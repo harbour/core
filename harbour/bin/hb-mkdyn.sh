@@ -63,7 +63,7 @@ MINOR="${REVIS%%.*}"
 REVIS="${REVIS#${MINOR}}"
 REVIS="${REVIS#.}"
 REVIS="${REVIS%%.*}"
-[ -n "${MAJOR}" ] || MAJOR=0
+[ -n "${MAJOR}" ] || MAJOR=1
 [ -n "${MINOR}" ] || MINOR=1
 [ -n "${REVIS}" ] || REVIS=0
 VERSION="${MAJOR}.${MINOR}.${REVIS}"
@@ -131,7 +131,7 @@ if [ "${SLIB_EXT}" = ".dylib" ]; then
     ln -sf "${FULLNAME}" "${DSTDIR}${BASE}.${MAJOR}${SLIB_EXT}" && \
     ln -sf "${FULLNAME}" "${DSTDIR}${BASE}${SLIB_EXT}"
 elif [ "${SLIB_EXT}" = ".dll" ]; then
-    FULLNAME="${LIB_NAME}${SLIB_EXT}"
+    FULLNAME="${LIB_NAME}-${MAJOR}${MINOR}${SLIB_EXT}"
     if [ "$HB_COMPILER" = "mingwce" ]; then
         SYSLIBS=" -lwininet -lws2"
     else

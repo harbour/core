@@ -8,6 +8,42 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-17 17:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkdyn.sh
+  * bin/hb-mkdyn.bat
+  * source/vm/maindllp.c
+  * utils/hbmk2/hbmk2.prg
+    + Renamed all Windows Harbour .dlls to harbour-11.dll and
+      harbourmt-11.dll. This means that MinGW will now have a versioned
+      name to be in sync with other builds. It also means that
+      -vc, -pocc, -ow postfixes are gone (and additionally DMC
+      could also be supported). What remains is -x64 to
+      signal an x64 and -ia64 to signal a IA64 build. Another thing
+      which remains is -b32 (now renamed to -bcc to be in sync with
+      rest of Harbour), because Borland has an non-standard
+      name mangling, and while it can be made work with other
+      compilers since the calling convention is the same, it requires
+      the .dll user applications to be rebuilt with some implib tricks.
+      Overall Borland isn't recommended for .dll creation.
+      Please do further tests for binary compatibility.
+
+    ; TOFIX: Location of .dll still differs for mingw/cygwin, they
+             are created in lib while rest of compilers create it in
+             bin. I think we should sync them by creating a copy
+             of the .dlls in bin for mingw/cygwin. Przemek, could
+             you help here?
+    ; TOFIX: "Making <dllname>..." screen messages. I'll need some
+             help here also.
+
+  * bin/hb-mkdyn.sh
+    * ${MAJOR} default set to 1.
+
+  * make_gnu_os2.cmd
+    * Minor formatting.
+
+  * contrib/hbgd/gdwrp.c
+    ! Minor correction to recent change. (avoiding warning for MinGW)
+
 2009-03-17 16:14 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/tests/speedtst.prg
     + added new tests of dynamic code blocks performance

@@ -95,12 +95,12 @@ for %%f in (%HB_DLL_LIBS_MT%) do (
 )
 cd ..
 
-if "%HB_COMPILER%" == "msvc"     set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-vc
-if "%HB_COMPILER%" == "msvc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-vc
-if "%HB_COMPILER%" == "msvc64"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-vc-x64
-if "%HB_COMPILER%" == "msvc64"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-vc-x64
-if "%HB_COMPILER%" == "msvcia64" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-vc-ia64
-if "%HB_COMPILER%" == "msvcia64" set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-vc-ia64
+if "%HB_COMPILER%" == "msvc"     set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
+if "%HB_COMPILER%" == "msvc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
+if "%HB_COMPILER%" == "msvc64"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
+if "%HB_COMPILER%" == "msvc64"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
+if "%HB_COMPILER%" == "msvcia64" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-ia64
+if "%HB_COMPILER%" == "msvcia64" set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-ia64
 
 echo Making %_DST_NAME_ST%.dll... && link /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt user32.lib wsock32.lib advapi32.lib gdi32.lib
 echo Making %_DST_NAME_MT%.dll... && link /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt user32.lib wsock32.lib advapi32.lib gdi32.lib
@@ -217,8 +217,8 @@ for %%f in (%HB_DLL_LIBS_MT%) do (
 )
 cd ..
 
-set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-b32
-set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-b32
+set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-bcc
+set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-bcc
 
 echo. , "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll",, cw32mt.lib import32.lib >> _hballst.txt
 echo. , "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll",, cw32mt.lib import32.lib >> _hballmt.txt
@@ -268,8 +268,8 @@ copy /b /y "%HB_LIB_INSTALL%\%HB_DLL_LIBS_MT%.lib" . > nul && wlib -q -b "%HB_DL
 echo FILE '%HB_DLL_LIBS_ST%.lib'>> _hbsst.txt
 echo FILE '%HB_DLL_LIBS_MT%.lib'>> _hbsmt.txt
 
-set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-ow
-set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-ow
+set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
+set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
 
 echo Making %_DST_NAME_ST%.dll... && wlink OP QUIET SYS NT_DLL OP IMPLIB NAME '%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll' @_hbsst.txt LIB user32.lib, wsock32.lib, advapi32.lib, gdi32.lib
 echo Making %_DST_NAME_MT%.dll... && wlink OP QUIET SYS NT_DLL OP IMPLIB NAME '%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll' @_hbsmt.txt LIB user32.lib, wsock32.lib, advapi32.lib, gdi32.lib
@@ -343,8 +343,8 @@ for %%f in (%HB_DLL_LIBS_MT%) do (
 )
 cd ..
 
-set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-pocc
-set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-pocc
+set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
+set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
 
 echo Making %_DST_NAME_ST%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt user32.lib wsock32.lib advapi32.lib gdi32.lib
 echo Making %_DST_NAME_MT%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt user32.lib wsock32.lib advapi32.lib gdi32.lib

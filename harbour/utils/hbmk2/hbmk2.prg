@@ -1309,7 +1309,8 @@ FUNCTION Main( ... )
                s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "winspool", "gdi32", "comctl32", "comdlg32", "ole32", "oleaut32", "uuid", "wsock32", "ws2_32" } )
             ENDIF
          ENDIF
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt", "harbour" ) }
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
+                                       "harbour-" + cDL_Version_Alter ) }
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
             AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
@@ -1453,8 +1454,8 @@ FUNCTION Main( ... )
             AAdd( s_aOPTL, "OP MAP" )
          ENDIF
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32" } )
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-ow",;
-                                       "harbour-" + cDL_Version_Alter + "-ow" ),;
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
+                                       "harbour-" + cDL_Version_Alter ),;
                            "hbmainstd",;
                            "hbmainwin" }
 
@@ -1579,8 +1580,8 @@ FUNCTION Main( ... )
          IF s_lSHARED
             AAdd( s_aLIBPATH, "{DB}" )
          ENDIF
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-b32",;
-                                       "harbour-" + cDL_Version_Alter + "-b32" ),;
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-bcc",;
+                                       "harbour-" + cDL_Version_Alter + "-bcc" ),;
                            "hbmainstd",;
                            "hbmainwin" }
 
@@ -1635,18 +1636,18 @@ FUNCTION Main( ... )
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
          DO CASE
          CASE t_cCOMP $ "msvc|icc"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-vc",;
-                                          "harbour-" + cDL_Version_Alter + "-vc" ),;
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
+                                          "harbour-" + cDL_Version_Alter ),;
                               "hbmainstd",;
                               "hbmainwin" }
          CASE t_cCOMP == "msvc64"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-vc-x64",;
-                                          "harbour-" + cDL_Version_Alter + "-vc-x64" ),;
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-x64",;
+                                          "harbour-" + cDL_Version_Alter + "-x64" ),;
                               "hbmainstd",;
                               "hbmainwin" }
          CASE t_cCOMP == "msvcia64"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-vc-ia64",;
-                                          "harbour-" + cDL_Version_Alter + "-vc-ia64" ),;
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-ia64",;
+                                          "harbour-" + cDL_Version_Alter + "-ia64" ),;
                               "hbmainstd",;
                               "hbmainwin" }
          ENDCASE
@@ -1718,8 +1719,8 @@ FUNCTION Main( ... )
             AAdd( s_aOPTL, "/debug" )
          ENDIF
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32", "advapi32", "gdi32" } )
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-pocc",;
-                                       "harbour-" + cDL_Version_Alter + "-pocc" ),;
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
+                                       "harbour-" + cDL_Version_Alter ),;
                            "hbmainstd",;
                            "hbmainwin" }
 

@@ -57,8 +57,12 @@
 
 /* NOTE: Do some initialization required by the GD headers. */
 #if defined(HB_OS_WIN)
-   #define WIN32
-   #define BGDWIN32
+   #if !defined(WIN32)
+      #define WIN32
+   #endif
+   #if !defined(BGDWIN32)
+      #define BGDWIN32
+   #endif
 #endif
 
 #ifdef HAVE_CONFIG_H

@@ -59,19 +59,20 @@
 
 #include "hbtypes.h"
 
-#define HB_DLL_NAME  "harbour.dll"
+#define HB_DLL_NAME    "harbour.dll"
+#define HB_DLL_NAMEMT  "harbourmt.dll"
 #if defined( __BORLANDC__ )
-   #define HB_DLL_NAME2 "harbour-11-b32.dll"
-#if defined( __POCC__ )
-   #define HB_DLL_NAME2 "harbour-11-pocc.dll"
-#elif defined( __WATCOMC__ )
-   #define HB_DLL_NAME2 "harbour-11-ow.dll"
+   #define HB_DLL_NAME2   "harbour-11-bcc.dll"
+   #define HB_DLL_NAMEMT2 "harbourmt-11-bcc.dll"
 #elif defined( _MSC_VER ) && defined( _M_X64 )
-   #define HB_DLL_NAME2 "harbour-11-vc-x64.dll"
+   #define HB_DLL_NAME2   "harbour-11-x64.dll"
+   #define HB_DLL_NAMEMT2 "harbourmt-11-x64.dll"
 #elif defined( _MSC_VER ) && defined( _M_IA64 )
-   #define HB_DLL_NAME2 "harbour-11-vc-ia64.dll"
-#elif defined( _MSC_VER )
-   #define HB_DLL_NAME2 "harbour-11-vc.dll"
+   #define HB_DLL_NAME2   "harbour-11-ia64.dll"
+   #define HB_DLL_NAMEMT2 "harbourmt-11-ia64.dll"
+#else
+   #define HB_DLL_NAME2   "harbour-11.dll"
+   #define HB_DLL_NAMEMT2 "harbourmt-11.dll"
 #endif
 
 #if defined(HB_OS_WIN)

@@ -36,13 +36,13 @@ rem compiler option for the define and either the LIBRARY_PATH or
 rem the -L compiler/linker option for the library.
 rem For building Harbour you can also use HB_USER_LDFLAGS environment variable,
 rem f.e.
-rem         SET HB_USER_LDFLAGS=-Le:\usr\lib\tcpipv4
+rem         set HB_USER_LDFLAGS=-Le:\usr\lib\tcpipv4
 rem
 rem If you are using newer OS2 version with tcp/ip stack >= 4.1
 rem (eComStation, for example) and you do not need backward binary
 rem compatibility then you can disable it by setting HB_OS2_TCP32
 rem environment variable, f.e.
-rem         SET HB_OS2_TCP32=yes
+rem         set HB_OS2_TCP32=yes
 
 if "%HB_OS2_TCP32%" == "yes" goto tcp32
 if "%HB_OS2_TCP32%" == "YES" goto tcp32
