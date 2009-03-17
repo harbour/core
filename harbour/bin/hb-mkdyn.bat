@@ -349,6 +349,9 @@ set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
 echo Making %_DST_NAME_ST%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt user32.lib wsock32.lib advapi32.lib gdi32.lib
 echo Making %_DST_NAME_MT%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt user32.lib wsock32.lib advapi32.lib gdi32.lib
 
+polib "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" /out:"%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
+polib "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" /out:"%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
+
 rem ; Cleanup
 for /F %%o in (_hbost.txt) do ( del %%o )
 if exist _st\maindll.obj  del _st\maindll.obj

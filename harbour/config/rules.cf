@@ -29,7 +29,7 @@ HB := $(HB)harbour$(EXE_EXT)
 ifeq ($(HB_GCMODE),)
    HB_GCMODE=3
 endif
-HB_FLAGS := -i$(HB_INC_COMPILE) -q0 -w3 -es2 -km $(HB_PDBG)
+HB_FLAGS := -i$(HB_INC_COMPILE) -q0 -w3 -es2 -kmo $(HB_PDBG)
 HB_RULE = $(HB) $? -n1 $(HB_FLAGS) -gc$(HB_GCMODE) $(HB_USER_PRGFLAGS)
 
 # The rule to link an executable.

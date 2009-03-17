@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-18 00:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/rules.cf
+    + Added -ko optimization switch for Harbour.
+    ; TODO: Disable it for specific places of hbtest.
+
+  * bin/hb-mkdyn.bat
+    + Added missing pocc implib generation.
+
+  * utils/hbmk2/hbmk2.prg
+    + mingwce support synced with mingw some more.
+      F.e. now resources are supported for mingwce executables.
+
 2009-03-17 20:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.sh
   * bin/hb-func.sh

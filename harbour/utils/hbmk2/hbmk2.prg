@@ -1316,13 +1316,13 @@ FUNCTION Main( ... )
             AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
-         IF t_cCOMP == "mingw" .AND. Len( s_aRESSRC ) > 0
+         IF t_cCOMP $ "mingw|mingwce" .AND. Len( s_aRESSRC ) > 0
             IF Len( s_aRESSRC ) == 1
-               cBin_Res := "windres"
+               cBin_Res := t_cCCPREFIX + "windres"
                cOpt_Res := "{LR} -o {LS}"
                cResExt := ".o"
             ELSE
-               OutErr( "hbmk: Warning: Resource files ignored. Multiple ones not supported with mingw." + hb_osNewLine() )
+               OutErr( "hbmk: Warning: Resource files ignored. Multiple ones not supported with mingw/mingwce." + hb_osNewLine() )
             ENDIF
          ENDIF
 
@@ -1772,9 +1772,9 @@ FUNCTION Main( ... )
                         "LNK4217: locally defined symbol ... imported in function ..."
                         if using 'dllimport'. [vszakats] */
                tmp := ""
-            CASE t_cCOMP $ "gcc|mingw|cygwin" ; tmp := "__attribute__ (( dllimport ))"
-            CASE t_cCOMP $ "bcc|owatcom"      ; tmp := "__declspec( dllimport )"
-            OTHERWISE                         ; tmp := "_declspec( dllimport )"
+            CASE t_cCOMP $ "gcc|mingw|mingwce|cygwin" ; tmp := "__attribute__ (( dllimport ))"
+            CASE t_cCOMP $ "bcc|owatcom"              ; tmp := "__declspec( dllimport )"
+            OTHERWISE                                 ; tmp := "_declspec( dllimport )"
             ENDCASE
 
             /* Create list of requested symbols */
@@ -2294,7 +2294,7 @@ STATIC FUNCTION ListCookLib( arraySrc, cPrefix, cExtNew )
    LOCAL cDir
    LOCAL cLibName
 
-   IF t_cCOMP $ "gcc|gpp|mingw|djgpp|cygwin"
+   IF t_cCOMP $ "gcc|gpp|mingw|mingwce|djgpp|cygwin"
       FOR EACH cLibName IN array
          hb_FNameSplit( cLibName, @cDir )
          IF Empty( cDir )
@@ -2972,7 +2972,7 @@ STATIC FUNCTION getFirstFunc( cFile )
    LOCAL cFuncList, cExecNM, cFuncName, cExt, cLine, n, c
 
    cFuncName := ""
-   IF t_cCOMP $ "gcc|gpp|mingw|cygwin"
+   IF t_cCOMP $ "gcc|gpp|mingw|mingwce|cygwin"
       hb_FNameSplit( cFile,,, @cExt )
       IF cExt == ".c"
          FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFile ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
