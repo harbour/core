@@ -58,7 +58,7 @@
   hb_threadId( [ <pThID> ] ) -> <nThNo>
   hb_threadJoin( <pThID> [, @<xRetCode> ] ) -> <lOK>
   hb_threadDetach( <pThID> ) -> <lOK>
-* hb_threadQuitRequest( <pThID> ) -> <lOK> /* may be ignored !!! */
+* hb_threadQuitRequest( <pThID> ) -> <lOK>
   hb_threadTerminateAll() -> NIL
   hb_threadWaitForAll() -> NIL
   hb_threadWait( <pThID> | <apThID>, [ <nTimeOut> ] [, <lAll> ] ) => <nThInd> | <nThCount> | 0

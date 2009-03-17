@@ -112,6 +112,7 @@ PRG_SOURCES=\
 	scroll.prg \
 	sdf_test.prg \
 	seconds.prg \
+	server.prg \
 	setkeys.prg \
 	set_num.prg \
 	set_test.prg \

@@ -2,7 +2,7 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT = ../../../../../
 
 DOC_SUBDIR=/es
 

@@ -8,6 +8,23 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-17 12:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  + tests/server.prg
+  * tests/Makefile
+    + Added inet example from xhb.
+
+  * source/vm/thread.c
+    ! Fixed nested comment.
+
+  * contrib/xhb/hbcompat.ch
+  * contrib/xhb/xhb.ch
+    ! Moved xhb.lib dependent translation to xhb.ch.
+
+  * contrib/examples/hbdoc/examples/core_es/Makefile
+  * contrib/examples/hbdoc/examples/core_en/genhtm.bat
+  - contrib/examples/hbdoc/examples/core_en/genhtm.sh
+    * Cleanup.
+
 2009-03-17 10:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * debian/rules
   * harbour-win-spec

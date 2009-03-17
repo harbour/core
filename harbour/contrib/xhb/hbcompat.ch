@@ -227,9 +227,6 @@
    #xtranslate hb_MutexTimeOutLock( <x>, <n> ) => hb_MutexLock( <x>, <n> / 1000 )
    #xtranslate Notify( <x,...> )               => hb_mutexNotify( <x> )
    #xtranslate NotifyAll( <x,...> )            => hb_mutexNotifyAll( <x> )
-   #xtranslate Subscribe( <x,...> )            => xhb_mutexSubscribe( <x> )
-   #xtranslate SubscribeNow( <x,...> )         => xhb_mutexSubscribeNow( <x> )
-   #xtranslate StartThread( <x,...> )          => xhb_StartThread( <x> )
 
    /* not possible to well replicate xHarbour behavior because its buggy
       these function results are different on different platform, chosen
