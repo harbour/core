@@ -8,6 +8,30 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-17 09:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbdoc/genos2.prg
+  * utils/hbdoc/genng.prg
+  * utils/hbdoc/genasc.prg
+  * utils/hbdoc/genchm.prg
+  * utils/hbdoc/genhpc.prg
+  * utils/hbdoc/ft_funcs.prg
+  * utils/hbdoc/hbdoc.prg
+  * utils/hbdoc/genhtm.prg
+  * utils/hbdoc/genpdf1.prg
+  * utils/hbdoc/gentrf.prg
+  * utils/hbdoc/genrtf.prg
+    + Enabled line number for all files to aid finding crashes.
+    ! Few crashes fixed. Still far from usable state.
+
+  * source/vm/thread.c
+    + Added short Harbour level API description. (from Przemek)
+
+  * contrib/xhb/Makefile
+  * contrib/xhb/hbcompat.ch
+  + contrib/xhb/xhbmt.prg
+    + Added translation for all xhb MT functions.
+      (Thanks a lot Przemek)
+
 2009-03-17 00:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Fixed mingw -fmstat in static mode. (shared mode gives

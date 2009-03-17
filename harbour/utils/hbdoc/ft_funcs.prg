@@ -51,6 +51,7 @@
  */
 
 #pragma -w2
+#pragma linenumber=on
 
 #include "hbclass.ch"
 
@@ -207,7 +208,7 @@ METHOD closefile() CLASS FileBase
 */
 METHOD retrieve() CLASS FileBase
 
-   LOCAL cReturn       // as char
+   LOCAL cReturn := ""  // as char
    LOCAL nMoved        // as int
 
    IF ::noDosError() .AND. ::nDosHandle > 0

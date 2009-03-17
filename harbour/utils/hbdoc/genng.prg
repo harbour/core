@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * GENNG support module for hbdoc document Extractor 
+ * GENNG support module for hbdoc document Extractor
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -51,6 +51,7 @@
  */
 
 #pragma -w2
+#pragma linenumber=on
 
 #include "directry.ch"
 #include "fileio.ch"
@@ -184,8 +185,8 @@ FUNCTION ProcessiNg()
    //  Entry Point
    //
    //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "          
-   @ MODULELINE, 20 SAY "Documenting: "         
+   @ INFILELINE, 20 SAY "Extracting: "
+   @ MODULELINE, 20 SAY "Documenting: "
    //  loop through all of the files
 
    FOR i := 1 TO nFiles
@@ -196,16 +197,16 @@ FUNCTION ProcessiNg()
       nCommentLen := IIF( AT( ".asm", Lower( aDirList[ i, F_NAME ] ) ) > 0, 2, 4 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"                                  
+      @ LINELINE, 27   SAY "Line:"
 
       nLineCnt := 0
 
       IF nReadHandle < 0
          WRITE_ERROR( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
          @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]         
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
          LOOP
       ENDIF
       lEof := .F.
@@ -220,7 +221,7 @@ FUNCTION ProcessiNg()
          cBuffer := STRTRAN( cBuffer, CHR( 10 ), "" )
          nLineCnt ++
          IF nLineCnt % 10 == 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
 
@@ -283,9 +284,9 @@ FUNCTION ProcessiNg()
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
-               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
+               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
 
@@ -351,9 +352,9 @@ FUNCTION ProcessiNg()
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
-               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
+               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
                //          endif
@@ -361,7 +362,7 @@ FUNCTION ProcessiNg()
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  get the category
-               cCategory :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
+               cCategory :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
 
                //  3) One line description
 
@@ -739,12 +740,12 @@ FUNCTION ProcNgiInput()
       FT_FUSE()
    NEXT
 
-   @ INFILELINE, 21 SAY "Extracting: "         
+   @ INFILELINE, 21 SAY "Extracting: "
 
    FOR x := 1 TO LEN( afuncsam )
       cFile := afuncsam[ x ]
 
-      @ INFILELINE, 33 SAY PAD( cfile, 47 )         
+      @ INFILELINE, 33 SAY PAD( cfile, 47 )
 
       FT_FUSE( "ngi\" + cFile )
       aAlso := {}
@@ -785,7 +786,7 @@ FUNCTION ProcNgiInput()
    FOR x := 1 TO LEN( AFUNCSN_ )
       cFile := afuncsn_[ x ]
 
-      @ INFILELINE, 33 SAY PAD( cfile, 47 )         
+      @ INFILELINE, 33 SAY PAD( cfile, 47 )
 
       FT_FUSE( "ngi\" + cFile )
       aAlso := {}
@@ -844,7 +845,7 @@ FUNCTION ProcNgiInput()
                 .AND. UPPER( LEFT( cFile, AT( ".", cFile ) - 1 ) ) != "STRONGTYPING";
                 .AND. UPPER( LEFT( cFile, AT( ".", cFile ) - 1 ) ) != "THEGARBAGECOLLECTOR" ;
                 .AND. UPPER( LEFT( cFile, AT( ".", cFile ) - 1 ) ) != "THEIDLESTATES"
-         @ INFILELINE, 33 SAY PAD( cfile, 47 )         
+         @ INFILELINE, 33 SAY PAD( cfile, 47 )
 
          FT_FUSE( "ngi\" + acfiles[ x ] )
          aAlso := {}
@@ -1763,7 +1764,7 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
 
    LOCAL nPos
    LOCAL cCuritem
-   LOCAL lReturn
+   LOCAL lReturn := .F.
    LOCAL xPos
    xPos := aCurdoc[ nCurdoc ]
    nPos := ASCAN( xPos, { | x | UPPER( ALLTRIM( x ) ) == UPPER( ALLTRIM( cItem ) ) } )

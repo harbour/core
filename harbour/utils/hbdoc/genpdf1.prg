@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * GENPdf support module for hbdoc document Extractor 
+ * GENPdf support module for hbdoc document Extractor
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -51,6 +51,9 @@
  */
 
 #ifdef HBDOC_PDF
+
+#pragma -w2
+#pragma linenumber=on
 
 #include "directry.ch"
 #include "fileio.ch"
@@ -186,8 +189,8 @@ local hhh
    //  Entry Point
    //
    //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "          
-   @ MODULELINE, 20 SAY "Documenting: "         
+   @ INFILELINE, 20 SAY "Extracting: "
+   @ MODULELINE, 20 SAY "Documenting: "
    //  loop through all of the files
    if lmemory
 //   oPdf := tPdf():new( "pdf\temp.pdf" )
@@ -212,16 +215,16 @@ local hhh
       nCommentLen := IIF( AT( ".asm", Lower( aDirList[ i, F_NAME ] ) ) > 0, 2, 4 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"                                  
+      @ LINELINE, 27   SAY "Line:"
 
       nLineCnt := 0
 
       IF nReadHandle < 0
          WRITE_ERROR( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
          @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]         
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
          LOOP
       ENDIF
       lEof := .F.
@@ -250,7 +253,7 @@ local hhh
          endif
          nLineCnt ++
 //         IF nLineCnt % 10 == 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
   //       ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
 
@@ -334,9 +337,9 @@ local hhh
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
-               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
+               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
 
@@ -402,9 +405,9 @@ local hhh
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
-               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
+               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
                //          endif
@@ -412,7 +415,7 @@ local hhh
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  get the category
-               cCategory :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
+               cCategory :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
 
                //  3) One line description
 
@@ -802,7 +805,7 @@ hb_pdfWriteText( " " )
 HB_PDFTABLE(aFitable,aSitable,aTitable,aFoiTable)
 endif
 
-      
+
    afiTable  := {}
    asitable  := {}
    atitable  := {}
@@ -1054,7 +1057,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
 
             ENDIF
             curPos += nPos
-         ENDDO            
+         ENDDO
 
       ELSEIF cStyle == "Syntax"
          nIdentLevel := 6
@@ -1102,7 +1105,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
          nPos        := 0
 //         hb_pdfwritetext(cbuffer)
        cBuffer:=strtran(cbuffer,"<par>","")
-         
+
          DO WHILE !lendPar
             IF nPos == 0
                cLine := SUBSTR( cBuffer, 1, 85 )
@@ -1177,13 +1180,13 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
                ProcPdfTable( cline, nNumTableItems )
                LFstTableItem := .F.
             ELSE
-               ProcPdfTable( cline, nNumTableItems )  
+               ProcPdfTable( cline, nNumTableItems )
             ENDIF
 
          ENDIF
       ENDDO
       IF lEndTable
-         GenPdfTable( oPdf ,nNumTableItems) 
+         GenPdfTable( oPdf ,nNumTableItems)
          LFstTableItem:=.T.
       ENDIF
    ENDIF
@@ -1399,7 +1402,7 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
 
    LOCAL nPos
    LOCAL cCuritem
-   LOCAL lReturn
+   LOCAL lReturn := .F.
    LOCAL xPos
    xPos := aCurdoc[ nCurdoc ]
    nPos := ASCAN( xPos, { | x | UPPER( ALLTRIM( x ) ) == UPPER( ALLTRIM( cItem ) ) } )
@@ -1418,7 +1421,7 @@ static Function Formattablestring(cItem,cItem2,cItem3,cItem4,nItem)
 Local aItems:={}
 Local aItems2:={}
 Local aItems3:={}
-      
+
 Local aItems4:={}
 
 if nItem <3
@@ -1444,13 +1447,13 @@ static function getArray(aItems,aItems2,Aitems3,aItems4)
 local nSize := 0
 nSize:=Len(aItems)
 if nSize<Len(aitems2)
-nSize:=Len(aItems2)   
+nSize:=Len(aItems2)
 endif
 if nSize<Len(aitems3)
-nSize:=Len(aItems3)   
+nSize:=Len(aItems3)
 endif
 if nSize<Len(aitems4)
-nSize:=Len(aItems4)   
+nSize:=Len(aItems4)
 endif
 Return nSize
 

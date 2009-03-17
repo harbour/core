@@ -50,6 +50,32 @@
  *
  */
 
+/*
+  Harbour level API:
+
+  hb_threadStart( [<nThreadAttrs> ,] <@sStart()> | <bStart> | <cStart> [, <params,...> ] ) -> <pThID>
+  hb_threadSelf() -> <pThID> | NIL
+  hb_threadId( [ <pThID> ] ) -> <nThNo>
+  hb_threadJoin( <pThID> [, @<xRetCode> ] ) -> <lOK>
+  hb_threadDetach( <pThID> ) -> <lOK>
+* hb_threadQuitRequest( <pThID> ) -> <lOK> /* may be ignored !!! */
+  hb_threadTerminateAll() -> NIL
+  hb_threadWaitForAll() -> NIL
+  hb_threadWait( <pThID> | <apThID>, [ <nTimeOut> ] [, <lAll> ] ) => <nThInd> | <nThCount> | 0
+  hb_threadOnce( @<onceControl> [, <bAction> ] ) -> <lFirstCall>
+  hb_mutexCreate() -> <pMtx>
+  hb_mutexLock( <pMtx> [, <nTimeOut> ] ) -> <lLocked>
+  hb_mutexUnlock( <pMtx> ) -> <lOK>
+  hb_mutexNotify( <pMtx> [, <xVal>] ) -> NIL
+  hb_mutexNotifyAll( <pMtx> [, <xVal>] ) -> NIL
+  hb_mutexSubscribe( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) -> <lSubscribed>
+  hb_mutexSubscribeNow( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) -> <lSubscribed>
+
+  * - this function call can be ignored by the destination thread in some
+      cases. HVM does not guaranties that the QUIT signal will be always
+      delivered.
+*/
+
 #define HB_OS_WIN_USED
 
 #define INCL_DOSSEMAPHORES

@@ -102,6 +102,7 @@
  */
 
 #pragma -w2
+#pragma linenumber=on
 
 #include "directry.ch"
 #include "fileio.ch"
@@ -1609,7 +1610,7 @@ FUNCTION ReadAtFile( cAtFile )
       lEof := .F.
       DO WHILE .NOT. lEof
 
-         cBuffer := ALLTRIM( ReadLN( @lEof ) )
+         cBuffer := ALLTRIM( StrTran( ReadLN( @lEof ), Chr(13), "" ) )
          IF .NOT. EMPTY( cBuffer )
             AADD( aDirList, ARRAY( F_LEN ) )
             nCount ++

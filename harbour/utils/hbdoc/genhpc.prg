@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * GENHPC support module for hbdoc document Extractor 
+ * GENHPC support module for hbdoc document Extractor
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -51,6 +51,7 @@
  */
 
 #pragma -w2
+#pragma linenumber=on
 
 #include "directry.ch"
 #include "fileio.ch"
@@ -165,9 +166,9 @@ FUNCTION ProcessFiles()
    //  Entry Point
    //
    //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "         
+   @ INFILELINE, 20 SAY "Extracting: "
 
-   @ MODULELINE, 20 SAY "Documenting: "         
+   @ MODULELINE, 20 SAY "Documenting: "
    //  loop through all of the files
 
    FOR i := 1 TO nFiles
@@ -177,16 +178,16 @@ FUNCTION ProcessFiles()
       nCommentLen := IIF( AT( ".asm", Lower( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"                                  
+      @ LINELINE, 27   SAY "Line:"
 
       nLineCnt := 0
 
       IF nReadHandle < 0
          WRITE_ERROR( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
          @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]         
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
          LOOP
       ENDIF
       lEof := .F.
@@ -202,7 +203,7 @@ FUNCTION ProcessFiles()
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          nLineCnt ++
          IF nLineCnt % 10 == 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
 
@@ -257,7 +258,7 @@ FUNCTION ProcessFiles()
                //  Save the function name
                cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
 

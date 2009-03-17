@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * GENOS2 support module for hbdoc document Extractor 
+ * GENOS2 support module for hbdoc document Extractor
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -50,6 +50,7 @@
  */
 
 #pragma -w2
+#pragma linenumber=on
 
 #include "directry.ch"
 #include "fileio.ch"
@@ -184,8 +185,8 @@ FUNCTION ProcessOs2()
    //  Entry Point
    //
    //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "          
-   @ MODULELINE, 20 SAY "Documenting: "         
+   @ INFILELINE, 20 SAY "Extracting: "
+   @ MODULELINE, 20 SAY "Documenting: "
    //  loop through all of the files
    oOs2 := tOS2():new( "ipf\harbour.ipf" )
    FOR i := 1 TO nFiles
@@ -195,16 +196,16 @@ FUNCTION ProcessOs2()
       nCommentLen := IIF( AT( ".asm", Lower( aDirList[ i, F_NAME ] ) ) > 0, 2, 4 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"                                  
+      @ LINELINE, 27   SAY "Line:"
 
       nLineCnt := 0
 
       IF nReadHandle < 0
          WRITE_ERROR( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
          @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]         
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
          LOOP
       ENDIF
       lEof := .F.
@@ -218,7 +219,7 @@ FUNCTION ProcessOs2()
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          nLineCnt ++
          IF nLineCnt % 10 == 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
 
@@ -283,9 +284,9 @@ FUNCTION ProcessOs2()
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
-               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
+               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
 
@@ -348,9 +349,9 @@ FUNCTION ProcessOs2()
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
-               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
+               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
 
@@ -360,7 +361,7 @@ FUNCTION ProcessOs2()
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  get the category
-               cCategory :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
+               cCategory :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
 
                //  3) One line description
 
@@ -785,7 +786,7 @@ FUNCTION Formatos2Buff( cBuffer, cStyle )
    ELSEIF cStyle == "Arguments"
       nPos := 0
 
-      
+
       IF AT( "<par>", cReturn ) > 0
          cReturn := STRTRAN( cReturn, "<par>", "" )
          cReturn := STRTRAN( cReturn, "</par>", "" )
@@ -799,7 +800,7 @@ FUNCTION Formatos2Buff( cBuffer, cStyle )
          ENDIF
 
       ENDIF
-        
+
       DO WHILE !lEndBuff
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</par>", cLine ) > 0
@@ -970,13 +971,13 @@ RETURN max
 FUNCTION Genos2Table( oOs2 )
     Local x
     Local cItem,cItem1
-    //Local cItem2,cItem3 // Variables not used in function, it may be deleted? 
+    //Local cItem2,cItem3 // Variables not used in function, it may be deleted?
 //   oos2:WritePar( "" )
     if nNumTableItems == 2
         citem  := str(maxos2elem(afitable),2)
         cItem1 := Str(maxos2elem(asitable),2)
        oos2:writeText(":table cols="+"'"+cItem  + " " + cItem1 +"'." )
-    elseif nNumTableItems == 3         
+    elseif nNumTableItems == 3
        oos2:writeText(":table cols="+"'"+str(maxos2elem(afitable),2) + " " + str(maxos2elem(asitable),2) +  " " +str(maxos2elem(atitable),2) +"'." )
     elseif nNumTableItems == 4
        oos2:writeText(":table cols="+"'"+str(maxos2elem(afitable),2) + " " + str(maxos2elem(asitable),2) +  " " +str(maxos2elem(atitable),2) + " " +str(maxos2elem(afoitable),2)+"'." )
@@ -1046,7 +1047,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
 
    DEFAULT cStyle TO "Default"
    lendfixed := .F.
-   IF AT( "<par>", cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle != "Example" 
+   IF AT( "<par>", cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle != "Example"
       cBuffer := "<par>" + cBuffer
    ENDIF
    IF EMPTY( cBuffer )
@@ -1113,7 +1114,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
                cLine := SUBSTR( cBuffer, 1, 220 )
                nPos  := RAT( " ", cLine )
                IF nPos > 0
-                  
+
                   cLine := SUBSTR( cBuffer, 1, nPos )
 //                  cline:= Oos2:dostoos2text(cline)
                ENDIF
@@ -1178,7 +1179,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
 
             oos2:writetext(cbuffer + hb_OSNewLine() + ".br")
 
-            oOs2:writeText( cBuffer + hb_OSNewLine() + ".br") 
+            oOs2:writeText( cBuffer + hb_OSNewLine() + ".br")
          ENDIF
          */
          IF !EMPTY( cBuffer )
@@ -1306,7 +1307,7 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
 
    LOCAL nPos
    LOCAL cCuritem
-   LOCAL lReturn
+   LOCAL lReturn := .F.
    LOCAL xPos
    xPos := aCurdoc[ nCurdoc ]
    nPos := ASCAN( xPos, { | x | UPPER( ALLTRIM( x ) ) == UPPER( ALLTRIM( cItem ) ) } )
@@ -1335,14 +1336,14 @@ CLASS TOs2
    DATA aLinkRef
    DATA nRef
    DATA aHeadRef
-   DATA aIndRef 
+   DATA aIndRef
    METHOD New( cFile )
    METHOD WritePar( cPar )
    METHOD WritePar2( cPar,ctag )
    METHOD WriteLink( cLink )
    METHOD ScanLink( cLink )
    METHOD ScanRef( cRef )
-   METHOD ScanInd( cRef )    
+   METHOD ScanInd( cRef )
    METHOD WriteJumpLink( cLink, cName, cText )
    METHOD CLOSE()
    METHOD WriteText( cPar )
@@ -1384,7 +1385,7 @@ METHOD WritePar( cPar ) CLASS TOs2
    RETURN Self
 
 METHOD WritePar2( cBuffer,cTag,cStyle ) CLASS TOs2
-   Local aLines:={} 
+   Local aLines:={}
    LOCAL nPos,cLine:=""
    Default cStyle to "Default"
 if at("-",cBuffer)>0
@@ -1418,12 +1419,12 @@ Endif
 /*
 if cStyle=="Syntax"
     ? cBuffer
-endif    
+endif
          DO WHILE !lendPar
             IF nPos == 0
                cLine := SUBSTR( cBuffer, 1, 231 )
                nPos  := RAT( " ", cLine )
-               IF nPos > 0                 
+               IF nPos > 0
                   cLine := SUBSTR( cBuffer, 1, nPos )
                ENDIF
             If !empty(cLine) .and. !(cStyle =="Syntax")
@@ -1445,7 +1446,7 @@ endif
                nPos := RAT( " ", cLine )
                IF nPos > 0
                   cLine :=  SUBSTR( cBuffer, curpos, nPos )
-                  nPos -= 1  
+                  nPos -= 1
                ELSE
                   IF cLine == "</par>"
                      cLine := ""
@@ -1457,13 +1458,13 @@ endif
             elseIf !empty(cLine) .and. cStyle =="Syntax"
                 FWRITE( Self:nHandle,cTag+ ":hp2."+ cLine  +":ehp2." +CRLF)
             Endif
-            
+
             ENDIF
 
             curPos += nPos
 ? Curpos
          ENDDO
-*/   
+*/
 
    RETURN Self
 
@@ -1488,7 +1489,7 @@ METHOD WriteTitle( cTopic, cTitle ,cCategory) CLASS TOs2
    Local lHead:=.F.
    LOCAL nrItem,nIItem
    LOCAL cRefCateg
-   LOCAL cIndCateg   
+   LOCAL cIndCateg
    cTopic := ALLTRIM( cTopic )
    cRefCateg:=SetCateg(cCategory )
    cIndCateg:=SetInd(cCategory)
@@ -1502,11 +1503,11 @@ METHOD WriteTitle( cTopic, cTitle ,cCategory) CLASS TOs2
    If Self:ScanInd(cIndCateg)==0
       niItem := ASCAN( Self:aIndRef, { | a | upper(a) == upper(cIndCateg )} )
       FWRITE( Self:nHandle, ":h1 " + ::aIndRef[niItem] + "."+ UPPER( cCategory ) + CRLF)
-      lHead := .T.  
+      lHead := .T.
    ELSE             // Just in case that nItem>0 so the Link is already referenced
       niItem := ASCAN( Self:aIndRef, { | a | upper(a) == upper(cIndCateg) } )
    ENDIF
-   IF niItem>0 .AND.       lHead 
+   IF niItem>0 .AND.       lHead
       FWRITE( Self:nHandle, ":h2 "+ " res=" + ALLTRIM( STR( nItem ) ) + "." + cTopic  + CRLF  )
    elseIF     niItem>0 .AND.       !lHead
       FWRITE( Self:nHandle, ":h2 id="+ ::aIndRef[niItem] + " res=" + ALLTRIM( STR( nItem ) ) + "." + cTopic  + CRLF  )

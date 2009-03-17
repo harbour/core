@@ -7,14 +7,16 @@ ROOT = ../../
 LIBNAME=xhb
 
 C_SOURCES=\
+	cstructc.c \
 	dbf2txt.c \
+	dbgfxc.c \
 	filestat.c \
 	freadlin.c \
+	hbcomprs.c \
 	hbcrypt.c \
-	hbxml.c \
-	hbsyslog.c \
 	hboutdbg.c \
-	cstructc.c \
+	hbsyslog.c \
+	hbxml.c \
 	xhbarr.c \
 	xhbcopyf.c \
 	xhbenum.c \
@@ -22,9 +24,7 @@ C_SOURCES=\
 	xhbmsgs.c \
 	xhbqself.c \
 	xhbwith.c \
-	hbcomprs.c \
 	xstrdel.c \
-	dbgfxc.c \
 
 C_HEADERS=\
 	hbcompat.h \
@@ -32,16 +32,17 @@ C_HEADERS=\
 
 PRG_SOURCES=\
 	arrayblk.prg \
-	txml.prg \
+	cstruct.prg \
+	dbgfx.prg \
+	dirrec.prg \
 	hblog.prg \
 	hblognet.prg \
-	cstruct.prg \
 	hbstruct.prg \
-	dirrec.prg \
-	xhbcomp.prg \
-	dbgfx.prg \
-	sprintf.prg \
 	regexrpl.prg \
+	sprintf.prg \
+	txml.prg \
+	xhbcomp.prg \
+	xhbmt.prg \
 
 PRG_HEADERS=\
 	hbcompat.ch \
