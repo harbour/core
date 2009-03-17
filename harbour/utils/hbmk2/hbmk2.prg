@@ -1705,6 +1705,8 @@ FUNCTION Main( ... )
             IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
                AAdd( s_aOPTC, "/Fo{OO}" )
             ENDIF
+         ELSE
+            AAdd( s_aOPTL, "/out:{OE}" )
          ENDIF
          cOpt_Link := "{LO} {DL} {FL} {LL} {LS}"
          cLibPathPrefix := "/libpath:"
