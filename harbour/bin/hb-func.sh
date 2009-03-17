@@ -42,7 +42,7 @@ get_hbplatform()
 
 get_hbver()
 {
-    local FVER MAJOR MINOR REVIS hb_rootdir
+    local FVER MAJOR MINOR RELEA hb_rootdir
 
     hb_rootdir="${1-.}"
     FVER="${hb_rootdir}/include/hbver.h"
@@ -50,6 +50,17 @@ get_hbver()
     MINOR=`sed -e '/HB_VER_MINOR/   !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
     RELEA=`sed -e '/HB_VER_RELEASE/ !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
     echo "${MAJOR}.${MINOR}.${RELEA}"
+}
+
+get_hbver_win()
+{
+    local FVER MAJOR MINOR hb_rootdir
+
+    hb_rootdir="${1-.}"
+    FVER="${hb_rootdir}/include/hbver.h"
+    MAJOR=`sed -e '/HB_VER_MAJOR/   !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
+    MINOR=`sed -e '/HB_VER_MINOR/   !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
+    echo "${MAJOR}${MINOR}"
 }
 
 get_hbverstat()
@@ -717,7 +728,11 @@ mk_hblibso()
     name=`get_solibname`
     hb_rootdir="${1-.}"
 
-    hb_ver=`get_hbver "${hb_rootdir}"`
+    if [ "${HB_ARCHITECTURE}" = "win" ]; then
+       hb_ver=`get_hbver_win "${hb_rootdir}"`
+    else
+       hb_ver=`get_hbver "${hb_rootdir}"`
+    fi
     hb_libs=`mk_hbgetlibs "$2"`
     [ -z "${HB_GT_LIB}" ] && HB_GT_LIB="gtstd"
 
@@ -811,8 +826,8 @@ mk_hblibso()
         full_lib_name_mt="lib${name}mt.${hb_ver}${lib_ext}"
     elif [ "${HB_ARCHITECTURE}" = "win" ]; then
         lib_ext=".dll"
-        full_lib_name="${name}${lib_ext}"
-        full_lib_name_mt="${name}mt${lib_ext}"
+        full_lib_name="${name}-${hb_ver}${lib_ext}"
+        full_lib_name_mt="${name}mt-${hb_ver}${lib_ext}"
     elif [ "${HB_ARCHITECTURE}" = "hpux" ]; then
         lib_ext=".sl"
         full_lib_name="lib${name}-${hb_ver}${lib_ext}"

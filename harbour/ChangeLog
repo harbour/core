@@ -8,6 +8,19 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-17 20:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkdyn.sh
+  * bin/hb-func.sh
+    ! mingw/cygwin .dll name generation tweaked to work
+      properly. This fixes both TOFIXes in prev commit.
+
+  * mpkg_win.bat
+    + Added -9 switch to zip.
+
+  - contrib/examples/hbdoc/examples/core_es/hbpplib.txt
+  * contrib/examples/hbdoc/examples/core_es/dirstruc.txt
+    * Cleanup.
+
 2009-03-17 17:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbmysql/readme.txt
   * contrib/hbapollo/readme.txt
@@ -40,9 +53,9 @@
              are created in lib while rest of compilers create it in
              bin. I think we should sync them by creating a copy
              of the .dlls in bin for mingw/cygwin. Przemek, could
-             you help here?
+             you help here? [DONE]
     ; TOFIX: "Making <dllname>..." screen messages. I'll need some
-             help here also.
+             help here also. [DONE]
 
   * bin/hb-mkdyn.sh
     * ${MAJOR} default set to 1.

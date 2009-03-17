@@ -38,11 +38,7 @@ busca de remover directorios vac¡os)
 |                        (cambios hist¢ricos)
 |
 +---bin                - Ejecutables y batch de construcci¢n
-|   |                    deber¡a contener harbour.exe y otros ejecutables (*)
-|   |
-|   +---b32            - aqui se construye los binarios 32 bits Borland
-|   |
-|   +---vc             - aqui se construye los binarios 32 bits Microsoft
+|                        deber¡a contener harbour.exe y otros ejecutables (*)
 |
 +---config             - Archivos de Config. (.cf) para the GNU Make system
 |   |
@@ -153,20 +149,6 @@ busca de remover directorios vac¡os)
 +---include            - Archivos Include para ambos Harbour y C
 |
 +---lib                - Librerias de ejecuci¢n para cada plataforma (*)
-|   |
-|   +---b16            - borland 16 bits
-|   |
-|   +---b32            - borland 32 bits
-|   |
-|   +---vc             - microsoft 32 bits (Visual C++)
-|
-+---obj                - Archivos binarios .obj  (*) (#2)
-|   |
-|   +---b16            - borland 16 bits
-|   |
-|   +---b32            - borland 32 bits
-|   |
-|   +---vc             - microsoft 32 bits (Visual C++)
 |
 +---samples            - Archivos de ejemplo y peque¤as aplicaciones
 |   |
@@ -235,7 +217,7 @@ busca de remover directorios vac¡os)
     |
     +---hbextern       - generador de hbextern.ch
     |
-    +---hbmake         - Utilidad Make de Harbour
+    +---hbmk           - Utilidad Make de Harbour
     |
     +---hbpp           - Preprocesador de Harbour como m¢dulo aislado
     |

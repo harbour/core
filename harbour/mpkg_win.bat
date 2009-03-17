@@ -76,7 +76,7 @@ rem ; Build .zip package
 if exist %HB_PKGNAME%.zip del %HB_PKGNAME%.zip
 pushd
 cd %HB_INSTALL_BASE%
-zip -X -r -o %~dp0%HB_PKGNAME%.zip . -i %HB_DIRNAME%\*
+zip -9 -X -r -o %~dp0%HB_PKGNAME%.zip . -i %HB_DIRNAME%\*
 popd
 
 :MK_ERROR
