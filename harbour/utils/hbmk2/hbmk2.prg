@@ -1034,7 +1034,9 @@ FUNCTION Main( ... )
          make it the first source file specified. */
       DEFAULT s_cPROGNAME TO FN_NameGet( s_cFIRST )
 
-      IF t_cCOMP == "mingwce|msvcce|poccce"
+      IF t_cCOMP == "mingwce" .OR. ;
+         t_cCOMP == "msvcce" .OR. ;
+         t_cCOMP == "poccce"
          t_cGTDEFAULT := "gtwvt"
       ENDIF
 
@@ -1665,9 +1667,6 @@ FUNCTION Main( ... )
       CASE ( t_cARCH == "win" .AND. t_cCOMP == "pocc" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "xcc" )
 
-         /* TODO: pocc doesn't support multiple .c input files.
-                  This means we need to do the heavy lifting. */
-
          IF s_lGUI
             AAdd( s_aOPTL, "/subsystem:windows" )
          ELSE
@@ -1689,7 +1688,7 @@ FUNCTION Main( ... )
             cBin_Res := "porc.exe"
          ENDIF
          cBin_Dyn := cBin_Link
-         cOpt_CompC := "/c /Ze /Go {FC} /I{DI} {LC}"
+         cOpt_CompC := "/c /Ze /Go {FC} /I{DI} {IC} /Fo{OO}"
          cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
          IF t_cCOMP == "pocc"
             AAdd( s_aOPTC, "/Ot" )
@@ -1929,7 +1928,6 @@ FUNCTION Main( ... )
             /* Compiling */
 
             /* Order is significant */
-            cOpt_CompC := StrTran( cOpt_CompC, "{LC}"  , ArrayToList( ArrayJoin( ListDirExt( s_aPRG, "", ".c" ), s_aC ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LR}"  , ArrayToList( ArrayJoin( ListDirExt( s_aRESSRC, "", cResExt ), s_aRESCMP ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LO}"  , ArrayToList( ListCook( s_aOBJUSER, cObjPrefix ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( s_aRESSRC, "", cResExt ), s_aRESCMP ), cResPrefix ) ) )
@@ -1940,43 +1938,67 @@ FUNCTION Main( ... )
             cOpt_CompC := StrTran( cOpt_CompC, "{FL}"  , iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                          GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OD}"  , PathSepToTarget( FN_DirGet( s_cPROGNAME ) ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{OO}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cObjExt ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OE}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cBinExt ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OM}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, ".map" ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{DB}"  , s_cHB_BIN_INSTALL )
             cOpt_CompC := StrTran( cOpt_CompC, "{DI}"  , s_cHB_INC_INSTALL )
 
-            cOpt_CompC := AllTrim( cOpt_CompC )
+            IF "{IC}" $ cOpt_CompC
 
-            /* Handle moving the whole command line to a script, if requested. */
-            IF "{SCRIPT}" $ cOpt_CompC
-               fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".cpl" )
-               IF fhnd != F_ERROR
-                  FWrite( fhnd, StrTran( cOpt_CompC, "{SCRIPT}", "" ) )
-                  FClose( fhnd )
-                  cOpt_CompC := "@" + cScriptFile
-               ELSE
-                  OutErr( "hbmk: Warning: C compiler script couldn't be created, continuing in command line." + hb_osNewLine() )
+               FOR EACH tmp IN ArrayJoin( ListDirExt( s_aPRG, "", ".c" ), s_aC )
+
+                  cCommand := cOpt_CompC
+                  cCommand := StrTran( cCommand, "{IC}", tmp )
+                  cCommand := StrTran( cCommand, "{OO}", PathSepToTarget( NameDirExt( tmp, "", cObjExt ) ) )
+
+                  cCommand := cBin_CompC + " " + AllTrim( cCommand )
+
+                  IF s_lTRACE
+                     OutStd( "hbmk: C compiler command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+                  ENDIF
+
+                  IF ( tmp := hb_run( cCommand ) ) != 0
+                     OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
+                     nErrorLevel := 6
+                     EXIT
+                  ENDIF
+               NEXT
+            ELSE
+               cOpt_CompC := StrTran( cOpt_CompC, "{LC}"  , ArrayToList( ArrayJoin( ListDirExt( s_aPRG, "", ".c" ), s_aC ) ) )
+               cOpt_CompC := StrTran( cOpt_CompC, "{OO}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cObjExt ) ) )
+
+               cOpt_CompC := AllTrim( cOpt_CompC )
+
+               /* Handle moving the whole command line to a script, if requested. */
+               IF "{SCRIPT}" $ cOpt_CompC
+                  fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".cpl" )
+                  IF fhnd != F_ERROR
+                     FWrite( fhnd, StrTran( cOpt_CompC, "{SCRIPT}", "" ) )
+                     FClose( fhnd )
+                     cOpt_CompC := "@" + cScriptFile
+                  ELSE
+                     OutErr( "hbmk: Warning: C compiler script couldn't be created, continuing in command line." + hb_osNewLine() )
+                  ENDIF
                ENDIF
-            ENDIF
 
-            cCommand := cBin_CompC + " " + cOpt_CompC
+               cCommand := cBin_CompC + " " + cOpt_CompC
 
-            IF s_lTRACE
-               OutStd( "hbmk: C compiler command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+               IF s_lTRACE
+                  OutStd( "hbmk: C compiler command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+                  IF ! Empty( cScriptFile )
+                     OutStd( "hbmk: C compiler script:" + hb_osNewLine() + hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+                  ENDIF
+               ENDIF
+
+               IF ( tmp := hb_run( cCommand ) ) != 0
+                  OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
+                  nErrorLevel := 6
+               ENDIF
+
                IF ! Empty( cScriptFile )
-                  OutStd( "hbmk: C compiler script:" + hb_osNewLine() + hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+                  FErase( cScriptFile )
                ENDIF
-            ENDIF
-
-            IF ( tmp := hb_run( cCommand ) ) != 0
-               OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
-               nErrorLevel := 6
-            ENDIF
-
-            IF ! Empty( cScriptFile )
-               FErase( cScriptFile )
             ENDIF
          ELSE
             OutErr( "hbmk: Error: This compiler/platform isn't implemented." + hb_osNewLine() )
@@ -2275,20 +2297,26 @@ STATIC FUNCTION AAddNotEmpty( array, xItem )
 STATIC FUNCTION ListDirExt( arraySrc, cDirNew, cExtNew )
    LOCAL array := AClone( arraySrc )
    LOCAL cFileName
-   LOCAL cDir, cName, cExt
 
    FOR EACH cFileName IN array
-      hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
-      IF cDirNew != NIL
-         cDir := cDirNew
-      ENDIF
-      IF cExtNew != NIL
-         cExt := cExtNew
-      ENDIF
-      cFileName := hb_FNameMerge( cDir, cName, cExt )
+      cFileName := NameDirExt( cFileName, cDirNew, cExtNew )
    NEXT
 
    RETURN array
+
+STATIC FUNCTION NameDirExt( cFileName, cDirNew, cExtNew )
+   LOCAL cDir, cName, cExt
+
+   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
+
+   IF cDirNew != NIL
+      cDir := cDirNew
+   ENDIF
+   IF cExtNew != NIL
+      cExt := cExtNew
+   ENDIF
+
+   RETURN hb_FNameMerge( cDir, cName, cExt )
 
 /* Forms the list of libs as to appear on the command line */
 STATIC FUNCTION ListCookLib( arraySrc, cPrefix, cExtNew )
@@ -3021,7 +3049,9 @@ STATIC FUNCTION commandResult( cCommand, nResult )
 PROCEDURE PlatformPRGFlags( aOPTPRG )
 
    IF !( t_cARCH == hb_Version( HB_VERSION_BUILD_ARCH ) ) .OR. ;
-      t_cCOMP $ "mingwce|poccce|msvcce"
+      t_cCOMP == "mingwce" .OR. ;
+      t_cCOMP == "poccce" .OR. ;
+      t_cCOMP == "msvcce"
 
       #if   defined( __PLATFORM__WINDOWS )
          AAdd( aOPTPRG, "-undef:__PLATFORM__WINDOWS" )
@@ -3050,7 +3080,9 @@ PROCEDURE PlatformPRGFlags( aOPTPRG )
       #endif
 
       DO CASE
-      CASE t_cCOMP $ "mingwce|poccce|msvcce"
+      CASE t_cCOMP == "mingwce" .OR. ;
+           t_cCOMP == "poccce" .OR. ;
+           t_cCOMP == "msvcce"
          AAdd( aOPTPRG, "-D__PLATFORM__WINDOWS" )
          AAdd( aOPTPRG, "-D__PLATFORM__WINCE" )
       CASE t_cARCH == "win"
