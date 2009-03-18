@@ -109,7 +109,7 @@
       [ <init> ; ]                  ;
       time := secondscpu() ;        ;
       for i:=1 to N_LOOPS ;         ;
-         [ ( <testExp> ) ] ;        ;
+         [ ( <testExp> ) ; ]        ;
       next ;                        ;
       time := secondscpu() - time ; ;
       [ <exit> ; ]                  ;
