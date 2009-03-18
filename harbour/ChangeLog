@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-18 20:07 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/minmax.c
+    ! fixed min()/max() functions to always return the 1-st item when
+      items are equal. It's Clipper behavior and can be important when
+      two items with the same wight have different other attributes
+      like formatted value size or number of decimal places.
+
 2009-03-18 19:59 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-mkdyn.bat
   * harbour/config/linux/icc.cf

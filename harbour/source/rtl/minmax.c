@@ -55,6 +55,7 @@
 #include "hbapierr.h"
 
 /* returns the maximum of two date or numerics */
+/* NOTE: CA-Cl*pper returns 1-st item when they are equal [druzus] */
 HB_FUNC( MAX )
 {
    PHB_ITEM p1 = hb_param( 1, HB_IT_ANY );
@@ -67,7 +68,10 @@ HB_FUNC( MAX )
          HB_LONG l1 = hb_itemGetNInt( p1 );
          HB_LONG l2 = hb_itemGetNInt( p2 );
 
-         hb_retnint( l1 >= l2 ? l1 : l2 );
+         if( l1 >= l2 )
+            hb_itemReturn( p1 );
+         else
+            hb_itemReturn( p2 );
          return;
       }
       else if( HB_IS_NUMERIC( p1 ) && HB_IS_NUMERIC( p2 ) )
@@ -75,16 +79,10 @@ HB_FUNC( MAX )
          double d1 = hb_itemGetND( p1 );
          double d2 = hb_itemGetND( p2 );
 
-         int iDec1;
-         int iDec2;
-
-         hb_itemGetNLen( p1, NULL, &iDec1 );
-         hb_itemGetNLen( p2, NULL, &iDec2 );
-
          if( d1 >= d2 )
-            hb_retndlen( d1, 0, iDec1 );
+            hb_itemReturn( p1 );
          else
-            hb_retndlen( d2, 0, iDec2 );
+            hb_itemReturn( p2 );
          return;
       }
       else if( HB_IS_LOGICAL( p1 ) && HB_IS_LOGICAL( p2 ) )
@@ -97,9 +95,10 @@ HB_FUNC( MAX )
       }
       else if( HB_IS_DATE( p1 ) && HB_IS_DATE( p2 ) )
       {
-         char szDate[ 9 ];
+         LONG l1 = hb_itemGetDL( p1 );
+         LONG l2 = hb_itemGetDL( p2 );
 
-         hb_retds( hb_itemGetDL( p1 ) >= hb_itemGetDL( p2 ) ? hb_pardsbuff( szDate, 1 ) : hb_pardsbuff( szDate, 2 ) );
+         hb_retdl( l1 >= l2 ? l1 : l2 );
          return;
       }
    }
@@ -107,6 +106,7 @@ HB_FUNC( MAX )
 }
 
 /* returns the minimum of two date or numerics */
+/* NOTE: CA-Cl*pper returns 1-st item when they are equal [druzus] */
 HB_FUNC( MIN )
 {
    PHB_ITEM p1 = hb_param( 1, HB_IT_ANY );
@@ -119,7 +119,10 @@ HB_FUNC( MIN )
          HB_LONG l1 = hb_itemGetNInt( p1 );
          HB_LONG l2 = hb_itemGetNInt( p2 );
 
-         hb_retnint( l1 <= l2 ? l1 : l2 );
+         if( l1 <= l2 )
+            hb_itemReturn( p1 );
+         else
+            hb_itemReturn( p2 );
          return;
       }
       else if( HB_IS_NUMERIC( p1 ) && HB_IS_NUMERIC( p2 ) )
@@ -127,16 +130,10 @@ HB_FUNC( MIN )
          double d1 = hb_itemGetND( p1 );
          double d2 = hb_itemGetND( p2 );
 
-         int iDec1;
-         int iDec2;
-
-         hb_itemGetNLen( p1, NULL, &iDec1 );
-         hb_itemGetNLen( p2, NULL, &iDec2 );
-
          if( d1 <= d2 )
-            hb_retndlen( d1, 0, iDec1 );
+            hb_itemReturn( p1 );
          else
-            hb_retndlen( d2, 0, iDec2 );
+            hb_itemReturn( p2 );
          return;
       }
       else if( HB_IS_LOGICAL( p1 ) && HB_IS_LOGICAL( p2 ) )
@@ -149,9 +146,10 @@ HB_FUNC( MIN )
       }
       else if( HB_IS_DATE( p1 ) && HB_IS_DATE( p2 ) )
       {
-         char szDate[ 9 ];
+         LONG l1 = hb_itemGetDL( p1 );
+         LONG l2 = hb_itemGetDL( p2 );
 
-         hb_retds( hb_itemGetDL( p1 ) <= hb_itemGetDL( p2 ) ? hb_pardsbuff( szDate, 1 ) : hb_pardsbuff( szDate, 2 ) );
+         hb_retdl( l1 <= l2 ? l1 : l2 );
          return;
       }
    }
