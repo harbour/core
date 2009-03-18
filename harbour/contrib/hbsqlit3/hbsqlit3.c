@@ -7,7 +7,7 @@
  * SQLite3 library low level (client api) interface code
  *
  * Copyright 2007 P.Chornyj <myorg63@mail.ru>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -17,6 +17,37 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ * See doc/license.txt for licensing terms.
  *
  */
 
@@ -29,9 +60,9 @@
 */
 
 #if defined( __WATCOMC__ ) || (defined(__POCC__) && __POCC__ <= 450)
-   /* NOTE: Don't include the full library for those compilers 
-            which cannot compile it, due its large size. 
-            In these case the library should be linked separately. 
+   /* NOTE: Don't include the full library for those compilers
+            which cannot compile it, due its large size.
+            In these case the library should be linked separately.
             [vszakats] */
    #include "sqlite3/sqlite3.h"
 #else
@@ -79,7 +110,7 @@ typedef sqlite3 *      psqlite3;
 typedef sqlite3_stmt * psqlite3_stmt;
 
 /*
-   destructor, it's executed automatically 
+   destructor, it's executed automatically
 */
 
 static HB_GARBAGE_FUNC( hb_sqlite3_Destructor )
@@ -120,7 +151,7 @@ static void hb_retsqlite3( sqlite3 * pDb )
    sqlite3_libversion()         -> cVersion
    sqlite3_libversion_number()  -> nVersionNumber
 
-   Returns values equivalent to the header constants 
+   Returns values equivalent to the header constants
    SQLITE_VERSION and SQLITE_VERSION_NUMBER.
 */
 
@@ -154,8 +185,8 @@ HB_FUNC( SQLITE3_EXTENDED_RESULT_CODES )
    Error Codes And Messages
 
    sqlite3_errcode( db ) -> returns the numeric result code or extended result
-                            code 
-   sqlite3_errmsg( db )  -> return English-language text 
+                            code
+   sqlite3_errmsg( db )  -> return English-language text
                             that describes the error
 */
 
@@ -209,7 +240,7 @@ HB_FUNC( SQLITE3_LAST_INSERT_ROWID )
 /*
    Name Of The Folder Holding Temporary Files
 
-   sqlite3_temp_directory( cDirName ) -> lResult (TRUE/FALSE) 
+   sqlite3_temp_directory( cDirName ) -> lResult (TRUE/FALSE)
 */
 
 HB_FUNC( SQLITE3_TEMP_DIRECTORY )
@@ -239,10 +270,10 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
             HB_TRACE(HB_TR_DEBUG, ("sqlite_temp_directory(): Directory doesn't exist %s", pszDirName));
          }
       }
-      
+
       if( bResult )
          sqlite3_temp_directory = hb_strdup( pszDirName );
-      
+
       if( fFree )
          hb_xfree( pszDirName );
    }
@@ -272,7 +303,7 @@ HB_FUNC( SQLITE3_OPEN )
       else
       {
          sqlite3_close( db );
-      
+
          hb_retptr( NULL );
       }
    }
@@ -308,7 +339,7 @@ HB_FUNC( SQLITE3_OPEN_V2 )
 
 /*
    One-Step Query Execution Interface
-   
+
    sqlite3_exec( db, cSQLTEXT ) -> nResultCode
 */
 
@@ -336,7 +367,7 @@ HB_FUNC( SQLITE3_EXEC )
 /*
    Compiling An SQL Statement
 
-   sqlite3_prepare( db, cSQLTEXT ) 
+   sqlite3_prepare( db, cSQLTEXT )
    -> return pointer to compiled statement or NIL if error occurs
 
    TODO: pszTail?
@@ -391,7 +422,7 @@ HB_FUNC( SQLITE3_DB_HANDLE )
 
 /*
    Evaluate An Prepared SQL Statement
- 
+
    sqlite3_step( pStmt ) -> nResultCode
 */
 
@@ -410,8 +441,8 @@ HB_FUNC( SQLITE3_STEP )
 
    sqlite3_clear_bindings( pStmt ) -> nResultCode
 
-   Contrary to the intuition of many, 
-   sqlite3_reset() does not reset the bindings on a prepared statement. 
+   Contrary to the intuition of many,
+   sqlite3_reset() does not reset the bindings on a prepared statement.
    Use this routine to reset all host parameters to NULL.
 */
 
@@ -471,10 +502,10 @@ int sqlite3_bind_zeroblob(sqlite3_stmt*, int, int n)
 /*
    Binding Values To Prepared Statements
 
-   These routines return SQLITE_OK on success or an error code if anything 
-   goes wrong. 
-   SQLITE_RANGE is returned if the parameter index is out of range. 
-   SQLITE_NOMEM is returned if malloc fails. 
+   These routines return SQLITE_OK on success or an error code if anything
+   goes wrong.
+   SQLITE_RANGE is returned if the parameter index is out of range.
+   SQLITE_NOMEM is returned if malloc fails.
    SQLITE_MISUSE is returned if these routines are called on a virtual machine
    that is the wrong state or which has already been finalized.
 */
@@ -657,7 +688,7 @@ HB_FUNC( SQLITE3_COLUMN_COUNT )
    SQLITE3_TEXT        3
    SQLITE_BLOB         4
    SQLITE_NULL         5
-   
+
    Declared Datatype Of A Query Result (see doc)
    sqlite3_column_decltype( pStmt, nIndex ) -> nColumnDeclType
 */
@@ -699,7 +730,7 @@ HB_FUNC( SQLITE3_COLUMN_NAME )
 }
 
 /*
-   sqlite3_column_bytes( pStmt, columnIndex ) 
+   sqlite3_column_bytes( pStmt, columnIndex )
    -> returns the number of bytes in that BLOB or string
 
    Results Values From A Query
@@ -729,7 +760,7 @@ HB_FUNC( SQLITE3_COLUMN_BLOB )
    {
       int index = hb_parni( 2 ) - 1;
 
-      hb_retclen( ( const char * ) sqlite3_column_blob( pStmt, index ), 
+      hb_retclen( ( const char * ) sqlite3_column_blob( pStmt, index ),
                   sqlite3_column_bytes( pStmt, index ) );
    }
    else
@@ -773,7 +804,7 @@ HB_FUNC( SQLITE3_COLUMN_TEXT )
    if( pStmt )
    {
       int index = hb_parni( 2 ) - 1;
-      hb_retclen( ( char * ) sqlite3_column_text( pStmt, index ), 
+      hb_retclen( ( char * ) sqlite3_column_text( pStmt, index ),
                   sqlite3_column_bytes( pStmt, index ) );
    }
    else
@@ -885,16 +916,16 @@ HB_FUNC( SQLITE3_GET_TABLE )
 /*
    Extract Metadata About A Column Of A Table
    based on
-   int sqlite3_table_column_metadata( 
-     sqlite3 *db,                - IN:  Connection handle 
-     const char *zDbName,        - IN:  Database name or NULL 
-     const char *zTableName,     - IN:  Table name 
-     const char *zColumnName,    - IN:  Column name 
-     char const **pzDataType,    - OUT: Declared data type 
-     char const **pzCollSeq,     - OUT: Collation sequence name 
-     int *pNotNull,              - OUT: True if NOT NULL constraint exists 
-     int *pPrimaryKey,           - OUT: True if column part of PK 
-     int *pAutoinc               - OUT: True if column is auto-increment 
+   int sqlite3_table_column_metadata(
+     sqlite3 *db,                - IN:  Connection handle
+     const char *zDbName,        - IN:  Database name or NULL
+     const char *zTableName,     - IN:  Table name
+     const char *zColumnName,    - IN:  Column name
+     char const **pzDataType,    - OUT: Declared data type
+     char const **pzCollSeq,     - OUT: Collation sequence name
+     int *pNotNull,              - OUT: True if NOT NULL constraint exists
+     int *pPrimaryKey,           - OUT: True if column part of PK
+     int *pAutoinc               - OUT: True if column is auto-increment
    );
 */
 
@@ -976,15 +1007,15 @@ HB_FUNC( SQLITE3_COLUMN_ORIGIN_NAME )
 #endif
 
 /*
-   BLOB I/O 
+   BLOB I/O
 */
 
 /*
    Open A BLOB For Incremental I/O
 
-   Open a handle to the blob located in row iRow, column zColumn, table zTable 
+   Open a handle to the blob located in row iRow, column zColumn, table zTable
    in database zDb. i.e. the same blob that would be selected by:
- 
+
    SELECT zColumn FROM zDb.zTable WHERE rowid = iRow;
 */
 
@@ -1058,7 +1089,7 @@ HB_FUNC( SQLITE3_BLOB_READ )
       buffer = ( BYTE * ) hb_xgrab( iLen + 1 );
       /*hb_xmemset( buffer, 0, iLen );*/
 
-      if( SQLITE_OK == sqlite3_blob_read( pBlob, buffer, iLen, hb_parni( 3 ) ) ) 
+      if( SQLITE_OK == sqlite3_blob_read( pBlob, buffer, iLen, hb_parni( 3 ) ) )
       {
          buffer[ iLen ] = '\0';
          hb_retclen_buffer( ( char * ) buffer, iLen );
@@ -1122,7 +1153,7 @@ HB_FUNC( SQLITE3_ENABLE_SHARED_CACHE )
    Tracing And Profiling Functions
 
    sqlite3_trace( db, lOnOff )
-   sqlite3_profile( db, lOnOff ) 
+   sqlite3_profile( db, lOnOff )
 */
 
 static void SQL3ProfileLog( void * sFile, const char * sProfileMsg, sqlite3_uint64 int64 )
@@ -1130,7 +1161,7 @@ static void SQL3ProfileLog( void * sFile, const char * sProfileMsg, sqlite3_uint
    if( sProfileMsg )
    {
       FILE * hFile = fopen( sFile ? ( const char * ) sFile : "hbsq3_pr.log", "a" );
-      
+
       if( hFile )
       {
          fprintf( hFile, "%s - %" PFLL "d\n", sProfileMsg, int64 );
@@ -1144,7 +1175,7 @@ static void SQL3TraceLog( void * sFile, const char * sTraceMsg )
    if( sTraceMsg )
    {
       FILE * hFile = fopen( sFile ? ( const char * ) sFile : "hbsq3_tr.log", "a" );
-      
+
       if( hFile )
       {
          fprintf( hFile, "%s \n", sTraceMsg );
@@ -1174,7 +1205,7 @@ HB_FUNC( SQLITE3_TRACE )
 }
 
 /*
-   BLOB Import/export 
+   BLOB Import/export
 */
 
 HB_FUNC( SQLITE3_FILE_TO_BUFF )
