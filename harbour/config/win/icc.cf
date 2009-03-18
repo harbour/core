@@ -19,7 +19,9 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -W4 -Gs
 
 ifneq ($(HB_BUILD_OPTIM),no)
-CFLAGS += -Ogt2yb1p -GX- -G6 -YX
+# maximum optimizations
+# CFLAGS += -Ox
+CFLAGS += -O3
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)

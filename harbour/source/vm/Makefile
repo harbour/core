@@ -17,7 +17,7 @@ ifeq ($(HB_ARCHITECTURE),win)
 			DIRS = mainstd mainwin
 		endif
 	endif
-	DIRS += maindllh
+	DIRS += maindllh maindllp
 else
 	ifeq ($(HB_ARCHITECTURE),os2)
 		C_MAIN = mainstd.c
