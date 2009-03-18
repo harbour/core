@@ -8,6 +8,19 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-18 02:16 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbatomic.h
+    ! fixed inline assembler code for atomic inc/dec operations.
+      It's late and I haven't wrote anything in assembler using
+      Intel syntax for years.
+    * reenabled inline assembler code for atomic inc/dec operations
+      for POCC/XCC builds - such version should work. Please check.
+
+2009-03-18 01:14 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/utils/hbtest/rt_hvma.prg
+    * use #pragma -ko- / #pragma -ko+ to make 3 RTE messages clipper
+      compatible
+
 2009-03-18 01:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbatomic.h
     ! Typo (__inline__ -> __inline).

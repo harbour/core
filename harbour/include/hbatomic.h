@@ -258,7 +258,7 @@ HB_EXTERN_BEGIN
 
 #  endif  /* ???CPU?? */
 
-#elif defined( _MSC_VER ) && ! defined( __POCC__ ) && ! defined( __XCC__ )
+#elif defined( _MSC_VER )
 
 #  if defined( i386 ) || defined( __i386__ ) || defined( __x86_64__ ) || \
       defined( _M_IX86 ) || defined( _M_AMD64 )
@@ -267,14 +267,16 @@ HB_EXTERN_BEGIN
 
          static __inline void hb_atomic_inc32( volatile int * p )
          {
-            __asm lock inc p
+            __asm mov eax, p
+            __asm lock inc dword ptr [eax]
          }
 
          static __inline int hb_atomic_dec32( volatile int * p )
          {
             unsigned char c;
 
-            __asm lock dec p
+            __asm mov eax, p
+            __asm lock dec dword ptr [eax]
             __asm setne c
 
             return c;
