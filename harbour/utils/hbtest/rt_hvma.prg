@@ -63,13 +63,28 @@ PROCEDURE Main_HVMA()
    TEST_LINE( mnIntP==10.OR.mnIntP==0         , .T.                                               )
    TEST_LINE( mnIntP==10.AND.mnLongP==0       , .F.                                               )
 
+#ifdef __HARBOUR__
+   /* disable Harbour extended optimizations to test correct RTE message */
+   #pragma -ko-
+#endif
    TEST_LINE( NIL + 1                         , "E 1 BASE 1081 Argument error (+) OS:0 #:0 A:2:U:NIL;N:1 F:S" )
    TEST_LINE( NIL - 1                         , "E 1 BASE 1082 Argument error (-) OS:0 #:0 A:2:U:NIL;N:1 F:S" )
+
+#ifdef __HARBOUR__
+   #pragma -ko+
+#endif
 
    TEST_LINE( scString + NIL                  , "E 1 BASE 1081 Argument error (+) OS:0 #:0 A:2:C:HELLO;U:NIL F:S" )
    TEST_LINE( scString - NIL                  , "E 1 BASE 1082 Argument error (-) OS:0 #:0 A:2:C:HELLO;U:NIL F:S" )
 
+#ifdef __HARBOUR__
+   /* disable Harbour extended optimizations to test correct RTE message */
+   #pragma -ko-
+#endif
    TEST_LINE( 1 + NIL                         , "E 1 BASE 1081 Argument error (+) OS:0 #:0 A:2:N:1;U:NIL F:S" )
+#ifdef __HARBOUR__
+   #pragma -ko+
+#endif
    TEST_LINE( 1 - NIL                         , "E 1 BASE 1082 Argument error (-) OS:0 #:0 A:2:N:1;U:NIL F:S" )
 
    TEST_LINE( "A" - "B"                       , "AB"                               )
