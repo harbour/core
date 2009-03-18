@@ -77,13 +77,17 @@
 #command ?? <xx,...> => outstd(<xx>)
 
 #ifdef __HARBOUR__
-   #define EOL hb_OSNewLine()
+   #ifndef EOL
+      #define EOL hb_OSNewLine()
+   #endif
 #else
    #ifndef __CLIP__
       #xtranslate secondsCPU() => seconds()
-   #endif
-   #ifndef EOL
-      #define EOL chr(10)
+      #ifndef EOL
+         #define EOL chr(10)
+      #endif
+   #else
+      #define EOL chr(13)+chr(10)
    #endif
 #endif
 

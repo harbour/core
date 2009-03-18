@@ -421,7 +421,10 @@ static HB_GENC_FUNC( hb_p_endproc )
    if( lPCodePos < pFunc->lPCodePos - 1 )
    {
       if( cargo->iNestedBlock )
+      {
+         cargo->fEndRequest = TRUE;
          fprintf( cargo->yyc, "\thb_xvmEndProc();\n" );
+      }
       fprintf( cargo->yyc, "\tbreak;\n" );
    }
    return 1;
@@ -2254,6 +2257,7 @@ void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
    label_info.fVerbose = ( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_VERBOSE );
    label_info.fSetSeqBegin = FALSE;
    label_info.fCondJump = FALSE;
+   label_info.fEndRequest = FALSE;
    label_info.iNestedBlock = 0;
    if( pFunc->lPCodePos == 0 )
       label_info.pulLabels = NULL;
@@ -2272,7 +2276,8 @@ void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
    hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &label_info );
 
    fprintf( yyc, "   } while( 0 );\n" );
-   fprintf( yyc, "   hb_xvmExitProc();\n" );
+   if( label_info.fEndRequest )
+      fprintf( yyc, "   hb_xvmExitProc();\n" );
    fprintf( yyc, "}\n" );
 
    if( label_info.pulLabels )

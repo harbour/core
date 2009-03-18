@@ -508,6 +508,7 @@ typedef struct _HB_LABEL_INFO
    BOOL     fVerbose;
    BOOL     fSetSeqBegin;
    BOOL     fCondJump;
+   BOOL     fEndRequest;
    int      iNestedBlock;
    ULONG *  pulLabels;
 } HB_LABEL_INFO, * PHB_LABEL_INFO;

@@ -8,6 +8,38 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-18 19:59 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-mkdyn.bat
+  * harbour/config/linux/icc.cf
+  * harbour/contrib/xhb/xhbcls.ch
+  * harbour/contrib/hbblat/tests/f_listtext.txt
+  * harbour/contrib/hbblat/tests/f_sample.txt
+  * harbour/contrib/hbblat/tests/f_ps.txt
+  * harbour/contrib/hbblat/tests/f_sample1.txt
+  * harbour/contrib/hbblat/tests/blattest.prg
+  * harbour/contrib/hbblat/tests/f_subjectline.txt
+  * harbour/contrib/hbblat/tests/blatcmd.prg
+  * harbour/contrib/hbblat/syntax.txt
+  * harbour/contrib/hbblat/hbblat.ch
+  * harbour/contrib/hbblat/blatcls.prg
+  * harbour/contrib/hbblat/blatwrp.c
+  * harbour/contrib/hbblat/Makefile
+  * harbour/contrib/examples/uhttpd/session.prg
+  * harbour/tests/ac_test2.prg
+  * harbour/tests/gtxfnt.prg
+    * updated SVN attributes
+
+  * harbour/tests/speedtst.prg
+    * use chr(13)+chr(10) as EOL in outstd() in Clipper and XPP builds.
+
+  * harbour/source/compiler/genc.c
+    ! fixed one printf modifier
+
+  * harbour/source/compiler/gencc.c
+  * harbour/include/hbcompdf.h
+    % do not call hb_xvmExitProc() if hb_xvmEndProc() was not executed
+      inside function compiled by -gc3
+
 2009-03-18 15:11 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.bat
     + Added .dll generation support for win/icc.
