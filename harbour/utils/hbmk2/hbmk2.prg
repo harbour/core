@@ -848,15 +848,6 @@ FUNCTION Main( ... )
             AAdd( s_aLIBPATH, PathSepToTarget( cParam ) )
          ENDIF
 
-      CASE Left( cParam, 2 ) == "-l" .AND. ;
-           Len( cParam ) > 2 .AND. ;
-           !( Left( cParam, 3 ) == "-l-" )
-
-         cParam := ArchCompFilter( SubStr( cParam, 3 ) )
-         IF ! Empty( cParam )
-            AAdd( s_aLIBUSER, PathSepToTarget( cParam ) )
-         ENDIF
-
       CASE Left( cParamL, Len( "-prgflag:" ) ) == "-prgflag:"
 
          cParam := ArchCompFilter( SubStr( cParam, Len( "-prgflag:" ) + 1 ) )
@@ -881,6 +872,15 @@ FUNCTION Main( ... )
          cParam := ArchCompFilter( SubStr( cParam, Len( "-ldflag:" ) + 1 ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTL   , PathSepToTarget( cParam, 2 ) )
+         ENDIF
+
+      CASE Left( cParam, 2 ) == "-l" .AND. ;
+           Len( cParam ) > 2 .AND. ;
+           !( Left( cParam, 3 ) == "-l-" )
+
+         cParam := ArchCompFilter( SubStr( cParam, 3 ) )
+         IF ! Empty( cParam )
+            AAdd( s_aLIBUSER, PathSepToTarget( cParam ) )
          ENDIF
 
       CASE Left( cParam, 1 ) $ cOptPrefix

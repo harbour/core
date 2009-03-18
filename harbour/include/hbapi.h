@@ -1016,6 +1016,8 @@ extern void     hb_i18n_release( void * cargo );
 extern void *   hb_i18n_alloc( void * cargo );
 #endif /* _HB_API_INTERNAL_ || _HB_I18N_INTERNAL_ */
 
+extern HB_EXPORT void         hb_vmSetLinkedMain( const char * szMain );
+
 /* misc */
 extern HB_EXPORT char *       hb_verPlatform( void );        /* retrieves a newly allocated buffer containing platform version */
 extern HB_EXPORT char *       hb_verCompiler( void );        /* retrieves a newly allocated buffer containing compiler version */

@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-18 13:09 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbapi.h
+    ! Added HB_EXPORT declaration for hb_vmSetLinkedMain().
+
+  * utils/hbmk2/hbmk2.prg
+    ! Regression regarding -ldflag: option handling.
+
 2009-03-18 12:16 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/tests/speedtst.prg
     ! fixed typo.
