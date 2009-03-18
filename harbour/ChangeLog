@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-18 15:11 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkdyn.bat
+    + Added .dll generation support for win/icc.
+
 2009-03-18 13:09 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbapi.h
     ! Added HB_EXPORT declaration for hb_vmSetLinkedMain().

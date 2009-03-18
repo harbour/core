@@ -22,6 +22,7 @@ set HB_DLL_LIBS=hbcommon hbpp hbrtl hbmacro hblang hbcpage hbpcre hbzlib hbexter
 set HB_DLL_LIBS_ST=hbvm
 set HB_DLL_LIBS_MT=hbvmmt
 
+if "%HB_COMPILER%" == "icc"      goto DO_MSVC
 if "%HB_COMPILER%" == "msvc"     goto DO_MSVC
 if "%HB_COMPILER%" == "msvc64"   goto DO_MSVC
 if "%HB_COMPILER%" == "msvcia64" goto DO_MSVC
@@ -39,14 +40,19 @@ echo Making .dlls for %HB_COMPILER%...
 md _dll
 cd _dll
 
+if     "%HB_COMPILER%" == "icc" set _BIN_LIB=xilib
+if not "%HB_COMPILER%" == "icc" set _BIN_LIB=lib
+if     "%HB_COMPILER%" == "icc" set _BIN_LINK=xilink
+if not "%HB_COMPILER%" == "icc" set _BIN_LINK=link
+
 rem ; Extract neutral objects
 echo.> _hboneut.txt
 for %%f in (%HB_DLL_LIBS%) do (
    if exist "%HB_LIB_INSTALL%\%%f.lib" (
       echo Processing library: %%f
-      lib "%HB_LIB_INSTALL%\%%f.lib" /nologo /list > _hboraw.txt
+      %_BIN_LIB% "%HB_LIB_INSTALL%\%%f.lib" /nologo /list > _hboraw.txt
       for /F %%p in (_hboraw.txt) do (
-         lib "%HB_LIB_INSTALL%\%%f.lib" /nologo /extract:%%p
+         %_BIN_LIB% "%HB_LIB_INSTALL%\%%f.lib" /nologo /extract:%%p /out:%%p
          echo %%p>> _hboneut.txt
       )
       del _hboraw.txt
@@ -60,11 +66,11 @@ echo.> ..\_hbost.txt
 for %%f in (%HB_DLL_LIBS_ST%) do (
    if exist "%HB_LIB_INSTALL%\%%f.lib" (
       echo Processing library: %%f
-      lib "%HB_LIB_INSTALL%\%%f.lib" /nologo /list > _hboraw.txt
+      %_BIN_LIB% "%HB_LIB_INSTALL%\%%f.lib" /nologo /list > _hboraw.txt
       for /F %%p in (_hboraw.txt) do (
          if not "%%p" == "maindll.obj" (
          if not "%%p" == "maindllp.obj" (
-            lib "%HB_LIB_INSTALL%\%%f.lib" /nologo /extract:%%p
+            %_BIN_LIB% "%HB_LIB_INSTALL%\%%f.lib" /nologo /extract:%%p /out:%%p
             echo _st\%%p>> ..\_hbost.txt
          )
          )
@@ -81,11 +87,11 @@ echo.> ..\_hbomt.txt
 for %%f in (%HB_DLL_LIBS_MT%) do (
    if exist "%HB_LIB_INSTALL%\%%f.lib" (
       echo Processing library: %%f
-      lib "%HB_LIB_INSTALL%\%%f.lib" /nologo /list > _hboraw.txt
+      %_BIN_LIB% "%HB_LIB_INSTALL%\%%f.lib" /nologo /list > _hboraw.txt
       for /F %%p in (_hboraw.txt) do (
          if not "%%p" == "maindll.obj" (
          if not "%%p" == "maindllp.obj" (
-            lib "%HB_LIB_INSTALL%\%%f.lib" /nologo /extract:%%p
+            %_BIN_LIB% "%HB_LIB_INSTALL%\%%f.lib" /nologo /extract:%%p /out:%%p
             echo _mt\%%p>> ..\_hbomt.txt
          )
          )
@@ -95,6 +101,8 @@ for %%f in (%HB_DLL_LIBS_MT%) do (
 )
 cd ..
 
+if "%HB_COMPILER%" == "icc"      set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
+if "%HB_COMPILER%" == "icc"      set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
 if "%HB_COMPILER%" == "msvc"     set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
 if "%HB_COMPILER%" == "msvc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
 if "%HB_COMPILER%" == "msvc64"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
@@ -102,8 +110,8 @@ if "%HB_COMPILER%" == "msvc64"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
 if "%HB_COMPILER%" == "msvcia64" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-ia64
 if "%HB_COMPILER%" == "msvcia64" set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-ia64
 
-echo Making %_DST_NAME_ST%.dll... && link /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt user32.lib wsock32.lib advapi32.lib gdi32.lib
-echo Making %_DST_NAME_MT%.dll... && link /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt user32.lib wsock32.lib advapi32.lib gdi32.lib
+echo Making %_DST_NAME_ST%.dll... && %_BIN_LINK% /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt user32.lib wsock32.lib advapi32.lib gdi32.lib
+echo Making %_DST_NAME_MT%.dll... && %_BIN_LINK% /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt user32.lib wsock32.lib advapi32.lib gdi32.lib
 
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
@@ -373,3 +381,5 @@ rmdir _dll
 goto END
 
 :END
+
+endlocal
