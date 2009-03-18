@@ -153,7 +153,7 @@ HB_EXTERN_BEGIN
                   return;
                #if defined( HB_OS_WIN )
                   Sleep( 0 );
-               #elif defined( HB_OS_OS2 ) 
+               #elif defined( HB_OS_OS2 )
                   DosSleep( 0 );
                #elif defined( __SVR4 )
                   thr_yield();
@@ -195,7 +195,7 @@ HB_EXTERN_BEGIN
                   return;
                #if defined( HB_OS_WIN )
                   Sleep( 0 );
-               #elif defined( HB_OS_OS2 ) 
+               #elif defined( HB_OS_OS2 )
                   DosSleep( 0 );
                #elif defined( __SVR4 )
                   thr_yield();
@@ -258,7 +258,7 @@ HB_EXTERN_BEGIN
 
 #  endif  /* ???CPU?? */
 
-#elif defined( _MSC_VER )
+#elif defined( _MSC_VER ) && ! defined( __POCC__ ) && ! defined( __XCC__ )
 
 #  if defined( i386 ) || defined( __i386__ ) || defined( __x86_64__ ) || \
       defined( _M_IX86 ) || defined( _M_AMD64 )
@@ -270,7 +270,7 @@ HB_EXTERN_BEGIN
             __asm lock inc p
          }
 
-         static __inline__ int hb_atomic_dec32( volatile int * p )
+         static __inline int hb_atomic_dec32( volatile int * p )
          {
             unsigned char c;
 
