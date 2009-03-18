@@ -1286,7 +1286,7 @@ FUNCTION Main( ... )
             AAdd( s_aLIBPATH, "{DB}" )
          ENDIF
          IF ! lStopAfterCComp
-            IF t_cCOMP == "mingw"
+            IF t_cCOMP $ "mingw|mingwce"
                cOpt_CompC += " -Wl,--start-group {LL} -Wl,--end-group"
             ELSE
                cOpt_CompC += " {LL}"

@@ -73,73 +73,73 @@ typedef void ( * VM_DLL_EXECUTE ) ( const BYTE * pCode, PHB_SYMB pSymbols );
 typedef BOOL     ( * EXT_IS_ARRAY ) ( int iParam );
 typedef char *   ( * EXT_PARC1 )  ( int iParam );
 typedef char *   ( * EXT_PARC2 )  ( int iParam, ULONG ulArrayIndex );
-typedef PHB_ITEM ( * HB_PARAM)( int iParam, long lMask );
-typedef PHB_ITEM ( * HB_PARAMERROR)( int iParam );
+typedef PHB_ITEM ( * HB_PARAM )( int iParam, long lMask );
+typedef PHB_ITEM ( * HB_PARAMERROR )( int iParam );
 typedef int      ( * HB_PCOUNTS )( void );
-typedef void     ( * HB_RET)( void );
-typedef void     ( * HB_RETC)( const char * szText );
-typedef void     ( * HB_RETCLEN)( const char * szText, ULONG ulLen );
-typedef void     ( * HB_RETDS)( const char * szDate );
-typedef void     ( * HB_RETD)( int iYear, int iMonth, int iDay );
-typedef void     ( * HB_RETDL)( long lJulian );
-typedef void     ( * HB_RETL)( int iTrueFalse );
-typedef void     ( * HB_RETND)( double dNumber );
-typedef void     ( * HB_RETNI)( int iNumber );
-typedef void     ( * HB_RETNL)( long lNumber );
-typedef void     ( * HB_RETNLEN)( double dNumber, int iWidth, int iDec );
-typedef void     ( * HB_RETNDLEN)( double dNumber, int iWidth, int iDec );
-typedef void     ( * HB_RETNILEN)( int iNumber, int iWidth );
-typedef void     ( * HB_RETNLLEN)( long lNumber, int iWidth );
-typedef void     ( * HB_RETA)( ULONG ulLen );
-typedef ULONG    ( * HB_PARINFA)( int iParamNum, ULONG uiArrayIndex );
-typedef ULONG    ( * HB_PARINFO)( int iParam );
-typedef ULONG    ( * HB_PARCLEN)( int iParam );
-typedef ULONG    ( * HB_PARCSIZ)( int iParam );
-typedef char *   ( * HB_PARDS)( int iParam );
-typedef char *   ( * HB_PARDSBUFF)( char * szDate,int iParam);
-typedef int      ( * HB_PARL)( int iParam );
-typedef double   ( * HB_PARND)( int iParam );
-typedef int      ( * HB_PARNI)( int iParam );
-typedef long     ( * HB_PARNL)( int iParam );
-typedef ULONG    ( * HB_PARCLEN2)( int iParam, ULONG ulArrayIndex );
-typedef ULONG    ( * HB_PARCSIZ2)( int iParam, ULONG ulArrayIndex );
-typedef char *   ( * HB_PARDS2)( int iParam, ULONG ulArrayIndex );
-typedef char *   ( * HB_PARDSBUFF2)( char * szDate,int iParam, ULONG ulArrayIndex );
-typedef int      ( * HB_PARL2)( int iParam, ULONG ulArrayIndex );
-typedef double   ( * HB_PARND2)( int iParam, ULONG ulArrayIndex );
-typedef int      ( * HB_PARNI2)( int iParam, ULONG ulArrayIndex );
-typedef long     ( * HB_PARNL2)( int iParam, ULONG ulArrayIndex );
-typedef int      ( * HB_STORC)( const char * szText, int iParam );
-typedef int      ( * HB_STORCLEN)( const char * szText, ULONG ulLength, int iParam);
-typedef int      ( * HB_STORDS)( const char * szDate, int iParam) ;
-typedef int      ( * HB_STORL)( int iLogical, int iParam );
-typedef int      ( * HB_STORNI)( int iValue, int iParam );
-typedef int      ( * HB_STORNL)( long lValue, int iParam );
-typedef int      ( * HB_STORND)( double dValue, int iParam );
-typedef int      ( * HB_STORC2)( const char * szText, int iParam , ULONG ulArrayIndex);
-typedef int      ( * HB_STORCLEN2)( const char * szText, ULONG ulLength, int iParam , ULONG ulArrayIndex);
-typedef int      ( * HB_STORDS2)( const char * szDate, int iParam , ULONG ulArrayIndex) ;
-typedef int      ( * HB_STORL2)( int iLogical, int iParam , ULONG ulArrayIndex);
-typedef int      ( * HB_STORNI2)( int iValue, int iParam , ULONG ulArrayIndex);
-typedef int      ( * HB_STORNL2)( long lValue, int iParam , ULONG ulArrayIndex);
-typedef int      ( * HB_STORND2)( double dValue, int iParam , ULONG ulArrayIndex);
-typedef BOOL     ( * HB_ARRAYNEW)( PHB_ITEM pItem, ULONG ulLen );
-typedef ULONG    ( * HB_ARRAYLEN)( PHB_ITEM pArray );
-typedef BOOL     ( * HB_ARRAYISOBJECT)( PHB_ITEM pArray );
-typedef BOOL     ( * HB_ARRAYADD)( PHB_ITEM pArray, PHB_ITEM pItemValue );
-typedef BOOL     ( * HB_ARRAYINS)( PHB_ITEM pArray, ULONG ulIndex );
-typedef BOOL     ( * HB_ARRAYDEL)( PHB_ITEM pArray, ULONG ulIndex );
-typedef BOOL     ( * HB_ARRAYSIZE)( PHB_ITEM pArray, ULONG ulLen );
-typedef BOOL     ( * HB_ARRAYLAST)( PHB_ITEM pArray, PHB_ITEM pResult );
-typedef BOOL     ( * HB_ARRAYSET)( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem );
-typedef BOOL     ( * HB_ARRAYGET)( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem );
-typedef void     ( * HB_XINIT)( void );                         /* Initialize fixed memory subsystem */
-typedef void     ( * HB_XEXIT)( void );                         /* Deinitialize fixed memory subsystem */
-typedef void *   ( * HB_XALLOC)( ULONG ulSize );                /* allocates memory, returns NULL on failure */
-typedef void *   ( * HB_XGRAB)( ULONG ulSize );                 /* allocates memory, exits on failure */
-typedef void     ( * HB_XFREE)( void * pMem );                  /* frees memory */
-typedef void *   ( * HB_XREALLOC)( void * pMem, ULONG ulSize ); /* reallocates memory */
-typedef ULONG    ( * HB_XSIZE)( void * pMem );                  /* returns the size of an allocated memory block */
+typedef void     ( * HB_RET )( void );
+typedef void     ( * HB_RETC )( const char * szText );
+typedef void     ( * HB_RETCLEN )( const char * szText, ULONG ulLen );
+typedef void     ( * HB_RETDS )( const char * szDate );
+typedef void     ( * HB_RETD )( int iYear, int iMonth, int iDay );
+typedef void     ( * HB_RETDL )( long lJulian );
+typedef void     ( * HB_RETL )( int iTrueFalse );
+typedef void     ( * HB_RETND )( double dNumber );
+typedef void     ( * HB_RETNI )( int iNumber );
+typedef void     ( * HB_RETNL )( long lNumber );
+typedef void     ( * HB_RETNLEN )( double dNumber, int iWidth, int iDec );
+typedef void     ( * HB_RETNDLEN )( double dNumber, int iWidth, int iDec );
+typedef void     ( * HB_RETNILEN )( int iNumber, int iWidth );
+typedef void     ( * HB_RETNLLEN )( long lNumber, int iWidth );
+typedef void     ( * HB_RETA )( ULONG ulLen );
+typedef ULONG    ( * HB_PARINFA )( int iParamNum, ULONG uiArrayIndex );
+typedef ULONG    ( * HB_PARINFO )( int iParam );
+typedef ULONG    ( * HB_PARCLEN )( int iParam );
+typedef ULONG    ( * HB_PARCSIZ )( int iParam );
+typedef char *   ( * HB_PARDS )( int iParam );
+typedef char *   ( * HB_PARDSBUFF )( char * szDate,int iParam);
+typedef int      ( * HB_PARL )( int iParam );
+typedef double   ( * HB_PARND )( int iParam );
+typedef int      ( * HB_PARNI )( int iParam );
+typedef long     ( * HB_PARNL )( int iParam );
+typedef ULONG    ( * HB_PARCLEN2 )( int iParam, ULONG ulArrayIndex );
+typedef ULONG    ( * HB_PARCSIZ2 )( int iParam, ULONG ulArrayIndex );
+typedef char *   ( * HB_PARDS2 )( int iParam, ULONG ulArrayIndex );
+typedef char *   ( * HB_PARDSBUFF2 )( char * szDate,int iParam, ULONG ulArrayIndex );
+typedef int      ( * HB_PARL2 )( int iParam, ULONG ulArrayIndex );
+typedef double   ( * HB_PARND2 )( int iParam, ULONG ulArrayIndex );
+typedef int      ( * HB_PARNI2 )( int iParam, ULONG ulArrayIndex );
+typedef long     ( * HB_PARNL2 )( int iParam, ULONG ulArrayIndex );
+typedef int      ( * HB_STORC )( const char * szText, int iParam );
+typedef int      ( * HB_STORCLEN )( const char * szText, ULONG ulLength, int iParam );
+typedef int      ( * HB_STORDS )( const char * szDate, int iParam );
+typedef int      ( * HB_STORL )( int iLogical, int iParam );
+typedef int      ( * HB_STORNI )( int iValue, int iParam );
+typedef int      ( * HB_STORNL )( long lValue, int iParam );
+typedef int      ( * HB_STORND )( double dValue, int iParam );
+typedef int      ( * HB_STORC2 )( const char * szText, int iParam , ULONG ulArrayIndex );
+typedef int      ( * HB_STORCLEN2 )( const char * szText, ULONG ulLength, int iParam , ULONG ulArrayIndex );
+typedef int      ( * HB_STORDS2 )( const char * szDate, int iParam , ULONG ulArrayIndex );
+typedef int      ( * HB_STORL2 )( int iLogical, int iParam , ULONG ulArrayIndex );
+typedef int      ( * HB_STORNI2 )( int iValue, int iParam , ULONG ulArrayIndex );
+typedef int      ( * HB_STORNL2 )( long lValue, int iParam , ULONG ulArrayIndex );
+typedef int      ( * HB_STORND2 )( double dValue, int iParam , ULONG ulArrayIndex );
+typedef BOOL     ( * HB_ARRAYNEW )( PHB_ITEM pItem, ULONG ulLen );
+typedef ULONG    ( * HB_ARRAYLEN )( PHB_ITEM pArray );
+typedef BOOL     ( * HB_ARRAYISOBJECT )( PHB_ITEM pArray );
+typedef BOOL     ( * HB_ARRAYADD )( PHB_ITEM pArray, PHB_ITEM pItemValue );
+typedef BOOL     ( * HB_ARRAYINS )( PHB_ITEM pArray, ULONG ulIndex );
+typedef BOOL     ( * HB_ARRAYDEL )( PHB_ITEM pArray, ULONG ulIndex );
+typedef BOOL     ( * HB_ARRAYSIZE )( PHB_ITEM pArray, ULONG ulLen );
+typedef BOOL     ( * HB_ARRAYLAST )( PHB_ITEM pArray, PHB_ITEM pResult );
+typedef BOOL     ( * HB_ARRAYSET )( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem );
+typedef BOOL     ( * HB_ARRAYGET )( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem );
+typedef void     ( * HB_XINIT )( void );                         /* Initialize fixed memory subsystem */
+typedef void     ( * HB_XEXIT )( void );                         /* Deinitialize fixed memory subsystem */
+typedef void *   ( * HB_XALLOC )( ULONG ulSize );                /* allocates memory, returns NULL on failure */
+typedef void *   ( * HB_XGRAB )( ULONG ulSize );                 /* allocates memory, exits on failure */
+typedef void     ( * HB_XFREE )( void * pMem );                  /* frees memory */
+typedef void *   ( * HB_XREALLOC )( void * pMem, ULONG ulSize ); /* reallocates memory */
+typedef ULONG    ( * HB_XSIZE )( void * pMem );                  /* returns the size of an allocated memory block */
 
 HB_EXTERN_END
 
