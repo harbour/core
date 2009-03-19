@@ -48,11 +48,14 @@ PRG_SOURCES=\
 	hbstruct.prg \
 	regexrpl.prg \
 	sprintf.prg \
+	stream.prg \
+	traceprg.prg \
 	trpc.prg \
 	trpccli.prg \
 	ttable.prg \
 	txml.prg \
 	xhbcomp.prg \
+	xhberr.prg \
 	xhbmt.prg \
 
 PRG_HEADERS=\

@@ -74,7 +74,7 @@ ULONG hb_AtSkipStrings( const char * szSub, ULONG ulSubLen, const char * szText,
          {
             while( ++ulPos < ulLen && szText[ ulPos ] != '"' )
             {
-               // Skip.
+               /* Skip. */
             }
 
             ulPos++;
@@ -86,7 +86,7 @@ ULONG hb_AtSkipStrings( const char * szSub, ULONG ulSubLen, const char * szText,
          {
             while( ++ulPos < ulLen && szText[ ulPos ] != '\'' )
             {
-               // Skip.
+               /* Skip. */
             }
 
             ulPos++;
@@ -100,7 +100,7 @@ ULONG hb_AtSkipStrings( const char * szSub, ULONG ulSubLen, const char * szText,
             {
                while( ++ulPos < ulLen && szText[ ulPos ] != ']' )
                {
-                  // Skip.
+                  /* Skip. */
                }
 
                ulPos++;
@@ -136,7 +136,7 @@ ULONG hb_AtSkipStrings( const char * szSub, ULONG ulSubLen, const char * szText,
    }
 }
 
-HB_FUNC( ATSKIPSTRINGS ) // cFind, cWhere, nStart
+HB_FUNC( ATSKIPSTRINGS ) /* cFind, cWhere, nStart */
 {
    PHB_ITEM pFind = hb_param( 1, HB_IT_STRING ), pWhere = hb_param( 2, HB_IT_STRING );
 

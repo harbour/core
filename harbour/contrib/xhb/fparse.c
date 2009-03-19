@@ -79,7 +79,7 @@ FPARSE( cFile, cDelimiter ) -> array
 
 /* adjustable, but this should be sufficient in normal situation */
 #define MAX_READ 4096
-//----------------------------------------------------------------------------//
+/*----------------------------------------------------------------------------*/
 void hb_ParseLine( PHB_ITEM pReturn, char * szText, int iDelimiter, int * iWord )
 {
    if ( szText )
@@ -173,7 +173,7 @@ void hb_ParseLine( PHB_ITEM pReturn, char * szText, int iDelimiter, int * iWord 
                    }
                    else
                    {
-                      // ",,0"
+                      /* ",,0" */
                       /* it is not a delimiter */
                       /* move to next character */
                       ++ i;
@@ -265,7 +265,7 @@ void hb_ParseLine( PHB_ITEM pReturn, char * szText, int iDelimiter, int * iWord 
    }
 }
 
-//----------------------------------------------------------------------------//
+/*----------------------------------------------------------------------------*/
 static char ** hb_tokensplit ( char *string, BYTE delimiter, int iCharCount, int *iWord )
 {
    char *buffer, *bufptr;
@@ -324,7 +324,7 @@ static char ** hb_tokensplit ( char *string, BYTE delimiter, int iCharCount, int
    return (token_list);
 }
 
-//----------------------------------------------------------------------------//
+/*----------------------------------------------------------------------------*/
 BOOL file_read ( FILE *stream, char *string, int *iCharCount )
 {
    int ch, cnbr = 0;
@@ -358,7 +358,7 @@ BOOL file_read ( FILE *stream, char *string, int *iCharCount )
    }
 }
 
-//----------------------------------------------------------------------------//
+/*----------------------------------------------------------------------------*/
 HB_FUNC( FPARSE )
 {
    FILE *inFile ;
@@ -441,7 +441,7 @@ HB_FUNC( FPARSE )
    fclose( inFile );
 }
 
-//----------------------------------------------------------------------------//
+/*----------------------------------------------------------------------------*/
 HB_FUNC( FPARSEEX )
 {
    FILE *inFile ;
@@ -510,7 +510,7 @@ HB_FUNC( FPARSEEX )
    fclose( inFile );
 }
 
-//----------------------------------------------------------------------------//
+/*----------------------------------------------------------------------------*/
 HB_FUNC( FWORDCOUNT )
 {
    FILE *inFile ;
@@ -570,7 +570,7 @@ HB_FUNC( FWORDCOUNT )
    fclose( inFile );
 }
 
-//----------------------------------------------------------------------------//
+/*----------------------------------------------------------------------------*/
 HB_FUNC( FLINECOUNT )
 {
    FILE *inFile ;
@@ -617,7 +617,7 @@ HB_FUNC( FLINECOUNT )
    fclose( inFile );
 }
 
-//----------------------------------------------------------------------------//
+/*----------------------------------------------------------------------------*/
 HB_FUNC( FCHARCOUNT )
 {
    FILE *inFile ;
@@ -670,7 +670,7 @@ HB_FUNC( FCHARCOUNT )
    fclose( inFile );
 }
 
-//----------------------------------------------------------------------------//
+/*----------------------------------------------------------------------------*/
 HB_FUNC( FPARSELINE )
 {
    PHB_ITEM pReturn = NULL;

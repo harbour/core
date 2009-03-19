@@ -55,6 +55,22 @@
 #include "hbapiitm.h"
 #include "hbapigt.h"
 
+HB_FUNC( HB_CMDARGARGV )
+{
+   hb_retc( hb_cmdargARGV()[0] );
+}
+
+HB_FUNC( HB_VMMODE )
+{
+#if   defined(HB_NO_PROFILER) && defined(HB_NO_TRACE) && !defined(HB_GUI)
+   hb_retni( 2 ); /* optimized for console applications */
+#elif defined(HB_NO_PROFILER) && defined(HB_NO_TRACE) &&  defined(HB_GUI)
+   hb_retni( 1 ); /* optimized for gui applications */
+#else
+   hb_retni( 0 ); /* no optimization */
+#endif
+}
+
 HB_FUNC( XHB__KEYBOARD )
 {
    /* Clear the typeahead buffer without reallocating the keyboard buffer */

@@ -8,6 +8,22 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-19 20:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/xhb/Makefile
+  + contrib/xhb/stream.prg
+  + contrib/xhb/traceprg.prg
+  + contrib/xhb/xhberr.prg
+  * contrib/xhb/xhbfunc.c
+    + More ports: HB_CMDARGARGV(), HB_VMMODE(), TRACELOG(), Stream classes,
+      xhb errorsys (activate by calling xhb_ErrorSys())
+
+  * contrib/xhb/fparse.c
+  * contrib/xhb/dumpvar.prg
+  * contrib/xhb/xhbat.c
+  * contrib/xhb/ttable.prg
+  * contrib/xhb/txtline.c
+    * Fixes/cleanups to previous ports.
+
 2009-03-19 19:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * xhb/Makefile
   * xhb/dumpvar.prg

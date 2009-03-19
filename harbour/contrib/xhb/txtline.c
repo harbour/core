@@ -85,7 +85,7 @@ void hb_readLine( char * szText, ULONG ulTextLen, ULONG uiLineLen, USHORT uiTabL
 
    for( ulPos = 0; ulPos < ulTextLen; ulPos++ )
    {
-      // Check for line terminators
+      /* Check for line terminators */
       for( uiPosTerm = 0; uiPosTerm < uiTerms; uiPosTerm++ )
       {
          if( szText[ulPos] == Term[uiPosTerm][0] && (ulPos + iTermSizes[uiPosTerm] - 1) < ulTextLen )
@@ -124,8 +124,8 @@ void hb_readLine( char * szText, ULONG ulTextLen, ULONG uiLineLen, USHORT uiTabL
       }
       else if( szText[ulPos] == HB_CHAR_SOFT1 && szText[ulPos + 1] == HB_CHAR_SOFT2 )
       {
-         // Clipper does NOT considers SOFT CR as a word seperator - WHY?
-         // Should we not fix that?
+         /* Clipper does NOT considers SOFT CR as a word seperator - WHY?
+            Should we not fix that? */
          #if 0
             ulLastBlk = ulPos;
          #endif
@@ -229,7 +229,7 @@ HB_FUNC( HB_TABEXPAND )
 
 }
 
-// HB_READLINE( <cText>, [<aTerminators | cTerminator>], <nLineLen>, <nTabLen>, <lWrap>, [<nStartOffset>], @nOffSet, @nEnd, @lFound, @lEOF )
+/* HB_READLINE( <cText>, [<aTerminators | cTerminator>], <nLineLen>, <nTabLen>, <lWrap>, [<nStartOffset>], @nOffSet, @nEnd, @lFound, @lEOF ) */
 HB_FUNC( HB_READLINE )
 {
    PHB_ITEM pTerm1;
