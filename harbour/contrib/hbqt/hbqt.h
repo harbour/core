@@ -53,11 +53,9 @@
 #ifndef __HBQT_H
 #define __HBQT_H
 
-/* #define QT_VERSION 0x040500 */
+#include <Qt/qglobal.h>
 
 #if QT_VERSION >= 0x040500
-
-#include <Qt/qglobal.h>
 
 #define hbqt_par_QWidget( n )                ( ( QWidget* ) hb_parptr( n ) )
 #define hbqt_par_QDialog( n )                ( ( QDialog* ) hb_parptr( n ) )
