@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-19 19:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * xhb/Makefile
+  * xhb/dumpvar.prg
+  + xhb/decode.prg
+    + Added HB_DECODE().
+    * Syntax adapted for Harbour.
+
 2009-03-19 19:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/maindll.c
   * source/vm/maindllp.c

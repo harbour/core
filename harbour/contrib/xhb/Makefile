@@ -40,6 +40,7 @@ PRG_SOURCES=\
 	arrayblk.prg \
 	cstruct.prg \
 	dbgfx.prg \
+	decode.prg \
 	dirrec.prg \
 	dumpvar.prg \
 	hblog.prg \
