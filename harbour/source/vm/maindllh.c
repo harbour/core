@@ -74,10 +74,10 @@ BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserve
    switch( fdwReason )
    {
       case DLL_PROCESS_ATTACH:
-           break;
+         break;
 
       case DLL_PROCESS_DETACH:
-           break;
+         break;
    }
 
    return TRUE;

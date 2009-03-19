@@ -62,6 +62,8 @@
 
 #if defined(HB_OS_WIN)
 
+BOOL WINAPI HB_EXPORT DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved );
+
 BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
 {
    HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %p)", hInstance, fdwReason,
@@ -74,12 +76,12 @@ BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserve
    switch( fdwReason )
    {
       case DLL_PROCESS_ATTACH:
-           hb_vmInit( FALSE );  /* Don't execute first linked symbol */
-           break;
+         hb_vmInit( FALSE );  /* Don't execute first linked symbol */
+         break;
 
       case DLL_PROCESS_DETACH:
-           hb_vmQuit();
-           break;
+         hb_vmQuit();
+         break;
    }
 
    return TRUE;

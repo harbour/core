@@ -244,8 +244,8 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLRow
    for nI := 1 to Len(::aFieldStruct)
 
       // search for fields part of a primary key
-      if (sqlAND(::aFieldStruct[nI][MYSQL_FS_FLAGS], PRI_KEY_FLAG) == PRI_KEY_FLAG) .OR.;
-         (sqlAND(::aFieldStruct[nI][MYSQL_FS_FLAGS], MULTIPLE_KEY_FLAG) == MULTIPLE_KEY_FLAG)
+      if (hb_bitAnd(::aFieldStruct[nI][MYSQL_FS_FLAGS], PRI_KEY_FLAG) == PRI_KEY_FLAG) .OR.;
+         (hb_bitAnd(::aFieldStruct[nI][MYSQL_FS_FLAGS], MULTIPLE_KEY_FLAG) == MULTIPLE_KEY_FLAG)
 
          cWhere += ::aFieldStruct[nI][MYSQL_FS_NAME] + "="
 
@@ -347,19 +347,19 @@ METHOD New(nSocket, cQuery) CLASS TMySQLQuery
    ::lFieldAsData := .T.     //Use fields as object DATA. For compatibility
    ::aRow := {}              //Values of fields of current row
 
-   if sqlQuery(nSocket, cQuery) == 0
+   if mysql_query(nSocket, cQuery) == 0
 
       // save result set
-      if !Empty(::nResultHandle := sqlStoreR(nSocket))
+      if !Empty(::nResultHandle := mysql_store_result(nSocket))
 
-         ::nNumRows := sqlNRows(::nResultHandle)
-         ::nNumFields := sqlNumFi(::nResultHandle)
+         ::nNumRows := mysql_num_rows(::nResultHandle)
+         ::nNumFields := mysql_num_fields(::nResultHandle)
          //DAVID:
          ::aRow       := Array( ::nNumFields )
 
          for nI := 1 to ::nNumFields
 
-            aField := sqlFetchF(::nResultHandle)
+            aField := mysql_fetch_field(::nResultHandle)
             AAdd(::aFieldStruct, aField)
             //DAVID:
             if ::lFieldAsData
@@ -373,9 +373,9 @@ METHOD New(nSocket, cQuery) CLASS TMySQLQuery
       else
          // Should query have returned rows? (Was it a SELECT like query?)
 
-         if (::nNumFields := sqlNumFi(nSocket)) == 0
+         if (::nNumFields := mysql_num_fields(nSocket)) == 0
 
-            // Was not a SELECT so reset ResultHandle changed by previous sqlStoreR()
+            // Was not a SELECT so reset ResultHandle changed by previous mysql_store_result()
             ::nResultHandle := nil
 
          else
@@ -394,15 +394,15 @@ return Self
 METHOD Refresh() CLASS TMySQLQuery
 
    // free present result handle
-   sqlFreeR(::nResultHandle)
+   mysql_free_result(::nResultHandle)
 
    ::lError := .F.
 
-   if sqlQuery(::nSocket, ::cQuery) == 0
+   if mysql_query(::nSocket, ::cQuery) == 0
 
       // save result set
-      ::nResultHandle := sqlStoreR(::nSocket)
-      ::nNumRows := sqlNRows(::nResultHandle)
+      ::nResultHandle := mysql_store_result(::nSocket)
+      ::nNumRows := mysql_num_rows(::nResultHandle)
 
       // NOTE: I presume that number of fields doesn't change (that is nobody alters this table) between
       // successive refreshes of the same
@@ -465,7 +465,7 @@ METHOD Skip(nRows) CLASS TMySQLQuery
    //Clipper: only SKIP movement can set BOF() to .T.
    lbof := ::bof()
 
-//   sqlDataS(::nResultHandle, ::nCurRow - 1)
+//   mysql_data_seek(::nResultHandle, ::nCurRow - 1)
    ::getRow(::nCurrow)
 
    if lbof
@@ -512,7 +512,7 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
       if nRow >= 1 .AND. nRow <= ::nNumRows
 
          // NOTE: row count starts from 0
-         sqlDataS(::nResultHandle, nRow - 1)
+         mysql_data_seek(::nResultHandle, nRow - 1)
          ::nCurRow := nRow
 //DAVID:      else
          //DAVID: use current row  ::nCurRow++
@@ -528,7 +528,7 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
          Afill( ::aRow, "" )
 
       else
-         ::aRow := sqlFetchR(::nResultHandle)
+         ::aRow := mysql_fetch_row(::nResultHandle)
       endif
 
       if ::aRow != NIL
@@ -607,7 +607,7 @@ return iif(::aRow == NIL, NIL, oRow)
 // Free result handle and associated resources
 METHOD Destroy() CLASS TMySQLQuery
 
-   sqlFreeR(::nResultHandle)
+   mysql_free_result(::nResultHandle)
 
 return Self
 
@@ -621,7 +621,7 @@ METHOD Error() CLASS TMySQLQuery
 
    ::lError := .F.
 
-return sqlGetErr(::nSocket)
+return mysql_error(::nSocket)
 
 // Given a field name returns it's position
 METHOD FieldPos(cFieldName) CLASS TMySQLQuery
@@ -889,7 +889,7 @@ METHOD Update(oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
             cUpdateQuery += ::MakePrimaryKeyWhere()
          endif
 
-         if sqlQuery(::nSocket, cUpdateQuery) == 0
+         if mysql_query(::nSocket, cUpdateQuery) == 0
             //DAVID: Clipper maintain same record pointer
 
             //DAVID: after refresh(), position of current record is often unpredictable
@@ -940,7 +940,7 @@ METHOD Update(oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
                cUpdateQuery += oRow:MakePrimaryKeyWhere()
             endif
 
-            if sqlQuery(::nSocket, cUpdateQuery) == 0
+            if mysql_query(::nSocket, cUpdateQuery) == 0
 
                // All values are commited
                Afill(oRow:aDirty, .F.)
@@ -1002,7 +1002,7 @@ METHOD Delete(oRow, lOldRecord, lRefresh) CLASS TMySQLTable
             cDeleteQuery += ::MakePrimaryKeyWhere()
          endif
 
-         if sqlQuery(::nSocket, cDeleteQuery) == 0
+         if mysql_query(::nSocket, cDeleteQuery) == 0
             ::lError := .F.
             //DAVID: Clipper maintain same record pointer
             //DAVID: ::nCurRow--
@@ -1045,7 +1045,7 @@ METHOD Delete(oRow, lOldRecord, lRefresh) CLASS TMySQLTable
                cDeleteQuery += oRow:MakePrimaryKeyWhere()
             endif
 
-            if sqlQuery(::nSocket, cDeleteQuery) == 0
+            if mysql_query(::nSocket, cDeleteQuery) == 0
                ::lError := .F.
 
                //DAVID: after refresh(), position of current record is often unpredictable
@@ -1096,7 +1096,7 @@ METHOD Append(oRow, lRefresh) CLASS TMySQLTable
             // remove last comma from list of values and add closing parenthesis
             cInsertQuery := Left(cInsertQuery, Len(cInsertQuery) -1) + ")"
 
-            if sqlQuery(::nSocket, cInsertQuery) == 0
+            if mysql_query(::nSocket, cInsertQuery) == 0
                ::lError := .F.
                //DAVID: Clipper add record at end
                ::nCurRow := ::lastrec() + 1
@@ -1141,7 +1141,7 @@ METHOD Append(oRow, lRefresh) CLASS TMySQLTable
             // remove last comma from list of values and add closing parenthesis
             cInsertQuery := Left(cInsertQuery, Len(cInsertQuery) -1) + ")"
 
-            if sqlQuery(::nSocket, cInsertQuery) == 0
+            if mysql_query(::nSocket, cInsertQuery) == 0
                //DAVID:
                ::lError := .F.
 
@@ -1261,15 +1261,15 @@ return nil
 METHOD Refresh() CLASS TMySQLTABLE
 
    // free present result handle
-   sqlFreeR(::nResultHandle)
+   mysql_free_result(::nResultHandle)
 
    ::lError := .F.
 
-   if sqlQuery(::nSocket, ::cQuery) == 0
+   if mysql_query(::nSocket, ::cQuery) == 0
 
       // save result set
-      ::nResultHandle := sqlStoreR(::nSocket)
-      ::nNumRows := sqlNRows(::nResultHandle)
+      ::nResultHandle := mysql_store_result(::nSocket)
+      ::nNumRows := mysql_num_rows(::nResultHandle)
 
       // NOTE: I presume that number of fields doesn't change (that is nobody alters this table) between
       // successive refreshes of the same
@@ -1303,8 +1303,8 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLTable
    for nI := 1 to Len(::aFieldStruct)
 
       // search for fields part of a primary key
-      if (sqlAND(::aFieldStruct[nI][MYSQL_FS_FLAGS], PRI_KEY_FLAG) == PRI_KEY_FLAG) .OR.;
-         (sqlAND(::aFieldStruct[nI][MYSQL_FS_FLAGS], MULTIPLE_KEY_FLAG) == MULTIPLE_KEY_FLAG)
+      if (hb_bitAnd(::aFieldStruct[nI][MYSQL_FS_FLAGS], PRI_KEY_FLAG) == PRI_KEY_FLAG) .OR.;
+         (hb_bitAnd(::aFieldStruct[nI][MYSQL_FS_FLAGS], MULTIPLE_KEY_FLAG) == MULTIPLE_KEY_FLAG)
 
          cWhere += ::aFieldStruct[nI][MYSQL_FS_NAME] + "="
 
@@ -1369,7 +1369,7 @@ METHOD New(cServer, cUser, cPassword) CLASS TMySQLServer
    ::cServer := cServer
    ::cUser := cUser
    ::cPassword := cPassword
-   ::nSocket := sqlConnect(cServer, cUser, cPassword)
+   ::nSocket := mysql_real_connect(cServer, cUser, cPassword)
    ::lError := .F.
 
    if Empty( ::nSocket )
@@ -1381,13 +1381,13 @@ return Self
 
 
 METHOD Destroy() CLASS TMySQLServer
-   sqlClose(::nSocket)
+   mysql_close(::nSocket)
 return Self
 
 
 
 METHOD sql_commit() CLASS TMySQLServer
-  if sqlCommit(::nSocket) == 0
+  if mysql_commit(::nSocket) == 0
     Return .T.
   endif
 return .F.
@@ -1395,7 +1395,7 @@ return .F.
 
 
 METHOD sql_rollback() CLASS TMySQLServer
-  if sqlRollback(::nSocket) == 0
+  if mysql_rollback(::nSocket) == 0
     Return .T.
   endif
 return .F.
@@ -1403,14 +1403,14 @@ return .F.
 
 METHOD sql_version() CLASS TMySQLServer
 local nVer
-  nVer:=sqlversion(::nSocket)
+  nVer:=mysql_get_server_version(::nSocket)
 return nVer
 
 
 
 *METHOD SelectDB(cDBName) CLASS TMySQLServer
 *
-*   if sqlSelectD(::nSocket, cDBName) == 0
+*   if mysql_select_db(::nSocket, cDBName) == 0
 *      ::cDBName := cDBName
 *      return .T.
 *   else
@@ -1425,7 +1425,7 @@ METHOD SelectDB(cDBName) CLASS TMySQLServer
 
    ::lError := .F.
 
-   if sqlSelectD(::nSocket, cDBName) != 0     /* tabela nao existe */
+   if mysql_select_db(::nSocket, cDBName) != 0     /* tabela nao existe */
       ::cDBName :=""
       ::lError := .T.
    else                                       /* tabela existe */
@@ -1440,7 +1440,7 @@ return .F.
 METHOD CreateDatabase ( cDataBase ) CLASS TMySQLServer
    local cCreateQuery := "CREATE DATABASE "+ lower(cDatabase)
 
-   if sqlQuery(::nSocket, cCreateQuery) == 0
+   if mysql_query(::nSocket, cCreateQuery) == 0
       return .T.
    endif
 
@@ -1517,7 +1517,7 @@ METHOD CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) CLASS TMySQLSer
 
    // remove last comma from list
    ::cCreateQuery := Left(::cCreateQuery, Len(::cCreateQuery) -1) + ");"
-   if sqlQuery(::nSocket, ::cCreateQuery) == 0
+   if mysql_query(::nSocket, ::cCreateQuery) == 0
       return .T.
    else
       ::lError := .T.
@@ -1548,7 +1548,7 @@ METHOD CreateIndex(cName, cTable, aFNames, lUnique) CLASS TMySQLServer
    // remove last comma from list
    cCreateQuery := Left(cCreateQuery, Len(cCreateQuery) -1) + ")"
 
-   if sqlQuery(::nSocket, cCreateQuery) == 0
+   if mysql_query(::nSocket, cCreateQuery) == 0
       return .T.
 
    endif
@@ -1560,7 +1560,7 @@ METHOD DeleteIndex(cName, cTable) CLASS TMySQLServer
 
    local cDropQuery := "DROP INDEX " + cName + " FROM " + Lower(cTable)
 
-   if sqlQuery(::nSocket, cDropQuery) == 0
+   if mysql_query(::nSocket, cDropQuery) == 0
       return .T.
    endif
 
@@ -1571,7 +1571,7 @@ METHOD DeleteTable(cTable) CLASS TMySQLServer
 
    local cDropQuery := "DROP TABLE " + Lower(cTable)
 
-   if sqlQuery(::nSocket, cDropQuery) == 0
+   if mysql_query(::nSocket, cDropQuery) == 0
       return .T.
 
    endif
@@ -1607,7 +1607,7 @@ METHOD Query(cQuery) CLASS TMySQLServer
    if nNumTables == 1
       oQuery := TMySQLTable():New(::nSocket, cQuery, cTableName)
    else
-      oQuery := TMySQLQuery():New(::nSocket, cQuery)
+      oQuery := TMymysql_query():New(::nSocket, cQuery)
    endif
 
    if oQuery:NetErr()
@@ -1621,14 +1621,14 @@ METHOD Error() CLASS TMySQLServer
 
    ::lError := .F.
 
-return iif(Empty( ::nSocket ), "No connection to server", sqlGetErr(::nSocket))
+return iif(Empty( ::nSocket ), "No connection to server", mysql_error(::nSocket))
 
 
 METHOD ListDBs() CLASS TMySQLServer
 
    local aList
 
-   aList := sqlListDB(::nSocket)
+   aList := mysql_list_dbs(::nSocket)
 
 return aList
 
@@ -1637,7 +1637,7 @@ METHOD ListTables() CLASS TMySQLServer
 
    local aList
 
-   aList := sqlListTbl(::nSocket)
+   aList := mysql_list_tables(::nSocket)
 
 return aList
 
@@ -1653,12 +1653,12 @@ METHOD TableStruct(cTable) CLASS TMySQLServer
    local nRes, aField, aStruct, aSField, i
 
    aStruct := {}
-   nRes := sqlListF(::nSocket, cTable)
+   nRes := mysql_list_fields(::nSocket, cTable)
 
    if !Empty( nRes )
-      for i := 1 to sqlNumFi(nRes)
+      for i := 1 to mysql_num_fields(nRes)
 
-         aField := sqlFetchF(nRes)
+         aField := mysql_fetch_field(nRes)
          aSField := Array(DBS_DEC)
 
          // don't count indexes as real fields
@@ -1705,7 +1705,7 @@ METHOD TableStruct(cTable) CLASS TMySQLServer
          endif
       next
 
-      sqlFreeR(nRes)
+      mysql_free_result(nRes)
 
    endif*/
 
@@ -1734,7 +1734,7 @@ static function ClipValue2SQL(Value)
             cValue="''"
          ELSE
             cValue := "'"
-            Value:=DATATOSQL(value)
+            Value:=mysql_escape_string(value)
             cValue+= value+ "'"
          ENDIF
 

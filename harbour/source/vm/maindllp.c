@@ -78,8 +78,6 @@
 #if defined(HB_OS_WIN)
 HB_EXTERN_BEGIN
 
-BOOL WINAPI HB_EXPORT DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved );
-
 static FARPROC hb_getProcAddress( LPCSTR szProcName )
 {
    static HMODULE s_hModule = NULL;
@@ -110,6 +108,8 @@ static FARPROC hb_getProcAddress( LPCSTR szProcName )
 
    return pProcAddr;
 }
+
+BOOL WINAPI HB_EXPORT DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved );
 
 BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
 {

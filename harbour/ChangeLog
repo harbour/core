@@ -8,6 +8,53 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-19 01:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbmysql/mysql.c
+  * contrib/hbmysql/tmysql.prg
+    * Renamed all functions to standard mysql equivalents.
+      Please update your code and turn off old function
+      names with -DHB_MYSQL_LEGACY_LEVEL_OFF to test for
+      success. Legacy function names will be removed from
+      Harbour in the next release. This move allows to use
+      hbmysql and hbodbc in the same app.
+      SQLAND() has to be replaced with HB_BITAND(), be aware
+      that latter will RTE when non-numeric var is passed,
+      while SQLAND() was silently ignoring it.
+      Changed functions names:
+      SQLVERSION()      => mysql_get_server_version()
+      SQLCONNECT()      => mysql_real_connect()
+      SQLCLOSE()        => mysql_close()
+      SQLCOMMIT()       => mysql_commit()
+      SQLROLLBACK()     => mysql_rollback()
+      SQLSELECTD()      => mysql_select_db()
+      SQLQUERY()        => mysql_query()
+      SQLSTORER()       => mysql_store_result()
+      SQLUSERES()       => mysql_use_result()
+      SQLFREER()        => mysql_free_result()
+      SQLFETCHR()       => mysql_fetch_row()
+      SQLDATAS()        => mysql_data_seek()
+      SQLNROWS()        => mysql_num_rows()
+      SQLFETCHF()       => mysql_fetch_field()
+      SQLFSEEK()        => mysql_field_seek()
+      SQLNUMFI()        => mysql_num_fields()
+      SQLFICOU()        => mysql_field_count()
+      SQLLISTF()        => mysql_list_fields()
+      SQLGETERR()       => mysql_error()
+      SQLLISTDB()       => mysql_list_dbs()
+      SQLLISTTBL()      => mysql_list_tables()
+      SQLAFFROWS()      => mysql_affected_rows()
+      SQLHOSTINFO()     => mysql_get_host_info()
+      SQLSRVINFO()      => mysql_get_server_info()
+      DATATOSQL()       => mysql_escape_string()
+      FILETOSQLBINARY() => mysql_escape_string_from_file()
+      SQLAND()          => hb_bitAnd()
+
+  * source/vm/maindll.c
+  * source/vm/maindllh.c
+  * source/vm/maindllp.c
+  * contrib/hbodbc/odbc.c
+    * Minor formatting.
+
 2009-03-18 20:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/Makefile
   + source/vm/maindllp
