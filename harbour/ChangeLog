@@ -8,6 +8,22 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-19 18:06 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/maindll.c
+  * source/vm/maindllp.c
+    ! Fixed placement of HB_EXPORT in declaration.
+
+  * contrib/hbmysql/tmysql.prg
+    * Reformatting (heavy). Minor optimizations along the way. Pls test.
+    ! S&R typo fixed.
+    + Added lFormat parameter to FieldDec() method.
+      Submitted by Mitja Podgornik.
+
+  * contrib/xhb/Makefile
+  + contrib/xhb/fparse.c
+    + Added part from xhb RTL.
+      (pls review changed PHB_ITEM usage)
+
 2009-03-19 08:10 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbqt/hbqt.h
   * harbour/contrib/hbqt/hbqt_qdialog.cpp

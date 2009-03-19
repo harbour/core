@@ -11,6 +11,7 @@ C_SOURCES=\
 	dbf2txt.c \
 	dbgfxc.c \
 	filestat.c \
+	fparse.c \
 	freadlin.c \
 	hbcomprs.c \
 	hbcrypt.c \
