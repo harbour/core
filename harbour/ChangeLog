@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-19 12:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/rules.cf
+    % Removed -ko option as it slightly decreases performance in -gc3 mode.
+      (it's better in -gc[0-2] only)
+
 2009-03-19 12:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/xhb/Makefile
   + contrib/xhb/hbserv.h
