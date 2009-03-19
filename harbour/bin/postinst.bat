@@ -66,8 +66,6 @@ if "%HB_BUILD_IMPLIB%" == "yes" (
          if exist "%HB_DIR_OPENSSL%\ssleay32.dll"          implib -a "%HB_LIB_INSTALL%\ssleay32.lib"           "%HB_DIR_OPENSSL%\ssleay32.dll"
          if exist "%HB_DIR_PGSQL%\lib\libpq.dll"           implib -a "%HB_LIB_INSTALL%\libpq.lib"              "%HB_DIR_PGSQL%\lib\libpq.dll"
 
-         if exist "%SystemRoot%\system32\odbc32.dll"       implib    "%HB_LIB_INSTALL%\odbc32.lib"             "%SystemRoot%\system32\odbc32.dll"
-
          goto END
       )
 

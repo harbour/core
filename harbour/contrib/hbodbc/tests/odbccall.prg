@@ -5,39 +5,37 @@
 #xcommand WITH <oObject> DO => Self := <oObject>
 #xcommand ENDWITH           => Self := NIL
 
-FUNCTION Main()
+PROCEDURE Main()
 
    LOCAL cConStr
-   LOCAL cDir
+   LOCAL cDir := hb_DirBase()
    LOCAL dsFunctions
 
-   hb_FNameSplit( hb_ArgV( 0 ), @cDir )
+   LOCAL Self
 
-   cConStr := "DBQ=" + hb_FNameMerge( cDir, "harbour.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
+   cConStr := "DBQ=" + hb_FNameMerge( cDir, "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
 
    dsFunctions := TODBC():New( cConStr )
 
    WITH dsFunctions DO
 
-      ::SetSQL( "SELECT * FROM Functions" )
+      ::SetSQL( "SELECT * FROM test" )
       ::Open()
-      ? ::FieldByName( "Code" ):Value
+      ? ::FieldByName( "First" ):Value
       ? ::Skip()
-      ? ::FieldByName( "Code" ):Value
+      ? ::FieldByName( "First" ):Value
       ? ::GoTo( 1 )
-      ? ::FieldByName( "Code" ):Value
+      ? ::FieldByName( "First" ):Value
       ? ::Prior()
-      ? ::FieldByName( "Code" ):Value
+      ? ::FieldByName( "First" ):Value
       ? ::First()
-      ? ::FieldByName( "Code" ):Value
+      ? ::FieldByName( "First" ):Value
       ? ::Last()
-      ? ::FieldByName( "Code" ):Value
+      ? ::FieldByName( "First" ):Value
       ? ::Close()
 
    ENDWITH
 
    dsFunctions:Destroy()
 
-   RETURN( NIL )
-
-
+   RETURN

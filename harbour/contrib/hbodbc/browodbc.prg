@@ -9,7 +9,7 @@
  * Copyright 1999 Antonio Linares <alinares@fivetech.com> for code derived from browse.prg
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu> for original FieldBlock function
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca> for original Skipped function
- * Copyright 2002 Tomaz Zupan <tomaz.zupan@orpo.si> modifications for ODBC 
+ * Copyright 2002 Tomaz Zupan <tomaz.zupan@orpo.si> modifications for ODBC
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,37 +52,37 @@
  * If you do not wish that, delete this exception notice.
  *
  */
- 
+
  /* CREDITS:
  * This code is mostly derived work from harbours RTL browse.prg, browdb.prg.
- * and fieldbl.prg. Only minor changes were needed to adapt them to ODBC.     
+ * and fieldbl.prg. Only minor changes were needed to adapt them to ODBC.
  */
 
-#include "inkey.ch"
 #include "common.ch"
+#include "inkey.ch"
 
-function BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
+FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
 
-   local oBrw
-   local cOldScreen
-   local n, nOldCursor
-   local nKey := 0
-   local lExit := .f.
-   local bAction
-   local oColumn
+   LOCAL oBrw
+   LOCAL cOldScreen
+   LOCAL n, nOldCursor
+   LOCAL nKey := 0
+   LOCAL lExit := .F.
+   LOCAL bAction
+   LOCAL oColumn
    //LOCAL cFName
-   
-   //TODO: Check if datasource is open   
-   //if ! Used()
-   //   return .f.
-   //end
 
-   if PCount() < 4
+   //TODO: Check if datasource is open
+   //IF ! Used()
+   //   RETURN .F.
+   //ENDIF
+
+   IF PCount() < 4
       nTop    := 1
       nLeft   := 0
       nBottom := MaxRow()
       nRight  := MaxCol()
-   endif
+   ENDIF
 
    nOldCursor := SetCursor( 0 )
    cOldScreen := SaveScreen( nTop, nLeft, nBottom, nRight )
@@ -90,158 +90,158 @@ function BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
    @ nTop, nLeft TO nBottom, nRight
    @ nTop + 1, nLeft + 1 SAY Space( nRight - nLeft - 1 )
 
-   oBrw:= TBrowseNew(nTop + 2, nLeft + 1, nBottom - 1, nRight - 1 )
+   oBrw := TBrowseNew( nTop + 2, nLeft + 1, nBottom - 1, nRight - 1 )
 
    oBrw:SkipBlock     := { | nRecs | Skipped( nRecs,oDataSource ) }
    oBrw:GoTopBlock    := { || oDataSource:first() }
    oBrw:GoBottomBlock := { || oDataSource:last() }
 
    oBrw:HeadSep := "-"
-   
-   
-   // TODO: Find out number of columns in ODBC result set, up to then you have to add columns by hand
-   for n := 1 to len(oDataSource:Fields)
-      oColumn:= TBColumn():New( oDataSource:Fields[n]:FieldName,  ODBCFget(oDataSource:Fields[n]:FieldName,oDataSource))
-      oBrw:AddColumn(oColumn)
-   next
-   
-   oBrw:Configure()
 
+   // TODO: Find out number of columns in ODBC result set, up to then you have to add columns by hand
+   FOR n := 1 to Len( oDataSource:Fields )
+      oColumn:= TBColumn():New( oDataSource:Fields[ n ]:FieldName, ODBCFget( oDataSource:Fields[ n ]:FieldName, oDataSource ) )
+      oBrw:AddColumn( oColumn )
+   NEXT
+
+   oBrw:Configure()
    oBrw:ForceStable()
 
-   while ! lExit
+   DO WHILE ! lExit
 
-      if nKey == 0
-         while !oBrw:stabilize() .and. NextKey() == 0
-         enddo
-      endif
+      IF nKey == 0
+         DO WHILE !oBrw:stabilize() .AND. NextKey() == 0
+         ENDDO
+      ENDIF
 
-      if NextKey() == 0
+      IF NextKey() == 0
 
          oBrw:forceStable()
          Statline( oBrw, oDataSource)
 
          nKey := Inkey( 0 )
 
-         if ( bAction := SetKey( nKey ) ) != nil
+         IF ( bAction := SetKey( nKey ) ) != NIL
             Eval( bAction, ProcName( 1 ), ProcLine( 1 ), "" )
-            loop
-         endif
-      else
+            LOOP
+         ENDIF
+      ELSE
          nKey := Inkey()
-      endif
+      ENDIF
 
-      do case
-         case nKey == K_ESC
-            lExit := .t.
+      DO CASE
+      CASE nKey == K_ESC
+         lExit := .T.
 
-         case nKey == K_UP
-            oBrw:Up()
+      CASE nKey == K_UP
+         oBrw:Up()
 
-         case nKey == K_DOWN
-            oBrw:Down()
+      CASE nKey == K_DOWN
+         oBrw:Down()
 
-         case nKey == K_END
-            oBrw:End()
+      CASE nKey == K_END
+         oBrw:End()
 
-         case nKey == K_HOME
-            oBrw:Home()
+      CASE nKey == K_HOME
+         oBrw:Home()
 
-         case nKey == K_LEFT
-            oBrw:Left()
+      CASE nKey == K_LEFT
+         oBrw:Left()
 
-         case nKey == K_RIGHT
-            oBrw:Right()
+      CASE nKey == K_RIGHT
+         oBrw:Right()
 
-         case nKey == K_PGUP
-            oBrw:PageUp()
+      CASE nKey == K_PGUP
+         oBrw:PageUp()
 
-         case nKey == K_PGDN
-            oBrw:PageDown()
+      CASE nKey == K_PGDN
+         oBrw:PageDown()
 
-         case nKey == K_CTRL_PGUP
-            oBrw:GoTop()
+      CASE nKey == K_CTRL_PGUP
+         oBrw:GoTop()
 
-         case nKey == K_CTRL_PGDN
-            oBrw:GoBottom()
+      CASE nKey == K_CTRL_PGDN
+         oBrw:GoBottom()
 
-         case nKey == K_CTRL_LEFT
-            oBrw:panLeft()
+      CASE nKey == K_CTRL_LEFT
+         oBrw:panLeft()
 
-         case nKey == K_CTRL_RIGHT
-            oBrw:panRight()
+      CASE nKey == K_CTRL_RIGHT
+         oBrw:panRight()
 
-         case nKey == K_CTRL_HOME
-            oBrw:panHome()
+      CASE nKey == K_CTRL_HOME
+         oBrw:panHome()
 
-         case nKey == K_CTRL_END
-            oBrw:panEnd()
+      CASE nKey == K_CTRL_END
+         oBrw:panEnd()
 
-      endcase
-   end
+      ENDCASE
+   ENDDO
 
    RestScreen( nTop, nLeft, nBottom, nRight, cOldScreen )
    SetCursor( nOldCursor )
 
-return .t.
+   RETURN .T.
 
-static procedure Statline( oBrw, oDataSource )
+STATIC PROCEDURE Statline( oBrw, oDataSource )
 
-   local nTop   := oBrw:nTop - 1
-   local nRight := oBrw:nRight
+   LOCAL nTop   := oBrw:nTop - 1
+   LOCAL nRight := oBrw:nRight
 
    @ nTop, nRight - 27 SAY "Record "
 
-   if oDataSource:LastRec() == 0
+   IF oDataSource:LastRec() == 0
       @ nTop, nRight - 20 SAY "<none>               "
-   elseif oDataSource:RecNo() == oDataSource:LastRec() + 1
+   ELSEIF oDataSource:RecNo() == oDataSource:LastRec() + 1
       @ nTop, nRight - 40 SAY "         "
       @ nTop, nRight - 20 SAY "                <new>"
-   else
+   ELSE
       @ nTop, nRight - 20 SAY PadR( LTrim( Str( oDataSource:RecNo() ) ) + "/" +;
                                     Ltrim( Str( oDataSource:LastRec() ) ), 16 ) +;
                               iif( oBrw:hitTop, "<bof>", "     " )+;
                               iif( oBrw:hitBottom, "<eof>", "     " )
-   endif
+   ENDIF
 
-return
+   RETURN
 
 STATIC FUNCTION Skipped( nRecs, oDataSource )
 
    LOCAL nSkipped := 0
-   IF .not. oDataSource:Eof()
+
+   IF ! oDataSource:Eof()
       IF nRecs == 0
-         // ODBC doesn't have skip(0)
-      ELSEIF nRecs > 0 
+         // ODBC doesn't have Skip( 0 )
+      ELSEIF nRecs > 0
          DO WHILE nSkipped < nRecs
-           IF .NOT. oDataSource:Eof()
+           IF ! oDataSource:Eof()
              oDataSource:next( )
              IF oDataSource:Eof()
                oDataSource:prior( )
                EXIT
              ENDIF
              nSkipped++
-           ENDIF  
+           ENDIF
          ENDDO
       ELSEIF nRecs < 0
          DO WHILE nSkipped > nRecs
-           IF .NOT. oDataSource:Bof()
+           IF ! oDataSource:Bof()
              oDataSource:prior( )
              IF oDataSource:Bof()
                EXIT
              ENDIF
              nSkipped--
-           ENDIF  
+           ENDIF
          ENDDO
       ENDIF
    ENDIF
-RETURN nSkipped
 
-STATIC FUNCTION ODBCFGet(cFieldName,oDataSource)
+   RETURN nSkipped
+
+STATIC FUNCTION ODBCFGet( cFieldName, oDataSource )
 
    IF ISCHARACTER( cFieldName )
       // For changing value rather write a decent SQL statement
-      RETURN {| x | iif( x == NIL, oDataSource:FieldByName(cFieldName):value,NIL ) }
+      RETURN {| x | iif( x == NIL, oDataSource:FieldByName( cFieldName ):value, NIL ) }
    ENDIF
 
-RETURN NIL
+   RETURN NIL

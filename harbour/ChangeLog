@@ -8,6 +8,31 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-19 09:10 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/postinst.bat
+    - Removed generation of odbc32.lib for BCC.
+      You should configure BCC to include <bcc>/Lib/PSDK in
+      the lib paths in bcc32.cfg and ilink32.cfg. It's not
+      Harbour's job to generate it.
+
+  - contrib/hbodbc/tests/harbour.mdb
+  + contrib/hbodbc/tests/test.mdb
+  * contrib/hbodbc/tests/odbcdemo.prg
+  * contrib/hbodbc/tests/odbccall.prg
+  * contrib/hbodbc/tests/testodbc.prg
+    * Created working test table from test.dbf.
+      (previous .mdb was broken)
+
+  * contrib/hbodbc/tests/odbcdemo.prg
+  * contrib/hbodbc/tests/odbccall.prg
+  * contrib/hbodbc/tests/testodbc.prg
+  * contrib/hbodbc/todbc.prg
+  * contrib/hbodbc/browodbc.prg
+  * contrib/hbodbc/sql.ch
+    * Formatting.
+    * Optimizations and cleanups. (could still use a lot more)
+    ! Fixed to not use Alert().
+
 2009-03-19 01:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbmysql/mysql.c
   * contrib/hbmysql/tmysql.prg

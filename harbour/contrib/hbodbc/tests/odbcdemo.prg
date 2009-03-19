@@ -2,34 +2,28 @@
  * $Id$
  */
 
-*+--------------------------------------------------------------------
-*+
-*+    Function Main()
-*+
-*+--------------------------------------------------------------------
-*+
-FUNCTION Main()
+PROCEDURE Main()
 
    LOCAL aOrders
    LOCAL nOp
    LOCAL dsFunctions
    LOCAL cConStr
-   LOCAL cDir
+   LOCAL cDir := hb_DirBase()
 
-   hb_FNameSplit( hb_ArgV( 0 ), @cDir )
+   LOCAL i
 
-   cConStr := "DBQ=" + hb_FNameMerge( cDir, "harbour.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
+   cConStr := "DBQ=" + hb_FNameMerge( cDir, "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
 
    dsFunctions := TODBC():New( cConStr )
 
    SET COLOR TO "W+/B"
    CLS
 
-   WHILE .T.
+   DO WHILE .T.
 
       @ 00, 00 SAY padc( "- TODBC Demonstration -", 80 ) COLOR "B/W"
 
-      dsFunctions:SetSQL( "SELECT * FROM Functions" )
+      dsFunctions:SetSQL( "SELECT * FROM test" )
       dsFunctions:Open()
 
       @ 03, 24 TO len( dsFunctions:Fields ) + 4, 55
@@ -50,7 +44,7 @@ FUNCTION Main()
 
       dsFunctions:Close()
 
-      dsFunctions:SetSQL( "SELECT * FROM Functions ORDER BY " + aOrders[ nOp ] )
+      dsFunctions:SetSQL( "SELECT * FROM test ORDER BY " + aOrders[ nOp ] )
       dsFunctions:Open()
 
       FOR i := 11 TO 24
@@ -65,17 +59,17 @@ FUNCTION Main()
       @ 11, 02        SAY "Statement:"     COLOR "GR+/B"
       @ 11, col() + 1 SAY dsFunctions:cSQL
 
-      @ 14, 05 SAY " " + padr( dsFunctions:FieldByName( "Code" ) :FieldName, 3 ) + "   " + ;
-              padr( dsFunctions:FieldByName( "Function" ) :FieldName, 15 ) + "   " + ;
-              padr( dsFunctions:FieldByName( "State" ) :FieldName, 2 ) + "   " + ;
-              padr( dsFunctions:FieldByName( "Comments" ) :FieldName, 40 ) ;
+      @ 14, 05 SAY " " + PadR( dsFunctions:FieldByName( "First" ) :FieldName, 3 ) + "   " + ;
+                         PadR( dsFunctions:FieldByName( "Last" ) :FieldName, 15 ) + "   " + ;
+                         PadR( dsFunctions:FieldByName( "Street" ) :FieldName, 2 ) + "   " + ;
+                         PadR( dsFunctions:FieldByName( "City" ) :FieldName, 40 ) ;
               COLOR "B/W"
 
       WHILE !dsFunctions:Eof()
-         ? "      " + padr( dsFunctions:FieldByName( "Code" ) :Value, 3 ), "³", ;
-                            padr( dsFunctions:FieldByName( "Function" ) :Value, 15 ), "³", ;
-                            padr( dsFunctions:FieldByName( "State" ) :Value, 2 ), "³", ;
-                            padr( dsFunctions:FieldByName( "Comments" ) :Value, 40 )
+         ? "      " + PadR( dsFunctions:FieldByName( "First" ) :Value, 3 ), "³", ;
+                      PadR( dsFunctions:FieldByName( "Last" ) :Value, 15 ), "³", ;
+                      PadR( dsFunctions:FieldByName( "Street" ) :Value, 2 ), "³", ;
+                      PadR( dsFunctions:FieldByName( "City" ) :Value, 40 )
          dsFunctions:Skip()
       ENDDO
 
@@ -84,4 +78,4 @@ FUNCTION Main()
    ENDDO
    dsFunctions:Destroy()
 
-RETURN ( NIL )
+   RETURN
