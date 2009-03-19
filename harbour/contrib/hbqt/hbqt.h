@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 {list of individual authors and e-mail addresses}
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -53,17 +53,33 @@
 #ifndef __HBQT_H
 #define __HBQT_H
 
-#include <Qt/qglobal.h>
+/* #define QT_VERSION 0x040500 */
 
 #if QT_VERSION >= 0x040500
 
-#include <QtGui/QDialog>
+#include <Qt/qglobal.h>
 
-#define hbqt_par_QWidget( n )          ( ( QWidget* ) hb_parptr( n ) )
-#define hbqt_par_QDialog( n )          ( ( QDialog* ) hb_parptr( n ) )
-#define hbqt_par_QAbstractButton( n )  ( ( QAbstractButton* ) hb_parptr( n ) )
-#define hbqt_par_QString( n )          ( ( QString ) hb_parc( n ) )
-#define hbqt_par_WindowFlags( n )      ( ( Qt::WindowFlags ) hb_parni( n ) )
+#define hbqt_par_QWidget( n )                ( ( QWidget* ) hb_parptr( n ) )
+#define hbqt_par_QDialog( n )                ( ( QDialog* ) hb_parptr( n ) )
+#define hbqt_par_QAbstractButton( n )        ( ( QAbstractButton* ) hb_parptr( n ) )
+#define hbqt_par_QAbstractItemView( n )      ( ( QAbstractItemView* ) hb_parptr( n ) )
+#define hbqt_par_QAbstractItemDelegate( n )  ( ( QAbstractItemDelegate* ) hb_parptr( n ) )
+#define hbqt_par_QAbstractPrintDialog( n )   ( ( QAbstractPrintDialog* ) hb_parptr( n ) )
+#define hbqt_par_QAction( n )                ( ( QAction* ) hb_parptr( n ) )
+#define hbqt_par_QWindowSurface( n )         ( ( QWindowSurface* ) hb_parptr( n ) )
+#define hbqt_par_QStyle( n )                 ( ( QStyle* ) hb_parptr( n ) )
+#define hbqt_par_QLayout( n )                ( ( QLayout* ) hb_parptr( n ) )
+#define hbqt_par_QInputContext( n )          ( ( QInputContext* ) hb_parptr( n ) )
+
+#define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )
+#define hbqt_par_Bool( n )                   ( hb_parl( n ) )
+
+#define hbqt_par_WindowFlags( n )            ( ( Qt::WindowFlags ) hb_parni( n ) )
+
+#define hbqt_ret_QWidget( p )                ( hb_retptr( ( QWidget* ) p ) )
+#define hbqt_ret_QAbstractItemDelegate( p )  ( hb_retptr( ( QAbstractItemDelegate* ) p ) )
+#define hbqt_ret_QAbstractItemModel( p )     ( hb_retptr( ( QAbstractItemModel* ) p ) )
+#define hbqt_ret_QPrinter( p )               ( hb_retptr( ( QPrinter* ) p ) )
 
 #endif
 

@@ -25,6 +25,9 @@ CPP_SOURCES=\
 	hbqt_base.cpp \
 	hbqt_qdialog.cpp \
 	hbqt_qabstractbutton.cpp \
+	hbqt_qabstractitemview.cpp \
+	hbqt_qabstractprintdialog.cpp \
+	hbqt_qwidget.cpp \
 
 C_HEADERS=\
 	hbqt.h \

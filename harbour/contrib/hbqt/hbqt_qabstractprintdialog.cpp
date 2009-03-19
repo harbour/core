@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 {list of individual authors and e-mail addresses}
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,103 +57,79 @@
 
 #if QT_VERSION >= 0x040500
 
-#include  <QtGui/QDialog>
+#include <QtGui/QAbstractPrintDialog>
 
 /*----------------------------------------------------------------------*/
 /*
-QDialog ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
+int fromPage () const
 */
-HB_FUNC( QT_QDIALOG )
+HB_FUNC( QT_QABSTRACTPRINTDIALOG_FROMPAGE )
 {
-   hb_retptr( new QDialog( hbqt_par_QWidget( 1 ), hbqt_par_WindowFlags( 2 ) ) );
+  hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->fromPage() );
 }
 
 /*
-bool isModal () const
+int maxPage () const
 */
-HB_FUNC( QT_QDIALOG_ISMODAL )
+HB_FUNC( QT_QABSTRACTPRINTDIALOG_MAXPAGE )
 {
-   hb_retl( hbqt_par_QDialog( 1 )->isModal() );
+  hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->maxPage() );
 }
 
 /*
-void setModal ( bool modal )
+int minPage () const
 */
-HB_FUNC( QT_QDIALOG_SETMODAL )
+HB_FUNC( QT_QABSTRACTPRINTDIALOG_MINPAGE )
 {
-   hbqt_par_QDialog( 1 )->setModal( hb_parl( 2 ) );
+  hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->minPage() );
 }
 
 /*
-bool isSizeGripEnabled () const
+PrintRange printRange () const
 */
-HB_FUNC( QT_QDIALOG_ISSIZEGRIPENABLED )
+HB_FUNC( QT_QABSTRACTPRINTDIALOG_PRINTRANGE )
 {
-   hb_retl( hbqt_par_QDialog( 1 )->isSizeGripEnabled() );
+  hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->printRange() );
 }
 
 /*
-void setSizeGripEnabled ( bool )
+QPrinter * printer () const
 */
-HB_FUNC( QT_QDIALOG_SETSIZEGRIPENABLED )
+HB_FUNC( QT_QABSTRACTPRINTDIALOG_PRINTER )
 {
-   hbqt_par_QDialog( 1 )->setSizeGripEnabled( hb_parl( 2 ) );
+  hbqt_ret_QPrinter( hbqt_par_QAbstractPrintDialog( 1 )->printer() );
 }
 
 /*
-void QDialog::accept ()   [virtual slot]
+void setFromTo ( int from, int to )
 */
-HB_FUNC( QT_QDIALOG_ACCEPT )
+HB_FUNC( QT_QABSTRACTPRINTDIALOG_SETFROMTO )
 {
-   hbqt_par_QDialog( 1 )->accept();
+  hbqt_par_QAbstractPrintDialog( 1 )->setFromTo( hb_parni( 2 ), hb_parni( 3 ) );
 }
 
 /*
-void QDialog::done ( int r )   [virtual slot]
+void setMinMax ( int min, int max )
 */
-HB_FUNC( QT_QDIALOG_DONE )
+HB_FUNC( QT_QABSTRACTPRINTDIALOG_SETMINMAX )
 {
-   hbqt_par_QDialog( 1 )->done( hb_parni( 2 ) );
+  hbqt_par_QAbstractPrintDialog( 1 )->setMinMax( hb_parni( 2 ), hb_parni( 3 ) );
 }
 
 /*
-int QDialog::exec ()   [slot]
+void setPrintRange ( PrintRange range )
 */
-HB_FUNC( QT_QDIALOG_EXEC )
+HB_FUNC( QT_QABSTRACTPRINTDIALOG_SETPRINTRANGE )
 {
-   hb_retni( hbqt_par_QDialog( 1 )->exec() );
+  hbqt_par_QAbstractPrintDialog( 1 )->setPrintRange( ( QAbstractPrintDialog::PrintRange ) hb_parni( 2 ) );
 }
 
 /*
-void QDialog::open ()   [slot]
+int toPage () const
 */
-HB_FUNC( QT_QDIALOG_OPEN )
+HB_FUNC( QT_QABSTRACTPRINTDIALOG_TOPAGE )
 {
-   hbqt_par_QDialog( 1 )->open();
-}
-
-/*
-void QDialog::reject ()   [virtual slot]
-*/
-HB_FUNC( QT_QDIALOG_REJECT )
-{
-   hbqt_par_QDialog( 1 )->reject();
-}
-
-/*
-int QDialog::result () const
-*/
-HB_FUNC( QT_QDIALOG_RESULT )
-{
-   hb_retni( hbqt_par_QDialog( 1 )->result() );
-}
-
-/*
-void QDialog::setResult ( int i )
-*/
-HB_FUNC( QT_QDIALOG_SETRESULT )
-{
-   hbqt_par_QDialog( 1 )->setResult( hb_parni( 2 ) );
+  hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->toPage() );
 }
 
 /*----------------------------------------------------------------------*/

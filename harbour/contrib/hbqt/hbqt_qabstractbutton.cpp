@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 {list of individual authors and e-mail addresses}
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -49,15 +50,16 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
 
 #include "hbapi.h"
-
 #include "hbqt.h"
 
 #if QT_VERSION >= 0x040500
 
 #include <QtGui/QAbstractButton>
 
+/*----------------------------------------------------------------------*/
 /*
 bool autoExclusive () const
 */
@@ -230,5 +232,4 @@ HB_FUNC( QT_QABSTRACTBUTTON_TOGGLE )
 }
 
 /*----------------------------------------------------------------------*/
-
 #endif
