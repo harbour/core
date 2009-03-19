@@ -19,12 +19,16 @@ C_SOURCES=\
 	hbserv.c \
 	hbsyslog.c \
 	hbxml.c \
+	txtline.c \
 	xhbarr.c \
+	xhbat.c \
 	xhbcopyf.c \
 	xhbenum.c \
 	xhbfunc.c \
+	xhbis.c \
 	xhbmsgs.c \
 	xhbqself.c \
+	xhbscr.c \
 	xhbwith.c \
 	xstrdel.c \
 
@@ -37,6 +41,7 @@ PRG_SOURCES=\
 	cstruct.prg \
 	dbgfx.prg \
 	dirrec.prg \
+	dumpvar.prg \
 	hblog.prg \
 	hblognet.prg \
 	hbstruct.prg \

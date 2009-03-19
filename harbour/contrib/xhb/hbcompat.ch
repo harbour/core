@@ -119,6 +119,9 @@
 
    #xtranslate hb_DisableWaitLocks([<x>])  => DisableWaitLocks(<x>)
 
+   #xtranslate hb_gtLock()                 => HBCONSOLELOCK()
+   #xtranslate hb_gtUnLock()               => HBCONSOLEUNLOCK()
+
    #xtranslate hb_mtvm()                   => hb_multiThread()
    #xtranslate hb_threadWaitForAll()       => WaitForThreads()
    #xtranslate hb_mutexNotify(<x,...>)     => Notify(<x>)
@@ -195,6 +198,9 @@
    #xtranslate hb_WriteIni([<x,...>])      => hb_IniWrite(<x>)
 
    #xtranslate DisableWaitLocks([<x>])     => hb_DisableWaitLocks(<x>)
+
+   #xtranslate HBCONSOLELOCK()             => hb_gtLock()
+   #xtranslate HBCONSOLEUNLOCK()           => hb_gtUnLock()
 
    #xtranslate Str(<x>,[<y>],[<y>],<z>)    => iif(<z>, hb_NToS(<x>), Str(<x>))
    #xtranslate hb_CMDARGARGV([<x,...>])    => hb_ARGV(<x>)

@@ -69,16 +69,16 @@
 
 
 // Every single row of an answer
-CLASS TMySQLRow
+CREATE CLASS TMySQLRow
 
-   DATA  aRow              // a single row of answer
-   DATA  aDirty            // array of booleans set to .T. if corresponding field of aRow has been changed
-   DATA  aOldValue         // If aDirty[n] is .T. aOldValue[n] keeps a copy of changed value if aRow[n] is part of a primary key
+   VAR   aRow              // a single row of answer
+   VAR   aDirty            // array of booleans set to .T. if corresponding field of aRow has been changed
+   VAR   aOldValue         // If aDirty[n] is .T. aOldValue[n] keeps a copy of changed value if aRow[n] is part of a primary key
    //DAVID:
-   DATA  aOriValue         // Original values ( same as TMySQLtable:aOldValue )
+   VAR   aOriValue         // Original values ( same as TMySQLtable:aOldValue )
 
-   DATA  aFieldStruct      // type of each field
-   DATA  cTable            // Name of table containing this row, empty if TMySQLQuery returned this row
+   VAR   aFieldStruct      // type of each field
+   VAR   cTable            // Name of table containing this row, empty if TMySQLQuery returned this row
 
    METHOD   New( aRow, aFStruct, cTableName )     // Create a new Row object
 
@@ -277,7 +277,7 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLRow
 /* ----------------------------------------------------------------------------------------*/
 
 // Every single query submitted to MySQL server
-CLASS TMySQLQuery
+CREATE CLASS TMySQLQuery
 
    DATA  nSocket           // connection handle to MySQL server
    DATA  nResultHandle     // result handle received from MySQL
@@ -763,7 +763,7 @@ METHOD FieldType( nNum ) CLASS TMySQLQuery
 // A Table is a query without joins; this way I can Insert() e Delete() rows.
 // NOTE: it's always a SELECT result, so it will contain a full table only if
 //       SELECT * FROM ... was issued
-CLASS TMySQLTable FROM TMySQLQuery
+CREATE CLASS TMySQLTable FROM TMySQLQuery
 
    DATA  cTable               // name of table
    DATA  aOldValue         //  keeps a copy of old value
@@ -1326,7 +1326,7 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLTable
 /* ----------------------------------------------------------------------------------------*/
 
 // Every available MySQL server
-CLASS TMySQLServer
+CREATE CLASS TMySQLServer
 
    DATA  nSocket                 // connection handle to server (currently pointer to a MYSQL structure)
    DATA  cServer                 // server name

@@ -4,15 +4,10 @@
 
 /*
  * Harbour Project source code:
- * Windows self-contained DLL entry point
+ * SCROLL() function
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version, with one exception:
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,57 +50,17 @@
  *
  */
 
-#define HB_OS_WIN_USED
+#include "hbapi.h"
+#include "hbapigt.h"
 
-#include "hbvm.h"
-#include "hbapiitm.h"
+/* Scrolls a screen region */
 
-#if defined(HB_OS_WIN)
-
-HB_EXPORT BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved );
-
-BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+HB_FUNC( SCROLLFIXED )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %p)", hInstance, fdwReason,
-             pvReserved ) );
-
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
-
-   switch( fdwReason )
-   {
-      case DLL_PROCESS_ATTACH:
-         hb_vmInit( FALSE );  /* Don't execute first linked symbol */
-         break;
-
-      case DLL_PROCESS_DETACH:
-         hb_vmQuit();
-         break;
-   }
-
-   return TRUE;
+   hb_gtScroll( ( USHORT ) hb_parni( 1 ),
+                ( USHORT ) hb_parni( 2 ),
+                ( USHORT ) hb_parni( 3 ),
+                ( USHORT ) hb_parni( 4 ),
+                ( SHORT ) hb_parni( 5 ),   /* Defaults to zero on bad type */
+                ( SHORT ) hb_parni( 6 ) ); /* Defaults to zero on bad type */
 }
-
-LONG PASCAL HBDLLENTRY( char * cProcName )
-{
-   hb_itemDoC( cProcName, 0, 0 );
-
-   return 0;
-}
-
-LONG PASCAL HBDLLENTRY1( char * cProcName, LONG pItem )
-{
-   hb_itemDoC( cProcName, 1, ( PHB_ITEM ) pItem, 0 );
-
-   return 0;
-}
-
-LONG PASCAL HBDLLENTRY2( char * cProcName, LONG pItem1, LONG pItem2 )
-{
-   hb_itemDoC( cProcName, 2, ( PHB_ITEM ) pItem1, ( PHB_ITEM ) pItem2, 0 );
-
-   return 0;
-}
-
-#endif

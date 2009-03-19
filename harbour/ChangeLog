@@ -8,6 +8,41 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-19 19:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/maindll.c
+  * source/vm/maindllp.c
+    ! HB_EXPORT moved to beginning of declaration.
+
+  * contrib/hbmysql/tmysql.prg
+  * contrib/hbmysql/tsqlbrw.prg
+    * More formatting.
+
+  * xhb/Makefile
+  * xhb/hbcompat.ch
+  + xhb/xhbis.c
+  + xhb/xhbscr.c
+  + xhb/xhbat.c
+  + xhb/txtline.c
+  + xhb/dumpvar.prg
+    + Added xhb remaining stuff:
+      ISALNUM()
+      ISSPACE()
+      ISXDIGIT()
+      ISCNTRL()
+      ISGRAPH()
+      ISPRINT()
+      ISPUNCT()
+      ISASCII()
+      SCROLLFIXED()
+      ATSKIPSTRINGS()
+      HB_TABEXPAND()
+      HB_READLINE()
+      __OutDebug()
+      HB_DumpVar()
+      HBCONSOLELOCK() (emulation, might be wrong)
+      HBCONSOLEUNLOCK() (emulation, might be wrong)
+    ; Please review, my only goal was to make them compile.
+
 2009-03-19 18:06 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/maindll.c
   * source/vm/maindllp.c
