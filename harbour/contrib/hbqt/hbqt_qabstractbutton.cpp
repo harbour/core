@@ -54,7 +54,9 @@
 
 #include "hbqt.h"
 
-#include <QtGui\QAbstractButton>
+#if QT_VERSION >= 0x040500
+
+#include <QtGui/QAbstractButton>
 
 /*
 bool autoExclusive () const
@@ -228,3 +230,5 @@ HB_FUNC( QT_QABSTRACTBUTTON_TOGGLE )
 }
 
 /*----------------------------------------------------------------------*/
+
+#endif

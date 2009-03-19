@@ -55,16 +55,14 @@
 #include "set.ch"
 #include "ads.ch"
 
+REQUEST ADS
+
 function Main()
 
    local i
 
-   REQUEST ADS
-   rddRegister( "ADS", 1 )
    rddsetdefault( "ADS" )
    SET SERVER LOCAL    // REMOTE
-
-   AdsSetFileType(ADS_CDX)
 
    // use test   // make this available to get some stats on open tables below
 

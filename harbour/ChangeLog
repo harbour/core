@@ -8,6 +8,32 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-19 12:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/xhb/Makefile
+  + contrib/xhb/hbserv.h
+  + contrib/xhb/hbserv.ch
+  + contrib/xhb/trpccli.prg
+  + contrib/xhb/hbrpc.ch
+  + contrib/xhb/ttable.prg
+  + contrib/xhb/trpc.prg
+  + contrib/xhb/ttable.ch
+  + contrib/xhb/hbserv.c
+    + Added few components from xhb. They compile without warnings,
+      but I didn't try any of them.
+
+  * contrib/hbqt/hbqt_qabstractbutton.cpp
+  * contrib/hbqt/hbqt_qdialog.cpp
+  * contrib/hbqt/hbqt.h
+  * contrib/hbqt/Makefile
+    + Added QT_VERSION(), QT_VERSION_STR()
+    + Added QT version protection.
+    ! Fixed to use forward slashes in #include filenames.
+    * Changed Linux include dir autodetection.
+    * Changed autodetection to look for qglobal.h.
+
+  * contrib/rddads/tests/testmg.prg
+    - Removed unnecessary lines.
+
 2009-03-19 09:10 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/postinst.bat
     - Removed generation of odbc32.lib for BCC.

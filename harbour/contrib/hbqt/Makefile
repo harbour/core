@@ -11,17 +11,18 @@ ifneq ($(HB_ARCHITECTURE),os2)
 
 ifeq ($(HB_INC_QT),)
 ifeq ($(HB_XBUILD),)
-HB_INC_QT = /usr/include /usr/local/Trolltech/Qt-4.5.0/include /Developer/qt/include
+HB_INC_QT = /usr/include/qt4 /Developer/qt/include
 endif
 endif
 
-HB_INC_QT_OK += $(foreach d, $(HB_INC_QT), $(if $(wildcard $(d)/Qt/qatomic.h),$(d),))
+HB_INC_QT_OK += $(foreach d, $(HB_INC_QT), $(if $(wildcard $(d)/Qt/qglobal.h),$(d),))
 
 ifneq ($(strip $(HB_INC_QT_OK)),)
 
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_QT_OK), -I$(d))
 
 CPP_SOURCES=\
+	hbqt_base.cpp \
 	hbqt_qdialog.cpp \
 	hbqt_qabstractbutton.cpp \
 

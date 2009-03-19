@@ -54,6 +54,8 @@
 
 #include "hbqt.h"
 
+#if QT_VERSION >= 0x040500
+
 /*
 QDialog ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
 */
@@ -143,3 +145,5 @@ HB_FUNC( QT_QDIALOG_SETRESULT )
 {
    hbqt_par_QDialog( 1 )->setResult( hb_parni( 2 ) );
 }
+
+#endif

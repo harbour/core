@@ -3,11 +3,12 @@
  */
 
 /*
- * Harbour Project source code:
- * QT wrapper main header
+ * xHarbour Project source code:
+ * Remote Procedure Call code
+ * Standard definitions
  *
- * Copyright 2009 {list of individual authors and e-mail addresses}
- * www - http://www.harbour-project.org
+ * Copyright 2003 Giancarlo Niccolai <giancarlo@niccolai.ws>
+ * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,21 +51,27 @@
  *
  */
 
-#ifndef __HBQT_H
-#define __HBQT_H
+#ifndef RPC_CH
+#define RPC_CH
 
-#include <Qt/qglobal.h>
+#define RPC_LOOP_NONE            0
+#define RPC_LOOP_SUMMARY         1
+#define RPC_LOOP_ALLDATA         2
+#define RPC_LOOP_CONFIRMATION    3
 
-#if QT_VERSION >= 0x040500
+#define RPC_STATUS_ERROR         -1
+#define RPC_STATUS_NONE          0
+#define RPC_STATUS_CONNECTING    1
+#define RPC_STATUS_CONNECTED     2
+#define RPC_STATUS_LOGGED        3
+#define RPC_STATUS_WAITING       4
 
-#include <QtGui/QDialog>
-
-#define hbqt_par_QWidget( n )          ( ( QWidget* ) hb_parptr( n ) )
-#define hbqt_par_QDialog( n )          ( ( QDialog* ) hb_parptr( n ) )
-#define hbqt_par_QAbstractButton( n )  ( ( QAbstractButton* ) hb_parptr( n ) )
-#define hbqt_par_QString( n )          ( ( QString ) hb_parc( n ) )
-#define hbqt_par_WindowFlags( n )      ( ( Qt::WindowFlags ) hb_parni( n ) )
+#define RPCS_STATUS_BUSY         -2
+#define RPCS_STATUS_ERROR        -1
+#define RPCS_STATUS_NONE         0
+#define RPCS_STATUS_CHALLENGE    1
+#define RPCS_STATUS_LOGGED       2
+#define RPCS_STATUS_RUNNING      3
+#define RPCS_STATUS_CLOSED      10
 
 #endif
-
-#endif /* __HBQT_H */

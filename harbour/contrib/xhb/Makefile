@@ -15,6 +15,7 @@ C_SOURCES=\
 	hbcomprs.c \
 	hbcrypt.c \
 	hboutdbg.c \
+	hbserv.c \
 	hbsyslog.c \
 	hbxml.c \
 	xhbarr.c \
@@ -40,6 +41,9 @@ PRG_SOURCES=\
 	hbstruct.prg \
 	regexrpl.prg \
 	sprintf.prg \
+	trpc.prg \
+	trpccli.prg \
+	ttable.prg \
 	txml.prg \
 	xhbcomp.prg \
 	xhbmt.prg \
