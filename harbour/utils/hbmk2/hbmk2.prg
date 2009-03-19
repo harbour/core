@@ -874,6 +874,20 @@ FUNCTION Main( ... )
             AAdd( s_aOPTL   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
+      CASE Left( cParamL, Len( "-dflag:" ) ) == "-dflag:"
+
+         cParam := ArchCompFilter( SubStr( cParam, Len( "-dflag:" ) + 1 ) )
+         IF Left( cParam, 1 ) $ cOptPrefix
+            AAdd( s_aOPTD   , PathSepToTarget( cParam, 2 ) )
+         ENDIF
+
+      CASE Left( cParamL, Len( "-aflag:" ) ) == "-aflag:"
+
+         cParam := ArchCompFilter( SubStr( cParam, Len( "-aflag:" ) + 1 ) )
+         IF Left( cParam, 1 ) $ cOptPrefix
+            AAdd( s_aOPTA   , PathSepToTarget( cParam, 2 ) )
+         ENDIF
+
       CASE Left( cParam, 2 ) == "-l" .AND. ;
            Len( cParam ) > 2 .AND. ;
            !( Left( cParam, 3 ) == "-l-" )
@@ -3172,7 +3186,9 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -bldf=[p][c][l]   inherit .prg/.c/linker flags (or none) from Harbour build" ,;
       "  -prgflag:<f>      pass flag to Harbour" ,;
       "  -cflag:<f>        pass flag to C compiler" ,;
-      "  -ldflag:<f>       pass flag to linker" ,;
+      "  -ldflag:<f>       pass flag to linker (executable)" ,;
+      "  -aflag:<f>        pass flag to linker (static library)" ,;
+      "  -dflag:<f>        pass flag to linker (dynamic library)" ,;
       "  -hbcmp            stop after creating the object files" ,;
       "                    create link/copy hbmk to hbcmp for the same effect" ,;
       "  -hbcc             stop after creating the object files and accept raw C flags" ,;

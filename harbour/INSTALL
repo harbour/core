@@ -147,6 +147,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_MYSQL=C:\mysql\include
    HB_INC_OPENSSL=C:\openssl\inc32
    HB_INC_PGSQL=C:\pgsql\include
+   HB_INC_QT=C:\Qt\2009.01\qt\include
 
    NOTES: - For mingw and cygwin you have to use forward slashes
             and also cygwin drive notation for cygwin.

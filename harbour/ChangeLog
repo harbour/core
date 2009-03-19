@@ -8,6 +8,19 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-19 15:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+  * contrib/Makefile
+    + Added QT to the mainstream build. See INSTALL how to
+      enable it. We will disable it before release if it will
+      be a build blocker.
+
+  + contrib/hbqt/hbqt_base.cpp
+    + Added missing file from previous commit.
+
+  * utils/hbmk2/hbmk2.prg
+    + Added -dflag: and -aflag: options.
+
 2009-03-19 12:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/rules.cf
     % Removed -ko option as it slightly decreases performance in -gc3 mode.
