@@ -62,6 +62,7 @@
 #endif
 
 #define HB_OS_WIN_USED
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 
@@ -81,14 +82,9 @@ BOOL hb_isLegacyDevice( LPSTR pPrinterName )
    return bLegacyDev;
 }
 
-
 BOOL hb_PrinterExists( LPSTR pPrinterName )
 {
    BOOL Result = FALSE;
-   DWORD Flags = PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS;
-   PRINTER_INFO_4 *buffer4, *pPrinterEnum4;
-   HANDLE hPrinter;
-   ULONG needed = 0, returned = 0, a;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_PrinterExists(%s)", pPrinterName ) );
 
@@ -97,28 +93,36 @@ BOOL hb_PrinterExists( LPSTR pPrinterName )
    {                            /* Don't bother with test if '\' in string */
       if( hb_iswinnt() )
       {                         /* Use EnumPrinter() here because much faster than OpenPrinter() */
+         DWORD Flags = PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS;
+         ULONG needed = 0, returned = 0;
+
          EnumPrinters( Flags, NULL, 4, ( LPBYTE ) NULL, 0, &needed, &returned );
-         if( needed > 0 )
+         if( needed )
          {
+            PRINTER_INFO_4 * buffer4;
+            PRINTER_INFO_4 * pPrinterEnum4;
+
             pPrinterEnum4 = buffer4 = ( PRINTER_INFO_4 * ) hb_xgrab( needed );
-            if( pPrinterEnum4 )
+
+            if( EnumPrinters
+                ( Flags, NULL, 4, ( LPBYTE ) pPrinterEnum4, needed, &needed, &returned ) )
             {
-               if( EnumPrinters
-                   ( Flags, NULL, 4, ( LPBYTE ) pPrinterEnum4, needed, &needed, &returned ) )
+               ULONG a;
+
+               for( a = 0; !Result && a < returned; a++, pPrinterEnum4++ )
                {
-                  for( a = 0; !Result && a < returned; a++, pPrinterEnum4++ )
-                  {
-                     Result = strcmp( ( const char * ) pPrinterName,
-                                      ( const char * ) pPrinterEnum4->pPrinterName ) == 0;
-                  }
+                  Result = strcmp( ( const char * ) pPrinterName,
+                                   ( const char * ) pPrinterEnum4->pPrinterName ) == 0;
                }
-               hb_xfree( buffer4 );
             }
+            hb_xfree( buffer4 );
          }
       }
       else
       {
          LPTSTR lpPrinterName = HB_TCHAR_CONVTO( pPrinterName );
+         HANDLE hPrinter;
+
          if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) )
          {
             ClosePrinter( hPrinter );
@@ -132,13 +136,7 @@ BOOL hb_PrinterExists( LPSTR pPrinterName )
 
 HB_FUNC( PRINTEREXISTS )
 {
-   BOOL Result = FALSE;
-
-   if( ISCHAR( 1 ) )
-   {
-      Result = hb_PrinterExists( hb_parc( 1 ) );
-   }
-   hb_retl( Result );
+   hb_retl( ISCHAR( 1 ) && hb_PrinterExists( hb_parc( 1 ) ) );
 }
 
 BOOL hb_GetDefaultPrinter( char * pPrinterName, LPDWORD pdwBufferSize )
@@ -201,37 +199,33 @@ BOOL hb_GetDefaultPrinter( char * pPrinterName, LPDWORD pdwBufferSize )
 */
 
       DWORD dwNeeded, dwReturned;
-      PRINTER_INFO_2 *ppi2;
 
       if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, NULL, 0, &dwNeeded, &dwReturned ) )
       {
-         if( dwNeeded > 0 )
+         if( dwNeeded )
          {
-            ppi2 = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
-            if( ppi2 )
-            {
-               if( EnumPrinters
-                   ( PRINTER_ENUM_DEFAULT, NULL, 2, ( LPBYTE ) ppi2, dwNeeded, &dwNeeded,
-                     &dwReturned ) && dwReturned > 0 )
-               {
-                  DWORD dwSize = ( DWORD ) lstrlen( ppi2->pPrinterName );
+            PRINTER_INFO_2 * ppi2 = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
 
-                  if( dwSize && dwSize < *pdwBufferSize )
-                  {
-                     HB_TCHAR_GETFROM( pPrinterName, ppi2->pPrinterName,
-                                       lstrlen( ppi2->pPrinterName ) );
-                     *pdwBufferSize = dwSize + 1;
-                     Result = TRUE;
-                  }
+            if( EnumPrinters
+                ( PRINTER_ENUM_DEFAULT, NULL, 2, ( LPBYTE ) ppi2, dwNeeded, &dwNeeded,
+                  &dwReturned ) && dwReturned )
+            {
+               DWORD dwSize = ( DWORD ) lstrlen( ppi2->pPrinterName );
+
+               if( dwSize && dwSize < *pdwBufferSize )
+               {
+                  HB_TCHAR_GETFROM( pPrinterName, ppi2->pPrinterName,
+                                    lstrlen( ppi2->pPrinterName ) );
+                  *pdwBufferSize = dwSize + 1;
+                  Result = TRUE;
                }
-               hb_xfree( ppi2 );
             }
+            hb_xfree( ppi2 );
          }
       }
    }
    return Result;
 }
-
 
 HB_FUNC( GETDEFAULTPRINTER )
 {
@@ -244,24 +238,134 @@ HB_FUNC( GETDEFAULTPRINTER )
       hb_retc( NULL );
 }
 
+static DWORD IsPrinterError( HANDLE hPrinter )
+{
+   BOOL Result = -1;
+   DWORD cByteNeeded;
+
+   GetPrinter( hPrinter, 2, NULL, 0, &cByteNeeded );
+
+   if( cByteNeeded )
+   {
+      PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( cByteNeeded );
+
+      if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo, cByteNeeded, &cByteNeeded ) )
+         Result = pPrinterInfo->Status;
+
+      hb_xfree( pPrinterInfo );
+   }
+
+   return Result;
+}
+
+static BOOL GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, int * pcJobs )
+{
+   DWORD Result = FALSE;
+   DWORD cByteNeeded;
+
+   GetPrinter( hPrinter, 2, NULL, 0, &cByteNeeded );
+   if( cByteNeeded )
+   {
+      PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( cByteNeeded );
+      DWORD cByteUsed;
+
+      if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo, cByteNeeded, &cByteUsed ) )
+      {
+         DWORD nReturned;
+
+         EnumJobs( hPrinter, 0, pPrinterInfo->cJobs, 2, NULL, 0, ( LPDWORD ) &cByteNeeded, ( LPDWORD ) &nReturned );
+
+         if( cByteNeeded )
+         {
+            JOB_INFO_2 * pJobStorage = ( JOB_INFO_2 * ) hb_xgrab( cByteNeeded );
+
+            if( EnumJobs( hPrinter, 0, nReturned, 2, ( LPBYTE ) pJobStorage, cByteNeeded, ( LPDWORD ) &cByteUsed, ( LPDWORD ) &nReturned ) )
+            {
+               *pcJobs = nReturned;
+               *ppJobInfo = pJobStorage;
+               Result = TRUE;
+            }
+            else
+               hb_xfree( pJobStorage );
+         }
+      }
+      hb_xfree( pPrinterInfo );
+   }
+   return Result;
+}
+
+static DWORD IsPrinterErrorn( HANDLE hPrinter )
+{
+   DWORD dwError = IsPrinterError( hPrinter );  /* Just return the PrinterStatus */
+
+   if( !dwError )
+   {
+      JOB_INFO_2 * pJobs;
+      int cJobs;
+
+      if( GetJobs( hPrinter, &pJobs, &cJobs ) )
+      {
+         int i;
+
+         for( i = 0; ! dwError && i < cJobs; i++ )
+         {
+            if( pJobs[ i ].Status & JOB_STATUS_ERROR )
+               dwError = ( DWORD ) -20;
+            else if( pJobs[ i ].Status & JOB_STATUS_OFFLINE )
+               dwError = ( DWORD ) -21;
+            else if( pJobs[ i ].Status & JOB_STATUS_PAPEROUT )
+               dwError = ( DWORD ) -22;
+            else if( pJobs[ i ].Status & JOB_STATUS_BLOCKED_DEVQ )
+               dwError = ( DWORD ) -23;
+         }
+         hb_xfree( pJobs );
+      }
+   }
+   return dwError;
+}
+
+static DWORD hb_printerIsReadyn( char * pszPrinterName )
+{
+   DWORD dwPrinter = ( DWORD ) -1;
+   HANDLE hPrinter;
+
+   if( *pszPrinterName && OpenPrinter( pszPrinterName, &hPrinter, NULL ) )
+   {
+      dwPrinter = IsPrinterErrorn( hPrinter );
+      CloseHandle( hPrinter );
+   }
+   return dwPrinter;
+}
+
+HB_FUNC( XISPRINTER )
+{
+   char szDefaultPrinter[ MAXBUFFERSIZE ];
+   DWORD pdwBufferSize = sizeof( szDefaultPrinter );
+
+   hb_GetDefaultPrinter( ( LPTSTR ) szDefaultPrinter, &pdwBufferSize );
+   hb_retnl( hb_printerIsReadyn( ISCHAR( 1 ) ? hb_parc( 1 ) : ( char * ) szDefaultPrinter ) );
+}
+
 BOOL hb_GetPrinterNameByPort( char * pPrinterName, LPDWORD pdwBufferSize,
                               char * pPortName, BOOL bSubStr )
 {
    BOOL Result = FALSE, bFound = FALSE;
-   ULONG needed, returned, a;
-   PRINTER_INFO_5 * pPrinterEnum, * buffer;
+   ULONG needed, returned;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_GetPrinterNameByPort(%p,%p)", pPrinterName, pPortName ) );
 
    EnumPrinters( PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS, NULL, 5, ( LPBYTE ) NULL, 0,
                  &needed, &returned );
-   if( needed > 0 )
+   if( needed )
    {
+      PRINTER_INFO_5 * pPrinterEnum, * buffer;
       pPrinterEnum = buffer = ( PRINTER_INFO_5 * ) hb_xgrab( needed );
 
       if( EnumPrinters( PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS, NULL, 5,
                         ( LPBYTE ) buffer, needed, &needed, &returned ) )
       {
+         ULONG a;
+
          for( a = 0; a < returned && !bFound; a++, pPrinterEnum++ )
          {
             char * szPortName = HB_TCHAR_CONVFROM( pPrinterEnum->pPortName );
@@ -301,7 +405,7 @@ HB_FUNC( PRINTERPORTTONAME )
                                 ISLOG( 2 ) ? hb_parl( 2 ) : FALSE ) )
       hb_retc( szDefaultPrinter );
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 #   define BIG_PRINT_BUFFER (1024*32)
@@ -364,16 +468,13 @@ LONG hb_PrintFileRaw( UCHAR * cPrinterName, UCHAR * cFileName, UCHAR * cDocName 
 
 HB_FUNC( PRINTFILERAW )
 {
-   UCHAR *cPrinterName, *cFileName, *cDocName;
    LONG Result = -1;
 
    if( ISCHAR( 1 ) && ISCHAR( 2 ) )
-   {
-      cPrinterName = ( UCHAR * ) hb_parcx( 1 );
-      cFileName = ( UCHAR * ) hb_parcx( 2 );
-      cDocName = ( ISCHAR( 3 ) ? ( UCHAR * ) hb_parcx( 3 ) : cFileName );
-      Result = hb_PrintFileRaw( cPrinterName, cFileName, cDocName );
-   }
+      Result = hb_PrintFileRaw( ( UCHAR * ) hb_parcx( 1 ) /* cPrinterName */,
+                                ( UCHAR * ) hb_parcx( 2 ) /* cFileName */,
+                                ISCHAR( 3 ) ? ( UCHAR * ) hb_parcx( 3 ) : ( UCHAR * ) hb_parcx( 2 ) /* cDocName */ );
+
    hb_retnl( Result );
 }
 
@@ -411,190 +512,186 @@ HB_FUNC( GETPRINTERS )
    {
       EnumPrinters( Flags, NULL, 4, ( LPBYTE ) NULL, 0, &needed, &returned );
 
-      if( needed > 0 )
+      if( needed )
       {
          pPrinterEnum4 = buffer4 = ( PRINTER_INFO_4 * ) hb_xgrab( needed );
-         if( pPrinterEnum4 )
+
+         if( EnumPrinters
+             ( Flags, NULL, 4, ( LPBYTE ) pPrinterEnum4, needed, &needed, &returned ) )
          {
-            if( EnumPrinters
-                ( Flags, NULL, 4, ( LPBYTE ) pPrinterEnum4, needed, &needed, &returned ) )
+            if( bPrinterNamesOnly )
             {
-               if( bPrinterNamesOnly )
+               for( a = 0; a < returned; a++, pPrinterEnum4++ )
                {
-                  for( a = 0; a < returned; a++, pPrinterEnum4++ )
+                  if( ! bLocalPrintersOnly
+                      || pPrinterEnum4->Attributes & PRINTER_ATTRIBUTE_LOCAL )
                   {
-                     if( ! bLocalPrintersOnly
-                         || pPrinterEnum4->Attributes & PRINTER_ATTRIBUTE_LOCAL )
-                     {
-                        pszData = HB_TCHAR_CONVFROM( pPrinterEnum4->pPrinterName );
-                        hb_itemPutC( File, pszData );
-                        HB_TCHAR_FREE( pszData );
-                        hb_arrayAddForward( ArrayPrinter, File );
-                     }
-                  }
-               }
-               else
-               {
-                  for( a = 0; a < returned; a++, pPrinterEnum4++ )
-                  {
-                     if( ! bLocalPrintersOnly
-                         || pPrinterEnum4->Attributes & PRINTER_ATTRIBUTE_LOCAL )
-                     {
-                        if( OpenPrinter( pPrinterEnum4->pPrinterName, &hPrinter, NULL ) )
-                        {
-                           GetPrinter( hPrinter, 2, NULL, 0, &needed );
-                           if( needed > 0 )
-                           {
-                              pPrinterInfo2 = ( PRINTER_INFO_2 * ) hb_xgrab( needed );
-                              if( pPrinterInfo2 )
-                              {
-                                 pszData = HB_TCHAR_CONVFROM( pPrinterEnum4->pPrinterName );
-                                 hb_itemPutC( File, pszData );
-                                 HB_TCHAR_FREE( pszData );
-
-                                 hb_arrayNew( SubItems, 0 );
-
-                                 if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo2, needed, &needed ) )
-                                 {
-                                    pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pPortName );
-                                    hb_itemPutC( Port, pszData );
-                                    HB_TCHAR_FREE( pszData );
-                                    pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pDriverName );
-                                    hb_itemPutC( Driver, pszData );
-                                    HB_TCHAR_FREE( pszData );
-                                 }
-                                 else
-                                 {
-                                    hb_itemPutC( Port, "Error" );
-                                    hb_itemPutC( Driver, "Error" );
-                                 }
-
-                                 if( pPrinterEnum4->Attributes & PRINTER_ATTRIBUTE_LOCAL )
-                                    hb_itemPutC( Net, "LOCAL" );
-                                 else if( pPrinterEnum4->Attributes & PRINTER_ATTRIBUTE_NETWORK )
-                                    hb_itemPutC( Net, "NETWORK" );
-                                 else
-                                    hb_itemPutC( Net, "ERROR" );
-
-                                 hb_arrayAddForward( SubItems, File );
-                                 hb_arrayAddForward( SubItems, Port );
-                                 hb_arrayAddForward( SubItems, Net );
-                                 hb_arrayAddForward( SubItems, Driver );
-                                 hb_arrayAddForward( ArrayPrinter, SubItems );
-                                 hb_xfree( pPrinterInfo2 );
-                              }
-                           }
-                        }
-                        CloseHandle( hPrinter );
-                     }
+                     pszData = HB_TCHAR_CONVFROM( pPrinterEnum4->pPrinterName );
+                     hb_itemPutC( File, pszData );
+                     HB_TCHAR_FREE( pszData );
+                     hb_arrayAddForward( ArrayPrinter, File );
                   }
                }
             }
-            hb_xfree( buffer4 );
+            else
+            {
+               for( a = 0; a < returned; a++, pPrinterEnum4++ )
+               {
+                  if( ! bLocalPrintersOnly
+                      || pPrinterEnum4->Attributes & PRINTER_ATTRIBUTE_LOCAL )
+                  {
+                     if( OpenPrinter( pPrinterEnum4->pPrinterName, &hPrinter, NULL ) )
+                     {
+                        GetPrinter( hPrinter, 2, NULL, 0, &needed );
+                        if( needed )
+                        {
+                           pPrinterInfo2 = ( PRINTER_INFO_2 * ) hb_xgrab( needed );
+                           if( pPrinterInfo2 )
+                           {
+                              pszData = HB_TCHAR_CONVFROM( pPrinterEnum4->pPrinterName );
+                              hb_itemPutC( File, pszData );
+                              HB_TCHAR_FREE( pszData );
+
+                              hb_arrayNew( SubItems, 0 );
+
+                              if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo2, needed, &needed ) )
+                              {
+                                 pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pPortName );
+                                 hb_itemPutC( Port, pszData );
+                                 HB_TCHAR_FREE( pszData );
+                                 pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pDriverName );
+                                 hb_itemPutC( Driver, pszData );
+                                 HB_TCHAR_FREE( pszData );
+                              }
+                              else
+                              {
+                                 hb_itemPutC( Port, "Error" );
+                                 hb_itemPutC( Driver, "Error" );
+                              }
+
+                              if( pPrinterEnum4->Attributes & PRINTER_ATTRIBUTE_LOCAL )
+                                 hb_itemPutC( Net, "LOCAL" );
+                              else if( pPrinterEnum4->Attributes & PRINTER_ATTRIBUTE_NETWORK )
+                                 hb_itemPutC( Net, "NETWORK" );
+                              else
+                                 hb_itemPutC( Net, "ERROR" );
+
+                              hb_arrayAddForward( SubItems, File );
+                              hb_arrayAddForward( SubItems, Port );
+                              hb_arrayAddForward( SubItems, Net );
+                              hb_arrayAddForward( SubItems, Driver );
+                              hb_arrayAddForward( ArrayPrinter, SubItems );
+                              hb_xfree( pPrinterInfo2 );
+                           }
+                        }
+                     }
+                     CloseHandle( hPrinter );
+                  }
+               }
+            }
          }
+         hb_xfree( buffer4 );
       }
    }
    else
    {
       EnumPrinters( Flags, NULL, 5, ( LPBYTE ) buffer, 0, &needed, &returned );
 
-      if( needed > 0 )
+      if( needed )
       {
          pPrinterEnum = buffer = ( PRINTER_INFO_5 * ) hb_xgrab( needed );
-         if( pPrinterEnum )
+
+         if( EnumPrinters( Flags, NULL, 5, ( LPBYTE ) buffer, needed, &needed, &returned ) )
          {
-            if( EnumPrinters( Flags, NULL, 5, ( LPBYTE ) buffer, needed, &needed, &returned ) )
+            for( a = 0; a < returned; a++, pPrinterEnum++ )
             {
-               for( a = 0; a < returned; a++, pPrinterEnum++ )
+               if( !bLocalPrintersOnly || pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_LOCAL )
                {
-                  if( !bLocalPrintersOnly || pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_LOCAL )
+                  if( bPrinterNamesOnly )
                   {
-                     if( bPrinterNamesOnly )
+                     pszData = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
+                     hb_itemPutC( File, pszData );
+                     HB_TCHAR_FREE( pszData );
+                     hb_arrayAddForward( ArrayPrinter, File );
+                  }
+                  else
+                  {
+                     /* Tony (ABC)   11/1/2005        1:40PM. */
+                     for( a = 0; a < returned; a++, pPrinterEnum++ )
                      {
-                        pszData = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
-                        hb_itemPutC( File, pszData );
-                        HB_TCHAR_FREE( pszData );
-                        hb_arrayAddForward( ArrayPrinter, File );
-                     }
-                     else
-                     {
-                        /* Tony (ABC)   11/1/2005        1:40PM. */
-                        for( a = 0; a < returned; a++, pPrinterEnum++ )
+                        if( ! bLocalPrintersOnly
+                            || pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_LOCAL )
                         {
-                           if( ! bLocalPrintersOnly
-                               || pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_LOCAL )
+                           if( OpenPrinter( pPrinterEnum->pPrinterName, &hPrinter, NULL ) )
                            {
-                              if( OpenPrinter( pPrinterEnum->pPrinterName, &hPrinter, NULL ) )
+                              GetPrinter( hPrinter, 2, NULL, 0, &needed );
+                              if( needed )
                               {
-                                 GetPrinter( hPrinter, 2, NULL, 0, &needed );
-                                 if( needed > 0 )
+                                 pPrinterInfo2 = ( PRINTER_INFO_2 * ) hb_xgrab( needed );
+                                 if( pPrinterInfo2 )
                                  {
-                                    pPrinterInfo2 = ( PRINTER_INFO_2 * ) hb_xgrab( needed );
-                                    if( pPrinterInfo2 )
+                                    hb_arrayNew( SubItems, 0 );
+                                    pszData = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
+                                    hb_itemPutC( File, pszData );
+                                    HB_TCHAR_FREE( pszData );
+
+                                    if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo2, needed, &needed ) )
                                     {
-                                       hb_arrayNew( SubItems, 0 );
-                                       pszData = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
-                                       hb_itemPutC( File, pszData );
+                                       pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pPortName );
+                                       hb_itemPutC( Port, pszData );
                                        HB_TCHAR_FREE( pszData );
-
-                                       if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo2, needed, &needed ) )
-                                       {
-                                          pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pPortName );
-                                          hb_itemPutC( Port, pszData );
-                                          HB_TCHAR_FREE( pszData );
-                                          pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pDriverName );
-                                          hb_itemPutC( Driver, pszData );
-                                          HB_TCHAR_FREE( pszData );
-                                       }
-                                       else
-                                       {
-                                          hb_itemPutC( Port, "Error" );
-                                          hb_itemPutC( Driver, "Error" );
-                                       }
-
-                                       if( pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_LOCAL )
-                                          hb_itemPutC( Net, "LOCAL" );
-                                       else if( pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_NETWORK )
-                                          hb_itemPutC( Net, "NETWORK" );
-                                       else
-                                          hb_itemPutC( Net, "ERROR" );
-
-                                       hb_arrayAddForward( SubItems, File );
-                                       hb_arrayAddForward( SubItems, Port );
-                                       hb_arrayAddForward( SubItems, Net );
-                                       hb_arrayAddForward( SubItems, Driver );
-                                       hb_arrayAddForward( ArrayPrinter, SubItems );
-                                       hb_xfree( pPrinterInfo2 );
+                                       pszData = HB_TCHAR_CONVFROM( pPrinterInfo2->pDriverName );
+                                       hb_itemPutC( Driver, pszData );
+                                       HB_TCHAR_FREE( pszData );
                                     }
+                                    else
+                                    {
+                                       hb_itemPutC( Port, "Error" );
+                                       hb_itemPutC( Driver, "Error" );
+                                    }
+
+                                    if( pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_LOCAL )
+                                       hb_itemPutC( Net, "LOCAL" );
+                                    else if( pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_NETWORK )
+                                       hb_itemPutC( Net, "NETWORK" );
+                                    else
+                                       hb_itemPutC( Net, "ERROR" );
+
+                                    hb_arrayAddForward( SubItems, File );
+                                    hb_arrayAddForward( SubItems, Port );
+                                    hb_arrayAddForward( SubItems, Net );
+                                    hb_arrayAddForward( SubItems, Driver );
+                                    hb_arrayAddForward( ArrayPrinter, SubItems );
+                                    hb_xfree( pPrinterInfo2 );
                                  }
                               }
-                              CloseHandle( hPrinter );
                            }
+                           CloseHandle( hPrinter );
                         }
-                        /* Tony (ABC)   11/1/2005        1:40PM. Old Code... Justo in case. */
-#if 0
-                          hb_arrayNew( SubItems, 0 );
-                          hb_itemPutC( File, pPrinterEnum->pPrinterName );
-                          hb_itemPutC( Port, pPrinterEnum->pPortName );
-
-                          if( pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_LOCAL)
-                             hb_itemPutC( Net,"LOCAL" );
-                          else if( pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_NETWORK)
-                             hb_itemPutC( Net, "NETWORK" );
-                          else
-                             hb_itemPutC( Net, "ERROR" );
-
-                          hb_arrayAddForward( SubItems, File );
-                          hb_arrayAddForward( SubItems, Port );
-                          hb_arrayAddForward( SubItems, Net );
-                          hb_arrayAddForward( ArrayPrinter, SubItems );
-#endif
                      }
+                     /* Tony (ABC)   11/1/2005        1:40PM. Old Code... Justo in case. */
+#if 0
+                       hb_arrayNew( SubItems, 0 );
+                       hb_itemPutC( File, pPrinterEnum->pPrinterName );
+                       hb_itemPutC( Port, pPrinterEnum->pPortName );
+
+                       if( pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_LOCAL)
+                          hb_itemPutC( Net,"LOCAL" );
+                       else if( pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_NETWORK)
+                          hb_itemPutC( Net, "NETWORK" );
+                       else
+                          hb_itemPutC( Net, "ERROR" );
+
+                       hb_arrayAddForward( SubItems, File );
+                       hb_arrayAddForward( SubItems, Port );
+                       hb_arrayAddForward( SubItems, Net );
+                       hb_arrayAddForward( ArrayPrinter, SubItems );
+#endif
                   }
                }
             }
-            hb_xfree( buffer );
          }
+         hb_xfree( buffer );
       }
    }
    hb_itemReturnForward( ArrayPrinter );

@@ -55,6 +55,37 @@
 #include "hbapiitm.h"
 #include "hbapigt.h"
 
+#if 0
+
+/* NOTE: Dangerous functions, commented out. Harbour doesn't implement hb_retclen_const() */
+
+HB_FUNC( HB_POINTER2STRING )
+{
+   PHB_ITEM pPointer = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM pLen     = hb_param( 2, HB_IT_NUMERIC );
+
+   if( HB_IS_POINTER( pPointer ) && pLen )
+      hb_retclen_const( ( char * ) hb_itemGetPtr( pPointer ), ( ULONG ) hb_itemGetNL( pLen ) );
+   else if( HB_IS_INTEGER( pPointer ) && pLen )
+      hb_retclen_const( ( char * ) hb_itemGetNI( pPointer ), ( ULONG ) hb_itemGetNL( pLen ) );
+   else if( HB_IS_LONG( pPointer ) && pLen )
+      hb_retclen_const( ( char * ) hb_itemGetNL( pPointer ), ( ULONG ) hb_itemGetNL( pLen ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+}
+
+HB_FUNC( HB_STRING2POINTER )
+{
+   PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
+
+   if( pString )
+      hb_retptr( ( void * ) hb_itemGetCPtr( pString ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+}
+
+#endif
+
 HB_FUNC( HB_CMDARGARGV )
 {
    hb_retc( hb_cmdargARGV()[0] );

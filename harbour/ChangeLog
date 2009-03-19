@@ -8,6 +8,20 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-20 00:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  + contrib/xhb/inet.h
+    + Added from xhb.
+
+  * contrib/xhb/xhbfunc.c
+    + Added HB_POINTER2STRING() and HB_STRING2POINTER().
+      Just for the record, I've commented them, as they're both
+      very dangerous and violating basic programming rules.
+
+  * contrib/hbwin/win_prn2.c
+    + Added XISPRINTER() from xhb.
+    % Optimizations / cleanups in Windows spaghetti code.
+      Would need a complete 'refactor'.
+
 2009-03-19 20:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/xhb/Makefile
   + contrib/xhb/stream.prg
