@@ -8,6 +8,36 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-20 17:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * tests/bnchmark
+  + tests/bnchmark/bnch_win.bat
+    + Added speedtst comparison tool, featuring:
+      - CPU + physical memory info dump from WMI
+      - Tasklist before and after test runs
+      - Harbour /build info included in output
+      - Complete dump of commands executed, hbmk2 output
+      - Dir listing of tested .exes
+      - All tests repeated three times by default (configurable)
+      - 8 slots maximum to compare different speedtst scenarios
+      - By default it will run -st vs. -mt tests.
+    ; Please read the comments in the file for usage instructions.
+      Here's an example for parameter setup:
+      --
+      set PATH=C:\devl\MinGW-432\bin;%PATH%
+      set HB_BENCH_RUNS=3
+      set HB_RUN_FLAGS=--exclude=030
+      set HB_CMP_FLAGS_1=-gc2
+      set HB_CMP_FLAGS_2=-gc3
+      call bnch_win.bat > results.txt 2>&1
+      --
+
+  * config/rules.cf
+    + Restored -ko flag. Thanks Mindaugas for analysing test result.
+
+  * contrib/hbodbc/todbc.prg
+  * contrib/hbodbc/odbc.c
+    * Formatting + minor cleanups.
+
 2009-03-20 00:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + contrib/xhb/inet.h
     + Added from xhb.
