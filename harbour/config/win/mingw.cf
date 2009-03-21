@@ -80,7 +80,7 @@ LDLIBS += $(foreach lib, $(LNK_USR_LIB), -l$(lib))
 endif
 
 # This library is needed for CharToOemBuff() and OemToCharBuff() support.
-SYSLIBS = -luser32 -lgdi32 -lwsock32
+SYSLIBS = -luser32 -lgdi32
 SYSLIBS += -lwinspool -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lmpr -lws2_32 -lmapi32
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!

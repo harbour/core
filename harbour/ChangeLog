@@ -8,6 +8,151 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-21 15:02 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+  * config/win/icc.cf
+  * config/win/cygwin.cf
+  * config/win/msvc.cf
+  * config/win/owatcom.cf
+  * config/win/xcc.cf
+  * config/win/mingw.cf
+  * config/win/pocc.cf
+    * Changed Harbour to uniformly link against ws2_32 winsock
+      lib on Windows. Previous we've been using a mixture of
+      ws2_32 and wsock32, sometimes both. For some platforms
+      one of these libs is automatically included by linker,
+      f.e. for bcc, wsock32 is used.
+    ! This fixes wsock32 no longer available for mingw64.
+    ; These platforms should be retested if this causes any
+      problems, but ws2_32 should be available for all since long.
+
+  * utils/hbmk2/hbmk2.prg
+    ! Typo in prev commit.
+
+  * source/vm/maindllp.c
+  * source/vm/extrap.c
+    ! Fixed for mingw64.
+    ! Fixed warning for mingw64.
+      ; TODO: Check for possible regression.
+
+  * contrib/hbodbc/odbc.c
+    ! Fixed mingw64 warning.
+    ; TODO: Check for possible regression.
+
+    ; TOFIX: (3rd party dependent contribs not yet included)
+      Errors/Core:
+      Temp/ccVJXjZS.s: Assembler messages:
+      Temp/ccVJXjZS.s:19: Error: Incorrect register `%rax' used with `l' suffix
+      Temp/ccVJXjZS.s:20: Error: `0x0e10(%rax,%ecx,4)' is not a valid base/index expression
+      Temp/ccVJXjZS.s:36: Error: Incorrect register `%rax' used with `l' suffix
+      Temp/ccVJXjZS.s:37: Error: `0x0e10(%rax,%ecx,4)' is not a valid base/index expression
+      + GTWVG (also lots of warning)
+
+      Warnings/Core:
+      ../../hbprintf.c: In function 'hb_snprintf':
+      ../../hbprintf.c:1067: warning: implicit declaration of function 'finite'
+      ../../hbprintf.c:1148: warning: cast from pointer to integer of different size
+      ../../itemapi.c: In function 'hb_itemStrBuf':
+      ../../itemapi.c:2159: warning: implicit declaration of function 'finite'
+      ../../dbfntx1.c: In function 'hb_ntxTagHeaderCheck':
+      ../../dbfntx1.c:1016: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfntx1.c:1016: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfntx1.c:1017: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfntx1.c:1017: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfntx1.c:1017: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfntx1.c:1017: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfnsx1.c: In function 'hb_nsxTagHeaderCheck':
+      ../../dbfnsx1.c:1233: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfnsx1.c:1235: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfnsx1.c:1236: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfnsx1.c:1236: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfnsx1.c:1236: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfnsx1.c:1236: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfnsx1.c: In function 'hb_nsxPageFree':
+      ../../dbfnsx1.c:1525: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfnsx1.c:1525: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfnsx1.c:1525: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfnsx1.c:1525: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfnsx1.c: In function 'hb_nsxPageNew':
+      ../../dbfnsx1.c:1574: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfnsx1.c:1574: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfnsx1.c:1574: warning: dereferencing type-punned pointer will break strict-aliasing rules
+      ../../dbfnsx1.c:1574: warning: dereferencing type-punned pointer will break strict-aliasing rules
+
+      Warnings/Contrib:
+      ../../files.c: In function 'HB_FUN_SETFDATI':
+      ../../files.c:247: warning: cast to pointer from integer of different size
+      ../../files.c:268: warning: cast from pointer to integer of different size
+      ../../getenvrn.c: In function 'HB_FUN_FT_GETE':
+      ../../getenvrn.c:178: warning: implicit declaration of function 'GetEnvironmentStrings'
+      ../../getenvrn.c:178: warning: initialization makes pointer from integer without a cast
+      ../../tpwin.c: In function 'HB_FUN_P_INITPORTSPEED':
+      ../../tpwin.c:78: warning: cast to pointer from integer of different size
+      ../../tpwin.c:89: warning: cast to pointer from integer of different size
+      ../../tpwin.c: In function 'HB_FUN_P_READPORT':
+      ../../tpwin.c:108: warning: cast to pointer from integer of different size
+      ../../tpwin.c: In function 'HB_FUN_P_WRITEPORT':
+      ../../tpwin.c:119: warning: cast to pointer from integer of different size
+      ../../win_dll.c: In function 'DllExec':
+      ../../win_dll.c:509: warning: cast from pointer to integer of different size
+      ../../win_dll.c:603: warning: cast to pointer from integer of different size
+      ../../win_dll.c:672: warning: cast to pointer from integer of different size
+      ../../win_dll.c:689: warning: cast to pointer from integer of different size
+      ../../win_dll.c: In function 'hb_getprocaddress':
+      ../../win_dll.c:809: warning: cast to pointer from integer of different size
+      ../../win_ole.c: In function 'hb_oleItemToVariant':
+      ../../win_ole.c:466: warning: cast to pointer from integer of different size
+      ../../win_ole.c: In function 'FreeParams':
+      ../../win_ole.c:762: warning: cast from pointer to integer of different size
+      ../../win_ole.c: In function 'hb_oleVariantToItem':
+      ../../win_ole.c:1092: warning: cast from pointer to integer of different size
+      ../../win_ole.c: In function 'HB_FUN_CREATEOLEOBJECT':
+      ../../win_ole.c:1425: warning: cast from pointer to integer of different size
+      ../../win_ole.c: In function 'HB_FUN_GETOLEOBJECT':
+      ../../win_ole.c:1478: warning: cast from pointer to integer of different size
+      ../../win_ole.c: In function 'HB_FUN_OLEADDREF':
+      ../../win_ole.c:1486: warning: cast to pointer from integer of different size
+      ../../win_ole.c: In function 'HB_FUN_OLERELEASEOBJECT':
+      ../../win_ole.c:1498: warning: cast to pointer from integer of different size
+      ../../win_ole.c: In function 'HB_FUN_TOLEAUTO_OLEVALUE':
+      ../../win_ole.c:1648: warning: cast to pointer from integer of different size
+      ../../win_ole.c: In function 'HB_FUN_TOLEAUTO__OLEVALUE':
+      ../../win_ole.c:1675: warning: cast to pointer from integer of different size
+      ../../win_ole.c: In function 'HB_FUN_TOLEAUTO_OLENEWENUMERATOR':
+      ../../win_ole.c:1703: warning: cast to pointer from integer of different size
+      ../../win_ole.c: In function 'HB_FUN_TOLEAUTO_INVOKE':
+      ../../win_ole.c:1786: warning: cast to pointer from integer of different size
+      ../../win_ole.c: In function 'HB_FUN_TOLEAUTO_SET':
+      ../../win_ole.c:1810: warning: cast to pointer from integer of different size
+      ../../win_ole.c: In function 'HB_FUN_TOLEAUTO_GET':
+      ../../win_ole.c:1834: warning: cast to pointer from integer of different size
+      ../../win_ole.c: In function 'HB_FUN_TOLEAUTO_ONERROR':
+      ../../win_ole.c:1861: warning: cast to pointer from integer of different size
+      ../../win_regc.c: In function 'hb_regkeyconv':
+      ../../win_regc.c:77: warning: cast to pointer from integer of different size
+      ../../win_regc.c: In function 'HB_FUN_WIN_REGCREATEKEYEX':
+      ../../win_regc.c:82: warning: cast to pointer from integer of different size
+      ../../win_regc.c:96: warning: cast from pointer to integer of different size
+      ../../win_regc.c: In function 'HB_FUN_WIN_REGOPENKEYEX':
+      ../../win_regc.c:118: warning: cast from pointer to integer of different size
+      ../../win_regc.c: In function 'HB_FUN_WIN_REGCLOSEKEY':
+      ../../win_regc.c:193: warning: cast to pointer from integer of different size
+      ../../wapi_commctrl.c: In function 'HB_FUN_WAPI_TABCTRL_GETITEMRECT':
+      ../../wapi_commctrl.c:521: warning: value computed is not used
+      ../../wapi_commctrl.c: In function 'HB_FUN_WAPI_TABCTRL_GETIMAGELIST':
+      ../../wapi_commctrl.c:553: warning: cast from pointer to integer of different size
+      ../../wapi_commctrl.c: In function 'HB_FUN_WAPI_TABCTRL_ADJUSTRECT':
+      ../../wapi_commctrl.c:632: warning: value computed is not used
+      ../../wapi_commctrl.c: In function 'HB_FUN_WAPI_TABCTRL_CREATE':
+      ../../wapi_commctrl.c:782: warning: cast to pointer from integer of different size
+      ../../wapi_commctrl.c:786: warning: cast from pointer to integer of different size
+      ../../wapi_winbase.c: In function 'HB_FUN_WAPI_GETMODULEHANDLE':
+      ../../wapi_winbase.c:83: warning: cast to pointer from integer of different size
+      ../../hbserv.c: In function 's_serviceSetHBSig':
+      ../../hbserv.c:638: warning: passing argument 1 of 'SetUnhandledExceptionFilter' from incompatible pointer type
+      ../../hbxml.c: In function 'HB_FUN_HBXML_DATAREAD':
+      ../../hbxml.c:2321: warning: cast to pointer from integer of different size
+
 2009-03-21 14:23 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
   * utils/hbmk2/hbmk2.prg

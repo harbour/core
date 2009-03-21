@@ -50,7 +50,7 @@ ifeq ($(findstring rtl,$(LIBS)),rtl)
 LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
 endif
 
-LDFLAGS = $(LINKPATHS) user32.lib wsock32.lib advapi32.lib gdi32.lib
+LDFLAGS = $(LINKPATHS) user32.lib ws2_32.lib advapi32.lib gdi32.lib
 
 AR = xilib.exe
 ARFLAGS = $(HB_USER_AFLAGS)

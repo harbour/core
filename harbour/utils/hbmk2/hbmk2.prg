@@ -501,7 +501,7 @@ FUNCTION Main( ... )
                     { {|| FindInPath( "cygstart" ) != NIL }, "cygwin"  },;
                     { {|| FindInPath( "xcc"      ) != NIL }, "xcc"     } }
       aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "icc", "pocc", "xcc", "cygwin",;
-                    "mingw64", msvc64", "msvcia64", "iccia64", "pocc64",;
+                    "mingw64", "msvc64", "msvcia64", "iccia64", "pocc64",;
                     "mingwce", "msvcce", "poccce" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
@@ -1324,7 +1324,7 @@ FUNCTION Main( ... )
             IF t_cCOMP == "mingwce"
                s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl", "uuid", "ole32" } )
             ELSE
-               s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "winspool", "gdi32", "comctl32", "comdlg32", "ole32", "oleaut32", "uuid", "wsock32", "ws2_32" } )
+               s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "winspool", "gdi32", "comctl32", "comdlg32", "ole32", "oleaut32", "uuid", "ws2_32" } )
             ENDIF
          ENDIF
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
@@ -1471,7 +1471,7 @@ FUNCTION Main( ... )
          IF s_lMAP
             AAdd( s_aOPTL, "OP MAP" )
          ENDIF
-         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32" } )
+         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "ws2_32" } )
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
                                        "harbour-" + cDL_Version_Alter ),;
                            "hbmainstd",;
@@ -1651,7 +1651,7 @@ FUNCTION Main( ... )
          IF s_lSHARED
             AAdd( s_aOPTL, "/libpath:{DB}" )
          ENDIF
-         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
+         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "ws2_32", "advapi32", "gdi32" } )
          DO CASE
          CASE t_cCOMP $ "msvc|icc"
             s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
@@ -1735,7 +1735,7 @@ FUNCTION Main( ... )
          IF s_lDEBUG
             AAdd( s_aOPTL, "/debug" )
          ENDIF
-         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32", "advapi32", "gdi32" } )
+         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "ws2_32", "advapi32", "gdi32" } )
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
                                        "harbour-" + cDL_Version_Alter ),;
                            "hbmainstd",;

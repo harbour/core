@@ -105,7 +105,7 @@ LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo 
 
    errmsg[ 0 ] = '\0';
 
-#if defined(HB_OS_WIN_64) && defined(_M_X64)
+#if defined(HB_OS_WIN_64) && (defined(_M_X64) || defined(__MINGW64__))
    {
       PCONTEXT pCtx = pExceptionInfo->ContextRecord;
 
@@ -121,7 +121,7 @@ LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo 
                 "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
                 "    Flags:%08X\n",
                 ( UINT32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
-                pExceptionInfo->ExceptionRecord->ExceptionAddress,
+                ( HB_PTRDIFF ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
                 pCtx->Rax, pCtx->Rbx, pCtx->Rcx, pCtx->Rdx,
                 pCtx->Rsi, pCtx->Rdi, pCtx->Rbp,
                 pCtx->R8 , pCtx->R9 , pCtx->R10, pCtx->R11,
