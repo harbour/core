@@ -806,7 +806,7 @@ static LPVOID hb_getprocaddress( HMODULE hDLL, int i )
    HB_SYMBOL_UNUSED( i );
    return NULL;
 #else
-   LPVOID lpFunction = ( LPVOID ) GetProcAddress( hDLL, ISCHAR( i ) ? ( LPCSTR ) hb_parc( i ) : ( LPCSTR ) hb_parni( i ) );
+   LPVOID lpFunction = ( LPVOID ) GetProcAddress( hDLL, ISCHAR( i ) ? ( LPCSTR ) hb_parc( i ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( i ) );
 
    if( ! lpFunction && ISCHAR( i ) ) /* try with ANSI suffix? */
    {

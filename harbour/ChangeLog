@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-21 15:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbwin/win_dll.c
+  * contrib/hbwin/win_ole.c
+    ! Fixed most mingw64 spotted errors/warnings.
+
 2009-03-21 15:02 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
   * config/win/icc.cf
