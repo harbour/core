@@ -8,6 +8,17 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-21 13:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/win/mingwce.cf
+  * config/win/cygwin.cf
+  * config/win/mingw.cf
+    + Added -fomit-frame-pointer switch for win/gcc family.
+      It causes quite a huge improvement in all areas, bringing
+      MinGW very close to MSVC and even faster in many aspects.
+      Some FP operations are still slower a bit, and this seems
+      to be the only remaining - small - disadvantage.
+      For C level debugging this switch should be turned off AFAIK.
+
 2009-03-21 10:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * tests/bnchmark/bnch_win.bat
     + Added option to override benchmark program name, so now

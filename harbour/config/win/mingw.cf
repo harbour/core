@@ -17,7 +17,7 @@ CFLAGS = -Wall -W
 
 ifneq ($(HB_BUILD_OPTIM),no)
 CFLAGS += -O3
-CFLAGS += -march=i586 -mtune=pentiumpro
+CFLAGS += -fomit-frame-pointer -march=i586 -mtune=pentiumpro
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
