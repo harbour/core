@@ -8,6 +8,23 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-21 15:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbtpathy/tpwin.c
+  * contrib/hbwin/win_regc.c
+    ! mingw64 reported (64-bit) problems fixed.
+
+  * contrib/hbwin/wapi_winbase.c
+    ! mingw64 reported (64-bit) problem fixed.
+    ! ISNIL() -> ISCHAR(). It appear many times, but using ISNIL()
+      has the same cost IS<ACTUAL_TYPE>(), yet only covers one
+      case, so it's very dangerous and leave potential GPFs when
+      passing wrong type. So, when there is no strong special reason
+      to use ISNIL() (like we really want to allow all types except NIL),
+      always use ISCHAR(), ISNUM(), ISPOINTER(), ... instead.
+
+  * ChangeLog
+    - Deleted resolved mingw64 warnings from entry.
+
 2009-03-21 15:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbwin/win_dll.c
   * contrib/hbwin/win_ole.c
@@ -91,57 +108,11 @@
       ../../getenvrn.c: In function 'HB_FUN_FT_GETE':
       ../../getenvrn.c:178: warning: implicit declaration of function 'GetEnvironmentStrings'
       ../../getenvrn.c:178: warning: initialization makes pointer from integer without a cast
-      ../../tpwin.c: In function 'HB_FUN_P_INITPORTSPEED':
-      ../../tpwin.c:78: warning: cast to pointer from integer of different size
-      ../../tpwin.c:89: warning: cast to pointer from integer of different size
-      ../../tpwin.c: In function 'HB_FUN_P_READPORT':
-      ../../tpwin.c:108: warning: cast to pointer from integer of different size
-      ../../tpwin.c: In function 'HB_FUN_P_WRITEPORT':
-      ../../tpwin.c:119: warning: cast to pointer from integer of different size
       ../../win_dll.c: In function 'DllExec':
       ../../win_dll.c:509: warning: cast from pointer to integer of different size
       ../../win_dll.c:603: warning: cast to pointer from integer of different size
       ../../win_dll.c:672: warning: cast to pointer from integer of different size
       ../../win_dll.c:689: warning: cast to pointer from integer of different size
-      ../../win_dll.c: In function 'hb_getprocaddress':
-      ../../win_dll.c:809: warning: cast to pointer from integer of different size
-      ../../win_ole.c: In function 'hb_oleItemToVariant':
-      ../../win_ole.c:466: warning: cast to pointer from integer of different size
-      ../../win_ole.c: In function 'FreeParams':
-      ../../win_ole.c:762: warning: cast from pointer to integer of different size
-      ../../win_ole.c: In function 'hb_oleVariantToItem':
-      ../../win_ole.c:1092: warning: cast from pointer to integer of different size
-      ../../win_ole.c: In function 'HB_FUN_CREATEOLEOBJECT':
-      ../../win_ole.c:1425: warning: cast from pointer to integer of different size
-      ../../win_ole.c: In function 'HB_FUN_GETOLEOBJECT':
-      ../../win_ole.c:1478: warning: cast from pointer to integer of different size
-      ../../win_ole.c: In function 'HB_FUN_OLEADDREF':
-      ../../win_ole.c:1486: warning: cast to pointer from integer of different size
-      ../../win_ole.c: In function 'HB_FUN_OLERELEASEOBJECT':
-      ../../win_ole.c:1498: warning: cast to pointer from integer of different size
-      ../../win_ole.c: In function 'HB_FUN_TOLEAUTO_OLEVALUE':
-      ../../win_ole.c:1648: warning: cast to pointer from integer of different size
-      ../../win_ole.c: In function 'HB_FUN_TOLEAUTO__OLEVALUE':
-      ../../win_ole.c:1675: warning: cast to pointer from integer of different size
-      ../../win_ole.c: In function 'HB_FUN_TOLEAUTO_OLENEWENUMERATOR':
-      ../../win_ole.c:1703: warning: cast to pointer from integer of different size
-      ../../win_ole.c: In function 'HB_FUN_TOLEAUTO_INVOKE':
-      ../../win_ole.c:1786: warning: cast to pointer from integer of different size
-      ../../win_ole.c: In function 'HB_FUN_TOLEAUTO_SET':
-      ../../win_ole.c:1810: warning: cast to pointer from integer of different size
-      ../../win_ole.c: In function 'HB_FUN_TOLEAUTO_GET':
-      ../../win_ole.c:1834: warning: cast to pointer from integer of different size
-      ../../win_ole.c: In function 'HB_FUN_TOLEAUTO_ONERROR':
-      ../../win_ole.c:1861: warning: cast to pointer from integer of different size
-      ../../win_regc.c: In function 'hb_regkeyconv':
-      ../../win_regc.c:77: warning: cast to pointer from integer of different size
-      ../../win_regc.c: In function 'HB_FUN_WIN_REGCREATEKEYEX':
-      ../../win_regc.c:82: warning: cast to pointer from integer of different size
-      ../../win_regc.c:96: warning: cast from pointer to integer of different size
-      ../../win_regc.c: In function 'HB_FUN_WIN_REGOPENKEYEX':
-      ../../win_regc.c:118: warning: cast from pointer to integer of different size
-      ../../win_regc.c: In function 'HB_FUN_WIN_REGCLOSEKEY':
-      ../../win_regc.c:193: warning: cast to pointer from integer of different size
       ../../wapi_commctrl.c: In function 'HB_FUN_WAPI_TABCTRL_GETITEMRECT':
       ../../wapi_commctrl.c:521: warning: value computed is not used
       ../../wapi_commctrl.c: In function 'HB_FUN_WAPI_TABCTRL_GETIMAGELIST':

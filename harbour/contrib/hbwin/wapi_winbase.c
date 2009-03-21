@@ -76,11 +76,11 @@ HB_FUNC( WAPI_GETCOMMANDLINE )
 }
 /*----------------------------------------------------------------------*/
 /*
-HMODULE WINAPI GetModuleHandle( __in_opt  LPCTSTR lpModuleName );
+HMODULE WINAPI GetModuleHandle( __in_opt LPCTSTR lpModuleName );
 */
 HB_FUNC( WAPI_GETMODULEHANDLE )
 {
-   LPTSTR lpModuleName = ( LPTSTR ) ISNIL( 1 ) ? 0 : HB_TCHAR_CONVTO( hb_parc( 1 ) );
+   LPTSTR lpModuleName = ISCHAR( 1 ) ? ( LPTSTR ) HB_TCHAR_CONVTO( hb_parc( 1 ) ) : ( LPTSTR ) NULL;
 
    wapi_ret_HANDLE( GetModuleHandle( lpModuleName ) );
 
@@ -88,5 +88,3 @@ HB_FUNC( WAPI_GETMODULEHANDLE )
       HB_TCHAR_FREE( lpModuleName );
 }
 /*----------------------------------------------------------------------*/
-
-

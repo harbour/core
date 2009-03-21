@@ -55,7 +55,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-static HKEY hb_regkeyconv( ULONG nKey )
+static HKEY hb_regkeyconv( HB_PTRDIFF nKey )
 {
    switch( nKey )
    {
@@ -79,11 +79,11 @@ static HKEY hb_regkeyconv( ULONG nKey )
 
 HB_FUNC( WIN_REGCREATEKEYEX )
 {
-   HKEY hWnd = ( HKEY ) hb_parnl( 8 );
+   HKEY hWnd = ( HKEY ) hb_parnint( 8 );
    ULONG nResult = hb_parnl( 9 );
    LPTSTR lpText = HB_TCHAR_CONVTO( hb_parc( 2 ) );
 
-   if( RegCreateKeyEx( hb_regkeyconv( hb_parnl( 1 ) ),
+   if( RegCreateKeyEx( hb_regkeyconv( ( HB_PTRDIFF ) hb_parnint( 1 ) ),
                        lpText,
                        0,
                        NULL,
@@ -93,7 +93,7 @@ HB_FUNC( WIN_REGCREATEKEYEX )
                        &hWnd,
                        &nResult ) == ERROR_SUCCESS )
    {
-      hb_stornl( ( ULONG ) hWnd, 8 );
+      hb_stornint( ( HB_PTRDIFF ) hWnd, 8 );
       hb_stornl( nResult, 9 );
 
       hb_retnl( ERROR_SUCCESS );
@@ -109,13 +109,13 @@ HB_FUNC( WIN_REGOPENKEYEX )
    HKEY hWnd;
    LPTSTR lpText = HB_TCHAR_CONVTO( hb_parc( 2 ) );
 
-   if( RegOpenKeyEx( hb_regkeyconv( hb_parnl( 1 ) ),
+   if( RegOpenKeyEx( hb_regkeyconv( ( HB_PTRDIFF ) hb_parnint( 1 ) ),
                      lpText,
                      0,
                      hb_parnl( 4 ),
                      &hWnd ) == ERROR_SUCCESS )
    {
-      hb_stornl( ( ULONG ) hWnd, 5 );
+      hb_stornint( ( HB_PTRDIFF ) hWnd, 5 );
       hb_retnl( ERROR_SUCCESS );
    }
    else
@@ -130,7 +130,7 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
    DWORD nSize = 0;
    LPTSTR lpKey = HB_TCHAR_CONVTO( hb_parc( 2 ) );
 
-   if( RegQueryValueEx( hb_regkeyconv( hb_parnl( 1 ) ),
+   if( RegQueryValueEx( hb_regkeyconv( ( HB_PTRDIFF ) hb_parnint( 1 ) ),
                         lpKey,
                         NULL,
                         &nType,
@@ -141,7 +141,7 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
       {
          BYTE * cValue = ( BYTE * ) hb_xgrab( nSize + 1 );
 
-         RegQueryValueEx( hb_regkeyconv( hb_parnl( 1 ) ),
+         RegQueryValueEx( hb_regkeyconv( ( HB_PTRDIFF ) hb_parnint( 1 ) ),
                           lpKey,
                           NULL,
                           &nType,
@@ -161,13 +161,13 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
 
 HB_FUNC( WIN_REGSETVALUEEX )
 {
-   DWORD nType = hb_parnl( 4 );
+   DWORD nType = ( DWORD ) hb_parnl( 4 );
    LPTSTR lpKey = HB_TCHAR_CONVTO( hb_parc( 2 ) );
 
    if( nType != REG_DWORD )
    {
       BYTE * cValue = ( BYTE * ) hb_parc( 5 );
-      hb_retni( RegSetValueEx( hb_regkeyconv( hb_parnl( 1 ) ),
+      hb_retni( RegSetValueEx( hb_regkeyconv( ( HB_PTRDIFF ) hb_parnint( 1 ) ),
                                lpKey,
                                0,
                                nType,
@@ -176,8 +176,8 @@ HB_FUNC( WIN_REGSETVALUEEX )
    }
    else
    {
-      DWORD nSpace = hb_parnl( 5 );
-      hb_retni( RegSetValueEx( hb_regkeyconv( hb_parnl( 1 ) ),
+      DWORD nSpace = ( DWORD ) hb_parnl( 5 );
+      hb_retni( RegSetValueEx( hb_regkeyconv( ( HB_PTRDIFF ) hb_parnint( 1 ) ),
                                lpKey,
                                0,
                                nType,
@@ -190,5 +190,5 @@ HB_FUNC( WIN_REGSETVALUEEX )
 
 HB_FUNC( WIN_REGCLOSEKEY )
 {
-   hb_retnl( RegCloseKey( ( HKEY ) hb_parnl( 1 ) ) );
+   hb_retnl( RegCloseKey( ( HKEY ) hb_parnint( 1 ) ) );
 }
