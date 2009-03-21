@@ -192,6 +192,7 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    xcc      - Pelles C for xhb
    owatcom  - Open Watcom C++
    icc      - Intel(R) C/C++
+   iccia64  - Intel(R) C/C++ IA64
    bcc      - Borland/CodeGear C++ 4.x and above
    cygwin   - Cygwin GNU C
 

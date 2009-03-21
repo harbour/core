@@ -496,11 +496,12 @@ FUNCTION Main( ... )
                     { {|| FindInPath( "bcc32"    ) != NIL }, "bcc"     },;
                     { {|| FindInPath( "porc64"   ) != NIL }, "pocc64"  },;
                     { {|| FindInPath( "pocc"     ) != NIL }, "pocc"    },;
+                    { {|| ( tmp := FindInPath( "icl" ) ) != NIL .AND. "itanium" $ Lower( tmp ) }, "iccia64" },;
                     { {|| FindInPath( "icl"      ) != NIL }, "icc"     },;
                     { {|| FindInPath( "cygstart" ) != NIL }, "cygwin"  },;
                     { {|| FindInPath( "xcc"      ) != NIL }, "xcc"     } }
       aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "icc", "pocc", "xcc", "cygwin",;
-                    "msvc64", "msvcia64", "pocc64",;
+                    "msvc64", "msvcia64", "iccia64", "pocc64",;
                     "mingwce", "msvcce", "poccce" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
@@ -1605,7 +1606,7 @@ FUNCTION Main( ... )
             AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
-      CASE t_cARCH == "win" .AND. t_cCOMP $ "msvc|msvc64|msvcia64|icc"
+      CASE t_cARCH == "win" .AND. t_cCOMP $ "msvc|msvc64|msvcia64|icc|iccia64"
          IF s_lDEBUG
             AAdd( s_aOPTC, "-MTd -Zi" )
          ENDIF
@@ -1618,7 +1619,7 @@ FUNCTION Main( ... )
          cLibExt := ".lib"
          cObjExt := ".obj"
          cLibLibExt := cLibExt
-         IF t_cCOMP == "icc"
+         IF t_cCOMP $ "icc|iccia64"
             cBin_Lib := "xilib.exe"
             cBin_CompC := "icl.exe"
             cBin_Dyn := "xilink.exe"
@@ -1661,14 +1662,14 @@ FUNCTION Main( ... )
                                           "harbour-" + cDL_Version_Alter + "-x64" ),;
                               "hbmainstd",;
                               "hbmainwin" }
-         CASE t_cCOMP == "msvcia64"
+         CASE t_cCOMP $ "msvcia64|iccia64"
             s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-ia64",;
                                           "harbour-" + cDL_Version_Alter + "-ia64" ),;
                               "hbmainstd",;
                               "hbmainwin" }
          ENDCASE
 
-         IF !( t_cCOMP == "icc" )
+         IF !( t_cCOMP $ "icc|iccia64" )
             cBin_Res := "rc.exe"
             cOpt_Res := "/r {LR}"
             cResExt := ".res"
@@ -1781,7 +1782,7 @@ FUNCTION Main( ... )
             DO CASE
             CASE ! s_lSHARED .OR. ;
                  !( t_cARCH == "win" ) .OR. ;
-                 t_cCOMP $ "msvc|msvc64|msvcia64|icc"
+                 t_cCOMP $ "msvc|msvc64|msvcia64|icc|iccia64"
 
                /* NOTE: MSVC gives the warning:
                         "LNK4217: locally defined symbol ... imported in function ..."
@@ -3227,7 +3228,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "    linux  : gcc, gpp, owatcom, icc, mingw, mingwce" ,;
       "    darwin : gcc" ,;
       "    win    : mingw, msvc, bcc, owatcom, icc, pocc, cygwin," ,;
-      "             mingwce, msvc64, msvcia64, msvcce, pocc64, poccce, xcc" ,;
+      "             mingwce, msvc64, msvcia64, msvcce, iccia64, pocc64, poccce, xcc" ,;
       "    os2    : gcc, owatcom" ,;
       "    dos    : djgpp, owatcom" ,;
       "    bsd, hpux, sunos: gcc" }

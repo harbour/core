@@ -13,10 +13,12 @@
 @rem    - Harbour binary build
 @rem    - Harbour binary build \bin dir as current dir
 @rem    - This batch copied into current dir
-@rem    - speedtst.prg copied into current dir
-@rem    - envvars HB_CMP_FLAGS_[1-8] set to speedtst build flags
-@rem    - envvars HB_RUN_FLAGS_[1-8] set to speedtst run flags (optional)
-@rem    - envvar HB_RUN_FLAGS set to common speedtst run flags (optional)
+@rem    - envvar HB_BENCH_PRG set to benchmark program (default: speedtst)
+@rem    - benchmark program copied into current dir
+@rem    - envvars HB_CMP_FLAGS_[1-8] set to benchmark program build flags
+@rem    - envvar HB_CMP_FLAGS set to common benchmark program build flags (optional)
+@rem    - envvars HB_RUN_FLAGS_[1-8] set to benchmark program run flags (optional)
+@rem    - envvar HB_RUN_FLAGS set to common benchmark program run flags (optional)
 @rem    - envvar HB_BENCH_RUNS set to number of times tests are run (default: 3)
 @rem    - C compiler configured (just like you'd do for hbmk2)
 @rem    - Running it using this command:
@@ -24,6 +26,18 @@
 @rem ---------------------------------------------------------------
 
 @if not "%OS%" == "Windows_NT" goto END
+
+@rem ; Default settings
+@if "%HB_BENCH_PRG%" == "" @set HB_BENCH_PRG=speedtst
+@if "%HB_BENCH_RUNS%" == "" @set HB_BENCH_RUNS=3
+@if "%HB_CMP_FLAGS_1%" == "" @set HB_CMP_FLAGS_1=-st
+@if "%HB_CMP_FLAGS_2%" == "" @set HB_CMP_FLAGS_2=-mt
+
+@rem ; Benchmark information
+@set HB_BENCH_PRG
+@set HB_BENCH_RUNS
+@set HB_CMP_FLAGS
+@set HB_RUN_FLAGS
 
 @echo off
 
@@ -67,30 +81,25 @@ cscript //nologo //E:javascript _hbhwinfo.js
 harbour /build
 
 @rem ; Pre-make cleanup
-if exist speedtst_*.exe del speedtst_*.exe
+if exist %HB_BENCH_PRG%_*.exe del %HB_BENCH_PRG%_*.exe
 
-@rem ; Default test flags
-if "%HB_CMP_FLAGS_1%" == "" set HB_CMP_FLAGS_1=-st
-if "%HB_CMP_FLAGS_2%" == "" set HB_CMP_FLAGS_2=-mt
-if "%HB_BENCH_RUNS%" == "" set HB_BENCH_RUNS=3
+@rem ; Creating benchmark executables
+if not "%HB_CMP_FLAGS_1%" == "" hbmk2 %HB_BENCH_PRG%.prg -q0 -trace -o%HB_BENCH_PRG%_1.exe %HB_CMP_FLAGS% %HB_CMP_FLAGS_1%
+if not "%HB_CMP_FLAGS_2%" == "" hbmk2 %HB_BENCH_PRG%.prg -q0 -trace -o%HB_BENCH_PRG%_2.exe %HB_CMP_FLAGS% %HB_CMP_FLAGS_2%
+if not "%HB_CMP_FLAGS_3%" == "" hbmk2 %HB_BENCH_PRG%.prg -q0 -trace -o%HB_BENCH_PRG%_3.exe %HB_CMP_FLAGS% %HB_CMP_FLAGS_3%
+if not "%HB_CMP_FLAGS_4%" == "" hbmk2 %HB_BENCH_PRG%.prg -q0 -trace -o%HB_BENCH_PRG%_4.exe %HB_CMP_FLAGS% %HB_CMP_FLAGS_4%
+if not "%HB_CMP_FLAGS_5%" == "" hbmk2 %HB_BENCH_PRG%.prg -q0 -trace -o%HB_BENCH_PRG%_5.exe %HB_CMP_FLAGS% %HB_CMP_FLAGS_5%
+if not "%HB_CMP_FLAGS_6%" == "" hbmk2 %HB_BENCH_PRG%.prg -q0 -trace -o%HB_BENCH_PRG%_6.exe %HB_CMP_FLAGS% %HB_CMP_FLAGS_6%
+if not "%HB_CMP_FLAGS_7%" == "" hbmk2 %HB_BENCH_PRG%.prg -q0 -trace -o%HB_BENCH_PRG%_7.exe %HB_CMP_FLAGS% %HB_CMP_FLAGS_7%
+if not "%HB_CMP_FLAGS_8%" == "" hbmk2 %HB_BENCH_PRG%.prg -q0 -trace -o%HB_BENCH_PRG%_8.exe %HB_CMP_FLAGS% %HB_CMP_FLAGS_8%
 
-@rem ; Creating speedtst executables
-if not "%HB_CMP_FLAGS_1%" == "" hbmk2 speedtst.prg -q0 -trace -ospeedtst_1.exe %HB_CMP_FLAGS_1%
-if not "%HB_CMP_FLAGS_2%" == "" hbmk2 speedtst.prg -q0 -trace -ospeedtst_2.exe %HB_CMP_FLAGS_2%
-if not "%HB_CMP_FLAGS_3%" == "" hbmk2 speedtst.prg -q0 -trace -ospeedtst_3.exe %HB_CMP_FLAGS_3%
-if not "%HB_CMP_FLAGS_4%" == "" hbmk2 speedtst.prg -q0 -trace -ospeedtst_4.exe %HB_CMP_FLAGS_4%
-if not "%HB_CMP_FLAGS_5%" == "" hbmk2 speedtst.prg -q0 -trace -ospeedtst_5.exe %HB_CMP_FLAGS_5%
-if not "%HB_CMP_FLAGS_6%" == "" hbmk2 speedtst.prg -q0 -trace -ospeedtst_6.exe %HB_CMP_FLAGS_6%
-if not "%HB_CMP_FLAGS_7%" == "" hbmk2 speedtst.prg -q0 -trace -ospeedtst_7.exe %HB_CMP_FLAGS_7%
-if not "%HB_CMP_FLAGS_8%" == "" hbmk2 speedtst.prg -q0 -trace -ospeedtst_8.exe %HB_CMP_FLAGS_8%
-
-@rem ; speedtst executable information
-dir speedtst_*.exe speedtst.prg
+@rem ; benchmark executable information
+dir %HB_BENCH_PRG%_*.exe %HB_BENCH_PRG%.prg
 
 @rem ; pre-OS state information
 tasklist
 
-@rem ; Running speedtst executables in multiple runs
+@rem ; Running benchmark executables in multiple runs
 @for /l %%r in (1,1,%HB_BENCH_RUNS%) do @call :RUN_ALL %%r
 
 @rem ; post-OS state information
@@ -102,14 +111,14 @@ tasklist
 
    @echo.
    @echo Run #%1
-   if exist speedtst_1.exe speedtst_1.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_1%
-   if exist speedtst_2.exe speedtst_2.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_2%
-   if exist speedtst_3.exe speedtst_3.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_3%
-   if exist speedtst_4.exe speedtst_4.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_4%
-   if exist speedtst_5.exe speedtst_5.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_5%
-   if exist speedtst_6.exe speedtst_6.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_6%
-   if exist speedtst_7.exe speedtst_7.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_7%
-   if exist speedtst_8.exe speedtst_8.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_8%
+   if exist %HB_BENCH_PRG%_1.exe %HB_BENCH_PRG%_1.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_1%
+   if exist %HB_BENCH_PRG%_2.exe %HB_BENCH_PRG%_2.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_2%
+   if exist %HB_BENCH_PRG%_3.exe %HB_BENCH_PRG%_3.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_3%
+   if exist %HB_BENCH_PRG%_4.exe %HB_BENCH_PRG%_4.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_4%
+   if exist %HB_BENCH_PRG%_5.exe %HB_BENCH_PRG%_5.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_5%
+   if exist %HB_BENCH_PRG%_6.exe %HB_BENCH_PRG%_6.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_6%
+   if exist %HB_BENCH_PRG%_7.exe %HB_BENCH_PRG%_7.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_7%
+   if exist %HB_BENCH_PRG%_8.exe %HB_BENCH_PRG%_8.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_8%
    @goto END
 
 :END

@@ -8,6 +8,31 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-21 10:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * tests/bnchmark/bnch_win.bat
+    + Added option to override benchmark program name, so now
+      it can be used with customized speedtst versions or other
+      benchmark apps.
+    + Added HB_CMP_FLAGS envvar to define common compilation flags.
+    + Now echoing all benchmark settings to output.
+
+  * config/win/icc.cf
+    + Added -nologo.
+    * Changed -W4 to -W3, as -W3 is really verbose in this compiler.
+
+  * INSTALL
+  * bin/hb-mkdyn.bat
+  * utils/hbmk2/hbmk2.prg
+  + config/win/iccia64.cf
+    + Added Intel(R) C++ Compiler IA64 support.
+      All Harbour libs (including contribs) compiled successfully,
+      but I couldn't try linking any executables.
+    ; TODO: Add processor information to appropriate places into
+            Harbour. Currently we have only bit width and endianness,
+            but no actual CPU family info. CPU instruction families
+            Harbour can currently be built on out of the box:
+            x86, amd64, IA64, PPC, PPC64, ARM.
+
 2009-03-20 17:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * tests/bnchmark
   + tests/bnchmark/bnch_win.bat

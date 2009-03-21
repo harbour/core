@@ -23,6 +23,7 @@ set HB_DLL_LIBS_ST=hbvm
 set HB_DLL_LIBS_MT=hbvmmt
 
 if "%HB_COMPILER%" == "icc"      goto DO_MSVC
+if "%HB_COMPILER%" == "iccia64"  goto DO_MSVC
 if "%HB_COMPILER%" == "msvc"     goto DO_MSVC
 if "%HB_COMPILER%" == "msvc64"   goto DO_MSVC
 if "%HB_COMPILER%" == "msvcia64" goto DO_MSVC
@@ -40,10 +41,12 @@ echo Making .dlls for %HB_COMPILER%...
 md _dll
 cd _dll
 
-if     "%HB_COMPILER%" == "icc" set _BIN_LIB=xilib
-if not "%HB_COMPILER%" == "icc" set _BIN_LIB=lib
-if     "%HB_COMPILER%" == "icc" set _BIN_LINK=xilink
-if not "%HB_COMPILER%" == "icc" set _BIN_LINK=link
+set _BIN_LIB=lib
+set _BIN_LINK=link
+if "%HB_COMPILER%" == "icc"     set _BIN_LIB=xilib
+if "%HB_COMPILER%" == "icc"     set _BIN_LINK=xilink
+if "%HB_COMPILER%" == "iccia64" set _BIN_LIB=xilib
+if "%HB_COMPILER%" == "iccia64" set _BIN_LINK=xilink
 
 rem ; Extract neutral objects
 echo.> _hboneut.txt
@@ -103,6 +106,8 @@ cd ..
 
 if "%HB_COMPILER%" == "icc"      set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
 if "%HB_COMPILER%" == "icc"      set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
+if "%HB_COMPILER%" == "iccia64"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-ia64
+if "%HB_COMPILER%" == "iccia64"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-ia64
 if "%HB_COMPILER%" == "msvc"     set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
 if "%HB_COMPILER%" == "msvc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
 if "%HB_COMPILER%" == "msvc64"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
