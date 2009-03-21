@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 {list of individual authors and e-mail addresses}
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,103 +57,108 @@
 
 #if QT_VERSION >= 0x040500
 
-#include  <QtGui/QDialog>
+#include <QtGui/QPushButton>
 
 /*----------------------------------------------------------------------*/
-/*
-QDialog ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
-*/
-HB_FUNC( QT_QDIALOG )
+
+HB_FUNC( QT_PUSHBUTTON )
 {
-   hb_retptr( new QDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+  if( hb_pcount() >= 2 )
+    hb_retptr( ( QPushButton* ) new QPushButton( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 2 ), hbqt_par_QWidget( 3 ) ) );
+  else if( hb_pcount() >= 1 )
+    hb_retptr( ( QPushButton* ) new QPushButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+  else
+    hb_retptr( ( QPushButton* ) new QPushButton( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
-bool isModal () const
+QPushButton ( QWidget * parent = 0 ) [1]
+QPushButton ( const QString & text, QWidget * parent = 0 ) [2]
+QPushButton ( const QIcon & icon, const QString & text, QWidget * parent = 0 ) [3]
 */
-HB_FUNC( QT_QDIALOG_ISMODAL )
+HB_FUNC( QT_QPUSHBUTTON_1 )
 {
-   hb_retl( hbqt_par_QDialog( 1 )->isModal() );
+  hb_retptr( ( QPushButton* ) new QPushButton( hbqt_par_QWidget( 1 ) ) );
+}
+HB_FUNC( QT_QPUSHBUTTON_2 )
+{
+  hb_retptr( ( QPushButton* ) new QPushButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+}
+HB_FUNC( QT_QPUSHBUTTON_3 )
+{
+  hb_retptr( ( QPushButton* ) new QPushButton( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 2 ), hbqt_par_QWidget( 3 ) ) );
 }
 
 /*
-void setModal ( bool modal )
+bool autoDefault () const
 */
-HB_FUNC( QT_QDIALOG_SETMODAL )
+HB_FUNC( QT_QPUSHBUTTON_AUTODEFAULT )
 {
-   hbqt_par_QDialog( 1 )->setModal( hb_parl( 2 ) );
+  hb_retl( hbqt_par_QPushButton( 1 )->autoDefault() );
 }
 
 /*
-bool isSizeGripEnabled () const
+bool isDefault () const
 */
-HB_FUNC( QT_QDIALOG_ISSIZEGRIPENABLED )
+HB_FUNC( QT_QPUSHBUTTON_ISDEFAULT )
 {
-   hb_retl( hbqt_par_QDialog( 1 )->isSizeGripEnabled() );
+  hb_retl( hbqt_par_QPushButton( 1 )->isDefault() );
 }
 
 /*
-void setSizeGripEnabled ( bool )
+bool isFlat () const
 */
-HB_FUNC( QT_QDIALOG_SETSIZEGRIPENABLED )
+HB_FUNC( QT_QPUSHBUTTON_ISFLAT )
 {
-   hbqt_par_QDialog( 1 )->setSizeGripEnabled( hb_parl( 2 ) );
+  hb_retl( hbqt_par_QPushButton( 1 )->isFlat() );
 }
 
 /*
-void QDialog::accept ()   [virtual slot]
+QMenu * menu () const
 */
-HB_FUNC( QT_QDIALOG_ACCEPT )
+HB_FUNC( QT_QPUSHBUTTON_MENU )
 {
-   hbqt_par_QDialog( 1 )->accept();
+  hb_retptr( ( QMenu* ) hbqt_par_QPushButton( 1 )->menu() );
 }
 
 /*
-void QDialog::done ( int r )   [virtual slot]
+void setAutoDefault ( bool )
 */
-HB_FUNC( QT_QDIALOG_DONE )
+HB_FUNC( QT_QPUSHBUTTON_SETAUTODEFAULT )
 {
-   hbqt_par_QDialog( 1 )->done( hb_parni( 2 ) );
+  hbqt_par_QPushButton( 1 )->setAutoDefault( hb_parl( 2 ) );
 }
 
 /*
-int QDialog::exec ()   [slot]
+void setDefault ( bool )
 */
-HB_FUNC( QT_QDIALOG_EXEC )
+HB_FUNC( QT_QPUSHBUTTON_SETDEFAULT )
 {
-   hb_retni( hbqt_par_QDialog( 1 )->exec() );
+  hbqt_par_QPushButton( 1 )->setDefault( hb_parl( 2 ) );
 }
 
 /*
-void QDialog::open ()   [slot]
+void setFlat ( bool )
 */
-HB_FUNC( QT_QDIALOG_OPEN )
+HB_FUNC( QT_QPUSHBUTTON_SETFLAT )
 {
-   hbqt_par_QDialog( 1 )->open();
+  hbqt_par_QPushButton( 1 )->setFlat( hb_parl( 2 ) );
 }
 
 /*
-void QDialog::reject ()   [virtual slot]
+void setMenu ( QMenu * menu )
 */
-HB_FUNC( QT_QDIALOG_REJECT )
+HB_FUNC( QT_QPUSHBUTTON_SETMENU )
 {
-   hbqt_par_QDialog( 1 )->reject();
+  hbqt_par_QPushButton( 1 )->setMenu( hbqt_par_QMenu( 2 ) );
 }
 
 /*
-int QDialog::result () const
+void showMenu ()
 */
-HB_FUNC( QT_QDIALOG_RESULT )
+HB_FUNC( QT_QPUSHBUTTON_SHOWMENU )
 {
-   hb_retni( hbqt_par_QDialog( 1 )->result() );
-}
-
-/*
-void QDialog::setResult ( int i )
-*/
-HB_FUNC( QT_QDIALOG_SETRESULT )
-{
-   hbqt_par_QDialog( 1 )->setResult( hb_parni( 2 ) );
+  hbqt_par_QPushButton( 1 )->showMenu();
 }
 
 /*----------------------------------------------------------------------*/

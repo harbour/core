@@ -8,6 +8,98 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-21 09:01 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/hbqt/Makefile
+    + Added new files.
+
+  * harbour/contrib/hbqt/hbqt.h
+  + harbour/contrib/hbqt/slots.h
+    + Slots.h could be renamed to hbqt_slots.h, Marcos ?
+
+  + harbour/contrib/hbqt/hbqt_qabstractscrollarea.cpp
+  + harbour/contrib/hbqt/hbqt_qabstractslider.cpp
+  + harbour/contrib/hbqt/hbqt_qabstractspinbox.cpp
+  + harbour/contrib/hbqt/hbqt_qaction.cpp
+  + harbour/contrib/hbqt/hbqt_qapplication.cpp
+  + harbour/contrib/hbqt/hbqt_qboxlayout.cpp
+  + harbour/contrib/hbqt/hbqt_qcalendarwidget.cpp
+  + harbour/contrib/hbqt/hbqt_qcheckbox.cpp
+  + harbour/contrib/hbqt/hbqt_qcolordialog.cpp
+  + harbour/contrib/hbqt/hbqt_qcombobox.cpp
+  + harbour/contrib/hbqt/hbqt_qcommandlinkbutton.cpp
+  + harbour/contrib/hbqt/hbqt_qcoreapplication.cpp
+  + harbour/contrib/hbqt/hbqt_qcqlendarwidget.cpp
+  + harbour/contrib/hbqt/hbqt_qdateedit.cpp
+  + harbour/contrib/hbqt/hbqt_qdatetimeedit.cpp
+  + harbour/contrib/hbqt/hbqt_qdial.cpp
+  * harbour/contrib/hbqt/hbqt_qdialog.cpp
+  + harbour/contrib/hbqt/hbqt_qdoublespinbox.cpp
+  + harbour/contrib/hbqt/hbqt_qerrormessage.cpp
+  + harbour/contrib/hbqt/hbqt_qfiledialog.cpp
+  + harbour/contrib/hbqt/hbqt_qfocusframe.cpp
+  + harbour/contrib/hbqt/hbqt_qfont.cpp
+  + harbour/contrib/hbqt/hbqt_qfontcombobox.cpp
+  + harbour/contrib/hbqt/hbqt_qfontdialog.cpp
+  + harbour/contrib/hbqt/hbqt_qformlayout.cpp
+  + harbour/contrib/hbqt/hbqt_qframe.cpp
+  + harbour/contrib/hbqt/hbqt_qgroupbox.cpp
+  + harbour/contrib/hbqt/hbqt_qhboxlayout.cpp
+  + harbour/contrib/hbqt/hbqt_qinputdialog.cpp
+  + harbour/contrib/hbqt/hbqt_qlabel.cpp
+  + harbour/contrib/hbqt/hbqt_qlayout.cpp
+  + harbour/contrib/hbqt/hbqt_qlayoutitem.cpp
+  + harbour/contrib/hbqt/hbqt_qlcdnumber.cpp
+  + harbour/contrib/hbqt/hbqt_qlinedit.cpp
+  + harbour/contrib/hbqt/hbqt_qlineedit.cpp
+  + harbour/contrib/hbqt/hbqt_qlistview.cpp
+  + harbour/contrib/hbqt/hbqt_qmainwindow.cpp
+  + harbour/contrib/hbqt/hbqt_qmenu.cpp
+  + harbour/contrib/hbqt/hbqt_qmenubar.cpp
+  + harbour/contrib/hbqt/hbqt_qmessagebox.cpp
+  + harbour/contrib/hbqt/hbqt_qobject.cpp
+  + harbour/contrib/hbqt/hbqt_qpagesetupdialog.cpp
+  + harbour/contrib/hbqt/hbqt_qprintdialog.cpp
+  + harbour/contrib/hbqt/hbqt_qprintpreviewdialog.cpp
+  + harbour/contrib/hbqt/hbqt_qprogressbar.cpp
+  + harbour/contrib/hbqt/hbqt_qprogressdialog.cpp
+  + harbour/contrib/hbqt/hbqt_qpushbutton.cpp
+  + harbour/contrib/hbqt/hbqt_qradiobutton.cpp
+  + harbour/contrib/hbqt/hbqt_qscrollarea.cpp
+  + harbour/contrib/hbqt/hbqt_qscrollbar.cpp
+  + harbour/contrib/hbqt/hbqt_qsizegrip.cpp
+  + harbour/contrib/hbqt/hbqt_qslider.cpp
+  + harbour/contrib/hbqt/hbqt_qspinbox.cpp
+  + harbour/contrib/hbqt/hbqt_qsplitter.cpp
+  + harbour/contrib/hbqt/hbqt_qtabbar.cpp
+  + harbour/contrib/hbqt/hbqt_qtableview.cpp
+  + harbour/contrib/hbqt/hbqt_qtablewidget.cpp
+  + harbour/contrib/hbqt/hbqt_qtablewidgetitem.cpp
+  + harbour/contrib/hbqt/hbqt_qtabwidget.cpp
+  + harbour/contrib/hbqt/hbqt_qtextedit.cpp
+  + harbour/contrib/hbqt/hbqt_qtimeedit.cpp
+  + harbour/contrib/hbqt/hbqt_qtoolbar.cpp
+  + harbour/contrib/hbqt/hbqt_qtoolbox.cpp
+  + harbour/contrib/hbqt/hbqt_qtoolbutton.cpp
+  + harbour/contrib/hbqt/hbqt_qtreeview.cpp
+  + harbour/contrib/hbqt/hbqt_qvboxlayout.cpp
+  + harbour/contrib/hbqt/hbqt_qwebview.cpp
+  * harbour/contrib/hbqt/hbqt_qwidget.cpp
+  + harbour/contrib/hbqt/hbqt_qwizard.cpp
+  + harbour/contrib/hbqt/hbqt_slots.cpp
+  + harbour/contrib/hbqt/moc_slots.cpp
+    + Added re-worked code supplied by Marcos Gambeta, thanks.
+      Please ensure that all future developments should respect
+      hbqt.h api conventions.
+
+  + harbour/contrib/hbqt/tests
+  + harbour/contrib/hbqt/tests/demoqt.prg
+    + Added a small test. Marcos please check which MinGW flag is
+      needed so that it does not show up console screen as parent
+      of App or Dialogs.
+
+    ; NOTE: Marcos, can you update your PHP script to write
+            output file in format I showed in above files?
+
 2009-03-21 16:07 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     ! restored default optimization flag (-O3) in hb* scripts

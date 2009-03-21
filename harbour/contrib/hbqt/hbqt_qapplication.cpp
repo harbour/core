@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 {list of individual authors and e-mail addresses}
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,108 +53,117 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbapi.h"
+#include "hbapi.h"
+#include "hbinit.h"
+#include "hbdefs.h"
+#include "hbapifs.h"
+#include "hbapiitm.h"
+#include "hbstack.h"
+#include "hbvm.h"
+#include "hbdate.h"
+#include "hbapierr.h"
+
 #include "hbqt.h"
 
 #if QT_VERSION >= 0x040500
 
-#include  <QtGui/QDialog>
+#include <QtGui/QApplication>
 
 /*----------------------------------------------------------------------*/
-/*
-QDialog ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
-*/
-HB_FUNC( QT_QDIALOG )
+
+void release_codeblocks();
+
+static QApplication * app = NULL;
+static bool hbqtinit = false;
+
+// HB_FUNC( QT_QAPPLICATION )
+// {
+//    int i_argc = 0;
+//    char** c_argv = NULL;
+//    app = new QApplication(i_argc, c_argv);
+//    hb_retptr((QApplication*) app);
+// }
+HB_FUNC( QT_QAPPLICATION )
 {
-   hb_retptr( new QDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+   //int i_argc;
+   //char ** c_argv;
+   //i_argc = hb_cmdargARGC();
+   //c_argv = hb_cmdargARGV();
+   //app = new QApplication(i_argc, c_argv);
+   hb_retptr( (QApplication *) app );
+}
+
+HB_FUNC( QT_QAPPLICATION_EXEC )
+{
+   int i;
+   i = app->exec();
+   hb_retni( i );
+}
+
+HB_FUNC( QT_QAPPLICATION_SETSTYLE )
+{
+   app->setStyle( hb_parc(2) );
+}
+
+HB_FUNC( QT_QAPPLICATION_QUIT )
+{
+   app->quit();
 }
 
 /*
-bool isModal () const
+void aboutQt ()
 */
-HB_FUNC( QT_QDIALOG_ISMODAL )
+HB_FUNC( QT_QAPPLICATION_ABOUTQT )
 {
-   hb_retl( hbqt_par_QDialog( 1 )->isModal() );
+   app->aboutQt();
 }
 
-/*
-void setModal ( bool modal )
-*/
-HB_FUNC( QT_QDIALOG_SETMODAL )
+static void hbqt_Exit( void * cargo )
 {
-   hbqt_par_QDialog( 1 )->setModal( hb_parl( 2 ) );
+   HB_SYMBOL_UNUSED( cargo );
+
+   release_codeblocks();
 }
 
-/*
-bool isSizeGripEnabled () const
-*/
-HB_FUNC( QT_QDIALOG_ISSIZEGRIPENABLED )
+static void hbqt_Init( void * cargo )
 {
-   hb_retl( hbqt_par_QDialog( 1 )->isSizeGripEnabled() );
+   int argc;
+   char ** argv;
+
+   HB_SYMBOL_UNUSED( cargo );
+
+   argc = hb_cmdargARGC();
+   argv = hb_cmdargARGV();
+
+   app = new QApplication(argc, argv);
+
+   if( app )
+   {
+     hbqtinit = true;
+   }
+
+   if( ! hbqtinit )
+      hb_errInternal( 11001, "hbqt_Init(): QT Initilization Error.", NULL, NULL );
+
+   hb_cmdargInit( argc, argv );
+
+   hb_vmAtExit( hbqt_Exit, NULL );
 }
 
-/*
-void setSizeGripEnabled ( bool )
-*/
-HB_FUNC( QT_QDIALOG_SETSIZEGRIPENABLED )
-{
-   hbqt_par_QDialog( 1 )->setSizeGripEnabled( hb_parl( 2 ) );
-}
+HB_CALL_ON_STARTUP_BEGIN( _hb_hbqt_init_ )
+   hb_vmAtInit( hbqt_Init, NULL );
+HB_CALL_ON_STARTUP_END( _hb_hbqt_init_ )
 
-/*
-void QDialog::accept ()   [virtual slot]
-*/
-HB_FUNC( QT_QDIALOG_ACCEPT )
-{
-   hbqt_par_QDialog( 1 )->accept();
-}
-
-/*
-void QDialog::done ( int r )   [virtual slot]
-*/
-HB_FUNC( QT_QDIALOG_DONE )
-{
-   hbqt_par_QDialog( 1 )->done( hb_parni( 2 ) );
-}
-
-/*
-int QDialog::exec ()   [slot]
-*/
-HB_FUNC( QT_QDIALOG_EXEC )
-{
-   hb_retni( hbqt_par_QDialog( 1 )->exec() );
-}
-
-/*
-void QDialog::open ()   [slot]
-*/
-HB_FUNC( QT_QDIALOG_OPEN )
-{
-   hbqt_par_QDialog( 1 )->open();
-}
-
-/*
-void QDialog::reject ()   [virtual slot]
-*/
-HB_FUNC( QT_QDIALOG_REJECT )
-{
-   hbqt_par_QDialog( 1 )->reject();
-}
-
-/*
-int QDialog::result () const
-*/
-HB_FUNC( QT_QDIALOG_RESULT )
-{
-   hb_retni( hbqt_par_QDialog( 1 )->result() );
-}
-
-/*
-void QDialog::setResult ( int i )
-*/
-HB_FUNC( QT_QDIALOG_SETRESULT )
-{
-   hbqt_par_QDialog( 1 )->setResult( hb_parni( 2 ) );
-}
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup _hb_hbqt_init_
+#elif defined( HB_MSC_STARTUP )
+   #if defined( HB_OS_WIN_64 )
+      #pragma section( HB_MSC_START_SEGMENT, long, read )
+   #endif
+   #pragma data_seg( HB_MSC_START_SEGMENT )
+   static HB_$INITSYM hb_auto_hbqt_init_ = _hb_hbqt_init_;
+   #pragma data_seg()
+#endif
 
 /*----------------------------------------------------------------------*/
 #endif

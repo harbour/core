@@ -53,26 +53,59 @@
 #ifndef __HBQT_H
 #define __HBQT_H
 
+#define QT_VERSION 0x040500
+
 #include <Qt/qglobal.h>
 
 #if QT_VERSION >= 0x040500
 
-#define hbqt_par_QWidget( n )                ( ( QWidget* ) hb_parptr( n ) )
-#define hbqt_par_QDialog( n )                ( ( QDialog* ) hb_parptr( n ) )
+
 #define hbqt_par_QAbstractButton( n )        ( ( QAbstractButton* ) hb_parptr( n ) )
 #define hbqt_par_QAbstractItemView( n )      ( ( QAbstractItemView* ) hb_parptr( n ) )
+#define hbqt_par_QAbstractItemModel( n )     ( ( QAbstractItemModel* ) hb_parptr( n ) )
 #define hbqt_par_QAbstractItemDelegate( n )  ( ( QAbstractItemDelegate* ) hb_parptr( n ) )
 #define hbqt_par_QAbstractPrintDialog( n )   ( ( QAbstractPrintDialog* ) hb_parptr( n ) )
+#define hbqt_par_QAbstractScrollArea( n )    ( ( QAbstractScrollArea* ) hb_parptr( n ) )
+#define hbqt_par_QAbstractSlider( n )        ( ( QAbstractSlider* ) hb_parptr( n ) )
+#define hbqt_par_QAbstractSpinBox( n )       ( ( QAbstractSpinBox* ) hb_parptr( n ) )
 #define hbqt_par_QAction( n )                ( ( QAction* ) hb_parptr( n ) )
-#define hbqt_par_QWindowSurface( n )         ( ( QWindowSurface* ) hb_parptr( n ) )
-#define hbqt_par_QStyle( n )                 ( ( QStyle* ) hb_parptr( n ) )
-#define hbqt_par_QLayout( n )                ( ( QLayout* ) hb_parptr( n ) )
+#define hbqt_par_QActionGroup( n )           ( ( QActionGroup* ) hb_parptr( n ) )
+#define hbqt_par_QBoxLayout( n )             ( ( QBoxLayout* ) hb_parptr( n ) )
+#define hbqt_par_QCalendarWidget( n )        ( ( QCalendarWidget* ) hb_parptr( n ) )
+#define hbqt_par_QCheckBox( n )              ( ( QCheckBox* ) hb_parptr( n ) )
+#define hbqt_par_QColorDialog( n )           ( ( QColorDialog* ) hb_parptr( n ) )
+#define hbqt_par_QComboBox( n )              ( ( QComboBox* ) hb_parptr( n ) )
+#define hbqt_par_QCommandLinkButton( n )     ( ( QCommandLinkButton* ) hb_parptr( n ) )
+#define hbqt_par_QCompleter( n )             ( ( QCompleter* ) hb_parptr( n ) )
+#define hbqt_par_QDialog( n )                ( ( QDialog* ) hb_parptr( n ) )
+#define hbqt_par_QDockWidget( n )            ( ( QDockWidget* ) hb_parptr( n ) )
+#define hbqt_par_QFrame( n )                 ( ( QFrame* ) hb_parptr( n ) )
 #define hbqt_par_QInputContext( n )          ( ( QInputContext* ) hb_parptr( n ) )
+#define hbqt_par_QLabel( n )                 ( ( QLabel* ) hb_parptr( n ) )
+#define hbqt_par_QLayout( n )                ( ( QLayout* ) hb_parptr( n ) )
+#define hbqt_par_QLayoutItem( n )            ( ( QLayoutItem* ) hb_parptr( n ) )
+#define hbqt_par_QLineEdit( n )              ( ( QLineEdit* ) hb_parptr( n ) )
+#define hbqt_par_QMainWindow( n )            ( ( QMainWindow* ) hb_parptr( n ) )
+#define hbqt_par_QMenu( n )                  ( ( QMenu* ) hb_parptr( n ) )
+#define hbqt_par_QMenuBar( n )               ( ( QMenuBar* ) hb_parptr( n ) )
+#define hbqt_par_QObject( n )                ( ( QObject* ) hb_parptr( n ) )
+#define hbqt_par_QPrinter( n )               ( ( QPrinter* ) hb_parptr( n ) )
+#define hbqt_par_QPushButton( n )            ( ( QPushButton* ) hb_parptr( n ) )
+#define hbqt_par_QScrollBar( n )             ( ( QScrollBar* ) hb_parptr( n ) )
+#define hbqt_par_QSpacerItem( n )            ( ( QSpacerItem* ) hb_parptr( n ) )
+#define hbqt_par_QStatusBar( n )             ( ( QStatusBar* ) hb_parptr( n ) )
+#define hbqt_par_QStyle( n )                 ( ( QStyle* ) hb_parptr( n ) )
+#define hbqt_par_QTableView( n )             ( ( QTableView* ) hb_parptr( n ) )
+#define hbqt_par_QTableWidgetItem( n )       ( ( QTableWidgetItem* ) hb_parptr( n ) )
+#define hbqt_par_QToolBar( n )               ( ( QToolBar* ) hb_parptr( n ) )
+#define hbqt_par_QToolButton( n )            ( ( QToolButton* ) hb_parptr( n ) )
+#define hbqt_par_QWebView( n )               ( ( QWebView* ) hb_parptr( n ) )
+#define hbqt_par_QWidget( n )                ( ( QWidget* ) hb_parptr( n ) )
+#define hbqt_par_QWindowSurface( n )         ( ( QWindowSurface* ) hb_parptr( n ) )
 
+#define hbqt_par_QIcon( n )                  ( ( QIcon ) hb_parc( n ) )
 #define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )
 #define hbqt_par_Bool( n )                   ( hb_parl( n ) )
-
-#define hbqt_par_WindowFlags( n )            ( ( Qt::WindowFlags ) hb_parni( n ) )
 
 #define hbqt_ret_QWidget( p )                ( hb_retptr( ( QWidget* ) p ) )
 #define hbqt_ret_QAbstractItemDelegate( p )  ( hb_retptr( ( QAbstractItemDelegate* ) p ) )

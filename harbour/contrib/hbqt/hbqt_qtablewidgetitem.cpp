@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 {list of individual authors and e-mail addresses}
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,104 +57,44 @@
 
 #if QT_VERSION >= 0x040500
 
-#include  <QtGui/QDialog>
+#include <QtGui/QTableWidgetItem>
 
 /*----------------------------------------------------------------------*/
 /*
-QDialog ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
+QTableWidgetItem ( int type = Type ) [1]
+QTableWidgetItem ( const QString & text, int type = Type ) [2]
+QTableWidgetItem ( const QIcon & icon, const QString & text, int type = Type ) [3]
+QTableWidgetItem ( const QTableWidgetItem & other ) [4]
 */
-HB_FUNC( QT_QDIALOG )
+HB_FUNC( QT_QTABLEWIDGETITEM_1 )
 {
-   hb_retptr( new QDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+  hb_retptr( ( QTableWidgetItem* ) new QTableWidgetItem( hb_parni( 1 ) ) );
 }
 
-/*
-bool isModal () const
-*/
-HB_FUNC( QT_QDIALOG_ISMODAL )
+HB_FUNC( QT_QTABLEWIDGETITEM_2 )
 {
-   hb_retl( hbqt_par_QDialog( 1 )->isModal() );
+  hb_retptr( ( QTableWidgetItem* ) new QTableWidgetItem( hbqt_par_QString( 1 ), hb_parni( 2 ) ) );
 }
 
-/*
-void setModal ( bool modal )
-*/
-HB_FUNC( QT_QDIALOG_SETMODAL )
+HB_FUNC( QT_QTABLEWIDGETITEM_3 )
 {
-   hbqt_par_QDialog( 1 )->setModal( hb_parl( 2 ) );
+  hb_retptr( ( QTableWidgetItem* ) new QTableWidgetItem( QIcon( hbqt_par_QString( 1 ) ),hbqt_par_QString( 2 ), hb_parni( 3 ) ) );
 }
 
-/*
-bool isSizeGripEnabled () const
-*/
-HB_FUNC( QT_QDIALOG_ISSIZEGRIPENABLED )
+#if 0
+HB_FUNC( QT_QTABLEWIDGETITEM_4 )
 {
-   hb_retl( hbqt_par_QDialog( 1 )->isSizeGripEnabled() );
+  hb_retptr( ( QTableWidgetItem* ) new QTableWidgetItem( hbqt_par_QTableWidgetItem( 1 ) ) );
 }
 
-/*
-void setSizeGripEnabled ( bool )
-*/
-HB_FUNC( QT_QDIALOG_SETSIZEGRIPENABLED )
+HB_FUNC( QT_QTABLEWIDGETITEM_4 )
 {
-   hbqt_par_QDialog( 1 )->setSizeGripEnabled( hb_parl( 2 ) );
+  QTableWidgetItem * twi = NULL;
+  QTableWidgetItem * other = (QTableWidgetItem *) hb_parptr(1);
+  twi = new QTableWidgetItem ( (QTableWidgetItem *) other );
+  hb_retptr( (QTableWidgetItem *) twi );
 }
-
-/*
-void QDialog::accept ()   [virtual slot]
-*/
-HB_FUNC( QT_QDIALOG_ACCEPT )
-{
-   hbqt_par_QDialog( 1 )->accept();
-}
-
-/*
-void QDialog::done ( int r )   [virtual slot]
-*/
-HB_FUNC( QT_QDIALOG_DONE )
-{
-   hbqt_par_QDialog( 1 )->done( hb_parni( 2 ) );
-}
-
-/*
-int QDialog::exec ()   [slot]
-*/
-HB_FUNC( QT_QDIALOG_EXEC )
-{
-   hb_retni( hbqt_par_QDialog( 1 )->exec() );
-}
-
-/*
-void QDialog::open ()   [slot]
-*/
-HB_FUNC( QT_QDIALOG_OPEN )
-{
-   hbqt_par_QDialog( 1 )->open();
-}
-
-/*
-void QDialog::reject ()   [virtual slot]
-*/
-HB_FUNC( QT_QDIALOG_REJECT )
-{
-   hbqt_par_QDialog( 1 )->reject();
-}
-
-/*
-int QDialog::result () const
-*/
-HB_FUNC( QT_QDIALOG_RESULT )
-{
-   hb_retni( hbqt_par_QDialog( 1 )->result() );
-}
-
-/*
-void QDialog::setResult ( int i )
-*/
-HB_FUNC( QT_QDIALOG_SETRESULT )
-{
-   hbqt_par_QDialog( 1 )->setResult( hb_parni( 2 ) );
-}
+#endif
 
 /*----------------------------------------------------------------------*/
 #endif

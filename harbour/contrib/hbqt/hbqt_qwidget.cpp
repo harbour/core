@@ -57,8 +57,8 @@
 
 #if QT_VERSION >= 0x040500
 
-#include <Qt/QWidget.h>
-#include <Qt/QIcon.h>
+#include <QtGui/QWidget>
+#include <QtGui/QIcon>
 
 /*----------------------------------------------------------------------*/
 /*
@@ -66,7 +66,7 @@ QWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 )
 */
 HB_FUNC( QT_QWIDGET )
 {
-  hb_retptr( new QWidget( hbqt_par_QWidget( 1 ), hbqt_par_WindowFlags( 2 ) ) );
+  hb_retptr( new QWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
 }
 
 /*

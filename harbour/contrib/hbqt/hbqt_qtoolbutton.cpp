@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 {list of individual authors and e-mail addresses}
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,103 +57,119 @@
 
 #if QT_VERSION >= 0x040500
 
-#include  <QtGui/QDialog>
+#include <QtGui/QToolButton>
 
 /*----------------------------------------------------------------------*/
 /*
-QDialog ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
+QToolButton ( QWidget * parent = 0 )
 */
-HB_FUNC( QT_QDIALOG )
+HB_FUNC( QT_QTOOLBUTTON )
 {
-   hb_retptr( new QDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+  hb_retptr( ( QToolButton* ) new QToolButton( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
-bool isModal () const
+Qt::ArrowType arrowType () const
 */
-HB_FUNC( QT_QDIALOG_ISMODAL )
+HB_FUNC( QT_QTOOLBUTTON_ARROWTYPE )
 {
-   hb_retl( hbqt_par_QDialog( 1 )->isModal() );
+  hb_retni( hbqt_par_QToolButton( 1 )->arrowType() );
 }
 
 /*
-void setModal ( bool modal )
+bool autoRaise () const
 */
-HB_FUNC( QT_QDIALOG_SETMODAL )
+HB_FUNC( QT_QTOOLBUTTON_AUTORAISE )
 {
-   hbqt_par_QDialog( 1 )->setModal( hb_parl( 2 ) );
+  hb_retl( hbqt_par_QToolButton( 1 )->autoRaise() );
 }
 
 /*
-bool isSizeGripEnabled () const
+QAction * defaultAction () const
 */
-HB_FUNC( QT_QDIALOG_ISSIZEGRIPENABLED )
+HB_FUNC( QT_QTOOLBUTTON_DEFAULTACTION )
 {
-   hb_retl( hbqt_par_QDialog( 1 )->isSizeGripEnabled() );
+  hb_retptr( ( QAction* ) hbqt_par_QToolButton( 1 )->defaultAction() );
 }
 
 /*
-void setSizeGripEnabled ( bool )
+QMenu * menu () const
 */
-HB_FUNC( QT_QDIALOG_SETSIZEGRIPENABLED )
+HB_FUNC( QT_QTOOLBUTTON_MENU )
 {
-   hbqt_par_QDialog( 1 )->setSizeGripEnabled( hb_parl( 2 ) );
+  hb_retptr( ( QMenu* ) hbqt_par_QToolButton( 1 )->menu() );
 }
 
 /*
-void QDialog::accept ()   [virtual slot]
+ToolButtonPopupMode popupMode () const
 */
-HB_FUNC( QT_QDIALOG_ACCEPT )
+HB_FUNC( QT_QTOOLBUTTON_POPUPMODE )
 {
-   hbqt_par_QDialog( 1 )->accept();
+  hb_retni( hbqt_par_QToolButton( 1 )->popupMode() );
 }
 
 /*
-void QDialog::done ( int r )   [virtual slot]
+void setArrowType ( Qt::ArrowType type )
 */
-HB_FUNC( QT_QDIALOG_DONE )
+HB_FUNC( QT_QTOOLBUTTON_SETARROWTYPE )
 {
-   hbqt_par_QDialog( 1 )->done( hb_parni( 2 ) );
+  hbqt_par_QToolButton( 1 )->setArrowType( ( Qt::ArrowType ) hb_parni(2) );
 }
 
 /*
-int QDialog::exec ()   [slot]
+void setAutoRaise ( bool enable )
 */
-HB_FUNC( QT_QDIALOG_EXEC )
+HB_FUNC( QT_QTOOLBUTTON_SETAUTORAISE )
 {
-   hb_retni( hbqt_par_QDialog( 1 )->exec() );
+  hbqt_par_QToolButton( 1 )->setAutoRaise( hb_parl(2) );
 }
 
 /*
-void QDialog::open ()   [slot]
+void setMenu ( QMenu * menu )
 */
-HB_FUNC( QT_QDIALOG_OPEN )
+HB_FUNC( QT_QTOOLBUTTON_SETMENU )
 {
-   hbqt_par_QDialog( 1 )->open();
+  hbqt_par_QToolButton( 1 )->setMenu( hbqt_par_QMenu( 2 ) );
 }
 
 /*
-void QDialog::reject ()   [virtual slot]
+void setPopupMode ( ToolButtonPopupMode mode )
 */
-HB_FUNC( QT_QDIALOG_REJECT )
+HB_FUNC( QT_QTOOLBUTTON_SETPOPUPMODE )
 {
-   hbqt_par_QDialog( 1 )->reject();
+  hbqt_par_QToolButton( 1 )->setPopupMode( ( QToolButton::ToolButtonPopupMode ) hb_parni(2) );
 }
 
 /*
-int QDialog::result () const
+Qt::ToolButtonStyle toolButtonStyle () const
 */
-HB_FUNC( QT_QDIALOG_RESULT )
+HB_FUNC( QT_QTOOLBUTTON_TOOLBUTTONSTYLE )
 {
-   hb_retni( hbqt_par_QDialog( 1 )->result() );
+  hb_retni( hbqt_par_QToolButton( 1 )->toolButtonStyle() );
 }
 
 /*
-void QDialog::setResult ( int i )
+void setDefaultAction ( QAction * action )
 */
-HB_FUNC( QT_QDIALOG_SETRESULT )
+HB_FUNC( QT_QTOOLBUTTON_SETDEFAULTACTION )
 {
-   hbqt_par_QDialog( 1 )->setResult( hb_parni( 2 ) );
+  hbqt_par_QToolButton( 1 )->setDefaultAction( hbqt_par_QAction( 2 ) );
+}
+
+/*
+void setToolButtonStyle ( Qt::ToolButtonStyle style )
+*/
+HB_FUNC( QT_QTOOLBUTTON_SETTOOLBUTTONSTYLE )
+{
+  hbqt_par_QToolButton( 1 )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni(2) );
+}
+
+/*
+void showMenu ()
+*/
+HB_FUNC( QT_QTOOLBUTTON_SHOWMENU )
+{
+  hbqt_par_QToolButton( 1 )->showMenu();
 }
 
 /*----------------------------------------------------------------------*/

@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 {list of individual authors and e-mail addresses}
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,103 +57,103 @@
 
 #if QT_VERSION >= 0x040500
 
-#include  <QtGui/QDialog>
+#include <QtGui/QFrame>
 
 /*----------------------------------------------------------------------*/
 /*
-QDialog ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
+QFrame ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
 */
-HB_FUNC( QT_QDIALOG )
+HB_FUNC( QT_QFRAME )
 {
-   hb_retptr( new QDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+  hb_retptr( ( QFrame* ) new QFrame( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
 }
 
 /*
-bool isModal () const
+Shadow frameShadow () const
 */
-HB_FUNC( QT_QDIALOG_ISMODAL )
+HB_FUNC( QT_QFRAME_FRAMESHADOW )
 {
-   hb_retl( hbqt_par_QDialog( 1 )->isModal() );
+  hb_retni( hbqt_par_QFrame( 1 )->frameShadow() );
 }
 
 /*
-void setModal ( bool modal )
+Shape frameShape () const
 */
-HB_FUNC( QT_QDIALOG_SETMODAL )
+HB_FUNC( QT_QFRAME_FRAMESHAPE )
 {
-   hbqt_par_QDialog( 1 )->setModal( hb_parl( 2 ) );
+  hb_retni( hbqt_par_QFrame( 1 )->frameShape() );
 }
 
 /*
-bool isSizeGripEnabled () const
+int frameStyle () const
 */
-HB_FUNC( QT_QDIALOG_ISSIZEGRIPENABLED )
+HB_FUNC( QT_QFRAME_FRAMESTYLE )
 {
-   hb_retl( hbqt_par_QDialog( 1 )->isSizeGripEnabled() );
+  hb_retni( hbqt_par_QFrame( 1 )->frameStyle() );
 }
 
 /*
-void setSizeGripEnabled ( bool )
+int frameWidth () const
 */
-HB_FUNC( QT_QDIALOG_SETSIZEGRIPENABLED )
+HB_FUNC( QT_QFRAME_FRAMEWIDTH )
 {
-   hbqt_par_QDialog( 1 )->setSizeGripEnabled( hb_parl( 2 ) );
+  hb_retni( hbqt_par_QFrame( 1 )->frameWidth() );
 }
 
 /*
-void QDialog::accept ()   [virtual slot]
+int lineWidth () const
 */
-HB_FUNC( QT_QDIALOG_ACCEPT )
+HB_FUNC( QT_QFRAME_LINEWIDTH )
 {
-   hbqt_par_QDialog( 1 )->accept();
+  hb_retni( hbqt_par_QFrame( 1 )->lineWidth() );
 }
 
 /*
-void QDialog::done ( int r )   [virtual slot]
+int midLineWidth () const
 */
-HB_FUNC( QT_QDIALOG_DONE )
+HB_FUNC( QT_QFRAME_MIDLINEWIDTH )
 {
-   hbqt_par_QDialog( 1 )->done( hb_parni( 2 ) );
+  hb_retni( hbqt_par_QFrame( 1 )->midLineWidth() );
 }
 
 /*
-int QDialog::exec ()   [slot]
+void setFrameShadow ( Shadow )
 */
-HB_FUNC( QT_QDIALOG_EXEC )
+HB_FUNC( QT_QFRAME_SETFRAMESHADOW )
 {
-   hb_retni( hbqt_par_QDialog( 1 )->exec() );
+  hbqt_par_QFrame( 1 )->setFrameShadow( ( QFrame::Shadow ) hb_parni( 2 ) );
 }
 
 /*
-void QDialog::open ()   [slot]
+void setFrameShape ( Shape )
 */
-HB_FUNC( QT_QDIALOG_OPEN )
+HB_FUNC( QT_QFRAME_SETFRAMESHAPE )
 {
-   hbqt_par_QDialog( 1 )->open();
+  hbqt_par_QFrame( 1 )->setFrameShape( ( QFrame::Shape ) hb_parni( 2 ) );
 }
 
 /*
-void QDialog::reject ()   [virtual slot]
+void setFrameStyle ( int style )
 */
-HB_FUNC( QT_QDIALOG_REJECT )
+HB_FUNC( QT_QFRAME_SETFRAMESTYLE )
 {
-   hbqt_par_QDialog( 1 )->reject();
+  hbqt_par_QFrame( 1 )->setFrameStyle( hb_parni( 2 ) );
 }
 
 /*
-int QDialog::result () const
+void setLineWidth ( int )
 */
-HB_FUNC( QT_QDIALOG_RESULT )
+HB_FUNC( QT_QFRAME_SETLINEWIDTH )
 {
-   hb_retni( hbqt_par_QDialog( 1 )->result() );
+  hbqt_par_QFrame( 1 )->setLineWidth( hb_parni( 2 ) );
 }
 
 /*
-void QDialog::setResult ( int i )
+void setMidLineWidth ( int )
 */
-HB_FUNC( QT_QDIALOG_SETRESULT )
+HB_FUNC( QT_QFRAME_SETMIDLINEWIDTH )
 {
-   hbqt_par_QDialog( 1 )->setResult( hb_parni( 2 ) );
+  hbqt_par_QFrame( 1 )->setMidLineWidth( hb_parni( 2 ) );
 }
 
 /*----------------------------------------------------------------------*/
