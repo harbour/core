@@ -501,7 +501,7 @@ FUNCTION Main( ... )
                     { {|| FindInPath( "cygstart" ) != NIL }, "cygwin"  },;
                     { {|| FindInPath( "xcc"      ) != NIL }, "xcc"     } }
       aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "icc", "pocc", "xcc", "cygwin",;
-                    "msvc64", "msvcia64", "iccia64", "pocc64",;
+                    "mingw64", msvc64", "msvcia64", "iccia64", "pocc64",;
                     "mingwce", "msvcce", "poccce" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
@@ -1269,6 +1269,7 @@ FUNCTION Main( ... )
 
       CASE ( t_cARCH == "win" .AND. t_cCOMP == "gcc" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "mingw" ) .OR. ;
+           ( t_cARCH == "win" .AND. t_cCOMP == "mingw64" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "mingwce" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "cygwin" )
 
@@ -1301,7 +1302,7 @@ FUNCTION Main( ... )
             AAdd( s_aLIBPATH, "{DB}" )
          ENDIF
          IF ! lStopAfterCComp
-            IF t_cCOMP $ "mingw|mingwce"
+            IF t_cCOMP $ "mingw|mingw64|mingwce"
                cOpt_CompC += " -Wl,--start-group {LL} -Wl,--end-group"
             ELSE
                cOpt_CompC += " {LL}"
@@ -1333,13 +1334,13 @@ FUNCTION Main( ... )
             AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
-         IF t_cCOMP $ "mingw|mingwce" .AND. Len( s_aRESSRC ) > 0
+         IF t_cCOMP $ "mingw|mingw64|mingwce" .AND. Len( s_aRESSRC ) > 0
             IF Len( s_aRESSRC ) == 1
                cBin_Res := t_cCCPREFIX + "windres"
                cOpt_Res := "{LR} -o {LS}"
                cResExt := ".o"
             ELSE
-               OutErr( "hbmk: Warning: Resource files ignored. Multiple ones not supported with mingw/mingwce." + hb_osNewLine() )
+               OutErr( "hbmk: Warning: Resource files ignored. Multiple ones not supported with mingw/mingw64/mingwce." + hb_osNewLine() )
             ENDIF
          ENDIF
 
@@ -1788,9 +1789,9 @@ FUNCTION Main( ... )
                         "LNK4217: locally defined symbol ... imported in function ..."
                         if using 'dllimport'. [vszakats] */
                tmp := ""
-            CASE t_cCOMP $ "gcc|mingw|mingwce|cygwin" ; tmp := "__attribute__ (( dllimport ))"
-            CASE t_cCOMP $ "bcc|owatcom"              ; tmp := "__declspec( dllimport )"
-            OTHERWISE                                 ; tmp := "_declspec( dllimport )"
+            CASE t_cCOMP $ "gcc|mingw|mingw64|mingwce|cygwin" ; tmp := "__attribute__ (( dllimport ))"
+            CASE t_cCOMP $ "bcc|owatcom"                      ; tmp := "__declspec( dllimport )"
+            OTHERWISE                                         ; tmp := "_declspec( dllimport )"
             ENDCASE
 
             /* Create list of requested symbols */
@@ -2339,7 +2340,7 @@ STATIC FUNCTION ListCookLib( arraySrc, cPrefix, cExtNew )
    LOCAL cDir
    LOCAL cLibName
 
-   IF t_cCOMP $ "gcc|gpp|mingw|mingwce|djgpp|cygwin"
+   IF t_cCOMP $ "gcc|gpp|mingw|mingw64|mingwce|djgpp|cygwin"
       FOR EACH cLibName IN array
          hb_FNameSplit( cLibName, @cDir )
          IF Empty( cDir )
@@ -2477,7 +2478,7 @@ STATIC FUNCTION PathSepToTarget( cFileName, nStart )
 
    DEFAULT nStart TO 1
 
-   IF t_cARCH $ "win|dos|os2" .AND. !( t_cCOMP $ "mingw|mingwce|cygwin" )
+   IF t_cARCH $ "win|dos|os2" .AND. !( t_cCOMP $ "mingw|mingw64|mingwce|cygwin" )
       RETURN Left( cFileName, nStart - 1 ) + StrTran( SubStr( cFileName, nStart ), "/", "\" )
    ENDIF
 
@@ -3017,7 +3018,7 @@ STATIC FUNCTION getFirstFunc( cFile )
    LOCAL cFuncList, cExecNM, cFuncName, cExt, cLine, n, c
 
    cFuncName := ""
-   IF t_cCOMP $ "gcc|gpp|mingw|mingwce|cygwin"
+   IF t_cCOMP $ "gcc|gpp|mingw|mingw64|mingwce|cygwin"
       hb_FNameSplit( cFile,,, @cExt )
       IF cExt == ".c"
          FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFile ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
@@ -3228,7 +3229,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "    linux  : gcc, gpp, owatcom, icc, mingw, mingwce" ,;
       "    darwin : gcc" ,;
       "    win    : mingw, msvc, bcc, owatcom, icc, pocc, cygwin," ,;
-      "             mingwce, msvc64, msvcia64, msvcce, iccia64, pocc64, poccce, xcc" ,;
+      "             mingw64, msvc64, msvcia64, iccia64, pocc64," ,;
+      "             mingwce, msvcce, poccce, xcc" ,;
       "    os2    : gcc, owatcom" ,;
       "    dos    : djgpp, owatcom" ,;
       "    bsd, hpux, sunos: gcc" }

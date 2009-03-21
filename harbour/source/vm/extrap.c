@@ -55,11 +55,11 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt)
- *    hb_win32ExceptionHandler() Windows exception info dump code.
+ *    hb_winExceptionHandler() Windows exception info dump code.
  *
  * Copyright 2008 Viktor Szakats (harbour.01 syenar hu)
- *    hb_win32ExceptionHandler() Module listing code.
- *    hb_win32ExceptionHandler() x64 support.
+ *    hb_winExceptionHandler() Module listing code.
+ *    hb_winExceptionHandler() x64 support.
  *
  * See doc/license.txt for licensing terms.
  *
@@ -98,7 +98,7 @@
 
 #if defined(HB_OS_WIN) && !defined(HB_OS_WIN_CE)
 
-LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
+LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
 {
    char errmsg[ 8192 ];
    int errmsglen = sizeof( errmsg ) - 1;
@@ -360,7 +360,7 @@ void hb_vmSetExceptionHandler( void )
 {
 #if defined(HB_OS_WIN) && !defined(HB_OS_WIN_CE)
    {
-      LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_win32ExceptionHandler );
+      LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_winExceptionHandler );
       HB_SYMBOL_UNUSED( ef );
    }
 #elif defined(HB_OS_OS2) /* Add OS2TermHandler to this thread's chain of exception handlers */

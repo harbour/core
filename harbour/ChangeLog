@@ -8,6 +8,19 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-21 14:23 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+  * utils/hbmk2/hbmk2.prg
+  + config/win/mingw64.cf
+  * config/win/mingw.cf
+    + Added support for mingw64. MinGW 64-bit mode.
+      Harbour doesn't build yet due to some compiling errors
+      (plus some internal MinGW ones to be investigated).
+    ; TODO: Add support in postinst.sh.
+
+  * source/vm/extrap.c
+    * win32 -> win.
+
 2009-03-21 13:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/win/mingwce.cf
   * config/win/cygwin.cf

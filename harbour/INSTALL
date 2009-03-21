@@ -181,14 +181,15 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    Windows
    -------
    mingw    - MinGW GNU C
-   mingwce  - MinGW GNU C (Windows CE / ARM)
+   mingw64  - MinGW GNU C x64
+   mingwce  - MinGW GNU C ARM (Windows CE)
    msvc     - Microsoft Visual C++
    msvc64   - Microsoft Visual C++ x64
    msvcia64 - Microsoft Visual C++ IA64
-   msvcce   - Microsoft Visual C++ (Windows CE / ARM)
+   msvcce   - Microsoft Visual C++ ARM (Windows CE)
    pocc     - Pelles C 4.5 and above
    pocc64   - Pelles C 5.0 x64
-   poccce   - Pelles C 5.0 (Windows CE / ARM)
+   poccce   - Pelles C 5.0 ARM (Windows CE)
    xcc      - Pelles C for xhb
    owatcom  - Open Watcom C++
    icc      - Intel(R) C/C++
