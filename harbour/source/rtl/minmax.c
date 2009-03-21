@@ -101,6 +101,16 @@ HB_FUNC( MAX )
          hb_retdl( l1 >= l2 ? l1 : l2 );
          return;
       }
+      else if( HB_IS_DATETIME( p1 ) && HB_IS_DATETIME( p2 ) )
+      {
+         if( HB_IS_DATE( p1 ) )
+            hb_itemReturn( p1 );
+         else if( HB_IS_DATE( p2 ) )
+            hb_itemReturn( p2 );
+         else
+            hb_itemReturn( hb_itemGetTD( p1 ) >= hb_itemGetTD( p2 ) ? p1 : p2 );
+         return;
+      }
    }
    hb_errRT_BASE_SubstR( EG_ARG, 1093, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -150,6 +160,16 @@ HB_FUNC( MIN )
          LONG l2 = hb_itemGetDL( p2 );
 
          hb_retdl( l1 <= l2 ? l1 : l2 );
+         return;
+      }
+      else if( HB_IS_DATETIME( p1 ) && HB_IS_DATETIME( p2 ) )
+      {
+         if( HB_IS_DATE( p1 ) && hb_itemGetDL( p1 ) == hb_itemGetDL( p2 ) )
+            hb_itemReturn( p1 );
+         else if( HB_IS_DATE( p2 ) && hb_itemGetDL( p1 ) == hb_itemGetDL( p2 ) )
+            hb_itemReturn( p2 );
+         else
+            hb_itemReturn( hb_itemGetTD( p1 ) <= hb_itemGetTD( p2 ) ? p1 : p2 );
          return;
       }
    }

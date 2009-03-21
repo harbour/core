@@ -364,6 +364,7 @@ static USHORT   s_uiArrayClass     = 0;
 static USHORT   s_uiBlockClass     = 0;
 static USHORT   s_uiCharacterClass = 0;
 static USHORT   s_uiDateClass      = 0;
+static USHORT   s_uiTimeStampClass = 0;
 static USHORT   s_uiHashClass      = 0;
 static USHORT   s_uiLogicalClass   = 0;
 static USHORT   s_uiNilClass       = 0;
@@ -1065,11 +1066,13 @@ void hb_clsInit( void )
 void hb_clsDoInit( void )
 {
    static const char * s_pszFuncNames[] =
-      { "HBARRAY", "HBBLOCK", "HBCHARACTER", "HBDATE",
+      { "HBARRAY", "HBBLOCK", "HBCHARACTER",
+        "HBDATE", "HBTIMESTAMP",
         "HBHASH", "HBLOGICAL", "HBNIL", "HBNUMERIC",
         "HBSYMBOL", "HBPOINTER" };
    static USHORT * s_puiHandles[] =
-      { &s_uiArrayClass, &s_uiBlockClass, &s_uiCharacterClass, &s_uiDateClass,
+      { &s_uiArrayClass, &s_uiBlockClass, &s_uiCharacterClass,
+        &s_uiDateClass, &s_uiTimeStampClass,
         &s_uiHashClass, &s_uiLogicalClass, &s_uiNilClass, &s_uiNumericClass,
         &s_uiSymbolClass, &s_uiPointerClass };
    int i;
@@ -1291,6 +1294,9 @@ static USHORT hb_objGetClassH( PHB_ITEM pObject )
    else if( HB_IS_DATE( pObject ) )
       return s_uiDateClass;
 
+   else if( HB_IS_TIMESTAMP( pObject ) )
+      return s_uiTimeStampClass;
+
    else if( HB_IS_LOGICAL( pObject ) )
       return s_uiLogicalClass;
 
@@ -1335,6 +1341,9 @@ const char * hb_objGetClsName( PHB_ITEM pObject )
 
    else if( HB_IS_DATE( pObject ) )
       return "DATE";
+
+   else if( HB_IS_TIMESTAMP( pObject ) )
+      return "TIMESTAMP";
 
    else if( HB_IS_LOGICAL( pObject ) )
       return "LOGICAL";
@@ -1919,6 +1928,18 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
          }
       }
    }
+   else if( HB_IS_TIMESTAMP( pObject ) )
+   {
+      if( s_uiTimeStampClass )
+      {
+         pClass = s_pClasses[ s_uiTimeStampClass ];
+         {
+            PHB_SYMB pExecSym = hb_clsScalarMethod( pClass, pMsg, pStack );
+            if( pExecSym )
+               return pExecSym;
+         }
+      }
+   }
    else if( HB_IS_NUMERIC( pObject ) )
    {
       if( s_uiNumericClass )
@@ -2492,6 +2513,10 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem, HB_TYPE nDefault )
             case 'd':
                return HB_IT_DATE;
 
+            case 'T':
+            case 't':
+               return HB_IT_TIMESTAMP;
+
             case 'L':
             case 'l':
                return HB_IT_LOGICAL;
@@ -2533,6 +2558,9 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem, HB_TYPE nDefault )
 
       else if( HB_IS_DATE( pItem ) )
          return HB_IT_DATE;
+
+      else if( HB_IS_TIMESTAMP( pItem ) )
+         return HB_IT_TIMESTAMP;
 
       else if( HB_IS_LOGICAL( pItem ) )
          return HB_IT_LOGICAL;
@@ -3811,6 +3839,9 @@ HB_FUNC( __CLSASSOCTYPE )
                break;
             case HB_IT_DATE:
                s_uiDateClass = uiClass;
+               break;
+            case HB_IT_TIMESTAMP:
+               s_uiTimeStampClass = uiClass;
                break;
             case HB_IT_HASH:
                s_uiHashClass = uiClass;

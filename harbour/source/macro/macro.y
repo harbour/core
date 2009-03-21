@@ -153,6 +153,11 @@
       UCHAR    bWidth;  /* to hold the width of the value */
       UCHAR    bDec;    /* to hold the number of decimal points in the value */
    } valDouble;
+   struct
+   {
+      long     date;    /* to hold julian date */
+      long     time;    /* to hold milliseconds */
+   } valTimeStamp;
 };
 
 %{
@@ -167,7 +172,7 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * );
 
 %}
 
-%token IDENTIFIER NIL NUM_DOUBLE INASSIGN NUM_LONG NUM_DATE
+%token IDENTIFIER NIL NUM_DOUBLE INASSIGN NUM_LONG NUM_DATE TIMESTAMP
 %token IIF LITERAL TRUEVALUE FALSEVALUE
 %token AND OR NOT EQ NE1 NE2 INC DEC ALIASOP HASHOP SELF
 %token LE GE FIELD MACROVAR MACROTEXT
@@ -201,11 +206,12 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * );
 %right  ','
 /*the highest precedence*/
 
-%type <string>  IDENTIFIER MACROVAR MACROTEXT
-%type <valChar>    LITERAL
-%type <valDouble>  NUM_DOUBLE
-%type <valLong>    NUM_LONG
-%type <valLong>    NUM_DATE
+%type <string>    IDENTIFIER MACROVAR MACROTEXT
+%type <valChar>   LITERAL
+%type <valDouble> NUM_DOUBLE
+%type <valLong>   NUM_LONG
+%type <valLong>   NUM_DATE
+%type <valTimeStamp> TIMESTAMP
 %type <asExpr>  Argument ExtArgument RefArgument ArgList ElemList
 %type <asExpr>  BlockExpList BlockVarList BlockVars
 %type <asExpr>  NumValue NumAlias
@@ -235,7 +241,7 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * );
 %type <asExpr>  ArrayIndex IndexList
 %type <asExpr>  FieldAlias FieldVarAlias
 %type <asExpr>  PostOp
-%type <asExpr>  DateValue
+%type <asExpr>  DateValue TimeStampValue
 
 %%
 
@@ -278,13 +284,16 @@ Main : Expression '\n'  {
 
 /* Numeric values
  */
-NumValue   : NUM_DOUBLE      { $$ = hb_compExprNewDouble( $1.dNumber, $1.bWidth, $1.bDec, HB_COMP_PARAM ); }
-           | NUM_LONG        { $$ = hb_compExprNewLong( $1.lNumber, HB_COMP_PARAM ); }
+NumValue   : NUM_DOUBLE       { $$ = hb_compExprNewDouble( $1.dNumber, $1.bWidth, $1.bDec, HB_COMP_PARAM ); }
+           | NUM_LONG         { $$ = hb_compExprNewLong( $1.lNumber, HB_COMP_PARAM ); }
            ;
 
 DateValue  : NUM_DATE         { $$ = hb_compExprNewDate( $1.lNumber, HB_COMP_PARAM ); }
            ;
-           
+
+TimeStampValue : TIMESTAMP    { $$ = hb_compExprNewTimeStamp( $1.date, $1.time, HB_COMP_PARAM ); }
+               ;
+
 NumAlias   : NUM_LONG ALIASOP { $$ = hb_compExprNewLong( $1.lNumber, HB_COMP_PARAM ); }
            ;
 
@@ -418,24 +427,25 @@ AliasExpr  : NumAlias PareExpList         { $$ = hb_compExprNewAliasExpr( $1, $2
 
 /* Array expressions access
  */
-VariableAt  : NumValue      ArrayIndex    { $$ = $2; }
-            | NilValue      ArrayIndex    { $$ = $2; }
-            | DateValue     ArrayIndex    { $$ = $2; }
-            | LiteralValue  ArrayIndex    { $$ = $2; }
-            | CodeBlock     ArrayIndex    { $$ = $2; }
-            | Logical       ArrayIndex    { $$ = $2; }
-            | Hash          ArrayIndex    { $$ = $2; }
-            | SelfValue     ArrayIndex    { $$ = $2; }
-            | Variable      ArrayIndex    { $$ = $2; }
-            | AliasVar      ArrayIndex    { $$ = $2; }
-            | AliasExpr     ArrayIndex    { $$ = $2; }
-            | MacroVar      ArrayIndex    { $$ = $2; }
-            | MacroExpr     ArrayIndex    { $$ = $2; }
-            | ObjectData    ArrayIndex    { $$ = $2; }
-            | ObjectMethod  ArrayIndex    { $$ = $2; }
-            | FunCall       ArrayIndex    { $$ = $2; }
-            | IfInline      ArrayIndex    { $$ = $2; }
-            | PareExpList   ArrayIndex    { $$ = $2; }
+VariableAt  : NumValue        ArrayIndex  { $$ = $2; }
+            | NilValue        ArrayIndex  { $$ = $2; }
+            | DateValue       ArrayIndex  { $$ = $2; }
+            | TimeStampValue  ArrayIndex  { $$ = $2; }
+            | LiteralValue    ArrayIndex  { $$ = $2; }
+            | CodeBlock       ArrayIndex  { $$ = $2; }
+            | Logical         ArrayIndex  { $$ = $2; }
+            | Hash            ArrayIndex  { $$ = $2; }
+            | SelfValue       ArrayIndex  { $$ = $2; }
+            | Variable        ArrayIndex  { $$ = $2; }
+            | AliasVar        ArrayIndex  { $$ = $2; }
+            | AliasExpr       ArrayIndex  { $$ = $2; }
+            | MacroVar        ArrayIndex  { $$ = $2; }
+            | MacroExpr       ArrayIndex  { $$ = $2; }
+            | ObjectData      ArrayIndex  { $$ = $2; }
+            | ObjectMethod    ArrayIndex  { $$ = $2; }
+            | FunCall         ArrayIndex  { $$ = $2; }
+            | IfInline        ArrayIndex  { $$ = $2; }
+            | PareExpList     ArrayIndex  { $$ = $2; }
             ;
 
 /* Function call
@@ -493,6 +503,7 @@ SimpleExpression :
               NumValue
             | NilValue
             | DateValue
+            | TimeStampValue
             | LiteralValue
             | CodeBlock
             | Logical
@@ -555,6 +566,7 @@ EmptyExpression: /* nothing => nil */        { $$ = hb_compExprNewEmpty( HB_COMP
 LeftExpression : NumValue
                | NilValue
                | DateValue
+               | TimeStampValue
                | LiteralValue
                | CodeBlock
                | Logical
@@ -597,27 +609,28 @@ ExprUnary   : NOT Expression                 { $$ = hb_compExprNewNot( $2, HB_CO
             | '+' Expression  %prec UNARY    { $$ = $2; }
             ;
 
-ExprAssign  : NumValue     INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | NilValue     INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | DateValue    INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | LiteralValue INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | CodeBlock    INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | Logical      INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | SelfValue    INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | Array        INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | ArrayAt      INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | Hash         INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | AliasVar     INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | AliasExpr    INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | MacroVar     INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | MacroExpr    INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | Variable     INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | VariableAt   INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | PareExpList  INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | FunCall      INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | IfInline     INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | ObjectData   INASSIGN Expression  { HB_MACRO_IFENABLED( $$, hb_compExprAssign( $1, $3, HB_COMP_PARAM ), HB_SM_HARBOUR ); }
-            | ObjectMethod INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+ExprAssign  : NumValue        INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | NilValue        INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | DateValue       INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | TimeStampValue  INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | LiteralValue    INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | CodeBlock       INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | Logical         INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | SelfValue       INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | Array           INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | ArrayAt         INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | Hash            INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | AliasVar        INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | AliasExpr       INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | MacroVar        INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | MacroExpr       INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | Variable        INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | VariableAt      INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | PareExpList     INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | FunCall         INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | IfInline        INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | ObjectData      INASSIGN Expression  { HB_MACRO_IFENABLED( $$, hb_compExprAssign( $1, $3, HB_COMP_PARAM ), HB_SM_HARBOUR ); }
+            | ObjectMethod    INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             ;
 
 ExprPlusEq  : LeftExpression PLUSEQ  Expression { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
@@ -997,6 +1010,15 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          else
             yylval_ptr->valLong.lNumber = 0;
          return NUM_DATE;
+
+      case HB_PP_TOKEN_TIMESTAMP:
+         if( !hb_timeStampStrGetDT( pToken->value,
+                                    &yylval_ptr->valTimeStamp.date,
+                                    &yylval_ptr->valTimeStamp.time ) )
+         {
+            hb_macroError( EG_SYNTAX, pMacro );
+         }
+         return TIMESTAMP;
 
       case HB_PP_TOKEN_STRING:
          yylval_ptr->valChar.string = pToken->value;

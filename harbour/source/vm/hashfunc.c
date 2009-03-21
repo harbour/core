@@ -484,15 +484,16 @@ HB_FUNC( HB_HSCAN )
             ++ulStart;
          }
       }
-      else if( HB_IS_DATE( pValue ) )
+      else if( HB_IS_DATETIME( pValue ) )
       {
-         long lValue = hb_itemGetDL( pValue );
          while( ulCount-- )
          {
             PHB_ITEM pItem = hb_hashGetValueAt( pHash, ulStart );
             if( pItem )
             {
-               if( HB_IS_DATE( pItem ) && hb_itemGetDL( pItem ) == lValue )
+               if( HB_IS_DATETIME( pItem ) &&
+                   pItem->item.asDateTime.julian == pValue->item.asDateTime.julian &&
+                   ( !fExact || pItem->item.asDateTime.time == pValue->item.asDateTime.time ) )
                {
                   fFound = TRUE;
                   break;

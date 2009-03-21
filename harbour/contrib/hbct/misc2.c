@@ -76,6 +76,8 @@ HB_FUNC( COMPLEMENT )
       }
       else if( HB_IS_DATE( pItem ) )
          hb_retdl( 4537847 - hb_itemGetDL( pItem ) );
+      else if( HB_IS_TIMESTAMP( pItem ) )
+         hb_rettd( 4537847.0 - hb_itemGetTD( pItem ) );
       else if( HB_IS_NUMINT( pItem ) )
          hb_retnint( -hb_itemGetNInt( pItem ) );
       else if( HB_IS_NUMERIC( pItem ) )

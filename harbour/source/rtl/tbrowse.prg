@@ -646,7 +646,7 @@ METHOD readRecord( nRow ) CLASS TBROWSE
             oCol := aCol[ _TBCI_COLOBJECT ]
             cValue := Eval( oCol:block )
             aColor := _CELLCOLORS( aCol, cValue, nColors )
-            IF ValType( cValue ) $ "CMNDL"
+            IF ValType( cValue ) $ "CMNDTL"
                cValue := PadR( Transform( cValue, oCol:picture ), aCol[ _TBCI_CELLWIDTH ] )
             ELSE
                cValue := Space( aCol[ _TBCI_CELLWIDTH ] )
@@ -1305,7 +1305,8 @@ METHOD doConfigure() CLASS TBROWSE
        */
       xValue := Eval( oCol:block )
       cType  := ValType( xValue )
-      nWidth := Len( Transform( xValue, oCol:picture ) )
+      nWidth := IIF( cType $ "CMNDTL", ;
+                     Len( Transform( xValue, oCol:picture ) ), 0 )
       cColSep := oCol:colSep
       IF cColSep == NIL
          cColSep := ::cColSep

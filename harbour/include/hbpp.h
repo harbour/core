@@ -157,7 +157,8 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 #define HB_PP_TOKEN_STRING       41
 #define HB_PP_TOKEN_NUMBER       42
 #define HB_PP_TOKEN_DATE         43
-#define HB_PP_TOKEN_LOGICAL      44
+#define HB_PP_TOKEN_TIMESTAMP    44
+#define HB_PP_TOKEN_LOGICAL      45
 
 /* operators */
 #define HB_PP_TOKEN_LEFT_PB      50
@@ -260,6 +261,7 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
                                    HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_STRING && \
                                    HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_NUMBER && \
                                    HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_DATE && \
+                                   HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_TIMESTAMP && \
                                    HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_LOGICAL )
 
 #define HB_PP_TOKEN_OPEN_BR(t)   ( HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_LEFT_PB || \
@@ -343,7 +345,8 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
                                       HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_MACROTEXT || \
                                       HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_STRING || \
                                       HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_NUMBER || \
-                                      HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_DATE )
+                                      HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_DATE || \
+                                      HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_TIMESTAMP )
 #define HB_PP_TOKEN_ISEXPTOKEN(t)   ( HB_PP_TOKEN_ISEXPVAL( (t)->type ) || \
                                       ( (t)->pNext && HB_PP_TOKEN_ISUNARY( (t)->type ) && \
                                         HB_PP_TOKEN_ISEXPVAL( (t)->pNext->type ) ) )
@@ -371,6 +374,7 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_STRING && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_NUMBER && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_DATE && \
+                                      HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_TIMESTAMP && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_LOGICAL )
 #endif
 

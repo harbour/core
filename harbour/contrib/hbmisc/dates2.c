@@ -165,7 +165,7 @@ HB_FUNC( ADAYS )
 
 HB_FUNC( ISLEAPYEAR )
 {
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
    if( pDate )
    {
@@ -180,7 +180,7 @@ HB_FUNC( ISLEAPYEAR )
 
 HB_FUNC( DAYSINMONTH )
 {
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
    if( pDate )
    {
@@ -195,7 +195,7 @@ HB_FUNC( DAYSINMONTH )
 
 HB_FUNC( EOM )
 {
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
    if( pDate )
    {
@@ -210,7 +210,7 @@ HB_FUNC( EOM )
 
 HB_FUNC( BOM )
 {
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
    if( pDate )
    {
@@ -225,7 +225,7 @@ HB_FUNC( BOM )
 
 HB_FUNC( WOM )
 {
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
    if( pDate )
    {
@@ -240,7 +240,7 @@ HB_FUNC( WOM )
 
 HB_FUNC( DOY )
 {
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
    if( pDate )
    {
@@ -257,7 +257,7 @@ HB_FUNC( DOY )
 
 HB_FUNC( WOY )
 {
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
    if( pDate )
    {
@@ -272,7 +272,7 @@ HB_FUNC( WOY )
 
 HB_FUNC( EOY )
 {
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
    if( pDate )
    {
@@ -287,7 +287,7 @@ HB_FUNC( EOY )
 
 HB_FUNC( BOY )
 {
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
    if( pDate )
    {

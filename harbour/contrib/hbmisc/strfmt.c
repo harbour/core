@@ -77,20 +77,20 @@ HB_FUNC( STRFORMAT )
       ULONG  nMaskLen = hb_parclen( 1 );
       ULONG  nMaskPos;
       ULONG  nPos;
-   
+
       ULONG  nRetValLen;
       char * pszRetVal;
       char * pszRetValSave;
 
       STRPAR strpar[ HB_STRFORMAT_PARNUM_MAX_ ];
 
-      memset( &strpar, 0, sizeof( strpar ) );
+      memset( strpar, 0, sizeof( strpar ) );
 
       nParNum--;
 
       if( nParNum > HB_STRFORMAT_PARNUM_MAX_ )
          nParNum = HB_STRFORMAT_PARNUM_MAX_;
-      
+
       /* Calculate length of return value */
       nRetValLen = 0;
       for( nMaskPos = 0; nMaskPos < nMaskLen; nMaskPos++ )
@@ -98,7 +98,7 @@ HB_FUNC( STRFORMAT )
          if( pszMask[ nMaskPos ] == '%' )
          {
             nMaskPos++;
-      
+
             if( pszMask[ nMaskPos ] == '%' )
                nRetValLen++;
             else if( pszMask[ nMaskPos ] >= '1' && pszMask[ nMaskPos ] <= ( int )( nParNum + '0' ) )
@@ -117,7 +117,7 @@ HB_FUNC( STRFORMAT )
          else
             nRetValLen++;
       }
-      
+
       /* Assemble return value */
       pszRetVal = pszRetValSave = ( char * ) hb_xgrab( nRetValLen + 1 );
       for( nMaskPos = 0; nMaskPos < nMaskLen; nMaskPos++ )
@@ -125,13 +125,13 @@ HB_FUNC( STRFORMAT )
          if( pszMask[ nMaskPos ] == '%' )
          {
             nMaskPos++;
-      
+
             if( pszMask[ nMaskPos ] == '%' )
                *pszRetVal++ = pszMask[ nMaskPos ];
             else if( pszMask[ nMaskPos ] >= '1' && pszMask[ nMaskPos ] <= ( int ) ( nParNum + '0' ) )
             {
                nPos = pszMask[ nMaskPos ] - '1';
-      
+
                memcpy( pszRetVal, strpar[ nPos ].buffer, strpar[ nPos ].ulLen );
                pszRetVal += strpar[ nPos ].ulLen;
             }

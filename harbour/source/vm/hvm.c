@@ -86,6 +86,7 @@
 #include "hbxvm.h"
 #include "hbpcode.h"
 #include "hbset.h"
+#include "hbdate.h"
 #include "hbinkey.ch"
 #include "inkey.ch"
 #include "hbdebug.ch"
@@ -189,7 +190,6 @@ static void    hb_vmPushObjectVarRef( void );   /* pushes reference to object va
 static void    hb_vmPushVParams( void );        /* pusges variable parameters */
 static void    hb_vmPushUnRef( void );          /* push the unreferenced latest value on the stack */
 static void    hb_vmDuplicate( void );          /* duplicates the latest value on the stack */
-static void    hb_vmDuplTwo( void );            /* duplicates the latest two value on the stack */
 static void    hb_vmDuplUnRef( void );          /* duplicates the latest value on the stack and unref the source one */
 static void    hb_vmSwap( BYTE bCount );        /* swap bCount+1 time two items on HVM stack starting from the most top one */
 
@@ -2106,8 +2106,21 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                PHB_ITEM pItem = hb_stackAllocItem();
 
                pItem->type = HB_IT_DATE;
-               pItem->item.asDate.value = ( long ) HB_PCODE_MKLONG( &pCode[ 1 ] );
+               pItem->item.asDateTime.julian = ( long ) HB_PCODE_MKLONG( &pCode[ 1 ] );
+               pItem->item.asDateTime.time = 0;
                pCode += 5;
+            }
+            break;
+
+         case HB_P_PUSHTIMESTAMP:
+            HB_TRACE( HB_TR_DEBUG, ("(HB_P_PUSHTIMESTAMP)") );
+            {
+               PHB_ITEM pItem = hb_stackAllocItem();
+
+               pItem->type = HB_IT_TIMESTAMP;
+               pItem->item.asDateTime.julian = ( long ) HB_PCODE_MKLONG( &pCode[ 1 ] );;
+               pItem->item.asDateTime.time = ( long ) HB_PCODE_MKLONG( &pCode[ 5 ] );;
+               pCode += 9;
             }
             break;
 
@@ -2243,11 +2256,6 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_DUPLICATE:
             hb_vmDuplicate();
-            pCode++;
-            break;
-
-         case HB_P_DUPLTWO:
-            hb_vmDuplTwo();
             pCode++;
             break;
 
@@ -2865,9 +2873,10 @@ static void hb_vmAddInt( HB_ITEM_PTR pResult, LONG lAdd )
          dNewVal = ( double ) lVal + lAdd;
       }
    }
-   else if( HB_IS_DATE( pResult ) )
+   else if( HB_IS_DATETIME( pResult ) )
    {
-      pResult->item.asDate.value += lAdd;
+      pResult->type &= ~HB_IT_DEFAULT;
+      pResult->item.asDateTime.julian += lAdd;
       return;
    }
    else if( HB_IS_DOUBLE( pResult ) )
@@ -2982,6 +2991,65 @@ static void hb_vmNegate( void )
    }
 }
 
+static void hb_vmTimeStampPut( HB_ITEM_PTR pItem, LONG lJulian, LONG lMilliSec )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmTimeStampPut(%p,%ld,%ld)", pItem, lJulian, lMilliSec));
+
+   /* timestamp normalization */
+   if( lJulian < 0 )
+   {
+      if( lMilliSec <= -HB_MILLISECS_PER_DAY )
+      {
+         lMilliSec += HB_MILLISECS_PER_DAY;
+         --lJulian;
+      }
+      else if( lMilliSec > 0 )
+      {
+         lMilliSec -= HB_MILLISECS_PER_DAY;
+         ++lJulian;
+         if( lMilliSec > 0 )
+         {
+            lMilliSec -= HB_MILLISECS_PER_DAY;
+            ++lJulian;
+         }
+      }
+   }
+   else
+   {
+      if( lMilliSec >= HB_MILLISECS_PER_DAY )
+      {
+         lMilliSec -= HB_MILLISECS_PER_DAY;
+         ++lJulian;
+      }
+      else if( lMilliSec < 0 )
+      {
+         lMilliSec += HB_MILLISECS_PER_DAY;
+         --lJulian;
+         if( lMilliSec < 0 )
+         {
+            lMilliSec += HB_MILLISECS_PER_DAY;
+            --lJulian;
+         }
+      }
+   }
+
+   hb_itemPutTDT( pItem, lJulian, lMilliSec );
+}
+
+static void hb_vmTimeStampAdd( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem, double dValue )
+{
+   LONG lJulian, lMilliSec;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmTimeStampAdd(%p,%p,%lf)", pResult, pItem, dValue));
+
+   hb_timeStampUnpackDT( dValue, &lJulian, &lMilliSec );
+
+   lJulian += pItem->item.asDateTime.julian;
+   lMilliSec += pItem->item.asDateTime.time;
+
+   hb_vmTimeStampPut( pResult, lJulian, lMilliSec );
+}
+
 static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPlus(%p,%p,%p)", pResult, pItem1, pItem2));
@@ -3043,18 +3111,45 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
          hb_itemCopy( pResult, pItem1 );
       pResult->type &= ~( HB_IT_MEMOFLAG | HB_IT_DEFAULT );
    }
-   else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
+   else if( HB_IS_DATETIME( pItem1 ) && HB_IS_DATETIME( pItem2 ) )
    {
-      /* NOTE: This is not a bug. CA-Cl*pper does exactly that. */
-      hb_itemPutDL( pResult, hb_itemGetNL( pItem1 ) + hb_itemGetNL( pItem2 ) );
+      if( HB_IS_TIMESTAMP( pItem1 ) || HB_IS_TIMESTAMP( pItem2 ) )
+         hb_vmTimeStampPut( pResult, pItem1->item.asDateTime.julian +
+                                     pItem2->item.asDateTime.julian,
+                                     pItem1->item.asDateTime.time +
+                                     pItem2->item.asDateTime.time );
+      else
+         /* NOTE: This is not a bug. CA-Cl*pper does exactly that for DATEs. */
+         hb_itemPutDL( pResult, pItem1->item.asDateTime.julian +
+                                pItem2->item.asDateTime.julian );
    }
-   else if( HB_IS_DATE( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
+   else if( HB_IS_DATETIME( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
    {
-      hb_itemPutDL( pResult, hb_itemGetDL( pItem1 ) + hb_itemGetNL( pItem2 ) );
+      if( HB_IS_TIMESTAMP( pItem1 ) )
+      {
+         if( HB_IS_NUMINT( pItem2 ) )
+            hb_vmTimeStampPut( pResult, pItem1->item.asDateTime.julian +
+                                        HB_ITEM_GET_NUMINTRAW( pItem2 ),
+                                        pItem1->item.asDateTime.time );
+         else
+            hb_vmTimeStampAdd( pResult, pItem1, pItem2->item.asDouble.value );
+      }
+      else
+         hb_itemPutDL( pResult, hb_itemGetDL( pItem1 ) + hb_itemGetNL( pItem2 ) );
    }
-   else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_DATE( pItem2 ) )
+   else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_DATETIME( pItem2 ) )
    {
-      hb_itemPutDL( pResult, hb_itemGetNL( pItem1 ) + hb_itemGetDL( pItem2 ) );
+      if( HB_IS_TIMESTAMP( pItem2 ) )
+      {
+         if( HB_IS_NUMINT( pItem1 ) )
+            hb_vmTimeStampPut( pResult, HB_ITEM_GET_NUMINTRAW( pItem1 ) +
+                                        pItem2->item.asDateTime.julian,
+                                        pItem2->item.asDateTime.time );
+         else
+            hb_vmTimeStampAdd( pResult, pItem2, pItem1->item.asDouble.value );
+      }
+      else
+         hb_itemPutDL( pResult, hb_itemGetNL( pItem1 ) + hb_itemGetDL( pItem2 ) );
    }
    else if( ! hb_objOperatorCall( HB_OO_OP_PLUS, pResult, pItem1, pItem2, NULL ) )
    {
@@ -3099,15 +3194,30 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
 
       hb_itemPutNDDec( pResult, dNumber1 - dNumber2, HB_MAX( iDec1, iDec2 ) );
    }
-   else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
+   else if( HB_IS_DATETIME( pItem1 ) && HB_IS_DATETIME( pItem2 ) )
    {
-      HB_LONG lResult = hb_itemGetDL( pItem1 ) - hb_itemGetDL( pItem2 );
-
-      HB_ITEM_PUT_NUMINTRAW( pResult, lResult );
+      HB_LONG lTime = pItem1->item.asDateTime.time -
+                      pItem2->item.asDateTime.time,
+              lJulian = pItem1->item.asDateTime.julian -
+                        pItem2->item.asDateTime.julian;
+      if( lTime != 0 )
+         hb_itemPutNDDec( pResult, hb_timeStampPackDT( lJulian, lTime ), HB_TIMEDIFF_DEC );
+      else
+         HB_ITEM_PUT_NUMINTRAW( pResult, lJulian );
    }
-   else if( HB_IS_DATE( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
+   else if( HB_IS_DATETIME( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
    {
-      hb_itemPutDL( pResult, hb_itemGetDL( pItem1 ) - hb_itemGetNL( pItem2 ) );
+      if( HB_IS_TIMESTAMP( pItem1 ) )
+      {
+         if( HB_IS_NUMINT( pItem2 ) )
+            hb_vmTimeStampPut( pResult, pItem1->item.asDateTime.julian -
+                                        HB_ITEM_GET_NUMINTRAW( pItem2 ),
+                                        pItem1->item.asDateTime.time );
+         else
+            hb_vmTimeStampAdd( pResult, pItem1, - pItem2->item.asDouble.value );
+      }
+      else
+         hb_itemPutDL( pResult, hb_itemGetDL( pItem1 ) - hb_itemGetNL( pItem2 ) );
    }
    else if( HB_IS_STRING( pItem1 ) && HB_IS_STRING( pItem2 ) )
    {
@@ -3381,10 +3491,10 @@ static void hb_vmInc( PHB_ITEM pItem )
       pItem->item.asDouble.value++;
       pItem->item.asDouble.length = HB_DBL_LENGTH( pItem->item.asDouble.value );
    }
-   else if( HB_IS_DATE( pItem ) )
+   else if( HB_IS_DATETIME( pItem ) )
    {
-      pItem->type = HB_IT_DATE;
-      pItem->item.asDate.value++;
+      pItem->type &= ~HB_IT_DEFAULT;
+      pItem->item.asDateTime.julian++;
    }
    else if( ! hb_objOperatorCall( HB_OO_OP_INC, pItem, pItem, NULL, NULL ) )
    {
@@ -3446,10 +3556,10 @@ static void hb_vmDec( PHB_ITEM pItem )
       pItem->item.asDouble.value--;
       pItem->item.asDouble.length = HB_DBL_LENGTH( pItem->item.asDouble.value );
    }
-   else if( HB_IS_DATE( pItem ) )
+   else if( HB_IS_DATETIME( pItem ) )
    {
-      pItem->type = HB_IT_DATE;
-      pItem->item.asDate.value--;
+      pItem->type &= ~HB_IT_DEFAULT;
+      pItem->item.asDateTime.julian--;
    }
    else if( ! hb_objOperatorCall( HB_OO_OP_DEC, pItem, pItem, NULL, NULL ) )
    {
@@ -3539,10 +3649,12 @@ static void hb_vmExactlyEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       hb_stackDec();
    }
-   else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
+   else if( HB_IS_DATETIME( pItem1 ) && HB_IS_DATETIME( pItem2 ) )
    {
-      pItem1->item.asLogical.value = ( pItem1->item.asDate.value ==
-                                       pItem2->item.asDate.value );
+      pItem1->item.asLogical.value = ( pItem1->item.asDateTime.julian ==
+                                       pItem2->item.asDateTime.julian &&
+                                       pItem1->item.asDateTime.time ==
+                                       pItem2->item.asDateTime.time );
       pItem1->type = HB_IT_LOGICAL;
       hb_stackDec();
    }
@@ -3643,10 +3755,16 @@ static void hb_vmEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       hb_stackDec();
    }
-   else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
+   else if( HB_IS_DATETIME( pItem1 ) && HB_IS_DATETIME( pItem2 ) )
    {
-      pItem1->item.asLogical.value = ( pItem1->item.asDate.value ==
-                                       pItem2->item.asDate.value );
+      if( HB_IS_TIMESTAMP( pItem1 ) && HB_IS_TIMESTAMP( pItem2 ) )
+         pItem1->item.asLogical.value = ( pItem1->item.asDateTime.julian ==
+                                          pItem2->item.asDateTime.julian ) &&
+                                        ( pItem1->item.asDateTime.time ==
+                                          pItem2->item.asDateTime.time );
+      else
+         pItem1->item.asLogical.value = ( pItem1->item.asDateTime.julian ==
+                                          pItem2->item.asDateTime.julian );
       pItem1->type = HB_IT_LOGICAL;
       hb_stackDec();
    }
@@ -3737,10 +3855,16 @@ static void hb_vmNotEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       hb_stackDec();
    }
-   else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
+   else if( HB_IS_DATETIME( pItem1 ) && HB_IS_DATETIME( pItem2 ) )
    {
-      pItem1->item.asLogical.value = ( pItem1->item.asDate.value !=
-                                       pItem2->item.asDate.value );
+      if( HB_IS_TIMESTAMP( pItem1 ) && HB_IS_TIMESTAMP( pItem2 ) )
+         pItem1->item.asLogical.value = ( pItem1->item.asDateTime.julian !=
+                                          pItem2->item.asDateTime.julian ) ||
+                                        ( pItem1->item.asDateTime.time !=
+                                          pItem2->item.asDateTime.time );
+      else
+         pItem1->item.asLogical.value = ( pItem1->item.asDateTime.julian !=
+                                          pItem2->item.asDateTime.julian );
       pItem1->type = HB_IT_LOGICAL;
       hb_stackDec();
    }
@@ -3818,10 +3942,18 @@ static void hb_vmLess( void )
       pItem1->type = HB_IT_LOGICAL;
       hb_stackDec();
    }
-   else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
+   else if( HB_IS_DATETIME( pItem1 ) && HB_IS_DATETIME( pItem2 ) )
    {
-      pItem1->item.asLogical.value = ( pItem1->item.asDate.value <
-                                       pItem2->item.asDate.value );
+      if( HB_IS_TIMESTAMP( pItem1 ) && HB_IS_TIMESTAMP( pItem2 ) )
+         pItem1->item.asLogical.value = ( pItem1->item.asDateTime.julian <
+                                          pItem2->item.asDateTime.julian ) ||
+                                        ( pItem1->item.asDateTime.julian ==
+                                          pItem2->item.asDateTime.julian &&
+                                          pItem1->item.asDateTime.time <
+                                          pItem2->item.asDateTime.time );
+      else
+         pItem1->item.asLogical.value = ( pItem1->item.asDateTime.julian <
+                                          pItem2->item.asDateTime.julian );
       pItem1->type = HB_IT_LOGICAL;
       hb_stackDec();
    }
@@ -3880,10 +4012,18 @@ static void hb_vmLessEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       hb_stackDec();
    }
-   else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
+   else if( HB_IS_DATETIME( pItem1 ) && HB_IS_DATETIME( pItem2 ) )
    {
-      pItem1->item.asLogical.value = ( pItem1->item.asDate.value <=
-                                       pItem2->item.asDate.value );
+      if( HB_IS_TIMESTAMP( pItem1 ) && HB_IS_TIMESTAMP( pItem2 ) )
+         pItem1->item.asLogical.value = ( pItem1->item.asDateTime.julian <
+                                          pItem2->item.asDateTime.julian ) ||
+                                        ( pItem1->item.asDateTime.julian ==
+                                          pItem2->item.asDateTime.julian &&
+                                          pItem1->item.asDateTime.time <=
+                                          pItem2->item.asDateTime.time );
+      else
+         pItem1->item.asLogical.value = ( pItem1->item.asDateTime.julian <=
+                                          pItem2->item.asDateTime.julian );
       pItem1->type = HB_IT_LOGICAL;
       hb_stackDec();
    }
@@ -3942,10 +4082,18 @@ static void hb_vmGreater( void )
       pItem1->type = HB_IT_LOGICAL;
       hb_stackDec();
    }
-   else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
+   else if( HB_IS_DATETIME( pItem1 ) && HB_IS_DATETIME( pItem2 ) )
    {
-      pItem1->item.asLogical.value = ( pItem1->item.asDate.value >
-                                       pItem2->item.asDate.value );
+      if( HB_IS_TIMESTAMP( pItem1 ) && HB_IS_TIMESTAMP( pItem2 ) )
+         pItem1->item.asLogical.value = ( pItem1->item.asDateTime.julian >
+                                          pItem2->item.asDateTime.julian ) ||
+                                        ( pItem1->item.asDateTime.julian ==
+                                          pItem2->item.asDateTime.julian &&
+                                          pItem1->item.asDateTime.time >
+                                          pItem2->item.asDateTime.time );
+      else
+         pItem1->item.asLogical.value = ( pItem1->item.asDateTime.julian >
+                                          pItem2->item.asDateTime.julian );
       pItem1->type = HB_IT_LOGICAL;
       hb_stackDec();
    }
@@ -4004,10 +4152,18 @@ static void hb_vmGreaterEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       hb_stackDec();
    }
-   else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
+   else if( HB_IS_DATETIME( pItem1 ) && HB_IS_DATETIME( pItem2 ) )
    {
-      pItem1->item.asLogical.value = ( pItem1->item.asDate.value >=
-                                       pItem2->item.asDate.value );
+      if( HB_IS_TIMESTAMP( pItem1 ) && HB_IS_TIMESTAMP( pItem2 ) )
+         pItem1->item.asLogical.value = ( pItem1->item.asDateTime.julian >
+                                          pItem2->item.asDateTime.julian ) ||
+                                        ( pItem1->item.asDateTime.julian ==
+                                          pItem2->item.asDateTime.julian &&
+                                          pItem1->item.asDateTime.time >=
+                                          pItem2->item.asDateTime.time );
+      else
+         pItem1->item.asLogical.value = ( pItem1->item.asDateTime.julian >=
+                                          pItem2->item.asDateTime.julian );
       pItem1->type = HB_IT_LOGICAL;
       hb_stackDec();
    }
@@ -6334,7 +6490,20 @@ void hb_vmPushDate( long lDate )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushDate(%ld)", lDate));
 
    pItem->type = HB_IT_DATE;
-   pItem->item.asDate.value = lDate;
+   pItem->item.asDateTime.julian = lDate;
+   pItem->item.asDateTime.time = 0;
+}
+
+void hb_vmPushTimeStamp( long lJulian, long lMilliSec )
+{
+   HB_STACK_TLS_PRELOAD
+   PHB_ITEM pItem = hb_stackAllocItem();
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushTimeStamp(%ld, %ld)", lJulian, lMilliSec));
+
+   pItem->type = HB_IT_TIMESTAMP;
+   pItem->item.asDateTime.julian = lJulian;
+   pItem->item.asDateTime.time = lMilliSec;
 }
 
 void hb_vmPushPointer( void * pPointer )
@@ -6726,19 +6895,6 @@ static void hb_vmDuplUnRef( void )
    hb_itemCopy( hb_stackAllocItem(), pItem );
    if( HB_IS_BYREF( pItem ) )
       hb_itemCopy( pItem, hb_itemUnRef( pItem ) );
-}
-
-static void hb_vmDuplTwo( void )
-{
-   HB_STACK_TLS_PRELOAD
-   PHB_ITEM pItem;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmDuplTwo()"));
-
-   pItem = hb_stackItemFromTop( -2 );
-   hb_itemCopy( hb_stackAllocItem(), pItem );
-   pItem = hb_stackItemFromTop( -2 );
-   hb_itemCopy( hb_stackAllocItem(), pItem );
 }
 
 static void hb_vmPushUnRef( void )
@@ -9106,13 +9262,6 @@ void hb_xvmDuplUnRef( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmDuplUnRef()"));
 
    hb_vmDuplUnRef();
-}
-
-void hb_xvmDuplTwo( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmDuplTwo()"));
-
-   hb_vmDuplTwo();
 }
 
 void hb_xvmPushUnRef( void )

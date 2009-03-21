@@ -120,7 +120,7 @@ typedef struct HB_CBVAR_
 typedef struct _HB_VARTYPE
 {
    struct _HB_VARTYPE *   pNext;
-   char                   cVarType;            
+   char                   cVarType;
    const char *           szFromClass;
 } HB_VARTYPE, * PHB_VARTYPE;
 
@@ -138,7 +138,8 @@ typedef struct _HB_VARTYPE
 #define  HB_EV_VARREF      0x0100
 #define  HB_EV_FUNREF      0x0200
 #define  HB_EV_DATE        0x0400
-#define  HB_EV_HASH        0x0800
+#define  HB_EV_TIMESTAMP   0x0800
+#define  HB_EV_HASH        0x1000
 
 /* messages sent to expressions
  */
@@ -183,6 +184,7 @@ typedef enum
    HB_ET_NIL,
    HB_ET_NUMERIC,
    HB_ET_DATE,
+   HB_ET_TIMESTAMP,
    HB_ET_STRING,
    HB_ET_CODEBLOCK,
    HB_ET_LOGICAL,
@@ -269,6 +271,11 @@ typedef struct HB_EXPR_
       } asNum;
       struct
       {
+         LONG  lDate;            /* julian date */
+         LONG  lTime;            /* time in milliseconds */
+      } asDate;
+      struct
+      {
          const char * szMacro;         /* identifier after the macro operator */
          struct HB_EXPR_ *pExprList;   /* list elements if &(...) was used */
          USHORT SubType;               /* context in which macro is used */
@@ -332,7 +339,7 @@ typedef struct HB_ELSEIF_
    ULONG    ulOffset;
    struct   HB_ELSEIF_ * pElseif;   /* next ELSEIF in the current IF statement */
    struct   HB_ELSEIF_ * pPrev;     /* previous IF statement */
-} HB_ELSEIF, * HB_ELSEIF_PTR;      
+} HB_ELSEIF, * HB_ELSEIF_PTR;
 
 /* support structure for EXIT and LOOP statements */
 typedef struct HB_LOOPEXIT_
@@ -345,7 +352,7 @@ typedef struct HB_LOOPEXIT_
    struct HB_LOOPEXIT_ * pLoopList;
    struct HB_LOOPEXIT_ * pExitList;
    struct HB_LOOPEXIT_ * pNext;
-} HB_LOOPEXIT, * HB_LOOPEXIT_PTR;  
+} HB_LOOPEXIT, * HB_LOOPEXIT_PTR;
 
 /* support structure for SWITCH statement */
 typedef struct HB_SWITCHCASE_

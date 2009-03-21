@@ -941,7 +941,7 @@ BOOL hb_fsGetFileTime( BYTE * pszFileName, LONG * plJulian, LONG * plMillisec )
              FileTimeToSystemTime( &local_ft, &st ) )
          {
             *plJulian = hb_dateEncode( st.wYear, st.wMonth, st.wDay );
-            *plMillisec = hb_timeStampEncode( st.wHour, st.wMinute, st.wSecond, st.wMilliseconds );
+            *plMillisec = hb_timeEncode( st.wHour, st.wMinute, st.wSecond, st.wMilliseconds );
 
             fResult = TRUE;
          }
@@ -971,7 +971,7 @@ BOOL hb_fsGetFileTime( BYTE * pszFileName, LONG * plJulian, LONG * plMillisec )
 #  endif
 
          *plJulian = hb_dateEncode( ft.tm_year + 1900, ft.tm_mon + 1, ft.tm_mday );
-         *plMillisec = hb_timeStampEncode( ft.tm_hour, ft.tm_min, ft.tm_sec, 0 );
+         *plMillisec = hb_timeEncode( ft.tm_hour, ft.tm_min, ft.tm_sec, 0 );
 
          fResult = TRUE;
       }
@@ -1089,7 +1089,7 @@ BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec )
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSetFileTime(%s, %ld, %ld)", pszFileName, lJulian, lMillisec));
 
    hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
-   hb_timeStampDecode( lMillisec, &iHour, &iMinute, &iSecond, &iMSec );
+   hb_timeDecode( lMillisec, &iHour, &iMinute, &iSecond, &iMSec );
 
 #if defined( HB_OS_WIN ) && !defined( __CYGWIN__ )
    {

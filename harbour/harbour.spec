@@ -452,7 +452,7 @@ then
 fi
 
 # remove unused files
-rm -f ${HB_BIN_INSTALL}/{hbtest}
+rm -f ${HB_BIN_INSTALL}/hbtest
 
 # Create a README file for people using this RPM.
 cat > doc/%{readme} <<EOF

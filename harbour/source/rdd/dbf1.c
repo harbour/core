@@ -205,7 +205,7 @@ static HB_LONG hb_dbfGetRowVer( DBFAREAP pArea, USHORT uiField, HB_LONG * pValue
                       sizeof( DBFHEADER ) + uiField * sizeof( DBFFIELD ) ) ==
        sizeof( dbField ) )
    {
-      *pValue = HB_GET_LE_UINT64( &dbField.bReserved2 ) + 1;
+      *pValue = HB_GET_LE_UINT64( dbField.bReserved2 ) + 1;
       HB_PUT_LE_UINT64( dbField.bReserved2, *pValue );
       hb_fileWriteAt( pArea->pDataFile, ( BYTE * ) &dbField, sizeof( dbField ),
                       sizeof( DBFHEADER ) + uiField * sizeof( DBFFIELD ) );
@@ -253,7 +253,7 @@ static void hb_dbfUpdateStampFields( DBFAREAP pArea )
          {
             BYTE * pPtr = pArea->pRecord + pArea->pFieldOffset[ uiCount ];
             if( lJulian == 0 )
-               hb_dateTimeStamp( &lJulian, &lMilliSec );
+               hb_timeStampGet( &lJulian, &lMilliSec );
             HB_PUT_LE_UINT32( pPtr, lJulian );
             pPtr += 4;
             HB_PUT_LE_UINT32( pPtr, lMilliSec );
@@ -1839,7 +1839,6 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
    LPFIELD pField;
    BOOL fError;
    PHB_ITEM pError;
-   char szBuffer[24];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfGetValue(%p, %hu, %p)", pArea, uiIndex, pItem));
 
@@ -1901,17 +1900,15 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
       case HB_FT_TIME:
          if( pField->uiLen == 4 )
          {
-            hb_itemPutC( pItem, hb_timeStampStr( szBuffer,
-                  HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ) ) );
+            hb_itemPutTDT( pItem, 0, HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ) );
             break;
          }
          /* no break */
 
       case HB_FT_MODTIME:
       case HB_FT_DAYTIME:
-         hb_itemPutC( pItem, hb_dateTimeStampStr( szBuffer,
-               HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ),
-               HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + 4 ) ) );
+         hb_itemPutTDT( pItem, HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ),
+                               HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + 4 ) );
          break;
 
       case HB_FT_INTEGER:
@@ -2253,6 +2250,7 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
     * limit [druzus]
     */
    char szBuffer[ 256 ];
+   BYTE * ptr;
    PHB_ITEM pError;
    HB_ERRCODE uiError;
 
@@ -2310,7 +2308,7 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
          {
             LONG lJulian, lMillisec;
             BYTE * ptr = pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
-            hb_dateTimeStampStrGet( hb_itemGetCPtr( pItem ), &lJulian, &lMillisec );
+            hb_timeStampStrGetDT( hb_itemGetCPtr( pItem ), &lJulian, &lMillisec );
             HB_PUT_LE_UINT32( ptr, lJulian );
             ptr += 4;
             HB_PUT_LE_UINT32( ptr, lMillisec );
@@ -2319,7 +2317,7 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
             uiError = EDBF_DATATYPE;
       }
       /* Must precede HB_IS_NUMERIC() because a DATE is also a NUMERIC. (xHarbour) */
-      else if( HB_IS_DATE( pItem ) )
+      else if( HB_IS_DATETIME( pItem ) )
       {
          if( pField->uiType == HB_FT_DATE )
          {
@@ -2338,6 +2336,20 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
                hb_itemGetDS( pItem, szBuffer );
                memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], szBuffer, 8 );
             }
+         }
+         else if( pField->uiType == HB_FT_DAYTIME ||
+                  pField->uiType == HB_FT_TIME )
+         {
+            long lDate, lTime;
+
+            hb_itemGetTDT( pItem, &lDate, &lTime );
+            ptr = pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
+            if( pField->uiType == HB_FT_DAYTIME )
+            {
+               HB_PUT_LE_UINT32( ptr, lDate );
+               ptr += 4;
+            }
+            HB_PUT_LE_UINT32( ptr, lTime );
          }
          else if( pField->uiType == HB_FT_ANY && pField->uiLen == 3 )
          {

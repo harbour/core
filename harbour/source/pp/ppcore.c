@@ -1139,6 +1139,22 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             else
                ++ul;
          }
+         else if( ( ch == 't' || ch == 'T' ) && ulLen > 1 && pBuffer[ 1 ] == '"' )
+         {
+            ++ul;
+            while( ++ul < ulLen && pBuffer[ ul ] != '"' ) {};
+            hb_pp_tokenAddNext( pState, pBuffer + 2, ul - 2,
+                                HB_PP_TOKEN_TIMESTAMP );
+            if( ul == ulLen )
+            {
+               ULONG ulSkip = pBuffer - hb_membufPtr( pState->pBuffer ) + 1;
+               hb_membufAddCh( pState->pBuffer, '\0' );
+               pBuffer = hb_membufPtr( pState->pBuffer ) + ulSkip;
+               hb_pp_error( pState, 'E', HB_PP_ERR_STRING_TERMINATOR, pBuffer );
+            }
+            else
+               ++ul;
+         }
 #endif
          else if( ch == '"' || ch == '\'' || ch == '`' )
          {
@@ -1171,7 +1187,6 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
 #endif
             hb_pp_tokenAddNext( pState, pBuffer + 1, ul - 1,
                                 HB_PP_TOKEN_STRING );
-
             if( ul == ulLen )
             {
                ULONG ulSkip = pBuffer - hb_membufPtr( pState->pBuffer ) + 1;
@@ -1557,6 +1572,12 @@ static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
          hb_membufAddData( pBuffer, pToken->value, pToken->len );
          hb_membufAddCh( pBuffer, ( char ) ( ch == '[' ? ']' : ch ) );
       }
+   }
+   else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_TIMESTAMP )
+   {
+      hb_membufAddStr( pBuffer, "t\"" );
+      hb_membufAddData( pBuffer, pToken->value, pToken->len );
+      hb_membufAddCh( pBuffer, '"' );
    }
    else
    {

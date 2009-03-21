@@ -136,7 +136,8 @@ typedef enum
    HB_SET_HBOUTLOG      = 112,
    HB_SET_HBOUTLOGINFO  = 113,
    HB_SET_CODEPAGE      = 114,
-   HB_SET_OSCODEPAGE    = 115
+   HB_SET_OSCODEPAGE    = 115,
+   HB_SET_TIMEFORMAT    = 116
 
 } HB_set_enum;
 
@@ -214,6 +215,7 @@ typedef struct
    char *     HB_SET_HBOUTLOG;
    char *     HB_SET_HBOUTLOGINFO;
    char *     HB_SET_OSCODEPAGE;
+   char *     HB_SET_TIMEFORMAT;
 
 } HB_SET_STRUCT, * PHB_SET_STRUCT;
 
@@ -273,6 +275,7 @@ extern HB_EXPORT char *     hb_setGetColor( void );
 extern HB_EXPORT BOOL       hb_setGetConfirm( void );
 extern HB_EXPORT BOOL       hb_setGetConsole( void );
 extern HB_EXPORT char *     hb_setGetDateFormat( void );
+extern HB_EXPORT char *     hb_setGetTimeFormat( void );
 extern HB_EXPORT BOOL       hb_setGetDebug( void );
 extern HB_EXPORT int        hb_setGetDecimals( void );
 extern HB_EXPORT char *     hb_setGetDefault( void );

@@ -516,8 +516,8 @@ char * hb_itemGetDS( PHB_ITEM pItem, char * szDate )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetDS(%p, %s)", pItem, szDate));
 
-   if( pItem && HB_IS_DATE( pItem ) )
-      return hb_dateDecStr( szDate, pItem->item.asDate.value );
+   if( pItem && HB_IS_DATETIME( pItem ) )
+      return hb_dateDecStr( szDate, pItem->item.asDateTime.julian );
    else
       return hb_dateDecStr( szDate, 0 );
 }
@@ -526,10 +526,53 @@ long hb_itemGetDL( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetDL(%p)", pItem));
 
-   if( pItem && HB_IS_DATE( pItem ) )
-      return pItem->item.asDate.value;
+   if( pItem && HB_IS_DATETIME( pItem ) )
+      return pItem->item.asDateTime.julian;
    else
       return 0;
+}
+
+/* This function always closes the time with a zero byte, so it needs a
+ * 18 character long buffer to store time in format "YYYYMMDDhhmmssfff"
+ * with trailing 0 byte.
+ */
+char * hb_itemGetTS( PHB_ITEM pItem, char * szDateTime )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetTS(%p, %s)", pItem, szDateTime));
+
+   if( pItem && HB_IS_DATETIME( pItem ) )
+      return hb_timeStampStrRawPut( szDateTime, pItem->item.asDateTime.julian,
+                                                pItem->item.asDateTime.time );
+   else
+      return hb_timeStampStrRawPut( szDateTime, 0, 0 );
+}
+
+double hb_itemGetTD( PHB_ITEM pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetTD(%p)", pItem));
+
+   if( pItem && HB_IS_DATETIME( pItem ) )
+      return hb_timeStampPackDT( pItem->item.asDateTime.julian,
+                                 pItem->item.asDateTime.time );
+   else
+      return 0;
+}
+
+BOOL hb_itemGetTDT( PHB_ITEM pItem, LONG * plJulian, LONG * plMilliSec )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetTDT(%p,%p,%p)", pItem, plJulian, plMilliSec));
+
+   if( pItem && HB_IS_DATETIME( pItem ) )
+   {
+      *plJulian = pItem->item.asDateTime.julian;
+      *plMilliSec = pItem->item.asDateTime.time;
+      return TRUE;
+   }
+   else
+   {
+      *plJulian = *plMilliSec = 0;
+      return FALSE;
+   }
 }
 
 BOOL hb_itemGetL( PHB_ITEM pItem )
@@ -611,8 +654,9 @@ LONG hb_itemGetNL( PHB_ITEM pItem )
          return ( LONG ) pItem->item.asDouble.value;
 #endif
 
-      else if( HB_IS_DATE( pItem ) )
-         return ( LONG ) pItem->item.asDate.value;
+      /* DATETIME TODO: remove it */
+      else if( HB_IS_DATETIME( pItem ) )
+         return ( LONG ) pItem->item.asDateTime.julian;
    }
 
    return 0;
@@ -637,8 +681,9 @@ HB_LONG hb_itemGetNInt( PHB_ITEM pItem )
          return ( HB_LONG ) pItem->item.asDouble.value;
 #endif
 
-      else if( HB_IS_DATE( pItem ) )
-         return ( LONG ) pItem->item.asDate.value;
+      /* DATETIME TODO: remove it */
+      else if( HB_IS_DATETIME( pItem ) )
+         return ( LONG ) pItem->item.asDateTime.julian;
    }
 
    return 0;
@@ -664,8 +709,9 @@ LONGLONG hb_itemGetNLL( PHB_ITEM pItem )
          return ( LONGLONG ) pItem->item.asDouble.value;
 #endif
 
-      else if( HB_IS_DATE( pItem ) )
-         return ( LONGLONG ) pItem->item.asDate.value;
+      /* DATETIME TODO: remove it */
+      else if( HB_IS_DATETIME( pItem ) )
+         return ( LONGLONG ) pItem->item.asDateTime.julian;
    }
 
    return 0;
@@ -749,7 +795,8 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, const char * szDate )
       pItem = hb_itemNew( NULL );
 
    pItem->type = HB_IT_DATE;
-   pItem->item.asDate.value = hb_dateEncStr( szDate );
+   pItem->item.asDateTime.julian = hb_dateEncStr( szDate );
+   pItem->item.asDateTime.time = 0;
 
    return pItem;
 }
@@ -767,7 +814,8 @@ PHB_ITEM hb_itemPutD( PHB_ITEM pItem, int iYear, int iMonth, int iDay )
       pItem = hb_itemNew( NULL );
 
    pItem->type = HB_IT_DATE;
-   pItem->item.asDate.value = hb_dateEncode( iYear, iMonth, iDay );
+   pItem->item.asDateTime.julian = hb_dateEncode( iYear, iMonth, iDay );
+   pItem->item.asDateTime.time = 0;
 
    return pItem;
 }
@@ -785,7 +833,68 @@ PHB_ITEM hb_itemPutDL( PHB_ITEM pItem, long lJulian )
       pItem = hb_itemNew( NULL );
 
    pItem->type = HB_IT_DATE;
-   pItem->item.asDate.value = lJulian;
+   pItem->item.asDateTime.julian = lJulian;
+   pItem->item.asDateTime.time = 0;
+
+   return pItem;
+}
+
+PHB_ITEM hb_itemPutTS( PHB_ITEM pItem, const char * szDateTime )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutTS(%p, %s)", pItem, szDateTime));
+
+   if( pItem )
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
+   else
+      pItem = hb_itemNew( NULL );
+
+   pItem->type = HB_IT_TIMESTAMP;
+   hb_timeStampStrRawGet( szDateTime, &pItem->item.asDateTime.julian,
+                                      &pItem->item.asDateTime.time );
+
+   return pItem;
+}
+
+PHB_ITEM hb_itemPutTD( PHB_ITEM pItem, double dTimeStamp )
+{
+   LONG lJulian, lMilliSec;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutTD(%p, %lf)", pItem, dTimeStamp));
+
+   if( pItem )
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
+   else
+      pItem = hb_itemNew( NULL );
+
+   hb_timeStampUnpackDT( dTimeStamp, &lJulian, &lMilliSec );
+   pItem->type = HB_IT_TIMESTAMP;
+   pItem->item.asDateTime.julian = lJulian;
+   pItem->item.asDateTime.time = lMilliSec;
+
+   return pItem;
+}
+
+PHB_ITEM hb_itemPutTDT( PHB_ITEM pItem, LONG lJulian, LONG lMilliSec )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutTDT(%p, %ld, %ld)", pItem, lJulian, lMilliSec));
+
+   if( pItem )
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
+   else
+      pItem = hb_itemNew( NULL );
+
+   pItem->type = HB_IT_TIMESTAMP;
+   pItem->item.asDateTime.julian = lJulian;
+   pItem->item.asDateTime.time = lMilliSec;
 
    return pItem;
 }
@@ -1311,6 +1420,9 @@ char * hb_itemTypeStr( PHB_ITEM pItem )
 
       case HB_IT_DATE:
          return ( char * ) "D";
+
+      case HB_IT_TIMESTAMP:
+         return ( char * ) "T";
 
       case HB_IT_LOGICAL:
          return ( char * ) "L";
@@ -2316,12 +2428,6 @@ BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int iDec )
       else if( HB_IS_LONG( pNumber ) )
          lNumber = pNumber->item.asLong.value;
 
-      else if( HB_IS_DATE( pNumber ) )
-         lNumber = pNumber->item.asDate.value;
-
-      else if( HB_IS_STRING( pNumber ) )
-         lNumber = pNumber->item.asString.value[ 0 ];
-
       else
       {
          lNumber = 0;
@@ -2447,10 +2553,26 @@ char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
          {
             char szDate[ 9 ];
 
-            hb_dateDecStr( szDate, pItem->item.asDate.value );
+            hb_dateDecStr( szDate, pItem->item.asDateTime.julian );
 
             buffer = ( char * ) hb_xgrab( 11 );
             hb_dateFormat( szDate, buffer, hb_stackSetStruct()->HB_SET_DATEFORMAT );
+            * ulLen = strlen( buffer );
+            * bFreeReq = TRUE;
+         }
+         break;
+
+      case HB_IT_TIMESTAMP:
+         {
+            char szDateTime[ 27 ];
+
+            hb_timeStampFormat( szDateTime,
+                                hb_stackSetStruct()->HB_SET_DATEFORMAT,
+                                hb_stackSetStruct()->HB_SET_TIMEFORMAT,
+                                pItem->item.asDateTime.julian,
+                                pItem->item.asDateTime.time );
+
+            buffer = hb_strdup( szDateTime );
             * ulLen = strlen( buffer );
             * bFreeReq = TRUE;
          }
@@ -2537,6 +2659,7 @@ char * hb_itemPadConv( PHB_ITEM pItem, ULONG * pulSize, BOOL * bFreeReq )
          case HB_IT_STRING:
          case HB_IT_MEMO:
          case HB_IT_DATE:
+         case HB_IT_TIMESTAMP:
             return hb_itemString( pItem, pulSize, bFreeReq );
 
          case HB_IT_DOUBLE:

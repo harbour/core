@@ -293,7 +293,7 @@ HB_FUNC( DMY )
    int iYear, iMonth, iDay;
    BOOL bMode = FALSE;
 
-   if( ISDATE( 1 ) )
+   if( ISDATETIME( 1 ) )
    {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    }
@@ -392,7 +392,7 @@ HB_FUNC( MDY )
 {
    int iYear, iMonth, iDay;
 
-   if( ISDATE( 1 ) )
+   if( ISDATETIME( 1 ) )
    {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    }
@@ -472,7 +472,9 @@ HB_FUNC( MDY )
 
 HB_FUNC( ADDMONTH )
 {
+   long lJulian, lMillisec = 0;
    int iYear, iMonth, iDay, iNum, iDays;
+   BOOL fTimeStamp = FALSE;
 
    if( ISNUM( 1 ) )
    {
@@ -481,7 +483,13 @@ HB_FUNC( ADDMONTH )
    }
    else
    {
-      if( ISDATE( 1 ) )
+      if( ISTIMESTAMP( 1 ) )
+      {
+         fTimeStamp = TRUE;
+         hb_partdt( &lJulian, &lMillisec, 1 );
+         hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
+      }
+      else if( ISDATE( 1 ) )
          hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
       else
          hb_dateToday( &iYear, &iMonth, &iDay );
@@ -506,7 +514,11 @@ HB_FUNC( ADDMONTH )
       iDay = iDays;
    }
 
-   hb_retd( iYear, iMonth, iDay );
+   lJulian = hb_dateEncode( iYear, iMonth, iDay );
+   if( fTimeStamp )
+      hb_rettdt( lJulian, lMillisec );
+   else
+      hb_retdl( lJulian );
 }
 
 
@@ -542,7 +554,7 @@ HB_FUNC( DOY )
 {
    LONG lDate;
 
-   if( ISDATE( 1 ) )
+   if( ISDATETIME( 1 ) )
    {
       lDate = hb_pardl( 1 );
    }
@@ -588,7 +600,7 @@ HB_FUNC( ISLEAP )
 {
    int iYear, iMonth, iDay;
 
-   if( ISDATE( 1 ) )
+   if( ISDATETIME( 1 ) )
    {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    }
@@ -708,7 +720,7 @@ HB_FUNC( QUARTER )
 {
    int iYear, iMonth, iDay;
 
-   if( ISDATE( 1 ) )
+   if( ISDATETIME( 1 ) )
    {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    }
@@ -762,7 +774,7 @@ HB_FUNC( LASTDAYOM )
    }
    else
    {
-      if( ISDATE( 1 ) )
+      if( ISDATETIME( 1 ) )
       {
          hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
       }
@@ -886,7 +898,7 @@ HB_FUNC( WEEK )
    LONG lDate;
    BOOL bSWN = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
 
-   if( ISDATE( 1 ) )
+   if( ISDATETIME( 1 ) )
    {
       lDate = hb_pardl( 1 );
       hb_dateDecode( lDate, &iYear, &iMonth, &iDay );

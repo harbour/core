@@ -46,7 +46,7 @@ Harbour functions to mange ZIP files:
 HB_ZipOpen( cFileName, [ iMode = HB_ZIP_CREATE ],
             [ @cGlobalComment ] ) --> hZip
 HB_ZipClose( hZip, [ cGlobalComment ] ) --> nError
-HB_ZipFileCreate( hZip, cZipName, dDate, cTime,
+HB_ZipFileCreate( hZip, cZipName, tDateTime, cTime,
                   nInternalAttr, nExternalAttr,
                   [ nMethod = HB_ZLIB_METHOD_DEFLATE ],
                   [ nLevel = HB_ZLIB_COMPRESSION_DEFAULT ],
@@ -67,7 +67,7 @@ HB_UnzipFileFirst( hUnzip ) --> nError
 HB_UnzipFileNext( hUnzip ) --> nError
 HB_UnzipFilePos( hUnzip ) --> nPosition
 HB_UnzipFileGoto( hUnzip, nPosition ) --> nError
-HB_UnzipFileInfo( hUnzip, @cZipName, @dDate, @cTime,
+HB_UnzipFileInfo( hUnzip, @cZipName, @tDateTime, @cTime,
                   @nInternalAttr, @nExternalAttr,
                   @nMethod, @nSize, @nCompressedSize,
                   @lCrypted, @cComment ) --> nError

@@ -158,11 +158,13 @@ static int hb_hashItemCmp( PHB_ITEM pKey1, PHB_ITEM pKey2, int iFlags )
       else
          return 1;
    }
-   else if( HB_IS_DATE( pKey1 ) )
+   else if( HB_IS_DATETIME( pKey1 ) )
    {
-      if( HB_IS_DATE( pKey2 ) )
-         return pKey1->item.asDate.value < pKey2->item.asDate.value ? -1 :
-              ( pKey1->item.asDate.value > pKey2->item.asDate.value ? 1 : 0 );
+      if( HB_IS_DATETIME( pKey2 ) )
+         return pKey1->item.asDateTime.julian < pKey2->item.asDateTime.julian ? -1 :
+              ( pKey1->item.asDateTime.julian > pKey2->item.asDateTime.julian ? 1 :
+              ( pKey1->item.asDateTime.time < pKey2->item.asDateTime.time ? -1 :
+              ( pKey1->item.asDateTime.time < pKey2->item.asDateTime.time ? 1 : 0 ) ) );
       else if( HB_IS_STRING( pKey2 ) )
          return -1;
       else
@@ -173,7 +175,7 @@ static int hb_hashItemCmp( PHB_ITEM pKey1, PHB_ITEM pKey2, int iFlags )
       if( HB_IS_POINTER( pKey2 ) )
          return pKey1->item.asPointer.value < pKey2->item.asPointer.value ? -1 :
               ( pKey1->item.asPointer.value > pKey2->item.asPointer.value ? 1 : 0 );
-      else if( HB_IS_STRING( pKey2 ) || HB_IS_DATE( pKey2 ) )
+      else if( HB_IS_STRING( pKey2 ) || HB_IS_DATETIME( pKey2 ) )
          return -1;
       else
          return 1;

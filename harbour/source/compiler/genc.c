@@ -580,15 +580,6 @@ static HB_GENC_FUNC( hb_p_duplunref )
    return 1;
 }
 
-static HB_GENC_FUNC( hb_p_dupltwo )
-{
-   HB_SYMBOL_UNUSED( pFunc );
-   HB_SYMBOL_UNUSED( lPCodePos );
-
-   fprintf( cargo->yyc, "\tHB_P_DUPLTWO,\n" );
-   return 1;
-}
-
 static HB_GENC_FUNC( hb_p_pushunref )
 {
    HB_SYMBOL_UNUSED( pFunc );
@@ -2082,7 +2073,6 @@ static HB_GENC_FUNC( hb_p_switch )
 
 static HB_GENC_FUNC( hb_p_pushdate )
 {
-
    fprintf( cargo->yyc, "\tHB_P_PUSHDATE, %i, %i, %i, %i,",
             pFunc->pCode[ lPCodePos + 1 ],
             pFunc->pCode[ lPCodePos + 2 ],
@@ -2103,6 +2093,30 @@ static HB_GENC_FUNC( hb_p_pushdate )
    return 5;
 }
 
+static HB_GENC_FUNC( hb_p_pushtimestamp )
+{
+   fprintf( cargo->yyc, "\tHB_P_PUSHTIMESTAMP, %i, %i, %i, %i, %i, %i, %i, %i,",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ],
+            pFunc->pCode[ lPCodePos + 3 ],
+            pFunc->pCode[ lPCodePos + 4 ],
+            pFunc->pCode[ lPCodePos + 5 ],
+            pFunc->pCode[ lPCodePos + 6 ],
+            pFunc->pCode[ lPCodePos + 7 ],
+            pFunc->pCode[ lPCodePos + 8 ] );
+   if( cargo->bVerbose )
+   {
+      char timestamp[24];
+
+      hb_timeStampStr( timestamp,
+                       HB_PCODE_MKLONG( &pFunc->pCode[ lPCodePos + 1 ] ),
+                       HB_PCODE_MKLONG( &pFunc->pCode[ lPCodePos + 5 ] ) );
+      fprintf( cargo->yyc, "\t/* %s */", timestamp );
+   }
+   fprintf( cargo->yyc, "\n" );
+
+   return 9;
+}
 
 static HB_GENC_FUNC( hb_p_localnearaddint )
 {
@@ -2423,7 +2437,7 @@ static const HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_do,
    hb_p_doshort,
    hb_p_duplicate,
-   hb_p_dupltwo,
+   hb_p_pushtimestamp,
    hb_p_inc,
    hb_p_instring,
    hb_p_jumpnear,

@@ -106,6 +106,16 @@ HB_FUNC( HB_ISDATE )
    hb_retl( ISDATE( 1 ) );
 }
 
+HB_FUNC( HB_ISDATETIME )
+{
+   hb_retl( ISDATETIME( 1 ) );
+}
+
+HB_FUNC( HB_ISTIMESTAMP )
+{
+   hb_retl( ISTIMESTAMP( 1 ) );
+}
+
 HB_FUNC( HB_ISBLOCK )
 {
    hb_retl( ISBLOCK( 1 ) );

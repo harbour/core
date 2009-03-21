@@ -63,16 +63,32 @@
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    hb_dateDOW()
  *
+ * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *    time/timestamp functions
+ *
  * See doc/license.txt for licensing terms.
  *
  */
 
 #define HB_OS_WIN_USED
 
-#include <time.h>
-
 #include "hbapi.h"
 #include "hbdate.h"
+#if defined( HB_LONG_LONG_OFF )
+#  include "hbmath.h"
+#endif
+
+#include <time.h>
+#if ( defined( HB_OS_BSD ) || defined( HB_OS_LINUX ) ) && !defined( __WATCOMC__ )
+#  include <sys/time.h>
+#elif !defined( HB_OS_WIN )
+#  include <sys/timeb.h>
+#  if defined(_MSC_VER)
+#     define timeb _timeb
+#     define ftime _ftime
+#  endif
+#endif
+
 
 #ifdef HB_C52_STRICT
    #define HB_DATE_YEAR_LIMIT    2999
@@ -81,6 +97,118 @@
 #endif
 
 #define HB_STR_DATE_BASE      1721060     /* 0000/01/01 */
+#define HB_SYS_DATE_BASE      2440588     /* 1970/01/01 */
+
+
+void hb_timeStampGetLocal( int * piYear, int * piMonth, int * piDay,
+                           int * piHour, int * piMinutes,
+                           int * piSeconds, int * piMSec )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampGetLocal(%p,%p,%p,%p,%p,%p,%p)", piYear, piMonth, piDay, piHour, piMinutes, piSeconds, piMSec));
+
+#if defined(HB_OS_WIN)
+   {
+      SYSTEMTIME st;
+
+      GetLocalTime( &st );
+
+      *piYear    = st.wYear;
+      *piMonth   = st.wMonth;
+      *piDay     = st.wDay;
+      *piHour    = st.wHour;
+      *piMinutes = st.wMinute;
+      *piSeconds = st.wSecond;
+      *piMSec    = st.wMilliseconds;
+   }
+#else
+   {
+      struct tm st;
+      time_t seconds, millisecs;
+
+#  if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
+      struct timeval tv;
+      gettimeofday( &tv, NULL );
+      seconds = tv.tv_sec;
+      millisecs = tv.tv_usec / 1000;
+#  else
+      struct timeb tb;
+      ftime( &tb );
+      seconds = tb.time;
+      millisecs = tb.millitm;
+#  endif
+
+#  if defined( HB_HAS_LOCALTIME_R )
+      localtime_r( &seconds, &st );
+#  else
+      st = *localtime( &seconds );
+#  endif
+
+      *piYear    = st.tm_year + 1900;
+      *piMonth   = st.tm_mon + 1;
+      *piDay     = st.tm_mday;
+      *piHour    = st.tm_hour;
+      *piMinutes = st.tm_min;
+      *piSeconds = st.tm_sec;
+      *piMSec    = millisecs;
+   }
+#endif
+}
+
+/* return UTC julian timestamp in milliseconds */
+HB_ULONG hb_dateMilliSeconds( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateMilliSeconds()"));
+
+#if defined(HB_OS_WIN)
+   {
+      SYSTEMTIME st;
+      GetSystemTime( &st );
+      return ( HB_ULONG ) hb_dateEncode( st.wYear, st.wMonth, st.wDay ) *
+             HB_MILLISECS_PER_DAY +
+             hb_timeEncode( st.wHour, st.wMinute, st.wSecond, st.wMilliseconds );
+   }
+#elif defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
+   {
+      struct timeval tv;
+      gettimeofday( &tv, NULL );
+      return ( ( HB_ULONG ) tv.tv_sec +
+               ( HB_ULONG ) HB_SYS_DATE_BASE * HB_SECONDS_PER_DAY ) * 1000 +
+             tv.tv_usec / 1000;
+   }
+#else
+   {
+      struct timeb tb;
+      ftime( &tb );
+      return ( ( HB_ULONG ) tb.time +
+               ( HB_ULONG ) HB_SYS_DATE_BASE * HB_SECONDS_PER_DAY ) * 1000 +
+             tb.time;
+   }
+#endif
+}
+
+/* return local timestamp */
+void hb_timeStampGet( LONG * plJulian, LONG * plMilliSec )
+{
+   int iYear, iMonth, iDay, iHour, iMinute, iSeconds, iMillisec;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampGet(%p,%p)", plJulian, plMilliSec));
+
+   hb_timeStampGetLocal( &iYear, &iMonth, &iDay,
+                         &iHour, &iMinute, &iSeconds, &iMillisec );
+   *plJulian   = hb_dateEncode( iYear, iMonth, iDay );
+   *plMilliSec = hb_timeEncode( iHour, iMinute, iSeconds, iMillisec );
+}
+
+double hb_dateSeconds( void )
+{
+   int iYear, iMonth, iDay, iHour, iMinute, iSeconds, iMillisec;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateSeconds()"));
+
+   hb_timeStampGetLocal( &iYear, &iMonth, &iDay,
+                         &iHour, &iMinute, &iSeconds, &iMillisec );
+   return ( double ) hb_timeEncode( iHour, iMinute, iSeconds, iMillisec ) / 1000;
+}
 
 LONG hb_dateEncode( int iYear, int iMonth, int iDay )
 {
@@ -259,179 +387,170 @@ int hb_dateDOW( int iYear, int iMonth, int iDay )
 
 void hb_dateToday( int * piYear, int * piMonth, int * piDay )
 {
-#if defined(HB_OS_WIN)
-   {
-      SYSTEMTIME st;
+   int iHour, iMinute, iSeconds, iMillisec;
 
-      GetLocalTime( &st );
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateToday(%p,%p,%p)", piYear, piMonth, piDay));
 
-      *piYear  = st.wYear;
-      *piMonth = st.wMonth;
-      *piDay   = st.wDay;
-   }
-#else
-   {
-      time_t t;
-      struct tm st;
-
-      time( &t );
-#  if defined( HB_HAS_LOCALTIME_R )
-      localtime_r( &t, &st );
-#  else
-      st = *localtime( &t );
-#  endif
-
-      *piYear  = st.tm_year + 1900;
-      *piMonth = st.tm_mon + 1;
-      *piDay   = st.tm_mday;
-   }
-#endif
+   hb_timeStampGetLocal( piYear, piMonth, piDay,
+                         &iHour, &iMinute, &iSeconds, &iMillisec );
 }
 
 /* NOTE: The passed buffer must be at least 9 chars long */
 
 void hb_dateTimeStr( char * pszTime )
 {
-#if defined(HB_OS_WIN)
-   {
-      SYSTEMTIME st;
-      GetLocalTime( &st );
-      hb_snprintf( pszTime, 9, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
-   }
-#else
-   {
-      time_t t;
-      struct tm st;
-      time( &t );
-#  if defined( HB_HAS_LOCALTIME_R )
-      localtime_r( &t, &st );
-#  else
-      st = *localtime( &t );
-#  endif
-      hb_snprintf( pszTime, 9, "%02d:%02d:%02d", st.tm_hour, st.tm_min, st.tm_sec );
-   }
-#endif
+   int iYear, iMonth, iDay, iHour, iMinute, iSeconds, iMillisec;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateTimeStr(%p)", pszTime));
+
+   hb_timeStampGetLocal( &iYear, &iMonth, &iDay,
+                         &iHour, &iMinute, &iSeconds, &iMillisec );
+   hb_snprintf( pszTime, 9, "%02d:%02d:%02d", iHour, iMinute, iSeconds );
 }
 
-LONG hb_timeStampEncode( int iHour, int iMinutes, int iSeconds, int iMSec )
-{
-   LONG lMillisec;
+/* functions to operate on time and timestamp values */
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampEncode(%d, %d, %d, %d)", iHour, iMinutes, iSeconds, iMSec));
+LONG hb_timeEncode( int iHour, int iMinutes, int iSeconds, int iMSec )
+{
+   LONG lMilliSec;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeEncode(%d, %d, %d, %d)", iHour, iMinutes, iSeconds, iMSec));
 
    if( iHour >= 0 && iHour < 24 &&
        iMinutes >= 0 && iMinutes < 60 &&
        iSeconds >= 0 && iSeconds < 60 &&
-       iMSec >= 0 && iMSec < 1000 )
+       iMSec >= 0 && iMSec < 1000 ) /* <= intentionally for rounded milliseconds values */
    {
-      lMillisec = ( ( LONG ) ( iHour * 60 + iMinutes ) * 60 + iSeconds ) *
+      lMilliSec = ( ( LONG ) ( iHour * 60 + iMinutes ) * 60 + iSeconds ) *
                   1000 + iMSec;
    }
    else
-   {
-      lMillisec = 0;
-   }
+      lMilliSec = 0;
 
-   return lMillisec;
+   return lMilliSec;
 }
 
-void hb_timeStampDecode( LONG lMillisec, int * piHour, int * piMinutes,
-                                         int * piSeconds, int * piMSec )
+void hb_timeDecode( LONG lMilliSec, int * piHour, int * piMinutes,
+                                    int * piSeconds, int * piMSec )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampDecode(%ld, %p, %p, %p, %p)", lMillisec, piHour, piMinutes, piSeconds, piMSec));
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeDecode(%ld, %p, %p, %p, %p)", lMilliSec, piHour, piMinutes, piSeconds, piMSec));
 
-   if( lMillisec <= 0 )
+   if( lMilliSec <= 0 )
    {
       *piHour = *piMinutes = *piSeconds = *piMSec = 0;
    }
    else
    {
-      *piMSec = lMillisec % 1000;
-      lMillisec /= 1000;
-      *piSeconds = lMillisec % 60;
-      lMillisec /= 60;
-      *piMinutes = lMillisec % 60;
-      lMillisec /= 60;
-      if( lMillisec >= 24 )
+      *piMSec = lMilliSec % 1000;
+      lMilliSec /= 1000;
+      *piSeconds = lMilliSec % 60;
+      lMilliSec /= 60;
+      *piMinutes = lMilliSec % 60;
+      lMilliSec /= 60;
+      if( lMilliSec >= 24 )
          *piHour = *piMinutes = *piSeconds = *piMSec = 0;
       else
-         *piHour = ( int ) lMillisec;
+         *piHour = ( int ) lMilliSec;
    }
 }
 
 /* This function always closes the time with a zero byte, so it needs a
-   13 character long buffer. */
-
-char * hb_timeStampStr( char * szTime, LONG lMillisec )
+ * 13 character long buffer to store time in format "hh:mm:ss.fff"
+ */
+char * hb_timeStr( char * szTime, LONG lMilliSec )
 {
    int iHour, iMinutes, iSeconds, iMSec;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampStr(%p, %ld)", szTime, lMillisec));
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStr(%p, %ld)", szTime, lMilliSec));
 
-   hb_timeStampDecode( lMillisec, &iHour, &iMinutes, &iSeconds, &iMSec );
+   hb_timeDecode( lMilliSec, &iHour, &iMinutes, &iSeconds, &iMSec );
    hb_snprintf( szTime, 13, "%02d:%02d:%02d.%03d",
                 iHour, iMinutes, iSeconds, iMSec );
-   szTime[ 12 ] = '\0';
 
    return szTime;
 }
 
-/* This function always closes the time with a zero byte, so it needs a
-   24 character long buffer. */
-
-char * hb_dateTimeStampStr( char * szDateTime, LONG lJulian, LONG lMillisec )
+BOOL hb_timeStrGet( const char * szTime,
+                    int * piHour, int * piMinutes,
+                    int * piSeconds, int * piMSec )
 {
-   int iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateTimeStampStr(%p, %ld, %ld)", szDateTime, lJulian, lMillisec));
-
-   hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
-   hb_timeStampDecode( lMillisec, &iHour, &iMinutes, &iSeconds, &iMSec );
-   hb_snprintf( szDateTime, 24, "%04d-%02d-%02d %02d:%02d:%02d.%03d",
-             iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec );
-   szDateTime[ 23 ] = '\0';
-
-   return szDateTime;
-}
-
-void hb_timeStrGet( const char * szTime, int * piHour, int * piMinutes,
-                                         int * piSeconds, int * piMSec )
-{
-   int iHour, iMinutes, iSeconds, iMSec;
+   int iHour, iMinutes, iSeconds, iMSec, iBlocks;
+   BOOL fValid;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_timeStrGet(%s, %p, %p, %p, %p)", szTime, piHour, piMinutes, piSeconds, piMSec));
 
-   iHour = iMinutes = iSeconds = iMSec = 0;
+   iHour = iMinutes = iSeconds = iMSec = iBlocks = 0;
+   fValid = FALSE;
 
    if( szTime )
    {
-      int iLen = hb_strnlen( szTime, 12 );
+      while( HB_ISSPACE( *szTime ) )
+         ++szTime;
 
-      if( iLen >= 5 )
+      if( HB_ISDIGIT( *szTime ) )
       {
-
-         iHour    = ( szTime[ 0 ] - '0' ) * 10 +
-                    ( szTime[ 1 ] - '0' );
-         iMinutes = ( szTime[ 3 ] - '0' ) * 10 +
-                    ( szTime[ 4 ] - '0' );
-         if( iHour >= 0 && iHour < 24 && iMinutes >= 0 && iMinutes < 60 )
+         iHour = ( *szTime++ - '0' );
+         if( HB_ISDIGIT( *szTime ) )
+            iHour = iHour * 10 + ( *szTime++ - '0' );
+         if( *szTime == ':' && HB_ISDIGIT( szTime[ 1 ] ) )
          {
-            if( iLen >= 8 )
+            ++iBlocks;
+            ++szTime;
+            iMinutes = ( *szTime++ - '0' );
+            if( HB_ISDIGIT( *szTime ) )
+               iMinutes = iMinutes * 10 + ( *szTime++ - '0' );
+            if( *szTime == ':' && HB_ISDIGIT( szTime[ 1 ] ) )
             {
-               iSeconds = ( szTime[ 6 ] - '0' ) * 10 +
-                          ( szTime[ 7 ] - '0' );
-               if( iSeconds < 0 || iSeconds >= 60 )
-                  iSeconds = 0;
-               else if( iLen >= 12 )
+               ++iBlocks;
+               ++szTime;
+               iSeconds = ( *szTime++ - '0' );
+               if( HB_ISDIGIT( *szTime ) )
+                  iSeconds = iSeconds * 10 + ( *szTime++ - '0' );
+               if( *szTime == '.' && HB_ISDIGIT( szTime[ 1 ] ) )
                {
-                  iMSec = ( ( szTime[  9 ] - '0' )   * 10 +
-                            ( szTime[ 10 ] - '0' ) ) * 10 +
-                            ( szTime[ 11 ] - '0' );
-                  if( iMSec < 0 || iMSec >= 1000 )
-                     iMSec = 0;
+                  ++iBlocks;
+                  ++szTime;
+                  iMSec = ( *szTime++ - '0' );
+                  if( HB_ISDIGIT( *szTime ) )
+                  {
+                     iMSec = iMSec * 10 + ( *szTime++ - '0' );
+                     if( HB_ISDIGIT( *szTime ) )
+                        iMSec = iMSec * 10 + ( *szTime++ - '0' );
+                  }
+                  if( HB_ISDIGIT( *szTime ) )
+                     ++szTime;
                }
             }
          }
+         while( HB_ISSPACE( *szTime ) )
+            ++szTime;
+         if( ( szTime[ 0 ] == 'p' || szTime[ 0 ] == 'P' ) &&
+             ( szTime[ 1 ] == 'm' || szTime[ 1 ] == 'M' ) )
+         {
+            ++iBlocks;
+            szTime += 2;
+            if( iHour == 0 )
+               iHour = 24;    /* wrong time */
+            else if( iHour != 12 )
+               iHour += 12;
+         }
+         else if( ( szTime[ 0 ] == 'a' || szTime[ 0 ] == 'A' ) &&
+                  ( szTime[ 1 ] == 'm' || szTime[ 1 ] == 'M' ) )
+         {
+            ++iBlocks;
+            szTime += 2;
+            if( iHour == 0 )
+               iHour = 24;    /* wrong time */
+            else if( iHour == 12 )
+               iHour = 0;
+         }
+         while( HB_ISSPACE( *szTime ) )
+            ++szTime;
+         if( *szTime == 0 && iBlocks > 0 &&
+             iHour < 24 && iMinutes < 60 && iSeconds < 60 )
+            fValid = TRUE;
+         else
+            iHour = iMinutes = iSeconds = iMSec = 0;
       }
    }
 
@@ -443,56 +562,329 @@ void hb_timeStrGet( const char * szTime, int * piHour, int * piMinutes,
       *piSeconds = iSeconds;
    if( piMSec )
       *piMSec = iMSec;
+
+   return fValid;
 }
 
-void hb_dateTimeStampStrGet( const char * szDateTime, LONG * plJulian, LONG * plMillisec )
+void hb_timeStrRawGet( const char * szTime,
+                       int * piHour, int * piMinutes,
+                       int * piSeconds, int * piMSec )
 {
-   int iLen;
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStrRawGet(%s, %p, %p, %p, %p)", szTime, piHour, piMinutes, piSeconds, piMSec));
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateTimeStampStr(%s, %p, %p)", szDateTime, plJulian, plMillisec));
+   *piHour = *piMinutes = *piSeconds = *piMSec = 0;
 
-   *plJulian = *plMillisec = 0;
-   iLen = szDateTime ? hb_strnlen( szDateTime, 23 ) : 0;
-   if( iLen >= 10 )
+   if( szTime )
    {
-      int iYear, iMonth, iDay;
+      int iLen = 0;
 
-      iYear  = ( ( ( int ) ( szDateTime[ 0 ] - '0' )   * 10 +
-                   ( int ) ( szDateTime[ 1 ] - '0' ) ) * 10 +
-                   ( int ) ( szDateTime[ 2 ] - '0' ) ) * 10 +
-                   ( int ) ( szDateTime[ 3 ] - '0' );
-      iMonth = ( szDateTime[ 5 ] - '0' ) * 10 + ( szDateTime[ 6 ] - '0' );
-      iDay   = ( szDateTime[ 8 ] - '0' ) * 10 + ( szDateTime[ 9 ] - '0' );
+      while( iLen < 10 && HB_ISDIGIT( szTime[ iLen ] ) )
+         ++iLen;
 
-      *plJulian = hb_dateEncode( iYear, iMonth, iDay );
-      if( iLen >= 16 )
+      if( iLen >= 2 && ( ( iLen & 1 ) == 0 || iLen == 7 || iLen == 9 ) )
       {
-         int iHour, iMinutes, iSeconds = 0, iMSec = 0;
-
-         iHour    = ( szDateTime[ 11 ] - '0' ) * 10 +
-                    ( szDateTime[ 12 ] - '0' );
-         iMinutes = ( szDateTime[ 14 ] - '0' ) * 10 +
-                    ( szDateTime[ 15 ] - '0' );
-         if( iHour >= 0 && iHour < 24 && iMinutes >= 0 && iMinutes < 60 )
+         *piHour = ( szTime[ 0 ] - '0' ) * 10 + ( szTime[ 1 ] - '0' );
+         szTime += 2;
+         iLen -= 2;
+         if( iLen >= 2 )
          {
-            if( iLen >= 19 )
+            *piMinutes = ( szTime[ 0 ] - '0' ) * 10 + ( szTime[ 1 ] - '0' );
+            szTime += 2;
+            iLen -= 2;
+            if( iLen >= 2 )
             {
-               iSeconds = ( szDateTime[ 17 ] - '0' ) * 10 +
-                          ( szDateTime[ 18 ] - '0' );
-               if( iSeconds < 0 || iSeconds >= 60 )
-                  iSeconds = 0;
-               else if( iLen >= 23 )
+               *piSeconds = ( szTime[ 0 ] - '0' ) * 10 + ( szTime[ 1 ] - '0' );
+               szTime += 2;
+               iLen -= 2;
+               switch( iLen )
                {
-                  iMSec = ( ( szDateTime[ 20 ] - '0' )   * 10 +
-                            ( szDateTime[ 21 ] - '0' ) ) * 10 +
-                            ( szDateTime[ 22 ] - '0' );
-                  if( iMSec < 0 || iMSec >= 1000 )
-                     iMSec = 0;
+                  case 4:
+                  case 3:
+                     *piMSec = ( ( int ) ( szTime[ 0 ] - '0' )   * 10 +
+                                 ( int ) ( szTime[ 1 ] - '0' ) ) * 10 +
+                                 ( int ) ( szTime[ 2 ] - '0' );
+                     break;
+                  case 2:
+                     *piMSec = ( ( int ) ( szTime[ 0 ] - '0' )   * 10 +
+                                 ( int ) ( szTime[ 1 ] - '0' ) ) * 10;
+                     break;
+                  case 1:
+                     *piMSec = ( int ) ( szTime[ 0 ] - '0' ) * 100;
+                     break;
                }
             }
-            *plMillisec = ( ( ( iHour * 60 ) + iMinutes ) * 60 + iSeconds ) *
-                          1000 + iMSec;
          }
       }
    }
+}
+
+
+/* This function always closes the time with a zero byte, so it needs a
+ * 18 character long buffer to store time in format "YYYYMMDDhhmmssfff"
+ * with trailing 0 byte.
+ */
+char * hb_timeStampStrRawPut( char * szDateTime, LONG lJulian, LONG lMilliSec )
+{
+   int iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampStrRawPut(%p, %ld, %ld)", szDateTime, lJulian, lMilliSec));
+
+   hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
+   hb_dateStrPut( szDateTime, iYear, iMonth, iDay );
+   hb_timeDecode( lMilliSec, &iHour, &iMinutes, &iSeconds, &iMSec );
+   hb_snprintf( szDateTime + 8, 10, "%02d%02d%02d%03d",
+                iHour, iMinutes, iSeconds, iMSec );
+
+   return szDateTime;
+}
+
+void hb_timeStampStrRawGet( const char * szDateTime, LONG * plJulian, LONG * plMilliSec )
+{
+   int iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec, iLen;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampStrRawGet(%s, %p, %p)", szDateTime, plJulian, plMilliSec));
+
+   *plJulian = *plMilliSec = 0;
+
+   iLen = 0;
+   while( iLen < 10 && HB_ISDIGIT( szDateTime[ iLen ] ) )
+      ++iLen;
+
+   if( iLen == 8 || iLen >= 10 )
+   {
+      hb_dateStrGet( szDateTime, &iYear, &iMonth, &iDay );
+      *plJulian = hb_dateEncode( iYear, iMonth, iDay );
+      szDateTime += 8;
+      iLen -= 8;
+   }
+
+   if( iLen >= 2 )
+   {
+      hb_timeStrRawGet( szDateTime, &iHour, &iMinutes, &iSeconds, &iMSec );
+      *plMilliSec = hb_timeEncode( iHour, iMinutes, iSeconds, iMSec );
+   }
+}
+
+/* This function always closes the time with a zero byte.
+ * It needs a 24 character long buffer for full datetime representation
+ * "YYYY-MM-DD hh:mm:ss.fff"
+ */
+char * hb_timeStampStr( char * szDateTime, LONG lJulian, LONG lMilliSec )
+{
+   int iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampStr(%p, %ld, %ld)", szDateTime, lJulian, lMilliSec));
+
+   hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
+   hb_timeDecode( lMilliSec, &iHour, &iMinutes, &iSeconds, &iMSec );
+   hb_snprintf( szDateTime, 24, "%04d-%02d-%02d %02d:%02d:%02d.%03d",
+             iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec );
+   szDateTime[ 23 ] = '\0';
+
+   return szDateTime;
+}
+
+BOOL hb_timeStampStrGet( const char * szDateTime,
+                         int * piYear, int * piMonth, int * piDay,
+                         int * piHour, int * piMinutes, int * piSeconds,
+                         int * piMSec )
+{
+   int iYear, iMonth, iDay;
+   BOOL fValid;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampStrGet(%s, %p, %p, %p, %p, %p, %p, %p)", szDateTime, piYear, piMonth, piDay, piHour, piMinutes, piSeconds, piMSec));
+
+   iYear = iMonth = iDay = 0;
+   fValid = FALSE;
+
+   if( szDateTime )
+   {
+      while( HB_ISSPACE( *szDateTime ) )
+         ++szDateTime;
+      if( HB_ISDIGIT( szDateTime[ 0 ] ) && HB_ISDIGIT( szDateTime[ 1 ] ) &&
+          HB_ISDIGIT( szDateTime[ 2 ] ) && HB_ISDIGIT( szDateTime[ 3 ] ) &&
+          ( szDateTime[ 4 ] == '-' || szDateTime[ 4 ] == '/' || szDateTime[ 4 ] == '.' ) &&
+          HB_ISDIGIT( szDateTime[ 5 ] ) && HB_ISDIGIT( szDateTime[ 6 ] ) &&
+          szDateTime[ 7 ] == szDateTime[ 4 ] &&
+          HB_ISDIGIT( szDateTime[ 9 ] ) && HB_ISDIGIT( szDateTime[ 9 ] ) &&
+          !HB_ISDIGIT( szDateTime[ 10 ] ) )
+      {
+         iYear  = ( ( ( int ) ( szDateTime[ 0 ] - '0' )   * 10 +
+                      ( int ) ( szDateTime[ 1 ] - '0' ) ) * 10 +
+                      ( int ) ( szDateTime[ 2 ] - '0' ) ) * 10 +
+                      ( int ) ( szDateTime[ 3 ] - '0' );
+         iMonth = ( szDateTime[ 5 ] - '0' ) * 10 + ( szDateTime[ 6 ] - '0' );
+         iDay   = ( szDateTime[ 8 ] - '0' ) * 10 + ( szDateTime[ 9 ] - '0' );
+         if( hb_dateEncode( iYear, iMonth, iDay ) != 0 )
+         {
+            szDateTime += 10;
+            if( *szDateTime == 'T' || *szDateTime == 't' )
+            {
+               if( HB_ISDIGIT( szDateTime[ 1 ] ) )
+                  ++szDateTime;
+            }
+            else
+            {
+               if( *szDateTime == ',' )
+                  ++szDateTime;
+               while( HB_ISSPACE( *szDateTime ) )
+                  ++szDateTime;
+               if( *szDateTime == '\0' )
+                  szDateTime = NULL;
+               fValid = TRUE;
+            }
+         }
+         else
+         {
+            iYear = iMonth = iDay = 0;
+            szDateTime = NULL;
+         }
+      }
+   }
+
+   if( !hb_timeStrGet( szDateTime, piHour, piMinutes, piSeconds, piMSec ) )
+   {
+      if( szDateTime )
+         fValid = FALSE;
+   }
+   else
+      fValid = TRUE;
+
+   if( piYear )
+      *piYear = iYear;
+   if( piMonth )
+      *piMonth = iMonth;
+   if( piDay )
+      *piDay = iDay;
+
+   return fValid;
+}
+
+BOOL hb_timeStampStrGetDT( const char * szDateTime,
+                           LONG * plJulian, LONG * plMilliSec )
+{
+   int iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec;
+   BOOL fValid;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampStrGetDT(%s, %p, %p)", szDateTime, plJulian, plMilliSec));
+
+   fValid = hb_timeStampStrGet( szDateTime, &iYear, &iMonth, &iDay,
+                                &iHour, &iMinutes, &iSeconds, &iMSec );
+   if( plJulian )
+      *plJulian = hb_dateEncode( iYear, iMonth, iDay );
+   if( plMilliSec )
+      *plMilliSec = hb_timeEncode( iHour, iMinutes, iSeconds, iMSec );
+
+   return fValid;
+}
+
+double hb_timeStampPackDT( LONG lJulian, LONG lMilliSec )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampPackDT(%ld, %ld)", lJulian, lMilliSec));
+
+   return ( double ) lJulian +
+          ( double ) lMilliSec / HB_MILLISECS_PER_DAY;
+}
+
+void hb_timeStampUnpackDT( double dTimeStamp,
+                           LONG * plJulian, LONG * plMilliSec )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampUnpackDT(%f, %p, %p)", dTimeStamp, plJulian, plMilliSec));
+
+   {
+#if defined( HB_LONG_LONG_OFF )
+      double dJulian, dTime;
+
+      dTime = modf( dTimeStamp + 0.5 / HB_MILLISECS_PER_DAY, &dJulian );
+      if( plJulian )
+         *plJulian = ( LONG ) dJulian;
+      if( plMilliSec )
+         *plMilliSec = ( LONG ) ( dTime * HB_MILLISECS_PER_DAY );
+#else
+      LONGLONG llMilliSec = ( LONGLONG ) ( dTimeStamp * HB_MILLISECS_PER_DAY + 0.5 );
+      if( plJulian )
+         *plJulian = ( LONG ) ( llMilliSec / HB_MILLISECS_PER_DAY );
+      if( plMilliSec )
+         *plMilliSec = ( LONG ) ( llMilliSec % HB_MILLISECS_PER_DAY );
+#endif
+   }
+}
+
+double hb_timeStampPack( int iYear, int iMonth, int iDay,
+                         int iHour, int iMinutes, int iSeconds, int iMSec )
+{
+   double dTimeStamp = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampPack(%d, %d, %d, %d, %d, %d, %d)", iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec));
+
+   if( iHour >= 0 && iHour < 24 &&
+       iMinutes >= 0 && iMinutes < 60 &&
+       iSeconds >= 0 && iSeconds < 60 &&
+       iMSec >= 0 && iMSec < 1000 )
+   {
+      LONG lJulian = hb_dateEncode( iYear, iMonth, iDay );
+
+      if( lJulian != 0 || ( iYear == 0 && iMonth == 0 && iDay == 0 ) )
+      {
+         dTimeStamp = ( double ) lJulian +
+                      ( double ) ( ( ( LONG ) ( iHour * 60 + iMinutes ) * 60 +
+                                     iSeconds ) * 1000 + iMSec ) /
+                                 HB_SECONDS_PER_DAY;
+      }
+   }
+   return dTimeStamp;
+}
+
+void hb_timeStampUnpack( double dTimeStamp,
+                         int * piYear, int * piMonth, int * piDay,
+                         int * piHour, int * piMinutes, int * piSeconds,
+                         int * piMSec )
+{
+   LONG lJulian, lMilliSec;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampUnpack(%f, %p, %p, %p, %p, %p, %p, %p)", dTimeStamp, piYear, piMonth, piDay, piHour, piMinutes, piSeconds, piMSec));
+
+   hb_timeStampUnpackDT( dTimeStamp, &lJulian, &lMilliSec );
+   hb_dateDecode( lJulian, piYear, piMonth, piDay );
+   hb_timeDecode( lMilliSec, piHour, piMinutes, piSeconds, piMSec );
+}
+
+double hb_timeStampPackD( int iYear, int iMonth, int iDay,
+                          int iHour, int iMinutes, double dSeconds )
+{
+   double dTimeStamp = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampPackD(%d, %d, %d, %d, %d, %f)", iYear, iMonth, iDay, iHour, iMinutes, dSeconds));
+
+   if( iHour >= 0 && iHour < 24 &&
+       iMinutes >= 0 && iMinutes < 60 &&
+       dSeconds >= 0 && dSeconds < 60 )
+   {
+      LONG lJulian = hb_dateEncode( iYear, iMonth, iDay );
+
+      if( lJulian != 0 || ( iYear == 0 && iMonth == 0 && iDay == 0 ) )
+      {
+         dTimeStamp = ( double ) lJulian +
+                      ( double ) ( ( ( iHour * 60 + iMinutes ) * 60 ) +
+                                   dSeconds ) / HB_SECONDS_PER_DAY;
+      }
+   }
+   return dTimeStamp;
+}
+
+void hb_timeStampUnpackD( double dTimeStamp,
+                          int * piYear, int * piMonth, int * piDay,
+                          int * piHour, int * piMinutes, double * pdSeconds )
+{
+   LONG lJulian, lMilliSec;
+   int iSeconds, iMSec;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampUnpackD(%f, %p, %p, %p, %p, %p, %p)", dTimeStamp, piYear, piMonth, piDay, piHour, piMinutes, pdSeconds));
+
+   hb_timeStampUnpackDT( dTimeStamp, &lJulian, &lMilliSec );
+   hb_dateDecode( lJulian, piYear, piMonth, piDay );
+   hb_timeDecode( lMilliSec, piHour, piMinutes, &iSeconds, &iMSec );
+
+   if( pdSeconds )
+      *pdSeconds = ( double ) iSeconds + ( double ) iMSec / 1000;
 }

@@ -54,6 +54,7 @@
 #include "hbinit.h"
 #include "hbvm.h"
 #include "hbset.h"
+#include "hbdate.h"
 #include "hbapirdd.h"
 #include "hbapiitm.h"
 #include "hbapilng.h"
@@ -505,12 +506,23 @@ static HB_ERRCODE hb_sdfPutValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
          else
             uiError = EDBF_DATATYPE;
       }
-      else if( HB_IS_DATE( pItem ) )
+      else if( HB_IS_DATETIME( pItem ) )
       {
          if( pField->uiType == HB_FT_DATE )
          {
             hb_itemGetDS( pItem, szBuffer );
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], szBuffer, 8 );
+         }
+         else if( pField->uiType == HB_FT_STRING &&
+                  ( pField->uiLen == 12 || pField->uiLen == 23 ) )
+         {
+            long lDate, lTime;
+            hb_itemGetTDT( pItem, &lDate, &lTime );
+            if( pField->uiLen == 12 )
+               hb_timeStr( szBuffer, lTime );
+            else
+               hb_timeStampStr( szBuffer, lDate, lTime );
+            memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], szBuffer, pField->uiLen );
          }
          else
             uiError = EDBF_DATATYPE;
@@ -847,6 +859,12 @@ static HB_ERRCODE hb_sdfAddField( SDFAREAP pArea, LPDBFIELDINFO pFieldInfo )
 
       case HB_FT_LONG:
       case HB_FT_STRING:
+         break;
+
+      case HB_FT_TIME:
+         pFieldInfo->uiType = HB_FT_STRING;
+         pFieldInfo->uiLen = 12;
+         pArea->fTransRec = FALSE;
          break;
 
       case HB_FT_DAYTIME:

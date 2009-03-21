@@ -84,10 +84,13 @@ static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock, PH
    if( HB_IS_STRING( pItem1 ) && HB_IS_STRING( pItem2 ) )
       return hb_itemStrCmp( pItem1, pItem2, FALSE ) < 0;
    else if( HB_IS_NUMINT( pItem1 ) && HB_IS_NUMINT( pItem2 ) )
+      /* intentionally separate comparison for integer numbers
+         to avoid precision lose in 64bit integer to double conversion */
       return hb_itemGetNInt( pItem1 ) < hb_itemGetNInt( pItem2 );
    else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
       return hb_itemGetND( pItem1 ) < hb_itemGetND( pItem2 );
-   else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
+   else if( HB_IS_DATETIME( pItem1 ) && HB_IS_DATETIME( pItem2 ) )
+      /* it's not exact comparison, compare only julian date */
       return hb_itemGetDL( pItem1 ) < hb_itemGetDL( pItem2 );
    else if( HB_IS_LOGICAL( pItem1 ) && HB_IS_LOGICAL( pItem2 ) )
       return hb_itemGetL( pItem1 ) < hb_itemGetL( pItem2 );
@@ -103,7 +106,7 @@ static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock, PH
       else if( HB_IS_BLOCK( pItem1 ) ) iWeight1 = 2;
       else if( HB_IS_STRING( pItem1 ) ) iWeight1 = 3;
       else if( HB_IS_LOGICAL( pItem1 ) ) iWeight1 = 4;
-      else if( HB_IS_DATE( pItem1 ) ) iWeight1 = 5;
+      else if( HB_IS_DATETIME( pItem1 ) ) iWeight1 = 5;
       else if( HB_IS_NUMERIC( pItem1 ) ) iWeight1 = 6;
       else iWeight1 = 7;
 
@@ -111,7 +114,7 @@ static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock, PH
       else if( HB_IS_BLOCK( pItem2 ) ) iWeight2 = 2;
       else if( HB_IS_STRING( pItem2 ) ) iWeight2 = 3;
       else if( HB_IS_LOGICAL( pItem2 ) ) iWeight2 = 4;
-      else if( HB_IS_DATE( pItem2 ) ) iWeight2 = 5;
+      else if( HB_IS_DATETIME( pItem2 ) ) iWeight2 = 5;
       else if( HB_IS_NUMERIC( pItem2 ) ) iWeight2 = 6;
       else iWeight2 = 7;
 

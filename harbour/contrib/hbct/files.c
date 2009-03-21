@@ -222,154 +222,40 @@ HB_FUNC( SETFATTR )
 
 HB_FUNC( SETFDATI )
 {
-   if( hb_pcount() >= 1 )
+   char *szFile = hb_parc( 1 );
+   BOOL fResult = FALSE;
+
+   if( szFile && *szFile )
    {
       PHB_ITEM pDate, pTime;
-      char *szFile = hb_parcx( 1 );
-      int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
+      LONG lJulian, lMillisec;
 
-      pDate = hb_param( 2, HB_IT_DATE );
-      if( !pDate )
-         pDate = hb_param( 3, HB_IT_DATE );
-      if( pDate )
-         hb_dateDecode( hb_itemGetDL( pDate ), &year, &month, &day );
-
-      pTime = hb_param( 2, HB_IT_STRING );
-      if( !pTime )
-         pTime = hb_param( 3, HB_IT_STRING );
-      if( pTime )
-         hb_timeStrGet( hb_itemGetCPtr( pTime ), &hour, &minute, &second, NULL );
-
-#if defined( HB_OS_WIN ) && !defined( __CYGWIN__ )
-      {
-         FILETIME ft, local_ft;
-         SYSTEMTIME st;
-         HANDLE f = ( HANDLE ) _lopen( szFile, OF_READWRITE | OF_SHARE_COMPAT );
-
-         if( f != ( HANDLE ) HFILE_ERROR )
-         {
-            if( !pDate || !pTime )
-               GetLocalTime( &st );
-            if( pDate )
-            {
-               st.wYear = ( WORD ) year;
-               st.wMonth = ( WORD ) month;
-               st.wDay = ( WORD ) day;
-            }
-            if( pTime )
-            {
-               st.wHour = ( WORD ) hour;
-               st.wMinute = ( WORD ) minute;
-               st.wSecond = ( WORD ) second;
-            }
-            SystemTimeToFileTime( &st, &local_ft );
-            LocalFileTimeToFileTime( &local_ft, &ft );
-            hb_retl( SetFileTime( f, NULL, &ft, &ft ) != 0 );
-            _lclose( ( HFILE ) f );
-            return;
-         }
-      }
-#elif defined( HB_OS_OS2 )
-      {
-         FILESTATUS3 fs3;
-         APIRET ulrc;
-
-         ulrc = DosQueryPathInfo( ( PCSZ ) szFile, FIL_STANDARD, &fs3, sizeof( fs3 ) );
-         if( ulrc == NO_ERROR )
-         {
-            FDATE fdate;
-            FTIME ftime;
-
-            if( !pDate || !pTime )
-            {
-               DATETIME dt;
-
-               DosGetDateTime( &dt );
-
-               fdate.year = dt.year - 1980;
-               fdate.month = dt.month;
-               fdate.day = dt.day;
-               ftime.hours = dt.hours;
-               ftime.minutes = dt.minutes;
-               ftime.twosecs = dt.seconds / 2;
-            }
-
-            if( pDate )
-            {
-               fdate.year = year - 1980;
-               fdate.month = month;
-               fdate.day = day;
-            }
-            if( pTime )
-            {
-               ftime.hours = hour;
-               ftime.minutes = minute;
-               ftime.twosecs = second / 2;
-            }
-            fs3.fdateCreation = fs3.fdateLastAccess = fs3.fdateLastWrite = fdate;
-            fs3.ftimeCreation = fs3.ftimeLastAccess = fs3.ftimeLastWrite = ftime;
-            ulrc = DosSetPathInfo( ( PCSZ ) szFile, FIL_STANDARD,
-                                   &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
-         }
-         hb_retl( ulrc == NO_ERROR );
-         return;
-      }
-#elif defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
-
-      if( !pDate && !pTime )
-      {
-         hb_retl( utime( szFile, NULL ) == 0 );
-         return;
-      }
+      if( ISTIMESTAMP( 1 ) )
+         hb_partdt( &lJulian, &lMillisec, 1 );
       else
       {
-         struct utimbuf buf;
-         struct tm new_value;
-
-         if( !pDate || !pTime )
-         {
-            time_t current_time;
-
-            current_time = time( NULL );
-#if defined( HB_HAS_LOCALTIME_R )
-            localtime_r( &current_time, &new_value );
-#   else
-            new_value = *localtime( &current_time );
-#   endif
-         }
-         else
-            memset( &new_value, 0, sizeof( new_value ) );
-
+         pDate = hb_param( 2, HB_IT_DATE );
          if( pDate )
+            pTime = hb_param( 3, HB_IT_STRING );
+         else
          {
-            new_value.tm_year = year - 1900;
-            new_value.tm_mon = month - 1;
-            new_value.tm_mday = day;
+            pTime = hb_param( 2, HB_IT_STRING );
+            pDate = hb_param( 3, HB_IT_DATE );
          }
+         lJulian   = pDate ? hb_itemGetDL( pDate ) : -1;
          if( pTime )
          {
-            new_value.tm_hour = hour;
-            new_value.tm_min = minute;
-            new_value.tm_sec = second;
+            int hour = 0, minute = 0, second = 0, msec = 0;
+            hb_timeStrGet( hb_itemGetCPtr( pTime ), &hour, &minute, &second, &msec );
+            lMillisec = hb_timeEncode( hour, minute, second, msec );
          }
-         buf.actime = buf.modtime = mktime( &new_value );
-         hb_retl( utime( szFile, &buf ) == 0 );
-         return;
+         else
+            lMillisec = -1;
       }
-#else
-      {
-         LONG lJulian, lMillisec;
-
-         lJulian = pDate ? hb_dateEncode( year, month, day ) : -1;
-         lMillisec = pTime ? hb_timeStampEncode( hour, minute, second, 0 ) : -1;
-
-         hb_retl( hb_fsSetFileTime( ( BYTE * ) szFile, lJulian, lMillisec ) );
-         return;
-      }
-#endif
+      fResult = hb_fsSetFileTime( ( BYTE * ) szFile, lJulian, lMillisec );
    }
 
-   hb_retl( FALSE );
+   hb_retl( fResult );
 }
 
 

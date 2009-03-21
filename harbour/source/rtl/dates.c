@@ -49,6 +49,19 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *    hb_timeFormat()
+ *    hb_timeUnformat()
+ *    hb_timeStampFormat()
+ *    hb_timeStampUnformat()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
 #include "hbapi.h"
 #include "hbdate.h"
@@ -71,7 +84,7 @@ char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * 
    if( size > 10 )
       size = 10;
 
-   if( szDate && szFormattedDate && strlen( szDate ) == 8 ) /* A valid date is always 8 characters */
+   if( szDate && strlen( szDate ) == 8 ) /* A valid date is always 8 characters */
    {
       const char * szPtr;
       int digit;
@@ -236,6 +249,8 @@ long hb_dateUnformat( const char * szDate, const char * szDateFormat )
 {
    int d_value = 0, m_value = 0, y_value = 0;
 
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateUnformat(%s, %s)", szDate, szDateFormat));
+
    if( szDate )
    {
       int d_pos = 0, m_pos = 0, y_pos = 0;
@@ -334,4 +349,280 @@ long hb_dateUnformat( const char * szDate, const char * szDateFormat )
    }
 
    return hb_dateEncode( y_value, m_value, d_value );
+}
+
+/* time modifiers:
+ *    H - hour
+ *    M - minutes
+ *    S - seconds
+ *    F - fractional part of seconds
+ *    P - PM/AM marker
+ * maximal size of time pattern:
+ *    16 for "hh:mm:ss:ffff pp"
+ * always safe buffer size is 17 (+1 for 0)
+ */
+char * hb_timeFormat( char * szBuffer, const char * szTimeFormat, LONG lMilliSec )
+{
+   char * szTimeBuffer;
+   int iHour, iMinutes, iSeconds, iMSec, iPM, i12;
+   int size, i, ch, count, value, digits, skip;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeFormat(%p, %s, %ld)", szBuffer, szTimeFormat, lMilliSec));
+
+   hb_timeDecode( lMilliSec, &iHour, &iMinutes, &iSeconds, &iMSec );
+   szTimeBuffer = szBuffer;
+
+   size = hb_strnlen( szTimeFormat, 16 );
+   iPM = i12 = 0;
+   for( i = 0; i < size; ++i )
+   {
+      if( HB_TOUPPER( szTimeFormat[ i ] ) == 'P' )
+      {
+         if( iHour >= 12 )
+         {
+            iPM = 1;
+            iHour -= 12;
+         }
+         if( iHour == 0 )
+            iHour += 12;
+         if( iHour < 10 )
+            i12 = 1;
+         break;
+      }
+   }
+
+   i = 0;
+   while( i < size )
+   {
+      count = -i;
+      ch = HB_TOUPPER( szTimeFormat[ i ] );
+      ++i;
+      while( ch == HB_TOUPPER( szTimeFormat[ i ] ) && i < size )
+         ++i;
+      count += i;
+      switch( ch )
+      {
+         case 'H':
+            value = iHour;
+            if( count == 2 && value >= 0 )
+            {
+               if( i12 )
+               {
+                  *szTimeBuffer++ = ' ';
+                  --count;
+               }
+               digits = count;
+            }
+            else
+               digits = 1;
+            iHour = -1;
+            break;
+         case 'M':
+            value = iMinutes;
+            iMinutes = -1;
+            digits = count > 2 ? 1 : count;
+            break;
+         case 'S':
+            value = iSeconds;
+            iSeconds = -1;
+            digits = count > 2 ? 1 : count;
+            break;
+         case 'F':
+            value = iMSec;
+            iMSec = -1;
+            digits = count > 4 ? 1 : count;
+            switch( digits )
+            {
+               case 4:
+                  value *= 10;
+                  break;
+               case 2:
+                  value = ( value + 5 ) / 10;
+                  break;
+               case 1:
+                  value = ( value + 50 ) / 100;
+                  break;
+            }
+            break;
+         case 'P':
+            if( iPM >= 0 )
+            {
+               *szTimeBuffer++ = iPM ? 'P' : 'A';
+               if( --count )
+               {
+                  *szTimeBuffer++ = 'M';
+                  --count;
+               }
+               iPM = -1;
+            }
+         default:
+            digits = value = 0;
+      }
+      if( digits && value >= 0 )
+      {
+         skip = digits;
+         count -= digits;
+         do
+         {
+            szTimeBuffer[ --digits ] = ( char ) ( '0' + value % 10 );
+            value /= 10;
+         }
+         while( digits );
+         szTimeBuffer += skip;
+      }
+      while( count-- )
+         *szTimeBuffer++ = ch;
+   }
+
+   *szTimeBuffer = '\0';
+
+   return szBuffer;
+}
+
+/*
+ * maximal size of time pattern:
+ *    16 for "hh:mm:ss:ffff pp"
+ * total maximal size of formatted timestamp value: 10 + 16 = 26
+ * always safe buffer size is: 27
+ */
+char * hb_timeStampFormat( char * szBuffer,
+                           const char * szDateFormat, const char * szTimeFormat,
+                           LONG lJulian, LONG lMilliSec )
+{
+   char szDate[ 9 ], * szTimeBuffer;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampFormat(%p, %s, %s, %ld, %ld)", szBuffer, szDateFormat, szTimeFormat, lJulian, lMilliSec));
+
+   hb_dateDecStr( szDate, lJulian );
+   hb_dateFormat( szDate, szBuffer, szDateFormat );
+   szTimeBuffer = szBuffer + strlen( szBuffer );
+   *szTimeBuffer++ = ' ';
+   hb_timeFormat( szTimeBuffer, szTimeFormat, lMilliSec );
+
+   return szBuffer;
+}
+
+LONG hb_timeUnformat( const char * szTime, const char * szTimeFormat )
+{
+   int iHour, iMinutes, iSeconds, iMSec, iPM;
+   int size, i, ch, count, digits, prec, * pValue;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeUnformat(%s, %s)", szTime, szTimeFormat));
+
+   if( ! szTime )
+      return 0;
+
+   if( ! szTimeFormat )
+      szTimeFormat = hb_setGetTimeFormat();
+
+   size = hb_strnlen( szTime, hb_strnlen( szTimeFormat, 16 ) );
+   iHour = iMinutes = iSeconds = iMSec = iPM = -1;
+   prec = 0;
+   for( i = 0; i < size; ++i )
+   {
+      digits = i;
+      count = -i;
+      ch = HB_TOUPPER( szTimeFormat[ i ] );
+      ++i;
+      while( ch == HB_TOUPPER( szTimeFormat[ i ] ) && i < size )
+         ++i;
+      count += i;
+      switch( ch )
+      {
+         case 'H':
+            if( count == 2 )
+            {
+               if( szTime[ digits ] == ' ' )
+                  ++digits;
+            }
+            else if( count > 2 )
+               count = 1;
+            pValue = &iHour;
+            break;
+         case 'M':
+            if( count > 2 )
+               count = 1;
+            pValue = &iMinutes;
+            break;
+         case 'S':
+            if( count > 2 )
+               count = 1;
+            pValue = &iSeconds;
+            break;
+         case 'F':
+            if( count > 4 )
+               count = 1;
+            prec = count;
+            pValue = &iMSec;
+            break;
+         case 'P':
+            if( iPM < 0 )
+               iPM = ( szTime[ digits ] == 'P' || szTime[ digits ] == 'p' ) ?
+                     1 : 0;
+         default:
+            pValue = NULL;
+      }
+      if( pValue && *pValue < 0 )
+      {
+         *pValue = 0;
+         while( count-- > 0 && HB_ISDIGIT( szTime[ digits ] ) )
+         {
+            *pValue = *pValue * 10 + ( szTime[ digits ] - '0' );
+            ++digits;
+         }
+      }
+   }
+   if( iHour < 0 )
+      iHour = 0;
+   if( iMinutes < 0 )
+      iMinutes = 0;
+   if( iSeconds < 0 )
+      iSeconds = 0;
+   if( iMSec < 0 )
+      iMSec = 0;
+   else if( iMSec > 0 )
+   {
+      if( prec == 4 )
+         iMSec /= 10;
+      else while( prec++ < 3 )
+         iMSec *= 10;
+   }
+   if( iPM > 0 )
+   {
+      if( iHour == 0 )
+         iHour = 24;    /* wrong time */
+      else if( iHour != 12 )
+         iHour += 12;
+   }
+   else if( iPM == 0 )
+   {
+      if( iHour == 0 )
+         iHour = 24;    /* wrong time */
+      else if( iHour == 12 )
+         iHour = 0;
+   }
+
+   return hb_timeEncode( iHour, iMinutes, iSeconds, iMSec );
+}
+
+void hb_timeStampUnformat( const char * szDateTime,
+                           const char * szDateFormat, const char * szTimeFormat,
+                           LONG * plJulian, LONG * plMilliSec )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampUnformat(%s, %s, %s, %p, %p)", szDateTime, szDateFormat, szTimeFormat, plJulian, plMilliSec));
+
+   if( szDateTime )
+   {
+      int size;
+
+      if( ! szDateFormat )
+         szDateFormat = hb_setGetDateFormat();
+      *plJulian = hb_dateUnformat( szDateTime, szDateFormat );
+      size = hb_strnlen( szDateTime, hb_strnlen( szDateFormat, 10 ) );
+      while( szDateFormat[ size ] == ' ' )
+         ++size;
+      *plMilliSec = hb_timeUnformat( szDateTime + size, szTimeFormat );
+   }
+   else
+      *plJulian = *plMilliSec = 0;
 }

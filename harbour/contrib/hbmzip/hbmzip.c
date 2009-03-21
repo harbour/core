@@ -190,21 +190,32 @@ HB_FUNC( HB_ZIPFILECREATE )
       {
          int iMethod = ISNUM( 7 ) ? hb_parni( 7 ) : Z_DEFLATED;
          int iLevel = ISNUM( 8 ) ? hb_parni( 8 ) : Z_DEFAULT_COMPRESSION;
+         long lJulian, lMillisec;
          int iY, iM, iD;
 
          zip_fileinfo zfi;
 
          memset( &zfi, 0, sizeof( zfi ) );
 
-         hb_dateDecode( hb_pardl( 3 ), &iY, &iM, &iD );
-         zfi.tmz_date.tm_year = iY;
-         zfi.tmz_date.tm_mon = iM - 1;
-         zfi.tmz_date.tm_mday = iD;
+         if( ISTIMESTAMP( 3 ) )
+         {
+            hb_partdt( &lJulian, &lMillisec, 3 );
+            hb_dateDecode( lJulian, &iY, &iM, &iD );
+            hb_timeDecode( lMillisec, &iY, &iM, &iD, NULL );
+         }
+         else
+         {
+            hb_dateDecode( hb_pardl( 3 ), &iY, &iM, &iD );
+            hb_timeStrGet( hb_parc( 4 ), &iY, &iM, &iD, NULL );
+         }
 
-         hb_timeStrGet( hb_parc( 4 ), &iY, &iM, &iD, NULL );
          zfi.tmz_date.tm_hour = iY;
          zfi.tmz_date.tm_min = iM;
          zfi.tmz_date.tm_sec = iD;
+
+         zfi.tmz_date.tm_year = iY;
+         zfi.tmz_date.tm_mon = iM - 1;
+         zfi.tmz_date.tm_mday = iD;
 
          zfi.internal_fa = hb_parnl( 5 );
          zfi.external_fa = hb_parnl( 6 );
@@ -391,8 +402,8 @@ HB_FUNC( HB_UNZIPFILEINFO )
       char           szFileName[ _POSIX_PATH_MAX + 1 ];
       unz_file_info  ufi;
       int            iResult;
-      PHB_ITEM       pItem;
       char           buf[ 16 ];
+      long           lJulian, lMillisec;
 
       iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szFileName, _POSIX_PATH_MAX,
                                        NULL, 0, NULL, 0 );
@@ -403,14 +414,15 @@ HB_FUNC( HB_UNZIPFILEINFO )
          szFileName[ _POSIX_PATH_MAX ] = '\0';
          hb_storc( szFileName, 2 );
 
-         pItem = hb_itemPutD( NULL, ufi.tmu_date.tm_year, ufi.tmu_date.tm_mon + 1,
+         lJulian   = hb_dateEncode( ufi.tmu_date.tm_year, ufi.tmu_date.tm_mon,
                                     ufi.tmu_date.tm_mday );
-         hb_itemParamStoreForward( 3, pItem );
-         hb_itemRelease( pItem );
+         lMillisec = hb_timeEncode( ufi.tmu_date.tm_hour, ufi.tmu_date.tm_min,
+                                    ufi.tmu_date.tm_sec, 0 );
 
-
-         hb_snprintf( buf, sizeof( buf ), "%02d:%02d:%02d", ufi.tmu_date.tm_hour,
-                   ufi.tmu_date.tm_min, ufi.tmu_date.tm_sec );
+         hb_stortdt( lJulian, lMillisec, 3 );
+         hb_snprintf( buf, sizeof( buf ), "%02d:%02d:%02d",
+                      ufi.tmu_date.tm_hour, ufi.tmu_date.tm_min,
+                      ufi.tmu_date.tm_sec );
          hb_storc( buf, 4 );
          hb_stornl( ufi.internal_fa, 5 );
          hb_stornl( ufi.external_fa, 6 );
@@ -438,11 +450,7 @@ HB_FUNC( HB_UNZIPFILEINFO )
       else
       {
          hb_storc( NULL, 2 );
-
-         pItem = hb_itemPutDL( NULL, 0 );
-         hb_itemParamStoreForward( 3, pItem );
-         hb_itemRelease( pItem );
-
+         hb_stortdt( 0, 0, 3 );
          hb_storc( NULL, 4 );
          hb_stornl( 0, 5 );
          hb_stornl( 0, 6 );

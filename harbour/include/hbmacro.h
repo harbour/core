@@ -130,7 +130,8 @@ extern ULONG hb_macroGenJumpTrue( LONG lOffset, HB_COMP_DECL );
 
 extern void hb_macroGenPushSymbol( const char * szSymbolName, BOOL bFunction, HB_COMP_DECL );
 extern void hb_macroGenPushLong( HB_LONG lNumber, HB_COMP_DECL );
-extern void hb_macroGenPushDate( HB_LONG lNumber, HB_COMP_DECL );
+extern void hb_macroGenPushDate( LONG lDate, HB_COMP_DECL );
+extern void hb_macroGenPushTimeStamp( LONG lDate, LONG lTime, HB_COMP_DECL );
 extern void hb_macroGenMessage( const char * szMsgName, BOOL bIsObject, HB_COMP_DECL );
 extern void hb_macroGenMessageData( const char * szMsg, BOOL bIsObject, HB_COMP_DECL );
 extern void hb_macroGenPopVar( const char * szVarName, HB_COMP_DECL );

@@ -329,21 +329,31 @@ static DWORD hb_printerIsReadyn( char * pszPrinterName )
    DWORD dwPrinter = ( DWORD ) -1;
    HANDLE hPrinter;
 
-   if( *pszPrinterName && OpenPrinter( pszPrinterName, &hPrinter, NULL ) )
+   if( *pszPrinterName )
    {
-      dwPrinter = IsPrinterErrorn( hPrinter );
-      CloseHandle( hPrinter );
+      LPTSTR lpPrinterName = HB_TCHAR_CONVTO( pszPrinterName );
+      if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) )
+      {
+         dwPrinter = IsPrinterErrorn( hPrinter );
+         CloseHandle( hPrinter );
+      }
+      HB_TCHAR_FREE( lpPrinterName );
    }
    return dwPrinter;
 }
 
 HB_FUNC( XISPRINTER )
 {
-   char szDefaultPrinter[ MAXBUFFERSIZE ];
+   char szDefaultPrinter[ MAXBUFFERSIZE ], * pszPrinterName;
    DWORD pdwBufferSize = sizeof( szDefaultPrinter );
 
-   hb_GetDefaultPrinter( ( LPTSTR ) szDefaultPrinter, &pdwBufferSize );
-   hb_retnl( hb_printerIsReadyn( ISCHAR( 1 ) ? hb_parc( 1 ) : ( char * ) szDefaultPrinter ) );
+   pszPrinterName = hb_parc( 1 );
+   if( !pszPrinterName )
+   {
+      hb_GetDefaultPrinter( szDefaultPrinter, &pdwBufferSize );
+      pszPrinterName = szDefaultPrinter;
+   }
+   hb_retnl( hb_printerIsReadyn( pszPrinterName ) );
 }
 
 BOOL hb_GetPrinterNameByPort( char * pPrinterName, LPDWORD pdwBufferSize,

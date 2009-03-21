@@ -1250,6 +1250,7 @@ static ULONG hb_fptCountSMTItemLength( FPTAREAP pArea, PHB_ITEM pItem,
          ulSize = 2;
          break;
       case HB_IT_DATE:
+      case HB_IT_TIMESTAMP:
          ulSize = 5;
          break;
       case HB_IT_INTEGER:
@@ -1398,6 +1399,7 @@ static ULONG hb_fptStoreSMTItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
          break;
 
       case HB_IT_DATE:
+      case HB_IT_TIMESTAMP:
          *(*bBufPtr)++ = SMT_IT_DATE;
          lVal = hb_itemGetDL( pItem );
          HB_PUT_LE_UINT32( *bBufPtr, lVal );
@@ -1668,6 +1670,7 @@ static ULONG hb_fptCountSixItemLength( FPTAREAP pArea, PHB_ITEM pItem,
       case HB_IT_LONG:
       case HB_IT_DOUBLE:
       case HB_IT_DATE:
+      case HB_IT_TIMESTAMP:
       case HB_IT_LOGICAL:
       default:
          ulSize = SIX_ITEM_BUFSIZE;
@@ -1739,6 +1742,7 @@ static ULONG hb_fptStoreSixItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
          break;
 
       case HB_IT_DATE:
+      case HB_IT_TIMESTAMP:
          lVal = hb_itemGetDL( pItem );
          HB_PUT_LE_UINT16( &(*bBufPtr)[0], FPTIT_SIX_LDATE );
          HB_PUT_LE_UINT32( &(*bBufPtr)[6], lVal );
@@ -1904,6 +1908,7 @@ static ULONG hb_fptCountFlexItemLength( FPTAREAP pArea, PHB_ITEM pItem,
             ulSize += ulLen + 2;
          break;
       case HB_IT_DATE:
+      case HB_IT_TIMESTAMP:
          ulSize += 4;
          break;
       case HB_IT_INTEGER:
@@ -1965,6 +1970,7 @@ static void hb_fptStoreFlexItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
          }
          break;
       case HB_IT_DATE:
+      case HB_IT_TIMESTAMP:
          *(*bBufPtr)++ = FPTIT_FLEXAR_DATEJ;
          lVal = hb_itemGetDL( pItem );
          HB_PUT_LE_UINT32( *bBufPtr, lVal );
@@ -3042,6 +3048,7 @@ static HB_ERRCODE hb_fptPutMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
             ulSize = 0;
             break;
          case HB_IT_DATE:
+         case HB_IT_TIMESTAMP:
             ulType = FPTIT_FLEX_LDATE;
             ulSize = 4;
             lVal = hb_itemGetDL( pItem );
@@ -3543,7 +3550,7 @@ static HB_ERRCODE hb_fptPutVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pI
       }
       else if( pField->uiLen == 3 )
       {
-         if( ! HB_IS_DATE( pItem ) )
+         if( ! HB_IS_DATETIME( pItem ) )
          {
             return EDBF_DATATYPE;
          }
@@ -3597,7 +3604,7 @@ static HB_ERRCODE hb_fptPutVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pI
             }
          }
 
-         if( HB_IS_DATE( pItem ) )
+         if( HB_IS_DATETIME( pItem ) )
          {
             hb_sxDtoP( ( char * ) pFieldBuf, hb_itemGetDL( pItem ) );
             uiType = HB_VF_DATE;

@@ -103,6 +103,11 @@ HB_FUNC( XTOC )
       hb_retc( hb_parc( 1 ) );
    else if( ISDATE( 1 ) )
       hb_retc( hb_pards( 1 ) );
+   else if( ISTIMESTAMP( 1 ) )
+   {
+      char szDateTime[ 18 ];
+      hb_retc( hb_itemGetTS( hb_param( 1, HB_IT_TIMESTAMP ), szDateTime ) );
+   }
    else if( ISNUM( 1 ) )
    {
       char buf[ sizeof( double ) ];

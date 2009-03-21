@@ -399,12 +399,23 @@ static BYTE hb_ntxItemType( PHB_ITEM pItem )
       case HB_IT_DATE:
          return 'D';
 
+      case HB_IT_TIMESTAMP:
+         return 'T';
+
       case HB_IT_LOGICAL:
          return 'L';
 
       default:
          return 'U';
    }
+}
+
+/*
+ * convert key type to comparable type
+ */
+static BYTE hb_ntxItemTypeCmp( BYTE bType )
+{
+   return bType == 'T' ? 'D' : bType;
 }
 
 /*
@@ -450,15 +461,39 @@ static LPKEYINFO hb_ntxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem, ULONG ulRecNo
       case 'N':
          hb_ntxNumToStr( pItem, pKey->key, pTag->KeyLength, pTag->KeyDec );
          break;
+      case 'T':
+         if( pTag->KeyType == 'T' )
+         {
+            hb_itemGetTS( pItem, pKey->key );
+            break;
+         }
       case 'D':
-         hb_itemGetDS( pItem, pKey->key );
+         if( pTag->KeyLength < 8 )
+         {
+            char szDate[ 9 ];
+            hb_itemGetDS( pItem, szDate );
+            memcpy( pKey->key, szDate, pTag->KeyLength );
+         }
+         else
+         {
+            hb_itemGetDS( pItem, pKey->key );
+            if( pTag->KeyLength > 8 )
+            {
+               memset( pKey->key + 8, '\0', pTag->KeyLength - 8 );
+               if( puiLen )
+                  *puiLen = 8;
+            }
+         }
+         pKey->key[ pTag->KeyLength ] = '\0';
          break;
       case 'L':
          pKey->key[0] = ( hb_itemGetL( pItem ) ? 'T':'F' );
-         pKey->key[1] = 0;
+         if( pTag->KeyLength > 1 )
+            memset( pKey->key + 1, '\0', pTag->KeyLength - 1 );
+         pKey->key[ pTag->KeyLength ] = '\0';
          break;
       default:
-         memset( pKey->key, '\0', pTag->KeyLength );
+         memset( pKey->key, '\0', pTag->KeyLength + 1 );
    }
    pKey->Xtra = ulRecNo;
    pKey->Tag = 0;
@@ -500,6 +535,9 @@ static PHB_ITEM hb_ntxKeyGetItem( PHB_ITEM pItem, LPKEYINFO pKey,
             break;
          case 'D':
             pItem = hb_itemPutDS( pItem, pKey->key );
+            break;
+         case 'T':
+            pItem = hb_itemPutTS( pItem, pKey->key );
             break;
          case 'L':
             pItem = hb_itemPutL( pItem, pKey->key[0] == 'T' );
@@ -671,7 +709,7 @@ static int hb_ntxValCompare( LPTAGINFO pTag, char* val1, int len1,
       {
          if( len1 > len2 )
             iResult = 1;
-         else if( len1 < len2 )
+         else if( len1 < len2 && fExact )
             iResult = -1;
       }
    }
@@ -768,7 +806,7 @@ static void hb_ntxTagSetScope( LPTAGINFO pTag, USHORT nScope, PHB_ITEM pItem )
    pScopeVal = ( hb_itemType( pItem ) == HB_IT_BLOCK ) ?
                            hb_vmEvalBlock( pItem ) : pItem;
 
-   if( pTag->KeyType == hb_ntxItemType( pScopeVal ) )
+   if( hb_ntxItemTypeCmp( pTag->KeyType ) == hb_ntxItemTypeCmp( hb_ntxItemType( pScopeVal ) ) )
    {
       PHB_NTXSCOPE pScope;
       BOOL fTop = ( nScope == 0 );
@@ -5416,6 +5454,13 @@ static HB_ERRCODE hb_ntxTagCreate( LPTAGINFO pTag, BOOL fReindex )
                   hb_ntxSortKeyAdd( pSort, pArea->ulRecNo, szBuffer, pTag->KeyLength );
                   break;
 
+               case HB_IT_TIMESTAMP:
+                  if( pTag->KeyType == 'T' )
+                  {
+                     hb_itemGetTS( pItem, szBuffer );
+                     hb_ntxSortKeyAdd( pSort, pArea->ulRecNo, szBuffer, 17 );
+                     break;
+                  }
                case HB_IT_DATE:
                   hb_itemGetDS( pItem, szBuffer );
                   hb_ntxSortKeyAdd( pSort, pArea->ulRecNo, szBuffer, 8 );
@@ -6151,6 +6196,9 @@ static HB_ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
          break;
       case 'D':
          iLen = 8;
+         break;
+      case 'T':
+         iLen = 17;
          break;
       case 'L':
          iLen = 1;

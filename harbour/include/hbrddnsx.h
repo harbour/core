@@ -218,10 +218,15 @@ HB_EXTERN_BEGIN
 #define NSX_TYPE_LNUM      0x0002
 #define NSX_TYPE_DNUM      0x0008
 #define NSX_TYPE_LDATE     0x0020
+#define NSX_TYPE_TIMESTAMP 0x0040   /* Harbour extension */
 #define NSX_TYPE_LOG       0x0080
 #define NSX_TYPE_CHAR      0x0400
 #define NSX_TYPE_ANYNUM    ( NSX_TYPE_LNUM | NSX_TYPE_DNUM )
-#define NSX_TYPE_ANYEXP    ( NSX_TYPE_ANYNUM | NSX_TYPE_CHAR | NSX_TYPE_LDATE | NSX_TYPE_LOG )
+#define NSX_TYPE_ANYEXP    ( NSX_TYPE_ANYNUM | NSX_TYPE_CHAR | NSX_TYPE_LDATE | NSX_TYPE_TIMESTAMP | NSX_TYPE_LOG )
+
+#define NSX_CMP_EXACT      0x00     /* exact comparision */
+#define NSX_CMP_PREFIX     0x01     /* prefix comparision */
+#define NSX_CMP_DATE       0x02     /* date comparision */
 
 #define NSX_TAG_FULLUPDT   0x00
 #define NSX_TAG_PARTIAL    0x01
@@ -353,6 +358,7 @@ typedef struct _KEYINFO
 {
    ULONG    page;     /* page number */
    ULONG    rec;      /* record number */
+   int      mode;     /* comparison mode NSX_CMP_* */
    UCHAR    val[ 1 ]; /* key value */
 } KEYINFO;
 typedef KEYINFO * LPKEYINFO;

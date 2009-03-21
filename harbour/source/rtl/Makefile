@@ -17,6 +17,7 @@ C_SOURCES=\
 	colorind.c   \
 	console.c    \
 	copyfile.c   \
+	cputime.c    \
 	datec.c      \
 	dates.c      \
 	dateshb.c    \

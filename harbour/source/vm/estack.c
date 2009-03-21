@@ -58,11 +58,11 @@
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapicls.h"
-#include "hbdefs.h"
 #include "hbstack.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapirdd.h"
+#include "hbdate.h"
 
 /* ------------------------------- */
 
@@ -755,7 +755,7 @@ HB_ITEM_PTR hb_stackLocalVariable( int *piFromBase )
    HB_STACK_TLS_PRELOAD
    HB_ITEM_PTR pBase = *hb_stack.pBase;
 
-/*   
+/*
    if( *piFromBase <= 0 )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 */
@@ -1117,6 +1117,15 @@ void hb_stackDispLocal( void )
             {
                char szDate[ 9 ];
                printf( HB_I_("DATE = \"%s\" "), hb_itemGetDS( *pBase, szDate ) );
+            }
+            break;
+
+         case HB_IT_TIMESTAMP:
+            {
+               char szDateTime[ 24 ];
+               printf( HB_I_("TIMESTAMP = \"%s\" "),
+                       hb_timeStampStr( szDateTime, ( *pBase )->item.asDateTime.julian,
+                                                    ( *pBase )->item.asDateTime.time ) );
             }
             break;
 

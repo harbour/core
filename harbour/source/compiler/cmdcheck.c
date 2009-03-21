@@ -46,12 +46,7 @@
  */
 
 #include "hbcomp.h"
-
-#if defined(HB_OS_WIN)
-#include <windows.h>
-#else
-#include <time.h>
-#endif
+#include "hbdate.h"
 
 /* TODO: Add support for this compiler switches
    -r -t || hb_getenv( "TMP" )
@@ -77,58 +72,29 @@
 
 static ULONG PackDateTime( void )
 {
+   int iYear, iMonth, iDay, iHour, iMinute, iSeconds, iMillisec;
    BYTE szString[4];
    BYTE nValue;
 
-#if defined(HB_OS_WIN)
-   SYSTEMTIME st;
+   hb_timeStampGetLocal( &iYear, &iMonth, &iDay,
+                         &iHour, &iMinute, &iSeconds, &iMillisec );
 
-   GetLocalTime( &st );
-
-   nValue = ( BYTE ) ( ( st.wYear - 1980 ) & ( 2 ^ 6 ) );      /* 6 bits */
+   nValue = ( BYTE ) ( ( iYear - 1980 ) & ( 2 ^ 6 ) );      /* 6 bits */
    szString[0] = nValue << 2;
-   nValue = ( BYTE ) ( st.wMonth );    /* 4 bits */
+   nValue = ( BYTE ) ( iMonth );    /* 4 bits */
    szString[0] |= nValue >> 2;
    szString[1] = nValue << 6;
-   nValue = ( BYTE ) ( st.wDay );      /* 5 bits */
+   nValue = ( BYTE ) ( iDay );      /* 5 bits */
    szString[1] |= nValue << 1;
 
-   nValue = ( BYTE ) st.wHour;         /* 5 bits */
+   nValue = ( BYTE ) iHour;         /* 5 bits */
    szString[1] = nValue >> 4;
    szString[2] = nValue << 4;
-   nValue = ( BYTE ) st.wMinute;       /* 6 bits */
+   nValue = ( BYTE ) iMinute;       /* 6 bits */
    szString[2] |= nValue >> 2;
    szString[3] = nValue << 6;
-   nValue = ( BYTE ) st.wSecond;       /* 6 bits */
+   nValue = ( BYTE ) iSeconds;       /* 6 bits */
    szString[3] |= nValue;
-#else
-   time_t t;
-   struct tm tm;
-
-   time( &t );
-#if defined( HB_HAS_LOCALTIME_R )
-   localtime_r( &t, &tm );
-#else
-   tm = *localtime( &t );
-#endif
-
-   nValue = ( BYTE ) ( ( ( tm.tm_year + 1900 ) - 1980 ) & ( 2 ^ 6 ) );      /* 6 bits */
-   szString[0] = nValue << 2;
-   nValue = ( BYTE ) ( tm.tm_mon + 1 );     /* 4 bits */
-   szString[0] |= nValue >> 2;
-   szString[1] = nValue << 6;
-   nValue = ( BYTE ) ( tm.tm_mday );        /* 5 bits */
-   szString[1] |= nValue << 1;
-
-   nValue = ( BYTE ) tm.tm_hour;    /* 5 bits */
-   szString[1] = nValue >> 4;
-   szString[2] = nValue << 4;
-   nValue = ( BYTE ) tm.tm_min;     /* 6 bits */
-   szString[2] |= nValue >> 2;
-   szString[3] = nValue << 6;
-   nValue = ( BYTE ) tm.tm_sec;     /* 6 bits */
-   szString[3] |= nValue;
-#endif
 
    return HB_MKLONG( szString[3], szString[2], szString[1], szString[0] );
 }

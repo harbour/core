@@ -506,6 +506,29 @@ long hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex )
       return hb_itemGetDL( NULL );
 }
 
+double hb_arrayGetTD( PHB_ITEM pArray, ULONG ulIndex )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetTD(%p, %lu)", pArray, ulIndex ));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetTD( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      return 0;
+}
+
+BOOL hb_arrayGetTDT( PHB_ITEM pArray, ULONG ulIndex, LONG * plJulian, LONG * plMilliSec )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetTDT(%p, %lu, %p, %p)", pArray, ulIndex, plJulian, plMilliSec));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetTDT( pArray->item.asArray.value->pItems + ulIndex - 1, plJulian, plMilliSec );
+   else
+   {
+      *plJulian = *plMilliSec = 0;
+      return FALSE;
+   }
+}
+
 BOOL hb_arrayGetL( PHB_ITEM pArray, ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetL(%p, %lu)", pArray, ulIndex));
@@ -669,6 +692,32 @@ BOOL hb_arraySetDL( PHB_ITEM pArray, ULONG ulIndex, LONG lDate )
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
       hb_itemPutDL( pArray->item.asArray.value->pItems + ulIndex - 1, lDate );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+BOOL hb_arraySetTD( PHB_ITEM pArray, ULONG ulIndex, double dTimeStamp )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetTD(%p, %lu, %lf)", pArray, ulIndex, dTimeStamp));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutTD( pArray->item.asArray.value->pItems + ulIndex - 1, dTimeStamp );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+BOOL hb_arraySetTDT( PHB_ITEM pArray, ULONG ulIndex, LONG lJulian, LONG lMilliSec )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetTDT(%p, %lu, %lf)", pArray, ulIndex, lJulian, lMilliSec));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutTDT( pArray->item.asArray.value->pItems + ulIndex - 1, lJulian, lMilliSec );
       return TRUE;
    }
    else
@@ -959,18 +1008,33 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
                }
                while( --ulCount > 0 );
             }
-            else if( HB_IS_DATE( pValue ) )
+            else if( HB_IS_DATETIME( pValue ) )
             {
-               long lValue = hb_itemGetDL( pValue ); /* NOTE: This is correct: Get the date as a long value. [vszakats] */
-
-               do
+               if( fExact )
                {
-                  PHB_ITEM pItem = pBaseArray->pItems + ulStart++;
+                  do
+                  {
+                     PHB_ITEM pItem = pBaseArray->pItems + ulStart++;
 
-                  if( HB_IS_DATE( pItem ) && hb_itemGetDL( pItem ) == lValue )
-                     return ulStart;
+                     if( HB_IS_DATETIME( pItem ) &&
+                         pItem->item.asDateTime.julian == pValue->item.asDateTime.julian &&
+                         pItem->item.asDateTime.time == pValue->item.asDateTime.time )
+                        return ulStart;
+                  }
+                  while( --ulCount > 0 );
                }
-               while( --ulCount > 0 );
+               else
+               {
+                  do
+                  {
+                     PHB_ITEM pItem = pBaseArray->pItems + ulStart++;
+
+                     if( HB_IS_DATETIME( pItem ) &&
+                         pItem->item.asDateTime.julian == pValue->item.asDateTime.julian )
+                        return ulStart;
+                  }
+                  while( --ulCount > 0 );
+               }
             }
             else if( HB_IS_LOGICAL( pValue ) )
             {
@@ -1110,18 +1174,33 @@ ULONG hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG
                }
                while( --ulCount && ulStart-- );
             }
-            else if( HB_IS_DATE( pValue ) )
+            else if( HB_IS_DATETIME( pValue ) )
             {
-               long lValue = hb_itemGetDL( pValue ); /* NOTE: This is correct: Get the date as a long value. [vszakats] */
-
-               do
+               if( fExact )
                {
-                  PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+                  do
+                  {
+                     PHB_ITEM pItem = pBaseArray->pItems + ulStart;
 
-                  if( HB_IS_DATE( pItem ) && hb_itemGetDL( pItem ) == lValue )
-                     return ulStart + 1;
+                     if( HB_IS_DATETIME( pItem ) &&
+                         pItem->item.asDateTime.julian == pValue->item.asDateTime.julian &&
+                         pItem->item.asDateTime.time == pValue->item.asDateTime.time )
+                        return ulStart + 1;
+                  }
+                  while( --ulCount && ulStart-- );
                }
-               while( --ulCount && ulStart-- );
+               else
+               {
+                  do
+                  {
+                     PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+                     if( HB_IS_DATETIME( pItem ) &&
+                         pItem->item.asDateTime.julian == pValue->item.asDateTime.julian )
+                        return ulStart + 1;
+                  }
+                  while( --ulCount && ulStart-- );
+               }
             }
             else if( HB_IS_LOGICAL( pValue ) )
             {

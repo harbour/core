@@ -143,7 +143,6 @@ extern HB_EXPORT BOOL   hb_xvmNot( void );
 extern HB_EXPORT BOOL   hb_xvmNegate( void );
 extern HB_EXPORT void   hb_xvmDuplicate( void );
 extern HB_EXPORT void   hb_xvmDuplUnRef( void );
-extern HB_EXPORT void   hb_xvmDuplTwo( void );
 extern HB_EXPORT void   hb_xvmPushUnRef( void );
 extern HB_EXPORT void   hb_xvmSwap( int iCount );
 extern HB_EXPORT BOOL   hb_xvmForTest( void );
@@ -222,7 +221,8 @@ extern HB_EXPORT void   hb_xvmPushLongLong( LONGLONG llNumber );
 #define hb_xvmPushNil()                   hb_vmPushNil()
 #define hb_xvmPushStringConst( psz, ul )  hb_vmPushStringPcode( psz, ul )
 #define hb_xvmPushSymbol( p )             hb_vmPushSymbol( p )
-#define hb_xvmPushDate( p )               hb_vmPushDate( p )
+#define hb_xvmPushDate( l )               hb_vmPushDate( l )
+#define hb_xvmPushTimeStamp( d, t )       hb_vmPushTimeStamp( d, t )
 
 
 /*

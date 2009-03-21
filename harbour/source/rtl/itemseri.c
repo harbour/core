@@ -101,6 +101,7 @@ UCHAR [ 1 ] - item type
   36. INT32NUM          4+1
   37. INT64NUM          8+1
   38. DBLNUM            8+1+1
+  39. TIMESTAMP         8
 */
 
 #define HB_SERIAL_NIL         0
@@ -142,6 +143,7 @@ UCHAR [ 1 ] - item type
 #define HB_SERIAL_INT32NUM   36
 #define HB_SERIAL_INT64NUM   37
 #define HB_SERIAL_DBLNUM     38
+#define HB_SERIAL_TIMESTAMP  39
 
 #define HB_SERIAL_DUMMYOFFSET ( ( ULONG ) -1 )
 
@@ -290,6 +292,10 @@ static ULONG hb_itemSerialSize( PHB_ITEM pItem, BOOL fNumSize, PHB_CYCLIC_REF * 
          ulSize = 4;
          break;
 
+      case HB_IT_TIMESTAMP:
+         ulSize = 9;
+         break;
+
       case HB_IT_INTEGER:
       case HB_IT_LONG:
          lVal = hb_itemGetNInt( pItem );
@@ -408,7 +414,7 @@ static ULONG hb_serializeItem( PHB_ITEM pItem, BOOL fNumSize, UCHAR * pBuffer,
    HB_LONG lVal;
    double d;
    int iWidth, iDecimal;
-   LONG l;
+   LONG l, l2;
    const char * szVal;
    ULONG ulRef, ulLen, u;
 
@@ -430,6 +436,15 @@ static ULONG hb_serializeItem( PHB_ITEM pItem, BOOL fNumSize, UCHAR * pBuffer,
          l = hb_itemGetDL( pItem );
          HB_PUT_LE_UINT24( &pBuffer[ ulOffset ], l );
          ulOffset += 3;
+         break;
+
+      case HB_IT_TIMESTAMP:
+         pBuffer[ ulOffset++ ] = HB_SERIAL_TIMESTAMP;
+         hb_itemGetTDT( pItem, &l, &l2 );
+         HB_PUT_LE_UINT32( &pBuffer[ ulOffset ], l );
+         ulOffset += 4;
+         HB_PUT_LE_UINT32( &pBuffer[ ulOffset ], l2 );
+         ulOffset += 4;
          break;
 
       case HB_IT_INTEGER:
@@ -855,6 +870,12 @@ static ULONG hb_deserializeItem( PHB_ITEM pItem, const UCHAR * pBuffer,
          ulOffset += 3;
          break;
 
+      case HB_SERIAL_TIMESTAMP:
+         hb_itemPutTDT( pItem, HB_GET_LE_UINT32( &pBuffer[ ulOffset ] ),
+                               HB_GET_LE_UINT32( &pBuffer[ ulOffset + 4 ] ) );
+         ulOffset += 8;
+         break;
+
       case HB_SERIAL_SYMBOL:
          ulLen = pBuffer[ ulOffset++ ];
          szVal = hb_strndup( ( char * ) &pBuffer[ ulOffset ], ulLen );
@@ -1018,6 +1039,7 @@ static BOOL hb_deserializeTest( const UCHAR ** pBufferPtr, ULONG * pulSize,
          break;
       case HB_SERIAL_INT64:
       case HB_SERIAL_DOUBLE:
+      case HB_SERIAL_TIMESTAMP:
          ulSize = 9;
          break;
       case HB_SERIAL_INT64NUM:

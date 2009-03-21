@@ -148,6 +148,10 @@ HB_EXTERN_BEGIN
 #define CDX_TYPE_COMPOUND      0x40    /* FoxPro */
 #define CDX_TYPE_STRUCTURE     0x80    /* FoxPro */
 
+#define CDX_CMP_EXACT          0x00    /* exact comparision */
+#define CDX_CMP_PREFIX         0x01    /* prefix comparision */
+#define CDX_CMP_DATE           0x02    /* date comparision */
+
 /*
  SIx3 order temperature flags:
    switch ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) )
@@ -246,7 +250,8 @@ struct _CDXTAG;   /* forward declaration */
 typedef struct _CDXKEY
 {
    BYTE *   val;
-   BYTE     len;
+   USHORT   len;
+   USHORT   mode;
    ULONG    rec;
 } CDXKEY;
 typedef CDXKEY * LPCDXKEY;

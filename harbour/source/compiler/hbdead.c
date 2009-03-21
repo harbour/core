@@ -382,7 +382,7 @@ static const PHB_CODETRACE_FUNC s_codeTraceFuncTable[] =
    hb_p_default,               /* HB_P_DO,                   */
    hb_p_default,               /* HB_P_DOSHORT,              */
    hb_p_default,               /* HB_P_DUPLICATE,            */
-   hb_p_default,               /* HB_P_DUPLTWO,              */
+   hb_p_default,               /* HB_P_PUSHTIMESTAMP,        */
    hb_p_default,               /* HB_P_INC,                  */
    hb_p_default,               /* HB_P_INSTRING,             */
    hb_p_jumpnear,              /* HB_P_JUMPNEAR,             */

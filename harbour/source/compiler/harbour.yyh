@@ -141,12 +141,13 @@
      WITHOBJECT = 357,
      ENDWITH = 358,
      NUM_DATE = 359,
-     EPSILON = 360,
-     HASHOP = 361,
-     THREAD = 362,
-     POST = 363,
-     UNARY = 364,
-     PRE = 365
+     TIMESTAMP = 360,
+     EPSILON = 361,
+     HASHOP = 362,
+     THREAD = 363,
+     POST = 364,
+     UNARY = 365,
+     PRE = 366
    };
 #endif
 /* Tokens.  */
@@ -252,12 +253,13 @@
 #define WITHOBJECT 357
 #define ENDWITH 358
 #define NUM_DATE 359
-#define EPSILON 360
-#define HASHOP 361
-#define THREAD 362
-#define POST 363
-#define UNARY 364
-#define PRE 365
+#define TIMESTAMP 360
+#define EPSILON 361
+#define HASHOP 362
+#define THREAD 363
+#define POST 364
+#define UNARY 365
+#define PRE 366
 
 
 
@@ -286,6 +288,11 @@ typedef union YYSTYPE
    } valDouble;
    struct
    {
+      long     date;
+      long     time;
+   } valTimeStamp;
+   struct
+   {
       char *   string;
       int      length;
       BOOL     dealloc;
@@ -308,7 +315,7 @@ typedef union YYSTYPE
    PHB_VARTYPE asVarType;
 }
 /* Line 1495 of yacc.c.  */
-#line 312 "harboury.h"
+#line 319 "harboury.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

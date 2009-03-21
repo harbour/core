@@ -8,6 +8,426 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-21 16:07 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    ! restored default optimization flag (-O3) in hb* scripts
+
+  * harbour/harbour.spec
+    ! fixed recent modification
+
+  * harbour/contrib/rddads/ads1.c
+  * harbour/contrib/rddads/adsfunc.c
+  * harbour/contrib/hbmisc/strfmt.c
+  * harbour/contrib/hbcrypt/sha1.c
+    ! fixed wrongly used C reference operator
+
+  * harbour/contrib/hbwin/win_prn2.c
+  * harbour/contrib/hbwin/wapi_commctrl.c
+  * harbour/source/vm/maindllp.c
+    ! fixes for unicode builds
+
+  * harbour/include/std.ch
+    + added SET TIME FORMAT [TO] <f>
+
+  * harbour/include/set.ch
+  * harbour/include/hbset.h
+  * harbour/source/vm/set.c
+    + added _SET_TIMEFORMAT
+      The folowing modifiers are supported:
+         hh - hours
+         mm - minutes
+         ss - seconds
+         fff - fraction part of seconds
+         p - 1-st letter from PM / AM signature. When used time is shown
+             in 12 hour format otherwise 24 hour format is used
+      ex: Set( __SET_TIMEFORMAT, "hh:mm pm" )
+      default _SET_TIMEFORMAT value is "hh:mm:ss:fff"
+    + added C function: char * hb_setGetTimeFormat( void );
+
+  * harbour/include/hbpp.h
+  * harbour/source/pp/ppcore.c
+    + added support for timestamp constant values in the form:
+         t"YYYY-MM-DD HH:MM:SS.fff"
+      The exact accepted timestamp pattern is is:
+         YYYY-MM-DD [H[H][:M[M][:S[S][.f[f[f[f]]]]]]] [PM|AM]
+      i.e.:
+         tValue := t"2009-03-21 5:31:45.437 PM"
+      or:
+         YYYY-MM-DDT[H[H][:M[M][:S[S][.f[f[f[f]]]]]]] [PM|AM]
+      with literal "T" as date and time part delimiters (XML timestamp
+      format), i.e.:
+         tValue := t"2009-03-21T17:31:45.437"
+      The folowing characters can be used as date delimiters: "-", "/", "."
+      if PM or AM is used HH is in range < 1 : 12 > otherwise
+      in range < 0 : 23 >
+
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+    + added support for t"YYYY-MM-DD HH:MM:SS.fff" time stamp constant
+      to compiler
+    + added support for VFP datetime constant values:
+         { ^ [ YYYY-MM-DD [,] ] [ HH[:MM[:SS][.FFF]] [AM|PM] ] }
+      The following characters can be used as date delimiters: "-", "/".
+      Dot "." as date delimiter is not supported.
+      There is no limit on number of characters in YYYY, MM, DD, HH, MM,
+      SS, FFF parts. Important is only their value. This is the format
+      in semi PP notation:
+         { ^ <YEAR> <sep:/-> <MONTH> <sep:/-> <DAY> [[<sep2:,>]
+           [ <HOUR> [ : <MIN> [ : <SEC> [ . <FRAQ> ] ] ] [AM|PP] ] }
+      In practice it allows to also parse xHarbour datetime constant
+      values with compatible conditions though xHarbour support onlu "/"
+      as date delimiter.
+      NOTE: there is one important difference to VFP and xHarbour in
+      decoding above format. In VFP and xHarbour when date part is
+      missing then it's set by default to: 1899-12-30 so this code:
+         { ^ 12:00 }
+      gived the same results as:
+         { ^ 1899/12/30 12:00 }
+      Harbour does not set any default date value when timestamp
+      constant value contains only time part.
+      If you want we can change it for strict VFP compatiblity.
+      Now this extension is enabled by default for testing. In the future
+      it will be probably covered by HB_COMPAT_FOXPRO macro.
+
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyh
+  * harbour/source/macro/macrolex.c
+    + added support for t"YYYY-MM-DD HH:MM:SS.fff" time stamp constant
+      to macro compiler
+
+  * harbour/include/hbmacro.h
+  * harbour/source/vm/macro.c
+    + added new function:
+      void hb_macroGenPushTimeStamp( LONG lDate, LONG lTime, HB_COMP_DECL );
+
+  * harbour/include/hberrors.h
+  * harbour/source/compiler/hbgenerr.c
+    + added new compile time error: "Invalid timestamp constant '%s'"
+
+  * harbour/source/compiler/cmdcheck.c
+    * use Harbour API timestamp functions instead of calling system
+      functions
+
+  * harbour/include/hbpcode.h
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/compiler/hbopt.c
+    + added new PCODE HB_P_PUSHTIMESTAMP (replaced one unused PCODE value)
+      to store timestamp constant values in the PCODE
+
+  * harbour/include/hbcomp.h
+  * harbour/source/compiler/hbmain.c
+    + added new function:
+      void hb_compGenPushTimeStamp( LONG lDate, LONG lTime, HB_COMP_DECL );
+
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt1.c
+    + added new C functions:
+      HB_EXPR_PTR hb_compExprNewTimeStamp( LONG, LONG, HB_COMP_DECL );
+
+  * harbour/include/hbexprb.c
+  * harbour/include/hbcompdf.h
+  * harbour/source/common/expropt2.c
+    + added timestamp expressions support
+    + added compile time optimization for timestamp expressions
+    * updated function optimization for timestamp expressions
+
+  * harbour/include/hbdate.h
+  * harbour/source/common/hbdate.c
+    * changed hb_dateMilliSeconds() to return UTC julian timestamp in
+      milliseconds
+    * changed existing seconds, time and timestamp functions to operate
+      on common OS specific functions to eliminate possible problems
+      with different OS time counters
+    + added new functions to operates on time and timestamp values.
+      See source code for details.
+
+  + harbour/source/rtl/cputime.c
+    * moved double hb_secondsCPU( int n ) function to separate file
+
+  * harbour/source/rtl/seconds.c
+    - removed old version of date/seconds functions
+
+  * harbour/source/vm/hashes.c
+  * harbour/source/vm/arrays.c
+    + added support for timestamp values as hash item indexes
+
+  * harbour/source/vm/hashfunc.c
+    + added support for find timestamp values in hash and array items
+      by simple date value in AScan(), hb_HScan(), hb_AScan() and hb_RAScan()
+      functions when exact comparison is not used.
+
+  * harbour/source/vm/asort.c
+    + added support for sorting timestamp values
+
+  * harbour/source/vm/classes.c
+    + added support for timestamp scallar classes
+    + added support for timestamp typed instance variables
+
+  * harbour/source/vm/memvars.c
+    + added support for timestamp values in .mem files
+
+  * harbour/source/vm/estack.c
+    + show timestamp values in stack dump
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/arrays.c
+    + added new C functions:
+      double hb_arrayGetTD( PHB_ITEM pArray, ULONG ulIndex );
+      BOOL hb_arraySetTD( PHB_ITEM pArray, ULONG ulIndex, double dTimeStamp )
+      BOOL hb_arrayGetTDT( PHB_ITEM pArray, ULONG ulIndex,
+                           LONG * plJulian, LONG * plMilliSec );
+      BOOL hb_arraySetTDT( PHB_ITEM pArray, ULONG ulIndex,
+                           LONG lJulian, LONG lMilliSec );
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/extend.c
+    + accept timestamp items in date functions - use only date part of
+      timestamp value
+    + added new C functions:
+      double hb_partd( int iParam, ... );
+      BOOL hb_partdt( LONG * plJulian, LONG * plMilliSec , int iParam, ... );
+      void hb_rettd( double dTimeStamp );
+      void hb_rettdt( LONG lJulian, LONG lMilliSec );
+      int hb_stortd( double dTimeStamp, int iParam, ... );
+      int hb_stortdt( LONG lJulian, LONG lMilliSec, int iParam, ... );
+
+  * harbour/include/hbapiitm.h
+  * harbour/source/vm/itemapi.c
+    + accept timestamp items in date functions - use only date part of
+      timestamp value
+    + added new C functions:
+      char * hb_itemGetTS( PHB_ITEM pItem, char * szDateTime );
+      PHB_ITEM hb_itemPutTS( PHB_ITEM pItem, const char * szDateTime );
+      double hb_itemGetTD( PHB_ITEM pItem );
+      PHB_ITEM hb_itemPutTD( PHB_ITEM pItem, double dTimeStamp )
+      BOOL hb_itemGetTDT( PHB_ITEM pItem, LONG * plJulian, LONG * plMilliSec );
+      PHB_ITEM hb_itemPutTDT( PHB_ITEM pItem, LONG lJulian, LONG lMilliSec );
+    + support for timestamp items in hb_itemString(), hb_itemPadConv() and
+      hb_itemTypeStr() functions
+
+  * harbour/include/hbvm.h
+  * harbour/include/hbxvm.h
+  * harbour/include/hbapi.h
+  * harbour/source/vm/hvm.c
+    + added HB_IT_TIMESTAMP items
+    * modified HB_IT_DATE internal item structure to use common structure
+      with HB_IT_TIMESTAMP - it  simplifies HVM code and eliminates additional
+      RT conditions.
+    + added HB_IS_TIMESTAMP() and ISTIMESTAMP() macros
+    + added HB_IS_DATETIME() and ISDATETIME() macros - they return true
+      if item/parameter is DATE or TIMESTAMP type.
+    + added void hb_vmPushTimeStamp( long lJulian, long lMilliSec );
+      and xhb_vmPushTimeStamp()
+    + added support for timestamp values in relational operators:
+         <, <=, >, >=, =, ==
+      When two timestamp values are compared then VM compares date and
+      time parts in both values.
+      When date and timestamp values are used in <, <=, >, >=, = operations
+      then VM compares only date part in both values.
+      When date and timestamp values are used in == operation then VM
+      compares date part in both values and then check if time part
+      of timestamp value is 0.
+    + added support for timestamp values in + and - math operations.
+      The following rules are used in timestamp arithmetic:
+         <t> + <t> => <t>
+         <t> - <t> => <n>
+         <t> + <n> => <t>
+         <n> + <t> => <t>
+         <t> - <n> => <t>
+         <d> + <t> => <t>
+         <t> + <d> => <t>
+         <d> - <t> => <n>
+         <t> - <d> => <n>
+      When number is result or argument of timestamp operation then the
+      its integer part is a number of day and fractional part is the time.
+
+  * harbour/source/rtl/dateshb.c
+    + added new .prg functions to mange date and timestamp values:
+      HB_DATETIME() -> <tTimeStamp>
+      HB_CTOD( <cDate> [, <cDateFormat> ] ) -> <dDate>
+      HB_DTOC( <dDate> [, <cDateFormat> ] ) -> <cDate>
+      HB_NTOT( <nValue> ) -> <tTimeStamp>
+      HB_TTON( <tTimeStamp> ) -> <nValue>
+      HB_TTOC( <tTimeStamp>, [ <cDateFormat> ] [, <cTimeFormat> ] ) ->
+                                                            <cTimeStamp>
+      HB_CTOT( <cTimeStamp>, [ <cDateFormat> ] [, <cTimeFormat> ] ) ->
+                                                            <tTimeStamp>
+      HB_TTOS( <tTimeStamp> ) -> <cYYYYMMDDHHMMSSFFF>
+      HB_STOT( <cDateTime> ) -> <tTimeStamp>
+         <cDateTime> should be in one of the above form:
+            - "YYYYMMDDHHMMSSFFF"
+            - "YYYYMMDDHHMMSSFF"
+            - "YYYYMMDDHHMMSSF"
+            - "YYYYMMDDHHMMSS"
+            - "YYYYMMDDHHMM"
+            - "YYYYMMDDHH"
+            - "YYYYMMDD"
+            - "HHMMSSFFF"
+            - "HHMMSSF"
+            - "HHMMSS"
+            - "HHMM"
+            - "HH"
+         Important is number of digits.
+      HB_TSTOSTR( <tTimeStamp> ) -> <cTimeStamp> // YYYY-MM-DD HH:MM:SS.fff
+      HB_STRTOTS( <cTimeStamp> ) -> <tTimeStamp>
+         <cTimeStamp> should be in one of the above form:
+            YYYY-MM-DD [H[H][:M[M][:S[S][.f[f[f[f]]]]]]] [PM|AM]
+            YYYY-MM-DDT[H[H][:M[M][:S[S][.f[f[f[f]]]]]]] [PM|AM]
+         The folowing characters can be used as date delimiters: "-", "/", "."
+         T - is literal "T" - it's for XML timestamp format
+         if PM or AM is used HH is in range < 1 : 12 > otherwise
+         in range < 0 : 23 >
+      HB_HOUR( <tTimeStamp> ) -> <nHour>
+      HB_MINUTE( <tTimeStamp> ) -> <nMinute>
+      HB_SEC( <tTimeStamp> ) -> <nSeconds>   // with milliseconds
+
+  * harbour/source/rtl/datec.c
+    + accept timestamp parameters in CMONTH() and CDOW() functions
+
+  * harbour/source/rtl/empty.c
+    + added support for timestamp items
+
+  * harbour/source/rtl/itemseri.c
+    + added support for timestamp items serialization
+
+  * harbour/source/rtl/minmax.c
+    + added support for timestamp values to MIN() and MAX() functions.
+      when only one of given parameters is timestamp value and other
+      is date value and date parts are equal then always date item
+      is returned as both MIN() or MAX() value.
+
+  * harbour/source/rtl/dates.c
+    + added new C functions: hb_timeFormat(), hb_timeUnformat(),
+      hb_timeStampFormat(), hb_timeStampUnformat()
+
+  * harbour/source/rtl/valtype.c
+    + added .prg functions: HB_ISDATETIME(), HB_ISTIMESTAMP()
+
+  * harbour/source/rtl/transfrm.c
+    + added support for timestamp items formatting.
+    + added new function modifier @T.
+      When @T is used without @D then only time part of timestamp value
+      is formatted and return.
+      When @D is used without @T then only date part of timestamp value
+      is formatted and return.
+
+  * harbour/source/rtl/tbrowse.prg
+    + display timestamp values
+
+  * harbour/source/rtl/philes.c
+    + accept timestamp value as second parameter of HB_FSETDATETIME()
+      function
+    + store file data and time in second parameter of HB_FGETDATETIME()
+      as timestamp value.
+    Old parameters (2-dDate, 3-cTime) are still supported but please think
+    about removing them - they are redundant.
+
+  * harbour/source/rtl/filesys.c
+    * updated function names
+
+
+  * harbour/source/rdd/dbf1.c
+    + added native support for time and timestamp fields
+
+  * harbour/include/hbrddcdx.h
+  * harbour/include/hbrddnsx.h
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfnsx/dbfnsx1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+    + added support for indexing timestamp fields
+    + added support for using DATE values with timestamp fields
+      which replicate HVM behavior.
+      SEEK and SEEKLAST with date value when active index is on
+      timestamp positions to 1-st or last record where date part
+      of indexed timesamp value is equal.
+      Settings scopes to date values when active index is on timestamp
+      value reduce the visible record range to these ones which have
+      date part of timestamp value in the range of dates values used
+      for scopes. It possible to mix date and timestamp values in scope
+      and set one scope to date value and the second to timesamp.
+
+  * harbour/source/rdd/sdf1.c
+  * harbour/source/rdd/delim1.c
+    + added support for exporting timestamp fields
+
+  * harbour/source/rdd/dbsql.c
+    ! fixed typo in logical value export
+    + export timestamp fields.
+      Please update the format to given SQL syntax.
+
+
+  * harbour/contrib/hbct/files.c
+    + changed SETFDATI() to optionally accept timestamp parameter
+      instead of two parameters dDate and cTime
+
+  * harbour/contrib/hbct/misc1.c
+    + added timestamp support to XTOC() function
+
+  * harbour/contrib/hbct/misc2.c
+    + added timestamp support to COMPLEMENT() function
+
+  * harbour/contrib/hbct/dattime2.c
+    + accept timestamp values in ADDMONTH(), DOY(), ISLEAP(), QUARTER()
+      LASTDAYOM(), WEEK() functions
+
+  * harbour/contrib/hbmzip/hbmzip.c
+    + updated HB_ZipFileCreate( hZip, cZipName, tDateTime, cTime, ... )
+      functions to optionaly accept timestamp value in 3-rd parameter
+      instead od dDate, and cTime in 3-rd and 4-th parameters.
+    + updated HB_UnzipFileInfo( hUnzip, @cZipName, @tDateTime, @cTime, ... )
+      to return timestamp value in 3-rd parameter instead of date value.
+      TODO: Please think about removing 4-th parameter from:
+               HB_ZipFileCreate( hZip, cZipName, tDateTime, cTime, ... )
+               HB_UnzipFileInfo( hUnzip, @cZipName, @tDateTime, @cTime, ... )
+            Now it's redundant.
+  * harbour/contrib/hbmzip/readme.txt
+    * updated parameters description for above functions
+
+  * harbour/contrib/hbnf/descendn.c
+    + added timestamp support to FT_DESCEND() function
+
+  * harbour/contrib/hbclipsm/date.c
+    + accept timestamp values in DATEASAGE(), DATEASARRAY() and DATEISLEAP()
+      functions
+
+  * harbour/contrib/hbmisc/dates2.c
+    + accept timestamp values in ISLEAPYEAR(), DAYSINMONTH(), EOM(), BOM(),
+      WOM(), WOY(), EOY() and BOY() functions
+
+
+   The following contrib files should be updated but I'm leaving it to
+   other developers who want to keep this code alive:
+         contrib/hbtip/utils.c
+         contrib/hbvpdf/hbvpdf.prg
+         contrib/hbvpdf/hbvpdft.prg
+         contrib/hbwin/win_dll.c
+            some minor cleanups if necessary and authors will find
+            timestamp values usable
+
+         contrib/hbole/ole2.c
+         contrib/hbwin/win_ole.c
+            add support for timestamp values in OLE
+
+         contrib/rddado/adordd.prg
+         contrib/rddads/ads1.c
+         contrib/rddads/adsx.c
+         contrib/rddsql/...
+            add support for timestamp values in RDDs
+
+   Warning: this implementation is not xHarbour compatible. There are many
+   important differences. Mostly on C level and used API. Please be careful
+   in porting xHarbour source code to Harbour.
+
 2009-03-21 15:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbtpathy/tpwin.c
   * contrib/hbwin/win_regc.c

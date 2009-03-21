@@ -169,7 +169,7 @@ static const HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_DO,                   */
    NULL,                       /* HB_P_DOSHORT,              */
    NULL,                       /* HB_P_DUPLICATE,            */
-   NULL,                       /* HB_P_DUPLTWO,              */
+   NULL,                       /* HB_P_PUSHTIMESTAMP,        */
    NULL,                       /* HB_P_INC,                  */
    NULL,                       /* HB_P_INSTRING,             */
    NULL,                       /* HB_P_JUMPNEAR,             */

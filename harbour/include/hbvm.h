@@ -148,6 +148,7 @@ extern HB_EXPORT void     hb_vmPushLogical( BOOL bValue );    /* pushes a logica
 extern HB_EXPORT void     hb_vmPushString( const char * szText, ULONG length );  /* pushes a string on to the stack */
 extern HB_EXPORT void     hb_vmPushStringPcode( const char * szText, ULONG length );  /* pushes a string from pcode on to the stack */
 extern HB_EXPORT void     hb_vmPushDate( long lDate );   /* pushes a long date onto the stack */
+extern HB_EXPORT void     hb_vmPushTimeStamp( long lJulian, long lMilliSec ); /* pushes two long value as timestamp onto the stack */
 extern HB_EXPORT void     hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer onto the stack */
 extern HB_EXPORT void     hb_vmPushDynSym( PHB_DYNS pDynSym ); /* pushes a function/method pointer onto the stack */
 extern HB_EXPORT void     hb_vmPushEvalSym( void ); /* pushes a codeblock eval symbol onto the stack */

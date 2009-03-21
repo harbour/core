@@ -2731,8 +2731,8 @@ static HB_ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          UNSIGNED8 pucDate[ 11 ];
 
          AdsGetDateFormat( pucFormat, &pusLen );
-         AdsSetDateFormat( ( UNSIGNED8 * )"YYYYMMDD" );
-         AdsGetLastTableUpdate( pArea->hTable, ( UNSIGNED8 * )&pucDate, &pusLen );
+         AdsSetDateFormat( ( UNSIGNED8 * ) "YYYYMMDD" );
+         AdsGetLastTableUpdate( pArea->hTable, pucDate, &pusLen );
          *(pucDate + 8) = '\0';
          hb_itemPutDS( pItem, ( char * ) pucDate );
          AdsSetDateFormat( pucFormat );

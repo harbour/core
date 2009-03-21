@@ -473,10 +473,7 @@ HB_FUNC( SET )
             pSet->HB_SET_ALTERNATE = set_logical( pArg2, pSet->HB_SET_ALTERNATE );
          break;
       case HB_SET_ALTFILE:
-         if( pSet->HB_SET_ALTFILE )
-            hb_retc( pSet->HB_SET_ALTFILE );
-         else
-            hb_retc( NULL );
+         hb_retc( pSet->HB_SET_ALTFILE );
          if( args > 1 )
          {
             if( HB_IS_NIL( pArg2 ) )
@@ -559,37 +556,30 @@ HB_FUNC( SET )
             hb_retni( hb_conSetCursor( FALSE, 0 ) );
          break;
       case HB_SET_DATEFORMAT:
-         if( pSet->HB_SET_DATEFORMAT )
-            hb_retc( pSet->HB_SET_DATEFORMAT );
-         else
-            hb_retc( NULL );
-
+         hb_retc( pSet->HB_SET_DATEFORMAT );
          if( args > 1 )
          {
-            BOOL flag = FALSE;
-            unsigned int i, iLen;
-            int ch, year = 0;
+            char * value;
+            int year = 0;
 
-            pSet->HB_SET_DATEFORMAT = set_string( pArg2, pSet->HB_SET_DATEFORMAT );
-            iLen = ( unsigned int ) strlen( pSet->HB_SET_DATEFORMAT );
-            for( i = 0; i < iLen; i++ )
+            value = pSet->HB_SET_DATEFORMAT = set_string( pArg2, pSet->HB_SET_DATEFORMAT );
+            while( *value )
             {
-               ch = pSet->HB_SET_DATEFORMAT[ i ];
-               if( !flag && ( ch == 'Y' || ch == 'y' ) )
-                  year++;   /* Only count the first set of consecutive "Y"s. */
-               else if( year )
-                  flag = TRUE; /* Indicate non-consecutive. */
+               if( *value == 'Y' || *value == 'y' )
+                  year++;
+               else if( year )   /* Only count the first set of consecutive "Y"s. */
+                  break;
+               ++value;
             }
-
-            flag = ( year >= 4 );
-
-            if( flag != pSet->hb_set_century )
-            {
-               /* CENTURY is not controlled directly by SET, so there is no
-                  notification for changing it indirectly via DATE FORMAT. */
-               pSet->hb_set_century = flag;
-            }
+            /* CENTURY is not controlled directly by SET, so there is no
+               notification for changing it indirectly via DATE FORMAT. */
+            pSet->hb_set_century = year >= 4;
          }
+         break;
+      case HB_SET_TIMEFORMAT:
+         hb_retc( pSet->HB_SET_TIMEFORMAT );
+         if( args > 1 )
+            pSet->HB_SET_TIMEFORMAT = set_string( pArg2, pSet->HB_SET_TIMEFORMAT );
          break;
       case HB_SET_DEBUG:
          hb_retl( pSet->HB_SET_DEBUG );
@@ -607,10 +597,7 @@ HB_FUNC( SET )
          }
          break;
       case HB_SET_DEFAULT:
-         if( pSet->HB_SET_DEFAULT )
-            hb_retc( pSet->HB_SET_DEFAULT );
-         else
-            hb_retc( NULL );
+         hb_retc( pSet->HB_SET_DEFAULT );
          if( args > 1 )
             pSet->HB_SET_DEFAULT = set_string( pArg2, pSet->HB_SET_DEFAULT );
          break;
@@ -620,10 +607,7 @@ HB_FUNC( SET )
             pSet->HB_SET_DELETED = set_logical( pArg2, pSet->HB_SET_DELETED );
          break;
       case HB_SET_DELIMCHARS:
-         if( pSet->HB_SET_DELIMCHARS )
-            hb_retc( pSet->HB_SET_DELIMCHARS );
-         else
-            hb_retc( NULL );
+         hb_retc( pSet->HB_SET_DELIMCHARS );
          if( args > 1 )
             pSet->HB_SET_DELIMCHARS = set_string( pArg2, pSet->HB_SET_DELIMCHARS );
          break;
@@ -633,10 +617,7 @@ HB_FUNC( SET )
             pSet->HB_SET_DELIMITERS = set_logical( pArg2, pSet->HB_SET_DELIMITERS );
          break;
       case HB_SET_DEVICE:
-         if( pSet->HB_SET_DEVICE )
-            hb_retc( pSet->HB_SET_DEVICE );
-         else
-            hb_retc( NULL );
+         hb_retc( pSet->HB_SET_DEVICE );
          if( args > 1 && ! HB_IS_NIL( pArg2 ) )
          {
             /* If the print file is not already open, open it in overwrite mode. */
@@ -698,10 +679,7 @@ HB_FUNC( SET )
             pSet->HB_SET_EXTRA = set_logical( pArg2, pSet->HB_SET_EXTRA );
          break;
       case HB_SET_EXTRAFILE:
-         if( pSet->HB_SET_EXTRAFILE )
-            hb_retc( pSet->HB_SET_EXTRAFILE );
-         else
-            hb_retc( NULL );
+         hb_retc( pSet->HB_SET_EXTRAFILE );
          if( args > 1 )
          {
             if( HB_IS_NIL( pArg2 ) )
@@ -805,10 +783,7 @@ HB_FUNC( SET )
             pSet->HB_SET_HARDCOMMIT = set_logical( pArg2, pSet->HB_SET_HARDCOMMIT );
          break;
       case HB_SET_PATH:
-         if( pSet->HB_SET_PATH )
-            hb_retc( pSet->HB_SET_PATH );
-         else
-            hb_retc( NULL );
+         hb_retc( pSet->HB_SET_PATH );
          if( args > 1 )
          {
             pSet->HB_SET_PATH = set_string( pArg2, pSet->HB_SET_PATH );
@@ -823,10 +798,7 @@ HB_FUNC( SET )
             pSet->HB_SET_PRINTER = set_logical( pArg2, pSet->HB_SET_PRINTER );
          break;
       case HB_SET_PRINTFILE:
-         if( pSet->HB_SET_PRINTFILE )
-            hb_retc( pSet->HB_SET_PRINTFILE );
-         else
-            hb_retc( NULL );
+         hb_retc( pSet->HB_SET_PRINTFILE );
          if( args > 1 && ! HB_IS_NIL( pArg2 ) )
             pSet->HB_SET_PRINTFILE = set_string( pArg2, pSet->HB_SET_PRINTFILE );
          if( args > 2 )
@@ -986,10 +958,7 @@ HB_FUNC( SET )
             pSet->HB_SET_DEFEXTENSIONS = set_logical( pArg2, pSet->HB_SET_DEFEXTENSIONS );
          break;
       case HB_SET_EOL:
-         if( pSet->HB_SET_EOL )
-            hb_retc( pSet->HB_SET_EOL );
-         else
-            hb_retc( NULL );
+         hb_retc( pSet->HB_SET_EOL );
          if( args > 1 )
             pSet->HB_SET_EOL = set_string( pArg2, pSet->HB_SET_EOL );
          break;
@@ -1058,6 +1027,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->HB_SET_CONFIRM = FALSE;
    pSet->HB_SET_CONSOLE = TRUE;
    pSet->HB_SET_DATEFORMAT = hb_strdup( "mm/dd/yy" );
+   pSet->HB_SET_TIMEFORMAT = hb_strdup( "hh:mm:ss.fff" );
    /*
     * Tests shows that Clipper has two different flags to control ALT+D
     * and ALTD() behavior and on startup these flags are not synchronized.
@@ -1156,6 +1126,7 @@ void hb_setRelease( PHB_SET_STRUCT pSet )
 
    if( pSet->HB_SET_ALTFILE )       hb_xfree( pSet->HB_SET_ALTFILE );
    if( pSet->HB_SET_DATEFORMAT )    hb_xfree( pSet->HB_SET_DATEFORMAT );
+   if( pSet->HB_SET_TIMEFORMAT )    hb_xfree( pSet->HB_SET_TIMEFORMAT );
    if( pSet->HB_SET_DEFAULT )       hb_xfree( pSet->HB_SET_DEFAULT );
    if( pSet->HB_SET_DELIMCHARS )    hb_xfree( pSet->HB_SET_DELIMCHARS );
    if( pSet->HB_SET_DEVICE )        hb_xfree( pSet->HB_SET_DEVICE );
@@ -1203,6 +1174,7 @@ PHB_SET_STRUCT hb_setClone( PHB_SET_STRUCT pSrc )
 
    if( pSet->HB_SET_ALTFILE )      pSet->HB_SET_ALTFILE      = hb_strdup( pSet->HB_SET_ALTFILE );
    if( pSet->HB_SET_DATEFORMAT )   pSet->HB_SET_DATEFORMAT   = hb_strdup( pSet->HB_SET_DATEFORMAT );
+   if( pSet->HB_SET_TIMEFORMAT )   pSet->HB_SET_TIMEFORMAT   = hb_strdup( pSet->HB_SET_TIMEFORMAT );
    if( pSet->HB_SET_DEFAULT )      pSet->HB_SET_DEFAULT      = hb_strdup( pSet->HB_SET_DEFAULT );
    if( pSet->HB_SET_DELIMCHARS )   pSet->HB_SET_DELIMCHARS   = hb_strdup( pSet->HB_SET_DELIMCHARS );
    if( pSet->HB_SET_DEVICE )       pSet->HB_SET_DEVICE       = hb_strdup( pSet->HB_SET_DEVICE );
@@ -1785,10 +1757,20 @@ BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
                      break;
                   ++szValue;
                }
-               if( pSet->hb_set_century ? iYear < 4 : iYear >= 4 )
-                  /* CENTURY is not controlled directly by SET, so there is no
-                     notification for changing it indirectly via DATE FORMAT. */
-                  pSet->hb_set_century = iYear >= 4;
+               /* CENTURY is not controlled directly by SET, so there is no
+                  notification for changing it indirectly via DATE FORMAT. */
+               pSet->hb_set_century = iYear >= 4;
+               fResult = TRUE;
+            }
+            break;
+         case HB_SET_TIMEFORMAT:
+            if( HB_IS_STRING( pItem ) )
+            {
+               szValue = hb_strndup( hb_itemGetCPtr( pItem ), USHRT_MAX );
+               if( pSet->HB_SET_TIMEFORMAT )
+                  hb_xfree( pSet->HB_SET_TIMEFORMAT );
+               pSet->HB_SET_TIMEFORMAT = szValue;
+               fResult = TRUE;
             }
             break;
          case HB_SET_DIRSEPARATOR:
@@ -2021,6 +2003,7 @@ BOOL    hb_setGetL( HB_set_enum set_specifier )
       case HB_SET_COLOR:
       case HB_SET_CURSOR:
       case HB_SET_DATEFORMAT:
+      case HB_SET_TIMEFORMAT:
       case HB_SET_DECIMALS:
       case HB_SET_DEFAULT:
       case HB_SET_DELIMCHARS:
@@ -2074,6 +2057,8 @@ char *  hb_setGetCPtr( HB_set_enum set_specifier )
          return pSet->HB_SET_COLOR;
       case HB_SET_DATEFORMAT:
          return pSet->HB_SET_DATEFORMAT;
+      case HB_SET_TIMEFORMAT:
+         return pSet->HB_SET_TIMEFORMAT;
       case HB_SET_DEFAULT:
          return pSet->HB_SET_DEFAULT;
       case HB_SET_DELIMCHARS:
@@ -2208,6 +2193,7 @@ int     hb_setGetNI( HB_set_enum set_specifier )
       case HB_SET_CONSOLE:
       case HB_SET_CURSOR:
       case HB_SET_DATEFORMAT:
+      case HB_SET_TIMEFORMAT:
       case HB_SET_DEBUG:
       case HB_SET_DEFAULT:
       case HB_SET_DELETED:
@@ -2343,9 +2329,14 @@ BOOL    hb_setGetConsole( void )
    return hb_stackSetStruct()->HB_SET_CONSOLE;
 }
 
-char *  hb_setGetDateFormat( void )
+char * hb_setGetDateFormat( void )
 {
    return hb_stackSetStruct()->HB_SET_DATEFORMAT;
+}
+
+char * hb_setGetTimeFormat( void )
+{
+   return hb_stackSetStruct()->HB_SET_TIMEFORMAT;
 }
 
 BOOL    hb_setGetDebug( void )

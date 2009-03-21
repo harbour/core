@@ -518,7 +518,7 @@ HB_FUNC( WAPI_TABCTRL_GETITEMRECT )
    PHB_ITEM aRect = hb_itemArrayNew( 4 );
    PHB_ITEM temp;
 
-   TabCtrl_GetItemRect( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), &rc );
+   ( void ) TabCtrl_GetItemRect( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), &rc );
 
    temp = hb_itemPutNL( NULL, rc.left );
    hb_arraySet( aRect, 1, temp );
@@ -629,7 +629,7 @@ HB_FUNC( WAPI_TABCTRL_ADJUSTRECT )
       rc.right  = hb_parnl( 3, 3 );
       rc.bottom = hb_parnl( 3, 4 );
 
-      TabCtrl_AdjustRect( wapi_par_HWND( 1 ), wapi_par_BOOL( 2 ), &rc );
+      ( void ) TabCtrl_AdjustRect( wapi_par_HWND( 1 ), wapi_par_BOOL( 2 ), &rc );
 
       hb_stornl( rc.left  , 3, 1 );
       hb_stornl( rc.top   , 3, 2 );

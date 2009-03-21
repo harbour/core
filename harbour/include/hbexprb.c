@@ -73,6 +73,7 @@ static HB_EXPR_FUNC( hb_compExprUseDummy );
 static HB_EXPR_FUNC( hb_compExprUseNil );
 static HB_EXPR_FUNC( hb_compExprUseNumeric );
 static HB_EXPR_FUNC( hb_compExprUseDate );
+static HB_EXPR_FUNC( hb_compExprUseTimeStamp );
 static HB_EXPR_FUNC( hb_compExprUseString );
 static HB_EXPR_FUNC( hb_compExprUseCodeblock );
 static HB_EXPR_FUNC( hb_compExprUseLogical );
@@ -152,6 +153,7 @@ const HB_EXPR_FUNC_PTR hb_comp_ExprTable[ HB_EXPR_COUNT ] = {
    hb_compExprUseNil,
    hb_compExprUseNumeric,
    hb_compExprUseDate,
+   hb_compExprUseTimeStamp,
    hb_compExprUseString,
    hb_compExprUseCodeblock,
    hb_compExprUseLogical,
@@ -319,7 +321,43 @@ static HB_EXPR_FUNC( hb_compExprUseDate )
          hb_compErrorLValue( HB_COMP_PARAM, pSelf );
          break;
       case HB_EA_PUSH_PCODE:
-         HB_GEN_FUNC1( PushDate, pSelf->value.asNum.val.l );
+         HB_GEN_FUNC1( PushDate, pSelf->value.asDate.lDate );
+         break;
+      case HB_EA_POP_PCODE:
+         break;
+      case HB_EA_PUSH_POP:
+      case HB_EA_STATEMENT:
+         hb_compWarnMeaningless( HB_COMP_PARAM, pSelf );
+      case HB_EA_DELETE:
+         break;
+   }
+
+   return pSelf;
+}
+
+/* actions for HB_ET_TIMESTAMP expression
+ */
+static HB_EXPR_FUNC( hb_compExprUseTimeStamp )
+{
+   switch( iMessage )
+   {
+      case HB_EA_REDUCE:
+         break;
+      case HB_EA_ARRAY_AT:
+         HB_COMP_ERROR_TYPE( pSelf );
+         break;
+      case HB_EA_ARRAY_INDEX:
+#ifdef HB_HASH_USES_ARRAY_INDEXES
+         if( !HB_SUPPORT_HARBOUR )
+#endif
+            hb_compErrorIndex( HB_COMP_PARAM, pSelf );     /* timestamp cannot be used as index element */
+         break;
+      case HB_EA_LVALUE:
+         hb_compErrorLValue( HB_COMP_PARAM, pSelf );
+         break;
+      case HB_EA_PUSH_PCODE:
+         HB_GEN_FUNC2( PushTimeStamp, pSelf->value.asDate.lDate,
+                                      pSelf->value.asDate.lTime );
          break;
       case HB_EA_POP_PCODE:
          break;

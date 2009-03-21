@@ -114,6 +114,7 @@
 #command SET CENTURY <x:ON,OFF,&>      => __SetCentury( <(x)> )
 #command SET CENTURY (<x>)             => __SetCentury( <x> )
 #command SET DATE FORMAT [TO] <f>      => Set( _SET_DATEFORMAT, <f> )
+#command SET TIME FORMAT [TO] <f>      => Set( _SET_TIMEFORMAT, <f> )
 #command SET EPOCH TO <y>              => Set( _SET_EPOCH, <y> )
 
 #command SET DECIMALS TO <x>           => Set( _SET_DECIMALS, <x> )

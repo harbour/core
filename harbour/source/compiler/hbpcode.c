@@ -139,7 +139,7 @@ const BYTE hb_comp_pcode_len[] = {
    3,        /* HB_P_DO,                   */
    2,        /* HB_P_DOSHORT,              */
    1,        /* HB_P_DUPLICATE,            */
-   1,        /* HB_P_DUPLTWO,              */
+   9,        /* HB_P_PUSHTIMESTAMP,        */
    1,        /* HB_P_INC,                  */
    1,        /* HB_P_INSTRING,             */
    2,        /* HB_P_JUMPNEAR,             */
@@ -330,7 +330,7 @@ static HB_PCODE_FUNC_PTR s_psize_table[] =
    NULL,                       /* HB_P_DO,                   */
    NULL,                       /* HB_P_DOSHORT,              */
    NULL,                       /* HB_P_DUPLICATE,            */
-   NULL,                       /* HB_P_DUPLTWO,              */
+   NULL,                       /* HB_P_PUSHTIMESTAMP,        */
    NULL,                       /* HB_P_INC,                  */
    NULL,                       /* HB_P_INSTRING,             */
    NULL,                       /* HB_P_JUMPNEAR,             */

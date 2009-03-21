@@ -759,7 +759,7 @@ static const HB_OPT_FUNC_PTR s_opt_table[] =
    NULL,                       /* HB_P_DO,                   */
    NULL,                       /* HB_P_DOSHORT,              */
    hb_p_duplicate,             /* HB_P_DUPLICATE,            */
-   NULL,                       /* HB_P_DUPLTWO,              */
+   NULL,                       /* HB_P_PUSHTIMESTAMP,        */
    NULL,                       /* HB_P_INC,                  */
    NULL,                       /* HB_P_INSTRING,             */
    NULL,                       /* HB_P_JUMPNEAR,             */

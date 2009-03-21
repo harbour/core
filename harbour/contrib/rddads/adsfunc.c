@@ -1799,7 +1799,7 @@ HB_FUNC( ADSDDGETDATABASEPROPERTY )
 
          if( AdsDDGetDatabaseProperty( hConnect,
                                        ulProperty,
-                                       &sBuffer,
+                                       sBuffer,
                                        &ulLength ) != AE_SUCCESS )
          {
             /* TODO: Better error handling. */

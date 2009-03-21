@@ -391,18 +391,23 @@ HB_FUNC( HB_FSETATTR )
 
 HB_FUNC( HB_FSETDATETIME )
 {
-   const char * szTime = hb_parc( 3 );
-   LONG lTime = -1;
+   LONG lDate = -1, lTime = -1;
 
-   if( szTime )
+   if( ISTIMESTAMP( 2 ) )
+      hb_partdt( &lDate, &lTime, 2 );
+   else
    {
-      int iHour, iMinutes, iSeconds, iMSec;
-      hb_timeStrGet( szTime, &iHour, &iMinutes, &iSeconds, &iMSec );
-      lTime = hb_timeStampEncode( iHour, iMinutes, iSeconds, iMSec );
+      if( ISDATE( 2 ) )
+         lDate = hb_pardl( 2 );
+      if( ISCHAR( 3 ) )
+      {
+         int iHour, iMinutes, iSeconds, iMSec;
+         if( hb_timeStrGet( hb_parc( 3 ), &iHour, &iMinutes, &iSeconds, &iMSec ) )
+            lTime = hb_timeEncode( iHour, iMinutes, iSeconds, iMSec );
+      }
    }
 
-   hb_retl( hb_fsSetFileTime( ( UCHAR * ) hb_parcx( 1 ),
-                              ISDATE( 2 ) ? hb_pardl( 2 ) : -1, lTime ) );
+   hb_retl( hb_fsSetFileTime( ( UCHAR * ) hb_parcx( 1 ), lDate, lTime ) );
 }
 
 HB_FUNC( HB_FGETDATETIME )
@@ -411,17 +416,19 @@ HB_FUNC( HB_FGETDATETIME )
 
    if( hb_fsGetFileTime( ( UCHAR * ) hb_parcx( 1 ), &lJulian, &lMillisec ) )
    {
-      char buf[ 13 ];
 
-      hb_stordl( lJulian, 2 );
-
-      hb_timeStampStr( buf, lMillisec );
-      if( lMillisec % 1000 == 0 )
-         buf[ 8 ] = '\0';
-      hb_storc( buf, 3 );
-
-      /* hb_stornl( lMillisec, 4 ); */
-
+      hb_stortdt( lJulian, lMillisec, 2 );
+      if( ISBYREF( 3 ) )
+      {
+         char buf[ 13 ];
+         hb_timeStr( buf, lMillisec );
+         if( lMillisec % 1000 == 0 )
+            buf[ 8 ] = '\0';
+         hb_storc( buf, 3 );
+         hb_stordl( lJulian, 2 );
+      }
+      else
+         hb_stortdt( lJulian, lMillisec, 2 );
       hb_retl( TRUE );
    }
    else

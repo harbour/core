@@ -61,6 +61,7 @@
 #include "hbapierr.h"
 #include "hbdbferr.h"
 #include "hbvm.h"
+#include "hbdate.h"
 
 #define HB_FILE_BUF_SIZE      0x10000
 typedef struct _HB_FILEBUF
@@ -182,9 +183,22 @@ static BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
          break;
       }
 
+      case HB_IT_TIMESTAMP:
+      {
+         long lDate, lTime;
+         char szDateTime[ 24 ];
+
+         hb_itemGetTDT( pValue, &lDate, &lTime );
+         hb_timeStampStr( szDateTime, lDate, lTime );
+         hb_addStrToFBuffer( pFileBuf, szDelim );
+         hb_addStrToFBuffer( pFileBuf, szDateTime );
+         hb_addStrToFBuffer( pFileBuf, szDelim );
+         break;
+      }
+
       case HB_IT_LOGICAL:
          hb_addStrToFBuffer( pFileBuf, szDelim );
-         hb_addToFBuffer( pFileBuf, hb_itemGetCPtr( pValue ) ? 'Y' : 'N' );
+         hb_addToFBuffer( pFileBuf, hb_itemGetL( pValue ) ? 'Y' : 'N' );
          hb_addStrToFBuffer( pFileBuf, szDelim );
          break;
 

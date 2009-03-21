@@ -64,6 +64,7 @@ static const char * s_OperTable[ HB_EXPR_COUNT ] = {
    "NIL",
    "Numeric",
    "Date",
+   "Timestamp",
    "String",
    "Codeblock",
    "Logical",
@@ -128,6 +129,7 @@ static const BYTE s_PrecedTable[ HB_EXPR_COUNT ] = {
    HB_ET_NIL,                 /*   HB_ET_NIL,         */
    HB_ET_NIL,                 /*   HB_ET_NUMERIC,     */
    HB_ET_NIL,                 /*   HB_ET_DATE,        */
+   HB_ET_NIL,                 /*   HB_ET_TIMESTAMP,   */
    HB_ET_NIL,                 /*   HB_ET_STRING,      */
    HB_ET_NIL,                 /*   HB_ET_CODEBLOCK,   */
    HB_ET_NIL,                 /*   HB_ET_LOGICAL,     */
@@ -336,16 +338,32 @@ HB_EXPR_PTR hb_compExprNewLong( HB_LONG lValue, HB_COMP_DECL )
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprNewDate( HB_LONG lValue, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewDate( LONG lDate, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewDate(%" PFHL "d, %p)", lValue, HB_COMP_PARAM));
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewDate(%ld, %p)", lDate, HB_COMP_PARAM));
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_DATE );
 
-   pExpr->value.asNum.val.l = lValue;
+   pExpr->value.asDate.lDate = ( LONG ) lDate;
+   pExpr->value.asDate.lTime = 0;
    pExpr->ValType = HB_EV_DATE;
+
+   return pExpr;
+}
+
+HB_EXPR_PTR hb_compExprNewTimeStamp( LONG lDate, LONG lTime, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewTimeStamp(%ld, %ld, %p)", lDate, lTime, HB_COMP_PARAM));
+
+   pExpr = HB_COMP_EXPR_NEW( HB_ET_TIMESTAMP );
+
+   pExpr->value.asDate.lDate = lDate;
+   pExpr->value.asDate.lTime = lTime;
+   pExpr->ValType = HB_EV_TIMESTAMP;
 
    return pExpr;
 }

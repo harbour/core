@@ -82,6 +82,7 @@
 #define PF_EMPTY      0x0200   /* @Z */
 #define PF_WIDTH      0x0400   /* @S */
 #define PF_PARNEGWOS  0x0800   /* @) Similar to PF_PARNEG but without leading spaces */
+#define PF_TIME       0x1000   /* @T only time part from timestamp items, Harbour extension */
 
 HB_FUNC( TRANSFORM )
 {
@@ -173,6 +174,9 @@ HB_FUNC( TRANSFORM )
                      ulPicLen--;
                      ulParamS = ( ulParamS * 10 ) + ( ( ULONG ) ( *szPic - '0' ) );
                   }
+                  break;
+               case 'T':
+                  uiPicFlags |= PF_TIME;
                   break;
                case 'X':
                   uiPicFlags |= PF_DEBIT;
@@ -741,6 +745,123 @@ HB_FUNC( TRANSFORM )
                   ulResultPos++;
                }
             }
+            szResult[ 12 ] = '\0';
+         }
+      }
+
+      /* ======================================================= */
+      /* Handle TIMESTAMP values                                 */
+      /* ======================================================= */
+
+      else if( HB_IS_TIMESTAMP( pValue ) )
+      {
+         char * szDateFormat = NULL, * szTimeFormat = NULL;
+         char szNewFormat[ 11 ];
+         long lDate, lTime;
+         UINT nFor;
+
+         szResult = ( char * ) hb_xgrab( 29 );
+         if( ( uiPicFlags & ( PF_DATE | PF_TIME ) ) != PF_TIME )
+            szDateFormat = hb_setGetDateFormat();
+         if( ( uiPicFlags & ( PF_DATE | PF_TIME ) ) != PF_DATE )
+            szTimeFormat = hb_setGetTimeFormat();
+
+#ifndef HB_C52_STRICT
+         if( szDateFormat && ( uiPicFlags & PF_BRITISH ) )
+         {
+            /* When @E is used CA-Cl*pper do not update date format
+             * pattern but wrongly moves 4-th and 5-th bytes of
+             * formatted date to the beginning (see below). It causes
+             * that date formats formats different then MM?DD?YY[YY]
+             * are wrongly translated. The code below is not CA-Cl*pper
+             * compatible but it tries to respect user date format
+             * [druzus]
+             */
+            const char * szBritish = hb_setGetCentury() ?
+                                     "DDMMYYYY" : "DDMMYY";
+            char cLast = 'x';
+
+            for( nFor = 0; nFor < 10; nFor++ )
+            {
+               if( *szBritish == cLast )
+               {
+                  szNewFormat[ nFor ] = cLast;
+                  szBritish++;
+               }
+               else if( ! *szDateFormat )
+                  break;
+               else if( *szBritish &&
+                        ( *szDateFormat == 'Y' || *szDateFormat == 'y' ||
+                          *szDateFormat == 'D' || *szDateFormat == 'd' ||
+                          *szDateFormat == 'M' || *szDateFormat == 'm' ) )
+               {
+                  szNewFormat[ nFor ] = cLast = *szBritish++;
+                  do
+                     szDateFormat++;
+                  while( szDateFormat[ -1 ] == szDateFormat[ 0 ] );
+               }
+               else
+                  szNewFormat[ nFor ] = *szDateFormat++;
+            }
+            szNewFormat[ nFor ] = '\0';
+            szDateFormat = szNewFormat;
+         }
+#endif
+
+         hb_itemGetTDT( pValue, &lDate, &lTime );
+         if( szTimeFormat )
+         {
+            if( szDateFormat )
+               hb_timeStampFormat( szResult, szDateFormat, szTimeFormat, lDate, lTime );
+            else
+               hb_timeFormat( szResult, szTimeFormat, lTime );
+         }
+         else
+         {
+            char szDate[ 9 ];
+            hb_dateFormat( hb_dateDecStr( szDate, lDate ), szResult, szDateFormat );
+         }
+         ulResultPos = strlen( szResult );
+
+#ifdef HB_C52_STRICT
+         if( uiPicFlags & PF_BRITISH )
+         {
+            /* replicated wrong Clipper behavior, see note above.
+             * It's not exact CA-Cl*pper behavior because it does
+             * not check for size of results and can extract data
+             * from static memory buffer used in previous conversions
+             * (see my note for @E in string conversion above)
+             * but this is buffer overflow and I do not plan to
+             * replicated it too [druzus]
+             */
+            if( ulResultPos >= 5 )
+            {
+               szNewFormat[ 0 ] = szResult[ 0 ];
+               szNewFormat[ 1 ] = szResult[ 1 ];
+               szResult[ 0 ] = szResult[ 3 ];
+               szResult[ 1 ] = szResult[ 4 ];
+               szResult[ 3 ] = szNewFormat[ 0 ];
+               szResult[ 4 ] = szNewFormat[ 1 ];
+            }
+         }
+#endif
+         if( szDateFormat && ( uiPicFlags & PF_REMAIN ) )
+         {
+            /* Here we also respect the date format modified for @E [druzus]
+             */
+            hb_dateFormat( "99999999", szPicDate, szDateFormat );
+            ulPicLen = strlen( szPicDate );
+
+            for( nFor = 0; nFor < ulPicLen; nFor++ )
+            {
+               if( szPicDate[ nFor ] != '9' )
+               {
+                  memmove( szResult + nFor + 1, szResult + nFor, 28 - nFor );
+                  szResult[ nFor ] = szPicDate[ nFor ];
+                  ulResultPos++;
+               }
+            }
+            szResult[ 28 ] = '\0';
          }
       }
 
@@ -882,6 +1003,14 @@ HB_FUNC( TRANSFORM )
          char szResult[ 11 ];
 
          hb_retc( hb_dateFormat( hb_itemGetDS( pValue, szDate ), szResult, hb_setGetDateFormat() ) );
+      }
+      else if( HB_IS_TIMESTAMP( pValue ) )
+      {
+         char szResult[ 27 ];
+         long lDate, lTime;
+
+         hb_itemGetTDT( pValue, &lDate, &lTime );
+         hb_retc( hb_timeStampFormat( szResult, hb_setGetDateFormat(), hb_setGetTimeFormat(), lDate, lTime ) );
       }
       else if( HB_IS_LOGICAL( pValue ) )
       {

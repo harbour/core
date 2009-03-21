@@ -79,6 +79,7 @@ HB_EXTERN_BEGIN
 #define HB_IT_LONG      ( ( HB_TYPE ) 0x00008 )
 #define HB_IT_DOUBLE    ( ( HB_TYPE ) 0x00010 )
 #define HB_IT_DATE      ( ( HB_TYPE ) 0x00020 )
+#define HB_IT_TIMESTAMP ( ( HB_TYPE ) 0x00040 )
 #define HB_IT_LOGICAL   ( ( HB_TYPE ) 0x00080 )
 #define HB_IT_SYMBOL    ( ( HB_TYPE ) 0x00100 )
 #define HB_IT_ALIAS     ( ( HB_TYPE ) 0x00200 )
@@ -95,10 +96,11 @@ HB_EXTERN_BEGIN
 #define HB_IT_OBJECT    HB_IT_ARRAY
 #define HB_IT_NUMERIC   ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE ) )
 #define HB_IT_NUMINT    ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG ) )
+#define HB_IT_DATETIME  ( ( HB_TYPE ) ( HB_IT_DATE | HB_IT_TIMESTAMP ) )
 #define HB_IT_ANY       ( ( HB_TYPE ) 0xFFFFFFFF )
 #define HB_IT_COMPLEX   ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_HASH | HB_IT_POINTER | /* HB_IT_MEMVAR | HB_IT_ENUM | HB_IT_EXTREF |*/ HB_IT_BYREF | HB_IT_STRING ) )
 #define HB_IT_GCITEM    ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_HASH | HB_IT_POINTER | HB_IT_BYREF ) )
-#define HB_IT_HASHKEY   ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE | HB_IT_DATE | HB_IT_STRING | HB_IT_POINTER ) )
+#define HB_IT_HASHKEY   ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE | HB_IT_DATE | HB_IT_TIMESTAMP | HB_IT_STRING | HB_IT_POINTER ) )
 
 #if 0
 
@@ -126,6 +128,7 @@ HB_EXTERN_BEGIN
 #define HB_IS_ARRAY( p )      HB_IS_OF_TYPE( p, HB_IT_ARRAY )
 #define HB_IS_BLOCK( p )      HB_IS_OF_TYPE( p, HB_IT_BLOCK )
 #define HB_IS_DATE( p )       HB_IS_OF_TYPE( p, HB_IT_DATE )
+#define HB_IS_TIMESTAMP( p )  HB_IS_OF_TYPE( p, HB_IT_TIMESTAMP )
 #define HB_IS_DOUBLE( p )     HB_IS_OF_TYPE( p, HB_IT_DOUBLE )
 #define HB_IS_INTEGER( p )    HB_IS_OF_TYPE( p, HB_IT_INTEGER )
 #define HB_IS_LOGICAL( p )    HB_IS_OF_TYPE( p, HB_IT_LOGICAL )
@@ -141,6 +144,7 @@ HB_EXTERN_BEGIN
 #define HB_IS_BYREF( p )      ( ( HB_ITEM_TYPE( p ) & HB_IT_BYREF ) != 0 )
 #define HB_IS_NUMERIC( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
 #define HB_IS_NUMINT( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMINT ) != 0 )
+#define HB_IS_DATETIME( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_DATETIME ) != 0 )
 #define HB_IS_COMPLEX( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
 #define HB_IS_GCITEM( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
 #define HB_IS_BADITEM( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
@@ -159,6 +163,7 @@ HB_EXTERN_BEGIN
 #define HB_IS_ARRAY( p )      ( HB_ITEM_TYPE( p ) == HB_IT_ARRAY )
 #define HB_IS_BLOCK( p )      ( HB_ITEM_TYPE( p ) == HB_IT_BLOCK )
 #define HB_IS_DATE( p )       ( HB_ITEM_TYPE( p ) == HB_IT_DATE )
+#define HB_IS_TIMESTAMP( p )  ( HB_ITEM_TYPE( p ) == HB_IT_TIMESTAMP )
 #define HB_IS_DOUBLE( p )     ( HB_ITEM_TYPE( p ) == HB_IT_DOUBLE )
 #define HB_IS_INTEGER( p )    ( HB_ITEM_TYPE( p ) == HB_IT_INTEGER )
 #define HB_IS_LOGICAL( p )    ( HB_ITEM_TYPE( p ) == HB_IT_LOGICAL )
@@ -174,6 +179,7 @@ HB_EXTERN_BEGIN
 #define HB_IS_BYREF( p )      ( ( HB_ITEM_TYPE( p ) & ~HB_IT_MEMVAR ) == HB_IT_BYREF )
 #define HB_IS_NUMERIC( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
 #define HB_IS_NUMINT( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMINT ) != 0 )
+#define HB_IS_DATETIME( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_DATETIME ) != 0 )
 #define HB_IS_COMPLEX( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
 #define HB_IS_GCITEM( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
 #define HB_IS_HASHKEY( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_HASHKEY ) != 0 )
@@ -190,6 +196,7 @@ HB_EXTERN_BEGIN
 #define HB_IS_ARRAY( p )      ( ( HB_ITEM_TYPERAW( p ) & HB_IT_ARRAY ) != 0 )
 #define HB_IS_BLOCK( p )      ( ( HB_ITEM_TYPERAW( p ) & HB_IT_BLOCK ) != 0 )
 #define HB_IS_DATE( p )       ( ( HB_ITEM_TYPERAW( p ) & HB_IT_DATE ) != 0 )
+#define HB_IS_TIMESTAMP( p )  ( ( HB_ITEM_TYPERAW( p ) & HB_IT_TIMESTAMP ) != 0 )
 #define HB_IS_DOUBLE( p )     ( ( HB_ITEM_TYPERAW( p ) & HB_IT_DOUBLE ) != 0 )
 #define HB_IS_INTEGER( p )    ( ( HB_ITEM_TYPERAW( p ) & HB_IT_INTEGER ) != 0 )
 #define HB_IS_LOGICAL( p )    ( ( HB_ITEM_TYPERAW( p ) & HB_IT_LOGICAL ) != 0 )
@@ -205,6 +212,7 @@ HB_EXTERN_BEGIN
 #define HB_IS_BYREF( p )      ( ( HB_ITEM_TYPERAW( p ) & HB_IT_BYREF ) != 0 )
 #define HB_IS_NUMERIC( p )    ( ( HB_ITEM_TYPERAW( p ) & HB_IT_NUMERIC ) != 0 )
 #define HB_IS_NUMINT( p )     ( ( HB_ITEM_TYPERAW( p ) & HB_IT_NUMINT ) != 0 )
+#define HB_IS_DATETIME( p )   ( ( HB_ITEM_TYPERAW( p ) & HB_IT_DATETIME ) != 0 )
 #define HB_IS_COMPLEX( p )    ( ( HB_ITEM_TYPERAW( p ) & HB_IT_COMPLEX ) != 0 )
 #define HB_IS_GCITEM( p )     ( ( HB_ITEM_TYPERAW( p ) & HB_IT_GCITEM ) != 0 )
 #define HB_IS_HASHKEY( p )    ( ( HB_ITEM_TYPERAW( p ) & HB_IT_HASHKEY ) != 0 )
@@ -220,14 +228,16 @@ HB_EXTERN_BEGIN
 #define ISNUM( n )         ( hb_param( n, HB_IT_NUMERIC ) != NULL )
 #define ISLOG( n )         ( hb_param( n, HB_IT_LOGICAL ) != NULL )
 #define ISDATE( n )        ( hb_param( n, HB_IT_DATE ) != NULL )
+#define ISTIMESTAMP( n )   ( hb_param( n, HB_IT_TIMESTAMP ) != NULL )   /* Not available in CA-Cl*pper. */
 #define ISMEMO( n )        ( hb_param( n, HB_IT_MEMO ) != NULL )
-#define ISBYREF( n )       ( ( hb_parinfo( n ) & HB_IT_BYREF ) != 0 ) /* NOTE: Intentionally using a different method */
+#define ISBYREF( n )       ( ( hb_parinfo( n ) & HB_IT_BYREF ) != 0 )   /* NOTE: Intentionally using a different method */
 #define ISARRAY( n )       ( hb_param( n, HB_IT_ARRAY ) != NULL )
 #define ISOBJECT( n )      ( hb_extIsObject( n ) )
-#define ISBLOCK( n )       ( hb_param( n, HB_IT_BLOCK ) != NULL )    /* Not available in CA-Cl*pper. */
-#define ISPOINTER( n )     ( hb_param( n, HB_IT_POINTER ) != NULL )  /* Not available in CA-Cl*pper. */
-#define ISHASH( n )        ( hb_param( n, HB_IT_HASH ) != NULL )     /* Not available in CA-Cl*pper. */
-#define ISSYMBOL( n )      ( hb_param( n, HB_IT_SYMBOL ) != NULL )   /* Not available in CA-Cl*pper. */
+#define ISBLOCK( n )       ( hb_param( n, HB_IT_BLOCK ) != NULL )       /* Not available in CA-Cl*pper. */
+#define ISPOINTER( n )     ( hb_param( n, HB_IT_POINTER ) != NULL )     /* Not available in CA-Cl*pper. */
+#define ISHASH( n )        ( hb_param( n, HB_IT_HASH ) != NULL )        /* Not available in CA-Cl*pper. */
+#define ISSYMBOL( n )      ( hb_param( n, HB_IT_SYMBOL ) != NULL )      /* Not available in CA-Cl*pper. */
+#define ISDATETIME( n )    ( hb_param( n, HB_IT_DATETIME ) != NULL )    /* Not available in CA-Cl*pper. */
 
 
 #ifdef _HB_API_INTERNAL_
@@ -278,9 +288,10 @@ struct hb_struPointer
    BOOL single;
 };
 
-struct hb_struDate
+struct hb_struDateTime
 {
-   long value;
+   long julian;
+   long time;
 };
 
 struct hb_struDouble
@@ -368,7 +379,7 @@ typedef struct _HB_ITEM
    {
       struct hb_struArray     asArray;
       struct hb_struBlock     asBlock;
-      struct hb_struDate      asDate;
+      struct hb_struDateTime  asDateTime;
       struct hb_struDouble    asDouble;
       struct hb_struInteger   asInteger;
       struct hb_struLogical   asLogical;
@@ -576,6 +587,8 @@ extern HB_EXPORT ULONG      hb_parcsiz( int iParam, ... ); /* retrieve a by-refe
 extern HB_EXPORT char *     hb_pards( int iParam, ... ); /* retrieve a date as a string yyyymmdd */
 extern HB_EXPORT char *     hb_pardsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string yyyymmdd */
 extern HB_EXPORT LONG       hb_pardl( int iParam, ... ); /* retrieve a date as a LONG NUMBER  */
+extern HB_EXPORT double     hb_partd( int iParam, ... ); /* retrieve a timestamp as a double number */ 
+extern HB_EXPORT BOOL       hb_partdt( LONG * plJulian, LONG * plMilliSec , int iParam, ... ); /* retrieve a timestamp as two long numbers */
 extern HB_EXPORT ULONG      hb_parinfa( int iParamNum, ULONG uiArrayIndex ); /* retrieve length or element type of an array parameter */
 extern HB_EXPORT ULONG      hb_parinfo( int iParam ); /* Determine the param count or data type */
 extern HB_EXPORT int        hb_parl( int iParam, ... ); /* retrieve a logical parameter as an int */
@@ -596,7 +609,7 @@ extern HB_EXPORT LONGLONG   hb_parnll( int iParam, ... ); /* retrieve a numeric 
 
 extern HB_EXPORT int    hb_pcount( void );          /* returns the number of suplied parameters */
 extern HB_EXPORT void   hb_ret( void );             /* post a NIL return value */
-extern HB_EXPORT void   hb_retc( const char * szText );   /* returns a string */
+extern HB_EXPORT void   hb_retc( const char * szText );  /* returns a string */
 extern HB_EXPORT void   hb_retc_null( void );       /* returns an empty string */
 extern HB_EXPORT void   hb_retc_buffer( char * szText ); /* sames as above, but accepts an allocated buffer */
 extern HB_EXPORT void   hb_retc_const( const char * szText ); /* returns a string as a pcode based string */
@@ -605,6 +618,8 @@ extern HB_EXPORT void   hb_retclen_buffer( char * szText, ULONG ulLen ); /* same
 extern HB_EXPORT void   hb_retds( const char * szDate );  /* returns a date, must use yyyymmdd format */
 extern HB_EXPORT void   hb_retd( int iYear, int iMonth, int iDay ); /* returns a date */
 extern HB_EXPORT void   hb_retdl( long lJulian );   /* returns a long value as a julian date */
+extern HB_EXPORT void   hb_rettd( double dTimeStamp );   /* returns a double value as a timestamp */
+extern HB_EXPORT void   hb_rettdt( LONG lJulian, LONG lMilliSec );   /* returns two long values as a timestamp */
 extern HB_EXPORT void   hb_retl( int iTrueFalse );  /* returns a logical integer */
 extern HB_EXPORT void   hb_retnd( double dNumber ); /* returns a double */
 extern HB_EXPORT void   hb_retni( int iNumber );    /* returns a integer number */
@@ -647,6 +662,8 @@ extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns
 #define hb_retds( szDate )                   hb_itemPutDS( hb_stackReturnItem(), szDate )
 #define hb_retd( iYear, iMonth, iDay )       hb_itemPutD( hb_stackReturnItem(), iYear, iMonth, iDay )
 #define hb_retdl( lJulian )                  hb_itemPutDL( hb_stackReturnItem(), lJulian )
+#define hb_rettd( dTimeStamp )               hb_itemPutTD( hb_stackReturnItem(), dTimeStamp )
+#define hb_rettdt( lJulian, lMilliSec )      hb_itemPutTDT( hb_stackReturnItem(), lJulian, lMilliSec )
 #define hb_retl( iLogical )                  hb_itemPutL( hb_stackReturnItem(), (iLogical) ? TRUE : FALSE )
 #define hb_retnd( dNumber )                  hb_itemPutND( hb_stackReturnItem(), dNumber )
 #define hb_retni( iNumber )                  hb_itemPutNI( hb_stackReturnItem(), iNumber )
@@ -670,6 +687,8 @@ extern HB_EXPORT int    hb_storclen( const char * szText, ULONG ulLength, int iP
 extern HB_EXPORT int    hb_storclen_buffer( char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string buffer on a variable by reference */
 extern HB_EXPORT int    hb_stords( const char * szDate, int iParam, ... );   /* szDate must have yyyymmdd format */
 extern HB_EXPORT int    hb_stordl( long lJulian, int iParam, ... ); /* lJulian must be a date in Julian format */
+extern HB_EXPORT int    hb_stortd( double dTimeStamp, int iParam, ... ); /* stores a double value as timestamp on a variable by reference */
+extern HB_EXPORT int    hb_stortdt( LONG lJulian, LONG lMilliSec, int iParam, ... ); /* stores two long values as timestamp on a variable by reference */
 extern HB_EXPORT int    hb_storl( int iLogical, int iParam, ... ); /* stores a logical integer on a variable by reference */
 extern HB_EXPORT int    hb_storni( int iValue, int iParam, ... ); /* stores an integer on a variable by reference */
 extern HB_EXPORT int    hb_stornl( long lValue, int iParam, ... ); /* stores a long on a variable by reference */
@@ -710,11 +729,15 @@ extern HB_EXPORT HB_LONG   hb_arrayGetNInt( PHB_ITEM pArray, ULONG ulIndex ); /*
 extern HB_EXPORT double    hb_arrayGetND( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the double value contained on an array element */
 extern HB_EXPORT char *    hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate ); /* retrieves the date value contained in an array element */
 extern HB_EXPORT long      hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the date value contained in an array element, as a long integer */
+extern HB_EXPORT double    hb_arrayGetTD( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the timestamp value contained in an array element, as a double value */
+extern HB_EXPORT BOOL      hb_arrayGetTDT( PHB_ITEM pArray, ULONG ulIndex, LONG * plJulian, LONG * plMilliSec ); /* retrieves the timestamp value contained in an array element, as two long values */
 extern HB_EXPORT HB_TYPE   hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the type of an array item */
 extern HB_EXPORT BOOL      hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element */
 extern HB_EXPORT BOOL      hb_arraySetForward( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element by forwarding it's value */
 extern HB_EXPORT BOOL      hb_arraySetDS( PHB_ITEM pArray, ULONG ulIndex, const char * szDate );
 extern HB_EXPORT BOOL      hb_arraySetDL( PHB_ITEM pArray, ULONG ulIndex, LONG lDate );
+extern HB_EXPORT BOOL      hb_arraySetTD( PHB_ITEM pArray, ULONG ulIndex, double dTimeStamp );
+extern HB_EXPORT BOOL      hb_arraySetTDT( PHB_ITEM pArray, ULONG ulIndex, LONG lJulian, LONG lMilliSec );
 extern HB_EXPORT BOOL      hb_arraySetL( PHB_ITEM pArray, ULONG ulIndex, BOOL fValue );
 extern HB_EXPORT BOOL      hb_arraySetNI( PHB_ITEM pArray, ULONG ulIndex, int iNumber );
 extern HB_EXPORT BOOL      hb_arraySetNL( PHB_ITEM pArray, ULONG ulIndex, LONG lNumber );

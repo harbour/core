@@ -119,7 +119,7 @@ HB_FUNC( DMY )
 HB_FUNC( DATEASAGE )
 {
    int iAge = 0;
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
    if( pDate )
    {
@@ -128,11 +128,11 @@ HB_FUNC( DATEASAGE )
 
       hb_dateToday( &iThisYear, &iThisMonth, &iThisDay );
       hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
-      
+
       if( iThisYear > iYear )
       {
          iAge = iThisYear - iYear;
-      
+
          if( iThisMonth < iMonth || ( iThisMonth == iMonth && iThisDay < iDay ) )
             --iAge;
       }
@@ -152,7 +152,7 @@ HB_FUNC( ADDMONTH )
    int iLimit, iMonthAdd, iYearAdd;
    long lNew;
 
-   hb_dateDecode( hb_parnl( 1 ), &iYear, &iMonth, &iDay );
+   hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
 
    iLimit = 12 - iMonth + 1;
    iYearAdd = iMonths / 12;
@@ -187,7 +187,7 @@ HB_FUNC( ADDMONTH )
 HB_FUNC( DATEASARRAY )
 {
    PHB_ITEM pReturn = hb_itemArrayNew( 3 );     /* Create array */
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
    if( pDate )
    {
@@ -229,7 +229,7 @@ HB_FUNC( ARRAYASDATE )
 */
 HB_FUNC( DATEISLEAP )
 {
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
    if( pDate )
    {

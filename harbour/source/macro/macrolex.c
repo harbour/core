@@ -135,6 +135,33 @@ static void hb_lexIdentCopy( PHB_MACRO_LEX pLex )
    }
 }
 
+static int hb_lexTimestampCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
+                                PHB_MACRO_LEX pLex )
+{
+   BOOL fOK = FALSE;
+   char * dst = pLex->pDst;
+
+   pLex->quote = FALSE;
+   while( pLex->ulSrc < pLex->ulLen )
+   {
+      char ch = pLex->pString[ pLex->ulSrc++ ];
+      if( ch == '"' )
+      {
+         fOK = TRUE;
+         break;
+      }
+      *dst++ = ch;
+   }
+   *dst = '\0';
+   if( !hb_timeStampStrGetDT( pLex->pDst,
+                              &yylval_ptr->valTimeStamp.date,
+                              &yylval_ptr->valTimeStamp.time ) )
+      fOK = FALSE;
+   if( !fOK )
+      hb_macroError( EG_SYNTAX, pMacro );
+   return TIMESTAMP;
+}
+
 static int hb_lexStringCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
                              PHB_MACRO_LEX pLex, char cDelim )
 {
@@ -617,6 +644,13 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                   {
                      pLex->ulSrc++;
                      return hb_lexStringExtCopy( yylval_ptr, pMacro, pLex );
+                  }
+                  else if( yylval_ptr->string[ 0 ] == 'T' &&
+                      pLex->ulLen > pLex->ulSrc &&
+                      pLex->pString[ pLex->ulSrc ] == '"' )
+                  {
+                     pLex->ulSrc++;
+                     return hb_lexTimestampCopy( yylval_ptr, pMacro, pLex );
                   }
                }
                else if( ulLen == 2 )

@@ -45,37 +45,38 @@
      INASSIGN = 261,
      NUM_LONG = 262,
      NUM_DATE = 263,
-     IIF = 264,
-     LITERAL = 265,
-     TRUEVALUE = 266,
-     FALSEVALUE = 267,
-     AND = 268,
-     OR = 269,
-     NOT = 270,
-     EQ = 271,
-     NE1 = 272,
-     NE2 = 273,
-     INC = 274,
-     DEC = 275,
-     ALIASOP = 276,
-     HASHOP = 277,
-     SELF = 278,
-     LE = 279,
-     GE = 280,
-     FIELD = 281,
-     MACROVAR = 282,
-     MACROTEXT = 283,
-     PLUSEQ = 284,
-     MINUSEQ = 285,
-     MULTEQ = 286,
-     DIVEQ = 287,
-     POWER = 288,
-     EXPEQ = 289,
-     MODEQ = 290,
-     EPSILON = 291,
-     POST = 292,
-     UNARY = 293,
-     PRE = 294
+     TIMESTAMP = 264,
+     IIF = 265,
+     LITERAL = 266,
+     TRUEVALUE = 267,
+     FALSEVALUE = 268,
+     AND = 269,
+     OR = 270,
+     NOT = 271,
+     EQ = 272,
+     NE1 = 273,
+     NE2 = 274,
+     INC = 275,
+     DEC = 276,
+     ALIASOP = 277,
+     HASHOP = 278,
+     SELF = 279,
+     LE = 280,
+     GE = 281,
+     FIELD = 282,
+     MACROVAR = 283,
+     MACROTEXT = 284,
+     PLUSEQ = 285,
+     MINUSEQ = 286,
+     MULTEQ = 287,
+     DIVEQ = 288,
+     POWER = 289,
+     EXPEQ = 290,
+     MODEQ = 291,
+     EPSILON = 292,
+     POST = 293,
+     UNARY = 294,
+     PRE = 295
    };
 #endif
 /* Tokens.  */
@@ -85,37 +86,38 @@
 #define INASSIGN 261
 #define NUM_LONG 262
 #define NUM_DATE 263
-#define IIF 264
-#define LITERAL 265
-#define TRUEVALUE 266
-#define FALSEVALUE 267
-#define AND 268
-#define OR 269
-#define NOT 270
-#define EQ 271
-#define NE1 272
-#define NE2 273
-#define INC 274
-#define DEC 275
-#define ALIASOP 276
-#define HASHOP 277
-#define SELF 278
-#define LE 279
-#define GE 280
-#define FIELD 281
-#define MACROVAR 282
-#define MACROTEXT 283
-#define PLUSEQ 284
-#define MINUSEQ 285
-#define MULTEQ 286
-#define DIVEQ 287
-#define POWER 288
-#define EXPEQ 289
-#define MODEQ 290
-#define EPSILON 291
-#define POST 292
-#define UNARY 293
-#define PRE 294
+#define TIMESTAMP 264
+#define IIF 265
+#define LITERAL 266
+#define TRUEVALUE 267
+#define FALSEVALUE 268
+#define AND 269
+#define OR 270
+#define NOT 271
+#define EQ 272
+#define NE1 273
+#define NE2 274
+#define INC 275
+#define DEC 276
+#define ALIASOP 277
+#define HASHOP 278
+#define SELF 279
+#define LE 280
+#define GE 281
+#define FIELD 282
+#define MACROVAR 283
+#define MACROTEXT 284
+#define PLUSEQ 285
+#define MINUSEQ 286
+#define MULTEQ 287
+#define DIVEQ 288
+#define POWER 289
+#define EXPEQ 290
+#define MODEQ 291
+#define EPSILON 292
+#define POST 293
+#define UNARY 294
+#define PRE 295
 
 
 
@@ -149,9 +151,14 @@ typedef union YYSTYPE
       UCHAR    bWidth;  /* to hold the width of the value */
       UCHAR    bDec;    /* to hold the number of decimal points in the value */
    } valDouble;
+   struct
+   {
+      long     date;    /* to hold julian date */
+      long     time;    /* to hold milliseconds */
+   } valTimeStamp;
 }
 /* Line 1495 of yacc.c.  */
-#line 155 "macroy.h"
+#line 162 "macroy.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

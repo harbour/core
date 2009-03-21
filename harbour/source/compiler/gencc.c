@@ -365,14 +365,6 @@ static HB_GENC_FUNC( hb_p_duplunref )
    return 1;
 }
 
-static HB_GENC_FUNC( hb_p_dupltwo )
-{
-   HB_GENC_LABEL();
-
-   fprintf( cargo->yyc, "\thb_xvmDuplTwo();\n" );
-   return 1;
-}
-
 static HB_GENC_FUNC( hb_p_pushunref )
 {
    HB_GENC_LABEL();
@@ -1800,6 +1792,14 @@ static HB_GENC_FUNC( hb_p_pushdate )
    return 5;
 }
 
+static HB_GENC_FUNC( hb_p_pushtimestamp )
+{
+   fprintf( cargo->yyc, "\thb_xvmPushTimeStamp( %ldL, %ldL );\n",
+            ( long ) HB_PCODE_MKLONG( &pFunc->pCode[ lPCodePos + 1 ] ),
+            ( long ) HB_PCODE_MKLONG( &pFunc->pCode[ lPCodePos + 5 ] ) );
+   return 9;
+}
+
 static HB_GENC_FUNC( hb_p_localnearaddint )
 {
    HB_GENC_LABEL();
@@ -2080,7 +2080,7 @@ static const HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_do,
    hb_p_doshort,
    hb_p_duplicate,
-   hb_p_dupltwo,
+   hb_p_pushtimestamp,
    hb_p_inc,
    hb_p_instring,
    hb_p_jumpnear,

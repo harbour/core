@@ -56,6 +56,7 @@
 HB_FUNC( EMPTY )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
+   LONG lDate, lTime;
    PHB_SYMB pSym;
 
    switch( hb_itemType( pItem ) )
@@ -87,6 +88,11 @@ HB_FUNC( EMPTY )
 
       case HB_IT_DATE:
          hb_retl( hb_itemGetDL( pItem ) == 0 );
+         break;
+
+      case HB_IT_TIMESTAMP:
+         hb_itemGetTDT( pItem, &lDate, &lTime );
+         hb_retl( lDate == 0 && lTime == 0 );
          break;
 
       case HB_IT_LOGICAL:

@@ -57,30 +57,97 @@
 
 HB_EXTERN_BEGIN
 
-extern HB_EXPORT double hb_dateSeconds( void );
-extern HB_EXPORT HB_ULONG hb_dateMilliSeconds( void );
 extern HB_EXPORT double hb_secondsCPU( int n );
-extern HB_EXPORT void   hb_dateTimeStamp( LONG * plJulian, LONG * plMilliSec );
-extern HB_EXPORT char * hb_timeStampStr( char * szTime, LONG lMillisec );
-extern HB_EXPORT LONG   hb_timeStampEncode( int iHour, int iMinutes, int iSeconds, int iMSec );
-extern HB_EXPORT void   hb_timeStampDecode( LONG lMillisec, int * piHour, int * piMinutes, int * piSeconds, int * piMSec );
-extern HB_EXPORT void   hb_timeStrGet( const char * szTime, int * piHour, int * piMinutes, int * piSeconds, int * piMSec );
-extern HB_EXPORT char * hb_dateTimeStampStr( char * szDateTime, LONG lJulian, LONG lMillisec );
-extern HB_EXPORT void   hb_dateTimeStampStrGet( const char * szDateTime, LONG * plJulian, LONG * plMillisec );
-extern HB_EXPORT void   hb_dateToday( int * piYear, int * piMonth, int * piDay );
+
+extern HB_EXPORT double hb_dateSeconds( void );
+/* return UTC julian timestamp in milliseconds */
+extern HB_EXPORT HB_ULONG hb_dateMilliSeconds( void );
+
+/* functions to operate on julian date values */
+
 extern HB_EXPORT void   hb_dateTimeStr( char * pszTime );
-extern HB_EXPORT char * hb_dateCMonth( int iMonth );
-extern HB_EXPORT char * hb_dateCDOW( int iDay );
-extern HB_EXPORT int    hb_dateDOW( int iYear, int iMonth, int iDay );
-extern HB_EXPORT int    hb_dateJulianDOW( LONG lJulian );
-extern HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat );
-extern HB_EXPORT long   hb_dateUnformat( const char * szDate, const char * szDateFormat );
+extern HB_EXPORT void   hb_dateToday( int * piYear, int * piMonth, int * piDay );
+
 extern HB_EXPORT long   hb_dateEncode( int iYear, int iMonth, int iDay );
 extern HB_EXPORT void   hb_dateDecode( long julian, int * piYear, int * piMonth, int * piDay );
 extern HB_EXPORT void   hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay );
 extern HB_EXPORT void   hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, int * piDay );
 extern HB_EXPORT char * hb_dateDecStr( char * szDate, long lJulian );
 extern HB_EXPORT long   hb_dateEncStr( const char * szDate );
+extern HB_EXPORT int    hb_dateDOW( int iYear, int iMonth, int iDay );
+extern HB_EXPORT int    hb_dateJulianDOW( LONG lJulian );
+
+/* RTL functions */
+extern HB_EXPORT char * hb_dateCMonth( int iMonth );
+extern HB_EXPORT char * hb_dateCDOW( int iDay );
+extern HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat );
+extern HB_EXPORT long   hb_dateUnformat( const char * szDate, const char * szDateFormat );
+
+/* functions to operate on time values */
+
+extern HB_EXPORT LONG   hb_timeEncode( int iHour, int iMinutes, int iSeconds, int iMSec );
+extern HB_EXPORT void   hb_timeDecode( LONG lMilliSec, int * piHour, int * piMinutes,
+                                       int * piSeconds, int * piMSec );
+extern HB_EXPORT char * hb_timeStr( char * szTime, LONG lMilliSec );
+extern HB_EXPORT BOOL   hb_timeStrGet( const char * szTime,
+                                       int * piHour, int * piMinutes,
+                                       int * piSeconds, int * piMSec );
+
+extern HB_EXPORT void   hb_timeStrRawGet( const char * szTime,
+                                          int * piHour, int * piMinutes,
+                                          int * piSeconds, int * piMSec );
+
+/* functions to operate on date and time values */
+
+extern HB_EXPORT void hb_timeStampGetLocal( int * piYear, int * piMonth, int * piDay,
+                                            int * piHour, int * piMinutes,
+                                            int * piSeconds, int * piMSec );
+extern HB_EXPORT void   hb_timeStampGet( LONG * plJulian, LONG * plMilliSec );
+
+extern HB_EXPORT char * hb_timeStampStrRawPut( char * szDateTime, LONG lJulian, LONG lMilliSec );
+extern HB_EXPORT void   hb_timeStampStrRawGet( const char * szDateTime, LONG * plJulian, LONG * plMilliSec );
+
+extern HB_EXPORT char * hb_timeStampStr( char * szDateTime, LONG lJulian, LONG lMilliSec );
+extern HB_EXPORT BOOL   hb_timeStampStrGet( const char * szDateTime,
+                                            int * piYear, int * piMonth, int * piDay,
+                                            int * piHour, int * piMinutes, int * piSeconds,
+                                            int * piMSec );
+extern HB_EXPORT BOOL   hb_timeStampStrGetDT( const char * szDateTime,
+                                              LONG * plJulian, LONG * plMilliSec );
+
+extern HB_EXPORT double hb_timeStampPackDT( LONG lJulian, LONG lMilliSec );
+extern HB_EXPORT void   hb_timeStampUnpackDT( double dTimeStamp,
+                                              LONG * plJulian, LONG * plMilliSec );
+extern HB_EXPORT double hb_timeStampPack( int iYear, int iMonth, int iDay,
+                                          int iHour, int iMinutes, int iSeconds, int iMSec );
+extern HB_EXPORT void   hb_timeStampUnpack( double dTimeStamp,
+                                            int * piYear, int * piMonth, int * piDay,
+                                            int * piHour, int * piMinutes, int * piSeconds,
+                                            int * piMSec );
+extern HB_EXPORT double hb_timeStampPackD( int iYear, int iMonth, int iDay,
+                                           int iHour, int iMinutes, double dSeconds );
+extern HB_EXPORT void   hb_timeStampUnpackD( double dTimeStamp,
+                                             int * piYear, int * piMonth, int * piDay,
+                                             int * piHour, int * piMinutes, double * pdSeconds );
+
+/* RTL functions */
+extern HB_EXPORT char * hb_timeFormat( char * szBuffer, const char * szTimeFormat, LONG lMilliSec );
+extern HB_EXPORT char * hb_timeStampFormat( char * szBuffer,
+                                            const char * szDateFormat, const char * szTimeFormat,
+                                            LONG lJulian, LONG lMilliSec );
+
+extern HB_EXPORT LONG   hb_timeUnformat( const char * szTime, const char * szTimeFormat );
+extern HB_EXPORT void   hb_timeStampUnformat( const char * szDateTime,
+                                              const char * szDateFormat, const char * szTimeFormat,
+                                              LONG * plJulian, LONG * plMilliSec );
+
+HB_EXTERN_END
+
+#define HB_MINUTES_PER_DAY    ( 24 * 60 )
+#define HB_SECONDS_PER_DAY    ( HB_MINUTES_PER_DAY * 60 )
+#define HB_MILLISECS_PER_DAY  ( HB_SECONDS_PER_DAY * 1000 )
+
+#define HB_TIMEDIFF_DEC       6     /* default number of decimal places in numeric timestamp diff values */
 
 #if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
       defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
@@ -88,8 +155,5 @@ extern HB_EXPORT long   hb_dateEncStr( const char * szDate );
    ! defined( HB_OS_DARWIN_5 ) && !defined( HB_HAS_LOCALTIME_R )
 #  define HB_HAS_LOCALTIME_R
 #endif
-
-
-HB_EXTERN_END
 
 #endif /* HB_DATE_H_ */

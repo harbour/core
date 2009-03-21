@@ -2996,12 +2996,22 @@ void hb_compGenPushLong( HB_LONG lNumber, HB_COMP_DECL )
    }
 }
 
-void hb_compGenPushDate( HB_LONG lNumber, HB_COMP_DECL )
+void hb_compGenPushDate( LONG lDate, HB_COMP_DECL )
 {
    BYTE pBuffer[ 5 ];
 
    pBuffer[ 0 ] = HB_P_PUSHDATE;
-   HB_PUT_LE_UINT32( pBuffer + 1, lNumber );
+   HB_PUT_LE_UINT32( pBuffer + 1, lDate );
+   hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), HB_COMP_PARAM );
+}
+
+void hb_compGenPushTimeStamp( LONG lDate, LONG lTime, HB_COMP_DECL )
+{
+   BYTE pBuffer[ 9 ];
+
+   pBuffer[ 0 ] = HB_P_PUSHTIMESTAMP;
+   HB_PUT_LE_UINT32( pBuffer + 1, lDate );
+   HB_PUT_LE_UINT32( pBuffer + 5, lTime );
    hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), HB_COMP_PARAM );
 }
 

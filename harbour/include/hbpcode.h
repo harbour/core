@@ -90,7 +90,7 @@ typedef enum
    HB_P_DO,                    /*  19 instructs the virtual machine to execute a function discarding its result */
    HB_P_DOSHORT,               /*  20 instructs the virtual machine to execute a function discarding its result */
    HB_P_DUPLICATE,             /*  21 places a copy of the latest virtual machine stack value on to the stack */
-   HB_P_DUPLTWO,               /*  22 places a copy of the latest two virtual machine stack value on to the stack */
+   HB_P_PUSHTIMESTAMP,         /*  22 places a timestamp constant value on the virtual machine stack */
    HB_P_INC,                   /*  23 increments the latest value on the virtual machine stack */
    HB_P_INSTRING,              /*  24 checks if the second latest value on the stack is a substring of the latest one */
    HB_P_JUMPNEAR,              /*  25 jumps to a relative offset 1 Byte */

@@ -88,6 +88,7 @@ const char * hb_comp_szErrors[] =
    "CASE requires either numeric or string constant",
    "String too long for SWITCH",
    "Invalid date constant '%s'",
+   "Invalid timestamp constant '%s'",
    "Memory buffer overflow",
    "Memory corruption detected",
    "Implicit send operator with no WITH OBJECT in sight",

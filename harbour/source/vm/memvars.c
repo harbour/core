@@ -1407,6 +1407,16 @@ static HB_DYNS_FUNC( hb_memvarSave )
             HB_PUT_LE_DOUBLE( &buffer[ HB_MEM_REC_LEN ], dNumber );
             hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN + HB_MEM_NUM_LEN );
          }
+         else if( HB_IS_TIMESTAMP( pMemvar ) )
+         {
+            double dNumber = hb_itemGetTD( pMemvar );
+
+            buffer[ 11 ] = 'T' + 128;
+            buffer[ 16 ] = 1;
+            buffer[ 17 ] = 0;
+            HB_PUT_LE_DOUBLE( &buffer[ HB_MEM_REC_LEN ], dNumber );
+            hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN + HB_MEM_NUM_LEN );
+         }
          else if( HB_IS_LOGICAL( pMemvar ) )
          {
             buffer[ 11 ] = 'L' + 128;
@@ -1608,6 +1618,18 @@ HB_FUNC( __MVRESTORE )
 
                   if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
                      pItem = hb_itemPutDL( pItem, ( long ) HB_GET_LE_DOUBLE( pbyNumber ) );
+                  else
+                     szName = NULL;
+
+                  break;
+               }
+
+               case 'T':
+               {
+                  BYTE pbyNumber[ HB_MEM_NUM_LEN ];
+
+                  if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
+                     pItem = hb_itemPutTD( pItem, HB_GET_LE_DOUBLE( pbyNumber ) );
                   else
                      szName = NULL;
 

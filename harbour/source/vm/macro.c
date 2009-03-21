@@ -1234,12 +1234,23 @@ void hb_macroGenPushLong( HB_LONG lNumber, HB_COMP_DECL )
 }
 
 /* generates the pcode to push a date on the virtual machine stack */
-void hb_macroGenPushDate( HB_LONG lNumber, HB_COMP_DECL )
+void hb_macroGenPushDate( LONG lDate, HB_COMP_DECL )
 {
    BYTE pBuffer[ 5 ];
-   
+
    pBuffer[ 0 ] = HB_P_PUSHDATE;
-   HB_PUT_LE_UINT32( pBuffer + 1, lNumber );
+   HB_PUT_LE_UINT32( pBuffer + 1, lDate );
+   hb_macroGenPCodeN( pBuffer, sizeof( pBuffer ), HB_COMP_PARAM );
+}
+
+/* generates the pcode to push a timestamp on the virtual machine stack */
+void hb_macroGenPushTimeStamp( LONG lDate, LONG lTime, HB_COMP_DECL )
+{
+   BYTE pBuffer[ 9 ];
+
+   pBuffer[ 0 ] = HB_P_PUSHTIMESTAMP;
+   HB_PUT_LE_UINT32( pBuffer + 1, lDate );
+   HB_PUT_LE_UINT32( pBuffer + 5, lTime );
    hb_macroGenPCodeN( pBuffer, sizeof( pBuffer ), HB_COMP_PARAM );
 }
 

@@ -552,6 +552,9 @@ static BYTE hb_nsxItemType( PHB_ITEM pItem )
       case HB_IT_DATE:
          return 'D';
 
+      case HB_IT_TIMESTAMP:
+         return 'T';
+
       case HB_IT_LOGICAL:
          return 'L';
 
@@ -576,6 +579,10 @@ static UCHAR hb_nsxKeyType( USHORT uiType, BYTE * pbTrail )
          *pbTrail = '\0';
          return 'D';
 
+      case NSX_TYPE_TIMESTAMP:
+         *pbTrail = '\0';
+         return 'T';
+
       case NSX_TYPE_LOG:
          *pbTrail = '\0';
          return 'L';
@@ -591,17 +598,28 @@ static UCHAR hb_nsxKeyType( USHORT uiType, BYTE * pbTrail )
 }
 
 /*
+ * convert internal type of key expression to comparable type
+ */
+static UCHAR hb_nsxKeyTypeCmp( UCHAR ucType )
+{
+   return ucType == 'T' ? 'D' : ucType;
+}
+
+/*
  * convert internal type of key expression to NSX (Clipper) one
  */
-static USHORT hb_nsxKeyTypeRaw( UCHAR bType )
+static USHORT hb_nsxKeyTypeRaw( UCHAR ucType )
 {
-   switch( bType )
+   switch( ucType )
    {
       case 'N':
          return NSX_TYPE_DNUM;
 
       case 'D':
          return NSX_TYPE_LDATE;
+
+      case 'T':
+         return NSX_TYPE_TIMESTAMP;
 
       case 'L':
          return NSX_TYPE_LOG;
@@ -630,7 +648,12 @@ static LPKEYINFO hb_nsxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem, ULONG ulRecNo
       pKey = hb_nsxKeyNew( pTag->KeyLength );
 
    if( puiLen )
+   {
       *puiLen = pTag->KeyLength;
+      pKey->mode = NSX_CMP_PREFIX;
+   }
+   else
+      pKey->mode = NSX_CMP_EXACT;
 
    switch( hb_nsxItemType( pItem ) )
    {
@@ -659,7 +682,16 @@ static LPKEYINFO hb_nsxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem, ULONG ulRecNo
          HB_DBL2ORD( &d, pKey->val );
          break;
       case 'D':
-         d = (double) hb_itemGetDL( pItem );
+         d = ( double ) hb_itemGetDL( pItem );
+         HB_DBL2ORD( &d, pKey->val );
+         if( puiLen && pTag->KeyType == 'T' )
+            pKey->mode = NSX_CMP_DATE;
+         break;
+      case 'T':
+         if( pTag->KeyType == 'D' )
+            d = ( double ) hb_itemGetDL( pItem );
+         else
+            d = hb_itemGetTD( pItem );
          HB_DBL2ORD( &d, pKey->val );
          break;
       case 'L':
@@ -712,6 +744,10 @@ static PHB_ITEM hb_nsxKeyGetItem( PHB_ITEM pItem, LPKEYINFO pKey,
          case 'D':
             HB_ORD2DBL( pKey->val, &d );
             pItem = hb_itemPutDL( pItem, ( LONG ) d );
+            break;
+         case 'T':
+            HB_ORD2DBL( pKey->val, &d );
+            pItem = hb_itemPutTD( pItem, d );
             break;
          case 'L':
             pItem = hb_itemPutL( pItem, pKey->val[0] == 'T' );
@@ -820,7 +856,7 @@ static BOOL hb_nsxEvalSeekCond( LPTAGINFO pTag, PHB_ITEM pCondItem )
  * compare two values using Tag conditions (len & type)
  */
 static int hb_nsxValCompare( LPTAGINFO pTag, UCHAR * val1, int len1,
-                             UCHAR * val2, int len2, BOOL fExact )
+                             UCHAR * val2, int len2, int iMode )
 {
    int iLimit, iResult = 0;
 
@@ -844,13 +880,26 @@ static int hb_nsxValCompare( LPTAGINFO pTag, UCHAR * val1, int len1,
       {
          if( len1 > len2 )
             iResult = 1;
-         else if( len1 < len2 && fExact )
+         else if( len1 < len2 && iMode == NSX_CMP_EXACT )
             iResult = -1;
       }
    }
+   else if( iMode == NSX_CMP_DATE && iLimit == 8 )
+   {
+      double d1, d2;
+      long l;
+
+      HB_ORD2DBL( val1, &d1 );
+      HB_ORD2DBL( val2, &d2 );
+      l = ( long ) d1 - ( long ) d2;
+      if( l < 0 )
+         iResult = -1;
+      else if( l > 0 )
+         iResult = 1;
+   }
    else
    {
-      if( iLimit <= 0 || (iResult = memcmp( val1, val2, iLimit )) == 0 )
+      if( iLimit == 0 || (iResult = memcmp( val1, val2, iLimit )) == 0 )
       {
          if( len1 > len2 )
             iResult = 1;
@@ -871,7 +920,7 @@ static BOOL hb_nsxInTopScope( LPTAGINFO pTag, UCHAR * key )
    if( pScope->scopeKeyLen )
    {
       int i = hb_nsxValCompare( pTag, pScope->scopeKey->val, pScope->scopeKeyLen,
-                                 key, pTag->KeyLength, FALSE );
+                                 key, pTag->KeyLength, pScope->scopeKey->mode );
       return pTag->fUsrDescend ? i >= 0 : i <= 0;
    }
    else
@@ -888,7 +937,7 @@ static BOOL hb_nsxInBottomScope( LPTAGINFO pTag, UCHAR * key )
    if( pScope->scopeKeyLen )
    {
       int i = hb_nsxValCompare( pTag, pScope->scopeKey->val, pScope->scopeKeyLen,
-                                key, pTag->KeyLength, FALSE );
+                                key, pTag->KeyLength, pScope->scopeKey->mode );
       return pTag->fUsrDescend ? i <= 0 : i >= 0;
    }
    else
@@ -951,7 +1000,7 @@ static void hb_nsxTagSetScope( LPTAGINFO pTag, USHORT nScope, PHB_ITEM pItem )
    pScopeVal = ( hb_itemType( pItem ) == HB_IT_BLOCK ) ?
                            hb_vmEvalBlock( pItem ) : pItem;
 
-   if( pTag->KeyType == hb_nsxItemType( pScopeVal ) )
+   if( hb_nsxKeyTypeCmp( pTag->KeyType ) == hb_nsxKeyTypeCmp( hb_nsxItemType( pScopeVal ) ) )
    {
       PHB_NSXSCOPE pScope;
       BOOL fTop = ( nScope == 0 );
@@ -1091,7 +1140,7 @@ static void hb_nsxPageCheckKeys( LPPAGEINFO pPage, LPTAGINFO pTag, int iPos, int
             return;
          }
          i = hb_nsxValCompare( pTag, pKeyPrev, pTag->KeyLength,
-                               pKeyVal, pTag->KeyLength, TRUE );
+                               pKeyVal, pTag->KeyLength, NSX_CMP_EXACT );
          if( i == 0 )
             i = ulRecNo > ulPrevRec ? -1 : 1;
 
@@ -1109,7 +1158,7 @@ static void hb_nsxPageCheckKeys( LPPAGEINFO pPage, LPTAGINFO pTag, int iPos, int
                                hb_nsxGetKeyVal( pPage, pTag->KeyLength, u - 1 ),
                                pTag->KeyLength,
                                hb_nsxGetKeyVal( pPage, pTag->KeyLength, u ),
-                               pTag->KeyLength, TRUE );
+                               pTag->KeyLength, NSX_CMP_EXACT );
          if( i == 0 )
             i = hb_nsxGetKeyRec( pPage, pTag->KeyLength, u ) >
                 hb_nsxGetKeyRec( pPage, pTag->KeyLength, u - 1 ) ? -1 : 1;
@@ -1359,7 +1408,7 @@ static LPPAGEINFO hb_nsxPageGetBuffer( LPTAGINFO pTag, ULONG ulPage )
    else
    {
       ULONG ul = pIndex->ulPageLast;
-      do
+      for( ; ; )
       {
          if( ++ul >= pIndex->ulPagesDepth )
             ul = 0;
@@ -1383,7 +1432,6 @@ static LPPAGEINFO hb_nsxPageGetBuffer( LPTAGINFO pTag, ULONG ulPage )
             break;
          }
       }
-      while( TRUE );
    }
 
    if( !*pPagePtr )
@@ -2642,8 +2690,8 @@ static BOOL hb_nsxTagPrevKey( LPTAGINFO pTag )
  * find a key value in page
  */
 static int hb_nsxPageKeyFind( LPTAGINFO pTag, LPPAGEINFO pPage,
-                              UCHAR * key, SHORT keylen, BOOL fLast,
-                              ULONG ulRecNo, BOOL *fStop )
+                              UCHAR * key, SHORT keylen, int mode,
+                              BOOL fLast, ULONG ulRecNo, BOOL *fStop )
 {
    int iBegin, iEnd, iLast, k, i;
    ULONG ulRec;
@@ -2668,7 +2716,7 @@ static int hb_nsxPageKeyFind( LPTAGINFO pTag, LPPAGEINFO pPage,
             break;
          }
          k = hb_nsxValCompare( pTag, key, keylen,
-                               pKeyVal, pTag->KeyLength, FALSE );
+                               pKeyVal, pTag->KeyLength, mode );
          if( k == 0 )
          {
             if( ulRecNo != 0 )
@@ -2706,7 +2754,7 @@ static int hb_nsxPageKeyFind( LPTAGINFO pTag, LPPAGEINFO pPage,
          i = ( iBegin + iEnd ) >> 1;
          k = hb_nsxValCompare( pTag, key, keylen,
                                hb_nsxGetKeyVal( pPage, pTag->KeyLength, i ),
-                               pTag->KeyLength, FALSE );
+                               pTag->KeyLength, mode );
          if( k == 0 )
          {
             if( ulRecNo != 0 )
@@ -2770,7 +2818,8 @@ static BOOL hb_nsxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, USHORT uiLen )
       if( ! pPage )
          return FALSE;
 
-      iKey = hb_nsxPageKeyFind( pTag, pPage, pKey->val, uiLen, fLast, ulRecNo, &fStop );
+      iKey = hb_nsxPageKeyFind( pTag, pPage, pKey->val, uiLen, pKey->mode,
+                                fLast, ulRecNo, &fStop );
       hb_nsxTagSetPageStack( pTag, pPage, iKey );
       if( ( fStop && ulRecNo ) || hb_nsxIsLeaf( pPage ) )
          break;
@@ -2797,7 +2846,7 @@ static BOOL hb_nsxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, USHORT uiLen )
          else
          {
             fStop = hb_nsxValCompare( pTag, pKey->val, uiLen, pTag->CurKeyInfo->val,
-                                      pTag->KeyLength, FALSE ) == 0;
+                                      pTag->KeyLength, pKey->mode ) == 0;
          }
       }
       else if( !fStop && pTag->CurKeyInfo->rec == 0 )
@@ -2811,7 +2860,7 @@ static BOOL hb_nsxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, USHORT uiLen )
          {
             fStop = hb_nsxValCompare( pTag, pKey->val, uiLen,
                                       pTag->CurKeyInfo->val, pTag->KeyLength,
-                                      FALSE ) == 0;
+                                      pKey->mode ) == 0;
          }
       }
    }
@@ -4383,8 +4432,9 @@ static BOOL hb_nsxOrdSkipUnique( LPTAGINFO pTag, LONG lDir )
             fOut = pTag->TagEOF || pTag->TagBOF;
          }
          while( !fOut && hb_nsxValCompare( pTag,
-                                       pTag->CurKeyInfo->val, pTag->KeyLength,
-                                       keyVal, pTag->KeyLength, TRUE ) == 0 );
+                                           pTag->CurKeyInfo->val, pTag->KeyLength,
+                                           keyVal, pTag->KeyLength,
+                                           NSX_CMP_EXACT ) == 0 );
       }
       else if( !fForward && !pArea->fPositioned )
       {
@@ -4556,7 +4606,8 @@ static BOOL hb_nsxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
          if( pTag->fUsrDescend )
             iStop = -iStop;
          if( iFixed && hb_nsxValCompare( pTag, ( UCHAR * ) szPattern, iFixed,
-                             pTag->CurKeyInfo->val, iFixed, FALSE ) == -iStop )
+                                         pTag->CurKeyInfo->val, iFixed,
+                                         NSX_CMP_PREFIX ) == -iStop )
          {
             LPKEYINFO pKey;
             pKey = hb_nsxKeyNew( pTag->KeyLength );
@@ -4564,6 +4615,7 @@ static BOOL hb_nsxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
             pKey->val[ iFixed ] = '\0';
             pKey->rec = pArea->lpCurTag->fUsrDescend ? NSX_MAX_REC_NUM :
                                                        NSX_IGNORE_REC_NUM;
+            pKey->mode = NSX_CMP_PREFIX;
             if( !hb_nsxTagKeyFind( pTag, pKey, iFixed ) )
             {
                if( fForward )
@@ -4594,7 +4646,7 @@ static BOOL hb_nsxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
                }
             }
             if( iFixed && hb_nsxValCompare( pTag, ( UCHAR * ) szPattern, iFixed,
-                             pTag->CurKeyInfo->val, iFixed, FALSE ) == iStop )
+                             pTag->CurKeyInfo->val, iFixed, NSX_CMP_PREFIX ) == iStop )
             {
                break;
             }
@@ -4920,7 +4972,7 @@ static int hb_nsxQuickSortCompare( LPNSXSORTINFO pSort, UCHAR * pKey1, UCHAR * p
 {
    int iLen = pSort->keyLen, i;
 
-   i = hb_nsxValCompare( pSort->pTag, pKey1, iLen, pKey2, iLen, TRUE );
+   i = hb_nsxValCompare( pSort->pTag, pKey1, iLen, pKey2, iLen, NSX_CMP_EXACT );
    if( i == 0 )
       i = ( HB_GET_LE_UINT32( pKey1 + iLen ) < HB_GET_LE_UINT32( pKey2 + iLen ) ) ? -1 : 1;
 
@@ -5206,7 +5258,7 @@ static void hb_nsxSortOrderPages( LPNSXSORTINFO pSort )
             m = ( l + r ) >> 1;
             ulPage = pSort->pSortedPages[ m ];
             pTmp = &pSort->pSwapPage[ ulPage ].pKeyPool[ pSort->pSwapPage[ ulPage ].ulCurKey * ( iLen + 4 ) ];
-            i = hb_nsxValCompare( pSort->pTag, pKey, iLen, pTmp, iLen, TRUE );
+            i = hb_nsxValCompare( pSort->pTag, pKey, iLen, pTmp, iLen, NSX_CMP_EXACT );
             if( i == 0 )
                i = ( ulRec < HB_GET_LE_UINT32( &pTmp[ iLen ] ) ) ? -1 : 1;
             if( i >= 0 )
@@ -5252,7 +5304,7 @@ static BOOL hb_nsxSortKeyGet( LPNSXSORTINFO pSort, UCHAR ** pKeyVal, ULONG *pulR
          m = ( l + r ) >> 1;
          ulPg = pSort->pSortedPages[ m ];
          pTmp = &pSort->pSwapPage[ ulPg ].pKeyPool[ pSort->pSwapPage[ ulPg ].ulCurKey * ( iLen + 4 ) ];
-         i = hb_nsxValCompare( pSort->pTag, pKey, iLen, pTmp, iLen, TRUE );
+         i = hb_nsxValCompare( pSort->pTag, pKey, iLen, pTmp, iLen, NSX_CMP_EXACT );
          if( i == 0 )
             i = ( ulRec < HB_GET_LE_UINT32( &pTmp[ iLen ] ) ) ? -1 : 1;
          if( i > 0 )
@@ -5494,13 +5546,14 @@ static void hb_nsxSortOut( LPNSXSORTINFO pSort )
       if( fUnique )
       {
          if( ulKey != 0 && hb_nsxValCompare( pTag, pSort->pLastKey, iLen,
-                                                   pKeyVal, iLen, TRUE ) == 0 )
+                                             pKeyVal, iLen, NSX_CMP_EXACT ) == 0 )
             continue;
       }
 #ifdef HB_NSX_DEBUG_EXT
       if( ulKey != 0 )
       {
-         int i = hb_nsxValCompare( pTag, pSort->pLastKey, iLen, pKeyVal, iLen, TRUE );
+         int i = hb_nsxValCompare( pTag, pSort->pLastKey, iLen, pKeyVal,
+                                   iLen, NSX_CMP_EXACT );
          if( i == 0 )
             i = ( pSort->ulLastRec < ulRec ) ? -1 : 1;
          if( i > 0 )
@@ -5583,7 +5636,7 @@ static void hb_nsxSortOut( LPNSXSORTINFO pSort )
     */
    fUnique = fUnique && ulLastPage &&
              hb_nsxValCompare( pTag, pSort->pLastKey, iLen,
-                               pKeyVal, iLen, TRUE ) == 0;
+                               pKeyVal, iLen, NSX_CMP_EXACT ) == 0;
 
    hb_nsxSortBufferFlush( pSort );
    hb_nsxSortFree( pSort, FALSE );
@@ -5859,7 +5912,11 @@ static HB_ERRCODE hb_nsxTagCreate( LPTAGINFO pTag, BOOL fReindex )
                   break;
 
                case HB_IT_DATE:
-                  d = (double) hb_itemGetDL( pItem );
+               case HB_IT_TIMESTAMP:
+                  if( pTag->KeyType == 'T' )
+                     d = hb_itemGetTD( pItem );
+                  else
+                     d = ( double ) hb_itemGetDL( pItem );
                   HB_DBL2ORD( &d, szBuffer );
                   hb_nsxSortKeyAdd( pSort, pArea->ulRecNo, szBuffer, 8 );
                   break;
@@ -6071,8 +6128,9 @@ static HB_ERRCODE hb_nsxSeek( NSXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pItem, BO
 
       fLast = pArea->lpCurTag->fUsrDescend ? !fFindLast : fFindLast;
 
-      pKey = hb_nsxKeyPutItem( NULL, pItem, fLast ? NSX_MAX_REC_NUM :
-                        NSX_IGNORE_REC_NUM, pArea->lpCurTag, TRUE, &uiLen );
+      pKey = hb_nsxKeyPutItem( NULL, pItem,
+                               fLast ? NSX_MAX_REC_NUM : NSX_IGNORE_REC_NUM,
+                               pArea->lpCurTag, TRUE, &uiLen );
 
       if( ! hb_nsxTagLockRead( pArea->lpCurTag ) )
       {
@@ -6112,7 +6170,8 @@ static HB_ERRCODE hb_nsxSeek( NSXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pItem, BO
                pArea->fFound = ( ulRec == pArea->ulRecNo ||
                      hb_nsxValCompare( pArea->lpCurTag, pKey->val, uiLen,
                                        pArea->lpCurTag->CurKeyInfo->val,
-                                       pArea->lpCurTag->KeyLength, FALSE ) == 0 );
+                                       pArea->lpCurTag->KeyLength,
+                                       NSX_CMP_PREFIX ) == 0 );
                if( ! pArea->fFound && ! fSoftSeek )
                   fEOF = TRUE;
             }
@@ -6289,7 +6348,8 @@ static HB_ERRCODE hb_nsxGoCold( NSXAREAP pArea )
                   else
                   {
                      if( hb_nsxValCompare( pTag, pKey->val, pTag->KeyLength,
-                          pTag->HotKeyInfo->val, pTag->KeyLength, TRUE ) == 0 )
+                                           pTag->HotKeyInfo->val, pTag->KeyLength,
+                                           NSX_CMP_EXACT ) == 0 )
                      {
                         if( pTag->HotFor ? fAdd : !fAdd )
                            fAdd = fDel = FALSE;
@@ -6594,6 +6654,7 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
    {
       case 'N':
       case 'D':
+      case 'T':
          iLen = 8;
          break;
       case 'L':
