@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-22 22:28 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/source/rtl/tscalart.c
+    ! fixed SVN attributes
+    ; I hope I did correctly
+
 2009-03-22 22:13 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   + harbour/source/rtl/tscalart.c
     + Added scalar TIMESTAMP
