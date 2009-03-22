@@ -306,8 +306,6 @@ void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
 
    VariantClear( pVariant );
 
-   hb_ToOutDebug( "\n\rhb_itemType( pItem ) =%i\n\r", hb_itemType( pItem ) );
-
    switch( hb_itemType( pItem ) )
    {
       case HB_IT_NIL:
@@ -431,8 +429,6 @@ void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
          {
             long lDate = hb_itemGetDL( pItem );
 
-            hb_ToOutDebug( "Sono in HB_IT_DATE" );
-
             if( lDate == 0 )
                pVariant->n1.n2.vt = VT_NULL;
             else if( bByRef )
@@ -453,8 +449,6 @@ void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
       case HB_IT_TIMESTAMP:
          {
             double dDateTime = hb_itemGetTD( pItem );
-
-            hb_ToOutDebug( "Sono in HB_IT_TIMESTAMP" );
 
             if( dDateTime == 0 )
                pVariant->n1.n2.vt = VT_NULL;

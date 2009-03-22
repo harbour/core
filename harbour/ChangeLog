@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-22 22:50 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/contrib/hbwin/win_ole.c
+    * removed debug lines
+
 2009-03-22 22:33 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/source/rtl/tscalart.c
     * fixed header
