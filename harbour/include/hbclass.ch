@@ -590,13 +590,13 @@ DECLARE HBClass ;
       __clsAssocType( __clsInstSuper( @<ClassFuncName>() ), #<type> )
 
 #command ENABLE TYPE CLASS <type: ;
-   ARRAY, BLOCK, CHARACTER, DATE, HASH, LOGICAL, NIL, NUMERIC, SYMBOL, POINTER> ;
+   ARRAY, BLOCK, CHARACTER, DATE, HASH, LOGICAL, NIL, NUMERIC, SYMBOL, TIMESTAMP, POINTER> ;
    [, <typeN: ;
-   ARRAY, BLOCK, CHARACTER, DATE, HASH, LOGICAL, NIL, NUMERIC, SYMBOL, POINTER>] => ;
+   ARRAY, BLOCK, CHARACTER, DATE, HASH, LOGICAL, NIL, NUMERIC, SYMBOL, TIMESTAMP, POINTER>] => ;
       REQUEST HB<type> [, HB<typeN>]
 
 #command ENABLE TYPE CLASS ALL => ;
       REQUEST HBArray, HBBlock, HBCharacter, HBDate, HBHash, ;
-              HBLogical, HBNil, HBNumeric, HBSymbol, HBPointer
+              HBLogical, HBNil, HBNumeric, HBSymbol, HBTimeStamp, HBPointer
 
 #endif /* HB_CLASS_CH_ */

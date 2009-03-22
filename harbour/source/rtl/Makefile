@@ -158,6 +158,7 @@ C_SOURCES=\
 	tscalarn.c   \
 	tscalarp.c   \
 	tscalars.c   \
+	tscalart.c   \
 	tscalaru.c   \
 	type.c       \
 	val.c        \

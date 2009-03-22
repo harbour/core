@@ -306,6 +306,8 @@ void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
 
    VariantClear( pVariant );
 
+   hb_ToOutDebug( "\n\rhb_itemType( pItem ) =%i\n\r", hb_itemType( pItem ) );
+
    switch( hb_itemType( pItem ) )
    {
       case HB_IT_NIL:
@@ -429,6 +431,8 @@ void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
          {
             long lDate = hb_itemGetDL( pItem );
 
+            hb_ToOutDebug( "Sono in HB_IT_DATE" );
+
             if( lDate == 0 )
                pVariant->n1.n2.vt = VT_NULL;
             else if( bByRef )
@@ -442,6 +446,30 @@ void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
             {
                pVariant->n1.n2.vt = VT_DATE;
                pVariant->n1.n2.n3.dblVal = (double) ( lDate - 2415019 );
+            }
+         }
+         break;
+
+      case HB_IT_TIMESTAMP:
+         {
+            double dDateTime = hb_itemGetTD( pItem );
+
+            hb_ToOutDebug( "Sono in HB_IT_TIMESTAMP" );
+
+            if( dDateTime == 0 )
+               pVariant->n1.n2.vt = VT_NULL;
+
+            else if( bByRef )
+            {
+               hb_itemPutND( pItem, ( dDateTime - (double) 2415019 ) );
+
+               pVariant->n1.n2.vt = VT_BYREF | VT_DATE;
+               pVariant->n1.n2.n3.pdblVal = &( pItem->item.asDouble.value );
+            }
+            else
+            {
+               pVariant->n1.n2.vt = VT_DATE;
+               pVariant->n1.n2.n3.dblVal = ( dDateTime - (double) 2415019 );
             }
          }
          break;
@@ -803,11 +831,11 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
                  break;
 
                case VT_BYREF | VT_DATE:
-                 hb_itemPutDL( pItem, ( long ) ( *( pVariant->n1.n2.n3.pdblVal ) ) + 2415019 );
+                 hb_itemPutTD( pItem, *pVariant->n1.n2.n3.pdblVal + ( double ) 2415019 );
                  break;
 
                case VT_DATE:
-                 hb_itemPutDL( pItem, ( long ) ( pVariant->n1.n2.n3.dblVal ) + 2415019 );
+                 hb_itemPutTD( pItem, pVariant->n1.n2.n3.dblVal + ( double ) 2415019 );
                  break;
 
                case VT_BYREF | VT_EMPTY:
@@ -1185,11 +1213,11 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
       }
 
       case VT_DATE | VT_BYREF:
-         hb_itemPutDL( pItem, ( long ) ( *pVariant->n1.n2.n3.pdblVal ) + 2415019 );
+         hb_itemPutTD( pItem, *pVariant->n1.n2.n3.pdblVal + ( double ) 2415019 );
          break;
 
       case VT_DATE:
-         hb_itemPutDL( pItem, ( long ) ( pVariant->n1.n2.n3.dblVal ) + 2415019 );
+         hb_itemPutTD( pItem, pVariant->n1.n2.n3.dblVal + ( double ) 2415019 );
          break;
 
       case VT_EMPTY | VT_BYREF:

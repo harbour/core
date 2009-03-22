@@ -82,6 +82,7 @@ METHOD AsString() CLASS ScalarObject
    CASE "M"
    CASE "C" ; RETURN Self
    CASE "D" ; RETURN DToC( Self )
+   CASE "T" ; RETURN HB_TToC( Self )
    CASE "H" ; RETURN "{ ... => ... }"
    CASE "L" ; RETURN iif( Self, ".T.", ".F." )
    CASE "N" ; RETURN hb_NToS( Self )
@@ -98,6 +99,7 @@ METHOD AsExpStr() CLASS ScalarObject
    CASE "M"
    CASE "C" ; RETURN '"' + Self + '"'
    CASE "D" ; RETURN 'CToD("' + DToC( Self ) + '")'
+   CASE "T" ; RETURN 'HB_CToT("' + HB_TToC( Self ) + '")'
    ENDSWITCH
 
    RETURN ::AsString()
@@ -271,6 +273,9 @@ METHOD AsExpStr() CLASS Character
 
 CREATE CLASS Date INHERIT HBScalar FUNCTION __HBDate
 
+   METHOD Year()
+   METHOD Month()
+   METHOD Day()
    METHOD AsString()
    METHOD AsExpStr()
 
@@ -281,6 +286,63 @@ METHOD AsString() CLASS Date
 
 METHOD AsExpStr() CLASS Date
    RETURN 'CToD("' + ::AsString() + '")'
+
+METHOD Year() CLASS Date
+   RETURN Year( Self )
+
+METHOD Month() CLASS Date
+   RETURN Month( Self )
+
+METHOD Day() CLASS Date
+   RETURN Day( Self )
+
+/* -------------------------------------------- */
+
+CREATE CLASS TimeStamp INHERIT HBScalar FUNCTION __HBTimeStamp
+
+   METHOD Date()
+   METHOD Time()
+   METHOD Year()
+   METHOD Month()
+   METHOD Day()
+   METHOD Hour()
+   METHOD Minute()
+   METHOD Sec()
+
+   METHOD AsString()
+   METHOD AsExpStr()
+
+ENDCLASS
+
+METHOD AsString() CLASS TimeStamp
+   RETURN HB_TTOS( Self )
+
+METHOD AsExpStr() CLASS TimeStamp
+   RETURN 'HB_STOT("' + ::AsString() + '")'
+
+METHOD Date() CLASS TimeStamp
+   RETURN HB_TTOC( Self, NIL, "" )
+
+METHOD Time() CLASS TimeStamp
+   RETURN HB_TTOC( Self, "", "HH:MM:SS" )
+
+METHOD Year() CLASS TimeStamp
+   RETURN Year( Self )
+
+METHOD Month() CLASS TimeStamp
+   RETURN Month( Self )
+
+METHOD Day() CLASS TimeStamp
+   RETURN Day( Self )
+
+METHOD Hour() CLASS TimeStamp
+   RETURN HB_HOUR( Self )
+
+METHOD Minute() CLASS TimeStamp
+   RETURN HB_MINUTE( Self )
+
+METHOD Sec() CLASS TimeStamp
+   RETURN HB_SEC( Self )
 
 /* -------------------------------------------- */
 

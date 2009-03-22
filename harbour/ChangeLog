@@ -8,6 +8,21 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-22 22:13 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  + harbour/source/rtl/tscalart.c
+    + Added scalar TIMESTAMP
+  * harbour/source/rtl/Makefile
+    + tscalart.c added
+  * harbour/include/hbclass.ch
+    * added HBTIMESTAMP scalar type to ENABLE TYPE CLASS
+  * harbour/source/rtl/tscalar.prg
+    + added scalar class TIMESTAMP with methods to extract
+      parts from Timestamp:
+      Date(), Time(), Year(), Month(), Day(), Hour(), Minute(), Sec()
+    * added methods Year(), Month(), Day() to Date scalar class
+  * harbour/contrib/hbwin/win_ole.c
+    * updated for new Timestamp type
+
 2009-03-22 21:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/valtoexp.prg
     + added timestamp support to hb_valToExp() and hb_cStr() functions
