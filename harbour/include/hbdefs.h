@@ -585,8 +585,10 @@ typedef unsigned long HB_COUNTER;
 /* type for memory pointer diff */
 #if defined( HB_OS_WIN_64 )
    typedef LONGLONG HB_PTRDIFF;
+   typedef ULONGLONG HB_PTRUINT;
 #else
    typedef long HB_PTRDIFF;
+   typedef unsigned long HB_PTRUINT;
 #endif
 
 #ifdef HB_LONG_LONG_OFF

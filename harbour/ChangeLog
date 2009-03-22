@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-22 18:16 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+    * added alternative asm inline function to __MINGW32__ builds which
+      operates on 64bit pointers. It's used when __MINGW64__ macro is
+      defined. I do not know if such macro existing in 64bit MinGW version.
+
+  * harbour/include/hbdefs.h
+    + added HB_PTRUINT
+
+  * harbour/source/common/hbprintf.c
+    * used HB_PTRUINT for %p casting
+
 2009-03-21 09:01 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbqt/Makefile
     + Added new files.

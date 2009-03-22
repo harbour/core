@@ -213,12 +213,21 @@ typedef struct
             static __inline__  __attribute__ ((pure, malloc)) void * hb_stack_ptr_from_tls( void )
             {
                void * p;
+#              if defined( __MINGW64__ )
+               __asm__ (
+                  "movq  %%fs:(0x18), %0\n\t"
+                  "movq  0x0e10(%0,%1,4), %0\n\t"
+                  :"=a" (p)
+                  :"c" (hb_stack_key)
+               );
+#              else
                __asm__ (
                   "movl  %%fs:(0x18), %0\n\t"
                   "movl  0x0e10(%0,%1,4), %0\n\t"
                   :"=a" (p)
                   :"c" (hb_stack_key)
                );
+#              endif
                return p;
             }
 #           define hb_stack_ptr  ( ( PHB_STACK ) hb_stack_ptr_from_tls() )
