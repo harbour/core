@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-22 21:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/valtoexp.prg
+    + added timestamp support to hb_valToExp() and hb_cStr() functions
+
 2009-03-22 18:16 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbstack.h
     * added alternative asm inline function to __MINGW32__ builds which
