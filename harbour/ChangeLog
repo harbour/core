@@ -8,6 +8,12 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-22 22:33 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/source/rtl/tscalart.c
+    * fixed header
+    ; copyright leaved to Przemek as I have only changed function name, but
+      the code is the same
+
 2009-03-22 22:28 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/source/rtl/tscalart.c
     ! fixed SVN attributes

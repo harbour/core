@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- *    Date scalar class function
+ *    Timestamp scalar class function
  *
- * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
