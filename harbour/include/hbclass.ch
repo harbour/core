@@ -571,6 +571,9 @@ DECLARE HBClass ;
    #xcommand SYNC METHOD <MethodName> [<decl,...>] => METHOD <MethodName> [<decl>] SYNC
    #xcommand SYNC CLASS METHOD <MethodName> [<decl,...>] => CLASSMETHOD <MethodName> [<decl>] SYNC
 
+   #xcommand METHOD <!className!>:<!methodName!>[([<params,...>])] => ;
+             METHOD <methodName>( <params> ) CLASS <className>
+
 #endif /* HB_CLS_XPP */
 
 /* Class datas and messages - we do not support real class messages yet */

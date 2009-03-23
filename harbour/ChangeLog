@@ -8,6 +8,25 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-23 20:46 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    + added support for xBase++ method code declaration by
+         METHOD <clasName>:<methodName>[ ( <parameters,...> ) ]
+      f.e.:
+         METHOD TBrowse:Configure( nMode )
+
+  * harbour/source/rtl/tthreadx.prg
+  * harbour/source/rtl/thfuncx.prg
+    ! fixed 0 timeout parameter in some xBase++ compatible functions
+      In xBase++ timeout 0 means wait forever
+
+  * harbour/tests/speedtst.prg
+    * update to compile with MT support using xBase++ MT .prg API.
+      I tested it only using Harbour by compiling this code with
+      -D__XPP__ macro and it works using only xBase++ MT .prg API
+      we are emulating.
+      Please make some tests with real xBase++ compiler.
+
 2009-03-23 17:04 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/itemapi.c
   * harbour/source/common/hbprintf.c

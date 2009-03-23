@@ -146,7 +146,9 @@ EXPORTED:
 ENDCLASS
 
 METHOD new( nMaxStackSize ) CLASS TTHREAD
-   ::maxStackSize := nMaxStackSize
+   IF ISNUMBER( nMaxStackSize )
+      ::maxStackSize := nMaxStackSize
+   ENDIF
    ::Init()
    RETURN Self
 
@@ -233,7 +235,8 @@ METHOD synchronize( nTimeOut ) CLASS TTHREAD
 
    IF hb_threadSelf() != pThreadID
       RETURN hb_threadWait( pThreadID, ;
-                            iif( ISNUMBER( nTimeOut ), nTimeOut / 100, ) )
+                            iif( ISNUMBER( nTimeOut ) .AND. nTimeOut != 0, ;
+                            nTimeOut / 100, ) )
    ENDIF
    RETURN .F.
 

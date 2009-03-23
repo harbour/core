@@ -11,6 +11,17 @@
  *
  */
 
+/* Harbour MT functions used int hit test */
+/*
+#xtranslate hb_mutexSubscribe(      => mt_mutexSubscribe(
+#xtranslate hb_mutexNotify(         => mt_mutexNotify(
+#xtranslate hb_mutexCreate(         => mt_mutexCreate(
+#xtranslate hb_threadOnce(          => mt_threadOnce(
+#xtranslate hb_threadStart(         => mt_threadStart(
+#xtranslate hb_threadJoin(          => mt_threadJoin(
+#xtranslate hb_threadWaitForAll(    => mt_threadWaitForAll(
+*/
+
 #define N_TESTS 56
 #define N_LOOPS 1000000
 #define ARR_LEN 16
@@ -33,10 +44,6 @@
 
 #ifdef __XPP__
    #define __NO_OBJ_ARRAY__
-   /* xBase++ version for MT performance testing is not ready yet */
-   #ifndef __ST__
-      #define __ST__
-   #endif
 #endif
 
 #ifdef __CLIP__
@@ -468,10 +475,11 @@ nTimeTotST := nTimeTotMT := 0
 
 #ifdef __MT__
    if lScale
+      aThreads := array( nMT )
       mtxJobs := hb_mutexCreate()
       mtxResults := hb_mutexCreate()
       for i:=1 to nMT
-         hb_threadStart( "thTestScale", mtxJobs, mtxResults )
+         aThreads[ i ] := hb_threadStart( "thTestScale", mtxJobs, mtxResults )
       next
       for i:=1 to N_TESTS
          cTest := strzero( i, 3 )
@@ -506,7 +514,7 @@ nTimeTotST := nTimeTotMT := 0
       for i:=1 to nMT
          hb_mutexNotify( mtxJobs, NIL )
       next
-      hb_threadWaitForAll()
+      hb_threadWaitForAll( aThreads )
    elseif nMT < 0
       aThreads := array( N_TESTS )
       for i:=1 to N_TESTS
@@ -521,10 +529,11 @@ nTimeTotST := nTimeTotMT := 0
          endif
       next
    elseif nMT > 0
+      aThreads := array( nMT )
       aResults := array( N_TESTS )
       mtxJobs := hb_mutexCreate()
       for i:=1 to nMT
-         hb_threadStart( "thTest", mtxJobs, aResults )
+         aThreads[ i ] := hb_threadStart( "thTest", mtxJobs, aResults )
       next
       for i:=1 to N_TESTS
          if !strzero( i, 3 ) $ cExclude
@@ -534,7 +543,7 @@ nTimeTotST := nTimeTotMT := 0
       for i:=1 to nMT
          hb_mutexNotify( mtxJobs, NIL )
       next
-      hb_threadWaitForAll()
+      hb_threadWaitForAll( aThreads )
       for i:=1 to N_TESTS
          if aResults[ i ] != NIL
             ? dsp_result( aResults[ i ], nLoopOverHead )
@@ -662,19 +671,19 @@ return
 
 
 #ifdef __CLIPPER__
-   function hb_mtvm()
+   static function hb_mtvm()
    return .f.                 /* Clipper does not support MT */
 #endif
 #ifdef __CLIP__
-   function hb_mtvm()
+   static function hb_mtvm()
    return .t.                 /* CLIP always uses VM with MT support */
 #endif
 #ifdef __XPP__
-   function hb_mtvm()
+   static function hb_mtvm()
    return .t.                 /* xBase++ always uses VM with MT support */
 #endif
 #ifdef __XHARBOUR__
-   function hb_mtvm()
+   static function hb_mtvm()
    return hb_multiThread()    /* check for MT support in xHarbour VM */
 #endif
 
@@ -682,7 +691,7 @@ return
 #ifndef __MT__
 
    /* trivial single thread version of once execution */
-   function hb_threadOnce( xOnceControl, bAction )
+   static function hb_threadOnce( xOnceControl, bAction )
       local lFirstCall := .f.
       if xOnceControl == NIL
          if bAction != NIL
@@ -713,7 +722,7 @@ return
    //#define _DUMY_XHB_TEST_
 
 
-   function hb_mutexSubscribe( mtx, nTimeOut, xSubscribed )
+   static function hb_mutexSubscribe( mtx, nTimeOut, xSubscribed )
       local lSubscribed
       if valtype( nTimeOut ) == "N"
          nTimeOut := round( nTimeOut * 1000, 0 )
@@ -724,7 +733,7 @@ return
       endif
    return lSubscribed
 
-   function hb_mutexNotify( mtx, xValue )
+   static function hb_mutexNotify( mtx, xValue )
       Notify( mtx, xValue )
    return nil
 
@@ -734,7 +743,7 @@ return
     * return value
     */
 
-   function hb_threadStart( ... )
+   static function hb_threadStart( ... )
       local thId
       thId := StartThread( @threadFirstFunc(), hb_aParams() )
       /* Just like in JoinThread() the same race condition exists in
@@ -746,7 +755,7 @@ return
    return GetThreadId( thId )
 #endif
 
-   function hb_threadJoin( thId, xResult )
+   static function hb_threadJoin( thId, xResult )
       xResult := results( thId )
    return .t.
 
@@ -784,11 +793,11 @@ return
       endif
    return xResult
 
-   function hb_threadWaitForAll()
+   static function hb_threadWaitForAll()
       WaitForThreads()
    return nil
 
-   function hb_threadOnce( xOnceControl, bAction )
+   static function hb_threadOnce( xOnceControl, bAction )
       static s_mutex
       local lFirstCall := .f.
       if s_mutex == NIL
@@ -810,7 +819,7 @@ return
    init proc once_init()
       /* set workareas local to thread */
       set workarea private
-      /* initialize mutex in hb_trheadDoOnce() */
+      /* initialize mutex in hb_threadOnce() */
       hb_threadOnce()
       /* initialize error object to reduce possible crashes when two
        * threads will try to create new error class simultaneously.
@@ -822,27 +831,123 @@ return
 #endif /* __XHARBOUR__ */
 
 
+#ifdef __XPP__
+
+#ifdef __HARBOUR__
+   /* for testing. Harbour also can use xBase++ API in this code */
+   #include "hbclass.ch"
+#endif
+
+   INIT PROCEDURE once_init()
+      /* initialize sync object hb_threadOnce() */
+      hb_threadOnce()
+      RETURN
+
+   CLASS Notifier
+      PROTECTED:
+         VAR aQueue
+         VAR oSignal
+      EXPORTED:
+         METHOD init
+         SYNC METHOD notify
+         SYNC METHOD subscribe
+   ENDCLASS
+
+   METHOD Notifier:init
+      ::aQueue := {}
+      ::oSignal := Signal():new()
+      RETURN self
+
+   METHOD Notifier:notify( xValue )
+      AAdd( ::aQueue, xValue )
+      ::oSignal:signal()
+      RETURN self
+
+   METHOD Notifier:subscribe()
+      LOCAL xResult
+      WHILE Len( ::aQueue ) == 0
+         ::oSignal:wait()
+      ENDDO
+      xResult := ::aQueue[ 1 ]
+      ADel( ::aQueue, 1 )
+      ASize( ::aQueue, Len( ::aQueue ) - 1 )
+      RETURN xResult
+
+
+   STATIC FUNCTION hb_mutexSubscribe( mtx, nTimeOut, xResult )
+      /* Ignore timeout - it's not used in this test */
+      xResult := mtx:subscribe()
+      RETURN .T.
+
+   STATIC FUNCTION hb_mutexNotify( mtx, xValue )
+      RETURN mtx:notify( xValue )
+
+   STATIC FUNCTION hb_mutexCreate()
+      RETURN Notifier():new()
+
+
+   CLASS Once
+      EXPORTED:
+         SYNC METHOD onceDo
+   ENDCLASS
+
+   METHOD Once:onceDo( xOnceControl, bAction )
+      LOCAL lFirstCall := .f.
+      IF xOnceControl == NIL
+         IF bAction != NIL
+            Eval( bAction )
+         ENDIF
+         xOnceControl := .t.
+         lFirstCall := .t.
+      ENDIF
+      RETURN lFirstCall
+
+   STATIC FUNCTION hb_threadOnce( xOnceControl, bAction )
+      STATIC s_oObject
+      IF s_oObject == NIL
+         s_oObject := Once():new()
+      ENDIF
+      RETURN s_oObject:onceDo( @xOnceControl, bAction )
+
+   STATIC FUNCTION hb_threadStart( cFunc, xPar1, xPar2, xPar3 )
+      LOCAL oThread
+      oThread := Thread():new()
+      oThread:start( cFunc, xPar1, xPar2, xPar3 )
+      RETURN oThread
+
+   STATIC FUNCTION hb_threadJoin( oThread, xResult )
+      oThread:synchronize( 0 )
+      xResult := oThread:result
+      RETURN .T.
+
+   STATIC FUNCTION hb_threadWaitForAll( aThreads )
+      ThreadWaitAll( aThreads )
+      RETURN NIL
+
+#endif /* __XPP__ */
+
+
 /*
-   function hb_threadStart( cFunc, xPar1, xPar2, xPar3 )
+   static function hb_threadStart( cFunc, xPar1, xPar2, xPar3 )
    return nil
 
-   function hb_threadJoin( thId, xResult )
+   static function hb_threadJoin( thId, xResult )
    return nil
 
-   function hb_mutexCreate()
+   static function hb_mutexCreate()
    return nil
 
-   function hb_mutexSubscribe()
+   static function hb_mutexSubscribe()
    return nil
-   function hb_mutexLock()
+   static function hb_mutexLock()
    return nil
-   function hb_mutexUnlock()
+   static function hb_mutexUnlock()
    return nil
-   function hb_mutexNotify()
+   static function hb_mutexNotify()
    return nil
-   function hb_threadWaitForAll()
+   static function hb_threadWaitForAll()
    return nil
-   function hb_mtvm()
+   static function hb_mtvm()
    return .f.
 */
 
