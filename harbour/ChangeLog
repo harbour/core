@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-23 21:42 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbodbc/odbc.c
+  * harbour/contrib/hbtpathy/tpwin.c
+  * harbour/contrib/hbwin/win_ole.c
+  * harbour/contrib/hbwin/win_regc.c
+    ! casting
+
 2009-03-23 20:46 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbclass.ch
     + added support for xBase++ method code declaration by

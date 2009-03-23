@@ -75,7 +75,7 @@ HB_FUNC( P_INITPORTSPEED )
 
    if( BuildCommDCB( lpValues, &dcb ) )
    {
-      if( SetCommState( ( HANDLE ) hb_parnint( 1 ), &dcb ) )
+      if( SetCommState( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), &dcb ) )
       {
          COMMTIMEOUTS timeouts;
 
@@ -86,7 +86,7 @@ HB_FUNC( P_INITPORTSPEED )
          timeouts.WriteTotalTimeoutMultiplier = 0;
          timeouts.WriteTotalTimeoutConstant = 0;
 
-         hb_retnl( SetCommTimeouts( ( HANDLE ) hb_parnint( 1 ), &timeouts ) ? 0 : -1 );
+         hb_retnl( SetCommTimeouts( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), &timeouts ) ? 0 : -1 );
       }
       else
          hb_retnl( -1 );
@@ -105,7 +105,7 @@ HB_FUNC( P_READPORT )
    BOOL bRet;
 
    memset( &Overlapped, 0, sizeof( OVERLAPPED ) );
-   bRet = ReadFile( ( HANDLE ) hb_parnint( 1 ), Buffer, sizeof( Buffer ), &nRead, &Overlapped );
+   bRet = ReadFile( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), Buffer, sizeof( Buffer ), &nRead, &Overlapped );
    hb_retclen( bRet ? Buffer : NULL, nRead );
 }
 
@@ -116,7 +116,7 @@ HB_FUNC( P_WRITEPORT )
    BOOL bRet;
 
    memset( &Overlapped, 0, sizeof( OVERLAPPED ) );
-   bRet = WriteFile( ( HANDLE ) hb_parnint( 1 ), hb_parcx( 2 ), hb_parclen( 2 ), &nWritten, &Overlapped );
+   bRet = WriteFile( ( HANDLE ) ( HB_PTRUINT ) hb_parnint( 1 ), hb_parcx( 2 ), hb_parclen( 2 ), &nWritten, &Overlapped );
    hb_retnl( bRet ? ( long ) nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
 }
 

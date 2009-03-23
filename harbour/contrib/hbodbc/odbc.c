@@ -438,7 +438,7 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @ cErrorClass, @ nType, @ cErrorMsg */
 #endif
    hb_retni( SQLError( ( HENV ) hb_parptr( 1 ),
                        ( HDBC ) hb_parptr( 2 ),
-                       ( HSTMT ) hb_parnint( 3 ),
+                       ( HSTMT ) ( HB_PTRUINT ) hb_parnint( 3 ),
                        buffer,
                        &lError,
                        szErrorMsg,
@@ -499,7 +499,7 @@ HB_FUNC( SQLSETCONNECTOPTION ) /* hDbc, nOption, uOption */
 #if (ODBCVER >= 0x0300)
    hb_retni( SQLSetConnectAttr( ( SQLHDBC ) hb_parptr( 1 ),
                                 ( SQLINTEGER ) hb_parnl( 2 ),
-                                ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) hb_parnint( 3 ),
+                                ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
                                 ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
 #else
    hb_retni( SQLSetConnectOption( ( HDBC ) hb_parptr( 1 ),
@@ -513,7 +513,7 @@ HB_FUNC( SQLSETSTMTOPTION ) /* hStmt, nOption, uOption )  --> nRetCode */
 #if (ODBCVER >= 0x0300)
    hb_retni( SQLSetStmtAttr( ( SQLHSTMT ) hb_parptr( 1 ),
                              ( SQLINTEGER ) hb_parnl( 2 ),
-                             ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) hb_parnint( 3 ),
+                             ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
                              ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
 #else
    hb_retni( SQLSetStmtOption( ( SQLHSTMT ) hb_parptr( 1 ),

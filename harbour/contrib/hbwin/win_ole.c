@@ -485,7 +485,7 @@ void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
                hb_vmPush( pItem );
                hb_vmSend( 0 );
 
-               pDisp = ( IDispatch * ) hb_parnint( -1 );
+               pDisp = ( IDispatch * ) ( HB_PTRUINT ) hb_parnint( -1 );
                pDisp->lpVtbl->AddRef( pDisp );
 
                /*HB_TRACE(HB_TR_INFO, ("Dispatch: in: %s(%i)%ld\n", pDisp, __FILE__, __LINE__));*/
@@ -585,7 +585,7 @@ ItemToVariant_StringArray:
                      break;
 
                   default:
-                     HB_TRACE(HB_TR_INFO, ("Unexpected VT type %p in: %s(%i)!\n", ( void * ) ( HB_PTRDIFF ) pVariant->n1.n2.vt, __FILE__, __LINE__));
+                     HB_TRACE(HB_TR_INFO, ("Unexpected VT type %p in: %s(%i)!\n", ( void * ) ( HB_PTRUINT ) pVariant->n1.n2.vt, __FILE__, __LINE__));
                }
 
                break;
@@ -781,7 +781,7 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
                     /*TOleAuto():New( nDispatch )*/
                     hb_vmPushDynSym( s_pSym_New );
                     hb_itemPushForward( s_pOleAuto );
-                    hb_vmPushNumInt( ( HB_PTRDIFF ) pDisp );
+                    hb_vmPushNumInt( ( HB_PTRUINT ) pDisp );
                     hb_vmSend( 1 );
 
                     hb_itemForwardValue( pItem, hb_stackReturnItem() );
@@ -862,7 +862,7 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
                  }
                  else
                  {
-                    HB_TRACE(HB_TR_INFO, ("Unexpected type %p in: %s(%i)!\n", ( void * ) ( HB_PTRDIFF ) pVariant->n1.n2.vt, __FILE__, __LINE__));
+                    HB_TRACE(HB_TR_INFO, ("Unexpected type %p in: %s(%i)!\n", ( void * ) ( HB_PTRUINT ) pVariant->n1.n2.vt, __FILE__, __LINE__));
                  }
             }
          }
@@ -870,7 +870,7 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
          {
             if( pVariant->n1.n2.vt & VT_BYREF )
             {
-               HB_TRACE(HB_TR_INFO, ("Unexpected type %p in: %s(%i)!\n", ( void * ) ( HB_PTRDIFF ) pVariant->n1.n2.vt, __FILE__, __LINE__));
+               HB_TRACE(HB_TR_INFO, ("Unexpected type %p in: %s(%i)!\n", ( void * ) ( HB_PTRUINT ) pVariant->n1.n2.vt, __FILE__, __LINE__));
             }
          }
 
@@ -1111,7 +1111,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
             /*TOleAuto():New( nDispatch )*/
             hb_vmPushDynSym( s_pSym_New );
             hb_itemPushForward( pOleAuto );
-            hb_vmPushNumInt( ( HB_PTRDIFF ) pDisp );
+            hb_vmPushNumInt( ( HB_PTRUINT ) pDisp );
             hb_vmSend( 1 );
 
             /* If retrieved from IUnknown than doubly added! */
@@ -1266,7 +1266,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
          }
          else
          {
-            HB_TRACE(HB_TR_INFO, ("Unexpected type %p in: %s(%i)!\n", ( void * ) ( HB_PTRDIFF ) pVariant->n1.n2.vt, __FILE__, __LINE__));
+            HB_TRACE(HB_TR_INFO, ("Unexpected type %p in: %s(%i)!\n", ( void * ) ( HB_PTRUINT ) pVariant->n1.n2.vt, __FILE__, __LINE__));
             return E_FAIL;
          }
    }
@@ -1358,7 +1358,7 @@ static char * Ole2TxtError( void )
       case MK_E_UNAVAILABLE:         return "MK_E_UNAVAILABLE";
    }
 
-   HB_TRACE(HB_TR_INFO, ("TOleAuto Error %p\n", ( void * ) ( HB_PTRDIFF ) s_nOleError));
+   HB_TRACE(HB_TR_INFO, ("TOleAuto Error %p\n", ( void * ) ( HB_PTRUINT ) s_nOleError));
 
    return "Unknown error";
 }
@@ -1374,7 +1374,7 @@ HB_FUNC( MESSAGEBOX )
 {
    LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    LPTSTR lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   HWND hWnd = ISNUM( 1 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) :
+   HWND hWnd = ISNUM( 1 ) ? ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ) :
                             ( HWND ) hb_parptr( 1 );
    hb_retni( MessageBox( hWnd, lpStr1, lpStr2, hb_parni( 4 ) ) );
    HB_TCHAR_FREE( lpStr1 );
@@ -1444,7 +1444,7 @@ HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID [, cIID ] [, cLicense ] ) */
       }
    }
 
-   hb_retnint( ( HB_PTRDIFF ) pDisp );
+   hb_retnint( ( HB_PTRUINT ) pDisp );
 }
 
 /* ----------------------------------------------------------------------- */
@@ -1497,7 +1497,7 @@ HB_FUNC( GETOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
          pUnk->lpVtbl->Release( pUnk );
 
          if( SUCCEEDED( s_nOleError ) )
-            hb_retnint( ( HB_PTRDIFF ) pDisp );
+            hb_retnint( ( HB_PTRUINT ) pDisp );
       }
    }
 }
@@ -1505,7 +1505,7 @@ HB_FUNC( GETOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 /* ----------------------------------------------------------------------- */
 HB_FUNC( OLEADDREF ) /* ( hOleObject, szMethodName, uParams... ) */
 {
-   IDispatch * pDisp = ( IDispatch * ) hb_parnint( 1 );
+   IDispatch * pDisp = ( IDispatch * ) ( HB_PTRUINT ) hb_parnint( 1 );
 
    /*HB_TRACE(HB_TR_INFO, ("OleAddRef( %p )\n", pDisp));*/
 
@@ -1517,7 +1517,7 @@ HB_FUNC( OLEADDREF ) /* ( hOleObject, szMethodName, uParams... ) */
 /* ----------------------------------------------------------------------- */
 HB_FUNC( OLERELEASEOBJECT ) /* ( hOleObject, szMethodName, uParams... ) */
 {
-   IDispatch * pDisp = ( IDispatch * ) hb_parnint( 1 );
+   IDispatch * pDisp = ( IDispatch * ) ( HB_PTRUINT ) hb_parnint( 1 );
 
    /*HB_TRACE(HB_TR_INFO, ("OleReleaseObject( %p )\n", pDisp));*/
 
@@ -1667,7 +1667,7 @@ HB_FUNC( TOLEAUTO_OLEVALUE )
       hb_vmPush( hb_stackSelfItem() );
       hb_vmSend( 0 );
 
-      pDisp = ( IDispatch * ) hb_parnint( -1 );
+      pDisp = ( IDispatch * ) ( HB_PTRUINT ) hb_parnint( -1 );
 
       VariantClear( &s_RetVal );
 
@@ -1694,7 +1694,7 @@ HB_FUNC( TOLEAUTO__OLEVALUE )
       hb_vmPush( hb_stackSelfItem() );
       hb_vmSend( 0 );
 
-      pDisp = ( IDispatch * ) hb_parnint( -1 );
+      pDisp = ( IDispatch * ) ( HB_PTRUINT ) hb_parnint( -1 );
 
       VariantClear( &s_RetVal );
 
@@ -1722,7 +1722,7 @@ HB_FUNC( TOLEAUTO_OLENEWENUMERATOR ) /* ( hOleObject, szMethodName, uParams... )
    hb_vmPush( hb_stackSelfItem() );
    hb_vmSend( 0 );
 
-   pDisp = ( IDispatch * ) hb_parnint( -1 );
+   pDisp = ( IDispatch * ) ( HB_PTRUINT ) hb_parnint( -1 );
 
    VariantClear( &s_RetVal );
 
@@ -1805,7 +1805,7 @@ HB_FUNC( TOLEAUTO_INVOKE )
    hb_vmPush( hb_stackSelfItem() );
    hb_vmSend( 0 );
 
-   pDisp = ( IDispatch * ) hb_parnint( -1 );
+   pDisp = ( IDispatch * ) ( HB_PTRUINT ) hb_parnint( -1 );
 
    if( szName && SUCCEEDED( OleGetID( pDisp, szName, &DispID, NULL ) ) )
    {
@@ -1829,7 +1829,7 @@ HB_FUNC( TOLEAUTO_SET )
    hb_vmPushDynSym( s_pSym_hObj );
    hb_vmPush( hb_stackSelfItem() );
    hb_vmSend( 0 );
-   pDisp = ( IDispatch * ) hb_parnint( -1 );
+   pDisp = ( IDispatch * ) ( HB_PTRUINT ) hb_parnint( -1 );
 
    if( szName && SUCCEEDED( OleGetID( pDisp, szName, &DispID, NULL ) ) )
    {
@@ -1853,7 +1853,7 @@ HB_FUNC( TOLEAUTO_GET )
    hb_vmPushDynSym( s_pSym_hObj );
    hb_vmPush( hb_stackSelfItem() );
    hb_vmSend( 0 );
-   pDisp = ( IDispatch * ) hb_parnint( -1 );
+   pDisp = ( IDispatch * ) ( HB_PTRUINT ) hb_parnint( -1 );
 
    if( szName && SUCCEEDED( OleGetID( pDisp, szName, &DispID, NULL ) ) )
    {
@@ -1880,7 +1880,7 @@ HB_FUNC( TOLEAUTO_ONERROR )
    hb_vmPushDynSym( s_pSym_hObj );
    hb_vmPush( hb_stackSelfItem() );
    hb_vmSend( 0 );
-   pDisp = ( IDispatch * ) hb_parnint( -1 );
+   pDisp = ( IDispatch * ) ( HB_PTRUINT ) hb_parnint( -1 );
 
 OleGetID:
 
