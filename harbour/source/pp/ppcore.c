@@ -1612,7 +1612,7 @@ static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
       }
       else
       {
-         hb_membufAddStr( pBuffer, "t\"" );
+         hb_membufAddStr( pBuffer, "d\"" );
          hb_membufAddData( pBuffer, pToken->value, pToken->len );
          hb_membufAddCh( pBuffer, '"' );
       }
