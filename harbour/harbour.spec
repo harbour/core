@@ -438,7 +438,7 @@ EOF
 # check if we should rebuild tools with shared libs
 if [ "%{!?_with_static:1}" ]
 then
-    export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} -L${HB_LIB_INSTALL} -l%{name} %{!?_without_gtcrs:-lncurses} %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11}"
+    export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} -L${HB_LIB_INSTALL} -l%{name}"
     export HB_USER_PRGFLAGS="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${HB_USER_PRGFLAGS}"
 
     for utl in hbmk2 hbrun hbi18n
@@ -599,7 +599,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/*.txt
 %doc doc/%{readme}
 %doc doc/en/
-%doc doc/es/
 
 %dir /etc/harbour
 %verify(not md5 mtime) %config /etc/harbour.cfg
