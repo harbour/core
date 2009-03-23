@@ -1407,6 +1407,13 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
       SelectClipRgn( hdc, NULL );
       DeleteObject( hrgn1 );
    }
+#else
+   HB_SYMBOL_UNUSED( pWVT );
+   HB_SYMBOL_UNUSED( gObj );
+   HB_SYMBOL_UNUSED( iLeft );
+   HB_SYMBOL_UNUSED( iTop );
+   HB_SYMBOL_UNUSED( iRight );
+   HB_SYMBOL_UNUSED( iBottom );
 #endif
 }
 /*----------------------------------------------------------------------*/

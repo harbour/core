@@ -684,6 +684,12 @@ BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char * image )
   }
   return( bResult );
 #else
+  HB_SYMBOL_UNUSED( hdc );
+  HB_SYMBOL_UNUSED( x1 );
+  HB_SYMBOL_UNUSED( y1 );
+  HB_SYMBOL_UNUSED( wd );
+  HB_SYMBOL_UNUSED( ht );
+  HB_SYMBOL_UNUSED( image );
   return( FALSE );
 #endif
 }

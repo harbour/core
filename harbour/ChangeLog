@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-23 22:08 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/gtwvg/gtwvg.h
+  * harbour/contrib/gtwvg/wvggui.c
+  * harbour/contrib/gtwvg/wvgcuig.c
+  * harbour/contrib/gtwvg/wvgcore.c
+    ! pacified MinGW-CE builds warnings
+
 2009-03-23 21:42 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbodbc/odbc.c
   * harbour/contrib/hbtpathy/tpwin.c

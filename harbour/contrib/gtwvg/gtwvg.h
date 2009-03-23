@@ -601,7 +601,7 @@ typedef struct _tag_HB_GT_COLDEF
 #  define SC_MAXIMIZE 0xF030
 #endif
 
-#if defined( HB_OS_WIN_CE )
+#if defined( HB_OS_WIN_CE ) && !defined( __MINGW32CE__ )
    BOOL SetMenu( HWND hWnd, HMENU hMenu );
    HMENU GetMenu( HWND hWnd );
 
