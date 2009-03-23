@@ -1155,6 +1155,22 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             else
                ++ul;
          }
+         else if( ( ch == 'd' || ch == 'D' ) && ulLen > 1 && pBuffer[ 1 ] == '"' )
+         {
+            ++ul;
+            while( ++ul < ulLen && pBuffer[ ul ] != '"' ) {};
+            hb_pp_tokenAddNext( pState, pBuffer + 2, ul - 2,
+                                HB_PP_TOKEN_DATE );
+            if( ul == ulLen )
+            {
+               ULONG ulSkip = pBuffer - hb_membufPtr( pState->pBuffer ) + 1;
+               hb_membufAddCh( pState->pBuffer, '\0' );
+               pBuffer = hb_membufPtr( pState->pBuffer ) + ulSkip;
+               hb_pp_error( pState, 'E', HB_PP_ERR_STRING_TERMINATOR, pBuffer );
+            }
+            else
+               ++ul;
+         }
 #endif
          else if( ch == '"' || ch == '\'' || ch == '`' )
          {
@@ -1575,9 +1591,31 @@ static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
    }
    else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_TIMESTAMP )
    {
-      hb_membufAddStr( pBuffer, "t\"" );
-      hb_membufAddData( pBuffer, pToken->value, pToken->len );
-      hb_membufAddCh( pBuffer, '"' );
+      if( pToken->len >= 2 && pToken->value[ 0 ] == '0' &&
+          ( pToken->value[ 1 ] == 'T' || pToken->value[ 1 ] == 't' ) )
+      {
+         hb_membufAddData( pBuffer, pToken->value, pToken->len );
+      }
+      else
+      {
+         hb_membufAddStr( pBuffer, "t\"" );
+         hb_membufAddData( pBuffer, pToken->value, pToken->len );
+         hb_membufAddCh( pBuffer, '"' );
+      }
+   }
+   else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_DATE )
+   {
+      if( pToken->len >= 2 && pToken->value[ 0 ] == '0' &&
+          ( pToken->value[ 1 ] == 'D' || pToken->value[ 1 ] == 'd' ) )
+      {
+         hb_membufAddData( pBuffer, pToken->value, pToken->len );
+      }
+      else
+      {
+         hb_membufAddStr( pBuffer, "t\"" );
+         hb_membufAddData( pBuffer, pToken->value, pToken->len );
+         hb_membufAddCh( pBuffer, '"' );
+      }
    }
    else
    {

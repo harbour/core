@@ -135,8 +135,8 @@ static void hb_lexIdentCopy( PHB_MACRO_LEX pLex )
    }
 }
 
-static int hb_lexTimestampCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
-                                PHB_MACRO_LEX pLex )
+static int hb_lexTimestampGet( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
+                               PHB_MACRO_LEX pLex )
 {
    BOOL fOK = FALSE;
    char * dst = pLex->pDst;
@@ -160,6 +160,38 @@ static int hb_lexTimestampCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
    if( !fOK )
       hb_macroError( EG_SYNTAX, pMacro );
    return TIMESTAMP;
+}
+
+static int hb_lexDateGet( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
+                          PHB_MACRO_LEX pLex )
+{
+   BOOL fOK = FALSE;
+   char * dst = pLex->pDst;
+   int iYear, iMonth, iDay;
+
+   pLex->quote = FALSE;
+   while( pLex->ulSrc < pLex->ulLen )
+   {
+      char ch = pLex->pString[ pLex->ulSrc++ ];
+      if( ch == '"' )
+      {
+         fOK = TRUE;
+         break;
+      }
+      *dst++ = ch;
+   }
+   *dst = '\0';
+   if( fOK && hb_timeStampStrGet( pLex->pDst, &iYear, &iMonth, &iDay, NULL, NULL, NULL, NULL ) )
+   {
+      yylval_ptr->valLong.lNumber = hb_dateEncode( iYear, iMonth, iDay );
+   }
+   else
+   {
+      yylval_ptr->valLong.lNumber = 0;
+      hb_macroError( EG_SYNTAX, pMacro );
+   }
+
+   return NUM_DATE;
 }
 
 static int hb_lexStringCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
@@ -564,6 +596,17 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                         yylval_ptr->valLong.lNumber =
                                        hb_dateEncode( year, month, day );
                         pLex->ulSrc = ul;
+                        if( yylval_ptr->valLong.lNumber == 0 &&
+                            ( year != 0 || month != 0 || day != 0 ) )
+                        {
+                           hb_macroError( EG_SYNTAX, pMacro );
+                        }
+                        return NUM_DATE;
+                     }
+                     else if( ul - pLex->ulSrc == 2 &&
+                              pLex->pString[ pLex->ulSrc + 1 ] == '0' )
+                     {
+                        yylval_ptr->valLong.lNumber = 0;
                         return NUM_DATE;
                      }
                      ul = pLex->ulSrc;
@@ -638,19 +681,21 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                *pLex->pDst++ = '\0';
                if( ulLen == 1 )
                {
-                  if( yylval_ptr->string[ 0 ] == 'E' &&
-                      pLex->ulLen > pLex->ulSrc &&
+                  if( pLex->ulLen > pLex->ulSrc &&
                       pLex->pString[ pLex->ulSrc ] == '"' )
                   {
-                     pLex->ulSrc++;
-                     return hb_lexStringExtCopy( yylval_ptr, pMacro, pLex );
-                  }
-                  else if( yylval_ptr->string[ 0 ] == 'T' &&
-                      pLex->ulLen > pLex->ulSrc &&
-                      pLex->pString[ pLex->ulSrc ] == '"' )
-                  {
-                     pLex->ulSrc++;
-                     return hb_lexTimestampCopy( yylval_ptr, pMacro, pLex );
+                     switch( yylval_ptr->string[ 0 ] )
+                     {
+                        case 'E':
+                           pLex->ulSrc++;
+                           return hb_lexStringExtCopy( yylval_ptr, pMacro, pLex );
+                        case 'T':
+                           pLex->ulSrc++;
+                           return hb_lexTimestampGet( yylval_ptr, pMacro, pLex );
+                        case 'D':
+                           pLex->ulSrc++;
+                           return hb_lexDateGet( yylval_ptr, pMacro, pLex );
+                     }
                   }
                }
                else if( ulLen == 2 )

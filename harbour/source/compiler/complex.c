@@ -493,24 +493,34 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
          }
       }
       case HB_PP_TOKEN_DATE:
-         pLex->iState = LITERAL;
-         if( pToken->len == 10 )
-         {
-            int year, month, day;
-            hb_dateStrGet( pToken->value + 2, &year, &month, &day );
-            yylval_ptr->valLong.lNumber = hb_dateEncode( year, month, day );
-         }
-         else
-            yylval_ptr->valLong.lNumber = 0;
+      {
+         int iYear, iMonth, iDay;
 
+         pLex->iState = LITERAL;
+         if( pToken->value[ 0 ] == '0' &&
+             ( pToken->value[ 1 ] == 'D' || pToken->value[ 1 ] == 'd' ) )
+         {
+            if( pToken->len == 10 )
+            {
+               hb_dateStrGet( pToken->value + 2, &iYear, &iMonth, &iDay );
+            }
+            else
+            {
+               iYear = iMonth = iDay = 0;
+               if( !pToken->len == 3 || pToken->value[ 2 ] != '0' )
+                  iYear = -1;
+            }
+         }
+         else if( !hb_timeStampStrGet( pToken->value, &iYear, &iMonth, &iDay, NULL, NULL, NULL, NULL ) )
+            iYear = -1;
+         yylval_ptr->valLong.lNumber = hb_dateEncode( iYear, iMonth, iDay );
          if( yylval_ptr->valLong.lNumber == 0 &&
-             strcmp( pToken->value + 2, "0" ) != 0 &&
-             strcmp( pToken->value + 2, "00000000" ) != 0 )
+             ( iYear != 0 || iMonth != 0 || iDay != 0 ) )
          {
             hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_DATE, pToken->value, NULL );
          }
          return NUM_DATE;
-
+      }
       case HB_PP_TOKEN_TIMESTAMP:
          pLex->iState = LITERAL;
          if( !hb_timeStampStrGetDT( pToken->value,

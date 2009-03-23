@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-23 02:17 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+  * harbour/source/common/hbdate.c
+  * harbour/source/macro/macrolex.c
+  * harbour/source/compiler/complex.c
+    + added alternative support for date constant values as: d"YYYY-MM-DD"
+      As delimiter the following characters can be used: "-", "/", "."
+      Just like in t"..."
+
 2009-03-22 22:50 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/hbwin/win_ole.c
     * removed debug lines

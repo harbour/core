@@ -715,7 +715,8 @@ BOOL hb_timeStampStrGet( const char * szDateTime,
                       ( int ) ( szDateTime[ 3 ] - '0' );
          iMonth = ( szDateTime[ 5 ] - '0' ) * 10 + ( szDateTime[ 6 ] - '0' );
          iDay   = ( szDateTime[ 8 ] - '0' ) * 10 + ( szDateTime[ 9 ] - '0' );
-         if( hb_dateEncode( iYear, iMonth, iDay ) != 0 )
+         if( hb_dateEncode( iYear, iMonth, iDay ) != 0 ||
+             ( iYear == 0 && iMonth == 0 && iDay == 0 ) )
          {
             szDateTime += 10;
             if( *szDateTime == 'T' || *szDateTime == 't' )
@@ -742,13 +743,18 @@ BOOL hb_timeStampStrGet( const char * szDateTime,
       }
    }
 
-   if( !hb_timeStrGet( szDateTime, piHour, piMinutes, piSeconds, piMSec ) )
+   if( piHour || piMinutes || piSeconds || piMSec )
    {
-      if( szDateTime )
-         fValid = FALSE;
+      if( !hb_timeStrGet( szDateTime, piHour, piMinutes, piSeconds, piMSec ) )
+      {
+         if( szDateTime )
+            fValid = FALSE;
+      }
+      else
+         fValid = TRUE;
    }
-   else
-      fValid = TRUE;
+   else if( szDateTime )
+      fValid = FALSE;
 
    if( piYear )
       *piYear = iYear;
