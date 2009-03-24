@@ -29,7 +29,9 @@
 #ifndef __HARBOUR__
    #ifndef __XPP__
       #ifndef __CLIP__
-        #define __CLIPPER__
+         #ifndef FlagShip
+            #define __CLIPPER__
+         #endif
       #endif
    #endif
 #endif
@@ -40,10 +42,33 @@
    #ifndef __ST__
       #define __ST__
    #endif
+   /* Clipper does not have function to extract process time */
+   #xtranslate secondsCPU() => seconds()
+   #ifndef EOL
+      #define EOL chr(13)+chr(10)
+   #endif
+#endif
+
+#ifdef FlagShip
+   #define __NO_OBJ_ARRAY__
+   /* FlagShip does not support multithreading */
+   #ifndef __ST__
+      #define __ST__
+   #endif
+   /* the FlagShip version of seconds() returns integer values */
+   #xtranslate seconds() => fs_seconds()
+   #ifndef EOL
+      #define EOL chr(10)
+   #endif
 #endif
 
 #ifdef __XPP__
    #define __NO_OBJ_ARRAY__
+   /* Has xBase++ function to extract process time? */
+   #xtranslate secondsCPU() => seconds()
+   #ifndef EOL
+      #define EOL chr(13)+chr(10)
+   #endif
 #endif
 
 #ifdef __CLIP__
@@ -51,6 +76,15 @@
    /* CLIP version for MT performance testing is not ready yet */
    #ifndef __ST__
       #define __ST__
+   #endif
+   #ifndef EOL
+      #define EOL chr(10)
+   #endif
+#endif
+
+#ifdef __HARBOUR__
+   #ifndef EOL
+      #define EOL hb_OSNewLine()
    #endif
 #endif
 
@@ -82,21 +116,6 @@
 #command ? => outstd(EOL)
 #command ? <xx,...> => outstd(EOL);outstd(<xx>)
 #command ?? <xx,...> => outstd(<xx>)
-
-#ifdef __HARBOUR__
-   #ifndef EOL
-      #define EOL hb_OSNewLine()
-   #endif
-#else
-   #ifndef __CLIP__
-      #xtranslate secondsCPU() => seconds()
-      #ifndef EOL
-         #define EOL chr(10)
-      #endif
-   #else
-      #define EOL chr(13)+chr(10)
-   #endif
-#endif
 
 #xcommand TEST <testfunc>           ;
           [ WITH <locals,...> ]     ;
@@ -349,15 +368,15 @@ TEST t045 CODE f0()
 TEST t046 CODE f1( i )
 
 TEST t047 WITH c := dtos( date() ) ;
-          INFO f2( c[1...8] ) ;
+          INFO "f2( c[1...8] )" ;
           CODE f2( c )
 
 TEST t048 WITH c := repl( dtos( date() ), 5000 ) ;
-          INFO f2( c[1...40000] ) ;
+          INFO "f2( c[1...40000] )" ;
           CODE f2( c )
 
 TEST t049 WITH c := repl( dtos( date() ), 5000 ) ;
-          INFO f2( @c[1...40000] ) ;
+          INFO "f2( @c[1...40000] )" ;
           CODE f2( c )
 
 TEST t050 WITH c := repl( dtos( date() ),5000 ), c2 ;
@@ -674,6 +693,10 @@ return
    static function hb_mtvm()
    return .f.                 /* Clipper does not support MT */
 #endif
+#ifdef FlagShip
+   static function hb_mtvm()
+   return .f.                 /* FlagShip does not support MT */
+#endif
 #ifdef __CLIP__
    static function hb_mtvm()
    return .t.                 /* CLIP always uses VM with MT support */
@@ -951,4 +974,22 @@ return
    return .f.
 */
 
+#endif
+
+#ifdef FlagShip
+   static function fs_seconds()
+      LOCAL_DOUBLE nret := 0
+      #Cinline
+      {
+         #include <sys/time.h>
+         struct timeval tv;
+         if( gettimeofday(&tv, NULL) == 0 )
+            nret = (double) tv.tv_sec + (double) (tv.tv_usec) / 1000000;
+      }
+      #endCinline
+   return nret
+   #ifndef FlagShip5
+      FUNCTION cursesinit()
+      return nil
+   #endif
 #endif
