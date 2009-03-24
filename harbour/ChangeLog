@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-24 18:34 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/tbrowse.prg
+    ! fixed Clipper compatibility in configure() action - it does not
+      set refreshAll flag and only invalidates all records
+    ! recalculate visible columns in colorRect() method
+    * enabled strict Clipper compatible behavior for non character
+      footers and headers
+
 2009-03-24 13:27 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gttrm/gttrm.c
     * formatting

@@ -548,13 +548,15 @@ METHOD colorRect( aRect, aColors ) CLASS TBROWSE
       aColors[ 1 ] >= 1 .AND. aColors[ 1 ] <= Len( ::aColors ) .AND. ;
       aColors[ 2 ] >= 1 .AND. aColors[ 2 ] <= Len( ::aColors )
 
+      ::setVisible()
+
       FOR nRow := aRect[ 1 ] TO aRect[ 3 ]
          ::readRecord( nRow )
          FOR nCol := aRect[ 2 ] TO aRect[ 4 ]
             ::aCellColors[ nRow, nCol, 1 ] := aColors[ 1 ]
             ::aCellColors[ nRow, nCol, 2 ] := aColors[ 2 ]
-            ::dispRow( nRow )
          NEXT
+         ::dispRow( nRow )
       NEXT
    ENDIF
 
@@ -744,7 +746,7 @@ METHOD setPosition() CLASS TBROWSE
 
 METHOD stabilize() CLASS TBROWSE
 
-   LOCAL nCol, nRowCount, nToMove, nMoved
+   LOCAL nRowCount, nToMove, nMoved
    LOCAL lDisp, lRead, lStat
 
    IF ::nConfigure != 0
@@ -763,13 +765,7 @@ METHOD stabilize() CLASS TBROWSE
          ::lRefresh := .F.
       ENDIF
 
-      nCol := ::nColPos
-      IF nCol < 1 .OR. nCol > ::colCount .OR. ::nLastPos != nCol .OR. ;
-         ::lFrames .OR. ::nLeftVisible == 0 .OR. ::nRightVisible == 0 .OR. ;
-         ::aColData[ nCol ][ _TBCI_COLPOS ] == NIL
-
-         ::setVisible()
-      ENDIF
+      ::setVisible()
 
       IF ::lFrames
          ::dispFrames()
@@ -1461,7 +1457,12 @@ METHOD doConfigure() CLASS TBROWSE
 
    ::lStable := .F.
    ::lFrames := .T.
-   ::lRefresh := .T.
+
+   /* Clipper does not set refreshAll flag in Configure */
+   /* ::lRefresh := .T. */
+
+   ::nLastRow := nRowCount
+   ::nLastScroll := 0
 
    /* CA-Cl*pper update visible columns here but without
     * colPos repositioning. [druzus]
@@ -1522,14 +1523,10 @@ STATIC FUNCTION _DECODE_FH( cName, nHeight, nWidth )
       ENDIF
 
    ELSE
-#ifndef HB_C52_STRICT
       /* CA-Cl*per bug, it accepts non character values though cannot
        * display them properly
        */
-      nHeight := 1
-#else
-      nHeight := 0
-#endif
+      /* nHeight := 1 */
       cName := ""
    ENDIF
 
@@ -1712,103 +1709,109 @@ STATIC PROCEDURE _SETVISIBLE( aColData, nWidth, nFrozen, nLeft, nRight )
 /* set visible columns */
 METHOD setVisible() CLASS TBROWSE
 
+   LOCAL nCol, nLeft, nFrozen, nLast, nColumns, nWidth, nColPos
+   LOCAL lFirst, lFrames
    LOCAL aCol
-   LOCAL nCol
-   LOCAL nLeft
-   LOCAL nFrozen
-   LOCAL nLast
-   LOCAL nColumns := Len( ::aColData )
-   LOCAL nWidth := _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1
-   LOCAL nColPos := ::nColPos
-   LOCAL lFirst
-   LOCAL lFrames := .F.
 
-   IF nColPos > nColumns
-      ::nColPos := nColumns
-      ::nLeftVisible := nColumns
-      ::nRightVisible := nColumns
-   ELSEIF ::nColPos < 1
-      ::nColPos := 1
-      ::nLeftVisible := 1
-      ::nRightVisible := 1
-   ELSEIF nColPos != ::nLastPos
-      IF nColPos > ::nRightVisible
-         ::nRightVisible := ::nColPos
-         ::nLeftVisible := 0
-      ELSEIF nColPos < ::nLeftVisible
-         ::nLeftVisible := ::nColPos
-         ::nRightVisible := 0
+   nColPos := ::nColPos
+   IF nColPos < 1 .OR. nColPos > ::colCount .OR. ::nLastPos != nColPos .OR. ;
+      ::lFrames .OR. ::nLeftVisible == 0 .OR. ::nRightVisible == 0 .OR. ;
+      ::aColData[ nColPos ][ _TBCI_COLPOS ] == NIL
+
+      lFrames := .F.
+      nWidth := _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1
+      nColumns := Len( ::aColData )
+
+      IF nColPos > nColumns
+         ::nColPos := nColumns
+         ::nLeftVisible := nColumns
+         ::nRightVisible := nColumns
+      ELSEIF ::nColPos < 1
+         ::nColPos := 1
+         ::nLeftVisible := 1
+         ::nRightVisible := 1
+      ELSEIF nColPos != ::nLastPos
+         IF nColPos > ::nRightVisible
+            ::nRightVisible := ::nColPos
+            ::nLeftVisible := 0
+         ELSEIF nColPos < ::nLeftVisible
+            ::nLeftVisible := ::nColPos
+            ::nRightVisible := 0
+         ENDIF
+      ELSEIF ::nColPos <= ::nFrozen .AND. ::nLeftVisible == 0
+         nCol := _NEXTCOLUMN( ::aColData, ::nFrozen + 1 )
+         ::nColPos := iif( nCol == 0, nColumns, nCol )
       ENDIF
-   ELSEIF ::nColPos <= ::nFrozen .AND. ::nLeftVisible == 0
-      nCol := _NEXTCOLUMN( ::aColData, ::nFrozen + 1 )
-      ::nColPos := iif( nCol == 0, nColumns, nCol )
-   ENDIF
 
-   _SETVISIBLE( ::aColData, @nWidth, ;
-                @::nFrozen, @::nLeftVisible, @::nRightVisible )
+      _SETVISIBLE( ::aColData, @nWidth, ;
+                   @::nFrozen, @::nLeftVisible, @::nRightVisible )
 
-   IF ::nColPos > ::nRightVisible
-      ::nColPos := ::nRightVisible
-   ELSEIF ::nColPos > ::nFrozen .AND. ::nColPos < ::nLeftVisible
-      ::nColPos := ::nLeftVisible
-   ENDIF
+      IF ::nColPos > ::nRightVisible
+         ::nColPos := ::nRightVisible
+      ELSEIF ::nColPos > ::nFrozen .AND. ::nColPos < ::nLeftVisible
+         ::nColPos := ::nLeftVisible
+      ENDIF
 
 #if 0
-   /* Always try to locate visible column.
-    * CA-Cl*pper does not have such condition. [druzus]
-    */
-   IF ::nColPos >= 1 .AND. ::aColData[ ::nColPos ][ _TBCI_CELLWIDTH ] <= 0
-      nCol := _PREVCOLUMN( ::aColData, ::nColPos - 1 )
-      ::nColPos := iif( nCol == 0, _NEXTCOLUMN( ::aColData, ::nColPos + 1 ), nCol )
-   ENDIF
+      /* Always try to locate visible column.
+       * CA-Cl*pper does not have such condition. [druzus]
+       */
+      IF ::nColPos >= 1 .AND. ::aColData[ ::nColPos ][ _TBCI_CELLWIDTH ] <= 0
+         nCol := _PREVCOLUMN( ::aColData, ::nColPos - 1 )
+         ::nColPos := iif( nCol == 0, ;
+                           _NEXTCOLUMN( ::aColData, ::nColPos + 1 ), nCol )
+      ENDIF
 #endif
 
-   /* update column size and positions on the screen */
-   nLeft := _TBR_COORD( ::n_Left )
-   lFirst := .T.
-   FOR nCol := 1 TO ::nRightVisible
-      aCol := ::aColData[ nCol ]
-      IF aCol[ _TBCI_CELLWIDTH ] > 0 .AND. ;
-         ( nCol <= ::nFrozen .OR. nCol >= ::nLeftVisible )
+      /* update column size and positions on the screen */
+      nLeft := _TBR_COORD( ::n_Left )
+      lFirst := .T.
+      FOR nCol := 1 TO ::nRightVisible
+         aCol := ::aColData[ nCol ]
+         IF aCol[ _TBCI_CELLWIDTH ] > 0 .AND. ;
+            ( nCol <= ::nFrozen .OR. nCol >= ::nLeftVisible )
 
-         nFrozen := iif( nCol == ::nLeftVisible, Int( nWidth / 2 ), 0 )
-         nColPos := nLeft += nFrozen
-         nLeft += aCol[ _TBCI_COLWIDTH ]
-         IF lFirst
-            lFirst := .F.
+            nFrozen := iif( nCol == ::nLeftVisible, Int( nWidth / 2 ), 0 )
+            nColPos := nLeft += nFrozen
+            nLeft += aCol[ _TBCI_COLWIDTH ]
+            IF lFirst
+               lFirst := .F.
+            ELSE
+               nLeft += aCol[ _TBCI_SEPWIDTH ]
+            ENDIF
+            nLast := iif( nCol == ::nRightVisible, ;
+                          _TBR_COORD( ::n_Right ) - nLeft + 1, 0 )
+
+            IF aCol[ _TBCI_COLPOS      ] != nColPos  .OR. ;
+               aCol[ _TBCI_FROZENSPACE ] != nFrozen  .OR. ;
+               aCol[ _TBCI_LASTSPACE   ] != nLast
+
+               lFrames := .T.
+               aCol[ _TBCI_COLPOS      ] := nColPos
+               aCol[ _TBCI_FROZENSPACE ] := nFrozen
+               aCol[ _TBCI_LASTSPACE   ] := nLast
+            ENDIF
          ELSE
-            nLeft += aCol[ _TBCI_SEPWIDTH ]
+            IF aCol[ _TBCI_COLPOS ] != NIL
+               lFrames := .T.
+            ENDIF
+            aCol[ _TBCI_COLPOS ] := NIL
          ENDIF
-         nLast := iif( nCol == ::nRightVisible, _TBR_COORD( ::n_Right ) - nLeft + 1, 0 )
-
-         IF aCol[ _TBCI_COLPOS      ] != nColPos  .OR. ;
-            aCol[ _TBCI_FROZENSPACE ] != nFrozen  .OR. ;
-            aCol[ _TBCI_LASTSPACE   ] != nLast
-
-            lFrames := .T.
-            aCol[ _TBCI_COLPOS      ] := nColPos
-            aCol[ _TBCI_FROZENSPACE ] := nFrozen
-            aCol[ _TBCI_LASTSPACE   ] := nLast
-         ENDIF
-      ELSE
+      NEXT
+      FOR nCol := ::nRightVisible + 1 TO nColumns
+         aCol := ::aColData[ nCol ]
          IF aCol[ _TBCI_COLPOS ] != NIL
             lFrames := .T.
          ENDIF
          aCol[ _TBCI_COLPOS ] := NIL
-      ENDIF
-   NEXT
-   FOR nCol := ::nRightVisible + 1 TO nColumns
-      aCol := ::aColData[ nCol ]
-      IF aCol[ _TBCI_COLPOS ] != NIL
-         lFrames := .T.
-      ENDIF
-      aCol[ _TBCI_COLPOS ] := NIL
-   NEXT
+      NEXT
 
-   ::nLastPos := ::nColPos
+      ::nLastPos := ::nColPos
 
-   IF lFrames
-      ::lFrames := .T.
+      IF lFrames
+         ::lFrames := .T.
+      ENDIF
+
    ENDIF
 
    RETURN Self
