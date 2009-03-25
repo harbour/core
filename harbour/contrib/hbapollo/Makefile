@@ -7,6 +7,7 @@ ROOT = ../../
 LIBNAME=hbapollo
 
 ifneq ($(HB_ARCHITECTURE),dos)
+ifneq ($(HB_COMPILER),mingw64)
 
 HB_INC_APOLLO_OK += $(foreach d, $(HB_INC_APOLLO), $(if $(wildcard $(d)/Sde61.h),$(d),))
 
@@ -30,6 +31,9 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

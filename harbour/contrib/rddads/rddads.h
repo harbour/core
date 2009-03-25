@@ -58,7 +58,9 @@
 #if !defined( unix ) && ( defined( __LINUX__ ) || defined( HB_OS_LINUX ) )
    #define unix
 #endif
-
+#if defined( __MINGW64__ )
+   #define x64
+#endif
 #if defined( __WATCOMC__ ) || defined( __LCC__ )
    #define _declspec( dllexport ) __declspec( dllexport )
 #endif

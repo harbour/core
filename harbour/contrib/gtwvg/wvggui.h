@@ -58,10 +58,6 @@
 
 //-------------------------------------------------------------------//
 
-#ifndef _WIN32_IE
-   #define _WIN32_IE 0x0400
-#endif
-
 #ifndef CINTERFACE
    #define CINTERFACE 1
 #endif
@@ -94,6 +90,10 @@
 #include "hbgfxdef.ch"
 
 #include "hbgtwvg.ch"
+
+#ifndef _WIN32_IE
+   #define _WIN32_IE 0x0400
+#endif
 
 HB_EXTERN_BEGIN
 

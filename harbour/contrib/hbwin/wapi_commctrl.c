@@ -550,7 +550,7 @@ HB_FUNC( WAPI_TABCTRL_GETROWCOUNT )
 
 HB_FUNC( WAPI_TABCTRL_GETIMAGELIST )
 {
-   wapi_ret_NINT( ( LONG ) TabCtrl_GetImageList( wapi_par_HWND( 1 ) ) );
+   wapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_GetImageList( wapi_par_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* #define TabCtrl_SetImageList(hwnd, himl) */
@@ -779,11 +779,11 @@ HB_FUNC( WAPI_TABCTRL_CREATE )
    LONG hFont;
    LONG style;
    style   = ISNIL( 6 ) ? 0 : ( LONG ) hb_parnl( 6 );
-   hwnd    = ( HWND ) hb_parnl( 1 );
+   hwnd    = ( HWND ) hb_parnint( 1 );
    hFont   = SendMessage( hwnd, WM_GETFONT, 0, 0 );
    hbutton = CreateWindowEx( 0, WC_TABCONTROL, NULL, style, hb_parni( 2 ), hb_parni( 3 ) , hb_parni( 4 ), hb_parni( 5 ), hwnd, NULL, GetModuleHandle( NULL ), NULL );
    SendMessage( hbutton, ( UINT ) WM_SETFONT, ( WPARAM ) hFont, 1 );
-   hb_retnl( ( LONG ) hbutton );
+   hb_retnint( ( HB_PTRDIFF ) hbutton );
 }
 
 /*----------------------------------------------------------------------*/

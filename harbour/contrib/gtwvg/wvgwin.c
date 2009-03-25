@@ -2134,7 +2134,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          //
          tbab.hInst = NULL;
 #if (_WIN32_IE >= 0x0500)
-         tbab.nID   = wapi_par_HBITMAP( 2 );
+         tbab.nID   = ( UINT_PTR ) wapi_par_HBITMAP( 2 );
 #else
          tbab.nID   = ( UINT ) wapi_par_HBITMAP( 2 );
 #endif
@@ -2203,7 +2203,7 @@ HB_FUNC( WIN_SENDTOOLBARMESSAGE )
 
          tbab.hInst = NULL;
 #if (_WIN32_IE >= 0x0500)
-         tbab.nID   = wapi_par_HBITMAP( 3 );
+         tbab.nID   = ( UINT_PTR ) wapi_par_HBITMAP( 3 );
 #else
          tbab.nID   = ( UINT ) wapi_par_HBITMAP( 3 );
 #endif

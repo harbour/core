@@ -238,9 +238,8 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_BUILD_DEBUG=yes        Create a debug build.
    - HB_BUILD_OPTIM=no         Disable C compiler optimizations.
    - HB_CONTRIBLIBS=no         Don't build any contrib libraries.
-   - HB_CONTRIBLIBS=[<list>]   Build space separated <list> of
-                               contrib libraries. Build all if
-                               left empty.
+   - HB_CONTRIBLIBS=[<list>]   Build space separated <list> of contrib
+                               libraries. Build all if left empty.
    - HB_CONTRIB_ADDONS=<list>  Build additional libraries stored
                                in the contrib directory.
    - HB_VISUALC_VER_PRE80=yes  Set this if you're using a pre-8.0

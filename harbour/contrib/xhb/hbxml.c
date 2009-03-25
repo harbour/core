@@ -2318,7 +2318,7 @@ HB_FUNC( HBXML_DATAREAD )
          mxml_refill_from_handle_func,
          buffer, 0, 512 );
 
-      refil.u.vPtr = (void *) hb_itemGetNL( pParam );
+      refil.u.vPtr = (void *) hb_itemGetNInt( pParam );
    }
 
    /* Now we can get the root node */

@@ -27,16 +27,20 @@ goto inst_%HB_ARCHITECTURE%
 rem Windows post install part
 if not "%OS%" == "Windows_NT" goto end
 
-if "%HB_DYNLIB%" == "yes" call %~dp0hb-mkdyn.bat
+if not "%HB_DYNLIB%" == "yes" goto _SKIP_DLL_BIN
 
-set _HB_BIN_INSTALL=%HB_BIN_INSTALL%
-if not "%HB_BIN_COMPILE%" == "" set HB_BIN_INSTALL=%HB_BIN_COMPILE%
-if exist "%HB_BIN_INSTALL%\*.dll" (
-   %HB_BIN_INSTALL%\hbmk2 -q0 -shared -o%_HB_BIN_INSTALL%\hbrun-dll  %~dp0..\utils\hbrun\hbrun.hbm -lhbcplr -lhbpp -lhbcommon
-   %HB_BIN_INSTALL%\hbmk2 -q0 -shared -o%_HB_BIN_INSTALL%\hbtest-dll %~dp0..\utils\hbtest\hbtest.hbm
-)
-set HB_BIN_INSTALL=%_HB_BIN_INSTALL%
-set _HB_BIN_INSTALL=
+   call %~dp0hb-mkdyn.bat
+
+   setlocal
+   set _HB_BIN_INSTALL=%HB_BIN_INSTALL%
+   if not "%HB_BIN_COMPILE%" == "" set HB_BIN_INSTALL=%HB_BIN_COMPILE%
+   if exist "%HB_BIN_INSTALL%\*.dll" (
+      %HB_BIN_INSTALL%\hbmk2 -q0 -shared -o%_HB_BIN_INSTALL%\hbrun-dll  %~dp0..\utils\hbrun\hbrun.hbm -lhbcplr -lhbpp -lhbcommon
+      %HB_BIN_INSTALL%\hbmk2 -q0 -shared -o%_HB_BIN_INSTALL%\hbtest-dll %~dp0..\utils\hbtest\hbtest.hbm
+   )
+   endlocal
+
+:_SKIP_DLL_BIN
 
 if "%HB_BUILD_IMPLIB%" == "yes" (
 

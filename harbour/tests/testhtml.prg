@@ -82,7 +82,7 @@ STATIC FUNCTION New()
    ::cContent    := ""
    ::cBody       := ""
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION SetTitle( cTitle )
 
@@ -90,7 +90,7 @@ STATIC FUNCTION SetTitle( cTitle )
 
    ::cTitle := cTitle
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION AddLink( cLinkTo, cLinkName )
 
@@ -99,7 +99,7 @@ STATIC FUNCTION AddLink( cLinkTo, cLinkName )
    ::cBody := ::cBody + ;
       "<A HREF='" + cLinkTo + "'>" + cLinkName + "</A>"
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION AddHead( cDescr )
 
@@ -126,7 +126,7 @@ STATIC FUNCTION AddPara( cPara, cAlign )
       cPara + s_cNewLine + ;
       "</P>"
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION Generate()
 
@@ -140,25 +140,25 @@ STATIC FUNCTION Generate()
       ::cBody                                                  + s_cNewLine + ;
       "</BODY></HTML>"
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION ShowResult()
 
    LOCAL Self := QSelf()
 
-   qqOut(                                                                  ;
-      "HTTP/1.0 200 OK"                                        + s_cNewLine + ;
+   OutStd(                                                                  ;
+;//      "HTTP/1.0 200 OK"                                        + s_cNewLine + ;
       "CONTENT-TYPE: TEXT/HTML"                      + s_cNewLine + s_cNewLine + ;
       ::cContent )
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION SaveToFile( cFile )
 
    LOCAL Self  := QSelf()
-   LOCAL hFile := fCreate( cFile )
+   LOCAL hFile := FCreate( cFile )
 
-   fWrite( hFile, ::cContent )
-   fClose( hFile )
+   FWrite( hFile, ::cContent )
+   FClose( hFile )
 
-   RETURN( Self )
+   RETURN Self

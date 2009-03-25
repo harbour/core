@@ -8,6 +8,181 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-25 11:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * tests/testhtml.prg
+    * Update by Vailton Renato applied.
+
+  * INSTALL
+    * Minor formatting.
+
+  * bin/postinst.bat
+    + Minor cleanup to creation of hbrun/hbtest dll versions.
+      (now it's more difficult to mislead it by already existing
+      foreign .dlls)
+
+  * contrib/hbqt/Makefile
+  * contrib/hbapollo/Makefile
+    - Disabled for mingw64.
+
+  * contrib/rddads/rddads.h
+    + Added workaround to compile under mingw64.
+
+  * contrib/gtwvg/gtwvg.h
+  * contrib/gtwvg/wvggui.h
+    ! Fixed to _not_ override _WIN32_IE. Overriding these version
+      numbers is generally a very bad idea. Instead the code should
+      adapt to whatever values are defined by system headers.
+      This fixes most mingw64 errors. Please test other compilers.
+
+  * contrib/xhb/hbxml.c
+  * contrib/hbfimage/fi_winfu.c
+  * contrib/hbwin/wapi_commctrl.c
+    ! Pointer/handle to integer conversion.
+
+  * contrib/gtwvg/wvgcuig.c
+  * contrib/gtwvg/wvgwin.c
+    ! Fixed NULL used instead of 0.
+    ! Fixed ISNIL() usage. GTWVG code is full of ISNIL() macros,
+      which makes the code prone to GPFs and other unexpected
+      behaviour when wrong type is passed. The solution is to
+      change all these to type specific IS*() macros.
+
+  ; TOFIX: (core and all contribs)
+
+    C:/DOCUME~1/vszakats/LOCALS~1/Temp/ccVcE53g.s: Assembler messages:
+    C:/DOCUME~1/vszakats/LOCALS~1/Temp/ccVcE53g.s:20: Error: `0x0e10(%rax,%ecx,4)' is not a valid base/index expression
+
+    In these files:
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../hvm.c -ohvm.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../arrays.c -oarrays.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../asort.c -oasort.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../classes.c -oclasses.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../cmdarg.c -ocmdarg.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../debug.c -odebug.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../dynlibhb.c -odynlibhb.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../dynsym.c -odynsym.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../codebloc.c -ocodebloc.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../estack.c -oestack.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../eval.c -oeval.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../evalhb.c -oevalhb.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../extend.c -oextend.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../fm.c -ofm.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../garbage.c -ogarbage.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../hashes.c -ohashes.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../hashfunc.c -ohashfunc.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../itemapi.c -oitemapi.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../macro.c -omacro.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../memvars.c -omemvars.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../pcount.c -opcount.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../proc.c -oproc.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../pvalue.c -opvalue.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../runner.c -orunner.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../set.c -oset.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer  -DHB_MT_VM  -c ../../../thread.c -othread.o
+    x86_64-pc-mingw32-gcc -I. -I../../../../../include -Wall -W -O3 -fomit-frame-pointer   -DHB_FM_STATISTICS -DHB_MT_VM  -c ../../../fm.c -ofm.o
+
+    ../../dbfntx1.c: In function 'hb_ntxTagHeaderCheck':
+    ../../dbfntx1.c:1054: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfntx1.c:1054: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfntx1.c:1055: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfntx1.c:1055: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfntx1.c:1055: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfntx1.c:1055: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfnsx1.c: In function 'hb_nsxTagHeaderCheck':
+    ../../dbfnsx1.c:1282: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfnsx1.c:1284: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfnsx1.c:1285: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfnsx1.c:1285: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfnsx1.c:1285: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfnsx1.c:1285: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfnsx1.c: In function 'hb_nsxPageFree':
+    ../../dbfnsx1.c:1573: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfnsx1.c:1573: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfnsx1.c:1573: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfnsx1.c:1573: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfnsx1.c: In function 'hb_nsxPageNew':
+    ../../dbfnsx1.c:1622: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfnsx1.c:1622: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfnsx1.c:1622: warning: dereferencing type-punned pointer will break strict-aliasing rules
+    ../../dbfnsx1.c:1622: warning: dereferencing type-punned pointer will break strict-aliasing rules
+
+    ../../hb_btree.c: In function 'StackSkip':
+    ../../hb_btree.c:643: warning: cast from pointer to integer of different size
+    ../../hb_btree.c: In function 'Grow':
+    ../../hb_btree.c:739: warning: cast from pointer to integer of different size
+
+    ../../getenvrn.c: In function 'HB_FUN_FT_GETE':
+    ../../getenvrn.c:178: warning: implicit declaration of function 'GetEnvironmentStrings'
+    ../../getenvrn.c:178: warning: initialization makes pointer from integer without a cast
+
+    ../../win_dll.c: In function 'DllExec':
+    ../../win_dll.c:509: warning: cast from pointer to integer of different size
+    ../../win_dll.c:603: warning: cast to pointer from integer of different size
+    ../../win_dll.c:672: warning: cast to pointer from integer of different size
+    ../../win_dll.c:689: warning: cast to pointer from integer of different size
+
+    ../../hbserv.c: In function 's_serviceSetHBSig':
+    ../../hbserv.c:638: warning: passing argument 1 of 'SetUnhandledExceptionFilter' from incompatible pointer type
+
+    ../../firebird.c: In function 'HB_FUN_FBCREATEDB':
+    ../../firebird.c:87: warning: initialization makes integer from pointer without a cast
+    ../../firebird.c:88: warning: initialization makes integer from pointer without a cast
+    ../../firebird.c: In function 'HB_FUN_FBCONNECT':
+    ../../firebird.c:115: warning: initialization makes integer from pointer without a cast
+    ../../firebird.c:143: warning: cast to pointer from integer of different size
+    ../../firebird.c: In function 'HB_FUN_FBCLOSE':
+    ../../firebird.c:149: warning: cast from pointer to integer of different size
+    ../../firebird.c: In function 'HB_FUN_FBSTARTTRANSACTION':
+    ../../firebird.c:172: warning: cast from pointer to integer of different size
+    ../../firebird.c:173: warning: initialization makes integer from pointer without a cast
+    ../../firebird.c:179: warning: cast to pointer from integer of different size
+    ../../firebird.c: In function 'HB_FUN_FBCOMMIT':
+    ../../firebird.c:184: warning: cast from pointer to integer of different size
+    ../../firebird.c: In function 'HB_FUN_FBROLLBACK':
+    ../../firebird.c:195: warning: cast from pointer to integer of different size
+    ../../firebird.c: In function 'HB_FUN_FBEXECUTE':
+    ../../firebird.c:206: warning: cast from pointer to integer of different size
+    ../../firebird.c:207: warning: initialization makes integer from pointer without a cast
+    ../../firebird.c:215: warning: cast from pointer to integer of different size
+    ../../firebird.c: In function 'HB_FUN_FBQUERY':
+    ../../firebird.c:249: warning: cast from pointer to integer of different size
+    ../../firebird.c:250: warning: initialization makes integer from pointer without a cast
+    ../../firebird.c:253: warning: initialization makes integer from pointer without a cast
+    ../../firebird.c:270: warning: cast from pointer to integer of different size
+    ../../firebird.c:375: warning: cast to pointer from integer of different size
+    ../../firebird.c:379: warning: cast to pointer from integer of different size
+    ../../firebird.c: In function 'HB_FUN_FBFETCH':
+    ../../firebird.c:395: warning: cast from pointer to integer of different size
+    ../../firebird.c: In function 'HB_FUN_FBFREE':
+    ../../firebird.c:419: warning: cast from pointer to integer of different size
+    ../../firebird.c:421: warning: cast from pointer to integer of different size
+    ../../firebird.c: In function 'HB_FUN_FBGETBLOB':
+    ../../firebird.c:613: warning: cast from pointer to integer of different size
+    ../../firebird.c:614: warning: initialization makes integer from pointer without a cast
+    ../../firebird.c:615: warning: initialization makes integer from pointer without a cast
+    ../../firebird.c:624: warning: cast from pointer to integer of different size
+
+    ../../fbirddd.c: In function 'fbConnect':
+    ../../fbirddd.c:164: warning: initialization makes integer from pointer without a cast
+    ../../fbirddd.c:192: warning: cast to pointer from integer of different size
+    ../../fbirddd.c: In function 'fbOpen':
+    ../../fbirddd.c:217: warning: initialization makes integer from pointer without a cast
+    ../../fbirddd.c:218: warning: initialization makes integer from pointer without a cast
+    ../../fbirddd.c:409: warning: assignment makes pointer from integer without a cast
+    ../../fbirddd.c:410: warning: assignment makes pointer from integer without a cast
+    ../../fbirddd.c: In function 'fbClose':
+    ../../fbirddd.c:446: warning: passing argument 2 of 'isc_dsql_free_statement' from incompatible pointer type
+    c:/devl/Firebird-2.1.1/include/ibase.h:629: note: expected 'isc_stmt_handle *' but argument is of type 'void **'
+    ../../fbirddd.c:451: warning: passing argument 2 of 'isc_rollback_transaction' from incompatible pointer type
+    c:/devl/Firebird-2.1.1/include/ibase.h:780: note: expected 'isc_tr_handle *' but argument is of type 'void **'
+    ../../fbirddd.c: In function 'fbGoTo':
+    ../../fbirddd.c:469: warning: passing argument 2 of 'isc_dsql_fetch' from incompatible pointer type
+    c:/devl/Firebird-2.1.1/include/ibase.h:622: note: expected 'isc_stmt_handle *' but argument is of type 'void **'
+    ../../fbirddd.c:531: warning: passing argument 2 of 'isc_dsql_free_statement' from incompatible pointer type
+    c:/devl/Firebird-2.1.1/include/ibase.h:629: note: expected 'isc_stmt_handle *' but argument is of type 'void **'
+    ../../fbirddd.c:538: warning: passing argument 2 of 'isc_commit_transaction' from incompatible pointer type
+    c:/devl/Firebird-2.1.1/include/ibase.h:524: note: expected 'isc_tr_handle *' but argument is of type 'void **'
+
 2009-03-25 02:49 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/tests/speedtst.prg
     * simplified xHarbour MT test - use mutexes as internal thread IDs
@@ -696,74 +871,6 @@
   * contrib/hbodbc/odbc.c
     ! Fixed mingw64 warning.
     ; TODO: Check for possible regression.
-
-    ; TOFIX: (3rd party dependent contribs not yet included)
-      Errors/Core:
-      Temp/ccVJXjZS.s: Assembler messages:
-      Temp/ccVJXjZS.s:19: Error: Incorrect register `%rax' used with `l' suffix
-      Temp/ccVJXjZS.s:20: Error: `0x0e10(%rax,%ecx,4)' is not a valid base/index expression
-      Temp/ccVJXjZS.s:36: Error: Incorrect register `%rax' used with `l' suffix
-      Temp/ccVJXjZS.s:37: Error: `0x0e10(%rax,%ecx,4)' is not a valid base/index expression
-      + GTWVG (also lots of warning)
-
-      Warnings/Core:
-      ../../hbprintf.c: In function 'hb_snprintf':
-      ../../hbprintf.c:1067: warning: implicit declaration of function 'finite'
-      ../../hbprintf.c:1148: warning: cast from pointer to integer of different size
-      ../../itemapi.c: In function 'hb_itemStrBuf':
-      ../../itemapi.c:2159: warning: implicit declaration of function 'finite'
-      ../../dbfntx1.c: In function 'hb_ntxTagHeaderCheck':
-      ../../dbfntx1.c:1016: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfntx1.c:1016: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfntx1.c:1017: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfntx1.c:1017: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfntx1.c:1017: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfntx1.c:1017: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfnsx1.c: In function 'hb_nsxTagHeaderCheck':
-      ../../dbfnsx1.c:1233: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfnsx1.c:1235: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfnsx1.c:1236: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfnsx1.c:1236: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfnsx1.c:1236: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfnsx1.c:1236: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfnsx1.c: In function 'hb_nsxPageFree':
-      ../../dbfnsx1.c:1525: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfnsx1.c:1525: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfnsx1.c:1525: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfnsx1.c:1525: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfnsx1.c: In function 'hb_nsxPageNew':
-      ../../dbfnsx1.c:1574: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfnsx1.c:1574: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfnsx1.c:1574: warning: dereferencing type-punned pointer will break strict-aliasing rules
-      ../../dbfnsx1.c:1574: warning: dereferencing type-punned pointer will break strict-aliasing rules
-
-      Warnings/Contrib:
-      ../../files.c: In function 'HB_FUN_SETFDATI':
-      ../../files.c:247: warning: cast to pointer from integer of different size
-      ../../files.c:268: warning: cast from pointer to integer of different size
-      ../../getenvrn.c: In function 'HB_FUN_FT_GETE':
-      ../../getenvrn.c:178: warning: implicit declaration of function 'GetEnvironmentStrings'
-      ../../getenvrn.c:178: warning: initialization makes pointer from integer without a cast
-      ../../win_dll.c: In function 'DllExec':
-      ../../win_dll.c:509: warning: cast from pointer to integer of different size
-      ../../win_dll.c:603: warning: cast to pointer from integer of different size
-      ../../win_dll.c:672: warning: cast to pointer from integer of different size
-      ../../win_dll.c:689: warning: cast to pointer from integer of different size
-      ../../wapi_commctrl.c: In function 'HB_FUN_WAPI_TABCTRL_GETITEMRECT':
-      ../../wapi_commctrl.c:521: warning: value computed is not used
-      ../../wapi_commctrl.c: In function 'HB_FUN_WAPI_TABCTRL_GETIMAGELIST':
-      ../../wapi_commctrl.c:553: warning: cast from pointer to integer of different size
-      ../../wapi_commctrl.c: In function 'HB_FUN_WAPI_TABCTRL_ADJUSTRECT':
-      ../../wapi_commctrl.c:632: warning: value computed is not used
-      ../../wapi_commctrl.c: In function 'HB_FUN_WAPI_TABCTRL_CREATE':
-      ../../wapi_commctrl.c:782: warning: cast to pointer from integer of different size
-      ../../wapi_commctrl.c:786: warning: cast from pointer to integer of different size
-      ../../wapi_winbase.c: In function 'HB_FUN_WAPI_GETMODULEHANDLE':
-      ../../wapi_winbase.c:83: warning: cast to pointer from integer of different size
-      ../../hbserv.c: In function 's_serviceSetHBSig':
-      ../../hbserv.c:638: warning: passing argument 1 of 'SetUnhandledExceptionFilter' from incompatible pointer type
-      ../../hbxml.c: In function 'HB_FUN_HBXML_DATAREAD':
-      ../../hbxml.c:2321: warning: cast to pointer from integer of different size
 
 2009-03-21 14:23 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL

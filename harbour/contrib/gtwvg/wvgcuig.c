@@ -280,7 +280,7 @@ HB_FUNC( WVG_SETGOBJDATA )
                   bSuccess = FALSE;
                break;
             case GOBJ_OBJDATA_COLORBK:
-               gObj->crRGBBk = ISNIL( 3 ) ? ( COLORREF ) NULL : ( COLORREF ) ( HB_PTRDIFF ) hb_parnint( 3 );
+               gObj->crRGBBk = ISNUM( 3 ) ? ( COLORREF ) ( HB_PTRDIFF ) hb_parnint( 3 ) : ( COLORREF ) 0;
                break;
             default:
                bSuccess = FALSE;
@@ -612,9 +612,9 @@ HB_FUNC( WVG_LABEL )
       HB_TCHAR_CPTO( gObj->lpText, hb_parc( 4 ), strlen( hb_parc( 4 ) ) );
 #endif
 
-      gObj->iAlign           = ISNIL( 5 ) ? TA_LEFT : hb_parni( 5 );
+      gObj->iAlign           = ISNUM( 5 ) ? hb_parni( 5 ) : TA_LEFT;
       gObj->crRGBText        = ( COLORREF ) hb_parnint( 7 );
-      gObj->crRGBBk          = ISNIL( 8 ) ? ( COLORREF ) NULL : ( COLORREF ) hb_parnint( 8 );
+      gObj->crRGBBk          = ISNUM( 8 ) ? ( COLORREF ) hb_parnint( 8 ) : ( COLORREF ) 0;
       gObj->hFont            = hFont;
       gObj->bDestroyFont     = TRUE;
 
@@ -649,9 +649,9 @@ HB_FUNC( WVG_LABELEX )
    HB_TCHAR_CPTO( gObj->lpText, hb_parc( 4 ), strlen( hb_parc( 4 ) ) );
 #endif
 
-   gObj->iAlign           = ISNIL( 5 ) ? TA_LEFT : hb_parni( 5 );
+   gObj->iAlign           = ISNUM( 5 ) ? hb_parni( 5 ) : TA_LEFT;
    gObj->crRGBText        = ( COLORREF ) hb_parnint( 6 );
-   gObj->crRGBBk          = ISNIL( 7 ) ? ( COLORREF ) NULL : ( COLORREF ) hb_parnint( 7 );
+   gObj->crRGBBk          = ISNUM( 7 ) ? ( COLORREF ) hb_parnint( 7 ) : ( COLORREF ) 0;
 
    gObj->hFont            = pWVT->pGUI->hUserFonts[ hb_parni( 8 ) - 1 ];
    gObj->bDestroyFont     = FALSE;
@@ -664,7 +664,7 @@ static void hb_wvg_Label( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop )
 {
    HFONT hOldFont;
 
-   if( gObj->crRGBBk != ( COLORREF ) NULL )
+   if( gObj->crRGBBk != ( COLORREF ) 0 )
    {
       SetBkColor( pWVT->hdc, gObj->crRGBBk );
       SetBkMode( pWVT->hdc, OPAQUE );
@@ -1215,7 +1215,7 @@ HB_FUNC( WVG_TEXTBOX )
    gObj->iAlign           = iAlignH;
 
    gObj->crRGBText        = ( COLORREF ) hb_parnint( 9 );
-   gObj->crRGBBk          = ISNIL( 10 ) ? ( COLORREF ) NULL : ( COLORREF ) hb_parnint( 10 );
+   gObj->crRGBBk          = ISNUM( 10 ) ? ( COLORREF ) hb_parnint( 10 ) : ( COLORREF ) 0;
 
    gObj->hFont            = ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 11 );
    gObj->bDestroyFont     = FALSE;
@@ -1233,7 +1233,7 @@ static void hb_wvg_TextBox( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop,
 
    SetTextAlign( hdc, TA_TOP | TA_LEFT | TA_NOUPDATECP );
    SetTextColor( hdc, gObj->crRGBText );
-   if( gObj->crRGBBk == ( COLORREF ) NULL )
+   if( gObj->crRGBBk == ( COLORREF ) 0 )
       SetBkMode( hdc, TRANSPARENT );
    else
    {
@@ -1575,4 +1575,3 @@ void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect )
    }
 }
 /*----------------------------------------------------------------------*/
-

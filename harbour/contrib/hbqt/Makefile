@@ -8,6 +8,7 @@ LIBNAME=hbqt
 
 ifneq ($(HB_ARCHITECTURE),dos)
 ifneq ($(HB_ARCHITECTURE),os2)
+ifneq ($(HB_COMPILER),mingw64)
 
 ifeq ($(HB_INC_QT),)
 ifeq ($(HB_XBUILD),)
@@ -113,6 +114,9 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif
