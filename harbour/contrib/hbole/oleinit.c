@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * OLE Automation object
+ * OLE initialization
  *
  * Copyright 2008 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * www - http://www.harbour-project.org
@@ -50,35 +50,37 @@
  *
  */
 
-#define HB_CLS_NOTOBJECT  // avoid definition of method: INIT
-#include "hbclass.ch"
+
+#include "hbvm.h"
+#include "windows.h"
+
+/*
+ * Duplicated OleUninitialize() call causes GPF. So, if a few OLE libraries 
+ * is used inside Harbour code, you can expect GPF on application exit.
+ * This code does not implement any OLE interface except initialization. It is 
+ * have to be used from all other OLE libraries. [Mindaugas]
+ */
+
+static int    s_iOleInit = 0;
+
+static void hb_ole_exit( void* cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   if( s_iOleInit )
+   {
+      OleUninitialize();
+      s_iOleInit = 0;
+   }
+}
 
 
-REQUEST __GETMESSAGE
-
-CLASS HB_OleAuto
-   DATA __hObj
-
-   ERROR HANDLER __OnError()
-   DESTRUCTOR    __Dtor()
-ENDCLASS
-
-
-FUNC GetActiveObject( ... )
-LOCAL oOle, hOle
-   hOle := OleGetActiveObject( ... )
-   IF ! EMPTY( hOle )
-      oOle := HB_OleAuto()
-      oOle:__hObj := hOle
-   ENDIF
-RETURN oOle
-
-
-FUNC CreateObject( ... )
-LOCAL oOle, hOle
-   hOle := OleCreateObject( ... )
-   IF ! EMPTY( hOle )
-      oOle := HB_OleAuto()
-      oOle:__hObj := hOle
-   ENDIF
-RETURN oOle
+HB_EXPORT void hb_oleInit()
+{
+   if( ! s_iOleInit )
+   {
+      OleInitialize( NULL );
+      hb_vmAtExit( hb_ole_exit, NULL );
+   }
+   s_iOleInit++;
+}

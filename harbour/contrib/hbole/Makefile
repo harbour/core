@@ -9,7 +9,8 @@ LIBNAME=hbole
 ifeq ($(HB_ARCHITECTURE),win)
 
 C_SOURCES=\
-	ole2.c \
+	oleinit.c \
+	olecore.c \
 
 PRG_SOURCES=\
 	oleauto.prg \

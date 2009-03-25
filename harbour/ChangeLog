@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-25 13:35 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  - harbour/contrib/hbole/ole2.c
+  * harbour/contrib/hbole/oleauto.prg
+  + harbour/contrib/hbole/oleinit.c
+  + harbour/contrib/hbole/olecore.c
+    + added my own implementation of OLE library. It is bases on old 
+      code written by Jose F. Gimenez. Code is changed to be reentrant,
+      more clean, but only basic features are implemented. 
+
 2009-03-25 12:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbstack.h
     ! disabled inline assembler code to retrieve HVM stack pointer from TLS
