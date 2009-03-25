@@ -18,4 +18,6 @@ endif
 
 endif
 
+DIRS += $(HB_EXTERNAL_ADDONS)
+
 include $(ROOT)config/dir.cf

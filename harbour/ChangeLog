@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-25 15:55 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * external/Makefile
+    + Added HB_EXTERNAL_ADDON envvar support.
+
+  * config/win/bcc.cf
+    * -d moved to optimization switches.
+
 2009-03-25 14:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + external/Makefile
     + Added missing file.
