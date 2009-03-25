@@ -48,6 +48,83 @@ typedef struct HB_stru_genc_info
 typedef HB_GENC_FUNC( HB_GENC_FUNC_ );
 typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
 
+static void hb_compDumpFindCFunc( HB_COMP_DECL )
+{
+   PINLINE pInline;
+
+   pInline = HB_COMP_PARAM->inlines.pFirst;
+   while( pInline )
+   {
+      if( pInline->pCode && !pInline->szName )
+      {
+         const char * pszCCode = ( const char * ) pInline->pCode;
+         char ch;
+         int len;
+         while( ( ch = *pszCCode++ ) != 0 )
+         {
+            if( HB_ISFIRSTIDCHAR( ch ) )
+            {
+               if( ch == 'H' && strncmp( pszCCode, "B_FUNC_STATIC", 13 ) == 0 )
+               {
+                  pszCCode += 13;
+                  while( HB_ISSPACE( *pszCCode ) )
+                     ++pszCCode;
+                  if( *pszCCode == '(' )
+                  {
+                     ++pszCCode;
+                     while( HB_ISSPACE( *pszCCode ) )
+                        ++pszCCode;
+                     if( HB_ISFIRSTIDCHAR( *pszCCode ) )
+                     {
+                        char * name = ( char * ) pszCCode++;
+
+                        while( HB_ISNEXTIDCHAR( *pszCCode ) )
+                           ++pszCCode;
+                        len = ( int ) ( pszCCode - name );
+                        while( HB_ISSPACE( *pszCCode ) )
+                           ++pszCCode;
+                        if( *pszCCode == ')' )
+                        {
+                           name = hb_strndup( name, len );
+                           hb_compFunctionMarkStatic( HB_COMP_PARAM, name );
+                           hb_xfree( name );
+                        }
+                     }
+                  }
+               }
+               while( HB_ISNEXTIDCHAR( *pszCCode ) )
+                  ++pszCCode;
+            }
+            else if( ch == '/' && *pszCCode == '*' )
+            {
+               pszCCode++;
+               while( *pszCCode )
+               {
+                  if( *pszCCode++ == '*' )
+                  {
+                     if( *pszCCode++ == '/' )
+                        break;
+                  }
+               }
+            }
+            else if( ch == '/' && *pszCCode == '/' )
+            {
+               do { ++pszCCode; } while( *pszCCode && *pszCCode != '\n' );
+            }
+            else if( ch == '"' )
+            {
+               while( *pszCCode )
+               {
+                  if( *pszCCode++ == '"' )
+                     break;
+               }
+            }
+         }
+      }
+      pInline = pInline->pNext;
+   }
+}
+
 void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the C language output */
 {
    char szFileName[ _POSIX_PATH_MAX + 1 ];
@@ -105,6 +182,8 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 
    if( pFunc )
    {
+      hb_compDumpFindCFunc( HB_COMP_PARAM );
+
       fprintf( yyc, "#include \"hbvmpub.h\"\n" );
       if( HB_COMP_PARAM->iGenCOutput != HB_COMPGENC_COMPACT )
          fprintf( yyc, "#include \"hbpcode.h\"\n" );
@@ -168,7 +247,9 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
          if( ( pFuncall->cScope & ( HB_FS_DEFERRED | HB_FS_LOCAL ) ) == 0 &&
              hb_compFunctionFind( HB_COMP_PARAM, pFuncall->szName ) == NULL &&
              hb_compInlineFind( HB_COMP_PARAM, pFuncall->szName ) == NULL )
-            fprintf( yyc, "HB_FUNC_EXTERN( %s );\n", pFuncall->szName );
+            fprintf( yyc, "HB_FUNC_%s( %s );\n",
+                     ( pFuncall->cScope & HB_FS_STATIC ) ? "STATIC" : "EXTERN",
+                     pFuncall->szName );
          pFuncall = pFuncall->pNext;
       }
 

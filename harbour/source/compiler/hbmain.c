@@ -2042,6 +2042,28 @@ void hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cS
       HB_COMP_PARAM->lastLine = -1;
 }
 
+void hb_compFunctionMarkStatic( HB_COMP_DECL, const char * szFunName )
+{
+   if( hb_compFunctionFind( HB_COMP_PARAM, szFunName ) == NULL )
+   {
+      PFUNCALL pFunc = hb_compFunCallFind( HB_COMP_PARAM, szFunName );
+
+      if( pFunc )
+      {
+         PCOMSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
+
+         if( pSym )
+         {
+            if( ( pSym->cScope & HB_FS_DEFERRED ) == 0 )
+            {
+               pSym->cScope |= HB_FS_STATIC | HB_FS_LOCAL;
+               pFunc->cScope |= HB_FS_STATIC;
+            }
+         }
+      }
+   }
+}
+
 PINLINE hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine )
 {
    PINLINE pInline;

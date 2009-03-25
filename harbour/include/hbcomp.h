@@ -144,6 +144,8 @@ extern void      hb_compAnnounce( HB_COMP_DECL, const char * );
 extern PINLINE   hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine );
 extern PINLINE   hb_compInlineFind( HB_COMP_DECL, const char * szFunName );
 
+extern void      hb_compFunctionMarkStatic( HB_COMP_DECL, const char * szFunName );
+
 extern PFUNCALL  hb_compFunCallFind( HB_COMP_DECL, const char * szFunName ); /* locates a previously defined called function */
 extern BOOL      hb_compFunCallCheck( HB_COMP_DECL, const char *, int );
 

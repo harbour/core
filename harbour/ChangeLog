@@ -8,6 +8,64 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-25 23:21 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+    ! fixed line number set for C preprocessor in #pragma begindump
+
+  * harbour/include/hbcomp.h
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/genc.c
+    * added detection of static Harbour functions in #pragma begindump
+      code. I do not like it because it cannot be well implemented on
+      other then real C compiler/preprocessor level but it's probably
+      better then different workarounds I see in some [x]Harbour 3-rd
+      party projects.
+      Warning this functionality is not officially supported. It's a hack
+      to existing #pragma begindump hack and activated only for dumped C
+      code. It tries to detect Harbour static functions declared by
+      HB_FUNC_STATIC( name ) but it does not make any real C preprocessing.
+      Only strips comments and strings and then looks for above statement
+      dividing the code to some basic tokens so it will give wrong results
+      for code like:
+
+         #if 0
+            HB_FUNC_STATIC( MYFUNC )
+         #else
+            HB_FUNC( MYFUNC )
+         #endif
+            {
+               hb_retc( "MyFunc" );
+            }
+
+      but it works correctly for simple code which does not use conditional
+      compilation and does not try to redefine HB_FUNC_STATIC() macro, f.e:
+
+         proc main()
+            ? YEAR( DATE() ), MONTH( DATE() ), DAY( DATE() ), TEST()
+         return
+         #pragma begindump
+         #include "hbapi.h"
+         /* are comments stripped? If not then HB_FUNC_STATIC( DATE )
+            in comment can create troubles. */
+         // HB_FUNC_STATIC( YEAR ) just like this one in C++ comments
+         #define MYHB_FUNC_STATIC( fun )  #fun // to test whole word tokens
+         /* COMMENT */HB_FUNC_STATIC( TEST )
+         {
+            hb_retc( "HB_FUNC_STATIC( DAY )->" MYHB_FUNC_STATIC( MONTH ) );
+         }
+         #pragma enddump
+
+      Before we had wrong results for any code like:
+
+            HB_FUNC_STATIC( MYFUNC )
+            {
+               hb_retc( "MyFunc" );
+            }
+
+      so it's not making anything worse (I hope ;-)).
+      The implementation is intentionally local to -gc output to not
+      effect other compiler code.
+
 2009-03-25 16:32 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   - doc/license.txt
     % Removed duplicate copy of this text. Now /COPYING is the

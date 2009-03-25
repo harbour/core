@@ -810,7 +810,7 @@ static void hb_pp_dumpEnd( PHB_PP_STATE pState )
       ( pState->pDumpFunc )( pState->cargo,
                              hb_membufPtr( pState->pDumpBuffer ),
                              hb_membufLen( pState->pDumpBuffer ),
-                             pState->iDumpLine );
+                             pState->iDumpLine + 1 );
 
       /* I do not like it - dump data should be separated from
          preprocessed .prg code. What is inside DUMP area and
