@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-25 12:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+    ! disabled inline assembler code to retrieve HVM stack pointer from TLS
+      in Win64 builds. In summary I do not even know if Win64 uses the same
+      memory addresses for TLS as Win32 so it's not safe to enable such code
+      now. Maybe in the future though I hope that new 64 bit compilers will
+      have fast enough native TLS support.
+
 2009-03-25 11:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * tests/testhtml.prg
     * Update by Vailton Renato applied.

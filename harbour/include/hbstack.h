@@ -197,7 +197,8 @@ typedef struct
 #        endif
 #     else
          extern HB_TLS_KEY hb_stack_key;
-#        if defined( __BORLANDC__ ) && defined( HB_STACK_PRELOAD )
+#        if defined( __BORLANDC__ ) && defined( HB_STACK_PRELOAD ) && \
+            !defined( HB_OS_WIN_64 ) && !defined( HB_OS_WIN_CE )
             static __inline void* hb_stack_ptr_from_tls( void )
             {
                /* mov ecx,hb_stack_key */
@@ -209,25 +210,17 @@ typedef struct
                /* ret (if function is not inlined) */
                return (void*) _EAX;
             }
-#        elif defined( __MINGW32__ )
+#        elif defined( __MINGW32__ ) && \
+              !defined( HB_OS_WIN_64 ) && !defined( HB_OS_WIN_CE )
             static __inline__  __attribute__ ((pure, malloc)) void * hb_stack_ptr_from_tls( void )
             {
                void * p;
-#              if defined( __MINGW64__ )
-               __asm__ (
-                  "movq  %%fs:(0x18), %0\n\t"
-                  "movq  0x0e10(%0,%1,4), %0\n\t"
-                  :"=a" (p)
-                  :"c" (hb_stack_key)
-               );
-#              else
                __asm__ (
                   "movl  %%fs:(0x18), %0\n\t"
                   "movl  0x0e10(%0,%1,4), %0\n\t"
                   :"=a" (p)
                   :"c" (hb_stack_key)
                );
-#              endif
                return p;
             }
 #           define hb_stack_ptr  ( ( PHB_STACK ) hb_stack_ptr_from_tls() )
@@ -237,7 +230,8 @@ typedef struct
 #        endif
 #     endif
 #     if defined( HB_STACK_PRELOAD ) && !defined( HB_USE_TLS )
-#        if defined( __BORLANDC__ ) || defined( __MINGW32__ )
+#        if ( defined( __BORLANDC__ ) || defined( __MINGW32__ ) ) && \
+            !defined( HB_OS_WIN_64 ) && !defined( HB_OS_WIN_CE )
 #           define HB_STACK_TLS_PRELOAD   PHB_STACK _hb_stack_ptr_ = ( PHB_STACK ) hb_stack_ptr_from_tls();
 #           undef hb_stack_ptr
 #        else
