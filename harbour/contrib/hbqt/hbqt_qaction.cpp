@@ -67,18 +67,12 @@ QAction ( const QIcon & icon, const QString & text, QObject * parent ) [3]
 */
 HB_FUNC( QT_QACTION )
 {
-  if( hb_param( 1, HB_IT_POINTER ) )
-  {
-    hb_retptr( new QAction( hbqt_par_QObject( 1 ) ) );
-  }
-  else if( hb_param( 2, HB_IT_POINTER ) )
-  {
-    hb_retptr( new QAction( hbqt_par_QString( 1 ), hbqt_par_QObject( 2 ) ) );
-  }
-  else if( hb_param( 3, HB_IT_POINTER ) )
-  {
-    hb_retptr( new QAction( hbqt_par_QIcon( 1 ), hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ) ) );
-  }
+   if( hb_param( 1, HB_IT_POINTER ) )
+      hb_retptr( new QAction( hbqt_par_QObject( 1 ) ) );
+   else if( hb_param( 2, HB_IT_POINTER ) )
+      hb_retptr( new QAction( hbqt_par_QString( 1 ), hbqt_par_QObject( 2 ) ) );
+   else if( hb_param( 3, HB_IT_POINTER ) )
+      hb_retptr( new QAction( hbqt_par_QIcon( 1 ), hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ) ) );
 }
 
 #if 0
@@ -88,20 +82,20 @@ HB_FUNC( QT_QACTION_1 )
 }
 HB_FUNC( QT_QACTION_2 )
 {
-  QAction * action = NULL;
-  QString text = hb_parc(1);
-  QObject * parent = (QObject *) hb_parptr(2);
-  action = new QAction ( text, parent );
-  hb_retptr( (QAction *) action );
+   QAction * action = NULL;
+   QString text = hb_parc( 1 );
+   QObject * parent = ( QObject * ) hb_parptr( 2 );
+   action = new QAction ( text, parent );
+   hb_retptr( ( QAction * ) action );
 }
 HB_FUNC( QT_QACTION_3 )
 {
-  QAction * action = NULL;
-  QString icon = hb_parc(1);
-  QString text = hb_parc(2);
-  QObject * parent = (QObject *) hb_parptr(3);
-  action = new QAction ( QIcon( icon ), text, parent );
-  hb_retptr( (QAction *) action );
+   QAction * action = NULL;
+   QString icon = hb_parc( 1 );
+   QString text = hb_parc( 2 );
+   QObject * parent = ( QObject * ) hb_parptr( 3 );
+   action = new QAction ( QIcon( icon ), text, parent );
+   hb_retptr( ( QAction * ) action );
 }
 #endif
 
@@ -110,7 +104,7 @@ QActionGroup * actionGroup () const
 */
 HB_FUNC( QT_QACTION_ACTIONGROUP )
 {
-  hb_retptr( ( QActionGroup* ) hbqt_par_QAction( 1 )->actionGroup() );
+   hb_retptr( ( QActionGroup* ) hbqt_par_QAction( 1 )->actionGroup() );
 }
 
 /*
@@ -118,7 +112,7 @@ void activate ( ActionEvent event )
 */
 HB_FUNC( QT_QACTION_ACTIVATE )
 {
-  hbqt_par_QAction( 1 )->activate( ( QAction::ActionEvent ) hb_parni( 2 ) );
+   hbqt_par_QAction( 1 )->activate( ( QAction::ActionEvent ) hb_parni( 2 ) );
 }
 
 /*
@@ -126,7 +120,7 @@ bool autoRepeat () const
 */
 HB_FUNC( QT_QACTION_AUTOREPEAT )
 {
-  hb_retl( hbqt_par_QAction( 1 )->autoRepeat() );
+   hb_retl( hbqt_par_QAction( 1 )->autoRepeat() );
 }
 
 /*
@@ -134,7 +128,7 @@ QString iconText () const
 */
 HB_FUNC( QT_QACTION_ICONTEXT )
 {
-  hb_retc( hbqt_par_QAction( 1 )->iconText().toLatin1().data() );
+   hb_retc( hbqt_par_QAction( 1 )->iconText().toLatin1().data() );
 }
 
 /*
@@ -142,7 +136,7 @@ bool isCheckable () const
 */
 HB_FUNC( QT_QACTION_ISCHECKABLE )
 {
-  hb_retl( hbqt_par_QAction( 1 )->isCheckable() );
+   hb_retl( hbqt_par_QAction( 1 )->isCheckable() );
 }
 
 /*
@@ -150,7 +144,7 @@ bool isChecked () const
 */
 HB_FUNC( QT_QACTION_ISCHECKED )
 {
-  hb_retl( hbqt_par_QAction( 1 )->isChecked() );
+   hb_retl( hbqt_par_QAction( 1 )->isChecked() );
 }
 
 /*
@@ -158,7 +152,7 @@ bool isEnabled () const
 */
 HB_FUNC( QT_QACTION_ISENABLED )
 {
-  hb_retl( hbqt_par_QAction( 1 )->isEnabled() );
+   hb_retl( hbqt_par_QAction( 1 )->isEnabled() );
 }
 
 /*
@@ -166,7 +160,7 @@ bool isIconVisibleInMenu () const
 */
 HB_FUNC( QT_QACTION_ISICONVISIBLEINMENU )
 {
-  hb_retl( hbqt_par_QAction( 1 )->isIconVisibleInMenu() );
+   hb_retl( hbqt_par_QAction( 1 )->isIconVisibleInMenu() );
 }
 
 /*
@@ -174,7 +168,7 @@ bool isSeparator () const
 */
 HB_FUNC( QT_QACTION_ISSEPARATOR )
 {
-  hb_retl( hbqt_par_QAction( 1 )->isSeparator() );
+   hb_retl( hbqt_par_QAction( 1 )->isSeparator() );
 }
 
 /*
@@ -182,7 +176,7 @@ bool isVisible () const
 */
 HB_FUNC( QT_QACTION_ISVISIBLE )
 {
-  hb_retl( hbqt_par_QAction( 1 )->isVisible() );
+   hb_retl( hbqt_par_QAction( 1 )->isVisible() );
 }
 
 /*
@@ -190,7 +184,7 @@ QMenu * menu () const
 */
 HB_FUNC( QT_QACTION_MENU )
 {
-  hb_retptr( ( QMenu* ) hbqt_par_QAction( 1 )->menu() );
+   hb_retptr( ( QMenu* ) hbqt_par_QAction( 1 )->menu() );
 }
 
 /*
@@ -198,7 +192,7 @@ MenuRole menuRole () const
 */
 HB_FUNC( QT_QACTION_MENUROLE )
 {
-  hb_retni( hbqt_par_QAction( 1 )->menuRole() );
+   hb_retni( hbqt_par_QAction( 1 )->menuRole() );
 }
 
 /*
@@ -206,7 +200,7 @@ QWidget * parentWidget () const
 */
 HB_FUNC( QT_QACTION_PARENTWIDGET )
 {
-  hb_retptr( ( QWidget* ) hbqt_par_QAction( 1 )->parentWidget() );
+   hb_retptr( ( QWidget* ) hbqt_par_QAction( 1 )->parentWidget() );
 }
 
 /*
@@ -214,7 +208,7 @@ void setActionGroup ( QActionGroup * group )
 */
 HB_FUNC( QT_QACTION_SETACTIONGROUP )
 {
-  hbqt_par_QAction( 1 )->setActionGroup( hbqt_par_QActionGroup( 2 ) );
+   hbqt_par_QAction( 1 )->setActionGroup( hbqt_par_QActionGroup( 2 ) );
 }
 
 /*
@@ -222,7 +216,7 @@ void setAutoRepeat ( bool )
 */
 HB_FUNC( QT_QACTION_SETAUTOREPEAT )
 {
-  hbqt_par_QAction( 1 )->setAutoRepeat( hb_parl( 2 ) );
+   hbqt_par_QAction( 1 )->setAutoRepeat( hb_parl( 2 ) );
 }
 
 /*
@@ -230,7 +224,7 @@ void setCheckable ( bool )
 */
 HB_FUNC( QT_QACTION_SETCHECKABLE )
 {
-  hbqt_par_QAction( 1 )->setCheckable( hb_parl( 2 ) );
+   hbqt_par_QAction( 1 )->setCheckable( hb_parl( 2 ) );
 }
 
 /*
@@ -238,7 +232,7 @@ void setIconText ( const QString & text )
 */
 HB_FUNC( QT_QACTION_SETICONTEXT )
 {
-  hbqt_par_QAction( 1 )->setIconText( hbqt_par_QString( 2 ) );
+   hbqt_par_QAction( 1 )->setIconText( hbqt_par_QString( 2 ) );
 }
 
 /*
@@ -246,7 +240,7 @@ void setIconVisibleInMenu ( bool visible )
 */
 HB_FUNC( QT_QACTION_SETICONVISIBLEINMENU )
 {
-  hbqt_par_QAction( 1 )->setIconVisibleInMenu( hb_parl( 2 ) );
+   hbqt_par_QAction( 1 )->setIconVisibleInMenu( hb_parl( 2 ) );
 }
 
 /*
@@ -254,7 +248,7 @@ void setMenu ( QMenu * menu )
 */
 HB_FUNC( QT_QACTION_SETMENU )
 {
-  hbqt_par_QAction( 1 )->setMenu( hbqt_par_QMenu( 2 ) );
+   hbqt_par_QAction( 1 )->setMenu( hbqt_par_QMenu( 2 ) );
 }
 
 /*
@@ -262,7 +256,7 @@ void setMenuRole ( MenuRole menuRole )
 */
 HB_FUNC( QT_QACTION_SETMENUROLE )
 {
-  hbqt_par_QAction( 1 )->setMenuRole( ( QAction::MenuRole ) hb_parni( 2 ) );
+   hbqt_par_QAction( 1 )->setMenuRole( ( QAction::MenuRole ) hb_parni( 2 ) );
 }
 
 /*
@@ -270,7 +264,7 @@ void setSeparator ( bool b )
 */
 HB_FUNC( QT_QACTION_SETSEPARATOR )
 {
-  hbqt_par_QAction( 1 )->setSeparator( hb_parl( 2 ) );
+   hbqt_par_QAction( 1 )->setSeparator( hb_parl( 2 ) );
 }
 
 /*
@@ -278,7 +272,7 @@ void setShortcutContext ( Qt::ShortcutContext context )
 */
 HB_FUNC( QT_QACTION_SETSHORTCUTCONTEXT )
 {
-  hbqt_par_QAction( 1 )->setShortcutContext( ( Qt::ShortcutContext ) hb_parni( 2 ) );
+   hbqt_par_QAction( 1 )->setShortcutContext( ( Qt::ShortcutContext ) hb_parni( 2 ) );
 }
 
 /*
@@ -286,7 +280,7 @@ void setShortcuts ( QKeySequence::StandardKey key )
 */
 HB_FUNC( QT_QACTION_SETSHORTCUTS )
 {
-  hbqt_par_QAction( 1 )->setShortcuts( ( QKeySequence::StandardKey ) hb_parni( 2 ) );
+   hbqt_par_QAction( 1 )->setShortcuts( ( QKeySequence::StandardKey ) hb_parni( 2 ) );
 }
 
 /*
@@ -294,7 +288,7 @@ void setStatusTip ( const QString & statusTip )
 */
 HB_FUNC( QT_QACTION_SETSTATUSTIP )
 {
-  hbqt_par_QAction( 1 )->setStatusTip( hbqt_par_QString( 2 ) );
+   hbqt_par_QAction( 1 )->setStatusTip( hbqt_par_QString( 2 ) );
 }
 
 /*
@@ -302,7 +296,7 @@ void setText ( const QString & text )
 */
 HB_FUNC( QT_QACTION_SETTEXT )
 {
-  hbqt_par_QAction( 1 )->setText( hbqt_par_QString( 2 ) );
+   hbqt_par_QAction( 1 )->setText( hbqt_par_QString( 2 ) );
 }
 
 /*
@@ -310,7 +304,7 @@ void setToolTip ( const QString & tip )
 */
 HB_FUNC( QT_QACTION_SETTOOLTIP )
 {
-  hbqt_par_QAction( 1 )->setToolTip( hbqt_par_QString( 2 ) );
+   hbqt_par_QAction( 1 )->setToolTip( hbqt_par_QString( 2 ) );
 }
 
 /*
@@ -318,7 +312,7 @@ void setWhatsThis ( const QString & what )
 */
 HB_FUNC( QT_QACTION_SETWHATSTHIS )
 {
-  hbqt_par_QAction( 1 )->setWhatsThis( hbqt_par_QString( 2 ) );
+   hbqt_par_QAction( 1 )->setWhatsThis( hbqt_par_QString( 2 ) );
 }
 
 /*
@@ -326,7 +320,7 @@ Qt::ShortcutContext shortcutContext () const
 */
 HB_FUNC( QT_QACTION_SHORTCUTCONTEXT )
 {
-  hb_retni( hbqt_par_QAction( 1 )->shortcutContext() );
+   hb_retni( hbqt_par_QAction( 1 )->shortcutContext() );
 }
 
 /*
@@ -334,7 +328,7 @@ bool showStatusText ( QWidget * widget = 0 )
 */
 HB_FUNC( QT_QACTION_SHOWSTATUSTEXT )
 {
-  hb_retl( hbqt_par_QAction( 1 )->showStatusText( hbqt_par_QWidget( 2 ) ) );
+   hb_retl( hbqt_par_QAction( 1 )->showStatusText( hbqt_par_QWidget( 2 ) ) );
 }
 
 /*
@@ -342,7 +336,7 @@ QString statusTip () const
 */
 HB_FUNC( QT_QACTION_STATUSTIP )
 {
-  hb_retc( hbqt_par_QAction( 1 )->statusTip().toLatin1().data() );
+   hb_retc( hbqt_par_QAction( 1 )->statusTip().toLatin1().data() );
 }
 
 /*
@@ -350,7 +344,7 @@ QString text () const
 */
 HB_FUNC( QT_QACTION_TEXT )
 {
-  hb_retc( hbqt_par_QAction( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QAction( 1 )->text().toLatin1().data() );
 }
 
 /*
@@ -358,7 +352,7 @@ QString toolTip () const
 */
 HB_FUNC( QT_QACTION_TOOLTIP )
 {
-  hb_retc( hbqt_par_QAction( 1 )->toolTip().toLatin1().data() );
+   hb_retc( hbqt_par_QAction( 1 )->toolTip().toLatin1().data() );
 }
 
 /*
@@ -366,7 +360,7 @@ QString whatsThis () const
 */
 HB_FUNC( QT_QACTION_WHATSTHIS )
 {
-  hb_retc( hbqt_par_QAction( 1 )->whatsThis().toLatin1().data() );
+   hb_retc( hbqt_par_QAction( 1 )->whatsThis().toLatin1().data() );
 }
 
 /*
@@ -374,7 +368,7 @@ void hover ()
 */
 HB_FUNC( QT_QACTION_HOVER )
 {
-  hbqt_par_QAction( 1 )->hover();
+   hbqt_par_QAction( 1 )->hover();
 }
 
 /*
@@ -382,7 +376,7 @@ void setChecked ( bool )
 */
 HB_FUNC( QT_QACTION_SETCHECKED )
 {
-  hbqt_par_QAction( 1 )->setChecked( hb_parl( 2 ) );
+   hbqt_par_QAction( 1 )->setChecked( hb_parl( 2 ) );
 }
 
 /*
@@ -390,7 +384,7 @@ void setDisabled ( bool b )
 */
 HB_FUNC( QT_QACTION_SETDISABLED )
 {
-  hbqt_par_QAction( 1 )->setDisabled( hb_parl( 2 ) );
+   hbqt_par_QAction( 1 )->setDisabled( hb_parl( 2 ) );
 }
 
 /*
@@ -398,7 +392,7 @@ void setEnabled ( bool )
 */
 HB_FUNC( QT_QACTION_SETENABLED )
 {
-  hbqt_par_QAction( 1 )->setEnabled( hb_parl( 2 ) );
+   hbqt_par_QAction( 1 )->setEnabled( hb_parl( 2 ) );
 }
 
 /*
@@ -406,7 +400,7 @@ void setVisible ( bool )
 */
 HB_FUNC( QT_QACTION_SETVISIBLE )
 {
-  hbqt_par_QAction( 1 )->setVisible( hb_parl( 2 ) );
+   hbqt_par_QAction( 1 )->setVisible( hb_parl( 2 ) );
 }
 
 /*
@@ -414,7 +408,7 @@ void toggle ()
 */
 HB_FUNC( QT_QACTION_TOGGLE )
 {
-  hbqt_par_QAction( 1 )->toggle();
+   hbqt_par_QAction( 1 )->toggle();
 }
 
 /*
@@ -422,7 +416,7 @@ void trigger ()
 */
 HB_FUNC( QT_QACTION_TRIGGER )
 {
-  hbqt_par_QAction( 1 )->trigger();
+   hbqt_par_QAction( 1 )->trigger();
 }
 
 /*----------------------------------------------------------------------*/

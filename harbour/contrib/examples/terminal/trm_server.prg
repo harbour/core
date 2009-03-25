@@ -475,7 +475,7 @@ HB_FUNC( CREATEPROCESS )
   LPPROCESS_INFORMATION lpProcessInformation; // process information
 
   lpApplicationName   = NULL;//hb_parc( 1 );
-  lpCommandLine       = hb_parc( 1 );//NULL;//ISNIL( 2 ) ? NULL : hb_parc( 2 );
+  lpCommandLine       = hb_parc( 1 );
   lpProcessAttributes = NULL;
   lpThreadAttributes  = NULL;
   bInheritHandles     = TRUE;
@@ -503,8 +503,8 @@ HB_FUNC( SHELLEXECUTE )
    ShellExecute( NULL,
                 "OPEN",
                  hb_parc( 1 ),
-                 ISNIL( 2 ) ? NULL : hb_parc( 2 ),
-                 ISNIL( 3 ) ? NULL : hb_parc( 3 ),
+                 hb_parc( 2 ),
+                 hb_parc( 3 ),
                  SW_SHOWNORMAL );
 }
 
@@ -515,4 +515,3 @@ HB_FUNC( OUTPUTDEBUGSTRING )
 
 #pragma ENDDUMP
 //----------------------------------------------------------------------//
-

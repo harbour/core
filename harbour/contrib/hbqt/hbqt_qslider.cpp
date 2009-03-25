@@ -63,10 +63,10 @@
 
 HB_FUNC( QT_QSLIDER )
 {
-  if( hb_param( 1, HB_IT_NUMERIC ) )
-    hb_retptr( ( QSlider* ) new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
-  else
-    hb_retptr( ( QSlider* ) new QSlider( hbqt_par_QWidget( 1 ) ) );
+   if( ISNUM( 1 ) )
+      hb_retptr( ( QSlider* ) new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
+   else
+      hb_retptr( ( QSlider* ) new QSlider( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -75,11 +75,12 @@ QSlider ( Qt::Orientation orientation, QWidget * parent = 0 )
 */
 HB_FUNC( QT_QSLIDER_1 )
 {
-  hb_retptr( ( QSlider* ) new QSlider( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QSlider* ) new QSlider( hbqt_par_QWidget( 1 ) ) );
 }
+
 HB_FUNC( QT_QSLIDER_2 )
 {
-  hb_retptr( ( QSlider* ) new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
+   hb_retptr( ( QSlider* ) new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

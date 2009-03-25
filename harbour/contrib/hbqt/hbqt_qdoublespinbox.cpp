@@ -65,7 +65,7 @@ QDoubleSpinBox ( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QDOUBLESPINBOX )
 {
-  hb_retptr( ( QDoubleSpinBox* ) new QDoubleSpinBox( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QDoubleSpinBox* ) new QDoubleSpinBox( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

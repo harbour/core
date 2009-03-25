@@ -65,7 +65,7 @@ QCalendarWidget( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QCALENDARWIDGET )
 {
-  hb_retptr( ( QCalendarWidget* ) new QCalendarWidget( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QCalendarWidget* ) new QCalendarWidget( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -73,7 +73,7 @@ int dateEditAcceptDelay () const
 */
 HB_FUNC( QT_QCALENDARWIDGET_DATEEDITACCEPTDELAY )
 {
-  hb_retni( hbqt_par_QCalendarWidget( 1 )->dateEditAcceptDelay() );
+   hb_retni( hbqt_par_QCalendarWidget( 1 )->dateEditAcceptDelay() );
 }
 
 /*
@@ -81,7 +81,7 @@ Qt::DayOfWeek firstDayOfWeek () const
 */
 HB_FUNC( QT_QCALENDARWIDGET_FIRSTDAYOFWEEK )
 {
-  hb_retni( hbqt_par_QCalendarWidget( 1 )->firstDayOfWeek() );
+   hb_retni( hbqt_par_QCalendarWidget( 1 )->firstDayOfWeek() );
 }
 
 /*
@@ -89,7 +89,7 @@ HorizontalHeaderFormat horizontalHeaderFormat () const
 */
 HB_FUNC( QT_QCALENDARWIDGET_HORIZONTALHEADERFORMAT )
 {
-  hb_retni( hbqt_par_QCalendarWidget( 1 )->horizontalHeaderFormat() );
+   hb_retni( hbqt_par_QCalendarWidget( 1 )->horizontalHeaderFormat() );
 }
 
 /*
@@ -97,7 +97,7 @@ bool isDateEditEnabled () const
 */
 HB_FUNC( QT_QCALENDARWIDGET_ISDATEEDITENABLED )
 {
-  hb_retl( hbqt_par_QCalendarWidget( 1 )->isDateEditEnabled() );
+   hb_retl( hbqt_par_QCalendarWidget( 1 )->isDateEditEnabled() );
 }
 
 /*
@@ -105,7 +105,7 @@ bool isGridVisible () const
 */
 HB_FUNC( QT_QCALENDARWIDGET_ISGRIDVISIBLE )
 {
-  hb_retl( hbqt_par_QCalendarWidget( 1 )->isGridVisible() );
+   hb_retl( hbqt_par_QCalendarWidget( 1 )->isGridVisible() );
 }
 
 /*
@@ -113,7 +113,7 @@ bool isNavigationBarVisible () const
 */
 HB_FUNC( QT_QCALENDARWIDGET_ISNAVIGATIONBARVISIBLE )
 {
-  hb_retl( hbqt_par_QCalendarWidget( 1 )->isNavigationBarVisible() );
+   hb_retl( hbqt_par_QCalendarWidget( 1 )->isNavigationBarVisible() );
 }
 
 /*
@@ -121,7 +121,7 @@ int monthShown () const
 */
 HB_FUNC( QT_QCALENDARWIDGET_MONTHSHOWN )
 {
-  hb_retni( hbqt_par_QCalendarWidget( 1 )->monthShown() );
+   hb_retni( hbqt_par_QCalendarWidget( 1 )->monthShown() );
 }
 
 /*
@@ -129,7 +129,7 @@ SelectionMode selectionMode () const
 */
 HB_FUNC( QT_QCALENDARWIDGET_SELECTIONMODE )
 {
-  hb_retni( hbqt_par_QCalendarWidget( 1 )->selectionMode() );
+   hb_retni( hbqt_par_QCalendarWidget( 1 )->selectionMode() );
 }
 
 /*
@@ -137,7 +137,7 @@ void setDateEditAcceptDelay( int delay )
 */
 HB_FUNC( QT_QCALENDARWIDGET_SETDATEEDITACCEPTDELAY )
 {
-  hbqt_par_QCalendarWidget( 1 )->setDateEditAcceptDelay( hb_parni( 2 ) );
+   hbqt_par_QCalendarWidget( 1 )->setDateEditAcceptDelay( hb_parni( 2 ) );
 }
 
 /*
@@ -145,7 +145,7 @@ void setDateEditEnabled( bool enable )
 */
 HB_FUNC( QT_QCALENDARWIDGET_SETDATEEDITENABLED )
 {
-  hbqt_par_QCalendarWidget( 1 )->setDateEditEnabled( hb_parl( 2 ) );
+   hbqt_par_QCalendarWidget( 1 )->setDateEditEnabled( hb_parl( 2 ) );
 }
 
 /*
@@ -153,7 +153,7 @@ void setFirstDayOfWeek( Qt::DayOfWeek dayOfWeek )
 */
 HB_FUNC( QT_QCALENDARWIDGET_SETFIRSTDAYOFWEEK )
 {
-  hbqt_par_QCalendarWidget( 1 )->setFirstDayOfWeek(  (Qt::DayOfWeek) hb_parni( 2 ) );
+   hbqt_par_QCalendarWidget( 1 )->setFirstDayOfWeek(  (Qt::DayOfWeek) hb_parni( 2 ) );
 }
 
 /*
@@ -161,7 +161,7 @@ void setHorizontalHeaderFormat( HorizontalHeaderFormat format )
 */
 HB_FUNC( QT_QCALENDARWIDGET_SETHORIZONTALHEADERFORMAT )
 {
-  hbqt_par_QCalendarWidget( 1 )->setHorizontalHeaderFormat( ( QCalendarWidget::HorizontalHeaderFormat ) hb_parni( 2 ) );
+   hbqt_par_QCalendarWidget( 1 )->setHorizontalHeaderFormat( ( QCalendarWidget::HorizontalHeaderFormat ) hb_parni( 2 ) );
 }
 
 /*
@@ -169,7 +169,7 @@ void setSelectionMode( SelectionMode mode )
 */
 HB_FUNC( QT_QCALENDARWIDGET_SETSELECTIONMODE )
 {
-  hbqt_par_QCalendarWidget( 1 )->setSelectionMode(  (QCalendarWidget::SelectionMode) hb_parni( 2 ) );
+   hbqt_par_QCalendarWidget( 1 )->setSelectionMode(  (QCalendarWidget::SelectionMode) hb_parni( 2 ) );
 }
 
 /*
@@ -177,7 +177,7 @@ void setVerticalHeaderFormat( VerticalHeaderFormat format )
 */
 HB_FUNC( QT_QCALENDARWIDGET_SETVERTICALHEADERFORMAT )
 {
-  hbqt_par_QCalendarWidget( 1 )->setVerticalHeaderFormat( ( QCalendarWidget::VerticalHeaderFormat ) hb_parni( 2 ) );
+   hbqt_par_QCalendarWidget( 1 )->setVerticalHeaderFormat( ( QCalendarWidget::VerticalHeaderFormat ) hb_parni( 2 ) );
 }
 
 /*
@@ -185,7 +185,7 @@ VerticalHeaderFormat verticalHeaderFormat () const
 */
 HB_FUNC( QT_QCALENDARWIDGET_VERTICALHEADERFORMAT )
 {
-  hb_retni( hbqt_par_QCalendarWidget( 1 )->verticalHeaderFormat() );
+   hb_retni( hbqt_par_QCalendarWidget( 1 )->verticalHeaderFormat() );
 }
 
 /*
@@ -193,7 +193,7 @@ int yearShown () const
 */
 HB_FUNC( QT_QCALENDARWIDGET_YEARSHOWN )
 {
-  hb_retni( hbqt_par_QCalendarWidget( 1 )->yearShown() );
+   hb_retni( hbqt_par_QCalendarWidget( 1 )->yearShown() );
 }
 
 /*
@@ -201,7 +201,7 @@ void setCurrentPage( int year, int month )
 */
 HB_FUNC( QT_QCALENDARWIDGET_SETCURRENTPAGE )
 {
-  hbqt_par_QCalendarWidget( 1 )->setCurrentPage( hb_parni( 2 ), hb_parni( 3 ) );
+   hbqt_par_QCalendarWidget( 1 )->setCurrentPage( hb_parni( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -209,7 +209,7 @@ void setGridVisible( bool show )
 */
 HB_FUNC( QT_QCALENDARWIDGET_SETGRIDVISIBLE )
 {
-  hbqt_par_QCalendarWidget( 1 )->setGridVisible( hb_parl( 2 ) );
+   hbqt_par_QCalendarWidget( 1 )->setGridVisible( hb_parl( 2 ) );
 }
 
 /*
@@ -217,7 +217,7 @@ void setNavigationBarVisible( bool visible )
 */
 HB_FUNC( QT_QCALENDARWIDGET_SETNAVIGATIONBARVISIBLE )
 {
-  hbqt_par_QCalendarWidget( 1 )->setNavigationBarVisible( hb_parl( 2 ) );
+   hbqt_par_QCalendarWidget( 1 )->setNavigationBarVisible( hb_parl( 2 ) );
 }
 
 /*
@@ -225,7 +225,7 @@ void showNextMonth ()
 */
 HB_FUNC( QT_QCALENDARWIDGET_SHOWNEXTMONTH )
 {
-  hbqt_par_QCalendarWidget( 1 )->showNextMonth();
+   hbqt_par_QCalendarWidget( 1 )->showNextMonth();
 }
 
 /*
@@ -233,7 +233,7 @@ void showNextYear ()
 */
 HB_FUNC( QT_QCALENDARWIDGET_SHOWNEXTYEAR )
 {
-  hbqt_par_QCalendarWidget( 1 )->showNextYear();
+   hbqt_par_QCalendarWidget( 1 )->showNextYear();
 }
 
 /*
@@ -241,7 +241,7 @@ void showPreviousMonth ()
 */
 HB_FUNC( QT_QCALENDARWIDGET_SHOWPREVIOUSMONTH )
 {
-  hbqt_par_QCalendarWidget( 1 )->showPreviousMonth();
+   hbqt_par_QCalendarWidget( 1 )->showPreviousMonth();
 }
 
 /*
@@ -249,7 +249,7 @@ void showPreviousYear ()
 */
 HB_FUNC( QT_QCALENDARWIDGET_SHOWPREVIOUSYEAR )
 {
-  hbqt_par_QCalendarWidget( 1 )->showPreviousYear();
+   hbqt_par_QCalendarWidget( 1 )->showPreviousYear();
 }
 
 /*
@@ -257,7 +257,7 @@ void showSelectedDate ()
 */
 HB_FUNC( QT_QCALENDARWIDGET_SHOWSELECTEDDATE )
 {
-  hbqt_par_QCalendarWidget( 1 )->showSelectedDate();
+   hbqt_par_QCalendarWidget( 1 )->showSelectedDate();
 }
 
 /*
@@ -265,7 +265,7 @@ void showToday ()
 */
 HB_FUNC( QT_QCALENDARWIDGET_SHOWTODAY )
 {
-  hbqt_par_QCalendarWidget( 1 )->showToday();
+   hbqt_par_QCalendarWidget( 1 )->showToday();
 }
 
 /*----------------------------------------------------------------------*/

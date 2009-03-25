@@ -2,4 +2,4 @@
 # $Id$
 #
 
-libs=hbsqlit3
+libs=hbsqlit3 sqlite3

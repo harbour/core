@@ -1,7 +1,8 @@
 /*
- *
  * $Id$
- *
+ */
+
+/*
  * Harbour Project source code:
  * dbf2pg.prg - converts a .dbf file into a Postgres table
  *
@@ -93,7 +94,7 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15,
    i := 1
    // Scan parameters and setup workings
    while (i <= PCount())
-      
+
       cTok := hb_PValue(i++)
 
       do case
@@ -123,7 +124,7 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15,
 
       case cTok == "-s"
          lUseTrans := .T.
-         
+
       case cTok == "-m"
          nCommit := val(hb_PValue(i++))
 
@@ -143,7 +144,7 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15,
    if (nHandle := FCreate(Trim(cTable) + '.log')) == -1
         ? 'Cannot create log file'
         quit
-   endif        
+   endif
 
    USE (cFile) SHARED
    aDbfStruct := DBStruct()
@@ -153,7 +154,7 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15,
       ? oServer:ErrorMsg()
       quit
    endif
-   
+
    oServer:lallCols := .F.
 
    if lCreateTable
@@ -175,15 +176,15 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15,
          quit
       endif
    endif
-   
+
    if lTruncate
-        oServer:Execute('truncate table ' + cTable)        
+        oServer:Execute('truncate table ' + cTable)
         if oServer:NetErr()
             ? oServer:ErrorMsg()
             FWrite( nHandle, "Error: " + oServer:ErrorMsg() + CRLF )
             FClose( nHandle )
             quit
-        endif        
+        endif
    endif
 
    oTable := oServer:Query("SELECT * FROM " + cTable + " LIMIT 1")
@@ -196,105 +197,105 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15,
 
    if lUseTrans
       oServer:StartTransaction()
-   endif      
-   
+   endif
+
    FWrite( nHandle, "Start: " + time() + CRLF )
 
    ? "Start: ", time()
-   ? 
-   
+   ?
+
    if ! Empty(nRecno)
       dbgoto(nRecno)
-   endif      
+   endif
 
-   while ! eof() .and. Inkey() != K_ESC .and. (empty(nRecno) .or. nRecno == recno())
+   do while ! eof() .and. Inkey() != K_ESC .and. (empty(nRecno) .or. nRecno == recno())
       oRecord := oTable:GetBlankRow()
-      
+
       for i := 1 to oTable:FCount()
          cField := lower(oTable:FieldName(i))
          sType := fieldtype(fieldpos(cField))
          dType := oRecord:Fieldtype(i)
          cValue := fieldget(fieldpos(cField))
-         
-         if ! ISNIL(cValue)
-            if dType != sType           
+
+         if cValue != NIL
+            if dType != sType
                if dType == 'C' .and. sType == 'N'
                  cValue := Str(cValue)
-                 
+
                elseif dType == 'C' .and. sType == 'D'
                  cValue := DtoC(cValue)
-            
+
                elseif dType == 'C' .and. sType == 'L'
                  cValue := IIF( cValue, "S", "N" )
-                 
+
                elseif dType == 'N' .and. sType == 'C'
                  cValue := val(cValue)
-                 
+
                elseif dType == 'N' .and. sType == 'D'
                  cValue := Val(DtoS(cValue))
-            
+
                elseif dType == 'N' .and. sType == 'L'
                  cValue := IIF( cValue, 1, 0 )
-                 
+
                elseif dType == 'D' .and. sType == 'C'
                  cValue := CtoD(cValue)
-                 
+
                elseif dType == 'D' .and. sType == 'N'
                  cValue := StoD(Str(cValue))
-                 
+
                elseif dType == 'L' .and. sType == 'N'
                  cValue := ! Empty(cValue)
 
                elseif dType == 'L' .and. sType == 'C'
-                 cValue := IIF( alltrim(cValue) $ "YySs1", .T., .F. )                                                  
-            
-               end
-            end            
-            
-            if ! ISNIL(cValue)
-                if oRecord:Fieldtype(i) == 'C' .or. oRecord:Fieldtype(i) == 'M'                    
+                 cValue := IIF( alltrim(cValue) $ "YySs1", .T., .F. )
+
+               endif
+            endif
+
+            if cValue != NIL
+                if oRecord:Fieldtype(i) == 'C' .or. oRecord:Fieldtype(i) == 'M'
                     oRecord:FieldPut(i, hb_oemtoansi(cValue))
-                else                    
+                else
                     oRecord:FieldPut(i, cValue)
-                endif                                        
+                endif
             endif
          endif
       next
 
       oTable:Append(oRecord)
-      
+
       if oTable:NetErr()
          ?
          ? "Error Record: ", recno(), left(oTable:ErrorMsg(),70)
-         ? 
-         FWrite( nHandle, "Error at record: " + Str(recno()) + " Description: " + oTable:ErrorMsg() + CRLF )         
+         ?
+         FWrite( nHandle, "Error at record: " + Str(recno()) + " Description: " + oTable:ErrorMsg() + CRLF )
       else
-         nCount++         
+         nCount++
       endif
 
       dbSkip()
 
       if (nCount % nCommit) == 0
          DevPos(Row(), 1)
-         DevOut("imported recs: " + Str(nCount))         
-         
+         DevOut("imported recs: " + Str(nCount))
+
          if lUseTrans
             oServer:commit()
             oServer:StartTransaction()
-         endif            
+         endif
       endif
    enddo
-   
+
    if (nCount % nCommit) != 0
         if lUseTrans
             oServer:commit()
-        endif            
-   endif        
+        endif
+   endif
 
    FWrite( nHandle, "End: " +  time() + ", records in dbf: " + ltrim(str(recno())) + ", imported recs: " + ltrim(str(nCount)) + CRLF )
 
    ? "End: ", time()
-   ? 
+   ?
 
    FClose( nHandle )
 
@@ -319,7 +320,7 @@ procedure Help()
    ? "-m commit interval"
    ? "-r insert only record number"
    ? "-e search path"
-   
+
    ? ""
 
 return

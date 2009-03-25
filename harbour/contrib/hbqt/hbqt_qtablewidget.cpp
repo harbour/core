@@ -63,10 +63,10 @@
 
 HB_FUNC( QT_QTABLEWIDGET )
 {
-  if( hb_param( 1, HB_IT_NUMERIC ) && hb_param( 2, HB_IT_NUMERIC ) )
-    hb_retptr( ( QTableWidget* ) new QTableWidget( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) );
-  else
-    hb_retptr( ( QTableWidget* ) new QTableWidget( hbqt_par_QWidget( 1 ) ) );
+   if( hb_param( 1, HB_IT_NUMERIC ) && hb_param( 2, HB_IT_NUMERIC ) )
+      hb_retptr( ( QTableWidget* ) new QTableWidget( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) );
+   else
+      hb_retptr( ( QTableWidget* ) new QTableWidget( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -75,11 +75,12 @@ QTableWidget ( int rows, int columns, QWidget * parent = 0 ) [2]
 */
 HB_FUNC( QT_QTABLEWIDGET_1 )
 {
-  hb_retptr( ( QTableWidget* ) new QTableWidget( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QTableWidget* ) new QTableWidget( hbqt_par_QWidget( 1 ) ) );
 }
+
 HB_FUNC( QT_QTABLEWIDGET_2 )
 {
-  hb_retptr( ( QTableWidget* ) new QTableWidget( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) );
+   hb_retptr( ( QTableWidget* ) new QTableWidget( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

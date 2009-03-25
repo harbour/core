@@ -4,7 +4,7 @@
 
 ROOT = ../../
 
-LIBNAME=hbsqlit3
+LIBNAME=sqlite3
 
 ifeq ($(HB_WITHOUT_SQLIT3),)
 ifeq ($(HB_ARCHITECTURE),dos)
@@ -19,28 +19,8 @@ endif
 endif
 
 ifneq ($(HB_WITHOUT_SQLIT3),yes)
-
-HB_INC_SQLITE3_OK =
-
-ifeq ($(HB_INC_SQLITE3),)
-ifeq ($(HB_XBUILD),)
-HB_INC_SQLITE3 = /usr/include $(TOP)$(ROOT)/external/sqlite3
-endif
-endif
-
-HB_INC_SQLITE3_OK += $(foreach d, $(HB_INC_SQLITE3), $(if $(wildcard $(d)/sqlite3.h),$(d),))
-
-endif
-
-ifneq ($(strip $(HB_INC_SQLITE3_OK)),)
-
-HB_USER_CFLAGS += $(foreach d, $(HB_INC_SQLITE3_OK), -I$(d))
-
-C_SOURCES=\
-	hbsqlit3.c \
-
-PRG_HEADERS=\
-	hbsqlit3.ch \
+C_SOURCES =\
+	_sqlite3.c \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

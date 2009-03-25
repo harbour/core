@@ -68,7 +68,7 @@ QFont ( const QFont & font )
 */
 HB_FUNC( QT_QFONT )
 {
-  hb_retptr( ( QFont* ) new QFont() );
+   hb_retptr( ( QFont* ) new QFont() );
 }
 
 /*----------------------------------------------------------------------*/

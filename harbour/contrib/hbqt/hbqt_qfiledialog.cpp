@@ -66,7 +66,7 @@ QFileDialog ( QWidget * parent = 0, const QString & caption = QString(), const Q
 */
 HB_FUNC( QT_QFILEDIALOG )
 {
-  hb_retptr( ( QFileDialog* ) new QFileDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+   hb_retptr( ( QFileDialog* ) new QFileDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

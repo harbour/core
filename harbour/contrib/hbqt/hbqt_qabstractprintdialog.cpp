@@ -65,7 +65,7 @@ int fromPage () const
 */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_FROMPAGE )
 {
-  hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->fromPage() );
+   hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->fromPage() );
 }
 
 /*
@@ -73,7 +73,7 @@ int maxPage () const
 */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_MAXPAGE )
 {
-  hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->maxPage() );
+   hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->maxPage() );
 }
 
 /*
@@ -81,7 +81,7 @@ int minPage () const
 */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_MINPAGE )
 {
-  hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->minPage() );
+   hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->minPage() );
 }
 
 /*
@@ -89,7 +89,7 @@ PrintRange printRange () const
 */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_PRINTRANGE )
 {
-  hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->printRange() );
+   hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->printRange() );
 }
 
 /*
@@ -97,7 +97,7 @@ QPrinter * printer () const
 */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_PRINTER )
 {
-  hbqt_ret_QPrinter( hbqt_par_QAbstractPrintDialog( 1 )->printer() );
+   hbqt_ret_QPrinter( hbqt_par_QAbstractPrintDialog( 1 )->printer() );
 }
 
 /*
@@ -105,7 +105,7 @@ void setFromTo ( int from, int to )
 */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_SETFROMTO )
 {
-  hbqt_par_QAbstractPrintDialog( 1 )->setFromTo( hb_parni( 2 ), hb_parni( 3 ) );
+   hbqt_par_QAbstractPrintDialog( 1 )->setFromTo( hb_parni( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -113,7 +113,7 @@ void setMinMax ( int min, int max )
 */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_SETMINMAX )
 {
-  hbqt_par_QAbstractPrintDialog( 1 )->setMinMax( hb_parni( 2 ), hb_parni( 3 ) );
+   hbqt_par_QAbstractPrintDialog( 1 )->setMinMax( hb_parni( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -121,7 +121,7 @@ void setPrintRange ( PrintRange range )
 */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_SETPRINTRANGE )
 {
-  hbqt_par_QAbstractPrintDialog( 1 )->setPrintRange( ( QAbstractPrintDialog::PrintRange ) hb_parni( 2 ) );
+   hbqt_par_QAbstractPrintDialog( 1 )->setPrintRange( ( QAbstractPrintDialog::PrintRange ) hb_parni( 2 ) );
 }
 
 /*
@@ -129,7 +129,7 @@ int toPage () const
 */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_TOPAGE )
 {
-  hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->toPage() );
+   hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->toPage() );
 }
 
 /*----------------------------------------------------------------------*/

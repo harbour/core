@@ -66,9 +66,9 @@ void addScrollBarWidget ( QWidget * widget, Qt::Alignment alignment )
 */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_ADDSCROLLBARWIDGET )
 {
-  QWidget * par2 = (QWidget *) hb_parptr(2);
-  int par3 = hb_parni(3);
-  hbqt_par_QAbstractScrollArea( 1 )->addScrollBarWidget ( par2,  (Qt::Alignment) par3 );
+   QWidget * par2 = ( QWidget * ) hb_parptr( 2 );
+   int par3 = hb_parni( 3 );
+   hbqt_par_QAbstractScrollArea( 1 )->addScrollBarWidget ( par2, ( Qt::Alignment ) par3 );
 }
 
 /*
@@ -76,7 +76,7 @@ QWidget * cornerWidget () const
 */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_CORNERWIDGET )
 {
-  hb_retptr( ( QWidget* ) hbqt_par_QAbstractScrollArea( 1 )->cornerWidget() );
+   hb_retptr( ( QWidget* ) hbqt_par_QAbstractScrollArea( 1 )->cornerWidget() );
 }
 
 /*
@@ -84,7 +84,7 @@ QScrollBar * horizontalScrollBar () const
 */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_HORIZONTALSCROLLBAR )
 {
-  hb_retptr( ( QScrollBar* ) hbqt_par_QAbstractScrollArea( 1 )->horizontalScrollBar() );
+   hb_retptr( ( QScrollBar* ) hbqt_par_QAbstractScrollArea( 1 )->horizontalScrollBar() );
 }
 
 /*
@@ -92,7 +92,7 @@ Qt::ScrollBarPolicy horizontalScrollBarPolicy () const
 */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_HORIZONTALSCROLLBARPOLICY )
 {
-  hb_retni( hbqt_par_QAbstractScrollArea( 1 )->horizontalScrollBarPolicy() );
+   hb_retni( hbqt_par_QAbstractScrollArea( 1 )->horizontalScrollBarPolicy() );
 }
 
 /*
@@ -100,7 +100,7 @@ void setCornerWidget ( QWidget * widget )
 */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_SETCORNERWIDGET )
 {
-  hbqt_par_QAbstractScrollArea( 1 )->setCornerWidget( hbqt_par_QWidget( 2 ) );
+   hbqt_par_QAbstractScrollArea( 1 )->setCornerWidget( hbqt_par_QWidget( 2 ) );
 }
 
 /*
@@ -108,7 +108,7 @@ void setHorizontalScrollBar ( QScrollBar * scrollBar )
 */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_SETHORIZONTALSCROLLBAR )
 {
-  hbqt_par_QAbstractScrollArea( 1 )->setHorizontalScrollBar( hbqt_par_QScrollBar( 2 ) );
+   hbqt_par_QAbstractScrollArea( 1 )->setHorizontalScrollBar( hbqt_par_QScrollBar( 2 ) );
 }
 
 /*
@@ -116,7 +116,7 @@ void setHorizontalScrollBarPolicy ( Qt::ScrollBarPolicy )
 */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_SETHORIZONTALSCROLLBARPOLICY )
 {
-  hbqt_par_QAbstractScrollArea( 1 )->setHorizontalScrollBarPolicy( ( Qt::ScrollBarPolicy ) hb_parni( 2 ) );
+   hbqt_par_QAbstractScrollArea( 1 )->setHorizontalScrollBarPolicy( ( Qt::ScrollBarPolicy ) hb_parni( 2 ) );
 }
 
 /*
@@ -124,7 +124,7 @@ void setVerticalScrollBar ( QScrollBar * scrollBar )
 */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_SETVERTICALSCROLLBAR )
 {
-  hbqt_par_QAbstractScrollArea( 1 )->setVerticalScrollBar( hbqt_par_QScrollBar( 2 ) );
+   hbqt_par_QAbstractScrollArea( 1 )->setVerticalScrollBar( hbqt_par_QScrollBar( 2 ) );
 }
 
 /*
@@ -132,7 +132,7 @@ void setVerticalScrollBarPolicy ( Qt::ScrollBarPolicy )
 */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_SETVERTICALSCROLLBARPOLICY )
 {
-  hbqt_par_QAbstractScrollArea( 1 )->setVerticalScrollBarPolicy( ( Qt::ScrollBarPolicy ) hb_parni( 2 ) );
+   hbqt_par_QAbstractScrollArea( 1 )->setVerticalScrollBarPolicy( ( Qt::ScrollBarPolicy ) hb_parni( 2 ) );
 }
 
 /*
@@ -140,7 +140,7 @@ void setViewport ( QWidget * widget )
 */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_SETVIEWPORT )
 {
-  hbqt_par_QAbstractScrollArea( 1 )->setViewport( hbqt_par_QWidget( 2 ) );
+   hbqt_par_QAbstractScrollArea( 1 )->setViewport( hbqt_par_QWidget( 2 ) );
 }
 
 /*
@@ -148,7 +148,7 @@ QScrollBar * verticalScrollBar () const
 */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_VERTICALSCROLLBAR )
 {
-  hb_retptr( ( QScrollBar* ) hbqt_par_QAbstractScrollArea( 1 )->verticalScrollBar() );
+   hb_retptr( ( QScrollBar* ) hbqt_par_QAbstractScrollArea( 1 )->verticalScrollBar() );
 }
 
 /*
@@ -156,7 +156,7 @@ Qt::ScrollBarPolicy verticalScrollBarPolicy () const
 */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_VERTICALSCROLLBARPOLICY )
 {
-  hb_retni( hbqt_par_QAbstractScrollArea( 1 )->verticalScrollBarPolicy() );
+   hb_retni( hbqt_par_QAbstractScrollArea( 1 )->verticalScrollBarPolicy() );
 }
 
 /*
@@ -164,7 +164,7 @@ QWidget * viewport () const
 */
 HB_FUNC( QT_QABSTRACTSCROLLAREA_VIEWPORT )
 {
-  hb_retptr( ( QWidget* ) hbqt_par_QAbstractScrollArea( 1 )->viewport() );
+   hb_retptr( ( QWidget* ) hbqt_par_QAbstractScrollArea( 1 )->viewport() );
 }
 
 /*----------------------------------------------------------------------*/

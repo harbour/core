@@ -67,7 +67,7 @@ QWebView ( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QWEBVIEW )
 {
-  hb_retptr( ( QWebView* ) new QWebView( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QWebView* ) new QWebView( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -75,7 +75,7 @@ void load ( const QUrl & url )
 */
 HB_FUNC( QT_QWEBVIEW_LOAD )
 {
-  hbqt_par_QWebView( 1 )->load( QUrl( hbqt_par_QString( 2 ) ) );
+   hbqt_par_QWebView( 1 )->load( QUrl( hbqt_par_QString( 2 ) ) );
 }
 
 /*
@@ -84,12 +84,12 @@ void setUrl ( const QUrl & url )
 */
 HB_FUNC( QT_QWEBVIEW_URL )
 {
-  //QWebView * webview = (QWebView *) hb_parptr(1);
+  /* QWebView * webview = (QWebView *) hb_parptr(1); */
 }
 
 HB_FUNC( QT_QWEBVIEW_SETURL )
 {
-  hbqt_par_QWebView( 1 )->setUrl( QUrl( hbqt_par_QString( 2 ) ) );
+   hbqt_par_QWebView( 1 )->setUrl( QUrl( hbqt_par_QString( 2 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

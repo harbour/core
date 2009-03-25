@@ -199,7 +199,7 @@ HB_FUNC( WAPI_SETSCROLLINFO )
    wapi_ret_NI( SetScrollInfo( wapi_par_HWND( 1 ),
                                wapi_par_INT( 2 ),
                                si,
-                               ISNIL( 4 ) ? TRUE : wapi_par_BOOL( 4 ) ) );
+                               ISLOG( 4 ) ? wapi_par_BOOL( 4 ) : TRUE ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -222,7 +222,7 @@ HB_FUNC( WAPI_SETSCROLLRANGE )
                                wapi_par_INT( 2 ),
                                wapi_par_INT( 3 ),
                                wapi_par_INT( 4 ),
-                               ( ISLOG( 5 ) ? wapi_par_BOOL( 5 ) : TRUE ) ) );
+                               ISLOG( 5 ) ? wapi_par_BOOL( 5 ) : TRUE ) );
 }
 /*----------------------------------------------------------------------*/
 /*

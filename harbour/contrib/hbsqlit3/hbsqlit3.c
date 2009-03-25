@@ -59,43 +59,7 @@
    char *sqlite3_hb_snprintf(int,char*,const char*, ...);
 */
 
-#if defined( __WATCOMC__ ) || (defined(__POCC__) && __POCC__ <= 450)
-   /* NOTE: Don't include the full library for those compilers
-            which cannot compile it, due its large size.
-            In these case the library should be linked separately.
-            [vszakats] */
-   #include "sqlite3/sqlite3.h"
-#else
-   #if defined( __GCC__ ) && __GNUC__ >= 4 && __GNUC_MINOR__ >= 2
-      #pragma GCC diagnostic ignored "-Wunused"
-      #pragma GCC diagnostic ignored "-Wsign-compare"
-      #pragma GCC diagnostic ignored "-Wuninitialized"
-   #elif defined( __BORLANDC__ )
-      #pragma warn -aus
-      #pragma warn -use
-      #pragma warn -par
-      #pragma warn -prc
-      #pragma warn -eff
-      #pragma warn -amp
-   #elif defined( _MSC_VER )
-      #pragma warning( disable: 4018 4244 )
-   #endif
-   #include "sqlite3/sqlite3.c"
-   #if defined( __GCC__ ) && __GNUC__ >= 4 && __GNUC_MINOR__ >= 2
-      #pragma GCC diagnostic warning "-Wunused"
-      #pragma GCC diagnostic warning "-Wsign-compare"
-      #pragma GCC diagnostic warning "-Wuninitialized"
-   #elif defined( __BORLANDC__ )
-      #pragma warn +aus
-   /* #pragma warn +use */ /* This affects the whole file, so don't turn it back on. */
-      #pragma warn +par
-      #pragma warn +prc
-      #pragma warn +eff
-      #pragma warn +amp
-   #elif defined( _MSC_VER )
-      #pragma warning( default: 4018 4244 )
-   #endif
-#endif
+#include "sqlite3.h"
 
 #include "hbvm.h"
 #include "hbapi.h"

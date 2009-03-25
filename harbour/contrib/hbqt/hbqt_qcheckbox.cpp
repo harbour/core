@@ -66,7 +66,7 @@ QCheckBox ( const QString & text, QWidget * parent = 0 )
 */
 HB_FUNC( QT_QCHECKBOX )
 {
-  hb_retptr( ( QCheckBox* ) new QCheckBox( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QCheckBox* ) new QCheckBox( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -74,7 +74,7 @@ Qt::CheckState checkState () const
 */
 HB_FUNC( QT_QCHECKBOX_CHECKSTATE )
 {
-  hb_retni( hbqt_par_QCheckBox( 1 )->checkState() );
+   hb_retni( hbqt_par_QCheckBox( 1 )->checkState() );
 }
 
 /*
@@ -82,7 +82,7 @@ bool isTristate () const
 */
 HB_FUNC( QT_QCHECKBOX_ISTRISTATE )
 {
-  hb_retl( hbqt_par_QCheckBox( 1 )->isTristate() );
+   hb_retl( hbqt_par_QCheckBox( 1 )->isTristate() );
 }
 
 /*
@@ -90,7 +90,7 @@ void setCheckState ( Qt::CheckState state )
 */
 HB_FUNC( QT_QCHECKBOX_SETCHECKSTATE )
 {
-  hbqt_par_QCheckBox( 1 )->setCheckState( ( Qt::CheckState ) hb_parni( 2 ) );
+   hbqt_par_QCheckBox( 1 )->setCheckState( ( Qt::CheckState ) hb_parni( 2 ) );
 }
 
 /*
@@ -98,7 +98,7 @@ void setTristate ( bool y = true )
 */
 HB_FUNC( QT_QCHECKBOX_SETTRISTATE )
 {
-  hbqt_par_QCheckBox( 1 )->setTristate( hb_parl( 2 ) );
+   hbqt_par_QCheckBox( 1 )->setTristate( hb_parl( 2 ) );
 }
 
 /*----------------------------------------------------------------------*/

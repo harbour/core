@@ -66,7 +66,7 @@ HB_FUNC( WAPI_IMAGELIST_ADD )
 {
    wapi_ret_NI( ImageList_Add( wapi_par_HIMAGELIST( 1 ),
                                wapi_par_HBITMAP( 2 ),
-                               ISNIL( 3 ) ? NULL : wapi_par_HBITMAP( 3 ) ) );
+                               wapi_par_HBITMAP( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -476,7 +476,7 @@ HB_FUNC( WAPI_TABCTRL_INSERTITEM )
    LPTSTR szText = HB_TCHAR_CONVTO( hb_parc( 3 ) );
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
-   item.iImage  = ISNIL( 4 ) ? -1 : wapi_par_INT( 4 );
+   item.iImage  = ISNUM( 4 ) ? wapi_par_INT( 4 ) : -1;
    item.pszText = szText;
 
    wapi_ret_NI( TabCtrl_InsertItem( wapi_par_HWND( 1 ), wapi_par_INT( 3 ), &item ) );
@@ -571,7 +571,7 @@ HB_FUNC( WAPI_TABCTRL_SETITEM )
    LPTSTR szText = HB_TCHAR_CONVTO( hb_parc( 3 ) );
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
-   item.iImage  = ISNIL( 4 ) ? -1 : wapi_par_INT( 4 );
+   item.iImage  = ISNUM( 4 ) ? wapi_par_INT( 4 ) : -1;
    item.pszText = szText;
 
    wapi_ret_L( TabCtrl_SetItem( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), &item ) );
@@ -778,7 +778,7 @@ HB_FUNC( WAPI_TABCTRL_CREATE )
    HWND hbutton;
    LONG hFont;
    LONG style;
-   style   = ISNIL( 6 ) ? 0 : ( LONG ) hb_parnl( 6 );
+   style   = ( LONG ) hb_parnl( 6 ); /* defaults to 0 */
    hwnd    = ( HWND ) hb_parnint( 1 );
    hFont   = SendMessage( hwnd, WM_GETFONT, 0, 0 );
    hbutton = CreateWindowEx( 0, WC_TABCONTROL, NULL, style, hb_parni( 2 ), hb_parni( 3 ) , hb_parni( 4 ), hb_parni( 5 ), hwnd, NULL, GetModuleHandle( NULL ), NULL );
@@ -796,7 +796,7 @@ HB_FUNC( WAPI_TABCTRL_ADDITEM )
    TC_ITEM item;
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
-   item.iImage  = ISNIL( 3 ) ? -1 : wapi_par_INT( 3 );
+   item.iImage  = ISNUM( 3 ) ? wapi_par_INT( 3 ) : -1;
    item.pszText = szText;
 
    wapi_ret_NI( TabCtrl_InsertItem( wapi_par_HWND( 1 ), iCount, &item ) );

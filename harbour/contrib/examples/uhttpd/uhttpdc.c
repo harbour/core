@@ -123,7 +123,7 @@ stopLoop:
 
 HB_FUNC( WIN_SYSREFRESH )
 {
-   hb_retl( win_SysRefresh( ( ISNIL( 1 ) ? 0 : hb_parni( 1 ) ) ) );
+   hb_retl( win_SysRefresh( hb_parni( 1 ) ) );
 }
 
 #else

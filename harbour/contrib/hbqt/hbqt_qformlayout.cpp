@@ -65,10 +65,10 @@ QFormLayout ( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QFORMLAYOUT )
 {
-  QFormLayout *formlayout = NULL;
-  QWidget* parent = ISNIL(1)? 0:(QWidget*) hb_parptr(1);
-  formlayout = new QFormLayout( parent );
-  hb_retptr((QFormLayout*) formlayout);
+   QFormLayout *formlayout = NULL;
+   QWidget* parent = ( QWidget * ) hb_parptr( 1 );
+   formlayout = new QFormLayout( parent );
+   hb_retptr( ( QFormLayout * ) formlayout);
 }
 
 /*
@@ -76,10 +76,10 @@ void addRow ( QWidget * label, QWidget * field )
 */
 HB_FUNC( QT_QFORMLAYOUT_ADDROW_1 )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  QWidget * par2 = (QWidget *) hb_parptr(2);
-  QWidget * par3 = (QWidget *) hb_parptr(3);
-  par1->addRow ( par2, par3 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   QWidget * par2 = ( QWidget * ) hb_parptr( 2 );
+   QWidget * par3 = ( QWidget * ) hb_parptr( 3 );
+   par1->addRow( par2, par3 );
 }
 
 /*
@@ -87,10 +87,10 @@ void addRow ( QWidget * label, QLayout * field )
 */
 HB_FUNC( QT_QFORMLAYOUT_ADDROW_2 )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  QWidget * par2 = (QWidget *) hb_parptr(2);
-  QLayout * par3 = (QLayout *) hb_parptr(3);
-  par1->addRow ( par2, par3 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   QWidget * par2 = ( QWidget * ) hb_parptr( 2 );
+   QLayout * par3 = ( QLayout * ) hb_parptr( 3 );
+   par1->addRow( par2, par3 );
 }
 
 /*
@@ -98,10 +98,10 @@ void addRow ( const QString & labelText, QWidget * field )
 */
 HB_FUNC( QT_QFORMLAYOUT_ADDROW_3 )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  QString par2 = hb_parc(2);
-  QWidget * par3 = (QWidget *) hb_parptr(3);
-  par1->addRow ( par2, par3 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   QString par2 = hb_parc( 2 );
+   QWidget * par3 = ( QWidget * ) hb_parptr( 3 );
+   par1->addRow( par2, par3 );
 }
 
 /*
@@ -109,10 +109,10 @@ void addRow ( const QString & labelText, QLayout * field )
 */
 HB_FUNC( QT_QFORMLAYOUT_ADDROW_4 )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  QString par2 = hb_parc(2);
-   QLayout * par3 = ( QLayout *) hb_parptr(3);
-  par1->addRow ( par2, par3 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   QString par2 = hb_parc( 2 );
+   QLayout * par3 = ( QLayout *) hb_parptr( 3 );
+   par1->addRow( par2, par3 );
 }
 
 /*
@@ -120,9 +120,9 @@ void addRow ( QWidget * widget )
 */
 HB_FUNC( QT_QFORMLAYOUT_ADDROW_5 )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  QWidget * par2 = (QWidget *) hb_parptr(2);
-  par1->addRow ( par2 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   QWidget * par2 = ( QWidget * ) hb_parptr( 2 );
+   par1->addRow( par2 );
 }
 
 /*
@@ -130,9 +130,9 @@ void addRow ( QLayout * layout )
 */
 HB_FUNC( QT_QFORMLAYOUT_ADDROW_6 )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  QLayout * par2 = (QLayout *) hb_parptr(2);
-  par1->addRow ( par2 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   QLayout * par2 = ( QLayout * ) hb_parptr( 2 );
+   par1->addRow( par2 );
 }
 
 /*
@@ -140,9 +140,9 @@ FieldGrowthPolicy fieldGrowthPolicy () const
 */
 HB_FUNC( QT_QFORMLAYOUT_FIELDGROWTHPOLICY )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int i = par1->fieldGrowthPolicy (  );
-  hb_retni( i );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int i = par1->fieldGrowthPolicy();
+   hb_retni( i );
 }
 
 /*
@@ -150,9 +150,9 @@ Qt::Alignment formAlignment () const
 */
 HB_FUNC( QT_QFORMLAYOUT_FORMALIGNMENT )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int i = par1->formAlignment (  );
-  hb_retni( i );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int i = par1->formAlignment();
+   hb_retni( i );
 }
 
 /*
@@ -160,9 +160,9 @@ int horizontalSpacing () const
 */
 HB_FUNC( QT_QFORMLAYOUT_HORIZONTALSPACING )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int i = par1->horizontalSpacing (  );
-  hb_retni( i );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int i = par1->horizontalSpacing();
+   hb_retni( i );
 }
 
 /*
@@ -170,11 +170,11 @@ void insertRow ( int row, QWidget * label, QWidget * field )
 */
 HB_FUNC( QT_QFORMLAYOUT_INSERTROW_1 )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  QWidget * par3 = (QWidget *) hb_parptr(3);
-  QWidget * par4 = (QWidget *) hb_parptr(4);
-  par1->insertRow ( par2, par3, par4 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   QWidget * par3 = ( QWidget * ) hb_parptr( 3 );
+   QWidget * par4 = ( QWidget * ) hb_parptr( 4 );
+   par1->insertRow( par2, par3, par4 );
 }
 
 /*
@@ -182,11 +182,11 @@ void insertRow ( int row, QWidget * label, QLayout * field )
 */
 HB_FUNC( QT_QFORMLAYOUT_INSERTROW_2 )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  QWidget * par3 = (QWidget *) hb_parptr(3);
-  QLayout * par4 = (QLayout *) hb_parptr(4);
-  par1->insertRow ( par2, par3, par4 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   QWidget * par3 = ( QWidget * ) hb_parptr( 3 );
+   QLayout * par4 = ( QLayout * ) hb_parptr( 4 );
+   par1->insertRow( par2, par3, par4 );
 }
 
 /*
@@ -194,11 +194,11 @@ void insertRow ( int row, const QString & labelText, QWidget * field )
 */
 HB_FUNC( QT_QFORMLAYOUT_INSERTROW_3 )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  QString par3 = hb_parc(3);
-  QWidget * par4 = (QWidget *) hb_parptr(4);
-  par1->insertRow ( par2, par3, par4 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   QString par3 = hb_parc( 3 );
+   QWidget * par4 = ( QWidget * ) hb_parptr( 4 );
+   par1->insertRow( par2, par3, par4 );
 }
 
 /*
@@ -206,11 +206,11 @@ void insertRow ( int row, const QString & labelText, QLayout * field )
 */
 HB_FUNC( QT_QFORMLAYOUT_INSERTROW_4 )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  QString par3 = hb_parc(3);
-  QLayout * par4 = (QLayout *) hb_parptr(4);
-  par1->insertRow ( par2, par3, par4 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   QString par3 = hb_parc( 3 );
+   QLayout * par4 = ( QLayout * ) hb_parptr( 4 );
+   par1->insertRow( par2, par3, par4 );
 }
 
 /*
@@ -218,10 +218,10 @@ void insertRow ( int row, QWidget * widget )
 */
 HB_FUNC( QT_QFORMLAYOUT_INSERTROW_5 )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  QWidget * par3 = (QWidget *) hb_parptr(3);
-  par1->insertRow ( par2, par3 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   QWidget * par3 = ( QWidget * ) hb_parptr( 3 );
+   par1->insertRow( par2, par3 );
 }
 
 /*
@@ -229,10 +229,10 @@ void insertRow ( int row, QLayout * layout )
 */
 HB_FUNC( QT_QFORMLAYOUT_INSERTROW_6 )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  QLayout * par3 = (QLayout *) hb_parptr(3);
-  par1->insertRow ( par2, par3 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   QLayout * par3 = ( QLayout * ) hb_parptr( 3 );
+   par1->insertRow( par2, par3 );
 }
 
 /*
@@ -240,11 +240,11 @@ QLayoutItem * itemAt ( int row, ItemRole role ) const
 */
 HB_FUNC( QT_QFORMLAYOUT_ITEMAT )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  int par3 = hb_parni(3);
-  QLayoutItem * ptr = par1->itemAt ( par2,  (QFormLayout::ItemRole) par3 );
-  hb_retptr( (QLayoutItem *) ptr );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   int par3 = hb_parni( 3 );
+   QLayoutItem * ptr = par1->itemAt( par2, ( QFormLayout::ItemRole ) par3 );
+   hb_retptr( ( QLayoutItem * ) ptr );
 }
 
 /*
@@ -252,9 +252,9 @@ Qt::Alignment labelAlignment () const
 */
 HB_FUNC( QT_QFORMLAYOUT_LABELALIGNMENT )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int i = par1->labelAlignment (  );
-  hb_retni( i );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int i = par1->labelAlignment();
+   hb_retni( i );
 }
 
 /*
@@ -262,10 +262,10 @@ QWidget * labelForField ( QWidget * field ) const
 */
 HB_FUNC( QT_QFORMLAYOUT_LABELFORFIELD_1 )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  QWidget * par2 = (QWidget *) hb_parptr(2);
-  QWidget * ptr = par1->labelForField ( par2 );
-  hb_retptr( (QWidget *) ptr );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   QWidget * par2 = ( QWidget * ) hb_parptr( 2 );
+   QWidget * ptr = par1->labelForField( par2 );
+   hb_retptr( ( QWidget * ) ptr );
 }
 
 /*
@@ -273,10 +273,10 @@ QWidget * labelForField ( QLayout * field ) const
 */
 HB_FUNC( QT_QFORMLAYOUT_LABELFORFIELD_2 )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  QLayout * par2 = (QLayout *) hb_parptr(2);
-  QWidget * ptr = par1->labelForField ( par2 );
-  hb_retptr( (QWidget *) ptr );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   QLayout * par2 = ( QLayout * ) hb_parptr( 2 );
+   QWidget * ptr = par1->labelForField( par2 );
+   hb_retptr( ( QWidget * ) ptr );
 }
 
 /*
@@ -284,9 +284,9 @@ int rowCount () const
 */
 HB_FUNC( QT_QFORMLAYOUT_ROWCOUNT )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int i = par1->rowCount (  );
-  hb_retni( i );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int i = par1->rowCount();
+   hb_retni( i );
 }
 
 /*
@@ -294,9 +294,9 @@ RowWrapPolicy rowWrapPolicy () const
 */
 HB_FUNC( QT_QFORMLAYOUT_ROWWRAPPOLICY )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int i = par1->rowWrapPolicy (  );
-  hb_retni( i );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int i = par1->rowWrapPolicy();
+   hb_retni( i );
 }
 
 /*
@@ -304,9 +304,9 @@ void setFieldGrowthPolicy ( FieldGrowthPolicy policy )
 */
 HB_FUNC( QT_QFORMLAYOUT_SETFIELDGROWTHPOLICY )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  par1->setFieldGrowthPolicy (  (QFormLayout::FieldGrowthPolicy) par2 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   par1->setFieldGrowthPolicy( ( QFormLayout::FieldGrowthPolicy ) par2 );
 }
 
 /*
@@ -314,9 +314,9 @@ void setFormAlignment ( Qt::Alignment alignment )
 */
 HB_FUNC( QT_QFORMLAYOUT_SETFORMALIGNMENT )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  par1->setFormAlignment (  (Qt::Alignment) par2 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   par1->setFormAlignment( ( Qt::Alignment ) par2 );
 }
 
 /*
@@ -324,9 +324,9 @@ void setHorizontalSpacing ( int spacing )
 */
 HB_FUNC( QT_QFORMLAYOUT_SETHORIZONTALSPACING )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  par1->setHorizontalSpacing ( par2 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   par1->setHorizontalSpacing( par2 );
 }
 
 /*
@@ -334,11 +334,11 @@ void setItem ( int row, ItemRole role, QLayoutItem * item )
 */
 HB_FUNC( QT_QFORMLAYOUT_SETITEM )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  int par3 = hb_parni(3);
-  QLayout * par4 = (QLayout *) hb_parptr(4);
-  par1->setItem ( par2,  (QFormLayout::ItemRole) par3, par4 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   int par3 = hb_parni( 3 );
+   QLayout * par4 = ( QLayout * ) hb_parptr( 4 );
+   par1->setItem( par2, ( QFormLayout::ItemRole ) par3, par4 );
 }
 
 /*
@@ -346,9 +346,9 @@ void setLabelAlignment ( Qt::Alignment alignment )
 */
 HB_FUNC( QT_QFORMLAYOUT_SETLABELALIGNMENT )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  par1->setLabelAlignment (  (Qt::Alignment) par2 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   par1->setLabelAlignment( ( Qt::Alignment ) par2 );
 }
 
 /*
@@ -356,11 +356,11 @@ void setLayout ( int row, ItemRole role, QLayout * layout )
 */
 HB_FUNC( QT_QFORMLAYOUT_SETLAYOUT )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  int par3 = hb_parni(3);
-  QLayout * par4 = (QLayout *) hb_parptr(4);
-  par1->setLayout ( par2,  (QFormLayout::ItemRole) par3, par4 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   int par3 = hb_parni( 3 );
+   QLayout * par4 = ( QLayout * ) hb_parptr( 4 );
+   par1->setLayout( par2, ( QFormLayout::ItemRole ) par3, par4 );
 }
 
 /*
@@ -368,9 +368,9 @@ void setRowWrapPolicy ( RowWrapPolicy policy )
 */
 HB_FUNC( QT_QFORMLAYOUT_SETROWWRAPPOLICY )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  par1->setRowWrapPolicy (  (QFormLayout::RowWrapPolicy) par2 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   par1->setRowWrapPolicy( ( QFormLayout::RowWrapPolicy ) par2 );
 }
 
 /*
@@ -378,9 +378,9 @@ void setSpacing ( int spacing )
 */
 HB_FUNC( QT_QFORMLAYOUT_SETSPACING )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  par1->setSpacing ( par2 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   par1->setSpacing( par2 );
 }
 
 /*
@@ -388,9 +388,9 @@ void setVerticalSpacing ( int spacing )
 */
 HB_FUNC( QT_QFORMLAYOUT_SETVERTICALSPACING )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  par1->setVerticalSpacing ( par2 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   par1->setVerticalSpacing( par2 );
 }
 
 /*
@@ -398,11 +398,11 @@ void setWidget ( int row, ItemRole role, QWidget * widget )
 */
 HB_FUNC( QT_QFORMLAYOUT_SETWIDGET )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int par2 = hb_parni(2);
-  int par3 = hb_parni(3);
-  QWidget * par4 = (QWidget *) hb_parptr(4);
-  par1->setWidget ( par2,  (QFormLayout::ItemRole) par3, par4 );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int par2 = hb_parni( 2 );
+   int par3 = hb_parni( 3 );
+   QWidget * par4 = ( QWidget * ) hb_parptr( 4 );
+   par1->setWidget( par2,  (QFormLayout::ItemRole) par3, par4 );
 }
 
 /*
@@ -410,9 +410,9 @@ int spacing () const
 */
 HB_FUNC( QT_QFORMLAYOUT_SPACING )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int i = par1->spacing (  );
-  hb_retni( i );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int i = par1->spacing();
+   hb_retni( i );
 }
 
 /*
@@ -420,9 +420,9 @@ int verticalSpacing () const
 */
 HB_FUNC( QT_QFORMLAYOUT_VERTICALSPACING )
 {
-  QFormLayout * par1 = (QFormLayout *) hb_parptr(1);
-  int i = par1->verticalSpacing (  );
-  hb_retni( i );
+   QFormLayout * par1 = ( QFormLayout * ) hb_parptr( 1 );
+   int i = par1->verticalSpacing();
+   hb_retni( i );
 }
 
 /*----------------------------------------------------------------------*/

@@ -66,7 +66,7 @@ QColorDialog ( const QColor & initial, QWidget * parent = 0 )
 */
 HB_FUNC( QT_QCOLORDIALOG )
 {
-  hb_retptr( ( QColorDialog* ) new QColorDialog( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QColorDialog* ) new QColorDialog( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -74,7 +74,7 @@ void open ()
 */
 HB_FUNC( QT_QCOLORDIALOG_OPEN )
 {
-  hbqt_par_QColorDialog( 1 )->open (  );
+   hbqt_par_QColorDialog( 1 )->open (  );
 }
 
 /*
@@ -82,7 +82,7 @@ ColorDialogOptions options () const
 */
 HB_FUNC( QT_QCOLORDIALOG_OPTIONS )
 {
-  hb_retni( hbqt_par_QColorDialog( 1 )->options() );
+   hb_retni( hbqt_par_QColorDialog( 1 )->options() );
 }
 
 /*
@@ -90,7 +90,7 @@ void setOption ( ColorDialogOption option, bool on = true )
 */
 HB_FUNC( QT_QCOLORDIALOG_SETOPTION )
 {
-  hbqt_par_QColorDialog( 1 )->setOption( ( QColorDialog::ColorDialogOption ) hb_parni( 2 ), hb_parl( 3 ) );
+   hbqt_par_QColorDialog( 1 )->setOption( ( QColorDialog::ColorDialogOption ) hb_parni( 2 ), hb_parl( 3 ) );
 }
 
 /*
@@ -98,7 +98,7 @@ void setOptions ( ColorDialogOptions options )
 */
 HB_FUNC( QT_QCOLORDIALOG_SETOPTIONS )
 {
-  hbqt_par_QColorDialog( 1 )->setOptions( ( QColorDialog::ColorDialogOptions ) hb_parni( 2 ) );
+   hbqt_par_QColorDialog( 1 )->setOptions( ( QColorDialog::ColorDialogOptions ) hb_parni( 2 ) );
 }
 
 /*
@@ -106,7 +106,7 @@ bool testOption ( ColorDialogOption option ) const
 */
 HB_FUNC( QT_QCOLORDIALOG_TESTOPTION )
 {
-  hb_retl( hbqt_par_QColorDialog( 1 )->testOption( ( QColorDialog::ColorDialogOption ) hb_parni( 2 ) ) );
+   hb_retl( hbqt_par_QColorDialog( 1 )->testOption( ( QColorDialog::ColorDialogOption ) hb_parni( 2 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

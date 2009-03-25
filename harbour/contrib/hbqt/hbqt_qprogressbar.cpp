@@ -65,7 +65,7 @@ QProgressBar ( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QPROGRESSBAR )
 {
-  hb_retptr( ( QProgressBar* ) new QProgressBar( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QProgressBar* ) new QProgressBar( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

@@ -65,7 +65,7 @@ QFocusFrame ( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QFOCUSFRAME )
 {
-  hb_retptr( ( QFocusFrame* ) new QFocusFrame( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QFocusFrame* ) new QFocusFrame( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

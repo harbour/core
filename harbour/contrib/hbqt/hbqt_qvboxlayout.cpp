@@ -66,7 +66,7 @@ QVBoxLayout ( QWidget * parent )
 */
 HB_FUNC( QT_QVBOXLAYOUT )
 {
-  hb_retptr( ( QVBoxLayout* ) new QVBoxLayout( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QVBoxLayout* ) new QVBoxLayout( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

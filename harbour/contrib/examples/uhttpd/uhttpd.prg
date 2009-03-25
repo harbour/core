@@ -2170,7 +2170,7 @@ STATIC FUNCTION uhttpd_DefError( oError )
    nChoice := 0
    DO WHILE nChoice == 0
 
-      IF ISNIL( cDOSError )
+      IF cDOSError == NIL
          nChoice := Alert( cMessage + " " + cCallstack, aOptions )
       ELSE
          nChoice := Alert( cMessage + ";" + cDOSError + " " + cCallstack, aOptions )
@@ -2191,7 +2191,7 @@ STATIC FUNCTION uhttpd_DefError( oError )
 
    // "Quit" selected
 
-   IF ! ISNIL( cDOSError )
+   IF cDOSError != NIL
       cMessage += " " + cDOSError
    ENDIF
 

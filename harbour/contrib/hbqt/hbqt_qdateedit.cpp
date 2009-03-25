@@ -66,7 +66,7 @@ QDateEdit ( const QDate & date, QWidget * parent = 0 )
 */
 HB_FUNC( QT_QDATEEDIT )
 {
-  hb_retptr( ( QDateEdit* ) new QDateEdit( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QDateEdit* ) new QDateEdit( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

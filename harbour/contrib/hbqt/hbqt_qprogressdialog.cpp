@@ -66,7 +66,7 @@ QProgressDialog ( const QString & labelText, const QString & cancelButtonText, i
 */
 HB_FUNC( QT_QPROGRESSDIALOG )
 {
-  hb_retptr( ( QProgressDialog* ) new QProgressDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+   hb_retptr( ( QProgressDialog* ) new QProgressDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

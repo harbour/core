@@ -65,7 +65,7 @@ Qt::Alignment alignment () const
 */
 HB_FUNC( QT_QLAYOUTITEM_ALIGNMENT )
 {
-  hb_retni( hbqt_par_QLayoutItem( 1 )->alignment() );
+   hb_retni( hbqt_par_QLayoutItem( 1 )->alignment() );
 }
 
 /*
@@ -73,7 +73,7 @@ QSizePolicy::ControlTypes controlTypes () const
 */
 HB_FUNC( QT_QLAYOUTITEM_CONTROLTYPES )
 {
-  hb_retni( hbqt_par_QLayoutItem( 1 )->controlTypes() );
+   hb_retni( hbqt_par_QLayoutItem( 1 )->controlTypes() );
 }
 
 /*
@@ -81,7 +81,7 @@ void setAlignment ( Qt::Alignment alignment )
 */
 HB_FUNC( QT_QLAYOUTITEM_SETALIGNMENT )
 {
-  hbqt_par_QLayoutItem( 1 )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   hbqt_par_QLayoutItem( 1 )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
 }
 
 /*----------------------------------------------------------------------*/

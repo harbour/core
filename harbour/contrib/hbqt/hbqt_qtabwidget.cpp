@@ -65,7 +65,7 @@ QTabWidget ( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QTABWIDGET )
 {
-  hb_retptr( ( QTabWidget* ) new QTabWidget( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QTabWidget* ) new QTabWidget( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

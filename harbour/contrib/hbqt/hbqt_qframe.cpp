@@ -65,7 +65,7 @@ QFrame ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
 */
 HB_FUNC( QT_QFRAME )
 {
-  hb_retptr( ( QFrame* ) new QFrame( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+   hb_retptr( ( QFrame * ) new QFrame( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
 }
 
 /*
@@ -73,7 +73,7 @@ Shadow frameShadow () const
 */
 HB_FUNC( QT_QFRAME_FRAMESHADOW )
 {
-  hb_retni( hbqt_par_QFrame( 1 )->frameShadow() );
+   hb_retni( hbqt_par_QFrame( 1 )->frameShadow() );
 }
 
 /*
@@ -81,7 +81,7 @@ Shape frameShape () const
 */
 HB_FUNC( QT_QFRAME_FRAMESHAPE )
 {
-  hb_retni( hbqt_par_QFrame( 1 )->frameShape() );
+   hb_retni( hbqt_par_QFrame( 1 )->frameShape() );
 }
 
 /*
@@ -89,7 +89,7 @@ int frameStyle () const
 */
 HB_FUNC( QT_QFRAME_FRAMESTYLE )
 {
-  hb_retni( hbqt_par_QFrame( 1 )->frameStyle() );
+   hb_retni( hbqt_par_QFrame( 1 )->frameStyle() );
 }
 
 /*
@@ -97,7 +97,7 @@ int frameWidth () const
 */
 HB_FUNC( QT_QFRAME_FRAMEWIDTH )
 {
-  hb_retni( hbqt_par_QFrame( 1 )->frameWidth() );
+   hb_retni( hbqt_par_QFrame( 1 )->frameWidth() );
 }
 
 /*
@@ -105,7 +105,7 @@ int lineWidth () const
 */
 HB_FUNC( QT_QFRAME_LINEWIDTH )
 {
-  hb_retni( hbqt_par_QFrame( 1 )->lineWidth() );
+   hb_retni( hbqt_par_QFrame( 1 )->lineWidth() );
 }
 
 /*
@@ -113,7 +113,7 @@ int midLineWidth () const
 */
 HB_FUNC( QT_QFRAME_MIDLINEWIDTH )
 {
-  hb_retni( hbqt_par_QFrame( 1 )->midLineWidth() );
+   hb_retni( hbqt_par_QFrame( 1 )->midLineWidth() );
 }
 
 /*
@@ -121,7 +121,7 @@ void setFrameShadow ( Shadow )
 */
 HB_FUNC( QT_QFRAME_SETFRAMESHADOW )
 {
-  hbqt_par_QFrame( 1 )->setFrameShadow( ( QFrame::Shadow ) hb_parni( 2 ) );
+   hbqt_par_QFrame( 1 )->setFrameShadow( ( QFrame::Shadow ) hb_parni( 2 ) );
 }
 
 /*
@@ -129,7 +129,7 @@ void setFrameShape ( Shape )
 */
 HB_FUNC( QT_QFRAME_SETFRAMESHAPE )
 {
-  hbqt_par_QFrame( 1 )->setFrameShape( ( QFrame::Shape ) hb_parni( 2 ) );
+   hbqt_par_QFrame( 1 )->setFrameShape( ( QFrame::Shape ) hb_parni( 2 ) );
 }
 
 /*
@@ -137,7 +137,7 @@ void setFrameStyle ( int style )
 */
 HB_FUNC( QT_QFRAME_SETFRAMESTYLE )
 {
-  hbqt_par_QFrame( 1 )->setFrameStyle( hb_parni( 2 ) );
+   hbqt_par_QFrame( 1 )->setFrameStyle( hb_parni( 2 ) );
 }
 
 /*
@@ -145,7 +145,7 @@ void setLineWidth ( int )
 */
 HB_FUNC( QT_QFRAME_SETLINEWIDTH )
 {
-  hbqt_par_QFrame( 1 )->setLineWidth( hb_parni( 2 ) );
+   hbqt_par_QFrame( 1 )->setLineWidth( hb_parni( 2 ) );
 }
 
 /*
@@ -153,7 +153,7 @@ void setMidLineWidth ( int )
 */
 HB_FUNC( QT_QFRAME_SETMIDLINEWIDTH )
 {
-  hbqt_par_QFrame( 1 )->setMidLineWidth( hb_parni( 2 ) );
+   hbqt_par_QFrame( 1 )->setMidLineWidth( hb_parni( 2 ) );
 }
 
 /*----------------------------------------------------------------------*/

@@ -65,7 +65,7 @@ QWizard ( QWidget * parent = 0, Qt::WindowFlags flags = 0 )
 */
 HB_FUNC( QT_QWIZARD )
 {
-  hb_retptr( ( QWizard* ) new QWizard( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+   hb_retptr( ( QWizard* ) new QWizard( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

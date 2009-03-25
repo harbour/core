@@ -67,7 +67,7 @@ QCommandLinkButton ( const QString & text, const QString & description, QWidget 
 */
 HB_FUNC( QT_QCOMMANDLINKBUTTON )
 {
-  hb_retptr( ( QCommandLinkButton* ) new QCommandLinkButton( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QCommandLinkButton* ) new QCommandLinkButton( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -75,7 +75,7 @@ QString description () const
 */
 HB_FUNC( QT_QCOMMANDLINKBUTTON_DESCRIPTION )
 {
-  hb_retc( hbqt_par_QCommandLinkButton( 1 )->description().toLatin1().data() );
+   hb_retc( hbqt_par_QCommandLinkButton( 1 )->description().toLatin1().data() );
 }
 
 /*
@@ -83,7 +83,7 @@ void setDescription ( const QString & description )
 */
 HB_FUNC( QT_QCOMMANDLINKBUTTON_SETDESCRIPTION )
 {
-  hbqt_par_QCommandLinkButton( 1 )->setDescription( hbqt_par_QString( 2 ) );
+   hbqt_par_QCommandLinkButton( 1 )->setDescription( hbqt_par_QString( 2 ) );
 }
 
 /*
@@ -91,7 +91,7 @@ bool isFlat () const
 */
 HB_FUNC( QT_QCOMMANDLINKBUTTON_ISFLAT )
 {
-  hb_retl( hbqt_par_QCommandLinkButton( 1 )->isFlat() );
+   hb_retl( hbqt_par_QCommandLinkButton( 1 )->isFlat() );
 }
 
 /*
@@ -99,7 +99,7 @@ void setFlat ( bool )
 */
 HB_FUNC( QT_QCOMMANDLINKBUTTON_SETFLAT )
 {
-  hbqt_par_QCommandLinkButton( 1 )->setFlat( hb_parl( 2 ) );
+   hbqt_par_QCommandLinkButton( 1 )->setFlat( hb_parl( 2 ) );
 }
 
 /*----------------------------------------------------------------------*/

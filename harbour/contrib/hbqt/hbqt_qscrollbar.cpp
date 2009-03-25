@@ -65,7 +65,7 @@ QScrollBar ( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QSCROLLBAR )
 {
-  hb_retptr( ( QScrollBar* ) new QScrollBar( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QScrollBar* ) new QScrollBar( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

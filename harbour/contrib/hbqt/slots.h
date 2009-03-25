@@ -58,29 +58,30 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QList>
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 
 class Slots: public QObject
 {
-  Q_OBJECT
+   Q_OBJECT
 
-  public:
-  Slots(QObject *parent = 0);
-  ~Slots();
-  QList<QWidget*> list1;
-  QList<QString> list2;
-  QList<PHB_ITEM> list3;
-  QList<bool> list4;
+   public:
+   Slots( QObject *parent = 0 );
+   ~Slots();
+   QList<QWidget*> list1;
+   QList<QString> list2;
+   QList<PHB_ITEM> list3;
+   QList<bool> list4;
 
-  public slots:
-  void clicked();
-  void triggered();
-  void triggered(bool checked);
-  void hovered();
-  void stateChanged(int state);
-  void pressed();
-  void released();
+   public slots:
+   void clicked();
+   void triggered();
+   void triggered( bool checked );
+   void hovered();
+   void stateChanged( int state );
+   void pressed();
+   void released();
 };
 
 #endif

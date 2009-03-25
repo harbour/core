@@ -65,7 +65,7 @@ QToolBox ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
 */
 HB_FUNC( QT_QTOOLBOX )
 {
-  hb_retptr( ( QToolBox* ) new QToolBox( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+   hb_retptr( ( QToolBox* ) new QToolBox( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

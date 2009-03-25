@@ -65,7 +65,7 @@ QPageSetupDialog ( QPrinter * printer, QWidget * parent = 0 )
 */
 HB_FUNC( QT_QPAGESETUPDIALOG )
 {
-  hb_retptr( ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

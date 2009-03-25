@@ -65,7 +65,7 @@ QFontComboBox ( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QFONTCOMBOBOX )
 {
-  hb_retptr( (QFontComboBox*) new QFontComboBox( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QFontComboBox * ) new QFontComboBox( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

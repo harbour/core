@@ -65,7 +65,7 @@ QScrollArea ( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QSCROLLAREA )
 {
-  hb_retptr( ( QScrollArea* ) new QScrollArea( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QScrollArea* ) new QScrollArea( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

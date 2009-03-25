@@ -129,7 +129,7 @@ void setAutoExclusive ( bool )
 */
 HB_FUNC( QT_QABSTRACTBUTTON_SETAUTOEXCLUSIVE )
 {
-  hbqt_par_QAbstractButton( 1 )->setAutoExclusive( hb_parl( 2 ) );
+   hbqt_par_QAbstractButton( 1 )->setAutoExclusive( hb_parl( 2 ) );
 }
 
 /*
@@ -137,7 +137,7 @@ void setAutoRepeat ( bool )
 */
 HB_FUNC( QT_QABSTRACTBUTTON_SETAUTOREPEAT )
 {
-  hbqt_par_QAbstractButton( 1 )->setAutoRepeat( hb_parl( 2 ) );
+   hbqt_par_QAbstractButton( 1 )->setAutoRepeat( hb_parl( 2 ) );
 }
 
 /*
@@ -169,7 +169,7 @@ void setDown ( bool )
 */
 HB_FUNC( QT_QABSTRACTBUTTON_SETDOWN )
 {
-  hbqt_par_QAbstractButton( 1 )->setDown( hb_parl( 2 ) );
+   hbqt_par_QAbstractButton( 1 )->setDown( hb_parl( 2 ) );
 }
 
 /*
@@ -177,7 +177,7 @@ void setIcon ( const QIcon & icon )
 */
 HB_FUNC( QT_QABSTRACTBUTTON_SETICON )
 {
-  hbqt_par_QAbstractButton( 1 )->setIcon( QIcon( hbqt_par_QString( 2 ) ) );
+   hbqt_par_QAbstractButton( 1 )->setIcon( QIcon( hbqt_par_QString( 2 ) ) );
 }
 
 /*
@@ -185,7 +185,7 @@ void setText ( const QString & text )
 */
 HB_FUNC( QT_QABSTRACTBUTTON_SETTEXT )
 {
-  hbqt_par_QAbstractButton( 1 )->setText( hbqt_par_QString( 2 ) );
+   hbqt_par_QAbstractButton( 1 )->setText( hbqt_par_QString( 2 ) );
 }
 
 /*

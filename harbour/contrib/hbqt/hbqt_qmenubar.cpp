@@ -65,7 +65,7 @@ QMenuBar ( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QMENUBAR )
 {
-  hb_retptr( ( QMenuBar* ) new QMenuBar( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QMenuBar* ) new QMenuBar( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -73,17 +73,17 @@ QAction * activeAction () const
 */
 HB_FUNC( QT_QMENUBAR_ACTIVEACTION )
 {
-  hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->activeAction() );
+   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->activeAction() );
 }
 
 HB_FUNC( QT_QMENUBAR_ADDACTION )
 {
-  if( hb_pcount() == 2 && hb_param( 2, HB_IT_STRING ) )
-     hb_retptr( (QAction *) hbqt_par_QMenuBar( 1 )->addAction( hbqt_par_QString( 2 ) ) );
-  else if( hb_pcount() == 2 && hb_param( 2, HB_IT_POINTER ) )
-     hbqt_par_QMenuBar( 1 )->addAction ( hbqt_par_QAction( 2 ) );
-  else
-     hb_retptr( NULL );
+   if( hb_pcount() == 2 && hb_param( 2, HB_IT_STRING ) )
+      hb_retptr( (QAction *) hbqt_par_QMenuBar( 1 )->addAction( hbqt_par_QString( 2 ) ) );
+   else if( hb_pcount() == 2 && hb_param( 2, HB_IT_POINTER ) )
+      hbqt_par_QMenuBar( 1 )->addAction ( hbqt_par_QAction( 2 ) );
+   else
+      hb_retptr( NULL );
 }
 
 /*
@@ -91,7 +91,7 @@ QAction * addAction ( const QString & text )
 */
 HB_FUNC( QT_QMENUBAR_ADDACTION_1 )
 {
-  hb_retptr( (QAction *) hbqt_par_QMenuBar( 1 )->addAction( hbqt_par_QString( 2 ) ) );
+   hb_retptr( (QAction *) hbqt_par_QMenuBar( 1 )->addAction( hbqt_par_QString( 2 ) ) );
 }
 
 /*
@@ -99,19 +99,19 @@ void addAction ( QAction * action )
 */
 HB_FUNC( QT_QMENUBAR_ADDACTION_2 )
 {
-  hbqt_par_QMenuBar( 1 )->addAction ( hbqt_par_QAction( 2 ) );
+   hbqt_par_QMenuBar( 1 )->addAction ( hbqt_par_QAction( 2 ) );
 }
 
 HB_FUNC( QT_QMENUBAR_ADDMENU )
 {
-  if( hb_pcount() == 2 && hb_param( 2, HB_IT_POINTER ) )
-    hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->addMenu( hbqt_par_QMenu( 2 ) ) );
-  else if( hb_pcount() == 2 && hb_param( 2, HB_IT_STRING ) )
-    hb_retptr( (QMenu *) hbqt_par_QMenuBar( 1 )->addMenu( hbqt_par_QString( 2 ) ) );
-  else if( hb_pcount() == 3 && hb_param( 2, HB_IT_STRING ) && hb_param( 3, HB_IT_STRING ) )
-    hb_retptr( ( QMenu* ) hbqt_par_QMenuBar( 1 )->addMenu( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 3 ) ) );
-  else
-    hb_retptr( NULL );
+   if( hb_pcount() == 2 && hb_param( 2, HB_IT_POINTER ) )
+      hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->addMenu( hbqt_par_QMenu( 2 ) ) );
+   else if( hb_pcount() == 2 && hb_param( 2, HB_IT_STRING ) )
+      hb_retptr( (QMenu *) hbqt_par_QMenuBar( 1 )->addMenu( hbqt_par_QString( 2 ) ) );
+   else if( hb_pcount() == 3 && hb_param( 2, HB_IT_STRING ) && hb_param( 3, HB_IT_STRING ) )
+      hb_retptr( ( QMenu* ) hbqt_par_QMenuBar( 1 )->addMenu( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 3 ) ) );
+   else
+      hb_retptr( NULL );
 }
 
 /*
@@ -119,7 +119,7 @@ QAction * addMenu ( QMenu * menu )
 */
 HB_FUNC( QT_QMENUBAR_ADDMENU_1 )
 {
-  hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->addMenu( hbqt_par_QMenu( 2 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->addMenu( hbqt_par_QMenu( 2 ) ) );
 }
 
 /*
@@ -127,7 +127,7 @@ QMenu * addMenu ( const QString & title )
 */
 HB_FUNC( QT_QMENUBAR_ADDMENU_2 )
 {
-  hb_retptr( (QMenu *) hbqt_par_QMenuBar( 1 )->addMenu( hbqt_par_QString( 2 ) ) );
+   hb_retptr( (QMenu *) hbqt_par_QMenuBar( 1 )->addMenu( hbqt_par_QString( 2 ) ) );
 }
 
 /*
@@ -135,7 +135,7 @@ QMenu * addMenu ( const QIcon & icon, const QString & title )
 */
 HB_FUNC( QT_QMENUBAR_ADDMENU_3 )
 {
-  hb_retptr( ( QMenu* ) hbqt_par_QMenuBar( 1 )->addMenu( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 3 ) ) );
+   hb_retptr( ( QMenu* ) hbqt_par_QMenuBar( 1 )->addMenu( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 3 ) ) );
 }
 
 /*
@@ -143,7 +143,7 @@ QAction * addSeparator ()
 */
 HB_FUNC( QT_QMENUBAR_ADDSEPARATOR )
 {
-  hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->addSeparator() );
+   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->addSeparator() );
 }
 
 /*
@@ -151,7 +151,7 @@ void clear ()
 */
 HB_FUNC( QT_QMENUBAR_CLEAR )
 {
-  hbqt_par_QMenuBar( 1 )->clear();
+   hbqt_par_QMenuBar( 1 )->clear();
 }
 
 /*
@@ -159,7 +159,7 @@ QAction * insertMenu ( QAction * before, QMenu * menu )
 */
 HB_FUNC( QT_QMENUBAR_INSERTMENU )
 {
-  hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->insertMenu( hbqt_par_QAction( 2 ), hbqt_par_QMenu( 3 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->insertMenu( hbqt_par_QAction( 2 ), hbqt_par_QMenu( 3 ) ) );
 }
 
 /*
@@ -167,7 +167,7 @@ QAction * insertSeparator ( QAction * before )
 */
 HB_FUNC( QT_QMENUBAR_INSERTSEPARATOR )
 {
-  hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->insertSeparator( hbqt_par_QAction( 2 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QMenuBar( 1 )->insertSeparator( hbqt_par_QAction( 2 ) ) );
 }
 
 /*
@@ -175,7 +175,7 @@ bool isDefaultUp () const
 */
 HB_FUNC( QT_QMENUBAR_ISDEFAULTUP )
 {
-  hb_retl( hbqt_par_QMenuBar( 1 )->isDefaultUp() );
+   hb_retl( hbqt_par_QMenuBar( 1 )->isDefaultUp() );
 }
 
 /*
@@ -183,7 +183,7 @@ void setActiveAction ( QAction * act )
 */
 HB_FUNC( QT_QMENUBAR_SETACTIVEACTION )
 {
-  hbqt_par_QMenuBar( 1 )->setActiveAction( hbqt_par_QAction( 2 ) );
+   hbqt_par_QMenuBar( 1 )->setActiveAction( hbqt_par_QAction( 2 ) );
 }
 
 /*
@@ -191,7 +191,7 @@ void setDefaultUp ( bool )
 */
 HB_FUNC( QT_QMENUBAR_SETDEFAULTUP )
 {
-  hbqt_par_QMenuBar( 1 )->setDefaultUp( hb_parl(2) );
+   hbqt_par_QMenuBar( 1 )->setDefaultUp( hb_parl(2) );
 }
 
 /*----------------------------------------------------------------------*/

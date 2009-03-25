@@ -65,7 +65,7 @@ QBoxLayout ( Direction dir, QWidget * parent = 0 )
 */
 HB_FUNC( QT_QBOXLAYOUT )
 {
-  hb_retptr( ( QBoxLayout* ) new QBoxLayout( ( QBoxLayout::Direction ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
+   hb_retptr( ( QBoxLayout* ) new QBoxLayout( ( QBoxLayout::Direction ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
 }
 
 /*
@@ -73,7 +73,7 @@ void addLayout ( QLayout * layout, int stretch = 0 )
 */
 HB_FUNC( QT_QBOXLAYOUT_ADDLAYOUT )
 {
-  hbqt_par_QBoxLayout( 1 )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ) );
+   hbqt_par_QBoxLayout( 1 )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -81,7 +81,7 @@ void addSpacerItem ( QSpacerItem * spacerItem )
 */
 HB_FUNC( QT_QBOXLAYOUT_ADDSPACERITEM )
 {
-  hbqt_par_QBoxLayout( 1 )->addSpacerItem( hbqt_par_QSpacerItem( 2 ) );
+   hbqt_par_QBoxLayout( 1 )->addSpacerItem( hbqt_par_QSpacerItem( 2 ) );
 }
 
 /*
@@ -89,7 +89,7 @@ void addSpacing ( int size )
 */
 HB_FUNC( QT_QBOXLAYOUT_ADDSPACING )
 {
-  hbqt_par_QBoxLayout( 1 )->addSpacing( hb_parni( 2 ) );
+   hbqt_par_QBoxLayout( 1 )->addSpacing( hb_parni( 2 ) );
 }
 
 /*
@@ -97,7 +97,7 @@ void addStretch ( int stretch = 0 )
 */
 HB_FUNC( QT_QBOXLAYOUT_ADDSTRETCH )
 {
-  hbqt_par_QBoxLayout( 1 )->addStretch( hb_parni( 2 ) );
+   hbqt_par_QBoxLayout( 1 )->addStretch( hb_parni( 2 ) );
 }
 
 /*
@@ -105,7 +105,7 @@ void addStrut ( int size )
 */
 HB_FUNC( QT_QBOXLAYOUT_ADDSTRUT )
 {
-  hbqt_par_QBoxLayout( 1 )->addStrut( hb_parni( 2 ) );
+   hbqt_par_QBoxLayout( 1 )->addStrut( hb_parni( 2 ) );
 }
 
 /*
@@ -113,7 +113,7 @@ void addWidget ( QWidget * widget, int stretch = 0, Qt::Alignment alignment = 0 
 */
 HB_FUNC( QT_QBOXLAYOUT_ADDWIDGET )
 {
-  hbqt_par_QBoxLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), ( Qt::Alignment ) hb_parni( 4 ) );
+   hbqt_par_QBoxLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), ( Qt::Alignment ) hb_parni( 4 ) );
 }
 
 /*
@@ -121,7 +121,7 @@ Direction direction () const
 */
 HB_FUNC( QT_QBOXLAYOUT_DIRECTION )
 {
-  hb_retni( hbqt_par_QBoxLayout( 1 )->direction() );
+   hb_retni( hbqt_par_QBoxLayout( 1 )->direction() );
 }
 
 /*
@@ -129,7 +129,7 @@ void insertLayout ( int index, QLayout * layout, int stretch = 0 )
 */
 HB_FUNC( QT_QBOXLAYOUT_INSERTLAYOUT )
 {
-  hbqt_par_QBoxLayout( 1 )->insertLayout( hb_parni( 2 ), hbqt_par_QLayout( 3 ), hb_parni( 4 ) );
+   hbqt_par_QBoxLayout( 1 )->insertLayout( hb_parni( 2 ), hbqt_par_QLayout( 3 ), hb_parni( 4 ) );
 }
 
 /*
@@ -137,7 +137,7 @@ void insertSpacerItem ( int index, QSpacerItem * spacerItem )
 */
 HB_FUNC( QT_QBOXLAYOUT_INSERTSPACERITEM )
 {
-  hbqt_par_QBoxLayout( 1 )->insertSpacerItem( hb_parni( 2 ), hbqt_par_QSpacerItem( 3 ) );
+   hbqt_par_QBoxLayout( 1 )->insertSpacerItem( hb_parni( 2 ), hbqt_par_QSpacerItem( 3 ) );
 }
 
 /*
@@ -145,7 +145,7 @@ void insertSpacing ( int index, int size )
 */
 HB_FUNC( QT_QBOXLAYOUT_INSERTSPACING )
 {
-  hbqt_par_QBoxLayout( 1 )->insertSpacing( hb_parni( 2 ), hb_parni( 3 ) );
+   hbqt_par_QBoxLayout( 1 )->insertSpacing( hb_parni( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -153,7 +153,7 @@ void insertStretch ( int index, int stretch = 0 )
 */
 HB_FUNC( QT_QBOXLAYOUT_INSERTSTRETCH )
 {
-  hbqt_par_QBoxLayout( 1 )->insertStretch( hb_parni( 2 ), hb_parni( 3 ) );
+   hbqt_par_QBoxLayout( 1 )->insertStretch( hb_parni( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -161,7 +161,7 @@ void insertWidget ( int index, QWidget * widget, int stretch = 0, Qt::Alignment 
 */
 HB_FUNC( QT_QBOXLAYOUT_INSERTWIDGET )
 {
-  hbqt_par_QBoxLayout( 1 )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 5 ), ( Qt::Alignment ) hb_parni( 6 ) );
+   hbqt_par_QBoxLayout( 1 )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 5 ), ( Qt::Alignment ) hb_parni( 6 ) );
 }
 
 /*
@@ -169,7 +169,7 @@ void setDirection ( Direction direction )
 */
 HB_FUNC( QT_QBOXLAYOUT_SETDIRECTION )
 {
-  hbqt_par_QBoxLayout( 1 )->setDirection( ( QBoxLayout::Direction ) hb_parni( 2 ) );
+   hbqt_par_QBoxLayout( 1 )->setDirection( ( QBoxLayout::Direction ) hb_parni( 2 ) );
 }
 
 /*
@@ -177,7 +177,7 @@ void setSpacing ( int spacing )
 */
 HB_FUNC( QT_QBOXLAYOUT_SETSPACING )
 {
-  hbqt_par_QBoxLayout( 1 )->setSpacing( hb_parni( 2 ) );
+   hbqt_par_QBoxLayout( 1 )->setSpacing( hb_parni( 2 ) );
 }
 
 /*
@@ -185,7 +185,7 @@ void setStretch ( int index, int stretch )
 */
 HB_FUNC( QT_QBOXLAYOUT_SETSTRETCH )
 {
-  hbqt_par_QBoxLayout( 1 )->setStretch( hb_parni( 2 ), hb_parni( 3 ) );
+   hbqt_par_QBoxLayout( 1 )->setStretch( hb_parni( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -193,7 +193,7 @@ bool setStretchFactor ( QWidget * widget, int stretch )
 */
 HB_FUNC( QT_QBOXLAYOUT_SETSTRETCHFACTOR )
 {
-  hb_retl( hbqt_par_QBoxLayout( 1 )->setStretchFactor( hbqt_par_QWidget( 2 ), hb_parni( 3 ) ) );
+   hb_retl( hbqt_par_QBoxLayout( 1 )->setStretchFactor( hbqt_par_QWidget( 2 ), hb_parni( 3 ) ) );
 }
 
 /*
@@ -201,7 +201,7 @@ int spacing () const
 */
 HB_FUNC( QT_QBOXLAYOUT_SPACING )
 {
-  hb_retni( hbqt_par_QBoxLayout( 1 )->spacing() );
+   hb_retni( hbqt_par_QBoxLayout( 1 )->spacing() );
 }
 
 /*
@@ -209,7 +209,7 @@ int stretch ( int index ) const
 */
 HB_FUNC( QT_QBOXLAYOUT_STRETCH )
 {
-  hb_retni( hbqt_par_QBoxLayout( 1 )->stretch( hb_parni( 2 ) ) );
+   hb_retni( hbqt_par_QBoxLayout( 1 )->stretch( hb_parni( 2 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

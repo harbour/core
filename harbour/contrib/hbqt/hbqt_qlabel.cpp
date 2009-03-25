@@ -66,7 +66,7 @@ QLabel ( const QString & text, QWidget * parent = 0, Qt::WindowFlags f = 0 )
 */
 HB_FUNC( QT_QLABEL )
 {
-  hb_retptr( ( QLabel* ) new QLabel( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QLabel* ) new QLabel( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -74,7 +74,7 @@ Qt::Alignment alignment () const
 */
 HB_FUNC( QT_QLABEL_ALIGNMENT )
 {
-  hb_retni( hbqt_par_QLabel( 1 )->alignment() );
+   hb_retni( hbqt_par_QLabel( 1 )->alignment() );
 }
 
 /*
@@ -82,7 +82,7 @@ QWidget * buddy () const
 */
 HB_FUNC( QT_QLABEL_BUDDY )
 {
-  hb_retptr( ( QWidget* ) hbqt_par_QLabel( 1 )->buddy() );
+   hb_retptr( ( QWidget* ) hbqt_par_QLabel( 1 )->buddy() );
 }
 
 /*
@@ -90,7 +90,7 @@ bool hasScaledContents () const
 */
 HB_FUNC( QT_QLABEL_HASSCALEDCONTENTS )
 {
-  hb_retl( hbqt_par_QLabel( 1 )->hasScaledContents() );
+   hb_retl( hbqt_par_QLabel( 1 )->hasScaledContents() );
 }
 
 /*
@@ -98,7 +98,7 @@ int indent () const
 */
 HB_FUNC( QT_QLABEL_INDENT )
 {
-  hb_retni( hbqt_par_QLabel( 1 )->indent() );
+   hb_retni( hbqt_par_QLabel( 1 )->indent() );
 }
 
 /*
@@ -106,7 +106,7 @@ int margin () const
 */
 HB_FUNC( QT_QLABEL_MARGIN )
 {
-  hb_retni( hbqt_par_QLabel( 1 )->margin() );
+   hb_retni( hbqt_par_QLabel( 1 )->margin() );
 }
 
 /*
@@ -114,7 +114,7 @@ bool openExternalLinks () const
 */
 HB_FUNC( QT_QLABEL_OPENEXTERNALLINKS )
 {
-  hb_retl( hbqt_par_QLabel( 1 )->openExternalLinks() );
+   hb_retl( hbqt_par_QLabel( 1 )->openExternalLinks() );
 }
 
 /*
@@ -122,7 +122,7 @@ void setAlignment ( Qt::Alignment )
 */
 HB_FUNC( QT_QLABEL_SETALIGNMENT )
 {
-  hbqt_par_QLabel( 1 )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   hbqt_par_QLabel( 1 )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
 }
 
 /*
@@ -130,7 +130,7 @@ void setBuddy ( QWidget * buddy )
 */
 HB_FUNC( QT_QLABEL_SETBUDDY )
 {
-  hbqt_par_QLabel( 1 )->setBuddy( hbqt_par_QWidget( 1 ) );
+   hbqt_par_QLabel( 1 )->setBuddy( hbqt_par_QWidget( 1 ) );
 }
 
 /*
@@ -138,7 +138,7 @@ void setIndent ( int )
 */
 HB_FUNC( QT_QLABEL_SETINDENT )
 {
-  hbqt_par_QLabel( 1 )->setIndent( hb_parni( 2 ) );
+   hbqt_par_QLabel( 1 )->setIndent( hb_parni( 2 ) );
 }
 
 /*
@@ -146,7 +146,7 @@ void setMargin ( int )
 */
 HB_FUNC( QT_QLABEL_SETMARGIN )
 {
-  hbqt_par_QLabel( 1 )->setMargin( hb_parni( 2 ) );
+   hbqt_par_QLabel( 1 )->setMargin( hb_parni( 2 ) );
 }
 
 /*
@@ -154,7 +154,7 @@ void setOpenExternalLinks ( bool open )
 */
 HB_FUNC( QT_QLABEL_SETOPENEXTERNALLINKS )
 {
-  hbqt_par_QLabel( 1 )->setOpenExternalLinks( hb_parl( 2 ) );
+   hbqt_par_QLabel( 1 )->setOpenExternalLinks( hb_parl( 2 ) );
 }
 
 /*
@@ -162,7 +162,7 @@ void setScaledContents ( bool )
 */
 HB_FUNC( QT_QLABEL_SETSCALEDCONTENTS )
 {
-  hbqt_par_QLabel( 1 )->setScaledContents( hb_parl( 2 ) );
+   hbqt_par_QLabel( 1 )->setScaledContents( hb_parl( 2 ) );
 }
 
 /*
@@ -170,7 +170,7 @@ void setTextFormat ( Qt::TextFormat )
 */
 HB_FUNC( QT_QLABEL_SETTEXTFORMAT )
 {
-  hbqt_par_QLabel( 1 )->setTextFormat( ( Qt::TextFormat ) hb_parni( 2 ) );
+   hbqt_par_QLabel( 1 )->setTextFormat( ( Qt::TextFormat ) hb_parni( 2 ) );
 }
 
 /*
@@ -178,7 +178,7 @@ void setTextInteractionFlags ( Qt::TextInteractionFlags flags )
 */
 HB_FUNC( QT_QLABEL_SETTEXTINTERACTIONFLAGS )
 {
-  hbqt_par_QLabel( 1 )->setTextInteractionFlags( ( Qt::TextInteractionFlags ) hb_parni( 2 ) );
+   hbqt_par_QLabel( 1 )->setTextInteractionFlags( ( Qt::TextInteractionFlags ) hb_parni( 2 ) );
 }
 
 /*
@@ -186,7 +186,7 @@ void setWordWrap ( bool on )
 */
 HB_FUNC( QT_QLABEL_SETWORDWRAP )
 {
-  hbqt_par_QLabel( 1 )->setWordWrap( hb_parl( 2 ) );
+   hbqt_par_QLabel( 1 )->setWordWrap( hb_parl( 2 ) );
 }
 
 /*
@@ -194,7 +194,7 @@ QString text () const
 */
 HB_FUNC( QT_QLABEL_TEXT )
 {
-  hb_retc( hbqt_par_QLabel( 1 )->text().toLatin1().data() );
+   hb_retc( hbqt_par_QLabel( 1 )->text().toLatin1().data() );
 }
 
 /*
@@ -202,7 +202,7 @@ Qt::TextFormat textFormat () const
 */
 HB_FUNC( QT_QLABEL_TEXTFORMAT )
 {
-  hb_retni( hbqt_par_QLabel( 1 )->textFormat() );
+   hb_retni( hbqt_par_QLabel( 1 )->textFormat() );
 }
 
 /*
@@ -210,7 +210,7 @@ Qt::TextInteractionFlags textInteractionFlags () const
 */
 HB_FUNC( QT_QLABEL_TEXTINTERACTIONFLAGS )
 {
-  hb_retni( hbqt_par_QLabel( 1 )->textInteractionFlags() );
+   hb_retni( hbqt_par_QLabel( 1 )->textInteractionFlags() );
 }
 
 /*
@@ -218,7 +218,7 @@ bool wordWrap () const
 */
 HB_FUNC( QT_QLABEL_WORDWRAP )
 {
-  hb_retl( hbqt_par_QLabel( 1 )->wordWrap() );
+   hb_retl( hbqt_par_QLabel( 1 )->wordWrap() );
 }
 
 /*
@@ -226,22 +226,18 @@ void clear ()
 */
 HB_FUNC( QT_QLABEL_CLEAR )
 {
-  hbqt_par_QLabel( 1 )->clear();
+   hbqt_par_QLabel( 1 )->clear();
 }
 
 
 HB_FUNC( QT_QLABEL_SETNUM )
 {
-  PHB_ITEM num = hb_param( 2, HB_IT_ANY );
+   PHB_ITEM num = hb_param( 2, HB_IT_ANY );
 
-  if( HB_IS_DOUBLE( num ) )
-  {
-    hbqt_par_QLabel( 1 )->setNum( ( double ) hb_parnd( 2 ) );
-  }
-  else if( HB_IS_NUMBER(num) )
-  {
-    hbqt_par_QLabel( 1 )->setNum( ( int ) hb_parni( 2 ) );
-  }
+   if( HB_IS_DOUBLE( num ) )
+      hbqt_par_QLabel( 1 )->setNum( ( double ) hb_parnd( 2 ) );
+   else if( HB_IS_NUMBER(num) )
+      hbqt_par_QLabel( 1 )->setNum( ( int ) hb_parni( 2 ) );
 }
 
 /*
@@ -249,7 +245,7 @@ void setText ( const QString & )
 */
 HB_FUNC( QT_QLABEL_SETTEXT )
 {
-  hbqt_par_QLabel( 1 )->setText( hbqt_par_QString( 2 ) );
+   hbqt_par_QLabel( 1 )->setText( hbqt_par_QString( 2 ) );
 }
 
 /*----------------------------------------------------------------------*/

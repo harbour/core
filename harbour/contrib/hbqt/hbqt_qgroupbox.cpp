@@ -66,7 +66,7 @@ QGroupBox ( const QString & title, QWidget * parent = 0 )
 */
 HB_FUNC( QT_QGROUPBOX )
 {
-  hb_retptr( ( QGroupBox* ) new QGroupBox( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QGroupBox * ) new QGroupBox( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

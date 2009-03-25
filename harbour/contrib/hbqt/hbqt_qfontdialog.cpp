@@ -66,7 +66,7 @@ QFontDialog ( const QFont & initial, QWidget * parent = 0 )
 */
 HB_FUNC( QT_QFONTDIALOG )
 {
-  hb_retptr( (QFontDialog*) new QFontDialog( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QFontDialog * ) new QFontDialog( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

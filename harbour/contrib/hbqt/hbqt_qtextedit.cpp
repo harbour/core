@@ -63,10 +63,10 @@
 
 HB_FUNC( QT_QTEXTEDIT )
 {
-  if( hb_param( 1, HB_IT_STRING ) )
-    hb_retptr( ( QTextEdit* ) new QTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
-  else
-    hb_retptr( ( QTextEdit* ) new QTextEdit( hbqt_par_QWidget( 1 ) ) );
+   if( hb_param( 1, HB_IT_STRING ) )
+      hb_retptr( ( QTextEdit* ) new QTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+   else
+      hb_retptr( ( QTextEdit* ) new QTextEdit( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -75,12 +75,12 @@ QTextEdit ( const QString & text, QWidget * parent = 0 ) [2]
 */
 HB_FUNC( QT_QTEXTEDIT_1 )
 {
-  hb_retptr( ( QTextEdit* ) new QTextEdit( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QTextEdit* ) new QTextEdit( hbqt_par_QWidget( 1 ) ) );
 }
 
 HB_FUNC( QT_QTEXTEDIT_2 )
 {
-  hb_retptr( ( QTextEdit* ) new QTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+   hb_retptr( ( QTextEdit* ) new QTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

@@ -78,15 +78,17 @@ QPushButton ( const QIcon & icon, const QString & text, QWidget * parent = 0 ) [
 */
 HB_FUNC( QT_QPUSHBUTTON_1 )
 {
-  hb_retptr( ( QPushButton* ) new QPushButton( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QPushButton* ) new QPushButton( hbqt_par_QWidget( 1 ) ) );
 }
+
 HB_FUNC( QT_QPUSHBUTTON_2 )
 {
-  hb_retptr( ( QPushButton* ) new QPushButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+   hb_retptr( ( QPushButton* ) new QPushButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
 }
+
 HB_FUNC( QT_QPUSHBUTTON_3 )
 {
-  hb_retptr( ( QPushButton* ) new QPushButton( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 2 ), hbqt_par_QWidget( 3 ) ) );
+   hb_retptr( ( QPushButton* ) new QPushButton( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 2 ), hbqt_par_QWidget( 3 ) ) );
 }
 
 /*
@@ -94,7 +96,7 @@ bool autoDefault () const
 */
 HB_FUNC( QT_QPUSHBUTTON_AUTODEFAULT )
 {
-  hb_retl( hbqt_par_QPushButton( 1 )->autoDefault() );
+   hb_retl( hbqt_par_QPushButton( 1 )->autoDefault() );
 }
 
 /*
@@ -102,7 +104,7 @@ bool isDefault () const
 */
 HB_FUNC( QT_QPUSHBUTTON_ISDEFAULT )
 {
-  hb_retl( hbqt_par_QPushButton( 1 )->isDefault() );
+   hb_retl( hbqt_par_QPushButton( 1 )->isDefault() );
 }
 
 /*
@@ -110,7 +112,7 @@ bool isFlat () const
 */
 HB_FUNC( QT_QPUSHBUTTON_ISFLAT )
 {
-  hb_retl( hbqt_par_QPushButton( 1 )->isFlat() );
+   hb_retl( hbqt_par_QPushButton( 1 )->isFlat() );
 }
 
 /*
@@ -118,7 +120,7 @@ QMenu * menu () const
 */
 HB_FUNC( QT_QPUSHBUTTON_MENU )
 {
-  hb_retptr( ( QMenu* ) hbqt_par_QPushButton( 1 )->menu() );
+   hb_retptr( ( QMenu* ) hbqt_par_QPushButton( 1 )->menu() );
 }
 
 /*
@@ -126,7 +128,7 @@ void setAutoDefault ( bool )
 */
 HB_FUNC( QT_QPUSHBUTTON_SETAUTODEFAULT )
 {
-  hbqt_par_QPushButton( 1 )->setAutoDefault( hb_parl( 2 ) );
+   hbqt_par_QPushButton( 1 )->setAutoDefault( hb_parl( 2 ) );
 }
 
 /*
@@ -134,7 +136,7 @@ void setDefault ( bool )
 */
 HB_FUNC( QT_QPUSHBUTTON_SETDEFAULT )
 {
-  hbqt_par_QPushButton( 1 )->setDefault( hb_parl( 2 ) );
+   hbqt_par_QPushButton( 1 )->setDefault( hb_parl( 2 ) );
 }
 
 /*
@@ -142,7 +144,7 @@ void setFlat ( bool )
 */
 HB_FUNC( QT_QPUSHBUTTON_SETFLAT )
 {
-  hbqt_par_QPushButton( 1 )->setFlat( hb_parl( 2 ) );
+   hbqt_par_QPushButton( 1 )->setFlat( hb_parl( 2 ) );
 }
 
 /*
@@ -150,7 +152,7 @@ void setMenu ( QMenu * menu )
 */
 HB_FUNC( QT_QPUSHBUTTON_SETMENU )
 {
-  hbqt_par_QPushButton( 1 )->setMenu( hbqt_par_QMenu( 2 ) );
+   hbqt_par_QPushButton( 1 )->setMenu( hbqt_par_QMenu( 2 ) );
 }
 
 /*
@@ -158,7 +160,7 @@ void showMenu ()
 */
 HB_FUNC( QT_QPUSHBUTTON_SHOWMENU )
 {
-  hbqt_par_QPushButton( 1 )->showMenu();
+   hbqt_par_QPushButton( 1 )->showMenu();
 }
 
 /*----------------------------------------------------------------------*/

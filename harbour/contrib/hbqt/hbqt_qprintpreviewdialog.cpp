@@ -66,12 +66,12 @@ QPrintPreviewDialog ( QWidget * parent = 0, Qt::WindowFlags flags = 0 )
 */
 HB_FUNC( QT_QPRINTPREVIEWDIALOG )
 {
-  if( hb_param( 2, HB_IT_POINTER ) )
-     hb_retptr( ( QPrintPreviewDialog* ) new QPrintPreviewDialog( hbqt_par_QPrinter( 1 ),
-                            hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ) );
-  else
-     hb_retptr( ( QPrintPreviewDialog* ) new QPrintPreviewDialog( hbqt_par_QWidget( 2 ),
-                                                  ( Qt::WindowFlags ) hb_parni( 3 ) ) );
+   if( hb_param( 2, HB_IT_POINTER ) )
+      hb_retptr( ( QPrintPreviewDialog* ) new QPrintPreviewDialog( hbqt_par_QPrinter( 1 ),
+                             hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ) );
+   else
+      hb_retptr( ( QPrintPreviewDialog* ) new QPrintPreviewDialog( hbqt_par_QWidget( 2 ),
+                                                   ( Qt::WindowFlags ) hb_parni( 3 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

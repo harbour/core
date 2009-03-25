@@ -65,7 +65,7 @@ QErrorMessage ( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QERRORMESSAGE )
 {
-  hb_retptr( ( QErrorMessage* ) new QErrorMessage( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QErrorMessage* ) new QErrorMessage( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

@@ -65,7 +65,7 @@ QSizeGrip ( QWidget * parent )
 */
 HB_FUNC( QT_QSIZEGRIP )
 {
-  hb_retptr( ( QSizeGrip* ) new QSizeGrip( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QSizeGrip* ) new QSizeGrip( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

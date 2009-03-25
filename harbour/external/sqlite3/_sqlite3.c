@@ -4,10 +4,9 @@
 
 /*
  * Harbour Project source code:
- * QT wrapper main header
+ * SQLite3 stub
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009 Viktor Szakats <harbour 01 syenar hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,30 +49,35 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
 
-#include "hbapi.h"
-#include "hbqt.h"
-
-#if QT_VERSION >= 0x040500
-
-#include <QtGui/QMessageBox>
-
-/*----------------------------------------------------------------------*/
-
-HB_FUNC( QT_QMESSAGEBOX )
-{
-   hb_retptr( ( QMessageBox* ) new QMessageBox() );
-}
-
-// function added only for tests
-// a better implementation will be done
-HB_FUNC( MSGINFO )
-{
-   QMessageBox msgBox;
-   msgBox.setText( hb_parc( 1 ) );
-   msgBox.exec();
-}
-
-/*----------------------------------------------------------------------*/
+#if !( defined( __WATCOMC__ ) || (defined(__POCC__) && __POCC__ <= 450) )
+   #if defined( __GCC__ ) && __GNUC__ >= 4 && __GNUC_MINOR__ >= 2
+      #pragma GCC diagnostic ignored "-Wunused"
+      #pragma GCC diagnostic ignored "-Wsign-compare"
+      #pragma GCC diagnostic ignored "-Wuninitialized"
+   #elif defined( __BORLANDC__ )
+      #pragma warn -aus
+      #pragma warn -use
+      #pragma warn -par
+      #pragma warn -prc
+      #pragma warn -eff
+      #pragma warn -amp
+   #elif defined( _MSC_VER )
+      #pragma warning( disable: 4018 4244 )
+   #endif
+   #include "sqlite3.c"
+   #if defined( __GCC__ ) && __GNUC__ >= 4 && __GNUC_MINOR__ >= 2
+      #pragma GCC diagnostic warning "-Wunused"
+      #pragma GCC diagnostic warning "-Wsign-compare"
+      #pragma GCC diagnostic warning "-Wuninitialized"
+   #elif defined( __BORLANDC__ )
+      #pragma warn +aus
+   /* #pragma warn +use */ /* This affects the whole file, so don't turn it back on. */
+      #pragma warn +par
+      #pragma warn +prc
+      #pragma warn +eff
+      #pragma warn +amp
+   #elif defined( _MSC_VER )
+      #pragma warning( default: 4018 4244 )
+   #endif
 #endif

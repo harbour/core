@@ -64,10 +64,10 @@
 
 HB_FUNC( QT_QTOOLBAR )
 {
-  if( hb_param( 1, HB_IT_STRING ) )
-    hb_retptr( ( QToolBar* ) new QToolBar( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
-  else
-    hb_retptr( ( QToolBar* ) new QToolBar( hbqt_par_QWidget( 1 ) ) );
+   if( hb_param( 1, HB_IT_STRING ) )
+      hb_retptr( ( QToolBar* ) new QToolBar( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+   else
+      hb_retptr( ( QToolBar* ) new QToolBar( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -76,12 +76,12 @@ QToolBar ( QWidget * parent = 0 ) [2]
 */
 HB_FUNC( QT_QTOOLBAR_1 )
 {
-  hb_retptr( ( QToolBar* ) new QToolBar( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+   hb_retptr( ( QToolBar* ) new QToolBar( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
 }
 
 HB_FUNC( QT_QTOOLBAR_2 )
 {
-  hb_retptr( ( QToolBar* ) new QToolBar( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QToolBar* ) new QToolBar( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -89,7 +89,7 @@ QAction * actionAt ( int x, int y ) const
 */
 HB_FUNC( QT_QTOOLBAR_ACTIONAT_1 )
 {
-  hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->actionAt( hb_parni(2), hb_parni(3) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->actionAt( hb_parni(2), hb_parni(3) ) );
 }
 
 /*
@@ -97,7 +97,7 @@ void addAction ( QAction * action )
 */
 HB_FUNC( QT_QTOOLBAR_ADDACTION_1 )
 {
-  hbqt_par_QToolBar( 1 )->addAction( hbqt_par_QAction( 2 ) );
+   hbqt_par_QToolBar( 1 )->addAction( hbqt_par_QAction( 2 ) );
 }
 
 /*
@@ -105,7 +105,7 @@ QAction * addAction ( const QString & text )
 */
 HB_FUNC( QT_QTOOLBAR_ADDACTION_2 )
 {
-  hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addAction( hbqt_par_QString( 2 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addAction( hbqt_par_QString( 2 ) ) );
 }
 
 /*
@@ -113,7 +113,7 @@ QAction * addAction ( const QIcon & icon, const QString & text )
 */
 HB_FUNC( QT_QTOOLBAR_ADDACTION_3 )
 {
-  hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addAction( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 3 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addAction( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 3 ) ) );
 }
 
 /*
@@ -121,7 +121,7 @@ QAction * addSeparator ()
 */
 HB_FUNC( QT_QTOOLBAR_ADDSEPARATOR )
 {
-  hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addSeparator() );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addSeparator() );
 }
 
 /*
@@ -129,7 +129,7 @@ QAction * addWidget ( QWidget * widget )
 */
 HB_FUNC( QT_QTOOLBAR_ADDWIDGET )
 {
-  hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addWidget( hbqt_par_QWidget( 2 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addWidget( hbqt_par_QWidget( 2 ) ) );
 }
 
 /*
@@ -137,7 +137,7 @@ Qt::ToolBarAreas allowedAreas () const
 */
 HB_FUNC( QT_QTOOLBAR_ALLOWEDAREAS )
 {
-  hb_retni( hbqt_par_QToolBar( 1 )->allowedAreas() );
+   hb_retni( hbqt_par_QToolBar( 1 )->allowedAreas() );
 }
 
 /*
@@ -145,7 +145,7 @@ void clear ()
 */
 HB_FUNC( QT_QTOOLBAR_CLEAR )
 {
-  hbqt_par_QToolBar( 1 )->clear();
+   hbqt_par_QToolBar( 1 )->clear();
 }
 
 /*
@@ -153,7 +153,7 @@ QAction * insertSeparator ( QAction * before )
 */
 HB_FUNC( QT_QTOOLBAR_INSERTSEPARATOR )
 {
-  hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->insertSeparator( hbqt_par_QAction( 2 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->insertSeparator( hbqt_par_QAction( 2 ) ) );
 }
 
 /*
@@ -161,7 +161,7 @@ QAction * insertWidget ( QAction * before, QWidget * widget )
 */
 HB_FUNC( QT_QTOOLBAR_INSERTWIDGET )
 {
-  hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->insertWidget( hbqt_par_QAction( 2 ), hbqt_par_QWidget( 3 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->insertWidget( hbqt_par_QAction( 2 ), hbqt_par_QWidget( 3 ) ) );
 }
 
 /*
@@ -169,7 +169,7 @@ bool isAreaAllowed( Qt::ToolBarArea area ) const
 */
 HB_FUNC( QT_QTOOLBAR_ISAREAALLOWED )
 {
-  hb_retl( hbqt_par_QToolBar( 1 )->isAreaAllowed( ( Qt::ToolBarArea ) hb_parni(2) ) );
+   hb_retl( hbqt_par_QToolBar( 1 )->isAreaAllowed( ( Qt::ToolBarArea ) hb_parni(2) ) );
 }
 
 /*
@@ -177,7 +177,7 @@ bool isFloatable () const
 */
 HB_FUNC( QT_QTOOLBAR_ISFLOATABLE )
 {
-  hb_retl( hbqt_par_QToolBar( 1 )->isFloatable() );
+   hb_retl( hbqt_par_QToolBar( 1 )->isFloatable() );
 }
 
 /*
@@ -185,7 +185,7 @@ bool isFloating () const
 */
 HB_FUNC( QT_QTOOLBAR_ISFLOATING )
 {
-  hb_retl( hbqt_par_QToolBar( 1 )->isFloating() );
+   hb_retl( hbqt_par_QToolBar( 1 )->isFloating() );
 }
 
 /*
@@ -193,7 +193,7 @@ bool isMovable () const
 */
 HB_FUNC( QT_QTOOLBAR_ISMOVABLE )
 {
-  hb_retl( hbqt_par_QToolBar( 1 )->isMovable() );
+   hb_retl( hbqt_par_QToolBar( 1 )->isMovable() );
 }
 
 /*
@@ -201,7 +201,7 @@ Qt::Orientation orientation () const
 */
 HB_FUNC( QT_QTOOLBAR_ORIENTATION )
 {
-  hb_retni( hbqt_par_QToolBar( 1 )->orientation() );
+   hb_retni( hbqt_par_QToolBar( 1 )->orientation() );
 }
 
 /*
@@ -209,7 +209,7 @@ void setAllowedAreas( Qt::ToolBarAreas areas )
 */
 HB_FUNC( QT_QTOOLBAR_SETALLOWEDAREAS )
 {
-  hbqt_par_QToolBar( 1 )->setAllowedAreas( ( Qt::ToolBarAreas ) hb_parni(2) );
+   hbqt_par_QToolBar( 1 )->setAllowedAreas( ( Qt::ToolBarAreas ) hb_parni(2) );
 }
 
 /*
@@ -217,7 +217,7 @@ void setFloatable ( bool floatable )
 */
 HB_FUNC( QT_QTOOLBAR_SETFLOATABLE )
 {
-  hbqt_par_QToolBar( 1 )->setFloatable( hb_parl(2) );
+   hbqt_par_QToolBar( 1 )->setFloatable( hb_parl(2) );
 }
 
 /*
@@ -225,7 +225,7 @@ void setMovable ( bool movable )
 */
 HB_FUNC( QT_QTOOLBAR_SETMOVABLE )
 {
-  hbqt_par_QToolBar( 1 )->setMovable( hb_parl(2) );
+   hbqt_par_QToolBar( 1 )->setMovable( hb_parl(2) );
 }
 
 /*
@@ -233,7 +233,7 @@ void setOrientation ( Qt::Orientation orientation )
 */
 HB_FUNC( QT_QTOOLBAR_SETORIENTATION )
 {
-  hbqt_par_QToolBar( 1 )->setOrientation( ( Qt::Orientation ) hb_parni(2) );
+   hbqt_par_QToolBar( 1 )->setOrientation( ( Qt::Orientation ) hb_parni(2) );
 }
 
 /*
@@ -241,7 +241,7 @@ QAction * toggleViewAction () const
 */
 HB_FUNC( QT_QTOOLBAR_TOGGLEVIEWACTION )
 {
-  hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->toggleViewAction() );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->toggleViewAction() );
 }
 
 /*
@@ -249,7 +249,7 @@ Qt::ToolButtonStyle toolButtonStyle () const
 */
 HB_FUNC( QT_QTOOLBAR_TOOLBUTTONSTYLE )
 {
-  hb_retni( hbqt_par_QToolBar( 1 )->toolButtonStyle() );
+   hb_retni( hbqt_par_QToolBar( 1 )->toolButtonStyle() );
 }
 
 /*
@@ -257,7 +257,7 @@ QWidget * widgetForAction ( QAction * action ) const
 */
 HB_FUNC( QT_QTOOLBAR_WIDGETFORACTION )
 {
-  hb_retptr( ( QWidget* ) hbqt_par_QToolBar( 1 )->widgetForAction( hbqt_par_QAction( 2 ) ) );
+   hb_retptr( ( QWidget* ) hbqt_par_QToolBar( 1 )->widgetForAction( hbqt_par_QAction( 2 ) ) );
 }
 
 /*
@@ -265,7 +265,7 @@ void setToolButtonStyle ( Qt::ToolButtonStyle toolButtonStyle )
 */
 HB_FUNC( QT_QTOOLBAR_SETTOOLBUTTONSTYLE )
 {
-  hbqt_par_QToolBar( 1 )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni(2) );
+   hbqt_par_QToolBar( 1 )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni(2) );
 }
 
 /*----------------------------------------------------------------------*/

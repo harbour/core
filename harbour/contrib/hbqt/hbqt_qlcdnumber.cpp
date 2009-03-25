@@ -66,7 +66,7 @@ QLCDNumber ( uint numDigits, QWidget * parent = 0 )
 */
 HB_FUNC( QT_QLCDNUMBER )
 {
-  hb_retptr( ( QLCDNumber* ) new QLCDNumber( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QLCDNumber * ) new QLCDNumber( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

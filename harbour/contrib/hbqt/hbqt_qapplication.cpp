@@ -76,33 +76,36 @@ void release_codeblocks();
 static QApplication * app = NULL;
 static bool hbqtinit = false;
 
-// HB_FUNC( QT_QAPPLICATION )
-// {
-//    int i_argc = 0;
-//    char** c_argv = NULL;
-//    app = new QApplication(i_argc, c_argv);
-//    hb_retptr((QApplication*) app);
-// }
+#if 0
 HB_FUNC( QT_QAPPLICATION )
 {
-   //int i_argc;
-   //char ** c_argv;
-   //i_argc = hb_cmdargARGC();
-   //c_argv = hb_cmdargARGV();
-   //app = new QApplication(i_argc, c_argv);
-   hb_retptr( (QApplication *) app );
+   int i_argc = 0;
+   char** c_argv = NULL;
+   app = new QApplication( i_argc, c_argv );
+   hb_retptr( ( QApplication* ) app);
+}
+#endif
+
+HB_FUNC( QT_QAPPLICATION )
+{
+#if 0
+   int i_argc;
+   char ** c_argv;
+   i_argc = hb_cmdargARGC();
+   c_argv = hb_cmdargARGV();
+   app = new QApplication( i_argc, c_argv );
+#endif
+   hb_retptr( ( QApplication * ) app );
 }
 
 HB_FUNC( QT_QAPPLICATION_EXEC )
 {
-   int i;
-   i = app->exec();
-   hb_retni( i );
+   hb_retni( app->exec() );
 }
 
 HB_FUNC( QT_QAPPLICATION_SETSTYLE )
 {
-   app->setStyle( hb_parc(2) );
+   app->setStyle( hb_parc( 2 ) );
 }
 
 HB_FUNC( QT_QAPPLICATION_QUIT )
@@ -135,12 +138,10 @@ static void hbqt_Init( void * cargo )
    argc = hb_cmdargARGC();
    argv = hb_cmdargARGV();
 
-   app = new QApplication(argc, argv);
+   app = new QApplication( argc, argv );
 
    if( app )
-   {
-     hbqtinit = true;
-   }
+      hbqtinit = true;
 
    if( ! hbqtinit )
       hb_errInternal( 11001, "hbqt_Init(): QT Initilization Error.", NULL, NULL );

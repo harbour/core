@@ -65,7 +65,7 @@ QToolButton ( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QTOOLBUTTON )
 {
-  hb_retptr( ( QToolButton* ) new QToolButton( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QToolButton* ) new QToolButton( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -73,7 +73,7 @@ Qt::ArrowType arrowType () const
 */
 HB_FUNC( QT_QTOOLBUTTON_ARROWTYPE )
 {
-  hb_retni( hbqt_par_QToolButton( 1 )->arrowType() );
+   hb_retni( hbqt_par_QToolButton( 1 )->arrowType() );
 }
 
 /*
@@ -81,7 +81,7 @@ bool autoRaise () const
 */
 HB_FUNC( QT_QTOOLBUTTON_AUTORAISE )
 {
-  hb_retl( hbqt_par_QToolButton( 1 )->autoRaise() );
+   hb_retl( hbqt_par_QToolButton( 1 )->autoRaise() );
 }
 
 /*
@@ -89,7 +89,7 @@ QAction * defaultAction () const
 */
 HB_FUNC( QT_QTOOLBUTTON_DEFAULTACTION )
 {
-  hb_retptr( ( QAction* ) hbqt_par_QToolButton( 1 )->defaultAction() );
+   hb_retptr( ( QAction* ) hbqt_par_QToolButton( 1 )->defaultAction() );
 }
 
 /*
@@ -97,7 +97,7 @@ QMenu * menu () const
 */
 HB_FUNC( QT_QTOOLBUTTON_MENU )
 {
-  hb_retptr( ( QMenu* ) hbqt_par_QToolButton( 1 )->menu() );
+   hb_retptr( ( QMenu* ) hbqt_par_QToolButton( 1 )->menu() );
 }
 
 /*
@@ -105,7 +105,7 @@ ToolButtonPopupMode popupMode () const
 */
 HB_FUNC( QT_QTOOLBUTTON_POPUPMODE )
 {
-  hb_retni( hbqt_par_QToolButton( 1 )->popupMode() );
+   hb_retni( hbqt_par_QToolButton( 1 )->popupMode() );
 }
 
 /*
@@ -113,7 +113,7 @@ void setArrowType ( Qt::ArrowType type )
 */
 HB_FUNC( QT_QTOOLBUTTON_SETARROWTYPE )
 {
-  hbqt_par_QToolButton( 1 )->setArrowType( ( Qt::ArrowType ) hb_parni(2) );
+   hbqt_par_QToolButton( 1 )->setArrowType( ( Qt::ArrowType ) hb_parni(2) );
 }
 
 /*
@@ -121,7 +121,7 @@ void setAutoRaise ( bool enable )
 */
 HB_FUNC( QT_QTOOLBUTTON_SETAUTORAISE )
 {
-  hbqt_par_QToolButton( 1 )->setAutoRaise( hb_parl(2) );
+   hbqt_par_QToolButton( 1 )->setAutoRaise( hb_parl(2) );
 }
 
 /*
@@ -129,7 +129,7 @@ void setMenu ( QMenu * menu )
 */
 HB_FUNC( QT_QTOOLBUTTON_SETMENU )
 {
-  hbqt_par_QToolButton( 1 )->setMenu( hbqt_par_QMenu( 2 ) );
+   hbqt_par_QToolButton( 1 )->setMenu( hbqt_par_QMenu( 2 ) );
 }
 
 /*
@@ -137,7 +137,7 @@ void setPopupMode ( ToolButtonPopupMode mode )
 */
 HB_FUNC( QT_QTOOLBUTTON_SETPOPUPMODE )
 {
-  hbqt_par_QToolButton( 1 )->setPopupMode( ( QToolButton::ToolButtonPopupMode ) hb_parni(2) );
+   hbqt_par_QToolButton( 1 )->setPopupMode( ( QToolButton::ToolButtonPopupMode ) hb_parni(2) );
 }
 
 /*
@@ -145,7 +145,7 @@ Qt::ToolButtonStyle toolButtonStyle () const
 */
 HB_FUNC( QT_QTOOLBUTTON_TOOLBUTTONSTYLE )
 {
-  hb_retni( hbqt_par_QToolButton( 1 )->toolButtonStyle() );
+   hb_retni( hbqt_par_QToolButton( 1 )->toolButtonStyle() );
 }
 
 /*
@@ -153,7 +153,7 @@ void setDefaultAction ( QAction * action )
 */
 HB_FUNC( QT_QTOOLBUTTON_SETDEFAULTACTION )
 {
-  hbqt_par_QToolButton( 1 )->setDefaultAction( hbqt_par_QAction( 2 ) );
+   hbqt_par_QToolButton( 1 )->setDefaultAction( hbqt_par_QAction( 2 ) );
 }
 
 /*
@@ -161,7 +161,7 @@ void setToolButtonStyle ( Qt::ToolButtonStyle style )
 */
 HB_FUNC( QT_QTOOLBUTTON_SETTOOLBUTTONSTYLE )
 {
-  hbqt_par_QToolButton( 1 )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni(2) );
+   hbqt_par_QToolButton( 1 )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni(2) );
 }
 
 /*
@@ -169,7 +169,7 @@ void showMenu ()
 */
 HB_FUNC( QT_QTOOLBUTTON_SHOWMENU )
 {
-  hbqt_par_QToolButton( 1 )->showMenu();
+   hbqt_par_QToolButton( 1 )->showMenu();
 }
 
 /*----------------------------------------------------------------------*/

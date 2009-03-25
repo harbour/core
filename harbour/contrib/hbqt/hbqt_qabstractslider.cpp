@@ -66,7 +66,7 @@ bool hasTracking () const
 */
 HB_FUNC( QT_QABSTRACTSLIDER_HASTRACKING )
 {
-  hb_retl( hbqt_par_QAbstractSlider( 1 )->hasTracking() );
+   hb_retl( hbqt_par_QAbstractSlider( 1 )->hasTracking() );
 }
 
 /*
@@ -74,7 +74,7 @@ bool invertedAppearance () const
 */
 HB_FUNC( QT_QABSTRACTSLIDER_INVERTEDAPPEARANCE )
 {
-  hb_retl( hbqt_par_QAbstractSlider( 1 )->invertedAppearance() );
+   hb_retl( hbqt_par_QAbstractSlider( 1 )->invertedAppearance() );
 }
 
 /*
@@ -82,7 +82,7 @@ bool invertedControls () const
 */
 HB_FUNC( QT_QABSTRACTSLIDER_INVERTEDCONTROLS )
 {
-  hb_retl( hbqt_par_QAbstractSlider( 1 )->invertedControls() );
+   hb_retl( hbqt_par_QAbstractSlider( 1 )->invertedControls() );
 }
 
 /*
@@ -90,7 +90,7 @@ bool isSliderDown () const
 */
 HB_FUNC( QT_QABSTRACTSLIDER_ISSLIDERDOWN )
 {
-  hb_retl( hbqt_par_QAbstractSlider( 1 )->isSliderDown() );
+   hb_retl( hbqt_par_QAbstractSlider( 1 )->isSliderDown() );
 }
 
 /*
@@ -98,7 +98,7 @@ int maximum () const
 */
 HB_FUNC( QT_QABSTRACTSLIDER_MAXIMUM )
 {
-  hb_retni( hbqt_par_QAbstractSlider( 1 )->maximum() );
+   hb_retni( hbqt_par_QAbstractSlider( 1 )->maximum() );
 }
 
 /*
@@ -106,7 +106,7 @@ int minimum () const
 */
 HB_FUNC( QT_QABSTRACTSLIDER_MINIMUM )
 {
-  hb_retni( hbqt_par_QAbstractSlider( 1 )->minimum() );
+   hb_retni( hbqt_par_QAbstractSlider( 1 )->minimum() );
 }
 
 /*
@@ -114,7 +114,7 @@ Qt::Orientation orientation () const
 */
 HB_FUNC( QT_QABSTRACTSLIDER_ORIENTATION )
 {
-  hb_retni( hbqt_par_QAbstractSlider( 1 )->orientation() );
+   hb_retni( hbqt_par_QAbstractSlider( 1 )->orientation() );
 }
 
 /*
@@ -122,7 +122,7 @@ int pageStep () const
 */
 HB_FUNC( QT_QABSTRACTSLIDER_PAGESTEP )
 {
-  hb_retni( hbqt_par_QAbstractSlider( 1 )->pageStep() );
+   hb_retni( hbqt_par_QAbstractSlider( 1 )->pageStep() );
 }
 
 /*
@@ -130,7 +130,7 @@ void setInvertedAppearance ( bool )
 */
 HB_FUNC( QT_QABSTRACTSLIDER_SETINVERTEDAPPEARANCE )
 {
-  hbqt_par_QAbstractSlider( 1 )->setInvertedAppearance( hb_parl( 2 ) );
+   hbqt_par_QAbstractSlider( 1 )->setInvertedAppearance( hb_parl( 2 ) );
 }
 
 /*
@@ -138,7 +138,7 @@ void setInvertedControls ( bool )
 */
 HB_FUNC( QT_QABSTRACTSLIDER_SETINVERTEDCONTROLS )
 {
-  hbqt_par_QAbstractSlider( 1 )->setInvertedControls( hb_parl( 2 ) );
+   hbqt_par_QAbstractSlider( 1 )->setInvertedControls( hb_parl( 2 ) );
 }
 
 /*
@@ -146,7 +146,7 @@ void setMaximum ( int )
 */
 HB_FUNC( QT_QABSTRACTSLIDER_SETMAXIMUM )
 {
-  hbqt_par_QAbstractSlider( 1 )->setMaximum( hb_parni( 2 ) );
+   hbqt_par_QAbstractSlider( 1 )->setMaximum( hb_parni( 2 ) );
 }
 
 /*
@@ -154,7 +154,7 @@ void setMinimum ( int )
 */
 HB_FUNC( QT_QABSTRACTSLIDER_SETMINIMUM )
 {
-  hbqt_par_QAbstractSlider( 1 )->setMinimum( hb_parni( 2 ) );
+   hbqt_par_QAbstractSlider( 1 )->setMinimum( hb_parni( 2 ) );
 }
 
 /*
@@ -162,7 +162,7 @@ void setPageStep ( int )
 */
 HB_FUNC( QT_QABSTRACTSLIDER_SETPAGESTEP )
 {
-  hbqt_par_QAbstractSlider( 1 )->setPageStep( hb_parni( 2 ) );
+   hbqt_par_QAbstractSlider( 1 )->setPageStep( hb_parni( 2 ) );
 }
 
 /*
@@ -170,7 +170,7 @@ void setRange ( int min, int max )
 */
 HB_FUNC( QT_QABSTRACTSLIDER_SETRANGE )
 {
-  hbqt_par_QAbstractSlider( 1 )->setRange( hb_parni( 2 ), hb_parni( 3 ) );
+   hbqt_par_QAbstractSlider( 1 )->setRange( hb_parni( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -178,7 +178,7 @@ void setSingleStep ( int )
 */
 HB_FUNC( QT_QABSTRACTSLIDER_SETSINGLESTEP )
 {
-  hbqt_par_QAbstractSlider( 1 )->setSingleStep( hb_parni( 2 ) );
+   hbqt_par_QAbstractSlider( 1 )->setSingleStep( hb_parni( 2 ) );
 }
 
 /*
@@ -186,7 +186,7 @@ void setSliderDown ( bool )
 */
 HB_FUNC( QT_QABSTRACTSLIDER_SETSLIDERDOWN )
 {
-  hbqt_par_QAbstractSlider( 1 )->setSliderDown( hb_parl( 2 ) );
+   hbqt_par_QAbstractSlider( 1 )->setSliderDown( hb_parl( 2 ) );
 }
 
 /*
@@ -194,7 +194,7 @@ void setSliderPosition ( int )
 */
 HB_FUNC( QT_QABSTRACTSLIDER_SETSLIDERPOSITION )
 {
-  hbqt_par_QAbstractSlider( 1 )->setSliderPosition( hb_parni( 2 ) );
+   hbqt_par_QAbstractSlider( 1 )->setSliderPosition( hb_parni( 2 ) );
 }
 
 /*
@@ -202,7 +202,7 @@ void setTracking ( bool enable )
 */
 HB_FUNC( QT_QABSTRACTSLIDER_SETTRACKING )
 {
-  hbqt_par_QAbstractSlider( 1 )->setTracking( hb_parl( 2 ) );
+   hbqt_par_QAbstractSlider( 1 )->setTracking( hb_parl( 2 ) );
 }
 
 /*
@@ -210,7 +210,7 @@ int singleStep () const
 */
 HB_FUNC( QT_QABSTRACTSLIDER_SINGLESTEP )
 {
-  hb_retni( hbqt_par_QAbstractSlider( 1 )->singleStep() );
+   hb_retni( hbqt_par_QAbstractSlider( 1 )->singleStep() );
 }
 
 /*
@@ -218,7 +218,7 @@ int sliderPosition () const
 */
 HB_FUNC( QT_QABSTRACTSLIDER_SLIDERPOSITION )
 {
-  hb_retni( hbqt_par_QAbstractSlider( 1 )->sliderPosition() );
+   hb_retni( hbqt_par_QAbstractSlider( 1 )->sliderPosition() );
 }
 
 /*
@@ -226,7 +226,7 @@ void triggerAction ( SliderAction action )
 */
 HB_FUNC( QT_QABSTRACTSLIDER_TRIGGERACTION )
 {
-  hbqt_par_QAbstractSlider( 1 )->triggerAction( ( QAbstractSlider::SliderAction ) hb_parni( 2 ) );
+   hbqt_par_QAbstractSlider( 1 )->triggerAction( ( QAbstractSlider::SliderAction ) hb_parni( 2 ) );
 }
 
 /*
@@ -234,7 +234,7 @@ int value () const
 */
 HB_FUNC( QT_QABSTRACTSLIDER_VALUE )
 {
-  hb_retni( hbqt_par_QAbstractSlider( 1 )->value() );
+   hb_retni( hbqt_par_QAbstractSlider( 1 )->value() );
 }
 
 /*
@@ -242,7 +242,7 @@ void setOrientation ( Qt::Orientation )
 */
 HB_FUNC( QT_QABSTRACTSLIDER_SETORIENTATION )
 {
-  hbqt_par_QAbstractSlider( 1 )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) );
+   hbqt_par_QAbstractSlider( 1 )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) );
 }
 
 /*
@@ -250,7 +250,7 @@ void setValue ( int )
 */
 HB_FUNC( QT_QABSTRACTSLIDER_SETVALUE )
 {
-  hbqt_par_QAbstractSlider( 1 )->setValue( hb_parni( 2 ) );
+   hbqt_par_QAbstractSlider( 1 )->setValue( hb_parni( 2 ) );
 }
 
 /*----------------------------------------------------------------------*/

@@ -66,7 +66,7 @@ QPrintDialog::QPrintDialog ( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QPRINTDIALOG )
 {
-  hb_retptr( ( QPrintDialog* ) new QPrintDialog ( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QPrintDialog* ) new QPrintDialog ( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

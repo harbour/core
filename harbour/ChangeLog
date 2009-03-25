@@ -8,14 +8,138 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-25 14:09 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    + Added HB_INC_SQLITE3
+
+  * include/hbapi.h
+    + Added HB_IS*() flavour of classic Clipper compatibility IS*()
+      macros. I'd recommend everyone to start using these new ones,
+      as the old ones might be deprecated in future versions.
+
+  * Makefile
+    + Added new 'external' dir to host foreign, non-Harbour code.
+
+  + external
+  + external/sqlite3
+  + external/sqlite3/_sqlite3.c
+  + external/sqlite3/sqlite3.c
+  + external/sqlite3/sqlite3.h
+  + external/sqlite3/Makefile
+  - contrib/hbsqlit3/sqlite3
+    + Moved sqlite3 code into its dedicated place.
+
+  * contrib/hbsqlit3/tests/hbsqlit3.hbp
+    + Added sqlite3 to liblist.
+
+  * contrib/hbsqlit3/hbsqlit3.c
+  * contrib/hbsqlit3/Makefile
+    + Changed to use external headers just like other external
+      dependent libs. The only difference here is that it will
+      pickup the locally hosted sqlite3 source from
+      external/sqlite3 if not specified by user.
+    * Changed to no embed sqlite3 code anymore.
+      ATTENTION: This also means that hbsqlit3 users will now
+                 have to add sqlite3 lib to their liblist, since
+                 this code isn't anymore embedded into hbsqlit3.
+
+  * contrib/hbqt/hbqt_qfontcombobox.cpp
+  * contrib/hbqt/hbqt_qgroupbox.cpp
+  * contrib/hbqt/hbqt_qcombobox.cpp
+  * contrib/hbqt/hbqt_qtoolbutton.cpp
+  * contrib/hbqt/slots.h
+  * contrib/hbqt/hbqt_qpushbutton.cpp
+  * contrib/hbqt/hbqt_qpagesetupdialog.cpp
+  * contrib/hbqt/hbqt_qprintpreviewdialog.cpp
+  * contrib/hbqt/hbqt_qlabel.cpp
+  * contrib/hbqt/hbqt_qinputdialog.cpp
+  * contrib/hbqt/hbqt_qprogressdialog.cpp
+  * contrib/hbqt/hbqt_qtoolbox.cpp
+  * contrib/hbqt/hbqt_qcommandlinkbutton.cpp
+  * contrib/hbqt/hbqt_qmenubar.cpp
+  * contrib/hbqt/hbqt_qhboxlayout.cpp
+  * contrib/hbqt/hbqt_qabstractbutton.cpp
+  * contrib/hbqt/hbqt_qabstractprintdialog.cpp
+  * contrib/hbqt/hbqt_qwizard.cpp
+  * contrib/hbqt/hbqt_qabstractspinbox.cpp
+  * contrib/hbqt/hbqt_qfont.cpp
+  * contrib/hbqt/hbqt_qdial.cpp
+  * contrib/hbqt/hbqt_qtablewidgetitem.cpp
+  * contrib/hbqt/hbqt_qlcdnumber.cpp
+  * contrib/hbqt/hbqt_qmainwindow.cpp
+  * contrib/hbqt/hbqt_qprintdialog.cpp
+  * contrib/hbqt/hbqt_qcalendarwidget.cpp
+  * contrib/hbqt/hbqt_qabstractitemview.cpp
+  * contrib/hbqt/hbqt_qaction.cpp
+  * contrib/hbqt/hbqt_qspinbox.cpp
+  * contrib/hbqt/hbqt_qwidget.cpp
+  * contrib/hbqt/hbqt_slots.cpp
+  * contrib/hbqt/hbqt_qdateedit.cpp
+  * contrib/hbqt/hbqt_qcheckbox.cpp
+  * contrib/hbqt/hbqt_qprogressbar.cpp
+  * contrib/hbqt/hbqt_qframe.cpp
+  * contrib/hbqt/hbqt_qfocusframe.cpp
+  * contrib/hbqt/hbqt_qtabbar.cpp
+  * contrib/hbqt/hbqt_qcqlendarwidget.cpp
+  * contrib/hbqt/hbqt_qerrormessage.cpp
+  * contrib/hbqt/hbqt_qfiledialog.cpp
+  * contrib/hbqt/hbqt_qformlayout.cpp
+  * contrib/hbqt/hbqt_qtoolbar.cpp
+  * contrib/hbqt/hbqt_qdatetimeedit.cpp
+  * contrib/hbqt/hbqt_qmenu.cpp
+  * contrib/hbqt/hbqt_qabstractslider.cpp
+  * contrib/hbqt/hbqt_qwebview.cpp
+  * contrib/hbqt/hbqt_qlayout.cpp
+  * contrib/hbqt/hbqt_qslider.cpp
+  * contrib/hbqt/hbqt_qtableview.cpp
+  * contrib/hbqt/hbqt_qfontdialog.cpp
+  * contrib/hbqt/hbqt_qboxlayout.cpp
+  * contrib/hbqt/hbqt_qtreeview.cpp
+  * contrib/hbqt/hbqt_qtextedit.cpp
+  * contrib/hbqt/hbqt_qradiobutton.cpp
+  * contrib/hbqt/hbqt_qcolordialog.cpp
+  * contrib/hbqt/hbqt_qapplication.cpp
+  * contrib/hbqt/hbqt_qtimeedit.cpp
+  * contrib/hbqt/hbqt_qsplitter.cpp
+  * contrib/hbqt/hbqt_qlistview.cpp
+  * contrib/hbqt/hbqt_qtabwidget.cpp
+  * contrib/hbqt/hbqt_qabstractscrollarea.cpp
+  * contrib/hbqt/hbqt_qvboxlayout.cpp
+  * contrib/hbqt/hbqt_qdoublespinbox.cpp
+  * contrib/hbqt/hbqt_qscrollbar.cpp
+  * contrib/hbqt/hbqt_qscrollarea.cpp
+  * contrib/hbqt/hbqt_qtablewidget.cpp
+  * contrib/hbqt/hbqt_qsizegrip.cpp
+  * contrib/hbqt/hbqt_qlayoutitem.cpp
+  * contrib/hbqt/hbqt_qmessagebox.cpp
+  * contrib/hbqt/hbqt_qlineedit.cpp
+    * Formatting, indenting.
+    ! ISNIL() usage removed.
+
+  * contrib/hbwin/wapi_commctrl.c
+  * contrib/hbwin/wapi_winuser.c
+    ! ISNIL() usage removed.
+
+  * contrib/hbfbird/tfirebrd.prg
+  * contrib/hbpgsql/tests/simple.prg
+  * contrib/hbpgsql/tests/test.prg
+  * contrib/hbpgsql/tests/cache.prg
+  * contrib/hbpgsql/tests/stress.prg
+  * contrib/hbpgsql/tests/dbf2pg.prg
+  * contrib/hbpgsql/tpostgre.prg
+  * contrib/examples/uhttpd/uhttpd.prg
+  * contrib/examples/uhttpd/uhttpdc.c
+  * contrib/examples/terminal/trm_server.prg
+    * ISNIL() usage and other code cleanup, formatting.
+
 2009-03-25 13:35 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   - harbour/contrib/hbole/ole2.c
   * harbour/contrib/hbole/oleauto.prg
   + harbour/contrib/hbole/oleinit.c
   + harbour/contrib/hbole/olecore.c
-    + added my own implementation of OLE library. It is bases on old 
+    + added my own implementation of OLE library. It is bases on old
       code written by Jose F. Gimenez. Code is changed to be reentrant,
-      more clean, but only basic features are implemented. 
+      more clean, but only basic features are implemented.
 
 2009-03-25 12:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbstack.h
@@ -843,7 +967,7 @@
 
   * contrib/hbwin/wapi_winbase.c
     ! mingw64 reported (64-bit) problem fixed.
-    ! ISNIL() -> ISCHAR(). It appear many times, but using ISNIL()
+    ! ISNIL() -> ISCHAR(). It appears many times, but using ISNIL()
       has the same cost IS<ACTUAL_TYPE>(), yet only covers one
       case, so it's very dangerous and leave potential GPFs when
       passing wrong type. So, when there is no strong special reason

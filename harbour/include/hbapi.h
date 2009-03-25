@@ -223,21 +223,38 @@ HB_EXTERN_BEGIN
 #endif
 
 
-#define ISNIL( n )         ( hb_param( n, HB_IT_ANY ) == NULL || HB_IS_NIL( hb_param( n, HB_IT_ANY ) ) ) /* NOTE: Intentionally using a different method */
-#define ISCHAR( n )        ( hb_param( n, HB_IT_STRING ) != NULL )
-#define ISNUM( n )         ( hb_param( n, HB_IT_NUMERIC ) != NULL )
-#define ISLOG( n )         ( hb_param( n, HB_IT_LOGICAL ) != NULL )
-#define ISDATE( n )        ( hb_param( n, HB_IT_DATE ) != NULL )
-#define ISTIMESTAMP( n )   ( hb_param( n, HB_IT_TIMESTAMP ) != NULL )   /* Not available in CA-Cl*pper. */
-#define ISMEMO( n )        ( hb_param( n, HB_IT_MEMO ) != NULL )
-#define ISBYREF( n )       ( ( hb_parinfo( n ) & HB_IT_BYREF ) != 0 )   /* NOTE: Intentionally using a different method */
-#define ISARRAY( n )       ( hb_param( n, HB_IT_ARRAY ) != NULL )
-#define ISOBJECT( n )      ( hb_extIsObject( n ) )
-#define ISBLOCK( n )       ( hb_param( n, HB_IT_BLOCK ) != NULL )       /* Not available in CA-Cl*pper. */
-#define ISPOINTER( n )     ( hb_param( n, HB_IT_POINTER ) != NULL )     /* Not available in CA-Cl*pper. */
-#define ISHASH( n )        ( hb_param( n, HB_IT_HASH ) != NULL )        /* Not available in CA-Cl*pper. */
-#define ISSYMBOL( n )      ( hb_param( n, HB_IT_SYMBOL ) != NULL )      /* Not available in CA-Cl*pper. */
-#define ISDATETIME( n )    ( hb_param( n, HB_IT_DATETIME ) != NULL )    /* Not available in CA-Cl*pper. */
+#define HB_ISNIL( n )         ( hb_param( n, HB_IT_ANY ) == NULL || HB_IS_NIL( hb_param( n, HB_IT_ANY ) ) ) /* NOTE: Intentionally using a different method */
+#define HB_ISCHAR( n )        ( hb_param( n, HB_IT_STRING ) != NULL )
+#define HB_ISNUM( n )         ( hb_param( n, HB_IT_NUMERIC ) != NULL )
+#define HB_ISLOG( n )         ( hb_param( n, HB_IT_LOGICAL ) != NULL )
+#define HB_ISDATE( n )        ( hb_param( n, HB_IT_DATE ) != NULL )
+#define HB_ISTIMESTAMP( n )   ( hb_param( n, HB_IT_TIMESTAMP ) != NULL )   /* Not available in CA-Cl*pper. */
+#define HB_ISMEMO( n )        ( hb_param( n, HB_IT_MEMO ) != NULL )
+#define HB_ISBYREF( n )       ( ( hb_parinfo( n ) & HB_IT_BYREF ) != 0 )   /* NOTE: Intentionally using a different method */
+#define HB_ISARRAY( n )       ( hb_param( n, HB_IT_ARRAY ) != NULL )
+#define HB_ISOBJECT( n )      ( hb_extIsObject( n ) )
+#define HB_ISBLOCK( n )       ( hb_param( n, HB_IT_BLOCK ) != NULL )       /* Not available in CA-Cl*pper. */
+#define HB_ISPOINTER( n )     ( hb_param( n, HB_IT_POINTER ) != NULL )     /* Not available in CA-Cl*pper. */
+#define HB_ISHASH( n )        ( hb_param( n, HB_IT_HASH ) != NULL )        /* Not available in CA-Cl*pper. */
+#define HB_ISSYMBOL( n )      ( hb_param( n, HB_IT_SYMBOL ) != NULL )      /* Not available in CA-Cl*pper. */
+#define HB_ISDATETIME( n )    ( hb_param( n, HB_IT_DATETIME ) != NULL )    /* Not available in CA-Cl*pper. */
+
+/* Compatibility #defined, deprecated */
+#define ISNIL( n )            HB_ISNIL( n )
+#define ISCHAR( n )           HB_ISCHAR( n )
+#define ISNUM( n )            HB_ISNUM( n )
+#define ISLOG( n )            HB_ISLOG( n )
+#define ISDATE( n )           HB_ISDATE( n )
+#define ISTIMESTAMP( n )      HB_ISTIMESTAMP( n )
+#define ISMEMO( n )           HB_ISMEMO( n )
+#define ISBYREF( n )          HB_ISBYREF( n )
+#define ISARRAY( n )          HB_ISARRAY( n )
+#define ISOBJECT( n )         HB_ISOBJECT( n )
+#define ISBLOCK( n )          HB_ISBLOCK( n )
+#define ISPOINTER( n )        HB_ISPOINTER( n )
+#define ISHASH( n )           HB_ISHASH( n )
+#define ISSYMBOL( n )         HB_ISSYMBOL( n )
+#define ISDATETIME( n )       HB_ISDATETIME( n )
 
 
 #ifdef _HB_API_INTERNAL_
@@ -587,7 +604,7 @@ extern HB_EXPORT ULONG      hb_parcsiz( int iParam, ... ); /* retrieve a by-refe
 extern HB_EXPORT char *     hb_pards( int iParam, ... ); /* retrieve a date as a string yyyymmdd */
 extern HB_EXPORT char *     hb_pardsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string yyyymmdd */
 extern HB_EXPORT LONG       hb_pardl( int iParam, ... ); /* retrieve a date as a LONG NUMBER  */
-extern HB_EXPORT double     hb_partd( int iParam, ... ); /* retrieve a timestamp as a double number */ 
+extern HB_EXPORT double     hb_partd( int iParam, ... ); /* retrieve a timestamp as a double number */
 extern HB_EXPORT BOOL       hb_partdt( LONG * plJulian, LONG * plMilliSec , int iParam, ... ); /* retrieve a timestamp as two long numbers */
 extern HB_EXPORT ULONG      hb_parinfa( int iParamNum, ULONG uiArrayIndex ); /* retrieve length or element type of an array parameter */
 extern HB_EXPORT ULONG      hb_parinfo( int iParam ); /* Determine the param count or data type */

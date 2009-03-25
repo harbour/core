@@ -66,13 +66,13 @@ QTimeEdit ( const QTime & time, QWidget * parent = 0 ) [2]
 */
 HB_FUNC( QT_QTIMEEDIT_1 )
 {
-  hb_retptr( ( QTimeEdit* ) new QTimeEdit( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QTimeEdit* ) new QTimeEdit( hbqt_par_QWidget( 1 ) ) );
 }
 
 #if 0
 HB_FUNC( QT_QTIMEEDIT_2 )
 {
-  hb_retptr( (QTimeEdit *) new QTimeEdit( QTime( hbqt_par_QString( 1 ) ), hbqt_par_QWidget( 2 ) ) );
+   hb_retptr( (QTimeEdit *) new QTimeEdit( QTime( hbqt_par_QString( 1 ) ), hbqt_par_QWidget( 2 ) ) );
 }
 #endif
 

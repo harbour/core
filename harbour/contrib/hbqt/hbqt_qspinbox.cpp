@@ -65,7 +65,7 @@ QSpinBox ( QWidget * parent = 0 )
 */
 HB_FUNC( QT_QSPINBOX )
 {
-  hb_retptr( ( QSpinBox* ) new QSpinBox( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QSpinBox* ) new QSpinBox( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

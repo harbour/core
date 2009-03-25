@@ -63,10 +63,10 @@
 
 HB_FUNC( QT_QRADIOBUTTON )
 {
-  if( hb_param( 1, HB_IT_STRING ) )
-    hb_retptr( ( QRadioButton* ) new QRadioButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
-  else
-    hb_retptr( ( QRadioButton* ) new QRadioButton( hbqt_par_QWidget( 1 ) ) );
+   if( ISCHAR( 1 ) )
+      hb_retptr( ( QRadioButton* ) new QRadioButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+   else
+      hb_retptr( ( QRadioButton* ) new QRadioButton( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -75,11 +75,11 @@ QRadioButton ( const QString & text, QWidget * parent = 0 ) [2]
 */
 HB_FUNC( QT_QRADIOBUTTON_1 )
 {
-  hb_retptr( ( QRadioButton* ) new QRadioButton( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QRadioButton* ) new QRadioButton( hbqt_par_QWidget( 1 ) ) );
 }
 HB_FUNC( QT_QRADIOBUTTON_2 )
 {
-  hb_retptr( ( QRadioButton* ) new QRadioButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+   hb_retptr( ( QRadioButton* ) new QRadioButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

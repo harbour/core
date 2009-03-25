@@ -63,10 +63,10 @@
 
 HB_FUNC( QT_QSPLITTER )
 {
-  if( hb_param( 1, HB_IT_NUMERIC ) )
-    hb_retptr( ( QSplitter* ) new QSplitter( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
-  else
-    hb_retptr( ( QSplitter* ) new QSplitter( hbqt_par_QWidget( 1 ) ) );
+   if( hb_param( 1, HB_IT_NUMERIC ) )
+      hb_retptr( ( QSplitter* ) new QSplitter( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
+   else
+      hb_retptr( ( QSplitter* ) new QSplitter( hbqt_par_QWidget( 1 ) ) );
 }
 
 /*
@@ -75,11 +75,11 @@ QSplitter ( Qt::Orientation orientation, QWidget * parent = 0 ) [2]
 */
 HB_FUNC( QT_QSPLITTER_1 )
 {
-  hb_retptr( ( QSplitter* ) new QSplitter( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QSplitter* ) new QSplitter( hbqt_par_QWidget( 1 ) ) );
 }
 HB_FUNC( QT_QSPLITTER_2 )
 {
-  hb_retptr( ( QSplitter* ) new QSplitter( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
+   hb_retptr( ( QSplitter* ) new QSplitter( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
 }
 
 /*----------------------------------------------------------------------*/

@@ -23,6 +23,7 @@ DIRS=\
 	source \
 	$(HB_UTIL_DIR) \
 	contrib{source} \
+	external \
 
 endif
 
