@@ -377,7 +377,7 @@ TEST t048 WITH c := repl( dtos( date() ), 5000 ) ;
 
 TEST t049 WITH c := repl( dtos( date() ), 5000 ) ;
           INFO "f2( @c[1...40000] )" ;
-          CODE f2( c )
+          CODE f2( @c )
 
 TEST t050 WITH c := repl( dtos( date() ),5000 ), c2 ;
           INFO "f2( @c[1...40000] ), c2 := c" ;
@@ -732,19 +732,6 @@ return
 
 #ifdef __XHARBOUR__
 
-   /* do not expect that this code will work with xHarbour.
-    * xHarbour has many race conditions which are exploited quite fast
-    * on real multi CPU machines so it crashes in different places :-(
-    * probably this code should be forwared to xHarbour developers as
-    * some type of MT test
-    */
-
-   /* this define is only to test if emulation function works
-    * without running real test which causes that xHarbour crashes
-    */
-   //#define _DUMY_XHB_TEST_
-
-
    static function hb_mutexSubscribe( mtx, nTimeOut, xSubscribed )
       local lSubscribed
       if valtype( nTimeOut ) == "N"
@@ -760,61 +747,29 @@ return
       Notify( mtx, xValue )
    return nil
 
-   /* in xHarbour there is race condition in JoinThread() which
-    * fails if thread end before we call it so we cannot use it :-(
-    * this code tries to simulate it and also add support for thread
-    * return value
+   /* In xHarbour there is race condition in JoinThread() which fails if
+    * thread have ended before call to JoinThread() so we cannot use it.
+    * Exactly the same problem exists in GetThreadId().
+    * As workaround we will use mutexes as thread IDs and notify/subscribe
+    * mechanism to simulate thread join operation and passing thread return
+    * value.
     */
-
    static function hb_threadStart( ... )
       local thId
-      thId := StartThread( @threadFirstFunc(), hb_aParams() )
-      /* Just like in JoinThread() the same race condition exists in
-       * GetThreadId() so we will use HVM thread numbers internally
+      thId := hb_mutexCreate()
+      /* For some reasons codeblocks as thread startup entry are broken
+       * in xHarbour so we use intermediate function instead
        */
-#ifdef _DUMY_XHB_TEST_
-   return val( substr( hb_aParams()[1], 2 ) )
-#else
-   return GetThreadId( thId )
-#endif
+      StartThread( @_thFuncFirst(), thId, hb_aParams() )
+   return thId
 
-   static function hb_threadJoin( thId, xResult )
-      xResult := results( thId )
-   return .t.
-
-   static function threadFirstFunc( aParams )
-      local xResult
-#ifdef _DUMY_XHB_TEST_
-      xResult := { "skipped test " + aParams[1], val( substr( aParams[1], 2 ) ) + 0.99 }
-      results( val( substr( aParams[1], 2 ) ), xResult )
-#else
-      xResult := hb_execFromArray( aParams )
-      results( GetThreadId(), xResult )
-#endif
+   static function _thFuncFirst( thID, aParams )
+      Notify( thId, hb_execFromArray( aParams ) )
    return nil
 
-   static function results( nThread, xResult )
-      static s_aResults
-      static s_mutex
-      if s_aResults == nil
-         s_aResults := HSetAutoAdd( hash(), .t. )
-         s_mutex := hb_mutexCreate()
-      endif
-      if pcount() < 2
-         while ! nThread $ s_aResults
-            Subscribe( s_mutex, 1000 )
-         enddo
-         xResult := s_aResults[ nThread ]
-      else
-         s_aResults[ nThread ] := xResult
-         /* We cannot use NotifyAll() here because it will create
-          * race condition. In this program only one thread join
-          * results so we can use simple Notify() as workaround
-          */
-         //NotifyAll( s_mutex )
-         Notify( s_mutex )
-      endif
-   return xResult
+   static function hb_threadJoin( thId, xResult )
+      xResult := Subscribe( thId )
+   return .t.
 
    static function hb_threadWaitForAll()
       WaitForThreads()
@@ -844,8 +799,8 @@ return
       set workarea private
       /* initialize mutex in hb_threadOnce() */
       hb_threadOnce()
-      /* initialize error object to reduce possible crashes when two
-       * threads will try to create new error class simultaneously.
+      /* initialize error object to reduce to chance for possible crash
+       * when two threads try to create new error class simultaneously.
        * xHarbour does not have any protection against such situation
        */
       errorNew()
@@ -862,7 +817,7 @@ return
 #endif
 
    INIT PROCEDURE once_init()
-      /* initialize sync object hb_threadOnce() */
+      /* initialize sync object in hb_threadOnce() */
       hb_threadOnce()
       RETURN
 
