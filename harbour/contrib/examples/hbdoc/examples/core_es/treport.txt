@@ -13,7 +13,7 @@
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentacion
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

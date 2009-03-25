@@ -29,7 +29,7 @@
  * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
  * Documentaci¢n en Ingl‚s de: HB_ISBYREF()
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

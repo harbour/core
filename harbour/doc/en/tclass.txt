@@ -9,7 +9,7 @@
  * Copyright 2000 Brian Hays <bhays@abacuslaw.com>
  *    Documentation
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

@@ -12,7 +12,7 @@
  *         AINS(), ADEL(), ADEL(), AFILL(), ASCAN()
  *         AEVAL(), ACOPY(), ACLONE(), ASORT()
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

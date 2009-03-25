@@ -59,7 +59,7 @@
  *    bash script with similar purpose for gcc family.
  *    entry point override method and detection code for gcc.
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

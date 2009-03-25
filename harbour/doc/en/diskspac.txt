@@ -9,7 +9,7 @@
  * Copyright 2000 Paul Tucker <ptucker@sympatico.ca>
  *    Documentation for: DISKSPACE() and related functions
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

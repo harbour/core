@@ -12,7 +12,7 @@
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *           Author: Martin Vogel <vogel@inttec.de>
  *    Documentation for Math API functions
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

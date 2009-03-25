@@ -13,7 +13,7 @@
  *    Documentation for: ARRAY(), AADD(), ACLONE(), ACOPY(), ASIZE(),
  *                       ATAIL(), AINS(), ADEL(), AFILL(), ASCAN(), AEVAL()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

@@ -16,7 +16,7 @@
  *      CDOW(),CMONTH(),DATE(),CTOD(),DAY(),DAYS(), DOW(),DTOS(),
  *      DTOC(),ELAPTIME(),MONTH(),SECONDS(),SECS(),TIME(),YEAR()
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

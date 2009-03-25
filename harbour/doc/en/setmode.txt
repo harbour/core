@@ -5,7 +5,7 @@
  * Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
  *    Documentation for: SETMODE()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  */
 
 /*  $DOC$

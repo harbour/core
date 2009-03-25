@@ -65,7 +65,7 @@
  *    hb_conNewLine()
  *    DISPOUTAT()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

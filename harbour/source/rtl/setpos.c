@@ -57,7 +57,7 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    SETPOS()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

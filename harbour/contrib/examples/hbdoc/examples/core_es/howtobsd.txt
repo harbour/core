@@ -14,7 +14,7 @@
  *   Documentaci¢n en Espa¤ol de: 
  *     Configuraci¢n del sistema operativo FreeBSD para usar con Harbour
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

@@ -6,7 +6,7 @@
 
 rem ---------------------------------------------------------------
 rem Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
-rem See doc/license.txt for licensing terms.
+rem See COPYING for licensing terms.
 rem ---------------------------------------------------------------
 
 rem NOTE: .prg files have to be compiled with -n1

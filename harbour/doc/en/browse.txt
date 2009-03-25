@@ -9,7 +9,7 @@
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: BROWSE(), DBEDIT(), TBROWSEDB(), DBSKIPPER()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

@@ -13,7 +13,7 @@
  *    Documentation for: HB_LANGERRMSG(),HB_LANGMESSAGE(),HB_SETCODEPAGE(),
  *                       HB_TRANSLATE()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

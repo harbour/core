@@ -71,7 +71,7 @@
  *    SQLBINDOUTPARAM()
  *    SQLMORERESULTS()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  */
 
 #define HB_OS_WIN_USED

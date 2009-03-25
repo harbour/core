@@ -57,7 +57,7 @@
  * Copyright 2001 Luiz Rafael Culik
  *    Support for CA-Cl*pper 5.3 Getsystem
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

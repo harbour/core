@@ -19,7 +19,7 @@
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
  *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  * www - http://www.harbour-project.org
  *

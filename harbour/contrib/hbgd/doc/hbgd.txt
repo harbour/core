@@ -9,7 +9,7 @@
  * Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
  *    Documentation for GD Library wrapper functions and classes
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

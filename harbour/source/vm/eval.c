@@ -58,7 +58,7 @@
  *    hb_itemDo() ( based on HB_DO() by Ryszard Glab )
  *    hb_itemDoC() ( based on HB_DO() by Ryszard Glab )
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

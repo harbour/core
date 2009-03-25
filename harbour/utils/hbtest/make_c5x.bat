@@ -11,7 +11,7 @@ rem ---------------------------------------------------------------
 
 rem ---------------------------------------------------------------
 rem Copyright 1999-2008 Viktor Szakats (viktor.szakats@syenar.hu)
-rem See doc/license.txt for licensing terms.
+rem See COPYING for licensing terms.
 rem ---------------------------------------------------------------
 
 rem ; Settings for CA-Cl*pper 5.3

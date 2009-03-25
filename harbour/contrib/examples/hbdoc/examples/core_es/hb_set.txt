@@ -12,7 +12,7 @@
  * Copyright 2000 Edison Suarez <edison@directo.cl>
  *    La traducci¢n de fichero hb_set.txt al espa¤ol.
  *
- * Vea doc/license.txt para los t‚rminos de la licencia.
+ * Vea COPYING para los t‚rminos de la licencia.
  *
  */
 

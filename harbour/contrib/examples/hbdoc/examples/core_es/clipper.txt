@@ -12,7 +12,7 @@
  * Copyright 2001 Alejandro de G rate <alex_degarate@hotmail.com>
  *   Traducci¢n al Espa¤ol de clipper.txt
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

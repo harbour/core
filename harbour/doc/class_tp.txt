@@ -67,7 +67,7 @@ FILE HEADER TEMPLATE (OPTIONAL ADDITION FOR PARTIAL COPYRIGHTS)
  * Copyright 2000 {name} <{e-mail address}>
  *    {function or subsystem name}
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

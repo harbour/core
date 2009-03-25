@@ -10,7 +10,7 @@ rem Copyright 2003 Przemyslaw Czerpak (druzus / at / priv.onet.pl)
 rem simple script run after Harbour make install to finish install
 rem process
 rem
-rem See doc/license.txt for licensing terms.
+rem See COPYING for licensing terms.
 rem ---------------------------------------------------------------
 
 set _HBMK_CFG=%HB_BIN_INSTALL%\hbmk.cfg

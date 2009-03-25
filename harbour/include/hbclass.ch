@@ -67,7 +67,7 @@
  *    Delegating, DATA Shared
  *    Support of 10 Chars limits
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

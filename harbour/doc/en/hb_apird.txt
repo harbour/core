@@ -9,7 +9,7 @@
  * Copyright 1999 {list of individual authors and e-mail addresses}
  *   Header file for the RDD API
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

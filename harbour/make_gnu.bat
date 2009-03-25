@@ -20,7 +20,7 @@ rem For further information about the GNU make system please
 rem check doc/gmake.txt
 rem
 rem Copyright 1999-2009 Viktor Szakats (viktor.szakats@syenar.hu)
-rem See doc/license.txt for licensing terms.
+rem See COPYING for licensing terms.
 rem ---------------------------------------------------------------
 
 rem Setup defaults.

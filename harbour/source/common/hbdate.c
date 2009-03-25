@@ -66,7 +66,7 @@
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    time/timestamp functions
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

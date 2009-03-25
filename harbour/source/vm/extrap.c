@@ -61,7 +61,7 @@
  *    hb_winExceptionHandler() Module listing code.
  *    hb_winExceptionHandler() x64 support.
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

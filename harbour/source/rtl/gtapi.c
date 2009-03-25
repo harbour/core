@@ -73,7 +73,7 @@
  *    have been moved to hbgtcore.c to hb_gt_def_*() functions
  *    some of my modificaations.
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

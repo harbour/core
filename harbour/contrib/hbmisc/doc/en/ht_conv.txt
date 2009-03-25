@@ -9,7 +9,7 @@
  * Copyright 1999 Luiz Rafael Culik <Culik@sl.conex.net>
  *    Documentation
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

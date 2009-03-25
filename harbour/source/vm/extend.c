@@ -64,7 +64,7 @@
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
  *    hb_retd()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

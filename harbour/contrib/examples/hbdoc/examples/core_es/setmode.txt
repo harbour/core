@@ -10,7 +10,7 @@
  * Documentaci¢n en Espa¤ol de: 
  *    SETMODE()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

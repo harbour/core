@@ -16,7 +16,7 @@
  *         Readme, hb_gcAlloc(), hb_gcFree(), hb_gcLockItem(),
  *         hb_gcUnlockItem(), hb_gcCollectAll(), hb_gcItemRef(), HB_GCALL()
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

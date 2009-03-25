@@ -12,7 +12,7 @@
  *
  *      Basado en ../en/math.txt
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

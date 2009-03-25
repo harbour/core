@@ -18,7 +18,7 @@
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  *    Documentation for: DO()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

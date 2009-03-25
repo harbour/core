@@ -18,7 +18,7 @@
  * Copyright 2000 David G. Holm <Harbour@SpaceMoose.com>
  *    Documentation for: HB_FEOF()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

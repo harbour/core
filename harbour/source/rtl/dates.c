@@ -59,7 +59,7 @@
  *    hb_timeStampFormat()
  *    hb_timeStampUnformat()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

@@ -9,7 +9,7 @@
 # simple script to build shared libraries from static ones and
 # object files
 #
-# See doc/license.txt for licensing terms.
+# See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
 # HB_ARCHITECTURE=""

@@ -57,7 +57,7 @@
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
  *    SETMODE()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

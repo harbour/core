@@ -23,7 +23,7 @@
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * Documentaci¢n en Ingl‚s de: DO()
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

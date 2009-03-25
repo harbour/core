@@ -9,7 +9,7 @@
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: EVAL()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

@@ -62,7 +62,7 @@
  * hb_pp_SetRules_() and related code for supportting
  * replaceable rules with -w switch
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

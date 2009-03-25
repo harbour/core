@@ -10,7 +10,7 @@
  * Documentaci¢n en Espa¤ol de:
  *   FIELD, LOCAL, MEMVAR
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

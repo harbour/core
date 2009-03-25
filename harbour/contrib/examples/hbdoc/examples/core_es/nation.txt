@@ -12,7 +12,7 @@
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  * Documentaci¢n en Ingles de:  ISAFFIRM(), ISNEGATIVE(), NATIONMSG()
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

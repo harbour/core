@@ -16,7 +16,7 @@
  *              Leame para Estado Ocioso, HB_IDLEADD(), HB_IDLEDEL()
  *              HB_IDLESTATE(), hb_idleState()
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

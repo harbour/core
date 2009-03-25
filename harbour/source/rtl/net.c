@@ -57,7 +57,7 @@
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
  *    Support for DJGPP/GCC/OS2 for netname
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

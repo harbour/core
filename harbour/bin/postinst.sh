@@ -9,7 +9,7 @@
 # simple script run after Harbour make install to finish install
 # process
 #
-# See doc/license.txt for licensing terms.
+# See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
 if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ] || \

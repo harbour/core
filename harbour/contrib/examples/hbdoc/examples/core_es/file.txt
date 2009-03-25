@@ -26,7 +26,7 @@
  *         ERASE, DELETE FILE, __TYPEFILE(), TYPE, CURDIR(), COPY FILE,
  *         HB_FEOF(), DIRREMOVE(), DIRCHANGE(), MAKEDIR(), ISDISK(),
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

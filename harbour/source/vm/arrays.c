@@ -64,7 +64,7 @@
  *    hb_arrayFromStack()
  *    hb_arrayFromParams()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

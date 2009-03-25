@@ -20,7 +20,7 @@
  *   should start from 3000
  *   Errors generated in tools functions should start from 4000
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

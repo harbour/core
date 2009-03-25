@@ -12,7 +12,7 @@
  * Copyright 2002 Alejandro de G rate <alex_degarate@hotmail.com>
  *   Documentaci¢n en Espa¤ol de: cmdline.txt
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

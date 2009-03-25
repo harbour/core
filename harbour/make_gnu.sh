@@ -12,7 +12,7 @@
 # check doc/gmake.txt
 #
 # Copyright 1999-2001 Viktor Szakats (viktor.szakats@syenar.hu)
-# See doc/license.txt for licensing terms.
+# See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
 # ---------------------------------------------------------------

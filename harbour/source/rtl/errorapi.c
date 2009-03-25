@@ -73,7 +73,7 @@
  *    rewritten in C ERROR class and all hb_errGet*() and hb_errPut*()
  *    functions
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

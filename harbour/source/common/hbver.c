@@ -66,7 +66,7 @@
  *    hb_verPlatform() (rearrangment and cleanup)
  *    hb_verPlatform() (Wine detection and some more)
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

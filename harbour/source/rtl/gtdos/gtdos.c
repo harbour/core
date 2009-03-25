@@ -78,7 +78,7 @@
  *                Luiz Rafael Culik <Culik@sl.conex.net>
  *    Harbour Mouse Subsystem for DOS
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

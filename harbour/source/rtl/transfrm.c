@@ -57,7 +57,7 @@
  * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
  *    String handling
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

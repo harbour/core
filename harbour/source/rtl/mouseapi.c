@@ -57,7 +57,7 @@
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    API proposal
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

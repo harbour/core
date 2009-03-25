@@ -58,7 +58,7 @@
  *    Small fixes
  *    Internal error names
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

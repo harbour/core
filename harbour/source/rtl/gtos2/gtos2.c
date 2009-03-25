@@ -79,7 +79,7 @@
  *    hb_gt_ScreenPtr() and hb_gt_xYYYY() functions and virtual screen support inside hb_gt_XXXX()s
  *    16 bit KBD subsystem use inside hb_gt_os2_ReadKey()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

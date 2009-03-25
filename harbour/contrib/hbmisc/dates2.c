@@ -57,7 +57,7 @@
  * Copyright 1999 Jon Berg <jmberg@pnh10.med.navy.mil>
  *    DateTime()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

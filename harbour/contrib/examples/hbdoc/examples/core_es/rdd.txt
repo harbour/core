@@ -14,7 +14,7 @@
  * Documentaci¢n en Ingl‚s de: 
  *    DB*(), ORD*(), RDD*()
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

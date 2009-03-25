@@ -12,7 +12,7 @@
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    Documentaci¢n en Ingl‚s de: READVAR()
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

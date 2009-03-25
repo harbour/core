@@ -41,7 +41,7 @@
  *    hb_compMethodFind()
  *    hb_compDeclaredAdd()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

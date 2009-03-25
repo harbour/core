@@ -57,7 +57,7 @@
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    eInstVar() (from RTL)
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

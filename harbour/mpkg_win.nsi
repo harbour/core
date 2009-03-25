@@ -6,7 +6,7 @@
 ; NSIS installer script for Harbour Project
 ;
 ; Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
-; See doc/license.txt for licensing terms.
+; See COPYING for licensing terms.
 ; ---------------------------------------------------------------
 
 ; TODO: tests/examples
@@ -61,7 +61,7 @@ InstallDir C:\$%HB_DIRNAME%
 ;--------------------------------
 ; License Language String
 
-LicenseLangString MUILicense ${LANG_ENGLISH} "$%HB_DOC_INSTALL%\license.txt"
+LicenseLangString MUILicense ${LANG_ENGLISH} "$%HB_INSTALL_PREFIX%\COPYING"
 
 ;--------------------------------
 ; The stuff to install
@@ -73,11 +73,11 @@ Section "Main components" hb_main
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
 
-  File /oname=COPYING "$%HB_DOC_INSTALL%\license.txt"
-  File /nonfatal "$%HB_INSTALL_PREFIX%\ChangeLog"
+  File /nonfatal "$%HB_INSTALL_PREFIX%\COPYING"
   File /nonfatal "$%HB_INSTALL_PREFIX%\ERRATA"
   File /nonfatal "$%HB_INSTALL_PREFIX%\INSTALL"
   File /nonfatal "$%HB_INSTALL_PREFIX%\TODO"
+  File /nonfatal "$%HB_INSTALL_PREFIX%\ChangeLog"
 
   SetOutPath $INSTDIR\bin
   File "$%HB_BIN_INSTALL%\*.*"

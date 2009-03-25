@@ -24,7 +24,7 @@
  *                 __objModInline(), __objDelMethod(), __objDelInline(),
  *                 __objDelData(), __objDerivedFrom()
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

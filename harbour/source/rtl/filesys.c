@@ -78,7 +78,7 @@
  *    API calls to allow openning an unlimited number of files
  *    simultaneously.
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

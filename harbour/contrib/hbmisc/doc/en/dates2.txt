@@ -10,7 +10,7 @@
  *    Documentation for: AMONTHS, ADAYS, ISLEAPYEAR, DAYSINMONTH, EOM, BOM,
  *                       WOM, DOY, WOY, EOY, BOY
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

@@ -65,7 +65,7 @@
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    __dbgCStr()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

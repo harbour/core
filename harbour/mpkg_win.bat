@@ -8,7 +8,7 @@ rem ---------------------------------------------------------------
 rem Installer creator for Harbour Project
 rem
 rem Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
-rem See doc/license.txt for licensing terms.
+rem See COPYING for licensing terms.
 rem
 rem This script requires:
 rem    - Windows NT or upper

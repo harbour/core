@@ -13,7 +13,7 @@
  * Copyright 2000 Chen Kedem <niki@actcom.co.il>
  * Documentaci¢n en Ingl‚s de: TONE()
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

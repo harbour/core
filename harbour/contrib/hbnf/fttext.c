@@ -162,7 +162,7 @@
  * Copyright 1999-2008 Viktor Szakats (harbour.01 syenar hu)
  *    _findeol(), _findbol()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

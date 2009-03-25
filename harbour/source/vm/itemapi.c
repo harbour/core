@@ -80,7 +80,7 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_itemStr(), hb_itemString(), and hb_itemValToStr().
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

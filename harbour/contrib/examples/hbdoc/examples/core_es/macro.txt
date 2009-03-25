@@ -10,7 +10,7 @@
  * Documentaci¢n en Espa¤ol de:  
  *        Compilador Macro, HB_SETMACRO()
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

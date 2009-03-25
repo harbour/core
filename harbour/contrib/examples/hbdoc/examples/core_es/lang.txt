@@ -17,7 +17,7 @@
  *    Documentaci¢n en Ingl‚s de: HB_LANGERRMSG(), HB_LANGMESSAGE(),
  *                       HB_SETCODEPAGE(), HB_TRANSLATE()
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

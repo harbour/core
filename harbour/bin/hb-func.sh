@@ -9,7 +9,7 @@
 # small set of functions used by Harbour scripts
 # warning: some bash extensions are used
 #
-# See doc/license.txt for licensing terms.
+# See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
 get_hbplatform()
@@ -272,7 +272,7 @@ mk_hbtools()
 # Copyright 2003 Przemyslaw Czerpak <druzus@priv.onet.pl>
 # simple script to build binaries .tgz from Harbour sources
 #
-# See doc/license.txt for licensing terms.
+# See COPYING for licensing terms.
 # ---------------------------------------------------------------
 #
 

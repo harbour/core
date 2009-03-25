@@ -9,7 +9,7 @@
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  *   Header file for the Extend API, Array API, misc API and base declarations
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

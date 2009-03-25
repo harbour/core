@@ -62,7 +62,7 @@
  *
  * New Param for Method :ClassSel() to allow it to return only ClassData array
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

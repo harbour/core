@@ -25,7 +25,7 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_Tone()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  * www - http://www.harbour-project.org
  *

@@ -16,7 +16,7 @@
  *                       PADC(), PADL(), PADR(), ALLTRIM(), TRIM(), RTRIM(),
  *                       SPACE(), REPLICATE(), VAL(), TRANSFORM(), STRTRAN()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

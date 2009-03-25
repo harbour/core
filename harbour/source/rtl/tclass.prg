@@ -67,7 +67,7 @@
  *    Support for inheritance
  *    Support for default DATA values
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

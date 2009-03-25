@@ -16,7 +16,7 @@
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *         Header file for the Language API
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 

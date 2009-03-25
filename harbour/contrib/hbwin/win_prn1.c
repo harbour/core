@@ -8,7 +8,7 @@
  *     Copyright 2004 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  * www - http://www.harbour-project.org
  *

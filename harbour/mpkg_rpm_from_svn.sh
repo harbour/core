@@ -10,7 +10,7 @@
 # installed then takes current Harbour sources from SourceForge SVN
 # repository and builds binary RPMs at your local host.
 #
-# See doc/license.txt for licensing terms.
+# See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
 export SVNURL="https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour"

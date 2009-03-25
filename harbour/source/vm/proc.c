@@ -62,7 +62,7 @@
  *    Special treatment in case of Object and Eval (only for methodname)
  *    skipping block and adding (b) before the method name
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

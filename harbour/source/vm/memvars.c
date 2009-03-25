@@ -59,7 +59,7 @@
  *    __MVRESTORE() (Thanks to Dave Pearson and Jo French for the original
  *                   Clipper function (FReadMem()) to read .mem files)
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

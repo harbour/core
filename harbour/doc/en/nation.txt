@@ -11,7 +11,7 @@
  *    ISNEGATIVE() documentation
  *    NATIONMSG() documentation
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

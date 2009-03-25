@@ -57,7 +57,7 @@
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    :Move()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

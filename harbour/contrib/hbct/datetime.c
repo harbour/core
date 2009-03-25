@@ -61,7 +61,7 @@
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *   Wom()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

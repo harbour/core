@@ -62,7 +62,7 @@
  *    __DBGVMVARSGET()
  *    __DBGVMVARSLIST()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

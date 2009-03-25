@@ -58,7 +58,7 @@
  *    _NATSORTVER()
  *    _NATMSGVER()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

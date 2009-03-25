@@ -66,7 +66,7 @@
  * Copyright 2005 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
  *    Internal GT code reimplemented in differ way
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

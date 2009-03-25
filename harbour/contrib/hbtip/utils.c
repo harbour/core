@@ -58,7 +58,7 @@
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    hb_strAtI()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

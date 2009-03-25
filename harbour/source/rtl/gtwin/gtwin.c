@@ -25,7 +25,7 @@
  *    hb_gt_Tone()
  *    hb_gt_ReadKey()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  * www - http://www.harbour-project.org
  *

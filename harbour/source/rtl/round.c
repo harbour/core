@@ -60,7 +60,7 @@
  * Copyright 2003 Vicente Aranzana <varanzana@gruposp.com>
  * hb_numRound()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING for licensing terms.
  *
  */
 

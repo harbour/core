@@ -10,7 +10,7 @@
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: READKEY()
  *
- * Vea doc/license.txt por los t‚rminos de la licencia.
+ * Vea COPYING por los t‚rminos de la licencia.
  *
  */
 
