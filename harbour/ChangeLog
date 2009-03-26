@@ -8,6 +8,32 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-26 16:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbole/olecore.c
+    * added two notes with default defines for windows header files
+    ! small correction and fixes in casting
+    ; Now this code can be compiled by MinGW and OpenWatcom if we uncomment
+      CINTERFACE setting. Anyhow I'd prefer to use C++ friendly declarations.
+      Mindaugas, this code uses static variable: s_lOleError.
+      Can we make it thread local? It should resolve the problem with using
+      this code in MT programs.
+      The next thing is the place where OLE is uninitialized.
+      It's done by hb_vmAtExit(). In some cases it may be problematic
+      because after hb_vmAtExit() some .prg destructors can be executed
+      yet, f.e. when public variables are destroyed. The HB_OLEAUTO()
+      objects uses destructor which can be activated after executing
+      hb_ole_exit(). To resolve this problem you can replicate the trick
+      with pointer variable stored inside static .prg var I added to old
+      OLE code in contrib/whbwin/ (.prg destructors are disabled just
+      before releasing static variables). It's not elegant solution
+      but it will work. Probably we should think about two levels of
+      exit procedures. The second one can be used only for pure C code
+      which does not try to reenter HVM.
+
+  * harbour/contrib/gtwvg/gtwvg.h
+    ! moved _WIN32_IE declaration before #include ... to fix MinGW32
+      compilation
+
 2009-03-26 15:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Added autodetection of embedded MinGW64 and MinGWCE

@@ -51,6 +51,24 @@
  *
  */
 
+
+/* This option can resolve compilation problems in C++ mode for some
+ * compilers like OpenWatcom but not for all, f.e. it will not help
+ * BCC when used with -P (C++ mode) switch.
+ */
+/*
+#if defined( __cplusplus ) && !defined( CINTERFACE )
+   #define CINTERFACE 1
+#endif
+*/
+
+/* This code uses named union so this declaration is necessary for
+ * compilers where nameless unions are default
+ */
+#if !defined( NONAMELESSUNION )
+   #define NONAMELESSUNION
+#endif
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapicls.h"
@@ -69,9 +87,9 @@ static PHB_DYNS s_pDyns_hObjAssign;
 static PHB_DYNS s_pDyns_GetMessage;
 
 
-void hb_oleInit( void );          /* TODO: move to some hbole.h */
+HB_EXPORT void hb_oleInit( void );  /* TODO: move to some hbole.h */
 
-void HB_FUN_HB_OLEAUTO( void );
+HB_FUNC_EXTERN( HB_OLEAUTO );
 
 
 static void hb_olecore_init( void* cargo )
@@ -204,10 +222,10 @@ static void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
             hb_vmPushDynSym( s_pDyns_hb_oleauto );
             hb_vmPushNil();
             hb_vmDo( 0 );
-         
+
             pRet = hb_itemNew( NULL );
             hb_itemMove( pRet, hb_stackReturnItem() );
-         
+
             hb_vmPushDynSym( s_pDyns_hObjAssign );
             hb_vmPush( pRet );
             hb_vmPushPointer( pVariant->n1.n2.n3.pdispVal );
@@ -320,7 +338,7 @@ HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    GUID        ClassID, iid;
    REFIID      riid = &IID_IDispatch;
    IDispatch*  pDisp = NULL;
-
+   BOOL        fIID = FALSE;
 
    cCLSID = AnsiToWide( hb_parc( 1 ) );
    if ( hb_parc( 1 )[ 0 ] == '{' )
@@ -340,12 +358,12 @@ HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
       else
          memcpy( (LPVOID) &iid, hb_parc( 2 ), sizeof( iid ) );
 
-      (LPVOID) riid = &iid;
+      fIID = TRUE;
    }
 
    if ( s_lOleError == S_OK )
-      s_lOleError = CoCreateInstance( &ClassID, NULL, CLSCTX_SERVER, riid, (LPVOID) &pDisp );
-   
+      s_lOleError = CoCreateInstance( &ClassID, NULL, CLSCTX_SERVER, fIID ? &iid : riid, (LPVOID *) (LPVOID) &pDisp );
+
    hb_retptr( pDisp );
 }
 
@@ -392,7 +410,7 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
       s_lOleError = GetActiveObject( &ClassID, NULL, &pUnk );
 
       if ( s_lOleError == S_OK )
-         s_lOleError = pUnk->lpVtbl->QueryInterface( pUnk, riid, (void **) &pDisp );
+         s_lOleError = pUnk->lpVtbl->QueryInterface( pUnk, riid, (void **) ( void * ) &pDisp );
    }
 
    hb_retptr( pDisp );
@@ -522,7 +540,7 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
    hb_vmPush( hb_stackSelfItem() );
    hb_vmSend( 0 );
    pDisp = ( IDispatch* ) hb_parptr( -1 );
-                         
+
    /* TODO: implement hb_clsGetMessageName() */
    hb_vmPushDynSym( s_pDyns_GetMessage );
    hb_vmPushNil();
