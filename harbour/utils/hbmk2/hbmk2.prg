@@ -607,6 +607,22 @@ FUNCTION Main( ... )
                      t_cCCPATH := tmp
                   ENDIF
                ENDIF
+               IF Empty( t_cCCPATH )
+                  tmp := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw64" + hb_osPathSeparator() + "bin"
+                  IF hb_FileExists( tmp + hb_osPathSeparator() + "x86_64-pc-mingw32-gcc.exe" )
+                     t_cCOMP := "mingw64"
+                     t_cCCPATH := tmp
+                     t_cCCPREFIX := "x86_64-pc-mingw32-"
+                  ENDIF
+               ENDIF
+               IF Empty( t_cCCPATH )
+                  tmp := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin"
+                  IF hb_FileExists( tmp + hb_osPathSeparator() + "arm-wince-mingw32ce-gcc.exe" )
+                     t_cCOMP := "mingwce"
+                     t_cCCPATH := tmp
+                     t_cCCPREFIX := "arm-wince-mingw32ce-"
+                  ENDIF
+               ENDIF
             #endif
             IF Empty( t_cCOMP ) .AND. ! Empty( aCOMPDET )
                /* Look for this compiler first */
