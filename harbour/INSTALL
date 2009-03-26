@@ -137,7 +137,6 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 
    HB_INC_ADS=C:\ads\acesdk
    HB_INC_ALLEGRO=C:\allegro\include
-   HB_INC_APOLLO=C:\Apollo\include
    HB_INC_BLAT=C:\blat\full\source
    HB_INC_CURL=C:\curl\include
    HB_INC_FIREBIRD=C:\Firebird\include

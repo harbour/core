@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-26 16:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+  - contrib/hbapollo
+  * contrib/Makefile
+  + contrib/examples/hbapollo
+    * Moved hbapollo to examples.
+    ; TODO: This, hbwhat, hbgf and hbsqlit2 should be IMO permanently
+            removed from repository. If there are no objections, I'll
+            do it next week.
+
 2009-03-26 16:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbole/olecore.c
     * added two notes with default defines for windows header files
