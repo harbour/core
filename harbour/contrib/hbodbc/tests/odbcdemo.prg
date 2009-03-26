@@ -65,7 +65,7 @@ PROCEDURE Main()
                          PadR( dsFunctions:FieldByName( "City" ) :FieldName, 40 ) ;
               COLOR "B/W"
 
-      WHILE !dsFunctions:Eof()
+      DO WHILE !dsFunctions:Eof()
          ? "      " + PadR( dsFunctions:FieldByName( "First" ) :Value, 3 ), "³", ;
                       PadR( dsFunctions:FieldByName( "Last" ) :Value, 15 ), "³", ;
                       PadR( dsFunctions:FieldByName( "Street" ) :Value, 2 ), "³", ;

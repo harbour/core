@@ -49,8 +49,6 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbinit.h"
 #include "hbapiitm.h"

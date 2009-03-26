@@ -61,11 +61,14 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
+
+#if defined(HB_OS_WIN)
+   /* NOTE: To satisfy MySQL headers. */
+   #include <winsock2.h>
+#endif
 
 #include "mysql.h"
 

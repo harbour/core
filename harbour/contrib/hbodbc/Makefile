@@ -9,6 +9,12 @@ LIBNAME=hbodbc
 ifeq ($(HB_COMPILER),rsxnt)
 HB_WITHOUT_ODBC=yes
 endif
+ifeq ($(HB_ARCHITECTURE),dos)
+HB_WITHOUT_ODBC=yes
+endif
+ifeq ($(HB_ARCHITECTURE),os2)
+HB_WITHOUT_ODBC=yes
+endif
 
 ifneq ($(HB_ARCHITECTURE),win)
 ifeq ($(HB_WITHOUT_ODBC),)

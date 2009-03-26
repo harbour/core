@@ -189,18 +189,18 @@ METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
    ::lCacheRS  := lCache
 
    // Allocates SQL Environment
-   IF ( nRet := SQLAllocEn( @xBuf ) ) == SQL_SUCCESS
+   IF ( nRet := SQLAllocEnv( @xBuf ) ) == SQL_SUCCESS
       ::hEnv := xBuf
    ELSE
       ::nRetCode := nRet
       RETURN NIL
    ENDIF
 
-   SQLAllocCo( ::hEnv, @xBuf )                 // Allocates SQL Connection
+   SQLAllocConnect( ::hEnv, @xBuf )                 // Allocates SQL Connection
    ::hDbc := xBuf
 
    IF cUserName == NIL
-      SQLDriverC( ::hDbc, ::cODBCStr, @xBuf )     // Connects to Driver
+      SQLDriverConnect( ::hDbc, ::cODBCStr, @xBuf )     // Connects to Driver
       ::cODBCRes := xBuf
    ELSE
       IF ! ( ( nRet := SQLConnect( ::hDbc, cODBCStr, cUserName, cPassword ) ) == SQL_SUCCESS .OR. nRet == SQL_SUCCESS_WITH_INFO )
@@ -229,8 +229,8 @@ METHOD SetAutocommit( lEnable ) CLASS TODBC
 
 METHOD Destroy() CLASS TODBC
 
-   SQLDisconn( ::hDbc )                        // Disconnects from Driver
-   SQLFreeCon( ::hDbc )                        // Frees the connection
+   SQLDisConnect( ::hDbc )                        // Disconnects from Driver
+   SQLFreeConnect( ::hDbc )                        // Frees the connection
    SQLFreeEnv( ::hEnv )                        // Frees the environment
 
    RETURN NIL
@@ -241,7 +241,7 @@ METHOD GetCnnOptions( nType ) CLASS TODBC
 
    LOCAL cBuffer := Space( 256 )
 
-   ::nRetCode := SQLGetConnectOption( ::hDbc, nType, @cBuffer )
+   ::nRetCode := SQLGetConnectAttr( ::hDbc, nType, @cBuffer )
 
    RETURN cBuffer
 
@@ -249,7 +249,7 @@ METHOD GetCnnOptions( nType ) CLASS TODBC
 
 METHOD SetCnnOptions( nType, uBuffer ) CLASS TODBC
 
-   RETURN ::nRetCode := SQLSetConnectOption( ::hDbc, nType, uBuffer )
+   RETURN ::nRetCode := SQLSetConnectAttr( ::hDbc, nType, uBuffer )
 
 /*-----------------------------------------------------------------------*/
 
@@ -269,7 +269,7 @@ METHOD GetStmtOptions( nType ) CLASS TODBC
 
    LOCAL cBuffer := Space( 256 )
 
-   ::nRetCode := SQLGetStmtOption( ::hStmt, nType, @cBuffer )
+   ::nRetCode := SQLGetStmtAttr( ::hStmt, nType, @cBuffer )
 
    RETURN cBuffer
 
@@ -277,7 +277,7 @@ METHOD GetStmtOptions( nType ) CLASS TODBC
 
 METHOD SetStmtOptions( nType, uBuffer ) CLASS TODBC
 
-   RETURN ::nRetCode := SQLSetStmtOption( ::hStmt, nType, uBuffer )
+   RETURN ::nRetCode := SQLSetStmtAttr( ::hStmt, nType, uBuffer )
 
 /*-----------------------------------------------------------------------*/
 
@@ -336,16 +336,16 @@ METHOD Open() CLASS TODBC
 
       // Allocates and executes the statement
       xBuf := ::hStmt
-      SQLAllocSt( ::hDbc, @xBuf )
+      SQLAllocStmt( ::hDbc, @xBuf )
       ::hStmt := xBuf
-      nRet := SQLExecDir( ::hStmt, ::cSQL )
+      nRet := SQLExecDirect( ::hStmt, ::cSQL )
 
       // Get result information about fields and stores it
       // on Fields collection
-      SQLNumRes( ::hStmt, @nCols )
+      SQLNumResultCols( ::hStmt, @nCols )
 
       // Get number of rows in result set
-      nResult := SQLRowCoun( ::hStmt, @nRows )
+      nResult := SQLRowCount( ::hStmt, @nRows )
       IF nResult  == SQL_SUCCESS
          ::nRecCount := nRows
       ENDIF
@@ -354,7 +354,7 @@ METHOD Open() CLASS TODBC
 
       FOR i := 1 TO nCols
 
-         SQLDescrib( ::hStmt, i, @cColName, 255, @nNameLen, @nDataType, ;
+         SQLDescribeCol( ::hStmt, i, @cColName, 255, @nNameLen, @nDataType, ;
                      @nColSize, @nDecimals, @nNul )
 
          AAdd( ::Fields, TODBCField():New() )
@@ -410,9 +410,9 @@ METHOD ExecSQL() CLASS TODBC
    ELSE
       // Allocates and executes the statement
       xBuf := ::hStmt
-      SQLAllocSt( ::hDbc, @xBuf )
+      SQLAllocStmt( ::hDbc, @xBuf )
       ::hStmt := xBuf
-      nRet := SQLExecDir( ::hStmt, ::cSQL )
+      nRet := SQLExecDirect( ::hStmt, ::cSQL )
 
       ::Close()
    ENDIF
@@ -425,7 +425,7 @@ METHOD ExecSQL() CLASS TODBC
 METHOD Close() CLASS TODBC
 
    // Frees the statement
-   SQLFreeStm( ::hStmt, SQL_DROP )
+   SQLFreeStmt( ::hStmt, SQL_DROP )
    ::Active := .F.
 
    // Reset all recordset related variables
@@ -529,7 +529,7 @@ METHOD Fetch( nFetchType, nOffset ) CLASS TODBC
 
    ELSE           // apearently we don't have
 //    nResult := SQLFetch( ::hStmt /*, nFetchType, nOffSet */)
-      nResult := SQLExtende( ::hStmt, nFetchType, nOffSet, @nRows, 0 )
+      nResult := SQLExtendedFetch( ::hStmt, nFetchType, nOffSet, @nRows, 0 )
    ENDIF
 
    IF nResult == SQL_SUCCESS .OR. nResult == SQL_SUCCESS_WITH_INFO

@@ -52,10 +52,7 @@
  *
  */
 
-#include <stdlib.h>
 #include <time.h>
-
-#define HB_OS_WIN_USED
 
 /* NOTE: Ugly hack to avoid this error when compiler with BCC 5.8.2 and above:
          Error E2238 C:\...\Firebird-2.1.1\include\ibase.h 82: Multiple declaration for 'intptr_t' */
@@ -482,7 +479,7 @@ HB_FUNC( FBGETDATA )
          break;
 
       case SQL_TIMESTAMP:
-         isc_decode_timestamp ( ( ISC_TIMESTAMP * ) var->sqldata, &times );
+         isc_decode_timestamp( ( ISC_TIMESTAMP * ) var->sqldata, &times );
          hb_snprintf( date_s, sizeof( date_s ), "%04d-%02d-%02d %02d:%02d:%02d.%04d",
                    times.tm_year + 1900,
                    times.tm_mon + 1,
@@ -505,7 +502,7 @@ HB_FUNC( FBGETDATA )
          break;
 
       case SQL_TYPE_TIME:
-         isc_decode_sql_time ( ( ISC_TIME * ) var->sqldata, &times );
+         isc_decode_sql_time( ( ISC_TIME * ) var->sqldata, &times );
          hb_snprintf( date_s, sizeof( date_s ), "%02d:%02d:%02d.%04d",
                    times.tm_hour,
                    times.tm_min,

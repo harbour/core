@@ -92,7 +92,9 @@
 #include "hbgtwvg.ch"
 
 #ifndef _WIN32_IE
-   #define _WIN32_IE 0x0400
+   #ifndef __MINGW64__
+      #define _WIN32_IE 0x0400
+   #endif
 #endif
 
 HB_EXTERN_BEGIN

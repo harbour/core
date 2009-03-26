@@ -8,6 +8,51 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-26 22:01 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbodbc/tests/odbcdemo.prg
+  * contrib/hbodbc/tests/testodbc.prg
+  * contrib/hbodbc/todbc.prg
+  * contrib/hbodbc/odbc.c
+  * contrib/hbodbc/Makefile
+    + Platform protection moved to Makefile level.
+    + Lots of type cleanups to use SQL types rather than Windows types.
+    + Lots of type cleanups to use large integers where needed.
+    * Synced Harbour integers API calls with SQL integer sizes.
+    + Cleaned __DMC__ hacks.
+    ! Fixed to compile with ODBCVER == 0x0100 and ODBCVER == 0x0200.
+    * Update Harbour level function names as follows. Old names are
+      still available, you can disabled them by defining HB_ODBC_LEGACY_LEVEL_OFF macro:
+      SQLALLOCEN          => SQLALLOCENV
+      SQLALLOCCO          => SQLALLOCCONNECT
+      SQLDRIVERC          => SQLDRIVERCONNECT
+      SQLDISCONN          => SQLDISCONNECT
+      SQLFREECON          => SQLFREECONNECT
+      SQLALLOCST          => SQLALLOCSTMT
+      SQLFREESTM          => SQLFREESTMT
+      SQLEXECDIR          => SQLEXECDIRECT
+      SQLNUMRES           => SQLNUMRESULTCOLS
+      SQLDESCRIB          => SQLDESCRIBECOL
+      SQLEXTENDE          => SQLEXTENDEDFETCH
+      SQLFETCHSC          => SQLFETCHSCROLL
+      SQLROWCOUN          => SQLROWCOUNT
+      SQLSETCONNECTOPTION => SQLSETCONNECTATTR
+      SQLSETSTMTOPTION    => SQLSETSTMTATTR
+      SQLGETCONNECTOPTION => SQLGETCONNECTATTR
+      SQLGETSTMTOPTION    => SQLGETSTMTATTR
+
+  * contrib/hbmysql/mysql.c
+    % Replaced Windows headers with winsock2.h which seems to
+      be required by mysql headers.
+
+  * contrib/hbfbird/firebird.c
+  * contrib/rddsql/sqlmix.c
+  * contrib/hbssl/sslrand.c
+    % Removed Windows headers.
+
+  * contrib/gtwvg/gtwvg.h
+  * contrib/gtwvg/wvggui.h
+    + Readded ugly workaround for mingw64.
+
 2009-03-26 20:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbole/olecore.c
     ! added some very basic protection against possible GPF if wrong

@@ -25,21 +25,21 @@ PROCEDURE Main()
    ? padc( "*** ODBC ACCESS TEST ***", 80 )
    ?
    ? "Allocating environment... "
-   SQLAllocEn( @hEnv )
+   SQLAllocEnv( @hEnv )
    ? "Allocating connection... "
-   SQLAllocCo( hEnv, @hDbc )
+   SQLAllocConnect( hEnv, @hDbc )
    ? "Connecting to driver " + cConstrin + "... "
-   SQLDriverC( hDbc, cConstrin, @cConstrout )
+   SQLDriverConnect( hDbc, cConstrin, @cConstrout )
    ? "Allocating statement... "
-   SQLAllocSt( hDbc, @hStmt )
+   SQLAllocStmt( hDbc, @hStmt )
 
    ?
    ? "SQL: SELECT * FROM TEST"
-   SQLExecDir( hStmt, "select * from test" )
+   SQLExecDirect( hStmt, "select * from test" )
 
    ?
 
-   WHILE SQLFetch( hStmt ) == 0
+   DO WHILE SQLFetch( hStmt ) == 0
       nRows++
       GET ROW 1 INTO cCode
       GET ROW 2 INTO cFunc
@@ -51,9 +51,9 @@ PROCEDURE Main()
    ? "------------------------------------------------------------------------------"
    ? str( nRows, 4 ), " row(s) affected."
 
-   SQLFreeStm( hStmt, SQL_DROP )
-   SQLDisconn( hDbc )
-   SQLFreeCon( hDbc )
+   SQLFreeStmt( hStmt, SQL_DROP )
+   SQLDisConnect( hDbc )
+   SQLFreeConnect( hDbc )
    SQLFreeEnv( hEnv )
 
    RETURN
