@@ -75,6 +75,7 @@
 #include "hbapierr.h"
 #include "hbvm.h"
 #include "hbstack.h"
+#include "hbdate.h"
 #include "hbinit.h"
 
 #include <ole2.h>
@@ -113,7 +114,7 @@ static void hb_olecore_init( void* cargo )
 
 /* Unicode string management */
 
-static wchar_t* AnsiToWide( char* szString )
+static wchar_t* AnsiToWide( const char* szString )
 {
    int       iLen;
    wchar_t*  szWide;
@@ -125,7 +126,7 @@ static wchar_t* AnsiToWide( char* szString )
 }
 
 
-static char* WideToAnsi( wchar_t* szWide )
+static char* WideToAnsi( const wchar_t* szWide )
 {
    int    iLen;
    char*  szString;
@@ -180,8 +181,13 @@ static void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
          pVariant->n1.n2.n3.dblVal = ( double ) ( hb_itemGetDL( pItem ) - 0x0024D9AB );
          break;
 
+      case HB_IT_TIMESTAMP:
+         pVariant->n1.n2.vt = VT_DATE;
+         pVariant->n1.n2.n3.dblVal = hb_itemGetTD( pItem ) - 0x0024D9AB;
+         break;
+
       case HB_IT_OBJECT:
-         if ( hb_stricmp( hb_objGetClsName( pItem ), "HB_OLEAUTO" ) == 0 )
+         if( hb_stricmp( hb_objGetClsName( pItem ), "HB_OLEAUTO" ) == 0 )
          {
             hb_vmPushDynSym( s_pDyns_hObjAccess );
             hb_vmPush( pItem );
@@ -196,17 +202,14 @@ static void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
 
 static void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 {
-   char*  szString;
-
-   hb_itemClear( pItem );
-
    switch( pVariant->n1.n2.vt )
    {
       case VT_BSTR:
-         szString = WideToAnsi( pVariant->n1.n2.n3.bstrVal );
-         hb_itemPutC( pItem, szString );
-         hb_xfree( szString );
+      {
+         char* szString = WideToAnsi( pVariant->n1.n2.n3.bstrVal );
+         hb_itemPutCLPtr( pItem, szString, strlen( szString ) );
          break;
+      }
 
       case VT_BOOL:
          hb_itemPutL( pItem, pVariant->n1.n2.n3.boolVal );
@@ -214,24 +217,25 @@ static void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 
       case VT_DISPATCH:
       {
-         PHB_ITEM   pRet;
-
-         if ( pVariant->n1.n2.n3.pdispVal )
+         hb_itemClear( pItem );
+         if( pVariant->n1.n2.n3.pdispVal )
          {
+            PHB_ITEM pObject;
+
             /* TODO: save/restore stack return item */
+
             hb_vmPushDynSym( s_pDyns_hb_oleauto );
             hb_vmPushNil();
             hb_vmDo( 0 );
 
-            pRet = hb_itemNew( NULL );
-            hb_itemMove( pRet, hb_stackReturnItem() );
+            pObject = hb_itemNew( hb_stackReturnItem() );
 
             hb_vmPushDynSym( s_pDyns_hObjAssign );
-            hb_vmPush( pRet );
+            hb_vmPush( pObject );
             hb_vmPushPointer( pVariant->n1.n2.n3.pdispVal );
             hb_vmSend( 1 );
-            hb_itemMove( pItem, pRet );
-            hb_itemRelease( pRet );
+            hb_itemMove( pItem, pObject );
+            hb_itemRelease( pObject );
          }
          break;
       }
@@ -282,16 +286,26 @@ static void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
            break;
 
       case VT_DATE:
-           hb_itemPutDL( pItem, ( long ) pVariant->n1.n2.n3.dblVal + 0x0024D9AB );
-           break;
+      {
+           long lJulian, lMilliSec;
 
+           hb_timeStampUnpackDT( pVariant->n1.n2.n3.dblVal + 0x0024D9AB, &lJulian, &lMilliSec );
+           if( lMilliSec )
+              hb_itemPutTDT( pItem, lJulian, lMilliSec );
+           else
+              hb_itemPutDL( pItem, lJulian );
+           break;
+      }
+
+      default:
+         hb_itemClear( pItem );
    }
 }
 
 
 /* IDispatch parameters, return value handling */
 
-static void GetParams( DISPPARAMS* dParams )
+static void GetParams( DISPPARAMS * dispparam )
 {
    VARIANTARG*  pArgs = NULL;
    UINT         uiArgCount, uiArg;
@@ -309,10 +323,10 @@ static void GetParams( DISPPARAMS* dParams )
       }
    }
 
-   dParams->rgvarg = pArgs;
-   dParams->cArgs  = uiArgCount;
-   dParams->rgdispidNamedArgs = 0;
-   dParams->cNamedArgs = 0;
+   dispparam->rgvarg = pArgs;
+   dispparam->cArgs  = uiArgCount;
+   dispparam->rgdispidNamedArgs = 0;
+   dispparam->cNamedArgs = 0;
 }
 
 
@@ -339,30 +353,37 @@ HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    REFIID      riid = &IID_IDispatch;
    IDispatch*  pDisp = NULL;
    BOOL        fIID = FALSE;
+   const char* cOleName = hb_parc( 1 );
+   const char* cID = hb_parc( 2 );
 
-   cCLSID = AnsiToWide( hb_parc( 1 ) );
-   if ( hb_parc( 1 )[ 0 ] == '{' )
-      s_lOleError = CLSIDFromString( (LPOLESTR) cCLSID, &ClassID );
-   else
-      s_lOleError = CLSIDFromProgID( (LPCOLESTR) cCLSID, &ClassID );
-   hb_xfree( cCLSID );
-
-   if ( hb_pcount() == 2 )
+   if( cOleName )
    {
-      if ( hb_parc( 2 )[ 0 ] == '{' )
-      {
-         cCLSID = AnsiToWide( hb_parc( 2 ) );
-         s_lOleError = CLSIDFromString( (LPOLESTR) cCLSID, &iid );
-         hb_xfree( cCLSID );
-      }
+      cCLSID = AnsiToWide( cOleName );
+      if( cOleName[ 0 ] == '{' )
+         s_lOleError = CLSIDFromString( (LPOLESTR) cCLSID, &ClassID );
       else
-         memcpy( (LPVOID) &iid, hb_parc( 2 ), sizeof( iid ) );
+         s_lOleError = CLSIDFromProgID( (LPCOLESTR) cCLSID, &ClassID );
+      hb_xfree( cCLSID );
 
-      fIID = TRUE;
+      if( cID )
+      {
+         if( cID[ 0 ] == '{' )
+         {
+            cCLSID = AnsiToWide( cID );
+            s_lOleError = CLSIDFromString( (LPOLESTR) cCLSID, &iid );
+            hb_xfree( cCLSID );
+         }
+         else if( hb_parclen( 2 ) == ( ULONG ) sizeof( iid ) )
+            memcpy( (LPVOID) &iid, cID, sizeof( iid ) );
+
+         fIID = TRUE;
+      }
+
+      if( s_lOleError == S_OK )
+         s_lOleError = CoCreateInstance( &ClassID, NULL, CLSCTX_SERVER, fIID ? &iid : riid, (LPVOID *) (LPVOID) &pDisp );
    }
-
-   if ( s_lOleError == S_OK )
-      s_lOleError = CoCreateInstance( &ClassID, NULL, CLSCTX_SERVER, fIID ? &iid : riid, (LPVOID *) (LPVOID) &pDisp );
+   else
+      s_lOleError = CO_E_CLASSSTRING;
 
    hb_retptr( pDisp );
 }
@@ -375,43 +396,48 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    LPIID         riid = (LPIID) &IID_IDispatch;
    IDispatch*    pDisp = NULL;
    IUnknown*     pUnk = NULL;
-   char*         cOleName = hb_parc( 1 );
+   const char*   cOleName = hb_parc( 1 );
+   const char*   cID = hb_parc( 2 );
 
-   s_lOleError = S_OK;
-
-   wCLSID = (BSTR) AnsiToWide( (LPSTR) cOleName );
-
-   if ( cOleName[ 0 ] == '{' )
-      s_lOleError = CLSIDFromString( wCLSID, (LPCLSID) &ClassID );
-   else
-      s_lOleError = CLSIDFromProgID( wCLSID, (LPCLSID) &ClassID );
-
-   hb_xfree( wCLSID );
-
-   if ( hb_pcount() == 2 )
+   if( cOleName )
    {
-      char * cID = hb_parc( 2 );
-      if ( cID[ 0 ] == '{' )
-      {
-         wCLSID = (BSTR) AnsiToWide( (LPSTR) cID );
-         s_lOleError = CLSIDFromString( wCLSID, &iid );
-         hb_xfree( wCLSID );
-      }
+      s_lOleError = S_OK;
+
+      wCLSID = (BSTR) AnsiToWide( (LPSTR) cOleName );
+
+      if( cOleName[ 0 ] == '{' )
+         s_lOleError = CLSIDFromString( wCLSID, (LPCLSID) &ClassID );
       else
+         s_lOleError = CLSIDFromProgID( wCLSID, (LPCLSID) &ClassID );
+
+      hb_xfree( wCLSID );
+
+      if( cID )
       {
-         memcpy( ( LPVOID ) &iid, cID, sizeof( iid ) );
+         if( cID[ 0 ] == '{' )
+         {
+            wCLSID = (BSTR) AnsiToWide( (LPSTR) cID );
+            s_lOleError = CLSIDFromString( wCLSID, &iid );
+            hb_xfree( wCLSID );
+            riid = &iid;
+         }
+         else if( hb_parclen( 2 ) == ( ULONG ) sizeof( iid ) )
+         {
+            memcpy( ( LPVOID ) &iid, cID, sizeof( iid ) );
+            riid = &iid;
+         }
       }
 
-      riid = &iid;
-   }
+      if( s_lOleError == S_OK )
+      {
+         s_lOleError = GetActiveObject( &ClassID, NULL, &pUnk );
 
-   if ( s_lOleError == S_OK )
-   {
-      s_lOleError = GetActiveObject( &ClassID, NULL, &pUnk );
-
-      if ( s_lOleError == S_OK )
-         s_lOleError = pUnk->lpVtbl->QueryInterface( pUnk, riid, (void **) ( void * ) &pDisp );
+         if ( s_lOleError == S_OK )
+            s_lOleError = pUnk->lpVtbl->QueryInterface( pUnk, riid, (void **) ( void * ) &pDisp );
+      }
    }
+   else
+      s_lOleError = CO_E_CLASSSTRING;
 
    hb_retptr( pDisp );
 }
@@ -421,7 +447,7 @@ HB_FUNC( OLERELEASE )
 {
    IDispatch * pDisp = ( IDispatch* ) hb_parptr( 1 );
 
-   s_lOleError = pDisp->lpVtbl->Release( pDisp );
+   s_lOleError = pDisp ? pDisp->lpVtbl->Release( pDisp ) : E_INVALIDARG;
    hb_retl( s_lOleError == S_OK  );
 }
 
@@ -434,7 +460,7 @@ HB_FUNC( OLEERROR )
 
 HB_FUNC( OLEERRORTEXT )
 {
-   switch ( s_lOleError )
+   switch( s_lOleError )
    {
       case S_OK:
          hb_retc( "" );
@@ -546,9 +572,10 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
    hb_vmPushNil();
    hb_vmDo( 0 );
 
-   if ( ! pDisp )
+   if( ! pDisp )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 1005, "Invalid HB_OLEAUTO object", hb_parc( -1 ), HB_ERR_ARGS_SELFPARAMS );
+      return;
    }
 
    /* Take a copy of szMethod string, because return item could be overwritten */
@@ -604,7 +631,7 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
                                            &dispparam, &RetVal, &excep, &uiArgErr );
       FreeParams( &dispparam );
 
-      hb_oleVariantToItem( hb_stackReturnItem(), & RetVal );
+      hb_oleVariantToItem( hb_stackReturnItem(), &RetVal );
       if( RetVal.n1.n2.vt != VT_DISPATCH )
          VariantClear( &RetVal );
 

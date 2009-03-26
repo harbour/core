@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-26 20:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbole/olecore.c
+    ! added some very basic protection against possible GPF if wrong
+      parameters are passed to some OLE*() functions
+    + added timestamp support
+    * minor formatting and some cleanups in casting
+
 2009-03-26 16:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
   - contrib/hbapollo
