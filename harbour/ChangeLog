@@ -8,6 +8,29 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-25 15:47 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * doc/en/Makefile
+  * doc/Makefile
+  - doc/en
+  + doc/en-EN
+    * Renamed.
+
+  + man
+  + man/nfdoc
+  + man/manpages
+    + Added new dir for Harbour manuals.
+    ; TODO: Move files here from /doc.
+
+  * contrib/hbtpathy/tests/testtp.prg
+    * Applied update/fix by Barry Jackson.
+
+  * utils/hbmk2/hbmk2.prg
+    + Added autodetection of MinGW compiler if installed in the
+      Harbour directory tree in the mingw dir.
+      This way it's possible to create a fully setup-free
+      install kit, which is able to produce Harbour executables
+      right after unzip by simply issuing command: hbmk2 hello.prg
+
 2009-03-26 14:10 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/contrib/hbole/olecore.c
     * fixed compile time warning

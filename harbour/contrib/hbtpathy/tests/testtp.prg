@@ -67,12 +67,10 @@
 */
 
 function main
-   ?
-   ?
    ? tp_open( 1,, 9600, 8, "N", 1 )
-   //tp_send( 1, "Hi there bob" )
+   tp_send( 1, "Hi there Bob", 1 )    // One second timeout
    tp_inkey( .5 )
-   //? tp_recv( 1 )
+   ? tp_recv( 1 )
    ?
    tp_Close( 1 )
 return nil

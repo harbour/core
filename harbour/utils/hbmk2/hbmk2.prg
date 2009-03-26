@@ -62,7 +62,7 @@
  * See COPYING for licensing terms.
  *
  */
-
+#pragma linenumber=on
 /*
    Man page HOWTO:
       http://www.schweikhardt.net/man_page_howto.html
@@ -486,7 +486,7 @@ FUNCTION Main( ... )
       cOptPrefix := "-/"
    CASE t_cARCH == "win"
       /* Order is significant.
-         owatcom also keeps a cl.exe in it's binary dir. */
+         owatcom also keeps a cl.exe in its binary dir. */
       aCOMPDET := { { {|| FindInPath( t_cCCPREFIX + "gcc" ) != NIL }, "mingw"   },; /* TODO: Add full support for g++ */
                     { {|| FindInPath( "wpp386"   ) != NIL .AND. ;
                           ! Empty( GetEnv( "WATCOM" ) ) }, "owatcom" },; /* TODO: Add full support for wcc386 */
@@ -521,64 +521,7 @@ FUNCTION Main( ... )
    /* Setup GUI state for Harbour default */
    SetupForGT( t_cGTDEFAULT, NIL, @s_lGUI )
 
-   /* Autodetect compiler */
-
-   IF lStopAfterHarbour
-      /* If we're just compiling .prg to .c we don't need a C compiler. */
-      t_cCOMP := ""
-   ELSE
-      IF Empty( t_cCOMP ) .OR. t_cCOMP == "bld"
-         IF Len( aCOMPSUP ) == 1
-            t_cCOMP := aCOMPSUP[ 1 ]
-         ELSEIF t_cARCH == "linux" .OR. t_cCOMP == "bld"
-            t_cCOMP := cSelfCOMP
-            IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
-               t_cCOMP := NIL
-            ENDIF
-         ELSEIF ! Empty( aCOMPDET )
-            /* Look for this compiler first */
-            FOR tmp := 1 TO Len( aCOMPDET )
-               IF aCOMPDET[ tmp ][ 2 ] == cSelfCOMP .AND. Eval( aCOMPDET[ tmp ][ 1 ] )
-                  t_cCOMP := aCOMPDET[ tmp ][ 2 ]
-                  EXIT
-               ENDIF
-            NEXT
-            IF Empty( t_cCOMP )
-               /* Check the rest of compilers */
-               FOR tmp := 1 TO Len( aCOMPDET )
-                  IF !( aCOMPDET[ tmp ][ 2 ] == cSelfCOMP ) .AND. Eval( aCOMPDET[ tmp ][ 1 ] )
-                     t_cCOMP := aCOMPDET[ tmp ][ 2 ]
-                     EXIT
-                  ENDIF
-               NEXT
-            ENDIF
-         ENDIF
-         IF ! Empty( t_cCOMP )
-            IF t_lInfo
-               OutStd( "hbmk: Autodetected compiler: " + t_cCOMP + hb_osNewLine() )
-            ENDIF
-         ELSE
-            IF Empty( aCOMPDET )
-               OutErr( "hbmk: Please choose a compiler by using -comp= option or envvar HB_COMPILER." + hb_osNewLine() )
-               OutErr( "      You have the following choices on your platform:" + hb_osNewLine() )
-               OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
-            ELSE
-               OutErr( "hbmk: Harbour Make couldn't detect any supported C compiler in your PATH." + hb_osNewLine() )
-               OutErr( "      Please setup one or set -comp= option or envvar HB_COMPILER" + hb_osNewLine() )
-               OutErr( "      to one of these values:" + hb_osNewLine() )
-               OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
-            ENDIF
-            PauseForKey()
-            RETURN 2
-         ENDIF
-      ELSE
-         IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
-            OutErr( "hbmk: Error: Compiler value unknown: " + t_cCOMP + hb_osNewLine() )
-            PauseForKey()
-            RETURN 2
-         ENDIF
-      ENDIF
-   ENDIF
+   /* Autodetect Harbour environment */
 
    /* Detect system locations to enable shared library option by default */
    lSysLoc := hb_DirBase() == "/usr/local/bin/" .OR. ;
@@ -586,15 +529,11 @@ FUNCTION Main( ... )
               hb_DirBase() == "/opt/harbour/" .OR. ;
               hb_DirBase() == "/opt/bin/"
 
-   /* Autodetect Harbour environment */
+   s_cHB_BIN_INSTALL := PathSepToSelf( GetEnv( "HB_BIN_INSTALL" ) )
+   s_cHB_LIB_INSTALL := PathSepToSelf( GetEnv( "HB_LIB_INSTALL" ) )
+   s_cHB_INC_INSTALL := PathSepToSelf( GetEnv( "HB_INC_INSTALL" ) )
 
-   s_aLIBPATH := {}
-
-   s_cHB_BIN_INSTALL := PathSepToTarget( GetEnv( "HB_BIN_INSTALL" ) )
-   s_cHB_LIB_INSTALL := PathSepToTarget( GetEnv( "HB_LIB_INSTALL" ) )
-   s_cHB_INC_INSTALL := PathSepToTarget( GetEnv( "HB_INC_INSTALL" ) )
-
-   s_cHB_INSTALL_PREFIX := PathSepToTarget( GetEnv( "HB_INSTALL_PREFIX" ) )
+   s_cHB_INSTALL_PREFIX := PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) )
    IF Empty( s_cHB_INSTALL_PREFIX )
       DO CASE
       CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG )
@@ -644,6 +583,82 @@ FUNCTION Main( ... )
    IF t_lInfo
       OutStd( "hbmk: Using Harbour: " + s_cHB_BIN_INSTALL + " " + s_cHB_INC_INSTALL + " " + s_cHB_LIB_INSTALL + hb_osNewLine() )
    ENDIF
+
+   /* Autodetect compiler */
+
+   IF lStopAfterHarbour
+      /* If we're just compiling .prg to .c we don't need a C compiler. */
+      t_cCOMP := ""
+   ELSE
+      IF Empty( t_cCOMP ) .OR. t_cCOMP == "bld"
+         IF Len( aCOMPSUP ) == 1
+            t_cCOMP := aCOMPSUP[ 1 ]
+         ELSEIF t_cARCH == "linux" .OR. t_cCOMP == "bld"
+            t_cCOMP := cSelfCOMP
+            IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
+               t_cCOMP := NIL
+            ENDIF
+         ELSE
+            #if defined( __PLATFORM__WINDOWS )
+               IF Empty( t_cCCPATH )
+                  tmp := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw" + hb_osPathSeparator() + "bin"
+                  IF hb_FileExists( tmp + hb_osPathSeparator() + "gcc.exe" )
+                     t_cCOMP := "mingw"
+                     t_cCCPATH := tmp
+                  ENDIF
+               ENDIF
+            #endif
+            IF Empty( t_cCOMP ) .AND. ! Empty( aCOMPDET )
+               /* Look for this compiler first */
+               FOR tmp := 1 TO Len( aCOMPDET )
+                  IF aCOMPDET[ tmp ][ 2 ] == cSelfCOMP .AND. Eval( aCOMPDET[ tmp ][ 1 ] )
+                     t_cCOMP := aCOMPDET[ tmp ][ 2 ]
+                     EXIT
+                  ENDIF
+               NEXT
+               IF Empty( t_cCOMP )
+                  /* Check the rest of compilers */
+                  FOR tmp := 1 TO Len( aCOMPDET )
+                     IF !( aCOMPDET[ tmp ][ 2 ] == cSelfCOMP ) .AND. Eval( aCOMPDET[ tmp ][ 1 ] )
+                        t_cCOMP := aCOMPDET[ tmp ][ 2 ]
+                        EXIT
+                     ENDIF
+                  NEXT
+               ENDIF
+            ENDIF
+         ENDIF
+         IF ! Empty( t_cCOMP )
+            IF t_lInfo
+               OutStd( "hbmk: Autodetected compiler: " + t_cCOMP + hb_osNewLine() )
+            ENDIF
+         ELSE
+            IF Empty( aCOMPDET )
+               OutErr( "hbmk: Please choose a compiler by using -comp= option or envvar HB_COMPILER." + hb_osNewLine() )
+               OutErr( "      You have the following choices on your platform:" + hb_osNewLine() )
+               OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
+            ELSE
+               OutErr( "hbmk: Harbour Make couldn't detect any supported C compiler in your PATH." + hb_osNewLine() )
+               OutErr( "      Please setup one or set -comp= option or envvar HB_COMPILER" + hb_osNewLine() )
+               OutErr( "      to one of these values:" + hb_osNewLine() )
+               OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
+            ENDIF
+            PauseForKey()
+            RETURN 2
+         ENDIF
+      ELSE
+         IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
+            OutErr( "hbmk: Error: Compiler value unknown: " + t_cCOMP + hb_osNewLine() )
+            PauseForKey()
+            RETURN 2
+         ENDIF
+      ENDIF
+   ENDIF
+
+   s_cHB_BIN_INSTALL := PathSepToTarget( s_cHB_BIN_INSTALL )
+   s_cHB_LIB_INSTALL := PathSepToTarget( s_cHB_LIB_INSTALL )
+   s_cHB_INC_INSTALL := PathSepToTarget( s_cHB_INC_INSTALL )
+
+   s_aLIBPATH := {}
 
    /* Add main Harbour library dir to lib path list */
    AAddNotEmpty( s_aLIBPATH, s_cHB_LIB_INSTALL )

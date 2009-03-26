@@ -35,7 +35,7 @@ DOC_FILES=\
 	windll.txt \
 
 DIRS=\
-	en \
+	en-EN \
 
 include $(TOP)$(ROOT)config/doc.cf
 include $(TOP)$(ROOT)config/dir.cf
