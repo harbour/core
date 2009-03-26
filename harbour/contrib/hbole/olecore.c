@@ -113,7 +113,7 @@ static char* WideToAnsi( wchar_t* szWide )
    char*  szString;
 
    iLen = WideCharToMultiByte( CP_ACP, 0, szWide, -1, NULL, 0, NULL, NULL );
-   szString = hb_xgrab( ( iLen + 1 ) * sizeof( char ) );
+   szString = ( char* ) hb_xgrab( ( iLen + 1 ) * sizeof( char ) );
    WideCharToMultiByte( CP_ACP, 0, szWide, -1, szString, iLen, NULL, NULL );
    return szString;
 }
