@@ -1167,7 +1167,7 @@ FUNCTION Main( ... )
       s_aLIBVM := iif( s_lMT, aLIB_BASE_MT, aLIB_BASE_ST )
       aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, t_aLIBCOREGT } )
 
-      IF ! Empty( s_cGT )
+      IF ! Empty( s_cGT ) .AND. !( Lower( s_cGT ) == "gtnul" )
          IF AScan( aLIB_BASE2, {|tmp| Lower( tmp ) == Lower( s_cGT ) } ) == 0
             AAdd( aLIB_BASE2, s_cGT )
          ENDIF

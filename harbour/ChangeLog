@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-27 12:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbqt/tests/hbqt.hbp
+    + Removed mingw32 lib not necessary.
+    + Added gt=gtnul to suppress the console window.
+
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed gtnul usage in one remaining place.
+
 2009-03-27 11:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * ChangeLog
     * One TOFIX marked as DONE.
