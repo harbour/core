@@ -2,31 +2,25 @@
 # $Id$
 #
 
+HB_BUILD_WARN = no
+HB_BUILD_MODE = c
+
 ROOT = ../../
 
 LIBNAME=sqlite3
 
-ifeq ($(HB_WITHOUT_SQLIT3),)
-ifeq ($(HB_ARCHITECTURE),dos)
-HB_WITHOUT_SQLIT3=yes
+ifeq ($(HB_WITH_SQLITE3),)
+ifeq ($(HB_ARCHITECTURE),win)
+HB_WITH_SQLITE3=yes
 endif
-ifeq ($(HB_ARCHITECTURE),bsd)
-HB_WITHOUT_SQLIT3=yes
-endif
-ifeq ($(HB_ARCHITECTURE),hpux)
-HB_WITHOUT_SQLIT3=yes
-endif
-ifeq ($(HB_ARCHITECTURE),linux)
-HB_WITHOUT_SQLIT3=yes
-endif
-ifeq ($(HB_ARCHITECTURE),darwin)
-HB_WITHOUT_SQLIT3=yes
+ifeq ($(HB_ARCHITECTURE),os2)
+HB_WITH_SQLITE3=yes
 endif
 endif
 
-ifneq ($(HB_WITHOUT_SQLIT3),yes)
+ifeq ($(HB_WITH_SQLITE3),yes)
 C_SOURCES =\
-	_sqlite3.c \
+	sqlite3.c \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

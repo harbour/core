@@ -14,7 +14,11 @@ CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
-CFLAGS = -Wall -W
+CFLAGS =
+
+ifneq ($(HB_BUILD_WARN),no)
+CFLAGS += -Wall -W
+endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
 CFLAGS += -O3

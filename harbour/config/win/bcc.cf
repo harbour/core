@@ -16,7 +16,11 @@ CC = bcc32.exe
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
-CFLAGS = -q -Q -w -w-sig- -tWM
+CFLAGS = -q -tWM
+
+ifneq ($(HB_BUILD_WARN),no)
+CFLAGS += -w -w-sig- -Q
+endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
 CFLAGS += -d -4 -O2 -OS -Ov -Oi -Oc

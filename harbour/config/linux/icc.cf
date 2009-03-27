@@ -21,7 +21,10 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 #CFLAGS = -xHOST
 CFLAGS = -D_GNU_SOURCE
 #CFLAGS += -std=c99
+
+ifneq ($(HB_BUILD_WARN),no)
 #CFLAGS += -w2 -Wall
+endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
 CFLAGS += -O3

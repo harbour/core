@@ -22,6 +22,10 @@ CPPFLAGS = -I.
 
 CPPFLAGS += -Ze -Go
 
+ifneq ($(HB_BUILD_WARN),no)
+CPPFLAGS += -W2
+endif
+
 ifneq ($(HB_BUILD_OPTIM),no)
 CPPFLAGS += -Ot
 # -Ox: can cause GPF in 4.50/5.00, so it's disabled.

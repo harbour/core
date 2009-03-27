@@ -247,9 +247,9 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
          if( ( pFuncall->cScope & ( HB_FS_DEFERRED | HB_FS_LOCAL ) ) == 0 &&
              hb_compFunctionFind( HB_COMP_PARAM, pFuncall->szName ) == NULL &&
              hb_compInlineFind( HB_COMP_PARAM, pFuncall->szName ) == NULL )
-            fprintf( yyc, "HB_FUNC_%s( %s );\n",
-                     ( pFuncall->cScope & HB_FS_STATIC ) ? "STATIC" : "EXTERN",
-                     pFuncall->szName );
+            fprintf( yyc, ( pFuncall->cScope & HB_FS_STATIC ) ?
+                             "HB_FUNC_STATIC( %s );\n" :
+                             "HB_FUNC_EXTERN( %s );\n", pFuncall->szName );
          pFuncall = pFuncall->pNext;
       }
 

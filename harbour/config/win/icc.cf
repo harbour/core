@@ -16,7 +16,11 @@ CC = icl.exe
 CC_IN = -c
 CC_OUT = -Fo
 CPPFLAGS = -nologo -I. -I$(HB_INC_COMPILE)
-CFLAGS = -W3 -Gs
+CFLAGS = -Gs
+
+ifneq ($(HB_BUILD_WARN),no)
+CFLAGS += -W3
+endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
 # maximum optimizations

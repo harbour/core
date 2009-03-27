@@ -8,6 +8,61 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-27 16:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * debian/dirs
+    * Changed en -> en-EN.
+
+  * external/sqlite3/Makefile
+  * external/sqlite3/_sqlite3.c
+    + Disabled warnings and forced C mode for sqlite3.
+    - Deleted no longer needed stub.
+
+  * include/hbsetup.h
+    + Added HB_PATH_MAX.
+
+  * source/compiler/genc.c
+    * Minor modification to recent addition to make code
+      more grep friendly.
+
+  * config/win/msvc.cf
+  * config/win/msvcce.cf
+    + Added HB_BUILD_MODE=c and HB_BUILD_MODE=cpp support
+      to force specific build mode.
+      ATTENTION: Don't use this for normal Harbour code,
+                 it's only meant for external libs hosted
+                 inside Harbour source tree.
+
+  * config/win/pocc.cf
+  * config/win/poccce.cf
+    + Added -w3 (default is -w2).
+
+  * config/darwin/gcc.cf
+  * config/hpux/gcc.cf
+  * config/dos/owatcom.cf
+  * config/dos/djgpp.cf
+  * config/win/mingwce.cf
+  * config/win/poccce.cf
+  * config/win/icc.cf
+  * config/win/cygwin.cf
+  * config/win/msvc.cf
+  * config/win/owatcom.cf
+  * config/win/msvcce.cf
+  * config/win/mingw.cf
+  * config/win/pocc.cf
+  * config/win/bcc.cf
+  * config/linux/owatcom.cf
+  * config/linux/gcc.cf
+  * config/linux/icc.cf
+  * config/os2/owatcom.cf
+  * config/os2/gcc.cf
+  * config/sunos/gcc.cf
+  * config/bsd/gcc.cf
+    + Added support for HB_BUILD_WARN=no to reset warning levels
+      to compiler defaults.
+      ATTENTION: Don't use this for normal Harbour code,
+                 it's only meant for external libs hosted
+                 inside Harbour source tree.
+
 2009-03-27 15:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * external/sqlite3/Makefile
     * Don't build it for linux and darwin.

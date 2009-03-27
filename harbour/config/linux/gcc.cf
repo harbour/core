@@ -24,9 +24,16 @@ ifeq ($(HB_COMPILER),icc)
 CFLAGS = -D_GNU_SOURCE
 #CFLAGS += -std=c99
 #CFLAGS += -xHOST
+else
+CFLAGS =
+endif
+
+ifneq ($(HB_BUILD_WARN),no)
+ifeq ($(HB_COMPILER),icc)
 #CFLAGS += -w2 -Wall
 else
-CFLAGS = -Wall -W
+CFLAGS += -Wall -W
+endif
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)

@@ -15,8 +15,12 @@ CC = wpp386
 CC_IN =
 CC_OUT = -fo=
 
-#CPPFLAGS = -j -w3 -5s -5r -fp5 -oehtz -s -zq -zt0 -bt=linux
-CPPFLAGS = -w3 -zq -bt=linux
+#CPPFLAGS = -j -5s -5r -oehtz -zq -bt=linux
+CPPFLAGS = -zq -bt=linux
+
+ifneq ($(HB_BUILD_WARN),no)
+CPPFLAGS += -w3
+endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
 # architecture flags

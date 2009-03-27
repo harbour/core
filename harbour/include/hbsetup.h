@@ -229,6 +229,8 @@
    #define _POSIX_PATH_MAX    255
 #endif
 
+#define HB_PATH_MAX     264 /* with trailing 0 byte */
+
 /* NOTE:
    Compiler                                _MSC_VER value
    --------                                --------------
