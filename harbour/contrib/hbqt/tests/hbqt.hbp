@@ -2,5 +2,7 @@
 # $Id$
 #
 
+{mingw}libs=supc++ mingw32
 libs=hbqt
 libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
+gui=yes

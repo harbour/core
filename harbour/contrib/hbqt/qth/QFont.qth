@@ -1,4 +1,4 @@
-# 
+#
 
 enum Capitalization { MixedCase, AllUppercase, AllLowercase, SmallCaps, Capitalize }
 enum SpacingType { PercentageSpacing, AbsoluteSpacing }
@@ -26,9 +26,9 @@ HB_FUNC( QT_QFONT )
    }
    else
    {
-      hb_retptr( ( QFont* ) new QFont( hbqt_par_QString( 1 ), 
-                                       HB_IS_NUMERIC( 2 ) ? hb_parni( 2 ) : -1, 
-                                       HB_IS_NUMERIC( 3 ) ? hb_parni( 3 ) : -1, 
+      hb_retptr( ( QFont* ) new QFont( hbqt_par_QString( 1 ),
+                                       HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1,
+                                       HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1,
                                        hb_parl( 4 ) ) );
    }
 }
@@ -92,4 +92,3 @@ QString toString () const
 bool underline () const
 int weight () const
 qreal wordSpacing () const
-

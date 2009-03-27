@@ -10,7 +10,7 @@ QPen ( const QPen & pen )
 */
 HB_FUNC( QT_QPEN )
 {
-   if( hb_pcount() == 1 && HB_IS_NUMERIC( 1 ) )
+   if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
       hb_retptr( ( QPen* ) new QPen() );
    }

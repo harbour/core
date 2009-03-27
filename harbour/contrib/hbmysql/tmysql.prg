@@ -202,46 +202,37 @@ METHOD FieldDec( nNum, lFormat ) CLASS TMySQLRow
 
 METHOD FieldType( nNum ) CLASS TMySQLRow
 
-   LOCAL cType := "U"
+   IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
 
-   IF nNum >=1 .AND. nNum <= Len( ::aFieldStruct )
+      SWITCH ::aFieldStruct[nNum][MYSQL_FS_TYPE]
+      CASE MYSQL_TINY_TYPE
+         RETURN "L"
 
-      DO CASE
-      CASE ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_TINY_TYPE
-         cType := "L"
+      CASE MYSQL_SHORT_TYPE
+      CASE MYSQL_LONG_TYPE
+      CASE MYSQL_LONGLONG_TYPE
+      CASE MYSQL_FLOAT_TYPE
+      CASE MYSQL_DOUBLE_TYPE
+      CASE MYSQL_DECIMAL_TYPE
+      CASE MYSQL_INT24_TYPE
+         RETURN "N"
 
-      CASE ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE .OR.;
-           ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE .OR.;
-           ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE .OR.;
-           ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_FLOAT_TYPE .OR.;
-           ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE .OR.;
-           ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DECIMAL_TYPE
-         cType := "N"
+      CASE MYSQL_VAR_STRING_TYPE
+      CASE MYSQL_STRING_TYPE
+      CASE MYSQL_DATETIME_TYPE
+         RETURN "C"
 
-      CASE ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DATE_TYPE
-         cType := "D"
+      CASE MYSQL_DATE_TYPE
+         RETURN "D"
 
-      CASE ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_BLOB_TYPE
-         cType := "M"
+      CASE MYSQL_BLOB_TYPE
+      CASE MYSQL_MEDIUM_BLOB_TYPE
+         RETURN "M"
 
-      CASE ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_VAR_STRING_TYPE .OR.;
-           ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_STRING_TYPE     .OR.;
-           ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DATETIME_TYPE
-         cType := "C"
-
-      CASE ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE
-         cType := "N"
-
-      CASE ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_MEDIUM_BLOB_TYPE
-         cType := "M"
-
-      OTHERWISE
-         cType := "U"
-
-      ENDCASE
+      ENDSWITCH
    ENDIF
 
-   RETURN cType
+   RETURN "U"
 
 
 // returns a WHERE x=y statement which uses primary key (if available)
@@ -279,28 +270,28 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLRow
 // Every single query submitted to MySQL server
 CREATE CLASS TMySQLQuery
 
-   DATA  nSocket           // connection handle to MySQL server
-   DATA  nResultHandle     // result handle received from MySQL
+   VAR   nSocket           // connection handle to MySQL server
+   VAR   nResultHandle     // result handle received from MySQL
 
-   DATA  cQuery            // copy of query that generated this object
+   VAR   cQuery            // copy of query that generated this object
 
-   DATA  nNumRows          // number of rows available on answer NOTE MySQL is 0 based
-   DATA  nCurRow           // I'm currently over row number
-
-   //DAVID:
-   DATA  lBof
-   DATA  lEof
+   VAR   nNumRows          // number of rows available on answer NOTE MySQL is 0 based
+   VAR   nCurRow           // I'm currently over row number
 
    //DAVID:
-   DATA  lFieldAsData      //Use fields as object DATA. For compatibility
+   VAR   lBof
+   VAR   lEof
+
+   //DAVID:
+   VAR   lFieldAsData      //Use fields as object DATA. For compatibility
                            //Names of fields can match name of TMySQLQuery/Table DATAs,
                            //and it is dangerous. ::lFieldAsData:=.F. can fix it
-   DATA  aRow              //Values of fields of current row
+   VAR   aRow              //Values of fields of current row
 
-   DATA  nNumFields        // how many fields per row
-   DATA  aFieldStruct      // type of each field, a copy is here a copy inside each row
+   VAR   nNumFields        // how many fields per row
+   VAR   aFieldStruct      // type of each field, a copy is here a copy inside each row
 
-   DATA  lError            // .T. if last operation failed
+   VAR   lError            // .T. if last operation failed
 
    METHOD   New( nSocket, cQuery )       // New query object
    METHOD   Destroy()
@@ -537,57 +528,65 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
 
          // Convert answer from text field to correct clipper types
          FOR i := 1 TO ::nNumFields
-            DO CASE
-            CASE ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_TINY_TYPE
+
+            SWITCH ::aFieldStruct[i][MYSQL_FS_TYPE]
+            CASE MYSQL_TINY_TYPE
                //DAVID:
                IF ::aRow[i] == NIL
                   ::aRow[i] := "0"
                ENDIF
                ::aRow[i] := Val( ::aRow[i] ) != 0
+               EXIT
 
-            CASE ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE .OR.;
-                 ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE .OR.;
-                 ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE .OR.;
-                 ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE .OR. ;
-                 ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DECIMAL_TYPE
+            CASE MYSQL_SHORT_TYPE
+            CASE MYSQL_LONG_TYPE
+            CASE MYSQL_LONGLONG_TYPE
+            CASE MYSQL_INT24_TYPE
+            CASE MYSQL_DECIMAL_TYPE
                //DAVID:
                IF ::aRow[i] == NIL
                   ::aRow[i] := "0"
                ENDIF
                ::aRow[i] := Val( ::aRow[i] )
+               EXIT
 
-            CASE ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE .OR.;
-                 ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_FLOAT_TYPE
+            CASE MYSQL_DOUBLE_TYPE
+            CASE MYSQL_FLOAT_TYPE
                //DAVID:
                IF ::aRow[i] == NIL
                   ::aRow[i] := "0"
                ENDIF
                ::aRow[i] := Val( ::aRow[i] )
+               EXIT
 
-            CASE ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DATE_TYPE
+            CASE MYSQL_DATE_TYPE
                IF Empty( ::aRow[i] )
                   ::aRow[i] := hb_SToD( "" )
                ELSE
                   // Date format YYYY-MM-DD
                   ::aRow[i] := hb_SToD( Left( ::aRow[i], 4 ) + SubStr( ::aRow[i], 6, 2 ) + Right( ::aRow[i], 2 ) )
                ENDIF
+               EXIT
 
-            CASE ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_BLOB_TYPE
+            CASE MYSQL_BLOB_TYPE
                // Memo field
+               EXIT
 
-            CASE ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_STRING_TYPE .OR.;
-                 ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_VAR_STRING_TYPE
+            CASE MYSQL_STRING_TYPE
+            CASE MYSQL_VAR_STRING_TYPE
                // char field
+               EXIT
 
-            CASE ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DATETIME_TYPE
+            CASE MYSQL_DATETIME_TYPE
                // DateTime field
+               EXIT
 
             OTHERWISE
 
                //DAVID: Alert( "Unknown type from SQL Server Field: " + hb_NToS( i ) + " is type " + hb_NToS( ::aFieldStruct[i][MYSQL_FS_TYPE] ) )
                // QOUT( "Unknown type from SQL Server Field: " + hb_NToS( i ) + " is type " + hb_NToS( ::aFieldStruct[i][MYSQL_FS_TYPE] ) )
 
-            ENDCASE
+            ENDSWITCH
 
             //DAVID:
             IF ::lFieldAsData
@@ -717,45 +716,37 @@ METHOD FieldDec( nNum, lFormat ) CLASS TMySQLQuery
 
 METHOD FieldType( nNum ) CLASS TMySQLQuery
 
-   LOCAL cType := "U"
-
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
-      DO CASE
-      CASE ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_TINY_TYPE
-         cType := "L"
 
-      CASE ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE .OR.;
-           ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE .OR.;
-           ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE .OR.;
-           ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_FLOAT_TYPE .OR.;
-           ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE.OR.;
-           ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DECIMAL_TYPE
-         cType := "N"
+      SWITCH ::aFieldStruct[nNum][MYSQL_FS_TYPE]
+      CASE MYSQL_TINY_TYPE
+         RETURN "L"
 
-      CASE ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DATE_TYPE
-         cType := "D"
+      CASE MYSQL_SHORT_TYPE
+      CASE MYSQL_LONG_TYPE
+      CASE MYSQL_LONGLONG_TYPE
+      CASE MYSQL_FLOAT_TYPE
+      CASE MYSQL_DOUBLE_TYPE
+      CASE MYSQL_DECIMAL_TYPE
+      CASE MYSQL_INT24_TYPE
+         RETURN "N"
 
-      CASE ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_BLOB_TYPE
-         cType := "M"
+      CASE MYSQL_VAR_STRING_TYPE
+      CASE MYSQL_STRING_TYPE
+      CASE MYSQL_DATETIME_TYPE
+         RETURN "C"
 
-      CASE ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_VAR_STRING_TYPE .OR.;
-           ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_STRING_TYPE     .OR.;
-           ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DATETIME_TYPE
-         cType := "C"
+      CASE MYSQL_DATE_TYPE
+         RETURN "D"
 
-      CASE ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE
-         cType := "N"
+      CASE MYSQL_BLOB_TYPE
+      CASE MYSQL_MEDIUM_BLOB_TYPE
+         RETURN "M"
 
-      CASE ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_MEDIUM_BLOB_TYPE
-         cType := "M"
-
-      OTHERWISE
-         cType := "U"
-
-      ENDCASE
+      ENDSWITCH
    ENDIF
 
-   RETURN cType
+   RETURN "U"
 
 
 /* ----------------------------------------------------------------------------------------*/
@@ -765,8 +756,8 @@ METHOD FieldType( nNum ) CLASS TMySQLQuery
 //       SELECT * FROM ... was issued
 CREATE CLASS TMySQLTable FROM TMySQLQuery
 
-   DATA  cTable               // name of table
-   DATA  aOldValue         //  keeps a copy of old value
+   VAR   cTable               // name of table
+   VAR   aOldValue         //  keeps a copy of old value
 
    METHOD   New( nSocket, cQuery, cTableName )
    METHOD   GetRow( nRow )
@@ -857,8 +848,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
    ::lError := .F.
 
-   DO CASE
-   CASE oRow == NIL // default Current row
+   IF oRow == NIL // default Current row
 
       FOR i := 1 TO  ::nNumFields
 
@@ -912,7 +902,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
          ::lError := .T.
       ENDIF
 
-   CASE oRow != NIL
+   ELSE
 
       IF oRow:cTable == ::cTable
 
@@ -965,7 +955,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
             ::lError := .T.
          ENDIF
       ENDIF
-   ENDCASE
+   ENDIF
 
    RETURN !::lError
 
@@ -982,8 +972,7 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
    DEFAULT lRefresh TO .T.
 
    // is this a row of this table ?
-   DO CASE
-   CASE orow == NIL
+   IF oRow == NIL
 
       //DAVID:
       IF lOldRecord
@@ -1023,7 +1012,8 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
          ::lError := .T.
       ENDIF
 
-   CASE oRow != NIL
+   ELSE
+
       IF oRow:cTable == ::cTable
 
          //DAVID:
@@ -1058,7 +1048,7 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
             ::lError := .T.
          ENDIF
       ENDIF
-   ENDCASE
+   ENDIF
 
    RETURN !::lError
 
@@ -1073,8 +1063,7 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
    //DAVID: too many ::refresh() can slow some processes, so we can desactivate it by parameter
    DEFAULT lRefresh TO .T.
 
-   DO CASE
-   CASE oRow == NIL // default Current row
+   IF oRow == NIL // default Current row
 
       // field names
       FOR i := 1 TO ::nNumFields
@@ -1117,7 +1106,7 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
          ::lError := .T.
       ENDIF
 
-   CASE oRow != NIL
+   ELSE
 
       IF oRow:cTable == ::cTable
 
@@ -1166,7 +1155,7 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
          ENDIF
       ENDIF
 
-   ENDCASE
+   ENDIF
 
    RETURN .F.
 
@@ -1183,34 +1172,39 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
    // crate an array of empty fields
    FOR i := 1 TO ::nNumFields
 
-      DO CASE
-      CASE ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_STRING_TYPE     .OR. ;
-           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_VAR_STRING_TYPE .OR. ;
-           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_BLOB_TYPE       .OR. ;
-           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DATETIME_TYPE
+      SWITCH ::aFieldStruct[i][MYSQL_FS_TYPE]
+      CASE MYSQL_STRING_TYPE
+      CASE MYSQL_VAR_STRING_TYPE
+      CASE MYSQL_BLOB_TYPE
+      CASE MYSQL_DATETIME_TYPE
          aRow[i] := ""
+         EXIT
 
-      CASE ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE      .OR. ;
-           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE .OR. ;
-           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE .OR. ;
-           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE .OR. ;
-           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DECIMAL_TYPE
+      CASE MYSQL_SHORT_TYPE
+      CASE MYSQL_LONG_TYPE
+      CASE MYSQL_LONGLONG_TYPE
+      CASE MYSQL_INT24_TYPE
+      CASE MYSQL_DECIMAL_TYPE
          aRow[i] := 0
+         EXIT
 
-      CASE ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_TINY_TYPE
+      CASE MYSQL_TINY_TYPE
          aRow[i] := .F.
+         EXIT
 
-      CASE ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE .OR. ;
-           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_FLOAT_TYPE
+      CASE MYSQL_DOUBLE_TYPE
+      CASE MYSQL_FLOAT_TYPE
          aRow[i] := 0.0
+         EXIT
 
-      CASE ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DATE_TYPE
+      CASE MYSQL_DATE_TYPE
          aRow[i] := hb_SToD( "" )
+         EXIT
 
       OTHERWISE
          aRow[i] := NIL
 
-      ENDCASE
+      ENDSWITCH
    NEXT
 
    //DAVID:
@@ -1328,13 +1322,13 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLTable
 // Every available MySQL server
 CREATE CLASS TMySQLServer
 
-   DATA  nSocket                 // connection handle to server (currently pointer to a MYSQL structure)
-   DATA  cServer                 // server name
-   DATA  cDBName                 // Selected DB
-   DATA  cUser                   // user accessing db
-   DATA  cPassword               // his/her password
-   DATA  lError                  // .T. if occurred an error
-   DATA  cCreateQuery
+   VAR   nSocket                 // connection handle to server (currently pointer to a MYSQL structure)
+   VAR   cServer                 // server name
+   VAR   cDBName                 // Selected DB
+   VAR   cUser                   // user accessing db
+   VAR   cPassword               // his/her password
+   VAR   lError                  // .T. if occurred an error
+   VAR   cCreateQuery
 
    METHOD   New( cServer, cUser, cPassword )   // Opens connection to a server, returns a server object
    METHOD   Destroy()                         // Closes connection to server
@@ -1445,14 +1439,17 @@ METHOD CreateTable( cTable, aStruct, cPrimaryKey, cUniqueKey, cAuto ) CLASS TMyS
    ::cCreateQuery := "CREATE TABLE " + Lower( cTable ) + " ("
 
    FOR i := 1 TO Len( aStruct )
-      DO CASE
-      CASE aStruct[i][DBS_TYPE] == "C"
+
+      SWITCH aStruct[i][DBS_TYPE]
+      CASE "C"
          ::cCreateQuery += aStruct[i][DBS_NAME] + " char(" + hb_NToS( aStruct[i][DBS_LEN]) + ")" + Eval( cNN, aStruct[i] ) + iif( aStruct[i][DBS_NAME] == cPrimaryKey, " NOT NULL ", "" ) + ","
+         EXIT
 
-      CASE aStruct[i][DBS_TYPE] == "M"
+      CASE "M"
          ::cCreateQuery += aStruct[i][DBS_NAME] + " text" + Eval( cNN, aStruct[i] ) + ","
+         EXIT
 
-      CASE aStruct[i][DBS_TYPE] == "N"
+      CASE "N"
          /*
          IF aStruct[i][DBS_DEC] == 0
             ::cCreateQuery += aStruct[i][DBS_NAME] + " int(" + hb_NToS( aStruct[i][DBS_LEN] ) + ")" + Eval( cNN, aStruct[i] ) + iif( aStruct[i][DBS_NAME] == cPrimaryKey, " NOT NULL ", "" ) + iif( aStruct[i][DBS_NAME] == cAuto, " auto_increment ", "" ) + ","
@@ -1475,22 +1472,28 @@ METHOD CreateTable( cTable, aStruct, cPrimaryKey, cUniqueKey, cAuto ) CLASS TMyS
          ELSE
             ::cCreateQuery += aStruct[i][DBS_NAME] + " real(" + hb_NToS( aStruct[i][DBS_LEN] ) + "," + hb_NToS( aStruct[i][DBS_DEC]) + ")" + Eval( cNN, aStruct[i] ) + ","
          ENDIF
-      CASE aStruct[i][DBS_TYPE] == "D"
+         EXIT
+
+      CASE "D"
          ::cCreateQuery += aStruct[i][DBS_NAME] + " date " + Eval( cNN, aStruct[i] ) + ","
+         EXIT
 
-      CASE aStruct[i][DBS_TYPE] == "L"
+      CASE "L"
          ::cCreateQuery += aStruct[i][DBS_NAME] + " tinyint "  + Eval( cNN, aStruct[i] ) + ","
+         EXIT
 
-      CASE aStruct[i][DBS_TYPE] == "B"
+      CASE "B"
          ::cCreateQuery += aStruct[i][DBS_NAME] + " mediumblob "  + Eval( cNN, aStruct[i] ) + ","
+         EXIT
 
-      CASE aStruct[i][DBS_TYPE] == "I"
+      CASE "I"
          ::cCreateQuery += aStruct[i][DBS_NAME] + " mediumint " + Eval( cNN, aStruct[i] ) + ","
+         EXIT
 
       OTHERWISE
          ::cCreateQuery += aStruct[i][DBS_NAME] + " char(" + hb_NToS( aStruct[i][DBS_LEN] ) + ")" + Eval( cNN, aStruct[i] ) + ","
 
-      ENDCASE
+      ENDSWITCH
 
    NEXT
    IF cPrimarykey != NIL
@@ -1642,38 +1645,45 @@ METHOD TableStruct( cTable ) CLASS TMySQLServer
             aSField[DBS_NAME] := Left( aField[MSQL_FS_NAME], 10 )
             aSField[DBS_DEC] := 0
 
-            DO CASE
-            CASE aField[MSQL_FS_TYPE] == MSQL_INT_TYPE
+            SWITCH aField[MSQL_FS_TYPE]
+            CASE MSQL_INT_TYPE
                aSField[DBS_TYPE] := "N"
                aSField[DBS_LEN] := 11
+               EXIT
 
-            CASE aField[MSQL_FS_TYPE] == MSQL_UINT_TYPE
+            CASE MSQL_UINT_TYPE
                aSField[DBS_TYPE] := "L"
                aSField[DBS_LEN] := 1
+               EXIT
 
-            CASE aField[MSQL_FS_TYPE] == MSQL_CHAR_TYPE
+            CASE MSQL_CHAR_TYPE
                aSField[DBS_TYPE] := "C"
                aSField[DBS_LEN] := aField[MSQL_FS_LENGTH]
+               EXIT
 
-            CASE aField[MSQL_FS_TYPE] == MSQL_DATE_TYPE
+            CASE MSQL_DATE_TYPE
                aSField[DBS_TYPE] := "D"
                aSField[DBS_LEN] := aField[MSQL_FS_LENGTH]
+               EXIT
 
-            CASE aField[MSQL_FS_TYPE] == MSQL_REAL_TYPE
+            CASE MSQL_REAL_TYPE
                aSField[DBS_TYPE] := "N"
                aSField[DBS_LEN] := 12
                aSFIeld[DBS_DEC] := 8
+               EXIT
 
-            CASE aField[MSQL_FS_TYPE] == MYSQL_MEDIUM_BLOB_TYPE
+            CASE MYSQL_MEDIUM_BLOB_TYPE
                aSField[DBS_TYPE] := "B"
                aSField[DBS_LEN] := aField[MSQL_FS_LENGTH]
+               EXIT
 
-            CASE aField[MSQL_FS_TYPE] == FIELD_TYPE_INT24
+            CASE FIELD_TYPE_INT24
                aSField[DBS_TYPE] := "I"
                aSField[DBS_LEN] := aField[MSQL_FS_LENGTH]
                aSFIeld[DBS_DEC] := aField[MYSQL_FS_DECIMALS]
+               EXIT
 
-            ENDCASE
+            ENDSWITCH
 
             AAdd( aStruct, aSField )
          ENDIF
@@ -1691,19 +1701,22 @@ STATIC FUNCTION ClipValue2SQL( Value )
 
    LOCAL cValue
 
-   DO CASE
-   CASE ISNUMBER( Value )
+   SWITCH ValType( Value )
+   CASE "N"
       cValue := hb_NToS( Value )
+      EXIT
 
-   CASE ISDATE( Value )
+   CASE "D"
       IF ! Empty( Value )
          /* MySQL dates are like YYYY-MM-DD */
          cValue := "'" + StrZero( Year( Value ), 4 ) + "-" + StrZero( Month( Value ), 2 ) + "-" + StrZero( Day( Value ), 2 ) + "'"
       ELSE
          cValue := "''"
       ENDIF
+      EXIT
 
-   CASE Valtype( Value ) $ "CM"
+   CASE "C"
+   CASE "M"
       IF Empty( Value )
          cValue := "''"
       ELSE
@@ -1711,13 +1724,15 @@ STATIC FUNCTION ClipValue2SQL( Value )
          Value := mysql_escape_string( value )
          cValue += value + "'"
       ENDIF
+      EXIT
 
-   CASE ISLOGICAL( Value )
+   CASE "L"
       cValue := iif( Value, "1", "0" )
+      EXIT
 
    OTHERWISE
       cValue := "''"       // NOTE: Here we lose values we cannot convert
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN cValue

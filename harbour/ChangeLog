@@ -8,6 +8,24 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-27 11:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * ChangeLog
+    * One TOFIX marked as DONE.
+
+  * contrib/hbmysql/tmysql.prg
+    % Optimizations (using SWITCH)
+
+  * contrib/hbqt/qth/QFont.qth
+  * contrib/hbqt/qth/QPen.qth
+  * contrib/hbqt/hbqt_qfont.cpp
+    ! Fixed HB_IS*() macro usage.
+
+  * contrib/hbqt/tests/hbqt.hbp
+    + Added C++ and runtime MinGW lib.
+    ; TOFIX: I still get:
+      harbour/lib/win/mingw/libhbvm.a(fm.o):fm.c:(.text+0x39b): undefined reference to `__mingw_vfprintf'
+    + gui=yes
+
 2009-03-27 02:03 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbqt/hbqt.h
   * harbour/contrib/hbqt/hbqt_qfont.cpp
@@ -25,10 +43,10 @@
   + harbour/contrib/hbqt/qth/QFont.qth
   + harbour/contrib/hbqt/qth/QPen.qth
   + harbour/contrib/hbqt/qth/QWidget.qth
-    + Added .qth contining prototypes and user code to be embedded 
+    + Added .qth contining prototypes and user code to be embedded
       into the resulting .cpp source file.
 
-    /*  
+    /*
        COMPILE  : hbmk2 hbqtgen
        USAGE    : hbqtgen -I<qthHeaderFilesPath> -O<cppSourceFilePath> <qthFile1.qth> <qthFile2.qth> <...>
                   hbqtgen -help
@@ -36,8 +54,8 @@
 
        NEXT     : hbqtgen @QtProjectFile.qtp
 
-       OVERVIEW : .qth 
-  
+       OVERVIEW : .qth
+
 
                      enum Capitalization { MixedCase, AllUppercase, AllLowercase, SmallCaps, Capitalize }
                      enum SpacingType { PercentageSpacing, AbsoluteSpacing }
@@ -132,30 +150,30 @@
                      qreal wordSpacing () const
 
 
-       
-       Comments   :  #  // 
 
-       Enumerators: enum definitions must be included what exists in the 
-                    help documenttaion. It has special significan while 
+       Comments   :  #  //
+
+       Enumerators: enum definitions must be included what exists in the
+                    help documenttaion. It has special significan while
                     parsing the prototypes.
-  
-       UserCode   : Anything contained in <CODE> </CODE> construct will be 
+
+       UserCode   : Anything contained in <CODE> </CODE> construct will be
                     written directly in the .cpp as is. Developer is responsible
                     to insert syntatically correct code. usually constructor
                     function goes here. And may be complex functions be
                     put under it. Also if some special #include command is needed.
 
-       Prototype  : Not all prototypes are included in the source .cpp at the 
-                    moment. I need more help on this front how we detect and 
+       Prototype  : Not all prototypes are included in the source .cpp at the
+                    moment. I need more help on this front how we detect and
                     format the parameters. I am struck specially at something
                     like   <const QFont & other> . Przemek?
 
                     Bottom line: Copy and Paste all prototypes from the docs,
                     generate the .cpp, compile it, check which function raises
                     error, comment it out in .qth with either "//" or "#",
-                    regenerate .cpp until all errors are covered, copy .cpp 
+                    regenerate .cpp until all errors are covered, copy .cpp
                     into production folder.
-                 
+
     */
 
 2009-03-27 10:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
@@ -217,7 +235,7 @@
   * contrib/hbole/tests/sample.odt
     + Updated to latest hbole code.
     ; TOFIX: hbole code doesn't compile with MSVC in default C++
-             even if #define CINTERFACE 1 is enabled.
+             even if #define CINTERFACE 1 is enabled. [DONE]
     ; TOFIX: OpenOffice example fails at some point. It probably
              needs array support.
 

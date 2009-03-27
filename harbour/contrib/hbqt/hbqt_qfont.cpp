@@ -92,7 +92,7 @@ bool bold () const
 */
 HB_FUNC( QT_QFONT_BOLD )
 {
-   hb_retl( hbqt_par_QFont( 1 )->bold(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->bold() );
 }
 
 /*
@@ -100,7 +100,7 @@ Capitalization capitalization () const
 */
 HB_FUNC( QT_QFONT_CAPITALIZATION )
 {
-   hb_retni( hbqt_par_QFont( 1 )->capitalization(  ) );
+   hb_retni( hbqt_par_QFont( 1 )->capitalization() );
 }
 
 /*
@@ -116,7 +116,7 @@ bool exactMatch () const
 */
 HB_FUNC( QT_QFONT_EXACTMATCH )
 {
-   hb_retl( hbqt_par_QFont( 1 )->exactMatch(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->exactMatch() );
 }
 
 /*
@@ -132,7 +132,7 @@ bool fixedPitch () const
 */
 HB_FUNC( QT_QFONT_FIXEDPITCH )
 {
-   hb_retl( hbqt_par_QFont( 1 )->fixedPitch(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->fixedPitch() );
 }
 
 /*
@@ -162,7 +162,7 @@ bool italic () const
 */
 HB_FUNC( QT_QFONT_ITALIC )
 {
-   hb_retl( hbqt_par_QFont( 1 )->italic(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->italic() );
 }
 
 /*
@@ -170,7 +170,7 @@ bool kerning () const
 */
 HB_FUNC( QT_QFONT_KERNING )
 {
-   hb_retl( hbqt_par_QFont( 1 )->kerning(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->kerning() );
 }
 
 /*
@@ -202,7 +202,7 @@ qreal letterSpacing () const
 */
 HB_FUNC( QT_QFONT_LETTERSPACING )
 {
-   hb_retnd( hbqt_par_QFont( 1 )->letterSpacing(  ) );
+   hb_retnd( hbqt_par_QFont( 1 )->letterSpacing() );
 }
 
 /*
@@ -210,7 +210,7 @@ SpacingType letterSpacingType () const
 */
 HB_FUNC( QT_QFONT_LETTERSPACINGTYPE )
 {
-   hb_retni( hbqt_par_QFont( 1 )->letterSpacingType(  ) );
+   hb_retni( hbqt_par_QFont( 1 )->letterSpacingType() );
 }
 
 /*
@@ -218,7 +218,7 @@ bool overline () const
 */
 HB_FUNC( QT_QFONT_OVERLINE )
 {
-   hb_retl( hbqt_par_QFont( 1 )->overline(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->overline() );
 }
 
 /*
@@ -226,7 +226,7 @@ int pixelSize () const
 */
 HB_FUNC( QT_QFONT_PIXELSIZE )
 {
-   hb_retni( hbqt_par_QFont( 1 )->pixelSize(  ) );
+   hb_retni( hbqt_par_QFont( 1 )->pixelSize() );
 }
 
 /*
@@ -234,7 +234,7 @@ int pointSize () const
 */
 HB_FUNC( QT_QFONT_POINTSIZE )
 {
-   hb_retni( hbqt_par_QFont( 1 )->pointSize(  ) );
+   hb_retni( hbqt_par_QFont( 1 )->pointSize() );
 }
 
 /*
@@ -242,7 +242,7 @@ qreal pointSizeF () const
 */
 HB_FUNC( QT_QFONT_POINTSIZEF )
 {
-   hb_retnd( hbqt_par_QFont( 1 )->pointSizeF(  ) );
+   hb_retnd( hbqt_par_QFont( 1 )->pointSizeF() );
 }
 
 /*
@@ -250,7 +250,7 @@ bool rawMode () const
 */
 HB_FUNC( QT_QFONT_RAWMODE )
 {
-   hb_retl( hbqt_par_QFont( 1 )->rawMode(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->rawMode() );
 }
 
 /*
@@ -441,7 +441,7 @@ int stretch () const
 */
 HB_FUNC( QT_QFONT_STRETCH )
 {
-   hb_retni( hbqt_par_QFont( 1 )->stretch(  ) );
+   hb_retni( hbqt_par_QFont( 1 )->stretch() );
 }
 
 /*
@@ -449,7 +449,7 @@ bool strikeOut () const
 */
 HB_FUNC( QT_QFONT_STRIKEOUT )
 {
-   hb_retl( hbqt_par_QFont( 1 )->strikeOut(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->strikeOut() );
 }
 
 /*
@@ -457,7 +457,7 @@ Style style () const
 */
 HB_FUNC( QT_QFONT_STYLE )
 {
-   hb_retni( hbqt_par_QFont( 1 )->style(  ) );
+   hb_retni( hbqt_par_QFont( 1 )->style() );
 }
 
 /*
@@ -465,7 +465,7 @@ StyleHint styleHint () const
 */
 HB_FUNC( QT_QFONT_STYLEHINT )
 {
-   hb_retni( hbqt_par_QFont( 1 )->styleHint(  ) );
+   hb_retni( hbqt_par_QFont( 1 )->styleHint() );
 }
 
 /*
@@ -473,7 +473,7 @@ StyleStrategy styleStrategy () const
 */
 HB_FUNC( QT_QFONT_STYLESTRATEGY )
 {
-   hb_retni( hbqt_par_QFont( 1 )->styleStrategy(  ) );
+   hb_retni( hbqt_par_QFont( 1 )->styleStrategy() );
 }
 
 /*
@@ -489,7 +489,7 @@ bool underline () const
 */
 HB_FUNC( QT_QFONT_UNDERLINE )
 {
-   hb_retl( hbqt_par_QFont( 1 )->underline(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->underline() );
 }
 
 /*
@@ -497,7 +497,7 @@ int weight () const
 */
 HB_FUNC( QT_QFONT_WEIGHT )
 {
-   hb_retni( hbqt_par_QFont( 1 )->weight(  ) );
+   hb_retni( hbqt_par_QFont( 1 )->weight() );
 }
 
 /*
@@ -505,11 +505,8 @@ qreal wordSpacing () const
 */
 HB_FUNC( QT_QFONT_WORDSPACING )
 {
-   hb_retnd( hbqt_par_QFont( 1 )->wordSpacing(  ) );
+   hb_retnd( hbqt_par_QFont( 1 )->wordSpacing() );
 }
-
-
 
 #endif
 /*----------------------------------------------------------------------*/
-
