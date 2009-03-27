@@ -93,17 +93,23 @@
 
 #include <ole2.h>
 
-static HRESULT      s_lOleError = 0;
-
 static PHB_DYNS s_pDyns_hb_oleauto;
 static PHB_DYNS s_pDyns_hObjAccess;
 static PHB_DYNS s_pDyns_hObjAssign;
 
+typedef struct
+{
+   HRESULT  lOleError;
+} HB_OLEDATA, * PHB_OLEDATA;
+
+static HB_TSD_NEW( s_oleData, sizeof( HB_OLEDATA ), NULL, NULL );
+#define hb_getOleData()       ( ( PHB_OLEDATA ) hb_stackGetTSD( &s_oleData ) )
+#define hb_getOleError()      ( hb_getOleData()->lOleError )
+#define hb_setOleError(e)     do { hb_getOleData()->lOleError = (e); } while( 0 )
 
 HB_EXPORT void hb_oleInit( void );  /* TODO: move to some hbole.h */
 
 HB_FUNC_EXTERN( HB_OLEAUTO );
-
 
 static void hb_olecore_init( void* cargo )
 {
@@ -116,7 +122,7 @@ static void hb_olecore_init( void* cargo )
    if( s_pDyns_hObjAccess == s_pDyns_hObjAssign )
    {
       /* Never executed. Just force linkage */
-      HB_FUN_HB_OLEAUTO();
+      HB_FUNC_EXEC( HB_OLEAUTO );
    }
 
    hb_oleInit();
@@ -223,7 +229,7 @@ static void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
       }
 
       case VT_BOOL:
-         hb_itemPutL( pItem, pVariant->n1.n2.n3.boolVal );
+         hb_itemPutL( pItem, pVariant->n1.n2.n3.boolVal ? TRUE : FALSE );
          break;
 
       case VT_DISPATCH:
@@ -284,8 +290,16 @@ static void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
            hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.ullVal );
            break;
 
+      case VT_R4:
+           hb_itemPutND( pItem, ( double ) pVariant->n1.n2.n3.fltVal );
+           break;
+
       case VT_R8:
            hb_itemPutND( pItem, pVariant->n1.n2.n3.dblVal );
+           break;
+
+      case VT_CY:
+           hb_itemPutND( pItem, ( double ) pVariant->n1.n2.n3.cyVal.int64 / 10000 );
            break;
 
       case VT_INT:
@@ -365,14 +379,15 @@ HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    LPVOID      pDisp = NULL; /* IDispatch* */
    const char* cOleName = hb_parc( 1 );
    const char* cID = hb_parc( 2 );
+   HRESULT     lOleError;
 
    if( cOleName )
    {
       cCLSID = AnsiToWide( cOleName );
       if( cOleName[ 0 ] == '{' )
-         s_lOleError = CLSIDFromString( (LPOLESTR) cCLSID, &ClassID );
+         lOleError = CLSIDFromString( (LPOLESTR) cCLSID, &ClassID );
       else
-         s_lOleError = CLSIDFromProgID( (LPCOLESTR) cCLSID, &ClassID );
+         lOleError = CLSIDFromProgID( (LPCOLESTR) cCLSID, &ClassID );
       hb_xfree( cCLSID );
 
       if( cID )
@@ -380,7 +395,7 @@ HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
          if( cID[ 0 ] == '{' )
          {
             cCLSID = AnsiToWide( cID );
-            s_lOleError = CLSIDFromString( (LPOLESTR) cCLSID, &iid );
+            lOleError = CLSIDFromString( (LPOLESTR) cCLSID, &iid );
             hb_xfree( cCLSID );
             fIID = TRUE;
          }
@@ -391,37 +406,35 @@ HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
          }
       }
 
-      if( s_lOleError == S_OK )
-         s_lOleError = CoCreateInstance( HB_ID_REF( ClassID ), NULL, CLSCTX_SERVER, fIID ? HB_ID_REF( iid ) : HB_ID_REF( IID_IDispatch ), &pDisp );
+      if( lOleError == S_OK )
+         lOleError = CoCreateInstance( HB_ID_REF( ClassID ), NULL, CLSCTX_SERVER, fIID ? HB_ID_REF( iid ) : HB_ID_REF( IID_IDispatch ), &pDisp );
    }
    else
-      s_lOleError = CO_E_CLASSSTRING;
+      lOleError = CO_E_CLASSSTRING;
 
+   hb_setOleError( lOleError );
    hb_retptr( pDisp );
 }
 
 
 HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 {
-   BSTR          wCLSID;
-   IID           ClassID, iid;
-   BOOL          fIID = FALSE;
-   LPVOID        pDisp = NULL; /* IDispatch* */
-   IUnknown*     pUnk = NULL;
-   const char*   cOleName = hb_parc( 1 );
-   const char*   cID = hb_parc( 2 );
+   BSTR        wCLSID;
+   IID         ClassID, iid;
+   BOOL        fIID = FALSE;
+   LPVOID      pDisp = NULL; /* IDispatch* */
+   IUnknown*   pUnk = NULL;
+   const char* cOleName = hb_parc( 1 );
+   const char* cID = hb_parc( 2 );
+   HRESULT     lOleError;
 
    if( cOleName )
    {
-      s_lOleError = S_OK;
-
       wCLSID = (BSTR) AnsiToWide( (LPSTR) cOleName );
-
       if( cOleName[ 0 ] == '{' )
-         s_lOleError = CLSIDFromString( wCLSID, (LPCLSID) &ClassID );
+         lOleError = CLSIDFromString( wCLSID, (LPCLSID) &ClassID );
       else
-         s_lOleError = CLSIDFromProgID( wCLSID, (LPCLSID) &ClassID );
-
+         lOleError = CLSIDFromProgID( wCLSID, (LPCLSID) &ClassID );
       hb_xfree( wCLSID );
 
       if( cID )
@@ -429,7 +442,7 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
          if( cID[ 0 ] == '{' )
          {
             wCLSID = (BSTR) AnsiToWide( (LPSTR) cID );
-            s_lOleError = CLSIDFromString( wCLSID, &iid );
+            lOleError = CLSIDFromString( wCLSID, &iid );
             hb_xfree( wCLSID );
             fIID = TRUE;
          }
@@ -440,21 +453,22 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
          }
       }
 
-      if( s_lOleError == S_OK )
+      if( lOleError == S_OK )
       {
-         s_lOleError = GetActiveObject( HB_ID_REF( ClassID ), NULL, &pUnk );
+         lOleError = GetActiveObject( HB_ID_REF( ClassID ), NULL, &pUnk );
 
-         if ( s_lOleError == S_OK )
+         if ( lOleError == S_OK )
 #if HB_OLE_C_API
-            s_lOleError = pUnk->lpVtbl->QueryInterface( pUnk, fIID ? &iid : &IID_IDispatch, &pDisp );
+            lOleError = pUnk->lpVtbl->QueryInterface( pUnk, fIID ? &iid : &IID_IDispatch, &pDisp );
 #else
-            s_lOleError = pUnk->QueryInterface( fIID ? iid : IID_IDispatch, &pDisp );
+            lOleError = pUnk->QueryInterface( fIID ? iid : IID_IDispatch, &pDisp );
 #endif
       }
    }
    else
-      s_lOleError = CO_E_CLASSSTRING;
+      lOleError = CO_E_CLASSSTRING;
 
+   hb_setOleError( lOleError );
    hb_retptr( pDisp );
 }
 
@@ -462,28 +476,30 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 HB_FUNC( OLERELEASE )
 {
    IDispatch * pDisp = ( IDispatch* ) hb_parptr( 1 );
+   HRESULT     lOleError;
 
    if( pDisp )
 #if HB_OLE_C_API
-      s_lOleError = ( HRESULT ) pDisp->lpVtbl->Release( pDisp );
+      lOleError = ( HRESULT ) pDisp->lpVtbl->Release( pDisp );
 #else
-      s_lOleError = ( HRESULT ) pDisp->Release();
+      lOleError = ( HRESULT ) pDisp->Release();
 #endif
    else
-      s_lOleError = E_INVALIDARG;
-   hb_retl( s_lOleError == S_OK  );
+      lOleError = E_INVALIDARG;
+   hb_setOleError( lOleError );
+   hb_retl( lOleError == S_OK  );
 }
 
 
 HB_FUNC( OLEERROR )
 {
-   hb_retnl( s_lOleError );
+   hb_retnl( hb_getOleError() );
 }
 
 
 HB_FUNC( OLEERRORTEXT )
 {
-   switch( s_lOleError )
+   switch( hb_getOleError() )
    {
       case S_OK:                    hb_retc_null();                        break;
       case CO_E_CLASSSTRING:        hb_retc( "CO_E_CLASSSTRING" );         break;
@@ -521,6 +537,7 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
    VARIANTARG  RetVal;
    EXCEPINFO   excep;
    UINT        uiArgErr;
+   HRESULT     lOleError;
 
    /* Get object handle */
    hb_vmPushDynSym( s_pDyns_hObjAccess );
@@ -543,14 +560,14 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
    {
       pMemberArray = &szMethodWide[ 1 ];
 #if HB_OLE_C_API
-      s_lOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, &pMemberArray,
-                                                  1, LOCALE_USER_DEFAULT, &dispid );
+      lOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, &pMemberArray,
+                                                1, LOCALE_USER_DEFAULT, &dispid );
 #else
-      s_lOleError = pDisp->GetIDsOfNames( IID_NULL, &pMemberArray,
-                                          1, LOCALE_USER_DEFAULT, &dispid );
+      lOleError = pDisp->GetIDsOfNames( IID_NULL, &pMemberArray,
+                                        1, LOCALE_USER_DEFAULT, &dispid );
 #endif
 
-      if ( s_lOleError == S_OK )
+      if( lOleError == S_OK )
       {
          DISPID     lPropPut = DISPID_PROPERTYPUT;
 
@@ -560,19 +577,20 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
          dispparam.cNamedArgs = 1;
 
 #if HB_OLE_C_API
-         s_lOleError = pDisp->lpVtbl->Invoke( pDisp, dispid, &IID_NULL,
-                                              LOCALE_USER_DEFAULT,
-                                              DISPATCH_PROPERTYPUT, &dispparam,
-                                              NULL, &excep, &uiArgErr );
+         lOleError = pDisp->lpVtbl->Invoke( pDisp, dispid, &IID_NULL,
+                                            LOCALE_USER_DEFAULT,
+                                            DISPATCH_PROPERTYPUT, &dispparam,
+                                            NULL, &excep, &uiArgErr );
 #else
-         s_lOleError = pDisp->Invoke( dispid, IID_NULL,
-                                      LOCALE_USER_DEFAULT,
-                                      DISPATCH_PROPERTYPUT, &dispparam,
-                                      NULL, &excep, &uiArgErr );
+         lOleError = pDisp->Invoke( dispid, IID_NULL,
+                                    LOCALE_USER_DEFAULT,
+                                    DISPATCH_PROPERTYPUT, &dispparam,
+                                    NULL, &excep, &uiArgErr );
 #endif
          FreeParams( &dispparam );
          hb_xfree( szMethodWide );
          hb_ret();
+         hb_setOleError( lOleError );
          return;
       }
    }
@@ -581,30 +599,30 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
 
    pMemberArray = szMethodWide;
 #if HB_OLE_C_API
-   s_lOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, &pMemberArray,
-                                               1, LOCALE_USER_DEFAULT, &dispid );
+   lOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, &pMemberArray,
+                                             1, LOCALE_USER_DEFAULT, &dispid );
 #else
-   s_lOleError = pDisp->GetIDsOfNames( IID_NULL, &pMemberArray,
-                                       1, LOCALE_USER_DEFAULT, &dispid );
+   lOleError = pDisp->GetIDsOfNames( IID_NULL, &pMemberArray,
+                                     1, LOCALE_USER_DEFAULT, &dispid );
 #endif
    hb_xfree( szMethodWide );
 
-   if ( s_lOleError == S_OK )
+   if( lOleError == S_OK )
    {
       memset( &excep, 0, sizeof( excep ) );
       VariantInit( &RetVal );
       GetParams( &dispparam );
 
 #if HB_OLE_C_API
-      s_lOleError = pDisp->lpVtbl->Invoke( pDisp, dispid, &IID_NULL,
-                                           LOCALE_USER_DEFAULT,
-                                           DISPATCH_PROPERTYGET | DISPATCH_METHOD,
-                                           &dispparam, &RetVal, &excep, &uiArgErr );
+      lOleError = pDisp->lpVtbl->Invoke( pDisp, dispid, &IID_NULL,
+                                         LOCALE_USER_DEFAULT,
+                                         DISPATCH_PROPERTYGET | DISPATCH_METHOD,
+                                         &dispparam, &RetVal, &excep, &uiArgErr );
 #else
-      s_lOleError = pDisp->Invoke( dispid, IID_NULL,
-                                   LOCALE_USER_DEFAULT,
-                                   DISPATCH_PROPERTYGET | DISPATCH_METHOD,
-                                   &dispparam, &RetVal, &excep, &uiArgErr );
+      lOleError = pDisp->Invoke( dispid, IID_NULL,
+                                 LOCALE_USER_DEFAULT,
+                                 DISPATCH_PROPERTYGET | DISPATCH_METHOD,
+                                 &dispparam, &RetVal, &excep, &uiArgErr );
 #endif
       FreeParams( &dispparam );
 
@@ -612,8 +630,11 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
       if( RetVal.n1.n2.vt != VT_DISPATCH )
          VariantClear( &RetVal );
 
+      hb_setOleError( lOleError );
       return;
    }
+
+   hb_setOleError( lOleError );
 
    /* TODO: add description containing TypeName of the object */
    if( szMethod[ 0 ] == '_' )

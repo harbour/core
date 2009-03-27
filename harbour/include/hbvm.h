@@ -61,11 +61,16 @@ HB_EXTERN_BEGIN
 extern HB_EXPORT void     hb_vmInit( BOOL bStartMainProc );
 extern HB_EXPORT int      hb_vmQuit( void ); /* Immediately quits the virtual machine, return ERRORLEVEL code */
 
-/* registration AtInit and AtExit functions - they are executed
- * just before (after) .prg INIT (EXIT) procedures.
+/* registration AtInit, AtExit and AtQuit functions.
+ * AtInit functions are executed just before .prg INIT procedures.
+ * AtExit functions are executed just after .prg EXIT procedures.
+ * AtQuit functions are executed after deallocating all HVM items and
+ * disabling .prg destructors. They can make final cleanup at C level
+ * but should not reenter HVM.
  */
 extern HB_EXPORT void     hb_vmAtInit( HB_INIT_FUNC pFunc, void * cargo );
 extern HB_EXPORT void     hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo );
+extern HB_EXPORT void     hb_vmAtQuit( HB_INIT_FUNC pFunc, void * cargo );
 
 /* Harbour virtual machine functions */
 extern HB_EXPORT void     hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols ) HB_FLATTEN_ATTR;  /* invokes the virtual machine */

@@ -80,7 +80,7 @@ HB_EXPORT void hb_oleInit()
    if( ! s_iOleInit )
    {
       OleInitialize( NULL );
-      hb_vmAtExit( hb_ole_exit, NULL );
+      hb_vmAtQuit( hb_ole_exit, NULL );
    }
    s_iOleInit++;
 }

@@ -8,6 +8,22 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-27 14:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbvm.h
+  * harbour/source/vm/hvm.c
+    + added void hb_vmAtQuit( HB_INIT_FUNC pFunc, void * cargo );
+      AtQuit functions are executed after deallocating all HVM items and
+      disabling .prg destructors. They can make final cleanup at C level
+      but should not reenter HVM.
+
+  * harbour/contrib/hbole/oleinit.c
+    * use hb_vmAtQuit() instead of hb_vmAtExit() - it resolves the problem
+      with executing destructors to OLE objects after closing OLE connection.
+
+  * harbour/contrib/hbole/olecore.c
+    + added translation for VT_R4 and VT_CY values.
+    ! fixed MT support by moving OLE error code to TSD
+
 2009-03-27 12:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbqt/tests/hbqt.hbp
     + Removed mingw32 lib not necessary.

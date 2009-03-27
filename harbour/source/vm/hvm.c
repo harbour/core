@@ -290,29 +290,27 @@ static int        s_VMCancelKeyEx = HB_K_ALT_C;
 
 static PHB_FUNC_LIST s_InitFunctions = NULL;
 static PHB_FUNC_LIST s_ExitFunctions = NULL;
+static PHB_FUNC_LIST s_QuitFunctions = NULL;
 
-void hb_vmAtInit( HB_INIT_FUNC pFunc, void * cargo )
+static void hb_vmAddModuleFunction( PHB_FUNC_LIST * pLstPtr, HB_INIT_FUNC pFunc, void * cargo )
 {
    PHB_FUNC_LIST pLst = ( PHB_FUNC_LIST ) hb_xgrab( sizeof( HB_FUNC_LIST ) );
 
    pLst->pFunc = pFunc;
    pLst->cargo = cargo;
    HB_ATINIT_LOCK
-   pLst->pNext = s_InitFunctions;
-   s_InitFunctions = pLst;
+   pLst->pNext = *pLstPtr;
+   *pLstPtr = pLst;
    HB_ATINIT_UNLOCK
 }
 
-void hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo )
+static void hb_vmDoModuleFunctions( PHB_FUNC_LIST pLst )
 {
-   PHB_FUNC_LIST pLst = ( PHB_FUNC_LIST ) hb_xgrab( sizeof( HB_FUNC_LIST ) );
-
-   pLst->pFunc = pFunc;
-   pLst->cargo = cargo;
-   HB_ATINIT_LOCK
-   pLst->pNext = s_ExitFunctions;
-   s_ExitFunctions = pLst;
-   HB_ATINIT_UNLOCK
+   while( pLst )
+   {
+      pLst->pFunc( pLst->cargo );
+      pLst = pLst->pNext;
+   }
 }
 
 static void hb_vmCleanModuleFunctions( void )
@@ -331,28 +329,42 @@ static void hb_vmCleanModuleFunctions( void )
       s_ExitFunctions = pLst->pNext;
       hb_xfree( pLst );
    }
+   while( s_QuitFunctions )
+   {
+      pLst = s_QuitFunctions;
+      s_QuitFunctions = pLst->pNext;
+      hb_xfree( pLst );
+   }
+}
+
+void hb_vmAtInit( HB_INIT_FUNC pFunc, void * cargo )
+{
+   hb_vmAddModuleFunction( &s_InitFunctions, pFunc, cargo );
+}
+
+void hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo )
+{
+   hb_vmAddModuleFunction( &s_ExitFunctions, pFunc, cargo );
+}
+
+void hb_vmAtQuit( HB_INIT_FUNC pFunc, void * cargo )
+{
+   hb_vmAddModuleFunction( &s_QuitFunctions, pFunc, cargo );
 }
 
 static void hb_vmDoModuleInitFunctions( void )
 {
-   PHB_FUNC_LIST pLst = s_InitFunctions;
-
-   while( pLst )
-   {
-      pLst->pFunc( pLst->cargo );
-      pLst = pLst->pNext;
-   }
+   hb_vmDoModuleFunctions( s_InitFunctions );
 }
 
 static void hb_vmDoModuleExitFunctions( void )
 {
-   PHB_FUNC_LIST pLst = s_ExitFunctions;
+   hb_vmDoModuleFunctions( s_ExitFunctions );
+}
 
-   while( pLst )
-   {
-      pLst->pFunc( pLst->cargo );
-      pLst = pLst->pNext;
-   }
+static void hb_vmDoModuleQuitFunctions( void )
+{
+   hb_vmDoModuleFunctions( s_QuitFunctions );
 }
 
 
@@ -1032,11 +1044,8 @@ int hb_vmQuit( void )
    hb_vmTerminateThreads();
 #endif
 
-   hb_vmDoExitFunctions(); /* process defined EXIT functions */
-
-   /* process AtExit registered functions */
-   hb_vmDoModuleExitFunctions();
-   hb_vmCleanModuleFunctions();
+   hb_vmDoExitFunctions();          /* process defined EXIT functions */
+   hb_vmDoModuleExitFunctions();    /* process AtExit registered functions */
 
    /* release all known items stored in subsystems */
    hb_itemClear( hb_stackReturnItem() );
@@ -1079,14 +1088,17 @@ int hb_vmQuit( void )
 
    /* release all remaining items */
 
-   hb_conRelease();                       /* releases Console */
-   hb_vmReleaseLocalSymbols();            /* releases the local modules linked list */
-   hb_dynsymRelease();                    /* releases the dynamic symbol table */
+   hb_conRelease();                 /* releases Console */
+   hb_vmReleaseLocalSymbols();      /* releases the local modules linked list */
+   hb_dynsymRelease();              /* releases the dynamic symbol table */
 #ifndef HB_CDP_SUPPORT_OFF
-   hb_cdpReleaseAll();                    /* releases codepages */
+   hb_cdpReleaseAll();              /* releases codepages */
 #endif
    hb_itemClear( hb_stackReturnItem() );
    hb_gcCollectAll( TRUE );
+
+   hb_vmDoModuleQuitFunctions();    /* process AtQuit registered functions */
+   hb_vmCleanModuleFunctions();
 
 #if defined( HB_MT_VM )
    hb_vmStackRelease();       /* release HVM stack and remove it from linked HVM stacks list */
