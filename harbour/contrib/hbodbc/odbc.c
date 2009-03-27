@@ -135,7 +135,7 @@ HB_FUNC( SQLDRIVERCONNECT ) /* hDbc, @cConnectString --> nRetCode */
                            ( SQLTCHAR * ) lpStr,
                            ( SQLSMALLINT ) hb_parclen( 2 ),
                            ( SQLTCHAR * ) buffer,
-                           ( SQLSMALLINT ) sizeof( buffer ),
+                           ( SQLSMALLINT ) HB_SIZEOFARRAY( buffer ),
                            ( SQLSMALLINT * ) &wLen,
                            ( SQLUSMALLINT ) SQL_DRIVER_COMPLETE );
    HB_TCHAR_FREE( lpStr );
@@ -153,7 +153,7 @@ HB_FUNC( SQLDRIVERCONNECT ) /* hDbc, @cConnectString --> nRetCode */
                            ( SQLTCHAR * ) hb_parcx( 2 ),
                            ( SQLSMALLINT ) hb_parclen( 2 ),
                            ( SQLTCHAR * ) buffer,
-                           ( SQLSMALLINT ) sizeof( buffer ),
+                           ( SQLSMALLINT ) HB_SIZEOFARRAY( buffer ),
                            ( SQLSMALLINT * ) &wLen,
                            ( SQLUSMALLINT ) SQL_DRIVER_COMPLETE );
    hb_storc( ( char * ) buffer, 3 );
@@ -445,7 +445,7 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
    SQLINTEGER lError;
    SQLSMALLINT wLen;
    SQLTCHAR buffer[ 256 ];
-   SQLTCHAR szErrorMsg[ 256 ];
+   SQLTCHAR szErrorMsg[ SQL_MAX_MESSAGE_LENGTH + 1 ];
    hb_retni( SQLError( ( SQLHENV ) hb_parptr( 1 ),
                        ( SQLHDBC ) hb_parptr( 2 ),
                        ( SQLHSTMT ) ( HB_PTRUINT ) hb_parnint( 3 ),
