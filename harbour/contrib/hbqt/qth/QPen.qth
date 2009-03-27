@@ -1,0 +1,47 @@
+
+<CODE>
+/*
+QPen ()
+QPen ( Qt::PenStyle style )
+QPen ( const QColor & color )
+QPen ( const QBrush & brush, qreal width, Qt::PenStyle style = Qt::SolidLine, Qt::PenCapStyle cap = Qt::SquareCap, Qt::PenJoinStyle join = Qt::BevelJoin )
+QPen ( const QPen & pen )
+~QPen ()
+*/
+HB_FUNC( QT_QPEN )
+{
+   if( hb_pcount() == 1 && HB_IS_NUMERIC( 1 ) )
+   {
+      hb_retptr( ( QPen* ) new QPen() );
+   }
+   else
+   {
+      hb_retptr( ( QPen* ) new QPen() );
+   }
+}
+
+</CODE>
+
+QBrush brush () const
+Qt::PenCapStyle capStyle () const
+QColor color () const
+qreal dashOffset () const
+QVector<qreal> dashPattern () const
+bool isCosmetic () const
+bool isSolid () const
+Qt::PenJoinStyle joinStyle () const
+qreal miterLimit () const
+void setBrush ( const QBrush & brush )
+void setCapStyle ( Qt::PenCapStyle style )
+void setColor ( const QColor & color )
+void setCosmetic ( bool cosmetic )
+void setDashOffset ( qreal offset )
+void setDashPattern ( const QVector<qreal> & pattern )
+void setJoinStyle ( Qt::PenJoinStyle style )
+void setMiterLimit ( qreal limit )
+void setStyle ( Qt::PenStyle style )
+void setWidth ( int width )
+void setWidthF ( qreal width )
+Qt::PenStyle style () const
+int width () const
+qreal widthF () const

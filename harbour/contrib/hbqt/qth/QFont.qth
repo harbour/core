@@ -1,0 +1,95 @@
+# 
+
+enum Capitalization { MixedCase, AllUppercase, AllLowercase, SmallCaps, Capitalize }
+enum SpacingType { PercentageSpacing, AbsoluteSpacing }
+enum Stretch { UltraCondensed, ExtraCondensed, Condensed, SemiCondensed, ..., UltraExpanded }
+enum Style { StyleNormal, StyleItalic, StyleOblique }
+enum StyleHint { AnyStyle, SansSerif, Helvetica, Serif, ..., System }
+enum StyleStrategy { PreferDefault, PreferBitmap, PreferDevice, PreferOutline, ..., PreferQuality }
+enum Weight { Light, Normal, DemiBold, Bold, Black }
+
+
+
+<CODE>
+
+/*
+QFont ()
+QFont ( const QString & family, int pointSize = -1, int weight = -1, bool italic = false )
+QFont ( const QFont & font, QPaintDevice * pd )
+QFont ( const QFont & font )
+*/
+HB_FUNC( QT_QFONT )
+{
+   if( HB_IS_STRING( 1 ) )
+   {
+      hb_retptr( ( QFont* ) new QFont() );
+   }
+   else
+   {
+      hb_retptr( ( QFont* ) new QFont( hbqt_par_QString( 1 ), 
+                                       HB_IS_NUMERIC( 2 ) ? hb_parni( 2 ) : -1, 
+                                       HB_IS_NUMERIC( 3 ) ? hb_parni( 3 ) : -1, 
+                                       hb_parl( 4 ) ) );
+   }
+}
+
+</CODE>
+
+
+
+bool bold () const
+Capitalization capitalization () const
+QString defaultFamily () const
+bool exactMatch () const
+QString family () const
+bool fixedPitch () const
+FT_Face freetypeFace () const
+bool fromString ( const QString & descrip )
+HFONT handle () const
+//bool isCopyOf ( const QFont & f ) const
+bool italic () const
+bool kerning () const
+QString key () const
+QString lastResortFamily () const
+QString lastResortFont () const
+qreal letterSpacing () const
+SpacingType letterSpacingType () const
+//quint32 macFontID () const
+bool overline () const
+int pixelSize () const
+int pointSize () const
+qreal pointSizeF () const
+bool rawMode () const
+QString rawName () const
+QFont resolve ( const QFont & other ) const
+void setBold ( bool enable )
+void setCapitalization ( Capitalization caps )
+void setFamily ( const QString & family )
+void setFixedPitch ( bool enable )
+void setItalic ( bool enable )
+void setKerning ( bool enable )
+void setLetterSpacing ( SpacingType type, qreal spacing )
+void setOverline ( bool enable )
+void setPixelSize ( int pixelSize )
+void setPointSize ( int pointSize )
+void setPointSizeF ( qreal pointSize )
+void setRawMode ( bool enable )
+void setRawName ( const QString & name )
+void setStretch ( int factor )
+void setStrikeOut ( bool enable )
+void setStyle ( Style style )
+void setStyleHint ( StyleHint hint, StyleStrategy strategy = PreferDefault )
+void setStyleStrategy ( StyleStrategy s )
+void setUnderline ( bool enable )
+void setWeight ( int weight )
+void setWordSpacing ( qreal spacing )
+int stretch () const
+bool strikeOut () const
+Style style () const
+StyleHint styleHint () const
+StyleStrategy styleStrategy () const
+QString toString () const
+bool underline () const
+int weight () const
+qreal wordSpacing () const
+
