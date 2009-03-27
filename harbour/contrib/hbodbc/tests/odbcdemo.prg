@@ -8,11 +8,10 @@ PROCEDURE Main()
    LOCAL nOp
    LOCAL dsFunctions
    LOCAL cConStr
-   LOCAL cDir := hb_DirBase()
 
    LOCAL i
 
-   cConStr := "DBQ=" + hb_FNameMerge( cDir, "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
+   cConStr := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
 
    dsFunctions := TODBC():New( cConStr )
 

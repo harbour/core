@@ -31,6 +31,7 @@
 #include   "hbgtinfo.ch"
 #include    "hbgtwvg.ch"
 #include   "wvgparts.ch"
+#include "setcurs.ch"
 
 REQUEST DbfCdx
 REQUEST DbfNtx
@@ -772,7 +773,7 @@ FUNCTION WvtMyBrowse_X( oCrt )
    LOCAL nLeft   :=  3
    LOCAL nBottom := maxrow() - 2
    LOCAL nRight  := maxcol() - 3
-   LOCAL nCursor := setCursor( 0 )
+   LOCAL nCursor := setCursor( SC_NONE )
    LOCAL nRow    := row()
    LOCAL nCol    := col()
    LOCAL cColor  := SetColor( "N/W*,N/GR*,,,N/W*" )
@@ -3939,7 +3940,7 @@ PROCEDURE GCUIConsole( oCrt )
    //
    hTxt := Wvg_TextBox( 3,57,16,75, {10,10,-10,-10}, 'This is first TextBox Line!', 2, 2 )
    //
-   Wvg_Image( 15,36,16,42, {-3,-3,3,3}, GOBJ_IMAGESOURCE_FILE, 'Vouch1.bmp' )
+   Wvg_Image( 15,36,16,42, {-3,-3,3,3}, GOBJ_IMAGESOURCE_FILE, 'vouch1.bmp' )
    Wvg_BoxRaised( 15,36,16,42,{-2,-2,2,2} )
    //
    Wvg_ShadedRect( 1,54,18,79, { -5,-5,5,5 }, 0, {65000,21000,7000,56000}, {255,32255,16000,32500} )

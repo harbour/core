@@ -63,6 +63,7 @@
          <param> := IIF(<param> = NIL, <val>, <param> ) ;
          [; <paramn> := IIF(<paramn> = NIL, <valn>, <paramn> ) ]
 #include "inkey.ch"
+#include "setcurs.ch"
 
 
 #ifdef FT_TEST
@@ -352,7 +353,7 @@ FUNCTION FT_BRWSWHL(aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    @ nTop, nLeft CLEAR TO nBottom, nRight
    SetColor(cColorSave)
 
-   nCursSave := SetCursor(0)
+   nCursSave := SetCursor(SC_NONE)
 
    lMore := .t.
    WHILE (lMore)

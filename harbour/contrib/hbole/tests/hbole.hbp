@@ -2,4 +2,4 @@
 # $Id$
 #
 
-{win}libs=hbole ole32 oleaut32
+{win}libs=hbole

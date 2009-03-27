@@ -63,6 +63,7 @@
 
 #include 'hbgtinfo.ch'
 #include 'fileio.ch'
+#include "setcurs.ch"
 
 //----------------------------------------------------------------------//
 
@@ -134,7 +135,7 @@ Function Main( cAddress, cPort, cAppln, cParams, cDirectory )
 
    TrmInitFont()
 
-   SetCursor( 0 )
+   SetCursor( SC_NONE )
    SetColor( 'W/N' )
    SetBlink( .T. )
 
@@ -721,7 +722,7 @@ Static Function DispClock()
 
    if SetClock()
       if !empty( aInfo := SetClockInfo() )
-         nCrs := SetCursor( 0 )
+         nCrs := SetCursor( SC_NONE )
          nRow := row()
          nCol := col()
          DispOutAt( aInfo[ 1 ], aInfo[ 2 ], time(), aInfo[ 3 ] )

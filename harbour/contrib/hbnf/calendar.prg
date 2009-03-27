@@ -96,6 +96,8 @@
  *  $END$
  */
 
+#include "setcurs.ch"
+
 #ifdef FT_TEST
   FUNCTION MAIN()
    local aRet[8], i
@@ -136,8 +138,8 @@ FUNCTION FT_CALENDAR (nRow, nCol, cColor, lShadow, lShowHelp)
  nCol := IIF ( nCol <1 .OR. nCol >63, 63, nCol )   //check col bounds
 
  cSavColor   := SETCOLOR(cColor)  //save current and set display color
- cSaveScreen := SAVESCREEN ( nRow-1, nCol-1, nRow+3, nCol+17 ) //save screen
- cSaveCursor := SETCURSOR (0)     // save current and turn off cursor
+ cSaveScreen := SAVESCREEN( nRow-1, nCol-1, nRow+3, nCol+17 ) //save screen
+ cSaveCursor := SETCURSOR( SC_NONE )     // save current and turn off cursor
 
  IF lShadow
     @nRow-1,nCol-1 to nRow+2, nCol+15
@@ -231,4 +233,3 @@ FUNCTION FT_CALENDAR (nRow, nCol, cColor, lShadow, lShowHelp)
  RETURN ( VAL(SUBSTR(cString,nOffset,nChar)) )
 
 * end of calendar.prg
-

@@ -730,7 +730,7 @@ METHOD LoadData( nPos ) CLASS TODBC
 
         CASE SQL_TIMESTAMP
         CASE SQL_DATE
-           uData := SToD( SubStr( uData, 1, 4 ) + SubStr( uData, 6, 2 ) + SubStr( uData, 9, 2 ) )
+           uData := hb_SToD( SubStr( uData, 1, 4 ) + SubStr( uData, 6, 2 ) + SubStr( uData, 9, 2 ) )
            EXIT
 
         CASE SQL_BIT
@@ -750,7 +750,7 @@ METHOD LoadData( nPos ) CLASS TODBC
               uData := StrTran( uData, ",", "." )
               uData := Round( Val( uData ), ::Fields[ i ]:DataSize )
            ENDIF
-           uData := SetNumLen( uData, ::Fields[ i ]:DataSize, ::Fields[ i ]:DataDecs )
+           uData := SQLNumSetLen( uData, ::Fields[ i ]:DataSize, ::Fields[ i ]:DataDecs )
            EXIT
 
         ENDSWITCH

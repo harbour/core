@@ -1,9 +1,0 @@
-#
-# $Id$
-#
-
-# Used by Harbour core
-{win}libs=kernel32 user32 wsock32 advapi32 gdi32
-# Others
-{win}libs=winspool comctl32 comdlg32 shell32 ole32 oleaut32 uuid odbc32 mpr winmm mapi32
-{win&!bcc}libs=odbccp32

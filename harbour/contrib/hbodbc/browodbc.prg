@@ -60,6 +60,7 @@
 
 #include "common.ch"
 #include "inkey.ch"
+#include "setcurs.ch"
 
 FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
 
@@ -70,12 +71,11 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
    LOCAL lExit := .F.
    LOCAL bAction
    LOCAL oColumn
-   //LOCAL cFName
 
-   //TODO: Check if datasource is open
-   //IF ! Used()
-   //   RETURN .F.
-   //ENDIF
+   // TODO: Check if datasource is open
+// IF ! Used()
+//    RETURN .F.
+// ENDIF
 
    IF PCount() < 4
       nTop    := 1
@@ -84,7 +84,7 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
       nRight  := MaxCol()
    ENDIF
 
-   nOldCursor := SetCursor( 0 )
+   nOldCursor := SetCursor( SC_NONE )
    cOldScreen := SaveScreen( nTop, nLeft, nBottom, nRight )
 
    @ nTop, nLeft TO nBottom, nRight

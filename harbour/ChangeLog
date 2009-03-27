@@ -8,6 +8,56 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-27 01:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+  * contrib/hbole/tests/hbole.hbp
+  * contrib/gtwvg/tests/gtwvg.hbp
+  * contrib/hbwin/tests/hbwin.hbp
+  - utils/hbmk2/examples/winapi.hbp
+    + Added all important Windows system libs to all
+      win compilers in hbmk2.
+    - Removed above libs from .hbp files.
+
+  * contrib/hbodbc/todbc.prg
+  * contrib/hbodbc/browodbc.prg
+  * contrib/hbodbc/odbc.c
+    * Further cleanups.
+      SETNUMLEN() -> SQLNUMSETLEN(). This should probably be a core
+      function by the name HB_NUMSETLEN().
+
+  * contrib/hbole/tests/testole.prg
+  * contrib/hbole/tests/sample.odt
+    + Updated to latest hbole code.
+    ; TOFIX: hbole code doesn't compile with MSVC in default C++
+             even if #define CINTERFACE 1 is enabled.
+    ; TOFIX: OpenOffice example fails at some point. It probably
+             needs array support.
+
+  * contrib/hbole/olecore.c
+    * Minor formatting.
+
+  * contrib/hbqt/hbqt_qabstractitemview.cpp
+    ! Fixed backslash to forward slash.
+
+  * contrib/hbct/tests/ctwtest.prg
+  * contrib/hbnf/dispmsg.prg
+  * contrib/hbnf/pegs.prg
+  * contrib/hbnf/tbwhile.prg
+  * contrib/hbnf/calendar.prg
+  * contrib/gtwvg/tests/demowvg.prg
+  * contrib/examples/terminal/trm_server.prg
+  * contrib/examples/terminal/trm_client.prg
+    ! Using manifest constants.
+
+  * contrib/hbmysql/mysql.c
+  * contrib/hbodbc/odbc.c
+    * Minor cleanup.
+
+  * contrib/hbodbc/tests/odbcdemo.prg
+  * contrib/hbodbc/tests/odbccall.prg
+  * contrib/hbodbc/tests/testodbc.prg
+    * Minor.
+
 2009-03-26 22:01 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbodbc/tests/odbcdemo.prg
   * contrib/hbodbc/tests/testodbc.prg

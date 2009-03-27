@@ -122,6 +122,7 @@
 
 
 #include "inkey.ch"
+#include "setcurs.ch"
 
 // beginning of demo program
 #ifdef FT_TEST
@@ -180,7 +181,7 @@ PROCEDURE Main( cCmdLine )
                              { cWindN,,,,, cWindH } }, "BIOQ" + CHR(27) )
 
    SETCOLOR( "W/N" )
-   SETCURSOR( 1 )
+   SETCURSOR( SC_NORMAL )
    SETBLINK( .T.)
    RESTSCREEN(,,,, cDosScrn )
    SETPOS(nDosRow, nDosCol)
@@ -265,7 +266,7 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
    cOldScreen := SAVESCREEN( nBoxTop, nBoxLeft, nBoxBottom+1, nBoxRight+2 )
 
-   cOldCursor := SETCURSOR( 0 )
+   cOldCursor := SETCURSOR( SC_NONE )
 
    // draw box
    cOldColor := SETCOLOR( aInfo[ 2, LEN( aInfo[2] ) ] )
@@ -333,4 +334,3 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    SETCOLOR( cOldColor )
    SETCURSOR( cOldCursor )
    RETURN xRtnVal
-

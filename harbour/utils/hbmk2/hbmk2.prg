@@ -221,6 +221,8 @@ FUNCTION Main( ... )
    LOCAL s_aLIBSYS
    LOCAL s_aLIBPATH
    LOCAL s_aLIBDYNHAS
+   LOCAL s_aLIBSYSCORE := {}
+   LOCAL s_aLIBSYSMISC := {}
    LOCAL s_aOPTPRG
    LOCAL s_aOPTC
    LOCAL s_aOPTL
@@ -510,6 +512,8 @@ FUNCTION Main( ... )
       cDynLibExt := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
+      s_aLIBSYSCORE := { "user32", "gdi32", "advapi32", "ws2_32" }
+      s_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "ole32", "oleaut32", "uuid", "mpr", "winmm", "mapi32" }
    OTHERWISE
       OutErr( "hbmk: Error: Architecture value unknown: " + t_cARCH + hb_osNewLine() )
       PauseForKey()
@@ -1353,9 +1357,10 @@ FUNCTION Main( ... )
          ENDIF
          IF ! s_lSHARED
             IF t_cCOMP == "mingwce"
-               s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl", "uuid", "ole32" } )
+               s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl" } )
+               s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "uuid", "ole32" } )
             ELSE
-               s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "winspool", "gdi32", "comctl32", "comdlg32", "ole32", "oleaut32", "uuid", "ws2_32" } )
+               s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
             ENDIF
          ENDIF
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
@@ -1502,7 +1507,7 @@ FUNCTION Main( ... )
          IF s_lMAP
             AAdd( s_aOPTL, "OP MAP" )
          ENDIF
-         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "ws2_32" } )
+         s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, { "kernel32" }, s_aLIBSYSCORE, s_aLIBSYSMISC } )
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
                                        "harbour-" + cDL_Version_Alter ),;
                            "hbmainstd",;
@@ -1682,7 +1687,7 @@ FUNCTION Main( ... )
          IF s_lSHARED
             AAdd( s_aOPTL, "/libpath:{DB}" )
          ENDIF
-         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "ws2_32", "advapi32", "gdi32" } )
+         s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
          DO CASE
          CASE t_cCOMP $ "msvc|icc"
             s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
@@ -1766,7 +1771,7 @@ FUNCTION Main( ... )
          IF s_lDEBUG
             AAdd( s_aOPTL, "/debug" )
          ENDIF
-         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "ws2_32", "advapi32", "gdi32" } )
+         s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, { "kernel32" }, s_aLIBSYSCORE, s_aLIBSYSMISC } )
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
                                        "harbour-" + cDL_Version_Alter ),;
                            "hbmainstd",;
@@ -1783,7 +1788,8 @@ FUNCTION Main( ... )
       CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
       CASE t_cARCH == "linux" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wince/ARM on win/x86 */
          IF ! s_lSHARED
-            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl", "uuid", "ole32" } )
+            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl" } )
+            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "uuid", "ole32" } )
          ENDIF
       ENDCASE
 

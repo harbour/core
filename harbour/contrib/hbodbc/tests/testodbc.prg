@@ -18,9 +18,7 @@ PROCEDURE Main()
    LOCAL nRows      := 0
    LOCAL cCode, cFunc, cState, cComm
 
-   LOCAL cDir := hb_DirBase()
-
-   cConstrin := "DBQ=" + hb_FNameMerge( cDir, "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
+   cConstrin := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
 
    ? padc( "*** ODBC ACCESS TEST ***", 80 )
    ?

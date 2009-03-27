@@ -24,7 +24,7 @@ PROCEDURE Main()
    @  6, 25 TO 19, 55 DOUBLE
    @  8, 28 SAY "Test Harbour OLE with..."
 
-   While .t.
+   DO WHILE .T.
       @ 10, 32 PROMPT "MS Excel"
       @ 11, 32 PROMPT "MS Word"
       @ 12, 32 PROMPT "MS Outlook (1)"
@@ -55,7 +55,7 @@ PROCEDURE Main()
       ELSEIF nOption == 8
          EXIT
       ENDIF
-   End
+   ENDDO
 
    SetColor("W/N")
    CLS
@@ -69,40 +69,29 @@ STATIC PROCEDURE Exm_CDO()
    LOCAL oCDOMsg
    LOCAL oCDOConf
 
-   BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
-      oCDOMsg := CreateObject( "CDO.Message" )
-      BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+   IF ( oCDOMsg  := CreateObject( "CDO.Message" ) ) != NIL .AND. ;
+      ( oCDOConf := CreateObject( "CDO.Configuration" ) ) != NIL
 
-         oCDOConf := CreateObject( "CDO.Configuration" )
+      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/sendusing") := 2 // ; cdoSendUsingPort
+      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserver") := "localhost"
+      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserverport") := 25
+      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout") := 120
+      oCDOConf:Fields:Update()
 
-         oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/sendusing") := 2 // ; cdoSendUsingPort
-         oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserver") := "localhost"
-         oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserverport") := 25
-         oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout") := 120
-         oCDOConf:Fields:Update()
+      oCDOMsg:Configuration := oCDOConf
+      oCDOMsg:BodyPart:Charset := "iso-8859-2" // "iso-8859-1" "utf-8"
+      oCDOMsg:To := "test@localhost"
+      oCDOMsg:From := "sender@localhost"
+      oCDOMsg:Subject := "Test message"
+      oCDOMsg:TextBody := "Test message body"
 
-         oCDOMsg:Configuration := oCDOConf
-         oCDOMsg:BodyPart:Charset := "iso-8859-2" // "iso-8859-1" "utf-8"
-         oCDOMsg:To := "test@localhost"
-         oCDOMsg:From := "sender@localhost"
-         oCDOMsg:Subject := "Test message"
-         oCDOMsg:TextBody := "Test message body"
+      oCDOMsg:Send()
+   ELSE
+      Alert( "Error: CDO subsystem not available. [" + OLEErrorText()+ "]" )
+   ENDIF
 
-         BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
-            oCDOMsg:Send()
-         RECOVER
-            Alert( "Error: CDO send error. [" + Ole2TxtError()+ "]" )
-         END SEQUENCE
-
-         oCDOConf := NIL
-
-      END SEQUENCE
-
-      oCDOMsg := NIL
-
-   RECOVER
-      Alert( "Error: CDO subsystem not available. [" + Ole2TxtError()+ "]" )
-   END SEQUENCE
+   oCDOConf := NIL
+   oCDOMsg := NIL
 
    RETURN
 
@@ -110,15 +99,12 @@ STATIC PROCEDURE Exm_IExplorer()
 
    LOCAL oIE
 
-   BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
-      oIE := CreateObject( "InternetExplorer.Application" )
-      BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
-         oIE:Visible := .T.
-         oIE:Navigate( "http://www.harbour-project.org" )
-      END SEQUENCE
-   RECOVER
-      Alert( "Error: IExplorer not available. [" + Ole2TxtError()+ "]" )
-   END SEQUENCE
+   IF ( oIE := CreateObject( "InternetExplorer.Application" ) ) != NIL
+      oIE:Visible := .T.
+      oIE:Navigate( "http://www.harbour-project.org" )
+   ELSE
+      Alert( "Error: IExplorer not available. [" + OLEErrorText()+ "]" )
+   ENDIF
 
    RETURN
 
@@ -129,70 +115,66 @@ STATIC PROCEDURE Exm_MSExcel()
    LOCAL oWorkSheet
    LOCAL oAS
 
-   BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
-      oExcel := CreateObject( "Excel.Application" )
-      BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+   IF ( oExcel := CreateObject( "Excel.Application" ) ) != NIL
 
-         oWorkBook := oExcel:WorkBooks:Add()
+      oWorkBook := oExcel:WorkBooks:Add()
 
-         FOR EACH oWorkSheet IN oWorkBook:WorkSheets
-            ? oWorkSheet:Name
-         NEXT
+      FOR EACH oWorkSheet IN oWorkBook:WorkSheets
+         ? oWorkSheet:Name
+      NEXT
 
-         oAS := oExcel:ActiveSheet()
+      oAS := oExcel:ActiveSheet()
 
-         oAS:Cells:Font:Name := "Arial"
-         oAS:Cells:Font:Size := 12
+      oAS:Cells:Font:Name := "Arial"
+      oAS:Cells:Font:Size := 12
 
-         // Explicit use of DEFAULT method by means of #xtranslate above!!!
-         oAS:Cells( 3, 1 ) := "Explict DEFAULT Method Text:"
+      // Explicit use of DEFAULT method by means of #xtranslate above!!!
+      oAS:Cells( 3, 1 ) := "Explict DEFAULT Method Text:"
 
-         // Array notation seem to have REVERSED indexs for the Cells Collections!!!
-         // Implicitly using DEFAULT Method
-         oAS:Cells[ 2, 3 ] := "Implicit DEFAULT Method using *reversed* array index notation"
+      // Array notation seem to have REVERSED indexs for the Cells Collections!!!
+      // Implicitly using DEFAULT Method
+      oAS:Cells[ 2, 3 ] := "Implicit DEFAULT Method using *reversed* array index notation"
 
-         // Operator overloading will attempt explict resolutin using :OleValue
-         oAS:Cells[ 2, 3 ] += "!"
+      // Operator overloading will attempt explict resolutin using :OleValue
+      oAS:Cells[ 2, 3 ] += "!"
 
-         oAS:Cells( 4, 1 ):Value := "Numeric:"
-         oAS:Cells( 4, 2 ):NumberFormat := "#.##0,00"
+      oAS:Cells( 4, 1 ):Value := "Numeric:"
+      oAS:Cells( 4, 2 ):NumberFormat := "#.##0,00"
 
-         oAS:Cells[ 2, 4 ] := 1234.50
-         oAS:Cells[ 2, 4 ] *= 4
-         ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
-         oAS:Cells[ 2, 4 ] /= 2
-         ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
+      oAS:Cells[ 2, 4 ] := 1234.50
+      oAS:Cells[ 2, 4 ] *= 4
+      ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
+      oAS:Cells[ 2, 4 ] /= 2
+      ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
 
-         oAS:Cells[ 2, 4 ]++
-         ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
-         oAS:Cells[ 2, 4 ]--
-         ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
+      oAS:Cells[ 2, 4 ]++
+      ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
+      oAS:Cells[ 2, 4 ]--
+      ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
 
-         oAS:Cells( 5, 1 ):Value := "Logical:"
-         oAS:Cells( 5, 2 ):Value := .T.
-         oAS:Cells( 6, 1 ):Value := "Date:"
-         oAS:Cells( 6, 2 ):Value := DATE()
+      oAS:Cells( 5, 1 ):Value := "Logical:"
+      oAS:Cells( 5, 2 ):Value := .T.
+      oAS:Cells( 6, 1 ):Value := "Date:"
+      oAS:Cells( 6, 2 ):Value := DATE()
 
-         oAS:Columns( 1 ):Font:Bold := .T.
-         oAS:Columns( 2 ):HorizontalAlignment := -4152  // xlRight
+      oAS:Columns( 1 ):Font:Bold := .T.
+      oAS:Columns( 2 ):HorizontalAlignment := -4152  // xlRight
 
-         oAS:Columns( 1 ):AutoFit()
-         oAS:Columns( 2 ):AutoFit()
+      oAS:Columns( 1 ):AutoFit()
+      oAS:Columns( 2 ):AutoFit()
 
-         oAS:Cells( 1, 1 ):Value := "OLE from Harbour"
-         oAS:Cells( 1, 1 ):Font:Size := 16
-         oAS:Range( "A1:B1" ):HorizontalAlignment := 7
+      oAS:Cells( 1, 1 ):Value := "OLE from Harbour"
+      oAS:Cells( 1, 1 ):Font:Size := 16
+      oAS:Range( "A1:B1" ):HorizontalAlignment := 7
 
-         oAS:Cells( 1, 1 ):Select()
+      oAS:Cells( 1, 1 ):Select()
 
-         oExcel:Visible := .T.
+      oExcel:Visible := .T.
 
-         oExcel:Quit()
-
-      END SEQUENCE
-   RECOVER
-      Alert( "Error: MS Excel not available. [" + Ole2TxtError()+ "]" )
-   END SEQUENCE
+      oExcel:Quit()
+   ELSE
+      Alert( "Error: MS Excel not available. [" + OLEErrorText()+ "]" )
+   ENDIF
 
    RETURN
 
@@ -201,26 +183,22 @@ STATIC PROCEDURE Exm_MSWord()
    LOCAL oWord
    LOCAL oText
 
-   BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
-      oWord := CreateObject( "Word.Application" )
-      BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+   IF ( oWord := CreateObject( "Word.Application" ) ) != NIL
 
-         oWord:Documents:Add()
+      oWord:Documents:Add()
 
-         oText := oWord:Selection()
+      oText := oWord:Selection()
 
-         oText:Text := "OLE from Harbour" + hb_OSNewLine()
-         oText:Font:Name := "Arial"
-         oText:Font:Size := 48
-         oText:Font:Bold := .T.
+      oText:Text := "OLE from Harbour" + hb_OSNewLine()
+      oText:Font:Name := "Arial"
+      oText:Font:Size := 48
+      oText:Font:Bold := .T.
 
-         oWord:Visible := .T.
-         oWord:WindowState := 1 // ; Maximize
-
-      END SEQUENCE
-   RECOVER
-      Alert( "Error: MS Word not available. [" + Ole2TxtError()+ "]" )
-   END SEQUENCE
+      oWord:Visible := .T.
+      oWord:WindowState := 1 // ; Maximize
+   ELSE
+      Alert( "Error: MS Word not available. [" + OLEErrorText()+ "]" )
+   ENDIF
 
    RETURN
 
@@ -229,16 +207,13 @@ STATIC PROCEDURE Exm_MSOutlook()
    LOCAL oOL
    LOCAL oList
 
-   BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
-      oOL := CreateObject( "Outlook.Application" )
-      BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
-         oList := oOL:CreateItem( 7 ) // ; olDistributionListItem
-         oList:DLName := "Distribution List"
-         oList:Display( .F. )
-      END SEQUENCE
-   RECOVER
-      Alert( "Error: MS Outlook not available. [" + Ole2TxtError()+ "]" )
-   END SEQUENCE
+   IF ( oOL := CreateObject( "Outlook.Application" ) ) != NIL
+      oList := oOL:CreateItem( 7 ) // ; olDistributionListItem
+      oList:DLName := "Distribution List"
+      oList:Display( .F. )
+   ELSE
+      Alert( "Error: MS Outlook not available. [" + OLEErrorText()+ "]" )
+   ENDIF
 
    RETURN
 
@@ -249,9 +224,9 @@ STATIC PROCEDURE Exm_MSOutlook2()
    LOCAL oMail
    LOCAL i
 
-   oOL := TOleAuto():New( "Outlook.Application.9" )
+   oOL := hb_OleAuto():New( "Outlook.Application.9" )
 
-   IF Ole2TxtError() != "S_OK"
+   IF OLEErrorText() != "S_OK"
       Alert("Outlook is not available", "Error")
    ELSE
       oMail := oOL:CreateItem( 0 )  // olMailItem
@@ -283,36 +258,36 @@ STATIC PROCEDURE Exm_OpenOffice()
    LOCAL oOO_PropVal01
    LOCAL oOO_Doc
 
-   LOCAL cDir
+   IF ( oOO_ServiceManager := CreateObject( "com.sun.star.ServiceManager" ) ) != NIL
 
-   BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+      IF ( oOO_Desktop := oOO_ServiceManager:createInstance( "com.sun.star.frame.Desktop" ) ) != NIL
+         IF ( oOO_PropVal01 := oOO_ServiceManager:Bridge_GetStruct( "com.sun.star.beans.PropertyValue" ) ) != NIL
+            IF ( oOO_Doc := oOO_Desktop:loadComponentFromURL( OO_ConvertToURL( hb_FNameMerge( hb_dirBase(), "sample.odt" ) ), "_blank", 0, { oOO_PropVal01 } ) ) != NIL
 
-      oOO_ServiceManager := CreateObject( "com.sun.star.ServiceManager" )
+              // ...
 
-      BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+              oOO_Doc:Close( .T. )
+              oOO_Doc := NIL
+            ELSE
+               Alert( "Error: #3: " + OO_ConvertToURL( hb_FNameMerge( hb_dirBase(), "sample.odt" ) ) )
+            ENDIF
 
-         hb_FNameSplit( hb_ArgV( 0 ), @cDir )
-
-         oOO_Desktop := oOO_ServiceManager:createInstance( "com.sun.star.frame.Desktop" )
-         oOO_PropVal01 := oOO_ServiceManager:Bridge_GetStruct( "com.sun.star.beans.PropertyValue" )
-         oOO_Doc := oOO_Desktop:loadComponentFromURL( OO_ConvertToURL( hb_FNameMerge( cDir, "sample.odt" ) ), "_blank", 0, { oOO_PropVal01 } )
-
-         // ...
-
-         oOO_Doc:Close( .T. )
-         oOO_Doc := NIL
+            oOO_PropVal01 := NIL
+         ELSE
+            Alert( "Error: #2" )
+         ENDIF
 
          oOO_Desktop:Terminate()
          oOO_Desktop := NIL
-         oOO_PropVal01 := NIL
-
-      END SEQUENCE
+      ELSE
+         Alert( "Error: #1" )
+      ENDIF
 
       oOO_ServiceManager := NIL
 
-   RECOVER
-      Alert( "Error: OpenOffice not available. [" + Ole2TxtError()+ "]" )
-   END SEQUENCE
+   ELSE
+      Alert( "Error: OpenOffice not available. [" + OLEErrorText()+ "]" )
+   ENDIF
 
    RETURN
 

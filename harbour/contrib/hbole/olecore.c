@@ -268,7 +268,7 @@ static void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
            hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.ulVal );
            break;
 
-      case VT_UI8:  
+      case VT_UI8:
            /* TODO: sign is lost. Convertion to double will lose significant digits. */
            hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.ullVal );
            break;
@@ -443,7 +443,7 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 }
 
 
-HB_FUNC( OLERELEASE ) 
+HB_FUNC( OLERELEASE )
 {
    IDispatch * pDisp = ( IDispatch* ) hb_parptr( 1 );
 
@@ -462,89 +462,27 @@ HB_FUNC( OLEERRORTEXT )
 {
    switch( s_lOleError )
    {
-      case S_OK:
-         hb_retc( "" );
-         break;
-
-      case CO_E_CLASSSTRING:
-         hb_retc( "CO_E_CLASSSTRING" );
-         break;
-
-      case OLE_E_WRONGCOMPOBJ:
-         hb_retc( "OLE_E_WRONGCOMPOBJ" );
-         break;
-
-      case REGDB_E_CLASSNOTREG:
-         hb_retc( "REGDB_E_CLASSNOTREG" );
-         break;
-
-      case REGDB_E_WRITEREGDB:
-         hb_retc( "REGDB_E_WRITEREGDB" );
-         break;
-
-      case E_OUTOFMEMORY:
-         hb_retc( "E_OUTOFMEMORY" );
-         break;
-
-      case E_INVALIDARG:
-         hb_retc( "E_INVALIDARG" );
-         break;
-
-      case E_UNEXPECTED:
-         hb_retc( "E_UNEXPECTED" );
-         break;
-
-      case DISP_E_UNKNOWNNAME:
-         hb_retc( "DISP_E_UNKNOWNNAME" );
-         break;
-
-      case DISP_E_UNKNOWNLCID:
-         hb_retc( "DISP_E_UNKNOWNLCID" );
-         break;
-
-      case DISP_E_BADPARAMCOUNT:
-         hb_retc( "DISP_E_BADPARAMCOUNT" );
-         break;
-
-      case DISP_E_BADVARTYPE:
-         hb_retc( "DISP_E_BADVARTYPE" );
-         break;
-
-      case DISP_E_EXCEPTION:
-         hb_retc( "DISP_E_EXCEPTION" );
-         break;
-
-      case DISP_E_MEMBERNOTFOUND:
-         hb_retc( "DISP_E_MEMBERNOTFOUND" );
-         break;
-
-      case DISP_E_NONAMEDARGS:
-         hb_retc( "DISP_E_NONAMEDARGS" );
-         break;
-
-      case DISP_E_OVERFLOW:
-         hb_retc( "DISP_E_OVERFLOW" );
-         break;
-
-      case DISP_E_PARAMNOTFOUND:
-         hb_retc( "DISP_E_PARAMNOTFOUND" );
-         break;
-
-      case DISP_E_TYPEMISMATCH:
-         hb_retc( "DISP_E_TYPEMISMATCH" );
-         break;
-
-      case DISP_E_UNKNOWNINTERFACE:
-         hb_retc( "DISP_E_UNKNOWNINTERFACE" );
-         break;
-
-      case DISP_E_PARAMNOTOPTIONAL:
-         hb_retc( "DISP_E_PARAMNOTOPTIONAL" );
-         break;
-
-      default:
-         hb_retc( "Unknown OLE error" );
-         break;
+      case S_OK:                    hb_retc_null();                        break;
+      case CO_E_CLASSSTRING:        hb_retc( "CO_E_CLASSSTRING" );         break;
+      case OLE_E_WRONGCOMPOBJ:      hb_retc( "OLE_E_WRONGCOMPOBJ" );       break;
+      case REGDB_E_CLASSNOTREG:     hb_retc( "REGDB_E_CLASSNOTREG" );      break;
+      case REGDB_E_WRITEREGDB:      hb_retc( "REGDB_E_WRITEREGDB" );       break;
+      case E_OUTOFMEMORY:           hb_retc( "E_OUTOFMEMORY" );            break;
+      case E_INVALIDARG:            hb_retc( "E_INVALIDARG" );             break;
+      case E_UNEXPECTED:            hb_retc( "E_UNEXPECTED" );             break;
+      case DISP_E_UNKNOWNNAME:      hb_retc( "DISP_E_UNKNOWNNAME" );       break;
+      case DISP_E_UNKNOWNLCID:      hb_retc( "DISP_E_UNKNOWNLCID" );       break;
+      case DISP_E_BADPARAMCOUNT:    hb_retc( "DISP_E_BADPARAMCOUNT" );     break;
+      case DISP_E_BADVARTYPE:       hb_retc( "DISP_E_BADVARTYPE" );        break;
+      case DISP_E_EXCEPTION:        hb_retc( "DISP_E_EXCEPTION" );         break;
+      case DISP_E_MEMBERNOTFOUND:   hb_retc( "DISP_E_MEMBERNOTFOUND" );    break;
+      case DISP_E_NONAMEDARGS:      hb_retc( "DISP_E_NONAMEDARGS" );       break;
+      case DISP_E_OVERFLOW:         hb_retc( "DISP_E_OVERFLOW" );          break;
+      case DISP_E_PARAMNOTFOUND:    hb_retc( "DISP_E_PARAMNOTFOUND" );     break;
+      case DISP_E_TYPEMISMATCH:     hb_retc( "DISP_E_TYPEMISMATCH" );      break;
+      case DISP_E_UNKNOWNINTERFACE: hb_retc( "DISP_E_UNKNOWNINTERFACE" );  break;
+      case DISP_E_PARAMNOTOPTIONAL: hb_retc( "DISP_E_PARAMNOTOPTIONAL" );  break;
+      default:                      hb_retc( "Unknown OLE error" );        break;
    }
 }
 
@@ -587,7 +525,7 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
    if( szMethod[ 0 ] == '_' && hb_pcount() > 0 )
    {
       pMemberArray = &szMethodWide[ 1 ];
-      s_lOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, &pMemberArray, 
+      s_lOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, &pMemberArray,
                                                   1, LOCALE_USER_DEFAULT, &dispid );
 
       if ( s_lOleError == S_OK )
@@ -599,9 +537,9 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
          dispparam.rgdispidNamedArgs = &lPropPut;
          dispparam.cNamedArgs = 1;
 
-         s_lOleError = pDisp->lpVtbl->Invoke( pDisp, dispid, &IID_NULL, 
+         s_lOleError = pDisp->lpVtbl->Invoke( pDisp, dispid, &IID_NULL,
                                               LOCALE_USER_DEFAULT,
-                                              DISPATCH_PROPERTYPUT, &dispparam, 
+                                              DISPATCH_PROPERTYPUT, &dispparam,
                                               NULL, &excep, &uiArgErr );
 
          FreeParams( &dispparam );
@@ -615,7 +553,7 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
    /* Try property get and invoke */
 
    pMemberArray = szMethodWide;
-   s_lOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, &pMemberArray, 
+   s_lOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, &pMemberArray,
                                                1, LOCALE_USER_DEFAULT, &dispid );
    hb_xfree( szMethodWide );
 

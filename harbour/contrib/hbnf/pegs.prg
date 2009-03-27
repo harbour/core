@@ -53,6 +53,7 @@
 
 #include "inkey.ch"
 #include "common.ch"
+#include "setcurs.ch"
 
 #translate SINGLEBOX(<top>, <left>, <bottom>, <right>) => ;
            @ <top>, <left>, <bottom>, <right> BOX "ÚÄ¿³ÙÄÀ³ "
@@ -194,11 +195,11 @@ return NIL
 
 static function err_msg(msg)
 local buffer := savescreen(23, 33, 23, 47)
-setcursor(0)
+setcursor(SC_NONE)
 setcolor('+w/r')
 @ 23, 33 say msg
 inkey(2)
-setcursor(1)
+setcursor(SC_NORMAL)
 restscreen(23, 33, 23, 47, buffer)
 return nil
 

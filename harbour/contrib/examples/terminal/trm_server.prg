@@ -62,6 +62,7 @@
 //----------------------------------------------------------------------//
 
 #include 'inkey.ch'
+#include "setcurs.ch"
 
 //----------------------------------------------------------------------//
 
@@ -95,8 +96,7 @@ Function Main( cPort )
    MutexCount    := HB_MutexCreate()
 
    SetColor( 'W+/N' )
-   SetCursor( 0 )
-   SetCursor( .f. )
+   SetCursor( SC_NONE )
 
    BuildScreen()
 

@@ -12,6 +12,7 @@
 
 #define ntrim(n) ltrim(str(n))
 #include "inkey.ch"
+#include "setcurs.ch"
 
 proc main()
 local aWin:=array(9), y, x, i, k, lFlag:=.f., lBoard:=.t.
@@ -90,7 +91,7 @@ while .t.
       lFlag:=!lFlag
       setcursor(iif(lFlag,3,1))
    elseif k==K_DEL
-      setcursor(0)
+      setcursor(SC_NONE)
    elseif k==K_LEFT
       wmove(wrow(),wcol()-1)
    elseif k==K_RIGHT

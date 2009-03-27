@@ -57,7 +57,7 @@
 
 #if QT_VERSION >= 0x040500
 
-#include <QtGui\QAbstractItemView>
+#include <QtGui/QAbstractItemView>
 
 /*----------------------------------------------------------------------*/
 /*
