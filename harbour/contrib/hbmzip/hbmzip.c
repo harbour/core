@@ -399,19 +399,19 @@ HB_FUNC( HB_UNZIPFILEINFO )
 
    if( hUnzip )
    {
-      char           szFileName[ _POSIX_PATH_MAX + 1 ];
+      char           szFileName[ HB_PATH_MAX ];
       unz_file_info  ufi;
       int            iResult;
       char           buf[ 16 ];
       long           lJulian, lMillisec;
 
-      iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szFileName, _POSIX_PATH_MAX,
+      iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szFileName, HB_PATH_MAX - 1,
                                        NULL, 0, NULL, 0 );
       hb_retni( iResult );
 
       if( iResult == UNZ_OK )
       {
-         szFileName[ _POSIX_PATH_MAX ] = '\0';
+         szFileName[ HB_PATH_MAX - 1 ] = '\0';
          hb_storc( szFileName, 2 );
 
          lJulian   = hb_dateEncode( ufi.tmu_date.tm_year, ufi.tmu_date.tm_mon,
@@ -1022,14 +1022,14 @@ HB_FUNC( HB_ZIPSTOREFILEHANDLE )
 
 static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, const char* szPassword )
 {
-   char           szName[ _POSIX_PATH_MAX + 1 ];
+   char           szName[ HB_PATH_MAX ];
    ULONG          ulPos, ulLen;
    char           cSep, * pString;
    unz_file_info  ufi;
    int            iResult;
    HB_FHANDLE     hFile;
 
-   iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szName, _POSIX_PATH_MAX,
+   iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szName, HB_PATH_MAX - 1,
                                     NULL, 0, NULL, 0 );
    if( iResult != UNZ_OK )
       return iResult;
@@ -1235,7 +1235,7 @@ static int hb_unzipExtractCurrentFileToHandle( unzFile hUnzip, HB_FHANDLE hFile,
    if( hFile == FS_ERROR )
       return -200;
 
-   iResult = unzGetCurrentFileInfo( hUnzip, &ufi, NULL, _POSIX_PATH_MAX,
+   iResult = unzGetCurrentFileInfo( hUnzip, &ufi, NULL, HB_PATH_MAX - 1,
                                     NULL, 0, NULL, 0 );
    if( iResult != UNZ_OK )
       return iResult;
@@ -1298,8 +1298,8 @@ HB_FUNC( HB_UNZIPEXTRACTCURRENTFILETOHANDLE )
 
 static int hb_zipDeleteFile( const char* szZipFile, const char* szFileMask )
 {
-   char szTempFile[ _POSIX_PATH_MAX + 1 ];
-   char szCurrFile[ _POSIX_PATH_MAX + 1 ];
+   char szTempFile[ HB_PATH_MAX ];
+   char szCurrFile[ HB_PATH_MAX ];
    PHB_FNAME pFileName;
    HB_FHANDLE hFile;
    unzFile hUnzip;
@@ -1356,7 +1356,7 @@ static int hb_zipDeleteFile( const char* szZipFile, const char* szFileMask )
 
    while( iResult == UNZ_OK )
    {
-      iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szCurrFile, _POSIX_PATH_MAX, NULL, 0, NULL, 0 );
+      iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szCurrFile, HB_PATH_MAX - 1, NULL, 0, NULL, 0 );
       if( iResult != UNZ_OK )
          break;
 

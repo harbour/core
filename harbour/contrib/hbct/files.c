@@ -283,7 +283,7 @@ HB_FUNC( FILEDELETE )
 
          do
          {
-            char szPath[ _POSIX_PATH_MAX + 1 ];
+            char szPath[ HB_PATH_MAX ];
 
             pFilepath->szName = ffind->szName;
             hb_fsFNameMerge( szPath, pFilepath );

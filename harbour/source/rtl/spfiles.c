@@ -64,7 +64,7 @@ BOOL hb_spFile( BYTE * pFilename, BYTE * pRetPath )
    if( pRetPath )
       Path = pRetPath;
    else
-      Path = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
+      Path = ( BYTE * ) hb_xgrab( HB_PATH_MAX );
 
    pFilepath = hb_fsFNameSplit( ( char * ) pFilename );
 
@@ -128,7 +128,7 @@ BOOL hb_spFileExists( BYTE * pFilename, BYTE * pRetPath )
    if( pRetPath )
       Path = pRetPath;
    else
-      Path = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
+      Path = ( BYTE * ) hb_xgrab( HB_PATH_MAX );
 
    pFilepath = hb_fsFNameSplit( ( char * ) pFilename );
 
@@ -183,7 +183,7 @@ BOOL hb_spFileExists( BYTE * pFilename, BYTE * pRetPath )
 
 HB_FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags )
 {
-   BYTE path[ _POSIX_PATH_MAX + 1 ];
+   BYTE path[ HB_PATH_MAX ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_spOpen(%p, %hu)", pFilename, uiFlags));
 
@@ -195,7 +195,7 @@ HB_FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags )
 
 HB_FHANDLE hb_spCreate( BYTE * pFilename, ULONG ulAttr )
 {
-   BYTE path[ _POSIX_PATH_MAX + 1 ];
+   BYTE path[ HB_PATH_MAX ];
    PHB_FNAME pFilepath;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_spCreate(%p, %lu)", pFilename, ulAttr));
@@ -212,7 +212,7 @@ HB_FHANDLE hb_spCreate( BYTE * pFilename, ULONG ulAttr )
 
 HB_FHANDLE hb_spCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFlags )
 {
-   BYTE path[ _POSIX_PATH_MAX + 1 ];
+   BYTE path[ HB_PATH_MAX ];
    PHB_FNAME pFilepath;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_spCreateEx(%p, %lu, %hu)", pFilename, ulAttr, uiFlags));

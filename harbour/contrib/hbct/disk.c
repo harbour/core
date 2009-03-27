@@ -101,7 +101,7 @@ HB_FUNC( DIRMAKE )
 
 HB_FUNC( DIRNAME )
 {
-   BYTE *pbyBuffer = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
+   BYTE *pbyBuffer = ( BYTE * ) hb_xgrab( HB_PATH_MAX );
    unsigned char *pszDrive = ( unsigned char * ) hb_parc( 1 );
    USHORT uiDrive = 0;
 
@@ -116,7 +116,7 @@ HB_FUNC( DIRNAME )
          uiDrive = *pszDrive - ( 'a' - 1 );
    }
    pbyBuffer[0] = HB_OS_PATH_DELIM_CHR;
-   hb_fsCurDirBuff( uiDrive, pbyBuffer + 1, _POSIX_PATH_MAX );
+   hb_fsCurDirBuff( uiDrive, pbyBuffer + 1, HB_PATH_MAX - 1 );
 
    hb_retc_buffer( ( char * ) pbyBuffer );
 }

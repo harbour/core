@@ -725,7 +725,7 @@ int main( int argc, char * argv[] )
       {
          if( fWrite )
          {
-            char szFileName[ _POSIX_PATH_MAX + 1 ];
+            char szFileName[ HB_PATH_MAX ];
             PHB_FNAME pFileName;
 
             pFileName = hb_fsFNameSplit( szFile );

@@ -66,7 +66,7 @@ static BOOL hb_sxSemName( char * szFileName )
 
    if( szName && szName[0] )
    {
-      hb_strncpy( szFileName, szName, _POSIX_PATH_MAX );
+      hb_strncpy( szFileName, szName, HB_PATH_MAX - 1 );
       hb_strLower( szFileName, strlen( szFileName ) );
       fResult = TRUE;
    }
@@ -86,7 +86,7 @@ static BOOL hb_sxSemName( char * szFileName )
          szName = hb_itemGetCPtr( pOrderInfo.itmResult );
          if( szName && szName[0] )
          {
-            hb_strncpy( szFileName, szName, _POSIX_PATH_MAX );
+            hb_strncpy( szFileName, szName, HB_PATH_MAX - 1 );
             hb_strLower( szFileName, strlen( szFileName ) );
             fResult = TRUE;
          }
@@ -138,7 +138,7 @@ static HB_FHANDLE hb_sxSemOpen( BYTE * szFileName, BOOL * pfNewFile )
 
 HB_FUNC( SX_MAKESEM )
 {
-   BYTE szFileName[_POSIX_PATH_MAX + 1], buffer[2];
+   BYTE szFileName[HB_PATH_MAX], buffer[2];
    int iUsers = -1;
    BOOL fError = FALSE, fNewFile = FALSE;
 
@@ -175,7 +175,7 @@ HB_FUNC( SX_MAKESEM )
 
 HB_FUNC( SX_KILLSEM )
 {
-   BYTE szFileName[_POSIX_PATH_MAX + 1], buffer[2];
+   BYTE szFileName[HB_PATH_MAX], buffer[2];
    int iUsers = -1;
 
    if( hb_sxSemName( ( char * ) szFileName ) )
@@ -201,7 +201,7 @@ HB_FUNC( SX_KILLSEM )
 
 HB_FUNC( SX_ISSEM )
 {
-   BYTE szFileName[_POSIX_PATH_MAX + 1];
+   BYTE szFileName[HB_PATH_MAX];
    HB_FHANDLE hFile = FS_ERROR;
 
    if( hb_sxSemName( ( char * ) szFileName ) )

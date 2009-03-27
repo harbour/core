@@ -656,7 +656,7 @@ UINT WINAPI GetTempFileNameA( LPCSTR tmpdir, LPCSTR prefix, UINT unique, LPSTR f
    {
       char *afilename = hb_wctomb( wfilename );
 
-      hb_strncpy( filename, afilename, _POSIX_PATH_MAX );
+      hb_strncpy( filename, afilename, HB_PATH_MAX - 1 );
       hb_xfree( afilename );
    }
    SetLastError( dwError );

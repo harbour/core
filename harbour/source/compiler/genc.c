@@ -127,8 +127,8 @@ static void hb_compDumpFindCFunc( HB_COMP_DECL )
 
 void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the C language output */
 {
-   char szFileName[ _POSIX_PATH_MAX + 1 ];
-   char szModulname[ _POSIX_PATH_MAX + 1 ];
+   char szFileName[ HB_PATH_MAX ];
+   char szModulname[ HB_PATH_MAX ];
    PCOMSYMBOL pSym;
    PFUNCTION pFunc;
    PINLINE pInline;
@@ -155,7 +155,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 
    if( ! HB_COMP_PARAM->fQuiet )
    {
-      char buffer[ 80 + _POSIX_PATH_MAX ];
+      char buffer[ 80 + HB_PATH_MAX - 1 ];
       hb_snprintf( buffer, sizeof( buffer ),
                 "Generating C source output to \'%s\'... ", szFileName );
       hb_compOutStd( HB_COMP_PARAM, buffer );

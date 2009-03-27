@@ -1437,7 +1437,7 @@ HB_FUNC( __MVSAVE )
    {
       PHB_ITEM pError = NULL;
       PHB_FNAME pFileName;
-      char szFileName[ _POSIX_PATH_MAX + 1 ];
+      char szFileName[ HB_PATH_MAX ];
       HB_FHANDLE fhnd;
 
       /* Generate filename */
@@ -1513,7 +1513,7 @@ HB_FUNC( __MVRESTORE )
    {
       PHB_ITEM pError = NULL;
       PHB_FNAME pFileName;
-      char szFileName[ _POSIX_PATH_MAX + 1 ];
+      char szFileName[ HB_PATH_MAX ];
       HB_FHANDLE fhnd;
 
       BOOL bAdditive = hb_parl( 2 );

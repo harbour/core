@@ -1252,7 +1252,7 @@ static HB_ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
    PHB_FNAME pFileName;
    HB_ERRCODE errCode;
    BOOL fRetry;
-   BYTE szFileName[ _POSIX_PATH_MAX + 1 ];
+   BYTE szFileName[ HB_PATH_MAX ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_delimCreate(%p,%p)", pArea, pCreateInfo));
 
@@ -1339,7 +1339,7 @@ static HB_ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
    HB_ERRCODE errCode;
    USHORT uiFlags;
    BOOL fRetry;
-   BYTE szFileName[ _POSIX_PATH_MAX + 1 ];
+   BYTE szFileName[ HB_PATH_MAX ];
    char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_delimOpen(%p,%p)", pArea, pOpenInfo));

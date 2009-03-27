@@ -5187,7 +5187,7 @@ static void hb_nsxSortWritePage( LPNSXSORTINFO pSort )
 
    if( pSort->hTempFile == FS_ERROR )
    {
-      BYTE szName[ _POSIX_PATH_MAX + 1 ];
+      BYTE szName[ HB_PATH_MAX ];
       pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
       if( pSort->hTempFile == FS_ERROR )
          hb_nsxErrorRT( pSort->pTag->pIndex->pArea, EG_CREATE, EDBF_CREATE_TEMP,
@@ -6537,7 +6537,7 @@ static HB_ERRCODE hb_nsxOpen( NSXAREAP pArea, LPDBOPENINFO pOpenInfo )
    if( errCode == HB_SUCCESS && ( DBFAREA_DATA( pArea )->fStrictStruct ?
                                pArea->fHasTags : hb_setGetAutOpen() ) )
    {
-      char szFileName[ _POSIX_PATH_MAX + 1 ];
+      char szFileName[ HB_PATH_MAX ];
 
       hb_nsxCreateFName( pArea, NULL, NULL, szFileName, NULL );
       if( hb_spFileExists( ( BYTE * ) szFileName, NULL ) ||
@@ -6595,7 +6595,7 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
 {
    PHB_ITEM pResult, pKeyExp, pForExp = NULL;
    int iLen, iTag;
-   char szFileName[ _POSIX_PATH_MAX + 1 ], szSpFile[ _POSIX_PATH_MAX + 1 ],
+   char szFileName[ HB_PATH_MAX ], szSpFile[ HB_PATH_MAX ],
         szTagName[ NSX_TAGNAME + 1 ];
    const char * szKey, * szFor = NULL;
    LPNSXINDEX pIndex, * pIndexPtr;
@@ -7723,7 +7723,7 @@ static HB_ERRCODE hb_nsxOrderListAdd( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    USHORT uiFlags;
    PHB_FILE pFile;
-   char szFileName[ _POSIX_PATH_MAX + 1 ];
+   char szFileName[ HB_PATH_MAX ];
    LPNSXINDEX pIndex, *pIndexPtr;
    HB_ERRCODE errCode;
    BOOL fRetry, fReadonly, fShared, fProd;
@@ -7839,7 +7839,7 @@ static HB_ERRCODE hb_nsxOrderListClear( NSXAREAP pArea )
 static HB_ERRCODE hb_nsxOrderListDelete( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    char szTagName[ NSX_TAGNAME + 1 ];
-   char szFileName[ _POSIX_PATH_MAX + 1 ];
+   char szFileName[ HB_PATH_MAX ];
    LPNSXINDEX pIndex, * pIndexPtr;
    BOOL fProd;
 

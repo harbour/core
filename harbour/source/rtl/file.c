@@ -101,7 +101,7 @@ BOOL hb_fsIsDirectory( BYTE * pszFilename )
       }
    }
 
-   if( iLen && iLen <= _POSIX_PATH_MAX )
+   if( iLen && iLen <= ( HB_PATH_MAX - 1 ) )
    {
       if( ( ffind = hb_fsFindFirst( ( char * ) pszFilename, HB_FA_DIRECTORY ) ) != NULL )
       {

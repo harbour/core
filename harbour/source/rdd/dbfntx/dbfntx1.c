@@ -4788,7 +4788,7 @@ static void hb_ntxSortWritePage( LPNTXSORTINFO pSort )
 
    if( pSort->hTempFile == FS_ERROR )
    {
-      BYTE szName[ _POSIX_PATH_MAX + 1 ];
+      BYTE szName[ HB_PATH_MAX ];
       pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
       if( pSort->hTempFile == FS_ERROR )
          hb_ntxErrorRT( pSort->pTag->Owner->Owner, EG_CREATE, EDBF_CREATE_TEMP,
@@ -6074,7 +6074,7 @@ static HB_ERRCODE ntxOpen( NTXAREAP pArea, LPDBOPENINFO pOpenInfo )
    if( errCode == HB_SUCCESS && DBFAREA_DATA( pArea )->fStruct &&
        ( DBFAREA_DATA( pArea )->fStrictStruct ? pArea->fHasTags : hb_setGetAutOpen() ) )
    {
-      char szFileName[ _POSIX_PATH_MAX + 1 ];
+      char szFileName[ HB_PATH_MAX ];
 
       hb_ntxCreateFName( pArea, NULL, NULL, szFileName, NULL );
       if( hb_spFileExists( ( BYTE * ) szFileName, NULL ) ||
@@ -6132,7 +6132,7 @@ static HB_ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
 {
    PHB_ITEM pResult, pKeyExp, pForExp = NULL;
    int iLen, iDec, iTag, i;
-   char szFileName[ _POSIX_PATH_MAX + 1 ], szSpFile[ _POSIX_PATH_MAX + 1 ],
+   char szFileName[ HB_PATH_MAX ], szSpFile[ HB_PATH_MAX ],
         szTagName[ NTX_MAX_TAGNAME + 1 ], * szKey, * szFor = NULL;
    LPNTXINDEX pIndex, * pIndexPtr;
    LPTAGINFO pTag = NULL;
@@ -7314,7 +7314,7 @@ static HB_ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    USHORT uiFlags;
    PHB_FILE pFile;
-   char szFileName[ _POSIX_PATH_MAX + 1 ], szTagName[ NTX_MAX_TAGNAME + 1 ];
+   char szFileName[ HB_PATH_MAX ], szTagName[ NTX_MAX_TAGNAME + 1 ];
    LPNTXINDEX pIndex, *pIndexPtr;
    HB_ERRCODE errCode;
    BOOL fRetry, fReadonly, fShared, fProd;
@@ -7438,7 +7438,7 @@ static HB_ERRCODE ntxOrderListClear( NTXAREAP pArea )
 static HB_ERRCODE ntxOrderListDelete( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    char szTagName[ NTX_MAX_TAGNAME + 1 ];
-   char szFileName[ _POSIX_PATH_MAX + 1 ];
+   char szFileName[ HB_PATH_MAX ];
    LPNTXINDEX pIndex, * pIndexPtr;
    BOOL fProd;
 

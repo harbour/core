@@ -216,7 +216,7 @@ static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, const char * file_name, BOOL
 {
    PHB_ITEM pError = NULL;
    HB_FHANDLE handle;
-   char path[ _POSIX_PATH_MAX + 1 ];
+   char path[ HB_PATH_MAX ];
    BOOL bPipe = FALSE;
    HB_TRACE(HB_TR_DEBUG, ("open_handle(%p, %s, %d, %s, %d)", pSet, file_name, (int) bAppend, def_ext, (int) set_specifier));
 

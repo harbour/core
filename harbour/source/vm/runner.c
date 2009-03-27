@@ -507,7 +507,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
 
 static PHRB_BODY hb_hrbLoadFromFile( char* szHrb )
 {
-   char szFileName[ _POSIX_PATH_MAX + 1 ];
+   char szFileName[ HB_PATH_MAX ];
    PHRB_BODY pHrbBody = NULL;
    PHB_FNAME pFileName;
    HB_FHANDLE hFile;

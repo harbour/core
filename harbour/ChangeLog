@@ -8,6 +8,78 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-27 18:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/win/poccce.cf
+  * config/win/pocc.cf
+    * Warning level taken down to -w2.
+
+  * contrib/hbsqlit3/Makefile
+    - Disabled for pocc, as it chokes on the new version of
+      sqlite3.h.
+
+  * INSTALL
+    * Minor update.
+
+  * include/hbapifs.h
+  * include/hbdbsort.h
+  * include/hbsetup.h
+  * contrib/hbct/files.c
+  * contrib/hbct/disk.c
+  * contrib/hbmzip/hbmzip.c
+  * contrib/rddads/ads1.c
+  * contrib/hbbmcdx/bmdbfcdx.c
+  * contrib/examples/pp/pp.c
+  * contrib/examples/pp/hbppcore.c
+  * source/pp/ppcore.c
+  * source/pp/hbpp.c
+  * source/vm/runner.c
+  * source/vm/estack.c
+  * source/vm/hvm.c
+  * source/vm/cmdarg.c
+  * source/vm/fm.c
+  * source/vm/proc.c
+  * source/vm/extrap.c
+  * source/vm/memvars.c
+  * source/vm/set.c
+  * source/main/harbour.c
+  * source/common/hbfsapi.c
+  * source/common/hbwince.c
+  * source/rtl/spfiles.c
+  * source/rtl/defpath.c
+  * source/rtl/philes.c
+  * source/rtl/fnsplit.c
+  * source/rtl/fstemp.c
+  * source/rtl/gtchrmap.c
+  * source/rtl/errorint.c
+  * source/rtl/filebuf.c
+  * source/rtl/hbffind.c
+  * source/rtl/filesys.c
+  * source/rtl/file.c
+  * source/rdd/dbfntx/dbfntx1.c
+  * source/rdd/sdf1.c
+  * source/rdd/dbfnsx/dbfnsx1.c
+  * source/rdd/dbfcdx/dbfcdx1.c
+  * source/rdd/delim1.c
+  * source/rdd/dbf1.c
+  * source/rdd/hsx/hsx.c
+  * source/rdd/dbffpt/dbffpt1.c
+  * source/rdd/hbsix/sxsem.c
+  * source/rdd/hbsix/sxfname.c
+  * source/compiler/hbmain.c
+  * source/compiler/genc.c
+  * source/compiler/harbour.yyc
+  * source/compiler/harbour.y
+  * source/compiler/compi18n.c
+  * source/compiler/genhrb.c
+  * source/compiler/gencobj.c
+  * source/compiler/genobj32.c
+    * _POSIX_PATH_MAX + 1 -> HB_PATH_MAX
+    * _POSIX_PATH_MAX -> HB_PATH_MAX - 1
+      Please update your .c code to use new constant.
+      Harbour initialization of the value is now HB_LEGACY_LEVEL2
+      and will be removed in next version.
+    ; Please review me.
+
 2009-03-27 16:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * external/sqlite3/sqlite3.c
   * external/sqlite3/sqlite3.h
@@ -971,7 +1043,7 @@
       behaviour when wrong type is passed. The solution is to
       change all these to type specific IS*() macros.
 
-  ; TOFIX: (core and all contribs)
+  ; TOFIX: (core and all contribs) [DONE]
 
     C:/DOCUME~1/vszakats/LOCALS~1/Temp/ccVcE53g.s: Assembler messages:
     C:/DOCUME~1/vszakats/LOCALS~1/Temp/ccVcE53g.s:20: Error: `0x0e10(%rax,%ecx,4)' is not a valid base/index expression
@@ -1790,11 +1862,11 @@
   * source/vm/extrap.c
     ! Fixed for mingw64.
     ! Fixed warning for mingw64.
-      ; TODO: Check for possible regression.
+      ; TODO: Check for possible regression. [DONE]
 
   * contrib/hbodbc/odbc.c
     ! Fixed mingw64 warning.
-    ; TODO: Check for possible regression.
+    ; TODO: Check for possible regression. [DONE]
 
 2009-03-21 14:23 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
@@ -2235,7 +2307,7 @@
 2009-03-18 00:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/rules.cf
     + Added -ko optimization switch for Harbour.
-    ; TODO: Disable it for specific places of hbtest.
+    ; TODO: Disable it for specific places of hbtest. [DONE]
 
   * bin/hb-mkdyn.bat
     + Added missing pocc implib generation.

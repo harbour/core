@@ -66,7 +66,7 @@ static int     s_argc = 0;
 static char ** s_argv = NULL;
 
 #if !defined( HB_OS_WIN )
-static char    s_szAppName[ _POSIX_PATH_MAX + 1 ];
+static char    s_szAppName[ HB_PATH_MAX ];
 #else
 static char    s_szAppName[ MAX_PATH ];
 static TCHAR   s_lpAppName[ MAX_PATH ];
@@ -195,11 +195,11 @@ void hb_cmdargUpdate( void )
                 pFName->szPath[ 1 ] == HB_OS_PATH_DELIM_CHR )
                pFName->szPath += 2;
             s_szAppName[ 0 ] = HB_OS_PATH_DELIM_CHR;
-            hb_fsCurDirBuff( 0, ( BYTE * ) ( s_szAppName + 1 ), _POSIX_PATH_MAX );
+            hb_fsCurDirBuff( 0, ( BYTE * ) ( s_szAppName + 1 ), HB_PATH_MAX - 1 );
             if( s_szAppName[ 1 ] != 0 )
             {
-               hb_strncat( s_szAppName, HB_OS_PATH_DELIM_CHR_STRING, _POSIX_PATH_MAX );
-               hb_strncat( s_szAppName, pFName->szPath, _POSIX_PATH_MAX );
+               hb_strncat( s_szAppName, HB_OS_PATH_DELIM_CHR_STRING, HB_PATH_MAX - 1 );
+               hb_strncat( s_szAppName, pFName->szPath, HB_PATH_MAX - 1 );
                pFName->szPath = hb_strdup( s_szAppName );
                hb_fsFNameMerge( s_szAppName, pFName );
                hb_xfree( ( void * ) pFName->szPath );

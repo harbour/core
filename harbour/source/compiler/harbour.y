@@ -475,7 +475,7 @@ CompTimeStr : LITERAL {
             }
             | LITERAL '+' LITERAL {
                {
-                  char szFileName[ _POSIX_PATH_MAX + 1 ];
+                  char szFileName[ HB_PATH_MAX ];
                   hb_strncat( hb_strncpy( szFileName, $1.string, sizeof( szFileName ) - 1 ), $3.string, sizeof( szFileName ) - 1 );
                   hb_compAutoOpenAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY ) );
                   if( $1.dealloc )

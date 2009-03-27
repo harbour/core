@@ -4711,7 +4711,7 @@ yyreduce:
 #line 476 "harbour.y"
     {
                {
-                  char szFileName[ _POSIX_PATH_MAX + 1 ];
+                  char szFileName[ HB_PATH_MAX ];
                   hb_strncat( hb_strncpy( szFileName, (yyvsp[(1) - (3)].valChar).string, sizeof( szFileName ) - 1 ), (yyvsp[(3) - (3)].valChar).string, sizeof( szFileName ) - 1 );
                   hb_compAutoOpenAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY ) );
                   if( (yyvsp[(1) - (3)].valChar).dealloc )

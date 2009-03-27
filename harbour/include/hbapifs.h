@@ -244,7 +244,7 @@ typedef struct
    const char * szName;
    const char * szExtension;
    const char * szDrive;
-   char   szBuffer[ _POSIX_PATH_MAX + HB_MAX_DRIVE_LENGTH + 4 ];
+   char   szBuffer[ HB_PATH_MAX - 1 + HB_MAX_DRIVE_LENGTH + 4 ];
 } HB_FNAME, * PHB_FNAME, * HB_FNAME_PTR;
 
 extern HB_EXPORT PHB_FNAME  hb_fsFNameSplit( const char * pszFileName ); /* Split given filename into path, name and extension */
@@ -270,7 +270,7 @@ extern HB_EXPORT HB_FHANDLE hb_spCreateEx( BYTE * pFilename, ULONG ulAttr, USHOR
 /* File Find API structure */
 typedef struct
 {
-   char        szName[ _POSIX_PATH_MAX + 1 ];
+   char        szName[ HB_PATH_MAX ];
    LONG        lDate;
    char        szDate[ 9 ]; /* in YYYYMMDD format */
    char        szTime[ 9 ]; /* in HH:MM:SS format */

@@ -103,8 +103,8 @@ int  hb_comp_iLineINLINE = 0;
 int main( int argc, char * argv[] )
 {
   FILE * handl_o;
-  char szFileName[ _POSIX_PATH_MAX + 1 ];
-  char szPpoName[ _POSIX_PATH_MAX + 1 ];
+  char szFileName[ HB_PATH_MAX ];
+  char szPpoName[ HB_PATH_MAX ];
   int iArg = 1;
   BOOL bOutTable = FALSE;
   BOOL bOutNew = FALSE;

@@ -179,7 +179,7 @@ int hb_compMain( int argc, char * const argv[], BYTE ** pBufPtr, ULONG * pulSize
 
 static int hb_compProcessRSPFile( HB_COMP_DECL, const char * szRspName )
 {
-   char szFile[ _POSIX_PATH_MAX + 1 ];
+   char szFile[ HB_PATH_MAX ];
    int iStatus = EXIT_SUCCESS;
    PHB_FNAME pFileName;
    FILE *inFile;
@@ -196,7 +196,7 @@ static int hb_compProcessRSPFile( HB_COMP_DECL, const char * szRspName )
    inFile = hb_fopen( szRspName, "r" );
    if( !inFile )
    {
-      char buffer[ _POSIX_PATH_MAX + 80 ];
+      char buffer[ HB_PATH_MAX - 1 + 80 ];
       hb_snprintf( buffer, sizeof( buffer ),
                 "Cannot open input file: %s\n", szRspName );
       hb_compOutErr( HB_COMP_PARAM, buffer );
@@ -221,7 +221,7 @@ static int hb_compProcessRSPFile( HB_COMP_DECL, const char * szRspName )
          {
             while( ( ch = fgetc ( inFile ) ) != EOF && ch != '"' && ch != '\n' )
             {
-               if( i < _POSIX_PATH_MAX )
+               if( i < ( HB_PATH_MAX - 1 ) )
                   szFile[ i++ ] = (char) ch;
             }
             if( ch == '"' )
@@ -242,7 +242,7 @@ static int hb_compProcessRSPFile( HB_COMP_DECL, const char * szRspName )
             while( ch != EOF && ch != '\n' )
                ch = fgetc( inFile );
          }
-         else if( i < _POSIX_PATH_MAX )
+         else if( i < ( HB_PATH_MAX - 1 ) )
             szFile[ i++ ] = (char) ch;
       }
       while( ch != EOF );
@@ -3940,9 +3940,9 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
 
    if( HB_COMP_PARAM->pFileName->szName )
    {
-      char szFileName[ _POSIX_PATH_MAX + 1 ];    /* filename to parse */
-      char szPpoName[ _POSIX_PATH_MAX + 1 ];
-      char buffer[ _POSIX_PATH_MAX * 2 + 80 ];
+      char szFileName[ HB_PATH_MAX ];    /* filename to parse */
+      char szPpoName[ HB_PATH_MAX ];
+      char buffer[ ( HB_PATH_MAX - 1 ) * 2 + 80 ];
 
       /* Add /D command line or envvar defines */
       /* hb_compChkDefines( argc, argv ); */
@@ -4263,9 +4263,9 @@ static int hb_compAutoOpen( HB_COMP_DECL, const char * szPrg, BOOL * pbSkipGen, 
 
    if( HB_COMP_PARAM->pFileName->szName )
    {
-      char szFileName[ _POSIX_PATH_MAX + 1 ];    /* filename to parse */
-      char szPpoName[ _POSIX_PATH_MAX + 1 ];
-      char buffer[ _POSIX_PATH_MAX * 2 + 80 ];
+      char szFileName[ HB_PATH_MAX ];    /* filename to parse */
+      char szPpoName[ HB_PATH_MAX ];
+      char buffer[ ( HB_PATH_MAX - 1 ) * 2 + 80 ];
 
       /* Clear and reinitialize preprocessor state */
       hb_pp_reset( HB_COMP_PARAM->pLex->pPP );

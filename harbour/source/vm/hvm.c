@@ -8269,7 +8269,7 @@ void hb_vmRequestCancel( void )
    if( hb_stackSetStruct()->HB_SET_CANCEL )
    {
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 + 10 ]; /* additional 10 bytes for line info (%hu) overhead */
-      char file[ _POSIX_PATH_MAX + 1 ];
+      char file[ HB_PATH_MAX ];
       USHORT uiLine;
       int iLevel = 0, l;
 

@@ -299,7 +299,7 @@ ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       p1,
    if( p1->ExceptionNum != XCPT_UNWIND && p1->ExceptionNum < XCPT_BREAKPOINT )
    {
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
-      char file[ _POSIX_PATH_MAX + 1 ];
+      char file[ HB_PATH_MAX ];
       USHORT uiLine;
       int iLevel = 0;
 

@@ -71,7 +71,7 @@ static BOOL fsGetTempDirByCase( BYTE * pszName, const char * pszTempDir )
 
    if( pszTempDir && *pszTempDir != '\0' )
    {
-      hb_strncpy( ( char * ) pszName, ( char * ) pszTempDir, _POSIX_PATH_MAX );
+      hb_strncpy( ( char * ) pszName, ( char * ) pszTempDir, HB_PATH_MAX - 1 );
       switch( hb_setGetDirCase() )
       {
          case HB_SET_CASE_LOWER:
@@ -104,12 +104,12 @@ static HB_FHANDLE hb_fsCreateTempLow( const BYTE * pszDir, const BYTE * pszPrefi
 
       if( pszDir && pszDir[ 0 ] != '\0' )
       {
-         hb_strncpy( ( char * ) pszName, ( char * ) pszDir, _POSIX_PATH_MAX );
+         hb_strncpy( ( char * ) pszName, ( char * ) pszDir, HB_PATH_MAX - 1 );
       }
       else
       {
 #if defined(HB_OS_WIN)
-         if( ! GetTempPathA( ( DWORD ) _POSIX_PATH_MAX, ( LPSTR ) pszName ) )
+         if( ! GetTempPathA( ( DWORD ) ( HB_PATH_MAX - 1 ), ( LPSTR ) pszName ) )
          {
             pszName[ 0 ] = '.';
             pszName[ 1 ] = '\0';
@@ -143,10 +143,10 @@ static HB_FHANDLE hb_fsCreateTempLow( const BYTE * pszDir, const BYTE * pszPrefi
       }
 
       if( pszPrefix )
-         hb_strncat( ( char * ) pszName, ( char * ) pszPrefix, _POSIX_PATH_MAX );
+         hb_strncat( ( char * ) pszName, ( char * ) pszPrefix, HB_PATH_MAX - 1 );
 
       iLen = ( int ) strlen( ( char * ) pszName );
-      if( iLen > _POSIX_PATH_MAX - 6 )
+      if( iLen > ( HB_PATH_MAX - 1 ) - 6 )
          return FS_ERROR;
 
 #if !defined(__WATCOMC__) && ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) )
@@ -156,7 +156,7 @@ static HB_FHANDLE hb_fsCreateTempLow( const BYTE * pszDir, const BYTE * pszPrefi
           hb_setGetDirCase() != HB_SET_CASE_UPPER &&
           pszExt == NULL )
       {
-         hb_strncat( ( char * ) pszName, "XXXXXX", _POSIX_PATH_MAX );
+         hb_strncat( ( char * ) pszName, "XXXXXX", HB_PATH_MAX - 1 );
          hb_vmUnlock();
          fd = ( HB_FHANDLE ) mkstemp( ( char * ) pszName );
          hb_fsSetIOError( fd != ( HB_FHANDLE ) -1, 0 );
@@ -177,7 +177,7 @@ static HB_FHANDLE hb_fsCreateTempLow( const BYTE * pszDir, const BYTE * pszPrefi
          }
          pszName[ iLen ] = '\0';
          if( pszExt )
-            hb_strncat( ( char * ) pszName, ( char * ) pszExt, _POSIX_PATH_MAX );
+            hb_strncat( ( char * ) pszName, ( char * ) pszExt, HB_PATH_MAX - 1 );
          hb_fsNameConv( pszName, NULL );
          fd = hb_fsCreateEx( pszName, ulAttr, FO_EXCLUSIVE | FO_EXCL );
       }
@@ -190,7 +190,7 @@ static HB_FHANDLE hb_fsCreateTempLow( const BYTE * pszDir, const BYTE * pszPrefi
    return FS_ERROR;
 }
 
-/* NOTE: The buffer must be at least _POSIX_PATH_MAX + 1 chars long */
+/* NOTE: The buffer must be at least HB_PATH_MAX chars long */
 #if !defined( HB_OS_UNIX )
 
 static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefix )
@@ -201,19 +201,19 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
 
 #if defined(HB_IO_WIN)
    {
-      char cTempDir[ _POSIX_PATH_MAX + 1 ];
+      char cTempDir[ HB_PATH_MAX ];
 
       if( pszDir && pszDir[ 0 ] != '\0' )
          hb_strncpy( ( char * ) cTempDir, ( const char * ) pszDir, sizeof( cTempDir ) - 1 );
       else
       {
-         if( ! GetTempPathA( ( DWORD ) _POSIX_PATH_MAX + 1, cTempDir ) )
+         if( ! GetTempPathA( ( DWORD ) HB_PATH_MAX, cTempDir ) )
          {
             hb_fsSetIOError( FALSE, 0 );
             return FALSE;
          }
       }
-      cTempDir[ _POSIX_PATH_MAX ] = '\0';
+      cTempDir[ HB_PATH_MAX - 1 ] = '\0';
 
       fResult = GetTempFileNameA( ( LPCSTR ) cTempDir, pszPrefix ? ( LPCSTR ) pszPrefix : ( LPCSTR ) "hb", 0, ( LPSTR ) pszBuffer );
    }
@@ -224,7 +224,7 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
    HB_SYMBOL_UNUSED( pszPrefix );
 
    /* TOFIX: The spec says to reserve L_tmpnam number of characters for the
-             passed buffer. It will be needed to fix _POSIX_PATH_MAX to be
+             passed buffer. It will be needed to fix HB_PATH_MAX - 1 to be
              at least this large. */
 
    pszBuffer[ 0 ] = '\0';
@@ -238,7 +238,7 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
    return fResult;
 }
 
-/* NOTE: The pszName buffer must be at least _POSIX_PATH_MAX + 1 chars long */
+/* NOTE: The pszName buffer must be at least HB_PATH_MAX chars long */
 
 HB_FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, ULONG ulAttr, BYTE * pszName )
 {
@@ -277,7 +277,7 @@ HB_FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, ULONG u
 
 HB_FUNC( HB_FTEMPCREATE )
 {
-   BYTE szName[ _POSIX_PATH_MAX + 1 ];
+   BYTE szName[ HB_PATH_MAX ];
 
    hb_retnint( ( HB_NHANDLE ) hb_fsCreateTemp( ( BYTE * ) hb_parc( 1 ),
                                                ( BYTE * ) hb_parc( 2 ),
@@ -294,7 +294,7 @@ HB_FHANDLE hb_fsCreateTempEx( BYTE * pszName, const BYTE * pszDir, const BYTE * 
 
 HB_FUNC( HB_FTEMPCREATEEX )
 {
-   BYTE szName[ _POSIX_PATH_MAX + 1 ];
+   BYTE szName[ HB_PATH_MAX ];
 
    hb_retnint( ( HB_NHANDLE ) hb_fsCreateTempEx( szName,
                                                  ( BYTE * ) hb_parc( 2 ),

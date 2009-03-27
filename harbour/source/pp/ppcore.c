@@ -1854,7 +1854,7 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
                                   BOOL fSysFile, BOOL * pfNested, FILE * file_in,
                                   BOOL fSearchPath, PHB_PP_OPEN_FUNC pOpenFunc )
 {
-   char szFileNameBuf[ _POSIX_PATH_MAX + 1 ];
+   char szFileNameBuf[ HB_PATH_MAX ];
    PHB_PP_FILE pFile;
 
    if( ! file_in )
@@ -5406,7 +5406,7 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
  */
 void hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile )
 {
-   char szFileName[ _POSIX_PATH_MAX + 1 ];
+   char szFileName[ HB_PATH_MAX ];
    PHB_PP_FILE pFile = pState->pFile;
    PHB_FNAME pFileName;
    BOOL fError = FALSE;

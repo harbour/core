@@ -369,8 +369,8 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
 
       if( pfFree )
       {
-         BYTE * szNew = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-         hb_strncpy( ( char * ) szNew, ( char * ) szFileName, _POSIX_PATH_MAX );
+         BYTE * szNew = ( BYTE * ) hb_xgrab( HB_PATH_MAX );
+         hb_strncpy( ( char * ) szNew, ( char * ) szFileName, HB_PATH_MAX - 1 );
          szFileName = szNew;
          *pfFree = TRUE;
       }

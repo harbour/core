@@ -1387,7 +1387,7 @@ static int hb_hsxDestroy( int iHandle )
 static int hb_hsxCreate( char * szFile, int iBufSize, int iKeySize,
                          BOOL fIgnoreCase, int iFilter, PHB_ITEM pExpr )
 {
-   char szFileName[ _POSIX_PATH_MAX + 1 ], * szExpr = NULL;
+   char szFileName[ HB_PATH_MAX ], * szExpr = NULL;
    PHB_ITEM pKeyExpr = NULL;
    ULONG ulBufSize;
    USHORT uiRecordSize;
@@ -1398,7 +1398,7 @@ static int hb_hsxCreate( char * szFile, int iBufSize, int iKeySize,
    if( !szFile || ! *szFile )
       return HSX_BADPARMS;
 
-   hb_strncpy( szFileName, szFile, _POSIX_PATH_MAX );
+   hb_strncpy( szFileName, szFile, HB_PATH_MAX - 1 );
 
    if( iKeySize < 1 || iKeySize > HSXMAXKEY_SIZE )
       iKeySize = HSXDEFKEY_SIZE;
@@ -1475,7 +1475,7 @@ static int hb_hsxCreate( char * szFile, int iBufSize, int iKeySize,
 
 static int hb_hsxOpen( char * szFile, int iBufSize, int iMode )
 {
-   char szFileName[ _POSIX_PATH_MAX + 1 ];
+   char szFileName[ HB_PATH_MAX ];
    BOOL fShared, fReadonly;
    PHB_FILE pFile;
    ULONG ulBufSize;
@@ -1486,7 +1486,7 @@ static int hb_hsxOpen( char * szFile, int iBufSize, int iMode )
    if( !szFile || ! *szFile )
       return HSX_BADPARMS;
 
-   hb_strncpy( szFileName, szFile, _POSIX_PATH_MAX );
+   hb_strncpy( szFileName, szFile, HB_PATH_MAX - 1 );
 
    ulBufSize = iBufSize * 1024;
    if( ulBufSize == 0 )

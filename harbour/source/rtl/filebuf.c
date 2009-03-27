@@ -346,7 +346,7 @@ PHB_FILE hb_fileExtOpen( BYTE * pFilename, BYTE * pDefExt,
          pFile = NULL;
       }
       else if( uiExFlags & FXO_COPYNAME )
-         hb_strncpy( ( char * ) pFilename, ( char * ) pszFile, _POSIX_PATH_MAX );
+         hb_strncpy( ( char * ) pFilename, ( char * ) pszFile, HB_PATH_MAX - 1 );
 
       if( pError )
       {

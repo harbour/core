@@ -259,7 +259,7 @@ BOOL hb_compI18nSave( HB_COMP_DECL )
    PHB_I18NTABLE    pI18n;
    PHB_I18NSTRING   pString;
    HB_FNAME         FileName;
-   char             szFileName[ _POSIX_PATH_MAX + 1 ];
+   char             szFileName[ HB_PATH_MAX ];
    char*            szText;
    UINT             uiIndex, uiLine;
    FILE*            file; 

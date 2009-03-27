@@ -248,7 +248,7 @@ void hb_pp_SetRules_( HB_INCLUDE_FUNC_PTR pIncludeFunc, BOOL bQuiet )
 
          if( hb_comp_pFileName->szName )
          {
-            char szFileName[_POSIX_PATH_MAX + 1];
+            char szFileName[HB_PATH_MAX];
 
             if( !hb_comp_pFileName->szExtension )
                hb_comp_pFileName->szExtension = ".ch";
@@ -495,7 +495,7 @@ void hb_pp_Init( void )
 int hb_pp_ParseDirective_( char *sLine )
 {
    char sDirective[MAX_NAME];
-   char szInclude[_POSIX_PATH_MAX + 1];
+   char szInclude[HB_PATH_MAX];
    int i;
    int bIgnore = 1;
    char *sParse;

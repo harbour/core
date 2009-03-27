@@ -225,8 +225,10 @@
    #define HB_ISOPTSEP( c )             ( ( c ) == '-' || ( c ) == '/' )
 #endif
 
-#ifndef _POSIX_PATH_MAX
-   #define _POSIX_PATH_MAX    255
+#ifdef HB_LEGACY_LEVEL2
+   #ifndef _POSIX_PATH_MAX
+      #define _POSIX_PATH_MAX    255
+   #endif
 #endif
 
 #define HB_PATH_MAX     264 /* with trailing 0 byte */

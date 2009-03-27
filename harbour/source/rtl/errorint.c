@@ -62,7 +62,7 @@
 void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 )
 {
    char buffer[ 8192 ];
-   char file[ _POSIX_PATH_MAX + 1 ];
+   char file[ HB_PATH_MAX ];
    const char * szFile;
    USHORT uiLine;
    int iLevel;

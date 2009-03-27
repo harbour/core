@@ -219,7 +219,7 @@ char * hb_procname( int iLevel, char * szName, BOOL fMethodName )
 /* NOTE: szName size must be an at least:
  *          HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5
  *       szFile szie must be an at least:
- *          _POSIX_PATH_MAX + 1
+ *          HB_PATH_MAX
  */
 BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
 {
@@ -276,7 +276,7 @@ BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
          szModule = hb_vmFindModuleSymbolName( hb_vmGetRealFuncSym( pSym ) );
 
          if( szModule )
-            hb_strncpy( szFile, szModule, _POSIX_PATH_MAX );
+            hb_strncpy( szFile, szModule, HB_PATH_MAX - 1 );
          else
             szFile[ 0 ] = '\0';
       }

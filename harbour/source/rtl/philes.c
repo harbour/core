@@ -269,7 +269,7 @@ HB_FUNC( FREADSTR )
 
 HB_FUNC( CURDIR )
 {
-   BYTE byBuffer[ _POSIX_PATH_MAX + 1 ];
+   BYTE byBuffer[ HB_PATH_MAX ];
    USHORT uiDrive = 0;
    char * szDrive;
 
@@ -307,7 +307,7 @@ HB_FUNC( HB_PROGNAME )
 
 HB_FUNC( HB_DIRBASE )
 {
-   BYTE byBuffer[ _POSIX_PATH_MAX + 1 ];
+   BYTE byBuffer[ HB_PATH_MAX ];
 
    hb_fsBaseDirBuff( byBuffer );
 

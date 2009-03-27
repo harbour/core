@@ -7661,7 +7661,7 @@ static HB_ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* open (production) structural index */
    if( DBFAREA_DATA( pArea )->fStrictStruct ? pArea->fHasTags : hb_setGetAutOpen() )
    {
-      char szFileName[ _POSIX_PATH_MAX + 1 ];
+      char szFileName[ HB_PATH_MAX ];
 
       pArea->fHasTags = FALSE;
       hb_cdxCreateFName( pArea, NULL, NULL, szFileName, NULL );
@@ -7768,7 +7768,7 @@ static HB_ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
    USHORT uiFlags;
    PHB_FILE pFile;
    char szBaseName[ CDX_MAXTAGNAMELEN + 1 ];
-   char szFileName[ _POSIX_PATH_MAX + 1 ];
+   char szFileName[ HB_PATH_MAX ];
    LPCDXINDEX pIndex, * pIndexPtr;
    BOOL fProd, bRetry;
    PHB_ITEM pError = NULL;
@@ -7892,7 +7892,7 @@ static HB_ERRCODE hb_cdxOrderListClear( CDXAREAP pArea )
 static HB_ERRCODE hb_cdxOrderListDelete( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    char szTagName[ CDX_MAXTAGNAMELEN + 1 ];
-   char szFileName[ _POSIX_PATH_MAX + 1 ];
+   char szFileName[ HB_PATH_MAX ];
    LPCDXINDEX pIndex, * pIndexPtr;
    BOOL fProd;
 
@@ -8016,7 +8016,7 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
         fTemporary = FALSE, fExclusive = FALSE;
    PHB_ITEM pKeyExp, pForExp = NULL, pResult;
    char szCpndTagName[ CDX_MAXTAGNAMELEN + 1 ], szTagName[ CDX_MAXTAGNAMELEN + 1 ];
-   char szFileName[ _POSIX_PATH_MAX + 1 ], szTempFile[ _POSIX_PATH_MAX + 1 ];
+   char szFileName[ HB_PATH_MAX ], szTempFile[ HB_PATH_MAX ];
    char *szFor = NULL;
    LPCDXINDEX pIndex;
    LPCDXTAG pTag;
@@ -9588,7 +9588,7 @@ static void hb_cdxSortWritePage( LPCDXSORTINFO pSort )
 
    if ( pSort->hTempFile == FS_ERROR )
    {
-      BYTE szName[ _POSIX_PATH_MAX + 1 ];
+      BYTE szName[ HB_PATH_MAX ];
       pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
       if ( pSort->hTempFile == FS_ERROR )
       {

@@ -249,7 +249,7 @@ static LONG s_lMemoryConsumed = 0;    /* memory max size consumed */
 static PHB_MEMINFO s_pFirstBlock = NULL;
 static PHB_MEMINFO s_pLastBlock = NULL;
 
-static char s_szFileName[ _POSIX_PATH_MAX + 1 ] = { '\0' };
+static char s_szFileName[ HB_PATH_MAX ] = { '\0' };
 static char s_szInfo[ 256 ] = { '\0' };
 
 #else /* ! HB_FM_STATISTICS */

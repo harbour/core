@@ -2557,7 +2557,7 @@ BYTE * hb_fsCurDir( USHORT uiDrive )
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDir(%hu)", uiDrive));
 
    pbyDirBuffer = hb_stackDirBuffer();
-   hb_fsCurDirBuff( uiDrive, pbyDirBuffer, _POSIX_PATH_MAX + 1 );
+   hb_fsCurDirBuff( uiDrive, pbyDirBuffer, HB_PATH_MAX );
 
    return ( BYTE * ) pbyDirBuffer;
 }
@@ -2859,7 +2859,7 @@ BYTE * hb_fsExtName( BYTE * pFilename, BYTE * pDefExt,
    BOOL fIsFile = FALSE;
    BYTE * szPath;
 
-   szPath = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
+   szPath = ( BYTE * ) hb_xgrab( HB_PATH_MAX );
 
    pFilepath = hb_fsFNameSplit( ( char * ) pFilename );
 
@@ -3037,7 +3037,7 @@ HB_FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
    }
 
    if( uiExFlags & FXO_COPYNAME && hFile != FS_ERROR )
-      hb_strncpy( ( char * ) pFilename, ( char * ) szPath, _POSIX_PATH_MAX );
+      hb_strncpy( ( char * ) pFilename, ( char * ) szPath, HB_PATH_MAX - 1 );
 
    hb_xfree( szPath );
    return hFile;
@@ -3125,8 +3125,8 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
 
       if( pfFree )
       {
-         BYTE * szNew = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-         hb_strncpy( ( char * ) szNew, ( char * ) szFileName, _POSIX_PATH_MAX );
+         BYTE * szNew = ( BYTE * ) hb_xgrab( HB_PATH_MAX );
+         hb_strncpy( ( char * ) szNew, ( char * ) szFileName, HB_PATH_MAX - 1 );
          szFileName = szNew;
          *pfFree = TRUE;
       }
@@ -3150,7 +3150,7 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
 
          if( fFree )
          {
-            hb_strncpy( ( char * ) szFileName, ( char * ) pbyResult, _POSIX_PATH_MAX );
+            hb_strncpy( ( char * ) szFileName, ( char * ) pbyResult, HB_PATH_MAX - 1 );
             hb_xfree( pbyResult );
          }
       }
@@ -3210,7 +3210,7 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
    return szFileName;
 }
 
-/* NOTE: pbyBuffer must be _POSIX_PATH_MAX + 1 long. */
+/* NOTE: pbyBuffer must be HB_PATH_MAX long. */
 void hb_fsBaseDirBuff( BYTE * pbyBuffer )
 {
    const char * szBaseName = hb_cmdargARGVN( 0 );
@@ -3229,7 +3229,7 @@ void hb_fsBaseDirBuff( BYTE * pbyBuffer )
       /* Convert from OS codepage */
       pbyResult = hb_osDecode( pbyBuffer, &fFree );
       if( pbyResult != pbyBuffer )
-         hb_strncpy( ( char * ) pbyBuffer, ( char * ) pbyResult, _POSIX_PATH_MAX );
+         hb_strncpy( ( char * ) pbyBuffer, ( char * ) pbyResult, HB_PATH_MAX - 1 );
       if( fFree )
          hb_xfree( pbyResult );
    }

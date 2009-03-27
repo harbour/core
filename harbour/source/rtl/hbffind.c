@@ -147,8 +147,8 @@
    {
       DIR *           dir;
       struct dirent * entry;
-      char            pattern[ _POSIX_PATH_MAX + 1 ];
-      char            path[ _POSIX_PATH_MAX + 1 ];
+      char            pattern[ HB_PATH_MAX ];
+      char            path[ HB_PATH_MAX ];
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 
 #else
@@ -634,8 +634,8 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    {
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
-      char dirname[ _POSIX_PATH_MAX + 1 ];
-      char string[ _POSIX_PATH_MAX + 1 ];
+      char dirname[ HB_PATH_MAX ];
+      char string[ HB_PATH_MAX ];
 
       bFound = FALSE;
 

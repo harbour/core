@@ -143,7 +143,7 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit: Filename: |%s|\n", pszFileName));
 
-   iPos = iSize = hb_strnlen( pszFileName, _POSIX_PATH_MAX );
+   iPos = iSize = hb_strnlen( pszFileName, HB_PATH_MAX - 1 );
    cDirSep = ( char ) hb_setGetDirSeparator();
 
    /* Grab memory, set defaults */
@@ -219,9 +219,9 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
    return pFileName;
 }
 
-/* NOTE: szFileName buffer must be at least _POSIX_PATH_MAX + 1 long.
+/* NOTE: szFileName buffer must be at least HB_PATH_MAX long.
  *       Because some freign code may not be updated yet then
- *       hb_fsFNameMerge() efectively uses only _POSIX_PATH_MAX buffer
+ *       hb_fsFNameMerge() efectively uses only HB_PATH_MAX buffer
  *       but it will be changed in the future.
  */
 
@@ -247,7 +247,7 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 
    /* Add path if specified */
    if( pFileName->szPath )
-      hb_strncat( pszFileName, pFileName->szPath, _POSIX_PATH_MAX - 1 );
+      hb_strncat( pszFileName, pFileName->szPath, HB_PATH_MAX - 1 - 1 );
 
    /* If we have a path, append a path separator to the path if there
       was none. */
@@ -255,7 +255,7 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
    {
       int iLen = strlen( pszFileName ) - 1;
 
-      if( iLen < _POSIX_PATH_MAX - 2 && pszFileName[ iLen ] != cDirSep &&
+      if( iLen < HB_PATH_MAX - 1 - 2 && pszFileName[ iLen ] != cDirSep &&
           strchr( HB_OS_PATH_DELIM_CHR_LIST, pszFileName[ iLen ] ) == NULL )
       {
          pszFileName[ iLen + 1 ] = HB_OS_PATH_DELIM_CHR;
@@ -265,7 +265,7 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 
    /* Add filename (without extension) if specified */
    if( pszName )
-      hb_strncat( pszFileName, pszName, _POSIX_PATH_MAX - 1 );
+      hb_strncat( pszFileName, pszName, HB_PATH_MAX - 1 - 1 );
 
    /* Add extension if specified */
    if( pFileName->szExtension )
@@ -273,9 +273,9 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
       /* Add a dot if the extension doesn't have it */
       if( pFileName->szExtension[ 0 ] != '\0' &&
           pFileName->szExtension[ 0 ] != '.' )
-         hb_strncat( pszFileName, ".", _POSIX_PATH_MAX - 1 );
+         hb_strncat( pszFileName, ".", HB_PATH_MAX - 1 - 1 );
 
-      hb_strncat( pszFileName, pFileName->szExtension, _POSIX_PATH_MAX - 1 );
+      hb_strncat( pszFileName, pFileName->szExtension, HB_PATH_MAX - 1 - 1 );
    }
 
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szPath: |%s|\n", pFileName->szPath));

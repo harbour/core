@@ -23,7 +23,7 @@ CPPFLAGS = -I.
 CPPFLAGS += -Ze -Go
 
 ifneq ($(HB_BUILD_WARN),no)
-CPPFLAGS += -W2
+CPPFLAGS += -W1
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)

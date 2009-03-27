@@ -34,7 +34,7 @@
 #define HB_CFG_FILENAME    "harbour.cfg"
 
 /* QUESTION: Allocate buffer dynamically ? */
-#define HB_CFG_LINE_LEN    ( _POSIX_PATH_MAX << 1 )
+#define HB_CFG_LINE_LEN    ( ( HB_PATH_MAX - 1 ) << 1 )
 
 #if defined( HB_OS_UNIX_COMPATIBLE )
    #define HB_NULL_STR " > /dev/null"
@@ -52,7 +52,7 @@ static char * hb_searchpath( const char * pszFile, char * pszEnv, char * pszCfg 
    /* Check current dir first  */
    if( hb_fsFileExists( ( const char * ) pszFile ) )
    {
-      hb_snprintf( pszCfg, _POSIX_PATH_MAX + 1, "%s", pszFile );
+      hb_snprintf( pszCfg, HB_PATH_MAX, "%s", pszFile );
       return ( char * ) pszFile;
    }
    else
@@ -72,7 +72,7 @@ static char * hb_searchpath( const char * pszFile, char * pszEnv, char * pszCfg 
          }
          if( *pszPath )
          {
-            hb_snprintf( pszCfg, _POSIX_PATH_MAX + 1, "%s%c%s", pszPath, HB_OS_PATH_DELIM_CHR, pszFile );
+            hb_snprintf( pszCfg, HB_PATH_MAX, "%s%c%s", pszPath, HB_OS_PATH_DELIM_CHR, pszFile );
             if( hb_fsFileExists( ( const char * ) pszCfg ) )
             {
                bFound = TRUE;
@@ -127,13 +127,13 @@ static void hb_substenvvar( char * szLine )
 /* Builds platform dependant object module from Harbour C output */
 void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 {
-   char szFileName[ _POSIX_PATH_MAX + 1 ];
+   char szFileName[ HB_PATH_MAX ];
    char szLine[ HB_CFG_LINE_LEN + 1 ];
    char szCompiler[ HB_CFG_LINE_LEN + 1 ] = "";
    char szOptions[ HB_CFG_LINE_LEN + 1 ] = "";
    char szCommandLine[ HB_CFG_LINE_LEN * 2 + 1 ];
-   char szOutPath[ _POSIX_PATH_MAX + 1 ] = "\0";
-   char pszTemp[ _POSIX_PATH_MAX + 1 ] = "";
+   char szOutPath[ HB_PATH_MAX ] = "\0";
+   char pszTemp[ HB_PATH_MAX ] = "";
    char buffer[ HB_CFG_LINE_LEN * 2 + 1024 ];
 #if defined( HB_OS_UNIX_COMPATIBLE )
    char * pszEnv = hb_strdup( "/etc:/usr/local/etc" );

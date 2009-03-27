@@ -147,7 +147,7 @@
 
 /* ------------------------------- */
 
-static BYTE s_byDirBuffer[ _POSIX_PATH_MAX + 1 ];
+static BYTE s_byDirBuffer[ HB_PATH_MAX ];
 static HB_IOERRORS s_IOErrors;
 
 /* ------------------------------- */
@@ -838,7 +838,7 @@ BYTE * hb_stackDirBuffer( void )
    {
       HB_STACK_TLS_PRELOAD
       if( !hb_stack.byDirBuffer )
-         hb_stack.byDirBuffer = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
+         hb_stack.byDirBuffer = ( BYTE * ) hb_xgrab( HB_PATH_MAX );
       return hb_stack.byDirBuffer;
    }
 #endif
@@ -1170,7 +1170,7 @@ void hb_stackDispLocal( void )
 void hb_stackDispCall( void )
 {
    char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 + 10 ]; /* additional 10 bytes for line info (%hu) overhead */
-   char file[ _POSIX_PATH_MAX + 1 ];
+   char file[ HB_PATH_MAX ];
    USHORT uiLine;
    int iLevel;
 

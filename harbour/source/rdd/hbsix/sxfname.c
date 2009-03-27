@@ -61,7 +61,7 @@ HB_FUNC( SX_FNAMEPARSER )
 
    if( szFileName )
    {
-      char szPathBuf[ _POSIX_PATH_MAX + 1 ];
+      char szPathBuf[ HB_PATH_MAX ];
       PHB_FNAME pFileName;
       ULONG ulLen;
       BOOL fFree;

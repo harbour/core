@@ -3843,7 +3843,7 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
 
    if( pCreateInfo )
    {
-      BYTE szFileName[ _POSIX_PATH_MAX + 1 ];
+      BYTE szFileName[ HB_PATH_MAX ];
       PHB_FNAME pFileName;
       PHB_ITEM pError = NULL, pItem = NULL;
       BOOL bRetry;
@@ -4079,7 +4079,7 @@ static HB_ERRCODE hb_fptGetValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szF
  */
 static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
-   BYTE szFileName[ _POSIX_PATH_MAX + 1 ];
+   BYTE szFileName[ HB_PATH_MAX ];
    PHB_FNAME pFileName;
    PHB_ITEM pError;
    USHORT uiFlags;
@@ -4471,7 +4471,7 @@ static HB_ERRCODE hb_fptDoPack( FPTAREAP pArea, USHORT uiBlockSize,
       return HB_FAILURE;
    else if( pArea->fHasMemo && pArea->pMemoFile && pArea->pDataFile )
    {
-      BYTE szFile[ _POSIX_PATH_MAX + 1 ];
+      BYTE szFile[ HB_PATH_MAX ];
       ULONG ulRecNo, ulRecords;
       LONG lStep = lEvalStep;
 
@@ -4615,7 +4615,7 @@ static HB_ERRCODE hb_fptPack( FPTAREAP pArea )
    if( !pArea->fReadonly && !pArea->fShared &&
        pArea->fHasMemo && pArea->pMemoFile && pArea->pDataFile )
    {
-      BYTE szFile[ _POSIX_PATH_MAX + 1 ];
+      BYTE szFile[ HB_PATH_MAX ];
 
       if( SELF_GOCOLD( ( AREAP ) pArea ) != HB_SUCCESS )
          return HB_FAILURE;
