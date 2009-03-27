@@ -218,7 +218,7 @@ static void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
       case VT_BSTR:
       {
          char* szString = WideToAnsi( pVariant->n1.n2.n3.bstrVal );
-         hb_itemPutCLPtr( pItem, szString, strlen( szString ) );
+         hb_itemPutCPtr2( pItem, szString );
          break;
       }
 

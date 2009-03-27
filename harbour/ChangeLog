@@ -8,6 +8,35 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-27 10:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added autodetection of lib/<arch>/<comp> lib dir. This
+      makes it possible to use hbmk2 in multicompiler scenarios
+      without 'make install'ing Harbour, or even multicompiler
+      end-user configurations for any compiler regardless of
+      lib format and naming.
+
+  + contrib/hbqt/tests/hbqt.hbp
+    + Added .hbp file for hbqt.
+
+  * contrib/hbodbc/odbc.c
+    * Further type cleanup.
+    * Formatting.
+
+  * contrib/hbole/tests/testole.prg
+    * Minor cleanups.
+
+  * contrib/hbole/olecore.c
+    * Using hb_itemGetCPtr2() instead of hb_itemGetCLPtr()
+
+  * contrib/hbwin/wapi_commctrl.c
+  * contrib/hbwin/wapi_winuser.c
+    ! WinCE fixes.
+    * Formatting.
+
+  * contrib/examples/hbwhat/tests/hbwhat.hbp
+    - Removed no longer necessary Windows libs.
+
 2009-03-27 02:53 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/tests/speedtst.prg
     * redirect output to file using SET ALTERNATE ... instead of stdout()

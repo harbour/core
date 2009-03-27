@@ -20,7 +20,7 @@ PROCEDURE Main()
    LOCAL nOption
 
    CLS
-   SetColor("W+/R")
+
    @  6, 25 TO 19, 55 DOUBLE
    @  8, 28 SAY "Test Harbour OLE with..."
 
@@ -57,7 +57,6 @@ PROCEDURE Main()
       ENDIF
    ENDDO
 
-   SetColor("W/N")
    CLS
 
    RETURN
@@ -72,7 +71,7 @@ STATIC PROCEDURE Exm_CDO()
    IF ( oCDOMsg  := CreateObject( "CDO.Message" ) ) != NIL .AND. ;
       ( oCDOConf := CreateObject( "CDO.Configuration" ) ) != NIL
 
-      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/sendusing") := 2 // ; cdoSendUsingPort
+      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/sendusing") := 2 /* cdoSendUsingPort */
       oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserver") := "localhost"
       oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserverport") := 25
       oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout") := 120
@@ -89,9 +88,6 @@ STATIC PROCEDURE Exm_CDO()
    ELSE
       Alert( "Error: CDO subsystem not available. [" + OLEErrorText()+ "]" )
    ENDIF
-
-   oCDOConf := NIL
-   oCDOMsg := NIL
 
    RETURN
 
@@ -195,7 +191,7 @@ STATIC PROCEDURE Exm_MSWord()
       oText:Font:Bold := .T.
 
       oWord:Visible := .T.
-      oWord:WindowState := 1 // ; Maximize
+      oWord:WindowState := 1 /* Maximize */
    ELSE
       Alert( "Error: MS Word not available. [" + OLEErrorText()+ "]" )
    ENDIF
@@ -208,7 +204,7 @@ STATIC PROCEDURE Exm_MSOutlook()
    LOCAL oList
 
    IF ( oOL := CreateObject( "Outlook.Application" ) ) != NIL
-      oList := oOL:CreateItem( 7 ) // ; olDistributionListItem
+      oList := oOL:CreateItem( 7 /* olDistributionListItem */ )
       oList:DLName := "Distribution List"
       oList:Display( .F. )
    ELSE
@@ -224,19 +220,16 @@ STATIC PROCEDURE Exm_MSOutlook2()
    LOCAL oMail
    LOCAL i
 
-   oOL := hb_OleAuto():New( "Outlook.Application.9" )
+   IF ( oOL := hb_OleAuto():New( "Outlook.Application.9" ) ) != NIL
 
-   IF OLEErrorText() != "S_OK"
-      Alert("Outlook is not available", "Error")
-   ELSE
-      oMail := oOL:CreateItem( 0 )  // olMailItem
+      oMail := oOL:CreateItem( 0 /* olMailItem */ )
 
       FOR i := 1 TO 10
          oMail:Recipients:Add( "Contact" + LTRIM( STR( i, 2 ) ) + ;
                "<contact" + LTRIM( STR( i, 2 ) ) + "@server.com>" )
       NEXT
 
-      oLista := oOL:CreateItem( 7 )  // olDistributionListItem
+      oLista := oOL:CreateItem( 7 /* olDistributionListItem */ )
       oLista:DLName := "Test with distribution list"
       oLista:Display( .F. )
       oLista:AddMembers( oMail:Recipients )
@@ -246,7 +239,8 @@ STATIC PROCEDURE Exm_MSOutlook2()
       oMail:End()
       oLista:End()
       oOL:End()
-
+   ELSE
+      Alert("Outlook is not available", "Error")
    ENDIF
 
    RETURN

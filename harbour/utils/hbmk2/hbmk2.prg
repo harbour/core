@@ -574,19 +574,6 @@ FUNCTION Main( ... )
       PauseForKey()
       RETURN 3
    ENDIF
-   IF Empty( s_cHB_BIN_INSTALL )
-      s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "bin"
-   ENDIF
-   IF Empty( s_cHB_LIB_INSTALL )
-      s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "lib"
-   ENDIF
-   IF Empty( s_cHB_INC_INSTALL )
-      s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "include"
-   ENDIF
-
-   IF t_lInfo
-      OutStd( "hbmk: Using Harbour: " + s_cHB_BIN_INSTALL + " " + s_cHB_INC_INSTALL + " " + s_cHB_LIB_INSTALL + hb_osNewLine() )
-   ENDIF
 
    /* Autodetect compiler */
 
@@ -672,6 +659,29 @@ FUNCTION Main( ... )
             RETURN 2
          ENDIF
       ENDIF
+   ENDIF
+
+   /* Finish detecting bin/lib/include dirs */
+
+   IF Empty( s_cHB_BIN_INSTALL )
+      s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "bin"
+   ENDIF
+   IF Empty( s_cHB_LIB_INSTALL )
+      /* Autodetect multi-compiler/platform lib structure */
+      IF hb_DirExists( tmp := PathNormalize( s_cHB_INSTALL_PREFIX ) + "lib" +;
+                                               hb_osPathSeparator() + t_cARCH +;
+                                               hb_osPathSeparator() + t_cCOMP )
+         s_cHB_LIB_INSTALL := tmp
+      ELSE
+         s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "lib"
+      ENDIF
+   ENDIF
+   IF Empty( s_cHB_INC_INSTALL )
+      s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "include"
+   ENDIF
+
+   IF t_lInfo
+      OutStd( "hbmk: Using Harbour: " + s_cHB_BIN_INSTALL + " " + s_cHB_INC_INSTALL + " " + s_cHB_LIB_INSTALL + hb_osNewLine() )
    ENDIF
 
    s_cHB_BIN_INSTALL := PathSepToTarget( s_cHB_BIN_INSTALL )

@@ -97,9 +97,8 @@ HB_FUNC( WAPI_GETSCROLLBARINFO )
                                 wapi_par_LONG( 2 ),
                                 sbi );
    if( bSuccess )
-   {
-      hb_storclen( ( char* ) &sbi, sizeof( SCROLLBARINFO ), 3 );
-   }
+      hb_storclen( ( char * ) &sbi, sizeof( SCROLLBARINFO ), 3 );
+
    wapi_ret_L( bSuccess );
 }
 #endif
@@ -116,7 +115,7 @@ HB_FUNC( WAPI_GETSCROLLINFO )
                              wapi_par_INT( 2 ),
                              si );
    if( bSuccess )
-      hb_storclen( ( char* ) &si, 3, sizeof( SCROLLINFO ) );
+      hb_storclen( ( char * ) &si, 3, sizeof( SCROLLINFO ) );
 
    wapi_ret_L( bSuccess );
 }
@@ -263,10 +262,7 @@ HB_FUNC( WAPI_LOADBITMAP )
 
    hbmp = LoadBitmap( hinst, lpBmp );
    if( hbmp )
-   {
-hb_ToOutDebug( "hbmp loaded" );
       wapi_ret_NINT( ( long ) hbmp );
-   }
    else
       wapi_ret_NI( 0 );
 

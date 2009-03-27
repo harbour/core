@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+
+libs=hbqt
+libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4

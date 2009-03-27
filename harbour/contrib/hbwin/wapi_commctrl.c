@@ -752,6 +752,8 @@ HB_FUNC( WAPI_TABCTRL_SETUNICODEFORMAT )
 {
 #if ! defined(HB_OS_WIN_CE)
    wapi_ret_L( TabCtrl_SetUnicodeFormat( wapi_par_HWND( 1 ), wapi_par_BOOL( 2 ) ) );
+#else
+   wapi_ret_L( FALSE );
 #endif
 }
 /*----------------------------------------------------------------------*/
