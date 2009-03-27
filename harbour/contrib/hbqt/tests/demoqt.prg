@@ -52,7 +52,7 @@
  */
 /*----------------------------------------------------------------------*/
 
-Procedure Main ()
+Procedure Main()
 
    Local oApplication, oMainWindow
 
@@ -62,9 +62,8 @@ Procedure Main ()
 
    Qt_QWidget_SetWindowTitle( oMainWindow, "Testing Harbour-QT Implementation" )
    Qt_QWidget_Resize( oMainWindow, 640, 480)
-   Qt_QWidget_Show(  oMainWindow )
+   Qt_QWidget_Show( oMainWindow )
 
    Qt_QApplication_exec()
-
 
    Return

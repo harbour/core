@@ -526,7 +526,7 @@ HB_FUNC( PQSTATUS )
 HB_FUNC( PQRESULTERRORMESSAGE )
 {
    if( hb_parinfo( 1 ) )
-       hb_retc( PQresultErrorMessage( ( PGresult * ) hb_parptr( 1 ) ) );
+      hb_retc( PQresultErrorMessage( ( PGresult * ) hb_parptr( 1 ) ) );
 }
 
 HB_FUNC( PQRESULTSTATUS )

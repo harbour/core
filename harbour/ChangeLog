@@ -8,6 +8,19 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-27 14:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbodbc/odbc.c
+    * BYTE -> char
+    ! GetDesktopWindow() -> NULL
+
+  * contrib/hbmsql/tmsql.prg
+  * contrib/hbqt/tests/demoqt.prg
+  * contrib/hbpgsql/postgres.c
+    * Formatting.
+
+  * contrib/examples/hbapollo/Makefile
+    ! Changed root dir after recent move.
+
 2009-03-27 14:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbvm.h
   * harbour/source/vm/hvm.c
@@ -46,7 +59,7 @@
 
   * contrib/hbqt/tests/hbqt.hbp
     + Added C++ and runtime MinGW lib.
-    ; TOFIX: I still get:
+    ; TOFIX: I still get: [SOLVED]
       harbour/lib/win/mingw/libhbvm.a(fm.o):fm.c:(.text+0x39b): undefined reference to `__mingw_vfprintf'
     + gui=yes
 

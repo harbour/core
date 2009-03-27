@@ -131,7 +131,7 @@ HB_FUNC( SQLDRIVERCONNECT ) /* hDbc, @cConnectString --> nRetCode */
    SQLTCHAR buffer[ 1024 ];
    buffer[ 0 ] = '\0';
    ret = SQLDriverConnect( ( SQLHDBC ) hb_parptr( 1 ),
-                           ( SQLHWND ) GetDesktopWindow(),
+                           ( SQLHWND ) NULL,
                            ( SQLTCHAR * ) lpStr,
                            ( SQLSMALLINT ) hb_parclen( 2 ),
                            ( SQLTCHAR * ) buffer,
@@ -149,7 +149,7 @@ HB_FUNC( SQLDRIVERCONNECT ) /* hDbc, @cConnectString --> nRetCode */
    SQLTCHAR buffer[ 1024 ];
    buffer[ 0 ] = '\0';
    ret = SQLDriverConnect( ( SQLHDBC ) hb_parptr( 1 ),
-                           ( SQLHWND ) GetDesktopWindow(),
+                           ( SQLHWND ) NULL,
                            ( SQLTCHAR * ) hb_parcx( 2 ),
                            ( SQLSMALLINT ) hb_parclen( 2 ),
                            ( SQLTCHAR * ) buffer,
@@ -492,7 +492,7 @@ HB_FUNC( SQLROWCOUNT )
 
 HB_FUNC( SQLGETINFO ) /* hDbc, nType, @cResult */
 {
-   BYTE bBuffer[ 512 ];
+   char bBuffer[ 512 ];
    SQLSMALLINT wLen;
    SQLRETURN result = SQLGetInfo( ( SQLHDBC ) hb_parptr( 1 ),
                                   ( SQLUSMALLINT ) hb_parnl( 2 ),
@@ -545,7 +545,7 @@ HB_FUNC( SQLGETCONNECTATTR ) /* hDbc, nOption, @cOption */
    hb_storclen( result == SQL_SUCCESS ? ( char * ) buffer : NULL, len, 3 );
    hb_retni( result );
 #else
-   BYTE bBuffer[ 512 ];
+   char bBuffer[ 512 ];
    SQLRETURN result = SQLGetConnectOption( ( SQLHDBC ) hb_parptr( 1 ),
                                            ( SQLSMALLINT ) hb_parni( 2 ),
                                            ( SQLPOINTER ) bBuffer );
@@ -569,7 +569,7 @@ HB_FUNC( SQLGETSTMTATTR ) /* hStmt, nOption, @cOption */
    hb_storclen( result == SQL_SUCCESS ? ( char * ) buffer : NULL, len, 3 );
    hb_retni( result );
 #else
-   BYTE bBuffer[ 512 ];
+   char bBuffer[ 512 ];
    SQLRETURN result = SQLGetStmtOption( ( SQLHSTMT ) hb_parptr( 1 ),
                                         ( SQLSMALLINT ) hb_parni( 2 ),
                                         ( SQLPOINTER ) bBuffer );
@@ -634,7 +634,7 @@ HB_FUNC( SQLEXECUTESCALAR )
          result = SQLFetch( ( SQLHSTMT ) hStmt );
          if( result != SQL_NO_DATA )
          {
-            BYTE bBuffer[ 256 ];
+            char bBuffer[ 256 ];
             SQLLEN lLen;
             result = SQLGetData( ( SQLHSTMT ) hStmt,
                                  ( SQLUSMALLINT ) 1,

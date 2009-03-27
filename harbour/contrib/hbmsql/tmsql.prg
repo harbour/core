@@ -58,7 +58,7 @@
 
 
 // Every single row of an answer
-CLASS TmSQLRow
+CREATE CLASS TmSQLRow
 
    DATA  aRow              // a single row of answer
    DATA  aDirty            // array of booleans set to .T. if corresponding field of aRow has been changed
@@ -167,7 +167,7 @@ return ""
 /* ----------------------------------------------------------------------------------------*/
 
 // Every single query submitted to mSQL server
-CLASS TmSQLQuery
+CREATE CLASS TmSQLQuery
 
    DATA  nSocket           // connection handle to mSQL server
    DATA  nResultHandle     // result handle received from mSQL
@@ -352,7 +352,7 @@ return msqlGetErr()
 // A Table is a query without joins; this way I can Insert() e Delete() rows.
 // NOTE: it's always a SELECT result, so it will contain a full table only if
 //       SELECT * FROM ... was issued
-CLASS TmSQLTable FROM TmSQLQuery
+CREATE CLASS TmSQLTable FROM TmSQLQuery
 
    DATA  cTable               // name of table
 
@@ -587,7 +587,7 @@ return TmSQLRow():New(aRow, ::aFieldStruct, ::cTable, .F.)
 /* ----------------------------------------------------------------------------------------*/
 
 // Every available mSQL server
-CLASS TmSQLServer
+CREATE CLASS TmSQLServer
 
    DATA  nSocket                 // connection handle to server
    DATA  cServer                 // server name
