@@ -16,6 +16,12 @@ endif
 ifeq ($(HB_ARCHITECTURE),hpux)
 HB_WITHOUT_SQLIT3=yes
 endif
+ifeq ($(HB_ARCHITECTURE),linux)
+HB_WITHOUT_SQLIT3=yes
+endif
+ifeq ($(HB_ARCHITECTURE),darwin)
+HB_WITHOUT_SQLIT3=yes
+endif
 endif
 
 ifneq ($(HB_WITHOUT_SQLIT3),yes)

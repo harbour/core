@@ -6,31 +6,19 @@ ROOT = ../../
 
 LIBNAME=hbsqlit3
 
-ifeq ($(HB_WITHOUT_SQLIT3),)
-ifeq ($(HB_ARCHITECTURE),dos)
-HB_WITHOUT_SQLIT3=yes
-endif
-ifeq ($(HB_ARCHITECTURE),bsd)
-HB_WITHOUT_SQLIT3=yes
-endif
-ifeq ($(HB_ARCHITECTURE),hpux)
-HB_WITHOUT_SQLIT3=yes
-endif
-endif
-
-ifneq ($(HB_WITHOUT_SQLIT3),yes)
-
-HB_INC_SQLITE3_OK =
-
 ifeq ($(HB_INC_SQLITE3),)
 ifeq ($(HB_XBUILD),)
-HB_INC_SQLITE3 = /usr/include $(TOP)$(ROOT)/external/sqlite3
+HB_INC_SQLITE3 = /usr/include
+ifeq ($(HB_ARCHITECTURE),win)
+HB_INC_SQLITE3 += $(TOP)$(ROOT)/external/sqlite3
+endif
+ifeq ($(HB_ARCHITECTURE),os2)
+HB_INC_SQLITE3 += $(TOP)$(ROOT)/external/sqlite3
+endif
 endif
 endif
 
 HB_INC_SQLITE3_OK += $(foreach d, $(HB_INC_SQLITE3), $(if $(wildcard $(d)/sqlite3.h),$(d),))
-
-endif
 
 ifneq ($(strip $(HB_INC_SQLITE3_OK)),)
 

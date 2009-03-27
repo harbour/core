@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-27 15:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * external/sqlite3/Makefile
+    * Don't build it for linux and darwin.
+
+  * contrib/hbsqlit3/Makefile
+    * Changed to plain standard external dependency search method.
+    + Added searching in local sqlite3 copy for win and os2.
+
 2009-03-27 15:01 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbodbc/odbc.c
     ! Fixed potential buffer overrun in SQLDRIVERCONNECT() in UNICODE mode.
