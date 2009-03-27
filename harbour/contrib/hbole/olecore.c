@@ -69,6 +69,19 @@
    #define NONAMELESSUNION
 #endif
 
+/* macros used to hide type of interface: C or C++
+ */
+#if defined( __cplusplus ) && !defined( CINTERFACE ) && \
+   ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
+     ( defined(__WATCOMC__) && ( __WATCOMC__ >= 1270 ) ) )
+#  define HB_OLE_C_API        0
+#  define HB_ID_REF( id )     ( id )
+#else
+#  define HB_OLE_C_API        1
+#  define HB_ID_REF( id )     ( &id )
+#endif
+
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapicls.h"
@@ -85,7 +98,6 @@ static HRESULT      s_lOleError = 0;
 static PHB_DYNS s_pDyns_hb_oleauto;
 static PHB_DYNS s_pDyns_hObjAccess;
 static PHB_DYNS s_pDyns_hObjAssign;
-static PHB_DYNS s_pDyns_GetMessage;
 
 
 HB_EXPORT void hb_oleInit( void );  /* TODO: move to some hbole.h */
@@ -100,9 +112,8 @@ static void hb_olecore_init( void* cargo )
    s_pDyns_hb_oleauto = hb_dynsymGetCase( "HB_OLEAUTO" );
    s_pDyns_hObjAccess = hb_dynsymGetCase( "__HOBJ" );
    s_pDyns_hObjAssign = hb_dynsymGetCase( "___HOBJ" );
-   s_pDyns_GetMessage = hb_dynsymGetCase( "__GETMESSAGE" );
 
-   if( s_pDyns_hObjAssign == s_pDyns_GetMessage )
+   if( s_pDyns_hObjAccess == s_pDyns_hObjAssign )
    {
       /* Never executed. Just force linkage */
       HB_FUN_HB_OLEAUTO();
@@ -350,9 +361,8 @@ HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 {
    wchar_t*    cCLSID;
    GUID        ClassID, iid;
-   REFIID      riid = &IID_IDispatch;
-   IDispatch*  pDisp = NULL;
    BOOL        fIID = FALSE;
+   LPVOID      pDisp = NULL; /* IDispatch* */
    const char* cOleName = hb_parc( 1 );
    const char* cID = hb_parc( 2 );
 
@@ -372,15 +382,17 @@ HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
             cCLSID = AnsiToWide( cID );
             s_lOleError = CLSIDFromString( (LPOLESTR) cCLSID, &iid );
             hb_xfree( cCLSID );
+            fIID = TRUE;
          }
          else if( hb_parclen( 2 ) == ( ULONG ) sizeof( iid ) )
+         {
             memcpy( (LPVOID) &iid, cID, sizeof( iid ) );
-
-         fIID = TRUE;
+            fIID = TRUE;
+         }
       }
 
       if( s_lOleError == S_OK )
-         s_lOleError = CoCreateInstance( &ClassID, NULL, CLSCTX_SERVER, fIID ? &iid : riid, (LPVOID *) (LPVOID) &pDisp );
+         s_lOleError = CoCreateInstance( HB_ID_REF( ClassID ), NULL, CLSCTX_SERVER, fIID ? HB_ID_REF( iid ) : HB_ID_REF( IID_IDispatch ), &pDisp );
    }
    else
       s_lOleError = CO_E_CLASSSTRING;
@@ -393,8 +405,8 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 {
    BSTR          wCLSID;
    IID           ClassID, iid;
-   LPIID         riid = (LPIID) &IID_IDispatch;
-   IDispatch*    pDisp = NULL;
+   BOOL          fIID = FALSE;
+   LPVOID        pDisp = NULL; /* IDispatch* */
    IUnknown*     pUnk = NULL;
    const char*   cOleName = hb_parc( 1 );
    const char*   cID = hb_parc( 2 );
@@ -419,21 +431,25 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
             wCLSID = (BSTR) AnsiToWide( (LPSTR) cID );
             s_lOleError = CLSIDFromString( wCLSID, &iid );
             hb_xfree( wCLSID );
-            riid = &iid;
+            fIID = TRUE;
          }
          else if( hb_parclen( 2 ) == ( ULONG ) sizeof( iid ) )
          {
             memcpy( ( LPVOID ) &iid, cID, sizeof( iid ) );
-            riid = &iid;
+            fIID = TRUE;
          }
       }
 
       if( s_lOleError == S_OK )
       {
-         s_lOleError = GetActiveObject( &ClassID, NULL, &pUnk );
+         s_lOleError = GetActiveObject( HB_ID_REF( ClassID ), NULL, &pUnk );
 
          if ( s_lOleError == S_OK )
-            s_lOleError = pUnk->lpVtbl->QueryInterface( pUnk, riid, (void **) ( void * ) &pDisp );
+#if HB_OLE_C_API
+            s_lOleError = pUnk->lpVtbl->QueryInterface( pUnk, fIID ? &iid : &IID_IDispatch, &pDisp );
+#else
+            s_lOleError = pUnk->QueryInterface( fIID ? iid : IID_IDispatch, &pDisp );
+#endif
       }
    }
    else
@@ -447,7 +463,14 @@ HB_FUNC( OLERELEASE )
 {
    IDispatch * pDisp = ( IDispatch* ) hb_parptr( 1 );
 
-   s_lOleError = pDisp ? pDisp->lpVtbl->Release( pDisp ) : E_INVALIDARG;
+   if( pDisp )
+#if HB_OLE_C_API
+      s_lOleError = ( HRESULT ) pDisp->lpVtbl->Release( pDisp );
+#else
+      s_lOleError = ( HRESULT ) pDisp->Release();
+#endif
+   else
+      s_lOleError = E_INVALIDARG;
    hb_retl( s_lOleError == S_OK  );
 }
 
@@ -490,7 +513,7 @@ HB_FUNC( OLEERRORTEXT )
 HB_FUNC( HB_OLEAUTO___ONERROR )
 {
    IDispatch*  pDisp;
-   char*       szMethod;
+   const char* szMethod;
    wchar_t*    szMethodWide;
    OLECHAR*    pMemberArray;
    DISPID      dispid;
@@ -505,19 +528,13 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
    hb_vmSend( 0 );
    pDisp = ( IDispatch* ) hb_parptr( -1 );
 
-   /* TODO: implement hb_clsGetMessageName() */
-   hb_vmPushDynSym( s_pDyns_GetMessage );
-   hb_vmPushNil();
-   hb_vmDo( 0 );
-
    if( ! pDisp )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 1005, "Invalid HB_OLEAUTO object", hb_parc( -1 ), HB_ERR_ARGS_SELFPARAMS );
       return;
    }
 
-   /* Take a copy of szMethod string, because return item could be overwritten */
-   szMethod = hb_strdup( hb_parc( -1 ) );
+   szMethod = hb_itemGetSymbol( hb_stackBaseItem() )->szName;
    szMethodWide = AnsiToWide( szMethod );
 
    /* Try property put */
@@ -525,8 +542,13 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
    if( szMethod[ 0 ] == '_' && hb_pcount() > 0 )
    {
       pMemberArray = &szMethodWide[ 1 ];
+#if HB_OLE_C_API
       s_lOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, &pMemberArray,
                                                   1, LOCALE_USER_DEFAULT, &dispid );
+#else
+      s_lOleError = pDisp->GetIDsOfNames( IID_NULL, &pMemberArray,
+                                          1, LOCALE_USER_DEFAULT, &dispid );
+#endif
 
       if ( s_lOleError == S_OK )
       {
@@ -537,14 +559,19 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
          dispparam.rgdispidNamedArgs = &lPropPut;
          dispparam.cNamedArgs = 1;
 
+#if HB_OLE_C_API
          s_lOleError = pDisp->lpVtbl->Invoke( pDisp, dispid, &IID_NULL,
                                               LOCALE_USER_DEFAULT,
                                               DISPATCH_PROPERTYPUT, &dispparam,
                                               NULL, &excep, &uiArgErr );
-
+#else
+         s_lOleError = pDisp->Invoke( dispid, IID_NULL,
+                                      LOCALE_USER_DEFAULT,
+                                      DISPATCH_PROPERTYPUT, &dispparam,
+                                      NULL, &excep, &uiArgErr );
+#endif
          FreeParams( &dispparam );
          hb_xfree( szMethodWide );
-         hb_xfree( szMethod );
          hb_ret();
          return;
       }
@@ -553,8 +580,13 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
    /* Try property get and invoke */
 
    pMemberArray = szMethodWide;
+#if HB_OLE_C_API
    s_lOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, &pMemberArray,
                                                1, LOCALE_USER_DEFAULT, &dispid );
+#else
+   s_lOleError = pDisp->GetIDsOfNames( IID_NULL, &pMemberArray,
+                                       1, LOCALE_USER_DEFAULT, &dispid );
+#endif
    hb_xfree( szMethodWide );
 
    if ( s_lOleError == S_OK )
@@ -563,17 +595,23 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
       VariantInit( &RetVal );
       GetParams( &dispparam );
 
+#if HB_OLE_C_API
       s_lOleError = pDisp->lpVtbl->Invoke( pDisp, dispid, &IID_NULL,
                                            LOCALE_USER_DEFAULT,
                                            DISPATCH_PROPERTYGET | DISPATCH_METHOD,
                                            &dispparam, &RetVal, &excep, &uiArgErr );
+#else
+      s_lOleError = pDisp->Invoke( dispid, IID_NULL,
+                                   LOCALE_USER_DEFAULT,
+                                   DISPATCH_PROPERTYGET | DISPATCH_METHOD,
+                                   &dispparam, &RetVal, &excep, &uiArgErr );
+#endif
       FreeParams( &dispparam );
 
       hb_oleVariantToItem( hb_stackReturnItem(), &RetVal );
       if( RetVal.n1.n2.vt != VT_DISPATCH )
          VariantClear( &RetVal );
 
-      hb_xfree( szMethod );
       return;
    }
 
@@ -582,8 +620,6 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
       hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, szMethod + 1, HB_ERR_ARGS_BASEPARAMS );
    else
       hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, szMethod, HB_ERR_ARGS_BASEPARAMS );
-
-   hb_xfree( szMethod );
 }
 
 
@@ -598,7 +634,11 @@ HB_FUNC( HB_OLEAUTO___DTOR )
 
    pDisp = ( IDispatch* ) hb_parptr( -1 );
    if( pDisp )
+#if HB_OLE_C_API
       pDisp->lpVtbl->Release( pDisp );
+#else
+      pDisp->Release();
+#endif
 }
 
 

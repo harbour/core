@@ -44,9 +44,6 @@
    #endif
    /* Clipper does not have function to extract process time */
    #xtranslate secondsCPU() => seconds()
-   #ifndef EOL
-      #define EOL chr(13)+chr(10)
-   #endif
 #endif
 
 #ifdef FlagShip
@@ -57,18 +54,12 @@
    #endif
    /* the FlagShip version of seconds() returns integer values */
    #xtranslate seconds() => fs_seconds()
-   #ifndef EOL
-      #define EOL chr(10)
-   #endif
 #endif
 
 #ifdef __XPP__
    #define __NO_OBJ_ARRAY__
    /* Has xBase++ function to extract process time? */
    #xtranslate secondsCPU() => seconds()
-   #ifndef EOL
-      #define EOL chr(13)+chr(10)
-   #endif
 #endif
 
 #ifdef __CLIP__
@@ -77,22 +68,12 @@
    #ifndef __ST__
       #define __ST__
    #endif
-   #ifndef EOL
-      #define EOL chr(10)
-   #endif
-#endif
-
-#ifdef __HARBOUR__
-   #ifndef EOL
-      #define EOL hb_OSNewLine()
-   #endif
 #endif
 
 #ifdef __XHARBOUR__
-   /* By default build xHarbour binaries without MT support
-    * xHarbour needs separated version for MT and ST mode
-    * because standard MT functions are not available in
-    * ST libraries.
+   /* By default build xHarbour binaries without MT support.
+    * xHarbour needs separated source code versions for MT and ST mode
+    * because standard MT functions are not available in ST libraries.
     */
    #ifndef __ST__
       #ifndef __MT__
@@ -112,10 +93,6 @@
    #endif
 #endif
 
-
-#command ? => outstd(EOL)
-#command ? <xx,...> => outstd(EOL);outstd(<xx>)
-#command ?? <xx,...> => outstd(<xx>)
 
 #xcommand TEST <testfunc>           ;
           [ WITH <locals,...> ]     ;
@@ -144,6 +121,7 @@
       time := secondscpu() - time ; ;
       [ <exit> ; ]                  ;
    return { procname() + ": " + iif( <.info.>, <(info)>, #<testExp> ), time }
+
 
 #ifdef __HARBOUR__
 proc main( ... )
@@ -207,7 +185,16 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
          return
       endif
    next
+
+   set alternate to speedlog.txt additive
+   set alternate on
+   // set console off
+
    test( nMT, cExclude, lScale )
+
+   set alternate off
+   set alternate to
+
 return
 
 
@@ -403,7 +390,7 @@ TEST t056 WITH c := dtos( date() ) CODE f_prv( c )
 #ifdef __MT__
 
 function thTest( mtxJobs, aResults )
-   local xJob
+   local xJob := NIL
    while .T.
       hb_mutexSubscribe( mtxJobs,, @xJob )
       if xJob == NIL
@@ -414,7 +401,7 @@ function thTest( mtxJobs, aResults )
 return nil
 
 function thTestScale( mtxJobs, mtxResults )
-   local xJob
+   local xJob := NIL
    while .T.
       hb_mutexSubscribe( mtxJobs,, @xJob )
       if xJob == NIL
@@ -670,10 +657,10 @@ static proc create_db()
                          {"F_D", "D",  8, 0} } )
    use TMP_FILE exclusive
    dbappend()
-   replace F_C with dtos(date())
-   replace F_N with 112345.67
-   replace F_D with date()
-   close
+   field->F_C := dtos(date())
+   field->F_N := 112345.67
+   field->F_D := date()
+   dbclosearea()
 return
 
 static proc remove_db()
@@ -681,7 +668,7 @@ static proc remove_db()
 return
 
 static proc close_db()
-   close
+   dbclosearea()
 return
 
 static proc use_dbsh()
@@ -881,7 +868,7 @@ return
       RETURN lFirstCall
 
    STATIC FUNCTION hb_threadOnce( xOnceControl, bAction )
-      STATIC s_oObject
+      STATIC s_oObject := NIL
       IF s_oObject == NIL
          s_oObject := Once():new()
       ENDIF
