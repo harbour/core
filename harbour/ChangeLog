@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-27 16:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * external/sqlite3/sqlite3.c
+  * external/sqlite3/sqlite3.h
+    * Updated to latest version.
+
 2009-03-27 16:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * debian/dirs
     * Changed en -> en-EN.
