@@ -11,7 +11,16 @@ EXE_EXT =
 LIB_PREF =
 LIB_EXT = .lib
 
+ifeq ($(HB_BUILD_MODE),c)
+CC = wcc386
+endif
+ifeq ($(HB_BUILD_MODE),cpp)
 CC = wpp386
+endif
+# Build in C++ mode by default
+ifeq ($(HB_BUILD_MODE),)
+CC = wpp386
+endif
 CC_IN =
 CC_OUT = -fo=
 
@@ -28,7 +37,12 @@ CPPFLAGS += -5 -fp5
 
 # optimization flags
 # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
-CPPFLAGS += -onaehtzr -oi+ -ei -zp8 -s -zt0
+CPPFLAGS += -onaehtzr -ei -zp8 -s -zt0
+ifeq ($(CC),wpp386)
+CPPFLAGS += -oi+
+else
+CPPFLAGS += -oi
+endif
 endif
 
 

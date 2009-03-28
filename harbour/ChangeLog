@@ -8,6 +8,19 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-28 18:09 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/dos/owatcom.cf
+  * config/win/owatcom.cf
+  * config/linux/owatcom.cf
+  * config/os2/owatcom.cf
+    + Added HB_BUILD_MODE=c/cpp support for Watcom compilers.
+    + Tweaked optimization options to work with wcc386 (C mode compiler).
+    + Tweaked C make rule for wcc386 (only accepts backslashes).
+    ; So now sqlite3 will be forced to C mode and will compile.
+    ; TOFIX: .cpp file compilation will be broken in forced C mode,
+             so more cleanup will be needed here if we want to allow
+             all combinations.
+
 2009-03-28 00:20 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.h
   * harbour/contrib/gtwvg/wvggui.h
@@ -53,7 +66,7 @@
   * harbour/contrib/gtwvg/wvgtreev.prg
   * harbour/contrib/gtwvg/wvgwnd.prg
     ! Comments converted to ANSI standards.
-    ! Formatting whereever needed.    
+    ! Formatting whereever needed.
 
     ; Perhaps no comment is left which do not confirm to ANSI standards.
 
