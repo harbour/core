@@ -49,21 +49,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                               EkOnkar
-//                         ( The LORD is ONE )
-//
-//                Xbase++ Compatible xbpPartHandler Class
-//
-//                  Pritpal Bedi <pritpal@vouchcac.com>
-//                               08Nov2008
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                               EkOnkar
+ *                         ( The LORD is ONE )
+ *
+ *                Xbase++ Compatible xbpPartHandler Class
+ *
+ *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                               08Nov2008
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbclass.ch'
 #include 'common.ch'
@@ -74,7 +74,7 @@
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 CLASS WvgPartHandler
 
@@ -105,7 +105,7 @@ CLASS WvgPartHandler
 
    ENDCLASS
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD init( oParent, oOwner ) CLASS WvgPartHandler
 
@@ -114,7 +114,7 @@ METHOD init( oParent, oOwner ) CLASS WvgPartHandler
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD create( oParent, oOwner ) CLASS WvgPartHandler
 
@@ -126,7 +126,7 @@ METHOD create( oParent, oOwner ) CLASS WvgPartHandler
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD configure( oParent, oOwner ) CLASS WvgPartHandler
 
@@ -138,7 +138,7 @@ METHOD configure( oParent, oOwner ) CLASS WvgPartHandler
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgPartHandler
 
@@ -149,7 +149,7 @@ METHOD destroy() CLASS WvgPartHandler
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD handleEvent( hEvent, mp1, mp2 ) CLASS WvgPartHandler
 
@@ -159,13 +159,13 @@ METHOD handleEvent( hEvent, mp1, mp2 ) CLASS WvgPartHandler
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD status() CLASS WvgPartHandler
 
    RETURN ::nStatus
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD addChild( oWvg ) CLASS WvgPartHandler
 
@@ -174,7 +174,7 @@ METHOD addChild( oWvg ) CLASS WvgPartHandler
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD childFromName( nNameId ) CLASS WvgPartHandler
    LOCAL i, oWvg
@@ -187,13 +187,13 @@ METHOD childFromName( nNameId ) CLASS WvgPartHandler
 
    RETURN oWvg
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD childList() CLASS WvgPartHandler
 
    RETURN ::aChildren
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD delChild( oWvg ) CLASS WvgPartHandler
    LOCAL n
@@ -207,7 +207,7 @@ METHOD delChild( oWvg ) CLASS WvgPartHandler
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setName( nNameId ) CLASS WvgPartHandler
    LOCAL nOldNameId := ::nNameId
@@ -218,7 +218,7 @@ METHOD setName( nNameId ) CLASS WvgPartHandler
 
    RETURN nOldNameId
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setOwner( oWvg ) CLASS WvgPartHandler
    LOCAL oOldXbp := ::oOwner
@@ -229,7 +229,7 @@ METHOD setOwner( oWvg ) CLASS WvgPartHandler
 
    RETURN oOldXbp
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setParent( oWvg ) CLASS WvgPartHandler
    LOCAL oOldXbp := ::oParent
@@ -240,7 +240,7 @@ METHOD setParent( oWvg ) CLASS WvgPartHandler
 
    RETURN oOldXbp
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
    Local aPos, aMenuItem, nIndex, nCtrlID, oObj
@@ -252,7 +252,7 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       IF     xParams[ 1 ] == WM_MOUSEHOVER
          aPos := { xParams[ 3 ], xParams[ 4 ] }
       elseif xParams[ 1 ] == WM_MOUSELEAVE
-         // Nothing
+         /* Nothing */
       else
          aPos := if( ::mouseMode == 2, { xParams[ 3 ], xParams[ 4 ] }, { xParams[ 5 ], xParams[ 6 ] } )
       ENDIF
@@ -279,12 +279,12 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
             eval( ::sl_lbDown, aPos, NIL, self )
          ENDIF
          EXIT
-      CASE WM_RBUTTONUP      ////
+      CASE WM_RBUTTONUP
          IF hb_isBlock( ::sl_rbUp )
             eval( ::sl_rbUp, aPos, NIL, self )
          ENDIF
          EXIT
-      CASE WM_LBUTTONUP      ////
+      CASE WM_LBUTTONUP
          IF hb_isBlock( ::sl_lbUp )
             eval( ::sl_lbUp, aPos, NIL, self )
          ENDIF
@@ -304,7 +304,7 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
             eval( ::sl_mbDown, aPos, NIL, self )
          ENDIF
          EXIT
-      CASE WM_MBUTTONUP       ////
+      CASE WM_MBUTTONUP
          IF hb_isBlock( ::sl_mbClick )
             eval( ::sl_mbClick, aPos, NIL, self )
          ENDIF
@@ -334,8 +334,7 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       ENDIF
 
    CASE nEvent == HB_GTE_SETFOCUS
-      //
-      //aeval( ::aChildren, {|o| Win_InvalidateRect( o:hWnd ) } )
+      /* aeval( ::aChildren, {|o| Win_InvalidateRect( o:hWnd ) } ) */
 
       IF hb_isBlock( ::sl_setInputFocus )
          eval( ::sl_setInputFocus, NIL, NIL, Self )
@@ -349,11 +348,12 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       ::lHasInputFocus := .f.
 
    CASE nEvent == HB_GTE_PAINT
-      //aeval( ::aChildren, {|o| Win_InvalidateRect( o:hWnd ) } )
+      /* aeval( ::aChildren, {|o| Win_InvalidateRect( o:hWnd ) } ) */
 
    CASE nEvent == HB_GTE_GUIPARTS
-      // Eventally every window be checked if it falls within returned rectangle or not
-      // then it will avoid a lot of flickering
+      /* Eventally every window be checked if it falls within returned rectangle or not
+       * then it will avoid a lot of flickering
+       */
       aeval( ::aChildren, {|o| Win_InvalidateRect( o:hWnd ) } )
 
    CASE nEvent == HB_GTE_CLOSE
@@ -363,7 +363,7 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
 
    CASE nEvent == HB_GTE_MENU
       DO CASE
-      CASE xParams[ 1 ] == 0  // menu selected
+      CASE xParams[ 1 ] == 0                             /* menu selected */
          IF hb_isObject( ::oMenu )
             IF !empty( aMenuItem := ::oMenu:FindMenuItemById( xParams[ 2 ] ) )
                IF hb_isBlock( aMenuItem[ 2 ] )
@@ -376,12 +376,12 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
             ENDIF
          ENDIF
 
-      CASE xParams[ 1 ] == 1 .and. hb_isObject( ::oMenu ) // enter menu loop
+      CASE xParams[ 1 ] == 1 .and. hb_isObject( ::oMenu ) /* enter menu loop */
          IF hb_isBlock( ::oMenu:sl_beginMenu )
             Eval( ::oMenu:sl_beginMenu, NIL, NIL, Self )
          ENDIF
 
-      CASE xParams[ 1 ] == 2 .and. hb_isObject( ::oMenu ) // exit menu loop
+      CASE xParams[ 1 ] == 2 .and. hb_isObject( ::oMenu ) /* exit menu loop */
          IF hb_isBlock( ::oMenu:sl_endMenu )
             Eval( ::oMenu:sl_endMenu, NIL, NIL, Self )
          ENDIF
@@ -441,4 +441,4 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
 
    RETURN nReturn
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/

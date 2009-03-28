@@ -49,17 +49,17 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//                               WvgParts.ch
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                               WvgParts.ch                            */
+/*----------------------------------------------------------------------*/
 
 #ifndef  _WVG_CH
 
 #define _WVG_CH
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
-#define DA_MODE                                    1  // Experimental
+#define DA_MODE                                    1  /* Experimental */
 
 #define objTypeNone                                0
 #define objTypeCrt                                 1
@@ -85,21 +85,21 @@
 #define objTypeScrollBar                          21
 #define objTypeTabPage                            22
 
-//----------------------------------------------------------------------//
-//  NMHDR info
-//
+/*----------------------------------------------------------------------*/
+/*  NMHDR info */
+
 #define NMH_code                                  1
 #define NMH_controlID                             2
 #define NMH_hWnd                                  3
-#define NMH_dwItemSpec                            4  // NMHMOUSE
-#define NMH_action                                4  // NMHTREEVIEW
+#define NMH_dwItemSpec                            4  /* NMHMOUSE    */
+#define NMH_action                                4  /* NMHTREEVIEW */
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #define EVENT_HANDELLED                           0
 #define EVENT_UNHANDELLED                         1
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #define WVG_AUTOSIZE                              -1
 
@@ -184,7 +184,7 @@
 
 #define WVGLISTBOX_MM_SINGLE                      1
 
-// Generic Pres Parameters
+/* Generic Pres Parameters */
 #define WVG_PP_FGCLR                              2
 #define WVG_PP_BGCLR                              4
 #define WVG_PP_COMPOUNDNAME                       15
@@ -197,10 +197,10 @@
 #define WVGMENUBAR_MIS_SEPARATOR                  4
 #define WVGMENUBAR_MIS_BUTTONSEPARATOR            512
 
-// SCROLLBAR
+/* SCROLLBAR */
 #define WVGSCROLL_HORIZONTAL                      1
 #define WVGSCROLL_VERTICAL                        2
-//
+
 #define WVGSB_PREVPOS                             1
 #define WVGSB_NEXTPOS                             2
 #define WVGSB_PREVPAGE                            3
@@ -214,6 +214,6 @@
 #define WVGTABPAGE_TAB_BOTTOM                     2
 #define WVGTABPAGE_TAB_TOP                        4
 
-#endif // #ifndef _WVG_CH
+#endif /* #ifndef _WVG_CH */
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/

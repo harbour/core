@@ -49,21 +49,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                               EkOnkar
-//                         ( The LORD is ONE )
-//
-//                 Xbase++ xbpStatusBar Compatible Class
-//
-//                  Pritpal Bedi <pritpal@vouchcac.com>
-//                              25Nov2008
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                               EkOnkar
+ *                         ( The LORD is ONE )
+ *
+ *                 Xbase++ xbpStatusBar Compatible Class
+ *
+ *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                              25Nov2008
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbclass.ch'
 #include 'common.ch'
@@ -74,15 +74,15 @@
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
-CLASS WvgStatusBar  INHERIT  WvgWindow //WvgActiveXControl
+CLASS WvgStatusBar  INHERIT  WvgWindow /* WvgActiveXControl */
 
    DATA     caption                               INIT ''
    DATA     sizeGrip                              INIT .T.
@@ -106,11 +106,10 @@ CLASS WvgStatusBar  INHERIT  WvgWindow //WvgActiveXControl
    METHOD   handleEvent()
 
    ENDCLASS
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatusBar
 
-   //::WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + WS_BORDER + SBARS_TOOLTIPS
@@ -119,7 +118,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatu
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatusBar
 
@@ -143,7 +142,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgStatusBar
    LOCAL nHandled := 1
@@ -198,7 +197,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgStatusBar
 
    RETURN nHandled
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgStatusBar
    LOCAL i, nItems
@@ -215,7 +214,7 @@ METHOD destroy() CLASS WvgStatusBar
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatusBar
 
@@ -223,7 +222,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode ) CLASS WvgStatusBar
    LOCAL oPanel, lSuccess
@@ -248,7 +247,7 @@ METHOD addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode ) CLASS WvgStatusBar
 
    RETURN oPanel
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD delItem( nItemORcKey ) CLASS WvgStatusBar
    LOCAL nIndex := 0
@@ -260,15 +259,14 @@ METHOD delItem( nItemORcKey ) CLASS WvgStatusBar
    ENDIF
 
    IF nIndex > 0
-      // Delete panel by window
-
+      /* Delete panel by window */
       adel( ::aItems, nIndex )
       asize( ::aItems, len( ::aItems ) - 1 )
    ENDIF
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD getItem( nItemORcKey ) CLASS WvgStatusBar
    LOCAL nIndex := 0, oPanel
@@ -287,13 +285,13 @@ METHOD getItem( nItemORcKey ) CLASS WvgStatusBar
 
    RETURN oPanel
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD clear() CLASS WvgStatusBar
    LOCAL i
 
    FOR i := 1 TO ::numItems
-      // Remove off window
+      /* Remove off window */
 
    NEXT
 
@@ -301,7 +299,7 @@ METHOD clear() CLASS WvgStatusBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD panelClick( xParam ) CLASS WvgStatusBar
 
@@ -311,7 +309,7 @@ METHOD panelClick( xParam ) CLASS WvgStatusBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD panelDblClick( xParam ) CLASS WvgStatusBar
 
@@ -321,15 +319,15 @@ METHOD panelDblClick( xParam ) CLASS WvgStatusBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//       WvgToolbarButton() Class compatible with XbpToolbarButton()
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *       WvgToolbarButton() Class compatible with XbpToolbarButton()
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 CLASS WvgStatusBarPanel
 
@@ -354,7 +352,7 @@ CLASS WvgStatusBarPanel
    DATA     oParent
 
    ENDCLASS
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 METHOD new( cCaption, nStyle, cKey ) CLASS WvgStatusBarPanel
 
    DEFAULT cCaption       TO ::sl_caption
@@ -366,7 +364,7 @@ METHOD new( cCaption, nStyle, cKey ) CLASS WvgStatusBarPanel
    ::key            := cKey
 
    RETURN Self
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 METHOD caption( cCaption ) CLASS WvgStatusBarPanel
 
    IF cCaption == NIL
@@ -381,9 +379,9 @@ METHOD caption( cCaption ) CLASS WvgStatusBarPanel
    ENDIF
 
    RETURN Self
-//----------------------------------------------------------------------//
-//                         MSDN on StatusBar Control
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                         MSDN on StatusBar Control                    */
+/*----------------------------------------------------------------------*/
 #if 0
 
 Messages
@@ -484,4 +482,4 @@ SBARS_TOOLTIPS
 Version 5.80.Identical to SBT_TOOLTIPS. Use this flag for versions 5.00 or later.
 
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/

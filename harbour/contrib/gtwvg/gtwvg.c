@@ -243,10 +243,12 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    if( pWVT->hFontBox && pWVT->hFontBox != pWVT->hFont )
       DeleteObject( pWVT->hFontBox );
 #endif
-   //if( pWVT->hFont )
-      //DeleteObject( pWVT->hFont );
+   #if 0
+   if( pWVT->hFont )
+      DeleteObject( pWVT->hFont );
+   #endif
 
-   // Detach PRG callback
+   /* Detach PRG callback */
    pWVT->pSymWVT_PAINT      = NULL;
    pWVT->pSymWVT_SETFOCUS   = NULL;
    pWVT->pSymWVT_KILLFOCUS  = NULL;
@@ -1914,7 +1916,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                if( GetUpdateRect( hWnd, &updateRect, FALSE ) )
                   return DefWindowProc( hWnd, message, wParam, lParam );
             }
-            {  // To evoke if that portion is covered by GUI control
+            {  /* To evoke if that portion is covered by GUI control */
                PHB_ITEM pEvParams = hb_itemNew( NULL );
                hb_itemPutNInt( pEvParams, ( HB_LONG ) ( HB_PTRDIFF ) hWnd );
                hb_gt_wvt_FireEvent( pWVT, HB_GTE_PAINT, pEvParams );
@@ -1950,7 +1952,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          {
             pWVT->bGetFocus = TRUE;
          }
-         {  // For mixing gui/cui items
+         {  /* For mixing gui/cui items */
             PHB_ITEM pEvParams = hb_itemNew( NULL );
 
             hb_arrayNew( pEvParams, 3 );
@@ -1977,7 +1979,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                hb_vmRequestRestore();
             }
          }
-         { // To mix gui/cui items
+         { /* To mix gui/cui items */
             PHB_ITEM pEvParams = hb_itemNew( NULL );
 
             hb_arrayNew( pEvParams, 3 );
@@ -1998,15 +2000,15 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_RBUTTONDOWN:
       case WM_LBUTTONDOWN:
       case WM_MBUTTONDOWN:
-      //
+
       case WM_RBUTTONUP:
       case WM_LBUTTONUP:
       case WM_MBUTTONUP:
-      //
+
       case WM_RBUTTONDBLCLK:
       case WM_LBUTTONDBLCLK:
       case WM_MBUTTONDBLCLK:
-      //
+
       case WM_MOUSEMOVE:
       case WM_MOUSEWHEEL:
       case WM_NCMOUSEMOVE:
@@ -2149,9 +2151,9 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             iHi = HIWORD( wParam );
 
             hb_arrayNew( pEvParams, 3 );
-            hb_arraySetNI( pEvParams, 1, iHi );                              // Notification Code
-            hb_arraySetNI( pEvParams, 2, iLo );                              // Control identifier
-            hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) ( HWND ) lParam ); // Controls hWnd
+            hb_arraySetNI( pEvParams, 1, iHi );                              /* Notification Code  */
+            hb_arraySetNI( pEvParams, 2, iLo );                              /* Control identifier */
+            hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) ( HWND ) lParam ); /* Controls hWnd      */
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_COMMAND, pEvParams );
          }
@@ -2328,8 +2330,7 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
 
             pWVT->hWndParent = hWndParent;
 
-            // Inherit attributes from parent
-            //
+            /* Inherit attributes from parent */
             pWVT->PTEXTSIZE.x       = pWVTp->PTEXTSIZE.x;
             pWVT->PTEXTSIZE.y       = pWVTp->PTEXTSIZE.y;
             pWVT->fontWidth         = pWVTp->fontWidth;
@@ -2386,8 +2387,8 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
       }
    }
 
-   // This can happen if the pGTp is alien to this GT
-   // TOFIX:
+   /* This can happen if the pGTp is alien to this GT */
+   /* TOFIX: */
    if( !bByConf )
    {
       POINT pt;
@@ -3027,7 +3028,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       {
          if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) )
          {
-            //HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL;
+            /* HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL; */
             HICON hIconToFree = pWVT->hIcon;
             LPTSTR lpImage;
 
@@ -3053,7 +3054,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       {
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            //HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL;
+            /* HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL; */
             HICON hIconToFree = pWVT->hIcon;
             LPTSTR lpIcon;
 
@@ -3876,7 +3877,7 @@ static void hb_gt_wvt_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       if( pWVT->hWnd )
       {
          RECT rect;
-//hb_ToOutDebug( "hb_gt_wvt_Redraw( PHB_GT pGT, iRow=%i, iCol=%i, iSize=%i)", iRow,iCol, iSize );
+
          rect.top = rect.bottom = ( SHORT ) iRow;
          rect.left = ( SHORT ) iCol;
          rect.right = ( SHORT ) ( iCol + iSize - 1 );
@@ -4091,14 +4092,15 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
    #pragma data_seg()
 #endif
 
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//
-//                    WVT specific functions
-//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------//
+/*
+ *                    WVT specific functions
+ */
+//----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 static void hb_wvt_gtLoadGuiData( void )
 {
@@ -4217,7 +4219,7 @@ static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
    pWVT->bTracking          = FALSE;
 
    pWVT->currentPen         = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB(   0,  0,  0 ) );
-   //
+
 #if ! defined( HB_OS_WIN_CE )
    {
       LOGBRUSH    lb;
@@ -4420,15 +4422,11 @@ static void hb_wvt_gtCreateToolTipWindow( PHB_GTWVT pWVT )
       pWVT->hWndTT = hwndTT;
 }
 
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//
-//                 Exported functions for API calls
-//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------//
+ *
+ *                 Exported functions for API calls
+ *
+//----------------------------------------------------------------------*/
 
 PHB_GTWVT hb_wvt_gtGetWVT( void )
 {
@@ -4443,7 +4441,8 @@ PHB_GTWVT hb_wvt_gtGetWVT( void )
    return pWVT;
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+
 HB_FUNC( HB_GTINFOEX )
 {
    if( ISPOINTER( 1 ) && ISNUM( 2 ) )
@@ -4460,7 +4459,6 @@ HB_FUNC( HB_GTINFOEX )
 
          hb_gt_BaseFree( pGT );
          HB_GTSELF_INFO( pGT, hb_parni( 2 ), &gtInfo );
-         //hb_gt_BaseFree( pGT );
 
          if( gtInfo.pResult )
             hb_itemReturnRelease( gtInfo.pResult );
@@ -4469,4 +4467,5 @@ HB_FUNC( HB_GTINFOEX )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-//----------------------------------------------------------------------//
+
+/*----------------------------------------------------------------------*/

@@ -50,21 +50,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                               EkOnkar
-//                         ( The LORD is ONE )
-//
-//                Xbase++ xbpHtmlViewer compatible Class
-//
-//                 Pritpal Bedi  <pritpal@vouchcac.com>
-//                              08Dec2008
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                               EkOnkar
+ *                         ( The LORD is ONE )
+ *
+ *                Xbase++ xbpHtmlViewer compatible Class
+ *
+ *                 Pritpal Bedi  <pritpal@vouchcac.com>
+ *                              08Dec2008
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbclass.ch'
 #include 'common.ch'
@@ -75,24 +75,24 @@
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
-#define evBeforeNavigate     100    //
-#define evNavigateComplete   101    //
-#define evStatusTextChange   102    //
+#define evBeforeNavigate     100
+#define evNavigateComplete   101
+#define evStatusTextChange   102
 #define evDownloadComplete   104
 #define evCommandStateChange 105
 #define evDownloadBegin      106
-#define evProgressChange     108    //
-#define evTitleChange        113    //
+#define evProgressChange     108
+#define evTitleChange        113
 
 #define evPropertyChange     112
 #define evBeforeNavigate2    250
 #define evNavigateComplete2  252
-#define evDocumentComplete   259     //
+#define evDocumentComplete   259
 #define evNavigateError      271
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 CLASS WvgHTMLViewer INHERIT WvgActiveXControl
 
@@ -141,7 +141,7 @@ CLASS WvgHTMLViewer INHERIT WvgActiveXControl
 
    ENDCLASS
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgHTMLViewer
 
@@ -151,7 +151,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgHTMLV
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgHTMLViewer
 
@@ -175,7 +175,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgHT
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD xBeforeNavigate( cURL, Flags, TFName, PData, Headers ) CLASS WvgHTMLViewer
 
@@ -191,7 +191,7 @@ METHOD xBeforeNavigate( cURL, Flags, TFName, PData, Headers ) CLASS WvgHTMLViewe
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD xStatusTextChange( cText ) CLASS WvgHTMLViewer
 
@@ -201,7 +201,7 @@ METHOD xStatusTextChange( cText ) CLASS WvgHTMLViewer
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD xNavigateComplete( cURL )
 
@@ -211,7 +211,7 @@ METHOD xNavigateComplete( cURL )
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD xProgressChange( nProgress, nProgMax ) CLASS WvgHTMLViewer
 
@@ -221,7 +221,7 @@ METHOD xProgressChange( nProgress, nProgMax ) CLASS WvgHTMLViewer
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD xTitleChange( cTitle )
 
@@ -231,7 +231,7 @@ METHOD xTitleChange( cTitle )
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD xDocumentComplete( cURI )
 
@@ -241,7 +241,7 @@ METHOD xDocumentComplete( cURI )
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setHTML( cHTML ) CLASS WvgHTMLViewer
 
@@ -250,5 +250,5 @@ METHOD setHTML( cHTML ) CLASS WvgHTMLViewer
 
    RETURN self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 

@@ -49,21 +49,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                                EkOnkar
-//                          ( The LORD is ONE )
-//
-//                 Xbase++ xbpPushButton Compatible Class
-//
-//                  Pritpal Bedi <pritpal@vouchcac.com>
-//                               26Nov2008
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                                EkOnkar
+ *                          ( The LORD is ONE )
+ *
+ *                 Xbase++ xbpPushButton Compatible Class
+ *
+ *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                               26Nov2008
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbclass.ch'
 #include 'common.ch'
@@ -74,13 +74,13 @@
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 CLASS WvgPushButton  INHERIT  WvgWindow
 
@@ -109,28 +109,28 @@ CLASS WvgPushButton  INHERIT  WvgWindow
    METHOD   setColorBG()                          INLINE NIL
 
    ENDCLASS
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushButton
 
    ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + BS_PUSHBUTTON  //+ BS_NOTIFY + BS_PUSHLIKE
+   ::style       := WS_CHILD + BS_PUSHBUTTON  /*+ BS_NOTIFY + BS_PUSHLIKE */
    ::className   := 'BUTTON'
    ::objType     := objTypePushButton
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushButton
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oParent:AddChild( SELF )
-   //
+
    ::createControl()
-   //
+
    ::SetWindowProcCallback()
 
    IF ::visible
@@ -141,7 +141,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPu
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgPushButton
 
@@ -176,7 +176,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgPushButton
 
    RETURN EVENT_UNHANDELLED
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgPushButton
 
@@ -186,7 +186,7 @@ METHOD destroy() CLASS WvgPushButton
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushButton
 
@@ -194,7 +194,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setCaption( xCaption, cDll ) CLASS WvgPushButton
 
@@ -207,7 +207,7 @@ METHOD setCaption( xCaption, cDll ) CLASS WvgPushButton
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD activate( xParam ) CLASS WvgPushButton
 
@@ -217,7 +217,7 @@ METHOD activate( xParam ) CLASS WvgPushButton
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD draw( xParam ) CLASS WvgPushButton
 
@@ -227,9 +227,9 @@ METHOD draw( xParam ) CLASS WvgPushButton
 
    RETURN Self
 
-//----------------------------------------------------------------------//
-//                         MSDN on Button Control
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                         MSDN on Button Control                       */
+/*----------------------------------------------------------------------*/
 #if 0
 
 Functions
@@ -534,5 +534,5 @@ Specifies a combination of button styles. If you create a button using the BUTTO
 with the CreateWindow or CreateWindowEx function, you can specify any of the button styles listed below.
 
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 

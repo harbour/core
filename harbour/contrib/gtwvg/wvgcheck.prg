@@ -49,21 +49,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                                EkOnkar
-//                          ( The LORD is ONE )
-//
-//                 Xbase++ xbpPushButton Compatible Class
-//
-//                  Pritpal Bedi <pritpal@vouchcac.com>
-//                               05Dec2008
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                                EkOnkar
+ *                          ( The LORD is ONE )
+ *
+ *                 Xbase++ xbpPushButton Compatible Class
+ *
+ *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                               05Dec2008
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbclass.ch'
 #include 'common.ch'
@@ -74,13 +74,13 @@
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 CLASS WvgCheckBox  INHERIT  WvgWindow, DataRef
 
@@ -94,9 +94,11 @@ CLASS WvgCheckBox  INHERIT  WvgWindow, DataRef
    METHOD   configure()
    METHOD   destroy()
 
-   //METHOD   editBuffer()                          INLINE ( Win_Button_GetCheck( ::hWnd ) == BST_CHECKED )
-   //METHOD   getData()                             INLINE ( Win_Button_GetCheck( ::hWnd ) == BST_CHECKED )
-   //METHOD   setData( lCheck )                     INLINE ::sendMessage( BM_SETCHECK, IF( lCheck, BST_CHECKED, BST_UNCHECKED ), 0 )
+   #if 0
+   METHOD   editBuffer()                          INLINE ( Win_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+   METHOD   getData()                             INLINE ( Win_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+   METHOD   setData( lCheck )                     INLINE ::sendMessage( BM_SETCHECK, IF( lCheck, BST_CHECKED, BST_UNCHECKED ), 0 )
+   #endif
    METHOD   setCaption( cCaption )
 
    ACCESS   selected                              INLINE ::sl_lbClick
@@ -105,19 +107,19 @@ CLASS WvgCheckBox  INHERIT  WvgWindow, DataRef
    METHOD   handleEvent( nEvent, aInfo )
 
    ENDCLASS
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCheckBox
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + BS_PUSHBUTTON + BS_AUTOCHECKBOX //+ BS_NOTIFY
+   ::style       := WS_CHILD + BS_PUSHBUTTON + BS_AUTOCHECKBOX /*+ BS_NOTIFY */
    ::className   := 'BUTTON'
    ::objType     := objTypeCheckBox
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCheckBox
 
@@ -143,7 +145,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCh
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgCheckBox
 
@@ -177,7 +179,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgCheckBox
 
    RETURN 1
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgCheckBox
 
@@ -187,7 +189,7 @@ METHOD destroy() CLASS WvgCheckBox
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCheckBox
 
@@ -195,7 +197,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setCaption( xCaption ) CLASS WvgCheckBox
 
@@ -206,5 +208,5 @@ METHOD setCaption( xCaption ) CLASS WvgCheckBox
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 

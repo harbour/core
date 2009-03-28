@@ -49,21 +49,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                                EkOnkar
-//                          ( The LORD is ONE )
-//
-//                  Xbase++ xbpTreeView compatible Class
-//
-//                  Pritpal Bedi <pritpal@vouchcac.com>
-//                               26Nov2008
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                                EkOnkar
+ *                          ( The LORD is ONE )
+ *
+ *                  Xbase++ xbpTreeView compatible Class
+ *
+ *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                               26Nov2008
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbclass.ch'
 #include 'common.ch'
@@ -74,9 +74,9 @@
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
-CLASS WvgComboBox  INHERIT  WvgListBox  // WvgSLE
+CLASS WvgComboBox  INHERIT  WvgListBox  /* WvgSLE */
 
 
    METHOD   new()
@@ -85,7 +85,7 @@ CLASS WvgComboBox  INHERIT  WvgListBox  // WvgSLE
    METHOD   destroy()
 
    ENDCLASS
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgComboBox
 
@@ -99,7 +99,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCombo
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgComboBox
 
@@ -117,7 +117,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCo
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgComboBox
 
@@ -125,7 +125,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgComboBox
 
@@ -133,9 +133,9 @@ METHOD destroy() CLASS WvgComboBox
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
-//                         MSDN on ComboBox Control
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                         MSDN on ComboBox Control                     */
+/*----------------------------------------------------------------------*/
 #if 0
 
 Functions
@@ -642,4 +642,4 @@ CBS_UPPERCASE
 Converts to uppercase all text in both the selection field and the list.
 
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/

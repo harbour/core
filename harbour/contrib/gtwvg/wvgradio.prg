@@ -49,21 +49,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                                EkOnkar
-//                          ( The LORD is ONE )
-//
-//                 Xbase++ xbpPushButton Compatible Class
-//
-//                  Pritpal Bedi <pritpal@vouchcac.com>
-//                               06Dec2008
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                                EkOnkar
+ *                          ( The LORD is ONE )
+ *
+ *                 Xbase++ xbpPushButton Compatible Class
+ *
+ *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                               06Dec2008
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbclass.ch'
 #include 'common.ch'
@@ -74,13 +74,13 @@
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 CLASS WvgRadioButton  INHERIT  WvgWindow, DataRef
 
@@ -102,7 +102,7 @@ CLASS WvgRadioButton  INHERIT  WvgWindow, DataRef
    METHOD   handleEvent( nEvent, aInfo )
 
    ENDCLASS
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
 
@@ -114,16 +114,16 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadio
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oParent:addChild( SELF )
-   //
+
    ::createControl()
-   //
+
    ::SetWindowProcCallback()
 
    IF ::visible
@@ -138,7 +138,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRa
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
@@ -161,7 +161,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
    RETURN 1
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgRadioButton
 
@@ -171,7 +171,7 @@ METHOD destroy() CLASS WvgRadioButton
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
 
@@ -179,7 +179,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setCaption( xCaption ) CLASS WvgRadioButton
 
@@ -190,5 +190,5 @@ METHOD setCaption( xCaption ) CLASS WvgRadioButton
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 

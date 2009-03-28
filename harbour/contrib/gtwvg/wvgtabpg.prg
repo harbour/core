@@ -49,21 +49,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                                EkOnkar
-//                          ( The LORD is ONE )
-//
-//                  Xbase++ xbpTabPage compatible Class
-//
-//                  Pritpal Bedi <pritpal@vouchcac.com>
-//                               01Mar2009
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                                EkOnkar
+ *                          ( The LORD is ONE )
+ *
+ *                  Xbase++ xbpTabPage compatible Class
+ *
+ *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                               01Mar2009
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbclass.ch'
 #include 'common.ch'
@@ -74,7 +74,7 @@
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_ToOutDebug( [<x,...>] ) =>
@@ -85,13 +85,13 @@
 CLASS WvgTabPage  INHERIT  WvgWindow
 
 
-   DATA     caption                               INIT NIL // Character string, Numeric, Object ("")
-   DATA     clipChildren                          INIT .T. // Determines whether Xbase Parts in the child list are clipped during graphic output.
-   DATA     minimized                             INIT .T. // Determines whether the XbpTabPage is minimized after it is created (the page is not visible).
-   DATA     postOffset                            INIT 80  // Determines the distance between the end of the tab and the end of the page as a percentage of the page width.
-   DATA     preOffset                             INIT 0   // Determines the distance between the start of the tab and the start of the page as a percentage of the page width.
-   DATA     tabHeight                             INIT -1  // Determines the height of the tab.
-   DATA     type                                  INIT WVGTABPAGE_TAB_TOP // Determines the position of the tab.
+   DATA     caption                               INIT NIL /* Character string, Numeric, Object ("")                                                                           */
+   DATA     clipChildren                          INIT .T. /* Determines whether Xbase Parts in the child list are clipped during graphic output.                              */
+   DATA     minimized                             INIT .T. /* Determines whether the XbpTabPage is minimized after it is created (the page is not visible).                    */
+   DATA     postOffset                            INIT 80  /* Determines the distance between the end of the tab and the end of the page as a percentage of the page width.    */
+   DATA     preOffset                             INIT 0   /* Determines the distance between the start of the tab and the start of the page as a percentage of the page width.*/
+   DATA     tabHeight                             INIT -1  /* Determines the height of the tab.                                                                                */
+   DATA     type                                  INIT WVGTABPAGE_TAB_TOP /* Determines the position of the tab.                                                               */
 
    METHOD   new()
    METHOD   create()
@@ -106,7 +106,7 @@ CLASS WvgTabPage  INHERIT  WvgWindow
 
    METHOD   handleEvent()
    ENDCLASS
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
 
@@ -118,7 +118,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPa
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
 
@@ -130,7 +130,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTa
    IF ::clipSiblings
       ::style += WS_CLIPSIBLINGS
    ENDIF
-   //::style += WS_DLGFRAME
+   /* ::style += WS_DLGFRAME */
 
    ::style += TCS_FOCUSNEVER
 
@@ -149,7 +149,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTa
    ENDIF
 
    IF ::minimized
-      ::hide()//minimize()
+      ::hide()
    ENDIF
 
    RETURN Self
@@ -178,10 +178,10 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
 
    CASE nMessage == HB_GTE_NOTIFY
       aHdr := Wvg_GetNMHdrInfo( aNM[ 2 ] )
-//hb_ToOutDebug( 'HB_GTE_NOTIFY %i %i %i', aHdr[ NMH_code ], NM_CLICK, NM_DBLCLK )
+
       DO CASE
-      CASE aHdr[ NMH_code ] == -551 //TCN_SELCHANGE
-//hb_ToOutDebug( 'TCN_SELCHANGE' )
+      CASE aHdr[ NMH_code ] == -551 /* TCN_SELCHANGE */
+
       ENDCASE
 
    CASE nMessage == HB_GTE_CTLCOLOR
@@ -191,7 +191,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
 
    RETURN( EVENT_UNHANDELLED )
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD tabActivate( xParam ) CLASS WvgTabPage
 
@@ -217,7 +217,7 @@ METHOD maximize() CLASS WvgTabPage
 
    RETURN .t.
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
 
@@ -225,7 +225,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgTabPage
 
@@ -233,9 +233,9 @@ METHOD destroy() CLASS WvgTabPage
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
-//                         MSDN on TabPage Control
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                         MSDN on TabPage Control                      */
+/*----------------------------------------------------------------------*/
 #if 0
 
 Tab

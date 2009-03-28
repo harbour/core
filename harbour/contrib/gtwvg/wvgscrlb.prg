@@ -49,21 +49,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                               EkOnkar
-//                         ( The LORD is ONE )
-//
-//                 Xbase++ xbpScrollBar Compatible Class
-//
-//                  Pritpal Bedi <pritpal@vouchcac.com>
-//                              17Feb2009
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                               EkOnkar
+ *                         ( The LORD is ONE )
+ *
+ *                 Xbase++ xbpScrollBar Compatible Class
+ *
+ *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                              17Feb2009
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbclass.ch'
 #include 'common.ch'
@@ -114,13 +114,13 @@ typedef struct tagSCROLLINFO {;
 }   SCROLLINFO
 
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 CLASS WvgScrollBar  INHERIT  WvgWindow, DataRef
 
@@ -148,19 +148,19 @@ CLASS WvgScrollBar  INHERIT  WvgWindow, DataRef
 
    ENDCLASS
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrollBar
 
    ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD  //+ SBS_SIZEBOX //+ SBS_SIZEGRIP
+   ::style       := WS_CHILD  /* + SBS_SIZEBOX + SBS_SIZEGRIP */
    ::className   := "SCROLLBAR"
    ::objType     := objTypeScrollBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrollBar
 
@@ -195,7 +195,7 @@ hb_ToOutDebug( "scrollinfo nMin=%i nMax=%i", si:nMin, si:nMax )
 #endif
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
    LOCAL nScrMsg, nScrPos, nCommand
@@ -350,7 +350,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
 
    RETURN EVENT_UNHANDELLED
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgScrollBar
 
@@ -360,7 +360,7 @@ METHOD destroy() CLASS WvgScrollBar
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD scroll( xParam ) CLASS WvgScrollBar
 
@@ -370,7 +370,7 @@ METHOD scroll( xParam ) CLASS WvgScrollBar
 
    RETURN self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setRange( aRange ) CLASS WvgScrollBar
    LOCAL aOldRange, nMin, nMax
@@ -387,14 +387,14 @@ METHOD setRange( aRange ) CLASS WvgScrollBar
 
    RETURN aOldRange
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setScrollBoxSize( nUnits ) CLASS WvgScrollBar
    LOCAL nOldUnits := nUnits
 
    RETURN nOldUnits
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 #if 0
 
 Scroll Bar
@@ -662,6 +662,6 @@ by the x, y, nWidth, and nHeight parameters of CreateWindowEx.
 
 
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 

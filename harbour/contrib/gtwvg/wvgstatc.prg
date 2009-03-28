@@ -49,21 +49,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                                EkOnkar
-//                          ( The LORD is ONE )
-//
-//                  Xbase++ xbpTreeView compatible Class
-//
-//                  Pritpal Bedi <pritpal@vouchcac.com>
-//                               26Nov2008
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                                EkOnkar
+ *                          ( The LORD is ONE )
+ *
+ *                  Xbase++ xbpTreeView compatible Class
+ *
+ *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                               26Nov2008
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbclass.ch'
 #include 'common.ch'
@@ -74,13 +74,13 @@
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 CLASS WvgStatic  INHERIT  WvgWindow
 
@@ -88,8 +88,8 @@ CLASS WvgStatic  INHERIT  WvgWindow
    DATA     caption                               INIT ''
    DATA     clipParent                            INIT .T.
    DATA     clipSiblings                          INIT .F.
-   DATA     options                               INIT -1//WVGSTATIC_TEXT_LEFT
-   DATA     type                                  INIT -1//WVGSTATIC_TYPE_TEXT
+   DATA     options                               INIT -1 /* WVGSTATIC_TEXT_LEFT */
+   DATA     type                                  INIT -1 /* WVGSTATIC_TYPE_TEXT */
 
    DATA     hBitmap
 
@@ -103,14 +103,14 @@ CLASS WvgStatic  INHERIT  WvgWindow
    METHOD   handleEvent()
 
    ENDCLASS
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatic
 
    ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   // SS_NOTIFY  SS_ETCHEDFRAME  SS_SUNKEN  SS_WHITERECT
-   //
+   /* SS_NOTIFY  SS_ETCHEDFRAME  SS_SUNKEN  SS_WHITERECT */
+
    ::style       := WS_CHILD + WS_CLIPCHILDREN
    ::exStyle     := WS_EX_NOPARENTNOTIFY
    ::className   := 'STATIC'
@@ -118,7 +118,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStati
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatic
 
@@ -141,7 +141,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
    SWITCH ::type
    CASE WVGSTATIC_TYPE_TEXT
       IF ( hb_bitAnd( ::options, WVGSTATIC_TEXT_LEFT ) == WVGSTATIC_TEXT_LEFT )
-         ::style += SS_LEFT //+ SS_LEFTNOWORDWRAP
+         ::style += SS_LEFT /*+ SS_LEFTNOWORDWRAP */
       ENDIF
       IF ( hb_bitAnd( ::options, WVGSTATIC_TEXT_RIGHT ) == WVGSTATIC_TEXT_RIGHT )
          ::style += SS_RIGHT
@@ -205,10 +205,10 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
       EXIT
    CASE WVGSTATIC_TYPE_RECESSEDLINE
       EXIT
-   END  // ::type
+   END  /* ::type */
 
    #if 1
-   // Options
+   /* Options */
    IF ( ascan( { WVGSTATIC_TYPE_FGNDFRAME, WVGSTATIC_TYPE_BGNDFRAME, WVGSTATIC_TYPE_HALFTONEFRAME }, ::type ) > 0 )
       IF     ( hb_bitAnd( ::options, WVGSTATIC_FRAMETHIN ) == WVGSTATIC_FRAMETHIN )
          ::style += WS_BORDER
@@ -243,7 +243,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgStatic
 
@@ -273,7 +273,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgStatic
 
    RETURN ( 1 )
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgStatic
 
@@ -287,7 +287,7 @@ METHOD destroy() CLASS WvgStatic
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatic
 
@@ -295,7 +295,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setCaption( xCaption, cDll )
 
@@ -314,16 +314,16 @@ METHOD setCaption( xCaption, cDll )
       ENDIF
 
       ::hBitmap := Win_LoadImage( ::caption, IF( hb_isNUmeric( ::caption ), 1, 2 ) )
-//hb_toOutDebug( "setCaption %s %i %s",::caption, ::hBitmap, IF( file( ::caption ),'Yes','No') )
+
       Win_SendMessage( ::hWnd, STM_SETIMAGE, IMAGE_BITMAP, ::hBitmap )
 
    ENDCASE
 
    RETURN Self
 
-//----------------------------------------------------------------------//
-//                         MSDN on Static Control
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                         MSDN on Static Control                       */
+/*----------------------------------------------------------------------*/
 #if 0
 
 Static Control Styles
@@ -383,7 +383,7 @@ A window receives this message through its WindowProc function.
 
 
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 
 

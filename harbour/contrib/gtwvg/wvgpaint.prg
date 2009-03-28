@@ -47,38 +47,38 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//
-//                           WvtPaint.prg
-//
-//            Routines to manage Wvt*Classes Gui Painting
-//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                           WvtPaint.prg
+ *
+ *            Routines to manage Wvt*Classes Gui Painting
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include "wvtwin.ch"
 #include "common.ch"
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 thread static t_paint_:= { { '', {} } }
 
-//-------------------------------------------------------------------//
-//
-//        This function must have to be defined in your appls
-//
-// function Wvt_Paint()
+/*----------------------------------------------------------------------*/
+/*
+ *        This function must have to be defined in your appls
+ */
+#if 0
+function Wvt_Paint()
 
-   //  Call this function from this funtion
-   //
-   // WvtPaintObjects()
+   /* Call this function from this funtion */
+   WvtPaintObjects()
 
-// return nil
-
-//-------------------------------------------------------------------//
+   return nil
+#endif
+/*----------------------------------------------------------------------*/
 
 function WvtPaintObjects()
    LOCAL i, lExe, nLeft, nRight, b, tlbr_, aBlocks, nBlocks
@@ -92,9 +92,9 @@ function WvtPaintObjects()
          lExe := .t.
 
          if aBlocks[ i,3 ] <> nil .and. !empty( aBlocks[ i,3 ] )
-            //  Check parameters against tlbr_ depending upon the
-            //  type of object and attributes contained in aAttr
-            //
+            /*  Check parameters against tlbr_ depending upon the
+             *  type of object and attributes contained in aAttr
+             */
             do case
             case aBlocks[ i,3,1 ] == WVT_BLOCK_GRID_V
                b := aBlocks[ i,3,6 ]
@@ -103,30 +103,30 @@ function WvtPaintObjects()
                else
                   nLeft  := b:aColumnsSep[ 1 ]
                   nRight := b:aColumnsSep[ len( b:aColumnsSep ) ]
-                  if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; // top   < bottom
-                        tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; // bootm > top
-                        tlbr_[ 2 ] <= nRight + 1       .and. ; // left  < right
-                        tlbr_[ 4 ] >= nLeft  - 2             ) // right > left
+                  if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; /* top   < bottom */
+                        tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; /* bootm > top    */
+                        tlbr_[ 2 ] <= nRight + 1       .and. ; /* left  < right  */
+                        tlbr_[ 4 ] >= nLeft  - 2             ) /* right > left   */
                      lExe := .f.
                   endif
                endif
 
             case aBlocks[ i,3,1 ] == WVT_BLOCK_GETS
-               if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; // top   < bott
-                     tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; // bootm > top
-                     tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; // left  < righ
-                     tlbr_[ 4 ] >= aBlocks[ i,3,3 ]       ) // right > left
+               if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; /* top   < bott  */
+                     tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; /* bootm > top   */
+                     tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; /* left  < righ  */
+                     tlbr_[ 4 ] >= aBlocks[ i,3,3 ]       ) /* right > left  */
                   lExe := .f.
                endif
 
             otherwise
-               // If refreshing rectangle's top is less than objects' bottom
-               // and left is less than objects' right
-               //
-               if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; // top   <= bottom
-                     tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; // bootm >= top
-                     tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; // left  < right
-                     tlbr_[ 4 ] >= aBlocks[ i,3,3 ]       ) // right > left
+               /* If refreshing rectangle's top is less than objects' bottom    */
+               /* and left is less than objects' right                          */
+               /*                                                               */
+               if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; /* top   <= bottom  */
+                     tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; /* bootm >= top     */
+                     tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; /* left  < right    */
+                     tlbr_[ 4 ] >= aBlocks[ i,3,3 ]       ) /* right > left     */
                   lExe := .f.
                endif
             endcase
@@ -140,7 +140,7 @@ function WvtPaintObjects()
 
    return ( 0 )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 function WvtSetPaint( a_ )
    local o
@@ -158,7 +158,7 @@ function WvtSetPaint( a_ )
 
    return o
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 function SetPaint( cID, nAction, xData, aAttr )
    local n, n1, oldData
@@ -181,7 +181,7 @@ function SetPaint( cID, nAction, xData, aAttr )
 
    return oldData
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 function GetPaint( cID )
    local n
@@ -192,7 +192,7 @@ function GetPaint( cID )
 
    return {}
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 function DelPaint( cID, nAction )
    local xData, n1, n
@@ -206,7 +206,7 @@ function DelPaint( cID, nAction )
 
    return xData
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 function PurgePaint( cID,lDummy )
    local n, aPaint
@@ -225,7 +225,7 @@ function PurgePaint( cID,lDummy )
 
    return ( aPaint )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 function InsertPaint( cID, aPaint, lSet )
    local n
@@ -244,17 +244,17 @@ function InsertPaint( cID, aPaint, lSet )
 
    return nil
 
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//
-//               RunTime Dialog Generation Routines
-//
-//                      Courtesy What32.lib
-//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *               RunTime Dialog Generation Routines
+ *
+ *                      Courtesy What32.lib
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle, ;
                               cFaceName, nPointSize, nWeight, lItalic, nHelpId, nExStyle )
@@ -282,17 +282,17 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
    nW := aFont[ 7 ] * nCols + aOffSet[ 4 ]
    nH := aFont[ 6 ] * nRows + aOffSet[ 3 ]
 
-   // Position it exactly where user has requested
-   //
+   /* Position it exactly where user has requested */
+
    aXY := Wvt_ClientToScreen( nTop,nLeft )
    nX  := aXY[ 1 ] + aOffSet[ 2 ]
    nY  := aXY[ 2 ] + aOffSet[ 1 ]
 
-   // MSDN says DlgBaseUnits and Screen Coordinates has multiplier of 4,8 for x & Y.
-   // But in my practice, the values below are 99% accurate.
-   // I have tested it on many fonts but on 1280/800 resolution.
-   // Please feel free to experiment if you find thses values inappropriate.
-   //
+   /* MSDN says DlgBaseUnits and Screen Coordinates has multiplier of 4,8 for x & Y.
+    * But in my practice, the values below are 99% accurate.
+    * I have tested it on many fonts but on 1280/800 resolution.
+    * Please feel free to experiment if you find thses values inappropriate.
+    */
    nXM :=  5.25
    nYM := 10.25
 
@@ -320,7 +320,6 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
    aAdd( aDlg[ 1 ] , 0       )
    aAdd( aDlg[ 1 ] , iif( ValType( cTitle ) == "C", cTitle, "" ) )
 
-   //IF ( nStyle & DS_SETFONT ) == DS_SETFONT
    if hb_bitAnd( nStyle, DS_SETFONT ) == DS_SETFONT
       aAdd( aDlg[ 1 ], iif( ValType( nPointSize ) == "N", nPointSize, 8               ) )
       aAdd( aDlg[ 1 ], iif( ValType( nWeight    ) == "N", nWeight   , 400             ) )
@@ -330,7 +329,7 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
 
    Return( aDlg )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
                          cnId, cnDlgClass, nStyle, cText, nHelpId, nExStyle )
@@ -370,7 +369,7 @@ Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
    nW  := ( nW * nXM / nBaseUnitsX )
    nH  := ( nH * nYM / nBaseUnitsY )
 
-   aDlg[ 1,4 ]++      // item count
+   aDlg[ 1,4 ]++      /* item count */
 
    aAdd( aDlg[  2 ] , iif( ValType( nHelpId  ) == "N", nHelpId , 0                     ) )
    aAdd( aDlg[  3 ] , iif( ValType( nExStyle ) == "N", nExStyle, 0                     ) )
@@ -386,7 +385,7 @@ Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
 
    Return aDlg
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 Function Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu )
    LOCAL hDlg, cType, xTemplate, nDlgMode
@@ -428,7 +427,7 @@ Function Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
 
    Return hDlg
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 Function Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
    LOCAL nResult, cType, xTemplate, nDlgMode
@@ -452,7 +451,7 @@ Function Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
 
    Return nResult
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*                       Borrowed from What32
 
 Wvt_GetOpenFileName( hWnd, @cPath, cTitle, aFilter, nFlags, cInitDir, cDefExt, nIndex )
@@ -495,14 +494,14 @@ FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, aFilter, nFlags, cIniDir, cDe
       n := AT( CHR(0)+ CHR(0), cFile )
       cFile  := LEFT( cFile,n )
       aFiles := {}
-      IF n == 0 // no double chr(0) user must have pressed cancel
+      IF n == 0 /* no double chr(0) user must have pressed cancel */
          RETURN( aFiles )
       END
-      x := AT( CHR( 0 ),cFile ) // fist null
+      x := AT( CHR( 0 ),cFile ) /* fist null */
       cPath := LEFT( cFile,x )
 
       cFile := STRTRAN( cFile,cPath )
-      IF !EMPTY( cFile ) // user selected more than 1 file
+      IF !EMPTY( cFile ) /* user selected more than 1 file */
          c := ''
          FOR n := 1 TO LEN( cFile )
              IF SUBSTR( cFile,n,1 ) == CHR( 0 )
@@ -518,17 +517,17 @@ FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, aFilter, nFlags, cIniDir, cDe
          x:=RAT('\',cFile)
          cPath:=LEFT(cFile,x-1)
          */
-         aFiles := { STRTRAN( cPath, CHR( 0 ) ) } //STRTRAN(STRTRAN(cFile,cPath),'\')}
+         aFiles := { STRTRAN( cPath, CHR( 0 ) ) }
       END
       Return( aFiles )
    else
-      //cRet := left( cRet, at( chr( 0 ), cRet ) -1 )
+      /* cRet := left( cRet, at( chr( 0 ), cRet ) -1 ) */
 
    end
 
    Return ( cRet )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 Wvt_GetSaveFileName( hWnd, cFile, cTitle, aFilter, nFlags, cInitDir, cDefExt, nIndex)
 
@@ -558,32 +557,32 @@ FUNCTION WVT_GetSaveFileName( hWnd, cFile, cTitle, aFilter, nFlags, cIniDir, cDe
 
    Return ( cFile )
 
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                      C Functions to PRG Ports
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                      C Functions to PRG Ports
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbgtinfo.ch'
 #include 'hbgtwvg.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_SetTitle( cTitle )
 
    RETURN Hb_GtInfo( HB_GTI_WINTITLE, cTitle )
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_GetTitle()
 
    RETURN Hb_GtInfo( HB_GTI_WINTITLE )
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
 
@@ -600,7 +599,7 @@ FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
 
@@ -612,55 +611,55 @@ FUNCTION Wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
 
    RETURN Hb_GtInfo( HB_GTI_SETFONT, { cFontName, nSize, nWidth, nWeight, nQuality } )
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_SetCodePage( nCodePage )
 
    RETURN Hb_GtInfo( HB_GTI_CODEPAGE, nCodePage )
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_GetPalette()
 
    RETURN Hb_GtInfo( HB_GTI_PALETTE )
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_SetPalette( aRGB )
 
    RETURN Hb_GtInfo( HB_GTI_PALETTE, aRGB )
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_GetRGBColor( nIndex )
 
    RETURN Hb_GtInfo( HB_GTI_PALETTE, nIndex )
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_SetAltF4Close( lSetClose )
 
    RETURN Hb_GtInfo( HB_GTI_CLOSABLE, lSetClose )
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_GetScreenWidth()
 
    RETURN Hb_GtInfo( HB_GTI_DESKTOPWIDTH )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_GetScreenHeight()
 
    RETURN Hb_GtInfo( HB_GTI_DESKTOPHEIGHT )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_GetWindowHandle()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
 
@@ -669,7 +668,7 @@ FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_WindowCentre( lCenter, lRePaint )
 
@@ -678,7 +677,7 @@ FUNCTION Wvt_WindowCentre( lCenter, lRePaint )
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_ProcessMessages()
 
@@ -686,7 +685,7 @@ FUNCTION Wvt_ProcessMessages()
 
    RETURN .t.
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_KeyBoard( nKey )
 
@@ -694,19 +693,19 @@ FUNCTION Wvt_KeyBoard( nKey )
 
    RETURN NIL
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_GetClipboard()
 
    RETURN Hb_GtInfo( HB_GTI_CLIPBOARDDATA )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_SetClipboard( cText )
 
    RETURN Hb_GtInfo( HB_GTI_CLIPBOARDDATA, cText )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_PasteFromClipboard()
    Local cText, nLen, i
@@ -720,76 +719,76 @@ FUNCTION Wvt_PasteFromClipboard()
 
    RETURN NIL
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_ResetWindow()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_RESETWINDOW )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_SetTimer( nTimerID, nMiliSeconds )
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SETTIMER, { nTimerID, nMiliSeconds } )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_KillTimer( nTimerID )
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_KILLTIMER, nTimerID )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_SetOnTop()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETONTOP )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_SetAsNormal()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETASNORMAL )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_Minimize()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MINIMIZED )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_Maximize()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_Hide()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_HIDDEN )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_Show()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_NORMAL )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_SetWindowPos( nX, nY )
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SETPOSITION, { nX, nY } )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_ShowWindow( nState )
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, nState )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Wvt_Update()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_UPDATEWINDOW )
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/

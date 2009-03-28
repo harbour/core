@@ -49,21 +49,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                                EkOnkar
-//                          ( The LORD is ONE )
-//
-//                  Xbase++ xbpTreeView compatible Class
-//
-//                  Pritpal Bedi <pritpal@vouchcac.com>
-//                               26Nov2008
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                                EkOnkar
+ *                          ( The LORD is ONE )
+ *
+ *                  Xbase++ xbpTreeView compatible Class
+ *
+ *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                               26Nov2008
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbclass.ch'
 #include 'common.ch'
@@ -74,13 +74,13 @@
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 CLASS WvgTreeView  INHERIT  WvgWindow, DataRef
 
@@ -129,21 +129,21 @@ CLASS WvgTreeView  INHERIT  WvgWindow, DataRef
 
    ENDCLASS
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTreeView
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + WS_TABSTOP + WS_CLIPSIBLINGS
-   ::exStyle     := WS_EX_STATICEDGE //+ TVS_EX_FADEINOUTEXPANDOS
+   ::exStyle     := WS_EX_STATICEDGE /*+ TVS_EX_FADEINOUTEXPANDOS */
 
    ::className   := "SysTreeView32"
    ::objType     := objTypeTreeView
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTreeView
 
@@ -175,7 +175,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTr
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgTreeView
    LOCAL hItemSelected, hParentOfSelected, n, aNMHdr
@@ -242,7 +242,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTreeView
 
    RETURN EVENT_UNHANDELLED
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgTreeView
 
@@ -252,7 +252,7 @@ METHOD destroy() CLASS WvgTreeView
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTreeView
 
@@ -260,7 +260,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD itemFromPos( aPos ) CLASS WvgTreeView
 
@@ -268,7 +268,7 @@ METHOD itemFromPos( aPos ) CLASS WvgTreeView
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD itemCollapsed( xParam ) CLASS WvgTreeView
 
@@ -278,7 +278,7 @@ METHOD itemCollapsed( xParam ) CLASS WvgTreeView
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD itemExpanded( xParam ) CLASS WvgTreeView
 
@@ -288,7 +288,7 @@ METHOD itemExpanded( xParam ) CLASS WvgTreeView
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD itemMarked( xParam ) CLASS WvgTreeView
 
@@ -298,7 +298,7 @@ METHOD itemMarked( xParam ) CLASS WvgTreeView
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 #if 0
 METHOD itemSelected( xParam ) CLASS WvgTreeView
 
@@ -308,9 +308,9 @@ METHOD itemSelected( xParam ) CLASS WvgTreeView
 
    RETURN Self
 #endif
-//----------------------------------------------------------------------//
-//                      Class WvgTreeViewItem
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                      Class WvgTreeViewItem                           */
+/*----------------------------------------------------------------------*/
 CLASS WvgTreeViewItem
 
    DATA     caption                               INIT ''
@@ -347,37 +347,37 @@ CLASS WvgTreeViewItem
    METHOD   insItem()
 
    ENDCLASS
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD new() CLASS WvgTreeViewItem
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD create() CLASS WvgTreeViewItem
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD configure() CLASS WvgTreeViewItem
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgTreeViewItem
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD isExpanded() CLASS WvgTreeViewItem
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setCaption( cCaption ) CLASS WvgTreeViewItem
 
@@ -385,14 +385,14 @@ METHOD setCaption( cCaption ) CLASS WvgTreeViewItem
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setExpandedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
 
    HB_SYMBOL_UNUSED( nResIdoBitmap )
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setImage( nResIdoBitmap ) CLASS WvgTreeViewItem
 
@@ -400,7 +400,7 @@ METHOD setImage( nResIdoBitmap ) CLASS WvgTreeViewItem
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setMarkedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
 
@@ -408,7 +408,7 @@ METHOD setMarkedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD addItem( cCaption ) CLASS WvgTreeViewItem
    Local oItem, hParent
@@ -428,33 +428,33 @@ METHOD addItem( cCaption ) CLASS WvgTreeViewItem
 
    RETURN oItem
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD delItem() CLASS WvgTreeViewItem
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD getChildItems() CLASS WvgTreeViewItem
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD getParentItem() CLASS WvgTreeViewItem
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD insItem() CLASS WvgTreeViewItem
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
-//                         MSDN on TreeView Control
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                         MSDN on TreeView Control                     */
+/*----------------------------------------------------------------------*/
 #if 0
 
 Macros
@@ -1296,4 +1296,4 @@ TVS_TRACKSELECT
 Version 4.70. Enables hot tracking in a tree-view control.
 
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/

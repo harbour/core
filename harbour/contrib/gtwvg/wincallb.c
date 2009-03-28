@@ -49,26 +49,26 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                      A Contribution from Andy Wos
-//                                   .
-//                            A Big Thank You
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-// Calback pointer interface
-// ( to be used with wincback.prg )
-// 6 June 2004, 13 June 2004
-// 5 April  2005 - optional (void) spec added
-// January  2006 - used VirtualAlloc to overcome DEP
-// February 2006 - reworked using Przemek's brilliant ideas
-//                 prg no longer required.
-
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                      A Contribution from Andy Wos
+ *                                   .
+ *                            A Big Thank You
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ * Calback pointer interface
+ * ( to be used with wincback.prg )
+ * 6 June 2004, 13 June 2004
+ * 5 April  2005 - optional (void) spec added
+ * January  2006 - used VirtualAlloc to overcome DEP
+ * February 2006 - reworked using Przemek's brilliant ideas
+ *                 prg no longer required.
+ */
 
 #include <windows.h>
 #include "hbapi.h"
@@ -79,33 +79,33 @@
 
 extern void hb_ToOutDebug( const char * sTraceMsg, ... );
 
-#define MAX_FUNC_SIZE 128 // this must be higher than the largest possible generated
-                          // machine code plus size of CALLBACKDATA structure
-                          // 128 bytes is now more than enough.
+#define MAX_FUNC_SIZE 128 /* this must be higher than the largest possible generated  */
+                          /* machine code plus size of CALLBACKDATA structure         */
+                          /* 128 bytes is now more than enough.                       */
 
-// my virtual memory management structures:
+/* my virtual memory management structures: */
 
-// callback function pointer and status
+/* callback function pointer and status */
 typedef struct _FuncData {
-   LPTSTR pFunc;        // the actual function pointer
-   BOOL   bActive;     // active flag
+   LPTSTR pFunc;        /* the actual function pointer */
+   BOOL   bActive;      /* active flag                 */
 } FuncData, *pFuncData;
 
-// page reservation and commitments
+/* page reservation and commitments */
 typedef struct _PageData {
-   LPTSTR    lpPage;    // pointer to this page
-   BOOL      bCommited; // pages commitment status
-   pFuncData Functions; // pointer to "array" of functions
+   LPTSTR    lpPage;    /* pointer to this page            */
+   BOOL      bCommited; /* pages commitment status         */
+   pFuncData Functions; /* pointer to "array" of functions */
 } PageData, *pPageData;
 
-// granular reservations
+/* granular reservations */
 typedef struct _MemReservation {
-   LPVOID    lpvBase ; // reserved area
-   pPageData MemPages; // pointer to "array" of pages
+   LPVOID    lpvBase ; /* reserved area                    */
+   pPageData MemPages; /* pointer to "array" of pages      */
 } MemReservation, *pMemReservation;
 
-// callback info
-//(stored inside the callback function memory block beyond the function code)
+/* callback info */
+/*(stored inside the callback function memory block beyond the function code) */
 typedef struct CALLBACKDATA {
    PHB_DYNS pDynSym;
    PHB_ITEM pSelf;
@@ -115,8 +115,8 @@ typedef struct CALLBACKDATA {
    BOOL     bVoid;
 } CALLBACKDATA, * PCALLBACKDATA;
 
-static void   _udp( BYTE * pCode, ULONG ulOffset, void * Address );                // absolute
-static void   _ucp( BYTE * pCode, ULONG ulOffset, void * Address, ULONG ulNext );  // relative
+static void   _udp( BYTE * pCode, ULONG ulOffset, void * Address );                /* absolute */
+static void   _ucp( BYTE * pCode, ULONG ulOffset, void * Address, ULONG ulNext );  /* relative */
 static LPVOID FuncMemAlloc( void );
 static BOOL   FuncMemFree( LPBYTE pMem );
 static LPVOID _GenerateCallback( CALLBACKDATA * pCallback );
@@ -130,12 +130,12 @@ DWORD dwReservedLen        = 0;
 
 pMemReservation pAllAllocs = NULL;
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
    prepare the callback structure and save the xHarbour symbols
-*/
-// params: pbcFunc, oObj, nParams, lVoid, cargo_params...
 
+   params: pbcFunc, oObj, nParams, lVoid, cargo_params...
+*/
 HB_FUNC( _ASCALLBACK )
 {
    CALLBACKDATA Callback;
@@ -175,12 +175,12 @@ HB_FUNC( _ASCALLBACK )
       return;
    }
 
-   Callback.iFormalParams = ISNUM( 3 ) ? hb_parni( 3 ) : 4 ;      // default to 4 formal parameters
-   Callback.bVoid         = ISLOG( 4 ) ? hb_parl ( 4 ) : FALSE;   // default to non-void function
+   Callback.iFormalParams = ISNUM( 3 ) ? hb_parni( 3 ) : 4 ;      /* default to 4 formal parameters */
+   Callback.bVoid         = ISLOG( 4 ) ? hb_parl ( 4 ) : FALSE;   /* default to non-void function   */
    Callback.iCargoParams  = hb_pcount() - 4;
 
    Callback.pParams = ( PHB_ITEM * ) hb_xgrab( Callback.iCargoParams * sizeof( PHB_ITEM ) );
-   iParam = 5; //i + 1;
+   iParam = 5; /* i + 1; */
    for( i = 0; i < Callback.iCargoParams; ++i )
    {
       Callback.pParams[ i ] = hb_itemNew( hb_param( i + iParam, HB_IT_ANY ) );
@@ -188,20 +188,21 @@ HB_FUNC( _ASCALLBACK )
 
    hb_retnint( ( HB_PTRDIFF ) ( pMem = _GenerateCallback( &Callback ) ) );
 
-   // debugging only
-   // to see what was generated
+   /* debugging only             */
+   /* to see what was generated  */
    if ( ISBYREF( 5 ) )
       hb_storclen( ( char * ) pMem, 128, 5 );
 }
-//----------------------------------------------------------------------//
-// the actual processing of the callbacks
-//
+/*----------------------------------------------------------------------*/
+/*
+ * the actual processing of the callbacks
+ */
 LRESULT __CallbackDispatcher( PCALLBACKDATA pCallback, ... )
 {
    int i;
    long lResult;
 
-   // save state?
+   /* save state? */
    hb_vmPushState();
 
    hb_vmPushSymbol( hb_dynsymSymbol( pCallback->pDynSym ) );
@@ -210,7 +211,7 @@ LRESULT __CallbackDispatcher( PCALLBACKDATA pCallback, ... )
    else
       hb_vmPushNil();
 
-   // first push the formal parameters
+   /* first push the formal parameters */
    if ( pCallback->iFormalParams )
    {
       va_list va;
@@ -223,13 +224,13 @@ LRESULT __CallbackDispatcher( PCALLBACKDATA pCallback, ... )
       va_end( va );
    }
 
-   // then push cargo params
+   /* then push cargo params */
    for( i = 0; i < pCallback->iCargoParams; ++i )
    {
       hb_vmPush( pCallback->pParams[ i ] );
    }
 
-   // execute
+   /* execute */
    if( pCallback->pSelf )
       hb_vmSend( ( USHORT ) ( pCallback->iFormalParams + pCallback->iCargoParams ) );
    else
@@ -241,7 +242,7 @@ LRESULT __CallbackDispatcher( PCALLBACKDATA pCallback, ... )
 
    return lResult;
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 //i tylko jedna wersje funkcji callback od dynamicznej allokacji:
 
@@ -334,35 +335,35 @@ static LPVOID _GenerateCallback( CALLBACKDATA * pCallback )
       if ( pCallback->iFormalParams == 0 )
       {
 
-         BYTE pFuncBody[] = { 0x68, 0x00, 0x00, 0x00, 0x00,    // push long (constant)
-                              0xE8, 0x00, 0x00, 0x00, 0x00,    // call function
-                              0x59,                            // pop cx
-                              0xC3, 0x90, 0x90, 0x90 };        // return
-                              // size: 15
+         BYTE pFuncBody[] = { 0x68, 0x00, 0x00, 0x00, 0x00,    /* push long (constant)         */
+                              0xE8, 0x00, 0x00, 0x00, 0x00,    /* call function                */
+                              0x59,                            /* pop cx                       */
+                              0xC3, 0x90, 0x90, 0x90 };        /* return                       */
+                              /* size: 15 */
 
          memcpy( pMem, pFuncBody, 15 );
-         _udp( pMem, 1, pCallbackRecord ) ;                     // update callbackdata pointer
-         _ucp( pMem, 6, __CallbackDispatcher, 10 );             // update code pointer
+         _udp( pMem, 1, pCallbackRecord ) ;                     /* update callbackdata pointer */
+         _ucp( pMem, 6, __CallbackDispatcher, 10 );             /* update code pointer         */
 
       }
       else
       {
-         BYTE pFuncProlog[] = { 0x55,                           // push bp
-                                0x8B, 0xEC };                   // mov bp,sp
+         BYTE pFuncProlog[] = { 0x55,                           /* push bp               */
+                                0x8B, 0xEC };                   /* mov bp,sp             */
 
-         BYTE pFuncEpilog[] = { 0x68, 0x00, 0x00, 0x00, 0x00,   // push long (constant)
-                                0xE8, 0x00, 0x00, 0x00, 0x00,   // call function
+         BYTE pFuncEpilog[] = { 0x68, 0x00, 0x00, 0x00, 0x00,   /* push long (constant)  */
+                                0xE8, 0x00, 0x00, 0x00, 0x00,   /* call function         */
                                 0x83, 0xC4, 0x00,
-                                0x5D,                           // pop bp
+                                0x5D,                           /* pop bp                */
                                 0xC2, 0x00, 0x00,
-                                0x90, 0x90, 0x90 };             // size: 20
+                                0x90, 0x90, 0x90 };             /* size: 20              */
 
          BYTE pParamData[]  = { 0x8B, 0x00, 0x00, 0x00 };
 
          memcpy( pMem, pFuncProlog, 3 );
          iOffset = 3;
 
-         // add formal parameters
+         /* add formal parameters */
 
          iParVal1 = 0x45;
          iParVal2 = 0x50;
@@ -384,8 +385,8 @@ static LPVOID _GenerateCallback( CALLBACKDATA * pCallback )
          }
 
          memcpy( pMem+iOffset, pFuncEpilog, 20 );
-         _udp( pMem, iOffset+1, pCallbackRecord ) ;                    // update callbackdata pointer
-         _ucp( pMem, iOffset+6, __CallbackDispatcher, iOffset+ 10 );   // update code pointer
+         _udp( pMem, iOffset+1, pCallbackRecord ) ;                    /* update callbackdata pointer */
+         _ucp( pMem, iOffset+6, __CallbackDispatcher, iOffset+ 10 );   /* update code pointer         */
          pMem[ iOffset+12 ] = ( BYTE ) ( 0x08 + ( ( pCallback->iFormalParams - 1 )* 4 ) );
          pMem[ iOffset+15 ] = ( BYTE ) ( pCallback->iFormalParams * 4 );
       }
@@ -393,7 +394,7 @@ static LPVOID _GenerateCallback( CALLBACKDATA * pCallback )
    return pMem;
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( _FREECALLBACK )
 {
@@ -403,16 +404,17 @@ HB_FUNC( _FREECALLBACK )
    return;
 }
 
-//----------------------------------------------------------------------//
-// Intel specific ?? Patch an address relative to the next instruction
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Intel specific ?? Patch an address relative to the next instruction
+ */
 static void _ucp( BYTE * pCode, ULONG ulOffset, void * Address, ULONG ulNext )
 {
    ULONG ulBase;
    ULONG ulRelative;
 
    ulBase = ( ULONG ) pCode + ( ULONG ) ulNext;
-   // Relative to next instruction
+   /* Relative to next instruction */
    ulRelative = ( ULONG ) Address - ( ULONG ) ulBase;
 
    pCode[ ulOffset     ] = ( BYTE ) ( ( ulRelative       ) & 0xFF );
@@ -420,9 +422,10 @@ static void _ucp( BYTE * pCode, ULONG ulOffset, void * Address, ULONG ulNext )
    pCode[ ulOffset + 2 ] = ( BYTE ) ( ( ulRelative >> 16 ) & 0xFF );
    pCode[ ulOffset + 3 ] = ( BYTE ) ( ( ulRelative >> 24 ) & 0xFF );
 }
-//----------------------------------------------------------------------//
-// Patch an address of the dynamic function
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Patch an address of the dynamic function
+ */
 static void _udp( BYTE * pCode, ULONG ulOffset, void * Address )
 {
    pCode[ ulOffset     ] = ( BYTE ) ( ( ( ULONG ) Address       ) & 0xFF );
@@ -430,31 +433,32 @@ static void _udp( BYTE * pCode, ULONG ulOffset, void * Address )
    pCode[ ulOffset + 2 ] = ( BYTE ) ( ( ( ULONG ) Address >> 16 ) & 0xFF );
    pCode[ ulOffset + 3 ] = ( BYTE ) ( ( ( ULONG ) Address >> 24 ) & 0xFF );
 }
-//----------------------------------------------------------------------//
-// allocate memory for a function
-// it is assumed that in the worst case scenario the function body requires
-// 256 bytes. The tests shown that it is in fact 159 bytes, but it has been
-// increased to be on the safe side and provide for future expansion of the
-// code.
-
-// on my PC:
-// dwPageSize              = 4096
-// dwAllocationGranularity = 65536
-
-// one page may contain 4096/256 = 16 callback functions
-// one min allocation can contain 65536/4096 = 16 pages, and 16*16 = 256 callback functions
-
-// Note to self:
-// it may be required to remove READWRITE flag for systems above Win9*
-// use VirtualProtect to change the comitted memory protection scheme
-// Note: VirtualProtect is not supported on Win9* systems
-
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*
+ * allocate memory for a function
+ * it is assumed that in the worst case scenario the function body requires
+ * 256 bytes. The tests shown that it is in fact 159 bytes, but it has been
+ * increased to be on the safe side and provide for future expansion of the
+ * code.
+ *
+ * on my PC:
+ * dwPageSize              = 4096
+ * dwAllocationGranularity = 65536
+ *
+ * one page may contain 4096/256 = 16 callback functions
+ * one min allocation can contain 65536/4096 = 16 pages, and 16*16 = 256 callback functions
+ *
+ * Note to self:
+ * it may be required to remove READWRITE flag for systems above Win9*
+ * use VirtualProtect to change the comitted memory protection scheme
+ * Note: VirtualProtect is not supported on Win9* systems
+ */
+/*----------------------------------------------------------------------*/
 
 static LPVOID FuncMemAlloc( void )
 {
 
-   SYSTEM_INFO      sSysInfo;         // useful information about the system
+   SYSTEM_INFO      sSysInfo;         /* useful information about the system */
    LPVOID           lpvBase;
    DWORD            i,j,k,l;
    BOOL             bFound;
@@ -464,7 +468,7 @@ static LPVOID FuncMemAlloc( void )
 
    if( dwPageSize == 0 )
    {
-      GetSystemInfo( &sSysInfo );     // populate the system information structure
+      GetSystemInfo( &sSysInfo );     /* populate the system information structure */
       dwPageSize     = sSysInfo.dwPageSize;
       dwMinAlloc     = sSysInfo.dwAllocationGranularity;
       dwMinReserve   = max( dwPageSize, dwMinAlloc );
@@ -478,20 +482,20 @@ static LPVOID FuncMemAlloc( void )
    bError       = FALSE;
    lpReturn     = NULL;
 
-   // first time called?
+   /* first time called? */
    if( pAllAllocs == NULL )
    {
-     // allocate space for the structure
+     /* allocate space for the structure */
      pAllAllocs = ( MemReservation* ) malloc( sizeof( MemReservation ) );
 
-     // reserve the minimum
+     /* reserve the minimum */
      lpvBase = VirtualAlloc(
-                             NULL,                 // system selects address
-                             dwMinReserve,         // size of allocation
-                             MEM_RESERVE,          // allocate reserved pages
-                             PAGE_NOACCESS );      // protection = no access
+                             NULL,                 /* system selects address  */
+                             dwMinReserve,         /* size of allocation      */
+                             MEM_RESERVE,          /* allocate reserved pages */
+                             PAGE_NOACCESS );      /* protection = no access  */
 
-     pAllAllocs->lpvBase  = lpvBase; // save the reservation
+     pAllAllocs->lpvBase  = lpvBase;               /* save the reservation    */
      pAllAllocs->MemPages = ( PageData* ) malloc( dwPagesInAlloc * sizeof( PageData ) );
 
      for( l = 0 ; l < dwPagesInAlloc ; l++ )
@@ -504,18 +508,18 @@ static LPVOID FuncMemAlloc( void )
 
    }
 
-   //find empty slot
-   for( i = 0 ; i < dwReservedLen ; i++ ) // each reservation
+   /* find empty slot */
+   for( i = 0 ; i < dwReservedLen ; i++ )                  /* each reservation   */
    {
       lpPage = ( char * ) ( pAllAllocs+i )->lpvBase;
 
-      for( j = 0 ; j < dwPagesInAlloc ; j++ ) // each reserved page
+      for( j = 0 ; j < dwPagesInAlloc ; j++ )              /* each reserved page */
       {
-         if( ( ( pAllAllocs+i )->MemPages+j )->bCommited ) // if committed
+         if( ( ( pAllAllocs+i )->MemPages+j )->bCommited ) /* if committed       */
          {
             for( k = 0 ; k < dwFuncsInPage ; k++ )
             {
-               if( ! ( ( ( pAllAllocs+i )->MemPages+j )->Functions+k )->bActive ) // function slot not active
+               if( ! ( ( ( pAllAllocs+i )->MemPages+j )->Functions+k )->bActive ) /* function slot not active */
                {
                    bFound = TRUE;
                    break;
@@ -523,17 +527,16 @@ static LPVOID FuncMemAlloc( void )
             }
             lpPage += dwPageSize;
          }
-         else // found uncommited page
+         else /* found uncommited page */
          {
-
             lpvBase = VirtualAlloc(
-                                     lpPage,                   // system selects address
-                                     dwPageSize,               // size of allocation
-                                     MEM_COMMIT,               // allocate reserved pages
-                                     PAGE_EXECUTE_READWRITE ); // protection = no access
+                                     lpPage,                   /* system selects address  */
+                                     dwPageSize,               /* size of allocation      */
+                                     MEM_COMMIT,               /* allocate reserved pages */
+                                     PAGE_EXECUTE_READWRITE ); /* protection = no access  */
             if( lpvBase == NULL )
             {
-               // error commiting mem page
+               /* error commiting mem page */
                bError = TRUE;
                break;
             }
@@ -549,7 +552,7 @@ static LPVOID FuncMemAlloc( void )
                                                ( LPTSTR ) ( ( ( LPSTR ) lpvBase) + ( l*MAX_FUNC_SIZE ) );
             }
 
-            j--; // to repeat
+            j--; /* to repeat */
          }
 
          if( bFound || bError )
@@ -563,27 +566,27 @@ static LPVOID FuncMemAlloc( void )
          break;
       }
 
-      // need to reseve more memory (allocate another block)
+      /* need to reseve more memory (allocate another block) */
       if( i == dwReservedLen-1 )
       {
-         // allocate space for the structure
+         /* allocate space for the structure */
          pAllAllocs = ( MemReservation* ) realloc( pAllAllocs, ( dwReservedLen+1 ) * sizeof( MemReservation ) );
 
-         // reserve the minimum
+         /* reserve the minimum */
          lpvBase = VirtualAlloc(
-                             NULL,                 // system selects address
-                             dwMinReserve,         // size of allocation
-                             MEM_RESERVE,          // allocate reserved pages
-                             PAGE_NOACCESS );      // protection = no access
+                             NULL,                 /* system selects address  */
+                             dwMinReserve,         /* size of allocation      */
+                             MEM_RESERVE,          /* allocate reserved pages */
+                             PAGE_NOACCESS );      /* protection = no access  */
 
          if( lpvBase == NULL )
          {
-            // error commiting mem page
+            /* error commiting mem page */
             bError = TRUE;
             break;
          }
 
-         ( pAllAllocs+i+1 )->lpvBase  = lpvBase; // save the reservation
+         ( pAllAllocs+i+1 )->lpvBase  = lpvBase;   /* save the reservation    */
          ( pAllAllocs+i+1 )->MemPages = ( PageData* ) malloc( dwPagesInAlloc * sizeof( PageData ) );
 
          for( l = 0 ; l < dwPagesInAlloc ; l++ )
@@ -596,7 +599,6 @@ static LPVOID FuncMemAlloc( void )
 
    if( bError )
    {
-//hb_ToOutDebug( "error" );
    }
    else if( bFound )
    {
@@ -606,9 +608,10 @@ static LPVOID FuncMemAlloc( void )
 
    return lpReturn;
 }
-//----------------------------------------------------------------------//
-// free the allocated CALLBACKDATA structure
-//
+/*----------------------------------------------------------------------*/
+/*
+ * free the allocated CALLBACKDATA structure
+ */
 static void FreeCallbackRecord( PCALLBACKDATA pCallback )
 {
    int i;
@@ -625,22 +628,22 @@ static void FreeCallbackRecord( PCALLBACKDATA pCallback )
       hb_xfree( pCallback->pParams );
    }
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 static BOOL FuncMemFree( LPBYTE pMem )
 {
    DWORD     i,j,k;
    BOOL      bSuccess = FALSE;
 
-   for( i = 0 ; i < dwReservedLen ; i++ ) // each reservation
+   for( i = 0 ; i < dwReservedLen ; i++ )                 /* each reservation   */
    {
-      for( j = 0 ; j < dwPagesInAlloc ; j++ ) // each reserved page
+      for( j = 0 ; j < dwPagesInAlloc ; j++ )             /* each reserved page */
       {
-         if( ( (pAllAllocs+i )->MemPages+j )->bCommited ) // if committed
+         if( ( (pAllAllocs+i )->MemPages+j )->bCommited ) /* if committed       */
          {
             for( k = 0 ; k < dwFuncsInPage ; k++ )
             {
-               if( ( ( ( pAllAllocs+i )->MemPages+j )->Functions+k )->bActive ) // function slot active
+               if( ( ( ( pAllAllocs+i )->MemPages+j )->Functions+k )->bActive ) /* function slot active */
                {
                   if( pMem == ( LPBYTE ) ( ( ( pAllAllocs+i )->MemPages+j )->Functions+k )->pFunc )
                   {
@@ -655,10 +658,11 @@ static BOOL FuncMemFree( LPBYTE pMem )
    }
    return bSuccess;
 }
-//----------------------------------------------------------------------//
-// according to MSDN all memory is freed automatically
-// perhaps this function is not required at all?
-//
+/*----------------------------------------------------------------------*/
+/*
+ * according to MSDN all memory is freed automatically
+ * perhaps this function is not required at all?
+ */
 static void FuncMemFreeAll( void )
 {
    DWORD     i,j,k;
@@ -666,15 +670,15 @@ static void FuncMemFreeAll( void )
 
    if( pAllAllocs != NULL )
    {
-      for( i = 0 ; i < dwReservedLen ; i++ ) // each reservation
+      for( i = 0 ; i < dwReservedLen ; i++ )                  /* each reservation   */
       {
-         for( j = 0 ; j < dwPagesInAlloc ; j++ ) // each reserved page
+         for( j = 0 ; j < dwPagesInAlloc ; j++ )              /* each reserved page */
          {
-            if( ( ( pAllAllocs+i )->MemPages+j )->bCommited ) // if committed
+            if( ( ( pAllAllocs+i )->MemPages+j )->bCommited ) /* if committed       */
             {
                for( k = 0 ; k < dwFuncsInPage ; k++ )
                {
-                  if( ( ( ( pAllAllocs+i )->MemPages+j )->Functions+k )->bActive ) // function slot not active
+                  if( ( ( ( pAllAllocs+i )->MemPages+j )->Functions+k )->bActive ) /* function slot not active */
                   {
                      pMem = ( LPBYTE ) ( ( ( pAllAllocs+i )->MemPages+j )->Functions+k )->pFunc;
                      FreeCallbackRecord( ( PCALLBACKDATA ) ( pMem + MAX_FUNC_SIZE - sizeof( CALLBACKDATA )-1 ) );
@@ -694,12 +698,13 @@ static void FuncMemFreeAll( void )
    }
    return;
 }
-//----------------------------------------------------------------------//
-// as exit procedure
-//
+/*----------------------------------------------------------------------*/
+/*
+ * as exit procedure
+ */
 HB_FUNC( _FREEALLCALLBACKS )
 {
    FuncMemFreeAll();
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 

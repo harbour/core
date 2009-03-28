@@ -49,21 +49,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                                EkOnkar
-//                          ( The LORD is ONE )
-//
-//                  Xbase++ xbpTreeView compatible Class
-//
-//                  Pritpal Bedi <pritpal@vouchcac.com>
-//                               26Nov2008
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                                EkOnkar
+ *                          ( The LORD is ONE )
+ *
+ *                  Xbase++ xbpTreeView compatible Class
+ *
+ *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                               26Nov2008
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbclass.ch'
 #include 'common.ch'
@@ -74,13 +74,13 @@
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 CLASS WvgListBox  INHERIT  WvgWindow, DataRef
 
@@ -144,7 +144,7 @@ CLASS WvgListBox  INHERIT  WvgWindow, DataRef
    METHOD   getCurItem()                          INLINE ::getItem( ::nCurSelected )
 
    ENDCLASS
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgListBox
 
@@ -157,7 +157,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgListB
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgListBox
 
@@ -174,9 +174,9 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgLi
    ENDIF
 
    ::oParent:AddChild( SELF )
-   //
+
    ::createControl()
-   //
+
    ::SetWindowProcCallback()
 
    IF ::visible
@@ -185,7 +185,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgLi
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
 
@@ -228,7 +228,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
 
    RETURN 0
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgListBox
 
@@ -236,7 +236,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgListBox
 
@@ -246,9 +246,9 @@ METHOD destroy() CLASS WvgListBox
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
-//                         MSDN on ListBox Control
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                         MSDN on ListBox Control                      */
+/*----------------------------------------------------------------------*/
 #if 0
 
 Functions
@@ -586,4 +586,4 @@ the user presses a key and the list box has the input focus. This enables an app
 to perform special processing on the keyboard input.
 
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/

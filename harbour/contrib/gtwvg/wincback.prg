@@ -49,64 +49,65 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                      A Contribution from Andy Wos
-//                                   .
-//                            A Big Thank You
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                      A Contribution from Andy Wos
+ *                                   .
+ *                            A Big Thank You
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'common.ch'
 
-//----------------------------------------------------------------------//
-//
-// Calback pointer interface
-// ( to be used with _winccback.c )
-// 6 June 2004, 13 June 2004
-// 5 April 2005 (added VOID return option)
-
-//----------------------------------------------------------------------//
-// Universal 32 bit callback procedure interface
-//
-// Syntax:
-//   AsCallback( <@MyFunc()>, , [<nQtyParams>], [<xCargo>], [<lVoid>] )  => pProcPtr
-//   or
-//   AsCallback( <bBlock>, , [<nQtyParams>], [<xCargo>], [<lVoid>] )  => pProcPtr
-//   or
-//   AsCallback( <MethPtr>, <oObject>, [<nQtyParams>], [<xCargo>], [<lVoid>] )  => pProcPtr
-//   or
-//   you can replace <@MyFunc()> or <MethPtr> with the acual name, eg: "MYFUNC", MYMETH"
-
-// Returns: <pProcPtr> - true callback function pointer, or 0 on failure
-//
-
-// Note: Must call FreeCallback( <pProcPtr> ), when no longer needed
-//       or memory leak will occur on the application exit.
-//       All parameters are treated as LONG (32bit) values.
-//       Also the return value is treated as a numerical LONG (32bit), unless <lVoid> is TRUE.
-//
-//       [<nQtyParams>] - optional number of formal parameters (not incl. <xCargo>)
-//                        as passed by the caller, eg. Windows, the default is 4.
-//                        The number of parameters must be exactly as specified.
-//                        Min value is 0, and the maximum is 10.
-//
-//       [<xCargo>]     - any extra value to pass to the callback procedure
-//                        (if you intend to change it, it has to be passed by
-//                        reference). It will be passed to the procedure, after
-//                        all formal parameters.
-//
-//       [<lVoid>]      - an optional indication that the callback function is not to return
-//                        any value (void) to the calling process (default FALSE).
-
-// [<cDebug>] - debugging only (not to be used in normal operation)
-//              if passed by reference, it returns the actual generated
-//              assembler code for inspection and debugging
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Calback pointer interface
+ * ( to be used with _winccback.c )
+ * 6 June 2004, 13 June 2004
+ * 5 April 2005 (added VOID return option)
+ */
+/*----------------------------------------------------------------------*/
+/*
+ * Universal 32 bit callback procedure interface
+ *
+ * Syntax:
+ *   AsCallback( <@MyFunc()>, , [<nQtyParams>], [<xCargo>], [<lVoid>] )  => pProcPtr
+ *   or
+ *   AsCallback( <bBlock>, , [<nQtyParams>], [<xCargo>], [<lVoid>] )  => pProcPtr
+ *   or
+ *   AsCallback( <MethPtr>, <oObject>, [<nQtyParams>], [<xCargo>], [<lVoid>] )  => pProcPtr
+ *   or
+ *   you can replace <@MyFunc()> or <MethPtr> with the acual name, eg: "MYFUNC", MYMETH"
+ *
+ * Returns: <pProcPtr> - true callback function pointer, or 0 on failure
+ *
+ *
+ * Note: Must call FreeCallback( <pProcPtr> ), when no longer needed
+ *       or memory leak will occur on the application exit.
+ *       All parameters are treated as LONG (32bit) values.
+ *       Also the return value is treated as a numerical LONG (32bit), unless <lVoid> is TRUE.
+ *
+ *       [<nQtyParams>] - optional number of formal parameters (not incl. <xCargo>)
+ *                        as passed by the caller, eg. Windows, the default is 4.
+ *                        The number of parameters must be exactly as specified.
+ *                        Min value is 0, and the maximum is 10.
+ *
+ *       [<xCargo>]     - any extra value to pass to the callback procedure
+ *                        (if you intend to change it, it has to be passed by
+ *                        reference). It will be passed to the procedure, after
+ *                        all formal parameters.
+ *
+ *       [<lVoid>]      - an optional indication that the callback function is not to return
+ *                        any value (void) to the calling process (default FALSE).
+ *
+ * [<cDebug>] - debugging only (not to be used in normal operation)
+ *              if passed by reference, it returns the actual generated
+ *              assembler code for inspection and debugging
+ */
 FUNCTION HB_AsCallback( pbcFunc, oObj, nNumParam, xCargo, lVoid, cDebug )
    LOCAL pCallback
 
@@ -115,28 +116,30 @@ FUNCTION HB_AsCallback( pbcFunc, oObj, nNumParam, xCargo, lVoid, cDebug )
    pCallback := _AsCallback( pbcFunc, oObj, nNumParam, lVoid, @cDebug )
 
    RETURN pCallback
-//----------------------------------------------------------------------//
-// Syntax: FreeCallback( < nProcPtr > ) => lSuccess
-//
-// Note: The callback procedure must have been obtained
-//       through the AsCallback() function
-//       You should not call this function from within
-//       the callback function itself !!!!!!
-//       If it is a window procedure, the window must be
-//       destroyed first, or it must be "unsubclassed"
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Syntax: FreeCallback( < nProcPtr > ) => lSuccess
+ *
+ * Note: The callback procedure must have been obtained
+ *       through the AsCallback() function
+ *       You should not call this function from within
+ *       the callback function itself !!!!!!
+ *       If it is a window procedure, the window must be
+ *       destroyed first, or it must be "unsubclassed"
+ */
 FUNCTION HB_FreeCallback( pCallback )
 
    _FreeCallback( pCallback )
 
    RETURN .T.
-//----------------------------------------------------------------------//
-// free all oustanding unreleased callback pointers on exit from the application
-// could be changed to EXIT PROCEDURE
-//
+/*----------------------------------------------------------------------*/
+/*
+ * free all oustanding unreleased callback pointers on exit from the application
+ * could be changed to EXIT PROCEDURE
+ */
 PROCEDURE _ExitCallbacks
 
    _FreeAllCallbacks()
 
    RETURN
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/

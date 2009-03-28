@@ -64,11 +64,11 @@
  *
  */
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #define HB_OS_WIN_USED
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #include "gtwvg.h"
 
@@ -85,7 +85,7 @@
 BOOL WINAPI ChooseColor( LPCHOOSECOLORW );
 #endif /* __MINGW32CE__ */
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 #if 0
 HB_EXTERN_BEGIN
 
@@ -111,32 +111,32 @@ static HINSTANCE wvg_hInstance( void )
    return ( HINSTANCE ) hInstance;
 }
 
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//
-//               Pritpal Bedi <pritpal@vouchcac.com>
-//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *               Pritpal Bedi <pritpal@vouchcac.com>
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_UTILS )
 {
-   // Retained for legacy code.
+   /* Retained for legacy code. */
 }
 
-//-------------------------------------------------------------------//
-//
-//     Wvt_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
-//                                    lItalic, lUnderline, lStrikeout )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *     Wvt_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
+ *                                    lItalic, lUnderline, lStrikeout )
+ */
 HB_FUNC( WVT_CHOOSEFONT )
 {
 #if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
-   CHOOSEFONT  cf;// = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-   LOGFONT     lf;// = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+   CHOOSEFONT  cf; /* = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }; */
+   LOGFONT     lf; /* = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0 }; */
    LONG        PointSize = 0;
 
    if ( ! ISNIL( 2 ) )
@@ -210,10 +210,10 @@ HB_FUNC( WVT_CHOOSEFONT )
 #endif
 }
 
-//-------------------------------------------------------------------//
-//
-//    Wvt_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    Wvt_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected
+ */
 HB_FUNC( WVT_CHOOSECOLOR )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -243,10 +243,10 @@ HB_FUNC( WVT_CHOOSECOLOR )
    }
 }
 
-//-------------------------------------------------------------------//
-//
-//  Wvt_MessageBox( cMessage, cTitle, nIcon, hWnd )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *  Wvt_MessageBox( cMessage, cTitle, nIcon, hWnd )
+ */
 HB_FUNC( WVT_MESSAGEBOX )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -258,13 +258,11 @@ HB_FUNC( WVT_MESSAGEBOX )
    HB_TCHAR_FREE( msg );
 }
 
-//-------------------------------------------------------------------//
-//#if _WIN32_IE > 0x400
-//-------------------------------------------------------------------//
-//
-//                              Tooltips
-//
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*
+ *                              Tooltips
+ */
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_SETTOOLTIPACTIVE )
 {
@@ -280,10 +278,10 @@ HB_FUNC( WVT_SETTOOLTIPACTIVE )
    hb_retl( bActive );
 }
 
-//-------------------------------------------------------------------//
-//
-//   Wvt_SetToolTip( nTop, nLeft, nBottom, nRight, cToolText )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *   Wvt_SetToolTip( nTop, nLeft, nBottom, nRight, cToolText )
+ */
 HB_FUNC( WVT_SETTOOLTIP )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -327,7 +325,7 @@ HB_FUNC( WVT_SETTOOLTIP )
    }
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_SETTOOLTIPTEXT )
 {
@@ -348,7 +346,7 @@ HB_FUNC( WVT_SETTOOLTIPTEXT )
    }
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_SETTOOLTIPMARGIN )
 {
@@ -366,7 +364,7 @@ HB_FUNC( WVT_SETTOOLTIPMARGIN )
 #endif
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_SETTOOLTIPWIDTH )
 {
@@ -384,7 +382,7 @@ HB_FUNC( WVT_SETTOOLTIPWIDTH )
 #endif
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_SETTOOLTIPBKCOLOR )
 {
@@ -401,7 +399,7 @@ HB_FUNC( WVT_SETTOOLTIPBKCOLOR )
 #endif
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
 {
@@ -419,7 +417,7 @@ HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
 #endif
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 #if _WIN32_IE > 0x400
 
 HB_FUNC( WVT_SETTOOLTIPTITLE )
@@ -442,7 +440,7 @@ HB_FUNC( WVT_SETTOOLTIPTITLE )
 }
 
 #endif
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_GETTOOLTIPWIDTH )
 {
@@ -453,7 +451,7 @@ HB_FUNC( WVT_GETTOOLTIPWIDTH )
 #endif
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_GETTOOLTIPBKCOLOR )
 {
@@ -464,7 +462,7 @@ HB_FUNC( WVT_GETTOOLTIPBKCOLOR )
 #endif
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_GETTOOLTIPTEXTCOLOR )
 {
@@ -475,9 +473,7 @@ HB_FUNC( WVT_GETTOOLTIPTEXTCOLOR )
 #endif
 }
 
-//-------------------------------------------------------------------//
-//#endif
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_SETGUI )
 {
@@ -493,7 +489,7 @@ HB_FUNC( WVT_SETGUI )
    hb_retl( bGui );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_SETMOUSEPOS )
 {
@@ -513,7 +509,7 @@ HB_FUNC( WVT_SETMOUSEPOS )
    }
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_GETPAINTRECT )
 {
@@ -529,7 +525,7 @@ HB_FUNC( WVT_GETPAINTRECT )
    hb_itemReturnRelease( info );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_SETPOINTER )
 {
@@ -617,7 +613,7 @@ HB_FUNC( WVT_SETPOINTER )
 #endif
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_SETMOUSEMOVE )
 {
@@ -631,7 +627,7 @@ HB_FUNC( WVT_SETMOUSEMOVE )
    hb_retl( bMouseMove );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_GETXYFROMROWCOL )
 {
@@ -646,7 +642,7 @@ HB_FUNC( WVT_GETXYFROMROWCOL )
    hb_itemReturnRelease( info );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_GETFONTINFO )
 {
@@ -665,15 +661,15 @@ HB_FUNC( WVT_GETFONTINFO )
    hb_itemReturnRelease( info );
 }
 
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//
-//                 Peter Rees <peter@rees.co.nz>
-//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                 Peter Rees <peter@rees.co.nz>
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_SETMENU )
 {
@@ -703,7 +699,7 @@ HB_FUNC( WVT_SETMENU )
    SetWindowPos( _s->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_SETPOPUPMENU )
 {
@@ -718,21 +714,21 @@ HB_FUNC( WVT_SETPOPUPMENU )
    }
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_CREATEMENU )
 {
   hb_retnint( ( HB_PTRDIFF ) CreateMenu() );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_CREATEPOPUPMENU )
 {
   hb_retnint( ( HB_PTRDIFF ) CreatePopupMenu() );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC_EXTERN( WIN_APPENDMENU );
 
@@ -741,28 +737,28 @@ HB_FUNC( WVT_APPENDMENU )
    HB_FUNC_EXEC( WIN_APPENDMENU );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_DELETEMENU )
 {
   hb_retl( DeleteMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_DESTROYMENU )
 {
   hb_retl( DestroyMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_ENABLEMENUITEM )
 {
    hb_retni( EnableMenuItem( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_GETLASTMENUEVENT )
 {
@@ -771,7 +767,7 @@ HB_FUNC( WVT_GETLASTMENUEVENT )
    hb_retni( _s->LastMenuEvent );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_SETLASTMENUEVENT )
 {
@@ -784,7 +780,7 @@ HB_FUNC( WVT_SETLASTMENUEVENT )
    hb_retni( iEvent );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_SETMENUKEYEVENT )
 {
@@ -798,7 +794,7 @@ HB_FUNC( WVT_SETMENUKEYEVENT )
    hb_retni( iOldEvent ) ;
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_DRAWMENUBAR )
 {
@@ -807,7 +803,7 @@ HB_FUNC( WVT_DRAWMENUBAR )
    DrawMenuBar( _s->hWnd ) ;
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_ENABLESHORTCUTS )
 {
@@ -821,7 +817,7 @@ HB_FUNC( WVT_ENABLESHORTCUTS )
    hb_retl( bWas );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_INVALIDATERECT )
 {
@@ -840,14 +836,14 @@ HB_FUNC( WVT_INVALIDATERECT )
    InvalidateRect( _s->hWnd, &rc, TRUE );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_ISLBUTTONPRESSED )
 {
    hb_retl( GetKeyState( VK_LBUTTON ) & 0x8000 );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_CLIENTTOSCREEN )
 {
@@ -866,7 +862,7 @@ HB_FUNC( WVT_CLIENTTOSCREEN )
    hb_itemReturnRelease( info );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_GETCURSORPOS )
 {
@@ -881,7 +877,7 @@ HB_FUNC( WVT_GETCURSORPOS )
    hb_itemReturnRelease( info );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_TRACKPOPUPMENU )
 {
@@ -900,7 +896,7 @@ HB_FUNC( WVT_TRACKPOPUPMENU )
                                                 NULL ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_GETMENU )
 {
@@ -909,15 +905,15 @@ HB_FUNC( WVT_GETMENU )
    hb_retnint( ( HB_PTRDIFF ) GetMenu( _s->hWnd ) );
 }
 
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//
-//                             Dialogs
-//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                             Dialogs
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
 {
@@ -1051,7 +1047,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
    hb_retnint( ( HB_PTRDIFF ) hDlg );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_CREATEDIALOGMODAL )
 {
@@ -1147,7 +1143,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
    hb_retnint( iResult );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT__MAKEDLGTEMPLATE )
 {
@@ -1156,87 +1152,82 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
    int   i, nchar ;
    DWORD lStyle ;
 
-   // Parameters: 12 arrays
-   // 1 for DLG template
-   // 11 for item properties
+   /* Parameters: 12 arrays                             */
+   /* 1 for DLG template                                */
+   /* 11 for item properties                            */
 
-   // 64k allow to build up to 255 items on the dialog
-   //
+   /* 64k allow to build up to 255 items on the dialog  */
+   /*                                                   */
    pdlgtemplate = p = ( PWORD ) LocalAlloc( LPTR, 65534 )  ;
 
-   //---------------
+   lStyle = hb_parnl(1,3) ;
 
-    lStyle = hb_parnl(1,3) ;
+   /* start to fill in the dlgtemplate information.  addressing by WORDs */
 
-    // start to fill in the dlgtemplate information.  addressing by WORDs
+   *p++ = 1                        ;  /* version    */
+   *p++ = 0xFFFF                   ;  /* signature  */
+   *p++ = LOWORD ( hb_parnl(1,1) ) ;  /* Help Id    */
+   *p++ = HIWORD ( hb_parnl(1,1) ) ;
 
-    *p++ = 1                        ; // version
-    *p++ = 0xFFFF                   ; // signature
-    *p++ = LOWORD ( hb_parnl(1,1) ) ; // Help Id
-    *p++ = HIWORD ( hb_parnl(1,1) ) ;
+   *p++ = LOWORD ( hb_parnl(1,2) ) ;  /* ext. style */
+   *p++ = HIWORD ( hb_parnl(1,2) ) ;
 
-    *p++ = LOWORD ( hb_parnl(1,2) ) ; // ext. style
-    *p++ = HIWORD ( hb_parnl(1,2) ) ;
+   *p++ = LOWORD (lStyle)          ;
+   *p++ = HIWORD (lStyle)          ;
 
-    *p++ = LOWORD (lStyle)          ;
-    *p++ = HIWORD (lStyle)          ;
+   *p++ = (WORD)   nItems          ;  /* NumberOfItems           */
+   *p++ = (short)  hb_parni(1,5)   ;  /* x                       */
+   *p++ = (short)  hb_parni(1,6)   ;  /* y                       */
+   *p++ = (short)  hb_parni(1,7)   ;  /* cx                      */
+   *p++ = (short)  hb_parni(1,8)   ;  /* cy                      */
+   *p++ = (short)  0               ;  /* Menu (ignored for now.) */
+   *p++ = (short)  0x00            ;  /* Class also ignored      */
 
-    *p++ = (WORD)   nItems          ;  // NumberOfItems
-    *p++ = (short)  hb_parni(1,5)   ;  // x
-    *p++ = (short)  hb_parni(1,6)   ;  // y
-    *p++ = (short)  hb_parni(1,7)   ;  // cx
-    *p++ = (short)  hb_parni(1,8)   ;  // cy
-    *p++ = (short)  0               ;  // Menu (ignored for now.)
-    *p++ = (short)  0x00            ;  // Class also ignored
+   if ( hb_parinfa( 1,11 ) == HB_IT_STRING )
+   {
+      nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parc( 1,11 ) ) ;
+      p += nchar   ;
+   }
+   else
+   {
+     *p++ =0 ;
+   }
+   /* add in the wPointSize and szFontName here iff the DS_SETFONT bit on */
 
-    if ( hb_parinfa( 1,11 ) == HB_IT_STRING )
-    {
-       nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parc( 1,11 ) ) ;
-       p += nchar   ;
-    }
-    else
-    {
-      *p++ =0 ;
-    }
-    // add in the wPointSize and szFontName here iff the DS_SETFONT bit on
+   if ( ( lStyle & DS_SETFONT ) )
+   {
+     *p++ = (short) hb_parni(1,12) ;
+     *p++ = (short) hb_parni(1,13) ;
+     *p++ = (short) hb_parni(1,14) ;
 
-    if ( ( lStyle & DS_SETFONT ) )
-    {
-      *p++ = (short) hb_parni(1,12) ;
-      *p++ = (short) hb_parni(1,13) ;
-      *p++ = (short) hb_parni(1,14) ;
-
-      nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parc( 1,15 ) ) ;
-      p += nchar ;
-    } ;
-
-    //---------------
-    // Now, for the items
+     nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parc( 1,15 ) ) ;
+     p += nchar ;
+   } ;
 
    for ( i = 1 ; i <= nItems ; i++ ) {
-      // make sure each item starts on a DWORD boundary
+      /* make sure each item starts on a DWORD boundary */
       p = lpwAlign (p) ;
 
-      *p++ = LOWORD ( hb_parnl(2,i) ) ;    // help id
+      *p++ = LOWORD ( hb_parnl(2,i) ) ;  /* help id     */
       *p++ = HIWORD ( hb_parnl(2,i) ) ;
 
-      *p++ = LOWORD ( hb_parnl(3,i) ) ; // ext. style
+      *p++ = LOWORD ( hb_parnl(3,i) ) ;  /* ext. style  */
       *p++ = HIWORD ( hb_parnl(3,i) ) ;
 
-      *p++ = LOWORD ( hb_parnl(4,i) ) ; // style
+      *p++ = LOWORD ( hb_parnl(4,i) ) ;  /* style       */
       *p++ = HIWORD ( hb_parnl(4,i) ) ;
 
-      *p++ = (short)  hb_parni(5,i)   ;  // x
-      *p++ = (short)  hb_parni(6,i)   ;  // y
-      *p++ = (short)  hb_parni(7,i)   ;  // cx
-      *p++ = (short)  hb_parni(8,i)   ;  // cy
+      *p++ = (short)  hb_parni(5,i)   ;  /* x           */
+      *p++ = (short)  hb_parni(6,i)   ;  /* y           */
+      *p++ = (short)  hb_parni(7,i)   ;  /* cx          */
+      *p++ = (short)  hb_parni(8,i)   ;  /* cy          */
 
-      *p++ = LOWORD ( hb_parnl(9,i) ) ;  // id
-      *p++ = HIWORD ( hb_parnl(9,i) ) ;  // id   // 0;
+      *p++ = LOWORD ( hb_parnl(9,i) ) ;  /* id          */
+      *p++ = HIWORD ( hb_parnl(9,i) ) ;  /* id          */
 
       if ( hb_parinfa( 10,i ) == HB_IT_STRING )
       {
-         nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parc( 10,i ) ) ; // class
+         nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parc( 10,i ) ) ; /* class */
          p += nchar ;
          }
       else
@@ -1247,7 +1238,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
       if ( hb_parinfa( 11,i ) == HB_IT_STRING )
          {
-         nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parc( 11,i ) ) ;  // text
+         nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parc( 11,i ) ) ;  /*  text  */
          p += nchar ;
          }
       else
@@ -1256,7 +1247,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
          *p++ = (WORD) hb_parni(11,i) ;
          }
 
-      *p++ = 0x00 ;  // extras ( in array 12 )
+      *p++ = 0x00 ;  /* extras ( in array 12 ) */
     };
 
     p = lpwAlign( p );
@@ -1266,11 +1257,11 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
     LocalFree( LocalHandle( pdlgtemplate ) );
 }
 
-//-------------------------------------------------------------------//
-//
-//  Helper routine.  Take an input pointer, return closest
-//  pointer that is aligned on a DWORD (4 byte) boundary.
-//
+/*----------------------------------------------------------------------*/
+/*
+ *  Helper routine.  Take an input pointer, return closest
+ *  pointer that is aligned on a DWORD (4 byte) boundary.
+ */
 LPWORD lpwAlign( LPWORD lpIn )
 {
    HB_PTRDIFF ul = ( HB_PTRDIFF ) lpIn;
@@ -1281,7 +1272,7 @@ LPWORD lpwAlign( LPWORD lpIn )
    return ( LPWORD ) ul;
 }
 
-//-----------------------------------------------------------------------------
+/*----------------------------------------------------------------------*/
 
 int nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn )
 {
@@ -1297,7 +1288,7 @@ int nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn )
    return nChar;
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_LBADDSTRING )
 {
@@ -1306,28 +1297,28 @@ HB_FUNC( WVT_LBADDSTRING )
    HB_TCHAR_FREE( text );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_LBGETCOUNT )
 {
    hb_retnl( ( long ) SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_GETCOUNT, 0, 0 ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_LBDELETESTRING )
 {
    SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_DELETESTRING, hb_parni( 3 ), 0 );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_LBSETCURSEL )
 {
    SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_SETCURSEL, hb_parni( 3 ), 0 );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_CBADDSTRING )
 {
@@ -1336,17 +1327,17 @@ HB_FUNC( WVT_CBADDSTRING )
    HB_TCHAR_FREE( text );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_CBSETCURSEL )
 {
    SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 );
 }
 
-//-------------------------------------------------------------------//
-//
-//   Wvt_DlgSetIcon( hDlg, ncIcon )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *   Wvt_DlgSetIcon( hDlg, ncIcon )
+ */
 HB_FUNC( WVT_DLGSETICON )
 {
    HICON hIcon;
@@ -1373,7 +1364,7 @@ HB_FUNC( WVT_DLGSETICON )
       hb_retnint( ( HB_PTRDIFF ) hIcon );
    }
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_GETFONTHANDLE )
 {
@@ -1388,15 +1379,15 @@ HB_FUNC( WVT_GETFONTHANDLE )
    hb_retnint( ( HB_PTRDIFF ) hFont );
 }
 
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                     Utility Functions - Not API
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                     Utility Functions - Not API
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 BOOL wvt_Array2Rect(PHB_ITEM aRect, RECT *rc )
 {
@@ -1410,7 +1401,7 @@ BOOL wvt_Array2Rect(PHB_ITEM aRect, RECT *rc )
    return FALSE;
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 PHB_ITEM wvt_Rect2Array( RECT *rc  )
 {
@@ -1424,7 +1415,7 @@ PHB_ITEM wvt_Rect2Array( RECT *rc  )
    return aRect;
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 BOOL wvt_Array2Point(PHB_ITEM aPoint, POINT *pt )
 {
@@ -1436,7 +1427,7 @@ BOOL wvt_Array2Point(PHB_ITEM aPoint, POINT *pt )
    return FALSE;
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 PHB_ITEM wvt_Point2Array( POINT *pt  )
 {
@@ -1448,7 +1439,7 @@ PHB_ITEM wvt_Point2Array( POINT *pt  )
    return aPoint;
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 BOOL wvt_Array2Size(PHB_ITEM aSize, SIZE *siz )
 {
@@ -1460,7 +1451,7 @@ BOOL wvt_Array2Size(PHB_ITEM aSize, SIZE *siz )
    return FALSE;
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 PHB_ITEM wvt_Size2Array( SIZE *siz  )
 {
@@ -1472,7 +1463,7 @@ PHB_ITEM wvt_Size2Array( SIZE *siz  )
    return aSize;
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 void  wvt_Rect2ArrayEx( RECT *rc ,PHB_ITEM aRect )
 {
@@ -1482,7 +1473,7 @@ void  wvt_Rect2ArrayEx( RECT *rc ,PHB_ITEM aRect )
    hb_arraySetNL(aRect, 4, rc->bottom);
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 void wvt_Point2ArrayEx( POINT *pt, PHB_ITEM aPoint)
 {
@@ -1490,7 +1481,7 @@ void wvt_Point2ArrayEx( POINT *pt, PHB_ITEM aPoint)
    hb_arraySetNL(aPoint, 2, pt->y);
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 void wvt_Size2ArrayEx( SIZE *siz, PHB_ITEM aSize )
 {
@@ -1498,7 +1489,7 @@ void wvt_Size2ArrayEx( SIZE *siz, PHB_ITEM aSize )
    hb_arraySetNL(aSize, 2, siz->cy);
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #define HB_PARTSTR( n )  ( ISCHAR( n ) ? HB_TCHAR_CONVTO( hb_parc(n) ) : NULL )
 #define HB_PARTFREE( p ) do { if( p ) HB_TCHAR_FREE( p ); } while( 0 )
@@ -1550,7 +1541,7 @@ HB_FUNC( WVT__GETOPENFILENAME )
    HB_PARTFREE( lpstrDefExt );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT__GETSAVEFILENAME )
 {
@@ -1595,4 +1586,4 @@ HB_FUNC( WVT__GETSAVEFILENAME )
    HB_PARTFREE( lpstrInitialDir );
    HB_PARTFREE( lpstrDefExt );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/

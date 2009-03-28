@@ -114,7 +114,7 @@ static const int K_Ctrl[] =
 
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #ifdef __DBG_GTWGU__
 #define WVGDEBUG( d )     hb_ToOutDebug d
@@ -122,7 +122,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 #define WVGDEBUG( d )
 #endif
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 {
@@ -155,7 +155,9 @@ static PHB_GTWVT hb_gt_wvt_Find( HWND hWnd )
    int iCount = s_wvtCount, iPos = 0;
    PHB_GTWVT pWVT = NULL;
 
-//WVGDEBUG( ( "hb_gt_wvt_Find()" ) );
+   #if 0
+   WVGDEBUG( ( "hb_gt_wvt_Find()" ) );
+   #endif
 
    HB_WVT_LOCK
 
@@ -226,7 +228,7 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 
    HB_WVT_UNLOCK
 
-   // Detach PRG callback
+   /* Detach PRG callback */
 
    hb_itemRelease( pWVT->pPP->pParentGT );
    hb_xfree( pWVT->pPP );
@@ -400,7 +402,9 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
 
 static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
 {
-   //WVGDEBUG( ( "wvggui:hb_gt_wvt_GetCharFromInputQueue()" ) );
+   #if 0
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_GetCharFromInputQueue()" ) );
+   #endif
 
    if( pWVT->keyPointerOut != pWVT->keyPointerIn )
    {
@@ -1059,7 +1063,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          {
             case SC_MAXIMIZE:
             {
-               // TODO
+               /* TODO */
             }
          }
 #endif
@@ -1129,7 +1133,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       {
          if( ( int ) lParam == 0 )
          {
-            // Menu command
+            /* Menu command */
             if( HIWORD( wParam ) == 0 )
             {
                hb_gt_wvt_FireMenuEvent( pWVT, 0, ( int ) LOWORD( wParam ) );
@@ -1144,9 +1148,9 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             iHi = HIWORD( wParam );
 
             hb_arrayNew( pEvParams, 3 );
-            hb_arraySetNI( pEvParams, 1, iHi );                              // Notification Code
-            hb_arraySetNI( pEvParams, 2, iLo );                              // Control identifier
-            hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) ( HWND ) lParam ); // Controls hWnd
+            hb_arraySetNI( pEvParams, 1, iHi );                              /* Notification Code  */
+            hb_arraySetNI( pEvParams, 2, iLo );                              /* Control identifier */
+            hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) ( HWND ) lParam ); /* Controls hWnd      */
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_COMMAND, pEvParams );
          }
@@ -1169,7 +1173,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          PHB_ITEM pEvParams = hb_itemNew( NULL );
          if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE, pEvParams ) == 0 )
          {
-            hb_gt_wvt_AddCharToInputQueue( pWVT, 27 );      // post ESCape
+            hb_gt_wvt_AddCharToInputQueue( pWVT, 27 );      /* post ESCape */
          }
          return 0;
       }
@@ -1370,8 +1374,10 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
    HB_GTSELF_SEMICOLD( pGT );
 
-//   hb_gt_wvt_CreateConsoleWindow( pWVT );
-//   hb_gt_wvt_ProcessMessages( pWVT );
+   #if 0
+   hb_gt_wvt_CreateConsoleWindow( pWVT );
+   hb_gt_wvt_ProcessMessages( pWVT );
+   #endif
 }
 
 /* ********************************************************************** */
@@ -1401,8 +1407,9 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
    BOOL fKey;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_ReadKey(%p,%d)", pGT, iEventMask ) );
-   //WVGDEBUG( ( "wvggui:hb_gt_wvt_ReadKey()" ) );
-
+   #if 0
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_ReadKey()" ) );
+   #endif
    HB_SYMBOL_UNUSED( iEventMask ); /* we ignore the eventmask! */
 
    pWVT = HB_GTWVT_GET( pGT );
@@ -1930,7 +1937,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             case HB_GTS_RESETWINDOW:
             {
                if( pWVT->hWnd )
-                  UpdateWindow( pWVT->hWnd );   // hb_gt_wvt_ResetWindowSize( pWVT );
+                  UpdateWindow( pWVT->hWnd );   /* hb_gt_wvt_ResetWindowSize( pWVT ); */
                break;
             }
             case HB_GTS_SETTIMER:

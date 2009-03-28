@@ -63,16 +63,16 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//
-//             Direct WinApi Functions - Prefixed WIN_*()
-//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *             Direct WinApi Functions - Prefixed WIN_*()
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #define HB_OS_WIN_USED
 
@@ -111,7 +111,7 @@
                           (((DWORD)((WORD)((DWORD_PTR)(b) & 0xffff))) << 16)))
 #endif
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 static HINSTANCE wvg_hInstance( void )
 {
@@ -122,7 +122,7 @@ static HINSTANCE wvg_hInstance( void )
    return ( HINSTANCE ) hInstance;
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_HINSTANCE )
 {
@@ -157,7 +157,7 @@ HB_FUNC( WIN_SENDMESSAGE )
    }
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 {
@@ -189,93 +189,93 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
    }
 }
 
-//-------------------------------------------------------------------//
-//
-//  WIN_SetTimer( hWnd, nIdentifier, nTimeOut )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *  WIN_SetTimer( hWnd, nIdentifier, nTimeOut )
+ */
 HB_FUNC( WIN_SETTIMER )
 {
    hb_retl( SetTimer( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), hb_parni( 3 ), NULL ) != 0 );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETFOCUS )
 {
    SetFocus( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETTEXTCOLOR )
 {
    hb_retnl( ( ULONG ) SetTextColor( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETBKCOLOR )
 {
    hb_retnl( ( ULONG ) SetBkColor( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 #if 0
 HB_FUNC( WIN_SETBKMODE )
 {
    hb_retni( ( int ) SetBkMode( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ) );
 }
 #endif
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_GETSTOCKOBJECT )
 {
    hb_retnint( ( HB_PTRDIFF ) GetStockObject( hb_parni( 1 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_DELETEOBJECT )
 {
    hb_retl( DeleteObject( ( HGDIOBJ ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SELECTOBJECT )
 {
    hb_retnint( ( HB_PTRDIFF ) SelectObject( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( HGDIOBJ ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_LOWORD )
 {
    hb_retnl( LOWORD( hb_parnl( 1 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_HIWORD )
 {
    hb_retnl( HIWORD( hb_parnl( 1 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 #if 0
 HB_FUNC( WIN_MULDIV )
 {
    hb_retni( MulDiv( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 #endif
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_GETDIALOGBASEUNITS )
 {
    hb_retnl( ( LONG ) GetDialogBaseUnits() ) ;
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETDLGITEMTEXT )
 {
@@ -284,7 +284,7 @@ HB_FUNC( WIN_SETDLGITEMTEXT )
    HB_TCHAR_FREE( lpBuffer );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_GETDLGITEMTEXT )
 {
@@ -293,10 +293,10 @@ HB_FUNC( WIN_GETDLGITEMTEXT )
    char * szText;
    UINT iResult;
 
-   iResult = GetDlgItemText( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), // handle of dialog box
-                             hb_parni( 2 ),            // identifier of control
-                             cText,                    // address of buffer for text
-                             iLen                      // maximum size of string
+   iResult = GetDlgItemText( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), /* handle of dialog box */
+                             hb_parni( 2 ),            /* identifier of control      */
+                             cText,                    /* address of buffer for text */
+                             iLen                      /* maximum size of string     */
                             );
 
    cText[ iResult ] = '\0';
@@ -306,7 +306,7 @@ HB_FUNC( WIN_GETDLGITEMTEXT )
    hb_xfree( cText );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_CHECKDLGBUTTON )
 {
@@ -314,32 +314,32 @@ HB_FUNC( WIN_CHECKDLGBUTTON )
                             ( UINT )( ISNUM( 3 ) ? hb_parni( 3 ) : hb_parl( 3 ) ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_ISDLGBUTTONCHECKED )
 {
    hb_retni( IsDlgButtonChecked( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ) ) ;
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_CHECKRADIOBUTTON )
 {
-    hb_retl( CheckRadioButton( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), // handle of dialog box
-                                        hb_parni( 2 ),   // identifier of first radio button in group
-                                        hb_parni( 3 ),   // identifier of last radio button in group
-                                        hb_parni( 4 )    // identifier of radio button to select
+    hb_retl( CheckRadioButton( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), /* handle of dialog box */
+                                        hb_parni( 2 ),   /* identifier of first radio button in group */
+                                        hb_parni( 3 ),   /* identifier of last radio button in group  */
+                                        hb_parni( 4 )    /* identifier of radio button to select      */
                               ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_GETDLGITEM )
 {
    hb_retnint( ( HB_PTRDIFF ) GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_MESSAGEBOX )
 {
@@ -353,7 +353,7 @@ HB_FUNC( WIN_MESSAGEBOX )
    HB_TCHAR_FREE( lpMsg );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_INVALIDATERECT )
 {
@@ -372,10 +372,10 @@ HB_FUNC( WIN_INVALIDATERECT )
    }
 }
 
-//-------------------------------------------------------------------//
-//
-//  Win_LoadIcon( ncIcon )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *  Win_LoadIcon( ncIcon )
+ */
 HB_FUNC( WIN_LOADICON )
 {
    HICON hIcon;
@@ -394,13 +394,13 @@ HB_FUNC( WIN_LOADICON )
    hb_retnint( ( HB_PTRDIFF ) hIcon );
 }
 
-//-------------------------------------------------------------------//
-//
-//  Win_LoadImage( ncImage, nSource ) -> hImage
-//    nSource == 0 ResourceIdByNumber
-//    nSource == 1 ResourceIdByName
-//    nSource == 2 ImageFromDiskFile
-//
+/*----------------------------------------------------------------------*/
+/*
+ *  Win_LoadImage( ncImage, nSource ) -> hImage
+ *    nSource == 0 ResourceIdByNumber
+ *    nSource == 1 ResourceIdByName
+ *    nSource == 2 ImageFromDiskFile
+ */
 HB_FUNC( WIN_LOADIMAGE )
 {
    HBITMAP hImage = 0;
@@ -426,7 +426,7 @@ HB_FUNC( WIN_LOADIMAGE )
    hb_retnint( ( HB_PTRDIFF ) hImage );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_GETCLIENTRECT )
 {
@@ -443,29 +443,29 @@ HB_FUNC( WIN_GETCLIENTRECT )
    hb_itemReturnRelease( info );
 }
 
-//-------------------------------------------------------------------//
-//
-//    Win_DrawImage( hdc, nLeft, nTop, nWidth, nHeight, cImage ) in Pixels
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    Win_DrawImage( hdc, nLeft, nTop, nWidth, nHeight, cImage ) in Pixels
+ */
 HB_FUNC( WIN_DRAWIMAGE )
 {
    hb_retl( hb_wvt_DrawImage( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), hb_parni( 3 ),
                                    hb_parni( 4 ), hb_parni( 5 ), hb_parc( 6 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_GETDC )
 {
    hb_retnint( ( HB_PTRDIFF ) GetDC( ISNIL( 1 ) ? NULL : ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
 }
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_RELEASEDC )
 {
    hb_retl( ReleaseDC( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( HDC ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
 }
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_CREATEBRUSH )
 {
@@ -480,10 +480,10 @@ HB_FUNC( WIN_CREATEBRUSH )
    hb_retnint( ( HB_PTRDIFF ) CreateSolidBrush( lb.lbColor ) );
 #endif
 }
-//-------------------------------------------------------------------//
-//
-//   Win_DrawText( hDC, cText, aRect, nFormat )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *   Win_DrawText( hDC, cText, aRect, nFormat )
+ */
 HB_FUNC( WIN_DRAWTEXT )
 {
    RECT rc = { 0,0,0,0 };
@@ -498,7 +498,7 @@ HB_FUNC( WIN_DRAWTEXT )
    HB_TCHAR_FREE( lpBuffer );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_GETWINDOWRECT )
 {
@@ -515,43 +515,44 @@ HB_FUNC( WIN_GETWINDOWRECT )
    hb_itemReturnRelease( info );
 }
 
-//-------------------------------------------------------------------//
-// Win_MoveWindow( hWnd, nLeft, nTop, nWidth, nHeight, lRePaint )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Win_MoveWindow( hWnd, nLeft, nTop, nWidth, nHeight, lRePaint )
+ */
 HB_FUNC( WIN_MOVEWINDOW )
 {
    MoveWindow( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parnl( 2 ), hb_parnl( 3 ), hb_parnl( 4 ), hb_parnl( 5 ), hb_parl( 6 ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_GETDESKTOPWINDOW )
 {
    wvg_rethandle( GetDesktopWindow() );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETPARENT )
 {
    hb_retnint( ( HB_PTRDIFF ) SetParent( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ), (HWND) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_BRINGWINDOWTOTOP )
 {
    hb_retl( BringWindowToTop( wvg_parhwnd( 1 ) ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETFOREGROUNDWINDOW )
 {
    hb_retl( BringWindowToTop( wvg_parhwnd( 1 ) ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETWINDOWTEXT )
 {
@@ -560,35 +561,35 @@ HB_FUNC( WIN_SETWINDOWTEXT )
    HB_TCHAR_FREE( text );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETWINDOWLONG )
 {
    hb_retnl( SetWindowLong( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), hb_parnl( 3 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_ISWINDOW )
 {
    hb_retl( IsWindow( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_ENABLEWINDOW )
 {
    hb_retl( EnableWindow( wvg_parhwnd( 1 ), hb_parl( 2 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_DESTROYWINDOW )
 {
    hb_retl( DestroyWindow( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_CLIENTTOSCREEN )
 {
@@ -613,7 +614,7 @@ HB_FUNC( WIN_CLIENTTOSCREEN )
    }
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SCREENTOCLIENT )
 {
@@ -638,28 +639,28 @@ HB_FUNC( WIN_SCREENTOCLIENT )
    }
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_AND )
 {
    hb_retnl( hb_parnl(1) & hb_parnl(2) ) ;
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_OR )
 {
    hb_retnl( hb_parnl(1) | hb_parnl(2) ) ;
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_NOT )
 {
    hb_retnl( ~( hb_parnl(1) ) ) ;
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_TRACKPOPUPMENU )
 {
@@ -684,7 +685,7 @@ HB_FUNC( WIN_TRACKPOPUPMENU )
    hb_retnl( TrackPopupMenu( hMenu, uFlags, xy.x, xy.y, 0, hWnd, NULL ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_CHOOSECOLOR )
 {
@@ -713,7 +714,7 @@ HB_FUNC( WIN_CHOOSECOLOR )
    }
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_FINDWINDOW )
 {
@@ -734,16 +735,16 @@ HB_FUNC( WIN_FINDWINDOW )
    }
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SLEEP )
 {
    Sleep( hb_parni( 1 ) );
 }
 
-//----------------------------------------------------------------------//
-//                         Menu Manipulations
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                         Menu Manipulations                           */
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETMENU )
 {
@@ -775,21 +776,21 @@ HB_FUNC( WIN_SETMENU )
    #endif
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_CREATEMENU )
 {
   hb_retnint( ( HB_PTRDIFF ) CreateMenu() );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_CREATEPOPUPMENU )
 {
   hb_retnint( ( HB_PTRDIFF ) CreatePopupMenu() );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_APPENDMENU )
 {
@@ -799,7 +800,7 @@ HB_FUNC( WIN_APPENDMENU )
    if ( ISCHAR( 4 ) )
    {
       iLen = hb_parclen( 4 );
-      if ( iLen > 0 && iLen < 256 )   // Translate '~' to '&'
+      if ( iLen > 0 && iLen < 256 )   /* Translate '~' to '&' */
       {
          char * text = ( char * ) hb_xgrab( iLen + 1 );
 
@@ -824,69 +825,69 @@ HB_FUNC( WIN_APPENDMENU )
       }
    }
    else
-   {  // It is a SEPARATOR or Submenu
+   {  /* It is a SEPARATOR or Submenu */
       LPCTSTR lpszCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 );
       hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), ( LPCTSTR ) lpszCaption ) );
    }
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_DELETEMENU )
 {
   hb_retl( DeleteMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_DESTROYMENU )
 {
   hb_retl( DestroyMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_ENABLEMENUITEM )
 {
    hb_retl( EnableMenuItem( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_CHECKMENUITEM )
 {
    hb_retni( CheckMenuItem( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_DRAWMENUBAR )
 {
    DrawMenuBar( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) ;
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_UPDATEWINDOW )
 {
    hb_retl( UpdateWindow( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SHOWWINDOW )
 {
    hb_retl( ShowWindow( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_MAKELPARAM )
 {
    hb_retnint( MAKELPARAM( hb_parnint( 1 ), hb_parnint( 2 ) ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_CREATEWINDOWEX )
 {
@@ -913,7 +914,7 @@ HB_FUNC( WIN_CREATEWINDOWEX )
 
    hb_retnint( ( HB_PTRDIFF ) hWnd );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 #if 0
 HB_FUNC( WIN_CREATETOOLBAREX )
 {
@@ -936,11 +937,11 @@ HB_FUNC( WIN_CREATETOOLBAREX )
    hb_retnint( ( HB_PTRDIFF ) hWnd );
 }
 #endif
-//----------------------------------------------------------------------//
-//
-//              Bitmap Management Function . Coutesy GTWVW
-//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*
+ *              Bitmap Management Function . Coutesy GTWVW
+ */
+/*----------------------------------------------------------------------*/
 static BITMAPINFO * PackedDibLoad( PTSTR szFileName )
 {
    BITMAPFILEHEADER bmfh ;
@@ -1255,7 +1256,7 @@ static HBITMAP hPrepareBitmap( char * szBitmapX, UINT uiBitmap,
 
    return hBitmap;
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
 {
@@ -1267,7 +1268,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
    hb_retnint( ( HB_PTRDIFF ) hBitmap );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCEID )
 {
@@ -1279,7 +1280,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCEID )
    hb_retnint( ( HB_PTRDIFF ) hBitmap );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
 {
@@ -1290,7 +1291,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
 
    hb_retnint( ( HB_PTRDIFF ) hBitmap );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_STATUSBARCREATEPANEL )
 {
@@ -1349,7 +1350,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
    hb_retl( FALSE );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_STATUSBARSETTEXT )
 {
@@ -1362,7 +1363,7 @@ HB_FUNC( WVG_STATUSBARSETTEXT )
       int    iFlags;
       TCHAR  *szCaption;
 
-      iPart -= 1;           // Zero based
+      iPart -= 1;           /* Zero based */
 
       iFlags = ( int ) HIWORD( SendMessage( hWndSB, SB_GETTEXT, ( WPARAM ) iPart, ( LPARAM ) szText ) );
 
@@ -1372,7 +1373,7 @@ HB_FUNC( WVG_STATUSBARSETTEXT )
    }
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_STATUSBARREFRESH )
 {
@@ -1398,7 +1399,7 @@ HB_FUNC( WVG_STATUSBARREFRESH )
    #endif
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SENDMESSAGETEXT )
 {
@@ -1409,7 +1410,7 @@ HB_FUNC( WIN_SENDMESSAGETEXT )
    HB_TCHAR_FREE( lpBuffer );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_GETMESSAGETEXT )
 {
@@ -1424,7 +1425,7 @@ HB_FUNC( WIN_GETMESSAGETEXT )
    }
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETWNDPROC )
 {
@@ -1441,7 +1442,7 @@ HB_FUNC( WIN_SETWNDPROC )
    hb_retnint( ( HB_PTRDIFF ) oldProc );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_DEFWINDOWPROC )
 {
@@ -1451,7 +1452,7 @@ HB_FUNC( WIN_DEFWINDOWPROC )
                               wvg_parlparam( 4 ) ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_CALLWINDOWPROC )
 {
@@ -1462,9 +1463,10 @@ HB_FUNC( WIN_CALLWINDOWPROC )
                                wvg_parlparam( 5 ) ) );
 }
 
-//----------------------------------------------------------------------//
-// Wvg_GetNMHInfo( nlParam )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Wvg_GetNMHInfo( nlParam )
+ */
 HB_FUNC( WVG_GETNMHDRINFO )
 {
    LPNMHDR  lpnmh     = ( LPNMHDR ) wvg_parlparam( 1 );
@@ -1478,9 +1480,10 @@ HB_FUNC( WVG_GETNMHDRINFO )
 
    hb_itemReturnRelease( pEvParams );
 }
-//----------------------------------------------------------------------//
-// Wvg_GetNMMouseInfo( nlParam )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Wvg_GetNMMouseInfo( nlParam )
+ */
 HB_FUNC( WVG_GETNMMOUSEINFO )
 {
    LPNMMOUSE nmm       = ( LPNMMOUSE ) wvg_parlparam( 1 );
@@ -1492,13 +1495,14 @@ HB_FUNC( WVG_GETNMMOUSEINFO )
    hb_arraySetNI( pEvParams  , 1, nmh.code );
    hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.idFrom   );
    hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) nmh.hwndFrom );
-   hb_arraySetNInt( pEvParams, 4, ( HB_PTRDIFF ) nmm->dwItemSpec );//hb_arraySetNL( pEvParams  , 4, nmm->dwItemSpec );
+   hb_arraySetNInt( pEvParams, 4, ( HB_PTRDIFF ) nmm->dwItemSpec );
 
    hb_itemReturnRelease( pEvParams );
 }
 /*----------------------------------------------------------------------*/
-// Wvg_SetToolbarButtonTip( nlParam, cToolTip )
-//
+/*
+ * Wvg_SetToolbarButtonTip( nlParam, cToolTip )
+ */
 #if 0
 HB_FUNC( WVG_SETTOOLBARBUTTONTIP )
 {
@@ -1512,9 +1516,10 @@ HB_FUNC( WVG_SETTOOLBARBUTTONTIP )
 //   HB_TCHAR_FREE( pszText );
 }
 #endif
-//----------------------------------------------------------------------//
-// Wvg_GetNMTreeViewInfo( nlParam )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *  Wvg_GetNMTreeViewInfo( nlParam )
+ */
 HB_FUNC( WVG_GETNMTREEVIEWINFO )
 {
    LPNMTREEVIEW pnmtv  = ( LPNMTREEVIEW ) wvg_parlparam( 1 );
@@ -1531,9 +1536,9 @@ HB_FUNC( WVG_GETNMTREEVIEWINFO )
 
    hb_itemReturnRelease( pEvParams );
 }
-//----------------------------------------------------------------------//
-//                         TreeView Functions
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                         TreeView Functions                           */
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_TREEVIEW_SETTEXTCOLOR )
 {
@@ -1541,7 +1546,7 @@ HB_FUNC( WIN_TREEVIEW_SETTEXTCOLOR )
    hb_retl( TreeView_SetTextColor( wvg_parhwnd( 1 ), wvg_parcolor( 2 ) ) );
 #endif
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_TREEVIEW_SETBKCOLOR )
 {
@@ -1549,21 +1554,24 @@ HB_FUNC( WIN_TREEVIEW_SETBKCOLOR )
    hb_retl( TreeView_SetBkColor( wvg_parhwnd( 1 ), wvg_parcolor( 2 ) ) );
 #endif
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_TREEVIEW_SETLINECOLOR )
 {
-   //hb_retl( TreeView_SetLineColor( wvg_parhwnd( 1 ), wvg_parcolor( 2 ) ) );
+   #if 0
+   hb_retl( TreeView_SetLineColor( wvg_parhwnd( 1 ), wvg_parcolor( 2 ) ) );
+   #endif
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_TREEVIEW_SELECTITEM )
 {
    hb_retl( TreeView_SelectItem( wvg_parhwnd( 1 ), wvg_parhandle( 2 ) ) );
 }
-//----------------------------------------------------------------------//
-//  Wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *  Wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected )
+ */
 HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 {
    LPNMTREEVIEW pnmtv     = ( LPNMTREEVIEW ) wvg_parlparam( 2 );
@@ -1607,10 +1615,10 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
    }
 }
 
-//----------------------------------------------------------------------//
-//
-//   hItem := Wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:Caption )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *   hItem := Wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:Caption )
+ */
 HB_FUNC( WVG_TREEVIEW_ADDITEM )
 {
    TVINSERTSTRUCT tvis;
@@ -1623,7 +1631,7 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
                           TVIS_EXPANDEDONCE | TVIS_SELECTED | TVIS_EXPANDPARTIAL |
                           TVIS_OVERLAYMASK | TVIS_STATEIMAGEMASK | TVIS_USERMASK ;
 
-   tvis.item.state      = 0;        // TVI_BOLD
+   tvis.item.state      = 0;        /* TVI_BOLD */
    tvis.hParent         = ISNIL( 2 ) ? NULL : ( HTREEITEM ) wvg_parhandle( 2 );
    tvis.item.pszText    = text;
 
@@ -1632,21 +1640,23 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
    HB_TCHAR_FREE( text );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_TREEVIEW_EXPAND )
 {
    hb_retl( TreeView_Expand( wvg_parhwnd( 1 ), wvg_parhandle( 2 ), ( hb_parl( 3 ) ? TVE_EXPAND : TVE_COLLAPSE ) ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_TVIS_EXPANDED )
 {
-   //hb_retl( TreeView_GetItemState( wvg_parhwnd( 1 ), wvg_parhandle( 2 ), ( UINT ) TVIS_EXPANDED ) );
+   #if 0
+   hb_retl( TreeView_GetItemState( wvg_parhwnd( 1 ), wvg_parhandle( 2 ), ( UINT ) TVIS_EXPANDED ) );
+   #endif
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_TREEVIEW_SHOWEXPANDED )
 {
@@ -1698,9 +1708,9 @@ HB_FUNC( WVG_TREEVIEW_SHOWEXPANDED )
    }
 }
 
-//----------------------------------------------------------------------//
-//                          ListBox Functions
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                          ListBox Functions                           */
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_LBGETTEXT )
 {
@@ -1714,29 +1724,29 @@ HB_FUNC( WIN_LBGETTEXT )
    HB_TCHAR_FREE( szText );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_LBGETCURSEL )
 {
    hb_retni( ListBox_GetCurSel( wvg_parhwnd( 1 ) ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_LBSETCURSEL )
 {
    hb_retni( ListBox_SetCurSel( wvg_parhwnd( 1 ), hb_parni( 2 ) ) );
 }
 
-//----------------------------------------------------------------------//
-//                                Buttons
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                                Buttons                               */
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_BUTTON_GETCHECK )
 {
    hb_retnl( Button_GetCheck( wvg_parhwnd( 1 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_ISICONIC )
 {
@@ -1746,7 +1756,7 @@ HB_FUNC( WIN_ISICONIC )
    hb_retl( FALSE );
 #endif
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_ISZOOMED )
 {
@@ -1756,9 +1766,10 @@ HB_FUNC( WIN_ISZOOMED )
    hb_retl( TRUE );
 #endif
 }
-//----------------------------------------------------------------------//
-// Win_SetDCBrushColor( hDC, nRGB )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Win_SetDCBrushColor( hDC, nRGB )
+ */
 HB_FUNC( WIN_SETDCBRUSHCOLOR )
 {
 #if ( _WIN32_WINNT >= 0x0500 )
@@ -1767,9 +1778,10 @@ HB_FUNC( WIN_SETDCBRUSHCOLOR )
    wvg_rethandle( NULL );
 #endif
 }
-//----------------------------------------------------------------------//
-// Win_SetDCPenColor( hDC, nRGB )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Win_SetDCPenColor( hDC, nRGB )
+ */
 HB_FUNC( WIN_SETDCPENCOLOR )
 {
 #if ( _WIN32_WINNT >= 0x0500 )
@@ -1779,31 +1791,34 @@ HB_FUNC( WIN_SETDCPENCOLOR )
 #endif
 }
 
-//----------------------------------------------------------------------//
-// Win_GetCurrentObject( hDC, nObjType )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Win_GetCurrentObject( hDC, nObjType )
+ */
 HB_FUNC( WIN_GETCURRENTOBJECT )
 {
    wvg_rethandle( GetCurrentObject( wvg_parhdc( 1 ), hb_parni( 2 ) ) );
 }
 
-//----------------------------------------------------------------------//
-// Win_GetCurrentBrush( hDC )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Win_GetCurrentBrush( hDC )
+ */
 HB_FUNC( WIN_GETCURRENTBRUSH )
 {
    wvg_rethandle( GetCurrentObject( wvg_parhdc( 1 ), OBJ_BRUSH ) );
 }
 
-//----------------------------------------------------------------------//
-// Win_GetCurrentFornt( hDC )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Win_GetCurrentFornt( hDC )
+ */
 HB_FUNC( WIN_GETCURRENTFONT )
 {
    wvg_rethandle( GetCurrentObject( wvg_parhdc( 1 ), OBJ_FONT ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETWINDOWPOSTOBACK )
 {
@@ -1811,7 +1826,7 @@ HB_FUNC( WIN_SETWINDOWPOSTOBACK )
                   SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETWINDOWPOSTOTOP )
 {
@@ -1819,7 +1834,7 @@ HB_FUNC( WIN_SETWINDOWPOSTOTOP )
                                   SWP_NOSIZE | SWP_NOMOVE  | SWP_NOACTIVATE ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETWINDOWSIZE )
 {
@@ -1827,7 +1842,7 @@ HB_FUNC( WIN_SETWINDOWSIZE )
                  hb_parl( 4 ) ? 0 : SWP_NOREDRAW | SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE  ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETWINDOWPOSITION )
 {
@@ -1835,7 +1850,7 @@ HB_FUNC( WIN_SETWINDOWPOSITION )
                 hb_parl( 4 ) ? 0 : SWP_NOREDRAW | SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SETWINDOWPOSANDSIZE )
 {
@@ -1844,9 +1859,9 @@ HB_FUNC( WIN_SETWINDOWPOSANDSIZE )
                         ( hb_parl( 6 ) ? 0 : SWP_NOREDRAW ) | SWP_NOZORDER | SWP_NOACTIVATE ) );
 }
 
-//----------------------------------------------------------------------//
-//                            WvgFontDialog()
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                            WvgFontDialog()                           */
+/*----------------------------------------------------------------------*/
 
 PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, BOOL bEmpty )
 {
@@ -1896,15 +1911,16 @@ PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, BOOL bEmpty )
    return( aFont );
 }
 
-//----------------------------------------------------------------------//
-// Wvg_ChooseFont( hWnd, nWndProc, familyName, nominalPointSize, ;
-//                 viewScreenFonts, viewPrinterFonts )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Wvg_ChooseFont( hWnd, nWndProc, familyName, nominalPointSize, ;
+ *                 viewScreenFonts, viewPrinterFonts )
+ */
 HB_FUNC( WVG_CHOOSEFONT )
 {
 #if ! defined( HB_OS_WIN_CE )
-   CHOOSEFONT  cf;  // = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-   LOGFONT     lf;  // = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+   CHOOSEFONT  cf;  /* = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }; */
+   LOGFONT     lf;  /* = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0 }; */
    DWORD       Flags;
    LONG        PointSize = 0;
    HWND        hWnd  = wvg_parhwnd( 1 );
@@ -1938,7 +1954,7 @@ HB_FUNC( WVG_CHOOSEFONT )
    Flags = Flags | CF_SCALABLEONLY;
    Flags = Flags | CF_NOVECTORFONTS;
    Flags = Flags | CF_NOSCRIPTSEL;
-   Flags = Flags | CF_NOSIMULATIONS;        // ::synthesizeFonts  == .f.
+   Flags = Flags | CF_NOSIMULATIONS;        /* ::synthesizeFonts  == .f. */
    #endif
 
    if( ISLOG( 5 ) &&  hb_parl( 5 ) )
@@ -1948,7 +1964,7 @@ HB_FUNC( WVG_CHOOSEFONT )
 
    cf.lStructSize      = sizeof( CHOOSEFONT );
    cf.hwndOwner        = hWnd;
-   cf.hDC              = ( HDC ) NULL;      // only when ::oPrinterPS is defined
+   cf.hDC              = ( HDC ) NULL;      /* only when ::oPrinterPS is defined */
    cf.lpLogFont        = &lf;
    cf.iPointSize       = PointSize;
    cf.Flags            = Flags;
@@ -1958,7 +1974,7 @@ HB_FUNC( WVG_CHOOSEFONT )
    cf.lpTemplateName   = ( LPTSTR ) NULL;
    cf.hInstance        = ( HINSTANCE ) NULL;
    cf.lpszStyle        = ( LPTSTR ) szStyle;
-   cf.nFontType        = SCREEN_FONTTYPE;   // ??
+   cf.nFontType        = SCREEN_FONTTYPE;   /* ?? */
    cf.nSizeMin         = 0;
    cf.nSizeMax         = 0;
 
@@ -1984,7 +2000,7 @@ HB_FUNC( WVG_CHOOSEFONT )
 #endif
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
 {
@@ -2002,7 +2018,7 @@ HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
 #endif
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_FONTCREATE )
 {
@@ -2041,9 +2057,10 @@ HB_FUNC( WVG_FONTCREATE )
    }
 }
 
-//----------------------------------------------------------------------//
-// Wvg_PointSizeToHeight( hdc, nPointSize )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Wvg_PointSizeToHeight( hdc, nPointSize )
+ */
 HB_FUNC( WVG_POINTSIZETOHEIGHT )
 {
    HDC hdc = ISNIL( 1 ) ? GetDC( GetDesktopWindow() ) : wvg_parhdc( 1 );
@@ -2054,9 +2071,10 @@ HB_FUNC( WVG_POINTSIZETOHEIGHT )
       ReleaseDC( GetDesktopWindow(), hdc );
 }
 
-//----------------------------------------------------------------------//
-// Wvg_HeightToPointSize( hdc, nHeight )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Wvg_HeightToPointSize( hdc, nHeight )
+ */
 HB_FUNC( WVG_HEIGHTTOPOINTSIZE )
 {
    HDC hdc = ISNIL( 1 ) ? GetDC( GetDesktopWindow() ) : wvg_parhdc( 1 );
@@ -2067,7 +2085,7 @@ HB_FUNC( WVG_HEIGHTTOPOINTSIZE )
       ReleaseDC( GetDesktopWindow(), hdc );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 HB_FUNC( WVG_SETCURRENTBRUSH )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -2078,9 +2096,10 @@ HB_FUNC( WVG_SETCURRENTBRUSH )
 #endif
 #endif
 }
-//----------------------------------------------------------------------//
-// Win_SetLayeredWindowAttributes( hWnd, nRGB, nOpacityFactor [0-255] )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Win_SetLayeredWindowAttributes( hWnd, nRGB, nOpacityFactor [0-255] )
+ */
 HB_FUNC( WIN_SETLAYEREDWINDOWATTRIBUTES )
 {
 #if ( _WIN32_WINNT >= 0x0500 )
@@ -2111,10 +2130,11 @@ HB_FUNC( WIN_SETLAYEREDWINDOWATTRIBUTES )
    }
 #endif
 }
-//----------------------------------------------------------------------//
-//                                IL  | DL
-//  Wvg_AddToolbarButton( hWndTB, nBtn|hBitmap, cCaption, nButtonID, nMode, lIsTooltip )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *                                IL  | DL
+ *  Wvg_AddToolbarButton( hWndTB, nBtn|hBitmap, cCaption, nButtonID, nMode, lIsTooltip )
+ */
 HB_FUNC( WVG_ADDTOOLBARBUTTON )
 {
    TBBUTTON    tbb;
@@ -2126,12 +2146,11 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
 
    switch( hb_parni( 5 ) )
    {
-      case 1:  // button from image
+      case 1:  /* button from image */
       {
          int iNewBitmap, iNewString;
 
-         // set bitmap
-         //
+         /* set bitmap */
          tbab.hInst = NULL;
 #if (_WIN32_IE >= 0x0500)
          tbab.nID   = ( UINT_PTR ) wapi_par_HBITMAP( 2 );
@@ -2140,8 +2159,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
 #endif
          iNewBitmap = ( int ) SendMessage( hWndTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab );
 
-         // set string
-         //
+         /* set string */
          szCaption = HB_TCHAR_CONVTO( hb_parc( 3 ) );
          iNewString = ( int ) SendMessage( hWndTB, TB_ADDSTRING, ( WPARAM ) 0, ( LPARAM ) szCaption );
          HB_TCHAR_FREE( szCaption );
@@ -2152,8 +2170,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
             SendMessage( hWndTB, TB_SETMAXTEXTROWS, ( WPARAM ) 0, ( LPARAM ) 0 );
          }
          #endif
-         // add button
-         //
+         /* add button */
          tbb.iBitmap   = iNewBitmap;
          tbb.idCommand = iCommand;
          tbb.fsState   = TBSTATE_ENABLED;
@@ -2169,12 +2186,12 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          return;
       }
 
-      case 2:  // system bitmap
+      case 2:  /* system bitmap */
 
 
-      case 3:  // separator
+      case 3:  /* separator     */
       {
-         tbb.iBitmap   = 0;  // Can be width of the separator
+         tbb.iBitmap   = 0;  /* Can be width of the separator */
          tbb.idCommand = 0;
          tbb.fsState   = TBSTATE_ENABLED;
          tbb.fsStyle   = TBSTYLE_SEP;
@@ -2187,11 +2204,11 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
       }
    }
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WIN_SENDTOOLBARMESSAGE )
 {
-//#if ! defined( HB_OS_WIN_CE )
+/* #if ! defined( HB_OS_WIN_CE ) */
    HWND hTB = wapi_par_HWND( 1 );
    int  msg = wapi_par_INT( 2 );
 
@@ -2361,12 +2378,13 @@ HB_FUNC( WIN_SENDTOOLBARMESSAGE )
          break;
 #endif
    }
-//#endif
+/* #endif */
 }
 
-//----------------------------------------------------------------------//
-// Wvg_RegisterClass( cClassName,
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Wvg_RegisterClass( cClassName,
+ */
 HB_FUNC( WVG_REGISTERCLASS_BYNAME )
 {
    WNDCLASS wndclass;
@@ -2393,9 +2411,10 @@ HB_FUNC( WVG_REGISTERCLASS_BYNAME )
    HB_TCHAR_FREE( szClass );
 }
 
-//----------------------------------------------------------------------//
-//  Function with Win_FillRect() exists in hbwin:win_parn1.c with different approach.
-//                        **************************************
+/*----------------------------------------------------------------------*/
+/*
+ *  Function with Win_FillRect() exists in hbwin:win_parn1.c with different approach.
+ */
 HB_FUNC( WVG_FILLRECT )
 {
    RECT rc;
@@ -2408,7 +2427,7 @@ HB_FUNC( WVG_FILLRECT )
    FillRect( wapi_par_HDC( 1 ), &rc, wapi_par_HBRUSH( 3 ) );
 }
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_BEGINMOUSETRACKING )
 {

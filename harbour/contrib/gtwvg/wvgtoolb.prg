@@ -49,21 +49,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                               EkOnkar
-//                         ( The LORD is ONE )
-//
-//                  Xbase++ xbpToolBar Compatible Class
-//
-//                  Pritpal Bedi <pritpal@vouchcac.com>
-//                              23Nov2008
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                               EkOnkar
+ *                         ( The LORD is ONE )
+ *
+ *                  Xbase++ xbpToolBar Compatible Class
+ *
+ *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                              23Nov2008
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbclass.ch'
 #include 'common.ch'
@@ -74,15 +74,15 @@
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
-CLASS WvgToolBar  INHERIT  WvgWindow //WvgActiveXControl
+CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
 
    DATA     appearance
    DATA     style                                 INIT WVGTOOLBAR_STYLE_STANDARD
@@ -131,21 +131,24 @@ CLASS WvgToolBar  INHERIT  WvgWindow //WvgActiveXControl
    METHOD   handleEvent( nMessage, aInfo )
 
    ENDCLASS
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolBar
 
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   // + TBSTYLE_LIST   caption to the right, otherwise caption to the bottom
-   //::style       := WS_CHILD //+ TBSTYLE_FLAT + CCS_ADJUSTABLE //+ CCS_NODIVIDER    //+CCS_VERT
+   #if 0
+   + TBSTYLE_LIST   caption to the right, otherwise caption to the bottom
+   ::style       := WS_CHILD + TBSTYLE_FLAT + CCS_ADJUSTABLE + CCS_NODIVIDER +CCS_VERT
+   #endif
+
    ::exStyle     := TBSTYLE_EX_DOUBLEBUFFER + TBSTYLE_EX_MIXEDBUTTONS
    ::className   := TOOLBARCLASSNAME
    ::objType     := objTypeToolBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolBar
 
@@ -159,7 +162,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
       ::style := 0
    ENDIF
    ::style += WS_CHILD
-   //
+
    IF ::wrappable
       ::style += TBSTYLE_WRAPABLE
    ENDIF
@@ -179,10 +182,10 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
    ::createControl()
 
    #if 0
-   // Should not be defined as we only require its notifications
-   // so the parent of toolbar will process them anyway
-   // All other functionality should be default until ownerdraw is introduced.
-   //
+   /* Should not be defined as we only require its notifications
+    * so the parent of toolbar will process them anyway
+    * All other functionality should be default until ownerdraw is introduced.
+    */
    ::SetWindowProcCallback()
    #endif
 
@@ -191,7 +194,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
       ::SendToolbarMessage( TB_SETIMAGELIST, ::hImageList )
 
       ::SendToolbarMessage( TB_BUTTONSTRUCTSIZE )
-      //::SendToolbarMessage( TB_SETINDENT, 10 )
+      /* ::SendToolbarMessage( TB_SETINDENT, 10 ) */
    ENDIF
 
    IF ::visible
@@ -200,7 +203,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
    LOCAL nObj, aNMMouse
@@ -231,7 +234,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
 
             ENDIF
          ENDIF
-         RETURN EVENT_HANDELLED  //0
+         RETURN EVENT_HANDELLED
 
       #if 0
       CASE aNMMouse[ NMH_code ] == TBN_GETINFOTIPA
@@ -251,7 +254,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
 
    RETURN EVENT_UNHANDELLED
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD destroy() CLASS WvgToolBar
    LOCAL i, nItems
@@ -280,7 +283,7 @@ METHOD destroy() CLASS WvgToolBar
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolBar
 
@@ -288,12 +291,12 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD sendToolbarMessage( nMsg, p1, p2 ) CLASS WvgToolBar
    RETURN Win_SendToolbarMessage( ::hWnd, nMsg, p1, p2 )
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB ) CLASS WvgToolBar
    LOCAL oBtn, hBitmap, cType, nBtn
@@ -302,10 +305,11 @@ METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey,
    HB_SYMBOL_UNUSED( xHotImage )
    HB_SYMBOL_UNUSED( cDLL )
 
-   // Issue this at the begining of first item
-   //
+   /* Issue this at the begining of first item */
    IF !( ::lSized )
-      //::SendToolbarMessage( TB_SETBUTTONWIDTH, ::buttonWidth, ::buttonWidth )
+      #if 0
+      ::SendToolbarMessage( TB_SETBUTTONWIDTH, ::buttonWidth, ::buttonWidth )
+      #endif
       ::lSized := .t.
    ENDIF
 
@@ -342,12 +346,13 @@ METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey,
 
       WVG_AddToolbarButton( ::hWnd, nBtn, oBtn:caption, oBtn:command, 1, ::showToolTips )
 
-      // Set Button Size
+      /* Set Button Size */
       ::SendToolbarMessage( TB_SETBUTTONSIZE, ::buttonWidth, ::buttonHeight )
 
-      //SendMessage( hWndTB, TB_SETPADDING, ( WPARAM ) 0, ( LPARAM ) MAKELPARAM(  10,10 ) );
-      //::sendToolbarMessage( TB_SETPADDING, 10, 10 )
-
+      #if 0
+      SendMessage( hWndTB, TB_SETPADDING, ( WPARAM ) 0, ( LPARAM ) MAKELPARAM(  10,10 ) );
+      ::sendToolbarMessage( TB_SETPADDING, 10, 10 )
+      #endif
       ::sendToolbarMessage( TB_AUTOSIZE )
    ELSE
       Wvg_AddToolbarButton( ::hWnd, , , oBtn:command, 3, .f. )
@@ -358,55 +363,55 @@ METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey,
 
    RETURN oBtn
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD delItem() CLASS WvgToolBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD getItem() CLASS WvgToolBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD clear() CLASS WvgToolBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD customize() CLASS WvgToolBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD loadImageSet() CLASS WvgToolBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD saveToolbar() CLASS WvgToolBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD restToolbar() CLASS WvgToolBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setPosAndSize() CLASS WvgToolBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD setSize() CLASS WvgToolBar
 
@@ -414,7 +419,7 @@ METHOD setSize() CLASS WvgToolBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD buttonClick( xParam ) CLASS WvgToolBar
 
@@ -424,7 +429,7 @@ METHOD buttonClick( xParam ) CLASS WvgToolBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD change( xParam ) CLASS WvgToolBar
 
@@ -434,7 +439,7 @@ METHOD change( xParam ) CLASS WvgToolBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD buttonMenuClick( xParam ) CLASS WvgToolBar
 
@@ -444,7 +449,7 @@ METHOD buttonMenuClick( xParam ) CLASS WvgToolBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 METHOD buttonDropDown( xParam ) CLASS WvgToolBar
 
@@ -454,15 +459,15 @@ METHOD buttonDropDown( xParam ) CLASS WvgToolBar
 
    RETURN Self
 
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//       WvgToolbarButton() Class compatible with XbpToolbarButton()
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *       WvgToolbarButton() Class compatible with XbpToolbarButton()
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 CLASS WvgToolbarButton
 
@@ -489,7 +494,7 @@ CLASS WvgToolbarButton
    METHOD   new()
 
    ENDCLASS
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 METHOD new( cCaption, nStyle, cKey ) CLASS WvgToolbarButton
 
    DEFAULT cCaption       TO ::caption
@@ -501,9 +506,9 @@ METHOD new( cCaption, nStyle, cKey ) CLASS WvgToolbarButton
    ::key            := cKey
 
    RETURN Self
-//----------------------------------------------------------------------//
-//                         MSDN on ToolBar Control
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*                         MSDN on ToolBar Control                      */
+/*----------------------------------------------------------------------*/
 #if 0
 
 MESSAGES
@@ -1094,4 +1099,4 @@ TBSTYLE_SEP
 Equivalent to BTNS_SEP. Use TBSTYLE_SEP for version 4.72 and earlier.
 
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/

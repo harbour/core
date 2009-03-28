@@ -63,20 +63,20 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//
-//                      GUI Drawing Functions
-//               Pritpal Bedi <pritpal@vouchcac.com>
-//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                      GUI Drawing Functions
+ *               Pritpal Bedi <pritpal@vouchcac.com>
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #define HB_OS_WIN_USED
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #include "gtwvg.h"
 
@@ -92,14 +92,14 @@ static void hb_wvt_DrawToolButtonFlat ( HDC hdc, int iTop, int iLeft, int iBotto
 static void hb_wvt_DrawToolButtonUp   ( HDC hdc, int iTop, int iLeft, int iBottom, int iRight );
 static void hb_wvt_DrawToolButtonDown ( HDC hdc, int iTop, int iLeft, int iBottom, int iRight );
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_CORE )
 {
-   //  Retained for legacy code.
+   /* Retained for legacy code. */
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
 {
@@ -124,7 +124,7 @@ void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT righ
    }
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 void hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
 {
@@ -145,10 +145,10 @@ void hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT righ
    hb_gtEndWrite();
 }
 
-//-------------------------------------------------------------------//
-//
-//               Courtesy - Augusto Infante - Thanks
-//
+/*----------------------------------------------------------------------*/
+/*
+ *               Courtesy - Augusto Infante - Thanks
+ */
 #if ! defined( HB_OS_WIN_CE )
 IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection )
 {
@@ -226,7 +226,7 @@ IPicture * hb_wvt_gtLoadPicture( char * cImage )
    return ( IPicture * ) iPicture;
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 BOOL hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture )
 {
@@ -322,7 +322,7 @@ BOOL hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture
    return bResult;
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 BOOL hb_wvt_gtDestroyPicture( IPicture * iPicture )
 {
@@ -336,8 +336,8 @@ BOOL hb_wvt_gtDestroyPicture( IPicture * iPicture )
 
    return bResult;
 }
-#endif //#if ! defined( HB_OS_WIN_CE )
-//-------------------------------------------------------------------//
+#endif /* #if ! defined( HB_OS_WIN_CE ) */
+/*----------------------------------------------------------------------*/
 
 POINT  hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row )
 {
@@ -351,11 +351,11 @@ POINT  hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row )
    return xy;
 }
 
-//-------------------------------------------------------------------//
-//
-//                 Modeless Dialogs Implementation
-//
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*
+ *                 Modeless Dialogs Implementation
+ */
+/*----------------------------------------------------------------------*/
 
 BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -464,7 +464,7 @@ BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPA
    return lReturn;
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -582,7 +582,7 @@ BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
    return lReturn;
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char * image )
 {
@@ -694,105 +694,105 @@ BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char * image )
 #endif
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 static void hb_wvt_DrawBoxRaised( HDC hdc, int iTop, int iLeft, int iBottom, int iRight )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    SelectObject( hdc, _s->pGUI->penWhiteDim );
-   MoveToEx( hdc, iLeft, iTop, NULL );        //  Top Inner
+   MoveToEx( hdc, iLeft, iTop, NULL );        /*  Top Inner     */
    LineTo( hdc, iRight, iTop );
-   MoveToEx( hdc, iLeft, iTop, NULL );        //  Left Inner
+   MoveToEx( hdc, iLeft, iTop, NULL );        /*  Left Inner    */
    LineTo( hdc, iLeft, iBottom );
 
    SelectObject( hdc, _s->pGUI->penWhite );
-   MoveToEx( hdc, iLeft-1, iTop-1, NULL );    //  Top Outer
+   MoveToEx( hdc, iLeft-1, iTop-1, NULL );    /*  Top Outer     */
    LineTo( hdc, iRight+1, iTop-1 );
-   MoveToEx( hdc, iLeft-1, iTop-1, NULL );    //  Left Outer
+   MoveToEx( hdc, iLeft-1, iTop-1, NULL );    /*  Left Outer    */
    LineTo( hdc, iLeft-1, iBottom+1 );
 
    SelectObject( hdc, _s->pGUI->penDarkGray );
-   MoveToEx( hdc, iLeft, iBottom, NULL );     //  Bottom Inner
+   MoveToEx( hdc, iLeft, iBottom, NULL );     /*  Bottom Inner  */
    LineTo( hdc, iRight, iBottom );
-   MoveToEx( hdc, iRight, iBottom, NULL );    //  Right Inner
+   MoveToEx( hdc, iRight, iBottom, NULL );    /*  Right Inner   */
    LineTo( hdc, iRight, iTop );
 
    SelectObject( hdc, _s->pGUI->penBlack );
-   MoveToEx( hdc, iLeft-1, iBottom+1, NULL ); //  Bottom Outer
+   MoveToEx( hdc, iLeft-1, iBottom+1, NULL ); /*  Bottom Outer  */
    LineTo( hdc, iRight+1+1, iBottom+1 );
-   MoveToEx( hdc, iRight+1, iTop-1, NULL );   //  Right Outer
+   MoveToEx( hdc, iRight+1, iTop-1, NULL );   /*  Right Outer   */
    LineTo( hdc, iRight+1, iBottom+1 );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 static void hb_wvt_DrawBoxRecessed( HDC hdc, int iTop, int iLeft, int iBottom, int iRight )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    SelectObject( hdc, _s->pGUI->penWhiteDim );
-   MoveToEx( hdc, iRight, iTop, NULL );            // Right Inner
+   MoveToEx( hdc, iRight, iTop, NULL );            /* Right Inner  */
    LineTo( hdc, iRight, iBottom );
-   MoveToEx( hdc, iLeft, iBottom, NULL );          // Bottom Inner
+   MoveToEx( hdc, iLeft, iBottom, NULL );          /* Bottom Inner */
    LineTo( hdc, iRight, iBottom );
 
    SelectObject( hdc, _s->pGUI->penWhite );
-   MoveToEx( hdc, iRight+1, iTop-1, NULL );        // Right Outer
+   MoveToEx( hdc, iRight+1, iTop-1, NULL );        /* Right Outer  */
    LineTo( hdc, iRight + 1, iBottom + 1 );
-   MoveToEx( hdc, iLeft - 1, iBottom + 1, NULL );  // Bottom Outer
+   MoveToEx( hdc, iLeft - 1, iBottom + 1, NULL );  /* Bottom Outer */
    LineTo( hdc, iRight + 2, iBottom + 1 );
 
    SelectObject( hdc, _s->pGUI->penBlack );
-   MoveToEx( hdc, iLeft, iTop, NULL );             // Left Inner
+   MoveToEx( hdc, iLeft, iTop, NULL );             /* Left Inner   */
    LineTo( hdc, iLeft, iBottom );
-   MoveToEx( hdc, iLeft, iTop, NULL );             // Top Inner
+   MoveToEx( hdc, iLeft, iTop, NULL );             /* Top Inner    */
    LineTo( hdc, iRight, iTop );
 
    SelectObject( hdc, _s->pGUI->penDarkGray );
-   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     // Left Outer
+   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     /* Left Outer   */
    LineTo( hdc, iLeft - 1 , iBottom + 1 );
-   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     // Top Outer
+   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     /* Top Outer    */
    LineTo( hdc, iRight + 1, iTop - 1 );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 static void hb_wvt_DrawOutline( HDC hdc, int iTop, int iLeft, int iBottom, int iRight )
 {
-   MoveToEx( hdc, iLeft, iTop, NULL );             //  Top
+   MoveToEx( hdc, iLeft, iTop, NULL );             /*  Top     */
    LineTo( hdc, iRight, iTop );
 
-   MoveToEx( hdc, iLeft, iTop, NULL );             //  Left
+   MoveToEx( hdc, iLeft, iTop, NULL );             /*  Left    */
    LineTo( hdc, iLeft, iBottom );
 
-   MoveToEx( hdc, iLeft, iBottom, NULL );          //  Bottom
+   MoveToEx( hdc, iLeft, iBottom, NULL );          /*  Bottom  */
    LineTo( hdc, iRight, iBottom );
 
-   MoveToEx( hdc, iRight, iTop, NULL );            //  Right
+   MoveToEx( hdc, iRight, iTop, NULL );            /*  Right   */
    LineTo( hdc, iRight, iBottom + 1);
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 static void hb_wvt_DrawBoxGet( HDC hdc, int iTop, int iLeft, int iBottom, int iRight )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    SelectObject( hdc, _s->pGUI->penBlack );
-   MoveToEx( hdc, iLeft-1 , iTop-1, NULL );        // Top Inner
+   MoveToEx( hdc, iLeft-1 , iTop-1, NULL );        /* Top Inner  */
    LineTo(   hdc, iRight-1, iTop-1       );
-   MoveToEx( hdc, iLeft-1 , iTop-1, NULL );        // Left Inner
+   MoveToEx( hdc, iLeft-1 , iTop-1, NULL );        /* Left Inner */
    LineTo(   hdc, iLeft-1 , iBottom-1    );
 
    SelectObject( hdc, _s->pGUI->penDarkGray );
-   MoveToEx( hdc, iLeft-2, iTop-2, NULL );         // Top Outer
+   MoveToEx( hdc, iLeft-2, iTop-2, NULL );         /* Top Outer  */
    LineTo(   hdc, iRight , iTop-2       );
-   MoveToEx( hdc, iLeft-2, iTop-2, NULL );         // Left Outer
+   MoveToEx( hdc, iLeft-2, iTop-2, NULL );         /* Left Outer */
    LineTo(   hdc, iLeft-2, iBottom      );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 static void hb_wvt_DrawBoxGroup( HDC hdc, int iTop, int iLeft, int iBottom, int iRight )
 {
@@ -800,35 +800,35 @@ static void hb_wvt_DrawBoxGroup( HDC hdc, int iTop, int iLeft, int iBottom, int 
 
    SelectObject( hdc, _s->pGUI->penDarkGray );
 
-   MoveToEx( hdc, iRight, iTop, NULL );            // Right Inner
+   MoveToEx( hdc, iRight, iTop, NULL );            /* Right Inner  */
    LineTo( hdc, iRight, iBottom );
 
-   MoveToEx( hdc, iLeft, iBottom, NULL );          // Bottom Inner
+   MoveToEx( hdc, iLeft, iBottom, NULL );          /* Bottom Inner */
    LineTo( hdc, iRight, iBottom );
 
-   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     // Left Outer
+   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     /* Left Outer   */
    LineTo( hdc, iLeft - 1, iBottom + 1 );
 
-   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     // Top Outer
+   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     /* Top Outer    */
    LineTo( hdc, iRight + 1, iTop - 1 );
 
 
    SelectObject( hdc, _s->pGUI->penWhite );
 
-   MoveToEx( hdc, iRight + 1, iTop, NULL );        // Right Outer
+   MoveToEx( hdc, iRight + 1, iTop, NULL );        /* Right Outer  */
    LineTo( hdc, iRight + 1, iBottom + 1 );
 
-   MoveToEx( hdc, iLeft -1, iBottom + 1, NULL );   // Bottom Outer
+   MoveToEx( hdc, iLeft -1, iBottom + 1, NULL );   /* Bottom Outer */
    LineTo( hdc, iRight + 1 + 1, iBottom + 1);
 
-   MoveToEx( hdc, iLeft, iTop, NULL );             // Left Inner
+   MoveToEx( hdc, iLeft, iTop, NULL );             /* Left Inner   */
    LineTo( hdc, iLeft, iBottom );
 
-   MoveToEx( hdc, iLeft, iTop, NULL );             // Top Inner
+   MoveToEx( hdc, iLeft, iTop, NULL );             /* Top Inner    */
    LineTo( hdc, iRight, iTop );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 static void hb_wvt_DrawBoxGroupRaised( HDC hdc, int iTop, int iLeft, int iBottom, int iRight )
 {
@@ -836,34 +836,34 @@ static void hb_wvt_DrawBoxGroupRaised( HDC hdc, int iTop, int iLeft, int iBottom
 
    SelectObject( hdc, _s->pGUI->penWhite );
 
-   MoveToEx( hdc, iRight, iTop, NULL );           // Right Inner
+   MoveToEx( hdc, iRight, iTop, NULL );           /* Right Inner   */
    LineTo( hdc, iRight, iBottom );
 
-   MoveToEx( hdc, iLeft, iBottom, NULL );         // Bottom Inner
+   MoveToEx( hdc, iLeft, iBottom, NULL );         /* Bottom Inner  */
    LineTo( hdc, iRight, iBottom );
 
-   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );    // Left Outer
+   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );    /* Left Outer    */
    LineTo( hdc, iLeft - 1, iBottom + 1 );
 
-   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );    // Top Outer
+   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );    /* Top Outer     */
    LineTo( hdc, iRight + 1, iTop - 1 );
 
    SelectObject( hdc, _s->pGUI->penDarkGray );
 
-   MoveToEx( hdc, iRight + 1, iTop, NULL );       // Right Outer
+   MoveToEx( hdc, iRight + 1, iTop, NULL );       /* Right Outer   */
    LineTo( hdc, iRight + 1, iBottom + 1 );
 
-   MoveToEx( hdc, iLeft -1, iBottom + 1, NULL );  // Bottom Outer
+   MoveToEx( hdc, iLeft -1, iBottom + 1, NULL );  /* Bottom Outer  */
    LineTo( hdc, iRight + 1 + 1, iBottom + 1);
 
-   MoveToEx( hdc, iLeft, iTop, NULL );            // Left Inner
+   MoveToEx( hdc, iLeft, iTop, NULL );            /* Left Inner    */
    LineTo( hdc, iLeft, iBottom );
 
-   MoveToEx( hdc, iLeft, iTop, NULL );            // Top Inner
+   MoveToEx( hdc, iLeft, iTop, NULL );            /* Top Inner     */
    LineTo( hdc, iRight, iTop );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 static void hb_wvt_DrawToolButtonFlat( HDC hdc, int iTop, int iLeft, int iBottom, int iRight )
 {
@@ -871,20 +871,20 @@ static void hb_wvt_DrawToolButtonFlat( HDC hdc, int iTop, int iLeft, int iBottom
 
    SelectObject( hdc, _s->pGUI->penGray );
 
-   MoveToEx( hdc, iRight, iTop, NULL );           // Right
+   MoveToEx( hdc, iRight, iTop, NULL );           /* Right  */
    LineTo( hdc, iRight, iBottom + 1);
 
-   MoveToEx( hdc, iLeft, iBottom, NULL );         // Bottom
+   MoveToEx( hdc, iLeft, iBottom, NULL );         /* Bottom */
    LineTo( hdc, iRight, iBottom );
 
-   MoveToEx( hdc, iLeft, iTop, NULL );            // Left
+   MoveToEx( hdc, iLeft, iTop, NULL );            /* Left   */
    LineTo( hdc, iLeft, iBottom );
 
-   MoveToEx( hdc, iLeft, iTop, NULL );            // Top
+   MoveToEx( hdc, iLeft, iTop, NULL );            /* Top    */
    LineTo( hdc, iRight, iTop );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 static void hb_wvt_DrawToolButtonUp( HDC hdc, int iTop, int iLeft, int iBottom, int iRight )
 {
@@ -892,18 +892,18 @@ static void hb_wvt_DrawToolButtonUp( HDC hdc, int iTop, int iLeft, int iBottom, 
 
    SelectObject( hdc, _s->pGUI->penBlack );
 
-   MoveToEx( hdc, iRight, iTop, NULL );           // Right
+   MoveToEx( hdc, iRight, iTop, NULL );           /* Right  */
    LineTo( hdc, iRight, iBottom+1 );
 
-   MoveToEx( hdc, iLeft, iBottom, NULL );         // Bottom
+   MoveToEx( hdc, iLeft, iBottom, NULL );         /* Bottom */
    LineTo( hdc, iRight, iBottom );
 
    SelectObject( hdc, _s->pGUI->penWhite );
 
-   MoveToEx( hdc, iLeft, iTop, NULL );            // Left
+   MoveToEx( hdc, iLeft, iTop, NULL );            /* Left   */
    LineTo( hdc, iLeft, iBottom );
 
-   MoveToEx( hdc, iLeft, iTop, NULL );            // Top
+   MoveToEx( hdc, iLeft, iTop, NULL );            /* Top    */
    LineTo( hdc, iRight, iTop );
 }
 
@@ -915,18 +915,18 @@ static void hb_wvt_DrawToolButtonDown( HDC hdc, int iTop, int iLeft, int iBottom
 
    SelectObject( hdc, _s->pGUI->penWhite );
 
-   MoveToEx( hdc, iRight, iTop, NULL );           // Right
+   MoveToEx( hdc, iRight, iTop, NULL );           /* Right  */
    LineTo( hdc, iRight, iBottom+1 );
 
-   MoveToEx( hdc, iLeft, iBottom, NULL );         // Bottom
+   MoveToEx( hdc, iLeft, iBottom, NULL );         /* Bottom */
    LineTo( hdc, iRight, iBottom );
 
    SelectObject( hdc, _s->pGUI->penBlack );
 
-   MoveToEx( hdc, iLeft, iTop, NULL );            // Left
+   MoveToEx( hdc, iLeft, iTop, NULL );            /* Left   */
    LineTo( hdc, iLeft, iBottom );
 
-   MoveToEx( hdc, iLeft, iTop, NULL );            // Top
+   MoveToEx( hdc, iLeft, iTop, NULL );            /* Top    */
    LineTo( hdc, iRight, iTop );
 }
 
@@ -973,9 +973,9 @@ static COLORREF hb_wvt_FgColorParam( int iParam )
 }
 
 /*----------------------------------------------------------------------*/
-//
-//   Wvt_SetPen( nPenStyle, nWidth, nColor )
-//
+/*
+ *  Wvt_SetPen( nPenStyle, nWidth, nColor )
+ */
 HB_FUNC( WVT_SETPEN )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1012,9 +1012,9 @@ HB_FUNC( WVT_SETPEN )
 }
 
 /*----------------------------------------------------------------------*/
-//
-//   Wvt_SetBrush( nStyle, nColor, [ nHatch ] )
-//
+/*
+ *   Wvt_SetBrush( nStyle, nColor, [ nHatch ] )
+ */
 HB_FUNC( WVT_SETBRUSH )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1052,9 +1052,9 @@ HB_FUNC( WVT_SETBRUSH )
 }
 
 /*----------------------------------------------------------------------*/
-//
-//   Wvt_DrawBoxGet( nRow, nCol, nWidth )
-//
+/*
+ *   Wvt_DrawBoxGet( nRow, nCol, nWidth )
+ */
 HB_FUNC( WVT_DRAWBOXGET )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1075,9 +1075,9 @@ HB_FUNC( WVT_DRAWBOXGET )
 }
 
 /*----------------------------------------------------------------------*/
-//
-//   Wvt_DrawBoxRaised( nTop, nLeft, nBottom, nRight, aPxlOff )
-//
+/*
+ *   Wvt_DrawBoxRaised( nTop, nLeft, nBottom, nRight, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWBOXRAISED )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1096,10 +1096,10 @@ HB_FUNC( WVT_DRAWBOXRAISED )
    #endif
 }
 
-//-------------------------------------------------------------------//
-//
-//    Wvt_DrawBoxRecessed( nTop, nLeft, nBottom, nRight, aPxlOff )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    Wvt_DrawBoxRecessed( nTop, nLeft, nBottom, nRight, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWBOXRECESSED )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1118,10 +1118,10 @@ HB_FUNC( WVT_DRAWBOXRECESSED )
    #endif
 }
 
-//-------------------------------------------------------------------//
-//
-//    Wvt_DrawBoxGroup( nTop, nLeft, nBottom, nRight, aPxlOff )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    Wvt_DrawBoxGroup( nTop, nLeft, nBottom, nRight, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWBOXGROUP )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1140,10 +1140,10 @@ HB_FUNC( WVT_DRAWBOXGROUP )
    #endif
 }
 
-//-------------------------------------------------------------------//
-//
-//    Wvt_DrawBoxRaised( nTop, nLeft, nBottom, nRight, aPxlOff )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    Wvt_DrawBoxRaised( nTop, nLeft, nBottom, nRight, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWBOXGROUPRAISED )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1162,10 +1162,10 @@ HB_FUNC( WVT_DRAWBOXGROUPRAISED )
    #endif
 }
 
-//-------------------------------------------------------------------//
-//
-//    Wvt_DrawImage( nTop, nLeft, nBottom, nRight, cImage/nPictureSlot, aPxlOff )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    Wvt_DrawImage( nTop, nLeft, nBottom, nRight, cImage/nPictureSlot, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWIMAGE )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -1203,12 +1203,12 @@ HB_FUNC( WVT_DRAWIMAGE )
 #endif
 }
 
-//-------------------------------------------------------------------//
-//
-//    WVT_DRAWLABEL( nRow, nCol, cLabel, nAlign, nEscapement, nTextColor, nBkColor,;
-//                     cFontFace, nFontHeight, nFontWidth, nFontWeight, nQuality,  ;
-//                        nCharSet, lItalics, lUnderline, lStrikeOut, aPxlOff )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    WVT_DRAWLABEL( nRow, nCol, cLabel, nAlign, nEscapement, nTextColor, nBkColor,;
+ *                     cFontFace, nFontHeight, nFontWidth, nFontWeight, nQuality,  ;
+ *                        nCharSet, lItalics, lUnderline, lStrikeOut, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWLABEL )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1231,7 +1231,7 @@ HB_FUNC( WVT_DRAWLABEL )
    logfont.lfHeight         = ( ISNIL(  9 ) ? _s->fontHeight : hb_parni(  9 ) );
    logfont.lfWidth          = ( ISNIL( 10 ) ? (_s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 10 ) );
 
-   //strcpy( logfont.lfFaceName, ( ISNIL( 8 ) ? _s->fontFace : hb_parcx( 8 ) ) );
+
    HB_TCHAR_CPTO( logfont.lfFaceName, ( ISNIL( 8 ) ? _s->fontFace : hb_parcx( 8 ) ), sizeof( logfont.lfFaceName )-1 );
 
    hFont = CreateFontIndirect( &logfont );
@@ -1250,7 +1250,6 @@ HB_FUNC( WVT_DRAWLABEL )
       SetTextAlign( _s->hdc, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
       hOldFont = ( HFONT ) SelectObject( _s->hdc, hFont );
 
-      //ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 3 ), strlen( hb_parcx( 3 ) ), NULL );
       ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
 
       SelectObject( _s->hdc, hOldFont );
@@ -1262,7 +1261,6 @@ HB_FUNC( WVT_DRAWLABEL )
          SetTextAlign( _s->hGuiDC, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
          hOldFontGui = ( HFONT ) SelectObject( _s->hGuiDC, hFont );
 
-         //ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, hb_parcx( 3 ), strlen( hb_parcx( 3 ) ), NULL );
          ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
          SelectObject( _s->hGuiDC, hOldFontGui );
       }
@@ -1275,10 +1273,10 @@ HB_FUNC( WVT_DRAWLABEL )
    hb_retl( FALSE );
 }
 
-//-------------------------------------------------------------------//
-//                      1      2       3        4       5       6        7         8
-//    Wvt_DrawOutline( nTop, nLeft, nBottom, nRight, nThick, nShape, nRGBColor, aPxlOff )
-//
+/*----------------------------------------------------------------------*/
+/*                      1      2       3        4       5       6        7         8
+ *    Wvt_DrawOutline( nTop, nLeft, nBottom, nRight, nThick, nShape, nRGBColor, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWOUTLINE )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1337,10 +1335,10 @@ HB_FUNC( WVT_DRAWOUTLINE )
    }
 }
 
-//-------------------------------------------------------------------//
-//                  1      2       3       4        5        6       7       8       9      10        11
-//   Wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor, aPxlOff )
-//
+/*----------------------------------------------------------------------*/
+/*                  1      2       3       4        5        6       7       8       9      10        11
+ *   Wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWLINE )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1355,7 +1353,7 @@ HB_FUNC( WVT_DRAWLINE )
    COLORREF cr;
    HPEN     hPen, hOldPen, hOldPenGUI;
 
-   //   Resolve Parameters
+   /*   Resolve Parameters   */
    iOrient = ISNIL( 5 ) ? 0 : hb_parni( 5 );
    iFormat = ISNIL( 6 ) ? 0 : hb_parni( 6 );
    iAlign  = ISNIL( 7 ) ? 0 : hb_parni( 7 );
@@ -1368,8 +1366,8 @@ HB_FUNC( WVT_DRAWLINE )
 
    switch ( iAlign )
    {
-      case 0:                  // Center
-         if ( iOrient == 0 )   // Horizontal
+      case 0:                  /* Center */
+         if ( iOrient == 0 )   /* Horizontal */
          {
             iOffset = ( ( iBottom - iTop ) / 2 ) ;
             y       = iTop + iOffset ;
@@ -1381,11 +1379,11 @@ HB_FUNC( WVT_DRAWLINE )
          }
          break;
 
-      case 1:                  // Top
+      case 1:                  /* Top    */
          break;
 
-      case 2:                  // bottom
-         if ( iFormat == 0 || iFormat == 1 )  // Raised/Recessd
+      case 2:                  /* bottom */
+         if ( iFormat == 0 || iFormat == 1 )  /* Raised/Recessd */
          {
             y = iBottom - 1;
          }
@@ -1395,11 +1393,11 @@ HB_FUNC( WVT_DRAWLINE )
          }
          break;
 
-      case 3:                  // Left
+      case 3:                  /* Left  */
          break;
 
-      case 4:                  // Right
-         if ( iFormat == 0 || iFormat == 1 )  // Raised/Recessd
+      case 4:                  /* Right */
+         if ( iFormat == 0 || iFormat == 1 )  /* Raised/Recessd */
          {
             x = iRight - 1;
          }
@@ -1416,9 +1414,9 @@ HB_FUNC( WVT_DRAWLINE )
 
    switch ( iFormat )
    {
-      case 0:                                       // Raised
+      case 0:                                       /* Raised */
       {
-         if ( iOrient == 0 )                        //  Horizontal
+         if ( iOrient == 0 )                        /* Horizontal */
          {
             SelectObject( _s->hdc, _s->pGUI->penWhite );
             MoveToEx( _s->hdc, x, y, NULL );
@@ -1438,7 +1436,7 @@ HB_FUNC( WVT_DRAWLINE )
             }
             #endif
          }
-         else                                       //  Vertical
+         else                                       /* Vertical */
          {
             SelectObject( _s->hdc, _s->pGUI->penWhite );
             MoveToEx( _s->hdc, x, y, NULL );
@@ -1461,9 +1459,9 @@ HB_FUNC( WVT_DRAWLINE )
       }
       break;
 
-      case 1:                                      // Recessed
+      case 1:                                      /* Recessed */
       {
-         if ( iOrient == 0 )                       // Horizontal
+         if ( iOrient == 0 )                       /* Horizontal */
          {
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x, y, NULL );
@@ -1483,7 +1481,7 @@ HB_FUNC( WVT_DRAWLINE )
             }
             #endif
          }
-         else                                      //  Vertical
+         else                                      /* Vertical */
          {
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x, y, NULL );
@@ -1506,9 +1504,9 @@ HB_FUNC( WVT_DRAWLINE )
       }
       break;
 
-      case 2:                                      // Plain
+      case 2:                                      /* Plain */
       {
-         if ( iOrient == 0 )                       // Horizontal
+         if ( iOrient == 0 )                       /* Horizontal */
          {
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x, y, NULL );
@@ -1522,7 +1520,7 @@ HB_FUNC( WVT_DRAWLINE )
             }
             #endif
          }
-         else                                      //  Vertical
+         else                                      /* Vertical */
          {
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x, y, NULL );
@@ -1549,11 +1547,11 @@ HB_FUNC( WVT_DRAWLINE )
    hb_retl( TRUE );
 }
 
-//-------------------------------------------------------------------//
-//
-//    Inside the area requested!
-//    Wvt_DrawEllipse( nTop, nLeft, nBottom, nRight, aPxlOff )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    Inside the area requested!
+ *    Wvt_DrawEllipse( nTop, nLeft, nBottom, nRight, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWELLIPSE )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1575,10 +1573,10 @@ HB_FUNC( WVT_DRAWELLIPSE )
    #endif
 }
 
-//-------------------------------------------------------------------//
-//
-//    Wvt_DrawRectangle( nTop, nLeft, nBottom, nRight, aPxlOff )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    Wvt_DrawRectangle( nTop, nLeft, nBottom, nRight, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWRECTANGLE )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1600,10 +1598,10 @@ HB_FUNC( WVT_DRAWRECTANGLE )
    #endif
 }
 
-//-------------------------------------------------------------------//
-//
-//    Wvt_DrawRoundRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRoundHeight, nRoundWidth )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    Wvt_DrawRoundRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRoundHeight, nRoundWidth )
+ */
 HB_FUNC( WVT_DRAWROUNDRECT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1629,10 +1627,10 @@ HB_FUNC( WVT_DRAWROUNDRECT )
    #endif
 }
 
-//-------------------------------------------------------------------//
-//
-//    Wvt_DrawFocusRect( nTop, nLeft, nBottom, nRight, aPxlOff )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    Wvt_DrawFocusRect( nTop, nLeft, nBottom, nRight, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWFOCUSRECT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1657,10 +1655,10 @@ HB_FUNC( WVT_DRAWFOCUSRECT )
    #endif
 }
 
-//-------------------------------------------------------------------//
-//
-//   Wvt_DrawColorRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRGB )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *   Wvt_DrawColorRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRGB )
+ */
 HB_FUNC( WVT_DRAWCOLORRECT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1692,11 +1690,11 @@ HB_FUNC( WVT_DRAWCOLORRECT )
    }
 }
 
-//-------------------------------------------------------------------//
-//                        1     2       3      4       5
-//    Wvt_DrawGridHorz( nTop, nLeft, nRight, nRows, aPxlOff )
-//                                                  aPxlOff[ 2 ] and aPxlOff[ 4 ] used
-//
+/*----------------------------------------------------------------------*/
+/*                        1     2       3      4       5
+ *    Wvt_DrawGridHorz( nTop, nLeft, nRight, nRows, aPxlOff )
+ *                                                  aPxlOff[ 2 ] and aPxlOff[ 4 ] used
+ */
 HB_FUNC( WVT_DRAWGRIDHORZ )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1743,11 +1741,11 @@ HB_FUNC( WVT_DRAWGRIDHORZ )
    hb_retl( TRUE );
 }
 
-//-------------------------------------------------------------------//
-//
-//     Wvt_DrawGridVert( nTop, nBottom, aCols, nCols, aPxlOff )
-//                                                  aPxlOff[ 1 ] and aPxlOff[ 3 ] used
-//
+/*----------------------------------------------------------------------*/
+/*
+ *     Wvt_DrawGridVert( nTop, nBottom, aCols, nCols, aPxlOff )
+ *                                                  aPxlOff[ 1 ] and aPxlOff[ 3 ] used
+ */
 HB_FUNC( WVT_DRAWGRIDVERT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1793,11 +1791,11 @@ HB_FUNC( WVT_DRAWGRIDVERT )
    hb_retl( TRUE );
 }
 
-//-------------------------------------------------------------------//
-//
-//    Wvt_DrawButton( nTop, nLeft, nBottom, nRight, cText, cnImage, ;
-//                    nFormat, nTextColor, nBkColor, nImageAt, aPxlOff ) ;
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    Wvt_DrawButton( nTop, nLeft, nBottom, nRight, cText, cnImage, ;
+ *                    nFormat, nTextColor, nBkColor, nImageAt, aPxlOff ) ;
+ */
 HB_FUNC( WVT_DRAWBUTTON )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1816,7 +1814,7 @@ HB_FUNC( WVT_DRAWBUTTON )
    int      iFormat   = ISNIL(  7 ) ? 0 : hb_parni( 7 );
    COLORREF textColor = ISNIL(  8 ) ? _s->COLORS[ 0 ] : ( COLORREF ) hb_parnl( 8 ) ;
    COLORREF bkColor   = ISNIL(  9 ) ? _s->COLORS[ 7 ] : ( COLORREF ) hb_parnl( 9 ) ;
-   // int      iImageAt  = ISNIL( 10 ) ? 0 : hb_parni( 10 );
+   /* int      iImageAt  = ISNIL( 10 ) ? 0 : hb_parni( 10 ); */
 
    xy         = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );;
    iTop       = xy.y + hb_parni( 11,1 );
@@ -1886,7 +1884,7 @@ HB_FUNC( WVT_DRAWBUTTON )
 #endif
       GetTextExtentPoint32( _s->hdc, text, lstrlen( text ), &sz );
 
-      // iTextWidth   = sz.cx;
+      /* iTextWidth   = sz.cx; */
       iTextHeight  = sz.cy;
 
       xy.x = iLeft + ( ( iRight - iLeft + 1 ) / 2 ) ;
@@ -1912,7 +1910,7 @@ HB_FUNC( WVT_DRAWBUTTON )
       SetBkMode( _s->hdc, TRANSPARENT );
       SetTextColor( _s->hdc, textColor );
 
-      //ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );
+      /*ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );*/
       ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
       if ( _s->bGui )
       {
@@ -1925,7 +1923,6 @@ HB_FUNC( WVT_DRAWBUTTON )
          SetBkMode( _s->hGuiDC, TRANSPARENT );
          SetTextColor( _s->hGuiDC, textColor );
 
-         //ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );
          ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
       }
       HB_TCHAR_FREE( text );
@@ -1960,10 +1957,10 @@ HB_FUNC( WVT_DRAWBUTTON )
    hb_retl( TRUE );
 }
 
-//-------------------------------------------------------------------//
-//
-//   Wvt_DrawStatusBar( nNumPanels, aTLBRofPanels )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *   Wvt_DrawStatusBar( nNumPanels, aTLBRofPanels )
+ */
 HB_FUNC( WVT_DRAWSTATUSBAR )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1987,18 +1984,18 @@ HB_FUNC( WVT_DRAWSTATUSBAR )
 
       SelectObject( _s->hdc, _s->pGUI->penWhite );
 
-      MoveToEx( _s->hdc, iRight, iTop, NULL );            // Right
+      MoveToEx( _s->hdc, iRight, iTop, NULL );            /* Right  */
       LineTo( _s->hdc, iRight, iBottom );
 
-      MoveToEx( _s->hdc, iLeft, iBottom, NULL );          // Bottom
+      MoveToEx( _s->hdc, iLeft, iBottom, NULL );          /* Bottom */
       LineTo( _s->hdc, iRight, iBottom );
 
       SelectObject( _s->hdc, _s->pGUI->penDarkGray );
 
-      MoveToEx( _s->hdc, iLeft, iTop, NULL );             // Left
+      MoveToEx( _s->hdc, iLeft, iTop, NULL );             /* Left   */
       LineTo( _s->hdc, iLeft, iBottom );
 
-      MoveToEx( _s->hdc, iLeft, iTop, NULL );             // Top
+      MoveToEx( _s->hdc, iLeft, iTop, NULL );             /* Top    */
       LineTo( _s->hdc, iRight, iTop );
 
       iNext = iNext + 4;
@@ -2029,11 +2026,11 @@ HB_FUNC( WVT_DRAWSTATUSBAR )
    LineTo( _s->hdc, iRight, iTop-11 );
 }
 
-//-------------------------------------------------------------------//
-//
-//  Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aPxlOff ) -> lOk
-//  nSlot <= 20  aAdj == { 0,0,-2,-2 } To Adjust the pixels for { Top,Left,Bottom,Right }
-//
+/*----------------------------------------------------------------------*/
+/*
+ *  Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aPxlOff ) -> lOk
+ *  nSlot <= 20  aAdj == { 0,0,-2,-2 } To Adjust the pixels for { Top,Left,Bottom,Right }
+ */
 HB_FUNC( WVT_DRAWPICTURE )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -2061,10 +2058,10 @@ HB_FUNC( WVT_DRAWPICTURE )
 #endif
 }
 
-//-------------------------------------------------------------------//
-//
-//    WVT_DRAWLABELEX( nRow, nCol, cLabel, nAlign, nTextColor, nBkColor, nSlotFont, aPxlOff )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    WVT_DRAWLABELEX( nRow, nCol, cLabel, nAlign, nTextColor, nBkColor, nSlotFont, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWLABELEX )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2087,7 +2084,6 @@ HB_FUNC( WVT_DRAWLABELEX )
       SetTextAlign( _s->hdc, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
       SelectObject( _s->hdc, _s->pGUI->hUserFonts[ iSlot ] );
 
-      //ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 3 ), strlen( hb_parcx( 3 ) ), NULL );
       ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
       #if defined(__SETGUI__)
       if ( _s->bGui )
@@ -2097,7 +2093,6 @@ HB_FUNC( WVT_DRAWLABELEX )
          SetTextAlign( _s->hGuiDC, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
          SelectObject( _s->hGuiDC, _s->pGUI->hUserFonts[ iSlot ] );
 
-         //ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, hb_parcx( 3 ), strlen( hb_parcx( 3 ) ), NULL );
          ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
       }
       #endif
@@ -2108,10 +2103,10 @@ HB_FUNC( WVT_DRAWLABELEX )
    hb_retl( FALSE );
 }
 
-//-------------------------------------------------------------------//
-//                    1      2       3       4        5        6       7       8          9
-//   Wvt_DrawLineEx( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nSlotPen, aPxlOff )
-//
+/*----------------------------------------------------------------------*/
+/*                    1      2       3       4        5        6       7       8          9
+ *   Wvt_DrawLineEx( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nSlotPen, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWLINEEX )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2131,7 +2126,7 @@ HB_FUNC( WVT_DRAWLINEEX )
    iBottom = xy.y-1 + hb_parni( 9,4 );
    iRight  = xy.x-1 + hb_parni( 9,4 );
 
-   //   Resolve Parameters
+   /* Resolve Parameters */
    iOrient = ISNIL( 5 ) ? 0 : hb_parni( 5 );
    iFormat = ISNIL( 6 ) ? 0 : hb_parni( 6 );
    iAlign  = ISNIL( 7 ) ? 0 : hb_parni( 7 );
@@ -2141,9 +2136,9 @@ HB_FUNC( WVT_DRAWLINEEX )
 
    switch ( iAlign )
    {
-      case 0:                  // Center
+      case 0:                  /* Center */
       {
-         if ( iOrient == 0 )   // Horizontal
+         if ( iOrient == 0 )   /* Horizontal */
          {
             iOffset = ( ( iBottom - iTop ) / 2 ) ;
             y       = iTop + iOffset ;
@@ -2156,12 +2151,12 @@ HB_FUNC( WVT_DRAWLINEEX )
       }
       break;
 
-      case 1:                  // Top
+      case 1:                  /* Top */
       break;
 
-      case 2:                  // bottom
+      case 2:                  /* bottom */
       {
-         if ( iFormat == 0 || iFormat == 1 )  // Raised/Recessd
+         if ( iFormat == 0 || iFormat == 1 )  /* Raised/Recessd */
          {
             y = iBottom - 1;
          }
@@ -2172,12 +2167,12 @@ HB_FUNC( WVT_DRAWLINEEX )
       }
       break;
 
-      case 3:                  // Left
+      case 3:                  /* Left */
       break;
 
-      case 4:                  // Right
+      case 4:                  /* Right */
       {
-         if ( iFormat == 0 || iFormat == 1 )  // Raised/Recessd
+         if ( iFormat == 0 || iFormat == 1 )  /* Raised/Recessd */
          {
             x = iRight - 1;
          }
@@ -2193,9 +2188,9 @@ HB_FUNC( WVT_DRAWLINEEX )
 
    switch ( iFormat )
    {
-      case 0:                                       // Raised
+      case 0:                                       /* Raised */
       {
-         if ( iOrient == 0 )                        //  Horizontal
+         if ( iOrient == 0 )                        /* Horizontal */
          {
             SelectObject( _s->hdc, _s->pGUI->penWhite );
             MoveToEx( _s->hdc, x, y, NULL );
@@ -2215,7 +2210,7 @@ HB_FUNC( WVT_DRAWLINEEX )
             }
             #endif
          }
-         else                                       //  Vertical
+         else                                       /* Vertical */
          {
             SelectObject( _s->hdc, _s->pGUI->penWhite );
             MoveToEx( _s->hdc, x, y, NULL );
@@ -2238,9 +2233,9 @@ HB_FUNC( WVT_DRAWLINEEX )
       }
       break;
 
-      case 1:                                      // Recessed
+      case 1:                                      /* Recessed */
       {
-         if ( iOrient == 0 )                       // Horizontal
+         if ( iOrient == 0 )                       /* Horizontal */
          {
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x, y, NULL );
@@ -2260,7 +2255,7 @@ HB_FUNC( WVT_DRAWLINEEX )
             }
             #endif
          }
-         else                                      //  Vertical
+         else                                      /* Vertical */
          {
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x, y, NULL );
@@ -2283,9 +2278,9 @@ HB_FUNC( WVT_DRAWLINEEX )
       }
       break;
 
-      case 2:                                      // Plain
+      case 2:                                      /* Plain */
       {
-         if ( iOrient == 0 )                       // Horizontal
+         if ( iOrient == 0 )                       /* Horizontal */
          {
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x, y, NULL );
@@ -2299,7 +2294,7 @@ HB_FUNC( WVT_DRAWLINEEX )
             }
             #endif
          }
-         else                                      //  Vertical
+         else                                      /* Vertical */
          {
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x, y, NULL );
@@ -2320,10 +2315,10 @@ HB_FUNC( WVT_DRAWLINEEX )
    hb_retl( TRUE );
 }
 
-//-------------------------------------------------------------------//
-//
-//    Wvt_DrawOutlineEx( nTop, nLeft, nBottom, nRight, nSlotPen, aPxlOff )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    Wvt_DrawOutlineEx( nTop, nLeft, nBottom, nRight, nSlotPen, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWOUTLINEEX )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2357,10 +2352,10 @@ HB_FUNC( WVT_DRAWOUTLINEEX )
    #endif
 }
 
-//----------------------------------------------------------------------//
-//                        1     2       3        4       5         6           7         8            9      10       11
-//    WVT_DRAWLABELOBJ( nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont, aPxlOff )
-//
+/*----------------------------------------------------------------------*/
+/*                        1     2       3        4       5         6           7         8            9      10       11
+ *    WVT_DRAWLABELOBJ( nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont, aPxlOff )
+ */
 HB_FUNC( WVT_DRAWLABELOBJ )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2389,7 +2384,6 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    SetBkColor( _s->hdc, bgClr );
    SelectObject( _s->hdc, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 10 ) );
 
-   //GetTextExtentPoint32( _s->hdc, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), &sz );
    GetTextExtentPoint32( _s->hdc, text, lstrlen( text ), &sz );
 
    x = iLeft;
@@ -2437,9 +2431,6 @@ HB_FUNC( WVT_DRAWLABELOBJ )
 
    uiOptions    = ETO_CLIPPED | ETO_OPAQUE ;
 
-   //  Ground is Ready, Draw Text
-   //
-   //ExtTextOut( _s->hdc, x, y, uiOptions, &rect, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );
    ExtTextOut( _s->hdc, x, y, uiOptions, &rect, text, lstrlen( text ), NULL );
    #if defined(__SETGUI__)
    if ( _s->bGui )
@@ -2449,7 +2440,6 @@ HB_FUNC( WVT_DRAWLABELOBJ )
       SelectObject( _s->hGuiDC, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 10 ) );
       SetTextAlign( _s->hGuiDC, iAlignH | iAlignV );
 
-      //ExtTextOut( _s->hGuiDC, x, y, uiOptions, &rect, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );
       ExtTextOut( _s->hGuiDC, x, y, uiOptions, &rect, text, lstrlen( text ), NULL );
    }
    #endif
@@ -2457,10 +2447,11 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    hb_retl( TRUE );
 }
 
-//-------------------------------------------------------------------//
-//    nState 0 Flat, 1 Raised, 2 Recessed
-//    Wvt_DrawToolButtonState( nTop, nLeft, nBottom, nRight, aPxlOff, nState )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *    nState 0 Flat, 1 Raised, 2 Recessed
+ *    Wvt_DrawToolButtonState( nTop, nLeft, nBottom, nRight, aPxlOff, nState )
+ */
 HB_FUNC( WVT_DRAWTOOLBUTTONSTATE )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2472,7 +2463,7 @@ HB_FUNC( WVT_DRAWTOOLBUTTONSTATE )
 
    switch ( hb_parni( 6 ) )
    {
-      case 0:     // Flat
+      case 0:     /* Flat */
       {
          hb_wvt_DrawToolButtonFlat( _s->hdc, iTop, iLeft, iBottom, iRight );
          #if defined(__SETGUI__)
@@ -2484,7 +2475,7 @@ HB_FUNC( WVT_DRAWTOOLBUTTONSTATE )
       }
       break;
 
-      case 1:     // Raised
+      case 1:     /* Raised */
       {
          hb_wvt_DrawToolButtonUp( _s->hdc, iTop, iLeft, iBottom, iRight );
          #if defined(__SETGUI__)
@@ -2496,7 +2487,7 @@ HB_FUNC( WVT_DRAWTOOLBUTTONSTATE )
       }
       break;
 
-      case 2:     // Recessed
+      case 2:     /* Recessed */
       {
          hb_wvt_DrawToolButtonDown( _s->hdc, iTop, iLeft, iBottom, iRight );
          #if defined(__SETGUI__)
@@ -2511,10 +2502,10 @@ HB_FUNC( WVT_DRAWTOOLBUTTONSTATE )
    hb_retl( TRUE );
 }
 
-//-------------------------------------------------------------------//
-//
-//   Wvt_DrawScrollButton( nTop, nLeft, nBottom, nRight, aPxlOff, nTLBR, lDepressed )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *   Wvt_DrawScrollButton( nTop, nLeft, nBottom, nRight, aPxlOff, nTLBR, lDepressed )
+ */
 HB_FUNC( WVT_DRAWSCROLLBUTTON )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2557,7 +2548,7 @@ HB_FUNC( WVT_DRAWSCROLLBUTTON )
 
    switch ( hb_parni( 6 ) )
    {
-      case 1:   // Top
+      case 1:   /* Top */
       {
          xy.y       = iTop + iOff - 1;
          xy.x       = iLeft + ( ( iRight - iLeft + 1 ) / 2 );
@@ -2570,7 +2561,7 @@ HB_FUNC( WVT_DRAWSCROLLBUTTON )
       }
       break;
 
-      case 2:  // Left
+      case 2:  /* Left */
       {
          xy.y       = iTop + ( ( iBottom - iTop + 1 ) / 2 );
          xy.x       = iLeft + iOff;
@@ -2583,7 +2574,7 @@ HB_FUNC( WVT_DRAWSCROLLBUTTON )
       }
       break;
 
-      case 3:  //  Bottom
+      case 3:  /* Bottom */
       {
          xy.x       = iLeft + ( ( iRight - iLeft + 1 ) / 2 );
          xy.y       = iBottom - iOff;
@@ -2596,7 +2587,7 @@ HB_FUNC( WVT_DRAWSCROLLBUTTON )
       }
       break;
 
-      case 4:  // Right
+      case 4:  /* Right */
       {
          xy.x       = iRight - iOff - 1;
          xy.y       = iTop + ( ( iBottom - iTop + 1 ) / 2 );
@@ -2622,10 +2613,10 @@ HB_FUNC( WVT_DRAWSCROLLBUTTON )
    hb_xfree( Point );
 }
 
-//-------------------------------------------------------------------//
-//
-//  Wvt_DrawScrollbarThumbVert( nTop, nLeft, nBottom, nRight, aPxlOff, nThumbPos )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *  Wvt_DrawScrollbarThumbVert( nTop, nLeft, nBottom, nRight, aPxlOff, nThumbPos )
+ */
 HB_FUNC( WVT_DRAWSCROLLTHUMBVERT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2636,8 +2627,7 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBVERT )
    int iRight      = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parni( 5,4 );
    int iTabTop, iTabLft, iTabBtm, iTabRgt;
 
-   //  Background
-   //
+   /* Background */
    SetBkMode( _s->hdc, OPAQUE );
    SetBkColor( _s->hdc, RGB( 230,230,230 ) );
    SelectObject( _s->hdc, _s->pGUI->diagonalBrush );
@@ -2653,8 +2643,7 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBVERT )
       Rectangle( _s->hGuiDC, iLeft, iTop, iRight+1, iBottom+1 );
    }
    #endif
-   //  Thumb
-   //
+   /* Thumb */
    iTabTop  = _s->PTEXTSIZE.y * hb_parni( 6 );
    iTabLft  = iLeft;
    iTabBtm  = iTabTop + _s->PTEXTSIZE.y - 1;
@@ -2680,10 +2669,10 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBVERT )
    #endif
 }
 
-//-------------------------------------------------------------------//
-//
-//  Wvt_DrawScrollbarThumbHorz( nTop, nLeft, nBottom, nRight, aPxlOff, nThumbPos )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *  Wvt_DrawScrollbarThumbHorz( nTop, nLeft, nBottom, nRight, aPxlOff, nThumbPos )
+ */
 HB_FUNC( WVT_DRAWSCROLLTHUMBHORZ )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2697,8 +2686,7 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBHORZ )
    iThumbLeft  = _s->PTEXTSIZE.x * hb_parni( 6 );
    iThumbRight = iThumbLeft + ( _s->PTEXTSIZE.x * 2 ) - 1;
 
-   //  Background
-   //
+   /* Background */
    SetBkMode( _s->hdc, OPAQUE );
    SetBkColor( _s->hdc, RGB( 230,230,230 ) );
    SelectObject( _s->hdc, _s->pGUI->diagonalBrush );
@@ -2714,8 +2702,7 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBHORZ )
       Rectangle( _s->hGuiDC, iLeft, iTop, iRight+1, iBottom+1 );
    }
    #endif
-   //  Thumb
-   //
+   /* Thumb */
    SelectObject( _s->hdc, _s->pGUI->whiteBrush );
    SelectObject( _s->hdc, _s->pGUI->penGray );
    Rectangle( _s->hdc, iThumbLeft, iTop, iThumbRight, iBottom );
@@ -2736,11 +2723,11 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBHORZ )
    #endif
 }
 
-//#if WINVER > 0x500
-//-------------------------------------------------------------------//
-//
-//    Wvt_DrawShadedRect( nTop, nLeft, nBottom, nRight, aPxlOff, nHorVert, aRGBb, aRGBe  )
-//
+/* #if WINVER > 0x500 */
+/*----------------------------------------------------------------------*/
+/*
+ *    Wvt_DrawShadedRect( nTop, nLeft, nBottom, nRight, aPxlOff, nHorVert, aRGBb, aRGBe  )
+ */
 HB_FUNC( WVT_DRAWSHADEDRECT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2788,12 +2775,12 @@ HB_FUNC( WVT_DRAWSHADEDRECT )
 }
 //#endif
 
-//-------------------------------------------------------------------//
-//
-//   Wvt_DrawTextBox( nTop, nLeft, nBottom, nRight, aPxlOff, cText, ;
-//                    nAlignHorz, nAlignVert, nTextColor, nBackColor, ;
-//                    nBackMode, hFont )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *   Wvt_DrawTextBox( nTop, nLeft, nBottom, nRight, aPxlOff, cText, ;
+ *                    nAlignHorz, nAlignVert, nTextColor, nBackColor, ;
+ *                    nBackMode, hFont )
+ */
 HB_FUNC( WVT_DRAWTEXTBOX )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2837,7 +2824,6 @@ HB_FUNC( WVT_DRAWTEXTBOX )
    SetBkMode( _s->hdc, ISNIL( 11 ) ? OPAQUE : hb_parni( 11 ) );
    SelectObject( _s->hdc, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 12 ) );
 
-   //DrawText( _s->hdc, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
    DrawText( _s->hdc, text, lstrlen( text ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
    #if defined(__SETGUI__)
    if ( _s->bGui )
@@ -2848,18 +2834,17 @@ HB_FUNC( WVT_DRAWTEXTBOX )
       SetBkMode( _s->hGuiDC, ISNIL( 11 ) ? OPAQUE : hb_parni( 11 ) );
       SelectObject( _s->hGuiDC, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 12 ) );
 
-      //DrawText( _s->hGuiDC, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
       DrawText( _s->hGuiDC, text, lstrlen( text ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
    }
    #endif
    HB_TCHAR_FREE( text );
 }
 
-//-------------------------------------------------------------------//
-//
-// Wvt_DrawProgressBar( nTop, nLeft, nBottom, nRight, aPxlOff, nPercent,;
-//                      nBackColor, nBarColor, cImage, lVertical, nDirection )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Wvt_DrawProgressBar( nTop, nLeft, nBottom, nRight, aPxlOff, nPercent,;
+ *                      nBackColor, nBarColor, cImage, lVertical, nDirection )
+ */
 HB_FUNC( WVT_DRAWPROGRESSBAR )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2955,16 +2940,16 @@ HB_FUNC( WVT_DRAWPROGRESSBAR )
    }
 }
 
-//-------------------------------------------------------------------//
-//
-// Wvt_CreateFont( cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline,
-//                 lStrikeout, nCharSet, nQuality, nEscapement )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Wvt_CreateFont( cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline,
+ *                 lStrikeout, nCharSet, nQuality, nEscapement )
+ */
 HB_FUNC( WVT_CREATEFONT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   LOGFONT  logfont;// = { 0,0,0 };
+   LOGFONT  logfont; /* = { 0,0,0 }; */
 
    logfont.lfEscapement     = ( ISNIL( 10 ) ? 0 : ( hb_parni( 10 ) * 10 ) );
    logfont.lfOrientation    = 0;
@@ -2980,16 +2965,15 @@ HB_FUNC( WVT_CREATEFONT )
    logfont.lfHeight         = ( ISNIL(  2 ) ? _s->fontHeight : hb_parni( 2 ) );
    logfont.lfWidth          = ( ISNIL(  3 ) ? ( _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 3 ) );
 
-   //strcpy( logfont.lfFaceName, ( ISNIL( 1 ) ? _s->fontFace : hb_parcx( 1 ) ) );
    HB_TCHAR_CPTO( logfont.lfFaceName, ( ISNIL( 1 ) ? _s->fontFace : hb_parcx( 1 ) ), sizeof( logfont.lfFaceName )-1 );
 
    hb_retnint( ( HB_PTRDIFF ) CreateFontIndirect( &logfont ) );
 }
 
-//-------------------------------------------------------------------//
-//
-//   Wvt_LoadPicture( nSlot, cFilePic )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *   Wvt_LoadPicture( nSlot, cFilePic )
+ */
 HB_FUNC( WVT_LOADPICTURE )
 {
    BOOL       bResult  = FALSE;
@@ -3013,7 +2997,7 @@ HB_FUNC( WVT_LOADPICTURE )
    hb_retl( bResult );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVT_LOADPICTUREFROMRESOURCE )
 {
@@ -3038,16 +3022,16 @@ HB_FUNC( WVT_LOADPICTUREFROMRESOURCE )
    hb_retl( bResult );
 }
 
-//-------------------------------------------------------------------//
-//
-// Wvt_LoadFont( nSlotFont, cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline, lStrikeout,
-//               nCharSet, nQuality, nEscapement )
-//
+/*----------------------------------------------------------------------*/
+/*
+ * Wvt_LoadFont( nSlotFont, cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline, lStrikeout,
+ *               nCharSet, nQuality, nEscapement )
+ */
 HB_FUNC( WVT_LOADFONT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   LOGFONT  logfont;// = { 0 };
+   LOGFONT  logfont; /* = { 0 }; */
    int      iSlot = hb_parni( 1 ) - 1;
    HFONT    hFont;
 
@@ -3065,7 +3049,6 @@ HB_FUNC( WVT_LOADFONT )
    logfont.lfHeight         = ( ISNIL(  3 ) ? _s->fontHeight : hb_parni( 3 ) );
    logfont.lfWidth          = ( ISNIL(  4 ) ? ( _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 4 ) );
 
-   //strcpy( logfont.lfFaceName, ( ISNIL( 2 ) ? _s->fontFace : hb_parcx( 2 ) ) );
    HB_TCHAR_CPTO( logfont.lfFaceName, ( ISNIL( 2 ) ? _s->fontFace : hb_parcx( 2 ) ), sizeof( logfont.lfFaceName )-1 );
 
    hFont = CreateFontIndirect( &logfont );
@@ -3079,10 +3062,10 @@ HB_FUNC( WVT_LOADFONT )
    }
 }
 
-//-------------------------------------------------------------------//
-//
-//  Wvt_LoadPen( nSlot, nStyle, nWidth, nRGBColor )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *  Wvt_LoadPen( nSlot, nStyle, nWidth, nRGBColor )
+ */
 HB_FUNC( WVT_LOADPEN )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -3114,10 +3097,10 @@ HB_FUNC( WVT_LOADPEN )
    }
 }
 
-//-------------------------------------------------------------------//
-//
-//   aScr := Wvt_SaveScreen( nTop, nLeft, nBottom, nRight )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *   aScr := Wvt_SaveScreen( nTop, nLeft, nBottom, nRight )
+ */
 HB_FUNC( WVT_SAVESCREEN )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -3159,10 +3142,10 @@ HB_FUNC( WVT_SAVESCREEN )
    hb_itemReturnRelease( info );
 }
 
-//-------------------------------------------------------------------//
-//
-//   Wvt_RestScreen( nTop, nLeft, nBottom, nRight, aScr, lDoNotDestroyBMP )
-//
+/*----------------------------------------------------------------------*/
+/*
+ *   Wvt_RestScreen( nTop, nLeft, nBottom, nRight, aScr, lDoNotDestroyBMP )
+ */
 HB_FUNC( WVT_RESTSCREEN )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -3266,4 +3249,4 @@ HB_FUNC( WVT_RESTSCREEN )
    hb_retl( bResult );
 }
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/

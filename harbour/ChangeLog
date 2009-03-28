@@ -8,6 +8,55 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-28 00:20 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.h
+  * harbour/contrib/gtwvg/wvggui.h
+
+  * harbour/contrib/gtwvg/wvtwin.ch
+
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/gtwvg/wvgcore.c
+  * harbour/contrib/gtwvg/wincallb.c
+  * harbour/contrib/gtwvg/wvgcuig.c
+  * harbour/contrib/gtwvg/wvggui.c
+  * harbour/contrib/gtwvg/wvgsink.c
+  * harbour/contrib/gtwvg/wvgutils.c
+  * harbour/contrib/gtwvg/wvgwin.c
+
+  * harbour/contrib/gtwvg/wincback.prg
+  * harbour/contrib/gtwvg/wvg3stat.prg
+  * harbour/contrib/gtwvg/wvgax.prg
+  * harbour/contrib/gtwvg/wvgbitmp.prg
+  * harbour/contrib/gtwvg/wvgcheck.prg
+  * harbour/contrib/gtwvg/wvgclass.prg
+  * harbour/contrib/gtwvg/wvgcombo.prg
+  * harbour/contrib/gtwvg/wvgcrt.prg
+  * harbour/contrib/gtwvg/wvgdarea.prg
+  * harbour/contrib/gtwvg/wvgdatar.prg
+  * harbour/contrib/gtwvg/wvgdlg.prg
+  * harbour/contrib/gtwvg/wvghtmlv.prg
+  * harbour/contrib/gtwvg/wvglistb.prg
+  * harbour/contrib/gtwvg/wvgmenub.prg
+  * harbour/contrib/gtwvg/wvgmle.prg
+  * harbour/contrib/gtwvg/wvgpaint.prg
+  * harbour/contrib/gtwvg/wvgparts.ch
+  * harbour/contrib/gtwvg/wvgphdlr.prg
+  * harbour/contrib/gtwvg/wvgpushb.prg
+  * harbour/contrib/gtwvg/wvgradio.prg
+  * harbour/contrib/gtwvg/wvgscrlb.prg
+  * harbour/contrib/gtwvg/wvgsle.prg
+  * harbour/contrib/gtwvg/wvgstatb.prg
+  * harbour/contrib/gtwvg/wvgstatc.prg
+  * harbour/contrib/gtwvg/wvgsysw.prg
+  * harbour/contrib/gtwvg/wvgtabpg.prg
+  * harbour/contrib/gtwvg/wvgtoolb.prg
+  * harbour/contrib/gtwvg/wvgtreev.prg
+  * harbour/contrib/gtwvg/wvgwnd.prg
+    ! Comments converted to ANSI standards.
+    ! Formatting whereever needed.    
+
+    ; Perhaps no comment is left which do not confirm to ANSI standards.
+
 2009-03-28 00:59 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/examples/uhttpd/uhttpd.prg
     + added #define FIXED_THREADS that disable (temporarly) dynamic threads

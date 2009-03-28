@@ -56,13 +56,13 @@
 
 #define HB_GT_NAME  WGU
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #ifndef CINTERFACE
    #define CINTERFACE 1
 #endif
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #include <windows.h>
 #include <winuser.h>
@@ -99,7 +99,7 @@
 
 HB_EXTERN_BEGIN
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #define WVT_CHAR_QUEUE_SIZE         128
 #define WVT_MAX_TITLE_SIZE          128
@@ -142,13 +142,13 @@ HB_EXTERN_BEGIN
 #define HB_MSG_NOTIFYICON          ( WM_USER+1399 )
 #define HB_ID_NOTIFYICON            99
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 #define WVT_PICTURES_MAX            50
 #define WVT_FONTS_MAX               50
 #define WVT_PENS_MAX                50
 #define WVT_DLGML_MAX               50
 #define WVT_DLGMD_MAX               50
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #if defined(__DMC__)
    #if (_WIN32_IE >= 0x0300)
@@ -170,8 +170,8 @@ HB_EXTERN_BEGIN
       #endif
       #if !defined( INITCOMMONCONTROLSEX )
          typedef struct tagINITCOMMONCONTROLSEX {
-             DWORD dwSize;             // size of this structure
-             DWORD dwICC;              // flags indicating which classes to be initialized
+             DWORD dwSize;             /* size of this structure                           */
+             DWORD dwICC;              /* flags indicating which classes to be initialized */
          } INITCOMMONCONTROLSEX, *LPINITCOMMONCONTROLSEX;
       #endif
       #if !defined(InitCommonControlsEx)
@@ -224,7 +224,7 @@ STDAPI OleLoadPicture(LPSTREAM,LONG,BOOL,REFIID,PVOID*);
 #endif
 #endif /* __BORLANDC__ */
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 typedef BOOL ( WINAPI *wvtGradientFill )     (
                       HDC        hdc,
@@ -240,7 +240,7 @@ typedef BOOL ( WINAPI *wvtSetLayeredWindowAttributes )(
                       BYTE       bAlpha,
                       DWORD      dwFlags     );
 
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 typedef struct
 {
@@ -308,40 +308,40 @@ typedef struct
    BOOL     bResizable;
    BOOL     bClosable;
 
-   //          To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed>            //
+   /*          To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed>            */
 
-   int       rowStart;                      // Holds nTop    of last WM_PAINT rectangle returned by Wvt_GetPaintRect()
-   int       rowStop;                       // Holds nBottom of last WM_PAINT rectangle
-   int       colStart;                      // Holds nLeft   of last WM_PAINT rectangle
-   int       colStop;                       // Holds nRight  of last WM_PAINT rectangle
+   int       rowStart;                      /* Holds nTop    of last WM_PAINT rectangle returned by Wvt_GetPaintRect()*/
+   int       rowStop;                       /* Holds nBottom of last WM_PAINT rectangle                               */
+   int       colStart;                      /* Holds nLeft   of last WM_PAINT rectangle                               */
+   int       colStop;                       /* Holds nRight  of last WM_PAINT rectangle                               */
 
-   int       iFactor;                       // Transparency factor 0~255
+   int       iFactor;                       /* Transparency factor 0~255                                              */
 
-   int       LastMenuEvent;                 // Last menu item selected
-   int       MenuKeyEvent;                  // User definable event number for windows menu command
-   BOOL      InvalidateWindow;              // Flag for controlling whether to use ScrollWindowEx()
-   BOOL      EnableShortCuts;               // Determines whether ALT key enables menu or system menu
+   int       LastMenuEvent;                 /* Last menu item selected                                                */
+   int       MenuKeyEvent;                  /* User definable event number for windows menu command                   */
+   BOOL      InvalidateWindow;              /* Flag for controlling whether to use ScrollWindowEx()                   */
+   BOOL      EnableShortCuts;               /* Determines whether ALT key enables menu or system menu                 */
 
    BOOL      bPaint;
    BOOL      bGetFocus;
    BOOL      bSetFocus;
    BOOL      bKillFocus;
 
-   HINSTANCE hMSImg32;                      // Handle to the loaded library msimg32.dll
-   wvtGradientFill pfnGF;                   // Pointer to Address of the GradientFill function in MSImg32.dll
-   HINSTANCE hUser32;                       // Handle to the loaded library user32.dll
-   wvtSetLayeredWindowAttributes pfnLayered;// Pointer to set Windows attribute - transparency.
+   HINSTANCE hMSImg32;                      /* Handle to the loaded library msimg32.dll                      */
+   wvtGradientFill pfnGF;                   /* Pointer to Address of the GradientFill function in MSImg32.dll*/
+   HINSTANCE hUser32;                       /* Handle to the loaded library user32.dll                       */
+   wvtSetLayeredWindowAttributes pfnLayered;/* Pointer to set Windows attribute - transparency.              */
 
-   PHB_GT_PARAMS  pPP;                      // Presentation Parameters
+   PHB_GT_PARAMS  pPP;                      /* Presentation Parameters                                       */
 
-   BOOL      bTracking;                     // To track if mouse has eneter or left the window area
-   BOOL      bResizing;                     // To know when it is in resizing mode
+   BOOL      bTracking;                     /* To track if mouse has eneter or left the window area          */
+   BOOL      bResizing;                     /* To know when it is in resizing mode                           */
    int       width;
    int       height;
 
 } HB_GTWVT, * PHB_GTWVT;
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #ifndef INVALID_FILE_SIZE
    #define INVALID_FILE_SIZE (DWORD)0xFFFFFFFF
@@ -363,7 +363,7 @@ typedef struct
    #define GCLP_HCURSOR (-12)
 #endif
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 typedef enum
 {
@@ -405,7 +405,7 @@ typedef struct _tag_HB_GT_COLDEF
    HB_GT_GCOLOR color;
 } HB_GT_COLDEF;
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 /* xHarbour compatible definitions */
 #if !defined( K_SH_LEFT )
@@ -427,9 +427,9 @@ typedef struct _tag_HB_GT_COLDEF
 #  define WM_MOUSEWHEEL 0x020A
 #endif
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 void        HB_EXPORT   hb_ToOutDebug( const char * sTraceMsg, ... );
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 #if 0
 extern BOOL     wvt_Array2Rect(PHB_ITEM aRect, RECT *rc );
 extern PHB_ITEM wvt_Rect2Array( RECT *rc  );

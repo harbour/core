@@ -49,21 +49,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                               EkOnkar
-//                         ( The LORD is ONE )
-//
-//                  Xbase++ Compatible xbpDialog Class
-//
-//                 Pritpal Bedi <pritpal@vouchcac.com>
-//                             17Nov2008
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*
+ *                               EkOnkar
+ *                         ( The LORD is ONE )
+ *
+ *                  Xbase++ Compatible xbpDialog Class
+ *
+ *                 Pritpal Bedi <pritpal@vouchcac.com>
+ *                             17Nov2008
+ */
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include 'hbclass.ch'
 #include 'common.ch'
@@ -74,7 +74,7 @@
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 CLASS WvgDialog FROM WvgWindow
 
    DATA     oMenu
@@ -101,7 +101,7 @@ CLASS WvgDialog FROM WvgWindow
                                                          { ::aRect[ 1 ], ::aRect[ 2 ], ;
                                                          ::aRect[ 3 ]-::aRect[ 1 ], ::aRect[ 4 ]-::aRect[ 2 ] }
    ENDCLASS
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDialog
 
    ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -114,7 +114,7 @@ METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDial
    ::style       := WS_THICKFRAME+WS_OVERLAPPED+WS_CAPTION+WS_SYSMENU+WS_MINIMIZEBOX+WS_MAXIMIZEBOX;
 
    RETURN Self
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDialog
    LOCAL oW
 
@@ -171,13 +171,13 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDi
    hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| ::notifier( nEvent, ... ) } )
 
    RETURN Self
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDialog
 
    ::WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 METHOD destroy() CLASS WvgDialog
 
    IF hb_isObject( ::oMenu )
@@ -196,7 +196,7 @@ METHOD destroy() CLASS WvgDialog
    ::pGTp := NIL
 
    RETURN Self
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 METHOD setFrameState( nState ) CLASS WvgDialog
    LOCAL lSuccess := .f.
 
@@ -214,7 +214,7 @@ METHOD setFrameState( nState ) CLASS WvgDialog
    ENDCASE
 
    RETURN lSuccess
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 METHOD getFrameState() CLASS WvgDialog
 
    IF Win_IsIconic( ::hWnd )
@@ -225,7 +225,7 @@ METHOD getFrameState() CLASS WvgDialog
    ENDIF
 
    RETURN WVGDLG_FRAMESTAT_NORMALIZED
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 METHOD menuBar() CLASS WvgDialog
 
    IF !( hb_isObject( ::oMenu ) )
@@ -233,5 +233,5 @@ METHOD menuBar() CLASS WvgDialog
    ENDIF
 
    RETURN ::oMenu
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
