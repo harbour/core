@@ -8,6 +8,32 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-28 00:59 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/contrib/examples/uhttpd/uhttpd.prg
+    + added #define FIXED_THREADS that disable (temporarly) dynamic threads
+      support, until I will find a correct way to implement.
+    * changed default GT in Linux from GTXWC to GTTRM
+    + added Actions and Handlers support
+      rewrote handlers part, now separated and similar to Apache
+    * changed internal ScripAlias Hash name from Aliases to ScriptAliases
+    + added Alias support
+    + added PATH_INFO and PATH_TRANSLATED support
+      this means that parts of urls longer than the real file url are passed to
+      file as parameters. Actually valid for any file.
+    * fixed CGIKill() to correct handle killing of not responding CGI apps
+    * formatting and minor changes
+    ; NOTE: not tested under Linux, more tests to do
+    ; TOFIX: in case of error of cgi executables error output is missing,
+             this I have to check better.
+  * harbour/contrib/examples/uhttpd/uhttpd.ini
+    * changed [ALIASES] section name to [SCRIPTALIASES]
+    + added [ALIASES] correct section
+  * harbour/contrib/examples/uhttpd/session.prg
+    + added retrying in case of error in reading session files.
+      to check it better
+  ; NOTE: still work in progress.
+    Any comments and suggestions are welcome
+
 2009-03-27 18:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/win/poccce.cf
   * config/win/pocc.cf

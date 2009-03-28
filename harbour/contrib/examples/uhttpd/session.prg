@@ -143,6 +143,8 @@ CLASS uhttpd_Session
    DATA bWrite                  //INIT {|cID, cData| ::SessionWrite( cID, cData ) }
    DATA bDestroy                //INIT {|cID| ::SessionDestroy( cID ) }
    DATA bGC                     //INIT {|nMaxLifeTime| ::SessionGC( nMaxLifeTime ) }
+   DATA nFileRetry              INIT 10        // How many time try to open / write / delete file in case of error
+   DATA nFileWait               INIT 500       // How many milliseconds have to wait before retry
 
    DATA nActiveSessions         INIT 0
 
@@ -579,22 +581,36 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
   LOCAL cFile
   LOCAL nFileSize
   LOCAL cBuffer
+  LOCAL nRetry  := 0
+  LOCAL nFError := 0
   DEFAULT cID TO ::cSID
-  cFile := ::cSavePath + "/" + ::cName + "_" + cID
+  cFile := ::cSavePath + HB_OSPathSeparator() + ::cName + "_" + cID
   //TraceLog( "SessionRead: cFile", cFile )
   IF File( cFile )
-     IF ( nH := FOpen( cFile, FO_READ ) ) <> -1
-        nFileSize := FSeek( nH, 0, FS_END )
-        FSeek( nH, 0, FS_SET )
-        cBuffer := Space( nFileSize )
-        IF ( FRead( nH, @cBuffer,  nFileSize ) ) <> nFileSize
-           uhttpd_Die( "ERROR: On reading session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+     DO WHILE nRetry++ <= ::nFileRetry
+        IF ( nH := FOpen( cFile, FO_READ + FO_DENYWRITE ) ) <> -1
+
+           nRetry := 0
+           DO WHILE nRetry++ <= ::nFileRetry
+              nFileSize := FSeek( nH, 0, FS_END )
+              FSeek( nH, 0, FS_SET )
+              cBuffer := Space( nFileSize )
+              IF ( FRead( nH, @cBuffer,  nFileSize ) ) <> nFileSize
+                 //uhttpd_Die( "ERROR: On reading session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+                 hb_idleSleep( ::nFileWait / 1000 )
+                 LOOP
+              ENDIF
+              FClose( nH )
+              EXIT
+           ENDDO
+
         ELSE
-           FClose( nH )
+           //uhttpd_Die( "ERROR: On opening session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+           hb_idleSleep( ::nFileWait / 1000 )
+           LOOP
         ENDIF
-     ELSE
-        uhttpd_Die( "ERROR: On opening session file : " + cFile + ", file not exist." )
-     ENDIF
+        EXIT
+     ENDDO
   ENDIF
   //TraceLog( "SessionRead() - cID, cFile, nFileSize, cBuffer", cID, cFile, nFileSize, cBuffer )
 RETURN cBuffer
@@ -611,7 +627,7 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
 
   nFileSize := Len( cData )
 
-  cFile := ::cSavePath + "/" + ::cName + "_" + cID
+  cFile := ::cSavePath + HB_OSPathSeparator() + ::cName + "_" + cID
   //TraceLog( "SessionWrite() - cFile", cFile )
   IF nFileSize > 0
      IF ( nH := FCreate( cFile, FC_NORMAL ) ) <> -1
@@ -619,16 +635,16 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
            uhttpd_Die( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
         ELSE
            lOk := TRUE
-           FClose( nH )
         ENDIF
+        FClose( nH )
      ELSE
         uhttpd_Die( "ERROR: On WRITING session file. I can not create session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
      ENDIF
   ELSE
      // If session data is empty, I will delete the file if exist
-     IF File( cFile )
-        FErase( cFile )
-     ENDIF
+     //IF File( cFile )
+     //   FErase( cFile )
+     //ENDIF
      // Return that all is ok
      lOk := TRUE
   ENDIF
@@ -644,7 +660,7 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
   ::oCookie:DeleteCookie( ::cName )
 
   //TraceLog( "SessionDestroy() - cID, oCGI:h_Session", cID, DumpValue( oCGI:h_Session ) )
-  cFile := ::cSavePath + "/" + ::cName + "_" + cID
+  cFile := ::cSavePath + HB_OSPathSeparator() + ::cName + "_" + cID
   IF !( lOk := ( FErase( cFile ) == 0 ) )
      uhttpd_Die( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
   ELSE
@@ -661,14 +677,14 @@ METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
   LOCAL aDir, aFile
 
   DEFAULT nMaxLifeTime TO ::nGc_MaxLifeTime
-  aDir := Directory( ::cSavePath + "/" + ::cName + "_*.*" )
+  aDir := Directory( ::cSavePath + HB_OSPathSeparator() + ::cName + "_*.*" )
 
   FOR EACH aFile IN aDir
       nSecs := TimeDiffAsSeconds( aFile[ F_DATE ], Date(), aFile[ F_TIME ], Time() )
       //TraceLog( "GC: aFile[ F_NAME ], aFile[ F_DATE ], Date(), aFile[ F_TIME ], Time(), nSecs, nMaxLifeTime", ;
       //               aFile[ F_NAME ], aFile[ F_DATE ], Date(), aFile[ F_TIME ], Time(), nSecs, nMaxLifeTime )
       IF nSecs > nMaxLifeTime
-         FErase( ::cSavePath + "/" + aFile[ F_NAME ] )
+         FErase( ::cSavePath + HB_OSPathSeparator() + aFile[ F_NAME ] )
       ENDIF
   NEXT
 
