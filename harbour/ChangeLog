@@ -8,6 +8,29 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-28 21:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added autofilling CCPREFIX on Windows platform when
+      -comp=mingw64 or -comp=mingwce is specified.
+    + Added autofilling CCPATH on Windows platform when
+      -comp=mingw64 or -comp=mingwce is specified and
+      corresponding embedded MinGW installations are found in
+      Harbour directory.
+
+    ; IOW this means that it's now possible to create a unified,
+      self-contained install kit, which is able to easily build
+      x64, WinCE and x86 executables with command below:
+      > hbmk2 test.prg            => test.exe for x86
+      > hbmk2 -comp=mingw64 a.prg => test.exe for x64
+      > hbmk2 -comp=mingwce a.prg => test.exe for ARM/WinCE
+      Can it be any simpler than that?
+
+      My sample install .zip is 322MB and it contains Harbour libs
+      for msvc, mingw, mingw64, mingwce, bcc, owatcom and contains
+      all required MinGW files.
+      It will be even easier if we add CPU platform identifiers
+      to Harbour.
+
 2009-03-28 18:09 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/dos/owatcom.cf
   * config/win/owatcom.cf

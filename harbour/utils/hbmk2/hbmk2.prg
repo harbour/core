@@ -255,6 +255,7 @@ FUNCTION Main( ... )
    LOCAL s_lFMSTAT := NIL /* NIL = default, .T. = on, .F. = off */
 
    LOCAL aCOMPDET
+   LOCAL aCOMPDET_LOCAL
    LOCAL aCOMPSUP
 
    LOCAL cLibPrefix
@@ -289,7 +290,7 @@ FUNCTION Main( ... )
    LOCAL cBin_Lib
    LOCAL cBin_Dyn
    LOCAL nErrorLevel
-   LOCAL tmp, array
+   LOCAL tmp, tmp1, array
    LOCAL cScriptFile
    LOCAL fhnd
    LOCAL lNOHBP
@@ -575,6 +576,13 @@ FUNCTION Main( ... )
       RETURN 3
    ENDIF
 
+   IF t_cARCH == "win"
+      aCOMPDET_LOCAL := {;
+          { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw"   + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "mingw"  , ""                     } ,;
+          { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw64" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "mingw64", "x86_64-pc-mingw32-"   } ,;
+          { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "mingwce", "arm-wince-mingw32ce-" } }
+   ENDIF
+
    /* Autodetect compiler */
 
    IF lStopAfterHarbour
@@ -590,31 +598,17 @@ FUNCTION Main( ... )
                t_cCOMP := NIL
             ENDIF
          ELSE
-            #if defined( __PLATFORM__WINDOWS )
-               IF Empty( t_cCCPATH )
-                  tmp := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw" + hb_osPathSeparator() + "bin"
-                  IF hb_FileExists( tmp + hb_osPathSeparator() + "gcc.exe" )
-                     t_cCOMP := "mingw"
-                     t_cCCPATH := tmp
+            IF t_cARCH == "win"
+               /* Autodetect embedded MinGW installation */
+               FOR tmp := 1 TO Len( aCOMPDET_LOCAL )
+                  IF ! Empty( tmp1 := Eval( aCOMPDET_LOCAL[ tmp ][ 1 ], aCOMPDET_LOCAL[ tmp ][ 3 ] ) )
+                     t_cCOMP := aCOMPDET_LOCAL[ tmp ][ 2 ]
+                     t_cCCPREFIX := aCOMPDET_LOCAL[ tmp ][ 3 ]
+                     t_cCCPATH := tmp1
+                     EXIT
                   ENDIF
-               ENDIF
-               IF Empty( t_cCCPATH )
-                  tmp := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw64" + hb_osPathSeparator() + "bin"
-                  IF hb_FileExists( tmp + hb_osPathSeparator() + "x86_64-pc-mingw32-gcc.exe" )
-                     t_cCOMP := "mingw64"
-                     t_cCCPATH := tmp
-                     t_cCCPREFIX := "x86_64-pc-mingw32-"
-                  ENDIF
-               ENDIF
-               IF Empty( t_cCCPATH )
-                  tmp := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin"
-                  IF hb_FileExists( tmp + hb_osPathSeparator() + "arm-wince-mingw32ce-gcc.exe" )
-                     t_cCOMP := "mingwce"
-                     t_cCCPATH := tmp
-                     t_cCCPREFIX := "arm-wince-mingw32ce-"
-                  ENDIF
-               ENDIF
-            #endif
+               NEXT
+            ENDIF
             IF Empty( t_cCOMP ) .AND. ! Empty( aCOMPDET )
                /* Look for this compiler first */
                FOR tmp := 1 TO Len( aCOMPDET )
@@ -657,6 +651,18 @@ FUNCTION Main( ... )
             OutErr( "hbmk: Error: Compiler value unknown: " + t_cCOMP + hb_osNewLine() )
             PauseForKey()
             RETURN 2
+         ENDIF
+         IF t_cARCH == "win"
+            /* Detect cross platform CCPREFIX and CCPATH if embedded MinGW installation is detected */
+            FOR tmp := 1 TO Len( aCOMPDET_LOCAL )
+               IF aCOMPDET_LOCAL[ tmp ][ 2 ] == t_cCOMP
+                  IF ! Empty( tmp1 := Eval( aCOMPDET_LOCAL[ tmp ][ 1 ], aCOMPDET_LOCAL[ tmp ][ 3 ] ) )
+                     t_cCCPATH := tmp1
+                  ENDIF
+                  t_cCCPREFIX := aCOMPDET_LOCAL[ tmp ][ 3 ]
+                  EXIT
+               ENDIF
+            NEXT
          ENDIF
       ENDIF
    ENDIF
