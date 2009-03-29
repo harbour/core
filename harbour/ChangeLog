@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-29 22:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/xhb/hbserv.c
+    ! Fixed issues with prev commit. (Thanks Francesco)
+
 2009-03-29 09:03 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   + harbour/contrib/hbqt/doc
     + Added folder to receive auto-generated Q*.txt documentation
@@ -15,16 +19,16 @@
       Qt_QWidget_setContentsMargins( pQWidget, nLeft, nTop, nRight, nBottom ) -> NIL
 
   + harbour/contrib/hbqt/gensource
-    + Added folder to receive auto generated .cpp sources. 
-      The idea is to have freedom to generate sources and test them 
+    + Added folder to receive auto generated .cpp sources.
+      The idea is to have freedom to generate sources and test them
       prior to committing to distribution folder.
-    
+
   * harbour/contrib/hbqt/hbqt.h
     + Added more parameter and return macros.
 
   + harbour/contrib/hbqt/hbqt_utils.c
     + Added generic conversion routins to support parameters and return values.
-     
+
   + harbour/contrib/hbqt/hbqt_qtreewidget.cpp
   + harbour/contrib/hbqt/hbqt_qtreewidgetitem.cpp
   * harbour/contrib/hbqt/hbqt_qtreeview.cpp
@@ -34,7 +38,7 @@
       Implemented project files with .qtp extension.
       Implemented auto generation of document files with .txt extension.
          USAGE: hbqtgen.exe @qt45.qtp will generate files as:
-                . 
+                .
                 ../gensource/hbqt_Q*.cpp
                 ../doc/Q*.txt
 
@@ -124,7 +128,7 @@
     ; REQUEST ( Przemek ) - Can you please provide a GTWVT.C like
              skeleton .cpp which I could use as a base for GTQTC ?
 
-    
+
 2009-03-29 22:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * config/dos/owatcom.cf
   * config/win/owatcom.cf
