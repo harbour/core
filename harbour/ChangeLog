@@ -8,6 +8,22 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-29 15:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkdyn.sh
+  * bin/hb-func.sh
+    + Added support for .dll creation and hbmk for mingw64.
+    * Synced Windows system liblist for dll creation.
+    * wsock32 -> ws2_32
+
+  * bin/hb-mkdyn.bat
+    ! wsock32 -> ws2_32
+
+  * contrib/gtwvg/gtwvg.c
+    ! Fixed embedded ANSI C comments.
+  * contrib/gtwvg/wvgsink.c
+    ! Fixed a few non-ANSI C comments.
+    * There is more, see: 'grep // *.c'
+
 2009-03-29 11:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
   * external/Makefile

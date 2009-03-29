@@ -40,10 +40,14 @@ fi
 
 . ${hb_root}/bin/hb-func.sh
 
-if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "gpp" ] || \
-   [ "$HB_COMPILER" = "mingw" ] || [ "$HB_COMPILER" = "mingwce" ] || \
+if [ "$HB_COMPILER" = "gcc" ] || \
+   [ "$HB_COMPILER" = "gpp" ] || \
+   [ "$HB_COMPILER" = "mingw" ] || \
+   [ "$HB_COMPILER" = "mingw64" ] || \
+   [ "$HB_COMPILER" = "mingwce" ] || \
    [ "$HB_COMPILER" = "cygwin" ] || \
-   [ "$HB_COMPILER" = "djgpp" ] || [ "$HB_COMPILER" = "icc" ]
+   [ "$HB_COMPILER" = "djgpp" ] || \
+   [ "$HB_COMPILER" = "icc" ]
 then
     RANLIB=""
     MAKE=make
@@ -93,8 +97,11 @@ then
     fi
 
     mk_hbtools "${HB_BIN_INSTALL}" "$@"
-    if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "gpp" ] || \
-       [ "$HB_COMPILER" = "mingw" ] || [ "$HB_COMPILER" = "mingwce" ] || \
+    if [ "$HB_COMPILER" = "gcc" ] || \
+       [ "$HB_COMPILER" = "gpp" ] || \
+       [ "$HB_COMPILER" = "mingw" ] || \
+       [ "$HB_COMPILER" = "mingw64" ] || \
+       [ "$HB_COMPILER" = "mingwce" ] || \
        [ "$HB_COMPILER" = "icc" ]; then
         mk_hblibso "${hb_root}"
     fi

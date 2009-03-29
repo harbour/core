@@ -135,8 +135,7 @@ elif [ "${SLIB_EXT}" = ".dll" ]; then
     if [ "$HB_COMPILER" = "mingwce" ]; then
         SYSLIBS=" -lwininet -lws2"
     else
-        SYSLIBS="-luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32"
-        SYSLIBS="${SYSLIBS} -loleaut32 -luuid -lmpr -lwsock32 -lws2_32 -lmapi32"
+        SYSLIBS="-luser32 -lws2_32 -ladvapi32 -lgdi32"
     fi
     ${HB_CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} ${HB_USER_LDFLAGS} ${SYSLIBS} ${HB_DLLIBS} && \
         cd "${dir}" && \

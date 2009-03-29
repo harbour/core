@@ -187,8 +187,8 @@ mk_hbtools()
         HB_SYS_LIBS="-lz ${HB_SYS_LIBS}"
         hb_libs="${hb_libs//hbzlib/}"
     fi
-    if [ "${HB_COMPILER}" = "mingw" ]; then
-        HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lwsock32 -lws2_32"
+    if [ "${HB_COMPILER}" = "mingw" ] || [ "${HB_COMPILER}" = "mingw64" ]; then
+        HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
         HB_WITHOUT_X11="yes"
     elif [ "${HB_COMPILER}" = "mingwce" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32"
@@ -330,7 +330,7 @@ elif [ "\$*" = "mk-links" ]; then
             if [ "\${HB_ARCHITECTURE}" = "dos" ]; then
                 cp -f "\${NAME}" "\${n}"
             else
-                ln -sf "\${NAME}" "\${n}"
+                 ln -sf "\${NAME}" "\${n}"
             fi
         done
         )
@@ -566,7 +566,7 @@ else
 fi
 
 l=""
-if [ "\${HB_COMPILER}" = "mingw" ]; then
+if [ "\${HB_COMPILER}" = "mingw" ] || [ "\${HB_COMPILER}" = "mingw64" ]; then
     if [ -z "\${HB_MODE}" ]; then
         LN_OPT="\${LN_OPT} -mwindows"
         l="hbmainwin"
@@ -752,8 +752,8 @@ mk_hblibso()
         linker_options="-lz ${linker_options}"
         hb_libs="${hb_libs//hbzlib/}"
     fi
-    if [ "${HB_COMPILER}" = "mingw" ]; then
-        linker_options="${linker_options} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lwsock32 -lws2_32"
+    if [ "${HB_COMPILER}" = "mingw" ] || [ "${HB_COMPILER}" = "mingw64" ]; then
+        linker_options="${linker_options} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
     elif [ "${HB_COMPILER}" = "mingwce" ]; then
         linker_options="${linker_options} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32"
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
@@ -826,8 +826,13 @@ mk_hblibso()
         full_lib_name_mt="lib${name}mt.${hb_ver}${lib_ext}"
     elif [ "${HB_ARCHITECTURE}" = "win" ]; then
         lib_ext=".dll"
-        full_lib_name="${name}-${hb_ver}${lib_ext}"
-        full_lib_name_mt="${name}mt-${hb_ver}${lib_ext}"
+        if [ "${HB_COMPILER}" = "mingw64" ]; then
+            full_lib_name="${name}-${hb_ver}-x64${lib_ext}"
+            full_lib_name_mt="${name}mt-${hb_ver}-x64${lib_ext}"
+        else
+            full_lib_name="${name}-${hb_ver}${lib_ext}"
+            full_lib_name_mt="${name}mt-${hb_ver}${lib_ext}"
+        fi
     elif [ "${HB_ARCHITECTURE}" = "hpux" ]; then
         lib_ext=".sl"
         full_lib_name="lib${name}-${hb_ver}${lib_ext}"

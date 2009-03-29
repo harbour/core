@@ -428,7 +428,7 @@ static HRESULT STDMETHODCALLTYPE GetIDsOfNames( IEventHandler *self, REFIID riid
    return ( HRESULT ) E_NOTIMPL;
 }
 
-//------------------------------------------------------------------------------
+/*-----------------------------------------------------------------------------*/
 
 static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *self, DISPID dispid, REFIID riid,
                                       LCID lcid, WORD wFlags, DISPPARAMS *params,
@@ -687,7 +687,7 @@ HB_FUNC( HB_AX_RELEASEOBJECT )
    IDispatch * pDisp = ( IDispatch * ) ( HB_PTRDIFF ) hb_parnint( 1 );
    s_nOleError = pDisp->lpVtbl->Release( pDisp );
 }
-//---------------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 HB_FUNC( HB_AX_SETUPCONNECTIONPOINT )
 {
    HRESULT              hr;
@@ -791,7 +791,7 @@ HB_FUNC( HB_AX_ATLAXWININIT )
 
    hb_retl( bRet );
 }
-//---------------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 ATLAPI AtlAxCreateControlEx(
    LPCOLESTR lpszName,
@@ -918,7 +918,7 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
  *    ::hObj := HB_AX_AtlAxGetControl( "ATLAXWin", ::hContainer, ::CLSID, ::nID, ;
  *                   ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ::style, ::exStyle, @hx )
  */
-HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container window
+HB_FUNC( HB_AX_ATLAXGETCONTROL ) /* HWND hWnd = handle of control container window */
 {
    IUnknown  *pUnk = NULL;
    IDispatch *obj;
@@ -1009,7 +1009,7 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container wind
    }
 }
 
-//---------------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( HB_AX_ATLSETVERB )
 {
@@ -1073,15 +1073,15 @@ HB_FUNC( HB_AX_ATLAXWINTERM )
 /*----------------------------------------------------------------------*/
 
 typedef struct  {
-   DISPID   m_dispID;       // dispatch id
-   BSTR     m_bstrName;     // method or property name
-   WORD     m_wFlag;        // invoke flag
-   short    m_oVft;         // offset of virtual function
-   CALLCONV m_callconv;     // calling convention
-   VARTYPE  m_vtOutputType; // output type
-   VARIANT* m_pOutput;      // output data
-   int      m_nParamCount;  // number of parameters
-   WORD*    m_pParamTypes;  // parameter type array
+   DISPID   m_dispID;       /* dispatch id */
+   BSTR     m_bstrName;     /* method or property name */
+   WORD     m_wFlag;        /* invoke flag */
+   short    m_oVft;         /* offset of virtual function */
+   CALLCONV m_callconv;     /* calling convention */
+   VARTYPE  m_vtOutputType; /* output type */
+   VARIANT* m_pOutput;      /* output data */
+   int      m_nParamCount;  /* number of parameters */
+   WORD*    m_pParamTypes;  /* parameter type array */
 } DispInfo;
 
 /*----------------------------------------------------------------------*/
@@ -1090,11 +1090,11 @@ typedef struct  {
 #if 0
 
 
-//=================================================
-// BUGGY experimental, untested and unfinished code
-//=================================================
+/*=================================================
+   BUGGY experimental, untested and unfinished code
+  =================================================*/
 
-int LoadTypeInformation( IDispatch* pDisp ) // pass dispatch interface
+int LoadTypeInformation( IDispatch* pDisp ) /* pass dispatch interface */
 {
    //UINT nTypeInfoCount;
    //m_hRet = m_pDisp->GetTypeInfoCount(&nTypeInfoCount);
@@ -1441,7 +1441,3 @@ hb_ToOutDebug( "<<<<<<<<<<<<<<<  6  >>>>>>>>>>>>");
 }
 #endif
 /*----------------------------------------------------------------------*/
-
-
-
-
