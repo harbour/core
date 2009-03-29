@@ -330,7 +330,7 @@ elif [ "\$*" = "mk-links" ]; then
             if [ "\${HB_ARCHITECTURE}" = "dos" ]; then
                 cp -f "\${NAME}" "\${n}"
             else
-                 ln -sf "\${NAME}" "\${n}"
+                ln -sf "\${NAME}" "\${n}"
             fi
         done
         )
@@ -829,6 +829,9 @@ mk_hblibso()
         if [ "${HB_COMPILER}" = "mingw64" ]; then
             full_lib_name="${name}-${hb_ver}-x64${lib_ext}"
             full_lib_name_mt="${name}mt-${hb_ver}-x64${lib_ext}"
+        elif [ "${HB_COMPILER}" = "mingwce" ]; then
+            full_lib_name="${name}-${hb_ver}-arm${lib_ext}"
+            full_lib_name_mt="${name}mt-${hb_ver}-arm${lib_ext}"
         else
             full_lib_name="${name}-${hb_ver}${lib_ext}"
             full_lib_name_mt="${name}mt-${hb_ver}${lib_ext}"

@@ -5,6 +5,16 @@
 HB_BUILD_WARN = no
 HB_BUILD_MODE = c
 
+ifeq ($(HB_COMPILER),mingwce)
+HB_USER_CFLAGS += -D_WIN32_WCE
+endif
+ifeq ($(HB_COMPILER),msvcce)
+HB_USER_CFLAGS += -D_WIN32_WCE
+endif
+ifeq ($(HB_COMPILER),poccce)
+HB_USER_CFLAGS += -D_WIN32_WCE
+endif
+
 ROOT = ../../
 
 LIBNAME=sqlite3

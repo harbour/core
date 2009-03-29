@@ -8,6 +8,75 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-29 19:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * external/sqlite3/Makefile
+    ! Added necessary configuration for WinCE builds.
+
+  * bin/hb-func.sh
+  * source/vm/maindllp.c
+    * mingwce will now generate dll by the name: harbour*-*-arm.dll
+    ; TOFIX: mingwce .dlls should probably be generated in bin dir just
+             like in every other cases, but I don't know why it's
+             explicitly put in lib dir in this case.
+
+  * bin/hb-mkdyn.bat
+    + Added .dll generation for msvcce and poccce.
+
+  * source/vm/maindllp.c
+    * Formatting.
+    ! Fixed to compile for WinCE. Please review me.
+
+  * contrib/hbct/disk.c
+    ! DRIVETYPE() made a dummy under WinCE to make it compile.
+
+  * contrib/gtwvg/Makefile
+    ! Limited GTWVG builds to 32-bit Windows compilers as it's
+      still broken for WinCE, this time with pocce. Notice
+      HB_OS* macros aren't available before #including Harbour
+      headers. Reenable them after being fixed and tested.
+
+  * contrib/hbole/olecore.c
+    ! Fixed compilation errors below with poccce. Please review me.
+      pocc.exe -I. -Ze -Go -W1 -Ot -Tarm-coff -D_WINCE -DUNICODE -DHB_NO_WIN_CONSOLE -I../../../../include     -c ../../olecore.c -Foolecore.obj
+      ../../olecore.c(188): error #2152: Unknown field 'llVal' of 'union (no name)'.
+      ../../olecore.c(273): error #2152: Unknown field 'llVal' of 'union (no name)'.
+      ../../olecore.c(290): error #2152: Unknown field 'ullVal' of 'union (no name)'.
+
+  * contrib/hbsqlit3/Makefile
+    ! Excluded for poccce.
+
+  ; TOFIX:
+      pocc.exe -I. -Ze -Go -W1 -Ot -Tarm-coff -D_WINCE -DUNICODE -DHB_NO_WIN_CONSOLE -I../../../../include     -c ../../getenvrn.c -Fogetenvrn.obj
+      ../../getenvrn.c(177): warning #2027: Missing prototype for 'GetEnvironmentStrings'.
+      ../../getenvrn.c(177): error #2168: Operands of = have incompatible types 'wchar_t *' and 'int'.
+      ../../getenvrn.c(246): warning #2027: Missing prototype for 'FreeEnvironmentStrings'.
+      pocc.exe -I. -Ze -Go -W1 -Ot -Tarm-coff -D_WINCE -DUNICODE -DHB_NO_WIN_CONSOLE -I../../../../include     -c ../../hbserv.c -Fohbserv.obj
+      ../../hbserv.c(391): error #2048: Undeclared identifier 'CTRL_C_EVENT'.
+      ../../hbserv.c(392): error #2048: Undeclared identifier 'CTRL_BREAK_EVENT'.
+      ../../hbserv.c(393): error #2048: Undeclared identifier 'CTRL_CLOSE_EVENT'.
+      ../../hbserv.c(394): error #2048: Undeclared identifier 'CTRL_LOGOFF_EVENT'.
+      ../../hbserv.c(395): error #2048: Undeclared identifier 'CTRL_SHUTDOWN_EVENT'.
+      ../../hbserv.c(398): error #2069: Initializer must be constant.
+      ../../hbserv.c(511): warning #2027: Missing prototype for 'CallNextHookEx'.
+      ../../hbserv.c(528): warning #2027: Missing prototype for 'CallNextHookEx'.
+      ../../hbserv.c(635): error #2048: Undeclared identifier 'SEM_NOALIGNMENTFAULTEXCEPT'.
+      ../../hbserv.c(635): error #2048: Undeclared identifier 'SEM_NOGPFAULTERRORBOX'.
+      ../../hbserv.c(636): error #2048: Undeclared identifier 'SEM_NOOPENFILEERRORBOX'.
+      ../../hbserv.c(638): warning #2027: Missing prototype for 'SetUnhandledExceptionFilter'.
+      ../../hbserv.c(639): warning #2027: Missing prototype for 'SetWindowsHookEx'.
+      ../../hbserv.c(639): error #2048: Undeclared identifier 'WH_GETMESSAGE'.
+      ../../hbserv.c(639): error #2048: Undeclared identifier 'HOOKPROC'.
+      ../../hbserv.c(639): error #2001: Syntax error: expected ')' but found 's_MsgFilterFunc'.
+      ../../hbserv.c(639): error #2168: Operands of = have incompatible types 'HHOOK' and 'int'.
+      ../../hbserv.c(639): error #2001: Syntax error: expected ';' but found 's_MsgFilterFunc'.
+      ../../hbserv.c(639): error #2001: Syntax error: expected ';' but found ')'.
+      ../../hbserv.c(639): error #2061: Illegal statement termination.
+      ../../hbserv.c(640): warning #2027: Missing prototype for 'SetConsoleCtrlHandler'.
+      ../../hbserv.c(665): warning #2027: Missing prototype for 'SetUnhandledExceptionFilter'.
+      ../../hbserv.c(668): warning #2027: Missing prototype for 'UnhookWindowsHookEx'.
+      ../../hbserv.c(672): warning #2027: Missing prototype for 'SetConsoleCtrlHandler'.
+      ../../hbserv.c(776): warning #2027: Missing prototype for 'FreeConsole'.
+
 2009-03-29 19:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/fm.c
     ! fixed typo and add missing HVM stack preload macros

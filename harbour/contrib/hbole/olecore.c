@@ -185,7 +185,11 @@ static void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
 
       case HB_IT_LONG:
          pVariant->n1.n2.vt = VT_I8;
+#if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          pVariant->n1.n2.n3.llVal = hb_itemGetNInt( pItem );
+#else
+         pVariant->n1.n2.n3.lVal = hb_itemGetNL( pItem );
+#endif
          break;
 
       case HB_IT_DOUBLE:
@@ -270,7 +274,11 @@ static void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
            break;
 
       case VT_I8:
+#if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
            hb_itemPutNInt( pItem, pVariant->n1.n2.n3.llVal );
+#else
+           hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.lVal );
+#endif
            break;
 
       case VT_UI1:
@@ -287,7 +295,11 @@ static void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 
       case VT_UI8:
            /* TODO: sign is lost. Convertion to double will lose significant digits. */
+#if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
            hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.ullVal );
+#else
+           hb_itemPutNInt( pItem, ( HB_LONG ) pVariant->n1.n2.n3.ulVal );
+#endif
            break;
 
       case VT_R4:

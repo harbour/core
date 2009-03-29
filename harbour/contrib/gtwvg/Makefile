@@ -8,7 +8,28 @@ ROOT = ../../
 
 LIBNAME=gtwvg
 
-ifeq ($(HB_ARCHITECTURE),win)
+ifeq ($(HB_WITH_GTWVG),)
+ifeq ($(HB_COMPILER),mingw)
+HB_WITH_GTWVG=yes
+endif
+ifeq ($(HB_COMPILER),msvc)
+HB_WITH_GTWVG=yes
+endif
+ifeq ($(HB_COMPILER),owatcom)
+HB_WITH_GTWVG=yes
+endif
+ifeq ($(HB_COMPILER),pocc)
+HB_WITH_GTWVG=yes
+endif
+ifeq ($(HB_COMPILER),icc)
+HB_WITH_GTWVG=yes
+endif
+ifeq ($(HB_COMPILER),bcc)
+HB_WITH_GTWVG=yes
+endif
+endif
+
+ifeq ($(HB_WITH_GTWVG),yes)
 
 C_SOURCES=\
 	gtwvg.c \

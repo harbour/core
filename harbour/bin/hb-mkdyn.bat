@@ -27,9 +27,11 @@ if "%HB_COMPILER%" == "iccia64"  goto DO_MSVC
 if "%HB_COMPILER%" == "msvc"     goto DO_MSVC
 if "%HB_COMPILER%" == "msvc64"   goto DO_MSVC
 if "%HB_COMPILER%" == "msvcia64" goto DO_MSVC
+if "%HB_COMPILER%" == "msvcce"   goto DO_MSVC
 if "%HB_COMPILER%" == "bcc"      goto DO_BCC
 if "%HB_COMPILER%" == "owatcom"  goto DO_OWATCOM
 if "%HB_COMPILER%" == "pocc"     goto DO_POCC
+if "%HB_COMPILER%" == "poccce"   goto DO_POCC
 
 echo HB_COMPILER %HB_COMPILER% isn't supported.
 goto END
@@ -110,13 +112,18 @@ if "%HB_COMPILER%" == "iccia64"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-ia64
 if "%HB_COMPILER%" == "iccia64"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-ia64
 if "%HB_COMPILER%" == "msvc"     set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
 if "%HB_COMPILER%" == "msvc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
+if "%HB_COMPILER%" == "msvcce"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
+if "%HB_COMPILER%" == "msvcce"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
 if "%HB_COMPILER%" == "msvc64"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
 if "%HB_COMPILER%" == "msvc64"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
 if "%HB_COMPILER%" == "msvcia64" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-ia64
 if "%HB_COMPILER%" == "msvcia64" set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-ia64
 
-echo Making %_DST_NAME_ST%.dll... && %_BIN_LINK% /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt user32.lib ws2_32.lib advapi32.lib gdi32.lib
-echo Making %_DST_NAME_MT%.dll... && %_BIN_LINK% /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt user32.lib ws2_32.lib advapi32.lib gdi32.lib
+if not "%HB_COMPILER%" == "msvcce" set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
+if     "%HB_COMPILER%" == "msvcce" set _SYSLIBS=wininet.lib ws2.lib
+
+echo Making %_DST_NAME_ST%.dll... && %_BIN_LINK% /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt %_SYSLIBS%
+echo Making %_DST_NAME_MT%.dll... && %_BIN_LINK% /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt %_SYSLIBS%
 
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
@@ -356,11 +363,16 @@ for %%f in (%HB_DLL_LIBS_MT%) do (
 )
 cd ..
 
-set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
-set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
+if "%HB_COMPILER%" == "pocc"     set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
+if "%HB_COMPILER%" == "pocc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
+if "%HB_COMPILER%" == "poccce"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
+if "%HB_COMPILER%" == "poccce"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
 
-echo Making %_DST_NAME_ST%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt user32.lib ws2_32.lib advapi32.lib gdi32.lib
-echo Making %_DST_NAME_MT%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt user32.lib ws2_32.lib advapi32.lib gdi32.lib
+if "%HB_COMPILER%" == "pocc"     set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
+if "%HB_COMPILER%" == "poccce"   set _SYSLIBS=wininet.lib ws2.lib
+
+echo Making %_DST_NAME_ST%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt %_SYSLIBS%
+echo Making %_DST_NAME_MT%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt %_SYSLIBS%
 
 polib "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" /out:"%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
 polib "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" /out:"%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"

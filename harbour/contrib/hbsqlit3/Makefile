@@ -7,6 +7,7 @@ ROOT = ../../
 LIBNAME=hbsqlit3
 
 ifneq ($(HB_COMPILER),pocc)
+ifneq ($(HB_COMPILER),poccce)
 
 ifeq ($(HB_INC_SQLITE3),)
 ifeq ($(HB_XBUILD),)
@@ -39,6 +40,9 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif
