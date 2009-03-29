@@ -333,7 +333,7 @@ typedef void * PHB_MEMINFO;
 typedef struct
 {
    int      count;
-   mspace * ms;
+   mspace   ms;
 } HB_MSPACE, * PHB_MSPACE;
 
 static mspace s_gm = NULL;
@@ -424,6 +424,7 @@ void hb_xinit_thread( void )
 void hb_xexit_thread( void )
 {
 #if defined( HB_FM_DLMT_ALLOC )
+   HB_STACK_TLS_PRELOAD
    if( hb_stack.allocator != NULL )
    {
       HB_FM_LOCK
@@ -1070,6 +1071,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 
 ULONG hb_xquery( USHORT uiMode )
 {
+   HB_STACK_TLS_PRELOAD
    ULONG ulResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xquery(%hu)", uiMode));
