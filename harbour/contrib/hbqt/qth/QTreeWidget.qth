@@ -1,0 +1,53 @@
+<CODE>
+#include <QtGui/QTreeWidget>
+
+
+/*
+ * QTreeWidget ( QWidget * parent = 0 )
+ * ~QTreeWidget ()
+ */
+HB_FUNC( QT_QTREEWIDGET )
+{
+   hb_retptr( ( QTreeWidget* ) new QTreeWidget( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+void addTopLevelItem ( QTreeWidgetItem * item )
+void addTopLevelItems ( const QList<QTreeWidgetItem *> & items )
+void closePersistentEditor ( QTreeWidgetItem * item, int column = 0 )
+int columnCount () const
+int currentColumn () const
+QTreeWidgetItem * currentItem () const
+void editItem ( QTreeWidgetItem * item, int column = 0 )
+QList<QTreeWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags, int column = 0 ) const
+QTreeWidgetItem * headerItem () const
+int indexOfTopLevelItem ( QTreeWidgetItem * item ) const
+void insertTopLevelItem ( int index, QTreeWidgetItem * item )
+void insertTopLevelItems ( int index, const QList<QTreeWidgetItem *> & items )
+QTreeWidgetItem * invisibleRootItem () const
+bool isFirstItemColumnSpanned ( const QTreeWidgetItem * item ) const
+QTreeWidgetItem * itemAbove ( const QTreeWidgetItem * item ) const
+QTreeWidgetItem * itemAt ( const QPoint & p ) const
+QTreeWidgetItem * itemAt ( int x, int y ) const
+QTreeWidgetItem * itemBelow ( const QTreeWidgetItem * item ) const
+QWidget * itemWidget ( QTreeWidgetItem * item, int column ) const
+void openPersistentEditor ( QTreeWidgetItem * item, int column = 0 )
+void removeItemWidget ( QTreeWidgetItem * item, int column )
+QList<QTreeWidgetItem *> selectedItems () const
+void setColumnCount ( int columns )
+void setCurrentItem ( QTreeWidgetItem * item )
+void setCurrentItem ( QTreeWidgetItem * item, int column )
+void setCurrentItem ( QTreeWidgetItem * item, int column, QItemSelectionModel::SelectionFlags command )
+void setFirstItemColumnSpanned ( const QTreeWidgetItem * item, bool span )
+void setHeaderItem ( QTreeWidgetItem * item )
+void setHeaderLabel ( const QString & label )
+void setHeaderLabels ( const QStringList & labels )
+void setItemWidget ( QTreeWidgetItem * item, int column, QWidget * widget )
+int sortColumn () const
+void sortItems ( int column, Qt::SortOrder order )
+QTreeWidgetItem * takeTopLevelItem ( int index )
+QTreeWidgetItem * topLevelItem ( int index ) const
+int topLevelItemCount () const
+QRect visualItemRect ( const QTreeWidgetItem * item ) const
+

@@ -1,0 +1,36 @@
+
+
+<CODE>
+#include <QtGui/QLCDNumber>
+
+
+/*
+ * QLCDNumber ( QWidget * parent = 0 )
+ * QLCDNumber ( uint numDigits, QWidget * parent = 0 )
+ * ~QLCDNumber ()
+ */
+HB_FUNC( QT_QLCDNUMBER )
+{
+   hb_retptr( ( QLCDNumber * ) new QLCDNumber( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+enum Mode { Hex, Dec, Oct, Bin }
+enum SegmentStyle { Outline, Filled, Flat }
+
+
+bool checkOverflow ( double num ) const
+bool checkOverflow ( int num ) const
+int intValue () const
+Mode mode () const
+int numDigits () const
+SegmentStyle segmentStyle () const
+void setMode ( Mode )
+void setNumDigits ( int nDigits )
+void setSegmentStyle ( SegmentStyle )
+bool smallDecimalPoint () const
+double value () const
+
+
+

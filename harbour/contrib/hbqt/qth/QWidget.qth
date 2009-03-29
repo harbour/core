@@ -1,25 +1,19 @@
 
-# Enumerations
-#
-enum RenderFlag { DrawWindowBackground, DrawChildren, IgnoreMask }
-
-
-
 <CODE>
-
+#include <QtGui/QWidget>
 #include <QtGui/QIcon>
 
 
 /*
-QWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 )
-*/
+ * QWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 )
+ */
 HB_FUNC( QT_QWIDGET )
 {
    hb_retptr( new QWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
 }
-
 </CODE>
 
+enum RenderFlag { DrawWindowBackground, DrawChildren, IgnoreMask }
 
 bool acceptDrops () const
 QString accessibleDescription () const
@@ -167,7 +161,7 @@ void setMinimumSize ( int minw, int minh )
 void setMinimumWidth ( int minw )
 void setMouseTracking ( bool enable )
 void setPalette ( const QPalette & )
-//void setParent ( QWidget * parent )
+void setParent ( QWidget * parent )
 void setParent ( QWidget * parent, Qt::WindowFlags f )
 void setShortcutAutoRepeat ( int id, bool enable = true )
 void setShortcutEnabled ( int id, bool enable = true )

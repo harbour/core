@@ -1,0 +1,45 @@
+
+<CODE>
+#include <QtCore/QObject>
+
+
+/*
+ * Q_INVOKABLE QObject ( QObject * parent = 0 )
+ * virtual ~QObject ()
+ */
+HB_FUNC( QT_QOBJECT )
+{
+   hb_retptr( ( QObject* ) new QObject() );
+}
+</CODE>
+
+
+bool blockSignals ( bool block )
+const QObjectList & children () const
+bool connect ( const QObject * sender, const char * signal, const char * method, Qt::ConnectionType type = Qt::AutoConnection ) const
+bool disconnect ( const char * signal = 0, const QObject * receiver = 0, const char * method = 0 )
+bool disconnect ( const QObject * receiver, const char * method = 0 )
+void dumpObjectInfo ()
+void dumpObjectTree ()
+QList<QByteArray> dynamicPropertyNames () const
+virtual bool event ( QEvent * e )
+virtual bool eventFilter ( QObject * watched, QEvent * event )
+T findChild ( const QString & name = QString() ) const
+QList<T> findChildren ( const QString & name = QString() ) const
+QList<T> findChildren ( const QRegExp & regExp ) const
+bool inherits ( const char * className ) const
+void installEventFilter ( QObject * filterObj )
+bool isWidgetType () const
+void killTimer ( int id )
+virtual const QMetaObject * metaObject () const
+void moveToThread ( QThread * targetThread )
+QString objectName () const
+QObject * parent () const
+QVariant property ( const char * name ) const
+void removeEventFilter ( QObject * obj )
+void setObjectName ( const QString & name )
+void setParent ( QObject * parent )
+bool setProperty ( const char * name, const QVariant & value )
+bool signalsBlocked () const
+int startTimer ( int interval )
+QThread * thread () const

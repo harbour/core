@@ -1,0 +1,26 @@
+
+
+<CODE>
+#include <QtGui/QPrintPreviewDialog>
+
+
+/*
+ * QPrintPreviewDialog ( QPrinter * printer, QWidget * parent = 0, Qt::WindowFlags flags = 0 )
+ * QPrintPreviewDialog ( QWidget * parent = 0, Qt::WindowFlags flags = 0 )
+ * ~QPrintPreviewDialog ()
+ */
+HB_FUNC( QT_QPRINTPREVIEWDIALOG )
+{
+   if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
+      hb_retptr( ( QPrintPreviewDialog* ) new QPrintPreviewDialog( hbqt_par_QPrinter( 1 ),
+                             hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ) );
+   else
+      hb_retptr( ( QPrintPreviewDialog* ) new QPrintPreviewDialog( hbqt_par_QWidget( 1 ),
+                                                   ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+}
+</CODE>
+
+void open ( QObject * receiver, const char * member )
+QPrinter * printer ()
+
+

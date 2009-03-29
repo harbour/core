@@ -1,0 +1,40 @@
+
+
+<CODE>
+#include <QtGui/QAbstractButton>
+
+
+/*
+ * QAbstractButton ( QWidget * parent = 0 )
+ * ~QAbstractButton ()
+ */
+#if 0
+HB_FUNC( QT_QABSTRACTBUTTON )
+{
+   hb_retptr( new QAbstractButton( hbqt_par_QWidget( 1 ) ) );
+}
+#endif
+</CODE>
+
+
+bool autoExclusive () const
+bool autoRepeat () const
+int autoRepeatDelay () const
+int autoRepeatInterval () const
+QButtonGroup * group () const
+QIcon icon () const
+QSize iconSize () const
+bool isCheckable () const
+bool isChecked () const
+bool isDown () const
+void setAutoExclusive ( bool )
+void setAutoRepeat ( bool )
+void setAutoRepeatDelay ( int )
+void setAutoRepeatInterval ( int )
+void setCheckable ( bool )
+void setDown ( bool )
+void setIcon ( const QIcon & icon )
+void setShortcut ( const QKeySequence & key )
+void setText ( const QString & text )
+QKeySequence shortcut () const
+QString text () const

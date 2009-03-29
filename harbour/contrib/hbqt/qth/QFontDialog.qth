@@ -1,0 +1,31 @@
+
+
+<CODE>
+#include <QtGui/QFontDialog>
+
+
+/*
+ * QFontDialog ( QWidget * parent = 0 )
+ * QFontDialog ( const QFont & initial, QWidget * parent = 0 )
+ */
+HB_FUNC( QT_QFONTDIALOG )
+{
+   hb_retptr( ( QFontDialog * ) new QFontDialog( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+enum FontDialogOption { NoButtons, DontUseNativeDialog }
+flags FontDialogOptions
+
+QFont currentFont () const
+void open ( QObject * receiver, const char * member )
+FontDialogOptions options () const
+QFont selectedFont () const
+void setCurrentFont ( const QFont & font )
+void setOption ( FontDialogOption option, bool on = true )
+void setOptions ( FontDialogOptions options )
+bool testOption ( FontDialogOption option ) const
+
+
+
+

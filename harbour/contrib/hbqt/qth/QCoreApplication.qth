@@ -1,0 +1,25 @@
+
+
+<CODE>
+#include <QtCore/QCoreApplication>
+
+
+/*
+ * QCoreApplication ( int & argc, char ** argv )
+ * ~QCoreApplication ()
+ */
+#if 0
+HB_FUNC( QT_QCOREAPPLICATION )
+{
+
+}
+#endif
+</CODE>
+
+
+enum Encoding { CodecForTr, UnicodeUTF8, DefaultCodec }
+
+// bool filterEvent ( void * message, long * result )
+virtual bool notify ( QObject * receiver, QEvent * event )
+EventFilter setEventFilter ( EventFilter filter )
+// virtual bool winEventFilter ( MSG * msg, long * result )

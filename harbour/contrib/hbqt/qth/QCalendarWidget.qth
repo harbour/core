@@ -1,0 +1,49 @@
+
+
+<CODE>
+#include <QtGui/QCalendarWidget>
+
+
+/*
+ * QCalendarWidget ( QWidget * parent = 0 )
+ * ~QCalendarWidget ()
+ */
+HB_FUNC( QT_QCALENDARWIDGET )
+{
+   hb_retptr( ( QCalendarWidget* ) new QCalendarWidget( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+enum HorizontalHeaderFormat { SingleLetterDayNames, ShortDayNames, LongDayNames, NoHorizontalHeader }
+enum SelectionMode { NoSelection, SingleSelection }
+enum VerticalHeaderFormat { ISOWeekNumbers, NoVerticalHeader }
+
+int dateEditAcceptDelay () const
+QMap<QDate, QTextCharFormat> dateTextFormat () const
+QTextCharFormat dateTextFormat ( const QDate & date ) const
+Qt::DayOfWeek firstDayOfWeek () const
+QTextCharFormat headerTextFormat () const
+HorizontalHeaderFormat horizontalHeaderFormat () const
+bool isDateEditEnabled () const
+bool isGridVisible () const
+bool isNavigationBarVisible () const
+QDate maximumDate () const
+QDate minimumDate () const
+int monthShown () const
+QDate selectedDate () const
+SelectionMode selectionMode () const
+void setDateEditAcceptDelay ( int delay )
+void setDateEditEnabled ( bool enable )
+void setDateTextFormat ( const QDate & date, const QTextCharFormat & format )
+void setFirstDayOfWeek ( Qt::DayOfWeek dayOfWeek )
+void setHeaderTextFormat ( const QTextCharFormat & format )
+void setHorizontalHeaderFormat ( HorizontalHeaderFormat format )
+void setMaximumDate ( const QDate & date )
+void setMinimumDate ( const QDate & date )
+void setSelectionMode ( SelectionMode mode )
+void setVerticalHeaderFormat ( VerticalHeaderFormat format )
+void setWeekdayTextFormat ( Qt::DayOfWeek dayOfWeek, const QTextCharFormat & format )
+VerticalHeaderFormat verticalHeaderFormat () const
+QTextCharFormat weekdayTextFormat ( Qt::DayOfWeek dayOfWeek ) const
+int yearShown () const

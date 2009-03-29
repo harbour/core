@@ -1,0 +1,29 @@
+
+
+<CODE>
+#include <QtGui/QGroupBox>
+
+
+/*
+ * QGroupBox ( QWidget * parent = 0 )
+ * QGroupBox ( const QString & title, QWidget * parent = 0 )
+ * ~QGroupBox ()
+ */
+HB_FUNC( QT_QGROUPBOX )
+{
+   hb_retptr( ( QGroupBox * ) new QGroupBox( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+Qt::Alignment alignment () const
+bool isCheckable () const
+bool isChecked () const
+bool isFlat () const
+void setAlignment ( int alignment )
+void setCheckable ( bool checkable )
+void setFlat ( bool flat )
+void setTitle ( const QString & title )
+QString title () const
+
+
+

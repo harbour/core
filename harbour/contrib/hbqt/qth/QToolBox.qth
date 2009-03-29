@@ -1,0 +1,36 @@
+
+
+<CODE>
+#include <QtGui/QToolBox>
+
+
+/*
+ * QToolBox ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
+ * ~QToolBox ()
+ */
+HB_FUNC( QT_QTOOLBOX )
+{
+   hb_retptr( ( QToolBox* ) new QToolBox( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+}
+</CODE>
+
+int addItem ( QWidget * widget, const QIcon & iconSet, const QString & text )
+int addItem ( QWidget * w, const QString & text )
+int count () const
+int currentIndex () const
+QWidget * currentWidget () const
+int indexOf ( QWidget * widget ) const
+int insertItem ( int index, QWidget * widget, const QIcon & icon, const QString & text )
+int insertItem ( int index, QWidget * widget, const QString & text )
+bool isItemEnabled ( int index ) const
+QIcon itemIcon ( int index ) const
+QString itemText ( int index ) const
+QString itemToolTip ( int index ) const
+void removeItem ( int index )
+void setItemEnabled ( int index, bool enabled )
+void setItemIcon ( int index, const QIcon & icon )
+void setItemText ( int index, const QString & text )
+void setItemToolTip ( int index, const QString & toolTip )
+QWidget * widget ( int index ) const
+
+

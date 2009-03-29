@@ -1,0 +1,32 @@
+
+<CODE>
+#include <QtGui/QFrame>
+
+
+/*
+ * QFrame ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
+ * ~QFrame ()
+ */
+HB_FUNC( QT_QFRAME )
+{
+   hb_retptr( new QFrame( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );   
+}
+</CODE>
+
+enum Shadow { Plain, Raised, Sunken }
+enum Shape { NoFrame, Box, Panel, StyledPanel, ..., WinPanel }
+enum StyleMask { Shadow_Mask, Shape_Mask }
+
+QRect frameRect () const
+Shadow frameShadow () const
+Shape frameShape () const
+int frameStyle () const
+int frameWidth () const
+int lineWidth () const
+int midLineWidth () const
+void setFrameRect ( const QRect & )
+void setFrameShadow ( Shadow )
+void setFrameShape ( Shape )
+void setFrameStyle ( int style )
+void setLineWidth ( int )
+void setMidLineWidth ( int )

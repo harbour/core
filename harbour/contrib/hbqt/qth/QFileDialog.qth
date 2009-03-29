@@ -1,0 +1,73 @@
+
+
+<CODE>
+#include <QtGui/QFileDialog>
+
+
+/*
+ * QFileDialog ( QWidget * parent, Qt::WindowFlags flags )
+ * QFileDialog ( QWidget * parent = 0, const QString & caption = QString(), const QString & directory = QString(), const QString & filter = QString() )
+ * ~QFileDialog ()
+ */
+HB_FUNC( QT_QFILEDIALOG )
+{
+   hb_retptr( ( QFileDialog* ) new QFileDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+}
+</CODE>
+
+
+enum AcceptMode { AcceptOpen, AcceptSave }
+enum DialogLabel { LookIn, FileName, FileType, Accept, Reject }
+enum FileMode { AnyFile, ExistingFile, Directory, ExistingFiles, DirectoryOnly }
+enum Option { ShowDirsOnly, DontResolveSymlinks, DontConfirmOverwrite, DontUseNativeDialog, ..., DontUseSheet }
+flags Options
+enum ViewMode { Detail, List }
+
+AcceptMode acceptMode () const
+bool confirmOverwrite () const
+QString defaultSuffix () const
+QDir directory () const
+FileMode fileMode () const
+QDir::Filters filter () const
+QStringList history () const
+QFileIconProvider * iconProvider () const
+bool isNameFilterDetailsVisible () const
+bool isReadOnly () const
+QAbstractItemDelegate * itemDelegate () const
+QString labelText ( DialogLabel label ) const
+QStringList nameFilters () const
+void open ( QObject * receiver, const char * member )
+Options options () const
+QAbstractProxyModel * proxyModel () const
+bool resolveSymlinks () const
+bool restoreState ( const QByteArray & state )
+QByteArray saveState () const
+void selectFile ( const QString & filename )
+void selectNameFilter ( const QString & filter )
+QStringList selectedFiles () const
+QString selectedNameFilter () const
+void setAcceptMode ( AcceptMode mode )
+void setConfirmOverwrite ( bool enabled )
+void setDefaultSuffix ( const QString & suffix )
+void setDirectory ( const QString & directory )
+void setDirectory ( const QDir & directory )
+void setFileMode ( FileMode mode )
+void setFilter ( QDir::Filters filters )
+void setHistory ( const QStringList & paths )
+void setIconProvider ( QFileIconProvider * provider )
+void setItemDelegate ( QAbstractItemDelegate * delegate )
+void setLabelText ( DialogLabel label, const QString & text )
+void setNameFilter ( const QString & filter )
+void setNameFilterDetailsVisible ( bool enabled )
+void setNameFilters ( const QStringList & filters )
+void setOption ( Option option, bool on = true )
+void setOptions ( Options options )
+void setProxyModel ( QAbstractProxyModel * proxyModel )
+void setReadOnly ( bool enabled )
+void setResolveSymlinks ( bool enabled )
+void setSidebarUrls ( const QList<QUrl> & urls )
+void setViewMode ( ViewMode mode )
+QList<QUrl> sidebarUrls () const
+bool testOption ( Option option ) const
+ViewMode viewMode () const
+

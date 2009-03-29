@@ -1,0 +1,68 @@
+
+
+<CODE>
+#include <QtGui/QMainWindow>
+
+
+/*
+ * QMainWindow ( QWidget * parent = 0, Qt::WindowFlags flags = 0 )
+ * ~QMainWindow ()
+ */
+HB_FUNC( QT_QMAINWINDOW )
+{
+   hb_retptr( ( QMainWindow* ) new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+}
+</CODE>
+
+
+enum DockOption { AnimatedDocks, AllowNestedDocks, AllowTabbedDocks, ForceTabbedDocks, VerticalTabs }
+flags DockOptions
+
+void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )
+void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget, Qt::Orientation orientation )
+void addToolBar ( Qt::ToolBarArea area, QToolBar * toolbar )
+void addToolBar ( QToolBar * toolbar )
+QToolBar * addToolBar ( const QString & title )
+void addToolBarBreak ( Qt::ToolBarArea area = Qt::TopToolBarArea )
+QWidget * centralWidget () const
+Qt::DockWidgetArea corner ( Qt::Corner corner ) const
+virtual QMenu * createPopupMenu ()
+DockOptions dockOptions () const
+Qt::DockWidgetArea dockWidgetArea ( QDockWidget * dockwidget ) const
+bool documentMode () const
+QSize iconSize () const
+void insertToolBar ( QToolBar * before, QToolBar * toolbar )
+void insertToolBarBreak ( QToolBar * before )
+bool isAnimated () const
+bool isDockNestingEnabled () const
+QMenuBar * menuBar () const
+QWidget * menuWidget () const
+void removeDockWidget ( QDockWidget * dockwidget )
+void removeToolBar ( QToolBar * toolbar )
+void removeToolBarBreak ( QToolBar * before )
+bool restoreDockWidget ( QDockWidget * dockwidget )
+bool restoreState ( const QByteArray & state, int version = 0 )
+QByteArray saveState ( int version = 0 ) const
+void setCentralWidget ( QWidget * widget )
+void setCorner ( Qt::Corner corner, Qt::DockWidgetArea area )
+void setDockOptions ( DockOptions options )
+void setDocumentMode ( bool enabled )
+void setIconSize ( const QSize & iconSize )
+void setMenuBar ( QMenuBar * menuBar )
+void setMenuWidget ( QWidget * menuBar )
+void setStatusBar ( QStatusBar * statusbar )
+void setTabPosition ( Qt::DockWidgetAreas areas, QTabWidget::TabPosition tabPosition )
+void setTabShape ( QTabWidget::TabShape tabShape )
+void setToolButtonStyle ( Qt::ToolButtonStyle toolButtonStyle )
+void setUnifiedTitleAndToolBarOnMac ( bool set )
+void splitDockWidget ( QDockWidget * first, QDockWidget * second, Qt::Orientation orientation )
+QStatusBar * statusBar () const
+QTabWidget::TabPosition tabPosition ( Qt::DockWidgetArea area ) const
+QTabWidget::TabShape tabShape () const
+QList<QDockWidget *> tabifiedDockWidgets ( QDockWidget * dockwidget ) const
+void tabifyDockWidget ( QDockWidget * first, QDockWidget * second )
+Qt::ToolBarArea toolBarArea ( QToolBar * toolbar ) const
+bool toolBarBreak ( QToolBar * toolbar ) const
+Qt::ToolButtonStyle toolButtonStyle () const
+bool unifiedTitleAndToolBarOnMac () const
+

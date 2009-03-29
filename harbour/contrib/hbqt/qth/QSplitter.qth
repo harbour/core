@@ -1,0 +1,44 @@
+
+
+<CODE>
+#include <QtGui/QSplitter>
+
+
+/*
+ * QSplitter ( QWidget * parent = 0 )
+ * QSplitter ( Qt::Orientation orientation, QWidget * parent = 0 )
+ * ~QSplitter ()
+ */
+HB_FUNC( QT_SPLITTER )
+{
+   if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
+      hb_retptr( ( QSplitter* ) new QSplitter( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
+   else
+      hb_retptr( ( QSplitter* ) new QSplitter( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+void addWidget ( QWidget * widget )
+bool childrenCollapsible () const
+int count () const
+void getRange ( int index, int * min, int * max ) const
+QSplitterHandle * handle ( int index ) const
+int handleWidth () const
+int indexOf ( QWidget * widget ) const
+void insertWidget ( int index, QWidget * widget )
+bool isCollapsible ( int index ) const
+bool opaqueResize () const
+Qt::Orientation orientation () const
+void refresh ()
+bool restoreState ( const QByteArray & state )
+QByteArray saveState () const
+void setChildrenCollapsible ( bool )
+void setCollapsible ( int index, bool collapse )
+void setHandleWidth ( int )
+void setOpaqueResize ( bool opaque = true )
+void setOrientation ( Qt::Orientation )
+void setSizes ( const QList<int> & list )
+void setStretchFactor ( int index, int stretch )
+QList<int> sizes () const
+QWidget * widget ( int index ) const

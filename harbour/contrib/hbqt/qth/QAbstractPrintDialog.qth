@@ -1,0 +1,33 @@
+
+
+<CODE>
+#include <QtGui/QAbstractPrintDialog>
+
+
+/*
+ * QAbstractPrintDialog ( QPrinter * printer, QWidget * parent = 0 )
+ */
+#if 0
+HB_FUNC( QT_QABSTRACTPRINTDIALOG )
+{
+
+}
+#endif
+</CODE>
+
+enum PrintDialogOption { None, PrintToFile, PrintSelection, PrintPageRange, ..., PrintShowPageSize }
+flags PrintDialogOptions
+enum PrintRange { AllPages, Selection, PageRange }
+
+virtual int exec () = 0
+int fromPage () const
+int maxPage () const
+int minPage () const
+PrintRange printRange () const
+QPrinter * printer () const
+void setFromTo ( int from, int to )
+void setMinMax ( int min, int max )
+void setOptionTabs ( const QList<QWidget *> & tabs )
+void setPrintRange ( PrintRange range )
+int toPage () const
+

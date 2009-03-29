@@ -1,0 +1,26 @@
+
+
+<CODE>
+#include <QtGui/QScrollArea>
+
+
+/*
+ * QScrollArea ( QWidget * parent = 0 )
+ * ~QScrollArea ()
+ */
+HB_FUNC( QT_QSCROLLAREA )
+{
+   hb_retptr( ( QScrollArea* ) new QScrollArea( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+Qt::Alignment alignment () const
+void ensureVisible ( int x, int y, int xmargin = 50, int ymargin = 50 )
+void ensureWidgetVisible ( QWidget * childWidget, int xmargin = 50, int ymargin = 50 )
+void setAlignment ( Qt::Alignment )
+void setWidget ( QWidget * widget )
+void setWidgetResizable ( bool resizable )
+QWidget * takeWidget ()
+QWidget * widget () const
+bool widgetResizable () const

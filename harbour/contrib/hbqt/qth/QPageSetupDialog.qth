@@ -1,0 +1,28 @@
+
+
+<CODE>
+#include <QtGui/QPageSetupDialog>
+
+
+/*
+ * QPageSetupDialog ( QPrinter * printer, QWidget * parent = 0 )
+ * QPageSetupDialog ( QWidget * parent = 0 )
+ */
+HB_FUNC( QT_QPAGESETUPDIALOG )
+{
+   hb_retptr( ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+enum PageSetupDialogOption { DontUseSheet }
+flags PageSetupDialogOptions
+
+virtual int exec ()
+void open ( QObject * receiver, const char * member )
+PageSetupDialogOptions options () const
+QPrinter * printer ()
+void setOption ( PageSetupDialogOption option, bool on = true )
+void setOptions ( PageSetupDialogOptions options )
+virtual void setVisible ( bool visible )
+bool testOption ( PageSetupDialogOption option ) const

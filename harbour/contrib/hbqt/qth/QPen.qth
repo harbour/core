@@ -1,13 +1,16 @@
 
 <CODE>
+#include <QtGui/QPen>
+
+
 /*
-QPen ()
-QPen ( Qt::PenStyle style )
-QPen ( const QColor & color )
-QPen ( const QBrush & brush, qreal width, Qt::PenStyle style = Qt::SolidLine, Qt::PenCapStyle cap = Qt::SquareCap, Qt::PenJoinStyle join = Qt::BevelJoin )
-QPen ( const QPen & pen )
-~QPen ()
-*/
+ * QPen ()
+ * QPen ( Qt::PenStyle style )
+ * QPen ( const QColor & color )
+ * QPen ( const QBrush & brush, qreal width, Qt::PenStyle style = Qt::SolidLine, Qt::PenCapStyle cap = Qt::SquareCap, Qt::PenJoinStyle join = Qt::BevelJoin )
+ * QPen ( const QPen & pen )
+ * ~QPen ()
+ */
 HB_FUNC( QT_QPEN )
 {
    if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
@@ -19,7 +22,6 @@ HB_FUNC( QT_QPEN )
       hb_retptr( ( QPen* ) new QPen() );
    }
 }
-
 </CODE>
 
 QBrush brush () const

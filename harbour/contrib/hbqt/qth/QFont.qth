@@ -1,23 +1,13 @@
-#
-
-enum Capitalization { MixedCase, AllUppercase, AllLowercase, SmallCaps, Capitalize }
-enum SpacingType { PercentageSpacing, AbsoluteSpacing }
-enum Stretch { UltraCondensed, ExtraCondensed, Condensed, SemiCondensed, ..., UltraExpanded }
-enum Style { StyleNormal, StyleItalic, StyleOblique }
-enum StyleHint { AnyStyle, SansSerif, Helvetica, Serif, ..., System }
-enum StyleStrategy { PreferDefault, PreferBitmap, PreferDevice, PreferOutline, ..., PreferQuality }
-enum Weight { Light, Normal, DemiBold, Bold, Black }
-
-
 
 <CODE>
+#include <QtGui/QFont>
 
 /*
-QFont ()
-QFont ( const QString & family, int pointSize = -1, int weight = -1, bool italic = false )
-QFont ( const QFont & font, QPaintDevice * pd )
-QFont ( const QFont & font )
-*/
+ * QFont ()
+ * QFont ( const QString & family, int pointSize = -1, int weight = -1, bool italic = false )
+ * QFont ( const QFont & font, QPaintDevice * pd )
+ * QFont ( const QFont & font )
+ */
 HB_FUNC( QT_QFONT )
 {
    if( HB_IS_STRING( 1 ) )
@@ -32,10 +22,16 @@ HB_FUNC( QT_QFONT )
                                        hb_parl( 4 ) ) );
    }
 }
-
 </CODE>
 
 
+enum Capitalization { MixedCase, AllUppercase, AllLowercase, SmallCaps, Capitalize }
+enum SpacingType { PercentageSpacing, AbsoluteSpacing }
+enum Stretch { UltraCondensed, ExtraCondensed, Condensed, SemiCondensed, ..., UltraExpanded }
+enum Style { StyleNormal, StyleItalic, StyleOblique }
+enum StyleHint { AnyStyle, SansSerif, Helvetica, Serif, ..., System }
+enum StyleStrategy { PreferDefault, PreferBitmap, PreferDevice, PreferOutline, ..., PreferQuality }
+enum Weight { Light, Normal, DemiBold, Bold, Black }
 
 bool bold () const
 Capitalization capitalization () const

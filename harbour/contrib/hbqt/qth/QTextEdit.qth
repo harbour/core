@@ -1,0 +1,84 @@
+
+
+<CODE>
+#include <QtGui/QTextEdit>
+
+
+/*
+
+ */
+HB_FUNC( QT_QTEXTEDIT )
+{
+   if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
+      hb_retptr( ( QTextEdit* ) new QTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+   else
+      hb_retptr( ( QTextEdit* ) new QTextEdit( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+flags AutoFormatting
+enum AutoFormattingFlag { AutoNone, AutoBulletList, AutoAll }
+enum LineWrapMode { NoWrap, WidgetWidth, FixedPixelWidth, FixedColumnWidth }
+
+QTextEdit ( QWidget * parent = 0 )
+QTextEdit ( const QString & text, QWidget * parent = 0 )
+virtual ~QTextEdit ()
+bool acceptRichText () const
+Qt::Alignment alignment () const
+QString anchorAt ( const QPoint & pos ) const
+AutoFormatting autoFormatting () const
+bool canPaste () const
+QMenu * createStandardContextMenu ()
+QMenu * createStandardContextMenu ( const QPoint & position )
+QTextCharFormat currentCharFormat () const
+QFont currentFont () const
+QTextCursor cursorForPosition ( const QPoint & pos ) const
+QRect cursorRect ( const QTextCursor & cursor ) const
+QRect cursorRect () const
+int cursorWidth () const
+QTextDocument * document () const
+QString documentTitle () const
+void ensureCursorVisible ()
+QList<ExtraSelection> extraSelections () const
+bool find ( const QString & exp, QTextDocument::FindFlags options = 0 )
+QString fontFamily () const
+bool fontItalic () const
+qreal fontPointSize () const
+bool fontUnderline () const
+int fontWeight () const
+bool isReadOnly () const
+bool isUndoRedoEnabled () const
+int lineWrapColumnOrWidth () const
+LineWrapMode lineWrapMode () const
+virtual QVariant loadResource ( int type, const QUrl & name )
+void mergeCurrentCharFormat ( const QTextCharFormat & modifier )
+void moveCursor ( QTextCursor::MoveOperation operation, QTextCursor::MoveMode mode = QTextCursor::MoveAnchor )
+bool overwriteMode () const
+void print ( QPrinter * printer ) const
+void setAcceptRichText ( bool accept )
+void setAutoFormatting ( AutoFormatting features )
+void setCurrentCharFormat ( const QTextCharFormat & format )
+void setCursorWidth ( int width )
+void setDocument ( QTextDocument * document )
+void setDocumentTitle ( const QString & title )
+void setExtraSelections ( const QList<ExtraSelection> & selections )
+void setLineWrapColumnOrWidth ( int w )
+void setLineWrapMode ( LineWrapMode mode )
+void setOverwriteMode ( bool overwrite )
+void setReadOnly ( bool ro )
+void setTabChangesFocus ( bool b )
+void setTabStopWidth ( int width )
+void setTextCursor ( const QTextCursor & cursor )
+void setTextInteractionFlags ( Qt::TextInteractionFlags flags )
+void setUndoRedoEnabled ( bool enable )
+void setWordWrapMode ( QTextOption::WrapMode policy )
+bool tabChangesFocus () const
+int tabStopWidth () const
+QColor textBackgroundColor () const
+QColor textColor () const
+QTextCursor textCursor () const
+Qt::TextInteractionFlags textInteractionFlags () const
+QString toHtml () const
+QString toPlainText () const
+QTextOption::WrapMode wordWrapMode () const

@@ -1,0 +1,31 @@
+
+
+<CODE>
+#include <QtGui/QSlider>
+
+
+/*
+ * QSlider ( QWidget * parent = 0 )
+ * QSlider ( Qt::Orientation orientation, QWidget * parent = 0 )
+ * ~QSlider ()
+ */
+HB_FUNC( QT_ )
+{
+   if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
+      hb_retptr( ( QSlider* ) new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
+   else
+      hb_retptr( ( QSlider* ) new QSlider( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+enum TickPosition { NoTicks, TicksBothSides, TicksAbove, TicksBelow, TicksLeft, TicksRight }
+
+
+void setTickInterval ( int ti )
+void setTickPosition ( TickPosition position )
+int tickInterval () const
+TickPosition tickPosition () const
+
+
+

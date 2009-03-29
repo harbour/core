@@ -1,0 +1,33 @@
+
+<CODE>
+#include <QtGui/QMenuBar>
+
+
+/*
+ * QMenuBar ( QWidget * parent = 0 )
+ * ~QMenuBar ()
+ */
+HB_FUNC( QT_QMENUBAR )
+{
+   hb_retptr( ( QMenuBar* ) new QMenuBar( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+QAction * activeAction () const
+QAction * addAction ( const QString & text )
+QAction * addAction ( const QString & text, const QObject * receiver, const char * member )
+void addAction ( QAction * action )
+QAction * addMenu ( QMenu * menu )
+QMenu * addMenu ( const QString & title )
+QMenu * addMenu ( const QIcon & icon, const QString & title )
+QAction * addSeparator ()
+void clear ()
+// QAction * defaultAction () const
+QAction * insertMenu ( QAction * before, QMenu * menu )
+QAction * insertSeparator ( QAction * before )
+bool isDefaultUp () const
+OSMenuRef macMenu ()
+void setActiveAction ( QAction * act )
+// void setDefaultAction ( QAction * act )
+void setDefaultUp ( bool )

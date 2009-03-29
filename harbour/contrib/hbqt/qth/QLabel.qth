@@ -1,0 +1,40 @@
+
+
+<CODE>
+#include <QtGui/QLabel>
+
+
+/*
+ * QLabel ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
+ * QLabel ( const QString & text, QWidget * parent = 0, Qt::WindowFlags f = 0 )
+ * ~QLabel ()
+ */
+HB_FUNC( QT_QLABEL )
+{
+   hb_retptr( ( QLabel* ) new QLabel( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+Qt::Alignment alignment () const
+QWidget * buddy () const
+bool hasScaledContents () const
+int indent () const
+int margin () const
+QMovie * movie () const
+bool openExternalLinks () const
+const QPicture * picture () const
+const QPixmap * pixmap () const
+void setAlignment ( Qt::Alignment )
+void setBuddy ( QWidget * buddy )
+void setIndent ( int )
+void setMargin ( int )
+void setOpenExternalLinks ( bool open )
+void setScaledContents ( bool )
+void setTextFormat ( Qt::TextFormat )
+void setTextInteractionFlags ( Qt::TextInteractionFlags flags )
+void setWordWrap ( bool on )
+QString text () const
+Qt::TextFormat textFormat () const
+Qt::TextInteractionFlags textInteractionFlags () const
+bool wordWrap () const
+

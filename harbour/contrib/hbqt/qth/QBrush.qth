@@ -1,22 +1,24 @@
 <CODE>
+#include <QtGui/QBrush>
+
+
 /*
-QBrush ()
-QBrush ( Qt::BrushStyle style )
-QBrush ( const QColor & color, Qt::BrushStyle style = Qt::SolidPattern )
-QBrush ( Qt::GlobalColor color, Qt::BrushStyle style = Qt::SolidPattern )
-QBrush ( const QColor & color, const QPixmap & pixmap )
-QBrush ( Qt::GlobalColor color, const QPixmap & pixmap )
-QBrush ( const QPixmap & pixmap )
-QBrush ( const QImage & image )
-QBrush ( const QBrush & other )
-QBrush ( const QGradient & gradient )
-~QBrush ()
-*/
+ * QBrush ()
+ * QBrush ( Qt::BrushStyle style )
+ * QBrush ( const QColor & color, Qt::BrushStyle style = Qt::SolidPattern )
+ * QBrush ( Qt::GlobalColor color, Qt::BrushStyle style = Qt::SolidPattern )
+ * QBrush ( const QColor & color, const QPixmap & pixmap )
+ * QBrush ( Qt::GlobalColor color, const QPixmap & pixmap )
+ * QBrush ( const QPixmap & pixmap )
+ * QBrush ( const QImage & image )
+ * QBrush ( const QBrush & other )
+ * QBrush ( const QGradient & gradient )
+ * ~QBrush ()
+ */
 HB_FUNC( QT_QBRUSH )
 {
    hb_retptr( ( QBrush* ) new QBrush() );
 }
-
 </CODE>
 
 const QColor & color () const

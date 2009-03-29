@@ -1,0 +1,59 @@
+
+<CODE>
+#include <QtGui/QMenu>
+
+
+/*
+ * QMenu ( QWidget * parent = 0 )
+ * QMenu ( const QString & title, QWidget * parent = 0 )
+ * ~QMenu ()
+ */
+HB_FUNC( QT_QMENU )
+{
+   if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
+   {
+      hb_retptr( ( QMenu* ) new QMenu( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QMenu* ) new QMenu( hbqt_par_QWidget( 1 ) ) );
+   }
+}
+</CODE>
+
+
+QAction * actionAt ( const QPoint & pt ) const
+QRect actionGeometry ( QAction * act ) const
+QAction * activeAction () const
+QAction * addAction ( const QString & text )
+QAction * addAction ( const QIcon & icon, const QString & text )
+QAction * addAction ( const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )
+QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )
+void addAction ( QAction * action )
+QAction * addMenu ( QMenu * menu )
+QMenu * addMenu ( const QString & title )
+QMenu * addMenu ( const QIcon & icon, const QString & title )
+QAction * addSeparator ()
+void clear ()
+QAction * defaultAction () const
+QAction * exec ()
+QAction * exec ( const QPoint & p, QAction * action = 0 )
+void hideTearOffMenu ()
+QIcon icon () const
+QAction * insertMenu ( QAction * before, QMenu * menu )
+QAction * insertSeparator ( QAction * before )
+bool isEmpty () const
+bool isTearOffEnabled () const
+bool isTearOffMenuVisible () const
+OSMenuRef macMenu ( OSMenuRef merge = 0 )
+QAction * menuAction () const
+void popup ( const QPoint & p, QAction * atAction = 0 )
+bool separatorsCollapsible () const
+void setActiveAction ( QAction * act )
+void setDefaultAction ( QAction * act )
+void setIcon ( const QIcon & icon )
+void setSeparatorsCollapsible ( bool collapse )
+void setTearOffEnabled ( bool )
+void setTitle ( const QString & title )
+QString title () const
+HMENU wceMenu ( bool create = false )

@@ -1,0 +1,78 @@
+
+<CODE>
+#include <QtGui/QColor>
+
+/*
+QColor ()
+QColor ( int r, int g, int b, int a = 255 )
+QColor ( QRgb color )
+QColor ( const QString & name )
+QColor ( const char * name )
+QColor ( const QColor & color )
+QColor ( Qt::GlobalColor color )
+ */
+HB_FUNC( QT_QCOLOR )
+{
+
+}
+</CODE>
+
+
+enum Spec { Rgb, Hsv, Cmyk, Invalid }
+
+int alpha () const
+qreal alphaF () const
+int black () const
+qreal blackF () const
+int blue () const
+qreal blueF () const
+QColor convertTo ( Spec colorSpec ) const
+int cyan () const
+qreal cyanF () const
+QColor darker ( int factor = 200 ) const
+void getCmyk ( int * c, int * m, int * y, int * k, int * a = 0 )
+void getCmykF ( qreal * c, qreal * m, qreal * y, qreal * k, qreal * a = 0 )
+void getHsv ( int * h, int * s, int * v, int * a = 0 ) const
+void getHsvF ( qreal * h, qreal * s, qreal * v, qreal * a = 0 ) const
+void getRgb ( int * r, int * g, int * b, int * a = 0 ) const
+void getRgbF ( qreal * r, qreal * g, qreal * b, qreal * a = 0 ) const
+int green () const
+qreal greenF () const
+int hue () const
+qreal hueF () const
+bool isValid () const
+QColor lighter ( int factor = 150 ) const
+int magenta () const
+qreal magentaF () const
+QString name () const
+int red () const
+qreal redF () const
+QRgb rgb () const
+QRgb rgba () const
+int saturation () const
+qreal saturationF () const
+void setAlpha ( int alpha )
+void setAlphaF ( qreal alpha )
+void setBlue ( int blue )
+void setBlueF ( qreal blue )
+void setCmyk ( int c, int m, int y, int k, int a = 255 )
+void setCmykF ( qreal c, qreal m, qreal y, qreal k, qreal a = 1.0 )
+void setGreen ( int green )
+void setGreenF ( qreal green )
+void setHsv ( int h, int s, int v, int a = 255 )
+void setHsvF ( qreal h, qreal s, qreal v, qreal a = 1.0 )
+void setNamedColor ( const QString & name )
+void setRed ( int red )
+void setRedF ( qreal red )
+void setRgb ( int r, int g, int b, int a = 255 )
+void setRgb ( QRgb rgb )
+void setRgbF ( qreal r, qreal g, qreal b, qreal a = 1.0 )
+void setRgba ( QRgb rgba )
+Spec spec () const
+QColor toCmyk () const
+QColor toHsv () const
+QColor toRgb () const
+int value () const
+qreal valueF () const
+int yellow () const
+qreal yellowF () const

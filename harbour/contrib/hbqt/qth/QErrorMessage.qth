@@ -1,0 +1,17 @@
+
+
+<CODE>
+#include <QtGui/QErrorMessage>
+
+
+/*
+ * QErrorMessage ( QWidget * parent = 0 )
+ * ~QErrorMessage ()
+ */
+HB_FUNC( QT_QERRORMESSAGE )
+{
+   hb_retptr( ( QErrorMessage* ) new QErrorMessage( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+

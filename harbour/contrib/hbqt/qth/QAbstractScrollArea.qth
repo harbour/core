@@ -1,0 +1,34 @@
+
+
+<CODE>
+#include <QtGui/QAbstractScrollArea>
+
+
+/*
+ * QAbstractScrollArea ( QWidget * parent = 0 )
+ * ~QAbstractScrollArea ()
+ */
+#if 0
+HB_FUNC( QT_QABSTRACTSCROLLAREA )
+{
+
+}
+#endif
+</CODE>
+
+void addScrollBarWidget ( QWidget * widget, Qt::Alignment alignment )
+QWidget * cornerWidget () const
+QScrollBar * horizontalScrollBar () const
+Qt::ScrollBarPolicy horizontalScrollBarPolicy () const
+QSize maximumViewportSize () const
+QWidgetList scrollBarWidgets ( Qt::Alignment alignment )
+void setCornerWidget ( QWidget * widget )
+void setHorizontalScrollBar ( QScrollBar * scrollBar )
+void setHorizontalScrollBarPolicy ( Qt::ScrollBarPolicy )
+void setVerticalScrollBar ( QScrollBar * scrollBar )
+void setVerticalScrollBarPolicy ( Qt::ScrollBarPolicy )
+void setViewport ( QWidget * widget )
+QScrollBar * verticalScrollBar () const
+Qt::ScrollBarPolicy verticalScrollBarPolicy () const
+QWidget * viewport () const
+

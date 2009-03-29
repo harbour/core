@@ -8,6 +8,123 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-29 09:03 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  + harbour/contrib/hbqt/doc
+    + Added folder to receive auto-generated Q*.txt documentation
+      files with PRG level functions with parameters and return value like:
+      Qt_QWidget_setContentsMargins( pQWidget, nLeft, nTop, nRight, nBottom ) -> NIL
+
+  + harbour/contrib/hbqt/gensource
+    + Added folder to receive auto generated .cpp sources. 
+      The idea is to have freedom to generate sources and test them 
+      prior to committing to distribution folder.
+    
+  * harbour/contrib/hbqt/hbqt.h
+    + Added more parameter and return macros.
+
+  + harbour/contrib/hbqt/hbqt_utils.c
+    + Added generic conversion routins to support parameters and return values.
+     
+  + harbour/contrib/hbqt/hbqt_qtreewidget.cpp
+  + harbour/contrib/hbqt/hbqt_qtreewidgetitem.cpp
+  * harbour/contrib/hbqt/hbqt_qtreeview.cpp
+
+  * harbour/contrib/hbqt/generator/hbqtgen.prg
+    ! Rearrangement of sequences in .qht files.
+      Implemented project files with .qtp extension.
+      Implemented auto generation of document files with .txt extension.
+         USAGE: hbqtgen.exe @qt45.qtp will generate files as:
+                . 
+                ../gensource/hbqt_Q*.cpp
+                ../doc/Q*.txt
+
+  + harbour/contrib/hbqt/generator/qt45.qtp
+    + Added project file to generate sources and documenttaion for tested widgets.
+
+  + harbour/contrib/hbqt/qth/QAbstractButton.qth
+  + harbour/contrib/hbqt/qth/QAbstractItemView.qth
+  + harbour/contrib/hbqt/qth/QAbstractPrintDialog.qth
+  + harbour/contrib/hbqt/qth/QAbstractScrollArea.qth
+  + harbour/contrib/hbqt/qth/QAbstractSlider.qth
+  + harbour/contrib/hbqt/qth/QAbstractSpinBox.qth
+  + harbour/contrib/hbqt/qth/QAction.qth
+  + harbour/contrib/hbqt/qth/QApplication.qth
+  + harbour/contrib/hbqt/qth/QBoxLayout.qth
+  + harbour/contrib/hbqt/qth/QBrush.qth
+  + harbour/contrib/hbqt/qth/QCalendarWidget.qth
+  + harbour/contrib/hbqt/qth/QCheckBox.qth
+  + harbour/contrib/hbqt/qth/QColor.qth
+  + harbour/contrib/hbqt/qth/QColorDialog.qth
+  + harbour/contrib/hbqt/qth/QComboBox.qth
+  + harbour/contrib/hbqt/qth/QCommandLinkButton.qth
+  + harbour/contrib/hbqt/qth/QCoreApplication.qth
+  + harbour/contrib/hbqt/qth/QDateEdit.qth
+  + harbour/contrib/hbqt/qth/QDateTimeEdit.qth
+  + harbour/contrib/hbqt/qth/QDial.qth
+  + harbour/contrib/hbqt/qth/QDialog.qth
+  + harbour/contrib/hbqt/qth/QDoubleSpinBox.qth
+  + harbour/contrib/hbqt/qth/QErrorMessage.qth
+  + harbour/contrib/hbqt/qth/QFileDialog.qth
+  + harbour/contrib/hbqt/qth/QFocusFrame.qth
+  + harbour/contrib/hbqt/qth/QFont.qth
+  + harbour/contrib/hbqt/qth/QFontComboBox.qth
+  + harbour/contrib/hbqt/qth/QFontDialog.qth
+  + harbour/contrib/hbqt/qth/QFormLayout.qth
+  + harbour/contrib/hbqt/qth/QFrame.qth
+  + harbour/contrib/hbqt/qth/QGroupBox.qth
+  + harbour/contrib/hbqt/qth/QHBoxLayout.qth
+  + harbour/contrib/hbqt/qth/QInputDialog.qth
+  + harbour/contrib/hbqt/qth/QLabel.qth
+  + harbour/contrib/hbqt/qth/QLayout.qth
+  + harbour/contrib/hbqt/qth/QLayoutItem.qth
+  + harbour/contrib/hbqt/qth/QLCDNumber.qth
+  + harbour/contrib/hbqt/qth/QLineEdit.qth
+  + harbour/contrib/hbqt/qth/QListView.qth
+  + harbour/contrib/hbqt/qth/QMainWindow.qth
+  + harbour/contrib/hbqt/qth/QMenu.qth
+  + harbour/contrib/hbqt/qth/QMenuBar.qth
+  + harbour/contrib/hbqt/qth/QMessageBox.qth
+  + harbour/contrib/hbqt/qth/QObject.qth
+  + harbour/contrib/hbqt/qth/QPageSetupDialog.qth
+  + harbour/contrib/hbqt/qth/QPainter.qth
+  + harbour/contrib/hbqt/qth/QPen.qth
+  + harbour/contrib/hbqt/qth/QPrintDialog.qth
+  + harbour/contrib/hbqt/qth/QPrintPreviewDialog.qth
+  + harbour/contrib/hbqt/qth/QProgressBar.qth
+  + harbour/contrib/hbqt/qth/QPushButton.qth
+  + harbour/contrib/hbqt/qth/QRadioButton.qth
+  + harbour/contrib/hbqt/qth/QScrollArea.qth
+  + harbour/contrib/hbqt/qth/QScrollBar.qth
+  + harbour/contrib/hbqt/qth/QSizeGrip.qth
+  + harbour/contrib/hbqt/qth/QSlider.qth
+  + harbour/contrib/hbqt/qth/QSpinBox.qth
+  + harbour/contrib/hbqt/qth/QSplitter.qth
+  + harbour/contrib/hbqt/qth/QTabBar.qth
+  + harbour/contrib/hbqt/qth/QTableView.qth
+  + harbour/contrib/hbqt/qth/QTableWidget.qth
+  + harbour/contrib/hbqt/qth/QTableWidgetItem.qth
+  + harbour/contrib/hbqt/qth/QTabWidget.qth
+  + harbour/contrib/hbqt/qth/QTextEdit.qth
+  + harbour/contrib/hbqt/qth/QTimeEdit.qth
+  + harbour/contrib/hbqt/qth/QToolBar.qth
+  + harbour/contrib/hbqt/qth/QToolBox.qth
+  + harbour/contrib/hbqt/qth/QToolButton.qth
+  + harbour/contrib/hbqt/qth/QTreeView.qth
+  + harbour/contrib/hbqt/qth/QTreeWidget.qth
+  + harbour/contrib/hbqt/qth/QTreeWidgetItem.qth
+  + harbour/contrib/hbqt/qth/QVBoxLayout.qth
+  + harbour/contrib/hbqt/qth/QWidget.qth
+    + Added or changed(4) base header input files to generate sources.
+
+    ; TODO - Create <Makefile> for generated sources.
+           - Generate Classes based on compiled members supporting
+             QT's class hirarchy. As of now generated sources
+             have limited usage.
+
+    ; REQUEST ( Przemek ) - Can you please provide a GTWVT.C like
+             skeleton .cpp which I could use as a base for GTQTC ?
+
+    
 2009-03-29 22:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * config/dos/owatcom.cf
   * config/win/owatcom.cf

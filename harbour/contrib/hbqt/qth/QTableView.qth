@@ -1,0 +1,48 @@
+
+
+<CODE>
+#include <QtGui/QTableView>
+
+
+/*
+ * QTableView ( QWidget * parent = 0 )
+ * ~QTableView ()
+ */
+HB_FUNC( QT_QTABLEVIEW )
+{
+   hb_retptr( ( QTableView* ) new QTableView( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+void clearSpans ()
+int columnAt ( int x ) const
+int columnSpan ( int row, int column ) const
+int columnViewportPosition ( int column ) const
+int columnWidth ( int column ) const
+Qt::PenStyle gridStyle () const
+QHeaderView * horizontalHeader () const
+virtual QModelIndex indexAt ( const QPoint & pos ) const
+bool isColumnHidden ( int column ) const
+bool isCornerButtonEnabled () const
+bool isRowHidden ( int row ) const
+bool isSortingEnabled () const
+int rowAt ( int y ) const
+int rowHeight ( int row ) const
+int rowSpan ( int row, int column ) const
+int rowViewportPosition ( int row ) const
+void setColumnHidden ( int column, bool hide )
+void setColumnWidth ( int column, int width )
+void setCornerButtonEnabled ( bool enable )
+void setGridStyle ( Qt::PenStyle style )
+void setHorizontalHeader ( QHeaderView * header )
+void setRowHeight ( int row, int height )
+void setRowHidden ( int row, bool hide )
+void setSortingEnabled ( bool enable )
+void setSpan ( int row, int column, int rowSpanCount, int columnSpanCount )
+void setVerticalHeader ( QHeaderView * header )
+void setWordWrap ( bool on )
+bool showGrid () const
+void sortByColumn ( int column, Qt::SortOrder order )
+QHeaderView * verticalHeader () const
+bool wordWrap () const

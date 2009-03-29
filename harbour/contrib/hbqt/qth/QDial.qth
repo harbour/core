@@ -1,0 +1,22 @@
+
+
+<CODE>
+#include <QtGui/QDial>
+
+
+/*
+ * QDial ( QWidget * parent = 0 )
+ * ~QDial ()
+ */
+HB_FUNC( QT_QDIAL )
+{
+   hb_retptr( ( QDial* ) new QDial( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+int notchSize () const
+qreal notchTarget () const
+bool notchesVisible () const
+void setNotchTarget ( double target )
+bool wrapping () const
+

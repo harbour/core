@@ -1,0 +1,29 @@
+
+
+<CODE>
+#include <QtGui/QSpinBox>
+
+
+/*
+ * QSpinBox ( QWidget * parent = 0 )
+ */
+HB_FUNC( QT_QSPINBOX )
+{
+   hb_retptr( ( QSpinBox* ) new QSpinBox( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+QString cleanText () const
+int maximum () const
+int minimum () const
+QString prefix () const
+void setMaximum ( int max )
+void setMinimum ( int min )
+void setPrefix ( const QString & prefix )
+void setRange ( int minimum, int maximum )
+void setSingleStep ( int val )
+void setSuffix ( const QString & suffix )
+int singleStep () const
+QString suffix () const
+int value () const

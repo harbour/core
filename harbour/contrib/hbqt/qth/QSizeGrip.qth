@@ -1,0 +1,18 @@
+
+
+<CODE>
+#include <QtGui/QSizeGrip>
+
+
+/*
+ * QSizeGrip ( QWidget * parent )
+ * ~QSizeGrip ()
+ */
+HB_FUNC( QT_ )
+{
+   hb_retptr( ( QSizeGrip* ) new QSizeGrip( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+

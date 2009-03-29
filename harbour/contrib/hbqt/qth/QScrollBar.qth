@@ -1,0 +1,18 @@
+
+
+<CODE>
+#include <QtGui/QScrollBar>
+
+
+/*
+ * QScrollBar ( QWidget * parent = 0 )
+ * QScrollBar ( Qt::Orientation orientation, QWidget * parent = 0 )
+ * ~QScrollBar ()
+ */
+HB_FUNC( QT_ )
+{
+   hb_retptr( ( QScrollBar* ) new QScrollBar( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+

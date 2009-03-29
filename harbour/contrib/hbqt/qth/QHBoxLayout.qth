@@ -1,0 +1,19 @@
+
+
+<CODE>
+#include <QtGui/QHBoxLayout>
+
+
+/*
+ * QHBoxLayout ()
+ * QHBoxLayout ( QWidget * parent )
+ * ~QHBoxLayout ()
+ */
+HB_FUNC( QT_ )
+{
+   hb_retptr( ( QHBoxLayout * ) new QHBoxLayout( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+

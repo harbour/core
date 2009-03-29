@@ -1,0 +1,33 @@
+
+
+<CODE>
+#include <QtGui/QProgressBar>
+
+
+/*
+ * QProgressBar ( QWidget * parent = 0 )
+ */
+HB_FUNC( QT_QPROGRESSBAR )
+{
+   hb_retptr( ( QProgressBar* ) new QProgressBar( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+enum Direction { TopToBottom, BottomToTop }
+
+Qt::Alignment alignment () const
+QString format () const
+bool invertedAppearance ()
+bool isTextVisible () const
+int maximum () const
+int minimum () const
+Qt::Orientation orientation () const
+void setAlignment ( Qt::Alignment alignment )
+void setFormat ( const QString & format )
+void setInvertedAppearance ( bool invert )
+void setTextDirection ( QProgressBar::Direction textDirection )
+void setTextVisible ( bool visible )
+virtual QString text () const
+QProgressBar::Direction textDirection ()
+int value () const

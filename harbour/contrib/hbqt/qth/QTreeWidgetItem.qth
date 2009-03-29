@@ -1,0 +1,90 @@
+
+<CODE>
+#include <QtGui/QTreeWidgetItem>
+
+
+/*
+ * QTreeWidgetItem ( int type = Type )
+ * QTreeWidgetItem ( const QStringList & strings, int type = Type )
+ * QTreeWidgetItem ( QTreeWidget * parent, int type = Type )
+ * QTreeWidgetItem ( QTreeWidget * parent, const QStringList & strings, int type = Type )
+ * QTreeWidgetItem ( QTreeWidget * parent, QTreeWidgetItem * preceding, int type = Type )
+ * QTreeWidgetItem ( QTreeWidgetItem * parent, int type = Type )
+ * QTreeWidgetItem ( QTreeWidgetItem * parent, const QStringList & strings, int type = Type )
+ * QTreeWidgetItem ( QTreeWidgetItem * parent, QTreeWidgetItem * preceding, int type = Type )
+ * QTreeWidgetItem ( const QTreeWidgetItem & other )
+ * virtual ~QTreeWidgetItem ()
+ */
+HB_FUNC( QT_QTREEWIDGETITEM )
+{
+   if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
+   {
+      hb_retptr( ( QTreeWidgetItem* ) new QTreeWidgetItem( hb_parni( 1 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QTreeWidgetItem* ) new QTreeWidgetItem( hbqt_par_QTreeWidget( 1 ), hb_parni( 2 ) ) );
+   }
+}
+</CODE>
+
+enum ChildIndicatorPolicy { ShowIndicator, DontShowIndicator, DontShowIndicatorWhenChildless }
+enum ItemType { Type, UserType }
+
+void addChild ( QTreeWidgetItem * child )
+void addChildren ( const QList<QTreeWidgetItem *> & children )
+QBrush background ( int column ) const
+Qt::CheckState checkState ( int column ) const
+QTreeWidgetItem * child ( int index ) const
+int childCount () const
+QTreeWidgetItem::ChildIndicatorPolicy childIndicatorPolicy () const
+virtual QTreeWidgetItem * clone () const
+int columnCount () const
+virtual QVariant data ( int column, int role ) const
+Qt::ItemFlags flags () const
+QFont font ( int column ) const
+QBrush foreground ( int column ) const
+QIcon icon ( int column ) const
+int indexOfChild ( QTreeWidgetItem * child ) const
+void insertChild ( int index, QTreeWidgetItem * child )
+void insertChildren ( int index, const QList<QTreeWidgetItem *> & children )
+bool isDisabled () const
+bool isExpanded () const
+bool isFirstColumnSpanned () const
+bool isHidden () const
+bool isSelected () const
+QTreeWidgetItem * parent () const
+virtual void read ( QDataStream & in )
+void removeChild ( QTreeWidgetItem * child )
+void setBackground ( int column, const QBrush & brush )
+void setCheckState ( int column, Qt::CheckState state )
+void setChildIndicatorPolicy ( QTreeWidgetItem::ChildIndicatorPolicy policy )
+virtual void setData ( int column, int role, const QVariant & value )
+void setDisabled ( bool disabled )
+void setExpanded ( bool expand )
+void setFirstColumnSpanned ( bool span )
+void setFlags ( Qt::ItemFlags flags )
+void setFont ( int column, const QFont & font )
+void setForeground ( int column, const QBrush & brush )
+void setHidden ( bool hide )
+void setIcon ( int column, const QIcon & icon )
+void setSelected ( bool select )
+void setSizeHint ( int column, const QSize & size )
+void setStatusTip ( int column, const QString & statusTip )
+void setText ( int column, const QString & text )
+void setTextAlignment ( int column, int alignment )
+void setToolTip ( int column, const QString & toolTip )
+void setWhatsThis ( int column, const QString & whatsThis )
+QSize sizeHint ( int column ) const
+void sortChildren ( int column, Qt::SortOrder order )
+QString statusTip ( int column ) const
+QTreeWidgetItem * takeChild ( int index )
+QList<QTreeWidgetItem *> takeChildren ()
+QString text ( int column ) const
+int textAlignment ( int column ) const
+QString toolTip ( int column ) const
+QTreeWidget * treeWidget () const
+int type () const
+QString whatsThis ( int column ) const
+
+

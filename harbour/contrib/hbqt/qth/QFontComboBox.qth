@@ -1,0 +1,26 @@
+
+
+<CODE>
+#include <QtGui/QFontComboBox>
+
+
+/*
+ * QFontComboBox ( QWidget * parent = 0 )
+ * ~QFontComboBox ()
+ */
+HB_FUNC( QT_QFONTCOMBOBOX )
+{
+   hb_retptr( ( QFontComboBox * ) new QFontComboBox( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+enum FontFilter { AllFonts, ScalableFonts, NonScalableFonts, MonospacedFonts, ProportionalFonts }
+flags FontFilters
+
+QFont currentFont () const
+FontFilters fontFilters () const
+void setFontFilters ( FontFilters filters )
+void setWritingSystem ( QFontDatabase::WritingSystem script )
+QFontDatabase::WritingSystem writingSystem () const
+

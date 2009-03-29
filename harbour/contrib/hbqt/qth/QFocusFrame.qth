@@ -1,0 +1,19 @@
+
+
+<CODE>
+#include <QtGui/QFocusFrame>
+
+
+/*
+ * QFocusFrame ( QWidget * parent = 0 )
+ * ~QFocusFrame ()
+ */
+HB_FUNC( QT_QFOCUSFRAME )
+{
+   hb_retptr( ( QFocusFrame* ) new QFocusFrame( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+void setWidget ( QWidget * widget )
+QWidget * widget () const
+

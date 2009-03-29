@@ -1,0 +1,40 @@
+
+
+<CODE>
+#include <QtGui/QBoxLayout>
+
+
+/*
+ * QBoxLayout ( Direction dir, QWidget * parent = 0 )
+ * ~QBoxLayout ()
+ */
+HB_FUNC( QT_QBOXLAYOUT )
+{
+   hb_retptr( ( QBoxLayout* ) new QBoxLayout( ( QBoxLayout::Direction ) hb_parni( 1 ), 
+                                                   hbqt_par_QWidget( 2 ) ) );
+}
+</CODE>
+
+
+enum Direction { LeftToRight, RightToLeft, TopToBottom, BottomToTop }
+
+void addLayout ( QLayout * layout, int stretch = 0 )
+void addSpacerItem ( QSpacerItem * spacerItem )
+void addSpacing ( int size )
+void addStretch ( int stretch = 0 )
+void addStrut ( int size )
+void addWidget ( QWidget * widget, int stretch = 0, Qt::Alignment alignment = 0 )
+Direction direction () const
+void insertLayout ( int index, QLayout * layout, int stretch = 0 )
+void insertSpacerItem ( int index, QSpacerItem * spacerItem )
+void insertSpacing ( int index, int size )
+void insertStretch ( int index, int stretch = 0 )
+void insertWidget ( int index, QWidget * widget, int stretch = 0, Qt::Alignment alignment = 0 )
+virtual void invalidate ()
+void setDirection ( Direction direction )
+void setSpacing ( int spacing )
+void setStretch ( int index, int stretch )
+bool setStretchFactor ( QWidget * widget, int stretch )
+bool setStretchFactor ( QLayout * layout, int stretch )
+int spacing () const
+int stretch ( int index ) const

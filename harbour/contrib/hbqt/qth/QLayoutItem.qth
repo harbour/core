@@ -1,0 +1,39 @@
+
+
+<CODE>
+#include <QtGui/QLayoutItem>
+
+
+/*
+
+ */
+#if 0
+HB_FUNC( QT_QLAYOUTITEM )
+{
+
+}
+#endif
+</CODE>
+
+
+QLayoutItem ( Qt::Alignment alignment = 0 )
+virtual ~QLayoutItem ()
+Qt::Alignment alignment () const
+QSizePolicy::ControlTypes controlTypes () const
+virtual Qt::Orientations expandingDirections () const = 0
+virtual QRect geometry () const = 0
+virtual bool hasHeightForWidth () const
+virtual int heightForWidth ( int w ) const
+virtual void invalidate ()
+virtual bool isEmpty () const = 0
+virtual QLayout * layout ()
+virtual QSize maximumSize () const = 0
+virtual int minimumHeightForWidth ( int w ) const
+virtual QSize minimumSize () const = 0
+void setAlignment ( Qt::Alignment alignment )
+virtual void setGeometry ( const QRect & r ) = 0
+virtual QSize sizeHint () const = 0
+virtual QSpacerItem * spacerItem ()
+virtual QWidget * widget ()
+
+

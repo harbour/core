@@ -1,0 +1,61 @@
+
+
+<CODE>
+#include <QtGui/QInputDialog>
+
+
+/*
+ * QInputDialog ( QWidget * parent = 0, Qt::WindowFlags flags = 0 )
+ * ~QInputDialog ()
+ */
+HB_FUNC( QT_QINPUTDIALOG )
+{
+   hb_retptr( ( QInputDialog * ) new QInputDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+}
+</CODE>
+
+enum InputDialogOption { NoButtons, UseListViewForComboBoxItems }
+flags InputDialogOptions
+enum InputMode { TextInput, IntInput, DoubleInput }
+
+QString cancelButtonText () const
+QStringList comboBoxItems () const
+virtual void done ( int result )
+int doubleDecimals () const
+double doubleMaximum () const
+double doubleMinimum () const
+double doubleValue () const
+InputMode inputMode () const
+int intMaximum () const
+int intMinimum () const
+int intStep () const
+int intValue () const
+bool isComboBoxEditable () const
+QString labelText () const
+QString okButtonText () const
+void open ( QObject * receiver, const char * member )
+InputDialogOptions options () const
+void setCancelButtonText ( const QString & text )
+void setComboBoxEditable ( bool editable )
+void setComboBoxItems ( const QStringList & items )
+void setDoubleDecimals ( int decimals )
+void setDoubleMaximum ( double max )
+void setDoubleMinimum ( double min )
+void setDoubleRange ( double min, double max )
+void setDoubleValue ( double value )
+void setInputMode ( InputMode mode )
+void setIntMaximum ( int max )
+void setIntMinimum ( int min )
+void setIntRange ( int min, int max )
+void setIntStep ( int step )
+void setIntValue ( int value )
+void setLabelText ( const QString & text )
+void setOkButtonText ( const QString & text )
+void setOption ( InputDialogOption option, bool on = true )
+void setOptions ( InputDialogOptions options )
+void setTextEchoMode ( QLineEdit::EchoMode mode )
+void setTextValue ( const QString & text )
+bool testOption ( InputDialogOption option ) const
+QLineEdit::EchoMode textEchoMode () const
+QString textValue () const
+

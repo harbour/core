@@ -1,0 +1,37 @@
+
+<CODE>
+#include <QtGui/QColorDialog>
+
+/*
+ * QColorDialog ( QWidget * parent = 0 )
+ * QColorDialog ( const QColor & initial, QWidget * parent = 0 )
+ * ~QColorDialog ()
+ */
+HB_FUNC( QT_QCOLORDIALOG )
+{
+   if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
+   {
+      hb_retptr( ( QColorDialog* ) new QColorDialog( hb_parni( 1 ), 
+                                            hbqt_par_QWidget( 2 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QColorDialog* ) new QColorDialog( hbqt_par_QWidget( 1 ) ) );
+   }
+}
+</CODE>
+
+enum ColorDialogOption { ShowAlphaChannel, NoButtons, DontUseNativeDialog }
+enum ColorDialogOptions
+
+QColor currentColor () const
+void open ()
+void open ( QObject * receiver, const char * member )
+ColorDialogOptions options () const
+QColor selectedColor () const
+void setCurrentColor ( const QColor & color )
+void setOption ( ColorDialogOption option, bool on = true )
+void setOptions ( ColorDialogOptions options )
+virtual void setVisible ( bool visible )
+bool testOption ( ColorDialogOption option ) const
+

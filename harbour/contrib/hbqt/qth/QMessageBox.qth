@@ -1,0 +1,55 @@
+
+<CODE>
+#include <QtGui/QMessageBox>
+
+
+/*
+ * QMessageBox ( QWidget * parent = 0 )
+ * QMessageBox ( Icon icon, const QString & title, const QString & text, StandardButtons buttons = NoButton, QWidget * parent = 0, Qt::WindowFlags f = Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint )
+ * ~QMessageBox ()
+ */
+HB_FUNC( QT_QMESSAGEBOX )
+{
+   hb_retptr( ( QMessageBox* ) new QMessageBox() );
+}
+</CODE>
+
+
+enum ButtonRole { InvalidRole, AcceptRole, RejectRole, DestructiveRole, ..., ResetRole }
+enum Icon { NoIcon, Question, Information, Warning, Critical }
+enum StandardButton { Ok, Open, Save, Cancel, ..., ButtonMask }
+flags StandardButtons
+
+void addButton ( QAbstractButton * button, ButtonRole role )
+QPushButton * addButton ( const QString & text, ButtonRole role )
+QPushButton * addButton ( StandardButton button )
+QAbstractButton * button ( StandardButton which ) const
+ButtonRole buttonRole ( QAbstractButton * button ) const
+QList<QAbstractButton *> buttons () const
+QAbstractButton * clickedButton () const
+QPushButton * defaultButton () const
+QString detailedText () const
+QAbstractButton * escapeButton () const
+Icon icon () const
+QPixmap iconPixmap () const
+QString informativeText () const
+void open ( QObject * receiver, const char * member )
+void removeButton ( QAbstractButton * button )
+void setDefaultButton ( QPushButton * button )
+void setDefaultButton ( StandardButton button )
+void setDetailedText ( const QString & text )
+void setEscapeButton ( QAbstractButton * button )
+void setEscapeButton ( StandardButton button )
+void setIcon ( Icon )
+void setIconPixmap ( const QPixmap & pixmap )
+void setInformativeText ( const QString & text )
+void setStandardButtons ( StandardButtons buttons )
+void setText ( const QString & text )
+void setTextFormat ( Qt::TextFormat format )
+void setWindowModality ( Qt::WindowModality windowModality )
+void setWindowTitle ( const QString & title )
+StandardButton standardButton ( QAbstractButton * button ) const
+StandardButtons standardButtons () const
+QString text () const
+Qt::TextFormat textFormat () const
+

@@ -94,6 +94,9 @@ CPP_SOURCES=\
 	hbqt_qwizard.cpp \
 	hbqt_slots.cpp \
 	moc_slots.cpp \
+	hbqt_utils.cpp \
+	hbqt_qtreewidget.cpp \
+	hbqt_qtreewidgetitem.cpp \
 
 
 C_HEADERS=\

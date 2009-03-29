@@ -1,0 +1,134 @@
+
+
+<CODE>
+
+#include "hbapi.h"
+#include "hbinit.h"
+#include "hbdefs.h"
+#include "hbapifs.h"
+#include "hbapiitm.h"
+#include "hbstack.h"
+#include "hbvm.h"
+#include "hbdate.h"
+#include "hbapierr.h"
+
+#include <QtGui/QApplication>
+
+void release_codeblocks();
+
+static QApplication * app = NULL;
+static bool hbqtinit = false;
+
+/*
+ * QApplication ( int & argc, char ** argv )
+ * QApplication ( int & argc, char ** argv, bool GUIenabled )
+ * QApplication ( int & argc, char ** argv, Type type )
+ * QApplication ( Display * display, Qt::HANDLE visual = 0, Qt::HANDLE colormap = 0 )
+ * QApplication ( Display * display, int & argc, char ** argv, Qt::HANDLE visual = 0, Qt::HANDLE colormap = 0 )
+ * virtual ~QApplication ()
+*/
+
+#if 0
+HB_FUNC( QT_QAPPLICATION )
+{
+   int i_argc = 0;
+   char** c_argv = NULL;
+   app = new QApplication( i_argc, c_argv );
+   hb_retptr( ( QApplication* ) app);
+}
+#endif
+
+HB_FUNC( QT_QAPPLICATION )
+{
+#if 0
+   int i_argc;
+   char ** c_argv;
+   i_argc = hb_cmdargARGC();
+   c_argv = hb_cmdargARGV();
+   app = new QApplication( i_argc, c_argv );
+#endif
+   hb_retptr( ( QApplication * ) app );
+}
+
+static void hbqt_Exit( void * cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   release_codeblocks();
+}
+
+static void hbqt_Init( void * cargo )
+{
+   int argc;
+   char ** argv;
+
+   HB_SYMBOL_UNUSED( cargo );
+
+   argc = hb_cmdargARGC();
+   argv = hb_cmdargARGV();
+
+   app = new QApplication( argc, argv );
+
+   if( app )
+      hbqtinit = true;
+
+   if( ! hbqtinit )
+      hb_errInternal( 11001, "hbqt_Init(): QT Initilization Error.", NULL, NULL );
+
+   hb_cmdargInit( argc, argv );
+
+   hb_vmAtExit( hbqt_Exit, NULL );
+}
+
+HB_CALL_ON_STARTUP_BEGIN( _hb_hbqt_init_ )
+   hb_vmAtInit( hbqt_Init, NULL );
+HB_CALL_ON_STARTUP_END( _hb_hbqt_init_ )
+
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup _hb_hbqt_init_
+#elif defined( HB_MSC_STARTUP )
+   #if defined( HB_OS_WIN_64 )
+      #pragma section( HB_MSC_START_SEGMENT, long, read )
+   #endif
+   #pragma data_seg( HB_MSC_START_SEGMENT )
+   static HB_$INITSYM hb_auto_hbqt_init_ = _hb_hbqt_init_;
+   #pragma data_seg()
+#endif
+
+HB_FUNC( QT_QAPPLICATION_EXEC )
+{
+   hb_retni( app->exec() );
+}
+
+HB_FUNC( QT_QAPPLICATION_SETSTYLE )
+{
+   app->setStyle( hb_parc( 2 ) );
+}
+
+HB_FUNC( QT_QAPPLICATION_QUIT )
+{
+   app->quit();
+}
+
+HB_FUNC( QT_QAPPLICATION_ABOUTQT )
+{
+   app->aboutQt();
+}
+
+</CODE>
+
+enum ColorSpec { NormalColor, CustomColor, ManyColor }
+enum Type { Tty, GuiClient, GuiServer }
+
+virtual void commitData ( QSessionManager & manager )
+QInputContext * inputContext () const
+bool isSessionRestored () const
+virtual bool macEventFilter ( EventHandlerCallRef, EventRef )
+// virtual bool qwsEventFilter ( QWSEvent * )
+// int qwsProcessEvent ( QWSEvent * )
+// void qwsSetCustomColors ( QRgb * colortable, int start, int numColors )
+virtual void saveState ( QSessionManager & manager )
+QString sessionId () const
+QString sessionKey () const
+void setInputContext ( QInputContext * inputContext )
+QString styleSheet () const

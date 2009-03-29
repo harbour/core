@@ -1,0 +1,28 @@
+
+
+<CODE>
+#include <QtGui/QCheckBox>
+
+
+/*
+ * QCheckBox ( QWidget * parent = 0 )
+ * QCheckBox ( const QString & text, QWidget * parent = 0 )
+ */
+HB_FUNC( QT_QCHECKBOX )
+{
+   if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
+   {
+      hb_retptr( ( QCheckBox* ) new QCheckBox( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QCheckBox* ) new QCheckBox( hbqt_par_QWidget( 1 ) ) );
+   }
+}
+</CODE>
+
+
+Qt::CheckState checkState () const
+bool isTristate () const
+void setCheckState ( Qt::CheckState state )
+void setTristate ( bool y = true )

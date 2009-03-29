@@ -1,0 +1,25 @@
+
+
+<CODE>
+#include  <QtGui/QDialog>
+
+
+/*
+ * QDialog ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
+ * ~QDialog ()
+ */
+HB_FUNC( QT_QDIALOG )
+{
+   hb_retptr( new QDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+}
+</CODE>
+
+
+enum DialogCode { Accepted, Rejected }
+
+bool isSizeGripEnabled () const
+int result () const
+void setModal ( bool modal )
+void setResult ( int i )
+void setSizeGripEnabled ( bool )
+

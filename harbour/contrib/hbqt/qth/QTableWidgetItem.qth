@@ -1,0 +1,69 @@
+
+
+<CODE>
+#include <QtGui/QTableWidgetItem>
+
+
+/*
+ * QTableWidgetItem ( int type = Type )
+ * QTableWidgetItem ( const QString & text, int type = Type )
+ * QTableWidgetItem ( const QIcon & icon, const QString & text, int type = Type )
+ * QTableWidgetItem ( const QTableWidgetItem & other )
+ * virtual ~QTableWidgetItem ()
+ */
+HB_FUNC( QT_TABLEWIDGETITEM )
+{
+   if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) )
+   {
+      hb_retptr( ( QTableWidgetItem* ) new QTableWidgetItem( hbqt_par_QString( 1 ), hb_parni( 2 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QTableWidgetItem* ) new QTableWidgetItem( hb_parni( 1 ) ) );
+   }
+   
+   #if 0
+   hb_retptr( ( QTableWidgetItem* ) new QTableWidgetItem( QIcon( hbqt_par_QString( 1 ) ),hbqt_par_QString( 2 ), hb_parni( 3 ) ) );
+   hb_retptr( ( QTableWidgetItem* ) new QTableWidgetItem( hbqt_par_QTableWidgetItem( 1 ) ) );
+   #endif
+}
+</CODE>
+
+
+enum ItemType { Type, UserType }
+
+QBrush background () const
+Qt::CheckState checkState () const
+virtual QTableWidgetItem * clone () const
+int column () const
+virtual QVariant data ( int role ) const
+Qt::ItemFlags flags () const
+QFont font () const
+QBrush foreground () const
+QIcon icon () const
+bool isSelected () const
+virtual void read ( QDataStream & in )
+int row () const
+void setBackground ( const QBrush & brush )
+void setCheckState ( Qt::CheckState state )
+virtual void setData ( int role, const QVariant & value )
+void setFlags ( Qt::ItemFlags flags )
+void setFont ( const QFont & font )
+void setForeground ( const QBrush & brush )
+void setIcon ( const QIcon & icon )
+void setSelected ( bool select )
+void setSizeHint ( const QSize & size )
+void setStatusTip ( const QString & statusTip )
+void setText ( const QString & text )
+void setTextAlignment ( int alignment )
+void setToolTip ( const QString & toolTip )
+void setWhatsThis ( const QString & whatsThis )
+QSize sizeHint () const
+QString statusTip () const
+QTableWidget * tableWidget () const
+QString text () const
+int textAlignment () const
+QString toolTip () const
+int type () const
+QString whatsThis () const
+virtual void write ( QDataStream & out ) const

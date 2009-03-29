@@ -1,0 +1,57 @@
+<CODE>
+#include <QtGui/QTreeView>
+
+
+/*
+ * QTreeView ( QWidget * parent = 0 )
+ * ~QTreeView ()
+ */
+HB_FUNC( QT_QTREEVIEW )
+{
+   hb_retptr( ( QTreeView* ) new QTreeView( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+bool allColumnsShowFocus () const
+int autoExpandDelay () const
+int columnAt ( int x ) const
+int columnViewportPosition ( int column ) const
+int columnWidth ( int column ) const
+bool expandsOnDoubleClick () const
+QHeaderView * header () const
+int indentation () const
+QModelIndex indexAbove ( const QModelIndex & index ) const
+QModelIndex indexBelow ( const QModelIndex & index ) const
+bool isAnimated () const
+bool isColumnHidden ( int column ) const
+bool isExpanded ( const QModelIndex & index ) const
+bool isFirstColumnSpanned ( int row, const QModelIndex & parent ) const
+bool isHeaderHidden () const
+bool isRowHidden ( int row, const QModelIndex & parent ) const
+bool isSortingEnabled () const
+bool itemsExpandable () const
+bool rootIsDecorated () const
+virtual void scrollTo ( const QModelIndex & index, ScrollHint hint = EnsureVisible )
+void setAllColumnsShowFocus ( bool enable )
+void setAnimated ( bool enable )
+void setAutoExpandDelay ( int delay )
+void setColumnHidden ( int column, bool hide )
+void setColumnWidth ( int column, int width )
+void setExpanded ( const QModelIndex & index, bool expanded )
+void setExpandsOnDoubleClick ( bool enable )
+void setFirstColumnSpanned ( int row, const QModelIndex & parent, bool span )
+void setHeader ( QHeaderView * header )
+void setHeaderHidden ( bool hide )
+void setIndentation ( int i )
+void setItemsExpandable ( bool enable )
+void setRootIsDecorated ( bool show )
+void setRowHidden ( int row, const QModelIndex & parent, bool hide )
+void setSortingEnabled ( bool enable )
+void setUniformRowHeights ( bool uniform )
+void setWordWrap ( bool on )
+void sortByColumn ( int column, Qt::SortOrder order )
+bool uniformRowHeights () const
+virtual QRect visualRect ( const QModelIndex & index ) const
+bool wordWrap () const
+

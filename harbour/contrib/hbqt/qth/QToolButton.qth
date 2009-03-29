@@ -1,0 +1,27 @@
+
+<CODE>
+#include <QtGui/QToolButton>
+
+
+/*
+ * QToolButton ( QWidget * parent = 0 )
+ * ~QToolButton ()
+ */
+HB_FUNC( QT_QTOOLBUTTON )
+{
+   hb_retptr( ( QToolButton* ) new QToolButton( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+enum ToolButtonPopupMode { DelayedPopup, MenuButtonPopup, InstantPopup }
+
+Qt::ArrowType arrowType () const
+bool autoRaise () const
+QAction * defaultAction () const
+QMenu * menu () const
+ToolButtonPopupMode popupMode () const
+void setArrowType ( Qt::ArrowType type )
+void setAutoRaise ( bool enable )
+void setMenu ( QMenu * menu )
+void setPopupMode ( ToolButtonPopupMode mode )
+Qt::ToolButtonStyle toolButtonStyle () const

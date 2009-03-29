@@ -1,0 +1,72 @@
+
+
+<CODE>
+#include <QtGui/QAction>
+
+
+/*
+ * QAction ( QObject * parent )
+ * QAction ( const QString & text, QObject * parent )
+ * QAction ( const QIcon & icon, const QString & text, QObject * parent )
+ * ~QAction ()
+ */
+HB_FUNC( QT_QACTION )
+{
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( new QAction( hbqt_par_QObject( 1 ) ) );
+   else if( HB_ISPOINTER( 2 ) )
+      hb_retptr( new QAction( hbqt_par_QString( 1 ), hbqt_par_QObject( 2 ) ) );
+   else if( HB_ISPOINTER( 3 ) )
+      hb_retptr( new QAction( hbqt_par_QIcon( 1 ), hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ) ) );
+}
+</CODE>
+
+
+enum ActionEvent { Trigger, Hover }
+enum MenuRole { NoRole, TextHeuristicRole, ApplicationSpecificRole, AboutQtRole, ..., QuitRole }
+
+QActionGroup * actionGroup () const
+void activate ( ActionEvent event )
+QList<QGraphicsWidget *> associatedGraphicsWidgets () const
+QList<QWidget *> associatedWidgets () const
+bool autoRepeat () const
+QVariant data () const
+QFont font () const
+QIcon icon () const
+QString iconText () const
+bool isCheckable () const
+bool isChecked () const
+bool isEnabled () const
+bool isIconVisibleInMenu () const
+bool isSeparator () const
+bool isVisible () const
+QMenu * menu () const
+MenuRole menuRole () const
+QWidget * parentWidget () const
+void setActionGroup ( QActionGroup * group )
+void setAutoRepeat ( bool )
+void setCheckable ( bool )
+void setData ( const QVariant & userData )
+void setFont ( const QFont & font )
+void setIcon ( const QIcon & icon )
+void setIconText ( const QString & text )
+void setIconVisibleInMenu ( bool visible )
+void setMenu ( QMenu * menu )
+void setMenuRole ( MenuRole menuRole )
+void setSeparator ( bool b )
+void setShortcut ( const QKeySequence & shortcut )
+void setShortcutContext ( Qt::ShortcutContext context )
+void setShortcuts ( const QList<QKeySequence> & shortcuts )
+void setShortcuts ( QKeySequence::StandardKey key )
+void setStatusTip ( const QString & statusTip )
+void setText ( const QString & text )
+void setToolTip ( const QString & tip )
+void setWhatsThis ( const QString & what )
+QKeySequence shortcut () const
+Qt::ShortcutContext shortcutContext () const
+QList<QKeySequence> shortcuts () const
+bool showStatusText ( QWidget * widget = 0 )
+QString statusTip () const
+QString text () const
+QString toolTip () const
+QString whatsThis () const
