@@ -83,6 +83,8 @@
    #include <malloc.h>
 */
 
+#define HB_STACK_PRELOAD
+
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -101,7 +103,8 @@
    #undef HB_FM_DL_ALLOC
    #undef HB_FM_WIN_ALLOC
 #elif !defined( HB_FM_DL_ALLOC ) && !defined( HB_FM_WIN_ALLOC )
-   #if defined( _MSC_VER ) || defined( __BORLANDC__ ) || defined( __MINGW32__ )
+   #if defined( _MSC_VER ) || defined( __BORLANDC__ ) || defined( __MINGW32__ ) || \
+       ( defined( HB_FM_DLMT_ALLOC ) && defined( HB_MT_VM ) )
       #define HB_FM_DL_ALLOC
    #else
       /* #define HB_FM_DL_ALLOC */
@@ -124,6 +127,12 @@
 #  define REALLOC_ZERO_BYTES_FREES
 #  if defined( HB_MT_VM )
 #     define USE_LOCKS  1
+#     if defined( HB_FM_DLMT_ALLOC )
+#        define ONLY_MSPACES  1
+#        define FOOTERS       1
+#     endif
+#  else
+#     undef HB_FM_DLMT_ALLOC
 #  endif
 #  if defined( __BORLANDC__ )
 #     pragma warn -aus
@@ -136,7 +145,7 @@
 #     define ABORT TerminateProcess( GetCurrentProcess(), 0 )
 #  elif defined( __POCC__ ) && !defined( InterlockedCompareExchangePointer )
 #     define InterlockedCompareExchangePointer
-#  elif defined( _MSC_VER ) && !defined( USE_DL_PREFIX )
+#  elif defined( _MSC_VER ) && !defined( USE_DL_PREFIX ) && !defined( HB_FM_DLMT_ALLOC )
 #     define USE_DL_PREFIX
 #  endif
 #  include "dlmalloc.c"
@@ -148,27 +157,35 @@
 #     pragma warn +prc
 #     pragma warn +rch
 #  endif
-#  if defined( USE_DL_PREFIX )
+#  if defined( HB_FM_DLMT_ALLOC )
+#     define malloc( n )         mspace_malloc( hb_mspace(), ( n ) )
+#     define realloc( p, n )     mspace_realloc( NULL, ( p ), ( n ) )
+#     define free( p )           mspace_free( NULL, ( p ) )
+#  elif defined( USE_DL_PREFIX )
 #     define malloc( n )         dlmalloc( ( n ) )
 #     define realloc( p, n )     dlrealloc( ( p ), ( n ) )
 #     define free( p )           dlfree( ( p ) )
 #  endif
-#elif defined( HB_FM_WIN_ALLOC ) && defined( HB_OS_WIN )
-#  if defined( HB_FM_LOCALALLOC )
-#     define malloc( n )      ( void * ) LocalAlloc( LMEM_FIXED, ( n ) )
-#     define realloc( p, n )  ( void * ) LocalReAlloc( ( HLOCAL ) ( p ), ( n ), LMEM_MOVEABLE )
-#     define free( p )        LocalFree( ( HLOCAL ) ( p ) )
-#  else
-      static HANDLE s_hProcessHeap = NULL;
-#     define HB_FM_NEED_INIT
-#     define HB_FM_HEAP_INIT
-#     define malloc( n )      ( void * ) HeapAlloc( s_hProcessHeap, 0, ( n ) )
-#     define realloc( p, n )  ( void * ) HeapReAlloc( s_hProcessHeap, 0, ( void * ) ( p ), ( n ) )
-#     define free( p )        HeapFree( s_hProcessHeap, 0, ( void * ) ( p ) )
+#else
+#  undef HB_FM_DLMT_ALLOC
+#  if defined( HB_FM_WIN_ALLOC ) && defined( HB_OS_WIN )
+#     if defined( HB_FM_LOCALALLOC )
+#        define malloc( n )      ( void * ) LocalAlloc( LMEM_FIXED, ( n ) )
+#        define realloc( p, n )  ( void * ) LocalReAlloc( ( HLOCAL ) ( p ), ( n ), LMEM_MOVEABLE )
+#        define free( p )        LocalFree( ( HLOCAL ) ( p ) )
+#     else
+         static HANDLE s_hProcessHeap = NULL;
+#        define HB_FM_NEED_INIT
+#        define HB_FM_HEAP_INIT
+#        define malloc( n )      ( void * ) HeapAlloc( s_hProcessHeap, 0, ( n ) )
+#        define realloc( p, n )  ( void * ) HeapReAlloc( s_hProcessHeap, 0, ( void * ) ( p ), ( n ) )
+#        define free( p )        HeapFree( s_hProcessHeap, 0, ( void * ) ( p ) )
+#     endif
 #  endif
 #endif
 
 #if defined( HB_MT_VM ) && ( defined( HB_FM_STATISTICS ) || \
+    defined( HB_FM_DLMT_ALLOC ) || \
     !defined( HB_ATOM_INC ) || !defined( HB_ATOM_DEC ) )
 
    static HB_CRITICAL_NEW( s_fmMtx );
@@ -306,6 +323,116 @@ typedef void * PHB_MEMINFO;
 #  define HB_ATOM_SET( p, n ) ( (*(p)) = (n) )
 #endif
 
+
+#if defined( HB_FM_DLMT_ALLOC )
+
+#  if !defined( HB_MSPACE_COUNT )
+#     define HB_MSPACE_COUNT  16
+#  endif
+
+typedef struct
+{
+   int      count;
+   mspace * ms;
+} HB_MSPACE, * PHB_MSPACE;
+
+static mspace s_gm = NULL;
+static HB_MSPACE s_mspool[ HB_MSPACE_COUNT ];
+
+static mspace hb_mspace( void )
+{
+   HB_STACK_TLS_PRELOAD
+
+   if( hb_stackId() && hb_stack.allocator )
+      return ( ( PHB_MSPACE ) hb_stack.allocator )->ms;
+
+   if( !s_gm )
+      s_gm = create_mspace( 0, 1 );
+
+   return s_gm;
+}
+
+static void hb_mspace_cleanup( void )
+{
+   int i;
+
+   s_gm = NULL;
+   for( i = 0; i < HB_MSPACE_COUNT; ++i )
+   {
+      if( s_mspool[ i ].ms )
+      {
+         destroy_mspace( s_mspool[ i ].ms );
+         s_mspool[ i ].ms = NULL;
+         s_mspool[ i ].count = 0;
+      }
+   }
+}
+
+#elif defined( HB_FM_DL_ALLOC ) && defined( USE_DL_PREFIX )
+
+static void dlmalloc_destroy( void )
+{
+   if( ok_magic(gm) )
+   {
+      msegmentptr sp = &gm->seg;
+      while(sp != 0 )
+      {
+         char* base = sp->base;
+         size_t size = sp->size;
+         flag_t flag = sp->sflags;
+         sp = sp->next;
+         if( (flag & IS_MMAPPED_BIT) && !(flag & EXTERN_BIT) )
+            CALL_MUNMAP(base, size);
+      }
+   }
+}
+
+#endif
+
+void hb_xinit_thread( void )
+{
+#if defined( HB_FM_DLMT_ALLOC )
+   HB_STACK_TLS_PRELOAD
+
+   if( hb_stack.allocator == NULL )
+   {
+      HB_FM_LOCK
+      if( s_mspool[ 0 ].ms == NULL && s_gm )
+      {
+         s_mspool[ 0 ].count = 1;
+         s_mspool[ 0 ].ms = s_gm;
+         hb_stack.allocator = ( void * ) &s_mspool[ 0 ];
+      }
+      else
+      {
+         int i, imin = 0;
+         for( i = 1; i < HB_MSPACE_COUNT; ++i )
+         {
+            if( s_mspool[ i ].count < s_mspool[ imin ].count )
+               imin = i;
+         }
+         if( s_mspool[ imin ].ms == NULL )
+            s_mspool[ imin ].ms = create_mspace( 0, 1 );
+         s_mspool[ imin ].count++;
+         hb_stack.allocator = ( void * ) &s_mspool[ imin ];
+      }
+      HB_FM_UNLOCK
+   }
+#endif
+}
+
+void hb_xexit_thread( void )
+{
+#if defined( HB_FM_DLMT_ALLOC )
+   if( hb_stack.allocator != NULL )
+   {
+      HB_FM_LOCK
+      ( ( PHB_MSPACE ) hb_stack.allocator )->count--;
+      hb_stack.allocator = NULL;
+      HB_FM_UNLOCK
+   }
+#endif
+}
 
 void hb_xsetfilename( char * szValue )
 {
@@ -795,25 +922,6 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
 #endif /* HB_FM_NEED_INIT */
 }
 
-#if defined( HB_FM_DL_ALLOC ) && defined( USE_DL_PREFIX )
-static void dlmalloc_destroy( void )
-{
-   if( ok_magic(gm) )
-   {
-      msegmentptr sp = &gm->seg;
-      while(sp != 0 )
-      {
-         char* base = sp->base;
-         size_t size = sp->size;
-         flag_t flag = sp->sflags;
-         sp = sp->next;
-         if( (flag & IS_MMAPPED_BIT) && !(flag & EXTERN_BIT) )
-            CALL_MUNMAP(base, size);
-      }
-   }
-}
-#endif
-
 /* Returns pointer to string containing printable version
    of pMem memory block */
 
@@ -931,7 +1039,9 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
    }
 
 #if defined( HB_FM_DL_ALLOC )
-#  if defined( USE_DL_PREFIX )
+#  if defined( HB_FM_DLMT_ALLOC )
+      hb_mspace_cleanup();
+#  elif defined( USE_DL_PREFIX )
       dlmalloc_destroy();
 #  else
       malloc_trim( 0 );
@@ -946,7 +1056,9 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
    HB_TRACE(HB_TR_DEBUG, ("hb_xexit()"));
 
 #if defined( HB_FM_DL_ALLOC )
-#  if defined( USE_DL_PREFIX )
+#  if defined( HB_FM_DLMT_ALLOC )
+      hb_mspace_cleanup();
+#  elif defined( USE_DL_PREFIX )
       dlmalloc_destroy();
 #  else
       malloc_trim( 0 );

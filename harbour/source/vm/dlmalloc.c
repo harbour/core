@@ -4566,6 +4566,7 @@ void mspace_free(mspace msp, void* mem) {
     mchunkptr p  = mem2chunk(mem);
 #if FOOTERS
     mstate fm = get_mstate_for(p);
+    ( void ) msp;
 #else /* FOOTERS */
     mstate fm = (mstate)msp;
 #endif /* FOOTERS */

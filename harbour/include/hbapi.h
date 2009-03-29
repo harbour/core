@@ -493,6 +493,10 @@ extern HB_EXPORT ULONG  hb_xsize( void * pMem );                    /* returns t
 extern HB_EXPORT ULONG  hb_xquery( USHORT uiMode );                 /* Query different types of memory information */
 extern HB_EXPORT void   hb_xsetfilename( char * szValue );
 extern HB_EXPORT void   hb_xsetinfo( char * szValue );
+#ifdef _HB_API_INTERNAL_
+extern void hb_xinit_thread( void );
+extern void hb_xexit_thread( void );
+#endif
 
 extern HB_EXPORT HB_VMHANDLE hb_xvalloc( ULONG nSize, USHORT nFlags );
 extern HB_EXPORT void        hb_xvfree( HB_VMHANDLE h );

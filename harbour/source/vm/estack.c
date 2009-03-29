@@ -351,6 +351,7 @@ void hb_stackInit( void )
    {
       HB_STACK_TLS_PRELOAD
       hb_stack_init( &hb_stack );
+      hb_xinit_thread();
    }
 }
 
@@ -361,7 +362,7 @@ void hb_stackFree( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_stackFree()"));
 
    hb_stack_free( &hb_stack );
-
+   hb_xexit_thread();
 #if defined( HB_MT_VM )
    hb_stack_dealloc();
 #endif

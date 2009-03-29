@@ -8,6 +8,32 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-29 19:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/fm.c
+    + added support for thread local memory allocators by using MSPACE
+      mechanism in DLALLOC.
+      It can be enabled by compiling Harbour with HB_FM_DLMT_ALLOC macro.
+      By default up to 16 (HB_MSPACE_COUNT macro) independent memory
+      allocators is dynamically created for new threads. When more threads
+      is used then allocators are shared between them and HVM tries to
+      balance used allocators to reduce number of threads using the
+      same allocator.
+      It should give noticeable scalability improvement in some OS-es
+      where default memory manages has pure MT performance.
+      Please try to compiler speedtst.prg with Harbour compiled with
+      and without HB_FM_DLMT_ALLOC and compare results in this test:
+         speedtst --thread=2 --scale
+      using real multiCPU machine.
+
+  * harbour/source/vm/dlmalloc.c
+    * pacified warning when FOOTERS are enabled
+
+  * harbour/source/vm/garbage.c
+    * cleanup comment
+
 2009-03-29 09:03 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvgsink.c
     ! Fixed remaining non-ANSI C comments. Just had been overlooked!

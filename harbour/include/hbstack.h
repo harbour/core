@@ -184,6 +184,7 @@ typedef struct
    void *     pStackLst;      /* this stack entry in stack linked list */
    HB_IOERRORS IOErrors;      /* MT safe buffer for IO errors */
    BYTE *     byDirBuffer;    /* MT safe buffer for hb_fsCurDir() results */
+   void *     allocator;      /* memory manager global struct pointer */
 #endif
 } HB_STACK, * PHB_STACK;
 

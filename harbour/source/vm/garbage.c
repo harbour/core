@@ -72,9 +72,9 @@
 #  include "hbthread.h"
 #  include "hbatomic.h"
 
-/* Use spinlock instead of mutex in OS2 builds */
+/* Use spinlock instead of mutex */
 
-#  if defined( HB_SPINLOCK_INIT )
+#  if defined( HB_SPINLOCK_INIT ) && 1
 
       HB_SPINLOCK_T s_gcSpinLock = HB_SPINLOCK_INIT;
 #     define HB_GC_LOCK       HB_SPINLOCK_ACQUIRE( &s_gcSpinLock );
