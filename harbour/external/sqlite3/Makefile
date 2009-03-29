@@ -16,6 +16,9 @@ endif
 ifeq ($(HB_ARCHITECTURE),os2)
 HB_WITH_SQLITE3=yes
 endif
+ifeq ($(HB_COMPILER),bcc)
+HB_WITH_SQLITE3=no
+endif
 endif
 
 ifeq ($(HB_WITH_SQLITE3),yes)

@@ -8,6 +8,43 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-29 11:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+  * external/Makefile
+  + external/libhpdf/*
+  + external/libpng/*
+    + Added libharu and libpng to Harbour repository.
+      Now it's possible to use libhpdf as static lib on all
+      platforms. This is useful because this lib isn't yet part
+      of Linux distros.
+      libpng is only built for win/dos/os2 platforms.
+      It's possible to override libpng location by using
+      HB_INC_LIBPNG envvar.
+
+  * contrib/hbhpdf/Makefile
+    + Look for libharu headers in /external dir.
+
+  * external/sqlite3/Makefile
+    - Disabled for bcc. Latest sqlite3 version breaks with this compiler:
+      ---
+      Error E2293 ../../sqlite3.c 29156: ) expected in function winCurrentTime
+      Warning W8013 ../../sqlite3.c 29157: Possible use of 'timeW' before definition in function winCurrentTime
+      Error E2379 ../../sqlite3.c 29157: Statement missing ; in function winCurrentTime
+      Error E2379 ../../sqlite3.c 29158: Statement missing ; in function winCurrentTime
+      Error E2379 ../../sqlite3.c 29160: Statement missing ; in function winCurrentTime
+      Error E2293 ../../sqlite3.c 29161: ) expected in function winCurrentTime
+      Error E2379 ../../sqlite3.c 29162: Statement missing ; in function winCurrentTime
+      Error E2293 ../../sqlite3.c 29163: ) expected in function winCurrentTime
+      Warning W8057 ../../sqlite3.c 29171: Parameter 'prNow' is never used in function winCurrentTime
+      *** 7 errors in Compile ***
+      ---
+      bcc users can report this problem here:
+      http://www.sqlite.org/cvstrac/tktnew
+
+  + tests/bnch_win.bat
+  - tests/bnchmark
+    * Moved bnch_win.bat to tests.
+
 2009-03-28 21:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Added autofilling CCPREFIX on Windows platform when

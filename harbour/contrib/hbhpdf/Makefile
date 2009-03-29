@@ -10,7 +10,7 @@ ifneq ($(HB_ARCHITECTURE),dos)
 
 ifeq ($(HB_INC_LIBHARU),)
 ifeq ($(HB_XBUILD),)
-HB_INC_LIBHARU = /usr/include /usr/local/include
+HB_INC_LIBHARU = /usr/include /usr/local/include $(TOP)$(ROOT)external/libhpdf
 endif
 endif
 

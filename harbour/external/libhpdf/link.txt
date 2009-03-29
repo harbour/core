@@ -1,0 +1,9 @@
+/*
+ * $Id$
+ */
+
+stable:
+http://libharu.org/files/libharu-2.1.0.tar.gz
+
+unstable:
+git clone http://git.libharu.org/libharu.git
