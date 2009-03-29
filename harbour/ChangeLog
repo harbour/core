@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-29 22:07 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/tests/speedtst.prg
+    * added warning message when HVM debugger is enabled
+
 2009-03-29 19:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * external/sqlite3/Makefile
     ! Added necessary configuration for WinCE builds.

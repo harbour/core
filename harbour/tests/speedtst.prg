@@ -423,8 +423,12 @@ create_db()
 
 #ifdef __HARBOUR__
    #include "hbmemory.ch"
-      if MEMORY( HB_MEM_USEDMAX ) != 0
+   if MEMORY( HB_MEM_USEDMAX ) != 0
       ? "Warning !!! Memory statistic enabled."
+      ?
+   endif
+   if type( "__DBGENTRY()" ) == "UI"
+      ? "Warning !!! HVM debugger enabled."
       ?
    endif
 #endif
