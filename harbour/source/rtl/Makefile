@@ -31,9 +31,9 @@ C_SOURCES=\
 	disksphb.c   \
 	do.c         \
 	empty.c      \
-	errorapi.c   \
-	errorapu.c   \
-	errorint.c   \
+	errapi.c     \
+	errapiu.c    \
+	errint.c     \
 	file.c       \
 	filebuf.c    \
 	filehb.c     \
@@ -42,7 +42,7 @@ C_SOURCES=\
 	fmhb.c       \
 	fnsplit.c    \
 	fscopy.c     \
-	fserror.c    \
+	fserr.c      \
 	fssize.c     \
 	fstemp.c     \
 	gete.c       \
@@ -187,7 +187,7 @@ PRG_SOURCES=\
 	einstv52.prg \
 	einstvar.prg \
 	einstvau.prg \
-	errorsys.prg \
+	errsys.prg   \
 	fieldbl.prg  \
 	getlist.prg  \
 	getsys.prg   \

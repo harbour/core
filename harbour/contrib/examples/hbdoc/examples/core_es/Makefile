@@ -23,7 +23,7 @@ DOC_FILES=\
 	dir.txt \
 	dirstruc.txt \
 	diskspac.txt \
-	error.txt \
+	errsys.txt \
 	eval.txt \
 	file.txt \
 	garbage.txt \

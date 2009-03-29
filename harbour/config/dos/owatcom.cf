@@ -1,8 +1,13 @@
 #
 # $Id$
 #
-# The Harbour project
-# GNU MAKE file for OpenWatcom
+
+# GNU MAKE file for Open Watcom C/C++ compiler
+
+# ---------------------------------------------------------------
+# See option docs here:
+#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/cpopts.html
+# ---------------------------------------------------------------
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
@@ -34,7 +39,6 @@ endif
 CC_IN =
 CC_OUT = -fo=
 
-#CPPFLAGS = -j -5s -5r -oehtz -s -zq -zt0 -bt=DOS
 CPPFLAGS = -zq -bt=DOS
 
 ifneq ($(HB_BUILD_WARN),no)
@@ -43,7 +47,7 @@ endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
 # architecture flags
-CPPFLAGS += -5 -fp5
+CPPFLAGS += -5r -fp5
 
 # optimization flags
 # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code

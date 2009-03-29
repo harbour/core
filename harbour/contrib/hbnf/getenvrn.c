@@ -118,7 +118,6 @@ HB_FUNC( FT_GETE )
 {
 #if defined(HB_OS_DOS) || defined(HB_OS_UNIX_COMPATIBLE)
    {
-
       char *buffer = NULL;
       int x;
       int buffsize = 0;
@@ -172,7 +171,7 @@ HB_FUNC( FT_GETE )
       /* return number of strings found */
       hb_retni( x );
    }
-#elif defined(HB_OS_WIN)
+#elif defined(HB_OS_WIN) && ! ( defined(HB_OS_WIN_CE) && defined(__POCC__) )
    {
       char *buffer = NULL;
       LPTCH lpEnviron = GetEnvironmentStrings();
@@ -246,6 +245,8 @@ HB_FUNC( FT_GETE )
       HB_TCHAR_FREE( szEnviron );
       FreeEnvironmentStrings( ( LPTSTR ) lpEnviron );
    }
-
+#else
+   hb_storc( NULL, 1 );
+   hb_retni( 0 );
 #endif
 }

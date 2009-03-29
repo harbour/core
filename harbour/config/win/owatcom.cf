@@ -1,8 +1,13 @@
 #
 # $Id$
 #
-# The Harbour project
+
 # GNU MAKE file for Open Watcom C/C++ compiler
+
+# ---------------------------------------------------------------
+# See option docs here:
+#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/cpopts.html
+# ---------------------------------------------------------------
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
@@ -24,7 +29,6 @@ endif
 CC_IN =
 CC_OUT = -fo=
 
-#CPPFLAGS = -j -5r -oxehtz -zq -mf -bt=NT
 CPPFLAGS = -zq -bt=NT -bm
 
 ifneq ($(HB_BUILD_WARN),no)
@@ -36,7 +40,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
 CPPFLAGS += -5s -fp5
 # optimization flags
 # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
-CPPFLAGS += -onaehtzr -ei -zp8 -s -zt0
+CPPFLAGS += -oxaht -ei -zp8 -zt0
 ifeq ($(CC),wpp386)
 CPPFLAGS += -oi+
 else
@@ -56,7 +60,7 @@ CPPFLAGS += -d2
 endif
 
 ifeq ($(CC),wcc386)
-CC_RULE = $(CC) $(subst /,\,$(CPPFLAGS)) $(subst /,\,$(CFLAGS)) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CDYNLIB) $(subst /,\,$(CC_IN)) $(subst /,\,$<) $(CC_OUT)$(<F:.c=$(OBJ_EXT))
+CC_RULE = $(CC) $(subst /,\,$(CPPFLAGS)) $(subst /,\,$(CFLAGS)) $(HB_CDBG) $(subst /,\,$(HB_USER_CFLAGS)) $(HB_CDYNLIB) $(subst /,\,$(CC_IN)) $(subst /,\,$<) $(CC_OUT)$(<F:.c=$(OBJ_EXT))
 endif
 
 # Note: The empty line directly before 'endef' HAVE TO exist!

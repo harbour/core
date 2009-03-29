@@ -8,6 +8,55 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-29 22:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * config/dos/owatcom.cf
+  * config/win/owatcom.cf
+  * config/linux/owatcom.cf
+  * config/os2/owatcom.cf
+    % Tweaked optimization options. This will result in slower
+      build process, but more optimal runtime performance and
+      executable sizes. One option is now turned on which can
+      cause bad code with OW 1.1, so make sure you use latest
+      Open Watcom version, after all the upgrade is free.
+      It'd be great if owatcom users could make speedtst runs
+      with this revision and older ones to see the difference,
+      maybe now owatcom won't perform so poorly as before.
+    + Added link to C compiler option docs.
+    ! Fixed to convert slashes in HB_USER_CFLAGS.
+    % Enabled -5r for DOS and OS/2.
+
+  * contrib/hbct/disk.c
+    ! Disabled some volume/disk related code for WinCE.
+
+  * contrib/xhb/hbserv.c
+    ! Disabled for poccce.
+
+  * contrib/hbnf/getenvrn.c
+    ! Disabled FT_GETE() for poccce.
+    ! Fixed FT_GETE() to return zero/empty string on platforms not
+      supported (like also OS/2).
+
+  * doc/en-EN/Makefile
+  - doc/en-EN/error.txt
+  + doc/en-EN/errsys.txt
+  * source/rtl/Makefile
+  - source/rtl/fserror.c
+  - source/rtl/errorapi.c
+  - source/rtl/errorapu.c
+  - source/rtl/errorint.c
+  - source/rtl/errorsys.prg
+  + source/rtl/fserr.c
+  + source/rtl/errapi.c
+  + source/rtl/errint.c
+  + source/rtl/errapiu.c
+  + source/rtl/errsys.prg
+  * contrib/examples/hbdoc/examples/core_es/Makefile
+  - contrib/examples/hbdoc/examples/core_es/error.txt
+  + contrib/examples/hbdoc/examples/core_es/errsys.txt
+    * Most filenames containing 'error' renamed to make
+      it easier to search for errors in build logs.
+    ; Three headers remain.
+
 2009-03-29 22:07 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/tests/speedtst.prg
     * added warning message when HVM debugger is enabled

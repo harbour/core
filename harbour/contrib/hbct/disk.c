@@ -249,7 +249,7 @@ HB_FUNC( VOLUME )
          if( fFree )
             hb_xfree( sDiskName );
       }
-#if defined(HB_OS_WIN)
+#if defined(HB_OS_WIN) && ! defined(HB_OS_WIN_CE)
       {
          LPTSTR lpRoot, lpVolName;
          lpRoot = sRoot ? HB_TCHAR_CONVTO( sRoot ) : NULL;
@@ -273,7 +273,7 @@ HB_FUNC( VOLUME )
  */
 HB_FUNC( GETVOLINFO )
 {
-#if defined(HB_OS_WIN)
+#if defined(HB_OS_WIN) && ! defined(HB_OS_WIN_CE)
    int iretval;
    char *sDrive = hb_parcx( 1 ), *sVolName;
    TCHAR lpVolName[256];
@@ -291,7 +291,7 @@ HB_FUNC( GETVOLINFO )
       HB_TCHAR_FREE( sVolName );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 #endif
 }
 
@@ -310,7 +310,7 @@ HB_FUNC( GETVOLINFO )
 
 HB_FUNC( VOLSERIAL )
 {
-#if defined(HB_OS_WIN)
+#if defined(HB_OS_WIN) && ! defined(HB_OS_WIN_CE)
    int retval;
    char *sDrive = hb_parcx( 1 );
    LPTSTR lpDrive;
@@ -337,11 +337,11 @@ HB_FUNC( VOLSERIAL )
 
 HB_FUNC( TRUENAME )
 {
-   char *szFile = hb_parc( 1 );
+   char * szFile = hb_parc( 1 );
 
    if( szFile )
    {
-#ifdef HB_OS_WIN
+#if defined(HB_OS_WIN) && ! defined(HB_OS_WIN_CE)
       char *szBuffRet;
       TCHAR buffer[MAX_PATH + 1] = { 0 };
       LPTSTR lpFile;
@@ -358,5 +358,5 @@ HB_FUNC( TRUENAME )
 #endif
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }

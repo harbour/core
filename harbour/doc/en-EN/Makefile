@@ -20,7 +20,7 @@ DOC_FILES=\
 	dbstrux.txt \
 	dir.txt \
 	diskspac.txt \
-	error.txt \
+	errsys.txt \
 	eval.txt \
 	file.txt \
 	garbage.txt \

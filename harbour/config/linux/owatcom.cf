@@ -1,8 +1,13 @@
 #
 # $Id$
 #
-# The Harbour project
-# GNU MAKE file for OpenWatcom C/C++
+
+# GNU MAKE file for Open Watcom C/C++ compiler
+
+# ---------------------------------------------------------------
+# See option docs here:
+#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/cpopts.html
+# ---------------------------------------------------------------
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
@@ -24,7 +29,6 @@ endif
 CC_IN =
 CC_OUT = -fo=
 
-#CPPFLAGS = -j -5s -5r -oehtz -zq -bt=linux
 CPPFLAGS = -zq -bt=linux
 
 ifneq ($(HB_BUILD_WARN),no)
