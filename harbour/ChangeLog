@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-29 09:03 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvgsink.c
+    ! Fixed remaining non-ANSI C comments. Just had been overlooked!
+
 2009-03-29 15:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.sh
   * bin/hb-func.sh
