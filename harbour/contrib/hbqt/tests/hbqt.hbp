@@ -5,5 +5,7 @@
 {mingw}libs=supc++
 libs=hbqt
 libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
+# static libs
+#libs=QtCore QtGui QtNetwork QtWebKit
 gui=yes
 gt=gtnul

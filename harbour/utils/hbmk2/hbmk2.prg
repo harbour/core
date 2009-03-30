@@ -2397,9 +2397,12 @@ STATIC FUNCTION ListCookLib( arraySrc, cPrefix, cExtNew )
       FOR EACH cLibName IN array
          hb_FNameSplit( cLibName, @cDir )
          IF Empty( cDir )
+#if 0
+            /* Don't attempt to strip this as it can be valid for libs which have double lib prefixes (f.e. libpng) */
             IF Left( cLibName, 3 ) == "lib"
                cLibName := SubStr( cLibName, 4 )
             ENDIF
+#endif
             IF cPrefix != NIL
                cLibName := cPrefix + cLibName
             ENDIF
