@@ -179,7 +179,7 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    ------------------------
    gcc      - GNU C
 
-   Windows
+   Windows (recommended)
    -------
    mingw    - MinGW GNU C
    mingw64  - MinGW GNU C x64
@@ -188,6 +188,9 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    msvc64   - Microsoft Visual C++ x64
    msvcia64 - Microsoft Visual C++ IA64
    msvcce   - Microsoft Visual C++ ARM (Windows CE)
+
+   Windows (supported, but not recommended, certain features may be missing)
+   -------
    pocc     - Pelles C 4.5 and above
    pocc64   - Pelles C 5.0 x64
    poccce   - Pelles C 5.0 ARM (Windows CE)
