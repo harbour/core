@@ -41,7 +41,8 @@ CPPFLAGS += -5r -fp5
 
 # optimization flags
 # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
-CPPFLAGS += -onaehtzr -ei -zp8 -s -zt0
+# -oxaht
+CPPFLAGS += -onaehtzr -s -ei -zp8 -zt0
 ifeq ($(CC),wpp386)
 CPPFLAGS += -oi+
 else

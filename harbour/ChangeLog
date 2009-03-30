@@ -8,6 +8,17 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-30 10:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * config/win/owatcom.cf
+  * config/linux/owatcom.cf
+  * config/os2/owatcom.cf
+    - Reverted yesterdays attempt to make owatcom builds faster.
+      After the change the compilation time went slower, the
+      binaries got smaller, but execution speed got actually worse.
+      I've left -oz option removed for win, that's the only
+      remaining change, plus -5r in os2/dos.
+      owatcom seems not very useful for production.
+
 2009-03-30 09:37 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Added two Windows system libs. (also needed for QT)

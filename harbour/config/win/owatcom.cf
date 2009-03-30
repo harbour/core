@@ -40,7 +40,8 @@ ifneq ($(HB_BUILD_OPTIM),no)
 CPPFLAGS += -5s -fp5
 # optimization flags
 # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
-CPPFLAGS += -oxaht -ei -zp8 -zt0
+# -oxaht
+CPPFLAGS += -onaehtr -s -ei -zp8 -zt0
 ifeq ($(CC),wpp386)
 CPPFLAGS += -oi+
 else
