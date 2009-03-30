@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-30 12:32 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbqt/Makefile
+    - Disabled for bcc and pocc due to compilation error.
+    ; Maybe it's possible to make them work (at least bcc) by using
+      some special defines, please play with it if you're interested.
+      QT seems to like MinGW the best MSVC is also high on the
+      support list, so IMO we should also put the focus there.
+
 2009-03-30 11:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbqt/Makefile
     - Disabled for owatcom due to compilation error.
