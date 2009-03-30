@@ -9,6 +9,8 @@ ROOT = ../../
 LIBNAME=gtwvg
 
 ifeq ($(HB_WITH_GTWVG),)
+ifeq ($(HB_ARCHITECTURE),win)
+
 ifeq ($(HB_COMPILER),mingw)
 HB_WITH_GTWVG=yes
 endif
@@ -26,6 +28,8 @@ HB_WITH_GTWVG=yes
 endif
 ifeq ($(HB_COMPILER),bcc)
 HB_WITH_GTWVG=yes
+endif
+
 endif
 endif
 

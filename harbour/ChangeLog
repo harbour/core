@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-30 23:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/gtwvg/Makefile
+    ! check HB_ARCHITECTURE=win before compiling GTWVG.
+      It fixes non Windows OpenWatcom and ICC builds.
+
 2009-03-30 22:17 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/dlmalloc.c
     ! fixed casting
