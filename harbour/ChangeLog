@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-30 13:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtalleg/Makefile
+    - Disabled for minwgce.
+
 2009-03-30 13:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     * Split Windows compiler list to 'recommended' and 'supported'
@@ -15,7 +19,7 @@
       Some comments on the rest:
       - pocc: lack of 3rd party support, mediocre performance.
       - owatcom: lack of 3rd party support, bad performance,
-        proprietary object/dll format.
+        proprietary object format.
       - bcc: lack of 3rd party support, mediocre performance, has known bugs,
         proprietary object/dll format.
       - xcc: for testing only.

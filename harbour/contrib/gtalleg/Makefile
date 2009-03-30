@@ -10,6 +10,7 @@ ifneq ($(HB_COMPILER),pocc)
 ifneq ($(HB_COMPILER),xcc)
 ifneq ($(HB_COMPILER),dmc)
 ifneq ($(HB_COMPILER),owatcom)
+ifneq ($(HB_COMPILER),mingwce)
 
 ifeq ($(HB_INC_ALLEGRO),)
 ifeq ($(HB_XBUILD),)
@@ -29,6 +30,9 @@ C_SOURCES=\
 
 include $(TOP)$(ROOT)config/lib.cf
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif
