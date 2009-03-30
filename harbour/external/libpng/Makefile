@@ -19,6 +19,9 @@ endif
 ifeq ($(HB_ARCHITECTURE),dos)
 HB_WITH_LIBPNG=yes
 endif
+ifeq ($(HB_ARCHITECTURE),poccce)
+HB_WITH_LIBPNG=no
+endif
 endif
 
 ifeq ($(HB_WITH_LIBPNG),yes)

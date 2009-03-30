@@ -26,6 +26,9 @@ endif
 ifeq ($(HB_COMPILER),pocc)
 HB_WITH_QT=no
 endif
+ifeq ($(HB_COMPILER),poccce)
+HB_WITH_QT=no
+endif
 endif
 
 ifeq ($(HB_WITH_QT),yes)

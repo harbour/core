@@ -8,6 +8,12 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-31 01:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * external/libhpdf/Makefile
+  * external/libpng/Makefile
+  * contrib/hbqt/Makefile
+    - Disabled for poccce due to errors.
+
 2009-03-30 23:56 UTC+0200 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/examples/uhttpd/uhttpd.prg
     ! fixed CGI POST variables handling

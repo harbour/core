@@ -11,10 +11,12 @@ ROOT = ../../
 LIBNAME=libhpdf
 
 ifeq ($(HB_WITH_LIBHPDF),)
+HB_WITH_LIBHPDF=yes
 ifeq ($(HB_COMPILER),owatcom)
 HB_WITH_LIBHPDF=no
-else
-HB_WITH_LIBHPDF=yes
+endif
+ifeq ($(HB_COMPILER),poccce)
+HB_WITH_LIBHPDF=no
 endif
 endif
 
