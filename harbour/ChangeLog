@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-30 09:37 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added two Windows system libs. (also needed for QT)
+
 2009-03-29 22:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/xhb/hbserv.c
     ! Fixed issues with prev commit. (Thanks Francesco)

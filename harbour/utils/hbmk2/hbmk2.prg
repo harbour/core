@@ -514,7 +514,7 @@ FUNCTION Main( ... )
       cBinExt := ".exe"
       cOptPrefix := "-/"
       s_aLIBSYSCORE := { "user32", "gdi32", "advapi32", "ws2_32" }
-      s_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "ole32", "oleaut32", "uuid", "mpr", "winmm", "mapi32" }
+      s_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "ole32", "oleaut32", "uuid", "mpr", "winmm", "mapi32", "imm32", "msimg32" }
    OTHERWISE
       OutErr( "hbmk: Error: Architecture value unknown: " + t_cARCH + hb_osNewLine() )
       PauseForKey()
