@@ -2,6 +2,6 @@
 # $Id$
 #
 
-libs=hbhpdf libhpdf
+libs=hbhpdf libhpdf libpng
 # for the tests only
 libs=hbct
