@@ -85,6 +85,11 @@ BOOL win_SysRefresh( int iMsec )
       {
          switch( msg.message )
          {
+             case WM_CLOSE:
+             {
+                  iQuit = 1;
+                  goto stopLoop;
+             }
              case WM_QUIT:
              {
                   iQuit = ( int ) msg.wParam;
@@ -123,14 +128,14 @@ stopLoop:
 
 HB_FUNC( WIN_SYSREFRESH )
 {
-   hb_retl( win_SysRefresh( hb_parni( 1 ) ) );
+   hb_retni( win_SysRefresh( hb_parni( 1 ) ) );
 }
 
 #else
 
 HB_FUNC( WIN_SYSREFRESH )
 {
-   hb_retl( TRUE );
+   hb_retni( ( int ) FALSE );
 }
 
 #endif

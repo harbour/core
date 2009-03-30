@@ -96,6 +96,7 @@
 #include "inkey.ch"
 #include "error.ch"
 #include "hbmemory.ch"
+#include 'hbgtinfo.ch'
 
 #include "hbextern.ch"   // need this to use with HRB
 
@@ -131,7 +132,7 @@
 #endif
 
 #define APP_NAME      "uhttpd"
-#define APP_VER_NUM   "0.4.2"
+#define APP_VER_NUM   "0.4.3"
 #define APP_VERSION   APP_VER_NUM + APP_GD_SUPPORT + APP_INET_SUPPORT + APP_DT_SUPPORT
 
 #define AF_INET         2
@@ -183,6 +184,8 @@
 
 // dynamic call for HRB support
 DYNAMIC HRBMAIN
+
+STATIC s_lQuitRequest := FALSE
 
 STATIC s_hmtxQueue, s_hmtxServiceThreads, s_hmtxRunningThreads, s_hmtxLog, s_hmtxConsole, s_hmtxBusy
 STATIC s_hmtxHRB
@@ -272,6 +275,8 @@ FUNCTION MAIN( ... )
    cGT := HB_GTVERSION()
    IF ( cGT == "NUL" )
       lConsole := FALSE
+   ELSE
+      hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| GT_notifier( nEvent, ... ) } )
    ENDIF
 
    // TOCHECK: now not force case insensitive
@@ -533,8 +538,17 @@ FUNCTION MAIN( ... )
 
 #ifdef USE_WIN_ADDONS
          // windows resource releasing - 1 millisecond wait
-         WIN_SYSREFRESH( 1 )
+         IF WIN_SYSREFRESH( 1 ) != 0
+            EXIT
+         ENDIF
 #endif
+         IF hb_mutexLock( s_hmtxBusy )
+            IF s_lQuitRequest
+               hb_mutexUnlock( s_hmtxBusy )
+               EXIT
+            ENDIF
+            hb_mutexUnlock( s_hmtxBusy )
+         ENDIF
 
          IF s_lConsole
 
@@ -639,6 +653,7 @@ STATIC FUNCTION AcceptConnections()
    LOCAL nServiceConnections, nServiceThreads, nMaxServiceThreads, nThreadID
    LOCAL pThread
    LOCAL lCanNotify
+   LOCAL lQuitRequest := FALSE
 
    ErrorBlock( { | oError | uhttpd_DefError( oError ) } )
 
@@ -667,14 +682,25 @@ STATIC FUNCTION AcceptConnections()
 
 #ifdef USE_WIN_ADDONS
       // releasing resources
-      WIN_SYSREFRESH( 1 )
+      IF WIN_SYSREFRESH( 1 ) != 0
+         lQuitRequest := TRUE
+      ENDIF
 #endif
+
+      IF hb_mutexLock( s_hmtxBusy )
+         IF s_lQuitRequest
+            hb_mutexUnlock( s_hmtxBusy )
+            lQuitRequest := TRUE
+            EXIT
+         ENDIF
+         hb_mutexUnlock( s_hmtxBusy )
+      ENDIF
 
       // Waiting a connection from main application loop
       hb_mutexSubscribe( s_hmtxQueue,, @hSocket )
 
       // I have a QUIT request
-      IF hSocket == NIL
+      IF hSocket == NIL .OR. lQuitRequest
 
          // Requesting to Running threads to quit (using -1 value)
          AEVAL( s_aRunningThreads, {|| hb_mutexNotify( s_hmtxRunningThreads, -1 ) } )
@@ -799,8 +825,20 @@ STATIC FUNCTION ProcessConnection()
 
 #ifdef USE_WIN_ADDONS
       // releasing resources
-      WIN_SYSREFRESH( 1 )
+      IF WIN_SYSREFRESH( 1 ) != 0
+         lQuitRequest := TRUE
+         EXIT
+      ENDIF
 #endif
+
+      IF hb_mutexLock( s_hmtxBusy )
+         IF s_lQuitRequest
+            hb_mutexUnlock( s_hmtxBusy )
+            lQuitRequest := TRUE
+            EXIT
+         ENDIF
+         hb_mutexUnlock( s_hmtxBusy )
+      ENDIF
 
       // Waiting a connection from AcceptConnections() but up to defined time
       hb_mutexSubscribe( s_hmtxRunningThreads, THREAD_MAX_WAIT, @hSocket )
@@ -947,8 +985,20 @@ STATIC FUNCTION ServiceConnection()
 
 #ifdef USE_WIN_ADDONS
       // releasing resources
-      WIN_SYSREFRESH( 1 )
+      IF WIN_SYSREFRESH( 1 ) != 0
+         lQuitRequest := TRUE
+         EXIT
+      ENDIF
 #endif
+
+      IF hb_mutexLock( s_hmtxBusy )
+         IF s_lQuitRequest
+            hb_mutexUnlock( s_hmtxBusy )
+            lQuitRequest := TRUE
+            EXIT
+         ENDIF
+         hb_mutexUnlock( s_hmtxBusy )
+      ENDIF
 
       // Waiting a connection from AcceptConnections() but up to defined time
       hb_mutexSubscribe( s_hmtxServiceThreads, THREAD_MAX_WAIT, @hSocket )
@@ -2231,6 +2281,37 @@ STATIC FUNCTION ParseIni( cConfig )
 
    RETURN hDefault
 
+STATIC FUNCTION FileUnAlias( cScript )
+   LOCAL cFileName, x
+
+   // Checking if the request contains a Script Alias
+   IF HB_HHasKey( s_hScriptAliases, cScript )
+      // in this case I have to substitute the alias with the real file name
+      cFileName := hb_hGet( s_hScriptAliases, cScript )
+
+      // substitute macros
+      cFileName := StrTran( cFileName, "$(DOCROOT_DIR)", _SERVER[ "DOCUMENT_ROOT" ] )
+      cFileName := StrTran( cFileName, "$(APP_DIR)"    , Exe_Path() )
+   ENDIF
+
+   IF cFileName == NIL
+
+      // Checking if the request contains an alias
+      FOR EACH x IN s_hAliases
+          IF x:__enumKey() == Left( cScript, Len( x:__enumKey() ) )
+             cFileName := x:__enumValue() + SubStr( cScript, Len( x:__enumKey() ) + 1 )
+
+             // substitute macros
+             cFileName := StrTran( cFileName, "$(DOCROOT_DIR)", _SERVER[ "DOCUMENT_ROOT" ] )
+             cFileName := StrTran( cFileName, "$(APP_DIR)"    , Exe_Path() )
+             EXIT
+          ENDIF
+      NEXT
+
+   ENDIF
+
+RETURN cFileName
+
 STATIC FUNCTION uhttpd_DefError( oError )
    LOCAL cMessage
    LOCAL cCallstack
@@ -2377,86 +2458,6 @@ STATIC FUNCTION ErrorMessage( oError )
 
    RETURN cMessage
 
-// ------------------ FILTERS ---------------------
-STATIC FUNCTION Handler_HrbScript( cFileName )
-   LOCAL xResult
-   LOCAL cHRBBody, pHRB, oError
-
-   TRY
-      // Lock HRB to avoid MT race conditions
-      IF !HRB_ACTIVATE_CACHE
-         cHRBBody := HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) )
-      ENDIF
-      IF hb_mutexLock( s_hmtxHRB )
-         IF HRB_ACTIVATE_CACHE
-            // caching modules
-            IF !hb_HHasKey( s_hHRBModules, cFileName )
-               hb_HSet( s_hHRBModules, cFileName, HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) ) )
-            ENDIF
-            cHRBBody := s_hHRBModules[ cFileName ]
-         ENDIF
-         IF !EMPTY( pHRB := HB_HRBLOAD( cHRBBody ) )
-
-             xResult := HRBMAIN()
-
-             HB_HRBUNLOAD( pHRB )
-         ELSE
-             uhttpd_SetStatusCode( 404 )
-             t_cErrorMsg := "File does not exist: " + cFileName
-         ENDIF
-         hb_mutexUnlock( s_hmtxHRB )
-
-      ENDIF
-
-      IF HB_ISSTRING( xResult )
-         uhttpd_AddHeader( "Content-Type", "text/html" )
-         uhttpd_Write( xResult )
-      ELSE
-         // Application in HRB module is responsible to send HTML content
-      ENDIF
-
-   CATCH oError
-
-      WriteToConsole( "Error!" )
-
-      uhttpd_AddHeader( "Content-Type", "text/html" )
-      uhttpd_Write( "Error" )
-      uhttpd_Write( "<br>Description: " + hb_cStr( oError:Description ) )
-      uhttpd_Write( "<br>Filename: "    + hb_cStr( oError:filename ) )
-      uhttpd_Write( "<br>Operation: "   + hb_cStr( oError:operation ) )
-      uhttpd_Write( "<br>OsCode: "      + hb_cStr( oError:osCode ) )
-      uhttpd_Write( "<br>GenCode: "     + hb_cStr( oError:genCode ) )
-      uhttpd_Write( "<br>SubCode: "     + hb_cStr( oError:subCode ) )
-      uhttpd_Write( "<br>SubSystem: "   + hb_cStr( oError:subSystem ) )
-      uhttpd_Write( "<br>Args: "        + hb_cStr( hb_ValToExp( oError:args ) ) )
-      uhttpd_Write( "<br>ProcName: "    + hb_cStr( procname( 0 ) ) )
-      uhttpd_Write( "<br>ProcLine: "    + hb_cStr( procline( 0 ) ) )
-   END
-
-   RETURN MakeResponse()
-
-STATIC FUNCTION Handler_CgiScript( cFileName )
-   LOCAL xResult
-
-   IF ( CGIExec( uhttpd_OSFileName(cFileName), @xResult ) ) == 0
-
-      //uhttpd_AddHeader( "Content-Type", cI )
-      //uhttpd_Write( xResult )
-      RETURN "HTTP/1.1 200 OK " + CR_LF + xResult
-
-   ELSE
-
-      uhttpd_AddHeader( "Content-Type", "text/html" )
-      IF !Empty( xResult )
-         uhttpd_Write( xResult )
-      ELSE
-         uhttpd_Write( "CGI Error" )
-      ENDIF
-
-   ENDIF
-
-   RETURN MakeResponse()
-
 // ----------------------------------------------------------------------------------
 // HANDLERS
 // ----------------------------------------------------------------------------------
@@ -2545,6 +2546,85 @@ STATIC FUNCTION Handler_ServerStatus()
 
 RETURN MakeResponse()
 
+STATIC FUNCTION Handler_HrbScript( cFileName )
+   LOCAL xResult
+   LOCAL cHRBBody, pHRB, oError
+
+   TRY
+      // Lock HRB to avoid MT race conditions
+      IF !HRB_ACTIVATE_CACHE
+         cHRBBody := HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) )
+      ENDIF
+      IF hb_mutexLock( s_hmtxHRB )
+         IF HRB_ACTIVATE_CACHE
+            // caching modules
+            IF !hb_HHasKey( s_hHRBModules, cFileName )
+               hb_HSet( s_hHRBModules, cFileName, HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) ) )
+            ENDIF
+            cHRBBody := s_hHRBModules[ cFileName ]
+         ENDIF
+         IF !EMPTY( pHRB := HB_HRBLOAD( cHRBBody ) )
+
+             xResult := HRBMAIN()
+
+             HB_HRBUNLOAD( pHRB )
+         ELSE
+             uhttpd_SetStatusCode( 404 )
+             t_cErrorMsg := "File does not exist: " + cFileName
+         ENDIF
+         hb_mutexUnlock( s_hmtxHRB )
+
+      ENDIF
+
+      IF HB_ISSTRING( xResult )
+         uhttpd_AddHeader( "Content-Type", "text/html" )
+         uhttpd_Write( xResult )
+      ELSE
+         // Application in HRB module is responsible to send HTML content
+      ENDIF
+
+   CATCH oError
+
+      WriteToConsole( "Error!" )
+
+      uhttpd_AddHeader( "Content-Type", "text/html" )
+      uhttpd_Write( "Error" )
+      uhttpd_Write( "<br>Description: " + hb_cStr( oError:Description ) )
+      uhttpd_Write( "<br>Filename: "    + hb_cStr( oError:filename ) )
+      uhttpd_Write( "<br>Operation: "   + hb_cStr( oError:operation ) )
+      uhttpd_Write( "<br>OsCode: "      + hb_cStr( oError:osCode ) )
+      uhttpd_Write( "<br>GenCode: "     + hb_cStr( oError:genCode ) )
+      uhttpd_Write( "<br>SubCode: "     + hb_cStr( oError:subCode ) )
+      uhttpd_Write( "<br>SubSystem: "   + hb_cStr( oError:subSystem ) )
+      uhttpd_Write( "<br>Args: "        + hb_cStr( hb_ValToExp( oError:args ) ) )
+      uhttpd_Write( "<br>ProcName: "    + hb_cStr( procname( 0 ) ) )
+      uhttpd_Write( "<br>ProcLine: "    + hb_cStr( procline( 0 ) ) )
+   END
+
+   RETURN MakeResponse()
+
+STATIC FUNCTION Handler_CgiScript( cFileName )
+   LOCAL xResult
+
+   IF ( CGIExec( uhttpd_OSFileName(cFileName), @xResult ) ) == 0
+
+      //uhttpd_AddHeader( "Content-Type", cI )
+      //uhttpd_Write( xResult )
+      RETURN "HTTP/1.1 200 OK " + CR_LF + xResult
+
+   ELSE
+
+      uhttpd_AddHeader( "Content-Type", "text/html" )
+      IF !Empty( xResult )
+         uhttpd_Write( xResult )
+      ELSE
+         uhttpd_Write( "CGI Error" )
+      ENDIF
+
+   ENDIF
+
+   RETURN MakeResponse()
+
 STATIC FUNCTION LoadMimeTypes()
    LOCAL hMimeTypes
    // TODO: load mime types from file
@@ -2596,33 +2676,14 @@ STATIC FUNCTION LoadMimeTypes()
                  }
 RETURN hMimeTypes
 
-STATIC FUNCTION FileUnAlias( cScript )
-   LOCAL cFileName, x
-
-   // Checking if the request contains a Script Alias
-   IF HB_HHasKey( s_hScriptAliases, cScript )
-      // in this case I have to substitute the alias with the real file name
-      cFileName := hb_hGet( s_hScriptAliases, cScript )
-
-      // substitute macros
-      cFileName := StrTran( cFileName, "$(DOCROOT_DIR)", _SERVER[ "DOCUMENT_ROOT" ] )
-      cFileName := StrTran( cFileName, "$(APP_DIR)"    , Exe_Path() )
-   ENDIF
-
-   IF cFileName == NIL
-
-      // Checking if the request contains an alias
-      FOR EACH x IN s_hAliases
-          IF x:__enumKey() == Left( cScript, Len( x:__enumKey() ) )
-             cFileName := x:__enumValue() + SubStr( cScript, Len( x:__enumKey() ) + 1 )
-
-             // substitute macros
-             cFileName := StrTran( cFileName, "$(DOCROOT_DIR)", _SERVER[ "DOCUMENT_ROOT" ] )
-             cFileName := StrTran( cFileName, "$(APP_DIR)"    , Exe_Path() )
-             EXIT
-          ENDIF
-      NEXT
-
-   ENDIF
-
-RETURN cFileName
+STATIC FUNCTION GT_notifier( nEvent, xParams )
+  LOCAL nReturn := 0
+  DO CASE
+   CASE nEvent == HB_GTE_CLOSE
+        IF hb_mutexLock( s_hmtxBusy )
+           s_lQuitRequest := TRUE
+           nReturn := 1
+           hb_mutexUnlock( s_hmtxBusy )
+        ENDIF
+  ENDCASE
+RETURN nReturn

@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-30 20:13 UTC+0200 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/contrib/examples/uhttpd/uhttpd.prg
+    + added support for closing console using "X" system button
+      using hb_GTInfo() functions. Tested only in windows.
+    * formatting
+  * harbour/contrib/examples/uhttpd/uhttpdc.c
+    * added WM_CLOSE event in win_SysRefresh()
+  * harbour/contrib/examples/uhttpd/session.prg
+    * minor change
+
 2009-03-30 17:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbfbird/Makefile
   * contrib/gtalleg/Makefile

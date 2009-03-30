@@ -71,7 +71,7 @@
 
 MEMVAR _COOKIE, _SESSION, _REQUEST, _SERVER
 
-#define MY_CRCKEY "UhTTpK3y!@"
+#define MY_CRCKEY "UhTTpK3y76"
 
 FUNCTION uhttpd_SessionNew( cSessionName, cSessionPath )
 RETURN uhttpd_Session():New( cSessionName, cSessionPath )
