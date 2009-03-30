@@ -6,6 +6,8 @@ ROOT = ../../
 
 LIBNAME=hbfbird
 
+ifneq ($(HB_COMPILER),poccce)
+
 ifeq ($(HB_INC_FIREBIRD),)
 ifeq ($(HB_XBUILD),)
 HB_INC_FIREBIRD = /usr/include /opt/firebird/include
@@ -26,6 +28,9 @@ PRG_SOURCES=\
 
 include $(TOP)$(ROOT)config/lib.cf
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

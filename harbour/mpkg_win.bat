@@ -71,15 +71,15 @@ xcopy /D /Y ERRATA    "%HB_INSTALL_PREFIX%\"
 xcopy /D /Y INSTALL   "%HB_INSTALL_PREFIX%\"
 xcopy /D /Y TODO      "%HB_INSTALL_PREFIX%\"
 
-rem ; Build installer package
-makensis.exe %~dp0mpkg_win.nsi
-
 rem ; Build .zip package
 if exist %HB_PKGNAME%.zip del %HB_PKGNAME%.zip
 pushd
 cd %HB_INSTALL_BASE%
 zip -9 -X -r -o %~dp0%HB_PKGNAME%.zip . -i %HB_DIRNAME%\*
 popd
+
+rem ; Build installer package
+makensis.exe %~dp0mpkg_win.nsi
 
 :MK_ERROR
 

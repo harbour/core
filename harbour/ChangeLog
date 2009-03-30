@@ -8,6 +8,22 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-30 17:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbfbird/Makefile
+  * contrib/gtalleg/Makefile
+    - Disabled for poccce due to errors.
+
+  * contrib/hbfimage/fi_winfu.c
+    - Disabled Windows specific functions for poccce due to errors.
+
+  * config/win/owatcom.cf
+    % Removed -bm (MT mode) switch, because besides creating MT friendly
+      code, it kills performance. Pls shout if MT mode is now broken in
+      any ways.
+
+  * mpkg_win.bat
+    * Generate .zip file first.
+
 2009-03-30 13:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/gtalleg/Makefile
     - Disabled for minwgce.
