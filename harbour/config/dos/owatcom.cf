@@ -51,7 +51,8 @@ CPPFLAGS += -5r -fp5
 
 # optimization flags
 # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
-CPPFLAGS += -onaehtzr -ei -zp8 -s -zt0
+CPPFLAGS += -onaehtr -s -ei -zp4 -zt0
+#CPPFLAGS += -obl+m
 ifeq ($(CC),wpp386)
 CPPFLAGS += -oi+
 else
@@ -96,7 +97,10 @@ $(foreach lib, $(GTLIBS), $(link_lib))
 endef
 
 LD = wlink
-LDFLAGS = debug all OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe
+LDFLAGS = OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe
+ifeq ($(HB_BUILD_DEBUG),yes)
+LDFLAGS := debug all $(LDFLAGS)
+endif
 
 ifeq ($(HB_LIB_COMPILE),)
    LINKLIBS = $(foreach lib, $(CONTRIBS), $(LIB_DIR)/$(lib))

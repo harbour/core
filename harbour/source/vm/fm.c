@@ -100,15 +100,16 @@
 #endif
 
 #if defined( HB_FM_STD_ALLOC )
-   #undef HB_FM_DL_ALLOC
-   #undef HB_FM_WIN_ALLOC
+#  undef HB_FM_DL_ALLOC
+#  undef HB_FM_WIN_ALLOC
 #elif !defined( HB_FM_DL_ALLOC ) && !defined( HB_FM_WIN_ALLOC )
-   #if defined( _MSC_VER ) || defined( __BORLANDC__ ) || defined( __MINGW32__ ) || \
-       ( defined( HB_FM_DLMT_ALLOC ) && defined( HB_MT_VM ) )
-      #define HB_FM_DL_ALLOC
-   #else
+#  if defined( _MSC_VER ) || defined( __BORLANDC__ ) || defined( __MINGW32__ ) || \
+      ( defined( __WATCOMC__ ) && defined( HB_OS_WIN ) ) || \
+      ( defined( HB_FM_DLMT_ALLOC ) && defined( HB_MT_VM ) )
+#     define HB_FM_DL_ALLOC
+#  else
       /* #define HB_FM_DL_ALLOC */
-   #endif
+#  endif
 #endif
 
 #if defined( HB_FM_STATISTICS_OFF )
@@ -145,7 +146,8 @@
 #     define ABORT TerminateProcess( GetCurrentProcess(), 0 )
 #  elif defined( __POCC__ ) && !defined( InterlockedCompareExchangePointer )
 #     define InterlockedCompareExchangePointer
-#  elif defined( _MSC_VER ) && !defined( USE_DL_PREFIX ) && !defined( HB_FM_DLMT_ALLOC )
+#  elif ( defined( _MSC_VER ) || defined( __WATCOMC__ ) ) && \
+        !defined( USE_DL_PREFIX ) && !defined( HB_FM_DLMT_ALLOC )
 #     define USE_DL_PREFIX
 #  endif
 #  include "dlmalloc.c"

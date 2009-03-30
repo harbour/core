@@ -8,6 +8,60 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-30 22:17 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/dlmalloc.c
+    ! fixed casting
+
+  * harbour/source/vm/fm.c
+    % use DLMALLOC as default memory manager in OpenWatcom Windows builds.
+      Warning: HB_FM_DLMT_ALLOC does not work with OpenWatcom.
+
+  * harbour/config/dos/owatcom.cf
+  * harbour/config/win/owatcom.cf
+  * harbour/config/linux/owatcom.cf
+  * harbour/config/os2/owatcom.cf
+    * changed alignment settings from 8 to 4
+    * synced optimization flags used in different builds
+    ! fixed linker parameters when HB_BUILD_DEBUG=yes is set
+    ; TOVERIFY: I do not remember what calling convention should be used
+      in OpenWatcom MT OS2 builds to eliminate GPF when APIENTRY16 functions
+      are called. It's possible that current settings are wrong.
+
+  * harbour/config/win/owatcom.cf
+    * removed STACK=65536 from OpenWatcom linker parameters.
+      This switch probably was inherited from old DOS WatcomC builds.
+      Later I'll test current OpwnWatcom builds to check if we can also
+      remove it from DOS builds when cwstub.exe is used.
+    * restored -bm switch. When DLMALLOC is used it does not cause
+      noticeable performance reduction.
+    * use default register calling convention. We can change it
+      in the future but 1-st we should check the performance overhead.
+      If calling convention is a problem only for .DLLs then it can
+      be resolved by modifying HB_EXTERN declaration and adding function
+      attributes which will force given calling convention.
+
+  * harbour/config/linux/owatcom.cf
+    * enabled pentium pro instruction in OpenWatcom Linux builds.
+      It reduces the code size and increase performance a little bit.
+      Windows users which do not need pure pentium CPU support can make
+      the same.
+
+  * harbour/utils/hbmk2/hbmk2.prg
+    ! fixed object extension used in OpenWatcom Linux builds: it's .o not .obj
+    ! fixed linker parameters in OpenWatcom Linux builds: DEBUG ALL is single
+      option
+    ! fixed OpenWatcom calling convention settings. Viktor you cannot chose
+      simultaneously register and stack calling convention. You have to chose
+      one and keep it synced with Harbour compile time settings. Otherwise
+      you will have unresolved external or you will force creating by linker
+      dynamically function call wrappers (of course if OW support such
+      functionality) what may strongly reduce the performance.
+    ! removed -j compile time switch - it's not used to compile core code
+    * synced optimization flags with core code
+
+   I'm really interested in current OpenWatcom speedtst results compared
+   with other Windows builds (MSVC, MinGW, BCC, POCC) in ST and MT builds.
+
 2009-03-30 21:05 UTC+0200 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/examples/uhttpd/uhttpd.prg
     * error string formatting

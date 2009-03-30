@@ -29,7 +29,7 @@ endif
 CC_IN =
 CC_OUT = -fo=
 
-CPPFLAGS = -zq -bt=NT
+CPPFLAGS = -zq -bt=NT -bm
 
 ifneq ($(HB_BUILD_WARN),no)
 CPPFLAGS += -w3
@@ -37,11 +37,12 @@ endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
 # architecture flags
-CPPFLAGS += -5s -fp5
+CPPFLAGS += -5r -fp5
+
 # optimization flags
 # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
 # -oxaht
-CPPFLAGS += -onaehtr -s -ei -zp8 -zt0
+CPPFLAGS += -onaehtr -s -ei -zp4 -zt0
 ifeq ($(CC),wpp386)
 CPPFLAGS += -oi+
 else
@@ -89,7 +90,10 @@ echo LIB kernel32.lib, user32.lib, ws2_32.lib >> __link__.tmp
 endef
 
 LD = wlink
-LDFLAGS = OP osn=NT OP stack=65536 OP CASEEXACT
+LDFLAGS = OP osn=NT OP CASEEXACT
+ifeq ($(HB_BUILD_DEBUG),yes)
+LDFLAGS := debug all $(LDFLAGS)
+endif
 
 ifeq ($(HB_LIB_COMPILE),)
    LINKLIBS = $(foreach lib, $(CONTRIBS), $(LIB_DIR)/$(lib))

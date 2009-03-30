@@ -1476,7 +1476,7 @@ FUNCTION Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386.exe"
-         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS {FC} -i{DI} {LC}"
+         cOpt_CompC := "-zq -w3 -5r -fp5 -onaehtri+ -s -ei -zp4 -zt0 -bt=DOS {FC} -i{DI} {LC}"
          cBin_Link := "wlink.exe"
          cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          cBin_Lib := "wlib.exe"
@@ -1484,7 +1484,7 @@ FUNCTION Main( ... )
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
          IF s_lDEBUG
-            cOpt_Link := "DEBUG " + cOpt_Link
+            cOpt_Link := "DEBUG ALL" + cOpt_Link
          ENDIF
          IF s_lMAP
             AAdd( s_aOPTL, "OP MAP" )
@@ -1498,9 +1498,9 @@ FUNCTION Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386.exe"
-         cOpt_CompC := "-w3 -zq -bt=NT -5s -fp5 -onaehtzr -oi+ -ei -zp8 -s -zt0 {FC} -i{DI} {LC}"
+         cOpt_CompC := "-zq -w3 -5r -fp5 -onaehtri+ -s -ei -zp4 -zt0 -bt=NT {FC} -i{DI} {LC}"
          cBin_Link := "wlink.exe"
-         cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
+         cOpt_Link := "OP osn=NT OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
          cBin_Lib := "wlib.exe"
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
@@ -1518,7 +1518,7 @@ FUNCTION Main( ... )
             AAdd( s_aOPTL, "SYSTEM NT" ) /* TOFIX */
          ENDIF
          IF s_lDEBUG
-            cOpt_Link := "DEBUG " + cOpt_Link
+            cOpt_Link := "DEBUG ALL" + cOpt_Link
          ENDIF
          IF s_lMAP
             AAdd( s_aOPTL, "OP MAP" )
@@ -1552,7 +1552,7 @@ FUNCTION Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386.exe"
-         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {FC} -i{DI} {LC}"
+         cOpt_CompC := "-zq -w3 -5r -fp5 -onaehtri+ -s -ei -zp4 -zt0 -bt=OS2 {FC} -i{DI} {LC}"
          cBin_Link := "wlink.exe"
          cOpt_Link := "OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          cBin_Lib := "wlib.exe"
@@ -1560,7 +1560,7 @@ FUNCTION Main( ... )
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
          IF s_lDEBUG
-            cOpt_Link := "DEBUG " + cOpt_Link
+            cOpt_Link := "DEBUG ALL" + cOpt_Link
          ENDIF
          IF s_lMT
             AAdd( s_aOPTC, "-bm" )
@@ -1577,13 +1577,13 @@ FUNCTION Main( ... )
          cLibPrefix := "LIB "
          cLibExt := ".lib"
          cObjPrefix := "FILE "
-         cObjExt := ".obj"
+         cObjExt := ".o"
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386"
-         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=LINUX {FC} -i{DI} {LC}"
+         cOpt_CompC := "-zq -w3 -6r -fp6 -onaehtri+ -s -ei -zp4 -zt0 -bt=LINUX {FC} -i{DI} {LC}"
          cBin_Link := "wlink"
-         cOpt_Link := "ALL SYS LINUX OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
+         cOpt_Link := "SYS LINUX OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          cBin_Lib := "wlib"
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
@@ -1592,7 +1592,7 @@ FUNCTION Main( ... )
             AAdd( s_aOPTC, "-bm" )
          ENDIF
          IF s_lDEBUG
-            cOpt_Link := "DEBUG " + cOpt_Link
+            cOpt_Link := "DEBUG ALL" + cOpt_Link
          ENDIF
          IF s_lMAP
             AAdd( s_aOPTL, "OP MAP" )

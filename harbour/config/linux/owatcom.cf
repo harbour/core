@@ -37,12 +37,13 @@ endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
 # architecture flags
-CPPFLAGS += -5 -fp5
+CPPFLAGS += -6r -fp6
 
 # optimization flags
 # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
 # -oxaht
-CPPFLAGS += -onaehtzr -s -ei -zp8 -zt0
+CPPFLAGS += -onaehtr -s -ei -zp4 -zt0
+#CPPFLAGS += -obl+m
 ifeq ($(CC),wpp386)
 CPPFLAGS += -oi+
 else
@@ -65,7 +66,10 @@ space:= $(empty) $(empty)
 comma:= ,
 
 LD = wlink
-LDFLAGS = debug all sys Linux OP CASEEXACT
+LDFLAGS = sys Linux OP CASEEXACT
+ifeq ($(HB_BUILD_DEBUG),yes)
+LDFLAGS := debug all $(LDFLAGS)
+endif
 
 ifeq ($(HB_LIB_COMPILE),)
    LINKLIBS = $(foreach lib, $(CONTRIBS), $(LIB_DIR)/$(lib))

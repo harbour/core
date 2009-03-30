@@ -3823,7 +3823,7 @@ static void* internal_memalign(mstate m, size_t alignment, size_t bytes) {
   else {
     size_t nb = request2size(bytes);
     size_t req = nb + alignment + MIN_CHUNK_SIZE - CHUNK_OVERHEAD;
-    char* mem = (char*)internal_malloc(m, req);
+    char* mem = (char*)(internal_malloc(m, req));
     if (mem != 0) {
       void* leader = 0;
       void* trailer = 0;
@@ -3927,7 +3927,7 @@ static void** ialloc(mstate m,
   else {
     /* if empty req, must still return chunk representing empty array */
     if (n_elements == 0)
-      return (void**)internal_malloc(m, 0);
+      return (void**)(internal_malloc(m, 0));
     marray = 0;
     array_size = request2size(n_elements * (sizeof(void*)));
   }
