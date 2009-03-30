@@ -582,7 +582,7 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
   LOCAL nFileSize
   LOCAL cBuffer
   LOCAL nRetry  := 0
-  LOCAL nFError := 0
+
   DEFAULT cID TO ::cSID
   cFile := ::cSavePath + HB_OSPathSeparator() + ::cName + "_" + cID
   //TraceLog( "SessionRead: cFile", cFile )
@@ -620,6 +620,7 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
   LOCAL cFile
   LOCAL nFileSize
   LOCAL lOk := FALSE
+  LOCAL nRetry  := 0
 
   //TraceLog( "SessionWrite() - cID, cData", cID, cData )
   DEFAULT cID   TO ::cSID
@@ -630,16 +631,21 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
   cFile := ::cSavePath + HB_OSPathSeparator() + ::cName + "_" + cID
   //TraceLog( "SessionWrite() - cFile", cFile )
   IF nFileSize > 0
-     IF ( nH := FCreate( cFile, FC_NORMAL ) ) <> -1
-        IF ( FWrite( nH, @cData,  nFileSize ) ) <> nFileSize
-           uhttpd_Die( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+     DO WHILE nRetry++ <= ::nFileRetry
+        IF ( nH := hb_FCreate( cFile, FC_NORMAL, FO_READWRITE + FO_DENYWRITE ) ) <> -1
+           IF ( FWrite( nH, @cData,  nFileSize ) ) <> nFileSize
+              uhttpd_Die( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+           ELSE
+              lOk := TRUE
+           ENDIF
+           FClose( nH )
         ELSE
-           lOk := TRUE
+           //uhttpd_Die( "ERROR: On WRITING session file. I can not create session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+           hb_idleSleep( ::nFileWait / 1000 )
+           LOOP
         ENDIF
-        FClose( nH )
-     ELSE
-        uhttpd_Die( "ERROR: On WRITING session file. I can not create session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
-     ENDIF
+        EXIT
+     ENDDO
   ELSE
      // If session data is empty, I will delete the file if exist
      //IF File( cFile )
@@ -653,6 +659,8 @@ RETURN lOk
 METHOD SessionDestroy( cID ) CLASS uhttpd_Session
   LOCAL cFile
   LOCAL lOk
+  LOCAL nRetry  := 0
+
   //TraceLog( "SessionDestroy() - cID", cID )
   DEFAULT cID TO ::cSID
 
@@ -661,9 +669,22 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
 
   //TraceLog( "SessionDestroy() - cID, oCGI:h_Session", cID, DumpValue( oCGI:h_Session ) )
   cFile := ::cSavePath + HB_OSPathSeparator() + ::cName + "_" + cID
-  IF !( lOk := ( FErase( cFile ) == 0 ) )
-     uhttpd_Die( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
-  ELSE
+
+  lOk := FALSE
+  DO WHILE nRetry++ <= ::nFileRetry
+     IF ( lOk := ( FErase( cFile ) == 0 ) )
+        EXIT
+     ELSE
+        hb_idleSleep( ::nFileWait / 1000 )
+        LOOP
+     ENDIF
+  ENDDO
+
+  //IF !( lOk := ( FErase( cFile ) == 0 ) )
+  //   uhttpd_Die( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+  //ELSE
+
+  IF lOk
      //TraceLog( "SessionDestroy() - Sessione Eliminata - File " + cFile )
      // Genero un nuovo SID
      ::RegenerateID()
@@ -684,6 +705,7 @@ METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
       //TraceLog( "GC: aFile[ F_NAME ], aFile[ F_DATE ], Date(), aFile[ F_TIME ], Time(), nSecs, nMaxLifeTime", ;
       //               aFile[ F_NAME ], aFile[ F_DATE ], Date(), aFile[ F_TIME ], Time(), nSecs, nMaxLifeTime )
       IF nSecs > nMaxLifeTime
+         // No error checking here, because if I cannot delete file now I will find it again on next loop
          FErase( ::cSavePath + HB_OSPathSeparator() + aFile[ F_NAME ] )
       ENDIF
   NEXT

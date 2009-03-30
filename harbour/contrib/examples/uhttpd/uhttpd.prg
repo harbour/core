@@ -2321,6 +2321,8 @@ STATIC FUNCTION uhttpd_DefError( oError )
    LOCAL nChoice
 
    LOCAL n
+   LOCAL cDateTime, cString
+   LOCAL cNewLine := hb_OSNewLine()
 
    // By default, division by zero results in zero
    IF oError:genCode == EG_ZERODIV .AND. ;
@@ -2360,7 +2362,7 @@ STATIC FUNCTION uhttpd_DefError( oError )
    cCallstack := ""
    n := 1
    DO WHILE ! Empty( ProcName( ++n ) )
-      cCallstack += "Called from " + ProcName( n ) + "(" + hb_NToS( ProcLine( n ) ) + ")  "
+      cCallstack += "Called from " + ProcName( n ) + "(" + hb_NToS( ProcLine( n ) ) + ")  " + cNewLine
    ENDDO
 
    // Build buttons
@@ -2387,9 +2389,9 @@ STATIC FUNCTION uhttpd_DefError( oError )
    DO WHILE nChoice == 0
 
       IF cDOSError == NIL
-         nChoice := Alert( cMessage + " " + cCallstack, aOptions )
+         nChoice := Alert( cMessage + ";" + cCallstack, aOptions )
       ELSE
-         nChoice := Alert( cMessage + ";" + cDOSError + " " + cCallstack, aOptions )
+         nChoice := Alert( cMessage + " " + cDOSError + ";" + cCallstack, aOptions )
       ENDIF
 
    ENDDO
@@ -2411,13 +2413,21 @@ STATIC FUNCTION uhttpd_DefError( oError )
       cMessage += " " + cDOSError
    ENDIF
 
-   OutErr( hb_OSNewLine() )
+   OutErr( cNewLine )
    OutErr( cMessage )
-   OutErr( hb_OSNewLine() )
+   OutErr( cNewLine )
    OutErr( cCallstack )
 
    // Write to errorlog
-   uhttpd_WriteToLogFile( cMessage + HB_OsPathSeparator() + cCallstack, Exe_Path() + "\error.log" )
+   cDateTime := HB_TTOC( hb_DateTime() )
+   cString   := Replicate( "*", 70 ) + cNewLine + ;
+                cDateTime            + cNewLine + ;
+                Replicate( "*", 70 ) + cNewLine + ;
+                cMessage             + cNewLine + ;
+                cCallstack           + cNewLine + ;
+                Replicate( "*", 70 ) + cNewLine
+
+   uhttpd_WriteToLogFile( cString, Exe_Path() + "\error.log" )
 
    ErrorLevel( 1 )
    QUIT

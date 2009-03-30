@@ -714,14 +714,9 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
   IF cLog <> NIL
 
      IF !lCreate .AND. FILE( cLog )
-        nHandle := FOpen( cLog, FO_READWRITE + FO_SHARED)
+        nHandle := FOpen( cLog, FO_READWRITE + FO_SHARED )
      ELSE
-        nHandle := FCreate( cLog )
-        // After creation, I close and reopen it shared
-        IF Ferror() == 0 .AND. nHandle > 0
-           FClose( nHandle )
-           nHandle := FOpen( cLog, FO_READWRITE + FO_SHARED)
-        ENDIF
+        nHandle := hb_FCreate( cLog, FC_NORMAL, FO_READWRITE + FO_SHARED )
         //__OutDebug( "Create ", nHandle )
      ENDIF
 
