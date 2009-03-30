@@ -8,6 +8,36 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-30 11:30 UTC+0200 Petr Chornyj (myorg63 at mail.ru)
+   * contrib/hbsqlit3/hbsqlit3.ch
+   * contrib/hbsqlit3/hbsqlit3.c
+      * Added support for sqlite_exec() callback. 
+         Now the 3rd parameter is an optional callback that is invoked
+         once for each row of any query results.
+      * Now we can pass name of logfile as third parameter of
+         sqlite3_trace(), sqlite3_profile(). 
+      + Added sqlite3_set_authorizer() - 
+         Compile-Time Authorization Callbacks.
+      + Added sqlite3_busy_handler() - 
+         A Callback To Handle SQLITE_BUSY Errors.
+      + Added sqlite3_progress_handler() - Query Progress Callbacks.
+      + Added sqlite3_commit_hook(), sqlite3_rollback_hook() -
+         Commit And Rollback Notification Callbacks
+      + Added sqlite3_backup_*() API for backups purposes.
+      + Added sqlite3_initialize(), sqlite3_shutdown(), sqlite3_interrupt(),
+         sqlite3_status(), sqlite3_db_status(), sqlite3_stmt_status(), 
+         sqlite3_sql(), sqlite3_extended_errcode(), sqlite3_threadsafe(),
+         sqlite3_memory_used(), sqlite3_memory_highwater(). 
+      ! Fixed sqlite3_table_column_metadata().
+      - Temporary disabled sqlite3_db_handle().
+      * Minor changes, cleanup and formating. 
+   + contrib/hbsqlit3/tests/authorizer.prg 
+   + contrib/hbsqlit3/tests/backup.prg 
+   + contrib/hbsqlit3/tests/hooks.prg 
+      + Added for demonstration of new possibilities.
+   + contrib/hbsqlit3/tests/metadata.prg 
+      * Minor changes 
+
 2009-03-30 10:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * config/win/owatcom.cf
   * config/linux/owatcom.cf

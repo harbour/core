@@ -47,7 +47,7 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- * See COPYING for licensing terms.
+ * See doc/license.txt for licensing terms.
  *
  */
 
@@ -61,45 +61,44 @@
 #define SQLITE_INTEGER               1
 #define SQLITE_FLOAT                 2
 #ifdef SQLITE_TEXT
-#undef SQLITE_TEXT
+   #undef SQLITE_TEXT
 #else
-#define SQLITE_TEXT                  3
+   #define SQLITE_TEXT               3
 #endif
 #define SQLITE3_TEXT                 3
 #define SQLITE_BLOB                  4
 #define SQLITE_NULL                  5
 
-#define SQLITE_OK                    0    /* Successful result */
-
+#define SQLITE_OK                    0   /* Successful result */
 /* Beginning-of-Error-Codes */
-#define SQLITE_ERROR                 1    /* SQL error or missing database */
-#define SQLITE_INTERNAL              2    /* NOT USED. Internal logic error in SQLite */
-#define SQLITE_PERM                  3    /* Access permission denied */
-#define SQLITE_ABORT                 4    /* Callback routine requested an abort */
-#define SQLITE_BUSY                  5    /* The database file is locked */
-#define SQLITE_LOCKED                6    /* A table in the database is locked */
-#define SQLITE_NOMEM                 7    /* A malloc() failed */
-#define SQLITE_READONLY              8    /* Attempt to write a readonly database */
-#define SQLITE_INTERRUPT             9    /* Operation terminated by sqlite3_interrupt()*/
-#define SQLITE_IOERR                 10   /* Some kind of disk I/O error occurred */
-#define SQLITE_CORRUPT               11   /* The database disk image is malformed */
-#define SQLITE_NOTFOUND              12   /* NOT USED. Table or record not found */
-#define SQLITE_FULL                  13   /* Insertion failed because database is full */
-#define SQLITE_CANTOPEN              14   /* Unable to open the database file */
-#define SQLITE_PROTOCOL              15   /* NOT USED. Database lock protocol error */
-#define SQLITE_EMPTY                 16   /* Database is empty */
-#define SQLITE_SCHEMA                17   /* The database schema changed */
-#define SQLITE_TOOBIG                18   /* String or BLOB exceeds size limit */
-#define SQLITE_CONSTRAINT            19   /* Abort due to constraint violation */
-#define SQLITE_MISMATCH              20   /* Data type mismatch */
-#define SQLITE_MISUSE                21   /* Library used incorrectly */
-#define SQLITE_NOLFS                 22   /* Uses OS features not supported on host */
-#define SQLITE_AUTH                  23   /* Authorization denied */
-#define SQLITE_FORMAT                24   /* Auxiliary database format error */
-#define SQLITE_RANGE                 25   /* 2nd parameter to sqlite3_bind out of range */
-#define SQLITE_NOTADB                26   /* File opened that is not a database file */
-#define SQLITE_ROW                   100  /* sqlite3_step() has another row ready */
-#define SQLITE_DONE                  101  /* sqlite3_step() has finished executing */
+#define SQLITE_ERROR                 1   /* SQL error or missing database */
+#define SQLITE_INTERNAL              2   /* NOT USED. Internal logic error in SQLite */
+#define SQLITE_PERM                  3   /* Access permission denied */
+#define SQLITE_ABORT                 4   /* Callback routine requested an abort */
+#define SQLITE_BUSY                  5   /* The database file is locked */
+#define SQLITE_LOCKED                6   /* A table in the database is locked */
+#define SQLITE_NOMEM                 7   /* A malloc() failed */
+#define SQLITE_READONLY              8   /* Attempt to write a readonly database */
+#define SQLITE_INTERRUPT             9   /* Operation terminated by sqlite3_interrupt()*/
+#define SQLITE_IOERR                 10  /* Some kind of disk I/O error occurred */
+#define SQLITE_CORRUPT               11  /* The database disk image is malformed */
+#define SQLITE_NOTFOUND              12  /* NOT USED. Table or record not found */
+#define SQLITE_FULL                  13  /* Insertion failed because database is full */
+#define SQLITE_CANTOPEN              14  /* Unable to open the database file */
+#define SQLITE_PROTOCOL              15  /* NOT USED. Database lock protocol error */
+#define SQLITE_EMPTY                 16  /* Database is empty */
+#define SQLITE_SCHEMA                17  /* The database schema changed */
+#define SQLITE_TOOBIG                18  /* String or BLOB exceeds size limit */
+#define SQLITE_CONSTRAINT            19  /* Abort due to constraint violation */
+#define SQLITE_MISMATCH              20  /* Data type mismatch */
+#define SQLITE_MISUSE                21  /* Library used incorrectly */
+#define SQLITE_NOLFS                 22  /* Uses OS features not supported on host */
+#define SQLITE_AUTH                  23  /* Authorization denied */
+#define SQLITE_FORMAT                24  /* Auxiliary database format error */
+#define SQLITE_RANGE                 25  /* 2nd parameter to sqlite3_bind out of range */
+#define SQLITE_NOTADB                26  /* File opened that is not a database file */
+#define SQLITE_ROW                   100 /* sqlite3_step() has another row ready */
+#define SQLITE_DONE                  101 /* sqlite3_step() has finished executing */
 /* End-of-Error-Codes */
 
 /* Combination of the following bit values are used
@@ -117,4 +116,59 @@
 #define SQLITE_OPEN_SUBJOURNAL       8192
 #define SQLITE_OPEN_MASTER_JOURNAL   16384
 
+/* Status Parameters for prepared statements */
+#define SQLITE_STMTSTATUS_FULLSCAN_STEP     1
+#define SQLITE_STMTSTATUS_SORT              2
+
+/* Authorizer Action Codes */
+#define SQLITE_CREATE_INDEX          1   /* Index Name      Table Name      */
+#define SQLITE_CREATE_TABLE          2   /* Table Name      NULL            */
+#define SQLITE_CREATE_TEMP_INDEX     3   /* Index Name      Table Name      */
+#define SQLITE_CREATE_TEMP_TABLE     4   /* Table Name      NULL            */
+#define SQLITE_CREATE_TEMP_TRIGGER   5   /* Trigger Name    Table Name      */
+#define SQLITE_CREATE_TEMP_VIEW      6   /* View Name       NULL            */
+#define SQLITE_CREATE_TRIGGER        7   /* Trigger Name    Table Name      */
+#define SQLITE_CREATE_VIEW           8   /* View Name       NULL            */
+#define SQLITE_DELETE                9   /* Table Name      NULL            */
+#define SQLITE_DROP_INDEX            10  /* Index Name      Table Name      */
+#define SQLITE_DROP_TABLE            11  /* Table Name      NULL            */
+#define SQLITE_DROP_TEMP_INDEX       12  /* Index Name      Table Name      */
+#define SQLITE_DROP_TEMP_TABLE       13  /* Table Name      NULL            */
+#define SQLITE_DROP_TEMP_TRIGGER     14  /* Trigger Name    Table Name      */
+#define SQLITE_DROP_TEMP_VIEW        15  /* View Name       NULL            */
+#define SQLITE_DROP_TRIGGER          16  /* Trigger Name    Table Name      */
+#define SQLITE_DROP_VIEW             17  /* View Name       NULL            */
+#define SQLITE_INSERT                18  /* Table Name      NULL            */
+#define SQLITE_PRAGMA                19  /* Pragma Name     1st arg or NULL */
+#define SQLITE_READ                  20  /* Table Name      Column Name     */
+#define SQLITE_SELECT                21  /* NULL            NULL            */
+#define SQLITE_TRANSACTION           22  /* Operation       NULL            */
+#define SQLITE_UPDATE                23  /* Table Name      Column Name     */
+#define SQLITE_ATTACH                24  /* Filename        NULL            */
+#define SQLITE_DETACH                25  /* Database Name   NULL            */
+#define SQLITE_ALTER_TABLE           26  /* Database Name   Table Name      */
+#define SQLITE_REINDEX               27  /* Index Name      NULL            */
+#define SQLITE_ANALYZE               28  /* Table Name      NULL            */
+#define SQLITE_CREATE_VTABLE         29  /* Table Name      Module Name     */
+#define SQLITE_DROP_VTABLE           30  /* Table Name      Module Name     */
+#define SQLITE_FUNCTION              31  /* NULL            Function Name   */
+#define SQLITE_SAVEPOINT             32  /* Operation       Savepoint Name  */
+
+/* Authorizer Return Codes */
+#define SQLITE_DENY                  1   /* Abort the SQL statement with an error */
+#define SQLITE_IGNORE                2   /* Don't allow access, but don't generate an error */
+
+/* Status Parameters */
+#define SQLITE_STATUS_MEMORY_USED          0
+#define SQLITE_STATUS_PAGECACHE_USED       1
+#define SQLITE_STATUS_PAGECACHE_OVERFLOW   2
+#define SQLITE_STATUS_SCRATCH_USED         3
+#define SQLITE_STATUS_SCRATCH_OVERFLOW     4
+#define SQLITE_STATUS_MALLOC_SIZE          5
+#define SQLITE_STATUS_PARSER_STACK         6
+#define SQLITE_STATUS_PAGECACHE_SIZE       7
+#define SQLITE_STATUS_SCRATCH_SIZE         8
+
+/* Status Parameters for database connections */
+#define SQLITE_DBSTATUS_LOOKASIDE_USED     0
 #endif

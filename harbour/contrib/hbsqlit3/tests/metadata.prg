@@ -52,9 +52,7 @@
 
 #include "hbsqlit3.ch"
 
-#ifdef NODLL
-  #define SQLITE_ENABLE_COLUMN_METADATA
-#endif
+//#define SQLITE_ENABLE_COLUMN_METADATA
 
 PROCEDURE main()
    LOCAL lCreateIfNotExist := .f.
