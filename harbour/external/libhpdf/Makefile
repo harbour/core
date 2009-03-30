@@ -10,6 +10,16 @@ ROOT = ../../
 
 LIBNAME=libhpdf
 
+ifeq ($(HB_WITH_LIBHPDF),)
+ifeq ($(HB_COMPILER),owatcom)
+HB_WITH_LIBHPDF=no
+else
+HB_WITH_LIBHPDF=yes
+endif
+endif
+
+ifeq ($(HB_WITH_LIBHPDF),yes)
+
 ifeq ($(HB_INC_LIBPNG),)
 ifeq ($(HB_XBUILD),)
 HB_INC_LIBPNG = /usr/include
@@ -86,6 +96,9 @@ C_SOURCES = \
 
 include $(TOP)$(ROOT)config/lib.cf
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif
