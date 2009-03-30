@@ -71,8 +71,11 @@
         verify to launch .hrb and .exe *only* from cgi-bin
       - optimize code
       - add SSL support
-      - check CGIExec() better
       - fix dynamic threads (now locked to fixed number)
+      - add full mime type handling
+      - add cgi exec on linux
+      - add .htaccess support
+      - fix binding to address
 
 */
 
@@ -132,7 +135,7 @@
 #endif
 
 #define APP_NAME      "uhttpd"
-#define APP_VER_NUM   "0.4.3"
+#define APP_VER_NUM   "0.4.4"
 #define APP_VERSION   APP_VER_NUM + APP_GD_SUPPORT + APP_INET_SUPPORT + APP_DT_SUPPORT
 
 #define AF_INET         2
@@ -649,10 +652,13 @@ FUNCTION MAIN( ... )
 
 STATIC FUNCTION AcceptConnections()
    LOCAL hSocket
-   LOCAL nConnections, nThreads, nMaxThreads, n
-   LOCAL nServiceConnections, nServiceThreads, nMaxServiceThreads, nThreadID
-   LOCAL pThread
+   LOCAL n
+#ifndef FIXED_THREADS
+   LOCAL nConnections, nThreads, nMaxThreads
+   LOCAL nServiceConnections, nServiceThreads, nMaxServiceThreads
    LOCAL lCanNotify
+#endif
+   LOCAL pThread
    LOCAL lQuitRequest := FALSE
 
    ErrorBlock( { | oError | uhttpd_DefError( oError ) } )
@@ -691,37 +697,43 @@ STATIC FUNCTION AcceptConnections()
          IF s_lQuitRequest
             hb_mutexUnlock( s_hmtxBusy )
             lQuitRequest := TRUE
-            EXIT
          ENDIF
          hb_mutexUnlock( s_hmtxBusy )
       ENDIF
 
       // Waiting a connection from main application loop
-      hb_mutexSubscribe( s_hmtxQueue,, @hSocket )
+      IF !lQuitRequest
+         hb_mutexSubscribe( s_hmtxQueue,, @hSocket )
+      ENDIF
 
       // I have a QUIT request
       IF hSocket == NIL .OR. lQuitRequest
 
          // Requesting to Running threads to quit (using -1 value)
          AEVAL( s_aRunningThreads, {|| hb_mutexNotify( s_hmtxRunningThreads, -1 ) } )
+#ifndef FIXED_THREADS
          // Requesting to Service threads to quit (using -1 value)
          AEVAL( s_aServiceThreads, {|| hb_mutexNotify( s_hmtxServiceThreads, -1 ) } )
-
+#endif
          // waiting running threads to quit
          AEVAL( s_aRunningThreads, {|h| hb_threadJoin( h ) } )
+#ifndef FIXED_THREADS
          // waiting service threads to quit
          AEVAL( s_aServiceThreads, {|h| hb_threadJoin( h ) } )
-
+#endif
          IF hb_mutexLock( s_hmtxBusy )
             //hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
             asize( s_aRunningThreads, 0 )
+#ifndef FIXED_THREADS
             asize( s_aServiceThreads, 0 )
+#endif
             hb_mutexUnlock( s_hmtxBusy )
          ENDIF
 
          EXIT
       ENDIF
 
+#ifndef FIXED_THREADS
       // Load current state
       IF hb_mutexLock( s_hmtxBusy )
          nConnections       := s_nConnections
@@ -735,7 +747,6 @@ STATIC FUNCTION AcceptConnections()
 
       lCanNotify := FALSE
 
-#ifndef FIXED_THREADS
       // If I have no more running threads to use ...
       IF nConnections > nMaxThreads
 
@@ -1407,20 +1418,20 @@ STATIC PROCEDURE WriteToLog( cRequest )
    RETURN
 
 STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
-   LOCAL hOut, hErr
-   LOCAL cData, nLen
+   LOCAL hIn, hOut
+   LOCAL cData, nLen, cSend, v
    LOCAL nErrorLevel := 0, nKillExit := 0
    LOCAL pThread
    LOCAL hProc
    LOCAL hmtxCGIKill  := hb_mutexCreate()
-   LOCAL cError
+   //LOCAL cError
 
 
    IF HB_ISSTRING( cProc )
 
       //hb_toOutDebug( "Launching process: %s\n\r", cProc )
       // No hIn, hErr == hOut
-      hProc := hb_processOpen( cProc, , @hOut, @hErr, .T. ) // .T. = Detached Process (Hide Window)
+      hProc := hb_processOpen( cProc, @hIn, @hOut, @hOut, .T. ) // .T. = Detached Process (Hide Window)
 
       IF hProc > -1
          //hb_toOutDebug( "Process handler: %s\n\r", hProc )
@@ -1428,14 +1439,17 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
 
          pThread := hb_threadStart( @CGIKill(), hProc, hmtxCGIKill )
 
+         // Sending POST variables to CGI via STD_IN
+         cSend := ""
+         FOR EACH v IN _POST
+             cSend += v:__enumKey() + "=" + LTrim( hb_cStr( v:__enumValue() ) ) + IIF( v:__enumIndex() < Len( _POST ), "&", "" )
+         NEXT
+         FWrite( hIn, cSend )
+         //hb_toOutDebug( "Sending: %s\n\r", cSend )
+
          hb_mutexNotify( hmtxCGIKill, { hProc, .T. } )
 
-         // Nothing sent to process
-         //hb_toOutDebug( "Sending: %s\n\r", cSend )
-         //FWrite( hIn, cSend )
-
          //hb_toOutDebug( "Reading output\n\r" )
-
          cData := Space( 1000 )
          cOutPut := ""
          DO WHILE ( nLen := Fread( hOut, @cData, Len( cData ) ) ) > 0
@@ -1443,6 +1457,7 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
             cData := Space( 1000 )
          ENDDO
 
+         /*
          cData := Space( 1000 )
          cError := ""
          DO WHILE ( nLen := Fread( hErr, @cData, Len( cData ) ) ) > 0
@@ -1451,6 +1466,7 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
          ENDDO
 
          cOutPut += cError
+         */
 
          //hb_toOutDebug( "Received: cOutPut = %s\n\r", cOutPut )
 
@@ -1471,8 +1487,9 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
          ENDIF
 
          FClose( hProc )
+         FClose( hIn )
          FClose( hOut )
-         FClose( hErr )
+         //FClose( hErr )
 
          //hb_toOutDebug( "CGIExec closed handles\n\r" )
 
@@ -2696,4 +2713,7 @@ STATIC FUNCTION GT_notifier( nEvent, xParams )
            hb_mutexUnlock( s_hmtxBusy )
         ENDIF
   ENDCASE
+
+  HB_SYMBOL_UNUSED( xParams )
+
 RETURN nReturn
