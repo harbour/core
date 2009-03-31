@@ -66,7 +66,7 @@ space:= $(empty) $(empty)
 comma:= ,
 
 LD = wlink
-LDFLAGS = sys Linux OP CASEEXACT
+LDFLAGS = sys Linux
 ifeq ($(HB_BUILD_DEBUG),yes)
 LDFLAGS := debug all $(LDFLAGS)
 endif

@@ -1478,7 +1478,7 @@ FUNCTION Main( ... )
          cBin_CompC := "wpp386.exe"
          cOpt_CompC := "-zq -w3 -5r -fp5 -onaehtri+ -s -ei -zp4 -zt0 -bt=DOS {FC} -i{DI} {LC}"
          cBin_Link := "wlink.exe"
-         cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
+         cOpt_Link := "SYS causeway {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          cBin_Lib := "wlib.exe"
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
@@ -1500,7 +1500,7 @@ FUNCTION Main( ... )
          cBin_CompC := "wpp386.exe"
          cOpt_CompC := "-zq -w3 -5r -fp5 -onaehtri+ -s -ei -zp4 -zt0 -bt=NT {FC} -i{DI} {LC}"
          cBin_Link := "wlink.exe"
-         cOpt_Link := "OP osn=NT OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
+         cOpt_Link := "{FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
          cBin_Lib := "wlib.exe"
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
@@ -1554,7 +1554,7 @@ FUNCTION Main( ... )
          cBin_CompC := "wpp386.exe"
          cOpt_CompC := "-zq -w3 -5r -fp5 -onaehtri+ -s -ei -zp4 -zt0 -bt=OS2 {FC} -i{DI} {LC}"
          cBin_Link := "wlink.exe"
-         cOpt_Link := "OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
+         cOpt_Link := "{FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          cBin_Lib := "wlib.exe"
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
@@ -1583,7 +1583,7 @@ FUNCTION Main( ... )
          cBin_CompC := "wpp386"
          cOpt_CompC := "-zq -w3 -6r -fp6 -onaehtri+ -s -ei -zp4 -zt0 -bt=LINUX {FC} -i{DI} {LC}"
          cBin_Link := "wlink"
-         cOpt_Link := "SYS LINUX OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
+         cOpt_Link := "SYS LINUX {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          cBin_Lib := "wlib"
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt

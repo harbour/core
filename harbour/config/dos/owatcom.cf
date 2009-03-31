@@ -97,7 +97,8 @@ $(foreach lib, $(GTLIBS), $(link_lib))
 endef
 
 LD = wlink
-LDFLAGS = OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe
+# other SYS values: dos4g (default), pmodew (commercial)
+LDFLAGS = SYS causeway
 ifeq ($(HB_BUILD_DEBUG),yes)
 LDFLAGS := debug all $(LDFLAGS)
 endif

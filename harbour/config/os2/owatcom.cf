@@ -83,7 +83,7 @@ echo @%WATCOM%/binp/wlink.lnk >> __link__.tmp
 endef
 
 LD = wlink
-LDFLAGS = OP stack=65536 OP CASEEXACT
+LDFLAGS =
 ifeq ($(HB_BUILD_DEBUG),yes)
 LDFLAGS := debug all $(LDFLAGS)
 endif

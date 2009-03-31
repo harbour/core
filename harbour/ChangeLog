@@ -8,6 +8,17 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-31 02:46 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/dos/owatcom.cf
+  * harbour/config/win/owatcom.cf
+  * harbour/config/linux/owatcom.cf
+  * harbour/config/os2/owatcom.cf
+  * harbour/utils/hbmk2/hbmk2.prg
+    * removed unnecessary linker options
+    * use 'SYS causeway' to enable causeway stub in DOS builds instead
+      of setting it manually. DOS users can also use DOS4G (default) or
+      PMODE (commercial) stubs.
+
 2009-03-31 01:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * external/libhpdf/Makefile
   * external/libpng/Makefile

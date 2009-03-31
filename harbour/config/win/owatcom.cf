@@ -90,7 +90,7 @@ echo LIB kernel32.lib, user32.lib, ws2_32.lib >> __link__.tmp
 endef
 
 LD = wlink
-LDFLAGS = OP osn=NT OP CASEEXACT
+LDFLAGS =
 ifeq ($(HB_BUILD_DEBUG),yes)
 LDFLAGS := debug all $(LDFLAGS)
 endif
