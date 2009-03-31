@@ -6,6 +6,8 @@ ROOT = ../../../
 
 LIBNAME=sddfb
 
+ifneq ($(HB_COMPILER),pocc64)
+
 ifeq ($(HB_INC_FIREBIRD),)
 ifeq ($(HB_XBUILD),)
 HB_INC_FIREBIRD = /usr/include /opt/firebird/include
@@ -22,6 +24,9 @@ C_SOURCES=\
 	fbirddd.c \
 
 include $(TOP)$(ROOT)config/lib.cf
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif
