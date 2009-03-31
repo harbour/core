@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-31 13:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbfbird/Makefile
+    ! Excluded for pocc64 due to compile errors.
+
+  * source/rtl/hbinet.c
+    ! Fixed to warnings for pocc64.
+
 2009-03-31 12:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.bat
     + Added pocc64 support.

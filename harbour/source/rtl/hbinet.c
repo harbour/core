@@ -260,7 +260,7 @@
              link at all. Some hbinet.c features (or the whole module)
              won't properly work though. [vszakats] */
    #undef FD_ISSET
-   #define FD_ISSET( s, f ) ( 0 )
+   #define FD_ISSET( s, f ) do { HB_SYMBOL_UNUSED( s ); HB_SYMBOL_UNUSED( f ) } while( 0 )
 #endif
 
 #if defined( HB_OS_LINUX )

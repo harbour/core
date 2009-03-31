@@ -6,6 +6,7 @@ ROOT = ../../
 
 LIBNAME=hbfbird
 
+ifneq ($(HB_COMPILER),pocc64)
 ifneq ($(HB_COMPILER),poccce)
 
 ifeq ($(HB_INC_FIREBIRD),)
@@ -28,6 +29,9 @@ PRG_SOURCES=\
 
 include $(TOP)$(ROOT)config/lib.cf
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif
