@@ -27,9 +27,9 @@ setlocal
 
 rem ; Basic setup
 set HB_VERSION=1.1.0dev
-set HB_ARCHITECTURE=win
+if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=win
 set HB_PKGNAME=harbour-%HB_VERSION%-%HB_ARCHITECTURE%-%HB_COMPILER%
-set HB_DIRNAME=harbour-%HB_COMPILER%
+set HB_DIRNAME=harbour-%HB_ARCHITECTURE%-%HB_COMPILER%
 
 rem ; Dir setup
 set HB_INSTALL_BASE=%~dp0_hb_install_temp

@@ -1498,7 +1498,7 @@ FUNCTION Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386.exe"
-         cOpt_CompC := "-zq -w3 -5r -fp5 -onaehtri+ -s -ei -zp4 -zt0 -bt=NT {FC} -i{DI} {LC}"
+         cOpt_CompC := "-zq -w3 -6s -fp6 -onaehtri+ -s -ei -zp4 -zt0 -bt=NT {FC} -i{DI} {LC}"
          cBin_Link := "wlink.exe"
          cOpt_Link := "{FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
          cBin_Lib := "wlib.exe"
@@ -1799,10 +1799,10 @@ FUNCTION Main( ... )
 
       /* TODO */
       CASE t_cARCH == "linux" .AND. t_cCOMP == "icc"
-      CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
+      CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"  /* NOTE: Cross-platform: wce/ARM on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"  /* NOTE: Cross-platform: win/amd64 on win/x86 */
-      CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
-      CASE t_cARCH == "linux" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wince/ARM on win/x86 */
+      CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"  /* NOTE: Cross-platform: wce/ARM on win/x86 */
+      CASE t_cARCH == "linux" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wce/ARM on win/x86 */
          IF ! s_lSHARED
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl" } )
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "uuid", "ole32" } )

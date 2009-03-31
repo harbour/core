@@ -23,6 +23,9 @@ CFLAGS += -w -w-sig- -Q
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
+# for some reason -6 generates the exact same code as -4
+# with both 5.5 and 5.8. -5 seems to be significantly slower
+# than both.
 CFLAGS += -d -6 -O2 -OS -Ov -Oi -Oc
 endif
 

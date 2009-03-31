@@ -260,8 +260,7 @@ HB_EXTERN_BEGIN
 
 #elif defined( _MSC_VER )
 
-#  if defined( i386 ) || defined( __i386__ ) || defined( __x86_64__ ) || \
-      defined( _M_IX86 ) || defined( _M_AMD64 )
+#  if defined( i386 ) || defined( __i386__ ) || defined( _M_IX86 )
 
 #     if HB_COUNTER_SIZE == 4
 
