@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-31 21:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/postinst.bat
+    ! Fixed regression causing shared hbrun/hbtest binaries to
+      not be built on x64 targets.
+
+  * external/sqlite3/Makefile
+    ! Removed header installer rules. There are no headers here
+      to install.
+
 2009-03-31 19:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     + Added information on HB_EXTERNAL* envvar settings.

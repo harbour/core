@@ -38,12 +38,7 @@ ifeq ($(HB_WITH_SQLITE3),yes)
 C_SOURCES =\
 	sqlite3.c \
 
-include $(TOP)$(ROOT)config/header.cf
-INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf
-
-install::
-	$(INSTALL_RULE_HEADERS)
 
 else
 include $(TOP)$(ROOT)config/none.cf
