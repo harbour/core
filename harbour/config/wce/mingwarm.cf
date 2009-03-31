@@ -1,0 +1,153 @@
+#
+# $Id$
+#
+
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
+
+OBJ_EXT = .o
+EXE_EXT = .exe
+LIB_PREF = lib
+LIB_EXT = .a
+
+# Favor size for CE builds.
+HB_GCMODE=0
+
+CC = $(HB_CCPREFIX)gcc
+CC_IN = -c
+CC_OUT = -o
+CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+CFLAGS =
+
+ifneq ($(HB_BUILD_WARN),no)
+CFLAGS += -Wall -W
+endif
+
+ifneq ($(HB_BUILD_OPTIM),no)
+# Use -O2 instead of -O3 here.
+CFLAGS += -O2
+CFLAGS += -fomit-frame-pointer
+endif
+
+ifeq ($(HB_BUILD_DEBUG),yes)
+CFLAGS += -g
+endif
+
+LD = $(HB_CCPREFIX)gcc
+LD_OUT = -o
+LINKPATHS =
+LDLIBS =
+
+# Add all libraries specified in CONTRIBS and LIBS.
+ifeq ($(HB_LIB_COMPILE),)
+LINKPATHS += -L$(LIB_DIR)
+else
+LINKPATHS += -L$(HB_LIB_COMPILE)
+endif
+
+LDLIBS += $(foreach lib, $(CONTRIBS), -l$(subst lib,,$(lib)))
+LDLIBS += $(foreach lib, $(LIBS), -l$(lib))
+
+# If LIBS specifies the rdd library, add all DB drivers.
+ifeq ($(findstring rdd,$(LIBS)),rdd)
+LDLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
+endif
+
+# Add the specified GT driver library
+ifeq ($(findstring rtl,$(LIBS)),rtl)
+LDLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
+endif
+
+# HB_SCREEN_LIB: empty, or one of ncurses, slang
+# HB_SCREEN_LIB=ncurses
+# HB_SCREEN_LIB=slang
+
+ifneq ($(HB_SCREEN_LIB),)
+LDLIBS += -l$(HB_SCREEN_LIB)
+endif
+
+# Add the optional user path(s)
+ifneq ($(LNK_USR_PATH),)
+LINKPATHS += $(foreach path, $(LNK_USR_PATH), -L$(path))
+endif
+
+# Add the optional user libarary (or libraries)
+ifneq ($(LNK_USR_LIB),)
+LDLIBS += $(foreach lib, $(LNK_USR_LIB), -l$(lib))
+endif
+
+SYSLIBS = -lwininet -lws2
+# for contribs
+SYSLIBS += -lcommdlg -lcommctrl -luuid -lole32
+
+# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# It causes that every echo command will be separated by LF
+define lib_object
+echo. ADDMOD $(file) >> __lib__.tmp
+
+endef
+
+# We have to use script to overcome the DOS limit of max 128 characters
+# in commmand line
+define create_library
+echo. CREATE $(LIB_DIR)/$@ > __lib__.tmp
+$(foreach file, $(^F), $(lib_object))
+echo. SAVE >> __lib__.tmp
+echo. END >> __lib__.tmp
+$(AR) $(ARFLAGS) -M < __lib__.tmp
+endef
+
+# NOTE: The empty line below HAVE TO exist!
+define link_file
+echo. $(file) >> __link__.tmp
+
+endef
+
+define search_dir
+echo. SEARCH_DIR($(file)) >> __link__.tmp
+
+endef
+
+ifneq ($(strip $(LDLIBS)),)
+define libs_list
+echo. GROUP( >> __link__.tmp
+$(foreach file, $(LDLIBS), $(link_file))
+echo. ) >> __link__.tmp
+endef
+else
+libs_list=
+endif
+
+define link_exe_file
+echo. INPUT( >> __link__.tmp
+$(foreach file, $(^F), $(link_file))
+echo. ) >> __link__.tmp
+$(libs_list)
+$(foreach file, $(subst -L,,$(LINKPATHS)), $(search_dir))
+echo. GROUP( >> __link__.tmp
+$(foreach file, $(SYSLIBS), $(link_file))
+echo. ) >> __link__.tmp
+-$(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LD_OUT)$@ __link__.tmp
+endef
+
+LDFLAGS =
+
+AR = $(HB_CCPREFIX)ar
+ARFLAGS = $(HB_USER_AFLAGS)
+
+RANLIB = $(HB_CCPREFIX)ranlib
+
+ifeq ($(SHLVL),) # COMMAND.COM - length of command line is limited
+ifneq ($(OS),Windows_NT)
+AR_RULE = $(create_library)
+LD_RULE = $(link_exe_file)
+endif
+endif
+
+ifeq ($(AR_RULE),)
+AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(LIB_DIR)/$@
+# our libs have a lot of cross referenced now and we have to group them
+# until we won't have cleaned them
+LINKLIBS = $(LINKPATHS) -Wl,--start-group $(LDLIBS) -Wl,--end-group $(SYSLIBS)
+endif
+
+include $(TOP)$(ROOT)config/rules.cf

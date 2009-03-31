@@ -8,6 +8,26 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-31 12:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  + config/wce
+  + config/wce/dir.cf
+  + config/wce/global.cf
+  + config/wce/install.cf
+  + config/wce/msvcarm.cf
+  + config/wce/mingwarm.cf
+  + config/wce/poccarm.cf
+    + Added new arch for WinCE: wce
+      These will now live in parallel with old win/*ce targets
+      until they are fully functional. We can also back up from
+      here in case this new method turns out to be a dead end
+      for any reason. The upgrade path is:
+      win/msvcce  -> wce/msvcarm
+      win/mingwce -> wce/mingwarm
+      win/poccce  -> wce/poccarm
+      The idea is that this way we may continue adding support
+      for non-ARM WinCE platforms, if needed. It also makes it
+      easier to do things globally for wce platform only.
+
 2009-03-31 11:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     * Moved Windows CE compilers into a separate section.
