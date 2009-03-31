@@ -310,7 +310,7 @@
 
 /* Sub-option inside HB_OS_WIN */
 #ifndef HB_OS_WIN_CE
-   #if defined(_WINCE) || defined(__CEGCC__) || defined(__MINGW32CE__) || (defined(__POCC_TARGET__) && __POCC_TARGET__ == 2)
+   #if defined(_WINCE) || defined(__CEGCC__) || defined(__MINGW32CE__)
       #define HB_OS_WIN_CE
       /* Compatibility. Do not use this. */
       #ifdef HB_LEGACY_LEVEL2

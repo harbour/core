@@ -23,7 +23,7 @@ CFLAGS += -w -w-sig- -Q
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-CFLAGS += -d -4 -O2 -OS -Ov -Oi -Oc
+CFLAGS += -d -6 -O2 -OS -Ov -Oi -Oc
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)

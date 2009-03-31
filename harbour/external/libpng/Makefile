@@ -19,7 +19,7 @@ endif
 ifeq ($(HB_ARCHITECTURE),dos)
 HB_WITH_LIBPNG=yes
 endif
-ifeq ($(HB_ARCHITECTURE),poccce)
+ifeq ($(HB_COMPILER),poccce)
 HB_WITH_LIBPNG=no
 endif
 endif

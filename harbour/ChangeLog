@@ -8,6 +8,36 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-31 02:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbsetup.h
+    % '( defined(__POCC_TARGET__) && __POCC_TARGET__ == 2 ) )'
+      removed altogether. WinCE is detected anyway by using _WINCE.
+
+  * external/sqlite3/Makefile
+    - Disabled for poccce due to errors.
+
+  * external/libpng/Makefile
+    ! Fix to prev (poccce).
+
+  * config/win/poccce.cf
+    ! Added -D_M_ARM.
+
+  * config/win/owatcom.cf
+    * Pentium Pro scheduling.
+    * Changed back to __cdecl calling convention from register based
+      until we find a way to tweak HB_EXPORT to force __cdecl for
+      .dll exported functions.
+    ; TOFIX: Find out how to force __cdecl for HB_EXPORT functions in owatcom.
+             Or, if this is no good solution for owatcom users, or not
+             an option and performace is more important, we must rename
+             owatcom Harbour .dlls to a distinct name: harbour[mt]-11-ow.dll.
+             We should try to avoid that.
+
+  * config/win/bcc.cf
+    * -4 -> -6 for Pentium Pro instructions. Looking at the generated
+      code this looks like rescheduling, if someone now can test Harbour
+      or plain Pentium, it would be good to know if it still works.
+
 2009-03-31 02:46 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/dos/owatcom.cf
   * harbour/config/win/owatcom.cf

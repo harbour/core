@@ -29,6 +29,9 @@ endif
 ifeq ($(HB_COMPILER),bcc)
 HB_WITH_SQLITE3=no
 endif
+ifeq ($(HB_COMPILER),poccce)
+HB_WITH_SQLITE3=no
+endif
 endif
 
 ifeq ($(HB_WITH_SQLITE3),yes)

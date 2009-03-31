@@ -37,7 +37,7 @@ endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
 # architecture flags
-CPPFLAGS += -5r -fp5
+CPPFLAGS += -6s -fp6
 
 # optimization flags
 # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
