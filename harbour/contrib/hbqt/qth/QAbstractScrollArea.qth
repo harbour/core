@@ -1,4 +1,8 @@
 
+<CLASS>
+Inherit  = QFrame
+New      =
+</CLASS>
 
 <CODE>
 #include <QtGui/QAbstractScrollArea>
@@ -8,12 +12,10 @@
  * QAbstractScrollArea ( QWidget * parent = 0 )
  * ~QAbstractScrollArea ()
  */
-#if 0
 HB_FUNC( QT_QABSTRACTSCROLLAREA )
 {
 
 }
-#endif
 </CODE>
 
 void addScrollBarWidget ( QWidget * widget, Qt::Alignment alignment )

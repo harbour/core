@@ -1,3 +1,7 @@
+<CLASS>
+Inherit  = QWidget
+New      = pParent
+</CLASS>
 
 
 <CODE>
@@ -8,12 +12,10 @@
  * QAbstractSpinBox ( QWidget * parent = 0 )
  * ~QAbstractSpinBox ()
  */
-#if 0
 HB_FUNC( QT_QABSTRACTSPINBOX )
 {
 
 }
-#endif
 </CODE>
 
 enum ButtonSymbols { UpDownArrows, PlusMinus, NoButtons }

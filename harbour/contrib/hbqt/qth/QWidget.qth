@@ -1,3 +1,10 @@
+<CLASS>
+
+Inherit  = QObject, QPaintDevice
+New      = pParent, nFlags
+Calls    = QT_QWidget
+
+</CLASS>
 
 <CODE>
 #include <QtGui/QWidget>
@@ -221,3 +228,25 @@ Qt::WindowType windowType () const
 int x () const
 //Qt::HANDLE x11PictureHandle () const
 int y () const
+
+# Slots
+
+bool close ()
+void hide ()
+void lower ()
+void raise ()
+void repaint ()
+void setDisabled ( bool disable )
+void setEnabled ( bool enable )
+void setFocus ()
+void setHidden ( bool hidden )
+void setStyleSheet ( const QString & styleSheet )
+virtual void setVisible ( bool visible )
+void setWindowModified ( bool modified )
+void setWindowTitle ( const QString & title )
+void show ()
+void showFullScreen ()
+void showMaximized ()
+void showMinimized ()
+void showNormal ()
+void update ()

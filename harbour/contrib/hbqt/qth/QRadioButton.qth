@@ -1,3 +1,9 @@
+<CLASS>
+
+Inherit  = QAbstractButton
+New      = pParent
+
+</CLASS>
 
 
 <CODE>

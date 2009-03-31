@@ -1,3 +1,9 @@
+<CLASS>
+
+Inherit  = QAbstractSlider
+New      = pParent
+
+</CLASS>
 
 
 <CODE>
@@ -9,7 +15,7 @@
  * QSlider ( Qt::Orientation orientation, QWidget * parent = 0 )
  * ~QSlider ()
  */
-HB_FUNC( QT_ )
+HB_FUNC( QT_QSLIDER )
 {
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
       hb_retptr( ( QSlider* ) new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );

@@ -1,3 +1,8 @@
+<CLASS>
+
+New      = pParent
+
+</CLASS>
 
 
 <CODE>
@@ -7,12 +12,10 @@
 /*
 
  */
-#if 0
 HB_FUNC( QT_QLAYOUTITEM )
 {
 
 }
-#endif
 </CODE>
 
 

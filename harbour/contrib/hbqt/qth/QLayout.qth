@@ -1,3 +1,7 @@
+<CLASS>
+Inherit  = QObject, QLayoutItem
+New      = pParent
+</CLASS>
 
 
 <CODE>
@@ -8,12 +12,10 @@
  * QLayout ( QWidget * parent )
  * QLayout ()
  */
-#if 0
 HB_FUNC( QT_QLAYOUT )
 {
-   hb_retptr( ( QLayout* ) new QLayout( hbqt_par_QWidget( 1 ) ) );
+
 }
-#endif
 </CODE>
 
 

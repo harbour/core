@@ -55,12 +55,14 @@ QMenu.qth
 QMenuBar.qth
 QMessageBox.qth
 QObject.qth
+QPaintDevice.qth
 QPageSetupDialog.qth
 QPainter.qth
 QPen.qth
 QPrintDialog.qth
 QPrintPreviewDialog.qth
 QProgressBar.qth
+QProgressDialog.qth
 QPushButton.qth
 QRadioButton.qth
 QScrollArea.qth
@@ -83,6 +85,9 @@ QTreeView.qth
 QTreeWidget.qth
 QTreeWidgetItem.qth
 QVBoxLayout.qth
+QWebPage.qth
 QWidget.qth
+QWizard.qth
+QWebView.qth
 
 

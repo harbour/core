@@ -1,3 +1,8 @@
+<CLASS>
+
+New      = iType
+
+</CLASS>
 
 
 <CODE>
@@ -11,7 +16,7 @@
  * QTableWidgetItem ( const QTableWidgetItem & other )
  * virtual ~QTableWidgetItem ()
  */
-HB_FUNC( QT_TABLEWIDGETITEM )
+HB_FUNC( QT_QTABLEWIDGETITEM )
 {
    if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) )
    {

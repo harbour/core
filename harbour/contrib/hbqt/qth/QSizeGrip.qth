@@ -1,3 +1,9 @@
+<CLASS>
+
+Inherit  = QWidget
+New      = pParent
+
+</CLASS>
 
 
 <CODE>
@@ -8,7 +14,7 @@
  * QSizeGrip ( QWidget * parent )
  * ~QSizeGrip ()
  */
-HB_FUNC( QT_ )
+HB_FUNC( QT_QSIZEGRIP )
 {
    hb_retptr( ( QSizeGrip* ) new QSizeGrip( hbqt_par_QWidget( 1 ) ) );
 }

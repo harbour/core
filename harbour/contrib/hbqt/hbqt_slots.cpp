@@ -60,7 +60,7 @@
 
 #if QT_VERSION >= 0x040500
 
-#include "slots.h"
+#include "hbqt_slots.h"
 
 #include <QtGui/QWidget>
 #include <QtCore/QString>
@@ -409,3 +409,4 @@ void release_codeblocks( void )
 
 /*----------------------------------------------------------------------*/
 #endif
+

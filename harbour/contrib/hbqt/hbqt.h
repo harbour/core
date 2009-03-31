@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *
@@ -49,9 +50,12 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+
 
 #ifndef __HBQT_H
 #define __HBQT_H
+
 
 #define QT_VERSION 0x040500
 
@@ -114,6 +118,7 @@
 #define hbqt_par_QMenu( n )                  ( ( QMenu* ) hb_parptr( n ) )
 #define hbqt_par_QMenuBar( n )               ( ( QMenuBar* ) hb_parptr( n ) )
 #define hbqt_par_QMessageBox( n )            ( ( QMessageBox* ) hb_parptr( n ) )
+#define hbqt_par_QMovie( n )                 ( ( QMovie* ) hb_parptr( n ) )
 #define hbqt_par_QObject( n )                ( ( QObject* ) hb_parptr( n ) )
 #define hbqt_par_QPageSetupDialog( n )       ( ( QPageSetupDialog* ) hb_parptr( n ) )
 #define hbqt_par_QPainter( n )               ( ( QPainter* ) hb_parptr( n ) )
@@ -125,6 +130,7 @@
 #define hbqt_par_QPrintPreviewDialog( n )    ( ( QPrintPreviewDialog* ) hb_parptr( n ) )
 #define hbqt_par_QPrinter( n )               ( ( QPrinter* ) hb_parptr( n ) )
 #define hbqt_par_QProgressBar( n )           ( ( QProgressBar* ) hb_parptr( n ) )
+#define hbqt_par_QProgressDialog( n )        ( ( QProgressDialog* ) hb_parptr( n ) )
 #define hbqt_par_QPushButton( n )            ( ( QPushButton* ) hb_parptr( n ) )
 #define hbqt_par_QRect( n )                  ( ( QRect* ) hb_parptr( n ) )
 #define hbqt_par_QRectF( n )                 ( ( QRectF* ) hb_parptr( n ) )
@@ -154,7 +160,13 @@
 #define hbqt_par_QWebView( n )               ( ( QWebView* ) hb_parptr( n ) )
 #define hbqt_par_QWidget( n )                ( ( QWidget* ) hb_parptr( n ) )
 #define hbqt_par_QWindowSurface( n )         ( ( QWindowSurface* ) hb_parptr( n ) )
+#define hbqt_par_QWizard( n )                ( ( QWizard* ) hb_parptr( n ) )
+#define hbqt_par_QWizardPage( n )            ( ( QWizardPage* ) hb_parptr( n ) )
 #define hbqt_par_QWSEvent( n )               ( ( QWSEvent* ) hb_parptr( n ) )
+#define hbqt_par_QWebPage( n )               ( ( QWebPage* ) hb_parptr( n ) )
+#define hbqt_par_QNetworkAccessManager( n )  ( ( QNetworkAccessManager* ) hb_parptr( n ) )
+#define hbqt_par_QWebPluginFactory( n )      ( ( QWebPluginFactory* ) hb_parptr( n ) )
+#define hbqt_par_QContextMenuEvent( n )      ( ( QContextMenuEvent* ) hb_parptr( n ) )
 
 #define hbqt_par_QIcon( n )                  ( ( QIcon ) hb_parc( n ) )
 #define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )
@@ -177,6 +189,9 @@ QRect   hbqt_const_QRect( int );
 QSize   hbqt_const_QSize( int );
 QPoint  hbqt_const_QPoint( int );
 
+void    hb_ToOutDebug( const char * sTraceMsg, ... );
+
 #endif
 
 #endif /* __HBQT_H */
+

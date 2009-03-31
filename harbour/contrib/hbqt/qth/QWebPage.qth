@@ -1,0 +1,66 @@
+<CLASS>
+Inherit  = QObject
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <QtWebKit/QWebPage>
+
+
+
+/*
+ * QWebPage ( QObject * parent = 0 )
+ * ~QWebPage ()
+ */
+HB_FUNC( QT_QWEBPAGE )
+{
+   hb_retptr( new QWebPage( hbqt_par_QWidget( 2 ) ) );
+}
+</CODE>
+
+
+enum Extension { ChooseMultipleFilesExtension }
+enum FindFlag { FindBackward, FindCaseSensitively, FindWrapsAroundDocument }
+enum LinkDelegationPolicy { DontDelegateLinks, DelegateExternalLinks, DelegateAllLinks }
+enum NavigationType { NavigationTypeLinkClicked, NavigationTypeFormSubmitted, NavigationTypeBackOrForward, NavigationTypeReload, NavigationTypeFormResubmitted, NavigationTypeOther }
+enum WebAction { NoWebAction, OpenLink, OpenLinkInNewWindow, OpenFrameInNewWindow, ..., SelectAll }
+enum WebWindowType { WebBrowserWindow, WebModalDialog }
+
+flags FindFlags
+
+QAction * action ( WebAction action ) const
+quint64 bytesReceived () const
+QMenu * createStandardContextMenu ()
+QWebFrame * currentFrame () const
+// virtual bool extension ( Extension extension, const ExtensionOption * option = 0, ExtensionReturn * output = 0 )
+bool findText ( const QString & subString, FindFlags options = 0 )
+bool focusNextPrevChild ( bool next )
+bool forwardUnsupportedContent () const
+QWebHistory * history () const
+QVariant inputMethodQuery ( Qt::InputMethodQuery property ) const
+bool isContentEditable () const
+bool isModified () const
+LinkDelegationPolicy linkDelegationPolicy () const
+QWebFrame * mainFrame () const
+QNetworkAccessManager * networkAccessManager () const
+QPalette palette () const
+QWebPluginFactory * pluginFactory () const
+QString selectedText () const
+void setContentEditable ( bool editable )
+void setForwardUnsupportedContent ( bool forward )
+void setLinkDelegationPolicy ( LinkDelegationPolicy policy )
+void setNetworkAccessManager ( QNetworkAccessManager * manager )
+void setPalette ( const QPalette & palette )
+void setPluginFactory ( QWebPluginFactory * factory )
+void setView ( QWidget * view )
+void setViewportSize ( const QSize & size ) const
+QWebSettings * settings () const
+virtual bool supportsExtension ( Extension extension ) const
+bool swallowContextMenuEvent ( QContextMenuEvent * event )
+quint64 totalBytes () const
+virtual void triggerAction ( WebAction action, bool checked = false )
+QUndoStack * undoStack () const
+void updatePositionDependentActions ( const QPoint & pos )
+QWidget * view () const
+QSize viewportSize () const
+

@@ -1,3 +1,10 @@
+<CLASS>
+
+Inherit  = QWidget
+New      = pParent
+Calls    = QT_QComboBox
+
+</CLASS>
 
 
 <CODE>
@@ -8,7 +15,7 @@
  * QComboBox ( QWidget * parent = 0 )
  * ~QComboBox ()
  */
-HB_FUNC( QT_COMBOBOX )
+HB_FUNC( QT_QCOMBOBOX )
 {
    hb_retptr( ( QComboBox* ) new QComboBox( hbqt_par_QWidget( 1 ) ) );
 }

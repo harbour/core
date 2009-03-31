@@ -1,3 +1,9 @@
+<CLASS>
+
+Inherit  = QFrame
+New      = pParent
+
+</CLASS>
 
 
 <CODE>

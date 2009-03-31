@@ -52,36 +52,41 @@
  */
 /*----------------------------------------------------------------------*/
 
-#ifndef SLOTS_H
 
-#define SLOTS_H
+#include 'hbclass.ch'
 
-#include <QtCore/QObject>
-#include <QtCore/QList>
 
-#include "hbapi.h"
-#include "hbapiitm.h"
+CLASS QProgressBar INHERIT QWidget
 
-class Slots: public QObject
-{
-   Q_OBJECT
+   DATA    pPtr
 
-   public:
-   Slots( QObject *parent = 0 );
-   ~Slots();
-   QList<QWidget*> list1;
-   QList<QString> list2;
-   QList<PHB_ITEM> list3;
-   QList<bool> list4;
+   METHOD  New()
 
-   public slots:
-   void clicked();
-   void triggered();
-   void triggered( bool checked );
-   void hovered();
-   void stateChanged( int state );
-   void pressed();
-   void released();
-};
+   METHOD  alignment()                         INLINE  Qt_QProgressBar_alignment( ::pPtr )
+   METHOD  format()                            INLINE  Qt_QProgressBar_format( ::pPtr )
+   METHOD  invertedAppearance()                INLINE  Qt_QProgressBar_invertedAppearance( ::pPtr )
+   METHOD  isTextVisible()                     INLINE  Qt_QProgressBar_isTextVisible( ::pPtr )
+   METHOD  maximum()                           INLINE  Qt_QProgressBar_maximum( ::pPtr )
+   METHOD  minimum()                           INLINE  Qt_QProgressBar_minimum( ::pPtr )
+   METHOD  orientation()                       INLINE  Qt_QProgressBar_orientation( ::pPtr )
+   METHOD  setAlignment( nAlignment )          INLINE  Qt_QProgressBar_setAlignment( ::pPtr, nAlignment )
+   METHOD  setFormat( cFormat )                INLINE  Qt_QProgressBar_setFormat( ::pPtr, cFormat )
+   METHOD  setInvertedAppearance( lInvert )    INLINE  Qt_QProgressBar_setInvertedAppearance( ::pPtr, lInvert )
+   METHOD  setTextDirection( nTextDirection )  INLINE  Qt_QProgressBar_setTextDirection( ::pPtr, nTextDirection )
+   METHOD  setTextVisible( lVisible )          INLINE  Qt_QProgressBar_setTextVisible( ::pPtr, lVisible )
+   METHOD  text()                              INLINE  Qt_QProgressBar_text( ::pPtr )
+   METHOD  textDirection()                     INLINE  Qt_QProgressBar_textDirection( ::pPtr )
+   METHOD  value()                             INLINE  Qt_QProgressBar_value( ::pPtr )
 
-#endif
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD New( pParent ) CLASS QProgressBar
+
+   ::pPtr := Qt_QProgressBar( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+

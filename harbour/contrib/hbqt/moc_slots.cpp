@@ -1,5 +1,5 @@
 /****************************************************************************
-** Meta object code from reading C++ file 'slots.h'
+** Meta object code from reading C++ file "slots.h"
 **
 ** Created: Wed 18. Mar 17:25:39 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
@@ -12,9 +12,9 @@
 
 #if QT_VERSION >= 0x040500
 
-#include "slots.h"
+#include "hbqt_slots.h"
 #if !defined(Q_MOC_OUTPUT_REVISION)
-#error "The header file 'slots.h' doesn't include <QObject>."
+#error "The header file [slots.h] doesn,t include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 61
 #error "This file was generated using the moc from 4.5.0. It"
 #error "cannot be used with the include files from this version of Qt."
@@ -93,3 +93,4 @@ QT_END_MOC_NAMESPACE
 
 
 #endif
+

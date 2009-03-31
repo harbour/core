@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-
-/*
+   
+/* 
  * Harbour Project source code:
  * QT wrapper main header
- *
+ * 
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- *
+ * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
+ * 
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- *
+ * 
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- *
+ * 
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- *
+ * 
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- *
+ * 
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -57,11 +57,29 @@
 
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
+/*----------------------------------------------------------------------*/
 
+
+/*
+ *  Constructed[ 31/41 [ 75.61% ] ]
+ *  
+ *  *** Unconvered Prototypes ***
+ *  -----------------------------
+ *  
+ *  QModelIndex indexAbove ( const QModelIndex & index ) const
+ *  QModelIndex indexBelow ( const QModelIndex & index ) const
+ *  bool isExpanded ( const QModelIndex & index ) const
+ *  bool isFirstColumnSpanned ( int row, const QModelIndex & parent ) const
+ *  bool isRowHidden ( int row, const QModelIndex & parent ) const
+ *  virtual void scrollTo ( const QModelIndex & index, ScrollHint hint = EnsureVisible )
+ *  void setExpanded ( const QModelIndex & index, bool expanded )
+ *  void setFirstColumnSpanned ( int row, const QModelIndex & parent, bool span )
+ *  void setRowHidden ( int row, const QModelIndex & parent, bool hide )
+ *  virtual QRect visualRect ( const QModelIndex & index ) const
+ */ 
 
 
 #include <QtGui/QTreeView>
-
 
 
 /*
@@ -72,7 +90,6 @@ HB_FUNC( QT_QTREEVIEW )
 {
    hb_retptr( ( QTreeView* ) new QTreeView( hbqt_par_QWidget( 1 ) ) );
 }
-
 
 /*
  * bool allColumnsShowFocus () const
@@ -95,7 +112,7 @@ HB_FUNC( QT_QTREEVIEW_AUTOEXPANDDELAY )
  */
 HB_FUNC( QT_QTREEVIEW_COLUMNAT )
 {
-   hb_retni( hbqt_par_QTreeView( 1 )->columnAt( hb_parni( 1 ) ) );
+   hb_retni( hbqt_par_QTreeView( 1 )->columnAt( hb_parni( 2 ) ) );
 }
 
 /*
@@ -103,7 +120,7 @@ HB_FUNC( QT_QTREEVIEW_COLUMNAT )
  */
 HB_FUNC( QT_QTREEVIEW_COLUMNVIEWPORTPOSITION )
 {
-   hb_retni( hbqt_par_QTreeView( 1 )->columnViewportPosition( hb_parni( 1 ) ) );
+   hb_retni( hbqt_par_QTreeView( 1 )->columnViewportPosition( hb_parni( 2 ) ) );
 }
 
 /*
@@ -111,7 +128,7 @@ HB_FUNC( QT_QTREEVIEW_COLUMNVIEWPORTPOSITION )
  */
 HB_FUNC( QT_QTREEVIEW_COLUMNWIDTH )
 {
-   hb_retni( hbqt_par_QTreeView( 1 )->columnWidth( hb_parni( 1 ) ) );
+   hb_retni( hbqt_par_QTreeView( 1 )->columnWidth( hb_parni( 2 ) ) );
 }
 
 /*
@@ -151,7 +168,7 @@ HB_FUNC( QT_QTREEVIEW_ISANIMATED )
  */
 HB_FUNC( QT_QTREEVIEW_ISCOLUMNHIDDEN )
 {
-   hb_retl( hbqt_par_QTreeView( 1 )->isColumnHidden( hb_parni( 1 ) ) );
+   hb_retl( hbqt_par_QTreeView( 1 )->isColumnHidden( hb_parni( 2 ) ) );
 }
 
 /*
@@ -191,7 +208,7 @@ HB_FUNC( QT_QTREEVIEW_ROOTISDECORATED )
  */
 HB_FUNC( QT_QTREEVIEW_SETALLCOLUMNSSHOWFOCUS )
 {
-   hbqt_par_QTreeView( 1 )->setAllColumnsShowFocus( hb_parl( 1 ) );
+   hbqt_par_QTreeView( 1 )->setAllColumnsShowFocus( hb_parl( 2 ) );
 }
 
 /*
@@ -199,7 +216,7 @@ HB_FUNC( QT_QTREEVIEW_SETALLCOLUMNSSHOWFOCUS )
  */
 HB_FUNC( QT_QTREEVIEW_SETANIMATED )
 {
-   hbqt_par_QTreeView( 1 )->setAnimated( hb_parl( 1 ) );
+   hbqt_par_QTreeView( 1 )->setAnimated( hb_parl( 2 ) );
 }
 
 /*
@@ -207,7 +224,7 @@ HB_FUNC( QT_QTREEVIEW_SETANIMATED )
  */
 HB_FUNC( QT_QTREEVIEW_SETAUTOEXPANDDELAY )
 {
-   hbqt_par_QTreeView( 1 )->setAutoExpandDelay( hb_parni( 1 ) );
+   hbqt_par_QTreeView( 1 )->setAutoExpandDelay( hb_parni( 2 ) );
 }
 
 /*
@@ -215,7 +232,7 @@ HB_FUNC( QT_QTREEVIEW_SETAUTOEXPANDDELAY )
  */
 HB_FUNC( QT_QTREEVIEW_SETCOLUMNHIDDEN )
 {
-   hbqt_par_QTreeView( 1 )->setColumnHidden( hb_parni( 1 ), hb_parl( 2 ) );
+   hbqt_par_QTreeView( 1 )->setColumnHidden( hb_parni( 2 ), hb_parl( 3 ) );
 }
 
 /*
@@ -223,7 +240,7 @@ HB_FUNC( QT_QTREEVIEW_SETCOLUMNHIDDEN )
  */
 HB_FUNC( QT_QTREEVIEW_SETCOLUMNWIDTH )
 {
-   hbqt_par_QTreeView( 1 )->setColumnWidth( hb_parni( 1 ), hb_parni( 2 ) );
+   hbqt_par_QTreeView( 1 )->setColumnWidth( hb_parni( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -231,7 +248,7 @@ HB_FUNC( QT_QTREEVIEW_SETCOLUMNWIDTH )
  */
 HB_FUNC( QT_QTREEVIEW_SETEXPANDSONDOUBLECLICK )
 {
-   hbqt_par_QTreeView( 1 )->setExpandsOnDoubleClick( hb_parl( 1 ) );
+   hbqt_par_QTreeView( 1 )->setExpandsOnDoubleClick( hb_parl( 2 ) );
 }
 
 /*
@@ -239,7 +256,7 @@ HB_FUNC( QT_QTREEVIEW_SETEXPANDSONDOUBLECLICK )
  */
 HB_FUNC( QT_QTREEVIEW_SETHEADER )
 {
-   hbqt_par_QTreeView( 1 )->setHeader( hbqt_par_QHeaderView( 1 ) );
+   hbqt_par_QTreeView( 1 )->setHeader( hbqt_par_QHeaderView( 2 ) );
 }
 
 /*
@@ -247,7 +264,7 @@ HB_FUNC( QT_QTREEVIEW_SETHEADER )
  */
 HB_FUNC( QT_QTREEVIEW_SETHEADERHIDDEN )
 {
-   hbqt_par_QTreeView( 1 )->setHeaderHidden( hb_parl( 1 ) );
+   hbqt_par_QTreeView( 1 )->setHeaderHidden( hb_parl( 2 ) );
 }
 
 /*
@@ -255,7 +272,7 @@ HB_FUNC( QT_QTREEVIEW_SETHEADERHIDDEN )
  */
 HB_FUNC( QT_QTREEVIEW_SETINDENTATION )
 {
-   hbqt_par_QTreeView( 1 )->setIndentation( hb_parni( 1 ) );
+   hbqt_par_QTreeView( 1 )->setIndentation( hb_parni( 2 ) );
 }
 
 /*
@@ -263,7 +280,7 @@ HB_FUNC( QT_QTREEVIEW_SETINDENTATION )
  */
 HB_FUNC( QT_QTREEVIEW_SETITEMSEXPANDABLE )
 {
-   hbqt_par_QTreeView( 1 )->setItemsExpandable( hb_parl( 1 ) );
+   hbqt_par_QTreeView( 1 )->setItemsExpandable( hb_parl( 2 ) );
 }
 
 /*
@@ -271,7 +288,7 @@ HB_FUNC( QT_QTREEVIEW_SETITEMSEXPANDABLE )
  */
 HB_FUNC( QT_QTREEVIEW_SETROOTISDECORATED )
 {
-   hbqt_par_QTreeView( 1 )->setRootIsDecorated( hb_parl( 1 ) );
+   hbqt_par_QTreeView( 1 )->setRootIsDecorated( hb_parl( 2 ) );
 }
 
 /*
@@ -279,7 +296,7 @@ HB_FUNC( QT_QTREEVIEW_SETROOTISDECORATED )
  */
 HB_FUNC( QT_QTREEVIEW_SETSORTINGENABLED )
 {
-   hbqt_par_QTreeView( 1 )->setSortingEnabled( hb_parl( 1 ) );
+   hbqt_par_QTreeView( 1 )->setSortingEnabled( hb_parl( 2 ) );
 }
 
 /*
@@ -287,7 +304,7 @@ HB_FUNC( QT_QTREEVIEW_SETSORTINGENABLED )
  */
 HB_FUNC( QT_QTREEVIEW_SETUNIFORMROWHEIGHTS )
 {
-   hbqt_par_QTreeView( 1 )->setUniformRowHeights( hb_parl( 1 ) );
+   hbqt_par_QTreeView( 1 )->setUniformRowHeights( hb_parl( 2 ) );
 }
 
 /*
@@ -295,7 +312,7 @@ HB_FUNC( QT_QTREEVIEW_SETUNIFORMROWHEIGHTS )
  */
 HB_FUNC( QT_QTREEVIEW_SETWORDWRAP )
 {
-   hbqt_par_QTreeView( 1 )->setWordWrap( hb_parl( 1 ) );
+   hbqt_par_QTreeView( 1 )->setWordWrap( hb_parl( 2 ) );
 }
 
 /*
@@ -303,7 +320,7 @@ HB_FUNC( QT_QTREEVIEW_SETWORDWRAP )
  */
 HB_FUNC( QT_QTREEVIEW_SORTBYCOLUMN )
 {
-   hbqt_par_QTreeView( 1 )->sortByColumn( hb_parni( 1 ), ( Qt::SortOrder ) hb_parni( 2 ) );
+   hbqt_par_QTreeView( 1 )->sortByColumn( hb_parni( 2 ), ( Qt::SortOrder ) hb_parni( 3 ) );
 }
 
 /*
@@ -323,7 +340,7 @@ HB_FUNC( QT_QTREEVIEW_WORDWRAP )
 }
 
 
-
-#endif
+/*----------------------------------------------------------------------*/
+#endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
 

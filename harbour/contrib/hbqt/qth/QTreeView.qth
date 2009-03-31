@@ -1,3 +1,10 @@
+<CLASS>
+
+Inherit  = QAbstractItemView
+New      = pParent
+
+</CLASS>
+
 <CODE>
 #include <QtGui/QTreeView>
 

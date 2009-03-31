@@ -1,3 +1,10 @@
+<CLASS>
+
+Inherit  = QTreeView
+New      = pParent
+
+</CLASS>
+
 <CODE>
 #include <QtGui/QTreeWidget>
 

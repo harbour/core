@@ -1,3 +1,10 @@
+<CLASS>
+
+Inherit  = QPushButton
+New      = pParent
+Calls    = QT_QCommandLinkButton
+
+</CLASS>
 
 
 <CODE>

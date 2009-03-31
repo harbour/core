@@ -1,3 +1,9 @@
+<CLASS>
+
+Inherit  = QBoxLayout
+New      = pParent
+
+</CLASS>
 
 
 <CODE>

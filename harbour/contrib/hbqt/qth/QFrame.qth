@@ -1,3 +1,9 @@
+<CLASS>
+
+Inherit  = QWidget
+New      = pParent, nFlags
+
+</CLASS>
 
 <CODE>
 #include <QtGui/QFrame>

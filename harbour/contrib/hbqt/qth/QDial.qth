@@ -1,3 +1,9 @@
+<CLASS>
+
+Inherit  = QAbstractSlider
+New      = pParent
+
+</CLASS>
 
 
 <CODE>

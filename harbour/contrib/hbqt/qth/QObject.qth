@@ -1,3 +1,9 @@
+<CLASS>
+
+New      = pParent
+Calls    = QT_Qbject
+
+</CLASS>
 
 <CODE>
 #include <QtCore/QObject>
@@ -9,7 +15,7 @@
  */
 HB_FUNC( QT_QOBJECT )
 {
-   hb_retptr( ( QObject* ) new QObject() );
+   hb_retptr( ( QObject* ) new QObject( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

@@ -1,0 +1,48 @@
+<CLASS>
+Inherit  = QDialog
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <QtGui/QProgressDialog>
+
+
+/*
+ * QProgressDialog ( QWidget * parent = 0, Qt::WindowFlags f = 0 )
+ * QProgressDialog ( const QString & labelText, const QString & cancelButtonText, int minimum, int maximum, QWidget * parent = 0, Qt::WindowFlags f = 0 )
+ * ~QProgressDialog ()
+ */
+HB_FUNC( QT_QPROGRESSDIALOG )
+{
+   hb_retptr( new QProgressDialog( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+bool autoClose () const
+bool autoReset () const
+QString labelText () const
+int maximum () const
+int minimum () const
+int minimumDuration () const
+void open ( QObject * receiver, const char * member )
+void setAutoClose ( bool close )
+void setAutoReset ( bool reset )
+void setBar ( QProgressBar * bar )
+void setCancelButton ( QPushButton * cancelButton )
+void setLabel ( QLabel * label )
+virtual QSize sizeHint () const
+int value () const
+bool wasCanceled () const
+
+# SLOTS
+
+void cancel ()
+void reset ()
+void setCancelButtonText ( const QString & cancelButtonText )
+void setLabelText ( const QString & text )
+void setMaximum ( int maximum )
+void setMinimum ( int minimum )
+void setMinimumDuration ( int ms )
+void setRange ( int minimum, int maximum )
+void setValue ( int progress )

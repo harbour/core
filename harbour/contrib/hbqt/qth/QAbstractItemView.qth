@@ -1,3 +1,7 @@
+<CLASS>
+Inherit  = QAbstractScrollArea
+New      = pParent
+</CLASS>
 
 
 <CODE>
@@ -8,12 +12,10 @@
  * QAbstractItemView ( QWidget * parent = 0 )
  * ~QAbstractItemView ()
  */
-#if 0
 HB_FUNC( QT_QABSTRACTITEMVIEW )
 {
 
 }
-#endif
 </CODE>
 
 

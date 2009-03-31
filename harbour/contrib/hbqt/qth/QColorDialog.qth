@@ -1,3 +1,10 @@
+<CLASS>
+
+Inherit  = QDialog
+New      = pParent
+Calls    = QT_QColorDialog
+
+</CLASS>
 
 <CODE>
 #include <QtGui/QColorDialog>

@@ -1,3 +1,7 @@
+<CLASS>
+Inherit  = QWidget
+New      = 
+</CLASS>
 
 
 <CODE>
@@ -8,12 +12,10 @@
  * QAbstractSlider ( QWidget * parent = 0 )
  * ~QAbstractSlider ()
  */
-#if 0
 HB_FUNC( QT_QABSTRACTSLIDER )
 {
 
 }
-#endif
 </CODE>
 
 enum SliderAction { SliderNoAction, SliderSingleStepAdd, SliderSingleStepSub, SliderPageStepAdd, ..., SliderMove }

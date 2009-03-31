@@ -1,4 +1,8 @@
 
+<CLASS>
+Inherit  = QDialog
+New      = 
+</CLASS>
 
 <CODE>
 #include <QtGui/QAbstractPrintDialog>
@@ -7,12 +11,10 @@
 /*
  * QAbstractPrintDialog ( QPrinter * printer, QWidget * parent = 0 )
  */
-#if 0
 HB_FUNC( QT_QABSTRACTPRINTDIALOG )
 {
 
 }
-#endif
 </CODE>
 
 enum PrintDialogOption { None, PrintToFile, PrintSelection, PrintPageRange, ..., PrintShowPageSize }

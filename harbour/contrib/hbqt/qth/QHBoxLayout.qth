@@ -1,3 +1,9 @@
+<CLASS>
+
+Inherit  = QBoxLayout
+New      = pParent
+
+</CLASS>
 
 
 <CODE>
@@ -9,7 +15,7 @@
  * QHBoxLayout ( QWidget * parent )
  * ~QHBoxLayout ()
  */
-HB_FUNC( QT_ )
+HB_FUNC( QT_QHBOXLAYOUT )
 {
    hb_retptr( ( QHBoxLayout * ) new QHBoxLayout( hbqt_par_QWidget( 1 ) ) );
 }

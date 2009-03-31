@@ -1,3 +1,9 @@
+<CLASS>
+
+Inherit  = QAbstractSlider
+New      = pParent
+
+</CLASS>
 
 
 <CODE>
@@ -9,7 +15,7 @@
  * QScrollBar ( Qt::Orientation orientation, QWidget * parent = 0 )
  * ~QScrollBar ()
  */
-HB_FUNC( QT_ )
+HB_FUNC( QT_QSCROLLBAR )
 {
    hb_retptr( ( QScrollBar* ) new QScrollBar( hbqt_par_QWidget( 1 ) ) );
 }

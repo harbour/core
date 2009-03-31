@@ -1,3 +1,10 @@
+<CLASS>
+
+Inherit  = QWidget
+New      = pParent
+Calls    = QT_QCalendarWidget
+
+</CLASS>
 
 
 <CODE>

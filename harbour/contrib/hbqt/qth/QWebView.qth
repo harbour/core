@@ -1,0 +1,51 @@
+<CLASS>
+Inherit  = QWidget
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <QtWebKit/QWebView>
+
+
+
+/*
+ * QWebView ( QWidget * parent = 0 )
+ * virtual ~QWebView ()
+ */
+HB_FUNC( QT_QWEBVIEW )
+{
+   hb_retptr( new QWebView( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+bool findText ( const QString & subString, QWebPage::FindFlags options = 0 )
+QWebHistory * history () const
+QIcon icon () const
+bool isModified () const
+void load ( const QUrl & url )
+void load ( const QNetworkRequest & request, QNetworkAccessManager::Operation operation = QNetworkAccessManager::GetOperation, const QByteArray & body = QByteArray() )
+QWebPage * page () const
+QAction * pageAction ( QWebPage::WebAction action ) const
+QString selectedText () const
+void setContent ( const QByteArray & data, const QString & mimeType = QString(), const QUrl & baseUrl = QUrl() )
+void setHtml ( const QString & html, const QUrl & baseUrl = QUrl() )
+void setPage ( QWebPage * page )
+void setTextSizeMultiplier ( qreal factor )
+void setUrl ( const QUrl & url )
+void setZoomFactor ( qreal factor )
+QWebSettings * settings () const
+qreal textSizeMultiplier () const
+QString title () const
+void triggerPageAction ( QWebPage::WebAction action, bool checked = false )
+QUrl url () const
+qreal zoomFactor () const
+
+# SLOTS
+
+void back ()
+void forward ()
+void print ( QPrinter * printer ) const
+void reload ()
+void stop ()
+

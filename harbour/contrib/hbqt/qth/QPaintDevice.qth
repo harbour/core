@@ -1,0 +1,33 @@
+<CLASS>
+
+New = pParent
+
+</CLASS>
+
+<CODE>
+#include <QtGui/QPaintDevice>
+
+/*
+ * virtual ~QPaintDevice ()
+ */
+HB_FUNC( QT_QPAINTDEVICE )
+{
+
+}
+</CODE>
+
+
+enum PaintDeviceMetric { PdmWidth, PdmHeight, PdmWidthMM, PdmHeightMM, ..., PdmPhysicalDpiY }
+
+int depth () const
+int height () const
+int heightMM () const
+int logicalDpiX () const
+int logicalDpiY () const
+int numColors () const
+virtual QPaintEngine * paintEngine () const = 0
+bool paintingActive () const
+int physicalDpiX () const
+int physicalDpiY () const
+int width () const
+int widthMM () const

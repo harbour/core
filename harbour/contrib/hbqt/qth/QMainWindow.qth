@@ -1,3 +1,9 @@
+<CLASS>
+
+Inherit  = QWidget
+New      = pParent, nFlags
+
+</CLASS>
 
 
 <CODE>
@@ -66,3 +72,7 @@ bool toolBarBreak ( QToolBar * toolbar ) const
 Qt::ToolButtonStyle toolButtonStyle () const
 bool unifiedTitleAndToolBarOnMac () const
 
+# Slots
+
+void setAnimated ( bool enabled )
+void setDockNestingEnabled ( bool enabled )

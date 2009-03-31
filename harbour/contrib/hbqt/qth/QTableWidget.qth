@@ -1,3 +1,9 @@
+<CLASS>
+
+Inherit  = QTableView
+New      = pParent
+
+</CLASS>
 
 
 <CODE>

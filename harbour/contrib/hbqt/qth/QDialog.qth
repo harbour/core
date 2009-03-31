@@ -1,4 +1,11 @@
 
+<CLASS>
+
+Inherit  = QWidget
+New      = pParent, nFlags
+Calls    = QT_QDialog
+
+</CLASS>
 
 <CODE>
 #include  <QtGui/QDialog>
@@ -23,3 +30,10 @@ void setModal ( bool modal )
 void setResult ( int i )
 void setSizeGripEnabled ( bool )
 
+# Slots
+
+virtual void accept ()
+virtual void done ( int r )
+int exec ()
+void open ()
+virtual void reject ()

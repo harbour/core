@@ -1,3 +1,9 @@
+<CLASS>
+
+Inherit  = QFrame
+New      = pParent
+
+</CLASS>
 
 
 <CODE>
@@ -9,7 +15,7 @@
  * QSplitter ( Qt::Orientation orientation, QWidget * parent = 0 )
  * ~QSplitter ()
  */
-HB_FUNC( QT_SPLITTER )
+HB_FUNC( QT_QSPLITTER )
 {
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
       hb_retptr( ( QSplitter* ) new QSplitter( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );

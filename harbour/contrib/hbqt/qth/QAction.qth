@@ -1,3 +1,10 @@
+<CLASS>
+
+Inherit  = QObject
+New      = pParent
+Calls    = QT_QAction
+
+</CLASS>
 
 
 <CODE>

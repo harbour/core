@@ -1,3 +1,8 @@
+<CLASS>
+
+New      = pDevice
+
+</CLASS>
 
 <CODE>
 #include <QtGui/QPainter>

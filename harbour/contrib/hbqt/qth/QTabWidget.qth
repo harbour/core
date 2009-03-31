@@ -1,3 +1,9 @@
+<CLASS>
+
+Inherit  = QWidget
+New      = pParent
+
+</CLASS>
 
 
 <CODE>
@@ -8,7 +14,7 @@
  * QTabWidget ( QWidget * parent = 0 )
  * ~QTabWidget ()
  */
-HB_FUNC( QT_TABWIDGET )
+HB_FUNC( QT_QTABWIDGET )
 {
    hb_retptr( ( QTabWidget* ) new QTabWidget( hbqt_par_QWidget( 1 ) ) );
 }

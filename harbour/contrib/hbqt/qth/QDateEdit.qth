@@ -1,3 +1,10 @@
+<CLASS>
+
+Inherit  = QDateTimeEdit
+New      = pParent
+Calls    = QT_QDateEdit
+
+</CLASS>
 
 
 <CODE>

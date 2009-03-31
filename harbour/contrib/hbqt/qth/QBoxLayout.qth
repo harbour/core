@@ -1,3 +1,10 @@
+<CLASS>
+
+Inherit  = QLayout
+New      = nDirection, pParent
+Calls    = QT_QBoxLayout
+
+</CLASS>
 
 
 <CODE>

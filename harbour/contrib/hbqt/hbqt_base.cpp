@@ -4,9 +4,10 @@
 
 /*
  * Harbour Project source code:
- * QT base routines
+ * QT wrapper main header
  *
- * Copyright 2009 Viktor Szakats <harbour 01 syenar.hu>
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -49,6 +50,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
 
 #include "hbapi.h"
 
@@ -63,3 +65,4 @@ HB_FUNC( QT_VERSION_STR )
 {
    hb_retc_const( QT_VERSION_STR );
 }
+

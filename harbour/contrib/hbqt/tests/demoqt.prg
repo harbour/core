@@ -52,18 +52,75 @@
  */
 /*----------------------------------------------------------------------*/
 
-Procedure Main()
+#define QT_PTROF( oObj )  ( oObj:pPtr )
 
-   Local oApplication, oMainWindow
+/*----------------------------------------------------------------------*/
 
-   oApplication := Qt_QApplication()
+INIT PROCEDURE Qt_Start()
+   qt_qapplication()
+   RETURN
 
-   oMainWindow := Qt_QMainWindow()
+EXIT PROCEDURE Qt_End()
+   qt_qapplication_exec()
+   RETURN
 
-   Qt_QWidget_SetWindowTitle( oMainWindow, "Testing Harbour-QT Implementation" )
-   Qt_QWidget_Resize( oMainWindow, 640, 480)
-   Qt_QWidget_Show( oMainWindow )
+/*----------------------------------------------------------------------*/
 
-   Qt_QApplication_exec()
+PROCEDURE Main()
+   Local oLabel
+   Local oWnd
+   Local oMenuBar
+   Local oMenuA
+   LOCAL oPS, oPPrv, oMB, oWZ, oCD, oWP
 
-   Return
+   oWnd := QMainWindow():New()
+   oWnd:SetWindowTitle("Testing - QMainWindow, QMenu, QMenuBar and QLabel" )
+   oWnd:Resize( { 640, 400 } )
+
+   oMenuBar := QMenuBar():new( QT_PTROF( oWnd ) )
+   oMenuBar:resize( { oWnd:width(), 20 } )
+   oMenuBar:addAction( "First" )
+   oMenuBar:addSeparator()
+   oMenuBar:addAction( "Second" )
+
+   oMenuA := QMenu():new( QT_PTROF( oMenuBar ) )
+   oMenuA:setTitle( "New" )
+   oMenuA:addAction( "File" )
+   oMenuA:addAction( "Open" )
+   oMenuA:addSeparator()
+   oMenuA:addAction( "Close" )
+   oMenuBar:addMenu( QT_PTROF( oMenuA ) )
+
+   oLabel := QLabel():New( QT_PTROF( oWnd ) )
+   oLabel:SetText( "Testing Harbour + Qt" )
+   oLabel:move( { 100,100 } )
+   oLabel:Show()
+
+   oWnd:Show()
+
+   oPS := QPageSetupDialog():new()
+   oPS:setWindowTitle( "Harbour-QT PageSetup Dialog" )
+   oPS:show()
+   oPPrv := QPrintPreviewDialog():new()
+   oPPrv:setWindowTitle( "Harbour-QT Preview Preview Dialog" )
+   oPPrv:show()
+   oWZ := QWizard():new()
+   oWZ:setWindowTitle( "Harbour-QT Wizard to Show Slides etc." )
+   oWZ:show()
+   oCD := QColorDialog():new()
+   oCD:setWindowTitle( "Harbour-QT Color Selection Dialog" )
+   oCD:show()
+   oWP := QWebView():new()
+   oWP:setWindowTitle( "Harbour-QT Web Page Navigator" )
+   oWP:show()
+
+   RETURN
+
+/*----------------------------------------------------------------------*/
+
+PROCEDURE HB_GtSys()
+   HB_GT_GUI_DEFAULT()
+   RETURN
+
+/*----------------------------------------------------------------------*/
+
