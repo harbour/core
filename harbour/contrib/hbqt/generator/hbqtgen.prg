@@ -777,7 +777,7 @@ STATIC FUNCTION BuildHeader( txt_, nMode )
    aadd( txt_, ""                                                                              )
    ELSEIF nMode == 1
    aadd( txt_, ""                                                                              )
-   aadd( txt_, "#include 'hbclass.ch'"                                                         )
+   aadd( txt_, '#include "hbclass.ch"'                                                         )
    aadd( txt_, ""                                                                              )
    ELSEIF nMode == 2
    /* Pure Header */
@@ -890,11 +890,11 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
    aadd( txt_, '' )
 
    n := ascan( cls_, {|e_| lower( e_[ 1 ] ) == 'inherit' } )
-   s := 'CLASS '+ cWidget + IF( n > 0, ' INHERIT ' + cls_[ n,2 ], '' )
+   s := 'CREATE CLASS '+ cWidget + IF( n > 0, ' INHERIT ' + cls_[ n,2 ], '' )
 
    aadd( txt_, s  )
    aadd( txt_, '' )
-   aadd( txt_, '   DATA    pPtr'  )
+   aadd( txt_, '   VAR     pPtr'  )
    aadd( txt_, '' )
    aadd( txt_, '   METHOD  New()' )
    aadd( txt_, '' )
@@ -1937,4 +1937,3 @@ STATIC FUNCTION Build_Demo( cPathOut )
    RETURN CreateTarget( cFile, txt_ )
 
 /*----------------------------------------------------------------------*/
-

@@ -87,9 +87,9 @@ static char * hb_strescape( const char * szInput, int lLen, const char * cDelim 
 
 /* Export field values to text file */
 #ifndef HB_CDP_SUPPORT_OFF
-static BOOL hb_ExportVar( int handle, PHB_ITEM pValue, const char * cDelim, PHB_CODEPAGE cdp )
+static BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDelim, PHB_CODEPAGE cdp )
 #else
-static BOOL hb_ExportVar( int handle, PHB_ITEM pValue, const char * cDelim )
+static BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDelim )
 #endif
 {
    switch( hb_itemType( pValue ) )
@@ -164,11 +164,11 @@ HB_FUNC( DBF2TEXT )
    PHB_ITEM pFields  = hb_param( 3, HB_IT_ARRAY );
 
    const char * cDelim = hb_parc( 4 );
-   HB_FHANDLE handle = ( HB_FHANDLE ) hb_parnl( 5 );
-   const char * cSep   = hb_parc( 6 );
-   int nCount        = ( int ) hb_parnl( 7 );
+   HB_FHANDLE handle = ( HB_FHANDLE ) hb_parnint( 5 );
+   const char * cSep = hb_parc( 6 );
+   int nCount        = hb_parni( 7 );
 #ifndef HB_CDP_SUPPORT_OFF
-   PHB_CODEPAGE cdp  = hb_cdpFind( ( char * ) hb_parc( 8 ) );
+   PHB_CODEPAGE cdp  = hb_cdpFind( ( char * ) hb_parcx( 8 ) );
 #endif
 
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();

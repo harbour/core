@@ -63,10 +63,11 @@
 
 #include <stdio.h>
 
-/* DOS, Darwin < 6.x and poccce can't compile this module */
+/* These targets can't compile this module */
 #if !defined( HB_OS_DOS ) && \
     !defined( HB_OS_DARWIN_5 ) && \
-    ! ( defined(HB_OS_WIN_CE) && defined(__POCC__) )
+    ! ( defined(HB_OS_WIN_CE) && defined(__POCC__) ) && \
+    !defined( HB_OS_WIN_64 )
 
 #if defined( HB_OS_UNIX ) || defined (HB_OS_OS2_GCC)
 #include <sys/types.h>

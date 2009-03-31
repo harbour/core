@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-31 12:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/xhb/dbf2txt.c
+    ! Fixed for Win64.
+
+  * contrib/xhb/hbserv.c
+    - Excluded for Win64 builds.
+
+  * contrib/hbqt/generator/hbqtgen.prg
+    * Minor formatting in generated code. (Using double quotes
+      in #include, CLASS -> CREATE CLASS, DATA -> VAR to follow
+      Class(y) syntax.)
+
 2009-03-31 12:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   + config/wce
   + config/wce/dir.cf
