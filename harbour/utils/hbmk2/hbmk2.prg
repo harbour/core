@@ -1,7 +1,7 @@
 /*
  * $Id$
  */
-
+#pragma linenumber=on
 /*
  * Harbour Project source code:
  * Harbour Make
@@ -241,6 +241,7 @@ FUNCTION Main( ... )
 
    LOCAL s_lGUI := .F.
    LOCAL s_lMT := .F.
+   LOCAL s_lCPP := .F.
    LOCAL s_lSHARED := NIL
    LOCAL s_lSTATICFULL := NIL
    LOCAL s_lDEBUG := .F.
@@ -429,6 +430,11 @@ FUNCTION Main( ... )
       CASE "pocc"
          t_cARCH := "win"
          EXIT
+      CASE "mingwarm"
+      CASE "msvcarm"
+      CASE "poccarm"
+         t_cARCH := "wce"
+         EXIT
       CASE "djgpp"
          t_cARCH := "dos"
          EXIT
@@ -515,6 +521,20 @@ FUNCTION Main( ... )
       cOptPrefix := "-/"
       s_aLIBSYSCORE := { "user32", "gdi32", "advapi32", "ws2_32" }
       s_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "ole32", "oleaut32", "uuid", "mpr", "winmm", "mapi32", "imm32", "msimg32" }
+   CASE t_cARCH == "wce"
+      aCOMPDET := { { {|| FindInPath( t_cCCPREFIX + "gcc" ) != NIL }, "mingwarm" },;
+                    { {|| FindInPath( "cl"       ) != NIL }, "msvcarm" },;
+                    { {|| FindInPath( "pocc"     ) != NIL }, "poccarm" } }
+      aCOMPSUP := { "mingwarm", "msvcarm", "poccarm" }
+      cBin_CompPRG := "harbour.exe"
+      s_aLIBHBGT := { "gtwvt", "gtgui" }
+      t_cGTDEFAULT := "gtwvt"
+      cDynLibNamePrefix := ""
+      cDynLibExt := ".dll"
+      cBinExt := ".exe"
+      cOptPrefix := "-/"
+      s_aLIBSYSCORE := { "wininet", "ws2", "commdlg", "commctrl" }
+      s_aLIBSYSMISC := { "uuid", "ole32" }
    OTHERWISE
       OutErr( "hbmk: Error: Architecture value unknown: " + t_cARCH + hb_osNewLine() )
       PauseForKey()
@@ -576,11 +596,12 @@ FUNCTION Main( ... )
       RETURN 3
    ENDIF
 
-   IF t_cARCH == "win"
+   IF t_cARCH $ "win|wce"
       aCOMPDET_LOCAL := {;
-          { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw"   + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "mingw"  , ""                     } ,;
-          { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw64" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "mingw64", "x86_64-pc-mingw32-"   } ,;
-          { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "mingwce", "arm-wince-mingw32ce-" } }
+          { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw"   + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "win", "mingw"   , ""                     } ,;
+          { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw64" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "win", "mingw64" , "x86_64-pc-mingw32-"   } ,;
+          { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "win", "mingwce" , "arm-wince-mingw32ce-" } ,;
+          { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } }
    ENDIF
 
    /* Autodetect compiler */
@@ -598,12 +619,13 @@ FUNCTION Main( ... )
                t_cCOMP := NIL
             ENDIF
          ELSE
-            IF t_cARCH == "win"
+            IF t_cARCH $ "win|wce"
                /* Autodetect embedded MinGW installation */
                FOR tmp := 1 TO Len( aCOMPDET_LOCAL )
-                  IF ! Empty( tmp1 := Eval( aCOMPDET_LOCAL[ tmp ][ 1 ], aCOMPDET_LOCAL[ tmp ][ 3 ] ) )
-                     t_cCOMP := aCOMPDET_LOCAL[ tmp ][ 2 ]
-                     t_cCCPREFIX := aCOMPDET_LOCAL[ tmp ][ 3 ]
+                  IF t_cARCH == aCOMPDET_LOCAL[ tmp ][ 2 ] .AND. ;
+                     ! Empty( tmp1 := Eval( aCOMPDET_LOCAL[ tmp ][ 1 ], aCOMPDET_LOCAL[ tmp ][ 4 ] ) )
+                     t_cCOMP := aCOMPDET_LOCAL[ tmp ][ 3 ]
+                     t_cCCPREFIX := aCOMPDET_LOCAL[ tmp ][ 4 ]
                      t_cCCPATH := tmp1
                      EXIT
                   ENDIF
@@ -652,14 +674,15 @@ FUNCTION Main( ... )
             PauseForKey()
             RETURN 2
          ENDIF
-         IF t_cARCH == "win"
+         IF t_cARCH $ "win|wce"
             /* Detect cross platform CCPREFIX and CCPATH if embedded MinGW installation is detected */
             FOR tmp := 1 TO Len( aCOMPDET_LOCAL )
-               IF aCOMPDET_LOCAL[ tmp ][ 2 ] == t_cCOMP
-                  IF ! Empty( tmp1 := Eval( aCOMPDET_LOCAL[ tmp ][ 1 ], aCOMPDET_LOCAL[ tmp ][ 3 ] ) )
+               IF aCOMPDET_LOCAL[ tmp ][ 2 ] == t_cARCH .AND. ;
+                  aCOMPDET_LOCAL[ tmp ][ 3 ] == t_cCOMP
+                  IF ! Empty( tmp1 := Eval( aCOMPDET_LOCAL[ tmp ][ 1 ], aCOMPDET_LOCAL[ tmp ][ 4 ] ) )
                      t_cCCPATH := tmp1
                   ENDIF
-                  t_cCCPREFIX := aCOMPDET_LOCAL[ tmp ][ 3 ]
+                  t_cCCPREFIX := aCOMPDET_LOCAL[ tmp ][ 4 ]
                   EXIT
                ENDIF
             NEXT
@@ -1193,7 +1216,7 @@ FUNCTION Main( ... )
          cObjExt := ".o"
          cBin_Lib := t_cCCPREFIX + "ar"
          cOpt_Lib := "{FA} cr {OL} {LO}"
-         cBin_CompC := t_cCCPREFIX + iif( t_cCOMP == "gpp", "g++", "gcc" )
+         cBin_CompC := t_cCCPREFIX + iif( t_cCOMP == "gpp" .OR. s_lCPP, "g++", "gcc" )
          IF ! Empty( t_cCCPATH )
             cBin_Lib   := t_cCCPATH + "/" + cBin_Lib
             cBin_CompC := t_cCCPATH + "/" + cBin_CompC
@@ -1322,6 +1345,7 @@ FUNCTION Main( ... )
            ( t_cARCH == "win" .AND. t_cCOMP == "mingw" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "mingw64" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "mingwce" ) .OR. ;
+           ( t_cARCH == "wce" .AND. t_cCOMP == "mingwarm" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "cygwin" )
 
          cLibPrefix := "-l"
@@ -1339,7 +1363,7 @@ FUNCTION Main( ... )
             cBin_Lib   := t_cCCPATH + "\" + cBin_Lib
             cBin_CompC := t_cCCPATH + "\" + cBin_CompC
          ENDIF
-         IF !( t_cCOMP == "mingwce" )
+         IF !( t_cCOMP == "mingwce" ) .AND. !( t_cARCH == "wce" )
             IF s_lGUI
                cOpt_CompC += " -mwindows"
             ELSE
@@ -1353,7 +1377,7 @@ FUNCTION Main( ... )
             AAdd( s_aLIBPATH, "{DB}" )
          ENDIF
          IF ! lStopAfterCComp
-            IF t_cCOMP $ "mingw|mingw64|mingwce"
+            IF t_cCOMP $ "mingw|mingw64|mingwce|mingwarm"
                cOpt_CompC += " -Wl,--start-group {LL} -Wl,--end-group"
             ELSE
                cOpt_CompC += " {LL}"
@@ -1386,13 +1410,13 @@ FUNCTION Main( ... )
             AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
-         IF t_cCOMP $ "mingw|mingw64|mingwce" .AND. Len( s_aRESSRC ) > 0
+         IF t_cCOMP $ "mingw|mingw64|mingwce|mingwarm" .AND. Len( s_aRESSRC ) > 0
             IF Len( s_aRESSRC ) == 1
                cBin_Res := t_cCCPREFIX + "windres"
                cOpt_Res := "{LR} -o {LS}"
                cResExt := ".o"
             ELSE
-               OutErr( "hbmk: Warning: Resource files ignored. Multiple ones not supported with mingw/mingw64/mingwce." + hb_osNewLine() )
+               OutErr( "hbmk: Warning: Resource files ignored. Multiple ones not supported with mingw/mingw64/mingwce/mingwarm." + hb_osNewLine() )
             ENDIF
          ENDIF
 
@@ -1799,9 +1823,11 @@ FUNCTION Main( ... )
 
       /* TODO */
       CASE t_cARCH == "linux" .AND. t_cCOMP == "icc"
-      CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"  /* NOTE: Cross-platform: wce/ARM on win/x86 */
+      CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce" .OR. ;
+           t_cARCH == "wce" .AND. t_cCOMP == "msvcarm" /* NOTE: Cross-platform: wce/ARM on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"  /* NOTE: Cross-platform: win/amd64 on win/x86 */
-      CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"  /* NOTE: Cross-platform: wce/ARM on win/x86 */
+      CASE t_cARCH == "win" .AND. t_cCOMP == "poccce" .OR. ;
+           t_cARCH == "wce" .AND. t_cCOMP == "poccarm" /* NOTE: Cross-platform: wce/ARM on win/x86 */
       CASE t_cARCH == "linux" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wce/ARM on win/x86 */
          IF ! s_lSHARED
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl" } )
@@ -1842,9 +1868,9 @@ FUNCTION Main( ... )
                         "LNK4217: locally defined symbol ... imported in function ..."
                         if using 'dllimport'. [vszakats] */
                tmp := ""
-            CASE t_cCOMP $ "gcc|mingw|mingw64|mingwce|cygwin" ; tmp := "__attribute__ (( dllimport ))"
-            CASE t_cCOMP $ "bcc|owatcom"                      ; tmp := "__declspec( dllimport )"
-            OTHERWISE                                         ; tmp := "_declspec( dllimport )"
+            CASE t_cCOMP $ "gcc|mingw|mingw64|mingwce|mingwarm|cygwin" ; tmp := "__attribute__ (( dllimport ))"
+            CASE t_cCOMP $ "bcc|owatcom"                               ; tmp := "__declspec( dllimport )"
+            OTHERWISE                                                  ; tmp := "_declspec( dllimport )"
             ENDCASE
 
             /* Create list of requested symbols */
@@ -2393,7 +2419,7 @@ STATIC FUNCTION ListCookLib( arraySrc, cPrefix, cExtNew )
    LOCAL cDir
    LOCAL cLibName
 
-   IF t_cCOMP $ "gcc|gpp|mingw|mingw64|mingwce|djgpp|cygwin"
+   IF t_cCOMP $ "gcc|gpp|mingw|mingw64|mingwce|mingwarm|djgpp|cygwin"
       FOR EACH cLibName IN array
          hb_FNameSplit( cLibName, @cDir )
          IF Empty( cDir )
@@ -2534,7 +2560,7 @@ STATIC FUNCTION PathSepToTarget( cFileName, nStart )
 
    DEFAULT nStart TO 1
 
-   IF t_cARCH $ "win|dos|os2" .AND. !( t_cCOMP $ "mingw|mingw64|mingwce|cygwin" )
+   IF t_cARCH $ "win|dos|os2" .AND. !( t_cCOMP $ "mingw|mingw64|mingwce|mingwarm|cygwin" )
       RETURN Left( cFileName, nStart - 1 ) + StrTran( SubStr( cFileName, nStart ), "/", "\" )
    ENDIF
 
@@ -3074,7 +3100,7 @@ STATIC FUNCTION getFirstFunc( cFile )
    LOCAL cFuncList, cExecNM, cFuncName, cExt, cLine, n, c
 
    cFuncName := ""
-   IF t_cCOMP $ "gcc|gpp|mingw|mingw64|mingwce|cygwin"
+   IF t_cCOMP $ "gcc|gpp|mingw|mingw64|mingwce|mingwarm|cygwin"
       hb_FNameSplit( cFile,,, @cExt )
       IF cExt == ".c"
          FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFile ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
@@ -3121,6 +3147,7 @@ STATIC FUNCTION commandResult( cCommand, nResult )
 PROCEDURE PlatformPRGFlags( aOPTPRG )
 
    IF !( t_cARCH == hb_Version( HB_VERSION_BUILD_ARCH ) ) .OR. ;
+      t_cARCH == "wce" .OR. ;
       t_cCOMP == "mingwce" .OR. ;
       t_cCOMP == "poccce" .OR. ;
       t_cCOMP == "msvcce"
@@ -3152,7 +3179,8 @@ PROCEDURE PlatformPRGFlags( aOPTPRG )
       #endif
 
       DO CASE
-      CASE t_cCOMP == "mingwce" .OR. ;
+      CASE t_cARCH == "wce" .OR. ;
+           t_cCOMP == "mingwce" .OR. ;
            t_cCOMP == "poccce" .OR. ;
            t_cCOMP == "msvcce"
          AAdd( aOPTPRG, "-D__PLATFORM__WINDOWS" )
@@ -3282,11 +3310,12 @@ STATIC PROCEDURE ShowHelp( lLong )
       "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}" ,;
       "  - Defaults and feature support vary by architecture/compiler." ,;
       "  - Supported <comp> values for each supported <arch> value:" ,;
-      "    linux  : gcc, gpp, owatcom, icc, mingw, mingwce" ,;
+      "    linux  : gcc, owatcom, icc, mingw, mingwce" ,;
       "    darwin : gcc" ,;
       "    win    : mingw, msvc, bcc, owatcom, icc, pocc, cygwin," ,;
       "             mingw64, msvc64, msvcia64, iccia64, pocc64," ,;
       "             mingwce, msvcce, poccce, xcc" ,;
+      "    wce    : mingwarm, msvcarm, poccarm" ,;
       "    os2    : gcc, owatcom" ,;
       "    dos    : djgpp, owatcom" ,;
       "    bsd, hpux, sunos: gcc" }

@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-31 19:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    + Added information on HB_EXTERNAL* envvar settings.
+
+  * utils/hbmk2/hbmk2.prg
+    + Added support for wce target. Currently in parallel
+      with win/*ce targets.
+
 2009-03-31 14:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/rddsql/sddfb/Makefile
     ! Excluded for pocc64 due to compile errors.

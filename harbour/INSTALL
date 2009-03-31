@@ -189,13 +189,13 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
 
    Windows (supported, but not recommended, features may be missing)
    -------
-   pocc     - Pelles C 4.5 and above
-   pocc64   - Pelles C 5.0 x64
-   xcc      - Pelles C for xhb
    owatcom  - Open Watcom C++
    icc      - Intel(R) C/C++
    iccia64  - Intel(R) C/C++ IA64
    bcc      - Borland/CodeGear C++ 4.x and above
+   pocc     - Pelles C 4.5 and above
+   pocc64   - Pelles C 5.0 x64
+   xcc      - Pelles C for xhb
    cygwin   - Cygwin GNU C
 
    Windows CE
@@ -249,6 +249,11 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                libraries. Build all if left empty.
    - HB_CONTRIB_ADDONS=<list>  Build additional libraries stored
                                in the contrib directory.
+   - HB_EXTERNALLIBS=no        Don't build any external libraries.
+   - HB_EXTERNALLIBS=[<list>]  Build space separated <list> of external
+                               libraries. Build all if left empty.
+   - HB_EXTERNAL_ADDONS=<list> Build additional libraries stored
+                               in the external directory.
    - HB_VISUALC_VER_PRE80=yes  Set this if you're using a pre-8.0
                                (= pre-MSVS 2005) version of MSVC compiler.
    - HB_REBUILD_PARSER=yes     To rebuild the language parsers. Typically
