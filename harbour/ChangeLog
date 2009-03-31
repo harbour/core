@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-31 13:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/hbinet.c
+    ! Reverted. Damn.
+
 2009-03-31 13:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbfbird/Makefile
     ! Excluded for pocc64 due to compile errors.
