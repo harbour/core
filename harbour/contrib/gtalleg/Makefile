@@ -7,6 +7,7 @@ ROOT = ../../
 LIBNAME=gtalleg
 
 ifneq ($(HB_COMPILER),pocc)
+ifneq ($(HB_COMPILER),pocc64)
 ifneq ($(HB_COMPILER),poccce)
 ifneq ($(HB_COMPILER),xcc)
 ifneq ($(HB_COMPILER),dmc)
@@ -31,6 +32,9 @@ C_SOURCES=\
 
 include $(TOP)$(ROOT)config/lib.cf
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

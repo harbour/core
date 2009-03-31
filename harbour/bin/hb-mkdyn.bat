@@ -30,6 +30,7 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcce"   goto DO_MSVC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_bcc"      goto DO_BCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_owatcom"  goto DO_OWATCOM
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     goto DO_POCC
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   goto DO_POCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_poccce"   goto DO_POCC
 
 echo Platform %HB_ARCHITECTURE% / %HB_COMPILER% isn't supported.
@@ -364,10 +365,13 @@ cd ..
 
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_poccce"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_poccce"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
 
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_poccce"   set _SYSLIBS=wininet.lib ws2.lib
 
 echo Making %_DST_NAME_ST%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt %_SYSLIBS%

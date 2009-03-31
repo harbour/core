@@ -26,6 +26,9 @@ endif
 ifeq ($(HB_COMPILER),pocc)
 HB_WITH_QT=no
 endif
+ifeq ($(HB_COMPILER),pocc64)
+HB_WITH_QT=no
+endif
 ifeq ($(HB_COMPILER),poccce)
 HB_WITH_QT=no
 endif
@@ -225,4 +228,3 @@ endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif
-

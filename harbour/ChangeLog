@@ -8,6 +8,20 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-31 12:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkdyn.bat
+    + Added pocc64 support.
+
+  * contrib/gtalleg/Makefile
+    ! Excluded for pocc64 due to compile errors.
+
+  * contrib/hbsqlit3/Makefile
+    ! Excluded for pocc64 due to overflow.
+
+  * contrib/hbqt/generator/hbqtgen.prg
+  * contrib/hbqt/Makefile
+    ! Excluded for pocc64.
+
 2009-03-31 12:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/xhb/dbf2txt.c
     ! Fixed for Win64.
