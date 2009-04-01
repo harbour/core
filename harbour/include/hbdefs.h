@@ -1260,6 +1260,13 @@ typedef long                hbVMIntMax;       /* TOFIX */
    #define HB_START_PROC_STRICT
 #endif
 
+#if defined(__WATCOMC__) || defined(__DMC__) || \
+    defined(_MSC_VER) || defined(__POCC__)
+   #define HB_DLL_ENTRY_POINT    DllMain
+#else
+   #define HB_DLL_ENTRY_POINT    DllEntryPoint
+#endif
+
 #if defined(HB_FUNC_CALLCONV)
    #define HARBOUR void HB_FUNC_CALLCONV
 #else

@@ -78,7 +78,6 @@ $(foreach file, $(^F), $(link_file))
 $(foreach lib, $(LINKLIBS), $(link_lib))
 $(foreach lib, $(RDDLIBS), $(link_lib))
 $(foreach lib, $(GTLIBS), $(link_lib))
-echo @%WATCOM%/binp/wlink.lnk >> __link__.tmp
 -$(LD) @__link__.tmp
 endef
 

@@ -84,8 +84,7 @@ $(foreach file, $(^F), $(link_file))
 $(foreach lib, $(LINKLIBS), $(link_lib))
 $(foreach lib, $(RDDLIBS), $(link_lib))
 $(foreach lib, $(GTLIBS), $(link_lib))
-echo @%WATCOM%/binnt/wlink.lnk >> __link__.tmp
-echo LIB kernel32.lib, user32.lib, ws2_32.lib >> __link__.tmp
+echo LIB ws2_32.lib >> __link__.tmp
 -$(LD) @__link__.tmp
 endef
 

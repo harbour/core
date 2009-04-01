@@ -8,6 +8,49 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-01 22:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/doc/Makefile
+    ! removed unexisting license.txt file
+
+  * harbour/include/hbapidbg.h
+    * do not export Harbour debugger functions. If someone wants to create
+      3-rd party debugger then we should agree the list of functions which
+      should be public.
+
+  * harbour/include/hbstack.h
+    * minor cleanup in some definitions
+
+  * harbour/include/hbdefs.h
+    + added HB_DLL_ENTRY_POINT macro to set default DLL entry point for
+      different Windows compilers
+
+  * harbour/source/vm/maindllh.c
+  * harbour/source/vm/maindllp.c
+    * use HB_DLL_ENTRY_POINT macro
+
+  * harbour/include/hbsetup.h
+    * added internal macro to disable flatten optimization
+
+  * harbour/include/hbmath.h
+  * harbour/source/rtl/math.c
+    * make default math error handler function static
+
+  * harbour/include/hbatomic.h
+    + added atomic inc/dec inline asm code to OW x86 builds
+
+  * harbour/source/rtl/console.c
+    * small code reorganization to not mix public and private function calls
+
+  * harbour/source/rtl/hbregex.c
+  * harbour/source/hbpcre/_hbpcreg.c
+    * do not use hb_xfree() function pointer directly to avoid problems
+      with different calling conventions.
+
+  * harbour/config/win/owatcom.cf
+  * harbour/config/os2/owatcom.cf
+    * removed unnecessary in recent OpenWatcom versions explicit wlink.lnk
+      including.
+
 2009-04-01 14:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Added clipper/rtlink/exospace/blinker self-name recognition.

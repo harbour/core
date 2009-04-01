@@ -60,6 +60,11 @@ static void * hb_pcre_grab( size_t size )
    return hb_xgrab( size );
 }
 
+static void hb_pcre_free( void * ptr )
+{
+   hb_xfree( ptr );
+}
+
 #if 1
 #include "_hbconf.h"
 #endif
@@ -69,9 +74,9 @@ static void * hb_pcre_grab( size_t size )
 #ifndef VPCOMPAT
 HB_EXTERN_BEGIN
 PCRE_EXP_DATA_DEFN void *(*pcre_malloc)(size_t) = hb_pcre_grab;
-PCRE_EXP_DATA_DEFN void  (*pcre_free)(void *) = hb_xfree;
+PCRE_EXP_DATA_DEFN void  (*pcre_free)(void *) = hb_pcre_free;
 PCRE_EXP_DATA_DEFN void *(*pcre_stack_malloc)(size_t) = hb_pcre_grab;
-PCRE_EXP_DATA_DEFN void  (*pcre_stack_free)(void *) = hb_xfree;
+PCRE_EXP_DATA_DEFN void  (*pcre_stack_free)(void *) = hb_pcre_free;
 PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
 HB_EXTERN_END
 #endif

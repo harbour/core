@@ -87,6 +87,87 @@ typedef struct
 #endif
 } HB_MATHERRDATA, * PHB_MATHERRDATA;
 
+/* Harbour default math error handling routine */
+static int hb_matherr( HB_MATH_EXCEPTION * pexc )
+{
+   int mode = hb_mathGetErrMode();
+   int iRet = 1;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_matherr(%p)", pexc ) );
+
+   if( pexc == NULL || pexc->handled != 0 )
+   {
+      /* error already handled by other handlers ! */
+      return 1;
+   }
+
+   if( mode == HB_MATH_ERRMODE_USER || mode == HB_MATH_ERRMODE_USERDEFAULT ||
+       mode == HB_MATH_ERRMODE_USERCDEFAULT )
+   {
+      PHB_ITEM pArg1, pArg2, pError;
+      PHB_ITEM pMatherrResult;
+
+      /* create an error object */
+      /* NOTE: In case of HB_MATH_ERRMODE_USER[C]DEFAULT, I am setting both EF_CANSUBSTITUTE and EF_CANDEFAULT to .T. here.
+         This is forbidden according to the original Cl*pper docs, but I think this reflects the situation best here:
+         The error handler can either substitute the errorneous value (by returning a numeric value) or choose the
+         default error handling (by returning .F., as usual) [martin vogel] */
+      pError = hb_errRT_New_Subst( ES_ERROR, "MATH", EG_NUMERR, pexc->type,
+                                   pexc->error, pexc->funcname, 0, EF_CANSUBSTITUTE |
+                                   ( mode == HB_MATH_ERRMODE_USER ? 0 : EF_CANDEFAULT ) );
+
+      /* Assign the new array to the object data item. */
+      /* NOTE: Unfortunately, we cannot decide whether one or two parameters have been used when the
+         math function has been called, so we always take two */
+      pArg1 = hb_itemPutND( NULL, pexc->arg1 );
+      pArg2 = hb_itemPutND( NULL, pexc->arg2 );
+      hb_errPutArgs( pError, 2, pArg1, pArg2 );
+      hb_itemRelease( pArg1 );
+      hb_itemRelease( pArg2 );
+
+      /* launch error codeblock */
+      pMatherrResult = hb_errLaunchSubst( pError );
+      hb_errRelease( pError );
+
+      if( pMatherrResult )
+      {
+         if( HB_IS_NUMERIC( pMatherrResult ) )
+         {
+            pexc->retval = hb_itemGetND( pMatherrResult );
+            hb_itemGetNLen( pMatherrResult, &pexc->retvalwidth, &pexc->retvaldec );
+            pexc->handled = 1;
+         }
+         hb_itemRelease( pMatherrResult );
+      }
+   }
+
+   /* math exception not handled by Harbour error routine above ? */
+   if( pexc->handled == 0 )
+   {
+      switch( mode )
+      {
+         case HB_MATH_ERRMODE_USER:
+            /* user failed to handle the math exception, so quit the app [yes, that's the meaning of this mode !!] */
+            iRet = 0;
+            hb_vmRequestQuit();
+            break;
+
+         case HB_MATH_ERRMODE_DEFAULT:
+         case HB_MATH_ERRMODE_USERDEFAULT:
+            /* return 1 to suppress C RTL error msgs, but leave error handling to the calling Harbour routine */
+            break;
+
+         case HB_MATH_ERRMODE_CDEFAULT:
+         case HB_MATH_ERRMODE_USERCDEFAULT:
+            /* use the correction value supplied in pexc->retval */
+            pexc->handled = 1;
+            break;
+      }
+   }
+
+   return iRet;                 /* error handling successful */
+}
+
 static void hb_mathErrDataInit( void * Cargo )
 {
    PHB_MATHERRDATA pMathErr = ( PHB_MATHERRDATA ) Cargo;
@@ -369,87 +450,6 @@ HB_FUNC( HB_MATHERMODE )        /* ([<nNewMode>]) -> <nOldMode> */
    /* set new mode */
    if( ISNUM( 1 ) )
       hb_mathSetErrMode( hb_parni( 1 ) );
-}
-
-/* Harbour default math error handling routine */
-int hb_matherr( HB_MATH_EXCEPTION * pexc )
-{
-   int mode = hb_mathGetErrMode();
-   int iRet = 1;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_matherr(%p)", pexc ) );
-
-   if( pexc == NULL || pexc->handled != 0 )
-   {
-      /* error already handled by other handlers ! */
-      return 1;
-   }
-
-   if( mode == HB_MATH_ERRMODE_USER || mode == HB_MATH_ERRMODE_USERDEFAULT ||
-       mode == HB_MATH_ERRMODE_USERCDEFAULT )
-   {
-      PHB_ITEM pArg1, pArg2, pError;
-      PHB_ITEM pMatherrResult;
-
-      /* create an error object */
-      /* NOTE: In case of HB_MATH_ERRMODE_USER[C]DEFAULT, I am setting both EF_CANSUBSTITUTE and EF_CANDEFAULT to .T. here.
-         This is forbidden according to the original Cl*pper docs, but I think this reflects the situation best here:
-         The error handler can either substitute the errorneous value (by returning a numeric value) or choose the
-         default error handling (by returning .F., as usual) [martin vogel] */
-      pError = hb_errRT_New_Subst( ES_ERROR, "MATH", EG_NUMERR, pexc->type,
-                                   pexc->error, pexc->funcname, 0, EF_CANSUBSTITUTE |
-                                   ( mode == HB_MATH_ERRMODE_USER ? 0 : EF_CANDEFAULT ) );
-
-      /* Assign the new array to the object data item. */
-      /* NOTE: Unfortunately, we cannot decide whether one or two parameters have been used when the
-         math function has been called, so we always take two */
-      pArg1 = hb_itemPutND( NULL, pexc->arg1 );
-      pArg2 = hb_itemPutND( NULL, pexc->arg2 );
-      hb_errPutArgs( pError, 2, pArg1, pArg2 );
-      hb_itemRelease( pArg1 );
-      hb_itemRelease( pArg2 );
-
-      /* launch error codeblock */
-      pMatherrResult = hb_errLaunchSubst( pError );
-      hb_errRelease( pError );
-
-      if( pMatherrResult )
-      {
-         if( HB_IS_NUMERIC( pMatherrResult ) )
-         {
-            pexc->retval = hb_itemGetND( pMatherrResult );
-            hb_itemGetNLen( pMatherrResult, &pexc->retvalwidth, &pexc->retvaldec );
-            pexc->handled = 1;
-         }
-         hb_itemRelease( pMatherrResult );
-      }
-   }
-
-   /* math exception not handled by Harbour error routine above ? */
-   if( pexc->handled == 0 )
-   {
-      switch( mode )
-      {
-         case HB_MATH_ERRMODE_USER:
-            /* user failed to handle the math exception, so quit the app [yes, that's the meaning of this mode !!] */
-            iRet = 0;
-            hb_vmRequestQuit();
-            break;
-
-         case HB_MATH_ERRMODE_DEFAULT:
-         case HB_MATH_ERRMODE_USERDEFAULT:
-            /* return 1 to suppress C RTL error msgs, but leave error handling to the calling Harbour routine */
-            break;
-
-         case HB_MATH_ERRMODE_CDEFAULT:
-         case HB_MATH_ERRMODE_USERCDEFAULT:
-            /* use the correction value supplied in pexc->retval */
-            pexc->handled = 1;
-            break;
-      }
-   }
-
-   return iRet;                 /* error handling successful */
 }
 
 

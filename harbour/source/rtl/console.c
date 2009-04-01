@@ -268,8 +268,6 @@ static void hb_conOutDev( const char * pStr, ULONG ulLen )
       hb_gtWrite( ( BYTE * ) pStr, ulLen );
 }
 
-typedef void hb_out_func_typedef( const char *, ULONG );
-
 static char * hb_itemStringCon( PHB_ITEM pItem, ULONG * pulLen, BOOL * pfFreeReq )
 {
    /* logical values in device output (not console, stdout or stderr) are
@@ -283,38 +281,21 @@ static char * hb_itemStringCon( PHB_ITEM pItem, ULONG * pulLen, BOOL * pfFreeReq
    return hb_itemString( pItem, pulLen, pfFreeReq );
 }
 
-/* Format items for output, then call specified output function */
-static void hb_conOut( USHORT uiParam, hb_out_func_typedef * pOutFunc )
-{
-   char * pszString;
-   ULONG ulLen;
-   BOOL bFreeReq;
-   PHB_ITEM pItem;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_conOut(%hu, %p)", uiParam, pOutFunc));
-
-   pItem = hb_param( uiParam, HB_IT_ANY );
-
-   if( pOutFunc == hb_conOutDev )
-      pszString = hb_itemStringCon( pItem, &ulLen, &bFreeReq );
-   else
-      pszString = hb_itemString( pItem, &ulLen, &bFreeReq );
-
-   if( ulLen )
-      pOutFunc( pszString, ulLen );
-
-   if( bFreeReq )
-      hb_xfree( pszString );
-}
-
 HB_FUNC( OUTSTD ) /* writes a list of values to the standard output device */
 {
    USHORT uiPCount = ( USHORT ) hb_pcount();
    USHORT uiParam;
+   char * pszString;
+   ULONG ulLen;
+   BOOL fFree;
 
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
    {
-      hb_conOut( uiParam, hb_conOutStd );
+      pszString = hb_itemString( hb_param( uiParam, HB_IT_ANY ), &ulLen, &fFree );
+      if( ulLen )
+         hb_conOutStd( pszString, ulLen );
+      if( fFree )
+         hb_xfree( pszString );
       if( uiParam < uiPCount )
          hb_conOutStd( " ", 1 );
    }
@@ -324,10 +305,17 @@ HB_FUNC( OUTERR ) /* writes a list of values to the standard error device */
 {
    USHORT uiPCount = ( USHORT ) hb_pcount();
    USHORT uiParam;
+   char * pszString;
+   ULONG ulLen;
+   BOOL fFree;
 
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
    {
-      hb_conOut( uiParam, hb_conOutErr );
+      pszString = hb_itemString( hb_param( uiParam, HB_IT_ANY ), &ulLen, &fFree );
+      if( ulLen )
+         hb_conOutErr( pszString, ulLen );
+      if( fFree )
+         hb_xfree( pszString );
       if( uiParam < uiPCount )
          hb_conOutErr( " ", 1 );
    }
@@ -337,10 +325,17 @@ HB_FUNC( QQOUT ) /* writes a list of values to the current device (screen or pri
 {
    USHORT uiPCount = ( USHORT ) hb_pcount();
    USHORT uiParam;
+   char * pszString;
+   ULONG ulLen;
+   BOOL fFree;
 
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
    {
-      hb_conOut( uiParam, hb_conOutAlt );
+      pszString = hb_itemString( hb_param( uiParam, HB_IT_ANY ), &ulLen, &fFree );
+      if( ulLen )
+         hb_conOutAlt( pszString, ulLen );
+      if( fFree )
+         hb_xfree( pszString );
       if( uiParam < uiPCount )
          hb_conOutAlt( " ", 1 );
    }
@@ -493,6 +488,10 @@ HB_FUNC( SETPRC ) /* Sets the current printer row and column positions */
 
 HB_FUNC( DEVOUT ) /* writes a single value to the current device (screen or printer), but is not affected by SET ALTERNATE */
 {
+   char * pszString;
+   ULONG ulLen;
+   BOOL fFree;
+
    if( ISCHAR( 2 ) )
    {
       char szOldColor[ HB_CLRSTR_LEN ];
@@ -500,12 +499,22 @@ HB_FUNC( DEVOUT ) /* writes a single value to the current device (screen or prin
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_parc( 2 ) );
 
-      hb_conOut( 1, hb_conOutDev );
+      pszString = hb_itemStringCon( hb_param( 1, HB_IT_ANY ), &ulLen, &fFree );
+      if( ulLen )
+         hb_conOutDev( pszString, ulLen );
+      if( fFree )
+         hb_xfree( pszString );
 
       hb_gtSetColorStr( szOldColor );
    }
    else if( hb_pcount() >= 1 )
-      hb_conOut( 1, hb_conOutDev );
+   {
+      pszString = hb_itemStringCon( hb_param( 1, HB_IT_ANY ), &ulLen, &fFree );
+      if( ulLen )
+         hb_conOutDev( pszString, ulLen );
+      if( fFree )
+         hb_xfree( pszString );
+   }
 }
 
 HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected by SET ALTERNATE */

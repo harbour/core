@@ -292,7 +292,46 @@ HB_EXTERN_BEGIN
 
 #     endif
 
-#  endif
+#  endif    /* x86 */
+
+#elif defined( __WATCOMC__ ) && defined( __cplusplus )
+
+#  if defined( i386 ) || defined( __i386__ ) || defined( __x86_64__ ) || \
+      defined( _M_IX86 ) || defined( _M_AMD64 )
+
+#     if HB_COUNTER_SIZE == 4
+
+         static inline void hb_atomic_inc32( volatile int * p )
+         {
+            _asm {
+               mov eax, p
+               lock inc dword ptr [eax]
+            }
+         }
+
+         static inline int hb_atomic_dec32( volatile int * p )
+         {
+            unsigned char c;
+            _asm {
+               mov eax, p
+               lock dec dword ptr [eax]
+               setne c
+            }
+            return c;
+         }
+
+#        define HB_ATOM_INC( p )    ( hb_atomic_inc32( ( volatile int * ) (p) ) )
+#        define HB_ATOM_DEC( p )    ( hb_atomic_dec32( ( volatile int * ) (p) ) )
+#        define HB_ATOM_GET( p )    (*(int volatile *)(p))
+#        define HB_ATOM_SET( p, n ) do { *((int volatile *)(p)) = (n); } while(0)
+
+#     elif HB_COUNTER_SIZE == 8
+
+         /* TODO: */
+
+#     endif
+
+#  endif    /* x86 */
 
 #endif  /* ??? C compiler ??? */
 

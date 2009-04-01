@@ -60,9 +60,9 @@
 #include "hbvm.h"
 #include "hbapiitm.h"
 
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
 
-BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+HB_EXPORT BOOL WINAPI HB_DLL_ENTRY_POINT( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
 {
    HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
              pvReserved ) );
@@ -82,5 +82,12 @@ BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserve
 
    return TRUE;
 }
+
+#if defined( __DMC__ ) || defined( __WATCOMC__ )
+HB_EXTERN_BEGIN
+void hb_forceLinkMainWin( void ) {}
+void hb_forceLinkMainStd( void ) {}
+HB_EXTERN_END
+#endif
 
 #endif

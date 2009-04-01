@@ -541,6 +541,10 @@ static void * hb_pcre_grab( size_t size )
 {
    return hb_xgrab( size );
 }
+static void hb_pcre_free( void * ptr )
+{
+   hb_xfree( ptr );
+}
 #endif
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_regex_init_ )
@@ -553,9 +557,9 @@ HB_CALL_ON_STARTUP_BEGIN( _hb_regex_init_ )
    }
 #  endif
    pcre_malloc = hb_pcre_grab;
-   pcre_free = hb_xfree;
+   pcre_free = hb_pcre_free;
    pcre_stack_malloc = hb_pcre_grab;
-   pcre_stack_free = hb_xfree;
+   pcre_stack_free = hb_pcre_free;
 #endif
    hb_regexInit( hb_regfree, hb_regcomp, hb_regexec );
 HB_CALL_ON_STARTUP_END( _hb_regex_init_ )

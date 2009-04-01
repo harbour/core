@@ -125,7 +125,6 @@ extern HB_EXPORT BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *
 
 extern HB_EXPORT int hb_mathSetErrMode( int imode );
 extern HB_EXPORT int hb_mathGetErrMode( void );
-extern HB_EXPORT int hb_matherr( HB_MATH_EXCEPTION * pexc );
 
 extern HB_EXPORT HB_MATH_HANDLERPROC hb_mathSetHandler( HB_MATH_HANDLERPROC handlerproc );
 extern HB_EXPORT HB_MATH_HANDLERPROC hb_mathGetHandler( void );

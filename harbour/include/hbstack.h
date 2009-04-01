@@ -200,7 +200,7 @@ typedef struct
          extern HB_TLS_KEY hb_stack_key;
 #        if defined( __BORLANDC__ ) && defined( HB_STACK_PRELOAD ) && \
             !defined( HB_OS_WIN_64 ) && !defined( HB_OS_WIN_CE )
-            static __inline void* hb_stack_ptr_from_tls( void )
+            static __inline void * hb_stack_ptr_from_tls( void )
             {
                /* mov ecx,hb_stack_key */
                _ECX = hb_stack_key;
@@ -211,6 +211,7 @@ typedef struct
                /* ret (if function is not inlined) */
                return (void*) _EAX;
             }
+#           define hb_stack_ptr_get()    hb_stack_ptr_from_tls()
 #        elif defined( __MINGW32__ ) && \
               !defined( HB_OS_WIN_64 ) && !defined( HB_OS_WIN_CE )
             static __inline__  __attribute__ ((pure, malloc)) void * hb_stack_ptr_from_tls( void )
@@ -224,6 +225,7 @@ typedef struct
                );
                return p;
             }
+#           define hb_stack_ptr_get()    hb_stack_ptr_from_tls()
 #           define hb_stack_ptr  ( ( PHB_STACK ) hb_stack_ptr_from_tls() )
 #        endif
 #        if !defined( hb_stack_ptr )
@@ -231,19 +233,21 @@ typedef struct
 #        endif
 #     endif
 #     if defined( HB_STACK_PRELOAD ) && !defined( HB_USE_TLS )
-#        if ( defined( __BORLANDC__ ) || defined( __MINGW32__ ) ) && \
-            !defined( HB_OS_WIN_64 ) && !defined( HB_OS_WIN_CE )
-#           define HB_STACK_TLS_PRELOAD   PHB_STACK _hb_stack_ptr_ = ( PHB_STACK ) hb_stack_ptr_from_tls();
+#        if defined( hb_stack_ptr_get )
+#           define HB_STACK_TLS_PRELOAD   PHB_STACK _hb_stack_ptr_ = ( PHB_STACK ) hb_stack_ptr_get();
 #           undef hb_stack_ptr
 #        else
 #           define HB_STACK_TLS_PRELOAD   PHB_STACK _hb_stack_ptr_ = hb_stack_ptr;
 #        endif
-#        define hb_stack      ( * _hb_stack_ptr_ )
+#        define hb_stack            ( * _hb_stack_ptr_ )
+#        define hb_stack_ref()      ( _hb_stack_ptr_ )
 #     else
-#        define hb_stack      ( * hb_stack_ptr )
+#        define hb_stack            ( * hb_stack_ptr )
+#        define hb_stack_ref()      ( hb_stack_ptr )
 #     endif
 #  else
       extern HB_STACK hb_stack;
+#     define hb_stack_ref()         ( &hb_stack )
 #  endif
 #endif
 #if !defined( HB_STACK_TLS_PRELOAD ) && defined( HB_STACK_PRELOAD )
@@ -381,7 +385,7 @@ extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
 #define hb_stackGetI18N( )          ( hb_stack.pI18N )
 #define hb_stackSetI18N( p )        do { hb_stack.pI18N = ( p ); } while ( 0 )
 
-#define hb_stackId( )               ( ( void * ) &hb_stack )
+#define hb_stackId( )               ( ( void * ) hb_stack_ref() )
 #if defined( HB_MT_VM )
 #  define hb_stackList()            ( hb_stack.pStackLst )
 #  define hb_stackListSet( p )      do { hb_stack.pStackLst = ( p ); } while ( 0 )
