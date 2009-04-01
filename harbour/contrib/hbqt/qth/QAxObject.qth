@@ -1,0 +1,34 @@
+; Header File to Generate Sources
+;
+
+<CLASS>
+Inherit  = QObject, QAxBase
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <ActiveQt/QAxObject>
+
+
+/*
+ * QAxObject ( QObject * parent = 0 )
+ * QAxObject ( const QString & c, QObject * parent = 0 )
+ * QAxObject ( IUnknown * iface, QObject * parent = 0 )
+ * ~QAxObject ()
+ */
+HB_FUNC( QT_QAXOBJECT )
+{
+   hb_retptr( new QAxObject( hbqt_par_IUnknown( 1 ) ) );
+}
+</CODE>
+
+
+; ENUMS
+
+
+; PROTOTYPES
+bool doVerb ( const QString & verb )
+
+; SLOTS
+
+

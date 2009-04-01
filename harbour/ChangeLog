@@ -8,6 +8,27 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-31 18:41 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  + harbour/contrib/hbqt/qth/QAxBase.qth
+  + harbour/contrib/hbqt/qth/QAxBindable.qth
+  + harbour/contrib/hbqt/qth/QAxObject.qth
+  + harbour/contrib/hbqt/qth/QAxWidget.qth
+  + harbour/contrib/hbqt/qth/QDesktopWidget.qth
+  + harbour/contrib/hbqt/qth/QDir.qth
+  + harbour/contrib/hbqt/qth/QDockWidget.qth
+  + harbour/contrib/hbqt/qth/QFontInfo.qth
+  + harbour/contrib/hbqt/qth/QFtp.qth
+  + harbour/contrib/hbqt/qth/QGridLayout.qth
+  + harbour/contrib/hbqt/qth/QHeaderView.qth
+  + harbour/contrib/hbqt/qth/QHttp.qth
+  + harbour/contrib/hbqt/qth/QListWidget.qth
+  + harbour/contrib/hbqt/qth/QListWidgetItem.qth
+  + harbour/contrib/hbqt/qth/QSignalMapper.qth
+  + harbour/contrib/hbqt/qth/QSplashScreen.qth
+  + harbour/contrib/hbqt/qth/QTimer.qth
+  + harbour/contrib/hbqt/qth/QUrl.qth
+    + Added more source headers - RAW - not compiled.
+
 2009-03-31 21:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/postinst.bat
     ! Fixed regression causing shared hbrun/hbtest binaries to

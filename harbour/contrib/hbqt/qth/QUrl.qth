@@ -1,0 +1,102 @@
+; Header File to Generate Sources
+;
+
+<CLASS>
+Inherit  = QWidget
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <Qt/QUrl>
+
+
+/*
+ * QUrl ()
+ * QUrl ( const QString & url )
+ * QUrl ( const QUrl & other )
+ * QUrl ( const QString & url, ParsingMode parsingMode )
+ * ~QUrl ()
+ */
+HB_FUNC( QT_QURL )
+{
+   hb_retptr( new QUrl( hbqt_par_QString( 1 ) ) );
+}
+</CODE>
+
+
+; ENUMS
+enum FormattingOption { None, RemoveScheme, RemovePassword, RemoveUserInfo, ..., StripTrailingSlash }
+flags FormattingOptions
+enum ParsingMode { TolerantMode, StrictMode }
+
+; PROTOTYPES
+void addEncodedQueryItem ( const QByteArray & key, const QByteArray & value )
+void addQueryItem ( const QString & key, const QString & value )
+QList<QByteArray> allEncodedQueryItemValues ( const QByteArray & key ) const
+QStringList allQueryItemValues ( const QString & key ) const
+QString authority () const
+void clear ()
+QByteArray encodedFragment () const
+QByteArray encodedHost () const
+QByteArray encodedPassword () const
+QByteArray encodedPath () const
+QByteArray encodedQuery () const
+QByteArray encodedQueryItemValue ( const QByteArray & key ) const
+QList<QPair<QByteArray, QByteArray> > encodedQueryItems () const
+QByteArray encodedUserName () const
+QString errorString () const
+QString fragment () const
+bool hasEncodedQueryItem ( const QByteArray & key ) const
+bool hasFragment () const
+bool hasQuery () const
+bool hasQueryItem ( const QString & key ) const
+QString host () const
+bool isEmpty () const
+bool isParentOf ( const QUrl & childUrl ) const
+bool isRelative () const
+bool isValid () const
+QString password () const
+QString path () const
+int port () const
+int port ( int defaultPort ) const
+QString queryItemValue ( const QString & key ) const
+QList<QPair<QString, QString> > queryItems () const
+char queryPairDelimiter () const
+char queryValueDelimiter () const
+void removeAllEncodedQueryItems ( const QByteArray & key )
+void removeAllQueryItems ( const QString & key )
+void removeEncodedQueryItem ( const QByteArray & key )
+void removeQueryItem ( const QString & key )
+QUrl resolved ( const QUrl & relative ) const
+QString scheme () const
+void setAuthority ( const QString & authority )
+void setEncodedFragment ( const QByteArray & fragment )
+void setEncodedHost ( const QByteArray & host )
+void setEncodedPassword ( const QByteArray & password )
+void setEncodedPath ( const QByteArray & path )
+void setEncodedQuery ( const QByteArray & query )
+void setEncodedQueryItems ( const QList<QPair<QByteArray, QByteArray> > & query )
+void setEncodedUrl ( const QByteArray & encodedUrl )
+void setEncodedUrl ( const QByteArray & encodedUrl, ParsingMode parsingMode )
+void setEncodedUserName ( const QByteArray & userName )
+void setFragment ( const QString & fragment )
+void setHost ( const QString & host )
+void setPassword ( const QString & password )
+void setPath ( const QString & path )
+void setPort ( int port )
+void setQueryDelimiters ( char valueDelimiter, char pairDelimiter )
+void setQueryItems ( const QList<QPair<QString, QString> > & query )
+void setScheme ( const QString & scheme )
+void setUrl ( const QString & url )
+void setUrl ( const QString & url, ParsingMode parsingMode )
+void setUserInfo ( const QString & userInfo )
+void setUserName ( const QString & userName )
+QByteArray toEncoded ( FormattingOptions options = None ) const
+QString toLocalFile () const
+QString toString ( FormattingOptions options = None ) const
+QString userInfo () const
+QString userName () const
+
+; SLOTS
+
+

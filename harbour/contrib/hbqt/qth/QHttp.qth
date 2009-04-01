@@ -1,0 +1,65 @@
+; Header File to Generate Sources
+;
+
+<CLASS>
+Inherit  = QObject
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <Qt/QHttp>
+
+
+/*
+ * QHttp ( QObject * parent = 0 )
+ * QHttp ( const QString & hostName, quint16 port = 80, QObject * parent = 0 )
+ * QHttp ( const QString & hostName, ConnectionMode mode, quint16 port = 0, QObject * parent = 0 )
+ * virtual ~QHttp ()
+ */
+HB_FUNC( QT_QHTTP )
+{
+   hb_retptr( new QHttp( hbqt_par_QObject( 1 ) ) );
+}
+</CODE>
+
+
+; ENUMS
+enum ConnectionMode { ConnectionModeHttp, ConnectionModeHttps }
+enum Error { NoError, HostNotFound, ConnectionRefused, UnexpectedClose, ..., UnknownError }
+enum State { Unconnected, HostLookup, Connecting, Sending, ..., Closing }
+
+
+; PROTOTYPES
+qint64 bytesAvailable () const
+void clearPendingRequests ()
+int close ()
+QIODevice * currentDestinationDevice () const
+int currentId () const
+QHttpRequestHeader currentRequest () const
+QIODevice * currentSourceDevice () const
+Error error () const
+QString errorString () const
+int get ( const QString & path, QIODevice * to = 0 )
+bool hasPendingRequests () const
+int head ( const QString & path )
+QHttpResponseHeader lastResponse () const
+int post ( const QString & path, QIODevice * data, QIODevice * to = 0 )
+int post ( const QString & path, const QByteArray & data, QIODevice * to = 0 )
+qint64 read ( char * data, qint64 maxlen )
+QByteArray readAll ()
+int request ( const QHttpRequestHeader & header, QIODevice * data = 0, QIODevice * to = 0 )
+int request ( const QHttpRequestHeader & header, const QByteArray & data, QIODevice * to = 0 )
+int setHost ( const QString & hostName, quint16 port = 80 )
+int setHost ( const QString & hostName, ConnectionMode mode, quint16 port = 0 )
+int setProxy ( const QString & host, int port, const QString & username = QString(), const QString & password = QString() )
+int setProxy ( const QNetworkProxy & proxy )
+int setSocket ( QTcpSocket * socket )
+int setUser ( const QString & userName, const QString & password = QString() )
+State state () const
+
+
+; SLOTS
+void abort ()
+void ignoreSslErrors ()
+
+

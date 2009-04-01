@@ -1,0 +1,43 @@
+; Header File to Generate Sources
+;
+
+<CLASS>
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <QtGui/QFontInfo>
+
+
+/*
+ * QFontInfo ( const QFont & font )
+ * QFontInfo ( const QFontInfo & fi )
+ * ~QFontInfo ()
+ */
+HB_FUNC( QT_QFONTINFO )
+{
+   hb_retptr( new QFontInfo( hbqt_par_QFont( 1 ) ) );
+}
+</CODE>
+
+
+; ENUMS
+
+
+; PROTOTYPES
+bool bold () const
+bool exactMatch () const
+QString family () const
+bool fixedPitch () const
+bool italic () const
+int pixelSize () const
+int pointSize () const
+qreal pointSizeF () const
+bool rawMode () const
+QFont::Style style () const
+QFont::StyleHint styleHint () const
+int weight () const
+
+; SLOTS
+
+

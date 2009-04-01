@@ -1,0 +1,49 @@
+; Header File to Generate Sources
+;
+
+<CLASS>
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <ActiveQt/QAxBase>
+
+
+/*
+ * QAxBase ( IUnknown * iface = 0 )
+ * virtual ~QAxBase ()
+ */
+HB_FUNC( QT_QAXBASE )
+{
+   hb_retptr( new QAxBase( hbqt_par_IUnknown( 1 ) ) );
+}
+</CODE>
+
+
+; ENUMS
+
+
+; PROTOTYPES
+QVariant asVariant () const
+virtual void clear ()
+QString control () const
+void disableClassInfo ()
+void disableEventSink ()
+void disableMetaObject ()
+QVariant dynamicCall ( const char * function, const QVariant & var1 = QVariant(), const QVariant & var2 = QVariant(), const QVariant & var3 = QVariant(), const QVariant & var4 = QVariant(), const QVariant & var5 = QVariant(), const QVariant & var6 = QVariant(), const QVariant & var7 = QVariant(), const QVariant & var8 = QVariant() )
+QVariant dynamicCall ( const char * function, QList<QVariant> & vars )
+QString generateDocumentation ()
+bool isNull () const
+PropertyBag propertyBag () const
+virtual bool propertyWritable ( const char * prop ) const
+long queryInterface ( const QUuid & uuid, void ** iface ) const
+QAxObject * querySubObject ( const char * name, const QVariant & var1 = QVariant(), const QVariant & var2 = QVariant(), const QVariant & var3 = QVariant(), const QVariant & var4 = QVariant(), const QVariant & var5 = QVariant(), const QVariant & var6 = QVariant(), const QVariant & var7 = QVariant(), const QVariant & var8 = QVariant() )
+QAxObject * querySubObject ( const char * name, QList<QVariant> & vars )
+bool setControl ( const QString & )
+void setPropertyBag ( const PropertyBag & bag )
+virtual void setPropertyWritable ( const char * prop, bool ok )
+QStringList verbs () const
+
+; SLOTS
+
+

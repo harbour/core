@@ -1,0 +1,73 @@
+; Header File to Generate Sources
+;
+
+<CLASS>
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <Qt/QDir>
+
+
+/*
+ * QDir ( const QDir & dir )
+ * QDir ( const QString & path = QString() )
+ * QDir ( const QString & path, const QString & nameFilter, SortFlags sort = SortFlags( Name | IgnoreCase ), Filters filters = AllEntries )
+ * ~QDir ()
+ */
+HB_FUNC( QT_QDIR )
+{
+   hb_retptr( new QDir( hbqt_par_QString( 1 ) ) );
+}
+</CODE>
+
+
+; ENUMS
+enum Filter { Dirs, AllDirs, Files, Drives, ..., CaseSensitive }
+typedef FilterSpec
+flags Filters
+enum SortFlag { Name, Time, Size, Type, ..., LocaleAware }
+flags SortFlags
+
+
+; PROTOTYPES
+QString absoluteFilePath ( const QString & fileName ) const
+QString absolutePath () const
+QString canonicalPath () const
+bool cd ( const QString & dirName )
+bool cdUp ()
+uint count () const
+QString dirName () const
+QFileInfoList entryInfoList ( const QStringList & nameFilters, Filters filters = NoFilter, SortFlags sort = NoSort ) const
+QFileInfoList entryInfoList ( Filters filters = NoFilter, SortFlags sort = NoSort ) const
+QStringList entryList ( const QStringList & nameFilters, Filters filters = NoFilter, SortFlags sort = NoSort ) const
+QStringList entryList ( Filters filters = NoFilter, SortFlags sort = NoSort ) const
+bool exists ( const QString & name ) const
+bool exists () const
+QString filePath ( const QString & fileName ) const
+Filters filter () const
+bool isAbsolute () const
+bool isReadable () const
+bool isRelative () const
+bool isRoot () const
+bool makeAbsolute ()
+bool mkdir ( const QString & dirName ) const
+bool mkpath ( const QString & dirPath ) const
+QStringList nameFilters () const
+QString path () const
+void refresh () const
+QString relativeFilePath ( const QString & fileName ) const
+bool remove ( const QString & fileName )
+bool rename ( const QString & oldName, const QString & newName )
+bool rmdir ( const QString & dirName ) const
+bool rmpath ( const QString & dirPath ) const
+void setFilter ( Filters filters )
+void setNameFilters ( const QStringList & nameFilters )
+void setPath ( const QString & path )
+void setSorting ( SortFlags sort )
+SortFlags sorting () const
+
+
+; SLOTS
+
+

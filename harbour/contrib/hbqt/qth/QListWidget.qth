@@ -1,0 +1,64 @@
+; Header File to Generate Sources
+;
+
+<CLASS>
+Inherit  = QListView
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <QtGui/QListWidget>
+
+
+/*
+ * QListWidget ( QWidget * parent = 0 )
+ * ~QListWidget ()
+ */
+HB_FUNC( QT_QLISTWIDGET )
+{
+   hb_retptr( new QListWidget( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+; ENUMS
+
+
+; PROTOTYPES
+void addItem ( const QString & label )
+void addItem ( QListWidgetItem * item )
+void addItems ( const QStringList & labels )
+void closePersistentEditor ( QListWidgetItem * item )
+int count () const
+QListWidgetItem * currentItem () const
+int currentRow () const
+void editItem ( QListWidgetItem * item )
+QList<QListWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags ) const
+void insertItem ( int row, QListWidgetItem * item )
+void insertItem ( int row, const QString & label )
+void insertItems ( int row, const QStringList & labels )
+bool isSortingEnabled () const
+QListWidgetItem * item ( int row ) const
+QListWidgetItem * itemAt ( const QPoint & p ) const
+QListWidgetItem * itemAt ( int x, int y ) const
+QWidget * itemWidget ( QListWidgetItem * item ) const
+void openPersistentEditor ( QListWidgetItem * item )
+void removeItemWidget ( QListWidgetItem * item )
+int row ( const QListWidgetItem * item ) const
+QList<QListWidgetItem *> selectedItems () const
+void setCurrentItem ( QListWidgetItem * item )
+void setCurrentItem ( QListWidgetItem * item, QItemSelectionModel::SelectionFlags command )
+void setCurrentRow ( int row )
+void setCurrentRow ( int row, QItemSelectionModel::SelectionFlags command )
+void setItemWidget ( QListWidgetItem * item, QWidget * widget )
+void setSortingEnabled ( bool enable )
+void sortItems ( Qt::SortOrder order = Qt::AscendingOrder )
+QListWidgetItem * takeItem ( int row )
+QRect visualItemRect ( const QListWidgetItem * item ) const
+
+
+; SLOTS
+void clear ()
+void scrollToItem ( const QListWidgetItem * item, QAbstractItemView::ScrollHint hint = EnsureVisible )
+
+

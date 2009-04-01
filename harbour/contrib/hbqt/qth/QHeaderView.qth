@@ -1,0 +1,90 @@
+; Header File to Generate Sources
+;
+
+<CLASS>
+Inherit  = QAbstractItemView
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <QtGui/QHeaderView>
+
+
+/*
+ * QHeaderView ( Qt::Orientation orientation, QWidget * parent = 0 )
+ * virtual ~QHeaderView ()
+ */
+HB_FUNC( QT_QHEADERVIEW )
+{
+   hb_retptr( new QHeaderView( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+; ENUMS
+enum ResizeMode { Interactive, Fixed, Stretch, ResizeToContents, Custom }
+
+
+; PROTOTYPES
+bool cascadingSectionResizes () const
+int count () const
+Qt::Alignment defaultAlignment () const
+int defaultSectionSize () const
+int hiddenSectionCount () const
+void hideSection ( int logicalIndex )
+bool highlightSections () const
+bool isClickable () const
+bool isMovable () const
+bool isSectionHidden ( int logicalIndex ) const
+bool isSortIndicatorShown () const
+int length () const
+int logicalIndex ( int visualIndex ) const
+int logicalIndexAt ( int position ) const
+int logicalIndexAt ( int x, int y ) const
+int logicalIndexAt ( const QPoint & pos ) const
+int minimumSectionSize () const
+void moveSection ( int from, int to )
+int offset () const
+Qt::Orientation orientation () const
+ResizeMode resizeMode ( int logicalIndex ) const
+void resizeSection ( int logicalIndex, int size )
+void resizeSections ( QHeaderView::ResizeMode mode )
+bool restoreState ( const QByteArray & state )
+QByteArray saveState () const
+int sectionPosition ( int logicalIndex ) const
+int sectionSize ( int logicalIndex ) const
+int sectionSizeHint ( int logicalIndex ) const
+int sectionViewportPosition ( int logicalIndex ) const
+bool sectionsHidden () const
+bool sectionsMoved () const
+void setCascadingSectionResizes ( bool enable )
+void setClickable ( bool clickable )
+void setDefaultAlignment ( Qt::Alignment alignment )
+void setDefaultSectionSize ( int size )
+void setHighlightSections ( bool highlight )
+void setMinimumSectionSize ( int size )
+void setMovable ( bool movable )
+void setResizeMode ( ResizeMode mode )
+void setResizeMode ( int logicalIndex, ResizeMode mode )
+void setSectionHidden ( int logicalIndex, bool hide )
+void setSortIndicator ( int logicalIndex, Qt::SortOrder order )
+void setSortIndicatorShown ( bool show )
+void setStretchLastSection ( bool stretch )
+void showSection ( int logicalIndex )
+virtual QSize sizeHint () const
+Qt::SortOrder sortIndicatorOrder () const
+int sortIndicatorSection () const
+bool stretchLastSection () const
+int stretchSectionCount () const
+void swapSections ( int first, int second )
+int visualIndex ( int logicalIndex ) const
+int visualIndexAt ( int position ) const
+
+
+; SLOTS
+
+void headerDataChanged ( Qt::Orientation orientation, int logicalFirst, int logicalLast )
+void setOffset ( int offset )
+void setOffsetToLastSection ()
+void setOffsetToSectionPosition ( int visualIndex )
+

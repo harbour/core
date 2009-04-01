@@ -1,0 +1,62 @@
+; Header File to Generate Sources
+;
+
+<CLASS>
+Inherit  = QObject
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <Qt/QFtp>
+
+
+/*
+ * QFtp ( QObject * parent = 0 )
+ * virtual ~QFtp ()
+ */
+HB_FUNC( QT_QFTP )
+{
+   hb_retptr( new QFtp( hbqt_par_QObject( 1 ) ) );
+}
+</CODE>
+
+
+; ENUMS
+enum Command { None, SetTransferMode, SetProxy, ConnectToHost, ..., RawCommand }
+enum Error { NoError, HostNotFound, ConnectionRefused, NotConnected, UnknownError }
+enum State { Unconnected, HostLookup, Connecting, Connected, LoggedIn, Closing }
+enum TransferMode { Passive, Active }
+enum TransferType { Binary, Ascii }
+
+; PROTOTYPES
+qint64 bytesAvailable () const
+int cd ( const QString & dir )
+void clearPendingCommands ()
+int close ()
+int connectToHost ( const QString & host, quint16 port = 21 )
+Command currentCommand () const
+QIODevice * currentDevice () const
+int currentId () const
+Error error () const
+QString errorString () const
+int get ( const QString & file, QIODevice * dev = 0, TransferType type = Binary )
+bool hasPendingCommands () const
+int list ( const QString & dir = QString() )
+int login ( const QString & user = QString(), const QString & password = QString() )
+int mkdir ( const QString & dir )
+int put ( QIODevice * dev, const QString & file, TransferType type = Binary )
+int put ( const QByteArray & data, const QString & file, TransferType type = Binary )
+int rawCommand ( const QString & command )
+qint64 read ( char * data, qint64 maxlen )
+QByteArray readAll ()
+int remove ( const QString & file )
+int rename ( const QString & oldname, const QString & newname )
+int rmdir ( const QString & dir )
+int setProxy ( const QString & host, quint16 port )
+int setTransferMode ( TransferMode mode )
+State state () const
+
+; SLOTS
+void abort ()
+
+

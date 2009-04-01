@@ -1,0 +1,34 @@
+; Header File to Generate Sources
+;
+
+<CLASS>
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <ActiveQt/QAxBindable>
+
+
+/*
+ * QAxBindable ()
+ * virtual ~QAxBindable ()
+ */
+HB_FUNC( QT_QAXBINDABLE )
+{
+   hb_retptr( new QAxBindable() );
+}
+</CODE>
+
+
+; ENUMS
+
+
+; PROTOTYPES
+virtual QAxAggregated * createAggregate ()
+virtual bool readData ( QIODevice * source, const QString & format )
+void reportError ( int code, const QString & src, const QString & desc, const QString & context = QString() )
+virtual bool writeData ( QIODevice * sink )
+
+; SLOTS
+
+

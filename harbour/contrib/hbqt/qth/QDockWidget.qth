@@ -1,0 +1,47 @@
+; Header File to Generate Sources
+;
+
+<CLASS>
+Inherit  = QWidget
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <QtGui/QDockWidget>
+
+
+/*
+ * QDockWidget ( const QString & title, QWidget * parent = 0, Qt::WindowFlags flags = 0 )
+ * QDockWidget ( QWidget * parent = 0, Qt::WindowFlags flags = 0 )
+ * ~QDockWidget ()
+ */
+HB_FUNC( QT_QDOCKWIDGET )
+{
+   hb_retptr( new QDockWidget( hbqt_par_QWidget( 1 ), hb_parni( 2 ) ) );
+}
+</CODE>
+
+
+; ENUMS
+enum DockWidgetFeature { DockWidgetClosable, DockWidgetMovable, DockWidgetFloatable, DockWidgetVerticalTitleBar, AllDockWidgetFeatures, NoDockWidgetFeatures }
+flags DockWidgetFeatures
+
+
+; PROTOTYPES
+Qt::DockWidgetAreas allowedAreas () const
+DockWidgetFeatures features () const
+bool isAreaAllowed ( Qt::DockWidgetArea area ) const
+bool isFloating () const
+void setAllowedAreas ( Qt::DockWidgetAreas areas )
+void setFeatures ( DockWidgetFeatures features )
+void setFloating ( bool floating )
+void setTitleBarWidget ( QWidget * widget )
+void setWidget ( QWidget * widget )
+QWidget * titleBarWidget () const
+QAction * toggleViewAction () const
+QWidget * widget () const
+
+
+; SLOTS
+
+

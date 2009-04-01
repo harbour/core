@@ -1,0 +1,41 @@
+; Header File to Generate Sources
+;
+
+<CLASS>
+Inherit  = QObject
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <Qt/QTimer>
+
+
+/*
+ * QTimer ( QObject * parent = 0 )
+ * ~QTimer ()
+ */
+HB_FUNC( QT_QTIMER )
+{
+   hb_retptr( new QTimer( hbqt_par_QObject( 1 ) ) );
+}
+</CODE>
+
+
+; ENUMS
+
+
+; PROTOTYPES
+
+int interval () const
+bool isActive () const
+bool isSingleShot () const
+void setInterval ( int msec )
+void setSingleShot ( bool singleShot )
+int timerId () const
+
+; SLOTS
+void start ()
+void stop ()
+void start ( int msec )
+
+

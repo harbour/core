@@ -1,0 +1,38 @@
+; Header File to Generate Sources
+;
+
+<CLASS>
+Inherit  = QWidget
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <QtGui/QSplashScreen>
+
+
+/*
+ * QSplashScreen ( const QPixmap & pixmap = QPixmap(), Qt::WindowFlags f = 0 )
+ * QSplashScreen ( QWidget * parent, const QPixmap & pixmap = QPixmap(), Qt::WindowFlags f = 0 )
+ * virtual ~QSplashScreen ()
+ */
+HB_FUNC( QT_QSPLASHSCREEN )
+{
+   hb_retptr( new QSplashScreen( hbqt_par_QWidget( 1 ) ) );
+}
+</CODE>
+
+
+; ENUMS
+
+
+; PROTOTYPES
+void finish ( QWidget * mainWin )
+const QPixmap pixmap () const
+void repaint ()
+void setPixmap ( const QPixmap & pixmap )
+
+; SLOTS
+void clearMessage ()
+void showMessage ( const QString & message, int alignment = Qt::AlignLeft, const QColor & color = Qt::black )
+
+
