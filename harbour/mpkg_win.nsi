@@ -139,8 +139,8 @@ SectionEnd
 ; Descriptions
 
   ; Language strings
-  LangString DESC_hb_main ${LANG_ENGLISH} "Main components."
-  LangString DESC_hb_shortcuts ${LANG_ENGLISH} "Add icons to Start Menu and Desktop."
+  LangString DESC_hb_main ${LANG_ENGLISH} "Main components"
+  LangString DESC_hb_shortcuts ${LANG_ENGLISH} "Add icons to Start Menu and Desktop"
   LangString DESC_hb_examples ${LANG_ENGLISH} "Samples and tests"
 
   ; Assign language strings to sections

@@ -375,7 +375,8 @@ FUNCTION Main( ... )
    tmp := Lower( FN_NameGet( hb_argv( 0 ) ) )
    DO CASE
    CASE Right( tmp, 5 ) == "hbcmp" .OR. ;
-        Left(  tmp, 5 ) == "hbcmp"
+        Left(  tmp, 5 ) == "hbcmp" .OR. ;
+        tmp == "clipper"
       t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .F.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hbcmp option." + hb_osNewLine() )
@@ -387,7 +388,10 @@ FUNCTION Main( ... )
          OutStd( "hbmk: Enabled -hbcc option." + hb_osNewLine() )
       ENDIF
    CASE Right( tmp, 5 ) == "hblnk" .OR. ;
-        Left(  tmp, 5 ) == "hblnk"
+        Left(  tmp, 5 ) == "hblnk" .OR. ;
+        tmp == "rtlink" .OR. ;
+        tmp == "exospace" .OR. ;
+        tmp == "blinker"
       t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDFlag := .T.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hblnk option." + hb_osNewLine() )

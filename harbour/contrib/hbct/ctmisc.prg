@@ -77,7 +77,7 @@ FUNCTION CENTER( c, n, p, lMode )
       DEFAULT lMode TO .F.
    ENDIF
 
-   cRet := PadC( AllTrim( c ), n, p )
+   cRet := PadC( RTrim( c ), n, p )
 
    RETURN iif( lMode, cRet, RTrim( cRet ) )
 

@@ -266,12 +266,10 @@ HB_FUNC( WAPI_IMAGELIST_GETICONSIZE )
    {
       hb_storni( cx, 2 );
       hb_storni( cy, 3 );
-      hb_retl( 1 );
+      hb_retl( TRUE );
    }
    else
-   {
-      hb_retl( 0 );
-   }
+      hb_retl( FALSE );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -514,27 +512,15 @@ HB_FUNC( WAPI_TABCTRL_GETITEMCOUNT )
 
 HB_FUNC( WAPI_TABCTRL_GETITEMRECT )
 {
-   RECT rc;
    PHB_ITEM aRect = hb_itemArrayNew( 4 );
-   PHB_ITEM temp;
+   RECT rc;
 
    ( void ) TabCtrl_GetItemRect( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), &rc );
 
-   temp = hb_itemPutNL( NULL, rc.left );
-   hb_arraySet( aRect, 1, temp );
-   hb_itemRelease( temp );
-
-   temp = hb_itemPutNL( NULL, rc.top );
-   hb_arraySet( aRect, 2, temp );
-   hb_itemRelease( temp );
-
-   temp = hb_itemPutNL( NULL, rc.right );
-   hb_arraySet( aRect, 3, temp );
-   hb_itemRelease( temp );
-
-   temp = hb_itemPutNL( NULL, rc.bottom );
-   hb_arraySet( aRect, 4, temp );
-   hb_itemRelease( temp );
+   hb_arraySetNL( aRect, 1, rc.left );
+   hb_arraySetNL( aRect, 2, rc.top );
+   hb_arraySetNL( aRect, 3, rc.right );
+   hb_arraySetNL( aRect, 4, rc.bottom );
 
    hb_itemReturnRelease( aRect );
 }
@@ -777,11 +763,11 @@ HB_FUNC( WAPI_TABCTRL_GETUNICODEFORMAT )
 HB_FUNC( WAPI_TABCTRL_CREATE )
 {
    HWND hwnd;
-   HWND hbutton;
-   LONG hFont;
    LONG style;
+   LONG hFont;
+   HWND hbutton;
+   hwnd    = ( HWND ) wapi_par_HWND( 1 );
    style   = ( LONG ) hb_parnl( 6 ); /* defaults to 0 */
-   hwnd    = ( HWND ) hb_parnint( 1 );
    hFont   = SendMessage( hwnd, WM_GETFONT, 0, 0 );
    hbutton = CreateWindowEx( 0, WC_TABCONTROL, NULL, style, hb_parni( 2 ), hb_parni( 3 ) , hb_parni( 4 ), hb_parni( 5 ), hwnd, NULL, GetModuleHandle( NULL ), NULL );
    SendMessage( hbutton, ( UINT ) WM_SETFONT, ( WPARAM ) hFont, 1 );

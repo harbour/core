@@ -8,6 +8,24 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-01 14:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added clipper/rtlink/exospace/blinker self-name recognition.
+      clipper will switch it to hbcmp mode,
+      rtlink/exospace/blinker will switch it to hblnk mode.
+      rtlink parameter recognition is yet to be done.
+
+  * contrib/hbct/ctmisc.prg
+    ! Fixed CENTER() to not LTrim() the input string.
+
+  * contrib/hbwin/wapi_commctrl.c
+    ! 0/1 -> FALSE/TRUE
+    ! Fixed to use proper macro instead of hb_parnint().
+    % Using hb_arraySetNL() rather than hb_arraySet().
+
+  * mpkg_win.nsi
+    * Minor.
+
 2009-04-01 10:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * doc/Makefile
     ! Removed license.txt.
