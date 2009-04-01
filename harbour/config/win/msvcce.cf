@@ -6,6 +6,8 @@
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
+HB_FLAGSEXTRA = -D__PLATFORM__WINCE
+
 OBJ_EXT = .obj
 EXE_EXT = .exe
 LIB_PREF =

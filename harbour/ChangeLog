@@ -8,6 +8,35 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-01 10:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * doc/Makefile
+    ! Removed license.txt.
+
+  * INSTALL
+    + Added Windows/Windows CE build examples.
+      Cleaned mingw64 and mingwce cross-builds.
+
+  * mpkg_win.bat
+    * Using make_gnu.sh instead of make_gnu_xmingwce.sh
+      for mingwce target for uniformity.
+
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed silly typo causing RTE if compiler autodetection
+      fails to detect any tier-one compilers (or none).
+    + Added automatic postfixing external Harbour executable
+      name if hbmk2 executable name is also prefixed. Currently
+      -x64 and -ia64 are recognized. Useful to call harbour-x64.exe
+      / harbour-ia64.exe when hbmk2-x64.exe / hbmk2-ia64.exe is used.
+
+  * make_gnu_xmingwce.sh
+  * config/rules.cf
+  * config/win/mingwce.cf
+  * config/win/poccce.cf
+  * config/win/msvcce.cf
+  * config/wce/global.cf
+    * Moved -D__PLATFORM__WINCE to .cf files. This also fixes
+      missing __PLATFORM__WINCE for poccce and msvcce targets.
+
 2009-03-31 18:41 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   + harbour/contrib/hbqt/qth/QAxBase.qth
   + harbour/contrib/hbqt/qth/QAxBindable.qth
@@ -5713,7 +5742,7 @@
   * contrib/xhb/Makefile
   + contrib/xhb/dbf2txt.c
     + Added DBF2TXT() function from xhb.
-    ; TODO: RPC support and HB_SERVICE*() API ?
+    ; TODO: RPC support and HB_SERVICE*() API ? [DONE]
 
 2009-03-01 18:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/examples/uhttpd/hbmk.bat

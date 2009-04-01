@@ -142,6 +142,7 @@ THREAD STATIC t_cGTDEFAULT
 
 THREAD STATIC t_cCCPATH
 THREAD STATIC t_cCCPREFIX
+THREAD STATIC t_cHBPOSTFIX
 
 #define _PAR_cParam         1
 #define _PAR_cFileName      2
@@ -405,6 +406,15 @@ FUNCTION Main( ... )
       ENDIF
    ENDCASE
 
+   DO CASE
+   CASE Right( tmp, 4 ) == "-x64"
+      t_cHBPOSTFIX := Right( tmp, 4 )
+   CASE Right( tmp, 5 ) == "-ia64"
+      t_cHBPOSTFIX := Right( tmp, 5 )
+   OTHERWISE
+      t_cHBPOSTFIX := ""
+   ENDCASE
+
    /* Load architecture / compiler settings (compatibility) */
 
    IF Empty( t_cARCH )
@@ -460,7 +470,7 @@ FUNCTION Main( ... )
       ELSE
          aCOMPSUP := { "gcc" }
       ENDIF
-      cBin_CompPRG := "harbour"
+      cBin_CompPRG := "harbour" + t_cHBPOSTFIX
       s_aLIBHBGT := { "gttrm" }
       t_cGTDEFAULT := "gttrm"
       cDynLibNamePrefix := "lib"
@@ -475,7 +485,7 @@ FUNCTION Main( ... )
       aCOMPDET := { { {|| FindInPath( "gcc"      ) != NIL }, "djgpp"   },;
                     { {|| FindInPath( "wpp386"   ) != NIL }, "owatcom" } } /* TODO: Add full support for wcc386 */
       aCOMPSUP := { "djgpp", "gcc", "owatcom" }
-      cBin_CompPRG := "harbour.exe"
+      cBin_CompPRG := "harbour" + t_cHBPOSTFIX + ".exe"
       s_aLIBHBGT := { "gtdos" }
       t_cGTDEFAULT := "gtdos"
       cDynLibNamePrefix := ""
@@ -486,7 +496,7 @@ FUNCTION Main( ... )
       aCOMPDET := { { {|| FindInPath( "gcc"      ) != NIL }, "gcc"     },;
                     { {|| FindInPath( "wpp386"   ) != NIL }, "owatcom" } } /* TODO: Add full support for wcc386 */
       aCOMPSUP := { "gcc", "owatcom" }
-      cBin_CompPRG := "harbour.exe"
+      cBin_CompPRG := "harbour" + t_cHBPOSTFIX + ".exe"
       s_aLIBHBGT := { "gtos2" }
       t_cGTDEFAULT := "gtos2"
       cDynLibNamePrefix := ""
@@ -505,14 +515,14 @@ FUNCTION Main( ... )
                     { {|| FindInPath( "bcc32"    ) != NIL }, "bcc"     },;
                     { {|| FindInPath( "porc64"   ) != NIL }, "pocc64"  },;
                     { {|| FindInPath( "pocc"     ) != NIL }, "pocc"    },;
-                    { {|| ( tmp := FindInPath( "icl" ) ) != NIL .AND. "itanium" $ Lower( tmp ) }, "iccia64" },;
+                    { {|| ( tmp1 := FindInPath( "icl" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ) }, "iccia64" },;
                     { {|| FindInPath( "icl"      ) != NIL }, "icc"     },;
                     { {|| FindInPath( "cygstart" ) != NIL }, "cygwin"  },;
                     { {|| FindInPath( "xcc"      ) != NIL }, "xcc"     } }
       aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "icc", "pocc", "xcc", "cygwin",;
                     "mingw64", "msvc64", "msvcia64", "iccia64", "pocc64",;
                     "mingwce", "msvcce", "poccce" }
-      cBin_CompPRG := "harbour.exe"
+      cBin_CompPRG := "harbour" + t_cHBPOSTFIX + ".exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
       t_cGTDEFAULT := "gtwin"
       cDynLibNamePrefix := ""
@@ -526,7 +536,7 @@ FUNCTION Main( ... )
                     { {|| FindInPath( "cl"       ) != NIL }, "msvcarm" },;
                     { {|| FindInPath( "pocc"     ) != NIL }, "poccarm" } }
       aCOMPSUP := { "mingwarm", "msvcarm", "poccarm" }
-      cBin_CompPRG := "harbour.exe"
+      cBin_CompPRG := "harbour" + t_cHBPOSTFIX + ".exe"
       s_aLIBHBGT := { "gtwvt", "gtgui" }
       t_cGTDEFAULT := "gtwvt"
       cDynLibNamePrefix := ""

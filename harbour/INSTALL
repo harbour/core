@@ -264,7 +264,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    Cross building
    --------------
 
-   with mingwce:
+   when using make_gnu_xmingwce.sh:
       HB_COMP_PATH=<HARBOUR_NATIVE_BUILD_DIR>\bin\harbour.exe
       HB_PPGEN_PATH=<HARBOUR_NATIVE_BUILD_DIR>\bin\hbpp.exe
    with rest of compilers:
@@ -276,6 +276,243 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    a native Harbour build available on your system. You don't need
    a full native build, harbour.exe and hbpp.exe are enough for
    the process to succeed.
+
+
+EXAMPLES
+========
+
+   Windows/Windows CE
+   ------------------
+
+      NOTES: - Naturally, you'll need to adapt dirs to valid ones on your system.
+               Don't use space in dirs.
+             - '%1 %2' can be empty, 'clean', 'install' or 'clean install'
+               depending on what you want to do.
+             - Windows implib creation setup may change in the future.
+             - Cross compile setup (HB_BIN_COMPILE, HB_COMP_PATH, HB_PPGEN_PATH)
+               is tentative.
+
+      --- MSVC 2008 + SDK
+      set WindowsSDKDir=%ProgramFiles%\Microsoft SDKs\Windows\v6.0A\
+      call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
+      rem
+      set HB_COMPILER=msvc
+      rem
+      set PATH=C:\devl\make-3.81;%PATH%
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- MSVC 2008
+      call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
+      rem
+      set HB_COMPILER=msvc
+      rem
+      set PATH=C:\devl\make-3.81;%PATH%
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- MSVC 2008 x64 (requires native x86 Harbour binaries)
+      call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_amd64
+      rem
+      set HB_COMPILER=msvc64
+      rem
+      set HB_BIN_COMPILE=C:\hb-msvc\bin
+      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
+      rem
+      set PATH=C:\devl\make-3.81;%PATH%
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- MSVC 2005
+      call "%ProgramFiles%\Microsoft Visual Studio 8\VC\vcvarsall.bat"
+      rem
+      set HB_COMPILER=msvc
+      rem
+      set PATH=C:\devl\make-3.81;%PATH%
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- MSVC .NET 2003 (untested)
+      call "%ProgramFiles%\Microsoft Visual Studio .NET 2003\VC7\vcvarsall.bat"
+      rem
+      set HB_COMPILER=msvc
+      set HB_VISUALC_VER_PRE80=yes
+      rem
+      set PATH=C:\devl\make-3.81;%PATH%
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- MinGW GCC
+      set PATH=C:\devl\msys\1.0.11\bin;C:\devl\MinGW-433\bin;%PATH%
+      rem
+      set HB_COMPILER=mingw
+      rem
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      sh make_gnu.sh %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- MinGW GCC for x64 (requires native x86 Harbour binaries)
+      set HB_CCPATH=C:\devl\MinGW-440-64\bin
+      set HB_CCPREFIX=x86_64-pc-mingw32-
+      set PATH=C:\devl\msys\1.0.11\bin;%HB_CCPATH%;%PATH%
+      rem
+      set HB_COMPILER=mingw64
+      rem
+      set HB_BIN_COMPILE=C:\hb-mingw\bin
+      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
+      rem
+      set HB_INSTALL_PREFIX=/c/hb-%HB_COMPILER%
+      sh make_gnu.sh %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- MinGW GCC for WinCE/ARM (requires native x86 Harbour binaries)
+      set HB_CCPATH=C:\devl\MinGW-410-ce\opt\mingw32ce\bin
+      set HB_CCPREFIX=arm-wince-mingw32ce-
+      set PATH=C:\devl\msys\1.0.11\bin;%HB_CCPATH%;%PATH%
+      rem
+      set HB_COMPILER=mingwce
+      rem
+      set HB_BIN_COMPILE=C:\hb-mingw\bin
+      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
+      rem
+      set HB_INSTALL_PREFIX=/c/hb-%HB_COMPILER%
+      sh make_gnu.sh %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- Open Watcom C++
+      SET WATCOM=C:\devl\owatcom-1.8
+      SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
+      SET EDPATH=%WATCOM%\EDDAT
+      SET INCLUDE=%WATCOM%\H;%WATCOM%\H\NT
+      rem
+      set HB_COMPILER=owatcom
+      rem
+      set PATH=C:\devl\make-3.81;%PATH%
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- Intel(R) C++
+      call "%ProgramFiles%\Intel\Compiler\C++\10.1.014\IA32\Bin\iclvars.bat"
+      rem
+      set HB_COMPILER=icc
+      rem
+      set PATH=C:\devl\make-3.81;%PATH%
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- Borland/CodeGear C++
+      set PATH=C:\devl\bcc55\bin;%PATH%
+      rem
+      set HB_COMPILER=bcc
+      rem
+      set PATH=C:\devl\make-3.81;%PATH%
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- Pelles C
+      set PATH=C:\devl\PellesC-501\bin;%PATH%
+      set INCLUDE=C:\devl\PellesC-501\include;C:\devl\PellesC-501\include\win;%INCLUDE%
+      set LIB=C:\devl\PellesC-501\lib;C:\devl\PellesC-501\lib\win;%LIB%
+      rem
+      set HB_COMPILER=pocc
+      rem
+      set PATH=C:\devl\make-3.81;%PATH%
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- Pelles C x64 (requires native x86 Harbour binaries)
+      set PATH=C:\devl\PellesC-501-64\bin;%PATH%
+      set INCLUDE=C:\devl\PellesC-501-64\include;C:\devl\PellesC-501-64\include\win;%INCLUDE%
+      set LIB=C:\devl\PellesC-501-64\lib;C:\devl\PellesC-501-64\lib\win64;%LIB%
+      rem
+      set HB_COMPILER=pocc64
+      rem
+      set HB_BIN_COMPILE=C:\hb-pocc\bin
+      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
+      rem
+      set PATH=C:\devl\make-3.81;%PATH%
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- Pelles C WinCE/ARM (requires native x86 Harbour binaries)
+      set PATH=C:\devl\PellesC-501\bin;%PATH%
+      set INCLUDE=C:\devl\PellesC-501\include\wince;C:\devl\PellesC-501\include;%INCLUDE%
+      set LIB=C:\devl\PellesC-501\lib;C:\devl\PellesC-501\lib\wince;%INCLUDE%
+      rem
+      set HB_COMPILER=poccce
+      rem
+      set HB_BIN_COMPILE=C:\hb-pocc\bin
+      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
+      rem
+      set PATH=C:\devl\make-3.81;%PATH%
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- Cygwin GCC
+      set PATH=C:\devl\cygwin\bin;%PATH%
+      set C_INCLUDE_PATH=/cygdrive/c/devl/cygwin/usr/include:/cygdrive/c/devl/cygwin/usr/include/w32api
+      set LIBRARY_PATH=/cygdrive/c/devl/cygwin/usr/lib:/cygdrive/c/devl/cygwin/usr/lib/w32api
+      rem
+      set HB_COMPILER=cygwin
+      rem
+      set HB_INSTALL_PREFIX=/cygdrive/c/hb-%HB_COMPILER%
+      sh make_gnu.sh %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --8<--
+      rem ; Add these _before_ above sample scripts to configure 3rd party dependencies.
+      rem   For 'mingw' and 'cygwin' you'll have to use forward slashes and
+      rem   also cygwin drive notation for 'cygwin'.
+      set HB_INC_ADS=C:\ads\acesdk
+      set HB_INC_ALLEGRO=C:\allegro\include
+      set HB_INC_APOLLO=C:\Apollo\include
+      set HB_INC_BLAT=C:\blat\full\source
+      set HB_INC_CURL=C:\curl\include
+      set HB_INC_FIREBIRD=C:\Firebird\include
+      set HB_INC_FREEIMAGE=C:\FreeImage\Dist
+      set HB_INC_GD=C:\gd\include
+      set HB_INC_MYSQL=C:\mysql\include
+      set HB_INC_OPENSSL=C:\openssl\inc32
+      set HB_INC_PGSQL=C:\pgsql\include
+      set HB_INC_QT=C:\Qt\2009.01\qt\include
+      -->8--
+
+      --8<--
+      rem ; Add these _before_ above sample scripts to configure 3rd party dependencies
+      rem   for implib generation. This is needed for non-gcc compilers.
+      set HB_DIR_ADS=C:\ads\acesdk
+      set HB_DIR_ALLEGRO=C:\allegro
+      set HB_DIR_APOLLO=C:\Apollo
+      set HB_DIR_BLAT=C:\blat
+      set HB_DIR_CURL=C:\curl
+      set HB_DIR_FIREBIRD=C:\Firebird
+      set HB_DIR_FREEIMAGE=C:\FreeImage
+      set HB_DIR_GD=C:\gd
+      set HB_DIR_MYSQL=C:\mysql
+      set HB_DIR_OPENSSL=C:\openssl
+      set HB_DIR_PGSQL=C:\pgsql
+      set HB_DIR_QT=C:\Qt\2009.01\qt
+      rem
+      set HB_BUILD_IMPLIB=yes
+      -->8--
+
+      --8<--
+      rem ; To create installation packages (.exe + .zip),
+      rem   replace last lines (calling make_gnu.*) with these two:
+      set PATH=C:\devl\NSIS-2.44;%PATH%
+      call mpkg_win.bat > log-%HB_COMPILER%.txt 2>&1
+      -->8--
 
 
 FOR MORE INFORMATION
