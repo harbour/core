@@ -139,7 +139,7 @@ if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
 :DO_GCC
 
    set HB_DYNLIB=no
-   %_HB_MAKE% install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+   %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    goto MAKE_DONE
 
 :SKIP_WINDLL
