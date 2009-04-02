@@ -8,6 +8,31 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-03 01:20 UTC+0200 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/contrib/examples/uhttpd/uhttpd.prg
+    + added Application Root folder
+      Also as ini command and -a command line switch
+    * fixed starting path
+    ! fixed CGI/HRB execution path
+      now uhttpd runs CGI and HRB pointing to document root
+      as execution path. Pay attention to update existing cgi and
+      hrb modules.
+    + added console rows and cols to alter console display
+      either as ini command than as -cr and -cc command line switch
+    ! fixed $(APP_DIR) and $(DOCROOT_DIR) macro substitution
+      now it is possible to run uhttpd executable from a different
+      folder specifying uhttpd.ini path, application root path and
+      document root path that may differ from default
+    * updated help screen
+
+  * harbour/contrib/examples/uhttpd/uhttpd.ini
+    + added new commands
+  * harbour/contrib/examples/uhttpd/session.prg
+    * work in progress to fix error in session handling
+  * harbour/contrib/examples/uhttpd/modules/tableservletdb.prg
+    * updated path of test.dbf that now is relative to document root
+      and not to application path
+
 2009-04-03 00:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Fixed warning.

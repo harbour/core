@@ -55,9 +55,9 @@
 
 #define CRLF ( chr(13)+chr(10) )
 #ifdef __PLATFORM__WINDOWS
-#define TABLE_NAME_PATH "..\..\..\tests\test.dbf"
+#define TABLE_NAME_PATH "..\..\..\..\tests\test.dbf"
 #else
-#define TABLE_NAME_PATH "../../../tests/test.dbf"
+#define TABLE_NAME_PATH "../../../../tests/test.dbf"
 #endif
 #define SIMULATE_SLOW_REPLY
 
@@ -161,7 +161,7 @@ METHOD Open() CLASS TableManager
 
       CLOSE ALL
       USE ( cDBF ) ALIAS table SHARED NEW
-      //hb_ToOutDebug( "Used() = %s\n", Used() )
+      //hb_ToOutDebug( "cDBF = %s, Used() = %s\n", cDBF, Used() )
       ::lOpened := USED()
 
    ENDIF
@@ -402,4 +402,3 @@ METHOD ToString() CLASS BasicXML
   aEval( ::aData, {|c| s += c + IIF( Right( c, 1 ) == ">", CRLF, "" ) } )
 
 RETURN s
-

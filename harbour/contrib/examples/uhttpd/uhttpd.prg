@@ -193,7 +193,7 @@ STATIC s_lQuitRequest := FALSE
 STATIC s_hmtxQueue, s_hmtxServiceThreads, s_hmtxRunningThreads, s_hmtxLog, s_hmtxConsole, s_hmtxBusy
 STATIC s_hmtxHRB
 
-STATIC s_hfileLogAccess, s_hfileLogError, s_cDocumentRoot, s_lIndexes, s_lConsole, s_nPort
+STATIC s_hfileLogAccess, s_hfileLogError, s_cApplicationRoot, s_cDocumentRoot, s_lIndexes, s_lConsole, s_nPort
 STATIC s_cSessionPath
 STATIC s_nThreads, s_nStartThreads, s_nMaxThreads
 STATIC s_nServiceThreads, s_nStartServiceThreads, s_nMaxServiceThreads
@@ -247,11 +247,13 @@ FUNCTION MAIN( ... )
    LOCAL nPort, hListen, hSocket, aRemote, cI, xVal
    LOCAL aThreads, nStartThreads, nMaxThreads, nStartServiceThreads
    LOCAL i, cPar, lStop
-   LOCAL cGT, cDocumentRoot, lIndexes, cConfig
+   LOCAL cGT, cApplicationRoot, cDocumentRoot, lIndexes, cConfig
    LOCAL lConsole, lScriptAliasMixedCase, aDirectoryIndex
    LOCAL nProgress := 0
    LOCAL hDefault, cLogAccess, cLogError, cSessionPath
-   LOCAL cCmdPort, cCmdDocumentRoot, lCmdIndexes, nCmdStartThreads, nCmdMaxThreads
+   LOCAL cCmdPort, cCmdApplicationRoot, cCmdDocumentRoot, lCmdIndexes, nCmdStartThreads, nCmdMaxThreads
+   LOCAL nConsoleRows, nConsoleCols
+   LOCAL nCmdConsoleRows, nCmdConsoleCols
 
    IF !HB_MTVM()
       ? "I need multhread support. Please, recompile me!"
@@ -296,6 +298,9 @@ FUNCTION MAIN( ... )
       CASE cPar == "--port"             .OR. cPar == "-p"
          cCmdPort    := hb_PValue( i++ )
 
+      CASE cPar == "--approot"          .OR. cPar == "-a"
+         cCmdApplicationRoot := hb_PValue( i++ )
+
       CASE cPar == "--docroot"          .OR. cPar == "-d"
          cCmdDocumentRoot := hb_PValue( i++ )
 
@@ -313,6 +318,12 @@ FUNCTION MAIN( ... )
 
       CASE cPar == "--max-threads"      .OR. cPar == "-tm"
          nCmdMaxThreads := Val( hb_PValue( i++ ) )
+
+      CASE cPar == "--console-rows"     .OR. cPar == "-cr"
+         nCmdConsoleRows := Val( hb_PValue( i++ ) )
+
+      CASE cPar == "--console-cols"     .OR. cPar == "-cc"
+         nCmdConsoleCols := Val( hb_PValue( i++ ) )
 
       CASE cPar == "--help"             .OR. Lower( cPar ) == "-h" .OR. cPar == "-?"
          help()
@@ -343,11 +354,14 @@ FUNCTION MAIN( ... )
 
    // All key values MUST be in uppercase
    nPort                 := hDefault[ "MAIN" ][ "PORT" ]
+   cApplicationRoot      := hDefault[ "MAIN" ][ "APPLICATION_ROOT" ]
    cDocumentRoot         := hDefault[ "MAIN" ][ "DOCUMENT_ROOT" ]
    lIndexes              := hDefault[ "MAIN" ][ "SHOW_INDEXES" ]
    lScriptAliasMixedCase := hDefault[ "MAIN" ][ "SCRIPTALIASMIXEDCASE" ]
    cSessionPath          := hDefault[ "MAIN" ][ "SESSIONPATH" ]
    aDirectoryIndex       := hDefault[ "MAIN" ][ "DIRECTORYINDEX" ]
+   nConsoleRows          := hDefault[ "MAIN" ][ "CONSOLE-ROWS" ]
+   nConsoleCols          := hDefault[ "MAIN" ][ "CONSOLE-COLS" ]
 
    cLogAccess            := hDefault[ "LOGFILES" ][ "ACCESS" ]
    cLogError             := hDefault[ "LOGFILES" ][ "ERROR" ]
@@ -382,6 +396,10 @@ FUNCTION MAIN( ... )
       nPort := Val( cCmdPort )
    ENDIF
 
+   IF cCmdApplicationRoot != NIL
+      cApplicationRoot := cCmdApplicationRoot
+   ENDIF
+
    IF cCmdDocumentRoot != NIL
       cDocumentRoot := cCmdDocumentRoot
    ENDIF
@@ -398,6 +416,22 @@ FUNCTION MAIN( ... )
       nMaxThreads := nCmdMaxThreads
    ENDIF
 
+   IF nCmdConsoleRows != NIL
+      nConsoleRows := nCmdConsoleRows
+   ENDIF
+
+   IF nCmdConsoleCols != NIL
+      nConsoleCols := nCmdConsoleCols
+   ENDIF
+
+   // -------------------- adjusting MACROS values ----------------------------
+
+   // cApplicationRoot can be only ExePath() or a correct full path
+   cDocumentRoot         := StrTran( cDocumentRoot, "$(APP_DIR)", cApplicationRoot )
+   cSessionPath          := StrTran( cSessionPath , "$(APP_DIR)", cApplicationRoot )
+   cLogAccess            := StrTran( cLogAccess   , "$(APP_DIR)", cApplicationRoot )
+   cLogError             := StrTran( cLogError    , "$(APP_DIR)", cApplicationRoot )
+
    // -------------------- checking starting values ----------------------------
 
    IF nPort <= 0 .OR. nPort > 65535
@@ -406,6 +440,26 @@ FUNCTION MAIN( ... )
       RETURN 1
    ENDIF
 
+   IF HB_ISSTRING( cApplicationRoot )
+      cI := cApplicationRoot
+      IF HB_DirExists( cI )
+         IF RIGHT( cI, 1 ) == "/" .AND. LEN(cI) > 2 .AND. SUBSTR( cI, LEN( cI ) - 2, 1 ) != ":"
+           s_cApplicationRoot := LEFT( cI, LEN( cI ) - 1 )
+         ELSE
+           s_cApplicationRoot := cI
+         ENDIF
+      ELSE
+         ? "Invalid application root:", cI
+         WAIT
+         RETURN 3
+      ENDIF
+   ELSE
+      ? "Invalid application root"
+      WAIT
+      RETURN 3
+   ENDIF
+
+   //hb_ToOutDebug( "s_cDocumentRoot = %s, cDocumentRoot = %s\n\r", s_cDocumentRoot, cDocumentRoot )
 
    IF HB_ISSTRING( cDocumentRoot )
       //cI := STRTRAN( SUBSTR( cDocumentRoot, 2 ), "\", "/" )
@@ -437,6 +491,14 @@ FUNCTION MAIN( ... )
       nStartThreads := 0
    ELSEIF nStartThreads > nMaxThreads
       nStartThreads := nMaxThreads
+   ENDIF
+
+   IF nConsoleRows < 1 //.OR. nConsoleRows > MaxRow() + 1
+      nConsoleRows := MaxRow()
+   ENDIF
+
+   IF nConsoleCols < 1 //.OR. nConsoleCols > MaxCol() + 1
+      nConsoleCols := MaxCol()
    ENDIF
 
    // -------------------- assign STATIC values --------------------------------
@@ -477,7 +539,12 @@ FUNCTION MAIN( ... )
 
    // --------------------- MAIN PART ------------------------------------------
 
-   SET CURSOR OFF
+   IF s_lConsole
+      SET CURSOR OFF
+      SetMode( nConsoleRows, nConsoleCols )
+      //hb_toOutDebug( "nConsoleRows = %s, nConsoleCols = %s", nConsoleRows, nConsoleCols )
+      //hb_toOutDebug( "nCmdConsoleRows = %s, nCmdConsoleCols = %s", nCmdConsoleRows, nCmdConsoleCols )
+   ENDIF
 
    // --------------------- define mutexes -------------------------------------
 
@@ -1256,6 +1323,7 @@ STATIC FUNCTION ParseRequest( cRequest )
    //hb_ToOutDebug( "_GET = %s\n\r", hb_ValToExp( _GET ) )
    //hb_ToOutDebug( "_POST = %s\n\r", hb_ValToExp( _POST ) )
    //hb_ToOutDebug( "_COOKIE = %s\n\r", hb_ValToExp( _COOKIE ) )
+   //hb_ToOutDebug( "_SESSION = %s\n\r", hb_ValToExp( _SESSION ) )
    //hb_ToOutDebug( "_HTTP_REQUEST = %s\n\r", hb_ValToExp( _HTTP_REQUEST ) )
 
    // After defined all SERVER vars we can define a session
@@ -1423,7 +1491,8 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
    LOCAL nErrorLevel := 0, nKillExit := 0
    LOCAL pThread
    LOCAL hProc
-   LOCAL hmtxCGIKill  := hb_mutexCreate()
+   LOCAL hmtxCGIKill := hb_mutexCreate()
+   LOCAL cCurPath
    //LOCAL cError
 
 
@@ -1431,7 +1500,23 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
 
       //hb_toOutDebug( "Launching process: %s\n\r", cProc )
       // No hIn, hErr == hOut
+
+      // save current directory
+      cCurPath := CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir()
+
+      //hb_toOutDebug( "cCurPath: %s\n\r", cCurPath )
+
+      // Change dir to document root
+      DirChange( s_cDocumentRoot )
+
+      //hb_toOutDebug( "New Path: %s\n\r", CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir() )
+
       hProc := hb_processOpen( cProc, @hIn, @hOut, @hOut, .T. ) // .T. = Detached Process (Hide Window)
+
+      // return to original folder
+      DirChange( cCurPath )
+
+      //hb_toOutDebug( "New 2 Path: %s\n\r", CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir() )
 
       IF hProc > -1
          //hb_toOutDebug( "Process handler: %s\n\r", hProc )
@@ -2071,14 +2156,17 @@ STATIC PROCEDURE Help()
    ?
    ? "Parameters: (all optionals)"
    ?
-   ? "-p       | --port           webserver tcp port        (default: " + LTrim( Str( LISTEN_PORT ) ) + ")"
-   ? "-c       | --config         Configuration file        (default: " + APP_NAME + ".ini)"
+   ? "-p       | --port           webserver tcp port         (default: " + LTrim( Str( LISTEN_PORT ) ) + ")"
+   ? "-c       | --config         Configuration file         (default: " + APP_NAME + ".ini)"
    ? "                            It is possibile to define file path"
-   ? "-d       | --docroot        Document root directory   (default: <curdir>\home)"
-   ? "-i       | --indexes        Allow directory view      (default: no)"
+   ? "-a       | --approot        Application root directory (default: <curdir>)"
+   ? "-d       | --docroot        Document root directory    (default: <curdir>\home)"
+   ? "-i       | --indexes        Allow directory view       (default: no)"
    ? "-s       | --stop           Stop webserver"
-   ? "-ts      | --start-threads  Define starting threads   (default: " + LTrim( Str( START_RUNNING_THREADS ) ) + ")"
-   ? "-tm      | --max-threads    Define max threads        (default: " + LTrim( Str( MAX_RUNNING_THREADS ) ) + ")"
+   ? "-ts      | --start-threads  Define starting threads    (default: " + LTrim( Str( START_RUNNING_THREADS ) ) + ")"
+   ? "-tm      | --max-threads    Define max threads         (default: " + LTrim( Str( MAX_RUNNING_THREADS ) ) + ")"
+   ? "-cr      | --console-rows   Console rows               (default: " + LTrim( Str( MaxRow() + 1 ) ) + ")"
+   ? "-cc      | --console-cols   Console cols               (default: " + LTrim( Str( MaxCol() + 1 ) ) + ")"
    ? "-h | -?  | --help           This help message"
    ?
    WAIT
@@ -2183,11 +2271,14 @@ STATIC FUNCTION ParseIni( cConfig )
    { ;
      "MAIN"     => { ;
                      "PORT"                 => LISTEN_PORT              ,;
+                     "APPLICATION_ROOT"     => EXE_Path()               ,;
                      "DOCUMENT_ROOT"        => EXE_Path() + HB_OSPathSeparator() + "home"     ,;
                      "SHOW_INDEXES"         => FALSE                    ,;
                      "SCRIPTALIASMIXEDCASE" => TRUE                     ,;
                      "SESSIONPATH"          => EXE_Path() + HB_OSPathSeparator() + "sessions" ,;
-                     "DIRECTORYINDEX"       => DIRECTORYINDEX_ARRAY      ;
+                     "DIRECTORYINDEX"       => DIRECTORYINDEX_ARRAY     ,;
+                     "CONSOLE-ROWS"         => MaxRow() + 1             ,;
+                     "CONSOLE-COLS"         => MaxCol() + 1              ;
                    },;
      "LOGFILES" => { ;
                      "ACCESS"               => FILE_ACCESS_LOG          ,;
@@ -2249,21 +2340,31 @@ STATIC FUNCTION ParseIni( cConfig )
                                   DO CASE
                                      CASE cKey == "PORT"
                                           xVal := Val( cVal )
-                                     CASE cKey == "DOCUMENT_ROOT"
+                                     CASE cKey == "CONSOLE-ROWS"
+                                          xVal := Val( cVal )
+                                     CASE cKey == "CONSOLE-COLS"
+                                          xVal := Val( cVal )
+                                     CASE cKey == "APPLICATION_ROOT"
                                           IF !Empty( cVal )
                                              // Change APP_DIR macro with current exe path
-                                             xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
+                                             xVal := cVal
+                                          ENDIF
+                                     CASE cKey == "DOCUMENT_ROOT"
+                                          IF !Empty( cVal )
+                                             // After will change APP_DIR macro with application dir
+                                             //xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
+                                             xVal := cVal
                                           ENDIF
                                      CASE cKey == "SCRIPTALIASMIXEDCASE"
                                           xVal := cVal
                                      CASE cKey == "SESSIONPATH"
                                           IF !Empty( cVal )
                                              // Change APP_DIR macro with current exe path
-                                             xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
+                                             //xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
+                                             xVal := cVal
                                           ENDIF
                                      CASE cKey == "DIRECTORYINDEX"
                                           IF !Empty( cVal )
-                                             // Change APP_DIR macro with current exe path
                                              xVal := uhttpd_split( " ", AllTrim( cVal ) )
                                           ENDIF
                                   ENDCASE
@@ -2308,7 +2409,7 @@ STATIC FUNCTION FileUnAlias( cScript )
 
       // substitute macros
       cFileName := StrTran( cFileName, "$(DOCROOT_DIR)", _SERVER[ "DOCUMENT_ROOT" ] )
-      cFileName := StrTran( cFileName, "$(APP_DIR)"    , Exe_Path() )
+      cFileName := StrTran( cFileName, "$(APP_DIR)"    , s_cApplicationRoot )
    ENDIF
 
    IF cFileName == NIL
@@ -2320,7 +2421,7 @@ STATIC FUNCTION FileUnAlias( cScript )
 
              // substitute macros
              cFileName := StrTran( cFileName, "$(DOCROOT_DIR)", _SERVER[ "DOCUMENT_ROOT" ] )
-             cFileName := StrTran( cFileName, "$(APP_DIR)"    , Exe_Path() )
+             cFileName := StrTran( cFileName, "$(APP_DIR)"    , s_cApplicationRoot )
              EXIT
           ENDIF
       NEXT
@@ -2576,6 +2677,7 @@ RETURN MakeResponse()
 STATIC FUNCTION Handler_HrbScript( cFileName )
    LOCAL xResult
    LOCAL cHRBBody, pHRB, oError
+   LOCAL cCurPath
 
    TRY
       // Lock HRB to avoid MT race conditions
@@ -2590,9 +2692,18 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
             ENDIF
             cHRBBody := s_hHRBModules[ cFileName ]
          ENDIF
+         WriteToConsole( "Executing: " + cFileName )
          IF !EMPTY( pHRB := HB_HRBLOAD( cHRBBody ) )
 
+             // save current directory
+             cCurPath := CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir()
+             // Change dir to document root
+             DirChange( s_cDocumentRoot )
+
              xResult := HRBMAIN()
+
+             // return to original folder
+             DirChange( cCurPath )
 
              HB_HRBUNLOAD( pHRB )
          ELSE
@@ -2632,6 +2743,8 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
 
 STATIC FUNCTION Handler_CgiScript( cFileName )
    LOCAL xResult
+
+   WriteToConsole( "Executing: " + cFileName )
 
    IF ( CGIExec( uhttpd_OSFileName(cFileName), @xResult ) ) == 0
 

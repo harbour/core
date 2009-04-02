@@ -172,7 +172,7 @@ METHOD New( cSessionName, cSessionPath ) CLASS uhttpd_Session
   DEFAULT cSessionName TO "SESSION"
   DEFAULT cSessionPath TO ::cSavePath
 
-  // ::cSID := ::GenerateSID()
+  //::cSID := ::GenerateSID()
 
   // As default we will use FILES - this is FILE version
   ::bOpen     := {|cPath, cName| ::SessionOpen( cPath, cName ) }
@@ -211,6 +211,8 @@ METHOD Start( cSID ) CLASS uhttpd_Session
      ::cSID := cSID
   ENDIF
 
+  //hb_toOutDebug( "cSID = %s, ::cSID = %s\n\r", cSID, ::cSID )
+
   //TraceLog( "Active Sessions : " + hb_cStr( ::nActiveSessions ) )
 
   IF ::nActiveSessions <> 0
@@ -221,6 +223,9 @@ METHOD Start( cSID ) CLASS uhttpd_Session
      IF ( nPos := hb_HPos( _REQUEST, ::cName ) ) > 0
         //::cSID := ::oCGI:h_Request[ ::cName ]
         ::cSID := hb_HValueAt( _REQUEST, nPos )
+        IF HB_ISARRAY( ::cSID )
+           ::cSID := ::cSID[ 1 ] // Get Only 1-st
+        ENDIF
         lSendCookie := FALSE
         lDefine_SID := FALSE
         //::oCGI:ToLogFile( "::cSID = " + hb_cStr( ::cSID ), "/pointtoit/tmp/log.txt" )
@@ -526,32 +531,41 @@ METHOD CheckSID( cSID, cCRCKey ) CLASS uhttpd_Session
    LOCAL cBaseKeys   := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
    LOCAL nRand, nKey := 0
    LOCAL nLenTemp
+   LOCAL lOk
    //LOCAL a := 0
 
+   DEFAULT ::cSID  TO ::RegenerateID()
    DEFAULT cSID    TO ::cSID
    DEFAULT cCRCKey  TO MY_CRCKEY // Max Lenght must to be 10
 
-   /* Calculate the key */
-   FOR n := 1 TO nLenSID - 5 // 5 = CRC Length
-      //nRand     := At( cSID[ n ], cBaseKeys )
-      nRand     := At( SubStr( cSID, n, 1 ), cBaseKeys )
-      nKey += nRand
-   NEXT
+   //hb_toOutDebug( "cSID = %s, ::cSID = %s\n\r", hb_valtoexp( cSID ), hb_valtoexp( ::cSID ) )
 
-   // Recalculate the CRC
-   nSIDCRC  := nKey * 51 // Max Value is 99603. a 5 chars number
-   cTemp    := StrZero( nSIDCRC, 5 )
-   cSIDCRC  := ""
-   nLenTemp := Len( cTemp )
-   FOR n := 1 TO nLenTemp
-       //cSIDCRC += cCRCKey[ Val( cTemp[ n ] ) + 1 ]
-       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
-   NEXT
+   IF !Empty( cSID )
 
-   //TraceLog( "Check SID: cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a", cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a )
-   //::oCGI:ToLogFile( "::CheckSID() = " + hb_cStr( cSID ) + " " + hb_cStr( cSIDCRC ), "/pointtoit/tmp/log.txt" )
+      /* Calculate the key */
+      FOR n := 1 TO nLenSID - 5 // 5 = CRC Length
+         //nRand     := At( cSID[ n ], cBaseKeys )
+         nRand     := At( SubStr( cSID, n, 1 ), cBaseKeys )
+         nKey += nRand
+      NEXT
 
-RETURN ( Right( cSID, 5 ) == cSIDCRC )
+      // Recalculate the CRC
+      nSIDCRC  := nKey * 51 // Max Value is 99603. a 5 chars number
+      cTemp    := StrZero( nSIDCRC, 5 )
+      cSIDCRC  := ""
+      nLenTemp := Len( cTemp )
+      FOR n := 1 TO nLenTemp
+          //cSIDCRC += cCRCKey[ Val( cTemp[ n ] ) + 1 ]
+          cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
+      NEXT
+
+      lOk := ( Right( cSID, 5 ) == cSIDCRC )
+
+      //TraceLog( "Check SID: cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a", cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a )
+      //::oCGI:ToLogFile( "::CheckSID() = " + hb_cStr( cSID ) + " " + hb_cStr( cSIDCRC ), "/pointtoit/tmp/log.txt" )
+   ENDIF
+
+RETURN lOk
 
 // -------------------------------*************************-----------------------------------------
 
