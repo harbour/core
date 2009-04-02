@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-02 15:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added support for pocc64, poccce.
+      This is a very gray area for pocc. Currently it doesn't work
+      because polib is broken and doesn't generate an implib:
+      POLIB: fatal error: Internal error (create_archive_file).
+    ; TOFIX: poccce also doesn't work, but this is probably solvable,
+             there are unresolved externals when linking.
+
 2009-04-02 15:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/postinst.bat
   + utils/hbi18n/hbi18n.hbm

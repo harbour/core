@@ -533,7 +533,8 @@ FUNCTION Main( ... )
       cDynLibExt := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
-      s_aLIBSYSCORE := { "user32", "gdi32", "advapi32", "ws2_32" }
+      /* NOTE: Some targets (pocc and owatcom) need kernel32 explicitly. */
+      s_aLIBSYSCORE := { "kernel32", "user32", "gdi32", "advapi32", "ws2_32" }
       s_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "ole32", "oleaut32", "uuid", "mpr", "winmm", "mapi32", "imm32", "msimg32" }
    CASE t_cARCH == "wce"
       aCOMPDET := { { {|| FindInPath( t_cCCPREFIX + "gcc" ) != NIL }, "mingwarm" },;
@@ -1573,7 +1574,7 @@ FUNCTION Main( ... )
          IF s_lMAP
             AAdd( s_aOPTL, "OP MAP" )
          ENDIF
-         s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, { "kernel32" }, s_aLIBSYSCORE, s_aLIBSYSMISC } )
+         s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
                                        "harbour-" + cDL_Version_Alter ),;
                            "hbmainstd",;
@@ -1783,6 +1784,9 @@ FUNCTION Main( ... )
          ENDIF
 
       CASE ( t_cARCH == "win" .AND. t_cCOMP == "pocc" ) .OR. ;
+           ( t_cARCH == "win" .AND. t_cCOMP == "pocc64" ) .OR. ; /* NOTE: Cross-platform: win/amd64 on win/x86 */
+           ( t_cARCH == "win" .AND. t_cCOMP == "poccce" ) .OR. ;
+           ( t_cARCH == "wce" .AND. t_cCOMP == "poccarm" ) .OR. ; /* NOTE: Cross-platform: wce/ARM on win/x86 */
            ( t_cARCH == "win" .AND. t_cCOMP == "xcc" )
 
          IF s_lGUI
@@ -1808,10 +1812,15 @@ FUNCTION Main( ... )
          cBin_Dyn := cBin_Link
          cOpt_CompC := "/c /Ze /Go {FC} /I{DI} {IC} /Fo{OO}"
          cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
-         IF t_cCOMP == "pocc"
+         DO CASE
+         CASE t_cCOMP == "pocc"
             AAdd( s_aOPTC, "/Ot" )
             AAdd( s_aOPTC, "/Tx86-coff" )
-         ENDIF
+         CASE t_cCOMP == "pocc64"
+            AAdd( s_aOPTC, "/Tamd64-coff" )
+         CASE t_cCOMP $ "poccce|poccarm"
+            AAdd( s_aOPTC, "/Tarm-coff" )
+         ENDCASE
          cOpt_Res := "{LR}"
          cResExt := ".res"
          cOpt_Lib := "{FA} /out:{OL} {LO}"
@@ -1837,11 +1846,29 @@ FUNCTION Main( ... )
          IF s_lDEBUG
             AAdd( s_aOPTL, "/debug" )
          ENDIF
-         s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, { "kernel32" }, s_aLIBSYSCORE, s_aLIBSYSMISC } )
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
-                                       "harbour-" + cDL_Version_Alter ),;
-                           "hbmainstd",;
-                           "hbmainwin" }
+         IF t_cCOMP == "poccce"
+            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl" } )
+            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "uuid", "ole32" } )
+         ELSE
+            s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
+         ENDIF
+         DO CASE
+         CASE t_cCOMP == "pocc64"
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-x64",;
+                                          "harbour-" + cDL_Version_Alter + "-x64" ),;
+                              "hbmainstd",;
+                              "hbmainwin" }
+         CASE t_cCOMP $ "poccce|poccarm"
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm",;
+                                          "harbour-" + cDL_Version_Alter + "-arm" ),;
+                              "hbmainstd",;
+                              "hbmainwin" }
+         OTHERWISE
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
+                                          "harbour-" + cDL_Version_Alter ),;
+                              "hbmainstd",;
+                              "hbmainwin" }
+         ENDCASE
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
             AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
@@ -1851,9 +1878,6 @@ FUNCTION Main( ... )
       CASE t_cARCH == "linux" .AND. t_cCOMP == "icc"
       CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce" .OR. ;
            t_cARCH == "wce" .AND. t_cCOMP == "msvcarm" /* NOTE: Cross-platform: wce/ARM on win/x86 */
-      CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"  /* NOTE: Cross-platform: win/amd64 on win/x86 */
-      CASE t_cARCH == "win" .AND. t_cCOMP == "poccce" .OR. ;
-           t_cARCH == "wce" .AND. t_cCOMP == "poccarm" /* NOTE: Cross-platform: wce/ARM on win/x86 */
       CASE t_cARCH == "linux" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wce/ARM on win/x86 */
          IF ! s_lSHARED
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl" } )
