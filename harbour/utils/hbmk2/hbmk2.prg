@@ -1095,7 +1095,7 @@ FUNCTION Main( ... )
       aCommand := ArrayAJoin( { { iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) },;
                                 s_aPRG,;
                                 { "-i" + s_cHB_INC_INSTALL },;
-                                ListToArray( cSelfFlagPRG ),;
+                                iif( s_lBLDFLGP, { " " + cSelfFlagPRG }, {} ) +;
                                 ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
                                 s_aOPTPRG } )
 
