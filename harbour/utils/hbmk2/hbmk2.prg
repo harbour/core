@@ -1417,8 +1417,20 @@ FUNCTION Main( ... )
                s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
             ENDIF
          ENDIF
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
-                                       "harbour-" + cDL_Version_Alter ) }
+         DO CASE
+         CASE t_cCOMP == "mingw64"
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-x64",;
+                                          "harbour-" + cDL_Version_Alter + "-x64" ) }
+         CASE t_cCOMP == "mingwce"
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm",;
+                                          "harbour-" + cDL_Version_Alter + "-arm" ) }
+         CASE t_cCOMP == "mingwarm"
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm",;
+                                          "harbour-" + cDL_Version_Alter + "-arm" ) }
+         OTHERWISE
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
+                                          "harbour-" + cDL_Version_Alter ) }
+         ENDCASE
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
             AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )

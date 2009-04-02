@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-02 15:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/postinst.bat
+  + utils/hbi18n/hbi18n.hbm
+    + Generating hbmk2-dll and hbi18n-dll shared-mode executables.
+
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed shared libnames for MinGW family.
+    ; TOFIX: Still doesn't build shared-mode executables.
+
 2009-04-02 13:42 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.bat
   * bin/postinst.bat
