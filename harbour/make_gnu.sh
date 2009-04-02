@@ -133,6 +133,7 @@ then
 fi
 
 if [ "$HB_ARCHITECTURE" = "win" ] || \
+   [ "$HB_ARCHITECTURE" = "wce" ] || \
    [ "$HB_ARCHITECTURE" = "dos" ] || \
    [ "$HB_ARCHITECTURE" = "os2" ]; then
     if [ -n "$HB_INSTALL_PREFIX" ]; then
@@ -171,6 +172,7 @@ if [ -z "$HB_LIB_INSTALL" ]; then export HB_LIB_INSTALL="$HB_INSTALL_PREFIX/lib$
 if [ -z "$HB_INC_INSTALL" ]; then export HB_INC_INSTALL="$HB_INSTALL_PREFIX/include$hb_instsubdir"; fi
 
 if [ "$HB_ARCHITECTURE" = "win" ] || \
+   [ "$HB_ARCHITECTURE" = "wce" ] || \
    [ "$HB_ARCHITECTURE" = "dos" ] || \
    [ "$HB_ARCHITECTURE" = "os2" ]; then
     if [ -z "$HB_DOC_INSTALL" ]; then export HB_DOC_INSTALL="$HB_INSTALL_PREFIX/doc"; fi

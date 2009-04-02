@@ -12,7 +12,10 @@ rem ---------------------------------------------------------------
 rem NOTE: .prg files have to be compiled with -n1
 rem NOTE: .c   files have to be compiled with -DHB_DYNLIB
 
-if not "%OS%" == "Windows_NT" ( echo This script needs Windows NT or newer. && goto END )
+if not "%OS%" == "Windows_NT" ( echo This script needs Windows NT or newer. && goto :EOF )
+
+setlocal
+
 if "%HB_ARCHITECTURE%" == "" ( echo HB_ARCHITECTURE needs to be set. && goto END )
 if "%HB_COMPILER%" == "" ( echo HB_COMPILER needs to be set. && goto END )
 

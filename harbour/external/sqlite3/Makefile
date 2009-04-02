@@ -14,6 +14,9 @@ endif
 ifeq ($(HB_COMPILER),poccce)
 HB_USER_CFLAGS += -D_WIN32_WCE
 endif
+ifeq ($(HB_ARCHITECTURE),wce)
+HB_USER_CFLAGS += -D_WIN32_WCE
+endif
 
 ROOT = ../../
 

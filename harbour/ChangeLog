@@ -8,6 +8,30 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-02 11:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_gnu_xmingwce.sh
+  * bin/hb-mkdyn.sh
+  * bin/hb-func.sh
+  * bin/postinst.sh
+  * mpkg_win.bat
+  * external/sqlite3/Makefile
+  * make_gnu.sh
+    + Added 'wce' ARCH support and 'mingwce' COMP support where needed.
+    ; TODO: Start using above in local contrib Makefiles.
+
+  * bin/hb-mkdyn.sh
+    + Added comment on how to generate implib when creating the .dll.
+
+  * bin/hb-mkdyn.bat
+    ! Added missing setlocal.
+
+  * ChangeLog
+    ! Typos.
+
+  * make_gnu.bat
+    + Will now exit with message if tried to run with mingw/cygwin
+      targets.
+
 2009-04-01 22:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/doc/Makefile
     ! removed unexisting license.txt file
@@ -85,7 +109,7 @@
     ! Fixed silly typo causing RTE if compiler autodetection
       fails to detect any tier-one compilers (or none).
     + Added automatic postfixing external Harbour executable
-      name if hbmk2 executable name is also prefixed. Currently
+      name if hbmk2 executable name is also postfixed. Currently
       -x64 and -ia64 are recognized. Useful to call harbour-x64.exe
       / harbour-ia64.exe when hbmk2-x64.exe / hbmk2-ia64.exe is used.
 
@@ -149,7 +173,7 @@
     ! Excluded for pocc64 due to compile errors.
 
   * source/rtl/hbinet.c
-    ! Fixed to warnings for pocc64.
+    ! Fixed two warnings for pocc64.
 
 2009-03-31 12:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.bat

@@ -89,7 +89,7 @@ mk_hbgetlibs()
     if [ -z "$@" ]
     then
         libs=""
-        if [ "$HB_COMPILER" != "mingwce" ]
+        if [ "$HB_COMPILER" != "mingwce" ] && [ "$HB_ARCHITECTURE" != "wce" ]
         then
             libs="$libs gtwin"
         fi
@@ -106,7 +106,7 @@ mk_hbgetlibsctb()
     if [ -z "$@" ]
     then
         libs=""
-        if [ "$HB_COMPILER" = "mingwce" ]
+        if [ "$HB_COMPILER" = "mingwce" ] || [ "$HB_ARCHITECTURE" = "wce" ]
         then
             libs="$libs gtwin"
         fi
@@ -131,7 +131,8 @@ mk_hbtools()
         hb_static="yes"
         hb_static_default=" (default)"
         hb_exesuf=".exe"
-    elif [ "${HB_ARCHITECTURE}" = "win" ]; then
+    elif [ "${HB_ARCHITECTURE}" = "win" ] || \
+         [ "${HB_ARCHITECTURE}" = "wce" ]; then
         hb_tool="$1/${hb_pref}-build"
         hb_path_separator=":"
         if [ "${HB_MK_STATIC}" = "yes" ]; then
@@ -187,10 +188,12 @@ mk_hbtools()
         HB_SYS_LIBS="-lz ${HB_SYS_LIBS}"
         hb_libs="${hb_libs//hbzlib/}"
     fi
-    if [ "${HB_COMPILER}" = "mingw" ] || [ "${HB_COMPILER}" = "mingw64" ]; then
+    if [ "${HB_COMPILER}" = "mingw" ] || \
+       [ "${HB_COMPILER}" = "mingw64" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
         HB_WITHOUT_X11="yes"
-    elif [ "${HB_COMPILER}" = "mingwce" ]; then
+    elif [ "${HB_COMPILER}" = "mingwce" ] || \
+         [ "${HB_COMPILER}" = "mingwarm" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32"
         HB_WITHOUT_X11="yes"
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
@@ -427,7 +430,7 @@ SYSTEM_LIBS="${HB_SYS_LIBS}"
 # use pthread system library for MT programs
 if [ "\${HB_MT}" = "MT" ]; then
     case "\${HB_ARCHITECTURE}" in
-        dos|win|os2)
+        dos|win|wce|os2)
             ;;
         *)
             SYSTEM_LIBS="-lpthread \${SYSTEM_LIBS}"
@@ -511,7 +514,8 @@ else
         pref="lib"
         ext=".dylib"
         LN_OPT="\${LN_OPT} -bind_at_load -multiply_defined suppress"
-    elif [ "\${HB_ARCHITECTURE}" = "win" ]; then
+    elif [ "\${HB_ARCHITECTURE}" = "win" ] || \
+         [ "\${HB_ARCHITECTURE}" = "wce" ]; then
         pref=""
         ext=".dll"
         HB_LNK_ATTR="__attribute__ ((dllimport))"
@@ -575,7 +579,8 @@ if [ "\${HB_COMPILER}" = "mingw" ] || [ "\${HB_COMPILER}" = "mingw64" ]; then
     elif [ "\${HB_MODE}" = "std" ]; then
         l="hbmainstd"
     fi
-elif [ "\${HB_COMPILER}" = "mingwce" ]; then
+elif [ "\${HB_COMPILER}" = "mingwce" ] || \
+     [ "\${HB_COMPILER}" = "mingwarm" ]; then
     if [ "\${HB_MODE}" = "std" ]; then
         l="hbmainstd"
     else
@@ -728,7 +733,8 @@ mk_hblibso()
     name=`get_solibname`
     hb_rootdir="${1-.}"
 
-    if [ "${HB_ARCHITECTURE}" = "win" ]; then
+    if [ "${HB_ARCHITECTURE}" = "win" ] || \
+       [ "${HB_ARCHITECTURE}" = "wce" ]; then
        hb_ver=`get_hbver_win "${hb_rootdir}"`
     else
        hb_ver=`get_hbver "${hb_rootdir}"`
@@ -754,7 +760,8 @@ mk_hblibso()
     fi
     if [ "${HB_COMPILER}" = "mingw" ] || [ "${HB_COMPILER}" = "mingw64" ]; then
         linker_options="${linker_options} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
-    elif [ "${HB_COMPILER}" = "mingwce" ]; then
+    elif [ "${HB_COMPILER}" = "mingwce" ] || \
+         [ "${HB_COMPILER}" = "mingwarm" ]; then
         linker_options="${linker_options} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32"
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
         linker_options="${linker_options}"
@@ -824,12 +831,14 @@ mk_hblibso()
         lib_ext=".dylib"
         full_lib_name="lib${name}.${hb_ver}${lib_ext}"
         full_lib_name_mt="lib${name}mt.${hb_ver}${lib_ext}"
-    elif [ "${HB_ARCHITECTURE}" = "win" ]; then
+    elif [ "${HB_ARCHITECTURE}" = "win" ] || \
+         [ "${HB_ARCHITECTURE}" = "wce" ]; then
         lib_ext=".dll"
         if [ "${HB_COMPILER}" = "mingw64" ]; then
             full_lib_name="${name}-${hb_ver}-x64${lib_ext}"
             full_lib_name_mt="${name}mt-${hb_ver}-x64${lib_ext}"
-        elif [ "${HB_COMPILER}" = "mingwce" ]; then
+        elif [ "${HB_COMPILER}" = "mingwce" ] || \
+             [ "${HB_COMPILER}" = "mingwarm" ]; then
             full_lib_name="${name}-${hb_ver}-arm${lib_ext}"
             full_lib_name_mt="${name}mt-${hb_ver}-arm${lib_ext}"
         else
@@ -860,7 +869,8 @@ mk_hblibso()
     do
         if [ -f $l ]
         then
-            if [ "${HB_ARCHITECTURE}" = "win" ]; then
+            if [ "${HB_ARCHITECTURE}" = "win" ] || \
+               [ "${HB_ARCHITECTURE}" = "wce" ]; then
                 if [ "${HB_XBUILD}" = "" ]; then
                    (cd "$dir"
                    mv "${HB_LIB_INSTALL}/$l" "${HB_BIN_INSTALL}")

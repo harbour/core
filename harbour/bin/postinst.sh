@@ -45,6 +45,7 @@ if [ "$HB_COMPILER" = "gcc" ] || \
    [ "$HB_COMPILER" = "mingw" ] || \
    [ "$HB_COMPILER" = "mingw64" ] || \
    [ "$HB_COMPILER" = "mingwce" ] || \
+   [ "$HB_COMPILER" = "mingwarm" ] || \
    [ "$HB_COMPILER" = "cygwin" ] || \
    [ "$HB_COMPILER" = "djgpp" ] || \
    [ "$HB_COMPILER" = "icc" ]
@@ -102,6 +103,7 @@ then
        [ "$HB_COMPILER" = "mingw" ] || \
        [ "$HB_COMPILER" = "mingw64" ] || \
        [ "$HB_COMPILER" = "mingwce" ] || \
+       [ "$HB_COMPILER" = "mingwarm" ] || \
        [ "$HB_COMPILER" = "icc" ]; then
         mk_hblibso "${hb_root}"
     fi

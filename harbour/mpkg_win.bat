@@ -50,10 +50,11 @@ set HB_BUILD_IMPLIB=no
 set HB_USER_CFLAGS=%HB_USER_CFLAGS% -DHB_FM_STATISTICS_OFF
 
 rem ; Build Harbour
-if "%HB_COMPILER%" == "mingw"   ( sh make_gnu.sh clean install && goto MK_PKG )
-if "%HB_COMPILER%" == "mingw64" ( sh make_gnu.sh clean install && goto MK_PKG )
-if "%HB_COMPILER%" == "mingwce" ( sh make_gnu.sh clean install && goto MK_PKG )
-if "%HB_COMPILER%" == "cygwin"  ( sh make_gnu.sh clean install && goto MK_PKG )
+if "%HB_COMPILER%" == "mingw"    ( sh make_gnu.sh clean install && goto MK_PKG )
+if "%HB_COMPILER%" == "mingw64"  ( sh make_gnu.sh clean install && goto MK_PKG )
+if "%HB_COMPILER%" == "mingwce"  ( sh make_gnu.sh clean install && goto MK_PKG )
+if "%HB_COMPILER%" == "mingwarm" ( sh make_gnu.sh clean install && goto MK_PKG )
+if "%HB_COMPILER%" == "cygwin"   ( sh make_gnu.sh clean install && goto MK_PKG )
 call make_gnu.bat
 :MK_PKG
 

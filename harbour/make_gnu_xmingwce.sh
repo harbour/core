@@ -34,7 +34,8 @@ else
 fi
 
 CC_HB_USER_PRGFLAGS=""
-if [ "$HB_HOST_ARCH" != "win" ]; then
+if [ "$HB_HOST_ARCH" != "win" ] && \
+   [ "$HB_HOST_ARCH" != "wce" ]; then
     CC_HB_USER_PRGFLAGS="$CC_HB_USER_PRGFLAGS -D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__$UNAMEU"
 fi
 
@@ -48,7 +49,8 @@ export HB_USER_PRGFLAGS="$CC_HB_USER_PRGFLAGS $HB_USER_PRGFLAGS"
 # default cegcc instalation path
 [ -z "$HB_CCPATH" ] && HB_CCPATH="/opt/mingw32ce/bin"
 
-if [ "$HB_HOST_ARCH" != "win" ]; then
+if [ "$HB_HOST_ARCH" != "win" ] && \
+   [ "$HB_HOST_ARCH" != "wce" ]; then
     export PATH="$HB_CCPATH:$PATH"
 fi
 

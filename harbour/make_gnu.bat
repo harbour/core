@@ -30,6 +30,12 @@ if "%HB_ARCHITECTURE%" == ""                         set HB_ARCHITECTURE=dos
 if "%HB_COMPILER%"     == "" if not "%WINDIR%" == "" goto HELP
 if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
+if "%HB_COMPILER%" == "mingw"    ( echo For %HB_COMPILER% builds, use 'sh make_gnu.sh'. See INSTALL for more. && goto :EOF )
+if "%HB_COMPILER%" == "mingw64"  ( echo For %HB_COMPILER% builds, use 'sh make_gnu.sh'. See INSTALL for more. && goto :EOF )
+if "%HB_COMPILER%" == "mingwce"  ( echo For %HB_COMPILER% builds, use 'sh make_gnu.sh'. See INSTALL for more. && goto :EOF )
+if "%HB_COMPILER%" == "mingwarm" ( echo For %HB_COMPILER% builds, use 'sh make_gnu.sh'. See INSTALL for more. && goto :EOF )
+if "%HB_COMPILER%" == "cygwin"   ( echo For %HB_COMPILER% builds, use 'sh make_gnu.sh'. See INSTALL for more. && goto :EOF )
+
 if "%HB_INSTALL_PREFIX%" == "" if "%OS%" == "Windows_NT" set HB_INSTALL_PREFIX=%~dp0
 
 rem Set to constant value to be consistent with the non-GNU make files.
