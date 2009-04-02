@@ -8,6 +8,25 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-02 22:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexpra.c
+    ! verify all expression POP operation for usage as LValue
+
+  * harbour/include/hbexprb.c
+    ! fixed possible GPF in unverified send context
+    + added support for IIF() usage as LValue even if it cannot be
+      reduced during [macro]compilation
+
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macrolex.c
+    * removed support for some characters unsupported by Clipper in
+      macro expressions like chr(10) as trailing expression character, f.e.:
+         ? &("DATE()"+chr(10))
+
+  * harbour/source/compiler/complex.c
+    * formatting
+
 2009-04-02 17:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Enabled embedded Harbour compiler. This will simplify

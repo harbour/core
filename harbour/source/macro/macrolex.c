@@ -281,12 +281,11 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
 
    while( pLex->ulSrc < pLex->ulLen )
    {
-      char ch = pLex->pString[ pLex->ulSrc++ ];
+      unsigned char ch = ( unsigned char ) pLex->pString[ pLex->ulSrc++ ];
       switch( ch )
       {
          case ' ':
          case '\t':
-         case '\r':
             break;
 
          case '$':
@@ -295,8 +294,6 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          case '@':
          case '(':
          case '{':
-         case ';':
-         case '\n':
             pLex->quote = TRUE;
             return ch;
 

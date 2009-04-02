@@ -460,6 +460,7 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
          break;
       }
       case HB_EA_POP_PCODE:
+         break;
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
          hb_compWarnMeaningless( HB_COMP_PARAM, pSelf );
@@ -851,7 +852,7 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
          hb_compErrorRefer( HB_COMP_PARAM, NULL, hb_compExprDescription( pExp ) );
          break;
       }
-         
+
       case HB_EA_POP_PCODE:
          break;
       case HB_EA_PUSH_POP:
@@ -880,7 +881,14 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
          break;
 
       case HB_EA_LVALUE:
-         hb_compErrorLValue( HB_COMP_PARAM, pSelf );
+         if( HB_SUPPORT_HARBOUR )
+         {
+            HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList->pNext;
+            HB_EXPR_USE( pExpr, HB_EA_LVALUE );
+            HB_EXPR_USE( pExpr->pNext, HB_EA_LVALUE );
+         }
+         else
+            hb_compErrorLValue( HB_COMP_PARAM, pSelf );
          break;
 
       case HB_EA_PUSH_PCODE:
@@ -904,7 +912,25 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
          break;
       }
       case HB_EA_POP_PCODE:
+      {
+         /* this is called if all three parts of IIF expression should be generated
+         */
+         LONG lPosFalse, lPosEnd;
+         HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
+
+         HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
+         lPosFalse = HB_GEN_FUNC1( JumpFalse, 0 );
+         pExpr =pExpr->pNext;
+
+         HB_EXPR_USE( pExpr, HB_EA_POP_PCODE );
+         lPosEnd = HB_GEN_FUNC1( Jump, 0 );
+         pExpr =pExpr->pNext;
+
+         HB_GEN_FUNC1( JumpHere, lPosFalse );
+         HB_EXPR_USE( pExpr, HB_EA_POP_PCODE );
+         HB_GEN_FUNC1( JumpHere, lPosEnd );
          break;
+      }
 
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
@@ -2493,7 +2519,10 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
 
       case HB_EA_POP_PCODE:
          hb_compExprPushSendPop( pSelf, HB_COMP_PARAM );
-         HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
+         if( pSelf->value.asMessage.pParms )
+            HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
+         else
+            HB_COMP_ERROR_SYNTAX( pSelf );
          HB_GEN_FUNC2( PCode2, HB_P_SENDSHORT, 1 );
          break;
 

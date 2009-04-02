@@ -1225,7 +1225,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                   }
                   else
                      pLex->iState = IIF;
-   
+
                   return pLex->iState;
                }
                else if( HB_PP_LEX_NEEDLEFT( pToken->pNext ) || pLex->iState != LOOKUP )

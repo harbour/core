@@ -245,16 +245,7 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * );
 
 %%
 
-Main : Expression '\n'  {
-                           HB_MACRO_DATA->exprType = hb_compExprType( $1 );
-                           if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
-                              hb_macroExprGenPush( $1, HB_COMP_PARAM );
-                           else
-                              hb_macroExprGenPop( $1, HB_COMP_PARAM );
-                           hb_macroGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
-                        }
-
-     | Expression       {
+Main : Expression       {
                            HB_MACRO_DATA->exprType = hb_compExprType( $1 );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
                               hb_macroExprGenPush( $1, HB_COMP_PARAM );
@@ -267,14 +258,9 @@ Main : Expression '\n'  {
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
                               hb_macroExprGenPush( $1, HB_COMP_PARAM );
                            else
-                              hb_macroExprGenPop( $1, HB_COMP_PARAM );
+                              hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
                            hb_macroGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
                         }
-     | Expression error {
-                  HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
-                  hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
-                  HB_MACRO_ABORT;
-               }
      | error   {
                   HB_TRACE(HB_TR_DEBUG, ("macro -> invalid syntax: %s", HB_MACRO_DATA->string));
                   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
