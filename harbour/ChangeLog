@@ -8,6 +8,47 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-02 13:42 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkdyn.bat
+  * bin/postinst.bat
+    + Added support for GCC family .dll creation. (Cygwin not tested)
+      This will also create .def files. Also implib .a files are possible,
+      code is there commented.
+    + Added 'wce' ARCH support.
+    ! Fixed to not include gtwin in WinCE .dlls.
+    + Added support for HB_DLLIBS envvar.
+    ; NOTE: The benefits of using cmd shell instead of msys to create
+            mingw builds is that hbrun-dll and hbtest-dll are also
+            created and you don't have use forward slashes in HB_INC_*
+            envvars. It also allows to more easily add implib creation
+            in the future. Overall the Windows build environment is
+            more uniform this way. msys build output though is much
+            sleeker and also seems faster.
+            If this method turns out to be okay, it may become the
+            default/support/standard way to build Harbour with MinGW
+            on Windows. (if not we can return to the msys method)
+
+    ; TOFIX: Shared MinGW executables cannot be built if Harbour was built
+             with -DHB_DYNLIB. IMO this macro should be ignored in MinGW
+             builds as there is no separate DLL build and non-DLL.
+             [ I cannot fix this. ]
+             Until then I had to a hack to starter batch files.
+
+  * mpkg_win.bat
+    * Switched to use make_gnu.bat instead of make_gnu.sh to build
+      GCC family targets.
+
+  * make_gnu.bat
+    + Added special codepath for GCC familty as it needs one pass only
+      to create .dlls.
+
+  * INSTALL
+    * Updated to reflect now possible non-msys MinGW build.
+    * Updated example to use non-msys flavours.
+    + Readded MinGW + msys example.
+    % Minor simplification in mingw64/mingwce targets.
+      (HB_CCPATH no longer needed on Windows)
+
 2009-04-02 11:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_gnu_xmingwce.sh
   * bin/hb-mkdyn.sh

@@ -33,6 +33,45 @@ HOW TO BUILD AND INSTALL HARBOUR
       $ ./hello
       You should see 'Hello world!' on screen.
 
+   Windows
+   -------
+      Platform specific prerequisites:
+
+      1.) Windows NT or compatible system is required to build Harbour.
+      2.) Make sure to have your C compiler of choice properly installed.
+          Refer to your C compiler installation and setup instructions for
+          details. It's recommended to make sure no tools in your PATH
+          belonging to other C compilers are interfering with your setup.
+          For the list of supported compilers, please look up the
+          relevant section of this file.
+      3.) Make sure to have GNU Make. Certain older versions and builds
+          are untested and may not work. We recommend the one distributed
+          by MinGW team. Use this link to get it:
+            https://sourceforge.net/project/showfiles.php?group_id=2435&package_id=23918
+          If you have it, you have three choices:
+          - Copy mingw32-make.exe or make.exe into a separate directory
+            and add that directory to the beginning of your PATH.
+            (recommended)
+          - Put mingw32-make.exe anywhere in your PATH.
+          - Put mingw32-make.exe in Harbour source root dir.
+          If you're using MinGW compiler, you don't have to bother with
+          all this.
+
+      > set HB_COMPILER=<mingw|msvc|owatcom|bcc|pocc|...>
+      > set HB_INSTALL_PREFIX=<DIR>
+      > make_gnu.bat install
+
+      To test it, go to <DIR>\bin directory and type:
+      > hbmk2 ..\tests\hello.prg
+      > hello
+      You should see 'Hello world!' on screen.
+
+      NOTE: <DIR> is your destination directory where executables,
+            libraries and headers will be created. Use absolute paths
+            only. For a peace of mind, avoid using spaces, quotes
+            in the name. You can leave it empty, in this case the
+            results will be created under the current directory tree.
+
    Windows with MinGW + msys
    -------------------------
       This is the recommended way to build with MinGW.
@@ -61,43 +100,6 @@ HOW TO BUILD AND INSTALL HARBOUR
       You should see 'Hello world!' on screen.
 
       NOTE: <DIR> should use Cygwin drive notation: /cygdrive/c for C:
-
-   Windows with other compilers (MSVC, Watcom, Borland, Pelles, etc.)
-   ----------------------------
-      Platform specific prerequisites:
-
-      1.) Windows NT or compatible system is required to build Harbour.
-      2.) Make sure to have your C compiler of choice properly installed.
-          Refer to your C compiler installation and setup instructions for
-          details. It's recommended to make sure no tools in your PATH
-          belonging to other C compilers are interfering with your setup.
-          For the list of supported compilers, please look up the
-          relevant section of this file.
-      3.) Make sure to have GNU Make. Certain older versions and builds
-          are untested and may not work. We recommend the one distributed
-          by MinGW team. Use this link to get it:
-            https://sourceforge.net/project/showfiles.php?group_id=2435&package_id=23918
-          If you have it, you have three choices:
-          - Copy mingw32-make.exe or make.exe into a separate directory
-            and add that directory to the beginning of your PATH.
-            (recommended)
-          - Put mingw32-make.exe anywhere in your PATH.
-          - Put mingw32-make.exe in Harbour source root dir.
-
-      > set HB_COMPILER=<msvc|owatcom|bcc|pocc|...>
-      > set HB_INSTALL_PREFIX=<DIR>
-      > make_gnu.bat install
-
-      To test it, go to <DIR>\bin directory and type:
-      > hbmk2 ..\tests\hello.prg
-      > hello
-      You should see 'Hello world!' on screen.
-
-      NOTE: <DIR> is your destination directory where executables,
-            libraries and headers will be created. Use absolute paths
-            only. For a peace of mind, avoid using spaces, quotes
-            in the name. You can leave it empty, in this case the
-            results will be created under the current directory tree.
 
    DOS
    ---
@@ -150,7 +152,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_QT=C:\Qt\2009.01\qt\include
    HB_INC_SQLITE3=C:\sqlite3 (defaults to locally hosted version on win/os2)
 
-   NOTES: - For mingw and cygwin you have to use forward slashes
+   NOTES: - For mingw+msys and cygwin you have to use forward slashes
             and also cygwin drive notation for cygwin.
           - Space in directory names isn't currently supported.
           - Don't put the dir inside double quotes.
@@ -348,7 +350,17 @@ EXAMPLES
       ---
 
       --- MinGW GCC
-      set PATH=C:\devl\msys\1.0.11\bin;C:\devl\MinGW-433\bin;%PATH%
+      set PATH=C:\devl\MinGW-433\bin;%PATH%
+      rem
+      set HB_COMPILER=mingw
+      rem
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- MinGW GCC with msys
+      set PATH=C:\devl\msys\1.0.11\bin;%PATH%
+      set PATH=C:\devl\MinGW-433\bin;%PATH%
       rem
       set HB_COMPILER=mingw
       rem
@@ -357,31 +369,29 @@ EXAMPLES
       ---
 
       --- MinGW GCC for x64 (requires native x86 Harbour binaries)
-      set HB_CCPATH=C:\devl\MinGW-440-64\bin
+      set PATH=C:\devl\MinGW-440-64\bin;%PATH%
       set HB_CCPREFIX=x86_64-pc-mingw32-
-      set PATH=C:\devl\msys\1.0.11\bin;%HB_CCPATH%;%PATH%
       rem
       set HB_COMPILER=mingw64
       rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
       rem
-      set HB_INSTALL_PREFIX=/c/hb-%HB_COMPILER%
-      sh make_gnu.sh %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
 
       --- MinGW GCC for WinCE/ARM (requires native x86 Harbour binaries)
-      set HB_CCPATH=C:\devl\MinGW-410-ce\opt\mingw32ce\bin
+      set PATH=C:\devl\MinGW-410-ce\opt\mingw32ce\bin;%PATH%
       set HB_CCPREFIX=arm-wince-mingw32ce-
-      set PATH=C:\devl\msys\1.0.11\bin;%HB_CCPATH%;%PATH%
       rem
       set HB_COMPILER=mingwce
       rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
       rem
-      set HB_INSTALL_PREFIX=/c/hb-%HB_COMPILER%
-      sh make_gnu.sh %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
 
       --- Open Watcom C++
@@ -509,7 +519,7 @@ EXAMPLES
 
       --8<--
       rem ; To create installation packages (.exe + .zip),
-      rem   replace last lines (calling make_gnu.*) with these two:
+      rem   replace last line (calling make_gnu.bat) with these two:
       set PATH=C:\devl\NSIS-2.44;%PATH%
       call mpkg_win.bat > log-%HB_COMPILER%.txt 2>&1
       -->8--

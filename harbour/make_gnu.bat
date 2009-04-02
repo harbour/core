@@ -30,12 +30,6 @@ if "%HB_ARCHITECTURE%" == ""                         set HB_ARCHITECTURE=dos
 if "%HB_COMPILER%"     == "" if not "%WINDIR%" == "" goto HELP
 if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
-if "%HB_COMPILER%" == "mingw"    ( echo For %HB_COMPILER% builds, use 'sh make_gnu.sh'. See INSTALL for more. && goto :EOF )
-if "%HB_COMPILER%" == "mingw64"  ( echo For %HB_COMPILER% builds, use 'sh make_gnu.sh'. See INSTALL for more. && goto :EOF )
-if "%HB_COMPILER%" == "mingwce"  ( echo For %HB_COMPILER% builds, use 'sh make_gnu.sh'. See INSTALL for more. && goto :EOF )
-if "%HB_COMPILER%" == "mingwarm" ( echo For %HB_COMPILER% builds, use 'sh make_gnu.sh'. See INSTALL for more. && goto :EOF )
-if "%HB_COMPILER%" == "cygwin"   ( echo For %HB_COMPILER% builds, use 'sh make_gnu.sh'. See INSTALL for more. && goto :EOF )
-
 if "%HB_INSTALL_PREFIX%" == "" if "%OS%" == "Windows_NT" set HB_INSTALL_PREFIX=%~dp0
 
 rem Set to constant value to be consistent with the non-GNU make files.
@@ -121,6 +115,11 @@ if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
    rem the .dlls and a final pass for the regular version.
 
    if not "%HB_ARCHITECTURE%" == "win" goto SKIP_WINDLL
+   if "%HB_COMPILER%" == "mingw"    goto DO_GCC
+   if "%HB_COMPILER%" == "mingw64"  goto DO_GCC
+   if "%HB_COMPILER%" == "mingwce"  goto DO_GCC
+   if "%HB_COMPILER%" == "mingwarm" goto DO_GCC
+   if "%HB_COMPILER%" == "cygwin"   goto DO_GCC
    if not "%HB_BUILD_DLL%" == "yes" goto SKIP_WINDLL
 
    set _HB_CONTRIBLIBS=%HB_CONTRIBLIBS%
@@ -134,6 +133,12 @@ if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
    set HB_CONTRIB_ADDONS=%_HB_CONTRIB_ADDONS%
    set _HB_CONTRIBLIBS=
    set _HB_CONTRIB_ADDONS=
+   %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+   goto MAKE_DONE
+
+:DO_GCC
+
+   set HB_DYNLIB=no
    %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    goto MAKE_DONE
 

@@ -20,9 +20,15 @@ if "%HB_ARCHITECTURE%" == "" ( echo HB_ARCHITECTURE needs to be set. && goto END
 if "%HB_COMPILER%" == "" ( echo HB_COMPILER needs to be set. && goto END )
 
 set HB_DLL_VERSION=11
-set HB_DLL_LIBS=hbcommon hbpp hbrtl hbmacro hblang hbcpage hbpcre hbzlib hbextern hbrdd rddntx rddnsx rddcdx rddfpt hbsix hbhsx hbusrrdd gtcgi gtpca gtstd gtwin gtwvt gtgui hbmaindllh
+set HB_DLL_LIBS=hbcommon hbpp hbrtl hbmacro hblang hbcpage hbpcre hbzlib hbextern hbrdd rddntx rddnsx rddcdx rddfpt hbsix hbhsx hbusrrdd gtcgi gtpca gtstd gtwvt gtgui hbmaindllh
+set HB_DLL_LIBS_WIN=gtwin
 set HB_DLL_LIBS_ST=hbvm
 set HB_DLL_LIBS_MT=hbvmmt
+
+if "%HB_ARCHITECTURE%" == "wce" set HB_DLL_LIBS_WIN=
+if "%HB_COMPILER%" == "msvcce"  set HB_DLL_LIBS_WIN=
+if "%HB_COMPILER%" == "mingwce" set HB_DLL_LIBS_WIN=
+if "%HB_COMPILER%" == "poccce"  set HB_DLL_LIBS_WIN=
 
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_icc"      goto DO_MSVC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_iccia64"  goto DO_MSVC
@@ -30,11 +36,18 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc"     goto DO_MSVC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc64"   goto DO_MSVC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcia64" goto DO_MSVC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcce"   goto DO_MSVC
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm"  goto DO_MSVC
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw"    goto DO_GCC
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw64"  goto DO_GCC
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingwce"  goto DO_GCC
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" goto DO_GCC
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_cygwin"   goto DO_GCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_bcc"      goto DO_BCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_owatcom"  goto DO_OWATCOM
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     goto DO_POCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   goto DO_POCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_poccce"   goto DO_POCC
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  goto DO_POCC
 
 echo Platform %HB_ARCHITECTURE% / %HB_COMPILER% isn't supported.
 goto END
@@ -55,7 +68,7 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_iccia64" set _BIN_LINK=xilink
 
 rem ; Extract neutral objects
 echo.> _hboneut.txt
-for %%f in (%HB_DLL_LIBS%) do (
+for %%f in (%HB_DLL_LIBS% %HB_DLL_LIBS_WIN%) do (
    if exist "%HB_LIB_INSTALL%\%%f.lib" (
       echo Processing library: %%f
       %_BIN_LIB% "%HB_LIB_INSTALL%\%%f.lib" /nologo /list > _hboraw.txt
@@ -117,16 +130,19 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc"     set _DST_NAME_ST=harbour-
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcce"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcce"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc64"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc64"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcia64" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-ia64
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcia64" set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-ia64
 
-if not "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcce" set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
-if     "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcce" set _SYSLIBS=wininet.lib ws2.lib
+set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcce"  set _SYSLIBS=wininet.lib ws2.lib
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm" set _SYSLIBS=wininet.lib ws2.lib
 
-echo Making %_DST_NAME_ST%.dll... && %_BIN_LINK% /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt %_SYSLIBS%
-echo Making %_DST_NAME_MT%.dll... && %_BIN_LINK% /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt %_SYSLIBS%
+echo Making %_DST_NAME_ST%.dll... && %_BIN_LINK% /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt %_SYSLIBS% %HB_DLLIBS%
+echo Making %_DST_NAME_MT%.dll... && %_BIN_LINK% /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt %_SYSLIBS% %HB_DLLIBS%
 
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
@@ -161,7 +177,7 @@ echo. c0d32.obj +> _hballmt.txt
 
 rem ; Extract neutral objects
 echo.> _hboneut.txt
-for %%f in (%HB_DLL_LIBS%) do (
+for %%f in (%HB_DLL_LIBS% %HB_DLL_LIBS_WIN%) do (
    if exist "%HB_LIB_INSTALL%\%%f.lib" (
       echo Processing library: %%f
       tlib "%HB_LIB_INSTALL%\%%f.lib", _hboraw.txt > nul
@@ -243,8 +259,8 @@ cd ..
 set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-bcc
 set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-bcc
 
-echo. , "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll",, cw32mt.lib import32.lib >> _hballst.txt
-echo. , "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll",, cw32mt.lib import32.lib >> _hballmt.txt
+echo. , "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll",, cw32mt.lib import32.lib %HB_DLLIBS% >> _hballst.txt
+echo. , "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll",, cw32mt.lib import32.lib %HB_DLLIBS% >> _hballmt.txt
 
 echo Making %_DST_NAME_ST%.dll... && ilink32 -q -Gn -C -aa -Tpd -Gi -x c0d32.obj @_hballst.txt
 echo Making %_DST_NAME_MT%.dll... && ilink32 -q -Gn -C -aa -Tpd -Gi -x c0d32.obj @_hballmt.txt
@@ -280,7 +296,7 @@ cd _dll
 
 echo.> _hbsst.txt
 echo.> _hbsmt.txt
-for %%f in (%HB_DLL_LIBS%) do (
+for %%f in (%HB_DLL_LIBS% %HB_DLL_LIBS_WIN%) do (
    echo FILE '%HB_LIB_INSTALL%\%%f.lib'>> _hbsst.txt
    echo FILE '%HB_LIB_INSTALL%\%%f.lib'>> _hbsmt.txt
 )
@@ -319,7 +335,7 @@ cd _dll
 
 rem ; Extract neutral objects
 echo.> _hboneut.txt
-for %%f in (%HB_DLL_LIBS%) do (
+for %%f in (%HB_DLL_LIBS% %HB_DLL_LIBS_WIN%) do (
    if exist "%HB_LIB_INSTALL%\%%f.lib" (
       echo Processing library: %%f
       polib "%HB_LIB_INSTALL%\%%f.lib" /list /explode >> _hboneut.txt
@@ -372,13 +388,16 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   set _DST_NAME_ST=harbour-
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_poccce"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_poccce"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
 
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_poccce"   set _SYSLIBS=wininet.lib ws2.lib
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  set _SYSLIBS=wininet.lib ws2.lib
 
-echo Making %_DST_NAME_ST%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt %_SYSLIBS%
-echo Making %_DST_NAME_MT%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt %_SYSLIBS%
+echo Making %_DST_NAME_ST%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt %_SYSLIBS% %HB_DLLIBS%
+echo Making %_DST_NAME_MT%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt %_SYSLIBS% %HB_DLLIBS%
 
 polib "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" /out:"%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
 polib "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" /out:"%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
@@ -394,6 +413,96 @@ for /F %%o in (_hbomt.txt) do ( del %%o )
 if exist _mt\maindll.obj  del _mt\maindll.obj
 if exist _mt\maindllp.obj del _mt\maindllp.obj
 del _hbomt.txt
+rmdir _mt
+
+for /F %%o in (_hboneut.txt) do ( del %%o )
+del _hboneut.txt
+cd ..
+rmdir _dll
+
+goto END
+
+:DO_GCC
+
+echo Making .dlls for %HB_ARCHITECTURE% / %HB_COMPILER%...
+
+md _dll
+cd _dll
+
+rem ; Extract neutral objects
+echo.> _hboneut.txt
+for %%f in (%HB_DLL_LIBS% %HB_DLL_LIBS_WIN%) do (
+   if exist "%HB_LIB_INSTALL%\lib%%f.a" (
+      echo Processing library: %%f
+      %HB_CCPREFIX%ar -x "%HB_LIB_INSTALL%\lib%%f.a"
+      %HB_CCPREFIX%ar -t "%HB_LIB_INSTALL%\lib%%f.a" >> _hboneut.txt
+   ) else ( echo Library not found: %HB_LIB_INSTALL%\%%f.lib )
+)
+
+md _st
+cd _st
+rem ; Extract ST objects
+echo.> _hbost.txt
+for %%f in (%HB_DLL_LIBS_ST%) do (
+   if exist "%HB_LIB_INSTALL%\lib%%f.a" (
+      echo Processing library: %%f
+      %HB_CCPREFIX%ar -x "%HB_LIB_INSTALL%\lib%%f.a"
+      %HB_CCPREFIX%ar -t "%HB_LIB_INSTALL%\lib%%f.a" >> _hbost.txt
+   ) else ( echo Library not found: %HB_LIB_INSTALL%\%%f.lib )
+)
+cd ..
+
+md _mt
+cd _mt
+rem ; Extract MT objects
+echo.> _hbomt.txt
+for %%f in (%HB_DLL_LIBS_MT%) do (
+   if exist "%HB_LIB_INSTALL%\lib%%f.a" (
+      echo Processing library: %%f
+      %HB_CCPREFIX%ar -x "%HB_LIB_INSTALL%\lib%%f.a"
+      %HB_CCPREFIX%ar -t "%HB_LIB_INSTALL%\lib%%f.a" >> _hbomt.txt
+   ) else ( echo Library not found: %HB_LIB_INSTALL%\%%f.lib )
+)
+cd ..
+
+setlocal enabledelayedexpansion
+set _HBOST=
+for /f %%f in (_hboneut.txt)   do set _HBOST=!_HBOST! %%f
+for /f %%f in (_st\_hbost.txt) do set _HBOST=!_HBOST! _st\%%f
+set _HBOMT=
+for /f %%f in (_hboneut.txt)   do set _HBOMT=!_HBOMT! %%f
+for /f %%f in (_mt\_hbomt.txt) do set _HBOMT=!_HBOMT! _mt\%%f
+
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw"    set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw"    set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw64"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw64"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingwce"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingwce"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
+
+set _SYSLIBS=-luser32 -lws2_32 -ladvapi32 -lgdi32
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingwce"  set _SYSLIBS=-lwininet -lws2
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" set _SYSLIBS=-lwininet -lws2
+
+echo Making %_DST_NAME_ST%.dll... && %HB_CCPREFIX%gcc -shared -o "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" %_HBOST% %HB_USER_LDFLAGS% %_SYSLIBS% %HB_DLLIBS% -Wl,--output-def,"%HB_BIN_INSTALL%\%_DST_NAME_ST%.def"
+echo Making %_DST_NAME_MT%.dll... && %HB_CCPREFIX%gcc -shared -o "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" %_HBOMT% %HB_USER_LDFLAGS% %_SYSLIBS% %HB_DLLIBS% -Wl,--output-def,"%HB_BIN_INSTALL%\%_DST_NAME_MT%.def"
+
+rem ,--out-implib,"%HB_LIB_INSTALL%\lib%_DST_NAME_ST%.a"
+rem ,--out-implib,"%HB_LIB_INSTALL%\lib%_DST_NAME_MT%.a"
+
+rem ; Cleanup
+cd _st
+for /F %%o in (_hbost.txt) do ( del %%o )
+del _hbost.txt
+cd ..
+rmdir _st
+
+cd _mt
+for /F %%o in (_hbomt.txt) do ( del %%o )
+del _hbomt.txt
+cd ..
 rmdir _mt
 
 for /F %%o in (_hboneut.txt) do ( del %%o )
