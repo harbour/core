@@ -7,7 +7,7 @@
  * Functions:
  * SETFCREATE(), CSETSAFETY(), STRFILE(), FILESTR(), SCREENFILE()
  * SCREENFILE(), FILESCREEN()
- *                                             
+ *
  * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://www.xharbour.org
  *
@@ -56,6 +56,7 @@
 #include "hbapifs.h"
 #include "hbapigt.h"
 
+#include "ctstrfil.h"
 
 static int s_iFileAttr = HB_FA_NORMAL;
 static BOOL s_bSafety = 0;

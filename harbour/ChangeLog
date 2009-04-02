@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-02 16:30 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    + Made clear that Windows examples are all pure .bat scripts.
+    + Made clear that HB_BUILD_IMPLIB isn't supported for MinGW targets.
+      (and in most cases either not needed or not possible automatically)
+
+  * contrib/hbct/ctstrfil.c
+    ! Fixed missing #include which could cause unresolved externals.
+
 2009-04-02 15:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Added support for pocc64, poccce.
