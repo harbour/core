@@ -1,7 +1,7 @@
 /*
  * $Id$
  */
-#pragma linenumber=on
+
 /*
  * Harbour Project source code:
  * Harbour Make
@@ -123,9 +123,9 @@
    ---
 */
 
-/* TOFIX: We should try using the same .dll name format for all compilers/platform.
-          This also means they should be bniary compatible with each other
-          (within a given architecture of course). */
+#ifndef HBMK_INTEGRATED_COMPILER
+#define HBMK_INTEGRATED_COMPILER
+#endif
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
