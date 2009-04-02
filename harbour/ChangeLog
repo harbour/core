@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-02 17:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added msvcce (msvcarm) support. Untested, those who have such
+      working environment please do. (pre 8.0 MSVC isn't supported)
+
 2009-04-02 16:30 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     + Made clear that Windows examples are all pure .bat scripts.

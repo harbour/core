@@ -1710,9 +1710,15 @@ FUNCTION Main( ... )
             AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
-      CASE t_cARCH == "win" .AND. t_cCOMP $ "msvc|msvc64|msvcia64|icc|iccia64"
+      CASE ( t_cARCH == "win" .AND. t_cCOMP $ "msvc|msvc64|msvcia64|icc|iccia64" ) .OR. ;
+           ( t_cARCH == "win" .AND. t_cCOMP == "msvcce" ) .OR. ;
+           ( t_cARCH == "wce" .AND. t_cCOMP == "msvcarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
          IF s_lDEBUG
-            AAdd( s_aOPTC, "-MTd -Zi" )
+            IF t_cCOMP $ "msvcce|msvcarm"
+               AAdd( s_aOPTC, "-Zi" )
+            ELSE
+               AAdd( s_aOPTC, "-MTd -Zi" )
+            ENDIF
          ENDIF
          IF s_lGUI
             AAdd( s_aOPTL, "/subsystem:windows" )
@@ -1729,7 +1735,7 @@ FUNCTION Main( ... )
             cBin_Dyn := "xilink.exe"
          ELSE
             cBin_Lib := "lib.exe"
-            cBin_CompC := "cl.exe"
+            cBin_CompC := "cl.exe" /* TODO: Pre-8.0 is clarm.exe */
             cBin_Dyn := "link.exe"
          ENDIF
          cOpt_Lib := "{FA} /out:{OL} {LO}"
@@ -1740,6 +1746,33 @@ FUNCTION Main( ... )
          IF s_lMAP
             AAdd( s_aOPTC, "-Fm" )
             AAdd( s_aOPTD, "-Fm" )
+         ENDIF
+         IF t_cCOMP $ "msvcce|msvcarm"
+            /* NOTE: Copied from .cf. Probably needs cleaning. */
+            AAdd( s_aOPTC, "-D_WIN32_WCE=0x420" )
+            AAdd( s_aOPTC, "-DUNDER_CE=0x420" )
+            AAdd( s_aOPTC, "-DWIN32_PLATFORM_PSPC" )
+            AAdd( s_aOPTC, "-DWINCE" )
+            AAdd( s_aOPTC, "-D_WINCE" )
+            AAdd( s_aOPTC, "-D_WINDOWS" )
+            AAdd( s_aOPTC, "-DARM" )
+            AAdd( s_aOPTC, "-D_ARM_" )
+            AAdd( s_aOPTC, "-DARMV4" )
+            AAdd( s_aOPTC, "-DPOCKETPC2003_UI_MODEL" )
+            AAdd( s_aOPTC, "-D_M_ARM" )
+            AAdd( s_aOPTC, "-DUNICODE" )
+            AAdd( s_aOPTC, "-D_UNICODE" )
+            AAdd( s_aOPTC, "-D_UWIN" )
+            AAdd( s_aOPTL, "/subsystem:windowsce,4.20" )
+            AAdd( s_aOPTL, "/machine:arm" )
+            AAdd( s_aOPTL, "/armpadcode" )
+            AAdd( s_aOPTL, "/stack:65536,4096" )
+            AAdd( s_aOPTL, "/nodefaultlib:oldnames.lib" )
+            AAdd( s_aOPTL, "/nodefaultlib:kernel32.lib" )
+            AAdd( s_aOPTL, "/align:4096" )
+            AAdd( s_aOPTL, "/opt:ref" )
+            AAdd( s_aOPTL, "/opt:icf" )
+            AAdd( s_aOPTL, "/manifest:no" )
          ENDIF
          IF lStopAfterCComp
             AAdd( s_aOPTC, "-c" )
@@ -1754,7 +1787,12 @@ FUNCTION Main( ... )
          IF s_lSHARED
             AAdd( s_aOPTL, "/libpath:{DB}" )
          ENDIF
-         s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
+         IF t_cCOMP $ "msvcce|msvcarm"
+            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl" } )
+            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "uuid", "ole32" } )
+         ELSE
+            s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
+         ENDIF
          DO CASE
          CASE t_cCOMP $ "msvc|icc"
             s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
@@ -1769,6 +1807,11 @@ FUNCTION Main( ... )
          CASE t_cCOMP $ "msvcia64|iccia64"
             s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-ia64",;
                                           "harbour-" + cDL_Version_Alter + "-ia64" ),;
+                              "hbmainstd",;
+                              "hbmainwin" }
+         CASE t_cCOMP $ "msvcce|msvcarm"
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm",;
+                                          "harbour-" + cDL_Version_Alter + "-arm" ),;
                               "hbmainstd",;
                               "hbmainwin" }
          ENDCASE
@@ -1876,8 +1919,6 @@ FUNCTION Main( ... )
 
       /* TODO */
       CASE t_cARCH == "linux" .AND. t_cCOMP == "icc"
-      CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce" .OR. ;
-           t_cARCH == "wce" .AND. t_cCOMP == "msvcarm" /* NOTE: Cross-platform: wce/ARM on win/x86 */
       CASE t_cARCH == "linux" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wce/ARM on win/x86 */
          IF ! s_lSHARED
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl" } )
