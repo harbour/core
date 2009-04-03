@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-03 02:49 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/fm.c
+  * harbour/source/vm/cmdarg.c
+    ! fixed GPF when hb_vmInit() is called without initializing
+      application startup parameters by hb_cmdargInit().
+      Thanks to Enrico's friends for information about the problem.
+    * some code cleanup
+
 2009-04-03 01:20 UTC+0200 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/examples/uhttpd/uhttpd.prg
     + added Application Root folder

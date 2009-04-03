@@ -1000,7 +1000,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
             hb_dateToday( &iYear, &iMonth, &iDay );
             hb_dateTimeStr( szTime );
 
-            fprintf( hLog, HB_I_("Application Memory Allocation Report - %s\n"), hb_cmdargARGV()[0] );
+            fprintf( hLog, HB_I_("Application Memory Allocation Report - %s\n"), hb_cmdargARGVN( 0 ) );
             fprintf( hLog, HB_I_("Terminated at: %04d.%02d.%02d %s\n"), iYear, iMonth, iDay, szTime );
             if( s_szInfo[ 0 ] )
                fprintf( hLog, HB_I_("Info: %s\n"), s_szInfo );

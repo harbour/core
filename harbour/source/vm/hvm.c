@@ -1011,17 +1011,16 @@ void hb_vmInit( BOOL bStartMainProc )
 
    if( bStartMainProc && s_pSymStart )
    {
+      int argc = hb_cmdargARGC();
+      char ** argv = hb_cmdargARGV();
+      int iArgCount = 0;
       int i;
-      int iArgCount;
 
       hb_vmPushSymbol( s_pSymStart ); /* pushes first HB_FS_PUBLIC defined symbol to the stack */
       hb_vmPushNil();                 /* places NIL at self */
 
-      iArgCount = 0;
-      for( i = 1; i < hb_cmdargARGC(); i++ )     /* places application parameters on the stack */
+      for( i = 1; i < argc; i++ )     /* places application parameters on the stack */
       {
-         char ** argv = hb_cmdargARGV();
-
          /* Filter out any parameters beginning with //, like //INFO */
          if( ! hb_cmdargIsInternal( argv[ i ], NULL ) )
          {
@@ -7804,9 +7803,8 @@ static void hb_vmDoInitFunctions( void )
             {
                int argc = hb_cmdargARGC();
                char ** argv = hb_cmdargARGV();
-
-               int i;
                int iArgCount;
+               int i;
 
                hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
                hb_vmPushNil();

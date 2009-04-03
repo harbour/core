@@ -102,8 +102,16 @@ void hb_cmdargInit( int argc, char * argv[] )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_cmdargInit(%d, %p)", argc, argv));
 
-   s_argc = argc;
-   s_argv = argv;
+   if( argc == 0 || argv == NULL )
+   {
+      s_argc = 0;
+      s_argv = NULL;
+   }
+   else
+   {
+      s_argc = argc;
+      s_argv = argv;
+   }
 }
 
 int hb_cmdargARGC( void )
@@ -125,93 +133,96 @@ void hb_cmdargUpdate( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_cmdargUpdate()"));
 
+   if( s_argc > 0 )
+   {
 #if defined( HB_OS_WIN )
 
-   /* NOTE: Manually setup the executable name in Windows,
-            because in console apps the name may be truncated
-            in some cases, and in GUI apps it's not filled
-            at all. [vszakats] */
-   if( GetModuleFileName( NULL, s_lpAppName, MAX_PATH ) != 0 )
-   {
-      HB_TCHAR_GETFROM( s_szAppName, s_lpAppName, MAX_PATH );
-      s_argv[ 0 ] = s_szAppName;
-   }
-#else
-   /* NOTE: try to create absolute path from s_argv[ 0 ] if necessary */
-   {
-      PHB_FNAME pFName = hb_fsFNameSplit( s_argv[ 0 ] );
-      BOOL fInPath = FALSE;
-
-      if( !pFName->szPath )
+      /* NOTE: Manually setup the executable name in Windows,
+               because in console apps the name may be truncated
+               in some cases, and in GUI apps it's not filled
+               at all. [vszakats] */
+      if( GetModuleFileName( NULL, s_lpAppName, MAX_PATH ) != 0 )
       {
-         char * pszPATH = hb_getenv( "PATH" );
+         HB_TCHAR_GETFROM( s_szAppName, s_lpAppName, MAX_PATH );
+         s_argv[ 0 ] = s_szAppName;
+      }
+#else
+      /* NOTE: try to create absolute path from s_argv[ 0 ] if necessary */
+      {
+         PHB_FNAME pFName = hb_fsFNameSplit( s_argv[ 0 ] );
+         BOOL fInPath = FALSE;
 
-         if( pszPATH && *pszPATH )
+         if( !pFName->szPath )
          {
-            HB_PATHNAMES * pSearchPath = NULL, * pNextPath;
-            hb_fsAddSearchPath( pszPATH, &pSearchPath );
-            pNextPath = pSearchPath;
+            char * pszPATH = hb_getenv( "PATH" );
 
-            #ifdef HB_OS_OS2
-            if( !pFName->szExtension )
-               pFName->szExtension = ".exe";
-            #endif
-
-            while( pNextPath )
+            if( pszPATH && *pszPATH )
             {
-               pFName->szPath = pNextPath->szPath;
-               hb_fsFNameMerge( s_szAppName, pFName );
-               if( hb_fsFileExists( s_szAppName ) )
+               HB_PATHNAMES * pSearchPath = NULL, * pNextPath;
+               hb_fsAddSearchPath( pszPATH, &pSearchPath );
+               pNextPath = pSearchPath;
+
+#  ifdef HB_OS_OS2
+               if( !pFName->szExtension )
+                  pFName->szExtension = ".exe";
+#  endif
+
+               while( pNextPath )
                {
-                  /* even if the file is located using PATH then it does
-                   * not mean we will have absolute path here. It's not
-                   * good idea but PATH envvar can also contain relative
-                   * directories, f.e. "." or "bin" so we should add
-                   * current directory if necessary in code below.
-                   */
-                  hb_xfree( pFName );
-                  pFName = hb_fsFNameSplit( s_szAppName );
-                  fInPath = TRUE;
-                  break;
+                  pFName->szPath = pNextPath->szPath;
+                  hb_fsFNameMerge( s_szAppName, pFName );
+                  if( hb_fsFileExists( s_szAppName ) )
+                  {
+                     /* even if the file is located using PATH then it does
+                      * not mean we will have absolute path here. It's not
+                      * good idea but PATH envvar can also contain relative
+                      * directories, f.e. "." or "bin" so we should add
+                      * current directory if necessary in code below.
+                      */
+                     hb_xfree( pFName );
+                     pFName = hb_fsFNameSplit( s_szAppName );
+                     fInPath = TRUE;
+                     break;
+                  }
+                  pNextPath = pNextPath->pNext;
                }
-               pNextPath = pNextPath->pNext;
+               hb_fsFreeSearchPath( pSearchPath );
+               if( !fInPath )
+                  pFName->szPath = NULL;
             }
-            hb_fsFreeSearchPath( pSearchPath );
-            if( !fInPath )
-               pFName->szPath = NULL;
+            if( pszPATH )
+               hb_xfree( pszPATH );
          }
-         if( pszPATH )
-            hb_xfree( pszPATH );
-      }
-      if( pFName->szPath )
-      {
-#if defined(HB_OS_HAS_DRIVE_LETTER)
-         if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR && !pFName->szDrive )
-#else
-         if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR )
-#endif
+         if( pFName->szPath )
          {
-            if( pFName->szPath[ 0 ] == '.' &&
-                pFName->szPath[ 1 ] == HB_OS_PATH_DELIM_CHR )
-               pFName->szPath += 2;
-            s_szAppName[ 0 ] = HB_OS_PATH_DELIM_CHR;
-            hb_fsCurDirBuff( 0, ( BYTE * ) ( s_szAppName + 1 ), HB_PATH_MAX - 1 );
-            if( s_szAppName[ 1 ] != 0 )
+#  if defined( HB_OS_HAS_DRIVE_LETTER )
+            if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR && !pFName->szDrive )
+#  else
+            if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR )
+#  endif
             {
-               hb_strncat( s_szAppName, HB_OS_PATH_DELIM_CHR_STRING, HB_PATH_MAX - 1 );
-               hb_strncat( s_szAppName, pFName->szPath, HB_PATH_MAX - 1 );
-               pFName->szPath = hb_strdup( s_szAppName );
-               hb_fsFNameMerge( s_szAppName, pFName );
-               hb_xfree( ( void * ) pFName->szPath );
-               s_argv[ 0 ] = s_szAppName;
+               if( pFName->szPath[ 0 ] == '.' &&
+                   pFName->szPath[ 1 ] == HB_OS_PATH_DELIM_CHR )
+                  pFName->szPath += 2;
+               s_szAppName[ 0 ] = HB_OS_PATH_DELIM_CHR;
+               hb_fsCurDirBuff( 0, ( BYTE * ) ( s_szAppName + 1 ), HB_PATH_MAX - 1 );
+               if( s_szAppName[ 1 ] != 0 )
+               {
+                  hb_strncat( s_szAppName, HB_OS_PATH_DELIM_CHR_STRING, HB_PATH_MAX - 1 );
+                  hb_strncat( s_szAppName, pFName->szPath, HB_PATH_MAX - 1 );
+                  pFName->szPath = hb_strdup( s_szAppName );
+                  hb_fsFNameMerge( s_szAppName, pFName );
+                  hb_xfree( ( void * ) pFName->szPath );
+                  s_argv[ 0 ] = s_szAppName;
+               }
             }
+            else if( fInPath )
+               s_argv[ 0 ] = s_szAppName;
          }
-         else if( fInPath )
-            s_argv[ 0 ] = s_szAppName;
+         hb_xfree( pFName );
       }
-      hb_xfree( pFName );
-   }
 #endif
+   }
 }
 
 BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
@@ -432,39 +443,35 @@ HB_FUNC( HB_ARGV )
 HB_FUNC( HB_CMDLINE )
 {
    char * pszBuffer;
-
+   BOOL fFree;
    int nLen;
    int nPos;
 
    int argc = hb_cmdargARGC();
    char** argv = hb_cmdargARGV();
 
-   nLen = 1;
-   for( nPos = 1; nPos < argc; nPos++ )
-      nLen += ( int ) strlen( argv[ nPos ] ) + 1;
-
-   pszBuffer = ( char * ) hb_xgrab( nLen + 1 );
-
-   pszBuffer[ 0 ] = '\0';
-   for( nPos = 1; nPos < argc; nPos++ )
+   if( argc )
    {
-      hb_strncat( pszBuffer, argv[ nPos ], nLen );
-      hb_strncat( pszBuffer, " ", nLen );
-   }
+      nLen = 1;
+      for( nPos = 1; nPos < argc; nPos++ )
+         nLen += ( int ) strlen( argv[ nPos ] ) + 1;
 
-   {
-      /* Convert from OS codepage */
-      BOOL fFree;
-      char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) pszBuffer, &fFree );
+      pszBuffer = ( char * ) hb_xgrab( nLen + 1 );
 
-      if( fFree )
+      pszBuffer[ 0 ] = '\0';
+      for( nPos = 1; nPos < argc; nPos++ )
       {
-         hb_retc_buffer( pbyResult );
-         hb_xfree( pszBuffer );
+         hb_strncat( pszBuffer, argv[ nPos ], nLen );
+         hb_strncat( pszBuffer, " ", nLen );
       }
-      else
-         hb_retc_buffer( pszBuffer );
+
+      /* Convert from OS codepage */
+      hb_retc_buffer( ( char * ) hb_osDecode( ( BYTE * ) pszBuffer, &fFree ) );
+      if( fFree )
+         hb_xfree( pszBuffer );
    }
+   else
+      hb_retc_null();
 }
 
 /* Check for command line internal arguments */
