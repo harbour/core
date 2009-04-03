@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-03 03:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/dircmd.prg
+    ! small fix in 'DIR <filemask>' DOS like output formatting.
+      Note: this function uses strict DOS like 8.3 file name convention
+            in the output so it will play well with long file names.
+            Maybe we should change the output formatting?
+
 2009-04-03 02:49 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
   * harbour/source/vm/fm.c
