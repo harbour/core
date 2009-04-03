@@ -58,6 +58,7 @@
  *    gcc and *nix configuration elements.
  *    bash script with similar purpose for gcc family.
  *    entry point override method and detection code for gcc.
+ *    rtlink/blinker link script parsers.
  *
  * See COPYING for licensing terms.
  *
@@ -3302,6 +3303,241 @@ PROCEDURE PlatformPRGFlags( aOPTPRG )
 
    RETURN
 
+#define RTLNK_MODE_NONE       0
+#define RTLNK_MODE_OUT        1
+#define RTLNK_MODE_FILE       2
+#define RTLNK_MODE_FILENEXT   3
+#define RTLNK_MODE_LIB        4
+#define RTLNK_MODE_LIBNEXT    5
+#define RTLNK_MODE_SKIP       6
+#define RTLNK_MODE_SKIPNEXT   7
+
+STATIC PROCEDURE rtlnk_libtrans( aLibList )
+   STATIC hTrans := { ;
+      "CT"        => "hbct"   , ;
+      "CTP"       => "hbct"   , ;
+      "CLASSY"    => NIL      , ;
+      "CSYINSP"   => NIL      , ;
+      "SIX3"      => NIL      , ;
+      "NOMACH6"   => NIL      , ;
+      "BLXRATEX"  => NIL      , ;
+      "BLXCLP50"  => NIL      , ;
+      "BLXCLP52"  => NIL      , ;
+      "BLXCLP53"  => NIL      , ;
+      "EXOSPACE"  => NIL      , ;
+      "CLIPPER"   => NIL      , ;
+      "EXTEND"    => NIL      , ;
+      "TERMINAL"  => NIL      , ;
+      "PCBIOS"    => NIL      , ;
+      "ANSITERM"  => NIL      , ;
+      "DBFBLOB"   => NIL      , ;
+      "DBFMEMO"   => NIL      , ;
+      "DBFNTX"    => NIL      , ;
+      "DBFCDX"    => NIL      , ;
+      "_DBFCDX"   => NIL      , ;
+      "CLD"       => NIL      , ;
+      "CLDR"      => NIL      , ;
+      "LLIBCE"    => NIL      , ;
+      "LLIBCA"    => NIL      }
+   LOCAL cLib
+
+   FOR EACH cLib IN aLibList DESCEND
+      IF Lower( Right( cLib, 4 ) ) == ".lib"
+         cLib := Left( cLib, Len( cLib ) - 4 )
+      ENDIF
+      IF Upper( cLib ) $ hTrans
+         cLib := hTrans[ Upper( cLib ) ]
+         IF cLib == NIL
+            hb_ADel( aLibList, cLib:__enumIndex(), .T. )
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN
+
+STATIC PROCEDURE rtlnk_filetrans( aFileList )
+   STATIC hTrans := { ;
+      "CTUS"      => NIL      , ;
+      "CTUSP"     => NIL      , ;
+      "CTINT"     => NIL      , ;
+      "CTINTP"    => NIL      , ;
+      "__WAIT"    => NIL      , ;
+      "__WAIT_4"  => NIL      , ;
+      "__WAIT_B"  => NIL      , ;
+      "BLXCLP50"  => NIL      , ;
+      "BLXCLP52"  => NIL      , ;
+      "BLXCLP53"  => NIL      , ;
+      "BLDCLP50"  => NIL      , ;
+      "BLDCLP52"  => NIL      , ;
+      "BLDCLP53"  => NIL      , ;
+      "SIXCDX"    => NIL      , ;
+      "SIXNSX"    => NIL      , ;
+      "SIXNTX"    => NIL      , ;
+      "DBT"       => NIL      , ;
+      "FPT"       => NIL      , ;
+      "SMT"       => NIL      , ;
+      "NOMEMO"    => NIL      , ;
+      "CLD.LIB"   => NIL      }
+   LOCAL cFile
+
+   FOR EACH cFile IN aFileList DESCEND
+      IF Lower( Right( cFile, 4 ) ) == ".obj"
+         cFile := Left( cFile, Len( cFile ) - 4 )
+      ENDIF
+      IF Upper( cFile ) $ hTrans
+         cFile := hTrans[ Upper( cFile ) ]
+         IF cFile == NIL
+            hb_ADel( aFileList, cFile:__enumIndex(), .T. )
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN
+
+STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
+   LOCAL cFileBody
+   LOCAL cPath, cFile, cExt
+   LOCAL hFile
+
+   hb_FNameSplit( cFileName, @cPath, @cFile, @cExt )
+   IF Empty( cExt )
+      cExt := ".lnk"
+   ENDIF
+
+   cFileName := hb_FNameMerge( cPath, cFile, ".lnk" )
+   /* it's blinker extension, look for .lnk file in paths
+    * specified by LIB envvar
+    */
+   IF !hb_fileExists( cFileName ) .AND. ;
+      !Left( cFileName, 1 ) $ hb_osPathDelimiters() .AND. ;
+      !SubStr( cFileName, 2, 1 ) == hb_osDriveSeparator()
+      FOR EACH cPath IN hb_aTokens( GetEnv( "LIB" ), hb_osPathListSeparator() )
+         cFile := hb_FNameMerge( cPath, cFileName )
+         IF hb_fileExists( cFile )
+            cFileName := cFile
+            EXIT
+         ENDIF
+      NEXT
+   ENDIF
+
+   /* protection against recursive calls */
+   IF AScan( aPrevFiles, { |x| x == cFileName } ) == 0
+      IF ( hFile := FOpen( cFileName ) ) != -1
+         cFileBody := Space( FSeek( hFile, 0, FS_END ) )
+         FSeek( hFile, 0, FS_SET )
+         IF FRead( hFile, @cFileBody, Len( cFileBody ) ) != Len( cFileBody )
+            cFileBody := NIL
+         ENDIF
+         FClose( hFile )
+      ENDIF
+      AAdd( aPrevFiles, cFileName )
+   ELSE
+      cFileBody := ""
+   ENDIF
+
+   RETURN cFileBody
+
+STATIC FUNCTION rtlnk_process( cCommands, cFileOut, aFileList, aLibList, ;
+                              aPrevFiles )
+   LOCAL nCh, nMode
+   LOCAL cLine, cWord
+
+   cCommands := StrTran( StrTran( cCommands, Chr( 13 ) ), ",", " , " )
+   FOR EACH nCh IN @cCommands
+      SWITCH Asc( nCh )
+      CASE 9
+      CASE 11
+      CASE 12
+      CASE Asc( ";" )
+         nCh := " "
+      ENDSWITCH
+   NEXT
+   nMode := RTLNK_MODE_NONE
+   IF ! ISARRAY( aFileList )
+      aFileList := {}
+   ENDIF
+   IF ! ISARRAY( aLibList )
+      aLibList := {}
+   ENDIF
+   IF ! ISARRAY( aPrevFiles )
+      aPrevFiles := {}
+   ENDIF
+   FOR EACH cLine IN hb_ATokens( cCommands, Chr( 10 ) )
+      cLine := AllTrim( cLine )
+      IF !Empty( cLine ) .AND. !cLine = "#" .AND. !cLine = "//"
+         IF nMode == RTLNK_MODE_NONE
+            /* blinker extension */
+            IF Upper( cLine ) = "ECHO "
+               OutStd( "hbmk2: Blinker ECHO: " + SubStr( cLine, 6 ) + hb_osNewLine() )
+               LOOP
+            ELSEIF Upper( cLine ) = "BLINKER "
+               /* skip blinker commands */
+               LOOP
+            ELSE /* TODO: add other blinker commands */
+            ENDIF
+         ENDIF
+         FOR EACH cWord IN hb_aTokens( cLine )
+            IF nMode == RTLNK_MODE_OUT
+               cFileOut := cWord
+               nMode := RTLNK_MODE_FILENEXT
+            ELSEIF nMode == RTLNK_MODE_FILE
+               IF !cWord == ","
+                  IF AScan( aFileList, { |x| x == cWord } ) == 0
+                     AAdd( aFileList, cWord )
+                  ENDIF
+                  nMode := RTLNK_MODE_FILENEXT
+               ENDIF
+            ELSEIF nMode == RTLNK_MODE_LIB
+               IF !cWord == ","
+                  AAdd( aLibList, cWord )
+                  nMode := RTLNK_MODE_LIBNEXT
+               ENDIF
+            ELSEIF nMode == RTLNK_MODE_SKIP
+               IF !cWord == ","
+                  nMode := RTLNK_MODE_SKIPNEXT
+               ENDIF
+            ELSEIF cWord == ","
+               IF nMode == RTLNK_MODE_FILENEXT
+                  nMode := RTLNK_MODE_FILE
+               ELSEIF nMode == RTLNK_MODE_LIBNEXT
+                  nMode := RTLNK_MODE_LIB
+               ELSEIF nMode == RTLNK_MODE_SKIPNEXT
+                  nMode := RTLNK_MODE_SKIP
+               ENDIF
+            ELSEIF cWord = "@"
+               cWord := SubStr( cWord, 2 )
+               cCommands := rtlnk_read( @cWord, aPrevFiles )
+               IF cCommands == NIL
+                  OutStd( "hbmk2: error: Cannot open file: " + cWord + hb_osNewLine() )
+                  RETURN .F.
+               ENDIF
+               IF !rtlnk_process( cCommands, @cFileOut, @aFileList, @aLibList, ;
+                                  aPrevFiles )
+                  RETURN .F.
+               ENDIF
+            ELSE
+               cWord := Upper( cWord )
+               IF Len( cWord ) >= 2
+                  IF "OUTPUT" = cWord
+                     nMode := RTLNK_MODE_OUT
+                  ELSEIF "FILE" = cWord
+                     nMode := RTLNK_MODE_FILE
+                  ELSEIF "LIBRARY" = cWord
+                     nMode := RTLNK_MODE_LIB
+                  ELSEIF "MODULE" = cWord .OR. ;
+                         "EXCLUDE" = cWord .OR. ;
+                         "REFER" = cWord .OR. ;
+                         "INTO" = cWord
+                     nMode := RTLNK_MODE_SKIP
+                  ENDIF
+               ENDIF
+            ENDIF
+         NEXT
+      ENDIF
+   NEXT
+
+   RETURN .T.
+
 /* Keep this public, it's used from macro. */
 FUNCTION hbmk_ARCH()
    RETURN t_cARCH
@@ -3404,8 +3640,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "    linux  : gcc, owatcom, icc, mingw, mingwce" ,;
       "    darwin : gcc" ,;
       "    win    : mingw, msvc, bcc, owatcom, icc, pocc, cygwin," ,;
-      "             mingw64, msvc64, msvcia64, iccia64, pocc64," ,;
-      "             mingwce, msvcce, poccce, xcc" ,;
+      "             mingw64, msvc64, msvcia64, iccia64, pocc64, xcc" ,;
       "    wce    : mingwarm, msvcarm, poccarm" ,;
       "    os2    : gcc, owatcom" ,;
       "    dos    : djgpp, owatcom" ,;

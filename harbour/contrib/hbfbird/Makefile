@@ -8,6 +8,7 @@ LIBNAME=hbfbird
 
 ifneq ($(HB_COMPILER),pocc64)
 ifneq ($(HB_COMPILER),poccce)
+ifneq ($(HB_COMPILER),poccarm)
 
 ifeq ($(HB_INC_FIREBIRD),)
 ifeq ($(HB_XBUILD),)
@@ -29,6 +30,9 @@ PRG_SOURCES=\
 
 include $(TOP)$(ROOT)config/lib.cf
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

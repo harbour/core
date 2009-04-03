@@ -18,10 +18,14 @@ ifeq ($(HB_ARCHITECTURE),win)
 		endif
 	endif
 else
-	ifeq ($(HB_ARCHITECTURE),os2)
-		C_MAIN = mainstd.c
+	ifeq ($(HB_ARCHITECTURE),wce)
+		C_MAIN = mainwin.c
 	else
-		C_MAIN = main.c
+		ifeq ($(HB_ARCHITECTURE),os2)
+			C_MAIN = mainstd.c
+		else
+			C_MAIN = main.c
+		endif
 	endif
 endif
 

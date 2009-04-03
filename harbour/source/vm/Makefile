@@ -19,10 +19,15 @@ ifeq ($(HB_ARCHITECTURE),win)
 	endif
 	DIRS += maindllh maindllp
 else
-	ifeq ($(HB_ARCHITECTURE),os2)
-		C_MAIN = mainstd.c
+	ifeq ($(HB_COMPILER),wce)
+		C_MAIN = mainwin.c
+		DIRS = mainstd mainwin
 	else
-		C_MAIN = main.c
+		ifeq ($(HB_ARCHITECTURE),os2)
+			C_MAIN = mainstd.c
+		else
+			C_MAIN = main.c
+		endif
 	endif
 endif
 

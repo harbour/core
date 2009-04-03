@@ -15,10 +15,13 @@ HB_WITH_LIBHPDF=yes
 ifeq ($(HB_COMPILER),owatcom)
 HB_WITH_LIBHPDF=no
 endif
+ifeq ($(HB_COMPILER),pocc64)
+HB_WITH_LIBHPDF=no
+endif
 ifeq ($(HB_COMPILER),poccce)
 HB_WITH_LIBHPDF=no
 endif
-ifeq ($(HB_COMPILER),pocc64)
+ifeq ($(HB_COMPILER),poccarm)
 HB_WITH_LIBHPDF=no
 endif
 endif
@@ -29,6 +32,9 @@ ifeq ($(HB_INC_LIBPNG),)
 ifeq ($(HB_XBUILD),)
 HB_INC_LIBPNG = /usr/include
 ifeq ($(HB_ARCHITECTURE),win)
+HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
+endif
+ifeq ($(HB_ARCHITECTURE),wce)
 HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
 endif
 ifeq ($(HB_ARCHITECTURE),os2)

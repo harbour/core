@@ -17,6 +17,7 @@ HB_WITHOUT_ODBC=yes
 endif
 
 ifneq ($(HB_ARCHITECTURE),win)
+ifneq ($(HB_ARCHITECTURE),wce)
 ifeq ($(HB_WITHOUT_ODBC),)
 
 ifeq ($(HB_INC_ODBC),)
@@ -33,6 +34,7 @@ else
 HB_WITHOUT_ODBC=yes
 endif
 
+endif
 endif
 endif
 

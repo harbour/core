@@ -154,7 +154,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 
    NOTES: - For mingw+msys and cygwin you have to use forward slashes
             and also cygwin drive notation for cygwin.
-          - Space in directory names isn't currently supported.
+          - Spaces in directory names isn't currently supported.
           - Don't put the dir inside double quotes.
           - Use absolute paths.
 
@@ -202,9 +202,9 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
 
    Windows CE
    ----------
-   mingwce  - MinGW GNU C ARM
-   msvcce   - Microsoft Visual C++ ARM
-   poccce   - Pelles C 5.0 ARM
+   mingwarm - MinGW GNU C ARM
+   msvcarm  - Microsoft Visual C++ ARM
+   poccarm  - Pelles C 5.0 ARM
 
    DOS (32-bit)
    ---
@@ -286,9 +286,9 @@ EXAMPLES
    Windows/Windows CE
    ------------------
 
-      NOTES: - All above code should be copied to .bat files.
+      NOTES: - All code below should be copied to .bat files.
              - Naturally, you'll need to adapt dirs to valid ones on your system.
-               Don't use space in dirs.
+               Don't use spaces in dirs.
              - '%1 %2' can be empty, 'clean', 'install' or 'clean install'
                depending on what you want to do.
              - Windows implib creation setup may change in the future.
@@ -386,7 +386,8 @@ EXAMPLES
       set PATH=C:\devl\MinGW-410-ce\opt\mingw32ce\bin;%PATH%
       set HB_CCPREFIX=arm-wince-mingw32ce-
       rem
-      set HB_COMPILER=mingwce
+      set HB_ARCHITECTURE=wce
+      set HB_COMPILER=mingwarm
       rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
@@ -460,7 +461,8 @@ EXAMPLES
       set INCLUDE=C:\devl\PellesC-501\include\wince;C:\devl\PellesC-501\include;%INCLUDE%
       set LIB=C:\devl\PellesC-501\lib;C:\devl\PellesC-501\lib\wince;%INCLUDE%
       rem
-      set HB_COMPILER=poccce
+      set HB_ARCHITECTURE=wce
+      set HB_COMPILER=poccarm
       rem
       set HB_BIN_COMPILE=C:\hb-pocc\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%

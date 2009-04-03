@@ -9,11 +9,15 @@ LIBNAME=hbsqlit3
 ifneq ($(HB_COMPILER),pocc)
 ifneq ($(HB_COMPILER),pocc64)
 ifneq ($(HB_COMPILER),poccce)
+ifneq ($(HB_COMPILER),poccarm)
 
 ifeq ($(HB_INC_SQLITE3),)
 ifeq ($(HB_XBUILD),)
 HB_INC_SQLITE3 = /usr/include
 ifeq ($(HB_ARCHITECTURE),win)
+HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
+endif
+ifeq ($(HB_ARCHITECTURE),wce)
 HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
 endif
 ifeq ($(HB_ARCHITECTURE),os2)
@@ -41,6 +45,9 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

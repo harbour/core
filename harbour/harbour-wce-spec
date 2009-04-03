@@ -93,8 +93,8 @@ export HB_USER_CFLAGS="-DHB_FM_STATISTICS_OFF"
 make
 
 export HB_HOST_BUILD=lib
-export HB_ARCHITECTURE=win
-export HB_COMPILER=mingwce
+export HB_ARCHITECTURE=wce
+export HB_COMPILER=mingwarm
 
 mkdir -p source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}
 ln -s ../../linux/gcc/hbpp source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}/hbpp.exe
@@ -138,8 +138,8 @@ export HB_CCPREFIX="%{hb_ccpref}"
 export PATH="$HB_CCPATH$PATH"
 
 export HB_HOST_BUILD=lib
-export HB_ARCHITECTURE=win
-export HB_COMPILER=mingwce
+export HB_ARCHITECTURE=wce
+export HB_COMPILER=mingwarm
 export HB_XBUILD=wce
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}

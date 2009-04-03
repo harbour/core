@@ -8,6 +8,38 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-03 15:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * harbour-wce-spec
+  * INSTALL
+  * bin/postinst.bat
+  * Makefile
+  * make_gnu.bat
+  * external/sqlite3/Makefile
+  * external/libhpdf/Makefile
+  * external/libpng/Makefile
+  * contrib/gtalleg/Makefile
+  * contrib/hbodbc/Makefile
+  * contrib/hbtpathy/Makefile
+  * contrib/hbole/Makefile
+  * contrib/hbsqlit3/Makefile
+  * contrib/hbqt/generator/hbqtgen.prg
+  * contrib/hbqt/Makefile
+  * contrib/hbfbird/Makefile
+  * contrib/hbwin/Makefile
+  * source/vm/Makefile
+  * source/vm/vmmt/Makefile
+    + Added wce arch and mingwarm/msvcarm/poccarm support.
+      In parallel with old win/mingwce|msvcce|poccce support.
+      As soons as this new one work, the old one will be deleted.
+
+  * make_gnu.bat
+    ! Fixed to work like rest of targets for GCC family.
+      It will now only initiate a 'clean install' if HB_BUILD_DLL=yes.
+
+  * utils/hbmk2/hbmk2.prg
+    + Added Przemek's code for rtlink/blinker script parsing.
+      Not yet activated.
+
 2009-04-03 11:05 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.bat
     ! Attempt to fix owatcom shared executable generation.

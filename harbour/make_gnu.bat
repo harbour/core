@@ -114,13 +114,14 @@ if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
    rem It will automatically build Harbour in two passes, one for
    rem the .dlls and a final pass for the regular version.
 
-   if not "%HB_ARCHITECTURE%" == "win" goto SKIP_WINDLL
+   if "%HB_ARCHITECTURE%" == "dos" goto SKIP_WINDLL
+   if not "%HB_BUILD_DLL%" == "yes" goto SKIP_WINDLL
+
    if "%HB_COMPILER%" == "mingw"    goto DO_GCC
    if "%HB_COMPILER%" == "mingw64"  goto DO_GCC
    if "%HB_COMPILER%" == "mingwce"  goto DO_GCC
    if "%HB_COMPILER%" == "mingwarm" goto DO_GCC
    if "%HB_COMPILER%" == "cygwin"   goto DO_GCC
-   if not "%HB_BUILD_DLL%" == "yes" goto SKIP_WINDLL
 
    set _HB_CONTRIBLIBS=%HB_CONTRIBLIBS%
    set _HB_CONTRIB_ADDONS=%HB_CONTRIB_ADDONS%

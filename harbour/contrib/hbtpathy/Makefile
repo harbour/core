@@ -26,6 +26,12 @@ C_SOURCES=\
 	tpcommon.c \
 
 endif
+ifeq ($(HB_ARCHITECTURE),wce)
+C_SOURCES=\
+	tpwin.c \
+	tpcommon.c \
+
+endif
 ifeq ($(HB_ARCHITECTURE),os2)
 C_SOURCES=\
 	tpos2.c \
