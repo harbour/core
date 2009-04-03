@@ -301,8 +301,8 @@ for %%f in (%HB_DLL_LIBS% %HB_DLL_LIBS_WIN%) do (
    echo FILE '%HB_LIB_INSTALL%\%%f.lib'>> _hbsmt.txt
 )
 
-copy /b /y "%HB_LIB_INSTALL%\%HB_DLL_LIBS_ST%.lib" . > nul && wlib -q -b "%HB_DLL_LIBS_ST%.lib" - mainwin.obj
-copy /b /y "%HB_LIB_INSTALL%\%HB_DLL_LIBS_MT%.lib" . > nul && wlib -q -b "%HB_DLL_LIBS_MT%.lib" - mainwin.obj
+copy /b /y "%HB_LIB_INSTALL%\%HB_DLL_LIBS_ST%.lib" . > nul && wlib -q -b "%HB_DLL_LIBS_ST%.lib" - mainwin.obj - mainstd.obj
+copy /b /y "%HB_LIB_INSTALL%\%HB_DLL_LIBS_MT%.lib" . > nul && wlib -q -b "%HB_DLL_LIBS_MT%.lib" - mainwin.obj - mainstd.obj
 
 echo FILE '%HB_DLL_LIBS_ST%.lib'>> _hbsst.txt
 echo FILE '%HB_DLL_LIBS_MT%.lib'>> _hbsmt.txt

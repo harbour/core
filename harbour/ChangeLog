@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-03 11:05 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkdyn.bat
+    ! Attempt to fix owatcom shared executable generation.
+      (still GPFs, or does nothing)
+
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed typo in prev commit, causing RTE.
+
 2009-04-03 03:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/dircmd.prg
     ! small fix in 'DIR <filemask>' DOS like output formatting.
