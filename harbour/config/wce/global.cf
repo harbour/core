@@ -8,7 +8,6 @@ HB_GT_LIST=\
 	gtcgi \
 	gtpca \
 	gtstd \
-	gtwin \
 	gtwvt \
 	gtgui \
 

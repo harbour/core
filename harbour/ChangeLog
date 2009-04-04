@@ -8,6 +8,26 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-04 17:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    * Minor.
+
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed to add 'lib' prefix when -hblib option is used with
+      GCC family compilers.
+    ! Fixed to not override compiler output when -hblib option is used.
+
+  * contrib/hbqt/generator/hbqtgen.prg
+  + contrib/hbqt/Makefile_gen
+  * contrib/hbqt/Makefile
+    + Added Makefile_gen which holds the generated part of
+      the Makefile. This way there is no (less) hidden make
+      logic inside hbqtgen.
+
+  * config/wce/global.cf
+    - Removed gtwin.
+    ; TODO: Move GT inclusion logic to GT local Makefiles.
+
 2009-04-03 15:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * harbour-wce-spec
   * INSTALL
@@ -30,7 +50,7 @@
   * source/vm/vmmt/Makefile
     + Added wce arch and mingwarm/msvcarm/poccarm support.
       In parallel with old win/mingwce|msvcce|poccce support.
-      As soons as this new one work, the old one will be deleted.
+      As soons as this new one works, the old one will be deleted.
 
   * make_gnu.bat
     ! Fixed to work like rest of targets for GCC family.

@@ -43,7 +43,7 @@ HOW TO BUILD AND INSTALL HARBOUR
           details. It's recommended to make sure no tools in your PATH
           belonging to other C compilers are interfering with your setup.
           For the list of supported compilers, please look up the
-          relevant section of this file.
+          relevant section in this file.
       3.) Make sure to have GNU Make. Certain older versions and builds
           are untested and may not work. We recommend the one distributed
           by MinGW team. Use this link to get it:
@@ -74,8 +74,6 @@ HOW TO BUILD AND INSTALL HARBOUR
 
    Windows with MinGW + msys
    -------------------------
-      This is the recommended way to build with MinGW.
-
       Make sure to have msys and MinGW properly configured.
       msys should be put in PATH _before_ MinGW.
 

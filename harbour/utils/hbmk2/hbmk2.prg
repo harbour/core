@@ -266,6 +266,7 @@ FUNCTION Main( ... )
    LOCAL cObjPrefix
    LOCAL cObjExt
    LOCAL cLibLibExt
+   LOCAL cLibLibPrefix := ""
    LOCAL cLibObjPrefix
    LOCAL cDynObjPrefix := NIL
    LOCAL cLibPathPrefix
@@ -1227,6 +1228,7 @@ FUNCTION Main( ... )
            ( t_cARCH == "linux"  .AND. t_cCOMP == "gcc" ) .OR. ;
            ( t_cARCH == "linux"  .AND. t_cCOMP == "gpp" )
 
+         cLibLibPrefix := "lib"
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
@@ -1268,7 +1270,7 @@ FUNCTION Main( ... )
          ENDIF
          IF lStopAfterCComp
             AAdd( s_aOPTC, "-c" )
-            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+            IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( s_aPRG ) + Len( s_aC ) ) == 1
                IF t_cARCH == "darwin"
                   AAdd( s_aOPTC, "-o {OO}" )
                ELSE
@@ -1364,6 +1366,7 @@ FUNCTION Main( ... )
            ( t_cARCH == "wce" .AND. t_cCOMP == "mingwarm" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "cygwin" )
 
+         cLibLibPrefix := "lib"
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
@@ -1405,7 +1408,7 @@ FUNCTION Main( ... )
          ENDIF
          IF lStopAfterCComp
             AAdd( s_aOPTC, "-c" )
-            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+            IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( s_aPRG ) + Len( s_aC ) ) == 1
                AAdd( s_aOPTC, "-o{OO}" )
             ENDIF
          ELSE
@@ -1450,6 +1453,7 @@ FUNCTION Main( ... )
 
       CASE t_cARCH == "os2" .AND. t_cCOMP == "gcc"
 
+         cLibLibPrefix := "lib"
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
@@ -1474,7 +1478,7 @@ FUNCTION Main( ... )
          ENDIF
          IF lStopAfterCComp
             AAdd( s_aOPTC, "-c" )
-            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+            IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( s_aPRG ) + Len( s_aC ) ) == 1
                AAdd( s_aOPTC, "-o {OO}" )
             ENDIF
          ELSE
@@ -1487,6 +1491,7 @@ FUNCTION Main( ... )
 
       CASE t_cARCH == "dos" .AND. t_cCOMP == "djgpp"
 
+         cLibLibPrefix := "lib"
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
@@ -1508,7 +1513,7 @@ FUNCTION Main( ... )
          ENDIF
          IF lStopAfterCComp
             AAdd( s_aOPTC, "-c" )
-            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+            IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( s_aPRG ) + Len( s_aC ) ) == 1
                AAdd( s_aOPTC, "-o{OO}" )
             ENDIF
          ELSE
@@ -1690,7 +1695,7 @@ FUNCTION Main( ... )
          ENDIF
          cLibPathPrefix := ""
          cLibPathSep := ";"
-         IF lStopAfterCComp
+         IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
             IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
                AAdd( s_aOPTC, "-o{OO}" )
             ELSE
@@ -1775,7 +1780,7 @@ FUNCTION Main( ... )
             AAdd( s_aOPTL, "/opt:icf" )
             AAdd( s_aOPTL, "/manifest:no" )
          ENDIF
-         IF lStopAfterCComp
+         IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
             AAdd( s_aOPTC, "-c" )
             IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
                AAdd( s_aOPTC, "-Fo{OO}" )
@@ -1871,7 +1876,7 @@ FUNCTION Main( ... )
          IF s_lMT
             AAdd( s_aOPTC, "/MT" )
          ENDIF
-         IF lStopAfterCComp
+         IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
             IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
                AAdd( s_aOPTC, "/Fo{OO}" )
             ENDIF
@@ -2252,7 +2257,7 @@ FUNCTION Main( ... )
             cOpt_Lib := StrTran( cOpt_Lib, "{LO}"  , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cLibObjPrefix ) ) )
             cOpt_Lib := StrTran( cOpt_Lib, "{LL}"  , ArrayToList( s_aLIB ) )
             cOpt_Lib := StrTran( cOpt_Lib, "{FA}"  , GetEnv( "HB_USER_AFLAGS" ) + " " + ArrayToList( s_aOPTA ) )
-            cOpt_Lib := StrTran( cOpt_Lib, "{OL}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cLibLibExt ) ) )
+            cOpt_Lib := StrTran( cOpt_Lib, "{OL}"  , PathSepToTarget( FN_ExtSet( cLibLibPrefix + s_cPROGNAME, cLibLibExt ) ) )
             cOpt_Lib := StrTran( cOpt_Lib, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
             cOpt_Lib := StrTran( cOpt_Lib, "{DB}"  , s_cHB_BIN_INSTALL )
 
