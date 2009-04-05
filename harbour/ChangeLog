@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-05 12:57 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  + harbour/contrib/hbqt/tests/wvtext.prg
+    + Added wvtext.prg [ already in harbour/tests ] modified
+      to invoke QT dialogs. This demo is far from production 
+      environment abd is just a future concept of implementation
+      what we can achieve with QT with least efforts.
+
 2009-04-05 02:35 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   + harbour/contrib/hbqt/tests/*.png
     + Added some .png files used in the demoqt.prg.
