@@ -140,6 +140,82 @@ QPoint hbqt_const_QPoint( int i )
 }
 
 /*----------------------------------------------------------------------*/
+
+void hbqt_ret_QRectF( QRectF qrc )
+{
+   PHB_ITEM info = hb_itemArrayNew( 4 );
+
+   hb_arraySetND( info, 1, qrc.x() );
+   hb_arraySetND( info, 2, qrc.y() );
+   hb_arraySetND( info, 3, qrc.x()+qrc.width() );
+   hb_arraySetND( info, 4, qrc.y()+qrc.height() );
+
+   hb_itemReturnRelease( info );
+}
+
+/*----------------------------------------------------------------------*/
+
+QRectF hbqt_const_QRectF( int i )
+{
+   QRectF qrc;
+
+   qrc.setX( hb_parnd( i,1 ) );
+   qrc.setY( hb_parnd( i,2 ) );
+   qrc.setWidth( hb_parnd( i,3 ) - hb_parnd( i,1 ) + 1 );
+   qrc.setHeight( hb_parnd( i,4 ) - hb_parnd( i,2 ) + 1 );
+
+   return qrc;
+}
+
+/*----------------------------------------------------------------------*/
+
+void hbqt_ret_QSizeF( QSizeF qsz )
+{
+   PHB_ITEM info = hb_itemArrayNew( 2 );
+
+   hb_arraySetND( info, 1, qsz.width() );
+   hb_arraySetND( info, 2, qsz.height() );
+
+   hb_itemReturnRelease( info );
+}
+
+/*----------------------------------------------------------------------*/
+
+QSizeF hbqt_const_QSizeF( int i )
+{
+   QSizeF qsz;
+
+   qsz.setWidth( hb_parnd( i,1 ) );
+   qsz.setHeight( hb_parnd( i,2 ) );
+
+   return qsz;
+}
+
+/*----------------------------------------------------------------------*/
+
+void hbqt_ret_QPointF( QPointF qpt )
+{
+   PHB_ITEM info = hb_itemArrayNew( 2 );
+
+   hb_arraySetND( info, 1, qpt.x() );
+   hb_arraySetND( info, 2, qpt.y() );
+
+   hb_itemReturnRelease( info );
+}
+
+/*----------------------------------------------------------------------*/
+
+QPointF hbqt_const_QPointF( int i )
+{
+   QPointF qpt;
+
+   qpt.setX( hb_parnd( i,1 ) );
+   qpt.setY( hb_parnd( i,2 ) );
+
+   return qpt;
+}
+
+/*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
 

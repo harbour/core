@@ -144,7 +144,6 @@ FUNCTION Main( ... )
       GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    NEXT
 
-   ?
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -173,7 +172,7 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
    cpp_:={}
    prg_:={}
 
-   DispProgress( cFile )
+   OutStd( cFile )
 
    cPrj  := memoread( cFile )
 
@@ -250,12 +249,32 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION PullOutSection( cQth, cSec )
+   LOCAL cTxt, n, nn, cTknB, cTknE
+   LOCAL a_:={}
+
+   cTknB := '<'+cSec+'>'
+   cTknE := '</'+cSec+'>'
+
+   IF ( n := at( cTknB, cQth ) ) > 0
+      IF( nn := at( cTknE, cQth ) ) > 0
+         cTxt := substr( cQth, n+len( cTknB ), nn-1-( n+len( cTknB ) ) )
+      ENDIF
+      IF !empty( cTxt )
+         a_:= hb_ATokens( cTxt, _EOL )
+      ENDIF
+   ENDIF
+
+   RETURN a_
+
+/*----------------------------------------------------------------------*/
+
 STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    LOCAL cFile, cWidget, cExt, cPath, cOrg, cCode, cHBFunc, lSupported, cCPP, cPRG
-   LOCAL cPHP, cARGs, cPre, cPost, cFunc, cRet, cArg, ss, cQth, cAr, cName, cNames, cClass
+   LOCAL cPHP, cARGs, cPre, cPost, cFunc, cRet, cArg, ss, cQth, cAr, cName, cNames, cClass, cFileCpp
    LOCAL s, j, n, n1, hHandle, nFuncs, nCnvrtd, cRetName, lOk
-   LOCAL a_, b_, txt_, enum_, code_, x_, func_, dummy_, types_, cpp_, hdr_, ftr_, cmntd_, doc_
-   LOCAL nam_, dcc_, class_, cls_
+   LOCAL a_, b_, txt_, enum_, code_, x_, func_, dummy_, cpp_, hdr_, ftr_, cmntd_, doc_
+   LOCAL nam_, dcc_, class_, cls_, arg_, protos_, slots_, enums_, body_
 
    hb_fNameSplit( cProFile, @cPath, @cWidget, @cExt )
 
@@ -273,25 +292,15 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       RETURN nil
    ENDIF
 
-   DispProgress( cFile )
+   OutStd( cFile )
 
    /* Prepare to be parsed properly */
-   cQth := strtran( cQth, s_NewLine, _EOL )
+   cQth := strtran( cQth, s_NewLine          , _EOL )
    cQth := strtran( cQth, chr( 13 )+chr( 10 ), _EOL )
-   cQth := strtran( cQth, chr( 13 ), _EOL )
+   cQth := strtran( cQth, chr( 13 )          , _EOL )
 
-   /* Pull out Class Section */
-   IF( n := at( '<CLASS>', cQth ) ) > 0
-      IF ( n1 := at( '</CLASS>', cQth ) ) == 0
-         RETURN nil
-      ENDIF
-      cClass := substr( cQth, n+6, n1-n-1-6 )
-      cQth   := substr( cQth,1,n-1 ) + substr( cQth, n1+7 )
-   ENDIF
    cls_:={}
-   IF !empty( cClass )
-      class_:= hb_ATokens( cClass, _EOL )
-      /* Parse Ingredients */
+   IF !empty( class_:= PullOutSection( @cQth, 'CLASS' ) )
       FOR EACH s IN class_
          IF ( n := at( '=', s ) ) > 0
             aadd( cls_, { alltrim( substr( s, 1, n-1 ) ), alltrim( substr( s, n+1 ) ) } )
@@ -300,172 +309,69 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    ENDIF
 
    /* Pull out Code Section */
-   IF( n := at( '<CODE>', cQth ) ) > 0
-      IF ( n1 := at( '</CODE>', cQth ) ) == 0
-         RETURN nil
-      ENDIF
-      cCode := substr( cQth, n+6, n1-n-1-6 )
-      cQth  := substr( cQth,1,n-1 ) + substr( cQth, n1+7 )
-   ENDIF
-   IF !empty( cCode )
-      code_:= hb_ATokens( cCode, _EOL )
-   ENDIF
+   code_   := PullOutSection( @cQth, 'CODE'   )
 
-   a_:= hb_ATokens( cQth, _EOL )
-
+   /* Pull out Enumerators  */
+   enums_  := PullOutSection( @cQth, 'ENUMS'  )
    enum_:={}
-   n := 0
-   FOR EACH s IN a_
-      n++
+   FOR EACH s IN enums_
       IF ( 'enum ' $ s .or. 'flags ' $ s )
          b_:= hb_ATokens( alltrim( s ),' ' )
          aadd( enum_, b_[ 2 ] )
-         a_[ n ] := ''
       ENDIF
    NEXT
 
-   types_  := { 'void', 'int', 'bool', 'quint32', 'double', 'QString', 'QIcon', 'qreal', ;
-                                                              'QRect', 'QSize', 'QPoint' }
+   /* Pull out Prototypes   */
+   protos_ := PullOutSection( @cQth, 'PROTOS' )
+
+   /* Pull Out Signals      */
+   slots_  := PullOutSection( @cQth, 'SLOTS'  )
+
+   /* Combine signals and protos : same nature */
+   aeval( slots_, {|e| aadd( protos_, e ) } )
+
    dummy_  := {}
    func_   := { { "", 0 } }
    txt_    := {}
    cpp_    := {}
-   hdr_    := {}
-   ftr_    := {}
    cmntd_  := {}
    doc_    := {}
    nFuncs  := 0
    nCnvrtd := 0
-   cName   := ''
-   cNames  := ''
 
    /* Body */
-   FOR EACH s IN a_
+   FOR EACH s IN protos_
       cOrg := s
 
-      /* Normalize */
-      s := strtran( s, ' (', '(' )
-      s := strtran( s, ' *', '*' )
-      s := strtran( s, 'virtual ', '' )
-      s := alltrim( s )
+      IF empty( s := alltrim( s ) )
+         LOOP
+      ENDIF
+      /* Check if it is not ANSI C Comment */
+      IF left( alltrim( cOrg ),1 ) $ '/*'
+         LOOP
+      ENDIF
+      /* Another comment tokens */
+      IF empty( s ) .or. left( s,1 ) $ '#;'
+         LOOP
+      ENDIF
 
+      nFuncs++
+
+      /* Check if proto is commented out */
       IF left( s,2 ) == '//'
          aadd( cmntd_, cOrg )
          LOOP
       ENDIF
-      IF empty( s ) .or. left( s,1 ) == '#' .or. ( 'virtual' $ s )
+      /* Lists - Later */
+      IF '<' $ s
+         aadd( dummy_, cOrg )
          LOOP
       ENDIF
 
-      IF ( n := at( '(', s ) ) > 0
-         nFuncs++
-
-         n1 := rat( ')', s )
-         IF n+1 == n1
-            cARGs := ''
-         ELSE
-            cARGs := alltrim( substr( s, n+1, n1-n-2 ) )
-         ENDIF
-         cPre  := alltrim( substr( s, 1, n-1 ) )
-         cPost := alltrim( substr( s, n1+2 ) )
-
-         /* Normalize cPre */
-         cPre := strtran( cPre, 'const ', '' )
-
-         IF ( n := rat( ' ', cPre ) ) > 0
-            cFunc := alltrim( substr( cPre, n+1 ) )
-            cRet  := alltrim( substr( cPre, 1, n-1 ) )
-         ELSE
-            cFunc := alltrim( cPre )
-            cRet  := ''
-         ENDIF
-
-         /* There must be a return type */
-         IF !empty( cRet )
-            /* If return type is supported by auto engine */
-            IF ( '::' $ cRet ) .or. ;
-                     ascan( types_, cRet ) > 0 .or. ;
-                           ascan( enum_, cRet ) > 0 .or. ;
-                                 ( ( '*' $ cRet ) .and. !( '<' $ cRet ) )
-               lSupported := .t.
-               cArg := ''
-               cNames := ''
-               IF !empty( cARGs )
-                  b_:= hb_ATokens( cARGs, ',' )
-                  IF !empty( b_ )
-                     FOR j := 1 TO len( b_ )
-                        ss := alltrim( b_[ j ] )
-                        ss := strtran( ss, 'const ', '' )
-                        ss := strtran( ss, '& ', '' )
-                        ss := strtran( ss, '&', '' )
-                        ss := alltrim( ss )
-
-                        nam_:= hb_ATokens( ss, ' ' )
-
-                        IF len( nam_ ) > 1
-                           cAr   := nam_[ 1 ]
-                           cName := nam_[ 2 ]
-                        ELSE
-                           cAr   := nam_[ 1 ]
-                           cName := nam_[ 1 ]
-                        ENDIF
-
-                        /* If argument type is supported by the engine */
-                        DO CASE
-                        CASE ( '::' $ cAr )
-
-                        CASE ascan( enum_, cAr ) > 0
-
-                        CASE '<' $ cAr
-                           lSupported := .f.
-
-                        CASE ( '*'  $ ss )
-                           IF ascan( types_, strtran( cAr,'*','' ) ) > 0
-                              lSupported := .f.
-                           ENDIF
-
-                        CASE ascan( types_, cAr ) == 0
-                           lSupported := .f.
-
-                        ENDCASE
-
-                        IF !lSupported
-                           EXIT
-                        ENDIF
-
-                        cArg   += cAr + ','
-                        cName  := upper( left( cName,1 ) ) + substr( cName,2 )
-                        cNames += cName + ','
-                     NEXT
-                     cArg := substr( cArg, 1, len( cArg )-1 )
-                     cNames := substr( cNames, 1, len( cNames )-1 )
-                  ENDIF
-               ENDIF
-
-               IF lSupported
-                  IF ( n := ascan( func_, {|e_| e_[ 1 ] == cFunc } ) ) > 0
-                     func_[ n,2 ]++
-                     cHBFunc := cFunc + '_' + hb_ntos( func_[ n,2 ] )
-                  ELSE
-                     cHBFunc := cFunc
-                     aadd( func_, { cFunc, 0 } )
-                  ENDIF
-
-                  lOk := Build_Function( @txt_, cWidget, cOrg, cFunc, cArg, cRet, enum_, types_, ;
-                                                                         cHBFunc, @doc_, cNames )
-                  IF !lOk
-                     aadd( dummy_, cOrg )
-                  ELSE
-                     nCnvrtd++
-                  ENDIF
-               ELSE
-                  /* Build an array of protos not converted to functions */
-                  aadd( dummy_, cOrg )
-               ENDIF
-            ELSE
-               aadd( dummy_, cOrg )
-            ENDIF
-         ENDIF
+      IF ( lOk := ParseProto( s, cWidget, @txt_, @doc_, enum_, func_ ) )
+         nCnvrtd++
+      ELSE
+         aadd( dummy_, cOrg )
       ENDIF
    NEXT
 
@@ -473,9 +379,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    IF .t.  /* !empty( txt_ ) */
 
       /* Pull .cpp copyright text */
-      BuildHeader( @hdr_, 0 )
-      aeval( hdr_, {|e| aadd( cpp_, e ) } )
-      aadd( cpp_, '' )
+      BuildHeader( @cpp_, 0 )
 
       /* Insert information about prototypes not converted to functions */
       IF !empty( dummy_ )
@@ -506,11 +410,10 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       aeval( txt_, {|e| aadd( cpp_, strtran( e, chr( 13 ), '' ) ) } )
 
       /* Footer */
-      BuildFooter( @ftr_ )
-      aeval( ftr_, {|e| aadd( cpp_, e ) } )
+      BuildFooter( @cpp_ )
 
       /* And create .cpp source */
-      hHandle := fcreate( cPathOut + s_PathSep + 'hbqt_'+ lower( cWidget ) +'.cpp' )
+      hHandle := fcreate( cFileCpp )
       IF hHandle != -1
          aeval( cpp_, { |e| fWrite( hHandle, e + s_NewLine, len( e ) + len( s_NewLine ) ) } )
 
@@ -523,8 +426,12 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       ENDIF
 
       /* Build Class PRG Source */
+      cFileCpp := cPathOut + s_PathSep + 'hbqt_'+ lower( cWidget ) +'.cpp'
+      CreateTarget( cFileCpp, cpp_ )
+
+      /* Build CLASS */
       IF !empty( cls_ )
-         Build_Class( cWidget, cls_, doc_, cPathOut, hdr_ )
+         Build_Class( cWidget, cls_, doc_, cPathOut )
          cPRG := cWidget
       ELSE
          cPRG := ''
@@ -536,185 +443,449 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Build_Function( txt_, cWidget, cProtoType, cFunc, cArgs, cRet, enum_, ;
-                                                     types_, cHBFunc, doc_, cParNames )
-   LOCAL cParPtr  := "hbqt_par_" + cWidget + "( 1 )"
-   LOCAL pars     := ""
-   LOCAL docs     := ""
-   LOCAL cDocFunc := ""
-   LOCAL aArgs, cArg, n, nn, pp, cTxt, aNames
-   LOCAL nParSz   := 0
-   LOCAL nParRc   := 0
-   LOCAL nPar
+#define PRT_L_CONST    1
+#define PRT_L_FAR      2
+#define PRT_L_AND      3
+#define PRT_L_VIRT     4
+#define PRT_NAME       5
+#define PRT_CAST       6
+#define PRT_DEFAULT    7
+#define PRT_RAW        8
+#define PRT_BODY       9
+#define PRT_DOC       10
+#define PRT_BODY_PRE  11
 
-   IF !empty( cArgs )
-      aArgs := hb_ATokens( cArgs, ','  )
-      aNames := hb_ATokens( cParNames, ',' )
+#define PRT_ATTRB_MAX 11
 
-      n := 1
-      FOR EACH cArg IN aArgs
-         n++
+#define THIS_PROPER( s )   ( upper( left( s,1 ) ) + substr( s,2 ) )
 
-         DO CASE
-         CASE ( nn := ascan( enum_, cArg ) ) > 0
-            pars += '( '+ cWidget +'::'+ enum_[ nn ] +' ) hb_parni( '+ hb_ntos( n ) +' )'
-            docs += 'n'+cArg
+STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
+   LOCAL aRet, aFunc, aA, aArgus, aArg, aPar, aPre
+   LOCAL n, nn, nHBIdx
+   LOCAL cPre, cPar, cRet, cFun, cFunRet, cParas, cDocs, cCmd, cPas, s, ss
+   LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cHBIdx, cDocNM
+   LOCAL lConst, lAnd, lStar, lVirt, lSuccess
 
-         CASE cArg == 'int'
-            pars += 'hb_parni( '+ hb_ntos( n ) +' )'
-            docs += 'n'+aNames[ n-1 ]
+   cParas := ''
+   cDocs  := ''
+   aArgus := {}
 
-         CASE cArg == 'quint32'
-            pars += 'hb_parnint( '+ hb_ntos( n ) +' )'
-            docs += 'n'+aNames[ n-1 ]
+   aRet := {}; aFunc := {}; aArgus := {}
+   n := at( '(', cProto )
+   IF n > 0
+      nn := at( ')', cProto )
+      IF nn > 0
+         /* Pull out pre-mid-post components */
+         cPre := alltrim( substr( cProto,   1, n-1    ) )
+         cPar := alltrim( substr( cProto, n+1, nn-1-n ) )
+         cPas := alltrim( substr( cProto, nn+1 ) )
 
-         CASE cArg == 'double' .or. cArg == 'qreal'
-            pars += 'hb_parnd( '+ hb_ntos( n ) +' )'
-            docs += 'n'+aNames[ n-1 ]
+         /* parse cPre, it has two components */
+         n := rat( ' ', cPre )
+         IF n > 0   /* And it must be, otherwise it is constructor function which we write in <CODE>section */
+            cFun := alltrim( substr( cPre, n+1    ) )
+            cRet := alltrim( substr( cPre, 1, n-1 ) )
+         ELSE
+            cFun := cPre
+            cRet := ''
+         ENDIF
 
-         CASE cArg == 'bool'
-            pars += 'hb_parl( '+ hb_ntos( n ) +' )'
-            docs += 'l'+aNames[ n-1 ]
+         /*  Parse Parameters
+          *    - const QTransform &
+          *    - bool
+          *    - void
+          *    - int
+          *    - quint32
+          *    - quint64
+          *    - QString
+          *    - QIcon
+          *    - const QPen &
+          *    - Qt::BGMode
+          *    - one of the enum values without ::
+          *
+          *
+          *  Return values of known types
+          *    - int(32,64), bool, QString, enums (int)
+          *    - QPoint, QSize, QRect           [ should we manupulate as QT class ? ]
+          *
+          *  Rest all as pointers to classes
+          */
+         aRet := array( PRT_ATTRB_MAX )
 
-         CASE cArg == 'QString'
-            pars += 'hbqt_par_QString( '+ hb_ntos( n ) +' )'
-            docs += 'c'+IF( empty( aNames[ n-1 ] ), 'Str', aNames[ n-1 ] )
+         aRet[ PRT_L_CONST ] := 'const'   $ cRet  .or. 'const'   $ cPas
+         aRet[ PRT_L_AND   ] := '&'       $ cRet
+         aRet[ PRT_L_FAR   ] := '*'       $ cRet
+         aRet[ PRT_L_VIRT  ] := 'virtual' $ cRet
 
-         CASE cArg == 'QIcon'
-            pars += 'QIcon( hbqt_par_QString( '+ hb_ntos( n ) +' ) )'
-            docs += 'c'+IF( empty( aNames[ n-1 ] ), 'IconName', aNames[ n-1 ] )
+         cRet := strtran( cRet, 'const '  , '' )
+         cRet := strtran( cRet, '& '      , '' )
+         cRet := strtran( cRet, '&'       , '' )
+         cRet := strtran( cRet, '* '      , '' )
+         cRet := strtran( cRet, '*'       , '' )
+         cRet := strtran( cRet, 'virtual ', '' )
 
-         CASE ( '::' $ cArg )
-            pars += "( "+ cArg +" ) hb_parni( "+ hb_ntos( n ) +' )'
-            docs += 'n'+strtran( aNames[ n-1 ], '::', '_' )
+         /* Normalize */
+         cRet := alltrim( cRet )
+         n := at( ' ', cRet )
+         IF n > 0
+            aRet[ PRT_CAST ] := substr( cRet, 1, n-1 )
+         ELSE
+            aRet[ PRT_CAST ] := cRet
+         ENDIF
+         aRet[ PRT_NAME ] := aRet[ PRT_CAST ]
 
-         CASE ( '*' $ cArg )
-            pp := rtrim( cArg )
-            pp := rtrim( substr( pp, 1, at( "*", pp ) - 1 ) )
+         IF ( n := ascan( aEnum, {|e| IF( empty( e ), .f., e == aRet[ PRT_CAST ] ) } ) ) > 0
+            aRet[ PRT_CAST ] := cWidget + '::' + aRet[ PRT_CAST ]
+         ENDIF
 
-            pars += "hbqt_par_" + pp + "( " + hb_ntos( n ) + " )"
-            docs += 'p'+strtran( aNames[ n-1 ], '*', '' )
+         /* Parse arguments */
+         aArg := hb_ATokens( cPar, ',' )
+         /* Normalize */
+         aeval( aArg, {|e,i| aArg[ i ] := alltrim( e ) } )
 
-         CASE cArg == cWidget
-            pars += "hbqt_par_" + cWidget + "( " + hb_ntos( n ) + " )"
-            docs += 'p'+cWidget
+         cParas := ''
+         cDocs  := ''
 
-         CASE cArg == 'QRect'
-            pars += "hbqt_const_QRect( " + hb_ntos( n ) + " )"
-            docs += 'aRect'+aNames[ n-1 ] //'aRect'
+         /* TO hold arguments by reference */
+         aPre := {}
 
-         CASE cArg == 'QSize'
-            pars += "hbqt_const_QSize( " + hb_ntos( n ) + " )"
-            docs += 'aSize'+aNames[ n-1 ] //'aSize'
+         FOR EACH cPre IN aArg
+            aPar := array( PRT_ATTRB_MAX )
+            aA := aPar
 
-         CASE cArg == 'QPoint'
-            pars += "hbqt_const_QPoint( " + hb_ntos( n ) + " )"
-            docs += 'aPoint'+aNames[ n-1 ] //'aPoint'
+            aA[ PRT_RAW     ] := cPre
 
-         ENDCASE
+            aA[ PRT_L_CONST ] := 'const'   $ cPre
+            aA[ PRT_L_AND   ] := '&'       $ cPre
+            aA[ PRT_L_FAR   ] := '*'       $ cPre
+            aA[ PRT_L_VIRT  ] := 'virtual' $ cPre
+            /* Check if default value is defined */
+            n := at( '=', cPre )
+            IF n > 0
+               aA[ PRT_DEFAULT ] := alltrim( substr( cPre, n+1 ) )
+               cPre := substr( cPre, 1, n-1 )
+            ENDIF
+            /* Normalize */
+            cPre := strtran( cPre, 'const '  , ''  )
+            cPre := strtran( cPre, '& '      , ''  )
+            cPre := strtran( cPre, '&'       , ''  )
+            cPre := strtran( cPre, '* '      , ''  )
+            cPre := strtran( cPre, '*'       , ''  )
+            cPre := strtran( cPre, 'virtual ', ''  )
+            cPre := strtran( cPre, '   '     , ' ' )
+            cPre := strtran( cPre, '  '      , ' ' )
 
-         pars += ', '
-         docs += ', '
-      NEXT
+            cPre := alltrim( cPre )
+            /* left may be two elements, name and cast */
+            n := at( ' ', cPre )
+            IF n > 0
+               aA[ PRT_CAST ] := substr( cPre, 1, n-1 )
+               aA[ PRT_NAME ] := substr( cPre, n+1 )
+            ELSE
+               aA[ PRT_CAST ] := cPre
+               aA[ PRT_NAME ] := cPre
+            ENDIF
 
-      pars := alltrim( pars )
-      pars := substr( pars, 1, len( pars )-1 )
+            IF ( n := ascan( aEnum, {|e| IF( empty( e ), .f., e == aA[ PRT_CAST ] ) } ) ) > 0
+               aA[ PRT_CAST ] := cWidget + '::' + aA[ PRT_CAST ]
+            ENDIF
 
-      docs := alltrim( docs )
-      docs := substr( docs, 1, len( docs )-1 )
+            /* Add to main array */
+            aadd( aArgus, aA )
 
+            nHBIdx := cPre:__enumIndex() + 1
+            cHBIdx := hb_ntos( nHBIdx )
+            cDocNM := THIS_PROPER( aA[ PRT_NAME ] )
+
+            DO CASE
+            /* Values by reference */
+            CASE aA[ PRT_CAST ] $ 'int,qint16,qint32,qint64,quint16,quint32,quint64,QRgb' .and. aA[ PRT_L_FAR ]
+               aadd( aPre, { 'int i'+cDocNM+' = 0;', nHBIdx, 'i'+ cDocNM, 'hb_storni' } )
+               aA[ PRT_BODY ] := '&i'+cDocNM
+               aA[ PRT_DOC  ] := '@n'+ cDocNM
+
+            CASE aA[ PRT_CAST ] $ 'int,qint16,qint32,qint64,quint16,quint32,quint64,QRgb'
+               s := 'hb_parni( '+ cHBIdx +' )'
+               IF !empty( aA[ PRT_DEFAULT ] )
+                  aA[ PRT_BODY ] := '( HB_ISNIL( '+cHBIdx+' ) ? '+aA[ PRT_DEFAULT ]+' : '+ s + ' )'
+               ELSE
+                  aA[ PRT_BODY ] := s
+               ENDIF
+               aA[ PRT_DOC  ] := 'n'+ cDocNM
+
+            CASE aA[ PRT_CAST ] $ 'double,qreal' .and. aA[ PRT_L_FAR ]
+               aadd( aPre, { 'qreal qr'+cDocNM+' = 0;', nHBIdx, 'qr'+ cDocNM, 'hb_stornd'  } )
+               aA[ PRT_BODY ] := '&qr'+cDocNM
+               aA[ PRT_DOC  ] := '@n'+ cDocNM
+
+            CASE aA[ PRT_CAST ] $ 'double,qreal'
+               aA[ PRT_BODY ] := 'hb_parnd( '+ cHBIdx +' )'
+               aA[ PRT_DOC  ] := 'n'+ cDocNM
+
+            CASE ( '::' $ aA[ PRT_CAST ] ) .and. aA[ PRT_L_FAR ]
+               aadd( aPre, { aA[ PRT_CAST ]+' i'+cDocNM+';', nHBIdx, 'i'+ cDocNM, 'hb_storni' } )
+               aA[ PRT_BODY ] := '&i'+cDocNM
+               aA[ PRT_DOC  ] := '@n'+ cDocNM
+
+            CASE ( '::' $ aA[ PRT_CAST ] )
+               s := '( '+ aA[ PRT_CAST ] +' ) hb_parni( '+ cHBIdx +' )'
+               IF !empty( aA[ PRT_DEFAULT ] )
+                  IF ascan( aEnum, aA[ PRT_DEFAULT ] ) > 0
+                     ss := cWidget+'::'+aA[ PRT_DEFAULT ]
+                  ELSE
+                     ss := IF( '::' $ aA[ PRT_DEFAULT ], aA[ PRT_DEFAULT ], ;
+                        IF( isDigit( left( aA[ PRT_DEFAULT ],1 ) ), aA[ PRT_DEFAULT ], cWidget+'::'+aA[ PRT_DEFAULT ] ) )
+                  ENDIF
+                  ss := '( '+ aA[ PRT_CAST ] +' ) '+ss
+                  aA[ PRT_BODY ] := '( HB_ISNIL( '+cHBIdx+' ) ? '+ ss +' : '+ s + ' )'
+               ELSE
+                  aA[ PRT_BODY ] := s
+               ENDIF
+               aA[ PRT_DOC  ] := 'n'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'bool'
+               aA[ PRT_BODY ] := 'hb_parl( '+ cHBIdx +' )'
+               aA[ PRT_DOC  ] := 'l'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'QString'
+               aA[ PRT_BODY ] := 'hbqt_par_QString( '+ cHBIdx +' )'
+               aA[ PRT_DOC  ] := 'c'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'HFONT'
+               aA[ PRT_BODY ] := IF( aA[ PRT_L_CONST ], '*','' ) +'hbqt_par_HFONT( '+ cHBIdx +' )'
+               aA[ PRT_DOC  ] := 'h'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'HDC'
+               aA[ PRT_BODY ] := '*hbqt_par_HDC( '+ cHBIdx +' )'
+               aA[ PRT_DOC  ] := 'h'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'WId'
+               aA[ PRT_BODY ] := 'hbqt_par_WId( '+ cHBIdx +' )'
+               aA[ PRT_DOC  ] := 'h'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'FT_Face'
+               aA[ PRT_BODY ] := 'hbqt_par_FT_Face( '+ cHBIdx +' )'
+               aA[ PRT_DOC  ] := 'c'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'QIcon'
+               aA[ PRT_BODY ] := 'QIcon( hbqt_par_QString( '+ cHBIdx +' ) )'
+               aA[ PRT_DOC  ] := 'c'+ cDocNM
+
+            CASE aA[ PRT_L_FAR ]
+               aA[ PRT_BODY ] := 'hbqt_par_' + aA[ PRT_CAST ] + '( ' + cHBIdx + ' )'
+               aA[ PRT_DOC  ] := 'p'+ cDocNM
+
+            CASE aA[ PRT_L_AND ] .and. aA[ PRT_L_CONST ]
+               aA[ PRT_BODY ] := '*hbqt_par_' + aA[ PRT_CAST ] + '( ' + cHBIdx + ' )'
+               aA[ PRT_DOC  ] := 'p'+ cDocNM
+
+            CASE aA[ PRT_L_AND ]
+               aA[ PRT_BODY ] := '*hbqt_par_' + aA[ PRT_CAST ] + '( ' + cHBIdx + ' )'
+               //aA[ PRT_BODY ] := '( '+ aA[ PRT_CAST ]+'& )' + 'hbqt_par_' + aA[ PRT_CAST ] + '( ' + cHBIdx + ' )'
+               aA[ PRT_DOC  ] := 'p'+ cDocNM
+#if 0
+            CASE aA[ PRT_CAST ] == 'QRect'
+               aA[ PRT_BODY ] := 'hbqt_const_QRect( ' + cHBIdx + ' )'
+               aA[ PRT_DOC  ] := 'a'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'QSize'
+               aA[ PRT_BODY ] := 'hbqt_const_QSize( ' + cHBIdx + ' )'
+               aA[ PRT_DOC  ] := 'a'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'QPoint'
+               aA[ PRT_BODY ] := 'hbqt_const_QPoint( ' + cHBIdx + ' )'
+               aA[ PRT_DOC  ] := 'a'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'QRectF'
+               aA[ PRT_BODY ] := 'hbqt_const_QRectF( ' + cHBIdx + ' )'
+               aA[ PRT_DOC  ] := 'a'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'QSizeF'
+               aA[ PRT_BODY ] := 'hbqt_const_QSizeF( ' + cHBIdx + ' )'
+               aA[ PRT_DOC  ] := 'a'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'QPointF'
+               aA[ PRT_BODY ] := 'hbqt_const_QPointF( ' + cHBIdx + ' )'
+               aA[ PRT_DOC  ] := 'a'+ cDocNM
+#endif
+            OTHERWISE
+               aA[ PRT_BODY ] := ''
+               aA[ PRT_DOC  ] := ''
+
+            ENDCASE
+
+            cParas += aA[ PRT_BODY ] +', '
+            cDocs  += aA[ PRT_DOC  ] +', '
+         NEXT
+
+         IF right( cParas, 2 ) == ', '
+            cParas := substr( cParas, 1, len( cParas ) - 2 )
+            cDocs  := substr( cDocs , 1, len( cDocs  ) - 2 )
+         ENDIF
+
+         /* Build complete code line */
+         IF .t.
+            aA     := aRet
+            cWdg   := 'hbqt_par_'+cWidget+'( 1 )->'
+            cParas := '( '+ cParas +' )'
+            cCmn   := cWdg + cFun + cParas
+            cDocNM := THIS_PROPER( aA[ PRT_NAME ] )
+
+            DO CASE
+            CASE aA[ PRT_CAST ] == 'void'
+               cCmd := cCmn
+               cPrgRet := 'NIL'
+
+            CASE aA[ PRT_CAST ] $ 'int,qint16,qint32,qint64,quint16,quint32,quint64,QRgb,char'
+               cCmd := 'hb_retni( '+ cCmn +' )'
+               cPrgRet := 'n'+cDocNM
+
+            CASE aA[ PRT_CAST ] $ 'double,qreal'
+               cCmd := 'hb_retnd( '+ cCmn +' )'
+               cPrgRet := 'n'+cDocNM
+
+            CASE ( '::' $ aA[ PRT_CAST ] )
+               cCmd := 'hb_retni( ( '+ aA[ PRT_CAST ] +' ) ' + cCmn +' )'
+               cPrgRet := 'n'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'bool'
+               cCmd := 'hb_retl( '+ cCmn +' )'
+               cPrgRet := 'l'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'QString'
+               cCmd := 'hb_retc( '+ cCmn +'.toLatin1().data()' +' )'
+               cPrgRet := 'c'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'HFONT'
+               cCmd := 'hb_retptr( ( HFONT ) '+ cCmn +' )'
+               cPrgRet := 'h'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'HDC'
+               cCmd := 'hb_retptr( ( HDC ) '+ cCmn +' )'
+               cPrgRet := 'h'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'WId'
+               cCmd := 'hb_retptr( ( HWND ) '+ cCmn +' )'
+               cPrgRet := 'h'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'FT_Face'
+               cCmd := 'hb_retc( '+ cCmn +' )'
+               cPrgRet := 'c'+cDocNM
+
+            CASE aA[ PRT_L_FAR ]
+               cCmd := 'hb_retptr( ( '+ aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               cPrgRet := 'p'+cDocNM
+
+            CASE aA[ PRT_L_AND ] .and. aA[ PRT_L_CONST ]
+               cCmd := 'hb_retptr( &( ( '+ aA[ PRT_CAST ] + '& ) ' + cCmn + ' ) )'
+               cPrgRet := 'p'+cDocNM
+
+            CASE aA[ PRT_L_CONST ]
+               cCmd := 'hb_retptr( &( ( '+ aA[ PRT_CAST ] + ' ) ' + cCmn + ' ) )'
+               cPrgRet := 'p'+cDocNM
+
+            CASE aA[ PRT_L_AND ]
+               cCmd := 'hb_retptr( ( '+ aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               cPrgRet := 'p'+cDocNM
+#if 0
+            CASE aA[ PRT_CAST ] == 'QRect'
+               cCmd := 'hbqt_ret_QRect( '+ cCmn +' )'
+               cPrgRet := 'a'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'QRectF'
+               cCmd := 'hbqt_ret_QRectF( '+ cCmn +' )'
+               cPrgRet := 'a'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'QSize'
+               cCmd := 'hbqt_ret_QSize( '+ cCmn +' )'
+               cPrgRet := 'a'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'QSizeF'
+               cCmd := 'hbqt_ret_QSizeF( '+ cCmn +' )'
+               cPrgRet := 'a'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'QPoint'
+               cCmd := 'hbqt_ret_QPoint( '+ cCmn +' )'
+               cPrgRet := 'a'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'QPointF'
+               cCmd := 'hbqt_ret_QPointF( '+ cCmn +' )'
+               cPrgRet := 'a'+cDocNM
+#endif
+            OTHERWISE
+               /* No attribute is attached to return value */
+               IF left( aA[ PRT_CAST ], 1 ) == 'Q'
+                  cCmd := 'hb_retptr( &( ( '+ aA[ PRT_CAST ] + ' ) ' + cCmn + ' ) )'
+                  cPrgRet := 'p'+cDocNM
+
+               ELSE
+                  ? '<<< '+cProto + ' | ' + aA[ PRT_CAST ]+' >>>'
+                  cCmd := ''
+                  cPrgRet := ''
+
+               ENDIF
+
+            ENDCASE
+
+            IF !empty( cCmd )
+               cCmd := strtran( cCmd, '(  )', '()' ) +';'
+               ? cCmd
+            ENDIF
+         ENDIF
+      ENDIF
    ENDIF
 
-   DO CASE
-   CASE ( nn := ascan( enum_, cRet ) ) > 0
-      cTxt := "   hb_retni( "+ cParPtr +"->"+ cFunc +"( " + pars +" ) );"
-      cDocFunc := 'n' + enum_[ nn ]
+   IF ( lSuccess := !empty( cCmd ) )
+      IF ( n := ascan( func_, {|e_| e_[ 1 ] == cFun } ) ) > 0
+         func_[ n,2 ]++
+         cHBFunc := cFun + '_' + hb_ntos( func_[ n,2 ] )
+      ELSE
+         cHBFunc := cFun
+         aadd( func_, { cFun, 0 } )
+      ENDIF
 
-   CASE cRet == "void"
-      cTxt := "   "+ cParPtr +"->"+ cFunc +"( " + pars +" );"
-      cDocFunc := 'NIL'
-
-   CASE cRet == "bool"
-      cTxt := "   hb_retl( "+ cParPtr +"->"+ cFunc +"( "+ pars +" ) );"
-      cDocFunc := 'lValue'
-
-   CASE cRet == "int"
-      cTxt := "   hb_retni( "+ cParPtr +"->"+ cFunc +"( "+ pars +" ) );"
-      cDocFunc := 'nValue'
-
-   CASE cRet == 'quint32'
-      cTxt := "   hb_retnint( "+ cParPtr +"->"+ cFunc +"( "+ pars +" ) );"
-      cDocFunc := 'nValue'
-
-   CASE cRet == 'double' .or. cRet == 'qreal'
-      cTxt := "   hb_retnd( "+ cParPtr +"->"+ cFunc +"( "+ pars +" ) );"
-      cDocFunc := 'nValue'
-
-   CASE cRet == "QString"
-      cTxt := "   hb_retc( "+ cParPtr +"->"+ cFunc +"( "+ pars +").toLatin1().data() );"
-      cDocFunc := 'cValue'
-
-   CASE ( "*" $ cRet )
-      cTxt := "   hb_retptr( ( " + cRet +" ) "+ cParPtr +"->"+ cFunc +"( " + pars +" ) );"
-      cDocFunc := 'p' + strtran( cRet, '*', '' )
-
-   CASE ( "::" $ cRet )
-      cTxt := "   hb_retni( "+ cParPtr +"->"+ cFunc +"( "+ pars +" ) );"
-      cDocFunc := 'n' + strtran( cRet, '::', '_' )
-
-   CASE cRet == 'QRect'
-      cTxt := "   hbqt_ret_QRect( "+ cParPtr +"->"+ cFunc +"( " + pars +" ) );"
-      cDocFunc := 'aRect'
-
-   CASE cRet == 'QSize'
-      cTxt := "   hbqt_ret_QSize( "+ cParPtr +"->"+ cFunc +"( " + pars +" ) );"
-      cDocFunc := 'aSize'
-
-   CASE cRet == 'QPoint'
-      cTxt := "   hbqt_ret_QPoint( "+ cParPtr +"->"+ cFunc +"( " + pars +" ) );"
-      cDocFunc := 'aPoint'
-
-   OTHERWISE
-      cTxt := ''
-      cDocFunc := ''
-
-   ENDCASE
-
-   /* Again check if we have something to insert */
-   IF !empty( cTxt )
       aadd( txt_, "/*" )
-      aadd( txt_, " * "+ strtran( cProtoType, chr(13), '' ) )
+      aadd( txt_, " * "+ strtran( cProto, chr(13), '' ) )
       aadd( txt_, " */" )
 
       aadd( txt_, "HB_FUNC( QT_" + upper( cWidget ) +"_"+ upper( cHBFunc ) +" )" )
       aadd( txt_, "{"  )
 
-      aadd( txt_, cTxt )
+      /* Insert parameters by reference */
+      IF !empty( aPre )
+         FOR n := 1 TO len( aPre )
+            aadd( txt_, "   "+ aPre[ n, 1 ] )
+         NEXT
+         aadd( txt_, ""   )
+      ENDIF
+
+      aadd( txt_, "   "+ cCmd )
+//aadd( aA[ PRT_BODY_PRE ], { 'int i'+cDocNM+' = 0;', nHBIdx, 'int', cDocNM } )
+
+      /* Return values back to PRG */
+      IF !empty( aPre )
+         aadd( txt_, ""   )
+         FOR n := 1 TO len( aPre )
+            aadd( txt_, "   "+ aPre[ n,4 ]+"( " + aPre[ n,3 ] +", "+ hb_ntos( aPre[ n,2 ] ) +" );" )
+         NEXT
+      ENDIF
 
       aadd( txt_, "}"  )
       aadd( txt_, ""   )
 
       aadd( doc_, 'Qt_'+ cWidget + '_' + cHBFunc +'( p'+ cWidget + ;
-                                 IF( empty( docs ), '', ', '+ docs ) +' ) -> '+ cDocFunc )
+                        IF( empty( cDocs ), '', ', '+ cDocs ) +' ) -> '+ cPrgRet )
       aadd( doc_, '' )
    ENDIF
 
-   RETURN !empty( cTxt )
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION DispProgress( cFile )
-
-   ? cFile
-
-   RETURN nil
+   RETURN lSuccess
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION BuildHeader( txt_, nMode )
 
    aadd( txt_, "/*"                                                                            )
-   aadd( txt_, " * $Id$"        )
+   aadd( txt_, " * $Id$"                     )
    aadd( txt_, " */"                                                                           )
    aadd( txt_, "   "                                                                           )
    aadd( txt_, "/* "                                                                           )
@@ -883,7 +1054,6 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
    LOCAL s, n, cMtd, cRet, cM, ss, cCall, sm
    LOCAL nLen := len( cWidget )
    LOCAL txt_  :={}
-   LOCAL hdr_ :={}
 
    BuildHeader( @txt_, 1 )
 
@@ -894,9 +1064,10 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
 
    aadd( txt_, s  )
    aadd( txt_, '' )
-   aadd( txt_, '   VAR     pPtr'  )
+   aadd( txt_, '   VAR     pParent'  )
+   aadd( txt_, '   VAR     pPtr'     )
    aadd( txt_, '' )
-   aadd( txt_, '   METHOD  New()' )
+   aadd( txt_, '   METHOD  New()'    )
    aadd( txt_, '' )
 
    /* Populate METHODS */
@@ -905,6 +1076,8 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
       IF n > 0
          cRet  := substr( s, n+3 )
          s     := substr( s, 1, n-1 )
+         s     := strtran( s, '@', '' )  /* Just in Case */
+         s     := strtran( s, '::', '_' )  /* Just in Case */
 
          n     := at( cWidget, s )
          sm    := substr( s, n+nLen+1 )
@@ -934,6 +1107,8 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
 
    aadd( txt_, 'METHOD '+ cM + ' CLASS '+ cWidget )
    aadd( txt_, '' )
+   aadd( txt_, '   ::pParent := pParent' )
+   aadd( txt_, '' )
    aadd( txt_, '   ::pPtr := Qt_'+ cWidget +'( pParent )' )
    aadd( txt_, '' )
    aadd( txt_, '   RETURN Self' )
@@ -951,7 +1126,7 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    LOCAL s
 
    aadd( txt_, "#                                                       " )
-   aadd( txt_, "# $Id$   " )
+   aadd( txt_, "# $Id$" )
    aadd( txt_, "#                                                       " )
    aadd( txt_, "                                                        " )
    aadd( txt_, "                                                        " )
@@ -1109,6 +1284,64 @@ STATIC FUNCTION Build_HBQT_H( cPathOut )
    aadd( txt_, "#define hbqt_par_QNetworkAccessManager( n )  ( ( QNetworkAccessManager* ) hb_parptr( n ) )    " )
    aadd( txt_, "#define hbqt_par_QWebPluginFactory( n )      ( ( QWebPluginFactory* ) hb_parptr( n ) )        " )
    aadd( txt_, "#define hbqt_par_QContextMenuEvent( n )      ( ( QContextMenuEvent* ) hb_parptr( n ) )        " )
+   aadd( txt_, "#define hbqt_par_QDesktopWidget( n )         ( ( QDesktopWidget* ) hb_parptr( n ) )           " )
+   aadd( txt_, "#define hbqt_par_QFontInfo( n )              ( ( QFontInfo* ) hb_parptr( n ) )                " )
+   aadd( txt_, "#define hbqt_par_QDir( n )                   ( ( QDir* ) hb_parptr( n ) )                     " )
+   aadd( txt_, "#define hbqt_par_QDockWidget( n )            ( ( QDockWidget* ) hb_parptr( n ) )              " )
+   aadd( txt_, "#define hbqt_par_QGridLayout( n )            ( ( QGridLayout* ) hb_parptr( n ) )              " )
+   aadd( txt_, "#define hbqt_par_QHeaderView( n )            ( ( QHeaderView* ) hb_parptr( n ) )              " )
+   aadd( txt_, "#define hbqt_par_QListWidget( n )            ( ( QListWidget* ) hb_parptr( n ) )              " )
+   aadd( txt_, "#define hbqt_par_QListWidgetItem( n )        ( ( QListWidgetItem* ) hb_parptr( n ) )          " )
+   aadd( txt_, "#define hbqt_par_QTimer( n )                 ( ( QTimer* ) hb_parptr( n ) )                   " )
+   aadd( txt_, "#define hbqt_par_QUrl( n )                   ( ( QUrl* ) hb_parptr( n ) )                     " )
+   aadd( txt_, "#define hbqt_par_QWebPage( n )               ( ( QWebPage* ) hb_parptr( n ) )                 " )
+   aadd( txt_, "#define hbqt_par_QNetworkAccessManager( n )  ( ( QNetworkAccessManager* ) hb_parptr( n ) )    " )
+   aadd( txt_, "#define hbqt_par_QWebPluginFactory( n )      ( ( QWebPluginFactory* ) hb_parptr( n ) )        " )
+   aadd( txt_, "#define hbqt_par_QContextMenuEvent( n )      ( ( QContextMenuEvent* ) hb_parptr( n ) )        " )
+   aadd( txt_, "#define hbqt_par_QAxBase( n )                ( ( QAxBase* ) hb_parptr( n ) )                  " )
+   aadd( txt_, "#define hbqt_par_IUnknown( n )               ( ( IUnknown* ) hb_parptr( n ) )                 " )
+   aadd( txt_, "#define hbqt_par_QSignalMapper( n )          ( ( QSignalMapper* ) hb_parptr( n ) )            " )
+   aadd( txt_, "#define hbqt_par_QSplashScreen( n )          ( ( QSplashScreen* ) hb_parptr( n ) )            " )
+   aadd( txt_, "#define hbqt_par_QHttp( n )                  ( ( QHttp* ) hb_parptr( n ) )                    " )
+   aadd( txt_, "#define hbqt_par_QFtp( n )                   ( ( QFtp* ) hb_parptr( n ) )                     " )
+   aadd( txt_, "#define hbqt_par_QIODevice( n )              ( ( QIODevice* ) hb_parptr( n ) )                " )
+   aadd( txt_, "#define hbqt_par_QTcpSocket( n )             ( ( QTcpSocket* ) hb_parptr( n ) )               " )
+   aadd( txt_, "#define hbqt_par_QPainterPath( n )           ( ( QPainterPath* ) hb_parptr( n ) )             " )
+   aadd( txt_, "#define hbqt_par_QTransform( n )             ( ( QTransform* ) hb_parptr( n ) )               " )
+   aadd( txt_, "#define hbqt_par_QMatrix( n )                ( ( QMatrix* ) hb_parptr( n ) )                  " )
+   aadd( txt_, "#define hbqt_par_QTextOption( n )            ( ( QTextOption* ) hb_parptr( n ) )              " )
+   aadd( txt_, "#define hbqt_par_QPicture( n )               ( ( QPicture* ) hb_parptr( n ) )                 " )
+   aadd( txt_, "#define hbqt_par_QPixmap( n )                ( ( QPixmap* ) hb_parptr( n ) )                  " )
+   aadd( txt_, "#define hbqt_par_QRegion( n )                ( ( QRegion* ) hb_parptr( n ) )                  " )
+   aadd( txt_, "#define hbqt_par_QPolygon( n )               ( ( QPolygon* ) hb_parptr( n ) )                 " )
+   aadd( txt_, "#define hbqt_par_QPolygonF( n )              ( ( QPolygonF* ) hb_parptr( n ) )                " )
+   aadd( txt_, "#define hbqt_par_QVector( n )                ( ( QVector* ) hb_parptr( n ) )                  " )
+   aadd( txt_, "#define hbqt_par_QImage( n )                 ( ( QImage* ) hb_parptr( n ) )                   " )
+   aadd( txt_, "#define hbqt_par_QKeySequence( n )           ( ( QKeySequence* ) hb_parptr( n ) )             " )
+   aadd( txt_, "#define hbqt_par_QSize( n )                  ( ( QSize* ) hb_parptr( n ) )                    " )
+   aadd( txt_, "#define hbqt_par_QModelIndex( n )            ( ( QModelIndex* ) hb_parptr( n ) )              " )
+   aadd( txt_, "#define hbqt_par_QVariant( n )               ( ( QVariant* ) hb_parptr( n ) )                 " )
+   aadd( txt_, "#define hbqt_par_QSessionManager( n )        ( ( QSessionManager* ) hb_parptr( n ) )          " )
+   aadd( txt_, "#define hbqt_par_QDate( n )                  ( ( QDate* ) hb_parptr( n ) )                    " )
+   aadd( txt_, "#define hbqt_par_QTime( n )                  ( ( QTime* ) hb_parptr( n ) )                    " )
+   aadd( txt_, "#define hbqt_par_QDateTime( n )              ( ( QDateTime* ) hb_parptr( n ) )                " )
+   aadd( txt_, "#define hbqt_par_QTextCharFormat( n )        ( ( QTextCharFormat* ) hb_parptr( n ) )          " )
+   aadd( txt_, "#define hbqt_par_QStringList( n )            ( ( QStringList* ) hb_parptr( n ) )              " )
+   aadd( txt_, "#define hbqt_par_QErrorMessage( n )          ( ( QErrorMessage* ) hb_parptr( n ) )            " )
+   aadd( txt_, "#define hbqt_par_QByteArray( n )             ( ( QByteArray* ) hb_parptr( n ) )               " )
+   aadd( txt_, "#define hbqt_par_QDataStream( n )            ( ( QDataStream* ) hb_parptr( n ) )              " )
+   aadd( txt_, "#define hbqt_par_QTextCursor( n )            ( ( QTextCursor* ) hb_parptr( n ) )              " )
+   aadd( txt_, "#define hbqt_par_QPalette( n )               ( ( QPalette* ) hb_parptr( n ) )                 " )
+   aadd( txt_, "#define hbqt_par_QCursor( n )                ( ( QCursor* ) hb_parptr( n ) )                  " )
+   aadd( txt_, "#define hbqt_par_QNetworkRequest( n )        ( ( QNetworkRequest* ) hb_parptr( n ) )          " )
+   aadd( txt_, "#define hbqt_par_QTableWidgetSelectionRange( n ) ( ( QTableWidgetSelectionRange* ) hb_parptr( n ) ) " )
+   aadd( txt_, "#define hbqt_par_QWSEvent( n )               ( ( QWSEvent* ) hb_parptr( n ) )                 " )
+   aadd( txt_, "#define hbqt_par_HFONT( n )                  ( ( HFONT* ) hb_parptr( n ) )                    " )
+   aadd( txt_, "#define hbqt_par_QHttpRequestHeader( n )     ( ( QHttpRequestHeader* ) hb_parptr( n ) )       " )
+   aadd( txt_, "#define hbqt_par_QNetworkProxy( n )          ( ( QNetworkProxy* ) hb_parptr( n ) )            " )
+   aadd( txt_, "#define hbqt_par_WId( n )                    ( ( HWND* ) hb_parptr( n ) )                     " )
+   aadd( txt_, "#define hbqt_par_HDC( n )                    ( ( HDC* ) hb_parptr( n ) )                      " )
+   aadd( txt_, "#define hbqt_par_QBitmap( n )                ( ( QBitmap* ) hb_parptr( n ) )                  " )
    aadd( txt_, "                                                                                              " )
    aadd( txt_, "#define hbqt_par_QIcon( n )                  ( ( QIcon ) hb_parc( n ) )                       " )
    aadd( txt_, "#define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )                     " )
@@ -1130,6 +1363,14 @@ STATIC FUNCTION Build_HBQT_H( cPathOut )
    aadd( txt_, "QRect   hbqt_const_QRect( int );                                                              " )
    aadd( txt_, "QSize   hbqt_const_QSize( int );                                                              " )
    aadd( txt_, "QPoint  hbqt_const_QPoint( int );                                                             " )
+   aadd( txt_, "                                                                                              " )
+   aadd( txt_, "void    hbqt_ret_QRectF( QRectF );                                                            " )
+   aadd( txt_, "void    hbqt_ret_QSizeF( QSizeF );                                                            " )
+   aadd( txt_, "void    hbqt_ret_QPointF( QPointF );                                                          " )
+   aadd( txt_, "                                                                                              " )
+   aadd( txt_, "QRectF  hbqt_const_QRectF( int );                                                             " )
+   aadd( txt_, "QSizeF  hbqt_const_QSizeF( int );                                                             " )
+   aadd( txt_, "QPointF hbqt_const_QPointF( int );                                                            " )
    aadd( txt_, "                                                                                              " )
    aadd( txt_, "void    hb_ToOutDebug( const char * sTraceMsg, ... );                                         " )
    aadd( txt_, "                                                                                              " )
@@ -1231,6 +1472,82 @@ STATIC FUNCTION Build_HBQT_UTILS_CPP( cPathOut )
    aadd( txt_, '                                                                          ' )
    aadd( txt_, '   qpt.setX( hb_parni( i,1 ) );                                           ' )
    aadd( txt_, '   qpt.setY( hb_parni( i,2 ) );                                           ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '   return qpt;                                                            ' )
+   aadd( txt_, '}                                                                         ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, 'void hbqt_ret_QRectF( QRectF qrc )                                        ' )
+   aadd( txt_, '{                                                                         ' )
+   aadd( txt_, '   PHB_ITEM info = hb_itemArrayNew( 4 );                                  ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '   hb_arraySetND( info, 1, qrc.x() );                                     ' )
+   aadd( txt_, '   hb_arraySetND( info, 2, qrc.y() );                                     ' )
+   aadd( txt_, '   hb_arraySetND( info, 3, qrc.x()+qrc.width() );                         ' )
+   aadd( txt_, '   hb_arraySetND( info, 4, qrc.y()+qrc.height() );                        ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '   hb_itemReturnRelease( info );                                          ' )
+   aadd( txt_, '}                                                                         ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, 'QRectF hbqt_const_QRectF( int i )                                         ' )
+   aadd( txt_, '{                                                                         ' )
+   aadd( txt_, '   QRectF qrc;                                                            ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '   qrc.setX( hb_parnd( i,1 ) );                                           ' )
+   aadd( txt_, '   qrc.setY( hb_parnd( i,2 ) );                                           ' )
+   aadd( txt_, '   qrc.setWidth( hb_parnd( i,3 ) - hb_parnd( i,1 ) + 1 );                 ' )
+   aadd( txt_, '   qrc.setHeight( hb_parnd( i,4 ) - hb_parnd( i,2 ) + 1 );                ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '   return qrc;                                                            ' )
+   aadd( txt_, '}                                                                         ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, 'void hbqt_ret_QSizeF( QSizeF qsz )                                        ' )
+   aadd( txt_, '{                                                                         ' )
+   aadd( txt_, '   PHB_ITEM info = hb_itemArrayNew( 2 );                                  ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '   hb_arraySetND( info, 1, qsz.width() );                                 ' )
+   aadd( txt_, '   hb_arraySetND( info, 2, qsz.height() );                                ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '   hb_itemReturnRelease( info );                                          ' )
+   aadd( txt_, '}                                                                         ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, 'QSizeF hbqt_const_QSizeF( int i )                                         ' )
+   aadd( txt_, '{                                                                         ' )
+   aadd( txt_, '   QSizeF qsz;                                                            ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '   qsz.setWidth( hb_parnd( i,1 ) );                                       ' )
+   aadd( txt_, '   qsz.setHeight( hb_parnd( i,2 ) );                                      ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '   return qsz;                                                            ' )
+   aadd( txt_, '}                                                                         ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, 'void hbqt_ret_QPointF( QPointF qpt )                                      ' )
+   aadd( txt_, '{                                                                         ' )
+   aadd( txt_, '   PHB_ITEM info = hb_itemArrayNew( 2 );                                  ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '   hb_arraySetND( info, 1, qpt.x() );                                     ' )
+   aadd( txt_, '   hb_arraySetND( info, 2, qpt.y() );                                     ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '   hb_itemReturnRelease( info );                                          ' )
+   aadd( txt_, '}                                                                         ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, 'QPointF hbqt_const_QPointF( int i )                                       ' )
+   aadd( txt_, '{                                                                         ' )
+   aadd( txt_, '   QPointF qpt;                                                           ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, '   qpt.setX( hb_parnd( i,1 ) );                                           ' )
+   aadd( txt_, '   qpt.setY( hb_parnd( i,2 ) );                                           ' )
    aadd( txt_, '                                                                          ' )
    aadd( txt_, '   return qpt;                                                            ' )
    aadd( txt_, '}                                                                         ' )
@@ -1796,79 +2113,238 @@ STATIC FUNCTION Build_Demo( cPathOut )
 
    BuildHeader( @txt_, 2 )
 
-   aadd( txt_, '#define QT_PTROF( oObj )  ( oObj:pPtr )                                        ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, '/*----------------------------------------------------------------------*/     ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, 'INIT PROCEDURE Qt_Start()                                                      ' )
-   aadd( txt_, '   qt_qapplication()                                                           ' )
-   aadd( txt_, '   RETURN                                                                      ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, 'EXIT PROCEDURE Qt_End()                                                        ' )
-   aadd( txt_, '   qt_qapplication_exec()                                                      ' )
-   aadd( txt_, '   RETURN                                                                      ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, '/*----------------------------------------------------------------------*/     ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, 'PROCEDURE Main()                                                               ' )
-   aadd( txt_, '   Local oLabel                                                                ' )
-   aadd( txt_, '   Local oWnd                                                                  ' )
-   aadd( txt_, '   Local oMenuBar                                                              ' )
-   aadd( txt_, '   Local oMenuA                                                                ' )
-   aadd( txt_, '   LOCAL oPS, oPPrv, oMB, oWZ, oCD, oWP                                        ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, '   oWnd := QMainWindow():New()                                                 ' )
-   aadd( txt_, '   oWnd:SetWindowTitle("Testing - QMainWindow, QMenu, QMenuBar and QLabel" )   ' )
-   aadd( txt_, '   oWnd:Resize( { 640, 400 } )                                                 ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, '   oMenuBar := QMenuBar():new( QT_PTROF( oWnd ) )                              ' )
-   aadd( txt_, '   oMenuBar:resize( { oWnd:width(), 20 } )                                     ' )
-   aadd( txt_, '   oMenuBar:addAction( "First" )                                               ' )
-   aadd( txt_, '   oMenuBar:addSeparator()                                                     ' )
-   aadd( txt_, '   oMenuBar:addAction( "Second" )                                              ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, '   oMenuA := QMenu():new( QT_PTROF( oMenuBar ) )                               ' )
-   aadd( txt_, '   oMenuA:setTitle( "New" )                                                    ' )
-   aadd( txt_, '   oMenuA:addAction( "File" )                                                  ' )
-   aadd( txt_, '   oMenuA:addAction( "Open" )                                                  ' )
-   aadd( txt_, '   oMenuA:addSeparator()                                                       ' )
-   aadd( txt_, '   oMenuA:addAction( "Close" )                                                 ' )
-   aadd( txt_, '   oMenuBar:addMenu( QT_PTROF( oMenuA ) )                                      ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, '   oLabel := QLabel():New( QT_PTROF( oWnd ) )                                  ' )
-   aadd( txt_, '   oLabel:SetText( "Testing Harbour + Qt" )                                    ' )
-   aadd( txt_, '   oLabel:move( { 100,100 } )                                                  ' )
-   aadd( txt_, '   oLabel:Show()                                                               ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, '   oWnd:Show()                                                                 ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, '   oPS := QPageSetupDialog():new()                                             ' )
-   aadd( txt_, '   oPS:setWindowTitle( "Harbour-QT PageSetup Dialog" )                         ' )
-   aadd( txt_, '   oPS:show()                                                                  ' )
-   aadd( txt_, '   oPPrv := QPrintPreviewDialog():new()                                        ' )
-   aadd( txt_, '   oPPrv:setWindowTitle( "Harbour-QT Preview Preview Dialog" )                 ' )
-   aadd( txt_, '   oPPrv:show()                                                                ' )
-   aadd( txt_, '   oWZ := QWizard():new()                                                      ' )
-   aadd( txt_, '   oWZ:setWindowTitle( "Harbour-QT Wizard to Show Slides etc." )               ' )
-   aadd( txt_, '   oWZ:show()                                                                  ' )
-   aadd( txt_, '   oCD := QColorDialog():new()                                                 ' )
-   aadd( txt_, '   oCD:setWindowTitle( "Harbour-QT Color Selection Dialog" )                   ' )
-   aadd( txt_, '   oCD:show()                                                                  ' )
-   aadd( txt_, '   oWP := QWebView():new()                                                     ' )
-   aadd( txt_, '   oWP:setWindowTitle( "Harbour-QT Web Page Navigator" )                       ' )
-   aadd( txt_, '   oWP:show()                                                                  ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, '   RETURN                                                                      ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, '/*----------------------------------------------------------------------*/     ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, 'PROCEDURE HB_GtSys()                                                           ' )
-   aadd( txt_, '   HB_GT_GUI_DEFAULT()                                                         ' )
-   aadd( txt_, '   RETURN                                                                      ' )
-   aadd( txt_, '                                                                               ' )
-   aadd( txt_, '/*----------------------------------------------------------------------*/     ' )
-   aadd( txt_, '                                                                               ' )
+   aadd( txt_, '#define QT_PTROF( oObj )  ( oObj:pPtr )                                                                                  ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '#define QT_EVE_TRIGGERED   "triggered(bool)"                                                                             ' )
+   aadd( txt_, '#define QT_EVE_TRIGGERED_B "triggered(bool)"                                                                             ' )
+   aadd( txt_, '#define QT_EVE_HOVERED     "hovered()"                                                                                   ' )
+   aadd( txt_, '#define QT_EVE_CLICKED     "clicked()"                                                                                   ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/                                               ' )
+   aadd( txt_, '/*                                                                                                                       ' )
+   aadd( txt_, ' *                               A NOTE                                                                                  ' )
+   aadd( txt_, ' *                                                                                                                       ' )
+   aadd( txt_, ' *   This demo is built on auto generated classes by the engine. No attemp                                               ' )
+   aadd( txt_, ' *   is exercised to refine the way the code must be written. At this moment                                             ' )
+   aadd( txt_, ' *   my emphasis is on testing phase of QT wrapper functions and classes                                                 ' )
+   aadd( txt_, ' *   generated thereof. In near future the actual implementation will be                                                 ' )
+   aadd( txt_, ' *   based on the Xbase++ XBPParts  compatible framework. You just are                                                   ' )
+   aadd( txt_, ' *   encouraged to sense the power of QT through this expression.                                                        ' )
+   aadd( txt_, ' *                                                                                                                       ' )
+   aadd( txt_, ' *                             Pritpal Bedi                                                                              ' )
+   aadd( txt_, ' */                                                                                                                      ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/                                               ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, 'INIT PROCEDURE Qt_Start()                                                                                                ' )
+   aadd( txt_, '   qt_qapplication()                                                                                                     ' )
+   aadd( txt_, '   RETURN                                                                                                                ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, 'EXIT PROCEDURE Qt_End()                                                                                                  ' )
+   aadd( txt_, '   qt_qapplication_exec()                                                                                                ' )
+   aadd( txt_, '   RETURN                                                                                                                ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/                                               ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, 'PROCEDURE Main()                                                                                                         ' )
+   aadd( txt_, '   Local oLabel                                                                                                          ' )
+   aadd( txt_, '   Local oWnd                                                                                                            ' )
+   aadd( txt_, '   Local oMenuBar                                                                                                        ' )
+   aadd( txt_, '   Local oMenuA, pAction                                                                                                 ' )
+   aadd( txt_, '   LOCAL oPS, oPPrv, oMB, oWZ, oCD, oWP                                                                                  ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   oWnd := QMainWindow():new()                                                                                           ' )
+   aadd( txt_, '   oWnd:setWindowTitle("Testing - QMainWindow, QMenu, QMenuBar and QAction " )                                           ' )
+   aadd( txt_, '   oWnd:resize( 640, 400 )                                                                                               ' )
+   aadd( txt_, '   oWnd:Show()                                                                                                           ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   Build_MenuBar( oWnd )                                                                                                 ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   oLabel := QLabel():New( QT_PTROF( oWnd ) )                                                                            ' )
+   aadd( txt_, '   oLabel:setText( "Testing Harbour + Qt" )                                                                              ' )
+   aadd( txt_, '   oLabel:move( 200,100 )                                                                                                ' )
+   aadd( txt_, '   oLabel:show()                                                                                                         ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   RETURN                                                                                                                ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/                                               ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, 'STATIC FUNCTION Build_MenuBar( oWnd )                                                                                    ' )
+   aadd( txt_, '   LOCAL oMenuBar, oMenu                                                                                                 ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   oMenuBar := QMenuBar():new( QT_PTROF( oWnd ) )                                                                        ' )
+   aadd( txt_, '   oMenuBar:resize( oWnd:width(), 25 )                                                                                   ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   oMenu := QMenu():new( QT_PTROF( oMenuBar ) )                                                                          ' )
+   aadd( txt_, '   oMenu:setTitle( "&File" )                                                                                             ' )
+   aadd( txt_, '   Qt_Connect_Signal( oMenu:addAction_1( "new.png" , "&New"  ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )' )
+   aadd( txt_, '   Qt_Connect_Signal( oMenu:addAction_1( "open.png", "&Open" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open", w, l ) } )' )
+   aadd( txt_, '   oMenu:addSeparator()                                                                                                  ' )
+   aadd( txt_, '   Qt_Connect_Signal( oMenu:addAction_1( "save.png", "&Save" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save", w, l ) } )' )
+   aadd( txt_, '   oMenu:addSeparator()                                                                                                  ' )
+   aadd( txt_, '   Qt_Connect_Signal( oMenu:addAction( "E&xit" ), QT_EVE_TRIGGERED_B, {|w,l| MsgInfo( "Exit ?" ) } )                     ' )
+   aadd( txt_, '   oMenuBar:addMenu( QT_PTROF( oMenu ) )                                                                                 ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   oMenu := QMenu():new( QT_PTROF( oMenuBar ) )                                                                          ' )
+   aadd( txt_, '   oMenu:setTitle( "&Dialogs" )                                                                                          ' )
+   aadd( txt_, '   Qt_Connect_Signal( oMenu:addAction( "&Colors"    ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors"   , w, l ) } )       ' )
+   aadd( txt_, '   Qt_Connect_Signal( oMenu:addAction( "&Fonts"     ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts"    , w, l ) } )       ' )
+   aadd( txt_, '   oMenu:addSeparator()                                                                                                  ' )
+   aadd( txt_, '   Qt_Connect_Signal( oMenu:addAction( "&PageSetup" ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )       ' )
+   aadd( txt_, '   Qt_Connect_Signal( oMenu:addAction( "P&review"   ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview"  , w, l ) } )       ' )
+   aadd( txt_, '   oMenu:addSeparator()                                                                                                  ' )
+   aadd( txt_, '   Qt_Connect_Signal( oMenu:addAction( "&Wizard"    ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard"   , w, l ) } )       ' )
+   aadd( txt_, '   Qt_Connect_Signal( oMenu:addAction( "W&ebPage"   ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage"  , w, l ) } )       ' )
+   aadd( txt_, '   oMenuBar:addMenu( QT_PTROF( oMenu ) )                                                                                 ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   oMenuBar:show()                                                                                                       ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   RETURN nil                                                                                                            ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/                                               ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, 'FUNCTION MsgInfo( cMsg )                                                                                                 ' )
+   aadd( txt_, '   LOCAL oMB                                                                                                             ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   oMB := QMessageBox():new()                                                                                            ' )
+   aadd( txt_, '   oMB:setInformativeText( cMsg )                                                                                        ' )
+   aadd( txt_, '   oMB:setWindowTitle( "Harbour-QT" )                                                                                    ' )
+   aadd( txt_, '   oMB:show()                                                                                                            ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   RETURN nil                                                                                                            ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/                                               ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, 'STATIC FUNCTION FileDialog( cType, w, l )                                                                                ' )
+   aadd( txt_, '   LOCAL oFD := QFileDialog():new()                                                                                      ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   oFD:setWindowTitle( "Select a File" )                                                                                 ' )
+   aadd( txt_, '   oFD:show()                                                                                                            ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   RETURN nil                                                                                                            ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/                                               ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, 'STATIC FUNCTION Dialogs( cType, w, l )                                                                                   ' )
+   aadd( txt_, '   LOCAL oDlg, oUrl                                                                                                      ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   DO CASE                                                                                                               ' )
+   aadd( txt_, '   CASE cType == "PageSetup"                                                                                             ' )
+   aadd( txt_, '      oDlg := QPageSetupDialog():new()                                                                                   ' )
+   aadd( txt_, '      oDlg:setWindowTitle( "Harbour-QT PageSetup Dialog" )                                                               ' )
+   aadd( txt_, '      oDlg:show()                                                                                                        ' )
+   aadd( txt_, '   CASE cType == "Preview"                                                                                               ' )
+   aadd( txt_, '      oDlg := QPrintPreviewDialog():new()                                                                                ' )
+   aadd( txt_, '      oDlg:setWindowTitle( "Harbour-QT Preview Dialog" )                                                                 ' )
+   aadd( txt_, '      oDlg:show()                                                                                                        ' )
+   aadd( txt_, '   CASE cType == "Wizard"                                                                                                ' )
+   aadd( txt_, '      oDlg := QWizard():new()                                                                                            ' )
+   aadd( txt_, '      oDlg:setWindowTitle( "Harbour-QT Wizard to Show Slides etc." )                                                     ' )
+   aadd( txt_, '      oDlg:show()                                                                                                        ' )
+   aadd( txt_, '   CASE cType == "Colors"                                                                                                ' )
+   aadd( txt_, '      oDlg := QColorDialog():new()                                                                                       ' )
+   aadd( txt_, '      oDlg:setWindowTitle( "Harbour-QT Color Selection Dialog" )                                                         ' )
+   aadd( txt_, '      oDlg:show()                                                                                                        ' )
+   aadd( txt_, '   CASE cType == "WebPage"                                                                                               ' )
+   aadd( txt_, '      oDlg := QWebView():new()                                                                                           ' )
+   aadd( txt_, '      oUrl := QUrl():new()                                                                                               ' )
+   aadd( txt_, '      oUrl:setUrl( "http://www.harbour.vouch.info" )                                                                     ' )
+   aadd( txt_, '      QT_QWebView_SetUrl( QT_PTROF( oDlg ), QT_PTROF( oUrl ) )                                                           ' )
+   aadd( txt_, '      oDlg:setWindowTitle( "Harbour-QT Web Page Navigator" )                                                             ' )
+   aadd( txt_, '      oDlg:show()                                                                                                        ' )
+   aadd( txt_, '   CASE cType == "Fonts"                                                                                                 ' )
+   aadd( txt_, '      oDlg := QFontDialog():new()                                                                                        ' )
+   aadd( txt_, '      oDlg:setWindowTitle( "Harbour-QT Font Selector" )                                                                  ' )
+   aadd( txt_, '      oDlg:show()                                                                                                        ' )
+   aadd( txt_, '   ENDCASE                                                                                                               ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   RETURN nil                                                                                                            ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/                                               ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, 'PROCEDURE hb_GtSys()                                                                                                     ' )
+   aadd( txt_, '   HB_GT_GUI_DEFAULT()                                                                                                   ' )
+   aadd( txt_, '   RETURN                                                                                                                ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/                                               ' )
+   aadd( txt_, '/*                                                                                                                       ' )
+   aadd( txt_, ' * Just to Link Every New Widget                                                                                         ' )
+   aadd( txt_, ' */                                                                                                                      ' )
+   aadd( txt_, 'STATIC FUNCTION Dummies()                                                                                                ' )
+   aadd( txt_, '   LOCAL oSome                                                                                                           ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   oSome := QAction():new()                                                                                              ' )
+   aadd( txt_, '   oSome := QBoxLayout():new()                                                                                           ' )
+   aadd( txt_, '   oSome := QCalendarWidget():new()                                                                                      ' )
+   aadd( txt_, '   oSome := QCheckBox():new()                                                                                            ' )
+   aadd( txt_, '   oSome := QColorDialog():new()                                                                                         ' )
+   aadd( txt_, '   oSome := QComboBox():new()                                                                                            ' )
+   aadd( txt_, '   oSome := QCommandLinkButton():new()                                                                                   ' )
+   aadd( txt_, '   oSome := QDateEdit():new()                                                                                            ' )
+   aadd( txt_, '   oSome := QDateTimeEdit():new()                                                                                        ' )
+   aadd( txt_, '   oSome := QDial():new()                                                                                                ' )
+   aadd( txt_, '   oSome := QDialog():new()                                                                                              ' )
+   aadd( txt_, '   oSome := QDoubleSpinBox():new()                                                                                       ' )
+   aadd( txt_, '   oSome := QErrorMessage():new()                                                                                        ' )
+   aadd( txt_, '   oSome := QFileDialog():new()                                                                                          ' )
+   aadd( txt_, '   oSome := QFocusFrame():new()                                                                                          ' )
+   aadd( txt_, '   oSome := QFontComboBox():new()                                                                                        ' )
+   aadd( txt_, '   oSome := QFontDialog():new()                                                                                          ' )
+   aadd( txt_, '   oSome := QFormLayout():new()                                                                                          ' )
+   aadd( txt_, '   oSome := QFrame():new()                                                                                               ' )
+   aadd( txt_, '   oSome := QGroupBox():new()                                                                                            ' )
+   aadd( txt_, '   oSome := QHBoxLayout():new()                                                                                          ' )
+   aadd( txt_, '   oSome := QInputDialog():new()                                                                                         ' )
+   aadd( txt_, '   oSome := QLabel():new()                                                                                               ' )
+   aadd( txt_, '   oSome := QLayout():new()                                                                                              ' )
+   aadd( txt_, '   oSome := QLayoutItem():new()                                                                                          ' )
+   aadd( txt_, '   oSome := QLCDNumber():new()                                                                                           ' )
+   aadd( txt_, '   oSome := QLineEdit():new()                                                                                            ' )
+   aadd( txt_, '   oSome := QListView():new()                                                                                            ' )
+   aadd( txt_, '   oSome := QMainWindow():new()                                                                                          ' )
+   aadd( txt_, '   oSome := QMenu():new()                                                                                                ' )
+   aadd( txt_, '   oSome := QMenuBar():new()                                                                                             ' )
+   aadd( txt_, '   oSome := QMessageBox():new()                                                                                          ' )
+   aadd( txt_, '   oSome := QObject():new()                                                                                              ' )
+   aadd( txt_, '   oSome := QPageSetupDialog():new()                                                                                     ' )
+   aadd( txt_, '   oSome := QPaintDevice():new()                                                                                         ' )
+   aadd( txt_, '   oSome := QPainter():new()                                                                                             ' )
+   aadd( txt_, '   oSome := QPrintDialog():new()                                                                                         ' )
+   aadd( txt_, '   oSome := QPrintPreviewDialog():new()                                                                                  ' )
+   aadd( txt_, '   oSome := QProgressBar():new()                                                                                         ' )
+   aadd( txt_, '   oSome := QProgressDialog():New()                                                                                      ' )
+   aadd( txt_, '   oSome := QPushButton():new()                                                                                          ' )
+   aadd( txt_, '   oSome := QRadioButton():new()                                                                                         ' )
+   aadd( txt_, '   oSome := QScrollArea():new()                                                                                          ' )
+   aadd( txt_, '   oSome := QScrollBar():new()                                                                                           ' )
+   aadd( txt_, '   oSome := QSizeGrip():new()                                                                                            ' )
+   aadd( txt_, '   oSome := QSlider():new()                                                                                              ' )
+   aadd( txt_, '   oSome := QSpinBox():new()                                                                                             ' )
+   aadd( txt_, '   oSome := QSplitter():new()                                                                                            ' )
+   aadd( txt_, '   oSome := QTabBar():new()                                                                                              ' )
+   aadd( txt_, '   oSome := QTableView():new()                                                                                           ' )
+   aadd( txt_, '   oSome := QTableWidget():new()                                                                                         ' )
+   aadd( txt_, '   oSome := QTableWidgetItem():new()                                                                                     ' )
+   aadd( txt_, '   oSome := QTabWidget():new()                                                                                           ' )
+   aadd( txt_, '   oSome := QTextEdit():new()                                                                                            ' )
+   aadd( txt_, '   oSome := QTimeEdit():new()                                                                                            ' )
+   aadd( txt_, '   oSome := QToolBar():new()                                                                                             ' )
+   aadd( txt_, '   oSome := QToolBox():new()                                                                                             ' )
+   aadd( txt_, '   oSome := QToolButton():new()                                                                                          ' )
+   aadd( txt_, '   oSome := QTreeView():new()                                                                                            ' )
+   aadd( txt_, '   oSome := QTreeWidget():new()                                                                                          ' )
+   aadd( txt_, '   oSome := QTreeWidgetItem():new()                                                                                      ' )
+   aadd( txt_, '   oSome := QVBoxLayout():new()                                                                                          ' )
+   aadd( txt_, '   oSome := QWebPage():new()                                                                                             ' )
+   aadd( txt_, '   oSome := QWebView():new()                                                                                             ' )
+   aadd( txt_, '   oSome := QWidget():new()                                                                                              ' )
+   aadd( txt_, '   oSome := QWizard():new()                                                                                              ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '   RETURN nil                                                                                                            ' )
+   aadd( txt_, '                                                                                                                         ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/                                               ' )
+   aadd( txt_, '                                                                                                                         ' )
 
    RETURN CreateTarget( cFile, txt_ )
 
 /*----------------------------------------------------------------------*/
+

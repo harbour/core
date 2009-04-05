@@ -54,34 +54,42 @@
 ;              Header File to Generate QT Wrapper Sources
 ;
 
-
 <CLASS>
-New      = pParent
+New      = iWidth, iHeight
 </CLASS>
 
 <CODE>
-#include <ActiveQt/QAxBindable>
+#include <QtCore/QSize>
 
 
 /*
- * QAxBindable ()
- * virtual ~QAxBindable ()
+ * QSize ()
+ * QSize ( int width, int height )
+ * QSize boundedTo ( const QSize & otherSize ) const
+ * QSize expandedTo ( const QSize & otherSize ) const
  */
-HB_FUNC( QT_QAXBINDABLE )
+HB_FUNC( QT_QSIZE )
 {
-   hb_retptr( new QAxBindable() );
+   hb_retptr( ( QSize* ) new QSize( hb_parni( 1 ), hb_parni( 2 ) ) );
 }
 </CODE>
-
 
 <ENUMS>
 </ENUMS>
 
 <PROTOS>
-virtual QAxAggregated * createAggregate ()
-virtual bool readData ( QIODevice * source, const QString & format )
-void reportError ( int code, const QString & src, const QString & desc, const QString & context = QString() )
-virtual bool writeData ( QIODevice * sink )
+int height () const
+bool isEmpty () const
+bool isNull () const
+bool isValid () const
+int & rheight ()
+int & rwidth ()
+void scale ( int width, int height, Qt::AspectRatioMode mode )
+void scale ( const QSize & size, Qt::AspectRatioMode mode )
+void setHeight ( int height )
+void setWidth ( int width )
+void transpose ()
+int width () const
 </PROTOS>
 
 <SLOTS>
@@ -89,3 +97,7 @@ virtual bool writeData ( QIODevice * sink )
 
 <SIGNALS>
 </SIGNALS>
+
+
+
+

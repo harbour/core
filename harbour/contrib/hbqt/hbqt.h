@@ -167,6 +167,64 @@
 #define hbqt_par_QNetworkAccessManager( n )  ( ( QNetworkAccessManager* ) hb_parptr( n ) )
 #define hbqt_par_QWebPluginFactory( n )      ( ( QWebPluginFactory* ) hb_parptr( n ) )
 #define hbqt_par_QContextMenuEvent( n )      ( ( QContextMenuEvent* ) hb_parptr( n ) )
+#define hbqt_par_QDesktopWidget( n )         ( ( QDesktopWidget* ) hb_parptr( n ) )
+#define hbqt_par_QFontInfo( n )              ( ( QFontInfo* ) hb_parptr( n ) )
+#define hbqt_par_QDir( n )                   ( ( QDir* ) hb_parptr( n ) )
+#define hbqt_par_QDockWidget( n )            ( ( QDockWidget* ) hb_parptr( n ) )
+#define hbqt_par_QGridLayout( n )            ( ( QGridLayout* ) hb_parptr( n ) )
+#define hbqt_par_QHeaderView( n )            ( ( QHeaderView* ) hb_parptr( n ) )
+#define hbqt_par_QListWidget( n )            ( ( QListWidget* ) hb_parptr( n ) )
+#define hbqt_par_QListWidgetItem( n )        ( ( QListWidgetItem* ) hb_parptr( n ) )
+#define hbqt_par_QTimer( n )                 ( ( QTimer* ) hb_parptr( n ) )
+#define hbqt_par_QUrl( n )                   ( ( QUrl* ) hb_parptr( n ) )
+#define hbqt_par_QWebPage( n )               ( ( QWebPage* ) hb_parptr( n ) )
+#define hbqt_par_QNetworkAccessManager( n )  ( ( QNetworkAccessManager* ) hb_parptr( n ) )
+#define hbqt_par_QWebPluginFactory( n )      ( ( QWebPluginFactory* ) hb_parptr( n ) )
+#define hbqt_par_QContextMenuEvent( n )      ( ( QContextMenuEvent* ) hb_parptr( n ) )
+#define hbqt_par_QAxBase( n )                ( ( QAxBase* ) hb_parptr( n ) )
+#define hbqt_par_IUnknown( n )               ( ( IUnknown* ) hb_parptr( n ) )
+#define hbqt_par_QSignalMapper( n )          ( ( QSignalMapper* ) hb_parptr( n ) )
+#define hbqt_par_QSplashScreen( n )          ( ( QSplashScreen* ) hb_parptr( n ) )
+#define hbqt_par_QHttp( n )                  ( ( QHttp* ) hb_parptr( n ) )
+#define hbqt_par_QFtp( n )                   ( ( QFtp* ) hb_parptr( n ) )
+#define hbqt_par_QIODevice( n )              ( ( QIODevice* ) hb_parptr( n ) )
+#define hbqt_par_QTcpSocket( n )             ( ( QTcpSocket* ) hb_parptr( n ) )
+#define hbqt_par_QPainterPath( n )           ( ( QPainterPath* ) hb_parptr( n ) )
+#define hbqt_par_QTransform( n )             ( ( QTransform* ) hb_parptr( n ) )
+#define hbqt_par_QMatrix( n )                ( ( QMatrix* ) hb_parptr( n ) )
+#define hbqt_par_QTextOption( n )            ( ( QTextOption* ) hb_parptr( n ) )
+#define hbqt_par_QPicture( n )               ( ( QPicture* ) hb_parptr( n ) )
+#define hbqt_par_QPixmap( n )                ( ( QPixmap* ) hb_parptr( n ) )
+#define hbqt_par_QRegion( n )                ( ( QRegion* ) hb_parptr( n ) )
+#define hbqt_par_QPolygon( n )               ( ( QPolygon* ) hb_parptr( n ) )
+#define hbqt_par_QPolygonF( n )              ( ( QPolygonF* ) hb_parptr( n ) )
+#define hbqt_par_QVector( n )                ( ( QVector* ) hb_parptr( n ) )
+#define hbqt_par_QImage( n )                 ( ( QImage* ) hb_parptr( n ) )
+#define hbqt_par_QKeySequence( n )           ( ( QKeySequence* ) hb_parptr( n ) )
+#define hbqt_par_QSize( n )                  ( ( QSize* ) hb_parptr( n ) )
+#define hbqt_par_QModelIndex( n )            ( ( QModelIndex* ) hb_parptr( n ) )
+#define hbqt_par_QVariant( n )               ( ( QVariant* ) hb_parptr( n ) )
+#define hbqt_par_QSessionManager( n )        ( ( QSessionManager* ) hb_parptr( n ) )
+#define hbqt_par_QDate( n )                  ( ( QDate* ) hb_parptr( n ) )
+#define hbqt_par_QTime( n )                  ( ( QTime* ) hb_parptr( n ) )
+#define hbqt_par_QDateTime( n )              ( ( QDateTime* ) hb_parptr( n ) )
+#define hbqt_par_QTextCharFormat( n )        ( ( QTextCharFormat* ) hb_parptr( n ) )
+#define hbqt_par_QStringList( n )            ( ( QStringList* ) hb_parptr( n ) )
+#define hbqt_par_QErrorMessage( n )          ( ( QErrorMessage* ) hb_parptr( n ) )
+#define hbqt_par_QByteArray( n )             ( ( QByteArray* ) hb_parptr( n ) )
+#define hbqt_par_QDataStream( n )            ( ( QDataStream* ) hb_parptr( n ) )
+#define hbqt_par_QTextCursor( n )            ( ( QTextCursor* ) hb_parptr( n ) )
+#define hbqt_par_QPalette( n )               ( ( QPalette* ) hb_parptr( n ) )
+#define hbqt_par_QCursor( n )                ( ( QCursor* ) hb_parptr( n ) )
+#define hbqt_par_QNetworkRequest( n )        ( ( QNetworkRequest* ) hb_parptr( n ) )
+#define hbqt_par_QTableWidgetSelectionRange( n ) ( ( QTableWidgetSelectionRange* ) hb_parptr( n ) )
+#define hbqt_par_QWSEvent( n )               ( ( QWSEvent* ) hb_parptr( n ) )
+#define hbqt_par_HFONT( n )                  ( ( HFONT* ) hb_parptr( n ) )
+#define hbqt_par_QHttpRequestHeader( n )     ( ( QHttpRequestHeader* ) hb_parptr( n ) )
+#define hbqt_par_QNetworkProxy( n )          ( ( QNetworkProxy* ) hb_parptr( n ) )
+#define hbqt_par_WId( n )                    ( ( HWND* ) hb_parptr( n ) )
+#define hbqt_par_HDC( n )                    ( ( HDC* ) hb_parptr( n ) )
+#define hbqt_par_QBitmap( n )                ( ( QBitmap* ) hb_parptr( n ) )
 
 #define hbqt_par_QIcon( n )                  ( ( QIcon ) hb_parc( n ) )
 #define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )
@@ -188,6 +246,14 @@ void    hbqt_ret_QPoint( QPoint );
 QRect   hbqt_const_QRect( int );
 QSize   hbqt_const_QSize( int );
 QPoint  hbqt_const_QPoint( int );
+
+void    hbqt_ret_QRectF( QRectF );
+void    hbqt_ret_QSizeF( QSizeF );
+void    hbqt_ret_QPointF( QPointF );
+
+QRectF  hbqt_const_QRectF( int );
+QSizeF  hbqt_const_QSizeF( int );
+QPointF hbqt_const_QPointF( int );
 
 void    hb_ToOutDebug( const char * sTraceMsg, ... );
 

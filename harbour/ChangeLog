@@ -8,6 +8,143 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-05 02:00 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/hbqt/hbqt.h
+  * harbour/contrib/hbqt/generator/hbqtgen.prg
+  * harbour/contrib/hbqt/generator/qt45.qtp
+  + harbour/contrib/hbqt/gensource/Makefile
+  * harbour/contrib/hbqt/qth/QAbstractButton.qth
+  * harbour/contrib/hbqt/qth/QAbstractItemView.qth
+  * harbour/contrib/hbqt/qth/QAbstractPrintDialog.qth
+  * harbour/contrib/hbqt/qth/QAbstractScrollArea.qth
+  * harbour/contrib/hbqt/qth/QAbstractSlider.qth
+  * harbour/contrib/hbqt/qth/QAbstractSpinBox.qth
+  * harbour/contrib/hbqt/qth/QAction.qth
+  * harbour/contrib/hbqt/qth/QApplication.qth
+  * harbour/contrib/hbqt/qth/QAxBase.qth
+  * harbour/contrib/hbqt/qth/QAxBindable.qth
+  * harbour/contrib/hbqt/qth/QAxObject.qth
+  * harbour/contrib/hbqt/qth/QAxWidget.qth
+  * harbour/contrib/hbqt/qth/QBoxLayout.qth
+  * harbour/contrib/hbqt/qth/QBrush.qth
+  * harbour/contrib/hbqt/qth/QCalendarWidget.qth
+  * harbour/contrib/hbqt/qth/QCheckBox.qth
+  * harbour/contrib/hbqt/qth/QColor.qth
+  * harbour/contrib/hbqt/qth/QColorDialog.qth
+  * harbour/contrib/hbqt/qth/QComboBox.qth
+  * harbour/contrib/hbqt/qth/QCommandLinkButton.qth
+  * harbour/contrib/hbqt/qth/QCoreApplication.qth
+  * harbour/contrib/hbqt/qth/QDateEdit.qth
+  * harbour/contrib/hbqt/qth/QDateTimeEdit.qth
+  * harbour/contrib/hbqt/qth/QDesktopWidget.qth
+  * harbour/contrib/hbqt/qth/QDial.qth
+  * harbour/contrib/hbqt/qth/QDialog.qth
+  * harbour/contrib/hbqt/qth/QDir.qth
+  * harbour/contrib/hbqt/qth/QDockWidget.qth
+  * harbour/contrib/hbqt/qth/QDoubleSpinBox.qth
+  * harbour/contrib/hbqt/qth/QErrorMessage.qth
+  * harbour/contrib/hbqt/qth/QFileDialog.qth
+  * harbour/contrib/hbqt/qth/QFocusFrame.qth
+  * harbour/contrib/hbqt/qth/QFont.qth
+  * harbour/contrib/hbqt/qth/QFontComboBox.qth
+  * harbour/contrib/hbqt/qth/QFontDialog.qth
+  * harbour/contrib/hbqt/qth/QFontInfo.qth
+  * harbour/contrib/hbqt/qth/QFormLayout.qth
+  * harbour/contrib/hbqt/qth/QFrame.qth
+  * harbour/contrib/hbqt/qth/QFtp.qth
+  * harbour/contrib/hbqt/qth/QGridLayout.qth
+  * harbour/contrib/hbqt/qth/QGroupBox.qth
+  * harbour/contrib/hbqt/qth/QHBoxLayout.qth
+  * harbour/contrib/hbqt/qth/QHeaderView.qth
+  * harbour/contrib/hbqt/qth/QHttp.qth
+  * harbour/contrib/hbqt/qth/QInputDialog.qth
+  * harbour/contrib/hbqt/qth/QLabel.qth
+  * harbour/contrib/hbqt/qth/QLayout.qth
+  * harbour/contrib/hbqt/qth/QLayoutItem.qth
+  * harbour/contrib/hbqt/qth/QLCDNumber.qth
+  * harbour/contrib/hbqt/qth/QLineEdit.qth
+  * harbour/contrib/hbqt/qth/QListView.qth
+  * harbour/contrib/hbqt/qth/QListWidget.qth
+  * harbour/contrib/hbqt/qth/QListWidgetItem.qth
+  * harbour/contrib/hbqt/qth/QMainWindow.qth
+  * harbour/contrib/hbqt/qth/QMenu.qth
+  * harbour/contrib/hbqt/qth/QMenuBar.qth
+  * harbour/contrib/hbqt/qth/QMessageBox.qth
+  * harbour/contrib/hbqt/qth/QObject.qth
+  * harbour/contrib/hbqt/qth/QPageSetupDialog.qth
+  * harbour/contrib/hbqt/qth/QPaintDevice.qth
+  * harbour/contrib/hbqt/qth/QPainter.qth
+  * harbour/contrib/hbqt/qth/QPen.qth
+  * harbour/contrib/hbqt/qth/QPrintDialog.qth
+  * harbour/contrib/hbqt/qth/QPrintPreviewDialog.qth
+  * harbour/contrib/hbqt/qth/QProgressBar.qth
+  * harbour/contrib/hbqt/qth/QProgressDialog.qth
+  * harbour/contrib/hbqt/qth/QPushButton.qth
+  * harbour/contrib/hbqt/qth/QRadioButton.qth
+  * harbour/contrib/hbqt/qth/QScrollArea.qth
+  * harbour/contrib/hbqt/qth/QScrollBar.qth
+  * harbour/contrib/hbqt/qth/QSignalMapper.qth
+  + harbour/contrib/hbqt/qth/QSize.qth
+  * harbour/contrib/hbqt/qth/QSizeGrip.qth
+  * harbour/contrib/hbqt/qth/QSlider.qth
+  * harbour/contrib/hbqt/qth/QSpinBox.qth
+  * harbour/contrib/hbqt/qth/QSplashScreen.qth
+  * harbour/contrib/hbqt/qth/QSplitter.qth
+  * harbour/contrib/hbqt/qth/QTabBar.qth
+  * harbour/contrib/hbqt/qth/QTableView.qth
+  * harbour/contrib/hbqt/qth/QTableWidget.qth
+  * harbour/contrib/hbqt/qth/QTableWidgetItem.qth
+  * harbour/contrib/hbqt/qth/QTabWidget.qth
+  * harbour/contrib/hbqt/qth/QTextEdit.qth
+  * harbour/contrib/hbqt/qth/QTimeEdit.qth
+  * harbour/contrib/hbqt/qth/QTimer.qth
+  * harbour/contrib/hbqt/qth/QToolBar.qth
+  * harbour/contrib/hbqt/qth/QToolBox.qth
+  * harbour/contrib/hbqt/qth/QToolButton.qth
+  * harbour/contrib/hbqt/qth/QTreeView.qth
+  * harbour/contrib/hbqt/qth/QTreeWidget.qth
+  * harbour/contrib/hbqt/qth/QTreeWidgetItem.qth
+  * harbour/contrib/hbqt/qth/QUrl.qth
+  * harbour/contrib/hbqt/qth/QVBoxLayout.qth
+  * harbour/contrib/hbqt/qth/QWebPage.qth
+  * harbour/contrib/hbqt/qth/QWebView.qth
+  * harbour/contrib/hbqt/qth/QWidget.qth
+  * harbour/contrib/hbqt/qth/QWizard.qth
+    ! Restructured the layout of .qth source headers.
+      List of section blocks:
+         <CLASS>   </CLASS>
+         <CODE>    </CODE>
+         <ENUMS>   </ENUMS>
+         <PROTOS>  </PROTOS>
+         <SLOTS>   </SLOTS>
+         <SIGNALS> <SIGNALS>
+      This layout will be useful for future extensions.
+      We can spread anything outside of these blocks wheatever 
+      is required.
+
+      The <hbqtgen> engine has been reworked and enhanced to a 
+      great extent. At this moment about 99% functions are compiled
+      properly. Except for one warning everypiece compiles fine:
+          : warning: taking address of temporary 
+      which is the result of code like as below:
+          /*
+           * QIcon icon () const
+           */
+          HB_FUNC( QT_QABSTRACTBUTTON_ICON )
+          {
+             hb_retptr( &( ( QIcon ) hbqt_par_QAbstractButton( 1 )->icon() ) );
+          }
+      is spread all over. I have no clue how to suppress it. 
+      This is why I have not posted the files in root folder.
+      NOTE: Make system fails for <Makefile_gen>, Viktor?
+
+      The demoqt.prg is updated with many features. Just play.
+
+      And an Experiment: /tests/wvtext.prg can be updated to work with 
+      QT Widgets. Though this is not the end goal of QT, you may take 
+      advantage of QT's powerful yet simple classes to embed in your
+      console applications.
+      
 2009-04-05 09:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Enabled rtlink/blinker parsing code, so now hbmk2 will
