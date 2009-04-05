@@ -105,3 +105,8 @@ QWizard.qth
 QWebView.qth
 
 QSize.qth
+QSizeF.qth
+QPoint.qth
+QPointF.qth
+QRect.qth
+QRectF.qth

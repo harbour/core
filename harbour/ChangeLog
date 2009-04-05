@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-05 14:03 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/hbqt/generator/hbqtgen.prg
+  * harbour/contrib/hbqt/generator/qt45.qtp
+  + harbour/contrib/hbqt/qth/QPoint.qth
+  + harbour/contrib/hbqt/qth/QPointF.qth
+  + harbour/contrib/hbqt/qth/QRect.qth
+  + harbour/contrib/hbqt/qth/QRectF.qth
+  + harbour/contrib/hbqt/qth/QSizeF.qth
+    + Added more classes.
+
 2009-04-05 12:57 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   + harbour/contrib/hbqt/tests/wvtext.prg
     + Added wvtext.prg [ already in harbour/tests ] modified

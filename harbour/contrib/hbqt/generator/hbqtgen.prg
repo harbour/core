@@ -598,6 +598,10 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
             cDocNM := THIS_PROPER( aA[ PRT_NAME ] )
 
             DO CASE
+            CASE aA[ PRT_CAST ] == 'T'
+               aA[ PRT_BODY ] := 'hb_param( '+ cHBIdx +', HB_IT_ANY )'
+               aA[ PRT_DOC  ] := 'x'+ cDocNM
+
             /* Values by reference */
             CASE aA[ PRT_CAST ] $ 'int,qint16,qint32,qint64,quint16,quint32,quint64,QRgb' .and. aA[ PRT_L_FAR ]
                aadd( aPre, { 'int i'+cDocNM+' = 0;', nHBIdx, 'i'+ cDocNM, 'hb_storni' } )
@@ -732,6 +736,10 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
             cDocNM := THIS_PROPER( aA[ PRT_NAME ] )
 
             DO CASE
+            CASE aA[ PRT_CAST ] == 'T'
+               cCmd := 'hb_ret( '+ cCmn +' )'
+               cPrgRet := 'x'+cDocNM
+
             CASE aA[ PRT_CAST ] == 'void'
                cCmd := cCmn
                cPrgRet := 'NIL'
@@ -1319,6 +1327,7 @@ STATIC FUNCTION Build_HBQT_H( cPathOut )
    aadd( txt_, "#define hbqt_par_QImage( n )                 ( ( QImage* ) hb_parptr( n ) )                   " )
    aadd( txt_, "#define hbqt_par_QKeySequence( n )           ( ( QKeySequence* ) hb_parptr( n ) )             " )
    aadd( txt_, "#define hbqt_par_QSize( n )                  ( ( QSize* ) hb_parptr( n ) )                    " )
+   aadd( txt_, "#define hbqt_par_QSizeF( n )                 ( ( QSizeF* ) hb_parptr( n ) )                   " )
    aadd( txt_, "#define hbqt_par_QModelIndex( n )            ( ( QModelIndex* ) hb_parptr( n ) )              " )
    aadd( txt_, "#define hbqt_par_QVariant( n )               ( ( QVariant* ) hb_parptr( n ) )                 " )
    aadd( txt_, "#define hbqt_par_QSessionManager( n )        ( ( QSessionManager* ) hb_parptr( n ) )          " )
