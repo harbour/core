@@ -8,6 +8,19 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-05 09:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Enabled rtlink/blinker parsing code, so now hbmk2 will
+      work as a plugin replacement for clipper, rtlink/blinker/exospace
+      when renamed to these names. Example:
+      ---
+      > copy hbmk2.exe clipper.exe
+      > copy hbmk2.exe rtlink.exe
+      > clipper hello.prg
+      > echo OUT myhello FI hello > rtl.lnk
+      > rtlink @rtl.lnk
+      ---
+
 2009-04-04 17:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     * Minor.

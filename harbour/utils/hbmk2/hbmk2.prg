@@ -309,6 +309,7 @@ FUNCTION Main( ... )
    LOCAL lAcceptLDFlag := .F.
    LOCAL lCreateLib := .F.
    LOCAL lCreateDyn := .F.
+   LOCAL lAcceptLDClipper := .F.
 
    LOCAL aParams
    LOCAL aParam
@@ -390,13 +391,17 @@ FUNCTION Main( ... )
          OutStd( "hbmk: Enabled -hbcc option." + hb_osNewLine() )
       ENDIF
    CASE Right( tmp, 5 ) == "hblnk" .OR. ;
-        Left(  tmp, 5 ) == "hblnk" .OR. ;
-        tmp == "rtlink" .OR. ;
-        tmp == "exospace" .OR. ;
-        tmp == "blinker"
+        Left(  tmp, 5 ) == "hblnk"
       t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDFlag := .T.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hblnk option." + hb_osNewLine() )
+      ENDIF
+   CASE tmp == "rtlink" .OR. ;
+        tmp == "exospace" .OR. ;
+        tmp == "blinker"
+      t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDClipper := .T.
+      IF t_lInfo
+         OutStd( "hbmk: Enabled -hblnk (Clipper legacy) option." + hb_osNewLine() )
       ENDIF
    CASE Right( tmp, 5 ) == "hblib" .OR. ;
         Left(  tmp, 5 ) == "hblib"
@@ -782,8 +787,15 @@ FUNCTION Main( ... )
          IF Empty( FN_ExtGet( cParam ) )
             cParam := FN_ExtSet( cParam, ".hbm" )
          ENDIF
-         nEmbedLevel := 1
-         HBM_Load( aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
+         IF !( Lower( FN_ExtGet( cParam ) ) == ".hbm" ) .AND. lAcceptLDClipper
+            rtlnk_process( MemoRead( cParam ), @s_cPROGNAME, @s_aOBJUSER, @s_aLIBUSER )
+            IF ! Empty( s_aOBJUSER )
+               DEFAULT s_cFIRST TO s_aOBJUSER[ 1 ]
+            ENDIF
+         ELSE
+            nEmbedLevel := 1
+            HBM_Load( aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
+         ENDIF
       CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
          nEmbedLevel := 1
          HBM_Load( aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
@@ -3443,7 +3455,7 @@ STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
    RETURN cFileBody
 
 STATIC FUNCTION rtlnk_process( cCommands, cFileOut, aFileList, aLibList, ;
-                              aPrevFiles )
+                               aPrevFiles )
    LOCAL nCh, nMode
    LOCAL cLine, cWord
 
@@ -3458,12 +3470,6 @@ STATIC FUNCTION rtlnk_process( cCommands, cFileOut, aFileList, aLibList, ;
       ENDSWITCH
    NEXT
    nMode := RTLNK_MODE_NONE
-   IF ! ISARRAY( aFileList )
-      aFileList := {}
-   ENDIF
-   IF ! ISARRAY( aLibList )
-      aLibList := {}
-   ENDIF
    IF ! ISARRAY( aPrevFiles )
       aPrevFiles := {}
    ENDIF
@@ -3488,13 +3494,13 @@ STATIC FUNCTION rtlnk_process( cCommands, cFileOut, aFileList, aLibList, ;
             ELSEIF nMode == RTLNK_MODE_FILE
                IF !cWord == ","
                   IF AScan( aFileList, { |x| x == cWord } ) == 0
-                     AAdd( aFileList, cWord )
+                     AAdd( aFileList, PathSepToTarget( cWord ) )
                   ENDIF
                   nMode := RTLNK_MODE_FILENEXT
                ENDIF
             ELSEIF nMode == RTLNK_MODE_LIB
                IF !cWord == ","
-                  AAdd( aLibList, cWord )
+                  AAdd( aLibList, PathSepToTarget( cWord ) )
                   nMode := RTLNK_MODE_LIBNEXT
                ENDIF
             ELSEIF nMode == RTLNK_MODE_SKIP
