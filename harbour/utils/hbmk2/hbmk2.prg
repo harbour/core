@@ -1630,9 +1630,9 @@ FUNCTION Main( ... )
          ENDIF
          s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
-                                       "harbour-" + cDL_Version_Alter ),;
-                           "hbmainstd",;
-                           "hbmainwin" }
+                                       "harbour-" + cDL_Version_Alter ) }
+
+         AAdd( s_aOPTL, "FILE " + FN_ExtSet( s_cHB_LIB_INSTALL + hb_osPathSeparator() + iif( s_lGUI, "hbmainwin", "hbmainstd" ), cLibExt ) )
 
          IF Len( s_aRESSRC ) > 0
             IF Len( s_aRESSRC ) == 1

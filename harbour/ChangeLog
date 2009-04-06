@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-06 22:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    ! Adding hbmainstd/hbmainwin libs as object for win/owatcom.
+      This fixes the startup procedure problems. Thanks Przemek.
+
 2009-04-06 22:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour-wce-spec
     ! fixed MinGWCE cross compilation for Pocket PC by simple removing
@@ -40,9 +45,9 @@
 2009-04-06 19:35 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/rtl/hbstrfmt.c
     + added precision support for %s and %d.
-      COMMENT: I've used GNU printf() function for test. Some of 
-      formats is not supported by it. For example, zero padding is 
-      ignored if left alignment is used, etc. I'm not sure if it is 
+      COMMENT: I've used GNU printf() function for test. Some of
+      formats is not supported by it. For example, zero padding is
+      ignored if left alignment is used, etc. I'm not sure if it is
       intentional.
 
 2009-04-06 18:12 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
