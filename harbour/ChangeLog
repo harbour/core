@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-06 22:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-wce-spec
+    ! fixed MinGWCE cross compilation for Pocket PC by simple removing
+      __PLATFORM__WINCE from Harbour build parameters. It's now defined
+      by config/wce/mingwarm.cf
+      BTW why it's called mingwarm not mingwce? Is is planed to add for
+      each CPU type separate .cf file? For Linux it will be more then
+      20 files.
+      I do not know if MS plans to release (or maybe released) WinCE for
+      non ARM based computers (f.e. x86 ones) but it may happen. Just like
+      non x86 normal Windows ports may exist.
+
 2009-04-06 09:45 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbqt/generator/qt45.qtp
   * harbour/contrib/hbqt/hbqt.h
@@ -19,7 +31,7 @@
   * harbour/contrib/hbqt/qth/QSize.qth
   + harbour/contrib/hbqt/qth/QVariant.qth
     + Added more classes and update qt45.qtp
-	
+
 2009-04-06 09:36 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbqt/generator/hbqtgen.prg
     ! StdOut() used instead of ?.
