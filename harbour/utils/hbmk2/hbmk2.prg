@@ -919,6 +919,10 @@ FUNCTION Main( ... )
 
          OutStd( s_cHB_LIB_INSTALL )
 
+      CASE cParamL == "--hbdirdyn"       ; lStopAfterInit := .T.
+
+         OutStd( s_cHB_DYN_INSTALL )
+
       CASE cParamL == "--hbdirinc"       ; lStopAfterInit := .T.
 
          OutStd( s_cHB_INC_INSTALL )
@@ -3688,7 +3692,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -hblib            create static library" ,;
       "  -hbdyn            create dynamic library (experimental)" ,;
       "  --hbdirbin        output Harbour binary directory" ,;
-      "  --hbdirlib        output Harbour library directory" ,;
+      "  --hbdirlib        output Harbour static library directory" ,;
+      "  --hbdirdyn        output Harbour dynamic library directory" ,;
       "  --hbdirinc        output Harbour header directory" ,;
       "" ,;
       "  -arch=<arch>      assume specific architecure. Same as HB_ARCHITECTURE envvar" ,;
