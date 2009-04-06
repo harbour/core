@@ -1,11 +1,14 @@
-@echo off
-rem $Id$
-rem
+@rem
+@rem $Id$
+@rem
 
-IF %HB_COMPILER%.==. GOTO ERR_ENV
+@echo off
 
 echo. Making hbqtgen ...
-..\..\..\bin\hbmk2.exe hbqtgen
+set _HBMK=hbmk2.exe
+if exist ..\..\..\bin\hbmk2.exe set _HBMK=..\..\..\bin\hbmk2.exe
+%_HBMK% hbqtgen
+IF ERRORLEVEL 1 GOTO SHOW_ERROR
 echo. done
 echo.
 echo. Cleaning gensource and doc folders ...
@@ -18,7 +21,7 @@ echo. done
 echo.
 echo. Generating gensource and doc files
 hbqtgen.exe qt45.qtp > hbqtgen.log 2>&1
-IF NOT ERRORLEVEL 0 GOTO SHOW_ERROR
+IF ERRORLEVEL 1 GOTO SHOW_ERROR
 echo. done
 echo.
 echo. Cleaning hbqt root files ...
@@ -48,11 +51,5 @@ GOTO END_BATCH
 :SHOW_ERROR
 echo. There is an error on building hbqt.
 echo. Please check hbqtgen.log file
-GOTO END_BATCH
-
-:ERR_ENV
-echo. Please set correctly your environment:
-echo. set HB_COMPILER=mingw
-echo. and your PATH, then restart this batch.
 
 :END_BATCH

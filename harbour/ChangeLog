@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-06 23:38 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed to properly set errorlevels. For some reason I thought
+      returning a number from MAIN() will set the errorlevel. Now
+      using ErrorLevel() function.
+
+  * contrib/hbqt/generator/rebuild_hbqt.bat
+    * Added errorlevel checking after hbmk2 call.
+    ! Removed HB_COMPILER check.
+
 2009-04-06 22:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Adding hbmainstd/hbmainwin libs as object for win/owatcom.

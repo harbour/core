@@ -149,7 +149,7 @@ THREAD STATIC t_cHBPOSTFIX
 #define _PAR_cFileName      2
 #define _PAR_nLine          3
 
-FUNCTION Main( ... )
+PROCEDURE Main( ... )
 
    LOCAL aLIB_BASE1 := {;
       "hbcpage" ,;
@@ -295,7 +295,7 @@ FUNCTION Main( ... )
    LOCAL cBin_Res
    LOCAL cBin_Lib
    LOCAL cBin_Dyn
-   LOCAL nErrorLevel
+   LOCAL nErrorLevel := 0
    LOCAL tmp, tmp1, array
    LOCAL cScriptFile
    LOCAL fhnd
@@ -338,7 +338,8 @@ FUNCTION Main( ... )
       ShowHeader()
       ShowHelp()
       PauseForKey()
-      RETURN 9
+      ErrorLevel( 9 )
+      RETURN
    ENDIF
 
    FOR EACH cParam IN hb_AParams()
@@ -363,13 +364,15 @@ FUNCTION Main( ... )
          ShowHeader()
          ShowHelp( .T. )
          PauseForKey()
-         RETURN 9
+         ErrorLevel( 9 )
+         RETURN
 
       CASE cParamL == "--version"
 
          ShowHeader()
          PauseForKey()
-         RETURN 0
+         ErrorLevel( 0 )
+         RETURN
 
       ENDCASE
    NEXT
@@ -563,7 +566,8 @@ FUNCTION Main( ... )
    OTHERWISE
       OutErr( "hbmk: Error: Architecture value unknown: " + t_cARCH + hb_osNewLine() )
       PauseForKey()
-      RETURN 1
+      ErrorLevel( 1 )
+      RETURN
    ENDCASE
 
    t_aLIBCOREGT := ArrayJoin( aLIB_BASE_GT, s_aLIBHBGT )
@@ -597,7 +601,8 @@ FUNCTION Main( ... )
       OTHERWISE
          OutErr( "hbmk: Error: HB_INSTALL_PREFIX not set, failed to autodetect." + hb_osNewLine() )
          PauseForKey()
-         RETURN 3
+         ErrorLevel( 3 )
+         RETURN
       ENDCASE
       /* Detect special *nix dir layout (/bin, /lib/harbour, /include/harbour) */
       IF hb_FileExists( DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "include" +;
@@ -618,7 +623,8 @@ FUNCTION Main( ... )
       ( Empty( s_cHB_BIN_INSTALL ) .OR. Empty( s_cHB_LIB_INSTALL ) .OR. Empty( s_cHB_INC_INSTALL ) )
       OutErr( "hbmk: Error: Harbour locations couldn't be determined." + hb_osNewLine() )
       PauseForKey()
-      RETURN 3
+      ErrorLevel( 3 )
+      RETURN
    ENDIF
 
    IF t_cARCH $ "win|wce"
@@ -691,13 +697,15 @@ FUNCTION Main( ... )
                OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
             ENDIF
             PauseForKey()
-            RETURN 2
+            ErrorLevel( 2 )
+            RETURN
          ENDIF
       ELSE
          IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
             OutErr( "hbmk: Error: Compiler value unknown: " + t_cCOMP + hb_osNewLine() )
             PauseForKey()
-            RETURN 2
+            ErrorLevel( 2 )
+            RETURN
          ENDIF
          IF t_cARCH $ "win|wce"
             /* Detect cross platform CCPREFIX and CCPATH if embedded MinGW installation is detected */
@@ -1123,7 +1131,8 @@ FUNCTION Main( ... )
    IF ! lStopAfterInit .AND. ( Len( s_aPRG ) + Len( s_aC ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) == 0
       OutErr( "hbmk: Error: No source files were specified." + hb_osNewLine() )
       PauseForKey()
-      RETURN 4
+      ErrorLevel( 4 )
+      RETURN
    ENDIF
 
    /* Harbour compilation */
@@ -1152,7 +1161,8 @@ FUNCTION Main( ... )
          OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + hb_osNewLine() )
          OutErr( ArrayToList( aCommand ) + hb_osNewLine() )
          PauseForKey()
-         RETURN 6
+         ErrorLevel( 6 )
+         RETURN
       ENDIF
 #else
       cCommand := DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) +;
@@ -1177,7 +1187,8 @@ FUNCTION Main( ... )
          OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
          OutErr( cCommand + hb_osNewLine() )
          PauseForKey()
-         RETURN 6
+         ErrorLevel( 6 )
+         RETURN
       ENDIF
 #endif
    ENDIF
@@ -2086,7 +2097,8 @@ FUNCTION Main( ... )
             OutErr( "hbmk: Warning: Stub helper .c program couldn't be created." + hb_osNewLine() )
             AEval( ListDirExt( s_aPRG, "", ".c" ), {|tmp| FErase( tmp ) } )
             PauseForKey()
-            RETURN 5
+            ErrorLevel( 5 )
+            RETURN
          ENDIF
          AAdd( s_aC, s_cCSTUB )
       ENDIF
@@ -2116,8 +2128,6 @@ FUNCTION Main( ... )
       /* Dress obj names. */
       s_aOBJ := ListDirExt( ArrayJoin( s_aPRG, s_aC ), "", cObjExt )
       s_aOBJUSER := ListCook( s_aOBJUSER, NIL, cObjExt )
-
-      nErrorLevel := 0
 
       IF Len( s_aRESSRC ) > 0 .AND. ! Empty( cBin_Res )
 
@@ -2456,7 +2466,9 @@ FUNCTION Main( ... )
       ENDIF
    ENDIF
 
-   RETURN nErrorLevel
+   ErrorLevel( nErrorLevel )
+
+   RETURN
 
 STATIC FUNCTION SetupForGT( cGT, /* @ */ s_cGT, /* @ */ s_lGUI )
 
