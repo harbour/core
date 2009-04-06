@@ -205,6 +205,7 @@ FUNCTION Main( ... )
    LOCAL s_cHB_INSTALL_PREFIX
    LOCAL s_cHB_BIN_INSTALL
    LOCAL s_cHB_LIB_INSTALL
+   LOCAL s_cHB_DYN_INSTALL
    LOCAL s_cHB_INC_INSTALL
 
    LOCAL s_aPRG
@@ -251,6 +252,7 @@ FUNCTION Main( ... )
    LOCAL s_lMAP := .F.
    LOCAL s_lSTRIP := .F.
    LOCAL s_lTRACE := .F.
+   LOCAL s_lDONTEXEC := .F.
    LOCAL s_lBLDFLGP := .F.
    LOCAL s_lBLDFLGC := .F.
    LOCAL s_lBLDFLGL := .F.
@@ -401,7 +403,7 @@ FUNCTION Main( ... )
         tmp == "blinker"
       t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDClipper := .T.
       IF t_lInfo
-         OutStd( "hbmk: Enabled -hblnk (Clipper legacy) option." + hb_osNewLine() )
+         OutStd( "hbmk: Enabled -hblnk (Clipper compatibility) option." + hb_osNewLine() )
       ENDIF
    CASE Right( tmp, 5 ) == "hblib" .OR. ;
         Left(  tmp, 5 ) == "hblib"
@@ -714,6 +716,8 @@ FUNCTION Main( ... )
 
    /* Finish detecting bin/lib/include dirs */
 
+   s_aLIBPATH := {}
+
    IF Empty( s_cHB_BIN_INSTALL )
       s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "bin"
    ENDIF
@@ -722,6 +726,7 @@ FUNCTION Main( ... )
       IF hb_DirExists( tmp := PathNormalize( s_cHB_INSTALL_PREFIX ) + "lib" +;
                                                hb_osPathSeparator() + t_cARCH +;
                                                hb_osPathSeparator() + t_cCOMP )
+         s_cHB_DYN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "lib"
          s_cHB_LIB_INSTALL := tmp
       ELSE
          s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "lib"
@@ -731,18 +736,22 @@ FUNCTION Main( ... )
       s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "include"
    ENDIF
 
+   DEFAULT s_cHB_DYN_INSTALL TO s_cHB_LIB_INSTALL
+
    IF t_lInfo
-      OutStd( "hbmk: Using Harbour: " + s_cHB_BIN_INSTALL + " " + s_cHB_INC_INSTALL + " " + s_cHB_LIB_INSTALL + hb_osNewLine() )
+      OutStd( "hbmk: Using Harbour: " + s_cHB_BIN_INSTALL + " " + s_cHB_INC_INSTALL + " " + s_cHB_LIB_INSTALL + " " + s_cHB_DYN_INSTALL + hb_osNewLine() )
    ENDIF
 
    s_cHB_BIN_INSTALL := PathSepToTarget( s_cHB_BIN_INSTALL )
    s_cHB_LIB_INSTALL := PathSepToTarget( s_cHB_LIB_INSTALL )
+   s_cHB_DYN_INSTALL := PathSepToTarget( s_cHB_DYN_INSTALL )
    s_cHB_INC_INSTALL := PathSepToTarget( s_cHB_INC_INSTALL )
-
-   s_aLIBPATH := {}
 
    /* Add main Harbour library dir to lib path list */
    AAddNotEmpty( s_aLIBPATH, s_cHB_LIB_INSTALL )
+   IF ! Empty( s_cHB_DYN_INSTALL )
+      AAddNotEmpty( s_aLIBPATH, s_cHB_DYN_INSTALL )
+   ENDIF
 
    /* Process environment */
 
@@ -899,6 +908,7 @@ FUNCTION Main( ... )
       CASE cParamL == "-trace"           ; s_lTRACE    := .T.
       CASE cParamL == "-trace-" .OR. ;
            cParamL == "-notrace"         ; s_lTRACE    := .F.
+      CASE cParamL == "-traceonly"       ; s_lTRACE    := .T. ; s_lDONTEXEC := .T.
 
       CASE Left( cParamL, 6 ) == "-main="
 
@@ -1117,7 +1127,7 @@ FUNCTION Main( ... )
          OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() + ArrayToList( aCommand ) + hb_osNewLine() )
       ENDIF
 
-      IF ( tmp := hb_compile( "", aCommand ) ) != 0
+      IF ! s_lDONTEXEC .AND. ( tmp := hb_compile( "", aCommand ) ) != 0
          OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + hb_osNewLine() + ArrayToList( aCommand ) + hb_osNewLine() )
          PauseForKey()
          RETURN 6
@@ -1138,7 +1148,7 @@ FUNCTION Main( ... )
          OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
       ENDIF
 
-      IF ( tmp := hb_run( cCommand ) ) != 0
+      IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
          OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
          PauseForKey()
          RETURN 6
@@ -1174,7 +1184,7 @@ FUNCTION Main( ... )
       IF lSysLoc
          cPrefix := ""
       ELSE
-         cPrefix := PathNormalize( s_cHB_LIB_INSTALL )
+         cPrefix := PathNormalize( s_cHB_DYN_INSTALL )
       ENDIF
 #if 1
       cPostfix := ""
@@ -1949,7 +1959,7 @@ FUNCTION Main( ... )
       ENDIF
 
       /* Do entry function detection on platform required and supported */
-      IF ! lStopAfterCComp .AND. s_cMAIN == NIL
+      IF ! s_lDONTEXEC .AND. ! lStopAfterCComp .AND. s_cMAIN == NIL
          tmp := iif( Lower( FN_ExtGet( s_cFIRST ) ) == ".prg" .OR. Empty( FN_ExtGet( s_cFIRST ) ), FN_ExtSet( s_cFIRST, ".c" ), s_cFIRST )
          IF ! Empty( tmp := getFirstFunc( tmp ) )
             s_cMAIN := tmp
@@ -2115,7 +2125,7 @@ FUNCTION Main( ... )
             ENDIF
          ENDIF
 
-         IF ( tmp := hb_run( cCommand ) ) != 0
+         IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
             OutErr( "hbmk: Error: Running resource compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
             nErrorLevel := 8
          ENDIF
@@ -2162,7 +2172,7 @@ FUNCTION Main( ... )
                      OutStd( "hbmk: C compiler command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
                   ENDIF
 
-                  IF ( tmp := hb_run( cCommand ) ) != 0
+                  IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
                      OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
                      nErrorLevel := 6
                      EXIT
@@ -2195,7 +2205,7 @@ FUNCTION Main( ... )
                   ENDIF
                ENDIF
 
-               IF ( tmp := hb_run( cCommand ) ) != 0
+               IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
                   OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
                   nErrorLevel := 6
                ENDIF
@@ -2252,7 +2262,7 @@ FUNCTION Main( ... )
                ENDIF
             ENDIF
 
-            IF ( tmp := hb_run( cCommand ) ) != 0
+            IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
                OutErr( "hbmk: Error: Running linker. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
                nErrorLevel := 7
             ENDIF
@@ -2296,7 +2306,7 @@ FUNCTION Main( ... )
                ENDIF
             ENDIF
 
-            IF ( tmp := hb_run( cCommand ) ) != 0
+            IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
                OutErr( "hbmk: Error: Running lib command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
                nErrorLevel := 7
             ENDIF
@@ -2342,7 +2352,7 @@ FUNCTION Main( ... )
                ENDIF
             ENDIF
 
-            IF ( tmp := hb_run( cCommand ) ) != 0
+            IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
                OutErr( "hbmk: Error: Running dynamic lib link command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
                nErrorLevel := 7
             ENDIF
@@ -2381,7 +2391,9 @@ FUNCTION Main( ... )
             IF s_lTRACE
                OutStd( "hbmk: Running executable:" + hb_osNewLine() + PathSepToTarget( s_cPROGNAME ) + hb_osNewLine() )
             ENDIF
-            nErrorLevel := hb_run( PathSepToTarget( s_cPROGNAME ) )
+            IF ! s_lDONTEXEC
+               nErrorLevel := hb_run( PathSepToTarget( s_cPROGNAME ) )
+            ENDIF
          ENDIF
       ENDIF
    ENDIF
@@ -3603,6 +3615,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -[no]strip        strip (no strip) binaries" ,;
       "  -[no]fmstat       enable/disable runtime memory statistics (gcc builds only)" ,;
       "  -[no]trace        show commands executed" ,;
+      "  -traceonly        show commands to be executed, but don't execute them" ,;
       "  -[no]run          run/don't run the created executable" ,;
       "  -nohbp            do not process .hbp files in current directory" ,;
       "" ,;

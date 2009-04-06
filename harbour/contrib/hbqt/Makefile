@@ -51,7 +51,7 @@ ifneq ($(strip $(HB_INC_QT_OK)),)
 
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_QT_OK), -I$(d))
 
-include Makefile_gen
+include $(TOP)$(ROOT)contrib/hbqt/Makefile_gen
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

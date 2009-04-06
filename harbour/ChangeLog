@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-06 13:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed finding shared libs since /lib/<arch>/<comp> lib path
+      autodetection was added. Please test.
+    + Added -traceonly cmdline switch which will display all commands to
+      be executed, without actually executing them. Notice that this isn't
+      a complete "dry" run, as some temp files will may be created and
+      normally created temp files are deleted along the process.
+
+  * contrib/hbqt/Makefile
+    ! Fix to include statement.
+
 2009-04-05 14:03 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbqt/generator/hbqtgen.prg
   * harbour/contrib/hbqt/generator/qt45.qtp
@@ -21,7 +33,7 @@
 2009-04-05 12:57 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   + harbour/contrib/hbqt/tests/wvtext.prg
     + Added wvtext.prg [ already in harbour/tests ] modified
-      to invoke QT dialogs. This demo is far from production 
+      to invoke QT dialogs. This demo is far from production
       environment abd is just a future concept of implementation
       what we can achieve with QT with least efforts.
 
@@ -140,13 +152,13 @@
          <SLOTS>   </SLOTS>
          <SIGNALS> <SIGNALS>
       This layout will be useful for future extensions.
-      We can spread anything outside of these blocks wheatever 
+      We can spread anything outside of these blocks wheatever
       is required.
 
-      The <hbqtgen> engine has been reworked and enhanced to a 
+      The <hbqtgen> engine has been reworked and enhanced to a
       great extent. At this moment about 99% functions are compiled
       properly. Except for one warning everypiece compiles fine:
-          : warning: taking address of temporary 
+          : warning: taking address of temporary
       which is the result of code like as below:
           /*
            * QIcon icon () const
@@ -155,17 +167,17 @@
           {
              hb_retptr( &( ( QIcon ) hbqt_par_QAbstractButton( 1 )->icon() ) );
           }
-      is spread all over. I have no clue how to suppress it. 
+      is spread all over. I have no clue how to suppress it.
       This is why I have not posted the files in root folder.
       NOTE: Make system fails for <Makefile_gen>, Viktor?
 
       The demoqt.prg is updated with many features. Just play.
 
-      And an Experiment: /tests/wvtext.prg can be updated to work with 
-      QT Widgets. Though this is not the end goal of QT, you may take 
+      And an Experiment: /tests/wvtext.prg can be updated to work with
+      QT Widgets. Though this is not the end goal of QT, you may take
       advantage of QT's powerful yet simple classes to embed in your
       console applications.
-      
+
 2009-04-05 09:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Enabled rtlink/blinker parsing code, so now hbmk2 will
