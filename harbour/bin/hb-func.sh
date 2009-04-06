@@ -414,9 +414,9 @@ while [ \$n -lt \${#P[@]} ]; do
         -g[cohwij])  HB_GEN="\${v#-g}"; p="\${v}" ;;
         -gc[0-9])    HB_GEN="c"; p="\${v}" ;;
         -go[0-9])    HB_GEN="o"; p="\${v}" ;;
-        --hblibdir)  echo "\${HB_LIB_INSTALL}"; HB_EXIT="yes" ;;
-        --hbincdir)  echo "\${HB_INC_INSTALL}"; HB_EXIT="yes" ;;
-        --hbbindir)  echo "\${HB_BIN_INSTALL}"; HB_EXIT="yes" ;;
+        --hbdirlib)  echo "\${HB_LIB_INSTALL}"; HB_EXIT="yes" ;;
+        --hbdirinc)  echo "\${HB_INC_INSTALL}"; HB_EXIT="yes" ;;
+        --hbdirbin)  echo "\${HB_BIN_INSTALL}"; HB_EXIT="yes" ;;
         -*)          p="\${v}" ;;
         *)           [ -z \${FILEOUT} ] && FILEOUT="\${v##*/}"; p="\${v}" ;;
     esac
@@ -425,7 +425,8 @@ while [ \$n -lt \${#P[@]} ]; do
 done
 P=( "\${PP[@]}" )
 
-[ "\${HB_EXIT}" != "yes" ] || exit
+[ "\${P}" != "" ] && HB_EXIT="no"
+[ "\${HB_EXIT}" = "yes" ] && exit
 
 case "\${HB_MT}" in
     [Mm][Tt]|[Yy][Ee][Ss]|1)  HB_MT="MT";;
