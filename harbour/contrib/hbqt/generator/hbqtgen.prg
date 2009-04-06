@@ -68,15 +68,15 @@ FUNCTION Main( ... )
    LOCAL aProFiles := {}
    LOCAL lCompile  := .f.
 
+   s_NewLine := hb_OsNewLine()
+   s_PathSep := hb_OsPathSeparator()
+
    DispLogo()
 
    IF PCount() == 0
       DispHelp()
       RETURN nil
    ENDIF
-
-   s_NewLine := hb_OsNewLine()
-   s_PathSep := hb_OsPathSeparator()
 
    aParam := hb_AParams()
 
@@ -172,7 +172,7 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
    cpp_:={}
    prg_:={}
 
-   OutStd( cFile )
+   OutStd( cFile + s_NewLine )
 
    cPrj  := memoread( cFile )
 
@@ -184,7 +184,7 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
       /* We must have a matching pair */
       nn := at( '*/', cPrj )
       IF nn == 0
-         ? 'Project file has unbalanced comment section...'
+         OutStd( 'Project file has unbalanced comment section...' + s_NewLine )
          RETURN nil
       ENDIF
       cPrj := substr( cPrj,1,n-1 ) + substr( cPrj,nn+2 )
@@ -292,7 +292,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       RETURN nil
    ENDIF
 
-   OutStd( cFile )
+   OutStd( cFile  + s_NewLine )
 
    /* Prepare to be parsed properly */
    cQth := strtran( cQth, s_NewLine          , _EOL )
@@ -465,6 +465,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
    LOCAL cPre, cPar, cRet, cFun, cFunRet, cParas, cDocs, cCmd, cPas, s, ss
    LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cHBIdx, cDocNM
    LOCAL lConst, lAnd, lStar, lVirt, lSuccess
+   LOCAL cIntegers := 'int,qint16,qint32,qint64,quint16,quint32,quint64,qlonglong,qulonglong,QRgb,QChar'
 
    cParas := ''
    cDocs  := ''
@@ -603,12 +604,12 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                aA[ PRT_DOC  ] := 'x'+ cDocNM
 
             /* Values by reference */
-            CASE aA[ PRT_CAST ] $ 'int,qint16,qint32,qint64,quint16,quint32,quint64,QRgb' .and. aA[ PRT_L_FAR ]
+            CASE aA[ PRT_CAST ] $ cIntegers .and. aA[ PRT_L_FAR ]
                aadd( aPre, { 'int i'+cDocNM+' = 0;', nHBIdx, 'i'+ cDocNM, 'hb_storni' } )
                aA[ PRT_BODY ] := '&i'+cDocNM
                aA[ PRT_DOC  ] := '@n'+ cDocNM
 
-            CASE aA[ PRT_CAST ] $ 'int,qint16,qint32,qint64,quint16,quint32,quint64,QRgb'
+            CASE aA[ PRT_CAST ] $ cIntegers
                s := 'hb_parni( '+ cHBIdx +' )'
                IF !empty( aA[ PRT_DEFAULT ] )
                   aA[ PRT_BODY ] := '( HB_ISNIL( '+cHBIdx+' ) ? '+aA[ PRT_DEFAULT ]+' : '+ s + ' )'
@@ -647,6 +648,11 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                ENDIF
                aA[ PRT_DOC  ] := 'n'+ cDocNM
 
+            CASE aA[ PRT_CAST ] == 'bool' .and. aA[ PRT_L_FAR ]
+               aadd( aPre, { 'bool i'+cDocNM+' = 0;', nHBIdx, 'i'+ cDocNM, 'hb_stornl' } )
+               aA[ PRT_BODY ] := '&i'+cDocNM
+               aA[ PRT_DOC  ] := '@l'+ cDocNM
+
             CASE aA[ PRT_CAST ] == 'bool'
                aA[ PRT_BODY ] := 'hb_parl( '+ cHBIdx +' )'
                aA[ PRT_DOC  ] := 'l'+ cDocNM
@@ -665,6 +671,10 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
 
             CASE aA[ PRT_CAST ] == 'WId'
                aA[ PRT_BODY ] := 'hbqt_par_WId( '+ cHBIdx +' )'
+               aA[ PRT_DOC  ] := 'h'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'HRGN'
+               aA[ PRT_BODY ] := 'hbqt_par_HRGN( '+ cHBIdx +' )'
                aA[ PRT_DOC  ] := 'h'+ cDocNM
 
             CASE aA[ PRT_CAST ] == 'FT_Face'
@@ -744,7 +754,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cCmd := cCmn
                cPrgRet := 'NIL'
 
-            CASE aA[ PRT_CAST ] $ 'int,qint16,qint32,qint64,quint16,quint32,quint64,QRgb,char'
+            CASE aA[ PRT_CAST ] $ cIntegers
                cCmd := 'hb_retni( '+ cCmn +' )'
                cPrgRet := 'n'+cDocNM
 
@@ -760,6 +770,10 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cCmd := 'hb_retl( '+ cCmn +' )'
                cPrgRet := 'l'+cDocNM
 
+            CASE aA[ PRT_CAST ] == 'char'
+               cCmd := 'hb_retni( '+ cCmn +' )'
+               cPrgRet := 'c'+cDocNM
+
             CASE aA[ PRT_CAST ] == 'QString'
                cCmd := 'hb_retc( '+ cCmn +'.toLatin1().data()' +' )'
                cPrgRet := 'c'+cDocNM
@@ -774,6 +788,10 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
 
             CASE aA[ PRT_CAST ] == 'WId'
                cCmd := 'hb_retptr( ( HWND ) '+ cCmn +' )'
+               cPrgRet := 'h'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'HRGN'
+               cCmd := 'hb_retptr( ( HRGN ) '+ cCmn +' )'
                cPrgRet := 'h'+cDocNM
 
             CASE aA[ PRT_CAST ] == 'FT_Face'
@@ -827,7 +845,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                   cPrgRet := 'p'+cDocNM
 
                ELSE
-                  ? '<<< '+cProto + ' | ' + aA[ PRT_CAST ]+' >>>'
+                  OutStd( '<<< '+cProto + ' | ' + aA[ PRT_CAST ]+' >>>'  + s_NewLine )
                   cCmd := ''
                   cPrgRet := ''
 
@@ -837,7 +855,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
 
             IF !empty( cCmd )
                cCmd := strtran( cCmd, '(  )', '()' ) +';'
-               ? cCmd
+               OutStd( cCmd + s_NewLine )
             ENDIF
          ENDIF
       ENDIF
@@ -979,30 +997,36 @@ STATIC FUNCTION BuildFooter( txt_ )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION DispHelp()
+   LOCAL cHlp := ''
 
-   ?
-   ? 'SYNTAX:'
-   ? '   hbqtgen.exe [Options] [[@]<QtProjectFile.qtp>] [<QtHeaderFile.qth, ...>]'
-   ?
-   ? 'Options:'
-   ? '   -O<OutputPath>   [ e.g. c:\harbour\contrib\hbqt ]        [D] Current folder'
-   ? '   -I<InputPath>    [ e.g. c:\harbour\contrib\hbqt\protos ] [D] Current folder'
-   ? '   -D<DocFilesPath> [ e.g. c:\harbour\contrib\hbqt\doc    ] [D] Current folder'
-   ? ' '
-   ? '   -c<compile>      If QT env is set, attempts to compile resulting .cpp'
-   ?
-   inkey( 0 )
+   cHlp += ''                                                                               + s_NewLine
+   cHlp += 'SYNTAX:'                                                                        + s_NewLine
+   cHlp += '   hbqtgen.exe [Options] [[@]<QtProjectFile.qtp>] [<QtHeaderFile.qth, ...>]'    + s_NewLine
+   cHlp += ''                                                                               + s_NewLine
+   cHlp += 'Options:'                                                                       + s_NewLine
+   cHlp += '   -O<OutputPath>   [ e.g. c:\harbour\contrib\hbqt ]        [D] Current folder' + s_NewLine
+   cHlp += '   -I<InputPath>    [ e.g. c:\harbour\contrib\hbqt\protos ] [D] Current folder' + s_NewLine
+   cHlp += '   -D<DocFilesPath> [ e.g. c:\harbour\contrib\hbqt\doc    ] [D] Current folder' + s_NewLine
+   cHlp += ' '                                                                              + s_NewLine
+   cHlp += '   -c<compile>      If QT env is set, attempts to compile resulting .cpp'       + s_NewLine
+   cHlp += ''                                                                               + s_NewLine
+
+   OutStd( cHlp )
 
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION DispLogo()
+   LOCAL cHlp := ''
 
-   OutStd( hb_osNewLine() + "Harbour Source Gennerator for QT " + HBRawVersion() + hb_osNewLine() +;
-           "Copyright (c) 2009, Pritpal Bedi <pritpal@vouchcac.com>" + hb_osNewLine() +;
-           "http://www.harbour-project.org/" + hb_osNewLine() +;
-           hb_osNewLine() )
+   cHlp += ''                                                        + s_NewLine
+   cHlp += "Harbour Source Gennerator for QT " + HBRawVersion()      + s_NewLine
+   cHlp += "Copyright (c) 2009, Pritpal Bedi <pritpal@vouchcac.com>" + s_NewLine
+   cHlp += "http://www.harbour-project.org/"                         + s_NewLine
+   cHlp += ''                                                        + s_NewLine
+
+   OutStd( cHlp )
 
    RETURN nil
 
@@ -1351,6 +1375,12 @@ STATIC FUNCTION Build_HBQT_H( cPathOut )
    aadd( txt_, "#define hbqt_par_WId( n )                    ( ( HWND* ) hb_parptr( n ) )                     " )
    aadd( txt_, "#define hbqt_par_HDC( n )                    ( ( HDC* ) hb_parptr( n ) )                      " )
    aadd( txt_, "#define hbqt_par_QBitmap( n )                ( ( QBitmap* ) hb_parptr( n ) )                  " )
+   aadd( txt_, "#define hbqt_par_QTextStream( n )            ( ( QTextStream* ) hb_parptr( n ) )              " )
+   aadd( txt_, "#define hbqt_par_QTextCodec( n )             ( ( QTextCodec* ) hb_parptr( n ) )               " )
+   aadd( txt_, "#define hbqt_par_QEventLoop( n )             ( ( QEventLoop* ) hb_parptr( n ) )               " )
+   aadd( txt_, "#define hbqt_par_QPaintEvent( n )            ( ( QPaintEvent* ) hb_parptr( n ) )              " )
+   aadd( txt_, "#define hbqt_par_QInputEvent( n )            ( ( QInputEvent* ) hb_parptr( n ) )              " )
+   aadd( txt_, "#define hbqt_par_HRGN( n )                   ( ( HRGN* ) hb_parptr( n ) )                     " )
    aadd( txt_, "                                                                                              " )
    aadd( txt_, "#define hbqt_par_QIcon( n )                  ( ( QIcon ) hb_parc( n ) )                       " )
    aadd( txt_, "#define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )                     " )
@@ -2356,4 +2386,5 @@ STATIC FUNCTION Build_Demo( cPathOut )
    RETURN CreateTarget( cFile, txt_ )
 
 /*----------------------------------------------------------------------*/
+
 
