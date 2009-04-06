@@ -55,42 +55,37 @@
 ;
 
 <CLASS>
+Inherits = QObject
 Type     = Core
-New      = nWidth, nHeight
+New      = pObject
 </CLASS>
 
 <CODE>
-#include <QtCore/QSize>
-
+#include <QtCore/QEventLoop>
+#include <QtCore/QEvent>
 
 /*
- * QSize ()
- * QSize ( int width, int height )
- * QSize boundedTo ( const QSize & otherSize ) const
- * QSize expandedTo ( const QSize & otherSize ) const
+ * QEventLoop ( QObject * parent = 0 )
+ * ~QEventLoop ()
  */
-HB_FUNC( QT_QSIZE )
+HB_FUNC( QT_QEVENTLOOP )
 {
-   hb_retptr( ( QSize* ) new QSize( hb_parni( 1 ), hb_parni( 2 ) ) );
+   hb_retptr( ( QEvent* ) new QEventLoop( hbqt_par_QObject( 1 ) ) );
 }
 </CODE>
 
 <ENUMS>
+enum ProcessEventsFlag { AllEvents, ExcludeUserInputEvents, ExcludeSocketNotifiers, WaitForMoreEvents, DeferredDeletion }
+flags ProcessEventsFlags
 </ENUMS>
 
 <PROTOS>
-int height () const
-bool isEmpty () const
-bool isNull () const
-bool isValid () const
-int & rheight ()
-int & rwidth ()
-void scale ( int width, int height, Qt::AspectRatioMode mode )
-void scale ( const QSize & size, Qt::AspectRatioMode mode )
-void setHeight ( int height )
-void setWidth ( int width )
-void transpose ()
-int width () const
+int exec ( ProcessEventsFlags flags = AllEvents )
+void exit ( int returnCode = 0 )
+bool isRunning () const
+bool processEvents ( ProcessEventsFlags flags = AllEvents )
+void processEvents ( ProcessEventsFlags flags, int maxTime )
+void wakeUp ()
 </PROTOS>
 
 <SLOTS>

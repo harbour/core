@@ -55,23 +55,23 @@
 ;
 
 <CLASS>
-Type     = Core
-New      = nWidth, nHeight
+Inherits = QEvent
+Type     = Parameters
+New      = 
 </CLASS>
 
 <CODE>
-#include <QtCore/QSize>
-
+#include <QtGui/QInputEvent>
+#include <QtCore/QEvent>
 
 /*
- * QSize ()
- * QSize ( int width, int height )
- * QSize boundedTo ( const QSize & otherSize ) const
- * QSize expandedTo ( const QSize & otherSize ) const
+ *
+ *
  */
-HB_FUNC( QT_QSIZE )
+HB_FUNC( QT_QINPUTEVENT )
 {
-   hb_retptr( ( QSize* ) new QSize( hb_parni( 1 ), hb_parni( 2 ) ) );
+   hb_retptr( ( QInputEvent* ) new QInputEvent( ( QEvent::Type ) hb_parni( 1 ), 
+                                   ( Qt::KeyboardModifiers ) hb_parni( 2 ) ) );
 }
 </CODE>
 
@@ -79,18 +79,7 @@ HB_FUNC( QT_QSIZE )
 </ENUMS>
 
 <PROTOS>
-int height () const
-bool isEmpty () const
-bool isNull () const
-bool isValid () const
-int & rheight ()
-int & rwidth ()
-void scale ( int width, int height, Qt::AspectRatioMode mode )
-void scale ( const QSize & size, Qt::AspectRatioMode mode )
-void setHeight ( int height )
-void setWidth ( int width )
-void transpose ()
-int width () const
+Qt::KeyboardModifiers modifiers () const
 </PROTOS>
 
 <SLOTS>

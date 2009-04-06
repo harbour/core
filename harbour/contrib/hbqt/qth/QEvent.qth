@@ -56,41 +56,34 @@
 
 <CLASS>
 Type     = Core
-New      = nWidth, nHeight
+New      = nType
 </CLASS>
 
 <CODE>
-#include <QtCore/QSize>
+#include <QtCore/QEvent>
 
 
 /*
- * QSize ()
- * QSize ( int width, int height )
- * QSize boundedTo ( const QSize & otherSize ) const
- * QSize expandedTo ( const QSize & otherSize ) const
+ * QEvent ( Type type )
+ * virtual ~QEvent ()
  */
-HB_FUNC( QT_QSIZE )
+HB_FUNC( QT_QEVENT )
 {
-   hb_retptr( ( QSize* ) new QSize( hb_parni( 1 ), hb_parni( 2 ) ) );
+   hb_retptr( ( QEvent* ) new QEvent( ( QEvent::Type ) hb_parni( 1 ) ) );
 }
 </CODE>
 
 <ENUMS>
+enum Type { None, AccessibilityDescription, AccessibilityHelp, AccessibilityPrepare, ..., MaxUser }
 </ENUMS>
 
 <PROTOS>
-int height () const
-bool isEmpty () const
-bool isNull () const
-bool isValid () const
-int & rheight ()
-int & rwidth ()
-void scale ( int width, int height, Qt::AspectRatioMode mode )
-void scale ( const QSize & size, Qt::AspectRatioMode mode )
-void setHeight ( int height )
-void setWidth ( int width )
-void transpose ()
-int width () const
+void accept ()
+void ignore ()
+bool isAccepted () const
+void setAccepted ( bool accepted )
+bool spontaneous () const
+Type type () const
 </PROTOS>
 
 <SLOTS>

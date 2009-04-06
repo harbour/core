@@ -55,42 +55,56 @@
 ;
 
 <CLASS>
-Type     = Core
-New      = nWidth, nHeight
+Type     = Parameters
+New      = nX, nY, nWidth, nHeight, nType
 </CLASS>
 
 <CODE>
-#include <QtCore/QSize>
+#include <QtGui/QRegion>
 
 
 /*
- * QSize ()
- * QSize ( int width, int height )
- * QSize boundedTo ( const QSize & otherSize ) const
- * QSize expandedTo ( const QSize & otherSize ) const
+ * QRegion ()
+ * QRegion ( int x, int y, int w, int h, RegionType t = Rectangle )
+ * QRegion ( const QPolygon & a, Qt::FillRule fillRule = Qt::OddEvenFill )
+ * QRegion ( const QRegion & r )
+ * QRegion ( const QBitmap & bm )
+ * QRegion ( const QRect & r, RegionType t = Rectangle )
  */
-HB_FUNC( QT_QSIZE )
+HB_FUNC( QT_QREGION )
 {
-   hb_retptr( ( QSize* ) new QSize( hb_parni( 1 ), hb_parni( 2 ) ) );
+   hb_retptr( ( QRegion* ) new QRegion( hb_parni( 1 ), hb_parni( 2 ), 
+                                        hb_parni( 3 ), hb_parni( 4 ), 
+      ( QRegion::RegionType ) ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : QRegion::Rectangle ) ) );
 }
 </CODE>
 
 <ENUMS>
+enum RegionType { Rectangle, Ellipse }
 </ENUMS>
 
 <PROTOS>
-int height () const
+QRect boundingRect () const
+bool contains ( const QPoint & p ) const
+bool contains ( const QRect & r ) const
+//Handle handle () const
+HRGN handle () const
+QRegion intersected ( const QRegion & r ) const
+QRegion intersected ( const QRect & rect ) const
+bool intersects ( const QRegion & region ) const
+bool intersects ( const QRect & rect ) const
 bool isEmpty () const
-bool isNull () const
-bool isValid () const
-int & rheight ()
-int & rwidth ()
-void scale ( int width, int height, Qt::AspectRatioMode mode )
-void scale ( const QSize & size, Qt::AspectRatioMode mode )
-void setHeight ( int height )
-void setWidth ( int width )
-void transpose ()
-int width () const
+int numRects () const
+QVector<QRect> rects () const
+void setRects ( const QRect * rects, int number )
+QRegion subtracted ( const QRegion & r ) const
+void translate ( int dx, int dy )
+void translate ( const QPoint & point )
+QRegion translated ( int dx, int dy ) const
+QRegion translated ( const QPoint & p ) const
+QRegion united ( const QRegion & r ) const
+QRegion united ( const QRect & rect ) const
+QRegion xored ( const QRegion & r ) const
 </PROTOS>
 
 <SLOTS>

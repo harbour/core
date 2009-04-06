@@ -55,23 +55,22 @@
 ;
 
 <CLASS>
+Inherits = QEvent
 Type     = Core
-New      = nWidth, nHeight
+New      = 
 </CLASS>
 
 <CODE>
-#include <QtCore/QSize>
+#include <QtGui/QPaintEvent>
 
 
 /*
- * QSize ()
- * QSize ( int width, int height )
- * QSize boundedTo ( const QSize & otherSize ) const
- * QSize expandedTo ( const QSize & otherSize ) const
+ * QPaintEvent ( const QRegion & paintRegion )
+ * QPaintEvent ( const QRect & paintRect )
  */
-HB_FUNC( QT_QSIZE )
+HB_FUNC( QT_QPAINTEVENT )
 {
-   hb_retptr( ( QSize* ) new QSize( hb_parni( 1 ), hb_parni( 2 ) ) );
+   hb_retptr( ( QPaintEvent* ) new QPaintEvent( *hbqt_par_QRect( 1 ) ) );
 }
 </CODE>
 
@@ -79,18 +78,8 @@ HB_FUNC( QT_QSIZE )
 </ENUMS>
 
 <PROTOS>
-int height () const
-bool isEmpty () const
-bool isNull () const
-bool isValid () const
-int & rheight ()
-int & rwidth ()
-void scale ( int width, int height, Qt::AspectRatioMode mode )
-void scale ( const QSize & size, Qt::AspectRatioMode mode )
-void setHeight ( int height )
-void setWidth ( int width )
-void transpose ()
-int width () const
+const QRect & rect () const
+const QRegion & region () const
 </PROTOS>
 
 <SLOTS>
