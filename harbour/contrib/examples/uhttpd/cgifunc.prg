@@ -95,7 +95,7 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
          // with same name, then I will change it to an array
          IF ( hb_HPos( hHashVars, cName ) ) > 0
             IF !HB_ISARRAY( hHashVars[ cName ] )
-               // Transoform it to array
+               // Transform it to array
                hHashVars[ cName ] := { hHashVars[ cName ] }
             ENDIF
             aAdd( hHashVars[ cName ], xValue )
@@ -137,11 +137,13 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    LOCAL hUrl := hb_Hash()
    LOCAL nPos, cTemp, cUserNamePassword, cHostnamePort
    LOCAL cProto, cHost, cPort, nPort, cUser, cPass, cPath, cQuery, cFragment
+   LOCAL cUri
 
    // Prevents case matching
    hb_HSetCaseMatch( hUrl, FALSE )
 
    cTemp := cUrl
+   cUri  := ""
 
    // Starting with
    // http://[username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
@@ -155,6 +157,8 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    ELSE
       cProto := ""
    ENDIF
+
+   cUri += cProto + IIF( !Empty( cProto ), "://", "" )
 
    // Now we have:
    // [username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
@@ -212,6 +216,8 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    // Now we have:
    // hostname[:port][/path[/file[.ext]]
 
+   cUri += cTemp
+
    // Search for Path part using / char from right
    nPos := RAt( "/", cTemp )
    IF nPos > 0
@@ -225,7 +231,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    ENDIF
 
    // Now we have:
-   // hostname[:port][/path[/file[.ext]]
+   // hostname[:port]
 
    cHostnamePort := cTemp
 
@@ -252,6 +258,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    hb_hSet( hUrl, "PATH"    , cPath     )
    hb_hSet( hUrl, "QUERY"   , cQuery    )
    hb_hSet( hUrl, "FRAGMENT", cFragment )
+   hb_hSet( hUrl, "URI"     , cURI )
 
    // Prevents externals to add something else to this Hash
    hb_HSetAutoAdd( hUrl, FALSE )

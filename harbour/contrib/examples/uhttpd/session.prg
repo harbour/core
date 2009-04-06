@@ -844,23 +844,23 @@ METHOD SendCacheLimiter() CLASS uhttpd_Session
   LOCAL dDate
   DO CASE
      CASE ::cCache_Limiter == 'nocache'
-          //uhttpd_AddHeader( 'Expires', 'Thu, 19 Nov 1981 08:52:00 GMT' )
-          uhttpd_AddHeader( 'Expires', uhttpd_DateToGMT( ,,-1, ) )
-          uhttpd_AddHeader( 'Cache-Control', 'no-cache' )
-          //uhttpd_AddHeader("Cache-Control", "no-store, no-cache, must-revalidate")  // HTTP/1.1
-          //uhttpd_AddHeader("Cache-Control", "post-check=0, pre-check=0", FALSE )
-          uhttpd_AddHeader( 'Pragma', 'no-cache' )
+          //uhttpd_SetHeader( 'Expires', 'Thu, 19 Nov 1981 08:52:00 GMT' )
+          uhttpd_SetHeader( 'Expires', uhttpd_DateToGMT( ,,-1, ) )
+          uhttpd_SetHeader( 'Cache-Control', 'no-cache' )
+          //uhttpd_SetHeader("Cache-Control", "no-store, no-cache, must-revalidate")  // HTTP/1.1
+          //uhttpd_SetHeader("Cache-Control", "post-check=0, pre-check=0", FALSE )
+          uhttpd_SetHeader( 'Pragma', 'no-cache' )
      CASE ::cCache_Limiter == 'private'
-          uhttpd_AddHeader( 'Expires', 'Thu, 19 Nov 1981 08:52:00 GMT' )
-          uhttpd_AddHeader( 'Cache-Control', 'private, max-age=' + LTrim( Str( ::nCache_Expire * 60 ) ) )
+          uhttpd_SetHeader( 'Expires', 'Thu, 19 Nov 1981 08:52:00 GMT' )
+          uhttpd_SetHeader( 'Cache-Control', 'private, max-age=' + LTrim( Str( ::nCache_Expire * 60 ) ) )
           IF hb_FGetDateTime( hb_argv(0), @dDate )
-             uhttpd_AddHeader( 'Last-Modified', uhttpd_DateToGMT( dDate ) )
+             uhttpd_SetHeader( 'Last-Modified', uhttpd_DateToGMT( dDate ) )
           ENDIF
      CASE ::cCache_Limiter == 'public'
-          uhttpd_AddHeader( 'Expires', uhttpd_DateToGMT( ,,, ::nCache_Expire * 60 ) )
-          uhttpd_AddHeader( 'Cache-Control', 'public, max-age=' + LTrim( Str( ::nCache_Expire * 60 ) ) )
+          uhttpd_SetHeader( 'Expires', uhttpd_DateToGMT( ,,, ::nCache_Expire * 60 ) )
+          uhttpd_SetHeader( 'Cache-Control', 'public, max-age=' + LTrim( Str( ::nCache_Expire * 60 ) ) )
           IF hb_FGetDateTime( hb_argv(0), @dDate )
-             uhttpd_AddHeader( 'Last-Modified', uhttpd_DateToGMT( dDate ) )
+             uhttpd_SetHeader( 'Last-Modified', uhttpd_DateToGMT( dDate ) )
           ENDIF
      OTHERWISE
           uhttpd_Die( "ERROR: Caching method " + ::cCache_Limiter + " not implemented." )

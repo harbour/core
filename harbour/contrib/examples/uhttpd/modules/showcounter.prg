@@ -78,19 +78,19 @@ FUNCTION HRBMAIN()
      cHtml := CreateCounter( AllTrim( Str( Val( _REQUEST[ "w" ] ) ) ) )
      //hb_ToOutDebug( hb_sprintf( "CreateCounter = %s", cHtml ) )
      IF !Empty( cHtml )
-        uhttpd_AddHeader( "Content-Type", "image/gif" )
-        uhttpd_AddHeader( "Pragma", "no-cache" )
-        uhttpd_AddHeader( "Content-Disposition", "inline; filename=counter" + LTrim( Str( hb_randomint( 100 ) ) ) + ".gif" )
+        uhttpd_SetHeader( "Content-Type", "image/gif" )
+        uhttpd_SetHeader( "Pragma", "no-cache" )
+        uhttpd_SetHeader( "Content-Disposition", "inline; filename=counter" + LTrim( Str( hb_randomint( 100 ) ) ) + ".gif" )
         uhttpd_Write( cHtml )
      ELSE
-        uhttpd_AddHeader( "Content-Type", "text/html" )
+        uhttpd_SetHeader( "Content-Type", "text/html" )
         uhttpd_Write( "<h1>Error: No image created</h1>" )
      ENDIF
 
 
   ELSE
 
-     uhttpd_AddHeader( "Content-Type", "text/html" )
+     uhttpd_SetHeader( "Content-Type", "text/html" )
      uhttpd_Write( "<h1>Error: no parameters passed</h1>" )
 
   ENDIF

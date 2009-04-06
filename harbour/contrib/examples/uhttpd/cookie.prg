@@ -67,6 +67,7 @@ RETURN uhttpd_Cookie():New( cDomain, cPath, nExpireDays, nExpireSecs )
 CLASS uhttpd_Cookie
 
    // Data for cookies
+   DATA aCookies           INIT {}  // Using an array to mantain order
    DATA cDomain
    DATA cPath              INIT "/"
    DATA cExpire
@@ -96,7 +97,7 @@ METHOD SetCookieDefaults( cDomain, cPath, nExpireDays, nExpireSecs ) CLASS uhttp
    RETURN NIL
 
 METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpOnly ) CLASS uhttpd_Cookie
-   LOCAL cStr
+   LOCAL cStr, nPos, nCookies
 
    DEFAULT cDomain      TO ::cDomain
    DEFAULT cPath        TO ::cPath
@@ -105,7 +106,26 @@ METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpO
 
    ::lHttpOnly := lHttpOnly
 
-   cStr := cCookieName + "=" + uhttpd_UrlEncode( hb_cStr( xValue ) )
+   IF !Empty( xValue )
+      // Search if a cookie already exists
+                                        // case sensitive
+      IF ( nPos := aScan( ::aCookies, {|e| e[ 1 ] == cCookieName } ) ) > 0
+         ::aCookies[ nPos ][ 2 ] := uhttpd_UrlEncode( hb_cStr( xValue ) )
+      ELSE
+         aAdd( ::aCookies, { cCookieName, uhttpd_UrlEncode( hb_cStr( xValue ) ) } )
+      ENDIF
+   ELSE
+      IF ( nPos := aScan( ::aCookies, {|e| e[ 1 ] == cCookieName } ) ) > 0
+         hb_aDel( ::aCookies, nPos, .T. )
+      ENDIF
+   ENDIF
+
+   // Rebuild cookie string as per RFC2616 (comma separated list)
+   cStr     := ""
+   nCookies := Len( ::aCookies )
+   aEval( ::aCookies, {|e, i| cStr += e[ 1 ] + "=" + e[ 2 ] + IIF( i < nCookies, ",", "" ) } )
+
+   //cStr := cCookieName + "=" + uhttpd_UrlEncode( hb_cStr( xValue ) )
 
    IF cDomain <> NIL
       cStr += "; domain=" + cDomain
@@ -121,7 +141,8 @@ METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpO
    ENDIF
 
    // Send the header
-   uhttpd_AddHeader( "Set-Cookie", cStr, FALSE )
+   //uhttpd_SetHeader( "Set-Cookie", cStr, FALSE )
+   uhttpd_SetHeader( "Set-Cookie", cStr )
 
    RETURN NIL
 

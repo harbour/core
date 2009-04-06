@@ -108,7 +108,7 @@ Pressing button you will redirect to /info page. Look at COOKIE values.
      // Set a simple cookie
      oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )
      oCookie:SetCookie( "mycookie", cCookie )
-     uhttpd_AddHeader( "Location", "/info" )
+     uhttpd_SetHeader( "Location", "/info" )
      //uhttpd_Write( "cookie set <a href='/info'>Go to info page</a>" )
      RETURN NIL
   ENDIF

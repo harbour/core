@@ -59,7 +59,7 @@
 #include "common.ch"
 #include "hbclass.ch"
 
-MEMVAR _SERVER, _REQUEST, _GET, _POST, _COOKIE, _SESSION, _HTTP_REQUEST
+MEMVAR _SERVER, _REQUEST, _GET, _POST, _COOKIE, _SESSION, _HTTP_REQUEST, _HTTP_RESPONSE
 
 FUNCTION HRBMAIN()
   LOCAL cHtml
@@ -76,21 +76,23 @@ STATIC FUNCTION ShowServerInfo()
   //cHtml += "<br><br>If it is first time you see this page reload it to see cookies<br><br>"
   cHtml += '<br><br>Return to <a href="/">Main Page</a><br><br>'
 
-  cHtml += DisplayVars( _Server , "SERVER Vars" )
+  cHtml += DisplayVars( _Server       , "SERVER Vars" )
   cHtml += "<br>"
-  cHtml += DisplayVars( _HTTP_REQUEST , "HTTP Headers" )
+  cHtml += DisplayVars( _HTTP_REQUEST , "HTTP Request Headers" )
   cHtml += "<br>"
-  cHtml += DisplayVars( _Get    , "GET Vars" )
+  cHtml += DisplayVars( _HTTP_RESPONSE, "HTTP Response Headers" )
   cHtml += "<br>"
-  cHtml += DisplayVars( _Post   , "POST Vars" )
+  cHtml += DisplayVars( _Get          , "GET Vars" )
   cHtml += "<br>"
-  cHtml += DisplayVars( _Cookie , "COOKIE Vars" )
+  cHtml += DisplayVars( _Post         , "POST Vars" )
   cHtml += "<br>"
-  //cHtml += DisplayVars( _Files  , "FILE Vars" )
+  cHtml += DisplayVars( _Cookie       , "COOKIE Vars" )
+  cHtml += "<br>"
+  //cHtml += DisplayVars( _Files      , "FILE Vars" )
   //cHtml += "<br>"
-  cHtml += DisplayVars( _Request, "REQUEST Vars" )
+  cHtml += DisplayVars( _Request      , "REQUEST Vars" )
   cHtml += "<br>"
-  cHtml += DisplayVars( _Session, "SESSION Vars" )
+  cHtml += DisplayVars( _Session      , "SESSION Vars" )
   cHtml += "<br>"
 
   // Set a simple cookie

@@ -230,9 +230,9 @@ STATIC s_hHandlers         := { ;
 STATIC s_hScriptAliases    := { => }
 STATIC s_hAliases          := { => }
 
-THREAD STATIC t_cResult, t_nStatusCode, t_aHeader, t_cErrorMsg, t_oSession
+THREAD STATIC t_cResult, t_nStatusCode, /*t_aHeader,*/ t_cErrorMsg, t_oSession
 
-MEMVAR _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, m_cPost
+MEMVAR _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, _HTTP_RESPONSE, m_cPost
 
 ANNOUNCE ERRORSYS
 
@@ -567,6 +567,7 @@ FUNCTION MAIN( ... )
 
    IF hb_InetErrorCode( hListen ) != 0
       ? "Bind Error"
+      WAIT
    ELSE
 
       s_nLocalPort    := hb_InetPort( hListen )
@@ -880,7 +881,7 @@ STATIC FUNCTION ProcessConnection()
    LOCAL nMsecs, nParseTime, nPos, nThreadID
    LOCAL lQuitRequest := FALSE
 
-   PRIVATE _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, m_cPost
+   PRIVATE _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, _HTTP_RESPONSE, m_cPost
 
    nThreadId    := hb_threadID()
 
@@ -955,6 +956,8 @@ STATIC FUNCTION ProcessConnection()
 
       BEGIN SEQUENCE
 
+         cRequest := NIL
+
          /* receive query */
          nLen := readRequest( hSocket, @cRequest )
 
@@ -968,22 +971,23 @@ STATIC FUNCTION ProcessConnection()
          ELSEIF nLen == 0 /* connection closed */
          ELSE
 
-            //hb_ToOutDebug( "cRequest -- INIZIO --\n\r%s\n\rcRequest -- FINE --\n\r", cRequest )
+            //hb_ToOutDebug( "cRequest -- BEGIN --\n\r%s\n\rcRequest -- END --\n\r", cRequest )
 
             _SERVER := HB_IHASH(); _GET := HB_IHASH(); _POST := HB_IHASH(); _COOKIE := HB_IHASH()
-            _SESSION := HB_IHASH(); _REQUEST := HB_IHASH(); _HTTP_REQUEST := HB_IHASH(); m_cPost := NIL
+            _SESSION := HB_IHASH(); _REQUEST := HB_IHASH(); _HTTP_REQUEST := HB_IHASH(); _HTTP_RESPONSE := HB_IHASH()
+            m_cPost := NIL
             t_cResult     := ""
-            t_aHeader     := {}
+            //t_aHeader     := {}
             t_nStatusCode := 200
             t_cErrorMsg   := ""
 
-            defineServerAdresses( hSocket )
+            defineServer( hSocket )
 
             IF ParseRequest( cRequest )
-               //hb_ToOutDebug( "_SERVER = %s,\n\r _GET = %s,\n\r _POST = %s,\n\r _REQUEST = %s,\n\r _HTTP_REQUEST = %s\n\r", hb_ValToExp( _SERVER ), hb_ValToExp( _GET ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ), hb_ValToExp( _HTTP_REQUEST ) )
+               //hb_ToOutDebug( "_SERVER = %s,\n\r _GET = %s,\n\r _POST = %s,\n\r _REQUEST = %s,\n\r _HTTP_REQUEST = %s,\n\r _HTTP_RESPONSE = %s\n\r", hb_ValToExp( _SERVER ), hb_ValToExp( _GET ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ), hb_ValToExp( _HTTP_REQUEST ), hb_ValToExp( _HTTP_RESPONSE ) )
                cSend := uproc_default()
             ELSE
-               uhttpd_SetStatusCode( 400 )
+               //uhttpd_SetStatusCode( 400 )
                cSend := MakeResponse()
             ENDIF
 
@@ -994,7 +998,7 @@ STATIC FUNCTION ProcessConnection()
             WriteToLog( cRequest )
 
             // Destroy PRIVATE VARIABLES
-            _SERVER := _GET := _POST := _COOKIE := _SESSION := _REQUEST := _HTTP_REQUEST := m_cPost := NIL
+            _SERVER := _GET := _POST := _COOKIE := _SESSION := _REQUEST := _HTTP_REQUEST := _HTTP_RESPONSE := m_cPost := NIL
 
          ENDIF
 
@@ -1043,7 +1047,7 @@ STATIC FUNCTION ServiceConnection()
    LOCAL nError := 500013
    LOCAL lQuitRequest := FALSE
 
-   PRIVATE _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, m_cPost
+   PRIVATE _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, _HTTP_RESPONSE, m_cPost
 
    ErrorBlock( { | oError | uhttpd_DefError( oError ) } )
 
@@ -1125,16 +1129,17 @@ STATIC FUNCTION ServiceConnection()
             //hb_ToOutDebug( "cRequest -- INIZIO --\n\r%s\n\rcRequest -- FINE --\n\r", cRequest )
 
             _SERVER := HB_IHASH(); _GET := HB_IHASH(); _POST := HB_IHASH(); _COOKIE := HB_IHASH()
-            _SESSION := HB_IHASH(); _REQUEST := HB_IHASH(); _HTTP_REQUEST := HB_IHASH(); m_cPost := NIL
+            _SESSION := HB_IHASH(); _REQUEST := HB_IHASH(); _HTTP_REQUEST := HB_IHASH(); _HTTP_RESPONSE := HB_IHASH()
+            m_cPost := NIL
             t_cResult     := ""
-            t_aHeader     := {}
+            //t_aHeader     := {}
             t_nStatusCode := 200
             t_cErrorMsg   := ""
 
-            defineServerAdresses( hSocket )
+            defineServer( hSocket )
 
             IF ParseRequest( cRequest )
-               //hb_ToOutDebug( "_SERVER = %s,\n\r _GET = %s,\n\r _POST = %s,\n\r _REQUEST = %s,\n\r _HTTP_REQUEST = %s\n\r", hb_ValToExp( _SERVER ), hb_ValToExp( _GET ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ), hb_ValToExp( _HTTP_REQUEST ) )
+               //hb_ToOutDebug( "_SERVER = %s,\n\r _GET = %s,\n\r _POST = %s,\n\r _REQUEST = %s,\n\r _HTTP_REQUEST = %s,\n\r _HTTP_RESPONSE = %s\n\r", hb_ValToExp( _SERVER ), hb_ValToExp( _GET ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ), hb_ValToExp( _HTTP_REQUEST ), hb_ValToExp( _HTTP_RESPONSE ) )
                define_Env( _SERVER )
             ENDIF
             // Error page served
@@ -1146,7 +1151,7 @@ STATIC FUNCTION ServiceConnection()
             WriteToLog( cRequest )
 
             // Destroy PRIVATE VARIABLES
-            _SERVER := _GET := _POST := _COOKIE := _SESSION := _REQUEST := _HTTP_REQUEST := m_cPost := NIL
+            _SERVER := _GET := _POST := _COOKIE := _SESSION := _REQUEST := _HTTP_REQUEST := _HTTP_RESPONSE := m_cPost := NIL
 
          ENDIF
 
@@ -1191,6 +1196,7 @@ STATIC FUNCTION ServiceConnection()
 STATIC FUNCTION ParseRequest( cRequest )
    LOCAL aRequest, aLine, nI, nJ, cI
    LOCAL cReq, aVal, cFields, hVars
+   LOCAL hUrl
 
    // RFC2616
    aRequest := uhttpd_split( CR_LF, cRequest )
@@ -1202,6 +1208,8 @@ STATIC FUNCTION ParseRequest( cRequest )
    IF LEN( aLine ) != 3 .OR. ;
       ( aLine[1] != "GET" .AND. aLine[1] != "POST" ) .OR. ; // Sorry, we support GET and POST only
       LEFT( aLine[3], 5 ) != "HTTP/"
+      // Set status code
+      t_nStatusCode := 501 // Not Implemented
       RETURN .F.
    ENDIF
 
@@ -1210,25 +1218,20 @@ STATIC FUNCTION ParseRequest( cRequest )
    _SERVER[ "REQUEST_URI"     ] := aLine[2]
    _SERVER[ "SERVER_PROTOCOL" ] := aLine[3]
 
-   IF ( nI := AT( "?", _SERVER["REQUEST_URI"] ) ) > 0
-      _SERVER[ "SCRIPT_NAME"  ] := LEFT( _SERVER["REQUEST_URI"], nI - 1)
-      _SERVER[ "QUERY_STRING" ] := SUBSTR( _SERVER["REQUEST_URI"], nI + 1)
+   hUrl := uhttpd_SplitUrl( _SERVER[ "REQUEST_URI" ] )
+
+   _SERVER[ "SCRIPT_NAME"  ] := hUrl[ "URI" ]
+   _SERVER[ "QUERY_STRING" ] := hUrl[ "QUERY" ]
+
+   /*
+   IF ( nI := AT( "?", _SERVER[ "REQUEST_URI" ] ) ) > 0
+      _SERVER[ "SCRIPT_NAME"  ] := LEFT( _SERVER[ "REQUEST_URI" ], nI - 1)
+      _SERVER[ "QUERY_STRING" ] := SUBSTR( _SERVER[ "REQUEST_URI" ], nI + 1)
    ELSE
-      _SERVER[ "SCRIPT_NAME"  ] := _SERVER["REQUEST_URI"]
+      _SERVER[ "SCRIPT_NAME"  ] := _SERVER[ "REQUEST_URI" ]
       _SERVER[ "QUERY_STRING" ] := ""
    ENDIF
-
-   _SERVER[ "HTTP_ACCEPT"          ] := ""
-   _SERVER[ "HTTP_ACCEPT_CHARSET"  ] := ""
-   _SERVER[ "HTTP_ACCEPT_ENCODING" ] := ""
-   _SERVER[ "HTTP_ACCEPT_LANGUAGE" ] := ""
-   _SERVER[ "HTTP_CONNECTION"      ] := ""
-   _SERVER[ "HTTP_HOST"            ] := ""
-   _SERVER[ "HTTP_KEEP_ALIVE"      ] := ""
-   _SERVER[ "HTTP_REFERER"         ] := ""
-   _SERVER[ "HTTP_USER_AGENT"      ] := ""
-   _SERVER[ "HTTP_CACHE_CONTROL"   ] := ""
-   _SERVER[ "HTTP_COOKIE"          ] := ""
+   */
 
    FOR nI := 2 TO LEN( aRequest )
       IF aRequest[nI] == "";  EXIT
@@ -1248,8 +1251,9 @@ STATIC FUNCTION ParseRequest( cRequest )
              _SERVER[ "HTTP_" + STRTRAN( UPPER( LEFT( aRequest[nI], nJ - 1 ) ), "-", "_" ) ] := cI
              EXIT
            CASE "HOST"
-             aVal := uhttpd_split( ":", aRequest[ nI ] )
-             _SERVER[ "HTTP_" + STRTRAN( UPPER( aVal[ 1 ] ), "-", "_")] := AllTrim( aVal[ 2 ] )
+             //aVal := uhttpd_split( ":", aRequest[ nI ] )
+             //_SERVER[ "HTTP_" + STRTRAN( UPPER( aVal[ 1 ] ), "-", "_")] := AllTrim( aVal[ 2 ] )
+             _SERVER[ "HTTP_" + STRTRAN( UPPER( LEFT( aRequest[nI], nJ - 1 ) ), "-", "_" ) ] := cI
              EXIT
            CASE "CONTENT-TYPE"
            CASE "CONTENT-LENGTH"
@@ -1270,6 +1274,21 @@ STATIC FUNCTION ParseRequest( cRequest )
           hb_HSet( _HTTP_REQUEST, aVal[ 1 ], IIF( Len( aVal ) == 2, AllTrim( aVal[ 2 ] ), NIL ) )
        ENDIF
    NEXT
+
+   // check if Host field is provided
+   IF hb_HPos( _HTTP_REQUEST, "Host" ) == 0
+
+      // Try to determine Host name
+      IF !Empty( hUrl[ "HOST" ] )
+         _HTTP_REQUEST[ "Host" ] := hUrl[ "HOST" ]
+      ELSE
+         _HTTP_REQUEST[ "Host" ] := ""
+         // Set status code
+         t_nStatusCode := 400 // Bad Request
+         RETURN .F.
+      ENDIF
+
+   ENDIF
 
    //hb_toOutDebug( "_HTTP_REQUEST: aRequest = %s, _HTTP_REQUEST = %s\n\r", hb_ValToExp( aRequest ), hb_ValToExp( _HTTP_REQUEST ) )
 
@@ -1306,18 +1325,18 @@ STATIC FUNCTION ParseRequest( cRequest )
    //hb_toOutDebug( "COOKIE: cFields = %s, hVars = %s, _COOKIE = %s, _REQUEST = %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _COOKIE ), hb_ValToExp( _REQUEST ) )
 
 
+   // define _HTTP_RESPONSE
+   _HTTP_RESPONSE[ "X-Powered-By"      ] := Version()
+   _HTTP_RESPONSE[ "Connection"        ] := "Close"
+   _HTTP_RESPONSE[ "Content-Type"      ] := "text/html; charset=UTF-8"
+   _HTTP_RESPONSE[ "Server"            ] := APP_NAME + " " + APP_VERSION
+   //_HTTP_RESPONSE[ "Transfer-Encoding" ] := "chunked"
+
    // Complete _SERVER
    _SERVER[ "SERVER_NAME"       ] := uhttpd_split( ":", _HTTP_REQUEST[ "HOST" ], 1 )[ 1 ]
-   _SERVER[ "SERVER_SOFTWARE"   ] := APP_NAME + " " + APP_VERSION + " (" + OS() + ")"
-   _SERVER[ "SERVER_SIGNATURE"  ] := "<address>" + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + _SERVER[ "SERVER_PORT" ] + "</address>"
-   _SERVER[ "DOCUMENT_ROOT"     ] := s_cDocumentRoot
-   _SERVER[ "SERVER_ADMIN"      ] := "root@localhost"   // TOFIX: put real user
    _SERVER[ "SCRIPT_FILENAME"   ] := STRTRAN( STRTRAN( _SERVER[ "DOCUMENT_ROOT" ] + _SERVER[ "SCRIPT_NAME" ], "//", "/" ), "\", "/" )
-   _SERVER[ "GATEWAY_INTERFACE" ] := "CGI/1.1"
-   _SERVER[ "SCRIPT_URL"        ] := _SERVER["SCRIPT_NAME"]
-   _SERVER[ "SCRIPT_URI"        ] := "http://" + _HTTP_REQUEST[ "HOST" ] + _SERVER["SCRIPT_NAME"]
-   _SERVER[ "PATH_INFO"         ] := NIL
-   _SERVER[ "PATH_TRANSLATED"   ] := NIL
+   _SERVER[ "SCRIPT_URL"        ] := _SERVER[ "SCRIPT_NAME" ]
+   _SERVER[ "SCRIPT_URI"        ] := "http://" + _HTTP_REQUEST[ "HOST" ] + _SERVER[ "SCRIPT_NAME" ]
 
    //hb_ToOutDebug( "_SERVER = %s\n\r", hb_ValToExp( _SERVER ) )
    //hb_ToOutDebug( "_GET = %s\n\r", hb_ValToExp( _GET ) )
@@ -1325,26 +1344,28 @@ STATIC FUNCTION ParseRequest( cRequest )
    //hb_ToOutDebug( "_COOKIE = %s\n\r", hb_ValToExp( _COOKIE ) )
    //hb_ToOutDebug( "_SESSION = %s\n\r", hb_ValToExp( _SESSION ) )
    //hb_ToOutDebug( "_HTTP_REQUEST = %s\n\r", hb_ValToExp( _HTTP_REQUEST ) )
+   //hb_ToOutDebug( "_HTTP_RESPONSE = %s\n\r", hb_ValToExp( _HTTP_RESPONSE ) )
 
    // After defined all SERVER vars we can define a session
    // SESSION - sessions ID is stored as a cookie value, normally as SESSIONID var name (this can be user defined)
-   t_oSession := uhttpd_SessionNew( "SESSION", s_cSessionPath )
+   t_oSession := uhttpd_SessionNew( "UHTTPD-SESSION", s_cSessionPath )
    t_oSession:Start()
-
 
    RETURN .T.
 
 
 STATIC FUNCTION MakeResponse()
-   LOCAL cRet, cReturnCode
+   LOCAL cRet, cReturnCode, v
 
-   uhttpd_AddHeader( "Connection", "close" )
+   //uhttpd_SetHeader( "X-Powered-By", Version() )
+
+   //uhttpd_SetHeader( "Connection", "close" )
 
    IF uhttpd_GetHeader( "Location" ) != NIL
       t_nStatusCode := 301
    ENDIF
    IF uhttpd_GetHeader( "Content-Type" ) == NIL
-      uhttpd_AddHeader( "Content-Type", "text/html" )
+      uhttpd_SetHeader( "Content-Type", "text/html" )
    ENDIF
 
    cRet := "HTTP/1.1 "
@@ -1360,13 +1381,19 @@ STATIC FUNCTION MakeResponse()
      CASE 402
      CASE 403
      CASE 404
+     CASE 405
+     CASE 500
+     CASE 501
+     CASE 502
      CASE 503
+     CASE 504
+     CASE 505
           t_cResult := "<html><body><h1>" + cReturnCode + "</h1></body></html>"
           EXIT
 
      // extended error messages - from Microsoft IIS Server
      CASE 500013 // error: 500-13 Server too busy
-          uhttpd_AddHeader( "Retry-After", "60" )  // retry after 60 seconds
+          uhttpd_SetHeader( "Retry-After", "60" )  // retry after 60 seconds
           t_cResult := "<html><body><h1>500 Server Too Busy</h1></body></html>"
           EXIT
 
@@ -1380,14 +1407,25 @@ STATIC FUNCTION MakeResponse()
    //hb_ToOutDebug( "_SESSION = %s\n\r", hb_ValToExp( _SESSION ) )
 
    // Close session - Autodestructor will NOT close it, because t_oSession is destroyed only at end of Thread
-   t_oSession:Close()
+
+   IF HB_ISOBJECT( t_oSession )
+      t_oSession:Close()
+   ENDIF
    // t_oSession := NIL
 
    WriteToConsole( cReturnCode )
    cRet += cReturnCode + CR_LF
-   AEVAL( t_aHeader, {|x| cRet += x[1] + ": " + x[2] + CR_LF } )
+
+   FOR EACH v IN _HTTP_RESPONSE
+       cRet += v:__enumKey() + ": " + v:__enumValue() + CR_LF
+   NEXT
+
+   //AEVAL( t_aHeader, {|x| cRet += x[1] + ": " + x[2] + CR_LF } )
    cRet += CR_LF
    cRet += t_cResult
+
+   //hb_ToOutDebug( "_HTTP_RESPONSE = %s\n\rcRet = %s\n\r", hb_ValToExp( _HTTP_RESPONSE ), cRet )
+
    RETURN cRet
 
 STATIC FUNCTION DecodeStatusCode()
@@ -1415,8 +1453,26 @@ STATIC FUNCTION DecodeStatusCode()
      CASE 404
           cReturnCode := "404 Not Found"
           EXIT
+     CASE 405
+          cReturnCode := "405 Method Not Allowed"
+          EXIT
+     CASE 500
+          cReturnCode := "500 Internal Server Error"
+          EXIT
+     CASE 501
+          cReturnCode := "501 Not Implemented"
+          EXIT
+     CASE 502
+          cReturnCode := "502 Bad Gateway"
+          EXIT
      CASE 503
           cReturnCode := "503 Service Unavailable"
+          EXIT
+     CASE 504
+          cReturnCode := "504 Gateway Timeout"
+          EXIT
+     CASE 505
+          cReturnCode := "505 HTTP Version Not Supported"
           EXIT
 
      // extended error messages - from Microsoft IIS Server
@@ -1676,31 +1732,49 @@ PROCEDURE uhttpd_SetStatusCode(nStatusCode)
    RETURN
 
 
-PROCEDURE uhttpd_AddHeader( cType, cValue, lReplace )
-   LOCAL nI
-   DEFAULT lReplace TO TRUE // Needed from SetCookie()
+PROCEDURE uhttpd_SetHeader( cType, cValue )
+   //LOCAL nI
+   //DEFAULT lReplace TO TRUE // Needed from SetCookie()
 
+   hb_HSet( _HTTP_RESPONSE, cType, cValue )
+
+   /*
    IF lReplace .AND. ( nI := ASCAN( t_aHeader, {|x| UPPER( x[ 1 ] ) == UPPER( cType ) } ) ) > 0
       t_aHeader[ nI, 2 ] := cValue
    ELSE
       AADD( t_aHeader, { cType, cValue } )
    ENDIF
+   */
+
    RETURN
 
-FUNCTION uhttpd_GetHeader( cType, /*@*/ nPos )
+
+FUNCTION uhttpd_GetHeader( cType )
+   RETURN uhttpd_HGetValue( _HTTP_RESPONSE, cType )
+/*
    DEFAULT nPos TO 1
+
+   nPos := hb_HPos( hHash, cKey ))
    IF ( nPos := ASCAN( t_aHeader, {|x| UPPER( x[ 1 ] ) == UPPER( cType ) }, nPos ) ) > 0
       RETURN t_aHeader[ nPos, 2 ]
    ENDIF
    RETURN NIL
+*/
 
 PROCEDURE uhttpd_DelHeader( cType )
+   LOCAL nPos := hb_HPos( _HTTP_RESPONSE, cType )
+   IF nPos > 0
+      hb_HDel( _HTTP_RESPONSE, nPos )
+   ENDIF
+   RETURN
+/*
    LOCAL nI
 
    IF ( nI := ASCAN( t_aHeader, {|x| UPPER( x[ 1 ] ) == UPPER( cType ) } ) ) > 0
       hb_aDel( t_aHeader, nI, TRUE )
    ENDIF
    RETURN
+*/
 
 PROCEDURE uhttpd_Write( cString )
    t_cResult += cString
@@ -1787,10 +1861,12 @@ STATIC FUNCTION sendReply( hSocket, cSend )
 
    RETURN nError
 
-STATIC PROCEDURE defineServerAdresses( hSocket )
+STATIC PROCEDURE defineServer( hSocket )
 #ifndef USE_HB_INET
    LOCAL aI
 #endif
+
+   // define _SERVER vars (address part)
 #ifdef USE_HB_INET
    _SERVER[ "REMOTE_ADDR" ] := hb_InetAddress( hSocket )
    _SERVER[ "REMOTE_HOST" ] := _SERVER[ "REMOTE_ADDR" ]  // no reverse DNS
@@ -1810,6 +1886,35 @@ STATIC PROCEDURE defineServerAdresses( hSocket )
       _SERVER[ "SERVER_PORT" ] := LTrim( Str( aI[3] ) )
    ENDIF
 #endif
+
+   // add other _SERVER vars
+   _SERVER[ "REQUEST_METHOD"       ] := NIL
+   _SERVER[ "REQUEST_URI"          ] := NIL
+   _SERVER[ "SERVER_PROTOCOL"      ] := NIL
+   _SERVER[ "SCRIPT_NAME"          ] := NIL
+   _SERVER[ "QUERY_STRING"         ] := NIL
+   _SERVER[ "HTTP_ACCEPT"          ] := NIL
+   _SERVER[ "HTTP_ACCEPT_CHARSET"  ] := NIL
+   _SERVER[ "HTTP_ACCEPT_ENCODING" ] := NIL
+   _SERVER[ "HTTP_ACCEPT_LANGUAGE" ] := NIL
+   _SERVER[ "HTTP_CONNECTION"      ] := NIL
+   _SERVER[ "HTTP_HOST"            ] := NIL
+   _SERVER[ "HTTP_KEEP_ALIVE"      ] := NIL
+   _SERVER[ "HTTP_REFERER"         ] := ""
+   _SERVER[ "HTTP_USER_AGENT"      ] := ""
+   _SERVER[ "HTTP_CACHE_CONTROL"   ] := NIL
+   _SERVER[ "HTTP_COOKIE"          ] := NIL
+   _SERVER[ "SERVER_NAME"          ] := ""
+   _SERVER[ "SERVER_SOFTWARE"      ] := APP_NAME + " " + APP_VERSION + " (" + OS() + ")"
+   _SERVER[ "SERVER_SIGNATURE"     ] := "<address>" + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + _SERVER[ "SERVER_PORT" ] + "</address>"
+   _SERVER[ "DOCUMENT_ROOT"        ] := s_cDocumentRoot
+   _SERVER[ "SERVER_ADMIN"         ] := "root@localhost"   // TOFIX: put real user
+   _SERVER[ "SCRIPT_FILENAME"      ] := NIL
+   _SERVER[ "GATEWAY_INTERFACE"    ] := "CGI/1.1"
+   _SERVER[ "SCRIPT_URL"           ] := NIL
+   _SERVER[ "SCRIPT_URI"           ] := NIL
+   _SERVER[ "PATH_INFO"            ] := NIL
+   _SERVER[ "PATH_TRANSLATED"      ] := NIL
 
    RETURN
 
@@ -1913,7 +2018,7 @@ STATIC FUNCTION uproc_default()
 
             // if it exists as folder and it is missing trailing slash I add it and redirect to it
             IF RIGHT( cFileName, 1 ) != "/"
-               uhttpd_AddHeader( "Location", "http://" + _SERVER[ "HTTP_HOST" ] + _SERVER[ "SCRIPT_NAME" ] + "/" )
+               uhttpd_SetHeader( "Location", "http://" + _SERVER[ "HTTP_HOST" ] + _SERVER[ "SCRIPT_NAME" ] + "/" )
                RETURN MakeResponse()
             ENDIF
 
@@ -2020,7 +2125,7 @@ STATIC PROCEDURE Define_Env( hmServer )
 
 STATIC PROCEDURE ShowServerStatus()
    LOCAL cThreads
-   uhttpd_AddHeader( "Content-Type", "text/html" )
+   uhttpd_SetHeader( "Content-Type", "text/html" )
    uhttpd_Write( '<html><head>' )
    uhttpd_Write( '<META HTTP-EQUIV="Refresh" CONTENT="' + LTrim( Str( PAGE_STATUS_REFRESH ) ) + ';URL=/ServerStatus">' )
    uhttpd_Write( '<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">' )
@@ -2063,7 +2168,7 @@ STATIC PROCEDURE ShowFolder( cDir )
    LOCAL aDir, aF
    LOCAL cParentDir, nPos
 
-   uhttpd_AddHeader( "Content-Type", "text/html" )
+   uhttpd_SetHeader( "Content-Type", "text/html" )
 
    aDir := DIRECTORY( uhttpd_OSFileName( cDir ), "D" )
    IF HB_HHasKey( _GET, "s" )
@@ -2607,7 +2712,7 @@ STATIC FUNCTION Handler_Default( cFileName )
         cMime := "application/octet-stream"
       ENDIF
 
-      uhttpd_AddHeader( "Content-Type", cMime )
+      uhttpd_SetHeader( "Content-Type", cMime )
       uhttpd_Write( HB_MEMOREAD( uhttpd_OSFileName( cFileName ) ) )
 
    // Directory content request
@@ -2635,7 +2740,7 @@ RETURN MakeResponse()
 // This handler handle server status
 STATIC FUNCTION Handler_ServerStatus()
    LOCAL cThreads
-   uhttpd_AddHeader( "Content-Type", "text/html" )
+   uhttpd_SetHeader( "Content-Type", "text/html" )
    uhttpd_Write( '<html><head>' )
    uhttpd_Write( '<META HTTP-EQUIV="Refresh" CONTENT="' + LTrim( Str( PAGE_STATUS_REFRESH ) ) + ';URL=/ServerStatus">' )
    uhttpd_Write( '<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">' )
@@ -2715,7 +2820,7 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
       ENDIF
 
       IF HB_ISSTRING( xResult )
-         uhttpd_AddHeader( "Content-Type", "text/html" )
+         uhttpd_SetHeader( "Content-Type", "text/html" )
          uhttpd_Write( xResult )
       ELSE
          // Application in HRB module is responsible to send HTML content
@@ -2725,7 +2830,7 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
 
       WriteToConsole( "Error!" )
 
-      uhttpd_AddHeader( "Content-Type", "text/html" )
+      uhttpd_SetHeader( "Content-Type", "text/html" )
       uhttpd_Write( "Error" )
       uhttpd_Write( "<br>Description: " + hb_cStr( oError:Description ) )
       uhttpd_Write( "<br>Filename: "    + hb_cStr( oError:filename ) )
@@ -2748,13 +2853,13 @@ STATIC FUNCTION Handler_CgiScript( cFileName )
 
    IF ( CGIExec( uhttpd_OSFileName(cFileName), @xResult ) ) == 0
 
-      //uhttpd_AddHeader( "Content-Type", cI )
+      //uhttpd_SetHeader( "Content-Type", cI )
       //uhttpd_Write( xResult )
       RETURN "HTTP/1.1 200 OK " + CR_LF + xResult
 
    ELSE
 
-      uhttpd_AddHeader( "Content-Type", "text/html" )
+      uhttpd_SetHeader( "Content-Type", "text/html" )
       IF !Empty( xResult )
          uhttpd_Write( xResult )
       ELSE

@@ -8,6 +8,38 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-07 00:41 UTC+0200 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/contrib/examples/uhttpd/uhttpd.prg
+    + Added _HTTP_RESPONSE headers
+    * Renamed defineServerAdresses() function to defineServer()
+      as now define all _SERVER variables
+    * ParseRequest() now uses uhttpd_SplitUrl() to define URI parts
+    * Host now is defined according with RFC2616
+    * HRB session now is defined as UHTTPD-SESSION to avoid collision with
+      SESSION in cookies
+    ! uhttpd_AddHeader() renamed to uhttpd_SetHeader() to be conformed to
+      RFC2616 that wants that a header variable is defined only once.
+      See cookie.prg changes.
+      Headers now are contained in a Hash instead of an array
+    * fixed as per above also uhttpd_GetHeader() / uhttpd_DelHeader()
+
+  * harbour/contrib/examples/uhttpd/session.prg
+    * uhttpd_AddHeader() -> uhttpd_SetHeader()
+  * harbour/contrib/examples/uhttpd/cgifunc.prg
+    * in function uhttpd_SplitUrl() added URI hash field
+  + harbour/contrib/examples/uhttpd/cookie.prg
+    * To conform to RFC2616 now if Set-Cookie has more than one value than
+      is created a comma separated list of cookie-name=cookie-value
+    * uhttpd_AddHeader() -> uhttpd_SetHeader()
+
+  * harbour/contrib/examples/uhttpd/modules/info.prg
+    + Added _HTTP_RESPONSE display
+
+  * harbour/contrib/examples/uhttpd/modules/cookie.prg
+  * harbour/contrib/examples/uhttpd/modules/showcounter.prg
+  * harbour/contrib/examples/uhttpd/modules/tableservletdb.prg
+    * uhttpd_AddHeader() -> uhttpd_SetHeader()
+
 2009-04-06 23:38 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Fixed to properly set errorlevels. For some reason I thought
