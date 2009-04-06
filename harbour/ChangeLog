@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-06 19:35 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/rtl/hbstrfmt.c
+    + added precision support for %s and %d.
+      COMMENT: I've used GNU printf() function for test. Some of 
+      formats is not supported by it. For example, zero padding is 
+      ignored if left alignment is used, etc. I'm not sure if it is 
+      intentional.
+
 2009-04-06 18:12 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.bat
     * owatcom tweaks. Build is still going dunno if this will be okay.
