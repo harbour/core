@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-06 14:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbole/Makefile
+  * contrib/hbole/olecore.c
+  + contrib/hbole/hbwinole.h
+    + Added C header.
+    + Exported hb_oleVariantToItem().
+
+  * contrib/hbqt/hbqt_qfont.cpp
+    ! Fixed HB_IS_STRING() -> HB_ISCHAR().
+
 2009-04-06 13:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Fixed finding shared libs since /lib/<arch>/<comp> lib path

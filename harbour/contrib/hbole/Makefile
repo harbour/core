@@ -21,10 +21,18 @@ C_SOURCES=\
 	oleinit.c \
 	olecore.c \
 
+C_HEADERS = \
+	hbwinole.h \
+
 PRG_SOURCES=\
 	oleauto.prg \
 
+include $(TOP)$(ROOT)config/header.cf
+INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf
+
+install::
+	$(INSTALL_RULE_HEADERS)
 
 else
 include $(TOP)$(ROOT)config/none.cf

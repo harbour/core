@@ -51,47 +51,7 @@
  *
  */
 
-
-/* This option can resolve compilation problems in C++ mode for some
- * compilers like OpenWatcom but not for all, f.e. it will not help
- * BCC when used with -P (C++ mode) switch.
- */
-/*
-#if defined( __cplusplus ) && !defined( CINTERFACE )
-   #define CINTERFACE 1
-#endif
-*/
-
-/* This code uses named union so this declaration is necessary for
- * compilers where nameless unions are default
- */
-#if !defined( NONAMELESSUNION )
-   #define NONAMELESSUNION
-#endif
-
-/* macros used to hide type of interface: C or C++
- */
-#if defined( __cplusplus ) && !defined( CINTERFACE ) && \
-   ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
-     ( defined(__WATCOMC__) && ( __WATCOMC__ >= 1270 ) ) )
-#  define HB_OLE_C_API        0
-#  define HB_ID_REF( id )     ( id )
-#else
-#  define HB_OLE_C_API        1
-#  define HB_ID_REF( id )     ( &id )
-#endif
-
-
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbapicls.h"
-#include "hbapierr.h"
-#include "hbvm.h"
-#include "hbstack.h"
-#include "hbdate.h"
-#include "hbinit.h"
-
-#include <ole2.h>
+#include "hbwinole.h"
 
 static PHB_DYNS s_pDyns_hb_oleauto;
 static PHB_DYNS s_pDyns_hObjAccess;
@@ -105,9 +65,7 @@ typedef struct
 static HB_TSD_NEW( s_oleData, sizeof( HB_OLEDATA ), NULL, NULL );
 #define hb_getOleData()       ( ( PHB_OLEDATA ) hb_stackGetTSD( &s_oleData ) )
 #define hb_getOleError()      ( hb_getOleData()->lOleError )
-#define hb_setOleError(e)     do { hb_getOleData()->lOleError = (e); } while( 0 )
-
-HB_EXPORT void hb_oleInit( void );  /* TODO: move to some hbole.h */
+#define hb_setOleError( e )   do { hb_getOleData()->lOleError = ( e ); } while( 0 )
 
 HB_FUNC_EXTERN( HB_OLEAUTO );
 
@@ -221,7 +179,7 @@ static void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
 }
 
 
-static void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
+void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 {
    switch( pVariant->n1.n2.vt )
    {
