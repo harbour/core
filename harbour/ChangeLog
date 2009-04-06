@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-06 17:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added --hbdirbin, --hbdirlib, --hbdirinc.
+    + Added --version and --help to help screen.
+    ! Changed to use OS native slashed in path when calling harbour executable.
+    + -quiet will now suppress messages when -traceonly option is used.
+      Script dumps will still have a header for clarity.
+    + Will now dump harbour executable name to Harbour command -trace
+      output, even if internal compiler is used.
+
 2009-04-06 16:04 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     + added support for displaying harbour bin, lib and include directories

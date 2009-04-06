@@ -305,6 +305,7 @@ FUNCTION Main( ... )
    LOCAL cPostfix
    LOCAL nEmbedLevel
 
+   LOCAL lStopAfterInit := .F.
    LOCAL lStopAfterHarbour := .F.
    LOCAL lStopAfterCComp := .F.
    LOCAL lAcceptCFlag := .F.
@@ -910,6 +911,18 @@ FUNCTION Main( ... )
            cParamL == "-notrace"         ; s_lTRACE    := .F.
       CASE cParamL == "-traceonly"       ; s_lTRACE    := .T. ; s_lDONTEXEC := .T.
 
+      CASE cParamL == "--hbdirbin"       ; lStopAfterInit := .T.
+
+         OutStd( s_cHB_BIN_INSTALL )
+
+      CASE cParamL == "--hbdirlib"       ; lStopAfterInit := .T.
+
+         OutStd( s_cHB_LIB_INSTALL )
+
+      CASE cParamL == "--hbdirinc"       ; lStopAfterInit := .T.
+
+         OutStd( s_cHB_INC_INSTALL )
+
       CASE Left( cParamL, 6 ) == "-main="
 
          IF IsValidHarbourID( cParam := SubStr( cParam, 7 ) )
@@ -1103,7 +1116,7 @@ FUNCTION Main( ... )
    NEXT
 
    /* Start doing the make process. */
-   IF ( Len( s_aPRG ) + Len( s_aC ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) == 0
+   IF ! lStopAfterInit .AND. ( Len( s_aPRG ) + Len( s_aC ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) == 0
       OutErr( "hbmk: Error: No source files were specified." + hb_osNewLine() )
       PauseForKey()
       RETURN 4
@@ -1111,7 +1124,7 @@ FUNCTION Main( ... )
 
    /* Harbour compilation */
 
-   IF Len( s_aPRG ) > 0
+   IF ! lStopAfterInit .AND. Len( s_aPRG ) > 0
 
       PlatformPRGFlags( s_aOPTPRG )
 
@@ -1124,16 +1137,21 @@ FUNCTION Main( ... )
                                 s_aOPTPRG } )
 
       IF s_lTRACE
-         OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() + ArrayToList( aCommand ) + hb_osNewLine() )
+         IF ! s_lDONTEXEC .OR. ! t_lQuiet
+            OutStd( "hbmk: Harbour compiler command (internal):" + hb_osNewLine() )
+         ENDIF
+         OutStd( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG +;
+                 " " + ArrayToList( aCommand ) + hb_osNewLine() )
       ENDIF
 
       IF ! s_lDONTEXEC .AND. ( tmp := hb_compile( "", aCommand ) ) != 0
-         OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + hb_osNewLine() + ArrayToList( aCommand ) + hb_osNewLine() )
+         OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + hb_osNewLine() )
+         OutErr( ArrayToList( aCommand ) + hb_osNewLine() )
          PauseForKey()
          RETURN 6
       ENDIF
 #else
-      cCommand := DirAddPathSep( s_cHB_BIN_INSTALL ) +;
+      cCommand := DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) +;
                   cBin_CompPRG +;
                   " " + iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) +;
                   " " + ArrayToList( s_aPRG ) +;
@@ -1145,18 +1163,22 @@ FUNCTION Main( ... )
       cCommand := AllTrim( cCommand )
 
       IF s_lTRACE
-         OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+         IF ! s_lDONTEXEC .OR. ! t_lQuiet
+            OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() )
+         ENDIF
+         OutStd( cCommand + hb_osNewLine() )
       ENDIF
 
       IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
-         OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
+         OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+         OutErr( cCommand + hb_osNewLine() )
          PauseForKey()
          RETURN 6
       ENDIF
 #endif
    ENDIF
 
-   IF ! lStopAfterHarbour
+   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
 
       /* If -o with full name wasn't specified, let's
          make it the first source file specified. */
@@ -2119,14 +2141,19 @@ FUNCTION Main( ... )
          cCommand := cBin_Res + " " + cOpt_Res
 
          IF s_lTRACE
-            OutStd( "hbmk: Resource compiler command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+            IF ! s_lDONTEXEC .OR. ! t_lQuiet
+               OutStd( "hbmk: Resource compiler command:" + hb_osNewLine() )
+            ENDIF
+            OutStd( cCommand + hb_osNewLine() )
             IF ! Empty( cScriptFile )
-               OutStd( "hbmk: Resource compiler script:" + hb_osNewLine() + hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+               OutStd( "hbmk: Resource compiler script:" + hb_osNewLine() )
+               OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
             ENDIF
          ENDIF
 
          IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
-            OutErr( "hbmk: Error: Running resource compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
+            OutErr( "hbmk: Error: Running resource compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+            OutErr( cCommand + hb_osNewLine() )
             nErrorLevel := 8
          ENDIF
 
@@ -2169,11 +2196,15 @@ FUNCTION Main( ... )
                   cCommand := cBin_CompC + " " + AllTrim( cCommand )
 
                   IF s_lTRACE
-                     OutStd( "hbmk: C compiler command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+                     IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                        OutStd( "hbmk: C compiler command:" + hb_osNewLine() )
+                     ENDIF
+                     OutStd( cCommand + hb_osNewLine() )
                   ENDIF
 
                   IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
-                     OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
+                     OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+                     OutErr( cCommand + hb_osNewLine() )
                      nErrorLevel := 6
                      EXIT
                   ENDIF
@@ -2199,14 +2230,19 @@ FUNCTION Main( ... )
                cCommand := cBin_CompC + " " + cOpt_CompC
 
                IF s_lTRACE
-                  OutStd( "hbmk: C compiler command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+                  IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                     OutStd( "hbmk: C compiler command:" + hb_osNewLine() )
+                  ENDIF
+                  OutStd( cCommand + hb_osNewLine() )
                   IF ! Empty( cScriptFile )
-                     OutStd( "hbmk: C compiler script:" + hb_osNewLine() + hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+                     OutStd( "hbmk: C compiler script:" + hb_osNewLine() )
+                     OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
                   ENDIF
                ENDIF
 
                IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
-                  OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
+                  OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+                  OutErr( cCommand + hb_osNewLine() )
                   nErrorLevel := 6
                ENDIF
 
@@ -2256,14 +2292,19 @@ FUNCTION Main( ... )
             cCommand := cBin_Link + " " + cOpt_Link
 
             IF s_lTRACE
-               OutStd( "hbmk: Linker command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+               IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                  OutStd( "hbmk: Linker command:" + hb_osNewLine() )
+               ENDIF
+               OutStd( cCommand + hb_osNewLine() )
                IF ! Empty( cScriptFile )
-                  OutStd( "hbmk: Linker script:" + hb_osNewLine() + hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+                  OutStd( "hbmk: Linker script:" + hb_osNewLine() )
+                  OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
                ENDIF
             ENDIF
 
             IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
-               OutErr( "hbmk: Error: Running linker. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
+               OutErr( "hbmk: Error: Running linker. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+               OutErr( cCommand + hb_osNewLine() )
                nErrorLevel := 7
             ENDIF
 
@@ -2300,14 +2341,19 @@ FUNCTION Main( ... )
             cCommand := cBin_Lib + " " + cOpt_Lib
 
             IF s_lTRACE
-               OutStd( "hbmk: Lib command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+               IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                  OutStd( "hbmk: Lib command:" + hb_osNewLine() )
+               ENDIF
+               OutStd( cCommand + hb_osNewLine() )
                IF ! Empty( cScriptFile )
-                  OutStd( "hbmk: Lib script:" + hb_osNewLine() + hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+                  OutStd( "hbmk: Lib script:" + hb_osNewLine() )
+                  OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
                ENDIF
             ENDIF
 
             IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
-               OutErr( "hbmk: Error: Running lib command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
+               OutErr( "hbmk: Error: Running lib command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+               OutErr( cCommand + hb_osNewLine() )
                nErrorLevel := 7
             ENDIF
 
@@ -2346,14 +2392,19 @@ FUNCTION Main( ... )
             cCommand := cBin_Dyn + " " + cOpt_Dyn
 
             IF s_lTRACE
-               OutStd( "hbmk: Dynamic lib link command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+               IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                  OutStd( "hbmk: Dynamic lib link command:" + hb_osNewLine() )
+               ENDIF
+               OutStd( cCommand + hb_osNewLine() )
                IF ! Empty( cScriptFile )
-                  OutStd( "hbmk: Dynamic lib link script:" + hb_osNewLine() + hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+                  OutStd( "hbmk: Dynamic lib link script:" + hb_osNewLine() )
+                  OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
                ENDIF
             ENDIF
 
             IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
-               OutErr( "hbmk: Error: Running dynamic lib link command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
+               OutErr( "hbmk: Error: Running dynamic lib link command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+               OutErr( cCommand + hb_osNewLine() )
                nErrorLevel := 7
             ENDIF
 
@@ -2389,7 +2440,10 @@ FUNCTION Main( ... )
                ENDIF
             #endif
             IF s_lTRACE
-               OutStd( "hbmk: Running executable:" + hb_osNewLine() + PathSepToTarget( s_cPROGNAME ) + hb_osNewLine() )
+               IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                  OutStd( "hbmk: Running executable:" + hb_osNewLine() )
+               ENDIF
+               OutStd( PathSepToTarget( s_cPROGNAME ) + hb_osNewLine() )
             ENDIF
             IF ! s_lDONTEXEC
                nErrorLevel := hb_run( PathSepToTarget( s_cPROGNAME ) )
@@ -3602,7 +3656,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "                    with more GTs. First one will be the default at runtime" }
 
    LOCAL aText_Help := {;
-      "  -help             long help" }
+      "  -help|--help      long help" }
 
    LOCAL aText_Long := {;
       "" ,;
@@ -3631,13 +3685,17 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -hbcc             stop after creating the object files and accept raw C flags" ,;
       "                    create link/copy hbmk to hbcc for the same effect" ,;
       "  -hblnk            accept raw linker flags" ,;
-      "  -hblib            create static library (experimental)" ,;
+      "  -hblib            create static library" ,;
       "  -hbdyn            create dynamic library (experimental)" ,;
+      "  --hbdirbin        output Harbour binary directory" ,;
+      "  --hbdirlib        output Harbour library directory" ,;
+      "  --hbdirinc        output Harbour header directory" ,;
       "" ,;
       "  -arch=<arch>      assume specific architecure. Same as HB_ARCHITECTURE envvar" ,;
       "  -comp=<comp>      use specific compiler. Same as HB_COMPILER envvar" ,;
       "                    Special value:" ,;
       "                     - bld: use original build settings (default on *nix)" ,;
+      "  --version         display version header only" ,;
       "  -info             turn on informational messages" ,;
       "  -quiet            suppress all screen messages" ,;
       "" ,;
