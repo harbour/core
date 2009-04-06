@@ -5,7 +5,7 @@ rem
 IF %HB_COMPILER%.==. GOTO ERR_ENV
 
 echo. Making hbqtgen ...
-hbmk2.exe hbqtgen
+..\..\..\bin\hbmk2.exe hbqtgen
 echo. done
 echo.
 echo. Cleaning gensource and doc folders ...
@@ -56,4 +56,3 @@ echo. set HB_COMPILER=mingw
 echo. and your PATH, then restart this batch.
 
 :END_BATCH
-

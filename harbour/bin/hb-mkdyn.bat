@@ -20,7 +20,7 @@ if "%HB_ARCHITECTURE%" == "" ( echo HB_ARCHITECTURE needs to be set. && goto END
 if "%HB_COMPILER%" == "" ( echo HB_COMPILER needs to be set. && goto END )
 
 set HB_DLL_VERSION=11
-set HB_DLL_LIBS=hbcommon hbpp hbrtl hbmacro hblang hbcpage hbpcre hbzlib hbextern hbrdd rddntx rddnsx rddcdx rddfpt hbsix hbhsx hbusrrdd gtcgi gtpca gtstd gtwvt gtgui hbmaindllh
+set HB_DLL_LIBS=hbcommon hbpp hbrtl hbmacro hblang hbcpage hbpcre hbzlib hbextern hbrdd rddntx rddnsx rddcdx rddfpt hbsix hbhsx hbusrrdd gtcgi gtpca gtstd gtwvt gtgui
 set HB_DLL_LIBS_WIN=gtwin
 set HB_DLL_LIBS_ST=hbvm
 set HB_DLL_LIBS_MT=hbvmmt
@@ -291,12 +291,14 @@ goto END
 
 echo Making .dlls for %HB_ARCHITECTURE% / %HB_COMPILER%...
 
+set HB_DLL_LIBS_EXTRA=hbmaindllh
+
 md _dll
 cd _dll
 
 echo.> _hbsst.txt
 echo.> _hbsmt.txt
-for %%f in (%HB_DLL_LIBS% %HB_DLL_LIBS_WIN%) do (
+for %%f in (%HB_DLL_LIBS% %HB_DLL_LIBS_WIN% %HB_DLL_LIBS_EXTRA%) do (
    echo FILE '%HB_LIB_INSTALL%\%%f.lib'>> _hbsst.txt
    echo FILE '%HB_LIB_INSTALL%\%%f.lib'>> _hbsmt.txt
 )

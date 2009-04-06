@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-06 18:12 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkdyn.bat
+    * owatcom tweaks. Build is still going dunno if this will be okay.
+
+  * contrib/hbqt/generator/rebuild_hbqt.bat
+    * Added hbmk2 dir.
+
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed stupid MSVC typo.
+
 2009-04-06 17:58 UTC+0200 Francesco Saverio Giudice (info/at/fsgiudice.com)
   + harbour/contrib/hbqt/generator/rebuild_hbqt.bat
     + Added batch to generate fresh hbqt sources from headers

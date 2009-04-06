@@ -915,13 +915,13 @@ FUNCTION Main( ... )
 
          OutStd( s_cHB_BIN_INSTALL )
 
-      CASE cParamL == "--hbdirlib"       ; lStopAfterInit := .T.
-
-         OutStd( s_cHB_LIB_INSTALL )
-
       CASE cParamL == "--hbdirdyn"       ; lStopAfterInit := .T.
 
          OutStd( s_cHB_DYN_INSTALL )
+
+      CASE cParamL == "--hbdirlib"       ; lStopAfterInit := .T.
+
+         OutStd( s_cHB_LIB_INSTALL )
 
       CASE cParamL == "--hbdirinc"       ; lStopAfterInit := .T.
 
@@ -1768,7 +1768,7 @@ FUNCTION Main( ... )
            ( t_cARCH == "win" .AND. t_cCOMP == "msvcce" ) .OR. ;
            ( t_cARCH == "wce" .AND. t_cCOMP == "msvcarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
          IF s_lDEBUG
-            IF t_cCOMP $ "msvcce|msvcarm"
+            IF t_cCOMP == "msvcce" .OR. t_cCOMP == "msvcarm"
                AAdd( s_aOPTC, "-Zi" )
             ELSE
                AAdd( s_aOPTC, "-MTd -Zi" )
@@ -1801,7 +1801,7 @@ FUNCTION Main( ... )
             AAdd( s_aOPTC, "-Fm" )
             AAdd( s_aOPTD, "-Fm" )
          ENDIF
-         IF t_cCOMP $ "msvcce|msvcarm"
+         IF t_cCOMP == "msvcce" .OR. t_cCOMP == "msvcarm"
             /* NOTE: Copied from .cf. Probably needs cleaning. */
             AAdd( s_aOPTC, "-D_WIN32_WCE=0x420" )
             AAdd( s_aOPTC, "-DUNDER_CE=0x420" )
@@ -1841,7 +1841,7 @@ FUNCTION Main( ... )
          IF s_lSHARED
             AAdd( s_aOPTL, "/libpath:{DB}" )
          ENDIF
-         IF t_cCOMP $ "msvcce|msvcarm"
+         IF t_cCOMP == "msvcce" .OR. t_cCOMP == "msvcarm"
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl" } )
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "uuid", "ole32" } )
          ELSE
@@ -1863,7 +1863,7 @@ FUNCTION Main( ... )
                                           "harbour-" + cDL_Version_Alter + "-ia64" ),;
                               "hbmainstd",;
                               "hbmainwin" }
-         CASE t_cCOMP $ "msvcce|msvcarm"
+         CASE t_cCOMP == "msvcce" .OR. t_cCOMP == "msvcarm"
             s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm",;
                                           "harbour-" + cDL_Version_Alter + "-arm" ),;
                               "hbmainstd",;
@@ -3692,8 +3692,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -hblib            create static library" ,;
       "  -hbdyn            create dynamic library (experimental)" ,;
       "  --hbdirbin        output Harbour binary directory" ,;
-      "  --hbdirlib        output Harbour static library directory" ,;
       "  --hbdirdyn        output Harbour dynamic library directory" ,;
+      "  --hbdirlib        output Harbour static library directory" ,;
       "  --hbdirinc        output Harbour header directory" ,;
       "" ,;
       "  -arch=<arch>      assume specific architecure. Same as HB_ARCHITECTURE envvar" ,;
