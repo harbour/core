@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-06 16:04 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    + added support for displaying harbour bin, lib and include directories
+      for --hbbindir --hblibdir --hbincdir parameters.
+      Viktor please add such functionality also to hbmk2.
+      Only given directories should be displayed without any other
+      characters in the output.
+      Such feature allows to use -I`hbmk --hbincdir` in *nixes build
+      scripts what should greatly simplify 3-rd party projects make scripts.
+
 2009-04-06 15:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/hbmain.c
   * harbour/source/compiler/hbcomp.c

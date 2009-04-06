@@ -368,6 +368,7 @@ HB_USRLIBS=""
 HB_USRLPATH=""
 HB_GEN=""
 HB_MODE=""
+HB_EXIT=""
 LN_OPT="${CC_HB_USER_LDFLAGS}"
 CC_OPT="-O3 ${CC_HB_USER_CFLAGS}"
 HB_OPT="${CC_HB_USER_PRGFLAGS}"
@@ -413,6 +414,9 @@ while [ \$n -lt \${#P[@]} ]; do
         -g[cohwij])  HB_GEN="\${v#-g}"; p="\${v}" ;;
         -gc[0-9])    HB_GEN="c"; p="\${v}" ;;
         -go[0-9])    HB_GEN="o"; p="\${v}" ;;
+        --hblibdir)  echo "\${HB_LIB_INSTALL}"; HB_EXIT="yes" ;;
+        --hbincdir)  echo "\${HB_INC_INSTALL}"; HB_EXIT="yes" ;;
+        --hbbindir)  echo "\${HB_BIN_INSTALL}"; HB_EXIT="yes" ;;
         -*)          p="\${v}" ;;
         *)           [ -z \${FILEOUT} ] && FILEOUT="\${v##*/}"; p="\${v}" ;;
     esac
@@ -420,6 +424,8 @@ while [ \$n -lt \${#P[@]} ]; do
     n=\$[\$n + 1]
 done
 P=( "\${PP[@]}" )
+
+[ "\${HB_EXIT}" != "yes" ] || exit
 
 case "\${HB_MT}" in
     [Mm][Tt]|[Yy][Ee][Ss]|1)  HB_MT="MT";;
