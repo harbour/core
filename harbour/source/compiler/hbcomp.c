@@ -235,6 +235,7 @@ HB_COMP_PTR hb_comp_new( void )
 
       pComp->iStartProc       = 0;        /* no implicit starting procedure */
       pComp->iWarnings        = 0;        /* enable parse warnings */
+      pComp->iErrorCount      = 0;        /* number of compile errors */
 
       pComp->iGenCOutput= HB_COMPGENC_COMPACT;  /* C code generation default mode */
       pComp->iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */

@@ -7,21 +7,18 @@ ROOT = ../../
 ifeq ($(HB_ARCHITECTURE),win)
 	ifeq ($(HB_COMPILER),mingw)
 		C_MAIN = mainwin.c
-		DIRS = mainstd
 	else
 		ifeq ($(HB_COMPILER),mingwce)
 			C_MAIN = mainwin.c
-			DIRS = mainstd mainwin
 		else
 			C_MAIN = mainstd.c mainwin.c
-			DIRS = mainstd mainwin
 		endif
 	endif
-	DIRS += maindllh maindllp
+	DIRS = mainstd mainwin maindllh maindllp
 else
-	ifeq ($(HB_COMPILER),wce)
+	ifeq ($(HB_ARCHITECTURE),wce)
 		C_MAIN = mainwin.c
-		DIRS = mainstd mainwin
+		DIRS = mainstd mainwin maindllh maindllp
 	else
 		ifeq ($(HB_ARCHITECTURE),os2)
 			C_MAIN = mainstd.c

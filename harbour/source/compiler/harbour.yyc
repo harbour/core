@@ -4905,7 +4905,7 @@ yyreduce:
 
   case 141:
 #line 571 "harbour.y"
-    { (yyval.asExpr) = hb_compExprNewDate( (yyvsp[(1) - (1)].valLong).lNumber, HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprNewDate( ( LONG ) (yyvsp[(1) - (1)].valLong).lNumber, HB_COMP_PARAM ); ;}
     break;
 
   case 142:

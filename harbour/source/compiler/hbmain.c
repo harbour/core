@@ -3720,9 +3720,7 @@ static void hb_compInitVars( HB_COMP_DECL )
    HB_COMP_PARAM->symbols.pLast    = NULL;
    HB_COMP_PARAM->pInitFunc        = NULL;
    HB_COMP_PARAM->pLineFunc        = NULL;
-   HB_COMP_PARAM->fAnyWarning      = FALSE;
 
-   HB_COMP_PARAM->iErrorCount      = 0;
    HB_COMP_PARAM->lastLinePos      = 0;
    HB_COMP_PARAM->iStaticCnt       = 0;
    HB_COMP_PARAM->iVarScope        = VS_LOCAL;
@@ -4324,12 +4322,10 @@ static int hb_compAutoOpen( HB_COMP_DECL, const char * szPrg, BOOL * pbSkipGen, 
          if( !HB_COMP_PARAM->fExit )
          {
             int i = HB_COMP_PARAM->iExitLevel ;
-            BOOL b = HB_COMP_PARAM->fAnyWarning;
 
             hb_compparse( HB_COMP_PARAM );
 
             HB_COMP_PARAM->iExitLevel = ( i > HB_COMP_PARAM->iExitLevel ? i : HB_COMP_PARAM->iExitLevel );
-            HB_COMP_PARAM->fAnyWarning = ( b ? b : HB_COMP_PARAM->fAnyWarning );
          }
 
          if( HB_COMP_PARAM->fAnyWarning )

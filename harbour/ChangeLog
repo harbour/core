@@ -8,6 +8,48 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-06 15:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/hbcomp.c
+    ! fixed ignored -es2 compiler flag when warning is caused by startup
+      parameters
+
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.y
+    * pacified warning
+
+  * harbour/harbour.spec
+    ! fixed doc/en directory name to doc/en-EN
+
+  * harbour/source/vm/Makefile
+  + harbour/source/vm/maindllh
+  + harbour/source/vm/maindllh/Makefile
+    + added hbmaindllh library - it's necessary for some compiler to create
+      working harbour.dll, f.e. in OpenWatcom builds. Please updated
+      harbour.dll build scripts to use this library with such compilers.
+      MinGW based compilers do not need it.
+
+  * harbour/source/vm/Makefile
+    ! fixed typo which broke wce builds
+
+  * harbour/source/vm/Makefile
+  * harbour/harbour-wce-spec
+  * harbour/harbour.spec
+    + added mainstd mainwin maindllh maindllp to all win and wce builds
+
+  * harbour/harbour-win-spec
+  * harbour/harbour-wce-spec
+  * harbour/harbour.spec
+    + added support for parallel compilation (-j make flags) in RPMs
+      which supports %{_smp_mflags} macro
+    ! temporary fix: disabled harbour external libraries.
+      I do not know what should be the final version.
+    ; WCE builds are still broken due to repeated macro definitions
+      but I'm lost with the new build time parameters and I do not
+      know how to fix it without breaking hbce* scripts or bad introduce
+      some interactions to other build/install time scripts so it will
+      have to be fixed by Viktor.
+
 2009-04-06 14:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbole/Makefile
   * contrib/hbole/olecore.c
