@@ -53,16 +53,18 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QInputDialog INHERIT QDialog
+CREATE CLASS QInputDialog INHERIT QDialog
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
    METHOD  cancelButtonText()                  INLINE  Qt_QInputDialog_cancelButtonText( ::pPtr )
+   METHOD  comboBoxItems()                     INLINE  Qt_QInputDialog_comboBoxItems( ::pPtr )
    METHOD  done( nResult )                     INLINE  Qt_QInputDialog_done( ::pPtr, nResult )
    METHOD  doubleDecimals()                    INLINE  Qt_QInputDialog_doubleDecimals( ::pPtr )
    METHOD  doubleMaximum()                     INLINE  Qt_QInputDialog_doubleMaximum( ::pPtr )
@@ -80,12 +82,13 @@ CLASS QInputDialog INHERIT QDialog
    METHOD  options()                           INLINE  Qt_QInputDialog_options( ::pPtr )
    METHOD  setCancelButtonText( cText )        INLINE  Qt_QInputDialog_setCancelButtonText( ::pPtr, cText )
    METHOD  setComboBoxEditable( lEditable )    INLINE  Qt_QInputDialog_setComboBoxEditable( ::pPtr, lEditable )
+   METHOD  setComboBoxItems( pItems )          INLINE  Qt_QInputDialog_setComboBoxItems( ::pPtr, pItems )
    METHOD  setDoubleDecimals( nDecimals )      INLINE  Qt_QInputDialog_setDoubleDecimals( ::pPtr, nDecimals )
    METHOD  setDoubleMaximum( nMax )            INLINE  Qt_QInputDialog_setDoubleMaximum( ::pPtr, nMax )
    METHOD  setDoubleMinimum( nMin )            INLINE  Qt_QInputDialog_setDoubleMinimum( ::pPtr, nMin )
    METHOD  setDoubleRange( nMin, nMax )        INLINE  Qt_QInputDialog_setDoubleRange( ::pPtr, nMin, nMax )
    METHOD  setDoubleValue( nValue )            INLINE  Qt_QInputDialog_setDoubleValue( ::pPtr, nValue )
-   METHOD  setInputMode( nInputMode )          INLINE  Qt_QInputDialog_setInputMode( ::pPtr, nInputMode )
+   METHOD  setInputMode( nMode )               INLINE  Qt_QInputDialog_setInputMode( ::pPtr, nMode )
    METHOD  setIntMaximum( nMax )               INLINE  Qt_QInputDialog_setIntMaximum( ::pPtr, nMax )
    METHOD  setIntMinimum( nMin )               INLINE  Qt_QInputDialog_setIntMinimum( ::pPtr, nMin )
    METHOD  setIntRange( nMin, nMax )           INLINE  Qt_QInputDialog_setIntRange( ::pPtr, nMin, nMax )
@@ -93,11 +96,11 @@ CLASS QInputDialog INHERIT QDialog
    METHOD  setIntValue( nValue )               INLINE  Qt_QInputDialog_setIntValue( ::pPtr, nValue )
    METHOD  setLabelText( cText )               INLINE  Qt_QInputDialog_setLabelText( ::pPtr, cText )
    METHOD  setOkButtonText( cText )            INLINE  Qt_QInputDialog_setOkButtonText( ::pPtr, cText )
-   METHOD  setOption( nInputDialogOption, lOn )  INLINE  Qt_QInputDialog_setOption( ::pPtr, nInputDialogOption, lOn )
-   METHOD  setOptions( nInputDialogOptions )   INLINE  Qt_QInputDialog_setOptions( ::pPtr, nInputDialogOptions )
+   METHOD  setOption( nOption, lOn )           INLINE  Qt_QInputDialog_setOption( ::pPtr, nOption, lOn )
+   METHOD  setOptions( nOptions )              INLINE  Qt_QInputDialog_setOptions( ::pPtr, nOptions )
    METHOD  setTextEchoMode( nMode )            INLINE  Qt_QInputDialog_setTextEchoMode( ::pPtr, nMode )
    METHOD  setTextValue( cText )               INLINE  Qt_QInputDialog_setTextValue( ::pPtr, cText )
-   METHOD  testOption( nInputDialogOption )    INLINE  Qt_QInputDialog_testOption( ::pPtr, nInputDialogOption )
+   METHOD  testOption( nOption )               INLINE  Qt_QInputDialog_testOption( ::pPtr, nOption )
    METHOD  textEchoMode()                      INLINE  Qt_QInputDialog_textEchoMode( ::pPtr )
    METHOD  textValue()                         INLINE  Qt_QInputDialog_textValue( ::pPtr )
 
@@ -106,6 +109,8 @@ CLASS QInputDialog INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QInputDialog
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QInputDialog( pParent )
 

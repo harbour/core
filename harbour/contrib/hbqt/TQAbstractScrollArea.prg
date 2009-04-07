@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QAbstractScrollArea INHERIT QFrame
+CREATE CLASS QAbstractScrollArea INHERIT QFrame
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -67,6 +68,7 @@ CLASS QAbstractScrollArea INHERIT QFrame
    METHOD  horizontalScrollBar()               INLINE  Qt_QAbstractScrollArea_horizontalScrollBar( ::pPtr )
    METHOD  horizontalScrollBarPolicy()         INLINE  Qt_QAbstractScrollArea_horizontalScrollBarPolicy( ::pPtr )
    METHOD  maximumViewportSize()               INLINE  Qt_QAbstractScrollArea_maximumViewportSize( ::pPtr )
+   METHOD  scrollBarWidgets( nAlignment )      INLINE  Qt_QAbstractScrollArea_scrollBarWidgets( ::pPtr, nAlignment )
    METHOD  setCornerWidget( pWidget )          INLINE  Qt_QAbstractScrollArea_setCornerWidget( ::pPtr, pWidget )
    METHOD  setHorizontalScrollBar( pScrollBar )  INLINE  Qt_QAbstractScrollArea_setHorizontalScrollBar( ::pPtr, pScrollBar )
    METHOD  setHorizontalScrollBarPolicy( nQt_ScrollBarPolicy )  INLINE  Qt_QAbstractScrollArea_setHorizontalScrollBarPolicy( ::pPtr, nQt_ScrollBarPolicy )
@@ -82,6 +84,8 @@ CLASS QAbstractScrollArea INHERIT QFrame
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QAbstractScrollArea
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QAbstractScrollArea( pParent )
 

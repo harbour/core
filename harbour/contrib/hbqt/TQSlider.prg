@@ -53,17 +53,18 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QSlider INHERIT QAbstractSlider
+CREATE CLASS QSlider INHERIT QAbstractSlider
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
    METHOD  setTickInterval( nTi )              INLINE  Qt_QSlider_setTickInterval( ::pPtr, nTi )
-   METHOD  setTickPosition( nTickPosition )    INLINE  Qt_QSlider_setTickPosition( ::pPtr, nTickPosition )
+   METHOD  setTickPosition( nPosition )        INLINE  Qt_QSlider_setTickPosition( ::pPtr, nPosition )
    METHOD  tickInterval()                      INLINE  Qt_QSlider_tickInterval( ::pPtr )
    METHOD  tickPosition()                      INLINE  Qt_QSlider_tickPosition( ::pPtr )
 
@@ -72,6 +73,8 @@ CLASS QSlider INHERIT QAbstractSlider
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QSlider
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QSlider( pParent )
 

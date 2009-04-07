@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QLayoutItem
+CREATE CLASS QLayoutItem
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -75,7 +76,7 @@ CLASS QLayoutItem
    METHOD  minimumHeightForWidth( nW )         INLINE  Qt_QLayoutItem_minimumHeightForWidth( ::pPtr, nW )
    METHOD  minimumSize()                       INLINE  Qt_QLayoutItem_minimumSize( ::pPtr )
    METHOD  setAlignment( nAlignment )          INLINE  Qt_QLayoutItem_setAlignment( ::pPtr, nAlignment )
-   METHOD  setGeometry( aRectR )               INLINE  Qt_QLayoutItem_setGeometry( ::pPtr, aRectR )
+   METHOD  setGeometry( pR )                   INLINE  Qt_QLayoutItem_setGeometry( ::pPtr, pR )
    METHOD  sizeHint()                          INLINE  Qt_QLayoutItem_sizeHint( ::pPtr )
    METHOD  spacerItem()                        INLINE  Qt_QLayoutItem_spacerItem( ::pPtr )
    METHOD  widget()                            INLINE  Qt_QLayoutItem_widget( ::pPtr )
@@ -85,6 +86,8 @@ CLASS QLayoutItem
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QLayoutItem
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QLayoutItem( pParent )
 

@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -58,25 +58,6 @@
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
-
-
-/*
- *  Constructed[ 6/9 [ 66.67% ] ]
- *  
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *  
- *  virtual void commitData ( QSessionManager & manager )
- *  virtual bool macEventFilter ( EventHandlerCallRef, EventRef )
- *  virtual void saveState ( QSessionManager & manager )
- *  
- *  *** Commented out protos which construct fine but do not compile ***
- *  
- *  // virtual bool qwsEventFilter ( QWSEvent * )
- *  // int qwsProcessEvent ( QWSEvent * )
- *  // void qwsSetCustomColors ( QRgb * colortable, int start, int numColors )
- */ 
-
 
 
 #include "hbapi.h"
@@ -187,18 +168,20 @@ HB_FUNC( QT_QAPPLICATION_QUIT )
    app->quit();
 }
 
-HB_FUNC( QT_QAPPLICATION_ABOUTQT )
+/*
+ * virtual void commitData ( QSessionManager & manager )
+ */
+HB_FUNC( QT_QAPPLICATION_COMMITDATA )
 {
-   app->aboutQt();
+   hbqt_par_QApplication( 1 )->commitData( *hbqt_par_QSessionManager( 2 ) );
 }
-
 
 /*
  * QInputContext * inputContext () const
  */
 HB_FUNC( QT_QAPPLICATION_INPUTCONTEXT )
 {
-   hb_retptr( ( QInputContext* ) hbqt_par_QApplication( 1 )->inputContext(  ) );
+   hb_retptr( ( QInputContext* ) hbqt_par_QApplication( 1 )->inputContext() );
 }
 
 /*
@@ -206,7 +189,15 @@ HB_FUNC( QT_QAPPLICATION_INPUTCONTEXT )
  */
 HB_FUNC( QT_QAPPLICATION_ISSESSIONRESTORED )
 {
-   hb_retl( hbqt_par_QApplication( 1 )->isSessionRestored(  ) );
+   hb_retl( hbqt_par_QApplication( 1 )->isSessionRestored() );
+}
+
+/*
+ * virtual void saveState ( QSessionManager & manager )
+ */
+HB_FUNC( QT_QAPPLICATION_SAVESTATE )
+{
+   hbqt_par_QApplication( 1 )->saveState( *hbqt_par_QSessionManager( 2 ) );
 }
 
 /*
@@ -214,7 +205,7 @@ HB_FUNC( QT_QAPPLICATION_ISSESSIONRESTORED )
  */
 HB_FUNC( QT_QAPPLICATION_SESSIONID )
 {
-   hb_retc( hbqt_par_QApplication( 1 )->sessionId( ).toLatin1().data() );
+   hb_retc( hbqt_par_QApplication( 1 )->sessionId().toLatin1().data() );
 }
 
 /*
@@ -222,7 +213,7 @@ HB_FUNC( QT_QAPPLICATION_SESSIONID )
  */
 HB_FUNC( QT_QAPPLICATION_SESSIONKEY )
 {
-   hb_retc( hbqt_par_QApplication( 1 )->sessionKey( ).toLatin1().data() );
+   hb_retc( hbqt_par_QApplication( 1 )->sessionKey().toLatin1().data() );
 }
 
 /*
@@ -238,7 +229,31 @@ HB_FUNC( QT_QAPPLICATION_SETINPUTCONTEXT )
  */
 HB_FUNC( QT_QAPPLICATION_STYLESHEET )
 {
-   hb_retc( hbqt_par_QApplication( 1 )->styleSheet( ).toLatin1().data() );
+   hb_retc( hbqt_par_QApplication( 1 )->styleSheet().toLatin1().data() );
+}
+
+/*
+ * void aboutQt ()
+ */
+HB_FUNC( QT_QAPPLICATION_ABOUTQT )
+{
+   hbqt_par_QApplication( 1 )->aboutQt();
+}
+
+/*
+ * void closeAllWindows ()
+ */
+HB_FUNC( QT_QAPPLICATION_CLOSEALLWINDOWS )
+{
+   hbqt_par_QApplication( 1 )->closeAllWindows();
+}
+
+/*
+ * void setStyleSheet ( const QString & sheet )
+ */
+HB_FUNC( QT_QAPPLICATION_SETSTYLESHEET )
+{
+   hbqt_par_QApplication( 1 )->setStyleSheet( hbqt_par_QString( 2 ) );
 }
 
 

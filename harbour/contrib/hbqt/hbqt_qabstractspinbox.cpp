@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -58,7 +58,6 @@
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
-
 
 
 #include <QtGui/QAbstractSpinBox>
@@ -78,7 +77,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_ALIGNMENT )
 {
-   hb_retni( hbqt_par_QAbstractSpinBox( 1 )->alignment(  ) );
+   hb_retni( ( Qt::Alignment ) hbqt_par_QAbstractSpinBox( 1 )->alignment() );
 }
 
 /*
@@ -86,7 +85,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX_ALIGNMENT )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_BUTTONSYMBOLS )
 {
-   hb_retni( hbqt_par_QAbstractSpinBox( 1 )->buttonSymbols(  ) );
+   hb_retni( ( QAbstractSpinBox::ButtonSymbols ) hbqt_par_QAbstractSpinBox( 1 )->buttonSymbols() );
 }
 
 /*
@@ -94,7 +93,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX_BUTTONSYMBOLS )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_CORRECTIONMODE )
 {
-   hb_retni( hbqt_par_QAbstractSpinBox( 1 )->correctionMode(  ) );
+   hb_retni( ( QAbstractSpinBox::CorrectionMode ) hbqt_par_QAbstractSpinBox( 1 )->correctionMode() );
 }
 
 /*
@@ -102,7 +101,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX_CORRECTIONMODE )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_HASACCEPTABLEINPUT )
 {
-   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->hasAcceptableInput(  ) );
+   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->hasAcceptableInput() );
 }
 
 /*
@@ -110,7 +109,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX_HASACCEPTABLEINPUT )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_HASFRAME )
 {
-   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->hasFrame(  ) );
+   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->hasFrame() );
 }
 
 /*
@@ -118,7 +117,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX_HASFRAME )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_INTERPRETTEXT )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->interpretText(  );
+   hbqt_par_QAbstractSpinBox( 1 )->interpretText();
 }
 
 /*
@@ -126,7 +125,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX_INTERPRETTEXT )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_ISACCELERATED )
 {
-   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->isAccelerated(  ) );
+   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->isAccelerated() );
 }
 
 /*
@@ -134,7 +133,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX_ISACCELERATED )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_ISREADONLY )
 {
-   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->isReadOnly(  ) );
+   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->isReadOnly() );
 }
 
 /*
@@ -142,7 +141,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX_ISREADONLY )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_KEYBOARDTRACKING )
 {
-   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->keyboardTracking(  ) );
+   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->keyboardTracking() );
 }
 
 /*
@@ -222,7 +221,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETWRAPPING )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_SPECIALVALUETEXT )
 {
-   hb_retc( hbqt_par_QAbstractSpinBox( 1 )->specialValueText( ).toLatin1().data() );
+   hb_retc( hbqt_par_QAbstractSpinBox( 1 )->specialValueText().toLatin1().data() );
 }
 
 /*
@@ -238,7 +237,7 @@ HB_FUNC( QT_QABSTRACTSPINBOX_STEPBY )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_TEXT )
 {
-   hb_retc( hbqt_par_QAbstractSpinBox( 1 )->text( ).toLatin1().data() );
+   hb_retc( hbqt_par_QAbstractSpinBox( 1 )->text().toLatin1().data() );
 }
 
 /*
@@ -246,7 +245,39 @@ HB_FUNC( QT_QABSTRACTSPINBOX_TEXT )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_WRAPPING )
 {
-   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->wrapping(  ) );
+   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->wrapping() );
+}
+
+/*
+ * virtual void clear ()
+ */
+HB_FUNC( QT_QABSTRACTSPINBOX_CLEAR )
+{
+   hbqt_par_QAbstractSpinBox( 1 )->clear();
+}
+
+/*
+ * void selectAll ()
+ */
+HB_FUNC( QT_QABSTRACTSPINBOX_SELECTALL )
+{
+   hbqt_par_QAbstractSpinBox( 1 )->selectAll();
+}
+
+/*
+ * void stepDown ()
+ */
+HB_FUNC( QT_QABSTRACTSPINBOX_STEPDOWN )
+{
+   hbqt_par_QAbstractSpinBox( 1 )->stepDown();
+}
+
+/*
+ * void stepUp ()
+ */
+HB_FUNC( QT_QABSTRACTSPINBOX_STEPUP )
+{
+   hbqt_par_QAbstractSpinBox( 1 )->stepUp();
 }
 
 

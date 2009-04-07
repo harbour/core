@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QDial INHERIT QAbstractSlider
+CREATE CLASS QDial INHERIT QAbstractSlider
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -67,12 +68,16 @@ CLASS QDial INHERIT QAbstractSlider
    METHOD  notchesVisible()                    INLINE  Qt_QDial_notchesVisible( ::pPtr )
    METHOD  setNotchTarget( nTarget )           INLINE  Qt_QDial_setNotchTarget( ::pPtr, nTarget )
    METHOD  wrapping()                          INLINE  Qt_QDial_wrapping( ::pPtr )
+   METHOD  setNotchesVisible( lVisible )       INLINE  Qt_QDial_setNotchesVisible( ::pPtr, lVisible )
+   METHOD  setWrapping( lOn )                  INLINE  Qt_QDial_setWrapping( ::pPtr, lOn )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QDial
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QDial( pParent )
 

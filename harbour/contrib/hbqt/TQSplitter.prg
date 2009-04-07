@@ -53,18 +53,20 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QSplitter INHERIT QFrame
+CREATE CLASS QSplitter INHERIT QFrame
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
    METHOD  addWidget( pWidget )                INLINE  Qt_QSplitter_addWidget( ::pPtr, pWidget )
    METHOD  childrenCollapsible()               INLINE  Qt_QSplitter_childrenCollapsible( ::pPtr )
    METHOD  count()                             INLINE  Qt_QSplitter_count( ::pPtr )
+   METHOD  getRange( nIndex, nMin, nMax )      INLINE  Qt_QSplitter_getRange( ::pPtr, nIndex, nMin, nMax )
    METHOD  handle( nIndex )                    INLINE  Qt_QSplitter_handle( ::pPtr, nIndex )
    METHOD  handleWidth()                       INLINE  Qt_QSplitter_handleWidth( ::pPtr )
    METHOD  indexOf( pWidget )                  INLINE  Qt_QSplitter_indexOf( ::pPtr, pWidget )
@@ -73,6 +75,8 @@ CLASS QSplitter INHERIT QFrame
    METHOD  opaqueResize()                      INLINE  Qt_QSplitter_opaqueResize( ::pPtr )
    METHOD  orientation()                       INLINE  Qt_QSplitter_orientation( ::pPtr )
    METHOD  refresh()                           INLINE  Qt_QSplitter_refresh( ::pPtr )
+   METHOD  restoreState( pState )              INLINE  Qt_QSplitter_restoreState( ::pPtr, pState )
+   METHOD  saveState()                         INLINE  Qt_QSplitter_saveState( ::pPtr )
    METHOD  setChildrenCollapsible( lBool )     INLINE  Qt_QSplitter_setChildrenCollapsible( ::pPtr, lBool )
    METHOD  setCollapsible( nIndex, lCollapse )  INLINE  Qt_QSplitter_setCollapsible( ::pPtr, nIndex, lCollapse )
    METHOD  setHandleWidth( nInt )              INLINE  Qt_QSplitter_setHandleWidth( ::pPtr, nInt )
@@ -86,6 +90,8 @@ CLASS QSplitter INHERIT QFrame
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QSplitter
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QSplitter( pParent )
 

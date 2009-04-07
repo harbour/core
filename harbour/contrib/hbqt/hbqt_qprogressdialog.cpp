@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -58,7 +58,6 @@
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
-
 
 
 #include <QtGui/QProgressDialog>
@@ -79,7 +78,7 @@ HB_FUNC( QT_QPROGRESSDIALOG )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_AUTOCLOSE )
 {
-   hb_retl( hbqt_par_QProgressDialog( 1 )->autoClose(  ) );
+   hb_retl( hbqt_par_QProgressDialog( 1 )->autoClose() );
 }
 
 /*
@@ -87,7 +86,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_AUTOCLOSE )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_AUTORESET )
 {
-   hb_retl( hbqt_par_QProgressDialog( 1 )->autoReset(  ) );
+   hb_retl( hbqt_par_QProgressDialog( 1 )->autoReset() );
 }
 
 /*
@@ -95,7 +94,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_AUTORESET )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_LABELTEXT )
 {
-   hb_retc( hbqt_par_QProgressDialog( 1 )->labelText( ).toLatin1().data() );
+   hb_retc( hbqt_par_QProgressDialog( 1 )->labelText().toLatin1().data() );
 }
 
 /*
@@ -103,7 +102,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_LABELTEXT )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_MAXIMUM )
 {
-   hb_retni( hbqt_par_QProgressDialog( 1 )->maximum(  ) );
+   hb_retni( hbqt_par_QProgressDialog( 1 )->maximum() );
 }
 
 /*
@@ -111,7 +110,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_MAXIMUM )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_MINIMUM )
 {
-   hb_retni( hbqt_par_QProgressDialog( 1 )->minimum(  ) );
+   hb_retni( hbqt_par_QProgressDialog( 1 )->minimum() );
 }
 
 /*
@@ -119,7 +118,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_MINIMUM )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_MINIMUMDURATION )
 {
-   hb_retni( hbqt_par_QProgressDialog( 1 )->minimumDuration(  ) );
+   hb_retni( hbqt_par_QProgressDialog( 1 )->minimumDuration() );
 }
 
 /*
@@ -175,7 +174,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETLABEL )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SIZEHINT )
 {
-   hbqt_ret_QSize( hbqt_par_QProgressDialog( 1 )->sizeHint(  ) );
+   hb_retptr( new QSize( hbqt_par_QProgressDialog( 1 )->sizeHint() ) );
 }
 
 /*
@@ -183,7 +182,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_SIZEHINT )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_VALUE )
 {
-   hb_retni( hbqt_par_QProgressDialog( 1 )->value(  ) );
+   hb_retni( hbqt_par_QProgressDialog( 1 )->value() );
 }
 
 /*
@@ -191,7 +190,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_VALUE )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_WASCANCELED )
 {
-   hb_retl( hbqt_par_QProgressDialog( 1 )->wasCanceled(  ) );
+   hb_retl( hbqt_par_QProgressDialog( 1 )->wasCanceled() );
 }
 
 /*
@@ -199,7 +198,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_WASCANCELED )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_CANCEL )
 {
-   hbqt_par_QProgressDialog( 1 )->cancel(  );
+   hbqt_par_QProgressDialog( 1 )->cancel();
 }
 
 /*
@@ -207,7 +206,7 @@ HB_FUNC( QT_QPROGRESSDIALOG_CANCEL )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_RESET )
 {
-   hbqt_par_QProgressDialog( 1 )->reset(  );
+   hbqt_par_QProgressDialog( 1 )->reset();
 }
 
 /*

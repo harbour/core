@@ -53,28 +53,36 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QWebView INHERIT QWidget
+CREATE CLASS QWebView INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
    METHOD  findText( cSubString, nOptions )    INLINE  Qt_QWebView_findText( ::pPtr, cSubString, nOptions )
    METHOD  history()                           INLINE  Qt_QWebView_history( ::pPtr )
+   METHOD  icon()                              INLINE  Qt_QWebView_icon( ::pPtr )
    METHOD  isModified()                        INLINE  Qt_QWebView_isModified( ::pPtr )
+   METHOD  load( pUrl )                        INLINE  Qt_QWebView_load( ::pPtr, pUrl )
+   METHOD  load_1( pRequest, nOperation, pBody )  INLINE  Qt_QWebView_load_1( ::pPtr, pRequest, nOperation, pBody )
    METHOD  page()                              INLINE  Qt_QWebView_page( ::pPtr )
    METHOD  pageAction( nAction )               INLINE  Qt_QWebView_pageAction( ::pPtr, nAction )
    METHOD  selectedText()                      INLINE  Qt_QWebView_selectedText( ::pPtr )
+   METHOD  setContent( pData, cMimeType )      INLINE  Qt_QWebView_setContent( ::pPtr, pData, cMimeType )
+   METHOD  setHtml( cHtml, pBaseUrl )          INLINE  Qt_QWebView_setHtml( ::pPtr, cHtml, pBaseUrl )
    METHOD  setPage( pPage )                    INLINE  Qt_QWebView_setPage( ::pPtr, pPage )
    METHOD  setTextSizeMultiplier( nFactor )    INLINE  Qt_QWebView_setTextSizeMultiplier( ::pPtr, nFactor )
+   METHOD  setUrl( pUrl )                      INLINE  Qt_QWebView_setUrl( ::pPtr, pUrl )
    METHOD  setZoomFactor( nFactor )            INLINE  Qt_QWebView_setZoomFactor( ::pPtr, nFactor )
    METHOD  settings()                          INLINE  Qt_QWebView_settings( ::pPtr )
    METHOD  textSizeMultiplier()                INLINE  Qt_QWebView_textSizeMultiplier( ::pPtr )
    METHOD  title()                             INLINE  Qt_QWebView_title( ::pPtr )
    METHOD  triggerPageAction( nAction, lChecked )  INLINE  Qt_QWebView_triggerPageAction( ::pPtr, nAction, lChecked )
+   METHOD  url()                               INLINE  Qt_QWebView_url( ::pPtr )
    METHOD  zoomFactor()                        INLINE  Qt_QWebView_zoomFactor( ::pPtr )
    METHOD  back()                              INLINE  Qt_QWebView_back( ::pPtr )
    METHOD  forward()                           INLINE  Qt_QWebView_forward( ::pPtr )
@@ -87,6 +95,8 @@ CLASS QWebView INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QWebView
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QWebView( pParent )
 

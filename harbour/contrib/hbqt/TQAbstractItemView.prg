@@ -53,64 +53,32 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QAbstractItemView INHERIT QAbstractScrollArea
+CREATE CLASS QAbstractItemView INHERIT QAbstractScrollArea
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
-   METHOD  alternatingRowColors()              INLINE  Qt_QAbstractItemView_alternatingRowColors( ::pPtr )
-   METHOD  autoScrollMargin()                  INLINE  Qt_QAbstractItemView_autoScrollMargin( ::pPtr )
-   METHOD  dragDropMode()                      INLINE  Qt_QAbstractItemView_dragDropMode( ::pPtr )
-   METHOD  dragDropOverwriteMode()             INLINE  Qt_QAbstractItemView_dragDropOverwriteMode( ::pPtr )
-   METHOD  dragEnabled()                       INLINE  Qt_QAbstractItemView_dragEnabled( ::pPtr )
-   METHOD  editTriggers()                      INLINE  Qt_QAbstractItemView_editTriggers( ::pPtr )
-   METHOD  hasAutoScroll()                     INLINE  Qt_QAbstractItemView_hasAutoScroll( ::pPtr )
-   METHOD  horizontalScrollMode()              INLINE  Qt_QAbstractItemView_horizontalScrollMode( ::pPtr )
-   METHOD  iconSize()                          INLINE  Qt_QAbstractItemView_iconSize( ::pPtr )
-   METHOD  itemDelegate()                      INLINE  Qt_QAbstractItemView_itemDelegate( ::pPtr )
-   METHOD  itemDelegateForColumn( nColumn )    INLINE  Qt_QAbstractItemView_itemDelegateForColumn( ::pPtr, nColumn )
-   METHOD  itemDelegateForRow( nRow )          INLINE  Qt_QAbstractItemView_itemDelegateForRow( ::pPtr, nRow )
-   METHOD  keyboardSearch( cSearch )           INLINE  Qt_QAbstractItemView_keyboardSearch( ::pPtr, cSearch )
-   METHOD  model()                             INLINE  Qt_QAbstractItemView_model( ::pPtr )
-   METHOD  selectionBehavior()                 INLINE  Qt_QAbstractItemView_selectionBehavior( ::pPtr )
-   METHOD  selectionMode()                     INLINE  Qt_QAbstractItemView_selectionMode( ::pPtr )
-   METHOD  selectionModel()                    INLINE  Qt_QAbstractItemView_selectionModel( ::pPtr )
-   METHOD  setAlternatingRowColors( lEnable )  INLINE  Qt_QAbstractItemView_setAlternatingRowColors( ::pPtr, lEnable )
-   METHOD  setAutoScroll( lEnable )            INLINE  Qt_QAbstractItemView_setAutoScroll( ::pPtr, lEnable )
-   METHOD  setAutoScrollMargin( nMargin )      INLINE  Qt_QAbstractItemView_setAutoScrollMargin( ::pPtr, nMargin )
-   METHOD  setDragDropMode( nDragDropMode )    INLINE  Qt_QAbstractItemView_setDragDropMode( ::pPtr, nDragDropMode )
-   METHOD  setDragDropOverwriteMode( lOverwrite )  INLINE  Qt_QAbstractItemView_setDragDropOverwriteMode( ::pPtr, lOverwrite )
-   METHOD  setDragEnabled( lEnable )           INLINE  Qt_QAbstractItemView_setDragEnabled( ::pPtr, lEnable )
-   METHOD  setDropIndicatorShown( lEnable )    INLINE  Qt_QAbstractItemView_setDropIndicatorShown( ::pPtr, lEnable )
-   METHOD  setEditTriggers( nEditTriggers )    INLINE  Qt_QAbstractItemView_setEditTriggers( ::pPtr, nEditTriggers )
-   METHOD  setHorizontalScrollMode( nScrollMode )  INLINE  Qt_QAbstractItemView_setHorizontalScrollMode( ::pPtr, nScrollMode )
-   METHOD  setIconSize( aSizeSize )            INLINE  Qt_QAbstractItemView_setIconSize( ::pPtr, aSizeSize )
-   METHOD  setItemDelegate( pDelegate )        INLINE  Qt_QAbstractItemView_setItemDelegate( ::pPtr, pDelegate )
-   METHOD  setItemDelegateForColumn( nColumn, pDelegate )  INLINE  Qt_QAbstractItemView_setItemDelegateForColumn( ::pPtr, nColumn, pDelegate )
-   METHOD  setItemDelegateForRow( nRow, pDelegate )  INLINE  Qt_QAbstractItemView_setItemDelegateForRow( ::pPtr, nRow, pDelegate )
-   METHOD  setModel( pModel )                  INLINE  Qt_QAbstractItemView_setModel( ::pPtr, pModel )
-   METHOD  setSelectionBehavior( nBehavior )   INLINE  Qt_QAbstractItemView_setSelectionBehavior( ::pPtr, nBehavior )
-   METHOD  setSelectionMode( nMode )           INLINE  Qt_QAbstractItemView_setSelectionMode( ::pPtr, nMode )
-   METHOD  setSelectionModel( pSelectionModel )  INLINE  Qt_QAbstractItemView_setSelectionModel( ::pPtr, pSelectionModel )
-   METHOD  setTabKeyNavigation( lEnable )      INLINE  Qt_QAbstractItemView_setTabKeyNavigation( ::pPtr, lEnable )
-   METHOD  setTextElideMode( nMode )           INLINE  Qt_QAbstractItemView_setTextElideMode( ::pPtr, nMode )
-   METHOD  setVerticalScrollMode( nScrollMode )  INLINE  Qt_QAbstractItemView_setVerticalScrollMode( ::pPtr, nScrollMode )
-   METHOD  showDropIndicator()                 INLINE  Qt_QAbstractItemView_showDropIndicator( ::pPtr )
-   METHOD  sizeHintForColumn( nColumn )        INLINE  Qt_QAbstractItemView_sizeHintForColumn( ::pPtr, nColumn )
-   METHOD  sizeHintForRow( nRow )              INLINE  Qt_QAbstractItemView_sizeHintForRow( ::pPtr, nRow )
-   METHOD  tabKeyNavigation()                  INLINE  Qt_QAbstractItemView_tabKeyNavigation( ::pPtr )
-   METHOD  textElideMode()                     INLINE  Qt_QAbstractItemView_textElideMode( ::pPtr )
-   METHOD  verticalScrollMode()                INLINE  Qt_QAbstractItemView_verticalScrollMode( ::pPtr )
+   METHOD  clearSelection()                    INLINE  Qt_QAbstractItemView_clearSelection( ::pPtr )
+   METHOD  edit( pIndex )                      INLINE  Qt_QAbstractItemView_edit( ::pPtr, pIndex )
+   METHOD  reset()                             INLINE  Qt_QAbstractItemView_reset( ::pPtr )
+   METHOD  scrollToBottom()                    INLINE  Qt_QAbstractItemView_scrollToBottom( ::pPtr )
+   METHOD  scrollToTop()                       INLINE  Qt_QAbstractItemView_scrollToTop( ::pPtr )
+   METHOD  selectAll()                         INLINE  Qt_QAbstractItemView_selectAll( ::pPtr )
+   METHOD  setCurrentIndex( pIndex )           INLINE  Qt_QAbstractItemView_setCurrentIndex( ::pPtr, pIndex )
+   METHOD  setRootIndex( pIndex )              INLINE  Qt_QAbstractItemView_setRootIndex( ::pPtr, pIndex )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QAbstractItemView
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QAbstractItemView( pParent )
 

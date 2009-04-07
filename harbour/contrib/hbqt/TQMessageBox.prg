@@ -53,36 +53,39 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QMessageBox INHERIT QDialog
+CREATE CLASS QMessageBox INHERIT QDialog
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
-   METHOD  addButton( pButton, nButtonRole )   INLINE  Qt_QMessageBox_addButton( ::pPtr, pButton, nButtonRole )
-   METHOD  addButton_1( cText, nButtonRole )   INLINE  Qt_QMessageBox_addButton_1( ::pPtr, cText, nButtonRole )
-   METHOD  addButton_2( nStandardButton )      INLINE  Qt_QMessageBox_addButton_2( ::pPtr, nStandardButton )
-   METHOD  button( nStandardButton )           INLINE  Qt_QMessageBox_button( ::pPtr, nStandardButton )
+   METHOD  addButton( pButton, nRole )         INLINE  Qt_QMessageBox_addButton( ::pPtr, pButton, nRole )
+   METHOD  addButton_1( cText, nRole )         INLINE  Qt_QMessageBox_addButton_1( ::pPtr, cText, nRole )
+   METHOD  addButton_2( nButton )              INLINE  Qt_QMessageBox_addButton_2( ::pPtr, nButton )
+   METHOD  button( nWhich )                    INLINE  Qt_QMessageBox_button( ::pPtr, nWhich )
    METHOD  buttonRole( pButton )               INLINE  Qt_QMessageBox_buttonRole( ::pPtr, pButton )
    METHOD  clickedButton()                     INLINE  Qt_QMessageBox_clickedButton( ::pPtr )
    METHOD  defaultButton()                     INLINE  Qt_QMessageBox_defaultButton( ::pPtr )
    METHOD  detailedText()                      INLINE  Qt_QMessageBox_detailedText( ::pPtr )
    METHOD  escapeButton()                      INLINE  Qt_QMessageBox_escapeButton( ::pPtr )
    METHOD  icon()                              INLINE  Qt_QMessageBox_icon( ::pPtr )
+   METHOD  iconPixmap()                        INLINE  Qt_QMessageBox_iconPixmap( ::pPtr )
    METHOD  informativeText()                   INLINE  Qt_QMessageBox_informativeText( ::pPtr )
    METHOD  open( pReceiver, pMember )          INLINE  Qt_QMessageBox_open( ::pPtr, pReceiver, pMember )
    METHOD  removeButton( pButton )             INLINE  Qt_QMessageBox_removeButton( ::pPtr, pButton )
    METHOD  setDefaultButton( pButton )         INLINE  Qt_QMessageBox_setDefaultButton( ::pPtr, pButton )
-   METHOD  setDefaultButton_1( nStandardButton )  INLINE  Qt_QMessageBox_setDefaultButton_1( ::pPtr, nStandardButton )
+   METHOD  setDefaultButton_1( nButton )       INLINE  Qt_QMessageBox_setDefaultButton_1( ::pPtr, nButton )
    METHOD  setDetailedText( cText )            INLINE  Qt_QMessageBox_setDetailedText( ::pPtr, cText )
    METHOD  setEscapeButton( pButton )          INLINE  Qt_QMessageBox_setEscapeButton( ::pPtr, pButton )
-   METHOD  setEscapeButton_1( nStandardButton )  INLINE  Qt_QMessageBox_setEscapeButton_1( ::pPtr, nStandardButton )
+   METHOD  setEscapeButton_1( nButton )        INLINE  Qt_QMessageBox_setEscapeButton_1( ::pPtr, nButton )
    METHOD  setIcon( nIcon )                    INLINE  Qt_QMessageBox_setIcon( ::pPtr, nIcon )
+   METHOD  setIconPixmap( pPixmap )            INLINE  Qt_QMessageBox_setIconPixmap( ::pPtr, pPixmap )
    METHOD  setInformativeText( cText )         INLINE  Qt_QMessageBox_setInformativeText( ::pPtr, cText )
-   METHOD  setStandardButtons( nStandardButtons )  INLINE  Qt_QMessageBox_setStandardButtons( ::pPtr, nStandardButtons )
+   METHOD  setStandardButtons( nButtons )      INLINE  Qt_QMessageBox_setStandardButtons( ::pPtr, nButtons )
    METHOD  setText( cText )                    INLINE  Qt_QMessageBox_setText( ::pPtr, cText )
    METHOD  setTextFormat( nFormat )            INLINE  Qt_QMessageBox_setTextFormat( ::pPtr, nFormat )
    METHOD  setWindowModality( nWindowModality )  INLINE  Qt_QMessageBox_setWindowModality( ::pPtr, nWindowModality )
@@ -91,12 +94,15 @@ CLASS QMessageBox INHERIT QDialog
    METHOD  standardButtons()                   INLINE  Qt_QMessageBox_standardButtons( ::pPtr )
    METHOD  text()                              INLINE  Qt_QMessageBox_text( ::pPtr )
    METHOD  textFormat()                        INLINE  Qt_QMessageBox_textFormat( ::pPtr )
+   METHOD  exec()                              INLINE  Qt_QMessageBox_exec( ::pPtr )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QMessageBox
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QMessageBox( pParent )
 

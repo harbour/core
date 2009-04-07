@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QScrollArea INHERIT QAbstractScrollArea
+CREATE CLASS QScrollArea INHERIT QAbstractScrollArea
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -77,6 +78,8 @@ CLASS QScrollArea INHERIT QAbstractScrollArea
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QScrollArea
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QScrollArea( pParent )
 

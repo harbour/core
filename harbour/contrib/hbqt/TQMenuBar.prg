@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QMenuBar INHERIT QWidget
+CREATE CLASS QMenuBar INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -82,6 +83,8 @@ CLASS QMenuBar INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QMenuBar
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QMenuBar( pParent )
 

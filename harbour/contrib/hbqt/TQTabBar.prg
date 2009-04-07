@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QTabBar INHERIT QWidget
+CREATE CLASS QTabBar INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -80,32 +81,40 @@ CLASS QTabBar INHERIT QWidget
    METHOD  setDrawBase( lDrawTheBase )         INLINE  Qt_QTabBar_setDrawBase( ::pPtr, lDrawTheBase )
    METHOD  setElideMode( nQt_TextElideMode )   INLINE  Qt_QTabBar_setElideMode( ::pPtr, nQt_TextElideMode )
    METHOD  setExpanding( lEnabled )            INLINE  Qt_QTabBar_setExpanding( ::pPtr, lEnabled )
-   METHOD  setIconSize( aSizeSize )            INLINE  Qt_QTabBar_setIconSize( ::pPtr, aSizeSize )
+   METHOD  setIconSize( pSize )                INLINE  Qt_QTabBar_setIconSize( ::pPtr, pSize )
    METHOD  setMovable( lMovable )              INLINE  Qt_QTabBar_setMovable( ::pPtr, lMovable )
-   METHOD  setSelectionBehaviorOnRemove( nSelectionBehavior )  INLINE  Qt_QTabBar_setSelectionBehaviorOnRemove( ::pPtr, nSelectionBehavior )
+   METHOD  setSelectionBehaviorOnRemove( nBehavior )  INLINE  Qt_QTabBar_setSelectionBehaviorOnRemove( ::pPtr, nBehavior )
    METHOD  setShape( nShape )                  INLINE  Qt_QTabBar_setShape( ::pPtr, nShape )
-   METHOD  setTabButton( nIndex, nButtonPosition, pWidget )  INLINE  Qt_QTabBar_setTabButton( ::pPtr, nIndex, nButtonPosition, pWidget )
+   METHOD  setTabButton( nIndex, nPosition, pWidget )  INLINE  Qt_QTabBar_setTabButton( ::pPtr, nIndex, nPosition, pWidget )
+   METHOD  setTabData( nIndex, pData )         INLINE  Qt_QTabBar_setTabData( ::pPtr, nIndex, pData )
    METHOD  setTabEnabled( nIndex, lEnabled )   INLINE  Qt_QTabBar_setTabEnabled( ::pPtr, nIndex, lEnabled )
    METHOD  setTabText( nIndex, cText )         INLINE  Qt_QTabBar_setTabText( ::pPtr, nIndex, cText )
+   METHOD  setTabTextColor( nIndex, pColor )   INLINE  Qt_QTabBar_setTabTextColor( ::pPtr, nIndex, pColor )
    METHOD  setTabToolTip( nIndex, cTip )       INLINE  Qt_QTabBar_setTabToolTip( ::pPtr, nIndex, cTip )
    METHOD  setTabWhatsThis( nIndex, cText )    INLINE  Qt_QTabBar_setTabWhatsThis( ::pPtr, nIndex, cText )
    METHOD  setTabsClosable( lClosable )        INLINE  Qt_QTabBar_setTabsClosable( ::pPtr, lClosable )
    METHOD  setUsesScrollButtons( lUseButtons )  INLINE  Qt_QTabBar_setUsesScrollButtons( ::pPtr, lUseButtons )
    METHOD  shape()                             INLINE  Qt_QTabBar_shape( ::pPtr )
-   METHOD  tabAt( aPointPosition )             INLINE  Qt_QTabBar_tabAt( ::pPtr, aPointPosition )
-   METHOD  tabButton( nIndex, nButtonPosition )  INLINE  Qt_QTabBar_tabButton( ::pPtr, nIndex, nButtonPosition )
+   METHOD  tabAt( pPosition )                  INLINE  Qt_QTabBar_tabAt( ::pPtr, pPosition )
+   METHOD  tabButton( nIndex, nPosition )      INLINE  Qt_QTabBar_tabButton( ::pPtr, nIndex, nPosition )
+   METHOD  tabData( nIndex )                   INLINE  Qt_QTabBar_tabData( ::pPtr, nIndex )
+   METHOD  tabIcon( nIndex )                   INLINE  Qt_QTabBar_tabIcon( ::pPtr, nIndex )
    METHOD  tabRect( nIndex )                   INLINE  Qt_QTabBar_tabRect( ::pPtr, nIndex )
    METHOD  tabText( nIndex )                   INLINE  Qt_QTabBar_tabText( ::pPtr, nIndex )
+   METHOD  tabTextColor( nIndex )              INLINE  Qt_QTabBar_tabTextColor( ::pPtr, nIndex )
    METHOD  tabToolTip( nIndex )                INLINE  Qt_QTabBar_tabToolTip( ::pPtr, nIndex )
    METHOD  tabWhatsThis( nIndex )              INLINE  Qt_QTabBar_tabWhatsThis( ::pPtr, nIndex )
    METHOD  tabsClosable()                      INLINE  Qt_QTabBar_tabsClosable( ::pPtr )
    METHOD  usesScrollButtons()                 INLINE  Qt_QTabBar_usesScrollButtons( ::pPtr )
+   METHOD  setCurrentIndex( nIndex )           INLINE  Qt_QTabBar_setCurrentIndex( ::pPtr, nIndex )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QTabBar
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QTabBar( pParent )
 

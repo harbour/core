@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QPushButton INHERIT QAbstractButton
+CREATE CLASS QPushButton INHERIT QAbstractButton
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -70,12 +71,15 @@ CLASS QPushButton INHERIT QAbstractButton
    METHOD  setDefault( lBool )                 INLINE  Qt_QPushButton_setDefault( ::pPtr, lBool )
    METHOD  setFlat( lBool )                    INLINE  Qt_QPushButton_setFlat( ::pPtr, lBool )
    METHOD  setMenu( pMenu )                    INLINE  Qt_QPushButton_setMenu( ::pPtr, pMenu )
+   METHOD  showMenu()                          INLINE  Qt_QPushButton_showMenu( ::pPtr )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QPushButton
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QPushButton( pParent )
 

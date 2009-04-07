@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QFormLayout INHERIT QLayout
+CREATE CLASS QFormLayout INHERIT QLayout
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -70,6 +71,9 @@ CLASS QFormLayout INHERIT QLayout
    METHOD  addRow_5( pLayout )                 INLINE  Qt_QFormLayout_addRow_5( ::pPtr, pLayout )
    METHOD  fieldGrowthPolicy()                 INLINE  Qt_QFormLayout_fieldGrowthPolicy( ::pPtr )
    METHOD  formAlignment()                     INLINE  Qt_QFormLayout_formAlignment( ::pPtr )
+   METHOD  getItemPosition( nIndex, nRowPtr, nRolePtr )  INLINE  Qt_QFormLayout_getItemPosition( ::pPtr, nIndex, nRowPtr, nRolePtr )
+   METHOD  getLayoutPosition( pLayout, nRowPtr, nRolePtr )  INLINE  Qt_QFormLayout_getLayoutPosition( ::pPtr, pLayout, nRowPtr, nRolePtr )
+   METHOD  getWidgetPosition( pWidget, nRowPtr, nRolePtr )  INLINE  Qt_QFormLayout_getWidgetPosition( ::pPtr, pWidget, nRowPtr, nRolePtr )
    METHOD  horizontalSpacing()                 INLINE  Qt_QFormLayout_horizontalSpacing( ::pPtr )
    METHOD  insertRow( nRow, pLabel, pField )   INLINE  Qt_QFormLayout_insertRow( ::pPtr, nRow, pLabel, pField )
    METHOD  insertRow_1( nRow, pLabel, pField )  INLINE  Qt_QFormLayout_insertRow_1( ::pPtr, nRow, pLabel, pField )
@@ -77,22 +81,22 @@ CLASS QFormLayout INHERIT QLayout
    METHOD  insertRow_3( nRow, cLabelText, pField )  INLINE  Qt_QFormLayout_insertRow_3( ::pPtr, nRow, cLabelText, pField )
    METHOD  insertRow_4( nRow, pWidget )        INLINE  Qt_QFormLayout_insertRow_4( ::pPtr, nRow, pWidget )
    METHOD  insertRow_5( nRow, pLayout )        INLINE  Qt_QFormLayout_insertRow_5( ::pPtr, nRow, pLayout )
-   METHOD  itemAt( nRow, nItemRole )           INLINE  Qt_QFormLayout_itemAt( ::pPtr, nRow, nItemRole )
+   METHOD  itemAt( nRow, nRole )               INLINE  Qt_QFormLayout_itemAt( ::pPtr, nRow, nRole )
    METHOD  labelAlignment()                    INLINE  Qt_QFormLayout_labelAlignment( ::pPtr )
    METHOD  labelForField( pField )             INLINE  Qt_QFormLayout_labelForField( ::pPtr, pField )
    METHOD  labelForField_1( pField )           INLINE  Qt_QFormLayout_labelForField_1( ::pPtr, pField )
    METHOD  rowCount()                          INLINE  Qt_QFormLayout_rowCount( ::pPtr )
    METHOD  rowWrapPolicy()                     INLINE  Qt_QFormLayout_rowWrapPolicy( ::pPtr )
-   METHOD  setFieldGrowthPolicy( nFieldGrowthPolicy )  INLINE  Qt_QFormLayout_setFieldGrowthPolicy( ::pPtr, nFieldGrowthPolicy )
+   METHOD  setFieldGrowthPolicy( nPolicy )     INLINE  Qt_QFormLayout_setFieldGrowthPolicy( ::pPtr, nPolicy )
    METHOD  setFormAlignment( nAlignment )      INLINE  Qt_QFormLayout_setFormAlignment( ::pPtr, nAlignment )
    METHOD  setHorizontalSpacing( nSpacing )    INLINE  Qt_QFormLayout_setHorizontalSpacing( ::pPtr, nSpacing )
-   METHOD  setItem( nRow, nItemRole, pItem )   INLINE  Qt_QFormLayout_setItem( ::pPtr, nRow, nItemRole, pItem )
+   METHOD  setItem( nRow, nRole, pItem )       INLINE  Qt_QFormLayout_setItem( ::pPtr, nRow, nRole, pItem )
    METHOD  setLabelAlignment( nAlignment )     INLINE  Qt_QFormLayout_setLabelAlignment( ::pPtr, nAlignment )
-   METHOD  setLayout( nRow, nItemRole, pLayout )  INLINE  Qt_QFormLayout_setLayout( ::pPtr, nRow, nItemRole, pLayout )
-   METHOD  setRowWrapPolicy( nRowWrapPolicy )  INLINE  Qt_QFormLayout_setRowWrapPolicy( ::pPtr, nRowWrapPolicy )
+   METHOD  setLayout( nRow, nRole, pLayout )   INLINE  Qt_QFormLayout_setLayout( ::pPtr, nRow, nRole, pLayout )
+   METHOD  setRowWrapPolicy( nPolicy )         INLINE  Qt_QFormLayout_setRowWrapPolicy( ::pPtr, nPolicy )
    METHOD  setSpacing( nSpacing )              INLINE  Qt_QFormLayout_setSpacing( ::pPtr, nSpacing )
    METHOD  setVerticalSpacing( nSpacing )      INLINE  Qt_QFormLayout_setVerticalSpacing( ::pPtr, nSpacing )
-   METHOD  setWidget( nRow, nItemRole, pWidget )  INLINE  Qt_QFormLayout_setWidget( ::pPtr, nRow, nItemRole, pWidget )
+   METHOD  setWidget( nRow, nRole, pWidget )   INLINE  Qt_QFormLayout_setWidget( ::pPtr, nRow, nRole, pWidget )
    METHOD  spacing()                           INLINE  Qt_QFormLayout_spacing( ::pPtr )
    METHOD  verticalSpacing()                   INLINE  Qt_QFormLayout_verticalSpacing( ::pPtr )
 
@@ -101,6 +105,8 @@ CLASS QFormLayout INHERIT QLayout
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QFormLayout
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QFormLayout( pParent )
 

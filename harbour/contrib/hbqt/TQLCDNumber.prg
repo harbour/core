@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QLCDNumber INHERIT QFrame
+CREATE CLASS QLCDNumber INHERIT QFrame
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -73,12 +74,22 @@ CLASS QLCDNumber INHERIT QFrame
    METHOD  setSegmentStyle( nSegmentStyle )    INLINE  Qt_QLCDNumber_setSegmentStyle( ::pPtr, nSegmentStyle )
    METHOD  smallDecimalPoint()                 INLINE  Qt_QLCDNumber_smallDecimalPoint( ::pPtr )
    METHOD  value()                             INLINE  Qt_QLCDNumber_value( ::pPtr )
+   METHOD  display( cS )                       INLINE  Qt_QLCDNumber_display( ::pPtr, cS )
+   METHOD  display_1( nNum )                   INLINE  Qt_QLCDNumber_display_1( ::pPtr, nNum )
+   METHOD  display_2( nNum )                   INLINE  Qt_QLCDNumber_display_2( ::pPtr, nNum )
+   METHOD  setBinMode()                        INLINE  Qt_QLCDNumber_setBinMode( ::pPtr )
+   METHOD  setDecMode()                        INLINE  Qt_QLCDNumber_setDecMode( ::pPtr )
+   METHOD  setHexMode()                        INLINE  Qt_QLCDNumber_setHexMode( ::pPtr )
+   METHOD  setOctMode()                        INLINE  Qt_QLCDNumber_setOctMode( ::pPtr )
+   METHOD  setSmallDecimalPoint( lBool )       INLINE  Qt_QLCDNumber_setSmallDecimalPoint( ::pPtr, lBool )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QLCDNumber
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QLCDNumber( pParent )
 

@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -59,25 +59,15 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
-
 /*
- *  Constructed[ 36/47 [ 76.60% ] ]
- *  
+ *  Constructed[ 44/46 [ 95.65% ] ]
+ *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
- *  
- *  QDir directory () const
- *  QStringList history () const
- *  QStringList nameFilters () const
- *  bool restoreState ( const QByteArray & state )
- *  QByteArray saveState () const
- *  QStringList selectedFiles () const
- *  void setDirectory ( const QDir & directory )
- *  void setHistory ( const QStringList & paths )
- *  void setNameFilters ( const QStringList & filters )
+ *
  *  void setSidebarUrls ( const QList<QUrl> & urls )
  *  QList<QUrl> sidebarUrls () const
- */ 
+ */
 
 
 #include <QtGui/QFileDialog>
@@ -98,7 +88,7 @@ HB_FUNC( QT_QFILEDIALOG )
  */
 HB_FUNC( QT_QFILEDIALOG_ACCEPTMODE )
 {
-   hb_retni( hbqt_par_QFileDialog( 1 )->acceptMode(  ) );
+   hb_retni( ( QFileDialog::AcceptMode ) hbqt_par_QFileDialog( 1 )->acceptMode() );
 }
 
 /*
@@ -106,7 +96,7 @@ HB_FUNC( QT_QFILEDIALOG_ACCEPTMODE )
  */
 HB_FUNC( QT_QFILEDIALOG_CONFIRMOVERWRITE )
 {
-   hb_retl( hbqt_par_QFileDialog( 1 )->confirmOverwrite(  ) );
+   hb_retl( hbqt_par_QFileDialog( 1 )->confirmOverwrite() );
 }
 
 /*
@@ -114,7 +104,15 @@ HB_FUNC( QT_QFILEDIALOG_CONFIRMOVERWRITE )
  */
 HB_FUNC( QT_QFILEDIALOG_DEFAULTSUFFIX )
 {
-   hb_retc( hbqt_par_QFileDialog( 1 )->defaultSuffix( ).toLatin1().data() );
+   hb_retc( hbqt_par_QFileDialog( 1 )->defaultSuffix().toLatin1().data() );
+}
+
+/*
+ * QDir directory () const
+ */
+HB_FUNC( QT_QFILEDIALOG_DIRECTORY )
+{
+   hb_retptr( new QDir( hbqt_par_QFileDialog( 1 )->directory() ) );
 }
 
 /*
@@ -122,7 +120,7 @@ HB_FUNC( QT_QFILEDIALOG_DEFAULTSUFFIX )
  */
 HB_FUNC( QT_QFILEDIALOG_FILEMODE )
 {
-   hb_retni( hbqt_par_QFileDialog( 1 )->fileMode(  ) );
+   hb_retni( ( QFileDialog::FileMode ) hbqt_par_QFileDialog( 1 )->fileMode() );
 }
 
 /*
@@ -130,7 +128,15 @@ HB_FUNC( QT_QFILEDIALOG_FILEMODE )
  */
 HB_FUNC( QT_QFILEDIALOG_FILTER )
 {
-   hb_retni( hbqt_par_QFileDialog( 1 )->filter(  ) );
+   hb_retni( ( QDir::Filters ) hbqt_par_QFileDialog( 1 )->filter() );
+}
+
+/*
+ * QStringList history () const
+ */
+HB_FUNC( QT_QFILEDIALOG_HISTORY )
+{
+   hb_retptr( new QStringList( hbqt_par_QFileDialog( 1 )->history() ) );
 }
 
 /*
@@ -138,7 +144,7 @@ HB_FUNC( QT_QFILEDIALOG_FILTER )
  */
 HB_FUNC( QT_QFILEDIALOG_ICONPROVIDER )
 {
-   hb_retptr( ( QFileIconProvider* ) hbqt_par_QFileDialog( 1 )->iconProvider(  ) );
+   hb_retptr( ( QFileIconProvider* ) hbqt_par_QFileDialog( 1 )->iconProvider() );
 }
 
 /*
@@ -146,7 +152,7 @@ HB_FUNC( QT_QFILEDIALOG_ICONPROVIDER )
  */
 HB_FUNC( QT_QFILEDIALOG_ISNAMEFILTERDETAILSVISIBLE )
 {
-   hb_retl( hbqt_par_QFileDialog( 1 )->isNameFilterDetailsVisible(  ) );
+   hb_retl( hbqt_par_QFileDialog( 1 )->isNameFilterDetailsVisible() );
 }
 
 /*
@@ -154,7 +160,7 @@ HB_FUNC( QT_QFILEDIALOG_ISNAMEFILTERDETAILSVISIBLE )
  */
 HB_FUNC( QT_QFILEDIALOG_ISREADONLY )
 {
-   hb_retl( hbqt_par_QFileDialog( 1 )->isReadOnly(  ) );
+   hb_retl( hbqt_par_QFileDialog( 1 )->isReadOnly() );
 }
 
 /*
@@ -162,7 +168,7 @@ HB_FUNC( QT_QFILEDIALOG_ISREADONLY )
  */
 HB_FUNC( QT_QFILEDIALOG_ITEMDELEGATE )
 {
-   hb_retptr( ( QAbstractItemDelegate* ) hbqt_par_QFileDialog( 1 )->itemDelegate(  ) );
+   hb_retptr( ( QAbstractItemDelegate* ) hbqt_par_QFileDialog( 1 )->itemDelegate() );
 }
 
 /*
@@ -170,15 +176,15 @@ HB_FUNC( QT_QFILEDIALOG_ITEMDELEGATE )
  */
 HB_FUNC( QT_QFILEDIALOG_LABELTEXT )
 {
-   hb_retc( hbqt_par_QFileDialog( 1 )->labelText( ( QFileDialog::DialogLabel ) hb_parni( 2 )).toLatin1().data() );
+   hb_retc( hbqt_par_QFileDialog( 1 )->labelText( ( QFileDialog::DialogLabel ) hb_parni( 2 ) ).toLatin1().data() );
 }
 
 /*
- * void open ( QObject * receiver, const char * member )
+ * QStringList nameFilters () const
  */
-HB_FUNC( QT_QFILEDIALOG_OPEN )
+HB_FUNC( QT_QFILEDIALOG_NAMEFILTERS )
 {
-   hbqt_par_QFileDialog( 1 )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
+   hb_retptr( new QStringList( hbqt_par_QFileDialog( 1 )->nameFilters() ) );
 }
 
 /*
@@ -186,7 +192,7 @@ HB_FUNC( QT_QFILEDIALOG_OPEN )
  */
 HB_FUNC( QT_QFILEDIALOG_OPTIONS )
 {
-   hb_retni( hbqt_par_QFileDialog( 1 )->options(  ) );
+   hb_retni( ( QFileDialog::Options ) hbqt_par_QFileDialog( 1 )->options() );
 }
 
 /*
@@ -194,7 +200,7 @@ HB_FUNC( QT_QFILEDIALOG_OPTIONS )
  */
 HB_FUNC( QT_QFILEDIALOG_PROXYMODEL )
 {
-   hb_retptr( ( QAbstractProxyModel* ) hbqt_par_QFileDialog( 1 )->proxyModel(  ) );
+   hb_retptr( ( QAbstractProxyModel* ) hbqt_par_QFileDialog( 1 )->proxyModel() );
 }
 
 /*
@@ -202,7 +208,23 @@ HB_FUNC( QT_QFILEDIALOG_PROXYMODEL )
  */
 HB_FUNC( QT_QFILEDIALOG_RESOLVESYMLINKS )
 {
-   hb_retl( hbqt_par_QFileDialog( 1 )->resolveSymlinks(  ) );
+   hb_retl( hbqt_par_QFileDialog( 1 )->resolveSymlinks() );
+}
+
+/*
+ * bool restoreState ( const QByteArray & state )
+ */
+HB_FUNC( QT_QFILEDIALOG_RESTORESTATE )
+{
+   hb_retl( hbqt_par_QFileDialog( 1 )->restoreState( *hbqt_par_QByteArray( 2 ) ) );
+}
+
+/*
+ * QByteArray saveState () const
+ */
+HB_FUNC( QT_QFILEDIALOG_SAVESTATE )
+{
+   hb_retptr( new QByteArray( hbqt_par_QFileDialog( 1 )->saveState() ) );
 }
 
 /*
@@ -222,11 +244,19 @@ HB_FUNC( QT_QFILEDIALOG_SELECTNAMEFILTER )
 }
 
 /*
+ * QStringList selectedFiles () const
+ */
+HB_FUNC( QT_QFILEDIALOG_SELECTEDFILES )
+{
+   hb_retptr( new QStringList( hbqt_par_QFileDialog( 1 )->selectedFiles() ) );
+}
+
+/*
  * QString selectedNameFilter () const
  */
 HB_FUNC( QT_QFILEDIALOG_SELECTEDNAMEFILTER )
 {
-   hb_retc( hbqt_par_QFileDialog( 1 )->selectedNameFilter( ).toLatin1().data() );
+   hb_retc( hbqt_par_QFileDialog( 1 )->selectedNameFilter().toLatin1().data() );
 }
 
 /*
@@ -262,6 +292,14 @@ HB_FUNC( QT_QFILEDIALOG_SETDIRECTORY )
 }
 
 /*
+ * void setDirectory ( const QDir & directory )
+ */
+HB_FUNC( QT_QFILEDIALOG_SETDIRECTORY_1 )
+{
+   hbqt_par_QFileDialog( 1 )->setDirectory( *hbqt_par_QDir( 2 ) );
+}
+
+/*
  * void setFileMode ( FileMode mode )
  */
 HB_FUNC( QT_QFILEDIALOG_SETFILEMODE )
@@ -275,6 +313,14 @@ HB_FUNC( QT_QFILEDIALOG_SETFILEMODE )
 HB_FUNC( QT_QFILEDIALOG_SETFILTER )
 {
    hbqt_par_QFileDialog( 1 )->setFilter( ( QDir::Filters ) hb_parni( 2 ) );
+}
+
+/*
+ * void setHistory ( const QStringList & paths )
+ */
+HB_FUNC( QT_QFILEDIALOG_SETHISTORY )
+{
+   hbqt_par_QFileDialog( 1 )->setHistory( *hbqt_par_QStringList( 2 ) );
 }
 
 /*
@@ -315,6 +361,14 @@ HB_FUNC( QT_QFILEDIALOG_SETNAMEFILTER )
 HB_FUNC( QT_QFILEDIALOG_SETNAMEFILTERDETAILSVISIBLE )
 {
    hbqt_par_QFileDialog( 1 )->setNameFilterDetailsVisible( hb_parl( 2 ) );
+}
+
+/*
+ * void setNameFilters ( const QStringList & filters )
+ */
+HB_FUNC( QT_QFILEDIALOG_SETNAMEFILTERS )
+{
+   hbqt_par_QFileDialog( 1 )->setNameFilters( *hbqt_par_QStringList( 2 ) );
 }
 
 /*
@@ -378,7 +432,7 @@ HB_FUNC( QT_QFILEDIALOG_TESTOPTION )
  */
 HB_FUNC( QT_QFILEDIALOG_VIEWMODE )
 {
-   hb_retni( hbqt_par_QFileDialog( 1 )->viewMode(  ) );
+   hb_retni( ( QFileDialog::ViewMode ) hbqt_par_QFileDialog( 1 )->viewMode() );
 }
 
 

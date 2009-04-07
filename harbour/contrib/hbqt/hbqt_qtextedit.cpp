@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -59,27 +59,18 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
-
 /*
- *  Constructed[ 44/60 [ 73.33% ] ]
- *  
+ *  Constructed[ 81/86 [ 94.19% ] ]
+ *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
- *  
- *  QTextCharFormat currentCharFormat () const
- *  QFont currentFont () const
- *  QTextCursor cursorForPosition ( const QPoint & pos ) const
- *  QRect cursorRect ( const QTextCursor & cursor ) const
+ *
+ *  QTextEdit ( QWidget * parent = 0 )
+ *  QTextEdit ( const QString & text, QWidget * parent = 0 )
+ *  virtual ~QTextEdit ()
  *  QList<ExtraSelection> extraSelections () const
- *  virtual QVariant loadResource ( int type, const QUrl & name )
- *  void mergeCurrentCharFormat ( const QTextCharFormat & modifier )
- *  void setCurrentCharFormat ( const QTextCharFormat & format )
  *  void setExtraSelections ( const QList<ExtraSelection> & selections )
- *  void setTextCursor ( const QTextCursor & cursor )
- *  QColor textBackgroundColor () const
- *  QColor textColor () const
- *  QTextCursor textCursor () const
- */ 
+ */
 
 
 #include <QtGui/QTextEdit>
@@ -101,7 +92,7 @@ HB_FUNC( QT_QTEXTEDIT )
  */
 HB_FUNC( QT_QTEXTEDIT_ACCEPTRICHTEXT )
 {
-   hb_retl( hbqt_par_QTextEdit( 1 )->acceptRichText(  ) );
+   hb_retl( hbqt_par_QTextEdit( 1 )->acceptRichText() );
 }
 
 /*
@@ -109,7 +100,7 @@ HB_FUNC( QT_QTEXTEDIT_ACCEPTRICHTEXT )
  */
 HB_FUNC( QT_QTEXTEDIT_ALIGNMENT )
 {
-   hb_retni( hbqt_par_QTextEdit( 1 )->alignment(  ) );
+   hb_retni( ( Qt::Alignment ) hbqt_par_QTextEdit( 1 )->alignment() );
 }
 
 /*
@@ -117,7 +108,7 @@ HB_FUNC( QT_QTEXTEDIT_ALIGNMENT )
  */
 HB_FUNC( QT_QTEXTEDIT_ANCHORAT )
 {
-   hb_retc( hbqt_par_QTextEdit( 1 )->anchorAt( hbqt_const_QPoint( 2 )).toLatin1().data() );
+   hb_retc( hbqt_par_QTextEdit( 1 )->anchorAt( *hbqt_par_QPoint( 2 ) ).toLatin1().data() );
 }
 
 /*
@@ -125,7 +116,7 @@ HB_FUNC( QT_QTEXTEDIT_ANCHORAT )
  */
 HB_FUNC( QT_QTEXTEDIT_AUTOFORMATTING )
 {
-   hb_retni( hbqt_par_QTextEdit( 1 )->autoFormatting(  ) );
+   hb_retni( ( QTextEdit::AutoFormatting ) hbqt_par_QTextEdit( 1 )->autoFormatting() );
 }
 
 /*
@@ -133,7 +124,7 @@ HB_FUNC( QT_QTEXTEDIT_AUTOFORMATTING )
  */
 HB_FUNC( QT_QTEXTEDIT_CANPASTE )
 {
-   hb_retl( hbqt_par_QTextEdit( 1 )->canPaste(  ) );
+   hb_retl( hbqt_par_QTextEdit( 1 )->canPaste() );
 }
 
 /*
@@ -141,7 +132,7 @@ HB_FUNC( QT_QTEXTEDIT_CANPASTE )
  */
 HB_FUNC( QT_QTEXTEDIT_CREATESTANDARDCONTEXTMENU )
 {
-   hb_retptr( ( QMenu* ) hbqt_par_QTextEdit( 1 )->createStandardContextMenu(  ) );
+   hb_retptr( ( QMenu* ) hbqt_par_QTextEdit( 1 )->createStandardContextMenu() );
 }
 
 /*
@@ -149,15 +140,47 @@ HB_FUNC( QT_QTEXTEDIT_CREATESTANDARDCONTEXTMENU )
  */
 HB_FUNC( QT_QTEXTEDIT_CREATESTANDARDCONTEXTMENU_1 )
 {
-   hb_retptr( ( QMenu* ) hbqt_par_QTextEdit( 1 )->createStandardContextMenu( hbqt_const_QPoint( 2 ) ) );
+   hb_retptr( ( QMenu* ) hbqt_par_QTextEdit( 1 )->createStandardContextMenu( *hbqt_par_QPoint( 2 ) ) );
+}
+
+/*
+ * QTextCharFormat currentCharFormat () const
+ */
+HB_FUNC( QT_QTEXTEDIT_CURRENTCHARFORMAT )
+{
+   hb_retptr( new QTextCharFormat( hbqt_par_QTextEdit( 1 )->currentCharFormat() ) );
+}
+
+/*
+ * QFont currentFont () const
+ */
+HB_FUNC( QT_QTEXTEDIT_CURRENTFONT )
+{
+   hb_retptr( new QFont( hbqt_par_QTextEdit( 1 )->currentFont() ) );
+}
+
+/*
+ * QTextCursor cursorForPosition ( const QPoint & pos ) const
+ */
+HB_FUNC( QT_QTEXTEDIT_CURSORFORPOSITION )
+{
+   hb_retptr( new QTextCursor( hbqt_par_QTextEdit( 1 )->cursorForPosition( *hbqt_par_QPoint( 2 ) ) ) );
+}
+
+/*
+ * QRect cursorRect ( const QTextCursor & cursor ) const
+ */
+HB_FUNC( QT_QTEXTEDIT_CURSORRECT )
+{
+   hb_retptr( new QRect( hbqt_par_QTextEdit( 1 )->cursorRect( *hbqt_par_QTextCursor( 2 ) ) ) );
 }
 
 /*
  * QRect cursorRect () const
  */
-HB_FUNC( QT_QTEXTEDIT_CURSORRECT )
+HB_FUNC( QT_QTEXTEDIT_CURSORRECT_1 )
 {
-   hbqt_ret_QRect( hbqt_par_QTextEdit( 1 )->cursorRect(  ) );
+   hb_retptr( new QRect( hbqt_par_QTextEdit( 1 )->cursorRect() ) );
 }
 
 /*
@@ -165,7 +188,7 @@ HB_FUNC( QT_QTEXTEDIT_CURSORRECT )
  */
 HB_FUNC( QT_QTEXTEDIT_CURSORWIDTH )
 {
-   hb_retni( hbqt_par_QTextEdit( 1 )->cursorWidth(  ) );
+   hb_retni( hbqt_par_QTextEdit( 1 )->cursorWidth() );
 }
 
 /*
@@ -173,7 +196,7 @@ HB_FUNC( QT_QTEXTEDIT_CURSORWIDTH )
  */
 HB_FUNC( QT_QTEXTEDIT_DOCUMENT )
 {
-   hb_retptr( ( QTextDocument* ) hbqt_par_QTextEdit( 1 )->document(  ) );
+   hb_retptr( ( QTextDocument* ) hbqt_par_QTextEdit( 1 )->document() );
 }
 
 /*
@@ -181,7 +204,7 @@ HB_FUNC( QT_QTEXTEDIT_DOCUMENT )
  */
 HB_FUNC( QT_QTEXTEDIT_DOCUMENTTITLE )
 {
-   hb_retc( hbqt_par_QTextEdit( 1 )->documentTitle( ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextEdit( 1 )->documentTitle().toLatin1().data() );
 }
 
 /*
@@ -189,7 +212,7 @@ HB_FUNC( QT_QTEXTEDIT_DOCUMENTTITLE )
  */
 HB_FUNC( QT_QTEXTEDIT_ENSURECURSORVISIBLE )
 {
-   hbqt_par_QTextEdit( 1 )->ensureCursorVisible(  );
+   hbqt_par_QTextEdit( 1 )->ensureCursorVisible();
 }
 
 /*
@@ -197,7 +220,7 @@ HB_FUNC( QT_QTEXTEDIT_ENSURECURSORVISIBLE )
  */
 HB_FUNC( QT_QTEXTEDIT_FIND )
 {
-   hb_retl( hbqt_par_QTextEdit( 1 )->find( hbqt_par_QString( 2 ), ( QTextDocument::FindFlags ) hb_parni( 3 ) ) );
+   hb_retl( hbqt_par_QTextEdit( 1 )->find( hbqt_par_QString( 2 ), ( HB_ISNIL( 3 ) ? ( QTextDocument::FindFlags ) 0 : ( QTextDocument::FindFlags ) hb_parni( 3 ) ) ) );
 }
 
 /*
@@ -205,7 +228,7 @@ HB_FUNC( QT_QTEXTEDIT_FIND )
  */
 HB_FUNC( QT_QTEXTEDIT_FONTFAMILY )
 {
-   hb_retc( hbqt_par_QTextEdit( 1 )->fontFamily( ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextEdit( 1 )->fontFamily().toLatin1().data() );
 }
 
 /*
@@ -213,7 +236,7 @@ HB_FUNC( QT_QTEXTEDIT_FONTFAMILY )
  */
 HB_FUNC( QT_QTEXTEDIT_FONTITALIC )
 {
-   hb_retl( hbqt_par_QTextEdit( 1 )->fontItalic(  ) );
+   hb_retl( hbqt_par_QTextEdit( 1 )->fontItalic() );
 }
 
 /*
@@ -221,7 +244,7 @@ HB_FUNC( QT_QTEXTEDIT_FONTITALIC )
  */
 HB_FUNC( QT_QTEXTEDIT_FONTPOINTSIZE )
 {
-   hb_retnd( hbqt_par_QTextEdit( 1 )->fontPointSize(  ) );
+   hb_retnd( hbqt_par_QTextEdit( 1 )->fontPointSize() );
 }
 
 /*
@@ -229,7 +252,7 @@ HB_FUNC( QT_QTEXTEDIT_FONTPOINTSIZE )
  */
 HB_FUNC( QT_QTEXTEDIT_FONTUNDERLINE )
 {
-   hb_retl( hbqt_par_QTextEdit( 1 )->fontUnderline(  ) );
+   hb_retl( hbqt_par_QTextEdit( 1 )->fontUnderline() );
 }
 
 /*
@@ -237,7 +260,7 @@ HB_FUNC( QT_QTEXTEDIT_FONTUNDERLINE )
  */
 HB_FUNC( QT_QTEXTEDIT_FONTWEIGHT )
 {
-   hb_retni( hbqt_par_QTextEdit( 1 )->fontWeight(  ) );
+   hb_retni( hbqt_par_QTextEdit( 1 )->fontWeight() );
 }
 
 /*
@@ -245,7 +268,7 @@ HB_FUNC( QT_QTEXTEDIT_FONTWEIGHT )
  */
 HB_FUNC( QT_QTEXTEDIT_ISREADONLY )
 {
-   hb_retl( hbqt_par_QTextEdit( 1 )->isReadOnly(  ) );
+   hb_retl( hbqt_par_QTextEdit( 1 )->isReadOnly() );
 }
 
 /*
@@ -253,7 +276,7 @@ HB_FUNC( QT_QTEXTEDIT_ISREADONLY )
  */
 HB_FUNC( QT_QTEXTEDIT_ISUNDOREDOENABLED )
 {
-   hb_retl( hbqt_par_QTextEdit( 1 )->isUndoRedoEnabled(  ) );
+   hb_retl( hbqt_par_QTextEdit( 1 )->isUndoRedoEnabled() );
 }
 
 /*
@@ -261,7 +284,7 @@ HB_FUNC( QT_QTEXTEDIT_ISUNDOREDOENABLED )
  */
 HB_FUNC( QT_QTEXTEDIT_LINEWRAPCOLUMNORWIDTH )
 {
-   hb_retni( hbqt_par_QTextEdit( 1 )->lineWrapColumnOrWidth(  ) );
+   hb_retni( hbqt_par_QTextEdit( 1 )->lineWrapColumnOrWidth() );
 }
 
 /*
@@ -269,7 +292,23 @@ HB_FUNC( QT_QTEXTEDIT_LINEWRAPCOLUMNORWIDTH )
  */
 HB_FUNC( QT_QTEXTEDIT_LINEWRAPMODE )
 {
-   hb_retni( hbqt_par_QTextEdit( 1 )->lineWrapMode(  ) );
+   hb_retni( ( QTextEdit::LineWrapMode ) hbqt_par_QTextEdit( 1 )->lineWrapMode() );
+}
+
+/*
+ * virtual QVariant loadResource ( int type, const QUrl & name )
+ */
+HB_FUNC( QT_QTEXTEDIT_LOADRESOURCE )
+{
+   hb_retptr( new QVariant( hbqt_par_QTextEdit( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ) );
+}
+
+/*
+ * void mergeCurrentCharFormat ( const QTextCharFormat & modifier )
+ */
+HB_FUNC( QT_QTEXTEDIT_MERGECURRENTCHARFORMAT )
+{
+   hbqt_par_QTextEdit( 1 )->mergeCurrentCharFormat( *hbqt_par_QTextCharFormat( 2 ) );
 }
 
 /*
@@ -277,7 +316,7 @@ HB_FUNC( QT_QTEXTEDIT_LINEWRAPMODE )
  */
 HB_FUNC( QT_QTEXTEDIT_MOVECURSOR )
 {
-   hbqt_par_QTextEdit( 1 )->moveCursor( ( QTextCursor::MoveOperation ) hb_parni( 2 ), ( QTextCursor::MoveMode ) hb_parni( 3 ) );
+   hbqt_par_QTextEdit( 1 )->moveCursor( ( QTextCursor::MoveOperation ) hb_parni( 2 ), ( HB_ISNIL( 3 ) ? ( QTextCursor::MoveMode ) QTextCursor::MoveAnchor : ( QTextCursor::MoveMode ) hb_parni( 3 ) ) );
 }
 
 /*
@@ -285,7 +324,7 @@ HB_FUNC( QT_QTEXTEDIT_MOVECURSOR )
  */
 HB_FUNC( QT_QTEXTEDIT_OVERWRITEMODE )
 {
-   hb_retl( hbqt_par_QTextEdit( 1 )->overwriteMode(  ) );
+   hb_retl( hbqt_par_QTextEdit( 1 )->overwriteMode() );
 }
 
 /*
@@ -310,6 +349,14 @@ HB_FUNC( QT_QTEXTEDIT_SETACCEPTRICHTEXT )
 HB_FUNC( QT_QTEXTEDIT_SETAUTOFORMATTING )
 {
    hbqt_par_QTextEdit( 1 )->setAutoFormatting( ( QTextEdit::AutoFormatting ) hb_parni( 2 ) );
+}
+
+/*
+ * void setCurrentCharFormat ( const QTextCharFormat & format )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETCURRENTCHARFORMAT )
+{
+   hbqt_par_QTextEdit( 1 )->setCurrentCharFormat( *hbqt_par_QTextCharFormat( 2 ) );
 }
 
 /*
@@ -385,6 +432,22 @@ HB_FUNC( QT_QTEXTEDIT_SETTABSTOPWIDTH )
 }
 
 /*
+ * void setTextCursor ( const QTextCursor & cursor )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETTEXTCURSOR )
+{
+   hbqt_par_QTextEdit( 1 )->setTextCursor( *hbqt_par_QTextCursor( 2 ) );
+}
+
+/*
+ * void setTextInteractionFlags ( Qt::TextInteractionFlags flags )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETTEXTINTERACTIONFLAGS )
+{
+   hbqt_par_QTextEdit( 1 )->setTextInteractionFlags( ( Qt::TextInteractionFlags ) hb_parni( 2 ) );
+}
+
+/*
  * void setUndoRedoEnabled ( bool enable )
  */
 HB_FUNC( QT_QTEXTEDIT_SETUNDOREDOENABLED )
@@ -405,7 +468,7 @@ HB_FUNC( QT_QTEXTEDIT_SETWORDWRAPMODE )
  */
 HB_FUNC( QT_QTEXTEDIT_TABCHANGESFOCUS )
 {
-   hb_retl( hbqt_par_QTextEdit( 1 )->tabChangesFocus(  ) );
+   hb_retl( hbqt_par_QTextEdit( 1 )->tabChangesFocus() );
 }
 
 /*
@@ -413,7 +476,31 @@ HB_FUNC( QT_QTEXTEDIT_TABCHANGESFOCUS )
  */
 HB_FUNC( QT_QTEXTEDIT_TABSTOPWIDTH )
 {
-   hb_retni( hbqt_par_QTextEdit( 1 )->tabStopWidth(  ) );
+   hb_retni( hbqt_par_QTextEdit( 1 )->tabStopWidth() );
+}
+
+/*
+ * QColor textBackgroundColor () const
+ */
+HB_FUNC( QT_QTEXTEDIT_TEXTBACKGROUNDCOLOR )
+{
+   hb_retptr( new QColor( hbqt_par_QTextEdit( 1 )->textBackgroundColor() ) );
+}
+
+/*
+ * QColor textColor () const
+ */
+HB_FUNC( QT_QTEXTEDIT_TEXTCOLOR )
+{
+   hb_retptr( new QColor( hbqt_par_QTextEdit( 1 )->textColor() ) );
+}
+
+/*
+ * QTextCursor textCursor () const
+ */
+HB_FUNC( QT_QTEXTEDIT_TEXTCURSOR )
+{
+   hb_retptr( new QTextCursor( hbqt_par_QTextEdit( 1 )->textCursor() ) );
 }
 
 /*
@@ -421,7 +508,7 @@ HB_FUNC( QT_QTEXTEDIT_TABSTOPWIDTH )
  */
 HB_FUNC( QT_QTEXTEDIT_TEXTINTERACTIONFLAGS )
 {
-   hb_retni( hbqt_par_QTextEdit( 1 )->textInteractionFlags(  ) );
+   hb_retni( ( Qt::TextInteractionFlags ) hbqt_par_QTextEdit( 1 )->textInteractionFlags() );
 }
 
 /*
@@ -429,7 +516,7 @@ HB_FUNC( QT_QTEXTEDIT_TEXTINTERACTIONFLAGS )
  */
 HB_FUNC( QT_QTEXTEDIT_TOHTML )
 {
-   hb_retc( hbqt_par_QTextEdit( 1 )->toHtml( ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextEdit( 1 )->toHtml().toLatin1().data() );
 }
 
 /*
@@ -437,7 +524,7 @@ HB_FUNC( QT_QTEXTEDIT_TOHTML )
  */
 HB_FUNC( QT_QTEXTEDIT_TOPLAINTEXT )
 {
-   hb_retc( hbqt_par_QTextEdit( 1 )->toPlainText( ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextEdit( 1 )->toPlainText().toLatin1().data() );
 }
 
 /*
@@ -445,7 +532,207 @@ HB_FUNC( QT_QTEXTEDIT_TOPLAINTEXT )
  */
 HB_FUNC( QT_QTEXTEDIT_WORDWRAPMODE )
 {
-   hb_retni( hbqt_par_QTextEdit( 1 )->wordWrapMode(  ) );
+   hb_retni( ( QTextOption::WrapMode ) hbqt_par_QTextEdit( 1 )->wordWrapMode() );
+}
+
+/*
+ * void append ( const QString & text )
+ */
+HB_FUNC( QT_QTEXTEDIT_APPEND )
+{
+   hbqt_par_QTextEdit( 1 )->append( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void clear ()
+ */
+HB_FUNC( QT_QTEXTEDIT_CLEAR )
+{
+   hbqt_par_QTextEdit( 1 )->clear();
+}
+
+/*
+ * void copy ()
+ */
+HB_FUNC( QT_QTEXTEDIT_COPY )
+{
+   hbqt_par_QTextEdit( 1 )->copy();
+}
+
+/*
+ * void cut ()
+ */
+HB_FUNC( QT_QTEXTEDIT_CUT )
+{
+   hbqt_par_QTextEdit( 1 )->cut();
+}
+
+/*
+ * void insertHtml ( const QString & text )
+ */
+HB_FUNC( QT_QTEXTEDIT_INSERTHTML )
+{
+   hbqt_par_QTextEdit( 1 )->insertHtml( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void insertPlainText ( const QString & text )
+ */
+HB_FUNC( QT_QTEXTEDIT_INSERTPLAINTEXT )
+{
+   hbqt_par_QTextEdit( 1 )->insertPlainText( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void paste ()
+ */
+HB_FUNC( QT_QTEXTEDIT_PASTE )
+{
+   hbqt_par_QTextEdit( 1 )->paste();
+}
+
+/*
+ * void redo ()
+ */
+HB_FUNC( QT_QTEXTEDIT_REDO )
+{
+   hbqt_par_QTextEdit( 1 )->redo();
+}
+
+/*
+ * void scrollToAnchor ( const QString & name )
+ */
+HB_FUNC( QT_QTEXTEDIT_SCROLLTOANCHOR )
+{
+   hbqt_par_QTextEdit( 1 )->scrollToAnchor( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void selectAll ()
+ */
+HB_FUNC( QT_QTEXTEDIT_SELECTALL )
+{
+   hbqt_par_QTextEdit( 1 )->selectAll();
+}
+
+/*
+ * void setAlignment ( Qt::Alignment a )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETALIGNMENT )
+{
+   hbqt_par_QTextEdit( 1 )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+}
+
+/*
+ * void setCurrentFont ( const QFont & f )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETCURRENTFONT )
+{
+   hbqt_par_QTextEdit( 1 )->setCurrentFont( *hbqt_par_QFont( 2 ) );
+}
+
+/*
+ * void setFontFamily ( const QString & fontFamily )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETFONTFAMILY )
+{
+   hbqt_par_QTextEdit( 1 )->setFontFamily( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void setFontItalic ( bool italic )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETFONTITALIC )
+{
+   hbqt_par_QTextEdit( 1 )->setFontItalic( hb_parl( 2 ) );
+}
+
+/*
+ * void setFontPointSize ( qreal s )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETFONTPOINTSIZE )
+{
+   hbqt_par_QTextEdit( 1 )->setFontPointSize( hb_parnd( 2 ) );
+}
+
+/*
+ * void setFontUnderline ( bool underline )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETFONTUNDERLINE )
+{
+   hbqt_par_QTextEdit( 1 )->setFontUnderline( hb_parl( 2 ) );
+}
+
+/*
+ * void setFontWeight ( int weight )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETFONTWEIGHT )
+{
+   hbqt_par_QTextEdit( 1 )->setFontWeight( hb_parni( 2 ) );
+}
+
+/*
+ * void setHtml ( const QString & text )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETHTML )
+{
+   hbqt_par_QTextEdit( 1 )->setHtml( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void setPlainText ( const QString & text )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETPLAINTEXT )
+{
+   hbqt_par_QTextEdit( 1 )->setPlainText( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void setText ( const QString & text )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETTEXT )
+{
+   hbqt_par_QTextEdit( 1 )->setText( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void setTextBackgroundColor ( const QColor & c )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETTEXTBACKGROUNDCOLOR )
+{
+   hbqt_par_QTextEdit( 1 )->setTextBackgroundColor( *hbqt_par_QColor( 2 ) );
+}
+
+/*
+ * void setTextColor ( const QColor & c )
+ */
+HB_FUNC( QT_QTEXTEDIT_SETTEXTCOLOR )
+{
+   hbqt_par_QTextEdit( 1 )->setTextColor( *hbqt_par_QColor( 2 ) );
+}
+
+/*
+ * void undo ()
+ */
+HB_FUNC( QT_QTEXTEDIT_UNDO )
+{
+   hbqt_par_QTextEdit( 1 )->undo();
+}
+
+/*
+ * void zoomIn ( int range = 1 )
+ */
+HB_FUNC( QT_QTEXTEDIT_ZOOMIN )
+{
+   hbqt_par_QTextEdit( 1 )->zoomIn( ( HB_ISNIL( 2 ) ? 1 : hb_parni( 2 ) ) );
+}
+
+/*
+ * void zoomOut ( int range = 1 )
+ */
+HB_FUNC( QT_QTEXTEDIT_ZOOMOUT )
+{
+   hbqt_par_QTextEdit( 1 )->zoomOut( ( HB_ISNIL( 2 ) ? 1 : hb_parni( 2 ) ) );
 }
 
 

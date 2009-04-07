@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QFocusFrame INHERIT QWidget
+CREATE CLASS QFocusFrame INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -70,6 +71,8 @@ CLASS QFocusFrame INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QFocusFrame
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QFocusFrame( pParent )
 

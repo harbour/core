@@ -60,23 +60,6 @@
 /*----------------------------------------------------------------------*/
 
 
-/*
- *  Constructed[ 50/53 [ 94.34% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  FT_Face freetypeFace () const
- *  HFONT handle () const
- *  QFont resolve ( const QFont & other ) const
- *
- *  *** Commented out protos which construct fine but do not compile ***
- *
- *  //bool isCopyOf ( const QFont & f ) const
- *  //quint32 macFontID () const
- */
-
-
 #include <QtGui/QFont>
 
 /*
@@ -105,7 +88,7 @@ HB_FUNC( QT_QFONT )
  */
 HB_FUNC( QT_QFONT_BOLD )
 {
-   hb_retl( hbqt_par_QFont( 1 )->bold(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->bold() );
 }
 
 /*
@@ -113,7 +96,7 @@ HB_FUNC( QT_QFONT_BOLD )
  */
 HB_FUNC( QT_QFONT_CAPITALIZATION )
 {
-   hb_retni( hbqt_par_QFont( 1 )->capitalization(  ) );
+   hb_retni( ( QFont::Capitalization ) hbqt_par_QFont( 1 )->capitalization() );
 }
 
 /*
@@ -121,7 +104,7 @@ HB_FUNC( QT_QFONT_CAPITALIZATION )
  */
 HB_FUNC( QT_QFONT_DEFAULTFAMILY )
 {
-   hb_retc( hbqt_par_QFont( 1 )->defaultFamily( ).toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->defaultFamily().toLatin1().data() );
 }
 
 /*
@@ -129,7 +112,7 @@ HB_FUNC( QT_QFONT_DEFAULTFAMILY )
  */
 HB_FUNC( QT_QFONT_EXACTMATCH )
 {
-   hb_retl( hbqt_par_QFont( 1 )->exactMatch(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->exactMatch() );
 }
 
 /*
@@ -137,7 +120,7 @@ HB_FUNC( QT_QFONT_EXACTMATCH )
  */
 HB_FUNC( QT_QFONT_FAMILY )
 {
-   hb_retc( hbqt_par_QFont( 1 )->family( ).toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->family().toLatin1().data() );
 }
 
 /*
@@ -145,7 +128,7 @@ HB_FUNC( QT_QFONT_FAMILY )
  */
 HB_FUNC( QT_QFONT_FIXEDPITCH )
 {
-   hb_retl( hbqt_par_QFont( 1 )->fixedPitch(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->fixedPitch() );
 }
 
 /*
@@ -157,11 +140,19 @@ HB_FUNC( QT_QFONT_FROMSTRING )
 }
 
 /*
+ * HFONT handle () const
+ */
+HB_FUNC( QT_QFONT_HANDLE )
+{
+   hb_retptr( ( HFONT ) hbqt_par_QFont( 1 )->handle() );
+}
+
+/*
  * bool italic () const
  */
 HB_FUNC( QT_QFONT_ITALIC )
 {
-   hb_retl( hbqt_par_QFont( 1 )->italic(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->italic() );
 }
 
 /*
@@ -169,7 +160,7 @@ HB_FUNC( QT_QFONT_ITALIC )
  */
 HB_FUNC( QT_QFONT_KERNING )
 {
-   hb_retl( hbqt_par_QFont( 1 )->kerning(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->kerning() );
 }
 
 /*
@@ -177,7 +168,7 @@ HB_FUNC( QT_QFONT_KERNING )
  */
 HB_FUNC( QT_QFONT_KEY )
 {
-   hb_retc( hbqt_par_QFont( 1 )->key( ).toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->key().toLatin1().data() );
 }
 
 /*
@@ -185,7 +176,7 @@ HB_FUNC( QT_QFONT_KEY )
  */
 HB_FUNC( QT_QFONT_LASTRESORTFAMILY )
 {
-   hb_retc( hbqt_par_QFont( 1 )->lastResortFamily( ).toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->lastResortFamily().toLatin1().data() );
 }
 
 /*
@@ -193,7 +184,7 @@ HB_FUNC( QT_QFONT_LASTRESORTFAMILY )
  */
 HB_FUNC( QT_QFONT_LASTRESORTFONT )
 {
-   hb_retc( hbqt_par_QFont( 1 )->lastResortFont( ).toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->lastResortFont().toLatin1().data() );
 }
 
 /*
@@ -201,7 +192,7 @@ HB_FUNC( QT_QFONT_LASTRESORTFONT )
  */
 HB_FUNC( QT_QFONT_LETTERSPACING )
 {
-   hb_retnd( hbqt_par_QFont( 1 )->letterSpacing(  ) );
+   hb_retnd( hbqt_par_QFont( 1 )->letterSpacing() );
 }
 
 /*
@@ -209,7 +200,7 @@ HB_FUNC( QT_QFONT_LETTERSPACING )
  */
 HB_FUNC( QT_QFONT_LETTERSPACINGTYPE )
 {
-   hb_retni( hbqt_par_QFont( 1 )->letterSpacingType(  ) );
+   hb_retni( ( QFont::SpacingType ) hbqt_par_QFont( 1 )->letterSpacingType() );
 }
 
 /*
@@ -217,7 +208,7 @@ HB_FUNC( QT_QFONT_LETTERSPACINGTYPE )
  */
 HB_FUNC( QT_QFONT_OVERLINE )
 {
-   hb_retl( hbqt_par_QFont( 1 )->overline(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->overline() );
 }
 
 /*
@@ -225,7 +216,7 @@ HB_FUNC( QT_QFONT_OVERLINE )
  */
 HB_FUNC( QT_QFONT_PIXELSIZE )
 {
-   hb_retni( hbqt_par_QFont( 1 )->pixelSize(  ) );
+   hb_retni( hbqt_par_QFont( 1 )->pixelSize() );
 }
 
 /*
@@ -233,7 +224,7 @@ HB_FUNC( QT_QFONT_PIXELSIZE )
  */
 HB_FUNC( QT_QFONT_POINTSIZE )
 {
-   hb_retni( hbqt_par_QFont( 1 )->pointSize(  ) );
+   hb_retni( hbqt_par_QFont( 1 )->pointSize() );
 }
 
 /*
@@ -241,7 +232,7 @@ HB_FUNC( QT_QFONT_POINTSIZE )
  */
 HB_FUNC( QT_QFONT_POINTSIZEF )
 {
-   hb_retnd( hbqt_par_QFont( 1 )->pointSizeF(  ) );
+   hb_retnd( hbqt_par_QFont( 1 )->pointSizeF() );
 }
 
 /*
@@ -249,7 +240,7 @@ HB_FUNC( QT_QFONT_POINTSIZEF )
  */
 HB_FUNC( QT_QFONT_RAWMODE )
 {
-   hb_retl( hbqt_par_QFont( 1 )->rawMode(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->rawMode() );
 }
 
 /*
@@ -257,7 +248,7 @@ HB_FUNC( QT_QFONT_RAWMODE )
  */
 HB_FUNC( QT_QFONT_RAWNAME )
 {
-   hb_retc( hbqt_par_QFont( 1 )->rawName( ).toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->rawName().toLatin1().data() );
 }
 
 /*
@@ -393,7 +384,7 @@ HB_FUNC( QT_QFONT_SETSTYLE )
  */
 HB_FUNC( QT_QFONT_SETSTYLEHINT )
 {
-   hbqt_par_QFont( 1 )->setStyleHint( ( QFont::StyleHint ) hb_parni( 2 ), ( QFont::StyleStrategy ) hb_parni( 3 ) );
+   hbqt_par_QFont( 1 )->setStyleHint( ( QFont::StyleHint ) hb_parni( 2 ), ( HB_ISNIL( 3 ) ? ( QFont::StyleStrategy ) QFont::PreferDefault : ( QFont::StyleStrategy ) hb_parni( 3 ) ) );
 }
 
 /*
@@ -433,7 +424,7 @@ HB_FUNC( QT_QFONT_SETWORDSPACING )
  */
 HB_FUNC( QT_QFONT_STRETCH )
 {
-   hb_retni( hbqt_par_QFont( 1 )->stretch(  ) );
+   hb_retni( hbqt_par_QFont( 1 )->stretch() );
 }
 
 /*
@@ -441,7 +432,7 @@ HB_FUNC( QT_QFONT_STRETCH )
  */
 HB_FUNC( QT_QFONT_STRIKEOUT )
 {
-   hb_retl( hbqt_par_QFont( 1 )->strikeOut(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->strikeOut() );
 }
 
 /*
@@ -449,7 +440,7 @@ HB_FUNC( QT_QFONT_STRIKEOUT )
  */
 HB_FUNC( QT_QFONT_STYLE )
 {
-   hb_retni( hbqt_par_QFont( 1 )->style(  ) );
+   hb_retni( ( QFont::Style ) hbqt_par_QFont( 1 )->style() );
 }
 
 /*
@@ -457,7 +448,7 @@ HB_FUNC( QT_QFONT_STYLE )
  */
 HB_FUNC( QT_QFONT_STYLEHINT )
 {
-   hb_retni( hbqt_par_QFont( 1 )->styleHint(  ) );
+   hb_retni( ( QFont::StyleHint ) hbqt_par_QFont( 1 )->styleHint() );
 }
 
 /*
@@ -465,7 +456,7 @@ HB_FUNC( QT_QFONT_STYLEHINT )
  */
 HB_FUNC( QT_QFONT_STYLESTRATEGY )
 {
-   hb_retni( hbqt_par_QFont( 1 )->styleStrategy(  ) );
+   hb_retni( ( QFont::StyleStrategy ) hbqt_par_QFont( 1 )->styleStrategy() );
 }
 
 /*
@@ -473,7 +464,7 @@ HB_FUNC( QT_QFONT_STYLESTRATEGY )
  */
 HB_FUNC( QT_QFONT_TOSTRING )
 {
-   hb_retc( hbqt_par_QFont( 1 )->toString( ).toLatin1().data() );
+   hb_retc( hbqt_par_QFont( 1 )->toString().toLatin1().data() );
 }
 
 /*
@@ -481,7 +472,7 @@ HB_FUNC( QT_QFONT_TOSTRING )
  */
 HB_FUNC( QT_QFONT_UNDERLINE )
 {
-   hb_retl( hbqt_par_QFont( 1 )->underline(  ) );
+   hb_retl( hbqt_par_QFont( 1 )->underline() );
 }
 
 /*
@@ -489,7 +480,7 @@ HB_FUNC( QT_QFONT_UNDERLINE )
  */
 HB_FUNC( QT_QFONT_WEIGHT )
 {
-   hb_retni( hbqt_par_QFont( 1 )->weight(  ) );
+   hb_retni( hbqt_par_QFont( 1 )->weight() );
 }
 
 /*
@@ -497,10 +488,11 @@ HB_FUNC( QT_QFONT_WEIGHT )
  */
 HB_FUNC( QT_QFONT_WORDSPACING )
 {
-   hb_retnd( hbqt_par_QFont( 1 )->wordSpacing(  ) );
+   hb_retnd( hbqt_par_QFont( 1 )->wordSpacing() );
 }
 
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
+

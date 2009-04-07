@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QAbstractSpinBox INHERIT QWidget
+CREATE CLASS QAbstractSpinBox INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -73,8 +74,8 @@ CLASS QAbstractSpinBox INHERIT QWidget
    METHOD  keyboardTracking()                  INLINE  Qt_QAbstractSpinBox_keyboardTracking( ::pPtr )
    METHOD  setAccelerated( lOn )               INLINE  Qt_QAbstractSpinBox_setAccelerated( ::pPtr, lOn )
    METHOD  setAlignment( nFlag )               INLINE  Qt_QAbstractSpinBox_setAlignment( ::pPtr, nFlag )
-   METHOD  setButtonSymbols( nButtonSymbols )  INLINE  Qt_QAbstractSpinBox_setButtonSymbols( ::pPtr, nButtonSymbols )
-   METHOD  setCorrectionMode( nCorrectionMode )  INLINE  Qt_QAbstractSpinBox_setCorrectionMode( ::pPtr, nCorrectionMode )
+   METHOD  setButtonSymbols( nBs )             INLINE  Qt_QAbstractSpinBox_setButtonSymbols( ::pPtr, nBs )
+   METHOD  setCorrectionMode( nCm )            INLINE  Qt_QAbstractSpinBox_setCorrectionMode( ::pPtr, nCm )
    METHOD  setFrame( lBool )                   INLINE  Qt_QAbstractSpinBox_setFrame( ::pPtr, lBool )
    METHOD  setKeyboardTracking( lKt )          INLINE  Qt_QAbstractSpinBox_setKeyboardTracking( ::pPtr, lKt )
    METHOD  setReadOnly( lR )                   INLINE  Qt_QAbstractSpinBox_setReadOnly( ::pPtr, lR )
@@ -84,12 +85,18 @@ CLASS QAbstractSpinBox INHERIT QWidget
    METHOD  stepBy( nSteps )                    INLINE  Qt_QAbstractSpinBox_stepBy( ::pPtr, nSteps )
    METHOD  text()                              INLINE  Qt_QAbstractSpinBox_text( ::pPtr )
    METHOD  wrapping()                          INLINE  Qt_QAbstractSpinBox_wrapping( ::pPtr )
+   METHOD  clear()                             INLINE  Qt_QAbstractSpinBox_clear( ::pPtr )
+   METHOD  selectAll()                         INLINE  Qt_QAbstractSpinBox_selectAll( ::pPtr )
+   METHOD  stepDown()                          INLINE  Qt_QAbstractSpinBox_stepDown( ::pPtr )
+   METHOD  stepUp()                            INLINE  Qt_QAbstractSpinBox_stepUp( ::pPtr )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QAbstractSpinBox
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QAbstractSpinBox( pParent )
 

@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -58,16 +58,6 @@
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
-
-
-/*
- *  Constructed[ 27/28 [ 96.43% ] ]
- *  
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *  
- *  void getContentsMargins ( int * left, int * top, int * right, int * bottom ) const
- */ 
 
 
 #include <QtGui/QLayout>
@@ -87,7 +77,7 @@ HB_FUNC( QT_QLAYOUT )
  */
 HB_FUNC( QT_QLAYOUT_ACTIVATE )
 {
-   hb_retl( hbqt_par_QLayout( 1 )->activate(  ) );
+   hb_retl( hbqt_par_QLayout( 1 )->activate() );
 }
 
 /*
@@ -111,7 +101,7 @@ HB_FUNC( QT_QLAYOUT_ADDWIDGET )
  */
 HB_FUNC( QT_QLAYOUT_CONTENTSRECT )
 {
-   hbqt_ret_QRect( hbqt_par_QLayout( 1 )->contentsRect(  ) );
+   hb_retptr( new QRect( hbqt_par_QLayout( 1 )->contentsRect() ) );
 }
 
 /*
@@ -119,7 +109,7 @@ HB_FUNC( QT_QLAYOUT_CONTENTSRECT )
  */
 HB_FUNC( QT_QLAYOUT_COUNT )
 {
-   hb_retni( hbqt_par_QLayout( 1 )->count(  ) );
+   hb_retni( hbqt_par_QLayout( 1 )->count() );
 }
 
 /*
@@ -127,7 +117,25 @@ HB_FUNC( QT_QLAYOUT_COUNT )
  */
 HB_FUNC( QT_QLAYOUT_EXPANDINGDIRECTIONS )
 {
-   hb_retni( hbqt_par_QLayout( 1 )->expandingDirections(  ) );
+   hb_retni( ( Qt::Orientations ) hbqt_par_QLayout( 1 )->expandingDirections() );
+}
+
+/*
+ * void getContentsMargins ( int * left, int * top, int * right, int * bottom ) const
+ */
+HB_FUNC( QT_QLAYOUT_GETCONTENTSMARGINS )
+{
+   int iLeft = 0;
+   int iTop = 0;
+   int iRight = 0;
+   int iBottom = 0;
+
+   hbqt_par_QLayout( 1 )->getContentsMargins( &iLeft, &iTop, &iRight, &iBottom );
+
+   hb_storni( iLeft, 2 );
+   hb_storni( iTop, 3 );
+   hb_storni( iRight, 4 );
+   hb_storni( iBottom, 5 );
 }
 
 /*
@@ -143,7 +151,7 @@ HB_FUNC( QT_QLAYOUT_INDEXOF )
  */
 HB_FUNC( QT_QLAYOUT_ISENABLED )
 {
-   hb_retl( hbqt_par_QLayout( 1 )->isEnabled(  ) );
+   hb_retl( hbqt_par_QLayout( 1 )->isEnabled() );
 }
 
 /*
@@ -159,7 +167,7 @@ HB_FUNC( QT_QLAYOUT_ITEMAT )
  */
 HB_FUNC( QT_QLAYOUT_MAXIMUMSIZE )
 {
-   hbqt_ret_QSize( hbqt_par_QLayout( 1 )->maximumSize(  ) );
+   hb_retptr( new QSize( hbqt_par_QLayout( 1 )->maximumSize() ) );
 }
 
 /*
@@ -167,7 +175,7 @@ HB_FUNC( QT_QLAYOUT_MAXIMUMSIZE )
  */
 HB_FUNC( QT_QLAYOUT_MENUBAR )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QLayout( 1 )->menuBar(  ) );
+   hb_retptr( ( QWidget* ) hbqt_par_QLayout( 1 )->menuBar() );
 }
 
 /*
@@ -175,7 +183,7 @@ HB_FUNC( QT_QLAYOUT_MENUBAR )
  */
 HB_FUNC( QT_QLAYOUT_MINIMUMSIZE )
 {
-   hbqt_ret_QSize( hbqt_par_QLayout( 1 )->minimumSize(  ) );
+   hb_retptr( new QSize( hbqt_par_QLayout( 1 )->minimumSize() ) );
 }
 
 /*
@@ -183,7 +191,7 @@ HB_FUNC( QT_QLAYOUT_MINIMUMSIZE )
  */
 HB_FUNC( QT_QLAYOUT_PARENTWIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QLayout( 1 )->parentWidget(  ) );
+   hb_retptr( ( QWidget* ) hbqt_par_QLayout( 1 )->parentWidget() );
 }
 
 /*
@@ -271,7 +279,7 @@ HB_FUNC( QT_QLAYOUT_SETSPACING )
  */
 HB_FUNC( QT_QLAYOUT_SIZECONSTRAINT )
 {
-   hb_retni( hbqt_par_QLayout( 1 )->sizeConstraint(  ) );
+   hb_retni( ( QLayout::SizeConstraint ) hbqt_par_QLayout( 1 )->sizeConstraint() );
 }
 
 /*
@@ -279,7 +287,7 @@ HB_FUNC( QT_QLAYOUT_SIZECONSTRAINT )
  */
 HB_FUNC( QT_QLAYOUT_SPACING )
 {
-   hb_retni( hbqt_par_QLayout( 1 )->spacing(  ) );
+   hb_retni( hbqt_par_QLayout( 1 )->spacing() );
 }
 
 /*
@@ -295,7 +303,7 @@ HB_FUNC( QT_QLAYOUT_TAKEAT )
  */
 HB_FUNC( QT_QLAYOUT_UPDATE )
 {
-   hbqt_par_QLayout( 1 )->update(  );
+   hbqt_par_QLayout( 1 )->update();
 }
 
 

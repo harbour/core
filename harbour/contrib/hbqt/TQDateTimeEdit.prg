@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QDateTimeEdit INHERIT QAbstractSpinBox
+CREATE CLASS QDateTimeEdit INHERIT QAbstractSpinBox
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -72,8 +73,16 @@ CLASS QDateTimeEdit INHERIT QAbstractSpinBox
    METHOD  clearMinimumTime()                  INLINE  Qt_QDateTimeEdit_clearMinimumTime( ::pPtr )
    METHOD  currentSection()                    INLINE  Qt_QDateTimeEdit_currentSection( ::pPtr )
    METHOD  currentSectionIndex()               INLINE  Qt_QDateTimeEdit_currentSectionIndex( ::pPtr )
+   METHOD  date()                              INLINE  Qt_QDateTimeEdit_date( ::pPtr )
+   METHOD  dateTime()                          INLINE  Qt_QDateTimeEdit_dateTime( ::pPtr )
    METHOD  displayFormat()                     INLINE  Qt_QDateTimeEdit_displayFormat( ::pPtr )
    METHOD  displayedSections()                 INLINE  Qt_QDateTimeEdit_displayedSections( ::pPtr )
+   METHOD  maximumDate()                       INLINE  Qt_QDateTimeEdit_maximumDate( ::pPtr )
+   METHOD  maximumDateTime()                   INLINE  Qt_QDateTimeEdit_maximumDateTime( ::pPtr )
+   METHOD  maximumTime()                       INLINE  Qt_QDateTimeEdit_maximumTime( ::pPtr )
+   METHOD  minimumDate()                       INLINE  Qt_QDateTimeEdit_minimumDate( ::pPtr )
+   METHOD  minimumDateTime()                   INLINE  Qt_QDateTimeEdit_minimumDateTime( ::pPtr )
+   METHOD  minimumTime()                       INLINE  Qt_QDateTimeEdit_minimumTime( ::pPtr )
    METHOD  sectionAt( nIndex )                 INLINE  Qt_QDateTimeEdit_sectionAt( ::pPtr, nIndex )
    METHOD  sectionCount()                      INLINE  Qt_QDateTimeEdit_sectionCount( ::pPtr )
    METHOD  sectionText( nSection )             INLINE  Qt_QDateTimeEdit_sectionText( ::pPtr, nSection )
@@ -81,16 +90,31 @@ CLASS QDateTimeEdit INHERIT QAbstractSpinBox
    METHOD  setCalendarWidget( pCalendarWidget )  INLINE  Qt_QDateTimeEdit_setCalendarWidget( ::pPtr, pCalendarWidget )
    METHOD  setCurrentSection( nSection )       INLINE  Qt_QDateTimeEdit_setCurrentSection( ::pPtr, nSection )
    METHOD  setCurrentSectionIndex( nIndex )    INLINE  Qt_QDateTimeEdit_setCurrentSectionIndex( ::pPtr, nIndex )
+   METHOD  setDateRange( pMin, pMax )          INLINE  Qt_QDateTimeEdit_setDateRange( ::pPtr, pMin, pMax )
+   METHOD  setDateTimeRange( pMin, pMax )      INLINE  Qt_QDateTimeEdit_setDateTimeRange( ::pPtr, pMin, pMax )
    METHOD  setDisplayFormat( cFormat )         INLINE  Qt_QDateTimeEdit_setDisplayFormat( ::pPtr, cFormat )
+   METHOD  setMaximumDate( pMax )              INLINE  Qt_QDateTimeEdit_setMaximumDate( ::pPtr, pMax )
+   METHOD  setMaximumDateTime( pDt )           INLINE  Qt_QDateTimeEdit_setMaximumDateTime( ::pPtr, pDt )
+   METHOD  setMaximumTime( pMax )              INLINE  Qt_QDateTimeEdit_setMaximumTime( ::pPtr, pMax )
+   METHOD  setMinimumDate( pMin )              INLINE  Qt_QDateTimeEdit_setMinimumDate( ::pPtr, pMin )
+   METHOD  setMinimumDateTime( pDt )           INLINE  Qt_QDateTimeEdit_setMinimumDateTime( ::pPtr, pDt )
+   METHOD  setMinimumTime( pMin )              INLINE  Qt_QDateTimeEdit_setMinimumTime( ::pPtr, pMin )
    METHOD  setSelectedSection( nSection )      INLINE  Qt_QDateTimeEdit_setSelectedSection( ::pPtr, nSection )
+   METHOD  setTimeRange( pMin, pMax )          INLINE  Qt_QDateTimeEdit_setTimeRange( ::pPtr, pMin, pMax )
    METHOD  setTimeSpec( nSpec )                INLINE  Qt_QDateTimeEdit_setTimeSpec( ::pPtr, nSpec )
+   METHOD  time()                              INLINE  Qt_QDateTimeEdit_time( ::pPtr )
    METHOD  timeSpec()                          INLINE  Qt_QDateTimeEdit_timeSpec( ::pPtr )
+   METHOD  setDate( pDate )                    INLINE  Qt_QDateTimeEdit_setDate( ::pPtr, pDate )
+   METHOD  setDateTime( pDateTime )            INLINE  Qt_QDateTimeEdit_setDateTime( ::pPtr, pDateTime )
+   METHOD  setTime( pTime )                    INLINE  Qt_QDateTimeEdit_setTime( ::pPtr, pTime )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QDateTimeEdit
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QDateTimeEdit( pParent )
 

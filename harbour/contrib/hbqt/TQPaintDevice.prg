@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QPaintDevice
+CREATE CLASS QPaintDevice
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -80,6 +81,8 @@ CLASS QPaintDevice
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QPaintDevice
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QPaintDevice( pParent )
 

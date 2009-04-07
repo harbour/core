@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QDoubleSpinBox INHERIT QAbstractSpinBox
+CREATE CLASS QDoubleSpinBox INHERIT QAbstractSpinBox
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -79,12 +80,15 @@ CLASS QDoubleSpinBox INHERIT QAbstractSpinBox
    METHOD  textFromValue( nValue )             INLINE  Qt_QDoubleSpinBox_textFromValue( ::pPtr, nValue )
    METHOD  value()                             INLINE  Qt_QDoubleSpinBox_value( ::pPtr )
    METHOD  valueFromText( cText )              INLINE  Qt_QDoubleSpinBox_valueFromText( ::pPtr, cText )
+   METHOD  setValue( nVal )                    INLINE  Qt_QDoubleSpinBox_setValue( ::pPtr, nVal )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QDoubleSpinBox
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QDoubleSpinBox( pParent )
 

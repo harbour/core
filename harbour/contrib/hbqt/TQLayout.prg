@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QLayout INHERIT QObject, QLayoutItem
+CREATE CLASS QLayout INHERIT QObject, QLayoutItem
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -68,6 +69,7 @@ CLASS QLayout INHERIT QObject, QLayoutItem
    METHOD  contentsRect()                      INLINE  Qt_QLayout_contentsRect( ::pPtr )
    METHOD  count()                             INLINE  Qt_QLayout_count( ::pPtr )
    METHOD  expandingDirections()               INLINE  Qt_QLayout_expandingDirections( ::pPtr )
+   METHOD  getContentsMargins( nLeft, nTop, nRight, nBottom )  INLINE  Qt_QLayout_getContentsMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
    METHOD  indexOf( pWidget )                  INLINE  Qt_QLayout_indexOf( ::pPtr, pWidget )
    METHOD  isEnabled()                         INLINE  Qt_QLayout_isEnabled( ::pPtr )
    METHOD  itemAt( nIndex )                    INLINE  Qt_QLayout_itemAt( ::pPtr, nIndex )
@@ -95,6 +97,8 @@ CLASS QLayout INHERIT QObject, QLayoutItem
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QLayout
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QLayout( pParent )
 

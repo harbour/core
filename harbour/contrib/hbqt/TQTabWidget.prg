@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QTabWidget INHERIT QWidget
+CREATE CLASS QTabWidget INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -81,17 +82,18 @@ CLASS QTabWidget INHERIT QWidget
    METHOD  setCornerWidget( pWidget, nCorner )  INLINE  Qt_QTabWidget_setCornerWidget( ::pPtr, pWidget, nCorner )
    METHOD  setDocumentMode( lSet )             INLINE  Qt_QTabWidget_setDocumentMode( ::pPtr, lSet )
    METHOD  setElideMode( nQt_TextElideMode )   INLINE  Qt_QTabWidget_setElideMode( ::pPtr, nQt_TextElideMode )
-   METHOD  setIconSize( aSizeSize )            INLINE  Qt_QTabWidget_setIconSize( ::pPtr, aSizeSize )
+   METHOD  setIconSize( pSize )                INLINE  Qt_QTabWidget_setIconSize( ::pPtr, pSize )
    METHOD  setMovable( lMovable )              INLINE  Qt_QTabWidget_setMovable( ::pPtr, lMovable )
    METHOD  setTabEnabled( nIndex, lEnable )    INLINE  Qt_QTabWidget_setTabEnabled( ::pPtr, nIndex, lEnable )
    METHOD  setTabIcon( nIndex, cIcon )         INLINE  Qt_QTabWidget_setTabIcon( ::pPtr, nIndex, cIcon )
    METHOD  setTabPosition( nTabPosition )      INLINE  Qt_QTabWidget_setTabPosition( ::pPtr, nTabPosition )
-   METHOD  setTabShape( nTabShape )            INLINE  Qt_QTabWidget_setTabShape( ::pPtr, nTabShape )
+   METHOD  setTabShape( nS )                   INLINE  Qt_QTabWidget_setTabShape( ::pPtr, nS )
    METHOD  setTabText( nIndex, cLabel )        INLINE  Qt_QTabWidget_setTabText( ::pPtr, nIndex, cLabel )
    METHOD  setTabToolTip( nIndex, cTip )       INLINE  Qt_QTabWidget_setTabToolTip( ::pPtr, nIndex, cTip )
    METHOD  setTabWhatsThis( nIndex, cText )    INLINE  Qt_QTabWidget_setTabWhatsThis( ::pPtr, nIndex, cText )
    METHOD  setTabsClosable( lCloseable )       INLINE  Qt_QTabWidget_setTabsClosable( ::pPtr, lCloseable )
    METHOD  setUsesScrollButtons( lUseButtons )  INLINE  Qt_QTabWidget_setUsesScrollButtons( ::pPtr, lUseButtons )
+   METHOD  tabIcon( nIndex )                   INLINE  Qt_QTabWidget_tabIcon( ::pPtr, nIndex )
    METHOD  tabPosition()                       INLINE  Qt_QTabWidget_tabPosition( ::pPtr )
    METHOD  tabShape()                          INLINE  Qt_QTabWidget_tabShape( ::pPtr )
    METHOD  tabText( nIndex )                   INLINE  Qt_QTabWidget_tabText( ::pPtr, nIndex )
@@ -100,12 +102,16 @@ CLASS QTabWidget INHERIT QWidget
    METHOD  tabsClosable()                      INLINE  Qt_QTabWidget_tabsClosable( ::pPtr )
    METHOD  usesScrollButtons()                 INLINE  Qt_QTabWidget_usesScrollButtons( ::pPtr )
    METHOD  widget( nIndex )                    INLINE  Qt_QTabWidget_widget( ::pPtr, nIndex )
+   METHOD  setCurrentIndex( nIndex )           INLINE  Qt_QTabWidget_setCurrentIndex( ::pPtr, nIndex )
+   METHOD  setCurrentWidget( pWidget )         INLINE  Qt_QTabWidget_setCurrentWidget( ::pPtr, pWidget )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QTabWidget
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QTabWidget( pParent )
 

@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QScrollBar INHERIT QAbstractSlider
+CREATE CLASS QScrollBar INHERIT QAbstractSlider
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -68,6 +69,8 @@ CLASS QScrollBar INHERIT QAbstractSlider
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QScrollBar
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QScrollBar( pParent )
 

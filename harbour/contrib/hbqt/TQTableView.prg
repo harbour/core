@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QTableView INHERIT QAbstractItemView
+CREATE CLASS QTableView INHERIT QAbstractItemView
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -69,6 +70,7 @@ CLASS QTableView INHERIT QAbstractItemView
    METHOD  columnWidth( nColumn )              INLINE  Qt_QTableView_columnWidth( ::pPtr, nColumn )
    METHOD  gridStyle()                         INLINE  Qt_QTableView_gridStyle( ::pPtr )
    METHOD  horizontalHeader()                  INLINE  Qt_QTableView_horizontalHeader( ::pPtr )
+   METHOD  indexAt( pPos )                     INLINE  Qt_QTableView_indexAt( ::pPtr, pPos )
    METHOD  isColumnHidden( nColumn )           INLINE  Qt_QTableView_isColumnHidden( ::pPtr, nColumn )
    METHOD  isCornerButtonEnabled()             INLINE  Qt_QTableView_isCornerButtonEnabled( ::pPtr )
    METHOD  isRowHidden( nRow )                 INLINE  Qt_QTableView_isRowHidden( ::pPtr, nRow )
@@ -92,12 +94,25 @@ CLASS QTableView INHERIT QAbstractItemView
    METHOD  sortByColumn( nColumn, nOrder )     INLINE  Qt_QTableView_sortByColumn( ::pPtr, nColumn, nOrder )
    METHOD  verticalHeader()                    INLINE  Qt_QTableView_verticalHeader( ::pPtr )
    METHOD  wordWrap()                          INLINE  Qt_QTableView_wordWrap( ::pPtr )
+   METHOD  hideColumn( nColumn )               INLINE  Qt_QTableView_hideColumn( ::pPtr, nColumn )
+   METHOD  hideRow( nRow )                     INLINE  Qt_QTableView_hideRow( ::pPtr, nRow )
+   METHOD  resizeColumnToContents( nColumn )   INLINE  Qt_QTableView_resizeColumnToContents( ::pPtr, nColumn )
+   METHOD  resizeColumnsToContents()           INLINE  Qt_QTableView_resizeColumnsToContents( ::pPtr )
+   METHOD  resizeRowToContents( nRow )         INLINE  Qt_QTableView_resizeRowToContents( ::pPtr, nRow )
+   METHOD  resizeRowsToContents()              INLINE  Qt_QTableView_resizeRowsToContents( ::pPtr )
+   METHOD  selectColumn( nColumn )             INLINE  Qt_QTableView_selectColumn( ::pPtr, nColumn )
+   METHOD  selectRow( nRow )                   INLINE  Qt_QTableView_selectRow( ::pPtr, nRow )
+   METHOD  setShowGrid( lShow )                INLINE  Qt_QTableView_setShowGrid( ::pPtr, lShow )
+   METHOD  showColumn( nColumn )               INLINE  Qt_QTableView_showColumn( ::pPtr, nColumn )
+   METHOD  showRow( nRow )                     INLINE  Qt_QTableView_showRow( ::pPtr, nRow )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QTableView
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QTableView( pParent )
 

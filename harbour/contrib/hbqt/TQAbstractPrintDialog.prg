@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QAbstractPrintDialog INHERIT QDialog
+CREATE CLASS QAbstractPrintDialog INHERIT QDialog
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -70,7 +71,7 @@ CLASS QAbstractPrintDialog INHERIT QDialog
    METHOD  printer()                           INLINE  Qt_QAbstractPrintDialog_printer( ::pPtr )
    METHOD  setFromTo( nFrom, nTo )             INLINE  Qt_QAbstractPrintDialog_setFromTo( ::pPtr, nFrom, nTo )
    METHOD  setMinMax( nMin, nMax )             INLINE  Qt_QAbstractPrintDialog_setMinMax( ::pPtr, nMin, nMax )
-   METHOD  setPrintRange( nPrintRange )        INLINE  Qt_QAbstractPrintDialog_setPrintRange( ::pPtr, nPrintRange )
+   METHOD  setPrintRange( nRange )             INLINE  Qt_QAbstractPrintDialog_setPrintRange( ::pPtr, nRange )
    METHOD  toPage()                            INLINE  Qt_QAbstractPrintDialog_toPage( ::pPtr )
 
    ENDCLASS
@@ -78,6 +79,8 @@ CLASS QAbstractPrintDialog INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QAbstractPrintDialog
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QAbstractPrintDialog( pParent )
 

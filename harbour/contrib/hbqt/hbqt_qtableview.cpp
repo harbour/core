@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -58,16 +58,6 @@
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
-
-
-/*
- *  Constructed[ 30/31 [ 96.77% ] ]
- *  
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *  
- *  virtual QModelIndex indexAt ( const QPoint & pos ) const
- */ 
 
 
 #include <QtGui/QTableView>
@@ -87,7 +77,7 @@ HB_FUNC( QT_QTABLEVIEW )
  */
 HB_FUNC( QT_QTABLEVIEW_CLEARSPANS )
 {
-   hbqt_par_QTableView( 1 )->clearSpans(  );
+   hbqt_par_QTableView( 1 )->clearSpans();
 }
 
 /*
@@ -127,7 +117,7 @@ HB_FUNC( QT_QTABLEVIEW_COLUMNWIDTH )
  */
 HB_FUNC( QT_QTABLEVIEW_GRIDSTYLE )
 {
-   hb_retni( hbqt_par_QTableView( 1 )->gridStyle(  ) );
+   hb_retni( ( Qt::PenStyle ) hbqt_par_QTableView( 1 )->gridStyle() );
 }
 
 /*
@@ -135,7 +125,15 @@ HB_FUNC( QT_QTABLEVIEW_GRIDSTYLE )
  */
 HB_FUNC( QT_QTABLEVIEW_HORIZONTALHEADER )
 {
-   hb_retptr( ( QHeaderView* ) hbqt_par_QTableView( 1 )->horizontalHeader(  ) );
+   hb_retptr( ( QHeaderView* ) hbqt_par_QTableView( 1 )->horizontalHeader() );
+}
+
+/*
+ * virtual QModelIndex indexAt ( const QPoint & pos ) const
+ */
+HB_FUNC( QT_QTABLEVIEW_INDEXAT )
+{
+   hb_retptr( new QModelIndex( hbqt_par_QTableView( 1 )->indexAt( *hbqt_par_QPoint( 2 ) ) ) );
 }
 
 /*
@@ -151,7 +149,7 @@ HB_FUNC( QT_QTABLEVIEW_ISCOLUMNHIDDEN )
  */
 HB_FUNC( QT_QTABLEVIEW_ISCORNERBUTTONENABLED )
 {
-   hb_retl( hbqt_par_QTableView( 1 )->isCornerButtonEnabled(  ) );
+   hb_retl( hbqt_par_QTableView( 1 )->isCornerButtonEnabled() );
 }
 
 /*
@@ -167,7 +165,7 @@ HB_FUNC( QT_QTABLEVIEW_ISROWHIDDEN )
  */
 HB_FUNC( QT_QTABLEVIEW_ISSORTINGENABLED )
 {
-   hb_retl( hbqt_par_QTableView( 1 )->isSortingEnabled(  ) );
+   hb_retl( hbqt_par_QTableView( 1 )->isSortingEnabled() );
 }
 
 /*
@@ -295,7 +293,7 @@ HB_FUNC( QT_QTABLEVIEW_SETWORDWRAP )
  */
 HB_FUNC( QT_QTABLEVIEW_SHOWGRID )
 {
-   hb_retl( hbqt_par_QTableView( 1 )->showGrid(  ) );
+   hb_retl( hbqt_par_QTableView( 1 )->showGrid() );
 }
 
 /*
@@ -311,7 +309,7 @@ HB_FUNC( QT_QTABLEVIEW_SORTBYCOLUMN )
  */
 HB_FUNC( QT_QTABLEVIEW_VERTICALHEADER )
 {
-   hb_retptr( ( QHeaderView* ) hbqt_par_QTableView( 1 )->verticalHeader(  ) );
+   hb_retptr( ( QHeaderView* ) hbqt_par_QTableView( 1 )->verticalHeader() );
 }
 
 /*
@@ -319,7 +317,95 @@ HB_FUNC( QT_QTABLEVIEW_VERTICALHEADER )
  */
 HB_FUNC( QT_QTABLEVIEW_WORDWRAP )
 {
-   hb_retl( hbqt_par_QTableView( 1 )->wordWrap(  ) );
+   hb_retl( hbqt_par_QTableView( 1 )->wordWrap() );
+}
+
+/*
+ * void hideColumn ( int column )
+ */
+HB_FUNC( QT_QTABLEVIEW_HIDECOLUMN )
+{
+   hbqt_par_QTableView( 1 )->hideColumn( hb_parni( 2 ) );
+}
+
+/*
+ * void hideRow ( int row )
+ */
+HB_FUNC( QT_QTABLEVIEW_HIDEROW )
+{
+   hbqt_par_QTableView( 1 )->hideRow( hb_parni( 2 ) );
+}
+
+/*
+ * void resizeColumnToContents ( int column )
+ */
+HB_FUNC( QT_QTABLEVIEW_RESIZECOLUMNTOCONTENTS )
+{
+   hbqt_par_QTableView( 1 )->resizeColumnToContents( hb_parni( 2 ) );
+}
+
+/*
+ * void resizeColumnsToContents ()
+ */
+HB_FUNC( QT_QTABLEVIEW_RESIZECOLUMNSTOCONTENTS )
+{
+   hbqt_par_QTableView( 1 )->resizeColumnsToContents();
+}
+
+/*
+ * void resizeRowToContents ( int row )
+ */
+HB_FUNC( QT_QTABLEVIEW_RESIZEROWTOCONTENTS )
+{
+   hbqt_par_QTableView( 1 )->resizeRowToContents( hb_parni( 2 ) );
+}
+
+/*
+ * void resizeRowsToContents ()
+ */
+HB_FUNC( QT_QTABLEVIEW_RESIZEROWSTOCONTENTS )
+{
+   hbqt_par_QTableView( 1 )->resizeRowsToContents();
+}
+
+/*
+ * void selectColumn ( int column )
+ */
+HB_FUNC( QT_QTABLEVIEW_SELECTCOLUMN )
+{
+   hbqt_par_QTableView( 1 )->selectColumn( hb_parni( 2 ) );
+}
+
+/*
+ * void selectRow ( int row )
+ */
+HB_FUNC( QT_QTABLEVIEW_SELECTROW )
+{
+   hbqt_par_QTableView( 1 )->selectRow( hb_parni( 2 ) );
+}
+
+/*
+ * void setShowGrid ( bool show )
+ */
+HB_FUNC( QT_QTABLEVIEW_SETSHOWGRID )
+{
+   hbqt_par_QTableView( 1 )->setShowGrid( hb_parl( 2 ) );
+}
+
+/*
+ * void showColumn ( int column )
+ */
+HB_FUNC( QT_QTABLEVIEW_SHOWCOLUMN )
+{
+   hbqt_par_QTableView( 1 )->showColumn( hb_parni( 2 ) );
+}
+
+/*
+ * void showRow ( int row )
+ */
+HB_FUNC( QT_QTABLEVIEW_SHOWROW )
+{
+   hbqt_par_QTableView( 1 )->showRow( hb_parni( 2 ) );
 }
 
 

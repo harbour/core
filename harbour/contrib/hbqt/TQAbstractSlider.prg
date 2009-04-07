@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QAbstractSlider INHERIT QWidget
+CREATE CLASS QAbstractSlider INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -82,14 +83,18 @@ CLASS QAbstractSlider INHERIT QWidget
    METHOD  setTracking( lEnable )              INLINE  Qt_QAbstractSlider_setTracking( ::pPtr, lEnable )
    METHOD  singleStep()                        INLINE  Qt_QAbstractSlider_singleStep( ::pPtr )
    METHOD  sliderPosition()                    INLINE  Qt_QAbstractSlider_sliderPosition( ::pPtr )
-   METHOD  triggerAction( nSliderAction )      INLINE  Qt_QAbstractSlider_triggerAction( ::pPtr, nSliderAction )
+   METHOD  triggerAction( nAction )            INLINE  Qt_QAbstractSlider_triggerAction( ::pPtr, nAction )
    METHOD  value()                             INLINE  Qt_QAbstractSlider_value( ::pPtr )
+   METHOD  setOrientation( nQt_Orientation )   INLINE  Qt_QAbstractSlider_setOrientation( ::pPtr, nQt_Orientation )
+   METHOD  setValue( nInt )                    INLINE  Qt_QAbstractSlider_setValue( ::pPtr, nInt )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QAbstractSlider
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QAbstractSlider( pParent )
 

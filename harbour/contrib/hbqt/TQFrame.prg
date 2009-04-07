@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QFrame INHERIT QWidget
+CREATE CLASS QFrame INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -69,7 +70,7 @@ CLASS QFrame INHERIT QWidget
    METHOD  frameWidth()                        INLINE  Qt_QFrame_frameWidth( ::pPtr )
    METHOD  lineWidth()                         INLINE  Qt_QFrame_lineWidth( ::pPtr )
    METHOD  midLineWidth()                      INLINE  Qt_QFrame_midLineWidth( ::pPtr )
-   METHOD  setFrameRect( aRectQRect )          INLINE  Qt_QFrame_setFrameRect( ::pPtr, aRectQRect )
+   METHOD  setFrameRect( pQRect )              INLINE  Qt_QFrame_setFrameRect( ::pPtr, pQRect )
    METHOD  setFrameShadow( nShadow )           INLINE  Qt_QFrame_setFrameShadow( ::pPtr, nShadow )
    METHOD  setFrameShape( nShape )             INLINE  Qt_QFrame_setFrameShape( ::pPtr, nShape )
    METHOD  setFrameStyle( nStyle )             INLINE  Qt_QFrame_setFrameStyle( ::pPtr, nStyle )
@@ -81,6 +82,8 @@ CLASS QFrame INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QFrame
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QFrame( pParent )
 

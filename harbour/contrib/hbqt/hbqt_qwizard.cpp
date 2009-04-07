@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -59,25 +59,20 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
-
 /*
- *  Constructed[ 29/36 [ 80.56% ] ]
- *  
+ *  Constructed[ 33/36 [ 91.67% ] ]
+ *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
- *  
- *  QVariant field ( const QString & name ) const
+ *
  *  QList<int> pageIds () const
- *  QPixmap pixmap ( WizardPixmap which ) const
  *  void setButtonLayout ( const QList<WizardButton> & layout )
- *  void setField ( const QString & name, const QVariant & value )
- *  void setPixmap ( WizardPixmap which, const QPixmap & pixmap )
  *  QList<int> visitedPages () const
- */ 
+ */
 
 
 #include <QtGui/QWizard>
-
+#include <QtCore/QVariant>
 
 
 /*
@@ -110,7 +105,7 @@ HB_FUNC( QT_QWIZARD_BUTTON )
  */
 HB_FUNC( QT_QWIZARD_BUTTONTEXT )
 {
-   hb_retc( hbqt_par_QWizard( 1 )->buttonText( ( QWizard::WizardButton ) hb_parni( 2 )).toLatin1().data() );
+   hb_retc( hbqt_par_QWizard( 1 )->buttonText( ( QWizard::WizardButton ) hb_parni( 2 ) ).toLatin1().data() );
 }
 
 /*
@@ -118,7 +113,7 @@ HB_FUNC( QT_QWIZARD_BUTTONTEXT )
  */
 HB_FUNC( QT_QWIZARD_CURRENTID )
 {
-   hb_retni( hbqt_par_QWizard( 1 )->currentId(  ) );
+   hb_retni( hbqt_par_QWizard( 1 )->currentId() );
 }
 
 /*
@@ -126,7 +121,15 @@ HB_FUNC( QT_QWIZARD_CURRENTID )
  */
 HB_FUNC( QT_QWIZARD_CURRENTPAGE )
 {
-   hb_retptr( ( QWizardPage* ) hbqt_par_QWizard( 1 )->currentPage(  ) );
+   hb_retptr( ( QWizardPage* ) hbqt_par_QWizard( 1 )->currentPage() );
+}
+
+/*
+ * QVariant field ( const QString & name ) const
+ */
+HB_FUNC( QT_QWIZARD_FIELD )
+{
+   hb_retptr( new QVariant( hbqt_par_QWizard( 1 )->field( hbqt_par_QString( 2 ) ) ) );
 }
 
 /*
@@ -142,7 +145,7 @@ HB_FUNC( QT_QWIZARD_HASVISITEDPAGE )
  */
 HB_FUNC( QT_QWIZARD_NEXTID )
 {
-   hb_retni( hbqt_par_QWizard( 1 )->nextId(  ) );
+   hb_retni( hbqt_par_QWizard( 1 )->nextId() );
 }
 
 /*
@@ -150,7 +153,7 @@ HB_FUNC( QT_QWIZARD_NEXTID )
  */
 HB_FUNC( QT_QWIZARD_OPTIONS )
 {
-   hb_retni( hbqt_par_QWizard( 1 )->options(  ) );
+   hb_retni( ( QWizard::WizardOptions ) hbqt_par_QWizard( 1 )->options() );
 }
 
 /*
@@ -159,6 +162,14 @@ HB_FUNC( QT_QWIZARD_OPTIONS )
 HB_FUNC( QT_QWIZARD_PAGE )
 {
    hb_retptr( ( QWizardPage* ) hbqt_par_QWizard( 1 )->page( hb_parni( 2 ) ) );
+}
+
+/*
+ * QPixmap pixmap ( WizardPixmap which ) const
+ */
+HB_FUNC( QT_QWIZARD_PIXMAP )
+{
+   hb_retptr( new QPixmap( hbqt_par_QWizard( 1 )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ) );
 }
 
 /*
@@ -194,6 +205,14 @@ HB_FUNC( QT_QWIZARD_SETDEFAULTPROPERTY )
 }
 
 /*
+ * void setField ( const QString & name, const QVariant & value )
+ */
+HB_FUNC( QT_QWIZARD_SETFIELD )
+{
+   hbqt_par_QWizard( 1 )->setField( hbqt_par_QString( 2 ), *hbqt_par_QVariant( 3 ) );
+}
+
+/*
  * void setOption ( WizardOption option, bool on = true )
  */
 HB_FUNC( QT_QWIZARD_SETOPTION )
@@ -215,6 +234,14 @@ HB_FUNC( QT_QWIZARD_SETOPTIONS )
 HB_FUNC( QT_QWIZARD_SETPAGE )
 {
    hbqt_par_QWizard( 1 )->setPage( hb_parni( 2 ), hbqt_par_QWizardPage( 3 ) );
+}
+
+/*
+ * void setPixmap ( WizardPixmap which, const QPixmap & pixmap )
+ */
+HB_FUNC( QT_QWIZARD_SETPIXMAP )
+{
+   hbqt_par_QWizard( 1 )->setPixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) );
 }
 
 /*
@@ -254,7 +281,7 @@ HB_FUNC( QT_QWIZARD_SETWIZARDSTYLE )
  */
 HB_FUNC( QT_QWIZARD_STARTID )
 {
-   hb_retni( hbqt_par_QWizard( 1 )->startId(  ) );
+   hb_retni( hbqt_par_QWizard( 1 )->startId() );
 }
 
 /*
@@ -262,7 +289,7 @@ HB_FUNC( QT_QWIZARD_STARTID )
  */
 HB_FUNC( QT_QWIZARD_SUBTITLEFORMAT )
 {
-   hb_retni( hbqt_par_QWizard( 1 )->subTitleFormat(  ) );
+   hb_retni( ( Qt::TextFormat ) hbqt_par_QWizard( 1 )->subTitleFormat() );
 }
 
 /*
@@ -278,7 +305,7 @@ HB_FUNC( QT_QWIZARD_TESTOPTION )
  */
 HB_FUNC( QT_QWIZARD_TITLEFORMAT )
 {
-   hb_retni( hbqt_par_QWizard( 1 )->titleFormat(  ) );
+   hb_retni( ( Qt::TextFormat ) hbqt_par_QWizard( 1 )->titleFormat() );
 }
 
 /*
@@ -286,7 +313,7 @@ HB_FUNC( QT_QWIZARD_TITLEFORMAT )
  */
 HB_FUNC( QT_QWIZARD_VALIDATECURRENTPAGE )
 {
-   hb_retl( hbqt_par_QWizard( 1 )->validateCurrentPage(  ) );
+   hb_retl( hbqt_par_QWizard( 1 )->validateCurrentPage() );
 }
 
 /*
@@ -294,7 +321,7 @@ HB_FUNC( QT_QWIZARD_VALIDATECURRENTPAGE )
  */
 HB_FUNC( QT_QWIZARD_WIZARDSTYLE )
 {
-   hb_retni( hbqt_par_QWizard( 1 )->wizardStyle(  ) );
+   hb_retni( ( QWizard::WizardStyle ) hbqt_par_QWizard( 1 )->wizardStyle() );
 }
 
 /*
@@ -302,7 +329,7 @@ HB_FUNC( QT_QWIZARD_WIZARDSTYLE )
  */
 HB_FUNC( QT_QWIZARD_BACK )
 {
-   hbqt_par_QWizard( 1 )->back(  );
+   hbqt_par_QWizard( 1 )->back();
 }
 
 /*
@@ -310,7 +337,7 @@ HB_FUNC( QT_QWIZARD_BACK )
  */
 HB_FUNC( QT_QWIZARD_NEXT )
 {
-   hbqt_par_QWizard( 1 )->next(  );
+   hbqt_par_QWizard( 1 )->next();
 }
 
 /*
@@ -318,7 +345,7 @@ HB_FUNC( QT_QWIZARD_NEXT )
  */
 HB_FUNC( QT_QWIZARD_RESTART )
 {
-   hbqt_par_QWizard( 1 )->restart(  );
+   hbqt_par_QWizard( 1 )->restart();
 }
 
 

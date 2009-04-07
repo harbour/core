@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -58,31 +58,6 @@
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
-
-
-/*
- *  Constructed[ 40/56 [ 71.43% ] ]
- *  
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *  
- *  QColor convertTo ( Spec colorSpec ) const
- *  QColor darker ( int factor = 200 ) const
- *  void getCmyk ( int * c, int * m, int * y, int * k, int * a = 0 )
- *  void getCmykF ( qreal * c, qreal * m, qreal * y, qreal * k, qreal * a = 0 )
- *  void getHsv ( int * h, int * s, int * v, int * a = 0 ) const
- *  void getHsvF ( qreal * h, qreal * s, qreal * v, qreal * a = 0 ) const
- *  void getRgb ( int * r, int * g, int * b, int * a = 0 ) const
- *  void getRgbF ( qreal * r, qreal * g, qreal * b, qreal * a = 0 ) const
- *  QColor lighter ( int factor = 150 ) const
- *  QRgb rgb () const
- *  QRgb rgba () const
- *  void setRgb ( QRgb rgb )
- *  void setRgba ( QRgb rgba )
- *  QColor toCmyk () const
- *  QColor toHsv () const
- *  QColor toRgb () const
- */ 
 
 
 #include <QtGui/QColor>
@@ -106,7 +81,7 @@ HB_FUNC( QT_QCOLOR )
  */
 HB_FUNC( QT_QCOLOR_ALPHA )
 {
-   hb_retni( hbqt_par_QColor( 1 )->alpha(  ) );
+   hb_retni( hbqt_par_QColor( 1 )->alpha() );
 }
 
 /*
@@ -114,7 +89,7 @@ HB_FUNC( QT_QCOLOR_ALPHA )
  */
 HB_FUNC( QT_QCOLOR_ALPHAF )
 {
-   hb_retnd( hbqt_par_QColor( 1 )->alphaF(  ) );
+   hb_retnd( hbqt_par_QColor( 1 )->alphaF() );
 }
 
 /*
@@ -122,7 +97,7 @@ HB_FUNC( QT_QCOLOR_ALPHAF )
  */
 HB_FUNC( QT_QCOLOR_BLACK )
 {
-   hb_retni( hbqt_par_QColor( 1 )->black(  ) );
+   hb_retni( hbqt_par_QColor( 1 )->black() );
 }
 
 /*
@@ -130,7 +105,7 @@ HB_FUNC( QT_QCOLOR_BLACK )
  */
 HB_FUNC( QT_QCOLOR_BLACKF )
 {
-   hb_retnd( hbqt_par_QColor( 1 )->blackF(  ) );
+   hb_retnd( hbqt_par_QColor( 1 )->blackF() );
 }
 
 /*
@@ -138,7 +113,7 @@ HB_FUNC( QT_QCOLOR_BLACKF )
  */
 HB_FUNC( QT_QCOLOR_BLUE )
 {
-   hb_retni( hbqt_par_QColor( 1 )->blue(  ) );
+   hb_retni( hbqt_par_QColor( 1 )->blue() );
 }
 
 /*
@@ -146,7 +121,15 @@ HB_FUNC( QT_QCOLOR_BLUE )
  */
 HB_FUNC( QT_QCOLOR_BLUEF )
 {
-   hb_retnd( hbqt_par_QColor( 1 )->blueF(  ) );
+   hb_retnd( hbqt_par_QColor( 1 )->blueF() );
+}
+
+/*
+ * QColor convertTo ( Spec colorSpec ) const
+ */
+HB_FUNC( QT_QCOLOR_CONVERTTO )
+{
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->convertTo( ( QColor::Spec ) hb_parni( 2 ) ) ) );
 }
 
 /*
@@ -154,7 +137,7 @@ HB_FUNC( QT_QCOLOR_BLUEF )
  */
 HB_FUNC( QT_QCOLOR_CYAN )
 {
-   hb_retni( hbqt_par_QColor( 1 )->cyan(  ) );
+   hb_retni( hbqt_par_QColor( 1 )->cyan() );
 }
 
 /*
@@ -162,7 +145,127 @@ HB_FUNC( QT_QCOLOR_CYAN )
  */
 HB_FUNC( QT_QCOLOR_CYANF )
 {
-   hb_retnd( hbqt_par_QColor( 1 )->cyanF(  ) );
+   hb_retnd( hbqt_par_QColor( 1 )->cyanF() );
+}
+
+/*
+ * QColor darker ( int factor = 200 ) const
+ */
+HB_FUNC( QT_QCOLOR_DARKER )
+{
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->darker( ( HB_ISNIL( 2 ) ? 200 : hb_parni( 2 ) ) ) ) );
+}
+
+/*
+ * void getCmyk ( int * c, int * m, int * y, int * k, int * a = 0 )
+ */
+HB_FUNC( QT_QCOLOR_GETCMYK )
+{
+   int iC = 0;
+   int iM = 0;
+   int iY = 0;
+   int iK = 0;
+   int iA = 0;
+
+   hbqt_par_QColor( 1 )->getCmyk( &iC, &iM, &iY, &iK, &iA );
+
+   hb_storni( iC, 2 );
+   hb_storni( iM, 3 );
+   hb_storni( iY, 4 );
+   hb_storni( iK, 5 );
+   hb_storni( iA, 6 );
+}
+
+/*
+ * void getCmykF ( qreal * c, qreal * m, qreal * y, qreal * k, qreal * a = 0 )
+ */
+HB_FUNC( QT_QCOLOR_GETCMYKF )
+{
+   qreal qrC = 0;
+   qreal qrM = 0;
+   qreal qrY = 0;
+   qreal qrK = 0;
+   qreal qrA = 0;
+
+   hbqt_par_QColor( 1 )->getCmykF( &qrC, &qrM, &qrY, &qrK, &qrA );
+
+   hb_stornd( qrC, 2 );
+   hb_stornd( qrM, 3 );
+   hb_stornd( qrY, 4 );
+   hb_stornd( qrK, 5 );
+   hb_stornd( qrA, 6 );
+}
+
+/*
+ * void getHsv ( int * h, int * s, int * v, int * a = 0 ) const
+ */
+HB_FUNC( QT_QCOLOR_GETHSV )
+{
+   int iH = 0;
+   int iS = 0;
+   int iV = 0;
+   int iA = 0;
+
+   hbqt_par_QColor( 1 )->getHsv( &iH, &iS, &iV, &iA );
+
+   hb_storni( iH, 2 );
+   hb_storni( iS, 3 );
+   hb_storni( iV, 4 );
+   hb_storni( iA, 5 );
+}
+
+/*
+ * void getHsvF ( qreal * h, qreal * s, qreal * v, qreal * a = 0 ) const
+ */
+HB_FUNC( QT_QCOLOR_GETHSVF )
+{
+   qreal qrH = 0;
+   qreal qrS = 0;
+   qreal qrV = 0;
+   qreal qrA = 0;
+
+   hbqt_par_QColor( 1 )->getHsvF( &qrH, &qrS, &qrV, &qrA );
+
+   hb_stornd( qrH, 2 );
+   hb_stornd( qrS, 3 );
+   hb_stornd( qrV, 4 );
+   hb_stornd( qrA, 5 );
+}
+
+/*
+ * void getRgb ( int * r, int * g, int * b, int * a = 0 ) const
+ */
+HB_FUNC( QT_QCOLOR_GETRGB )
+{
+   int iR = 0;
+   int iG = 0;
+   int iB = 0;
+   int iA = 0;
+
+   hbqt_par_QColor( 1 )->getRgb( &iR, &iG, &iB, &iA );
+
+   hb_storni( iR, 2 );
+   hb_storni( iG, 3 );
+   hb_storni( iB, 4 );
+   hb_storni( iA, 5 );
+}
+
+/*
+ * void getRgbF ( qreal * r, qreal * g, qreal * b, qreal * a = 0 ) const
+ */
+HB_FUNC( QT_QCOLOR_GETRGBF )
+{
+   qreal qrR = 0;
+   qreal qrG = 0;
+   qreal qrB = 0;
+   qreal qrA = 0;
+
+   hbqt_par_QColor( 1 )->getRgbF( &qrR, &qrG, &qrB, &qrA );
+
+   hb_stornd( qrR, 2 );
+   hb_stornd( qrG, 3 );
+   hb_stornd( qrB, 4 );
+   hb_stornd( qrA, 5 );
 }
 
 /*
@@ -170,7 +273,7 @@ HB_FUNC( QT_QCOLOR_CYANF )
  */
 HB_FUNC( QT_QCOLOR_GREEN )
 {
-   hb_retni( hbqt_par_QColor( 1 )->green(  ) );
+   hb_retni( hbqt_par_QColor( 1 )->green() );
 }
 
 /*
@@ -178,7 +281,7 @@ HB_FUNC( QT_QCOLOR_GREEN )
  */
 HB_FUNC( QT_QCOLOR_GREENF )
 {
-   hb_retnd( hbqt_par_QColor( 1 )->greenF(  ) );
+   hb_retnd( hbqt_par_QColor( 1 )->greenF() );
 }
 
 /*
@@ -186,7 +289,7 @@ HB_FUNC( QT_QCOLOR_GREENF )
  */
 HB_FUNC( QT_QCOLOR_HUE )
 {
-   hb_retni( hbqt_par_QColor( 1 )->hue(  ) );
+   hb_retni( hbqt_par_QColor( 1 )->hue() );
 }
 
 /*
@@ -194,7 +297,7 @@ HB_FUNC( QT_QCOLOR_HUE )
  */
 HB_FUNC( QT_QCOLOR_HUEF )
 {
-   hb_retnd( hbqt_par_QColor( 1 )->hueF(  ) );
+   hb_retnd( hbqt_par_QColor( 1 )->hueF() );
 }
 
 /*
@@ -202,7 +305,15 @@ HB_FUNC( QT_QCOLOR_HUEF )
  */
 HB_FUNC( QT_QCOLOR_ISVALID )
 {
-   hb_retl( hbqt_par_QColor( 1 )->isValid(  ) );
+   hb_retl( hbqt_par_QColor( 1 )->isValid() );
+}
+
+/*
+ * QColor lighter ( int factor = 150 ) const
+ */
+HB_FUNC( QT_QCOLOR_LIGHTER )
+{
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->lighter( ( HB_ISNIL( 2 ) ? 150 : hb_parni( 2 ) ) ) ) );
 }
 
 /*
@@ -210,7 +321,7 @@ HB_FUNC( QT_QCOLOR_ISVALID )
  */
 HB_FUNC( QT_QCOLOR_MAGENTA )
 {
-   hb_retni( hbqt_par_QColor( 1 )->magenta(  ) );
+   hb_retni( hbqt_par_QColor( 1 )->magenta() );
 }
 
 /*
@@ -218,7 +329,7 @@ HB_FUNC( QT_QCOLOR_MAGENTA )
  */
 HB_FUNC( QT_QCOLOR_MAGENTAF )
 {
-   hb_retnd( hbqt_par_QColor( 1 )->magentaF(  ) );
+   hb_retnd( hbqt_par_QColor( 1 )->magentaF() );
 }
 
 /*
@@ -226,7 +337,7 @@ HB_FUNC( QT_QCOLOR_MAGENTAF )
  */
 HB_FUNC( QT_QCOLOR_NAME )
 {
-   hb_retc( hbqt_par_QColor( 1 )->name( ).toLatin1().data() );
+   hb_retc( hbqt_par_QColor( 1 )->name().toLatin1().data() );
 }
 
 /*
@@ -234,7 +345,7 @@ HB_FUNC( QT_QCOLOR_NAME )
  */
 HB_FUNC( QT_QCOLOR_RED )
 {
-   hb_retni( hbqt_par_QColor( 1 )->red(  ) );
+   hb_retni( hbqt_par_QColor( 1 )->red() );
 }
 
 /*
@@ -242,7 +353,23 @@ HB_FUNC( QT_QCOLOR_RED )
  */
 HB_FUNC( QT_QCOLOR_REDF )
 {
-   hb_retnd( hbqt_par_QColor( 1 )->redF(  ) );
+   hb_retnd( hbqt_par_QColor( 1 )->redF() );
+}
+
+/*
+ * QRgb rgb () const
+ */
+HB_FUNC( QT_QCOLOR_RGB )
+{
+   hb_retni( hbqt_par_QColor( 1 )->rgb() );
+}
+
+/*
+ * QRgb rgba () const
+ */
+HB_FUNC( QT_QCOLOR_RGBA )
+{
+   hb_retni( hbqt_par_QColor( 1 )->rgba() );
 }
 
 /*
@@ -250,7 +377,7 @@ HB_FUNC( QT_QCOLOR_REDF )
  */
 HB_FUNC( QT_QCOLOR_SATURATION )
 {
-   hb_retni( hbqt_par_QColor( 1 )->saturation(  ) );
+   hb_retni( hbqt_par_QColor( 1 )->saturation() );
 }
 
 /*
@@ -258,7 +385,7 @@ HB_FUNC( QT_QCOLOR_SATURATION )
  */
 HB_FUNC( QT_QCOLOR_SATURATIONF )
 {
-   hb_retnd( hbqt_par_QColor( 1 )->saturationF(  ) );
+   hb_retnd( hbqt_par_QColor( 1 )->saturationF() );
 }
 
 /*
@@ -298,7 +425,7 @@ HB_FUNC( QT_QCOLOR_SETBLUEF )
  */
 HB_FUNC( QT_QCOLOR_SETCMYK )
 {
-   hbqt_par_QColor( 1 )->setCmyk( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ) );
+   hbqt_par_QColor( 1 )->setCmyk( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( HB_ISNIL( 6 ) ? 255 : hb_parni( 6 ) ) );
 }
 
 /*
@@ -330,7 +457,7 @@ HB_FUNC( QT_QCOLOR_SETGREENF )
  */
 HB_FUNC( QT_QCOLOR_SETHSV )
 {
-   hbqt_par_QColor( 1 )->setHsv( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+   hbqt_par_QColor( 1 )->setHsv( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNIL( 5 ) ? 255 : hb_parni( 5 ) ) );
 }
 
 /*
@@ -370,7 +497,15 @@ HB_FUNC( QT_QCOLOR_SETREDF )
  */
 HB_FUNC( QT_QCOLOR_SETRGB )
 {
-   hbqt_par_QColor( 1 )->setRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+   hbqt_par_QColor( 1 )->setRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNIL( 5 ) ? 255 : hb_parni( 5 ) ) );
+}
+
+/*
+ * void setRgb ( QRgb rgb )
+ */
+HB_FUNC( QT_QCOLOR_SETRGB_1 )
+{
+   hbqt_par_QColor( 1 )->setRgb( hb_parni( 2 ) );
 }
 
 /*
@@ -382,11 +517,43 @@ HB_FUNC( QT_QCOLOR_SETRGBF )
 }
 
 /*
+ * void setRgba ( QRgb rgba )
+ */
+HB_FUNC( QT_QCOLOR_SETRGBA )
+{
+   hbqt_par_QColor( 1 )->setRgba( hb_parni( 2 ) );
+}
+
+/*
  * Spec spec () const
  */
 HB_FUNC( QT_QCOLOR_SPEC )
 {
-   hb_retni( hbqt_par_QColor( 1 )->spec(  ) );
+   hb_retni( ( QColor::Spec ) hbqt_par_QColor( 1 )->spec() );
+}
+
+/*
+ * QColor toCmyk () const
+ */
+HB_FUNC( QT_QCOLOR_TOCMYK )
+{
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->toCmyk() ) );
+}
+
+/*
+ * QColor toHsv () const
+ */
+HB_FUNC( QT_QCOLOR_TOHSV )
+{
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->toHsv() ) );
+}
+
+/*
+ * QColor toRgb () const
+ */
+HB_FUNC( QT_QCOLOR_TORGB )
+{
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->toRgb() ) );
 }
 
 /*
@@ -394,7 +561,7 @@ HB_FUNC( QT_QCOLOR_SPEC )
  */
 HB_FUNC( QT_QCOLOR_VALUE )
 {
-   hb_retni( hbqt_par_QColor( 1 )->value(  ) );
+   hb_retni( hbqt_par_QColor( 1 )->value() );
 }
 
 /*
@@ -402,7 +569,7 @@ HB_FUNC( QT_QCOLOR_VALUE )
  */
 HB_FUNC( QT_QCOLOR_VALUEF )
 {
-   hb_retnd( hbqt_par_QColor( 1 )->valueF(  ) );
+   hb_retnd( hbqt_par_QColor( 1 )->valueF() );
 }
 
 /*
@@ -410,7 +577,7 @@ HB_FUNC( QT_QCOLOR_VALUEF )
  */
 HB_FUNC( QT_QCOLOR_YELLOW )
 {
-   hb_retni( hbqt_par_QColor( 1 )->yellow(  ) );
+   hb_retni( hbqt_par_QColor( 1 )->yellow() );
 }
 
 /*
@@ -418,7 +585,7 @@ HB_FUNC( QT_QCOLOR_YELLOW )
  */
 HB_FUNC( QT_QCOLOR_YELLOWF )
 {
-   hb_retnd( hbqt_par_QColor( 1 )->yellowF(  ) );
+   hb_retnd( hbqt_par_QColor( 1 )->yellowF() );
 }
 
 

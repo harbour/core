@@ -53,28 +53,33 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QColorDialog INHERIT QDialog
+CREATE CLASS QColorDialog INHERIT QDialog
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
+   METHOD  currentColor()                      INLINE  Qt_QColorDialog_currentColor( ::pPtr )
    METHOD  open()                              INLINE  Qt_QColorDialog_open( ::pPtr )
-   METHOD  open_1( pReceiver, pMember )        INLINE  Qt_QColorDialog_open_1( ::pPtr, pReceiver, pMember )
    METHOD  options()                           INLINE  Qt_QColorDialog_options( ::pPtr )
-   METHOD  setOption( nColorDialogOption, lOn )  INLINE  Qt_QColorDialog_setOption( ::pPtr, nColorDialogOption, lOn )
-   METHOD  setOptions( nColorDialogOptions )   INLINE  Qt_QColorDialog_setOptions( ::pPtr, nColorDialogOptions )
+   METHOD  selectedColor()                     INLINE  Qt_QColorDialog_selectedColor( ::pPtr )
+   METHOD  setCurrentColor( pColor )           INLINE  Qt_QColorDialog_setCurrentColor( ::pPtr, pColor )
+   METHOD  setOption( nOption, lOn )           INLINE  Qt_QColorDialog_setOption( ::pPtr, nOption, lOn )
+   METHOD  setOptions( nOptions )              INLINE  Qt_QColorDialog_setOptions( ::pPtr, nOptions )
    METHOD  setVisible( lVisible )              INLINE  Qt_QColorDialog_setVisible( ::pPtr, lVisible )
-   METHOD  testOption( nColorDialogOption )    INLINE  Qt_QColorDialog_testOption( ::pPtr, nColorDialogOption )
+   METHOD  testOption( nOption )               INLINE  Qt_QColorDialog_testOption( ::pPtr, nOption )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QColorDialog
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QColorDialog( pParent )
 

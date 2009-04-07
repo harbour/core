@@ -232,8 +232,12 @@
 #define hbqt_par_QPaintEvent( n )            ( ( QPaintEvent* ) hb_parptr( n ) )
 #define hbqt_par_QInputEvent( n )            ( ( QInputEvent* ) hb_parptr( n ) )
 #define hbqt_par_HRGN( n )                   ( ( HRGN* ) hb_parptr( n ) )
+#define hbqt_par_QIcon( n )                  ( ( QIcon* ) hb_parc( n ) )
+#define hbqt_par_QStyleOption( n )           ( ( QStyleOption* ) hb_parptr( n ) )
+#define hbqt_par_QStyleOptionComplex( n )    ( ( QStyleOptionComplex* ) hb_parptr( n ) )
+#define hbqt_par_QFontMetrics( n )           ( ( QFontMetrics* ) hb_parptr( n ) )
+#define hbqt_par_QStyleHintReturn( n )       ( ( QStyleHintReturn* ) hb_parptr( n ) )
 
-#define hbqt_par_QIcon( n )                  ( ( QIcon ) hb_parc( n ) )
 #define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )
 #define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )
 #define hbqt_par_Bool( n )                   ( hb_parl( n ) )

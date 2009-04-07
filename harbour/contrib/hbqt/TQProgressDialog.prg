@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QProgressDialog INHERIT QDialog
+CREATE CLASS QProgressDialog INHERIT QDialog
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -92,6 +93,8 @@ CLASS QProgressDialog INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QProgressDialog
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QProgressDialog( pParent )
 

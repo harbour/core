@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QGroupBox INHERIT QWidget
+CREATE CLASS QGroupBox INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -71,12 +72,15 @@ CLASS QGroupBox INHERIT QWidget
    METHOD  setFlat( lFlat )                    INLINE  Qt_QGroupBox_setFlat( ::pPtr, lFlat )
    METHOD  setTitle( cTitle )                  INLINE  Qt_QGroupBox_setTitle( ::pPtr, cTitle )
    METHOD  title()                             INLINE  Qt_QGroupBox_title( ::pPtr )
+   METHOD  setChecked( lChecked )              INLINE  Qt_QGroupBox_setChecked( ::pPtr, lChecked )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QGroupBox
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QGroupBox( pParent )
 

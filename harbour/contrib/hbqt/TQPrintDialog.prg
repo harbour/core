@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QPrintDialog INHERIT QAbstractPrintDialog
+CREATE CLASS QPrintDialog INHERIT QAbstractPrintDialog
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -67,16 +68,18 @@ CLASS QPrintDialog INHERIT QAbstractPrintDialog
    METHOD  options()                           INLINE  Qt_QPrintDialog_options( ::pPtr )
    METHOD  printer()                           INLINE  Qt_QPrintDialog_printer( ::pPtr )
    METHOD  printer_1()                         INLINE  Qt_QPrintDialog_printer_1( ::pPtr )
-   METHOD  setOption( nPrintDialogOption, lOn )  INLINE  Qt_QPrintDialog_setOption( ::pPtr, nPrintDialogOption, lOn )
-   METHOD  setOptions( nPrintDialogOptions )   INLINE  Qt_QPrintDialog_setOptions( ::pPtr, nPrintDialogOptions )
+   METHOD  setOption( nOption, lOn )           INLINE  Qt_QPrintDialog_setOption( ::pPtr, nOption, lOn )
+   METHOD  setOptions( nOptions )              INLINE  Qt_QPrintDialog_setOptions( ::pPtr, nOptions )
    METHOD  setVisible( lVisible )              INLINE  Qt_QPrintDialog_setVisible( ::pPtr, lVisible )
-   METHOD  testOption( nPrintDialogOption )    INLINE  Qt_QPrintDialog_testOption( ::pPtr, nPrintDialogOption )
+   METHOD  testOption( nOption )               INLINE  Qt_QPrintDialog_testOption( ::pPtr, nOption )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QPrintDialog
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QPrintDialog( pParent )
 

@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -58,16 +58,6 @@
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
-
-
-/*
- *  Constructed[ 46/47 [ 97.87% ] ]
- *  
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *  
- *  void getTextMargins ( int * left, int * top, int * right, int * bottom ) const
- */ 
 
 
 #include <QtGui/QLineEdit>
@@ -88,7 +78,7 @@ HB_FUNC( QT_QLINEEDIT )
  */
 HB_FUNC( QT_QLINEEDIT_ALIGNMENT )
 {
-   hb_retni( hbqt_par_QLineEdit( 1 )->alignment(  ) );
+   hb_retni( ( Qt::Alignment ) hbqt_par_QLineEdit( 1 )->alignment() );
 }
 
 /*
@@ -96,7 +86,7 @@ HB_FUNC( QT_QLINEEDIT_ALIGNMENT )
  */
 HB_FUNC( QT_QLINEEDIT_BACKSPACE )
 {
-   hbqt_par_QLineEdit( 1 )->backspace(  );
+   hbqt_par_QLineEdit( 1 )->backspace();
 }
 
 /*
@@ -104,7 +94,7 @@ HB_FUNC( QT_QLINEEDIT_BACKSPACE )
  */
 HB_FUNC( QT_QLINEEDIT_COMPLETER )
 {
-   hb_retptr( ( QCompleter* ) hbqt_par_QLineEdit( 1 )->completer(  ) );
+   hb_retptr( ( QCompleter* ) hbqt_par_QLineEdit( 1 )->completer() );
 }
 
 /*
@@ -112,7 +102,7 @@ HB_FUNC( QT_QLINEEDIT_COMPLETER )
  */
 HB_FUNC( QT_QLINEEDIT_CREATESTANDARDCONTEXTMENU )
 {
-   hb_retptr( ( QMenu* ) hbqt_par_QLineEdit( 1 )->createStandardContextMenu(  ) );
+   hb_retptr( ( QMenu* ) hbqt_par_QLineEdit( 1 )->createStandardContextMenu() );
 }
 
 /*
@@ -120,7 +110,7 @@ HB_FUNC( QT_QLINEEDIT_CREATESTANDARDCONTEXTMENU )
  */
 HB_FUNC( QT_QLINEEDIT_CURSORBACKWARD )
 {
-   hbqt_par_QLineEdit( 1 )->cursorBackward( hb_parl( 2 ), hb_parni( 3 ) );
+   hbqt_par_QLineEdit( 1 )->cursorBackward( hb_parl( 2 ), ( HB_ISNIL( 3 ) ? 1 : hb_parni( 3 ) ) );
 }
 
 /*
@@ -128,7 +118,7 @@ HB_FUNC( QT_QLINEEDIT_CURSORBACKWARD )
  */
 HB_FUNC( QT_QLINEEDIT_CURSORFORWARD )
 {
-   hbqt_par_QLineEdit( 1 )->cursorForward( hb_parl( 2 ), hb_parni( 3 ) );
+   hbqt_par_QLineEdit( 1 )->cursorForward( hb_parl( 2 ), ( HB_ISNIL( 3 ) ? 1 : hb_parni( 3 ) ) );
 }
 
 /*
@@ -136,7 +126,7 @@ HB_FUNC( QT_QLINEEDIT_CURSORFORWARD )
  */
 HB_FUNC( QT_QLINEEDIT_CURSORPOSITION )
 {
-   hb_retni( hbqt_par_QLineEdit( 1 )->cursorPosition(  ) );
+   hb_retni( hbqt_par_QLineEdit( 1 )->cursorPosition() );
 }
 
 /*
@@ -144,7 +134,7 @@ HB_FUNC( QT_QLINEEDIT_CURSORPOSITION )
  */
 HB_FUNC( QT_QLINEEDIT_CURSORPOSITIONAT )
 {
-   hb_retni( hbqt_par_QLineEdit( 1 )->cursorPositionAt( hbqt_const_QPoint( 2 ) ) );
+   hb_retni( hbqt_par_QLineEdit( 1 )->cursorPositionAt( *hbqt_par_QPoint( 2 ) ) );
 }
 
 /*
@@ -168,7 +158,7 @@ HB_FUNC( QT_QLINEEDIT_CURSORWORDFORWARD )
  */
 HB_FUNC( QT_QLINEEDIT_DEL )
 {
-   hbqt_par_QLineEdit( 1 )->del(  );
+   hbqt_par_QLineEdit( 1 )->del();
 }
 
 /*
@@ -176,7 +166,7 @@ HB_FUNC( QT_QLINEEDIT_DEL )
  */
 HB_FUNC( QT_QLINEEDIT_DESELECT )
 {
-   hbqt_par_QLineEdit( 1 )->deselect(  );
+   hbqt_par_QLineEdit( 1 )->deselect();
 }
 
 /*
@@ -184,7 +174,7 @@ HB_FUNC( QT_QLINEEDIT_DESELECT )
  */
 HB_FUNC( QT_QLINEEDIT_DISPLAYTEXT )
 {
-   hb_retc( hbqt_par_QLineEdit( 1 )->displayText( ).toLatin1().data() );
+   hb_retc( hbqt_par_QLineEdit( 1 )->displayText().toLatin1().data() );
 }
 
 /*
@@ -192,7 +182,7 @@ HB_FUNC( QT_QLINEEDIT_DISPLAYTEXT )
  */
 HB_FUNC( QT_QLINEEDIT_DRAGENABLED )
 {
-   hb_retl( hbqt_par_QLineEdit( 1 )->dragEnabled(  ) );
+   hb_retl( hbqt_par_QLineEdit( 1 )->dragEnabled() );
 }
 
 /*
@@ -200,7 +190,7 @@ HB_FUNC( QT_QLINEEDIT_DRAGENABLED )
  */
 HB_FUNC( QT_QLINEEDIT_ECHOMODE )
 {
-   hb_retni( hbqt_par_QLineEdit( 1 )->echoMode(  ) );
+   hb_retni( ( QLineEdit::EchoMode ) hbqt_par_QLineEdit( 1 )->echoMode() );
 }
 
 /*
@@ -212,11 +202,29 @@ HB_FUNC( QT_QLINEEDIT_END )
 }
 
 /*
+ * void getTextMargins ( int * left, int * top, int * right, int * bottom ) const
+ */
+HB_FUNC( QT_QLINEEDIT_GETTEXTMARGINS )
+{
+   int iLeft = 0;
+   int iTop = 0;
+   int iRight = 0;
+   int iBottom = 0;
+
+   hbqt_par_QLineEdit( 1 )->getTextMargins( &iLeft, &iTop, &iRight, &iBottom );
+
+   hb_storni( iLeft, 2 );
+   hb_storni( iTop, 3 );
+   hb_storni( iRight, 4 );
+   hb_storni( iBottom, 5 );
+}
+
+/*
  * bool hasAcceptableInput () const
  */
 HB_FUNC( QT_QLINEEDIT_HASACCEPTABLEINPUT )
 {
-   hb_retl( hbqt_par_QLineEdit( 1 )->hasAcceptableInput(  ) );
+   hb_retl( hbqt_par_QLineEdit( 1 )->hasAcceptableInput() );
 }
 
 /*
@@ -224,7 +232,7 @@ HB_FUNC( QT_QLINEEDIT_HASACCEPTABLEINPUT )
  */
 HB_FUNC( QT_QLINEEDIT_HASFRAME )
 {
-   hb_retl( hbqt_par_QLineEdit( 1 )->hasFrame(  ) );
+   hb_retl( hbqt_par_QLineEdit( 1 )->hasFrame() );
 }
 
 /*
@@ -232,7 +240,7 @@ HB_FUNC( QT_QLINEEDIT_HASFRAME )
  */
 HB_FUNC( QT_QLINEEDIT_HASSELECTEDTEXT )
 {
-   hb_retl( hbqt_par_QLineEdit( 1 )->hasSelectedText(  ) );
+   hb_retl( hbqt_par_QLineEdit( 1 )->hasSelectedText() );
 }
 
 /*
@@ -248,7 +256,7 @@ HB_FUNC( QT_QLINEEDIT_HOME )
  */
 HB_FUNC( QT_QLINEEDIT_INPUTMASK )
 {
-   hb_retc( hbqt_par_QLineEdit( 1 )->inputMask( ).toLatin1().data() );
+   hb_retc( hbqt_par_QLineEdit( 1 )->inputMask().toLatin1().data() );
 }
 
 /*
@@ -264,7 +272,7 @@ HB_FUNC( QT_QLINEEDIT_INSERT )
  */
 HB_FUNC( QT_QLINEEDIT_ISMODIFIED )
 {
-   hb_retl( hbqt_par_QLineEdit( 1 )->isModified(  ) );
+   hb_retl( hbqt_par_QLineEdit( 1 )->isModified() );
 }
 
 /*
@@ -272,7 +280,7 @@ HB_FUNC( QT_QLINEEDIT_ISMODIFIED )
  */
 HB_FUNC( QT_QLINEEDIT_ISREADONLY )
 {
-   hb_retl( hbqt_par_QLineEdit( 1 )->isReadOnly(  ) );
+   hb_retl( hbqt_par_QLineEdit( 1 )->isReadOnly() );
 }
 
 /*
@@ -280,7 +288,7 @@ HB_FUNC( QT_QLINEEDIT_ISREADONLY )
  */
 HB_FUNC( QT_QLINEEDIT_ISREDOAVAILABLE )
 {
-   hb_retl( hbqt_par_QLineEdit( 1 )->isRedoAvailable(  ) );
+   hb_retl( hbqt_par_QLineEdit( 1 )->isRedoAvailable() );
 }
 
 /*
@@ -288,7 +296,7 @@ HB_FUNC( QT_QLINEEDIT_ISREDOAVAILABLE )
  */
 HB_FUNC( QT_QLINEEDIT_ISUNDOAVAILABLE )
 {
-   hb_retl( hbqt_par_QLineEdit( 1 )->isUndoAvailable(  ) );
+   hb_retl( hbqt_par_QLineEdit( 1 )->isUndoAvailable() );
 }
 
 /*
@@ -296,7 +304,7 @@ HB_FUNC( QT_QLINEEDIT_ISUNDOAVAILABLE )
  */
 HB_FUNC( QT_QLINEEDIT_MAXLENGTH )
 {
-   hb_retni( hbqt_par_QLineEdit( 1 )->maxLength(  ) );
+   hb_retni( hbqt_par_QLineEdit( 1 )->maxLength() );
 }
 
 /*
@@ -304,7 +312,7 @@ HB_FUNC( QT_QLINEEDIT_MAXLENGTH )
  */
 HB_FUNC( QT_QLINEEDIT_MINIMUMSIZEHINT )
 {
-   hbqt_ret_QSize( hbqt_par_QLineEdit( 1 )->minimumSizeHint(  ) );
+   hb_retptr( new QSize( hbqt_par_QLineEdit( 1 )->minimumSizeHint() ) );
 }
 
 /*
@@ -312,7 +320,7 @@ HB_FUNC( QT_QLINEEDIT_MINIMUMSIZEHINT )
  */
 HB_FUNC( QT_QLINEEDIT_SELECTEDTEXT )
 {
-   hb_retc( hbqt_par_QLineEdit( 1 )->selectedText( ).toLatin1().data() );
+   hb_retc( hbqt_par_QLineEdit( 1 )->selectedText().toLatin1().data() );
 }
 
 /*
@@ -320,7 +328,7 @@ HB_FUNC( QT_QLINEEDIT_SELECTEDTEXT )
  */
 HB_FUNC( QT_QLINEEDIT_SELECTIONSTART )
 {
-   hb_retni( hbqt_par_QLineEdit( 1 )->selectionStart(  ) );
+   hb_retni( hbqt_par_QLineEdit( 1 )->selectionStart() );
 }
 
 /*
@@ -432,7 +440,7 @@ HB_FUNC( QT_QLINEEDIT_SETVALIDATOR )
  */
 HB_FUNC( QT_QLINEEDIT_SIZEHINT )
 {
-   hbqt_ret_QSize( hbqt_par_QLineEdit( 1 )->sizeHint(  ) );
+   hb_retptr( new QSize( hbqt_par_QLineEdit( 1 )->sizeHint() ) );
 }
 
 /*
@@ -440,7 +448,7 @@ HB_FUNC( QT_QLINEEDIT_SIZEHINT )
  */
 HB_FUNC( QT_QLINEEDIT_TEXT )
 {
-   hb_retc( hbqt_par_QLineEdit( 1 )->text( ).toLatin1().data() );
+   hb_retc( hbqt_par_QLineEdit( 1 )->text().toLatin1().data() );
 }
 
 /*
@@ -448,7 +456,71 @@ HB_FUNC( QT_QLINEEDIT_TEXT )
  */
 HB_FUNC( QT_QLINEEDIT_VALIDATOR )
 {
-   hb_retptr( ( QValidator* ) hbqt_par_QLineEdit( 1 )->validator(  ) );
+   hb_retptr( ( QValidator* ) hbqt_par_QLineEdit( 1 )->validator() );
+}
+
+/*
+ * void clear ()
+ */
+HB_FUNC( QT_QLINEEDIT_CLEAR )
+{
+   hbqt_par_QLineEdit( 1 )->clear();
+}
+
+/*
+ * void copy () const
+ */
+HB_FUNC( QT_QLINEEDIT_COPY )
+{
+   hbqt_par_QLineEdit( 1 )->copy();
+}
+
+/*
+ * void cut ()
+ */
+HB_FUNC( QT_QLINEEDIT_CUT )
+{
+   hbqt_par_QLineEdit( 1 )->cut();
+}
+
+/*
+ * void paste ()
+ */
+HB_FUNC( QT_QLINEEDIT_PASTE )
+{
+   hbqt_par_QLineEdit( 1 )->paste();
+}
+
+/*
+ * void redo ()
+ */
+HB_FUNC( QT_QLINEEDIT_REDO )
+{
+   hbqt_par_QLineEdit( 1 )->redo();
+}
+
+/*
+ * void selectAll ()
+ */
+HB_FUNC( QT_QLINEEDIT_SELECTALL )
+{
+   hbqt_par_QLineEdit( 1 )->selectAll();
+}
+
+/*
+ * void setText ( const QString & )
+ */
+HB_FUNC( QT_QLINEEDIT_SETTEXT )
+{
+   hbqt_par_QLineEdit( 1 )->setText( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void undo ()
+ */
+HB_FUNC( QT_QLINEEDIT_UNDO )
+{
+   hbqt_par_QLineEdit( 1 )->undo();
 }
 
 

@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QSizeGrip INHERIT QWidget
+CREATE CLASS QSizeGrip INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -68,6 +69,8 @@ CLASS QSizeGrip INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QSizeGrip
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QSizeGrip( pParent )
 

@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QDialog INHERIT QWidget
+CREATE CLASS QDialog INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -78,6 +79,8 @@ CLASS QDialog INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QDialog
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QDialog( pParent )
 

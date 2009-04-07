@@ -53,26 +53,31 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QFontDialog INHERIT QDialog
+CREATE CLASS QFontDialog INHERIT QDialog
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
-   METHOD  open( pReceiver, pMember )          INLINE  Qt_QFontDialog_open( ::pPtr, pReceiver, pMember )
+   METHOD  currentFont()                       INLINE  Qt_QFontDialog_currentFont( ::pPtr )
    METHOD  options()                           INLINE  Qt_QFontDialog_options( ::pPtr )
-   METHOD  setOption( nFontDialogOption, lOn )  INLINE  Qt_QFontDialog_setOption( ::pPtr, nFontDialogOption, lOn )
-   METHOD  setOptions( nFontDialogOptions )    INLINE  Qt_QFontDialog_setOptions( ::pPtr, nFontDialogOptions )
-   METHOD  testOption( nFontDialogOption )     INLINE  Qt_QFontDialog_testOption( ::pPtr, nFontDialogOption )
+   METHOD  selectedFont()                      INLINE  Qt_QFontDialog_selectedFont( ::pPtr )
+   METHOD  setCurrentFont( pFont )             INLINE  Qt_QFontDialog_setCurrentFont( ::pPtr, pFont )
+   METHOD  setOption( nOption, lOn )           INLINE  Qt_QFontDialog_setOption( ::pPtr, nOption, lOn )
+   METHOD  setOptions( nOptions )              INLINE  Qt_QFontDialog_setOptions( ::pPtr, nOptions )
+   METHOD  testOption( nOption )               INLINE  Qt_QFontDialog_testOption( ::pPtr, nOption )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QFontDialog
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QFontDialog( pParent )
 

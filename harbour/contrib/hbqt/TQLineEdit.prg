@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QLineEdit INHERIT QWidget
+CREATE CLASS QLineEdit INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -69,7 +70,7 @@ CLASS QLineEdit INHERIT QWidget
    METHOD  cursorBackward( lMark, nSteps )     INLINE  Qt_QLineEdit_cursorBackward( ::pPtr, lMark, nSteps )
    METHOD  cursorForward( lMark, nSteps )      INLINE  Qt_QLineEdit_cursorForward( ::pPtr, lMark, nSteps )
    METHOD  cursorPosition()                    INLINE  Qt_QLineEdit_cursorPosition( ::pPtr )
-   METHOD  cursorPositionAt( aPointPos )       INLINE  Qt_QLineEdit_cursorPositionAt( ::pPtr, aPointPos )
+   METHOD  cursorPositionAt( pPos )            INLINE  Qt_QLineEdit_cursorPositionAt( ::pPtr, pPos )
    METHOD  cursorWordBackward( lMark )         INLINE  Qt_QLineEdit_cursorWordBackward( ::pPtr, lMark )
    METHOD  cursorWordForward( lMark )          INLINE  Qt_QLineEdit_cursorWordForward( ::pPtr, lMark )
    METHOD  del()                               INLINE  Qt_QLineEdit_del( ::pPtr )
@@ -78,6 +79,7 @@ CLASS QLineEdit INHERIT QWidget
    METHOD  dragEnabled()                       INLINE  Qt_QLineEdit_dragEnabled( ::pPtr )
    METHOD  echoMode()                          INLINE  Qt_QLineEdit_echoMode( ::pPtr )
    METHOD  end( lMark )                        INLINE  Qt_QLineEdit_end( ::pPtr, lMark )
+   METHOD  getTextMargins( nLeft, nTop, nRight, nBottom )  INLINE  Qt_QLineEdit_getTextMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
    METHOD  hasAcceptableInput()                INLINE  Qt_QLineEdit_hasAcceptableInput( ::pPtr )
    METHOD  hasFrame()                          INLINE  Qt_QLineEdit_hasFrame( ::pPtr )
    METHOD  hasSelectedText()                   INLINE  Qt_QLineEdit_hasSelectedText( ::pPtr )
@@ -108,12 +110,22 @@ CLASS QLineEdit INHERIT QWidget
    METHOD  sizeHint()                          INLINE  Qt_QLineEdit_sizeHint( ::pPtr )
    METHOD  text()                              INLINE  Qt_QLineEdit_text( ::pPtr )
    METHOD  validator()                         INLINE  Qt_QLineEdit_validator( ::pPtr )
+   METHOD  clear()                             INLINE  Qt_QLineEdit_clear( ::pPtr )
+   METHOD  copy()                              INLINE  Qt_QLineEdit_copy( ::pPtr )
+   METHOD  cut()                               INLINE  Qt_QLineEdit_cut( ::pPtr )
+   METHOD  paste()                             INLINE  Qt_QLineEdit_paste( ::pPtr )
+   METHOD  redo()                              INLINE  Qt_QLineEdit_redo( ::pPtr )
+   METHOD  selectAll()                         INLINE  Qt_QLineEdit_selectAll( ::pPtr )
+   METHOD  setText( cQString )                 INLINE  Qt_QLineEdit_setText( ::pPtr, cQString )
+   METHOD  undo()                              INLINE  Qt_QLineEdit_undo( ::pPtr )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QLineEdit
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QLineEdit( pParent )
 

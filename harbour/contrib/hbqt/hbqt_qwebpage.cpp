@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -60,26 +60,8 @@
 /*----------------------------------------------------------------------*/
 
 
-/*
- *  Constructed[ 29/34 [ 85.29% ] ]
- *  
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *  
- *  quint64 bytesReceived () const
- *  QVariant inputMethodQuery ( Qt::InputMethodQuery property ) const
- *  QPalette palette () const
- *  void setPalette ( const QPalette & palette )
- *  quint64 totalBytes () const
- *  
- *  *** Commented out protos which construct fine but do not compile ***
- *  
- *  // virtual bool extension ( Extension extension, const ExtensionOption * option = 0, ExtensionReturn * output = 0 )
- */ 
-
-
 #include <QtWebKit/QWebPage>
-
+#include <QtCore/QVariant>
 
 
 /*
@@ -100,11 +82,19 @@ HB_FUNC( QT_QWEBPAGE_ACTION )
 }
 
 /*
+ * quint64 bytesReceived () const
+ */
+HB_FUNC( QT_QWEBPAGE_BYTESRECEIVED )
+{
+   hb_retni( hbqt_par_QWebPage( 1 )->bytesReceived() );
+}
+
+/*
  * QMenu * createStandardContextMenu ()
  */
 HB_FUNC( QT_QWEBPAGE_CREATESTANDARDCONTEXTMENU )
 {
-   hb_retptr( ( QMenu* ) hbqt_par_QWebPage( 1 )->createStandardContextMenu(  ) );
+   hb_retptr( ( QMenu* ) hbqt_par_QWebPage( 1 )->createStandardContextMenu() );
 }
 
 /*
@@ -112,7 +102,7 @@ HB_FUNC( QT_QWEBPAGE_CREATESTANDARDCONTEXTMENU )
  */
 HB_FUNC( QT_QWEBPAGE_CURRENTFRAME )
 {
-   hb_retptr( ( QWebFrame* ) hbqt_par_QWebPage( 1 )->currentFrame(  ) );
+   hb_retptr( ( QWebFrame* ) hbqt_par_QWebPage( 1 )->currentFrame() );
 }
 
 /*
@@ -120,7 +110,7 @@ HB_FUNC( QT_QWEBPAGE_CURRENTFRAME )
  */
 HB_FUNC( QT_QWEBPAGE_FINDTEXT )
 {
-   hb_retl( hbqt_par_QWebPage( 1 )->findText( hbqt_par_QString( 2 ), ( QWebPage::FindFlags ) hb_parni( 3 ) ) );
+   hb_retl( hbqt_par_QWebPage( 1 )->findText( hbqt_par_QString( 2 ), ( HB_ISNIL( 3 ) ? ( QWebPage::FindFlags ) 0 : ( QWebPage::FindFlags ) hb_parni( 3 ) ) ) );
 }
 
 /*
@@ -136,7 +126,7 @@ HB_FUNC( QT_QWEBPAGE_FOCUSNEXTPREVCHILD )
  */
 HB_FUNC( QT_QWEBPAGE_FORWARDUNSUPPORTEDCONTENT )
 {
-   hb_retl( hbqt_par_QWebPage( 1 )->forwardUnsupportedContent(  ) );
+   hb_retl( hbqt_par_QWebPage( 1 )->forwardUnsupportedContent() );
 }
 
 /*
@@ -144,7 +134,15 @@ HB_FUNC( QT_QWEBPAGE_FORWARDUNSUPPORTEDCONTENT )
  */
 HB_FUNC( QT_QWEBPAGE_HISTORY )
 {
-   hb_retptr( ( QWebHistory* ) hbqt_par_QWebPage( 1 )->history(  ) );
+   hb_retptr( ( QWebHistory* ) hbqt_par_QWebPage( 1 )->history() );
+}
+
+/*
+ * QVariant inputMethodQuery ( Qt::InputMethodQuery property ) const
+ */
+HB_FUNC( QT_QWEBPAGE_INPUTMETHODQUERY )
+{
+   hb_retptr( new QVariant( hbqt_par_QWebPage( 1 )->inputMethodQuery( ( Qt::InputMethodQuery ) hb_parni( 2 ) ) ) );
 }
 
 /*
@@ -152,7 +150,7 @@ HB_FUNC( QT_QWEBPAGE_HISTORY )
  */
 HB_FUNC( QT_QWEBPAGE_ISCONTENTEDITABLE )
 {
-   hb_retl( hbqt_par_QWebPage( 1 )->isContentEditable(  ) );
+   hb_retl( hbqt_par_QWebPage( 1 )->isContentEditable() );
 }
 
 /*
@@ -160,7 +158,7 @@ HB_FUNC( QT_QWEBPAGE_ISCONTENTEDITABLE )
  */
 HB_FUNC( QT_QWEBPAGE_ISMODIFIED )
 {
-   hb_retl( hbqt_par_QWebPage( 1 )->isModified(  ) );
+   hb_retl( hbqt_par_QWebPage( 1 )->isModified() );
 }
 
 /*
@@ -168,7 +166,7 @@ HB_FUNC( QT_QWEBPAGE_ISMODIFIED )
  */
 HB_FUNC( QT_QWEBPAGE_LINKDELEGATIONPOLICY )
 {
-   hb_retni( hbqt_par_QWebPage( 1 )->linkDelegationPolicy(  ) );
+   hb_retni( ( QWebPage::LinkDelegationPolicy ) hbqt_par_QWebPage( 1 )->linkDelegationPolicy() );
 }
 
 /*
@@ -176,7 +174,7 @@ HB_FUNC( QT_QWEBPAGE_LINKDELEGATIONPOLICY )
  */
 HB_FUNC( QT_QWEBPAGE_MAINFRAME )
 {
-   hb_retptr( ( QWebFrame* ) hbqt_par_QWebPage( 1 )->mainFrame(  ) );
+   hb_retptr( ( QWebFrame* ) hbqt_par_QWebPage( 1 )->mainFrame() );
 }
 
 /*
@@ -184,7 +182,15 @@ HB_FUNC( QT_QWEBPAGE_MAINFRAME )
  */
 HB_FUNC( QT_QWEBPAGE_NETWORKACCESSMANAGER )
 {
-   hb_retptr( ( QNetworkAccessManager* ) hbqt_par_QWebPage( 1 )->networkAccessManager(  ) );
+   hb_retptr( ( QNetworkAccessManager* ) hbqt_par_QWebPage( 1 )->networkAccessManager() );
+}
+
+/*
+ * QPalette palette () const
+ */
+HB_FUNC( QT_QWEBPAGE_PALETTE )
+{
+   hb_retptr( new QPalette( hbqt_par_QWebPage( 1 )->palette() ) );
 }
 
 /*
@@ -192,7 +198,7 @@ HB_FUNC( QT_QWEBPAGE_NETWORKACCESSMANAGER )
  */
 HB_FUNC( QT_QWEBPAGE_PLUGINFACTORY )
 {
-   hb_retptr( ( QWebPluginFactory* ) hbqt_par_QWebPage( 1 )->pluginFactory(  ) );
+   hb_retptr( ( QWebPluginFactory* ) hbqt_par_QWebPage( 1 )->pluginFactory() );
 }
 
 /*
@@ -200,7 +206,7 @@ HB_FUNC( QT_QWEBPAGE_PLUGINFACTORY )
  */
 HB_FUNC( QT_QWEBPAGE_SELECTEDTEXT )
 {
-   hb_retc( hbqt_par_QWebPage( 1 )->selectedText( ).toLatin1().data() );
+   hb_retc( hbqt_par_QWebPage( 1 )->selectedText().toLatin1().data() );
 }
 
 /*
@@ -236,6 +242,14 @@ HB_FUNC( QT_QWEBPAGE_SETNETWORKACCESSMANAGER )
 }
 
 /*
+ * void setPalette ( const QPalette & palette )
+ */
+HB_FUNC( QT_QWEBPAGE_SETPALETTE )
+{
+   hbqt_par_QWebPage( 1 )->setPalette( *hbqt_par_QPalette( 2 ) );
+}
+
+/*
  * void setPluginFactory ( QWebPluginFactory * factory )
  */
 HB_FUNC( QT_QWEBPAGE_SETPLUGINFACTORY )
@@ -256,7 +270,7 @@ HB_FUNC( QT_QWEBPAGE_SETVIEW )
  */
 HB_FUNC( QT_QWEBPAGE_SETVIEWPORTSIZE )
 {
-   hbqt_par_QWebPage( 1 )->setViewportSize( hbqt_const_QSize( 2 ) );
+   hbqt_par_QWebPage( 1 )->setViewportSize( *hbqt_par_QSize( 2 ) );
 }
 
 /*
@@ -264,7 +278,7 @@ HB_FUNC( QT_QWEBPAGE_SETVIEWPORTSIZE )
  */
 HB_FUNC( QT_QWEBPAGE_SETTINGS )
 {
-   hb_retptr( ( QWebSettings* ) hbqt_par_QWebPage( 1 )->settings(  ) );
+   hb_retptr( ( QWebSettings* ) hbqt_par_QWebPage( 1 )->settings() );
 }
 
 /*
@@ -284,6 +298,14 @@ HB_FUNC( QT_QWEBPAGE_SWALLOWCONTEXTMENUEVENT )
 }
 
 /*
+ * quint64 totalBytes () const
+ */
+HB_FUNC( QT_QWEBPAGE_TOTALBYTES )
+{
+   hb_retni( hbqt_par_QWebPage( 1 )->totalBytes() );
+}
+
+/*
  * virtual void triggerAction ( WebAction action, bool checked = false )
  */
 HB_FUNC( QT_QWEBPAGE_TRIGGERACTION )
@@ -296,7 +318,7 @@ HB_FUNC( QT_QWEBPAGE_TRIGGERACTION )
  */
 HB_FUNC( QT_QWEBPAGE_UNDOSTACK )
 {
-   hb_retptr( ( QUndoStack* ) hbqt_par_QWebPage( 1 )->undoStack(  ) );
+   hb_retptr( ( QUndoStack* ) hbqt_par_QWebPage( 1 )->undoStack() );
 }
 
 /*
@@ -304,7 +326,7 @@ HB_FUNC( QT_QWEBPAGE_UNDOSTACK )
  */
 HB_FUNC( QT_QWEBPAGE_UPDATEPOSITIONDEPENDENTACTIONS )
 {
-   hbqt_par_QWebPage( 1 )->updatePositionDependentActions( hbqt_const_QPoint( 2 ) );
+   hbqt_par_QWebPage( 1 )->updatePositionDependentActions( *hbqt_par_QPoint( 2 ) );
 }
 
 /*
@@ -312,7 +334,7 @@ HB_FUNC( QT_QWEBPAGE_UPDATEPOSITIONDEPENDENTACTIONS )
  */
 HB_FUNC( QT_QWEBPAGE_VIEW )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QWebPage( 1 )->view(  ) );
+   hb_retptr( ( QWidget* ) hbqt_par_QWebPage( 1 )->view() );
 }
 
 /*
@@ -320,7 +342,7 @@ HB_FUNC( QT_QWEBPAGE_VIEW )
  */
 HB_FUNC( QT_QWEBPAGE_VIEWPORTSIZE )
 {
-   hbqt_ret_QSize( hbqt_par_QWebPage( 1 )->viewportSize(  ) );
+   hb_retptr( new QSize( hbqt_par_QWebPage( 1 )->viewportSize() ) );
 }
 
 

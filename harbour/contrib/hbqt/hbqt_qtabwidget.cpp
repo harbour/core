@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -58,16 +58,6 @@
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
-
-
-/*
- *  Constructed[ 38/39 [ 97.44% ] ]
- *  
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *  
- *  QIcon tabIcon ( int index ) const
- */ 
 
 
 #include <QtGui/QTabWidget>
@@ -103,7 +93,7 @@ HB_FUNC( QT_QTABWIDGET_ADDTAB_1 )
  */
 HB_FUNC( QT_QTABWIDGET_CLEAR )
 {
-   hbqt_par_QTabWidget( 1 )->clear(  );
+   hbqt_par_QTabWidget( 1 )->clear();
 }
 
 /*
@@ -111,7 +101,7 @@ HB_FUNC( QT_QTABWIDGET_CLEAR )
  */
 HB_FUNC( QT_QTABWIDGET_CORNERWIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QTabWidget( 1 )->cornerWidget( ( Qt::Corner ) hb_parni( 2 ) ) );
+   hb_retptr( ( QWidget* ) hbqt_par_QTabWidget( 1 )->cornerWidget( ( HB_ISNIL( 2 ) ? ( Qt::Corner ) Qt::TopRightCorner : ( Qt::Corner ) hb_parni( 2 ) ) ) );
 }
 
 /*
@@ -119,7 +109,7 @@ HB_FUNC( QT_QTABWIDGET_CORNERWIDGET )
  */
 HB_FUNC( QT_QTABWIDGET_COUNT )
 {
-   hb_retni( hbqt_par_QTabWidget( 1 )->count(  ) );
+   hb_retni( hbqt_par_QTabWidget( 1 )->count() );
 }
 
 /*
@@ -127,7 +117,7 @@ HB_FUNC( QT_QTABWIDGET_COUNT )
  */
 HB_FUNC( QT_QTABWIDGET_CURRENTINDEX )
 {
-   hb_retni( hbqt_par_QTabWidget( 1 )->currentIndex(  ) );
+   hb_retni( hbqt_par_QTabWidget( 1 )->currentIndex() );
 }
 
 /*
@@ -135,7 +125,7 @@ HB_FUNC( QT_QTABWIDGET_CURRENTINDEX )
  */
 HB_FUNC( QT_QTABWIDGET_CURRENTWIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QTabWidget( 1 )->currentWidget(  ) );
+   hb_retptr( ( QWidget* ) hbqt_par_QTabWidget( 1 )->currentWidget() );
 }
 
 /*
@@ -143,7 +133,7 @@ HB_FUNC( QT_QTABWIDGET_CURRENTWIDGET )
  */
 HB_FUNC( QT_QTABWIDGET_DOCUMENTMODE )
 {
-   hb_retl( hbqt_par_QTabWidget( 1 )->documentMode(  ) );
+   hb_retl( hbqt_par_QTabWidget( 1 )->documentMode() );
 }
 
 /*
@@ -151,7 +141,7 @@ HB_FUNC( QT_QTABWIDGET_DOCUMENTMODE )
  */
 HB_FUNC( QT_QTABWIDGET_ELIDEMODE )
 {
-   hb_retni( hbqt_par_QTabWidget( 1 )->elideMode(  ) );
+   hb_retni( ( Qt::TextElideMode ) hbqt_par_QTabWidget( 1 )->elideMode() );
 }
 
 /*
@@ -159,7 +149,7 @@ HB_FUNC( QT_QTABWIDGET_ELIDEMODE )
  */
 HB_FUNC( QT_QTABWIDGET_ICONSIZE )
 {
-   hbqt_ret_QSize( hbqt_par_QTabWidget( 1 )->iconSize(  ) );
+   hb_retptr( new QSize( hbqt_par_QTabWidget( 1 )->iconSize() ) );
 }
 
 /*
@@ -191,7 +181,7 @@ HB_FUNC( QT_QTABWIDGET_INSERTTAB_1 )
  */
 HB_FUNC( QT_QTABWIDGET_ISMOVABLE )
 {
-   hb_retl( hbqt_par_QTabWidget( 1 )->isMovable(  ) );
+   hb_retl( hbqt_par_QTabWidget( 1 )->isMovable() );
 }
 
 /*
@@ -215,7 +205,7 @@ HB_FUNC( QT_QTABWIDGET_REMOVETAB )
  */
 HB_FUNC( QT_QTABWIDGET_SETCORNERWIDGET )
 {
-   hbqt_par_QTabWidget( 1 )->setCornerWidget( hbqt_par_QWidget( 2 ), ( Qt::Corner ) hb_parni( 3 ) );
+   hbqt_par_QTabWidget( 1 )->setCornerWidget( hbqt_par_QWidget( 2 ), ( HB_ISNIL( 3 ) ? ( Qt::Corner ) Qt::TopRightCorner : ( Qt::Corner ) hb_parni( 3 ) ) );
 }
 
 /*
@@ -239,7 +229,7 @@ HB_FUNC( QT_QTABWIDGET_SETELIDEMODE )
  */
 HB_FUNC( QT_QTABWIDGET_SETICONSIZE )
 {
-   hbqt_par_QTabWidget( 1 )->setIconSize( hbqt_const_QSize( 2 ) );
+   hbqt_par_QTabWidget( 1 )->setIconSize( *hbqt_par_QSize( 2 ) );
 }
 
 /*
@@ -323,11 +313,19 @@ HB_FUNC( QT_QTABWIDGET_SETUSESSCROLLBUTTONS )
 }
 
 /*
+ * QIcon tabIcon ( int index ) const
+ */
+HB_FUNC( QT_QTABWIDGET_TABICON )
+{
+   hb_retptr( new QIcon( hbqt_par_QTabWidget( 1 )->tabIcon( hb_parni( 2 ) ) ) );
+}
+
+/*
  * TabPosition tabPosition () const
  */
 HB_FUNC( QT_QTABWIDGET_TABPOSITION )
 {
-   hb_retni( hbqt_par_QTabWidget( 1 )->tabPosition(  ) );
+   hb_retni( ( QTabWidget::TabPosition ) hbqt_par_QTabWidget( 1 )->tabPosition() );
 }
 
 /*
@@ -335,7 +333,7 @@ HB_FUNC( QT_QTABWIDGET_TABPOSITION )
  */
 HB_FUNC( QT_QTABWIDGET_TABSHAPE )
 {
-   hb_retni( hbqt_par_QTabWidget( 1 )->tabShape(  ) );
+   hb_retni( ( QTabWidget::TabShape ) hbqt_par_QTabWidget( 1 )->tabShape() );
 }
 
 /*
@@ -343,7 +341,7 @@ HB_FUNC( QT_QTABWIDGET_TABSHAPE )
  */
 HB_FUNC( QT_QTABWIDGET_TABTEXT )
 {
-   hb_retc( hbqt_par_QTabWidget( 1 )->tabText( hb_parni( 2 )).toLatin1().data() );
+   hb_retc( hbqt_par_QTabWidget( 1 )->tabText( hb_parni( 2 ) ).toLatin1().data() );
 }
 
 /*
@@ -351,7 +349,7 @@ HB_FUNC( QT_QTABWIDGET_TABTEXT )
  */
 HB_FUNC( QT_QTABWIDGET_TABTOOLTIP )
 {
-   hb_retc( hbqt_par_QTabWidget( 1 )->tabToolTip( hb_parni( 2 )).toLatin1().data() );
+   hb_retc( hbqt_par_QTabWidget( 1 )->tabToolTip( hb_parni( 2 ) ).toLatin1().data() );
 }
 
 /*
@@ -359,7 +357,7 @@ HB_FUNC( QT_QTABWIDGET_TABTOOLTIP )
  */
 HB_FUNC( QT_QTABWIDGET_TABWHATSTHIS )
 {
-   hb_retc( hbqt_par_QTabWidget( 1 )->tabWhatsThis( hb_parni( 2 )).toLatin1().data() );
+   hb_retc( hbqt_par_QTabWidget( 1 )->tabWhatsThis( hb_parni( 2 ) ).toLatin1().data() );
 }
 
 /*
@@ -367,7 +365,7 @@ HB_FUNC( QT_QTABWIDGET_TABWHATSTHIS )
  */
 HB_FUNC( QT_QTABWIDGET_TABSCLOSABLE )
 {
-   hb_retl( hbqt_par_QTabWidget( 1 )->tabsClosable(  ) );
+   hb_retl( hbqt_par_QTabWidget( 1 )->tabsClosable() );
 }
 
 /*
@@ -375,7 +373,7 @@ HB_FUNC( QT_QTABWIDGET_TABSCLOSABLE )
  */
 HB_FUNC( QT_QTABWIDGET_USESSCROLLBUTTONS )
 {
-   hb_retl( hbqt_par_QTabWidget( 1 )->usesScrollButtons(  ) );
+   hb_retl( hbqt_par_QTabWidget( 1 )->usesScrollButtons() );
 }
 
 /*
@@ -384,6 +382,22 @@ HB_FUNC( QT_QTABWIDGET_USESSCROLLBUTTONS )
 HB_FUNC( QT_QTABWIDGET_WIDGET )
 {
    hb_retptr( ( QWidget* ) hbqt_par_QTabWidget( 1 )->widget( hb_parni( 2 ) ) );
+}
+
+/*
+ * void setCurrentIndex ( int index )
+ */
+HB_FUNC( QT_QTABWIDGET_SETCURRENTINDEX )
+{
+   hbqt_par_QTabWidget( 1 )->setCurrentIndex( hb_parni( 2 ) );
+}
+
+/*
+ * void setCurrentWidget ( QWidget * widget )
+ */
+HB_FUNC( QT_QTABWIDGET_SETCURRENTWIDGET )
+{
+   hbqt_par_QTabWidget( 1 )->setCurrentWidget( hbqt_par_QWidget( 2 ) );
 }
 
 

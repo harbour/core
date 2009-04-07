@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QPageSetupDialog INHERIT QDialog
+CREATE CLASS QPageSetupDialog INHERIT QDialog
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -66,16 +67,18 @@ CLASS QPageSetupDialog INHERIT QDialog
    METHOD  open( pReceiver, pMember )          INLINE  Qt_QPageSetupDialog_open( ::pPtr, pReceiver, pMember )
    METHOD  options()                           INLINE  Qt_QPageSetupDialog_options( ::pPtr )
    METHOD  printer()                           INLINE  Qt_QPageSetupDialog_printer( ::pPtr )
-   METHOD  setOption( nPageSetupDialogOption, lOn )  INLINE  Qt_QPageSetupDialog_setOption( ::pPtr, nPageSetupDialogOption, lOn )
-   METHOD  setOptions( nPageSetupDialogOptions )  INLINE  Qt_QPageSetupDialog_setOptions( ::pPtr, nPageSetupDialogOptions )
+   METHOD  setOption( nOption, lOn )           INLINE  Qt_QPageSetupDialog_setOption( ::pPtr, nOption, lOn )
+   METHOD  setOptions( nOptions )              INLINE  Qt_QPageSetupDialog_setOptions( ::pPtr, nOptions )
    METHOD  setVisible( lVisible )              INLINE  Qt_QPageSetupDialog_setVisible( ::pPtr, lVisible )
-   METHOD  testOption( nPageSetupDialogOption )  INLINE  Qt_QPageSetupDialog_testOption( ::pPtr, nPageSetupDialogOption )
+   METHOD  testOption( nOption )               INLINE  Qt_QPageSetupDialog_testOption( ::pPtr, nOption )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QPageSetupDialog
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QPageSetupDialog( pParent )
 

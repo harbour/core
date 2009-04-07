@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -58,17 +58,6 @@
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
-
-
-/*
- *  Constructed[ 38/40 [ 95.00% ] ]
- *  
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *  
- *  QStringList comboBoxItems () const
- *  void setComboBoxItems ( const QStringList & items )
- */ 
 
 
 #include <QtGui/QInputDialog>
@@ -88,7 +77,15 @@ HB_FUNC( QT_QINPUTDIALOG )
  */
 HB_FUNC( QT_QINPUTDIALOG_CANCELBUTTONTEXT )
 {
-   hb_retc( hbqt_par_QInputDialog( 1 )->cancelButtonText( ).toLatin1().data() );
+   hb_retc( hbqt_par_QInputDialog( 1 )->cancelButtonText().toLatin1().data() );
+}
+
+/*
+ * QStringList comboBoxItems () const
+ */
+HB_FUNC( QT_QINPUTDIALOG_COMBOBOXITEMS )
+{
+   hb_retptr( new QStringList( hbqt_par_QInputDialog( 1 )->comboBoxItems() ) );
 }
 
 /*
@@ -104,7 +101,7 @@ HB_FUNC( QT_QINPUTDIALOG_DONE )
  */
 HB_FUNC( QT_QINPUTDIALOG_DOUBLEDECIMALS )
 {
-   hb_retni( hbqt_par_QInputDialog( 1 )->doubleDecimals(  ) );
+   hb_retni( hbqt_par_QInputDialog( 1 )->doubleDecimals() );
 }
 
 /*
@@ -112,7 +109,7 @@ HB_FUNC( QT_QINPUTDIALOG_DOUBLEDECIMALS )
  */
 HB_FUNC( QT_QINPUTDIALOG_DOUBLEMAXIMUM )
 {
-   hb_retnd( hbqt_par_QInputDialog( 1 )->doubleMaximum(  ) );
+   hb_retnd( hbqt_par_QInputDialog( 1 )->doubleMaximum() );
 }
 
 /*
@@ -120,7 +117,7 @@ HB_FUNC( QT_QINPUTDIALOG_DOUBLEMAXIMUM )
  */
 HB_FUNC( QT_QINPUTDIALOG_DOUBLEMINIMUM )
 {
-   hb_retnd( hbqt_par_QInputDialog( 1 )->doubleMinimum(  ) );
+   hb_retnd( hbqt_par_QInputDialog( 1 )->doubleMinimum() );
 }
 
 /*
@@ -128,7 +125,7 @@ HB_FUNC( QT_QINPUTDIALOG_DOUBLEMINIMUM )
  */
 HB_FUNC( QT_QINPUTDIALOG_DOUBLEVALUE )
 {
-   hb_retnd( hbqt_par_QInputDialog( 1 )->doubleValue(  ) );
+   hb_retnd( hbqt_par_QInputDialog( 1 )->doubleValue() );
 }
 
 /*
@@ -136,7 +133,7 @@ HB_FUNC( QT_QINPUTDIALOG_DOUBLEVALUE )
  */
 HB_FUNC( QT_QINPUTDIALOG_INPUTMODE )
 {
-   hb_retni( hbqt_par_QInputDialog( 1 )->inputMode(  ) );
+   hb_retni( ( QInputDialog::InputMode ) hbqt_par_QInputDialog( 1 )->inputMode() );
 }
 
 /*
@@ -144,7 +141,7 @@ HB_FUNC( QT_QINPUTDIALOG_INPUTMODE )
  */
 HB_FUNC( QT_QINPUTDIALOG_INTMAXIMUM )
 {
-   hb_retni( hbqt_par_QInputDialog( 1 )->intMaximum(  ) );
+   hb_retni( hbqt_par_QInputDialog( 1 )->intMaximum() );
 }
 
 /*
@@ -152,7 +149,7 @@ HB_FUNC( QT_QINPUTDIALOG_INTMAXIMUM )
  */
 HB_FUNC( QT_QINPUTDIALOG_INTMINIMUM )
 {
-   hb_retni( hbqt_par_QInputDialog( 1 )->intMinimum(  ) );
+   hb_retni( hbqt_par_QInputDialog( 1 )->intMinimum() );
 }
 
 /*
@@ -160,7 +157,7 @@ HB_FUNC( QT_QINPUTDIALOG_INTMINIMUM )
  */
 HB_FUNC( QT_QINPUTDIALOG_INTSTEP )
 {
-   hb_retni( hbqt_par_QInputDialog( 1 )->intStep(  ) );
+   hb_retni( hbqt_par_QInputDialog( 1 )->intStep() );
 }
 
 /*
@@ -168,7 +165,7 @@ HB_FUNC( QT_QINPUTDIALOG_INTSTEP )
  */
 HB_FUNC( QT_QINPUTDIALOG_INTVALUE )
 {
-   hb_retni( hbqt_par_QInputDialog( 1 )->intValue(  ) );
+   hb_retni( hbqt_par_QInputDialog( 1 )->intValue() );
 }
 
 /*
@@ -176,7 +173,7 @@ HB_FUNC( QT_QINPUTDIALOG_INTVALUE )
  */
 HB_FUNC( QT_QINPUTDIALOG_ISCOMBOBOXEDITABLE )
 {
-   hb_retl( hbqt_par_QInputDialog( 1 )->isComboBoxEditable(  ) );
+   hb_retl( hbqt_par_QInputDialog( 1 )->isComboBoxEditable() );
 }
 
 /*
@@ -184,7 +181,7 @@ HB_FUNC( QT_QINPUTDIALOG_ISCOMBOBOXEDITABLE )
  */
 HB_FUNC( QT_QINPUTDIALOG_LABELTEXT )
 {
-   hb_retc( hbqt_par_QInputDialog( 1 )->labelText( ).toLatin1().data() );
+   hb_retc( hbqt_par_QInputDialog( 1 )->labelText().toLatin1().data() );
 }
 
 /*
@@ -192,7 +189,7 @@ HB_FUNC( QT_QINPUTDIALOG_LABELTEXT )
  */
 HB_FUNC( QT_QINPUTDIALOG_OKBUTTONTEXT )
 {
-   hb_retc( hbqt_par_QInputDialog( 1 )->okButtonText( ).toLatin1().data() );
+   hb_retc( hbqt_par_QInputDialog( 1 )->okButtonText().toLatin1().data() );
 }
 
 /*
@@ -208,7 +205,7 @@ HB_FUNC( QT_QINPUTDIALOG_OPEN )
  */
 HB_FUNC( QT_QINPUTDIALOG_OPTIONS )
 {
-   hb_retni( hbqt_par_QInputDialog( 1 )->options(  ) );
+   hb_retni( ( QInputDialog::InputDialogOptions ) hbqt_par_QInputDialog( 1 )->options() );
 }
 
 /*
@@ -225,6 +222,14 @@ HB_FUNC( QT_QINPUTDIALOG_SETCANCELBUTTONTEXT )
 HB_FUNC( QT_QINPUTDIALOG_SETCOMBOBOXEDITABLE )
 {
    hbqt_par_QInputDialog( 1 )->setComboBoxEditable( hb_parl( 2 ) );
+}
+
+/*
+ * void setComboBoxItems ( const QStringList & items )
+ */
+HB_FUNC( QT_QINPUTDIALOG_SETCOMBOBOXITEMS )
+{
+   hbqt_par_QInputDialog( 1 )->setComboBoxItems( *hbqt_par_QStringList( 2 ) );
 }
 
 /*
@@ -376,7 +381,7 @@ HB_FUNC( QT_QINPUTDIALOG_TESTOPTION )
  */
 HB_FUNC( QT_QINPUTDIALOG_TEXTECHOMODE )
 {
-   hb_retni( hbqt_par_QInputDialog( 1 )->textEchoMode(  ) );
+   hb_retni( ( QLineEdit::EchoMode ) hbqt_par_QInputDialog( 1 )->textEchoMode() );
 }
 
 /*
@@ -384,7 +389,7 @@ HB_FUNC( QT_QINPUTDIALOG_TEXTECHOMODE )
  */
 HB_FUNC( QT_QINPUTDIALOG_TEXTVALUE )
 {
-   hb_retc( hbqt_par_QInputDialog( 1 )->textValue( ).toLatin1().data() );
+   hb_retc( hbqt_par_QInputDialog( 1 )->textValue().toLatin1().data() );
 }
 
 

@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -59,19 +59,15 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
-
 /*
- *  Constructed[ 30/35 [ 85.71% ] ]
- *  
+ *  Constructed[ 33/35 [ 94.29% ] ]
+ *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
- *  
- *  QAction * addAction ( const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )
- *  QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )
- *  QIcon icon () const
+ *
  *  OSMenuRef macMenu ( OSMenuRef merge = 0 )
  *  HMENU wceMenu ( bool create = false )
- */ 
+ */
 
 
 #include <QtGui/QMenu>
@@ -99,7 +95,7 @@ HB_FUNC( QT_QMENU )
  */
 HB_FUNC( QT_QMENU_ACTIONAT )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->actionAt( hbqt_const_QPoint( 2 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->actionAt( *hbqt_par_QPoint( 2 ) ) );
 }
 
 /*
@@ -107,7 +103,7 @@ HB_FUNC( QT_QMENU_ACTIONAT )
  */
 HB_FUNC( QT_QMENU_ACTIONGEOMETRY )
 {
-   hbqt_ret_QRect( hbqt_par_QMenu( 1 )->actionGeometry( hbqt_par_QAction( 2 ) ) );
+   hb_retptr( new QRect( hbqt_par_QMenu( 1 )->actionGeometry( hbqt_par_QAction( 2 ) ) ) );
 }
 
 /*
@@ -115,7 +111,7 @@ HB_FUNC( QT_QMENU_ACTIONGEOMETRY )
  */
 HB_FUNC( QT_QMENU_ACTIVEACTION )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->activeAction(  ) );
+   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->activeAction() );
 }
 
 /*
@@ -135,9 +131,25 @@ HB_FUNC( QT_QMENU_ADDACTION_1 )
 }
 
 /*
- * void addAction ( QAction * action )
+ * QAction * addAction ( const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )
  */
 HB_FUNC( QT_QMENU_ADDACTION_2 )
+{
+   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->addAction( hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ), *hbqt_par_QKeySequence( 5 ) ) );
+}
+
+/*
+ * QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )
+ */
+HB_FUNC( QT_QMENU_ADDACTION_3 )
+{
+   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->addAction( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 3 ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ), *hbqt_par_QKeySequence( 6 ) ) );
+}
+
+/*
+ * void addAction ( QAction * action )
+ */
+HB_FUNC( QT_QMENU_ADDACTION_4 )
 {
    hbqt_par_QMenu( 1 )->addAction( hbqt_par_QAction( 2 ) );
 }
@@ -171,7 +183,7 @@ HB_FUNC( QT_QMENU_ADDMENU_2 )
  */
 HB_FUNC( QT_QMENU_ADDSEPARATOR )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->addSeparator(  ) );
+   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->addSeparator() );
 }
 
 /*
@@ -179,7 +191,7 @@ HB_FUNC( QT_QMENU_ADDSEPARATOR )
  */
 HB_FUNC( QT_QMENU_CLEAR )
 {
-   hbqt_par_QMenu( 1 )->clear(  );
+   hbqt_par_QMenu( 1 )->clear();
 }
 
 /*
@@ -187,7 +199,7 @@ HB_FUNC( QT_QMENU_CLEAR )
  */
 HB_FUNC( QT_QMENU_DEFAULTACTION )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->defaultAction(  ) );
+   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->defaultAction() );
 }
 
 /*
@@ -195,7 +207,7 @@ HB_FUNC( QT_QMENU_DEFAULTACTION )
  */
 HB_FUNC( QT_QMENU_EXEC )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->exec(  ) );
+   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->exec() );
 }
 
 /*
@@ -203,7 +215,7 @@ HB_FUNC( QT_QMENU_EXEC )
  */
 HB_FUNC( QT_QMENU_EXEC_1 )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->exec( hbqt_const_QPoint( 2 ), hbqt_par_QAction( 3 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->exec( *hbqt_par_QPoint( 2 ), hbqt_par_QAction( 3 ) ) );
 }
 
 /*
@@ -211,7 +223,15 @@ HB_FUNC( QT_QMENU_EXEC_1 )
  */
 HB_FUNC( QT_QMENU_HIDETEAROFFMENU )
 {
-   hbqt_par_QMenu( 1 )->hideTearOffMenu(  );
+   hbqt_par_QMenu( 1 )->hideTearOffMenu();
+}
+
+/*
+ * QIcon icon () const
+ */
+HB_FUNC( QT_QMENU_ICON )
+{
+   hb_retptr( new QIcon( hbqt_par_QMenu( 1 )->icon() ) );
 }
 
 /*
@@ -235,7 +255,7 @@ HB_FUNC( QT_QMENU_INSERTSEPARATOR )
  */
 HB_FUNC( QT_QMENU_ISEMPTY )
 {
-   hb_retl( hbqt_par_QMenu( 1 )->isEmpty(  ) );
+   hb_retl( hbqt_par_QMenu( 1 )->isEmpty() );
 }
 
 /*
@@ -243,7 +263,7 @@ HB_FUNC( QT_QMENU_ISEMPTY )
  */
 HB_FUNC( QT_QMENU_ISTEAROFFENABLED )
 {
-   hb_retl( hbqt_par_QMenu( 1 )->isTearOffEnabled(  ) );
+   hb_retl( hbqt_par_QMenu( 1 )->isTearOffEnabled() );
 }
 
 /*
@@ -251,7 +271,7 @@ HB_FUNC( QT_QMENU_ISTEAROFFENABLED )
  */
 HB_FUNC( QT_QMENU_ISTEAROFFMENUVISIBLE )
 {
-   hb_retl( hbqt_par_QMenu( 1 )->isTearOffMenuVisible(  ) );
+   hb_retl( hbqt_par_QMenu( 1 )->isTearOffMenuVisible() );
 }
 
 /*
@@ -259,7 +279,7 @@ HB_FUNC( QT_QMENU_ISTEAROFFMENUVISIBLE )
  */
 HB_FUNC( QT_QMENU_MENUACTION )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->menuAction(  ) );
+   hb_retptr( ( QAction* ) hbqt_par_QMenu( 1 )->menuAction() );
 }
 
 /*
@@ -267,7 +287,7 @@ HB_FUNC( QT_QMENU_MENUACTION )
  */
 HB_FUNC( QT_QMENU_POPUP )
 {
-   hbqt_par_QMenu( 1 )->popup( hbqt_const_QPoint( 2 ), hbqt_par_QAction( 3 ) );
+   hbqt_par_QMenu( 1 )->popup( *hbqt_par_QPoint( 2 ), hbqt_par_QAction( 3 ) );
 }
 
 /*
@@ -275,7 +295,7 @@ HB_FUNC( QT_QMENU_POPUP )
  */
 HB_FUNC( QT_QMENU_SEPARATORSCOLLAPSIBLE )
 {
-   hb_retl( hbqt_par_QMenu( 1 )->separatorsCollapsible(  ) );
+   hb_retl( hbqt_par_QMenu( 1 )->separatorsCollapsible() );
 }
 
 /*
@@ -331,7 +351,7 @@ HB_FUNC( QT_QMENU_SETTITLE )
  */
 HB_FUNC( QT_QMENU_TITLE )
 {
-   hb_retc( hbqt_par_QMenu( 1 )->title( ).toLatin1().data() );
+   hb_retc( hbqt_par_QMenu( 1 )->title().toLatin1().data() );
 }
 
 

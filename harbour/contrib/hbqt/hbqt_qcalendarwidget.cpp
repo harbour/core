@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -59,30 +59,18 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
-
 /*
- *  Constructed[ 16/28 [ 57.14% ] ]
- *  
+ *  Constructed[ 38/39 [ 97.44% ] ]
+ *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
- *  
+ *
  *  QMap<QDate, QTextCharFormat> dateTextFormat () const
- *  QTextCharFormat dateTextFormat ( const QDate & date ) const
- *  QTextCharFormat headerTextFormat () const
- *  QDate maximumDate () const
- *  QDate minimumDate () const
- *  QDate selectedDate () const
- *  void setDateTextFormat ( const QDate & date, const QTextCharFormat & format )
- *  void setHeaderTextFormat ( const QTextCharFormat & format )
- *  void setMaximumDate ( const QDate & date )
- *  void setMinimumDate ( const QDate & date )
- *  void setWeekdayTextFormat ( Qt::DayOfWeek dayOfWeek, const QTextCharFormat & format )
- *  QTextCharFormat weekdayTextFormat ( Qt::DayOfWeek dayOfWeek ) const
- */ 
+ */
 
 
 #include <QtGui/QCalendarWidget>
-
+#include <QtGui/QTextCharFormat>
 
 /*
  * QCalendarWidget ( QWidget * parent = 0 )
@@ -98,7 +86,15 @@ HB_FUNC( QT_QCALENDARWIDGET )
  */
 HB_FUNC( QT_QCALENDARWIDGET_DATEEDITACCEPTDELAY )
 {
-   hb_retni( hbqt_par_QCalendarWidget( 1 )->dateEditAcceptDelay(  ) );
+   hb_retni( hbqt_par_QCalendarWidget( 1 )->dateEditAcceptDelay() );
+}
+
+/*
+ * QTextCharFormat dateTextFormat ( const QDate & date ) const
+ */
+HB_FUNC( QT_QCALENDARWIDGET_DATETEXTFORMAT )
+{
+   hb_retptr( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->dateTextFormat( *hbqt_par_QDate( 2 ) ) ) );
 }
 
 /*
@@ -106,7 +102,15 @@ HB_FUNC( QT_QCALENDARWIDGET_DATEEDITACCEPTDELAY )
  */
 HB_FUNC( QT_QCALENDARWIDGET_FIRSTDAYOFWEEK )
 {
-   hb_retni( hbqt_par_QCalendarWidget( 1 )->firstDayOfWeek(  ) );
+   hb_retni( ( Qt::DayOfWeek ) hbqt_par_QCalendarWidget( 1 )->firstDayOfWeek() );
+}
+
+/*
+ * QTextCharFormat headerTextFormat () const
+ */
+HB_FUNC( QT_QCALENDARWIDGET_HEADERTEXTFORMAT )
+{
+   hb_retptr( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->headerTextFormat() ) );
 }
 
 /*
@@ -114,7 +118,7 @@ HB_FUNC( QT_QCALENDARWIDGET_FIRSTDAYOFWEEK )
  */
 HB_FUNC( QT_QCALENDARWIDGET_HORIZONTALHEADERFORMAT )
 {
-   hb_retni( hbqt_par_QCalendarWidget( 1 )->horizontalHeaderFormat(  ) );
+   hb_retni( ( QCalendarWidget::HorizontalHeaderFormat ) hbqt_par_QCalendarWidget( 1 )->horizontalHeaderFormat() );
 }
 
 /*
@@ -122,7 +126,7 @@ HB_FUNC( QT_QCALENDARWIDGET_HORIZONTALHEADERFORMAT )
  */
 HB_FUNC( QT_QCALENDARWIDGET_ISDATEEDITENABLED )
 {
-   hb_retl( hbqt_par_QCalendarWidget( 1 )->isDateEditEnabled(  ) );
+   hb_retl( hbqt_par_QCalendarWidget( 1 )->isDateEditEnabled() );
 }
 
 /*
@@ -130,7 +134,7 @@ HB_FUNC( QT_QCALENDARWIDGET_ISDATEEDITENABLED )
  */
 HB_FUNC( QT_QCALENDARWIDGET_ISGRIDVISIBLE )
 {
-   hb_retl( hbqt_par_QCalendarWidget( 1 )->isGridVisible(  ) );
+   hb_retl( hbqt_par_QCalendarWidget( 1 )->isGridVisible() );
 }
 
 /*
@@ -138,7 +142,23 @@ HB_FUNC( QT_QCALENDARWIDGET_ISGRIDVISIBLE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_ISNAVIGATIONBARVISIBLE )
 {
-   hb_retl( hbqt_par_QCalendarWidget( 1 )->isNavigationBarVisible(  ) );
+   hb_retl( hbqt_par_QCalendarWidget( 1 )->isNavigationBarVisible() );
+}
+
+/*
+ * QDate maximumDate () const
+ */
+HB_FUNC( QT_QCALENDARWIDGET_MAXIMUMDATE )
+{
+   hb_retptr( new QDate( hbqt_par_QCalendarWidget( 1 )->maximumDate() ) );
+}
+
+/*
+ * QDate minimumDate () const
+ */
+HB_FUNC( QT_QCALENDARWIDGET_MINIMUMDATE )
+{
+   hb_retptr( new QDate( hbqt_par_QCalendarWidget( 1 )->minimumDate() ) );
 }
 
 /*
@@ -146,7 +166,15 @@ HB_FUNC( QT_QCALENDARWIDGET_ISNAVIGATIONBARVISIBLE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_MONTHSHOWN )
 {
-   hb_retni( hbqt_par_QCalendarWidget( 1 )->monthShown(  ) );
+   hb_retni( hbqt_par_QCalendarWidget( 1 )->monthShown() );
+}
+
+/*
+ * QDate selectedDate () const
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SELECTEDDATE )
+{
+   hb_retptr( new QDate( hbqt_par_QCalendarWidget( 1 )->selectedDate() ) );
 }
 
 /*
@@ -154,7 +182,7 @@ HB_FUNC( QT_QCALENDARWIDGET_MONTHSHOWN )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SELECTIONMODE )
 {
-   hb_retni( hbqt_par_QCalendarWidget( 1 )->selectionMode(  ) );
+   hb_retni( ( QCalendarWidget::SelectionMode ) hbqt_par_QCalendarWidget( 1 )->selectionMode() );
 }
 
 /*
@@ -174,6 +202,14 @@ HB_FUNC( QT_QCALENDARWIDGET_SETDATEEDITENABLED )
 }
 
 /*
+ * void setDateTextFormat ( const QDate & date, const QTextCharFormat & format )
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SETDATETEXTFORMAT )
+{
+   hbqt_par_QCalendarWidget( 1 )->setDateTextFormat( *hbqt_par_QDate( 2 ), *hbqt_par_QTextCharFormat( 3 ) );
+}
+
+/*
  * void setFirstDayOfWeek ( Qt::DayOfWeek dayOfWeek )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETFIRSTDAYOFWEEK )
@@ -182,11 +218,35 @@ HB_FUNC( QT_QCALENDARWIDGET_SETFIRSTDAYOFWEEK )
 }
 
 /*
+ * void setHeaderTextFormat ( const QTextCharFormat & format )
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SETHEADERTEXTFORMAT )
+{
+   hbqt_par_QCalendarWidget( 1 )->setHeaderTextFormat( *hbqt_par_QTextCharFormat( 2 ) );
+}
+
+/*
  * void setHorizontalHeaderFormat ( HorizontalHeaderFormat format )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETHORIZONTALHEADERFORMAT )
 {
    hbqt_par_QCalendarWidget( 1 )->setHorizontalHeaderFormat( ( QCalendarWidget::HorizontalHeaderFormat ) hb_parni( 2 ) );
+}
+
+/*
+ * void setMaximumDate ( const QDate & date )
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SETMAXIMUMDATE )
+{
+   hbqt_par_QCalendarWidget( 1 )->setMaximumDate( *hbqt_par_QDate( 2 ) );
+}
+
+/*
+ * void setMinimumDate ( const QDate & date )
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SETMINIMUMDATE )
+{
+   hbqt_par_QCalendarWidget( 1 )->setMinimumDate( *hbqt_par_QDate( 2 ) );
 }
 
 /*
@@ -206,11 +266,27 @@ HB_FUNC( QT_QCALENDARWIDGET_SETVERTICALHEADERFORMAT )
 }
 
 /*
+ * void setWeekdayTextFormat ( Qt::DayOfWeek dayOfWeek, const QTextCharFormat & format )
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SETWEEKDAYTEXTFORMAT )
+{
+   hbqt_par_QCalendarWidget( 1 )->setWeekdayTextFormat( ( Qt::DayOfWeek ) hb_parni( 2 ), *hbqt_par_QTextCharFormat( 3 ) );
+}
+
+/*
  * VerticalHeaderFormat verticalHeaderFormat () const
  */
 HB_FUNC( QT_QCALENDARWIDGET_VERTICALHEADERFORMAT )
 {
-   hb_retni( hbqt_par_QCalendarWidget( 1 )->verticalHeaderFormat(  ) );
+   hb_retni( ( QCalendarWidget::VerticalHeaderFormat ) hbqt_par_QCalendarWidget( 1 )->verticalHeaderFormat() );
+}
+
+/*
+ * QTextCharFormat weekdayTextFormat ( Qt::DayOfWeek dayOfWeek ) const
+ */
+HB_FUNC( QT_QCALENDARWIDGET_WEEKDAYTEXTFORMAT )
+{
+   hb_retptr( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->weekdayTextFormat( ( Qt::DayOfWeek ) hb_parni( 2 ) ) ) );
 }
 
 /*
@@ -218,7 +294,95 @@ HB_FUNC( QT_QCALENDARWIDGET_VERTICALHEADERFORMAT )
  */
 HB_FUNC( QT_QCALENDARWIDGET_YEARSHOWN )
 {
-   hb_retni( hbqt_par_QCalendarWidget( 1 )->yearShown(  ) );
+   hb_retni( hbqt_par_QCalendarWidget( 1 )->yearShown() );
+}
+
+/*
+ * void setCurrentPage ( int year, int month )
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SETCURRENTPAGE )
+{
+   hbqt_par_QCalendarWidget( 1 )->setCurrentPage( hb_parni( 2 ), hb_parni( 3 ) );
+}
+
+/*
+ * void setDateRange ( const QDate & min, const QDate & max )
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SETDATERANGE )
+{
+   hbqt_par_QCalendarWidget( 1 )->setDateRange( *hbqt_par_QDate( 2 ), *hbqt_par_QDate( 3 ) );
+}
+
+/*
+ * void setGridVisible ( bool show )
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SETGRIDVISIBLE )
+{
+   hbqt_par_QCalendarWidget( 1 )->setGridVisible( hb_parl( 2 ) );
+}
+
+/*
+ * void setNavigationBarVisible ( bool visible )
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SETNAVIGATIONBARVISIBLE )
+{
+   hbqt_par_QCalendarWidget( 1 )->setNavigationBarVisible( hb_parl( 2 ) );
+}
+
+/*
+ * void setSelectedDate ( const QDate & date )
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SETSELECTEDDATE )
+{
+   hbqt_par_QCalendarWidget( 1 )->setSelectedDate( *hbqt_par_QDate( 2 ) );
+}
+
+/*
+ * void showNextMonth ()
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SHOWNEXTMONTH )
+{
+   hbqt_par_QCalendarWidget( 1 )->showNextMonth();
+}
+
+/*
+ * void showNextYear ()
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SHOWNEXTYEAR )
+{
+   hbqt_par_QCalendarWidget( 1 )->showNextYear();
+}
+
+/*
+ * void showPreviousMonth ()
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SHOWPREVIOUSMONTH )
+{
+   hbqt_par_QCalendarWidget( 1 )->showPreviousMonth();
+}
+
+/*
+ * void showPreviousYear ()
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SHOWPREVIOUSYEAR )
+{
+   hbqt_par_QCalendarWidget( 1 )->showPreviousYear();
+}
+
+/*
+ * void showSelectedDate ()
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SHOWSELECTEDDATE )
+{
+   hbqt_par_QCalendarWidget( 1 )->showSelectedDate();
+}
+
+/*
+ * void showToday ()
+ */
+HB_FUNC( QT_QCALENDARWIDGET_SHOWTODAY )
+{
+   hbqt_par_QCalendarWidget( 1 )->showToday();
 }
 
 

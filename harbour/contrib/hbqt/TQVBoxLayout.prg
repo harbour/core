@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QVBoxLayout INHERIT QBoxLayout
+CREATE CLASS QVBoxLayout INHERIT QBoxLayout
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -68,6 +69,8 @@ CLASS QVBoxLayout INHERIT QBoxLayout
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QVBoxLayout
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QVBoxLayout( pParent )
 

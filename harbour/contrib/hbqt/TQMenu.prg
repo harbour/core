@@ -53,21 +53,24 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QMenu INHERIT QWidget
+CREATE CLASS QMenu INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
-   METHOD  actionAt( aPointPt )                INLINE  Qt_QMenu_actionAt( ::pPtr, aPointPt )
+   METHOD  actionAt( pPt )                     INLINE  Qt_QMenu_actionAt( ::pPtr, pPt )
    METHOD  actionGeometry( pAct )              INLINE  Qt_QMenu_actionGeometry( ::pPtr, pAct )
    METHOD  activeAction()                      INLINE  Qt_QMenu_activeAction( ::pPtr )
    METHOD  addAction( cText )                  INLINE  Qt_QMenu_addAction( ::pPtr, cText )
    METHOD  addAction_1( cIcon, cText )         INLINE  Qt_QMenu_addAction_1( ::pPtr, cIcon, cText )
-   METHOD  addAction_2( pAction )              INLINE  Qt_QMenu_addAction_2( ::pPtr, pAction )
+   METHOD  addAction_2( cText, pReceiver, pMember, pShortcut )  INLINE  Qt_QMenu_addAction_2( ::pPtr, cText, pReceiver, pMember, pShortcut )
+   METHOD  addAction_3( cIcon, cText, pReceiver, pMember, pShortcut )  INLINE  Qt_QMenu_addAction_3( ::pPtr, cIcon, cText, pReceiver, pMember, pShortcut )
+   METHOD  addAction_4( pAction )              INLINE  Qt_QMenu_addAction_4( ::pPtr, pAction )
    METHOD  addMenu( pMenu )                    INLINE  Qt_QMenu_addMenu( ::pPtr, pMenu )
    METHOD  addMenu_1( cTitle )                 INLINE  Qt_QMenu_addMenu_1( ::pPtr, cTitle )
    METHOD  addMenu_2( cIcon, cTitle )          INLINE  Qt_QMenu_addMenu_2( ::pPtr, cIcon, cTitle )
@@ -75,15 +78,16 @@ CLASS QMenu INHERIT QWidget
    METHOD  clear()                             INLINE  Qt_QMenu_clear( ::pPtr )
    METHOD  defaultAction()                     INLINE  Qt_QMenu_defaultAction( ::pPtr )
    METHOD  exec()                              INLINE  Qt_QMenu_exec( ::pPtr )
-   METHOD  exec_1( aPointP, pAction )          INLINE  Qt_QMenu_exec_1( ::pPtr, aPointP, pAction )
+   METHOD  exec_1( pP, pAction )               INLINE  Qt_QMenu_exec_1( ::pPtr, pP, pAction )
    METHOD  hideTearOffMenu()                   INLINE  Qt_QMenu_hideTearOffMenu( ::pPtr )
+   METHOD  icon()                              INLINE  Qt_QMenu_icon( ::pPtr )
    METHOD  insertMenu( pBefore, pMenu )        INLINE  Qt_QMenu_insertMenu( ::pPtr, pBefore, pMenu )
    METHOD  insertSeparator( pBefore )          INLINE  Qt_QMenu_insertSeparator( ::pPtr, pBefore )
    METHOD  isEmpty()                           INLINE  Qt_QMenu_isEmpty( ::pPtr )
    METHOD  isTearOffEnabled()                  INLINE  Qt_QMenu_isTearOffEnabled( ::pPtr )
    METHOD  isTearOffMenuVisible()              INLINE  Qt_QMenu_isTearOffMenuVisible( ::pPtr )
    METHOD  menuAction()                        INLINE  Qt_QMenu_menuAction( ::pPtr )
-   METHOD  popup( aPointP, pAtAction )         INLINE  Qt_QMenu_popup( ::pPtr, aPointP, pAtAction )
+   METHOD  popup( pP, pAtAction )              INLINE  Qt_QMenu_popup( ::pPtr, pP, pAtAction )
    METHOD  separatorsCollapsible()             INLINE  Qt_QMenu_separatorsCollapsible( ::pPtr )
    METHOD  setActiveAction( pAct )             INLINE  Qt_QMenu_setActiveAction( ::pPtr, pAct )
    METHOD  setDefaultAction( pAct )            INLINE  Qt_QMenu_setDefaultAction( ::pPtr, pAct )
@@ -98,6 +102,8 @@ CLASS QMenu INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QMenu
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QMenu( pParent )
 

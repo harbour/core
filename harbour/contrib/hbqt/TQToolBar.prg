@@ -53,16 +53,17 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QToolBar INHERIT QWidget
+CREATE CLASS QToolBar INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
-   METHOD  actionAt( aPointP )                 INLINE  Qt_QToolBar_actionAt( ::pPtr, aPointP )
+   METHOD  actionAt( pP )                      INLINE  Qt_QToolBar_actionAt( ::pPtr, pP )
    METHOD  actionAt_1( nX, nY )                INLINE  Qt_QToolBar_actionAt_1( ::pPtr, nX, nY )
    METHOD  addAction( pAction )                INLINE  Qt_QToolBar_addAction( ::pPtr, pAction )
    METHOD  addAction_1( cText )                INLINE  Qt_QToolBar_addAction_1( ::pPtr, cText )
@@ -88,12 +89,16 @@ CLASS QToolBar INHERIT QWidget
    METHOD  toggleViewAction()                  INLINE  Qt_QToolBar_toggleViewAction( ::pPtr )
    METHOD  toolButtonStyle()                   INLINE  Qt_QToolBar_toolButtonStyle( ::pPtr )
    METHOD  widgetForAction( pAction )          INLINE  Qt_QToolBar_widgetForAction( ::pPtr, pAction )
+   METHOD  setIconSize( pIconSize )            INLINE  Qt_QToolBar_setIconSize( ::pPtr, pIconSize )
+   METHOD  setToolButtonStyle( nToolButtonStyle )  INLINE  Qt_QToolBar_setToolButtonStyle( ::pPtr, nToolButtonStyle )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QToolBar
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QToolBar( pParent )
 

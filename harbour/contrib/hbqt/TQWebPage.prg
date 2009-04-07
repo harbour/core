@@ -53,42 +53,48 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QWebPage INHERIT QObject
+CREATE CLASS QWebPage INHERIT QObject
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
-   METHOD  action( nWebAction )                INLINE  Qt_QWebPage_action( ::pPtr, nWebAction )
+   METHOD  action( nAction )                   INLINE  Qt_QWebPage_action( ::pPtr, nAction )
+   METHOD  bytesReceived()                     INLINE  Qt_QWebPage_bytesReceived( ::pPtr )
    METHOD  createStandardContextMenu()         INLINE  Qt_QWebPage_createStandardContextMenu( ::pPtr )
    METHOD  currentFrame()                      INLINE  Qt_QWebPage_currentFrame( ::pPtr )
-   METHOD  findText( cSubString, nFindFlags )  INLINE  Qt_QWebPage_findText( ::pPtr, cSubString, nFindFlags )
+   METHOD  findText( cSubString, nOptions )    INLINE  Qt_QWebPage_findText( ::pPtr, cSubString, nOptions )
    METHOD  focusNextPrevChild( lNext )         INLINE  Qt_QWebPage_focusNextPrevChild( ::pPtr, lNext )
    METHOD  forwardUnsupportedContent()         INLINE  Qt_QWebPage_forwardUnsupportedContent( ::pPtr )
    METHOD  history()                           INLINE  Qt_QWebPage_history( ::pPtr )
+   METHOD  inputMethodQuery( nProperty )       INLINE  Qt_QWebPage_inputMethodQuery( ::pPtr, nProperty )
    METHOD  isContentEditable()                 INLINE  Qt_QWebPage_isContentEditable( ::pPtr )
    METHOD  isModified()                        INLINE  Qt_QWebPage_isModified( ::pPtr )
    METHOD  linkDelegationPolicy()              INLINE  Qt_QWebPage_linkDelegationPolicy( ::pPtr )
    METHOD  mainFrame()                         INLINE  Qt_QWebPage_mainFrame( ::pPtr )
    METHOD  networkAccessManager()              INLINE  Qt_QWebPage_networkAccessManager( ::pPtr )
+   METHOD  palette()                           INLINE  Qt_QWebPage_palette( ::pPtr )
    METHOD  pluginFactory()                     INLINE  Qt_QWebPage_pluginFactory( ::pPtr )
    METHOD  selectedText()                      INLINE  Qt_QWebPage_selectedText( ::pPtr )
    METHOD  setContentEditable( lEditable )     INLINE  Qt_QWebPage_setContentEditable( ::pPtr, lEditable )
    METHOD  setForwardUnsupportedContent( lForward )  INLINE  Qt_QWebPage_setForwardUnsupportedContent( ::pPtr, lForward )
-   METHOD  setLinkDelegationPolicy( nLinkDelegationPolicy )  INLINE  Qt_QWebPage_setLinkDelegationPolicy( ::pPtr, nLinkDelegationPolicy )
+   METHOD  setLinkDelegationPolicy( nPolicy )  INLINE  Qt_QWebPage_setLinkDelegationPolicy( ::pPtr, nPolicy )
    METHOD  setNetworkAccessManager( pManager )  INLINE  Qt_QWebPage_setNetworkAccessManager( ::pPtr, pManager )
+   METHOD  setPalette( pPalette )              INLINE  Qt_QWebPage_setPalette( ::pPtr, pPalette )
    METHOD  setPluginFactory( pFactory )        INLINE  Qt_QWebPage_setPluginFactory( ::pPtr, pFactory )
    METHOD  setView( pView )                    INLINE  Qt_QWebPage_setView( ::pPtr, pView )
-   METHOD  setViewportSize( aSizeSize )        INLINE  Qt_QWebPage_setViewportSize( ::pPtr, aSizeSize )
+   METHOD  setViewportSize( pSize )            INLINE  Qt_QWebPage_setViewportSize( ::pPtr, pSize )
    METHOD  settings()                          INLINE  Qt_QWebPage_settings( ::pPtr )
    METHOD  supportsExtension( nExtension )     INLINE  Qt_QWebPage_supportsExtension( ::pPtr, nExtension )
    METHOD  swallowContextMenuEvent( pEvent )   INLINE  Qt_QWebPage_swallowContextMenuEvent( ::pPtr, pEvent )
-   METHOD  triggerAction( nWebAction, lChecked )  INLINE  Qt_QWebPage_triggerAction( ::pPtr, nWebAction, lChecked )
+   METHOD  totalBytes()                        INLINE  Qt_QWebPage_totalBytes( ::pPtr )
+   METHOD  triggerAction( nAction, lChecked )  INLINE  Qt_QWebPage_triggerAction( ::pPtr, nAction, lChecked )
    METHOD  undoStack()                         INLINE  Qt_QWebPage_undoStack( ::pPtr )
-   METHOD  updatePositionDependentActions( aPointPos )  INLINE  Qt_QWebPage_updatePositionDependentActions( ::pPtr, aPointPos )
+   METHOD  updatePositionDependentActions( pPos )  INLINE  Qt_QWebPage_updatePositionDependentActions( ::pPtr, pPos )
    METHOD  view()                              INLINE  Qt_QWebPage_view( ::pPtr )
    METHOD  viewportSize()                      INLINE  Qt_QWebPage_viewportSize( ::pPtr )
 
@@ -97,6 +103,8 @@ CLASS QWebPage INHERIT QObject
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QWebPage
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QWebPage( pParent )
 

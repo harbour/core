@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QRadioButton INHERIT QAbstractButton
+CREATE CLASS QRadioButton INHERIT QAbstractButton
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -68,6 +69,8 @@ CLASS QRadioButton INHERIT QAbstractButton
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QRadioButton
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QRadioButton( pParent )
 

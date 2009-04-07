@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QToolBox INHERIT QFrame
+CREATE CLASS QToolBox INHERIT QFrame
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -71,6 +72,7 @@ CLASS QToolBox INHERIT QFrame
    METHOD  insertItem( nIndex, pWidget, cIcon, cText )  INLINE  Qt_QToolBox_insertItem( ::pPtr, nIndex, pWidget, cIcon, cText )
    METHOD  insertItem_1( nIndex, pWidget, cText )  INLINE  Qt_QToolBox_insertItem_1( ::pPtr, nIndex, pWidget, cText )
    METHOD  isItemEnabled( nIndex )             INLINE  Qt_QToolBox_isItemEnabled( ::pPtr, nIndex )
+   METHOD  itemIcon( nIndex )                  INLINE  Qt_QToolBox_itemIcon( ::pPtr, nIndex )
    METHOD  itemText( nIndex )                  INLINE  Qt_QToolBox_itemText( ::pPtr, nIndex )
    METHOD  itemToolTip( nIndex )               INLINE  Qt_QToolBox_itemToolTip( ::pPtr, nIndex )
    METHOD  removeItem( nIndex )                INLINE  Qt_QToolBox_removeItem( ::pPtr, nIndex )
@@ -79,12 +81,16 @@ CLASS QToolBox INHERIT QFrame
    METHOD  setItemText( nIndex, cText )        INLINE  Qt_QToolBox_setItemText( ::pPtr, nIndex, cText )
    METHOD  setItemToolTip( nIndex, cToolTip )  INLINE  Qt_QToolBox_setItemToolTip( ::pPtr, nIndex, cToolTip )
    METHOD  widget( nIndex )                    INLINE  Qt_QToolBox_widget( ::pPtr, nIndex )
+   METHOD  setCurrentIndex( nIndex )           INLINE  Qt_QToolBox_setCurrentIndex( ::pPtr, nIndex )
+   METHOD  setCurrentWidget( pWidget )         INLINE  Qt_QToolBox_setCurrentWidget( ::pPtr, pWidget )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QToolBox
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QToolBox( pParent )
 

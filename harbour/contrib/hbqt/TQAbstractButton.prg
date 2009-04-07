@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QAbstractButton INHERIT QWidget
+CREATE CLASS QAbstractButton INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -67,6 +68,7 @@ CLASS QAbstractButton INHERIT QWidget
    METHOD  autoRepeatDelay()                   INLINE  Qt_QAbstractButton_autoRepeatDelay( ::pPtr )
    METHOD  autoRepeatInterval()                INLINE  Qt_QAbstractButton_autoRepeatInterval( ::pPtr )
    METHOD  group()                             INLINE  Qt_QAbstractButton_group( ::pPtr )
+   METHOD  icon()                              INLINE  Qt_QAbstractButton_icon( ::pPtr )
    METHOD  iconSize()                          INLINE  Qt_QAbstractButton_iconSize( ::pPtr )
    METHOD  isCheckable()                       INLINE  Qt_QAbstractButton_isCheckable( ::pPtr )
    METHOD  isChecked()                         INLINE  Qt_QAbstractButton_isChecked( ::pPtr )
@@ -78,14 +80,23 @@ CLASS QAbstractButton INHERIT QWidget
    METHOD  setCheckable( lBool )               INLINE  Qt_QAbstractButton_setCheckable( ::pPtr, lBool )
    METHOD  setDown( lBool )                    INLINE  Qt_QAbstractButton_setDown( ::pPtr, lBool )
    METHOD  setIcon( cIcon )                    INLINE  Qt_QAbstractButton_setIcon( ::pPtr, cIcon )
+   METHOD  setShortcut( pKey )                 INLINE  Qt_QAbstractButton_setShortcut( ::pPtr, pKey )
    METHOD  setText( cText )                    INLINE  Qt_QAbstractButton_setText( ::pPtr, cText )
+   METHOD  shortcut()                          INLINE  Qt_QAbstractButton_shortcut( ::pPtr )
    METHOD  text()                              INLINE  Qt_QAbstractButton_text( ::pPtr )
+   METHOD  animateClick( nMsec )               INLINE  Qt_QAbstractButton_animateClick( ::pPtr, nMsec )
+   METHOD  click()                             INLINE  Qt_QAbstractButton_click( ::pPtr )
+   METHOD  setChecked( lBool )                 INLINE  Qt_QAbstractButton_setChecked( ::pPtr, lBool )
+   METHOD  setIconSize( pSize )                INLINE  Qt_QAbstractButton_setIconSize( ::pPtr, pSize )
+   METHOD  toggle()                            INLINE  Qt_QAbstractButton_toggle( ::pPtr )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QAbstractButton
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QAbstractButton( pParent )
 

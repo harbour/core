@@ -53,25 +53,30 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QFontComboBox INHERIT QComboBox
+CREATE CLASS QFontComboBox INHERIT QComboBox
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
+   METHOD  currentFont()                       INLINE  Qt_QFontComboBox_currentFont( ::pPtr )
    METHOD  fontFilters()                       INLINE  Qt_QFontComboBox_fontFilters( ::pPtr )
-   METHOD  setFontFilters( nFontFilters )      INLINE  Qt_QFontComboBox_setFontFilters( ::pPtr, nFontFilters )
+   METHOD  setFontFilters( nFilters )          INLINE  Qt_QFontComboBox_setFontFilters( ::pPtr, nFilters )
    METHOD  setWritingSystem( nScript )         INLINE  Qt_QFontComboBox_setWritingSystem( ::pPtr, nScript )
    METHOD  writingSystem()                     INLINE  Qt_QFontComboBox_writingSystem( ::pPtr )
+   METHOD  setCurrentFont( pFont )             INLINE  Qt_QFontComboBox_setCurrentFont( ::pPtr, pFont )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QFontComboBox
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QFontComboBox( pParent )
 

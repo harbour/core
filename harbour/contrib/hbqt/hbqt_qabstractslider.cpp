@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -58,7 +58,6 @@
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
-
 
 
 #include <QtGui/QAbstractSlider>
@@ -78,7 +77,7 @@ HB_FUNC( QT_QABSTRACTSLIDER )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_HASTRACKING )
 {
-   hb_retl( hbqt_par_QAbstractSlider( 1 )->hasTracking(  ) );
+   hb_retl( hbqt_par_QAbstractSlider( 1 )->hasTracking() );
 }
 
 /*
@@ -86,7 +85,7 @@ HB_FUNC( QT_QABSTRACTSLIDER_HASTRACKING )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_INVERTEDAPPEARANCE )
 {
-   hb_retl( hbqt_par_QAbstractSlider( 1 )->invertedAppearance(  ) );
+   hb_retl( hbqt_par_QAbstractSlider( 1 )->invertedAppearance() );
 }
 
 /*
@@ -94,7 +93,7 @@ HB_FUNC( QT_QABSTRACTSLIDER_INVERTEDAPPEARANCE )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_INVERTEDCONTROLS )
 {
-   hb_retl( hbqt_par_QAbstractSlider( 1 )->invertedControls(  ) );
+   hb_retl( hbqt_par_QAbstractSlider( 1 )->invertedControls() );
 }
 
 /*
@@ -102,7 +101,7 @@ HB_FUNC( QT_QABSTRACTSLIDER_INVERTEDCONTROLS )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_ISSLIDERDOWN )
 {
-   hb_retl( hbqt_par_QAbstractSlider( 1 )->isSliderDown(  ) );
+   hb_retl( hbqt_par_QAbstractSlider( 1 )->isSliderDown() );
 }
 
 /*
@@ -110,7 +109,7 @@ HB_FUNC( QT_QABSTRACTSLIDER_ISSLIDERDOWN )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_MAXIMUM )
 {
-   hb_retni( hbqt_par_QAbstractSlider( 1 )->maximum(  ) );
+   hb_retni( hbqt_par_QAbstractSlider( 1 )->maximum() );
 }
 
 /*
@@ -118,7 +117,7 @@ HB_FUNC( QT_QABSTRACTSLIDER_MAXIMUM )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_MINIMUM )
 {
-   hb_retni( hbqt_par_QAbstractSlider( 1 )->minimum(  ) );
+   hb_retni( hbqt_par_QAbstractSlider( 1 )->minimum() );
 }
 
 /*
@@ -126,7 +125,7 @@ HB_FUNC( QT_QABSTRACTSLIDER_MINIMUM )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_ORIENTATION )
 {
-   hb_retni( hbqt_par_QAbstractSlider( 1 )->orientation(  ) );
+   hb_retni( ( Qt::Orientation ) hbqt_par_QAbstractSlider( 1 )->orientation() );
 }
 
 /*
@@ -134,7 +133,7 @@ HB_FUNC( QT_QABSTRACTSLIDER_ORIENTATION )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_PAGESTEP )
 {
-   hb_retni( hbqt_par_QAbstractSlider( 1 )->pageStep(  ) );
+   hb_retni( hbqt_par_QAbstractSlider( 1 )->pageStep() );
 }
 
 /*
@@ -222,7 +221,7 @@ HB_FUNC( QT_QABSTRACTSLIDER_SETTRACKING )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SINGLESTEP )
 {
-   hb_retni( hbqt_par_QAbstractSlider( 1 )->singleStep(  ) );
+   hb_retni( hbqt_par_QAbstractSlider( 1 )->singleStep() );
 }
 
 /*
@@ -230,7 +229,7 @@ HB_FUNC( QT_QABSTRACTSLIDER_SINGLESTEP )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SLIDERPOSITION )
 {
-   hb_retni( hbqt_par_QAbstractSlider( 1 )->sliderPosition(  ) );
+   hb_retni( hbqt_par_QAbstractSlider( 1 )->sliderPosition() );
 }
 
 /*
@@ -246,7 +245,23 @@ HB_FUNC( QT_QABSTRACTSLIDER_TRIGGERACTION )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_VALUE )
 {
-   hb_retni( hbqt_par_QAbstractSlider( 1 )->value(  ) );
+   hb_retni( hbqt_par_QAbstractSlider( 1 )->value() );
+}
+
+/*
+ * void setOrientation ( Qt::Orientation )
+ */
+HB_FUNC( QT_QABSTRACTSLIDER_SETORIENTATION )
+{
+   hbqt_par_QAbstractSlider( 1 )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) );
+}
+
+/*
+ * void setValue ( int )
+ */
+HB_FUNC( QT_QABSTRACTSLIDER_SETVALUE )
+{
+   hbqt_par_QAbstractSlider( 1 )->setValue( hb_parni( 2 ) );
 }
 
 

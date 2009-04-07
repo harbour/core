@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QMainWindow INHERIT QWidget
+CREATE CLASS QMainWindow INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -85,11 +86,13 @@ CLASS QMainWindow INHERIT QWidget
    METHOD  removeToolBar( pToolbar )           INLINE  Qt_QMainWindow_removeToolBar( ::pPtr, pToolbar )
    METHOD  removeToolBarBreak( pBefore )       INLINE  Qt_QMainWindow_removeToolBarBreak( ::pPtr, pBefore )
    METHOD  restoreDockWidget( pDockwidget )    INLINE  Qt_QMainWindow_restoreDockWidget( ::pPtr, pDockwidget )
+   METHOD  restoreState( pState, nVersion )    INLINE  Qt_QMainWindow_restoreState( ::pPtr, pState, nVersion )
+   METHOD  saveState( nVersion )               INLINE  Qt_QMainWindow_saveState( ::pPtr, nVersion )
    METHOD  setCentralWidget( pWidget )         INLINE  Qt_QMainWindow_setCentralWidget( ::pPtr, pWidget )
    METHOD  setCorner( nCorner, nArea )         INLINE  Qt_QMainWindow_setCorner( ::pPtr, nCorner, nArea )
-   METHOD  setDockOptions( nDockOptions )      INLINE  Qt_QMainWindow_setDockOptions( ::pPtr, nDockOptions )
+   METHOD  setDockOptions( nOptions )          INLINE  Qt_QMainWindow_setDockOptions( ::pPtr, nOptions )
    METHOD  setDocumentMode( lEnabled )         INLINE  Qt_QMainWindow_setDocumentMode( ::pPtr, lEnabled )
-   METHOD  setIconSize( aSizeIconSize )        INLINE  Qt_QMainWindow_setIconSize( ::pPtr, aSizeIconSize )
+   METHOD  setIconSize( pIconSize )            INLINE  Qt_QMainWindow_setIconSize( ::pPtr, pIconSize )
    METHOD  setMenuBar( pMenuBar )              INLINE  Qt_QMainWindow_setMenuBar( ::pPtr, pMenuBar )
    METHOD  setMenuWidget( pMenuBar )           INLINE  Qt_QMainWindow_setMenuWidget( ::pPtr, pMenuBar )
    METHOD  setStatusBar( pStatusbar )          INLINE  Qt_QMainWindow_setStatusBar( ::pPtr, pStatusbar )
@@ -114,6 +117,8 @@ CLASS QMainWindow INHERIT QWidget
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QMainWindow
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QMainWindow( pParent )
 

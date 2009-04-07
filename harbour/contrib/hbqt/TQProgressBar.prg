@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QProgressBar INHERIT QWidget
+CREATE CLASS QProgressBar INHERIT QWidget
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -77,12 +78,20 @@ CLASS QProgressBar INHERIT QWidget
    METHOD  text()                              INLINE  Qt_QProgressBar_text( ::pPtr )
    METHOD  textDirection()                     INLINE  Qt_QProgressBar_textDirection( ::pPtr )
    METHOD  value()                             INLINE  Qt_QProgressBar_value( ::pPtr )
+   METHOD  reset()                             INLINE  Qt_QProgressBar_reset( ::pPtr )
+   METHOD  setMaximum( nMaximum )              INLINE  Qt_QProgressBar_setMaximum( ::pPtr, nMaximum )
+   METHOD  setMinimum( nMinimum )              INLINE  Qt_QProgressBar_setMinimum( ::pPtr, nMinimum )
+   METHOD  setOrientation( nQt_Orientation )   INLINE  Qt_QProgressBar_setOrientation( ::pPtr, nQt_Orientation )
+   METHOD  setRange( nMinimum, nMaximum )      INLINE  Qt_QProgressBar_setRange( ::pPtr, nMinimum, nMaximum )
+   METHOD  setValue( nValue )                  INLINE  Qt_QProgressBar_setValue( ::pPtr, nValue )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QProgressBar
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QProgressBar( pParent )
 

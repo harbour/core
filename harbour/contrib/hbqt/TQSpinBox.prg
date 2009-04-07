@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QSpinBox INHERIT QAbstractSpinBox
+CREATE CLASS QSpinBox INHERIT QAbstractSpinBox
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -75,12 +76,15 @@ CLASS QSpinBox INHERIT QAbstractSpinBox
    METHOD  singleStep()                        INLINE  Qt_QSpinBox_singleStep( ::pPtr )
    METHOD  suffix()                            INLINE  Qt_QSpinBox_suffix( ::pPtr )
    METHOD  value()                             INLINE  Qt_QSpinBox_value( ::pPtr )
+   METHOD  setValue( nVal )                    INLINE  Qt_QSpinBox_setValue( ::pPtr, nVal )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QSpinBox
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QSpinBox( pParent )
 

@@ -53,16 +53,18 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QObject
+CREATE CLASS QObject
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
    METHOD  blockSignals( lBlock )              INLINE  Qt_QObject_blockSignals( ::pPtr, lBlock )
+   METHOD  children()                          INLINE  Qt_QObject_children( ::pPtr )
    METHOD  connect( pSender, pSignal, pMethod, nType )  INLINE  Qt_QObject_connect( ::pPtr, pSender, pSignal, pMethod, nType )
    METHOD  disconnect( pSignal, pReceiver, pMethod )  INLINE  Qt_QObject_disconnect( ::pPtr, pSignal, pReceiver, pMethod )
    METHOD  disconnect_1( pReceiver, pMethod )  INLINE  Qt_QObject_disconnect_1( ::pPtr, pReceiver, pMethod )
@@ -78,18 +80,23 @@ CLASS QObject
    METHOD  moveToThread( pTargetThread )       INLINE  Qt_QObject_moveToThread( ::pPtr, pTargetThread )
    METHOD  objectName()                        INLINE  Qt_QObject_objectName( ::pPtr )
    METHOD  parent()                            INLINE  Qt_QObject_parent( ::pPtr )
+   METHOD  property( pName )                   INLINE  Qt_QObject_property( ::pPtr, pName )
    METHOD  removeEventFilter( pObj )           INLINE  Qt_QObject_removeEventFilter( ::pPtr, pObj )
    METHOD  setObjectName( cName )              INLINE  Qt_QObject_setObjectName( ::pPtr, cName )
    METHOD  setParent( pParent )                INLINE  Qt_QObject_setParent( ::pPtr, pParent )
+   METHOD  setProperty( pName, pValue )        INLINE  Qt_QObject_setProperty( ::pPtr, pName, pValue )
    METHOD  signalsBlocked()                    INLINE  Qt_QObject_signalsBlocked( ::pPtr )
    METHOD  startTimer( nInterval )             INLINE  Qt_QObject_startTimer( ::pPtr, nInterval )
    METHOD  thread()                            INLINE  Qt_QObject_thread( ::pPtr )
+   METHOD  deleteLater()                       INLINE  Qt_QObject_deleteLater( ::pPtr )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QObject
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QObject( pParent )
 

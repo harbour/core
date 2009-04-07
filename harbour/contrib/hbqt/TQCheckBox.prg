@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QCheckBox INHERIT QAbstractButton
+CREATE CLASS QCheckBox INHERIT QAbstractButton
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -72,6 +73,8 @@ CLASS QCheckBox INHERIT QAbstractButton
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QCheckBox
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QCheckBox( pParent )
 

@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -58,7 +58,6 @@
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
-
 
 
 #include <QtGui/QToolBar>
@@ -82,7 +81,7 @@ HB_FUNC( QT_QTOOLBAR )
  */
 HB_FUNC( QT_QTOOLBAR_ACTIONAT )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->actionAt( hbqt_const_QPoint( 2 ) ) );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->actionAt( *hbqt_par_QPoint( 2 ) ) );
 }
 
 /*
@@ -138,7 +137,7 @@ HB_FUNC( QT_QTOOLBAR_ADDACTION_4 )
  */
 HB_FUNC( QT_QTOOLBAR_ADDSEPARATOR )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addSeparator(  ) );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->addSeparator() );
 }
 
 /*
@@ -154,7 +153,7 @@ HB_FUNC( QT_QTOOLBAR_ADDWIDGET )
  */
 HB_FUNC( QT_QTOOLBAR_ALLOWEDAREAS )
 {
-   hb_retni( hbqt_par_QToolBar( 1 )->allowedAreas(  ) );
+   hb_retni( ( Qt::ToolBarAreas ) hbqt_par_QToolBar( 1 )->allowedAreas() );
 }
 
 /*
@@ -162,7 +161,7 @@ HB_FUNC( QT_QTOOLBAR_ALLOWEDAREAS )
  */
 HB_FUNC( QT_QTOOLBAR_CLEAR )
 {
-   hbqt_par_QToolBar( 1 )->clear(  );
+   hbqt_par_QToolBar( 1 )->clear();
 }
 
 /*
@@ -170,7 +169,7 @@ HB_FUNC( QT_QTOOLBAR_CLEAR )
  */
 HB_FUNC( QT_QTOOLBAR_ICONSIZE )
 {
-   hbqt_ret_QSize( hbqt_par_QToolBar( 1 )->iconSize(  ) );
+   hb_retptr( new QSize( hbqt_par_QToolBar( 1 )->iconSize() ) );
 }
 
 /*
@@ -202,7 +201,7 @@ HB_FUNC( QT_QTOOLBAR_ISAREAALLOWED )
  */
 HB_FUNC( QT_QTOOLBAR_ISFLOATABLE )
 {
-   hb_retl( hbqt_par_QToolBar( 1 )->isFloatable(  ) );
+   hb_retl( hbqt_par_QToolBar( 1 )->isFloatable() );
 }
 
 /*
@@ -210,7 +209,7 @@ HB_FUNC( QT_QTOOLBAR_ISFLOATABLE )
  */
 HB_FUNC( QT_QTOOLBAR_ISFLOATING )
 {
-   hb_retl( hbqt_par_QToolBar( 1 )->isFloating(  ) );
+   hb_retl( hbqt_par_QToolBar( 1 )->isFloating() );
 }
 
 /*
@@ -218,7 +217,7 @@ HB_FUNC( QT_QTOOLBAR_ISFLOATING )
  */
 HB_FUNC( QT_QTOOLBAR_ISMOVABLE )
 {
-   hb_retl( hbqt_par_QToolBar( 1 )->isMovable(  ) );
+   hb_retl( hbqt_par_QToolBar( 1 )->isMovable() );
 }
 
 /*
@@ -226,7 +225,7 @@ HB_FUNC( QT_QTOOLBAR_ISMOVABLE )
  */
 HB_FUNC( QT_QTOOLBAR_ORIENTATION )
 {
-   hb_retni( hbqt_par_QToolBar( 1 )->orientation(  ) );
+   hb_retni( ( Qt::Orientation ) hbqt_par_QToolBar( 1 )->orientation() );
 }
 
 /*
@@ -266,7 +265,7 @@ HB_FUNC( QT_QTOOLBAR_SETORIENTATION )
  */
 HB_FUNC( QT_QTOOLBAR_TOGGLEVIEWACTION )
 {
-   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->toggleViewAction(  ) );
+   hb_retptr( ( QAction* ) hbqt_par_QToolBar( 1 )->toggleViewAction() );
 }
 
 /*
@@ -274,7 +273,7 @@ HB_FUNC( QT_QTOOLBAR_TOGGLEVIEWACTION )
  */
 HB_FUNC( QT_QTOOLBAR_TOOLBUTTONSTYLE )
 {
-   hb_retni( hbqt_par_QToolBar( 1 )->toolButtonStyle(  ) );
+   hb_retni( ( Qt::ToolButtonStyle ) hbqt_par_QToolBar( 1 )->toolButtonStyle() );
 }
 
 /*
@@ -283,6 +282,22 @@ HB_FUNC( QT_QTOOLBAR_TOOLBUTTONSTYLE )
 HB_FUNC( QT_QTOOLBAR_WIDGETFORACTION )
 {
    hb_retptr( ( QWidget* ) hbqt_par_QToolBar( 1 )->widgetForAction( hbqt_par_QAction( 2 ) ) );
+}
+
+/*
+ * void setIconSize ( const QSize & iconSize )
+ */
+HB_FUNC( QT_QTOOLBAR_SETICONSIZE )
+{
+   hbqt_par_QToolBar( 1 )->setIconSize( *hbqt_par_QSize( 2 ) );
+}
+
+/*
+ * void setToolButtonStyle ( Qt::ToolButtonStyle toolButtonStyle )
+ */
+HB_FUNC( QT_QTOOLBAR_SETTOOLBUTTONSTYLE )
+{
+   hbqt_par_QToolBar( 1 )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni( 2 ) );
 }
 
 

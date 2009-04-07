@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -58,7 +58,6 @@
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
-
 
 
 #include <QtGui/QProgressBar>
@@ -77,7 +76,7 @@ HB_FUNC( QT_QPROGRESSBAR )
  */
 HB_FUNC( QT_QPROGRESSBAR_ALIGNMENT )
 {
-   hb_retni( hbqt_par_QProgressBar( 1 )->alignment(  ) );
+   hb_retni( ( Qt::Alignment ) hbqt_par_QProgressBar( 1 )->alignment() );
 }
 
 /*
@@ -85,7 +84,7 @@ HB_FUNC( QT_QPROGRESSBAR_ALIGNMENT )
  */
 HB_FUNC( QT_QPROGRESSBAR_FORMAT )
 {
-   hb_retc( hbqt_par_QProgressBar( 1 )->format( ).toLatin1().data() );
+   hb_retc( hbqt_par_QProgressBar( 1 )->format().toLatin1().data() );
 }
 
 /*
@@ -93,7 +92,7 @@ HB_FUNC( QT_QPROGRESSBAR_FORMAT )
  */
 HB_FUNC( QT_QPROGRESSBAR_INVERTEDAPPEARANCE )
 {
-   hb_retl( hbqt_par_QProgressBar( 1 )->invertedAppearance(  ) );
+   hb_retl( hbqt_par_QProgressBar( 1 )->invertedAppearance() );
 }
 
 /*
@@ -101,7 +100,7 @@ HB_FUNC( QT_QPROGRESSBAR_INVERTEDAPPEARANCE )
  */
 HB_FUNC( QT_QPROGRESSBAR_ISTEXTVISIBLE )
 {
-   hb_retl( hbqt_par_QProgressBar( 1 )->isTextVisible(  ) );
+   hb_retl( hbqt_par_QProgressBar( 1 )->isTextVisible() );
 }
 
 /*
@@ -109,7 +108,7 @@ HB_FUNC( QT_QPROGRESSBAR_ISTEXTVISIBLE )
  */
 HB_FUNC( QT_QPROGRESSBAR_MAXIMUM )
 {
-   hb_retni( hbqt_par_QProgressBar( 1 )->maximum(  ) );
+   hb_retni( hbqt_par_QProgressBar( 1 )->maximum() );
 }
 
 /*
@@ -117,7 +116,7 @@ HB_FUNC( QT_QPROGRESSBAR_MAXIMUM )
  */
 HB_FUNC( QT_QPROGRESSBAR_MINIMUM )
 {
-   hb_retni( hbqt_par_QProgressBar( 1 )->minimum(  ) );
+   hb_retni( hbqt_par_QProgressBar( 1 )->minimum() );
 }
 
 /*
@@ -125,7 +124,7 @@ HB_FUNC( QT_QPROGRESSBAR_MINIMUM )
  */
 HB_FUNC( QT_QPROGRESSBAR_ORIENTATION )
 {
-   hb_retni( hbqt_par_QProgressBar( 1 )->orientation(  ) );
+   hb_retni( ( Qt::Orientation ) hbqt_par_QProgressBar( 1 )->orientation() );
 }
 
 /*
@@ -173,7 +172,7 @@ HB_FUNC( QT_QPROGRESSBAR_SETTEXTVISIBLE )
  */
 HB_FUNC( QT_QPROGRESSBAR_TEXT )
 {
-   hb_retc( hbqt_par_QProgressBar( 1 )->text( ).toLatin1().data() );
+   hb_retc( hbqt_par_QProgressBar( 1 )->text().toLatin1().data() );
 }
 
 /*
@@ -181,7 +180,7 @@ HB_FUNC( QT_QPROGRESSBAR_TEXT )
  */
 HB_FUNC( QT_QPROGRESSBAR_TEXTDIRECTION )
 {
-   hb_retni( hbqt_par_QProgressBar( 1 )->textDirection(  ) );
+   hb_retni( ( QProgressBar::Direction ) hbqt_par_QProgressBar( 1 )->textDirection() );
 }
 
 /*
@@ -189,7 +188,55 @@ HB_FUNC( QT_QPROGRESSBAR_TEXTDIRECTION )
  */
 HB_FUNC( QT_QPROGRESSBAR_VALUE )
 {
-   hb_retni( hbqt_par_QProgressBar( 1 )->value(  ) );
+   hb_retni( hbqt_par_QProgressBar( 1 )->value() );
+}
+
+/*
+ * void reset ()
+ */
+HB_FUNC( QT_QPROGRESSBAR_RESET )
+{
+   hbqt_par_QProgressBar( 1 )->reset();
+}
+
+/*
+ * void setMaximum ( int maximum )
+ */
+HB_FUNC( QT_QPROGRESSBAR_SETMAXIMUM )
+{
+   hbqt_par_QProgressBar( 1 )->setMaximum( hb_parni( 2 ) );
+}
+
+/*
+ * void setMinimum ( int minimum )
+ */
+HB_FUNC( QT_QPROGRESSBAR_SETMINIMUM )
+{
+   hbqt_par_QProgressBar( 1 )->setMinimum( hb_parni( 2 ) );
+}
+
+/*
+ * void setOrientation ( Qt::Orientation )
+ */
+HB_FUNC( QT_QPROGRESSBAR_SETORIENTATION )
+{
+   hbqt_par_QProgressBar( 1 )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) );
+}
+
+/*
+ * void setRange ( int minimum, int maximum )
+ */
+HB_FUNC( QT_QPROGRESSBAR_SETRANGE )
+{
+   hbqt_par_QProgressBar( 1 )->setRange( hb_parni( 2 ), hb_parni( 3 ) );
+}
+
+/*
+ * void setValue ( int value )
+ */
+HB_FUNC( QT_QPROGRESSBAR_SETVALUE )
+{
+   hbqt_par_QProgressBar( 1 )->setValue( hb_parni( 2 ) );
 }
 
 

@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -58,26 +58,6 @@
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
-
-
-/*
- *  Constructed[ 22/33 [ 66.67% ] ]
- *  
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *  
- *  QBrush background () const
- *  virtual QVariant data ( int role ) const
- *  QFont font () const
- *  QBrush foreground () const
- *  QIcon icon () const
- *  virtual void read ( QDataStream & in )
- *  void setBackground ( const QBrush & brush )
- *  virtual void setData ( int role, const QVariant & value )
- *  void setFont ( const QFont & font )
- *  void setForeground ( const QBrush & brush )
- *  virtual void write ( QDataStream & out ) const
- */ 
 
 
 #include <QtGui/QTableWidgetItem>
@@ -100,7 +80,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM )
    {
       hb_retptr( ( QTableWidgetItem* ) new QTableWidgetItem( hb_parni( 1 ) ) );
    }
-   
+
    #if 0
    hb_retptr( ( QTableWidgetItem* ) new QTableWidgetItem( QIcon( hbqt_par_QString( 1 ) ),hbqt_par_QString( 2 ), hb_parni( 3 ) ) );
    hb_retptr( ( QTableWidgetItem* ) new QTableWidgetItem( hbqt_par_QTableWidgetItem( 1 ) ) );
@@ -108,11 +88,19 @@ HB_FUNC( QT_QTABLEWIDGETITEM )
 }
 
 /*
+ * QBrush background () const
+ */
+HB_FUNC( QT_QTABLEWIDGETITEM_BACKGROUND )
+{
+   hb_retptr( new QBrush( hbqt_par_QTableWidgetItem( 1 )->background() ) );
+}
+
+/*
  * Qt::CheckState checkState () const
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_CHECKSTATE )
 {
-   hb_retni( hbqt_par_QTableWidgetItem( 1 )->checkState(  ) );
+   hb_retni( ( Qt::CheckState ) hbqt_par_QTableWidgetItem( 1 )->checkState() );
 }
 
 /*
@@ -120,7 +108,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_CHECKSTATE )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_CLONE )
 {
-   hb_retptr( ( QTableWidgetItem* ) hbqt_par_QTableWidgetItem( 1 )->clone(  ) );
+   hb_retptr( ( QTableWidgetItem* ) hbqt_par_QTableWidgetItem( 1 )->clone() );
 }
 
 /*
@@ -128,7 +116,47 @@ HB_FUNC( QT_QTABLEWIDGETITEM_CLONE )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_COLUMN )
 {
-   hb_retni( hbqt_par_QTableWidgetItem( 1 )->column(  ) );
+   hb_retni( hbqt_par_QTableWidgetItem( 1 )->column() );
+}
+
+/*
+ * virtual QVariant data ( int role ) const
+ */
+HB_FUNC( QT_QTABLEWIDGETITEM_DATA )
+{
+   hb_retptr( new QVariant( hbqt_par_QTableWidgetItem( 1 )->data( hb_parni( 2 ) ) ) );
+}
+
+/*
+ * Qt::ItemFlags flags () const
+ */
+HB_FUNC( QT_QTABLEWIDGETITEM_FLAGS )
+{
+   hb_retni( ( Qt::ItemFlags ) hbqt_par_QTableWidgetItem( 1 )->flags() );
+}
+
+/*
+ * QFont font () const
+ */
+HB_FUNC( QT_QTABLEWIDGETITEM_FONT )
+{
+   hb_retptr( new QFont( hbqt_par_QTableWidgetItem( 1 )->font() ) );
+}
+
+/*
+ * QBrush foreground () const
+ */
+HB_FUNC( QT_QTABLEWIDGETITEM_FOREGROUND )
+{
+   hb_retptr( new QBrush( hbqt_par_QTableWidgetItem( 1 )->foreground() ) );
+}
+
+/*
+ * QIcon icon () const
+ */
+HB_FUNC( QT_QTABLEWIDGETITEM_ICON )
+{
+   hb_retptr( new QIcon( hbqt_par_QTableWidgetItem( 1 )->icon() ) );
 }
 
 /*
@@ -136,7 +164,15 @@ HB_FUNC( QT_QTABLEWIDGETITEM_COLUMN )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_ISSELECTED )
 {
-   hb_retl( hbqt_par_QTableWidgetItem( 1 )->isSelected(  ) );
+   hb_retl( hbqt_par_QTableWidgetItem( 1 )->isSelected() );
+}
+
+/*
+ * virtual void read ( QDataStream & in )
+ */
+HB_FUNC( QT_QTABLEWIDGETITEM_READ )
+{
+   hbqt_par_QTableWidgetItem( 1 )->read( *hbqt_par_QDataStream( 2 ) );
 }
 
 /*
@@ -144,7 +180,15 @@ HB_FUNC( QT_QTABLEWIDGETITEM_ISSELECTED )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_ROW )
 {
-   hb_retni( hbqt_par_QTableWidgetItem( 1 )->row(  ) );
+   hb_retni( hbqt_par_QTableWidgetItem( 1 )->row() );
+}
+
+/*
+ * void setBackground ( const QBrush & brush )
+ */
+HB_FUNC( QT_QTABLEWIDGETITEM_SETBACKGROUND )
+{
+   hbqt_par_QTableWidgetItem( 1 )->setBackground( *hbqt_par_QBrush( 2 ) );
 }
 
 /*
@@ -153,6 +197,38 @@ HB_FUNC( QT_QTABLEWIDGETITEM_ROW )
 HB_FUNC( QT_QTABLEWIDGETITEM_SETCHECKSTATE )
 {
    hbqt_par_QTableWidgetItem( 1 )->setCheckState( ( Qt::CheckState ) hb_parni( 2 ) );
+}
+
+/*
+ * virtual void setData ( int role, const QVariant & value )
+ */
+HB_FUNC( QT_QTABLEWIDGETITEM_SETDATA )
+{
+   hbqt_par_QTableWidgetItem( 1 )->setData( hb_parni( 2 ), *hbqt_par_QVariant( 3 ) );
+}
+
+/*
+ * void setFlags ( Qt::ItemFlags flags )
+ */
+HB_FUNC( QT_QTABLEWIDGETITEM_SETFLAGS )
+{
+   hbqt_par_QTableWidgetItem( 1 )->setFlags( ( Qt::ItemFlags ) hb_parni( 2 ) );
+}
+
+/*
+ * void setFont ( const QFont & font )
+ */
+HB_FUNC( QT_QTABLEWIDGETITEM_SETFONT )
+{
+   hbqt_par_QTableWidgetItem( 1 )->setFont( *hbqt_par_QFont( 2 ) );
+}
+
+/*
+ * void setForeground ( const QBrush & brush )
+ */
+HB_FUNC( QT_QTABLEWIDGETITEM_SETFOREGROUND )
+{
+   hbqt_par_QTableWidgetItem( 1 )->setForeground( *hbqt_par_QBrush( 2 ) );
 }
 
 /*
@@ -176,7 +252,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_SETSELECTED )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_SETSIZEHINT )
 {
-   hbqt_par_QTableWidgetItem( 1 )->setSizeHint( hbqt_const_QSize( 2 ) );
+   hbqt_par_QTableWidgetItem( 1 )->setSizeHint( *hbqt_par_QSize( 2 ) );
 }
 
 /*
@@ -224,7 +300,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_SETWHATSTHIS )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_SIZEHINT )
 {
-   hbqt_ret_QSize( hbqt_par_QTableWidgetItem( 1 )->sizeHint(  ) );
+   hb_retptr( new QSize( hbqt_par_QTableWidgetItem( 1 )->sizeHint() ) );
 }
 
 /*
@@ -232,7 +308,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_SIZEHINT )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_STATUSTIP )
 {
-   hb_retc( hbqt_par_QTableWidgetItem( 1 )->statusTip( ).toLatin1().data() );
+   hb_retc( hbqt_par_QTableWidgetItem( 1 )->statusTip().toLatin1().data() );
 }
 
 /*
@@ -240,7 +316,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_STATUSTIP )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_TABLEWIDGET )
 {
-   hb_retptr( ( QTableWidget* ) hbqt_par_QTableWidgetItem( 1 )->tableWidget(  ) );
+   hb_retptr( ( QTableWidget* ) hbqt_par_QTableWidgetItem( 1 )->tableWidget() );
 }
 
 /*
@@ -248,7 +324,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_TABLEWIDGET )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_TEXT )
 {
-   hb_retc( hbqt_par_QTableWidgetItem( 1 )->text( ).toLatin1().data() );
+   hb_retc( hbqt_par_QTableWidgetItem( 1 )->text().toLatin1().data() );
 }
 
 /*
@@ -256,7 +332,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_TEXT )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_TEXTALIGNMENT )
 {
-   hb_retni( hbqt_par_QTableWidgetItem( 1 )->textAlignment(  ) );
+   hb_retni( hbqt_par_QTableWidgetItem( 1 )->textAlignment() );
 }
 
 /*
@@ -264,7 +340,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_TEXTALIGNMENT )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_TOOLTIP )
 {
-   hb_retc( hbqt_par_QTableWidgetItem( 1 )->toolTip( ).toLatin1().data() );
+   hb_retc( hbqt_par_QTableWidgetItem( 1 )->toolTip().toLatin1().data() );
 }
 
 /*
@@ -272,7 +348,7 @@ HB_FUNC( QT_QTABLEWIDGETITEM_TOOLTIP )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_TYPE )
 {
-   hb_retni( hbqt_par_QTableWidgetItem( 1 )->type(  ) );
+   hb_retni( hbqt_par_QTableWidgetItem( 1 )->type() );
 }
 
 /*
@@ -280,7 +356,15 @@ HB_FUNC( QT_QTABLEWIDGETITEM_TYPE )
  */
 HB_FUNC( QT_QTABLEWIDGETITEM_WHATSTHIS )
 {
-   hb_retc( hbqt_par_QTableWidgetItem( 1 )->whatsThis( ).toLatin1().data() );
+   hb_retc( hbqt_par_QTableWidgetItem( 1 )->whatsThis().toLatin1().data() );
+}
+
+/*
+ * virtual void write ( QDataStream & out ) const
+ */
+HB_FUNC( QT_QTABLEWIDGETITEM_WRITE )
+{
+   hbqt_par_QTableWidgetItem( 1 )->write( *hbqt_par_QDataStream( 2 ) );
 }
 
 

@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QTreeWidget INHERIT QTreeView
+CREATE CLASS QTreeWidget INHERIT QTreeView
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -74,7 +75,7 @@ CLASS QTreeWidget INHERIT QTreeView
    METHOD  invisibleRootItem()                 INLINE  Qt_QTreeWidget_invisibleRootItem( ::pPtr )
    METHOD  isFirstItemColumnSpanned( pItem )   INLINE  Qt_QTreeWidget_isFirstItemColumnSpanned( ::pPtr, pItem )
    METHOD  itemAbove( pItem )                  INLINE  Qt_QTreeWidget_itemAbove( ::pPtr, pItem )
-   METHOD  itemAt( aPointP )                   INLINE  Qt_QTreeWidget_itemAt( ::pPtr, aPointP )
+   METHOD  itemAt( pP )                        INLINE  Qt_QTreeWidget_itemAt( ::pPtr, pP )
    METHOD  itemAt_1( nX, nY )                  INLINE  Qt_QTreeWidget_itemAt_1( ::pPtr, nX, nY )
    METHOD  itemBelow( pItem )                  INLINE  Qt_QTreeWidget_itemBelow( ::pPtr, pItem )
    METHOD  itemWidget( pItem, nColumn )        INLINE  Qt_QTreeWidget_itemWidget( ::pPtr, pItem, nColumn )
@@ -87,6 +88,7 @@ CLASS QTreeWidget INHERIT QTreeView
    METHOD  setFirstItemColumnSpanned( pItem, lSpan )  INLINE  Qt_QTreeWidget_setFirstItemColumnSpanned( ::pPtr, pItem, lSpan )
    METHOD  setHeaderItem( pItem )              INLINE  Qt_QTreeWidget_setHeaderItem( ::pPtr, pItem )
    METHOD  setHeaderLabel( cLabel )            INLINE  Qt_QTreeWidget_setHeaderLabel( ::pPtr, cLabel )
+   METHOD  setHeaderLabels( pLabels )          INLINE  Qt_QTreeWidget_setHeaderLabels( ::pPtr, pLabels )
    METHOD  setItemWidget( pItem, nColumn, pWidget )  INLINE  Qt_QTreeWidget_setItemWidget( ::pPtr, pItem, nColumn, pWidget )
    METHOD  sortColumn()                        INLINE  Qt_QTreeWidget_sortColumn( ::pPtr )
    METHOD  sortItems( nColumn, nOrder )        INLINE  Qt_QTreeWidget_sortItems( ::pPtr, nColumn, nOrder )
@@ -94,12 +96,18 @@ CLASS QTreeWidget INHERIT QTreeView
    METHOD  topLevelItem( nIndex )              INLINE  Qt_QTreeWidget_topLevelItem( ::pPtr, nIndex )
    METHOD  topLevelItemCount()                 INLINE  Qt_QTreeWidget_topLevelItemCount( ::pPtr )
    METHOD  visualItemRect( pItem )             INLINE  Qt_QTreeWidget_visualItemRect( ::pPtr, pItem )
+   METHOD  clear()                             INLINE  Qt_QTreeWidget_clear( ::pPtr )
+   METHOD  collapseItem( pItem )               INLINE  Qt_QTreeWidget_collapseItem( ::pPtr, pItem )
+   METHOD  expandItem( pItem )                 INLINE  Qt_QTreeWidget_expandItem( ::pPtr, pItem )
+   METHOD  scrollToItem( pItem, nHint )        INLINE  Qt_QTreeWidget_scrollToItem( ::pPtr, pItem, nHint )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QTreeWidget
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QTreeWidget( pParent )
 

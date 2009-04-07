@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QPrintPreviewDialog INHERIT QDialog
+CREATE CLASS QPrintPreviewDialog INHERIT QDialog
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -70,6 +71,8 @@ CLASS QPrintPreviewDialog INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QPrintPreviewDialog
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QPrintPreviewDialog( pParent )
 

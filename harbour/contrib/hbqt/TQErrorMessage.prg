@@ -53,21 +53,25 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QErrorMessage INHERIT QDialog
+CREATE CLASS QErrorMessage INHERIT QDialog
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
+   METHOD  showMessage( cMessage, cType )      INLINE  Qt_QErrorMessage_showMessage( ::pPtr, cMessage, cType )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QErrorMessage
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QErrorMessage( pParent )
 

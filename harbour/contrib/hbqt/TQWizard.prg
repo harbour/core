@@ -53,38 +53,43 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QWizard INHERIT QDialog
+CREATE CLASS QWizard INHERIT QDialog
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
    METHOD  addPage( pPage )                    INLINE  Qt_QWizard_addPage( ::pPtr, pPage )
-   METHOD  button( nWizardButton )             INLINE  Qt_QWizard_button( ::pPtr, nWizardButton )
-   METHOD  buttonText( nWizardButton )         INLINE  Qt_QWizard_buttonText( ::pPtr, nWizardButton )
+   METHOD  button( nWhich )                    INLINE  Qt_QWizard_button( ::pPtr, nWhich )
+   METHOD  buttonText( nWhich )                INLINE  Qt_QWizard_buttonText( ::pPtr, nWhich )
    METHOD  currentId()                         INLINE  Qt_QWizard_currentId( ::pPtr )
    METHOD  currentPage()                       INLINE  Qt_QWizard_currentPage( ::pPtr )
+   METHOD  field( cName )                      INLINE  Qt_QWizard_field( ::pPtr, cName )
    METHOD  hasVisitedPage( nId )               INLINE  Qt_QWizard_hasVisitedPage( ::pPtr, nId )
    METHOD  nextId()                            INLINE  Qt_QWizard_nextId( ::pPtr )
    METHOD  options()                           INLINE  Qt_QWizard_options( ::pPtr )
    METHOD  page( nId )                         INLINE  Qt_QWizard_page( ::pPtr, nId )
+   METHOD  pixmap( nWhich )                    INLINE  Qt_QWizard_pixmap( ::pPtr, nWhich )
    METHOD  removePage( nId )                   INLINE  Qt_QWizard_removePage( ::pPtr, nId )
-   METHOD  setButton( nWizardButton, pButton )  INLINE  Qt_QWizard_setButton( ::pPtr, nWizardButton, pButton )
-   METHOD  setButtonText( nWizardButton, cText )  INLINE  Qt_QWizard_setButtonText( ::pPtr, nWizardButton, cText )
+   METHOD  setButton( nWhich, pButton )        INLINE  Qt_QWizard_setButton( ::pPtr, nWhich, pButton )
+   METHOD  setButtonText( nWhich, cText )      INLINE  Qt_QWizard_setButtonText( ::pPtr, nWhich, cText )
    METHOD  setDefaultProperty( pClassName, pProperty, pChangedSignal )  INLINE  Qt_QWizard_setDefaultProperty( ::pPtr, pClassName, pProperty, pChangedSignal )
-   METHOD  setOption( nWizardOption, lOn )     INLINE  Qt_QWizard_setOption( ::pPtr, nWizardOption, lOn )
-   METHOD  setOptions( nWizardOptions )        INLINE  Qt_QWizard_setOptions( ::pPtr, nWizardOptions )
+   METHOD  setField( cName, pValue )           INLINE  Qt_QWizard_setField( ::pPtr, cName, pValue )
+   METHOD  setOption( nOption, lOn )           INLINE  Qt_QWizard_setOption( ::pPtr, nOption, lOn )
+   METHOD  setOptions( nOptions )              INLINE  Qt_QWizard_setOptions( ::pPtr, nOptions )
    METHOD  setPage( nId, pPage )               INLINE  Qt_QWizard_setPage( ::pPtr, nId, pPage )
+   METHOD  setPixmap( nWhich, pPixmap )        INLINE  Qt_QWizard_setPixmap( ::pPtr, nWhich, pPixmap )
    METHOD  setStartId( nId )                   INLINE  Qt_QWizard_setStartId( ::pPtr, nId )
    METHOD  setSubTitleFormat( nFormat )        INLINE  Qt_QWizard_setSubTitleFormat( ::pPtr, nFormat )
    METHOD  setTitleFormat( nFormat )           INLINE  Qt_QWizard_setTitleFormat( ::pPtr, nFormat )
-   METHOD  setWizardStyle( nWizardStyle )      INLINE  Qt_QWizard_setWizardStyle( ::pPtr, nWizardStyle )
+   METHOD  setWizardStyle( nStyle )            INLINE  Qt_QWizard_setWizardStyle( ::pPtr, nStyle )
    METHOD  startId()                           INLINE  Qt_QWizard_startId( ::pPtr )
    METHOD  subTitleFormat()                    INLINE  Qt_QWizard_subTitleFormat( ::pPtr )
-   METHOD  testOption( nWizardOption )         INLINE  Qt_QWizard_testOption( ::pPtr, nWizardOption )
+   METHOD  testOption( nOption )               INLINE  Qt_QWizard_testOption( ::pPtr, nOption )
    METHOD  titleFormat()                       INLINE  Qt_QWizard_titleFormat( ::pPtr )
    METHOD  validateCurrentPage()               INLINE  Qt_QWizard_validateCurrentPage( ::pPtr )
    METHOD  wizardStyle()                       INLINE  Qt_QWizard_wizardStyle( ::pPtr )
@@ -97,6 +102,8 @@ CLASS QWizard INHERIT QDialog
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QWizard
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QWizard( pParent )
 

@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QLabel INHERIT QFrame
+CREATE CLASS QLabel INHERIT QFrame
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -78,6 +79,7 @@ CLASS QLabel INHERIT QFrame
    METHOD  setOpenExternalLinks( lOpen )       INLINE  Qt_QLabel_setOpenExternalLinks( ::pPtr, lOpen )
    METHOD  setScaledContents( lBool )          INLINE  Qt_QLabel_setScaledContents( ::pPtr, lBool )
    METHOD  setTextFormat( nQt_TextFormat )     INLINE  Qt_QLabel_setTextFormat( ::pPtr, nQt_TextFormat )
+   METHOD  setTextInteractionFlags( nFlags )   INLINE  Qt_QLabel_setTextInteractionFlags( ::pPtr, nFlags )
    METHOD  setWordWrap( lOn )                  INLINE  Qt_QLabel_setWordWrap( ::pPtr, lOn )
    METHOD  text()                              INLINE  Qt_QLabel_text( ::pPtr )
    METHOD  textFormat()                        INLINE  Qt_QLabel_textFormat( ::pPtr )
@@ -87,6 +89,8 @@ CLASS QLabel INHERIT QFrame
    METHOD  setMovie( pMovie )                  INLINE  Qt_QLabel_setMovie( ::pPtr, pMovie )
    METHOD  setNum( nNum )                      INLINE  Qt_QLabel_setNum( ::pPtr, nNum )
    METHOD  setNum_1( nNum )                    INLINE  Qt_QLabel_setNum_1( ::pPtr, nNum )
+   METHOD  setPicture( pPicture )              INLINE  Qt_QLabel_setPicture( ::pPtr, pPicture )
+   METHOD  setPixmap( pQPixmap )               INLINE  Qt_QLabel_setPixmap( ::pPtr, pQPixmap )
    METHOD  setText( cQString )                 INLINE  Qt_QLabel_setText( ::pPtr, cQString )
 
    ENDCLASS
@@ -94,6 +98,8 @@ CLASS QLabel INHERIT QFrame
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QLabel
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QLabel( pParent )
 

@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -59,17 +59,14 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
-
 /*
- *  Constructed[ 29/32 [ 90.63% ] ]
- *  
+ *  Constructed[ 32/33 [ 96.97% ] ]
+ *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
- *  
+ *
  *  QList<QAbstractButton *> buttons () const
- *  QPixmap iconPixmap () const
- *  void setIconPixmap ( const QPixmap & pixmap )
- */ 
+ */
 
 
 #include <QtGui/QMessageBox>
@@ -122,7 +119,7 @@ HB_FUNC( QT_QMESSAGEBOX_BUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_BUTTONROLE )
 {
-   hb_retni( hbqt_par_QMessageBox( 1 )->buttonRole( hbqt_par_QAbstractButton( 2 ) ) );
+   hb_retni( ( QMessageBox::ButtonRole ) hbqt_par_QMessageBox( 1 )->buttonRole( hbqt_par_QAbstractButton( 2 ) ) );
 }
 
 /*
@@ -130,7 +127,7 @@ HB_FUNC( QT_QMESSAGEBOX_BUTTONROLE )
  */
 HB_FUNC( QT_QMESSAGEBOX_CLICKEDBUTTON )
 {
-   hb_retptr( ( QAbstractButton* ) hbqt_par_QMessageBox( 1 )->clickedButton(  ) );
+   hb_retptr( ( QAbstractButton* ) hbqt_par_QMessageBox( 1 )->clickedButton() );
 }
 
 /*
@@ -138,7 +135,7 @@ HB_FUNC( QT_QMESSAGEBOX_CLICKEDBUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_DEFAULTBUTTON )
 {
-   hb_retptr( ( QPushButton* ) hbqt_par_QMessageBox( 1 )->defaultButton(  ) );
+   hb_retptr( ( QPushButton* ) hbqt_par_QMessageBox( 1 )->defaultButton() );
 }
 
 /*
@@ -146,7 +143,7 @@ HB_FUNC( QT_QMESSAGEBOX_DEFAULTBUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_DETAILEDTEXT )
 {
-   hb_retc( hbqt_par_QMessageBox( 1 )->detailedText( ).toLatin1().data() );
+   hb_retc( hbqt_par_QMessageBox( 1 )->detailedText().toLatin1().data() );
 }
 
 /*
@@ -154,7 +151,7 @@ HB_FUNC( QT_QMESSAGEBOX_DETAILEDTEXT )
  */
 HB_FUNC( QT_QMESSAGEBOX_ESCAPEBUTTON )
 {
-   hb_retptr( ( QAbstractButton* ) hbqt_par_QMessageBox( 1 )->escapeButton(  ) );
+   hb_retptr( ( QAbstractButton* ) hbqt_par_QMessageBox( 1 )->escapeButton() );
 }
 
 /*
@@ -162,7 +159,15 @@ HB_FUNC( QT_QMESSAGEBOX_ESCAPEBUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_ICON )
 {
-   hb_retni( hbqt_par_QMessageBox( 1 )->icon(  ) );
+   hb_retni( ( QMessageBox::Icon ) hbqt_par_QMessageBox( 1 )->icon() );
+}
+
+/*
+ * QPixmap iconPixmap () const
+ */
+HB_FUNC( QT_QMESSAGEBOX_ICONPIXMAP )
+{
+   hb_retptr( new QPixmap( hbqt_par_QMessageBox( 1 )->iconPixmap() ) );
 }
 
 /*
@@ -170,7 +175,7 @@ HB_FUNC( QT_QMESSAGEBOX_ICON )
  */
 HB_FUNC( QT_QMESSAGEBOX_INFORMATIVETEXT )
 {
-   hb_retc( hbqt_par_QMessageBox( 1 )->informativeText( ).toLatin1().data() );
+   hb_retc( hbqt_par_QMessageBox( 1 )->informativeText().toLatin1().data() );
 }
 
 /*
@@ -238,6 +243,14 @@ HB_FUNC( QT_QMESSAGEBOX_SETICON )
 }
 
 /*
+ * void setIconPixmap ( const QPixmap & pixmap )
+ */
+HB_FUNC( QT_QMESSAGEBOX_SETICONPIXMAP )
+{
+   hbqt_par_QMessageBox( 1 )->setIconPixmap( *hbqt_par_QPixmap( 2 ) );
+}
+
+/*
  * void setInformativeText ( const QString & text )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETINFORMATIVETEXT )
@@ -290,7 +303,7 @@ HB_FUNC( QT_QMESSAGEBOX_SETWINDOWTITLE )
  */
 HB_FUNC( QT_QMESSAGEBOX_STANDARDBUTTON )
 {
-   hb_retni( hbqt_par_QMessageBox( 1 )->standardButton( hbqt_par_QAbstractButton( 2 ) ) );
+   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->standardButton( hbqt_par_QAbstractButton( 2 ) ) );
 }
 
 /*
@@ -298,7 +311,7 @@ HB_FUNC( QT_QMESSAGEBOX_STANDARDBUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_STANDARDBUTTONS )
 {
-   hb_retni( hbqt_par_QMessageBox( 1 )->standardButtons(  ) );
+   hb_retni( ( QMessageBox::StandardButtons ) hbqt_par_QMessageBox( 1 )->standardButtons() );
 }
 
 /*
@@ -306,7 +319,7 @@ HB_FUNC( QT_QMESSAGEBOX_STANDARDBUTTONS )
  */
 HB_FUNC( QT_QMESSAGEBOX_TEXT )
 {
-   hb_retc( hbqt_par_QMessageBox( 1 )->text( ).toLatin1().data() );
+   hb_retc( hbqt_par_QMessageBox( 1 )->text().toLatin1().data() );
 }
 
 /*
@@ -314,7 +327,15 @@ HB_FUNC( QT_QMESSAGEBOX_TEXT )
  */
 HB_FUNC( QT_QMESSAGEBOX_TEXTFORMAT )
 {
-   hb_retni( hbqt_par_QMessageBox( 1 )->textFormat(  ) );
+   hb_retni( ( Qt::TextFormat ) hbqt_par_QMessageBox( 1 )->textFormat() );
+}
+
+/*
+ * int exec ()
+ */
+HB_FUNC( QT_QMESSAGEBOX_EXEC )
+{
+   hb_retni( hbqt_par_QMessageBox( 1 )->exec() );
 }
 
 

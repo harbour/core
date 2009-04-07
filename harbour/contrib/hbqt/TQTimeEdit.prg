@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QTimeEdit INHERIT QDateTimeEdit
+CREATE CLASS QTimeEdit INHERIT QDateTimeEdit
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -68,6 +69,8 @@ CLASS QTimeEdit INHERIT QDateTimeEdit
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QTimeEdit
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QTimeEdit( pParent )
 

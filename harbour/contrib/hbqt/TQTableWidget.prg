@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QTableWidget INHERIT QTableView
+CREATE CLASS QTableWidget INHERIT QTableView
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -72,7 +73,7 @@ CLASS QTableWidget INHERIT QTableView
    METHOD  editItem( pItem )                   INLINE  Qt_QTableWidget_editItem( ::pPtr, pItem )
    METHOD  horizontalHeaderItem( nColumn )     INLINE  Qt_QTableWidget_horizontalHeaderItem( ::pPtr, nColumn )
    METHOD  item( nRow, nColumn )               INLINE  Qt_QTableWidget_item( ::pPtr, nRow, nColumn )
-   METHOD  itemAt( aPointPoint )               INLINE  Qt_QTableWidget_itemAt( ::pPtr, aPointPoint )
+   METHOD  itemAt( pPoint )                    INLINE  Qt_QTableWidget_itemAt( ::pPtr, pPoint )
    METHOD  itemAt_1( nAx, nAy )                INLINE  Qt_QTableWidget_itemAt_1( ::pPtr, nAx, nAy )
    METHOD  itemPrototype()                     INLINE  Qt_QTableWidget_itemPrototype( ::pPtr )
    METHOD  openPersistentEditor( pItem )       INLINE  Qt_QTableWidget_openPersistentEditor( ::pPtr, pItem )
@@ -86,10 +87,13 @@ CLASS QTableWidget INHERIT QTableView
    METHOD  setCurrentItem( pItem )             INLINE  Qt_QTableWidget_setCurrentItem( ::pPtr, pItem )
    METHOD  setCurrentItem_1( pItem, nCommand )  INLINE  Qt_QTableWidget_setCurrentItem_1( ::pPtr, pItem, nCommand )
    METHOD  setHorizontalHeaderItem( nColumn, pItem )  INLINE  Qt_QTableWidget_setHorizontalHeaderItem( ::pPtr, nColumn, pItem )
+   METHOD  setHorizontalHeaderLabels( pLabels )  INLINE  Qt_QTableWidget_setHorizontalHeaderLabels( ::pPtr, pLabels )
    METHOD  setItem( nRow, nColumn, pItem )     INLINE  Qt_QTableWidget_setItem( ::pPtr, nRow, nColumn, pItem )
    METHOD  setItemPrototype( pItem )           INLINE  Qt_QTableWidget_setItemPrototype( ::pPtr, pItem )
+   METHOD  setRangeSelected( pRange, lSelect )  INLINE  Qt_QTableWidget_setRangeSelected( ::pPtr, pRange, lSelect )
    METHOD  setRowCount( nRows )                INLINE  Qt_QTableWidget_setRowCount( ::pPtr, nRows )
    METHOD  setVerticalHeaderItem( nRow, pItem )  INLINE  Qt_QTableWidget_setVerticalHeaderItem( ::pPtr, nRow, pItem )
+   METHOD  setVerticalHeaderLabels( pLabels )  INLINE  Qt_QTableWidget_setVerticalHeaderLabels( ::pPtr, pLabels )
    METHOD  sortItems( nColumn, nOrder )        INLINE  Qt_QTableWidget_sortItems( ::pPtr, nColumn, nOrder )
    METHOD  takeHorizontalHeaderItem( nColumn )  INLINE  Qt_QTableWidget_takeHorizontalHeaderItem( ::pPtr, nColumn )
    METHOD  takeItem( nRow, nColumn )           INLINE  Qt_QTableWidget_takeItem( ::pPtr, nRow, nColumn )
@@ -98,12 +102,21 @@ CLASS QTableWidget INHERIT QTableView
    METHOD  visualColumn( nLogicalColumn )      INLINE  Qt_QTableWidget_visualColumn( ::pPtr, nLogicalColumn )
    METHOD  visualItemRect( pItem )             INLINE  Qt_QTableWidget_visualItemRect( ::pPtr, pItem )
    METHOD  visualRow( nLogicalRow )            INLINE  Qt_QTableWidget_visualRow( ::pPtr, nLogicalRow )
+   METHOD  clear()                             INLINE  Qt_QTableWidget_clear( ::pPtr )
+   METHOD  clearContents()                     INLINE  Qt_QTableWidget_clearContents( ::pPtr )
+   METHOD  insertColumn( nColumn )             INLINE  Qt_QTableWidget_insertColumn( ::pPtr, nColumn )
+   METHOD  insertRow( nRow )                   INLINE  Qt_QTableWidget_insertRow( ::pPtr, nRow )
+   METHOD  removeColumn( nColumn )             INLINE  Qt_QTableWidget_removeColumn( ::pPtr, nColumn )
+   METHOD  removeRow( nRow )                   INLINE  Qt_QTableWidget_removeRow( ::pPtr, nRow )
+   METHOD  scrollToItem( pItem, nHint )        INLINE  Qt_QTableWidget_scrollToItem( ::pPtr, pItem, nHint )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QTableWidget
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QTableWidget( pParent )
 

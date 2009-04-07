@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -59,25 +59,20 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
-
 /*
- *  Constructed[ 22/29 [ 75.86% ] ]
- *  
+ *  Constructed[ 26/29 [ 89.66% ] ]
+ *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
- *  
- *  const QObjectList & children () const
+ *
  *  QList<QByteArray> dynamicPropertyNames () const
- *  T findChild ( const QString & name = QString() ) const
  *  QList<T> findChildren ( const QString & name = QString() ) const
  *  QList<T> findChildren ( const QRegExp & regExp ) const
- *  QVariant property ( const char * name ) const
- *  bool setProperty ( const char * name, const QVariant & value )
- */ 
+ */
 
 
 #include <QtCore/QObject>
-
+#include <QtCore/QVariant>
 
 /*
  * Q_INVOKABLE QObject ( QObject * parent = 0 )
@@ -97,11 +92,19 @@ HB_FUNC( QT_QOBJECT_BLOCKSIGNALS )
 }
 
 /*
+ * const QObjectList & children () const
+ */
+HB_FUNC( QT_QOBJECT_CHILDREN )
+{
+   hb_retptr( new QObjectList( hbqt_par_QObject( 1 )->children() ) );
+}
+
+/*
  * bool connect ( const QObject * sender, const char * signal, const char * method, Qt::ConnectionType type = Qt::AutoConnection ) const
  */
 HB_FUNC( QT_QOBJECT_CONNECT )
 {
-   hb_retl( hbqt_par_QObject( 1 )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( Qt::ConnectionType ) hb_parni( 5 ) ) );
+   hb_retl( hbqt_par_QObject( 1 )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNIL( 5 ) ? ( Qt::ConnectionType ) Qt::AutoConnection : ( Qt::ConnectionType ) hb_parni( 5 ) ) ) );
 }
 
 /*
@@ -125,7 +128,7 @@ HB_FUNC( QT_QOBJECT_DISCONNECT_1 )
  */
 HB_FUNC( QT_QOBJECT_DUMPOBJECTINFO )
 {
-   hbqt_par_QObject( 1 )->dumpObjectInfo(  );
+   hbqt_par_QObject( 1 )->dumpObjectInfo();
 }
 
 /*
@@ -133,7 +136,7 @@ HB_FUNC( QT_QOBJECT_DUMPOBJECTINFO )
  */
 HB_FUNC( QT_QOBJECT_DUMPOBJECTTREE )
 {
-   hbqt_par_QObject( 1 )->dumpObjectTree(  );
+   hbqt_par_QObject( 1 )->dumpObjectTree();
 }
 
 /*
@@ -173,7 +176,7 @@ HB_FUNC( QT_QOBJECT_INSTALLEVENTFILTER )
  */
 HB_FUNC( QT_QOBJECT_ISWIDGETTYPE )
 {
-   hb_retl( hbqt_par_QObject( 1 )->isWidgetType(  ) );
+   hb_retl( hbqt_par_QObject( 1 )->isWidgetType() );
 }
 
 /*
@@ -189,7 +192,7 @@ HB_FUNC( QT_QOBJECT_KILLTIMER )
  */
 HB_FUNC( QT_QOBJECT_METAOBJECT )
 {
-   hb_retptr( ( QMetaObject* ) hbqt_par_QObject( 1 )->metaObject(  ) );
+   hb_retptr( ( QMetaObject* ) hbqt_par_QObject( 1 )->metaObject() );
 }
 
 /*
@@ -205,7 +208,7 @@ HB_FUNC( QT_QOBJECT_MOVETOTHREAD )
  */
 HB_FUNC( QT_QOBJECT_OBJECTNAME )
 {
-   hb_retc( hbqt_par_QObject( 1 )->objectName( ).toLatin1().data() );
+   hb_retc( hbqt_par_QObject( 1 )->objectName().toLatin1().data() );
 }
 
 /*
@@ -213,7 +216,15 @@ HB_FUNC( QT_QOBJECT_OBJECTNAME )
  */
 HB_FUNC( QT_QOBJECT_PARENT )
 {
-   hb_retptr( ( QObject* ) hbqt_par_QObject( 1 )->parent(  ) );
+   hb_retptr( ( QObject* ) hbqt_par_QObject( 1 )->parent() );
+}
+
+/*
+ * QVariant property ( const char * name ) const
+ */
+HB_FUNC( QT_QOBJECT_PROPERTY )
+{
+   hb_retptr( new QVariant( hbqt_par_QObject( 1 )->property( hbqt_par_char( 2 ) ) ) );
 }
 
 /*
@@ -241,11 +252,19 @@ HB_FUNC( QT_QOBJECT_SETPARENT )
 }
 
 /*
+ * bool setProperty ( const char * name, const QVariant & value )
+ */
+HB_FUNC( QT_QOBJECT_SETPROPERTY )
+{
+   hb_retl( hbqt_par_QObject( 1 )->setProperty( hbqt_par_char( 2 ), *hbqt_par_QVariant( 3 ) ) );
+}
+
+/*
  * bool signalsBlocked () const
  */
 HB_FUNC( QT_QOBJECT_SIGNALSBLOCKED )
 {
-   hb_retl( hbqt_par_QObject( 1 )->signalsBlocked(  ) );
+   hb_retl( hbqt_par_QObject( 1 )->signalsBlocked() );
 }
 
 /*
@@ -261,7 +280,15 @@ HB_FUNC( QT_QOBJECT_STARTTIMER )
  */
 HB_FUNC( QT_QOBJECT_THREAD )
 {
-   hb_retptr( ( QThread* ) hbqt_par_QObject( 1 )->thread(  ) );
+   hb_retptr( ( QThread* ) hbqt_par_QObject( 1 )->thread() );
+}
+
+/*
+ * void deleteLater ()
+ */
+HB_FUNC( QT_QOBJECT_DELETELATER )
+{
+   hbqt_par_QObject( 1 )->deleteLater();
 }
 
 

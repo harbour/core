@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QCommandLinkButton INHERIT QPushButton
+CREATE CLASS QCommandLinkButton INHERIT QPushButton
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -70,6 +71,8 @@ CLASS QCommandLinkButton INHERIT QPushButton
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QCommandLinkButton
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QCommandLinkButton( pParent )
 

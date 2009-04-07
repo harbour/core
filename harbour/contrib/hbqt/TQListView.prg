@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QListView INHERIT QAbstractItemView
+CREATE CLASS QListView INHERIT QAbstractItemView
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -75,16 +76,16 @@ CLASS QListView INHERIT QAbstractItemView
    METHOD  resizeMode()                        INLINE  Qt_QListView_resizeMode( ::pPtr )
    METHOD  setBatchSize( nBatchSize )          INLINE  Qt_QListView_setBatchSize( ::pPtr, nBatchSize )
    METHOD  setFlow( nFlow )                    INLINE  Qt_QListView_setFlow( ::pPtr, nFlow )
-   METHOD  setGridSize( aSizeSize )            INLINE  Qt_QListView_setGridSize( ::pPtr, aSizeSize )
-   METHOD  setLayoutMode( nLayoutMode )        INLINE  Qt_QListView_setLayoutMode( ::pPtr, nLayoutMode )
+   METHOD  setGridSize( pSize )                INLINE  Qt_QListView_setGridSize( ::pPtr, pSize )
+   METHOD  setLayoutMode( nMode )              INLINE  Qt_QListView_setLayoutMode( ::pPtr, nMode )
    METHOD  setModelColumn( nColumn )           INLINE  Qt_QListView_setModelColumn( ::pPtr, nColumn )
    METHOD  setMovement( nMovement )            INLINE  Qt_QListView_setMovement( ::pPtr, nMovement )
-   METHOD  setResizeMode( nResizeMode )        INLINE  Qt_QListView_setResizeMode( ::pPtr, nResizeMode )
+   METHOD  setResizeMode( nMode )              INLINE  Qt_QListView_setResizeMode( ::pPtr, nMode )
    METHOD  setRowHidden( nRow, lHide )         INLINE  Qt_QListView_setRowHidden( ::pPtr, nRow, lHide )
    METHOD  setSelectionRectVisible( lShow )    INLINE  Qt_QListView_setSelectionRectVisible( ::pPtr, lShow )
    METHOD  setSpacing( nSpace )                INLINE  Qt_QListView_setSpacing( ::pPtr, nSpace )
    METHOD  setUniformItemSizes( lEnable )      INLINE  Qt_QListView_setUniformItemSizes( ::pPtr, lEnable )
-   METHOD  setViewMode( nViewMode )            INLINE  Qt_QListView_setViewMode( ::pPtr, nViewMode )
+   METHOD  setViewMode( nMode )                INLINE  Qt_QListView_setViewMode( ::pPtr, nMode )
    METHOD  setWordWrap( lOn )                  INLINE  Qt_QListView_setWordWrap( ::pPtr, lOn )
    METHOD  setWrapping( lEnable )              INLINE  Qt_QListView_setWrapping( ::pPtr, lEnable )
    METHOD  spacing()                           INLINE  Qt_QListView_spacing( ::pPtr )
@@ -97,6 +98,8 @@ CLASS QListView INHERIT QAbstractItemView
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QListView
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QListView( pParent )
 

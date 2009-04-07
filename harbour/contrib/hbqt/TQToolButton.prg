@@ -53,12 +53,13 @@
 /*----------------------------------------------------------------------*/
 
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 
-CLASS QToolButton INHERIT QAbstractButton
+CREATE CLASS QToolButton INHERIT QAbstractButton
 
-   DATA    pPtr
+   VAR     pParent
+   VAR     pPtr
 
    METHOD  New()
 
@@ -70,14 +71,19 @@ CLASS QToolButton INHERIT QAbstractButton
    METHOD  setArrowType( nType )               INLINE  Qt_QToolButton_setArrowType( ::pPtr, nType )
    METHOD  setAutoRaise( lEnable )             INLINE  Qt_QToolButton_setAutoRaise( ::pPtr, lEnable )
    METHOD  setMenu( pMenu )                    INLINE  Qt_QToolButton_setMenu( ::pPtr, pMenu )
-   METHOD  setPopupMode( nToolButtonPopupMode )  INLINE  Qt_QToolButton_setPopupMode( ::pPtr, nToolButtonPopupMode )
+   METHOD  setPopupMode( nMode )               INLINE  Qt_QToolButton_setPopupMode( ::pPtr, nMode )
    METHOD  toolButtonStyle()                   INLINE  Qt_QToolButton_toolButtonStyle( ::pPtr )
+   METHOD  setDefaultAction( pAction )         INLINE  Qt_QToolButton_setDefaultAction( ::pPtr, pAction )
+   METHOD  setToolButtonStyle( nStyle )        INLINE  Qt_QToolButton_setToolButtonStyle( ::pPtr, nStyle )
+   METHOD  showMenu()                          INLINE  Qt_QToolButton_showMenu( ::pPtr )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD New( pParent ) CLASS QToolButton
+
+   ::pParent := pParent
 
    ::pPtr := Qt_QToolButton( pParent )
 

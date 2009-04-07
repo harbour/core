@@ -1,42 +1,42 @@
 /*
  * $Id$
  */
-   
-/* 
+
+/*
  * Harbour Project source code:
  * QT wrapper main header
- * 
+ *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- * 
+ *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
- * 
+ *
  * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
- * 
+ *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
- * 
+ *
  * This exception applies only to the code released by the Harbour
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
@@ -44,7 +44,7 @@
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
- * 
+ *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
@@ -60,7 +60,6 @@
 /*----------------------------------------------------------------------*/
 
 
-
 #include <QtGui/QFrame>
 
 
@@ -70,7 +69,7 @@
  */
 HB_FUNC( QT_QFRAME )
 {
-   hb_retptr( new QFrame( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );   
+   hb_retptr( new QFrame( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
 }
 
 /*
@@ -78,7 +77,7 @@ HB_FUNC( QT_QFRAME )
  */
 HB_FUNC( QT_QFRAME_FRAMERECT )
 {
-   hbqt_ret_QRect( hbqt_par_QFrame( 1 )->frameRect(  ) );
+   hb_retptr( new QRect( hbqt_par_QFrame( 1 )->frameRect() ) );
 }
 
 /*
@@ -86,7 +85,7 @@ HB_FUNC( QT_QFRAME_FRAMERECT )
  */
 HB_FUNC( QT_QFRAME_FRAMESHADOW )
 {
-   hb_retni( hbqt_par_QFrame( 1 )->frameShadow(  ) );
+   hb_retni( ( QFrame::Shadow ) hbqt_par_QFrame( 1 )->frameShadow() );
 }
 
 /*
@@ -94,7 +93,7 @@ HB_FUNC( QT_QFRAME_FRAMESHADOW )
  */
 HB_FUNC( QT_QFRAME_FRAMESHAPE )
 {
-   hb_retni( hbqt_par_QFrame( 1 )->frameShape(  ) );
+   hb_retni( ( QFrame::Shape ) hbqt_par_QFrame( 1 )->frameShape() );
 }
 
 /*
@@ -102,7 +101,7 @@ HB_FUNC( QT_QFRAME_FRAMESHAPE )
  */
 HB_FUNC( QT_QFRAME_FRAMESTYLE )
 {
-   hb_retni( hbqt_par_QFrame( 1 )->frameStyle(  ) );
+   hb_retni( hbqt_par_QFrame( 1 )->frameStyle() );
 }
 
 /*
@@ -110,7 +109,7 @@ HB_FUNC( QT_QFRAME_FRAMESTYLE )
  */
 HB_FUNC( QT_QFRAME_FRAMEWIDTH )
 {
-   hb_retni( hbqt_par_QFrame( 1 )->frameWidth(  ) );
+   hb_retni( hbqt_par_QFrame( 1 )->frameWidth() );
 }
 
 /*
@@ -118,7 +117,7 @@ HB_FUNC( QT_QFRAME_FRAMEWIDTH )
  */
 HB_FUNC( QT_QFRAME_LINEWIDTH )
 {
-   hb_retni( hbqt_par_QFrame( 1 )->lineWidth(  ) );
+   hb_retni( hbqt_par_QFrame( 1 )->lineWidth() );
 }
 
 /*
@@ -126,7 +125,7 @@ HB_FUNC( QT_QFRAME_LINEWIDTH )
  */
 HB_FUNC( QT_QFRAME_MIDLINEWIDTH )
 {
-   hb_retni( hbqt_par_QFrame( 1 )->midLineWidth(  ) );
+   hb_retni( hbqt_par_QFrame( 1 )->midLineWidth() );
 }
 
 /*
@@ -134,7 +133,7 @@ HB_FUNC( QT_QFRAME_MIDLINEWIDTH )
  */
 HB_FUNC( QT_QFRAME_SETFRAMERECT )
 {
-   hbqt_par_QFrame( 1 )->setFrameRect( hbqt_const_QRect( 2 ) );
+   hbqt_par_QFrame( 1 )->setFrameRect( *hbqt_par_QRect( 2 ) );
 }
 
 /*
