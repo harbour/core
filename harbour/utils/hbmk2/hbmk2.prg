@@ -64,6 +64,8 @@
  *
  */
 
+#pragma linenumber=on
+
 /*
    Man page HOWTO:
       http://www.schweikhardt.net/man_page_howto.html

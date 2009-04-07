@@ -38,6 +38,3 @@ endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif
-else
-include $(TOP)$(ROOT)config/none.cf
-endif
