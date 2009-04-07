@@ -1922,7 +1922,7 @@ PROCEDURE Main( ... )
             AAdd( s_aOPTC, "/Tx86-coff" )
          CASE t_cCOMP == "pocc64"
             AAdd( s_aOPTC, "/Tamd64-coff" )
-         CASE t_cCOMP $ "poccce|poccarm"
+         CASE t_cCOMP == "poccce" .OR. t_cCOMP == "poccarm"
             AAdd( s_aOPTC, "/Tarm-coff" )
          ENDCASE
          cOpt_Res := "{LR}"
@@ -1960,7 +1960,7 @@ PROCEDURE Main( ... )
          CASE t_cCOMP == "pocc64"
             s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-x64" + cLibExt,;
                                           "harbour-" + cDL_Version_Alter + "-x64" + cLibExt ) }
-         CASE t_cCOMP $ "poccce|poccarm"
+         CASE t_cCOMP == "poccce" .OR. t_cCOMP == "poccarm"
             s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm" + cLibExt,;
                                           "harbour-" + cDL_Version_Alter + "-arm" + cLibExt ) }
          OTHERWISE
