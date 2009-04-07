@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-06 19:19 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/hbqt/generator/hbqtgen.prg
+    ! Fixed: warning - taken address of temprary. Thanks Xavi.
+      Still need to be tested.
+
 2009-04-07 00:41 UTC+0200 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/examples/uhttpd/uhttpd.prg
     + Added _HTTP_RESPONSE headers

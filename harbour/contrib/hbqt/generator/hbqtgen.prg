@@ -62,11 +62,10 @@ STATIC s_PathSep
 
 FUNCTION Main( ... )
    LOCAL aParam, cLParam
-   LOCAL cParam, cPathOut, cPathIn, cPrjFile, cProFile, cPathDoc
+   LOCAL cParam, cPathOut, cPathIn, cProFile, cPathDoc
    LOCAL x, cPath, cFile, cExt
    LOCAL aPrjFiles := {}
    LOCAL aProFiles := {}
-   LOCAL lCompile  := .f.
 
    s_NewLine := hb_OsNewLine()
    s_PathSep := hb_OsPathSeparator()
@@ -109,7 +108,6 @@ FUNCTION Main( ... )
          cPathDoc := substr( cParam,3 )
 
       CASE cParam == '-c'
-         lCompile := .t.
 
       CASE cLParam == '-help'
          DispHelp()
@@ -270,11 +268,11 @@ STATIC FUNCTION PullOutSection( cQth, cSec )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
-   LOCAL cFile, cWidget, cExt, cPath, cOrg, cCode, cHBFunc, lSupported, cCPP, cPRG
-   LOCAL cPHP, cARGs, cPre, cPost, cFunc, cRet, cArg, ss, cQth, cAr, cName, cNames, cClass, cFileCpp
-   LOCAL s, j, n, n1, hHandle, nFuncs, nCnvrtd, cRetName, lOk
-   LOCAL a_, b_, txt_, enum_, code_, x_, func_, dummy_, cpp_, hdr_, ftr_, cmntd_, doc_
-   LOCAL nam_, dcc_, class_, cls_, arg_, protos_, slots_, enums_, body_
+   LOCAL cFile, cWidget, cExt, cPath, cOrg, cCPP, cPRG
+   LOCAL cQth, cFileCpp
+   LOCAL s, n, hHandle, nFuncs, nCnvrtd
+   LOCAL b_, txt_, enum_, code_, func_, dummy_, cpp_, cmntd_, doc_
+   LOCAL class_, cls_, protos_, slots_, enums_
 
    hb_fNameSplit( cProFile, @cPath, @cWidget, @cExt )
 
@@ -368,7 +366,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
          LOOP
       ENDIF
 
-      IF ( lOk := ParseProto( s, cWidget, @txt_, @doc_, enum_, func_ ) )
+      IF ParseProto( s, cWidget, @txt_, @doc_, enum_, func_ )
          nCnvrtd++
       ELSE
          aadd( dummy_, cOrg )
@@ -460,18 +458,18 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 #define THIS_PROPER( s )   ( upper( left( s,1 ) ) + substr( s,2 ) )
 
 STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
-   LOCAL aRet, aFunc, aA, aArgus, aArg, aPar, aPre
+   LOCAL aRet, aA, aArgus, aArg, aPar, aPre
    LOCAL n, nn, nHBIdx
-   LOCAL cPre, cPar, cRet, cFun, cFunRet, cParas, cDocs, cCmd, cPas, s, ss
+   LOCAL cPre, cPar, cRet, cFun, cParas, cDocs, cCmd, cPas, s, ss
    LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cHBIdx, cDocNM
-   LOCAL lConst, lAnd, lStar, lVirt, lSuccess
+   LOCAL lSuccess
    LOCAL cIntegers := 'int,qint16,qint32,qint64,quint16,quint32,quint64,qlonglong,qulonglong,QRgb,QChar'
 
    cParas := ''
    cDocs  := ''
-   aArgus := {}
+   //aArgus := {}
 
-   aRet := {}; aFunc := {}; aArgus := {}
+   aRet := {}; aArgus := {}
    n := at( '(', cProto )
    IF n > 0
       nn := at( ')', cProto )
@@ -535,7 +533,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
          ENDIF
          aRet[ PRT_NAME ] := aRet[ PRT_CAST ]
 
-         IF ( n := ascan( aEnum, {|e| IF( empty( e ), .f., e == aRet[ PRT_CAST ] ) } ) ) > 0
+         IF ascan( aEnum, {|e| IF( empty( e ), .f., e == aRet[ PRT_CAST ] ) } ) > 0
             aRet[ PRT_CAST ] := cWidget + '::' + aRet[ PRT_CAST ]
          ENDIF
 
@@ -587,7 +585,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                aA[ PRT_NAME ] := cPre
             ENDIF
 
-            IF ( n := ascan( aEnum, {|e| IF( empty( e ), .f., e == aA[ PRT_CAST ] ) } ) ) > 0
+            IF ascan( aEnum, {|e| IF( empty( e ), .f., e == aA[ PRT_CAST ] ) } ) > 0
                aA[ PRT_CAST ] := cWidget + '::' + aA[ PRT_CAST ]
             ENDIF
 
@@ -803,11 +801,16 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cPrgRet := 'p'+cDocNM
 
             CASE aA[ PRT_L_AND ] .and. aA[ PRT_L_CONST ]
-               cCmd := 'hb_retptr( &( ( '+ aA[ PRT_CAST ] + '& ) ' + cCmn + ' ) )'
+               //cCmd := 'hb_retptr( &( ( '+ aA[ PRT_CAST ] + '& ) ' + cCmn + ' ) )'
+               cCmd := 'hb_retptr( new '+ aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
                cPrgRet := 'p'+cDocNM
 
             CASE aA[ PRT_L_CONST ]
-               cCmd := 'hb_retptr( &( ( '+ aA[ PRT_CAST ] + ' ) ' + cCmn + ' ) )'
+               #if 0
+                  cCmd := 'hb_retptr( &( ( '+ aA[ PRT_CAST ] + ' ) ' + cCmn + ' ) )'
+               #else
+                  cCmd := 'hb_retptr( new '+ aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
+               #endif
                cPrgRet := 'p'+cDocNM
 
             CASE aA[ PRT_L_AND ]
@@ -841,7 +844,8 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
             OTHERWISE
                /* No attribute is attached to return value */
                IF left( aA[ PRT_CAST ], 1 ) == 'Q'
-                  cCmd := 'hb_retptr( &( ( '+ aA[ PRT_CAST ] + ' ) ' + cCmn + ' ) )'
+                  //cCmd := 'hb_retptr( &( ( '+ aA[ PRT_CAST ] + '& ) ' + cCmn + ' ) )'
+                  cCmd := 'hb_retptr( new '+ aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
                   cPrgRet := 'p'+cDocNM
 
                ELSE
@@ -1083,7 +1087,7 @@ STATIC FUNCTION CreateTarget( cFile, txt_ )
 
 STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
    LOCAL cFile := cPathOut + s_PathSep + 'T'+cWidget +'.prg'
-   LOCAL s, n, cMtd, cRet, cM, ss, cCall, sm
+   LOCAL s, n, cM, ss, cCall, sm
    LOCAL nLen := len( cWidget )
    LOCAL txt_  :={}
 
@@ -1106,7 +1110,7 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
    FOR EACH s IN doc_
       n := at( '-> ', s )
       IF n > 0
-         cRet  := substr( s, n+3 )
+//         cRet  := substr( s, n+3 )
          s     := substr( s, 1, n-1 )
          s     := strtran( s, '@', '' )  /* Just in Case */
          s     := strtran( s, '::', '_' )  /* Just in Case */
@@ -1134,7 +1138,7 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
    aadd( txt_, '/*----------------------------------------------------------------------*/'   )
    aadd( txt_, ''                                                                             )
 
-   n  := ascan( cls_, {|e_| lower( e_[ 1 ] ) == 'new' } )
+   //n  := ascan( cls_, {|e_| lower( e_[ 1 ] ) == 'new' } )
    cM := 'New( pParent )'
 
    aadd( txt_, 'METHOD '+ cM + ' CLASS '+ cWidget )
@@ -2146,7 +2150,7 @@ STATIC FUNCTION Build_MOC_SLOTS_CPP( cPathOut )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Build_Demo( cPathOut )
+STATIC FUNCTION Build_Demo()
    LOCAL cFile := '..\tests\demoqt.prg'
    LOCAL txt_:={}
 
