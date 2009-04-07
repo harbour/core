@@ -8,6 +8,23 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-07 09:29 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  - contrib/hbqt/tests/Vou.ICO
+  + contrib/hbqt/tests/test.ico
+    ! Renamed to have all lower case. Please stick to this rule.
+      Couldn't find any reference to this file, please fix it
+      where needed.
+
+    ; TOFIX: hbqt.h has hb_ToOutDebug() declared as external. So,
+             hbqt will also depend on xhb lib? If this function is
+             so important I'd suggest to create a fully portable
+             version of it locally in hbqt.
+
+  - contrib/hbqt/gensource/Makefile
+    - Removed duplicate copy of Makefile. I'm not sure what was
+      the purpose but it wouldn't work here, and it wouldn't be
+      good to update this file in two copies.
+
 2009-04-06 23:52 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbqt/tests/vou.ico
     + Added icon to be displayed in titlebar.
