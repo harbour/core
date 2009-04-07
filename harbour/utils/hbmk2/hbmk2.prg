@@ -213,6 +213,7 @@ PROCEDURE Main( ... )
    LOCAL s_aRESSRC
    LOCAL s_aRESCMP
    LOCAL s_aLIBSHARED
+   LOCAL s_aLIBSHAREDPOST
    LOCAL s_aLIB
    LOCAL s_aLIBVM
    LOCAL s_aLIBUSER
@@ -758,7 +759,7 @@ PROCEDURE Main( ... )
 
    /* Add main Harbour library dir to lib path list */
    AAddNotEmpty( s_aLIBPATH, s_cHB_LIB_INSTALL )
-   IF ! Empty( s_cHB_DYN_INSTALL )
+   IF ! Empty( s_cHB_DYN_INSTALL ) .AND. !( s_cHB_DYN_INSTALL == s_cHB_LIB_INSTALL )
       AAddNotEmpty( s_aLIBPATH, s_cHB_DYN_INSTALL )
    ENDIF
 
@@ -1234,7 +1235,7 @@ PROCEDURE Main( ... )
       CASE t_cARCH $ "bsd|linux|hpux|sunos" .OR. t_cARCH == "darwin" /* Separated to avoid match with 'win' */
          s_aLIBSHARED := { iif( s_lMT, cPrefix + cDynLibNamePrefix + "harbourmt" + cPostfix + cDynLibExt,;
                                        cPrefix + cDynLibNamePrefix + "harbour"   + cPostfix + cDynLibExt ) }
-      CASE t_cARCH $ "os2|win"
+      CASE t_cARCH $ "os2|win|wce"
          s_aLIBSHARED := { iif( s_lMT, cDynLibNamePrefix + "harbourmt",;
                                        cDynLibNamePrefix + "harbour" ) }
       OTHERWISE
@@ -1496,6 +1497,8 @@ PROCEDURE Main( ... )
                                           "harbour-" + cDL_Version_Alter ) }
          ENDCASE
 
+         s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
+
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
             AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
@@ -1640,8 +1643,8 @@ PROCEDURE Main( ... )
             AAdd( s_aOPTL, "OP MAP" )
          ENDIF
          s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
-                                       "harbour-" + cDL_Version_Alter ) }
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + cLibExt,;
+                                       "harbour-" + cDL_Version_Alter + cLibExt ) }
 
          AAdd( s_aOPTL, "FILE " + FN_ExtSet( s_cHB_LIB_INSTALL + hb_osPathSeparator() + iif( s_lGUI, "hbmainwin", "hbmainstd" ), cLibExt ) )
 
@@ -1766,10 +1769,9 @@ PROCEDURE Main( ... )
          IF s_lSHARED
             AAdd( s_aLIBPATH, "{DB}" )
          ENDIF
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-bcc",;
-                                       "harbour-" + cDL_Version_Alter + "-bcc" ),;
-                           "hbmainstd",;
-                           "hbmainwin" }
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-bcc" + cLibExt,;
+                                       "harbour-" + cDL_Version_Alter + "-bcc" + cLibExt ) }
+         s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
             AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
@@ -1860,26 +1862,20 @@ PROCEDURE Main( ... )
          ENDIF
          DO CASE
          CASE t_cCOMP $ "msvc|icc"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
-                                          "harbour-" + cDL_Version_Alter ),;
-                              "hbmainstd",;
-                              "hbmainwin" }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + cLibExt,;
+                                          "harbour-" + cDL_Version_Alter + cLibExt ) }
          CASE t_cCOMP == "msvc64"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-x64",;
-                                          "harbour-" + cDL_Version_Alter + "-x64" ),;
-                              "hbmainstd",;
-                              "hbmainwin" }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-x64" + cLibExt,;
+                                          "harbour-" + cDL_Version_Alter + "-x64" + cLibExt ) }
          CASE t_cCOMP $ "msvcia64|iccia64"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-ia64",;
-                                          "harbour-" + cDL_Version_Alter + "-ia64" ),;
-                              "hbmainstd",;
-                              "hbmainwin" }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-ia64" + cLibExt,;
+                                          "harbour-" + cDL_Version_Alter + "-ia64" + cLibExt ) }
          CASE t_cCOMP == "msvcce" .OR. t_cCOMP == "msvcarm"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm",;
-                                          "harbour-" + cDL_Version_Alter + "-arm" ),;
-                              "hbmainstd",;
-                              "hbmainwin" }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm" + cLibExt,;
+                                          "harbour-" + cDL_Version_Alter + "-arm" + cLibExt ) }
          ENDCASE
+
+         s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
          IF !( t_cCOMP $ "icc|iccia64" )
             cBin_Res := "rc.exe"
@@ -1962,21 +1958,17 @@ PROCEDURE Main( ... )
          ENDIF
          DO CASE
          CASE t_cCOMP == "pocc64"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-x64",;
-                                          "harbour-" + cDL_Version_Alter + "-x64" ),;
-                              "hbmainstd",;
-                              "hbmainwin" }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-x64" + cLibExt,;
+                                          "harbour-" + cDL_Version_Alter + "-x64" + cLibExt ) }
          CASE t_cCOMP $ "poccce|poccarm"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm",;
-                                          "harbour-" + cDL_Version_Alter + "-arm" ),;
-                              "hbmainstd",;
-                              "hbmainwin" }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm" + cLibExt,;
+                                          "harbour-" + cDL_Version_Alter + "-arm" + cLibExt ) }
          OTHERWISE
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
-                                          "harbour-" + cDL_Version_Alter ),;
-                              "hbmainstd",;
-                              "hbmainwin" }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + cLibExt,;
+                                          "harbour-" + cDL_Version_Alter + cLibExt ) }
          ENDCASE
+
+         s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
             AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
@@ -1991,7 +1983,7 @@ PROCEDURE Main( ... )
          ENDIF
       ENDCASE
 
-      IF lCreateDyn .AND. t_cARCH == "win"
+      IF lCreateDyn .AND. t_cARCH $ "win|wce"
          AAdd( s_aOPTC, "-DHB_DYNLIB" )
       ENDIF
 
@@ -2017,7 +2009,7 @@ PROCEDURE Main( ... )
             /* NOTE: This has to be kept synced with Harbour HB_IMPORT values. */
             DO CASE
             CASE ! s_lSHARED .OR. ;
-                 !( t_cARCH == "win" ) .OR. ;
+                 !( t_cARCH $ "win|wce" ) .OR. ;
                  t_cCOMP $ "msvc|msvc64|msvcia64|icc|iccia64"
 
                /* NOTE: MSVC gives the warning:
@@ -2105,7 +2097,7 @@ PROCEDURE Main( ... )
 
       /* Library list assembly */
       IF s_lSHARED .AND. ! Empty( s_aLIBSHARED )
-         s_aLIBHB := ArrayAJoin( { s_aLIBSHARED,;
+         s_aLIBHB := ArrayAJoin( { s_aLIBSHAREDPOST,;
                                    s_aLIBFM,;
                                    aLIB_BASE_CPLR,;
                                    aLIB_BASE_DEBUG } )
@@ -2125,6 +2117,9 @@ PROCEDURE Main( ... )
       s_aLIB := ArrayAJoin( { s_aLIBHB, s_aLIBUSER, s_aLIB3RD, s_aLIBSYS } )
       /* Dress lib names. */
       s_aLIB := ListCookLib( s_aLIB, cLibPrefix, cLibExt )
+      IF s_lSHARED .AND. ! Empty( s_aLIBSHARED )
+         s_aLIB := ArrayJoin( ListCookLib( s_aLIBSHARED, cLibPrefix ), s_aLIB )
+      ENDIF
       /* Dress obj names. */
       s_aOBJ := ListDirExt( ArrayJoin( s_aPRG, s_aC ), "", cObjExt )
       s_aOBJUSER := ListCook( s_aOBJUSER, NIL, cObjExt )
@@ -2751,7 +2746,7 @@ STATIC FUNCTION PathSepToTarget( cFileName, nStart )
 
    DEFAULT nStart TO 1
 
-   IF t_cARCH $ "win|dos|os2" .AND. !( t_cCOMP $ "mingw|mingw64|mingwce|mingwarm|cygwin" )
+   IF t_cARCH $ "win|wce|dos|os2" .AND. !( t_cCOMP $ "mingw|mingw64|mingwce|mingwarm|cygwin" )
       RETURN Left( cFileName, nStart - 1 ) + StrTran( SubStr( cFileName, nStart ), "/", "\" )
    ENDIF
 

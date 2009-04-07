@@ -39,13 +39,12 @@ if not "%HB_DYNLIB%" == "yes" goto _SKIP_DLL_BIN
    call %~dp0hb-mkdyn.bat
 
    setlocal
-   set _HB_BIN_INSTALL=%HB_BIN_INSTALL%
-   if not "%HB_BIN_COMPILE%" == "" set HB_BIN_INSTALL=%HB_BIN_COMPILE%
-   if exist "%_HB_BIN_INSTALL%\*.dll" (
-      %HB_BIN_INSTALL%\hbmk2 -q0 -shared -o%_HB_BIN_INSTALL%\hbrun-dll  %~dp0..\utils\hbrun\hbrun.hbm -lhbcplr -lhbpp -lhbcommon
-      %HB_BIN_INSTALL%\hbmk2 -q0 -shared -o%_HB_BIN_INSTALL%\hbmk2-dll  %~dp0..\utils\hbmk2\hbmk2.hbm -lhbcplr -lhbpp -lhbcommon
-      %HB_BIN_INSTALL%\hbmk2 -q0 -shared -o%_HB_BIN_INSTALL%\hbtest-dll %~dp0..\utils\hbtest\hbtest.hbm
-      %HB_BIN_INSTALL%\hbmk2 -q0 -shared -o%_HB_BIN_INSTALL%\hbi18n-dll %~dp0..\utils\hbi18n\hbi18n.hbm
+   if "%HB_BIN_COMPILE%" == "" set HB_BIN_COMPILE=%HB_BIN_INSTALL%
+   if exist "%HB_BIN_INSTALL%\*.dll" (
+      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbrun-dll  %~dp0..\utils\hbrun\hbrun.hbm -lhbcplr -lhbpp -lhbcommon
+      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbmk2-dll  %~dp0..\utils\hbmk2\hbmk2.hbm -lhbcplr -lhbpp -lhbcommon
+      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbtest-dll %~dp0..\utils\hbtest\hbtest.hbm
+      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbi18n-dll %~dp0..\utils\hbi18n\hbi18n.hbm
    )
    endlocal
 
