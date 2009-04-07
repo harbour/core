@@ -1095,7 +1095,7 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
 
    aadd( txt_, '' )
 
-   n := ascan( cls_, {|e_| lower( e_[ 1 ] ) == 'inherit' } )
+   n := ascan( cls_, {|e_| left( lower( e_[ 1 ] ),7 ) == 'inherit' .and. !empty( e_[ 2 ] ) } )
    s := 'CREATE CLASS '+ cWidget + IF( n > 0, ' INHERIT ' + cls_[ n,2 ], '' )
 
    aadd( txt_, s  )
@@ -1385,8 +1385,12 @@ STATIC FUNCTION Build_HBQT_H( cPathOut )
    aadd( txt_, "#define hbqt_par_QPaintEvent( n )            ( ( QPaintEvent* ) hb_parptr( n ) )              " )
    aadd( txt_, "#define hbqt_par_QInputEvent( n )            ( ( QInputEvent* ) hb_parptr( n ) )              " )
    aadd( txt_, "#define hbqt_par_HRGN( n )                   ( ( HRGN* ) hb_parptr( n ) )                     " )
+   aadd( txt_, "#define hbqt_par_QIcon( n )                  ( ( QIcon* ) hb_parc( n ) )                      " )
+   aadd( txt_, "#define hbqt_par_QStyleOption( n )           ( ( QStyleOption* ) hb_parptr( n ) )             " )
+   aadd( txt_, "#define hbqt_par_QStyleOptionComplex( n )    ( ( QStyleOptionComplex* ) hb_parptr( n ) )      " )
+   aadd( txt_, "#define hbqt_par_QFontMetrics( n )           ( ( QFontMetrics* ) hb_parptr( n ) )             " )
+   aadd( txt_, "#define hbqt_par_QStyleHintReturn( n )       ( ( QStyleHintReturn* ) hb_parptr( n ) )         " )
    aadd( txt_, "                                                                                              " )
-   aadd( txt_, "#define hbqt_par_QIcon( n )                  ( ( QIcon ) hb_parc( n ) )                       " )
    aadd( txt_, "#define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )                     " )
    aadd( txt_, "#define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )                              " )
    aadd( txt_, "#define hbqt_par_Bool( n )                   ( hb_parl( n ) )                                 " )
@@ -2390,5 +2394,4 @@ STATIC FUNCTION Build_Demo()
    RETURN CreateTarget( cFile, txt_ )
 
 /*----------------------------------------------------------------------*/
-
 

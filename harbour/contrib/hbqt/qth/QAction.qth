@@ -80,7 +80,7 @@ HB_FUNC( QT_QACTION )
    else if( HB_ISPOINTER( 2 ) )
       hb_retptr( new QAction( hbqt_par_QString( 1 ), hbqt_par_QObject( 2 ) ) );
    else if( HB_ISPOINTER( 3 ) )
-      hb_retptr( new QAction( hbqt_par_QIcon( 1 ), hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ) ) );
+      hb_retptr( new QAction( *hbqt_par_QIcon( 1 ), hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ) ) );
 }
 </CODE>
 

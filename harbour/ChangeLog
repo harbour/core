@@ -8,6 +8,27 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-06 23:44 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/hbqt/generator/hbqtgen.prg
+    + New hbqt.h members.
+
+  * harbour/contrib/hbqt/generator/qt45.qtp
+    + Added new classes, Rearranged alphabetically.
+
+  * harbour/contrib/hbqt/qth/QAction.qth
+  + harbour/contrib/hbqt/qth/QBitmap.qth
+  + harbour/contrib/hbqt/qth/QCommonStyle.qth
+  + harbour/contrib/hbqt/qth/QIcon.qth
+  + harbour/contrib/hbqt/qth/QPixmap.qth
+  + harbour/contrib/hbqt/qth/QStatusBar.qth
+  + harbour/contrib/hbqt/qth/QStyle.qth
+  + harbour/contrib/hbqt/qth/QWindowsStyle.qth
+  + harbour/contrib/hbqt/qth/QWindowsXPStyle.qth
+    + Added new classes. Updated old ones.
+
+  * harbour/contrib/hbqt/tests/demoqt.prg
+    + Implemented StatusBar, Windows Icon, etc.
+
 2009-04-06 19:19 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbqt/generator/hbqtgen.prg
     ! Fixed: warning - taken address of temprary. Thanks Xavi.
