@@ -72,11 +72,6 @@ FUNCTION Main( ... )
 
    DispLogo()
 
-   IF PCount() == 0
-      DispHelp()
-      RETURN nil
-   ENDIF
-
    aParam := hb_AParams()
 
    FOR EACH cParam IN aParam
@@ -99,13 +94,13 @@ FUNCTION Main( ... )
          aadd( aProFiles, cParam )
 
       CASE left( cParam,2 ) == '-O'
-         cPathOut := substr( cParam,3 )
+         cPathOut := substr( cParam, 3 )
 
       CASE left( cParam,2 ) == '-I'
-         cPathIn := substr( cParam,3 )
+         cPathIn := substr( cParam, 3 )
 
       CASE left( cParam,2 ) == '-D'
-         cPathDoc := substr( cParam,3 )
+         cPathDoc := substr( cParam, 3 )
 
       CASE cParam == '-c'
 
@@ -116,20 +111,32 @@ FUNCTION Main( ... )
       ENDCASE
    NEXT
 
+   IF empty( aPrjFiles ) .and. hb_fileExists( "qt45.qtp" )
+      aadd( aPrjFiles, "qt45.qtp" )
+   ENDIF
+
    IF empty( aPrjFiles ) .and. empty( aProFiles )
       DispHelp()
       RETURN nil
    ENDIF
 
-   /* Please fix for Linux */
    IF empty( cPathOut )
-      cPathOut := DiskName() +':'+ s_PathSep + CurDir()
+      cPathOut := hb_dirBase()
    ENDIF
    IF empty( cPathIn )
-      cPathIn  := DiskName() +':'+ s_PathSep + CurDir()
+      cPathIn  := hb_dirBase()
    ENDIF
    IF empty( cPathDoc )
-      cPathDoc := DiskName() +':'+ s_PathSep + CurDir()
+      cPathDoc := hb_dirBase()
+   ENDIF
+   IF Right( cPathOut, 1 ) == s_PathSep
+      cPathOut := hb_StrShrink( cPathOut, 1 )
+   ENDIF
+   IF Right( cPathIn, 1 ) == s_PathSep
+      cPathIn := hb_StrShrink( cPathIn, 1 )
+   ENDIF
+   IF Right( cPathDoc, 1 ) == s_PathSep
+      cPathDoc := hb_StrShrink( cPathDoc, 1 )
    ENDIF
 
    /* Manage Project File */
@@ -170,7 +177,7 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
    cpp_:={}
    prg_:={}
 
-   OutStd( cFile + s_NewLine )
+   OutStd( "Processing: " + cFile + s_NewLine )
 
    cPrj  := memoread( cFile )
 
@@ -290,7 +297,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       RETURN nil
    ENDIF
 
-   OutStd( cFile  + s_NewLine )
+   OutStd( "Processing: " + cFile + s_NewLine )
 
    /* Prepare to be parsed properly */
    cQth := strtran( cQth, s_NewLine          , _EOL )
@@ -409,14 +416,6 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 
       /* Footer */
       BuildFooter( @cpp_ )
-
-      /* And create .cpp source */
-      hHandle := fcreate( cFileCpp )
-      IF hHandle != -1
-         aeval( cpp_, { |e| fWrite( hHandle, e + s_NewLine, len( e ) + len( s_NewLine ) ) } )
-
-         fClose( hHandle )
-      ENDIF
 
       /* Build Document File */
       IF !empty( doc_ )
@@ -859,7 +858,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
 
             IF !empty( cCmd )
                cCmd := strtran( cCmd, '(  )', '()' ) +';'
-               OutStd( cCmd + s_NewLine )
+               //OutStd( cCmd + s_NewLine )
             ENDIF
          ENDIF
       ENDIF
@@ -1060,6 +1059,8 @@ STATIC FUNCTION BuildDocument( cWidget, doc_, cPathDoc )
 
    cFile := cPathDoc + s_PathSep + cWidget +'.txt'
 
+   OutStd( "Creating: " + cFile + hb_osNewLine() )
+
    hHandle := fcreate( cFile )
    IF hHandle != -1
       aeval( dcc_, { |e| fWrite( hHandle, e + s_NewLine, len( e ) + len( s_NewLine ) ) } )
@@ -1072,6 +1073,8 @@ STATIC FUNCTION BuildDocument( cWidget, doc_, cPathDoc )
 
 STATIC FUNCTION CreateTarget( cFile, txt_ )
    LOCAL hHandle := fcreate( cFile )
+
+   OutStd( "Creating: " + cFile + hb_osNewLine() )
 
    /* Truncate entries */
    aeval( txt_, {|e,i| txt_[ i ] := trim( e ) } )
@@ -1193,6 +1196,7 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
          aadd( txt_, chr( 9 ) + 'T' + s + '.prg \' )
       NEXT
    ENDIF
+   aadd( txt_, "                                                        " )
    aadd( txt_, "                                                        " )
 
    RETURN CreateTarget( cFile, txt_ )
@@ -2394,4 +2398,3 @@ STATIC FUNCTION Build_Demo()
    RETURN CreateTarget( cFile, txt_ )
 
 /*----------------------------------------------------------------------*/
-

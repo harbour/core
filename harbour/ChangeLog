@@ -8,6 +8,25 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-04-07 10:48 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbqt/generator/qt45.qtp
+  * contrib/hbqt/generator/hbqtgen.prg
+  * contrib/hbqt/generator/rebuild_hbqt.bat
+    * Changed to create files directly in live source dir.
+      (can be overridden using cmdline switches)
+    * qt45.qtp will be picked automatically if no project
+      file is passed and the file exists.
+    ! Fixed default paths for all platforms.
+    + Added feedback when creating files.
+    ! Fixed one FCreate() session which always failed.
+    ! Fixed generation of Makefile_gen to always have two
+      closing empty lines to make GNU Make happy. Otherwise
+      it failed when assembling the lib with MinGW/msys.
+    % Commented output of source parts.
+    ; This means that the .bat file is no more necessary.
+      Please use: 'hbmk2 hbqtgen.prg -run' command to generate
+      hbqt sources.
+
 2009-04-07 09:29 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   - contrib/hbqt/tests/Vou.ICO
   + contrib/hbqt/tests/test.ico

@@ -20,7 +20,7 @@ del ..\doc\*.txt > nul
 echo. done
 echo.
 echo. Generating gensource and doc files
-hbqtgen.exe qt45.qtp > hbqtgen.log 2>&1
+hbqtgen.exe > hbqtgen.log 2>&1
 IF ERRORLEVEL 1 GOTO SHOW_ERROR
 echo. done
 echo.

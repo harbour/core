@@ -1,4 +1,4 @@
-; 
+;
 ; Harbour Source Wrapper Generator's Project File for QT v4.5
 ;
 ; Pritpal Bedi <pritpal@vouchcac.com>
@@ -6,7 +6,7 @@
 
 -I=..\qth
 
--O=..\gensource
+-O=..
 
 -D=..\doc
 
@@ -123,4 +123,3 @@ QWebView.qth
 QWindowsStyle.qth
 QWindowsXPStyle.qth
 QWizard.qth
-
