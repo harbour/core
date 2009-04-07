@@ -1049,36 +1049,32 @@ STATIC FUNCTION HBRawVersion()
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION BuildDocument( cWidget, doc_, cPathDoc )
+   LOCAL cFile := cPathDoc + s_PathSep + cWidget +'.txt'
    LOCAL dcc_:={}
-   LOCAL hHandle, cFile
 
    BuildHeader( @dcc_ )
 
    aadd( dcc_, '/* '  )
-   aadd( dcc_, ' *      HBQtGen v1.0 - Harbour Callable Wrappers Generator for QT v4.5      >' )
+   aadd( dcc_, ' *      HBQtGen v1.0 - Harbour Callable Wrappers Generator for QT v4.5      ' )
    aadd( dcc_, ' * '  )
-   aadd( dcc_, ' * Please do not modify this document as it is subject to change in future. >' )
+   aadd( dcc_, ' * Please do not modify this document as it is subject to change in future. ' )
    aadd( dcc_, ' * '  )
-   aadd( dcc_, ' *                    Pritpal Bedi <pritpal@vouchcac.com>                   >' )
+   aadd( dcc_, ' *                   Pritpal Bedi <pritpal@vouchcac.com>                    ' )
    aadd( dcc_, ' * '  )
-   aadd( dcc_, ' *                             '+dtoc( date() ) + ' - ' + time() + '                           >' )
+   aadd( dcc_, ' *                          '+dtoc( date() ) + ' - ' + time()                 )
    aadd( dcc_, ' * '  )
    aadd( dcc_, ' */ ' )
-   aadd( dcc_, ' '    )
+   aadd( dcc_, '   '  )
+   aadd( dcc_, '   '  )
 
    aeval( doc_, {|e| aadd( dcc_, e ) } )
 
-   cFile := cPathDoc + s_PathSep + cWidget +'.txt'
+   aadd( dcc_, ' '    )
+   aadd( dcc_, "/*----------------------------------------------------------------------*/"   )
+   aadd( dcc_, ' '    )
+   aadd( dcc_, ' '    )
 
-   OutStd( "Creating: " + cFile + hb_osNewLine() )
-
-   hHandle := fcreate( cFile )
-   IF hHandle != -1
-      aeval( dcc_, { |e| fWrite( hHandle, e + s_NewLine, len( e ) + len( s_NewLine ) ) } )
-      fClose( hHandle )
-   ENDIF
-
-   RETURN file( cFile )
+   RETURN CreateTarget( cFile, dcc_ )
 
 /*----------------------------------------------------------------------*/
 
