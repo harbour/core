@@ -17,8 +17,8 @@ UNAME=`uname`
 UNAMEL=`echo "$UNAME"|tr A-Z a-z`
 UNAMEU=`echo "$UNAME"|tr a-z A-Z`
 
-export HB_ARCHITECTURE=win
-export HB_COMPILER=mingwce
+export HB_ARCHITECTURE=wce
+export HB_COMPILER=mingwarm
 
 if [ "$OSTYPE" = "msdosdjgpp" ]; then
     HB_HOST_ARCH="dos"

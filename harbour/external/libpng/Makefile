@@ -22,9 +22,6 @@ endif
 ifeq ($(HB_ARCHITECTURE),dos)
 HB_WITH_LIBPNG=yes
 endif
-ifeq ($(HB_COMPILER),poccce)
-HB_WITH_LIBPNG=no
-endif
 ifeq ($(HB_COMPILER),poccarm)
 HB_WITH_LIBPNG=no
 endif

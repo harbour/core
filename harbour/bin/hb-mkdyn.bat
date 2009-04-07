@@ -26,27 +26,21 @@ set HB_DLL_LIBS_ST=hbvm
 set HB_DLL_LIBS_MT=hbvmmt
 
 if "%HB_ARCHITECTURE%" == "wce" set HB_DLL_LIBS_WIN=
-if "%HB_COMPILER%" == "msvcce"  set HB_DLL_LIBS_WIN=
-if "%HB_COMPILER%" == "mingwce" set HB_DLL_LIBS_WIN=
-if "%HB_COMPILER%" == "poccce"  set HB_DLL_LIBS_WIN=
 
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_icc"      goto DO_MSVC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_iccia64"  goto DO_MSVC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc"     goto DO_MSVC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc64"   goto DO_MSVC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcia64" goto DO_MSVC
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcce"   goto DO_MSVC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm"  goto DO_MSVC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw"    goto DO_GCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw64"  goto DO_GCC
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingwce"  goto DO_GCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" goto DO_GCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_cygwin"   goto DO_GCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_bcc"      goto DO_BCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_owatcom"  goto DO_OWATCOM
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     goto DO_POCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   goto DO_POCC
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_poccce"   goto DO_POCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  goto DO_POCC
 
 echo Platform %HB_ARCHITECTURE% / %HB_COMPILER% isn't supported.
@@ -128,8 +122,6 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_iccia64"  set _DST_NAME_ST=harbour-
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_iccia64"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-ia64
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc"     set _DST_NAME_ST=harbour-%HB_DLL_VERSION%
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcce"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcce"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc64"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
@@ -137,9 +129,8 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvc64"   set _DST_NAME_MT=harbourm
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcia64" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-ia64
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcia64" set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-ia64
 
-set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_msvcce"  set _SYSLIBS=wininet.lib ws2.lib
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_msvcarm" set _SYSLIBS=wininet.lib ws2.lib
+if "%HB_ARCHITECTURE%" == "win" set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
+if "%HB_ARCHITECTURE%" == "wce" set _SYSLIBS=wininet.lib ws2.lib
 
 echo Making %_DST_NAME_ST%.dll... && %_BIN_LINK% /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt %_SYSLIBS% %HB_DLLIBS%
 echo Making %_DST_NAME_MT%.dll... && %_BIN_LINK% /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt %_SYSLIBS% %HB_DLLIBS%
@@ -388,15 +379,11 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     set _DST_NAME_ST=harbour-
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_poccce"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_poccce"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
 
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_poccce"   set _SYSLIBS=wininet.lib ws2.lib
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  set _SYSLIBS=wininet.lib ws2.lib
+if "%HB_ARCHITECTURE%" == "win" set _SYSLIBS=user32.lib ws2_32.lib advapi32.lib gdi32.lib
+if "%HB_ARCHITECTURE%" == "wce" set _SYSLIBS=wininet.lib ws2.lib
 
 echo Making %_DST_NAME_ST%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt %_SYSLIBS% %HB_DLLIBS%
 echo Making %_DST_NAME_MT%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt %_SYSLIBS% %HB_DLLIBS%
@@ -479,14 +466,11 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw"    set _DST_NAME_ST=harbour-
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw"    set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw64"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-x64
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw64"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-x64
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingwce"  set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingwce"  set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-arm
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-arm
 
-set _SYSLIBS=-luser32 -lws2_32 -ladvapi32 -lgdi32
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingwce"  set _SYSLIBS=-lwininet -lws2
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" set _SYSLIBS=-lwininet -lws2
+if "%HB_ARCHITECTURE%" == "win" set _SYSLIBS=-luser32 -lws2_32 -ladvapi32 -lgdi32
+if "%HB_ARCHITECTURE%" == "wce" set _SYSLIBS=-lwininet -lws2
 
 echo Making %_DST_NAME_ST%.dll... && %HB_CCPREFIX%gcc -shared -o "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" %_HBOST% %HB_USER_LDFLAGS% %_SYSLIBS% %HB_DLLIBS% -Wl,--output-def,"%HB_BIN_INSTALL%\%_DST_NAME_ST%.def"
 echo Making %_DST_NAME_MT%.dll... && %HB_CCPREFIX%gcc -shared -o "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" %_HBOMT% %HB_USER_LDFLAGS% %_SYSLIBS% %HB_DLLIBS% -Wl,--output-def,"%HB_BIN_INSTALL%\%_DST_NAME_MT%.def"

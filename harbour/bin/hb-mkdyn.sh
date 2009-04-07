@@ -133,8 +133,7 @@ if [ "${SLIB_EXT}" = ".dylib" ]; then
     ln -sf "${FULLNAME}" "${DSTDIR}${BASE}${SLIB_EXT}"
 elif [ "${SLIB_EXT}" = ".dll" ]; then
     FULLNAME="${LIB_NAME}${SLIB_EXT}"
-    if [ "$HB_COMPILER" = "mingwce" ] || \
-       [ "$HB_COMPILER" = "mingwarm" ]; then
+    if [ "$HB_COMPILER" = "mingwarm" ]; then
         SYSLIBS=" -lwininet -lws2"
     else
         SYSLIBS="-luser32 -lws2_32 -ladvapi32 -lgdi32"

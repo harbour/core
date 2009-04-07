@@ -18,12 +18,6 @@ endif
 ifeq ($(HB_COMPILER),pocc64)
 HB_WITH_LIBHPDF=no
 endif
-ifeq ($(HB_COMPILER),poccce)
-HB_WITH_LIBHPDF=no
-endif
-ifeq ($(HB_COMPILER),mingwce)
-HB_WITH_LIBHPDF=no
-endif
 ifeq ($(HB_ARCHITECTURE),wce)
 HB_WITH_LIBHPDF=no
 endif

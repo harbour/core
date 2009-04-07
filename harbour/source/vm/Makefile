@@ -8,11 +8,7 @@ ifeq ($(HB_ARCHITECTURE),win)
 	ifeq ($(HB_COMPILER),mingw)
 		C_MAIN = mainwin.c
 	else
-		ifeq ($(HB_COMPILER),mingwce)
-			C_MAIN = mainwin.c
-		else
-			C_MAIN = mainstd.c mainwin.c
-		endif
+		C_MAIN = mainstd.c mainwin.c
 	endif
 	DIRS = mainstd mainwin maindllh maindllp
 else

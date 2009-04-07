@@ -89,7 +89,7 @@ mk_hbgetlibs()
     if [ -z "$@" ]
     then
         libs=""
-        if [ "$HB_COMPILER" != "mingwce" ] && [ "$HB_ARCHITECTURE" != "wce" ]
+        if [ "$HB_ARCHITECTURE" != "wce" ]
         then
             libs="$libs gtwin"
         fi
@@ -106,7 +106,7 @@ mk_hbgetlibsctb()
     if [ -z "$@" ]
     then
         libs=""
-        if [ "$HB_COMPILER" = "mingwce" ] || [ "$HB_ARCHITECTURE" = "wce" ]
+        if [ "$HB_ARCHITECTURE" = "wce" ]
         then
             libs="$libs gtwin"
         fi
@@ -192,8 +192,7 @@ mk_hbtools()
        [ "${HB_COMPILER}" = "mingw64" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
         HB_WITHOUT_X11="yes"
-    elif [ "${HB_COMPILER}" = "mingwce" ] || \
-         [ "${HB_COMPILER}" = "mingwarm" ]; then
+    elif [ "${HB_COMPILER}" = "mingwarm" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32"
         HB_WITHOUT_X11="yes"
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
@@ -586,8 +585,7 @@ if [ "\${HB_COMPILER}" = "mingw" ] || [ "\${HB_COMPILER}" = "mingw64" ]; then
     elif [ "\${HB_MODE}" = "std" ]; then
         l="hbmainstd"
     fi
-elif [ "\${HB_COMPILER}" = "mingwce" ] || \
-     [ "\${HB_COMPILER}" = "mingwarm" ]; then
+elif [ "\${HB_COMPILER}" = "mingwarm" ]; then
     if [ "\${HB_MODE}" = "std" ]; then
         l="hbmainstd"
     else
@@ -603,7 +601,7 @@ l="hbfm"
 [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
 if [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ] && \\
    ( [ -n "\${HB_FM_REQ}" ] || [ "\${HB_STATIC}" = "yes" ] ) && \\
-   ( [ "\${HB_COMPILER}" != "mingwce" ] || [ "\${HB_FM_REQ}" = "STAT" ] ); then
+   ( [ "\${HB_ARCHITECTURE}" != "wce" ] || [ "\${HB_FM_REQ}" = "STAT" ] ); then
     if [ "\${HB_STATIC}" = "yes" ] && [ "\${HB_FM_REQ}" = "STAT" ]; then
         HARBOUR_LIBS="-l\${l} \${HARBOUR_LIBS}"
     else
@@ -767,8 +765,7 @@ mk_hblibso()
     fi
     if [ "${HB_COMPILER}" = "mingw" ] || [ "${HB_COMPILER}" = "mingw64" ]; then
         linker_options="${linker_options} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
-    elif [ "${HB_COMPILER}" = "mingwce" ] || \
-         [ "${HB_COMPILER}" = "mingwarm" ]; then
+    elif [ "${HB_COMPILER}" = "mingwarm" ]; then
         linker_options="${linker_options} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32"
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
         linker_options="${linker_options}"
@@ -844,8 +841,7 @@ mk_hblibso()
         if [ "${HB_COMPILER}" = "mingw64" ]; then
             full_lib_name="${name}-${hb_ver}-x64${lib_ext}"
             full_lib_name_mt="${name}mt-${hb_ver}-x64${lib_ext}"
-        elif [ "${HB_COMPILER}" = "mingwce" ] || \
-             [ "${HB_COMPILER}" = "mingwarm" ]; then
+        elif [ "${HB_COMPILER}" = "mingwarm" ]; then
             full_lib_name="${name}-${hb_ver}-arm${lib_ext}"
             full_lib_name_mt="${name}mt-${hb_ver}-arm${lib_ext}"
         else

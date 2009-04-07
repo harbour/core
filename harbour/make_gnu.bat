@@ -119,7 +119,6 @@ if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
 
    if "%HB_COMPILER%" == "mingw"    goto DO_GCC
    if "%HB_COMPILER%" == "mingw64"  goto DO_GCC
-   if "%HB_COMPILER%" == "mingwce"  goto DO_GCC
    if "%HB_COMPILER%" == "mingwarm" goto DO_GCC
    if "%HB_COMPILER%" == "cygwin"   goto DO_GCC
 

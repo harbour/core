@@ -5,15 +5,6 @@
 HB_BUILD_WARN = no
 HB_BUILD_MODE = c
 
-ifeq ($(HB_COMPILER),mingwce)
-HB_USER_CFLAGS += -D_WIN32_WCE
-endif
-ifeq ($(HB_COMPILER),msvcce)
-HB_USER_CFLAGS += -D_WIN32_WCE
-endif
-ifeq ($(HB_COMPILER),poccce)
-HB_USER_CFLAGS += -D_WIN32_WCE
-endif
 ifeq ($(HB_ARCHITECTURE),wce)
 HB_USER_CFLAGS += -D_WIN32_WCE
 endif
@@ -33,9 +24,6 @@ ifeq ($(HB_ARCHITECTURE),os2)
 HB_WITH_SQLITE3=yes
 endif
 ifeq ($(HB_COMPILER),bcc)
-HB_WITH_SQLITE3=no
-endif
-ifeq ($(HB_COMPILER),poccce)
 HB_WITH_SQLITE3=no
 endif
 ifeq ($(HB_COMPILER),poccarm)

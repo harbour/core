@@ -121,9 +121,10 @@ Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}
 Defaults and feature support vary by architecture/compiler.
 
 Supported <comp> values for each supported <arch> value:
-linux: gcc, gpp, owatcom, icc, mingw, mingwce
+linux: gcc, gpp, owatcom, icc
 darwin: gcc
-win: mingw, msvc, bcc, owatcom, icc, pocc, cygwin, mingwce, msvc64, msvcia64, msvcce, pocc64, poccce
+win: mingw, msvc, bcc, owatcom, icc, pocc, cygwin, msvc64, msvcia64, pocc64
+wce: mingwarm, msvcarm, poccarm
 os2: gcc, owatcom
 dos: djgpp, owatcom
 bsd, hpux, sunos: gcc

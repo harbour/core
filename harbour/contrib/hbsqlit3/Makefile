@@ -8,7 +8,6 @@ LIBNAME=hbsqlit3
 
 ifneq ($(HB_COMPILER),pocc)
 ifneq ($(HB_COMPILER),pocc64)
-ifneq ($(HB_COMPILER),poccce)
 ifneq ($(HB_COMPILER),poccarm)
 
 ifeq ($(HB_INC_SQLITE3),)

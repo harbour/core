@@ -30,7 +30,6 @@ if not "%OS%" == "Windows_NT" goto end
 
 if "%HB_COMPILER%" == "mingw"    set HB_DYNLIB=yes
 if "%HB_COMPILER%" == "mingw64"  set HB_DYNLIB=yes
-if "%HB_COMPILER%" == "mingwce"  set HB_DYNLIB=yes
 if "%HB_COMPILER%" == "mingwarm" set HB_DYNLIB=yes
 if "%HB_COMPILER%" == "cygwin"   set HB_DYNLIB=yes
 
