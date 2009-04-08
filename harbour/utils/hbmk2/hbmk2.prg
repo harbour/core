@@ -1228,10 +1228,12 @@ PROCEDURE Main( ... )
       DO CASE
       CASE t_cARCH $ "bsd|linux|hpux|sunos" .OR. t_cARCH == "darwin" /* Separated to avoid match with 'win' */
          IF Empty( cPrefix )
-            cDynLibNamePrefix := ""
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt" + cPostfix,;
+                                          "harbour"   + cPostfix ) }
+         ELSE
+            s_aLIBSHARED := { iif( s_lMT, cPrefix + cDynLibNamePrefix + "harbourmt" + cPostfix + cDynLibExt,;
+                                          cPrefix + cDynLibNamePrefix + "harbour"   + cPostfix + cDynLibExt ) }
          ENDIF
-         s_aLIBSHARED := { iif( s_lMT, cPrefix + cDynLibNamePrefix + "harbourmt" + cPostfix + cDynLibExt,;
-                                       cPrefix + cDynLibNamePrefix + "harbour"   + cPostfix + cDynLibExt ) }
       CASE t_cARCH $ "os2|win|wce"
          s_aLIBSHARED := { iif( s_lMT, cDynLibNamePrefix + "harbourmt",;
                                        cDynLibNamePrefix + "harbour" ) }
