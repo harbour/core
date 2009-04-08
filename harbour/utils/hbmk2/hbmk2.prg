@@ -1227,6 +1227,9 @@ PROCEDURE Main( ... )
 
       DO CASE
       CASE t_cARCH $ "bsd|linux|hpux|sunos" .OR. t_cARCH == "darwin" /* Separated to avoid match with 'win' */
+         IF Empty( cPrefix )
+            cDynLibNamePrefix := ""
+         ENDIF
          s_aLIBSHARED := { iif( s_lMT, cPrefix + cDynLibNamePrefix + "harbourmt" + cPostfix + cDynLibExt,;
                                        cPrefix + cDynLibNamePrefix + "harbour"   + cPostfix + cDynLibExt ) }
       CASE t_cARCH $ "os2|win|wce"
@@ -1287,7 +1290,7 @@ PROCEDURE Main( ... )
          cLibExt := ""
          cObjExt := ".o"
          cBin_Lib := t_cCCPREFIX + "ar"
-         cOpt_Lib := "{FA} cr {OL} {LO}"
+         cOpt_Lib := "{FA} rcs {OL} {LO}"
          cBin_CompC := t_cCCPREFIX + iif( t_cCOMP == "gpp" .OR. s_lCPP, "g++", "gcc" )
          IF ! Empty( t_cCCPATH )
             cBin_Lib   := t_cCCPATH + "/" + cBin_Lib
@@ -1429,7 +1432,7 @@ PROCEDURE Main( ... )
          cLibPathSep := " "
          cLibLibExt := ".a"
          cBin_Lib := t_cCCPREFIX + "ar.exe"
-         cOpt_Lib := "{FA} cr {OL} {LO}"
+         cOpt_Lib := "{FA} rcs {OL} {LO}"
          cLibObjPrefix := NIL
          IF ! Empty( t_cCCPATH )
             cBin_Lib   := t_cCCPATH + "\" + cBin_Lib
