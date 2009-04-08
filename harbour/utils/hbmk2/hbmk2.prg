@@ -67,6 +67,9 @@
 #pragma linenumber=on
 
 /*
+   Program Library HOWTO:
+      http://www.linux.org/docs/ldp/howto/Program-Library-HOWTO/index.html
+
    Man page HOWTO:
       http://www.schweikhardt.net/man_page_howto.html
    Groff manual:

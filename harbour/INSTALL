@@ -274,8 +274,8 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    You need these when building for a platform different than host.
    For this to work, you will need to point above envvars to
    a native Harbour build available on your system. You don't need
-   a full native build, harbour.exe and hbpp.exe are enough for
-   the process to succeed.
+   a full native build, harbour.exe, hbpp.exe and hbmk2.exe are
+   enough for the process to succeed.
 
 
 EXAMPLES
