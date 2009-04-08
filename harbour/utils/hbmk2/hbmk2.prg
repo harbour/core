@@ -1639,7 +1639,9 @@ PROCEDURE Main( ... )
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + cLibExt,;
                                        "harbour-" + cDL_Version_Alter + cLibExt ) }
 
-         AAdd( s_aOPTL, "FILE " + FN_ExtSet( s_cHB_LIB_INSTALL + hb_osPathSeparator() + iif( s_lGUI, "hbmainwin", "hbmainstd" ), cLibExt ) )
+         IF s_lSHARED
+            AAdd( s_aOPTL, "FILE " + FN_ExtSet( s_cHB_LIB_INSTALL + hb_osPathSeparator() + iif( s_lGUI, "hbmainwin", "hbmainstd" ), cLibExt ) )
+         ENDIF
 
          IF Len( s_aRESSRC ) > 0
             IF Len( s_aRESSRC ) == 1
