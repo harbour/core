@@ -257,6 +257,7 @@ PROCEDURE Main( ... )
    LOCAL s_lNULRDD := .F.
    LOCAL s_lMAP := .F.
    LOCAL s_lSTRIP := .F.
+   LOCAL s_lCOMPR := .F.
    LOCAL s_lTRACE := .F.
    LOCAL s_lDONTEXEC := .F.
    LOCAL s_lBLDFLGP := .F.
@@ -285,6 +286,8 @@ PROCEDURE Main( ... )
    LOCAL cResExt
    LOCAL cBinExt
    LOCAL cOptPrefix
+   LOCAL cBin_Cprs
+   LOCAL cOpt_Cprs
 
    LOCAL cCommand
 #if defined( HBMK_INTEGRATED_COMPILER )
@@ -499,6 +502,8 @@ PROCEDURE Main( ... )
       cDynLibNamePrefix := "lib"
       cBinExt := NIL
       cOptPrefix := "-"
+      cBin_Cprs := "upx"
+      cOpt_Cprs := "{OB}"
       SWITCH t_cARCH
       CASE "darwin" ; cDynLibExt := ".dylib" ; EXIT
       CASE "hpux"   ; cDynLibExt := ".sl" ; EXIT
@@ -515,6 +520,8 @@ PROCEDURE Main( ... )
       cDynLibExt := ""
       cBinExt := ".exe"
       cOptPrefix := "-/"
+      cBin_Cprs := "upx.exe"
+      cOpt_Cprs := "{OB}"
    CASE t_cARCH == "os2"
       aCOMPDET := { { {|| FindInPath( "gcc"      ) != NIL }, "gcc"     },;
                     { {|| FindInPath( "wpp386"   ) != NIL }, "owatcom" } } /* TODO: Add full support for wcc386 */
@@ -551,6 +558,8 @@ PROCEDURE Main( ... )
       cDynLibExt := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
+      cBin_Cprs := "upx.exe"
+      cOpt_Cprs := "{OB}"
       /* NOTE: Some targets (pocc and owatcom) need kernel32 explicitly. */
       s_aLIBSYSCORE := { "kernel32", "user32", "gdi32", "advapi32", "ws2_32" }
       s_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "ole32", "oleaut32", "uuid", "mpr", "winmm", "mapi32", "imm32", "msimg32" }
@@ -566,6 +575,8 @@ PROCEDURE Main( ... )
       cDynLibExt := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
+      cBin_Cprs := "upx.exe"
+      cOpt_Cprs := "{OB}"
       s_aLIBSYSCORE := { "wininet", "ws2", "commdlg", "commctrl" }
       s_aLIBSYSMISC := { "uuid", "ole32" }
    OTHERWISE
@@ -851,6 +862,7 @@ PROCEDURE Main( ... )
                    @s_lNULRDD,;
                    @s_lMAP,;
                    @s_lSTRIP,;
+                   @s_lCOMPR,;
                    @s_lRUN,;
                    @s_cGT )
 
@@ -915,6 +927,9 @@ PROCEDURE Main( ... )
       CASE cParamL == "-strip"           ; s_lSTRIP    := .T.
       CASE cParamL == "-strip-" .OR. ;
            cParamL == "-nostrip"         ; s_lSTRIP    := .F.
+      CASE cParamL == "-compr"           ; s_lCOMPR    := .T.
+      CASE cParamL == "-compr-" .OR. ;
+           cParamL == "-nocompr"         ; s_lCOMPR    := .F.
       CASE cParamL == "-run"             ; s_lRUN      := .T.
       CASE cParamL == "-run-" .OR. ;
            cParamL == "-norun"           ; s_lRUN      := .F.
@@ -1084,6 +1099,7 @@ PROCEDURE Main( ... )
             @s_lNULRDD,;
             @s_lMAP,;
             @s_lSTRIP,;
+            @s_lCOMPR,;
             @s_lRUN,;
             @s_cGT )
 
@@ -2419,21 +2435,49 @@ PROCEDURE Main( ... )
       IF ! lStopAfterCComp
          IF nErrorLevel != 0
             PauseForKey()
-         ELSEIF s_lRUN
-            s_cPROGNAME := FN_ExtSet( s_cPROGNAME, cBinExt )
-            #if defined( __PLATFORM__UNIX )
-               IF Empty( FN_DirGet( s_cPROGNAME ) )
-                  s_cPROGNAME := "." + hb_osPathSeparator() + s_cPROGNAME
+         ELSE
+            IF s_lCOMPR .AND. ! lCreateLib .AND. ! Empty( cBin_Cprs )
+
+               /* Executable compression */
+
+               IF lCreateDyn
+                  cOpt_Cprs := StrTran( cOpt_Cprs, "{OB}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cDynLibExt ) ) )
+               ELSE
+                  cOpt_Cprs := StrTran( cOpt_Cprs, "{OB}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cBinExt ) ) )
                ENDIF
-            #endif
-            IF s_lTRACE
-               IF ! s_lDONTEXEC .OR. ! t_lQuiet
-                  OutStd( "hbmk: Running executable:" + hb_osNewLine() )
+               cOpt_Cprs := AllTrim( cOpt_Cprs )
+
+               cCommand := cBin_Cprs + " " + cOpt_Cprs
+
+               IF s_lTRACE
+                  IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                     OutStd( "hbmk: Compression command:" + hb_osNewLine() )
+                  ENDIF
+                  OutStd( cCommand + hb_osNewLine() )
                ENDIF
-               OutStd( PathSepToTarget( s_cPROGNAME ) + hb_osNewLine() )
+
+               IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
+                  OutErr( "hbmk: Warning: Running compression command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+                  OutErr( cCommand + hb_osNewLine() )
+               ENDIF
             ENDIF
-            IF ! s_lDONTEXEC
-               nErrorLevel := hb_run( PathSepToTarget( s_cPROGNAME ) )
+
+            IF s_lRUN .AND. ! lCreateLib .AND. ! lCreateDyn
+               s_cPROGNAME := FN_ExtSet( s_cPROGNAME, cBinExt )
+               #if defined( __PLATFORM__UNIX )
+                  IF Empty( FN_DirGet( s_cPROGNAME ) )
+                     s_cPROGNAME := "." + hb_osPathSeparator() + s_cPROGNAME
+                  ENDIF
+               #endif
+               IF s_lTRACE
+                  IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                     OutStd( "hbmk: Running executable:" + hb_osNewLine() )
+                  ENDIF
+                  OutStd( PathSepToTarget( s_cPROGNAME ) + hb_osNewLine() )
+               ENDIF
+               IF ! s_lDONTEXEC
+                  nErrorLevel := hb_run( PathSepToTarget( s_cPROGNAME ) )
+               ENDIF
             ENDIF
          ENDIF
       ENDIF
@@ -2799,6 +2843,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                                  /* @ */ lNULRDD,;
                                  /* @ */ lMAP,;
                                  /* @ */ lSTRIP,;
+                                 /* @ */ lCOMPR,;
                                  /* @ */ lRUN,;
                                  /* @ */ cGT )
    LOCAL aFile
@@ -2838,6 +2883,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
             @lNULRDD,;
             @lMAP,;
             @lSTRIP,;
+            @lCOMPR,;
             @lRUN,;
             @cGT )
          EXIT
@@ -2867,6 +2913,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                @lNULRDD,;
                @lMAP,;
                @lSTRIP,;
+               @lCOMPR,;
                @lRUN,;
                @cGT )
          ENDIF
@@ -2893,6 +2940,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
                                  /* @ */ lNULRDD,;
                                  /* @ */ lMAP,;
                                  /* @ */ lSTRIP,;
+                                 /* @ */ lCOMPR,;
                                  /* @ */ lRUN,;
                                  /* @ */ cGT )
    LOCAL cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
@@ -3023,6 +3071,12 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
          DO CASE
          CASE ValueIsT( cLine ) ; lSTRIP := .T.
          CASE ValueIsF( cLine ) ; lSTRIP := .F.
+         ENDCASE
+
+      CASE Lower( Left( cLine, Len( "compr="      ) ) ) == "compr="      ; cLine := SubStr( cLine, Len( "compr="      ) + 1 )
+         DO CASE
+         CASE ValueIsT( cLine ) ; lCOMPR := .T.
+         CASE ValueIsF( cLine ) ; lCOMPR := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "run="        ) ) ) == "run="        ; cLine := SubStr( cLine, Len( "run="        ) + 1 )
@@ -3653,7 +3707,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -[no]fmstat       enable/disable runtime memory statistics (gcc builds only)" ,;
       "  -[no]trace        show commands executed" ,;
       "  -traceonly        show commands to be executed, but don't execute them" ,;
-      "  -[no]run          run/don't run the created executable" ,;
+      "  -[no]compr        compress executable/dynamic lib (needs UPX)" ,;
+      "  -[no]run          run/don't run output executable" ,;
       "  -nohbp            do not process .hbp files in current directory" ,;
       "" ,;
       "  -bldf[-]          inherit all/no (default) flags from Harbour build" ,;
