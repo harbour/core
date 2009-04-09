@@ -154,6 +154,11 @@ THREAD STATIC t_cHBPOSTFIX
 #define _PAR_cFileName      2
 #define _PAR_nLine          3
 
+#define _COMPR_OFF          0
+#define _COMPR_DEF          1
+#define _COMPR_MIN          2
+#define _COMPR_MAX          3
+
 PROCEDURE Main( ... )
 
    LOCAL aLIB_BASE1 := {;
@@ -257,7 +262,7 @@ PROCEDURE Main( ... )
    LOCAL s_lNULRDD := .F.
    LOCAL s_lMAP := .F.
    LOCAL s_lSTRIP := .F.
-   LOCAL s_lCOMPR := .F.
+   LOCAL s_nCOMPR := _COMPR_OFF
    LOCAL s_lTRACE := .F.
    LOCAL s_lDONTEXEC := .F.
    LOCAL s_lBLDFLGP := .F.
@@ -288,6 +293,8 @@ PROCEDURE Main( ... )
    LOCAL cOptPrefix
    LOCAL cBin_Cprs
    LOCAL cOpt_Cprs
+   LOCAL cOpt_CprsMin
+   LOCAL cOpt_CprsMax
 
    LOCAL cCommand
 #if defined( HBMK_INTEGRATED_COMPILER )
@@ -504,6 +511,8 @@ PROCEDURE Main( ... )
       cOptPrefix := "-"
       cBin_Cprs := "upx"
       cOpt_Cprs := "{OB}"
+      cOpt_CprsMin := "-1"
+      cOpt_CprsMax := "-9"
       SWITCH t_cARCH
       CASE "darwin" ; cDynLibExt := ".dylib" ; EXIT
       CASE "hpux"   ; cDynLibExt := ".sl" ; EXIT
@@ -522,6 +531,8 @@ PROCEDURE Main( ... )
       cOptPrefix := "-/"
       cBin_Cprs := "upx.exe"
       cOpt_Cprs := "{OB}"
+      cOpt_CprsMin := "-1"
+      cOpt_CprsMax := "-9"
    CASE t_cARCH == "os2"
       aCOMPDET := { { {|| FindInPath( "gcc"      ) != NIL }, "gcc"     },;
                     { {|| FindInPath( "wpp386"   ) != NIL }, "owatcom" } } /* TODO: Add full support for wcc386 */
@@ -560,6 +571,8 @@ PROCEDURE Main( ... )
       cOptPrefix := "-/"
       cBin_Cprs := "upx.exe"
       cOpt_Cprs := "{OB}"
+      cOpt_CprsMin := "-1"
+      cOpt_CprsMax := "-9"
       /* NOTE: Some targets (pocc and owatcom) need kernel32 explicitly. */
       s_aLIBSYSCORE := { "kernel32", "user32", "gdi32", "advapi32", "ws2_32" }
       s_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "ole32", "oleaut32", "uuid", "mpr", "winmm", "mapi32", "imm32", "msimg32" }
@@ -577,6 +590,8 @@ PROCEDURE Main( ... )
       cOptPrefix := "-/"
       cBin_Cprs := "upx.exe"
       cOpt_Cprs := "{OB}"
+      cOpt_CprsMin := "-1"
+      cOpt_CprsMax := "-9"
       s_aLIBSYSCORE := { "wininet", "ws2", "commdlg", "commctrl" }
       s_aLIBSYSMISC := { "uuid", "ole32" }
    OTHERWISE
@@ -862,7 +877,7 @@ PROCEDURE Main( ... )
                    @s_lNULRDD,;
                    @s_lMAP,;
                    @s_lSTRIP,;
-                   @s_lCOMPR,;
+                   @s_nCOMPR,;
                    @s_lRUN,;
                    @s_cGT )
 
@@ -927,9 +942,17 @@ PROCEDURE Main( ... )
       CASE cParamL == "-strip"           ; s_lSTRIP    := .T.
       CASE cParamL == "-strip-" .OR. ;
            cParamL == "-nostrip"         ; s_lSTRIP    := .F.
-      CASE cParamL == "-compr"           ; s_lCOMPR    := .T.
+      CASE cParamL == "-compr" .OR. ;
+           Left( cParamL, 7 ) == "-compr="
+
+           DO CASE
+           CASE SubStr( cParamL, 8 ) == "min" ; s_nCOMPR := _COMPR_MIN
+           CASE SubStr( cParamL, 8 ) == "max" ; s_nCOMPR := _COMPR_MAX
+           OTHERWISE                          ; s_nCOMPR := _COMPR_DEF
+           ENDCASE
+
       CASE cParamL == "-compr-" .OR. ;
-           cParamL == "-nocompr"         ; s_lCOMPR    := .F.
+           cParamL == "-nocompr"         ; s_nCOMPR    := _COMPR_OFF
       CASE cParamL == "-run"             ; s_lRUN      := .T.
       CASE cParamL == "-run-" .OR. ;
            cParamL == "-norun"           ; s_lRUN      := .F.
@@ -1099,7 +1122,7 @@ PROCEDURE Main( ... )
             @s_lNULRDD,;
             @s_lMAP,;
             @s_lSTRIP,;
-            @s_lCOMPR,;
+            @s_nCOMPR,;
             @s_lRUN,;
             @s_cGT )
 
@@ -2436,9 +2459,14 @@ PROCEDURE Main( ... )
          IF nErrorLevel != 0
             PauseForKey()
          ELSE
-            IF s_lCOMPR .AND. ! lCreateLib .AND. ! Empty( cBin_Cprs )
+            IF s_nCOMPR != _COMPR_OFF .AND. ! lCreateLib .AND. ! Empty( cBin_Cprs )
 
                /* Executable compression */
+
+               DO CASE
+               CASE s_nCOMPR == _COMPR_MIN ; cOpt_Cprs += " " + cOpt_CprsMin
+               CASE s_nCOMPR == _COMPR_MAX ; cOpt_Cprs += " " + cOpt_CprsMax
+               ENDCASE
 
                IF lCreateDyn
                   cOpt_Cprs := StrTran( cOpt_Cprs, "{OB}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cDynLibExt ) ) )
@@ -2843,7 +2871,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                                  /* @ */ lNULRDD,;
                                  /* @ */ lMAP,;
                                  /* @ */ lSTRIP,;
-                                 /* @ */ lCOMPR,;
+                                 /* @ */ nCOMPR,;
                                  /* @ */ lRUN,;
                                  /* @ */ cGT )
    LOCAL aFile
@@ -2883,7 +2911,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
             @lNULRDD,;
             @lMAP,;
             @lSTRIP,;
-            @lCOMPR,;
+            @nCOMPR,;
             @lRUN,;
             @cGT )
          EXIT
@@ -2913,7 +2941,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                @lNULRDD,;
                @lMAP,;
                @lSTRIP,;
-               @lCOMPR,;
+               @nCOMPR,;
                @lRUN,;
                @cGT )
          ENDIF
@@ -2940,7 +2968,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
                                  /* @ */ lNULRDD,;
                                  /* @ */ lMAP,;
                                  /* @ */ lSTRIP,;
-                                 /* @ */ lCOMPR,;
+                                 /* @ */ nCOMPR,;
                                  /* @ */ lRUN,;
                                  /* @ */ cGT )
    LOCAL cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
@@ -3075,8 +3103,11 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
 
       CASE Lower( Left( cLine, Len( "compr="      ) ) ) == "compr="      ; cLine := SubStr( cLine, Len( "compr="      ) + 1 )
          DO CASE
-         CASE ValueIsT( cLine ) ; lCOMPR := .T.
-         CASE ValueIsF( cLine ) ; lCOMPR := .F.
+         CASE ValueIsT( cLine )       ; nCOMPR := _COMPR_DEF
+         CASE ValueIsF( cLine )       ; nCOMPR := _COMPR_OFF
+         CASE Lower( cLine ) == "def" ; nCOMPR := _COMPR_DEF
+         CASE Lower( cLine ) == "min" ; nCOMPR := _COMPR_MIN
+         CASE Lower( cLine ) == "max" ; nCOMPR := _COMPR_MAX
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "run="        ) ) ) == "run="        ; cLine := SubStr( cLine, Len( "run="        ) + 1 )
@@ -3707,7 +3738,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -[no]fmstat       enable/disable runtime memory statistics (gcc builds only)" ,;
       "  -[no]trace        show commands executed" ,;
       "  -traceonly        show commands to be executed, but don't execute them" ,;
-      "  -[no]compr        compress executable/dynamic lib (needs UPX)" ,;
+      "  -[no]compr[=lev]  compress executable/dynamic lib (needs UPX)" ,;
+      "                    level can be: min, max, def" ,;
       "  -[no]run          run/don't run output executable" ,;
       "  -nohbp            do not process .hbp files in current directory" ,;
       "" ,;
@@ -3751,6 +3783,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;
       "    cflags=[C compiler flags], ldflags=[Linker flags], libpaths=[lib paths]" ,;
       "    gui|mt|shared|nulrdd|debug|map|strip|run=[yes|no]" ,;
+      "    compr=[yes|no|def|min|max]" ,;
       "    Lines starting with '#' char are ignored" ,;
       "  - Platform filters are accepted in each .hbp line and with -l options." ,;
       "    Filter format: {[!][<arch|comp>]}. Filters can be combined " ,;
