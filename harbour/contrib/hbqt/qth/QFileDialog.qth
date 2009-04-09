@@ -100,7 +100,8 @@ QStringList nameFilters () const
 #
 #  Just too difficult to handle automatically
 #
-//void open ( QObject * receiver, const char * member )
+// void open ( QObject * receiver, const char * member )
+#
 Options options () const
 QAbstractProxyModel * proxyModel () const
 bool resolveSymlinks () const

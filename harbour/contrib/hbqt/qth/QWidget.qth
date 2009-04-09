@@ -115,7 +115,8 @@ QRect frameGeometry () const
 QSize frameSize () const
 const QRect & geometry () const
 void getContentsMargins ( int * left, int * top, int * right, int * bottom ) const
-virtual HDC getDC () const
+# non-portable
+// virtual HDC getDC () const
 void grabKeyboard ()
 void grabMouse ()
 void grabMouse ( const QCursor & cursor )
@@ -179,7 +180,8 @@ const QPalette & palette () const
 QWidget * parentWidget () const
 QPoint pos () const
 QRect rect () const
-virtual void releaseDC ( HDC hdc ) const
+# non-portable
+// virtual void releaseDC ( HDC hdc ) const
 void releaseKeyboard ()
 void releaseMouse ()
 void releaseShortcut ( int id )

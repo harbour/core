@@ -60,7 +60,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 19/20 [ 95.00% ] ]
+ *  Constructed[ 18/19 [ 94.74% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -109,14 +109,6 @@ HB_FUNC( QT_QREGION_CONTAINS )
 HB_FUNC( QT_QREGION_CONTAINS_1 )
 {
    hb_retl( hbqt_par_QRegion( 1 )->contains( *hbqt_par_QRect( 2 ) ) );
-}
-
-/*
- * HRGN handle () const
- */
-HB_FUNC( QT_QREGION_HANDLE )
-{
-   hb_retptr( ( HRGN ) hbqt_par_QRegion( 1 )->handle() );
 }
 
 /*

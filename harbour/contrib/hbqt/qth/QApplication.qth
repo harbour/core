@@ -175,10 +175,13 @@ enum Type { Tty, GuiClient, GuiServer }
 virtual void commitData ( QSessionManager & manager )
 QInputContext * inputContext () const
 bool isSessionRestored () const
-//virtual bool macEventFilter ( EventHandlerCallRef, EventRef )
-//virtual bool qwsEventFilter ( QWSEvent * )
-//int qwsProcessEvent ( QWSEvent * )
-//void qwsSetCustomColors ( QRgb * colortable, int start, int numColors )
+# 
+# not-found
+// virtual bool macEventFilter ( EventHandlerCallRef, EventRef )
+// virtual bool qwsEventFilter ( QWSEvent * )
+// int qwsProcessEvent ( QWSEvent * )
+// void qwsSetCustomColors ( QRgb * colortable, int start, int numColors )
+#
 virtual void saveState ( QSessionManager & manager )
 QString sessionId () const
 QString sessionKey () const

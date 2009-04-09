@@ -99,10 +99,16 @@ QString defaultFamily () const
 bool exactMatch () const
 QString family () const
 bool fixedPitch () const
+#
 # member not found
+#
 // FT_Face freetypeFace () const
+#
 bool fromString ( const QString & descrip )
-HFONT handle () const
+#
+# Not portable
+// HFONT handle () const
+#
 # member not found
 // bool isCopyOf ( const QFont & f ) const
 bool italic () const
@@ -112,6 +118,7 @@ QString lastResortFamily () const
 QString lastResortFont () const
 qreal letterSpacing () const
 SpacingType letterSpacingType () const
+#
 # member not found
 // quint32 macFontID () const
 bool overline () const
@@ -120,6 +127,7 @@ int pointSize () const
 qreal pointSizeF () const
 bool rawMode () const
 QString rawName () const
+#
 # error: invalid conversion from `QFont*' to `uint'
 # initializing argument 1 of `void QFont::resolve(uint)'
 // QFont resolve ( const QFont & other ) const

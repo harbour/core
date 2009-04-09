@@ -60,7 +60,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 216/219 [ 98.63% ] ]
+ *  Constructed[ 214/217 [ 98.62% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -341,14 +341,6 @@ HB_FUNC( QT_QWIDGET_GETCONTENTSMARGINS )
    hb_storni( iTop, 3 );
    hb_storni( iRight, 4 );
    hb_storni( iBottom, 5 );
-}
-
-/*
- * virtual HDC getDC () const
- */
-HB_FUNC( QT_QWIDGET_GETDC )
-{
-   hb_retptr( ( HDC ) hbqt_par_QWidget( 1 )->getDC() );
 }
 
 /*
@@ -773,14 +765,6 @@ HB_FUNC( QT_QWIDGET_POS )
 HB_FUNC( QT_QWIDGET_RECT )
 {
    hb_retptr( new QRect( hbqt_par_QWidget( 1 )->rect() ) );
-}
-
-/*
- * virtual void releaseDC ( HDC hdc ) const
- */
-HB_FUNC( QT_QWIDGET_RELEASEDC )
-{
-   hbqt_par_QWidget( 1 )->releaseDC( *hbqt_par_HDC( 2 ) );
 }
 
 /*

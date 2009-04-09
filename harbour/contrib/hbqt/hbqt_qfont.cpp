@@ -140,14 +140,6 @@ HB_FUNC( QT_QFONT_FROMSTRING )
 }
 
 /*
- * HFONT handle () const
- */
-HB_FUNC( QT_QFONT_HANDLE )
-{
-   hb_retptr( ( HFONT ) hbqt_par_QFont( 1 )->handle() );
-}
-
-/*
  * bool italic () const
  */
 HB_FUNC( QT_QFONT_ITALIC )

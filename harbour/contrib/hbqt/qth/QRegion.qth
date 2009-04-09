@@ -87,8 +87,10 @@ enum RegionType { Rectangle, Ellipse }
 QRect boundingRect () const
 bool contains ( const QPoint & p ) const
 bool contains ( const QRect & r ) const
-//Handle handle () const
-HRGN handle () const
+#
+# non-portable
+// Handle handle () const
+#
 QRegion intersected ( const QRegion & r ) const
 QRegion intersected ( const QRect & rect ) const
 bool intersects ( const QRegion & region ) const

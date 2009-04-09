@@ -266,8 +266,6 @@ QRectF  hbqt_const_QRectF( int );
 QSizeF  hbqt_const_QSizeF( int );
 QPointF hbqt_const_QPointF( int );
 
-void    hb_ToOutDebug( const char * sTraceMsg, ... );
-
 #endif
 
 #endif /* __HBQT_H */

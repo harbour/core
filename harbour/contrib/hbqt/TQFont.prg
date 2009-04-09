@@ -70,7 +70,6 @@ CREATE CLASS QFont
    METHOD  family()                            INLINE  Qt_QFont_family( ::pPtr )
    METHOD  fixedPitch()                        INLINE  Qt_QFont_fixedPitch( ::pPtr )
    METHOD  fromString( cDescrip )              INLINE  Qt_QFont_fromString( ::pPtr, cDescrip )
-   METHOD  handle()                            INLINE  Qt_QFont_handle( ::pPtr )
    METHOD  italic()                            INLINE  Qt_QFont_italic( ::pPtr )
    METHOD  kerning()                           INLINE  Qt_QFont_kerning( ::pPtr )
    METHOD  key()                               INLINE  Qt_QFont_key( ::pPtr )

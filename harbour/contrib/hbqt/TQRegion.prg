@@ -66,7 +66,6 @@ CREATE CLASS QRegion
    METHOD  boundingRect()                      INLINE  Qt_QRegion_boundingRect( ::pPtr )
    METHOD  contains( pP )                      INLINE  Qt_QRegion_contains( ::pPtr, pP )
    METHOD  contains_1( pR )                    INLINE  Qt_QRegion_contains_1( ::pPtr, pR )
-   METHOD  handle()                            INLINE  Qt_QRegion_handle( ::pPtr )
    METHOD  intersected( pR )                   INLINE  Qt_QRegion_intersected( ::pPtr, pR )
    METHOD  intersected_1( pRect )              INLINE  Qt_QRegion_intersected_1( ::pPtr, pRect )
    METHOD  intersects( pRegion )               INLINE  Qt_QRegion_intersects( ::pPtr, pRegion )
