@@ -102,7 +102,9 @@ void clearMask ()
 QRect contentsRect () const
 Qt::ContextMenuPolicy contextMenuPolicy () const
 QCursor cursor () const
-WId effectiveWinId () const
+#
+# non-portable
+// WId effectiveWinId () const
 void ensurePolished () const
 Qt::FocusPolicy focusPolicy () const
 QWidget * focusProxy () const

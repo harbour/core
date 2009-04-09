@@ -60,7 +60,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 214/217 [ 98.62% ] ]
+ *  Constructed[ 213/216 [ 98.61% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -227,14 +227,6 @@ HB_FUNC( QT_QWIDGET_CONTEXTMENUPOLICY )
 HB_FUNC( QT_QWIDGET_CURSOR )
 {
    hb_retptr( new QCursor( hbqt_par_QWidget( 1 )->cursor() ) );
-}
-
-/*
- * WId effectiveWinId () const
- */
-HB_FUNC( QT_QWIDGET_EFFECTIVEWINID )
-{
-   hb_retptr( ( HWND ) hbqt_par_QWidget( 1 )->effectiveWinId() );
 }
 
 /*

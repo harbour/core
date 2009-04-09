@@ -81,7 +81,6 @@ CREATE CLASS QWidget INHERIT QObject, QPaintDevice
    METHOD  contentsRect()                      INLINE  Qt_QWidget_contentsRect( ::pPtr )
    METHOD  contextMenuPolicy()                 INLINE  Qt_QWidget_contextMenuPolicy( ::pPtr )
    METHOD  cursor()                            INLINE  Qt_QWidget_cursor( ::pPtr )
-   METHOD  effectiveWinId()                    INLINE  Qt_QWidget_effectiveWinId( ::pPtr )
    METHOD  ensurePolished()                    INLINE  Qt_QWidget_ensurePolished( ::pPtr )
    METHOD  focusPolicy()                       INLINE  Qt_QWidget_focusPolicy( ::pPtr )
    METHOD  focusProxy()                        INLINE  Qt_QWidget_focusProxy( ::pPtr )
