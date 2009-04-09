@@ -509,10 +509,12 @@ PROCEDURE Main( ... )
       cDynLibNamePrefix := "lib"
       cBinExt := NIL
       cOptPrefix := "-"
-      cBin_Cprs := "upx"
-      cOpt_Cprs := "{OB}"
-      cOpt_CprsMin := "-1"
-      cOpt_CprsMax := "-9"
+      IF t_cARCH == "linux"
+         cBin_Cprs := "upx"
+         cOpt_Cprs := "{OB}"
+         cOpt_CprsMin := "-1"
+         cOpt_CprsMax := "-9"
+      ENDIF
       SWITCH t_cARCH
       CASE "darwin" ; cDynLibExt := ".dylib" ; EXIT
       CASE "hpux"   ; cDynLibExt := ".sl" ; EXIT
@@ -3719,7 +3721,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -l<libname>       link with <libname> library" ,;
       "  -L<libpath>       additional path to search for libraries" ,;
       "  -static|-shared   link with static/shared libs" ,;
-      "  -mt|-st           link with multi-thread/single-thread VM" ,;
+      "  -mt|-st           link with multi/single-thread VM" ,;
       "  -gt<name>         link with GT<name> GT driver, can be repeated to link" ,;
       "                    with more GTs. First one will be the default at runtime" }
 
