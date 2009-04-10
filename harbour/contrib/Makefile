@@ -58,4 +58,8 @@ DIRS += $(HB_CONTRIB_ADDONS)
 
 # DIRS += examples
 
-include $(ROOT)config/dir.cf
+ifneq ($(DIRS),)
+include $(TOP)$(ROOT)config/dir.cf
+else
+include $(TOP)$(ROOT)config/none.cf
+endif

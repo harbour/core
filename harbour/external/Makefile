@@ -22,4 +22,8 @@ endif
 
 DIRS += $(HB_EXTERNAL_ADDONS)
 
-include $(ROOT)config/dir.cf
+ifneq ($(DIRS),)
+include $(TOP)$(ROOT)config/dir.cf
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
