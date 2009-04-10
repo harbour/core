@@ -246,7 +246,11 @@ typedef struct
 #        define hb_stack_ref()      ( hb_stack_ptr )
 #     endif
 #  else
-      extern HB_STACK hb_stack;
+#     if defined( HB_STACK_LOCAL_MACROS )
+         static HB_STACK hb_stack;
+#     else
+         extern HB_STACK hb_stack;
+#     endif
 #     define hb_stack_ref()         ( &hb_stack )
 #  endif
 #endif

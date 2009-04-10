@@ -133,9 +133,9 @@
 #else
 
    /* no MT mode */
-#  if defined( HB_STACK_MACROS )
+#  if defined( HB_STACK_MACROS ) && !defined( HB_STACK_LOCAL_MACROS )
       HB_STACK hb_stack;
-#  else
+#  elif !defined( __cplusplus )
       static HB_STACK hb_stack;
 #  endif
 

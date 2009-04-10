@@ -50,7 +50,7 @@
  *
  */
 
-#include "hbvmopt.h"
+#include "hbvmint.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -351,9 +351,11 @@ HB_FUNC( HB_HMERGE )
                hb_vmPush( pValue );
                hb_vmPushLong( ulPos );
                hb_vmSend( 3 );
-               if( HB_IS_LOGICAL( hb_stackReturnItem() ) &&
-                   hb_itemGetL( hb_stackReturnItem() ) )
-                  hb_hashAdd( pDest, pKey, pValue );
+               {
+                  PHB_ITEM pReturn = hb_stackReturnItem();
+                  if( HB_IS_LOGICAL( pReturn ) && hb_itemGetL( pReturn ) )
+                     hb_hashAdd( pDest, pKey, pValue );
+               }
             }
             else
                break;
@@ -435,11 +437,13 @@ HB_FUNC( HB_HSCAN )
                hb_vmPush( pVal );
                hb_vmPushLong( ulStart );
                hb_vmSend( 3 );
-               if( HB_IS_LOGICAL( hb_stackReturnItem() ) &&
-                   hb_itemGetL( hb_stackReturnItem() ) )
                {
-                  fFound = TRUE;
-                  break;
+                  PHB_ITEM pReturn = hb_stackReturnItem();
+                  if( HB_IS_LOGICAL( pReturn ) && hb_itemGetL( pReturn ) )
+                  {
+                     fFound = TRUE;
+                     break;
+                  }
                }
             }
             else

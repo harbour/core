@@ -50,7 +50,6 @@
  *
  */
 
-#include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbvm.h"
 
@@ -193,4 +192,3 @@ void hb_vmSymbolInit_RT( void )
 
    hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) );
 }
-

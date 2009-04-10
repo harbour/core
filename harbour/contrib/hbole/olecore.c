@@ -53,6 +53,9 @@
 
 #include "hbwinole.h"
 
+/* base date value in OLE (1899-12-30) as julian day */
+#define HB_OLE_DATE_BASE      0x0024D9AB
+
 static PHB_DYNS s_pDyns_hb_oleauto;
 static PHB_DYNS s_pDyns_hObjAccess;
 static PHB_DYNS s_pDyns_hObjAssign;
@@ -185,12 +188,12 @@ static void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
 
       case HB_IT_DATE:
          pVariant->n1.n2.vt = VT_DATE;
-         pVariant->n1.n2.n3.dblVal = ( double ) ( hb_itemGetDL( pItem ) - 0x0024D9AB );
+         pVariant->n1.n2.n3.dblVal = ( double ) ( hb_itemGetDL( pItem ) - HB_OLE_DATE_BASE );
          break;
 
       case HB_IT_TIMESTAMP:
          pVariant->n1.n2.vt = VT_DATE;
-         pVariant->n1.n2.n3.dblVal = hb_itemGetTD( pItem ) - 0x0024D9AB;
+         pVariant->n1.n2.n3.dblVal = hb_itemGetTD( pItem ) - HB_OLE_DATE_BASE;
          break;
 
       case HB_IT_OBJECT:
@@ -318,7 +321,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
       {
            long lJulian, lMilliSec;
 
-           hb_timeStampUnpackDT( pVariant->n1.n2.n3.dblVal + 0x0024D9AB, &lJulian, &lMilliSec );
+           hb_timeStampUnpackDT( pVariant->n1.n2.n3.dblVal + HB_OLE_DATE_BASE, &lJulian, &lMilliSec );
            if( lMilliSec )
               hb_itemPutTDT( pItem, lJulian, lMilliSec );
            else
@@ -412,13 +415,12 @@ HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
       }
 
       if( lOleError == S_OK )
-         lOleError = CoCreateInstance( HB_ID_REF( ClassID ), NULL, CLSCTX_SERVER, fIID ? HB_ID_REF( iid ) : HB_ID_REF( IID_IDispatch ), ( void** ) &pDisp );
+         lOleError = CoCreateInstance( HB_ID_REF( ClassID ), NULL, CLSCTX_SERVER, fIID ? HB_ID_REF( iid ) : HB_ID_REF( IID_IDispatch ), ( void** ) ( void * ) &pDisp );
    }
    else
       lOleError = CO_E_CLASSSTRING;
 
    hb_setOleError( lOleError );
-
    ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
    *ppDisp = pDisp;
    hb_retptrGC( ppDisp );
@@ -468,7 +470,7 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 
          if ( lOleError == S_OK )
 #if HB_OLE_C_API
-            lOleError = pUnk->lpVtbl->QueryInterface( pUnk, fIID ? &iid : &IID_IDispatch, ( void** ) &pDisp );
+            lOleError = pUnk->lpVtbl->QueryInterface( pUnk, fIID ? &iid : &IID_IDispatch, ( void** ) ( void * ) &pDisp );
 #else
             lOleError = pUnk->QueryInterface( fIID ? iid : IID_IDispatch, ( void** ) &pDisp );
 #endif
@@ -502,11 +504,11 @@ HB_FUNC( OLERELEASE )
          *ppDisp = NULL;
          hb_retl( TRUE );
       }
+      else
+         hb_retl( FALSE );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-
-   hb_retl( FALSE );
 }
 
 
@@ -564,6 +566,8 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
    hb_vmSend( 0 );
 
    pDisp = hb_oleParam( -1 );
+   if( !pDisp )
+      return;
 
    szMethod = hb_itemGetSymbol( hb_stackBaseItem() )->szName;
    szMethodWide = AnsiToWide( szMethod );

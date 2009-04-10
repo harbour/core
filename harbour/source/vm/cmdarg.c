@@ -52,7 +52,6 @@
 
 #define HB_OS_WIN_USED
 
-#include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"

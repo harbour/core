@@ -66,7 +66,7 @@
  *
  */
 
-#include "hbvmopt.h"
+#include "hbvmint.h"
 #include "hbapi.h"
 #include "hbapicls.h"
 #include "hbapiitm.h"

@@ -58,7 +58,7 @@
 #define HB_OS_WIN_USED
 #define INCL_DOSMODULEMGR
 
-#include "hbvmopt.h"
+#include "hbvmint.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbstack.h"

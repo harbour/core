@@ -58,7 +58,7 @@
          SORTING AND SEARCHING ALGORITHMS: A COOKBOOK, BY THOMAS NIEMANN
          http://members.xoom.com/_XMCM/thomasn/s_man.htm */
 
-#include "hbvmopt.h"
+#include "hbvmint.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
 #include "hbstack.h"
@@ -75,8 +75,11 @@ static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock, PH
 
       if( pBaseArray->ulLen <= ulLast )
          return FALSE;
-      else if( HB_IS_LOGICAL( hb_stackReturnItem() ) )
-         return hb_itemGetL( hb_stackReturnItem() );
+      else
+         /* CA-Cl*pper always takes return value as logical item
+          * accepting 0, 1 as numeric representation of FALSE/TRUE
+          */
+         return hb_parl( -1 );
    }
 
    /* Do native compare when no codeblock is supplied */

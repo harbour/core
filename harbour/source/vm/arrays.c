@@ -214,7 +214,6 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
          {
             if( pBaseArray->ulLen < ulLen )
             {
-
                if( pBaseArray->ulAllocated < ulLen )
                {
                   /* 
@@ -252,8 +251,8 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
                }
                else if( ulLen < ( pBaseArray->ulAllocated >> 1 ) )
                {
-                  pBaseArray->ulAllocated = ulLen;
                   pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
+                  pBaseArray->ulAllocated = ulLen;
                }
             }
          }

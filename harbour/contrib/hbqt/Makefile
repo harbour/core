@@ -38,7 +38,7 @@ ifeq ($(HB_WITH_QT),yes)
 
 ifeq ($(HB_INC_QT),)
 ifeq ($(HB_XBUILD),)
-HB_INC_QT = /usr/include/qt4 /Developer/qt/include
+HB_INC_QT = /usr/include/qt4 /usr/include /Developer/qt/include
 endif
 endif
 
