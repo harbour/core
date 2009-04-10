@@ -87,6 +87,34 @@ static void hb_olecore_init( void* cargo )
 }
 
 
+static HB_GARBAGE_FUNC( hb_ole_destructor )
+{
+   IDispatch**  ppDisp = ( IDispatch** ) Cargo;
+
+   if( *ppDisp )
+   {
+#if HB_OLE_C_API
+      ( *ppDisp )->lpVtbl->Release( *ppDisp );
+#else
+      ( *ppDisp )->Release();
+#endif
+      *ppDisp = NULL;
+   }
+}
+
+
+static IDispatch* hb_oleParam( int iParam )
+{
+   IDispatch**  ppDisp = ( IDispatch** ) hb_parptrGC( hb_ole_destructor, iParam );
+
+   if( ppDisp && *ppDisp )
+      return *ppDisp;
+
+   hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   return NULL;
+}
+
+
 /* Unicode string management */
 
 static wchar_t* AnsiToWide( const char* szString )
@@ -172,7 +200,7 @@ static void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
             hb_vmPush( pItem );
             hb_vmSend( 0 );
             pVariant->n1.n2.vt = VT_DISPATCH;
-            pVariant->n1.n2.n3.pdispVal = ( IDispatch* ) hb_parptr( -1 );
+            pVariant->n1.n2.n3.pdispVal = hb_oleParam( -1 );
          }
          break;
    }
@@ -199,7 +227,8 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          hb_itemClear( pItem );
          if( pVariant->n1.n2.n3.pdispVal )
          {
-            PHB_ITEM pObject;
+            PHB_ITEM    pObject, pPtrGC;
+            IDispatch** ppDisp;
 
             /* TODO: save/restore stack return item */
 
@@ -209,12 +238,17 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 
             pObject = hb_itemNew( hb_stackReturnItem() );
 
+            ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
+            *ppDisp = pVariant->n1.n2.n3.pdispVal;
+            pPtrGC = hb_itemPutPtrGC( NULL, ppDisp );
+
             hb_vmPushDynSym( s_pDyns_hObjAssign );
             hb_vmPush( pObject );
-            hb_vmPushPointer( pVariant->n1.n2.n3.pdispVal );
+            hb_vmPush( pPtrGC );
             hb_vmSend( 1 );
             hb_itemMove( pItem, pObject );
             hb_itemRelease( pObject );
+            hb_itemRelease( pPtrGC );
          }
          break;
       }
@@ -346,7 +380,8 @@ HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    wchar_t*    cCLSID;
    GUID        ClassID, iid;
    BOOL        fIID = FALSE;
-   LPVOID      pDisp = NULL; /* IDispatch* */
+   IDispatch*  pDisp = NULL;
+   IDispatch** ppDisp;
    const char* cOleName = hb_parc( 1 );
    const char* cID = hb_parc( 2 );
    HRESULT     lOleError;
@@ -377,13 +412,16 @@ HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
       }
 
       if( lOleError == S_OK )
-         lOleError = CoCreateInstance( HB_ID_REF( ClassID ), NULL, CLSCTX_SERVER, fIID ? HB_ID_REF( iid ) : HB_ID_REF( IID_IDispatch ), &pDisp );
+         lOleError = CoCreateInstance( HB_ID_REF( ClassID ), NULL, CLSCTX_SERVER, fIID ? HB_ID_REF( iid ) : HB_ID_REF( IID_IDispatch ), ( void** ) &pDisp );
    }
    else
       lOleError = CO_E_CLASSSTRING;
 
    hb_setOleError( lOleError );
-   hb_retptr( pDisp );
+
+   ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
+   *ppDisp = pDisp;
+   hb_retptrGC( ppDisp );
 }
 
 
@@ -392,7 +430,8 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    BSTR        wCLSID;
    IID         ClassID, iid;
    BOOL        fIID = FALSE;
-   LPVOID      pDisp = NULL; /* IDispatch* */
+   IDispatch*  pDisp = NULL;
+   IDispatch** ppDisp;
    IUnknown*   pUnk = NULL;
    const char* cOleName = hb_parc( 1 );
    const char* cID = hb_parc( 2 );
@@ -429,9 +468,9 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 
          if ( lOleError == S_OK )
 #if HB_OLE_C_API
-            lOleError = pUnk->lpVtbl->QueryInterface( pUnk, fIID ? &iid : &IID_IDispatch, &pDisp );
+            lOleError = pUnk->lpVtbl->QueryInterface( pUnk, fIID ? &iid : &IID_IDispatch, ( void** ) &pDisp );
 #else
-            lOleError = pUnk->QueryInterface( fIID ? iid : IID_IDispatch, &pDisp );
+            lOleError = pUnk->QueryInterface( fIID ? iid : IID_IDispatch, ( void** ) &pDisp );
 #endif
       }
    }
@@ -439,25 +478,35 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
       lOleError = CO_E_CLASSSTRING;
 
    hb_setOleError( lOleError );
-   hb_retptr( pDisp );
+   ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
+   *ppDisp = pDisp;
+   hb_retptrGC( ppDisp );
 }
 
 
 HB_FUNC( OLERELEASE )
 {
-   IDispatch * pDisp = ( IDispatch* ) hb_parptr( 1 );
+   IDispatch** ppDisp = ( IDispatch** ) hb_parptrGC( hb_ole_destructor, 1 );
    HRESULT     lOleError;
 
-   if( pDisp )
+   if( ppDisp && *ppDisp )
+   {
 #if HB_OLE_C_API
-      lOleError = ( HRESULT ) pDisp->lpVtbl->Release( pDisp );
+      lOleError = ( HRESULT ) ( *ppDisp )->lpVtbl->Release( *ppDisp );
 #else
-      lOleError = ( HRESULT ) pDisp->Release();
+      lOleError = ( HRESULT ) ( *ppDisp )->Release();
 #endif
+      hb_setOleError( lOleError );
+      if( lOleError == S_OK )
+      {
+         *ppDisp = NULL;
+         hb_retl( TRUE );
+      }
+   }
    else
-      lOleError = E_INVALIDARG;
-   hb_setOleError( lOleError );
-   hb_retl( lOleError == S_OK  );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+
+   hb_retl( FALSE );
 }
 
 
@@ -513,13 +562,8 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
    hb_vmPushDynSym( s_pDyns_hObjAccess );
    hb_vmPush( hb_stackSelfItem() );
    hb_vmSend( 0 );
-   pDisp = ( IDispatch* ) hb_parptr( -1 );
 
-   if( ! pDisp )
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 1005, "Invalid HB_OLEAUTO object", hb_parc( -1 ), HB_ERR_ARGS_SELFPARAMS );
-      return;
-   }
+   pDisp = hb_oleParam( -1 );
 
    szMethod = hb_itemGetSymbol( hb_stackBaseItem() )->szName;
    szMethodWide = AnsiToWide( szMethod );
@@ -611,25 +655,6 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
       hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, szMethod + 1, HB_ERR_ARGS_BASEPARAMS );
    else
       hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, szMethod, HB_ERR_ARGS_BASEPARAMS );
-}
-
-
-HB_FUNC( HB_OLEAUTO___DTOR )
-{
-   IDispatch*  pDisp;
-
-   /* Get object handle */
-   hb_vmPushDynSym( s_pDyns_hObjAccess );
-   hb_vmPush( hb_stackSelfItem() );
-   hb_vmSend( 0 );
-
-   pDisp = ( IDispatch* ) hb_parptr( -1 );
-   if( pDisp )
-#if HB_OLE_C_API
-      pDisp->lpVtbl->Release( pDisp );
-#else
-      pDisp->Release();
-#endif
 }
 
 

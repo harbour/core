@@ -60,7 +60,6 @@ CLASS HB_OleAuto
    DATA __hObj
 
    ERROR HANDLER __OnError()
-   DESTRUCTOR    __Dtor()
 ENDCLASS
 
 
