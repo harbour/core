@@ -183,7 +183,7 @@ static HB_ERRCODE fbConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
    memcpy( parambuf + i, hb_arrayGetCPtr( pItem, 4 ), ul );
    i += ul;
 
-   if ( isc_attach_database( status, hb_arrayGetCLen( pItem, 5 ), hb_arrayGetCPtr( pItem, 5 ),
+   if ( isc_attach_database( status, ( short ) hb_arrayGetCLen( pItem, 5 ), hb_arrayGetCPtr( pItem, 5 ),
                              & db, (short) i, parambuf ) )
    {
       /* TODO: error code in status[1]; */
@@ -228,7 +228,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 
    if ( isc_start_transaction ( status, &pTrans, 1, (isc_db_handle*) &pArea->pConnection->hConnection, 0, NULL ) )
    {
-      hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_START, "Start transaction failed", NULL, status[ 1 ] );
+      hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_START, "Start transaction failed", NULL, ( USHORT ) status[ 1 ] );
       return HB_FAILURE;
    }
 
@@ -238,7 +238,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 
    if ( isc_dsql_allocate_statement( status, (isc_db_handle*) &pArea->pConnection->hConnection, &pStmt ) )
    {
-      hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_STMTALLOC, "Allocate statement failed", NULL, status[ 1 ] );
+      hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_STMTALLOC, "Allocate statement failed", NULL, ( USHORT ) status[ 1 ] );
       isc_rollback_transaction( status, &pTrans );
       hb_xfree( pSqlda );
       return HB_FAILURE;
@@ -246,7 +246,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 
    if ( isc_dsql_prepare( status, &pTrans, &pStmt, 0, pArea->szQuery, DIALECT, pSqlda ) )
    {
-      hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_INVALIDQUERY, "Prepare statement failed", pArea->szQuery, status[ 1 ] );
+      hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_INVALIDQUERY, "Prepare statement failed", pArea->szQuery, ( USHORT ) status[ 1 ] );
       isc_dsql_free_statement( status, &pStmt, DSQL_drop );
       isc_rollback_transaction( status, &pTrans );
       hb_xfree( pSqlda );
@@ -262,7 +262,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 
       if ( isc_dsql_describe( status, & pStmt, DIALECT, pSqlda ) )
       {
-         hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_STMTDESCR, "Describe statement failed", NULL, status[ 1 ] );
+         hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_STMTDESCR, "Describe statement failed", NULL, ( USHORT ) status[ 1 ] );
          isc_dsql_free_statement( status, &pStmt, DSQL_drop );
          isc_rollback_transaction( status, &pTrans );
          hb_xfree( pSqlda );
@@ -406,8 +406,8 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    hb_xfree( pBuffer );
 
    pArea->pResult = pSqlda;
-   pArea->pStmt = pStmt;
-   pArea->pTrans = pTrans;
+   pArea->pStmt = ( void* ) pStmt;
+   pArea->pTrans = ( void* ) pTrans;
 
    if ( bError )
    {
@@ -443,12 +443,19 @@ static HB_ERRCODE fbClose( SQLBASEAREAP pArea )
    }
    if ( pArea->pStmt )
    {
-      isc_dsql_free_statement( status, &pArea->pStmt, DSQL_drop );
+      isc_stmt_handle  stmt = ( isc_stmt_handle ) pArea->pStmt;
+
+      /* We can not pass here ( isc_stmt_handle* ) &pArea->pStmt. 
+         It will not work on 64bit big-endian system, since on 64bit 
+         handle is unsigned int */
+      isc_dsql_free_statement( status, &stmt, DSQL_drop );
       pArea->pStmt = NULL;
    }
    if ( pArea->pTrans )
    {
-      isc_rollback_transaction( status, &pArea->pTrans );
+      isc_tr_handle   tr = ( isc_tr_handle ) pArea->pTrans;
+
+      isc_rollback_transaction( status, &tr );
       pArea->pTrans = NULL;
    }
    return HB_SUCCESS;
@@ -466,7 +473,10 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
 
    while ( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )
    {
-      lErr = isc_dsql_fetch( status, &pArea->pStmt, DIALECT, (XSQLDA *) pArea->pResult );
+      isc_stmt_handle  stmt = ( isc_stmt_handle ) pArea->pStmt;
+      isc_tr_handle  tr = ( isc_tr_handle ) pArea->pTrans;
+
+      lErr = isc_dsql_fetch( status, &stmt, DIALECT, (XSQLDA *) pArea->pResult );
 
       if ( lErr == 0 )
       {
@@ -528,16 +538,16 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
       else if ( lErr == 100L )
       {
          pArea->fFetched = TRUE;
-         if ( isc_dsql_free_statement( status, & pArea->pStmt, DSQL_drop ) )
+         if ( isc_dsql_free_statement( status, &stmt, DSQL_drop ) )
          {
-            hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_STMTFREE, "Statement free error", NULL, status[ 1 ] );
+            hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_STMTFREE, "Statement free error", NULL, ( USHORT ) status[ 1 ] );
             return HB_FAILURE;
          }
          pArea->pStmt = NULL;
 
-         if ( isc_commit_transaction( status, & pArea->pTrans ) )
+         if ( isc_commit_transaction( status, &tr ) )
          {
-            hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_COMMIT, "Transaction commit error", NULL, status[ 1 ] );
+            hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_COMMIT, "Transaction commit error", NULL, ( USHORT ) status[ 1 ] );
             return HB_FAILURE;
          }
          pArea->pTrans = NULL;
