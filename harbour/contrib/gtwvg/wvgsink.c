@@ -143,8 +143,14 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem );
 
 HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant );
 
-void HB_EXPORT hb_ToOutDebug( const char * sTraceMsg, ... );
+/* Switch it on when required tracing. While committing switch it off */
+#if 0
+#define __HBTOOUT__
+#endif
 
+#ifdef __HBTOOUT__
+void hb_ToOutDebug( const char * sTraceMsg, ... );
+#endif
 /*----------------------------------------------------------------------*/
 
 #if !defined( StringCchCat )
@@ -316,7 +322,9 @@ static HRESULT STDMETHODCALLTYPE QueryInterface( IEventHandler *self, REFIID vTa
    {
       *ppv = ( IUnknown * ) self;
       /* Increment the count of callers who have an outstanding pointer to self object */
+#ifdef __HBTOOUT__
 hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IUnknown ) ) )" );
+#endif
       self->lpVtbl->AddRef( self );
       return S_OK;
    }
@@ -324,7 +332,9 @@ hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB
    if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IDispatch ) ) )
    {
       *ppv = ( IDispatch * ) self;
+#ifdef __HBTOOUT__
 hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IDispatch ) ) )" );
+#endif
       self->lpVtbl->AddRef( self );
       return S_OK;
    }
@@ -334,7 +344,9 @@ hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB
       if( ++( ( ( MyRealIEventHandler * ) self )->iID_riid ) == 1 )
       {
          *ppv = ( IDispatch* ) self;
+#ifdef __HBTOOUT__
 hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB_ID_REF( ( ( MyRealIEventHandler * ) self )->device_event_interface_iid ) ) )" );
+#endif
          self->lpVtbl->AddRef( self );
       }
       return S_OK;
@@ -1122,8 +1134,9 @@ int LoadTypeInformation( IDispatch* pDisp ) /* pass dispatch interface */
     *wsprintf( cBuffer, "typeinfocount: %i", i );
     *OutputDebugString( cBuffer);
     */
+#ifdef __HBTOOUT__
    hb_ToOutDebug( "---------------- start ------------------" );
-
+#endif
    hr = pDisp->lpVtbl->GetTypeInfo( pDisp, 0, LOCALE_SYSTEM_DEFAULT, &pTypeInfo );
    if( hr != S_OK || pTypeInfo == NULL )
    {

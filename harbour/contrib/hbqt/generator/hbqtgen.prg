@@ -658,22 +658,6 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                aA[ PRT_BODY ] := 'hbqt_par_QString( '+ cHBIdx +' )'
                aA[ PRT_DOC  ] := 'c'+ cDocNM
 
-            CASE aA[ PRT_CAST ] == 'HFONT'
-               aA[ PRT_BODY ] := IF( aA[ PRT_L_CONST ], '*','' ) +'hbqt_par_HFONT( '+ cHBIdx +' )'
-               aA[ PRT_DOC  ] := 'h'+ cDocNM
-
-            CASE aA[ PRT_CAST ] == 'HDC'
-               aA[ PRT_BODY ] := '*hbqt_par_HDC( '+ cHBIdx +' )'
-               aA[ PRT_DOC  ] := 'h'+ cDocNM
-
-            CASE aA[ PRT_CAST ] == 'WId'
-               aA[ PRT_BODY ] := 'hbqt_par_WId( '+ cHBIdx +' )'
-               aA[ PRT_DOC  ] := 'h'+ cDocNM
-
-            CASE aA[ PRT_CAST ] == 'HRGN'
-               aA[ PRT_BODY ] := 'hbqt_par_HRGN( '+ cHBIdx +' )'
-               aA[ PRT_DOC  ] := 'h'+ cDocNM
-
             CASE aA[ PRT_CAST ] == 'FT_Face'
                aA[ PRT_BODY ] := 'hbqt_par_FT_Face( '+ cHBIdx +' )'
                aA[ PRT_DOC  ] := 'c'+ cDocNM
@@ -698,6 +682,22 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                #endif
                aA[ PRT_DOC  ] := 'p'+ cDocNM
 #if 0
+            CASE aA[ PRT_CAST ] == 'HFONT'
+               aA[ PRT_BODY ] := IF( aA[ PRT_L_CONST ], '*','' ) +'hbqt_par_HFONT( '+ cHBIdx +' )'
+               aA[ PRT_DOC  ] := 'h'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'HDC'
+               aA[ PRT_BODY ] := '*hbqt_par_HDC( '+ cHBIdx +' )'
+               aA[ PRT_DOC  ] := 'h'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'WId'
+               aA[ PRT_BODY ] := 'hbqt_par_WId( '+ cHBIdx +' )'
+               aA[ PRT_DOC  ] := 'h'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'HRGN'
+               aA[ PRT_BODY ] := 'hbqt_par_HRGN( '+ cHBIdx +' )'
+               aA[ PRT_DOC  ] := 'h'+ cDocNM
+
             CASE aA[ PRT_CAST ] == 'QRect'
                aA[ PRT_BODY ] := 'hbqt_const_QRect( ' + cHBIdx + ' )'
                aA[ PRT_DOC  ] := 'a'+ cDocNM
@@ -778,22 +778,6 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cCmd := 'hb_retc( '+ cCmn +'.toLatin1().data()' +' )'
                cPrgRet := 'c'+cDocNM
 
-            CASE aA[ PRT_CAST ] == 'HFONT'
-               cCmd := 'hb_retptr( ( HFONT ) '+ cCmn +' )'
-               cPrgRet := 'h'+cDocNM
-
-            CASE aA[ PRT_CAST ] == 'HDC'
-               cCmd := 'hb_retptr( ( HDC ) '+ cCmn +' )'
-               cPrgRet := 'h'+cDocNM
-
-            CASE aA[ PRT_CAST ] == 'WId'
-               cCmd := 'hb_retptr( ( HWND ) '+ cCmn +' )'
-               cPrgRet := 'h'+cDocNM
-
-            CASE aA[ PRT_CAST ] == 'HRGN'
-               cCmd := 'hb_retptr( ( HRGN ) '+ cCmn +' )'
-               cPrgRet := 'h'+cDocNM
-
             CASE aA[ PRT_CAST ] == 'FT_Face'
                cCmd := 'hb_retc( '+ cCmn +' )'
                cPrgRet := 'c'+cDocNM
@@ -822,6 +806,22 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cCmd := 'hb_retptr( ( '+ aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
                cPrgRet := 'p'+cDocNM
 #if 0
+            CASE aA[ PRT_CAST ] == 'HFONT'
+               cCmd := 'hb_retptr( ( HFONT ) '+ cCmn +' )'
+               cPrgRet := 'h'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'HDC'
+               cCmd := 'hb_retptr( ( HDC ) '+ cCmn +' )'
+               cPrgRet := 'h'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'WId'
+               cCmd := 'hb_retptr( ( HWND ) '+ cCmn +' )'
+               cPrgRet := 'h'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'HRGN'
+               cCmd := 'hb_retptr( ( HRGN ) '+ cCmn +' )'
+               cPrgRet := 'h'+cDocNM
+
             CASE aA[ PRT_CAST ] == 'QRect'
                cCmd := 'hbqt_ret_QRect( '+ cCmn +' )'
                cPrgRet := 'a'+cDocNM
