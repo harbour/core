@@ -137,6 +137,12 @@
 STATIC s_lStdOut := .F.
 
 #ifdef __HARBOUR__
+#ifndef __XHARBOUR__
+#include "hbver.ch"
+#endif
+#endif
+
+#ifdef __HARBOUR__
 proc main( ... )
    local aParams := hb_aparams()
 #else
@@ -504,8 +510,9 @@ endif
 ? date(), time(), os()
 ? version() + iif( hb_mtvm(), " (MT)" + iif( nMT != 0, "+", "" ), "" ), ""
 #ifdef __HARBOUR__
-   ?? hb_compiler()
+   ?? hb_compiler(), ""
 #endif
+?? spd_cpu()
 
 if lScale .and. nMT < 1
    nMT := 1
@@ -729,6 +736,32 @@ static proc use_dbsh()
    use TMP_FILE shared
 return
 
+#ifdef __HARBOUR__
+#ifndef __XHARBOUR__
+   static function spd_cpu()
+   return hb_version( HB_VERSION_CPU )
+#endif
+#endif
+#ifdef __CLIPPER__
+   static function spd_cpu()
+   return "x86"
+#endif
+#ifdef FlagShip
+   static function spd_cpu()
+   return "?"
+#endif
+#ifdef __CLIP__
+   static function spd_cpu()
+   return "?"
+#endif
+#ifdef __XPP__
+   static function spd_cpu()
+   return "x86"
+#endif
+#ifdef __XHARBOUR__
+   static function spd_cpu()
+   return "?"
+#endif
 
 #ifdef __CLIPPER__
    static function hb_mtvm()
