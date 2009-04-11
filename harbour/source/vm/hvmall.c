@@ -56,7 +56,7 @@
 #define _HB_HASH_INTERNAL_
 #define HB_MACRO_SUPPORT
 
-#define HB_NO_FALTTEN
+#define HB_NO_FLATTEN
 #define HB_STACK_LOCAL_MACROS
 
 /* warning the order of included files is important
