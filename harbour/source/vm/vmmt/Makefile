@@ -25,41 +25,52 @@ else
 	endif
 endif
 
+ifeq ($(HB_HVM_ALL),yes)
+
+C_SOURCES=\
+	hvmall.c \
+
+else
+
 C_SOURCES=\
 	hvm.c \
 	arrays.c \
-	arrayshb.c \
-	asort.c \
-	break.c \
 	classes.c \
-	cmdarg.c \
-	debug.c \
-	dynlibhb.c \
 	dynsym.c \
 	codebloc.c \
 	estack.c \
-	eval.c \
-	evalhb.c \
 	extend.c \
-	extrap.c \
 	fm.c \
 	garbage.c \
 	hashes.c \
+	itemapi.c \
+	macro.c \
+	memvars.c \
+	set.c \
+	thread.c \
+
+endif
+
+C_SOURCES+=\
+	arrayshb.c \
+	asort.c \
+	break.c \
+	cmdarg.c \
+	debug.c \
+	dynlibhb.c \
+	eval.c \
+	evalhb.c \
+	extrap.c \
 	hashfunc.c \
 	initexit.c \
 	initsymb.c \
-	itemapi.c \
-	macro.c \
-	$(C_MAIN) \
-	memvars.c \
 	memvclip.c \
 	pcount.c \
-	proc.c \
 	pvalue.c \
+	proc.c \
 	runner.c \
-	set.c \
-	thread.c \
 	vm.c \
+	$(C_MAIN) \
 
 PRG_SOURCES=\
 	harbinit.prg \
