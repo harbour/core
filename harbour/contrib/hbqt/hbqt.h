@@ -220,18 +220,14 @@
 #define hbqt_par_QNetworkRequest( n )        ( ( QNetworkRequest* ) hb_parptr( n ) )
 #define hbqt_par_QTableWidgetSelectionRange( n ) ( ( QTableWidgetSelectionRange* ) hb_parptr( n ) )
 #define hbqt_par_QWSEvent( n )               ( ( QWSEvent* ) hb_parptr( n ) )
-#define hbqt_par_HFONT( n )                  ( ( HFONT* ) hb_parptr( n ) )
 #define hbqt_par_QHttpRequestHeader( n )     ( ( QHttpRequestHeader* ) hb_parptr( n ) )
 #define hbqt_par_QNetworkProxy( n )          ( ( QNetworkProxy* ) hb_parptr( n ) )
-#define hbqt_par_WId( n )                    ( ( HWND* ) hb_parptr( n ) )
-#define hbqt_par_HDC( n )                    ( ( HDC* ) hb_parptr( n ) )
 #define hbqt_par_QBitmap( n )                ( ( QBitmap* ) hb_parptr( n ) )
 #define hbqt_par_QTextStream( n )            ( ( QTextStream* ) hb_parptr( n ) )
 #define hbqt_par_QTextCodec( n )             ( ( QTextCodec* ) hb_parptr( n ) )
 #define hbqt_par_QEventLoop( n )             ( ( QEventLoop* ) hb_parptr( n ) )
 #define hbqt_par_QPaintEvent( n )            ( ( QPaintEvent* ) hb_parptr( n ) )
 #define hbqt_par_QInputEvent( n )            ( ( QInputEvent* ) hb_parptr( n ) )
-#define hbqt_par_HRGN( n )                   ( ( HRGN* ) hb_parptr( n ) )
 #define hbqt_par_QIcon( n )                  ( ( QIcon* ) hb_parc( n ) )
 #define hbqt_par_QStyleOption( n )           ( ( QStyleOption* ) hb_parptr( n ) )
 #define hbqt_par_QStyleOptionComplex( n )    ( ( QStyleOptionComplex* ) hb_parptr( n ) )
@@ -269,4 +265,3 @@ QPointF hbqt_const_QPointF( int );
 #endif
 
 #endif /* __HBQT_H */
-
