@@ -94,7 +94,6 @@ CREATE CLASS QPixmap INHERIT QPaintDevice
    METHOD  setMask( pMask )                    INLINE  Qt_QPixmap_setMask( ::pPtr, pMask )
    METHOD  size()                              INLINE  Qt_QPixmap_size( ::pPtr )
    METHOD  toImage()                           INLINE  Qt_QPixmap_toImage( ::pPtr )
-   METHOD  toWinHBITMAP( nFormat )             INLINE  Qt_QPixmap_toWinHBITMAP( ::pPtr, nFormat )
    METHOD  transformed( pTransform, nMode )    INLINE  Qt_QPixmap_transformed( ::pPtr, pTransform, nMode )
    METHOD  transformed_1( pMatrix, nMode )     INLINE  Qt_QPixmap_transformed_1( ::pPtr, pMatrix, nMode )
    METHOD  width()                             INLINE  Qt_QPixmap_width( ::pPtr )

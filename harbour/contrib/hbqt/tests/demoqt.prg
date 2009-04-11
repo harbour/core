@@ -76,6 +76,7 @@
 
 INIT PROCEDURE Qt_Start()
    qt_qapplication()
+   /*qt_qapplication_setstyle( QT_PTROF( QWindowsXPStyle():new() ) )*/
    RETURN
 
 EXIT PROCEDURE Qt_End()
@@ -86,22 +87,42 @@ EXIT PROCEDURE Qt_End()
 
 PROCEDURE Main()
    Local oLabel
-   Local oWnd
-   Local oMenuBar
+   Local oWnd, oSize
+   Local oMenuBar, pIcon
    Local oMenuA, pAction
-   LOCAL oPS, oPPrv, oMB, oWZ, oCD, oWP
+   LOCAL oPS, oPPrv, oMB, oWZ, oCD, oWP, oSBar, oStyle
 
    oWnd := QMainWindow():new()
-   oWnd:setWindowTitle("Testing - QMainWindow, QMenu, QMenuBar and QAction " )
+   oWnd:setWindowTitle( "Testing - QMainWindow, QMenu, QMenuBar and QAction " )
+   oWnd:setWindowIcon( "test" )
+   pIcon := oWnd:windowIcon()
+
+   /* The method 2 */
    oWnd:resize( 640, 400 )
-   oWnd:Show()
+   #if 0
+   /* The method 2 */
+   oSize := QSize():new()
+   oSize:setWidth( 640 )
+   oSize:setHeight( 400 )
+   oWnd:resize_1( QT_PTROF( oSize ) )
+   #endif
 
    Build_MenuBar( oWnd )
+
+   oSBar := QStatusBar():new( QT_PTROF( oWnd ) )
+   oWnd:setStatusBar( QT_PTROF( oSBar ) )
+   oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
+
+   oStyle := QWindowsXPStyle()
+   oStyle:standardIcon( 2 )
+   oWnd:setStyle( QT_PTROF( oStyle ) )
 
    oLabel := QLabel():New( QT_PTROF( oWnd ) )
    oLabel:setText( "Testing Harbour + Qt" )
    oLabel:move( 200,100 )
    oLabel:show()
+
+   oWnd:Show()
 
    RETURN
 
@@ -200,9 +221,11 @@ STATIC FUNCTION Dialogs( cType, w, l )
 
 /*----------------------------------------------------------------------*/
 
+#ifdef __PLATFORM__WINDOWS
 PROCEDURE hb_GtSys()
    HB_GT_GUI_DEFAULT()
    RETURN
+#endif
 
 /*----------------------------------------------------------------------*/
 /*

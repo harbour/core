@@ -70,7 +70,11 @@
  */
 HB_FUNC( QT_QWINDOWSXPSTYLE )
 {
+#if defined( HB_OS_WIN )
    hb_retptr( ( QWindowsXPStyle* ) new QWindowsXPStyle() );
+#else
+   hb_retptr( NULL );
+#endif
 }
 
 

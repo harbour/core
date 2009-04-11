@@ -135,7 +135,7 @@ QImage toImage () const
 #
 // CGImageRef toMacCGImageRef () const
 #
-HBITMAP toWinHBITMAP ( HBitmapFormat format = NoAlpha ) const
+//HBITMAP toWinHBITMAP ( HBitmapFormat format = NoAlpha ) const
 QPixmap transformed ( const QTransform & transform, Qt::TransformationMode mode = Qt::FastTransformation ) const
 QPixmap transformed ( const QMatrix & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
 int width () const

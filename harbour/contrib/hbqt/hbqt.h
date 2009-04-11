@@ -59,7 +59,7 @@
 
 #define QT_VERSION 0x040500
 
-#include <Qt/qglobal.h>
+#include <qglobal.h>
 
 #if QT_VERSION >= 0x040500
 
@@ -248,7 +248,7 @@
 #define hbqt_ret_QAbstractItemModel( p )     ( hb_retptr( ( QAbstractItemModel* ) p ) )
 #define hbqt_ret_QPrinter( p )               ( hb_retptr( ( QPrinter* ) p ) )
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 void    hbqt_ret_QRect( QRect );
 void    hbqt_ret_QSize( QSize );

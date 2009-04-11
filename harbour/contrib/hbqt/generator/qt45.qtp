@@ -4,11 +4,11 @@
 ; Pritpal Bedi <pritpal@vouchcac.com>
 ;
 
--I=..\qth
+-I=../qth
 
 -O=..
 
--D=..\doc
+-D=../doc
 
 
 QAbstractButton.qth

@@ -57,8 +57,8 @@
 
 #define SLOTS_H
 
-#include <QtCore/QObject>
-#include <QtCore/QList>
+#include <QObject>
+#include <QList>
 
 #include "hbapi.h"
 #include "hbapiitm.h"

@@ -43,10 +43,23 @@ endif
 endif
 
 HB_INC_QT_OK += $(foreach d, $(HB_INC_QT), $(if $(wildcard $(d)/Qt/qglobal.h),$(d),))
+ifeq ($(HB_ARCHITECTURE),darwin)
+ifeq ($(strip $(HB_INC_QT_OK)),)
+HB_INC_QT_OK = $(if $(wildcard /Library/Frameworks/QtCore.framework/Versions/4/Headers/QtCore),spec,)
+ifeq ($(HB_INC_QT_OK),spec)
+HB_USER_CFLAGS += -I/Library/Frameworks/QtCore.framework/Headers
+HB_USER_CFLAGS += -I/Library/Frameworks/QtGui.framework/Headers
+HB_USER_CFLAGS += -I/Library/Frameworks/QtNetwork.framework/Headers
+HB_USER_CFLAGS += -I/Library/Frameworks/QtWebKit.framework/Headers
+endif
+endif
+endif
 
 ifneq ($(strip $(HB_INC_QT_OK)),)
 
-HB_USER_CFLAGS += $(foreach d, $(HB_INC_QT_OK), -I$(d))
+ifneq ($(strip $(HB_INC_QT_OK)),spec)
+HB_USER_CFLAGS += $(foreach d, $(HB_INC_QT_OK), -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
+endif
 
 include $(TOP)$(ROOT)contrib/hbqt/Makefile_gen
 

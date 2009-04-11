@@ -289,20 +289,25 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       cFile := cProFile
    ENDIF
    IF !file( cFile )
-      RETURN nil
+      OutStd( "Cannot find: " + cFile + s_NewLine )
+      RETURN { nil }
    ENDIF
 
    cQth := memoread( cFile )
    IF empty( cQth )
-      RETURN nil
+      OutStd( "Cannot read: " + cFile + s_NewLine )
+      RETURN { nil }
    ENDIF
 
    OutStd( "Processing: " + cFile + s_NewLine )
 
    /* Prepare to be parsed properly */
-   cQth := strtran( cQth, s_NewLine          , _EOL )
-   cQth := strtran( cQth, chr( 13 )+chr( 10 ), _EOL )
-   cQth := strtran( cQth, chr( 13 )          , _EOL )
+   IF ! hb_osNewLine() == _EOL
+      cQth := StrTran( cQth, hb_osNewLine(), _EOL )
+   ENDIF
+   IF ! hb_osNewLine() == Chr( 13 ) + Chr( 10 )
+      cQth := StrTran( cQth, Chr( 13 ) + Chr( 10 ), _EOL )
+   ENDIF
 
    cls_:={}
    IF !empty( class_:= PullOutSection( @cQth, 'CLASS' ) )
@@ -1224,7 +1229,7 @@ STATIC FUNCTION Build_HBQT_H( cPathOut )
    aadd( txt_, "                                                                                              " )
    aadd( txt_, "#define QT_VERSION 0x040500                                                                   " )
    aadd( txt_, "                                                                                              " )
-   aadd( txt_, "#include <Qt/qglobal.h>                                                                       " )
+   aadd( txt_, "#include <qglobal.h>                                                                          " )
    aadd( txt_, "                                                                                              " )
    aadd( txt_, "#if QT_VERSION >= 0x040500                                                                    " )
    aadd( txt_, "                                                                                              " )
@@ -1413,7 +1418,7 @@ STATIC FUNCTION Build_HBQT_H( cPathOut )
    aadd( txt_, "#define hbqt_ret_QAbstractItemModel( p )     ( hb_retptr( ( QAbstractItemModel* ) p ) )       " )
    aadd( txt_, "#define hbqt_ret_QPrinter( p )               ( hb_retptr( ( QPrinter* ) p ) )                 " )
    aadd( txt_, "                                                                                              " )
-   aadd( txt_, "#include <QtGui/QWidget>                                                                      " )
+   aadd( txt_, "#include <QWidget>                                                                            " )
    aadd( txt_, "                                                                                              " )
    aadd( txt_, "void    hbqt_ret_QRect( QRect );                                                              " )
    aadd( txt_, "void    hbqt_ret_QSize( QSize );                                                              " )
@@ -1455,7 +1460,7 @@ STATIC FUNCTION Build_HBQT_UTILS_CPP( cPathOut )
    aadd( txt_, '#if QT_VERSION >= 0x040500                                                ' )
    aadd( txt_, '/*----------------------------------------------------------------------*/' )
    aadd( txt_, '                                                                          ' )
-   aadd( txt_, '#include <QtGui/QWidget>                                                  ' )
+   aadd( txt_, '#include <QWidget>                                                        ' )
    aadd( txt_, '                                                                          ' )
    aadd( txt_, '/*----------------------------------------------------------------------*/' )
    aadd( txt_, '                                                                          ' )
@@ -1654,8 +1659,8 @@ STATIC FUNCTION Build_HBQT_SLOTS_H( cPathOut )
    aadd( txt_, '                                   ' )
    aadd( txt_, '#define SLOTS_H                    ' )
    aadd( txt_, '                                   ' )
-   aadd( txt_, '#include <QtCore/QObject>          ' )
-   aadd( txt_, '#include <QtCore/QList>            ' )
+   aadd( txt_, '#include <QObject>                 ' )
+   aadd( txt_, '#include <QList>                   ' )
    aadd( txt_, '                                   ' )
    aadd( txt_, '#include "hbapi.h"                 ' )
    aadd( txt_, '#include "hbapiitm.h"              ' )
@@ -1705,9 +1710,9 @@ STATIC FUNCTION Build_HBQT_SLOTS_CPP( cPathOut )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '#include "hbqt_slots.h"                                                                                                   ' )
    aadd( txt_, '                                                                                                                          ' )
-   aadd( txt_, '#include <QtGui/QWidget>                                                                                                  ' )
-   aadd( txt_, '#include <QtCore/QString>                                                                                                 ' )
-   aadd( txt_, '#include <QtCore/QList>                                                                                                   ' )
+   aadd( txt_, '#include <QWidget>                                                                                                        ' )
+   aadd( txt_, '#include <QString>                                                                                                        ' )
+   aadd( txt_, '#include <QList>                                                                                                          ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '#define HBQT_EVT_CLICKED          1                                                                                       ' )
    aadd( txt_, '#define HBQT_EVT_TRIGGERED        2                                                                                       ' )
@@ -2165,8 +2170,8 @@ STATIC FUNCTION Build_MOC_SLOTS_CPP( cPathOut )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_Demo()
-   LOCAL cFile := '..\tests\demoqt.prg'
-   LOCAL txt_:={}
+   LOCAL cFile := '..' + s_PathSep + 'tests' + s_PathSep + 'demoqt.prg'
+   LOCAL txt_:= {}
 
    BuildHeader( @txt_, 2 )
 
@@ -2339,9 +2344,11 @@ STATIC FUNCTION Build_Demo()
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '/*----------------------------------------------------------------------*/                                                ' )
    aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, '#ifdef __PLATFORM__WINDOWS                                                                                                ' )
    aadd( txt_, 'PROCEDURE hb_GtSys()                                                                                                      ' )
    aadd( txt_, '   HB_GT_GUI_DEFAULT()                                                                                                    ' )
    aadd( txt_, '   RETURN                                                                                                                 ' )
+   aadd( txt_, '#endif                                                                                                                    ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '/*----------------------------------------------------------------------*/                                                ' )
    aadd( txt_, '/*                                                                                                                        ' )

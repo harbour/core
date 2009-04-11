@@ -1532,7 +1532,7 @@ HB_FUNC( QT_QWIDGET_WIDTH )
  */
 HB_FUNC( QT_QWIDGET_WINID )
 {
-   hb_retptr( ( HWND ) hbqt_par_QWidget( 1 )->winId() );
+   hb_retptr( new WId( hbqt_par_QWidget( 1 )->winId() ) );
 }
 
 /*

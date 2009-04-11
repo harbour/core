@@ -62,9 +62,9 @@
 
 #include "hbqt_slots.h"
 
-#include <QtGui/QWidget>
-#include <QtCore/QString>
-#include <QtCore/QList>
+#include <QWidget>
+#include <QString>
+#include <QList>
 
 #define HBQT_EVT_CLICKED          1
 #define HBQT_EVT_TRIGGERED        2

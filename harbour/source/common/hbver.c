@@ -218,6 +218,15 @@ const char * hb_verCPU( void )
    return HB_CPU_STR;
 }
 
+char * hb_verHostCPU( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_verHostCPU()"));
+
+   /* TODO */
+
+   return "";
+}
+
 /* NOTE: OS() function, as a primary goal will detect the version number
          of the target platform. As an extra it may also detect the host OS.
          The latter is mainly an issue in DOS, where the host OS can be OS/2

@@ -326,14 +326,6 @@ HB_FUNC( QT_QPIXMAP_TOIMAGE )
 }
 
 /*
- * HBITMAP toWinHBITMAP ( HBitmapFormat format = NoAlpha ) const
- */
-HB_FUNC( QT_QPIXMAP_TOWINHBITMAP )
-{
-   hb_retptr( new HBITMAP( hbqt_par_QPixmap( 1 )->toWinHBITMAP( ( HB_ISNIL( 2 ) ? ( QPixmap::HBitmapFormat ) QPixmap::NoAlpha : ( QPixmap::HBitmapFormat ) hb_parni( 2 ) ) ) ) );
-}
-
-/*
  * QPixmap transformed ( const QTransform & transform, Qt::TransformationMode mode = Qt::FastTransformation ) const
  */
 HB_FUNC( QT_QPIXMAP_TRANSFORMED )

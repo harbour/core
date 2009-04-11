@@ -65,7 +65,7 @@ HB_FUNC( HB_TRACELEVEL )
 
 HB_FUNC( HB_TRACESTRING )
 {
-   char * szMessage = hb_parc( 1 );
+   char * szMessage = hb_parcx( 1 );
    if( szMessage )
    {
       HB_TRACE(HB_TR_ALWAYS, ("%s", szMessage) );
