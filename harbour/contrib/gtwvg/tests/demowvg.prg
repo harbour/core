@@ -31,7 +31,6 @@
 #include   "hbgtinfo.ch"
 #include    "hbgtwvg.ch"
 #include   "wvgparts.ch"
-#include "setcurs.ch"
 
 REQUEST DbfCdx
 REQUEST DbfNtx
@@ -127,6 +126,17 @@ static s_paint_:= { { "", {} } }
 #endif
 
 static s_pGT_:= { NIL,NIL,NIL }
+/*----------------------------------------------------------------------*/
+#ifdef __QT__
+#define QT_PTROF( oObj )  ( oObj:pPtr )
+INIT PROCEDURE Qt_Start()
+   qt_qapplication()
+   RETURN
+
+EXIT PROCEDURE Qt_End()
+   qt_qapplication_exec()
+   RETURN
+#endif
 //-------------------------------------------------------------------//
 EXIT PROCEDURE KillGTs()
 
@@ -136,6 +146,7 @@ EXIT PROCEDURE KillGTs()
 
    RETURN
 //----------------------------------------------------------------------//
+
 PROCEDURE Main()
 
    LOCAL aLastPaint, clr, scr, a_:={}
@@ -172,10 +183,6 @@ PROCEDURE Main()
 
    CLS
    Wvt_ShowWindow( SW_RESTORE )
-
-//   EditMemo()
-
-// smain()
 
    SetKey( K_F12        , {|| hb_gtInfo( HB_GTI_ACTIVATESELECTCOPY ) } )
    SetKey( K_CTRL_V     , {|| __KeyBoard( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) ) } )
@@ -773,7 +780,7 @@ FUNCTION WvtMyBrowse_X( oCrt )
    LOCAL nLeft   :=  3
    LOCAL nBottom := maxrow() - 2
    LOCAL nRight  := maxcol() - 3
-   LOCAL nCursor := setCursor( SC_NONE )
+   LOCAL nCursor := setCursor( 0 )
    LOCAL nRow    := row()
    LOCAL nCol    := col()
    LOCAL cColor  := SetColor( "N/W*,N/GR*,,,N/W*" )
@@ -1471,6 +1478,12 @@ FUNCTION CreateMainMenu()
    oMenu:AddItem( "-")
    oMenu:AddItem( "ActiveX - Image Viewer"      , {|| Hb_ThreadStart( {|| ExecuteActiveX(  5 ) } ) } )
    g_oMenuBar:addItem( "",oMenu)
+
+   #ifdef __QT__
+   oMenu := wvtMenu():new():create()
+   oMenu:Caption:= "~QT"
+   oMenu:AddItem( "All Widgets"                 , {|| Hb_ThreadStart( {|| ExeQTWidgets() } ) } )
+   #endif
 
    RETURN g_oMenuBar
 //-------------------------------------------------------------------//
@@ -2493,7 +2506,7 @@ Function ExecuteActiveX( nActiveX, xParam )
    oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
 
    // Read file into LOCAL variable
-   cText   := MemoRead( 'gtwvg.hbp' )
+   cText   := MemoRead( 'hbmk_b32.bat' )
    // Create MLE, specify position using :create() and
    // assign data code block accessing LOCAL variable
    oMLE    := WvgMLE():new( oStatic2 )
@@ -3133,7 +3146,7 @@ FUNCTION demoxbp()
    oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
 
    // Read file into LOCAL variable
-   cText   := MemoRead( 'gtwvg.hbp' )
+   cText   := MemoRead( 'hbmk_b32.bat' )
    // Create MLE, specify position using :create() and
    // assign data code block accessing LOCAL variable
    oMLE    := WvgMLE():new()
@@ -3940,7 +3953,7 @@ PROCEDURE GCUIConsole( oCrt )
    //
    hTxt := Wvg_TextBox( 3,57,16,75, {10,10,-10,-10}, 'This is first TextBox Line!', 2, 2 )
    //
-   Wvg_Image( 15,36,16,42, {-3,-3,3,3}, GOBJ_IMAGESOURCE_FILE, 'vouch1.bmp' )
+   Wvg_Image( 15,36,16,42, {-3,-3,3,3}, GOBJ_IMAGESOURCE_FILE, 'Vouch1.bmp' )
    Wvg_BoxRaised( 15,36,16,42,{-2,-2,2,2} )
    //
    Wvg_ShadedRect( 1,54,18,79, { -5,-5,5,5 }, 0, {65000,21000,7000,56000}, {255,32255,16000,32500} )
@@ -3953,7 +3966,7 @@ PROCEDURE GCUIConsole( oCrt )
    // Issue the read
    READ
 
-   Alert( 'How did you like the "Alert" replacement?', { 'WOW','OK','OOps'} )
+   My_Alert( 'How did you like the "Alert" replacement?', { 'WOW','OK','OOps'} )
 
    RETURN
 /*----------------------------------------------------------------------*/
@@ -4030,17 +4043,17 @@ Function EditFunc( nMode, nRow, nCol )
       DO CASE
       CASE nLoop == 1                         // Set insert mode
          SetCursor( SC_SPECIAL1 )
-hb_ToOutDebug( 'nLoop %i %s', nLoop, 'ME_INIT:K_INS' )
+//hb_ToOutDebug( 'nLoop %i %s', nLoop, 'ME_INIT:K_INS' )
          RETURN K_INS
 
       OTHERWISE
-hb_ToOutDebug( 'nLoop %i %s', nLoop, 'ME_INIT:OTHERWISE' )
+//hb_ToOutDebug( 'nLoop %i %s', nLoop, 'ME_INIT:OTHERWISE' )
          RETURN ME_DEFAULT
 
       ENDCASE
 
    CASE nMode == ME_IDLE
-hb_ToOutDebug( 'nLoop %i %s', nLoop, 'ME_IDLE' )
+//hb_ToOutDebug( 'nLoop %i %s', nLoop, 'ME_IDLE' )
 
    OTHERWISE
       IF nKey == K_INS
@@ -4051,10 +4064,310 @@ hb_ToOutDebug( 'nLoop %i %s', nLoop, 'ME_IDLE' )
          ENDIF
 
       ENDIF
-hb_ToOutDebug( 'nLoop %i %s %i %i', nLoop, 'OTHERWISE', nKey, nMode )
+//hb_ToOutDebug( 'nLoop %i %s %i %i', nLoop, 'OTHERWISE', nKey, nMode )
 
    ENDCASE
 
    RETURN ME_DEFAULT
 #endif
 //----------------------------------------------------------------------//
+#ifdef __QT__
+FUNCTION ExeQTWidgets()
+   LOCAL oPS, oPPrv, oWZ, oCD, oWP
+
+   oPS := QPageSetupDialog():new()
+   oPS:setWindowTitle( 'Harbour-QT PageSetup Dialog' )
+   oPS:show()
+
+   oPPrv := QPrintPreviewDialog():new()
+   oPPrv:setWindowTitle( 'Harbour-QT Preview Preview Dialog' )
+   oPPrv:show()
+
+   oWZ := QWizard():new()
+   oWZ:setWindowTitle( 'Harbour-QT Wizard to Show Slides etc.' )
+   oWZ:show()
+
+   oCD := QColorDialog():new()
+   oCD:setWindowTitle( 'Harbour-QT Color Selection Dialog' )
+   oCD:show()
+
+   oWP := QWebView():new()
+   oWP:setWindowTitle( 'Harbour-QT Web Page Navigator' )
+   oWP:show()
+
+   RETURN NIL
+#endif
+//----------------------------------------------------------------------//
+
+Function My_Alert( cMessage, aOptions, cCaption, nInit, nTime )
+   RETURN Vou_AlertDialog( cCaption, cMessage, aOptions, nInit, , ,nTime )
+
+#define DLG_CLR_MOUSE     1
+#define DLG_CLR_CAPT      2
+#define DLG_CLR_TEXT      3
+#define DLG_CLR_BTN       4
+#define DLG_CLR_TRG       5
+#define DLG_CLR_SHADOW    6
+#define DLG_CLR_HILITE    7
+#define DLG_CLR_HISEL     8
+
+#define  K_MOVING          1001
+#define  K_LEFT_DOWN       1002
+#define  K_LEFT_DBLCLICK   1006
+#define  K_LEFT_UP         1003
+#define  K_RIGHT_DOWN      1004
+#define  K_RIGHT_DBLCLICK  1007
+#define  K_RIGHT_UP        1005
+
+#xtranslate B_CRT <nTop>,<nLeft>,<nBottom>,<nRight> ;
+            [ TITLE    <ttl>     ] ;
+            [ ICON    <icon>     ] ;
+            [ <lModal:MODAL>     ] ;
+            [ <lRowCols:RESIZEROWCOLS> ] ;
+            [ <lHidden:HIDDEN>   ] ;
+            [ <lCenter:CENTER>   ] ;
+            [ AT <nRow>,<nCol>   ] ;
+            [ <lNoTitleBar:NOTITLEBAR> ] ;
+            INTO <oCrt> ;
+            => ;
+   <oCrt> := Vou_CreateOCrt( <nTop>, <nLeft>, <nBottom>, <nRight>, <ttl>, <icon>, ;
+                             <.lModal.>, <.lRowCols.>, <.lHidden.>, <.lCenter.>, ;
+                             <nRow>, <nCol>, <.lNoTitleBar.> )
+
+
+FUNCTION Vou_AlertDialog( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
+   local nLinesRqd, nColRqd, nLeft, nBottom, nRight, oCrt, nCOff
+   local nColTxt, nColCap, nColBut, nBtnRow
+   local i, nTopReq, lGo, nKey, nMCol, nMRow, nTrg
+   local maxCol  := maxcol()
+   local maxRow  := maxrow()
+   local nBtnCol_:={}, a_:={}, oCrt_:={}
+   local pal_    := {"w+/n","w/r","n/w","n/bg","r/bg","N/W","n/B","w+/B"}
+   local aTrg_   :={}, lWin := .f., x_:={}
+
+   DEFAULT cCaption  TO "Your Attention Please!"
+   DEFAULT aButtons_ TO {"OK"}
+   DEFAULT aText_    TO {}
+   DEFAULT aMessage_ TO {}
+   DEFAULT sel       TO 1
+   DEFAULT nTime     TO 10
+
+   if nTime == 0
+      nTime := 10000   //  Seconds
+   endif
+
+   if valtype( aText_ ) == "C"
+      aText_:= {aText_}
+   endif
+
+   if valtype(aButtons_) == "C"
+      aButtons_:= {aButtons_}
+   endif
+
+   nLinesRqd := len( aText_ )+ if( len( aText_ )== 0, 4, 5 )
+   nTopReq   := int( ( maxRow - nLinesRqd ) / 2 )
+   nTop      := if( nTop == nil, nTopReq, if( nTop >  nTopReq, nTop, nTopReq ) )
+   nBottom   := nTop + nLinesRqd - 1   // 1 for shadow
+
+   // check for columns
+   // place 2 spaces before and after the buttons
+   nColCap   := len( cCaption )+ 7  // " - "+"  "+caption+"  "
+   nColTxt   := 0
+   if !empty(aText_)
+      aeval(aText_, {|e| nColTxt := max( nColTxt, len( e ) ) } )
+   endif
+   nColTxt   += 6                   // for two spaces at both sides
+   nColBut   := 0
+   aeval( aButtons_, {|e| nColBut += len( e ) + 7 } )
+   nColBut   += 3
+
+   nColRqd   := 0
+   aeval( { nColCap, nColTxt, nColBut }, {|e| nColRqd := max( nColRqd, e ) } )
+
+   nLeft     := IF( maxCol > nColRqd, int( ( maxCol - nColRqd ) / 2 ), 0 )
+   nRight    := nLeft+nColRqd
+   nBtnRow   := nTop+1+len( aText_ )+if( len( aText_ )==0,1,2 )
+
+   aTrg_:= array( len( aButtons_ ) )
+   for i := 1 to len( aButtons_ )
+      aTrg_[i] := upper( substr( aButtons_[ i ], 1, 1 ) )
+   next
+
+   //                        Create a new Window
+   //
+   B_CRT nTop, nLeft, nBottom-1, nRight MODAL ICON "dia_excl.ico" TITLE '  '+cCaption INTO oCrt
+
+   nCOff   := nLeft
+   nTop    := -1
+   nLeft   := 0
+   nBottom := nTop + nLinesRqd - 1
+   nRight  := nLeft + nColRqd
+   nBtnRow := nTop + 1 + len( aText_ ) + if( len( aText_ ) == 0, 1, 2 )
+
+   nBtnCol_  := array( len( aButtons_ ) )
+
+   nBtnCol_[ 1 ] := int( ( nColRqd - nColBut ) / 2 ) + 3
+   if len( aButtons_ ) > 1
+      for i := 2 to len( aButtons_ )
+         nBtnCol_[ i ] := nBtnCol_[ i-1 ] + len( aButtons_[ i-1 ] ) + 3 + 4
+      next
+   ENDIF
+
+   setcursor( 0 )
+   SetColor( 'N/W' )
+   CLS
+
+   DispBegin()
+   SetColor( pal_[ DLG_CLR_TEXT ] )
+
+   Wvg_BoxRaised( nTop, nLeft, nBottom, nRight )
+
+   SetColor( pal_[ DLG_CLR_TEXT ] )
+   if !empty( aText_ )
+      FOR  i := 1 to len( aText_ )
+         @ nTop+1+i, nLeft SAY padc( aText_[ i ], nRight-nLeft+1 )
+      NEXT
+   ENDIF
+
+   // display buttons
+   //
+   for i := 1 to len( aButtons_ )
+      SetColor( pal_[ DLG_CLR_BTN ] )
+      @ nBtnRow, nBtnCol_[ i ] SAY "  "+aButtons_[ i ]+"  "
+      SetColor( pal_[ DLG_CLR_TRG ] )
+      @ nBtnRow, nBtnCol_[ i ]+2 say substr( aButtons_[ i ],1,1 )
+
+      aadd( x_, { nBtnRow, nBtnCol_[ i ], nBtnRow, nBtnCol_[ i ] + len( aButtons_[ i ] ) + 3 } )
+   next
+
+   setColor( pal_[ DLG_CLR_HILITE ] )
+   @ nBtnRow, nBtnCol_[ sel ] SAY "  "+aButtons_[sel]+"  "
+
+   setColor( pal_[ DLG_CLR_HISEL ] )
+   @ nBtnRow, nBtnCol_[ sel ]+2 SAY substr( aButtons_[ sel ],1,1 )
+
+   aeval( x_, {|e_| Wvg_BoxRaised( e_[ 1 ], e_[ 2 ], e_[ 3 ], e_[ 4 ] ) } )
+
+   dispend()
+
+   lGo := .t.
+   do while lGo
+      IF ( nKey := Inkey() ) == 0
+         LOOP
+      ENDIF
+
+      if nKey == K_ESC
+         sel := 0
+         exit
+      endif
+      nMRow := MRow()
+      nMCol := MCol()
+
+      do case
+      case nKey == K_RIGHT_DOWN
+         sel := 0
+         lGo := .f.
+      case nKey == K_LEFT_DOWN
+         if nMRow == nTop
+            if nMCol >= nLeft .and. nMCol <= nLeft+3
+               sel := 0
+               lGo := .f.
+            endif
+         elseif nMRow == nBtnRow
+            for i := 1 to len( nBtnCol_ )
+               if nMCol >= nBtnCol_[ i ] .and. nMCol <= nBtnCol_[ i ] + len( aButtons_[ i ] )+4
+                  sel := i
+                  lGo := .f.
+               endif
+            next
+         endif
+      case nKey == K_ESC
+         sel := 0
+         lGo := .f.
+      case nKey == K_ENTER
+         lGo := .f.
+      case nKey == K_LEFT  .or. nKey == K_DOWN
+         sel--
+      case nKey == K_RIGHT .or. nKey == K_UP
+         sel++
+      case ( nTrg := ascan( aTrg_, upper( chr( nKey ) ) ) ) > 0
+         sel := nTrg
+         lGo := .f.
+      otherwise
+         if setkey( nKey ) != nil
+            eval( setKey( nKey ) )
+         endif
+      endcase
+
+      if sel > len( aButtons_ )
+         sel := 1
+      elseif sel < 1
+         sel := len( aButtons_ )
+      endif
+
+      dispbegin()
+      for i := 1 to len ( aButtons_ )
+         setColor( pal_[ DLG_CLR_BTN ] )
+         @ nBtnRow, nBtnCol_[ i ] SAY "  "+aButtons_[i]+"  "
+         setColor( pal_[ DLG_CLR_TRG])
+         @ nBtnRow, nBtnCol_[i]+2 say substr(aButtons_[i],1,1)
+      next
+      if sel > 0
+         setColor( pal_[ DLG_CLR_HILITE ] )
+         @ nBtnRow, nBtnCol_[sel] SAY "  "+aButtons_[ sel ]+"  "
+         setColor( pal_[ DLG_CLR_HISEL ] )
+         @ nBtnRow, nBtnCol_[ sel ]+2 SAY substr( aButtons_[ sel ], 1, 1 )
+      endif
+
+      dispend()
+   enddo
+
+   oCrt:destroy()
+
+   return sel
+
+//----------------------------------------------------------------------//
+
+FUNCTION Vou_CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
+                                                  lCenter, nRow, nCol, lNoTitleBar )
+   LOCAL oCrt, aPos
+
+   DEFAULT cTitle      TO 'Info'
+   DEFAULT xIcon       TO 'VW_DFT'
+   DEFAULT lModal      TO .T.
+   DEFAULT lHidden     TO .F.
+   DEFAULT lCenter     TO .F.
+   DEFAULT lNoTitleBar TO .F.
+
+   aPos := IF( lCenter, {-1,-1}, IF( nRow == NIL, { nT, nL }, { nRow,nCol } ) )
+
+   oCrt := WvgCrt():new( , , aPos, { nB - nT, nR - nL }, , !lHidden )
+   oCrt:lModal := lModal
+   IF lRowCols
+      oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS
+   ENDIF
+   oCrt:create()
+   SetCursor( 0 )
+
+   IF hb_isNumeric( xIcon )
+      hb_gtInfo( HB_GTI_ICONRES, xIcon )
+   ELSE
+      IF ( '.ico' $ lower( xIcon ) )
+         hb_gtInfo( HB_GTI_ICONFILE, xIcon )
+      ELSE
+         IF '.bmp' $ lower( xIcon )
+            xIcon := 'VW_DFT'
+         ENDIF
+         hb_gtInfo( HB_GTI_ICONRES, xIcon )
+      ENDIF
+   ENDIF
+
+   hb_gtInfo( HB_GTI_WINTITLE, cTitle )
+
+   SetColor( 'N/W' )
+   CLS
+
+   RETURN oCrt
+
+/*----------------------------------------------------------------------*/
+

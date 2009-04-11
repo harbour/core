@@ -1,0 +1,13 @@
+#
+# $Id$
+#
+
+{mingw}libs=supc++
+libs=hbqt gtqtc xhb
+libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
+# static libs
+#libs=QtCore QtGui QtNetwork QtWebKit
+gui=yes
+gt=gtnul
+libspath=c:\qt\2009.01\gt\lib
+
