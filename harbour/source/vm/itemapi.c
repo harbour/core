@@ -137,6 +137,7 @@ BOOL hb_itemParamStore( USHORT uiParam, PHB_ITEM pItem )
 
    if( hb_param( uiParam, HB_IT_BYREF ) )
    {
+      HB_STACK_TLS_PRELOAD
       hb_itemCopyToRef( hb_stackItemFromBase( uiParam ), pItem );
       return TRUE;
    }
@@ -150,6 +151,7 @@ BOOL hb_itemParamStoreForward( USHORT uiParam, PHB_ITEM pItem )
 
    if( hb_param( uiParam, HB_IT_BYREF ) )
    {
+      HB_STACK_TLS_PRELOAD
       hb_itemMoveToRef( hb_stackItemFromBase( uiParam ), pItem );
       return TRUE;
    }
@@ -159,6 +161,8 @@ BOOL hb_itemParamStoreForward( USHORT uiParam, PHB_ITEM pItem )
 
 USHORT hb_itemPCount( void )
 {
+   HB_STACK_TLS_PRELOAD
+
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPCount()"));
 
    return ( USHORT ) hb_pcount();
@@ -755,7 +759,10 @@ PHB_ITEM hb_itemReturn( PHB_ITEM pItem )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemReturn(%p)", pItem));
 
    if( pItem )
+   {
+      HB_STACK_TLS_PRELOAD
       hb_itemCopy( hb_stackReturnItem(), pItem );
+   }
 
    return pItem;
 }
@@ -765,7 +772,10 @@ PHB_ITEM hb_itemReturnForward( PHB_ITEM pItem )
    HB_TRACE_STEALTH( HB_TR_DEBUG, ("hb_itemReturnForward(%p)", pItem ) );
 
    if( pItem )
+   {
+      HB_STACK_TLS_PRELOAD
       hb_itemMove( hb_stackReturnItem(), pItem );
+   }
 
    return pItem;
 }
@@ -776,6 +786,7 @@ void hb_itemReturnRelease( PHB_ITEM pItem )
 
    if( pItem )
    {
+      HB_STACK_TLS_PRELOAD
       hb_itemMove( hb_stackReturnItem(), pItem );
       hb_itemRelease( pItem );
    }
@@ -919,6 +930,8 @@ PHB_ITEM hb_itemPutL( PHB_ITEM pItem, BOOL bValue )
 
 PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
 {
+   HB_STACK_TLS_PRELOAD
+
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutND(%p, %lf)", pItem, dNumber));
 
    if( pItem )
@@ -1063,7 +1076,10 @@ PHB_ITEM hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
       iWidth = HB_DBL_LENGTH( dNumber );
 
    if( iDec < 0 )
+   {
+      HB_STACK_TLS_PRELOAD
       iDec = hb_stackSetStruct()->HB_SET_DECIMALS;
+   }
 
    if( iDec == 0 )
    {
@@ -1113,7 +1129,10 @@ PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
    }
 
    if( iDec < 0 )
+   {
+      HB_STACK_TLS_PRELOAD
       iDec = hb_stackSetStruct()->HB_SET_DECIMALS;
+   }
 
    pItem->type = HB_IT_DOUBLE;
    pItem->item.asDouble.length = iWidth;
@@ -1140,6 +1159,7 @@ PHB_ITEM hb_itemPutNDDec( PHB_ITEM pItem, double dNumber, int iDec )
 
    if( iDec == HB_DEFAULT_DECIMALS )
    {
+      HB_STACK_TLS_PRELOAD
       pItem->item.asDouble.decimal = hb_stackSetStruct()->HB_SET_DECIMALS;
    }
    else
@@ -1807,6 +1827,7 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
 
             if( hb_vmRequestQuery() == 0 )
             {
+               HB_STACK_TLS_PRELOAD
                hb_itemPutNInt( hb_stackAllocItem(), pItem->item.asEnum.offset );
                hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
                               2, pItem->item.asEnum.basePtr, hb_stackItemFromTop( -1 ) );
@@ -1834,6 +1855,7 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
                }
                else if( hb_vmRequestQuery() == 0 )
                {
+                  HB_STACK_TLS_PRELOAD
                   hb_arrayPushBase( pItem->item.asRefer.BasePtr.array );
                   hb_itemPutNInt( hb_stackAllocItem(), pItem->item.asRefer.value + 1 );
                   hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
@@ -2052,6 +2074,7 @@ PHB_ITEM hb_itemClone( PHB_ITEM pItem )
 /* Check whether two strings are equal (0), smaller (-1), or greater (1) */
 int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
 {
+   HB_STACK_TLS_PRELOAD
    const char * szFirst;
    const char * szSecond;
    ULONG ulLenFirst;
@@ -2132,6 +2155,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
 /* Check whether two strings are equal (0), smaller (-1), or greater (1), ignore case */
 int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
 {
+   HB_STACK_TLS_PRELOAD
    const char * szFirst;
    const char * szSecond;
    ULONG ulLenFirst;
@@ -2549,37 +2573,41 @@ char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
          break;
 
       case HB_IT_DATE:
-         {
-            char szDate[ 9 ];
+      {
+         HB_STACK_TLS_PRELOAD
+         char szDate[ 9 ];
 
-            hb_dateDecStr( szDate, pItem->item.asDateTime.julian );
+         hb_dateDecStr( szDate, pItem->item.asDateTime.julian );
 
-            buffer = ( char * ) hb_xgrab( 11 );
-            hb_dateFormat( szDate, buffer, hb_stackSetStruct()->HB_SET_DATEFORMAT );
-            * ulLen = strlen( buffer );
-            * bFreeReq = TRUE;
-         }
+         buffer = ( char * ) hb_xgrab( 11 );
+         hb_dateFormat( szDate, buffer, hb_stackSetStruct()->HB_SET_DATEFORMAT );
+         * ulLen = strlen( buffer );
+         * bFreeReq = TRUE;
          break;
+      }
 
       case HB_IT_TIMESTAMP:
-         {
-            char szDateTime[ 27 ];
+      {
+         HB_STACK_TLS_PRELOAD
+         char szDateTime[ 27 ];
 
-            hb_timeStampFormat( szDateTime,
-                                hb_stackSetStruct()->HB_SET_DATEFORMAT,
-                                hb_stackSetStruct()->HB_SET_TIMEFORMAT,
-                                pItem->item.asDateTime.julian,
-                                pItem->item.asDateTime.time );
+         hb_timeStampFormat( szDateTime,
+                             hb_stackSetStruct()->HB_SET_DATEFORMAT,
+                             hb_stackSetStruct()->HB_SET_TIMEFORMAT,
+                             pItem->item.asDateTime.julian,
+                             pItem->item.asDateTime.time );
 
-            buffer = hb_strdup( szDateTime );
-            * ulLen = strlen( buffer );
-            * bFreeReq = TRUE;
-         }
+         buffer = hb_strdup( szDateTime );
+         * ulLen = strlen( buffer );
+         * bFreeReq = TRUE;
          break;
+      }
 
       case HB_IT_DOUBLE:
       case HB_IT_INTEGER:
       case HB_IT_LONG:
+      {
+         HB_STACK_TLS_PRELOAD
          if( hb_stackSetStruct()->HB_SET_FIXED )
          {
             /* If fixed mode is enabled, use the default number of decimal places. */
@@ -2601,6 +2629,7 @@ char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
             * bFreeReq = FALSE;
          }
          break;
+      }
 
       case HB_IT_NIL:
          buffer = ( char * ) "NIL";

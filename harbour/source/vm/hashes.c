@@ -526,6 +526,7 @@ BOOL hb_hashScan( PHB_ITEM pHash, PHB_ITEM pKey, ULONG * pulPos )
                hb_vmPush( pVal2 );
                if( !hb_xvmExactlyEqual() )
                {
+                  HB_STACK_TLS_PRELOAD
                   fResult = hb_itemGetL( hb_stackItemFromTop( -1 ) );
                   hb_stackPop();
                }

@@ -103,6 +103,7 @@ static void hb_arrayReleaseItems( PHB_BASEARRAY pBaseArray )
 
 void hb_arrayPushBase( PHB_BASEARRAY pBaseArray )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_stackAllocItem();
 
    pItem->type = HB_IT_ARRAY;
@@ -123,6 +124,7 @@ static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
       if( pBaseArray->uiPrevCls == 0 &&
           hb_clsHasDestructor( pBaseArray->uiClass ) )
       {
+         HB_STACK_TLS_PRELOAD
          hb_arrayPushBase( pBaseArray );
          hb_objDestructorCall( hb_stackItemFromTop( -1 ) );
 
@@ -968,6 +970,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
 
             if( HB_IS_BLOCK( pValue ) )
             {
+               HB_STACK_TLS_PRELOAD
                do
                {
                   hb_vmPushSymbol( &hb_symEval );
@@ -1131,6 +1134,7 @@ ULONG hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG
 
             if( HB_IS_BLOCK( pValue ) )
             {
+               HB_STACK_TLS_PRELOAD
                do
                {
                   hb_vmPushSymbol( &hb_symEval );
@@ -1493,6 +1497,7 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
 
 PHB_ITEM hb_arrayFromStack( USHORT uiLen )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pArray = hb_itemNew( NULL );
    USHORT uiPos;
 
@@ -1510,6 +1515,7 @@ PHB_ITEM hb_arrayFromStack( USHORT uiLen )
 
 PHB_ITEM hb_arrayFromParams( int iLevel )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pArray;
    USHORT uiPos, uiPCount;
    LONG lBaseOffset;
@@ -1533,6 +1539,7 @@ PHB_ITEM hb_arrayFromParams( int iLevel )
 
 PHB_ITEM hb_arrayBaseParams( void )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pArray;
    USHORT uiPos, uiPCount;
 
@@ -1553,6 +1560,7 @@ PHB_ITEM hb_arrayBaseParams( void )
 
 PHB_ITEM hb_arraySelfParams( void )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pArray;
    USHORT uiPos, uiPCount;
 

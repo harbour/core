@@ -254,9 +254,13 @@ typedef struct
 #     define hb_stack_ref()         ( &hb_stack )
 #  endif
 #endif
-#if !defined( HB_STACK_TLS_PRELOAD ) && defined( HB_STACK_PRELOAD )
-#  define HB_STACK_TLS_PRELOAD
-#  undef  HB_STACK_PRELOAD
+#if !defined( HB_STACK_TLS_PRELOAD )
+#  if defined( HB_STACK_PRELOAD )
+#     define HB_STACK_TLS_PRELOAD
+#     undef  HB_STACK_PRELOAD
+#  elif defined( HB_STACK_MACROS )
+#     define HB_STACK_TLS_PRELOAD
+#  endif
 #endif
 
 #endif /* _HB_API_INTERNAL_ */

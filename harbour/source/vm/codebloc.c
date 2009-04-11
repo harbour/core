@@ -121,6 +121,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
                                   PHB_SYMB pSymbols,
                                   ULONG ulLen )
 {
+   HB_STACK_TLS_PRELOAD
    HB_CODEBLOCK_PTR pCBlock;
    PHB_ITEM pLocals, pBase;
    BYTE * pCode;
@@ -232,6 +233,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
 
 HB_CODEBLOCK_PTR hb_codeblockMacroNew( const BYTE * pBuffer, ULONG ulLen )
 {
+   HB_STACK_TLS_PRELOAD
    HB_CODEBLOCK_PTR pCBlock;
    PHB_ITEM pBase;
    BYTE * pCode;
@@ -276,6 +278,8 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( const BYTE * pBuffer, ULONG ulLen )
  */
 void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
 {
+   HB_STACK_TLS_PRELOAD
+
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockEvaluate(%p)", pItem));
 
    hb_stackSetStaticsBase( pItem->item.asBlock.value->pStatics );

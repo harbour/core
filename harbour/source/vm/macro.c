@@ -163,6 +163,7 @@ static BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
       bValid = FALSE;
       if( pResult )
       {
+         HB_STACK_TLS_PRELOAD
          hb_stackPop();
          hb_vmPush( pResult );
          hb_itemRelease( pResult );
@@ -204,6 +205,8 @@ void hb_macroRun( HB_MACRO_PTR pMacro )
 
 static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
 {
+   HB_STACK_TLS_PRELOAD
+
    HB_TRACE(HB_TR_DEBUG, ("hb_macroSyntaxError(%p)", pMacro));
 
    if( pMacro && pMacro->pError )
@@ -412,6 +415,8 @@ static char * hb_macroTextSubst( const char * szString, ULONG *pulStringLen )
 
 void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
 {
+   HB_STACK_TLS_PRELOAD
+
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGetValue(%p)", pItem));
 
    if( hb_macroCheckParam( pItem ) )
@@ -494,6 +499,8 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
  */
 void hb_macroSetValue( HB_ITEM_PTR pItem, BYTE flags )
 {
+   HB_STACK_TLS_PRELOAD
+
    HB_TRACE(HB_TR_DEBUG, ("hb_macroSetValue(%p)", pItem));
 
    if( hb_macroCheckParam( pItem ) )
@@ -544,6 +551,8 @@ void hb_macroSetValue( HB_ITEM_PTR pItem, BYTE flags )
  */
 static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag, BYTE bSupported )
 {
+   HB_STACK_TLS_PRELOAD
+
    if( HB_IS_STRING( pAlias ) && HB_IS_STRING( pVar ) )
    {
       /* grab memory for "alias->var"
@@ -786,8 +795,12 @@ static void hb_macroBlock( const char * szString, PHB_ITEM pItem )
 HB_FUNC( HB_MACROBLOCK )
 {
    const char * szMacro = hb_parc( 1 );
+
    if( szMacro )
+   {
+      HB_STACK_TLS_PRELOAD
       hb_macroBlock( szMacro, hb_stackReturnItem() );
+   }
 }
 
 /* This function handles a macro function calls, e.g. var :=&macro()
@@ -799,6 +812,7 @@ HB_FUNC( HB_MACROBLOCK )
  */
 void hb_macroPushSymbol( HB_ITEM_PTR pItem )
 {
+   HB_STACK_TLS_PRELOAD
    HB_TRACE(HB_TR_DEBUG, ("hb_macroPushSymbol(%p)", pItem));
 
    if( hb_macroCheckParam( pItem ) )
@@ -866,6 +880,7 @@ void hb_macroTextValue( HB_ITEM_PTR pItem )
 
 char * hb_macroGetType( HB_ITEM_PTR pItem )
 {
+   HB_STACK_TLS_PRELOAD
    const char * szType;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGetType(%p)", pItem));
@@ -990,6 +1005,7 @@ ULONG hb_macroSetMacro( BOOL bSet, ULONG flag )
 
 HB_FUNC( HB_SETMACRO )
 {
+   HB_STACK_TLS_PRELOAD
    int iPrmCnt = hb_pcount();
 
    if( iPrmCnt > 0 )

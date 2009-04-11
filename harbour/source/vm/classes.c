@@ -1075,6 +1075,8 @@ void hb_clsDoInit( void )
         &s_uiDateClass, &s_uiTimeStampClass,
         &s_uiHashClass, &s_uiLogicalClass, &s_uiNilClass, &s_uiNumericClass,
         &s_uiSymbolClass, &s_uiPointerClass };
+
+   HB_STACK_TLS_PRELOAD
    int i;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_clsDoInit()"));
@@ -1523,6 +1525,7 @@ static USHORT hb_clsSenderMethodClasss( void )
 
    if( lOffset > 0 )
    {
+      HB_STACK_TLS_PRELOAD
       PHB_STACK_STATE pStack = hb_stackItem( lOffset )->item.asSymbol.stackstate;
 
       if( pStack->uiClass )
@@ -1539,6 +1542,7 @@ static PHB_SYMB hb_clsSenderSymbol( void )
 
    if( lOffset > 0 )
    {
+      HB_STACK_TLS_PRELOAD
       pSym = hb_stackItem( lOffset )->item.asSymbol.value;
 
       if( pSym == &hb_symEval || pSym->pDynSym == hb_symEval.pDynSym )
@@ -1559,6 +1563,7 @@ static USHORT hb_clsSenderObjectClasss( void )
 
    if( lOffset > 0 )
    {
+      HB_STACK_TLS_PRELOAD
       PHB_ITEM pSender = hb_stackItem( lOffset + 1 );
 
       if( HB_IS_ARRAY( pSender ) )
@@ -1675,6 +1680,7 @@ static void hb_clsMakeSuperObject( PHB_ITEM pDest, PHB_ITEM pObject,
 PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
                           PHB_STACK_STATE pStack )
 {
+   HB_STACK_TLS_PRELOAD
    PCLASS pClass = NULL;
    PHB_DYNS pMsg;
 
@@ -2072,6 +2078,7 @@ BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
    pExecSym = hb_objGetMethod( pObject, pMessage, pStack );
    if( pExecSym )
    {
+      HB_STACK_TLS_PRELOAD
       if( pExecSym->value.pFunPtr == hb___msgSetData )
       {
          USHORT uiObjClass = pObject->item.asArray.value->uiClass;
@@ -2142,6 +2149,7 @@ BOOL hb_clsHasDestructor( USHORT uiClass )
  */
 static void hb_objSupperDestructorCall( PHB_ITEM pObject, PCLASS pClass )
 {
+   HB_STACK_TLS_PRELOAD
    PMETHOD pMethod = pClass->pMethods;
    ULONG   ulLimit = hb_clsMthNum( pClass );
    BYTE * pbClasses;
@@ -2246,6 +2254,7 @@ BOOL hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult, PHB_ITEM pObjec
 
    if( hb_objHasOperator( pObject, uiOperator ) )
    {
+      HB_STACK_TLS_PRELOAD
       hb_vmPushSymbol( s_opSymbols + uiOperator );
       hb_vmPush( pObject );
       hb_itemSetNil( hb_stackReturnItem() );
@@ -2326,7 +2335,10 @@ PHB_ITEM hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, ULONG ulArg, ...
    else
       hb_errRT_BASE( EG_ARG, 3000, NULL, "__ObjSendMessage()", 0 );
 
-   return hb_stackReturnItem();
+   {
+      HB_STACK_TLS_PRELOAD
+      return hb_stackReturnItem();
+   }
 }
 
 PHB_ITEM hb_objSendMsg( PHB_ITEM pObject, const char *sMsg, ULONG ulArg, ... )
@@ -2347,7 +2359,10 @@ PHB_ITEM hb_objSendMsg( PHB_ITEM pObject, const char *sMsg, ULONG ulArg, ... )
    }
    hb_vmSend( (USHORT) ulArg );
 
-   return hb_stackReturnItem();
+   {
+      HB_STACK_TLS_PRELOAD
+      return hb_stackReturnItem();
+   }
 }
 
 static PHB_DYNS hb_objGetMsgSym( PHB_ITEM pMessage )
@@ -2395,6 +2410,7 @@ static PHB_SYMB hb_objGetFuncSym( PHB_ITEM pItem )
 /* send message which allows to set execution context for debugger */
 void hb_dbg_objSendMessage( int iProcLevel, PHB_ITEM pObject, PHB_ITEM pMessage, int iParamOffset )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_DYNS pMsgSym;
 
    pMsgSym = hb_objGetMsgSym( pMessage );
@@ -3382,6 +3398,7 @@ HB_FUNC( __CLSNEW )
        ( ! pClassFunc || HB_IS_SYMBOL( pClassFunc ) ) &&
        ( ! pModFriend || HB_IS_LOGICAL( pModFriend ) ) )
    {
+      HB_STACK_TLS_PRELOAD
       USHORT uiClass;
       uiClass = hb_clsNew( szClassName, ( USHORT ) hb_itemGetNI( pDatas ),
                            pSuperArray, hb_itemGetSymbol( pClassFunc ),
@@ -3636,6 +3653,7 @@ HB_FUNC( __CLSMODMSG )
  */
 HB_FUNC( __OBJGETCLSNAME )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
    USHORT uiClass;
 
@@ -3658,7 +3676,10 @@ HB_FUNC( __OBJHASMSG )
    PHB_DYNS pMessage = hb_objGetMsgSym( hb_param( 2, HB_IT_ANY ) );
 
    if( pMessage )
+   {
+      HB_STACK_TLS_PRELOAD
       hb_retl( hb_objHasMessage( hb_param( 1, HB_IT_ANY ), pMessage ) );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -3674,6 +3695,7 @@ HB_FUNC( __OBJHASMSGASSIGNED )
 
    if( pMessage )
    {
+      HB_STACK_TLS_PRELOAD
       PHB_SYMB pExecSym = hb_objGetMethod( hb_param( 1, HB_IT_ANY ),
                                            pMessage->pSymbol, NULL );
       hb_retl( pExecSym && pExecSym != &s___msgVirtual );
@@ -3693,6 +3715,7 @@ HB_FUNC( __OBJSENDMSG )
 
    if( pMessage )
    {
+      HB_STACK_TLS_PRELOAD
       USHORT uiPCount = hb_pcount();
       USHORT uiParam;
 
@@ -3739,6 +3762,7 @@ HB_FUNC( __OBJCLONE )
  */
 HB_FUNC( __CLSINSTSUPER )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING | HB_IT_SYMBOL );
    USHORT uiClassH = 0, uiClass;
    PHB_SYMB pClassFuncSym = NULL;
@@ -3817,6 +3841,7 @@ HB_FUNC( __CLSINSTSUPER )
  */
 HB_FUNC( __CLSASSOCTYPE )
 {
+   HB_STACK_TLS_PRELOAD
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
    PHB_ITEM pType = hb_param( 2, HB_IT_ANY );
    BOOL fResult = FALSE;
@@ -3878,6 +3903,7 @@ HB_FUNC( __CLSASSOCTYPE )
  */
 HB_FUNC( __CLSCNTCLASSES )
 {
+   HB_STACK_TLS_PRELOAD
    hb_retni( ( int ) s_uiClasses );
 }
 
@@ -3888,6 +3914,7 @@ HB_FUNC( __CLSCNTCLASSES )
  */
 HB_FUNC( __CLS_CNTCLSDATA )
 {
+   HB_STACK_TLS_PRELOAD
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
 
    hb_retni( uiClass && uiClass <= s_uiClasses ?
@@ -3901,6 +3928,7 @@ HB_FUNC( __CLS_CNTCLSDATA )
  */
 HB_FUNC( __CLS_CNTSHRDATA )
 {
+   HB_STACK_TLS_PRELOAD
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
 
    hb_retni( uiClass && uiClass <= s_uiClasses ?
@@ -3914,6 +3942,7 @@ HB_FUNC( __CLS_CNTSHRDATA )
  */
 HB_FUNC( __CLS_CNTDATA )
 {
+   HB_STACK_TLS_PRELOAD
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
 
    hb_retni( uiClass && uiClass <= s_uiClasses ?
@@ -3927,6 +3956,7 @@ HB_FUNC( __CLS_CNTDATA )
  */
 HB_FUNC( __CLS_DECDATA )
 {
+   HB_STACK_TLS_PRELOAD
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
 
    if( uiClass && uiClass <= s_uiClasses &&
@@ -3946,6 +3976,7 @@ HB_FUNC( __CLS_DECDATA )
  */
 HB_FUNC( __CLS_INCDATA )
 {
+   HB_STACK_TLS_PRELOAD
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
 
    if( uiClass && uiClass <= s_uiClasses )
@@ -3987,6 +4018,7 @@ HB_FUNC( __CLASSADD )
 
 HB_FUNC( __CLASSNAME )
 {
+   HB_STACK_TLS_PRELOAD
    hb_retc( hb_clsName( ( USHORT ) hb_parni( 1 ) ) );
 }
 
@@ -4023,16 +4055,19 @@ HB_FUNC( __CLASSSEL )
 /* to be used from Classes ERROR HANDLER method */
 HB_FUNC( __GETMESSAGE )
 {
+   HB_STACK_TLS_PRELOAD
    hb_retc( hb_stackItem( hb_stackBaseItem()->item.asSymbol.stackstate->lBaseItem )->item.asSymbol.value->szName );
 }
 
 HB_FUNC( __CLSPARENT )
 {
+   HB_STACK_TLS_PRELOAD
    hb_retl( hb_clsIsParent( ( USHORT ) hb_parni( 1 ) , hb_parc( 2 ) ) );
 }
 
 HB_FUNC( __SENDER )
 {
+   HB_STACK_TLS_PRELOAD
    LONG lOffset = hb_stackBaseProcOffset( 2 );
 
    if( lOffset > 0 )
@@ -4061,6 +4096,7 @@ HB_FUNC( __SENDER )
  */
 HB_FUNC( __CLASSH )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pObject = hb_param( 1, HB_IT_ANY );
 
    hb_retni( pObject ? hb_objGetClassH( pObject ) : 0 );
@@ -4075,6 +4111,7 @@ HB_FUNC( __CLASSH )
  */
 static HARBOUR hb___msgClassH( void )
 {
+   HB_STACK_TLS_PRELOAD
    hb_retni( hb_stackBaseItem()->item.asSymbol.stackstate->uiClass );
 }
 
@@ -4086,6 +4123,7 @@ static HARBOUR hb___msgClassH( void )
  */
 static HARBOUR hb___msgClassName( void )
 {
+   HB_STACK_TLS_PRELOAD
    USHORT uiClass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
 
    if( uiClass )
@@ -4102,6 +4140,7 @@ static HARBOUR hb___msgClassName( void )
  */
 static HARBOUR hb___msgClassSel( void )
 {
+   HB_STACK_TLS_PRELOAD
    USHORT uiClass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
 
    if( uiClass && uiClass <= s_uiClasses )
@@ -4200,6 +4239,7 @@ static HARBOUR hb___msgClassParent( void )
  */
 static HARBOUR hb___msgEvalInline( void )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_STACK_STATE pStack = hb_stackBaseItem()->item.asSymbol.stackstate;
    PCLASS pClass   = s_pClasses[ pStack->uiClass ];
    PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
@@ -4226,6 +4266,7 @@ static HARBOUR hb___msgEvalInline( void )
 
 static HARBOUR hb___msgPerform( void )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
    USHORT uiPCount = hb_pcount(), uiParam;
    PHB_SYMB pSym = NULL;
@@ -4261,6 +4302,7 @@ static HARBOUR hb___msgPerform( void )
 
 static HARBOUR hb___msgDelegate( void )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_STACK_STATE pStack = hb_stackBaseItem()->item.asSymbol.stackstate;
    PCLASS pClass   = s_pClasses[ pStack->uiClass ];
    PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
@@ -4280,6 +4322,7 @@ static HARBOUR hb___msgDelegate( void )
 
 static HARBOUR hb___msgSync( void )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_STACK_STATE pStack = hb_stackBaseItem()->item.asSymbol.stackstate;
    PCLASS pClass = s_pClasses[ pStack->uiClass ];
    PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
@@ -4311,6 +4354,7 @@ static HARBOUR hb___msgSync( void )
 
 static HARBOUR hb___msgSyncClass( void )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_STACK_STATE pStack = hb_stackBaseItem()->item.asSymbol.stackstate;
    PCLASS pClass = s_pClasses[ pStack->uiClass ];
    PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
@@ -4340,6 +4384,7 @@ static HARBOUR hb___msgSyncClass( void )
  */
 static HARBOUR hb___msgNoMethod( void )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_SYMB pSym = hb_itemGetSymbol( hb_stackBaseItem() );
 
 #if 1  /* Clipper compatible error message */
@@ -4370,6 +4415,7 @@ static HARBOUR hb___msgNoMethod( void )
  */
 static HARBOUR hb___msgScopeErr( void )
 {
+   HB_STACK_TLS_PRELOAD
    char * pszProcName;
    PHB_ITEM pObject = hb_stackSelfItem();
    PMETHOD pMethod = s_pClasses[
@@ -4387,6 +4433,7 @@ static HARBOUR hb___msgScopeErr( void )
 
 static HARBOUR hb___msgTypeErr( void )
 {
+   HB_STACK_TLS_PRELOAD
    char * pszProcName;
    PHB_ITEM pObject = hb_stackSelfItem();
    PMETHOD pMethod = s_pClasses[
@@ -4406,6 +4453,7 @@ static HARBOUR hb___msgTypeErr( void )
  */
 static HARBOUR hb___msgSuper( void )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_STACK_STATE pStack = hb_stackBaseItem()->item.asSymbol.stackstate;
 
    hb_clsMakeSuperObject( hb_stackReturnItem(), hb_stackSelfItem(),
@@ -4420,6 +4468,7 @@ static HARBOUR hb___msgSuper( void )
  */
 static HARBOUR hb___msgRealClass( void )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pObject = hb_stackSelfItem();
    USHORT uiClass = hb_clsSenderMethodClasss();
    USHORT uiCurClass = hb_objGetClassH( pObject );
@@ -4442,6 +4491,7 @@ static HARBOUR hb___msgRealClass( void )
  */
 static HARBOUR hb___msgGetClsData( void )
 {
+   HB_STACK_TLS_PRELOAD
    PCLASS pClass   = s_pClasses[
                   hb_stackBaseItem()->item.asSymbol.stackstate->uiClass ];
    PMETHOD pMethod = pClass->pMethods +
@@ -4458,6 +4508,7 @@ static HARBOUR hb___msgGetClsData( void )
  */
 static HARBOUR hb___msgSetClsData( void )
 {
+   HB_STACK_TLS_PRELOAD
    PCLASS pClass   = s_pClasses[
                   hb_stackBaseItem()->item.asSymbol.stackstate->uiClass ];
    PMETHOD pMethod = pClass->pMethods +
@@ -4493,6 +4544,7 @@ static HARBOUR hb___msgSetClsData( void )
  */
 static HARBOUR hb___msgGetShrData( void )
 {
+   HB_STACK_TLS_PRELOAD
    PCLASS pClass   = s_pClasses[
                   hb_stackBaseItem()->item.asSymbol.stackstate->uiClass ];
    PMETHOD pMethod = pClass->pMethods +
@@ -4509,6 +4561,7 @@ static HARBOUR hb___msgGetShrData( void )
  */
 static HARBOUR hb___msgSetShrData( void )
 {
+   HB_STACK_TLS_PRELOAD
    PCLASS pClass   = s_pClasses[
                   hb_stackBaseItem()->item.asSymbol.stackstate->uiClass ];
    PMETHOD pMethod = pClass->pMethods +
@@ -4545,6 +4598,7 @@ static HARBOUR hb___msgSetShrData( void )
  */
 static HARBOUR hb___msgGetData( void )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pObject  = hb_stackSelfItem();
 
    if( HB_IS_ARRAY( pObject ) )
@@ -4577,6 +4631,7 @@ static HARBOUR hb___msgGetData( void )
  */
 static HARBOUR hb___msgSetData( void )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pObject  = hb_stackSelfItem();
 
    if( HB_IS_ARRAY( pObject ) )
@@ -4669,6 +4724,7 @@ void hb_mthAddTime( ULONG ulClockTicks )
 HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times */
                        /* ( nClass, cMsg ) --> aMethodInfo { nTimes, nTime } */
 {
+   HB_STACK_TLS_PRELOAD
 #ifndef HB_NO_PROFILER
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
    char * cMsg    = hb_parc( 2 );
@@ -4774,6 +4830,7 @@ HB_FUNC( __CLSGETPROPERTIES )
  */
 HB_FUNC( __CLSPREALLOCATE )
 {
+   HB_STACK_TLS_PRELOAD
    LONG lNewSize = hb_parnl( 1 );
 
    if( lNewSize > ( LONG ) USHRT_MAX )
@@ -4795,6 +4852,7 @@ HB_FUNC( __CLSPREALLOCATE )
 
 HB_FUNC( __CLSLOCKDEF )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pClsItm = hb_param( 1, HB_IT_BYREF );
    BOOL fLocked = FALSE;
 
@@ -4842,6 +4900,7 @@ HB_FUNC( __CLSUNLOCKDEF )
 
 HB_FUNC( HB_SETCLSHANDLE ) /* ( oObject, nClassHandle ) --> nPrevClassHandle */
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
    USHORT uiPrevClassHandle = 0;
 
@@ -4918,6 +4977,7 @@ void hb_clsAssociate( USHORT usClassH )
  */
 HB_FUNC( __CLS_PARAM )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM array;
    USHORT uiParam = ( USHORT ) hb_pcount();
    USHORT n;
@@ -4939,6 +4999,7 @@ HB_FUNC( __CLS_PARAM )
 
 HB_FUNC( __CLS_PAR00 )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM array;
    USHORT uiParam = ( USHORT ) hb_pcount();
    USHORT n;

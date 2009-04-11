@@ -823,6 +823,8 @@ HB_FUNC( HB_GCSTEP )
 */
 HB_FUNC( HB_GCALL )
 {
+   HB_STACK_TLS_PRELOAD
+
    /* call hb_ret() to clear stack return item, HVM does not clean
     * it before calling functions/procedures if caller does not
     * try to retrieve returned value. It's safe and cost nearly

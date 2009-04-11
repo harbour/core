@@ -364,6 +364,7 @@ static void hb_set_OSCODEPAGE( PHB_SET_STRUCT pSet )
 
 BOOL hb_setSetCentury( BOOL new_century_setting )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
    BOOL old_century_setting = pSet->hb_set_century;
 
@@ -436,6 +437,7 @@ BOOL hb_setSetCentury( BOOL new_century_setting )
 
 HB_FUNC( __SETCENTURY )
 {
+   HB_STACK_TLS_PRELOAD
    BOOL old_century_setting = hb_setGetCentury();
    PHB_ITEM pNewVal = hb_param( 1, HB_IT_ANY );
 
@@ -447,6 +449,7 @@ HB_FUNC( __SETCENTURY )
 
 HB_FUNC( SETCANCEL )
 {
+   HB_STACK_TLS_PRELOAD
    hb_retl( hb_setGetCancel() );
    /* SETCANCEL() accepts only logical parameters */
    hb_setSetItem( HB_SET_CANCEL, hb_param( 1, HB_IT_LOGICAL ) );
@@ -454,6 +457,7 @@ HB_FUNC( SETCANCEL )
 
 HB_FUNC( SET )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
    int args = hb_pcount();
    BOOL bFlag;
@@ -1192,6 +1196,7 @@ PHB_SET_STRUCT hb_setClone( PHB_SET_STRUCT pSrc )
 
 int hb_setListenerAdd( HB_SET_LISTENER_CALLBACK * callback )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
    PHB_SET_LISTENER p_sl = (PHB_SET_LISTENER) hb_xgrab( sizeof( HB_SET_LISTENER ) );
    PHB_SET_LISTENER_LST pList;
@@ -1218,6 +1223,7 @@ int hb_setListenerAdd( HB_SET_LISTENER_CALLBACK * callback )
 
 void hb_setListenerNotify( HB_set_enum set, HB_set_listener_enum when )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_SET_LISTENER_LST pList = ( PHB_SET_LISTENER_LST ) hb_stackSetStruct()->hb_set_listener;
    if( pList )
    {
@@ -1232,6 +1238,7 @@ void hb_setListenerNotify( HB_set_enum set, HB_set_listener_enum when )
 
 int hb_setListenerRemove( int listener )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_SET_LISTENER_LST pList = ( PHB_SET_LISTENER_LST ) hb_stackSetStruct()->hb_set_listener;
    if( pList )
    {
@@ -1260,6 +1267,7 @@ int hb_setListenerRemove( int listener )
 
 static BOOL hb_setSetFile( HB_set_enum set_specifier, const char * szFile, BOOL fAdditive )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
    BOOL fResult = TRUE;
 
@@ -1317,6 +1325,7 @@ static BOOL hb_setSetFile( HB_set_enum set_specifier, const char * szFile, BOOL 
 
 BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
    BOOL fResult = FALSE;
    char * szValue;
@@ -1928,6 +1937,7 @@ BOOL hb_setSetItem2( HB_set_enum set_specifier, PHB_ITEM pItem1, PHB_ITEM pItem2
 
 BOOL    hb_setGetL( HB_set_enum set_specifier )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
 
    switch( set_specifier )
@@ -2047,6 +2057,7 @@ BOOL    hb_setGetL( HB_set_enum set_specifier )
 
 char *  hb_setGetCPtr( HB_set_enum set_specifier )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
 
    switch( set_specifier )
@@ -2150,6 +2161,7 @@ char *  hb_setGetCPtr( HB_set_enum set_specifier )
 
 int     hb_setGetNI( HB_set_enum set_specifier )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
 
    switch( set_specifier )
@@ -2256,336 +2268,403 @@ long    hb_setGetNL( HB_set_enum set_specifier )
 
 HB_PATHNAMES * hb_setGetFirstSetPath( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->hb_set_path;
 }
 
 HB_FHANDLE hb_setGetAltHan( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->hb_set_althan;
 }
 
 BOOL    hb_setGetCentury( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->hb_set_century;
 }
 
 HB_FHANDLE hb_setGetExtraHan( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->hb_set_extrahan;
 }
 
 HB_FHANDLE hb_setGetPrintHan( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->hb_set_printhan;
 }
 
 BOOL    hb_setGetAlternate( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_ALTERNATE;
 }
 
 char *  hb_setGetAltFile( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_ALTFILE;
 }
 
 BOOL    hb_setGetAutOpen( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_AUTOPEN;
 }
 
 int     hb_setGetAutOrder( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_AUTORDER;
 }
 
 int     hb_setGetAutoShare( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_AUTOSHARE;
 }
 
 BOOL    hb_setGetBell( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_BELL;
 }
 
 BOOL    hb_setGetCancel( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_CANCEL;
 }
 
 char *  hb_setGetColor( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_COLOR;
 }
 
 BOOL    hb_setGetConfirm( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_CONFIRM;
 }
 
 BOOL    hb_setGetConsole( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_CONSOLE;
 }
 
 char * hb_setGetDateFormat( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DATEFORMAT;
 }
 
 char * hb_setGetTimeFormat( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_TIMEFORMAT;
 }
 
 BOOL    hb_setGetDebug( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DEBUG;
 }
 
 int     hb_setGetDecimals( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DECIMALS;
 }
 
 char *  hb_setGetDefault( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DEFAULT;
 }
 
 BOOL    hb_setGetDeleted( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DELETED;
 }
 
 char *  hb_setGetDelimChars( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DELIMCHARS;
 }
 
 BOOL    hb_setGetDelimiters( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DELIMITERS;
 }
 
 char *  hb_setGetDevice( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DEVICE;
 }
 
 BOOL    hb_setGetEOF( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_EOF;
 }
 
 int     hb_setGetEpoch( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_EPOCH;
 }
 
 BOOL    hb_setGetEscape( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_ESCAPE;
 }
 
 int     hb_setGetEventMask( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_EVENTMASK;
 }
 
 BOOL    hb_setGetExact( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_EXACT;
 }
 
 BOOL    hb_setGetExclusive( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_EXCLUSIVE;
 }
 
 BOOL    hb_setGetExit( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_EXIT;
 }
 
 BOOL    hb_setGetExtra( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_EXTRA;
 }
 
 char *  hb_setGetExtraFile( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_EXTRAFILE;
 }
 
 BOOL    hb_setGetFixed( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_FIXED;
 }
 
 BOOL    hb_setGetIdleRepeat( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_IDLEREPEAT;
 }
 
 BOOL    hb_setGetInsert( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_INSERT;
 }
 
 BOOL    hb_setGetIntensity( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_INTENSITY;
 }
 
 char *  hb_setGetPath( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_PATH;
 }
 
 int     hb_setGetMargin( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_MARGIN;
 }
 
 int     hb_setGetMBlockSize( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_MBLOCKSIZE;
 }
 
 BOOL    hb_setGetMCenter( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_MCENTER;
 }
 
 int     hb_setGetMessage( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_MESSAGE;
 }
 
 char *  hb_setGetMFileExt( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_MFILEEXT;
 }
 
 BOOL    hb_setGetOptimize( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_OPTIMIZE;
 }
 
 BOOL    hb_setGetPrinter( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_PRINTER;
 }
 
 char *  hb_setGetPrintFile( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_PRINTFILE;
 }
 
 BOOL    hb_setGetScoreBoard( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_SCOREBOARD;
 }
 
 BOOL    hb_setGetScrollBreak( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_SCROLLBREAK;
 }
 
 BOOL    hb_setGetSoftSeek( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_SOFTSEEK;
 }
 
 BOOL    hb_setGetStrictRead( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_STRICTREAD;
 }
 
 int     hb_setGetTypeAhead( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_TYPEAHEAD;
 }
 
 BOOL    hb_setGetUnique( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_UNIQUE;
 }
 
 int     hb_setGetFileCase( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_FILECASE;
 }
 
 int     hb_setGetDirCase( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DIRCASE;
 }
 
 int     hb_setGetDirSeparator( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DIRSEPARATOR;
 }
 
 int     hb_setGetVideoMode( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_VIDEOMODE;
 }
 
 BOOL    hb_setGetWrap( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_WRAP;
 }
 
 int     hb_setGetDBFLockScheme( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DBFLOCKSCHEME;
 }
 
 BOOL    hb_setGetHardCommit( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_HARDCOMMIT;
 }
 
 BOOL    hb_setGetForceOpt( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_FORCEOPT;
 }
 
 BOOL    hb_setGetDefExtension( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DEFEXTENSIONS;
 }
 
 char *  hb_setGetEOL( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_EOL;
 }
 
 BOOL    hb_setGetTrimFileName( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_TRIMFILENAME;
 }
 
 char *  hb_setGetHBOUTLOG( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_HBOUTLOG;
 }
 
 char *  hb_setGetHBOUTLOGINFO( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_HBOUTLOGINFO;
 }
 
 char *  hb_setGetOSCODEPAGE( void )
 {
+   HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_OSCODEPAGE;
 }
 
 UCHAR * hb_osEncode( UCHAR * szFileName, BOOL * pfFree )
 {
+   HB_STACK_TLS_PRELOAD
    *pfFree = FALSE;
 
 #if defined( HB_MT_VM )
@@ -2612,6 +2691,7 @@ UCHAR * hb_osEncode( UCHAR * szFileName, BOOL * pfFree )
 
 UCHAR * hb_osDecode( UCHAR * szFileName, BOOL * pfFree )
 {
+   HB_STACK_TLS_PRELOAD
    *pfFree = FALSE;
 
 #if defined( HB_MT_VM )

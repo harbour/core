@@ -600,11 +600,13 @@ void hb_dynsymRelease( void )
 
 HB_FUNC( __DYNSCOUNT ) /* How much symbols do we have: dsCount = __dynsymCount() */
 {
+   HB_STACK_TLS_PRELOAD
    hb_retnint( s_uiDynSymbols );
 }
 
 HB_FUNC( __DYNSGETNAME ) /* Get name of symbol: cSymbol = __dynsymGetName( dsIndex ) */
 {
+   HB_STACK_TLS_PRELOAD
    PHB_DYNS pDynSym = hb_dynsymGetByIndex( hb_parnl( 1 ) );
 
    hb_retc( pDynSym ? pDynSym->pSymbol->szName : NULL );
@@ -612,6 +614,7 @@ HB_FUNC( __DYNSGETNAME ) /* Get name of symbol: cSymbol = __dynsymGetName( dsInd
 
 HB_FUNC( __DYNSGETINDEX ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
 {
+   HB_STACK_TLS_PRELOAD
    PHB_DYNS pDynSym;
    UINT uiPos = 0;
    char * szName = hb_parc( 1 );
@@ -634,6 +637,7 @@ HB_FUNC( __DYNSGETINDEX ) /* Gimme index number of symbol: dsIndex = __dynsymGet
 HB_FUNC( __DYNSISFUN ) /* returns .t. if a symbol has a function/procedure pointer,
                           given its symbol index */
 {
+   HB_STACK_TLS_PRELOAD
    PHB_DYNS pDynSym = hb_dynsymGetByIndex( hb_parnl( 1 ) );
 
    hb_retl( pDynSym && hb_dynsymIsFunction( pDynSym ) );
@@ -643,6 +647,7 @@ HB_FUNC( __DYNSGETPRF ) /* profiler: It returns an array with a function or proc
                                      called and consumed times { nTimes, nTime }
                                      , given the dynamic symbol index */
 {
+   HB_STACK_TLS_PRELOAD
 #ifndef HB_NO_PROFILER
    PHB_DYNS pDynSym = hb_dynsymGetByIndex( hb_parnl( 1 ) );
 #endif
@@ -665,6 +670,7 @@ HB_FUNC( __DYNSGETPRF ) /* profiler: It returns an array with a function or proc
 
 HB_FUNC( __DYNSN2PTR )
 {
+   HB_STACK_TLS_PRELOAD
    char * szName = hb_parc( 1 );
 
    hb_retptr( szName ? hb_dynsymGet( szName ) : NULL );
@@ -672,6 +678,7 @@ HB_FUNC( __DYNSN2PTR )
 
 HB_FUNC( __DYNSN2SYM )
 {
+   HB_STACK_TLS_PRELOAD
    char * szName = hb_parc( 1 );
 
    if( szName )
@@ -680,6 +687,7 @@ HB_FUNC( __DYNSN2SYM )
 
 HB_FUNC( __DYNSP2NAME )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_DYNS pDynSym = ( PHB_DYNS ) hb_parptr( 1 );
 
    hb_retc( pDynSym != NULL ? pDynSym->pSymbol->szName : NULL );

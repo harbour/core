@@ -932,6 +932,7 @@ HB_FUNC( HB_THREADSTART )
 
    if( pStart )
    {
+      HB_STACK_TLS_PRELOAD
       PHB_ITEM pReturn;
       PHB_THREADSTATE pThread;
       ULONG ulPCount, ulParam;
@@ -1028,6 +1029,7 @@ HB_FUNC( HB_THREADSELF )
 HB_FUNC( HB_THREADID )
 {
 #if defined( HB_MT_VM )
+   HB_STACK_TLS_PRELOAD
    PHB_THREADSTATE pThread;
 
    if( hb_pcount() > 0 )
@@ -1141,6 +1143,7 @@ HB_FUNC( HB_THREADJOIN )
 
    if( pThread )
    {
+      HB_STACK_TLS_PRELOAD
       BOOL fResult = FALSE;
 
       if( pThread->th_h )
@@ -1170,6 +1173,7 @@ HB_FUNC( HB_THREADDETACH )
 
    if( pThread )
    {
+      HB_STACK_TLS_PRELOAD
       BOOL fResult = FALSE;
 
       if( pThread->th_h && hb_threadDetach( pThread->th_h ) )
@@ -1187,6 +1191,7 @@ HB_FUNC( HB_THREADQUITREQUEST )
 
    if( pThread )
    {
+      HB_STACK_TLS_PRELOAD
       BOOL fResult = FALSE;
 
 #if defined( HB_MT_VM )
@@ -1204,6 +1209,7 @@ HB_FUNC( HB_THREADWAIT )
 {
 #if defined( HB_MT_VM )
 #  define HB_THREAD_WAIT_ALLOC  16
+   HB_STACK_TLS_PRELOAD
    BOOL fAll = FALSE;
    ULONG ulMilliSec = HB_THREAD_INFINITE_WAIT;
    PHB_THREADSTATE * pThreads, pAlloc[ HB_THREAD_WAIT_ALLOC ];
@@ -1294,6 +1300,7 @@ HB_FUNC( HB_THREADONCE )
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
    if( pItem && ISBYREF( 1 ) && ( HB_IS_NIL( pItem ) || HB_IS_LOGICAL( pItem ) ) )
    {
+      HB_STACK_TLS_PRELOAD
       BOOL fFirstCall = FALSE;
       if( HB_IS_NIL( pItem ) || !hb_itemGetL( pItem ) )
       {
@@ -2040,6 +2047,7 @@ HB_FUNC( HB_MUTEXLOCK )
 
    if( pItem )
    {
+      HB_STACK_TLS_PRELOAD
       if( ISNUM( 2 ) )
       {
          ULONG ulMilliSec = 0;
@@ -2058,7 +2066,10 @@ HB_FUNC( HB_MUTEXUNLOCK )
    PHB_ITEM pItem = hb_mutexParam( 1 );
 
    if( pItem )
+   {
+      HB_STACK_TLS_PRELOAD
       hb_retl( hb_threadMutexUnlock( pItem ) );
+   }
 }
 
 HB_FUNC( HB_MUTEXNOTIFY )
@@ -2083,6 +2094,7 @@ HB_FUNC( HB_MUTEXSUBSCRIBE )
 
    if( pItem )
    {
+      HB_STACK_TLS_PRELOAD
       PHB_ITEM pResult;
 
       if( ISNUM( 2 ) )
@@ -2113,6 +2125,7 @@ HB_FUNC( HB_MUTEXSUBSCRIBENOW )
 
    if( pItem )
    {
+      HB_STACK_TLS_PRELOAD
       PHB_ITEM pResult;
 
       if( ISNUM( 2 ) )
@@ -2139,6 +2152,7 @@ HB_FUNC( HB_MUTEXSUBSCRIBENOW )
 
 HB_FUNC( HB_MTVM )
 {
+   HB_STACK_TLS_PRELOAD
 #if defined( HB_MT_VM )
    hb_retl( TRUE );
 #else

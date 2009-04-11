@@ -220,6 +220,7 @@ HB_ITEM_PTR hb_memvarDetachLocal( PHB_ITEM pLocal )
  */
 static void hb_memvarAddPrivate( PHB_DYNS pDynSym, PHB_ITEM pValue )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_PRIVATE_STACK pPrivateStack;
    PHB_ITEM pMemvar;
 
@@ -289,6 +290,7 @@ static void hb_memvarAddPrivate( PHB_DYNS pDynSym, PHB_ITEM pValue )
  */
 ULONG hb_memvarGetPrivatesBase( void )
 {
+   HB_STACK_TLS_PRELOAD
    ULONG ulBase;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetPrivatesBase()"));
@@ -303,6 +305,7 @@ ULONG hb_memvarGetPrivatesBase( void )
  */
 void hb_memvarSetPrivatesBase( ULONG ulBase )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_PRIVATE_STACK pPrivateStack;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarSetPrivatesBase(%lu)", ulBase));
@@ -329,6 +332,8 @@ void hb_memvarSetPrivatesBase( ULONG ulBase )
  */
 void hb_memvarUpdatePrivatesBase( void )
 {
+   HB_STACK_TLS_PRELOAD
+
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarUpdatePrivatesBase()"));
 
    hb_stackGetPrivateStack()->base = hb_stackGetPrivateStack()->count;
@@ -339,6 +344,8 @@ void hb_memvarUpdatePrivatesBase( void )
  */
 static void hb_memvarResetPrivatesBase( void )
 {
+   HB_STACK_TLS_PRELOAD
+
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarResetPrivatesBase()"));
 
    hb_stackGetPrivateStack()->base = hb_stackBaseItem()->item.asSymbol.stackstate->ulPrivateBase;
@@ -701,6 +708,7 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
 
       if( pDynSymbol && hb_dynsymGetMemvar( pDynSymbol ) )
       {
+         HB_STACK_TLS_PRELOAD
          ULONG ulBase = hb_stackGetPrivateStack()->count;
 
          /* Find the variable with a requested name that is currently visible
@@ -737,6 +745,7 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
  */
 static void hb_memvarReleaseWithMask( const char *szMask, BOOL bInclude )
 {
+   HB_STACK_TLS_PRELOAD
    ULONG ulBase = hb_stackGetPrivateStack()->count;
    PHB_DYNS pDynVar;
    PHB_ITEM pMemvar;
@@ -770,6 +779,7 @@ static int hb_memvarScopeGet( PHB_DYNS pDynVar )
       return HB_MV_UNKNOWN;
    else
    {
+      HB_STACK_TLS_PRELOAD
       ULONG ulBase = hb_stackGetPrivateStack()->count;    /* start from the top of the stack */
 
       while( ulBase )
@@ -818,6 +828,7 @@ static HB_DYNS_FUNC( hb_memvarClear )
 /* Clear all memvar variables optionally without GetList PUBLIC variable */
 void hb_memvarsClear( BOOL fAll )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_DYNS pGetList;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarsClear(%d)", ( int ) fAll));
@@ -864,7 +875,10 @@ static int hb_memvarCount( int iScope )
       return iPublicCnt;
    }
    else
+   {
+      HB_STACK_TLS_PRELOAD
       return hb_stackGetPrivateStack()->count;  /* number of PRIVATE variables */
+   }
 }
 
 /* Checks passed dynamic symbol if it is a PUBLIC variable and returns
@@ -921,6 +935,7 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, const char ** p
       }
       else
       {
+         HB_STACK_TLS_PRELOAD
          if( ( ULONG ) iPos < hb_stackGetPrivateStack()->count )
          {
             HB_DYNS_PTR pDynSym = hb_stackGetPrivateStack()->stack[ iPos ].pDynSym;
@@ -952,6 +967,7 @@ static HB_DYNS_FUNC( hb_memvarCountVisible )
 
 PHB_ITEM hb_memvarSaveInArray( int iScope, BOOL fCopy )
 {
+   HB_STACK_TLS_PRELOAD
    struct mv_memvarArray_info MVInfo;
    PHB_ITEM pArray, pItem, pMemvar;
    PHB_DYNS pDynSymbol;
@@ -1034,6 +1050,7 @@ static const char * hb_memvarGetMask( int iParam )
 
 HB_FUNC( __MVPUBLIC )
 {
+   HB_STACK_TLS_PRELOAD
    int iCount = hb_pcount();
 
    if( iCount )
@@ -1066,6 +1083,7 @@ HB_FUNC( __MVPUBLIC )
 
 HB_FUNC( __MVPRIVATE )
 {
+   HB_STACK_TLS_PRELOAD
    int iCount = hb_pcount();
 
    if( iCount )
@@ -1100,6 +1118,7 @@ HB_FUNC( __MVPRIVATE )
 
 HB_FUNC( __MVXRELEASE )
 {
+   HB_STACK_TLS_PRELOAD
    int iCount = hb_pcount();
 
    if( iCount )
@@ -1132,6 +1151,7 @@ HB_FUNC( __MVXRELEASE )
 
 HB_FUNC( __MVRELEASE )
 {
+   HB_STACK_TLS_PRELOAD
    int iCount = hb_pcount();
 
    if( iCount && ISCHAR( 1 ) )
@@ -1148,6 +1168,7 @@ HB_FUNC( __MVRELEASE )
 
 HB_FUNC( __MVSCOPE )
 {
+   HB_STACK_TLS_PRELOAD
    int iMemvar = HB_MV_ERROR;
 
    if( hb_pcount() )
@@ -1169,6 +1190,7 @@ HB_FUNC( __MVCLEAR )
 
 HB_FUNC( __MVDBGINFO )
 {
+   HB_STACK_TLS_PRELOAD
    int iCount = hb_pcount();
 
    if( iCount == 1 )          /* request for a number of variables */
@@ -1218,6 +1240,7 @@ HB_FUNC( __MVDBGINFO )
 
 HB_FUNC( __MVEXIST )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_DYNS pDyn;
    pDyn = hb_memvarFindSymbol( hb_parc( 1 ), hb_parclen( 1 ) );
    hb_retl( pDyn && hb_dynsymGetMemvar( pDyn ) );
@@ -1229,6 +1252,7 @@ HB_FUNC( __MVGET )
 
    if( pName )
    {
+      HB_STACK_TLS_PRELOAD
       HB_DYNS_PTR pDynVar = hb_memvarFindSymbol( pName->item.asString.value,
                                                  pName->item.asString.length );
 
@@ -1432,6 +1456,8 @@ static HB_DYNS_FUNC( hb_memvarSave )
 
 HB_FUNC( __MVSAVE )
 {
+   HB_STACK_TLS_PRELOAD
+
    /* Clipper also checks for the number of arguments here */
    if( hb_pcount() == 3 && ISCHAR( 1 ) && ISCHAR( 2 ) && ISLOG( 3 ) )
    {
@@ -1511,6 +1537,7 @@ HB_FUNC( __MVRESTORE )
    if( ISCHAR( 1 ) && ISLOG( 2 ) )
 #endif
    {
+      HB_STACK_TLS_PRELOAD
       PHB_ITEM pError = NULL;
       PHB_FNAME pFileName;
       char szFileName[ HB_PATH_MAX ];
@@ -1695,6 +1722,7 @@ HB_FUNC( __MVRESTORE )
  */
 HB_FUNC( __MVSETBASE )
 {
+   HB_STACK_TLS_PRELOAD
    long lOffset = hb_stackBaseProcOffset( 0 );
 
    if( lOffset > 0 )

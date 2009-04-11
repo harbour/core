@@ -9336,19 +9336,24 @@ BOOL hb_xvmEqualInt( LONG lValue )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmEqualInt(%ld)", lValue));
 
    pItem = hb_stackItemFromTop( -1 );
-   if( HB_IS_NIL( pItem ) )
+   if( HB_IS_INTEGER( pItem ) )
    {
+      pItem->item.asLogical.value = ( LONG ) pItem->item.asInteger.value == lValue;
       pItem->type = HB_IT_LOGICAL;
+   }
+   else if( HB_IS_LONG( pItem ) )
+   {
+      pItem->item.asLogical.value = pItem->item.asLong.value == ( HB_LONG ) lValue;
+      pItem->type = HB_IT_LOGICAL;
+   }
+   else if( HB_IS_DOUBLE( pItem ) )
+   {
+      pItem->item.asLogical.value = pItem->item.asDouble.value == ( double ) lValue;
+      pItem->type = HB_IT_LOGICAL;
+   }
+   else if( HB_IS_NIL( pItem ) )
+   {
       pItem->item.asLogical.value = FALSE;
-   }
-   else if( HB_IS_NUMINT( pItem ) )
-   {
-      pItem->item.asLogical.value = HB_ITEM_GET_NUMINTRAW( pItem ) == ( HB_LONG ) lValue;
-      pItem->type = HB_IT_LOGICAL;
-   }
-   else if( HB_IS_NUMERIC( pItem ) )
-   {
-      pItem->item.asLogical.value = HB_ITEM_GET_NUMDBLRAW( pItem ) == ( double ) lValue;
       pItem->type = HB_IT_LOGICAL;
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_EQUAL ) )
@@ -9384,19 +9389,24 @@ BOOL hb_xvmEqualIntIs( LONG lValue, BOOL * pfValue )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmEqualIntIs(%ld,%p)", lValue, pfValue));
 
    pItem = hb_stackItemFromTop( -1 );
-   if( HB_IS_NIL( pItem ) )
+   if( HB_IS_INTEGER( pItem ) )
+   {
+      * pfValue = ( LONG ) pItem->item.asInteger.value == lValue;
+      hb_stackDec();
+   }
+   else if( HB_IS_LONG( pItem ) )
+   {
+      * pfValue = pItem->item.asLong.value == ( HB_LONG ) lValue;
+      hb_stackDec();
+   }
+   else if( HB_IS_DOUBLE( pItem ) )
+   {
+      * pfValue = pItem->item.asDouble.value == ( double ) lValue;
+      hb_stackDec();
+   }
+   else if( HB_IS_NIL( pItem ) )
    {
       * pfValue = FALSE;
-      hb_stackDec();
-   }
-   else if( HB_IS_NUMINT( pItem ) )
-   {
-      * pfValue = HB_ITEM_GET_NUMINTRAW( pItem ) == ( HB_LONG ) lValue;
-      hb_stackDec();
-   }
-   else if( HB_IS_NUMERIC( pItem ) )
-   {
-      * pfValue = HB_ITEM_GET_NUMDBLRAW( pItem ) == ( double ) lValue;
       hb_stackDec();
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_EQUAL ) )
@@ -9445,19 +9455,24 @@ BOOL hb_xvmNotEqualInt( LONG lValue )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmNotEqualInt(%ld)", lValue));
 
    pItem = hb_stackItemFromTop( -1 );
-   if( HB_IS_NIL( pItem ) )
+   if( HB_IS_INTEGER( pItem ) )
    {
+      pItem->item.asLogical.value = ( LONG ) pItem->item.asInteger.value != lValue;
       pItem->type = HB_IT_LOGICAL;
+   }
+   else if( HB_IS_LONG( pItem ) )
+   {
+      pItem->item.asLogical.value = pItem->item.asLong.value != ( HB_LONG ) lValue;
+      pItem->type = HB_IT_LOGICAL;
+   }
+   else if( HB_IS_DOUBLE( pItem ) )
+   {
+      pItem->item.asLogical.value = pItem->item.asDouble.value != ( double ) lValue;
+      pItem->type = HB_IT_LOGICAL;
+   }
+   else if( HB_IS_NIL( pItem ) )
+   {
       pItem->item.asLogical.value = TRUE;
-   }
-   else if( HB_IS_NUMINT( pItem ) )
-   {
-      pItem->item.asLogical.value = HB_ITEM_GET_NUMINTRAW( pItem ) != ( HB_LONG ) lValue;
-      pItem->type = HB_IT_LOGICAL;
-   }
-   else if( HB_IS_NUMERIC( pItem ) )
-   {
-      pItem->item.asLogical.value = HB_ITEM_GET_NUMDBLRAW( pItem ) != ( double ) lValue;
       pItem->type = HB_IT_LOGICAL;
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_NOTEQUAL ) )
@@ -9493,19 +9508,24 @@ BOOL hb_xvmNotEqualIntIs( LONG lValue, BOOL * pfValue )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmNotEqualIntIs(%ld,%p)", lValue, pfValue));
 
    pItem = hb_stackItemFromTop( -1 );
-   if( HB_IS_NIL( pItem ) )
+   if( HB_IS_INTEGER( pItem ) )
+   {
+      * pfValue = ( LONG ) pItem->item.asInteger.value != lValue;
+      hb_stackDec();
+   }
+   else if( HB_IS_LONG( pItem ) )
+   {
+      * pfValue = pItem->item.asLong.value != ( HB_LONG ) lValue;
+      hb_stackDec();
+   }
+   else if( HB_IS_DOUBLE( pItem ) )
+   {
+      * pfValue = pItem->item.asDouble.value != ( double ) lValue;
+      hb_stackDec();
+   }
+   else if( HB_IS_NIL( pItem ) )
    {
       * pfValue = TRUE;
-      hb_stackDec();
-   }
-   else if( HB_IS_NUMINT( pItem ) )
-   {
-      * pfValue = HB_ITEM_GET_NUMINTRAW( pItem ) != ( HB_LONG ) lValue;
-      hb_stackDec();
-   }
-   else if( HB_IS_NUMERIC( pItem ) )
-   {
-      * pfValue = HB_ITEM_GET_NUMDBLRAW( pItem ) != ( double ) lValue;
       hb_stackDec();
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_NOTEQUAL ) )
@@ -9554,14 +9574,19 @@ BOOL hb_xvmLessThenInt( LONG lValue )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLessThenInt(%ld)", lValue));
 
    pItem = hb_stackItemFromTop( -1 );
-   if( HB_IS_NUMINT( pItem ) )
+   if( HB_IS_INTEGER( pItem ) )
    {
-      pItem->item.asLogical.value = HB_ITEM_GET_NUMINTRAW( pItem ) < ( HB_LONG ) lValue;
+      pItem->item.asLogical.value = ( LONG ) pItem->item.asInteger.value < lValue;
       pItem->type = HB_IT_LOGICAL;
    }
-   else if( HB_IS_NUMERIC( pItem ) )
+   else if( HB_IS_LONG( pItem ) )
    {
-      pItem->item.asLogical.value = HB_ITEM_GET_NUMDBLRAW( pItem ) < ( double ) lValue;
+      pItem->item.asLogical.value = pItem->item.asLong.value < ( HB_LONG ) lValue;
+      pItem->type = HB_IT_LOGICAL;
+   }
+   else if( HB_IS_DOUBLE( pItem ) )
+   {
+      pItem->item.asLogical.value = pItem->item.asDouble.value < ( double ) lValue;
       pItem->type = HB_IT_LOGICAL;
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_LESS ) )
@@ -9597,14 +9622,19 @@ BOOL hb_xvmLessThenIntIs( LONG lValue, BOOL * pfValue )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLessThenIntIs(%ld,%p)", lValue, pfValue));
 
    pItem = hb_stackItemFromTop( -1 );
-   if( HB_IS_NUMINT( pItem ) )
+   if( HB_IS_INTEGER( pItem ) )
    {
-      * pfValue = HB_ITEM_GET_NUMINTRAW( pItem ) < ( HB_LONG ) lValue;
+      * pfValue = ( LONG ) pItem->item.asInteger.value < lValue;
       hb_stackDec();
    }
-   else if( HB_IS_NUMERIC( pItem ) )
+   else if( HB_IS_LONG( pItem ) )
    {
-      * pfValue = HB_ITEM_GET_NUMDBLRAW( pItem ) < ( double ) lValue;
+      * pfValue = pItem->item.asLong.value < ( HB_LONG ) lValue;
+      hb_stackDec();
+   }
+   else if( HB_IS_DOUBLE( pItem ) )
+   {
+      * pfValue = pItem->item.asDouble.value < ( double ) lValue;
       hb_stackDec();
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_LESS ) )
@@ -9653,14 +9683,19 @@ BOOL hb_xvmLessEqualThenInt( LONG lValue )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLessEqualThenInt(%ld)", lValue));
 
    pItem = hb_stackItemFromTop( -1 );
-   if( HB_IS_NUMINT( pItem ) )
+   if( HB_IS_INTEGER( pItem ) )
    {
-      pItem->item.asLogical.value = HB_ITEM_GET_NUMINTRAW( pItem ) <= ( HB_LONG ) lValue;
+      pItem->item.asLogical.value = ( LONG ) pItem->item.asInteger.value <= lValue;
       pItem->type = HB_IT_LOGICAL;
    }
-   else if( HB_IS_NUMERIC( pItem ) )
+   else if( HB_IS_LONG( pItem ) )
    {
-      pItem->item.asLogical.value = HB_ITEM_GET_NUMDBLRAW( pItem ) <= ( double ) lValue;
+      pItem->item.asLogical.value = pItem->item.asLong.value <= ( HB_LONG ) lValue;
+      pItem->type = HB_IT_LOGICAL;
+   }
+   else if( HB_IS_DOUBLE( pItem ) )
+   {
+      pItem->item.asLogical.value = pItem->item.asDouble.value <= ( double ) lValue;
       pItem->type = HB_IT_LOGICAL;
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_LESSEQUAL ) )
@@ -9696,14 +9731,19 @@ BOOL hb_xvmLessEqualThenIntIs( LONG lValue, BOOL * pfValue )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLessEqualThenIntIs(%ld,%p)", lValue, pfValue));
 
    pItem = hb_stackItemFromTop( -1 );
-   if( HB_IS_NUMINT( pItem ) )
+   if( HB_IS_INTEGER( pItem ) )
    {
-      * pfValue = HB_ITEM_GET_NUMINTRAW( pItem ) <= ( HB_LONG ) lValue;
+      * pfValue = ( LONG ) pItem->item.asInteger.value <= lValue;
       hb_stackDec();
    }
-   else if( HB_IS_NUMERIC( pItem ) )
+   else if( HB_IS_LONG( pItem ) )
    {
-      * pfValue = HB_ITEM_GET_NUMDBLRAW( pItem ) <= ( double ) lValue;
+      * pfValue = pItem->item.asLong.value <= ( HB_LONG ) lValue;
+      hb_stackDec();
+   }
+   else if( HB_IS_DOUBLE( pItem ) )
+   {
+      * pfValue = pItem->item.asDouble.value <= ( double ) lValue;
       hb_stackDec();
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_LESSEQUAL ) )
@@ -9752,14 +9792,19 @@ BOOL hb_xvmGreaterThenInt( LONG lValue )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmGreaterThenInt(%ld)", lValue));
 
    pItem = hb_stackItemFromTop( -1 );
-   if( HB_IS_NUMINT( pItem ) )
+   if( HB_IS_INTEGER( pItem ) )
    {
-      pItem->item.asLogical.value = HB_ITEM_GET_NUMINTRAW( pItem ) > ( HB_LONG ) lValue;
+      pItem->item.asLogical.value = ( LONG ) pItem->item.asInteger.value > lValue;
       pItem->type = HB_IT_LOGICAL;
    }
-   else if( HB_IS_NUMERIC( pItem ) )
+   else if( HB_IS_LONG( pItem ) )
    {
-      pItem->item.asLogical.value = HB_ITEM_GET_NUMDBLRAW( pItem ) > ( double ) lValue;
+      pItem->item.asLogical.value = pItem->item.asLong.value > ( HB_LONG ) lValue;
+      pItem->type = HB_IT_LOGICAL;
+   }
+   else if( HB_IS_DOUBLE( pItem ) )
+   {
+      pItem->item.asLogical.value = pItem->item.asDouble.value > ( double ) lValue;
       pItem->type = HB_IT_LOGICAL;
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_GREATER ) )
@@ -9795,14 +9840,19 @@ BOOL hb_xvmGreaterThenIntIs( LONG lValue, BOOL * pfValue )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmGreaterThenIntIs(%ld,%p)", lValue, pfValue));
 
    pItem = hb_stackItemFromTop( -1 );
-   if( HB_IS_NUMINT( pItem ) )
+   if( HB_IS_INTEGER( pItem ) )
    {
-      * pfValue = HB_ITEM_GET_NUMINTRAW( pItem ) > ( HB_LONG ) lValue;
+      * pfValue = ( LONG ) pItem->item.asInteger.value > lValue;
       hb_stackDec();
    }
-   else if( HB_IS_NUMERIC( pItem ) )
+   else if( HB_IS_LONG( pItem ) )
    {
-      * pfValue = HB_ITEM_GET_NUMDBLRAW( pItem ) > ( double ) lValue;
+      * pfValue = pItem->item.asLong.value > ( HB_LONG ) lValue;
+      hb_stackDec();
+   }
+   else if( HB_IS_DOUBLE( pItem ) )
+   {
+      * pfValue = pItem->item.asDouble.value > ( double ) lValue;
       hb_stackDec();
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_GREATER ) )
@@ -9851,14 +9901,19 @@ BOOL hb_xvmGreaterEqualThenInt( LONG lValue )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmGreaterEqualThenInt(%ld)", lValue));
 
    pItem = hb_stackItemFromTop( -1 );
-   if( HB_IS_NUMINT( pItem ) )
+   if( HB_IS_INTEGER( pItem ) )
    {
-      pItem->item.asLogical.value = HB_ITEM_GET_NUMINTRAW( pItem ) >= ( HB_LONG ) lValue;
+      pItem->item.asLogical.value = ( LONG ) pItem->item.asInteger.value >= lValue;
       pItem->type = HB_IT_LOGICAL;
    }
-   else if( HB_IS_NUMERIC( pItem ) )
+   else if( HB_IS_LONG( pItem ) )
    {
-      pItem->item.asLogical.value = HB_ITEM_GET_NUMDBLRAW( pItem ) >= ( double ) lValue;
+      pItem->item.asLogical.value = pItem->item.asLong.value >= ( HB_LONG ) lValue;
+      pItem->type = HB_IT_LOGICAL;
+   }
+   else if( HB_IS_DOUBLE( pItem ) )
+   {
+      pItem->item.asLogical.value = pItem->item.asDouble.value >= ( double ) lValue;
       pItem->type = HB_IT_LOGICAL;
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_GREATEREQUAL ) )
@@ -9894,14 +9949,19 @@ BOOL hb_xvmGreaterEqualThenIntIs( LONG lValue, BOOL * pfValue )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmGreaterEqualThenIntIs(%ld,%p)", lValue, pfValue));
 
    pItem = hb_stackItemFromTop( -1 );
-   if( HB_IS_NUMINT( pItem ) )
+   if( HB_IS_INTEGER( pItem ) )
    {
-      * pfValue = HB_ITEM_GET_NUMINTRAW( pItem ) >= ( HB_LONG ) lValue;
+      * pfValue = ( LONG ) pItem->item.asInteger.value >= lValue;
       hb_stackDec();
    }
-   else if( HB_IS_NUMERIC( pItem ) )
+   else if( HB_IS_LONG( pItem ) )
    {
-      * pfValue = HB_ITEM_GET_NUMDBLRAW( pItem ) >= ( double ) lValue;
+      * pfValue = pItem->item.asLong.value >= ( HB_LONG ) lValue;
+      hb_stackDec();
+   }
+   else if( HB_IS_DOUBLE( pItem ) )
+   {
+      * pfValue = pItem->item.asDouble.value >= ( double ) lValue;
       hb_stackDec();
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_GREATEREQUAL ) )
