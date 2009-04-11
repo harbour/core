@@ -111,14 +111,14 @@ tasklist
 
    @echo.
    @echo Run #%1
-   if exist %HB_BENCH_PRG%_1.exe %HB_BENCH_PRG%_1.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_1%
-   if exist %HB_BENCH_PRG%_2.exe %HB_BENCH_PRG%_2.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_2%
-   if exist %HB_BENCH_PRG%_3.exe %HB_BENCH_PRG%_3.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_3%
-   if exist %HB_BENCH_PRG%_4.exe %HB_BENCH_PRG%_4.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_4%
-   if exist %HB_BENCH_PRG%_5.exe %HB_BENCH_PRG%_5.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_5%
-   if exist %HB_BENCH_PRG%_6.exe %HB_BENCH_PRG%_6.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_6%
-   if exist %HB_BENCH_PRG%_7.exe %HB_BENCH_PRG%_7.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_7%
-   if exist %HB_BENCH_PRG%_8.exe %HB_BENCH_PRG%_8.exe %HB_RUN_FLAGS% %HB_RUN_FLAGS_8%
+   if exist %HB_BENCH_PRG%_1.exe %HB_BENCH_PRG%_1.exe --stdout %HB_RUN_FLAGS% %HB_RUN_FLAGS_1%
+   if exist %HB_BENCH_PRG%_2.exe %HB_BENCH_PRG%_2.exe --stdout %HB_RUN_FLAGS% %HB_RUN_FLAGS_2%
+   if exist %HB_BENCH_PRG%_3.exe %HB_BENCH_PRG%_3.exe --stdout %HB_RUN_FLAGS% %HB_RUN_FLAGS_3%
+   if exist %HB_BENCH_PRG%_4.exe %HB_BENCH_PRG%_4.exe --stdout %HB_RUN_FLAGS% %HB_RUN_FLAGS_4%
+   if exist %HB_BENCH_PRG%_5.exe %HB_BENCH_PRG%_5.exe --stdout %HB_RUN_FLAGS% %HB_RUN_FLAGS_5%
+   if exist %HB_BENCH_PRG%_6.exe %HB_BENCH_PRG%_6.exe --stdout %HB_RUN_FLAGS% %HB_RUN_FLAGS_6%
+   if exist %HB_BENCH_PRG%_7.exe %HB_BENCH_PRG%_7.exe --stdout %HB_RUN_FLAGS% %HB_RUN_FLAGS_7%
+   if exist %HB_BENCH_PRG%_8.exe %HB_BENCH_PRG%_8.exe --stdout %HB_RUN_FLAGS% %HB_RUN_FLAGS_8%
    @goto END
 
 :END

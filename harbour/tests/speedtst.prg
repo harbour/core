@@ -94,6 +94,18 @@
 #endif
 
 
+#command ? => spd_out(EOL)
+#command ? <xx,...> => spd_out(EOL);spd_out(<xx>)
+#command ?? <xx,...> => spd_out(<xx>)
+
+#ifdef __HARBOUR__
+   #define EOL hb_OSNewLine()
+#else
+   #ifndef EOL
+      #define EOL chr(10)
+   #endif
+#endif
+
 #xcommand TEST <testfunc>           ;
           [ WITH <locals,...> ]     ;
           [ STATIC <statics,...> ]  ;
@@ -122,6 +134,7 @@
       [ <exit> ; ]                  ;
    return { procname() + ": " + iif( <.info.>, <(info)>, #<testExp> ), time }
 
+STATIC s_lStdOut := .F.
 
 #ifdef __HARBOUR__
 proc main( ... )
@@ -173,8 +186,10 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
                cExclude += strzero( i, 3 ) + " "
             endif
          next
-      elseif cParam = "--scale"
+      elseif cParam == "--scale"
          lScale := .t.
+      elseif cParam == "--stdout"
+         s_lStdOut := .t.
       else
          lSyntax = .t.
       endif
@@ -186,16 +201,51 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
       endif
    next
 
-   set alternate to speedlog.txt additive
-   set alternate on
+   IF ! s_lStdOut
+      set alternate to ( FN_ExtSet( hb_progname(), ".txt" ) ) additive
+      set alternate on
+   ENDIF
    // set console off
 
    test( nMT, cExclude, lScale )
 
-   set alternate off
-   set alternate to
+   IF ! s_lStdOut
+      set alternate off
+      set alternate to
+   ENDIF
 
 return
+
+STATIC PROCEDURE spd_out( p1, p2, p3, p4, p5, p6 )
+   IF s_lStdOut
+      DO CASE
+      CASE PCount() == 0 ; OutStd()
+      CASE PCount() == 1 ; OutStd( p1 )
+      CASE PCount() == 2 ; OutStd( p1, p2 )
+      CASE PCount() == 3 ; OutStd( p1, p2, p3 )
+      CASE PCount() == 4 ; OutStd( p1, p2, p3, p4 )
+      CASE PCount() == 5 ; OutStd( p1, p2, p3, p4, p5 )
+      CASE PCount() == 6 ; OutStd( p1, p2, p3, p4, p5, p6 )
+      ENDCASE
+   ELSE
+      DO CASE
+      CASE PCount() == 0 ; QQOut()
+      CASE PCount() == 1 ; QQOut( p1 )
+      CASE PCount() == 2 ; QQOut( p1, p2 )
+      CASE PCount() == 3 ; QQOut( p1, p2, p3 )
+      CASE PCount() == 4 ; QQOut( p1, p2, p3, p4 )
+      CASE PCount() == 5 ; QQOut( p1, p2, p3, p4, p5 )
+      CASE PCount() == 6 ; QQOut( p1, p2, p3, p4, p5, p6 )
+      ENDCASE
+   ENDIF
+   RETURN
+
+STATIC FUNCTION FN_ExtSet( cFileName, cExt )
+   LOCAL cDir, cName
+
+   hb_FNameSplit( cFileName, @cDir, @cName )
+
+   RETURN hb_FNameMerge( cDir, cName, cExt )
 
 
 /*** TESTS ***/
