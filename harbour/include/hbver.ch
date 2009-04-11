@@ -71,7 +71,7 @@
 #define HB_VERSION_BUILD_DATE       12
 #define HB_VERSION_BUILD_TIME       13
 #define HB_VERSION_BUILD_ARCH       22
-#define HB_VERSION_BUILD_COMP       23 /* Last. Please continue from here. */
+#define HB_VERSION_BUILD_COMP       23
 #define HB_VERSION_FLAG_PRG         14
 #define HB_VERSION_FLAG_C           15
 #define HB_VERSION_FLAG_LINKER      16
@@ -80,6 +80,7 @@
 #define HB_VERSION_MT               19
 #define HB_VERSION_UNIX_COMPAT      20
 #define HB_VERSION_PLATFORM         21
+#define HB_VERSION_CPU              24 /* Last. Please continue from here. */
 
 /* hb_version( HB_VERSION_ENDIANNESS ) return values. */
 #define HB_VERSION_ENDIAN_LITTLE    1

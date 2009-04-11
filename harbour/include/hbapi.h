@@ -1063,6 +1063,7 @@ extern void *   hb_i18n_alloc( void * cargo );
 extern HB_EXPORT void         hb_vmSetLinkedMain( const char * szMain );
 
 /* misc */
+extern HB_EXPORT const char * hb_verCPU( void );             /* retrieves a constant string with CPU architecture */
 extern HB_EXPORT char *       hb_verPlatform( void );        /* retrieves a newly allocated buffer containing platform version */
 extern HB_EXPORT char *       hb_verCompiler( void );        /* retrieves a newly allocated buffer containing compiler version */
 extern HB_EXPORT char *       hb_verHarbour( void );         /* retrieves a newly allocated buffer containing harbour version */

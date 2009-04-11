@@ -62,6 +62,7 @@
  *    hb_verCompiler() (support for determining some compiler version/revision)
  *
  * Copyright 2000-2009 Viktor Szakats <viktor.szakats@syenar.hu>
+ *    hb_verCPU()
  *    hb_verPlatform() (support for detecting Windows NT on DOS)
  *    hb_verPlatform() (rearrangment and cleanup)
  *    hb_verPlatform() (Wine detection and some more)
@@ -92,6 +93,130 @@
    #include <sys/utsname.h>
 
 #endif
+
+/* Partially based on:
+      http://predef.sourceforge.net/prearch.html
+      http://poshlib.hookatooka.com/poshlib/trac.cgi/browser/posh.h
+ */
+
+#if   defined(__alpha__) || \
+      defined(__alpha) || \
+      defined(alpha) || \
+      defined(_M_ALPHA)
+   #define HB_CPU_STR "Alpha"
+
+#elif defined(__amd64__) || \
+      defined(__amd64) || \
+      defined(__x86_64__) || \
+      defined(__x86_64) || \
+      defined(_M_AMD64) || \
+      defined(_M_X64) || \
+      defined(__MINGW64__)
+   #define HB_CPU_STR "x86-64"
+
+#elif defined(__arm__) || \
+      defined(ARM) || \
+      defined(_ARM) || \
+      defined(_M_ARM)
+   #define HB_CPU_STR "ARM"
+
+#elif defined(__hppa__) || \
+      defined(__hppa) || \
+      defined(hppa)
+   #define HB_CPU_STR "PA-RISC"
+
+#elif defined(i386) || \
+      defined(__i386__) || \
+      defined(__i386) || \
+      defined(_M_IX86) || \
+      defined(__X86__) || \
+      defined(_X86_) || \
+      defined(__I86__) || \
+      defined(__THW_INTEL__) || \
+      defined(__INTEL__)
+   #define HB_CPU_STR "x86"
+
+#elif defined(__ia64__) || \
+      defined(__ia64) || \
+      defined(_IA64) || \
+      defined(__IA64__) || \
+      defined(_M_IA64)
+   #define HB_CPU_STR "IA-64"
+
+#elif defined(__m68k__) || \
+      defined(M68000)
+   #define HB_CPU_STR "m68k"
+
+#elif defined(__mips__) || \
+      defined(__mips) || \
+      defined(__MIPS__) || \
+      defined(mips) || \
+      defined(_MIPS) || \
+      defined(__MIPS__) || \
+      defined(_M_MRX000) || \
+      defined(_M_MIPS)
+   #define HB_CPU_STR "MIPS"
+
+#elif defined(__powerpc64__)
+   #define HB_CPU_STR "PPC64"
+
+#elif defined(__powerpc__) || \
+      defined(__powerpc) || \
+      defined(__POWERPC__) || \
+      defined(__ppc__) || \
+      defined(__PPC__) || \
+      defined(_ARCH_PPC) || \
+      defined(_M_MPPC) || \
+      defined(_M_PPC)
+   #define HB_CPU_STR "PPC"
+
+#elif defined(__THW_RS6000) || \
+      defined(_IBMR2) || \
+      defined(_POWER) || \
+      defined(_ARCH_PWR) || \
+      defined(_ARCH_PWR2)
+   #define HB_CPU_STR "POWER"
+
+#elif defined(__sparc__) || \
+      defined(__sparc)
+   #if defined(__arch64__) || \
+       defined(__sparcv9) || \
+       defined(__sparc_v9__)
+      #define HB_CPU_STR "Sparc/64"
+   #else
+      #define HB_CPU_STR "Sparc/32"
+   #endif
+
+#elif defined(__sh__) || \
+      defined(_SH3) || \
+      defined(__sh4__) || \
+      defined(__SH4__) || \
+      defined(_M_SH)
+   #define HB_CPU_STR "SuperH"
+
+#elif defined(__370__) || \
+      defined(__THW_370__)
+   #define HB_CPU_STR "System/370"
+
+#elif defined(__s390__) || \
+      defined(__s390x__)
+   #define HB_CPU_STR "System/390"
+
+#elif defined(__SYSC_ZARCH__)
+   #define HB_CPU_STR "z/Architecture"
+
+#endif
+
+#ifndef HB_CPU_STR
+   #define HB_CPU_STR "(unknown)"
+#endif
+
+const char * hb_verCPU( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_verCPU()"));
+
+   return HB_CPU_STR;
+}
 
 /* NOTE: OS() function, as a primary goal will detect the version number
          of the target platform. As an extra it may also detect the host OS.

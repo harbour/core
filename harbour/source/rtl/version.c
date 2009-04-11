@@ -160,6 +160,10 @@ HB_FUNC( HB_VERSION )
       #endif
       break;
 
+   case HB_VERSION_CPU:
+      hb_retc_const( hb_verCPU() );
+      break;
+
    case HB_VERSION_ENDIANNESS:
       #if defined( HB_LITTLE_ENDIAN )
          hb_retni( HB_VERSION_ENDIAN_LITTLE );
