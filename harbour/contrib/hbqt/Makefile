@@ -58,7 +58,7 @@ endif
 ifneq ($(strip $(HB_INC_QT_OK)),)
 
 ifneq ($(strip $(HB_INC_QT_OK)),spec)
-HB_USER_CFLAGS += $(foreach d, $(HB_INC_QT_OK), -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
+HB_USER_CFLAGS += $(foreach d, $(HB_INC_QT_OK), -I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
 endif
 
 include $(TOP)$(ROOT)contrib/hbqt/Makefile_gen
