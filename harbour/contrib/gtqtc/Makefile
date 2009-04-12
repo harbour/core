@@ -56,8 +56,6 @@ HB_USER_CFLAGS += $(foreach d, $(HB_INC_QT_OK), -I$(d))
 CPP_SOURCES=\
 	gtqtc.cpp \
 	moc_gtqtc.cpp \
-	qtconsolearea.cpp \
-	qtmainwindow.cpp \
 
 
 C_HEADERS=\

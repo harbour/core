@@ -56,6 +56,7 @@
 #define HB_GT_NAME  QTC
 
 #include <Qt/qglobal.h>
+#include <QtGui/QtGui>
 #include <QtCore/QObject>
 #include <QtCore/QList>
 #include <QtGui/QApplication>
@@ -66,6 +67,8 @@
 #include <QtGui/QPainter>
 #include <QtGui/QPaintDevice>
 #include <QtGui/QColor>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QMouseEvent>
 
 #include "hbset.h"
 #include "hbgtcore.h"
@@ -183,7 +186,7 @@ class ConsoleArea : public QWidget
 public:
     ConsoleArea(QWidget *parent = 0);
 
-    PHB_GT    pGT;
+    PHB_GT pGT;
 
     bool   openImage(const QString &fileName);
     bool   saveImage(const QString &fileName, const char *fileFormat);
@@ -194,9 +197,7 @@ public:
     QColor penColor() const { return myPenColor; }
     int    penWidth() const { return myPenWidth; }
 
-    //Qt::GlobalColor COLORS[ 16 ];
     QRgb   COLORS[ 16 ];
-    //QColor COLORS[ 16 ];
     void   sizeByFont(void);
 
 public slots:
@@ -204,6 +205,8 @@ public slots:
     void   print();
 
 protected:
+    void   keyPressEvent(QKeyEvent *event);
+    void   keyReleaseEvent(QKeyEvent *event);
     void   mousePressEvent(QMouseEvent *event);
     void   mouseMoveEvent(QMouseEvent *event);
     void   mouseReleaseEvent(QMouseEvent *event);
@@ -238,7 +241,6 @@ public:
     ConsoleArea *consoleArea;
     PHB_GT      pGT;
 
-    void someFunc(void);
 protected:
     void closeEvent(QCloseEvent *event);
 
