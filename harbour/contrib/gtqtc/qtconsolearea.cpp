@@ -167,7 +167,10 @@ void ConsoleArea::paintEvent(QPaintEvent * /* event */)
     QPainter painter(this);
     painter.drawImage(QPoint(0, 0), image);
     {
-       QFont font( tr( "Courier New" ), 12, -1, FALSE );
+       int hgt = height();
+       int fntHeight = (hgt/25);
+       fntHeight = 14;
+       QFont font( tr( "Courier New" ), fntHeight, 10, FALSE );
        font = QFont(font, painter.device());
        QFontMetrics fontMetrics( font );
        int height = fontMetrics.height();
@@ -202,6 +205,7 @@ void ConsoleArea::paintEvent(QPaintEvent * /* event */)
                    painter.setBackground( brush );
                    QPen pen( COLORS[ bOldColor ] );
                    painter.setPen( pen );
+OutputDebugString( "KKKK len=%i bOldColor=%i bColor=%i" );
 
                    painter.drawText( QPointF( startCol,iTop ), QString( text ) );
 
@@ -281,3 +285,4 @@ void ConsoleArea::print()
 }
 
 /*----------------------------------------------------------------------*/
+

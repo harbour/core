@@ -1531,14 +1531,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
 static DWORD hb_gt_wvt_ProcessMessages( void )
 {
-   MSG msg;
-
-   while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
-   {
-      TranslateMessage( &msg );
-      DispatchMessage( &msg );
-   }
-   return msg.wParam;
+   app->processEvents();
+   return( 0 );
 }
 
 static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, QFont *qFont, int iWidth )
@@ -1648,18 +1642,14 @@ void hbqt_exit( PHB_GT pGT )
 {
    PHB_GTWVT pWVT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Exit(%p)", pGT));
+   HB_TRACE(HB_TR_DEBUG, ("hbqt_exit(%p)", pGT));
 
    pWVT = HB_GTWVT_GET( pGT );
-   HB_GTSUPER_EXIT( pGT );
+
+   /* A HACK - must be constructed differently - Still looking for the ways to control it */
+   hb_gt_wvt_AddCharToInputQueue( pWVT, 27 );
 
    app->quit();
-
-   if( pWVT )
-      hb_gt_wvt_Free( pWVT );
-
-   if( app )
-      app->quit();
 }
 
 static void hbqt_Init( void * cargo )
@@ -1723,6 +1713,58 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
 
    if( pWVT )
       hb_gt_wvt_Free( pWVT );
+}
+
+/* ********************************************************************** */
+
+static void hb_gt_wvt_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
+{
+   PHB_GTWVT pWVT;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
+
+   pWVT = HB_GTWVT_GET( pGT );
+   if( pWVT )
+   {
+      if( pWVT->qWnd )
+      {
+         RECT rect;
+
+         rect.top = rect.bottom = ( SHORT ) iRow;
+         rect.left = ( SHORT ) iCol;
+         rect.right = ( SHORT ) ( iCol + iSize - 1 );
+
+         rect = hb_gt_wvt_GetXYFromColRowRect( pWVT, rect );
+
+         /* Schedule a Repaint Event */
+         pWVT->qWnd->update( QRect( iCol, iRow, iCol + iSize - 1, iRow ) );
+      }
+      else
+         pWVT->fInit = TRUE;
+   }
+}
+
+/* ********************************************************************** */
+
+static void hb_gt_wvt_Refresh( PHB_GT pGT )
+{
+   PHB_GTWVT pWVT;
+
+   HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_Refresh(%p)", pGT) );
+
+   HB_GTSUPER_REFRESH( pGT );
+
+   pWVT = HB_GTWVT_GET( pGT );
+   if( pWVT )
+   {
+      if( !pWVT->qWnd && pWVT->fInit )
+         hb_gt_wvt_CreateConsoleWindow( pWVT );
+
+      if( pWVT->qWnd )
+      {
+         app->processEvents();
+      }
+   }
 }
 
 /* ********************************************************************** */
@@ -1795,7 +1837,7 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
 
    pWVT = HB_GTWVT_GET( pGT );
 
-   if( pWVT->hWnd ) /* Is the window already open */
+   if( pWVT->qWnd ) /* Is the window already open */
       hb_gt_wvt_ProcessMessages();
 
    fKey = hb_gt_wvt_GetCharFromInputQueue( pWVT, &c );
@@ -1812,58 +1854,6 @@ static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    HB_SYMBOL_UNUSED( pGT );
 
    //hb_gt_winapi_tone( dFrequency, dDuration );  ???
-}
-
-/* ********************************************************************** */
-
-static void hb_gt_wvt_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
-{
-   PHB_GTWVT pWVT;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
-
-   pWVT = HB_GTWVT_GET( pGT );
-   if( pWVT )
-   {
-      if( pWVT->hWnd )
-      {
-         RECT rect;
-
-         rect.top = rect.bottom = ( SHORT ) iRow;
-         rect.left = ( SHORT ) iCol;
-         rect.right = ( SHORT ) ( iCol + iSize - 1 );
-
-         rect = hb_gt_wvt_GetXYFromColRowRect( pWVT, rect );
-
-         /* Schedule a Repaint Event */
-         pWVT->qWnd->update( QRect( iCol, iRow, iCol + iSize - 1, iRow ) );
-      }
-      else
-         pWVT->fInit = TRUE;
-   }
-}
-
-/* ********************************************************************** */
-
-static void hb_gt_wvt_Refresh( PHB_GT pGT )
-{
-   PHB_GTWVT pWVT;
-
-   HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_Refresh(%p)", pGT) );
-
-   HB_GTSUPER_REFRESH( pGT );
-
-   pWVT = HB_GTWVT_GET( pGT );
-   if( pWVT )
-   {
-      if( !pWVT->qWnd && pWVT->fInit )
-         hb_gt_wvt_CreateConsoleWindow( pWVT );
-
-      if( pWVT->qWnd )
-      {
-         app->exec();
-      }
-   }
 }
 
 /* ********************************************************************** */

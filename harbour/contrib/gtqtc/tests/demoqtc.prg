@@ -38,6 +38,8 @@ FUNCTION Main()
    Local nHeight := 20
    Local nWidth  := Int( nHeight/2 )
    Local cFont
+   Local nn := 1
+   Local cc := 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmn'
 
    Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
    Hb_GtInfo( HB_GTI_FONTWIDTH, nWidth  )
@@ -46,15 +48,19 @@ FUNCTION Main()
    SetCursor( 0 )
    SetColor( "n/w" )
 
-   //HB_GtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| MyNotifier( nEvent, ... ) } )
-
    DispScreen()
 
    DO WHILE .T.
       nKey := Inkey(0.1)
-
+    
       if nKey == K_ESC
          exit
+      endif
+      
+      @ maxrow()-1, ( nn % 80 ) SAY substr( cc, nn, 1 )
+      nn++
+      if nn > 79
+         nn := 1
       endif
 
       DO CASE
@@ -90,7 +96,7 @@ FUNCTION Main()
 
       ENDCASE
    ENDDO
-   
+ 
    RETURN NIL
 //----------------------------------------------------------------------//
 STATIC FUNCTION MyNotifier( nEvent, ... )
@@ -148,7 +154,7 @@ STATIC FUNCTION DispScreen()
    DispOutAt( 0, MaxCol() - 1       , "TR", "N/GR*" )
    DispOutAt( MaxRow(), 0           , "BL", "N/G*"  )
    DispOutAt( MaxRow(), MaxCol() - 1, "BR", "N/G*"  )
-
+hb_ToOutDebug( "113" )
    DispEnd()
    RETURN NIL
 //----------------------------------------------------------------------//
