@@ -138,7 +138,8 @@ void MainWindow::createActions()
     openAct->setShortcut(tr("Ctrl+O"));
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
 
-    foreach (QByteArray format, QImageWriter::supportedImageFormats()) {
+    foreach (QByteArray format, QImageWriter::supportedImageFormats())
+    {
         QString text = tr("%1...").arg(QString(format).toUpper());
 
         QAction *action = new QAction(text, this);

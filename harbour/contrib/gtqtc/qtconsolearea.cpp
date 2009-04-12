@@ -171,13 +171,6 @@ void ConsoleArea::paintEvent(QPaintEvent * /* event */)
        font = QFont(font, painter.device());
        QFontMetrics fontMetrics( font );
        int height = fontMetrics.height();
-       #if 0
-                   QBrush brush( QColor( 200,11,131 ) );
-                   painter.setBackground( brush );
-
-                   QPen pen( QColor( 100,100,100 ) );
-                   painter.setPen( pen );
-       #endif
        painter.setFont(font);
        painter.setBackgroundMode(Qt::OpaqueMode);
        {
@@ -205,15 +198,11 @@ void ConsoleArea::paintEvent(QPaintEvent * /* event */)
                 }
                 else if( bColor != bOldColor )
                 {
-                   #if 0
-                   //QBrush brush( COLORS[ ( bOldColor >> 4 ) & 0x0F ] );
-                   QBrush brush( QColor( 200,11,131 ) );
+                   QBrush brush( COLORS[ bOldColor >> 4 ] );
                    painter.setBackground( brush );
-
-                   //painter.setPen( QColor( COLORS[ ( bOldColor & 0x0F ) ] ) );
-                   QPen pen( QColor( 100,100,100 ) );
+                   QPen pen( COLORS[ bOldColor ] );
                    painter.setPen( pen );
-                   #endif
+
                    painter.drawText( QPointF( startCol,iTop ), QString( text ) );
 
                    bOldColor = bColor;
@@ -225,13 +214,11 @@ void ConsoleArea::paintEvent(QPaintEvent * /* event */)
              }
              if( len > 0 )
              {
-                   #if 0
-                   QBrush brush( QColor( 200,11,131 ) );
-                   painter.setBackground( brush );
+                QBrush brush( COLORS[ bOldColor >> 4 ] );
+                painter.setBackground( brush );
+                QPen pen( COLORS[ bOldColor ] );
+                painter.setPen( pen );
 
-                   QPen pen( QColor( 100,100,100 ) );
-                   painter.setPen( pen );
-                   #endif
                 painter.drawText(QPointF(startCol,iTop),QString(text));
              }
           }

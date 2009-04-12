@@ -230,22 +230,22 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->ROWS              = WVT_DEFAULT_ROWS;
    pWVT->COLS              = WVT_DEFAULT_COLS;
 
-   pWVT->COLORS[ 0]        = BLACK;
-   pWVT->COLORS[ 1]        = BLUE;
-   pWVT->COLORS[ 2]        = GREEN;
-   pWVT->COLORS[ 3]        = CYAN;
-   pWVT->COLORS[ 4]        = RED;
-   pWVT->COLORS[ 5]        = MAGENTA;
-   pWVT->COLORS[ 6]        = BROWN;
-   pWVT->COLORS[ 7]        = WHITE;
-   pWVT->COLORS[ 8]        = LIGHT_GRAY;
-   pWVT->COLORS[ 9]        = BRIGHT_BLUE;
-   pWVT->COLORS[10]        = BRIGHT_GREEN;
-   pWVT->COLORS[11]        = BRIGHT_CYAN;
-   pWVT->COLORS[12]        = BRIGHT_RED;
-   pWVT->COLORS[13]        = BRIGHT_MAGENTA;
-   pWVT->COLORS[14]        = YELLOW;
-   pWVT->COLORS[15]        = BRIGHT_WHITE;
+   pWVT->COLORS[ 0]        = C_BLACK;
+   pWVT->COLORS[ 1]        = C_BLUE;
+   pWVT->COLORS[ 2]        = C_GREEN;
+   pWVT->COLORS[ 3]        = C_CYAN;
+   pWVT->COLORS[ 4]        = C_RED;
+   pWVT->COLORS[ 5]        = C_MAGENTA;
+   pWVT->COLORS[ 6]        = C_BROWN;
+   pWVT->COLORS[ 7]        = C_WHITE;
+   pWVT->COLORS[ 8]        = C_LIGHT_GRAY;
+   pWVT->COLORS[ 9]        = C_BRIGHT_BLUE;
+   pWVT->COLORS[10]        = C_BRIGHT_GREEN;
+   pWVT->COLORS[11]        = C_BRIGHT_CYAN;
+   pWVT->COLORS[12]        = C_BRIGHT_RED;
+   pWVT->COLORS[13]        = C_BRIGHT_MAGENTA;
+   pWVT->COLORS[14]        = C_YELLOW;
+   pWVT->COLORS[15]        = C_BRIGHT_WHITE;
 
    /* THESE are the default font parameters, if not changed by user */
    pWVT->PTEXTSIZE.x       = WVT_DEFAULT_FONT_WIDTH;
@@ -1599,10 +1599,12 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
 
       /* Set icon */
+      #if 0
       if( pWVT->hIcon )
       {
-         //pWVT->qWnd->setWindowIcon( pWVT->hIcon );
+         pWVT->qWnd->setWindowIcon( pWVT->hIcon );
       }
+      #endif
 
       /* Set default window title */
       {
@@ -1776,7 +1778,7 @@ static const char * hb_gt_wvt_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Windows GUI console (WVT)";
+   return "Harbour Terminal: Multi-Platform QT based GUI console (QTC)";
 }
 
 /* ********************************************************************** */
@@ -2140,42 +2142,31 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-#if 0
       case HB_GTI_DESKTOPWIDTH:
       {
-         RECT rDesk;
-         HWND hDesk = GetDesktopWindow();
-         GetWindowRect( hDesk, &rDesk );
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, rDesk.right - rDesk.left );
+         QDesktopWidget *qDesk = new QDesktopWidget();
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, qDesk->width() );
          break;
       }
       case HB_GTI_DESKTOPHEIGHT:
       {
-         RECT rDesk;
-         HWND hDesk = GetDesktopWindow();
-         GetWindowRect( hDesk, &rDesk );
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, rDesk.bottom - rDesk.top );
+         QDesktopWidget *qDesk = new QDesktopWidget();
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, qDesk->height() );
          break;
       }
       case HB_GTI_DESKTOPCOLS:
       {
-         RECT rDesk;
-         HWND hDesk = GetDesktopWindow();
-         GetClientRect( hDesk, &rDesk );
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult,
-                              ( rDesk.right - rDesk.left ) / pWVT->PTEXTSIZE.x );
+         QDesktopWidget *qDesk = new QDesktopWidget();
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, qDesk->width() / pWVT->PTEXTSIZE.x );
          break;
       }
       case HB_GTI_DESKTOPROWS:
       {
-         RECT rDesk;
-         HWND hDesk = GetDesktopWindow();
-         GetClientRect( hDesk, &rDesk );
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult,
-                              ( rDesk.bottom - rDesk.top ) / pWVT->PTEXTSIZE.y );
+         QDesktopWidget *qDesk = new QDesktopWidget();
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, qDesk->height() / pWVT->PTEXTSIZE.y );
          break;
       }
-#endif
+
       case HB_GTI_WINTITLE:
          if( pWVT->hWnd )
          {
@@ -2223,32 +2214,19 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pWVT->boxCDP = cdpBox;
          }
          break;
-#if 0
+
       case HB_GTI_ICONFILE:
       {
          if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) )
          {
-            HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL;
-            LPTSTR lpImage;
-
-            lpImage = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
-            pWVT->bIconToFree = TRUE;
-            pWVT->hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpImage,
-                                               IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
-            HB_TCHAR_FREE( lpImage );
-            if( pWVT->hWnd )
+            if( pWVT->qWnd )
             {
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
+               pWVT->qWnd->setWindowIcon( QIcon( QString( hb_itemGetCPtr( pInfo->pNewVal ) ) ) );
             }
-
-            if( hIconToFree )
-               DestroyIcon( hIconToFree );
          }
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) pWVT->hIcon );
          break;
       }
-
+#if 0
       case HB_GTI_ICONRES:
       {
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
@@ -2373,21 +2351,14 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pWVT->bResizable = bNewValue;
                if( pWVT->hWnd )
                {
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-                  LONG style;
-#else
                   LONG_PTR style;
-#endif
                   if( pWVT->bResizable )
                      style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME;
                   else
                      style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
 
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-                  SetWindowLong( pWVT->hWnd, GWL_STYLE, style );
-#else
                   SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
-#endif
+
                   SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                                 SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
                   ShowWindow( pWVT->hWnd, SW_HIDE );
@@ -2396,7 +2367,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             }
          }
          break;
-
+#endif
       case HB_GTI_SELECTCOPY:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bSelectCopy );
 
@@ -2406,6 +2377,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
             if( hb_itemGetCLen( pInfo->pNewVal ) )
             {
+               #if 0
                HMENU hSysMenu = pWVT->hWnd ? GetSystemMenu( pWVT->hWnd, FALSE ) : NULL;
                if( hSysMenu || !pWVT->hWnd )
                {
@@ -2413,17 +2385,10 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      hb_xfree( pWVT->pszSelectCopy );
                   pWVT->pszSelectCopy = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
                   pWVT->bSelectCopy = TRUE;
-
-#if !defined(HB_OS_WIN_CE)  /* WinCE does not support ModifyMenu */
-                  if( hSysMenu )
-                  {
-                     LPTSTR buffer;
-                     buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
-                     ModifyMenu( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | MF_STRING | MF_ENABLED, SYS_EV_MARK, buffer );
-                     HB_TCHAR_FREE( buffer );
-                  }
-#endif
                }
+               #endif
+               pWVT->pszSelectCopy = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
+               pWVT->bSelectCopy = TRUE;
             }
          }
          else if( pInfo->pNewVal )
@@ -2433,12 +2398,15 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             {
                if( pWVT->hWnd )
                {
+                  #if 0
                   HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
                   if( hSysMenu )
                   {
                      EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED ) );
                      pWVT->bSelectCopy = bNewValue;
                   }
+                  #endif
+                  pWVT->bSelectCopy = bNewValue;
                }
                else
                   pWVT->bSelectCopy = bNewValue;
@@ -2453,21 +2421,24 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != pWVT->bClosable )
             {
-               if( pWVT->hWnd )
+               if( pWVT->qWnd )
                {
+                  #if 0
                   HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
                   if( hSysMenu )
                   {
                      EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED ) );
                      pWVT->bClosable = bNewValue;
                   }
+                  #endif
+                  pWVT->bClosable = bNewValue;
                }
                else
                   pWVT->bClosable = bNewValue;
             }
          }
          break;
-#endif
+
       case HB_GTI_PALETTE:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
@@ -2475,11 +2446,11 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
             if( iIndex >= 0 && iIndex < 16 )
             {
-               pInfo->pResult = hb_itemPutNL( pInfo->pResult, pWVT->qWnd->consoleArea->COLORS[ iIndex ] );
+               pInfo->pResult = hb_itemPutNL( pInfo->pResult, pWVT->COLORS[ iIndex ] );
 
                if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
                {
-                  pWVT->qWnd->consoleArea->COLORS[ iIndex ] = ( Qt::GlobalColor ) hb_itemGetNL( pInfo->pNewVal2 );
+                  pWVT->COLORS[ iIndex ] = hb_itemGetNL( pInfo->pNewVal2 );
 
                   if( pWVT->hWnd )
                      HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
@@ -2495,14 +2466,14 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             }
             hb_arrayNew( pInfo->pResult, 16 );
             for( i = 0; i < 16; i++ )
-               hb_arraySetNL( pInfo->pResult, i + 1, pWVT->qWnd->consoleArea->COLORS[ i ] );
+               hb_arraySetNL( pInfo->pResult, i + 1, pWVT->COLORS[ i ] );
 
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
             {
                if( hb_arrayLen( pInfo->pNewVal ) == 16 )
                {
                   for( i = 0; i < 16; i++ )
-                     pWVT->qWnd->consoleArea->COLORS[ i ] = ( Qt::GlobalColor ) hb_arrayGetNL( pInfo->pNewVal, i + 1 );
+                     pWVT->COLORS[ i ] = hb_arrayGetNL( pInfo->pNewVal, i + 1 );
 
                   if( pWVT->hWnd )
                      HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
@@ -2518,7 +2489,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             pWVT->ResizeMode = hb_itemGetNI( pInfo->pNewVal );
          }
          break;
-#if 0
+
       case HB_GTI_SETPOS_XY:
       case HB_GTI_SETPOS_ROWCOL:
          if( pWVT->hWnd && ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
@@ -2538,15 +2509,10 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                x = hb_itemGetNI( pInfo->pNewVal );
                y = hb_itemGetNI( pInfo->pNewVal2 );
             }
-            hb_retl( SetWindowPos( pWVT->hWnd, NULL,
-                                   x,
-                                   y,
-                                   rect.right - rect.left,
-                                   rect.bottom - rect.top,
-                                   SWP_NOSIZE | SWP_NOZORDER ) );
+            pWVT->qWnd->move( x,y );
          }
          break;
-#endif
+
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
@@ -2576,7 +2542,6 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->MouseGetPos          = hb_gt_wvt_mouse_GetPos;
    pFuncTable->MouseButtonState     = hb_gt_wvt_mouse_ButtonState;
    pFuncTable->MouseCountButton     = hb_gt_wvt_mouse_CountButton;
-   //pFuncTable->MouseCountButton     = MainWindow::someFunc;
 
    return TRUE;
 }

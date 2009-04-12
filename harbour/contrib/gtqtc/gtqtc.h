@@ -60,6 +60,7 @@
 #include <QtCore/QList>
 #include <QtGui/QApplication>
 #include <QtGui/QMainWindow>
+#include <QtGui/QDesktopWidget>
 #include <QtGui/QWidget>
 #include <QtGui/QFont>
 #include <QtGui/QPainter>
@@ -93,8 +94,8 @@
 #endif
 #define WVT_DEFAULT_FONT_NAME    "Courier New"
 
-#define QQRGB( r,g,b )  ( ( Qt::GlobalColor ) ( ( r ) + ( g * 256 ) + ( b * 256 * 256 ) ) )
-//#define QQRGB( r,g,b )  ( QColor( r,g,b ) )
+//#define QQRGB( r,g,b )  ( ( QRgb ) ( ( r ) + ( g * 256 ) + ( b * 256 * 256 ) ) )
+#define QQRGB( r,g,b )  ( qRgb( r,g,b ) )
 
 #define C_BLACK          RGB( 0x0 ,0x0 ,0x0  )
 #define C_BLUE           RGB( 0x0 ,0x0 ,0x85 )
@@ -168,6 +169,11 @@
 
 #define SYS_EV_MARK  1000
 
+
+void hb_ToOutDebug( const char * sTraceMsg, ... );
+void hbqt_exit( PHB_GT );
+
+
 /*----------------------------------------------------------------------*/
 
 class ConsoleArea : public QWidget
@@ -188,7 +194,8 @@ public:
     QColor penColor() const { return myPenColor; }
     int    penWidth() const { return myPenWidth; }
 
-    Qt::GlobalColor COLORS[ 16 ];
+    //Qt::GlobalColor COLORS[ 16 ];
+    QRgb   COLORS[ 16 ];
     //QColor COLORS[ 16 ];
     void   sizeByFont(void);
 
@@ -218,9 +225,6 @@ private:
     int    fontHeight;
     int    fontWidth;
 };
-
-void hb_ToOutDebug( const char * sTraceMsg, ... );
-void hbqt_exit( PHB_GT );
 
 /*----------------------------------------------------------------------*/
 
@@ -278,7 +282,6 @@ typedef struct
    QFont        *qFont;
    QFont        *qFontBox;
 
-//   HINSTANCE    hInstance;                    /* parent window instance */
    int          iCmdShow;
 
    USHORT       ROWS;                         /* number of displayable rows in window */
@@ -307,7 +310,6 @@ typedef struct
    int          fontWeight;                   /* Bold level */
    int          fontQuality;                  /* requested font quality */
    char         fontFace[ LF_FACESIZE ];      /* requested font face name LF_FACESIZE #defined in wingdi.h */
-//   HFONT        hFont;                        /* current font handle */
 
    HWND         hWnd;                         /* the window handle */
    BOOL         fInit;                        /* logical variable indicating that window should be open */
