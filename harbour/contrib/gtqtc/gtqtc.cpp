@@ -2297,36 +2297,20 @@ void ConsoleArea::clearImage()
     update();
 }
 
-void ConsoleArea::mousePressEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton) {
-        lastPoint = event->pos();
-        scribbling = true;
-    }
-}
-
 static void hb_gt_wvt_QTranslateKey( PHB_GTWVT pWVT, Qt::KeyboardModifiers kbm, int key, int shiftkey, int altkey, int controlkey )
 {
    if( kbm & Qt::AltModifier )
-   {
       hb_gt_wvt_AddCharToInputQueue( pWVT, altkey );
-   }
    else
    {
       if( kbm & Qt::ControlModifier )
-      {
          hb_gt_wvt_AddCharToInputQueue( pWVT, controlkey );
-      }
       else
       {
          if( kbm & Qt::ShiftModifier )
-         {
             hb_gt_wvt_AddCharToInputQueue( pWVT, shiftkey );
-         }
          else
-         {
             hb_gt_wvt_AddCharToInputQueue( pWVT, key );
-         }
       }
    }
 }
@@ -2342,29 +2326,13 @@ static void hb_gt_wvt_QTranslateKeyDigit( PHB_GTWVT pWVT, Qt::KeyboardModifiers 
 static void hb_gt_wvt_QTranslateKeyAlpha( PHB_GTWVT pWVT, Qt::KeyboardModifiers kbm, int key, int shiftkey, int altkey, int controlkey, QString text )
 {
    if( kbm & Qt::AltModifier )
-   {
       hb_gt_wvt_AddCharToInputQueue( pWVT, altkey );
-   }
    else
    {
       if( kbm & Qt::ControlModifier )
-      {
          hb_gt_wvt_AddCharToInputQueue( pWVT, controlkey );
-      }
       else
-      {
          hb_gt_wvt_AddCharToInputQueue( pWVT, ( int ) *text.toLatin1().data() );
-         #if 0
-         if( kbm & Qt::ShiftModifier )
-         {
-            hb_gt_wvt_AddCharToInputQueue( pWVT, shiftkey );
-         }
-         else
-         {
-            hb_gt_wvt_AddCharToInputQueue( pWVT, key );
-         }
-         #endif
-      }
    }
 }
 
@@ -2381,25 +2349,17 @@ static void hb_gt_wvt_QTranslateKeyKP( PHB_GTWVT pWVT, Qt::KeyboardModifiers kbm
    }
 
    if( kbm & Qt::AltModifier )
-   {
       hb_gt_wvt_AddCharToInputQueue( pWVT, altkey );
-   }
    else
    {
       if( kbm & Qt::ControlModifier )
-      {
          hb_gt_wvt_AddCharToInputQueue( pWVT, controlkey );
-      }
       else
       {
          if( kbm & Qt::ShiftModifier )
-         {
             hb_gt_wvt_AddCharToInputQueue( pWVT, shiftkey );
-         }
          else
-         {
             hb_gt_wvt_AddCharToInputQueue( pWVT, key );
-         }
       }
    }
 }
@@ -2417,318 +2377,317 @@ void ConsoleArea::keyPressEvent(QKeyEvent *event)
 
    switch( event->key() )
    {
-   case Qt::Key_Escape          : /* 0x01000000          */
-      c = K_ESC              ;  break;
-   case Qt::Key_Tab             : /* 0x01000001          */
-   case Qt::Key_Backtab         : /* 0x01000002          */
+   case Qt::Key_Escape          :
+      hb_gt_wvt_QTranslateKey( pWVT, kbm, K_ESC, K_ESC, K_ALT_ESC, K_ESC );
+      return;
+   case Qt::Key_Tab             :
+   case Qt::Key_Backtab         :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_TAB, K_SH_TAB, K_ALT_TAB, K_CTRL_TAB );
       return;
-   case Qt::Key_Backspace       : /* 0x01000003          */
+   case Qt::Key_Backspace       :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_BS, K_SH_BS, K_ALT_BS, K_CTRL_BS );
       return;
-   case Qt::Key_Return          : /* 0x01000004          */
-   case Qt::Key_Enter           : /* 0x01000005   Typically located on the keypad. */
+   case Qt::Key_Return          :
+   case Qt::Key_Enter           : /* Typically located on the keypad. */
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_ENTER, K_SH_ENTER, K_ALT_ENTER, K_CTRL_ENTER );
       return;
-   case Qt::Key_Insert          : /* 0x01000006          */
+   case Qt::Key_Insert          :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_INS, K_SH_INS, K_ALT_INS, K_CTRL_INS );
       return;
-   case Qt::Key_Delete          : /* 0x01000007          */
+   case Qt::Key_Delete          :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_DEL, K_SH_DEL, K_ALT_DEL, K_CTRL_DEL );
       return;
-#if 0
-   case Qt::Key_Pause           : /* 0x01000008          */
-      c = K_PAUSE            ;  break;
-   case Qt::Key_Print           : /* 0x01000009          */
-      c = K_                 ;  break;
-   case Qt::Key_SysReq          : /* 0x0100000a          */
-      c = K_                 ;  break;
-   case Qt::Key_Clear           : /* 0x0100000b          */
-      c = K_                 ;  break;
-#endif
-   case Qt::Key_Home            : /* 0x01000010          */
+   case Qt::Key_Home            :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_HOME, K_SH_HOME, K_ALT_HOME, K_CTRL_HOME );
       return;
-   case Qt::Key_End             : /* 0x01000011          */
+   case Qt::Key_End             :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_END, K_SH_END, K_ALT_END, K_CTRL_END );
       return;
-   case Qt::Key_Left            : /* 0x01000012          */
+   case Qt::Key_Left            :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_LEFT, K_SH_LEFT, K_ALT_LEFT, K_CTRL_LEFT );
       return;
-   case Qt::Key_Up              : /* 0x01000013          */
+   case Qt::Key_Up              :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_UP, K_SH_UP, K_ALT_UP, K_CTRL_UP );
       return;
-   case Qt::Key_Right           : /* 0x01000014          */
+   case Qt::Key_Right           :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_RIGHT, K_SH_RIGHT, K_ALT_RIGHT, K_CTRL_RIGHT );
       return;
-   case Qt::Key_Down            : /* 0x01000015          */
+   case Qt::Key_Down            :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_DOWN, K_SH_DOWN, K_ALT_DOWN, K_CTRL_DOWN );
       return;
-   case Qt::Key_PageUp          : /* 0x01000016          */
+   case Qt::Key_PageUp          :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_PGUP, K_SH_PGUP, K_ALT_PGUP, K_CTRL_PGUP );
       return;
-   case Qt::Key_PageDown        : /* 0x01000017          */
+   case Qt::Key_PageDown        :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_PGDN, K_SH_PGDN, K_ALT_PGDN, K_CTRL_PGDN );
       return;
-#if 0
-   case Qt::Key_Shift           : /* 0x01000020          */
-      c = K_                 ;  break;
-   case Qt::Key_Control         : /* 0x01000021   On Mac OS X, this corresponds to the Command keys. */
-      c = K_                 ;  break;
-   case Qt::Key_Meta            : /* 0x01000022   On Mac OS X, this corresponds to the Control keys. On Windows keyboards, this key is mapped to the Windows key. */
-      c = K_                 ;  break;
-   case Qt::Key_Alt             : /* 0x01000023          */
-      c = K_                 ;  break;
-   case Qt::Key_AltGr           : /* 0x01001103   On Windows, when the KeyDown event for this key is sent, the Ctrl+Alt modifiers are also set. */
-      c = K_                 ;  break;
-   case Qt::Key_CapsLock        : /* 0x01000024          */
-      c = K_                 ;  break;
-   case Qt::Key_NumLock         : /* 0x01000025          */
-      c = K_                 ;  break;
-   case Qt::Key_ScrollLock      : /* 0x01000026          */
-      c = K_                 ;  break;
-#endif
-   case Qt::Key_F1              : /* 0x01000030          */
+   case Qt::Key_F1              :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_F1, K_SH_F1, K_ALT_F1, K_CTRL_F1 );
       return;
-   case Qt::Key_F2              : /* 0x01000031          */
+   case Qt::Key_F2              :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_F2, K_SH_F2, K_ALT_F2, K_CTRL_F2 );
       return;
-   case Qt::Key_F3              : /* 0x01000032          */
+   case Qt::Key_F3              :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_F3, K_SH_F3, K_ALT_F3, K_CTRL_F3 );
       return;
-   case Qt::Key_F4              : /* 0x01000033          */
+   case Qt::Key_F4              :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_F4, K_SH_F4, K_ALT_F4, K_CTRL_F4 );
       return;
-   case Qt::Key_F5              : /* 0x01000034          */
+   case Qt::Key_F5              :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_F5, K_SH_F5, K_ALT_F5, K_CTRL_F5 );
       return;
-   case Qt::Key_F6              : /* 0x01000035          */
+   case Qt::Key_F6              :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_F6, K_SH_F6, K_ALT_F6, K_CTRL_F6 );
       return;
-   case Qt::Key_F7              : /* 0x01000036          */
+   case Qt::Key_F7              :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_F7, K_SH_F7, K_ALT_F7, K_CTRL_F7 );
       return;
-   case Qt::Key_F8              : /* 0x01000037          */
+   case Qt::Key_F8              :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_F8, K_SH_F8, K_ALT_F8, K_CTRL_F8 );
       return;
-   case Qt::Key_F9              : /* 0x01000038          */
+   case Qt::Key_F9              :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_F9, K_SH_F9, K_ALT_F9, K_CTRL_F9 );
       return;
-   case Qt::Key_F10             : /* 0x01000039          */
+   case Qt::Key_F10             :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_F10, K_SH_F10, K_ALT_F10, K_CTRL_F10 );
       return;
-   case Qt::Key_F11             : /* 0x0100003a          */
+   case Qt::Key_F11             :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_F11, K_SH_F11, K_ALT_F11, K_CTRL_F11 );
       return;
-   case Qt::Key_F12             : /* 0x0100003b          */
+   case Qt::Key_F12             :
       hb_gt_wvt_QTranslateKey( pWVT, kbm, K_F12, K_SH_F12, K_ALT_F12, K_CTRL_F12 );
       return;
-#if 0
-   case Qt::Key_Super_L         : /* 0x01000053          */
-      c = K_                 ;  break;
-   case Qt::Key_Super_R         : /* 0x01000054          */
-      c = K_                 ;  break;
-   case Qt::Key_Menu            : /* 0x01000055          */
-      c = K_                 ;  break;
-   case Qt::Key_Hyper_L         : /* 0x01000056          */
-      c = K_                 ;  break;
-   case Qt::Key_Hyper_R         : /* 0x01000057          */
-      c = K_                 ;  break;
-   case Qt::Key_Help            : /* 0x01000058          */
-      c = K_                 ;  break;
-   case Qt::Key_Direction_L     : /* 0x01000059          */
-      c = K_                 ;  break;
-   case Qt::Key_Direction_R     : /* 0x01000060          */
-      c = K_                 ;  break;
-   case Qt::Key_Space           : /* 0x20                */
-      c = K_                 ;  break;
-   case Qt::Key_Any             : /* Key_Space           */
-      c = K_                 ;  break;
-   case Qt::Key_Exclam          : /* 0x21                */
-      c = K_                 ;  break;
-   case Qt::Key_QuoteDbl        : /* 0x22                */
-      c = K_                 ;  break;
-   case Qt::Key_NumberSign      : /* 0x23                */
-      c = K_                 ;  break;
-   case Qt::Key_Dollar          : /* 0x24                */
-      c = K_                 ;  break;
-   case Qt::Key_Percent         : /* 0x25                */
-      c = K_                 ;  break;
-   case Qt::Key_Ampersand       : /* 0x26                */
-      c = K_                 ;  break;
-   case Qt::Key_Apostrophe      : /* 0x27                */
-      c = K_                 ;  break;
-   case Qt::Key_ParenLeft       : /* 0x28                */
-      c = K_                 ;  break;
-   case Qt::Key_ParenRight      : /* 0x29                */
-      c = K_                 ;  break;
-   case Qt::Key_Comma           : /* 0x2c                */
-      c = K_                 ;  break;
-   case Qt::Key_Period          : /* 0x2e                */
-      c = K_                 ;  break;
-#endif
-   case Qt::Key_Asterisk        : /* 0x2a                */
+   case Qt::Key_Space           :
+      c = ' '                ;  break;
+   case Qt::Key_Exclam          :
+      c = '!'                ;  break;
+   case Qt::Key_QuoteDbl        :
+      c = '"'                ;  break;
+   case Qt::Key_NumberSign      :
+      c = '#'                ;  break;
+   case Qt::Key_Dollar          :
+      c = '$'                ;  break;
+   case Qt::Key_Percent         :
+      c = '%'                ;  break;
+   case Qt::Key_Ampersand       :
+      c = '&'                ;  break;
+   case Qt::Key_Apostrophe      :
+      c = Qt::Key_Apostrophe ;  break;
+   case Qt::Key_ParenLeft       :
+      c = '('                ;  break;
+   case Qt::Key_ParenRight      :
+      c = ')'                ;  break;
+   case Qt::Key_Comma           :
+      c = ','                ;  break;
+   case Qt::Key_Period          :
+      c = '.'                ;  break;
+   case Qt::Key_Asterisk        :
       hb_gt_wvt_QTranslateKeyKP( pWVT, kbm, '*', '*', '*', '*', '*', '*', KP_ALT_ASTERISK, KP_CTRL_ASTERISK );
       return;
-   case Qt::Key_Plus            : /* 0x2b                */
+   case Qt::Key_Plus            :
       hb_gt_wvt_QTranslateKeyKP( pWVT, kbm, '+', '+', '+', '+', '+', '+', KP_ALT_PLUS, KP_CTRL_PLUS );
       return;
-   case Qt::Key_Minus           : /* 0x2d                */
+   case Qt::Key_Minus           :
       hb_gt_wvt_QTranslateKeyKP( pWVT, kbm, '-', '-', '-', '-', '-', '-', KP_ALT_MINUS, KP_CTRL_MINUS );
       return;
-   case Qt::Key_Slash           : /* 0x2f                */
+   case Qt::Key_Slash           :
       hb_gt_wvt_QTranslateKeyKP( pWVT, kbm, '/', '/', '/', '/', '/', '/', KP_ALT_SLASH, KP_CTRL_SLASH );
       return;
-   case Qt::Key_0               : /* 0x30                */
+   case Qt::Key_0               :
       hb_gt_wvt_QTranslateKeyDigit( pWVT, kbm, 0, K_ALT_0 );
       return;
-   case Qt::Key_1               : /* 0x31                */
+   case Qt::Key_1               :
       hb_gt_wvt_QTranslateKeyDigit( pWVT, kbm, 1, K_ALT_1 );
       return;
-   case Qt::Key_2               : /* 0x32                */
+   case Qt::Key_2               :
       hb_gt_wvt_QTranslateKeyDigit( pWVT, kbm, 2, K_ALT_2 );
       return;
-   case Qt::Key_3               : /* 0x33                */
+   case Qt::Key_3               :
       hb_gt_wvt_QTranslateKeyDigit( pWVT, kbm, 3, K_ALT_3 );
       return;
-   case Qt::Key_4               : /* 0x34                */
+   case Qt::Key_4               :
       hb_gt_wvt_QTranslateKeyDigit( pWVT, kbm, 4, K_ALT_4 );
       return;
-   case Qt::Key_5               : /* 0x35                */
+   case Qt::Key_5               :
       hb_gt_wvt_QTranslateKeyKP( pWVT, kbm, '5', '5', K_ALT_5, '5', '5', '5', KP_ALT_5, KP_CTRL_5 );
       break;
-   case Qt::Key_6               : /* 0x36                */
+   case Qt::Key_6               :
       hb_gt_wvt_QTranslateKeyDigit( pWVT, kbm, 6, K_ALT_6 );
       return;
-   case Qt::Key_7               : /* 0x37                */
+   case Qt::Key_7               :
       hb_gt_wvt_QTranslateKeyDigit( pWVT, kbm, 7, K_ALT_7 );
       return;
-   case Qt::Key_8               : /* 0x38                */
+   case Qt::Key_8               :
       hb_gt_wvt_QTranslateKeyDigit( pWVT, kbm, 8, K_ALT_8 );
       return;
-   case Qt::Key_9               : /* 0x39                */
+   case Qt::Key_9               :
       hb_gt_wvt_QTranslateKeyDigit( pWVT, kbm, 9, K_ALT_9 );
       return;
-   case Qt::Key_Colon           : /* 0x3a                */
+   case Qt::Key_Colon           :
       c = ':'                ;  break;
-   case Qt::Key_Semicolon       : /* 0x3b                */
+   case Qt::Key_Semicolon       :
       c = ';'                ;  break;
-#if 0
-   case Qt::Key_Less            : /* 0x3c                */
-      c = K_                 ;  break;
-   case Qt::Key_Equal           : /* 0x3d                */
-      c = K_                 ;  break;
-   case Qt::Key_Greater         : /* 0x3e                */
-      c = K_                 ;  break;
-   case Qt::Key_Question        : /* 0x3f                */
-      c = K_                 ;  break;
-   case Qt::Key_At              : /* 0x40                */
-      c = K_                 ;  break;
-#endif
-   case Qt::Key_A               : /* 0x41                */
+   case Qt::Key_Less            :
+      c = '<'                ;  break;
+   case Qt::Key_Equal           :
+      c = '='                ;  break;
+   case Qt::Key_Greater         :
+      c = '>'                ;  break;
+   case Qt::Key_Question        :
+      hb_gt_wvt_QTranslateKey( pWVT, kbm, '?', '?', '?', K_CTRL_QUESTION );
+      return;
+   case Qt::Key_At              :
+      c = '@'                ;  break;
+   case Qt::Key_A               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'A', 'a', K_ALT_A, K_CTRL_A, event->text() );
       return;
-   case Qt::Key_B               : /* 0x42                */
+   case Qt::Key_B               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'B', 'b', K_ALT_B, K_CTRL_B, event->text() );
       return;
-   case Qt::Key_C               : /* 0x43                */
+   case Qt::Key_C               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'C', 'c', K_ALT_C, K_CTRL_C, event->text() );
       return;
-   case Qt::Key_D               : /* 0x44                */
+   case Qt::Key_D               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'D', 'd', K_ALT_D, K_CTRL_D, event->text() );
       return;
-   case Qt::Key_E               : /* 0x45                */
+   case Qt::Key_E               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'E', 'e', K_ALT_E, K_CTRL_E, event->text() );
       return;
-   case Qt::Key_F               : /* 0x46                */
+   case Qt::Key_F               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'F', 'f', K_ALT_F, K_CTRL_F, event->text() );
       return;
-   case Qt::Key_G               : /* 0x47                */
+   case Qt::Key_G               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'G', 'g', K_ALT_G, K_CTRL_G, event->text() );
       return;
-   case Qt::Key_H               : /* 0x48                */
+   case Qt::Key_H               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'H', 'h', K_ALT_H, K_CTRL_H, event->text() );
       return;
-   case Qt::Key_I               : /* 0x49                */
+   case Qt::Key_I               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'I', 'i', K_ALT_I, K_CTRL_I, event->text() );
       return;
-   case Qt::Key_J               : /* 0x4a                */
+   case Qt::Key_J               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'J', 'j', K_ALT_J, K_CTRL_J, event->text() );
       return;
-   case Qt::Key_K               : /* 0x4b                */
+   case Qt::Key_K               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'K', 'k', K_ALT_K, K_CTRL_K, event->text() );
       return;
-   case Qt::Key_L               : /* 0x4c                */
+   case Qt::Key_L               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'L', 'l', K_ALT_L, K_CTRL_L, event->text() );
       return;
-   case Qt::Key_M               : /* 0x4d                */
+   case Qt::Key_M               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'M', 'm', K_ALT_M, K_CTRL_M, event->text() );
       return;
-   case Qt::Key_N               : /* 0x4e                */
+   case Qt::Key_N               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'N', 'n', K_ALT_N, K_CTRL_N, event->text() );
       return;
-   case Qt::Key_O               : /* 0x4f                */
+   case Qt::Key_O               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'O', 'o', K_ALT_O, K_CTRL_O, event->text() );
       return;
-   case Qt::Key_P               : /* 0x50                */
+   case Qt::Key_P               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'P', 'p', K_ALT_P, K_CTRL_P, event->text() );
       return;
-   case Qt::Key_Q               : /* 0x51                */
+   case Qt::Key_Q               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'Q', 'q', K_ALT_Q, K_CTRL_Q, event->text() );
       return;
-   case Qt::Key_R               : /* 0x52                */
+   case Qt::Key_R               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'R', 'r', K_ALT_R, K_CTRL_R, event->text() );
       return;
-   case Qt::Key_S               : /* 0x53                */
+   case Qt::Key_S               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'S', 's', K_ALT_S, K_CTRL_S, event->text() );
       return;
-   case Qt::Key_T               : /* 0x54                */
+   case Qt::Key_T               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'T', 't', K_ALT_T, K_CTRL_T, event->text() );
       return;
-   case Qt::Key_U               : /* 0x55                */
+   case Qt::Key_U               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'U', 'u', K_ALT_U, K_CTRL_U, event->text() );
       return;
-   case Qt::Key_V               : /* 0x56                */
+   case Qt::Key_V               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'V', 'v', K_ALT_V, K_CTRL_V, event->text() );
       return;
-   case Qt::Key_W               : /* 0x57                */
+   case Qt::Key_W               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'W', 'w', K_ALT_W, K_CTRL_W, event->text() );
       return;
-   case Qt::Key_X               : /* 0x58                */
+   case Qt::Key_X               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'X', 'x', K_ALT_X, K_CTRL_X, event->text() );
       return;
-   case Qt::Key_Y               : /* 0x59                */
+   case Qt::Key_Y               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'Y', 'y', K_ALT_Y, K_CTRL_Y, event->text() );
       return;
-   case Qt::Key_Z               : /* 0x5a                */
+   case Qt::Key_Z               :
       hb_gt_wvt_QTranslateKeyAlpha( pWVT, kbm, 'Z', 'z', K_ALT_Z, K_CTRL_Z, event->text() );
       return;
+   case Qt::Key_BracketLeft     :
+      c = '['                ;  break;
+   case Qt::Key_Backslash       :
+      c = Qt::Key_Backslash  ;  break;
+   case Qt::Key_BracketRight    :
+      c = ']'                ;  break;
+   case Qt::Key_AsciiCircum     :
+      c = '^'                ;  break;
+   case Qt::Key_Underscore      :
+      c = '_'                ;  break;
+   case Qt::Key_QuoteLeft       :
+      c = '"'                ;  break;
+   case Qt::Key_BraceLeft       :
+      c = '{'                ;  break;
+   case Qt::Key_Bar             :
+      c = '|'                ;  break;
+   case Qt::Key_BraceRight      :
+      c = '}'                ;  break;
+   case Qt::Key_AsciiTilde      :
+      c = '~'                ;  break;
 #if 0
-   case Qt::Key_BracketLeft     : /* 0x5b                */
+   case Qt::Key_Shift           :
       c = K_                 ;  break;
-   case Qt::Key_Backslash       : /* 0x5c                */
+   case Qt::Key_Control         : /* On Mac OS X, this corresponds to the Command keys. */
       c = K_                 ;  break;
-   case Qt::Key_BracketRight    : /* 0x5d                */
+   case Qt::Key_Meta            : /* On Mac OS X, this corresponds to the Control keys. On Windows keyboards, this key is mapped to the Windows key. */
       c = K_                 ;  break;
-   case Qt::Key_AsciiCircum     : /* 0x5e                */
+   case Qt::Key_Alt             :
       c = K_                 ;  break;
-   case Qt::Key_Underscore      : /* 0x5f                */
+   case Qt::Key_AltGr           : /* On Windows, when the KeyDown event for this key is sent, the Ctrl+Alt modifiers are also set. */
       c = K_                 ;  break;
-   case Qt::Key_QuoteLeft       : /* 0x60                */
+   case Qt::Key_CapsLock        :
       c = K_                 ;  break;
-   case Qt::Key_BraceLeft       : /* 0x7b                */
+   case Qt::Key_NumLock         :
       c = K_                 ;  break;
-   case Qt::Key_Bar             : /* 0x7c                */
+   case Qt::Key_ScrollLock      :
       c = K_                 ;  break;
-   case Qt::Key_BraceRight      : /* 0x7d                */
+   case Qt::Key_Super_L         :
       c = K_                 ;  break;
-   case Qt::Key_AsciiTilde      : /* 0x7e                */
+   case Qt::Key_Super_R         :
+      c = K_                 ;  break;
+   case Qt::Key_Menu            :
+      c = K_                 ;  break;
+   case Qt::Key_Hyper_L         :
+      c = K_                 ;  break;
+   case Qt::Key_Hyper_R         :
+      c = K_                 ;  break;
+   case Qt::Key_Help            :
+      c = K_                 ;  break;
+   case Qt::Key_Direction_L     :
+      c = K_                 ;  break;
+   case Qt::Key_Direction_R     :
+      c = K_                 ;  break;
+   case Qt::Key_Pause           :
+      c = K_PAUSE            ;  break;
+   case Qt::Key_Print           :
+      c = K_                 ;  break;
+   case Qt::Key_SysReq          :
+      c = K_                 ;  break;
+   case Qt::Key_Clear           :
       c = K_                 ;  break;
 #endif
-   default:
-       QWidget::keyPressEvent(event);
-       return ;
+   default                      :
+   {
+      if( ( event->key() >= 0 ) && ( event->key() <= 255 ) )
+         c = event->key();
+      else
+      {
+         QWidget::keyPressEvent(event);
+         return ;
+      }
+   }
    }
 
    hb_gt_wvt_AddCharToInputQueue( pWVT, c );
@@ -2736,13 +2695,21 @@ void ConsoleArea::keyPressEvent(QKeyEvent *event)
 
 void ConsoleArea::keyReleaseEvent(QKeyEvent *event)
 {
-   OutputDebugString( "Key Released" );
+   int key = event->key();
 }
 
 void ConsoleArea::mouseMoveEvent(QMouseEvent *event)
 {
     if ((event->buttons() & Qt::LeftButton) && scribbling)
         drawLineTo(event->pos());
+}
+
+void ConsoleArea::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        lastPoint = event->pos();
+        scribbling = true;
+    }
 }
 
 void ConsoleArea::mouseReleaseEvent(QMouseEvent *event)
@@ -2755,7 +2722,6 @@ void ConsoleArea::mouseReleaseEvent(QMouseEvent *event)
 
 void ConsoleArea::paintEvent(QPaintEvent * event)
 {
-//OutputDebugString( "               entry" );
     QPainter painter(this);
     QRect rect = event->rect();
     //painter.drawImage(QPoint(0, 0), image);
@@ -2822,7 +2788,6 @@ OutputDebugString( "KKKK len=%i bOldColor=%i bColor=%i" );
           }
        }
     }
-//OutputDebugString( "               exit" );
 }
 
 void ConsoleArea::resizeEvent(QResizeEvent *event)
