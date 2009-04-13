@@ -116,7 +116,7 @@
 /* TODO: Optimizations (speed/memory). */
 /* TODO: Incremental support:
          - handle libs? (problematic)
-         - creating intermediate files in '_arch/comp' subdir
+         - Reuse Harbour .c output for different compiler targets.
          - 'clean' option? */
 
 /* PLANNING:
@@ -341,6 +341,8 @@ PROCEDURE Main( ... )
    LOCAL lCreateDyn := .F.
    LOCAL lAcceptLDClipper := .F.
 
+   LOCAL cWorkDir := NIL
+
    LOCAL aParams
    LOCAL aParam
    LOCAL cParam
@@ -369,7 +371,7 @@ PROCEDURE Main( ... )
       ShowHeader()
       ShowHelp()
       PauseForKey()
-      ErrorLevel( 9 )
+      ErrorLevel( 19 )
       RETURN
    ENDIF
 
@@ -395,7 +397,7 @@ PROCEDURE Main( ... )
          ShowHeader()
          ShowHelp( .T. )
          PauseForKey()
-         ErrorLevel( 9 )
+         ErrorLevel( 19 )
          RETURN
 
       CASE cParamL == "--version"
@@ -1098,6 +1100,10 @@ PROCEDURE Main( ... )
             AAdd( s_aOPTRUN , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
+      CASE Left( cParamL, Len( "-workdir:" ) ) == "-workdir:"
+
+         cWorkDir := PathSepToTarget( ArchCompFilter( SubStr( cParam, Len( "-workdir:" ) + 1 ) ) )
+
       CASE Left( cParam, 2 ) == "-l" .AND. ;
            Len( cParam ) > 2 .AND. ;
            !( Left( cParam, 3 ) == "-l-" )
@@ -1216,6 +1222,21 @@ PROCEDURE Main( ... )
       RETURN
    ENDIF
 
+   IF s_lINC
+      IF cWorkDir == NIL
+         cWorkDir := t_cARCH + hb_osPathSeparator() + t_cCOMP
+      ENDIF
+      AAdd( s_aOPTPRG, "-o" + cWorkDir + hb_osPathSeparator() ) /* NOTE: Ending path sep is important. */
+      IF ! DirBuild( cWorkDir )
+         OutErr( "hbmk: Error: Working directory cannot be created: " + cWorkDir + hb_osNewLine() )
+         PauseForKey()
+         ErrorLevel( 9 )
+         RETURN
+      ENDIF
+   ELSE
+      cWorkDir := ""
+   ENDIF
+
    IF ! lStopAfterInit .AND. ! lStopAfterHarbour
 
       /* If -o with full name wasn't specified, let's
@@ -1234,7 +1255,7 @@ PROCEDURE Main( ... )
          s_aPRG_TODO := {}
          FOR EACH tmp IN s_aPRG
             IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
-               ! hb_FGetDateTime( FN_ExtSet( tmp, ".c" ), @tmp2 ) .OR. ;
+               ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
                tmp1 > tmp2
                AAdd( s_aPRG_TODO, tmp )
             ENDIF
@@ -1265,7 +1286,7 @@ PROCEDURE Main( ... )
                                 s_aOPTPRG } )
 
       IF s_lTRACE
-         IF ! s_lDONTEXEC .OR. ! t_lQuiet
+         IF ! t_lQuiet
             OutStd( "hbmk: Harbour compiler command (internal):" + hb_osNewLine() )
          ENDIF
          OutStd( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG +;
@@ -1292,7 +1313,7 @@ PROCEDURE Main( ... )
       cCommand := AllTrim( cCommand )
 
       IF s_lTRACE
-         IF ! s_lDONTEXEC .OR. ! t_lQuiet
+         IF ! t_lQuiet
             OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() )
          ENDIF
          OutStd( cCommand + hb_osNewLine() )
@@ -1361,6 +1382,7 @@ PROCEDURE Main( ... )
          {LL}     list of lib files
          {FC}     flags for C compiler (user + automatic)
          {FL}     flags for linker (user + automatic)
+         {OW}     working dir (when in -inc mode)
          {OD}     output dir
          {OO}     output object (when in -hbcmp mode)
          {OE}     output executable
@@ -1398,7 +1420,12 @@ PROCEDURE Main( ... )
          cBin_Lib := t_cCCPREFIX + "ar"
          cOpt_Lib := "{FA} rcs {OL} {LO}"
          cBin_CompC := t_cCCPREFIX + iif( t_cCOMP == "gpp" .OR. s_lCPP, "g++", "gcc" )
-         cOpt_CompC := "-c -O3 {FC} {LC} -I{DI}"
+         cOpt_CompC := "-c -O3 {FC} -I{DI}"
+         IF s_lINC .AND. ! Empty( cWorkDir )
+            cOpt_CompC += " {IC} -o {OO}"
+         ELSE
+            cOpt_CompC += " {LC}"
+         ENDIF
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          IF ! Empty( t_cCCPATH )
@@ -1535,7 +1562,12 @@ PROCEDURE Main( ... )
          cLibExt := ""
          cObjExt := ".o"
          cBin_CompC := t_cCCPREFIX + "gcc.exe"
-         cOpt_CompC := "-c -O3 {FC} {LC} -I{DI}"
+         cOpt_CompC := "-c -O3 {FC} -I{DI}"
+         IF s_lINC .AND. ! Empty( cWorkDir )
+            cOpt_CompC += " {IC} -o {OO}"
+         ELSE
+            cOpt_CompC += " {LC}"
+         ENDIF
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {LS} {FL} {DL}"
          cLibPathPrefix := "-L"
@@ -1617,7 +1649,12 @@ PROCEDURE Main( ... )
          cLibExt := ""
          cObjExt := ".o"
          cBin_CompC := "gcc.exe"
-         cOpt_CompC := "-c -O3 {FC} {LC} -I{DI}"
+         cOpt_CompC := "-c -O3 {FC} -I{DI}"
+         IF s_lINC .AND. ! Empty( cWorkDir )
+            cOpt_CompC += " {IC} -o {OO}"
+         ELSE
+            cOpt_CompC += " {LC}"
+         ENDIF
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          cLibPathPrefix := "-L"
@@ -1656,7 +1693,12 @@ PROCEDURE Main( ... )
          cLibExt := ""
          cObjExt := ".o"
          cBin_CompC := "gcc.exe"
-         cOpt_CompC := "-c -O3 {FC} {LC} -I{DI}{SCRIPT}"
+         cOpt_CompC := "-c -O3 {FC} -I{DI}"
+         IF s_lINC .AND. ! Empty( cWorkDir )
+            cOpt_CompC += " {IC} -o {OO}"
+         ELSE
+            cOpt_CompC += " {LC}{SCRIPT}"
+         ENDIF
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}{SCRIPT}"
          cLibPathPrefix := "-L"
@@ -1694,7 +1736,12 @@ PROCEDURE Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386.exe"
-         cOpt_CompC := "-zq -w3 -5r -fp5 -onaehtri+ -s -ei -zp4 -zt0 -bt=DOS {FC} -i{DI} {LC}"
+         cOpt_CompC := "-zq -5r -fp5 -onaehtri+ -s -ei -zp4 -zt0 -bt=DOS {FC} -i{DI}"
+         IF s_lINC .AND. ! Empty( cWorkDir )
+            cOpt_CompC += " {IC} -fo={OO}"
+         ELSE
+            cOpt_CompC += " {LC}"
+         ENDIF
          cBin_Link := "wlink.exe"
          cOpt_Link := "SYS causeway {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          cBin_Lib := "wlib.exe"
@@ -1716,7 +1763,12 @@ PROCEDURE Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386.exe"
-         cOpt_CompC := "-zq -w3 -6s -fp6 -onaehtri+ -s -ei -zp4 -zt0 -bt=NT {FC} -i{DI} {LC}"
+         cOpt_CompC := "-zq -6s -fp6 -onaehtri+ -s -ei -zp4 -zt0 -bt=NT {FC} -i{DI}"
+         IF s_lINC .AND. ! Empty( cWorkDir )
+            cOpt_CompC += " {IC} -fo={OO}"
+         ELSE
+            cOpt_CompC += " {LC}"
+         ENDIF
          cBin_Link := "wlink.exe"
          cOpt_Link := "{FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
          cBin_Lib := "wlib.exe"
@@ -1768,7 +1820,12 @@ PROCEDURE Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386.exe"
-         cOpt_CompC := "-zq -w3 -5r -fp5 -onaehtri+ -s -ei -zp4 -zt0 -bt=OS2 {FC} -i{DI} {LC}"
+         cOpt_CompC := "-zq -5r -fp5 -onaehtri+ -s -ei -zp4 -zt0 -bt=OS2 {FC} -i{DI}"
+         IF s_lINC .AND. ! Empty( cWorkDir )
+            cOpt_CompC += " {IC} -fo={OO}"
+         ELSE
+            cOpt_CompC += " {LC}"
+         ENDIF
          cBin_Link := "wlink.exe"
          cOpt_Link := "{FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          cBin_Lib := "wlib.exe"
@@ -1797,7 +1854,12 @@ PROCEDURE Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386"
-         cOpt_CompC := "-zq -w3 -6r -fp6 -onaehtri+ -s -ei -zp4 -zt0 -bt=LINUX {FC} -i{DI} {LC}"
+         cOpt_CompC := "-zq -6r -fp6 -onaehtri+ -s -ei -zp4 -zt0 -bt=LINUX {FC} -i{DI}"
+         IF s_lINC .AND. ! Empty( cWorkDir )
+            cOpt_CompC += " {IC} -fo={OO}"
+         ELSE
+            cOpt_CompC += " {LC}"
+         ENDIF
          cBin_Link := "wlink"
          cOpt_Link := "SYS LINUX {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          cBin_Lib := "wlib"
@@ -1838,20 +1900,24 @@ PROCEDURE Main( ... )
          cBin_CompC := "bcc32.exe"
          cOpt_CompC := "-c -q -tWM -O2 -OS -Ov -Oi -Oc -d {FC} -I{DI} {LC}"
          cBin_Res := "brcc32.exe"
-         cOpt_Res := "{LR}"
+         cOpt_Res := "{IR} -fo{OS}"
          cResExt := ".res"
          cBin_Link := "ilink32.exe"
          cOpt_Link := "-Gn -C -ap -Tpe -L{DL} {FL} c0d32.obj {LO}, {OE}, " + iif( s_lMAP, "{OM}", "nul" ) + ", cw32mt.lib {LL} import32.lib,, {LS}{SCRIPT}"
          cLibPathPrefix := ""
          cLibPathSep := ";"
-         IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
-            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
-               AAdd( s_aOPTC, "-o{OO}" )
-            ELSE
-               AAdd( s_aOPTC, "-n{OD}" )
+         IF s_lINC
+            IF ! Empty( cWorkDir )
+               AAdd( s_aOPTC, "-n{OW}" )
             ENDIF
          ELSE
-            AAdd( s_aOPTC, "-e{OE}" )
+            IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
+               IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+                  AAdd( s_aOPTC, "-o{OO}" )
+               ELSE
+                  AAdd( s_aOPTC, "-n{OD}" )
+               ENDIF
+            ENDIF
          ENDIF
          IF s_lSHARED
             AAdd( s_aLIBPATH, "{DB}" )
@@ -1895,7 +1961,7 @@ PROCEDURE Main( ... )
          ENDIF
          cOpt_Lib := "{FA} /out:{OL} {LO}"
          cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
-         cOpt_CompC := "-nologo -c -W3 {FC} -I{DI} {LC}"
+         cOpt_CompC := "-nologo -c {FC} -I{DI} {LC}"
          cOpt_Link := "-nologo {LO} {DL} {FL} {LL} {LS}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
@@ -1930,14 +1996,18 @@ PROCEDURE Main( ... )
             AAdd( s_aOPTL, "/opt:icf" )
             AAdd( s_aOPTL, "/manifest:no" )
          ENDIF
-         IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
-            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
-               AAdd( s_aOPTC, "-Fo{OO}" )
-            ELSE
-               AAdd( s_aOPTC, "-Fo{OD}" )
+         IF s_lINC
+            IF ! Empty( cWorkDir )
+               AAdd( s_aOPTC, "-Fo{OW}\" ) /* NOTE: Ending path sep is important. */
             ENDIF
          ELSE
-            AAdd( s_aOPTC, "-Fe{OE}" )
+            IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
+               IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+                  AAdd( s_aOPTC, "-Fo{OO}" )
+               ELSE
+                  AAdd( s_aOPTC, "-Fo{OD}" )
+               ENDIF
+            ENDIF
          ENDIF
          IF s_lSHARED
             AAdd( s_aOPTL, "/libpath:{DB}" )
@@ -1962,7 +2032,7 @@ PROCEDURE Main( ... )
 
          IF !( t_cCOMP $ "icc|iccia64" )
             cBin_Res := "rc.exe"
-            cOpt_Res := "/r {LR}"
+            cOpt_Res := "/fo {OS} {IR}"
             cResExt := ".res"
          ENDIF
 
@@ -2007,17 +2077,13 @@ PROCEDURE Main( ... )
          CASE t_cCOMP == "poccarm"
             AAdd( s_aOPTC, "/Tarm-coff" )
          ENDCASE
-         cOpt_Res := "{LR}"
+         cOpt_Res := "/Fo{OS} {IR}"
          cResExt := ".res"
          cOpt_Lib := "{FA} /out:{OL} {LO}"
          IF s_lMT
             AAdd( s_aOPTC, "/MT" )
          ENDIF
-         IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
-            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
-               AAdd( s_aOPTC, "/Fo{OO}" )
-            ENDIF
-         ELSE
+         IF !( lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn )
             AAdd( s_aOPTL, "/out:{OE}" )
          ENDIF
          cOpt_Link := "{LO} {DL} {FL} {LL} {LS}"
@@ -2160,7 +2226,7 @@ PROCEDURE Main( ... )
          ELSE
             OutErr( "hbmk: Warning: Stub helper .c program couldn't be created." + hb_osNewLine() )
             IF ! s_lINC
-               AEval( ListDirExt( s_aPRG, "", ".c" ), {|tmp| FErase( tmp ) } )
+               AEval( ListDirExt( s_aPRG, cWorkDir, ".c" ), {|tmp| FErase( tmp ) } )
             ENDIF
             PauseForKey()
             ErrorLevel( 5 )
@@ -2195,14 +2261,14 @@ PROCEDURE Main( ... )
          s_aLIB := ArrayJoin( ListCookLib( s_aLIBSHARED, cLibPrefix ), s_aLIB )
       ENDIF
       /* Dress obj names. */
-      s_aOBJ := ListDirExt( ArrayJoin( s_aPRG, s_aC ), "", cObjExt )
+      s_aOBJ := ListDirExt( ArrayJoin( s_aPRG, s_aC ), cWorkDir, cObjExt )
       s_aOBJUSER := ListCook( s_aOBJUSER, NIL, cObjExt )
 
       IF s_lINC
          s_aRESSRC_TODO := {}
          FOR EACH tmp IN s_aRESSRC
             IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
-               ! hb_FGetDateTime( FN_ExtSet( tmp, cResExt ), @tmp2 ) .OR. ;
+               ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cResExt ), @tmp2 ) .OR. ;
                tmp1 > tmp2
                AAdd( s_aRESSRC_TODO, tmp )
             ENDIF
@@ -2228,12 +2294,12 @@ PROCEDURE Main( ... )
 
                cCommand := cOpt_Res
                cCommand := StrTran( cCommand, "{IR}", tmp )
-               cCommand := StrTran( cCommand, "{OS}", PathSepToTarget( FN_ExtSet( tmp, cResExt ) ) )
+               cCommand := StrTran( cCommand, "{OS}", PathSepToTarget( FN_DirExtSet( tmp, cWorkDir, cResExt ) ) )
 
                cCommand := cBin_Res + " " + AllTrim( cCommand )
 
                IF s_lTRACE
-                  IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                  IF ! t_lQuiet
                      OutStd( "hbmk: Resource compiler command:" + hb_osNewLine() )
                   ENDIF
                   OutStd( cCommand + hb_osNewLine() )
@@ -2266,7 +2332,7 @@ PROCEDURE Main( ... )
             cCommand := cBin_Res + " " + cOpt_Res
 
             IF s_lTRACE
-               IF ! s_lDONTEXEC .OR. ! t_lQuiet
+               IF ! t_lQuiet
                   OutStd( "hbmk: Resource compiler command:" + hb_osNewLine() )
                ENDIF
                OutStd( cCommand + hb_osNewLine() )
@@ -2294,7 +2360,7 @@ PROCEDURE Main( ... )
             s_aC_DONE := {}
             FOR EACH tmp IN s_aC
                IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
-                  ! hb_FGetDateTime( FN_ExtSet( tmp, cObjExt ), @tmp2 ) .OR. ;
+                  ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
                   tmp1 > tmp2
                   AAdd( s_aC_TODO, tmp )
                ELSE
@@ -2310,8 +2376,8 @@ PROCEDURE Main( ... )
             s_aPRG_TODO := {}
             s_aPRG_DONE := {}
             FOR EACH tmp IN s_aPRG
-               IF ! hb_FGetDateTime( FN_ExtSet( tmp, ".c" ), @tmp1 ) .OR. ;
-                  ! hb_FGetDateTime( FN_ExtSet( tmp, cObjExt ), @tmp2 ) .OR. ;
+               IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp1 ) .OR. ;
+                  ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
                   tmp1 > tmp2
                   AAdd( s_aPRG_TODO, tmp )
                ELSE
@@ -2339,7 +2405,7 @@ PROCEDURE Main( ... )
                                                          GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( s_aOPTC ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{FL}"  , iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                          GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{LR}"  , ArrayToList( ArrayJoin( ListDirExt( s_aRESSRC, "", cResExt ), s_aRESCMP ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LR}"  , ArrayToList( ArrayJoin( ListDirExt( s_aRESSRC, cWorkDir, cResExt ), s_aRESCMP ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LO}"  , ArrayToList( ArrayAJoin( { ListCook( s_aOBJUSER, cObjPrefix ), ListCook( s_aPRG_DONE, cObjPrefix, cObjExt ), ListCook( s_aC_DONE, cObjPrefix, cObjExt ) } ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( s_aRESSRC, "", cResExt ), s_aRESCMP ), cResPrefix ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LA}"  , ArrayToList( s_aOBJA ) )
@@ -2353,16 +2419,16 @@ PROCEDURE Main( ... )
 
             IF "{IC}" $ cOpt_CompC
 
-               FOR EACH tmp IN ArrayJoin( ListDirExt( s_aPRG_TODO, "", ".c" ), s_aC_TODO )
+               FOR EACH tmp IN ArrayJoin( ListDirExt( s_aPRG_TODO, cWorkDir, ".c" ), s_aC_TODO )
 
                   cCommand := cOpt_CompC
                   cCommand := StrTran( cCommand, "{IC}", tmp )
-                  cCommand := StrTran( cCommand, "{OO}", PathSepToTarget( NameDirExt( tmp, "", cObjExt ) ) )
+                  cCommand := StrTran( cCommand, "{OO}", PathSepToTarget( FN_DirExtSet( tmp, cWorkDir, cObjExt ) ) )
 
                   cCommand := cBin_CompC + " " + AllTrim( cCommand )
 
                   IF s_lTRACE
-                     IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                     IF ! t_lQuiet
                         OutStd( "hbmk: C compiler command:" + hb_osNewLine() )
                      ENDIF
                      OutStd( cCommand + hb_osNewLine() )
@@ -2376,8 +2442,9 @@ PROCEDURE Main( ... )
                   ENDIF
                NEXT
             ELSE
-               cOpt_CompC := StrTran( cOpt_CompC, "{LC}"  , ArrayToList( ArrayJoin( ListDirExt( s_aPRG_TODO, "", ".c" ), s_aC_TODO ) ) )
+               cOpt_CompC := StrTran( cOpt_CompC, "{LC}"  , ArrayToList( ArrayJoin( ListDirExt( s_aPRG_TODO, cWorkDir, ".c" ), s_aC_TODO ) ) )
                cOpt_CompC := StrTran( cOpt_CompC, "{OO}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cObjExt ) ) )
+               cOpt_CompC := StrTran( cOpt_CompC, "{OW}"  , PathSepToTarget( cWorkDir ) )
 
                cOpt_CompC := AllTrim( cOpt_CompC )
 
@@ -2396,7 +2463,7 @@ PROCEDURE Main( ... )
                cCommand := cBin_CompC + " " + cOpt_CompC
 
                IF s_lTRACE
-                  IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                  IF ! t_lQuiet
                      OutStd( "hbmk: C compiler command:" + hb_osNewLine() )
                   ENDIF
                   OutStd( cCommand + hb_osNewLine() )
@@ -2438,39 +2505,7 @@ PROCEDURE Main( ... )
 
                lTargetUpToDate := .T.
                IF lTargetUpToDate
-                  FOR EACH tmp IN s_aOBJ
-                     IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. tmp1 > tTarget
-                        lTargetUpToDate := .F.
-                        EXIT
-                     ENDIF
-                  NEXT
-               ENDIF
-               IF lTargetUpToDate
-                  FOR EACH tmp IN s_aOBJUSER
-                     IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. tmp1 > tTarget
-                        lTargetUpToDate := .F.
-                        EXIT
-                     ENDIF
-                  NEXT
-               ENDIF
-               IF lTargetUpToDate
-                  FOR EACH tmp IN s_aOBJA
-                     IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. tmp1 > tTarget
-                        lTargetUpToDate := .F.
-                        EXIT
-                     ENDIF
-                  NEXT
-               ENDIF
-               IF lTargetUpToDate
-                  FOR EACH tmp IN s_aRESSRC
-                     IF ! hb_FGetDateTime( FN_ExtSet( tmp, cResExt ), @tmp1 ) .OR. tmp1 > tTarget
-                        lTargetUpToDate := .F.
-                        EXIT
-                     ENDIF
-                  NEXT
-               ENDIF
-               IF lTargetUpToDate
-                  FOR EACH tmp IN s_aRESCMP
+                  FOR EACH tmp IN ArrayAJoin( { s_aOBJ, s_aOBJUSER, s_aOBJA, s_aRESSRC, s_aRESCMP } )
                      IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. tmp1 > tTarget
                         lTargetUpToDate := .F.
                         EXIT
@@ -2495,7 +2530,7 @@ PROCEDURE Main( ... )
       IF nErrorLevel == 0 .AND. ( Len( s_aOBJ ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) > 0
 
          IF lTargetUpToDate
-            OutStd( "hbmk: Target already up to date: " + cTarget + hb_osNewLine() )
+            OutStd( "hbmk: Target up to date: " + cTarget + hb_osNewLine() )
          ELSE
             DO CASE
             CASE ! lStopAfterCComp .AND. ! Empty( cBin_Link )
@@ -2510,7 +2545,7 @@ PROCEDURE Main( ... )
                cOpt_Link := StrTran( cOpt_Link, "{FL}"  , iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                           GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
                cOpt_Link := StrTran( cOpt_Link, "{LO}"  , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cObjPrefix ) ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( s_aRESSRC, "", cResExt ), s_aRESCMP ), cResPrefix ) ) )
+               cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( s_aRESSRC, cWorkDir, cResExt ), s_aRESCMP ), cResPrefix ) ) )
                cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( s_aOBJA ) )
                cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( s_aLIB ) )
                cOpt_Link := StrTran( cOpt_Link, "{OE}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cBinExt ) ) )
@@ -2535,7 +2570,7 @@ PROCEDURE Main( ... )
                cCommand := cBin_Link + " " + cOpt_Link
 
                IF s_lTRACE
-                  IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                  IF ! t_lQuiet
                      OutStd( "hbmk: Linker command:" + hb_osNewLine() )
                   ENDIF
                   OutStd( cCommand + hb_osNewLine() )
@@ -2588,7 +2623,7 @@ PROCEDURE Main( ... )
                cCommand := cBin_Lib + " " + cOpt_Lib
 
                IF s_lTRACE
-                  IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                  IF ! t_lQuiet
                      OutStd( "hbmk: Lib command:" + hb_osNewLine() )
                   ENDIF
                   OutStd( cCommand + hb_osNewLine() )
@@ -2619,7 +2654,7 @@ PROCEDURE Main( ... )
                /* Order is significant */
                cOpt_Dyn := StrTran( cOpt_Dyn, "{FD}"  , GetEnv( "HB_USER_DFLAGS" ) + " " + ArrayToList( s_aOPTD ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LO}"  , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cDynObjPrefix ) ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( s_aRESSRC, "", cResExt ), s_aRESCMP ), cResPrefix ) ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( s_aRESSRC, cWorkDir, cResExt ), s_aRESCMP ), cResPrefix ) ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LL}"  , ArrayToList( s_aLIB ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OD}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cDynLibExt ) ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OM}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, ".map" ) ) )
@@ -2643,7 +2678,7 @@ PROCEDURE Main( ... )
                cCommand := cBin_Dyn + " " + cOpt_Dyn
 
                IF s_lTRACE
-                  IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                  IF ! t_lQuiet
                      OutStd( "hbmk: Dynamic lib link command:" + hb_osNewLine() )
                   ENDIF
                   OutStd( cCommand + hb_osNewLine() )
@@ -2671,15 +2706,15 @@ PROCEDURE Main( ... )
 
       IF ! Empty( s_cCSTUB )
          FErase( s_cCSTUB )
-         FErase( NameDirExt( s_cCSTUB, "", cObjExt ) )
+         FErase( FN_DirExtSet( s_cCSTUB, "", cObjExt ) )
       ENDIF
       IF ! s_lINC
-         AEval( ListDirExt( s_aPRG, "", ".c" ), {|tmp| FErase( tmp ) } )
+         AEval( ListDirExt( s_aPRG, cWorkDir, ".c" ), {|tmp| FErase( tmp ) } )
       ENDIF
       IF ! lStopAfterCComp .OR. lCreateLib .OR. lCreateDyn
          IF ! s_lINC
             IF ! Empty( cResExt )
-               AEval( ListDirExt( s_aRESSRC, "", cResExt ), {|tmp| FErase( tmp ) } )
+               AEval( ListDirExt( s_aRESSRC, cWorkDir, cResExt ), {|tmp| FErase( tmp ) } )
             ENDIF
             AEval( s_aOBJ, {|tmp| FErase( tmp ) } )
          ENDIF
@@ -2709,7 +2744,7 @@ PROCEDURE Main( ... )
                cCommand := cBin_Cprs + " " + cOpt_Cprs
 
                IF s_lTRACE
-                  IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                  IF ! t_lQuiet
                      OutStd( "hbmk: Compression command:" + hb_osNewLine() )
                   ENDIF
                   OutStd( cCommand + hb_osNewLine() )
@@ -2730,7 +2765,7 @@ PROCEDURE Main( ... )
                #endif
                cCommand := AllTrim( PathSepToTarget( s_cPROGNAME ) + " " + ArrayToList( s_aOPTRUN ) )
                IF s_lTRACE
-                  IF ! s_lDONTEXEC .OR. ! t_lQuiet
+                  IF ! t_lQuiet
                      OutStd( "hbmk: Running executable:" + hb_osNewLine() )
                   ENDIF
                   OutStd( cCommand + hb_osNewLine() )
@@ -2862,24 +2897,10 @@ STATIC FUNCTION ListDirExt( arraySrc, cDirNew, cExtNew )
    LOCAL cFileName
 
    FOR EACH cFileName IN array
-      cFileName := NameDirExt( cFileName, cDirNew, cExtNew )
+      cFileName := FN_DirExtSet( cFileName, cDirNew, cExtNew )
    NEXT
 
    RETURN array
-
-STATIC FUNCTION NameDirExt( cFileName, cDirNew, cExtNew )
-   LOCAL cDir, cName, cExt
-
-   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
-
-   IF cDirNew != NIL
-      cDir := cDirNew
-   ENDIF
-   IF cExtNew != NIL
-      cExt := cExtNew
-   ENDIF
-
-   RETURN hb_FNameMerge( cDir, cName, cExt )
 
 /* Forms the list of libs as to appear on the command line */
 STATIC FUNCTION ListCookLib( arraySrc, cPrefix, cExtNew )
@@ -3057,6 +3078,44 @@ STATIC FUNCTION DirDelPathSep( cDir )
 
    RETURN cDir
 
+#define hb_DirMake( d ) MakeDir( d )
+
+FUNCTION DirBuild( cDir )
+   LOCAL cDirTemp
+   LOCAL cDirItem
+   LOCAL tmp
+
+   IF ! hb_DirExists( cDir )
+
+      cDir := DirAddPathSep( cDir )
+
+      IF ! Empty( hb_osDriveSeparator() ) .AND. ;
+         ( tmp := At( hb_osDriveSeparator(), cDir ) ) > 0
+         cDirTemp := Left( cDir, tmp )
+         cDir := SubStr( cDir, tmp + 1 )
+      ELSE
+         cDirTemp := ""
+      ENDIF
+
+      FOR EACH cDirItem IN hb_ATokens( cDir, hb_osPathSeparator() )
+         IF !( Right( cDirTemp, 1 ) == hb_osPathSeparator() ) .AND. ! Empty( cDirTemp )
+            cDirTemp += hb_osPathSeparator()
+         ENDIF
+         IF ! Empty( cDirItem )  /* Skip root path, if any */
+            cDirTemp += cDirItem
+            IF hb_FileExists( cDirTemp )
+               RETURN .F.
+            ELSEIF ! hb_DirExists( cDirTemp )
+               IF hb_DirMake( cDirTemp ) != 0
+                  RETURN .F.
+               ENDIF
+            ENDIF
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN .T.
+
 STATIC FUNCTION FN_DirGet( cFileName )
    LOCAL cDir
 
@@ -3082,6 +3141,20 @@ STATIC FUNCTION FN_ExtSet( cFileName, cExt )
    LOCAL cDir, cName
 
    hb_FNameSplit( cFileName, @cDir, @cName )
+
+   RETURN hb_FNameMerge( cDir, cName, cExt )
+
+STATIC FUNCTION FN_DirExtSet( cFileName, cDirNew, cExtNew )
+   LOCAL cDir, cName, cExt
+
+   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
+
+   IF cDirNew != NIL
+      cDir := cDirNew
+   ENDIF
+   IF cExtNew != NIL
+      cExt := cExtNew
+   ENDIF
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
 
@@ -3994,6 +4067,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -dflag:<f>        pass flag to linker (dynamic library)" ,;
       "  -runflag:<f>      pass flag to output executable when -run option is used" ,;
       "  -inc              enable incremental build mode" ,;
+      "  -workdir:<dir>    working directory for incremental build mode" ,;
+      "                    (default: arch/comp)" ,;
       "  -hbcmp            stop after creating the object files" ,;
       "                    create link/copy hbmk to hbcmp for the same effect" ,;
       "  -hbcc             stop after creating the object files and accept raw C flags" ,;
