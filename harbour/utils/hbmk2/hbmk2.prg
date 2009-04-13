@@ -115,11 +115,9 @@
 /* TODO: Cleanup on variable names and compiler configuration. */
 /* TODO: Optimizations (speed/memory). */
 /* TODO: Incremental support:
-         - separate link from C compilation for all compilers
          - handle libs? (problematic)
          - creating intermediate files in '_arch/comp' subdir
-         - 'clean' option?
-         - fix to remove stub object */
+         - 'clean' option? */
 
 /* PLANNING:
    hbgtwvg.hbp
@@ -1171,8 +1169,16 @@ PROCEDURE Main( ... )
 
       CASE FN_ExtGet( cParamL ) == ".res"
 
-         cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
-         AAdd( s_aRESCMP , PathSepToTarget( cParam ) )
+         IF t_cCOMP $ "mingw|mingw64|mingwarm"
+            /* For MinGW family add .res files as source input, as they
+               will need to be converted to coff format with windres (just
+               like plain .rc files) before feeding them to gcc. */
+            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+            AAdd( s_aRESSRC , PathSepToTarget( cParam ) )
+         ELSE
+            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+            AAdd( s_aRESCMP , PathSepToTarget( cParam ) )
+         ENDIF
 
       CASE FN_ExtGet( cParamL ) == ".a"
 
@@ -1597,8 +1603,8 @@ PROCEDURE Main( ... )
 
          IF t_cCOMP $ "mingw|mingw64|mingwarm" .AND. Len( s_aRESSRC ) > 0
             cBin_Res := t_cCCPREFIX + "windres"
-            cResExt := ".o"
-            cOpt_Res := "{IR} -o {OS}"
+            cResExt := ".reso"
+            cOpt_Res := "{IR} -O coff -o {OS}"
             IF ! Empty( t_cCCPATH )
                cBin_Res := t_cCCPATH + "\" + cBin_Res
             ENDIF
@@ -2665,6 +2671,7 @@ PROCEDURE Main( ... )
 
       IF ! Empty( s_cCSTUB )
          FErase( s_cCSTUB )
+         FErase( NameDirExt( s_cCSTUB, "", cObjExt ) )
       ENDIF
       IF ! s_lINC
          AEval( ListDirExt( s_aPRG, "", ".c" ), {|tmp| FErase( tmp ) } )
