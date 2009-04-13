@@ -699,18 +699,6 @@ PROCEDURE Main( ... )
                t_cCOMP := NIL
             ENDIF
          ELSE
-            IF t_cARCH $ "win|wce"
-               /* Autodetect embedded MinGW installation */
-               FOR tmp := 1 TO Len( aCOMPDET_LOCAL )
-                  IF t_cARCH == aCOMPDET_LOCAL[ tmp ][ 2 ] .AND. ;
-                     ! Empty( tmp1 := Eval( aCOMPDET_LOCAL[ tmp ][ 1 ], aCOMPDET_LOCAL[ tmp ][ 4 ] ) )
-                     t_cCOMP := aCOMPDET_LOCAL[ tmp ][ 3 ]
-                     t_cCCPREFIX := aCOMPDET_LOCAL[ tmp ][ 4 ]
-                     t_cCCPATH := tmp1
-                     EXIT
-                  ENDIF
-               NEXT
-            ENDIF
             IF Empty( t_cCOMP ) .AND. ! Empty( aCOMPDET )
                /* Look for this compiler first */
                FOR tmp := 1 TO Len( aCOMPDET )
@@ -728,6 +716,18 @@ PROCEDURE Main( ... )
                      ENDIF
                   NEXT
                ENDIF
+            ENDIF
+            IF Empty( t_cCOMP ) .AND. t_cARCH $ "win|wce"
+               /* Autodetect embedded MinGW installation */
+               FOR tmp := 1 TO Len( aCOMPDET_LOCAL )
+                  IF t_cARCH == aCOMPDET_LOCAL[ tmp ][ 2 ] .AND. ;
+                     ! Empty( tmp1 := Eval( aCOMPDET_LOCAL[ tmp ][ 1 ], aCOMPDET_LOCAL[ tmp ][ 4 ] ) )
+                     t_cCOMP := aCOMPDET_LOCAL[ tmp ][ 3 ]
+                     t_cCCPREFIX := aCOMPDET_LOCAL[ tmp ][ 4 ]
+                     t_cCCPATH := tmp1
+                     EXIT
+                  ENDIF
+               NEXT
             ENDIF
          ENDIF
          IF ! Empty( t_cCOMP )
