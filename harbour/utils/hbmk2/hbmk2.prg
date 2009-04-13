@@ -114,6 +114,14 @@
 /* TODO: Add support for dynamic library creation for rest of compilers. */
 /* TODO: Cleanup on variable names and compiler configuration. */
 /* TODO: Optimizations (speed/memory). */
+/* TODO: Incremental support:
+         - separate link from C compilation for all compilers
+         - handle resources
+         - handle .c and object input files
+         - handle libs? (problematic)
+         - creating intermediate files in '_arch/comp' subdir
+         - add 'inc=on' support in .hbp files
+         - 'clean' option? */
 
 /* PLANNING:
    hbgtwvg.hbp
@@ -242,6 +250,7 @@ PROCEDURE Main( ... )
    LOCAL s_aOPTL
    LOCAL s_aOPTA
    LOCAL s_aOPTD
+   LOCAL s_aOPTRUN
    LOCAL s_cPROGDIR
    LOCAL s_cPROGNAME
    LOCAL s_cFIRST
@@ -270,6 +279,7 @@ PROCEDURE Main( ... )
    LOCAL s_lBLDFLGL := .F.
    LOCAL s_lRUN := .F.
    LOCAL s_lFMSTAT := NIL /* NIL = default, .T. = on, .F. = off */
+   LOCAL s_lINC := .F.
 
    LOCAL aCOMPDET
    LOCAL aCOMPDET_LOCAL
@@ -334,6 +344,8 @@ PROCEDURE Main( ... )
    LOCAL aParam
    LOCAL cParam
    LOCAL cParamL
+
+   LOCAL cTarget, tTarget
 
    LOCAL cDir, cName, cExt
 
@@ -816,6 +828,7 @@ PROCEDURE Main( ... )
    s_aOPTL := {}
    s_aOPTA := {}
    s_aOPTD := {}
+   s_aOPTRUN := {}
    s_aRESSRC := {}
    s_aRESCMP := {}
    s_aLIBFM := {}
@@ -938,6 +951,9 @@ PROCEDURE Main( ... )
       CASE cParamL == "-map"             ; s_lMAP      := .T.
       CASE cParamL == "-map-" .OR. ;
            cParamL == "-nomap"           ; s_lMAP      := .F.
+      CASE cParamL == "-inc"             ; s_lINC      := .T.
+      CASE cParamL == "-inc-" .OR. ;
+           cParamL == "-noinc"           ; s_lINC      := .F.
       CASE cParamL == "-fmstat"          ; s_lFMSTAT   := .T.
       CASE cParamL == "-fmstat-" .OR. ;
            cParamL == "-nofmstat"        ; s_lFMSTAT   := .F.
@@ -1071,6 +1087,13 @@ PROCEDURE Main( ... )
             AAdd( s_aOPTA   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
+      CASE Left( cParamL, Len( "-runflag:" ) ) == "-runflag:"
+
+         cParam := ArchCompFilter( SubStr( cParam, Len( "-runflag:" ) + 1 ) )
+         IF Left( cParam, 1 ) $ cOptPrefix
+            AAdd( s_aOPTRUN , PathSepToTarget( cParam, 2 ) )
+         ENDIF
+
       CASE Left( cParam, 2 ) == "-l" .AND. ;
            Len( cParam ) > 2 .AND. ;
            !( Left( cParam, 3 ) == "-l-" )
@@ -1180,6 +1203,39 @@ PROCEDURE Main( ... )
       RETURN
    ENDIF
 
+   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+
+      /* If -o with full name wasn't specified, let's
+         make it the first source file specified. */
+      DEFAULT s_cPROGNAME TO FN_NameGet( s_cFIRST )
+
+      /* Combine output dir with output name. */
+      IF ! Empty( s_cPROGDIR )
+         hb_FNameSplit( s_cPROGNAME, @cDir, @cName, @cExt )
+         s_cPROGNAME := hb_FNameMerge( iif( Empty( cDir ), s_cPROGDIR, cDir ), cName, cExt )
+      ENDIF
+
+      /* Incremental */
+
+      IF s_lINC
+
+         DO CASE
+         CASE lCreateLib ; cTarget := PathSepToTarget( FN_ExtSet( cLibLibPrefix + s_cPROGNAME, cLibLibExt ) )
+         CASE lCreateDyn ; cTarget := PathSepToTarget( FN_ExtSet( s_cPROGNAME, cDynLibExt ) )
+         OTHERWISE       ; cTarget := PathSepToTarget( FN_ExtSet( s_cPROGNAME, cBinExt ) )
+         ENDCASE
+
+         tTarget := NIL
+         IF hb_FGetDateTime( cTarget, @tTarget )
+            FOR EACH tmp IN s_aPRG DESCEND
+               IF hb_FGetDateTime( tmp, @tmp1 ) .AND. tTarget >= tmp1
+                  hb_ADel( s_aPRG, tmp:__enumIndex(), .T. )
+               ENDIF
+            NEXT
+         ENDIF
+      ENDIF
+   ENDIF
+
    /* Harbour compilation */
 
    IF ! lStopAfterInit .AND. Len( s_aPRG ) > 0
@@ -1240,22 +1296,12 @@ PROCEDURE Main( ... )
 
    IF ! lStopAfterInit .AND. ! lStopAfterHarbour
 
-      /* If -o with full name wasn't specified, let's
-         make it the first source file specified. */
-      DEFAULT s_cPROGNAME TO FN_NameGet( s_cFIRST )
-
       IF s_cGT == t_cGTDEFAULT
          s_cGT := NIL
       ENDIF
 
       /* Merge user libs from command line and envvar. Command line has priority. */
       s_aLIBUSER := ArrayAJoin( { s_aLIBUSER, s_aLIBUSERGT, ListToArray( PathSepToTarget( GetEnv( "HB_USER_LIBS" ) ) ) } )
-
-      /* Combine output dir with output name. */
-      IF ! Empty( s_cPROGDIR )
-         hb_FNameSplit( s_cPROGNAME, @cDir, @cName, @cExt )
-         s_cPROGNAME := hb_FNameMerge( iif( Empty( cDir ), s_cPROGDIR, cDir ), cName, cExt )
-      ENDIF
 
       IF lSysLoc
          cPrefix := ""
@@ -2450,10 +2496,12 @@ PROCEDURE Main( ... )
       ENDIF
       AEval( ListDirExt( s_aPRG, "", ".c" ), {|tmp| FErase( tmp ) } )
       IF ! lStopAfterCComp .OR. lCreateLib .OR. lCreateDyn
-         IF ! Empty( cResExt )
-            AEval( ListDirExt( s_aRESSRC, "", cResExt ), {|tmp| FErase( tmp ) } )
+         IF ! s_lINC
+            IF ! Empty( cResExt )
+               AEval( ListDirExt( s_aRESSRC, "", cResExt ), {|tmp| FErase( tmp ) } )
+            ENDIF
+            AEval( s_aOBJ, {|tmp| FErase( tmp ) } )
          ENDIF
-         AEval( s_aOBJ, {|tmp| FErase( tmp ) } )
       ENDIF
       AEval( s_aCLEAN, {|tmp| FErase( tmp ) } )
 
@@ -2499,14 +2547,15 @@ PROCEDURE Main( ... )
                      s_cPROGNAME := "." + hb_osPathSeparator() + s_cPROGNAME
                   ENDIF
                #endif
+               cCommand := AllTrim( PathSepToTarget( s_cPROGNAME ) + " " + ArrayToList( s_aOPTRUN ) )
                IF s_lTRACE
                   IF ! s_lDONTEXEC .OR. ! t_lQuiet
                      OutStd( "hbmk: Running executable:" + hb_osNewLine() )
                   ENDIF
-                  OutStd( PathSepToTarget( s_cPROGNAME ) + hb_osNewLine() )
+                  OutStd( cCommand + hb_osNewLine() )
                ENDIF
                IF ! s_lDONTEXEC
-                  nErrorLevel := hb_run( PathSepToTarget( s_cPROGNAME ) )
+                  nErrorLevel := hb_run( cCommand )
                ENDIF
             ENDIF
          ENDIF
@@ -3752,6 +3801,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -ldflag:<f>       pass flag to linker (executable)" ,;
       "  -aflag:<f>        pass flag to linker (static library)" ,;
       "  -dflag:<f>        pass flag to linker (dynamic library)" ,;
+      "  -runflag:<f>      pass flag to output executable when -run option is used" ,;
       "  -hbcmp            stop after creating the object files" ,;
       "                    create link/copy hbmk to hbcmp for the same effect" ,;
       "  -hbcc             stop after creating the object files and accept raw C flags" ,;

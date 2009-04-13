@@ -76,10 +76,18 @@ static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock, PH
       if( pBaseArray->ulLen <= ulLast )
          return FALSE;
       else
+      {
+         PHB_ITEM pRet = hb_param( -1, HB_IT_ANY );
+
          /* CA-Cl*pper always takes return value as logical item
           * accepting 0, 1 as numeric representation of FALSE/TRUE
           */
-         return hb_parl( -1 );
+         if( HB_IS_LOGICAL( pRet ) ||
+             HB_IS_NUMERIC( pRet ) )
+            return hb_itemGetL( pRet );
+         else
+            return TRUE;
+      }
    }
 
    /* Do native compare when no codeblock is supplied */

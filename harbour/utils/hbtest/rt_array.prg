@@ -289,7 +289,40 @@ PROCEDURE Main_ARRAY()
 
    /* ASort() */
 
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||NIL})) , "ABCDEFGHIJ"     ) /* Bug/Feature in CA-Cl*pper, it will return: "IHGFEDCBAJ" */
+   /* Different results in Harbour and CA-Cl*pper due to different
+      sorting algorithms. Anyhow the results pattern should match.
+      [vszakats] */
+#ifdef __HARBOUR__
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||NIL})) , "DCBAEFIHGJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||hb_SToD()})) , "DCBAEFIHGJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||"0"})) , "DCBAEFIHGJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||"1"})) , "DCBAEFIHGJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||"2"})) , "DCBAEFIHGJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||"a"})) , "DCBAEFIHGJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||"A"})) , "DCBAEFIHGJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||""}))  , "DCBAEFIHGJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||"z"})) , "DCBAEFIHGJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||.T.})) , "DCBAEFIHGJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||.F.})) , "FEIDGCHBJA"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||2}))   , "DCBAEFIHGJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||1}))   , "DCBAEFIHGJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||0}))   , "FEIDGCHBJA"     )
+#else
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||NIL})) , "IHGFEDCBAJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||hb_SToD()})) , "IHGFEDCBAJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||"0"})) , "IHGFEDCBAJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||"1"})) , "IHGFEDCBAJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||"2"})) , "IHGFEDCBAJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||"a"})) , "IHGFEDCBAJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||"A"})) , "IHGFEDCBAJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||""}))  , "IHGFEDCBAJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||"z"})) , "IHGFEDCBAJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||.T.})) , "IHGFEDCBAJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||.F.})) , "DCEABJIHFG"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||2}))   , "IHGFEDCBAJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||1}))   , "IHGFEDCBAJ"     )
+   TEST_LINE( TAStr(ASort(TARRv(),,,{||0}))   , "DCEABJIHFG"     )
+#endif
    TEST_LINE( TAStr(ASort(TARRv()))           , "ABCDEFGHIJ"     )
    TEST_LINE( TAStr(ASort(TARRv(),NIL,NIL))   , "ABCDEFGHIJ"     )
    TEST_LINE( TAStr(ASort(TARRv(),NIL, -2))   , "ABCDEFGHIJ"     )

@@ -13,4 +13,3 @@ libs=hbqt
 #libs=QtCore QtGui QtNetwork QtWebKit
 gui=yes
 gt=gtnul
-

@@ -2733,7 +2733,7 @@ static HB_ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          AdsGetDateFormat( pucFormat, &pusLen );
          AdsSetDateFormat( ( UNSIGNED8 * ) "YYYYMMDD" );
          AdsGetLastTableUpdate( pArea->hTable, pucDate, &pusLen );
-         *(pucDate + 8) = '\0';
+         *( pucDate + 8 ) = '\0';
          hb_itemPutDS( pItem, ( char * ) pucDate );
          AdsSetDateFormat( pucFormat );
          break;

@@ -48,11 +48,6 @@ ifneq ($(strip $(HB_INC_QT_OK)),)
 
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_QT_OK), -I$(d))
 
-#
-# $Id$
-#
-
-
 CPP_SOURCES=\
 	gtqtc.cpp \
 	moc_gtqtc.cpp \

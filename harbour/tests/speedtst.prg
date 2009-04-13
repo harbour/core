@@ -253,6 +253,15 @@ STATIC FUNCTION FN_ExtSet( cFileName, cExt )
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
 
+#ifndef __HARBOUR__
+STATIC FUNCTION hb_progname()
+   RETURN "speedtst"
+#else
+#ifdef __XHARBOUR__
+STATIC FUNCTION hb_progname()
+   RETURN "speedtst"
+#endif
+#endif
 
 /*** TESTS ***/
 

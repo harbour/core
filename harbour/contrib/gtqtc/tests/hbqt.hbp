@@ -9,5 +9,3 @@ libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
 #libs=QtCore QtGui QtNetwork QtWebKit
 gui=yes
 gt=gtnul
-libspath=c:\qt\2009.01\gt\lib
-

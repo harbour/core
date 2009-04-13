@@ -416,8 +416,6 @@ HB_FUNC( HB_FGETDATETIME )
 
    if( hb_fsGetFileTime( ( UCHAR * ) hb_parcx( 1 ), &lJulian, &lMillisec ) )
    {
-
-      hb_stortdt( lJulian, lMillisec, 2 );
       if( ISBYREF( 3 ) )
       {
          char buf[ 13 ];
@@ -429,6 +427,7 @@ HB_FUNC( HB_FGETDATETIME )
       }
       else
          hb_stortdt( lJulian, lMillisec, 2 );
+
       hb_retl( TRUE );
    }
    else
