@@ -1265,8 +1265,8 @@ PROCEDURE Main( ... )
          s_aPRG_TODO := {}
          FOR EACH tmp IN s_aPRG
             IF s_lDEBUGINC
-               OutStd( "PRG", FN_ExtSet( tmp, ".prg" ),;
-                              FN_DirExtSet( tmp, cWorkDir, ".c" ), hb_osNewLine() )
+               OutStd( "hbmk: debuginc: PRG", FN_ExtSet( tmp, ".prg" ),;
+                                              FN_DirExtSet( tmp, cWorkDir, ".c" ), hb_osNewLine() )
             ENDIF
             IF ! hb_FGetDateTime( FN_ExtSet( tmp, ".prg" ), @tmp1 ) .OR. ;
                ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
@@ -1918,9 +1918,18 @@ PROCEDURE Main( ... )
          cOpt_Res := "{IR} -fo{OS}"
          cResExt := ".res"
          cBin_Link := "ilink32.exe"
-         cOpt_Link := "-Gn -C " + iif( s_lGUI, "-aa", "-ap" ) + ' -Tpe -L"{DL}" {FL} ' + iif( s_lGUI, "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( s_lMAP, "{OM}", "nul" ) + ", cw32mt.lib {LL} import32.lib,, {LS}{SCRIPT}"
+         cBin_Dyn := cBin_Link
+         cOpt_Link := '-Gn -Tpe -L"{DL}" {FL} ' + iif( s_lGUI, "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( s_lMAP, "{OM}", "nul" ) + ", cw32mt.lib {LL} import32.lib,, {LS}{SCRIPT}"
+         cOpt_Dyn  := '-Gn -Tpd -L"{DL}" {FD} ' +              "c0d32.obj"                + " {LO}, {OD}, " + iif( s_lMAP, "{OM}", "nul" ) + ", cw32mt.lib {LL} import32.lib,, {LS}{SCRIPT}"
          cLibPathPrefix := ""
          cLibPathSep := ";"
+         IF s_lGUI
+            AAdd( s_aOPTL, "-aa" )
+            AAdd( s_aOPTD, "-aa" )
+         ELSE
+            AAdd( s_aOPTL, "-ap" )
+            AAdd( s_aOPTD, "-ap" )
+         ENDIF
          IF s_lINC
             IF ! Empty( cWorkDir )
                AAdd( s_aOPTC, "-n{OW}" )
@@ -2285,7 +2294,7 @@ PROCEDURE Main( ... )
          s_aRESSRC_TODO := {}
          FOR EACH tmp IN s_aRESSRC
             IF s_lDEBUGINC
-               OutStd( "RESSRC", tmp, FN_DirExtSet( tmp, cWorkDir, cResExt ), hb_osNewLine() )
+               OutStd( "hbmk: debuginc: RESSRC", tmp, FN_DirExtSet( tmp, cWorkDir, cResExt ), hb_osNewLine() )
             ENDIF
             IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cResExt ), @tmp2 ) .OR. ;
@@ -2380,7 +2389,7 @@ PROCEDURE Main( ... )
             s_aC_DONE := {}
             FOR EACH tmp IN s_aC
                IF s_lDEBUGINC
-                  OutStd( "C", tmp, FN_DirExtSet( tmp, cWorkDir, cObjExt ), hb_osNewLine() )
+                  OutStd( "hbmk: debuginc: C", tmp, FN_DirExtSet( tmp, cWorkDir, cObjExt ), hb_osNewLine() )
                ENDIF
                IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                   ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
@@ -2400,8 +2409,8 @@ PROCEDURE Main( ... )
             s_aPRG_DONE := {}
             FOR EACH tmp IN s_aPRG
                IF s_lDEBUGINC
-                  OutStd( "CPRG", FN_DirExtSet( tmp, cWorkDir, ".c" ),;
-                                  FN_DirExtSet( tmp, cWorkDir, cObjExt ), hb_osNewLine() )
+                  OutStd( "hbmk: debuginc: CPRG", FN_DirExtSet( tmp, cWorkDir, ".c" ),;
+                                                  FN_DirExtSet( tmp, cWorkDir, cObjExt ), hb_osNewLine() )
                ENDIF
                IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp1 ) .OR. ;
                   ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
@@ -2529,7 +2538,7 @@ PROCEDURE Main( ... )
             ENDCASE
 
             IF s_lDEBUGINC
-               OutStd( "EXE", cTarget, hb_osNewLine() )
+               OutStd( "hbmk: debuginc: EXE", cTarget, hb_osNewLine() )
             ENDIF
 
             IF hb_FGetDateTime( cTarget, @tTarget )
@@ -2538,7 +2547,7 @@ PROCEDURE Main( ... )
                IF lTargetUpToDate
                   FOR EACH tmp IN ArrayAJoin( { s_aOBJ, s_aOBJUSER, s_aOBJA, s_aRESSRC, s_aRESCMP } )
                      IF s_lDEBUGINC
-                        OutStd( "EXEDEP", tmp, hb_osNewLine() )
+                        OutStd( "hbmk: debuginc: EXEDEP", tmp, hb_osNewLine() )
                      ENDIF
                      IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. tmp1 > tTarget
                         lTargetUpToDate := .F.
@@ -2551,7 +2560,7 @@ PROCEDURE Main( ... )
                IF lTargetUpToDate
                   FOR EACH tmp IN s_aLIB
                      IF s_lDEBUGINC
-                        OutStd( "EXEDEPLIB", tmp, hb_osNewLine() )
+                        OutStd( "hbmk: debuginc: EXEDEPLIB", tmp, hb_osNewLine() )
                      ENDIF
                      IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. tmp1 > tTarget
                         lTargetUpToDate := .F.
@@ -3302,7 +3311,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
    IF ! lConfigOnly
       FOR EACH aFile IN Directory( "*" + ".hbp" )
          cFileName := aFile[ F_NAME ]
-         IF !( cFileName == HBMK_CFG_NAME )
+         IF !( cFileName == HBMK_CFG_NAME ) .AND. Lower( FN_ExtGet( cFileName ) ) == ".hbp"
             IF ! t_lQuiet
                OutStd( "hbmk: Processing: " + cFileName + hb_osNewLine() )
             ENDIF
