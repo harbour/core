@@ -1356,12 +1356,12 @@ CREATE CLASS TMySQLServer
 ENDCLASS
 
 
-METHOD New( cServer, cUser, cPassword ) CLASS TMySQLServer
+METHOD New( cServer, cUser, cPassword, nPort ) CLASS TMySQLServer
 
    ::cServer := cServer
    ::cUser := cUser
    ::cPassword := cPassword
-   ::nSocket := mysql_real_connect( cServer, cUser, cPassword )
+   ::nSocket := mysql_real_connect( cServer, cUser, cPassword, nPort )
    ::lError := .F.
 
    IF Empty( ::nSocket )
