@@ -729,6 +729,31 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    }
 }
 
+static void hb_gt_wvt_Maximize( PHB_GTWVT pWVT )
+{
+   pWVT->bMaximized = TRUE;
+
+   if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
+      hb_gt_wvt_FitSize( pWVT );
+   else
+      hb_gt_wvt_FitRows( pWVT );
+
+      /* Disable "maximize" button */
+#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
+      SetWindowLong( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
+#else
+      SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
+#endif
+      SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
+                                         SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
+      ShowWindow( pWVT->hWnd, SW_HIDE );
+      ShowWindow( pWVT->hWnd, SW_NORMAL );
+
+      hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
+      if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
+         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
+}
+
 static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 {
    HDC        hdc;
@@ -1701,33 +1726,19 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          }
          return 0;
 
+      case WM_NCLBUTTONDBLCLK:
+         if( !pWVT->bMaximized )
+         {
+            hb_gt_wvt_Maximize( pWVT );
+         }
+         return 0;
+
       case WM_SYSCOMMAND:
          switch( wParam )
          {
             case SC_MAXIMIZE:
             {
-               pWVT->bMaximized = TRUE;
-
-               if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
-                  hb_gt_wvt_FitSize( pWVT );
-               else
-                  hb_gt_wvt_FitRows( pWVT );
-
-               /* Disable "maximize" button */
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-               SetWindowLong( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
-#else
-               SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
-#endif
-               SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
-                                         SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
-               ShowWindow( pWVT->hWnd, SW_HIDE );
-               ShowWindow( pWVT->hWnd, SW_NORMAL );
-
-               hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
-               if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
-                  hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
-
+               hb_gt_wvt_Maximize( pWVT );
                return 0;
             }
 

@@ -919,6 +919,25 @@ static BOOL hb_gt_wvt_FitSizeRows( PHB_GTWVT pWVT )
    return( bSizeChanged );
 }
 
+static void hb_gt_wvt_Maximize( PHB_GTWVT pWVT )
+{
+   pWVT->bMaximized = TRUE;
+   hb_gt_wvt_FitSizeRows( pWVT );
+
+   /* Disable "maximize" button */
+   {
+#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
+      DWORD style = GetWindowLong( pWVT->hWnd, GWL_STYLE );
+      SetWindowLong( pWVT->hWnd, GWL_STYLE, style &~ WS_MAXIMIZEBOX );
+#else
+      LONG_PTR style = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
+      SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, ( HB_PTRDIFF ) style &~ WS_MAXIMIZEBOX );
+#endif
+   }
+   SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
+              SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
+}
+
 static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 {
    HDC        hdc;
@@ -2073,27 +2092,19 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_gt_wvt_FitSizeRows( pWVT );
          return 0;
 
+      case WM_NCLBUTTONDBLCLK:
+         if( !pWVT->bMaximized )
+         {
+            hb_gt_wvt_Maximize( pWVT );
+         }
+         return 0;
+
       case WM_SYSCOMMAND:
          switch( wParam )
          {
             case SC_MAXIMIZE:
             {
-               pWVT->bMaximized = TRUE;
-
-               hb_gt_wvt_FitSizeRows( pWVT );
-
-               /* Disable "maximize" button */
-               {
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-                  DWORD style = GetWindowLong( pWVT->hWnd, GWL_STYLE );
-                  SetWindowLong( pWVT->hWnd, GWL_STYLE, style &~ WS_MAXIMIZEBOX );
-#else
-                  LONG_PTR style = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
-                  SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, ( HB_PTRDIFF ) style &~ WS_MAXIMIZEBOX );
-#endif
-               }
-               SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
-                          SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
+               hb_gt_wvt_Maximize( pWVT );
                return 0;
             }
             case SYS_EV_MARK:
