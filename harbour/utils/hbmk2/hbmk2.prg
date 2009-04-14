@@ -269,6 +269,7 @@ PROCEDURE Main( ... )
    LOCAL s_lSHARED := NIL
    LOCAL s_lSTATICFULL := NIL
    LOCAL s_lDEBUG := .F.
+   LOCAL s_lDEBUGINC := .F.
    LOCAL s_lNULRDD := .F.
    LOCAL s_lMAP := .F.
    LOCAL s_lSTRIP := .F.
@@ -954,6 +955,9 @@ PROCEDURE Main( ... )
       CASE cParamL == "-debug"           ; s_lDEBUG    := .T.
       CASE cParamL == "-debug-" .OR. ;
            cParamL == "-nodebug"         ; s_lDEBUG    := .F.
+      CASE cParamL == "-debuginc"        ; s_lDEBUGINC := .T.
+      CASE cParamL == "-debuginc-" .OR. ;
+           cParamL == "-nodebuginc"      ; s_lDEBUGINC := .F.
       CASE cParamL == "-nulrdd"          ; s_lNULRDD   := .T.
       CASE cParamL == "-nulrdd-"         ; s_lNULRDD   := .F.
       CASE cParamL == "-map"             ; s_lMAP      := .T.
@@ -1258,7 +1262,10 @@ PROCEDURE Main( ... )
       IF s_lINC .AND. ! s_lREBUILD
          s_aPRG_TODO := {}
          FOR EACH tmp IN s_aPRG
-            IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
+            IF s_lDEBUGINC
+               OutStd( "PRG", FN_ExtSet( tmp, ".prg" ), FN_DirExtSet( tmp, cWorkDir, ".c" ), hb_osNewLine() )
+            ENDIF
+            IF ! hb_FGetDateTime( FN_ExtSet( tmp, ".prg" ), @tmp1 ) .OR. ;
                ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
                tmp1 > tmp2
                AAdd( s_aPRG_TODO, tmp )
@@ -2260,7 +2267,7 @@ PROCEDURE Main( ... )
       ENDIF
 
       /* Merge lib lists. */
-      s_aLIB := ArrayAJoin( { s_aLIBHB, s_aLIBUSER, s_aLIB3RD, s_aLIBSYS } )
+      s_aLIB := ArrayAJoin( { s_aLIBUSER, s_aLIBHB, s_aLIB3RD, s_aLIBSYS } )
       /* Dress lib names. */
       s_aLIB := ListCookLib( s_aLIB, cLibPrefix, cLibExt )
       IF s_lSHARED .AND. ! Empty( s_aLIBSHARED )
@@ -2273,6 +2280,9 @@ PROCEDURE Main( ... )
       IF s_lINC .AND. ! s_lREBUILD
          s_aRESSRC_TODO := {}
          FOR EACH tmp IN s_aRESSRC
+            IF s_lDEBUGINC
+               OutStd( "RESSRC", tmp, FN_DirExtSet( tmp, cWorkDir, cResExt ), hb_osNewLine() )
+            ENDIF
             IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cResExt ), @tmp2 ) .OR. ;
                tmp1 > tmp2
@@ -2365,6 +2375,9 @@ PROCEDURE Main( ... )
             s_aC_TODO := {}
             s_aC_DONE := {}
             FOR EACH tmp IN s_aC
+               IF s_lDEBUGINC
+                  OutStd( "C", tmp, FN_DirExtSet( tmp, cWorkDir, cObjExt ), hb_osNewLine() )
+               ENDIF
                IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                   ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
                   tmp1 > tmp2
@@ -2382,6 +2395,9 @@ PROCEDURE Main( ... )
             s_aPRG_TODO := {}
             s_aPRG_DONE := {}
             FOR EACH tmp IN s_aPRG
+               IF s_lDEBUGINC
+                  OutStd( "CPRG", FN_DirExtSet( tmp, cWorkDir, ".c" ), FN_DirExtSet( tmp, cWorkDir, cObjExt ), hb_osNewLine() )
+               ENDIF
                IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp1 ) .OR. ;
                   ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
                   tmp1 > tmp2
@@ -2507,11 +2523,18 @@ PROCEDURE Main( ... )
             OTHERWISE       ; cTarget := PathSepToTarget( FN_ExtSet( s_cPROGNAME, cBinExt ) )
             ENDCASE
 
+            IF s_lDEBUGINC
+               OutStd( "EXE", cTarget, hb_osNewLine() )
+            ENDIF
+
             IF hb_FGetDateTime( cTarget, @tTarget )
 
                lTargetUpToDate := .T.
                IF lTargetUpToDate
                   FOR EACH tmp IN ArrayAJoin( { s_aOBJ, s_aOBJUSER, s_aOBJA, s_aRESSRC, s_aRESCMP } )
+                     IF s_lDEBUGINC
+                        OutStd( "EXEDEP", tmp, hb_osNewLine() )
+                     ENDIF
                      IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. tmp1 > tTarget
                         lTargetUpToDate := .F.
                         EXIT
@@ -2522,6 +2545,9 @@ PROCEDURE Main( ... )
                /* We need a way to find and pick libraries according to linker rules. */
                IF lTargetUpToDate
                   FOR EACH tmp IN s_aLIB
+                     IF s_lDEBUGINC
+                        OutStd( "EXEDEPLIB", tmp, hb_osNewLine() )
+                     ENDIF
                      IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. tmp1 > tTarget
                         lTargetUpToDate := .F.
                         EXIT
