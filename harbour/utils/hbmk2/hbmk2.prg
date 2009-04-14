@@ -1263,7 +1263,8 @@ PROCEDURE Main( ... )
          s_aPRG_TODO := {}
          FOR EACH tmp IN s_aPRG
             IF s_lDEBUGINC
-               OutStd( "PRG", FN_ExtSet( tmp, ".prg" ), FN_DirExtSet( tmp, cWorkDir, ".c" ), hb_osNewLine() )
+               OutStd( "PRG", FN_ExtSet( tmp, ".prg" ),;
+                              FN_DirExtSet( tmp, cWorkDir, ".c" ), hb_osNewLine() )
             ENDIF
             IF ! hb_FGetDateTime( FN_ExtSet( tmp, ".prg" ), @tmp1 ) .OR. ;
                ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
@@ -1914,7 +1915,7 @@ PROCEDURE Main( ... )
          cOpt_Res := "{IR} -fo{OS}"
          cResExt := ".res"
          cBin_Link := "ilink32.exe"
-         cOpt_Link := "-Gn -C -ap -Tpe -L{DL} {FL} c0d32.obj {LO}, {OE}, " + iif( s_lMAP, "{OM}", "nul" ) + ", cw32mt.lib {LL} import32.lib,, {LS}{SCRIPT}"
+         cOpt_Link := '-Gn -C -ap -Tpe -L"{DL}" {FL} ' + iif( s_lGUI, "c0w32.obj", "c0x32.obj" ) + ' {LO}, {OE}, ' + iif( s_lMAP, "{OM}", "nul" ) + ", cw32mt.lib {LL} import32.lib,, {LS}{SCRIPT}"
          cLibPathPrefix := ""
          cLibPathSep := ";"
          IF s_lINC
@@ -2396,7 +2397,8 @@ PROCEDURE Main( ... )
             s_aPRG_DONE := {}
             FOR EACH tmp IN s_aPRG
                IF s_lDEBUGINC
-                  OutStd( "CPRG", FN_DirExtSet( tmp, cWorkDir, ".c" ), FN_DirExtSet( tmp, cWorkDir, cObjExt ), hb_osNewLine() )
+                  OutStd( "CPRG", FN_DirExtSet( tmp, cWorkDir, ".c" ),;
+                                  FN_DirExtSet( tmp, cWorkDir, cObjExt ), hb_osNewLine() )
                ENDIF
                IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp1 ) .OR. ;
                   ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
