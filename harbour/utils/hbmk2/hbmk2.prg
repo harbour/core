@@ -114,10 +114,10 @@
 /* TODO: Add support for dynamic library creation for rest of compilers. */
 /* TODO: Cleanup on variable names and compiler configuration. */
 /* TODO: Optimizations (speed/memory). */
+/* TODO: C++/C mode. */
 /* TODO: Incremental support:
          - handle libs? (problematic)
-         - Reuse Harbour .c output for different compiler targets.
-         - 'clean' option? */
+         - Reuse Harbour .c output for different compiler targets. */
 
 /* PLANNING:
    hbgtwvg.hbp
@@ -281,6 +281,8 @@ PROCEDURE Main( ... )
    LOCAL s_lRUN := .F.
    LOCAL s_lFMSTAT := NIL /* NIL = default, .T. = on, .F. = off */
    LOCAL s_lINC := .F.
+   LOCAL s_lREBUILD := .F.
+   LOCAL s_lCLEAN := .F.
 
    LOCAL aCOMPDET
    LOCAL aCOMPDET_LOCAL
@@ -957,6 +959,8 @@ PROCEDURE Main( ... )
       CASE cParamL == "-map"             ; s_lMAP      := .T.
       CASE cParamL == "-map-" .OR. ;
            cParamL == "-nomap"           ; s_lMAP      := .F.
+      CASE cParamL == "-rebuild"         ; s_lINC      := .T. ; s_lREBUILD := .T.
+      CASE cParamL == "-clean"           ; s_lINC      := .T. ; s_lCLEAN := .T.
       CASE cParamL == "-inc"             ; s_lINC      := .T.
       CASE cParamL == "-inc-" .OR. ;
            cParamL == "-noinc"           ; s_lINC      := .F.
@@ -1251,7 +1255,7 @@ PROCEDURE Main( ... )
 
       /* Incremental */
 
-      IF s_lINC
+      IF s_lINC .AND. ! s_lREBUILD
          s_aPRG_TODO := {}
          FOR EACH tmp IN s_aPRG
             IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
@@ -1269,7 +1273,7 @@ PROCEDURE Main( ... )
 
    /* Harbour compilation */
 
-   IF ! lStopAfterInit .AND. Len( s_aPRG_TODO ) > 0
+   IF ! lStopAfterInit .AND. Len( s_aPRG_TODO ) > 0 .AND. ! s_lCLEAN
 
       IF s_lINC .AND. ! t_lQuiet
          OutStd( "Compiling Harbour sources..." + hb_osNewLine() )
@@ -2136,6 +2140,7 @@ PROCEDURE Main( ... )
       /* HACK: Override entry point requested by user or detected by us,
                and override the GT if requested by user. */
       IF ! lStopAfterCComp .AND. ;
+         ! s_lCLEAN .AND. ;
          ( s_cMAIN != NIL .OR. ;
            ! Empty( s_aLIBUSERGT ) .OR. ;
            s_cGT != NIL .OR. ;
@@ -2264,7 +2269,7 @@ PROCEDURE Main( ... )
       s_aOBJ := ListDirExt( ArrayJoin( s_aPRG, s_aC ), cWorkDir, cObjExt )
       s_aOBJUSER := ListCook( s_aOBJUSER, NIL, cObjExt )
 
-      IF s_lINC
+      IF s_lINC .AND. ! s_lREBUILD
          s_aRESSRC_TODO := {}
          FOR EACH tmp IN s_aRESSRC
             IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
@@ -2277,7 +2282,7 @@ PROCEDURE Main( ... )
          s_aRESSRC_TODO := s_aRESSRC
       ENDIF
 
-      IF Len( s_aRESSRC_TODO ) > 0 .AND. ! Empty( cBin_Res )
+      IF Len( s_aRESSRC_TODO ) > 0 .AND. ! Empty( cBin_Res ) .AND. ! s_lCLEAN
 
          IF s_lINC .AND. ! t_lQuiet
             OutStd( "Compiling resources..." + hb_osNewLine() )
@@ -2355,7 +2360,7 @@ PROCEDURE Main( ... )
       ENDIF
 
       IF nErrorLevel == 0
-         IF s_lINC
+         IF s_lINC .AND. ! s_lREBUILD
             s_aC_TODO := {}
             s_aC_DONE := {}
             FOR EACH tmp IN s_aC
@@ -2372,7 +2377,7 @@ PROCEDURE Main( ... )
             s_aC_DONE := {}
          ENDIF
 
-         IF s_lINC
+         IF s_lINC .AND. ! s_lREBUILD
             s_aPRG_TODO := {}
             s_aPRG_DONE := {}
             FOR EACH tmp IN s_aPRG
@@ -2390,7 +2395,7 @@ PROCEDURE Main( ... )
          ENDIF
       ENDIF
 
-      IF nErrorLevel == 0 .AND. ( Len( s_aPRG_TODO ) + Len( s_aC_TODO ) + iif( Empty( cBin_Link ), Len( s_aOBJUSER ) + Len( s_aOBJA ), 0 ) ) > 0
+      IF nErrorLevel == 0 .AND. ( Len( s_aPRG_TODO ) + Len( s_aC_TODO ) + iif( Empty( cBin_Link ), Len( s_aOBJUSER ) + Len( s_aOBJA ), 0 ) ) > 0 .AND. ! s_lCLEAN
 
          IF ! Empty( cBin_CompC )
 
@@ -2493,7 +2498,7 @@ PROCEDURE Main( ... )
 
          lTargetUpToDate := .F.
 
-         IF s_lINC
+         IF s_lINC .AND. ! s_lREBUILD
 
             DO CASE
             CASE lCreateLib ; cTarget := PathSepToTarget( FN_ExtSet( cLibLibPrefix + s_cPROGNAME, cLibLibExt ) )
@@ -2527,7 +2532,7 @@ PROCEDURE Main( ... )
          ENDIF
       ENDIF
 
-      IF nErrorLevel == 0 .AND. ( Len( s_aOBJ ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) > 0
+      IF nErrorLevel == 0 .AND. ( Len( s_aOBJ ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) > 0 .AND. ! s_lCLEAN
 
          IF lTargetUpToDate
             OutStd( "hbmk: Target up to date: " + cTarget + hb_osNewLine() )
@@ -2708,11 +2713,11 @@ PROCEDURE Main( ... )
          FErase( s_cCSTUB )
          FErase( FN_DirExtSet( s_cCSTUB, "", cObjExt ) )
       ENDIF
-      IF ! s_lINC
+      IF ! s_lINC .OR. s_lCLEAN
          AEval( ListDirExt( s_aPRG, cWorkDir, ".c" ), {|tmp| FErase( tmp ) } )
       ENDIF
       IF ! lStopAfterCComp .OR. lCreateLib .OR. lCreateDyn
-         IF ! s_lINC
+         IF ! s_lINC .OR. s_lCLEAN
             IF ! Empty( cResExt )
                AEval( ListDirExt( s_aRESSRC, cWorkDir, cResExt ), {|tmp| FErase( tmp ) } )
             ENDIF
@@ -2720,8 +2725,11 @@ PROCEDURE Main( ... )
          ENDIF
       ENDIF
       AEval( s_aCLEAN, {|tmp| FErase( tmp ) } )
+      IF s_lCLEAN
+         DirUnbuild( cWorkDir )
+      ENDIF
 
-      IF ! lStopAfterCComp
+      IF ! lStopAfterCComp .AND. ! s_lCLEAN
          IF nErrorLevel != 0
             PauseForKey()
          ELSE
@@ -3078,7 +3086,7 @@ STATIC FUNCTION DirDelPathSep( cDir )
 
    RETURN cDir
 
-#define hb_DirMake( d ) MakeDir( d )
+#define hb_DirCreate( d ) MakeDir( d )
 
 FUNCTION DirBuild( cDir )
    LOCAL cDirTemp
@@ -3106,12 +3114,42 @@ FUNCTION DirBuild( cDir )
             IF hb_FileExists( cDirTemp )
                RETURN .F.
             ELSEIF ! hb_DirExists( cDirTemp )
-               IF hb_DirMake( cDirTemp ) != 0
+               IF hb_DirCreate( cDirTemp ) != 0
                   RETURN .F.
                ENDIF
             ENDIF
          ENDIF
       NEXT
+   ENDIF
+
+   RETURN .T.
+
+#define hb_DirDelete( d ) DirRemove( d )
+
+FUNCTION DirUnbuild( cDir )
+   LOCAL cDirTemp
+   LOCAL tmp
+
+   IF hb_DirExists( cDir )
+
+      cDir := DirDelPathSep( cDir )
+
+      cDirTemp := cDir
+      DO WHILE ! Empty( cDirTemp )
+         IF hb_DirExists( cDirTemp )
+            IF hb_DirDelete( cDirTemp ) != 0
+               RETURN .F.
+            ENDIF
+         ENDIF
+         IF ( tmp := RAt( hb_osPathSeparator(), cDirTemp ) ) == 0
+            EXIT
+         ENDIF
+         cDirTemp := Left( cDirTemp, tmp - 1 )
+         IF ! Empty( hb_osDriveSeparator() ) .AND. ;
+            Right( cDirTemp, 1 ) == hb_osDriveSeparator()
+            EXIT
+         ENDIF
+      ENDDO
    ENDIF
 
    RETURN .T.
@@ -4067,6 +4105,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -dflag:<f>        pass flag to linker (dynamic library)" ,;
       "  -runflag:<f>      pass flag to output executable when -run option is used" ,;
       "  -inc              enable incremental build mode" ,;
+      "  -rebuild          rebuild all (in incremental build mode)" ,;
+      "  -clean            clean (in incremental build mode)" ,;
       "  -workdir:<dir>    working directory for incremental build mode" ,;
       "                    (default: arch/comp)" ,;
       "  -hbcmp            stop after creating the object files" ,;
