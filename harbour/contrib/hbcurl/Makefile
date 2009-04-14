@@ -38,6 +38,17 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+ifeq ($(HB_ARCHITECTURE),win)
+DIRS += hbcurls
+endif
+ifeq ($(HB_ARCHITECTURE),wce)
+DIRS += hbcurls
+endif
+
+ifneq ($(DIRS),)
+	include $(TOP)$(ROOT)config/dir.cf
+endif
+
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

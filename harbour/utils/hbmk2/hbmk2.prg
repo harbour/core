@@ -1942,6 +1942,7 @@ PROCEDURE Main( ... )
             ELSE
                AAdd( s_aOPTC, "-MTd -Zi" )
             ENDIF
+            AAdd( s_aOPTL, "/debug" )
          ENDIF
          IF s_lGUI
             AAdd( s_aOPTL, "/subsystem:windows" )
@@ -1966,7 +1967,7 @@ PROCEDURE Main( ... )
          cOpt_Lib := "{FA} /out:{OL} {LO}"
          cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
          cOpt_CompC := "-nologo -c {FC} -I{DI} {LC}"
-         cOpt_Link := "-nologo {LO} {DL} {FL} {LL} {LS}"
+         cOpt_Link := "-nologo /out:{OE} {LO} {DL} {FL} {LL} {LS}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
          IF s_lMAP
@@ -4157,7 +4158,9 @@ STATIC PROCEDURE ShowHelp( lLong )
       "    wce    : mingwarm, msvcarm, poccarm" ,;
       "    os2    : gcc, owatcom" ,;
       "    dos    : djgpp, owatcom" ,;
-      "    bsd, hpux, sunos: gcc" }
+      "    bsd    : gcc" ,;
+      "    hpux   : gcc" ,;
+      "    sunos  : gcc" }
 
    DEFAULT lLong TO .F.
 
