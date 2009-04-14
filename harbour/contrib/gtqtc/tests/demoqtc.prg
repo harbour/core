@@ -37,9 +37,9 @@ FUNCTION Main()
    Local nKey, lMark, lResize, lClose
    Local nHeight := 20
    Local nWidth  := Int( nHeight/2 )
-   Local cFont
-   Local nn := 0
-   Local cc := 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmn'
+   Local cFont   := 'Courier New'
+   Local nn      := 0
+   Local cc      := 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmn'
 
    Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
    Hb_GtInfo( HB_GTI_FONTWIDTH, nWidth  )
@@ -67,7 +67,8 @@ ENDIF
 
       DO CASE
       CASE nKey == K_ENTER
-         Alert( "<Enter> Pressed" )
+         //Alert( "<Enter> Pressed" )
+         @ 10,20 SAY 'Pressed Enter' COLOR 'W+/R'
 
       CASE nKey == K_F2
          lMark := Hb_GtInfo( HB_GTI_SELECTCOPY )
@@ -96,8 +97,6 @@ ENDIF
       CASE nKey == K_F12
          EXIT
 
-      CASE nKey == K_LEFT
-         Alert( 'Testing' )
       ENDCASE
    ENDDO
 

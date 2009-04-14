@@ -528,8 +528,9 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
 
 static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 {
-   pWVT->qWnd->consoleArea->sizeByFont();
    #if 0
+   pWVT->qWnd->consoleArea->sizeByFont();
+
    QFont *qFont;
    /*
     * set the font and get it's size to determine the size of the client area
@@ -1254,8 +1255,8 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       {
          PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
          pWVT->qWnd->setWindowTitle( "Harbour-QT Console" );
-         pWVT->qWnd->resize( 900,600 );
          pWVT->qWnd->consoleArea->sizeByFont();
+         pWVT->qWnd->setWindowSize();
          hb_xfree( pFileName );
       }
 
@@ -2216,10 +2217,6 @@ ConsoleArea::ConsoleArea(QWidget *parent)
     : QWidget(parent)
 {
    setAttribute(Qt::WA_StaticContents);
-   modified   = false;
-   scribbling = false;
-   myPenWidth = 1;
-   myPenColor = Qt::blue;
 
    COLORS[ 0] = BLACK;
    COLORS[ 1] = BLUE;
@@ -2238,64 +2235,125 @@ ConsoleArea::ConsoleArea(QWidget *parent)
    COLORS[14] = YELLOW;
    COLORS[15] = BRIGHT_WHITE;
 
+   ROWS = 25;
+   COLS = 80;
+
    setFocusPolicy(Qt::StrongFocus);
-   // grabKeyboard();
 }
 
 void ConsoleArea::sizeByFont(void)
 {
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+
    QPainter painter( this );
-   qFont = QFont( tr("Courier New"), 12, -1, FALSE );
-   qFont = QFont( qFont, painter.device() );
+   qFont = QFont();
+   qFont.setFamily( pWVT->fontFace );
+   qFont.setPixelSize( pWVT->fontHeight );
+   qFont.setWeight( -1 );
+   qFont.setFixedPitch( TRUE );
+   qFont        = QFont( qFont, painter.device() );
    QFontMetrics fontMetrics( qFont );
-   fontHeight = fontMetrics.height();
-   fontWidth  = fontMetrics.averageCharWidth();
-   resize( fontWidth*80, fontHeight*25 );
+   fontHeight   = fontMetrics.height();
+   fontWidth    = fontMetrics.averageCharWidth();
+   fontAscent   = fontMetrics.ascent();
+   int ls       = 0; //fontMetrics.letterSpacing();
+   windowWidth  = fontWidth * COLS;
+   windowHeight = fontHeight * ROWS;
+
+   setFont( qFont );
+
+   QWidget::update();
+#if 0
+   wsprintf( buf, "%i %i %i %i   %i, %i   %i %i", pWVT->fontWidth, ls, fontWidth, fontHeight,
+                                   windowWidth,windowHeight,width(),height() );
+   OutputDebugString( buf );
+#endif
 }
 
-bool ConsoleArea::openImage(const QString &fileName)
+void ConsoleArea::keyReleaseEvent(QKeyEvent *event)
 {
-    QImage loadedImage;
-    if (!loadedImage.load(fileName))
-        return false;
-
-    QSize newSize = loadedImage.size().expandedTo(size());
-    resizeImage(&loadedImage, newSize);
-    image = loadedImage;
-    modified = false;
-    update();
-    return true;
+   int key = event->key();
 }
 
-bool ConsoleArea::saveImage(const QString &fileName, const char *fileFormat)
+void ConsoleArea::mouseMoveEvent(QMouseEvent *event)
 {
-    QImage visibleImage = image;
-    resizeImage(&visibleImage, size());
+}
 
-    if (visibleImage.save(fileName, fileFormat)) {
-        modified = false;
-        return true;
-    } else {
-        return false;
+void ConsoleArea::mousePressEvent(QMouseEvent *event)
+{
+}
+
+void ConsoleArea::mouseReleaseEvent(QMouseEvent *event)
+{
+}
+
+void ConsoleArea::paintEvent(QPaintEvent * event)
+{
+    QPainter painter(this);
+    painter.setBackgroundMode(Qt::OpaqueMode);
+    QRect rect = event->rect();
+
+    int    iRow,iCol,startCol,len ;
+    int    iTop;
+    USHORT usChar;
+    BYTE   bColor, bAttr, bOldColor = 0;
+    char   text[ WVT_MAX_COLS ];
+
+    iTop = 0;
+    for( iRow = 0; iRow < ROWS; iRow++ )
+    {
+       iCol = startCol = 0;
+       len  = 0;
+       iTop = ( iRow * fontHeight ) + fontAscent;
+
+       text[ 0 ] = '\0';
+
+       while( iCol < COLS )
+       {
+          if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
+             break;
+
+          if( len == 0 )
+          {
+             bOldColor = bColor;
+          }
+          else if( bColor != bOldColor )
+          {
+
+             QPen pen( COLORS[ bOldColor & 0x0F ] );
+             painter.setPen( pen );
+             QBrush brush( COLORS[ bOldColor >> 4 ] );
+             painter.setBackground( brush );
+
+             text[ len ] = '\0';
+             painter.drawText( QPoint( startCol, iTop ), QString( text ) );
+
+             bOldColor = bColor;
+             startCol  = iCol;
+             len       = 0;
+          }
+          text[ len++ ] = ( char ) usChar;
+          iCol++;
+       }
+       if( len > 0 )
+       {
+          QPen pen( COLORS[ bOldColor & 0x0F ] );
+          painter.setPen( pen );
+          QBrush brush( COLORS[ bOldColor >> 4 ] );
+          painter.setBackground( brush );
+
+          text[ len ] = '\0';
+          painter.drawText( QPoint( startCol,iTop ), QString( text ) );
+       }
     }
 }
 
-void ConsoleArea::setPenColor(const QColor &newColor)
+void ConsoleArea::resizeEvent(QResizeEvent *event)
 {
-    myPenColor = newColor;
+    QWidget::resizeEvent(event);
 }
 
-void ConsoleArea::setPenWidth(int newWidth)
-{
-    myPenWidth = newWidth;
-}
-
-void ConsoleArea::clearImage()
-{
-    image.fill(qRgb(255, 255, 255));
-    modified = true;
-    update();
-}
+/*----------------------------------------------------------------------*/
 
 static void hb_gt_wvt_QTranslateKey( PHB_GTWVT pWVT, Qt::KeyboardModifiers kbm, int key, int shiftkey, int altkey, int controlkey )
 {
@@ -2679,7 +2737,6 @@ void ConsoleArea::keyPressEvent(QKeyEvent *event)
       c = K_                 ;  break;
 #endif
    default                      :
-   {
       if( ( event->key() >= 0 ) && ( event->key() <= 255 ) )
          c = event->key();
       else
@@ -2688,165 +2745,10 @@ void ConsoleArea::keyPressEvent(QKeyEvent *event)
          return ;
       }
    }
-   }
-
    hb_gt_wvt_AddCharToInputQueue( pWVT, c );
 }
 
-void ConsoleArea::keyReleaseEvent(QKeyEvent *event)
-{
-   int key = event->key();
-}
-
-void ConsoleArea::mouseMoveEvent(QMouseEvent *event)
-{
-    if ((event->buttons() & Qt::LeftButton) && scribbling)
-        drawLineTo(event->pos());
-}
-
-void ConsoleArea::mousePressEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton) {
-        lastPoint = event->pos();
-        scribbling = true;
-    }
-}
-
-void ConsoleArea::mouseReleaseEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton && scribbling) {
-        drawLineTo(event->pos());
-        scribbling = false;
-    }
-}
-
-void ConsoleArea::paintEvent(QPaintEvent * event)
-{
-    QPainter painter(this);
-    QRect rect = event->rect();
-    //painter.drawImage(QPoint(0, 0), image);
-    {
-       int hgt = height();
-       int fntHeight = (hgt/25);
-       fntHeight = 14;
-       QFont font( tr( "Courier New" ), fntHeight, 10, FALSE );
-       font = QFont(font, painter.device());
-       QFontMetrics fontMetrics( font );
-       int height = fontMetrics.height();
-       painter.setFont(font);
-       painter.setBackgroundMode(Qt::OpaqueMode);
-       {
-          int    iRow,iCol,startCol,len ;
-          int    iTop;
-          USHORT usChar;
-          BYTE   bColor, bAttr, bOldColor = 0;
-          char   text[ 4000 ];
-
-          iTop = 0;
-          for( iRow = 0; iRow <= 24; iRow++ )
-          {
-             iCol = startCol = 0;
-             len  = 0;
-             iTop = ( iRow * height ) + height;
-
-             while( iCol <= 79 )
-             {
-                if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
-                   break;
-
-                if( len == 0 )
-                {
-                   bOldColor = bColor;
-                }
-                else if( bColor != bOldColor )
-                {
-                   QPen pen( COLORS[ bOldColor & 0x0F ] );
-                   painter.setPen( pen );
-                   QBrush brush( COLORS[ bOldColor >> 4 ] );
-                   painter.setBackground( brush );
-
-OutputDebugString( "KKKK len=%i bOldColor=%i bColor=%i" );
-
-                   painter.drawText( QPointF( startCol,iTop ), QString( text ) );
-
-                   bOldColor = bColor;
-                   startCol  = iCol;
-                   len       = 0;
-                }
-                text[ len++ ] = ( char ) usChar;
-                iCol++;
-             }
-             if( len > 0 )
-             {
-                QPen pen( COLORS[ bOldColor & 0x0F ] );
-                painter.setPen( pen );
-                QBrush brush( COLORS[ bOldColor >> 4 ] );
-                painter.setBackground( brush );
-//OutputDebugString( "mmmmmm len=%i bOldColor=%i bColor=%i" );
-                painter.drawText(QPointF(startCol,iTop),QString(text));
-             }
-          }
-       }
-    }
-}
-
-void ConsoleArea::resizeEvent(QResizeEvent *event)
-{
-    if (width() > image.width() || height() > image.height()) {
-        int newWidth = qMax(width() + 128, image.width());
-        int newHeight = qMax(height() + 128, image.height());
-        resizeImage(&image, QSize(newWidth, newHeight));
-        update();
-    }
-    QWidget::resizeEvent(event);
-}
-
-void ConsoleArea::drawLineTo(const QPoint &endPoint)
-{
-    QPainter painter(&image);
-    painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
-                        Qt::RoundJoin));
-    painter.drawLine(lastPoint, endPoint);
-    modified = true;
-
-    int rad = (myPenWidth / 2) + 2;
-    update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
-    lastPoint = endPoint;
-}
-
-void ConsoleArea::resizeImage(QImage *image, const QSize &newSize)
-{
-    if (image->size() == newSize)
-        return;
-
-    QImage newImage(newSize, QImage::Format_RGB32);
-    newImage.fill(qRgb(255, 255, 255));
-    QPainter painter(&newImage);
-    painter.drawImage(QPoint(0, 0), *image);
-    *image = newImage;
-}
-
-void ConsoleArea::print()
-{
-#ifndef QT_NO_PRINTER
-    QPrinter printer(QPrinter::HighResolution);
-
-    QPrintDialog *printDialog = new QPrintDialog(&printer, this);
-    if (printDialog->exec() == QDialog::Accepted) {
-        QPainter painter(&printer);
-        QRect rect = painter.viewport();
-        QSize size = image.size();
-        size.scale(rect.size(), Qt::KeepAspectRatio);
-        painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
-        painter.setWindow(image.rect());
-        painter.drawImage(0, 0, image);
-    }
-#endif // QT_NO_PRINTER
-}
-
-static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int altkey, int controlkey )
-{
-}
+/*----------------------------------------------------------------------*/
 
 static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -2962,187 +2864,27 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
 
 /*----------------------------------------------------------------------*/
 /*
- *
+ *                           Class MainWindow
  */
 /*----------------------------------------------------------------------*/
 
 MainWindow::MainWindow()
 {
-    consoleArea = new ConsoleArea;
-    setCentralWidget(consoleArea);
+   consoleArea = new ConsoleArea;
+   setCentralWidget(consoleArea);
 
-    setFocusPolicy(Qt::StrongFocus);
-
-    createActions();
-//    createMenus();
+   setFocusPolicy(Qt::StrongFocus);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
    event->accept();
    hbqt_exit( pGT );
-#if 0
-    if (maybeSave()) {
-        event->accept();
-    } else {
-        event->ignore();
-    }
-#endif
 }
-
-void MainWindow::open()
-{
-    if (maybeSave()) {
-        QString fileName = QFileDialog::getOpenFileName(this,
-                                   tr("Open File"), QDir::currentPath());
-        if (!fileName.isEmpty())
-            consoleArea->openImage(fileName);
-    }
-}
-
-void MainWindow::save()
-{
-    QAction *action = qobject_cast<QAction *>(sender());
-    QByteArray fileFormat = action->data().toByteArray();
-    saveFile(fileFormat);
-}
-
-void MainWindow::penColor()
-{
-    QColor newColor = QColorDialog::getColor(consoleArea->penColor());
-    if (newColor.isValid())
-        consoleArea->setPenColor(newColor);
-}
-
-void MainWindow::penWidth()
-{
-    bool ok;
-    int newWidth = QInputDialog::getInteger(this, tr("Scribble"),
-                                            tr("Select pen width:"),
-                                            consoleArea->penWidth(),
-                                            1, 50, 1, &ok);
-    if (ok)
-        consoleArea->setPenWidth(newWidth);
-}
-
-void MainWindow::about()
-{
-    QMessageBox::about(this, tr("About Scribble"),
-            tr("<p>The <b>Console</b> example shows how to use QMainWindow as the "
-               "base widget for an application, and how to reimplement some of "
-               "QWidget's event handlers to receive the events generated for "
-               "the application's widgets:</p><p> We reimplement the mouse event "
-               "handlers to facilitate drawing, the paint event handler to "
-               "update the application and the resize event handler to optimize "
-               "the application's appearance. In addition we reimplement the "
-               "close event handler to intercept the close events before "
-               "terminating the application.</p><p> The example also demonstrates "
-               "how to use QPainter to draw an image in real time, as well as "
-               "to repaint widgets.</p>"));
-}
-
-void MainWindow::createActions()
-{
-    openAct = new QAction(tr("&Open..."), this);
-    openAct->setShortcut(tr("Ctrl+O"));
-    connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
-
-    foreach (QByteArray format, QImageWriter::supportedImageFormats())
-    {
-        QString text = tr("%1...").arg(QString(format).toUpper());
-
-        QAction *action = new QAction(text, this);
-        action->setData(format);
-        connect(action, SIGNAL(triggered()), this, SLOT(save()));
-        saveAsActs.append(action);
-    }
-
-    printAct = new QAction(tr("&Print..."), this);
-    connect(printAct, SIGNAL(triggered()), consoleArea, SLOT(print()));
-
-    exitAct = new QAction(tr("E&xit"), this);
-    exitAct->setShortcut(tr("Ctrl+Q"));
-    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
-
-    penColorAct = new QAction(tr("&Pen Color..."), this);
-    connect(penColorAct, SIGNAL(triggered()), this, SLOT(penColor()));
-
-    penWidthAct = new QAction(tr("Pen &Width..."), this);
-    connect(penWidthAct, SIGNAL(triggered()), this, SLOT(penWidth()));
-
-    clearScreenAct = new QAction(tr("&Clear Screen"), this);
-    clearScreenAct->setShortcut(tr("Ctrl+L"));
-    connect(clearScreenAct, SIGNAL(triggered()),
-            consoleArea, SLOT(clearImage()));
-
-    aboutAct = new QAction(tr("&About"), this);
-    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
-
-    aboutQtAct = new QAction(tr("About &Qt"), this);
-    connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-}
-
-void MainWindow::createMenus()
-{
-    saveAsMenu = new QMenu(tr("&Save As"), this);
-    foreach (QAction *action, saveAsActs)
-        saveAsMenu->addAction(action);
-
-    fileMenu = new QMenu(tr("&File"), this);
-    fileMenu->addAction(openAct);
-    fileMenu->addMenu(saveAsMenu);
-    fileMenu->addAction(printAct);
-    fileMenu->addSeparator();
-    fileMenu->addAction(exitAct);
-
-    optionMenu = new QMenu(tr("&Options"), this);
-    optionMenu->addAction(penColorAct);
-    optionMenu->addAction(penWidthAct);
-    optionMenu->addSeparator();
-    optionMenu->addAction(clearScreenAct);
-
-    helpMenu = new QMenu(tr("&Help"), this);
-    helpMenu->addAction(aboutAct);
-    helpMenu->addAction(aboutQtAct);
-
-    menuBar()->addMenu(fileMenu);
-    menuBar()->addMenu(optionMenu);
-    menuBar()->addMenu(helpMenu);
-}
-
-bool MainWindow::maybeSave()
-{
-    if (consoleArea->isModified()) {
-       QMessageBox::StandardButton ret;
-       ret = QMessageBox::warning(this, tr("Scribble"),
-                          tr("The image has been modified.\n"
-                             "Do you want to save your changes?"),
-                          QMessageBox::Save | QMessageBox::Discard
-                          | QMessageBox::Cancel);
-        if (ret == QMessageBox::Save) {
-            return saveFile("png");
-        } else if (ret == QMessageBox::Cancel) {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool MainWindow::saveFile(const QByteArray &fileFormat)
-{
-    QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
-
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
-                               initialPath,
-                               tr("%1 Files (*.%2);;All Files (*)")
-                               .arg(QString(fileFormat.toUpper()))
-                               .arg(QString(fileFormat)));
-    if (fileName.isEmpty()) {
-        return false;
-    } else {
-        return consoleArea->saveImage(fileName, fileFormat);
-    }
-}
-
 /*----------------------------------------------------------------------*/
 
+void MainWindow::setWindowSize( void )
+{
+   resize( consoleArea->windowWidth, consoleArea->windowHeight );
+}
+/*----------------------------------------------------------------------*/

@@ -179,6 +179,8 @@ void hbqt_exit( PHB_GT );
 
 /*----------------------------------------------------------------------*/
 
+class MainWindow;
+
 class ConsoleArea : public QWidget
 {
     Q_OBJECT
@@ -188,21 +190,18 @@ public:
 
     PHB_GT pGT;
 
-    bool   openImage(const QString &fileName);
-    bool   saveImage(const QString &fileName, const char *fileFormat);
-    void   setPenColor(const QColor &newColor);
-    void   setPenWidth(int newWidth);
-
-    bool   isModified() const { return modified; }
-    QColor penColor() const { return myPenColor; }
-    int    penWidth() const { return myPenWidth; }
-
     QRgb   COLORS[ 16 ];
     void   sizeByFont(void);
 
-public slots:
-    void   clearImage();
-    void   print();
+    int    fontHeight;
+    int    fontWidth;
+    int    fontAscent;
+
+    int    ROWS;
+    int    COLS;
+    int    windowWidth, windowHeight;
+
+    char   buf[ 80 ];
 
 protected:
     void   keyPressEvent(QKeyEvent *event);
@@ -214,19 +213,7 @@ protected:
     void   resizeEvent(QResizeEvent *event);
 
 private:
-    void   drawLineTo(const QPoint &endPoint);
-    void   resizeImage(QImage *image, const QSize &newSize);
-
-    bool   modified;
-    bool   scribbling;
-    int    myPenWidth;
-    QColor myPenColor;
-    QImage image;
-    QPoint lastPoint;
-
     QFont  qFont;
-    int    fontHeight;
-    int    fontWidth;
 };
 
 /*----------------------------------------------------------------------*/
@@ -241,36 +228,11 @@ public:
     ConsoleArea *consoleArea;
     PHB_GT      pGT;
 
+    void setWindowSize( void );
+
 protected:
     void closeEvent(QCloseEvent *event);
 
-private slots:
-    void open();
-    void save();
-    void penColor();
-    void penWidth();
-    void about();
-
-private:
-    void createActions();
-    void createMenus();
-    bool maybeSave();
-    bool saveFile(const QByteArray &fileFormat);
-
-    QMenu *saveAsMenu;
-    QMenu *fileMenu;
-    QMenu *optionMenu;
-    QMenu *helpMenu;
-
-    QAction *openAct;
-    QList<QAction *> saveAsActs;
-    QAction *exitAct;
-    QAction *penColorAct;
-    QAction *penWidthAct;
-    QAction *printAct;
-    QAction *clearScreenAct;
-    QAction *aboutAct;
-    QAction *aboutQtAct;
 };
 
 /*----------------------------------------------------------------------*/

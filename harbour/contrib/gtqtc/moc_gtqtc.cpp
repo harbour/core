@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'gtqtc.h'
 **
-** Created: Fri Apr 10 21:42:34 2009
+** Created: Mon Apr 13 22:15:05 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,20 +23,16 @@ static const uint qt_meta_data_ConsoleArea[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   12, // methods
+       0,    0, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
-
- // slots: signature, parameters, type, tag, flags
-      13,   12,   12,   12, 0x0a,
-      26,   12,   12,   12, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_ConsoleArea[] = {
-    "ConsoleArea\0\0clearImage()\0print()\0"
+    "ConsoleArea\0"
 };
 
 const QMetaObject ConsoleArea::staticMetaObject = {
@@ -62,14 +58,6 @@ int ConsoleArea::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     _id = QWidget::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
-    if (_c == QMetaObject::InvokeMetaMethod) {
-        switch (_id) {
-        case 0: clearImage(); break;
-        case 1: print(); break;
-        default: ;
-        }
-        _id -= 2;
-    }
     return _id;
 }
 static const uint qt_meta_data_MainWindow[] = {
@@ -78,24 +66,16 @@ static const uint qt_meta_data_MainWindow[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   12, // methods
+       0,    0, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
-
- // slots: signature, parameters, type, tag, flags
-      12,   11,   11,   11, 0x08,
-      19,   11,   11,   11, 0x08,
-      26,   11,   11,   11, 0x08,
-      37,   11,   11,   11, 0x08,
-      48,   11,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
-    "MainWindow\0\0open()\0save()\0penColor()\0"
-    "penWidth()\0about()\0"
+    "MainWindow\0"
 };
 
 const QMetaObject MainWindow::staticMetaObject = {
@@ -121,17 +101,6 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     _id = QMainWindow::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
-    if (_c == QMetaObject::InvokeMetaMethod) {
-        switch (_id) {
-        case 0: open(); break;
-        case 1: save(); break;
-        case 2: penColor(); break;
-        case 3: penWidth(); break;
-        case 4: about(); break;
-        default: ;
-        }
-        _id -= 5;
-    }
     return _id;
 }
 QT_END_MOC_NAMESPACE
