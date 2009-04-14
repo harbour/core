@@ -142,6 +142,7 @@ REQUEST HB_GT_CGI_DEFAULT
 
 REQUEST hbmk_ARCH
 REQUEST hbmk_COMP
+REQUEST hbmk_KEYW
 
 THREAD STATIC t_lQuiet := .F.
 THREAD STATIC t_lInfo := .F.
@@ -149,6 +150,9 @@ THREAD STATIC t_cARCH
 THREAD STATIC t_cCOMP
 THREAD STATIC t_aLIBCOREGT
 THREAD STATIC t_cGTDEFAULT
+
+THREAD STATIC t_lMT := .F.
+THREAD STATIC t_lDEBUG := .F.
 
 THREAD STATIC t_cCCPATH
 THREAD STATIC t_cCCPREFIX
@@ -264,11 +268,9 @@ PROCEDURE Main( ... )
    LOCAL s_cMAIN := NIL
 
    LOCAL s_lGUI := .F.
-   LOCAL s_lMT := .F.
    LOCAL s_lCPP := .F.
    LOCAL s_lSHARED := NIL
    LOCAL s_lSTATICFULL := NIL
-   LOCAL s_lDEBUG := .F.
    LOCAL s_lDEBUGINC := .F.
    LOCAL s_lNULRDD := .F.
    LOCAL s_lMAP := .F.
@@ -816,11 +818,11 @@ PROCEDURE Main( ... )
 
    /* Process environment */
 
-   IF    Lower( GetEnv( "HB_MT"     ) ) == "mt" ; s_lMT     := .T. ; ENDIF /* Compatibility */
-   IF ValueIsT( GetEnv( "HB_MT"     ) )         ; s_lMT     := .T. ; ENDIF
+   IF    Lower( GetEnv( "HB_MT"     ) ) == "mt" ; t_lMT     := .T. ; ENDIF /* Compatibility */
+   IF ValueIsT( GetEnv( "HB_MT"     ) )         ; t_lMT     := .T. ; ENDIF
    IF ValueIsT( GetEnv( "HB_GUI"    ) )         ; s_lGUI    := .T. ; ENDIF
    IF ValueIsT( GetEnv( "HB_SHARED" ) )         ; s_lSHARED := .T. ; s_lSTATICFULL := .F. ; ENDIF
-   IF ValueIsT( GetEnv( "HB_DEBUG"  ) )         ; s_lDEBUG  := .T. ; ENDIF
+   IF ValueIsT( GetEnv( "HB_DEBUG"  ) )         ; t_lDEBUG  := .T. ; ENDIF
    IF ValueIsT( GetEnv( "HB_NULRDD" ) )         ; s_lNULRDD := .T. ; ENDIF
 
    IF Lower( Left( GetEnv( "HB_GT" ), 2 ) ) == "gt"
@@ -893,10 +895,10 @@ PROCEDURE Main( ... )
                    @s_aOPTC,;
                    @s_aOPTL,;
                    @s_lGUI,;
-                   @s_lMT,;
+                   @t_lMT,;
                    @s_lSHARED,;
                    @s_lSTATICFULL,;
-                   @s_lDEBUG,;
+                   @t_lDEBUG,;
                    @s_lNULRDD,;
                    @s_lMAP,;
                    @s_lSTRIP,;
@@ -940,8 +942,8 @@ PROCEDURE Main( ... )
            cParamL == "-mwindows"        ; s_lGUI      := .T. /* Compatibility */
       CASE cParamL == "-std" .OR. ;
            cParamL == "-mconsole"        ; s_lGUI      := .F. /* Compatibility */
-      CASE cParamL == "-mt"              ; s_lMT       := .T.
-      CASE cParamL == "-st"              ; s_lMT       := .F.
+      CASE cParamL == "-mt"              ; t_lMT       := .T.
+      CASE cParamL == "-st"              ; t_lMT       := .F.
       CASE cParamL == "-shared"          ; s_lSHARED   := .T. ; s_lSTATICFULL := .F.
       CASE cParamL == "-static"          ; s_lSHARED   := .F. ; s_lSTATICFULL := .F.
       CASE cParamL == "-fullstatic"      ; s_lSHARED   := .F. ; s_lSTATICFULL := .T.
@@ -952,9 +954,9 @@ PROCEDURE Main( ... )
          s_lBLDFLGP := "p" $ cParam
          s_lBLDFLGC := "c" $ cParam
          s_lBLDFLGL := "l" $ cParam
-      CASE cParamL == "-debug"           ; s_lDEBUG    := .T.
+      CASE cParamL == "-debug"           ; t_lDEBUG    := .T.
       CASE cParamL == "-debug-" .OR. ;
-           cParamL == "-nodebug"         ; s_lDEBUG    := .F.
+           cParamL == "-nodebug"         ; t_lDEBUG    := .F.
       CASE cParamL == "-debuginc"        ; s_lDEBUGINC := .T.
       CASE cParamL == "-debuginc-" .OR. ;
            cParamL == "-nodebuginc"      ; s_lDEBUGINC := .F.
@@ -1158,10 +1160,10 @@ PROCEDURE Main( ... )
             @s_aOPTC,;
             @s_aOPTL,;
             @s_lGUI,;
-            @s_lMT,;
+            @t_lMT,;
             @s_lSHARED,;
             @s_lSTATICFULL,;
-            @s_lDEBUG,;
+            @t_lDEBUG,;
             @s_lNULRDD,;
             @s_lMAP,;
             @s_lSTRIP,;
@@ -1365,14 +1367,14 @@ PROCEDURE Main( ... )
       DO CASE
       CASE t_cARCH $ "bsd|linux|hpux|sunos" .OR. t_cARCH == "darwin" /* Separated to avoid match with 'win' */
          IF Empty( cPrefix )
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt" + cPostfix,;
+            s_aLIBSHARED := { iif( t_lMT, "harbourmt" + cPostfix,;
                                           "harbour"   + cPostfix ) }
          ELSE
-            s_aLIBSHARED := { iif( s_lMT, cPrefix + cDynLibNamePrefix + "harbourmt" + cPostfix + cDynLibExt,;
+            s_aLIBSHARED := { iif( t_lMT, cPrefix + cDynLibNamePrefix + "harbourmt" + cPostfix + cDynLibExt,;
                                           cPrefix + cDynLibNamePrefix + "harbour"   + cPostfix + cDynLibExt ) }
          ENDIF
       CASE t_cARCH $ "os2|win|wce"
-         s_aLIBSHARED := { iif( s_lMT, cDynLibNamePrefix + "harbourmt",;
+         s_aLIBSHARED := { iif( t_lMT, cDynLibNamePrefix + "harbourmt",;
                                        cDynLibNamePrefix + "harbour" ) }
       OTHERWISE
          s_aLIBSHARED := NIL
@@ -1407,7 +1409,7 @@ PROCEDURE Main( ... )
 
       /* Assemble library list */
 
-      s_aLIBVM := iif( s_lMT, aLIB_BASE_MT, aLIB_BASE_ST )
+      s_aLIBVM := iif( t_lMT, aLIB_BASE_MT, aLIB_BASE_ST )
       aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, t_aLIBCOREGT } )
 
       IF ! Empty( s_cGT ) .AND. !( Lower( s_cGT ) == "gtnul" )
@@ -1519,7 +1521,7 @@ PROCEDURE Main( ... )
          /* Add system libraries */
          IF ! s_lSHARED
             AAdd( s_aLIBSYS, "m" )
-            IF s_lMT
+            IF t_lMT
                AAdd( s_aLIBSYS, "pthread" )
             ENDIF
             DO CASE
@@ -1560,7 +1562,7 @@ PROCEDURE Main( ... )
          ENDIF
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+            AAdd( s_aLIBFM, iif( t_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
       CASE ( t_cARCH == "win" .AND. t_cCOMP == "gcc" ) .OR. ;
@@ -1629,20 +1631,20 @@ PROCEDURE Main( ... )
          ENDIF
          DO CASE
          CASE t_cCOMP == "mingw64"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-x64",;
+            s_aLIBSHARED := { iif( t_lMT, "harbourmt-" + cDL_Version_Alter + "-x64",;
                                           "harbour-" + cDL_Version_Alter + "-x64" ) }
          CASE t_cCOMP == "mingwarm"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm",;
+            s_aLIBSHARED := { iif( t_lMT, "harbourmt-" + cDL_Version_Alter + "-arm",;
                                           "harbour-" + cDL_Version_Alter + "-arm" ) }
          OTHERWISE
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
+            s_aLIBSHARED := { iif( t_lMT, "harbourmt-" + cDL_Version_Alter,;
                                           "harbour-" + cDL_Version_Alter ) }
          ENDCASE
 
          s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+            AAdd( s_aLIBFM, iif( t_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
          IF t_cCOMP $ "mingw|mingw64|mingwarm" .AND. Len( s_aRESSRC ) > 0
@@ -1695,7 +1697,7 @@ PROCEDURE Main( ... )
          ENDIF
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+            AAdd( s_aLIBFM, iif( t_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
       CASE t_cARCH == "dos" .AND. t_cCOMP == "djgpp"
@@ -1760,7 +1762,7 @@ PROCEDURE Main( ... )
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
-         IF s_lDEBUG
+         IF t_lDEBUG
             cOpt_Link := "DEBUG ALL" + cOpt_Link
          ENDIF
          IF s_lMAP
@@ -1787,7 +1789,7 @@ PROCEDURE Main( ... )
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
-         IF s_lMT
+         IF t_lMT
             AAdd( s_aOPTC, "-bm" )
          ENDIF
          IF s_lGUI
@@ -1799,14 +1801,14 @@ PROCEDURE Main( ... )
             AAdd( s_aOPTL, "RU CON" ) /* TOFIX */
             AAdd( s_aOPTL, "SYSTEM NT" ) /* TOFIX */
          ENDIF
-         IF s_lDEBUG
+         IF t_lDEBUG
             cOpt_Link := "DEBUG ALL" + cOpt_Link
          ENDIF
          IF s_lMAP
             AAdd( s_aOPTL, "OP MAP" )
          ENDIF
          s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + cLibExt,;
+         s_aLIBSHARED := { iif( t_lMT, "harbourmt-" + cDL_Version_Alter + cLibExt,;
                                        "harbour-" + cDL_Version_Alter + cLibExt ) }
 
          IF s_lSHARED
@@ -1821,7 +1823,7 @@ PROCEDURE Main( ... )
          ENDIF
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+            AAdd( s_aLIBFM, iif( t_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
       CASE t_cARCH == "os2" .AND. t_cCOMP == "owatcom"
@@ -1844,10 +1846,10 @@ PROCEDURE Main( ... )
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
-         IF s_lDEBUG
+         IF t_lDEBUG
             cOpt_Link := "DEBUG ALL" + cOpt_Link
          ENDIF
-         IF s_lMT
+         IF t_lMT
             AAdd( s_aOPTC, "-bm" )
          ENDIF
          IF s_lMAP
@@ -1855,7 +1857,7 @@ PROCEDURE Main( ... )
          ENDIF
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+            AAdd( s_aLIBFM, iif( t_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
       CASE t_cARCH == "linux" .AND. t_cCOMP == "owatcom"
@@ -1878,10 +1880,10 @@ PROCEDURE Main( ... )
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
-         IF s_lMT
+         IF t_lMT
             AAdd( s_aOPTC, "-bm" )
          ENDIF
-         IF s_lDEBUG
+         IF t_lDEBUG
             cOpt_Link := "DEBUG ALL" + cOpt_Link
          ENDIF
          IF s_lMAP
@@ -1889,13 +1891,14 @@ PROCEDURE Main( ... )
          ENDIF
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+            AAdd( s_aLIBFM, iif( t_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
       /* Misc */
       CASE t_cARCH == "win" .AND. t_cCOMP == "bcc"
-         IF s_lDEBUG
+         IF t_lDEBUG
             AAdd( s_aOPTC, "-y -v" )
+            AAdd( s_aOPTL, "-v" )
          ELSE
             AAdd( s_aCLEAN, PathSepToTarget( FN_ExtSet( s_cPROGNAME, ".tds" ) ) )
          ENDIF
@@ -1915,7 +1918,7 @@ PROCEDURE Main( ... )
          cOpt_Res := "{IR} -fo{OS}"
          cResExt := ".res"
          cBin_Link := "ilink32.exe"
-         cOpt_Link := '-Gn -C -ap -Tpe -L"{DL}" {FL} ' + iif( s_lGUI, "c0w32.obj", "c0x32.obj" ) + ' {LO}, {OE}, ' + iif( s_lMAP, "{OM}", "nul" ) + ", cw32mt.lib {LL} import32.lib,, {LS}{SCRIPT}"
+         cOpt_Link := "-Gn -C " + iif( s_lGUI, "-aa", "-ap" ) + ' -Tpe -L"{DL}" {FL} ' + iif( s_lGUI, "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( s_lMAP, "{OM}", "nul" ) + ", cw32mt.lib {LL} import32.lib,, {LS}{SCRIPT}"
          cLibPathPrefix := ""
          cLibPathSep := ";"
          IF s_lINC
@@ -1934,17 +1937,17 @@ PROCEDURE Main( ... )
          IF s_lSHARED
             AAdd( s_aLIBPATH, "{DB}" )
          ENDIF
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-bcc" + cLibExt,;
+         s_aLIBSHARED := { iif( t_lMT, "harbourmt-" + cDL_Version_Alter + "-bcc" + cLibExt,;
                                        "harbour-" + cDL_Version_Alter + "-bcc" + cLibExt ) }
          s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+            AAdd( s_aLIBFM, iif( t_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
       CASE ( t_cARCH == "win" .AND. t_cCOMP $ "msvc|msvc64|msvcia64|icc|iccia64" ) .OR. ;
            ( t_cARCH == "wce" .AND. t_cCOMP == "msvcarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
-         IF s_lDEBUG
+         IF t_lDEBUG
             IF t_cCOMP == "msvcarm"
                AAdd( s_aOPTC, "-Zi" )
             ELSE
@@ -2028,16 +2031,16 @@ PROCEDURE Main( ... )
          s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
          DO CASE
          CASE t_cCOMP $ "msvc|icc"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + cLibExt,;
+            s_aLIBSHARED := { iif( t_lMT, "harbourmt-" + cDL_Version_Alter + cLibExt,;
                                           "harbour-" + cDL_Version_Alter + cLibExt ) }
          CASE t_cCOMP == "msvc64"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-x64" + cLibExt,;
+            s_aLIBSHARED := { iif( t_lMT, "harbourmt-" + cDL_Version_Alter + "-x64" + cLibExt,;
                                           "harbour-" + cDL_Version_Alter + "-x64" + cLibExt ) }
          CASE t_cCOMP $ "msvcia64|iccia64"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-ia64" + cLibExt,;
+            s_aLIBSHARED := { iif( t_lMT, "harbourmt-" + cDL_Version_Alter + "-ia64" + cLibExt,;
                                           "harbour-" + cDL_Version_Alter + "-ia64" + cLibExt ) }
          CASE t_cCOMP == "msvcarm"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm" + cLibExt,;
+            s_aLIBSHARED := { iif( t_lMT, "harbourmt-" + cDL_Version_Alter + "-arm" + cLibExt,;
                                           "harbour-" + cDL_Version_Alter + "-arm" + cLibExt ) }
          ENDCASE
 
@@ -2050,7 +2053,7 @@ PROCEDURE Main( ... )
          ENDIF
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+            AAdd( s_aLIBFM, iif( t_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
       CASE ( t_cARCH == "win" .AND. t_cCOMP == "pocc" ) .OR. ;
@@ -2093,7 +2096,7 @@ PROCEDURE Main( ... )
          cOpt_Res := "/Fo{OS} {IR}"
          cResExt := ".res"
          cOpt_Lib := "{FA} /out:{OL} {LO}"
-         IF s_lMT
+         IF t_lMT
             AAdd( s_aOPTC, "/MT" )
          ENDIF
          IF !( lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn )
@@ -2108,26 +2111,26 @@ PROCEDURE Main( ... )
          IF s_lMAP
             AAdd( s_aOPTL, "/map" )
          ENDIF
-         IF s_lDEBUG
+         IF t_lDEBUG
             AAdd( s_aOPTL, "/debug" )
          ENDIF
          s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
          DO CASE
          CASE t_cCOMP == "pocc64"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-x64" + cLibExt,;
+            s_aLIBSHARED := { iif( t_lMT, "harbourmt-" + cDL_Version_Alter + "-x64" + cLibExt,;
                                           "harbour-" + cDL_Version_Alter + "-x64" + cLibExt ) }
          CASE t_cCOMP == "poccarm"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm" + cLibExt,;
+            s_aLIBSHARED := { iif( t_lMT, "harbourmt-" + cDL_Version_Alter + "-arm" + cLibExt,;
                                           "harbour-" + cDL_Version_Alter + "-arm" + cLibExt ) }
          OTHERWISE
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + cLibExt,;
+            s_aLIBSHARED := { iif( t_lMT, "harbourmt-" + cDL_Version_Alter + cLibExt,;
                                           "harbour-" + cDL_Version_Alter + cLibExt ) }
          ENDCASE
 
          s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+            AAdd( s_aLIBFM, iif( t_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
       /* TODO */
@@ -2739,7 +2742,11 @@ PROCEDURE Main( ... )
       /* Cleanup */
 
       IF ! Empty( s_cCSTUB )
-         FErase( s_cCSTUB )
+         IF hb_ArgCheck( "debugstub" )
+            OutStd( "hbmk: Stub kept for debug: " + s_cCSTUB + hb_osNewLine() )
+         ELSE
+            FErase( s_cCSTUB )
+         ENDIF
          FErase( FN_DirExtSet( s_cCSTUB, "", cObjExt ) )
       ENDIF
       IF ! s_lINC .OR. s_lCLEAN
@@ -3629,7 +3636,9 @@ STATIC FUNCTION ArchCompFilter( cItem )
    LOCAL xResult
    LOCAL cValue
 
-   LOCAL cExpr := "( hbmk_ARCH() == Lower( '%1' ) .OR. hbmk_COMP() == Lower( '%1' ) )"
+   LOCAL cExpr := "( hbmk_ARCH() == Lower( '%1' ) .OR. " +;
+                    "hbmk_COMP() == Lower( '%1' ) .OR. " +;
+                    "hbmk_KEYW( Lower( '%' ) ) )"
 
    IF ( nStart := At( "{", cItem ) ) > 0 .AND. ;
       ( nEnd := hb_At( "}", cItem, nStart ) ) > 0
@@ -4072,6 +4081,10 @@ FUNCTION hbmk_ARCH()
 /* Keep this public, it's used from macro. */
 FUNCTION hbmk_COMP()
    RETURN t_cCOMP
+
+FUNCTION hbmk_KEYW( cKeyword )
+   RETURN cKeyword == iif( t_lMT   , "mt"   , "st"      ) .OR. ;
+          cKeyword == iif( t_lDEBUG, "debug", "nodebug" )
 
 STATIC PROCEDURE PauseForKey()
 

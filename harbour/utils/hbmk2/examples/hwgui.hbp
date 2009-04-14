@@ -2,7 +2,5 @@
 # $Id$
 #
 
-{win}libs=hwgui procmisc hwg_qhtm
-
-{linux}libs=hwgui procmisc hbxml
-{linux}ldflags="`pkg-config --libs gtk+-2.0 --libs libgnomeprint-2.2`"
+{win}libs=hwgui hwg_qhtm procmisc hbxml
+{win}gt=gtgui
