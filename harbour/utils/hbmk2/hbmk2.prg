@@ -1151,6 +1151,21 @@ PROCEDURE Main( ... )
 
       CASE FN_ExtGet( cParamL ) == ".hbp"
 
+         cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+
+         IF ! hb_FileExists( cParam )
+            FOR EACH tmp IN s_aLIBPATH
+               IF hb_FileExists( DirAddPathSep( tmp ) + FN_NameExtGet( cParam ) )
+                  cParam := DirAddPathSep( tmp ) + FN_NameExtGet( cParam )
+                  EXIT
+               ENDIF
+            NEXT
+         ENDIF
+
+         IF t_lInfo
+            OutStd( "hbmk: Processing: " + cParam + hb_osNewLine() )
+         ENDIF
+
          HBP_ProcessOne( cParam,;
             @s_aLIBUSER,;
             @s_aLIBUSERGT,;
@@ -3213,6 +3228,13 @@ STATIC FUNCTION FN_NameGet( cFileName )
 
    RETURN cName
 
+STATIC FUNCTION FN_NameExtGet( cFileName )
+   LOCAL cName, cExt
+
+   hb_FNameSplit( cFileName,, @cName, @cExt )
+
+   RETURN hb_FNameMerge( NIL, cName, cExt )
+
 STATIC FUNCTION FN_ExtGet( cFileName )
    LOCAL cExt
 
@@ -3389,7 +3411,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
 
       CASE Lower( Left( cLine, Len( "libpaths="   ) ) ) == "libpaths="   ; cLine := SubStr( cLine, Len( "libpaths="   ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathSepToTarget( StrStripQuote( cItem ) )
+            cItem := PathProc( PathSepToTarget( MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) ), cFileName )
             IF AScan( aLIBPATH, {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( aLIBPATH, cItem )
             ENDIF
@@ -3413,9 +3435,15 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          NEXT
 
+      CASE Lower( Left( cLine, Len( "echo="       ) ) ) == "echo="       ; cLine := SubStr( cLine, Len( "echo="       ) + 1 )
+         cLine := MacroProc( cLine, FN_DirGet( cFileName ) )
+         IF ! Empty( cLine )
+            OutStd( cLine + hb_osNewLine() )
+         ENDIF
+
       CASE Lower( Left( cLine, Len( "prgflags="   ) ) ) == "prgflags="   ; cLine := SubStr( cLine, Len( "prgflags="   ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathSepToTarget( StrStripQuote( cItem ) )
+            cItem := PathSepToTarget( MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
             IF AScan( aOPTPRG, {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( aOPTPRG, cItem )
             ENDIF
@@ -3423,7 +3451,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
 
       CASE Lower( Left( cLine, Len( "cflags="     ) ) ) == "cflags="     ; cLine := SubStr( cLine, Len( "cflags="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := StrStripQuote( cItem )
+            cItem := MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) )
             IF AScan( aOPTC, {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( aOPTC, cItem )
             ENDIF
@@ -3431,7 +3459,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
 
       CASE Lower( Left( cLine, Len( "ldflags="    ) ) ) == "ldflags="    ; cLine := SubStr( cLine, Len( "ldflags="    ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := StrStripQuote( cItem )
+            cItem := MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) )
             IF AScan( aOPTL, {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( aOPTL, cItem )
             ENDIF
@@ -3650,6 +3678,7 @@ STATIC FUNCTION ArchCompFilter( cItem )
                     "hbmk_KEYW( Lower( '%' ) ) )"
 
    IF ( nStart := At( "{", cItem ) ) > 0 .AND. ;
+      !( SubStr( cItem, nStart - 1, 1 ) == "$" ) .AND. ;
       ( nEnd := hb_At( "}", cItem, nStart ) ) > 0
 
       /* Separate filter from the rest of the item */
@@ -3699,7 +3728,7 @@ STATIC FUNCTION MacroProc( cString, cDirParent )
    DO WHILE ( nStart := At( "${", cString ) ) > 0 .AND. ;
             ( nEnd := hb_At( "}", cString, nStart ) ) > 0
 
-      cMacro := Upper( SubStr( cString, nStart + 2, nEnd - nStart - 1 ) )
+      cMacro := Upper( SubStr( cString, nStart + 2, nEnd - nStart - 2 ) )
 
       DO CASE
       CASE cMacro == "HB_ROOT"
@@ -3708,8 +3737,12 @@ STATIC FUNCTION MacroProc( cString, cDirParent )
          IF Empty( cDirParent )
             cMacro := ""
          ELSE
-            cMacro := PathSepToSelf( DirAddPathSep( cDirParent ) )
+            cMacro := PathSepToSelf( cDirParent )
          ENDIF
+      CASE cMacro == "HB_ARCH" .OR. cMacro == "HB_ARCHITECTURE"
+         cMacro := t_cARCH
+      CASE cMacro == "HB_COMP" .OR. cMacro == "HB_COMPILER"
+         cMacro := t_cCOMP
       CASE ! Empty( GetEnv( cMacro ) )
          cMacro := GetEnv( cMacro )
       OTHERWISE
@@ -4193,12 +4226,14 @@ STATIC PROCEDURE ShowHelp( lLong )
       "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;
       "    cflags=[C compiler flags], ldflags=[Linker flags], libpaths=[lib paths]" ,;
       "    gui|mt|shared|nulrdd|debug|map|strip|run|inc=[yes|no]" ,;
-      "    compr=[yes|no|def|min|max]" ,;
+      "    compr=[yes|no|def|min|max], echo=<text>" ,;
       "    Lines starting with '#' char are ignored" ,;
       "  - Platform filters are accepted in each .hbp line and with -l options." ,;
       "    Filter format: {[!][<arch|comp>]}. Filters can be combined " ,;
       "    using '&', '|' operators and grouped by parantheses." ,;
       "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}" ,;
+      "  - Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, echo=) will",;
+      "    accept macros: ${hb_root}, ${hb_parent}, ${hb_arch}, ${hb_comp}, ${<envvar>}",;
       "  - Defaults and feature support vary by architecture/compiler." ,;
       "  - Supported <comp> values for each supported <arch> value:" ,;
       "    linux  : gcc, owatcom, icc" ,;

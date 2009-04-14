@@ -2,20 +2,17 @@
  * $Id$
  */
 
-/* DNLDftp.prg
+/*
    Download an file from an ftp server
 */
 
 #include "common.ch"
 
-FUNCTION MAIN( cFile)
+PROCDURE MAIN( cFile)
 
-   LOCAL lRet
+   ? TRP20FTPEnv( cFile )
 
-   lRet := TRP20FTPEnv( cFile )
-   ? lRet
-
-RETURN nil
+RETURN
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -47,7 +44,7 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
 
    // Leemos ficheros a enviar
    aFiles := { { cCarpeta, 1, 2, 3 } }
-   //     aFiles := Directory( cCarpeta)
+   //     aFiles := Directory( cCarpeta )
 
    IF Len( aFiles ) > 0
 
