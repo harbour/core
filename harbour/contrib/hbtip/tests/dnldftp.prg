@@ -8,7 +8,7 @@
 
 #include "common.ch"
 
-PROCDURE MAIN( cFile)
+PROCEDURE MAIN( cFile)
 
    ? TRP20FTPEnv( cFile )
 

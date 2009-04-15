@@ -116,22 +116,9 @@
 /* TODO: Optimizations (speed/memory). */
 /* TODO: C++/C mode. */
 /* TODO: Incremental support:
+         - detect updates by walking through #include files
          - handle libs? (problematic)
          - Reuse Harbour .c output for different compiler targets. */
-
-/* PLANNING:
-   hbgtwvg.hbp
-   ---
-   requires=hbwin xhb
-   prgflags=-DHAS_GTWVG
-   cflags=-DHAS_GTWVG
-   prgincludes=gtwvg.ch
-   cincludes=hbgtwvg.h
-   libs=gtwvg
-   libpaths=C:\libs
-   autodetect=yes
-   ---
-*/
 
 #ifndef HBMK_INTEGRATED_COMPILER
 #define HBMK_INTEGRATED_COMPILER
@@ -286,6 +273,7 @@ PROCEDURE Main( ... )
    LOCAL s_lINC := .F.
    LOCAL s_lREBUILD := .F.
    LOCAL s_lCLEAN := .F.
+   LOCAL s_nJOBS := 1
 
    LOCAL aCOMPDET
    LOCAL aCOMPDET_LOCAL
@@ -1011,6 +999,15 @@ PROCEDURE Main( ... )
 
          OutStd( s_cHB_INC_INSTALL )
 
+      CASE Left( cParamL, Len( "-jobs=" ) ) == "-jobs="
+
+         cParam := ArchCompFilter( SubStr( cParam, Len( "-jobs=" ) + 1 ) )
+         IF Val( cParam ) > 0
+            s_nJOBS := Val( cParam )
+         ENDIF
+
+         HB_SYMBOL_UNUSED( s_nJOBS )
+
       CASE Left( cParamL, 6 ) == "-main="
 
          IF IsValidHarbourID( cParam := SubStr( cParam, 7 ) )
@@ -1063,9 +1060,9 @@ PROCEDURE Main( ... )
             AAdd( s_aLIBPATH, PathSepToTarget( cParam ) )
          ENDIF
 
-      CASE Left( cParamL, Len( "-prgflag:" ) ) == "-prgflag:"
+      CASE Left( cParamL, Len( "-prgflag=" ) ) == "-prgflag="
 
-         cParam := ArchCompFilter( SubStr( cParam, Len( "-prgflag:" ) + 1 ) )
+         cParam := ArchCompFilter( SubStr( cParam, Len( "-prgflag=" ) + 1 ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             IF SubStr( cParamL, 2 ) == "gh"
                lStopAfterHarbour := .T.
@@ -1075,44 +1072,44 @@ PROCEDURE Main( ... )
             ENDIF
          ENDIF
 
-      CASE Left( cParamL, Len( "-cflag:" ) ) == "-cflag:"
+      CASE Left( cParamL, Len( "-cflag=" ) ) == "-cflag="
 
-         cParam := ArchCompFilter( SubStr( cParam, Len( "-cflag:" ) + 1 ) )
+         cParam := ArchCompFilter( SubStr( cParam, Len( "-cflag=" ) + 1 ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTC   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
-      CASE Left( cParamL, Len( "-ldflag:" ) ) == "-ldflag:"
+      CASE Left( cParamL, Len( "-ldflag=" ) ) == "-ldflag="
 
-         cParam := ArchCompFilter( SubStr( cParam, Len( "-ldflag:" ) + 1 ) )
+         cParam := ArchCompFilter( SubStr( cParam, Len( "-ldflag=" ) + 1 ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTL   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
-      CASE Left( cParamL, Len( "-dflag:" ) ) == "-dflag:"
+      CASE Left( cParamL, Len( "-dflag=" ) ) == "-dflag="
 
-         cParam := ArchCompFilter( SubStr( cParam, Len( "-dflag:" ) + 1 ) )
+         cParam := ArchCompFilter( SubStr( cParam, Len( "-dflag=" ) + 1 ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTD   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
-      CASE Left( cParamL, Len( "-aflag:" ) ) == "-aflag:"
+      CASE Left( cParamL, Len( "-aflag=" ) ) == "-aflag="
 
-         cParam := ArchCompFilter( SubStr( cParam, Len( "-aflag:" ) + 1 ) )
+         cParam := ArchCompFilter( SubStr( cParam, Len( "-aflag=" ) + 1 ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTA   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
-      CASE Left( cParamL, Len( "-runflag:" ) ) == "-runflag:"
+      CASE Left( cParamL, Len( "-runflag=" ) ) == "-runflag="
 
-         cParam := ArchCompFilter( SubStr( cParam, Len( "-runflag:" ) + 1 ) )
+         cParam := ArchCompFilter( SubStr( cParam, Len( "-runflag=" ) + 1 ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTRUN , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
-      CASE Left( cParamL, Len( "-workdir:" ) ) == "-workdir:"
+      CASE Left( cParamL, Len( "-workdir=" ) ) == "-workdir="
 
-         cWorkDir := PathSepToTarget( ArchCompFilter( SubStr( cParam, Len( "-workdir:" ) + 1 ) ) )
+         cWorkDir := PathSepToTarget( ArchCompFilter( SubStr( cParam, Len( "-workdir=" ) + 1 ) ) )
 
       CASE Left( cParam, 2 ) == "-l" .AND. ;
            Len( cParam ) > 2 .AND. ;
@@ -2952,6 +2949,33 @@ STATIC FUNCTION ArrayAJoin( arrayList )
 
    RETURN array
 
+STATIC FUNCTION ArraySplit( arrayIn, nChunksReq )
+   LOCAL arrayOut
+   LOCAL nChunkSize
+   LOCAL nChunkPos
+   LOCAL item
+
+   IF nChunksReq > 0
+
+      arrayOut := {}
+      nChunkSize := Max( Round( Len( arrayIn ) / nChunksReq, 0 ), 1 )
+      nChunkPos := 0
+
+      FOR EACH item IN arrayIn
+         IF nChunkPos == 0
+            AAdd( arrayOut, {} )
+         ENDIF
+         AAdd( ATail( arrayOut ), item )
+         IF ++nChunkPos == nChunkSize .AND. Len( arrayOut ) < nChunksReq
+            nChunkPos := 0
+         ENDIF
+      NEXT
+   ELSE
+      arrayOut := arrayIn
+   ENDIF
+
+   RETURN arrayOut
+
 STATIC FUNCTION AAddNotEmpty( array, xItem )
 
    IF ! Empty( xItem )
@@ -3733,7 +3757,7 @@ STATIC FUNCTION MacroProc( cString, cDirParent )
       DO CASE
       CASE cMacro == "HB_ROOT"
          cMacro := PathSepToSelf( DirAddPathSep( hb_DirBase() ) )
-      CASE cMacro == "HB_PARENT"
+      CASE cMacro == "HB_SELF"
          IF Empty( cDirParent )
             cMacro := ""
          ELSE
@@ -4182,16 +4206,16 @@ STATIC PROCEDURE ShowHelp( lLong )
       "" ,;
       "  -bldf[-]          inherit all/no (default) flags from Harbour build" ,;
       "  -bldf=[p][c][l]   inherit .prg/.c/linker flags (or none) from Harbour build" ,;
-      "  -prgflag:<f>      pass flag to Harbour" ,;
-      "  -cflag:<f>        pass flag to C compiler" ,;
-      "  -ldflag:<f>       pass flag to linker (executable)" ,;
-      "  -aflag:<f>        pass flag to linker (static library)" ,;
-      "  -dflag:<f>        pass flag to linker (dynamic library)" ,;
-      "  -runflag:<f>      pass flag to output executable when -run option is used" ,;
+      "  -prgflag=<f>      pass flag to Harbour" ,;
+      "  -cflag=<f>        pass flag to C compiler" ,;
+      "  -ldflag=<f>       pass flag to linker (executable)" ,;
+      "  -aflag=<f>        pass flag to linker (static library)" ,;
+      "  -dflag=<f>        pass flag to linker (dynamic library)" ,;
+      "  -runflag=<f>      pass flag to output executable when -run option is used" ,;
       "  -inc              enable incremental build mode" ,;
       "  -rebuild          rebuild all (in incremental build mode)" ,;
       "  -clean            clean (in incremental build mode)" ,;
-      "  -workdir:<dir>    working directory for incremental build mode" ,;
+      "  -workdir=<dir>    working directory for incremental build mode" ,;
       "                    (default: arch/comp)" ,;
       "  -hbcmp            stop after creating the object files" ,;
       "                    create link/copy hbmk to hbcmp for the same effect" ,;
@@ -4232,8 +4256,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "    Filter format: {[!][<arch|comp>]}. Filters can be combined " ,;
       "    using '&', '|' operators and grouped by parantheses." ,;
       "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}" ,;
-      "  - Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, echo=) will",;
-      "    accept macros: ${hb_root}, ${hb_parent}, ${hb_arch}, ${hb_comp}, ${<envvar>}",;
+      "  - Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, echo=) will" ,;
+      "    accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${<envvar>}" ,;
       "  - Defaults and feature support vary by architecture/compiler." ,;
       "  - Supported <comp> values for each supported <arch> value:" ,;
       "    linux  : gcc, owatcom, icc" ,;
