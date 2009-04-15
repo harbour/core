@@ -191,7 +191,7 @@ public:
     PHB_GT pGT;
 
     QRgb   COLORS[ 16 ];
-    void   sizeByFont(void);
+    void   resetWindowSize(void);
 
     int    fontHeight;
     int    fontWidth;
@@ -209,6 +209,7 @@ protected:
     void   mousePressEvent(QMouseEvent *event);
     void   mouseMoveEvent(QMouseEvent *event);
     void   mouseReleaseEvent(QMouseEvent *event);
+    void   mouseDoubleClickEvent(QMouseEvent * event);
     void   paintEvent(QPaintEvent *event);
     void   resizeEvent(QResizeEvent *event);
 

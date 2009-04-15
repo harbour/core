@@ -41,18 +41,20 @@ FUNCTION Main()
    Local nn      := 0
    Local cc      := 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmn'
 
+   #if 0
    Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
    Hb_GtInfo( HB_GTI_FONTWIDTH, nWidth  )
    Hb_GtInfo( HB_GTI_FONTSIZE , nHeight )
+   #endif
 
+   Hb_GtInfo( HB_GTI_CODEPAGE, 255 )
    SetCursor( 0 )
    SetColor( "n/w" )
 
    DispScreen()
 
    DO WHILE .T.
-      nKey := Inkey(0.1)
-
+      nKey := Inkey(0.1, INKEY_ALL )
       if nKey == K_ESC
          exit
       endif
@@ -67,8 +69,7 @@ ENDIF
 
       DO CASE
       CASE nKey == K_ENTER
-         //Alert( "<Enter> Pressed" )
-         @ 10,20 SAY 'Pressed Enter' COLOR 'W+/R'
+         Alert( "<Enter> Pressed" )
 
       CASE nKey == K_F2
          lMark := Hb_GtInfo( HB_GTI_SELECTCOPY )
@@ -92,7 +93,7 @@ ENDIF
          SetPaletteIndex()
 
       CASE nKey == K_F8
-         Alert( "Menu text changed. Was: " + hb_GtInfo( HB_GTI_SELECTCOPY, DToS(Date()) + " " + Time() ) )
+         Alert( "Menu title is " + hb_GtInfo( HB_GTI_WINTITLE ) )
 
       CASE nKey == K_F12
          EXIT

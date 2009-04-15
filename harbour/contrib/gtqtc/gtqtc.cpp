@@ -210,6 +210,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 {
    PHB_GTWVT pWVT;
    OSVERSIONINFO osvi;
+   HB_SYMBOL_UNUSED( hInstance );
 
    osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
    GetVersionEx( &osvi );
@@ -337,25 +338,21 @@ static QFont* hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, 
    return qFont;
 }
 
-static POINT hb_gt_wvt_GetXYFromColRow( PHB_GTWVT pWVT, USHORT col, USHORT row )
+static QPoint hb_gt_wvt_QGetXYFromColRow( PHB_GTWVT pWVT, int col, int row )
 {
-   POINT xy;
-
-   xy.x = col * pWVT->PTEXTSIZE.x;
-   xy.y = row * pWVT->PTEXTSIZE.y;
-
+   QPoint xy;
+   xy.setX( col * pWVT->PTEXTSIZE.x );
+   xy.setY( row * pWVT->PTEXTSIZE.y );
    return xy;
 }
 
-static RECT hb_gt_wvt_GetXYFromColRowRect( PHB_GTWVT pWVT, RECT colrow )
+static QRect hb_gt_wvt_QGetXYFromColRowRect( PHB_GTWVT pWVT, QRect colrow )
 {
-   RECT xy;
-
-   xy.left   = colrow.left * pWVT->PTEXTSIZE.x;
-   xy.top    = colrow.top  * pWVT->PTEXTSIZE.y;
-   xy.right  = ( colrow.right  + 1 ) * pWVT->PTEXTSIZE.x;
-   xy.bottom = ( colrow.bottom + 1 ) * pWVT->PTEXTSIZE.y;
-
+   QRect xy;
+   xy.setLeft( colrow.left() * pWVT->PTEXTSIZE.x );
+   xy.setTop( colrow.top()  * pWVT->PTEXTSIZE.y );
+   xy.setRight( ( colrow.right()  + 1 ) * pWVT->PTEXTSIZE.x );
+   xy.setBottom( ( colrow.bottom() + 1 ) * pWVT->PTEXTSIZE.y );
    return xy;
 }
 
@@ -392,7 +389,6 @@ static void hb_gt_wvt_UpdateCaret( PHB_GTWVT pWVT )
    {
       if( pWVT->CaretExist && !pWVT->CaretHidden )
       {
-//         HideCaret( pWVT->hWnd );
          pWVT->CaretHidden = TRUE;
       }
    }
@@ -403,16 +399,11 @@ static void hb_gt_wvt_UpdateCaret( PHB_GTWVT pWVT )
       {
          pWVT->CaretSize = iCaretSize;
          pWVT->CaretWidth = pWVT->PTEXTSIZE.x;
-//         pWVT->CaretExist = CreateCaret( pWVT->hWnd, ( HBITMAP ) NULL, pWVT->PTEXTSIZE.x,
-//                                         pWVT->CaretSize < 0 ? - pWVT->CaretSize : pWVT->CaretSize );
       }
       if( pWVT->CaretExist )
       {
-         POINT xy;
-         xy = hb_gt_wvt_GetXYFromColRow( pWVT, ( SHORT ) iCol, ( SHORT ) iRow );
-//         SetCaretPos( xy.x, pWVT->CaretSize < 0 ?
-//                      xy.y : xy.y + pWVT->PTEXTSIZE.y - pWVT->CaretSize );
-//         ShowCaret( pWVT->hWnd );
+         QPoint xy;
+         xy = hb_gt_wvt_QGetXYFromColRow( pWVT, iCol, iRow );
          pWVT->CaretHidden = FALSE;
       }
    }
@@ -422,7 +413,6 @@ static void hb_gt_wvt_KillCaret( PHB_GTWVT pWVT )
 {
    if( pWVT->CaretExist )
    {
-//      DestroyCaret();
       pWVT->CaretExist = FALSE;
    }
 }
@@ -468,7 +458,6 @@ static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
    return FALSE;
 }
 
-
 static int hb_gt_wvt_key_ansi_to_oem( int c )
 {
    BYTE pszAnsi[ 2 ];
@@ -477,540 +466,73 @@ static int hb_gt_wvt_key_ansi_to_oem( int c )
    pszAnsi[ 0 ] = ( CHAR ) c;
    pszAnsi[ 1 ] = 0;
 //   CharToOemBuffA( ( LPCSTR ) pszAnsi, ( LPSTR ) pszOem, 1 );
-
    return * pszOem;
 }
 
 static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
 {
-   #if 0
-   RECT wi;
-   RECT ci;
-   int maxWidth;
-   int maxHeight;
-   int borderWidth;
-   int borderHeight;
-
-   GetClientRect( pWVT->hWnd, &ci );
-   GetWindowRect( pWVT->hWnd, &wi );
-
-   borderWidth = ( wi.right - wi.left - ( ci.right - ci.left ) );
-   borderHeight = ( wi.bottom - wi.top - ( ci.bottom - ci.top ) );
-
-   if( pWVT->bMaximized )
-   {
-      SystemParametersInfo( SPI_GETWORKAREA, 0, &wi, 0 );
-
-      maxHeight = wi.bottom - wi.top - borderHeight;
-      maxWidth  = wi.right - wi.left - borderWidth;
-   }
-   else
-   {
-      maxWidth = ci.right - ci.left;
-      maxHeight = ci.bottom - ci.top;
-   }
-
-   if( maxHeight > 0 )
-   {
-      BOOL bOldCentre = pWVT->CentreWindow;
-      pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
-      HB_GTSELF_SETMODE( pWVT->pGT, ( USHORT ) ( maxHeight / pWVT->PTEXTSIZE.y ), ( USHORT ) ( maxWidth / pWVT->PTEXTSIZE.x ) );
-      pWVT->CentreWindow = bOldCentre;
-   }
-   #endif
+   HB_SYMBOL_UNUSED( pWVT );
 }
 
 static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
 {
-   pWVT->qWnd->resize( 940,600 );
    HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
 }
 
-static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
+static void hb_gt_wvt_QResetWindowSize( PHB_GTWVT pWVT )
 {
-   #if 0
-   pWVT->qWnd->consoleArea->sizeByFont();
-
-   QFont *qFont;
-   /*
-    * set the font and get it's size to determine the size of the client area
-    * for the required number of rows and columns .
-    * No need to call hb_gt_wvt_GetFont() if font is already existant [prtpal 20081108]
-    */
-   if( !pWVT->qFont )
-   {
-      qFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
-                                 pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
-      pWVT->qFont = qFont;
-   }
-   else
-      qFont = pWVT->qFont;
-
-   QPainter painter = QPainter( pWVT->qWnd->consoleArea );
-   qFont = QFont( &qFont, painter.device() );
-   QFontMetrics fontMetrics( &qFont );
-   fontHeight = fontMetrics.height();
-   fontWidth  = fontMetrics.averageCharWidth();
-   #endif
-
-   #if 0
-   QFont        *qFont;
-   QPaintDevice *qdc;
-   QPaintEngine *qPE;
-
-   HDC        hdc;
-   USHORT     height, width;
-   RECT       wi, ci;
-   TEXTMETRIC tm;
-   RECT       rcWorkArea;
-   int        n;
-
-
-   //qdc = pWVT->qWnd->PaintEngine();
-
-   #if 0
-   hdc      = GetDC( pWVT->hWnd );
-   //qOldFont = ( HFONT ) SelectObject( hdc, hFont );
-   GetTextMetrics( hdc, &tm );
-   SetTextCharacterExtra( hdc, 0 ); /* do not add extra char spacing even if bold */
-   //SelectObject( hdc, hOldFont );
-   ReleaseDC( pWVT->hWnd, hdc );
-   #endif
-   /*
-    * we will need to use the font size to handle the transformations from
-    * row column space in the future, so we keep it around in a static!
-    */
-
-   pWVT->PTEXTSIZE.x = pWVT->fontWidth < 0 ? -pWVT->fontWidth :
-                    tm.tmAveCharWidth; /* For fixed FONT should == tm.tmMaxCharWidth */
-   pWVT->PTEXTSIZE.y = tm.tmHeight;    /* but seems to be a problem on Win9X so */
-                                       /* assume proportional fonts always for Win9X */
-#if defined(HB_OS_WIN_CE)
-   pWVT->FixedFont = FALSE;
-#else
-   pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
-                     ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) == 0 &&
-                     ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
-#endif
-
-   /* pWVT->FixedSize[] is used by ExtTextOut() to emulate
-      fixed font when a proportional font is used */
-   for( n = 0; n < pWVT->COLS; n++ )
-      pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
-
-   /* resize the window to get the specified number of rows and columns */
-   GetWindowRect( pWVT->hWnd, &wi );
-   GetClientRect( pWVT->hWnd, &ci );
-
-   height = ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
-   width  = ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
-
-   width  += ( USHORT ) ( wi.right - wi.left - ci.right );
-   height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
-
-   /* Center the window within the CLIENT area on the screen
-      but only if pWVT->CentreWindow == TRUE */
-   if( pWVT->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) )
-   {
-      wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
-      wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
-   }
-
-   if( wi.left < 0 || wi.top < 0 )
-   {
-      pWVT->bMaximized = TRUE;
-
-      if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
-         hb_gt_wvt_FitSize( pWVT );
-      else
-         hb_gt_wvt_FitRows( pWVT );
-
-      /* resize the window to get the specified number of rows and columns */
-      GetWindowRect( pWVT->hWnd, &wi );
-      GetClientRect( pWVT->hWnd, &ci );
-
-      height = ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
-      width  = ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
-
-      width  += ( USHORT ) ( wi.right - wi.left - ci.right );
-      height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
-
-      /* Center the window within the CLIENT area on the screen
-         but only if pWVT->CentreWindow == TRUE */
-      if( pWVT->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) )
-      {
-         wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
-         wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
-      }
-   }
-
-   SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
-
-   HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
-
-   if( pWVT->CaretExist && !pWVT->CaretHidden )
-      hb_gt_wvt_UpdateCaret( pWVT );
-
-   #endif
+   pWVT->qWnd->consoleArea->resetWindowSize();
 }
 
-static BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRow, int iCol )
+static BOOL hb_gt_wvt_QSetWindowSize( PHB_GTWVT pWVT, int iRow, int iCol )
 {
    if( HB_GTSELF_RESIZE( pWVT->pGT, iRow, iCol ) )
    {
       pWVT->ROWS = ( USHORT ) iRow;
       pWVT->COLS = ( USHORT ) iCol;
+
+      pWVT->qWnd->consoleArea->ROWS = iRow;
+      pWVT->qWnd->consoleArea->COLS = iCol;
       return TRUE;
    }
    return FALSE;
 }
 
-static BOOL hb_gt_wvt_InitWindow( PHB_GTWVT pWVT, int iRow, int iCol )
+static BOOL hb_gt_wvt_QInitWindow( PHB_GTWVT pWVT, int iRow, int iCol )
 {
-   BOOL fRet = hb_gt_wvt_SetWindowSize( pWVT, iRow, iCol );
-
-   hb_gt_wvt_ResetWindowSize( pWVT );
-
+   BOOL fRet = hb_gt_wvt_QSetWindowSize( pWVT, iRow, iCol );
+   hb_gt_wvt_QResetWindowSize( pWVT );
    return fRet;
 }
 
-/*
- * get the row and column from xy pixel client coordinates
- * This works because we are using the FIXED system font
- */
-static POINT hb_gt_wvt_GetColRowFromXY( PHB_GTWVT pWVT, USHORT x, USHORT y )
+static QPoint hb_gt_wvt_QGetColRowFromXY( PHB_GTWVT pWVT, int x, int y )
 {
-   POINT colrow;
-
-   colrow.x = x / pWVT->PTEXTSIZE.x;
-   colrow.y = y / pWVT->PTEXTSIZE.y;
-
+   QPoint colrow;
+   colrow.setX( x / pWVT->PTEXTSIZE.x );
+   colrow.setY( y / pWVT->PTEXTSIZE.y );
    return colrow;
 }
 
-static RECT hb_gt_wvt_GetColRowFromXYRect( PHB_GTWVT pWVT, RECT xy )
+static QRect hb_gt_wvt_QGetColRowFromXYRect( PHB_GTWVT pWVT, QRect xy )
 {
-   RECT colrow;
-
-   colrow.left   = xy.left   / pWVT->PTEXTSIZE.x;
-   colrow.top    = xy.top    / pWVT->PTEXTSIZE.y;
-   colrow.right  = xy.right  / pWVT->PTEXTSIZE.x -
-                   ( xy.right  % pWVT->PTEXTSIZE.x ? 0 : 1 ); /* Adjust for when rectangle */
-   colrow.bottom = xy.bottom / pWVT->PTEXTSIZE.y -
-                   ( xy.bottom % pWVT->PTEXTSIZE.y ? 0 : 1 ); /* EXACTLY overlaps characters */
-
+   QRect colrow;
+   colrow.setLeft( xy.left()   / pWVT->PTEXTSIZE.x );
+   colrow.setTop( xy.top()    / pWVT->PTEXTSIZE.y );
+   colrow.setRight( xy.right()  / pWVT->PTEXTSIZE.x -
+                   ( xy.right()  % pWVT->PTEXTSIZE.x ? 0 : 1 ) ); /* Adjust for when rectangle */
+   colrow.setBottom( xy.bottom() / pWVT->PTEXTSIZE.y -
+                   ( xy.bottom() % pWVT->PTEXTSIZE.y ? 0 : 1 ) ); /* EXACTLY overlaps characters */
    return colrow;
 }
 
+#if 0
 static void hb_gt_wvt_SetMousePos( PHB_GTWVT pWVT, int iRow, int iCol )
 {
    pWVT->MousePos.y = ( SHORT ) iRow;
    pWVT->MousePos.x = ( SHORT ) iCol;
 }
-
-static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
-{
-   #if 0
-   POINT xy, colrow;
-   SHORT keyCode = 0;
-
-   HB_SYMBOL_UNUSED( wParam );
-
-   if( ! pWVT->bBeginMarked && ! pWVT->MouseMove && ( message == WM_MOUSEMOVE || message == WM_NCMOUSEMOVE ) )
-      return;
-
-   xy.x = LOWORD( lParam );
-   xy.y = HIWORD( lParam );
-
-   colrow = hb_gt_wvt_GetColRowFromXY( pWVT, ( USHORT ) xy.x, ( USHORT ) xy.y );
-   hb_gt_wvt_SetMousePos( pWVT, colrow.y, colrow.x );
-
-   switch( message )
-   {
-      case WM_LBUTTONDBLCLK:
-         keyCode = K_LDBLCLK;
-         break;
-
-      case WM_RBUTTONDBLCLK:
-         keyCode = K_RDBLCLK;
-         break;
-
-      case WM_LBUTTONDOWN:
-      {
-         if( pWVT->bBeginMarked )
-         {
-            pWVT->bBeingMarked = TRUE;
-
-            pWVT->sRectNew.left     = xy.x;
-            pWVT->sRectNew.top      = xy.y;
-            pWVT->sRectNew.right    = xy.x;
-            pWVT->sRectNew.bottom   = xy.y;
-
-            pWVT->sRectOld.left   = 0;
-            pWVT->sRectOld.top    = 0;
-            pWVT->sRectOld.right  = 0;
-            pWVT->sRectOld.bottom = 0;
-
-            return;
-         }
-         else
-         {
-            keyCode = K_LBUTTONDOWN;
-            break;
-         }
-      }
-      case WM_RBUTTONDOWN:
-         keyCode = K_RBUTTONDOWN;
-         break;
-
-      case WM_RBUTTONUP:
-         keyCode = K_RBUTTONUP;
-         break;
-
-      case WM_LBUTTONUP:
-      {
-         if( pWVT->bBeingMarked )
-         {
-            pWVT->bBeginMarked = FALSE;
-            pWVT->bBeingMarked = FALSE;
-
-            RedrawWindow( pWVT->hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
-
-            {
-               ULONG  ulSize;
-               int    irow, icol, j, top, left, bottom, right;
-               char * sBuffer;
-               RECT   rect = { 0, 0, 0, 0 };
-               RECT   colrowRC = { 0, 0, 0, 0 };
-
-               rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
-               rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
-               rect.right  = HB_MAX( pWVT->sRectNew.left, pWVT->sRectNew.right  );
-               rect.bottom = HB_MAX( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
-
-               colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
-
-               left   = colrowRC.left;
-               top    = colrowRC.top;
-               right  = colrowRC.right;
-               bottom = colrowRC.bottom;
-
-               ulSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
-               sBuffer = ( char * ) hb_xgrab( ulSize + 1 );
-
-               for( j = 0, irow = top; irow <= bottom; irow++ )
-               {
-                  for( icol = left; icol <= right; icol++ )
-                  {
-                     BYTE bColor, bAttr;
-                     USHORT usChar;
-
-                     if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
-                        break;
-
-                     sBuffer[ j++ ] = ( char ) usChar;
-                  }
-
-                  sBuffer[ j++ ] = '\r';
-                  sBuffer[ j++ ] = '\n';
-               }
-               sBuffer[ j ] = '\0';
-
-               if( j > 0 )
-               {
-                  hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
-                                             CF_OEMTEXT : CF_TEXT,
-                                             sBuffer,
-                                             j );
-               }
-
-               hb_xfree( sBuffer );
-            }
-            return;
-         }
-         else
-         {
-            keyCode = K_LBUTTONUP;
-            break;
-         }
-      }
-      case WM_MBUTTONDOWN:
-         keyCode = K_MBUTTONDOWN;
-         break;
-
-      case WM_MBUTTONUP:
-         keyCode = K_MBUTTONUP;
-         break;
-
-      case WM_MBUTTONDBLCLK:
-         keyCode = K_MDBLCLK;
-         break;
-
-      case WM_MOUSEMOVE:
-      {
-         if( pWVT->bBeingMarked )
-         {
-            RECT rect     = { 0, 0, 0, 0 };
-            RECT colrowRC = { 0, 0, 0, 0 };
-
-            pWVT->sRectNew.right  = xy.x;
-            pWVT->sRectNew.bottom = xy.y;
-
-            rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
-            rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
-            rect.right  = HB_MAX( pWVT->sRectNew.left, pWVT->sRectNew.right  );
-            rect.bottom = HB_MAX( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
-
-            colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
-            rect     = hb_gt_wvt_GetXYFromColRowRect( pWVT, colrowRC );
-
-            if( rect.left   != pWVT->sRectOld.left   ||
-                rect.top    != pWVT->sRectOld.top    ||
-                rect.right  != pWVT->sRectOld.right  ||
-                rect.bottom != pWVT->sRectOld.bottom )
-            {
-#if !defined(HB_OS_WIN_CE)  /* WinCE does not support InvertRgn */
-               /* Concept forwarded by Andy Wos - thanks. */
-               HRGN rgn1 = CreateRectRgn( pWVT->sRectOld.left, pWVT->sRectOld.top, pWVT->sRectOld.right, pWVT->sRectOld.bottom );
-               HRGN rgn2 = CreateRectRgn( rect.left, rect.top, rect.right, rect.bottom );
-               HRGN rgn3 = CreateRectRgn( 0, 0, 0, 0 );
-
-               if( CombineRgn( rgn3, rgn1, rgn2, RGN_XOR ) != 0 )
-               {
-                  HDC hdc = GetDC( pWVT->hWnd );
-                  InvertRgn( hdc, rgn3 );
-                  ReleaseDC( pWVT->hWnd, hdc );
-               }
-
-               DeleteObject( rgn1 );
-               DeleteObject( rgn2 );
-               DeleteObject( rgn3 );
 #endif
-               pWVT->sRectOld.left   = rect.left;
-               pWVT->sRectOld.top    = rect.top;
-               pWVT->sRectOld.right  = rect.right;
-               pWVT->sRectOld.bottom = rect.bottom;
-            }
-            return;
-         }
-         else
-         {
-#if defined( __HB_GTWVT_GEN_K_MMDOWN_EVENTS )
-            SHORT keyState = ( SHORT ) wParam;
 
-            switch( keyState )
-            {
-               case MK_LBUTTON:
-                  keyCode = K_MMLEFTDOWN;
-                  break;
-               case MK_RBUTTON:
-                  keyCode = K_MMRIGHTDOWN;
-                  break;
-               case MK_MBUTTON:
-                  keyCode = K_MMMIDDLEDOWN;
-                  break;
-               default:
-                  keyCode = K_MOUSEMOVE;
-            }
-            break;
-#else
-            keyCode = K_MOUSEMOVE;
-            break;
-#endif
-         }
-      }
-      case WM_MOUSEWHEEL:
-      {
-         SHORT keyState = ( SHORT ) HIWORD( wParam );
-         keyCode = keyState > 0 ? K_MWFORWARD : K_MWBACKWARD;
-         break;
-      }
-      case WM_NCMOUSEMOVE:
-         keyCode = K_NCMOUSEMOVE;
-         break;
-   }
-
-   if( keyCode != 0 )
-      hb_gt_wvt_AddCharToInputQueue( pWVT, keyCode );
-
-   #endif
-}
-
-
-/*
- * hb_gt_wvt_TextOut converts col and row to x and y ( pixels ) and calls
- * the Windows function TextOut with the expected coordinates
- */
-static BOOL hb_gt_wvt_TextOut( PHB_GTWVT pWVT, HDC hdc, USHORT col, USHORT row, BYTE attr, LPCTSTR lpString, USHORT cbString )
-{
-   #if 0
-   POINT xy;
-   RECT  rClip;
-
-   /* set foreground color */
-   SetTextColor( hdc, pWVT->COLORS[ attr & 0x0F ] );
-   /* set background color */
-   SetBkColor( hdc, pWVT->COLORS[ ( attr >> 4 ) & 0x0F ] );
-
-   SetTextAlign( hdc, TA_LEFT );
-
-   xy = hb_gt_wvt_GetXYFromColRow( pWVT, col, row );
-   SetRect( &rClip, xy.x, xy.y, xy.x + cbString * pWVT->PTEXTSIZE.x, xy.y + pWVT->PTEXTSIZE.y );
-
-   return ExtTextOut( hdc, xy.x, xy.y, ETO_CLIPPED | ETO_OPAQUE, &rClip,
-                      lpString, cbString, pWVT->FixedFont ? NULL : pWVT->FixedSize );
-   #endif
-
-   return TRUE;
-}
-
-static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
-{
-   #if 0
-   PAINTSTRUCT ps;
-   HDC         hdc;
-   RECT        rcRect;
-   int         iRow, iCol, startCol, len;
-   BYTE        bColor, bAttr, bOldColor = 0;
-   USHORT      usChar;
-   TCHAR       text[ WVT_MAX_ROWS ];
-
-   hdc = BeginPaint( pWVT->hWnd, &ps );
-
-   rcRect = hb_gt_wvt_GetColRowFromXYRect( pWVT, updateRect );
-
-   for( iRow = rcRect.top; iRow <= rcRect.bottom; ++iRow )
-   {
-      iCol = startCol = rcRect.left;
-      len = 0;
-
-      while( iCol <= rcRect.right )
-      {
-         if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
-            break;
-
-         usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, TRUE, ( BYTE ) usChar );
-         if( len == 0 )
-         {
-            bOldColor = bColor;
-         }
-         else if( bColor != bOldColor )
-         {
-            hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
-            bOldColor = bColor;
-            startCol = iCol;
-            len = 0;
-         }
-         text[ len++ ] = ( TCHAR ) usChar;
-         iCol++;
-      }
-      if( len > 0 )
-         hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
-   }
-
-   EndPaint( pWVT->hWnd, &ps );
-   #endif
-}
 #if 0
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -1020,16 +542,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
    {
       case WM_CREATE:
          return hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
-
-      case WM_PAINT:
-      {
-         RECT updateRect;
-
-         if( GetUpdateRect( hWnd, &updateRect, FALSE ) )
-            hb_gt_wvt_PaintText( pWVT, updateRect );
-
-         return 0;
-      }
 
       case WM_MY_UPDATE_CARET:
          hb_gt_wvt_UpdateCaret( pWVT );
@@ -1186,37 +698,16 @@ static DWORD hb_gt_wvt_ProcessMessages( void )
    return( 0 );
 }
 
-static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, QFont *qFont, int iWidth )
+static BOOL hb_gt_wvt_QValidWindowSize( int rows, int cols, QFont *qFont, int iWidth )
 {
-   HB_SYMBOL_UNUSED( hWnd   );
+   //QDesktopWidget *desk = new QDesktopWidget();
+   //int maxWidth = desk->width();
+   //int maxHeight = desk->height();
+
    HB_SYMBOL_UNUSED( rows   );
    HB_SYMBOL_UNUSED( cols   );
    HB_SYMBOL_UNUSED( qFont  );
    HB_SYMBOL_UNUSED( iWidth );
-
-   #if 0
-   HDC        hdc;
-   HFONT      hOldFont;
-   USHORT     width, height, maxWidth, maxHeight;
-   TEXTMETRIC tm;
-   RECT       rcWorkArea;
-
-   SystemParametersInfo( SPI_GETWORKAREA,0, &rcWorkArea, 0 );
-
-   maxWidth  = ( USHORT ) ( rcWorkArea.right - rcWorkArea.left );
-   maxHeight = ( USHORT ) ( rcWorkArea.bottom - rcWorkArea.top );
-
-   hdc       = GetDC( hWnd );
-   hOldFont  = ( HFONT ) SelectObject( hdc, hFont );
-   GetTextMetrics( hdc, &tm );
-   SelectObject( hdc, hOldFont ); /* Put old font back */
-   ReleaseDC( hWnd, hdc );
-
-   width     = ( USHORT ) ( iWidth < 0 ? -iWidth : tm.tmAveCharWidth * cols );  /* Total pixel width this setting would take */
-   height    = ( USHORT ) ( tm.tmHeight * rows ); /* Total pixel height this setting would take */
-
-   return ( width <= maxWidth ) && ( height <= maxHeight );
-   #endif
 
    return TRUE;
 }
@@ -1241,7 +732,7 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       pWVT->qWnd->pGT               = pWVT->pGT;
       pWVT->qWnd->consoleArea->pGT  = pWVT->pGT;
 
-      hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
+      hb_gt_wvt_QInitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
 
       /* Set icon */
       #if 0
@@ -1255,7 +746,7 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       {
          PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
          pWVT->qWnd->setWindowTitle( "Harbour-QT Console" );
-         pWVT->qWnd->consoleArea->sizeByFont();
+         pWVT->qWnd->consoleArea->resetWindowSize();
          pWVT->qWnd->setWindowSize();
          hb_xfree( pFileName );
       }
@@ -1379,16 +870,17 @@ static void hb_gt_wvt_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    {
       if( pWVT->qWnd )
       {
-         RECT rect;
+         QRect rect;
 
-         rect.top = rect.bottom = ( SHORT ) iRow;
-         rect.left = ( SHORT ) iCol;
-         rect.right = ( SHORT ) ( iCol + iSize - 1 );
+         rect.setTop( iRow );
+         rect.setBottom( iRow );
+         rect.setLeft( iCol );
+         rect.setRight( iCol + iSize - 1 );
 
-         rect = hb_gt_wvt_GetXYFromColRowRect( pWVT, rect );
+         rect = hb_gt_wvt_QGetXYFromColRowRect( pWVT, rect );
 
          /* Schedule a Repaint Event */
-         pWVT->qWnd->update( QRect( iCol, iRow, iCol + iSize - 1, iRow ) );
+         pWVT->qWnd->update( rect );
       }
       else
          pWVT->fInit = TRUE;
@@ -1431,7 +923,7 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 
    if( iRow <= WVT_MAX_ROWS && iCol <= WVT_MAX_COLS )
    {
-      if( pWVT->hWnd ) /* Is the window already open */
+      if( pWVT->qWnd ) /* Is the window already open */
       {
          QFont *qFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
                                            pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
@@ -1442,9 +934,9 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
              * make sure that the mode selected along with the current
              * font settings will fit in the window
              */
-            if( hb_gt_wvt_ValidWindowSize( pWVT->hWnd, iRow, iCol, qFont, pWVT->fontWidth ) )
+            if( hb_gt_wvt_QValidWindowSize( iRow, iCol, qFont, pWVT->fontWidth ) )
             {
-               fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol );
+               fResult = hb_gt_wvt_QInitWindow( pWVT, iRow, iCol );
             }
             qFont->~QFont();
             HB_GTSELF_REFRESH( pGT );
@@ -1452,7 +944,7 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
       }
       else
       {
-         fResult = hb_gt_wvt_SetWindowSize( pWVT, iRow, iCol );
+         fResult = hb_gt_wvt_QSetWindowSize( pWVT, iRow, iCol );
          HB_GTSELF_SEMICOLD( pGT );
       }
    }
@@ -1503,6 +995,8 @@ static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
 
    HB_SYMBOL_UNUSED( pGT );
+   HB_SYMBOL_UNUSED( dFrequency );
+   HB_SYMBOL_UNUSED( dDuration );
 
    //hb_gt_winapi_tone( dFrequency, dDuration );  ???
 }
@@ -1514,7 +1008,6 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
 #ifndef HB_CDP_SUPPORT_OFF
-
    /*
     * We are displaying text in U16 so pszTermCDP is unimportant.
     * We only have to know what is the internal application codepage
@@ -1529,7 +1022,6 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
       if( cdpHost )
          HB_GTWVT_GET( pGT )->hostCDP = cdpHost;
    }
-
 #endif
 
    return TRUE;
@@ -1583,6 +1075,7 @@ static void hb_gt_wvt_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 
 static BOOL hb_gt_wvt_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
+   HB_SYMBOL_UNUSED( iButton );
    HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_mouse_ButtonState(%p,%i)", pGT, iButton) );
 
    HB_SYMBOL_UNUSED( pGT );
@@ -1653,15 +1146,11 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            QFont *qFont = hb_gt_wvt_GetFont( pWVT->fontFace, iVal, pWVT->fontWidth, pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
-            if( qFont )
+            pWVT->fontHeight = iVal;
+            if( pWVT->qWnd )
             {
-               pWVT->fontHeight = 16;//iVal;
-               if( pWVT->hWnd )
-               {
-                  hb_gt_wvt_ResetWindowSize( pWVT );
-                  HB_GTSELF_REFRESH( pGT );
-               }
+               hb_gt_wvt_QResetWindowSize( pWVT );
+               HB_GTSELF_REFRESH( pGT );
             }
          }
          break;
@@ -1672,97 +1161,26 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( iVal > 0 )
          {
             /* store font status for next operation on fontsize */
-            pWVT->fontWidth = 8;//iVal;
+            pWVT->fontWidth = iVal;
          }
          break;
 
       case HB_GTI_FONTNAME:
          pInfo->pResult = hb_itemPutC( pInfo->pResult, pWVT->fontFace );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) /* TODO */
-         {
             hb_strncpy( pWVT->fontFace, hb_itemGetCPtr( pInfo->pNewVal ), sizeof( pWVT->fontFace ) - 1 );
-         }
          break;
 
       case HB_GTI_FONTWEIGHT:
-         switch( pWVT->fontWeight )
-         {
-            case FW_THIN:
-            case FW_EXTRALIGHT:
-            case FW_LIGHT:
-               iVal = HB_GTI_FONTW_THIN;
-            break;
-
-            case FW_DONTCARE:
-            case FW_NORMAL:
-            case FW_MEDIUM:
-               iVal = HB_GTI_FONTW_NORMAL;
-            break;
-
-            case FW_SEMIBOLD:
-            case FW_BOLD:
-            case FW_EXTRABOLD:
-            case FW_HEAVY:
-               iVal = HB_GTI_FONTW_BOLD;
-            break;
-
-            default:
-               iVal = 0;
-            break;
-         }
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, iVal );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->fontWeight );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-         {
-            /* store font status for next operation on fontsize */
-            switch( hb_itemGetNI( pInfo->pNewVal ) )
-            {
-               case HB_GTI_FONTW_THIN:
-                  pWVT->fontWeight = FW_LIGHT;
-                  break;
-               case HB_GTI_FONTW_NORMAL:
-                  pWVT->fontWeight = FW_NORMAL;
-                  break;
-               case HB_GTI_FONTW_BOLD:
-                  pWVT->fontWeight = FW_BOLD;
-                  break;
-            }
-         }
+            pWVT->fontWeight = hb_itemGetNI( pInfo->pNewVal );
          break;
 
       case HB_GTI_FONTQUALITY:
-         switch( pWVT->fontQuality )
-         {
-            case ANTIALIASED_QUALITY:
-               iVal = HB_GTI_FONTQ_HIGH;
-               break;
-            case DEFAULT_QUALITY:
-            case DRAFT_QUALITY:
-               iVal = HB_GTI_FONTQ_NORMAL;
-               break;
-            case NONANTIALIASED_QUALITY:
-            case PROOF_QUALITY:
-               iVal = HB_GTI_FONTQ_DRAFT;
-               break;
-            default:
-               iVal = 0;
-               break;
-         }
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, iVal );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->fontQuality );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-         {
-            switch( hb_itemGetNI( pInfo->pNewVal ) )
-            {
-               case HB_GTI_FONTQ_HIGH:
-                  pWVT->fontQuality = ANTIALIASED_QUALITY;
-                  break;
-               case HB_GTI_FONTQ_NORMAL:
-                  pWVT->fontQuality = DEFAULT_QUALITY;
-                  break;
-               case HB_GTI_FONTQ_DRAFT:
-                  pWVT->fontQuality = DRAFT_QUALITY;
-                  break;
-            }
-         }
+            pWVT->fontQuality = hb_itemGetNI( pInfo->pNewVal ) ;
          break;
 
       case HB_GTI_SCREENHEIGHT:
@@ -1809,7 +1227,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       }
 
       case HB_GTI_WINTITLE:
-         if( pWVT->hWnd )
+         if( pWVT->qWnd )
          {
             pInfo->pResult = hb_itemPutCPtr2( pInfo->pResult, pWVT->qWnd->windowTitle().toLatin1().data() );
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
@@ -1824,7 +1242,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             iVal = hb_itemGetNI( pInfo->pNewVal );
             if( iVal != pWVT->CodePage )
             {
-               if( !pWVT->hWnd )
+               if( !pWVT->qWnd )
                {
                   pWVT->CodePage = iVal;
                }
@@ -2092,6 +1510,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
                {
                   pWVT->COLORS[ iIndex ] = hb_itemGetNL( pInfo->pNewVal2 );
+                  pWVT->qWnd->consoleArea->COLORS[ iIndex ] = hb_itemGetNL( pInfo->pNewVal2 );
 
                   if( pWVT->hWnd )
                      HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
@@ -2115,6 +1534,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                {
                   for( i = 0; i < 16; i++ )
                      pWVT->COLORS[ i ] = hb_arrayGetNL( pInfo->pNewVal, i + 1 );
+                     pWVT->qWnd->consoleArea->COLORS[ i ] = hb_arrayGetNL( pInfo->pNewVal, i + 1 );
 
                   if( pWVT->hWnd )
                      HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
@@ -2239,9 +1659,10 @@ ConsoleArea::ConsoleArea(QWidget *parent)
    COLS = 80;
 
    setFocusPolicy(Qt::StrongFocus);
+   setMouseTracking( TRUE );
 }
 
-void ConsoleArea::sizeByFont(void)
+void ConsoleArea::resetWindowSize(void)
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
 
@@ -2249,14 +1670,15 @@ void ConsoleArea::sizeByFont(void)
    qFont = QFont();
    qFont.setFamily( pWVT->fontFace );
    qFont.setPixelSize( pWVT->fontHeight );
-   qFont.setWeight( -1 );
+   //qFont.setWeight( -1 );
    qFont.setFixedPitch( TRUE );
    qFont        = QFont( qFont, painter.device() );
    QFontMetrics fontMetrics( qFont );
    fontHeight   = fontMetrics.height();
    fontWidth    = fontMetrics.averageCharWidth();
+   pWVT->PTEXTSIZE.x = fontWidth;
+   pWVT->PTEXTSIZE.y = fontHeight;
    fontAscent   = fontMetrics.ascent();
-   int ls       = 0; //fontMetrics.letterSpacing();
    windowWidth  = fontWidth * COLS;
    windowHeight = fontHeight * ROWS;
 
@@ -2264,55 +1686,319 @@ void ConsoleArea::sizeByFont(void)
 
    QWidget::update();
 #if 0
-   wsprintf( buf, "%i %i %i %i   %i, %i   %i %i", pWVT->fontWidth, ls, fontWidth, fontHeight,
-                                   windowWidth,windowHeight,width(),height() );
+   wsprintf( buf, "%i %i  %i %i   %i %i",
+                      pWVT->fontWidth, pWVT->fontHeight, fontWidth, fontHeight,
+                                   windowWidth,windowHeight );
    OutputDebugString( buf );
 #endif
 }
 
 void ConsoleArea::keyReleaseEvent(QKeyEvent *event)
 {
-   int key = event->key();
+   HB_SYMBOL_UNUSED( event );
+   //int key = event->key();
+}
+
+#if 0
+static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
+{
+   if( ! pWVT->bBeginMarked && ! pWVT->MouseMove && ( message == WM_MOUSEMOVE || message == WM_NCMOUSEMOVE ) )
+      return;
+
+   xy.x = LOWORD( lParam );
+   xy.y = HIWORD( lParam );
+
+   colrow = hb_gt_wvt_GetColRowFromXY( pWVT, ( USHORT ) xy.x, ( USHORT ) xy.y );
+   hb_gt_wvt_SetMousePos( pWVT, colrow.y, colrow.x );
+
+   switch( message )
+   {
+      case WM_LBUTTONDOWN:
+      {
+         if( pWVT->bBeginMarked )
+         {
+            pWVT->bBeingMarked = TRUE;
+
+            pWVT->sRectNew.left     = xy.x;
+            pWVT->sRectNew.top      = xy.y;
+            pWVT->sRectNew.right    = xy.x;
+            pWVT->sRectNew.bottom   = xy.y;
+
+            pWVT->sRectOld.left   = 0;
+            pWVT->sRectOld.top    = 0;
+            pWVT->sRectOld.right  = 0;
+            pWVT->sRectOld.bottom = 0;
+
+            return;
+         }
+         else
+         {
+            keyCode = K_LBUTTONDOWN;
+            break;
+         }
+      }
+
+      case WM_LBUTTONUP:
+      {
+         if( pWVT->bBeingMarked )
+         {
+            pWVT->bBeginMarked = FALSE;
+            pWVT->bBeingMarked = FALSE;
+
+            RedrawWindow( pWVT->hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+
+            {
+               ULONG  ulSize;
+               int    irow, icol, j, top, left, bottom, right;
+               char * sBuffer;
+               RECT   rect = { 0, 0, 0, 0 };
+               RECT   colrowRC = { 0, 0, 0, 0 };
+
+               rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
+               rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
+               rect.right  = HB_MAX( pWVT->sRectNew.left, pWVT->sRectNew.right  );
+               rect.bottom = HB_MAX( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
+
+               colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
+
+               left   = colrowRC.left;
+               top    = colrowRC.top;
+               right  = colrowRC.right;
+               bottom = colrowRC.bottom;
+
+               ulSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
+               sBuffer = ( char * ) hb_xgrab( ulSize + 1 );
+
+               for( j = 0, irow = top; irow <= bottom; irow++ )
+               {
+                  for( icol = left; icol <= right; icol++ )
+                  {
+                     BYTE bColor, bAttr;
+                     USHORT usChar;
+
+                     if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
+                        break;
+
+                     sBuffer[ j++ ] = ( char ) usChar;
+                  }
+
+                  sBuffer[ j++ ] = '\r';
+                  sBuffer[ j++ ] = '\n';
+               }
+               sBuffer[ j ] = '\0';
+
+               if( j > 0 )
+               {
+                  hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
+                                             CF_OEMTEXT : CF_TEXT,
+                                             sBuffer,
+                                             j );
+               }
+
+               hb_xfree( sBuffer );
+            }
+            return;
+         }
+         else
+         {
+            keyCode = K_LBUTTONUP;
+            break;
+         }
+      }
+      case WM_MOUSEMOVE:
+      {
+         if( pWVT->bBeingMarked )
+         {
+            RECT rect     = { 0, 0, 0, 0 };
+            RECT colrowRC = { 0, 0, 0, 0 };
+
+            pWVT->sRectNew.right  = xy.x;
+            pWVT->sRectNew.bottom = xy.y;
+
+            rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
+            rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
+            rect.right  = HB_MAX( pWVT->sRectNew.left, pWVT->sRectNew.right  );
+            rect.bottom = HB_MAX( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
+
+            colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
+            rect     = hb_gt_wvt_GetXYFromColRowRect( pWVT, colrowRC );
+
+            if( rect.left   != pWVT->sRectOld.left   ||
+                rect.top    != pWVT->sRectOld.top    ||
+                rect.right  != pWVT->sRectOld.right  ||
+                rect.bottom != pWVT->sRectOld.bottom )
+            {
+#if !defined(HB_OS_WIN_CE)  /* WinCE does not support InvertRgn */
+               /* Concept forwarded by Andy Wos - thanks. */
+               HRGN rgn1 = CreateRectRgn( pWVT->sRectOld.left, pWVT->sRectOld.top, pWVT->sRectOld.right, pWVT->sRectOld.bottom );
+               HRGN rgn2 = CreateRectRgn( rect.left, rect.top, rect.right, rect.bottom );
+               HRGN rgn3 = CreateRectRgn( 0, 0, 0, 0 );
+
+               if( CombineRgn( rgn3, rgn1, rgn2, RGN_XOR ) != 0 )
+               {
+                  HDC hdc = GetDC( pWVT->hWnd );
+                  InvertRgn( hdc, rgn3 );
+                  ReleaseDC( pWVT->hWnd, hdc );
+               }
+
+               DeleteObject( rgn1 );
+               DeleteObject( rgn2 );
+               DeleteObject( rgn3 );
+#endif
+               pWVT->sRectOld.left   = rect.left;
+               pWVT->sRectOld.top    = rect.top;
+               pWVT->sRectOld.right  = rect.right;
+               pWVT->sRectOld.bottom = rect.bottom;
+            }
+            return;
+         }
+         }
+      }
+      case WM_MOUSEWHEEL:
+      {
+         SHORT keyState = ( SHORT ) HIWORD( wParam );
+         keyCode = keyState > 0 ? K_MWFORWARD : K_MWBACKWARD;
+         break;
+      }
+      case WM_NCMOUSEMOVE:
+         keyCode = K_NCMOUSEMOVE;
+         break;
+   }
+}
+#endif
+
+void hb_gt_wvt_QSetMousePos( PHB_GTWVT pWVT, int x, int y )
+{
+   QPoint colrow = hb_gt_wvt_QGetColRowFromXY( pWVT, x, y );
+
+   pWVT->MousePos.y = ( SHORT ) colrow.y();
+   pWVT->MousePos.x = ( SHORT ) colrow.x();
+}
+
+void ConsoleArea::mouseDoubleClickEvent(QMouseEvent *event)
+{
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+   int c = 0;
+
+   switch( event->button() )
+   {
+   case Qt::LeftButton:
+      c = K_LDBLCLK;
+      break;
+   case Qt::RightButton:
+      c = K_RDBLCLK;;
+      break;
+   case Qt::MidButton:
+      c = K_MDBLCLK;;
+      break;
+   }
+   if( c != 0 )
+   {
+      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
+      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
+   }
 }
 
 void ConsoleArea::mouseMoveEvent(QMouseEvent *event)
 {
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+   int c = K_MOUSEMOVE;
+#if defined( __HB_GTWVT_GEN_K_MMDOWN_EVENTS )
+   switch( event->button() )
+   {
+   case Qt::LeftButton:
+      c = K_MMLEFTDOWN;
+      break;
+   case Qt::RightButton:
+      c = K_MMRIGHTDOWN;
+      break;
+   case Qt::MidButton:
+      c = K_MMMIDDLEDOWN;
+      break;
+   }
+#endif
+   if( c != 0 )
+   {
+      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
+      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
+   }
 }
+
 
 void ConsoleArea::mousePressEvent(QMouseEvent *event)
 {
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+   int c = 0;
+
+   switch( event->button() )
+   {
+   case Qt::LeftButton:
+      c = K_LBUTTONDOWN;
+      break;
+   case Qt::RightButton:
+      c = K_RBUTTONDOWN;
+      break;
+   case Qt::MidButton:
+      c = K_MBUTTONDOWN;
+      break;
+   }
+   if( c != 0 )
+   {
+      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
+      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
+   }
 }
 
 void ConsoleArea::mouseReleaseEvent(QMouseEvent *event)
 {
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+   int c = 0;
+
+   switch( event->button() )
+   {
+   case Qt::LeftButton:
+      c = K_LBUTTONUP;
+      break;
+   case Qt::RightButton:
+      c = K_RBUTTONUP;
+      break;
+   case Qt::MidButton:
+      c = K_MBUTTONUP;
+      break;
+   }
+   if( c != 0 )
+   {
+      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
+      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
+   }
 }
 
 void ConsoleArea::paintEvent(QPaintEvent * event)
 {
     QPainter painter(this);
     painter.setBackgroundMode(Qt::OpaqueMode);
-    QRect rect = event->rect();
 
-    int    iRow,iCol,startCol,len ;
-    int    iTop;
-    USHORT usChar;
-    BYTE   bColor, bAttr, bOldColor = 0;
-    char   text[ WVT_MAX_COLS ];
+    int       iRow,iCol,startCol,len,iTop ;
+    USHORT    usChar;
+    BYTE      bColor, bAttr, bOldColor = 0;
+    char      text[ WVT_MAX_COLS ];
+    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+    QRect rcRect = hb_gt_wvt_QGetColRowFromXYRect( pWVT, event->rect() );
 
-    iTop = 0;
-    for( iRow = 0; iRow < ROWS; iRow++ )
+    for( iRow = rcRect.top(); iRow <= rcRect.bottom(); ++iRow )
     {
-       iCol = startCol = 0;
+       iCol = startCol = rcRect.left();
        len  = 0;
        iTop = ( iRow * fontHeight ) + fontAscent;
 
        text[ 0 ] = '\0';
 
-       while( iCol < COLS )
+       while( iCol <= rcRect.right() )
        {
           if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
              break;
 
+          // usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, TRUE, ( BYTE ) usChar );
           if( len == 0 )
           {
              bOldColor = bColor;
@@ -2326,7 +2012,7 @@ void ConsoleArea::paintEvent(QPaintEvent * event)
              painter.setBackground( brush );
 
              text[ len ] = '\0';
-             painter.drawText( QPoint( startCol, iTop ), QString( text ) );
+             painter.drawText( QPoint( startCol*fontWidth, iTop ), QString( text ) );
 
              bOldColor = bColor;
              startCol  = iCol;
@@ -2343,7 +2029,7 @@ void ConsoleArea::paintEvent(QPaintEvent * event)
           painter.setBackground( brush );
 
           text[ len ] = '\0';
-          painter.drawText( QPoint( startCol,iTop ), QString( text ) );
+          painter.drawText( QPoint( startCol*fontWidth,iTop ), QString( text ) );
        }
     }
 }
@@ -2383,6 +2069,10 @@ static void hb_gt_wvt_QTranslateKeyDigit( PHB_GTWVT pWVT, Qt::KeyboardModifiers 
 
 static void hb_gt_wvt_QTranslateKeyAlpha( PHB_GTWVT pWVT, Qt::KeyboardModifiers kbm, int key, int shiftkey, int altkey, int controlkey, QString text )
 {
+   HB_SYMBOL_UNUSED( key );
+   HB_SYMBOL_UNUSED( shiftkey );
+   HB_SYMBOL_UNUSED( controlkey );
+
    if( kbm & Qt::AltModifier )
       hb_gt_wvt_AddCharToInputQueue( pWVT, altkey );
    else
@@ -2424,12 +2114,14 @@ static void hb_gt_wvt_QTranslateKeyKP( PHB_GTWVT pWVT, Qt::KeyboardModifiers kbm
 
 void ConsoleArea::keyPressEvent(QKeyEvent *event)
 {
-   int  c;
+   int  c = 0;
    Qt::KeyboardModifiers kbm = event->modifiers();
 
+   #if 0
    BOOL bShift    = kbm & Qt::ShiftModifier;
    BOOL bControl  = kbm & Qt::ControlModifier;
    BOOL bAlt      = kbm & Qt::AltModifier;
+   #endif
 
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
 
@@ -2749,11 +2441,9 @@ void ConsoleArea::keyPressEvent(QKeyEvent *event)
 }
 
 /*----------------------------------------------------------------------*/
-
+#if 0
 static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
 {
-   #if 0
-
    switch( message )
    {
             default:
@@ -2857,11 +2547,9 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
          pWVT->IgnoreWM_SYSCHAR = FALSE;
       }
    }
-   #endif
-
    return 0;
 }
-
+#endif
 /*----------------------------------------------------------------------*/
 /*
  *                           Class MainWindow
