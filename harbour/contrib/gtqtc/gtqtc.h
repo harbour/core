@@ -225,6 +225,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow();
+    ~MainWindow();
 
     ConsoleArea *consoleArea;
     PHB_GT      pGT;
@@ -252,14 +253,12 @@ typedef struct
    USHORT       ROWS;                         /* number of displayable rows in window */
    USHORT       COLS;                         /* number of displayable columns in window */
 
-   COLORREF     COLORS[ 16 ];                 /* colors */
-
    BOOL         CaretExist;                   /* TRUE if a caret has been created */
    BOOL         CaretHidden;                  /* TRUE if a caret has been hiden */
    int          CaretSize;                    /* Height of solid caret */
    int          CaretWidth;                   /* Width of solid caret */
 
-   POINT        MousePos;                     /* the last mouse position */
+   QPoint       MousePos;                     /* the last mouse position */
    BOOL         MouseMove;                    /* Flag to say whether to return mouse movement events */
 
    int          Keys[ WVT_CHAR_QUEUE_SIZE ];  /* Array to hold the characters & events */
@@ -267,23 +266,22 @@ typedef struct
    int          keyPointerOut;                /* Offset into key array of next character to read */
    int          keyLast;                      /* last inkey code value in buffer */
 
-   POINT        PTEXTSIZE;                    /* size of the fixed width font */
+   QPoint       PTEXTSIZE;                    /* size of the fixed width font */
    BOOL         FixedFont;                    /* TRUE if current font is a fixed font */
    int          FixedSize[ WVT_MAX_COLS ];    /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
    int          fontHeight;                   /* requested font height */
    int          fontWidth;                    /* requested font width */
    int          fontWeight;                   /* Bold level */
    int          fontQuality;                  /* requested font quality */
-   char         fontFace[ LF_FACESIZE ];      /* requested font face name LF_FACESIZE #defined in wingdi.h */
+   char         fontFace[ MAX_PATH ];         /* requested font face name LF_FACESIZE #defined in wingdi.h */
 
-   HWND         hWnd;                         /* the window handle */
    BOOL         fInit;                        /* logical variable indicating that window should be open */
 
    PHB_CODEPAGE hostCDP;                      /* Host/HVM CodePage for unicode output translations */
    PHB_CODEPAGE inCDP;                        /* Host/HVM CodePage for unicode input translations */
    PHB_CODEPAGE boxCDP;                       /* CodePage for legacy drawing chars: IBM437 */
 
-   HICON        hIcon;                        /* Title Bar and Task List icon. Can be NULL. */
+   QIcon        qIcon;                        /* Title Bar and Task List icon. Can be NULL. */
    BOOL         bIconToFree;                  /* Do we need to free this icon when it's not NULL? */
 
    int          CodePage;                     /* Code page to use for display characters */
@@ -303,9 +301,6 @@ typedef struct
    BOOL         bClosable;
 
    int          ResizeMode;                   /* Sets the resizing mode either to FONT or ROWS */
-   RECT         sRectNew;
-   RECT         sRectOld;
-
    BOOL         bResizing;
    BOOL         bAlreadySizing;
 
