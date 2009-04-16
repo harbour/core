@@ -1215,14 +1215,18 @@ PROCEDURE Main( ... )
 
       CASE FN_ExtGet( cParamL ) == ".prg"
 
-         cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
-         AAdd( s_aPRG    , PathSepToTarget( cParam ) )
-         DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+         FOR EACH cParam IN FN_Expand( cParam )
+            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+            AAdd( s_aPRG    , PathSepToTarget( cParam ) )
+            DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+         NEXT
 
       CASE FN_ExtGet( cParamL ) == ".rc"
 
-         cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
-         AAdd( s_aRESSRC , PathSepToTarget( cParam ) )
+         FOR EACH cParam IN FN_Expand( cParam )
+            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+            AAdd( s_aRESSRC , PathSepToTarget( cParam ) )
+         NEXT
 
       CASE FN_ExtGet( cParamL ) == ".res"
 
@@ -1230,11 +1234,15 @@ PROCEDURE Main( ... )
             /* For MinGW family add .res files as source input, as they
                will need to be converted to coff format with windres (just
                like plain .rc files) before feeding them to gcc. */
-            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
-            AAdd( s_aRESSRC , PathSepToTarget( cParam ) )
+            FOR EACH cParam IN FN_Expand( cParam )
+               cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+               AAdd( s_aRESSRC , PathSepToTarget( cParam ) )
+            NEXT
          ELSE
-            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
-            AAdd( s_aRESCMP , PathSepToTarget( cParam ) )
+            FOR EACH cParam IN FN_Expand( cParam )
+               cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+               AAdd( s_aRESCMP , PathSepToTarget( cParam ) )
+            NEXT
          ENDIF
 
       CASE FN_ExtGet( cParamL ) == ".a"
@@ -1244,15 +1252,19 @@ PROCEDURE Main( ... )
 
       CASE FN_ExtGet( cParamL ) $ ".o|.obj"
 
-         cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
-         AAdd( s_aOBJUSER, PathSepToTarget( cParam ) )
-         DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+         FOR EACH cParam IN FN_Expand( cParam )
+            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+            AAdd( s_aOBJUSER, PathSepToTarget( cParam ) )
+            DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+         NEXT
 
       CASE FN_ExtGet( cParamL ) $ ".c|.cpp"
 
-         cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
-         AAdd( s_aC      , PathSepToTarget( cParam ) )
-         DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+         FOR EACH cParam IN FN_Expand( cParam )
+            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+            AAdd( s_aC      , PathSepToTarget( cParam ) )
+            DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+         NEXT
 
       OTHERWISE
 
@@ -3547,6 +3559,32 @@ STATIC FUNCTION FN_DirExtSet( cFileName, cDirNew, cExtNew )
    ENDIF
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
+
+STATIC FUNCTION FN_Expand( cFileName )
+   LOCAL aFileList
+   LOCAL aFile
+   LOCAL aDir
+   LOCAL cExt
+
+   IF ! FN_HasWildcard( cFileName )
+      RETURN { cFileName }
+   ENDIF
+
+   aFileList := {}
+
+   cExt := FN_ExtGet( cFileName )
+   aDir := Directory( cFileName )
+   FOR EACH aFile IN aDir
+      IF FN_ExtGet( aFile[ F_NAME ] ) == cExt /* Workaround to not find 'hello.prga' when looking for '*.prg' */
+         AAdd( aFilelist, aFile[ F_NAME ] )
+      ENDIF
+   NEXT
+
+   RETURN aFileList
+
+STATIC FUNCTION FN_HasWildcard( cFileName )
+   RETURN "?" $ cFileName .OR. ;
+          "*" $ cFileName
 
 #define HBMK_CFG_NAME  "hbmk.cfg"
 
