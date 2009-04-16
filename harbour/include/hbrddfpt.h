@@ -53,10 +53,6 @@
 #ifndef HB_RDDFPT_H_
 #define HB_RDDFPT_H_
 
-#include "hbdbf.h"
-#include "hbdbferr.h"
-#include "hbapirdd.h"
-#define HB_EXTERNAL_RDDDBF_USE
 #include "hbrdddbf.h"
 
 HB_EXTERN_BEGIN

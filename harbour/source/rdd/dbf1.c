@@ -52,20 +52,19 @@
 
 #define HB_TRIGVAR_BYREF
 
-#include "hbapi.h"
-#include "hbinit.h"
-#include "hbvm.h"
-#include "hbapiitm.h"
+#define _HB_RDDDBF_INTERNAL_
+
 #include "hbrdddbf.h"
-#include "hbdbf.h"
+#include "hbdbsort.h"
+#include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapilng.h"
 #include "hbset.h"
 #include "hbdate.h"
 #include "hbmath.h"
-#include "hbdbsort.h"
 #include "hbsxfunc.h"
 #include "hbstack.h"
+#include "hbvm.h"
 #include "error.ch"
 #include "rddsys.ch"
 #include "hbsxdef.ch"

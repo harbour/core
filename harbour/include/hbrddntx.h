@@ -53,9 +53,6 @@
 #ifndef HB_RDDNTX_H_
 #define HB_RDDNTX_H_
 
-#include "hbapirdd.h"
-#include "hbdbferr.h"
-#define HB_EXTERNAL_RDDDBF_USE
 #include "hbrdddbf.h"
 
 HB_EXTERN_BEGIN

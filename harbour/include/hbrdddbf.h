@@ -250,7 +250,7 @@ typedef DBFAREA * LPDBFAREA;
 #define DBFAREAP LPDBFAREA
 #endif
 
-#ifndef HB_EXTERNAL_RDDDBF_USE
+#ifdef _HB_RDDDBF_INTERNAL_
 
 /*
  * -- DBF METHODS --
@@ -361,7 +361,7 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect
 
 #define hb_dbfWhoCares                             NULL
 
-#endif /* HB_EXTERNAL_RDDDBF_USE */
+#endif /* _HB_RDDDBF_INTERNAL_ */
 
 extern HB_EXPORT ULONG      hb_dbfGetMemoBlock( DBFAREAP pArea, USHORT uiIndex );
 extern HB_EXPORT void       hb_dbfPutMemoBlock( DBFAREAP pArea, USHORT uiIndex,

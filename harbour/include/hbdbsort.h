@@ -53,7 +53,6 @@
 #ifndef HB_DBSORT_H_
 #define HB_DBSORT_H_
 
-#define HB_EXTERNAL_RDDDBF_USE
 #include "hbrdddbf.h"
 
 HB_EXTERN_BEGIN
