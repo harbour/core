@@ -2,5 +2,14 @@
 # $Id$
 #
 
-{win}libs=hwgui hwg_qhtm procmisc hbxml
+# Copy this file to hwgui root dir and include it in hbmk2
+# command line to build an app:
+# > hbmk2 test.prg C:\hwgui\hwgui.hbp
+
+{win}prgflags=-i${hb_self}include
+{win}cflags=-I${hb_self}include
+{win}libpaths=${hb_self}lib
+
 {win}gt=gtgui
+
+{win}libs=hwgui hwg_qhtm procmisc hbxml

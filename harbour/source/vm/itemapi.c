@@ -1115,7 +1115,7 @@ PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
 
    if( iWidth <= 0 || iWidth > 99 )
    {
-#if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
+#if defined(__BORLANDC__) && (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
       /* Borland C compiled app crashes if a "NaN" double is compared
        * with another double [martin vogel]
        */
