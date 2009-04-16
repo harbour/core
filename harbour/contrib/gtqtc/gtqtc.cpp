@@ -10,23 +10,11 @@
  * Video subsystem for Windows using GUI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
- * based on
- *   Bcc ConIO Video subsystem by
- *     Copyright 2002 Marek Paliwoda <paliwoda@inteia.pl>
- *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
- *   Video subsystem for Windows compilers
- *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
- *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
  *    Adopted to new GT API
  *
- * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
- *
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_gt_Tone()
  *
  * See COPYING for licensing terms.
  *
@@ -71,26 +59,10 @@
  *
  */
 
-/*
- * Individual authors:
- * (C) 2003-2004 Giancarlo Niccolai <gc at niccolai dot ws>
- *         Standard xplatform GT Info system,
- *         Graphical object system and event system.
- *         GTINFO() And GTO_* implementation.
- *
- * (C) 2004 Mauricio Abre <maurifull@datafull.com>
- *         Cross-GT, multiplatform Graphics API
- *
- */
-
 #include "gtqtc.h"
 
 static QApplication * app      = NULL;
 static bool           hbqtinit = false;
-
-#if !defined( SM_REMOTESESSION )
-   #define SM_REMOTESESSION        0x1000
-#endif
 
 #define WM_MY_UPDATE_CARET         1700
 
@@ -107,10 +79,6 @@ static HB_CRITICAL_NEW( s_wvtMtx );
 
 static PHB_GTWVT  s_wvtWindows[ WVT_MAX_WINDOWS ];
 static int        s_wvtCount = 0;
-
-//static const TCHAR s_szClassName[] = TEXT( "Harbour_WVT_Class" );
-
-//static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 
 void hb_ToOutDebug( const char * sTraceMsg, ... );
 
@@ -199,11 +167,10 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    hb_xfree( pWVT );
 }
 
-static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
+static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
 {
    PHB_GTWVT pWVT;
    OSVERSIONINFO osvi;
-   HB_SYMBOL_UNUSED( hInstance );
 
    osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
    GetVersionEx( &osvi );
@@ -228,8 +195,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->PTEXTSIZE.setY( WVT_DEFAULT_FONT_HEIGHT );
    pWVT->fontWidth         = WVT_DEFAULT_FONT_WIDTH;
    pWVT->fontHeight        = WVT_DEFAULT_FONT_HEIGHT;
-   pWVT->fontWeight        = FW_NORMAL;
-   pWVT->fontQuality       = DEFAULT_QUALITY;
+   pWVT->fontWeight        = 0;
+   pWVT->fontQuality       = 0;
    hb_strncpy( pWVT->fontFace, WVT_DEFAULT_FONT_NAME, sizeof( pWVT->fontFace ) - 1 );
 
    pWVT->CaretExist        = FALSE;
@@ -239,18 +206,17 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->MousePos.setX( 0 );
    pWVT->MousePos.setY( 0 );
    pWVT->MouseMove         = TRUE;
-//   pWVT->hWnd              = NULL;
    pWVT->keyPointerIn      = 0;
    pWVT->keyPointerOut     = 0;
    pWVT->keyLast           = 0;
 
-   pWVT->CentreWindow      = TRUE;            /* Default is to always display window in centre of screen */
-   pWVT->CodePage          = OEM_CHARSET;     /* GetACP(); - set code page to default system */
+   pWVT->CentreWindow      = TRUE;        /* Default is to always display window in centre of screen */
+   pWVT->CodePage          = 255;         /* GetACP(); - set code page to default system */
 
-   pWVT->Win9X             = ( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
+   //pWVT->Win9X             = ( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
    pWVT->AltF4Close        = FALSE;
 
-   pWVT->IgnoreWM_SYSCHAR  = FALSE;
+   //pWVT->IgnoreWM_SYSCHAR  = FALSE;
 
    pWVT->bMaximized        = FALSE;
    pWVT->bBeingMarked      = FALSE;
@@ -277,10 +243,10 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
 static void hb_gt_wvt_SetWindowFlags( PHB_GTWVT pWVT, Qt::WindowFlags flags )
 {
-   pWVT->qWnd->setWindowFlags(flags);
+   pWVT->qWnd->setWindowFlags( flags );
    QPoint pos = pWVT->qWnd->pos();
    if( pos.x() < 0 )
-      pos.setX(0);
+      pos.setX( 0 );
    if( pos.y() < 0 )
       pos.setY( 0 );
    pWVT->qWnd->move( pos );
@@ -297,11 +263,8 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent )
       if( hb_vmRequestReenter() )
       {
          PHB_ITEM pEvent = hb_itemPutNI( NULL, nEvent );
-
          nResult = hb_itemGetNI( hb_vmEvalBlockV( ( PHB_ITEM ) pWVT->pGT->pNotifierBlock, 1, pEvent ) );
-
          hb_itemRelease( pEvent );
-
          hb_vmRequestRestore();
       }
    }
@@ -325,6 +288,7 @@ static QFont* hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, 
 
    return qFont;
 }
+
 #if 0    /*   I M P O R T A N T   */
 static QPoint hb_gt_wvt_QGetXYFromColRow( PHB_GTWVT pWVT, int col, int row )
 {
@@ -334,6 +298,7 @@ static QPoint hb_gt_wvt_QGetXYFromColRow( PHB_GTWVT pWVT, int col, int row )
    return xy;
 }
 #endif
+
 static QRect hb_gt_wvt_QGetXYFromColRowRect( PHB_GTWVT pWVT, QRect colrow )
 {
    QRect xy;
@@ -343,6 +308,7 @@ static QRect hb_gt_wvt_QGetXYFromColRowRect( PHB_GTWVT pWVT, QRect colrow )
    xy.setBottom( ( colrow.bottom() + 1 ) * pWVT->PTEXTSIZE.y() );
    return xy;
 }
+
 #if 0
 static void hb_gt_wvt_UpdateCaret( PHB_GTWVT pWVT )
 {
@@ -445,6 +411,49 @@ static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
    *iKey = 0;
    return FALSE;
 }
+
+int hb_gt_wvt_getKbdState( void )
+{
+   int iKbdState = 0;
+   Qt::KeyboardModifiers kbState = qApp->keyboardModifiers();
+
+   if( kbState & Qt::ShiftModifier   ) iKbdState |= HB_GTI_KBD_SHIFT;
+   if( kbState & Qt::ControlModifier ) iKbdState |= HB_GTI_KBD_CTRL;
+   if( kbState & Qt::AltModifier     ) iKbdState |= HB_GTI_KBD_ALT;
+   #if 0
+   if( kbState[VK_LWIN    ] & 0x80 ) iKbdState |= HB_GTI_KBD_LWIN;
+   if( kbState[VK_RWIN    ] & 0x80 ) iKbdState |= HB_GTI_KBD_RWIN;
+   if( kbState[VK_APPS    ] & 0x80 ) iKbdState |= HB_GTI_KBD_MENU;
+   if( kbState[VK_SCROLL  ] & 0x01 ) iKbdState |= HB_GTI_KBD_SCROLOCK;
+   if( kbState[VK_NUMLOCK ] & 0x01 ) iKbdState |= HB_GTI_KBD_NUMLOCK;
+   if( kbState[VK_CAPITAL ] & 0x01 ) iKbdState |= HB_GTI_KBD_CAPSLOCK;
+   if( kbState[VK_INSERT  ] & 0x01 ) iKbdState |= HB_GTI_KBD_INSERT;
+   #endif
+
+   return iKbdState;
+}
+#if 0
+void hb_gt_wvt_setKbdState( int iKbdState )
+{
+   BYTE kbState[256];
+
+   GetKeyboardState( kbState );
+
+   kbState[VK_SHIFT  ] = ( iKbdState & HB_GTI_KBD_SHIFT    ) ? 0x80 : 0;
+   kbState[VK_CONTROL] = ( iKbdState & HB_GTI_KBD_CTRL     ) ? 0x80 : 0;
+   kbState[VK_MENU   ] = ( iKbdState & HB_GTI_KBD_ALT      ) ? 0x80 : 0;
+   kbState[VK_LWIN   ] = ( iKbdState & HB_GTI_KBD_LWIN     ) ? 0x80 : 0;
+   kbState[VK_RWIN   ] = ( iKbdState & HB_GTI_KBD_RWIN     ) ? 0x80 : 0;
+   kbState[VK_APPS   ] = ( iKbdState & HB_GTI_KBD_MENU     ) ? 0x80 : 0;
+   kbState[VK_SCROLL ] = ( iKbdState & HB_GTI_KBD_SCROLOCK ) ? 0x01 : 0;
+   kbState[VK_NUMLOCK] = ( iKbdState & HB_GTI_KBD_NUMLOCK  ) ? 0x01 : 0;
+   kbState[VK_CAPITAL] = ( iKbdState & HB_GTI_KBD_CAPSLOCK ) ? 0x01 : 0;
+   kbState[VK_INSERT ] = ( iKbdState & HB_GTI_KBD_INSERT   ) ? 0x01 : 0;
+
+   SetKeyboardState( kbState );
+}
+#endif
+
 #if 0
 static int hb_gt_wvt_key_ansi_to_oem( int c )
 {
@@ -467,6 +476,7 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
 }
 #endif
+
 static void hb_gt_wvt_QResetWindowSize( PHB_GTWVT pWVT )
 {
    pWVT->qWnd->consoleArea->resetWindowSize();
@@ -520,9 +530,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
    if( pWVT ) switch( message )
    {
-      case WM_CREATE:
-         return hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
-
       case WM_MY_UPDATE_CARET:
          hb_gt_wvt_UpdateCaret( pWVT );
          return 0;
@@ -533,27 +540,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
       case WM_KILLFOCUS:
          hb_gt_wvt_KillCaret( pWVT );
-         return 0;
-
-      case WM_KEYDOWN:
-      case WM_SYSKEYDOWN:
-      case WM_CHAR:
-      case WM_SYSCHAR:
-         return hb_gt_wvt_KeyEvent( pWVT, message, wParam, lParam );
-
-      case WM_RBUTTONDOWN:
-      case WM_LBUTTONDOWN:
-      case WM_RBUTTONUP:
-      case WM_LBUTTONUP:
-      case WM_RBUTTONDBLCLK:
-      case WM_LBUTTONDBLCLK:
-      case WM_MBUTTONDOWN:
-      case WM_MBUTTONUP:
-      case WM_MBUTTONDBLCLK:
-      case WM_MOUSEMOVE:
-      case WM_MOUSEWHEEL:
-      case WM_NCMOUSEMOVE:
-         hb_gt_wvt_MouseEvent( pWVT, message, wParam, lParam );
          return 0;
 
       case WM_QUERYENDSESSION: /* Closing down computer */
@@ -570,16 +556,10 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          }
          return 0;
 
-      case WM_QUIT:
-      case WM_DESTROY:
-         return 0;
-
       case WM_ENTERIDLE:
-         /* FSG - 12/05/2004 - Signal than i'm on idle */
          hb_idleState();
          return 0;
 
-      /* Pritpal Bedi - 06 Jun 2008 */
       case WM_ACTIVATE:
          hb_gt_wvt_FireEvent( pWVT, ( LOWORD( wParam ) == WA_INACTIVE ? HB_GTE_KILLFOCUS : HB_GTE_SETFOCUS ) );
          return 0;
@@ -590,13 +570,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             pWVT->bMaximized = FALSE;
 
             /* Enable "maximize" button */
-
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-            SetWindowLong( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME );
-#else
             SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME );
-#endif
-
             SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                                       SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
             ShowWindow( pWVT->hWnd, SW_HIDE );
@@ -642,11 +616,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                   hb_gt_wvt_FitRows( pWVT );
 
                /* Disable "maximize" button */
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-               SetWindowLong( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
-#else
                SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
-#endif
                SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                                          SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
                ShowWindow( pWVT->hWnd, SW_HIDE );
@@ -667,12 +637,10 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          }
          break;
    }
-
-   return DefWindowProc( hWnd, message, wParam, lParam );
 }
 #endif
 
-static DWORD hb_gt_wvt_ProcessMessages( void )
+static int hb_gt_wvt_ProcessMessages( void )
 {
    app->processEvents();
    return( 0 );
@@ -800,7 +768,6 @@ static void hbqt_Init( void * cargo )
 
 static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   HANDLE    hInstance = NULL;
    int       iCmdShow = 0;
    PHB_GTWVT pWVT = NULL;
 
@@ -808,7 +775,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    hbqt_Init( NULL );
    if( hbqtinit )
-      pWVT = hb_gt_wvt_New( pGT, ( HINSTANCE ) hInstance, iCmdShow );
+      pWVT = hb_gt_wvt_New( pGT, iCmdShow );
       if( !pWVT )
          hb_errInternal( 10001, "Maximum number of WVT windows reached, cannot create another one", NULL, NULL );
 
@@ -1059,17 +1026,16 @@ static BOOL hb_gt_wvt_mouse_ButtonState( PHB_GT pGT, int iButton )
    HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_mouse_ButtonState(%p,%i)", pGT, iButton) );
 
    HB_SYMBOL_UNUSED( pGT );
-   #if 0
+
    switch( iButton )
    {
    case 0:
-      return ( GetKeyState( VK_LBUTTON ) & 0x8000 ) != 0;
+      return ( qApp->mouseButtons() & Qt::LeftButton );
    case 1:
-      return ( GetKeyState( VK_RBUTTON ) & 0x8000 ) != 0;
+      return ( qApp->mouseButtons() & Qt::RightButton );
    case 2:
-      return ( GetKeyState( VK_MBUTTON ) & 0x8000 ) != 0;
+      return ( qApp->mouseButtons() & Qt::MidButton );
    }
-   #endif
    return FALSE;
 }
 
@@ -1268,13 +1234,12 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_VIEWMAXHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->ROWS );
          break;
-#if 0
+
       case HB_GTI_KBDSHIFTS:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_winapi_getKbdState() );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_wvt_getKbdState() );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-            hb_gt_winapi_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
+            // hb_gt_wvt_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
          break;
-#endif
 
       case HB_GTI_CURSORBLINKRATE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, qApp->cursorFlashTime() );

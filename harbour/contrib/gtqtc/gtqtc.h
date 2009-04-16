@@ -275,7 +275,7 @@ typedef struct
    int          fontWidth;                    /* requested font width */
    int          fontWeight;                   /* Bold level */
    int          fontQuality;                  /* requested font quality */
-   char         fontFace[ MAX_PATH ];         /* requested font face name LF_FACESIZE #defined in wingdi.h */
+   char         fontFace[ WVT_MAX_COLS ];     /* requested font face name LF_FACESIZE #defined in wingdi.h */
 
    BOOL         fInit;                        /* logical variable indicating that window should be open */
 
@@ -287,11 +287,11 @@ typedef struct
    BOOL         bIconToFree;                  /* Do we need to free this icon when it's not NULL? */
 
    int          CodePage;                     /* Code page to use for display characters */
-   BOOL         Win9X;                        /* Flag to say if running on Win9X not NT/2000/XP */
+   //BOOL         Win9X;                        /* Flag to say if running on Win9X not NT/2000/XP */
    BOOL         AltF4Close;                   /* Can use Alt+F4 to close application */
    BOOL         CentreWindow;                 /* True if window is to be Reset into centre of window */
 
-   BOOL         IgnoreWM_SYSCHAR;
+   //BOOL         IgnoreWM_SYSCHAR;
 
    BOOL         bMaximized;                   /* Flag is set when window has been maximized */
    BOOL         bBeingMarked;                 /* Flag to control DOS window like copy operation */
