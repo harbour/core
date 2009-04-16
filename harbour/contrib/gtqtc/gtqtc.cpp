@@ -1062,12 +1062,12 @@ static BOOL hb_gt_wvt_mouse_ButtonState( PHB_GT pGT, int iButton )
    #if 0
    switch( iButton )
    {
-      case 0:
-         return ( GetKeyState( VK_LBUTTON ) & 0x8000 ) != 0;
-      case 1:
-         return ( GetKeyState( VK_RBUTTON ) & 0x8000 ) != 0;
-      case 2:
-         return ( GetKeyState( VK_MBUTTON ) & 0x8000 ) != 0;
+   case 0:
+      return ( GetKeyState( VK_LBUTTON ) & 0x8000 ) != 0;
+   case 1:
+      return ( GetKeyState( VK_RBUTTON ) & 0x8000 ) != 0;
+   case 2:
+      return ( GetKeyState( VK_MBUTTON ) & 0x8000 ) != 0;
    }
    #endif
    return FALSE;
@@ -1205,7 +1205,6 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, qDesk->height() / pWVT->PTEXTSIZE.y() );
          break;
       }
-
       case HB_GTI_WINTITLE:
          if( pWVT->qWnd )
          {
@@ -1255,60 +1254,13 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_ICONFILE:
-      {
-         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) )
-         {
-            if( pWVT->qWnd )
-            {
-               pWVT->qWnd->setWindowIcon( QIcon( QString( hb_itemGetCPtr( pInfo->pNewVal ) ) ) );
-            }
-         }
-         break;
-      }
-#if 0
-      case HB_GTI_ICONRES:
-      {
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL;
-            LPTSTR lpIcon;
-
-            lpIcon = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
-            pWVT->bIconToFree = FALSE;
-            pWVT->hIcon = LoadIcon( pWVT->hInstance, lpIcon );
-            HB_TCHAR_FREE( lpIcon );
-
-            if( pWVT->hWnd )
-            {
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
-            }
-
-            if( hIconToFree )
-               DestroyIcon( hIconToFree );
+            if( pWVT->qWnd )
+               pWVT->qWnd->setWindowIcon( QIcon( QString( hb_itemGetCPtr( pInfo->pNewVal ) ) ) );
          }
-         else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-         {
-            HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL;
-
-            pWVT->bIconToFree = FALSE;
-            pWVT->hIcon = LoadIcon( pWVT->hInstance,
-                                    MAKEINTRESOURCE( ( HB_LONG )
-                                         hb_itemGetNInt( pInfo->pNewVal ) ) );
-
-            if( pWVT->hWnd )
-            {
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
-            }
-
-            if( hIconToFree )
-               DestroyIcon( hIconToFree );
-         }
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) pWVT->hIcon );
          break;
-      }
-#endif
+
       case HB_GTI_VIEWMAXWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->COLS );
          break;
@@ -1322,13 +1274,16 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             hb_gt_winapi_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
          break;
+#endif
 
       case HB_GTI_CURSORBLINKRATE:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, GetCaretBlinkTime() );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, qApp->cursorFlashTime() );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-            SetCaretBlinkTime( hb_itemGetNI( pInfo->pNewVal ) );
+         {
+            qApp->setCursorFlashTime( hb_itemGetNI( pInfo->pNewVal ) );
+         }
          break;
-#endif
+
       case HB_GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
@@ -1344,7 +1299,6 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_SCREENSIZE:
-      {
          int iX, iY;
 
          if( !pInfo->pResult )
@@ -1365,7 +1319,6 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             pWVT->CentreWindow = bOldCentre;
          }
          break;
-      }
 
       case HB_GTI_RESIZABLE:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bResizable );
@@ -1471,17 +1424,16 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
             int iIndex = hb_itemGetNI( pInfo->pNewVal );
-
             if( iIndex >= 0 && iIndex < 16 )
             {
                pInfo->pResult = hb_itemPutNL( pInfo->pResult, pWVT->qWnd->consoleArea->COLORS[ iIndex ] );
-
                if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
                {
-                  pWVT->qWnd->consoleArea->COLORS[ iIndex ] = hb_itemGetNL( pInfo->pNewVal2 );
-
                   if( pWVT->qWnd )
+                  {
+                     pWVT->qWnd->consoleArea->COLORS[ iIndex ] = hb_itemGetNL( pInfo->pNewVal2 );
                      HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+                  }
                }
             }
          }
@@ -1672,12 +1624,6 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
    if( ! pWVT->bBeginMarked && ! pWVT->MouseMove && ( message == WM_MOUSEMOVE || message == WM_NCMOUSEMOVE ) )
       return;
 
-   xy.x = LOWORD( lParam );
-   xy.y = HIWORD( lParam );
-
-   colrow = hb_gt_wvt_GetColRowFromXY( pWVT, ( USHORT ) xy.x, ( USHORT ) xy.y );
-   hb_gt_wvt_SetMousePos( pWVT, colrow.y, colrow.x );
-
    switch( message )
    {
       case WM_LBUTTONDOWN:
@@ -1795,7 +1741,6 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                 rect.right  != pWVT->sRectOld.right  ||
                 rect.bottom != pWVT->sRectOld.bottom )
             {
-#if !defined(HB_OS_WIN_CE)  /* WinCE does not support InvertRgn */
                /* Concept forwarded by Andy Wos - thanks. */
                HRGN rgn1 = CreateRectRgn( pWVT->sRectOld.left, pWVT->sRectOld.top, pWVT->sRectOld.right, pWVT->sRectOld.bottom );
                HRGN rgn2 = CreateRectRgn( rect.left, rect.top, rect.right, rect.bottom );
@@ -1811,7 +1756,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                DeleteObject( rgn1 );
                DeleteObject( rgn2 );
                DeleteObject( rgn3 );
-#endif
+
                pWVT->sRectOld.left   = rect.left;
                pWVT->sRectOld.top    = rect.top;
                pWVT->sRectOld.right  = rect.right;
@@ -1820,12 +1765,6 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             return;
          }
          }
-      }
-      case WM_MOUSEWHEEL:
-      {
-         SHORT keyState = ( SHORT ) HIWORD( wParam );
-         keyCode = keyState > 0 ? K_MWFORWARD : K_MWBACKWARD;
-         break;
       }
       case WM_NCMOUSEMOVE:
          keyCode = K_NCMOUSEMOVE;
@@ -1840,6 +1779,31 @@ void hb_gt_wvt_QSetMousePos( PHB_GTWVT pWVT, int x, int y )
 
    pWVT->MousePos.setY( colrow.y() );
    pWVT->MousePos.setX( colrow.x() );
+}
+
+void ConsoleArea::wheelEvent(QWheelEvent *event)
+{
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+   int c = 0;
+
+   switch( event->orientation() )
+   {
+   case Qt::Vertical:
+      if( event->delta() < 0 )
+         c = K_MWFORWARD;
+      else
+         c = K_MWBACKWARD;
+      break;
+   case Qt::Horizontal:
+   default:
+      QWidget::wheelEvent(event);
+      return;
+   }
+   if( c != 0 )
+   {
+      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
+      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
+   }
 }
 
 void ConsoleArea::mouseDoubleClickEvent(QMouseEvent *event)

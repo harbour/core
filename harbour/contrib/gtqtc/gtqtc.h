@@ -213,6 +213,7 @@ protected:
     void   mouseDoubleClickEvent(QMouseEvent * event);
     void   paintEvent(QPaintEvent *event);
     void   resizeEvent(QResizeEvent *event);
+    void   wheelEvent(QWheelEvent *event);
 
 private:
     QFont  qFont;
