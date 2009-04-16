@@ -123,6 +123,19 @@
 #define HBMK_INTEGRATED_COMPILER
 #endif
 
+#define _PAR_cParam         1
+#define _PAR_cFileName      2
+#define _PAR_nLine          3
+
+#define _COMPR_OFF          0
+#define _COMPR_DEF          1
+#define _COMPR_MIN          2
+#define _COMPR_MAX          3
+
+#define _HEAD_OFF           0
+#define _HEAD_PARTIAL       1
+#define _HEAD_FULL          2
+
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
 
@@ -139,19 +152,13 @@ STATIC s_cGTDEFAULT
 
 STATIC s_lMT := .F.
 STATIC s_lDEBUG := .F.
+STATIC s_nHEAD := _HEAD_PARTIAL
+
+STATIC s_lDEBUGINC
 
 STATIC s_cCCPATH
 STATIC s_cCCPREFIX
 STATIC s_cHBPOSTFIX
-
-#define _PAR_cParam         1
-#define _PAR_cFileName      2
-#define _PAR_nLine          3
-
-#define _COMPR_OFF          0
-#define _COMPR_DEF          1
-#define _COMPR_MIN          2
-#define _COMPR_MAX          3
 
 PROCEDURE Main( ... )
 
@@ -239,6 +246,7 @@ PROCEDURE Main( ... )
    LOCAL s_aLIBSYSMISC := {}
    LOCAL s_aOPTPRG
    LOCAL s_aOPTC
+   LOCAL s_aOPTRES
    LOCAL s_aOPTL
    LOCAL s_aOPTA
    LOCAL s_aOPTD
@@ -273,8 +281,6 @@ PROCEDURE Main( ... )
    LOCAL s_lREBUILD := .F.
    LOCAL s_lCLEAN := .F.
    LOCAL s_nJOBS := 1
-
-   LOCAL s_lDEBUGINC := hb_ArgCheck( "debuginc" )
 
    LOCAL aCOMPDET
    LOCAL aCOMPDET_LOCAL
@@ -368,6 +374,8 @@ PROCEDURE Main( ... )
       ErrorLevel( 19 )
       RETURN
    ENDIF
+
+   s_lDEBUGINC := hb_ArgCheck( "debuginc" )
 
    FOR EACH cParam IN hb_AParams()
 
@@ -824,6 +832,7 @@ PROCEDURE Main( ... )
    s_aC := {}
    s_aOPTPRG := {}
    s_aOPTC := {}
+   s_aOPTRES := {}
    s_aOPTL := {}
    s_aOPTA := {}
    s_aOPTD := {}
@@ -882,6 +891,7 @@ PROCEDURE Main( ... )
                    @s_aLIBDYNHAS,;
                    @s_aOPTPRG,;
                    @s_aOPTC,;
+                   @s_aOPTRES,;
                    @s_aOPTL,;
                    @s_lGUI,;
                    @s_lMT,;
@@ -892,6 +902,7 @@ PROCEDURE Main( ... )
                    @s_lMAP,;
                    @s_lSTRIP,;
                    @s_nCOMPR,;
+                   @s_nHEAD,;
                    @s_lRUN,;
                    @s_lINC,;
                    @s_cGT )
@@ -970,9 +981,20 @@ PROCEDURE Main( ... )
            CASE SubStr( cParamL, 8 ) == "max" ; s_nCOMPR := _COMPR_MAX
            OTHERWISE                          ; s_nCOMPR := _COMPR_DEF
            ENDCASE
-
       CASE cParamL == "-compr-" .OR. ;
            cParamL == "-nocompr"         ; s_nCOMPR    := _COMPR_OFF
+
+      CASE cParamL == "-head" .OR. ;
+           Left( cParamL, 6 ) == "-head="
+
+           DO CASE
+           CASE SubStr( cParamL, 7 ) == "off"  ; s_nHEAD := _HEAD_OFF
+           CASE SubStr( cParamL, 7 ) == "full" ; s_nHEAD := _HEAD_FULL
+           OTHERWISE                           ; s_nHEAD := _HEAD_PARTIAL
+           ENDCASE
+      CASE cParamL == "-head-" .OR. ;
+           cParamL == "-nohead"          ; s_nHEAD     := _HEAD_OFF
+
       CASE cParamL == "-run"             ; s_lRUN      := .T.
       CASE cParamL == "-run-" .OR. ;
            cParamL == "-norun"           ; s_lRUN      := .F.
@@ -1077,6 +1099,13 @@ PROCEDURE Main( ... )
             AAdd( s_aOPTC   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
+      CASE Left( cParamL, Len( "-resflag=" ) ) == "-resflag="
+
+         cParam := ArchCompFilter( SubStr( cParam, Len( "-resflag=" ) + 1 ) )
+         IF Left( cParam, 1 ) $ cOptPrefix
+            AAdd( s_aOPTRES , PathSepToTarget( cParam, 2 ) )
+         ENDIF
+
       CASE Left( cParamL, Len( "-ldflag=" ) ) == "-ldflag="
 
          cParam := ArchCompFilter( SubStr( cParam, Len( "-ldflag=" ) + 1 ) )
@@ -1168,6 +1197,7 @@ PROCEDURE Main( ... )
             @s_aLIBDYNHAS,;
             @s_aOPTPRG,;
             @s_aOPTC,;
+            @s_aOPTRES,;
             @s_aOPTL,;
             @s_lGUI,;
             @s_lMT,;
@@ -1178,6 +1208,7 @@ PROCEDURE Main( ... )
             @s_lMAP,;
             @s_lSTRIP,;
             @s_nCOMPR,;
+            @s_nHEAD,;
             @s_lRUN,;
             @s_lINC,;
             @s_cGT )
@@ -1280,7 +1311,8 @@ PROCEDURE Main( ... )
             ENDIF
             IF ! hb_FGetDateTime( FN_ExtSet( tmp, ".prg" ), @tmp1 ) .OR. ;
                ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
-               tmp1 > tmp2
+               tmp1 > tmp2 .OR. ;
+               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( FN_ExtSet( tmp, ".prg" ), tmp2, 1, OPTPRG_to_INCPATH( s_aOPTPRG, s_cHB_INC_INSTALL ) ) )
                AAdd( s_aPRG_TODO, tmp )
             ENDIF
          NEXT
@@ -1660,7 +1692,7 @@ PROCEDURE Main( ... )
          IF s_cCOMP $ "mingw|mingw64|mingwarm" .AND. Len( s_aRESSRC ) > 0
             cBin_Res := s_cCCPREFIX + "windres"
             cResExt := ".reso"
-            cOpt_Res := "{IR} -O coff -o {OS}"
+            cOpt_Res := "{FR} {IR} -O coff -o {OS}"
             IF ! Empty( s_cCCPATH )
                cBin_Res := s_cCCPATH + "\" + cBin_Res
             ENDIF
@@ -1828,7 +1860,7 @@ PROCEDURE Main( ... )
          IF Len( s_aRESSRC ) > 0
             cBin_Res := "wrc"
             cResExt := ".res"
-            cOpt_Res := "-r -zm {IR} -fo={OS}"
+            cOpt_Res := "-r {FR} -zm {IR} -fo={OS}"
             cResPrefix := "OP res="
          ENDIF
 
@@ -1925,7 +1957,7 @@ PROCEDURE Main( ... )
          cBin_CompC := "bcc32.exe"
          cOpt_CompC := "-c -q -tWM -O2 -OS -Ov -Oi -Oc -d {FC} -I{DI} {LC}"
          cBin_Res := "brcc32.exe"
-         cOpt_Res := "{IR} -fo{OS}"
+         cOpt_Res := "{FR} {IR} -fo{OS}"
          cResExt := ".res"
          cBin_Link := "ilink32.exe"
          cBin_Dyn := cBin_Link
@@ -2067,7 +2099,7 @@ PROCEDURE Main( ... )
 
          IF !( s_cCOMP $ "icc|iccia64" )
             cBin_Res := "rc.exe"
-            cOpt_Res := "/fo {OS} {IR}"
+            cOpt_Res := "{FR} /fo {OS} {IR}"
             cResExt := ".res"
          ENDIF
 
@@ -2112,7 +2144,7 @@ PROCEDURE Main( ... )
          CASE s_cCOMP == "poccarm"
             AAdd( s_aOPTC, "/Tarm-coff" )
          ENDCASE
-         cOpt_Res := "/Fo{OS} {IR}"
+         cOpt_Res := "{FR} /Fo{OS} {IR}"
          cResExt := ".res"
          cOpt_Lib := "{FA} /out:{OL} {LO}"
          IF s_lMT
@@ -2310,6 +2342,7 @@ PROCEDURE Main( ... )
             IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cResExt ), @tmp2 ) .OR. ;
                tmp1 > tmp2
+               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, 1, OPTC_to_INCPATH( s_aOPTRES, s_cHB_INC_INSTALL ) ) )
                AAdd( s_aRESSRC_TODO, tmp )
             ENDIF
          NEXT
@@ -2325,7 +2358,7 @@ PROCEDURE Main( ... )
 
          /* Compiling resource */
 
-         cOpt_Res := StrTran( cOpt_Res, "{FR}"  , GetEnv( "HB_USER_RESFLAGS" ) )
+         cOpt_Res := StrTran( cOpt_Res, "{FR}"  , GetEnv( "HB_USER_RESFLAGS" ) + " " + ArrayToList( s_aOPTRES ) )
          cOpt_Res := StrTran( cOpt_Res, "{DI}"  , s_cHB_INC_INSTALL )
 
          IF "{IR}" $ cOpt_Res
@@ -2404,7 +2437,8 @@ PROCEDURE Main( ... )
                ENDIF
                IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                   ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
-                  tmp1 > tmp2
+                  tmp1 > tmp2 .OR. ;
+                  ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, 1, OPTC_to_INCPATH( s_aOPTC, s_cHB_INC_INSTALL ) ) )
                   AAdd( s_aC_TODO, tmp )
                ELSE
                   AAdd( s_aC_DONE, tmp )
@@ -2876,21 +2910,166 @@ STATIC FUNCTION SetupForGT( cGT, /* @ */ s_cGT, /* @ */ s_lGUI )
 
    RETURN .F.
 
-/* Trying to mimic/replicate logic used by compilers. */
+/* This function will scan and detect header dependencies newer than
+   root file. It won't attempt to parse all possible #include syntaxes
+   and source code formats, won't try to interpret comments, line
+   continuation, different keyword and filename cases, etc, etc. In
+   order to work, it will need #include "filename" format in source.
+   If this isn't enough for your needs, feel free to update the code.
+   [vszakats] */
+
+STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, nEmbedLevel, aINCPATH )
+   LOCAL cFile
+   LOCAL fhnd
+   LOCAL nPos
+   LOCAL tTimeSelf
+   LOCAL tmp
+
+   DEFAULT nEmbedLevel TO 1
+
+   IF s_nHEAD == _HEAD_OFF
+      RETURN .F.
+   ENDIF
+
+   IF nEmbedLevel > 4
+      RETURN .F.
+   ENDIF
+
+   /* Filter out non-source format inputs for MinGW / windres */
+   IF s_cCOMP $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin" .AND. s_cARCH $ "win|wce" .AND. ;
+      Lower( FN_ExtGet( cFileName ) ) == ".res"
+      RETURN .F.
+   ENDIF
+
+   cFileName := FindHeader( cFileName, aINCPATH )
+   IF Empty( cFileName )
+      RETURN .F.
+   ENDIF
+
+   IF s_lDEBUGINC
+      OutStd( "hbmk: debuginc: HEADER", cFileName, hb_osNewLine() )
+   ENDIF
+
+   IF ! hb_FGetDateTime( cFileName, @tTimeSelf )
+      RETURN .F.
+   ENDIF
+
+   IF tTimeSelf > tTimeParent
+      RETURN .T.
+   ENDIF
+
+   /* NOTE: Beef up this section if you need a more intelligent source
+            parser. Notice that this code is meant to process both
+            .prg, .c and .res sources. Please try to keep it simple,
+            as speed and maintainability is also important. [vszakats] */
+
+   IF s_nHEAD == _HEAD_FULL
+      cFile := MemoRead( cFileName )
+   ELSE
+      IF ( fhnd := FOpen( cFileName, FO_READ + FO_SHARED ) ) == F_ERROR
+         RETURN .F.
+      ENDIF
+      cFile := Space( 16384 )
+      FRead( fhnd, @cFile, Len( cFile ) )
+      FClose( fhnd )
+   ENDIF
+
+   nPos := 1
+   DO WHILE ( tmp := hb_At( '#include "', cFile, nPos ) ) > 0
+      nPos := tmp + Len( '#include "' )
+      IF ( tmp := hb_At( '"', cFile, nPos ) ) > 0
+         IF FindNewerHeaders( SubStr( cFile, nPos, tmp - nPos ), tTimeParent, nEmbedLevel + 1, aINCPATH )
+            RETURN .T.
+         ENDIF
+      ENDIF
+   ENDDO
+
+   RETURN .F.
+
+STATIC FUNCTION OPTPRG_to_INCPATH( aOPT, cHB_INC_INSTALL )
+   LOCAL aINCPATH := {}
+   LOCAL cItem
+
+   /* NOTE: Order has to be in sync with cOpt_Prg setup */
+   AAdd( aINCPATH, cHB_INC_INSTALL )
+
+   FOR EACH cItem IN aOPT
+      IF Len( cItem ) > 2 .AND. ;
+         ( Lower( Left( cItem, 2 ) ) == "-i" .OR. ;
+           Lower( Left( cItem, 2 ) ) == "-I" )
+         AAdd( aINCPATH, SubStr( cItem, 3 ) )
+      ENDIF
+   NEXT
+
+   FOR EACH cItem IN hb_ATokens( GetEnv( "INCLUDE" ), hb_osPathListSeparator() )
+      IF ! Empty( cItem )
+         AAdd( aINCPATH, cItem )
+      ENDIF
+   NEXT
+
+   RETURN aINCPATH
+
+STATIC FUNCTION OPTC_to_INCPATH( aOPT, cHB_INC_INSTALL )
+   LOCAL aINCPATH := {}
+   LOCAL cItem
+
+   FOR EACH cItem IN aOPT
+      IF Len( cItem ) > 2 .AND. Left( cItem, 2 ) == "-I"
+         AAdd( aINCPATH, SubStr( cItem, 3 ) )
+      ENDIF
+   NEXT
+
+   /* NOTE: Order has to be in sync with cOpt_CompC setup */
+   AAdd( aINCPATH, cHB_INC_INSTALL )
+
+   RETURN aINCPATH
+
+STATIC FUNCTION FindHeader( cFileName, aINCPATH )
+   LOCAL cDir
+
+   /* Check in current dir */
+   IF hb_FileExists( cFileName )
+      RETURN cFileName
+   ENDIF
+
+   /* Check in include path list */
+   FOR EACH cDir IN aINCPATH
+      IF hb_FileExists( DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName )
+         RETURN DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName
+      ENDIF
+   NEXT
+
+   RETURN NIL
+
+/* Replicating logic used by compilers. */
 
 STATIC FUNCTION FindLib( cLib, aLIBPATH, cLibExt )
    LOCAL cDir
    LOCAL tmp
 
-   /* Check in current dir.
-      (need to verify for each compiler if this need to be enabled) */
-   IF !( s_cCOMP $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin" )
+   /* Check libnames containing dirs */
+   IF s_cCOMP $ "msvc|msvc64|msvcarm|bcc|pocc|pocc64|poccarm|owatcom"
+      IF ! Empty( FN_DirGet( cLib ) )
+         IF hb_FileExists( cLib := FN_ExtSet( cLib, cLibExt ) )
+            RETURN cLib
+         ENDIF
+         IF s_cCOMP $ "pocc|pocc64|poccarm"
+            IF hb_FileExists( cLib := FN_ExtSet( cLib, ".a" ) )
+               RETURN cLib
+            ENDIF
+         ENDIF
+         RETURN NIL
+      ENDIF
+   ENDIF
+
+   /* Check in current dir */
+   IF s_cCOMP $ "msvc|msvc64|msvcarm|bcc|pocc|pocc64|poccarm|owatcom"
       IF ! Empty( tmp := LibExists( "", cLib, cLibExt ) )
          RETURN tmp
       ENDIF
    ENDIF
 
-   /* Check in the libpaths. */
+   /* Check in libpaths */
    FOR EACH cDir IN aLIBPATH
       IF ! Empty( cDir )
          IF ! Empty( tmp := LibExists( cDir, cLib, cLibExt ) )
@@ -2900,19 +3079,16 @@ STATIC FUNCTION FindLib( cLib, aLIBPATH, cLibExt )
    NEXT
 
 #if 0
-   #if defined( __PLATFORM__WINDOWS ) .OR. ;
-       defined( __PLATFORM__DOS ) .OR. ;
-       defined( __PLATFORM__OS2 )
-   FOR EACH cDir IN hb_ATokens( GetEnv( "LIB" ), hb_osPathListSeparator(), .T., .T. )
-   #else
-   FOR EACH cDir IN hb_ATokens( GetEnv( "LIB" ), hb_osPathListSeparator() )
-   #endif
-      IF ! Empty( cDir )
-         IF ! Empty( tmp := LibExists( cDir, cLib, cLibExt ) )
-            RETURN tmp
+   /* Check in certain other compiler specific locations. */
+   IF s_cCOMP $ "msvc|msvc64|msvcarm"
+      FOR EACH cDir IN hb_ATokens( GetEnv( "LIB" ), hb_osPathListSeparator(), .T., .T. )
+         IF ! Empty( cDir )
+            IF ! Empty( tmp := LibExists( cDir, cLib, cLibExt ) )
+               RETURN tmp
+            ENDIF
          ENDIF
-      ENDIF
-   NEXT
+      NEXT
+   ENDIF
 #endif
 
    RETURN NIL
@@ -2925,24 +3101,28 @@ STATIC FUNCTION LibExists( cDir, cLib, cLibExt )
    DO CASE
    CASE s_cCOMP $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin" .AND. s_cARCH $ "win|wce"
       /* NOTE: ld/gcc option -dll-search-prefix isn't taken into account here,
-               just like cygwin's default -dll-search-prefix=cyg option. So,
-               '<prefix>xxx.dll' format libs won't be found by hbmk2. */
+               So, '<prefix>xxx.dll' format libs won't be found by hbmk2. */
       DO CASE
-      CASE hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
-      CASE hb_FileExists( tmp := cDir +         FN_ExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
-      CASE hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".a" )     ) ; RETURN tmp
-/*    CASE hb_FileExists( tmp := cDir + "cyg" + FN_ExtSet( cLib, ".dll" )   ) ; RETURN tmp */
-      CASE hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".dll" )   ) ; RETURN tmp
-      CASE hb_FileExists( tmp := cDir +         FN_ExtSet( cLib, ".dll" )   ) ; RETURN tmp
+      CASE                           hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
+      CASE                           hb_FileExists( tmp := cDir +         FN_ExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
+      CASE                           hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".a" )     ) ; RETURN tmp
+      CASE s_cCOMP == "cygwin" .AND. hb_FileExists( tmp := cDir + "cyg" + FN_ExtSet( cLib, ".dll" )   ) ; RETURN tmp
+      CASE                           hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".dll" )   ) ; RETURN tmp
+      CASE                           hb_FileExists( tmp := cDir +         FN_ExtSet( cLib, ".dll" )   ) ; RETURN tmp
       ENDCASE
    CASE s_cCOMP $ "gcc|gpp" .AND. s_cARCH $ "linux|sunos"
       DO CASE
-      CASE hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".so" )    ) ; RETURN tmp
-      CASE hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".a" )     ) ; RETURN tmp
+      CASE                           hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".so" )    ) ; RETURN tmp
+      CASE                           hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".a" )     ) ; RETURN tmp
+      ENDCASE
+   CASE s_cCOMP $ "pocc|pocc64|poccarm"
+      DO CASE
+      CASE                           hb_FileExists( tmp := cDir +         FN_ExtSet( cLib, cLibExt )  ) ; RETURN tmp
+      CASE                           hb_FileExists( tmp := cDir +         FN_ExtSet( cLib, ".a" )     ) ; RETURN tmp
       ENDCASE
    OTHERWISE
       DO CASE
-      CASE hb_FileExists( tmp := cDir +         FN_ExtSet( cLib, cLibExt )  ) ; RETURN tmp
+      CASE                           hb_FileExists( tmp := cDir +         FN_ExtSet( cLib, cLibExt )  ) ; RETURN tmp
       ENDCASE
    ENDCASE
 
@@ -3367,6 +3547,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                                  /* @ */ aLIBDYNHAS,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
+                                 /* @ */ aOPTRES,;
                                  /* @ */ aOPTL,;
                                  /* @ */ lGUI,;
                                  /* @ */ lMT,;
@@ -3377,6 +3558,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                                  /* @ */ lMAP,;
                                  /* @ */ lSTRIP,;
                                  /* @ */ nCOMPR,;
+                                 /* @ */ nHEAD,;
                                  /* @ */ lRUN,;
                                  /* @ */ lINC,;
                                  /* @ */ cGT )
@@ -3408,6 +3590,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
             @aLIBDYNHAS,;
             @aOPTPRG,;
             @aOPTC,;
+            @aOPTRES,;
             @aOPTL,;
             @lGUI,;
             @lMT,;
@@ -3418,6 +3601,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
             @lMAP,;
             @lSTRIP,;
             @nCOMPR,;
+            @nHEAD,;
             @lRUN,;
             @lINC,;
             @cGT )
@@ -3439,6 +3623,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                @aLIBDYNHAS,;
                @aOPTPRG,;
                @aOPTC,;
+               @aOPTRES,;
                @aOPTL,;
                @lGUI,;
                @lMT,;
@@ -3449,6 +3634,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                @lMAP,;
                @lSTRIP,;
                @nCOMPR,;
+               @nHEAD,;
                @lRUN,;
                @lINC,;
                @cGT )
@@ -3467,6 +3653,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
                                  /* @ */ aLIBDYNHAS,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
+                                 /* @ */ aOPTRES,;
                                  /* @ */ aOPTL,;
                                  /* @ */ lGUI,;
                                  /* @ */ lMT,;
@@ -3477,6 +3664,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
                                  /* @ */ lMAP,;
                                  /* @ */ lSTRIP,;
                                  /* @ */ nCOMPR,;
+                                 /* @ */ nHEAD,;
                                  /* @ */ lRUN,;
                                  /* @ */ lINC,;
                                  /* @ */ cGT )
@@ -3552,6 +3740,14 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          NEXT
 
+      CASE Lower( Left( cLine, Len( "resflags="   ) ) ) == "resflags="   ; cLine := SubStr( cLine, Len( "resflags="   ) + 1 )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            cItem := MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) )
+            IF AScan( aOPTRES, {|tmp| tmp == cItem } ) == 0
+               AAddNotEmpty( aOPTRES, cItem )
+            ENDIF
+         NEXT
+
       CASE Lower( Left( cLine, Len( "ldflags="    ) ) ) == "ldflags="    ; cLine := SubStr( cLine, Len( "ldflags="    ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) )
@@ -3623,6 +3819,13 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
          CASE Lower( cLine ) == "def" ; nCOMPR := _COMPR_DEF
          CASE Lower( cLine ) == "min" ; nCOMPR := _COMPR_MIN
          CASE Lower( cLine ) == "max" ; nCOMPR := _COMPR_MAX
+         ENDCASE
+
+      CASE Lower( Left( cLine, Len( "head="       ) ) ) == "head="       ; cLine := SubStr( cLine, Len( "head="       ) + 1 )
+         DO CASE
+         CASE Lower( cLine ) == "off"     ; nHEAD := _HEAD_OFF
+         CASE Lower( cLine ) == "full"    ; nHEAD := _HEAD_FULL
+         CASE Lower( cLine ) == "partial" ; nHEAD := _HEAD_PARTIAL
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "run="        ) ) ) == "run="        ; cLine := SubStr( cLine, Len( "run="        ) + 1 )
@@ -4271,7 +4474,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -[no]trace        show commands executed" ,;
       "  -traceonly        show commands to be executed, but don't execute them" ,;
       "  -[no]compr[=lev]  compress executable/dynamic lib (needs UPX)" ,;
-      "                    level can be: min, max, def" ,;
+      "                    <lev> can be: min, max, def" ,;
       "  -[no]run          run/don't run output executable" ,;
       "  -nohbp            do not process .hbp files in current directory" ,;
       "" ,;
@@ -4279,12 +4482,15 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -bldf=[p][c][l]   inherit .prg/.c/linker flags (or none) from Harbour build" ,;
       "  -prgflag=<f>      pass flag to Harbour" ,;
       "  -cflag=<f>        pass flag to C compiler" ,;
+      "  -resflag=<f>      pass flag to resource compiler (Windows only)" ,;
       "  -ldflag=<f>       pass flag to linker (executable)" ,;
       "  -aflag=<f>        pass flag to linker (static library)" ,;
       "  -dflag=<f>        pass flag to linker (dynamic library)" ,;
       "  -runflag=<f>      pass flag to output executable when -run option is used" ,;
       "  -jobs=<n>         start n compilation threads (MT builds only)" ,;
       "  -inc              enable incremental build mode" ,;
+      "  -[no]head[=<m>]   control source header parsing (in incremental build mode)" ,;
+      "                    <m> can be: full, partial (default), off" ,;
       "  -rebuild          rebuild all (in incremental build mode)" ,;
       "  -clean            clean (in incremental build mode)" ,;
       "  -workdir=<dir>    working directory for incremental build mode" ,;
@@ -4320,7 +4526,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - .hbp option files in current dir are automatically processed." ,;
       "  - .hbp options (they should come in separate lines):" ,;
       "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;
-      "    cflags=[C compiler flags], ldflags=[Linker flags], libpaths=[lib paths]" ,;
+      "    cflags=[C compiler flags], resflags=[resource compiler flags]" ,;
+      "    ldflags=[Linker flags], libpaths=[lib paths]" ,;
       "    gui|mt|shared|nulrdd|debug|map|strip|run|inc=[yes|no]" ,;
       "    compr=[yes|no|def|min|max], echo=<text>" ,;
       "    Lines starting with '#' char are ignored" ,;
