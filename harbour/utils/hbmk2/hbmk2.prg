@@ -116,7 +116,6 @@
 /* TODO: Optimizations (speed/memory). */
 /* TODO: C++/C mode. */
 /* TODO: Incremental support:
-         - detect updates by walking through #include files
          - Reuse Harbour .c output for different compiler targets. */
 
 #ifndef HBMK_INTEGRATED_COMPILER
@@ -353,6 +352,7 @@ PROCEDURE Main( ... )
    LOCAL lTargetUpToDate
 
    LOCAL cDir, cName, cExt
+   LOCAL headstate
 
    LOCAL lNIX := hb_Version( HB_VERSION_UNIX_COMPAT )
 
@@ -1312,7 +1312,7 @@ PROCEDURE Main( ... )
             IF ! hb_FGetDateTime( FN_ExtSet( tmp, ".prg" ), @tmp1 ) .OR. ;
                ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( FN_ExtSet( tmp, ".prg" ), tmp2, 1, OPTPRG_to_INCPATH( s_aOPTPRG, s_cHB_INC_INSTALL ) ) )
+               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( FN_ExtSet( tmp, ".prg" ), tmp2, OPTPRG_to_INCPATH( s_aOPTPRG, s_cHB_INC_INSTALL ), @headstate ) )
                AAdd( s_aPRG_TODO, tmp )
             ENDIF
          NEXT
@@ -2342,7 +2342,7 @@ PROCEDURE Main( ... )
             IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cResExt ), @tmp2 ) .OR. ;
                tmp1 > tmp2
-               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, 1, OPTC_to_INCPATH( s_aOPTRES, s_cHB_INC_INSTALL ) ) )
+               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, OPTC_to_INCPATH( s_aOPTRES, s_cHB_INC_INSTALL ), @headstate ) )
                AAdd( s_aRESSRC_TODO, tmp )
             ENDIF
          NEXT
@@ -2438,7 +2438,7 @@ PROCEDURE Main( ... )
                IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                   ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
                   tmp1 > tmp2 .OR. ;
-                  ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, 1, OPTC_to_INCPATH( s_aOPTC, s_cHB_INC_INSTALL ) ) )
+                  ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, OPTC_to_INCPATH( s_aOPTC, s_cHB_INC_INSTALL ), @headstate ) )
                   AAdd( s_aC_TODO, tmp )
                ELSE
                   AAdd( s_aC_DONE, tmp )
@@ -2918,7 +2918,7 @@ STATIC FUNCTION SetupForGT( cGT, /* @ */ s_cGT, /* @ */ s_lGUI )
    If this isn't enough for your needs, feel free to update the code.
    [vszakats] */
 
-STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, nEmbedLevel, aINCPATH )
+STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, aINCPATH, /* @ */ hFiles, nEmbedLevel )
    LOCAL cFile
    LOCAL fhnd
    LOCAL nPos
@@ -2927,11 +2927,15 @@ STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, nEmbedLevel, aINCPATH 
 
    DEFAULT nEmbedLevel TO 1
 
+   IF nEmbedLevel == 1
+      hFiles := hb_Hash()
+   ENDIF
+
    IF s_nHEAD == _HEAD_OFF
       RETURN .F.
    ENDIF
 
-   IF nEmbedLevel > 4
+   IF nEmbedLevel > 10
       RETURN .F.
    ENDIF
 
@@ -2945,6 +2949,11 @@ STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, nEmbedLevel, aINCPATH 
    IF Empty( cFileName )
       RETURN .F.
    ENDIF
+
+   IF hb_HPos( hFiles, cFileName ) > 0
+      RETURN .F.
+   ENDIF
+   hb_HSet( hFiles, cFileName, .T. )
 
    IF s_lDEBUGINC
       OutStd( "hbmk: debuginc: HEADER", cFileName, hb_osNewLine() )
@@ -2978,7 +2987,8 @@ STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, nEmbedLevel, aINCPATH 
    DO WHILE ( tmp := hb_At( '#include "', cFile, nPos ) ) > 0
       nPos := tmp + Len( '#include "' )
       IF ( tmp := hb_At( '"', cFile, nPos ) ) > 0
-         IF FindNewerHeaders( SubStr( cFile, nPos, tmp - nPos ), tTimeParent, nEmbedLevel + 1, aINCPATH )
+         IF FindNewerHeaders( SubStr( cFile, nPos, tmp - nPos ), tTimeParent, aINCPATH, @hFiles, nEmbedLevel + 1 )
+            hFiles := NIL
             RETURN .T.
          ENDIF
       ENDIF
@@ -4529,7 +4539,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "    cflags=[C compiler flags], resflags=[resource compiler flags]" ,;
       "    ldflags=[Linker flags], libpaths=[lib paths]" ,;
       "    gui|mt|shared|nulrdd|debug|map|strip|run|inc=[yes|no]" ,;
-      "    compr=[yes|no|def|min|max], echo=<text>" ,;
+      "    compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>" ,;
       "    Lines starting with '#' char are ignored" ,;
       "  - Platform filters are accepted in each .hbp line and with -l options." ,;
       "    Filter format: {[!][<arch|comp>]}. Filters can be combined " ,;
