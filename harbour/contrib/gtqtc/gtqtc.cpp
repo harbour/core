@@ -274,6 +274,19 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
    return pWVT;
 }
+
+static void hb_gt_wvt_SetWindowFlags( PHB_GTWVT pWVT, Qt::WindowFlags flags )
+{
+   pWVT->qWnd->setWindowFlags(flags);
+   QPoint pos = pWVT->qWnd->pos();
+   if( pos.x() < 0 )
+      pos.setX(0);
+   if( pos.y() < 0 )
+      pos.setY( 0 );
+   pWVT->qWnd->move( pos );
+   pWVT->qWnd->show();
+}
+
 #if 0
 static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent )
 {
@@ -1310,39 +1323,26 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             hb_gt_winapi_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
          break;
 
-      case HB_GTI_CLIPBOARDDATA:
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-         {
-            hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
-                                       CF_OEMTEXT : CF_TEXT,
-                                       hb_itemGetCPtr( pInfo->pNewVal ),
-                                       hb_itemGetCLen( pInfo->pNewVal ) );
-         }
-         else
-         {
-            char * szClipboardData;
-            ULONG ulLen;
-            if( hb_gt_winapi_getClipboard( pWVT->CodePage == OEM_CHARSET ?
-                                           CF_OEMTEXT : CF_TEXT,
-                                           &szClipboardData, &ulLen ) )
-            {
-               pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult,
-                                                 szClipboardData,
-                                                 ulLen );
-            }
-            else
-            {
-               pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-            }
-         }
-         break;
-
       case HB_GTI_CURSORBLINKRATE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, GetCaretBlinkTime() );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             SetCaretBlinkTime( hb_itemGetNI( pInfo->pNewVal ) );
          break;
 #endif
+      case HB_GTI_CLIPBOARDDATA:
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         {
+            QClipboard *cb = QApplication::clipboard();
+            cb->setText( QString( hb_itemGetCPtr( pInfo->pNewVal ) ) );
+         }
+         else
+         {
+            QClipboard *cb = QApplication::clipboard();
+            pInfo->pResult = hb_itemPutC( pInfo->pResult, cb->text().toLatin1().data() );
+         }
+
+         break;
+
       case HB_GTI_SCREENSIZE:
       {
          int iX, iY;
@@ -1366,7 +1366,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
       }
-#if 0
+
       case HB_GTI_RESIZABLE:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bResizable );
          if( pInfo->pNewVal )
@@ -1375,32 +1375,37 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( bNewValue != pWVT->bResizable )
             {
                pWVT->bResizable = bNewValue;
-               if( pWVT->hWnd )
+               if( pWVT->qWnd )
                {
-                  LONG_PTR style;
+                  Qt::WindowFlags flags = pWVT->qWnd->windowFlags();
                   if( pWVT->bResizable )
-                     style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME;
+                  {
+                     flags |= Qt::WindowMaximizeButtonHint;
+                     pWVT->qWnd->setMinimumWidth( 0 );
+                     pWVT->qWnd->setMaximumWidth( QDesktopWidget().width() );
+                     pWVT->qWnd->setMinimumHeight( 50 );
+                     pWVT->qWnd->setMaximumHeight( QDesktopWidget().height() );
+                  }
                   else
-                     style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
-
-                  SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
-
-                  SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
-                                SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
-                  ShowWindow( pWVT->hWnd, SW_HIDE );
-                  ShowWindow( pWVT->hWnd, SW_NORMAL );
+                  {
+                     flags = flags &~ Qt::WindowMaximizeButtonHint;
+                     pWVT->qWnd->setMinimumWidth( pWVT->qWnd->width() );
+                     pWVT->qWnd->setMaximumWidth( pWVT->qWnd->width() );
+                     pWVT->qWnd->setMinimumHeight( pWVT->qWnd->height() );
+                     pWVT->qWnd->setMaximumHeight( pWVT->qWnd->height() );
+                  }
+                  hb_gt_wvt_SetWindowFlags( pWVT, flags );
                }
             }
          }
          break;
-#endif
+
       case HB_GTI_SELECTCOPY:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bSelectCopy );
 
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             pInfo->pResult = hb_itemPutC( pInfo->pResult, pWVT->pszSelectCopy );
-
             if( hb_itemGetCLen( pInfo->pNewVal ) )
             {
                #if 0
@@ -1447,20 +1452,17 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != pWVT->bClosable )
             {
+               pWVT->bClosable = bNewValue;
                if( pWVT->qWnd )
                {
-                  #if 0
-                  HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-                  if( hSysMenu )
-                  {
-                     EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED ) );
-                     pWVT->bClosable = bNewValue;
-                  }
-                  #endif
-                  pWVT->bClosable = bNewValue;
+                  Qt::WindowFlags flags = pWVT->qWnd->windowFlags();
+                  if( pWVT->bClosable )
+                     flags |= Qt::WindowCloseButtonHint;
+                  else
+                     flags = flags &~ Qt::WindowCloseButtonHint;
+
+                  hb_gt_wvt_SetWindowFlags( pWVT, flags );
                }
-               else
-                  pWVT->bClosable = bNewValue;
             }
          }
          break;
@@ -2521,6 +2523,11 @@ MainWindow::MainWindow()
    setCentralWidget(consoleArea);
 
    setFocusPolicy(Qt::StrongFocus);
+
+   Qt::WindowFlags flags = Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint |
+                           Qt::WindowMinimizeButtonHint | Qt::WindowSystemMenuHint |
+                           Qt::WindowTitleHint | Qt::CustomizeWindowHint | Qt::Window ;
+   setWindowFlags( flags );
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

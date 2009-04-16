@@ -144,7 +144,7 @@ STATIC FUNCTION DispScreen()
    DispOutAt( 5, 0, padc( "_  __  / / /_/ /_  /   _  /_/ / /_/ / /_/ /_  /        / /_/ / _  /  ",nMaxCol ), "W+/W" )
    DispOutAt( 6, 0, padc( "/_/ /_/  \__,_/ /_/    /_.___/\____/\__,_/ /_/         \____/  /_/   ",nMaxCol ), "W+/W" )
 
-   #if 0
+   #if 1
    DispOutAt( ++nRow, nCol, "< F2 MarkCopy    Toggle >", cColor )
    DispOutAt( ++nRow, nCol, "< F3 Resize      Toggle >", cColor )
    DispOutAt( ++nRow, nCol, "< F4 Closable    Toggle >", cColor )
@@ -152,10 +152,9 @@ STATIC FUNCTION DispScreen()
    DispOutAt( ++nRow, nCol, "< F6 Palette D   Repeat >", cColor )
    DispOutAt( ++nRow, nCol, "< F7 Palette By Index R >", cColor )
    DispOutAt( ++nRow, nCol, "< F8 MarkCopy menu text >", cColor )
-   DispOutAt( ++nRow, nCol, "<    Click Other Window >", cColor )
+   DispOutAt( ++nRow, nCol, "<    Enter - Alert()    >", cColor )
    DispOutAt( ++nRow, nCol, "<    Click X Button     >", cColor )
    #endif
-   DispOutAt( ++nRow+5, nCol, "<    Enter - Alert()    >", cColor )
 
    DispOutAt( maxrow(), 0, Space( maxcol()+1 ), "N/G*" )
 

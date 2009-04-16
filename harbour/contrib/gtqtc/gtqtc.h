@@ -69,6 +69,7 @@
 #include <QtGui/QColor>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
+#include <QtGui/QClipboard>
 
 #include "hbset.h"
 #include "hbgtcore.h"
