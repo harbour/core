@@ -117,7 +117,6 @@
 /* TODO: C++/C mode. */
 /* TODO: Incremental support:
          - detect updates by walking through #include files
-         - handle libs? (problematic)
          - Reuse Harbour .c output for different compiler targets. */
 
 #ifndef HBMK_INTEGRATED_COMPILER
@@ -225,6 +224,7 @@ PROCEDURE Main( ... )
    LOCAL s_aLIBSHARED
    LOCAL s_aLIBSHAREDPOST := {}
    LOCAL s_aLIB
+   LOCAL s_aLIBRAW
    LOCAL s_aLIBVM
    LOCAL s_aLIBUSER
    LOCAL s_aLIBUSERGT
@@ -258,7 +258,6 @@ PROCEDURE Main( ... )
    LOCAL s_lCPP := .F.
    LOCAL s_lSHARED := NIL
    LOCAL s_lSTATICFULL := NIL
-   LOCAL s_lDEBUGINC := .F.
    LOCAL s_lNULRDD := .F.
    LOCAL s_lMAP := .F.
    LOCAL s_lSTRIP := .F.
@@ -274,6 +273,8 @@ PROCEDURE Main( ... )
    LOCAL s_lREBUILD := .F.
    LOCAL s_lCLEAN := .F.
    LOCAL s_nJOBS := 1
+
+   LOCAL s_lDEBUGINC := hb_ArgCheck( "debuginc" )
 
    LOCAL aCOMPDET
    LOCAL aCOMPDET_LOCAL
@@ -945,9 +946,6 @@ PROCEDURE Main( ... )
       CASE cParamL == "-debug"           ; s_lDEBUG    := .T.
       CASE cParamL == "-debug-" .OR. ;
            cParamL == "-nodebug"         ; s_lDEBUG    := .F.
-      CASE cParamL == "-debuginc"        ; s_lDEBUGINC := .T.
-      CASE cParamL == "-debuginc-" .OR. ;
-           cParamL == "-nodebuginc"      ; s_lDEBUGINC := .F.
       CASE cParamL == "-nulrdd"          ; s_lNULRDD   := .T.
       CASE cParamL == "-nulrdd-"         ; s_lNULRDD   := .F.
       CASE cParamL == "-map"             ; s_lMAP      := .T.
@@ -1618,7 +1616,7 @@ PROCEDURE Main( ... )
             AAdd( s_aOPTL, "-Wl,-Map {OM}" )
          ENDIF
          IF s_lSHARED
-            AAdd( s_aLIBPATH, "{DB}" )
+            AAdd( s_aLIBPATH, s_cHB_BIN_INSTALL )
          ENDIF
          IF ! lStopAfterCComp
             IF s_cCOMP $ "mingw|mingw64|mingwarm"
@@ -1689,7 +1687,7 @@ PROCEDURE Main( ... )
             AAdd( s_aOPTL, "-Wl,-Map {OM}" )
          ENDIF
          IF s_lSHARED
-            AAdd( s_aLIBPATH, "{DB}" )
+            AAdd( s_aLIBPATH, s_cHB_BIN_INSTALL )
          ENDIF
          AAdd( s_aOPTL, "{LL}" )
          aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
@@ -1956,7 +1954,7 @@ PROCEDURE Main( ... )
             ENDIF
          ENDIF
          IF s_lSHARED
-            AAdd( s_aLIBPATH, "{DB}" )
+            AAdd( s_aLIBPATH, s_cHB_BIN_INSTALL )
          ENDIF
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-bcc" + cLibExt,;
                                        "harbour-" + cDL_Version_Alter + "-bcc" + cLibExt ) }
@@ -2047,7 +2045,7 @@ PROCEDURE Main( ... )
             ENDIF
          ENDIF
          IF s_lSHARED
-            AAdd( s_aOPTL, "/libpath:{DB}" )
+            AAdd( s_aLIBPATH, s_cHB_BIN_INSTALL )
          ENDIF
          s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
          DO CASE
@@ -2127,7 +2125,7 @@ PROCEDURE Main( ... )
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
          IF s_lSHARED
-            AAdd( s_aOPTL, "/libpath:{DB}" )
+            AAdd( s_aLIBPATH, s_cHB_BIN_INSTALL )
          ENDIF
          IF s_lMAP
             AAdd( s_aOPTL, "/map" )
@@ -2292,10 +2290,11 @@ PROCEDURE Main( ... )
       ENDIF
 
       /* Merge lib lists. */
-      s_aLIB := ArrayAJoin( { s_aLIBUSER, s_aLIBHB, s_aLIB3RD, s_aLIBSYS } )
+      s_aLIBRAW := ArrayAJoin( { s_aLIBUSER, s_aLIBHB, s_aLIB3RD, s_aLIBSYS } )
       /* Dress lib names. */
-      s_aLIB := ListCookLib( s_aLIB, cLibPrefix, cLibExt )
+      s_aLIB := ListCookLib( s_aLIBRAW, cLibPrefix, cLibExt )
       IF s_lSHARED .AND. ! Empty( s_aLIBSHARED )
+         s_aLIBRAW := ArrayJoin( s_aLIBSHARED, s_aLIBRAW )
          s_aLIB := ArrayJoin( ListCookLib( s_aLIBSHARED, cLibPrefix ), s_aLIB )
       ENDIF
       /* Dress obj names. */
@@ -2567,20 +2566,20 @@ PROCEDURE Main( ... )
                      ENDIF
                   NEXT
                ENDIF
-#if 0
                /* We need a way to find and pick libraries according to linker rules. */
                IF lTargetUpToDate
-                  FOR EACH tmp IN s_aLIB
-                     IF s_lDEBUGINC
-                        OutStd( "hbmk: debuginc: EXEDEPLIB", tmp, hb_osNewLine() )
-                     ENDIF
-                     IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. tmp1 > tTarget
-                        lTargetUpToDate := .F.
-                        EXIT
+                  FOR EACH tmp IN s_aLIBRAW
+                     IF ! Empty( tmp2 := FindLib( tmp, s_aLIBPATH, cLibExt ) )
+                        IF s_lDEBUGINC
+                           OutStd( "hbmk: debuginc: EXEDEPLIB", tmp2, hb_osNewLine() )
+                        ENDIF
+                        IF ! hb_FGetDateTime( tmp2, @tmp1 ) .OR. tmp1 > tTarget
+                           lTargetUpToDate := .F.
+                           EXIT
+                        ENDIF
                      ENDIF
                   NEXT
                ENDIF
-#endif
             ENDIF
          ENDIF
       ENDIF
@@ -2876,6 +2875,78 @@ STATIC FUNCTION SetupForGT( cGT, /* @ */ s_cGT, /* @ */ s_lGUI )
    ENDIF
 
    RETURN .F.
+
+/* Trying to mimic/replicate logic used by compilers. */
+
+STATIC FUNCTION FindLib( cLib, aLIBPATH, cLibExt )
+   LOCAL cDir
+   LOCAL tmp
+
+   /* Check in current dir.
+      (need to verify for each compiler if this need to be enabled) */
+   IF !( s_cCOMP $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin" )
+      IF ! Empty( tmp := LibExists( "", cLib, cLibExt ) )
+         RETURN tmp
+      ENDIF
+   ENDIF
+
+   /* Check in the libpaths. */
+   FOR EACH cDir IN aLIBPATH
+      IF ! Empty( cDir )
+         IF ! Empty( tmp := LibExists( cDir, cLib, cLibExt ) )
+            RETURN tmp
+         ENDIF
+      ENDIF
+   NEXT
+
+#if 0
+   #if defined( __PLATFORM__WINDOWS ) .OR. ;
+       defined( __PLATFORM__DOS ) .OR. ;
+       defined( __PLATFORM__OS2 )
+   FOR EACH cDir IN hb_ATokens( GetEnv( "LIB" ), hb_osPathListSeparator(), .T., .T. )
+   #else
+   FOR EACH cDir IN hb_ATokens( GetEnv( "LIB" ), hb_osPathListSeparator() )
+   #endif
+      IF ! Empty( cDir )
+         IF ! Empty( tmp := LibExists( cDir, cLib, cLibExt ) )
+            RETURN tmp
+         ENDIF
+      ENDIF
+   NEXT
+#endif
+
+   RETURN NIL
+
+STATIC FUNCTION LibExists( cDir, cLib, cLibExt )
+   LOCAL tmp
+
+   cDir := DirAddPathSep( PathSepToSelf( cDir ) )
+
+   DO CASE
+   CASE s_cCOMP $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin" .AND. s_cARCH $ "win|wce"
+      /* NOTE: ld/gcc option -dll-search-prefix isn't taken into account here,
+               just like cygwin's default -dll-search-prefix=cyg option. So,
+               '<prefix>xxx.dll' format libs won't be found by hbmk2. */
+      DO CASE
+      CASE hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
+      CASE hb_FileExists( tmp := cDir +         FN_ExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
+      CASE hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".a" )     ) ; RETURN tmp
+/*    CASE hb_FileExists( tmp := cDir + "cyg" + FN_ExtSet( cLib, ".dll" )   ) ; RETURN tmp */
+      CASE hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".dll" )   ) ; RETURN tmp
+      CASE hb_FileExists( tmp := cDir +         FN_ExtSet( cLib, ".dll" )   ) ; RETURN tmp
+      ENDCASE
+   CASE s_cCOMP $ "gcc|gpp" .AND. s_cARCH $ "linux|sunos"
+      DO CASE
+      CASE hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".so" )    ) ; RETURN tmp
+      CASE hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".a" )     ) ; RETURN tmp
+      ENDCASE
+   OTHERWISE
+      DO CASE
+      CASE hb_FileExists( tmp := cDir +         FN_ExtSet( cLib, cLibExt )  ) ; RETURN tmp
+      ENDCASE
+   ENDCASE
+
+   RETURN NIL
 
 STATIC FUNCTION FindInPath( cFileName )
    LOCAL cDir
@@ -3435,7 +3506,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
 
       CASE Lower( Left( cLine, Len( "libpaths="   ) ) ) == "libpaths="   ; cLine := SubStr( cLine, Len( "libpaths="   ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathProc( PathSepToTarget( MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) ), cFileName )
+            cItem := PathSepToTarget( MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
             IF AScan( aLIBPATH, {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( aLIBPATH, cItem )
             ENDIF
