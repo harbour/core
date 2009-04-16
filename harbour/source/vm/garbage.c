@@ -134,6 +134,18 @@ typedef struct HB_GARBAGE_
 /* flags stored in 'flags' slot */
 #define HB_GC_USERSWEEP    8  /* memory block with user defined sweep function */
 
+#ifdef HB_GC_AUTO
+/* number of allocated memory blocks */
+static ULONG s_ulBlocks = 0;
+/* number of allocated memory blocks after last GC activation */
+static ULONG s_ulBlocksMarked = 0;
+#  define HB_GC_AUTO_INC      ++s_ulBlocks;
+#  define HB_GC_AUTO_DEC      --s_ulBlocks;
+#else
+#  define HB_GC_AUTO_INC
+#  define HB_GC_AUTO_DEC
+#endif
+
 /* pointer to memory block that will be checked in next step */
 static HB_GARBAGE_PTR s_pCurrBlock = NULL;
 /* memory blocks are stored in linked list with a loop */
@@ -206,6 +218,15 @@ void * hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc )
       pAlloc->flags  = 0;
 
       HB_GC_LOCK
+#ifdef HB_GC_AUTO
+      if( s_ulBlocks > s_ulBlocksMarked + 100000 )
+      {
+         HB_GC_UNLOCK
+         hb_gcCollectAll( TRUE );
+         HB_GC_LOCK
+      }
+      HB_GC_AUTO_INC
+#endif
       hb_gcLink( &s_pCurrBlock, pAlloc );
       HB_GC_UNLOCK
 
@@ -226,7 +247,13 @@ void hb_gcFree( void *pBlock )
       if( !( pAlloc->used & HB_GC_DELETE ) )
       {
          HB_GC_LOCK
-         hb_gcUnlink( pAlloc->locked ? &s_pLockedBlock : &s_pCurrBlock, pAlloc );
+         if( pAlloc->locked )
+            hb_gcUnlink( &s_pLockedBlock, pAlloc );
+         else
+         {
+            hb_gcUnlink( &s_pCurrBlock, pAlloc );
+            HB_GC_AUTO_DEC
+         }
          HB_GC_UNLOCK
 
          if( pAlloc->flags & HB_GC_USERSWEEP )
@@ -278,7 +305,13 @@ void hb_gcRefFree( void * pBlock )
              * if cleanup function activate GC
              */
             HB_GC_LOCK
-            hb_gcUnlink( pAlloc->locked ? &s_pLockedBlock : &s_pCurrBlock, pAlloc );
+            if( pAlloc->locked )
+               hb_gcUnlink( &s_pLockedBlock, pAlloc );
+            else
+            {
+               hb_gcUnlink( &s_pCurrBlock, pAlloc );
+               HB_GC_AUTO_DEC
+            }
             HB_GC_UNLOCK
 
             pAlloc->used |= HB_GC_DELETE;
@@ -323,6 +356,7 @@ void hb_gcRefCheck( void * pBlock )
 
          HB_GC_LOCK
          hb_gcLink( &s_pCurrBlock, pAlloc );
+         HB_GC_AUTO_INC
          HB_GC_UNLOCK
 
          if( hb_vmRequestQuery() == 0 )
@@ -400,6 +434,7 @@ void * hb_gcLock( void * pBlock )
       {
          hb_gcUnlink( &s_pCurrBlock, pAlloc );
          hb_gcLink( &s_pLockedBlock, pAlloc );
+         HB_GC_AUTO_DEC
       }
       ++pAlloc->locked;
       HB_GC_UNLOCK
@@ -426,6 +461,7 @@ void * hb_gcUnlock( void * pBlock )
 
             hb_gcUnlink( &s_pLockedBlock, pAlloc );
             hb_gcLink( &s_pCurrBlock, pAlloc );
+            HB_GC_AUTO_INC
          }
       }
       HB_GC_UNLOCK
@@ -713,6 +749,7 @@ void hb_gcCollectAll( BOOL fForce )
             pDelete->used |= HB_GC_DELETE | HB_GC_DELETELST;
             hb_gcUnlink( &s_pCurrBlock, pDelete );
             hb_gcLink( &s_pDeletedBlock, pDelete );
+            HB_GC_AUTO_DEC
          }
          else
          {
@@ -729,6 +766,11 @@ void hb_gcCollectAll( BOOL fForce )
        * during next collecting
        */
       s_uUsedFlag ^= HB_GC_USED_FLAG;
+
+#ifdef HB_GC_AUTO
+      /* store number of marked blocks for automatic GC activation */
+      s_ulBlocksMarked = s_ulBlocks;
+#endif
 
       hb_vmResumeThreads();
 
@@ -757,6 +799,7 @@ void hb_gcCollectAll( BOOL fForce )
                pDelete->locked = 0;
                HB_GC_LOCK
                hb_gcLink( &s_pCurrBlock, pDelete );
+               HB_GC_AUTO_INC
                HB_GC_UNLOCK
                if( hb_vmRequestQuery() == 0 )
                   hb_errRT_BASE( EG_DESTRUCTOR, 1301, NULL, "Reference to freed block", 0 );
@@ -803,6 +846,7 @@ void hb_gcReleaseAll( void )
          HB_TRACE( HB_TR_INFO, ( "Release %p", s_pCurrBlock ) );
          pDelete = s_pCurrBlock;
          hb_gcUnlink( &s_pCurrBlock, pDelete );
+         HB_GC_AUTO_DEC
          HB_GARBAGE_FREE( pDelete );
 
       } while ( s_pCurrBlock );
