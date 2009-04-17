@@ -1292,8 +1292,8 @@ FUNCTION hbmk( aArgs )
                OutStd( "hbmk: debuginc: PRG", FN_ExtSet( tmp, ".prg" ),;
                                               FN_DirExtSet( tmp, cWorkDir, ".c" ), hb_osNewLine() )
             ENDIF
-            IF ! hb_FGetDateTime( FN_ExtSet( tmp, ".prg" ), @tmp1 ) .OR. ;
-               ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
+            IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
+               ! hb_FGetDateTime( FN_ExtSet( tmp, ".prg" ), @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
                ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( FN_ExtSet( tmp, ".prg" ), tmp2, OPTPRG_to_INCPATH( s_aOPTPRG, s_cHB_INC_INSTALL ), @headstate ) )
                AAdd( s_aPRG_TODO, tmp )
@@ -1500,12 +1500,12 @@ FUNCTION hbmk( aArgs )
             AAdd( s_aOPTC, "-no-cpp-precomp" )
             AAdd( s_aOPTC, "-Wno-long-double" )
             IF s_lSHARED
-               AAdd( s_aOPTC, "-bind_as_load" )
-               AAdd( s_aOPTC, "-multiply_defined suppress" )
+               AAdd( s_aOPTL, "-bind_as_load" )
+               AAdd( s_aOPTL, "-multiply_defined suppress" )
             ENDIF
          ENDIF
          IF s_lSTRIP .AND. !( s_cARCH == "sunos" )
-            AAdd( s_aOPTC, "-s" )
+            AAdd( s_aOPTL, "-s" )
          ENDIF
          IF lStopAfterCComp
             IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( s_aPRG ) + Len( s_aC ) ) == 1
@@ -1662,7 +1662,7 @@ FUNCTION hbmk( aArgs )
             ENDIF
          ENDIF
          IF s_lSTRIP
-            AAdd( s_aOPTC, "-s" )
+            AAdd( s_aOPTL, "-s" )
          ENDIF
          IF lStopAfterCComp
             IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( s_aPRG ) + Len( s_aC ) ) == 1
@@ -1737,7 +1737,7 @@ FUNCTION hbmk( aArgs )
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "socket" } )
          ENDIF
          IF s_lSTRIP
-            AAdd( s_aOPTC, "-s" )
+            AAdd( s_aOPTL, "-s" )
          ENDIF
          /* OS/2 needs a space between -o and file name following it */
          IF lStopAfterCComp
@@ -1786,7 +1786,7 @@ FUNCTION hbmk( aArgs )
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
          ENDIF
          IF s_lSTRIP
-            AAdd( s_aOPTC, "-s" )
+            AAdd( s_aOPTL, "-s" )
          ENDIF
          IF lStopAfterCComp
             IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( s_aPRG ) + Len( s_aC ) ) == 1
@@ -2443,8 +2443,8 @@ FUNCTION hbmk( aArgs )
             IF s_lDEBUGINC
                OutStd( "hbmk: debuginc: RESSRC", tmp, FN_DirExtSet( tmp, cWorkDir, cResExt ), hb_osNewLine() )
             ENDIF
-            IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
-               ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cResExt ), @tmp2 ) .OR. ;
+            IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cResExt ), @tmp2 ) .OR. ;
+               ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2
                ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, OPTC_to_INCPATH( s_aOPTRES, s_cHB_INC_INSTALL ), @headstate ) )
                AAdd( s_aRESSRC_TODO, tmp )
@@ -2539,8 +2539,8 @@ FUNCTION hbmk( aArgs )
                IF s_lDEBUGINC
                   OutStd( "hbmk: debuginc: C", tmp, FN_DirExtSet( tmp, cWorkDir, cObjExt ), hb_osNewLine() )
                ENDIF
-               IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
-                  ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
+               IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
+                  ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                   tmp1 > tmp2 .OR. ;
                   ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, OPTC_to_INCPATH( s_aOPTC, s_cHB_INC_INSTALL ), @headstate ) )
                   AAdd( s_aC_TODO, tmp )
@@ -3022,6 +3022,10 @@ STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, aINCPATH, /* @ */ hFil
    LOCAL nPos
    LOCAL tTimeSelf
    LOCAL tmp
+
+   IF ! hb_isTimeStamp( tTimeParent )
+      RETURN .F.
+   ENDIF
 
    DEFAULT nEmbedLevel TO 1
 
