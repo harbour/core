@@ -63,10 +63,10 @@
 
 /* NOTE: This definitions must be ahead of any and all #include statements */
 
-#if !defined( HB_FM_STATISTICS )
-    !defined( HB_FM_STATISTICS_OFF )
+#if !defined( HB_FM_STATISTICS ) && \
+    !defined( HB_FM_STATISTICS_OFF ) && \
     !defined( HB_FM_STATISTICS_DYN_OFF )
-   #define HB_FM_STATISTICS_OFF
+#  define HB_FM_STATISTICS_OFF
 #endif
 
 /* For MS-Win builds */
