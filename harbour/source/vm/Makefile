@@ -4,6 +4,26 @@
 
 ROOT = ../../
 
+HB_HVM_ALL = yes
+ifeq ($(HB_COMPILER),bcc)
+	HB_HVM_ALL = no
+endif
+ifeq ($(HB_COMPILER),pocc)
+	HB_HVM_ALL = no
+endif
+ifeq ($(HB_COMPILER),pocc64)
+	HB_HVM_ALL = no
+endif
+ifeq ($(HB_COMPILER),poccarm)
+	HB_HVM_ALL = no
+endif
+ifeq ($(HB_COMPILER),xcc)
+	HB_HVM_ALL = no
+endif
+ifeq ($(HB_COMPILER),dmc)
+	HB_HVM_ALL = no
+endif
+
 ifeq ($(HB_ARCHITECTURE),win)
 	ifeq ($(HB_COMPILER),mingw)
 		C_MAIN = mainwin.c
@@ -76,12 +96,10 @@ PRG_SOURCES=\
 
 LIBNAME=hbvm
 
-DIRS+= fm
-
 HB_USER_CFLAGS:=$(subst -DHB_MT_VM,,$(HB_USER_CFLAGS))
 ifneq ($(HB_ARCHITECTURE),dos)
 ifneq ($(HB_MT),no)
-   DIRS+= vmmt fmmt
+   DIRS+= vmmt
 endif
 endif
 

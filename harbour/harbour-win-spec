@@ -89,7 +89,7 @@ rm -fR $RPM_BUILD_ROOT
 export HB_HOST_BUILD=yes
 export HB_ARCHITECTURE=linux
 export HB_COMPILER=gcc
-export HB_USER_CFLAGS="-DHB_FM_STATISTICS_OFF"
+export HB_USER_CFLAGS=
 make %{?_smp_mflags}
 
 export HB_HOST_BUILD=lib
@@ -102,7 +102,7 @@ mkdir -p source/main/${HB_ARCHITECTURE}/${HB_COMPILER}
 ln -s ../../linux/gcc/harbour source/main/${HB_ARCHITECTURE}/${HB_COMPILER}/harbour.exe
 
 export CC_HB_USER_CFLAGS=""
-export HB_USER_CFLAGS="$CC_HB_USER_CFLAGS -DHB_FM_STATISTICS_OFF"
+export HB_USER_CFLAGS="$CC_HB_USER_CFLAGS"
 export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
 export HB_USER_PRGFLAGS="$CC_HB_USER_PRGFLAGS"
 export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS}"
@@ -129,7 +129,7 @@ make %{?_smp_mflags}
 # Install harbour itself.
 
 export CC_HB_USER_CFLAGS=""
-export HB_USER_CFLAGS="$CC_HB_USER_CFLAGS -DHB_FM_STATISTICS_OFF"
+export HB_USER_CFLAGS="$CC_HB_USER_CFLAGS"
 export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
 export HB_USER_PRGFLAGS="$CC_HB_USER_PRGFLAGS"
 export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS}"
@@ -308,8 +308,6 @@ rm -fR $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbcommon.a
 %{_libdir}/%{name}/libhbcplr.a
 %{_libdir}/%{name}/libhbdebug.a
-%{_libdir}/%{name}/libhbfm.a
-%{_libdir}/%{name}/libhbfmmt.a
 %{_libdir}/%{name}/librddfpt.a
 %{_libdir}/%{name}/librddcdx.a
 %{_libdir}/%{name}/librddntx.a

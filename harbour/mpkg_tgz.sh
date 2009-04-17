@@ -29,7 +29,6 @@ hb_pref="hb"
 hb_contrib=""
 hb_sysdir="yes"
 hb_exesuf=""
-export HB_USER_CFLAGS="$HB_USER_CFLAGS -DHB_FM_STATISTICS_OFF"
 
 [ -z "$HB_INSTALL_PREFIX" ] && [ -n "$PREFIX" ] && export HB_INSTALL_PREFIX="$PREFIX"
 

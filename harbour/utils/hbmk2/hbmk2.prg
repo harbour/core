@@ -254,7 +254,6 @@ FUNCTION hbmk( aArgs )
    LOCAL s_aLIBVM
    LOCAL s_aLIBUSER
    LOCAL s_aLIBUSERGT
-   LOCAL s_aLIBFM
    LOCAL s_aLIBHB
    LOCAL s_aLIBHBGT
    LOCAL s_aLIB3RD
@@ -295,7 +294,6 @@ FUNCTION hbmk( aArgs )
    LOCAL s_lBLDFLGC := .F.
    LOCAL s_lBLDFLGL := .F.
    LOCAL s_lRUN := .F.
-   LOCAL s_lFMSTAT := NIL /* NIL = default, .T. = on, .F. = off */
    LOCAL s_lINC := .F.
    LOCAL s_lREBUILD := .F.
    LOCAL s_lCLEAN := .F.
@@ -790,7 +788,6 @@ FUNCTION hbmk( aArgs )
    s_aOPTRUN := {}
    s_aRESSRC := {}
    s_aRESCMP := {}
-   s_aLIBFM := {}
    s_aLIBUSER := {}
    s_aLIBUSERGT := {}
    s_aLIBDYNHAS := {}
@@ -928,9 +925,6 @@ FUNCTION hbmk( aArgs )
       CASE cParamL == "-inc"             ; s_lINC       := .T.
       CASE cParamL == "-inc-" .OR. ;
            cParamL == "-noinc"           ; s_lINC       := .F.
-      CASE cParamL == "-fmstat"          ; s_lFMSTAT    := .T.
-      CASE cParamL == "-fmstat-" .OR. ;
-           cParamL == "-nofmstat"        ; s_lFMSTAT    := .F.
       CASE cParamL == "-strip"           ; s_lSTRIP     := .T.
       CASE cParamL == "-strip-" .OR. ;
            cParamL == "-nostrip"         ; s_lSTRIP     := .F.
@@ -1591,10 +1585,6 @@ FUNCTION hbmk( aArgs )
             AAdd( s_aLIBSYS, "X11" )
          ENDIF
 
-         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
-         ENDIF
-
       CASE ( s_cARCH == "win" .AND. s_cCOMP == "gcc" ) .OR. ;
            ( s_cARCH == "win" .AND. s_cCOMP == "mingw" ) .OR. ;
            ( s_cARCH == "win" .AND. s_cCOMP == "mingw64" ) .OR. ;
@@ -1686,10 +1676,6 @@ FUNCTION hbmk( aArgs )
 
          s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
-         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
-         ENDIF
-
          IF s_cCOMP $ "mingw|mingw64|mingwarm" .AND. Len( s_aRESSRC ) > 0
             cBin_Res := s_cCCPREFIX + "windres"
             cResExt := ".reso"
@@ -1746,10 +1732,6 @@ FUNCTION hbmk( aArgs )
             AAdd( s_aOPTL, "-o {OE}" )
          ENDIF
 
-         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
-         ENDIF
-
       CASE s_cARCH == "dos" .AND. s_cCOMP == "djgpp"
 
          IF s_lDEBUG
@@ -1792,10 +1774,6 @@ FUNCTION hbmk( aArgs )
             ENDIF
          ELSE
             AAdd( s_aOPTL, "-o{OE}" )
-         ENDIF
-
-         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, "hbfm" )
          ENDIF
 
       /* Watcom family */
@@ -1911,10 +1889,6 @@ FUNCTION hbmk( aArgs )
             cResPrefix := "OP res="
          ENDIF
 
-         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
-         ENDIF
-
       CASE s_cARCH == "os2" .AND. s_cCOMP == "owatcom"
          cLibPrefix := "LIB "
          cLibExt := ".lib"
@@ -1960,10 +1934,6 @@ FUNCTION hbmk( aArgs )
             AAdd( s_aOPTL, "OP MAP" )
          ENDIF
 
-         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
-         ENDIF
-
       CASE s_cARCH == "linux" .AND. s_cCOMP == "owatcom"
          cLibPrefix := "LIB "
          cLibExt := ".lib"
@@ -2007,10 +1977,6 @@ FUNCTION hbmk( aArgs )
          ENDIF
          IF s_lMAP
             AAdd( s_aOPTL, "OP MAP" )
-         ENDIF
-
-         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
       /* Misc */
@@ -2075,10 +2041,6 @@ FUNCTION hbmk( aArgs )
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-bcc" + cLibExt,;
                                        "harbour-" + cDL_Version_Alter + "-bcc" + cLibExt ) }
          s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
-
-         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
-         ENDIF
 
       CASE ( s_cARCH == "win" .AND. s_cCOMP $ "msvc|msvc64|msvcia64|icc|iccia64" ) .OR. ;
            ( s_cARCH == "wce" .AND. s_cCOMP == "msvcarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
@@ -2214,10 +2176,6 @@ FUNCTION hbmk( aArgs )
             cResExt := ".res"
          ENDIF
 
-         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
-         ENDIF
-
       CASE ( s_cARCH == "win" .AND. s_cCOMP == "pocc" ) .OR. ;
            ( s_cARCH == "win" .AND. s_cCOMP == "pocc64" ) .OR. ; /* NOTE: Cross-platform: win/amd64 on win/x86 */
            ( s_cARCH == "wce" .AND. s_cCOMP == "poccarm" ) .OR. ; /* NOTE: Cross-platform: wce/ARM on win/x86 */
@@ -2300,10 +2258,6 @@ FUNCTION hbmk( aArgs )
 
          s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
-         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
-         ENDIF
-
       /* TODO */
       CASE s_cARCH == "linux" .AND. s_cCOMP == "icc"
       ENDCASE
@@ -2326,8 +2280,7 @@ FUNCTION hbmk( aArgs )
          ! s_lCLEAN .AND. ;
          ( s_cMAIN != NIL .OR. ;
            ! Empty( s_aLIBUSERGT ) .OR. ;
-           s_cGT != NIL .OR. ;
-           s_lFMSTAT != NIL )
+           s_cGT != NIL )
 
          fhnd := hb_FTempCreateEx( @s_cCSTUB, NIL, "hbmk_", ".c" )
          IF fhnd != F_ERROR
@@ -2353,9 +2306,6 @@ FUNCTION hbmk( aArgs )
                /* NOTE: Request this function to generate link error, rather
                         than starting with the wrong (default) function. */
                AAdd( array, Upper( iif( Left( s_cMAIN, 1 ) == "@", SubStr( s_cMAIN, 2 ), s_cMAIN ) ) )
-            ENDIF
-            IF s_lFMSTAT != NIL
-               AAdd( array, iif( s_lFMSTAT, "HB_FM_STAT", "HB_FM_NOSTAT" ) )
             ENDIF
             IF s_cGT != NIL
                /* Always request default GT first */
@@ -2424,12 +2374,10 @@ FUNCTION hbmk( aArgs )
       /* Library list assembly */
       IF s_lSHARED .AND. ! Empty( s_aLIBSHARED )
          s_aLIBHB := ArrayAJoin( { s_aLIBSHAREDPOST,;
-                                   s_aLIBFM,;
                                    aLIB_BASE_CPLR,;
                                    aLIB_BASE_DEBUG } )
       ELSE
-         s_aLIBHB := ArrayAJoin( { s_aLIBFM,;
-                                   aLIB_BASE1,;
+         s_aLIBHB := ArrayAJoin( { aLIB_BASE1,;
                                    aLIB_BASE_CPLR,;
                                    aLIB_BASE_DEBUG,;
                                    s_aLIBVM,;
@@ -4625,7 +4573,6 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -[no]opt          toggle C compiler optimizations (default: on)" ,;
       "  -[no]map          create (or not) a map file" ,;
       "  -[no]strip        strip (no strip) binaries" ,;
-      "  -[no]fmstat       enable/disable runtime memory statistics (gcc builds only)" ,;
       "  -[no]trace        show commands executed" ,;
       "  -traceonly        show commands to be executed, but don't execute them" ,;
       "  -[no]compr[=lev]  compress executable/dynamic lib (needs UPX)" ,;

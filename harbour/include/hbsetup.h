@@ -89,24 +89,6 @@
 #endif
 
 /* ***********************************************************************
- * If you turn this on, the memory subsystem will collect trace information
- * and several statistical data about memory management, it will show
- * these on exit if memory seem to have been leaked. The memory subsystem
- * will also do pointer checks. [vszakats]
- * This should be normally turned off in a final release.
- *
- * Note that if you turn this on, Harbour will be slighlty slower, larger
- * and will consume more memory.
- *
- * By default this is turned on. Define HB_FM_STATISTICS_OFF to turn it off.
- */
-#if defined( HB_FM_STATISTICS_OFF )
-   #undef HB_FM_STATISTICS
-#elif !defined( HB_FM_STATISTICS )
-   #define HB_FM_STATISTICS
-#endif
-
-/* ***********************************************************************
  * Enable profiler support in HVM
  * By default this is turned off. Define HB_USE_PROFILER to turn it on.
  */

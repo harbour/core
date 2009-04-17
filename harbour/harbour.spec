@@ -71,7 +71,7 @@
 %define hb_pref  hb
 %define hb_arch  export HB_ARCHITECTURE=linux
 %define hb_cc    export HB_COMPILER=gcc
-%define hb_cflag export HB_USER_CFLAGS="-DHB_FM_STATISTICS_OFF"
+%define hb_cflag export HB_USER_CFLAGS=
 %define hb_lflag export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} %{?_with_static:-static}"
 %define hb_gpm   export HB_GPM_MOUSE=%{!?_without_gpm:yes}
 %define hb_crs   export HB_WITHOUT_GTCRS=%{?_without_gtcrs:yes}
@@ -629,8 +629,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbcommon.a
 %{_libdir}/%{name}/libhbcplr.a
 %{_libdir}/%{name}/libhbdebug.a
-%{_libdir}/%{name}/libhbfm.a
-%{_libdir}/%{name}/libhbfmmt.a
 %{_libdir}/%{name}/librddfpt.a
 %{_libdir}/%{name}/librddcdx.a
 %{_libdir}/%{name}/librddntx.a

@@ -314,8 +314,6 @@ if [ \$# = 0 ]; then
     -hwgui              # link with HWGUI library (GTK+ interface)
     -l<libname>         # link with <libname> library
     -L<libpath>         # additional path to search for libraries
-    -fmstat             # link with the memory statistics lib
-    -nofmstat           # do not link with the memory statistics lib (default)
     -[no]strip          # strip (no strip) binaries
     -main=<main_func>   # set the name of main program function/procedure.
                         # if not set then 'MAIN' is used or if it doesn't
@@ -357,7 +355,6 @@ HB_GT="${HB_GT_LIB#gt}"
 HB_GPM_MOUSE="${HB_GPM_MOUSE}"
 
 HB_GT_REQ=""
-HB_FM_REQ=""
 HB_STRIP="yes"
 HB_MAIN_FUNC=""
 HB_XBGTK=""
@@ -401,8 +398,6 @@ while [ \$n -lt \${#P[@]} ]; do
         -hwgui)      HB_HWGUI="yes" ;;
         -mt)         HB_MT="MT" ;;
         -gt*)        HB_GT_REQ="\${HB_GT_REQ} \${v#-gt}" ;;
-        -fmstat)     HB_FM_REQ="STAT" ;;
-        -nofmstat)   HB_FM_REQ="NOSTAT" ;;
         -strip)      HB_STRIP="yes" ;;
         -nostrip)    HB_STRIP="no" ;;
         -l[^-]*)     HB_USRLIBS="\${HB_USRLIBS} \${v}" ;;
@@ -508,7 +503,6 @@ for gt in \${HB_GT_REQ}; do
         fi
 #    fi
 done
-[ -n "\${HB_FM_REQ}" ] && HB_LNK_REQ="\${HB_LNK_REQ} HB_FM_\${HB_FM_REQ}"
 
 HB_LNK_ATTR=""
 HARBOUR_LIBS=""
@@ -595,18 +589,6 @@ fi
 if [ -n "\${l}" ]; then
     [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
     [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ] && HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
-fi
-
-l="hbfm"
-[ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
-if [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ] && \\
-   ( [ -n "\${HB_FM_REQ}" ] || [ "\${HB_STATIC}" = "yes" ] ) && \\
-   ( [ "\${HB_ARCHITECTURE}" != "wce" ] || [ "\${HB_FM_REQ}" = "STAT" ] ); then
-    if [ "\${HB_STATIC}" = "yes" ] && [ "\${HB_FM_REQ}" = "STAT" ]; then
-        HARBOUR_LIBS="-l\${l} \${HARBOUR_LIBS}"
-    else
-        HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
-    fi
 fi
 
 if [ "\${HB_ARCHITECTURE}" = "darwin" ]; then
