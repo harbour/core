@@ -85,11 +85,9 @@
          deal with "/" prefixed variant. Since we need to use -o
          Harbour switch, it will be a problem also when user tries
          to use -p option, .ppo files will be generated in temp dir. */
-/* TODO: Sync default C/linker switches with the ones in Harbour GNU make system. */
 /* TODO: Add support for library creation for rest of compilers. */
 /* TODO: Add support for dynamic library creation for rest of compilers. */
 /* TODO: Cleanup on variable names and compiler configuration. */
-/* TODO: Optimizations (speed/memory). */
 /* TODO: C++/C mode. */
 /* TODO: Incremental support:
          - Reuse Harbour .c output for different compiler targets. */
@@ -2111,19 +2109,35 @@ FUNCTION hbmk( aArgs )
          IF s_cCOMP $ "icc|iccia64"
             cBin_Lib := "xilib.exe"
             cBin_CompC := "icl.exe"
-            cBin_Dyn := "xilink.exe"
-            cBin_Link := "link.exe"
+            cBin_Link := "xilink.exe"
+            cBin_Dyn := cBin_Link
          ELSE
             cBin_Lib := "lib.exe"
-            cBin_CompC := "cl.exe" /* TODO: Pre-8.0 is clarm.exe */
-            cBin_Dyn := "link.exe"
+            IF s_cCOMP == "msvcarm" .AND. ! Empty( GetEnv( "HB_VISUALC_VER_PRE80" ) )
+               cBin_CompC := "clarm.exe"
+            ELSE
+               cBin_CompC := "cl.exe"
+            ENDIF
             cBin_Link := "link.exe"
+            cBin_Dyn := cBin_Link
          ENDIF
          cOpt_Lib := "{FA} /out:{OL} {LO}"
          cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
          cOpt_CompC := "-nologo -c -Gs"
          IF s_lOPT
-            cOpt_CompC += " -Ot2b1 -EHs-c-" /* TODO: Pre-8.0 is -Ogt2yb1p -GX- -G6 -YX */
+            IF s_cCOMP == "msvcarm"
+               IF Empty( GetEnv( "HB_VISUALC_VER_PRE80" ) )
+                  cOpt_CompC += " -Od -Os -Gy -GS- -EHsc- -Gm -Zi -GR-"
+               ELSE
+                  cOpt_CompC += " -Oxsb1 -EHsc -YX -GF"
+               ENDIF
+            ELSE
+               IF Empty( GetEnv( "HB_VISUALC_VER_PRE80" ) )
+                  cOpt_CompC += " -Ot2b1 -EHs-c-"
+               ELSE
+                  cOpt_CompC += " -Ogt2yb1p -GX- -G6 -YX"
+               ENDIF
+            ENDIF
          ENDIF
          cOpt_CompC += " {FC} -I{DI} {LC}"
          cOpt_Link := "-nologo /out:{OE} {LO} {DL} {FL} {LL} {LS}"
