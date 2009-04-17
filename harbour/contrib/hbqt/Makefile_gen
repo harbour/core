@@ -17,6 +17,7 @@ CPP_SOURCES=\
 	hbqt_qbrush.cpp \
 	hbqt_qcalendarwidget.cpp \
 	hbqt_qcheckbox.cpp \
+	hbqt_qclipboard.cpp \
 	hbqt_qcolor.cpp \
 	hbqt_qcolordialog.cpp \
 	hbqt_qcombobox.cpp \
@@ -142,6 +143,7 @@ PRG_SOURCES=\
 	TQBoxLayout.prg \
 	TQCalendarWidget.prg \
 	TQCheckBox.prg \
+	TQClipboard.prg \
 	TQColorDialog.prg \
 	TQComboBox.prg \
 	TQCommandLinkButton.prg \

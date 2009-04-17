@@ -24,6 +24,7 @@ QBoxLayout.qth
 QBrush.qth
 QCalendarWidget.qth
 QCheckBox.qth
+QClipboard.qth
 QColor.qth
 QColorDialog.qth
 QComboBox.qth

@@ -57,8 +57,6 @@
 #define __HBQT_H
 
 
-/* #define QT_VERSION 0x040500 */
-
 #include <qglobal.h>
 
 #if QT_VERSION >= 0x040500
@@ -233,6 +231,8 @@
 #define hbqt_par_QStyleOptionComplex( n )    ( ( QStyleOptionComplex* ) hb_parptr( n ) )
 #define hbqt_par_QFontMetrics( n )           ( ( QFontMetrics* ) hb_parptr( n ) )
 #define hbqt_par_QStyleHintReturn( n )       ( ( QStyleHintReturn* ) hb_parptr( n ) )
+#define hbqt_par_QClipboard( n )             ( ( QClipboard* ) hb_parptr( n ) )
+#define hbqt_par_QMimeData( n )              ( ( QMimeData* ) hb_parptr( n ) )
 
 #define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )
 #define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )
@@ -265,3 +265,4 @@ QPointF hbqt_const_QPointF( int );
 #endif
 
 #endif /* __HBQT_H */
+
