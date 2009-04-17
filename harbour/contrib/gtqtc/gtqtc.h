@@ -55,6 +55,7 @@
 
 #define HB_GT_NAME  QTC
 
+#include <QtGui/QtGui>
 #include <Qt/qglobal.h>
 #include <QtGui/QtGui>
 #include <QtCore/QObject>
@@ -193,6 +194,7 @@ public:
 
     QRgb   COLORS[ 16 ];
     void   resetWindowSize(void);
+    void   redrawBuffer( const QRect & rect );
 
     int    fontHeight;
     int    fontWidth;
@@ -214,9 +216,19 @@ protected:
     void   paintEvent(QPaintEvent *event);
     void   resizeEvent(QResizeEvent *event);
     void   wheelEvent(QWheelEvent *event);
+    void   timerEvent(QTimerEvent *event);
 
 private:
     QFont  qFont;
+    QBasicTimer *pv_timer;
+    QImage image;
+    BOOL   pv_bBlinking;
+    int    pv_crtLastRow;
+    int    pv_crtLastCol;
+
+    void   displayCell( int iCol, int iRow );
+    void   displayBlock( int iCol, int iRow );
+    void   resizeImage(QImage *image, const QSize &newSize);
 };
 
 /*----------------------------------------------------------------------*/

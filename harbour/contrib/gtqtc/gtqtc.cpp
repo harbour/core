@@ -155,14 +155,14 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 
    if( pWVT->qFont )
       pWVT->qFont->~QFont();
-
+#if 0
    if( pWVT->qWnd )
       pWVT->qWnd->~MainWindow();
-
-   #if 0
+#endif
+#if 0
    if( pWVT->hIcon && pWVT->bIconToFree )
       DestroyIcon( pWVT->hIcon );
-   #endif
+#endif
 
    hb_xfree( pWVT );
 }
@@ -170,10 +170,6 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
 {
    PHB_GTWVT pWVT;
-   OSVERSIONINFO osvi;
-
-   osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-   GetVersionEx( &osvi );
 
    pWVT = ( PHB_GTWVT ) hb_xgrab( sizeof( HB_GTWVT ) );
    memset( pWVT, 0, sizeof( HB_GTWVT ) );
@@ -213,10 +209,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
    pWVT->CentreWindow      = TRUE;        /* Default is to always display window in centre of screen */
    pWVT->CodePage          = 255;         /* GetACP(); - set code page to default system */
 
-   //pWVT->Win9X             = ( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
    pWVT->AltF4Close        = FALSE;
-
-   //pWVT->IgnoreWM_SYSCHAR  = FALSE;
 
    pWVT->bMaximized        = FALSE;
    pWVT->bBeingMarked      = FALSE;
@@ -818,16 +811,16 @@ static void hb_gt_wvt_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       if( pWVT->qWnd )
       {
          QRect rect;
-
+         /* Fill in values */
          rect.setTop( iRow );
          rect.setBottom( iRow );
          rect.setLeft( iCol );
          rect.setRight( iCol + iSize - 1 );
-
+         /* convert in pixel coordinates */
          rect = hb_gt_wvt_QGetXYFromColRowRect( pWVT, rect );
-
          /* Schedule a Repaint Event */
-         pWVT->qWnd->update( rect );
+         pWVT->qWnd->consoleArea->redrawBuffer( rect );
+         pWVT->qWnd->consoleArea->update( rect );
       }
       else
          pWVT->fInit = TRUE;
@@ -852,7 +845,11 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
 
       if( pWVT->qWnd )
       {
-         app->processEvents();
+         QRect rect( 0,0,pWVT->COLS,pWVT->ROWS );
+         rect = hb_gt_wvt_QGetXYFromColRowRect( pWVT, rect );
+         pWVT->qWnd->consoleArea->redrawBuffer( rect );
+         pWVT->qWnd->consoleArea->update( rect );
+         hb_gt_wvt_ProcessMessages();
       }
    }
 }
@@ -945,7 +942,8 @@ static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    HB_SYMBOL_UNUSED( dFrequency );
    HB_SYMBOL_UNUSED( dDuration );
 
-   //hb_gt_winapi_tone( dFrequency, dDuration );  ???
+   /* Not exactly what this function is supposed to do, but ... */
+   qApp->beep();
 }
 
 /* ********************************************************************** */
@@ -1483,6 +1481,8 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->SetKeyCP             = hb_gt_wvt_SetKeyCP;
    pFuncTable->ReadKey              = hb_gt_wvt_ReadKey;
 
+   //pFuncTable->PutChar              = hb_gt_wvt_PutChar;
+
    pFuncTable->MouseIsPresent       = hb_gt_wvt_mouse_IsPresent;
    pFuncTable->MouseGetPos          = hb_gt_wvt_mouse_GetPos;
    pFuncTable->MouseButtonState     = hb_gt_wvt_mouse_ButtonState;
@@ -1542,8 +1542,16 @@ ConsoleArea::ConsoleArea(QWidget *parent)
    ROWS = 25;
    COLS = 80;
 
+//   image = new QImage();
+
    setFocusPolicy(Qt::StrongFocus);
    setMouseTracking( TRUE );
+
+   pv_bBlinking  = FALSE;
+   pv_crtLastRow = 15;
+   pv_crtLastCol = 10;
+   pv_timer = new QBasicTimer();
+   pv_timer->start( 500,this );
 }
 
 void ConsoleArea::resetWindowSize(void)
@@ -1551,24 +1559,28 @@ void ConsoleArea::resetWindowSize(void)
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
 
    QPainter painter( this );
+
    qFont = QFont();
    qFont.setFamily( pWVT->fontFace );
    qFont.setPixelSize( pWVT->fontHeight );
    //qFont.setWeight( -1 );
    qFont.setFixedPitch( TRUE );
+   /* works - devise strategy to exploit it while resizing */
+   /* qFont.setStretch( 50 ); */
    qFont        = QFont( qFont, painter.device() );
    QFontMetrics fontMetrics( qFont );
    fontHeight   = fontMetrics.height();
    fontWidth    = fontMetrics.averageCharWidth();
+   fontAscent   = fontMetrics.ascent();
    pWVT->PTEXTSIZE.setX( fontWidth );
    pWVT->PTEXTSIZE.setY( fontHeight );
-   fontAscent   = fontMetrics.ascent();
    windowWidth  = fontWidth * COLS;
    windowHeight = fontHeight * ROWS;
 
+   resizeImage( &image, QSize( windowWidth, windowHeight ) );
+   image.fill( qRgb( 198,198,198 ) );
    setFont( qFont );
-
-   QWidget::update();
+   update();
 #if 0
    wsprintf( buf, "%i %i  %i %i   %i %i",
                       pWVT->fontWidth, pWVT->fontHeight, fontWidth, fontHeight,
@@ -1577,381 +1589,142 @@ void ConsoleArea::resetWindowSize(void)
 #endif
 }
 
-void ConsoleArea::keyReleaseEvent(QKeyEvent *event)
+void ConsoleArea::redrawBuffer( const QRect & rect )
 {
-   HB_SYMBOL_UNUSED( event );
-   //int key = event->key();
-}
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+   QPainter painter(&image);
+   QFont font( qFont, painter.device() );
+   painter.setFont( font );
+   painter.setBackgroundMode(Qt::OpaqueMode);
 
-#if 0
-static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
-{
-   if( ! pWVT->bBeginMarked && ! pWVT->MouseMove && ( message == WM_MOUSEMOVE || message == WM_NCMOUSEMOVE ) )
-      return;
+   USHORT usChar;
+   int    iCol, iRow, len, iTop, startCol;
+   BYTE   bColor, bAttr, bOldColor = 0;
+   char   text[ WVT_MAX_COLS ];
+   QRect  rcRect = hb_gt_wvt_QGetColRowFromXYRect( pWVT, rect );
 
-   switch( message )
+   for( iRow = rcRect.top(); iRow <= rcRect.bottom(); ++iRow )
    {
-      case WM_LBUTTONDOWN:
+      iCol     = startCol = rcRect.left();
+      len      = 0;
+      iTop     = ( iRow * fontHeight ) + fontAscent;
+      text[0]  = '\0';
+
+      while( iCol <= rcRect.right() )
       {
-         if( pWVT->bBeginMarked )
-         {
-            pWVT->bBeingMarked = TRUE;
-
-            pWVT->sRectNew.left     = xy.x;
-            pWVT->sRectNew.top      = xy.y;
-            pWVT->sRectNew.right    = xy.x;
-            pWVT->sRectNew.bottom   = xy.y;
-
-            pWVT->sRectOld.left   = 0;
-            pWVT->sRectOld.top    = 0;
-            pWVT->sRectOld.right  = 0;
-            pWVT->sRectOld.bottom = 0;
-
-            return;
-         }
-         else
-         {
-            keyCode = K_LBUTTONDOWN;
+         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
             break;
-         }
-      }
 
-      case WM_LBUTTONUP:
+         // usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, TRUE, ( BYTE ) usChar );
+         if( len == 0 )
+         {
+            bOldColor = bColor;
+         }
+         else if( bColor != bOldColor )
+         {
+            text[ len ] = '\0';
+            painter.setPen( QPen( COLORS[ bOldColor & 0x0F ] ) );
+            painter.setBackground( QBrush( COLORS[ bOldColor >> 4 ] ) );
+            painter.drawText( QPoint( startCol*fontWidth, iTop ), QString( text ) );
+            bOldColor = bColor;
+            startCol  = iCol;
+            len       = 0;
+         }
+         text[ len++ ] = ( char ) usChar;
+         iCol++;
+      }
+      if( len > 0 )
       {
-         if( pWVT->bBeingMarked )
-         {
-            pWVT->bBeginMarked = FALSE;
-            pWVT->bBeingMarked = FALSE;
-
-            RedrawWindow( pWVT->hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
-
-            {
-               ULONG  ulSize;
-               int    irow, icol, j, top, left, bottom, right;
-               char * sBuffer;
-               RECT   rect = { 0, 0, 0, 0 };
-               RECT   colrowRC = { 0, 0, 0, 0 };
-
-               rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
-               rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
-               rect.right  = HB_MAX( pWVT->sRectNew.left, pWVT->sRectNew.right  );
-               rect.bottom = HB_MAX( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
-
-               colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
-
-               left   = colrowRC.left;
-               top    = colrowRC.top;
-               right  = colrowRC.right;
-               bottom = colrowRC.bottom;
-
-               ulSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
-               sBuffer = ( char * ) hb_xgrab( ulSize + 1 );
-
-               for( j = 0, irow = top; irow <= bottom; irow++ )
-               {
-                  for( icol = left; icol <= right; icol++ )
-                  {
-                     BYTE bColor, bAttr;
-                     USHORT usChar;
-
-                     if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
-                        break;
-
-                     sBuffer[ j++ ] = ( char ) usChar;
-                  }
-
-                  sBuffer[ j++ ] = '\r';
-                  sBuffer[ j++ ] = '\n';
-               }
-               sBuffer[ j ] = '\0';
-
-               if( j > 0 )
-               {
-                  hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
-                                             CF_OEMTEXT : CF_TEXT,
-                                             sBuffer,
-                                             j );
-               }
-
-               hb_xfree( sBuffer );
-            }
-            return;
-         }
-         else
-         {
-            keyCode = K_LBUTTONUP;
-            break;
-         }
+         text[ len ] = '\0';
+         painter.setPen( QPen( COLORS[ bOldColor & 0x0F ] ) );
+         painter.setBackground( QBrush( COLORS[ bOldColor >> 4 ] ) );
+         painter.drawText( QPoint( startCol*fontWidth, iTop ), QString( text ) );
       }
-      case WM_MOUSEMOVE:
-      {
-         if( pWVT->bBeingMarked )
-         {
-            RECT rect     = { 0, 0, 0, 0 };
-            RECT colrowRC = { 0, 0, 0, 0 };
-
-            pWVT->sRectNew.right  = xy.x;
-            pWVT->sRectNew.bottom = xy.y;
-
-            rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
-            rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
-            rect.right  = HB_MAX( pWVT->sRectNew.left, pWVT->sRectNew.right  );
-            rect.bottom = HB_MAX( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
-
-            colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
-            rect     = hb_gt_wvt_GetXYFromColRowRect( pWVT, colrowRC );
-
-            if( rect.left   != pWVT->sRectOld.left   ||
-                rect.top    != pWVT->sRectOld.top    ||
-                rect.right  != pWVT->sRectOld.right  ||
-                rect.bottom != pWVT->sRectOld.bottom )
-            {
-               /* Concept forwarded by Andy Wos - thanks. */
-               HRGN rgn1 = CreateRectRgn( pWVT->sRectOld.left, pWVT->sRectOld.top, pWVT->sRectOld.right, pWVT->sRectOld.bottom );
-               HRGN rgn2 = CreateRectRgn( rect.left, rect.top, rect.right, rect.bottom );
-               HRGN rgn3 = CreateRectRgn( 0, 0, 0, 0 );
-
-               if( CombineRgn( rgn3, rgn1, rgn2, RGN_XOR ) != 0 )
-               {
-                  HDC hdc = GetDC( pWVT->hWnd );
-                  InvertRgn( hdc, rgn3 );
-                  ReleaseDC( pWVT->hWnd, hdc );
-               }
-
-               DeleteObject( rgn1 );
-               DeleteObject( rgn2 );
-               DeleteObject( rgn3 );
-
-               pWVT->sRectOld.left   = rect.left;
-               pWVT->sRectOld.top    = rect.top;
-               pWVT->sRectOld.right  = rect.right;
-               pWVT->sRectOld.bottom = rect.bottom;
-            }
-            return;
-         }
-         }
-      }
-      case WM_NCMOUSEMOVE:
-         keyCode = K_NCMOUSEMOVE;
-         break;
-   }
-}
-#endif
-
-void hb_gt_wvt_QSetMousePos( PHB_GTWVT pWVT, int x, int y )
-{
-   QPoint colrow = hb_gt_wvt_QGetColRowFromXY( pWVT, x, y );
-
-   pWVT->MousePos.setY( colrow.y() );
-   pWVT->MousePos.setX( colrow.x() );
-}
-
-void ConsoleArea::wheelEvent(QWheelEvent *event)
-{
-   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-   int c = 0;
-
-   switch( event->orientation() )
-   {
-   case Qt::Vertical:
-      if( event->delta() < 0 )
-         c = K_MWFORWARD;
-      else
-         c = K_MWBACKWARD;
-      break;
-   case Qt::Horizontal:
-   default:
-      QWidget::wheelEvent(event);
-      return;
-   }
-   if( c != 0 )
-   {
-      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
-      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
-   }
-}
-
-void ConsoleArea::mouseDoubleClickEvent(QMouseEvent *event)
-{
-   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-   int c = 0;
-
-   switch( event->button() )
-   {
-   case Qt::LeftButton:
-      c = K_LDBLCLK;
-      break;
-   case Qt::RightButton:
-      c = K_RDBLCLK;;
-      break;
-   case Qt::MidButton:
-      c = K_MDBLCLK;;
-      break;
-   case Qt::MouseButtonMask:
-   case Qt::XButton1:
-   case Qt::XButton2:
-   case Qt::NoButton:
-      QWidget::mouseDoubleClickEvent(event);
-      return;
-   }
-   if( c != 0 )
-   {
-      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
-      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
-   }
-}
-
-void ConsoleArea::mouseMoveEvent(QMouseEvent *event)
-{
-   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-   int c = K_MOUSEMOVE;
-#if defined( __HB_GTWVT_GEN_K_MMDOWN_EVENTS )
-   switch( event->button() )
-   {
-   case Qt::LeftButton:
-      c = K_MMLEFTDOWN;
-      break;
-   case Qt::RightButton:
-      c = K_MMRIGHTDOWN;
-      break;
-   case Qt::MidButton:
-      c = K_MMMIDDLEDOWN;
-      break;
-   case Qt::XButton1:
-   case Qt::XButton2:
-   case Qt::NoButton:
-      QWidget::mouseMoveEvent(event);
-      return;
-   }
-#endif
-   if( c != 0 )
-   {
-      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
-      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
-   }
-}
-
-
-void ConsoleArea::mousePressEvent(QMouseEvent *event)
-{
-   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-   int c = 0;
-
-   switch( event->button() )
-   {
-   case Qt::LeftButton:
-      c = K_LBUTTONDOWN;
-      break;
-   case Qt::RightButton:
-      c = K_RBUTTONDOWN;
-      break;
-   case Qt::MidButton:
-      c = K_MBUTTONDOWN;
-      break;
-   case Qt::MouseButtonMask:
-   case Qt::XButton1:
-   case Qt::XButton2:
-   case Qt::NoButton:
-      QWidget::mousePressEvent(event);
-      return;
-   }
-   if( c != 0 )
-   {
-      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
-      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
-   }
-}
-
-void ConsoleArea::mouseReleaseEvent(QMouseEvent *event)
-{
-   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-   int c = 0;
-
-   switch( event->button() )
-   {
-   case Qt::LeftButton:
-      c = K_LBUTTONUP;
-      break;
-   case Qt::RightButton:
-      c = K_RBUTTONUP;
-      break;
-   case Qt::MidButton:
-      c = K_MBUTTONUP;
-      break;
-   case Qt::MouseButtonMask:
-   case Qt::XButton1:
-   case Qt::XButton2:
-   case Qt::NoButton:
-      QWidget::mouseReleaseEvent(event);
-      return;
-   }
-   if( c != 0 )
-   {
-      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
-      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
    }
 }
 
 void ConsoleArea::paintEvent(QPaintEvent * event)
 {
-    QPainter painter(this);
-    painter.setBackgroundMode(Qt::OpaqueMode);
+   QPainter painter(this);
+   painter.drawImage( event->rect(), image, event->rect() );
+}
 
-    int       iRow,iCol,startCol,len,iTop ;
-    USHORT    usChar;
-    BYTE      bColor, bAttr, bOldColor = 0;
-    char      text[ WVT_MAX_COLS ];
-    PHB_GTWVT pWVT   = HB_GTWVT_GET( pGT );
-    QRect     rcRect = hb_gt_wvt_QGetColRowFromXYRect( pWVT, event->rect() );
+void ConsoleArea::displayCell( int iCol, int iRow )
+{
+   QPainter painter(&image);
+   painter.setBackgroundMode(Qt::OpaqueMode);
+   QFont font( qFont, painter.device() );
+   painter.setFont( font );
 
-    for( iRow = rcRect.top(); iRow <= rcRect.bottom(); ++iRow )
-    {
-       iCol = startCol = rcRect.left();
-       len  = 0;
-       iTop = ( iRow * fontHeight ) + fontAscent;
+   USHORT usChar;
+   BYTE   bAttr,  bColor = 0;
 
-       text[ 0 ] = '\0';
+   if( HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
+   {
+      painter.setPen( QPen( COLORS[ bColor & 0x0F ] ) );
+      painter.setBackground( QBrush( COLORS[ bColor >> 4 ] ) );
+      painter.drawText( QPoint( iCol*fontWidth, ( iRow * fontHeight ) + fontAscent ), QString( usChar ) );
+   }
+   update( QRect( iCol*fontWidth, iRow * fontHeight, fontWidth, fontHeight ) );
+}
 
-       while( iCol <= rcRect.right() )
-       {
-          if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
-             break;
+void ConsoleArea::displayBlock( int iCol, int iRow )
+{
+   QPainter painter(&image);
+   painter.setBackgroundMode(Qt::OpaqueMode);
+   QFont font( qFont, painter.device() );
+   painter.setFont( font );
+   painter.setPen( QPen( QColor( 255,255,255 ) ) );
+   painter.setBackground( QBrush( QColor( 255,255,255 ) ) );
+   painter.drawText( QPoint( iCol*fontWidth, ( iRow * fontHeight ) + fontAscent ), QString( ' ' ) );
+   update( QRect( iCol*fontWidth, iRow * fontHeight, fontWidth, fontHeight ) );
+   //qApp->processEvents();
+}
 
-          // usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, TRUE, ( BYTE ) usChar );
-          if( len == 0 )
-          {
-             bOldColor = bColor;
-          }
-          else if( bColor != bOldColor )
-          {
-             text[ len ] = '\0';
-             painter.setPen( QPen( COLORS[ bOldColor & 0x0F ] ) );
-             painter.setBackground( QBrush( COLORS[ bOldColor >> 4 ] ) );
-             painter.drawText( QPoint( startCol*fontWidth, iTop ), QString( text ) );
-//OutputDebugString( text );
-             bOldColor = bColor;
-             startCol  = iCol;
-             len       = 0;
-          }
-          text[ len++ ] = ( char ) usChar;
-          iCol++;
-       }
-       if( len > 0 )
-       {
-          text[ len ] = '\0';
-          painter.setPen( QPen( COLORS[ bOldColor & 0x0F ] ) );
-          painter.setBackground( QBrush( COLORS[ bOldColor >> 4 ] ) );
-          painter.drawText( QPoint( startCol*fontWidth, iTop ), QString( text ) );
-//OutputDebugString( text );
-       }
-    }
+void ConsoleArea::timerEvent(QTimerEvent *event)
+{
+   if( event->timerId() == pv_timer->timerId() )
+   {
+      if( pv_bBlinking )
+      {
+         pv_bBlinking = FALSE;
+         displayCell( pv_crtLastCol, pv_crtLastRow );
+      }
+      else
+      {
+         pv_bBlinking = TRUE;
+         displayBlock( pv_crtLastCol, pv_crtLastRow );
+      }
+   }
+   else
+   {
+      QWidget::timerEvent(event);
+   }
 }
 
 void ConsoleArea::resizeEvent(QResizeEvent *event)
 {
-    QWidget::resizeEvent(event);
+   #if 0
+   if( width() > image.width() || height() > image.height() )
+   {
+      resizeImage(&image, size());
+      update();
+   }
+   #endif
+   QWidget::resizeEvent(event);
 }
 
+void ConsoleArea::resizeImage(QImage *image, const QSize &newSize)
+{
+   if (image->size() == newSize)
+       return;
+
+   QImage newImage(newSize, QImage::Format_RGB32);
+   newImage.fill(qRgb(255, 255, 255));
+   QPainter painter(&newImage);
+   painter.drawImage(QPoint(0, 0), *image);
+   *image = newImage;
+ }
 /*----------------------------------------------------------------------*/
 
 static void hb_gt_wvt_QTranslateKey( PHB_GTWVT pWVT, Qt::KeyboardModifiers kbm, int key, int shiftkey, int altkey, int controlkey )
@@ -2440,6 +2213,321 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
    return 0;
 }
 #endif
+
+void ConsoleArea::keyReleaseEvent(QKeyEvent *event)
+{
+   HB_SYMBOL_UNUSED( event );
+   //int key = event->key();
+}
+
+#if 0
+static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
+{
+   if( ! pWVT->bBeginMarked && ! pWVT->MouseMove && ( message == WM_MOUSEMOVE || message == WM_NCMOUSEMOVE ) )
+      return;
+
+   switch( message )
+   {
+      case WM_LBUTTONDOWN:
+      {
+         if( pWVT->bBeginMarked )
+         {
+            pWVT->bBeingMarked = TRUE;
+
+            pWVT->sRectNew.left     = xy.x;
+            pWVT->sRectNew.top      = xy.y;
+            pWVT->sRectNew.right    = xy.x;
+            pWVT->sRectNew.bottom   = xy.y;
+
+            pWVT->sRectOld.left   = 0;
+            pWVT->sRectOld.top    = 0;
+            pWVT->sRectOld.right  = 0;
+            pWVT->sRectOld.bottom = 0;
+
+            return;
+         }
+         else
+         {
+            keyCode = K_LBUTTONDOWN;
+            break;
+         }
+      }
+
+      case WM_LBUTTONUP:
+      {
+         if( pWVT->bBeingMarked )
+         {
+            pWVT->bBeginMarked = FALSE;
+            pWVT->bBeingMarked = FALSE;
+
+            RedrawWindow( pWVT->hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+
+            {
+               ULONG  ulSize;
+               int    irow, icol, j, top, left, bottom, right;
+               char * sBuffer;
+               RECT   rect = { 0, 0, 0, 0 };
+               RECT   colrowRC = { 0, 0, 0, 0 };
+
+               rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
+               rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
+               rect.right  = HB_MAX( pWVT->sRectNew.left, pWVT->sRectNew.right  );
+               rect.bottom = HB_MAX( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
+
+               colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
+
+               left   = colrowRC.left;
+               top    = colrowRC.top;
+               right  = colrowRC.right;
+               bottom = colrowRC.bottom;
+
+               ulSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
+               sBuffer = ( char * ) hb_xgrab( ulSize + 1 );
+
+               for( j = 0, irow = top; irow <= bottom; irow++ )
+               {
+                  for( icol = left; icol <= right; icol++ )
+                  {
+                     BYTE bColor, bAttr;
+                     USHORT usChar;
+
+                     if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
+                        break;
+
+                     sBuffer[ j++ ] = ( char ) usChar;
+                  }
+
+                  sBuffer[ j++ ] = '\r';
+                  sBuffer[ j++ ] = '\n';
+               }
+               sBuffer[ j ] = '\0';
+
+               if( j > 0 )
+               {
+                  hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
+                                             CF_OEMTEXT : CF_TEXT,
+                                             sBuffer,
+                                             j );
+               }
+
+               hb_xfree( sBuffer );
+            }
+            return;
+         }
+         else
+         {
+            keyCode = K_LBUTTONUP;
+            break;
+         }
+      }
+      case WM_MOUSEMOVE:
+      {
+         if( pWVT->bBeingMarked )
+         {
+            RECT rect     = { 0, 0, 0, 0 };
+            RECT colrowRC = { 0, 0, 0, 0 };
+
+            pWVT->sRectNew.right  = xy.x;
+            pWVT->sRectNew.bottom = xy.y;
+
+            rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
+            rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
+            rect.right  = HB_MAX( pWVT->sRectNew.left, pWVT->sRectNew.right  );
+            rect.bottom = HB_MAX( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
+
+            colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
+            rect     = hb_gt_wvt_GetXYFromColRowRect( pWVT, colrowRC );
+
+            if( rect.left   != pWVT->sRectOld.left   ||
+                rect.top    != pWVT->sRectOld.top    ||
+                rect.right  != pWVT->sRectOld.right  ||
+                rect.bottom != pWVT->sRectOld.bottom )
+            {
+               /* Concept forwarded by Andy Wos - thanks. */
+               HRGN rgn1 = CreateRectRgn( pWVT->sRectOld.left, pWVT->sRectOld.top, pWVT->sRectOld.right, pWVT->sRectOld.bottom );
+               HRGN rgn2 = CreateRectRgn( rect.left, rect.top, rect.right, rect.bottom );
+               HRGN rgn3 = CreateRectRgn( 0, 0, 0, 0 );
+
+               if( CombineRgn( rgn3, rgn1, rgn2, RGN_XOR ) != 0 )
+               {
+                  HDC hdc = GetDC( pWVT->hWnd );
+                  InvertRgn( hdc, rgn3 );
+                  ReleaseDC( pWVT->hWnd, hdc );
+               }
+
+               DeleteObject( rgn1 );
+               DeleteObject( rgn2 );
+               DeleteObject( rgn3 );
+
+               pWVT->sRectOld.left   = rect.left;
+               pWVT->sRectOld.top    = rect.top;
+               pWVT->sRectOld.right  = rect.right;
+               pWVT->sRectOld.bottom = rect.bottom;
+            }
+            return;
+         }
+         }
+      }
+      case WM_NCMOUSEMOVE:
+         keyCode = K_NCMOUSEMOVE;
+         break;
+   }
+}
+#endif
+
+void hb_gt_wvt_QSetMousePos( PHB_GTWVT pWVT, int x, int y )
+{
+   QPoint colrow = hb_gt_wvt_QGetColRowFromXY( pWVT, x, y );
+
+   pWVT->MousePos.setY( colrow.y() );
+   pWVT->MousePos.setX( colrow.x() );
+}
+
+void ConsoleArea::wheelEvent(QWheelEvent *event)
+{
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+   int c = 0;
+
+   switch( event->orientation() )
+   {
+   case Qt::Vertical:
+      if( event->delta() < 0 )
+         c = K_MWFORWARD;
+      else
+         c = K_MWBACKWARD;
+      break;
+   case Qt::Horizontal:
+   default:
+      QWidget::wheelEvent(event);
+      return;
+   }
+   if( c != 0 )
+   {
+      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
+      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
+   }
+}
+
+void ConsoleArea::mouseDoubleClickEvent(QMouseEvent *event)
+{
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+   int c = 0;
+
+   switch( event->button() )
+   {
+   case Qt::LeftButton:
+      c = K_LDBLCLK;
+      break;
+   case Qt::RightButton:
+      c = K_RDBLCLK;;
+      break;
+   case Qt::MidButton:
+      c = K_MDBLCLK;;
+      break;
+   case Qt::MouseButtonMask:
+   case Qt::XButton1:
+   case Qt::XButton2:
+   case Qt::NoButton:
+      QWidget::mouseDoubleClickEvent(event);
+      return;
+   }
+   if( c != 0 )
+   {
+      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
+      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
+   }
+}
+
+void ConsoleArea::mouseMoveEvent(QMouseEvent *event)
+{
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+   int c = K_MOUSEMOVE;
+#if defined( __HB_GTWVT_GEN_K_MMDOWN_EVENTS )
+   switch( event->button() )
+   {
+   case Qt::LeftButton:
+      c = K_MMLEFTDOWN;
+      break;
+   case Qt::RightButton:
+      c = K_MMRIGHTDOWN;
+      break;
+   case Qt::MidButton:
+      c = K_MMMIDDLEDOWN;
+      break;
+   case Qt::XButton1:
+   case Qt::XButton2:
+   case Qt::NoButton:
+      QWidget::mouseMoveEvent(event);
+      return;
+   }
+#endif
+   if( c != 0 )
+   {
+      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
+      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
+   }
+}
+
+
+void ConsoleArea::mousePressEvent(QMouseEvent *event)
+{
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+   int c = 0;
+
+   switch( event->button() )
+   {
+   case Qt::LeftButton:
+      c = K_LBUTTONDOWN;
+      break;
+   case Qt::RightButton:
+      c = K_RBUTTONDOWN;
+      break;
+   case Qt::MidButton:
+      c = K_MBUTTONDOWN;
+      break;
+   case Qt::MouseButtonMask:
+   case Qt::XButton1:
+   case Qt::XButton2:
+   case Qt::NoButton:
+      QWidget::mousePressEvent(event);
+      return;
+   }
+   if( c != 0 )
+   {
+      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
+      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
+   }
+}
+
+void ConsoleArea::mouseReleaseEvent(QMouseEvent *event)
+{
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+   int c = 0;
+
+   switch( event->button() )
+   {
+   case Qt::LeftButton:
+      c = K_LBUTTONUP;
+      break;
+   case Qt::RightButton:
+      c = K_RBUTTONUP;
+      break;
+   case Qt::MidButton:
+      c = K_MBUTTONUP;
+      break;
+   case Qt::MouseButtonMask:
+   case Qt::XButton1:
+   case Qt::XButton2:
+   case Qt::NoButton:
+      QWidget::mouseReleaseEvent(event);
+      return;
+   }
+   if( c != 0 )
+   {
+      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
+      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
+   }
+}
 /*----------------------------------------------------------------------*/
 /*
  *                           Class MainWindow

@@ -35,11 +35,15 @@ STATIC nRows := 20, nCols := 60, nColorIndex := 1
 
 FUNCTION Main()
    Local nKey, lMark, lResize, lClose
+   LOCAL cVar    := '          '
+   LOCAL getlist := {}
    Local nHeight := 20
    Local nWidth  := Int( nHeight/2 )
    Local cFont   := 'Courier New'
    Local nn      := 0
    Local cc      := 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmn'
+
+   SET SCOREBOARD OFF
 
    #if 0
    Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
@@ -53,6 +57,8 @@ FUNCTION Main()
 
    DispScreen()
 
+   Hb_GtInfo( HB_GTI_ICONFILE, 'test.ico' )
+
    DO WHILE .T.
       nKey := Inkey(0.1, INKEY_ALL )
       if nKey == K_ESC
@@ -63,10 +69,9 @@ IF nKey != 0
    hb_ToOutDebug( "nKey %i %s", nKey, chr( nKey ) )
 ENDIF
 #endif
-      @ maxrow()-1, nn SAY substr( cc, nn+1, 1 )
-      nn++
-      if nn > 79
-         nn := 0
+      IF nn < 80
+         @ maxrow()-1, nn SAY substr( cc, nn+1, 1 )
+         nn++
       endif
 
       DO CASE
@@ -95,10 +100,9 @@ ENDIF
          SetPaletteIndex()
 
       CASE nKey == K_F8
-         Alert( "Menu title is " + hb_GtInfo( HB_GTI_WINTITLE ) )
-
-      CASE nKey == K_F12
-         EXIT
+         @ maxrow()-3, 10 GET cVar COLOR 'W+/B'
+         READ
+         @ maxrow()-3, 10 SAY cVar COLOR 'W+/W'
 
       ENDCASE
    ENDDO
@@ -151,7 +155,8 @@ STATIC FUNCTION DispScreen()
    DispOutAt( ++nRow, nCol, "< F5 Palette L   Repeat >", cColor )
    DispOutAt( ++nRow, nCol, "< F6 Palette D   Repeat >", cColor )
    DispOutAt( ++nRow, nCol, "< F7 Palette By Index R >", cColor )
-   DispOutAt( ++nRow, nCol, "< F8 MarkCopy menu text >", cColor )
+   //DispOutAt( ++nRow, nCol, "< F8 MarkCopy menu text >", cColor )
+   DispOutAt( ++nRow, nCol, "<        F8  GET        >", cColor )
    DispOutAt( ++nRow, nCol, "<    Enter - Alert()    >", cColor )
    DispOutAt( ++nRow, nCol, "<    Click X Button     >", cColor )
    #endif
