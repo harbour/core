@@ -185,50 +185,63 @@ class MainWindow;
 
 class ConsoleArea : public QWidget
 {
-    Q_OBJECT
+   Q_OBJECT
 
 public:
-    ConsoleArea(QWidget *parent = 0);
+   ConsoleArea(QWidget *parent = 0);
 
-    PHB_GT pGT;
+   PHB_GT pGT;
 
-    QRgb   COLORS[ 16 ];
-    void   resetWindowSize(void);
-    void   redrawBuffer( const QRect & rect );
+   QRgb   COLORS[ 16 ];
+   void   resetWindowSize(void);
+   void   redrawBuffer(const QRect & rect );
 
-    int    fontHeight;
-    int    fontWidth;
-    int    fontAscent;
+   BOOL   createCaret(int iWidth, int iHeight);
+   void   showCaret(void);
+   void   hideCaret(void);
+   void   setCaretPos(int iRow, int iCol);
+   void   destroyCaret();
 
-    int    ROWS;
-    int    COLS;
-    int    windowWidth, windowHeight;
+   void   displayCell( int iCol, int iRow );
+   void   displayBlock( int iCol, int iRow );
+   void   resizeImage(QImage *image, const QSize &newSize);
 
-    char   buf[ 80 ];
+   int    fontHeight;
+   int    fontWidth;
+   int    fontAscent;
+
+   int    ROWS;
+   int    COLS;
+   int    windowWidth, windowHeight;
+
+   int    pu_crtHeight;
+   int    pu_crtWidth;
+   BOOL   pu_bBlinking;
+   int    pu_crtLastRow;
+   int    pu_crtLastCol;
+
+   char   buf[ 80 ];
 
 protected:
-    void   keyPressEvent(QKeyEvent *event);
-    void   keyReleaseEvent(QKeyEvent *event);
-    void   mousePressEvent(QMouseEvent *event);
-    void   mouseMoveEvent(QMouseEvent *event);
-    void   mouseReleaseEvent(QMouseEvent *event);
-    void   mouseDoubleClickEvent(QMouseEvent * event);
-    void   paintEvent(QPaintEvent *event);
-    void   resizeEvent(QResizeEvent *event);
-    void   wheelEvent(QWheelEvent *event);
-    void   timerEvent(QTimerEvent *event);
+   void   keyPressEvent(QKeyEvent *event);
+   void   keyReleaseEvent(QKeyEvent *event);
+   void   mousePressEvent(QMouseEvent *event);
+   void   mouseMoveEvent(QMouseEvent *event);
+   void   mouseReleaseEvent(QMouseEvent *event);
+   void   mouseDoubleClickEvent(QMouseEvent * event);
+   void   paintEvent(QPaintEvent *event);
+   void   resizeEvent(QResizeEvent *event);
+   void   wheelEvent(QWheelEvent *event);
+   void   timerEvent(QTimerEvent *event);
+   void   focusInEvent(QFocusEvent *event);
+   void   focusOutEvent(QFocusEvent *event);
+   void   moveEvent(QMoveEvent *event);
 
 private:
-    QFont  qFont;
-    QBasicTimer *pv_timer;
-    QImage image;
-    BOOL   pv_bBlinking;
-    int    pv_crtLastRow;
-    int    pv_crtLastCol;
+   QFont  qFont;
+   QBasicTimer *pv_timer;
+   QImage image;
 
-    void   displayCell( int iCol, int iRow );
-    void   displayBlock( int iCol, int iRow );
-    void   resizeImage(QImage *image, const QSize &newSize);
 };
 
 /*----------------------------------------------------------------------*/

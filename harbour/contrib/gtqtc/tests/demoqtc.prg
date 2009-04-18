@@ -35,7 +35,8 @@ STATIC nRows := 20, nCols := 60, nColorIndex := 1
 
 FUNCTION Main()
    Local nKey, lMark, lResize, lClose
-   LOCAL cVar    := '          '
+   LOCAL cVar    := '               '
+   LOCAL cVar1   := '               '
    LOCAL getlist := {}
    Local nHeight := 20
    Local nWidth  := Int( nHeight/2 )
@@ -100,9 +101,13 @@ ENDIF
          SetPaletteIndex()
 
       CASE nKey == K_F8
-         @ maxrow()-3, 10 GET cVar COLOR 'W+/B'
+         #include 'setcurs.ch'
+         SetCursor( 2 )
+         SetKey( K_F12, {||  SetCursor( 2 ) } )
+         @ maxrow()-6, 5 GET cVar  COLOR 'W+/B'
+         @ maxrow()-5, 5 GET cVar1 COLOR 'W+/R'
          READ
-         @ maxrow()-3, 10 SAY cVar COLOR 'W+/W'
+         @ maxrow()-3, 5 SAY cVar COLOR 'W+/W'
 
       ENDCASE
    ENDDO
