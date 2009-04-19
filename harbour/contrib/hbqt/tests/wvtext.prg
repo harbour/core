@@ -14,6 +14,8 @@
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
+#define __GTQTC__
+
 #include "hbgtinfo.ch"
 #include "inkey.ch"
 #include "box.ch"
@@ -43,7 +45,7 @@ STATIC nRows := 20, nCols := 60, nColorIndex := 1
 #define QT_EVE_CLICKED     "clicked()"
 
 /*----------------------------------------------------------------------*/
-
+#if 0
 INIT PROCEDURE Qt_Start()
    qt_qapplication()
    RETURN
@@ -51,7 +53,7 @@ INIT PROCEDURE Qt_Start()
 EXIT PROCEDURE Qt_End()
    qt_qapplication_quit()
    RETURN
-
+#endif
 /*----------------------------------------------------------------------*/
 
 FUNCTION Main()
@@ -186,6 +188,9 @@ STATIC FUNCTION DispScreen()
    RETURN NIL
 //----------------------------------------------------------------------//
 PROCEDURE HB_GTSYS()
+#ifdef __GTQTC__
+   REQUEST HB_GT_QTC_DEFAULT
+#endif
 #ifdef __GTWVG__
    REQUEST HB_GT_WVG_DEFAULT
 #else

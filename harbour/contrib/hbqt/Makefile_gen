@@ -99,7 +99,20 @@ CPP_SOURCES=\
 	hbqt_qtablewidget.cpp \
 	hbqt_qtablewidgetitem.cpp \
 	hbqt_qtabwidget.cpp \
+	hbqt_qtextblock.cpp \
+	hbqt_qtextblockformat.cpp \
+	hbqt_qtextblockgroup.cpp \
+	hbqt_qtextbrowser.cpp \
+	hbqt_qtextboundaryfinder.cpp \
+	hbqt_qtextcharformat.cpp \
+	hbqt_qtextcursor.cpp \
+	hbqt_qtextdecoder.cpp \
+	hbqt_qtextdocument.cpp \
+	hbqt_qtextdocumentfragment.cpp \
+	hbqt_qtextdocumentwriter.cpp \
 	hbqt_qtextedit.cpp \
+	hbqt_qtextformat.cpp \
+	hbqt_qtextstream.cpp \
 	hbqt_qtimeedit.cpp \
 	hbqt_qtimer.cpp \
 	hbqt_qtoolbar.cpp \
@@ -223,7 +236,20 @@ PRG_SOURCES=\
 	TQTableWidget.prg \
 	TQTableWidgetItem.prg \
 	TQTabWidget.prg \
+	TQTextBlock.prg \
+	TQTextBlockFormat.prg \
+	TQTextBlockGroup.prg \
+	TQTextBrowser.prg \
+	TQTextBoundaryFinder.prg \
+	TQTextCharFormat.prg \
+	TQTextCursor.prg \
+	TQTextDecoder.prg \
+	TQTextDocument.prg \
+	TQTextDocumentFragment.prg \
+	TQTextDocumentWriter.prg \
 	TQTextEdit.prg \
+	TQTextFormat.prg \
+	TQTextStream.prg \
 	TQTimeEdit.prg \
 	TQTimer.prg \
 	TQToolBar.prg \

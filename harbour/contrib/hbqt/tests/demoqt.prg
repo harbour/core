@@ -156,7 +156,7 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    Qt_Connect_Signal( oMenu:addAction( "W&ebPage"   ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage"  , w, l ) } )
    oMenuBar:addMenu( QT_PTROF( oMenu ) )
 
-   oMenuBar:show()
+   oWnd:setMenuBar( QT_PTROF( oMenuBar ) )
 
    RETURN nil
 

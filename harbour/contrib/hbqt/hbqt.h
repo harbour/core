@@ -56,8 +56,12 @@
 #ifndef __HBQT_H
 #define __HBQT_H
 
-
-#include <qglobal.h>
+#include <qt/qglobal.h>
+#include <qtgui/QTextDocumentFragment>
+#include <qtgui/QTextDocument>
+#include <qtgui/QTextDocumentWriter>
+#include <qtgui/QTextBlock>
+#include <qtgui/QTextCursor>
 
 #if QT_VERSION >= 0x040500
 
@@ -233,6 +237,24 @@
 #define hbqt_par_QStyleHintReturn( n )       ( ( QStyleHintReturn* ) hb_parptr( n ) )
 #define hbqt_par_QClipboard( n )             ( ( QClipboard* ) hb_parptr( n ) )
 #define hbqt_par_QMimeData( n )              ( ( QMimeData* ) hb_parptr( n ) )
+#define hbqt_par_QTextBlock( n )             ( ( QTextBlock* ) hb_parptr( n ) )
+#define hbqt_par_QTextBlockUserData( n )     ( ( QTextBlockUserData* ) hb_parptr( n ) )
+#define hbqt_par_QTextBrowser( n )           ( ( QTextBrowser* ) hb_parptr( n ) )
+#define hbqt_par_QTextFormat( n )            ( ( QTextFormat* ) hb_parptr( n ) )
+#define hbqt_par_QTextBlockFormat( n )       ( ( QTextBlockFormat* ) hb_parptr( n ) )
+#define hbqt_par_QTextBlockGroup( n )        ( ( QTextBlockGroup* ) hb_parptr( n ) )
+#define hbqt_par_QTextBoundaryFinder( n )    ( ( QTextBoundaryFinder* ) hb_parptr( n ) )
+#define hbqt_par_QTextListFormat( n )        ( ( QTextListFormat* ) hb_parptr( n ) )
+#define hbqt_par_QTextFrameFormat( n )       ( ( QTextFrameFormat* ) hb_parptr( n ) )
+#define hbqt_par_QTextImageFormat( n )       ( ( QTextImageFormat* ) hb_parptr( n ) )
+#define hbqt_par_QTextTableFormat( n )       ( ( QTextTableFormat* ) hb_parptr( n ) )
+#define hbqt_par_QTextDocumentFragment( n )  ( ( QTextDocumentFragment* ) hb_parptr( n ) )
+#define hbqt_par_QTextDecoder( n )           ( ( QTextDecoder* ) hb_parptr( n ) )
+#define hbqt_par_QTextDecument( n )          ( ( QTextDocument* ) hb_parptr( n ) )
+#define hbqt_par_QTextDocumentWriter( n )    ( ( QTextDocumentWriter* ) hb_parptr( n ) )
+#define hbqt_par_QTextCursor( n )            ( ( QTextCursor* ) hb_parptr( n ) )
+#define hbqt_par_QRegExp( n )                ( ( QRegExp* ) hb_parptr( n ) )
+#define hbqt_par_QAbstractTextDocumentLayout( n ) ( ( QAbstractTextDocumentLayout* ) hb_parptr( n ) )
 
 #define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )
 #define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )
@@ -244,7 +266,7 @@
 #define hbqt_ret_QAbstractItemModel( p )     ( hb_retptr( ( QAbstractItemModel* ) p ) )
 #define hbqt_ret_QPrinter( p )               ( hb_retptr( ( QPrinter* ) p ) )
 
-#include <QWidget>
+#include <QtGui/QWidget>
 
 void    hbqt_ret_QRect( QRect );
 void    hbqt_ret_QSize( QSize );
