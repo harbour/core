@@ -4,7 +4,7 @@
 
 ROOT = ../../
 
-LIBNAME=hbqt
+LIBNAME=gtqtc
 
 ifeq ($(HB_WITH_QT),)
 HB_WITH_QT=yes
