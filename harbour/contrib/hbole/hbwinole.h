@@ -59,8 +59,6 @@
 #include "hbdate.h"
 #include "hbinit.h"
 
-HB_EXTERN_BEGIN
-
 /* This option can resolve compilation problems in C++ mode for some
  * compilers like OpenWatcom but not for all, f.e. it will not help
  * BCC when used with -P (C++ mode) switch.
@@ -78,6 +76,8 @@ HB_EXTERN_BEGIN
    #define NONAMELESSUNION
 #endif
 
+#include <ole2.h>
+
 /* macros used to hide type of interface: C or C++
  */
 #if defined( __cplusplus ) && !defined( CINTERFACE ) && \
@@ -90,7 +90,7 @@ HB_EXTERN_BEGIN
 #  define HB_ID_REF( id )     ( &id )
 #endif
 
-#include <ole2.h>
+HB_EXTERN_BEGIN
 
 HB_EXPORT void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant );
 HB_EXPORT void hb_oleInit( void );

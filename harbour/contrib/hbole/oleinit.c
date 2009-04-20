@@ -50,18 +50,16 @@
  *
  */
 
-
-#include "hbvm.h"
-#include "windows.h"
+#include "hbwinole.h"
 
 /*
- * Duplicated OleUninitialize() call causes GPF. So, if a few OLE libraries 
+ * Duplicated OleUninitialize() call causes GPF. So, if a few OLE libraries
  * is used inside Harbour code, you can expect GPF on application exit.
- * This code does not implement any OLE interface except initialization. It is 
+ * This code does not implement any OLE interface except initialization. It is
  * have to be used from all other OLE libraries. [Mindaugas]
  */
 
-static int    s_iOleInit = 0;
+static int s_iOleInit = 0;
 
 static void hb_ole_exit( void* cargo )
 {
@@ -74,8 +72,7 @@ static void hb_ole_exit( void* cargo )
    }
 }
 
-
-HB_EXPORT void hb_oleInit()
+void hb_oleInit()
 {
    if( ! s_iOleInit )
    {

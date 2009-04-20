@@ -123,10 +123,14 @@ STATIC s_cCOMP
 STATIC s_aLIBCOREGT
 STATIC s_cGTDEFAULT
 
+STATIC s_aOPTPRG
+STATIC s_aOPTC
 STATIC s_lGUI := .F.
 STATIC s_lMT := .F.
 STATIC s_lDEBUG := .F.
 STATIC s_nHEAD := _HEAD_PARTIAL
+STATIC s_aINCTRYPATH
+STATIC s_lREBUILD := .F.
 
 STATIC s_lDEBUGINC := .F.
 STATIC s_lDEBUGSTUB := .F.
@@ -262,8 +266,6 @@ FUNCTION hbmk( aArgs )
    LOCAL s_aLIBDYNHAS
    LOCAL s_aLIBSYSCORE := {}
    LOCAL s_aLIBSYSMISC := {}
-   LOCAL s_aOPTPRG
-   LOCAL s_aOPTC
    LOCAL s_aOPTRES
    LOCAL s_aOPTL
    LOCAL s_aOPTA
@@ -295,7 +297,6 @@ FUNCTION hbmk( aArgs )
    LOCAL s_lBLDFLGL := .F.
    LOCAL s_lRUN := .F.
    LOCAL s_lINC := .F.
-   LOCAL s_lREBUILD := .F.
    LOCAL s_lCLEAN := .F.
    LOCAL s_nJOBS := 1
 
@@ -788,6 +789,7 @@ FUNCTION hbmk( aArgs )
    s_aOPTRUN := {}
    s_aRESSRC := {}
    s_aRESCMP := {}
+   s_aINCTRYPATH := {}
    s_aLIBUSER := {}
    s_aLIBUSERGT := {}
    s_aLIBDYNHAS := {}
@@ -837,6 +839,7 @@ FUNCTION hbmk( aArgs )
                    @s_aLIBUSERGT,;
                    @s_aLIBPATH,;
                    @s_aLIBDYNHAS,;
+                   @s_aINCTRYPATH,;
                    @s_aOPTPRG,;
                    @s_aOPTC,;
                    @s_aOPTRES,;
@@ -883,6 +886,7 @@ FUNCTION hbmk( aArgs )
            cParamL            == "-hblnk" .OR. ;
            cParamL            == "-hblib" .OR. ;
            cParamL            == "-hbdyn" .OR. ;
+           cParamL            == "-nohbp" .OR. ;
            cParamL            == "-clipper" .OR. ;
            cParamL            == "-rtlink" .OR. ;
            cParamL            == "-blinker" .OR. ;
@@ -1041,14 +1045,29 @@ FUNCTION hbmk( aArgs )
       CASE Left( cParam, 2 ) == "-L" .AND. ;
            Len( cParam ) > 2
 
-         cParam := ArchCompFilter( SubStr( cParam, 3 ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, 3 ) ) )
          IF ! Empty( cParam )
             AAdd( s_aLIBPATH, PathSepToTarget( cParam ) )
          ENDIF
 
+      CASE Left( cParamL, Len( "-inctrypath=" ) ) == "-inctrypath=" .AND. ;
+           Len( cParamL ) > Len( "-inctrypath=" )
+
+         cParam := MacroProc( tmp := ArchCompFilter( SubStr( cParam, Len( "-inctrypath=" ) + 1 ) ) )
+         IF ! Empty( cParam )
+            AAdd( s_aINCTRYPATH, PathSepToTarget( cParam ) )
+         ENDIF
+
+      CASE Left( cParamL, Len( "-stop" ) ) == "-stop"
+
+         cParam := ArchCompFilter( cParam )
+         IF ! Empty( cParam )
+            lStopAfterInit := .T.
+         ENDIF
+
       CASE Left( cParamL, Len( "-prgflag=" ) ) == "-prgflag="
 
-         cParam := ArchCompFilter( SubStr( cParam, Len( "-prgflag=" ) + 1 ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-prgflag=" ) + 1 ) ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             IF SubStr( cParamL, 2 ) == "gh"
                lStopAfterHarbour := .T.
@@ -1060,49 +1079,49 @@ FUNCTION hbmk( aArgs )
 
       CASE Left( cParamL, Len( "-cflag=" ) ) == "-cflag="
 
-         cParam := ArchCompFilter( SubStr( cParam, Len( "-cflag=" ) + 1 ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-cflag=" ) + 1 ) ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTC   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-resflag=" ) ) == "-resflag="
 
-         cParam := ArchCompFilter( SubStr( cParam, Len( "-resflag=" ) + 1 ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-resflag=" ) + 1 ) ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTRES , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-ldflag=" ) ) == "-ldflag="
 
-         cParam := ArchCompFilter( SubStr( cParam, Len( "-ldflag=" ) + 1 ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-ldflag=" ) + 1 ) ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTL   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-dflag=" ) ) == "-dflag="
 
-         cParam := ArchCompFilter( SubStr( cParam, Len( "-dflag=" ) + 1 ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-dflag=" ) + 1 ) ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTD   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-aflag=" ) ) == "-aflag="
 
-         cParam := ArchCompFilter( SubStr( cParam, Len( "-aflag=" ) + 1 ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-aflag=" ) + 1 ) ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTA   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-runflag=" ) ) == "-runflag="
 
-         cParam := ArchCompFilter( SubStr( cParam, Len( "-runflag=" ) + 1 ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-runflag=" ) + 1 ) ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTRUN , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-workdir=" ) ) == "-workdir="
 
-         cWorkDir := PathSepToTarget( ArchCompFilter( SubStr( cParam, Len( "-workdir=" ) + 1 ) ) )
+         cWorkDir := PathSepToTarget( MacroProc( ArchCompFilter( SubStr( cParam, Len( "-workdir=" ) + 1 ) ) ) )
 
       CASE Left( cParam, 2 ) == "-l" .AND. ;
            Len( cParam ) > 2 .AND. ;
@@ -1161,6 +1180,7 @@ FUNCTION hbmk( aArgs )
             @s_aLIBUSERGT,;
             @s_aLIBPATH,;
             @s_aLIBDYNHAS,;
+            @s_aINCTRYPATH,;
             @s_aOPTPRG,;
             @s_aOPTC,;
             @s_aOPTRES,;
@@ -1244,23 +1264,29 @@ FUNCTION hbmk( aArgs )
       ENDCASE
    NEXT
 
+   IF lCreateDyn .AND. s_lSHARED
+      s_lSHARED := .F.
+   ENDIF
+
    /* Start doing the make process. */
    IF ! lStopAfterInit .AND. ( Len( s_aPRG ) + Len( s_aC ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) == 0
       OutErr( "hbmk: Error: No source files were specified." + hb_osNewLine() )
       RETURN 4
    ENDIF
 
-   IF s_lINC
-      IF cWorkDir == NIL
-         cWorkDir := s_cARCH + hb_osPathSeparator() + s_cCOMP
+   IF ! lStopAfterInit
+      IF s_lINC
+         IF cWorkDir == NIL
+            cWorkDir := s_cARCH + hb_osPathSeparator() + s_cCOMP
+         ENDIF
+         AAdd( s_aOPTPRG, "-o" + cWorkDir + hb_osPathSeparator() ) /* NOTE: Ending path sep is important. */
+         IF ! DirBuild( cWorkDir )
+            OutErr( "hbmk: Error: Working directory cannot be created: " + cWorkDir + hb_osNewLine() )
+            RETURN 9
+         ENDIF
+      ELSE
+         cWorkDir := ""
       ENDIF
-      AAdd( s_aOPTPRG, "-o" + cWorkDir + hb_osPathSeparator() ) /* NOTE: Ending path sep is important. */
-      IF ! DirBuild( cWorkDir )
-         OutErr( "hbmk: Error: Working directory cannot be created: " + cWorkDir + hb_osNewLine() )
-         RETURN 9
-      ENDIF
-   ELSE
-      cWorkDir := ""
    ENDIF
 
    IF ! lStopAfterInit .AND. ! lStopAfterHarbour
@@ -1287,7 +1313,7 @@ FUNCTION hbmk( aArgs )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( FN_ExtSet( tmp, ".prg" ), @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( FN_ExtSet( tmp, ".prg" ), tmp2, OPTPRG_to_INCPATH( s_aOPTPRG, s_cHB_INC_INSTALL ), @headstate ) )
+               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( FN_ExtSet( tmp, ".prg" ), tmp2, .F., OPTPRG_to_INCPATH( s_aOPTPRG, s_cHB_INC_INSTALL ), @headstate ) )
                AAdd( s_aPRG_TODO, tmp )
             ENDIF
          NEXT
@@ -2264,6 +2290,7 @@ FUNCTION hbmk( aArgs )
 
       IF lCreateDyn .AND. s_cARCH $ "win|wce"
          AAdd( s_aOPTC, "-DHB_DYNLIB" )
+         AAdd( aLIB_BASE1, "hbmaindllp" )
       ENDIF
 
       /* Do entry function detection on platform required and supported */
@@ -2407,8 +2434,8 @@ FUNCTION hbmk( aArgs )
             ENDIF
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cResExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
-               tmp1 > tmp2
-               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, OPTC_to_INCPATH( s_aOPTRES, s_cHB_INC_INSTALL ), @headstate ) )
+               tmp1 > tmp2 .OR. ;
+               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, .F., OPTC_to_INCPATH( s_aOPTRES, s_cHB_INC_INSTALL ), @headstate ) )
                AAdd( s_aRESSRC_TODO, tmp )
             ENDIF
          NEXT
@@ -2494,6 +2521,9 @@ FUNCTION hbmk( aArgs )
       ENDIF
 
       IF nErrorLevel == 0
+
+         headstate := NIL
+
          IF s_lINC .AND. ! s_lREBUILD
             s_aC_TODO := {}
             s_aC_DONE := {}
@@ -2504,7 +2534,7 @@ FUNCTION hbmk( aArgs )
                IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
                   ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                   tmp1 > tmp2 .OR. ;
-                  ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, OPTC_to_INCPATH( s_aOPTC, s_cHB_INC_INSTALL ), @headstate ) )
+                  ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, ! Empty( s_aINCTRYPATH ), OPTC_to_INCPATH( s_aOPTC, s_cHB_INC_INSTALL ), @headstate ) )
                   AAdd( s_aC_TODO, tmp )
                ELSE
                   AAdd( s_aC_DONE, tmp )
@@ -2513,6 +2543,13 @@ FUNCTION hbmk( aArgs )
          ELSE
             s_aC_TODO := s_aC
             s_aC_DONE := {}
+         ENDIF
+
+         /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
+         IF ! Empty( s_aINCTRYPATH ) .AND. ! Empty( s_aC_TODO ) .AND. headstate == NIL
+            FOR EACH tmp IN s_aC
+               FindNewerHeaders( tmp, NIL, .T., OPTC_to_INCPATH( s_aOPTC, s_cHB_INC_INSTALL ), @headstate )
+            NEXT
          ENDIF
 
          IF s_lINC .AND. ! s_lREBUILD
@@ -2978,24 +3015,29 @@ STATIC FUNCTION SetupForGT( cGT, /* @ */ s_cGT, /* @ */ s_lGUI )
    If this isn't enough for your needs, feel free to update the code.
    [vszakats] */
 
-STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, aINCPATH, /* @ */ hFiles, nEmbedLevel )
+#define _HEADSTATE_hFiles       1
+#define _HEADSTATE_lAnyNewer    2
+#define _HEADSTATE_MAX_         2
+
+STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, lIncTry, aINCPATH, /* @ */ headstate, nEmbedLevel )
    LOCAL cFile
    LOCAL fhnd
    LOCAL nPos
    LOCAL tTimeSelf
    LOCAL tmp
+   LOCAL cNameExtL
 
-   IF ! hb_isTimeStamp( tTimeParent )
-      RETURN .F.
-   ENDIF
+   STATIC s_aExcl := { "windows.h", "ole2.h", "os2.h" }
 
    DEFAULT nEmbedLevel TO 1
 
    IF nEmbedLevel == 1
-      hFiles := hb_Hash()
+      headstate := Array( _HEADSTATE_MAX_ )
+      headstate[ _HEADSTATE_hFiles ] := hb_Hash()
+      headstate[ _HEADSTATE_lAnyNewer ] := .F.
    ENDIF
 
-   IF s_nHEAD == _HEAD_OFF
+   IF ! lIncTry .AND. s_nHEAD == _HEAD_OFF
       RETURN .F.
    ENDIF
 
@@ -3009,15 +3051,21 @@ STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, aINCPATH, /* @ */ hFil
       RETURN .F.
    ENDIF
 
-   cFileName := FindHeader( cFileName, aINCPATH )
+   /* Don't spend time on some known headers */
+   cNameExtL := Lower( FN_NameExtGet( cFileName ) )
+   IF AScan( s_aExcl, { |tmp| Lower( tmp ) == cNameExtL } ) > 0
+      RETURN .F.
+   ENDIF
+
+   cFileName := FindHeader( cFileName, aINCPATH, iif( lIncTry, s_aINCTRYPATH, NIL ) )
    IF Empty( cFileName )
       RETURN .F.
    ENDIF
 
-   IF hb_HPos( hFiles, cFileName ) > 0
+   IF hb_HPos( headstate[ _HEADSTATE_hFiles ], cFileName ) > 0
       RETURN .F.
    ENDIF
-   hb_HSet( hFiles, cFileName, .T. )
+   hb_HSet( headstate[ _HEADSTATE_hFiles ], cFileName, .T. )
 
    IF s_lDEBUGINC
       OutStd( "hbmk: debuginc: HEADER", cFileName, hb_osNewLine() )
@@ -3027,8 +3075,12 @@ STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, aINCPATH, /* @ */ hFil
       RETURN .F.
    ENDIF
 
-   IF tTimeSelf > tTimeParent
-      RETURN .T.
+   IF tTimeParent != NIL .AND. tTimeSelf > tTimeParent
+      headstate[ _HEADSTATE_lAnyNewer ] := .T.
+      /* Let it continue if we want to scan for header locations */
+      IF ! lIncTry
+         RETURN .T.
+      ENDIF
    ENDIF
 
    /* NOTE: Beef up this section if you need a more intelligent source
@@ -3036,7 +3088,7 @@ STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, aINCPATH, /* @ */ hFil
             .prg, .c and .res sources. Please try to keep it simple,
             as speed and maintainability is also important. [vszakats] */
 
-   IF s_nHEAD == _HEAD_FULL
+   IF lIncTry .OR. s_nHEAD == _HEAD_FULL
       cFile := MemoRead( cFileName )
    ELSE
       IF ( fhnd := FOpen( cFileName, FO_READ + FO_SHARED ) ) == F_ERROR
@@ -3051,14 +3103,17 @@ STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, aINCPATH, /* @ */ hFil
    DO WHILE ( tmp := hb_At( '#include "', cFile, nPos ) ) > 0
       nPos := tmp + Len( '#include "' )
       IF ( tmp := hb_At( '"', cFile, nPos ) ) > 0
-         IF FindNewerHeaders( SubStr( cFile, nPos, tmp - nPos ), tTimeParent, aINCPATH, @hFiles, nEmbedLevel + 1 )
-            hFiles := NIL
-            RETURN .T.
+         IF FindNewerHeaders( SubStr( cFile, nPos, tmp - nPos ), tTimeParent, lIncTry, aINCPATH, @headstate, nEmbedLevel + 1 )
+            headstate[ _HEADSTATE_lAnyNewer ] := .T.
+            /* Let it continue if we want to scan for header locations */
+            IF ! lIncTry
+               RETURN .T.
+            ENDIF
          ENDIF
       ENDIF
    ENDDO
 
-   RETURN .F.
+   RETURN headstate[ _HEADSTATE_lAnyNewer ]
 
 STATIC FUNCTION OPTPRG_to_INCPATH( aOPT, cHB_INC_INSTALL )
    LOCAL aINCPATH := {}
@@ -3098,7 +3153,7 @@ STATIC FUNCTION OPTC_to_INCPATH( aOPT, cHB_INC_INSTALL )
 
    RETURN aINCPATH
 
-STATIC FUNCTION FindHeader( cFileName, aINCPATH )
+STATIC FUNCTION FindHeader( cFileName, aINCPATH, aINCTRYPATH )
    LOCAL cDir
 
    /* Check in current dir */
@@ -3109,6 +3164,23 @@ STATIC FUNCTION FindHeader( cFileName, aINCPATH )
    /* Check in include path list */
    FOR EACH cDir IN aINCPATH
       IF hb_FileExists( DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName )
+         RETURN DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName
+      ENDIF
+   NEXT
+
+   /* Check in potential include path list */
+   FOR EACH cDir IN aINCTRYPATH
+      IF hb_FileExists( DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName )
+         /* Add these dir to include paths */
+         IF AScan( aINCPATH, { |tmp| tmp == cDir } ) == 0
+            AAdd( aINCPATH, cDir )
+         ENDIF
+         IF AScan( s_aOPTC, { |tmp| tmp == "-I" + cDir } ) == 0
+            IF s_lDEBUGINC
+               OutStd( "hbmk: debuginc: Autodetected header dir for " + cFileName + ": " + cDir, hb_osNewLine() )
+            ENDIF
+            AAdd( s_aOPTC, "-I" + cDir )
+         ENDIF
          RETURN DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName
       ENDIF
    NEXT
@@ -3645,6 +3717,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                                  /* @ */ aLIBUSERGT,;
                                  /* @ */ aLIBPATH,;
                                  /* @ */ aLIBDYNHAS,;
+                                 /* @ */ aINCTRYPATH,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
                                  /* @ */ aOPTRES,;
@@ -3689,6 +3762,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
             @aLIBUSERGT,;
             @aLIBPATH,;
             @aLIBDYNHAS,;
+            @aINCTRYPATH,;
             @aOPTPRG,;
             @aOPTC,;
             @aOPTRES,;
@@ -3723,6 +3797,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                @aLIBUSERGT,;
                @aLIBPATH,;
                @aLIBDYNHAS,;
+               @aINCTRYPATH,;
                @aOPTPRG,;
                @aOPTC,;
                @aOPTRES,;
@@ -3754,6 +3829,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
                                  /* @ */ aLIBUSERGT,;
                                  /* @ */ aLIBPATH,;
                                  /* @ */ aLIBDYNHAS,;
+                                 /* @ */ aINCTRYPATH,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
                                  /* @ */ aOPTRES,;
@@ -3788,7 +3864,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       cLine := AllTrim( ArchCompFilter( AllTrim( cLine ) ) )
 
       DO CASE
-      CASE Lower( Left( cLine, Len( "libs="       ) ) ) == "libs="       ; cLine := SubStr( cLine, Len( "libs="       ) + 1 )
+      CASE Lower( Left( cLine, Len( "libs="         ) ) ) == "libs="         ; cLine := SubStr( cLine, Len( "libs="         ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( StrStripQuote( cItem ) )
             IF AScan( aLIBUSER, {|tmp| tmp == cItem } ) == 0
@@ -3796,7 +3872,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "libpaths="   ) ) ) == "libpaths="   ; cLine := SubStr( cLine, Len( "libpaths="   ) + 1 )
+      CASE Lower( Left( cLine, Len( "libpaths="     ) ) ) == "libpaths="     ; cLine := SubStr( cLine, Len( "libpaths="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
             IF AScan( aLIBPATH, {|tmp| tmp == cItem } ) == 0
@@ -3804,11 +3880,19 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          NEXT
 
+      CASE Lower( Left( cLine, Len( "inctrypaths="  ) ) ) == "inctrypaths="  ; cLine := SubStr( cLine, Len( "inctrypaths="  ) + 1 )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            cItem := PathSepToTarget( MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
+            IF AScan( aINCTRYPATH, {|tmp| tmp == cItem } ) == 0
+               AAddNotEmpty( aINCTRYPATH, cItem )
+            ENDIF
+         NEXT
+
       /* NOTE: This keyword is used in hbmk.cfg and signals whether
                a given optional module (gtsln, gtcrs, gtxwc) is part of the
                Harbour shared library, so that we can automatically add
                the required libs here. [vszakats] */
-      CASE Lower( Left( cLine, Len( "libdynhas="  ) ) ) == "libdynhas="  ; cLine := SubStr( cLine, Len( "libdynhas="  ) + 1 )
+      CASE Lower( Left( cLine, Len( "libdynhas="    ) ) ) == "libdynhas="    ; cLine := SubStr( cLine, Len( "libdynhas="    ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( StrStripQuote( cItem ) )
             IF ! Empty( cItem )
@@ -3822,13 +3906,13 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "echo="       ) ) ) == "echo="       ; cLine := SubStr( cLine, Len( "echo="       ) + 1 )
+      CASE Lower( Left( cLine, Len( "echo="         ) ) ) == "echo="         ; cLine := SubStr( cLine, Len( "echo="         ) + 1 )
          cLine := MacroProc( cLine, FN_DirGet( cFileName ) )
          IF ! Empty( cLine )
             OutStd( cLine + hb_osNewLine() )
          ENDIF
 
-      CASE Lower( Left( cLine, Len( "prgflags="   ) ) ) == "prgflags="   ; cLine := SubStr( cLine, Len( "prgflags="   ) + 1 )
+      CASE Lower( Left( cLine, Len( "prgflags="     ) ) ) == "prgflags="     ; cLine := SubStr( cLine, Len( "prgflags="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
             IF AScan( aOPTPRG, {|tmp| tmp == cItem } ) == 0
@@ -3836,7 +3920,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "cflags="     ) ) ) == "cflags="     ; cLine := SubStr( cLine, Len( "cflags="     ) + 1 )
+      CASE Lower( Left( cLine, Len( "cflags="       ) ) ) == "cflags="       ; cLine := SubStr( cLine, Len( "cflags="       ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) )
             IF AScan( aOPTC, {|tmp| tmp == cItem } ) == 0
@@ -3844,7 +3928,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "resflags="   ) ) ) == "resflags="   ; cLine := SubStr( cLine, Len( "resflags="   ) + 1 )
+      CASE Lower( Left( cLine, Len( "resflags="     ) ) ) == "resflags="     ; cLine := SubStr( cLine, Len( "resflags="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) )
             IF AScan( aOPTRES, {|tmp| tmp == cItem } ) == 0
@@ -3852,7 +3936,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "ldflags="    ) ) ) == "ldflags="    ; cLine := SubStr( cLine, Len( "ldflags="    ) + 1 )
+      CASE Lower( Left( cLine, Len( "ldflags="      ) ) ) == "ldflags="      ; cLine := SubStr( cLine, Len( "ldflags="      ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) )
             IF AScan( aOPTL, {|tmp| tmp == cItem } ) == 0
@@ -3860,69 +3944,69 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "gui="        ) ) ) == "gui="        ; cLine := SubStr( cLine, Len( "gui="        ) + 1 )
+      CASE Lower( Left( cLine, Len( "gui="          ) ) ) == "gui="          ; cLine := SubStr( cLine, Len( "gui="          ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; lGUI := .T.
          CASE ValueIsF( cLine ) ; lGUI := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "mt="         ) ) ) == "mt="         ; cLine := SubStr( cLine, Len( "mt="         ) + 1 )
+      CASE Lower( Left( cLine, Len( "mt="           ) ) ) == "mt="           ; cLine := SubStr( cLine, Len( "mt="           ) + 1 )
          DO CASE
          CASE Lower( cLine ) == "mt" ; lMT := .T. /* Compatibility */
          CASE ValueIsT( cLine ) ; lMT := .T.
          CASE ValueIsF( cLine ) ; lMT := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "shareddef="  ) ) ) == "shareddef="  ; cLine := SubStr( cLine, Len( "shareddef="  ) + 1 )
+      CASE Lower( Left( cLine, Len( "shareddef="    ) ) ) == "shareddef="    ; cLine := SubStr( cLine, Len( "shareddef="    ) + 1 )
          IF lSHARED == NIL
             DO CASE
             CASE ValueIsT( cLine ) ; lSHARED := .T. ; lSTATICFULL := .F.
             CASE ValueIsF( cLine ) ; lSHARED := .F. ; lSTATICFULL := .F.
             ENDCASE
          ENDIF
-      CASE Lower( Left( cLine, Len( "shared="     ) ) ) == "shared="     ; cLine := SubStr( cLine, Len( "shared="     ) + 1 )
+      CASE Lower( Left( cLine, Len( "shared="       ) ) ) == "shared="       ; cLine := SubStr( cLine, Len( "shared="       ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; lSHARED := .T. ; lSTATICFULL := .F.
          CASE ValueIsF( cLine ) ; lSHARED := .F. ; lSTATICFULL := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "fullstatic=" ) ) ) == "fullstatic=" ; cLine := SubStr( cLine, Len( "fullstatic=" ) + 1 )
+      CASE Lower( Left( cLine, Len( "fullstatic="   ) ) ) == "fullstatic="   ; cLine := SubStr( cLine, Len( "fullstatic="   ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; lSHARED := .F. ; lSTATICFULL := .T.
          CASE ValueIsF( cLine ) ; lSHARED := .F. ; lSTATICFULL := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "debug="      ) ) ) == "debug="      ; cLine := SubStr( cLine, Len( "debug="      ) + 1 )
+      CASE Lower( Left( cLine, Len( "debug="        ) ) ) == "debug="        ; cLine := SubStr( cLine, Len( "debug="        ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; lDEBUG := .T.
          CASE ValueIsF( cLine ) ; lDEBUG := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "opt="        ) ) ) == "opt="        ; cLine := SubStr( cLine, Len( "opt="        ) + 1 )
+      CASE Lower( Left( cLine, Len( "opt="          ) ) ) == "opt="          ; cLine := SubStr( cLine, Len( "opt="          ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; lOPT := .T.
          CASE ValueIsF( cLine ) ; lOPT := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "nulrdd="     ) ) ) == "nulrdd="     ; cLine := SubStr( cLine, Len( "nulrdd="     ) + 1 )
+      CASE Lower( Left( cLine, Len( "nulrdd="       ) ) ) == "nulrdd="       ; cLine := SubStr( cLine, Len( "nulrdd="       ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; lNULRDD := .T.
          CASE ValueIsF( cLine ) ; lNULRDD := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "map="        ) ) ) == "map="        ; cLine := SubStr( cLine, Len( "map="        ) + 1 )
+      CASE Lower( Left( cLine, Len( "map="          ) ) ) == "map="          ; cLine := SubStr( cLine, Len( "map="          ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; lMAP := .T.
          CASE ValueIsF( cLine ) ; lMAP := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "strip="      ) ) ) == "strip="      ; cLine := SubStr( cLine, Len( "strip="      ) + 1 )
+      CASE Lower( Left( cLine, Len( "strip="        ) ) ) == "strip="        ; cLine := SubStr( cLine, Len( "strip="        ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; lSTRIP := .T.
          CASE ValueIsF( cLine ) ; lSTRIP := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "compr="      ) ) ) == "compr="      ; cLine := SubStr( cLine, Len( "compr="      ) + 1 )
+      CASE Lower( Left( cLine, Len( "compr="        ) ) ) == "compr="        ; cLine := SubStr( cLine, Len( "compr="        ) + 1 )
          DO CASE
          CASE ValueIsT( cLine )       ; nCOMPR := _COMPR_DEF
          CASE ValueIsF( cLine )       ; nCOMPR := _COMPR_OFF
@@ -3931,20 +4015,20 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
          CASE Lower( cLine ) == "max" ; nCOMPR := _COMPR_MAX
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "head="       ) ) ) == "head="       ; cLine := SubStr( cLine, Len( "head="       ) + 1 )
+      CASE Lower( Left( cLine, Len( "head="         ) ) ) == "head="         ; cLine := SubStr( cLine, Len( "head="         ) + 1 )
          DO CASE
          CASE Lower( cLine ) == "off"     ; nHEAD := _HEAD_OFF
          CASE Lower( cLine ) == "full"    ; nHEAD := _HEAD_FULL
          CASE Lower( cLine ) == "partial" ; nHEAD := _HEAD_PARTIAL
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "run="        ) ) ) == "run="        ; cLine := SubStr( cLine, Len( "run="        ) + 1 )
+      CASE Lower( Left( cLine, Len( "run="          ) ) ) == "run="          ; cLine := SubStr( cLine, Len( "run="          ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; lRUN := .T.
          CASE ValueIsF( cLine ) ; lRUN := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "inc="        ) ) ) == "inc="        ; cLine := SubStr( cLine, Len( "inc="        ) + 1 )
+      CASE Lower( Left( cLine, Len( "inc="          ) ) ) == "inc="          ; cLine := SubStr( cLine, Len( "inc="          ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; lINC := .T.
          CASE ValueIsF( cLine ) ; lINC := .F.
@@ -3954,7 +4038,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
                building Harbour. It only needs to be filled if this default
                GT is different from the Harbour default one, IOW when it
                was overridden by user at Harbour build time. [vszakats] */
-      CASE Lower( Left( cLine, Len( "gtdef="      ) ) ) == "gtdef="      ; cLine := SubStr( cLine, Len( "gtdef="      ) + 1 )
+      CASE Lower( Left( cLine, Len( "gtdef="        ) ) ) == "gtdef="        ; cLine := SubStr( cLine, Len( "gtdef="        ) + 1 )
          IF ! Empty( cLine )
             IF ! SetupForGT( cLine, @s_cGTDEFAULT, @lGUI )
                cLine := NIL
@@ -3967,7 +4051,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          ENDIF
 
-      CASE Lower( Left( cLine, Len( "gt="         ) ) ) == "gt="         ; cLine := SubStr( cLine, Len( "gt="         ) + 1 )
+      CASE Lower( Left( cLine, Len( "gt="           ) ) ) == "gt="           ; cLine := SubStr( cLine, Len( "gt="           ) + 1 )
          IF ! Empty( cLine )
             IF cGT == NIL
                IF ! SetupForGT( cLine, @cGT, @lGUI )
@@ -4093,37 +4177,40 @@ STATIC FUNCTION ArchCompFilter( cItem )
       cFilterSrc := SubStr( cItem, nStart + 1, nEnd - nStart - 1 )
       cItem := Left( cItem, nStart - 1 ) + SubStr( cItem, nEnd + 1 )
 
-      /* Parse filter and convert it to Harbour expression */
-      cFilterHarb := ""
-      cValue := ""
-      FOR nPos := 1 TO Len( cFilterSrc )
-         IF IsDigit( SubStr( cFilterSrc, nPos, 1 ) ) .OR. ;
-            IsAlpha( SubStr( cFilterSrc, nPos, 1 ) )
-            cValue += SubStr( cFilterSrc, nPos, 1 )
-         ELSE
-            IF ! Empty( cValue )
-               cFilterHarb += StrTran( cExpr, "%1", cValue ) + SubStr( cFilterSrc, nPos, 1 )
-               cValue := ""
+      IF ! Empty( cFilterSrc )
+
+         /* Parse filter and convert it to Harbour expression */
+         cFilterHarb := ""
+         cValue := ""
+         FOR nPos := 1 TO Len( cFilterSrc )
+            IF IsDigit( SubStr( cFilterSrc, nPos, 1 ) ) .OR. ;
+               IsAlpha( SubStr( cFilterSrc, nPos, 1 ) )
+               cValue += SubStr( cFilterSrc, nPos, 1 )
             ELSE
-               cFilterHarb += SubStr( cFilterSrc, nPos, 1 )
+               IF ! Empty( cValue )
+                  cFilterHarb += StrTran( cExpr, "%1", cValue ) + SubStr( cFilterSrc, nPos, 1 )
+                  cValue := ""
+               ELSE
+                  cFilterHarb += SubStr( cFilterSrc, nPos, 1 )
+               ENDIF
+            ENDIF
+         NEXT
+         IF ! Empty( cValue )
+            cFilterHarb += StrTran( cExpr, "%1", cValue ) + SubStr( cFilterSrc, nPos, 1 )
+         ENDIF
+
+         cFilterHarb := StrTran( cFilterHarb, "&", ".AND." )
+         cFilterHarb := StrTran( cFilterHarb, "|", ".OR." )
+
+         /* Evaluate filter */
+         bFilter := hb_macroBlock( cFilterHarb )
+         IF bFilter != NIL
+            IF ISLOGICAL( xResult := Eval( bFilter ) ) .AND. xResult
+               RETURN cItem
             ENDIF
          ENDIF
-      NEXT
-      IF ! Empty( cValue )
-         cFilterHarb += StrTran( cExpr, "%1", cValue ) + SubStr( cFilterSrc, nPos, 1 )
+         RETURN ""
       ENDIF
-
-      cFilterHarb := StrTran( cFilterHarb, "&", ".AND." )
-      cFilterHarb := StrTran( cFilterHarb, "|", ".OR." )
-
-      /* Evaluate filter */
-      bFilter := hb_macroBlock( cFilterHarb )
-      IF bFilter != NIL
-         IF ISLOGICAL( xResult := Eval( bFilter ) ) .AND. xResult
-            RETURN cItem
-         ENDIF
-      ENDIF
-      RETURN ""
    ENDIF
 
    RETURN cItem
@@ -4535,7 +4622,8 @@ FUNCTION hbmk_COMP()
 FUNCTION hbmk_KEYW( cKeyword )
    RETURN cKeyword == iif( s_lMT   , "mt"   , "st"      ) .OR. ;
           cKeyword == iif( s_lGUI  , "gui"  , "std"     ) .OR. ;
-          cKeyword == iif( s_lDEBUG, "debug", "nodebug" )
+          cKeyword == iif( s_lDEBUG, "debug", "nodebug" ) .OR. ;
+          cKeyword == iif( s_cARCH $ "bsd|hpux|sunos|linux" .OR. s_cARCH == "darwin", "unix", "" )
 
 STATIC PROCEDURE ShowHeader()
 
@@ -4579,9 +4667,11 @@ STATIC PROCEDURE ShowHelp( lLong )
       "                    <lev> can be: min, max, def" ,;
       "  -[no]run          run/don't run output executable" ,;
       "  -nohbp            do not process .hbp files in current directory" ,;
+      "  -stop             stop without doing anything" ,;
       "" ,;
       "  -bldf[-]          inherit all/no (default) flags from Harbour build" ,;
       "  -bldf=[p][c][l]   inherit .prg/.c/linker flags (or none) from Harbour build" ,;
+      "  -inctrypath=<p>   additional path to autodetect .c header locations" ,;
       "  -prgflag=<f>      pass flag to Harbour" ,;
       "  -cflag=<f>        pass flag to C compiler" ,;
       "  -resflag=<f>      pass flag to resource compiler (Windows only)" ,;
@@ -4634,16 +4724,18 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - .hbp options (they should come in separate lines):" ,;
       "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;
       "    cflags=[C compiler flags], resflags=[resource compiler flags]" ,;
-      "    ldflags=[Linker flags], libpaths=[lib paths]" ,;
+      "    ldflags=[Linker flags], libpaths=[lib paths], inctrypaths=[paths]" ,;
       "    gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no]" ,;
       "    compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>" ,;
       "    Lines starting with '#' char are ignored" ,;
-      "  - Platform filters are accepted in each .hbp line and with -l options." ,;
+      "  - Platform filters are accepted in each .hbp line and with several options." ,;
       "    Filter format: {[!][<arch|comp>]}. Filters can be combined " ,;
       "    using '&', '|' operators and grouped by parantheses." ,;
-      "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}" ,;
-      "  - Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, echo=) will" ,;
-      "    accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${<envvar>}" ,;
+      "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}," ,;
+      "         {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}" ,;
+      "  - Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=," ,;
+      "    echo=) and corresponding command line parameters will accept macros:" ,;
+      "    ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${<envvar>}" ,;
       "  - Defaults and feature support vary by architecture/compiler." ,;
       "  - Supported <comp> values for each supported <arch> value:" ,;
       "    linux  : gcc, owatcom, icc" ,;
