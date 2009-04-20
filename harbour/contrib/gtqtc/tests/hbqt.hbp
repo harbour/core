@@ -3,7 +3,7 @@
 #
 
 {mingw}libs=supc++
-libs=hbqt gtqtc xhb
+libs=gtqtc xhb
 libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
 # static libs
 #libs=QtCore QtGui QtNetwork QtWebKit

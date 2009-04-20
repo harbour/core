@@ -305,8 +305,6 @@ static void hb_gt_wvt_QUpdateCaret( PHB_GTWVT pWVT )
 {
    int iRow, iCol, iStyle, iCaretSize;
 
-//OutputDebugString("UpdateCaret");
-
    /* Restore previous cell value */
    pWVT->qWnd->consoleArea->displayCell( pWVT->qWnd->consoleArea->pu_crtLastCol, pWVT->qWnd->consoleArea->pu_crtLastRow );
 
@@ -384,7 +382,6 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
       if( pWVT->keyLast == iKey && pWVT->keyPointerIn != pWVT->keyPointerOut )
          return;
    }
-
    /*
     * When the buffer is full new event overwrite the last one
     * in the buffer - it's Clipper behavior, [druzus]
@@ -407,7 +404,6 @@ static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
       }
       return TRUE;
    }
-
    *iKey = 0;
    return FALSE;
 }
@@ -420,7 +416,7 @@ int hb_gt_wvt_getKbdState( void )
    if( kbState & Qt::ShiftModifier   ) iKbdState |= HB_GTI_KBD_SHIFT;
    if( kbState & Qt::ControlModifier ) iKbdState |= HB_GTI_KBD_CTRL;
    if( kbState & Qt::AltModifier     ) iKbdState |= HB_GTI_KBD_ALT;
-   #if 0
+   #if 0  /* No equivalents available in QT */
    if( kbState[VK_LWIN    ] & 0x80 ) iKbdState |= HB_GTI_KBD_LWIN;
    if( kbState[VK_RWIN    ] & 0x80 ) iKbdState |= HB_GTI_KBD_RWIN;
    if( kbState[VK_APPS    ] & 0x80 ) iKbdState |= HB_GTI_KBD_MENU;
@@ -534,16 +530,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_vmRequestQuit();
          return 0;
 
-      case WM_CLOSE:  /* Clicked 'X' on system menu */
-         if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE ) == 0 )
-         {
-            PHB_ITEM pItem = hb_itemPutL( NULL, TRUE );
-            hb_setSetItem( HB_SET_CANCEL, pItem );
-            hb_itemRelease( pItem );
-            hb_vmRequestCancel();
-         }
-         return 0;
-
       case WM_ENTERIDLE:
          hb_idleState();
          return 0;
@@ -592,13 +578,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          {
             case SC_MAXIMIZE:
             {
-               pWVT->bMaximized = TRUE;
-
-               if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
-                  hb_gt_wvt_FitSize( pWVT );
-               else
-                  hb_gt_wvt_FitRows( pWVT );
-
                /* Disable "maximize" button */
                SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
                SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
@@ -804,7 +783,6 @@ static void hb_gt_wvt_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    pWVT = HB_GTWVT_GET( pGT );
    if( pWVT && pWVT->qWnd )
    {
-//OutputDebugString( "Redraw" );
       QRect rect;
       /* Fill in values */
       rect.setTop( iRow );
@@ -835,53 +813,21 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
       if( !pWVT->fInit )
       {
          pWVT->fInit = TRUE;
+         if( pWVT->CentreWindow )
+         {
+            int iDTWidth  = QDesktopWidget().width();
+            int iDTHeight = QDesktopWidget().height();
+            int iWidth    = pWVT->qWnd->width();
+            int iHeight   = pWVT->qWnd->height();
+            pWVT->qWnd->move( ( iDTWidth - iWidth ) / 2, ( iDTHeight - iHeight ) / 2 );
+         }
          pWVT->qWnd->show();
          pWVT->qWnd->update();
       }
-//OutputDebugString( "Refresh" );
       hb_gt_wvt_QUpdateCaret( pWVT );
-      //hb_gt_wvt_ProcessMessages();
    }
 }
 
-/* ********************************************************************** */
-#if 0
-static void hb_gt_wvt_SetPos( PHB_GT pGT, int iRow, int iCol )
-{
-   PHB_GTWVT pWVT;
-
-   HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_SetPos(%p %i %i)", pGT, iRow, iCol) );
-
-   HB_GTSUPER_SETPOS( pGT, iRow, iCol );
-
-   pWVT = HB_GTWVT_GET( pGT );
-   if( pWVT && pWVT->qWnd )
-   {
-OutputDebugString( "SetPos" );
-      hb_gt_wvt_QUpdateCaret( pWVT );
-      //hb_gt_wvt_ProcessMessages();
-   }
-}
-
-/* ********************************************************************** */
-
-static void hb_gt_wvt_SetCursorStyle( PHB_GT pGT, int iStyle )
-{
-   PHB_GTWVT pWVT;
-
-   HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_SetCursorStyle(%p %i)", pGT, iStyle) );
-
-   HB_GTSUPER_SETCURSORSTYLE( pGT, iStyle );
-
-   pWVT = HB_GTWVT_GET( pGT );
-   if( pWVT && pWVT->qWnd )
-   {
-OutputDebugString( "SetCursorStyle" );
-      hb_gt_wvt_QUpdateCaret( pWVT );
-      //hb_gt_wvt_ProcessMessages();
-   }
-}
-#endif
 /* ********************************************************************** */
 
 static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
@@ -1509,9 +1455,6 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->SetKeyCP             = hb_gt_wvt_SetKeyCP;
    pFuncTable->ReadKey              = hb_gt_wvt_ReadKey;
 
-   //pFuncTable->SetPos               = hb_gt_wvt_SetPos;
-   //pFuncTable->SetCursorStyle       = hb_gt_wvt_SetCursorStyle;
-
    pFuncTable->MouseIsPresent       = hb_gt_wvt_mouse_IsPresent;
    pFuncTable->MouseGetPos          = hb_gt_wvt_mouse_GetPos;
    pFuncTable->MouseButtonState     = hb_gt_wvt_mouse_ButtonState;
@@ -1576,6 +1519,9 @@ ConsoleArea::ConsoleArea(QWidget *parent)
 
    pu_bBlinking  = FALSE;
    pv_timer = new QBasicTimer();
+
+   bFirst   = TRUE;
+   bSizing  = FALSE;
 }
 
 void ConsoleArea::resetWindowSize(void)
@@ -1603,6 +1549,10 @@ void ConsoleArea::resetWindowSize(void)
    pWVT->PTEXTSIZE.setY( fontHeight );
    windowWidth  = fontWidth * COLS;
    windowHeight = fontHeight * ROWS;
+   wW = windowWidth;
+   wH = windowHeight;
+   iFW = fontWidth;
+   iFH = fontHeight;
 
    resizeImage( &image, QSize( windowWidth, windowHeight ) );
    image.fill( qRgb( 198,198,198 ) );
@@ -1674,7 +1624,7 @@ void ConsoleArea::paintEvent(QPaintEvent * event)
    painter.drawImage( event->rect(), image, event->rect() );
 }
 
-BOOL ConsoleArea::createCaret(int iWidth, int iHeight)
+bool ConsoleArea::createCaret(int iWidth, int iHeight)
 {
    pu_crtWidth  = iWidth;
    pu_crtHeight = iHeight;
@@ -1688,7 +1638,6 @@ void ConsoleArea::hideCaret(void)
 void ConsoleArea::showCaret(void)
 {
    displayCell( pu_crtLastRow, pu_crtLastCol );
-   //pv_timer->start(qApp->cursorFlashTime(),this);
    pv_timer->start(350,this);
 }
 void ConsoleArea::destroyCaret(void)
@@ -1754,8 +1703,59 @@ void ConsoleArea::timerEvent(QTimerEvent *event)
 void ConsoleArea::resizeEvent(QResizeEvent *event)
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-   hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
+
+   bSizing = TRUE;
+
+   int iW  = width();
+   int iH  = height();
+
+   if( bFirst )
+      bFirst = FALSE;
+   else
+   {
+   if( windowWidth != iW || windowHeight != iH )
+   {
+      int iFH  = iH / (ROWS);
+      int iStr = qFont.stretch();
+      int fac  = iStr + ( ( iW - windowWidth ) / COLS );
+
+      QFontMetrics fmm( qFont );
+
+#if 0
+wsprintf( buf, "BEFORE pixelSize = %i fontWidth=%i iFH=%i fac=%i str=%i",
+                       fmm.height(),fmm.averageCharWidth(),iFH,fac,iStr );
+OutputDebugString( buf );
+#endif
+      QPainter painter( this );
+      qFont  = QFont( qFont, painter.device() );
+      qFont.setPointSize( 0 );
+      qFont.setPixelSize( iFH-3 );
+      qFont.setStretch( fac );
+      QFontMetrics fm( qFont );
+      fontHeight   = fm.height();
+      fontWidth    = fm.averageCharWidth();
+      fontAscent   = fm.ascent();
+      pWVT->PTEXTSIZE.setX( fontWidth );
+      pWVT->PTEXTSIZE.setY( fontHeight );
+      windowWidth  = fontWidth * COLS;
+      windowHeight = fontHeight * ROWS;
+#if 0
+wsprintf( buf, " AFTER pixelSize = %i fontWidth=%i", fm.height(), fm.averageCharWidth() );
+OutputDebugString( buf );
+#endif
+      resizeImage( &image, QSize( windowWidth, windowHeight ) );
+      redrawBuffer( image.rect() );
+
+      // Works but rolls back successively once event loop comes out of resizing mode
+      // So where to handle it ?
+      //
+      // pWVT->qWnd->resize( windowWidth,windowHeight );
+
+      hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
+   }
+
    QWidget::resizeEvent(event);
+   }
 }
 
 void ConsoleArea::moveEvent(QMoveEvent *event)
@@ -2196,14 +2196,14 @@ void ConsoleArea::keyPressEvent(QKeyEvent *event)
 
 /*----------------------------------------------------------------------*/
 #if 0
-static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
+static bool hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
 {
    switch( message )
    {
             default:
             {
-               BOOL bCtrl     = GetKeyState( VK_CONTROL ) & 0x8000;
-               BOOL bShift    = GetKeyState( VK_SHIFT ) & 0x8000;
+               bool bCtrl     = GetKeyState( VK_CONTROL ) & 0x8000;
+               bool bShift    = GetKeyState( VK_SHIFT ) & 0x8000;
                int  iScanCode = HIWORD( lParam ) & 0xFF;
 
                if( bCtrl && iScanCode == 76 ) /* CTRL_VK_NUMPAD5 */
@@ -2507,7 +2507,6 @@ void ConsoleArea::mouseMoveEvent(QMouseEvent *event)
    }
 }
 
-
 void ConsoleArea::mousePressEvent(QMouseEvent *event)
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
@@ -2543,6 +2542,13 @@ void ConsoleArea::mouseReleaseEvent(QMouseEvent *event)
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
    int c = 0;
 
+   if( bSizing )
+   {
+//OutputDebugString( "XXXXXXXXXXXXX" );
+      bSizing = FALSE;
+      pWVT->qWnd->setWindowSize();
+   }
+
    switch( event->button() )
    {
    case Qt::LeftButton:
@@ -2566,6 +2572,23 @@ void ConsoleArea::mouseReleaseEvent(QMouseEvent *event)
       hb_gt_wvt_AddCharToInputQueue( pWVT, c );
       hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
    }
+}
+
+bool ConsoleArea::event(QEvent *event)
+{
+   // PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+#if 0
+   wsprintf( buf, "Event=%i", event->type() );
+   OutputDebugString( buf );
+
+   if( bSizing )
+   {
+OutputDebugString( "EVENT" );
+      bSizing = FALSE;
+      pWVT->qWnd->setWindowSize();
+   }
+#endif
+   return( QWidget::event( event ) );
 }
 /*----------------------------------------------------------------------*/
 /*

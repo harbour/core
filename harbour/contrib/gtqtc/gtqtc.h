@@ -196,7 +196,7 @@ public:
    void   resetWindowSize(void);
    void   redrawBuffer(const QRect & rect );
 
-   BOOL   createCaret(int iWidth, int iHeight);
+   bool   createCaret(int iWidth, int iHeight);
    void   showCaret(void);
    void   hideCaret(void);
    void   setCaretPos(int iRow, int iCol);
@@ -213,12 +213,16 @@ public:
    int    ROWS;
    int    COLS;
    int    windowWidth, windowHeight;
+   int    wH, wW, iFW, iFH;
 
    int    pu_crtHeight;
    int    pu_crtWidth;
-   BOOL   pu_bBlinking;
+   bool   pu_bBlinking;
    int    pu_crtLastRow;
    int    pu_crtLastCol;
+
+   bool   bFirst;
+   bool   bSizing;
 
    char   buf[ 80 ];
 
@@ -236,6 +240,7 @@ protected:
    void   focusInEvent(QFocusEvent *event);
    void   focusOutEvent(QFocusEvent *event);
    void   moveEvent(QMoveEvent *event);
+   bool   event(QEvent *event);
 
 private:
    QFont  qFont;
@@ -280,13 +285,13 @@ typedef struct
    USHORT       ROWS;                         /* number of displayable rows in window */
    USHORT       COLS;                         /* number of displayable columns in window */
 
-   BOOL         CaretExist;                   /* TRUE if a caret has been created */
-   BOOL         CaretHidden;                  /* TRUE if a caret has been hiden */
+   bool         CaretExist;                   /* TRUE if a caret has been created */
+   bool         CaretHidden;                  /* TRUE if a caret has been hiden */
    int          CaretSize;                    /* Height of solid caret */
    int          CaretWidth;                   /* Width of solid caret */
 
    QPoint       MousePos;                     /* the last mouse position */
-   BOOL         MouseMove;                    /* Flag to say whether to return mouse movement events */
+   bool         MouseMove;                    /* Flag to say whether to return mouse movement events */
 
    int          Keys[ WVT_CHAR_QUEUE_SIZE ];  /* Array to hold the characters & events */
    int          keyPointerIn;                 /* Offset into key array for character to be placed */
@@ -294,7 +299,7 @@ typedef struct
    int          keyLast;                      /* last inkey code value in buffer */
 
    QPoint       PTEXTSIZE;                    /* size of the fixed width font */
-   BOOL         FixedFont;                    /* TRUE if current font is a fixed font */
+   bool         FixedFont;                    /* TRUE if current font is a fixed font */
    int          FixedSize[ WVT_MAX_COLS ];    /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
    int          fontHeight;                   /* requested font height */
    int          fontWidth;                    /* requested font width */
@@ -302,34 +307,31 @@ typedef struct
    int          fontQuality;                  /* requested font quality */
    char         fontFace[ WVT_MAX_COLS ];     /* requested font face name LF_FACESIZE #defined in wingdi.h */
 
-   BOOL         fInit;                        /* logical variable indicating that window should be open */
+   bool         fInit;                        /* logical variable indicating that window should be open */
 
    PHB_CODEPAGE hostCDP;                      /* Host/HVM CodePage for unicode output translations */
    PHB_CODEPAGE inCDP;                        /* Host/HVM CodePage for unicode input translations */
    PHB_CODEPAGE boxCDP;                       /* CodePage for legacy drawing chars: IBM437 */
 
    QIcon        qIcon;                        /* Title Bar and Task List icon. Can be NULL. */
-   BOOL         bIconToFree;                  /* Do we need to free this icon when it's not NULL? */
+   bool         bIconToFree;                  /* Do we need to free this icon when it's not NULL? */
 
    int          CodePage;                     /* Code page to use for display characters */
-   //BOOL         Win9X;                        /* Flag to say if running on Win9X not NT/2000/XP */
-   BOOL         AltF4Close;                   /* Can use Alt+F4 to close application */
-   BOOL         CentreWindow;                 /* True if window is to be Reset into centre of window */
+   bool         AltF4Close;                   /* Can use Alt+F4 to close application */
+   bool         CentreWindow;                 /* True if window is to be Reset into centre of window */
 
-   //BOOL         IgnoreWM_SYSCHAR;
+   bool         bMaximized;                   /* Flag is set when window has been maximized */
+   bool         bBeingMarked;                 /* Flag to control DOS window like copy operation */
+   bool         bBeginMarked;
 
-   BOOL         bMaximized;                   /* Flag is set when window has been maximized */
-   BOOL         bBeingMarked;                 /* Flag to control DOS window like copy operation */
-   BOOL         bBeginMarked;
-
-   BOOL         bResizable;
-   BOOL         bSelectCopy;
+   bool         bResizable;
+   bool         bSelectCopy;
    char *       pszSelectCopy;
-   BOOL         bClosable;
+   bool         bClosable;
 
    int          ResizeMode;                   /* Sets the resizing mode either to FONT or ROWS */
-   BOOL         bResizing;
-   BOOL         bAlreadySizing;
+   bool         bResizing;
+   bool         bAlreadySizing;
 
 } HB_GTWVT, * PHB_GTWVT;
 
