@@ -408,8 +408,6 @@ FUNCTION hbmk( aArgs )
            cParamL            == "-clipper" ; s_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .F.
       CASE cParamL            == "-hbcc"    ; s_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptCFlag := .T.
       CASE cParamL            == "-hblnk"   ; s_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDFlag := .T.
-      CASE cParamL            == "-hblib"   ; s_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .T. ; lCreateDyn := .F.
-      CASE cParamL            == "-hbdyn"   ; s_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .T.
       CASE cParamL            == "-rtlink" .OR. ;
            cParamL            == "-exospace" .OR. ;
            cParamL            == "-blinker" ; s_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDClipper := .T.
@@ -886,8 +884,6 @@ FUNCTION hbmk( aArgs )
            cParamL            == "-hbcmp" .OR. ;
            cParamL            == "-hbcc"  .OR. ;
            cParamL            == "-hblnk" .OR. ;
-           cParamL            == "-hblib" .OR. ;
-           cParamL            == "-hbdyn" .OR. ;
            cParamL            == "-nohbp" .OR. ;
            cParamL            == "-clipper" .OR. ;
            cParamL            == "-rtlink" .OR. ;
@@ -897,6 +893,8 @@ FUNCTION hbmk( aArgs )
 
          /* Simply ignore. They were already processed in the first pass. */
 
+      CASE cParamL == "-hblib"           ; s_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .T. ; lCreateDyn := .F.
+      CASE cParamL == "-hbdyn"           ; s_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .T.
       CASE cParamL == "-gui" .OR. ;
            cParamL == "-mwindows"        ; s_lGUI       := .T. /* Compatibility */
       CASE cParamL == "-std" .OR. ;
