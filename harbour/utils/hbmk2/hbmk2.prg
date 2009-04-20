@@ -3726,7 +3726,7 @@ STATIC FUNCTION FN_Expand( cFileName )
    aDir := Directory( cFileName )
    FOR EACH aFile IN aDir
       IF FN_ExtGet( aFile[ F_NAME ] ) == cExt /* Workaround to not find 'hello.prga' when looking for '*.prg' */
-         AAdd( aFilelist, aFile[ F_NAME ] )
+         AAdd( aFilelist, hb_FNameMerge( FN_DirGet( cFileName ), aFile[ F_NAME ] ) )
       ENDIF
    NEXT
 
