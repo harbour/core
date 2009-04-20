@@ -441,33 +441,35 @@ HB_FUNC( HB_ARGV )
 
 HB_FUNC( HB_CMDLINE )
 {
-   char * pszBuffer;
-   BOOL fFree;
-   int nLen;
-   int nPos;
-
-   int argc = hb_cmdargARGC();
    char** argv = hb_cmdargARGV();
+   int argc = hb_cmdargARGC();
+   char * pszBuffer, * ptr;
+   ULONG ulLen;
+   int iArg;
 
-   if( argc )
+   ulLen = 0;
+   for( iArg = 1; iArg < argc; iArg++ )
+      ulLen += ( ULONG ) strlen( argv[ iArg ] ) + 1;
+
+   if( ulLen )
    {
-      nLen = 1;
-      for( nPos = 1; nPos < argc; nPos++ )
-         nLen += ( int ) strlen( argv[ nPos ] ) + 1;
-
-      pszBuffer = ( char * ) hb_xgrab( nLen + 1 );
-
-      pszBuffer[ 0 ] = '\0';
-      for( nPos = 1; nPos < argc; nPos++ )
+      ptr = pszBuffer = ( char * ) hb_xgrab( ulLen );
+      for( iArg = 1; iArg < argc; iArg++ )
       {
-         hb_strncat( pszBuffer, argv[ nPos ], nLen );
-         hb_strncat( pszBuffer, " ", nLen );
+         ulLen = ( ULONG ) strlen( argv[ iArg ] );
+         memcpy( ptr, argv[ iArg ], ulLen );
+         ptr += ulLen;
+         *ptr++ = ' ';
       }
+      *--ptr = '\0';
 
       /* Convert from OS codepage */
-      hb_retc_buffer( ( char * ) hb_osDecode( ( BYTE * ) pszBuffer, &fFree ) );
-      if( fFree )
-         hb_xfree( pszBuffer );
+      {
+         BOOL fFree;
+         hb_retc_buffer( ( char * ) hb_osDecode( ( BYTE * ) pszBuffer, &fFree ) );
+         if( fFree )
+            hb_xfree( pszBuffer );
+      }
    }
    else
       hb_retc_null();

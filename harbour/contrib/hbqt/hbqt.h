@@ -56,12 +56,12 @@
 #ifndef __HBQT_H
 #define __HBQT_H
 
-#include <qt/qglobal.h>
-#include <qtgui/QTextDocumentFragment>
-#include <qtgui/QTextDocument>
-#include <qtgui/QTextDocumentWriter>
-#include <qtgui/QTextBlock>
-#include <qtgui/QTextCursor>
+#include <Qt/qglobal.h>
+#include <QtGui/QTextDocumentFragment>
+#include <QtGui/QTextDocument>
+/* #include <QtGui/QTextDocumentWriter> */
+#include <QtGui/QTextBlock>
+#include <QtGui/QTextCursor>
 
 #if QT_VERSION >= 0x040500
 
