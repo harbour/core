@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbregex.h"
 
-#if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
+#if defined( HB_OS_UNIX ) && !defined( HB_NO_FNMATCH )
 #  include <fnmatch.h>
 #endif
 
@@ -293,7 +293,7 @@ BOOL hb_strMatchRegExp( const char * szString, const char * szPattern )
 BOOL hb_strMatchFile( const char * szString, const char * szPattern )
 {
 #if defined( HB_OS_UNIX )
-#  if defined( __WATCOMC__ )
+#  if defined( HB_NO_FNMATCH )
    return hb_strMatchWildExact( szString, szPattern );
 #  else
    return fnmatch( szPattern, szString, FNM_PERIOD | FNM_PATHNAME ) == 0;

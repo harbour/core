@@ -478,31 +478,29 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
             case 'o':
             case 'O':
-            {
-               char *szPath = hb_strdup( s + 1 );
-
-               HB_COMP_PARAM->pOutPath = hb_fsFNameSplit( szPath );
-               hb_xfree( szPath );
+               HB_COMP_PARAM->pOutPath = hb_fsFNameSplit( s + 1 );
                break;
-            }
 
                /* Added for preprocessor needs */
             case 'p':
             case 'P':
                if( s[ 1 ] == '+' && s[ 2 ] == '\0' )
                   HB_COMP_PARAM->fPPT = TRUE;
-               else if( s[ 1 ] == '-' && s[ 2 ] == '\0' )
-                  HB_COMP_PARAM->fPPO = FALSE;
                else
                {
                   if( HB_COMP_PARAM->pPpoPath )
                   {
-                     HB_COMP_PARAM->pPpoPath = NULL;
                      hb_xfree( HB_COMP_PARAM->pPpoPath );
+                     HB_COMP_PARAM->pPpoPath = NULL;
                   }
-                  if( s[ 1 ] )
-                     HB_COMP_PARAM->pPpoPath = hb_fsFNameSplit( s + 1 );
-                  HB_COMP_PARAM->fPPO = TRUE;
+                  if( s[ 1 ] == '-' && s[ 2 ] == '\0' )
+                     HB_COMP_PARAM->fPPO = FALSE;
+                  else
+                  {
+                     if( s[ 1 ] )
+                        HB_COMP_PARAM->pPpoPath = hb_fsFNameSplit( s + 1 );
+                     HB_COMP_PARAM->fPPO = TRUE;
+                  }
                }
                break;
 

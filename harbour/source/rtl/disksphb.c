@@ -374,6 +374,8 @@ HB_FUNC( HB_DISKSPACE )
    }
 #else
    {
+      int iTODO;
+
       HB_SYMBOL_UNUSED( szPath );
       HB_SYMBOL_UNUSED( uiType );
    }

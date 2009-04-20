@@ -1831,7 +1831,7 @@ void hb_fsCommit( HB_FHANDLE hFileHandle )
     * original or duplicated file handle
    */
    hb_vmUnlock();
-   #if defined(_POSIX_SYNCHRONIZED_IO) && _POSIX_SYNCHRONIZED_IO + 0 > 0
+   #if defined( _POSIX_SYNCHRONIZED_IO )
       /* faster - flushes data buffers only, without updating directory info
       */
       hb_fsSetIOError( fdatasync( hFileHandle ) == 0, 0 );

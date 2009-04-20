@@ -57,9 +57,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-#if defined(__WATCOMC__)
-#include <malloc.h>     /* alloca prototype */
-#endif
 
 #include "hbmacro.ch"
 #include "hbapi.h"
