@@ -184,6 +184,21 @@ PROCEDURE Main( ... )
 
    RETURN
 
+FUNCTION hbmk_run( cCmd )
+#if defined( __PLATFORM__DOS )
+   RETURN hb_run( cCmd )
+#else
+   LOCAL h := hb_ProcessOpen( cCmd )
+   LOCAL result
+   IF h != F_ERROR
+      result := hb_processValue( h )
+      hb_ProcessClose( h, .T. )
+   ELSE
+      result := -1
+   ENDIF
+   RETURN result
+#endif
+
 FUNCTION hbmk( aArgs )
 
    LOCAL aLIB_BASE1 := {;
@@ -1242,7 +1257,7 @@ FUNCTION hbmk( aArgs )
          NEXT
 
       CASE FN_ExtGet( cParamL ) == ".c" .OR. ;
-           FN_ExtGet( cParamL ) == ".cpp"
+           FN_ExtGet( cParamL ) == ".cpp" /* .cc, .cxx, .cx */
 
          FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
             AAdd( s_aC      , PathSepToTarget( cParam ) )
@@ -2333,7 +2348,7 @@ FUNCTION hbmk( aArgs )
          OutStd( cCommand + hb_osNewLine() )
       ENDIF
 
-      IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
+      IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
          OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
          OutErr( cCommand + hb_osNewLine() )
          RETURN 6
@@ -2521,7 +2536,7 @@ FUNCTION hbmk( aArgs )
                   OutStd( cCommand + hb_osNewLine() )
                ENDIF
 
-               IF ! s_lDONTEXEC .AND. ( tmp1 := hb_run( cCommand ) ) != 0
+               IF ! s_lDONTEXEC .AND. ( tmp1 := hbmk_run( cCommand ) ) != 0
                   OutErr( "hbmk: Error: Running resource compiler. " + hb_ntos( tmp1 ) + ":" + hb_osNewLine() )
                   OutErr( cCommand + hb_osNewLine() )
                   nErrorLevel := 6
@@ -2558,7 +2573,7 @@ FUNCTION hbmk( aArgs )
                ENDIF
             ENDIF
 
-            IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
+            IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
                OutErr( "hbmk: Error: Running resource compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
                OutErr( cCommand + hb_osNewLine() )
                nErrorLevel := 8
@@ -2638,7 +2653,7 @@ FUNCTION hbmk( aArgs )
                      OutStd( cCommand + hb_osNewLine() )
                   ENDIF
 
-                  IF ! s_lDONTEXEC .AND. ( tmp1 := hb_run( cCommand ) ) != 0
+                  IF ! s_lDONTEXEC .AND. ( tmp1 := hbmk_run( cCommand ) ) != 0
                      OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp1 ) + ":" + hb_osNewLine() )
                      OutErr( cCommand + hb_osNewLine() )
                      nErrorLevel := 6
@@ -2677,7 +2692,7 @@ FUNCTION hbmk( aArgs )
                   ENDIF
                ENDIF
 
-               IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
+               IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
                   OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
                   OutErr( cCommand + hb_osNewLine() )
                   nErrorLevel := 6
@@ -2794,7 +2809,7 @@ FUNCTION hbmk( aArgs )
                   ENDIF
                ENDIF
 
-               IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
+               IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
                   OutErr( "hbmk: Error: Running linker. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
                   OutErr( cCommand + hb_osNewLine() )
                   nErrorLevel := 7
@@ -2847,7 +2862,7 @@ FUNCTION hbmk( aArgs )
                   ENDIF
                ENDIF
 
-               IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
+               IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
                   OutErr( "hbmk: Error: Running lib command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
                   OutErr( cCommand + hb_osNewLine() )
                   nErrorLevel := 7
@@ -2902,7 +2917,7 @@ FUNCTION hbmk( aArgs )
                   ENDIF
                ENDIF
 
-               IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
+               IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
                   OutErr( "hbmk: Error: Running dynamic lib link command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
                   OutErr( cCommand + hb_osNewLine() )
                   nErrorLevel := 7
@@ -2968,7 +2983,7 @@ FUNCTION hbmk( aArgs )
                OutStd( cCommand + hb_osNewLine() )
             ENDIF
 
-            IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
+            IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
                OutErr( "hbmk: Warning: Running compression command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
                OutErr( cCommand + hb_osNewLine() )
             ENDIF
@@ -2989,7 +3004,7 @@ FUNCTION hbmk( aArgs )
                OutStd( cCommand + hb_osNewLine() )
             ENDIF
             IF ! s_lDONTEXEC
-               nErrorLevel := hb_run( cCommand )
+               nErrorLevel := hbmk_run( cCommand )
             ENDIF
          ENDIF
       ENDIF
