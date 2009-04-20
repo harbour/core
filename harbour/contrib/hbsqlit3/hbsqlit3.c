@@ -60,6 +60,12 @@
 #include "hbapifs.h"
 #include "hbstack.h"
 
+/* TOFIX: verify the exact SQLITE3 version */
+#if SQLITE_VERSION_NUMBER <= 3004001
+#define sqlite3_int64   LONGLONG
+#define sqlite3_uint64  ULONGLONG
+#endif
+
 #define HB_SQLITE3_DB                        6000001
 
 #define HB_ERR_MEMSTRU_NOT_MEM_BLOCK         4001
@@ -404,6 +410,7 @@ HB_FUNC( SQLITE3_LIBVERSION_NUMBER )
    allocated by sqlite3_initialize()
 */
 
+#if SQLITE_VERSION_NUMBER >= 3006000
 HB_FUNC( SQLITE3_INITIALIZE )
 {
    hb_retni( sqlite3_initialize() );
@@ -413,6 +420,7 @@ HB_FUNC( SQLITE3_SHUTDOWN )
 {
    hb_retni( sqlite3_shutdown() );
 }
+#endif /* SQLITE_VERSION_NUMBER >= 3006000 */
 
 /**
    Enable Or Disable Extended Result Codes
@@ -615,6 +623,7 @@ HB_FUNC( SQLITE3_OPEN )
    }
 }
 
+#if SQLITE_VERSION_NUMBER >= 3005000
 HB_FUNC( SQLITE3_OPEN_V2 )
 {
    sqlite3  *db;
@@ -642,6 +651,7 @@ HB_FUNC( SQLITE3_OPEN_V2 )
       hb_xfree( pszdbName );
    }
 }
+#endif /* SQLITE_VERSION_NUMBER >= 3005000 */
 
 /**
    One-Step Query Execution Interface
@@ -763,6 +773,8 @@ HB_FUNC( SQLITE3_COMPLETE )
    sqlite3_sql( pStmt ) -> cSQLTEXT
 */
 
+/* TOFIX: verify the exact SQLITE3 version */
+#if SQLITE_VERSION_NUMBER > 3004001
 HB_FUNC( SQLITE3_SQL )
 {
    psqlite3_stmt  pStmt = ( psqlite3_stmt ) hb_parptr( 1 );
@@ -776,6 +788,7 @@ HB_FUNC( SQLITE3_SQL )
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError(1) );
    }
 }
+#endif
 
 /**
    Prepared Statement Status.
@@ -2236,6 +2249,8 @@ HB_FUNC( SQLITE3_BACKUP_PAGECOUNT )
    sqlite3_memory_highwater( lResetFlag ) -> nResult
 */
 
+/* TOFIX: verify the exact SQLITE3 version */
+#if SQLITE_VERSION_NUMBER > 3004001
 HB_FUNC( SQLITE3_MEMORY_USED )
 {
    hb_retnint( sqlite3_memory_used() );
@@ -2245,6 +2260,7 @@ HB_FUNC( SQLITE3_MEMORY_HIGHWATER )
 {
    hb_retnint( sqlite3_memory_highwater(( int ) hb_parl(1)) );
 }
+#endif
 
 /**
    Test To See If The Library Is Threadsafe
@@ -2252,10 +2268,13 @@ HB_FUNC( SQLITE3_MEMORY_HIGHWATER )
    sqlite3_threadsafe() -> nResult
 */
 
+/* TOFIX: verify the exact SQLITE3 version */
+#if SQLITE_VERSION_NUMBER > 3004001
 HB_FUNC( SQLITE3_THREADSAFE )
 {
    hb_retni( sqlite3_threadsafe() );
 }
+#endif
 
 /**
    SQLite Runtime Status
@@ -2263,6 +2282,7 @@ HB_FUNC( SQLITE3_THREADSAFE )
    sqlite3_status( nOp, @nCurrent, @nHighwater, lResetFlag);
 */
 
+#if SQLITE_VERSION_NUMBER >= 3006000
 HB_FUNC( SQLITE3_STATUS )
 {
    int   iCurrent, iHighwater;
@@ -2279,13 +2299,15 @@ HB_FUNC( SQLITE3_STATUS )
       hb_retni( -1 );
    }
 }
+#endif /* SQLITE_VERSION_NUMBER >= 3006000 */
 
 /**
    Database Connection Status
 
-   sqlite3_status( pDb, nOp, @nCurrent, @nHighwater, lResetFlag);
+   sqlite3_db_status( pDb, nOp, @nCurrent, @nHighwater, lResetFlag);
 */
 
+#if SQLITE_VERSION_NUMBER >= 3006001
 HB_FUNC( SQLITE3_DB_STATUS )
 {
    int         iCurrent, iHighwater;
@@ -2303,3 +2325,4 @@ HB_FUNC( SQLITE3_DB_STATUS )
       hb_retni( -1 );
    }
 }
+#endif /* SQLITE_VERSION_NUMBER >= 3006001 */
