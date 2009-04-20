@@ -88,9 +88,10 @@
 /* TODO: Add support for library creation for rest of compilers. */
 /* TODO: Add support for dynamic library creation for rest of compilers. */
 /* TODO: Cleanup on variable names and compiler configuration. */
-/* TODO: C++/C mode. */
-/* TODO: Incremental support:
-         - Reuse Harbour .c output for different compiler targets. */
+/* TODO: Finish C++/C mode selection. */
+/* TODO: Add a way to fallback to stop if required headers couldn't be found.
+         This needs a way to spec what key headers to look for. */
+/* TODO: Reuse Harbour .c output for different compiler targets in incremental mode. */
 
 #ifndef HBMK_INTEGRATED_COMPILER
 #define HBMK_INTEGRATED_COMPILER
@@ -320,6 +321,7 @@ FUNCTION hbmk( aArgs )
    LOCAL cResExt
    LOCAL cBinExt
    LOCAL cOptPrefix
+   LOCAL cOptIncMask
    LOCAL cBin_Cprs
    LOCAL cOpt_Cprs
    LOCAL cOpt_CprsMin
@@ -1289,6 +1291,8 @@ FUNCTION hbmk( aArgs )
       ENDIF
    ENDIF
 
+   /* Decide about output name */
+
    IF ! lStopAfterInit .AND. ! lStopAfterHarbour
 
       /* If -o with full name wasn't specified, let's
@@ -1300,86 +1304,6 @@ FUNCTION hbmk( aArgs )
          hb_FNameSplit( s_cPROGNAME, @cDir, @cName, @cExt )
          s_cPROGNAME := hb_FNameMerge( iif( Empty( cDir ), s_cPROGDIR, cDir ), cName, cExt )
       ENDIF
-
-      /* Incremental */
-
-      IF s_lINC .AND. ! s_lREBUILD
-         s_aPRG_TODO := {}
-         FOR EACH tmp IN s_aPRG
-            IF s_lDEBUGINC
-               OutStd( "hbmk: debuginc: PRG", FN_ExtSet( tmp, ".prg" ),;
-                                              FN_DirExtSet( tmp, cWorkDir, ".c" ), hb_osNewLine() )
-            ENDIF
-            IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
-               ! hb_FGetDateTime( FN_ExtSet( tmp, ".prg" ), @tmp1 ) .OR. ;
-               tmp1 > tmp2 .OR. ;
-               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( FN_ExtSet( tmp, ".prg" ), tmp2, .F., OPTPRG_to_INCPATH( s_aOPTPRG, s_cHB_INC_INSTALL ), @headstate ) )
-               AAdd( s_aPRG_TODO, tmp )
-            ENDIF
-         NEXT
-      ELSE
-         s_aPRG_TODO := s_aPRG
-      ENDIF
-   ELSE
-      s_aPRG_TODO := s_aPRG
-   ENDIF
-
-   /* Harbour compilation */
-
-   IF ! lStopAfterInit .AND. Len( s_aPRG_TODO ) > 0 .AND. ! s_lCLEAN
-
-      IF s_lINC .AND. ! s_lQuiet
-         OutStd( "Compiling Harbour sources..." + hb_osNewLine() )
-      ENDIF
-
-      PlatformPRGFlags( s_aOPTPRG )
-
-#if defined( HBMK_INTEGRATED_COMPILER )
-      aCommand := ArrayAJoin( { { iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) },;
-                                s_aPRG_TODO,;
-                                { "-i" + s_cHB_INC_INSTALL },;
-                                iif( s_lBLDFLGP, { " " + cSelfFlagPRG }, {} ),;
-                                ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
-                                s_aOPTPRG } )
-
-      IF s_lTRACE
-         IF ! s_lQuiet
-            OutStd( "hbmk: Harbour compiler command (internal):" + hb_osNewLine() )
-         ENDIF
-         OutStd( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG +;
-                 " " + ArrayToList( aCommand ) + hb_osNewLine() )
-      ENDIF
-
-      IF ! s_lDONTEXEC .AND. ( tmp := hb_compile( "", aCommand ) ) != 0
-         OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + hb_osNewLine() )
-         OutErr( ArrayToList( aCommand ) + hb_osNewLine() )
-         RETURN 6
-      ENDIF
-#else
-      cCommand := DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) +;
-                  cBin_CompPRG +;
-                  " " + iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) +;
-                  " " + ArrayToList( s_aPRG_TODO ) +;
-                  " -i" + s_cHB_INC_INSTALL +;
-                  iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
-                  iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
-                  iif( ! Empty( s_aOPTPRG ), " " + ArrayToList( s_aOPTPRG ), "" )
-
-      cCommand := AllTrim( cCommand )
-
-      IF s_lTRACE
-         IF ! s_lQuiet
-            OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() )
-         ENDIF
-         OutStd( cCommand + hb_osNewLine() )
-      ENDIF
-
-      IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
-         OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
-         OutErr( cCommand + hb_osNewLine() )
-         RETURN 6
-      ENDIF
-#endif
    ENDIF
 
    IF ! lStopAfterInit .AND. ! lStopAfterHarbour
@@ -1424,6 +1348,8 @@ FUNCTION hbmk( aArgs )
       s_aLIB3RD := {}
       s_aLIBSYS := {}
       s_aCLEAN := {}
+
+      cOptIncMask := "-I{DI}"
 
       /* Command macros:
 
@@ -1635,7 +1561,8 @@ FUNCTION hbmk( aArgs )
                cOpt_CompC += " -fomit-frame-pointer"
             ENDIF
          ENDIF
-         cOpt_CompC += " {FC} -I{DI}"
+         cOpt_CompC += ' {FC} -I"{DI}"'
+         cOptIncMask := '-I"{DI}"'
          IF s_lINC .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
          ELSE
@@ -1826,6 +1753,7 @@ FUNCTION hbmk( aArgs )
             ENDIF
          ENDIF
          cOpt_CompC += " -zq -bt=DOS {FC} -i{DI}"
+         cOptIncMask := "-i{DI}"
          IF s_lINC .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -fo={OO}"
          ELSE
@@ -1870,6 +1798,7 @@ FUNCTION hbmk( aArgs )
             cOpt_CompC += " -3s"
          ENDIF
          cOpt_CompC += " -zq -bt=NT {FC} -i{DI}"
+         cOptIncMask := "-i{DI}"
          IF s_lINC .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -fo={OO}"
          ELSE
@@ -1938,6 +1867,7 @@ FUNCTION hbmk( aArgs )
             ENDIF
          ENDIF
          cOpt_CompC += " -zq -bt=OS2 {FC} -i{DI}"
+         cOptIncMask := "-i{DI}"
          IF s_lINC .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -fo={OO}"
          ELSE
@@ -1983,6 +1913,7 @@ FUNCTION hbmk( aArgs )
             ENDIF
          ENDIF
          cOpt_CompC += " -zq -bt=linux {FC} -i{DI}"
+         cOptIncMask := "-i{DI}"
          IF s_lINC .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -fo={OO}"
          ELSE
@@ -2127,7 +2058,8 @@ FUNCTION hbmk( aArgs )
                ENDIF
             ENDIF
          ENDIF
-         cOpt_CompC += " {FC} -I{DI} {LC}"
+         cOpt_CompC += ' {FC} -I"{DI}" {LC}'
+         cOptIncMask := '-I"{DI}"'
          cOpt_Link := "-nologo /out:{OE} {LO} {DL} {FL} {LL} {LS}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
@@ -2232,6 +2164,7 @@ FUNCTION hbmk( aArgs )
          ENDIF
          cBin_Dyn := cBin_Link
          cOpt_CompC := "/c /Ze /Go {FC} /I{DI} {IC} /Fo{OO}"
+         cOptIncMask := "/I{DI}"
          cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
          DO CASE
          CASE s_cCOMP == "pocc"
@@ -2292,6 +2225,129 @@ FUNCTION hbmk( aArgs )
          AAdd( s_aOPTC, "-DHB_DYNLIB" )
          AAdd( aLIB_BASE1, "hbmaindllp" )
       ENDIF
+   ENDIF
+
+   /* Do header detection and create incremental file list for .c files */
+
+   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+
+      headstate := NIL
+
+      IF s_lINC .AND. ! s_lREBUILD
+         s_aC_TODO := {}
+         s_aC_DONE := {}
+         FOR EACH tmp IN s_aC
+            IF s_lDEBUGINC
+               OutStd( "hbmk: debuginc: C", tmp, FN_DirExtSet( tmp, cWorkDir, cObjExt ), hb_osNewLine() )
+            ENDIF
+            IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
+               ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
+               tmp1 > tmp2 .OR. ;
+               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, ! Empty( s_aINCTRYPATH ), OPTC_to_INCPATH( s_aOPTC, s_cHB_INC_INSTALL ), s_aOPTC, cOptIncMask, @headstate ) )
+               AAdd( s_aC_TODO, tmp )
+            ELSE
+               AAdd( s_aC_DONE, tmp )
+            ENDIF
+         NEXT
+      ELSE
+         s_aC_TODO := s_aC
+         s_aC_DONE := {}
+      ENDIF
+
+      /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
+      IF ! Empty( s_aINCTRYPATH ) .AND. ! Empty( s_aC_TODO ) .AND. headstate == NIL
+         FOR EACH tmp IN s_aC
+            FindNewerHeaders( tmp, NIL, .T., OPTC_to_INCPATH( s_aOPTC, s_cHB_INC_INSTALL ), s_aOPTC, cOptIncMask, @headstate )
+         NEXT
+      ENDIF
+   ENDIF
+
+   /* Create incremental file list for .prg files */
+
+   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+
+      /* Incremental */
+
+      IF s_lINC .AND. ! s_lREBUILD
+         s_aPRG_TODO := {}
+         FOR EACH tmp IN s_aPRG
+            IF s_lDEBUGINC
+               OutStd( "hbmk: debuginc: PRG", FN_ExtSet( tmp, ".prg" ),;
+                                              FN_DirExtSet( tmp, cWorkDir, ".c" ), hb_osNewLine() )
+            ENDIF
+            IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
+               ! hb_FGetDateTime( FN_ExtSet( tmp, ".prg" ), @tmp1 ) .OR. ;
+               tmp1 > tmp2 .OR. ;
+               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( FN_ExtSet( tmp, ".prg" ), tmp2, .F., OPTPRG_to_INCPATH( s_aOPTPRG, s_cHB_INC_INSTALL ), NIL, NIL, @headstate ) )
+               AAdd( s_aPRG_TODO, tmp )
+            ENDIF
+         NEXT
+      ELSE
+         s_aPRG_TODO := s_aPRG
+      ENDIF
+   ELSE
+      s_aPRG_TODO := s_aPRG
+   ENDIF
+
+   /* Harbour compilation */
+
+   IF ! lStopAfterInit .AND. Len( s_aPRG_TODO ) > 0 .AND. ! s_lCLEAN
+
+      IF s_lINC .AND. ! s_lQuiet
+         OutStd( "Compiling Harbour sources..." + hb_osNewLine() )
+      ENDIF
+
+      PlatformPRGFlags( s_aOPTPRG )
+
+#if defined( HBMK_INTEGRATED_COMPILER )
+      aCommand := ArrayAJoin( { { iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) },;
+                                s_aPRG_TODO,;
+                                { "-i" + s_cHB_INC_INSTALL },;
+                                iif( s_lBLDFLGP, { " " + cSelfFlagPRG }, {} ),;
+                                ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
+                                s_aOPTPRG } )
+
+      IF s_lTRACE
+         IF ! s_lQuiet
+            OutStd( "hbmk: Harbour compiler command (internal):" + hb_osNewLine() )
+         ENDIF
+         OutStd( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG +;
+                 " " + ArrayToList( aCommand ) + hb_osNewLine() )
+      ENDIF
+
+      IF ! s_lDONTEXEC .AND. ( tmp := hb_compile( "", aCommand ) ) != 0
+         OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + hb_osNewLine() )
+         OutErr( ArrayToList( aCommand ) + hb_osNewLine() )
+         RETURN 6
+      ENDIF
+#else
+      cCommand := DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) +;
+                  cBin_CompPRG +;
+                  " " + iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) +;
+                  " " + ArrayToList( s_aPRG_TODO ) +;
+                  " -i" + s_cHB_INC_INSTALL +;
+                  iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
+                  iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
+                  iif( ! Empty( s_aOPTPRG ), " " + ArrayToList( s_aOPTPRG ), "" )
+
+      cCommand := AllTrim( cCommand )
+
+      IF s_lTRACE
+         IF ! s_lQuiet
+            OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() )
+         ENDIF
+         OutStd( cCommand + hb_osNewLine() )
+      ENDIF
+
+      IF ! s_lDONTEXEC .AND. ( tmp := hb_run( cCommand ) ) != 0
+         OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+         OutErr( cCommand + hb_osNewLine() )
+         RETURN 6
+      ENDIF
+#endif
+   ENDIF
+
+   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
 
       /* Do entry function detection on platform required and supported */
       IF ! s_lDONTEXEC .AND. ! lStopAfterCComp .AND. s_cMAIN == NIL
@@ -2435,7 +2491,7 @@ FUNCTION hbmk( aArgs )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cResExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, .F., OPTC_to_INCPATH( s_aOPTRES, s_cHB_INC_INSTALL ), @headstate ) )
+               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, .F., OPTC_to_INCPATH( s_aOPTRES, s_cHB_INC_INSTALL ), NIL, NIL, @headstate ) )
                AAdd( s_aRESSRC_TODO, tmp )
             ENDIF
          NEXT
@@ -2521,36 +2577,6 @@ FUNCTION hbmk( aArgs )
       ENDIF
 
       IF nErrorLevel == 0
-
-         headstate := NIL
-
-         IF s_lINC .AND. ! s_lREBUILD
-            s_aC_TODO := {}
-            s_aC_DONE := {}
-            FOR EACH tmp IN s_aC
-               IF s_lDEBUGINC
-                  OutStd( "hbmk: debuginc: C", tmp, FN_DirExtSet( tmp, cWorkDir, cObjExt ), hb_osNewLine() )
-               ENDIF
-               IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
-                  ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
-                  tmp1 > tmp2 .OR. ;
-                  ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, ! Empty( s_aINCTRYPATH ), OPTC_to_INCPATH( s_aOPTC, s_cHB_INC_INSTALL ), @headstate ) )
-                  AAdd( s_aC_TODO, tmp )
-               ELSE
-                  AAdd( s_aC_DONE, tmp )
-               ENDIF
-            NEXT
-         ELSE
-            s_aC_TODO := s_aC
-            s_aC_DONE := {}
-         ENDIF
-
-         /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
-         IF ! Empty( s_aINCTRYPATH ) .AND. ! Empty( s_aC_TODO ) .AND. headstate == NIL
-            FOR EACH tmp IN s_aC
-               FindNewerHeaders( tmp, NIL, .T., OPTC_to_INCPATH( s_aOPTC, s_cHB_INC_INSTALL ), @headstate )
-            NEXT
-         ENDIF
 
          IF s_lINC .AND. ! s_lREBUILD
             s_aPRG_TODO := {}
@@ -3019,7 +3045,7 @@ STATIC FUNCTION SetupForGT( cGT, /* @ */ s_cGT, /* @ */ s_lGUI )
 #define _HEADSTATE_lAnyNewer    2
 #define _HEADSTATE_MAX_         2
 
-STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, lIncTry, aINCPATH, /* @ */ headstate, nEmbedLevel )
+STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, lIncTry, aINCPATH, aOPT, cOptMask, /* @ */ headstate, nEmbedLevel )
    LOCAL cFile
    LOCAL fhnd
    LOCAL nPos
@@ -3057,7 +3083,7 @@ STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, lIncTry, aINCPATH, /* 
       RETURN .F.
    ENDIF
 
-   cFileName := FindHeader( cFileName, aINCPATH, iif( lIncTry, s_aINCTRYPATH, NIL ) )
+   cFileName := FindHeader( cFileName, aINCPATH, iif( lIncTry, s_aINCTRYPATH, NIL ), aOPT, cOptMask )
    IF Empty( cFileName )
       RETURN .F.
    ENDIF
@@ -3103,7 +3129,7 @@ STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, lIncTry, aINCPATH, /* 
    DO WHILE ( tmp := hb_At( '#include "', cFile, nPos ) ) > 0
       nPos := tmp + Len( '#include "' )
       IF ( tmp := hb_At( '"', cFile, nPos ) ) > 0
-         IF FindNewerHeaders( SubStr( cFile, nPos, tmp - nPos ), tTimeParent, lIncTry, aINCPATH, @headstate, nEmbedLevel + 1 )
+         IF FindNewerHeaders( SubStr( cFile, nPos, tmp - nPos ), tTimeParent, lIncTry, aINCPATH, aOPT, cOptMask, @headstate, nEmbedLevel + 1 )
             headstate[ _HEADSTATE_lAnyNewer ] := .T.
             /* Let it continue if we want to scan for header locations */
             IF ! lIncTry
@@ -3153,8 +3179,9 @@ STATIC FUNCTION OPTC_to_INCPATH( aOPT, cHB_INC_INSTALL )
 
    RETURN aINCPATH
 
-STATIC FUNCTION FindHeader( cFileName, aINCPATH, aINCTRYPATH )
+STATIC FUNCTION FindHeader( cFileName, aINCPATH, aINCTRYPATH, aOPT, cOptMask )
    LOCAL cDir
+   LOCAL cOption
 
    /* Check in current dir */
    IF hb_FileExists( cFileName )
@@ -3175,11 +3202,12 @@ STATIC FUNCTION FindHeader( cFileName, aINCPATH, aINCTRYPATH )
          IF AScan( aINCPATH, { |tmp| tmp == cDir } ) == 0
             AAdd( aINCPATH, cDir )
          ENDIF
-         IF AScan( s_aOPTC, { |tmp| tmp == "-I" + cDir } ) == 0
+         cOption := StrTran( cOptMask, "{DI}", cDir )
+         IF AScan( aOPT, { |tmp| tmp == cOption } ) == 0
             IF s_lDEBUGINC
                OutStd( "hbmk: debuginc: Autodetected header dir for " + cFileName + ": " + cDir, hb_osNewLine() )
             ENDIF
-            AAdd( s_aOPTC, "-I" + cDir )
+            AAdd( aOPT, cOption )
          ENDIF
          RETURN DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName
       ENDIF
@@ -4620,10 +4648,20 @@ FUNCTION hbmk_COMP()
    RETURN s_cCOMP
 
 FUNCTION hbmk_KEYW( cKeyword )
-   RETURN cKeyword == iif( s_lMT   , "mt"   , "st"      ) .OR. ;
-          cKeyword == iif( s_lGUI  , "gui"  , "std"     ) .OR. ;
-          cKeyword == iif( s_lDEBUG, "debug", "nodebug" ) .OR. ;
-          cKeyword == iif( s_cARCH $ "bsd|hpux|sunos|linux" .OR. s_cARCH == "darwin", "unix", "" )
+
+   IF cKeyword == iif( s_lMT   , "mt"   , "st"      ) .OR. ;
+      cKeyword == iif( s_lGUI  , "gui"  , "std"     ) .OR. ;
+      cKeyword == iif( s_lDEBUG, "debug", "nodebug" )
+      RETURN .T.
+   ENDIF
+
+   RETURN ( cKeyword == "unix"     .AND. s_cARCH $ "bsd|hpux|sunos|linux" .OR. s_cARCH == "darwin" ) .OR. ;
+          ( cKeyword == "allgcc"   .AND. s_cCOMP $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin"         ) .OR. ;
+          ( cKeyword == "allwin"   .AND. s_cCOMP $ "win|wce"                                       ) .OR. ;
+          ( cKeyword == "allmingw" .AND. s_cCOMP $ "mingw|mingw64|mingwarm"                        ) .OR. ;
+          ( cKeyword == "allmsvc"  .AND. s_cCOMP $ "msvc|msvc64|msvcarm"                           ) .OR. ;
+          ( cKeyword == "allpocc"  .AND. s_cCOMP $ "pocc|pocc64|poccarm"                           ) .OR. ;
+          ( cKeyword == "allicc"   .AND. s_cCOMP $ "icc|iccia64"                                   )
 
 STATIC PROCEDURE ShowHeader()
 
@@ -4729,10 +4767,11 @@ STATIC PROCEDURE ShowHelp( lLong )
       "    compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>" ,;
       "    Lines starting with '#' char are ignored" ,;
       "  - Platform filters are accepted in each .hbp line and with several options." ,;
-      "    Filter format: {[!][<arch|comp>]}. Filters can be combined " ,;
+      "    Filter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined " ,;
       "    using '&', '|' operators and grouped by parantheses." ,;
       "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}," ,;
-      "         {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}" ,;
+      "         {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}", ,;
+      "         {allpocc}, {allgcc}, {allmingw}, {allmsvc}", ,;
       "  - Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=," ,;
       "    echo=) and corresponding command line parameters will accept macros:" ,;
       "    ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${<envvar>}" ,;
