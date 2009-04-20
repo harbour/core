@@ -1827,11 +1827,18 @@ void hb_fsCommit( HB_FHANDLE hFileHandle )
 
 #elif defined(HB_OS_UNIX)
 
-   /* NOTE: close() functions releases all lock regardles if it is an
+   /* NOTE: close() functions releases all locks regardles if it is an
     * original or duplicated file handle
    */
    hb_vmUnlock();
-   #if defined( _POSIX_SYNCHRONIZED_IO )
+   /* We should check here only for _POSIX_SYNCHRONIZED_IO defined
+    * and it should be enough to test if fdatasync() declaration
+    * exists in <unistd.h>. Unfortunately on some OS-es like Darwin
+    * _POSIX_SYNCHRONIZED_IO is defined but fdatasync() does not exists.
+    * As workaround we are using this trick to check non zero version
+    * number but on some systems it may disable using fdatasync() [druzus]
+    */
+   #if defined(_POSIX_SYNCHRONIZED_IO) && _POSIX_SYNCHRONIZED_IO + 0 > 0
       /* faster - flushes data buffers only, without updating directory info
       */
       hb_fsSetIOError( fdatasync( hFileHandle ) == 0, 0 );
