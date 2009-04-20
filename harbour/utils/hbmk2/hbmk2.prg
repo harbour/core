@@ -1202,16 +1202,14 @@ FUNCTION hbmk( aArgs )
 
       CASE FN_ExtGet( cParamL ) == ".prg"
 
-         FOR EACH cParam IN FN_Expand( cParam )
-            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
             AAdd( s_aPRG    , PathSepToTarget( cParam ) )
             DEFAULT s_cFIRST TO PathSepToSelf( cParam )
          NEXT
 
       CASE FN_ExtGet( cParamL ) == ".rc"
 
-         FOR EACH cParam IN FN_Expand( cParam )
-            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
             AAdd( s_aRESSRC , PathSepToTarget( cParam ) )
          NEXT
 
@@ -1221,13 +1219,11 @@ FUNCTION hbmk( aArgs )
             /* For MinGW family add .res files as source input, as they
                will need to be converted to coff format with windres (just
                like plain .rc files) before feeding them to gcc. */
-            FOR EACH cParam IN FN_Expand( cParam )
-               cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+            FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
                AAdd( s_aRESSRC , PathSepToTarget( cParam ) )
             NEXT
          ELSE
-            FOR EACH cParam IN FN_Expand( cParam )
-               cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+            FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
                AAdd( s_aRESCMP , PathSepToTarget( cParam ) )
             NEXT
          ENDIF
@@ -1237,18 +1233,18 @@ FUNCTION hbmk( aArgs )
          cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
          AAdd( s_aOBJA   , PathSepToTarget( cParam ) )
 
-      CASE FN_ExtGet( cParamL ) $ ".o|.obj"
+      CASE FN_ExtGet( cParamL ) == ".o" .OR. ;
+           FN_ExtGet( cParamL ) == ".obj"
 
-         FOR EACH cParam IN FN_Expand( cParam )
-            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
             AAdd( s_aOBJUSER, PathSepToTarget( cParam ) )
             DEFAULT s_cFIRST TO PathSepToSelf( cParam )
          NEXT
 
-      CASE FN_ExtGet( cParamL ) $ ".c|.cpp"
+      CASE FN_ExtGet( cParamL ) == ".c" .OR. ;
+           FN_ExtGet( cParamL ) == ".cpp"
 
-         FOR EACH cParam IN FN_Expand( cParam )
-            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
             AAdd( s_aC      , PathSepToTarget( cParam ) )
             DEFAULT s_cFIRST TO PathSepToSelf( cParam )
          NEXT
@@ -3194,22 +3190,24 @@ STATIC FUNCTION FindHeader( cFileName, aINCPATH, aINCTRYPATH, aOPT, cOptMask )
    NEXT
 
    /* Check in potential include path list */
-   FOR EACH cDir IN aINCTRYPATH
-      IF hb_FileExists( DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName )
-         /* Add these dir to include paths */
-         IF AScan( aINCPATH, { |tmp| tmp == cDir } ) == 0
-            AAdd( aINCPATH, cDir )
-         ENDIF
-         cOption := StrTran( cOptMask, "{DI}", cDir )
-         IF AScan( aOPT, { |tmp| tmp == cOption } ) == 0
-            IF s_lDEBUGINC
-               OutStd( "hbmk: debuginc: Autodetected header dir for " + cFileName + ": " + cDir, hb_osNewLine() )
+   IF ! Empty( aINCTRYPATH )
+      FOR EACH cDir IN aINCTRYPATH
+         IF hb_FileExists( DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName )
+            /* Add these dir to include paths */
+            IF AScan( aINCPATH, { |tmp| tmp == cDir } ) == 0
+               AAdd( aINCPATH, cDir )
             ENDIF
-            AAdd( aOPT, cOption )
+            cOption := StrTran( cOptMask, "{DI}", cDir )
+            IF AScan( aOPT, { |tmp| tmp == cOption } ) == 0
+               IF s_lDEBUGINC
+                  OutStd( "hbmk: debuginc: Autodetected header dir for " + cFileName + ": " + cDir, hb_osNewLine() )
+               ENDIF
+               AAdd( aOPT, cOption )
+            ENDIF
+            RETURN DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName
          ENDIF
-         RETURN DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName
-      ENDIF
-   NEXT
+      NEXT
+   ENDIF
 
    RETURN NIL
 
