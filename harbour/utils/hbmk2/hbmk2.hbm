@@ -2,5 +2,5 @@
 # $Id$
 #
 
--nulrdd
+-nulrdd -km
 hbmk2.prg

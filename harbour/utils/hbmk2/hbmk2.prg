@@ -4224,7 +4224,7 @@ STATIC FUNCTION ArchCompFilter( cItem )
 
    LOCAL cExpr := "( hbmk_ARCH() == Lower( '%1' ) .OR. " +;
                     "hbmk_COMP() == Lower( '%1' ) .OR. " +;
-                    "hbmk_KEYW( Lower( '%' ) ) )"
+                    "hbmk_KEYW( Lower( '%1' ) ) )"
 
    IF ( nStart := At( "{", cItem ) ) > 0 .AND. ;
       !( SubStr( cItem, nStart - 1, 1 ) == "$" ) .AND. ;
