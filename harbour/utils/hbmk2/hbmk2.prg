@@ -2350,7 +2350,9 @@ FUNCTION hbmk( aArgs )
 
       IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
          OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
-         OutErr( cCommand + hb_osNewLine() )
+         IF ! s_lQuiet
+            OutErr( cCommand + hb_osNewLine() )
+         ENDIF
          RETURN 6
       ENDIF
 #endif
@@ -2538,7 +2540,9 @@ FUNCTION hbmk( aArgs )
 
                IF ! s_lDONTEXEC .AND. ( tmp1 := hbmk_run( cCommand ) ) != 0
                   OutErr( "hbmk: Error: Running resource compiler. " + hb_ntos( tmp1 ) + ":" + hb_osNewLine() )
-                  OutErr( cCommand + hb_osNewLine() )
+                  IF ! s_lQuiet
+                     OutErr( cCommand + hb_osNewLine() )
+                  ENDIF
                   nErrorLevel := 6
                   EXIT
                ENDIF
@@ -2575,7 +2579,9 @@ FUNCTION hbmk( aArgs )
 
             IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
                OutErr( "hbmk: Error: Running resource compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
-               OutErr( cCommand + hb_osNewLine() )
+               IF ! s_lQuiet
+                  OutErr( cCommand + hb_osNewLine() )
+               ENDIF
                nErrorLevel := 8
             ENDIF
 
@@ -2655,7 +2661,9 @@ FUNCTION hbmk( aArgs )
 
                   IF ! s_lDONTEXEC .AND. ( tmp1 := hbmk_run( cCommand ) ) != 0
                      OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp1 ) + ":" + hb_osNewLine() )
-                     OutErr( cCommand + hb_osNewLine() )
+                     IF ! s_lQuiet
+                        OutErr( cCommand + hb_osNewLine() )
+                     ENDIF
                      nErrorLevel := 6
                      EXIT
                   ENDIF
@@ -2694,7 +2702,9 @@ FUNCTION hbmk( aArgs )
 
                IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
                   OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
-                  OutErr( cCommand + hb_osNewLine() )
+                  IF ! s_lQuiet
+                     OutErr( cCommand + hb_osNewLine() )
+                  ENDIF
                   nErrorLevel := 6
                ENDIF
 
@@ -2811,7 +2821,9 @@ FUNCTION hbmk( aArgs )
 
                IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
                   OutErr( "hbmk: Error: Running linker. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
-                  OutErr( cCommand + hb_osNewLine() )
+                  IF ! s_lQuiet
+                     OutErr( cCommand + hb_osNewLine() )
+                  ENDIF
                   nErrorLevel := 7
                ENDIF
 
@@ -2864,7 +2876,9 @@ FUNCTION hbmk( aArgs )
 
                IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
                   OutErr( "hbmk: Error: Running lib command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
-                  OutErr( cCommand + hb_osNewLine() )
+                  IF ! s_lQuiet
+                     OutErr( cCommand + hb_osNewLine() )
+                  ENDIF
                   nErrorLevel := 7
                ENDIF
 
@@ -2919,7 +2933,9 @@ FUNCTION hbmk( aArgs )
 
                IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
                   OutErr( "hbmk: Error: Running dynamic lib link command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
-                  OutErr( cCommand + hb_osNewLine() )
+                  IF ! s_lQuiet
+                     OutErr( cCommand + hb_osNewLine() )
+                  ENDIF
                   nErrorLevel := 7
                ENDIF
 
@@ -2985,7 +3001,9 @@ FUNCTION hbmk( aArgs )
 
             IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
                OutErr( "hbmk: Warning: Running compression command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
-               OutErr( cCommand + hb_osNewLine() )
+               IF ! s_lQuiet
+                  OutErr( cCommand + hb_osNewLine() )
+               ENDIF
             ENDIF
          ENDIF
 
@@ -4781,8 +4799,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "    Filter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined " ,;
       "    using '&', '|' operators and grouped by parantheses." ,;
       "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}," ,;
-      "         {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}", ,;
-      "         {allpocc}, {allgcc}, {allmingw}, {allmsvc}", ,;
+      "         {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}" ,;
+      "         {allpocc}, {allgcc}, {allmingw}, {allmsvc}" ,;
       "  - Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=," ,;
       "    echo=) and corresponding command line parameters will accept macros:" ,;
       "    ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${<envvar>}" ,;
