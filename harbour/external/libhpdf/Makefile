@@ -40,6 +40,9 @@ endif
 ifeq ($(HB_ARCHITECTURE),dos)
 HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
 endif
+ifeq ($(HB_ARCHITECTURE),darwin)
+HB_INC_LIBPNG += $(TOP)$(ROOT)external/libpng
+endif
 endif
 endif
 

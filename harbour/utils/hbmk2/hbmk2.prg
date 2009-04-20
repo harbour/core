@@ -41,6 +41,9 @@
  */
 
 #pragma linenumber=on
+/* Optimizations */
+#pragma -km+
+#pragma -ko+
 
 /*
    Program Library HOWTO:
@@ -130,6 +133,7 @@ STATIC s_lGUI := .F.
 STATIC s_lMT := .F.
 STATIC s_lDEBUG := .F.
 STATIC s_nHEAD := _HEAD_PARTIAL
+STATIC s_aINCPATH
 STATIC s_aINCTRYPATH
 STATIC s_lREBUILD := .F.
 
@@ -778,6 +782,9 @@ FUNCTION hbmk( aArgs )
       AAddNotEmpty( s_aLIBPATH, s_cHB_DYN_INSTALL )
    ENDIF
 
+   /* Add main Harbour header dir to header path list */
+   AAddNotEmpty( s_aINCPATH, s_cHB_INC_INSTALL )
+
    /* Process environment */
 
    IF    Lower( GetEnv( "HB_MT"     ) ) == "mt" ; s_lMT     := .T. ; ENDIF /* Compatibility */
@@ -804,6 +811,7 @@ FUNCTION hbmk( aArgs )
    s_aOPTRUN := {}
    s_aRESSRC := {}
    s_aRESCMP := {}
+   s_aINCPATH := {}
    s_aINCTRYPATH := {}
    s_aLIBUSER := {}
    s_aLIBUSERGT := {}
@@ -854,6 +862,7 @@ FUNCTION hbmk( aArgs )
                    @s_aLIBUSERGT,;
                    @s_aLIBPATH,;
                    @s_aLIBDYNHAS,;
+                   @s_aINCPATH,;
                    @s_aINCTRYPATH,;
                    @s_aOPTPRG,;
                    @s_aOPTC,;
@@ -893,8 +902,7 @@ FUNCTION hbmk( aArgs )
       cParamL := Lower( cParam )
 
       DO CASE
-      CASE cParamL            == "-quiet" .OR. ;
-           Left( cParamL, 6 ) == "-comp=" .OR. ;
+      CASE Left( cParamL, 6 ) == "-comp=" .OR. ;
            Left( cParamL, 6 ) == "-arch=" .OR. ;
            cParamL            == "-hbcmp" .OR. ;
            cParamL            == "-hbcc"  .OR. ;
@@ -903,11 +911,12 @@ FUNCTION hbmk( aArgs )
            cParamL            == "-clipper" .OR. ;
            cParamL            == "-rtlink" .OR. ;
            cParamL            == "-blinker" .OR. ;
-           cParamL            == "-exospace" .OR. ;
-           cParamL            == "-info"
+           cParamL            == "-exospace"
 
          /* Simply ignore. They were already processed in the first pass. */
 
+      CASE cParamL == "-quiet"           ; s_lQuiet := .T. ; s_lInfo := .F.
+      CASE cParamL == "-info"            ; s_lInfo := .T.
       CASE cParamL == "-hblib"           ; s_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .T. ; lCreateDyn := .F.
       CASE cParamL == "-hbdyn"           ; s_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .T.
       CASE cParamL == "-gui" .OR. ;
@@ -1065,6 +1074,22 @@ FUNCTION hbmk( aArgs )
             AAdd( s_aLIBPATH, PathSepToTarget( cParam ) )
          ENDIF
 
+      CASE Left( cParamL, 2 ) == "-i" .AND. ;
+           Len( cParamL ) > 2
+
+         cParam := MacroProc( tmp := ArchCompFilter( SubStr( cParam, 3 ) ) )
+         IF ! Empty( cParam )
+            AAdd( s_aINCPATH, PathSepToTarget( cParam ) )
+         ENDIF
+
+      CASE Left( cParamL, Len( "-incpath=" ) ) == "-incpath=" .AND. ;
+           Len( cParamL ) > Len( "-incpath=" )
+
+         cParam := MacroProc( tmp := ArchCompFilter( SubStr( cParam, Len( "-incpath=" ) + 1 ) ) )
+         IF ! Empty( cParam )
+            AAdd( s_aINCPATH, PathSepToTarget( cParam ) )
+         ENDIF
+
       CASE Left( cParamL, Len( "-inctrypath=" ) ) == "-inctrypath=" .AND. ;
            Len( cParamL ) > Len( "-inctrypath=" )
 
@@ -1195,6 +1220,7 @@ FUNCTION hbmk( aArgs )
             @s_aLIBUSERGT,;
             @s_aLIBPATH,;
             @s_aLIBDYNHAS,;
+            @s_aINCPATH,;
             @s_aINCTRYPATH,;
             @s_aOPTPRG,;
             @s_aOPTC,;
@@ -1419,7 +1445,7 @@ FUNCTION hbmk( aArgs )
          IF s_lOPT
             cOpt_CompC += " -O3"
          ENDIF
-         cOpt_CompC += " {FC} -I{DI}"
+         cOpt_CompC += " {FC}"
          IF s_lINC .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
          ELSE
@@ -1570,7 +1596,7 @@ FUNCTION hbmk( aArgs )
                cOpt_CompC += " -fomit-frame-pointer"
             ENDIF
          ENDIF
-         cOpt_CompC += ' {FC} -I"{DI}"'
+         cOpt_CompC += " {FC}"
          cOptIncMask := '-I"{DI}"'
          IF s_lINC .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
@@ -1661,7 +1687,7 @@ FUNCTION hbmk( aArgs )
          IF s_lOPT
             cOpt_CompC += " -O3"
          ENDIF
-         cOpt_CompC += " {FC} -I{DI}"
+         cOpt_CompC += " {FC}"
          IF s_lINC .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
          ELSE
@@ -1708,7 +1734,7 @@ FUNCTION hbmk( aArgs )
          IF s_lOPT
             cOpt_CompC += " -O3"
          ENDIF
-         cOpt_CompC += " {FC} -I{DI}"
+         cOpt_CompC += " {FC}"
          IF s_lINC .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
          ELSE
@@ -1761,7 +1787,7 @@ FUNCTION hbmk( aArgs )
                cOpt_CompC += " -oi"
             ENDIF
          ENDIF
-         cOpt_CompC += " -zq -bt=DOS {FC} -i{DI}"
+         cOpt_CompC += " -zq -bt=DOS {FC}"
          cOptIncMask := "-i{DI}"
          IF s_lINC .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -fo={OO}"
@@ -1806,7 +1832,7 @@ FUNCTION hbmk( aArgs )
          ELSE
             cOpt_CompC += " -3s"
          ENDIF
-         cOpt_CompC += " -zq -bt=NT {FC} -i{DI}"
+         cOpt_CompC += " -zq -bt=NT {FC}"
          cOptIncMask := "-i{DI}"
          IF s_lINC .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -fo={OO}"
@@ -1875,7 +1901,7 @@ FUNCTION hbmk( aArgs )
                cOpt_CompC += " -oi"
             ENDIF
          ENDIF
-         cOpt_CompC += " -zq -bt=OS2 {FC} -i{DI}"
+         cOpt_CompC += " -zq -bt=OS2 {FC}"
          cOptIncMask := "-i{DI}"
          IF s_lINC .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -fo={OO}"
@@ -1921,7 +1947,7 @@ FUNCTION hbmk( aArgs )
                cOpt_CompC += " -oi"
             ENDIF
          ENDIF
-         cOpt_CompC += " -zq -bt=linux {FC} -i{DI}"
+         cOpt_CompC += " -zq -bt=linux {FC}"
          cOptIncMask := "-i{DI}"
          IF s_lINC .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -fo={OO}"
@@ -1971,7 +1997,7 @@ FUNCTION hbmk( aArgs )
          IF s_lOPT
             cOpt_CompC += " -d -6 -O2 -OS -Ov -Oi -Oc"
          ENDIF
-         cOpt_CompC += " {FC} -I{DI} {LC}"
+         cOpt_CompC += " {FC} {LC}"
          cBin_Res := "brcc32.exe"
          cOpt_Res := "{FR} {IR} -fo{OS}"
          cResExt := ".res"
@@ -2067,7 +2093,7 @@ FUNCTION hbmk( aArgs )
                ENDIF
             ENDIF
          ENDIF
-         cOpt_CompC += ' {FC} -I"{DI}" {LC}'
+         cOpt_CompC += " {FC} {LC}"
          cOptIncMask := '-I"{DI}"'
          cOpt_Link := "-nologo /out:{OE} {LO} {DL} {FL} {LL} {LS}"
          cLibPathPrefix := "/libpath:"
@@ -2172,7 +2198,7 @@ FUNCTION hbmk( aArgs )
             cBin_Res := "porc.exe"
          ENDIF
          cBin_Dyn := cBin_Link
-         cOpt_CompC := "/c /Ze /Go {FC} /I{DI} {IC} /Fo{OO}"
+         cOpt_CompC := "/c /Ze /Go {FC} {IC} /Fo{OO}"
          cOptIncMask := "/I{DI}"
          cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
          DO CASE
@@ -2236,6 +2262,13 @@ FUNCTION hbmk( aArgs )
       ENDIF
    ENDIF
 
+   /* Header paths */
+
+   FOR EACH tmp IN s_aINCPATH
+      AAdd( s_aOPTPRG, "-i" + tmp )
+      AAdd( s_aOPTC, StrTran( cOptIncMask, "{DI}", tmp ) )
+   NEXT
+
    /* Do header detection and create incremental file list for .c files */
 
    IF ! lStopAfterInit .AND. ! lStopAfterHarbour
@@ -2252,7 +2285,7 @@ FUNCTION hbmk( aArgs )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, ! Empty( s_aINCTRYPATH ), OPTC_to_INCPATH( s_aOPTC, s_cHB_INC_INSTALL ), s_aOPTC, cOptIncMask, @headstate ) )
+               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, NIL, tmp2, ! Empty( s_aINCTRYPATH ), .T., @headstate ) )
                AAdd( s_aC_TODO, tmp )
             ELSE
                AAdd( s_aC_DONE, tmp )
@@ -2266,7 +2299,7 @@ FUNCTION hbmk( aArgs )
       /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
       IF ! Empty( s_aINCTRYPATH ) .AND. ! Empty( s_aC_TODO ) .AND. headstate == NIL
          FOR EACH tmp IN s_aC
-            FindNewerHeaders( tmp, NIL, .T., OPTC_to_INCPATH( s_aOPTC, s_cHB_INC_INSTALL ), s_aOPTC, cOptIncMask, @headstate )
+            FindNewerHeaders( tmp, NIL, NIL, .T., .T., @headstate )
          NEXT
       ENDIF
    ENDIF
@@ -2287,7 +2320,7 @@ FUNCTION hbmk( aArgs )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( FN_ExtSet( tmp, ".prg" ), @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( FN_ExtSet( tmp, ".prg" ), tmp2, .F., OPTPRG_to_INCPATH( s_aOPTPRG, s_cHB_INC_INSTALL ), NIL, NIL, @headstate ) )
+               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( FN_ExtSet( tmp, ".prg" ), NIL, tmp2, .F., .F., @headstate ) )
                AAdd( s_aPRG_TODO, tmp )
             ENDIF
          NEXT
@@ -2311,7 +2344,6 @@ FUNCTION hbmk( aArgs )
 #if defined( HBMK_INTEGRATED_COMPILER )
       aCommand := ArrayAJoin( { { iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) },;
                                 s_aPRG_TODO,;
-                                { "-i" + s_cHB_INC_INSTALL },;
                                 iif( s_lBLDFLGP, { " " + cSelfFlagPRG }, {} ),;
                                 ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
                                 s_aOPTPRG } )
@@ -2334,7 +2366,6 @@ FUNCTION hbmk( aArgs )
                   cBin_CompPRG +;
                   " " + iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) +;
                   " " + ArrayToList( s_aPRG_TODO ) +;
-                  " -i" + s_cHB_INC_INSTALL +;
                   iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
                   iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
                   iif( ! Empty( s_aOPTPRG ), " " + ArrayToList( s_aOPTPRG ), "" )
@@ -2502,7 +2533,7 @@ FUNCTION hbmk( aArgs )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cResExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, tmp2, .F., OPTC_to_INCPATH( s_aOPTRES, s_cHB_INC_INSTALL ), NIL, NIL, @headstate ) )
+               ( s_nHEAD != _HEAD_OFF .AND. FindNewerHeaders( tmp, NIL, tmp2, .F., .T., @headstate ) )
                AAdd( s_aRESSRC_TODO, tmp )
             ENDIF
          NEXT
@@ -3072,7 +3103,7 @@ STATIC FUNCTION SetupForGT( cGT, /* @ */ s_cGT, /* @ */ s_lGUI )
 #define _HEADSTATE_lAnyNewer    2
 #define _HEADSTATE_MAX_         2
 
-STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, lIncTry, aINCPATH, aOPT, cOptMask, /* @ */ headstate, nEmbedLevel )
+STATIC FUNCTION FindNewerHeaders( cFileName, cParentDir, tTimeParent, lIncTry, lCMode, /* @ */ headstate, nEmbedLevel )
    LOCAL cFile
    LOCAL fhnd
    LOCAL nPos
@@ -3083,6 +3114,7 @@ STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, lIncTry, aINCPATH, aOP
    STATIC s_aExcl := { "windows.h", "ole2.h", "os2.h" }
 
    DEFAULT nEmbedLevel TO 1
+   DEFAULT cParentDir TO FN_DirGet( cFileName )
 
    IF nEmbedLevel == 1
       headstate := Array( _HEADSTATE_MAX_ )
@@ -3110,7 +3142,7 @@ STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, lIncTry, aINCPATH, aOP
       RETURN .F.
    ENDIF
 
-   cFileName := FindHeader( cFileName, aINCPATH, iif( lIncTry, s_aINCTRYPATH, NIL ), aOPT, cOptMask )
+   cFileName := FindHeader( cFileName, cParentDir, iif( lIncTry, s_aINCTRYPATH, NIL ) )
    IF Empty( cFileName )
       RETURN .F.
    ENDIF
@@ -3156,7 +3188,8 @@ STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, lIncTry, aINCPATH, aOP
    DO WHILE ( tmp := hb_At( '#include "', cFile, nPos ) ) > 0
       nPos := tmp + Len( '#include "' )
       IF ( tmp := hb_At( '"', cFile, nPos ) ) > 0
-         IF FindNewerHeaders( SubStr( cFile, nPos, tmp - nPos ), tTimeParent, lIncTry, aINCPATH, aOPT, cOptMask, @headstate, nEmbedLevel + 1 )
+         IF FindNewerHeaders( SubStr( cFile, nPos, tmp - nPos ),;
+               iif( lCMode, FN_DirGet( cFileName ), cParentDir ), tTimeParent, lIncTry, lCMode, @headstate, nEmbedLevel + 1 )
             headstate[ _HEADSTATE_lAnyNewer ] := .T.
             /* Let it continue if we want to scan for header locations */
             IF ! lIncTry
@@ -3168,55 +3201,22 @@ STATIC FUNCTION FindNewerHeaders( cFileName, tTimeParent, lIncTry, aINCPATH, aOP
 
    RETURN headstate[ _HEADSTATE_lAnyNewer ]
 
-STATIC FUNCTION OPTPRG_to_INCPATH( aOPT, cHB_INC_INSTALL )
-   LOCAL aINCPATH := {}
-   LOCAL cItem
-
-   /* NOTE: Order has to be in sync with cOpt_Prg setup */
-   AAdd( aINCPATH, cHB_INC_INSTALL )
-
-   FOR EACH cItem IN aOPT
-      IF Len( cItem ) > 2 .AND. ;
-         ( Lower( Left( cItem, 2 ) ) == "-i" .OR. ;
-           Lower( Left( cItem, 2 ) ) == "-I" )
-         AAdd( aINCPATH, SubStr( cItem, 3 ) )
-      ENDIF
-   NEXT
-
-   FOR EACH cItem IN hb_ATokens( GetEnv( "INCLUDE" ), hb_osPathListSeparator() )
-      IF ! Empty( cItem )
-         AAdd( aINCPATH, cItem )
-      ENDIF
-   NEXT
-
-   RETURN aINCPATH
-
-STATIC FUNCTION OPTC_to_INCPATH( aOPT, cHB_INC_INSTALL )
-   LOCAL aINCPATH := {}
-   LOCAL cItem
-
-   FOR EACH cItem IN aOPT
-      IF Len( cItem ) > 2 .AND. Left( cItem, 2 ) == "-I"
-         AAdd( aINCPATH, SubStr( cItem, 3 ) )
-      ENDIF
-   NEXT
-
-   /* NOTE: Order has to be in sync with cOpt_CompC setup */
-   AAdd( aINCPATH, cHB_INC_INSTALL )
-
-   RETURN aINCPATH
-
-STATIC FUNCTION FindHeader( cFileName, aINCPATH, aINCTRYPATH, aOPT, cOptMask )
+STATIC FUNCTION FindHeader( cFileName, cParentDir, aINCTRYPATH )
    LOCAL cDir
-   LOCAL cOption
 
    /* Check in current dir */
    IF hb_FileExists( cFileName )
       RETURN cFileName
    ENDIF
 
-   /* Check in include path list */
-   FOR EACH cDir IN aINCPATH
+   /* Check in parent dir */
+
+   IF hb_FileExists( DirAddPathSep( PathSepToSelf( cParentDir ) ) + cFileName )
+      RETURN DirAddPathSep( PathSepToSelf( cParentDir ) ) + cFileName
+   ENDIF
+
+   /* Check in include path list specified via -incpath options */
+   FOR EACH cDir IN s_aINCPATH
       IF hb_FileExists( DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName )
          RETURN DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName
       ENDIF
@@ -3227,15 +3227,11 @@ STATIC FUNCTION FindHeader( cFileName, aINCPATH, aINCTRYPATH, aOPT, cOptMask )
       FOR EACH cDir IN aINCTRYPATH
          IF hb_FileExists( DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName )
             /* Add these dir to include paths */
-            IF AScan( aINCPATH, { |tmp| tmp == cDir } ) == 0
-               AAdd( aINCPATH, cDir )
-            ENDIF
-            cOption := StrTran( cOptMask, "{DI}", cDir )
-            IF AScan( aOPT, { |tmp| tmp == cOption } ) == 0
+            IF AScan( s_aINCPATH, { |tmp| tmp == cDir } ) == 0
+               AAdd( s_aINCPATH, cDir )
                IF s_lDEBUGINC
                   OutStd( "hbmk: debuginc: Autodetected header dir for " + cFileName + ": " + cDir, hb_osNewLine() )
                ENDIF
-               AAdd( aOPT, cOption )
             ENDIF
             RETURN DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName
          ENDIF
@@ -3774,6 +3770,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                                  /* @ */ aLIBUSERGT,;
                                  /* @ */ aLIBPATH,;
                                  /* @ */ aLIBDYNHAS,;
+                                 /* @ */ aINCPATH,;
                                  /* @ */ aINCTRYPATH,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
@@ -3819,6 +3816,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
             @aLIBUSERGT,;
             @aLIBPATH,;
             @aLIBDYNHAS,;
+            @aINCPATH,;
             @aINCTRYPATH,;
             @aOPTPRG,;
             @aOPTC,;
@@ -3854,6 +3852,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                @aLIBUSERGT,;
                @aLIBPATH,;
                @aLIBDYNHAS,;
+               @aINCPATH,;
                @aINCTRYPATH,;
                @aOPTPRG,;
                @aOPTC,;
@@ -3886,6 +3885,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
                                  /* @ */ aLIBUSERGT,;
                                  /* @ */ aLIBPATH,;
                                  /* @ */ aLIBDYNHAS,;
+                                 /* @ */ aINCPATH,;
                                  /* @ */ aINCTRYPATH,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
@@ -3934,6 +3934,14 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             cItem := PathSepToTarget( MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
             IF AScan( aLIBPATH, {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( aLIBPATH, cItem )
+            ENDIF
+         NEXT
+
+      CASE Lower( Left( cLine, Len( "incpaths="     ) ) ) == "incpaths="     ; cLine := SubStr( cLine, Len( "incpaths="     ) + 1 )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            cItem := PathSepToTarget( MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
+            IF AScan( aINCPATH, {|tmp| tmp == cItem } ) == 0
+               AAddNotEmpty( aINCPATH, cItem )
             ENDIF
          NEXT
 
@@ -4707,77 +4715,78 @@ STATIC PROCEDURE ShowHelp( lLong )
       "Syntax:  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res]>" ,;
       "" ,;
       "Options:" ,;
-      "  -o<outname>       output file name" ,;
-      "  -l<libname>       link with <libname> library" ,;
-      "  -L<libpath>       additional path to search for libraries" ,;
-      "  -static|-shared   link with static/shared libs" ,;
-      "  -mt|-st           link with multi/single-thread VM" ,;
-      "  -gt<name>         link with GT<name> GT driver, can be repeated to link" ,;
-      "                    with more GTs. First one will be the default at runtime" }
+      "  -o<outname>        output file name" ,;
+      "  -l<libname>        link with <libname> library" ,;
+      "  -L<libpath>        additional path to search for libraries" ,;
+      "  -static|-shared    link with static/shared libs" ,;
+      "  -mt|-st            link with multi/single-thread VM" ,;
+      "  -gt<name>          link with GT<name> GT driver, can be repeated to link" ,;
+      "                     with more GTs. First one will be the default at runtime" }
 
    LOCAL aText_Help := {;
-      "  -help|--help      long help" }
+      "  -help|--help       long help" }
 
    LOCAL aText_Long := {;
       "" ,;
-      "  -gui|-std         create GUI/console executable" ,;
-      "  -main=<mainfunc>  override the name of starting function/procedure" ,;
-      "  -fullstatic       link with all static libs" ,;
-      "  -nulrdd[-]        link with nulrdd" ,;
-      "  -[no]debug        add/exclude C compiler debug info" ,;
-      "  -[no]opt          toggle C compiler optimizations (default: on)" ,;
-      "  -[no]map          create (or not) a map file" ,;
-      "  -[no]strip        strip (no strip) binaries" ,;
-      "  -[no]trace        show commands executed" ,;
-      "  -traceonly        show commands to be executed, but don't execute them" ,;
-      "  -[no]compr[=lev]  compress executable/dynamic lib (needs UPX)" ,;
-      "                    <lev> can be: min, max, def" ,;
-      "  -[no]run          run/don't run output executable" ,;
-      "  -nohbp            do not process .hbp files in current directory" ,;
-      "  -stop             stop without doing anything" ,;
+      "  -gui|-std          create GUI/console executable" ,;
+      "  -main=<mainfunc>   override the name of starting function/procedure" ,;
+      "  -fullstatic        link with all static libs" ,;
+      "  -nulrdd[-]         link with nulrdd" ,;
+      "  -[no]debug         add/exclude C compiler debug info" ,;
+      "  -[no]opt           toggle C compiler optimizations (default: on)" ,;
+      "  -[no]map           create (or not) a map file" ,;
+      "  -[no]strip         strip (no strip) binaries" ,;
+      "  -[no]trace         show commands executed" ,;
+      "  -traceonly         show commands to be executed, but don't execute them" ,;
+      "  -[no]compr[=lev]   compress executable/dynamic lib (needs UPX)" ,;
+      "                     <lev> can be: min, max, def" ,;
+      "  -[no]run           run/don't run output executable" ,;
+      "  -nohbp             do not process .hbp files in current directory" ,;
+      "  -stop              stop without doing anything" ,;
       "" ,;
-      "  -bldf[-]          inherit all/no (default) flags from Harbour build" ,;
-      "  -bldf=[p][c][l]   inherit .prg/.c/linker flags (or none) from Harbour build" ,;
-      "  -inctrypath=<p>   additional path to autodetect .c header locations" ,;
-      "  -prgflag=<f>      pass flag to Harbour" ,;
-      "  -cflag=<f>        pass flag to C compiler" ,;
-      "  -resflag=<f>      pass flag to resource compiler (Windows only)" ,;
-      "  -ldflag=<f>       pass flag to linker (executable)" ,;
-      "  -aflag=<f>        pass flag to linker (static library)" ,;
-      "  -dflag=<f>        pass flag to linker (dynamic library)" ,;
-      "  -runflag=<f>      pass flag to output executable when -run option is used" ,;
-      "  -jobs=<n>         start n compilation threads (MT builds only)" ,;
-      "  -inc              enable incremental build mode" ,;
-      "  -[no]head[=<m>]   control source header parsing (in incremental build mode)" ,;
-      "                    <m> can be: full, partial (default), off" ,;
-      "  -rebuild          rebuild all (in incremental build mode)" ,;
-      "  -clean            clean (in incremental build mode)" ,;
-      "  -workdir=<dir>    working directory for incremental build mode" ,;
-      "                    (default: arch/comp)" ,;
-      "  -hbcmp|-clipper   stop after creating the object files" ,;
-      "                    create link/copy hbmk to hbcmp/clipper for the same effect" ,;
-      "  -hbcc             stop after creating the object files and accept raw C flags" ,;
-      "                    create link/copy hbmk to hbcc for the same effect" ,;
-      "  -hblnk            accept raw linker flags" ,;
-      "  -hblib            create static library" ,;
-      "  -hbdyn            create dynamic library" ,;
-      "  -rtlink           " ,;
-      "  -blinker          " ,;
-      "  -exospace         emulate Clipper compatible linker behavior" ,;
-      "                    create link/copy hbmk to rtlink/blinker/exospace for the" ,;
-      "                    same effect" ,;
-      "  --hbdirbin        output Harbour binary directory" ,;
-      "  --hbdirdyn        output Harbour dynamic library directory" ,;
-      "  --hbdirlib        output Harbour static library directory" ,;
-      "  --hbdirinc        output Harbour header directory" ,;
+      "  -bldf[-]           inherit all/no (default) flags from Harbour build" ,;
+      "  -bldf=[p][c][l]    inherit .prg/.c/linker flags (or none) from Harbour build" ,;
+      "  -incpath=<p>|-i<p> additional path to search for headers" ,;
+      "  -inctrypath=<p>    additional path to autodetect .c header locations" ,;
+      "  -prgflag=<f>       pass flag to Harbour" ,;
+      "  -cflag=<f>         pass flag to C compiler" ,;
+      "  -resflag=<f>       pass flag to resource compiler (Windows only)" ,;
+      "  -ldflag=<f>        pass flag to linker (executable)" ,;
+      "  -aflag=<f>         pass flag to linker (static library)" ,;
+      "  -dflag=<f>         pass flag to linker (dynamic library)" ,;
+      "  -runflag=<f>       pass flag to output executable when -run option is used" ,;
+      "  -jobs=<n>          start n compilation threads (MT builds only)" ,;
+      "  -inc               enable incremental build mode" ,;
+      "  -[no]head[=<m>]    control source header parsing (in incremental build mode)" ,;
+      "                     <m> can be: full, partial (default), off" ,;
+      "  -rebuild           rebuild all (in incremental build mode)" ,;
+      "  -clean             clean (in incremental build mode)" ,;
+      "  -workdir=<dir>     working directory for incremental build mode" ,;
+      "                     (default: arch/comp)" ,;
+      "  -hbcmp|-clipper    stop after creating the object files" ,;
+      "                     create link/copy hbmk to hbcmp/clipper for the same effect" ,;
+      "  -hbcc              stop after creating the object files and accept raw C flags" ,;
+      "                     create link/copy hbmk to hbcc for the same effect" ,;
+      "  -hblnk             accept raw linker flags" ,;
+      "  -hblib             create static library" ,;
+      "  -hbdyn             create dynamic library" ,;
+      "  -rtlink            " ,;
+      "  -blinker           " ,;
+      "  -exospace          emulate Clipper compatible linker behavior" ,;
+      "                     create link/copy hbmk to rtlink/blinker/exospace for the" ,;
+      "                     same effect" ,;
+      "  --hbdirbin         output Harbour binary directory" ,;
+      "  --hbdirdyn         output Harbour dynamic library directory" ,;
+      "  --hbdirlib         output Harbour static library directory" ,;
+      "  --hbdirinc         output Harbour header directory" ,;
       "" ,;
-      "  -arch=<arch>      assume specific architecure. Same as HB_ARCHITECTURE envvar" ,;
-      "  -comp=<comp>      use specific compiler. Same as HB_COMPILER envvar" ,;
-      "                    Special value:" ,;
-      "                     - bld: use original build settings (default on *nix)" ,;
-      "  --version         display version header only" ,;
-      "  -info             turn on informational messages" ,;
-      "  -quiet            suppress all screen messages" ,;
+      "  -arch=<arch>       assume specific architecure. Same as HB_ARCHITECTURE envvar" ,;
+      "  -comp=<comp>       use specific compiler. Same as HB_COMPILER envvar" ,;
+      "                     Special value:" ,;
+      "                      - bld: use original build settings (default on *nix)" ,;
+      "  --version          display version header only" ,;
+      "  -info              turn on informational messages" ,;
+      "  -quiet             suppress all screen messages" ,;
       "" ,;
       "Notes:" ,;
       "  - <script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>." ,;
@@ -4791,7 +4800,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - .hbp options (they should come in separate lines):" ,;
       "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;
       "    cflags=[C compiler flags], resflags=[resource compiler flags]" ,;
-      "    ldflags=[Linker flags], libpaths=[lib paths], inctrypaths=[paths]" ,;
+      "    ldflags=[Linker flags], libpaths=[paths]," ,;
+      "    incpaths=[paths], inctrypaths=[paths]" ,;
       "    gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no]" ,;
       "    compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>" ,;
       "    Lines starting with '#' char are ignored" ,;
@@ -4799,7 +4809,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "    Filter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined " ,;
       "    using '&', '|' operators and grouped by parantheses." ,;
       "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}," ,;
-      "         {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}" ,;
+      "         {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}," ,;
       "         {allpocc}, {allgcc}, {allmingw}, {allmsvc}" ,;
       "  - Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=," ,;
       "    echo=) and corresponding command line parameters will accept macros:" ,;
