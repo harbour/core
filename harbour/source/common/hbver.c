@@ -218,7 +218,7 @@ const char * hb_verCPU( void )
    return HB_CPU_STR;
 }
 
-char * hb_verHostCPU( void )
+const char * hb_verHostCPU( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_verHostCPU()"));
 
