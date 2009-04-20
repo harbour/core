@@ -4667,8 +4667,8 @@ FUNCTION hbmk_KEYW( cKeyword )
    ENDIF
 
    RETURN ( cKeyword == "unix"     .AND. s_cARCH $ "bsd|hpux|sunos|linux" .OR. s_cARCH == "darwin" ) .OR. ;
+          ( cKeyword == "allwin"   .AND. s_cARCH $ "win|wce"                                       ) .OR. ;
           ( cKeyword == "allgcc"   .AND. s_cCOMP $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin"         ) .OR. ;
-          ( cKeyword == "allwin"   .AND. s_cCOMP $ "win|wce"                                       ) .OR. ;
           ( cKeyword == "allmingw" .AND. s_cCOMP $ "mingw|mingw64|mingwarm"                        ) .OR. ;
           ( cKeyword == "allmsvc"  .AND. s_cCOMP $ "msvc|msvc64|msvcarm"                           ) .OR. ;
           ( cKeyword == "allpocc"  .AND. s_cCOMP $ "pocc|pocc64|poccarm"                           ) .OR. ;
