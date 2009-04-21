@@ -194,8 +194,9 @@ typedef struct _CDXTAGHEADER
    BYTE     indexOpt;         /* index options see CDX_TYPE_* */
    BYTE     indexSig;         /* index signature */
    BYTE     reserved2[ 478 ];
-   BYTE     codepage[ 6 ];    /* VFP codepage */
-   BYTE     ignoreCase[ 2 ];  /* 1 = ignore case, key converted to upper */
+   BYTE     codepage[ 5 ];    /* VFP codepage */
+   BYTE     ignoreCase;       /* 1 = ignore case, key converted to upper */
+   BYTE     reserved3[ 2 ];
    BYTE     ascendFlg[ 2 ];   /* 0 = ascending  1 = descending */
    BYTE     forExpPos[ 2 ];   /* offset of filter expression */
    BYTE     forExpLen[ 2 ];   /* length of filter expression */
@@ -333,6 +334,7 @@ typedef struct _CDXTAG
    BOOL     ChgOnly;          /* only existing key modifications are updated, no new key added */
    BOOL     UsrAscend;        /* user settable ascending/descending order flag */
    BOOL     UsrUnique;        /* user settable unique order flag */
+   BOOL     IgnoreCase;       /* ignore case (upper keys) */
 
    BOOL     TagChanged;
    BOOL     TagBOF;

@@ -711,12 +711,17 @@ static LPCDXKEY hb_cdxKeyPutItem( LPCDXKEY pKey, PHB_ITEM pItem, ULONG ulRec, LP
    }
    pKey = hb_cdxKeyPut( pKey, ptr, ( USHORT ) ulLen, ulRec );
    pKey->mode = ( USHORT ) iMode;
+   if( pTag->uiType == 'C' )
+   {
 #ifndef HB_CDP_SUPPORT_OFF
-   if( fTrans && pTag->uiType == 'C' )
-      hb_cdpnTranslate( ( char * ) pKey->val, hb_vmCDP(), pTag->pIndex->pArea->cdPage, pKey->len );
+      if( fTrans )
+         hb_cdpnTranslate( ( char * ) pKey->val, hb_vmCDP(), pTag->pIndex->pArea->cdPage, pKey->len );
 #else
-   HB_SYMBOL_UNUSED( fTrans );
+      HB_SYMBOL_UNUSED( fTrans );
 #endif
+      if( pTag->IgnoreCase )
+         hb_strUpper( ( char * ) pKey->val, pKey->len );
+   }
    return pKey;
 }
 
@@ -3534,6 +3539,8 @@ static void hb_cdxTagHeaderStore( LPCDXTAG pTag )
    tagHeader.indexSig = 1;
    if( !pTag->AscendKey )
       HB_PUT_LE_UINT16( tagHeader.ascendFlg, 1 );
+   if( pTag->IgnoreCase )
+      tagHeader.ignoreCase = 1;
 
    uiKeyLen = pTag->KeyExpr == NULL ? 0 : strlen( pTag->KeyExpr );
    uiForLen = pTag->ForExpr == NULL ? 0 : strlen( pTag->ForExpr );
@@ -3638,6 +3645,11 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
 
    pTag->AscendKey = pTag->UsrAscend = ( HB_GET_LE_UINT16( tagHeader.ascendFlg ) == 0 );
    pTag->UsrUnique = FALSE;
+   if( tagHeader.indexSig == 0x01 )
+      pTag->IgnoreCase = tagHeader.ignoreCase == 1;
+   else
+      pTag->IgnoreCase = FALSE;
+
    if( pTag->OptFlags & CDX_TYPE_STRUCTURE )
       return;
 
@@ -3657,6 +3669,8 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
    pTag->bTrail = ( pTag->uiType == 'C' ) ? ' ' : '\0';
    if( pTag->uiType == 'C' )
       hb_cdxMakeSortTab( pTag->pIndex->pArea );
+   else
+      pTag->IgnoreCase = FALSE;
 
    pTag->nField = hb_rddFieldExpIndex( ( AREAP ) pTag->pIndex->pArea,
                                        pTag->KeyExpr );
@@ -3737,7 +3751,7 @@ static LPCDXTAG hb_cdxTagNew( LPCDXINDEX pIndex, char *szTagName, ULONG TagHdr )
    pTag->szName = hb_strdup( szName );
    pTag->pIndex = pIndex;
    pTag->AscendKey = pTag->UsrAscend = TRUE;
-   pTag->UsrUnique = FALSE;
+   pTag->UsrUnique = pTag->IgnoreCase = FALSE;
    pTag->uiType = 'C';
    pTag->bTrail = ' ';
    pTag->CurKey = hb_cdxKeyNew();
@@ -4635,8 +4649,8 @@ static LPCDXTAG hb_cdxIndexCreateTag( BOOL fStruct, LPCDXINDEX pIndex,
                                       char * KeyExp, PHB_ITEM pKeyItem,
                                       BYTE bType, USHORT uiLen,
                                       char * ForExp, PHB_ITEM pForItem,
-                                      BOOL fAscnd, BOOL fUniq, BOOL fCustom,
-                                      BOOL fReindex )
+                                      BOOL fAscnd, BOOL fUniq, BOOL fNoCase,
+                                      BOOL fCustom, BOOL fReindex )
 {
    LPCDXTAG pTag;
 
@@ -4662,11 +4676,12 @@ static LPCDXTAG hb_cdxIndexCreateTag( BOOL fStruct, LPCDXINDEX pIndex,
    pTag->AscendKey = pTag->UsrAscend = fAscnd;
    pTag->UniqueKey = fUniq;
    pTag->UsrUnique = FALSE;
-   pTag->Custom    = fCustom;
-   pTag->Template  = pTag->MultiKey = pTag->Custom;
-   pTag->Partial   = pTag->ChgOnly = FALSE;
+   pTag->IgnoreCase = fNoCase && bType == 'C';
+   pTag->Custom = fCustom;
+   pTag->Template = pTag->MultiKey = pTag->Custom;
+   pTag->Partial = pTag->ChgOnly = FALSE;
    pTag->uiType = bType;
-   pTag->bTrail = ( pTag->uiType == 'C' ) ? ' ' : '\0';
+   pTag->bTrail = ( bType == 'C' ) ? ' ' : '\0';
    pTag->uiLen = uiLen;
    pTag->MaxKeys = CDX_INT_FREESPACE / ( uiLen + 8 );
    pTag->TagChanged = TRUE;
@@ -4683,7 +4698,7 @@ static void hb_cdxIndexCreateStruct( LPCDXINDEX pIndex, char * szTagName )
    /* here we can change default tag name */
    pIndex->pCompound = hb_cdxIndexCreateTag( TRUE, pIndex, szTagName,
                            NULL, NULL, 'C', CDX_MAXTAGNAMELEN, NULL, NULL,
-                           TRUE, FALSE, FALSE, FALSE );
+                           TRUE, FALSE, FALSE, FALSE, FALSE );
 }
 
 /*
@@ -4754,8 +4769,8 @@ static LPCDXTAG hb_cdxIndexAddTag( LPCDXINDEX pIndex, char * szTagName,
                                    char * szKeyExp, PHB_ITEM pKeyItem,
                                    BYTE bType, USHORT uiLen,
                                    char * szForExp, PHB_ITEM pForItem,
-                                   BOOL fAscend, BOOL fUnique, BOOL fCustom,
-                                   BOOL fReindex )
+                                   BOOL fAscend, BOOL fUnique, BOOL fNoCase,
+                                   BOOL fCustom, BOOL fReindex )
 {
    LPCDXTAG pTag, *pTagPtr;
    LPCDXKEY pKey;
@@ -4768,7 +4783,7 @@ static LPCDXTAG hb_cdxIndexAddTag( LPCDXINDEX pIndex, char * szTagName,
    /* Create new tag an add to tag list */
    pTag = hb_cdxIndexCreateTag( FALSE, pIndex, szTagName, szKeyExp, pKeyItem,
                                 bType, uiLen, szForExp, pForItem,
-                                fAscend, fUnique, fCustom, fReindex );
+                                fAscend, fUnique, fNoCase, fCustom, fReindex );
    pTagPtr = &pIndex->TagList;
    while( *pTagPtr )
       pTagPtr = &(*pTagPtr)->pNext;
@@ -4812,8 +4827,8 @@ static void hb_cdxIndexReindex( LPCDXINDEX pIndex )
    {
       pTag = pTagList;
       hb_cdxIndexAddTag( pIndex, pTag->szName, pTag->KeyExpr, pTag->pKeyItem,
-         (BYTE) pTag->uiType, pTag->uiLen, pTag->ForExpr, pTag->pForItem,
-         pTag->AscendKey, pTag->UniqueKey, pTag->Custom, TRUE );
+         ( BYTE ) pTag->uiType, pTag->uiLen, pTag->ForExpr, pTag->pForItem,
+         pTag->AscendKey, pTag->UniqueKey, pTag->IgnoreCase, pTag->Custom, TRUE );
       pTagList = pTag->pNext;
       pTag->pKeyItem = pTag->pForItem = NULL;
       hb_cdxTagFree( pTag );
@@ -7503,8 +7518,8 @@ static HB_ERRCODE hb_cdxOrderListRebuild( CDXAREAP pArea )
 static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 {
    ULONG ulRecNo;
-   BOOL fNewFile, fOpenedIndex, fProd, fAscend = TRUE, fCustom = FALSE,
-        fTemporary = FALSE, fExclusive = FALSE;
+   BOOL fNewFile, fOpenedIndex, fProd, fAscend = TRUE, fNoCase = FALSE,
+        fCustom = FALSE, fTemporary = FALSE, fExclusive = FALSE;
    PHB_ITEM pKeyExp, pForExp = NULL, pResult;
    char szCpndTagName[ CDX_MAXTAGNAMELEN + 1 ], szTagName[ CDX_MAXTAGNAMELEN + 1 ];
    char szFileName[ HB_PATH_MAX ], szTempFile[ HB_PATH_MAX ];
@@ -7815,7 +7830,7 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
 
    pTag = hb_cdxIndexAddTag( pIndex, szTagName, hb_itemGetCPtr( pOrderInfo->abExpr ),
                              pKeyExp, bType, uiLen, szFor, pForExp,
-                             fAscend , pOrderInfo->fUnique, fCustom, FALSE );
+                             fAscend , pOrderInfo->fUnique, fNoCase, fCustom, FALSE );
 
    if( pArea->lpdbOrdCondInfo && ( !pArea->lpdbOrdCondInfo->fAll &&
                                    !pArea->lpdbOrdCondInfo->fAdditive ) )
@@ -9201,6 +9216,8 @@ static void hb_cdxSortKeyAdd( LPCDXSORTINFO pSort, ULONG ulRec, BYTE * pKeyVal, 
    {
       memcpy( pDst, pKeyVal, iLen );
    }
+   if( pSort->pTag->IgnoreCase )
+      hb_strUpper( ( char * ) pDst, iLen );
    HB_PUT_LE_UINT32( &pDst[ iLen ], ulRec );
    pSort->ulKeys++;
    pSort->ulTotKeys++;
