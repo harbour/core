@@ -128,7 +128,7 @@ FUNCTION hb_CStr( xVal )
       CASE "D"
          RETURN iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
       CASE "T"
-         cVal := 't"' + hb_TSToStr( xVal, .T. ) + '"'
+         RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
       CASE "L"
          RETURN iif( xVal, ".T.", ".F." )
       CASE "S"
