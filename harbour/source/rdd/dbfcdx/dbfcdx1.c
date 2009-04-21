@@ -669,9 +669,18 @@ static LPCDXKEY hb_cdxKeyPutItem( LPCDXKEY pKey, PHB_ITEM pItem, ULONG ulRec, LP
          }
          break;
       case 'N':
-         d = hb_itemGetND( pItem );
-         HB_DBL2ORD( &d, ptr );
-         ulLen = 8;
+         if( pTag->uiLen == 4 )
+         {
+            UINT32 uiVal = ( UINT32 ) hb_itemGetNI( pItem ) + 0x80000000;
+            HB_PUT_BE_UINT32( ptr, uiVal );
+            ulLen = 4;
+         }
+         else
+         {
+            d = hb_itemGetND( pItem );
+            HB_DBL2ORD( &d, ptr );
+            ulLen = 8;
+         }
          break;
       case 'D':
          d = ( double ) hb_itemGetDL( pItem );
@@ -742,8 +751,16 @@ static PHB_ITEM hb_cdxKeyGetItem( LPCDXKEY pKey, PHB_ITEM pItem, LPCDXTAG pTag, 
             }
             break;
          case 'N':
-            HB_ORD2DBL( pKey->val, &d );
-            pItem = hb_itemPutND( pItem, d );
+            if( pKey->len == 4 )
+            {
+               INT32 iVal = ( INT32 ) ( HB_GET_BE_UINT32( pKey->val ) ) - 0x80000000;
+               pItem = hb_itemPutNI( pItem, iVal );
+            }
+            else
+            {
+               HB_ORD2DBL( pKey->val, &d );
+               pItem = hb_itemPutND( pItem, d );
+            }
             break;
          case 'D':
             HB_ORD2DBL( pKey->val, &d );
@@ -3663,7 +3680,7 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
    SELF_GOTO( ( AREAP ) pTag->pIndex->pArea, ulRecNo );
 
    if( pTag->uiLen > CDX_MAXKEY || pTag->uiType == 'U' ||
-       ( pTag->uiType == 'N' && pTag->uiLen != 8 ) ||
+       ( pTag->uiType == 'N' && pTag->uiLen != 8 && pTag->uiLen != 4 ) ||
        ( pTag->uiType == 'D' && pTag->uiLen != 8 ) ||
        ( pTag->uiType == 'T' && pTag->uiLen != 8 ) ||
        ( pTag->uiType == 'L' && pTag->uiLen != 1 ) )
@@ -9592,9 +9609,18 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, BOOL fReindex )
                case HB_IT_INTEGER:
                case HB_IT_LONG:
                case HB_IT_DOUBLE:
-                  d = hb_itemGetND( pItem );
-                  HB_DBL2ORD( &d, &cTemp[0] );
-                  hb_cdxSortKeyAdd( pSort, pArea->ulRecNo, cTemp, 8 );
+                  if( pTag->uiLen == 4 )
+                  {
+                     UINT32 uiVal = ( UINT32 ) hb_itemGetNI( pItem ) + 0x80000000;
+                     HB_PUT_BE_UINT32( &cTemp[0], uiVal );
+                     hb_cdxSortKeyAdd( pSort, pArea->ulRecNo, cTemp, 4 );
+                  }
+                  else
+                  {
+                     d = hb_itemGetND( pItem );
+                     HB_DBL2ORD( &d, &cTemp[0] );
+                     hb_cdxSortKeyAdd( pSort, pArea->ulRecNo, cTemp, 8 );
+                  }
                   break;
 
                case HB_IT_DATE:

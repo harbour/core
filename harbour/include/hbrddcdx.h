@@ -193,7 +193,8 @@ typedef struct _CDXTAGHEADER
    BYTE     keySize  [ 2 ];   /* key length */
    BYTE     indexOpt;         /* index options see CDX_TYPE_* */
    BYTE     indexSig;         /* index signature */
-   BYTE     reserved2[ 484 ];
+   BYTE     reserved2[ 478 ];
+   BYTE     codepage[ 6 ];    /* VFP codepage */
    BYTE     ignoreCase[ 2 ];  /* 1 = ignore case, key converted to upper */
    BYTE     ascendFlg[ 2 ];   /* 0 = ascending  1 = descending */
    BYTE     forExpPos[ 2 ];   /* offset of filter expression */
