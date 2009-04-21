@@ -4308,6 +4308,8 @@ STATIC FUNCTION MacroProc( cString, cDirParent )
          cMacro := s_cARCH
       CASE cMacro == "HB_COMP" .OR. cMacro == "HB_COMPILER"
          cMacro := s_cCOMP
+      CASE cMacro == "HB_CPU"
+         cMacro := hbmk_CPU()
       CASE ! Empty( GetEnv( cMacro ) )
          cMacro := GetEnv( cMacro )
       OTHERWISE
@@ -4689,6 +4691,29 @@ FUNCTION hbmk_ARCH()
 FUNCTION hbmk_COMP()
    RETURN s_cCOMP
 
+FUNCTION hbmk_CPU()
+
+   DO CASE
+   CASE s_cCOMP $ "gcc|gpp|cygwin|owatcom|bcc|icc|xcc" .OR. ;
+        s_cCOMP == "pocc" .OR. ;
+        s_cCOMP == "mingw" .OR. ;
+        s_cCOMP == "msvc"
+      RETURN "x86"
+   CASE s_cCOMP == "mingw64" .OR. ;
+        s_cCOMP == "msvc64" .OR. ;
+        s_cCOMP == "pocc64"
+      RETURN "x86_64"
+   CASE s_cCOMP == "iccia64" .OR. ;
+        s_cCOMP == "msvcia64"
+      RETURN "ia64"
+   CASE s_cCOMP == "mingwarm" .OR. ;
+        s_cCOMP == "msvcarm" .OR. ;
+        s_cCOMP == "poccarm"
+      RETURN "arm"
+   ENDCASE
+
+   RETURN ""
+
 FUNCTION hbmk_KEYW( cKeyword )
 
    IF cKeyword == iif( s_lMT   , "mt"   , "st"      ) .OR. ;
@@ -4697,13 +4722,21 @@ FUNCTION hbmk_KEYW( cKeyword )
       RETURN .T.
    ENDIF
 
-   RETURN ( cKeyword == "unix"     .AND. s_cARCH $ "bsd|hpux|sunos|linux" .OR. s_cARCH == "darwin" ) .OR. ;
-          ( cKeyword == "allwin"   .AND. s_cARCH $ "win|wce"                                       ) .OR. ;
-          ( cKeyword == "allgcc"   .AND. s_cCOMP $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin"         ) .OR. ;
-          ( cKeyword == "allmingw" .AND. s_cCOMP $ "mingw|mingw64|mingwarm"                        ) .OR. ;
-          ( cKeyword == "allmsvc"  .AND. s_cCOMP $ "msvc|msvc64|msvcarm"                           ) .OR. ;
-          ( cKeyword == "allpocc"  .AND. s_cCOMP $ "pocc|pocc64|poccarm"                           ) .OR. ;
-          ( cKeyword == "allicc"   .AND. s_cCOMP $ "icc|iccia64"                                   )
+   IF ( cKeyword == "unix"     .AND. ( s_cARCH $ "bsd|hpux|sunos|linux" .OR. s_cARCH == "darwin" )   ) .OR. ;
+      ( cKeyword == "allwin"   .AND. s_cARCH $ "win|wce"                                             ) .OR. ;
+      ( cKeyword == "allgcc"   .AND. s_cCOMP $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin|djgpp"         ) .OR. ;
+      ( cKeyword == "allmingw" .AND. s_cCOMP $ "mingw|mingw64|mingwarm"                              ) .OR. ;
+      ( cKeyword == "allmsvc"  .AND. s_cCOMP $ "msvc|msvc64|msvcarm"                                 ) .OR. ;
+      ( cKeyword == "allpocc"  .AND. s_cCOMP $ "pocc|pocc64|poccarm"                                 ) .OR. ;
+      ( cKeyword == "allicc"   .AND. s_cCOMP $ "icc|iccia64"                                         )
+      RETURN .T.
+   ENDIF
+
+   IF cKeyword == hbmk_CPU()
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
 
 STATIC PROCEDURE ShowHeader()
 
@@ -4815,10 +4848,10 @@ STATIC PROCEDURE ShowHelp( lLong )
       "    using '&', '|' operators and grouped by parantheses." ,;
       "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}," ,;
       "         {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}," ,;
-      "         {allpocc}, {allgcc}, {allmingw}, {allmsvc}" ,;
+      "         {allpocc}, {allgcc}, {allmingw}, {allmsvc}, {x86|x86_64|ia64|arm}" ,;
       "  - Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=," ,;
       "    echo=) and corresponding command line parameters will accept macros:" ,;
-      "    ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${<envvar>}" ,;
+      "    ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}" ,;
       "  - Defaults and feature support vary by architecture/compiler." ,;
       "  - Supported <comp> values for each supported <arch> value:" ,;
       "    linux  : gcc, owatcom, icc" ,;
