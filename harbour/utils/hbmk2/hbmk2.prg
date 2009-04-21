@@ -1069,7 +1069,7 @@ FUNCTION hbmk( aArgs )
       CASE Left( cParam, 2 ) == "-L" .AND. ;
            Len( cParam ) > 2
 
-         cParam := MacroProc( ArchCompFilter( SubStr( cParam, 3 ) ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF ! Empty( cParam )
             AAdd( s_aLIBPATH, PathSepToTarget( cParam ) )
          ENDIF
@@ -1077,7 +1077,7 @@ FUNCTION hbmk( aArgs )
       CASE Left( cParamL, 2 ) == "-i" .AND. ;
            Len( cParamL ) > 2
 
-         cParam := MacroProc( tmp := ArchCompFilter( SubStr( cParam, 3 ) ) )
+         cParam := MacroProc( tmp := ArchCompFilter( SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF ! Empty( cParam )
             AAdd( s_aINCPATH, PathSepToTarget( cParam ) )
          ENDIF
@@ -1085,7 +1085,7 @@ FUNCTION hbmk( aArgs )
       CASE Left( cParamL, Len( "-incpath=" ) ) == "-incpath=" .AND. ;
            Len( cParamL ) > Len( "-incpath=" )
 
-         cParam := MacroProc( tmp := ArchCompFilter( SubStr( cParam, Len( "-incpath=" ) + 1 ) ) )
+         cParam := MacroProc( tmp := ArchCompFilter( SubStr( cParam, Len( "-incpath=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF ! Empty( cParam )
             AAdd( s_aINCPATH, PathSepToTarget( cParam ) )
          ENDIF
@@ -1093,7 +1093,7 @@ FUNCTION hbmk( aArgs )
       CASE Left( cParamL, Len( "-inctrypath=" ) ) == "-inctrypath=" .AND. ;
            Len( cParamL ) > Len( "-inctrypath=" )
 
-         cParam := MacroProc( tmp := ArchCompFilter( SubStr( cParam, Len( "-inctrypath=" ) + 1 ) ) )
+         cParam := MacroProc( tmp := ArchCompFilter( SubStr( cParam, Len( "-inctrypath=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF ! Empty( cParam )
             AAdd( s_aINCTRYPATH, PathSepToTarget( cParam ) )
          ENDIF
@@ -1107,7 +1107,7 @@ FUNCTION hbmk( aArgs )
 
       CASE Left( cParamL, Len( "-prgflag=" ) ) == "-prgflag="
 
-         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-prgflag=" ) + 1 ) ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-prgflag=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             IF SubStr( cParamL, 2 ) == "gh"
                lStopAfterHarbour := .T.
@@ -1119,49 +1119,49 @@ FUNCTION hbmk( aArgs )
 
       CASE Left( cParamL, Len( "-cflag=" ) ) == "-cflag="
 
-         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-cflag=" ) + 1 ) ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-cflag=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTC   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-resflag=" ) ) == "-resflag="
 
-         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-resflag=" ) + 1 ) ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-resflag=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTRES , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-ldflag=" ) ) == "-ldflag="
 
-         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-ldflag=" ) + 1 ) ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-ldflag=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTL   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-dflag=" ) ) == "-dflag="
 
-         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-dflag=" ) + 1 ) ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-dflag=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTD   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-aflag=" ) ) == "-aflag="
 
-         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-aflag=" ) + 1 ) ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-aflag=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTA   , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-runflag=" ) ) == "-runflag="
 
-         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-runflag=" ) + 1 ) ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, Len( "-runflag=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF Left( cParam, 1 ) $ cOptPrefix
             AAdd( s_aOPTRUN , PathSepToTarget( cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-workdir=" ) ) == "-workdir="
 
-         cWorkDir := PathSepToTarget( MacroProc( ArchCompFilter( SubStr( cParam, Len( "-workdir=" ) + 1 ) ) ) )
+         cWorkDir := PathSepToTarget( MacroProc( ArchCompFilter( SubStr( cParam, Len( "-workdir=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
 
       CASE Left( cParam, 2 ) == "-l" .AND. ;
            Len( cParam ) > 2 .AND. ;
@@ -2267,6 +2267,7 @@ FUNCTION hbmk( aArgs )
    FOR EACH tmp IN s_aINCPATH
       AAdd( s_aOPTPRG, "-i" + tmp )
       AAdd( s_aOPTC, StrTran( cOptIncMask, "{DI}", tmp ) )
+      AAdd( s_aOPTRES, StrTran( cOptIncMask, "{DI}", tmp ) )
    NEXT
 
    /* Do header detection and create incremental file list for .c files */
