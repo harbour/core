@@ -1053,7 +1053,7 @@ FUNCTION hbmk( aArgs )
 
       CASE Left( cParam, 2 ) == "-o" .AND. ! lStopAfterHarbour
 
-         tmp := MacroProc( ArchCompFilter( SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] )
+         tmp := MacroProc( ArchCompFilter( SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF ! Empty( tmp )
             tmp := PathSepToSelf( tmp )
             hb_FNameSplit( tmp, @cDir, @cName, @cExt )
