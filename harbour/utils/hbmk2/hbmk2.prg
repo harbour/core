@@ -1053,17 +1053,20 @@ FUNCTION hbmk( aArgs )
 
       CASE Left( cParam, 2 ) == "-o" .AND. ! lStopAfterHarbour
 
-         tmp := PathSepToSelf( SubStr( cParam, 3 ) )
-         hb_FNameSplit( tmp, @cDir, @cName, @cExt )
-         IF ! Empty( cDir ) .AND. Empty( cName ) .AND. Empty( cExt )
-            /* Only a dir was passed, let's store that and pick a default name later. */
-            s_cPROGDIR := cDir
-         ELSEIF ! Empty( tmp )
-            s_cPROGDIR := NIL
-            s_cPROGNAME := tmp
-         ELSE
-            s_cPROGDIR := NIL
-            s_cPROGNAME := NIL
+         tmp := MacroProc( ArchCompFilter( SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] )
+         IF ! Empty( tmp )
+            tmp := PathSepToSelf( tmp )
+            hb_FNameSplit( tmp, @cDir, @cName, @cExt )
+            IF ! Empty( cDir ) .AND. Empty( cName ) .AND. Empty( cExt )
+               /* Only a dir was passed, let's store that and pick a default name later. */
+               s_cPROGDIR := cDir
+            ELSEIF ! Empty( tmp )
+               s_cPROGDIR := NIL
+               s_cPROGNAME := tmp
+            ELSE
+               s_cPROGDIR := NIL
+               s_cPROGNAME := NIL
+            ENDIF
          ENDIF
 
       CASE Left( cParam, 2 ) == "-L" .AND. ;
@@ -2033,6 +2036,7 @@ FUNCTION hbmk( aArgs )
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-bcc" + cLibExt,;
                                        "harbour-" + cDL_Version_Alter + "-bcc" + cLibExt ) }
          s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
+         s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
 
       CASE ( s_cARCH == "win" .AND. s_cCOMP $ "msvc|msvc64|msvcia64|icc|iccia64" ) .OR. ;
            ( s_cARCH == "wce" .AND. s_cCOMP == "msvcarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
@@ -4719,6 +4723,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -o<outname>        output file name" ,;
       "  -l<libname>        link with <libname> library" ,;
       "  -L<libpath>        additional path to search for libraries" ,;
+      "  -i<p>|-incpath=<p> additional path to search for headers" ,;
       "  -static|-shared    link with static/shared libs" ,;
       "  -mt|-st            link with multi/single-thread VM" ,;
       "  -gt<name>          link with GT<name> GT driver, can be repeated to link" ,;
@@ -4747,7 +4752,6 @@ STATIC PROCEDURE ShowHelp( lLong )
       "" ,;
       "  -bldf[-]           inherit all/no (default) flags from Harbour build" ,;
       "  -bldf=[p][c][l]    inherit .prg/.c/linker flags (or none) from Harbour build" ,;
-      "  -incpath=<p>|-i<p> additional path to search for headers" ,;
       "  -inctrypath=<p>    additional path to autodetect .c header locations" ,;
       "  -prgflag=<f>       pass flag to Harbour" ,;
       "  -cflag=<f>         pass flag to C compiler" ,;

@@ -12,5 +12,5 @@
 {win}gt=gtgui
 
 {win}libs=fiveh fivehc
-{win}libs=nddeapi iphlpapi rasapi32
+{win}libs=nddeapi iphlpapi rasapi32 odbc32
 {win}libs=hbwin
