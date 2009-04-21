@@ -510,12 +510,12 @@ BOOL hb_timeStrGet( const char * szTime,
                {
                   ++iBlocks;
                   ++szTime;
-                  iMSec = ( *szTime++ - '0' );
+                  iMSec = ( *szTime++ - '0' ) * 100;
                   if( HB_ISDIGIT( *szTime ) )
                   {
-                     iMSec = iMSec * 10 + ( *szTime++ - '0' );
+                     iMSec += ( *szTime++ - '0' ) * 10;
                      if( HB_ISDIGIT( *szTime ) )
-                        iMSec = iMSec * 10 + ( *szTime++ - '0' );
+                        iMSec += ( *szTime++ - '0' );
                   }
                   if( HB_ISDIGIT( *szTime ) )
                      ++szTime;

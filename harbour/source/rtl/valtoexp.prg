@@ -66,7 +66,7 @@ FUNCTION hb_VALTOEXP( xVal )
          cVal := iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
          EXIT
       CASE "T"
-         cVal := iif( Empty( xVal ), 't"00:00"', 't"' + hb_TSToStr( xVal ) + '"' )
+         cVal := 't"' + hb_TSToStr( xVal, .T. ) + '"'
          EXIT
       CASE "L"
          cVal := iif( xVal, ".T.", ".F." )
@@ -128,7 +128,7 @@ FUNCTION hb_CStr( xVal )
       CASE "D"
          RETURN iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
       CASE "T"
-         RETURN iif( Empty( xVal ), 't"00:00"', 't"' + hb_TSToStr( xVal ) + '"' )
+         cVal := 't"' + hb_TSToStr( xVal, .T. ) + '"'
       CASE "L"
          RETURN iif( xVal, ".T.", ".F." )
       CASE "S"

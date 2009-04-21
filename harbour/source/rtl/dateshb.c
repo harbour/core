@@ -375,7 +375,39 @@ HB_FUNC( HB_TSTOSTR )
    {
       char szBuffer[ 24 ];
 
-      hb_retc( hb_timeStampStr( szBuffer, lDate, lTime ) );
+      hb_timeStampStr( szBuffer, lDate, lTime );
+      if( ISLOG( 2 ) && hb_parl( 2 ) )
+      {
+         if( lTime == 0 )
+         {
+            if( lDate == 0 )
+               hb_retc( "00:00" );
+            else
+            {
+               szBuffer[ 10 ] = '\0';
+               hb_retc( szBuffer );
+            }
+         }
+         else
+         {
+            int i = 23;
+            while( szBuffer[ i - 1 ] == '0' )
+               --i;
+            if( szBuffer[ i - 1 ] == '.' )
+            {
+               --i;
+               if( szBuffer[ i - 1 ] == '0' && szBuffer[ i - 2 ] == '0' )
+                  i -= 3;
+            }
+            szBuffer[ i ] = '\0';
+            if( lDate == 0 )
+               hb_retc( szBuffer + 11 );
+            else
+               hb_retc( szBuffer );
+         }
+      }
+      else
+         hb_retc( szBuffer );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
