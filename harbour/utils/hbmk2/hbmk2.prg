@@ -746,6 +746,7 @@ FUNCTION hbmk( aArgs )
    /* Finish detecting bin/lib/include dirs */
 
    s_aLIBPATH := {}
+   s_aINCPATH := {}
 
    IF Empty( s_cHB_BIN_INSTALL )
       s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "bin"
@@ -811,7 +812,6 @@ FUNCTION hbmk( aArgs )
    s_aOPTRUN := {}
    s_aRESSRC := {}
    s_aRESCMP := {}
-   s_aINCPATH := {}
    s_aINCTRYPATH := {}
    s_aLIBUSER := {}
    s_aLIBUSERGT := {}
