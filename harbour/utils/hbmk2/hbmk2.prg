@@ -4896,7 +4896,9 @@ STATIC PROCEDURE ShowHeader()
 STATIC PROCEDURE ShowHelp( lLong )
 
    LOCAL aText_Basic := {;
-      "Syntax:  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po]>" ,;
+      "Syntax:" ,;
+      "" ,;
+      "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.hbl]>" ,;
       "" ,;
       "Options:" ,;
       "  -o<outname>        output file name" ,;
@@ -4947,6 +4949,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -clean             clean (in incremental build mode)" ,;
       "  -workdir=<dir>     working directory for incremental build mode" ,;
       "                     (default: arch/comp)" ,;
+      "" ,;
       "  -hbl=<output>      output .hbl filename. ${lng} macro is accepted in filename" ,;
       "  -lng=<languages>   list of languages to be replaced in ${lng} macros in .po" ,;
       "                     filenames and output .hbl filenames. Comma separared list:" ,;
