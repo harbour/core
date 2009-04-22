@@ -35,6 +35,7 @@
  *    bash script with similar purpose for gcc family.
  *    entry point override method and detection code for gcc.
  *    rtlink/blinker link script parsers.
+ *    LoadPOFiles() and GenHbl().
  *
  * See COPYING for licensing terms.
  *
@@ -301,6 +302,9 @@ FUNCTION hbmk( aArgs )
    LOCAL s_lHB_PCRE := .T.
    LOCAL s_lHB_ZLIB := .T.
    LOCAL s_cMAIN := NIL
+   LOCAL s_aPO
+   LOCAL s_cHBL
+   LOCAL s_aLNG
 
    LOCAL s_lCPP := NIL
    LOCAL s_lSHARED := NIL
@@ -821,6 +825,9 @@ FUNCTION hbmk( aArgs )
    s_cPROGDIR := NIL
    s_cPROGNAME := NIL
    s_cFIRST := NIL
+   s_aPO := {}
+   s_cHBL := NIL
+   s_aLNG := {}
 
    /* Collect all command line parameters */
    aParams := {}
@@ -858,6 +865,7 @@ FUNCTION hbmk( aArgs )
 
    /* Process automatic control files. */
    HBP_ProcessAll( lNOHBP,;
+                   @s_aPO,;
                    @s_aLIBUSER,;
                    @s_aLIBUSERGT,;
                    @s_aLIBPATH,;
@@ -1021,6 +1029,20 @@ FUNCTION hbmk( aArgs )
          ENDIF
 
          HB_SYMBOL_UNUSED( s_nJOBS )
+
+      CASE Left( cParamL, 5 ) == "-lng="
+
+         cParam := SubStr( cParam, 6 )
+         IF ! Empty( cParam )
+            s_aLNG := ListToArray( cParam, "," )
+         ENDIF
+
+      CASE Left( cParamL, 5 ) == "-hbl="
+
+         cParam := SubStr( cParam, 6 )
+         IF ! Empty( cParam )
+            s_cHBL := PathSepToTarget( cParam )
+         ENDIF
 
       CASE Left( cParamL, 6 ) == "-main="
 
@@ -1219,6 +1241,7 @@ FUNCTION hbmk( aArgs )
          ENDIF
 
          HBP_ProcessOne( cParam,;
+            @s_aPO,;
             @s_aLIBUSER,;
             @s_aLIBUSERGT,;
             @s_aLIBPATH,;
@@ -1292,6 +1315,16 @@ FUNCTION hbmk( aArgs )
             AAdd( s_aC      , PathSepToTarget( cParam ) )
             DEFAULT s_cFIRST TO PathSepToSelf( cParam )
          NEXT
+
+      CASE FN_ExtGet( cParamL ) == ".po"
+
+         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
+            AAdd( s_aPO, PathSepToTarget( cParam ) )
+         NEXT
+
+      CASE FN_ExtGet( cParamL ) == ".hbl"
+
+         s_cHBL := PathSepToTarget( cParam )
 
       OTHERWISE
 
@@ -2546,6 +2579,10 @@ FUNCTION hbmk( aArgs )
          s_aRESSRC_TODO := s_aRESSRC
       ENDIF
 
+      IF Len( s_aPO ) > 0 .AND. ! s_lCLEAN
+         MakeHBL( s_aPO, s_cHBL, s_aLNG )
+      ENDIF
+
       IF Len( s_aRESSRC_TODO ) > 0 .AND. ! Empty( cBin_Res ) .AND. ! s_lCLEAN
 
          IF s_lINC .AND. ! s_lQuiet
@@ -3115,6 +3152,7 @@ STATIC FUNCTION FindNewerHeaders( cFileName, cParentDir, tTimeParent, lIncTry, l
    LOCAL tTimeSelf
    LOCAL tmp
    LOCAL cNameExtL
+   LOCAL cExt
 
    STATIC s_aExcl := { "windows.h", "ole2.h", "os2.h" }
 
@@ -3132,12 +3170,6 @@ STATIC FUNCTION FindNewerHeaders( cFileName, cParentDir, tTimeParent, lIncTry, l
    ENDIF
 
    IF nEmbedLevel > 10
-      RETURN .F.
-   ENDIF
-
-   /* Filter out non-source format inputs for MinGW / windres */
-   IF s_cCOMP $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin" .AND. s_cARCH $ "win|wce" .AND. ;
-      Lower( FN_ExtGet( cFileName ) ) == ".res"
       RETURN .F.
    ENDIF
 
@@ -3172,6 +3204,15 @@ STATIC FUNCTION FindNewerHeaders( cFileName, cParentDir, tTimeParent, lIncTry, l
          RETURN .T.
       ENDIF
    ENDIF
+
+   cExt := Lower( FN_ExtGet( cFileName ) )
+
+   /* Filter out non-source format inputs for MinGW / windres */
+   IF s_cCOMP $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin" .AND. s_cARCH $ "win|wce" .AND. cExt == ".res"
+      RETURN .F.
+   ENDIF
+
+   /* TODO: Add filter based on extension to avoid binary files */
 
    /* NOTE: Beef up this section if you need a more intelligent source
             parser. Notice that this code is meant to process both
@@ -3251,7 +3292,7 @@ STATIC FUNCTION FindLib( cLib, aLIBPATH, cLibExt )
    LOCAL cDir
    LOCAL tmp
 
-   /* Check libnames containing dirs */
+   /* Check libs in their full paths */
    IF s_cCOMP $ "msvc|msvc64|msvcarm|bcc|pocc|pocc64|poccarm|owatcom"
       IF ! Empty( FN_DirGet( cLib ) )
          IF hb_FileExists( cLib := FN_ExtSet( cLib, cLibExt ) )
@@ -3517,12 +3558,12 @@ STATIC FUNCTION ArrayToList( array, cSeparator )
 
    RETURN cString
 
-STATIC FUNCTION ListToArray( cList )
+STATIC FUNCTION ListToArray( cList, cSep )
    LOCAL array := {}
    LOCAL cItem
 
    IF ! Empty( cList )
-      FOR EACH cItem IN hb_ATokens( cList )
+      FOR EACH cItem IN hb_ATokens( cList, cSep )
          AAddNotEmpty( array, cItem )
       NEXT
    ENDIF
@@ -3771,6 +3812,7 @@ STATIC FUNCTION FN_HasWildcard( cFileName )
 #define HBMK_CFG_NAME  "hbmk.cfg"
 
 STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
+                                 /* @ */ aPO,;
                                  /* @ */ aLIBUSER,;
                                  /* @ */ aLIBUSERGT,;
                                  /* @ */ aLIBPATH,;
@@ -3817,6 +3859,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
             OutStd( "hbmk: Processing configuration: " + cFileName + hb_osNewLine() )
          ENDIF
          HBP_ProcessOne( cFileName,;
+            @aPO,;
             @aLIBUSER,;
             @aLIBUSERGT,;
             @aLIBPATH,;
@@ -3853,6 +3896,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                OutStd( "hbmk: Processing: " + cFileName + hb_osNewLine() )
             ENDIF
             HBP_ProcessOne( cFileName,;
+               @aPO,;
                @aLIBUSER,;
                @aLIBUSERGT,;
                @aLIBPATH,;
@@ -3886,6 +3930,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
 #define _EOL          Chr( 10 )
 
 STATIC PROCEDURE HBP_ProcessOne( cFileName,;
+                                 /* @ */ aPO,;
                                  /* @ */ aLIBUSER,;
                                  /* @ */ aLIBUSERGT,;
                                  /* @ */ aLIBPATH,;
@@ -3926,9 +3971,17 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       cLine := AllTrim( ArchCompFilter( AllTrim( cLine ) ) )
 
       DO CASE
+      CASE Lower( Left( cLine, Len( "po="          ) ) ) == "po="            ; cLine := SubStr( cLine, Len( "po="           ) + 1 )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            cItem := PathSepToTarget( MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
+            IF AScan( aPO, {|tmp| tmp == cItem } ) == 0
+               AAddNotEmpty( aPO, cItem )
+            ENDIF
+         NEXT
+
       CASE Lower( Left( cLine, Len( "libs="         ) ) ) == "libs="         ; cLine := SubStr( cLine, Len( "libs="         ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathSepToTarget( StrStripQuote( cItem ) )
+            cItem := PathSepToTarget( MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
             IF AScan( aLIBUSER, {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( aLIBUSER, cItem )
             ENDIF
@@ -4683,6 +4736,99 @@ STATIC FUNCTION rtlnk_process( cCommands, cFileOut, aFileList, aLibList, ;
 
    RETURN .T.
 
+/* .hbl generation */
+
+#define _LNG_MARKER "${lng}"
+
+STATIC PROCEDURE MakeHBL( aPO, cHBL, aLNG )
+   LOCAL cPO
+   LOCAL tPO
+   LOCAL cLNG
+   LOCAL tLNG
+   LOCAL aPO_TODO
+
+   IF ! Empty( aPO )
+      IF s_lDEBUG
+         OutStd( "hbmk: PO: in: ", ArrayToList( aPO ), hb_osNewLine() )
+      ENDIF
+      IF Empty( cHBL )
+         cHBL := FN_NameGet( aPO[ 1 ] )
+      ENDIF
+      IF Empty( FN_ExtGet( cHBL ) )
+         cHBL := FN_ExtSet( cHBL, ".hbl" )
+      ENDIF
+      IF Empty( aLNG )
+         tLNG := NIL
+         hb_FGetDateTime( cHBL, @tLNG )
+         aPO_TODO := {}
+         FOR EACH cPO IN aPO
+            IF !( _LNG_MARKER $ cPO ) .AND. ( tLNG == NIL .OR. ( hb_FGetDateTime( cPO, @tPO ) .AND. tPO > tLNG ) )
+               AAdd( aPO_TODO, cPO )
+            ENDIF
+         NEXT
+         IF ! Empty( aPO_TODO )
+            IF s_lDEBUG
+               OutStd( "hbmk: PO: ", ArrayToList( aPO_TODO ), "->", cHBL, hb_osNewLine() )
+            ENDIF
+            GenHbl( aPO_TODO, cHBL )
+         ENDIF
+      ELSE
+         FOR EACH cLNG IN aLNG
+            tLNG := NIL
+            hb_FGetDateTime( StrTran( cHBL, _LNG_MARKER, cLNG ), @tLNG )
+            aPO_TODO := {}
+            FOR EACH cPO IN aPO
+               IF _LNG_MARKER $ cPO .AND. ( tLNG == NIL .OR. ( hb_FGetDateTime( StrTran( cPO, _LNG_MARKER, cLNG ), @tPO ) .AND. tPO > tLNG ) )
+                  AAdd( aPO_TODO, StrTran( cPO, _LNG_MARKER, cLNG ) )
+               ENDIF
+            NEXT
+            IF ! Empty( aPO_TODO )
+               IF s_lDEBUG
+                  OutStd( "hbmk: PO: ", ArrayToList( aPO_TODO ), "->", StrTran( cHBL, _LNG_MARKER, cLNG ), hb_osNewLine() )
+               ENDIF
+               GenHbl( aPO_TODO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
+            ENDIF
+         NEXT
+      ENDIF
+   ENDIF
+
+   RETURN
+
+STATIC FUNCTION LoadPOFiles( aFiles )
+   LOCAL aTrans, aTrans2
+   LOCAL cErrorMsg
+   LOCAL n
+
+   aTrans := __I18N_potArrayLoad( aFiles[ 1 ], @cErrorMsg )
+   IF aTrans == NIL
+      OutStd( "hbmk: .po error: ", cErrorMsg, hb_osNewLine() )
+   ENDIF
+   FOR n := 2 TO Len( aFiles )
+      aTrans2 := __I18N_potArrayLoad( aFiles[ n ], @cErrorMsg )
+      IF aTrans2 == NIL
+         OutStd( "hbmk: .po error: ", cErrorMsg, hb_osNewLine() )
+      ELSE
+         __I18N_potArrayJoin( aTrans, aTrans2 )
+      ENDIF
+   NEXT
+
+   RETURN aTrans
+
+STATIC PROCEDURE GenHbl( aFiles, cFileOut, lEmpty )
+   LOCAL cHblBody
+   LOCAL pI18N
+   LOCAL aTrans := LoadPOFiles( aFiles )
+
+   IF ISARRAY( aTrans )
+      pI18N := __I18N_hashTable( __I18N_potArrayToHash( aTrans, lEmpty ) )
+      cHblBody := HB_I18N_SaveTable( pI18N )
+      IF ! hb_memoWrit( cFileOut, cHblBody )
+         OutStd( "hbmk: Cannot create file: ", cFileOut, hb_osNewLine() )
+      ENDIF
+   ENDIF
+
+   RETURN
+
 /* Keep this public, it's used from macro. */
 FUNCTION hbmk_ARCH()
    RETURN s_cARCH
@@ -4750,7 +4896,7 @@ STATIC PROCEDURE ShowHeader()
 STATIC PROCEDURE ShowHelp( lLong )
 
    LOCAL aText_Basic := {;
-      "Syntax:  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res]>" ,;
+      "Syntax:  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po]>" ,;
       "" ,;
       "Options:" ,;
       "  -o<outname>        output file name" ,;
@@ -4801,6 +4947,11 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -clean             clean (in incremental build mode)" ,;
       "  -workdir=<dir>     working directory for incremental build mode" ,;
       "                     (default: arch/comp)" ,;
+      "  -hbl=<output>      output .hbl filename. ${lng} macro is accepted in filename" ,;
+      "  -lng=<languages>   list of languages to be replaced in ${lng} macros in .po" ,;
+      "                     filenames and output .hbl filenames. Comma separared list:" ,;
+      "                     -lng=en-EN,hu-HU,de" ,;
+      "" ,;
       "  -hbcmp|-clipper    stop after creating the object files" ,;
       "                     create link/copy hbmk to hbcmp/clipper for the same effect" ,;
       "  -hbcc              stop after creating the object files and accept raw C flags" ,;
@@ -4838,7 +4989,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - .hbp options (they should come in separate lines):" ,;
       "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;
       "    cflags=[C compiler flags], resflags=[resource compiler flags]" ,;
-      "    ldflags=[Linker flags], libpaths=[paths]," ,;
+      "    ldflags=[Linker flags], libpaths=[paths], po=[.po files]" ,;
       "    incpaths=[paths], inctrypaths=[paths]" ,;
       "    gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no]" ,;
       "    compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>" ,;
