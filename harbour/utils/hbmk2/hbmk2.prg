@@ -2330,13 +2330,13 @@ FUNCTION hbmk( aArgs )
             ENDIF
          NEXT
       ELSE
-         s_aC_TODO := s_aC
+         s_aC_TODO := AClone( s_aC )
          s_aC_DONE := {}
       ENDIF
 
       /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
       IF ! Empty( s_aINCTRYPATH ) .AND. ! Empty( s_aC_TODO ) .AND. headstate == NIL
-         FOR EACH tmp IN s_aC
+         FOR EACH tmp IN s_aC_TODO
             FindNewerHeaders( tmp, NIL, NIL, .T., .T., @headstate )
          NEXT
       ENDIF
@@ -2532,6 +2532,7 @@ FUNCTION hbmk( aArgs )
             RETURN 5
          ENDIF
          AAdd( s_aC, s_cCSTUB )
+         AAdd( s_aC_TODO, s_cCSTUB )
       ENDIF
 
       /* Library list assembly */
