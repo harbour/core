@@ -1039,10 +1039,11 @@ FUNCTION hbmk( aArgs )
 
       CASE Left( cParamL, 5 ) == "-hbl="
 
-         cParam := SubStr( cParam, 6 )
-         IF ! Empty( cParam )
-            s_cHBL := PathSepToTarget( cParam )
-         ENDIF
+         s_cHBL := PathSepToTarget( SubStr( cParam, 6 ) )
+
+      CASE Left( cParamL, 5 ) == "-hbl"
+
+         s_cHBL := ""
 
       CASE Left( cParamL, 6 ) == "-main="
 
@@ -2580,7 +2581,7 @@ FUNCTION hbmk( aArgs )
          s_aRESSRC_TODO := s_aRESSRC
       ENDIF
 
-      IF Len( s_aPO ) > 0 .AND. ! s_lCLEAN
+      IF Len( s_aPO ) > 0 .AND. s_cHBL != NIL .AND. ! s_lCLEAN
          MakeHBL( s_aPO, s_cHBL, s_aLNG )
       ENDIF
 
@@ -4951,7 +4952,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -workdir=<dir>     working directory for incremental build mode" ,;
       "                     (default: arch/comp)" ,;
       "" ,;
-      "  -hbl=<output>      output .hbl filename. ${lng} macro is accepted in filename" ,;
+      "  -hbl[=<output>]    output .hbl filename. ${lng} macro is accepted in filename" ,;
       "  -lng=<languages>   list of languages to be replaced in ${lng} macros in .po" ,;
       "                     filenames and output .hbl filenames. Comma separared list:" ,;
       "                     -lng=en-EN,hu-HU,de" ,;
