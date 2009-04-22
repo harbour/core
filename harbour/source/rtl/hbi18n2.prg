@@ -63,6 +63,8 @@
 #define _I18N_ITEM         { "", {}, {}, .F., NIL }
 
 #define _I18N_EOL          chr( 10 )
+#define _I18N_DELIM        ( chr( 0 ) + chr( 3 ) + chr( 0 ) )
+
 
 STATIC FUNCTION __I18N_fileName( cFile )
    LOCAL cExt
@@ -74,6 +76,7 @@ STATIC FUNCTION __I18N_fileName( cFile )
       ENDIF
    ENDIF
    RETURN cFile
+
 
 STATIC FUNCTION __I18N_strEncode( cStr )
    RETURN substr( hb_strToExp( cStr, .T. ), 2 )
@@ -390,17 +393,22 @@ FUNCTION __I18N_POTARRAYTOHASH( aTrans, lEmpty, hI18N )
 
 FUNCTION __I18N_POTARRAYJOIN( aTrans, aTrans2 )
    LOCAL aItem, aDest, aSrc
-   LOCAL ctx, msg
-   LOCAL n
+   LOCAL hIndex
+   LOCAL ctx
+
+   hIndex := { => }
+   FOR EACH aItem in aTrans
+      ctx := aItem[ _I18N_CONTEXT ] + _I18N_DELIM + aItem[ _I18N_MSGID, 1 ]
+      hIndex[ ctx ] := aItem:__enumIndex()
+   NEXT
 
    FOR EACH aItem in aTrans2
-      ctx := aItem[ _I18N_CONTEXT ]
-      msg := aItem[ _I18N_MSGID, 1 ]
-      IF ( n := ASCAN( aTrans, { |x| x[ _I18N_CONTEXT ] == ctx .AND. ;
-                                     x[ _I18N_MSGID, 1 ] == msg } ) ) == 0
+      ctx := aItem[ _I18N_CONTEXT ] + _I18N_DELIM + aItem[ _I18N_MSGID, 1 ]
+      IF ! ctx $ hIndex
          AAdd( aTrans, AClone( aItem ) )
+         hIndex[ ctx ] := Len( aTrans )
       ELSE
-         aDest := aTrans[ n ]
+         aDest := aTrans[ hIndex[ ctx ] ]
          IF aItem[ _I18N_PLURAL ]
             aDest[ _I18N_PLURAL ] := .T.
          ENDIF
@@ -427,6 +435,7 @@ FUNCTION __I18N_POTARRAYJOIN( aTrans, aTrans2 )
    NEXT
 
    RETURN aTrans
+
 
 FUNCTION HB_I18N_LOADPOT( cFile, pI18N, cErrorMsg )
    LOCAL aTrans
