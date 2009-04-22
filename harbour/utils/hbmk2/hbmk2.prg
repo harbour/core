@@ -3030,7 +3030,7 @@ FUNCTION hbmk( aArgs )
          ELSE
             FErase( s_cCSTUB )
          ENDIF
-         FErase( FN_DirExtSet( s_cCSTUB, "", cObjExt ) )
+         FErase( FN_DirExtSet( s_cCSTUB, cWorkDir, cObjExt ) )
       ENDIF
       IF ! s_lINC .OR. s_lCLEAN
          AEval( ListDirExt( s_aPRG, cWorkDir, ".c" ), {|tmp| FErase( tmp ) } )
