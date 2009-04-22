@@ -94,8 +94,8 @@
 #endif
 
 
-#command ? => spd_out(EOL)
-#command ? <xx,...> => spd_out(EOL);spd_out(<xx>)
+#command ? => spd_out()
+#command ? <xx,...> => spd_out();spd_out(<xx>)
 #command ?? <xx,...> => spd_out(<xx>)
 
 #ifdef __HARBOUR__
@@ -208,7 +208,7 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
    next
 
    IF ! s_lStdOut
-      set alternate to ( FN_ExtSet( hb_progname(), ".txt" ) ) additive
+      set alternate to ( spd_logfile() ) additive
       set alternate on
    ENDIF
    // set console off
@@ -223,44 +223,38 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
 return
 
 STATIC PROCEDURE spd_out( p1, p2, p3, p4, p5, p6 )
+   LOCAL nPCount := PCount()
+
    IF s_lStdOut
       DO CASE
-      CASE PCount() == 0 ; OutStd()
-      CASE PCount() == 1 ; OutStd( p1 )
-      CASE PCount() == 2 ; OutStd( p1, p2 )
-      CASE PCount() == 3 ; OutStd( p1, p2, p3 )
-      CASE PCount() == 4 ; OutStd( p1, p2, p3, p4 )
-      CASE PCount() == 5 ; OutStd( p1, p2, p3, p4, p5 )
-      CASE PCount() == 6 ; OutStd( p1, p2, p3, p4, p5, p6 )
+      CASE nPCount == 0 ; OutStd( EOL )
+      CASE nPCount == 1 ; OutStd( p1 )
+      CASE nPCount == 2 ; OutStd( p1, p2 )
+      CASE nPCount == 3 ; OutStd( p1, p2, p3 )
+      CASE nPCount == 4 ; OutStd( p1, p2, p3, p4 )
+      CASE nPCount == 5 ; OutStd( p1, p2, p3, p4, p5 )
+      CASE nPCount == 6 ; OutStd( p1, p2, p3, p4, p5, p6 )
       ENDCASE
    ELSE
       DO CASE
-      CASE PCount() == 0 ; QQOut()
-      CASE PCount() == 1 ; QQOut( p1 )
-      CASE PCount() == 2 ; QQOut( p1, p2 )
-      CASE PCount() == 3 ; QQOut( p1, p2, p3 )
-      CASE PCount() == 4 ; QQOut( p1, p2, p3, p4 )
-      CASE PCount() == 5 ; QQOut( p1, p2, p3, p4, p5 )
-      CASE PCount() == 6 ; QQOut( p1, p2, p3, p4, p5, p6 )
+      CASE nPCount == 0 ; QOut()
+      CASE nPCount == 1 ; QQOut( p1 )
+      CASE nPCount == 2 ; QQOut( p1, p2 )
+      CASE nPCount == 3 ; QQOut( p1, p2, p3 )
+      CASE nPCount == 4 ; QQOut( p1, p2, p3, p4 )
+      CASE nPCount == 5 ; QQOut( p1, p2, p3, p4, p5 )
+      CASE nPCount == 6 ; QQOut( p1, p2, p3, p4, p5, p6 )
       ENDCASE
    ENDIF
    RETURN
 
-STATIC FUNCTION FN_ExtSet( cFileName, cExt )
-   LOCAL cDir, cName
-
-   hb_FNameSplit( cFileName, @cDir, @cName )
-
-   RETURN hb_FNameMerge( cDir, cName, cExt )
-
+STATIC FUNCTION spd_logfile()
 #ifndef __HARBOUR__
-STATIC FUNCTION hb_progname()
-   RETURN "speedtst"
+   RETURN "speedtst.txt"
 #else
-#ifdef __XHARBOUR__
-STATIC FUNCTION hb_progname()
-   RETURN "speedtst"
-#endif
+   LOCAL cDir, cName
+   hb_FNameSplit( hb_ArgV( 0 ),, @cName )
+   RETURN hb_FNameMerge( , cName, ".txt" )
 #endif
 
 /*** TESTS ***/

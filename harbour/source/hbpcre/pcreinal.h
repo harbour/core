@@ -598,9 +598,9 @@ variable-length repeat, or a anything other than literal characters. */
 environments where these macros are defined elsewhere. Unfortunately, there
 is no way to do the same for the typedef. */
 
-typedef int BOOL;
 
 #ifndef FALSE
+typedef int BOOL;
 #define FALSE   0
 #define TRUE    1
 #endif
