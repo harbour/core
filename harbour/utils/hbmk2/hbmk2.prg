@@ -35,7 +35,7 @@
  *    bash script with similar purpose for gcc family.
  *    entry point override method and detection code for gcc.
  *    rtlink/blinker link script parsers.
- *    LoadPOFiles() and GenHbl().
+ *    LoadPOTFiles() and GenHbl().
  *
  * See COPYING for licensing terms.
  *
@@ -302,7 +302,7 @@ FUNCTION hbmk( aArgs )
    LOCAL s_lHB_PCRE := .T.
    LOCAL s_lHB_ZLIB := .T.
    LOCAL s_cMAIN := NIL
-   LOCAL s_aPO
+   LOCAL s_aPOT
    LOCAL s_cHBL
    LOCAL s_aLNG
 
@@ -825,7 +825,7 @@ FUNCTION hbmk( aArgs )
    s_cPROGDIR := NIL
    s_cPROGNAME := NIL
    s_cFIRST := NIL
-   s_aPO := {}
+   s_aPOT := {}
    s_cHBL := NIL
    s_aLNG := {}
 
@@ -865,7 +865,7 @@ FUNCTION hbmk( aArgs )
 
    /* Process automatic control files. */
    HBP_ProcessAll( lNOHBP,;
-                   @s_aPO,;
+                   @s_aPOT,;
                    @s_aLIBUSER,;
                    @s_aLIBUSERGT,;
                    @s_aLIBPATH,;
@@ -1242,7 +1242,7 @@ FUNCTION hbmk( aArgs )
          ENDIF
 
          HBP_ProcessOne( cParam,;
-            @s_aPO,;
+            @s_aPOT,;
             @s_aLIBUSER,;
             @s_aLIBUSERGT,;
             @s_aLIBPATH,;
@@ -1317,10 +1317,10 @@ FUNCTION hbmk( aArgs )
             DEFAULT s_cFIRST TO PathSepToSelf( cParam )
          NEXT
 
-      CASE FN_ExtGet( cParamL ) == ".po"
+      CASE FN_ExtGet( cParamL ) == ".pot"
 
          FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
-            AAdd( s_aPO, PathSepToTarget( cParam ) )
+            AAdd( s_aPOT, PathSepToTarget( cParam ) )
          NEXT
 
       CASE FN_ExtGet( cParamL ) == ".hbl"
@@ -2581,8 +2581,8 @@ FUNCTION hbmk( aArgs )
          s_aRESSRC_TODO := s_aRESSRC
       ENDIF
 
-      IF Len( s_aPO ) > 0 .AND. s_cHBL != NIL .AND. ! s_lCLEAN
-         MakeHBL( s_aPO, s_cHBL, s_aLNG )
+      IF Len( s_aPOT ) > 0 .AND. s_cHBL != NIL .AND. ! s_lCLEAN
+         MakeHBL( s_aPOT, s_cHBL, s_aLNG )
       ENDIF
 
       IF Len( s_aRESSRC_TODO ) > 0 .AND. ! Empty( cBin_Res ) .AND. ! s_lCLEAN
@@ -3814,7 +3814,7 @@ STATIC FUNCTION FN_HasWildcard( cFileName )
 #define HBMK_CFG_NAME  "hbmk.cfg"
 
 STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
-                                 /* @ */ aPO,;
+                                 /* @ */ aPOT,;
                                  /* @ */ aLIBUSER,;
                                  /* @ */ aLIBUSERGT,;
                                  /* @ */ aLIBPATH,;
@@ -3861,7 +3861,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
             OutStd( "hbmk: Processing configuration: " + cFileName + hb_osNewLine() )
          ENDIF
          HBP_ProcessOne( cFileName,;
-            @aPO,;
+            @aPOT,;
             @aLIBUSER,;
             @aLIBUSERGT,;
             @aLIBPATH,;
@@ -3898,7 +3898,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                OutStd( "hbmk: Processing: " + cFileName + hb_osNewLine() )
             ENDIF
             HBP_ProcessOne( cFileName,;
-               @aPO,;
+               @aPOT,;
                @aLIBUSER,;
                @aLIBUSERGT,;
                @aLIBPATH,;
@@ -3932,7 +3932,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
 #define _EOL          Chr( 10 )
 
 STATIC PROCEDURE HBP_ProcessOne( cFileName,;
-                                 /* @ */ aPO,;
+                                 /* @ */ aPOT,;
                                  /* @ */ aLIBUSER,;
                                  /* @ */ aLIBUSERGT,;
                                  /* @ */ aLIBPATH,;
@@ -3973,11 +3973,11 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       cLine := AllTrim( ArchCompFilter( AllTrim( cLine ) ) )
 
       DO CASE
-      CASE Lower( Left( cLine, Len( "po="          ) ) ) == "po="            ; cLine := SubStr( cLine, Len( "po="           ) + 1 )
+      CASE Lower( Left( cLine, Len( "pots="        ) ) ) == "pots="          ; cLine := SubStr( cLine, Len( "pots="         ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
-            IF AScan( aPO, {|tmp| tmp == cItem } ) == 0
-               AAddNotEmpty( aPO, cItem )
+            IF AScan( aPOT, {|tmp| tmp == cItem } ) == 0
+               AAddNotEmpty( aPOT, cItem )
             ENDIF
          NEXT
 
@@ -4742,19 +4742,19 @@ STATIC FUNCTION rtlnk_process( cCommands, cFileOut, aFileList, aLibList, ;
 
 #define _LNG_MARKER "${lng}"
 
-STATIC PROCEDURE MakeHBL( aPO, cHBL, aLNG )
+STATIC PROCEDURE MakeHBL( aPOT, cHBL, aLNG )
    LOCAL cPO
    LOCAL tPO
    LOCAL cLNG
    LOCAL tLNG
-   LOCAL aPO_TODO
+   LOCAL aPOT_TODO
 
-   IF ! Empty( aPO )
+   IF ! Empty( aPOT )
       IF s_lDEBUG
-         OutStd( "hbmk: PO: in: ", ArrayToList( aPO ), hb_osNewLine() )
+         OutStd( "hbmk: pot: in: ", ArrayToList( aPOT ), hb_osNewLine() )
       ENDIF
       IF Empty( cHBL )
-         cHBL := FN_NameGet( aPO[ 1 ] )
+         cHBL := FN_NameGet( aPOT[ 1 ] )
       ENDIF
       IF Empty( FN_ExtGet( cHBL ) )
          cHBL := FN_ExtSet( cHBL, ".hbl" )
@@ -4762,33 +4762,33 @@ STATIC PROCEDURE MakeHBL( aPO, cHBL, aLNG )
       IF Empty( aLNG )
          tLNG := NIL
          hb_FGetDateTime( cHBL, @tLNG )
-         aPO_TODO := {}
-         FOR EACH cPO IN aPO
+         aPOT_TODO := {}
+         FOR EACH cPO IN aPOT
             IF !( _LNG_MARKER $ cPO ) .AND. ( tLNG == NIL .OR. ( hb_FGetDateTime( cPO, @tPO ) .AND. tPO > tLNG ) )
-               AAdd( aPO_TODO, cPO )
+               AAdd( aPOT_TODO, cPO )
             ENDIF
          NEXT
-         IF ! Empty( aPO_TODO )
+         IF ! Empty( aPOT_TODO )
             IF s_lDEBUG
-               OutStd( "hbmk: PO: ", ArrayToList( aPO_TODO ), "->", cHBL, hb_osNewLine() )
+               OutStd( "hbmk: pot: ", ArrayToList( aPOT_TODO ), "->", cHBL, hb_osNewLine() )
             ENDIF
-            GenHbl( aPO_TODO, cHBL )
+            GenHbl( aPOT_TODO, cHBL )
          ENDIF
       ELSE
          FOR EACH cLNG IN aLNG
             tLNG := NIL
             hb_FGetDateTime( StrTran( cHBL, _LNG_MARKER, cLNG ), @tLNG )
-            aPO_TODO := {}
-            FOR EACH cPO IN aPO
+            aPOT_TODO := {}
+            FOR EACH cPO IN aPOT
                IF _LNG_MARKER $ cPO .AND. ( tLNG == NIL .OR. ( hb_FGetDateTime( StrTran( cPO, _LNG_MARKER, cLNG ), @tPO ) .AND. tPO > tLNG ) )
-                  AAdd( aPO_TODO, StrTran( cPO, _LNG_MARKER, cLNG ) )
+                  AAdd( aPOT_TODO, StrTran( cPO, _LNG_MARKER, cLNG ) )
                ENDIF
             NEXT
-            IF ! Empty( aPO_TODO )
+            IF ! Empty( aPOT_TODO )
                IF s_lDEBUG
-                  OutStd( "hbmk: PO: ", ArrayToList( aPO_TODO ), "->", StrTran( cHBL, _LNG_MARKER, cLNG ), hb_osNewLine() )
+                  OutStd( "hbmk: pot: ", ArrayToList( aPOT_TODO ), "->", StrTran( cHBL, _LNG_MARKER, cLNG ), hb_osNewLine() )
                ENDIF
-               GenHbl( aPO_TODO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
+               GenHbl( aPOT_TODO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
             ENDIF
          NEXT
       ENDIF
@@ -4796,40 +4796,45 @@ STATIC PROCEDURE MakeHBL( aPO, cHBL, aLNG )
 
    RETURN
 
-STATIC FUNCTION LoadPOFiles( aFiles )
+STATIC FUNCTION LoadPOTFiles( aFiles )
    LOCAL aTrans, aTrans2
    LOCAL cErrorMsg
    LOCAL n
 
    aTrans := __I18N_potArrayLoad( aFiles[ 1 ], @cErrorMsg )
    IF aTrans == NIL
-      OutStd( "hbmk: .po error: ", cErrorMsg, hb_osNewLine() )
+      OutErr( "hbmk: .pot error: ", cErrorMsg, hb_osNewLine() )
+   ELSE
+      FOR n := 2 TO Len( aFiles )
+         aTrans2 := __I18N_potArrayLoad( aFiles[ n ], @cErrorMsg )
+         IF aTrans2 == NIL
+            OutErr( "hbmk: .pot error: ", cErrorMsg, hb_osNewLine() )
+            EXIT
+         ELSE
+            __I18N_potArrayJoin( aTrans, aTrans2 )
+         ENDIF
+      NEXT
    ENDIF
-   FOR n := 2 TO Len( aFiles )
-      aTrans2 := __I18N_potArrayLoad( aFiles[ n ], @cErrorMsg )
-      IF aTrans2 == NIL
-         OutStd( "hbmk: .po error: ", cErrorMsg, hb_osNewLine() )
-      ELSE
-         __I18N_potArrayJoin( aTrans, aTrans2 )
-      ENDIF
-   NEXT
 
    RETURN aTrans
 
-STATIC PROCEDURE GenHbl( aFiles, cFileOut, lEmpty )
+STATIC FUNCTION GenHbl( aFiles, cFileOut, lEmpty )
    LOCAL cHblBody
    LOCAL pI18N
-   LOCAL aTrans := LoadPOFiles( aFiles )
+   LOCAL aTrans := LoadPOTFiles( aFiles )
+   LOCAL lRetVal := .F.
 
    IF ISARRAY( aTrans )
       pI18N := __I18N_hashTable( __I18N_potArrayToHash( aTrans, lEmpty ) )
       cHblBody := HB_I18N_SaveTable( pI18N )
-      IF ! hb_memoWrit( cFileOut, cHblBody )
-         OutStd( "hbmk: Cannot create file: ", cFileOut, hb_osNewLine() )
+      IF hb_memoWrit( cFileOut, cHblBody )
+         lRetVal := .T.
+      ELSE
+         OutErr( "hbmk: Cannot create file: ", cFileOut, hb_osNewLine() )
       ENDIF
    ENDIF
 
-   RETURN
+   RETURN lRetVal
 
 /* Keep this public, it's used from macro. */
 FUNCTION hbmk_ARCH()
@@ -4900,7 +4905,7 @@ STATIC PROCEDURE ShowHelp( lLong )
    LOCAL aText_Basic := {;
       "Syntax:" ,;
       "" ,;
-      "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.hbl]>" ,;
+      "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.pot|.hbl]>" ,;
       "" ,;
       "Options:" ,;
       "  -o<outname>        output file name" ,;
@@ -4953,7 +4958,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "                     (default: arch/comp)" ,;
       "" ,;
       "  -hbl[=<output>]    output .hbl filename. ${lng} macro is accepted in filename" ,;
-      "  -lng=<languages>   list of languages to be replaced in ${lng} macros in .po" ,;
+      "  -lng=<languages>   list of languages to be replaced in ${lng} macros in .pot" ,;
       "                     filenames and output .hbl filenames. Comma separared list:" ,;
       "                     -lng=en-EN,hu-HU,de" ,;
       "" ,;
@@ -4994,7 +4999,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - .hbp options (they should come in separate lines):" ,;
       "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;
       "    cflags=[C compiler flags], resflags=[resource compiler flags]" ,;
-      "    ldflags=[Linker flags], libpaths=[paths], po=[.po files]" ,;
+      "    ldflags=[Linker flags], libpaths=[paths], pots=[.pot files]" ,;
       "    incpaths=[paths], inctrypaths=[paths]" ,;
       "    gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no]" ,;
       "    compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>" ,;
