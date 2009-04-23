@@ -7523,13 +7523,21 @@ PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols,
 
       if( fClone )
       {
-         PHB_SYMB pSymbols = ( PHB_SYMB ) hb_xgrab( uiSymbols * sizeof( HB_SYMB ) );
-         memcpy( pSymbols, pModuleSymbols, uiSymbols * sizeof( HB_SYMB ) );
+         ULONG ulSymSize = ( ULONG ) uiSymbols * sizeof( HB_SYMB ), ulSize;
+         char * buffer;
+
+         ulSize = ulSymSize;
+         for( ui = 0; ui < uiSymbols; ui++ )
+            ulSize += ( ULONG ) strlen( pModuleSymbols[ ui ].szName ) + 1;
+         buffer = ( char * ) memcpy( hb_xgrab( ulSize ), pModuleSymbols, ulSymSize );
+         pModuleSymbols = ( PHB_SYMB ) buffer;
          for( ui = 0; ui < uiSymbols; ui++ )
          {
-            pSymbols[ ui ].szName = hb_strdup( pSymbols[ ui ].szName );
+            buffer += ulSymSize;
+            ulSymSize = ( ULONG ) strlen( pModuleSymbols[ ui ].szName ) + 1;
+            memcpy( buffer, pModuleSymbols[ ui ].szName, ulSymSize );
+            pModuleSymbols[ ui ].szName = buffer;
          }
-         pModuleSymbols = pSymbols;
       }
 
       pNewSymbols = ( PHB_SYMBOLS ) hb_xgrab( sizeof( HB_SYMBOLS ) );
@@ -7725,25 +7733,10 @@ static void hb_vmReleaseLocalSymbols( void )
 
       pDestroy = s_pSymbols;
       s_pSymbols = s_pSymbols->pNext;
-
       if( pDestroy->szModuleName )
-      {
          hb_xfree( pDestroy->szModuleName );
-      }
       if( pDestroy->fAllocated )
-      {
-         USHORT ui;
-         for( ui = 0; ui < pDestroy->uiModuleSymbols; ++ui )
-         {
-            PHB_SYMB pSymbol = pDestroy->pModuleSymbols + ui;
-            if( pSymbol->pDynSym && pSymbol->pDynSym->pSymbol == pSymbol )
-            {
-               pSymbol->pDynSym->pSymbol = NULL;
-            }
-            hb_xfree( ( void * ) pSymbol->szName );
-         }
          hb_xfree( pDestroy->pModuleSymbols );
-      }
       hb_xfree( pDestroy );
    }
 }
