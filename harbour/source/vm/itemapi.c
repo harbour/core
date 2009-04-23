@@ -1426,49 +1426,49 @@ HB_TYPE hb_itemType( PHB_ITEM pItem )
       return HB_IT_NIL;
 }
 
-char * hb_itemTypeStr( PHB_ITEM pItem )
+const char * hb_itemTypeStr( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemTypeStr(%p)", pItem));
 
    switch( HB_ITEM_TYPE( pItem ) )
    {
       case HB_IT_ARRAY:
-         return ( char * ) ( hb_arrayIsObject( pItem ) ? "O" : "A" );
+         return hb_arrayIsObject( pItem ) ? "O" : "A";
 
       case HB_IT_BLOCK:
-         return ( char * ) "B";
+         return "B";
 
       case HB_IT_DATE:
-         return ( char * ) "D";
+         return "D";
 
       case HB_IT_TIMESTAMP:
-         return ( char * ) "T";
+         return "T";
 
       case HB_IT_LOGICAL:
-         return ( char * ) "L";
+         return "L";
 
       case HB_IT_INTEGER:
       case HB_IT_LONG:
       case HB_IT_DOUBLE:
-         return ( char * ) "N";
+         return "N";
 
       case HB_IT_STRING:
-         return ( char * ) "C";
+         return "C";
 
       case HB_IT_MEMO:
-         return ( char * ) "M";
+         return "M";
 
       case HB_IT_HASH:
-         return ( char * ) "H";
+         return "H";
 
       case HB_IT_POINTER:
-         return ( char * ) "P";
+         return "P";
 
       case HB_IT_SYMBOL:
-         return ( char * ) "S";
+         return "S";
    }
 
-   return ( char * ) "U";
+   return "U";
 }
 
 /* Internal API, not standard Clipper */
