@@ -95,6 +95,11 @@
 
 #define NO_YYERROR
 
+/* NOTE: these symbols are defined explicitly to pacify warnings */
+#define YYENABLE_NLS          0
+#define YYLTYPE_IS_TRIVIAL    0
+
+
 /* yacc/lex related definitions
  */
 

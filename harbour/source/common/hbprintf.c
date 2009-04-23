@@ -921,7 +921,7 @@ int hb_snprintf( char * buffer, size_t bufsize, const char * format, ... )
                      flags |= _F_SIGN;
                      c = *format++;
                      break;
-#if _SUSV2_COMPAT_
+#ifdef _SUSV2_COMPAT_
                   case '\'':  /* group with locale thousands' grouping characters */
                      c = *format++;
                      break;

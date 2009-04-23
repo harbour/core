@@ -64,6 +64,10 @@
 
 #define NO_YYERROR
 
+/* NOTE: these symbols are defined explicitly to pacify warnings */
+#define YYENABLE_NLS          0
+#define YYLTYPE_IS_TRIVIAL    0
+
 static void hb_compLoopStart( HB_COMP_DECL, BOOL );
 static void hb_compLoopEnd( HB_COMP_DECL );
 static void hb_compLoopLoop( HB_COMP_DECL );

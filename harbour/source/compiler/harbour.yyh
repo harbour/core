@@ -266,7 +266,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 109 "harbour.y"
+#line 113 "harbour.y"
 {
    char *  string;      /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */

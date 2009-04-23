@@ -124,7 +124,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 130 "macro.y"
+#line 135 "macro.y"
 {
    const char * string; /* to hold a string returned by lex */
    int      iNumber;    /* to hold a temporary integer number */
