@@ -2520,9 +2520,14 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
       case HB_EA_POP_PCODE:
          hb_compExprPushSendPop( pSelf, HB_COMP_PARAM );
          if( pSelf->value.asMessage.pParms )
+         {
             HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
+         }
          else
-            HB_COMP_ERROR_SYNTAX( pSelf );
+         {
+            HB_GEN_FUNC2( PCode2, HB_P_SWAP, 1 );
+            HB_GEN_FUNC2( PCode2, HB_P_SWAP, 1 );
+         }
          HB_GEN_FUNC2( PCode2, HB_P_SENDSHORT, 1 );
          break;
 
