@@ -3,7 +3,6 @@
 #
 
 {mingw|(gcc&(linux|darwin))}libs=supc++
-libs=hbqt
 {!darwin}libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
 {darwin}libs=/Library/Frameworks/QtCore.framework/QtCore
 {darwin}libs=/Library/Frameworks/QtGui.framework/QtGui
@@ -12,4 +11,6 @@ libs=hbqt
 # static libs
 #libs=QtCore QtGui QtNetwork QtWebKit
 gui=yes
-gt=gtnul
+gt=gtqtc
+# optional
+mt=yes
