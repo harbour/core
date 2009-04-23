@@ -71,6 +71,7 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QClipboard>
+#include <QtCore/QThread>
 
 #include "hbset.h"
 #include "hbgtcore.h"
@@ -174,10 +175,7 @@
 
 #define SYS_EV_MARK  1000
 
-
 void hb_ToOutDebug( const char * sTraceMsg, ... );
-void hbqt_exit( PHB_GT );
-
 
 /*----------------------------------------------------------------------*/
 
@@ -204,16 +202,14 @@ public:
 
    void   displayCell( int iCol, int iRow );
    void   displayBlock( int iCol, int iRow );
-   void   resizeImage(QImage *image, const QSize &newSize);
+   void   resizeImage(const QSize &newSize);
 
    int    fontHeight;
    int    fontWidth;
    int    fontAscent;
 
-   int    ROWS;
-   int    COLS;
+   int    ROWS, COLS;
    int    windowWidth, windowHeight;
-   int    wH, wW, iFW, iFH;
 
    int    pu_crtHeight;
    int    pu_crtWidth;
@@ -243,10 +239,9 @@ protected:
    bool   event(QEvent *event);
 
 private:
-   QFont  qFont;
+   QFont       qFont;
    QBasicTimer *pv_timer;
-   QImage image;
-
+   QImage      *image;
 };
 
 /*----------------------------------------------------------------------*/
@@ -257,7 +252,6 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow();
-    ~MainWindow();
 
     ConsoleArea *consoleArea;
     PHB_GT      pGT;
@@ -276,9 +270,11 @@ typedef struct
    PHB_GT       pGT;                          /* core GT pointer */
    int          iHandle;                      /* window number */
 
+   QApplication *qApplctn;
    MainWindow   *qWnd;
    QFont        *qFont;
    QFont        *qFontBox;
+   QEventLoop   *qEventLoop;
 
    int          iCmdShow;
 

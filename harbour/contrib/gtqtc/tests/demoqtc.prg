@@ -27,6 +27,8 @@
 #define HB_GTI_SETPARENT         101
 #define HB_GTI_WINHANDLE         102
 
+REQUEST HB_ZipOpen
+
 //----------------------------------------------------------------------//
 
 STATIC nRows := 20, nCols := 60, nColorIndex := 1
@@ -144,7 +146,7 @@ STATIC FUNCTION DispScreen()
    DispBegin()
 
    CLS
-   DispOutAt( 0, 0,padc( "Harbour GT - New Features", maxcol()+1 ), "N/GR*" )
+   DispOutAt( 0, 0,padc( "Harbour GTQTC - QT based Terminal Driver", maxcol()+1 ), "N/GR*" )
 
    // Contributed by Massimo Belgrano
    DispOutAt( 2, 0, padc( "______  __             ______________________                        ",nMaxCol ), "W+/W" )

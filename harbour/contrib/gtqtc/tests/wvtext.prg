@@ -18,9 +18,6 @@
 #include "inkey.ch"
 #include "box.ch"
 
-#ifdef __GTWVG__
-#include "hbgtwvg.ch"
-#endif
 
 #define RGB(r,g,b) ( r + ( g * 256 ) + ( b * 256 * 256 ) )
 
@@ -45,9 +42,7 @@ FUNCTION Main()
    Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
    Hb_GtInfo( HB_GTI_FONTWIDTH, nWidth  )
    Hb_GtInfo( HB_GTI_FONTSIZE , nHeight )
-   #ifdef __GTWVG__
    Hb_GtInfo( HB_GTI_ICONFILE, "..\contrib\gtwvg\tests\vr_1.ico" )
-   #endif
    SetCursor( 0 )
    SetColor( "n/w" )
 
@@ -88,6 +83,9 @@ FUNCTION Main()
 
       CASE nKey == K_F8
          Alert( "Menu text changed. Was: " + hb_GtInfo( HB_GTI_SELECTCOPY, DToS(Date()) + " " + Time() ) )
+
+      CASE nKey == K_F10
+         hb_threadStart( @thFunc() )
 
       ENDCASE
    ENDDO
@@ -142,9 +140,6 @@ STATIC FUNCTION DispScreen()
    DispOutAt( ++nRow, nCol, "< F8 MarkCopy menu text >", cColor )
    DispOutAt( ++nRow, nCol, "<    Click Other Window >", cColor )
    DispOutAt( ++nRow, nCol, "<    Click X Button     >", cColor )
-#ifdef __GTWVG__
-   DispOutAt( ++nRow, nCol, "< F9 Run in SysTray     >", cColor )
-#endif
    DispOutAt( ++nRow, nCol, "< F10 Open New Window   >", cColor )
 
    DispOutAt( maxrow(), 0, Space( maxcol()+1 ), "N/G*" )
@@ -188,29 +183,15 @@ FUNCTION SetPaletteIndex()
 
    RETURN NIL
 //----------------------------------------------------------------------//
-#define HB_GTS_NIM_ADD               0
-#define HB_GTS_NIM_MODIFY            1
-#define HB_GTS_NIM_DELETE            2
-
-FUNCTION RunInSysTray()
-   #ifdef __GTWVG__
-   Alert( "Please check your System Tray area after exiting this alert,"+;
-             ";then right click on the icon"+;
-                 ";displaying tooltip 'Harbour GT in SysTray' !" )
-
-   Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SYSTRAYICON, { HB_GTS_NIM_ADD, HB_GTS_NIT_FILE, ;
-                "..\contrib\gtwvg\tests\vr_1.ico", "Harbour GT in SysTray" } )
-   #endif
-   RETURN NIL
-//----------------------------------------------------------------------//
 PROCEDURE thFunc()
-   #ifdef __GTWVG__
-   Local cTitle, oBrowse, lEnd, nKey, i, aStruct, pGT1, pGT, hWnd
+   Local cTitle, oBrowse, lEnd, nKey, i, aStruct, pGT1, pGT
    Local aColor := { 'W+/N', 'W+/B', 'W+/G', 'W+/BG', 'W+/N*', 'W+/RB', 'N/W*', 'N/GR*' }
 
    static nBrowser := 0
    static nZx := 0
    static nZy := 0
+
+   nColorIndex := 1
 
    ErrorBlock( {|oErr| MyErrorSys( oErr ) } )
 
@@ -219,7 +200,10 @@ PROCEDURE thFunc()
    nZy += 20
 
    /* allocate own GT driver */
-   hb_gtReload( 'WVT' )
+   if !( hb_gtReload( 'QTC' ) )
+      Alert( 'QTC Driver could not been loaded!' )
+      Return NIL
+   endif
    Hb_GtInfo( HB_GTI_PALETTE, 8, RGB( 120, 200, 240 ) )
 
    if ( nBrowser % 2 ) != 0
@@ -227,6 +211,8 @@ PROCEDURE thFunc()
    endif
    Hb_GtInfo( HB_GTI_WINTITLE, 'Test.dbf    ['+if( ( nBrowser % 2 ) != 0, 'RESIZABLE_BY_ROWS', 'RESIZABLE_BY_FONT' )+']' )
 
+   SetColor( aColor[ nColorIndex ] )
+   CLS
    SetCursor( 0 )
 
    nColorIndex++
@@ -292,12 +278,12 @@ PROCEDURE thFunc()
             // LIKE in Xbase++:
             // oWnd := gtDialog():New( oParent, oOwner, aSize, aPos, aPresParam, lVisible )
             //
-            hWnd := hb_gtInfo( HB_GTI_WINHANDLE )
+//            hWnd := hb_gtInfo( HB_GTI_WINHANDLE )
 
-            pGT1 := hb_gtCreate( 'WVT' )
+            pGT1 := hb_gtCreate( 'QTC' )
             pGT  := hb_gtSelect( pGT1 )
             SetMode( 7,40 )
-            hb_gtInfo( HB_GTI_SETPARENT     , hWnd )
+//            hb_gtInfo( HB_GTI_SETPARENT     , hWnd )
             hb_gtInfo( HB_GTI_SETPOS_ROWCOL , 4, 8 )
             hb_gtInfo( HB_GTI_WINTITLE      , 'Modal Dialog [ Row:4 Col:8 ]' )
             hb_gtInfo( HB_GTI_RESIZABLE     , .F.  )
@@ -436,7 +422,7 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
       lRet := .f.
 
    endcase
-   #endif
+
    RETURN lRet
 //-------------------------------------------------------------------//
 PROCEDURE MyErrorSys( oError )

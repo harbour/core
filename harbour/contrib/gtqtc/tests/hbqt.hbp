@@ -3,9 +3,14 @@
 #
 
 {mingw}libs=supc++
-libs=gtqtc xhb
-libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
-# static libs
-#libs=QtCore QtGui QtNetwork QtWebKit
+
+gt=gtqtc
 gui=yes
-gt=gtnul
+mt=yes
+
+{win}libpaths=C:\Qt\2009.01\Qt\Lib
+
+{win}libs=gtqtc xhb hbmzip
+{win}libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
+
+

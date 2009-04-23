@@ -126,6 +126,7 @@ static BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
             s_wvtWindows[ iPos ] = pWVT;
             pWVT->iHandle = iPos;
             fOK = TRUE;
+            ++s_wvtCount;
             break;
          }
          ++iPos;
@@ -143,28 +144,34 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 
    s_wvtWindows[ pWVT->iHandle ] = NULL;
 
-   if( --s_wvtCount == 0 )
+#if 0
+   if( pWVT->qEventLoop )
    {
-      app->quit();
+      pWVT->qEventLoop->exit();
+      pWVT->qEventLoop = NULL;
    }
-
-   HB_WVT_UNLOCK
+#endif
 
    if( pWVT->pszSelectCopy )
       hb_xfree( pWVT->pszSelectCopy );
 
+#if 0
    if( pWVT->qFont )
       pWVT->qFont->~QFont();
-#if 0
-   if( pWVT->qWnd )
-      pWVT->qWnd->~MainWindow();
-#endif
-#if 0
-   if( pWVT->hIcon && pWVT->bIconToFree )
-      DestroyIcon( pWVT->hIcon );
 #endif
 
+   if( --s_wvtCount == 0 )
+   {
+      app->quit();
+   }
+   else
+   {
+      s_wvtWindows[ 0 ]->qWnd->setFocus();
+   }
+
    hb_xfree( pWVT );
+//OutputDebugString( "2" );
+   HB_WVT_UNLOCK
 }
 
 static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
@@ -182,7 +189,6 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
    }
 
    pWVT->iCmdShow          = iCmdShow;
-
    pWVT->ROWS              = WVT_DEFAULT_ROWS;
    pWVT->COLS              = WVT_DEFAULT_COLS;
 
@@ -244,6 +250,7 @@ static void hb_gt_wvt_SetWindowFlags( PHB_GTWVT pWVT, Qt::WindowFlags flags )
       pos.setY( 0 );
    pWVT->qWnd->move( pos );
    pWVT->qWnd->show();
+   pWVT->qWnd->setFocus(Qt::OtherFocusReason);
 }
 
 static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent )
@@ -476,6 +483,7 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
 static void hb_gt_wvt_QResetWindowSize( PHB_GTWVT pWVT )
 {
    pWVT->qWnd->consoleArea->resetWindowSize();
+   pWVT->qWnd->setWindowSize();
 }
 
 static BOOL hb_gt_wvt_QSetWindowSize( PHB_GTWVT pWVT, int iRow, int iCol )
@@ -603,12 +611,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 }
 #endif
 
-static int hb_gt_wvt_ProcessMessages( void )
-{
-   app->processEvents();
-   return( 0 );
-}
-
 static BOOL hb_gt_wvt_QValidWindowSize( int rows, int cols, QFont *qFont, int iWidth )
 {
    //QDesktopWidget *desk = new QDesktopWidget();
@@ -623,20 +625,11 @@ static BOOL hb_gt_wvt_QValidWindowSize( int rows, int cols, QFont *qFont, int iW
    return TRUE;
 }
 
-static MainWindow* hb_gt_wvt_CreateWindow( BOOL bResizable )
-{
-   MainWindow *qWnd = new MainWindow();
-
-   HB_SYMBOL_UNUSED( bResizable );
-
-   return qWnd;
-}
-
 static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 {
-   if( !pWVT->qWnd )
+   //if( !pWVT->qWnd )
    {
-      pWVT->qWnd = hb_gt_wvt_CreateWindow( pWVT->bResizable );
+      pWVT->qWnd = new MainWindow();
       if( !pWVT->qWnd )
          hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
 
@@ -677,12 +670,7 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
          }
          #endif
       }
-#if 0
-      pWVT->qWnd->show();
-      pWVT->qWnd->update();
-#endif
    }
-
    return TRUE;
 }
 
@@ -691,20 +679,6 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
  * GT Specific Functions
  */
 /* ********************************************************************** */
-
-void hbqt_exit( PHB_GT pGT )
-{
-   PHB_GTWVT pWVT;
-
-   HB_TRACE(HB_TR_DEBUG, ("hbqt_exit(%p)", pGT));
-
-   pWVT = HB_GTWVT_GET( pGT );
-
-   /* A HACK - must be constructed differently - Still looking for the ways to control it */
-   hb_gt_wvt_AddCharToInputQueue( pWVT, 27 );
-
-   app->quit();
-}
 
 static void hbqt_Init( void * cargo )
 {
@@ -732,8 +706,8 @@ static void hbqt_Init( void * cargo )
 
 static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   int       iCmdShow = 0;
-   PHB_GTWVT pWVT = NULL;
+   int          iCmdShow = 0;
+   PHB_GTWVT    pWVT = NULL;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
 
@@ -744,6 +718,8 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
          hb_errInternal( 10001, "Maximum number of WVT windows reached, cannot create another one", NULL, NULL );
 
    HB_GTLOCAL( pGT ) = ( void * ) pWVT;
+
+   pWVT->qEventLoop = new QEventLoop( pWVT->qWnd );
 
    /* SUPER GT initialization */
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
@@ -764,12 +740,13 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Exit(%p)", pGT));
 
    pWVT = HB_GTWVT_GET( pGT );
-   HB_GTSUPER_EXIT( pGT );
-
-   app->quit();
-
    if( pWVT )
+   {
+//OutputDebugString( "1" );
       hb_gt_wvt_Free( pWVT );
+//OutputDebugString( "111" );
+   }
+   HB_GTSUPER_EXIT( pGT );
 }
 
 /* ********************************************************************** */
@@ -843,30 +820,14 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
    {
       if( pWVT->qWnd ) /* Is the window already open */
       {
-         QFont *qFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
-                                           pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
-
-         if( qFont )
-         {
-            /*
-             * make sure that the mode selected along with the current
-             * font settings will fit in the window
-             */
-            if( hb_gt_wvt_QValidWindowSize( iRow, iCol, qFont, pWVT->fontWidth ) )
-            {
-               fResult = hb_gt_wvt_QInitWindow( pWVT, iRow, iCol );
-            }
-            qFont->~QFont();
-            HB_GTSELF_REFRESH( pGT );
-         }
-      }
-      else
-      {
-         fResult = hb_gt_wvt_QSetWindowSize( pWVT, iRow, iCol );
-         HB_GTSELF_SEMICOLD( pGT );
+         /*
+          * make sure that the mode selected along with the current
+          * font settings will fit in the window
+          */
+         fResult = hb_gt_wvt_QInitWindow( pWVT, iRow, iCol );
+         HB_GTSELF_REFRESH( pGT );
       }
    }
-
    return fResult;
 }
 
@@ -898,8 +859,8 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
 
    pWVT = HB_GTWVT_GET( pGT );
 
-   if( pWVT->qWnd ) /* Is the window already open */
-      hb_gt_wvt_ProcessMessages();
+   if( pWVT->qEventLoop ) /* Is the window already open */
+      pWVT->qEventLoop->processEvents();
 
    fKey = hb_gt_wvt_GetCharFromInputQueue( pWVT, &c );
 
@@ -1270,7 +1231,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   Qt::WindowFlags flags = pWVT->qWnd->windowFlags();
                   if( pWVT->bResizable )
                   {
-                     flags |= Qt::WindowMaximizeButtonHint;
+                     flags = flags | Qt::WindowMaximizeButtonHint;
                      pWVT->qWnd->setMinimumWidth( 0 );
                      pWVT->qWnd->setMaximumWidth( QDesktopWidget().width() );
                      pWVT->qWnd->setMinimumHeight( 50 );
@@ -1493,6 +1454,7 @@ ConsoleArea::ConsoleArea(QWidget *parent)
     : QWidget(parent)
 {
    setAttribute(Qt::WA_StaticContents);
+   setAttribute(Qt::WA_PaintOnScreen);
 
    COLORS[ 0] = BLACK;
    COLORS[ 1] = BLUE;
@@ -1517,11 +1479,13 @@ ConsoleArea::ConsoleArea(QWidget *parent)
    setFocusPolicy(Qt::StrongFocus);
    setMouseTracking( TRUE );
 
-   pu_bBlinking  = FALSE;
+   pu_bBlinking = FALSE;
    pv_timer = new QBasicTimer();
 
    bFirst   = TRUE;
    bSizing  = FALSE;
+
+   image    = new QImage();
 }
 
 void ConsoleArea::resetWindowSize(void)
@@ -1536,28 +1500,24 @@ void ConsoleArea::resetWindowSize(void)
    qFont = QFont();
    qFont.setFamily( pWVT->fontFace );
    qFont.setPixelSize( pWVT->fontHeight );
-   //qFont.setWeight( -1 );
    qFont.setFixedPitch( TRUE );
-   /* works - devise strategy to exploit it while resizing */
-   /* qFont.setStretch( 50 ); */
    qFont        = QFont( qFont, painter.device() );
    QFontMetrics fontMetrics( qFont );
    fontHeight   = fontMetrics.height();
    fontWidth    = fontMetrics.averageCharWidth();
    fontAscent   = fontMetrics.ascent();
-   pWVT->PTEXTSIZE.setX( fontWidth );
-   pWVT->PTEXTSIZE.setY( fontHeight );
    windowWidth  = fontWidth * COLS;
    windowHeight = fontHeight * ROWS;
-   wW = windowWidth;
-   wH = windowHeight;
-   iFW = fontWidth;
-   iFH = fontHeight;
 
-   resizeImage( &image, QSize( windowWidth, windowHeight ) );
-   image.fill( qRgb( 198,198,198 ) );
+   pWVT->PTEXTSIZE.setX( fontWidth );
+   pWVT->PTEXTSIZE.setY( fontHeight );
+
+   resizeImage( QSize( windowWidth, windowHeight ) );
+   image->fill( qRgb( 198,198,198 ) );
    setFont( qFont );
+   setFocus(Qt::OtherFocusReason);
    update();
+
 #if 0
    wsprintf( buf, "%i %i  %i %i", pWVT->fontWidth, pWVT->fontHeight, fontWidth, fontHeight);
    OutputDebugString( buf );
@@ -1567,7 +1527,7 @@ void ConsoleArea::resetWindowSize(void)
 void ConsoleArea::redrawBuffer( const QRect & rect )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-   QPainter painter(&image);
+   QPainter painter(image);
    QFont font( qFont, painter.device() );
    painter.setFont( font );
    painter.setBackgroundMode(Qt::OpaqueMode);
@@ -1580,17 +1540,17 @@ void ConsoleArea::redrawBuffer( const QRect & rect )
 
    for( iRow = rcRect.top(); iRow <= rcRect.bottom(); ++iRow )
    {
-      iCol     = startCol = rcRect.left();
-      len      = 0;
-      iTop     = ( iRow * fontHeight ) + fontAscent;
-      text[0]  = '\0';
+      iCol    = startCol = rcRect.left();
+      len     = 0;
+      iTop    = ( iRow * fontHeight ) + fontAscent;
+      text[0] = '\0';
 
       while( iCol <= rcRect.right() )
       {
          if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
             break;
 
-         // usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, TRUE, ( BYTE ) usChar );
+         //usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, TRUE, ( BYTE ) usChar );
          if( len == 0 )
          {
             bOldColor = bColor;
@@ -1621,7 +1581,10 @@ void ConsoleArea::redrawBuffer( const QRect & rect )
 void ConsoleArea::paintEvent(QPaintEvent * event)
 {
    QPainter painter(this);
-   painter.drawImage( event->rect(), image, event->rect() );
+   painter.drawImage( event->rect(), *image, event->rect() );
+
+   /* Scaling works but a lot is required ! */
+   //painter.drawImage( rect(), image, image.rect() );
 }
 
 bool ConsoleArea::createCaret(int iWidth, int iHeight)
@@ -1632,13 +1595,14 @@ bool ConsoleArea::createCaret(int iWidth, int iHeight)
 }
 void ConsoleArea::hideCaret(void)
 {
-   displayCell( pu_crtLastRow, pu_crtLastCol );
    pv_timer->stop();
+   pu_bBlinking = FALSE;
+   displayCell( pu_crtLastRow, pu_crtLastCol );
 }
 void ConsoleArea::showCaret(void)
 {
    displayCell( pu_crtLastRow, pu_crtLastCol );
-   pv_timer->start(350,this);
+   pv_timer->start(250,this);
 }
 void ConsoleArea::destroyCaret(void)
 {
@@ -1651,10 +1615,9 @@ void ConsoleArea::setCaretPos(int iCol, int iRow)
    pu_crtLastCol = iCol;
    pu_crtLastRow = iRow;
 }
-
 void ConsoleArea::displayCell( int iCol, int iRow )
 {
-   QPainter painter(&image);
+   QPainter painter(image);
    painter.setBackgroundMode(Qt::OpaqueMode);
    QFont font( qFont, painter.device() );
    painter.setFont( font );
@@ -1668,17 +1631,17 @@ void ConsoleArea::displayCell( int iCol, int iRow )
       painter.setBackground( QBrush( COLORS[ bColor >> 4 ] ) );
       painter.drawText( QPoint( iCol*fontWidth, ( iRow*fontHeight ) + fontAscent ), QString( usChar ) );
    }
-   update( QRect( iCol*fontWidth, iRow*fontHeight, fontWidth, fontHeight ) );
+   //update( QRect( iCol*fontWidth, iRow*fontHeight, fontWidth, fontHeight ) );
+   repaint( QRect( iCol*fontWidth, iRow*fontHeight, fontWidth, fontHeight ) );
 }
-
 void ConsoleArea::displayBlock( int iCol, int iRow )
 {
-   QPainter painter(&image);
+   QPainter painter(image);
    painter.fillRect( QRect( iCol*fontWidth, iRow*fontHeight+(fontHeight-pu_crtHeight),
-                            fontWidth, pu_crtHeight /*fontHeight*3/4*/ ), qRgb( 255,255,255 ) );
-   update( QRect( iCol*fontWidth, iRow*fontHeight, fontWidth, fontHeight ) );
+                            fontWidth, pu_crtHeight ), qRgb( 255,255,255 ) );
+   //update( QRect( iCol*fontWidth, iRow*fontHeight, fontWidth, fontHeight ) );
+   repaint( QRect( iCol*fontWidth, iRow*fontHeight, fontWidth, fontHeight ) );
 }
-
 void ConsoleArea::timerEvent(QTimerEvent *event)
 {
    if( event->timerId() == pv_timer->timerId() )
@@ -1710,51 +1673,43 @@ void ConsoleArea::resizeEvent(QResizeEvent *event)
    int iH  = height();
 
    if( bFirst )
+   {
       bFirst = FALSE;
+      QWidget::resizeEvent(event);
+   }
    else
    {
-   if( windowWidth != iW || windowHeight != iH )
-   {
-      int iFH  = iH / (ROWS);
-      int iStr = qFont.stretch();
-      int fac  = iStr + ( ( iW - windowWidth ) / COLS );
+      if( windowWidth != iW || windowHeight != iH )
+      {
+         int iFH  = iH / (ROWS);
+         int iStr = qFont.stretch();
+         int fac  = iStr + ( ( iW - windowWidth ) / COLS );
 
-      QFontMetrics fmm( qFont );
+         QFontMetrics fmm( qFont );
 
-#if 0
-wsprintf( buf, "BEFORE pixelSize = %i fontWidth=%i iFH=%i fac=%i str=%i",
-                       fmm.height(),fmm.averageCharWidth(),iFH,fac,iStr );
-OutputDebugString( buf );
-#endif
-      QPainter painter( this );
-      qFont  = QFont( qFont, painter.device() );
-      qFont.setPointSize( 0 );
-      qFont.setPixelSize( iFH-3 );
-      qFont.setStretch( fac );
-      QFontMetrics fm( qFont );
-      fontHeight   = fm.height();
-      fontWidth    = fm.averageCharWidth();
-      fontAscent   = fm.ascent();
-      pWVT->PTEXTSIZE.setX( fontWidth );
-      pWVT->PTEXTSIZE.setY( fontHeight );
-      windowWidth  = fontWidth * COLS;
-      windowHeight = fontHeight * ROWS;
-#if 0
-wsprintf( buf, " AFTER pixelSize = %i fontWidth=%i", fm.height(), fm.averageCharWidth() );
-OutputDebugString( buf );
-#endif
-      resizeImage( &image, QSize( windowWidth, windowHeight ) );
-      redrawBuffer( image.rect() );
+         QPainter painter( this );
+         qFont = QFont( qFont, painter.device() );
+         qFont.setPointSize( 0 );
+         qFont.setPixelSize( iFH-3 );  /* 3 in cases this is not the exact value but still... */
+         qFont.setStretch( fac );
+         QFontMetrics fm( qFont );
+         fontHeight   = fm.height();
+         fontWidth    = fm.averageCharWidth();
+         fontAscent   = fm.ascent();
+         windowWidth  = fontWidth * COLS;
+         windowHeight = fontHeight * ROWS;
 
-      // Works but rolls back successively once event loop comes out of resizing mode
-      // So where to handle it ?
-      //
-      // pWVT->qWnd->resize( windowWidth,windowHeight );
+         pWVT->PTEXTSIZE.setX( fontWidth );
+         pWVT->PTEXTSIZE.setY( fontHeight );
+         resizeImage( QSize( windowWidth, windowHeight ) );
+         redrawBuffer( image->rect() );
 
-      hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
-   }
-
-   QWidget::resizeEvent(event);
+         hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
+      }
+      else
+      {
+         QWidget::resizeEvent(event);
+      }
    }
 }
 
@@ -1767,32 +1722,29 @@ void ConsoleArea::focusInEvent(QFocusEvent *event)
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
    hb_gt_wvt_QUpdateCaret( pWVT );
+   /* We can fire this event but cannot fire OUT event, message loop gets confused */
    hb_gt_wvt_FireEvent( pWVT, HB_GTE_SETFOCUS );
-   QWidget::focusInEvent(event);
 }
 
 void ConsoleArea::focusOutEvent(QFocusEvent *event)
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-   displayCell( pu_crtLastCol, pu_crtLastRow );
    hb_gt_wvt_QKillCaret( pWVT );
-   hb_gt_wvt_FireEvent( pWVT, HB_GTE_KILLFOCUS );
-   QWidget::focusOutEvent(event);
+   /* Either of IN or OUT messagess */
+   /* hb_gt_wvt_FireEvent( pWVT, HB_GTE_KILLFOCUS ); */
 }
 
-void ConsoleArea::resizeImage(QImage *image, const QSize &newSize)
+void ConsoleArea::resizeImage(const QSize &newSize)
 {
    if (image->size() == newSize)
        return;
 
-   QImage newImage( newSize, QImage::Format_RGB32 );
-   newImage.fill( qRgb( 255, 255, 255 ) );
-   QPainter painter( &newImage );
+   QImage *newImage = new QImage( newSize, QImage::Format_RGB32 );
+   newImage->fill( qRgb( 255, 255, 255 ) );
+   QPainter painter( newImage );
    painter.drawImage( QPoint(0,0), *image );
-   *image = newImage;
+   image = newImage;
  }
-
-/*----------------------------------------------------------------------*/
 
 static void hb_gt_wvt_QTranslateKey( PHB_GTWVT pWVT, Qt::KeyboardModifiers kbm, int key, int shiftkey, int altkey, int controlkey )
 {
@@ -2431,9 +2383,9 @@ void ConsoleArea::wheelEvent(QWheelEvent *event)
    {
    case Qt::Vertical:
       if( event->delta() < 0 )
-         c = K_MWFORWARD;
-      else
          c = K_MWBACKWARD;
+      else
+         c = K_MWFORWARD;
       break;
    case Qt::Horizontal:
    default:
@@ -2481,6 +2433,7 @@ void ConsoleArea::mouseMoveEvent(QMouseEvent *event)
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
    int c = K_MOUSEMOVE;
+
 #if defined( __HB_GTWVT_GEN_K_MMDOWN_EVENTS )
    switch( event->button() )
    {
@@ -2511,6 +2464,12 @@ void ConsoleArea::mousePressEvent(QMouseEvent *event)
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
    int c = 0;
+
+   if( bSizing )
+   {
+      bSizing = FALSE;
+      pWVT->qWnd->setWindowSize();
+   }
 
    switch( event->button() )
    {
@@ -2544,7 +2503,6 @@ void ConsoleArea::mouseReleaseEvent(QMouseEvent *event)
 
    if( bSizing )
    {
-//OutputDebugString( "XXXXXXXXXXXXX" );
       bSizing = FALSE;
       pWVT->qWnd->setWindowSize();
    }
@@ -2576,18 +2534,12 @@ void ConsoleArea::mouseReleaseEvent(QMouseEvent *event)
 
 bool ConsoleArea::event(QEvent *event)
 {
-   // PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-#if 0
-   wsprintf( buf, "Event=%i", event->type() );
-   OutputDebugString( buf );
-
-   if( bSizing )
+   if( bSizing && ( event->type() == QEvent::Enter || event->type() == QEvent::Leave ) )
    {
-OutputDebugString( "EVENT" );
+      PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
       bSizing = FALSE;
       pWVT->qWnd->setWindowSize();
    }
-#endif
    return( QWidget::event( event ) );
 }
 /*----------------------------------------------------------------------*/
@@ -2598,10 +2550,10 @@ OutputDebugString( "EVENT" );
 
 MainWindow::MainWindow()
 {
-   consoleArea = new ConsoleArea;
+   consoleArea = new ConsoleArea();
    setCentralWidget(consoleArea);
 
-   setFocusPolicy(Qt::StrongFocus);
+   //setFocusPolicy(Qt::StrongFocus);
 
    Qt::WindowFlags flags = Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint |
                            Qt::WindowMinimizeButtonHint | Qt::WindowSystemMenuHint |
@@ -2612,17 +2564,23 @@ MainWindow::MainWindow()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-   if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE ) == 1 )
+
+   if( s_wvtCount > 1 && pWVT->iHandle == 0 )
+   {
       event->ignore();
+   }
    else
    {
-      event->accept();
-      hbqt_exit( pGT );
+      if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE ) == 1 )
+      {
+         event->ignore();
+      }
+      else
+      {
+         event->accept();
+         hb_gt_wvt_AddCharToInputQueue( pWVT, K_ESC );
+      }
    }
-}
-
-MainWindow::~MainWindow()
-{
 }
 
 void MainWindow::setWindowSize( void )
