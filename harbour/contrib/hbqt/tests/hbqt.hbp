@@ -2,7 +2,9 @@
 # $Id$
 #
 
-{mingw|(gcc&(linux|darwin))}libs=supc++
+{allwin}libpaths=${HB_DIR_QT}\lib
+
+{mingw|mingwce|(gcc&(linux|darwin))}libs=supc++
 libs=hbqt
 {!darwin}libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
 {darwin}libs=/Library/Frameworks/QtCore.framework/QtCore

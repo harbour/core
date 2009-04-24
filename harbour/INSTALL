@@ -147,7 +147,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_MYSQL=C:\mysql\include
    HB_INC_OPENSSL=C:\openssl\inc32
    HB_INC_PGSQL=C:\pgsql\include
-   HB_INC_QT=C:\Qt\2009.01\qt\include
+   HB_INC_QT=C:\Qt\4.5.1\include
    HB_INC_SQLITE3=C:\sqlite3 (defaults to locally hosted version on win/os2)
 
    NOTES: - For mingw+msys and cygwin you have to use forward slashes
@@ -496,7 +496,7 @@ EXAMPLES
       set HB_INC_MYSQL=C:\mysql\include
       set HB_INC_OPENSSL=C:\openssl\inc32
       set HB_INC_PGSQL=C:\pgsql\include
-      set HB_INC_QT=C:\Qt\2009.01\qt\include
+      set HB_INC_QT=C:\Qt\4.5.1\include
       -->8--
 
       --8<--
@@ -514,7 +514,7 @@ EXAMPLES
       set HB_DIR_MYSQL=C:\mysql
       set HB_DIR_OPENSSL=C:\openssl
       set HB_DIR_PGSQL=C:\pgsql
-      set HB_DIR_QT=C:\Qt\2009.01\qt
+      set HB_DIR_QT=C:\Qt\4.5.1
       rem
       set HB_BUILD_IMPLIB=yes
       -->8--

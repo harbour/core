@@ -27,8 +27,6 @@
 #define HB_GTI_SETPARENT         101
 #define HB_GTI_WINHANDLE         102
 
-REQUEST HB_ZipOpen
-
 //----------------------------------------------------------------------//
 
 STATIC nRows := 20, nCols := 60, nColorIndex := 1

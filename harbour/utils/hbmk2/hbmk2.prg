@@ -1095,9 +1095,9 @@ FUNCTION hbmk( aArgs )
       CASE Left( cParam, 2 ) == "-L" .AND. ;
            Len( cParam ) > 2
 
-         cParam := MacroProc( ArchCompFilter( SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
-         IF ! Empty( cParam )
-            AAdd( s_aLIBPATH, PathSepToTarget( cParam ) )
+         cParam := PathSepToTarget( MacroProc( ArchCompFilter( SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
+         IF ! Empty( cParam ) .AND. hb_DirExists( cParam )
+            AAdd( s_aLIBPATH, cParam )
          ENDIF
 
       CASE Left( cParamL, 2 ) == "-i" .AND. ;
@@ -3992,8 +3992,10 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       CASE Lower( Left( cLine, Len( "libpaths="     ) ) ) == "libpaths="     ; cLine := SubStr( cLine, Len( "libpaths="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( MacroProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
-            IF AScan( aLIBPATH, {|tmp| tmp == cItem } ) == 0
-               AAddNotEmpty( aLIBPATH, cItem )
+            IF ! Empty( cItem ) .AND. hb_DirExists( cItem )
+               IF AScan( aLIBPATH, {|tmp| tmp == cItem } ) == 0
+                  AAdd( aLIBPATH, cItem )
+               ENDIF
             ENDIF
          NEXT
 

@@ -42,7 +42,7 @@ FUNCTION Main()
    Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
    Hb_GtInfo( HB_GTI_FONTWIDTH, nWidth  )
    Hb_GtInfo( HB_GTI_FONTSIZE , nHeight )
-   Hb_GtInfo( HB_GTI_ICONFILE, "..\contrib\gtwvg\tests\vr_1.ico" )
+   Hb_GtInfo( HB_GTI_ICONFILE, "../../../contrib/hbqt/tests/test.ico" )
    SetCursor( 0 )
    SetColor( "n/w" )
 
@@ -209,7 +209,7 @@ PROCEDURE thFunc()
    if ( nBrowser % 2 ) != 0
       Hb_GtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
    endif
-   Hb_GtInfo( HB_GTI_WINTITLE, 'Test.dbf    ['+if( ( nBrowser % 2 ) != 0, 'RESIZABLE_BY_ROWS', 'RESIZABLE_BY_FONT' )+']' )
+   Hb_GtInfo( HB_GTI_WINTITLE, 'test.dbf    ['+if( ( nBrowser % 2 ) != 0, 'RESIZABLE_BY_ROWS', 'RESIZABLE_BY_FONT' )+']' )
 
    SetColor( aColor[ nColorIndex ] )
    CLS
@@ -235,7 +235,7 @@ PROCEDURE thFunc()
    cTitle := '<F11> Modal Dialog  <ReSize> <Maximize> <ESC>'
    DispOutAt( MaxRow(), 0, padc( cTitle, maxcol()+1 ), 'W+/R*' )
 
-   use test shared
+   use ../../../tests/test shared
    aStruct := DbStruct()
 
    oBrowse := TBrowse():New( 1, 0, maxrow()-1, maxcol() )
