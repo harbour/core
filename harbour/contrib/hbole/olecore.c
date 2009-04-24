@@ -72,6 +72,7 @@ static HB_TSD_NEW( s_oleData, sizeof( HB_OLEDATA ), NULL, NULL );
 
 HB_FUNC_EXTERN( HB_OLEAUTO );
 
+
 static void hb_olecore_init( void* cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
@@ -106,12 +107,40 @@ static HB_GARBAGE_FUNC( hb_ole_destructor )
 }
 
 
+static HB_GARBAGE_FUNC( hb_oleenum_destructor )
+{
+   IEnumVARIANT**  ppEnum = ( IEnumVARIANT** ) Cargo;
+
+   if( *ppEnum )
+   {
+#if HB_OLE_C_API
+      ( *ppEnum )->lpVtbl->Release( *ppEnum );
+#else
+      ( *ppEnum )->Release();
+#endif
+      *ppEnum = NULL;
+   }
+}
+
+
 static IDispatch* hb_oleParam( int iParam )
 {
    IDispatch**  ppDisp = ( IDispatch** ) hb_parptrGC( hb_ole_destructor, iParam );
 
    if( ppDisp && *ppDisp )
       return *ppDisp;
+
+   hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   return NULL;
+}
+
+
+static IEnumVARIANT* hb_oleenumParam( int iParam )
+{
+   IEnumVARIANT**  ppEnum = ( IEnumVARIANT** ) hb_parptrGC( hb_oleenum_destructor, iParam );
+
+   if( ppEnum && *ppEnum )
+      return *ppEnum;
 
    hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    return NULL;
@@ -228,6 +257,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
       case VT_DISPATCH:
       {
          hb_itemClear( pItem );
+
          if( pVariant->n1.n2.n3.pdispVal )
          {
             PHB_ITEM    pObject, pPtrGC;
@@ -512,6 +542,97 @@ HB_FUNC( OLERELEASE )
 }
 
 
+HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
+{
+   IDispatch *    pDisp = hb_oleParam( 1 );
+   IEnumVARIANT * pEnum;
+   VARIANTARG     variant;
+   DISPPARAMS     dispparam;
+   EXCEPINFO      excep;
+   UINT           uiArgErr;
+   HRESULT        lOleError;
+
+   memset( &excep, 0, sizeof( excep ) );
+   memset( &dispparam, 0, sizeof( dispparam ) ); /* empty parameters */
+   VariantInit( &variant );
+
+#if HB_OLE_C_API
+   lOleError = pDisp->lpVtbl->Invoke( pDisp, DISPID_NEWENUM, &IID_NULL,
+                                      LOCALE_USER_DEFAULT,
+                                      DISPATCH_PROPERTYGET,
+                                      &dispparam, &variant, &excep, &uiArgErr );
+#else
+   lOleError = pDisp->Invoke( DISPID_NEWENUM, IID_NULL,
+                              LOCALE_USER_DEFAULT,
+                              DISPATCH_PROPERTYGET,
+                              &dispparam, &variant, &excep, &uiArgErr );
+#endif
+
+   if( lOleError == S_OK )
+   {
+      if( variant.n1.n2.vt == VT_UNKNOWN )
+#if HB_OLE_C_API
+         lOleError = ( variant.n1.n2.n3.punkVal )->lpVtbl->QueryInterface( variant.n1.n2.n3.punkVal, 
+                       &IID_IEnumVARIANT, ( void** ) &pEnum );
+#else
+         lOleError = ( variant.n1.n2.n3.punkVal )->QueryInterface( variant.n1.n2.n3.punkVal, 
+                       IID_IEnumVARIANT, ( void** ) &pEnum );
+#endif
+      else if( variant.n1.n2.vt == VT_DISPATCH )
+#if HB_OLE_C_API
+         lOleError = ( variant.n1.n2.n3.pdispVal )->lpVtbl->QueryInterface( variant.n1.n2.n3.pdispVal, 
+                       &IID_IEnumVARIANT, ( void** ) &pEnum );
+#else
+         lOleError = ( variant.n1.n2.pdispVal )->QueryInterface( variant.n1.n2.n3.pdispVal, 
+                       IID_IEnumVARIANT, ( void** ) &pEnum );
+#endif
+      else
+      {
+         lOleError = -1; /* Invalid return value */
+      }
+
+      VariantClear( &variant );
+
+      if( lOleError == S_OK )
+      {
+         IEnumVARIANT**  ppEnum;
+
+         hb_setOleError( S_OK );
+
+         ppEnum = ( IEnumVARIANT** ) hb_gcAlloc( sizeof( IEnumVARIANT* ), hb_oleenum_destructor );
+         *ppEnum = pEnum;
+         hb_retptrGC( ppEnum );
+         return;
+      }
+   }
+   hb_setOleError( lOleError );
+   hb_ret();
+}
+
+
+HB_FUNC( __OLEENUMNEXT )
+{
+   IEnumVARIANT * pEnum = hb_oleenumParam( 1 );
+   VARIANTARG     variant;
+
+   VariantInit( &variant );
+#if HB_OLE_C_API
+   if( pEnum->lpVtbl->Next( pEnum, 1, &variant, NULL ) == S_OK )
+#else
+   if( pEnum->Next( pEnum, 1, &variant, NULL ) == S_OK )
+#endif
+   {
+      hb_oleVariantToItem( hb_stackReturnItem(), &variant );
+      if( variant.n1.n2.vt != VT_DISPATCH )
+         VariantClear( &variant );
+
+      hb_storl( TRUE, 2 );
+   }
+   else
+      hb_storl( FALSE, 2 );
+}
+
+
 HB_FUNC( OLEERROR )
 {
    hb_retnl( hb_getOleError() );
@@ -555,7 +676,7 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
    OLECHAR*    pMemberArray;
    DISPID      dispid;
    DISPPARAMS  dispparam;
-   VARIANTARG  RetVal;
+   VARIANTARG  variant;
    EXCEPINFO   excep;
    UINT        uiArgErr;
    HRESULT     lOleError;
@@ -628,25 +749,25 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
    if( lOleError == S_OK )
    {
       memset( &excep, 0, sizeof( excep ) );
-      VariantInit( &RetVal );
+      VariantInit( &variant );
       GetParams( &dispparam );
 
 #if HB_OLE_C_API
       lOleError = pDisp->lpVtbl->Invoke( pDisp, dispid, &IID_NULL,
                                          LOCALE_USER_DEFAULT,
                                          DISPATCH_PROPERTYGET | DISPATCH_METHOD,
-                                         &dispparam, &RetVal, &excep, &uiArgErr );
+                                         &dispparam, &variant, &excep, &uiArgErr );
 #else
       lOleError = pDisp->Invoke( dispid, IID_NULL,
                                  LOCALE_USER_DEFAULT,
                                  DISPATCH_PROPERTYGET | DISPATCH_METHOD,
-                                 &dispparam, &RetVal, &excep, &uiArgErr );
+                                 &dispparam, &variant, &excep, &uiArgErr );
 #endif
       FreeParams( &dispparam );
 
-      hb_oleVariantToItem( hb_stackReturnItem(), &RetVal );
-      if( RetVal.n1.n2.vt != VT_DISPATCH )
-         VariantClear( &RetVal );
+      hb_oleVariantToItem( hb_stackReturnItem(), &variant );
+      if( variant.n1.n2.vt != VT_DISPATCH )
+         VariantClear( &variant );
 
       hb_setOleError( lOleError );
       return;

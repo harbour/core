@@ -58,13 +58,57 @@ REQUEST __GETMESSAGE
 
 CLASS HB_OleAuto
    DATA __hObj
+   DATA __hObjEnum
 
+   METHOD __enumStart( enum, lDescend )
+   METHOD __enumSkip( enum, lDescend )
+   METHOD __enumStop()
    ERROR HANDLER __OnError()
 ENDCLASS
 
 
+METHOD __enumStart( enum, lDescend ) CLASS HB_OLEAUTO
+   LOCAL hObjEnum
+
+   IF lDescend
+      /* OLE does not support backward iteration. Runtime error could be a good choice also */
+      RETURN .F. 
+   ENDIF
+
+   hObjEnum := __OLEENUMCREATE( ::__hObj )
+   IF !EMPTY( hObjEnum )
+      IF !EMPTY( ::__hObjEnum )
+         /* small hack - clone the object array for nested FOR EACH calls */
+         self := __objClone( self )
+      ENDIF
+      ::__hObjEnum := hObjEnum
+      /* set base value for enumerator */
+      (@enum):__enumBase( self )
+      RETURN ::__enumSkip( @enum, lDescend )
+   ENDIF
+RETURN .F.
+
+
+METHOD __enumSkip( enum, lDescend ) CLASS HB_OLEAUTO
+   LOCAL lContinue, xValue
+
+   HB_SYMBOL_UNUSED( lDescend )
+   xValue := __OLEENUMNEXT( ::__hObjEnum, @lContinue )
+   /* set enumerator value */
+   (@enum):__enumValue( xValue )
+RETURN lContinue
+
+
+METHOD PROCEDURE __enumStop() CLASS HB_OLEAUTO
+   ::__hObjEnum := NIL     /* activate autodestructor */
+RETURN
+
+
+/* OLE functions */
+
 FUNC GetActiveObject( ... )
-LOCAL oOle, hOle
+   LOCAL oOle, hOle
+
    hOle := OleGetActiveObject( ... )
    IF ! EMPTY( hOle )
       oOle := HB_OleAuto()
@@ -74,10 +118,12 @@ RETURN oOle
 
 
 FUNC CreateObject( ... )
-LOCAL oOle, hOle
+   LOCAL oOle, hOle
+
    hOle := OleCreateObject( ... )
    IF ! EMPTY( hOle )
       oOle := HB_OleAuto()
       oOle:__hObj := hOle
    ENDIF
 RETURN oOle
+
