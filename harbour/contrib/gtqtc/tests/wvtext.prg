@@ -2,17 +2,17 @@
  * $Id$
  */
 
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 //
 //                  [x]Harbour Extended Features Deno
 //                                    .
 //                 Pritpal Bedi <pritpal@vouchcac.com>
 //
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #include "hbgtinfo.ch"
 #include "inkey.ch"
@@ -21,23 +21,18 @@
 
 #define RGB(r,g,b) ( r + ( g * 256 ) + ( b * 256 * 256 ) )
 
-//----------------------------------------------------------------------//
-
-// To be in hbgtinfo.ch
-//
-#define HB_GTI_SETPARENT         101
-#define HB_GTI_WINHANDLE         102
-
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 STATIC nRows := 20, nCols := 60, nColorIndex := 1
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 FUNCTION Main()
    Local nKey, lMark, lResize, lClose
    Local nHeight := 20
    Local nWidth  := Int( nHeight/2 )
    Local cFont
+
+   SET SCOREBOARD OFF
 
    Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
    Hb_GtInfo( HB_GTI_FONTWIDTH, nWidth  )
@@ -79,7 +74,7 @@ FUNCTION Main()
          SetPalette( 0 )
 
       CASE nKey == K_F7
-         SetPaletteIndex()
+         GetAVariable()
 
       CASE nKey == K_F8
          Alert( "Menu text changed. Was: " + hb_GtInfo( HB_GTI_SELECTCOPY, DToS(Date()) + " " + Time() ) )
@@ -91,7 +86,7 @@ FUNCTION Main()
    ENDDO
 
    RETURN NIL
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 STATIC FUNCTION MyNotifier( nEvent, ... )
 
    DO CASE
@@ -113,7 +108,7 @@ STATIC FUNCTION MyNotifier( nEvent, ... )
    ENDCASE
 
    RETURN 0
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 STATIC FUNCTION DispScreen()
    Local nRow := 12, nCol := 28
    Local cColor := "N/W"
@@ -136,7 +131,7 @@ STATIC FUNCTION DispScreen()
    DispOutAt( ++nRow, nCol, "< F4 Closable    Toggle >", cColor )
    DispOutAt( ++nRow, nCol, "< F5 Palette L   Repeat >", cColor )
    DispOutAt( ++nRow, nCol, "< F6 Palette D   Repeat >", cColor )
-   DispOutAt( ++nRow, nCol, "< F7 Palette By Index R >", cColor )
+   DispOutAt( ++nRow, nCol, "< F7     Get a Variable >", cColor )
    DispOutAt( ++nRow, nCol, "< F8 MarkCopy menu text >", cColor )
    DispOutAt( ++nRow, nCol, "<    Click Other Window >", cColor )
    DispOutAt( ++nRow, nCol, "<    Click X Button     >", cColor )
@@ -151,11 +146,11 @@ STATIC FUNCTION DispScreen()
 
    DispEnd()
    RETURN NIL
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 PROCEDURE HB_GTSYS()
    REQUEST HB_GT_QTC_DEFAULT
    RETURN
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 FUNCTION SetPalette( nMode )
    Local aPalette := Hb_GtInfo( HB_GTI_PALETTE )
 
@@ -175,23 +170,21 @@ FUNCTION SetPalette( nMode )
    DispScreen()
 
    RETURN NIL
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 FUNCTION SetPaletteIndex()
 
    Hb_GtInfo( HB_GTI_PALETTE, 8, RGB( 120, 200, 240 ) )
    DispScreen()
 
    RETURN NIL
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 PROCEDURE thFunc()
    Local cTitle, oBrowse, lEnd, nKey, i, aStruct, pGT1, pGT
-   Local aColor := { 'W+/N', 'W+/B', 'W+/G', 'W+/BG', 'W+/N*', 'W+/RB', 'N/W*', 'N/GR*' }
+   Local aColor := { 'W+/B', 'W+/G', 'W+/BG', 'W+/N*', 'W+/RB', 'N/W*', 'N/GR*', 'W+/N' }
 
    static nBrowser := 0
    static nZx := 0
    static nZy := 0
-
-   nColorIndex := 1
 
    ErrorBlock( {|oErr| MyErrorSys( oErr ) } )
 
@@ -252,6 +245,8 @@ PROCEDURE thFunc()
 
    oBrowse:configure()
 
+   HB_GtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| MyBrwNotifier( nEvent, oBrowse, ... ) } )
+
    lEnd := .f.
    While !lEnd
       oBrowse:ForceStable()
@@ -261,29 +256,11 @@ PROCEDURE thFunc()
       if BrwHandleKey( oBrowse, nKey, @lEnd )
          //
       else
-         if nKey == HB_K_RESIZE
-            cTitle := 'New Window with '+ltrim( str( MaxRow() ) )+;
-                          ' Rows and '+ltrim( str( MaxCol() ) )+' Columns'
-            DispOutAt( 0, 0, padc( cTitle, maxcol()+1 ), 'N/GR*' )
-            cTitle := '<F11> Modal Dialog  <ReSize> <Maximize> <ESC>'
-            DispOutAt( MaxRow(), 0, padc( cTitle, maxcol()+1 ), 'W+/R*' )
-
-            oBrowse:nBottom := MaxRow()-1
-            oBrowse:nRight  := MaxCol()
-            oBrowse:Configure()
-            oBrowse:RefreshAll()
-
-         elseif nKey == K_F11
-            // Initialization Phase . Can be a Dialog Class
-            // LIKE in Xbase++:
-            // oWnd := gtDialog():New( oParent, oOwner, aSize, aPos, aPresParam, lVisible )
-            //
-//            hWnd := hb_gtInfo( HB_GTI_WINHANDLE )
-
+         if nKey == K_F11
             pGT1 := hb_gtCreate( 'QTC' )
             pGT  := hb_gtSelect( pGT1 )
             SetMode( 7,40 )
-//            hb_gtInfo( HB_GTI_SETPARENT     , hWnd )
+
             hb_gtInfo( HB_GTI_SETPOS_ROWCOL , 4, 8 )
             hb_gtInfo( HB_GTI_WINTITLE      , 'Modal Dialog [ Row:4 Col:8 ]' )
             hb_gtInfo( HB_GTI_RESIZABLE     , .F.  )
@@ -307,7 +284,29 @@ PROCEDURE thFunc()
    DbCloseArea()
 
    RETURN
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+STATIC FUNCTION MyBrwNotifier( nEvent, oBrowse, ... )
+   LOCAL cTitle
+
+   DO CASE
+
+   CASE nEvent == HB_GTE_RESIZED
+      cTitle := 'New Window with '+ltrim( str( MaxRow() ) )+;
+                    ' Rows and '+ltrim( str( MaxCol() ) )+' Columns'
+      DispOutAt( 0, 0, padc( cTitle, maxcol()+1 ), 'N/GR*' )
+      cTitle := '<F11> Modal Dialog  <ReSize> <Maximize> <ESC>'
+      DispOutAt( MaxRow(), 0, padc( cTitle, maxcol()+1 ), 'W+/R*' )
+
+      oBrowse:nBottom := MaxRow()-1
+      oBrowse:nRight  := MaxCol()
+      oBrowse:configure()
+      oBrowse:refreshAll()
+      oBrowse:forceStable()
+
+   ENDCASE
+
+   RETURN 0
+/*----------------------------------------------------------------------*/
 STATIC FUNCTION DbSkipBlock( n, oTbr )
 
    LOCAL nSkipped := 0
@@ -326,7 +325,7 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
    endif
 
    RETURN  nSkipped
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 STATIC FUNCTION TBNext( oTbr )
 
    LOCAL nSaveRecNum := recno()
@@ -343,7 +342,7 @@ STATIC FUNCTION TBNext( oTbr )
    endif
 
    RETURN lMoved
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 STATIC FUNCTION TBPrev( oTbr )
    LOCAL nSaveRecNum := Recno()
    LOCAL lMoved := .T.
@@ -356,10 +355,10 @@ STATIC FUNCTION TBPrev( oTbr )
    endif
 
    RETURN lMoved
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 STATIC FUNCTION BlockField( i )
    RETURN  {|| fieldget( i ) }
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
    LOCAL lRet := .t.
 
@@ -424,7 +423,7 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
    endcase
 
    RETURN lRet
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 PROCEDURE MyErrorSys( oError )
 
    ? oError:Description
@@ -440,4 +439,18 @@ PROCEDURE MyErrorSys( oError )
    enddo
 
    RETURN
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION GetAVariable()
+   LOCAL getlist := {}
+   LOCAL cVrb    := space( 20 )
+   LOCAL cVrb1   := space( 20 )
+   LOCAL xScr    := SaveScreen( 9,30,10,50 )
+
+   @ 9,30 GET cVrb  COLOR 'W+/B*'
+   @10,30 GET cVrb1 COLOR 'W+/B*'
+   READ
+
+   RestScreen( 9,30,10,50, xScr )
+   RETURN NIL
+/*----------------------------------------------------------------------*/

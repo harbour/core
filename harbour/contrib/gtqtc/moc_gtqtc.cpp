@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'gtqtc.h'
 **
-** Created: Thu Apr 23 00:08:40 2009
+** Created: Fri Apr 24 14:36:06 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -17,7 +17,7 @@
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
-static const uint qt_meta_data_ConsoleArea[] = {
+static const uint qt_meta_data_DrawingArea[] = {
 
  // content:
        2,       // revision
@@ -31,29 +31,29 @@ static const uint qt_meta_data_ConsoleArea[] = {
        0        // eod
 };
 
-static const char qt_meta_stringdata_ConsoleArea[] = {
-    "ConsoleArea\0"
+static const char qt_meta_stringdata_DrawingArea[] = {
+    "DrawingArea\0"
 };
 
-const QMetaObject ConsoleArea::staticMetaObject = {
-    { &QWidget::staticMetaObject, qt_meta_stringdata_ConsoleArea,
-      qt_meta_data_ConsoleArea, 0 }
+const QMetaObject DrawingArea::staticMetaObject = {
+    { &QWidget::staticMetaObject, qt_meta_stringdata_DrawingArea,
+      qt_meta_data_DrawingArea, 0 }
 };
 
-const QMetaObject *ConsoleArea::metaObject() const
+const QMetaObject *DrawingArea::metaObject() const
 {
     return &staticMetaObject;
 }
 
-void *ConsoleArea::qt_metacast(const char *_clname)
+void *DrawingArea::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
-    if (!strcmp(_clname, qt_meta_stringdata_ConsoleArea))
-        return static_cast<void*>(const_cast< ConsoleArea*>(this));
+    if (!strcmp(_clname, qt_meta_stringdata_DrawingArea))
+        return static_cast<void*>(const_cast< DrawingArea*>(this));
     return QWidget::qt_metacast(_clname);
 }
 
-int ConsoleArea::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int DrawingArea::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QWidget::qt_metacall(_c, _id, _a);
     if (_id < 0)
