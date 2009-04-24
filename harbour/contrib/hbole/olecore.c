@@ -451,9 +451,14 @@ HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
       lOleError = CO_E_CLASSSTRING;
 
    hb_setOleError( lOleError );
-   ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
-   *ppDisp = pDisp;
-   hb_retptrGC( ppDisp );
+   if( lOleError == S_OK )
+   {
+      ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
+      *ppDisp = pDisp;
+      hb_retptrGC( ppDisp );
+   }
+   else
+      hb_ret();
 }
 
 
@@ -510,9 +515,14 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
       lOleError = CO_E_CLASSSTRING;
 
    hb_setOleError( lOleError );
-   ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
-   *ppDisp = pDisp;
-   hb_retptrGC( ppDisp );
+   if( lOleError == S_OK )
+   {
+      ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
+      *ppDisp = pDisp;
+      hb_retptrGC( ppDisp );
+   }
+   else
+      hb_ret();
 }
 
 
