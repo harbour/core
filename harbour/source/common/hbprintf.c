@@ -836,7 +836,7 @@ static size_t put_str( char *buffer, size_t bufsize, size_t size,
    return size;
 }
 
-int hb_snprintf( char * buffer, size_t bufsize, const char * format, ... )
+int hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap )
 {
    va_list args;
    size_t size;
@@ -858,13 +858,13 @@ int hb_snprintf( char * buffer, size_t bufsize, const char * format, ... )
       params.repeat = FALSE;
       if( params.maxarg > 0 )
       {
-         va_start( args, format );
+         va_copy( args, ap );
          va_arg_fill( &params, args );
          va_end( args );
       }
       format = fmt_start;
 #endif
-      va_start( args, format );
+      va_copy( args, ap );
       size = 0;
 
       do
@@ -1223,4 +1223,49 @@ int hb_snprintf( char * buffer, size_t bufsize, const char * format, ... )
    return ( int ) ( size - 1 );
 }
 
+#else /* ! defined( HB__USE_OWN_SNPRINTF ) */
+
+#undef _HB_SNPRINTF_ADD_EOS
+
+/* NOTE: The full size of the buffer is expected as nSize. [vszakats] */
+int hb_vsnprintf( char * buffer, size_t nSize, const char * format, va_list arglist )
+{
+   ULONG result;
+
+#if defined( __DJGPP__ ) && ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ <= 3 ) )
+   /* Use vsprintf() for DJGPP <= 2.03.
+      This is a temporary hack, should implement a C99 snprintf() ourselves. */
+   result = vsprintf( buffer, format, arglist );
+   #define _HB_SNPRINTF_ADD_EOS
+#elif defined( _MSC_VER ) && _MSC_VER >= 1400
+   result = _vsnprintf_s( buffer, nSize, _TRUNCATE, format, arglist );
+#elif ( defined( _MSC_VER ) || defined( __DMC__ ) ) && !defined( __XCC__ )
+   result = _vsnprintf( buffer, nSize, format, arglist );
+   #define _HB_SNPRINTF_ADD_EOS
+#elif defined( __WATCOMC__ ) && __WATCOMC__ < 1200
+   result = _vbprintf( buffer, nSize, format, arglist );
+#else
+   result = vsnprintf( buffer, nSize, format, arglist );
 #endif
+
+#ifdef _HB_SNPRINTF_ADD_EOS
+   if( buffer && nSize )
+      buffer[ nSize - 1 ] = '\0';
+#endif
+
+   return result;
+}
+
+#endif /* HB__USE_OWN_SNPRINTF */
+
+int hb_snprintf( char * buffer, size_t bufsize, const char * format, ... )
+{
+   va_list ap;
+   int iResult;
+
+   va_start( ap, format );
+   iResult = hb_vsnprintf( buffer, bufsize, format, ap );
+   va_end( ap );
+
+   return iResult;
+}
