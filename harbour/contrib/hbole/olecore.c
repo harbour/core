@@ -575,16 +575,14 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
          lOleError = ( variant.n1.n2.n3.punkVal )->lpVtbl->QueryInterface( variant.n1.n2.n3.punkVal, 
                        &IID_IEnumVARIANT, ( void** ) &pEnum );
 #else
-         lOleError = ( variant.n1.n2.n3.punkVal )->QueryInterface( variant.n1.n2.n3.punkVal, 
-                       IID_IEnumVARIANT, ( void** ) &pEnum );
+         lOleError = ( variant.n1.n2.n3.punkVal )->QueryInterface( IID_IEnumVARIANT, ( void** ) &pEnum );
 #endif
       else if( variant.n1.n2.vt == VT_DISPATCH )
 #if HB_OLE_C_API
          lOleError = ( variant.n1.n2.n3.pdispVal )->lpVtbl->QueryInterface( variant.n1.n2.n3.pdispVal, 
                        &IID_IEnumVARIANT, ( void** ) &pEnum );
 #else
-         lOleError = ( variant.n1.n2.pdispVal )->QueryInterface( variant.n1.n2.n3.pdispVal, 
-                       IID_IEnumVARIANT, ( void** ) &pEnum );
+         lOleError = ( variant.n1.n2.n3.pdispVal )->QueryInterface( IID_IEnumVARIANT, ( void** ) &pEnum );
 #endif
       else
       {
@@ -619,7 +617,7 @@ HB_FUNC( __OLEENUMNEXT )
 #if HB_OLE_C_API
    if( pEnum->lpVtbl->Next( pEnum, 1, &variant, NULL ) == S_OK )
 #else
-   if( pEnum->Next( pEnum, 1, &variant, NULL ) == S_OK )
+   if( pEnum->Next( 1, &variant, NULL ) == S_OK )
 #endif
    {
       hb_oleVariantToItem( hb_stackReturnItem(), &variant );
