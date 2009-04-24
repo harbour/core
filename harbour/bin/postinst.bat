@@ -107,6 +107,32 @@ if "%HB_BUILD_IMPLIB%" == "yes" (
          goto END
       )
 
+      if "%HB_COMPILER%" == "mingw" (
+
+         if exist "%HB_DIR_ADS%\Redistribute\ace32.lib"    copy /b /y "%HB_DIR_ADS%\Redistribute\ace32.lib"    "%HB_LIB_INSTALL%\libace32.a"
+         if exist "%HB_DIR_ADS%\ace32.lib"                 copy /b /y "%HB_DIR_ADS%\ace32.lib"                 "%HB_LIB_INSTALL%\libace32.a"
+         if exist "%HB_DIR_ADS%\32bit\ace32.lib"           copy /b /y "%HB_DIR_ADS%\32bit\ace32.lib"           "%HB_LIB_INSTALL%\libace32.a"
+         if exist "%HB_DIR_ALLEGRO%\lib\alleg.lib"         copy /b /y "%HB_DIR_ALLEGRO%\lib\alleg.lib"         "%HB_LIB_INSTALL%\liballeg.a"
+         if exist "%HB_DIR_BLAT%\full\blat.lib"            copy /b /y "%HB_DIR_BLAT%\full\blat.lib"            "%HB_LIB_INSTALL%\libblat.a"
+         if exist "%HB_DIR_CURL%\lib\libcurl.a"            copy /b /y "%HB_DIR_CURL%\lib\libcurl.a"            "%HB_LIB_INSTALL%\libcurl.a"
+         if exist "%HB_DIR_CURL%\lib\libcurldll.a"         copy /b /y "%HB_DIR_CURL%\lib\libcurldll.a"         "%HB_LIB_INSTALL%\libcurldll.a"
+         if exist "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"  copy /b /y "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"  "%HB_LIB_INSTALL%\libfbclient.a"
+         if exist "%HB_DIR_FREEIMAGE%\Dist\FreeImage.lib"  copy /b /y "%HB_DIR_FREEIMAGE%\Dist\FreeImage.lib"  "%HB_LIB_INSTALL%\libFreeImage.a"
+         if exist "%HB_DIR_GD%\lib\bgd.lib"                copy /b /y "%HB_DIR_GD%\lib\bgd.lib"                "%HB_LIB_INSTALL%\libbgd.a"
+         if exist "%HB_DIR_LIBHARU%\libhpdf.lib"           copy /b /y "%HB_DIR_LIBHARU%\libhpdf.lib"           "%HB_LIB_INSTALL%\libhpdf.a"
+         if exist "%HB_DIR_LIBHARU%\lib_dll\libhpdf.lib"   copy /b /y "%HB_DIR_LIBHARU%\lib_dll\libhpdf.lib"   "%HB_LIB_INSTALL%\libhpdf.a"
+         if exist "%HB_DIR_MYSQL%\lib\opt\libmySQL.lib"    copy /b /y "%HB_DIR_MYSQL%\lib\opt\libmySQL.lib"    "%HB_LIB_INSTALL%\libmySQL.a"
+         if exist "%HB_DIR_OPENSSL%\out32dll\libeay32.lib" copy /b /y "%HB_DIR_OPENSSL%\out32dll\libeay32.lib" "%HB_LIB_INSTALL%\libeay32.a"
+         if exist "%HB_DIR_OPENSSL%\dll\libeay32.lib"      copy /b /y "%HB_DIR_OPENSSL%\dll\libeay32.lib"      "%HB_LIB_INSTALL%\libeay32.a"
+         if exist "%HB_DIR_OPENSSL%\libeay32.lib"          copy /b /y "%HB_DIR_OPENSSL%\libeay32.lib"          "%HB_LIB_INSTALL%\libeay32.a"
+         if exist "%HB_DIR_OPENSSL%\out32dll\ssleay32.lib" copy /b /y "%HB_DIR_OPENSSL%\out32dll\ssleay32.lib" "%HB_LIB_INSTALL%\libssleay32.a"
+         if exist "%HB_DIR_OPENSSL%\dll\ssleay32.lib"      copy /b /y "%HB_DIR_OPENSSL%\dll\ssleay32.lib"      "%HB_LIB_INSTALL%\libssleay32.a"
+         if exist "%HB_DIR_OPENSSL%\ssleay32.lib"          copy /b /y "%HB_DIR_OPENSSL%\ssleay32.lib"          "%HB_LIB_INSTALL%\libssleay32.a"
+         if exist "%HB_DIR_PGSQL%\lib\libpq.lib"           copy /b /y "%HB_DIR_PGSQL%\lib\libpq.lib"           "%HB_LIB_INSTALL%\libpq.a"
+
+         goto END
+      )
+
       if "%HB_COMPILER%" == "pocc" (
 
          if exist "%HB_DIR_ADS%\Redistribute\ace32.lib"    copy /b /y "%HB_DIR_ADS%\Redistribute\ace32.lib"    "%HB_LIB_INSTALL%\ace32.lib"
