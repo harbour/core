@@ -1473,13 +1473,14 @@ DrawingArea::DrawingArea(QWidget *parent)
    /* Important but give it a thought */
    //setAttribute(Qt::WA_OpaquePaintEvent);
 
-   _bBlinking = FALSE;
+   _bBlinking  = FALSE;
    _basicTimer = new QBasicTimer();
 
-   _bFirst   = TRUE;
-   _bSizing  = FALSE;
+   _bFirst     = TRUE;
+   _bSizing    = FALSE;
+   _bCopying   = FALSE;
 
-   _image    = new QImage();
+   _image      = new QImage();
 }
 
 void DrawingArea::resetWindowSize(void)
@@ -1500,8 +1501,8 @@ void DrawingArea::resetWindowSize(void)
    _fontHeight   = fontMetrics.height();
    _fontWidth    = fontMetrics.averageCharWidth();
    _fontAscent   = fontMetrics.ascent();
-   _wndWidth  = _fontWidth * _iCOLS;
-   _wndHeight = _fontHeight * _iROWS;
+   _wndWidth     = _fontWidth * _iCOLS;
+   _wndHeight    = _fontHeight * _iROWS;
 
    pWVT->PTEXTSIZE.setX( _fontWidth );
    pWVT->PTEXTSIZE.setY( _fontHeight );
@@ -1509,18 +1510,16 @@ void DrawingArea::resetWindowSize(void)
    resizeImage( QSize( _wndWidth, _wndHeight ) );
    _image->fill( qRgb( 198,198,198 ) );
    setFont( _qFont );
-   setFocus(Qt::OtherFocusReason);
+   setFocus( Qt::OtherFocusReason );
    update();
 }
 
 void DrawingArea::drawBoxCharacter( QPainter *painter, USHORT usChar, BYTE bColor, int x, int y )
 {
-   painter->save();
-
    /* Common to all drawing operations except characters */
    int iGap  = 2;
-   int iMidY = y + _fontHeight/2;
-   int iMidX = x + _fontWidth/2;
+   int iMidY = y + _fontHeight / 2;
+   int iMidX = x + _fontWidth / 2;
    int iEndY = y + _fontHeight;
    int iEndX = x + _fontWidth;
 
@@ -1642,16 +1641,15 @@ void DrawingArea::drawBoxCharacter( QPainter *painter, USHORT usChar, BYTE bColo
       painter->drawText( QPoint( x,y+_fontAscent ), QString( usChar ) );
       break;
    }
-   painter->restore();
 }
 
 void DrawingArea::redrawBuffer( const QRect & rect )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-   QPainter painter(_image);
+   QPainter painter( _image );
    QFont font( _qFont, painter.device() );
    painter.setFont( font );
-   painter.setBackgroundMode(Qt::OpaqueMode);
+   painter.setBackgroundMode( Qt::OpaqueMode );
 
    USHORT usChar;
    int    iCol, iRow, len, iTop, startCol;
@@ -1679,19 +1677,16 @@ void DrawingArea::redrawBuffer( const QRect & rect )
 
          if( len == 0 )
          {
-            bOldAttr = bAttr;
+            bOldAttr  = bAttr;
             bOldColor = bColor;
          }
          else if( bColor != bOldColor || bAttr != bOldAttr )
          {
             text[ len ] = '\0';
-            #if 1
             if( bOldAttr & HB_GT_ATTR_BOX )
             {
-
             }
             else
-            #endif
             {
                painter.setPen( QPen( _COLORS[ bOldColor & 0x0F ] ) );
                painter.setBackground( QBrush( _COLORS[ bOldColor >> 4 ] ) );
@@ -1708,13 +1703,10 @@ void DrawingArea::redrawBuffer( const QRect & rect )
       if( len > 0 )
       {
          text[ len ] = '\0';
-         #if 1
          if( bOldAttr & HB_GT_ATTR_BOX )
          {
-
          }
          else
-         #endif
          {
             painter.setPen( QPen( _COLORS[ bOldColor & 0x0F ] ) );
             painter.setBackground( QBrush( _COLORS[ bOldColor >> 4 ] ) );
@@ -1724,38 +1716,38 @@ void DrawingArea::redrawBuffer( const QRect & rect )
    }
 }
 
-void DrawingArea::paintEvent(QPaintEvent * event)
+void DrawingArea::paintEvent( QPaintEvent * event )
 {
-   QPainter painter(this);
+   QPainter painter( this );
    painter.drawImage( event->rect(), *_image, event->rect() );
 
    /* Scaling works but a lot is required ! */
    //painter.drawImage( rect(), _image, _image.rect() );
 }
 
-bool DrawingArea::createCaret(int iWidth, int iHeight)
+bool DrawingArea::createCaret( int iWidth, int iHeight )
 {
    _crtWidth  = iWidth;
    _crtHeight = iHeight;
    return( TRUE );
 }
-void DrawingArea::hideCaret(void)
+void DrawingArea::hideCaret( void )
 {
    _basicTimer->stop();
    _bBlinking = FALSE;
    displayCell( _crtLastRow, _crtLastCol );
 }
-void DrawingArea::showCaret(void)
+void DrawingArea::showCaret( void )
 {
    displayCell( _crtLastRow, _crtLastCol );
-   _basicTimer->start(350,this);
+   _basicTimer->start( 350,this );
 }
-void DrawingArea::destroyCaret(void)
+void DrawingArea::destroyCaret( void )
 {
    _basicTimer->stop();
    displayCell( _crtLastRow, _crtLastCol );
 }
-void DrawingArea::setCaretPos(int iCol, int iRow)
+void DrawingArea::setCaretPos( int iCol, int iRow )
 {
    displayCell( _crtLastRow, _crtLastCol );
    _crtLastCol = iCol;
@@ -1763,8 +1755,8 @@ void DrawingArea::setCaretPos(int iCol, int iRow)
 }
 void DrawingArea::displayCell( int iRow, int iCol )
 {
-   QPainter painter(_image);
-   painter.setBackgroundMode(Qt::OpaqueMode);
+   QPainter painter( _image );
+   painter.setBackgroundMode( Qt::OpaqueMode );
    QFont font( _qFont, painter.device() );
    painter.setFont( font );
 
@@ -1784,11 +1776,11 @@ void DrawingArea::displayBlock( int iRow, int iCol )
 {
    QPainter painter(_image);
    painter.fillRect( QRect( iCol*_fontWidth, iRow*_fontHeight+(_fontHeight-_crtHeight),
-                            _fontWidth, _crtHeight ), qRgb( 255,255,255 ) );
+                                        _fontWidth, _crtHeight ), qRgb( 255,255,255 ) );
    /* We need immediate painting */
    repaint( QRect( iCol*_fontWidth, iRow*_fontHeight, _fontWidth, _fontHeight ) );
 }
-void DrawingArea::timerEvent(QTimerEvent *event)
+void DrawingArea::timerEvent( QTimerEvent *event )
 {
    if( event->timerId() == _basicTimer->timerId() )
    {
@@ -1805,26 +1797,26 @@ void DrawingArea::timerEvent(QTimerEvent *event)
    }
    else
    {
-      QWidget::timerEvent(event);
+      QWidget::timerEvent( event );
    }
 }
 
-void DrawingArea::resizeImage(const QSize &newSize)
+void DrawingArea::resizeImage( const QSize &newSize )
 {
-   if (_image->size() == newSize)
-       return;
+   if ( _image->size() == newSize )
+      return;
 
    QImage *newImage = new QImage( newSize, QImage::Format_RGB32 );
    newImage->fill( qRgb( 255, 255, 255 ) );
    QPainter painter( newImage );
-   painter.drawImage( QPoint(0,0), *_image );
+   painter.drawImage( QPoint( 0,0 ), *_image );
    /* Cleanup Memory */
    delete _image;
    /* Assign new image */
    _image = newImage;
 }
 
-void DrawingArea::resizeEvent(QResizeEvent *event)
+void DrawingArea::resizeEvent( QResizeEvent *event )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
 
@@ -1836,7 +1828,7 @@ void DrawingArea::resizeEvent(QResizeEvent *event)
    if( _bFirst )
    {
       _bFirst = FALSE;
-      QWidget::resizeEvent(event);
+      QWidget::resizeEvent( event );
    }
    else
    {
@@ -1859,7 +1851,7 @@ void DrawingArea::resizeEvent(QResizeEvent *event)
          }
          else
          {
-            int iFH  = iH / (_iROWS);
+            int iFH  = iH / ( _iROWS );
             int iStr = _qFont.stretch();
             int fac  = iStr + ( ( iW - _wndWidth ) / _iCOLS );
 
@@ -1886,39 +1878,38 @@ void DrawingArea::resizeEvent(QResizeEvent *event)
       }
       else
       {
-         QWidget::resizeEvent(event);
+         QWidget::resizeEvent( event );
       }
    }
 }
 
-void DrawingArea::moveEvent(QMoveEvent *event)
+void DrawingArea::moveEvent( QMoveEvent *event )
 {
-   QWidget::moveEvent(event);
+   QWidget::moveEvent( event );
 }
 
-void DrawingArea::focusInEvent(QFocusEvent *event)
+void DrawingArea::focusInEvent( QFocusEvent *event )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
    hb_gt_wvt_QUpdateCaret( pWVT );
    /* We can fire this event but cannot fire OUT event, message loop gets confused */
    //hb_gt_wvt_FireEvent( pWVT, HB_GTE_SETFOCUS );
-   QWidget::focusInEvent(event);
+   QWidget::focusInEvent( event );
 }
 
-void DrawingArea::focusOutEvent(QFocusEvent *event)
+void DrawingArea::focusOutEvent( QFocusEvent *event )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
    hb_gt_wvt_QKillCaret( pWVT );
    HB_SYMBOL_UNUSED( event );
    /* Either of IN or OUT messagess */
    /* hb_gt_wvt_FireEvent( pWVT, HB_GTE_KILLFOCUS ); */
-   QWidget::focusOutEvent(event);
+   QWidget::focusOutEvent( event );
 }
 
-void DrawingArea::keyReleaseEvent(QKeyEvent *event)
+void DrawingArea::keyReleaseEvent( QKeyEvent *event )
 {
    HB_SYMBOL_UNUSED( event );
-   //int key = event->key();
 }
 
 void hb_gt_wvt_QSetMousePos( PHB_GTWVT pWVT, int x, int y )
@@ -1929,7 +1920,7 @@ void hb_gt_wvt_QSetMousePos( PHB_GTWVT pWVT, int x, int y )
    pWVT->MousePos.setX( colrow.x() );
 }
 
-void DrawingArea::wheelEvent(QWheelEvent *event)
+void DrawingArea::wheelEvent( QWheelEvent *event )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
    int c = 0;
@@ -1944,7 +1935,7 @@ void DrawingArea::wheelEvent(QWheelEvent *event)
       break;
    case Qt::Horizontal:
    default:
-      QWidget::wheelEvent(event);
+      QWidget::wheelEvent( event );
       return;
    }
    if( c != 0 )
@@ -1954,7 +1945,7 @@ void DrawingArea::wheelEvent(QWheelEvent *event)
    }
 }
 
-void DrawingArea::mouseDoubleClickEvent(QMouseEvent *event)
+void DrawingArea::mouseDoubleClickEvent( QMouseEvent *event )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
    int c = 0;
@@ -1974,7 +1965,7 @@ void DrawingArea::mouseDoubleClickEvent(QMouseEvent *event)
    case Qt::XButton1:
    case Qt::XButton2:
    case Qt::NoButton:
-      QWidget::mouseDoubleClickEvent(event);
+      QWidget::mouseDoubleClickEvent( event );
       return;
    }
    if( c != 0 )
@@ -1984,7 +1975,7 @@ void DrawingArea::mouseDoubleClickEvent(QMouseEvent *event)
    }
 }
 
-void DrawingArea::mouseMoveEvent(QMouseEvent *event)
+void DrawingArea::mouseMoveEvent( QMouseEvent *event )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
    int c = K_MOUSEMOVE;
@@ -2004,7 +1995,7 @@ void DrawingArea::mouseMoveEvent(QMouseEvent *event)
    case Qt::XButton1:
    case Qt::XButton2:
    case Qt::NoButton:
-      QWidget::mouseMoveEvent(event);
+      QWidget::mouseMoveEvent( event );
       return;
    }
 #endif
@@ -2015,7 +2006,7 @@ void DrawingArea::mouseMoveEvent(QMouseEvent *event)
    }
 }
 
-void DrawingArea::mousePressEvent(QMouseEvent *event)
+void DrawingArea::mousePressEvent( QMouseEvent *event )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
    int c = 0;
@@ -2041,7 +2032,7 @@ void DrawingArea::mousePressEvent(QMouseEvent *event)
    case Qt::XButton1:
    case Qt::XButton2:
    case Qt::NoButton:
-      QWidget::mousePressEvent(event);
+      QWidget::mousePressEvent( event );
       return;
    }
    if( c != 0 )
@@ -2051,7 +2042,7 @@ void DrawingArea::mousePressEvent(QMouseEvent *event)
    }
 }
 
-void DrawingArea::mouseReleaseEvent(QMouseEvent *event)
+void DrawingArea::mouseReleaseEvent( QMouseEvent *event )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
    int c = 0;
@@ -2077,7 +2068,7 @@ void DrawingArea::mouseReleaseEvent(QMouseEvent *event)
    case Qt::XButton1:
    case Qt::XButton2:
    case Qt::NoButton:
-      QWidget::mouseReleaseEvent(event);
+      QWidget::mouseReleaseEvent( event );
       return;
    }
    if( c != 0 )
@@ -2087,7 +2078,7 @@ void DrawingArea::mouseReleaseEvent(QMouseEvent *event)
    }
 }
 
-bool DrawingArea::event(QEvent *event)
+bool DrawingArea::event( QEvent *event )
 {
    if( _bSizing && ( event->type() == QEvent::Enter || event->type() == QEvent::Leave ) )
    {
@@ -2169,7 +2160,7 @@ static void hb_gt_wvt_QTranslateKeyKP( PHB_GTWVT pWVT, Qt::KeyboardModifiers kbm
    }
 }
 
-void DrawingArea::keyPressEvent(QKeyEvent *event)
+void DrawingArea::keyPressEvent( QKeyEvent *event )
 {
    int  c = 0;
    Qt::KeyboardModifiers kbm = event->modifiers();
@@ -2490,7 +2481,7 @@ void DrawingArea::keyPressEvent(QKeyEvent *event)
          c = event->key();
       else
       {
-         QWidget::keyPressEvent(event);
+         QWidget::keyPressEvent( event );
          return ;
       }
    }
@@ -2509,13 +2500,13 @@ MainWindow::MainWindow()
                            Qt::WindowMinimizeButtonHint | Qt::WindowSystemMenuHint |
                            Qt::WindowTitleHint | Qt::CustomizeWindowHint | Qt::Window ;
    setWindowFlags( flags );
-   setFocusPolicy(Qt::StrongFocus);
+   setFocusPolicy( Qt::StrongFocus );
 
    _drawingArea = new DrawingArea();
-   setCentralWidget(_drawingArea);
+   setCentralWidget( _drawingArea );
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void MainWindow::closeEvent( QCloseEvent *event )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
 

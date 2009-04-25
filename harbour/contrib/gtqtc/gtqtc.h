@@ -186,23 +186,23 @@ class DrawingArea : public QWidget
    Q_OBJECT
 
 public:
-   DrawingArea(QWidget *parent = 0);
+   DrawingArea( QWidget *parent = 0 );
 
    PHB_GT pGT;
 
-   void   resetWindowSize(void);
-   void   redrawBuffer(const QRect & rect );
+   void   resetWindowSize( void );
+   void   redrawBuffer( const QRect & rect );
 
-   bool   createCaret(int iWidth, int iHeight);
-   void   showCaret(void);
-   void   hideCaret(void);
-   void   setCaretPos(int iRow, int iCol);
+   bool   createCaret( int iWidth, int iHeight );
+   void   showCaret( void );
+   void   hideCaret( void );
+   void   setCaretPos( int iRow, int iCol );
    void   destroyCaret();
 
-   void   displayCell(int iRow, int iCol);
-   void   displayBlock(int iRow, int iCol);
-   void   resizeImage(const QSize &newSize);
-   void   drawBoxCharacter(QPainter *painter, USHORT usChar, BYTE bColor, int x, int y);
+   void   displayCell( int iRow, int iCol );
+   void   displayBlock( int iRow, int iCol );
+   void   resizeImage( const QSize &newSize );
+   void   drawBoxCharacter( QPainter *painter, USHORT usChar, BYTE bColor, int x, int y );
 
    QRgb   _COLORS[ 16 ];
 
@@ -221,28 +221,29 @@ public:
 
    bool   _bFirst;
    bool   _bSizing;
+   bool   _bCopying;
 
    QBasicTimer *_basicTimer;
 
 protected:
-   void   keyPressEvent(QKeyEvent *event);
-   void   keyReleaseEvent(QKeyEvent *event);
-   void   mousePressEvent(QMouseEvent *event);
-   void   mouseMoveEvent(QMouseEvent *event);
-   void   mouseReleaseEvent(QMouseEvent *event);
-   void   mouseDoubleClickEvent(QMouseEvent * event);
-   void   paintEvent(QPaintEvent *event);
-   void   resizeEvent(QResizeEvent *event);
-   void   wheelEvent(QWheelEvent *event);
-   void   timerEvent(QTimerEvent *event);
-   void   focusInEvent(QFocusEvent *event);
-   void   focusOutEvent(QFocusEvent *event);
-   void   moveEvent(QMoveEvent *event);
-   bool   event(QEvent *event);
+   void   keyPressEvent( QKeyEvent *event );
+   void   keyReleaseEvent( QKeyEvent *event );
+   void   mousePressEvent( QMouseEvent *event );
+   void   mouseMoveEvent( QMouseEvent *event );
+   void   mouseReleaseEvent( QMouseEvent *event );
+   void   mouseDoubleClickEvent( QMouseEvent * event );
+   void   paintEvent( QPaintEvent *event );
+   void   resizeEvent( QResizeEvent *event );
+   void   wheelEvent( QWheelEvent *event );
+   void   timerEvent( QTimerEvent *event );
+   void   focusInEvent( QFocusEvent *event );
+   void   focusOutEvent( QFocusEvent *event );
+   void   moveEvent( QMoveEvent *event );
+   bool   event( QEvent *event );
 
 private:
-   QFont       _qFont;
-   QImage      *_image;
+   QFont  _qFont;
+   QImage *_image;
 };
 
 /*----------------------------------------------------------------------*/
@@ -260,7 +261,7 @@ public:
     void setWindowSize( void );
 
 protected:
-    void closeEvent(QCloseEvent *event);
+    void closeEvent( QCloseEvent *event );
 
 };
 
