@@ -1517,26 +1517,8 @@ void DrawingArea::drawBoxCharacter( QPainter *painter, USHORT usChar, BYTE bColo
 {
    painter->save();
 
-#if 0
-/* Single-line */
-#define B_SINGLE        ( Chr( 218 ) + Chr( 196 ) + Chr( 191 ) + Chr( 179 ) + ;
-                          Chr( 217 ) + Chr( 196 ) + Chr( 192 ) + Chr( 179 ) )
-/* Double-line */
-#define B_DOUBLE        ( Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + ;
-                          Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 ) )
-/* Single-line top, double-line sides */
-#define B_SINGLE_DOUBLE ( Chr( 214 ) + Chr( 196 ) + Chr( 183 ) + Chr( 186 ) + ;
-                          Chr( 189 ) + Chr( 196 ) + Chr( 211 ) + Chr( 186 ) )
-/* Double-line top, single-line sides */
-#define B_DOUBLE_SINGLE ( Chr( 213 ) + Chr( 205 ) + Chr( 184 ) + Chr( 179 ) + ;
-                          Chr( 190 ) + Chr( 205 ) + Chr( 212 ) + Chr( 179 ) )
-#define B_THIN          ( Chr( 219 ) + Chr( 223 ) + Chr( 219 ) + Chr( 219 ) + ;
-                          Chr( 219 ) + Chr( 220 ) + Chr( 219 ) + Chr( 219 ) )
-#define B_FAT           ( Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + ;
-                          Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + Chr( 219 ) )
-#endif
-
    /* Common to all drawing operations except characters */
+   int iGap  = 2;
    int iMidY = y + _fontHeight/2;
    int iMidX = x + _fontWidth/2;
    int iEndY = y + _fontHeight;
@@ -1551,48 +1533,111 @@ void DrawingArea::drawBoxCharacter( QPainter *painter, USHORT usChar, BYTE bColo
    {
    /*                             B_SINGLE                            */
    /* --------------------------------------------------------------- */
+   case 196:      /* --            */
+      painter->drawLine( x, iMidY, iEndX, iMidY );                       /* Horozontal */
+      break;
    case 179:      /* |            */
-      painter->drawLine( iMidX, y, iMidX, iEndY );      /* Vertical   */
+      painter->drawLine( iMidX, y, iMidX, iEndY );                       /* Vertical   */
       break;
    case 191:      /* top right    */
-      painter->drawLine( x, iMidY, iMidX, iMidY );      /* Horozontal */
-      painter->drawLine( iMidX, iMidY, iMidX, iEndY );  /* Vertical   */
+      painter->drawLine( x, iMidY, iMidX, iMidY );                       /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iMidX, iEndY );                   /* Vertical   */
       break;
    case 217:      /* bottom right  */
-      painter->drawLine( x, iMidY, iMidX, iMidY );      /* Horozontal */
-      painter->drawLine( iMidX, y, iMidX, iMidY );      /* Vertical   */
+      painter->drawLine( x, iMidY, iMidX, iMidY );                       /* Horozontal */
+      painter->drawLine( iMidX, y, iMidX, iMidY );                       /* Vertical   */
       break;
    case 218:      /* top left      */
-      painter->drawLine( iMidX, iMidY, iEndX, iMidY );  /* Horozontal */
-      painter->drawLine( iMidX, iMidY, iMidX, iEndY );  /* Vertical   */
+      painter->drawLine( iMidX, iMidY, iEndX, iMidY );                   /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iMidX, iEndY );                   /* Vertical   */
       break;
    case 192:      /* bottom left   */
-      painter->drawLine( iMidX, iMidY, iEndX, iMidY );  /* Horozontal */
-      painter->drawLine( iMidX, iMidY, iMidX, y     );  /* Vertical   */
-      break;
-   case 196:      /* --            */
-      painter->drawLine( x, iMidY, iEndX, iMidY );      /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iEndX, iMidY );                   /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iMidX, y     );                   /* Vertical   */
       break;
    case 193:      /* bottom mid up */
-      painter->drawLine( x, iMidY, iEndX, iMidY );      /* Horozontal */
-      painter->drawLine( iMidX, y, iMidX, iMidY );      /* Vertical   */
+      painter->drawLine( x, iMidY, iEndX, iMidY );                       /* Horozontal */
+      painter->drawLine( iMidX, y, iMidX, iMidY );                       /* Vertical   */
       break;
    case 194:      /* top mid down  */
-      painter->drawLine( x, iMidY, iEndX, iMidY );      /* Horozontal */
-      painter->drawLine( iMidX, iMidY, iMidX, iEndY );  /* Vertical   */
+      painter->drawLine( x, iMidY, iEndX, iMidY );                       /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iMidX, iEndY );                   /* Vertical   */
       break;
    case 195:      /* middle left   */
-      painter->drawLine( x, iMidY, iEndX, iMidY );      /* Horozontal */
-      painter->drawLine( iMidX, iMidY, iEndX, iMidY );  /* Vertical   */
+      painter->drawLine( iMidX, iMidY, iEndX, iMidY );                   /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iEndX, iMidY );                   /* Vertical   */
       break;
    case 180:      /* middle right  */
-      painter->drawLine( x, iMidY, iEndX, iMidY );      /* Horozontal */
-      painter->drawLine( x, iMidY, iMidX, iMidY );      /* Vertical   */
+      painter->drawLine( x, iMidY, iEndX, iMidY );                       /* Horozontal */
+      painter->drawLine( x, iMidY, iMidX, iMidY );                       /* Vertical   */
       break;
    case 197:      /* middle cross  */
-      painter->drawLine( x, iMidY, iEndX, iMidY );      /* Horozontal */
-      painter->drawLine( iMidX, y, iMidX, iEndY );      /* Vertical   */
+      painter->drawLine( x, iMidY, iEndX, iMidY );                       /* Horozontal */
+      painter->drawLine( iMidX, y, iMidX, iEndY );                       /* Vertical   */
       break;
+   /*                          B_DOUBLE_SINGLE                        */
+   /* --------------------------------------------------------------- */
+   case 205:      /* --            */
+      painter->drawLine( x, iMidY-iGap, iEndX, iMidY-iGap );             /* Horozontal */
+      painter->drawLine( x, iMidY+iGap, iEndX, iMidY+iGap );             /* Horozontal */
+      break;
+   #if 0
+   case 179:      /* |            */
+      painter->drawLine( iMidX, y, iMidX, iEndY );                       /* Vertical   */
+      break;
+   #endif
+   case 184:      /* top right    */
+      painter->drawLine( x, iMidY-iGap, iMidX, iMidY-iGap );             /* Horozontal */
+      painter->drawLine( x, iMidY+iGap, iMidX, iMidY+iGap );             /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iMidX, iEndY );                   /* Vertical   */
+      break;
+   case 190:      /* bottom right  */
+      painter->drawLine( x, iMidY-iGap, iMidX, iMidY-iGap );             /* Horozontal */
+      painter->drawLine( x, iMidY+iGap, iMidX, iMidY+iGap );             /* Horozontal */
+      painter->drawLine( iMidX, y, iMidX, iMidY );                       /* Vertical   */
+      break;
+   case 213:      /* top left      */
+      painter->drawLine( iMidX, iMidY-iGap, iEndX, iMidY-iGap );         /* Horozontal */
+      painter->drawLine( iMidX, iMidY+iGap, iEndX, iMidY+iGap );         /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iMidX, iEndY );                   /* Vertical   */
+      break;
+   case 212:      /* bottom left   */
+      painter->drawLine( iMidX, iMidY-iGap, iEndX, iMidY-iGap );         /* Horozontal */
+      painter->drawLine( iMidX, iMidY+iGap, iEndX, iMidY+iGap );         /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iMidX, y     );                   /* Vertical   */
+      break;
+   case 207:      /* bottom mid up */
+      painter->drawLine( x, iMidY-iGap, iEndX, iMidY-iGap );             /* Horozontal */
+      painter->drawLine( x, iMidY+iGap, iEndX, iMidY+iGap );             /* Horozontal */
+      painter->drawLine( iMidX, y, iMidX, iMidY-iGap );                  /* Vertical   */
+      break;
+   case 209:      /* top mid down  */
+      painter->drawLine( x, iMidY-iGap, iEndX, iMidY-iGap );             /* Horozontal */
+      painter->drawLine( x, iMidY+iGap, iEndX, iMidY+iGap );             /* Horozontal */
+      painter->drawLine( iMidX, iMidY+iGap, iMidX, iEndY );              /* Vertical   */
+      break;
+   case 198:      /* middle left   */
+      painter->drawLine( iMidX, iMidY-iGap, iEndX, iMidY-iGap );         /* Horozontal */
+      painter->drawLine( iMidX, iMidY+iGap, iEndX, iMidY+iGap );         /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iEndX, iMidY );                   /* Vertical   */
+      break;
+   case 181:      /* middle right  */
+      painter->drawLine( x, iMidY-iGap, iEndX, iMidY-iGap );             /* Horozontal */
+      painter->drawLine( x, iMidY+iGap, iEndX, iMidY+iGap );             /* Horozontal */
+      painter->drawLine( x, iMidY, iMidX, iMidY );                       /* Vertical   */
+      break;
+   case 216:      /* middle cross  */
+      painter->drawLine( x, iMidY-iGap, iMidX-iGap, iMidY-iGap );        /* Horozontal */
+      painter->drawLine( x, iMidY+iGap, iMidX-iGap, iMidY+iGap );        /* Horozontal */
+      painter->drawLine( iMidX+iGap, iMidY-iGap, iEndX, iMidY-iGap );    /* Horozontal */
+      painter->drawLine( iMidX+iGap, iMidY+iGap, iEndX, iMidY+iGap );    /* Horozontal */
+
+      painter->drawLine( iMidX-iGap, y, iMidX-iGap, iMidY-iGap );        /* Vertical   */
+      painter->drawLine( iMidX-iGap, y, iMidX+iGap, iMidY+iGap );        /* Vertical   */
+      painter->drawLine( iMidX-iGap, iMidY+iGap, iMidX-iGap, iEndY );    /* Vertical   */
+      painter->drawLine( iMidX+iGap, iMidY+iGap, iMidX+iGap, iEndY );    /* Vertical   */
+      break;
+   /*  ---------------------------------------------------------------------  */
    default:
       painter->drawText( QPoint( x,y+_fontAscent ), QString( usChar ) );
       break;

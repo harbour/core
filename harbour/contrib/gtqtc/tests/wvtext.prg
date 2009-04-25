@@ -40,7 +40,7 @@ FUNCTION Main()
    Hb_GtInfo( HB_GTI_ICONFILE, "../../../contrib/hbqt/tests/test.ico" )
    SetCursor( 0 )
    SetColor( "n/w" )
-   Hb_GtInfo( HB_GTI_CODEPAGE, 255 )
+   Hb_GtInfo( HB_GTI_CODEPAGE, 255 )     // DOES NOT WORK
 
    HB_GtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| MyNotifier( nEvent, ... ) } )
 
@@ -79,6 +79,9 @@ FUNCTION Main()
 
       CASE nKey == K_F8
          Alert( "Menu text changed. Was: " + hb_GtInfo( HB_GTI_SELECTCOPY, DToS(Date()) + " " + Time() ) )
+
+      CASE nKey == K_F9
+         Boxes()
 
       CASE nKey == K_F10
          hb_threadStart( @thFunc() )
@@ -134,7 +137,7 @@ STATIC FUNCTION DispScreen()
    DispOutAt( ++nRow, nCol, "< F6 Palette D   Repeat >", cColor )
    DispOutAt( ++nRow, nCol, "< F7     Get a Variable >", cColor )
    DispOutAt( ++nRow, nCol, "< F8 MarkCopy menu text >", cColor )
-   DispOutAt( ++nRow, nCol, "<    Click Other Window >", cColor )
+   DispOutAt( ++nRow, nCol, "< F9              Boxes >", cColor )
    DispOutAt( ++nRow, nCol, "<    Click X Button     >", cColor )
    DispOutAt( ++nRow, nCol, "< F10 Open New Window   >", cColor )
 
@@ -178,6 +181,23 @@ FUNCTION SetPaletteIndex()
    DispScreen()
 
    RETURN NIL
+/*----------------------------------------------------------------------*/
+STATIC FUNCTION Boxes()
+   LOCAL scr := SaveScreen( 0, 0,maxrow(), maxcol() )
+   LOCAL cColor := SetColor( 'W+/B' )
+
+   CLS
+   #include 'Box.ch'
+
+   DispBox( 2, 4,10,35,B_SINGLE )
+   DispBox( 2,44,10,75,B_DOUBLE_SINGLE )
+
+   DispOutAt( maxrow(),0,padc( 'Press ESC to exit',maxcol()+1 ), 'N/GR*' )
+
+   DO WHILE inkey( 0.1 ) <> 27; ENDDO
+
+   RestScreen( 0, 0, maxrow(), maxcol(), scr )
+   RETURN nil
 /*----------------------------------------------------------------------*/
 PROCEDURE thFunc()
    Local cTitle, oBrowse, lEnd, nKey, i, aStruct, pGT1, pGT
