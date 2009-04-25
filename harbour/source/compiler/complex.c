@@ -507,7 +507,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
             else
             {
                iYear = iMonth = iDay = 0;
-               if( !pToken->len == 3 || pToken->value[ 2 ] != '0' )
+               if( pToken->len != 3 || pToken->value[ 2 ] != '0' )
                   iYear = -1;
             }
          }
