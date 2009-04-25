@@ -40,13 +40,14 @@ FUNCTION Main()
    Hb_GtInfo( HB_GTI_ICONFILE, "../../../contrib/hbqt/tests/test.ico" )
    SetCursor( 0 )
    SetColor( "n/w" )
+   Hb_GtInfo( HB_GTI_CODEPAGE, 255 )
 
    HB_GtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| MyNotifier( nEvent, ... ) } )
 
    DispScreen()
 
    DO WHILE .T.
-      nKey := Inkey()
+      nKey := Inkey( 0.1 )
       if nKey == K_ESC
          exit
       endif
@@ -202,7 +203,8 @@ PROCEDURE thFunc()
    if ( nBrowser % 2 ) != 0
       Hb_GtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
    endif
-   Hb_GtInfo( HB_GTI_WINTITLE, 'test.dbf    ['+if( ( nBrowser % 2 ) != 0, 'RESIZABLE_BY_ROWS', 'RESIZABLE_BY_FONT' )+']' )
+   Hb_GtInfo( HB_GTI_WINTITLE, 'Test.dbf    ['+if( ( nBrowser % 2 ) != 0, 'RESIZABLE_BY_ROWS', 'RESIZABLE_BY_FONT' )+']' )
+   Hb_GtInfo( HB_GTI_ICONFILE, "test.ico" )
 
    SetColor( aColor[ nColorIndex ] )
    CLS

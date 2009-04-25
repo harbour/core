@@ -82,11 +82,11 @@
 #include "hbvm.h"
 #include "hbthread.h"
 
-#define WVT_CHAR_QUEUE_SIZE   128
-#define WVT_MAX_TITLE_SIZE    128
-#define WVT_MAX_ROWS          256
-#define WVT_MAX_COLS          256
-#define WVT_MAX_WINDOWS       256
+#define WVT_CHAR_QUEUE_SIZE       4096 //  128
+#define WVT_MAX_TITLE_SIZE         128
+#define WVT_MAX_ROWS               256
+#define WVT_MAX_COLS               256
+#define WVT_MAX_WINDOWS            256
 #if defined( HB_OS_WIN_CE )
 #  define WVT_DEFAULT_ROWS          15
 #  define WVT_DEFAULT_COLS          50
@@ -199,9 +199,10 @@ public:
    void   setCaretPos(int iRow, int iCol);
    void   destroyCaret();
 
-   void   displayCell(int iCol, int iRow);
-   void   displayBlock(int iCol, int iRow);
+   void   displayCell(int iRow, int iCol);
+   void   displayBlock(int iRow, int iCol);
    void   resizeImage(const QSize &newSize);
+   void   drawBoxCharacter(QPainter *painter, USHORT usChar, BYTE bColor, int x, int y);
 
    QRgb   _COLORS[ 16 ];
 
@@ -222,8 +223,6 @@ public:
    bool   _bSizing;
 
    QBasicTimer *_basicTimer;
-
-   char   buf[ 80 ];
 
 protected:
    void   keyPressEvent(QKeyEvent *event);
@@ -330,6 +329,15 @@ typedef struct
    int          ResizeMode;                   /* Sets the resizing mode either to FONT or ROWS */
    bool         bResizing;
    bool         bAlreadySizing;
+
+#if defined( UNICODE )
+   PHB_CODEPAGE boxCDP;                     /* CodePage for legacy drawing chars: IBM437 */
+#endif
+
+#if !defined( UNICODE )
+   BYTE         keyTransTbl[ 256 ];
+   BYTE         chrTransTbl[ 256 ];
+#endif
 
 } HB_GTWVT, * PHB_GTWVT;
 

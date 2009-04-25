@@ -80,36 +80,22 @@ static HB_CRITICAL_NEW( s_wvtMtx );
 static PHB_GTWVT  s_wvtWindows[ WVT_MAX_WINDOWS ];
 static int        s_wvtCount = 0;
 
-void hb_ToOutDebug( const char * sTraceMsg, ... );
-
 /*----------------------------------------------------------------------*/
-#if 0                   /*   I M P O R T A N T   */
-                        /*                       */
-static PHB_GTWVT hb_gt_wvt_Find( MainWindow qWnd )
+#if 1
+static void DebugIt( char* text, int iVal, int iVal2 )
 {
-   int iCount = s_wvtCount, iPos = 0;
-   PHB_GTWVT pWVT = NULL;
+   char   buf[ 100 ];
+   wsprintf( buf, text, iVal, iVal2 );
+   OutputDebugString( buf );
 
-   HB_WVT_LOCK
-
-   while( iCount && iPos < WVT_MAX_WINDOWS )
-   {
-      if( s_wvtWindows[ iPos ] )
-      {
-         if( s_wvtWindows[ iPos ]->qWnd == qWnd )
-         {
-            pWVT = s_wvtWindows[ iPos ];
-            break;
-         }
-         --iCount;
-      }
-      ++iPos;
-   }
-   HB_WVT_UNLOCK
-
-   return pWVT;
+#if 0
+   HB_SYMBOL_UNUSED( text );
+   HB_SYMBOL_UNUSED( iVal );
+   HB_SYMBOL_UNUSED( iVal2 );
+#endif
 }
 #endif
+/*----------------------------------------------------------------------*/
 
 static BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
 {
@@ -141,23 +127,16 @@ static BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
 
 static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 {
-   HB_WVT_LOCK
-
    s_wvtWindows[ pWVT->iHandle ] = NULL;
 
    if( pWVT->qWnd->_drawingArea->_basicTimer->isActive() )
       pWVT->qWnd->_drawingArea->_basicTimer->stop();
-#if 1
+
    if( pWVT->qEventLoop )
    {
       pWVT->qEventLoop->exit();
       pWVT->qEventLoop = NULL;
    }
-#endif
-#if 0
-   if( pWVT->qFont )
-      pWVT->qFont->~QFont();
-#endif
 
    if( pWVT->pszSelectCopy )
       hb_xfree( pWVT->pszSelectCopy );
@@ -166,14 +145,7 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    {
       app->quit();
    }
-   else
-   {
-      s_wvtWindows[ 0 ]->qWnd->setFocus();
-   }
-
    hb_xfree( pWVT );
-//OutputDebugString( "2" );
-   HB_WVT_UNLOCK
 }
 
 static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
@@ -234,9 +206,17 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
    pWVT->bAlreadySizing    = FALSE;
 
 #ifndef HB_CDP_SUPPORT_OFF
-   pWVT->hostCDP           = hb_vmCDP();
-   pWVT->inCDP             = hb_vmCDP();
-   pWVT->boxCDP            = hb_cdpFind( "EN" );
+   pWVT->hostCDP    = hb_vmCDP();
+#if defined( UNICODE )
+   pWVT->inCDP      = hb_vmCDP();
+   pWVT->boxCDP     = hb_cdpFind( "EN" );
+#else
+   {
+      int i;
+      for( i = 0; i < 256; ++i )
+         pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( BYTE ) i;
+   }
+#endif
 #endif
 
    return pWVT;
@@ -272,24 +252,6 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent )
    return nResult;
 }
 
-/*
- * use the standard fixed oem font, unless the caller has requested set size fonts
- */
-static QFont* hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage )
-{
-   QFont *qFont = new QFont( pszFace, iHeight, iWeight, FALSE );
-
-   if( qFont )
-   {
-      qFont->setFixedPitch( TRUE );
-   }
-   HB_SYMBOL_UNUSED( iWidth );
-   HB_SYMBOL_UNUSED( iQuality );
-   HB_SYMBOL_UNUSED( iCodePage );
-
-   return qFont;
-}
-
 #if 0    /*   I M P O R T A N T   */
 static QPoint hb_gt_wvt_QGetXYFromColRow( PHB_GTWVT pWVT, int col, int row )
 {
@@ -315,7 +277,7 @@ static void hb_gt_wvt_QUpdateCaret( PHB_GTWVT pWVT )
    int iRow, iCol, iStyle, iCaretSize;
 
    /* Restore previous cell value */
-   pWVT->qWnd->_drawingArea->displayCell( pWVT->qWnd->_drawingArea->_crtLastCol, pWVT->qWnd->_drawingArea->_crtLastRow );
+   pWVT->qWnd->_drawingArea->displayCell( pWVT->qWnd->_drawingArea->_crtLastRow, pWVT->qWnd->_drawingArea->_crtLastCol );
 
    HB_GTSELF_GETSCRCURSOR( pWVT->pGT, &iRow, &iCol, &iStyle );
 
@@ -404,7 +366,7 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
 
 static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
 {
-   if( pWVT->keyPointerOut != pWVT->keyPointerIn )
+   if( pWVT && pWVT->keyPointerOut != pWVT->keyPointerIn )
    {
       *iKey = pWVT->Keys[ pWVT->keyPointerOut ];
       if( ++pWVT->keyPointerOut >= WVT_CHAR_QUEUE_SIZE )
@@ -469,16 +431,6 @@ static int hb_gt_wvt_key_ansi_to_oem( int c )
    pszAnsi[ 1 ] = 0;
 //   CharToOemBuffA( ( LPCSTR ) pszAnsi, ( LPSTR ) pszOem, 1 );
    return * pszOem;
-}
-
-static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
-{
-   HB_SYMBOL_UNUSED( pWVT );
-}
-
-static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
-{
-   HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
 }
 #endif
 
@@ -613,6 +565,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 }
 #endif
 
+#if 0
 static bool hb_gt_wvt_QValidWindowSize( int rows, int cols, QFont *qFont, int iWidth )
 {
    //QDesktopWidget *desk = new QDesktopWidget();
@@ -626,6 +579,7 @@ static bool hb_gt_wvt_QValidWindowSize( int rows, int cols, QFont *qFont, int iW
 
    return TRUE;
 }
+#endif
 
 static void hb_gt_wvt_QCenterWindow( PHB_GTWVT pWVT )
 {
@@ -738,7 +692,9 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    /* Transferred back to its original position from REFRESH method */
    /* Actually this is the way it must be issued */
+   //HB_WVT_LOCK
    hb_gt_wvt_CreateConsoleWindow( pWVT );
+   //HB_WVT_UNLOCK
 }
 
 /* ********************************************************************** */
@@ -754,11 +710,8 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
 
    if( pWVT )
    {
-//OutputDebugString( "1" );
       hb_gt_wvt_Free( pWVT );
-//OutputDebugString( "111" );
    }
-//   HB_GTSUPER_EXIT( pGT );
 }
 
 /* ********************************************************************** */
@@ -801,6 +754,8 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
    {
       if( !pWVT->fInit )
       {
+         //HB_WVT_LOCK
+
          pWVT->fInit = TRUE;
          if( pWVT->CenterWindow )
          {
@@ -809,7 +764,8 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
          pWVT->qWnd->show();
          pWVT->qWnd->update();
          pWVT->qWnd->_drawingArea->setFocus();
-         //pWVT->qWnd->_drawingArea->show()
+
+         //HB_WVT_UNLOCK
       }
       hb_gt_wvt_QUpdateCaret( pWVT );
    }
@@ -873,7 +829,6 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
    pWVT = HB_GTWVT_GET( pGT );
    if( pWVT )
    {
-      qApp->processEvents();
       if( pWVT->qEventLoop ) /* Is the window already open */
       {
          pWVT->qEventLoop->processEvents();
@@ -904,6 +859,8 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
 #ifndef HB_CDP_SUPPORT_OFF
+
+#if defined( UNICODE )
    /*
     * We are displaying text in U16 so pszTermCDP is unimportant.
     * We only have to know what is the internal application codepage
@@ -918,6 +875,38 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
       if( cdpHost )
          HB_GTWVT_GET( pGT )->hostCDP = cdpHost;
    }
+
+#else
+   if( !pszHostCDP )
+      pszHostCDP = hb_cdpID();
+   if( !pszTermCDP )
+      pszTermCDP = pszHostCDP;
+
+   if( pszTermCDP && pszHostCDP )
+   {
+      PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+      PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
+                   cdpHost = hb_cdpFind( pszHostCDP );
+      int i;
+
+      for( i = 0; i < 256; ++i )
+         pWVT->chrTransTbl[ i ] = ( BYTE ) i;
+
+      if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
+          cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
+      {
+         for( i = 0; i < cdpHost->nChars; ++i )
+         {
+            pWVT->chrTransTbl[ ( BYTE ) cdpHost->CharsUpper[ i ] ] =
+                               ( BYTE ) cdpTerm->CharsUpper[ i ];
+            pWVT->chrTransTbl[ ( BYTE ) cdpHost->CharsLower[ i ] ] =
+                               ( BYTE ) cdpTerm->CharsLower[ i ];
+         }
+      }
+   }
+
+#endif
+
 #endif
 
    return TRUE;
@@ -1136,23 +1125,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             iVal = hb_itemGetNI( pInfo->pNewVal );
             if( iVal != pWVT->CodePage )
             {
-               if( !pWVT->qWnd )
-               {
-                  pWVT->CodePage = iVal;
-               }
-               else
-               {
-                  QFont *qFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
-                                                    pWVT->fontWeight, pWVT->fontQuality, iVal );
-                  if( qFont )
-                  {
-                     if( pWVT->qFont )
-                        pWVT->qFont->~QFont();
-
-                     pWVT->qFont = qFont;
-                     pWVT->CodePage = iVal;
-                  }
-               }
+               pWVT->CodePage = iVal;
             }
          }
          break;
@@ -1538,11 +1511,93 @@ void DrawingArea::resetWindowSize(void)
    setFont( _qFont );
    setFocus(Qt::OtherFocusReason);
    update();
+}
+
+void DrawingArea::drawBoxCharacter( QPainter *painter, USHORT usChar, BYTE bColor, int x, int y )
+{
+   painter->save();
 
 #if 0
-   wsprintf( buf, "%i %i  %i %i", pWVT->fontWidth, pWVT->fontHeight, _fontWidth, _fontHeight);
-   OutputDebugString( buf );
+/* Single-line */
+#define B_SINGLE        ( Chr( 218 ) + Chr( 196 ) + Chr( 191 ) + Chr( 179 ) + ;
+                          Chr( 217 ) + Chr( 196 ) + Chr( 192 ) + Chr( 179 ) )
+/* Double-line */
+#define B_DOUBLE        ( Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + ;
+                          Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 ) )
+/* Single-line top, double-line sides */
+#define B_SINGLE_DOUBLE ( Chr( 214 ) + Chr( 196 ) + Chr( 183 ) + Chr( 186 ) + ;
+                          Chr( 189 ) + Chr( 196 ) + Chr( 211 ) + Chr( 186 ) )
+/* Double-line top, single-line sides */
+#define B_DOUBLE_SINGLE ( Chr( 213 ) + Chr( 205 ) + Chr( 184 ) + Chr( 179 ) + ;
+                          Chr( 190 ) + Chr( 205 ) + Chr( 212 ) + Chr( 179 ) )
+#define B_THIN          ( Chr( 219 ) + Chr( 223 ) + Chr( 219 ) + Chr( 219 ) + ;
+                          Chr( 219 ) + Chr( 220 ) + Chr( 219 ) + Chr( 219 ) )
+#define B_FAT           ( Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + ;
+                          Chr( 219 ) + Chr( 219 ) + Chr( 219 ) + Chr( 219 ) )
 #endif
+
+   /* Common to all drawing operations except characters */
+   int iMidY = y + _fontHeight/2;
+   int iMidX = x + _fontWidth/2;
+   int iEndY = y + _fontHeight;
+   int iEndX = x + _fontWidth;
+
+   /* painter->setPen( QPen( QBrush( _COLORS[ bColor & 0x0F ] ),1 ) ); */
+   painter->setPen( QPen( _COLORS[ bColor & 0x0F ] ) );
+   painter->setBackground( QBrush( _COLORS[ bColor >> 4 ] ) );
+   painter->fillRect( x, y, _fontWidth, _fontHeight, QBrush( _COLORS[ bColor >> 4 ] ) );
+
+   switch( usChar )
+   {
+   /*                             B_SINGLE                            */
+   /* --------------------------------------------------------------- */
+   case 179:      /* |            */
+      painter->drawLine( iMidX, y, iMidX, iEndY );      /* Vertical   */
+      break;
+   case 191:      /* top right    */
+      painter->drawLine( x, iMidY, iMidX, iMidY );      /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iMidX, iEndY );  /* Vertical   */
+      break;
+   case 217:      /* bottom right  */
+      painter->drawLine( x, iMidY, iMidX, iMidY );      /* Horozontal */
+      painter->drawLine( iMidX, y, iMidX, iMidY );      /* Vertical   */
+      break;
+   case 218:      /* top left      */
+      painter->drawLine( iMidX, iMidY, iEndX, iMidY );  /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iMidX, iEndY );  /* Vertical   */
+      break;
+   case 192:      /* bottom left   */
+      painter->drawLine( iMidX, iMidY, iEndX, iMidY );  /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iMidX, y     );  /* Vertical   */
+      break;
+   case 196:      /* --            */
+      painter->drawLine( x, iMidY, iEndX, iMidY );      /* Horozontal */
+      break;
+   case 193:      /* bottom mid up */
+      painter->drawLine( x, iMidY, iEndX, iMidY );      /* Horozontal */
+      painter->drawLine( iMidX, y, iMidX, iMidY );      /* Vertical   */
+      break;
+   case 194:      /* top mid down  */
+      painter->drawLine( x, iMidY, iEndX, iMidY );      /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iMidX, iEndY );  /* Vertical   */
+      break;
+   case 195:      /* middle left   */
+      painter->drawLine( x, iMidY, iEndX, iMidY );      /* Horozontal */
+      painter->drawLine( iMidX, iMidY, iEndX, iMidY );  /* Vertical   */
+      break;
+   case 180:      /* middle right  */
+      painter->drawLine( x, iMidY, iEndX, iMidY );      /* Horozontal */
+      painter->drawLine( x, iMidY, iMidX, iMidY );      /* Vertical   */
+      break;
+   case 197:      /* middle cross  */
+      painter->drawLine( x, iMidY, iEndX, iMidY );      /* Horozontal */
+      painter->drawLine( iMidX, y, iMidX, iEndY );      /* Vertical   */
+      break;
+   default:
+      painter->drawText( QPoint( x,y+_fontAscent ), QString( usChar ) );
+      break;
+   }
+   painter->restore();
 }
 
 void DrawingArea::redrawBuffer( const QRect & rect )
@@ -1555,7 +1610,7 @@ void DrawingArea::redrawBuffer( const QRect & rect )
 
    USHORT usChar;
    int    iCol, iRow, len, iTop, startCol;
-   BYTE   bColor, bAttr, bOldColor = 0;
+   BYTE   bColor, bAttr, bOldColor = 0, bOldAttr = 0;
    char   text[ WVT_MAX_COLS ];
    QRect  rcRect = hb_gt_wvt_QGetColRowFromXYRect( pWVT, rect );
 
@@ -1571,18 +1626,34 @@ void DrawingArea::redrawBuffer( const QRect & rect )
          if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
             break;
 
-         //usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, TRUE, ( BYTE ) usChar );
+         usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
+         if( bAttr & HB_GT_ATTR_BOX )
+         {
+            drawBoxCharacter( &painter, usChar, bColor, iCol*_fontWidth, iRow*_fontHeight );
+         }
+
          if( len == 0 )
          {
+            bOldAttr = bAttr;
             bOldColor = bColor;
          }
-         else if( bColor != bOldColor )
+         else if( bColor != bOldColor || bAttr != bOldAttr )
          {
             text[ len ] = '\0';
-            painter.setPen( QPen( _COLORS[ bOldColor & 0x0F ] ) );
-            painter.setBackground( QBrush( _COLORS[ bOldColor >> 4 ] ) );
-            painter.drawText( QPoint( startCol*_fontWidth, iTop ), QString( text ) );
+            #if 1
+            if( bOldAttr & HB_GT_ATTR_BOX )
+            {
+
+            }
+            else
+            #endif
+            {
+               painter.setPen( QPen( _COLORS[ bOldColor & 0x0F ] ) );
+               painter.setBackground( QBrush( _COLORS[ bOldColor >> 4 ] ) );
+               painter.drawText( QPoint( startCol*_fontWidth, iTop ), QString( text ) );
+            }
             bOldColor = bColor;
+            bOldAttr  = bAttr;
             startCol  = iCol;
             len       = 0;
          }
@@ -1592,9 +1663,18 @@ void DrawingArea::redrawBuffer( const QRect & rect )
       if( len > 0 )
       {
          text[ len ] = '\0';
-         painter.setPen( QPen( _COLORS[ bOldColor & 0x0F ] ) );
-         painter.setBackground( QBrush( _COLORS[ bOldColor >> 4 ] ) );
-         painter.drawText( QPoint( startCol*_fontWidth, iTop ), QString( text ) );
+         #if 1
+         if( bOldAttr & HB_GT_ATTR_BOX )
+         {
+
+         }
+         else
+         #endif
+         {
+            painter.setPen( QPen( _COLORS[ bOldColor & 0x0F ] ) );
+            painter.setBackground( QBrush( _COLORS[ bOldColor >> 4 ] ) );
+            painter.drawText( QPoint( startCol*_fontWidth, iTop ), QString( text ) );
+         }
       }
    }
 }
@@ -1636,7 +1716,7 @@ void DrawingArea::setCaretPos(int iCol, int iRow)
    _crtLastCol = iCol;
    _crtLastRow = iRow;
 }
-void DrawingArea::displayCell( int iCol, int iRow )
+void DrawingArea::displayCell( int iRow, int iCol )
 {
    QPainter painter(_image);
    painter.setBackgroundMode(Qt::OpaqueMode);
@@ -1652,15 +1732,15 @@ void DrawingArea::displayCell( int iCol, int iRow )
       painter.setBackground( QBrush( _COLORS[ bColor >> 4 ] ) );
       painter.drawText( QPoint( iCol*_fontWidth, ( iRow*_fontHeight ) + _fontAscent ), QString( usChar ) );
    }
-   //update( QRect( iCol*_fontWidth, iRow*_fontHeight, _fontWidth, _fontHeight ) );
+   /* We need immediate painting */
    repaint( QRect( iCol*_fontWidth, iRow*_fontHeight, _fontWidth, _fontHeight ) );
 }
-void DrawingArea::displayBlock( int iCol, int iRow )
+void DrawingArea::displayBlock( int iRow, int iCol )
 {
    QPainter painter(_image);
    painter.fillRect( QRect( iCol*_fontWidth, iRow*_fontHeight+(_fontHeight-_crtHeight),
                             _fontWidth, _crtHeight ), qRgb( 255,255,255 ) );
-   //update( QRect( iCol*_fontWidth, iRow*_fontHeight, _fontWidth, _fontHeight ) );
+   /* We need immediate painting */
    repaint( QRect( iCol*_fontWidth, iRow*_fontHeight, _fontWidth, _fontHeight ) );
 }
 void DrawingArea::timerEvent(QTimerEvent *event)
@@ -1670,18 +1750,33 @@ void DrawingArea::timerEvent(QTimerEvent *event)
       if( _bBlinking )
       {
          _bBlinking = FALSE;
-         displayCell( _crtLastCol, _crtLastRow );
+         displayCell( _crtLastRow, _crtLastCol );
       }
       else
       {
          _bBlinking = TRUE;
-         displayBlock( _crtLastCol, _crtLastRow );
+         displayBlock( _crtLastRow, _crtLastCol );
       }
    }
    else
    {
       QWidget::timerEvent(event);
    }
+}
+
+void DrawingArea::resizeImage(const QSize &newSize)
+{
+   if (_image->size() == newSize)
+       return;
+
+   QImage *newImage = new QImage( newSize, QImage::Format_RGB32 );
+   newImage->fill( qRgb( 255, 255, 255 ) );
+   QPainter painter( newImage );
+   painter.drawImage( QPoint(0,0), *_image );
+   /* Cleanup Memory */
+   delete _image;
+   /* Assign new image */
+   _image = newImage;
 }
 
 void DrawingArea::resizeEvent(QResizeEvent *event)
@@ -1773,21 +1868,6 @@ void DrawingArea::focusOutEvent(QFocusEvent *event)
    /* Either of IN or OUT messagess */
    /* hb_gt_wvt_FireEvent( pWVT, HB_GTE_KILLFOCUS ); */
    QWidget::focusOutEvent(event);
-}
-
-void DrawingArea::resizeImage(const QSize &newSize)
-{
-   if (_image->size() == newSize)
-       return;
-
-   QImage *newImage = new QImage( newSize, QImage::Format_RGB32 );
-   newImage->fill( qRgb( 255, 255, 255 ) );
-   QPainter painter( newImage );
-   painter.drawImage( QPoint(0,0), *_image );
-   /* Cleanup Memory */
-   delete _image;
-   /* Assign new image */
-   _image = newImage;
 }
 
 void DrawingArea::keyReleaseEvent(QKeyEvent *event)
@@ -1895,14 +1975,6 @@ void DrawingArea::mousePressEvent(QMouseEvent *event)
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
    int c = 0;
 
-#ifdef __QTCDEBUG__
-wsprintf( buf,"ROWS = %i",pWVT->ROWS );
-OutputDebugString( buf );
-#endif
-
-   pWVT->qWnd->_drawingArea->setFocus( Qt::MouseFocusReason );
-
-   show();
    if( _bSizing )
    {
       _bSizing = FALSE;
@@ -1972,18 +2044,10 @@ void DrawingArea::mouseReleaseEvent(QMouseEvent *event)
 
 bool DrawingArea::event(QEvent *event)
 {
-if( ( event->type() == QEvent::KeyPress ) )
-{
-#ifdef __QTCDEBUG__
-   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-   wsprintf( buf, "event of pWvt->rows=%i", pWVT->ROWS );
-   OutputDebugString( buf );
-#endif
-}
    if( _bSizing && ( event->type() == QEvent::Enter || event->type() == QEvent::Leave ) )
    {
-      PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
       _bSizing = FALSE;
+      PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
       pWVT->qWnd->setWindowSize();
    }
    return( QWidget::event( event ) );
@@ -2065,11 +2129,6 @@ void DrawingArea::keyPressEvent(QKeyEvent *event)
    int  c = 0;
    Qt::KeyboardModifiers kbm = event->modifiers();
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
-
-#ifdef __QTCDEBUG__
-wsprintf( buf, "keyPressEvent pWVT->ROWS = %i", pWVT->ROWS );
-OutputDebugString( buf );
-#endif
 
    switch( event->key() )
    {
