@@ -1481,6 +1481,8 @@ DrawingArea::DrawingArea(QWidget *parent)
    _bCopying   = FALSE;
 
    _image      = new QImage();
+
+   _rCopying.setRect( -1, -1, -1, -1 );
 }
 
 void DrawingArea::resetWindowSize(void)
@@ -1643,6 +1645,78 @@ void DrawingArea::drawBoxCharacter( QPainter *painter, USHORT usChar, BYTE bColo
    }
 }
 
+void DrawingArea::copyTextOnClipboard( void )
+{
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+
+   QRect rectRC = hb_gt_wvt_QGetColRowFromXYRect( pWVT, _rCopying );
+   QRect rectXY = hb_gt_wvt_QGetXYFromColRowRect( pWVT, rectRC    );
+
+   repaint( rectXY );
+
+   /* Post to Clipboard */
+   int left   = rectRC.left();
+   int top    = rectRC.top();
+   int right  = rectRC.right();
+   int bottom = rectRC.bottom();
+
+   ULONG ulSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
+   char * sBuffer = ( char * ) hb_xgrab( ulSize + 1 );
+
+   int j, irow, icol;
+   for( j = 0, irow = top; irow <= bottom; irow++ )
+   {
+      for( icol = left; icol <= right; icol++ )
+      {
+         BYTE bColor, bAttr;
+         USHORT usChar;
+
+         if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
+            break;
+
+         sBuffer[ j++ ] = ( char ) usChar;
+      }
+
+      sBuffer[ j++ ] = '\r';
+      sBuffer[ j++ ] = '\n';
+   }
+   sBuffer[ j ] = '\0';
+
+   if( j > 0 )
+   {
+      QClipboard *cb = QApplication::clipboard();
+      cb->setText( QString( sBuffer ) );
+   }
+   hb_xfree( sBuffer );
+
+   _rCopying.setRect( -1, -1, -1, -1 );
+   _rCopyingP.setRect( -1, -1, -1, -1 );
+}
+
+void DrawingArea::paintCopyOperation( void )
+{
+   if( _rCopying.left() == -1 )
+      return;
+
+   PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+   QRect rect;
+
+   if( _rCopying.right() < _rCopyingP.right() || _rCopying.bottom() < _rCopyingP.bottom() )
+   {
+      _bCopying = false;
+      rect = hb_gt_wvt_QGetColRowFromXYRect( pWVT, _rCopyingP );
+      rect = hb_gt_wvt_QGetXYFromColRowRect( pWVT, rect );
+      repaint( rect );
+      _bCopying = true;
+   }
+   rect = hb_gt_wvt_QGetColRowFromXYRect( pWVT, _rCopying );
+   rect = hb_gt_wvt_QGetXYFromColRowRect( pWVT, rect );
+   repaint( rect );
+
+   _rCopyingP.setRight( _rCopying.right() );
+   _rCopyingP.setBottom( _rCopying.bottom() );
+}
+
 void DrawingArea::redrawBuffer( const QRect & rect )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
@@ -1719,10 +1793,17 @@ void DrawingArea::redrawBuffer( const QRect & rect )
 void DrawingArea::paintEvent( QPaintEvent * event )
 {
    QPainter painter( this );
-   painter.drawImage( event->rect(), *_image, event->rect() );
 
-   /* Scaling works but a lot is required ! */
-   //painter.drawImage( rect(), _image, _image.rect() );
+   if( _bCopying )
+   {
+      QImage newImage = _image->copy( event->rect() );
+      newImage.invertPixels();
+      painter.drawImage( event->rect(), newImage );
+   }
+   else
+   {
+      painter.drawImage( event->rect(), *_image, event->rect() );
+   }
 }
 
 bool DrawingArea::createCaret( int iWidth, int iHeight )
@@ -1980,24 +2061,36 @@ void DrawingArea::mouseMoveEvent( QMouseEvent *event )
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
    int c = K_MOUSEMOVE;
 
-#if defined( __HB_GTWVT_GEN_K_MMDOWN_EVENTS )
-   switch( event->button() )
+   if( event->buttons() & Qt::LeftButton )
    {
-   case Qt::LeftButton:
-      c = K_MMLEFTDOWN;
-      break;
-   case Qt::RightButton:
-      c = K_MMRIGHTDOWN;
-      break;
-   case Qt::MidButton:
-      c = K_MMMIDDLEDOWN;
-      break;
-   case Qt::XButton1:
-   case Qt::XButton2:
-   case Qt::NoButton:
-      QWidget::mouseMoveEvent( event );
-      return;
+      if( !_bCopying )
+      {
+         _bCopying = true;
+         _rCopying.setLeft( event->x() );
+         _rCopying.setTop( event->y() );
+         _rCopying.setRight( event->x() );
+         _rCopying.setBottom( event->y() );
+
+         _rCopyingP.setLeft( event->x() );
+         _rCopyingP.setTop( event->y() );
+         _rCopyingP.setRight( event->x() );
+         _rCopyingP.setBottom( event->y() );
+      }
+      if( _bCopying )
+      {
+         _rCopying.setRight( event->x() );
+         _rCopying.setBottom( event->y() );
+         paintCopyOperation();
+      }
    }
+
+#if defined( __HB_GTWVT_GEN_K_MMDOWN_EVENTS )
+   if( event->buttons() & Qt::LeftButton )
+      c = K_MMLEFTDOWN;
+   else if( event->buttons() & Qt::RightButton )
+      c = K_MMRIGHTDOWN;
+   else if( event->buttons() & Qt::MidButton )
+      c = K_MMMIDDLEDOWN;
 #endif
    if( c != 0 )
    {
@@ -2051,6 +2144,11 @@ void DrawingArea::mouseReleaseEvent( QMouseEvent *event )
    {
       _bSizing = FALSE;
       pWVT->qWnd->setWindowSize();
+   }
+   if( _bCopying )
+   {
+      _bCopying = false;
+      copyTextOnClipboard();
    }
 
    switch( event->button() )
@@ -2496,9 +2594,10 @@ void DrawingArea::keyPressEvent( QKeyEvent *event )
 
 MainWindow::MainWindow()
 {
-   Qt::WindowFlags flags = Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint |
-                           Qt::WindowMinimizeButtonHint | Qt::WindowSystemMenuHint |
-                           Qt::WindowTitleHint | Qt::CustomizeWindowHint | Qt::Window ;
+   Qt::WindowFlags flags = Qt::WindowCloseButtonHint    | Qt::WindowMaximizeButtonHint |
+                           Qt::WindowMinimizeButtonHint | Qt::WindowSystemMenuHint     |
+                           Qt::CustomizeWindowHint      | Qt::WindowTitleHint          |
+                           Qt::Window ;
    setWindowFlags( flags );
    setFocusPolicy( Qt::StrongFocus );
 
@@ -2532,165 +2631,6 @@ void MainWindow::setWindowSize( void )
 {
    resize( _drawingArea->_wndWidth, _drawingArea->_wndHeight );
 }
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-#if 0
-static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
-{
-   if( ! pWVT->bBeginMarked && ! pWVT->MouseMove && ( message == WM_MOUSEMOVE || message == WM_NCMOUSEMOVE ) )
-      return;
-
-   switch( message )
-   {
-      case WM_LBUTTONDOWN:
-      {
-         if( pWVT->bBeginMarked )
-         {
-            pWVT->bBeingMarked = TRUE;
-
-            pWVT->sRectNew.left     = xy.x;
-            pWVT->sRectNew.top      = xy.y;
-            pWVT->sRectNew.right    = xy.x;
-            pWVT->sRectNew.bottom   = xy.y;
-
-            pWVT->sRectOld.left   = 0;
-            pWVT->sRectOld.top    = 0;
-            pWVT->sRectOld.right  = 0;
-            pWVT->sRectOld.bottom = 0;
-
-            return;
-         }
-         else
-         {
-            keyCode = K_LBUTTONDOWN;
-            break;
-         }
-      }
-
-      case WM_LBUTTONUP:
-      {
-         if( pWVT->bBeingMarked )
-         {
-            pWVT->bBeginMarked = FALSE;
-            pWVT->bBeingMarked = FALSE;
-
-            RedrawWindow( pWVT->hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
-
-            {
-               ULONG  ulSize;
-               int    irow, icol, j, top, left, bottom, right;
-               char * sBuffer;
-               RECT   rect = { 0, 0, 0, 0 };
-               RECT   colrowRC = { 0, 0, 0, 0 };
-
-               rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
-               rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
-               rect.right  = HB_MAX( pWVT->sRectNew.left, pWVT->sRectNew.right  );
-               rect.bottom = HB_MAX( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
-
-               colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
-
-               left   = colrowRC.left;
-               top    = colrowRC.top;
-               right  = colrowRC.right;
-               bottom = colrowRC.bottom;
-
-               ulSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
-               sBuffer = ( char * ) hb_xgrab( ulSize + 1 );
-
-               for( j = 0, irow = top; irow <= bottom; irow++ )
-               {
-                  for( icol = left; icol <= right; icol++ )
-                  {
-                     BYTE bColor, bAttr;
-                     USHORT usChar;
-
-                     if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
-                        break;
-
-                     sBuffer[ j++ ] = ( char ) usChar;
-                  }
-
-                  sBuffer[ j++ ] = '\r';
-                  sBuffer[ j++ ] = '\n';
-               }
-               sBuffer[ j ] = '\0';
-
-               if( j > 0 )
-               {
-                  hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
-                                             CF_OEMTEXT : CF_TEXT,
-                                             sBuffer,
-                                             j );
-               }
-
-               hb_xfree( sBuffer );
-            }
-            return;
-         }
-         else
-         {
-            keyCode = K_LBUTTONUP;
-            break;
-         }
-      }
-      case WM_MOUSEMOVE:
-      {
-         if( pWVT->bBeingMarked )
-         {
-            RECT rect     = { 0, 0, 0, 0 };
-            RECT colrowRC = { 0, 0, 0, 0 };
-
-            pWVT->sRectNew.right  = xy.x;
-            pWVT->sRectNew.bottom = xy.y;
-
-            rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
-            rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
-            rect.right  = HB_MAX( pWVT->sRectNew.left, pWVT->sRectNew.right  );
-            rect.bottom = HB_MAX( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
-
-            colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
-            rect     = hb_gt_wvt_GetXYFromColRowRect( pWVT, colrowRC );
-
-            if( rect.left   != pWVT->sRectOld.left   ||
-                rect.top    != pWVT->sRectOld.top    ||
-                rect.right  != pWVT->sRectOld.right  ||
-                rect.bottom != pWVT->sRectOld.bottom )
-            {
-               /* Concept forwarded by Andy Wos - thanks. */
-               HRGN rgn1 = CreateRectRgn( pWVT->sRectOld.left, pWVT->sRectOld.top, pWVT->sRectOld.right, pWVT->sRectOld.bottom );
-               HRGN rgn2 = CreateRectRgn( rect.left, rect.top, rect.right, rect.bottom );
-               HRGN rgn3 = CreateRectRgn( 0, 0, 0, 0 );
-
-               if( CombineRgn( rgn3, rgn1, rgn2, RGN_XOR ) != 0 )
-               {
-                  HDC hdc = GetDC( pWVT->hWnd );
-                  InvertRgn( hdc, rgn3 );
-                  ReleaseDC( pWVT->hWnd, hdc );
-               }
-
-               DeleteObject( rgn1 );
-               DeleteObject( rgn2 );
-               DeleteObject( rgn3 );
-
-               pWVT->sRectOld.left   = rect.left;
-               pWVT->sRectOld.top    = rect.top;
-               pWVT->sRectOld.right  = rect.right;
-               pWVT->sRectOld.bottom = rect.bottom;
-            }
-            return;
-         }
-         }
-      }
-      case WM_NCMOUSEMOVE:
-         keyCode = K_NCMOUSEMOVE;
-         break;
-   }
-}
-#endif
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 #if 0
 static bool hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
@@ -2749,6 +2689,4 @@ static bool hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
    return 0;
 }
 #endif
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/

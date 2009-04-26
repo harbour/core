@@ -203,6 +203,8 @@ public:
    void   displayBlock( int iRow, int iCol );
    void   resizeImage( const QSize &newSize );
    void   drawBoxCharacter( QPainter *painter, USHORT usChar, BYTE bColor, int x, int y );
+   void   copyTextOnClipboard( void );
+   void   paintCopyOperation( void );
 
    QRgb   _COLORS[ 16 ];
 
@@ -221,7 +223,11 @@ public:
 
    bool   _bFirst;
    bool   _bSizing;
+   bool   _bInvertRect;
+
    bool   _bCopying;
+   QRect  _rCopying;
+   QRect  _rCopyingP;
 
    QBasicTimer *_basicTimer;
 
