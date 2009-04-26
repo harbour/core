@@ -81,7 +81,7 @@ static PHB_GTWVT  s_wvtWindows[ WVT_MAX_WINDOWS ];
 static int        s_wvtCount = 0;
 
 /*----------------------------------------------------------------------*/
-#if 1
+#if 0
 static void DebugIt( char* text, int iVal, int iVal2 )
 {
    char   buf[ 100 ];
@@ -127,19 +127,18 @@ static BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
 
 static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 {
-   s_wvtWindows[ pWVT->iHandle ] = NULL;
-
    if( pWVT->qWnd->_drawingArea->_basicTimer->isActive() )
+   {
       pWVT->qWnd->_drawingArea->_basicTimer->stop();
-
+   }
    if( pWVT->qEventLoop )
    {
       pWVT->qEventLoop->exit();
-      pWVT->qEventLoop = NULL;
    }
 
-   if( pWVT->pszSelectCopy )
-      hb_xfree( pWVT->pszSelectCopy );
+   pWVT->qWnd->~MainWindow();
+
+   s_wvtWindows[ pWVT->iHandle ] = NULL;
 
    if( --s_wvtCount == 0 )
    {
@@ -482,90 +481,6 @@ static QRect hb_gt_wvt_QGetColRowFromXYRect( PHB_GTWVT pWVT, QRect xy )
 }
 
 #if 0
-static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
-{
-   PHB_GTWVT pWVT = hb_gt_wvt_Find( hWnd );
-
-   if( pWVT ) switch( message )
-   {
-      case WM_QUERYENDSESSION: /* Closing down computer */
-         hb_vmRequestQuit();
-         return 0;
-
-      case WM_ENTERIDLE:
-         hb_idleState();
-         return 0;
-
-      case WM_ENTERSIZEMOVE:
-         if( pWVT->bMaximized )
-         {
-            pWVT->bMaximized = FALSE;
-
-            /* Enable "maximize" button */
-            SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME );
-            SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
-                                      SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
-            ShowWindow( pWVT->hWnd, SW_HIDE );
-            ShowWindow( pWVT->hWnd, SW_NORMAL );
-         }
-         pWVT->bResizing = TRUE;
-         return 0;
-
-      case WM_EXITSIZEMOVE:
-         pWVT->bResizing = FALSE;
-
-         hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
-         if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
-            hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
-         return 0;
-
-      case WM_SIZE:
-         if( pWVT->bResizing )
-         {
-            if( !pWVT->bAlreadySizing )
-            {
-               pWVT->bAlreadySizing = TRUE;
-
-               if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
-                  hb_gt_wvt_FitSize( pWVT );
-               else
-                  hb_gt_wvt_FitRows( pWVT );
-            }
-            pWVT->bAlreadySizing = FALSE;
-         }
-         return 0;
-
-      case WM_SYSCOMMAND:
-         switch( wParam )
-         {
-            case SC_MAXIMIZE:
-            {
-               /* Disable "maximize" button */
-               SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
-               SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
-                                         SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
-               ShowWindow( pWVT->hWnd, SW_HIDE );
-               ShowWindow( pWVT->hWnd, SW_NORMAL );
-
-               hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
-               if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
-                  hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
-
-               return 0;
-            }
-
-            case SYS_EV_MARK:
-            {
-               pWVT->bBeginMarked = TRUE;
-               return 0;
-            }
-         }
-         break;
-   }
-}
-#endif
-
-#if 0
 static bool hb_gt_wvt_QValidWindowSize( int rows, int cols, QFont *qFont, int iWidth )
 {
    //QDesktopWidget *desk = new QDesktopWidget();
@@ -592,48 +507,46 @@ static void hb_gt_wvt_QCenterWindow( PHB_GTWVT pWVT )
 
 static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 {
+   pWVT->qWnd = new MainWindow();
+   if( !pWVT->qWnd )
+      hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
+
+   pWVT->qWnd->pGT               = pWVT->pGT;
+   pWVT->qWnd->_drawingArea->pGT  = pWVT->pGT;
+
+   hb_gt_wvt_QInitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
+
+   /* Set icon */
+   #if 0
+   if( pWVT->hIcon )
    {
-      pWVT->qWnd = new MainWindow();
-      if( !pWVT->qWnd )
-         hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
+      pWVT->qWnd->setWindowIcon( pWVT->hIcon );
+   }
+   #endif
 
-      pWVT->qWnd->pGT               = pWVT->pGT;
-      pWVT->qWnd->_drawingArea->pGT  = pWVT->pGT;
+   /* Set default window title */
+   {
+      PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
+      pWVT->qWnd->setWindowTitle( "Harbour-QT Console" );
+      pWVT->qWnd->_drawingArea->resetWindowSize();
+      pWVT->qWnd->setWindowSize();
+      hb_xfree( pFileName );
+   }
 
-      hb_gt_wvt_QInitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
-
-      /* Set icon */
+   {
       #if 0
-      if( pWVT->hIcon )
+      HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+      if( hSysMenu )
       {
-         pWVT->qWnd->setWindowIcon( pWVT->hIcon );
+         /* Create "Mark" prompt in SysMenu to allow console type copy operation */
+         LPTSTR buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
+         AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, buffer );
+         HB_TCHAR_FREE( buffer );
+
+         if( ! pWVT->bClosable )
+            EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | MF_GRAYED );
       }
       #endif
-
-      /* Set default window title */
-      {
-         PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
-         pWVT->qWnd->setWindowTitle( "Harbour-QT Console" );
-         pWVT->qWnd->_drawingArea->resetWindowSize();
-         pWVT->qWnd->setWindowSize();
-         hb_xfree( pFileName );
-      }
-
-      {
-         #if 0
-         HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-         if( hSysMenu )
-         {
-            /* Create "Mark" prompt in SysMenu to allow console type copy operation */
-            LPTSTR buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
-            AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, buffer );
-            HB_TCHAR_FREE( buffer );
-
-            if( ! pWVT->bClosable )
-               EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | MF_GRAYED );
-         }
-         #endif
-      }
    }
    return TRUE;
 }
@@ -692,9 +605,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    /* Transferred back to its original position from REFRESH method */
    /* Actually this is the way it must be issued */
-   //HB_WVT_LOCK
    hb_gt_wvt_CreateConsoleWindow( pWVT );
-   //HB_WVT_UNLOCK
 }
 
 /* ********************************************************************** */
@@ -754,18 +665,14 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
    {
       if( !pWVT->fInit )
       {
-         //HB_WVT_LOCK
-
          pWVT->fInit = TRUE;
          if( pWVT->CenterWindow )
          {
             hb_gt_wvt_QCenterWindow( pWVT );
          }
+         pWVT->qWnd->_drawingArea->setFocus();
          pWVT->qWnd->show();
          pWVT->qWnd->update();
-         pWVT->qWnd->_drawingArea->setFocus();
-
-         //HB_WVT_UNLOCK
       }
       hb_gt_wvt_QUpdateCaret( pWVT );
    }
@@ -1796,9 +1703,9 @@ void DrawingArea::paintEvent( QPaintEvent * event )
 
    if( _bCopying )
    {
-      QImage newImage = _image->copy( event->rect() );
-      newImage.invertPixels();
-      painter.drawImage( event->rect(), newImage );
+      _image->invertPixels();
+      painter.drawImage( event->rect(), *_image, event->rect() );
+      _image->invertPixels();
    }
    else
    {
@@ -1892,7 +1799,7 @@ void DrawingArea::resizeImage( const QSize &newSize )
    QPainter painter( newImage );
    painter.drawImage( QPoint( 0,0 ), *_image );
    /* Cleanup Memory */
-   delete _image;
+   _image->~QImage();
    /* Assign new image */
    _image = newImage;
 }
@@ -2082,6 +1989,8 @@ void DrawingArea::mouseMoveEvent( QMouseEvent *event )
          _rCopying.setBottom( event->y() );
          paintCopyOperation();
       }
+      hb_gt_wvt_QSetMousePos( pWVT, event->x(), event->y() );
+      return;
    }
 
 #if defined( __HB_GTWVT_GEN_K_MMDOWN_EVENTS )
@@ -2605,6 +2514,17 @@ MainWindow::MainWindow()
    setCentralWidget( _drawingArea );
 }
 
+MainWindow::~MainWindow( void )
+{
+   delete this->_drawingArea;
+}
+
+DrawingArea::~DrawingArea( void )
+{
+   _image->~QImage();
+   _basicTimer->~QBasicTimer();
+}
+
 void MainWindow::closeEvent( QCloseEvent *event )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
@@ -2687,6 +2607,49 @@ static bool hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
       }
    }
    return 0;
+}
+#endif
+/*----------------------------------------------------------------------*/
+#if 0
+static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
+{
+   if( pWVT ) switch( message )
+   {
+      case WM_QUERYENDSESSION: /* Closing down computer */
+         hb_vmRequestQuit();
+         return 0;
+
+      case WM_ENTERIDLE:
+         hb_idleState();
+         return 0;
+
+      case WM_SYSCOMMAND:
+         switch( wParam )
+         {
+            case SC_MAXIMIZE:
+            {
+               /* Disable "maximize" button */
+               SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
+               SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
+                                         SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
+               ShowWindow( pWVT->hWnd, SW_HIDE );
+               ShowWindow( pWVT->hWnd, SW_NORMAL );
+
+               hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
+               if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
+                  hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
+
+               return 0;
+            }
+
+            case SYS_EV_MARK:
+            {
+               pWVT->bBeginMarked = TRUE;
+               return 0;
+            }
+         }
+         break;
+   }
 }
 #endif
 /*----------------------------------------------------------------------*/

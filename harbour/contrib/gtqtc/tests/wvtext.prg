@@ -304,7 +304,8 @@ PROCEDURE thFunc()
    end
 
    DbCloseArea()
-
+   oBrowse := NIL
+   hb_gcAll( .t. )
    RETURN
 /*----------------------------------------------------------------------*/
 STATIC FUNCTION MyBrwNotifier( nEvent, oBrowse, ... )
