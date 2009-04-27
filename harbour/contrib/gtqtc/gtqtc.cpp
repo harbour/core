@@ -97,9 +97,9 @@ static void DebugIt( char* text, int iVal, int iVal2 )
 #endif
 /*----------------------------------------------------------------------*/
 
-static BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
+static bool hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
 {
-   BOOL fOK = FALSE;
+   bool fOK = FALSE;
 
    HB_WVT_LOCK
 
@@ -224,14 +224,17 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, int iCmdShow )
 static void hb_gt_wvt_SetWindowFlags( PHB_GTWVT pWVT, Qt::WindowFlags flags )
 {
    pWVT->qWnd->setWindowFlags( flags );
+   #if 1
    QPoint pos = pWVT->qWnd->pos();
    if( pos.x() < 0 )
       pos.setX( 0 );
    if( pos.y() < 0 )
       pos.setY( 0 );
    pWVT->qWnd->move( pos );
+   #endif
+   pWVT->qWnd->setFocus();
+   pWVT->qWnd->_drawingArea->setFocus( Qt::MouseFocusReason );
    pWVT->qWnd->show();
-   pWVT->qWnd->setFocus(Qt::OtherFocusReason);
 }
 
 static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent )
@@ -363,7 +366,7 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
       pWVT->keyPointerIn = iPos;
 }
 
-static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
+static bool hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
 {
    if( pWVT && pWVT->keyPointerOut != pWVT->keyPointerIn )
    {
@@ -439,7 +442,7 @@ static void hb_gt_wvt_QResetWindowSize( PHB_GTWVT pWVT )
    pWVT->qWnd->setWindowSize();
 }
 
-static BOOL hb_gt_wvt_QSetWindowSize( PHB_GTWVT pWVT, int iRows, int iCols )
+static bool hb_gt_wvt_QSetWindowSize( PHB_GTWVT pWVT, int iRows, int iCols )
 {
    if( HB_GTSELF_RESIZE( pWVT->pGT, iRows, iCols ) )
    {
@@ -453,9 +456,9 @@ static BOOL hb_gt_wvt_QSetWindowSize( PHB_GTWVT pWVT, int iRows, int iCols )
    return FALSE;
 }
 
-static BOOL hb_gt_wvt_QInitWindow( PHB_GTWVT pWVT, int iRow, int iCol )
+static bool hb_gt_wvt_QInitWindow( PHB_GTWVT pWVT, int iRow, int iCol )
 {
-   BOOL fRet = hb_gt_wvt_QSetWindowSize( pWVT, iRow, iCol );
+   bool fRet = hb_gt_wvt_QSetWindowSize( pWVT, iRow, iCol );
    hb_gt_wvt_QResetWindowSize( pWVT );
    return fRet;
 }
@@ -505,7 +508,7 @@ static void hb_gt_wvt_QCenterWindow( PHB_GTWVT pWVT )
    pWVT->qWnd->move( ( iDTWidth - iWidth ) / 2, ( iDTHeight - iHeight ) / 2 );
 }
 
-static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
+static bool hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 {
    pWVT->qWnd = new MainWindow();
    if( !pWVT->qWnd )
@@ -670,6 +673,7 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
          {
             hb_gt_wvt_QCenterWindow( pWVT );
          }
+         pWVT->qWnd->setFocus();
          pWVT->qWnd->_drawingArea->setFocus();
          pWVT->qWnd->show();
          pWVT->qWnd->update();
@@ -683,7 +687,7 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
 static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 {
    PHB_GTWVT pWVT;
-   BOOL fResult = FALSE;
+   bool fResult = FALSE;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_SetMode(%p,%d,%d)", pGT, iRow, iCol ) );
 
@@ -728,7 +732,7 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
 {
    PHB_GTWVT pWVT;
    int  c = 0;
-   BOOL fKey = FALSE;
+   bool fKey = FALSE;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_ReadKey(%p,%d)", pGT, iEventMask ) );
    HB_SYMBOL_UNUSED( iEventMask ); /* we ignore the eventmask! */
@@ -1107,7 +1111,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
          if( iY  > 0 )
          {
-            BOOL bOldCentre = pWVT->CenterWindow;
+            bool bOldCentre = pWVT->CenterWindow;
             pWVT->CenterWindow = pWVT->bMaximized ? TRUE : FALSE;
             HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iY / pWVT->PTEXTSIZE.y() ), ( USHORT ) ( iX / pWVT->PTEXTSIZE.x() ) );
             pWVT->CenterWindow = bOldCentre;
@@ -1118,7 +1122,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bResizable );
          if( pInfo->pNewVal )
          {
-            BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
+            bool bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != pWVT->bResizable )
             {
                pWVT->bResizable = bNewValue;
@@ -1171,7 +1175,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          else if( pInfo->pNewVal )
          {
-            BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
+            bool bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != pWVT->bSelectCopy )
             {
                if( pWVT->qWnd )
@@ -1196,7 +1200,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bClosable );
          if( pInfo->pNewVal )
          {
-            BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
+            bool bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != pWVT->bClosable )
             {
                pWVT->bClosable = bNewValue;
@@ -2716,18 +2720,6 @@ static bool hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
    {
             default:
             {
-               bool bCtrl     = GetKeyState( VK_CONTROL ) & 0x8000;
-               bool bShift    = GetKeyState( VK_SHIFT ) & 0x8000;
-               int  iScanCode = HIWORD( lParam ) & 0xFF;
-
-               if( bCtrl && iScanCode == 76 ) /* CTRL_VK_NUMPAD5 */
-               {
-                  hb_gt_wvt_AddCharToInputQueue( pWVT, KP_CTRL_5 );
-               }
-               else if( bCtrl && wParam == VK_TAB ) /* K_CTRL_TAB */
-               {
-                  hb_gt_wvt_AddCharToInputQueue( pWVT, bShift ? K_CTRL_SH_TAB : K_CTRL_TAB );
-               }
                else if( iScanCode == 70 ) /* Ctrl_Break key OR Scroll Lock Key */
                {
                   if( bCtrl )  /* Not scroll lock */
@@ -2735,35 +2727,8 @@ static bool hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
                      hb_gt_wvt_AddCharToInputQueue( pWVT, HB_BREAK_FLAG ); /* Pretend Alt+C pressed */
                   }
                }
-               else if( bCtrl && iScanCode == 53 && bShift )
-               {
-                  hb_gt_wvt_AddCharToInputQueue( pWVT, K_CTRL_QUESTION );
-               }
             }
-         }
-         break;
-      }
-
-      case WM_SYSCHAR:
-      {
-         if( !pWVT->IgnoreWM_SYSCHAR )
-         {
-            int c, iScanCode = HIWORD( lParam ) & 0xFF;
-            switch( iScanCode )
-            {
-               case 13:
-                  c = K_ALT_EQUALS;
-                  break;
-               default:
-                  c = ( int ) wParam;
-                  break;
-            }
-            hb_gt_wvt_AddCharToInputQueue( pWVT, c );
-         }
-         pWVT->IgnoreWM_SYSCHAR = FALSE;
-      }
    }
-   return 0;
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -2786,27 +2751,19 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             case SC_MAXIMIZE:
             {
                /* Disable "maximize" button */
-               SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
-               SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
-                                         SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
-               ShowWindow( pWVT->hWnd, SW_HIDE );
-               ShowWindow( pWVT->hWnd, SW_NORMAL );
-
                hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
                if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
                   hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
-
-               return 0;
             }
 
             case SYS_EV_MARK:
             {
                pWVT->bBeginMarked = TRUE;
-               return 0;
             }
          }
-         break;
    }
 }
 #endif
 /*----------------------------------------------------------------------*/
+
+
