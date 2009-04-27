@@ -416,6 +416,31 @@ static void adsGetKeyItem( ADSAREAP pArea, PHB_ITEM pItem, int iKeyType,
             ADT files can use ";" concatentation operator, which returns index key types as Raw
    */
       case ADS_RAW:
+         /* hack for timestamp values, we need sth better yo detect timestamp indexes */
+         if( pArea->iFileType == ADS_ADT && pKeyBuf[ 0 ] == 0 && ( iKeyLen == 8 || iKeyLen == 4 ) )
+         {
+            LONG lDate, lTime;
+            lDate = HB_GET_BE_UINT32( pKeyBuf );
+            if( iKeyLen == 8 )
+            {
+               lTime = HB_GET_BE_UINT32( &pKeyBuf[ 4 ] );
+               /* ADS stores milliseconds in raw ADT form increased by one */
+               if( lTime )
+                  --lTime;
+               hb_itemPutTDT( pItem, lDate, lTime );
+            }
+            else
+               hb_itemPutDL( pItem, lDate );
+            break;
+         }
+#if ADS_LIB_VERSION >= 900
+         else if( pArea->iFileType == ADS_VFP && iKeyLen == 8 )
+         {
+            HB_ORD2DBL( pKeyBuf, &dValue );
+            hb_itemPutTD( pItem, dValue );
+            break;
+         }
+#endif
       case ADS_STRING:
          hb_itemPutCL( pItem, pKeyBuf, iKeyLen );
          break;
@@ -501,12 +526,9 @@ static void adsScopeGet( ADSAREAP pArea, ADSHANDLE hOrder, USHORT nScope, PHB_IT
 
 static HB_ERRCODE adsScopeSet( ADSAREAP pArea, ADSHANDLE hOrder, USHORT nScope, PHB_ITEM pItem )
 {
-   UNSIGNED16 u16DataType = ADS_STRINGKEY ;
-   UNSIGNED8 *pucScope;
+   HB_TRACE(HB_TR_DEBUG, ("adsScopeSet(%p, %lu, %hu, %p)", pArea, hOrder, nScope, pItem));
 
    HB_SYMBOL_UNUSED( pArea );
-
-   HB_TRACE(HB_TR_DEBUG, ("adsScopeSet(%p, %lu, %hu, %p)", pArea, hOrder, nScope, pItem));
 
    if( hOrder )
    {
@@ -520,56 +542,79 @@ static HB_ERRCODE adsScopeSet( ADSAREAP pArea, ADSHANDLE hOrder, USHORT nScope, 
          switch( u16KeyType )
          {
             case ADS_RAW:               /* adt files need the ";" concatenation operator (instead of "+") to be optimized */
+               /* ADS timestamp values */
+               if( HB_IS_DATETIME( pItem ) )
+               {
+                  if( pArea->iFileType == ADS_ADT )
+                  {
+                     UNSIGNED8 pKeyBuf[ 8 ];
+                     long lDate, lTime;
+                     hb_itemGetTDT( pItem, &lDate, &lTime );
+                     /* ADS stores milliseconds in raw ADT form increased by one */
+                     ++lTime;
+                     HB_PUT_BE_UINT32( pKeyBuf, lDate );
+                     HB_PUT_BE_UINT32( &pKeyBuf[ 4 ], lTime );
+                     AdsSetScope( hOrder, nScope, pKeyBuf, HB_IS_TIMESTAMP( pItem ) ? 8 : 4, ADS_RAWKEY );
+                     break;
+                  }
+#if ADS_LIB_VERSION >= 900
+                  else if( pArea->iFileType == ADS_VFP )
+                  {
+                     double dTemp;
+                     dTemp = hb_itemGetTD( pItem );
+                     AdsSetScope( hOrder, nScope,
+                                  ( UNSIGNED8 * ) &dTemp,
+                                  ( UNSIGNED16 ) sizeof( dTemp ), ADS_DOUBLEKEY );
+                     break;
+                  }
+#endif
+               }
             case ADS_STRING:
                if( HB_IS_STRING( pItem ) )
                {
-                  /* bTypeError = FALSE; */
-                  pucScope = ( UNSIGNED8 * ) hb_itemGetCPtr( pItem );
+                  UNSIGNED16 u16DataType = ADS_STRINGKEY ;
+                  UNSIGNED16 ucLen = ( UNSIGNED16 ) hb_itemGetCLen( pItem );
+                  UNSIGNED8 *pucScope = ( UNSIGNED8 * ) hb_itemGetCPtr( pItem );
+#if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
+                  UNSIGNED8 pszKeyFree = NULL;
+#endif
 #ifdef ADS_USE_OEM_TRANSLATION
                   if( hb_ads_bOEM )
                   {
 #if ADS_LIB_VERSION >= 600
                      u16DataType = ADS_RAWKEY;
 #else
-                     USHORT uiLen = ( USHORT ) hb_itemGetCLen( pItem );
-
-                     char * pBuffer = hb_adsOemToAnsi( ( char * ) pucScope, uiLen );
-                     memcpy( ( char * ) pucScope, pBuffer, uiLen );
-                     hb_adsOemAnsiFree( pBuffer );
+                     pucScope = pszKeyFree = ( UNSIGNED8 * ) hb_adsOemToAnsi( ( char * ) pucScope, uiLen );
 #endif
                   }
 #endif
-                  AdsSetScope( hOrder, nScope,
-                     ( UNSIGNED8 * ) pucScope,
-                     ( UNSIGNED16 ) hb_itemGetCLen( pItem ), u16DataType );
+                  AdsSetScope( hOrder, nScope, pucScope, ucLen, u16DataType );
+#if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
+                  if( pszKeyFree )
+                     hb_adsOemAnsiFree( pszKeyFree );
+#endif
                }
                break;
 
             case ADS_NUMERIC:
-            {
                if( HB_IS_NUMERIC( pItem ) )
                {
                   double dTemp;
-                  /* bTypeError = FALSE; */
                   dTemp = hb_itemGetND( pItem );
-                  u16DataType = ADS_DOUBLEKEY ;
                   AdsSetScope( hOrder, nScope,
-                     ( UNSIGNED8 * ) &dTemp,
-                     ( UNSIGNED16 ) sizeof( dTemp ), u16DataType );
+                               ( UNSIGNED8 * ) &dTemp,
+                               ( UNSIGNED16 ) sizeof( dTemp ), ADS_DOUBLEKEY );
                }
                break;
-            }
 
             case ADS_DATE:
-               if( HB_IS_DATE( pItem ) )
+               if( HB_IS_DATETIME( pItem ) )
                {
                   double dTemp;
-                  /* bTypeError = FALSE; */
                   dTemp = hb_itemGetDL( pItem );
-                  u16DataType = ADS_DOUBLEKEY ;
                   AdsSetScope( hOrder, nScope,
-                      ( UNSIGNED8 * ) &dTemp,
-                      ( UNSIGNED16 ) sizeof( dTemp ), u16DataType );
+                               ( UNSIGNED8 * ) &dTemp,
+                               ( UNSIGNED16 ) sizeof( dTemp ), ADS_DOUBLEKEY );
                }
                break;
 
@@ -899,10 +944,13 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
    UNSIGNED32 u32RecNo = 0, u32NewRec;
    UNSIGNED16 u16SeekType = ( bSoftSeek ) ? ADS_SOFTSEEK : ADS_HARDSEEK,
               u16KeyType, u16Found, u16KeyLen;
-   UNSIGNED8 *pszKey;
+   UNSIGNED8 *pszKey, pKeyBuf[ 8 ];
    double dValue;
    UNSIGNED8  *pucSavedKey = NULL;
    UNSIGNED16 u16SavedKeyLen = ADS_MAX_KEY_LENGTH;  /* this may be longer than the actual seek expression, so we don't pass it along */
+#if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
+   UNSIGNED8 pszKeyFree = NULL;
+#endif
 
    HB_TRACE(HB_TR_DEBUG, ("adsSeek(%p, %d, %p, %d)", pArea, bSoftSeek, pKey, bFindLast));
 
@@ -913,7 +961,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
    }
 
    /* build a seek key */
-   if( hb_itemType( pKey ) & HB_IT_STRING )
+   if( HB_IS_STRING( pKey ) )
    {
       pszKey = ( UNSIGNED8* ) hb_itemGetCPtr( pKey );
       u16KeyLen = ( UNSIGNED16 ) hb_itemGetCLen( pKey );
@@ -924,30 +972,46 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
       u16KeyType = ADS_STRINGKEY;
       if( hb_ads_bOEM )
       {
-         char * pBuffer = hb_adsOemToAnsi( ( char * ) pszKey, u16KeyLen );
-         memcpy( ( char * ) pszKey, pBuffer, u16KeyLen );
-         hb_adsOemAnsiFree( pBuffer );
+         pszKey = pszKeyFree = ( UNSIGNED8 * ) hb_adsOemToAnsi( ( char * ) pszKey, u16KeyLen );
       }
 #endif
 #else
       u16KeyType = ADS_STRINGKEY;
 #endif
    }
-   else if( hb_itemType( pKey ) & HB_IT_NUMERIC )
+   else if( HB_IS_DATETIME( pKey ) )
+   {
+      u16KeyType = 0;
+      AdsGetKeyType( pArea->hOrdCurrent, &u16KeyType );
+      /* index on timestamp values */
+      if( pArea->iFileType == ADS_ADT && u16KeyType == ADS_RAW )
+      {
+         long lDate, lTime;
+         hb_itemGetTDT( pKey, &lDate, &lTime );
+         /* ADS stores milliseconds in raw ADT form increased by one */
+         ++lTime;
+         HB_PUT_BE_UINT32( pKeyBuf, lDate );
+         HB_PUT_BE_UINT32( &pKeyBuf[ 4 ], lTime );
+         pszKey = pKeyBuf;
+         u16KeyLen = HB_IS_TIMESTAMP( pKey ) ? 8 : 4;
+         u16KeyType = ADS_RAWKEY;
+      }
+      else
+      {
+         dValue = hb_itemGetTD( pKey );
+         pszKey = ( UNSIGNED8* ) &dValue;
+         u16KeyLen = ( UNSIGNED16 ) sizeof( double );
+         u16KeyType = ADS_DOUBLEKEY;
+      }
+   }
+   else if( HB_IS_NUMERIC( pKey ) )
    {
       dValue = hb_itemGetND( pKey );
       pszKey = ( UNSIGNED8* ) &dValue;
       u16KeyLen = ( UNSIGNED16 ) sizeof( double );
       u16KeyType = ADS_DOUBLEKEY;
    }
-   else if( hb_itemType( pKey ) & HB_IT_DATE )
-   {
-      dValue = ( double ) hb_itemGetDL( pKey );
-      pszKey = ( UNSIGNED8* ) &dValue;
-      u16KeyLen = ( UNSIGNED16 ) sizeof( double );
-      u16KeyType = ADS_DOUBLEKEY;
-   }
-   else if( hb_itemType( pKey ) & HB_IT_LOGICAL )
+   else if( HB_IS_LOGICAL( pKey ) )
    {
       pszKey = ( UNSIGNED8* ) ( hb_itemGetL( pKey ) ? "1" : "0" );
       u16KeyLen = 1;
@@ -956,6 +1020,10 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
    else
    {
       commonError( pArea, EG_DATATYPE, 1020, 0, NULL, 0, NULL );
+#if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
+      if( pszKeyFree )
+         hb_adsOemAnsiFree( pszKeyFree );
+#endif
       return HB_FAILURE;
    }
 
@@ -1002,6 +1070,10 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
       HB_ERRCODE errCode = SELF_GOTO( ( AREAP ) pArea, 0 );
       /* HB_ERRCODE errCode = SELF_GOTOP( ( AREAP ) pArea ); */
       pArea->fBof = FALSE;
+#if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
+      if( pszKeyFree )
+         hb_adsOemAnsiFree( pszKeyFree );
+#endif
       return errCode;
    }
 
@@ -1074,6 +1146,10 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
       {
          if( pucSavedKey )
             hb_xfree( pucSavedKey );
+#if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
+         if( pszKeyFree )
+            hb_adsOemAnsiFree( pszKeyFree );
+#endif
          return HB_FAILURE;
       }
 
@@ -1109,6 +1185,10 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
 
    if( pucSavedKey )
       hb_xfree( pucSavedKey );
+#if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
+   if( pszKeyFree )
+      hb_adsOemAnsiFree( pszKeyFree );
+#endif
 
    return HB_SUCCESS;
 }
@@ -1574,7 +1654,11 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             break;
 
          case 'T':
+#if ADS_LIB_VERSION >= 900
+            if( ( pArea->iFileType == ADS_ADT || pArea->iFileType == ADS_VFP ) &&
+#else
             if( pArea->iFileType == ADS_ADT &&
+#endif
                 ( iNameLen == 1 || ( iNameLen >= 4 &&
                   hb_strnicmp( szFieldType, "timestamp", iNameLen ) == 0 ) ) )
             {
@@ -1591,6 +1675,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                   dbFieldInfo.uiLen = 4;
                }
             }
+/*
 #if ADS_LIB_VERSION >= 900
             else if( pArea->iFileType == ADS_VFP &&
                 (  iNameLen >= 4 &&
@@ -1604,6 +1689,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                }
             }
 #endif
+*/
             else
                return HB_FAILURE;
             break;
@@ -1942,19 +2028,30 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          hb_itemPutCL( pItem, ( char * ) pBuffer, pField->uiLen );
          break;
 
+      case HB_FT_TIME:
       case HB_FT_DAYTIME:
       case HB_FT_MODTIME:
-      case HB_FT_TIME:
+      {
+         SIGNED32 lTime = 0, lDate = 0;
          u32Length = pArea->maxFieldLen + 1;
-         ulRetVal = AdsGetField( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length, ADS_NONE );
+         ulRetVal = AdsGetMilliseconds( pArea->hTable, ADSFIELD( uiIndex ), &lTime );
          if( ulRetVal == AE_NO_CURRENT_RECORD )
          {
-            memset( pBuffer, ' ', pArea->maxFieldLen + 1 );
+            lTime = 0;
             pArea->fEof = TRUE;
          }
-         hb_itemPutCL( pItem, ( char * ) pBuffer, u32Length );
+         else if( pField->uiType != HB_FT_TIME )
+         {
+            ulRetVal = AdsGetJulian( pArea->hTable, ADSFIELD( uiIndex ), &lDate );
+            if( ulRetVal == AE_NO_CURRENT_RECORD )
+            {
+               pArea->fEof = TRUE;
+               lDate = 0;
+            }
+         }
+         hb_itemPutTDT( pItem, lDate, lTime );
          break;
-
+      }
       case HB_FT_INTEGER:
       {
          SIGNED32 lVal = 0;
@@ -2285,8 +2382,6 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case HB_FT_LONG:
       case HB_FT_INTEGER:
       case HB_FT_DOUBLE:
-      case HB_FT_TIME:
-      case HB_FT_DAYTIME:
       case HB_FT_AUTOINC:
       case HB_FT_CURDOUBLE:
       case HB_FT_CURRENCY:
@@ -2303,11 +2398,25 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          }
          break;
 
+      case HB_FT_TIME:
+      case HB_FT_DAYTIME:
+      case HB_FT_MODTIME:
+         if( HB_IS_DATETIME( pItem ) )
+         {
+            long lDate, lTime;
+            bTypeError = FALSE;
+            hb_itemGetTDT( pItem, &lDate, &lTime );
+            ulRetVal = AdsSetMilliseconds( pArea->hTable, ADSFIELD( uiIndex ), lTime );
+            if( ulRetVal == AE_SUCCESS && pField->uiType != HB_FT_TIME )
+               ulRetVal = AdsSetJulian( pArea->hTable, ADSFIELD( uiIndex ), lDate );
+         }
+         break;
+
       case HB_FT_DATE:
-         if( HB_IS_DATE( pItem ) )
+         if( HB_IS_DATETIME( pItem ) )
          {
             bTypeError = FALSE;
-            ulRetVal = AdsSetJulian(  pArea->hTable, ADSFIELD( uiIndex ), hb_itemGetDL( pItem ) );
+            ulRetVal = AdsSetJulian( pArea->hTable, ADSFIELD( uiIndex ), hb_itemGetDL( pItem ) );
          }
          break;
 
