@@ -105,13 +105,24 @@ CPP_SOURCES=\
 	hbqt_qtextbrowser.cpp \
 	hbqt_qtextboundaryfinder.cpp \
 	hbqt_qtextcharformat.cpp \
+	hbqt_qtextcodec.cpp \
 	hbqt_qtextcursor.cpp \
 	hbqt_qtextdecoder.cpp \
 	hbqt_qtextdocument.cpp \
 	hbqt_qtextdocumentfragment.cpp \
 	hbqt_qtextdocumentwriter.cpp \
 	hbqt_qtextedit.cpp \
+	hbqt_qtextencoder.cpp \
 	hbqt_qtextformat.cpp \
+	hbqt_qtextfragment.cpp \
+	hbqt_qtextframe.cpp \
+	hbqt_qtextframeformat.cpp \
+	hbqt_qtextimageformat.cpp \
+	hbqt_qtextinlineobject.cpp \
+	hbqt_qtextitem.cpp \
+	hbqt_qtextlayout.cpp \
+	hbqt_qtextlength.cpp \
+	hbqt_qtextline.cpp \
 	hbqt_qtextstream.cpp \
 	hbqt_qtimeedit.cpp \
 	hbqt_qtimer.cpp \
@@ -242,13 +253,24 @@ PRG_SOURCES=\
 	TQTextBrowser.prg \
 	TQTextBoundaryFinder.prg \
 	TQTextCharFormat.prg \
+	TQTextCodec.prg \
 	TQTextCursor.prg \
 	TQTextDecoder.prg \
 	TQTextDocument.prg \
 	TQTextDocumentFragment.prg \
 	TQTextDocumentWriter.prg \
 	TQTextEdit.prg \
+	TQTextEncoder.prg \
 	TQTextFormat.prg \
+	TQTextFragment.prg \
+	TQTextFrame.prg \
+	TQTextFrameFormat.prg \
+	TQTextImageFormat.prg \
+	TQTextInlineObject.prg \
+	TQTextItem.prg \
+	TQTextLayout.prg \
+	TQTextLength.prg \
+	TQTextLine.prg \
 	TQTextStream.prg \
 	TQTimeEdit.prg \
 	TQTimer.prg \
