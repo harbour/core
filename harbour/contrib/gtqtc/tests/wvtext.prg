@@ -183,18 +183,60 @@ FUNCTION SetPaletteIndex()
    RETURN NIL
 /*----------------------------------------------------------------------*/
 STATIC FUNCTION Boxes()
-   LOCAL scr := SaveScreen( 0, 0,maxrow(), maxcol() )
+   LOCAL scr    := SaveScreen( 0, 0,maxrow(), maxcol() )
    LOCAL cColor := SetColor( 'W+/B' )
+   LOCAL cClr   := 'w+/n'
+   LOCAL cTitle
 
    CLS
    #include 'Box.ch'
 
-   DispBox( 2, 4,10,35,B_SINGLE )
-   DispBox( 2,44,10,75,B_DOUBLE_SINGLE )
+   DispBox  ( 2-1, 4,10-1,35,B_SINGLE       , cClr )
+   DispOutAt( 5-1, 4, chr( 195 ), cClr )
+   DispOutAt( 5-1, 5, replicate( chr( 196 ),13 ), cClr )
+   DispOutAt( 5-1,18, chr( 197 ), cClr )
+   DispOutAt( 5-1,35, chr( 180 ), cClr )
+   DispOutAt( 2-1,18, chr( 194 ), cClr )
+   DispOutAt( 3-1,18, chr( 179 ), cClr )
+   DispOutAt( 4-1,18, chr( 179 ), cClr )
+   DispOutAt(10-1,18, chr( 193 ), cClr )
 
-   DispOutAt( maxrow(),0,padc( 'Press ESC to exit',maxcol()+1 ), 'N/GR*' )
+   DispBox  ( 2-1,44,10-1,75,B_DOUBLE_SINGLE, cClr )
+   DispOutAt( 5-1,44, chr( 198 ), cClr )
+   DispOutAt( 5-1,45, replicate( chr( 205 ),13 ), cClr )
+   DispOutAt( 5-1,58, chr( 216 ), cClr )
+   DispOutAt( 5-1,75, chr( 181 ), cClr )
+   DispOutAt( 2-1,58, chr( 209 ), cClr )
+   DispOutAt( 3-1,58, chr( 179 ), cClr )
+   DispOutAt( 4-1,58, chr( 179 ), cClr )
+   DispOutAt(10-1,58, chr( 207 ), cClr )
 
+   DispBox  (12-1, 4,20-1,35,B_DOUBLE       , cClr )
+   DispOutAt(15-1, 4, chr( 204 ), cClr )
+   DispOutAt(15-1, 5, replicate( chr( 205 ),13 ), cClr )
+   DispOutAt(15-1,18, chr( 206 ), cClr )
+   DispOutAt(15-1,35, chr( 185 ), cClr )
+   DispOutAt(12-1,18, chr( 203 ), cClr )
+   DispOutAt(13-1,18, chr( 186 ), cClr )
+   DispOutAt(14-1,18, chr( 186 ), cClr )
+   DispOutAt(20-1,18, chr( 202 ), cClr )
+
+   DispBox  (12-1,44,20-1,75,B_SINGLE_DOUBLE, cClr )
+   DispOutAt(15-1,44, chr( 199 ), cClr )
+   DispOutAt(15-1,45, replicate( chr( 196 ),13 ), cClr )
+   DispOutAt(15-1,58, chr( 215 ), cClr )
+   DispOutAt(15-1,75, chr( 182 ), cClr )
+   DispOutAt(12-1,58, chr( 210 ), cClr )
+   DispOutAt(13-1,58, chr( 186 ), cClr )
+   DispOutAt(14-1,58, chr( 186 ), cClr )
+   DispOutAt(20-1,58, chr( 208 ), cClr )
+
+   DispBox( 21, 4,23,35, B_FAT , cClr )
+   DispBox( 21,44,23,75, B_THIN, cClr )
+
+   cTitle := hb_gtInfo( HB_GTI_WINTITLE, 'Clipper BOX Characters Implementation <Press ESC to Exit>' )
    DO WHILE inkey( 0.1 ) <> 27; ENDDO
+   hb_gtInfo( HB_GTI_WINTITLE, 'Harbour QT Based Terminal' )
 
    RestScreen( 0, 0, maxrow(), maxcol(), scr )
    RETURN nil
