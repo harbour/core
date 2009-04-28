@@ -263,7 +263,7 @@ static HB_ERRCODE hb_waAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    pField->uiDec = pFieldInfo->uiDec;
    pField->uiFlags = pFieldInfo->uiFlags;
    pField->uiArea = pArea->uiArea;
-   pArea->uiFieldCount ++;
+   pArea->uiFieldCount++;
    return HB_SUCCESS;
 }
 
@@ -417,7 +417,7 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 
          case 'Q':
             pFieldInfo.uiType = HB_FT_VARLENGTH;
-            pFieldInfo.uiLen = uiLen > 255 ? 255 : uiLen;
+            pFieldInfo.uiLen = uiLen > 255 ? 255 : ( uiLen == 0 ? 1 : uiLen );
             break;
 
          case 'M':

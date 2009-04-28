@@ -801,6 +801,8 @@ static int hb_ctw_CenterWindow( PHB_GTCTW pCTW, int iWindow, BOOL fCenter )
 
       if( pWnd )
       {
+         int iRow = pWnd->iFirstRow, iCol = pWnd->iFirstCol;
+
          if( fCenter )
          {
             int iHeight = pCTW->iBoardBottom - pCTW->iBoardTop + 1,
@@ -825,6 +827,11 @@ static int hb_ctw_CenterWindow( PHB_GTCTW pCTW, int iWindow, BOOL fCenter )
             if( pWnd->iFirstCol < pCTW->iBoardLeft )
                pWnd->iFirstCol = pCTW->iBoardLeft;
          }
+
+         if( !pWnd->fHidden &&
+             ( iRow != pWnd->iFirstRow || iCol != pWnd->iFirstCol ) )
+            hb_ctw_RemapAllWindows( pCTW, 0 );
+
          return iWindow;
       }
    }

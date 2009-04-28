@@ -380,12 +380,15 @@ typedef struct _NTXAREA
    USHORT   uiNewBlockSize;         /* Size of new memo block */
    USHORT   uiMemoVersion;          /* MEMO file version */
    USHORT   uiDirtyRead;            /* Index dirty read bit filed */
+   USHORT   uiNullOffset;           /* Offset to _NullFlags filed */
+   USHORT   uiNullCount;            /* Number of null flags */
    BYTE     bTableType;             /* DBF type */
    BYTE     bMemoType;              /* MEMO type used in DBF memo fields */
    BYTE     bLockType;              /* Type of locking shemes */
    BYTE     bCryptType;             /* Type of used encryption */
    DBFHEADER dbfHeader;             /* DBF header buffer */
    USHORT * pFieldOffset;           /* Pointer to field offset array */
+   PHB_DBFFIELDBITS pFieldBits;     /* Pointer to extended DBF field info array */
    BYTE *   pRecord;                /* Buffer of record data */
    ULONG    ulRecCount;             /* Total records */
    ULONG    ulRecNo;                /* Current record */
