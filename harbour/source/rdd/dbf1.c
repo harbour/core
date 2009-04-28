@@ -425,7 +425,7 @@ static void hb_dbfAllocNullFlag( DBFAREAP pArea, USHORT uiField, BOOL fLength )
    if( !pArea->pFieldBits )
    {
       ULONG ulSize = sizeof( HB_DBFFIELDBITS ) * pArea->uiFieldExtent;
-      pArea->pFieldBits = memset( hb_xgrab( ulSize ), 0, ulSize );
+      pArea->pFieldBits = ( PHB_DBFFIELDBITS ) memset( hb_xgrab( ulSize ), 0, ulSize );
    }
    if( fLength )
       pArea->pFieldBits[ uiField ].uiLengthBit = pArea->uiNullCount++;
