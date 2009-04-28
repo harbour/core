@@ -2302,11 +2302,13 @@ FUNCTION hbmk( aArgs )
 
    /* Header paths */
 
-   FOR EACH tmp IN s_aINCPATH
-      AAdd( s_aOPTPRG, "-i" + tmp )
-      AAdd( s_aOPTC, StrTran( cOptIncMask, "{DI}", tmp ) )
-      AAdd( s_aOPTRES, StrTran( cOptIncMask, "{DI}", tmp ) )
-   NEXT
+   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+      FOR EACH tmp IN s_aINCPATH
+         AAdd( s_aOPTPRG, "-i" + tmp )
+         AAdd( s_aOPTC, StrTran( cOptIncMask, "{DI}", tmp ) )
+         AAdd( s_aOPTRES, StrTran( cOptIncMask, "{DI}", tmp ) )
+      NEXT
+   ENDIF
 
    /* Do header detection and create incremental file list for .c files */
 

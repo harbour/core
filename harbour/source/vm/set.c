@@ -50,6 +50,18 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2008-2009 Viktor Szakats <viktor.szakats@syenar.hu>
+ *    hb_osEncode()
+ *    hb_osDecode()
+ *
+ * See COPYING for licensing terms.
+ *
+ */
+
 #define _HB_SET_INTERNAL_
 
 #include "hbvmopt.h"

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (Template)
  *
- * Copyright 2006 { Tranlation by : Bicahi Esgici <esgici@yahoo.com> }
+ * Copyright 2006 { Translation by : Bicahi Esgici <esgici@yahoo.com> }
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -95,7 +95,7 @@ static HB_LANG s_lang =
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "Database Dosyasç  # Kayçt      Son GÅncelleme  Boyut", 
+      "Database Dosyasç  # Kayçt      Son G_ncelleme  Boyut",
       "Daha îrnek ister misiniz?",
       "Sayfa No.",
       "** Alttoplam **",
