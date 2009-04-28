@@ -1849,8 +1849,8 @@ static HB_ERRCODE adsFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_
 #if ADS_LIB_VERSION >= 900
          if( pField->uiTypeExtended == ADS_VARCHAR_FOX )
             hb_itemPutC( pItem, "V" );
-#endif
          else
+#endif
             hb_itemPutC( pItem, "Q" );
          break;
 
@@ -2024,7 +2024,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 #endif
          {
 #if ADS_LIB_VERSION >= 600
-            AdsGetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length ) == AE_NO_CURRENT_RECORD )
+            if( AdsGetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length ) == AE_NO_CURRENT_RECORD )
             {
                u32Length = pField->uiType == HB_FT_STRING ? pField->uiLen : 0;
                memset( pBuffer, ' ', u32Length );
