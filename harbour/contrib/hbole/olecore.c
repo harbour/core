@@ -507,7 +507,7 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 #if HB_OLE_C_API
             lOleError = pUnk->lpVtbl->QueryInterface( pUnk, fIID ? &iid : &IID_IDispatch, ( void** ) ( void * ) &pDisp );
 #else
-            lOleError = pUnk->QueryInterface( fIID ? iid : IID_IDispatch, ( void** ) &pDisp );
+            lOleError = pUnk->QueryInterface( fIID ? iid : IID_IDispatch, ( void** ) ( void * ) &pDisp );
 #endif
       }
    }
@@ -583,16 +583,16 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
       if( variant.n1.n2.vt == VT_UNKNOWN )
 #if HB_OLE_C_API
          lOleError = ( variant.n1.n2.n3.punkVal )->lpVtbl->QueryInterface( variant.n1.n2.n3.punkVal, 
-                       &IID_IEnumVARIANT, ( void** ) &pEnum );
+                       &IID_IEnumVARIANT, ( void** ) ( void * ) &pEnum );
 #else
-         lOleError = ( variant.n1.n2.n3.punkVal )->QueryInterface( IID_IEnumVARIANT, ( void** ) &pEnum );
+         lOleError = ( variant.n1.n2.n3.punkVal )->QueryInterface( IID_IEnumVARIANT, ( void** ) ( void * ) &pEnum );
 #endif
       else if( variant.n1.n2.vt == VT_DISPATCH )
 #if HB_OLE_C_API
          lOleError = ( variant.n1.n2.n3.pdispVal )->lpVtbl->QueryInterface( variant.n1.n2.n3.pdispVal, 
-                       &IID_IEnumVARIANT, ( void** ) &pEnum );
+                       &IID_IEnumVARIANT, ( void** ) ( void * ) &pEnum );
 #else
-         lOleError = ( variant.n1.n2.n3.pdispVal )->QueryInterface( IID_IEnumVARIANT, ( void** ) &pEnum );
+         lOleError = ( variant.n1.n2.n3.pdispVal )->QueryInterface( IID_IEnumVARIANT, ( void** ) ( void * ) &pEnum );
 #endif
       else
       {
