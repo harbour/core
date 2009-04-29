@@ -1193,7 +1193,7 @@ FUNCTION hbmk( aArgs )
            Len( cParam ) > 2 .AND. ;
            !( Left( cParam, 3 ) == "-l-" )
 
-         cParam := ArchCompFilter( SubStr( cParam, 3 ) )
+         cParam := MacroProc( ArchCompFilter( SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF ! Empty( cParam )
             AAdd( s_aLIBUSER, PathSepToTarget( cParam ) )
          ENDIF
