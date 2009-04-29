@@ -85,6 +85,10 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
              * if it's not necessary then simply remove the
              * code below. [druzus]
              */
+            case HB_P_PUSHBLOCKLARGE:
+               ulSkip = 8 + HB_PCODE_MKUSHORT( &pFunc->pCode[ ulPos + 6 ] ) * 2;
+               break;
+
             case HB_P_PUSHBLOCK:
                ulSkip = 7 + HB_PCODE_MKUSHORT( &pFunc->pCode[ ulPos + 5 ] ) * 2;
                break;
