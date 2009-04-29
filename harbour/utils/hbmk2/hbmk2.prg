@@ -1508,7 +1508,11 @@ FUNCTION hbmk( aArgs )
             ENDIF
          ENDIF
          IF s_lMAP
-            AAdd( s_aOPTL, "-Wl,-map,{OM}" )
+            IF s_cARCH == "darwin"
+               AAdd( s_aOPTL, "-Wl,-map,{OM}" )
+            ELSE
+               AAdd( s_aOPTL, "-Wl,-Map,{OM}" )
+            ENDIF
          ENDIF
          IF s_lSTATICFULL
             AAdd( s_aOPTL, "-static" )
