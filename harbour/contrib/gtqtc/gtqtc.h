@@ -55,8 +55,7 @@
 
 #define HB_GT_NAME  QTC
 
-#include <QtGui/QtGui>
-#include <Qt/qglobal.h>
+#include <qglobal.h>
 #include <QtGui/QtGui>
 #include <QtCore/QObject>
 #include <QtCore/QList>

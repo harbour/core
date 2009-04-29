@@ -56,7 +56,7 @@
 #ifndef __HBQT_H
 #define __HBQT_H
 
-#include <Qt/qglobal.h>
+#include <qglobal.h>
 #include <QtGui/QTextDocumentFragment>
 #include <QtGui/QTextDocument>
 /* #include <QtGui/QTextDocumentWriter> */
@@ -300,4 +300,3 @@ QPointF hbqt_const_QPointF( int );
 #endif
 
 #endif /* __HBQT_H */
-

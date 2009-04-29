@@ -95,7 +95,6 @@
 /* TODO: Finish C++/C mode selection. */
 /* TODO: Add a way to fallback to stop if required headers couldn't be found.
          This needs a way to spec what key headers to look for. */
-/* TODO: Reuse Harbour .c output for different compiler targets in incremental mode. */
 
 #ifndef HBMK_INTEGRATED_COMPILER
 #define HBMK_INTEGRATED_COMPILER
@@ -391,7 +390,6 @@ FUNCTION hbmk( aArgs )
    LOCAL cParam
    LOCAL cParamL
 
-   LOCAL cTarget
    LOCAL tTarget
    LOCAL lTargetUpToDate
 
@@ -1351,7 +1349,7 @@ FUNCTION hbmk( aArgs )
    IF ! lStopAfterInit
       IF s_lINC
          IF cWorkDir == NIL
-            cWorkDir := s_cARCH + hb_osPathSeparator() + s_cCOMP
+            cWorkDir := ".hbmk" + hb_osPathSeparator() + s_cARCH + hb_osPathSeparator() + s_cCOMP
          ENDIF
          AAdd( s_aOPTPRG, "-o" + cWorkDir + hb_osPathSeparator() ) /* NOTE: Ending path sep is important. */
          IF ! DirBuild( cWorkDir )
@@ -1497,6 +1495,7 @@ FUNCTION hbmk( aArgs )
          ENDIF
          cLibPathPrefix := "-L"
          cLibPathSep := " "
+         cLibLibExt := ".a"
          IF ! lStopAfterCComp
             IF s_cARCH == "linux" .OR. ;
                s_cARCH == "bsd"
@@ -1505,9 +1504,6 @@ FUNCTION hbmk( aArgs )
                AAdd( s_aOPTL, "{LL}" )
                aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
             ENDIF
-         ENDIF
-         IF s_lMAP
-            AAdd( s_aOPTL, "-Wl,-Map {OM}" )
          ENDIF
          IF s_lSTATICFULL
             AAdd( s_aOPTL, "-static" )
@@ -1734,6 +1730,7 @@ FUNCTION hbmk( aArgs )
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
+         cLibLibExt := ".a"
          IF s_lMAP
             AAdd( s_aOPTL, "-Wl,-Map {OM}" )
          ENDIF
@@ -1781,6 +1778,7 @@ FUNCTION hbmk( aArgs )
          cOpt_Link := "{LO} {LA} {FL} {DL}{SCRIPT}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
+         cLibLibExt := ".a"
          IF s_cCOMP == "djgpp"
             AAdd( s_aOPTL, "-Wl,--start-group {LL} -Wl,--end-group" )
          ELSE
@@ -2300,6 +2298,22 @@ FUNCTION hbmk( aArgs )
       ENDIF
    ENDIF
 
+   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+      hb_FNameSplit( s_cPROGNAME, @cDir, @cName, @cExt )
+      DO CASE
+      CASE ! lStopAfterCComp
+         IF Empty( cExt ) .AND. ! Empty( cBinExt )
+            s_cPROGNAME := hb_FNameMerge( cDir, cName, cBinExt )
+         ENDIF
+      CASE lStopAfterCComp .AND. lCreateDyn
+         IF Empty( cExt ) .AND. ! Empty( cDynLibExt )
+            s_cPROGNAME := hb_FNameMerge( cDir, cName, cDynLibExt )
+         ENDIF
+      CASE lStopAfterCComp .AND. lCreateLib
+         s_cPROGNAME := hb_FNameMerge( cDir, cLibLibPrefix + cName, iif( Empty( cLibLibExt ), cExt, cLibLibExt ) )
+      ENDCASE
+   ENDIF
+
    /* Header paths */
 
    IF ! lStopAfterInit .AND. ! lStopAfterHarbour
@@ -2713,7 +2727,7 @@ FUNCTION hbmk( aArgs )
             cOpt_CompC := StrTran( cOpt_CompC, "{LA}"  , ArrayToList( s_aOBJA ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LL}"  , ArrayToList( s_aLIB ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OD}"  , PathSepToTarget( FN_DirGet( s_cPROGNAME ) ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{OE}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cBinExt ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{OE}"  , PathSepToTarget( s_cPROGNAME ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OM}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, ".map" ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{DB}"  , s_cHB_BIN_INSTALL )
@@ -2801,17 +2815,11 @@ FUNCTION hbmk( aArgs )
 
          IF s_lINC .AND. ! s_lREBUILD
 
-            DO CASE
-            CASE lCreateLib ; cTarget := PathSepToTarget( FN_ExtSet( cLibLibPrefix + s_cPROGNAME, cLibLibExt ) )
-            CASE lCreateDyn ; cTarget := PathSepToTarget( FN_ExtSet( s_cPROGNAME, cDynLibExt ) )
-            OTHERWISE       ; cTarget := PathSepToTarget( FN_ExtSet( s_cPROGNAME, cBinExt ) )
-            ENDCASE
-
             IF s_lDEBUGINC
-               OutStd( "hbmk: debuginc: EXE", cTarget, hb_osNewLine() )
+               OutStd( "hbmk: debuginc: target", s_cPROGNAME, hb_osNewLine() )
             ENDIF
 
-            IF hb_FGetDateTime( cTarget, @tTarget )
+            IF hb_FGetDateTime( s_cPROGNAME, @tTarget )
 
                lTargetUpToDate := .T.
                IF lTargetUpToDate
@@ -2846,7 +2854,7 @@ FUNCTION hbmk( aArgs )
       IF nErrorLevel == 0 .AND. ( Len( s_aOBJ ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) > 0 .AND. ! s_lCLEAN
 
          IF lTargetUpToDate
-            OutStd( "hbmk: Target up to date: " + cTarget + hb_osNewLine() )
+            OutStd( "hbmk: Target up to date: " + s_cPROGNAME + hb_osNewLine() )
          ELSE
             DO CASE
             CASE ! lStopAfterCComp .AND. ! Empty( cBin_Link )
@@ -2864,7 +2872,7 @@ FUNCTION hbmk( aArgs )
                cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( s_aRESSRC, cWorkDir, cResExt ), s_aRESCMP ), cResPrefix ) ) )
                cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( s_aOBJA ) )
                cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( s_aLIB ) )
-               cOpt_Link := StrTran( cOpt_Link, "{OE}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cBinExt ) ) )
+               cOpt_Link := StrTran( cOpt_Link, "{OE}"  , PathSepToTarget( s_cPROGNAME ) )
                cOpt_Link := StrTran( cOpt_Link, "{OM}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, ".map" ) ) )
                cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
                cOpt_Link := StrTran( cOpt_Link, "{DB}"  , s_cHB_BIN_INSTALL )
@@ -2920,7 +2928,7 @@ FUNCTION hbmk( aArgs )
                cOpt_Lib := StrTran( cOpt_Lib, "{FA}"  , GetEnv( "HB_USER_AFLAGS" ) + " " + ArrayToList( s_aOPTA ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{LO}"  , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cLibObjPrefix ) ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{LL}"  , ArrayToList( s_aLIB ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{OL}"  , PathSepToTarget( FN_ExtSet( cLibLibPrefix + s_cPROGNAME, cLibLibExt ) ) )
+               cOpt_Lib := StrTran( cOpt_Lib, "{OL}"  , PathSepToTarget( s_cPROGNAME ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{DB}"  , s_cHB_BIN_INSTALL )
 
@@ -2976,7 +2984,7 @@ FUNCTION hbmk( aArgs )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LO}"  , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cDynObjPrefix ) ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( s_aRESSRC, cWorkDir, cResExt ), s_aRESCMP ), cResPrefix ) ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LL}"  , ArrayToList( s_aLIB ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{OD}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cDynLibExt ) ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{OD}"  , PathSepToTarget( s_cPROGNAME ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OM}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, ".map" ) ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{DB}"  , s_cHB_BIN_INSTALL )
@@ -3060,11 +3068,7 @@ FUNCTION hbmk( aArgs )
             CASE s_nCOMPR == _COMPR_MAX ; cOpt_Cprs += " " + cOpt_CprsMax
             ENDCASE
 
-            IF lCreateDyn
-               cOpt_Cprs := StrTran( cOpt_Cprs, "{OB}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cDynLibExt ) ) )
-            ELSE
-               cOpt_Cprs := StrTran( cOpt_Cprs, "{OB}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cBinExt ) ) )
-            ENDIF
+            cOpt_Cprs := StrTran( cOpt_Cprs, "{OB}", PathSepToTarget( s_cPROGNAME ) )
             cOpt_Cprs := AllTrim( cOpt_Cprs )
 
             cCommand := cBin_Cprs + " " + cOpt_Cprs
@@ -3085,7 +3089,6 @@ FUNCTION hbmk( aArgs )
          ENDIF
 
          IF s_lRUN .AND. ! lCreateLib .AND. ! lCreateDyn
-            s_cPROGNAME := FN_ExtSet( s_cPROGNAME, cBinExt )
             #if defined( __PLATFORM__UNIX )
                IF Empty( FN_DirGet( s_cPROGNAME ) )
                   s_cPROGNAME := "." + hb_osPathSeparator() + s_cPROGNAME

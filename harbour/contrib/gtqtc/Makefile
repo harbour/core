@@ -65,10 +65,8 @@ CPP_SOURCES=\
 	gtqtc.cpp \
 	moc_gtqtc.cpp \
 
-
 C_HEADERS=\
 	gtqtc.h \
-
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
@@ -83,6 +81,3 @@ endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif
-
-
-
