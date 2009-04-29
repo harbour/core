@@ -348,6 +348,8 @@ FUNCTION hbmk( aArgs )
    LOCAL cOpt_Cprs
    LOCAL cOpt_CprsMin
    LOCAL cOpt_CprsMax
+   LOCAL cBin_Post := NIL
+   LOCAL cOpt_Post
 
    LOCAL cCommand
 #if defined( HBMK_INTEGRATED_COMPILER )
@@ -1505,6 +1507,9 @@ FUNCTION hbmk( aArgs )
                aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
             ENDIF
          ENDIF
+         IF s_lMAP
+            AAdd( s_aOPTL, "-Wl,-map,{OM}" )
+         ENDIF
          IF s_lSTATICFULL
             AAdd( s_aOPTL, "-static" )
          ENDIF
@@ -1516,8 +1521,13 @@ FUNCTION hbmk( aArgs )
                AAdd( s_aOPTL, "-multiply_defined suppress" )
             ENDIF
          ENDIF
-         IF s_lSTRIP .AND. !( s_cARCH == "sunos" )
-            AAdd( s_aOPTL, "-s" )
+         IF s_lSTRIP
+            IF s_cARCH == "darwin"
+               cBin_Post := "strip"
+               cOpt_Post := "{OB}"
+            ELSEIF !( s_cARCH == "sunos" )
+               AAdd( s_aOPTL, "-s" )
+            ENDIF
          ENDIF
          IF lStopAfterCComp
             IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( s_aPRG ) + Len( s_aC ) ) == 1
@@ -2860,7 +2870,7 @@ FUNCTION hbmk( aArgs )
             CASE ! lStopAfterCComp .AND. ! Empty( cBin_Link )
 
                IF s_lINC .AND. ! s_lQuiet
-                  OutStd( "Linking..." + hb_osNewLine() )
+                  OutStd( "Linking...", PathSepToTarget( s_cPROGNAME ), hb_osNewLine() )
                ENDIF
 
                /* Linking */
@@ -2919,7 +2929,7 @@ FUNCTION hbmk( aArgs )
             CASE lStopAfterCComp .AND. lCreateLib .AND. ! Empty( cBin_Lib )
 
                IF s_lINC .AND. ! s_lQuiet
-                  OutStd( "Creating static library..." + hb_osNewLine() )
+                  OutStd( "Creating static library...", PathSepToTarget( s_cPROGNAME ), hb_osNewLine() )
                ENDIF
 
                /* Lib creation (static) */
@@ -2974,7 +2984,7 @@ FUNCTION hbmk( aArgs )
             CASE lStopAfterCComp .AND. lCreateDyn .AND. ! Empty( cBin_Dyn )
 
                IF s_lINC .AND. ! s_lQuiet
-                  OutStd( "Creating dynamic library..." + hb_osNewLine() )
+                  OutStd( "Creating dynamic library...", PathSepToTarget( s_cPROGNAME ), hb_osNewLine() )
                ENDIF
 
                /* Lib creation (dynamic) */
@@ -3059,6 +3069,29 @@ FUNCTION hbmk( aArgs )
       ENDIF
 
       IF nErrorLevel == 0 .AND. ! lStopAfterCComp .AND. ! s_lCLEAN
+
+         IF ! Empty( cBin_Post )
+
+            cOpt_Post := StrTran( cOpt_Post, "{OB}", PathSepToTarget( s_cPROGNAME ) )
+            cOpt_Post := AllTrim( cOpt_Post )
+
+            cCommand := cBin_Post + " " + cOpt_Post
+
+            IF s_lTRACE
+               IF ! s_lQuiet
+                  OutStd( "hbmk: Post processor command:" + hb_osNewLine() )
+               ENDIF
+               OutStd( cCommand + hb_osNewLine() )
+            ENDIF
+
+            IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
+               OutErr( "hbmk: Warning: Running post processor command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+               IF ! s_lQuiet
+                  OutErr( cCommand + hb_osNewLine() )
+               ENDIF
+            ENDIF
+         ENDIF
+
          IF s_nCOMPR != _COMPR_OFF .AND. ! lCreateLib .AND. ! Empty( cBin_Cprs )
 
             /* Executable compression */
@@ -3703,6 +3736,9 @@ FUNCTION DirBuild( cDir )
             ELSEIF ! hb_DirExists( cDirTemp )
                IF hb_DirCreate( cDirTemp ) != 0
                   RETURN .F.
+               ENDIF
+               IF Lower( cDirItem ) == ".hbmk"
+                  hb_FSetAttr( cDirTemp, FC_HIDDEN )
                ENDIF
             ENDIF
          ENDIF
