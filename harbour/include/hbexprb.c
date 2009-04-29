@@ -2670,27 +2670,27 @@ static HB_EXPR_FUNC( hb_compExprUseAssign )
             switch( pExpr->ExprType )
             {
                case HB_EO_PLUS:
-                  pExpr->ExprType = HB_EO_PLUSEQ;
+                  pSelf->ExprType = HB_EO_PLUSEQ;
                   break;
                case HB_EO_MINUS:
-                  pExpr->ExprType = HB_EO_MINUSEQ;
+                  pSelf->ExprType = HB_EO_MINUSEQ;
                   break;
                case HB_EO_MULT:
-                  pExpr->ExprType = HB_EO_MULTEQ;
+                  pSelf->ExprType = HB_EO_MULTEQ;
                   break;
                case HB_EO_DIV:
-                  pExpr->ExprType = HB_EO_DIVEQ;
+                  pSelf->ExprType = HB_EO_DIVEQ;
                   break;
                case HB_EO_MOD:
-                  pExpr->ExprType = HB_EO_MODEQ;
+                  pSelf->ExprType = HB_EO_MODEQ;
                   break;
                case HB_EO_POWER:
-                  pExpr->ExprType = HB_EO_EXPEQ;
+                  pSelf->ExprType = HB_EO_EXPEQ;
                   break;
             }
-            pSelf->value.asOperator.pRight = NULL;
-            HB_COMP_EXPR_FREE( pSelf );
-            pSelf = pExpr;
+            pSelf->value.asOperator.pRight = pExpr->value.asOperator.pRight;
+            pExpr->value.asOperator.pRight = NULL;
+            HB_COMP_EXPR_FREE( pExpr );
          }
          break;
       }
