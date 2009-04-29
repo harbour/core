@@ -76,7 +76,7 @@ void hb_ToOutDebug( const char * sTraceMsg, ... )
      va_list ap;
 
      va_start( ap, sTraceMsg );
-     vsnprintf( buffer, sizeof( buffer ), sTraceMsg, ap );
+     hb_vsnprintf( buffer, sizeof( buffer ), sTraceMsg, ap );
      va_end( ap );
 
      hb_OutDebug( ( const char * ) buffer, strlen( buffer ) );
@@ -130,4 +130,3 @@ void hb_ToLogFile( const char * sFile, const char * sTraceMsg, ... )
       }
    }
 }
-
