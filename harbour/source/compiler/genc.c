@@ -111,11 +111,17 @@ static void hb_compDumpFindCFunc( HB_COMP_DECL )
             {
                do { ++pszCCode; } while( *pszCCode && *pszCCode != '\n' );
             }
-            else if( ch == '"' )
+            else if( ch == '"' || ch == '\'' )
             {
                while( *pszCCode )
                {
-                  if( *pszCCode++ == '"' )
+                  if( *pszCCode == '\\' )
+                  {
+                     pszCCode++;
+                     if( *pszCCode )
+                        pszCCode++;
+                  }
+                  else if( *pszCCode++ == ch )
                      break;
                }
             }
