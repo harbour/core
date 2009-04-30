@@ -4873,8 +4873,8 @@ STATIC FUNCTION GenHbl( aFiles, cFileOut, lEmpty )
 
    IF ISARRAY( aTrans )
       pI18N := __I18N_hashTable( __I18N_potArrayToHash( aTrans, lEmpty ) )
-      cHblBody := HB_I18N_SaveTable( pI18N )
-      IF hb_memoWrit( cFileOut, cHblBody )
+      cHblBody := hb_I18N_SaveTable( pI18N )
+      IF hb_MemoWrit( cFileOut, cHblBody )
          lRetVal := .T.
       ELSE
          OutErr( "hbmk: Cannot create file: ", cFileOut, hb_osNewLine() )
@@ -4882,6 +4882,96 @@ STATIC FUNCTION GenHbl( aFiles, cFileOut, lEmpty )
    ENDIF
 
    RETURN lRetVal
+
+#define _VCS_UNKNOWN    0
+#define _VCS_SVN        1
+#define _VCS_GIT        2
+#define _VCS_MERCURIAL  3
+
+STATIC FUNCTION VCSDetect( cDir )
+
+   DEFAULT cDir TO ""
+
+   IF ! Empty( cDir )
+      cDir := DirAddPathSep( cDir )
+   ENDIF
+
+   DO CASE
+   CASE hb_DirExists( cDir + ".svn" ) ; RETURN _VCS_SVN
+   CASE hb_DirExists( cDir + ".git" ) ; RETURN _VCS_GIT
+   CASE hb_DirExists( cDir + ".hg" )  ; RETURN _VCS_MERCURIAL
+   ENDCASE
+
+   RETURN _VCS_UNKNOWN
+
+STATIC FUNCTION VCSID( cDir )
+#ifdef _VCSID_USE_PROCESS
+   LOCAL hStdOut
+#endif
+   LOCAL hnd, cStdOut
+   LOCAL nType := VCSDetect( cDir )
+   LOCAL cCommand
+   LOCAL cResult := ""
+   LOCAL cTemp
+   LOCAL tmp
+
+   SWITCH nType
+   CASE _VCS_SVN
+      cCommand := "svnversion"
+      EXIT
+   CASE _VCS_GIT
+      cCommand := "git rev-parse --short HEAD"
+      EXIT
+   CASE _VCS_MERCURIAL
+      cCommand := "hg head"
+      EXIT
+   OTHERWISE
+      cCommand := NIL
+   ENDSWITCH
+
+   IF ! Empty( cCommand )
+
+#ifdef _VCSID_USE_PROCESS
+      /* This is cleaner, but won't work when using aliases/wrappers
+         for version control commands. */
+      hnd := hb_processOpen( cCommand,, @hStdOut )
+      IF hnd != F_ERROR
+         cStdOut := Space( 256 )
+         tmp := FRead( hStdOut, @cStdOut, Len( cStdOut ) )
+         cStdOut := Left( cStdOut, tmp )
+         hb_processClose( hnd )
+         FClose( hStdOut )
+#else
+      hnd := hb_FTempCreateEx( @cTemp, NIL, "hbmk_", ".txt" )
+      IF hnd != F_ERROR
+         FClose( hnd )
+         cCommand += ">" + cTemp
+         hb_run( cCommand )
+         cStdOut := hb_MemoRead( cTemp )
+         FErase( cTemp )
+#endif
+
+         SWITCH nType
+         CASE _VCS_SVN
+            /* 10959<n> */
+         CASE _VCS_GIT
+            /* fe3bb56<n> */
+            cStdOut := StrTran( cStdOut, Chr( 13 ), "" )
+            cResult := StrTran( cStdOut, Chr( 10 ), "" )
+            EXIT
+         CASE _VCS_MERCURIAL
+            /* changeset:   696:9e33729cafae<n>... */
+            tmp := At( Chr( 10 ), cStdOut )
+            IF tmp > 0
+               cStdOut := Left( cStdOut, tmp - 1 )
+               cResult := AllTrim( StrTran( cStdOut, "changeset:", "" ) )
+            ENDIF
+            EXIT
+         ENDSWITCH
+      ENDIF
+   ENDIF
+
+   RETURN cResult
 
 /* Keep this public, it's used from macro. */
 FUNCTION hbmk_ARCH()
