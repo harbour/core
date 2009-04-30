@@ -93,6 +93,7 @@
 /* TODO: Add support for dynamic library creation for rest of compilers. */
 /* TODO: Cleanup on variable names and compiler configuration. */
 /* TODO: Finish C++/C mode selection. */
+/* TODO: Finish support for multithreaded compilation. */
 /* TODO: Add a way to fallback to stop if required headers couldn't be found.
          This needs a way to spec what key headers to look for. */
 
@@ -410,6 +411,10 @@ FUNCTION hbmk( aArgs )
    LOCAL cDL_Version       := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) + "." +;
                               hb_ntos( hb_Version( HB_VERSION_MINOR ) ) + "." +;
                               hb_ntos( hb_Version( HB_VERSION_RELEASE ) )
+
+   LOCAL aPRG_TODO
+   LOCAL aThreads
+   LOCAL thread
 
    IF Empty( aArgs )
       ShowHeader()
@@ -2411,24 +2416,48 @@ FUNCTION hbmk( aArgs )
       PlatformPRGFlags( s_aOPTPRG )
 
 #if defined( HBMK_INTEGRATED_COMPILER )
-      aCommand := ArrayAJoin( { { iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) },;
-                                s_aPRG_TODO,;
-                                iif( s_lBLDFLGP, { " " + cSelfFlagPRG }, {} ),;
-                                ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
-                                s_aOPTPRG } )
+      aThreads := {}
+      FOR EACH aPRG_TODO IN ArraySplit( s_aPRG_TODO, s_nJOBS )
+         aCommand := ArrayAJoin( { { iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) },;
+                                   aPRG_TODO,;
+                                   iif( s_lBLDFLGP, { " " + cSelfFlagPRG }, {} ),;
+                                   ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
+                                   s_aOPTPRG } )
 
-      IF s_lTRACE
-         IF ! s_lQuiet
-            OutStd( "hbmk: Harbour compiler command (internal):" + hb_osNewLine() )
+         IF s_lTRACE
+            IF ! s_lQuiet
+               IF hb_mtvm()
+                  OutStd( "hbmk: Harbour compiler command (internal) job #" + hb_ntos( aPRG_TODO:__enumIndex() ) + ":" + hb_osNewLine() )
+               ELSE
+                  OutStd( "hbmk: Harbour compiler command (internal):" + hb_osNewLine() )
+               ENDIF
+            ENDIF
+            OutStd( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG +;
+                    " " + ArrayToList( aCommand ) + hb_osNewLine() )
          ENDIF
-         OutStd( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG +;
-                 " " + ArrayToList( aCommand ) + hb_osNewLine() )
-      ENDIF
 
-      IF ! s_lDONTEXEC .AND. ( tmp := hb_compile( "", aCommand ) ) != 0
-         OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + hb_osNewLine() )
-         OutErr( ArrayToList( aCommand ) + hb_osNewLine() )
-         RETURN 6
+         IF ! s_lDONTEXEC
+            IF hb_mtvm()
+               AAdd( aThreads, hb_threadStart( @hb_compile(), "", aCommand ) )
+            ELSE
+               IF ( tmp := hb_compile( "", aCommand ) ) != 0
+                  OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + hb_osNewLine() )
+                  OutErr( ArrayToList( aCommand ) + hb_osNewLine() )
+                  RETURN 6
+               ENDIF
+            ENDIF
+         ENDIF
+      NEXT
+
+      IF hb_mtvm()
+         FOR EACH thread IN aThreads
+            hb_threadJoin( thread, @tmp )
+            IF tmp != 0
+               OutErr( "hbmk: Error: Running Harbour compiler job #" + hb_ntos( thread:__enumIndex() ) + ". " + hb_ntos( tmp ) + hb_osNewLine() )
+               OutErr( ArrayToList( aCommand ) + hb_osNewLine() )
+               RETURN 6
+            ENDIF
+         NEXT
       ENDIF
 #else
       cCommand := DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) +;
@@ -3511,7 +3540,7 @@ STATIC FUNCTION ArraySplit( arrayIn, nChunksReq )
          ENDIF
       NEXT
    ELSE
-      arrayOut := arrayIn
+      arrayOut := { arrayIn }
    ENDIF
 
    RETURN arrayOut
@@ -5085,7 +5114,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -aflag=<f>         pass flag to linker (static library)" ,;
       "  -dflag=<f>         pass flag to linker (dynamic library)" ,;
       "  -runflag=<f>       pass flag to output executable when -run option is used" ,;
-      "  -jobs=<n>          start n compilation threads (MT builds only)" ,;
+      "  -jobs=<n>          start n compilation threads (MT platforms/builds only)" ,;
       "  -inc               enable incremental build mode" ,;
       "  -[no]head[=<m>]    control source header parsing (in incremental build mode)" ,;
       "                     <m> can be: full, partial (default), off" ,;

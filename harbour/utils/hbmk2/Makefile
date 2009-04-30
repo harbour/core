@@ -15,13 +15,13 @@ PRG_MAIN=hbmk2.prg
 
 LIBS=\
 	hbdebug \
-	hbvm \
+	hbvmmt \
 	hbrtl \
 	hblang \
 	hbcpage \
 	hbnulrdd \
 	hbrtl \
-	hbvm \
+	hbvmmt \
 	hbmacro \
 	hbcommon \
 	hbpp \
