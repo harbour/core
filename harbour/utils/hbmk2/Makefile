@@ -6,6 +6,13 @@ ifeq ($(HB_MAIN),)
 HB_MAIN = std
 endif
 
+HVMLIB = hbvm
+ifneq ($(HB_ARCHITECTURE),dos)
+ifneq ($(HB_MT),no)
+   HVMLIB = hbvmmt
+endif
+endif
+
 ROOT = ../../
 
 PRG_SOURCES=\
@@ -15,13 +22,13 @@ PRG_MAIN=hbmk2.prg
 
 LIBS=\
 	hbdebug \
-	hbvmmt \
+	$(HVMLIB) \
 	hbrtl \
 	hblang \
 	hbcpage \
 	hbnulrdd \
 	hbrtl \
-	hbvmmt \
+	$(HVMLIB) \
 	hbmacro \
 	hbcommon \
 	hbpp \
