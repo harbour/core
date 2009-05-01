@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Display build information - code moved from hb_ver.c
+ * Display build information
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org

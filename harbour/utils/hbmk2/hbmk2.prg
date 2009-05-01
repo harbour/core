@@ -138,6 +138,7 @@ STATIC s_aINCPATH
 STATIC s_aINCTRYPATH
 STATIC s_lREBUILD := .F.
 
+STATIC s_lDEBUGTIME := .F.
 STATIC s_lDEBUGINC := .F.
 STATIC s_lDEBUGSTUB := .F.
 
@@ -359,6 +360,7 @@ FUNCTION hbmk( aArgs )
    LOCAL aCommand
 #endif
    LOCAL cOpt_CompC
+   LOCAL cOpt_CompCLoop
    LOCAL cOpt_Link
    LOCAL cOpt_Res
    LOCAL cOpt_Lib
@@ -414,9 +416,11 @@ FUNCTION hbmk( aArgs )
                               hb_ntos( hb_Version( HB_VERSION_MINOR ) ) + "." +;
                               hb_ntos( hb_Version( HB_VERSION_RELEASE ) )
 
-   LOCAL aPRG_TODO
+   LOCAL aTODO
    LOCAL aThreads
    LOCAL thread
+
+   LOCAL nStart := secondscpu()
 
    IF Empty( aArgs )
       ShowHeader()
@@ -956,6 +960,7 @@ FUNCTION hbmk( aArgs )
       CASE cParamL == "-opt"             ; s_lOPT       := .T.
       CASE cParamL == "-opt-" .OR. ;
            cParamL == "-noopt"           ; s_lOPT       := .F.
+      CASE cParamL == "-debugtime"       ; s_lDEBUGTIME := .T.
       CASE cParamL == "-debuginc"        ; s_lDEBUGINC  := .T.
       CASE cParamL == "-debugstub"       ; s_lDEBUGSTUB := .T.
       CASE cParamL == "-nulrdd"          ; s_lNULRDD    := .T.
@@ -2446,9 +2451,9 @@ FUNCTION hbmk( aArgs )
 
 #if defined( HBMK_INTEGRATED_COMPILER )
       aThreads := {}
-      FOR EACH aPRG_TODO IN ArraySplit( s_aPRG_TODO, s_nJOBS )
+      FOR EACH aTODO IN ArraySplit( s_aPRG_TODO, s_nJOBS )
          aCommand := ArrayAJoin( { { iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) },;
-                                   aPRG_TODO,;
+                                   aTODO,;
                                    iif( s_lBLDFLGP, { " " + cSelfFlagPRG }, {} ),;
                                    ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
                                    s_aOPTPRG } )
@@ -2456,7 +2461,7 @@ FUNCTION hbmk( aArgs )
          IF s_lTRACE
             IF ! s_lQuiet
                IF hb_mtvm()
-                  OutStd( "hbmk: Harbour compiler command (internal) job #" + hb_ntos( aPRG_TODO:__enumIndex() ) + ":" + hb_osNewLine() )
+                  OutStd( "hbmk: Harbour compiler command (internal) job #" + hb_ntos( aTODO:__enumIndex() ) + ":" + hb_osNewLine() )
                ELSE
                   OutStd( "hbmk: Harbour compiler command (internal):" + hb_osNewLine() )
                ENDIF
@@ -2467,7 +2472,7 @@ FUNCTION hbmk( aArgs )
 
          IF ! s_lDONTEXEC
             IF hb_mtvm()
-               AAdd( aThreads, hb_threadStart( @hb_compile(), "", aCommand ) )
+               AAdd( aThreads, { hb_threadStart( @hb_compile(), "", aCommand ), aCommand } )
             ELSE
                IF ( tmp := hb_compile( "", aCommand ) ) != 0
                   OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + hb_osNewLine() )
@@ -2480,10 +2485,10 @@ FUNCTION hbmk( aArgs )
 
       IF hb_mtvm()
          FOR EACH thread IN aThreads
-            hb_threadJoin( thread, @tmp )
+            hb_threadJoin( thread[ 1 ], @tmp )
             IF tmp != 0
                OutErr( "hbmk: Error: Running Harbour compiler job #" + hb_ntos( thread:__enumIndex() ) + ". " + hb_ntos( tmp ) + hb_osNewLine() )
-               OutErr( ArrayToList( aCommand ) + hb_osNewLine() )
+               OutErr( ArrayToList( thread[ 2 ] ) + hb_osNewLine() )
                RETURN 6
             ENDIF
          NEXT
@@ -2832,47 +2837,73 @@ FUNCTION hbmk( aArgs )
                   ENDIF
                NEXT
             ELSE
-               cOpt_CompC := StrTran( cOpt_CompC, "{LC}"  , ArrayToList( ArrayJoin( ListDirExt( s_aPRG_TODO, cWorkDir, ".c" ), s_aC_TODO ) ) )
                cOpt_CompC := StrTran( cOpt_CompC, "{OO}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cObjExt ) ) )
                cOpt_CompC := StrTran( cOpt_CompC, "{OW}"  , PathSepToTarget( cWorkDir ) )
 
-               cOpt_CompC := AllTrim( cOpt_CompC )
+               aThreads := {}
+               FOR EACH aTODO IN ArraySplit( ArrayJoin( ListDirExt( s_aPRG_TODO, cWorkDir, ".c" ), s_aC_TODO ), s_nJOBS )
 
-               /* Handle moving the whole command line to a script, if requested. */
-               IF "{SCRIPT}" $ cOpt_CompC
-                  fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".cpl" )
-                  IF fhnd != F_ERROR
-                     FWrite( fhnd, StrTran( cOpt_CompC, "{SCRIPT}", "" ) )
-                     FClose( fhnd )
-                     cOpt_CompC := "@" + cScriptFile
-                  ELSE
-                     OutErr( "hbmk: Warning: C compiler script couldn't be created, continuing in command line." + hb_osNewLine() )
+                  cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( aTODO ) ) )
+
+                  /* Handle moving the whole command line to a script, if requested. */
+                  IF "{SCRIPT}" $ cOpt_CompCLoop
+                     fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".cpl" )
+                     IF fhnd != F_ERROR
+                        FWrite( fhnd, StrTran( cOpt_CompCLoop, "{SCRIPT}", "" ) )
+                        FClose( fhnd )
+                        cOpt_CompCLoop := "@" + cScriptFile
+                     ELSE
+                        OutErr( "hbmk: Warning: C compiler script couldn't be created, continuing in command line." + hb_osNewLine() )
+                     ENDIF
                   ENDIF
-               ENDIF
 
-               cCommand := cBin_CompC + " " + cOpt_CompC
+                  cCommand := cBin_CompC + " " + cOpt_CompCLoop
 
-               IF s_lTRACE
-                  IF ! s_lQuiet
-                     OutStd( "hbmk: C compiler command:" + hb_osNewLine() )
+                  IF s_lTRACE
+                     IF ! s_lQuiet
+                        IF hb_mtvm()
+                           OutStd( "hbmk: C compiler command job #" + hb_ntos( aTODO:__enumIndex() ) + ":" + hb_osNewLine() )
+                        ELSE
+                           OutStd( "hbmk: C compiler command:" + hb_osNewLine() )
+                        ENDIF
+                     ENDIF
+                     OutStd( cCommand + hb_osNewLine() )
+                     IF ! Empty( cScriptFile )
+                        OutStd( "hbmk: C compiler script:" + hb_osNewLine() )
+                        OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+                     ENDIF
                   ENDIF
-                  OutStd( cCommand + hb_osNewLine() )
+
+                  IF ! s_lDONTEXEC
+                     IF hb_mtvm()
+                        AAdd( aThreads, { hb_threadStart( @hbmk_run(), cCommand ), cCommand } )
+                     ELSE
+                        IF ( tmp := hbmk_run( cCommand ) ) != 0
+                           OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+                           IF ! s_lQuiet
+                              OutErr( cCommand + hb_osNewLine() )
+                           ENDIF
+                           nErrorLevel := 6
+                        ENDIF
+                     ENDIF
+                  ENDIF
+
                   IF ! Empty( cScriptFile )
-                     OutStd( "hbmk: C compiler script:" + hb_osNewLine() )
-                     OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+                     FErase( cScriptFile )
                   ENDIF
-               ENDIF
+               NEXT
 
-               IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-                  OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
-                  IF ! s_lQuiet
-                     OutErr( cCommand + hb_osNewLine() )
-                  ENDIF
-                  nErrorLevel := 6
-               ENDIF
-
-               IF ! Empty( cScriptFile )
-                  FErase( cScriptFile )
+               IF hb_mtvm()
+                  FOR EACH thread IN aThreads
+                     hb_threadJoin( thread[ 1 ], @tmp )
+                     IF tmp != 0
+                        OutErr( "hbmk: Error: Running C compiler job #" + hb_ntos( thread:__enumIndex() ) + ". " + hb_ntos( tmp ) + hb_osNewLine() )
+                        IF ! s_lQuiet
+                           OutErr( thread[ 2 ] + hb_osNewLine() )
+                        ENDIF
+                        nErrorLevel := 6
+                     ENDIF
+                  NEXT
                ENDIF
             ENDIF
          ELSE
@@ -3201,6 +3232,10 @@ FUNCTION hbmk( aArgs )
             ENDIF
          ENDIF
       ENDIF
+   ENDIF
+
+   IF s_lDEBUGTIME
+      OutStd( "hbmk: Running time: " + hb_ntos( secondscpu() - nStart ) + "s" + hb_osNewLine() )
    ENDIF
 
    RETURN nErrorLevel
@@ -4963,9 +4998,6 @@ STATIC FUNCTION VCSDetect( cDir )
    RETURN _VCS_UNKNOWN
 
 STATIC FUNCTION VCSID( cDir, /* @ */ cType )
-#ifdef _VCSID_USE_PROCESS
-   LOCAL hStdOut
-#endif
    LOCAL hnd, cStdOut
    LOCAL nType := VCSDetect( cDir )
    LOCAL cCommand
@@ -4992,17 +5024,6 @@ STATIC FUNCTION VCSID( cDir, /* @ */ cType )
 
    IF ! Empty( cCommand )
 
-#ifdef _VCSID_USE_PROCESS
-      /* This is cleaner, but won't work when using aliases/wrappers
-         for version control commands. */
-      hnd := hb_processOpen( cCommand,, @hStdOut )
-      IF hnd != F_ERROR
-         cStdOut := Space( 256 )
-         tmp := FRead( hStdOut, @cStdOut, Len( cStdOut ) )
-         cStdOut := Left( cStdOut, tmp )
-         hb_processClose( hnd )
-         FClose( hStdOut )
-#else
       hnd := hb_FTempCreateEx( @cTemp )
       IF hnd != F_ERROR
          FClose( hnd )
@@ -5010,7 +5031,6 @@ STATIC FUNCTION VCSID( cDir, /* @ */ cType )
          hb_run( cCommand )
          cStdOut := hb_MemoRead( cTemp )
          FErase( cTemp )
-#endif
 
          SWITCH nType
          CASE _VCS_SVN
