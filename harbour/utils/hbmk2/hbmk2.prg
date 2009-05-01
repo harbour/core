@@ -183,7 +183,7 @@ PROCEDURE Main( ... )
    nResult := hbmk( aArgs )
 
    IF nResult != 0 .AND. hb_gtInfo( HB_GTI_ISGRAPHIC )
-      OutStd( "Press any key to continue..." )
+      OutStd( hb_i18n_gettext( "Press any key to continue..." ) )
       Inkey( 0 )
    ENDIF
 
@@ -498,7 +498,7 @@ FUNCTION hbmk( aArgs )
       ENDSWITCH
       IF ! Empty( s_cARCH )
          IF s_lInfo
-            OutStd( "hbmk: Autodetected architecture: " + s_cARCH + hb_osNewLine() )
+            OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: Autodetected architecture: %1$s" ), s_cARCH ), hb_osNewLine() )
          ENDIF
       ENDIF
    ENDIF
@@ -609,7 +609,7 @@ FUNCTION hbmk( aArgs )
       s_aLIBSYSCORE := { "wininet", "ws2", "commdlg", "commctrl" }
       s_aLIBSYSMISC := { "uuid", "ole32" }
    OTHERWISE
-      OutErr( "hbmk: Error: Architecture value unknown: " + s_cARCH + hb_osNewLine() )
+      OutErr( hb_StrFormat( "hbmk: Error: Architecture value unknown: %1$s", s_cARCH ), hb_osNewLine() )
       RETURN 1
    ENDCASE
 
@@ -642,7 +642,7 @@ FUNCTION hbmk( aArgs )
       CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG )
          s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".."
       OTHERWISE
-         OutErr( "hbmk: Error: HB_INSTALL_PREFIX not set, failed to autodetect." + hb_osNewLine() )
+         OutErr( "hbmk: Error: HB_INSTALL_PREFIX not set, failed to autodetect.", hb_osNewLine() )
          RETURN 3
       ENDCASE
       /* Detect special *nix dir layout (/bin, /lib/harbour, /include/harbour) */
@@ -662,7 +662,7 @@ FUNCTION hbmk( aArgs )
    ENDIF
    IF Empty( s_cHB_INSTALL_PREFIX ) .AND. ;
       ( Empty( s_cHB_BIN_INSTALL ) .OR. Empty( s_cHB_LIB_INSTALL ) .OR. Empty( s_cHB_INC_INSTALL ) )
-      OutErr( "hbmk: Error: Harbour locations couldn't be determined." + hb_osNewLine() )
+      OutErr( "hbmk: Error: Harbour locations couldn't be determined.", hb_osNewLine() )
       RETURN 3
    ENDIF
 
@@ -721,24 +721,24 @@ FUNCTION hbmk( aArgs )
          ENDIF
          IF ! Empty( s_cCOMP )
             IF s_lInfo
-               OutStd( "hbmk: Autodetected compiler: " + s_cCOMP + hb_osNewLine() )
+               OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: Autodetected compiler: %1$s" ), s_cCOMP ), hb_osNewLine() )
             ENDIF
          ELSE
             IF Empty( aCOMPDET )
-               OutErr( "hbmk: Please choose a compiler by using -comp= option or envvar HB_COMPILER." + hb_osNewLine() )
-               OutErr( "      You have the following choices on your platform:" + hb_osNewLine() )
-               OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
+               OutErr( "hbmk: Please choose a compiler by using -comp= option or envvar HB_COMPILER.", hb_osNewLine() )
+               OutErr( "      You have the following choices on your platform:", hb_osNewLine() )
+               OutErr( "      " + ArrayToList( aCOMPSUP, ", " ), hb_osNewLine() )
             ELSE
-               OutErr( "hbmk: Harbour Make couldn't detect any supported C compiler in your PATH." + hb_osNewLine() )
-               OutErr( "      Please setup one or set -comp= option or envvar HB_COMPILER" + hb_osNewLine() )
-               OutErr( "      to one of these values:" + hb_osNewLine() )
-               OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
+               OutErr( "hbmk: Harbour Make couldn't detect any supported C compiler in your PATH.", hb_osNewLine() )
+               OutErr( "      Please setup one or set -comp= option or envvar HB_COMPILER", hb_osNewLine() )
+               OutErr( "      to one of these values:", hb_osNewLine() )
+               OutErr( "      " + ArrayToList( aCOMPSUP, ", " ), hb_osNewLine() )
             ENDIF
             RETURN 2
          ENDIF
       ELSE
          IF AScan( aCOMPSUP, {|tmp| tmp == s_cCOMP } ) == 0
-            OutErr( "hbmk: Error: Compiler value unknown: " + s_cCOMP + hb_osNewLine() )
+            OutErr( hb_StrFormat( "hbmk: Error: Compiler value unknown: %1$s", s_cCOMP ), hb_osNewLine() )
             RETURN 2
          ENDIF
          IF s_cARCH $ "win|wce"
@@ -783,7 +783,7 @@ FUNCTION hbmk( aArgs )
    DEFAULT s_cHB_DYN_INSTALL TO s_cHB_LIB_INSTALL
 
    IF s_lInfo
-      OutStd( "hbmk: Using Harbour: " + s_cHB_BIN_INSTALL + " " + s_cHB_INC_INSTALL + " " + s_cHB_LIB_INSTALL + " " + s_cHB_DYN_INSTALL + hb_osNewLine() )
+      OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: Using Harbour: %1$s %2$s %3$s %4$s" ), s_cHB_BIN_INSTALL, s_cHB_INC_INSTALL, s_cHB_LIB_INSTALL, s_cHB_DYN_INSTALL ), hb_osNewLine() )
    ENDIF
 
    s_cHB_BIN_INSTALL := PathSepToTarget( s_cHB_BIN_INSTALL )
@@ -1061,7 +1061,7 @@ FUNCTION hbmk( aArgs )
          IF IsValidHarbourID( cParam := SubStr( cParam, 7 ) )
             s_cMAIN := "@" + cParam
          ELSE
-            OutErr( "hbmk: Warning: Invalid -main value ignored: " + cParam + hb_osNewLine() )
+            OutErr( hb_StrFormat( "hbmk: Warning: Invalid -main value ignored: %1$s", cParam ), hb_osNewLine() )
          ENDIF
 
       CASE Left( cParamL, 3 ) == "-gt"
@@ -1069,7 +1069,7 @@ FUNCTION hbmk( aArgs )
          cParam := ArchCompFilter( SubStr( cParam, 2 ) )
          IF s_cGT == NIL
             IF ! SetupForGT( cParam, @s_cGT, @s_lGUI )
-               OutErr( "hbmk: Warning: Invalid -gt value ignored: " + cParam + hb_osNewLine() )
+               OutErr( hb_StrFormat( "hbmk: Warning: Invalid -gt value ignored: %1$s", cParam ), hb_osNewLine() )
                cParam := NIL
             ENDIF
          ENDIF
@@ -1257,7 +1257,7 @@ FUNCTION hbmk( aArgs )
          ENDIF
 
          IF s_lInfo
-            OutStd( "hbmk: Processing: " + cParam + hb_osNewLine() )
+            OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: Processing: %1$s" ), cParam ), hb_osNewLine() )
          ENDIF
 
          HBP_ProcessOne( cParam,;
@@ -1363,7 +1363,7 @@ FUNCTION hbmk( aArgs )
 
    /* Start doing the make process. */
    IF ! lStopAfterInit .AND. ( Len( s_aPRG ) + Len( s_aC ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) == 0
-      OutErr( "hbmk: Error: No source files were specified." + hb_osNewLine() )
+      OutErr( "hbmk: Error: No source files were specified.", hb_osNewLine() )
       RETURN 4
    ENDIF
 
@@ -1374,7 +1374,7 @@ FUNCTION hbmk( aArgs )
          ENDIF
          AAdd( s_aOPTPRG, "-o" + cWorkDir + hb_osPathSeparator() ) /* NOTE: Ending path sep is important. */
          IF ! DirBuild( cWorkDir )
-            OutErr( "hbmk: Error: Working directory cannot be created: " + cWorkDir + hb_osNewLine() )
+            OutErr( hb_StrFormat( "hbmk: Error: Working directory cannot be created: %1$s", cWorkDir ), hb_osNewLine() )
             RETURN 9
          ENDIF
       ELSE
@@ -2359,7 +2359,7 @@ FUNCTION hbmk( aArgs )
          /* Update only if necessary to trigger rebuild only if really needed */
          IF !( hb_MemoRead( s_cVCSHEAD ) == tmp )
             IF s_lInfo
-               OutStd( "hbmk: Generating VCS header: " + s_cVCSHEAD + hb_osNewLine() )
+               OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: Generating VCS header: %1$s" ), s_cVCSHEAD ), hb_osNewLine() )
             ENDIF
             hb_MemoWrit( s_cVCSHEAD, tmp )
          ENDIF
@@ -2387,7 +2387,7 @@ FUNCTION hbmk( aArgs )
          s_aC_DONE := {}
          FOR EACH tmp IN s_aC
             IF s_lDEBUGINC
-               OutStd( "hbmk: debuginc: C", tmp, FN_DirExtSet( tmp, cWorkDir, cObjExt ), hb_osNewLine() )
+               OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: debuginc: C %1$s %2$s" ), tmp, FN_DirExtSet( tmp, cWorkDir, cObjExt ) ), hb_osNewLine() )
             ENDIF
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
@@ -2421,8 +2421,9 @@ FUNCTION hbmk( aArgs )
          s_aPRG_TODO := {}
          FOR EACH tmp IN s_aPRG
             IF s_lDEBUGINC
-               OutStd( "hbmk: debuginc: PRG", FN_ExtSet( tmp, ".prg" ),;
-                                              FN_DirExtSet( tmp, cWorkDir, ".c" ), hb_osNewLine() )
+               OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: debuginc: PRG %1$s %2$s" ),;
+                  FN_ExtSet( tmp, ".prg" ),;
+                  FN_DirExtSet( tmp, cWorkDir, ".c" ) ), hb_osNewLine() )
             ENDIF
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( FN_ExtSet( tmp, ".prg" ), @tmp1 ) .OR. ;
@@ -2443,7 +2444,7 @@ FUNCTION hbmk( aArgs )
    IF ! lStopAfterInit .AND. Len( s_aPRG_TODO ) > 0 .AND. ! s_lCLEAN
 
       IF s_lINC .AND. ! s_lQuiet
-         OutStd( "Compiling Harbour sources..." + hb_osNewLine() )
+         OutStd( hb_i18n_gettext( "Compiling Harbour sources..." ), hb_osNewLine() )
       ENDIF
 
       PlatformPRGFlags( s_aOPTPRG )
@@ -2460,13 +2461,13 @@ FUNCTION hbmk( aArgs )
          IF s_lTRACE
             IF ! s_lQuiet
                IF hb_mtvm()
-                  OutStd( "hbmk: Harbour compiler command (internal) job #" + hb_ntos( aTODO:__enumIndex() ) + ":" + hb_osNewLine() )
+                  OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: Harbour compiler command (internal) job #%1$s:" ), hb_ntos( aTODO:__enumIndex() ) ), hb_osNewLine() )
                ELSE
-                  OutStd( "hbmk: Harbour compiler command (internal):" + hb_osNewLine() )
+                  OutStd( hb_i18n_gettext( "hbmk: Harbour compiler command (internal):" ), hb_osNewLine() )
                ENDIF
             ENDIF
             OutStd( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG +;
-                    " " + ArrayToList( aCommand ) + hb_osNewLine() )
+                    " " + ArrayToList( aCommand ), hb_osNewLine() )
          ENDIF
 
          IF ! s_lDONTEXEC
@@ -2474,8 +2475,8 @@ FUNCTION hbmk( aArgs )
                AAdd( aThreads, { hb_threadStart( @hb_compile(), "", aCommand ), aCommand } )
             ELSE
                IF ( tmp := hb_compile( "", aCommand ) ) != 0
-                  OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + hb_osNewLine() )
-                  OutErr( ArrayToList( aCommand ) + hb_osNewLine() )
+                  OutErr( hb_StrFormat( "hbmk: Error: Running Harbour compiler. %1$s", hb_ntos( tmp ) ), hb_osNewLine() )
+                  OutErr( ArrayToList( aCommand ), hb_osNewLine() )
                   RETURN 6
                ENDIF
             ENDIF
@@ -2486,8 +2487,8 @@ FUNCTION hbmk( aArgs )
          FOR EACH thread IN aThreads
             hb_threadJoin( thread[ 1 ], @tmp )
             IF tmp != 0
-               OutErr( "hbmk: Error: Running Harbour compiler job #" + hb_ntos( thread:__enumIndex() ) + ". " + hb_ntos( tmp ) + hb_osNewLine() )
-               OutErr( ArrayToList( thread[ 2 ] ) + hb_osNewLine() )
+               OutErr( hb_StrFormat( "hbmk: Error: Running Harbour compiler job #%1$s. %2$s", hb_ntos( thread:__enumIndex() ), hb_ntos( tmp ) ), hb_osNewLine() )
+               OutErr( ArrayToList( thread[ 2 ] ), hb_osNewLine() )
                RETURN 6
             ENDIF
          NEXT
@@ -2505,15 +2506,15 @@ FUNCTION hbmk( aArgs )
 
       IF s_lTRACE
          IF ! s_lQuiet
-            OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() )
+            OutStd( hb_i18n_gettext( "hbmk: Harbour compiler command:" ), hb_osNewLine() )
          ENDIF
-         OutStd( cCommand + hb_osNewLine() )
+         OutStd( cCommand, hb_osNewLine() )
       ENDIF
 
       IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-         OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+         OutErr( hb_StrFormat( "hbmk: Error: Running Harbour compiler. %1$s:", hb_ntos( tmp ) ), hb_osNewLine() )
          IF ! s_lQuiet
-            OutErr( cCommand + hb_osNewLine() )
+            OutErr( cCommand, hb_osNewLine() )
          ENDIF
          RETURN 6
       ENDIF
@@ -2618,7 +2619,7 @@ FUNCTION hbmk( aArgs )
             ENDIF
             FClose( fhnd )
          ELSE
-            OutErr( "hbmk: Warning: Stub helper .c program couldn't be created." + hb_osNewLine() )
+            OutErr( "hbmk: Warning: Stub helper .c program couldn't be created.", hb_osNewLine() )
             IF ! s_lINC
                AEval( ListDirExt( s_aPRG, cWorkDir, ".c" ), {|tmp| FErase( tmp ) } )
             ENDIF
@@ -2660,7 +2661,7 @@ FUNCTION hbmk( aArgs )
          s_aRESSRC_TODO := {}
          FOR EACH tmp IN s_aRESSRC
             IF s_lDEBUGINC
-               OutStd( "hbmk: debuginc: RESSRC", tmp, FN_DirExtSet( tmp, cWorkDir, cResExt ), hb_osNewLine() )
+               OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: debuginc: RESSRC %1$s %2$s" ), tmp, FN_DirExtSet( tmp, cWorkDir, cResExt ) ), hb_osNewLine() )
             ENDIF
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cResExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
@@ -2680,7 +2681,7 @@ FUNCTION hbmk( aArgs )
       IF Len( s_aRESSRC_TODO ) > 0 .AND. ! Empty( cBin_Res ) .AND. ! s_lCLEAN
 
          IF s_lINC .AND. ! s_lQuiet
-            OutStd( "Compiling resources..." + hb_osNewLine() )
+            OutStd( hb_i18n_gettext( "Compiling resources..." ), hb_osNewLine() )
          ENDIF
 
          /* Compiling resource */
@@ -2700,15 +2701,15 @@ FUNCTION hbmk( aArgs )
 
                IF s_lTRACE
                   IF ! s_lQuiet
-                     OutStd( "hbmk: Resource compiler command:" + hb_osNewLine() )
+                     OutStd( hb_i18n_gettext( "hbmk: Resource compiler command:" ), hb_osNewLine() )
                   ENDIF
-                  OutStd( cCommand + hb_osNewLine() )
+                  OutStd( cCommand, hb_osNewLine() )
                ENDIF
 
                IF ! s_lDONTEXEC .AND. ( tmp1 := hbmk_run( cCommand ) ) != 0
-                  OutErr( "hbmk: Error: Running resource compiler. " + hb_ntos( tmp1 ) + ":" + hb_osNewLine() )
+                  OutErr( hb_StrFormat( "hbmk: Error: Running resource compiler. %1$s:", hb_ntos( tmp1 ) ), hb_osNewLine() )
                   IF ! s_lQuiet
-                     OutErr( cCommand + hb_osNewLine() )
+                     OutErr( cCommand, hb_osNewLine() )
                   ENDIF
                   nErrorLevel := 6
                   EXIT
@@ -2727,7 +2728,7 @@ FUNCTION hbmk( aArgs )
                   FClose( fhnd )
                   cOpt_Res := "@" + cScriptFile
                ELSE
-                  OutErr( "hbmk: Warning: Resource compiler script couldn't be created, continuing in command line." + hb_osNewLine() )
+                  OutErr( "hbmk: Warning: Resource compiler script couldn't be created, continuing in command line.", hb_osNewLine() )
                ENDIF
             ENDIF
 
@@ -2735,19 +2736,19 @@ FUNCTION hbmk( aArgs )
 
             IF s_lTRACE
                IF ! s_lQuiet
-                  OutStd( "hbmk: Resource compiler command:" + hb_osNewLine() )
+                  OutStd( hb_i18n_gettext( "hbmk: Resource compiler command:" ), hb_osNewLine() )
                ENDIF
-               OutStd( cCommand + hb_osNewLine() )
+               OutStd( cCommand, hb_osNewLine() )
                IF ! Empty( cScriptFile )
-                  OutStd( "hbmk: Resource compiler script:" + hb_osNewLine() )
-                  OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+                  OutStd( hb_i18n_gettext( "hbmk: Resource compiler script:" ), hb_osNewLine() )
+                  OutStd( hb_MemoRead( cScriptFile ), hb_osNewLine() )
                ENDIF
             ENDIF
 
             IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-               OutErr( "hbmk: Error: Running resource compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+               OutErr( hb_StrFormat( "hbmk: Error: Running resource compiler. %1$s:", hb_ntos( tmp ) ), hb_osNewLine() )
                IF ! s_lQuiet
-                  OutErr( cCommand + hb_osNewLine() )
+                  OutErr( cCommand, hb_osNewLine() )
                ENDIF
                nErrorLevel := 8
             ENDIF
@@ -2765,8 +2766,9 @@ FUNCTION hbmk( aArgs )
             s_aPRG_DONE := {}
             FOR EACH tmp IN s_aPRG
                IF s_lDEBUGINC
-                  OutStd( "hbmk: debuginc: CPRG", FN_DirExtSet( tmp, cWorkDir, ".c" ),;
-                                                  FN_DirExtSet( tmp, cWorkDir, cObjExt ), hb_osNewLine() )
+                  OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: debuginc: CPRG %1$s %2$s" ),;
+                     FN_DirExtSet( tmp, cWorkDir, ".c" ),;
+                     FN_DirExtSet( tmp, cWorkDir, cObjExt ) ), hb_osNewLine() )
                ENDIF
                IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, ".c" ), @tmp1 ) .OR. ;
                   ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
@@ -2787,7 +2789,7 @@ FUNCTION hbmk( aArgs )
          IF ! Empty( cBin_CompC )
 
             IF s_lINC .AND. ! s_lQuiet
-               OutStd( "Compiling..." + hb_osNewLine() )
+               OutStd( hb_i18n_gettext( "Compiling..." ), hb_osNewLine() )
             ENDIF
 
             /* Compiling */
@@ -2847,7 +2849,7 @@ FUNCTION hbmk( aArgs )
                         FClose( fhnd )
                         cOpt_CompCLoop := "@" + cScriptFile
                      ELSE
-                        OutErr( "hbmk: Warning: C compiler script couldn't be created, continuing in command line." + hb_osNewLine() )
+                        OutErr( "hbmk: Warning: C compiler script couldn't be created, continuing in command line.", hb_osNewLine() )
                      ENDIF
                   ENDIF
 
@@ -2856,15 +2858,15 @@ FUNCTION hbmk( aArgs )
                   IF s_lTRACE
                      IF ! s_lQuiet
                         IF hb_mtvm()
-                           OutStd( "hbmk: C compiler command job #" + hb_ntos( aTODO:__enumIndex() ) + ":" + hb_osNewLine() )
+                           OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: C compiler command job #%1$s:" ), hb_ntos( aTODO:__enumIndex() ) ), hb_osNewLine() )
                         ELSE
-                           OutStd( "hbmk: C compiler command:" + hb_osNewLine() )
+                           OutStd( hb_i18n_gettext( "hbmk: C compiler command:" ), hb_osNewLine() )
                         ENDIF
                      ENDIF
-                     OutStd( cCommand + hb_osNewLine() )
+                     OutStd( cCommand, hb_osNewLine() )
                      IF ! Empty( cScriptFile )
-                        OutStd( "hbmk: C compiler script:" + hb_osNewLine() )
-                        OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+                        OutStd( hb_i18n_gettext( "hbmk: C compiler script:" ), hb_osNewLine() )
+                        OutStd( hb_MemoRead( cScriptFile ), hb_osNewLine() )
                      ENDIF
                   ENDIF
 
@@ -2873,9 +2875,9 @@ FUNCTION hbmk( aArgs )
                         AAdd( aThreads, { hb_threadStart( @hbmk_run(), cCommand ), cCommand } )
                      ELSE
                         IF ( tmp := hbmk_run( cCommand ) ) != 0
-                           OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+                           OutErr( hb_StrFormat( "hbmk: Error: Running C compiler. %1$s:", hb_ntos( tmp ) ), hb_osNewLine() )
                            IF ! s_lQuiet
-                              OutErr( cCommand + hb_osNewLine() )
+                              OutErr( cCommand, hb_osNewLine() )
                            ENDIF
                            nErrorLevel := 6
                         ENDIF
@@ -2891,9 +2893,9 @@ FUNCTION hbmk( aArgs )
                   FOR EACH thread IN aThreads
                      hb_threadJoin( thread[ 1 ], @tmp )
                      IF tmp != 0
-                        OutErr( "hbmk: Error: Running C compiler job #" + hb_ntos( thread:__enumIndex() ) + ". " + hb_ntos( tmp ) + hb_osNewLine() )
+                        OutErr( hb_StrFormat( "hbmk: Error: Running C compiler job #%1$s. %2$s", hb_ntos( thread:__enumIndex() ), hb_ntos( tmp ) ), hb_osNewLine() )
                         IF ! s_lQuiet
-                           OutErr( thread[ 2 ] + hb_osNewLine() )
+                           OutErr( thread[ 2 ], hb_osNewLine() )
                         ENDIF
                         nErrorLevel := 6
                      ENDIF
@@ -2901,7 +2903,7 @@ FUNCTION hbmk( aArgs )
                ENDIF
             ENDIF
          ELSE
-            OutErr( "hbmk: Error: This compiler/platform isn't implemented." + hb_osNewLine() )
+            OutErr( "hbmk: Error: This compiler/platform isn't implemented.", hb_osNewLine() )
             nErrorLevel := 8
          ENDIF
       ENDIF
@@ -2913,7 +2915,7 @@ FUNCTION hbmk( aArgs )
          IF s_lINC .AND. ! s_lREBUILD
 
             IF s_lDEBUGINC
-               OutStd( "hbmk: debuginc: target", s_cPROGNAME, hb_osNewLine() )
+               OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: debuginc: target %1$s" ), s_cPROGNAME ), hb_osNewLine() )
             ENDIF
 
             IF hb_FGetDateTime( s_cPROGNAME, @tTarget )
@@ -2922,7 +2924,7 @@ FUNCTION hbmk( aArgs )
                IF lTargetUpToDate
                   FOR EACH tmp IN ArrayAJoin( { s_aOBJ, s_aOBJUSER, s_aOBJA, s_aRESSRC, s_aRESCMP } )
                      IF s_lDEBUGINC
-                        OutStd( "hbmk: debuginc: EXEDEP", tmp, hb_osNewLine() )
+                        OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: debuginc: EXEDEP %1$s" ), tmp ), hb_osNewLine() )
                      ENDIF
                      IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. tmp1 > tTarget
                         lTargetUpToDate := .F.
@@ -2935,7 +2937,7 @@ FUNCTION hbmk( aArgs )
                   FOR EACH tmp IN s_aLIBRAW
                      IF ! Empty( tmp2 := FindLib( tmp, s_aLIBPATH, cLibExt ) )
                         IF s_lDEBUGINC
-                           OutStd( "hbmk: debuginc: EXEDEPLIB", tmp2, hb_osNewLine() )
+                           OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: debuginc: EXEDEPLIB %1$s" ), tmp2 ), hb_osNewLine() )
                         ENDIF
                         IF ! hb_FGetDateTime( tmp2, @tmp1 ) .OR. tmp1 > tTarget
                            lTargetUpToDate := .F.
@@ -2951,13 +2953,13 @@ FUNCTION hbmk( aArgs )
       IF nErrorLevel == 0 .AND. ( Len( s_aOBJ ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) > 0 .AND. ! s_lCLEAN
 
          IF lTargetUpToDate
-            OutStd( "hbmk: Target up to date: " + s_cPROGNAME + hb_osNewLine() )
+            OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: Target up to date: %1$s" ), s_cPROGNAME ), hb_osNewLine() )
          ELSE
             DO CASE
             CASE ! lStopAfterCComp .AND. ! Empty( cBin_Link )
 
                IF s_lINC .AND. ! s_lQuiet
-                  OutStd( "Linking...", PathSepToTarget( s_cPROGNAME ), hb_osNewLine() )
+                  OutStd( hb_StrFormat( hb_i18n_gettext( "Linking... %1$s" ), PathSepToTarget( s_cPROGNAME ) ), hb_osNewLine() )
                ENDIF
 
                /* Linking */
@@ -2984,7 +2986,7 @@ FUNCTION hbmk( aArgs )
                      FClose( fhnd )
                      cOpt_Link := "@" + cScriptFile
                   ELSE
-                     OutErr( "hbmk: Warning: Link script couldn't be created, continuing in command line." + hb_osNewLine() )
+                     OutErr( "hbmk: Warning: Link script couldn't be created, continuing in command line.", hb_osNewLine() )
                   ENDIF
                ENDIF
 
@@ -2992,19 +2994,19 @@ FUNCTION hbmk( aArgs )
 
                IF s_lTRACE
                   IF ! s_lQuiet
-                     OutStd( "hbmk: Linker command:" + hb_osNewLine() )
+                     OutStd( hb_i18n_gettext( "hbmk: Linker command:" ), hb_osNewLine() )
                   ENDIF
-                  OutStd( cCommand + hb_osNewLine() )
+                  OutStd( cCommand, hb_osNewLine() )
                   IF ! Empty( cScriptFile )
-                     OutStd( "hbmk: Linker script:" + hb_osNewLine() )
-                     OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+                     OutStd( hb_i18n_gettext( "hbmk: Linker script:" ), hb_osNewLine() )
+                     OutStd( hb_MemoRead( cScriptFile ), hb_osNewLine() )
                   ENDIF
                ENDIF
 
                IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-                  OutErr( "hbmk: Error: Running linker. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+                  OutErr( hb_StrFormat( "hbmk: Error: Running linker. %1$s:", hb_ntos( tmp ) ), hb_osNewLine() )
                   IF ! s_lQuiet
-                     OutErr( cCommand + hb_osNewLine() )
+                     OutErr( cCommand, hb_osNewLine() )
                   ENDIF
                   nErrorLevel := 7
                ENDIF
@@ -3016,7 +3018,7 @@ FUNCTION hbmk( aArgs )
             CASE lStopAfterCComp .AND. lCreateLib .AND. ! Empty( cBin_Lib )
 
                IF s_lINC .AND. ! s_lQuiet
-                  OutStd( "Creating static library...", PathSepToTarget( s_cPROGNAME ), hb_osNewLine() )
+                  OutStd( hb_StrFormat( hb_i18n_gettext( "Creating static library... %1$s" ), PathSepToTarget( s_cPROGNAME ) ), hb_osNewLine() )
                ENDIF
 
                /* Lib creation (static) */
@@ -3039,7 +3041,7 @@ FUNCTION hbmk( aArgs )
                      FClose( fhnd )
                      cOpt_Lib := "@" + cScriptFile
                   ELSE
-                     OutErr( "hbmk: Warning: Lib script couldn't be created, continuing in command line." + hb_osNewLine() )
+                     OutErr( "hbmk: Warning: Lib script couldn't be created, continuing in command line.", hb_osNewLine() )
                   ENDIF
                ENDIF
 
@@ -3047,19 +3049,19 @@ FUNCTION hbmk( aArgs )
 
                IF s_lTRACE
                   IF ! s_lQuiet
-                     OutStd( "hbmk: Lib command:" + hb_osNewLine() )
+                     OutStd( hb_i18n_gettext( "hbmk: Lib command:" ), hb_osNewLine() )
                   ENDIF
-                  OutStd( cCommand + hb_osNewLine() )
+                  OutStd( cCommand, hb_osNewLine() )
                   IF ! Empty( cScriptFile )
-                     OutStd( "hbmk: Lib script:" + hb_osNewLine() )
-                     OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+                     OutStd( hb_i18n_gettext( "hbmk: Lib script:" ), hb_osNewLine() )
+                     OutStd( hb_MemoRead( cScriptFile ), hb_osNewLine() )
                   ENDIF
                ENDIF
 
                IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-                  OutErr( "hbmk: Error: Running lib command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+                  OutErr( hb_StrFormat( "hbmk: Error: Running lib command. %1$s:", hb_ntos( tmp ) ), hb_osNewLine() )
                   IF ! s_lQuiet
-                     OutErr( cCommand + hb_osNewLine() )
+                     OutErr( cCommand, hb_osNewLine() )
                   ENDIF
                   nErrorLevel := 7
                ENDIF
@@ -3071,7 +3073,7 @@ FUNCTION hbmk( aArgs )
             CASE lStopAfterCComp .AND. lCreateDyn .AND. ! Empty( cBin_Dyn )
 
                IF s_lINC .AND. ! s_lQuiet
-                  OutStd( "Creating dynamic library...", PathSepToTarget( s_cPROGNAME ), hb_osNewLine() )
+                  OutStd( hb_StrFormat( hb_i18n_gettext( "Creating dynamic library... %1$s" ), PathSepToTarget( s_cPROGNAME ) ), hb_osNewLine() )
                ENDIF
 
                /* Lib creation (dynamic) */
@@ -3096,7 +3098,7 @@ FUNCTION hbmk( aArgs )
                      FClose( fhnd )
                      cOpt_Dyn := "@" + cScriptFile
                   ELSE
-                     OutErr( "hbmk: Warning: Dynamic lib link script couldn't be created, continuing in command line." + hb_osNewLine() )
+                     OutErr( "hbmk: Warning: Dynamic lib link script couldn't be created, continuing in command line.", hb_osNewLine() )
                   ENDIF
                ENDIF
 
@@ -3104,19 +3106,19 @@ FUNCTION hbmk( aArgs )
 
                IF s_lTRACE
                   IF ! s_lQuiet
-                     OutStd( "hbmk: Dynamic lib link command:" + hb_osNewLine() )
+                     OutStd( hb_i18n_gettext( "hbmk: Dynamic lib link command:" ), hb_osNewLine() )
                   ENDIF
-                  OutStd( cCommand + hb_osNewLine() )
+                  OutStd( cCommand, hb_osNewLine() )
                   IF ! Empty( cScriptFile )
-                     OutStd( "hbmk: Dynamic lib link script:" + hb_osNewLine() )
-                     OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+                     OutStd( hb_i18n_gettext( "hbmk: Dynamic lib link script:" ), hb_osNewLine() )
+                     OutStd( hb_MemoRead( cScriptFile ), hb_osNewLine() )
                   ENDIF
                ENDIF
 
                IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-                  OutErr( "hbmk: Error: Running dynamic lib link command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+                  OutErr( hb_StrFormat( "hbmk: Error: Running dynamic lib link command. %1$s:", hb_ntos( tmp ) ), hb_osNewLine() )
                   IF ! s_lQuiet
-                     OutErr( cCommand + hb_osNewLine() )
+                     OutErr( cCommand, hb_osNewLine() )
                   ENDIF
                   nErrorLevel := 7
                ENDIF
@@ -3133,7 +3135,7 @@ FUNCTION hbmk( aArgs )
 
       IF ! Empty( s_cCSTUB )
          IF s_lDEBUGSTUB
-            OutStd( "hbmk: Stub kept for debug: " + s_cCSTUB + hb_osNewLine() )
+            OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: Stub kept for debug: %1$s" ), s_cCSTUB ), hb_osNewLine() )
          ELSE
             FErase( s_cCSTUB )
          ENDIF
@@ -3166,15 +3168,15 @@ FUNCTION hbmk( aArgs )
 
             IF s_lTRACE
                IF ! s_lQuiet
-                  OutStd( "hbmk: Post processor command:" + hb_osNewLine() )
+                  OutStd( hb_i18n_gettext( "hbmk: Post processor command:" ), hb_osNewLine() )
                ENDIF
-               OutStd( cCommand + hb_osNewLine() )
+               OutStd( cCommand, hb_osNewLine() )
             ENDIF
 
             IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-               OutErr( "hbmk: Warning: Running post processor command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+               OutErr( hb_StrFormat( "hbmk: Warning: Running post processor command. %1$s:", hb_ntos( tmp ) ), hb_osNewLine() )
                IF ! s_lQuiet
-                  OutErr( cCommand + hb_osNewLine() )
+                  OutErr( cCommand, hb_osNewLine() )
                ENDIF
             ENDIF
          ENDIF
@@ -3195,15 +3197,15 @@ FUNCTION hbmk( aArgs )
 
             IF s_lTRACE
                IF ! s_lQuiet
-                  OutStd( "hbmk: Compression command:" + hb_osNewLine() )
+                  OutStd( hb_i18n_gettext( "hbmk: Compression command:" ), hb_osNewLine() )
                ENDIF
-               OutStd( cCommand + hb_osNewLine() )
+               OutStd( cCommand, hb_osNewLine() )
             ENDIF
 
             IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-               OutErr( "hbmk: Warning: Running compression command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() )
+               OutErr( hb_StrFormat( "hbmk: Warning: Running compression command. %1$s:", hb_ntos( tmp ) ), hb_osNewLine() )
                IF ! s_lQuiet
-                  OutErr( cCommand + hb_osNewLine() )
+                  OutErr( cCommand, hb_osNewLine() )
                ENDIF
             ENDIF
          ENDIF
@@ -3217,9 +3219,9 @@ FUNCTION hbmk( aArgs )
             cCommand := AllTrim( PathSepToTarget( s_cPROGNAME ) + " " + ArrayToList( s_aOPTRUN ) )
             IF s_lTRACE
                IF ! s_lQuiet
-                  OutStd( "hbmk: Running executable:" + hb_osNewLine() )
+                  OutStd( hb_i18n_gettext( "hbmk: Running executable:" ), hb_osNewLine() )
                ENDIF
-               OutStd( cCommand + hb_osNewLine() )
+               OutStd( cCommand, hb_osNewLine() )
             ENDIF
             IF ! s_lDONTEXEC
                nErrorLevel := hbmk_run( cCommand )
@@ -3229,7 +3231,7 @@ FUNCTION hbmk( aArgs )
    ENDIF
 
    IF s_lDEBUGTIME
-      OutStd( "hbmk: Running time: " + hb_ntos( TimeElapsed( nStart, Seconds() ) ) + "s" + hb_osNewLine() )
+      OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: Running time: %1$ss" ), hb_ntos( TimeElapsed( nStart, Seconds() ) ) ), hb_osNewLine() )
    ENDIF
 
    RETURN nErrorLevel
@@ -3250,22 +3252,22 @@ STATIC FUNCTION CompileCLoop( aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, 
       IF s_lTRACE
          IF ! s_lQuiet
             IF nJob != NIL
-               OutStd( "hbmk: C compiler command job #" + hb_ntos( nJob ) + ":" + hb_osNewLine() )
+               OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: C compiler command job #%1$s:" ), hb_ntos( nJob ) ), hb_osNewLine() )
             ELSE
-               OutStd( "hbmk: C compiler command:" + hb_osNewLine() )
+               OutStd( hb_i18n_gettext( "hbmk: C compiler command:" ), hb_osNewLine() )
             ENDIF
          ENDIF
-         OutStd( cCommand + hb_osNewLine() )
+         OutStd( cCommand, hb_osNewLine() )
       ENDIF
 
       IF ! s_lDONTEXEC .AND. ( tmp1 := hbmk_run( cCommand ) ) != 0
          IF nJob != NIL
-            OutErr( "hbmk: Error: Running C compiler job #" + hb_ntos( nJob ) + ". " + hb_ntos( tmp1 ) + ":" + hb_osNewLine() )
+            OutErr( hb_StrFormat( "hbmk: Error: Running C compiler job #%1$s. %2$s:", hb_ntos( nJob ), hb_ntos( tmp1 ) ), hb_osNewLine() )
          ELSE
-            OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp1 ) + ":" + hb_osNewLine() )
+            OutErr( hb_StrFormat( "hbmk: Error: Running C compiler. %1$s:", hb_ntos( tmp1 ) ), hb_osNewLine() )
          ENDIF
          IF ! s_lQuiet
-            OutErr( cCommand + hb_osNewLine() )
+            OutErr( cCommand, hb_osNewLine() )
          ENDIF
          lResult := .F.
          EXIT
@@ -3361,7 +3363,7 @@ STATIC FUNCTION FindNewerHeaders( cFileName, cParentDir, tTimeParent, lIncTry, l
    hb_HSet( headstate[ _HEADSTATE_hFiles ], cFileName, .T. )
 
    IF s_lDEBUGINC
-      OutStd( "hbmk: debuginc: HEADER", cFileName, hb_osNewLine() )
+      OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: debuginc: HEADER %1$s" ), cFileName ), hb_osNewLine() )
    ENDIF
 
    IF ! hb_FGetDateTime( cFileName, @tTimeSelf )
@@ -3447,7 +3449,7 @@ STATIC FUNCTION FindHeader( cFileName, cParentDir, aINCTRYPATH )
             IF AScan( s_aINCPATH, { |tmp| tmp == cDir } ) == 0
                AAdd( s_aINCPATH, cDir )
                IF s_lDEBUGINC
-                  OutStd( "hbmk: debuginc: Autodetected header dir for " + cFileName + ": " + cDir, hb_osNewLine() )
+                  OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: debuginc: Autodetected header dir for %1$s: %2$s" ), cFileName, cDir ), hb_osNewLine() )
                ENDIF
             ENDIF
             RETURN DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName
@@ -4030,7 +4032,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
    FOR EACH cDir IN aCFGDirs
       IF hb_FileExists( cFileName := ( PathNormalize( DirAddPathSep( cDir ) ) + HBMK_CFG_NAME ) )
          IF ! s_lQuiet
-            OutStd( "hbmk: Processing configuration: " + cFileName + hb_osNewLine() )
+            OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: Processing configuration: %1$s" ), cFileName ), hb_osNewLine() )
          ENDIF
          HBP_ProcessOne( cFileName,;
             @aPOT,;
@@ -4067,7 +4069,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
          cFileName := aFile[ F_NAME ]
          IF !( cFileName == HBMK_CFG_NAME ) .AND. Lower( FN_ExtGet( cFileName ) ) == ".hbp"
             IF ! s_lQuiet
-               OutStd( "hbmk: Processing: " + cFileName + hb_osNewLine() )
+               OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: Processing: %1$s" ), cFileName ), hb_osNewLine() )
             ENDIF
             HBP_ProcessOne( cFileName,;
                @aPOT,;
@@ -4208,7 +4210,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       CASE Lower( Left( cLine, Len( "echo="         ) ) ) == "echo="         ; cLine := SubStr( cLine, Len( "echo="         ) + 1 )
          cLine := MacroProc( cLine, FN_DirGet( cFileName ) )
          IF ! Empty( cLine )
-            OutStd( cLine + hb_osNewLine() )
+            OutStd( hb_StrFormat( hb_i18n_gettext( "%1$s" ), cLine ), hb_osNewLine() )
          ENDIF
 
       CASE Lower( Left( cLine, Len( "prgflags="     ) ) ) == "prgflags="     ; cLine := SubStr( cLine, Len( "prgflags="     ) + 1 )
@@ -4447,7 +4449,7 @@ STATIC PROCEDURE HBM_Load( aParams, cFileName, /* @ */ nEmbedLevel )
          ENDIF
       NEXT
    ELSE
-      OutErr( "hbmk: Warning: File cannot be found: " + cFileName + hb_osNewLine() )
+      OutErr( hb_StrFormat( "hbmk: Warning: File cannot be found: %1$s", cFileName ), hb_osNewLine() )
    ENDIF
 
    RETURN
@@ -4620,7 +4622,7 @@ STATIC FUNCTION commandResult( cCommand, nResult )
       cResult := hb_MemoRead( cFileName )
       FErase( cFileName )
    ELSE
-      OutErr( "hbmk: Error: Cannot create temporary file." + hb_osNewLine() )
+      OutErr( "hbmk: Error: Cannot create temporary file.", hb_osNewLine() )
    ENDIF
 
    RETURN cResult
@@ -4845,7 +4847,7 @@ STATIC FUNCTION rtlnk_process( cCommands, cFileOut, aFileList, aLibList, ;
          IF nMode == RTLNK_MODE_NONE
             /* blinker extension */
             IF Upper( cLine ) = "ECHO "
-               OutStd( "hbmk2: Blinker ECHO: " + SubStr( cLine, 6 ) + hb_osNewLine() )
+               OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk2: Blinker ECHO: %1$s" ), SubStr( cLine, 6 ) ), hb_osNewLine() )
                LOOP
             ELSEIF Upper( cLine ) = "BLINKER "
                /* skip blinker commands */
@@ -4885,7 +4887,7 @@ STATIC FUNCTION rtlnk_process( cCommands, cFileOut, aFileList, aLibList, ;
                cWord := SubStr( cWord, 2 )
                cCommands := rtlnk_read( @cWord, aPrevFiles )
                IF cCommands == NIL
-                  OutStd( "hbmk2: error: Cannot open file: " + cWord + hb_osNewLine() )
+                  OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk2: error: Cannot open file: %1$s" ), cWord ), hb_osNewLine() )
                   RETURN .F.
                ENDIF
                IF !rtlnk_process( cCommands, @cFileOut, @aFileList, @aLibList, ;
@@ -4928,7 +4930,7 @@ STATIC PROCEDURE MakeHBL( aPOT, cHBL, aLNG )
 
    IF ! Empty( aPOT )
       IF s_lDEBUG
-         OutStd( "hbmk: pot: in: ", ArrayToList( aPOT ), hb_osNewLine() )
+         OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: pot: in: %1$s" ), ArrayToList( aPOT ) ), hb_osNewLine() )
       ENDIF
       IF Empty( cHBL )
          cHBL := FN_NameGet( aPOT[ 1 ] )
@@ -4947,7 +4949,7 @@ STATIC PROCEDURE MakeHBL( aPOT, cHBL, aLNG )
          NEXT
          IF ! Empty( aPOT_TODO )
             IF s_lDEBUG
-               OutStd( "hbmk: pot: ", ArrayToList( aPOT_TODO ), "->", cHBL, hb_osNewLine() )
+               OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: pot: %1$s -> %2$s" ), ArrayToList( aPOT_TODO ), cHBL ), hb_osNewLine() )
             ENDIF
             GenHbl( aPOT_TODO, cHBL )
          ENDIF
@@ -4963,7 +4965,7 @@ STATIC PROCEDURE MakeHBL( aPOT, cHBL, aLNG )
             NEXT
             IF ! Empty( aPOT_TODO )
                IF s_lDEBUG
-                  OutStd( "hbmk: pot: ", ArrayToList( aPOT_TODO ), "->", StrTran( cHBL, _LNG_MARKER, cLNG ), hb_osNewLine() )
+                  OutStd( hb_StrFormat( hb_i18n_gettext( "hbmk: pot: %1$s -> %2$s" ), ArrayToList( aPOT_TODO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ), hb_osNewLine() )
                ENDIF
                GenHbl( aPOT_TODO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
             ENDIF
@@ -4980,12 +4982,12 @@ STATIC FUNCTION LoadPOTFiles( aFiles )
 
    aTrans := __I18N_potArrayLoad( aFiles[ 1 ], @cErrorMsg )
    IF aTrans == NIL
-      OutErr( "hbmk: .pot error: ", cErrorMsg, hb_osNewLine() )
+      OutErr( hb_StrFormat( "hbmk: .pot error: %1$s", cErrorMsg ), hb_osNewLine() )
    ELSE
       FOR n := 2 TO Len( aFiles )
          aTrans2 := __I18N_potArrayLoad( aFiles[ n ], @cErrorMsg )
          IF aTrans2 == NIL
-            OutErr( "hbmk: .pot error: ", cErrorMsg, hb_osNewLine() )
+            OutErr( hb_StrFormat( "hbmk: .pot error: %1$s", cErrorMsg ), hb_osNewLine() )
             EXIT
          ELSE
             __I18N_potArrayJoin( aTrans, aTrans2 )
@@ -5007,7 +5009,7 @@ STATIC FUNCTION GenHbl( aFiles, cFileOut, lEmpty )
       IF hb_MemoWrit( cFileOut, cHblBody )
          lRetVal := .T.
       ELSE
-         OutErr( "hbmk: Cannot create file: ", cFileOut, hb_osNewLine() )
+         OutErr( hb_StrFormat( "hbmk: Cannot create file: %1$s", cFileOut ), hb_osNewLine() )
       ENDIF
    ENDIF
 
@@ -5158,133 +5160,133 @@ STATIC PROCEDURE ShowHeader()
 STATIC PROCEDURE ShowHelp( lLong )
 
    LOCAL aText_Basic := {;
-      "Syntax:" ,;
-      "" ,;
-      "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.pot|.hbl]>" ,;
-      "" ,;
-      "Options:" ,;
-      "  -o<outname>        output file name" ,;
-      "  -l<libname>        link with <libname> library" ,;
-      "  -L<libpath>        additional path to search for libraries" ,;
-      "  -i<p>|-incpath=<p> additional path to search for headers" ,;
-      "  -static|-shared    link with static/shared libs" ,;
-      "  -mt|-st            link with multi/single-thread VM" ,;
-      "  -gt<name>          link with GT<name> GT driver, can be repeated to link" ,;
-      "                     with more GTs. First one will be the default at runtime" }
+      hb_i18n_gettext( "Syntax:" ),;
+      hb_i18n_gettext( " " ),;
+      hb_i18n_gettext( "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.pot|.hbl]>" ),;
+      hb_i18n_gettext( " " ),;
+      hb_i18n_gettext( "Options:" ),;
+      hb_i18n_gettext( "  -o<outname>        output file name" ),;
+      hb_i18n_gettext( "  -l<libname>        link with <libname> library" ),;
+      hb_i18n_gettext( "  -L<libpath>        additional path to search for libraries" ),;
+      hb_i18n_gettext( "  -i<p>|-incpath=<p> additional path to search for headers" ),;
+      hb_i18n_gettext( "  -static|-shared    link with static/shared libs" ),;
+      hb_i18n_gettext( "  -mt|-st            link with multi/single-thread VM" ),;
+      hb_i18n_gettext( "  -gt<name>          link with GT<name> GT driver, can be repeated to link" ),;
+      hb_i18n_gettext( "                     with more GTs. First one will be the default at runtime" ) }
 
    LOCAL aText_Help := {;
-      "  -help|--help       long help" }
+      hb_i18n_gettext( "  -help|--help       long help" ) }
 
    LOCAL aText_Long := {;
-      "" ,;
-      "  -gui|-std          create GUI/console executable" ,;
-      "  -main=<mainfunc>   override the name of starting function/procedure" ,;
-      "  -fullstatic        link with all static libs" ,;
-      "  -nulrdd[-]         link with nulrdd" ,;
-      "  -[no]debug         add/exclude C compiler debug info" ,;
-      "  -[no]opt           toggle C compiler optimizations (default: on)" ,;
-      "  -[no]map           create (or not) a map file" ,;
-      "  -[no]strip         strip (no strip) binaries" ,;
-      "  -[no]trace         show commands executed" ,;
-      "  -traceonly         show commands to be executed, but don't execute them" ,;
-      "  -[no]compr[=lev]   compress executable/dynamic lib (needs UPX)" ,;
-      "                     <lev> can be: min, max, def" ,;
-      "  -[no]run           run/don't run output executable" ,;
-      "  -vcshead=<file>    generate .ch header file with local repository information" ,;
-      "                     SVN, Git and Mercurial are currently supported. Generated" ,;
-      "                     header will define macro _HBMK_VCS_TYPE_ with the name of" ,;
-      "                     detected VCS and _HBMK_VCS_ID_ with the unique ID of local" ,;
-      "                     repository" ,;
-      "  -nohbp             do not process .hbp files in current directory" ,;
-      "  -stop              stop without doing anything" ,;
-      "" ,;
-      "  -bldf[-]           inherit all/no (default) flags from Harbour build" ,;
-      "  -bldf=[p][c][l]    inherit .prg/.c/linker flags (or none) from Harbour build" ,;
-      "  -inctrypath=<p>    additional path to autodetect .c header locations" ,;
-      "  -prgflag=<f>       pass flag to Harbour" ,;
-      "  -cflag=<f>         pass flag to C compiler" ,;
-      "  -resflag=<f>       pass flag to resource compiler (Windows only)" ,;
-      "  -ldflag=<f>        pass flag to linker (executable)" ,;
-      "  -aflag=<f>         pass flag to linker (static library)" ,;
-      "  -dflag=<f>         pass flag to linker (dynamic library)" ,;
-      "  -runflag=<f>       pass flag to output executable when -run option is used" ,;
-      "  -jobs=<n>          start n compilation threads (MT platforms/builds only)" ,;
-      "  -inc               enable incremental build mode" ,;
-      "  -[no]head[=<m>]    control source header parsing (in incremental build mode)" ,;
-      "                     <m> can be: full, partial (default), off" ,;
-      "  -rebuild           rebuild all (in incremental build mode)" ,;
-      "  -clean             clean (in incremental build mode)" ,;
-      "  -workdir=<dir>     working directory for incremental build mode" ,;
-      "                     (default: arch/comp)" ,;
-      "" ,;
-      "  -hbl[=<output>]    output .hbl filename. ${lng} macro is accepted in filename" ,;
-      "  -lng=<languages>   list of languages to be replaced in ${lng} macros in .pot" ,;
-      "                     filenames and output .hbl filenames. Comma separared list:" ,;
-      "                     -lng=en-EN,hu-HU,de" ,;
-      "" ,;
-      "  -hbcmp|-clipper    stop after creating the object files" ,;
-      "                     create link/copy hbmk to hbcmp/clipper for the same effect" ,;
-      "  -hbcc              stop after creating the object files and accept raw C flags" ,;
-      "                     create link/copy hbmk to hbcc for the same effect" ,;
-      "  -hblnk             accept raw linker flags" ,;
-      "  -hblib             create static library" ,;
-      "  -hbdyn             create dynamic library" ,;
-      "  -rtlink            " ,;
-      "  -blinker           " ,;
-      "  -exospace          emulate Clipper compatible linker behavior" ,;
-      "                     create link/copy hbmk to rtlink/blinker/exospace for the" ,;
-      "                     same effect" ,;
-      "  --hbdirbin         output Harbour binary directory" ,;
-      "  --hbdirdyn         output Harbour dynamic library directory" ,;
-      "  --hbdirlib         output Harbour static library directory" ,;
-      "  --hbdirinc         output Harbour header directory" ,;
-      "" ,;
-      "  -arch=<arch>       assume specific architecure. Same as HB_ARCHITECTURE envvar" ,;
-      "  -comp=<comp>       use specific compiler. Same as HB_COMPILER envvar" ,;
-      "                     Special value:" ,;
-      "                      - bld: use original build settings (default on *nix)" ,;
-      "  --version          display version header only" ,;
-      "  -info              turn on informational messages" ,;
-      "  -quiet             suppress all screen messages" ,;
-      "" ,;
-      "Notes:" ,;
-      "  - <script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>." ,;
-      "  - Regular Harbour compiler options are also accepted." ,;
-      "  - Multiple -l, -L and <script> parameters are accepted." ,;
-      "  - " + HBMK_CFG_NAME + " option file in hbmk directory is always processed if it" ,;
-      "    exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour," ,;
-      "    <base>/etc are checked (in that order) before the hbmk directory." ,;
-      "    The file format is the same as .hbp." ,;
-      "  - .hbp option files in current dir are automatically processed." ,;
-      "  - .hbp options (they should come in separate lines):" ,;
-      "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;
-      "    cflags=[C compiler flags], resflags=[resource compiler flags]" ,;
-      "    ldflags=[Linker flags], libpaths=[paths], pots=[.pot files]" ,;
-      "    incpaths=[paths], inctrypaths=[paths]" ,;
-      "    gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no]" ,;
-      "    compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>" ,;
-      "    Lines starting with '#' char are ignored" ,;
-      "  - Platform filters are accepted in each .hbp line and with several options." ,;
-      "    Filter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined " ,;
-      "    using '&', '|' operators and grouped by parantheses." ,;
-      "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}," ,;
-      "         {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}," ,;
-      "         {allpocc}, {allgcc}, {allmingw}, {allmsvc}, {x86|x86_64|ia64|arm}" ,;
-      "  - Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=," ,;
-      "    echo=) and corresponding command line parameters will accept macros:" ,;
-      "    ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}" ,;
-      "  - Defaults and feature support vary by architecture/compiler." ,;
-      "  - Supported <comp> values for each supported <arch> value:" ,;
-      "    linux  : gcc, owatcom, icc" ,;
-      "    darwin : gcc" ,;
-      "    win    : mingw, msvc, bcc, owatcom, icc, pocc, cygwin," ,;
-      "             mingw64, msvc64, msvcia64, iccia64, pocc64, xcc" ,;
-      "    wce    : mingwarm, msvcarm, poccarm" ,;
-      "    os2    : gcc, owatcom" ,;
-      "    dos    : djgpp, owatcom" ,;
-      "    bsd    : gcc" ,;
-      "    hpux   : gcc" ,;
-      "    sunos  : gcc" }
+      hb_i18n_gettext( " " ),;
+      hb_i18n_gettext( "  -gui|-std          create GUI/console executable" ),;
+      hb_i18n_gettext( "  -main=<mainfunc>   override the name of starting function/procedure" ),;
+      hb_i18n_gettext( "  -fullstatic        link with all static libs" ),;
+      hb_i18n_gettext( "  -nulrdd[-]         link with nulrdd" ),;
+      hb_i18n_gettext( "  -[no]debug         add/exclude C compiler debug info" ),;
+      hb_i18n_gettext( "  -[no]opt           toggle C compiler optimizations (default: on)" ),;
+      hb_i18n_gettext( "  -[no]map           create (or not) a map file" ),;
+      hb_i18n_gettext( "  -[no]strip         strip (no strip) binaries" ),;
+      hb_i18n_gettext( "  -[no]trace         show commands executed" ),;
+      hb_i18n_gettext( "  -traceonly         show commands to be executed, but don't execute them" ),;
+      hb_i18n_gettext( "  -[no]compr[=lev]   compress executable/dynamic lib (needs UPX)" ),;
+      hb_i18n_gettext( "                     <lev> can be: min, max, def" ),;
+      hb_i18n_gettext( "  -[no]run           run/don't run output executable" ),;
+      hb_i18n_gettext( "  -vcshead=<file>    generate .ch header file with local repository information" ),;
+      hb_i18n_gettext( "                     SVN, Git and Mercurial are currently supported. Generated" ),;
+      hb_i18n_gettext( "                     header will define macro _HBMK_VCS_TYPE_ with the name of" ),;
+      hb_i18n_gettext( "                     detected VCS and _HBMK_VCS_ID_ with the unique ID of local" ),;
+      hb_i18n_gettext( "                     repository" ),;
+      hb_i18n_gettext( "  -nohbp             do not process .hbp files in current directory" ),;
+      hb_i18n_gettext( "  -stop              stop without doing anything" ),;
+      hb_i18n_gettext( " " ),;
+      hb_i18n_gettext( "  -bldf[-]           inherit all/no (default) flags from Harbour build" ),;
+      hb_i18n_gettext( "  -bldf=[p][c][l]    inherit .prg/.c/linker flags (or none) from Harbour build" ),;
+      hb_i18n_gettext( "  -inctrypath=<p>    additional path to autodetect .c header locations" ),;
+      hb_i18n_gettext( "  -prgflag=<f>       pass flag to Harbour" ),;
+      hb_i18n_gettext( "  -cflag=<f>         pass flag to C compiler" ),;
+      hb_i18n_gettext( "  -resflag=<f>       pass flag to resource compiler (Windows only)" ),;
+      hb_i18n_gettext( "  -ldflag=<f>        pass flag to linker (executable)" ),;
+      hb_i18n_gettext( "  -aflag=<f>         pass flag to linker (static library)" ),;
+      hb_i18n_gettext( "  -dflag=<f>         pass flag to linker (dynamic library)" ),;
+      hb_i18n_gettext( "  -runflag=<f>       pass flag to output executable when -run option is used" ),;
+      hb_i18n_gettext( "  -jobs=<n>          start n compilation threads (MT platforms/builds only)" ),;
+      hb_i18n_gettext( "  -inc               enable incremental build mode" ),;
+      hb_i18n_gettext( "  -[no]head[=<m>]    control source header parsing (in incremental build mode)" ),;
+      hb_i18n_gettext( "                     <m> can be: full, partial (default), off" ),;
+      hb_i18n_gettext( "  -rebuild           rebuild all (in incremental build mode)" ),;
+      hb_i18n_gettext( "  -clean             clean (in incremental build mode)" ),;
+      hb_i18n_gettext( "  -workdir=<dir>     working directory for incremental build mode" ),;
+      hb_i18n_gettext( "                     (default: arch/comp)" ),;
+      hb_i18n_gettext( " " ),;
+      hb_i18n_gettext( "  -hbl[=<output>]    output .hbl filename. ${lng} macro is accepted in filename" ),;
+      hb_i18n_gettext( "  -lng=<languages>   list of languages to be replaced in ${lng} macros in .pot" ),;
+      hb_i18n_gettext( "                     filenames and output .hbl filenames. Comma separared list:" ),;
+      hb_i18n_gettext( "                     -lng=en-EN,hu-HU,de" ),;
+      hb_i18n_gettext( " " ),;
+      hb_i18n_gettext( "  -hbcmp|-clipper    stop after creating the object files" ),;
+      hb_i18n_gettext( "                     create link/copy hbmk to hbcmp/clipper for the same effect" ),;
+      hb_i18n_gettext( "  -hbcc              stop after creating the object files and accept raw C flags" ),;
+      hb_i18n_gettext( "                     create link/copy hbmk to hbcc for the same effect" ),;
+      hb_i18n_gettext( "  -hblnk             accept raw linker flags" ),;
+      hb_i18n_gettext( "  -hblib             create static library" ),;
+      hb_i18n_gettext( "  -hbdyn             create dynamic library" ),;
+      hb_i18n_gettext( "  -rtlink            hb_i18n_gettext( " ),;
+      hb_i18n_gettext( "  -blinker           hb_i18n_gettext( " ),;
+      hb_i18n_gettext( "  -exospace          emulate Clipper compatible linker behavior" ),;
+      hb_i18n_gettext( "                     create link/copy hbmk to rtlink/blinker/exospace for the" ),;
+      hb_i18n_gettext( "                     same effect" ),;
+      hb_i18n_gettext( "  --hbdirbin         output Harbour binary directory" ),;
+      hb_i18n_gettext( "  --hbdirdyn         output Harbour dynamic library directory" ),;
+      hb_i18n_gettext( "  --hbdirlib         output Harbour static library directory" ),;
+      hb_i18n_gettext( "  --hbdirinc         output Harbour header directory" ),;
+      hb_i18n_gettext( " " ),;
+      hb_i18n_gettext( "  -arch=<arch>       assume specific architecure. Same as HB_ARCHITECTURE envvar" ),;
+      hb_i18n_gettext( "  -comp=<comp>       use specific compiler. Same as HB_COMPILER envvar" ),;
+      hb_i18n_gettext( "                     Special value:" ),;
+      hb_i18n_gettext( "                      - bld: use original build settings (default on *nix)" ),;
+      hb_i18n_gettext( "  --version          display version header only" ),;
+      hb_i18n_gettext( "  -info              turn on informational messages" ),;
+      hb_i18n_gettext( "  -quiet             suppress all screen messages" ),;
+      hb_i18n_gettext( " " ),;
+      hb_i18n_gettext( "Notes:" ),;
+      hb_i18n_gettext( "  - <script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>." ),;
+      hb_i18n_gettext( "  - Regular Harbour compiler options are also accepted." ),;
+      hb_i18n_gettext( "  - Multiple -l, -L and <script> parameters are accepted." ),;
+      hb_i18n_gettext( "  - " + HBMK_CFG_NAME + " option file in hbmk directory is always processed if it" ),;
+      hb_i18n_gettext( "    exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour," ),;
+      hb_i18n_gettext( "    <base>/etc are checked (in that order) before the hbmk directory." ),;
+      hb_i18n_gettext( "    The file format is the same as .hbp." ),;
+      hb_i18n_gettext( "  - .hbp option files in current dir are automatically processed." ),;
+      hb_i18n_gettext( "  - .hbp options (they should come in separate lines):" ),;
+      hb_i18n_gettext( "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ),;
+      hb_i18n_gettext( "    cflags=[C compiler flags], resflags=[resource compiler flags]" ),;
+      hb_i18n_gettext( "    ldflags=[Linker flags], libpaths=[paths], pots=[.pot files]" ),;
+      hb_i18n_gettext( "    incpaths=[paths], inctrypaths=[paths]" ),;
+      hb_i18n_gettext( "    gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no]" ),;
+      hb_i18n_gettext( "    compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>" ),;
+      hb_i18n_gettext( "    Lines starting with '#' char are ignored" ),;
+      hb_i18n_gettext( "  - Platform filters are accepted in each .hbp line and with several options." ),;
+      hb_i18n_gettext( "    Filter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined " ),;
+      hb_i18n_gettext( "    using '&', '|' operators and grouped by parantheses." ),;
+      hb_i18n_gettext( "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}," ),;
+      hb_i18n_gettext( "         {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}," ),;
+      hb_i18n_gettext( "         {allpocc}, {allgcc}, {allmingw}, {allmsvc}, {x86|x86_64|ia64|arm}" ),;
+      hb_i18n_gettext( "  - Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=," ),;
+      hb_i18n_gettext( "    echo=) and corresponding command line parameters will accept macros:" ),;
+      hb_i18n_gettext( "    ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}" ),;
+      hb_i18n_gettext( "  - Defaults and feature support vary by architecture/compiler." ),;
+      hb_i18n_gettext( "  - Supported <comp> values for each supported <arch> value:" ),;
+      hb_i18n_gettext( "    linux  : gcc, owatcom, icc" ),;
+      hb_i18n_gettext( "    darwin : gcc" ),;
+      hb_i18n_gettext( "    win    : mingw, msvc, bcc, owatcom, icc, pocc, cygwin," ),;
+      hb_i18n_gettext( "             mingw64, msvc64, msvcia64, iccia64, pocc64, xcc" ),;
+      hb_i18n_gettext( "    wce    : mingwarm, msvcarm, poccarm" ),;
+      hb_i18n_gettext( "    os2    : gcc, owatcom" ),;
+      hb_i18n_gettext( "    dos    : djgpp, owatcom" ),;
+      hb_i18n_gettext( "    bsd    : gcc" ),;
+      hb_i18n_gettext( "    hpux   : gcc" ),;
+      hb_i18n_gettext( "    sunos  : gcc" ) }
 
    DEFAULT lLong TO .F.
 
