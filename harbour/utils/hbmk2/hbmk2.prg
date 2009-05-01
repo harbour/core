@@ -93,7 +93,6 @@
 /* TODO: Add support for dynamic library creation for rest of compilers. */
 /* TODO: Cleanup on variable names and compiler configuration. */
 /* TODO: Finish C++/C mode selection. */
-/* TODO: Finish support for multithreaded compilation. */
 /* TODO: Add a way to fallback to stop if required headers couldn't be found.
          This needs a way to spec what key headers to look for. */
 
@@ -137,6 +136,8 @@ STATIC s_nHEAD := _HEAD_PARTIAL
 STATIC s_aINCPATH
 STATIC s_aINCTRYPATH
 STATIC s_lREBUILD := .F.
+STATIC s_lTRACE := .F.
+STATIC s_lDONTEXEC := .F.
 
 STATIC s_lDEBUGTIME := .F.
 STATIC s_lDEBUGINC := .F.
@@ -317,8 +318,6 @@ FUNCTION hbmk( aArgs )
    LOCAL s_lSTRIP := .F.
    LOCAL s_lOPT := .T.
    LOCAL s_nCOMPR := _COMPR_OFF
-   LOCAL s_lTRACE := .F.
-   LOCAL s_lDONTEXEC := .F.
    LOCAL s_lBLDFLGP := .F.
    LOCAL s_lBLDFLGC := .F.
    LOCAL s_lBLDFLGL := .F.
@@ -420,7 +419,7 @@ FUNCTION hbmk( aArgs )
    LOCAL aThreads
    LOCAL thread
 
-   LOCAL nStart := secondscpu()
+   LOCAL nStart := Seconds()
 
    IF Empty( aArgs )
       ShowHeader()
@@ -2812,30 +2811,25 @@ FUNCTION hbmk( aArgs )
 
             IF "{IC}" $ cOpt_CompC
 
-               FOR EACH tmp IN ArrayJoin( ListDirExt( s_aPRG_TODO, cWorkDir, ".c" ), s_aC_TODO )
-
-                  cCommand := cOpt_CompC
-                  cCommand := StrTran( cCommand, "{IC}", tmp )
-                  cCommand := StrTran( cCommand, "{OO}", PathSepToTarget( FN_DirExtSet( tmp, cWorkDir, cObjExt ) ) )
-
-                  cCommand := cBin_CompC + " " + AllTrim( cCommand )
-
-                  IF s_lTRACE
-                     IF ! s_lQuiet
-                        OutStd( "hbmk: C compiler command:" + hb_osNewLine() )
+               aThreads := {}
+               FOR EACH aTODO IN ArraySplit( ArrayJoin( ListDirExt( s_aPRG_TODO, cWorkDir, ".c" ), s_aC_TODO ), s_nJOBS )
+                  IF hb_mtvm()
+                     AAdd( aThreads, hb_threadStart( @CompileCLoop(), aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, aTODO:__enumIndex() ) )
+                  ELSE
+                     IF ! CompileCLoop( aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt )
+                        nErrorLevel := 6
                      ENDIF
-                     OutStd( cCommand + hb_osNewLine() )
-                  ENDIF
-
-                  IF ! s_lDONTEXEC .AND. ( tmp1 := hbmk_run( cCommand ) ) != 0
-                     OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp1 ) + ":" + hb_osNewLine() )
-                     IF ! s_lQuiet
-                        OutErr( cCommand + hb_osNewLine() )
-                     ENDIF
-                     nErrorLevel := 6
-                     EXIT
                   ENDIF
                NEXT
+
+               IF hb_mtvm()
+                  FOR EACH thread IN aThreads
+                     hb_threadJoin( thread, @tmp )
+                     IF ! tmp
+                        nErrorLevel := 6
+                     ENDIF
+                  NEXT
+               ENDIF
             ELSE
                cOpt_CompC := StrTran( cOpt_CompC, "{OO}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cObjExt ) ) )
                cOpt_CompC := StrTran( cOpt_CompC, "{OW}"  , PathSepToTarget( cWorkDir ) )
@@ -3235,10 +3229,50 @@ FUNCTION hbmk( aArgs )
    ENDIF
 
    IF s_lDEBUGTIME
-      OutStd( "hbmk: Running time: " + hb_ntos( secondscpu() - nStart ) + "s" + hb_osNewLine() )
+      OutStd( "hbmk: Running time: " + hb_ntos( TimeElapsed( nStart, Seconds() ) ) + "s" + hb_osNewLine() )
    ENDIF
 
    RETURN nErrorLevel
+
+STATIC FUNCTION CompileCLoop( aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, nJob )
+   LOCAL lResult := .T.
+   LOCAL cCommand
+   LOCAL tmp, tmp1
+
+   FOR EACH tmp IN aTODO
+
+      cCommand := cOpt_CompC
+      cCommand := StrTran( cCommand, "{IC}", tmp )
+      cCommand := StrTran( cCommand, "{OO}", PathSepToTarget( FN_DirExtSet( tmp, cWorkDir, cObjExt ) ) )
+
+      cCommand := cBin_CompC + " " + AllTrim( cCommand )
+
+      IF s_lTRACE
+         IF ! s_lQuiet
+            IF nJob != NIL
+               OutStd( "hbmk: C compiler command job #" + hb_ntos( nJob ) + ":" + hb_osNewLine() )
+            ELSE
+               OutStd( "hbmk: C compiler command:" + hb_osNewLine() )
+            ENDIF
+         ENDIF
+         OutStd( cCommand + hb_osNewLine() )
+      ENDIF
+
+      IF ! s_lDONTEXEC .AND. ( tmp1 := hbmk_run( cCommand ) ) != 0
+         IF nJob != NIL
+            OutErr( "hbmk: Error: Running C compiler job #" + hb_ntos( nJob ) + ". " + hb_ntos( tmp1 ) + ":" + hb_osNewLine() )
+         ELSE
+            OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp1 ) + ":" + hb_osNewLine() )
+         ENDIF
+         IF ! s_lQuiet
+            OutErr( cCommand + hb_osNewLine() )
+         ENDIF
+         lResult := .F.
+         EXIT
+      ENDIF
+   NEXT
+
+   RETURN lResult
 
 STATIC FUNCTION SetupForGT( cGT, /* @ */ s_cGT, /* @ */ s_lGUI )
 
@@ -4517,6 +4551,9 @@ STATIC FUNCTION MacroProc( cString, cDirParent )
    ENDDO
 
    RETURN cString
+
+STATIC FUNCTION TimeElapsed( nStartSec, nEndSec )
+     RETURN Round( ( nEndSec - iif( nEndSec < nStartSec, nStartSec - 86399, nStartSec ) ), 1 )
 
 #define HB_ISALPHA( c )         ( Upper( c ) >= "A" .AND. Upper( c ) <= "Z" )
 #define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == '_' )
