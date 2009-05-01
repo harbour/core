@@ -3521,7 +3521,7 @@ STATIC FUNCTION LibExists( cDir, cLib, cLibExt )
    DO CASE
    CASE s_cCOMP $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin" .AND. s_cARCH $ "win|wce"
       /* NOTE: ld/gcc option -dll-search-prefix isn't taken into account here,
-               So, '<prefix>xxx.dll' format libs won't be found by hbmk2. */
+               So, '<prefix>xxx.dll' format libs won't be found by hbmk. */
       DO CASE
       CASE                           hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
       CASE                           hb_FileExists( tmp := cDir +         FN_ExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
@@ -4849,7 +4849,7 @@ STATIC FUNCTION rtlnk_process( cCommands, cFileOut, aFileList, aLibList, ;
          IF nMode == RTLNK_MODE_NONE
             /* blinker extension */
             IF Upper( cLine ) = "ECHO "
-               OutStd( hb_StrFormat( I_( "hbmk2: Blinker ECHO: %1$s" ), SubStr( cLine, 6 ) ), hb_osNewLine() )
+               OutStd( hb_StrFormat( I_( "hbmk: Blinker ECHO: %1$s" ), SubStr( cLine, 6 ) ), hb_osNewLine() )
                LOOP
             ELSEIF Upper( cLine ) = "BLINKER "
                /* skip blinker commands */
@@ -4889,7 +4889,7 @@ STATIC FUNCTION rtlnk_process( cCommands, cFileOut, aFileList, aLibList, ;
                cWord := SubStr( cWord, 2 )
                cCommands := rtlnk_read( @cWord, aPrevFiles )
                IF cCommands == NIL
-                  OutStd( hb_StrFormat( I_( "hbmk2: error: Cannot open file: %1$s" ), cWord ), hb_osNewLine() )
+                  OutStd( hb_StrFormat( I_( "hbmk: error: Cannot open file: %1$s" ), cWord ), hb_osNewLine() )
                   RETURN .F.
                ENDIF
                IF !rtlnk_process( cCommands, @cFileOut, @aFileList, @aLibList, ;
