@@ -111,6 +111,8 @@
    #xtranslate hb_ADel([<x,...>])          => ADel(<x>)
    #xtranslate hb_At([<x,...>])            => At(<x>)
 
+   #xtranslate hb_i18n_gettext(<x>)        => i18n(<x>)
+
    #xtranslate hb_ARGV([<x,...>])          => hb_CMDARGARGV(<x>)
 
    #xtranslate hb_IniSetComment([<x,...>]) => hb_SetIniComment(<x>)
@@ -210,6 +212,8 @@
    #xtranslate AIns(<a>,<n>,[<x,...>])         => hb_AIns(<a>,<n>,<x>)
    #xtranslate ADel(<a>,<n>,<l>)               => hb_ADel(<a>,<n>,<l>)
    #xtranslate At(<a>,<b>,[<x,...>])           => hb_At(<a>,<b>,<x>)
+
+   #xtranslate i18n(<x>)                       => hb_i18n_gettext(<x>)
 
    /* MT functions */
    #xtranslate hb_MultiThread()                => hb_mtvm()
