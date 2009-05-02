@@ -5236,8 +5236,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       I_( "  -hblnk             accept raw linker flags" ),;
       I_( "  -hblib             create static library" ),;
       I_( "  -hbdyn             create dynamic library" ),;
-      I_( "  -rtlink            I_( " ),;
-      I_( "  -blinker           I_( " ),;
+      I_( "  -rtlink            " ),;
+      I_( "  -blinker           " ),;
       I_( "  -exospace          emulate Clipper compatible linker behavior" ),;
       I_( "                     create link/copy hbmk to rtlink/blinker/exospace for the" ),;
       I_( "                     same effect" ),;
