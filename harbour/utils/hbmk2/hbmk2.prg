@@ -311,6 +311,7 @@ FUNCTION hbmk( aArgs )
    LOCAL s_aLNG
    LOCAL s_cVCSDIR
    LOCAL s_cVCSHEAD
+   LOCAL s_cUILNG
 
    LOCAL s_lCPP := NIL
    LOCAL s_lSHARED := NIL
@@ -422,6 +423,24 @@ FUNCTION hbmk( aArgs )
    LOCAL thread
 
    LOCAL nStart := Seconds()
+
+   IF Empty( s_cUILNG := GetEnv( "LC_ALL" ) )
+      IF Empty( s_cUILNG := GetEnv( "LC_MESSAGES" ) )
+         IF Empty( s_cUILNG := GetEnv( "LANG" ) )
+            s_cUILNG := "en_EN"
+         ENDIF
+      ENDIF
+   ENDIF
+
+   IF !( s_cUILNG == "en_EN" )
+      tmp := "${hb_root}hbmk2.${lng}.hbl"
+      tmp := StrTran( tmp, "${hb_root}", PathSepToSelf( DirAddPathSep( hb_DirBase() ) ) )
+      tmp := StrTran( tmp, "${lng}", s_cUILNG )
+      tmp := hb_MemoRead( tmp )
+      IF hb_i18n_check( tmp )
+         hb_i18n_set( hb_i18n_restoretable( tmp ) )
+      ENDIF
+   ENDIF
 
    IF Empty( aArgs )
       ShowHeader()
@@ -5264,9 +5283,9 @@ STATIC PROCEDURE ShowHelp( lLong )
       I_( "    The file format is the same as .hbp." ),;
       I_( "  - .hbp option files in current dir are automatically processed." ),;
       I_( "  - .hbp options (they should come in separate lines):" ),;
-      I_( "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ),;
-      I_( "    cflags=[C compiler flags], resflags=[resource compiler flags]" ),;
-      I_( "    ldflags=[Linker flags], libpaths=[paths], pots=[.pot files]" ),;
+      I_( "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]," ),;
+      I_( "    cflags=[C compiler flags], resflags=[resource compiler flags]," ),;
+      I_( "    ldflags=[Linker flags], libpaths=[paths], pots=[.pot files]," ),;
       I_( "    incpaths=[paths], inctrypaths=[paths]" ),;
       I_( "    gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no]" ),;
       I_( "    compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>" ),;
