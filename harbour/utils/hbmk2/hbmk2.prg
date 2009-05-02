@@ -193,7 +193,7 @@ PROCEDURE Main( ... )
 
    RETURN
 
-FUNCTION hbmk_run( cCmd )
+STATIC FUNCTION hbmk_run( cCmd )
 #if defined( __PLATFORM__DOS )
    RETURN hb_run( cCmd )
 #else
@@ -3862,7 +3862,7 @@ STATIC FUNCTION DirDelPathSep( cDir )
 
 #define hb_DirCreate( d ) MakeDir( d )
 
-FUNCTION DirBuild( cDir )
+STATIC FUNCTION DirBuild( cDir )
    LOCAL cDirTemp
    LOCAL cDirItem
    LOCAL tmp
@@ -3903,7 +3903,7 @@ FUNCTION DirBuild( cDir )
 
 #define hb_DirDelete( d ) DirRemove( d )
 
-FUNCTION DirUnbuild( cDir )
+STATIC FUNCTION DirUnbuild( cDir )
    LOCAL cDirTemp
    LOCAL tmp
 
@@ -4648,7 +4648,7 @@ STATIC FUNCTION commandResult( cCommand, nResult )
 
    RETURN cResult
 
-PROCEDURE PlatformPRGFlags( aOPTPRG )
+STATIC PROCEDURE PlatformPRGFlags( aOPTPRG )
 
    IF !( s_cARCH == hb_Version( HB_VERSION_BUILD_ARCH ) ) .OR. ;
       s_cARCH == "wce"
