@@ -96,10 +96,6 @@
 /* TODO: Add a way to fallback to stop if required headers couldn't be found.
          This needs a way to spec what key headers to look for. */
 
-#ifndef HBMK_INTEGRATED_COMPILER
-#define HBMK_INTEGRATED_COMPILER
-#endif
-
 #define I_( x ) hb_i18n_gettext( x )
 
 #define _PAR_cParam         1
@@ -150,6 +146,7 @@ STATIC s_aINCTRYPATH
 STATIC s_lREBUILD := .F.
 STATIC s_lTRACE := .F.
 STATIC s_lDONTEXEC := .F.
+STATIC s_lXHB := .F.
 
 STATIC s_lDEBUGTIME := .F.
 STATIC s_lDEBUGINC := .F.
@@ -174,6 +171,12 @@ PROCEDURE Main( ... )
       hb_FNameSplit( hb_argv( 0 ),, @cName )
 
       tmp := Lower( cName )
+
+      IF Left( tmp, 1 ) == "x"
+         tmp := SubStr( tmp, 2 )
+         AAdd( aArgs, "-xhb" )
+      ENDIF
+
       DO CASE
       CASE Right( tmp, 5 ) == "hbcmp" .OR. ;
            Left(  tmp, 5 ) == "hbcmp" .OR. ;
@@ -220,53 +223,18 @@ STATIC FUNCTION hbmk_run( cCmd )
 
 FUNCTION hbmk( aArgs )
 
-   LOCAL aLIB_BASE1 := {;
-      "hbcpage" ,;
-      "hblang" ,;
-      "hbcommon" }
-
-   /* NOTE: All base GTs should come here. */
-   LOCAL aLIB_BASE2 := {;
-      "hbrtl" ,;
-      "hbpp" ,;
-      "hbmacro" ,;
-      "hbextern" }
-
-   LOCAL aLIB_BASE_GT := {;
-      "gtcgi" ,;
-      "gtpca" ,;
-      "gtstd" }
-
-   LOCAL aLIB_BASE_PCRE := {;
-      "hbpcre" }
-
-   LOCAL aLIB_BASE_ZLIB := {;
-      "hbzlib" }
-
-   LOCAL aLIB_BASE_DEBUG := {;
-      "hbdebug" }
-
-   LOCAL aLIB_BASE_CPLR := {;
-      "hbcplr" }
-
-   LOCAL aLIB_BASE_ST := {;
-      "hbvm" }
-   LOCAL aLIB_BASE_MT := {;
-      "hbvmmt" }
-
-   LOCAL aLIB_BASE_NULRDD := {;
-      "hbnulrdd" }
-
-   LOCAL aLIB_BASE_RDD := {;
-      "hbrdd" ,;
-      "hbusrrdd" ,;
-      "hbuddall" ,;
-      "hbhsx" ,;
-      "hbsix" ,;
-      "rddntx" ,;
-      "rddnsx" ,;
-      "rddcdx" ,;
-      "rddfpt" }
+   LOCAL aLIB_BASE1
+   LOCAL aLIB_BASE2
+   LOCAL aLIB_BASE_GT
+   LOCAL aLIB_BASE_PCRE
+   LOCAL aLIB_BASE_ZLIB
+   LOCAL aLIB_BASE_DEBUG
+   LOCAL aLIB_BASE_CPLR
+   LOCAL aLIB_BASE_ST
+   LOCAL aLIB_BASE_MT
+   LOCAL aLIB_BASE_NULRDD
+   LOCAL aLIB_BASE_RDD_ST
+   LOCAL aLIB_BASE_RDD_MT
 
    LOCAL s_cGT
    LOCAL s_cCSTUB
@@ -368,9 +336,7 @@ FUNCTION hbmk( aArgs )
    LOCAL cOpt_Post
 
    LOCAL cCommand
-#if defined( HBMK_INTEGRATED_COMPILER )
    LOCAL aCommand
-#endif
    LOCAL cOpt_CompC
    LOCAL cOpt_CompCLoop
    LOCAL cOpt_Link
@@ -475,6 +441,7 @@ FUNCTION hbmk( aArgs )
            cParamL            == "-exospace" .OR. ;
            cParamL            == "-blinker" ; s_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDClipper := .T.
       CASE cParamL            == "-info"    ; s_lInfo := .T.
+      CASE cParamL            == "-xhb"     ; s_lXHB := .T.
       CASE cParamL == "-help" .OR. ;
            cParamL == "--help"
 
@@ -489,6 +456,119 @@ FUNCTION hbmk( aArgs )
 
       ENDCASE
    NEXT
+
+   /* Initalize Harbour libs */
+
+   IF ! s_lXHB
+
+      aLIB_BASE1 := {;
+         "hbcpage" ,;
+         "hblang" ,;
+         "hbcommon" }
+
+      aLIB_BASE2 := {;
+         "hbrtl" ,;
+         "hbpp" ,;
+         "hbmacro" ,;
+         "hbextern" }
+
+      aLIB_BASE_GT := {;
+         "gtcgi" ,;
+         "gtpca" ,;
+         "gtstd" }
+
+      aLIB_BASE_PCRE := {;
+         "hbpcre" }
+
+      aLIB_BASE_ZLIB := {;
+         "hbzlib" }
+
+      aLIB_BASE_DEBUG := {;
+         "hbdebug" }
+
+      aLIB_BASE_CPLR := {;
+         "hbcplr" }
+
+      aLIB_BASE_ST := {;
+         "hbvm" }
+      aLIB_BASE_MT := {;
+         "hbvmmt" }
+
+      aLIB_BASE_NULRDD := {;
+         "hbnulrdd" }
+
+      aLIB_BASE_RDD_ST := {;
+         "hbrdd" ,;
+         "hbusrrdd" ,;
+         "hbuddall" ,;
+         "hbhsx" ,;
+         "hbsix" ,;
+         "rddntx" ,;
+         "rddnsx" ,;
+         "rddcdx" ,;
+         "rddfpt" }
+
+      aLIB_BASE_RDD_MT := aLIB_BASE_RDD_ST
+
+   ELSE
+
+      aLIB_BASE1 := {;
+         "codepage" ,;
+         "lang" ,;
+         "common" }
+
+      aLIB_BASE2 := {}
+
+      aLIB_BASE_GT := {;
+         "gtcgi" ,;
+         "gtpca" ,;
+         "gtstd" }
+
+      aLIB_BASE_PCRE := {;
+         "pcrepos" }
+
+      aLIB_BASE_ZLIB := {;
+         "zlib" }
+
+      aLIB_BASE_DEBUG := {;
+         "debug" }
+
+      aLIB_BASE_CPLR := {}
+
+      aLIB_BASE_ST := {;
+         "vm" ,;
+         "rtl" ,;
+         "macro" ,;
+         "pp" }
+      aLIB_BASE_MT := {;
+         "vmmt" ,;
+         "rtlmt" ,;
+         "macromt" ,;
+         "ppmt" }
+
+      aLIB_BASE_NULRDD := {;
+         "nulsys" }
+
+      aLIB_BASE_RDD_ST := {;
+         "rdd" ,;
+         "usrrdd" ,;
+         "rdds" ,;
+         "hsx" ,;
+         "hbsix" ,;
+         "dbfntx" ,;
+         "dbfcdx" ,;
+         "dbffpt" }
+
+      aLIB_BASE_RDD_MT := {;
+         "rddmt" ,;
+         "usrrddmt" ,;
+         "rddsmt" ,;
+         "hsxmt" ,;
+         "hbsixmt" ,;
+         "dbfntxmt" ,;
+         "dbfcdxmt" ,;
+         "dbffptmt" }
+   ENDIF
 
    /* Load architecture / compiler settings (compatibility) */
 
@@ -956,6 +1036,7 @@ FUNCTION hbmk( aArgs )
            cParamL            == "-hbcc"  .OR. ;
            cParamL            == "-hblnk" .OR. ;
            cParamL            == "-nohbp" .OR. ;
+           cParamL            == "-xhb" .OR. ;
            cParamL            == "-clipper" .OR. ;
            cParamL            == "-rtlink" .OR. ;
            cParamL            == "-blinker" .OR. ;
@@ -2356,8 +2437,13 @@ FUNCTION hbmk( aArgs )
       ENDCASE
 
       IF lCreateDyn .AND. s_cARCH $ "win|wce"
-         AAdd( s_aOPTC, "-DHB_DYNLIB" )
-         AAdd( aLIB_BASE1, "hbmaindllp" )
+         IF s_lXHB
+            AAdd( s_aOPTC, "-D__EXPORT__" )
+            AAdd( aLIB_BASE1, "dllmain" ) /* TOFIX */
+         ELSE
+            AAdd( s_aOPTC, "-DHB_DYNLIB" )
+            AAdd( aLIB_BASE1, "hbmaindllp" )
+         ENDIF
       ENDIF
    ENDIF
 
@@ -2479,76 +2565,81 @@ FUNCTION hbmk( aArgs )
 
       PlatformPRGFlags( s_aOPTPRG )
 
-#if defined( HBMK_INTEGRATED_COMPILER )
-      aThreads := {}
-      FOR EACH aTODO IN ArraySplit( s_aPRG_TODO, s_nJOBS )
-         aCommand := ArrayAJoin( { { iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) },;
-                                   aTODO,;
-                                   iif( s_lBLDFLGP, { " " + cSelfFlagPRG }, {} ),;
-                                   ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
-                                   s_aOPTPRG } )
+      IF ! s_lXHB
+
+         /* Use integrated compiler */
+
+         aThreads := {}
+         FOR EACH aTODO IN ArraySplit( s_aPRG_TODO, s_nJOBS )
+            aCommand := ArrayAJoin( { { iif( lCreateLib .OR. lCreateDyn, "-n1", iif( s_lXHB, "-n", "-n2" ) ) },;
+                                      aTODO,;
+                                      iif( s_lBLDFLGP, { " " + cSelfFlagPRG }, {} ),;
+                                      ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
+                                      s_aOPTPRG } )
+
+            IF s_lTRACE
+               IF ! s_lQuiet
+                  IF hb_mtvm()
+                     OutStd( hb_StrFormat( I_( "hbmk: Harbour compiler command (internal) job #%1$s:" ), hb_ntos( aTODO:__enumIndex() ) ), hb_osNewLine() )
+                  ELSE
+                     OutStd( I_( "hbmk: Harbour compiler command (internal):" ), hb_osNewLine() )
+                  ENDIF
+               ENDIF
+               OutStd( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG +;
+                       " " + ArrayToList( aCommand ), hb_osNewLine() )
+            ENDIF
+
+            IF ! s_lDONTEXEC
+               IF hb_mtvm()
+                  AAdd( aThreads, { hb_threadStart( @hb_compile(), "", aCommand ), aCommand } )
+               ELSE
+                  IF ( tmp := hb_compile( "", aCommand ) ) != 0
+                     OutErr( hb_StrFormat( "hbmk: Error: Running Harbour compiler. %1$s", hb_ntos( tmp ) ), hb_osNewLine() )
+                     OutErr( ArrayToList( aCommand ), hb_osNewLine() )
+                     RETURN 6
+                  ENDIF
+               ENDIF
+            ENDIF
+         NEXT
+
+         IF hb_mtvm()
+            FOR EACH thread IN aThreads
+               hb_threadJoin( thread[ 1 ], @tmp )
+               IF tmp != 0
+                  OutErr( hb_StrFormat( "hbmk: Error: Running Harbour compiler job #%1$s. %2$s", hb_ntos( thread:__enumIndex() ), hb_ntos( tmp ) ), hb_osNewLine() )
+                  OutErr( ArrayToList( thread[ 2 ] ), hb_osNewLine() )
+                  RETURN 6
+               ENDIF
+            NEXT
+         ENDIF
+      ELSE
+         /* Use external compiler */
+
+         cCommand := DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) +;
+                     cBin_CompPRG +;
+                     " " + iif( lCreateLib .OR. lCreateDyn, "-n1", iif( s_lXHB, "-n", "-n2" ) ) +;
+                     " " + ArrayToList( s_aPRG_TODO ) +;
+                     iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
+                     iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
+                     iif( ! Empty( s_aOPTPRG ), " " + ArrayToList( s_aOPTPRG ), "" )
+
+         cCommand := AllTrim( cCommand )
 
          IF s_lTRACE
             IF ! s_lQuiet
-               IF hb_mtvm()
-                  OutStd( hb_StrFormat( I_( "hbmk: Harbour compiler command (internal) job #%1$s:" ), hb_ntos( aTODO:__enumIndex() ) ), hb_osNewLine() )
-               ELSE
-                  OutStd( I_( "hbmk: Harbour compiler command (internal):" ), hb_osNewLine() )
-               ENDIF
+               OutStd( I_( "hbmk: Harbour compiler command:" ), hb_osNewLine() )
             ENDIF
-            OutStd( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG +;
-                    " " + ArrayToList( aCommand ), hb_osNewLine() )
+            OutStd( cCommand, hb_osNewLine() )
          ENDIF
 
-         IF ! s_lDONTEXEC
-            IF hb_mtvm()
-               AAdd( aThreads, { hb_threadStart( @hb_compile(), "", aCommand ), aCommand } )
-            ELSE
-               IF ( tmp := hb_compile( "", aCommand ) ) != 0
-                  OutErr( hb_StrFormat( "hbmk: Error: Running Harbour compiler. %1$s", hb_ntos( tmp ) ), hb_osNewLine() )
-                  OutErr( ArrayToList( aCommand ), hb_osNewLine() )
-                  RETURN 6
-               ENDIF
+         IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
+            OutErr( hb_StrFormat( "hbmk: Error: Running Harbour compiler. %1$s:", hb_ntos( tmp ) ), hb_osNewLine() )
+            IF ! s_lQuiet
+               OutErr( cCommand, hb_osNewLine() )
             ENDIF
+            RETURN 6
          ENDIF
-      NEXT
-
-      IF hb_mtvm()
-         FOR EACH thread IN aThreads
-            hb_threadJoin( thread[ 1 ], @tmp )
-            IF tmp != 0
-               OutErr( hb_StrFormat( "hbmk: Error: Running Harbour compiler job #%1$s. %2$s", hb_ntos( thread:__enumIndex() ), hb_ntos( tmp ) ), hb_osNewLine() )
-               OutErr( ArrayToList( thread[ 2 ] ), hb_osNewLine() )
-               RETURN 6
-            ENDIF
-         NEXT
       ENDIF
-#else
-      cCommand := DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) +;
-                  cBin_CompPRG +;
-                  " " + iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) +;
-                  " " + ArrayToList( s_aPRG_TODO ) +;
-                  iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
-                  iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
-                  iif( ! Empty( s_aOPTPRG ), " " + ArrayToList( s_aOPTPRG ), "" )
-
-      cCommand := AllTrim( cCommand )
-
-      IF s_lTRACE
-         IF ! s_lQuiet
-            OutStd( I_( "hbmk: Harbour compiler command:" ), hb_osNewLine() )
-         ENDIF
-         OutStd( cCommand, hb_osNewLine() )
-      ENDIF
-
-      IF ! s_lDONTEXEC .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-         OutErr( hb_StrFormat( "hbmk: Error: Running Harbour compiler. %1$s:", hb_ntos( tmp ) ), hb_osNewLine() )
-         IF ! s_lQuiet
-            OutErr( cCommand, hb_osNewLine() )
-         ENDIF
-         RETURN 6
-      ENDIF
-#endif
    ENDIF
 
    IF ! lStopAfterInit .AND. ! lStopAfterHarbour
@@ -2669,7 +2760,7 @@ FUNCTION hbmk( aArgs )
                                    aLIB_BASE_CPLR,;
                                    aLIB_BASE_DEBUG,;
                                    s_aLIBVM,;
-                                   iif( s_lNULRDD, aLIB_BASE_NULRDD, aLIB_BASE_RDD ),;
+                                   iif( s_lNULRDD, aLIB_BASE_NULRDD, iif( s_lMT, aLIB_BASE_RDD_MT, aLIB_BASE_RDD_ST ) ),;
                                    aLIB_BASE2,;
                                    iif( s_lHB_PCRE, aLIB_BASE_PCRE, {} ),;
                                    iif( s_lHB_ZLIB, aLIB_BASE_ZLIB, {} ) } )
@@ -5172,6 +5263,10 @@ FUNCTION hbmk_KEYW( cKeyword )
       RETURN .T.
    ENDIF
 
+   IF ( cKeyword == "xhb" .AND. s_lXHB )
+      RETURN .T.
+   ENDIF
+
    IF cKeyword == hbmk_CPU()
       RETURN .T.
    ENDIF
@@ -5272,6 +5367,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-hblnk"            , I_( "accept raw linker flags" ) },;
       { "-hblib"            , I_( "create static library" ) },;
       { "-hbdyn"            , I_( "create dynamic library" ) },;
+      { "-xhb"              , I_( "enable xhb mode (experimental)" ) },;
       { "-rtlink"           , I_( " " ) },;
       { "-blinker"          , I_( " " ) },;
       { "-exospace"         , I_( "emulate Clipper compatible linker behavior\ncreate link/copy hbmk to rtlink/blinker/exospace for the same effect" ) },;
