@@ -1896,9 +1896,9 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                         const char * szPlurals[ HB_I18N_PLURAL_MAX ];
                         if( usCount == 1 )
                         {
-                           if( pArg->ExprType == HB_ET_STRING && pArg->ulLength > 0 )
+                           if( pArg->ExprType == HB_ET_STRING )
                            {
-                              if( HB_COMP_PARAM->fI18n )
+                              if( HB_COMP_PARAM->fI18n && pArg->ulLength > 0 )
                               {
                                  if( pCount )
                                  {
