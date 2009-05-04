@@ -54,10 +54,11 @@
 
 #define _HB_I18N_MERGE  1
 #define _HB_I18N_GENHBL 2
+#define _HB_I18N_TRANS  3
 
 PROCEDURE Main( ... )
    LOCAL aParams, aFiles
-   LOCAL cFileOut
+   LOCAL cFileOut, cFileIn, cExt
    LOCAL lError, lEmpty, lQuiet
    LOCAL nMode, n
    LOCAL param
@@ -85,6 +86,12 @@ PROCEDURE Main( ... )
             ELSE
                nMode := _HB_I18N_GENHBL
             ENDIF
+         ELSEIF param == "a"
+            IF nMode != 0
+               lError := .T.
+            ELSE
+               nMode := _HB_I18N_TRANS
+            ENDIF
          ELSEIF param = "o"
             IF !Empty( param := SubStr( param, 2 ) )
                cFileOut := param
@@ -108,7 +115,19 @@ PROCEDURE Main( ... )
       ENDIF
    NEXT
 
-   IF nMode == 0 .OR. Empty( aFiles )
+   IF nMode == _HB_I18N_TRANS
+      FOR n := 1 TO Len( aFiles )
+         hb_FNameSplit( aFiles[ n ],,, @cExt )
+         IF !Lower( cExt ) == ".hbl"
+            cFileIn := aFiles[ n ]
+            HB_ADel( aFiles, n, .T. )
+            EXIT
+         ENDIF
+      NEXT
+   ENDIF
+
+   IF nMode == 0 .OR. Empty( aFiles ) .OR. ;
+      ( nMode == _HB_I18N_TRANS .AND. Empty( cFileIn ) )
       Syntax()
    ENDIF
 
@@ -120,6 +139,8 @@ PROCEDURE Main( ... )
       Merge( aFiles, cFileOut )
    ELSEIF nMode == _HB_I18N_GENHBL
       GenHbl( aFiles, cFileOut, lEmpty )
+   ELSEIF nMode == _HB_I18N_TRANS
+      AutoTrans( cFileIn, aFiles, cFileOut )
    ENDIF
 
    RETURN
@@ -140,10 +161,12 @@ STATIC PROCEDURE Logo()
 STATIC PROCEDURE Syntax()
 
    Logo()
-   OutStd( "Syntax: hbi18n -m | -g [-o<outfile>] [-e] [-q] <files1[.pot] ...>" + HB_OSNewLine() + ;
+   OutStd( "Syntax: hbi18n -m | -g | -a [-o<outfile>] [-e] [-q] <files1[.pot] ...>" + HB_OSNewLine() + ;
            HB_OSNewLine() + ;
            "    -m          merge given .pot files" + HB_OSNewLine() + ;
            "    -g          generate .hbl file from given .pot files" + HB_OSNewLine() + ;
+           "    -a          add automatic translations to 1-st .pot file using" + HB_OSNewLine() + ;
+           "                translations from other .pot or .hbl files" + HB_OSNewLine() + ;
            "    -o<outfile> output file name" + HB_OSNewLine() + ;
            "                default is first .pot file name with" + HB_OSNewLine() + ;
            "                .po_ (merge) or .hbl extension" + HB_OSNewLine() + ;
@@ -200,6 +223,37 @@ STATIC FUNCTION LoadFiles( aFiles )
 
    RETURN aTrans
 
+
+STATIC FUNCTION LoadFilesAsHash( aFiles )
+   LOCAL cTrans, cExt, cErrorMsg
+   LOCAL hTrans
+   LOCAL aTrans
+   LOCAL n
+
+   FOR n := 1 TO Len( aFiles )
+      hb_FNameSplit( aFiles[ n ],,, @cExt )
+      IF Lower( cExt ) == ".hbl"
+         cTrans := hb_memoRead( aFiles[ n ] )
+         IF !HB_I18N_Check( cTrans )
+            ErrorMsg( "Wrong file format: " + aFiles[ n ] )
+         ENDIF
+         IF hTrans == NIL
+            hTrans := __I18N_hashTable( HB_I18N_RestoreTable( cTrans ) )
+         ELSE
+            __I18N_hashJoin( hTrans, __I18N_hashTable( HB_I18N_RestoreTable( cTrans ) ) )
+         ENDIF
+      ELSE
+         aTrans := __I18N_potArrayLoad( aFiles[ n ], @cErrorMsg )
+         IF aTrans == NIL
+            ErrorMsg( cErrorMsg )
+         ENDIF
+         hTrans := __I18N_potArrayToHash( aTrans,, hTrans )
+      ENDIF
+   NEXT
+
+   RETURN hTrans
+
+
 STATIC PROCEDURE Merge( aFiles, cFileOut )
    LOCAL cErrorMsg
 
@@ -231,6 +285,24 @@ STATIC PROCEDURE GenHbl( aFiles, cFileOut, lEmpty )
    cHblBody := HB_I18N_SaveTable( pI18N )
    IF !hb_memoWrit( cFileOut, cHblBody )
       ErrorMsg( "cannot create file: " + cFileOut )
+   ENDIF
+
+   RETURN
+
+
+STATIC PROCEDURE AutoTrans( cFileIn, aFiles, cFileOut )
+   LOCAL cErrorMsg
+
+   IF Empty( cFileOut )
+      cFileOut := FileExt( cFileIn, ".pot", .T. )
+   ELSE
+      cFileOut := FileExt( cFileOut, ".pot", .F. )
+   ENDIF
+
+   IF !__I18N_potArraySave( cFileOut, ;
+         __I18N_potArrayTrans( LoadFiles( { cFileIn } ), ;
+                               LoadFilesAsHash( aFiles ) ), @cErrorMsg )
+      ErrorMsg( cErrorMsg )
    ENDIF
 
    RETURN

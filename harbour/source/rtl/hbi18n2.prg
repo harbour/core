@@ -379,8 +379,10 @@ FUNCTION __I18N_POTARRAYTOHASH( aTrans, lEmpty, hI18N )
             hContext := hTrans[ cContext ]
          ENDIF
          IF Empty( aItem[ _I18N_MSGSTR, 1 ] )
-            hContext[ aItem[ _I18N_MSGID, 1 ] ] := IIF( aItem[ _I18N_PLURAL ], ;
-                     AClone( aItem[ _I18N_MSGID ] ), aItem[ _I18N_MSGID, 1 ] )
+            IF ! aItem[ _I18N_MSGID, 1 ] $ hContext
+               hContext[ aItem[ _I18N_MSGID, 1 ] ] := IIF( aItem[ _I18N_PLURAL ], ;
+                        AClone( aItem[ _I18N_MSGID ] ), aItem[ _I18N_MSGID, 1 ] )
+            ENDIF
          ELSE
             hContext[ aItem[ _I18N_MSGID, 1 ] ] := IIF( aItem[ _I18N_PLURAL ], ;
                      AClone( aItem[ _I18N_MSGSTR ] ), aItem[ _I18N_MSGSTR, 1 ] )
@@ -389,6 +391,61 @@ FUNCTION __I18N_POTARRAYTOHASH( aTrans, lEmpty, hI18N )
    NEXT
 
    RETURN hI18N
+
+
+FUNCTION __I18N_POTARRAYTRANS( aTrans, hI18N )
+   LOCAL aItem
+   LOCAL hContext
+   LOCAL cContext
+   LOCAL hTrans
+   LOCAL xTrans
+
+   hTrans := hI18N[ "CONTEXT" ]
+
+   FOR EACH aItem IN aTrans
+      cContext := aItem[ _I18N_CONTEXT ]
+      IF cContext $ hTrans
+         hContext := hTrans[ cContext ]
+         IF Empty( aItem[ _I18N_MSGSTR, 1 ] )
+            IF aItem[ _I18N_MSGID, 1 ] $ hContext
+               xTrans := hContext[ aItem[ _I18N_MSGID, 1 ] ]
+               IF aItem[ _I18N_PLURAL ]
+                  aItem[ _I18N_MSGSTR ] := IIF( HB_ISARRAY( xTrans ), ;
+                                                AClone( xTrans ), { xTrans } )
+               ELSE
+                  aItem[ _I18N_MSGSTR ] := IIF( HB_ISARRAY( xTrans ), ;
+                                                { xTrans[ 1 ] }, { xTrans } )
+               ENDIF
+            ENDIF
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN aTrans
+
+
+FUNCTION __I18N_HASHJOIN( hTrans, hTrans2 )
+   LOCAL hContext, hCtx, hDstCtx
+   LOCAL xTrans
+
+   hContext := hTrans[ "CONTEXT" ]
+   FOR EACH hCtx in hTrans2[ "CONTEXT" ]
+      IF ! hCtx:__enumKey() $ hContext
+         hContext[ hCtx:__enumKey() ] := hb_hClone( hCtx )
+      ELSE
+         hDstCtx := hContext[ hCtx:__enumKey() ]
+         FOR EACH xTrans IN hCtx
+            IF !Empty( xTrans ) .AND. ;
+               ( ! xTrans:__enumKey() $ hDstCtx .OR. ;
+                 Empty( hDstCtx[ xTrans:__enumKey() ] ) )
+               hDstCtx[ xTrans:__enumKey() ] := IIF( HB_ISARRAY( xTrans ), ;
+                                                     AClone( xTrans ), xTrans )
+            ENDIF
+         NEXT
+      ENDIF
+   NEXT
+
+   RETURN hTrans
 
 
 FUNCTION __I18N_POTARRAYJOIN( aTrans, aTrans2 )
