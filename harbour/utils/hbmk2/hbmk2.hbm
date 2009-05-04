@@ -5,3 +5,7 @@
 -nulrdd
 -mt
 hbmk2.prg
+
+hbmk2.${lng}.pot
+-hbl=hbmk2.${lng}.hbl
+-lng=hu_HU

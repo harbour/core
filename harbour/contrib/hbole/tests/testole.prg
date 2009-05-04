@@ -8,9 +8,11 @@
  * hbole library demo/test code
  *
  * Copyright 2007 Enrico Maria Giordano e.m.giordano at emagsoftware.it
- * Copyright 2009, Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
+ * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
+ * Copyright 2008 Viktor Szakats <harbour.01 syenar.hu>
+ *    Exm_CDO(), Exm_OOOpen()
  *
- * WWW - http://www.harbour-project.org
+ * www - http://www.harbour-project.org
  *
  */
 
@@ -27,13 +29,15 @@ PROCEDURE Main()
       ? "5) Internet Explorer"
       ? "6) OpenOffice Calc"
       ? "7) OpenOffice Writer"
+      ? "8) OpenOffice Open"
+      ? "9) Send mail via CDO"
       ? "0) Quit"
       ? "> "
 
-      nOption := INKEY(0)
-      ?? CHR(nOption)
+      nOption := Inkey( 0 )
+      ?? Chr( nOption )
 
-      nOption -= ASC("0")
+      nOption -= Asc( "0" )
 
       IF nOption == 1
          Exm_MSExcel()
@@ -49,6 +53,10 @@ PROCEDURE Main()
          Exm_OOCalc()
       ELSEIF nOption == 7
          Exm_OOWriter()
+      ELSEIF nOption == 8
+         Exm_OOOpen()
+      ELSEIF nOption == 9
+         Exm_CDO()
       ELSEIF nOption == 0
          EXIT
       ENDIF
@@ -78,7 +86,7 @@ STATIC PROCEDURE Exm_MSExcel()
          ? oWorkBook:WorkSheets:Item(nI):Name
       NEXT
 
-      // OLE also allows to access collection elements by passing 
+      // OLE also allows to access collection elements by passing
       // indices to :Worksheets property
       FOR nI := 1 TO nCount
          ? oWorkBook:WorkSheets(nI):Name
@@ -224,24 +232,24 @@ STATIC PROCEDURE Exm_OOCalc()
 
       oSheet := oDoc:getSheets:getByIndex(0)
 
-      oSheet:getCellRangeByName( "A1" ):setString( "OLE from Harbour" ) 
+      oSheet:getCellRangeByName( "A1" ):setString( "OLE from Harbour" )
 
-      oSheet:getCellRangeByName( "A3" ):setString( "String:" ) 
-      oSheet:getCellRangeByName( "B3" ):setString( "Hello, World!" ) 
+      oSheet:getCellRangeByName( "A3" ):setString( "String:" )
+      oSheet:getCellRangeByName( "B3" ):setString( "Hello, World!" )
 
-      oSheet:getCellRangeByName( "A4" ):setString( "Numeric:" ) 
-      oSheet:getCellRangeByName( "B4" ):setValue( 1234.56 ) 
+      oSheet:getCellRangeByName( "A4" ):setString( "Numeric:" )
+      oSheet:getCellRangeByName( "B4" ):setValue( 1234.56 )
 
-      oSheet:getCellRangeByName( "A5" ):setString( "Logical:" ) 
-      oSheet:getCellRangeByName( "B5" ):setValue( .T. ) 
+      oSheet:getCellRangeByName( "A5" ):setString( "Logical:" )
+      oSheet:getCellRangeByName( "B5" ):setValue( .T. )
       oSheet:getCellRangeByName( "B5" ):setPropertyValue( "NumberFormat", 99 ) // BOOLEAN
 
-      oSheet:getCellRangeByName( "A6" ):setString( "Date:" ) 
-      oSheet:getCellRangeByName( "B6" ):setValue( DATE() ) 
+      oSheet:getCellRangeByName( "A6" ):setString( "Date:" )
+      oSheet:getCellRangeByName( "B6" ):setValue( DATE() )
       oSheet:getCellRangeByName( "B6" ):setPropertyValue( "NumberFormat", 36 ) // YYYY-MM-DD
 
-      oSheet:getCellRangeByName( "A7" ):setString( "Timestamp:" ) 
-      oSheet:getCellRangeByName( "B7" ):setValue( HB_DATETIME() ) 
+      oSheet:getCellRangeByName( "A7" ):setString( "Timestamp:" )
+      oSheet:getCellRangeByName( "B7" ):setValue( HB_DATETIME() )
       oSheet:getCellRangeByName( "B7" ):setPropertyValue( "NumberFormat", 51 ) // YYYY-MM-DD HH:MM:SS
 
       oSheet:getCellRangeByName( "A3" ):setPropertyValue( "IsCellBackgroundTransparent", .F. )
@@ -302,6 +310,84 @@ STATIC PROCEDURE Exm_OOWriter()
       oText:insertString( oCursor, "Good bye!", .F. )
    ELSE
       ? "Error. OpenOffice not available.", OLEErrorText()
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE Exm_OOOpen()
+
+   LOCAL oOO_ServiceManager
+   LOCAL oOO_Desktop
+   LOCAL oOO_PropVal01
+   LOCAL oOO_Doc
+
+   LOCAL cDir
+
+   IF ( oOO_ServiceManager := CreateObject( "com.sun.star.ServiceManager" ) ) != NIL
+
+      hb_FNameSplit( hb_ArgV( 0 ), @cDir )
+
+      oOO_Desktop := oOO_ServiceManager:createInstance( "com.sun.star.frame.Desktop" )
+      oOO_PropVal01 := oOO_ServiceManager:Bridge_GetStruct( "com.sun.star.beans.PropertyValue" )
+      oOO_Doc := oOO_Desktop:loadComponentFromURL( OO_ConvertToURL( hb_FNameMerge( cDir, "sample.odt" ) ), "_blank", 0, { oOO_PropVal01 } )
+
+      ? "Press any key to close OpenOffice"
+      Inkey( 0 )
+
+      oOO_Doc:Close( .T. )
+      oOO_Doc := NIL
+
+      oOO_Desktop:Terminate()
+      oOO_Desktop := NIL
+      oOO_PropVal01 := NIL
+   ELSE
+      ? "Error: OpenOffice not available.", OLEErrorText()
+   ENDIF
+
+   RETURN
+
+STATIC FUNCTION OO_ConvertToURL( cString )
+
+   // ; Handle UNC paths
+   IF !( Left( cString, 2 ) == "\\" )
+      cString := StrTran( cString, ":", "|" )
+      cString := "///" + cString
+   ENDIF
+
+   cString := StrTran( cString, "\", "/" )
+   cString := StrTran( cString, " ", "%20" )
+
+   RETURN "file:" + cString
+
+STATIC PROCEDURE Exm_CDO()
+
+   LOCAL oCDOMsg
+   LOCAL oCDOConf
+
+   IF ( oCDOMsg := CreateObject( "CDO.Message" ) ) != NIL
+
+      oCDOConf := CreateObject( "CDO.Configuration" )
+
+      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/sendusing"):Value := 2 // ; cdoSendUsingPort
+      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserver"):Value := "localhost"
+      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserverport"):Value := 25
+      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout"):Value := 120
+      oCDOConf:Fields:Update()
+
+      oCDOMsg:Configuration := oCDOConf
+      oCDOMsg:BodyPart:Charset := "iso-8859-2" // "iso-8859-1" "utf-8"
+      oCDOMsg:To := "test@localhost"
+      oCDOMsg:From := "sender@localhost"
+      oCDOMsg:Subject := "Test message"
+      oCDOMsg:TextBody := "Test message body"
+
+      BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+         oCDOMsg:Send()
+      RECOVER
+         ? "Error: CDO send error.", OLEErrorText()
+      END SEQUENCE
+   ELSE
+      ? "Error: CDO subsystem not available (needs Windows XP or upper).", OLEErrorText()
    ENDIF
 
    RETURN

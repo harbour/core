@@ -147,6 +147,7 @@ STATIC s_lREBUILD := .F.
 STATIC s_lTRACE := .F.
 STATIC s_lDONTEXEC := .F.
 STATIC s_lXHB := .F.
+STATIC s_cUILNG
 
 STATIC s_lDEBUGTIME := .F.
 STATIC s_lDEBUGINC := .F.
@@ -289,7 +290,6 @@ FUNCTION hbmk( aArgs )
    LOCAL s_aLNG
    LOCAL s_cVCSDIR
    LOCAL s_cVCSHEAD
-   LOCAL s_cUILNG
 
    LOCAL s_lCPP := NIL
    LOCAL s_lSHARED := NIL
@@ -388,11 +388,8 @@ FUNCTION hbmk( aArgs )
    LOCAL cSelfFlagC   := hb_Version( HB_VERSION_FLAG_C )
    LOCAL cSelfFlagL   := hb_Version( HB_VERSION_FLAG_LINKER )
 
-   LOCAL cDL_Version_Alter := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) +;
-                              hb_ntos( hb_Version( HB_VERSION_MINOR ) )
-   LOCAL cDL_Version       := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) + "." +;
-                              hb_ntos( hb_Version( HB_VERSION_MINOR ) ) + "." +;
-                              hb_ntos( hb_Version( HB_VERSION_RELEASE ) )
+   LOCAL cDL_Version_Alter
+   LOCAL cDL_Version
 
    LOCAL aTODO
    LOCAL aThreads
@@ -461,6 +458,14 @@ FUNCTION hbmk( aArgs )
 
    IF ! s_lXHB
 
+      cDL_Version_Alter := "-" +;
+                           hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) +;
+                           hb_ntos( hb_Version( HB_VERSION_MINOR ) )
+      cDL_Version       := "." +;
+                           hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) + "." +;
+                           hb_ntos( hb_Version( HB_VERSION_MINOR ) ) + "." +;
+                           hb_ntos( hb_Version( HB_VERSION_RELEASE ) )
+
       aLIB_BASE1 := {;
          "hbcpage" ,;
          "hblang" ,;
@@ -511,6 +516,9 @@ FUNCTION hbmk( aArgs )
       aLIB_BASE_RDD_MT := aLIB_BASE_RDD_ST
 
    ELSE
+
+      cDL_Version_Alter := ""
+      cDL_Version       := ""
 
       aLIB_BASE1 := {;
          "codepage" ,;
@@ -757,16 +765,16 @@ FUNCTION hbmk( aArgs )
       ENDCASE
       /* Detect special *nix dir layout (/bin, /lib/harbour, /include/harbour) */
       IF hb_FileExists( DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "include" +;
-                                         hb_osPathSeparator() + "harbour" +;
+                                         hb_osPathSeparator() + iif( s_lXHB, "xharbour", "harbour" ) +;
                                          hb_osPathSeparator() + "hbvm.h" )
          IF Empty( s_cHB_BIN_INSTALL )
             s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "bin"
          ENDIF
          IF Empty( s_cHB_LIB_INSTALL )
-            s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "lib" + hb_osPathSeparator() + "harbour"
+            s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "lib" + hb_osPathSeparator() + iif( s_lXHB, "xharbour", "harbour" )
          ENDIF
          IF Empty( s_cHB_INC_INSTALL )
-            s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "include" + hb_osPathSeparator() + "harbour"
+            s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "include" + hb_osPathSeparator() + iif( s_lXHB, "xharbour", "harbour" )
          ENDIF
       ENDIF
    ENDIF
@@ -1395,6 +1403,7 @@ FUNCTION hbmk( aArgs )
 
       CASE FN_ExtGet( cParamL ) == ".prg"
 
+         cParam := ArchCompFilter( cParam )
          FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
             AAdd( s_aPRG    , PathSepToTarget( cParam ) )
             DEFAULT s_cFIRST TO PathSepToSelf( cParam )
@@ -1437,6 +1446,7 @@ FUNCTION hbmk( aArgs )
       CASE FN_ExtGet( cParamL ) == ".c" .OR. ;
            FN_ExtGet( cParamL ) == ".cpp" /* .cc, .cxx, .cx */
 
+         cParam := ArchCompFilter( cParam )
          FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
             AAdd( s_aC      , PathSepToTarget( cParam ) )
             DEFAULT s_cFIRST TO PathSepToSelf( cParam )
@@ -1521,7 +1531,7 @@ FUNCTION hbmk( aArgs )
       cPostfix := ""
       HB_SYMBOL_UNUSED( cDL_Version )
 #else
-      cPostfix := "-" + cDL_Version
+      cPostfix := cDL_Version
 #endif
 
       DO CASE
@@ -1824,14 +1834,14 @@ FUNCTION hbmk( aArgs )
          ENDIF
          DO CASE
          CASE s_cCOMP == "mingw64"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-x64",;
-                                          "harbour-" + cDL_Version_Alter + "-x64" ) }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt" + cDL_Version_Alter + "-x64",;
+                                          "harbour" + cDL_Version_Alter + "-x64" ) }
          CASE s_cCOMP == "mingwarm"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm",;
-                                          "harbour-" + cDL_Version_Alter + "-arm" ) }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt" + cDL_Version_Alter + "-arm",;
+                                          "harbour" + cDL_Version_Alter + "-arm" ) }
          OTHERWISE
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter,;
-                                          "harbour-" + cDL_Version_Alter ) }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt" + cDL_Version_Alter,;
+                                          "harbour" + cDL_Version_Alter ) }
          ENDCASE
 
          s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
@@ -2039,8 +2049,8 @@ FUNCTION hbmk( aArgs )
             AAdd( s_aOPTL, "OP MAP" )
          ENDIF
          s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + cLibExt,;
-                                       "harbour-" + cDL_Version_Alter + cLibExt ) }
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt" + cDL_Version_Alter + cLibExt,;
+                                       "harbour" + cDL_Version_Alter + cLibExt ) }
 
          IF s_lSHARED
             AAdd( s_aOPTL, "FILE " + FN_ExtSet( s_cHB_LIB_INSTALL + hb_osPathSeparator() + iif( s_lGUI, "hbmainwin", "hbmainstd" ), cLibExt ) )
@@ -2204,8 +2214,8 @@ FUNCTION hbmk( aArgs )
          IF s_lSHARED
             AAdd( s_aLIBPATH, s_cHB_BIN_INSTALL )
          ENDIF
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-bcc" + cLibExt,;
-                                       "harbour-" + cDL_Version_Alter + "-bcc" + cLibExt ) }
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt" + cDL_Version_Alter + "-bcc" + cLibExt,;
+                                       "harbour" + cDL_Version_Alter + "-bcc" + cLibExt ) }
          s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
          s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
 
@@ -2323,17 +2333,17 @@ FUNCTION hbmk( aArgs )
          s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
          DO CASE
          CASE s_cCOMP $ "msvc|icc"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + cLibExt,;
-                                          "harbour-" + cDL_Version_Alter + cLibExt ) }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt" + cDL_Version_Alter + cLibExt,;
+                                          "harbour" + cDL_Version_Alter + cLibExt ) }
          CASE s_cCOMP == "msvc64"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-x64" + cLibExt,;
-                                          "harbour-" + cDL_Version_Alter + "-x64" + cLibExt ) }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt" + cDL_Version_Alter + "-x64" + cLibExt,;
+                                          "harbour" + cDL_Version_Alter + "-x64" + cLibExt ) }
          CASE s_cCOMP $ "msvcia64|iccia64"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-ia64" + cLibExt,;
-                                          "harbour-" + cDL_Version_Alter + "-ia64" + cLibExt ) }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt" + cDL_Version_Alter + "-ia64" + cLibExt,;
+                                          "harbour" + cDL_Version_Alter + "-ia64" + cLibExt ) }
          CASE s_cCOMP == "msvcarm"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm" + cLibExt,;
-                                          "harbour-" + cDL_Version_Alter + "-arm" + cLibExt ) }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt" + cDL_Version_Alter + "-arm" + cLibExt,;
+                                          "harbour" + cDL_Version_Alter + "-arm" + cLibExt ) }
          ENDCASE
 
          s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
@@ -2415,14 +2425,14 @@ FUNCTION hbmk( aArgs )
          s_aLIBSYS := ArrayAJoin( { s_aLIBSYS, s_aLIBSYSCORE, s_aLIBSYSMISC } )
          DO CASE
          CASE s_cCOMP == "pocc64"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-x64" + cLibExt,;
-                                          "harbour-" + cDL_Version_Alter + "-x64" + cLibExt ) }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt" + cDL_Version_Alter + "-x64" + cLibExt,;
+                                          "harbour" + cDL_Version_Alter + "-x64" + cLibExt ) }
          CASE s_cCOMP == "poccarm"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-arm" + cLibExt,;
-                                          "harbour-" + cDL_Version_Alter + "-arm" + cLibExt ) }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt" + cDL_Version_Alter + "-arm" + cLibExt,;
+                                          "harbour" + cDL_Version_Alter + "-arm" + cLibExt ) }
          OTHERWISE
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + cLibExt,;
-                                          "harbour-" + cDL_Version_Alter + cLibExt ) }
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt" + cDL_Version_Alter + cLibExt,;
+                                          "harbour" + cDL_Version_Alter + cLibExt ) }
          ENDCASE
 
          s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
@@ -2574,7 +2584,7 @@ FUNCTION hbmk( aArgs )
 
             IF s_lTRACE
                IF ! s_lQuiet
-                  IF hb_mtvm()
+                  IF Len( aTODO:__enumBase() ) > 1
                      hbmk_OutStd( hb_StrFormat( I_( "Harbour compiler command (internal) job #%1$s:" ), hb_ntos( aTODO:__enumIndex() ) ) )
                   ELSE
                      hbmk_OutStd( I_( "Harbour compiler command (internal):" ) )
@@ -2601,7 +2611,11 @@ FUNCTION hbmk( aArgs )
             FOR EACH thread IN aThreads
                hb_threadJoin( thread[ 1 ], @tmp )
                IF tmp != 0
-                  hbmk_OutErr( hb_StrFormat( I_( "Error: Running Harbour compiler job #%1$s. %2$s" ), hb_ntos( thread:__enumIndex() ), hb_ntos( tmp ) ) )
+                  IF Len( aThreads ) > 1
+                     hbmk_OutErr( hb_StrFormat( I_( "Error: Running Harbour compiler job #%1$s. %2$s" ), hb_ntos( thread:__enumIndex() ), hb_ntos( tmp ) ) )
+                  ELSE
+                     hbmk_OutErr( hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
+                  ENDIF
                   OutErr( ArrayToList( thread[ 2 ] ), hb_osNewLine() )
                   RETURN 6
                ENDIF
@@ -2932,7 +2946,7 @@ FUNCTION hbmk( aArgs )
                aThreads := {}
                FOR EACH aTODO IN ArraySplit( ArrayJoin( ListDirExt( s_aPRG_TODO, cWorkDir, ".c" ), s_aC_TODO ), s_nJOBS )
                   IF hb_mtvm()
-                     AAdd( aThreads, hb_threadStart( @CompileCLoop(), aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, aTODO:__enumIndex() ) )
+                     AAdd( aThreads, hb_threadStart( @CompileCLoop(), aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, aTODO:__enumIndex(), Len( aTODO:__enumBase() ) ) )
                   ELSE
                      IF ! CompileCLoop( aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt )
                         nErrorLevel := 6
@@ -2973,7 +2987,7 @@ FUNCTION hbmk( aArgs )
 
                   IF s_lTRACE
                      IF ! s_lQuiet
-                        IF hb_mtvm()
+                        IF Len( aTODO:__enumBase() ) > 1
                            hbmk_OutStd( hb_StrFormat( I_( "C compiler command job #%1$s:" ), hb_ntos( aTODO:__enumIndex() ) ) )
                         ELSE
                            hbmk_OutStd( I_( "C compiler command:" ) )
@@ -3009,7 +3023,11 @@ FUNCTION hbmk( aArgs )
                   FOR EACH thread IN aThreads
                      hb_threadJoin( thread[ 1 ], @tmp )
                      IF tmp != 0
-                        hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler job #%1$s. %2$s" ), hb_ntos( thread:__enumIndex() ), hb_ntos( tmp ) ) )
+                        IF Len( aThreads ) > 1
+                           hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler job #%1$s. %2$s" ), hb_ntos( thread:__enumIndex() ), hb_ntos( tmp ) ) )
+                        ELSE
+                           hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler. %1$s" ), hb_ntos( tmp ) ) )
+                        ENDIF
                         IF ! s_lQuiet
                            OutErr( thread[ 2 ], hb_osNewLine() )
                         ENDIF
@@ -3019,7 +3037,7 @@ FUNCTION hbmk( aArgs )
                ENDIF
             ENDIF
          ELSE
-            hbmk_OutErr( I_( "Error: This compiler/platform isn't implemented." ) )
+            hbmk_OutErr( I_( "Error: This architecture/compiler isn't implemented." ) )
             nErrorLevel := 8
          ENDIF
       ENDIF
@@ -3352,7 +3370,7 @@ FUNCTION hbmk( aArgs )
 
    RETURN nErrorLevel
 
-STATIC FUNCTION CompileCLoop( aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, nJob )
+STATIC FUNCTION CompileCLoop( aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, nJob, nJobs )
    LOCAL lResult := .T.
    LOCAL cCommand
    LOCAL tmp, tmp1
@@ -3367,7 +3385,7 @@ STATIC FUNCTION CompileCLoop( aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, 
 
       IF s_lTRACE
          IF ! s_lQuiet
-            IF nJob != NIL
+            IF nJobs > 1
                hbmk_OutStd( hb_StrFormat( I_( "C compiler command job #%1$s:" ), hb_ntos( nJob ) ) )
             ELSE
                hbmk_OutStd( I_( "C compiler command:" ) )
@@ -3377,7 +3395,7 @@ STATIC FUNCTION CompileCLoop( aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, 
       ENDIF
 
       IF ! s_lDONTEXEC .AND. ( tmp1 := hbmk_run( cCommand ) ) != 0
-         IF nJob != NIL
+         IF nJobs > 1
             hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler job #%1$s. %2$s:" ), hb_ntos( nJob ), hb_ntos( tmp1 ) ) )
          ELSE
             hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler. %1$s:" ), hb_ntos( tmp1 ) ) )
@@ -5277,8 +5295,13 @@ STATIC PROCEDURE ShowHeader()
 
    OutStd( "Harbour Make " + HBRawVersion() + hb_osNewLine() +;
            "Copyright (c) 1999-2009, Viktor Szakats" + hb_osNewLine() +;
-           "http://www.harbour-project.org/" + hb_osNewLine() +;
-           hb_osNewLine() )
+           "http://www.harbour-project.org/" + hb_osNewLine() )
+
+   IF !( s_cUILNG == "en_EN" )
+      OutStd( hb_StrFormat( I_( "Translation (%1$s): (add your name here)" ), s_cUILNG ), hb_osNewLine() )
+   ENDIF
+
+   OutStd( hb_osNewLine() )
 
    RETURN
 
@@ -5289,17 +5312,17 @@ STATIC PROCEDURE ShowHelp( lLong )
 
    LOCAL aText_Basic := {;
       I_( "Syntax:" ),;
-      I_( " " ),;
+      "",;
       I_( "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.pot|.hbl]>" ),;
-      I_( " " ),;
+      "",;
       I_( "Options:" ) }
 
    LOCAL aText_Notes := {;
-      I_( " " ),;
+      "",;
       I_( "Notes:" ) }
 
    LOCAL aText_Supp := {;
-      I_( " " ),;
+      "",;
       I_( "Supported <comp> values for each supported <arch> value:" ),;
       "  - linux  : gcc, owatcom, icc",;
       "  - darwin : gcc",;
@@ -5325,7 +5348,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-help|--help"      , I_( "long help" ) } }
 
    LOCAL aOpt_Long := {;
-      {},;
+      NIL,;
       { "-gui|-std"         , I_( "create GUI/console executable" ) },;
       { "-main=<mainfunc>"  , I_( "override the name of starting function/procedure" ) },;
       { "-fullstatic"       , I_( "link with all static libs" ) },;
@@ -5341,7 +5364,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-vcshead=<file>"   , I_( "generate .ch header file with local repository information SVN, Git and Mercurial are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
       { "-nohbp"            , I_( "do not process .hbp files in current directory" ) },;
       { "-stop"             , I_( "stop without doing anything" ) },;
-      {},;
+      NIL,;
       { "-bldf[-]"          , I_( "inherit all/no (default) flags from Harbour build" ) },;
       { "-bldf=[p][c][l]"   , I_( "inherit .prg/.c/linker flags (or none) from Harbour build" ) },;
       { "-inctrypath=<p>"   , I_( "additional path to autodetect .c header locations" ) },;
@@ -5358,24 +5381,24 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-rebuild"          , I_( "rebuild all (in incremental build mode)" ) },;
       { "-clean"            , I_( "clean (in incremental build mode)" ) },;
       { "-workdir=<dir>"    , I_( "working directory for incremental build mode\n(default: arch/comp)" ) },;
-      {},;
+      NIL,;
       { "-hbl[=<output>]"   , I_( "output .hbl filename. ${lng} macro is accepted in filename" ) },;
       { "-lng=<languages>"  , I_( "list of languages to be replaced in ${lng} macros in .pot filenames and output .hbl filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ) },;
-      {},;
+      NIL,;
       { "-hbcmp|-clipper"   , I_( "stop after creating the object files\ncreate link/copy hbmk to hbcmp/clipper for the same effect" ) },;
       { "-hbcc"             , I_( "stop after creating the object files and accept raw C flags\ncreate link/copy hbmk to hbcc for the same effect" ) },;
       { "-hblnk"            , I_( "accept raw linker flags" ) },;
       { "-hblib"            , I_( "create static library" ) },;
       { "-hbdyn"            , I_( "create dynamic library" ) },;
       { "-xhb"              , I_( "enable xhb mode (experimental)" ) },;
-      { "-rtlink"           , I_( " " ) },;
-      { "-blinker"          , I_( " " ) },;
+      { "-rtlink"           , "" },;
+      { "-blinker"          , "" },;
       { "-exospace"         , I_( "emulate Clipper compatible linker behavior\ncreate link/copy hbmk to rtlink/blinker/exospace for the same effect" ) },;
       { "--hbdirbin"        , I_( "output Harbour binary directory" ) },;
       { "--hbdirdyn"        , I_( "output Harbour dynamic library directory" ) },;
       { "--hbdirlib"        , I_( "output Harbour static library directory" ) },;
       { "--hbdirinc"        , I_( "output Harbour header directory" ) },;
-      {},;
+      NIL,;
       { "-arch=<arch>"      , I_( "assume specific architecure. Same as HB_ARCHITECTURE envvar" ) },;
       { "-comp=<comp>"      , I_( "use specific compiler. Same as HB_COMPILER envvar\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
       { "--version"         , I_( "display version header only" ) },;
