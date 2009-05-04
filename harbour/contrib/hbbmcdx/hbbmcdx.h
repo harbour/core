@@ -151,6 +151,10 @@ HB_EXTERN_BEGIN
 #define CDX_TYPE_COMPOUND      0x40    /* FoxPro */
 #define CDX_TYPE_STRUCTURE     0x80    /* FoxPro */
 
+#define CDX_CMP_EXACT          0x00    /* exact comparision */
+#define CDX_CMP_PREFIX         0x01    /* prefix comparision */
+#define CDX_CMP_DATE           0x02    /* date comparision */
+
 /*
  SIx3 order temperature flags:
    switch ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) )
@@ -195,8 +199,10 @@ typedef struct _CDXTAGHEADER
    BYTE     keySize  [ 2 ];   /* key length */
    BYTE     indexOpt;         /* index options see CDX_TYPE_* */
    BYTE     indexSig;         /* index signature */
-   BYTE     reserved2[ 484 ];
-   BYTE     ignoreCase[ 2 ];  /* 1 = ignore case, key converted to upper */
+   BYTE     reserved2[ 478 ];
+   BYTE     codepage[ 5 ];    /* VFP codepage */
+   BYTE     ignoreCase;       /* 1 = ignore case, key converted to upper */
+   BYTE     reserved3[ 2 ];
    BYTE     ascendFlg[ 2 ];   /* 0 = ascending  1 = descending */
    BYTE     forExpPos[ 2 ];   /* offset of filter expression */
    BYTE     forExpLen[ 2 ];   /* length of filter expression */
@@ -249,7 +255,8 @@ struct _CDXTAG;   /* forward declaration */
 typedef struct _CDXKEY
 {
    BYTE *   val;
-   BYTE     len;
+   USHORT   len;
+   USHORT   mode;
    ULONG    rec;
 } CDXKEY;
 typedef CDXKEY * LPCDXKEY;
@@ -333,6 +340,7 @@ typedef struct _CDXTAG
    BOOL     ChgOnly;          /* only existing key modifications are updated, no new key added */
    BOOL     UsrAscend;        /* user settable ascending/descending order flag */
    BOOL     UsrUnique;        /* user settable unique order flag */
+   BOOL     IgnoreCase;       /* ignore case (upper keys) */
 
    BOOL     TagChanged;
    BOOL     TagBOF;
@@ -492,12 +500,15 @@ typedef struct _CDXAREA
    USHORT   uiNewBlockSize;         /* Size of new memo block */
    USHORT   uiMemoVersion;          /* MEMO file version */
    USHORT   uiDirtyRead;            /* Index dirty read bit filed */
+   USHORT   uiNullOffset;           /* Offset to _NullFlags filed */
+   USHORT   uiNullCount;            /* Number of null flags */
    BYTE     bTableType;             /* DBF type */
    BYTE     bMemoType;              /* MEMO type used in DBF memo fields */
    BYTE     bLockType;              /* Type of locking shemes */
    BYTE     bCryptType;             /* Type of used encryption */
    DBFHEADER dbfHeader;             /* DBF header buffer */
    USHORT * pFieldOffset;           /* Pointer to field offset array */
+   PHB_DBFFIELDBITS pFieldBits;     /* Pointer to extended DBF field info array */
    BYTE *   pRecord;                /* Buffer of record data */
    ULONG    ulRecCount;             /* Total records */
    ULONG    ulRecNo;                /* Current record */
