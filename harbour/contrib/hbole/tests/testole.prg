@@ -3,42 +3,39 @@
  */
 
 /*
- * Harbour Project source code:
- *    demonstration code for FOR EACH used for OLE objects
- *    this code needs HBWIN library
+ * Harbour Project source code
+ *
+ * hbole library demo/test code
  *
  * Copyright 2007 Enrico Maria Giordano e.m.giordano at emagsoftware.it
- * www - http://www.harbour-project.org
+ * Copyright 2009, Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
+ *
+ * WWW - http://www.harbour-project.org
  *
  */
 
-/* Explicit usage of OLE DEFAULT Method when syntax implies it. */
-#xtranslate :<!Method!>( <args,...> ) := => :<Method>( <args> ):Value :=
-
 PROCEDURE Main()
-
    LOCAL nOption
 
-   CLS
-
-   @  6, 25 TO 19, 55 DOUBLE
-   @  8, 28 SAY "Test Harbour OLE with..."
-
    DO WHILE .T.
-      @ 10, 32 PROMPT "MS Excel"
-      @ 11, 32 PROMPT "MS Word"
-      @ 12, 32 PROMPT "MS Outlook (1)"
-      @ 13, 32 PROMPT "MS Outlook (2)"
-      @ 14, 32 PROMPT "Internet Explorer"
-      @ 15, 32 PROMPT "XP CDO"
-      @ 16, 32 PROMPT "OpenOffice"
-      @ 17, 32 PROMPT "Quit"
+      ? ""
+      ? "Select OLE test:"
+      ? "1) MS Excel"
+      ? "2) MS Word"
+      ? "3) MS Outlook (1)"
+      ? "4) MS Outlook (2)"
+      ? "5) Internet Explorer"
+      ? "6) OpenOffice Calc"
+      ? "7) OpenOffice Writer"
+      ? "0) Quit"
+      ? "> "
 
-      MENU TO nOption
+      nOption := INKEY(0)
+      ?? CHR(nOption)
 
-      IF nOption == 0
-         nOption := 8
-      ELSEIF nOption == 1
+      nOption -= ASC("0")
+
+      IF nOption == 1
          Exm_MSExcel()
       ELSEIF nOption == 2
          Exm_MSWord()
@@ -49,121 +46,88 @@ PROCEDURE Main()
       ELSEIF nOption == 5
          Exm_IExplorer()
       ELSEIF nOption == 6
-         Exm_CDO()
+         Exm_OOCalc()
       ELSEIF nOption == 7
-         Exm_OpenOffice()
-      ELSEIF nOption == 8
+         Exm_OOWriter()
+      ELSEIF nOption == 0
          EXIT
       ENDIF
    ENDDO
 
-   CLS
-
    RETURN
 
-// ; Requires Windows XP
-
-STATIC PROCEDURE Exm_CDO()
-
-   LOCAL oCDOMsg
-   LOCAL oCDOConf
-
-   IF ( oCDOMsg  := CreateObject( "CDO.Message" ) ) != NIL .AND. ;
-      ( oCDOConf := CreateObject( "CDO.Configuration" ) ) != NIL
-
-      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/sendusing") := 2 /* cdoSendUsingPort */
-      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserver") := "localhost"
-      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserverport") := 25
-      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout") := 120
-      oCDOConf:Fields:Update()
-
-      oCDOMsg:Configuration := oCDOConf
-      oCDOMsg:BodyPart:Charset := "iso-8859-2" // "iso-8859-1" "utf-8"
-      oCDOMsg:To := "test@localhost"
-      oCDOMsg:From := "sender@localhost"
-      oCDOMsg:Subject := "Test message"
-      oCDOMsg:TextBody := "Test message body"
-
-      oCDOMsg:Send()
-   ELSE
-      Alert( "Error: CDO subsystem not available. [" + OLEErrorText()+ "]" )
-   ENDIF
-
-   RETURN
-
-STATIC PROCEDURE Exm_IExplorer()
-
-   LOCAL oIE
-
-   IF ( oIE := CreateObject( "InternetExplorer.Application" ) ) != NIL
-      oIE:Visible := .T.
-      oIE:Navigate( "http://www.harbour-project.org" )
-   ELSE
-      Alert( "Error: IExplorer not available. [" + OLEErrorText()+ "]" )
-   ENDIF
-
-   RETURN
 
 STATIC PROCEDURE Exm_MSExcel()
-
-   LOCAL oExcel
-   LOCAL oWorkBook
-   LOCAL oWorkSheet
-   LOCAL oAS
+   LOCAL oExcel, oWorkBook, oWorkSheet, oAS
+   LOCAL nI, nCount
 
    IF ( oExcel := CreateObject( "Excel.Application" ) ) != NIL
 
       oWorkBook := oExcel:WorkBooks:Add()
 
+      // Enumerator test
       FOR EACH oWorkSheet IN oWorkBook:WorkSheets
          ? oWorkSheet:Name
       NEXT
 
+      // oWorkBook:WorkSheets is a collection
+      nCount := oWorkBook:WorkSheets:Count()
+
+      // Elements of collection can be accessed using :Item() method
+      FOR nI := 1 TO nCount
+         ? oWorkBook:WorkSheets:Item(nI):Name
+      NEXT
+
+      // OLE also allows to access collection elements by passing 
+      // indices to :Worksheets property
+      FOR nI := 1 TO nCount
+         ? oWorkBook:WorkSheets(nI):Name
+      NEXT
+
       oAS := oExcel:ActiveSheet()
 
+      // Set font for all cells
       oAS:Cells:Font:Name := "Arial"
       oAS:Cells:Font:Size := 12
 
-      // Explicit use of DEFAULT method by means of #xtranslate above!!!
-      oAS:Cells( 3, 1 ) := "Explict DEFAULT Method Text:"
+      oAS:Cells( 1, 1 ):Value := "OLE from Harbour"
+      oAS:Cells( 1, 1 ):Font:Size := 16
 
-      // Array notation seem to have REVERSED indexs for the Cells Collections!!!
-      // Implicitly using DEFAULT Method
-      oAS:Cells[ 2, 3 ] := "Implicit DEFAULT Method using *reversed* array index notation"
+      // oAS:Cells( 1, 1 ) is object, but oAS:Cells( 1, 1 ):Value has value of the cell
+      ? "Object valtype:", VALTYPE(oAS:Cells( 1, 1 )), "Value:", oAS:Cells( 1, 1 ):Value
 
-      // Operator overloading will attempt explict resolutin using :OleValue
-      oAS:Cells[ 2, 3 ] += "!"
+      oAS:Cells( 3, 1 ):Value := "String:"
+      oAS:Cells( 3, 2 ):Value := "Hello, World!"
 
       oAS:Cells( 4, 1 ):Value := "Numeric:"
-      oAS:Cells( 4, 2 ):NumberFormat := "#.##0,00"
-
-      oAS:Cells[ 2, 4 ] := 1234.50
-      oAS:Cells[ 2, 4 ] *= 4
-      ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
-      oAS:Cells[ 2, 4 ] /= 2
-      ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
-
-      oAS:Cells[ 2, 4 ]++
-      ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
-      oAS:Cells[ 2, 4 ]--
-      ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
+      oAS:Cells( 4, 2 ):Value := 1234.56
+      oAS:Cells( 4, 3 ):Value := oAS:Cells( 4, 2 ):Value
+      oAS:Cells( 4, 4 ):Value := oAS:Cells( 4, 2 ):Value
+      oAS:Cells( 4, 3 ):Value *= 2
+      oAS:Cells( 4, 2 ):Value++
 
       oAS:Cells( 5, 1 ):Value := "Logical:"
       oAS:Cells( 5, 2 ):Value := .T.
+
       oAS:Cells( 6, 1 ):Value := "Date:"
       oAS:Cells( 6, 2 ):Value := DATE()
 
+      oAS:Cells( 7, 1 ):Value := "Timestamp:"
+      oAS:Cells( 7, 2 ):Value := HB_DATETIME()
+
+      // Some formatting
       oAS:Columns( 1 ):Font:Bold := .T.
       oAS:Columns( 2 ):HorizontalAlignment := -4152  // xlRight
 
       oAS:Columns( 1 ):AutoFit()
       oAS:Columns( 2 ):AutoFit()
+      oAS:Columns( 3 ):AutoFit()
+      oAS:Columns( 4 ):AutoFit()
 
-      oAS:Cells( 1, 1 ):Value := "OLE from Harbour"
-      oAS:Cells( 1, 1 ):Font:Size := 16
+      oAS:Cells( 3, 2 ):Font:ColorIndex := 3  // red
+
       oAS:Range( "A1:B1" ):HorizontalAlignment := 7
-
-      oAS:Cells( 1, 1 ):Select()
+      oAS:Range( "A3:A7" ):Select()
 
       oExcel:Visible := .T.
 
@@ -174,10 +138,9 @@ STATIC PROCEDURE Exm_MSExcel()
 
    RETURN
 
-STATIC PROCEDURE Exm_MSWord()
 
-   LOCAL oWord
-   LOCAL oText
+STATIC PROCEDURE Exm_MSWord()
+   LOCAL oWord, oText
 
    IF ( oWord := CreateObject( "Word.Application" ) ) != NIL
 
@@ -193,34 +156,31 @@ STATIC PROCEDURE Exm_MSWord()
       oWord:Visible := .T.
       oWord:WindowState := 1 /* Maximize */
    ELSE
-      Alert( "Error: MS Word not available. [" + OLEErrorText()+ "]" )
+      ? "Error. MS Word not available.", OLEErrorText()
    ENDIF
 
    RETURN
 
-STATIC PROCEDURE Exm_MSOutlook()
 
-   LOCAL oOL
-   LOCAL oList
+STATIC PROCEDURE Exm_MSOutlook()
+   LOCAL oOL, oList
 
    IF ( oOL := CreateObject( "Outlook.Application" ) ) != NIL
       oList := oOL:CreateItem( 7 /* olDistributionListItem */ )
       oList:DLName := "Distribution List"
       oList:Display( .F. )
    ELSE
-      Alert( "Error: MS Outlook not available. [" + OLEErrorText()+ "]" )
+      ? "Error. MS Outlook not available.", OLEErrorText()
    ENDIF
 
    RETURN
 
-STATIC PROCEDURE Exm_MSOutlook2()
 
-   LOCAL oOL
-   LOCAL oLista
-   LOCAL oMail
+STATIC PROCEDURE Exm_MSOutlook2()
+   LOCAL oOL, oLista, oMail
    LOCAL i
 
-   IF ( oOL := hb_OleAuto():New( "Outlook.Application.9" ) ) != NIL
+   IF ( oOL := CreateObject( "Outlook.Application" ) ) != NIL
 
       oMail := oOL:CreateItem( 0 /* olMailItem */ )
 
@@ -235,65 +195,113 @@ STATIC PROCEDURE Exm_MSOutlook2()
       oLista:AddMembers( oMail:Recipients )
       oLista:Save()
       oLista:Close( 0 )
-
-      oMail:End()
-      oLista:End()
-      oOL:End()
    ELSE
-      Alert("Outlook is not available", "Error")
+      ? "Error. MS Outlook not available.", OLEErrorText()
    ENDIF
 
    RETURN
 
-STATIC PROCEDURE Exm_OpenOffice()
 
-   LOCAL oOO_ServiceManager
-   LOCAL oOO_Desktop
-   LOCAL oOO_PropVal01
-   LOCAL oOO_Doc
+STATIC PROCEDURE Exm_IExplorer()
+   LOCAL oIE
 
-   IF ( oOO_ServiceManager := CreateObject( "com.sun.star.ServiceManager" ) ) != NIL
-
-      IF ( oOO_Desktop := oOO_ServiceManager:createInstance( "com.sun.star.frame.Desktop" ) ) != NIL
-         IF ( oOO_PropVal01 := oOO_ServiceManager:Bridge_GetStruct( "com.sun.star.beans.PropertyValue" ) ) != NIL
-            IF ( oOO_Doc := oOO_Desktop:loadComponentFromURL( OO_ConvertToURL( hb_FNameMerge( hb_dirBase(), "sample.odt" ) ), "_blank", 0, { oOO_PropVal01 } ) ) != NIL
-
-              // ...
-
-              oOO_Doc:Close( .T. )
-              oOO_Doc := NIL
-            ELSE
-               Alert( "Error: #3: " + OO_ConvertToURL( hb_FNameMerge( hb_dirBase(), "sample.odt" ) ) )
-            ENDIF
-
-            oOO_PropVal01 := NIL
-         ELSE
-            Alert( "Error: #2" )
-         ENDIF
-
-         oOO_Desktop:Terminate()
-         oOO_Desktop := NIL
-      ELSE
-         Alert( "Error: #1" )
-      ENDIF
-
-      oOO_ServiceManager := NIL
-
+   IF ( oIE := CreateObject( "InternetExplorer.Application" ) ) != NIL
+      oIE:Visible := .T.
+      oIE:Navigate( "http://www.harbour-project.org" )
    ELSE
-      Alert( "Error: OpenOffice not available. [" + OLEErrorText()+ "]" )
+      ? "Error. IExplorer not available.", OLEErrorText()
    ENDIF
 
    RETURN
 
-STATIC FUNCTION OO_ConvertToURL( cString )
 
-   // ; Handle UNC paths
-   IF !( Left( cString, 2 ) == "\\" )
-      cString := StrTran( cString, ":", "|" )
-      cString := "///" + cString
+STATIC PROCEDURE Exm_OOCalc()
+   LOCAL oServiceManager, oDesktop, oDoc, oSheet
+
+   IF ( oServiceManager := CreateObject( "com.sun.star.ServiceManager" ) ) != NIL
+      oDesktop := oServiceManager:createInstance( "com.sun.star.frame.Desktop" )
+      oDoc := oDesktop:loadComponentFromURL( "private:factory/scalc", "_blank", 0, {} )
+
+      oSheet := oDoc:getSheets:getByIndex(0)
+
+      oSheet:getCellRangeByName( "A1" ):setString( "OLE from Harbour" ) 
+
+      oSheet:getCellRangeByName( "A3" ):setString( "String:" ) 
+      oSheet:getCellRangeByName( "B3" ):setString( "Hello, World!" ) 
+
+      oSheet:getCellRangeByName( "A4" ):setString( "Numeric:" ) 
+      oSheet:getCellRangeByName( "B4" ):setValue( 1234.56 ) 
+
+      oSheet:getCellRangeByName( "A5" ):setString( "Logical:" ) 
+      oSheet:getCellRangeByName( "B5" ):setValue( .T. ) 
+      oSheet:getCellRangeByName( "B5" ):setPropertyValue( "NumberFormat", 99 ) // BOOLEAN
+
+      oSheet:getCellRangeByName( "A6" ):setString( "Date:" ) 
+      oSheet:getCellRangeByName( "B6" ):setValue( DATE() ) 
+      oSheet:getCellRangeByName( "B6" ):setPropertyValue( "NumberFormat", 36 ) // YYYY-MM-DD
+
+      oSheet:getCellRangeByName( "A7" ):setString( "Timestamp:" ) 
+      oSheet:getCellRangeByName( "B7" ):setValue( HB_DATETIME() ) 
+      oSheet:getCellRangeByName( "B7" ):setPropertyValue( "NumberFormat", 51 ) // YYYY-MM-DD HH:MM:SS
+
+      oSheet:getCellRangeByName( "A3" ):setPropertyValue( "IsCellBackgroundTransparent", .F. )
+      oSheet:getCellRangeByName( "A3" ):setPropertyValue( "CellBackColor", 255 ) // blue
+      oSheet:getCellRangeByName( "B3" ):setPropertyValue( "CharColor", 255 * 256 * 256 ) // red
+   ELSE
+      ? "Error. OpenOffice not available.", OLEErrorText()
    ENDIF
 
-   cString := StrTran( cString, "\", "/" )
-   cString := StrTran( cString, " ", "%20" )
+   RETURN
 
-   RETURN "file:" + cString
+
+STATIC PROCEDURE Exm_OOWriter()
+   LOCAL oServiceManager, oDesktop, oDoc, oText, oCursor, oTable, oRow, oCell, oCellCursor, oRows
+
+   IF ( oServiceManager := CreateObject( "com.sun.star.ServiceManager" ) ) != NIL
+      oDesktop := oServiceManager:createInstance( "com.sun.star.frame.Desktop" )
+      oDoc := oDesktop:loadComponentFromURL( "private:factory/swriter", "_blank", 0, {} )
+
+      oText := oDoc:getText
+      oCursor := oText:createTextCursor
+
+      oText:insertString( oCursor, "OpenOffice Writer scripting from Harbour." + CHR(10), .F. )
+
+      oText:insertString( oCursor, "This is the second line" + CHR(10), .F. )
+
+      oTable := oDoc:createInstance( "com.sun.star.text.TextTable" )
+      oTable:initialize( 2, 4 )
+
+      oText:insertTextContent( oCursor, oTable, .F. )
+
+      oTable:setPropertyValue( "BackTransparent", .F. )
+      oTable:setPropertyValue( "BackColor", ( 255 * 256 + 255 ) * 256 + 192 )
+
+      oRows := oTable:getRows
+      oRow := oRows:getByIndex( 0 )
+      oRow:setPropertyValue( "BackTransparent", .F. )
+      oRow:setPropertyValue( "BackColor", ( 192 * 256 + 192 ) * 256 + 128 )
+
+      oCell := oTable:getCellByName( "A1" )
+      oCell:insertString( oCell:createTextCursor, "Jan", .F.)
+      oCell := oTable:getCellByName( "B1" )
+      oCell:insertString( oCell:createTextCursor, "Feb", .F.)
+      oCell := oTable:getCellByName( "C1" )
+      oCell:insertString( oCell:createTextCursor, "Mar", .F.)
+
+      // I guess we can set text without cursor creation
+      oTable:getCellByName( "D1" ):setString("SUM")
+
+      oTable:getCellByName( "A2" ):setValue(123.12)
+      oTable:getCellByName( "B2" ):setValue(97.07)
+      oTable:getCellByName( "C2" ):setValue(106.38)
+      oTable:getCellByName( "D2" ):setFormula("sum <A2:C2>")
+
+      oText:insertControlCharacter( oCursor, 0 , .F. )  // PARAGRAPH_BREAK
+
+      oCursor:setPropertyValue( "CharColor", 255 )
+      oText:insertString( oCursor, "Good bye!", .F. )
+   ELSE
+      ? "Error. OpenOffice not available.", OLEErrorText()
+   ENDIF
+
+   RETURN

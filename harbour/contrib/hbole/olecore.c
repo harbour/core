@@ -225,14 +225,53 @@ static void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
          pVariant->n1.n2.n3.dblVal = hb_itemGetTD( pItem ) - HB_OLE_DATE_BASE;
          break;
 
-      case HB_IT_OBJECT:
-         if( hb_stricmp( hb_objGetClsName( pItem ), "HB_OLEAUTO" ) == 0 )
+      case HB_IT_OBJECT: /* or ARRAY */
+         if( HB_IS_OBJECT( pItem ) )
          {
-            hb_vmPushDynSym( s_pDyns_hObjAccess );
-            hb_vmPush( pItem );
-            hb_vmSend( 0 );
-            pVariant->n1.n2.vt = VT_DISPATCH;
-            pVariant->n1.n2.n3.pdispVal = hb_oleParam( -1 );
+            if( hb_stricmp( hb_objGetClsName( pItem ), "HB_OLEAUTO" ) == 0 )
+            {
+               IDispatch * pDisp;
+
+               hb_vmPushDynSym( s_pDyns_hObjAccess );
+               hb_vmPush( pItem );
+               hb_vmSend( 0 );
+
+               pDisp = hb_oleParam( -1 );
+
+               /* pVariant will be freed using VariantClear(). 
+                  We increment reference count to keep OLE object alive */
+#if HB_OLE_C_API
+               pDisp->lpVtbl->AddRef( pDisp );
+#else
+               pDisp->AddRef();
+#endif
+               pVariant->n1.n2.vt = VT_DISPATCH;
+               pVariant->n1.n2.n3.pdispVal = pDisp;
+            }
+         }
+         else 
+         {
+            SAFEARRAY*      pSafeArray;
+            SAFEARRAYBOUND  sabound[ 1 ];
+            ULONG           ul, ulLen;
+
+            sabound[ 0 ].lLbound = 0;
+            sabound[ 0 ].cElements = ulLen = hb_arrayLen( pItem );
+
+            pSafeArray = SafeArrayCreate( VT_VARIANT, 1, sabound );
+            pVariant->n1.n2.vt = VT_VARIANT | VT_ARRAY;
+            pVariant->n1.n2.n3.parray = pSafeArray;
+
+            for( ul = 0; ul < ulLen; ul++ )
+            {
+               VARIANT  vItem;
+               long     lIndex[ 1 ];
+
+               hb_oleItemToVariant( &vItem, hb_arrayGetItemPtr( pItem, ul + 1 ) );
+               lIndex[ 0 ] = ( long ) ul;
+               SafeArrayPutElement( pSafeArray, lIndex, &vItem );
+               VariantClear( &vItem );
+            }
          }
          break;
    }
@@ -274,6 +313,13 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
             ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
             *ppDisp = pVariant->n1.n2.n3.pdispVal;
             pPtrGC = hb_itemPutPtrGC( NULL, ppDisp );
+
+            /* Item is one more copy of the object */
+#if HB_OLE_C_API
+            ( *ppDisp )->lpVtbl->AddRef( *ppDisp );
+#else
+            ( *ppDisp )->AddRef();
+#endif
 
             hb_vmPushDynSym( s_pDyns_hObjAssign );
             hb_vmPush( pObject );
@@ -562,6 +608,13 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
    UINT           uiArgErr;
    HRESULT        lOleError;
 
+   if( hb_parl( 2 ) )
+   {
+      hb_setOleError( S_OK );
+      hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      return;
+   }
+
    memset( &excep, 0, sizeof( excep ) );
    memset( &dispparam, 0, sizeof( dispparam ) ); /* empty parameters */
    VariantInit( &variant );
@@ -596,7 +649,9 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
 #endif
       else
       {
-         lOleError = -1; /* Invalid return value */
+         hb_setOleError( lOleError );
+         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         return;
       }
 
       VariantClear( &variant );
@@ -614,7 +669,7 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
       }
    }
    hb_setOleError( lOleError );
-   hb_ret();
+   hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
@@ -631,9 +686,7 @@ HB_FUNC( __OLEENUMNEXT )
 #endif
    {
       hb_oleVariantToItem( hb_stackReturnItem(), &variant );
-      if( variant.n1.n2.vt != VT_DISPATCH )
-         VariantClear( &variant );
-
+      VariantClear( &variant );
       hb_storl( TRUE, 2 );
    }
    else
@@ -736,8 +789,10 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
 #endif
          FreeParams( &dispparam );
          hb_xfree( szMethodWide );
-         hb_ret();
+
          hb_setOleError( lOleError );
+         if( lOleError != S_OK )
+            hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
          return;
       }
    }
@@ -774,10 +829,11 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
       FreeParams( &dispparam );
 
       hb_oleVariantToItem( hb_stackReturnItem(), &variant );
-      if( variant.n1.n2.vt != VT_DISPATCH )
-         VariantClear( &variant );
+      VariantClear( &variant );
 
       hb_setOleError( lOleError );
+      if( lOleError != S_OK )
+         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
 

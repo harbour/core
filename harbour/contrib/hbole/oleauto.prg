@@ -70,12 +70,7 @@ ENDCLASS
 METHOD __enumStart( enum, lDescend ) CLASS HB_OLEAUTO
    LOCAL hObjEnum
 
-   IF lDescend
-      /* OLE does not support backward iteration. Runtime error could be a good choice also */
-      RETURN .F. 
-   ENDIF
-
-   hObjEnum := __OLEENUMCREATE( ::__hObj )
+   hObjEnum := __OLEENUMCREATE( ::__hObj, lDescend )
    IF !EMPTY( hObjEnum )
       IF !EMPTY( ::__hObjEnum )
          /* small hack - clone the object array for nested FOR EACH calls */
