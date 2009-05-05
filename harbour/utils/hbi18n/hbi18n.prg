@@ -51,6 +51,7 @@
  */
 
 #include "hbgtinfo.ch"
+#include "directry.ch"
 
 #define _HB_I18N_MERGE  1
 #define _HB_I18N_GENHBL 2
@@ -114,6 +115,8 @@ PROCEDURE Main( ... )
          Syntax()
       ENDIF
    NEXT
+
+   aFiles := ExpandWildCards( aFiles )
 
    IF nMode == _HB_I18N_TRANS
       FOR n := 1 TO Len( aFiles )
@@ -203,6 +206,40 @@ STATIC FUNCTION FileExt( cFile, cDefExt, lForce )
    ENDIF
    RETURN cFile
 
+
+STATIC FUNCTION ExpandWildCards( aFiles )
+
+/* do not expand wild cards in environments where SHELL already does it.
+ * In *nixes it's possible that file name will contains "*" or "?".
+ */
+#ifndef __PLATFORM__UNIX
+   LOCAL cFile, cRealFile
+   LOCAL aRealFiles
+   LOCAL lWild
+
+   lWild := .F.
+   FOR EACH cFile IN aFiles
+      IF "*" $ cFile .OR. "?" $ cFile
+         lWild := .T.
+         EXIT
+      ENDIF
+   NEXT
+   IF lWild
+      aRealFiles := {}
+      FOR EACH cFile IN aFiles
+         IF "*" $ cFile .OR. "?" $ cFile
+            FOR EACH cRealFile IN Directory( cFile )
+               AAdd( aRealFiles, cRealFile[ F_NAME ] )
+            NEXT
+         ELSE
+            AAdd( aRealFiles, cFile )
+         ENDIF
+      NEXT
+      aFiles := aRealFiles
+   ENDIF
+#endif
+
+   RETURN aFiles
 
 STATIC FUNCTION LoadFiles( aFiles )
    LOCAL aTrans, aTrans2
