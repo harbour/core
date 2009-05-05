@@ -152,6 +152,7 @@ STATIC s_cUILNG
 STATIC s_lDEBUGTIME := .F.
 STATIC s_lDEBUGINC := .F.
 STATIC s_lDEBUGSTUB := .F.
+STATIC s_lDEBUGI18N := .F.
 
 STATIC s_cCCPATH
 STATIC s_cCCPREFIX
@@ -1089,6 +1090,7 @@ FUNCTION hbmk( aArgs )
       CASE cParamL == "-debugtime"       ; s_lDEBUGTIME := .T.
       CASE cParamL == "-debuginc"        ; s_lDEBUGINC  := .T.
       CASE cParamL == "-debugstub"       ; s_lDEBUGSTUB := .T.
+      CASE cParamL == "-debugi18n"       ; s_lDEBUGI18N := .T.
       CASE cParamL == "-nulrdd"          ; s_lNULRDD    := .T.
       CASE cParamL == "-nulrdd-"         ; s_lNULRDD    := .F.
       CASE cParamL == "-map"             ; s_lMAP       := .T.
@@ -5087,21 +5089,30 @@ STATIC PROCEDURE MakePOT( aLNG, cPOT, aPRG, cWorkDir )
    LOCAL aPOTIN
    LOCAL fhnd
    LOCAL cTempFileName
+   LOCAL cPOTCooked
 
    IF ! Empty( cPOT )
       aPOTIN := ListDirExt( aPRG, cWorkDir, ".pot" )
       IF ! Empty( aPOTIN )
          FOR EACH cLNG IN iif( Empty( aLNG ), { _LNG_MARKER }, aLNG )
+            cPOTCooked := StrTran( cPOT, _LNG_MARKER, cLNG )
             IF hb_FileExists( cPOT )
+               IF s_lDEBUGI18N
+                  hbmk_OutStd( hb_StrFormat( "MakePOT: existing .pot / output: %1$s", cPOTCooked ) )
+                  hbmk_OutStd( hb_StrFormat( "MakePOT: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
+               ENDIF
                fhnd := hb_FTempCreateEx( @cTempFileName, NIL, NIL, ".pot" )
                IF fhnd != F_ERROR
                   FClose( fhnd )
                   POTMerge( aPOTIN, cTempFileName )
-                  AutoTrans( StrTran( cPOT, _LNG_MARKER, cLNG ), { cTempFileName }, StrTran( cPOT, _LNG_MARKER, cLNG ) )
+                  AutoTrans( cTempFileName, { cPOTCooked }, cPOTCooked )
                   FErase( cTempFileName )
                ENDIF
             ELSE
-               POTMerge( aPOTIN, cPOT )
+               IF s_lDEBUGI18N
+                  hbmk_OutStd( hb_StrFormat( "MakePOT: new .pot: %1$s", cPOTCooked ) )
+               ENDIF
+               POTMerge( aPOTIN, cPOTCooked )
             ENDIF
          NEXT
       ENDIF
@@ -5117,8 +5128,8 @@ STATIC PROCEDURE MakeHBL( aPOT, cHBL, aLNG )
    LOCAL aPOT_TODO
 
    IF ! Empty( aPOT )
-      IF s_lDEBUG
-         hbmk_OutStd( hb_StrFormat( I_( "pot: in: %1$s" ), ArrayToList( aPOT ) ) )
+      IF s_lDEBUGI18N
+         hbmk_OutStd( hb_StrFormat( "pot: in: %1$s", ArrayToList( aPOT ) ) )
       ENDIF
       IF Empty( cHBL )
          cHBL := FN_NameGet( aPOT[ 1 ] )
@@ -5137,8 +5148,8 @@ STATIC PROCEDURE MakeHBL( aPOT, cHBL, aLNG )
             ENDIF
          NEXT
          IF ! Empty( aPOT_TODO )
-            IF s_lDEBUG
-               hbmk_OutStd( hb_StrFormat( I_( "pot: %1$s -> %2$s" ), ArrayToList( aPOT_TODO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
+            IF s_lDEBUGI18N
+               hbmk_OutStd( hb_StrFormat( "pot: %1$s -> %2$s", ArrayToList( aPOT_TODO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
             ENDIF
             GenHbl( aPOT_TODO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
          ENDIF
@@ -5147,24 +5158,28 @@ STATIC PROCEDURE MakeHBL( aPOT, cHBL, aLNG )
 
    RETURN
 
-STATIC FUNCTION LoadPOTFiles( aFiles )
+STATIC FUNCTION LoadPOTFiles( aFiles, lIgnoreError )
    LOCAL aTrans, aTrans2
    LOCAL cErrorMsg
    LOCAL n
 
    aTrans := __i18n_potArrayLoad( aFiles[ 1 ], @cErrorMsg )
-   IF aTrans == NIL
-      hbmk_OutErr( hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
-   ELSE
+   IF aTrans != NIL
       FOR n := 2 TO Len( aFiles )
          aTrans2 := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg )
-         IF aTrans2 == NIL
-            hbmk_OutErr( hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
-            EXIT
-         ELSE
+         IF aTrans2 != NIL
             __i18n_potArrayJoin( aTrans, aTrans2 )
+         ELSE
+            IF ! lIgnoreError
+               hbmk_OutErr( hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
+               EXIT
+            ENDIF
          ENDIF
       NEXT
+   ELSE
+      IF ! lIgnoreError
+         hbmk_OutErr( hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
+      ENDIF
    ENDIF
 
    RETURN aTrans
@@ -5191,10 +5206,10 @@ STATIC FUNCTION LoadPOTFilesAsHash( aFiles )
          ENDIF
       ELSE
          aTrans := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg )
-         IF aTrans == NIL
-            hbmk_OutErr( hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
-         ELSE
+         IF aTrans != NIL
             hTrans := __i18n_potArrayToHash( aTrans,, hTrans )
+         ELSE
+            hbmk_OutErr( hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
          ENDIF
       ENDIF
    NEXT
@@ -5203,7 +5218,7 @@ STATIC FUNCTION LoadPOTFilesAsHash( aFiles )
 
 STATIC PROCEDURE POTMerge( aFiles, cFileOut )
    LOCAL cErrorMsg
-   LOCAL aTrans := LoadPOTFiles( aFiles )
+   LOCAL aTrans := LoadPOTFiles( aFiles, .T. )
 
    IF aTrans != NIL
       IF !__i18n_potArraySave( cFileOut, aTrans, @cErrorMsg )
@@ -5216,7 +5231,7 @@ STATIC PROCEDURE POTMerge( aFiles, cFileOut )
 STATIC FUNCTION GenHbl( aFiles, cFileOut, lEmpty )
    LOCAL cHblBody
    LOCAL pI18N
-   LOCAL aTrans := LoadPOTFiles( aFiles )
+   LOCAL aTrans := LoadPOTFiles( aFiles, .F. )
    LOCAL lRetVal := .F.
 
    IF ISARRAY( aTrans )
@@ -5235,7 +5250,7 @@ STATIC PROCEDURE AutoTrans( cFileIn, aFiles, cFileOut )
    LOCAL cErrorMsg
 
    IF !__I18N_potArraySave( cFileOut, ;
-         __I18N_potArrayTrans( LoadPOTFiles( { cFileIn } ), ;
+         __I18N_potArrayTrans( LoadPOTFiles( { cFileIn }, .T. ), ;
                                LoadPOTFilesAsHash( aFiles ) ), @cErrorMsg )
       hbmk_OutErr( hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
    ENDIF
