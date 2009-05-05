@@ -1376,10 +1376,10 @@ DrawingArea::DrawingArea(QWidget *parent)
    _iROWS = 25;
    _iCOLS = 80;
 
-   setFocusPolicy(Qt::StrongFocus);
+   setFocusPolicy( Qt::StrongFocus );
    setMouseTracking( TRUE );
 
-   setAttribute(Qt::WA_InputMethodEnabled, true);
+   setAttribute( Qt::WA_InputMethodEnabled, true );
 
    /* Important but give it a thought */
    //setAttribute(Qt::WA_OpaquePaintEvent);
@@ -1396,7 +1396,7 @@ DrawingArea::DrawingArea(QWidget *parent)
    _rCopying.setRect( -1, -1, -1, -1 );
 }
 
-void DrawingArea::resetWindowSize(void)
+void DrawingArea::resetWindowSize( void )
 {
    PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
 
