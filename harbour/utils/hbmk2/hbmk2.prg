@@ -3269,7 +3269,7 @@ FUNCTION hbmk( aArgs )
 
       IF ! Empty( s_cCSTUB )
          IF s_lDEBUGSTUB
-            hbmk_OutStd( hb_StrFormat( I_( "Stub kept for debug: %1$s" ), s_cCSTUB ) )
+            hbmk_OutStd( hb_StrFormat( "Stub kept for debug: %1$s", s_cCSTUB ) )
          ELSE
             FErase( s_cCSTUB )
          ENDIF
@@ -5361,7 +5361,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-traceonly"        , I_( "show commands to be executed, but don't execute them" ) },;
       { "-[no]compr[=lev]"  , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) },;
       { "-[no]run"          , I_( "run/don't run output executable" ) },;
-      { "-vcshead=<file>"   , I_( "generate .ch header file with local repository information SVN, Git and Mercurial are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
+      { "-vcshead=<file>"   , I_( "generate .ch header file with local repository information. SVN, Git and Mercurial are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
       { "-nohbp"            , I_( "do not process .hbp files in current directory" ) },;
       { "-stop"             , I_( "stop without doing anything" ) },;
       NIL,;
