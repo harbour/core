@@ -254,7 +254,7 @@ static void hb_compI18nEscapeString( FILE* file, const char* szText )
    }
 }
 
-BOOL hb_compI18nSave( HB_COMP_DECL )
+BOOL hb_compI18nSave( HB_COMP_DECL, BOOL fFinal )
 {
    PHB_I18NTABLE    pI18n;
    PHB_I18NSTRING   pString;
@@ -268,7 +268,8 @@ BOOL hb_compI18nSave( HB_COMP_DECL )
    if( !pI18n )
       return FALSE;
 
-   FileName.szPath = FileName.szName = FileName.szExtension = FileName.szDrive = NULL;
+   FileName.szPath = FileName.szName = FileName.szExtension =
+   FileName.szDrive = NULL;
 
    if( HB_COMP_PARAM->pOutPath )
    {
@@ -293,6 +294,11 @@ BOOL hb_compI18nSave( HB_COMP_DECL )
 
    if( ! FileName.szName )
       FileName.szName = HB_COMP_PARAM->pFileName->szName;
+   else if( ! fFinal )
+      /* The exact file name was given generate single .pot file for
+       * all compiled .prg files in final phase.
+       */
+      return FALSE;
 
    if( ! FileName.szExtension )
       FileName.szExtension = ".pot";

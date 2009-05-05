@@ -156,6 +156,9 @@ int hb_compMain( int argc, char * const argv[], BYTE ** pBufPtr, ULONG * pulSize
    if( HB_COMP_PARAM->iErrorCount > 0 )
       iStatus = EXIT_FAILURE;
 
+   if( iStatus == EXIT_SUCCESS )
+      hb_compI18nSave( HB_COMP_PARAM, TRUE );
+
    if( pBufPtr && pulSize )
    {
       if( iStatus == EXIT_SUCCESS )
@@ -3814,14 +3817,6 @@ static void hb_compAddInitFunc( HB_COMP_DECL, PFUNCTION pFunc )
 
 void hb_compCompileEnd( HB_COMP_DECL )
 {
-   hb_compI18nFree( HB_COMP_PARAM );
-
-   if( HB_COMP_PARAM->pI18nFileName )
-   {
-      hb_xfree( HB_COMP_PARAM->pI18nFileName );
-      HB_COMP_PARAM->pI18nFileName = NULL;
-   }
-
    if( HB_COMP_PARAM->pMainFileName )
    {
       if( HB_COMP_PARAM->pFileName != HB_COMP_PARAM->pMainFileName )
@@ -4190,7 +4185,12 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
             }
 
             hb_compGenOutput( HB_COMP_PARAM, HB_COMP_PARAM->iLanguage );
-            hb_compI18nSave( HB_COMP_PARAM );
+         }
+
+         if( ! bSkipGen && HB_COMP_PARAM->iErrorCount == 0 )
+         {
+            if( hb_compI18nSave( HB_COMP_PARAM, FALSE ) )
+               hb_compI18nFree( HB_COMP_PARAM );
          }
       }
    }

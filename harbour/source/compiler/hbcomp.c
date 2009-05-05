@@ -247,6 +247,7 @@ HB_COMP_PTR hb_comp_new( void )
 
 void hb_comp_free( HB_COMP_PTR pComp )
 {
+   hb_compI18nFree( pComp );
    hb_compCompileEnd( pComp );
    hb_compParserStop( pComp );
 
@@ -295,13 +296,16 @@ void hb_comp_free( HB_COMP_PTR pComp )
    if( pComp->szStdCh )
       hb_xfree( pComp->szStdCh );
 
-   if( HB_COMP_PARAM->iStdChExt > 0 )
+   if( pComp->iStdChExt > 0 )
    {
       do
-         hb_xfree( HB_COMP_PARAM->szStdChExt[ --HB_COMP_PARAM->iStdChExt ] );
-      while( HB_COMP_PARAM->iStdChExt != 0 );
-      hb_xfree( HB_COMP_PARAM->szStdChExt );
+         hb_xfree( pComp->szStdChExt[ --pComp->iStdChExt ] );
+      while( pComp->iStdChExt != 0 );
+      hb_xfree( pComp->szStdChExt );
    }
+
+   if( pComp->pI18nFileName )
+      hb_xfree( pComp->pI18nFileName );
 
    hb_xfree( pComp );
 }
