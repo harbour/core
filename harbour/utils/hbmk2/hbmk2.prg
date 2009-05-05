@@ -35,7 +35,7 @@
  *    bash script with similar purpose for gcc family.
  *    entry point override method and detection code for gcc.
  *    rtlink/blinker link script parsers.
- *    LoadPOTFiles() and GenHbl().
+ *    POTMerge(), LoadPOTFiles(), LoadPOTFilesAsHash(), GenHbl() and AutoTrans().
  *
  * See COPYING for licensing terms.
  *
@@ -298,6 +298,7 @@ FUNCTION hbmk( aArgs )
    LOCAL s_aPOT
    LOCAL s_cHBL
    LOCAL s_aLNG
+   LOCAL s_cPOT
    LOCAL s_cVCSDIR
    LOCAL s_cVCSHEAD
 
@@ -961,6 +962,7 @@ FUNCTION hbmk( aArgs )
    s_cFIRST := NIL
    s_aPOT := {}
    s_cHBL := NIL
+   s_cPOT := NIL
    s_aLNG := {}
 
    /* Collect all command line parameters */
@@ -1176,6 +1178,10 @@ FUNCTION hbmk( aArgs )
       CASE Left( cParamL, 5 ) == "-hbl="
 
          s_cHBL := PathSepToTarget( SubStr( cParam, 6 ) )
+
+      CASE Left( cParamL, 5 ) == "-pot="
+
+         s_cPOT := PathSepToTarget( SubStr( cParam, 6 ) )
 
       CASE Left( cParamL, 5 ) == "-hbl"
 
@@ -2579,6 +2585,10 @@ FUNCTION hbmk( aArgs )
          hbmk_OutStd( I_( "Compiling Harbour sources..." ) )
       ENDIF
 
+      IF ! Empty( s_cPOT )
+         AAdd( s_aOPTPRG, "-j" )
+      ENDIF
+
       PlatformPRGFlags( s_aOPTPRG )
 
       IF ! s_lXHB
@@ -2815,8 +2825,10 @@ FUNCTION hbmk( aArgs )
          s_aRESSRC_TODO := s_aRESSRC
       ENDIF
 
+      MakePOT( s_aLNG, s_cPOT, s_aPRG_TODO, cWorkDir )
+
       IF Len( s_aPOT ) > 0 .AND. s_cHBL != NIL .AND. ! s_lCLEAN
-         MakeHBL( s_aPOT, s_cHBL, s_aLNG )
+         MakeHBL( s_aPOT, s_cHBL, s_aLNG, s_cPOT, s_aPRG_TODO, cWorkDir )
       ENDIF
 
       IF Len( s_aRESSRC_TODO ) > 0 .AND. ! Empty( cBin_Res ) .AND. ! s_lCLEAN
@@ -4105,6 +4117,9 @@ STATIC FUNCTION FN_DirExtSet( cFileName, cDirNew, cExtNew )
    RETURN hb_FNameMerge( cDir, cName, cExt )
 
 STATIC FUNCTION FN_Expand( cFileName )
+#ifdef __PLATFORM__UNIX
+   RETURN { cFileName }
+#else
    LOCAL aFileList
    LOCAL aFile
    LOCAL aDir
@@ -4125,6 +4140,7 @@ STATIC FUNCTION FN_Expand( cFileName )
    NEXT
 
    RETURN aFileList
+#endif
 
 STATIC FUNCTION FN_HasWildcard( cFileName )
    RETURN "?" $ cFileName .OR. ;
@@ -5066,6 +5082,33 @@ STATIC FUNCTION rtlnk_process( cCommands, cFileOut, aFileList, aLibList, ;
 
 #define _LNG_MARKER "${lng}"
 
+STATIC PROCEDURE MakePOT( aLNG, cPOT, aPRG, cWorkDir )
+   LOCAL cLNG
+   LOCAL aPOTIN
+   LOCAL fhnd
+   LOCAL cTempFileName
+
+   IF ! Empty( cPOT )
+      aPOTIN := ListDirExt( aPRG, cWorkDir, ".pot" )
+      IF ! Empty( aPOTIN )
+         FOR EACH cLNG IN iif( Empty( aLNG ), { _LNG_MARKER }, aLNG )
+            IF hb_FileExists( cPOT )
+               fhnd := hb_FTempCreateEx( @cTempFileName, NIL, NIL, ".pot" )
+               IF fhnd != F_ERROR
+                  FClose( fhnd )
+                  POTMerge( aPOTIN, cTempFileName )
+                  AutoTrans( StrTran( cPOT, _LNG_MARKER, cLNG ), { cTempFileName }, StrTran( cPOT, _LNG_MARKER, cLNG ) )
+                  FErase( cTempFileName )
+               ENDIF
+            ELSE
+               POTMerge( aPOTIN, cPOT )
+            ENDIF
+         NEXT
+      ENDIF
+   ENDIF
+
+   RETURN
+
 STATIC PROCEDURE MakeHBL( aPOT, cHBL, aLNG )
    LOCAL cPO
    LOCAL tPO
@@ -5083,39 +5126,23 @@ STATIC PROCEDURE MakeHBL( aPOT, cHBL, aLNG )
       IF Empty( FN_ExtGet( cHBL ) )
          cHBL := FN_ExtSet( cHBL, ".hbl" )
       ENDIF
-      IF Empty( aLNG )
+
+      FOR EACH cLNG IN iif( Empty( aLNG ), { _LNG_MARKER }, aLNG )
          tLNG := NIL
-         hb_FGetDateTime( cHBL, @tLNG )
+         hb_FGetDateTime( StrTran( cHBL, _LNG_MARKER, cLNG ), @tLNG )
          aPOT_TODO := {}
          FOR EACH cPO IN aPOT
-            IF !( _LNG_MARKER $ cPO ) .AND. ( tLNG == NIL .OR. ( hb_FGetDateTime( cPO, @tPO ) .AND. tPO > tLNG ) )
-               AAdd( aPOT_TODO, cPO )
+            IF _LNG_MARKER $ cPO .AND. ( tLNG == NIL .OR. ( hb_FGetDateTime( StrTran( cPO, _LNG_MARKER, cLNG ), @tPO ) .AND. tPO > tLNG ) )
+               AAdd( aPOT_TODO, StrTran( cPO, _LNG_MARKER, cLNG ) )
             ENDIF
          NEXT
          IF ! Empty( aPOT_TODO )
             IF s_lDEBUG
-               hbmk_OutStd( hb_StrFormat( I_( "pot: %1$s -> %2$s" ), ArrayToList( aPOT_TODO ), cHBL ) )
+               hbmk_OutStd( hb_StrFormat( I_( "pot: %1$s -> %2$s" ), ArrayToList( aPOT_TODO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
             ENDIF
-            GenHbl( aPOT_TODO, cHBL )
+            GenHbl( aPOT_TODO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
          ENDIF
-      ELSE
-         FOR EACH cLNG IN aLNG
-            tLNG := NIL
-            hb_FGetDateTime( StrTran( cHBL, _LNG_MARKER, cLNG ), @tLNG )
-            aPOT_TODO := {}
-            FOR EACH cPO IN aPOT
-               IF _LNG_MARKER $ cPO .AND. ( tLNG == NIL .OR. ( hb_FGetDateTime( StrTran( cPO, _LNG_MARKER, cLNG ), @tPO ) .AND. tPO > tLNG ) )
-                  AAdd( aPOT_TODO, StrTran( cPO, _LNG_MARKER, cLNG ) )
-               ENDIF
-            NEXT
-            IF ! Empty( aPOT_TODO )
-               IF s_lDEBUG
-                  hbmk_OutStd( hb_StrFormat( I_( "pot: %1$s -> %2$s" ), ArrayToList( aPOT_TODO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
-               ENDIF
-               GenHbl( aPOT_TODO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
-            ENDIF
-         NEXT
-      ENDIF
+      NEXT
    ENDIF
 
    RETURN
@@ -5142,6 +5169,50 @@ STATIC FUNCTION LoadPOTFiles( aFiles )
 
    RETURN aTrans
 
+STATIC FUNCTION LoadPOTFilesAsHash( aFiles )
+   LOCAL cTrans, cExt, cErrorMsg
+   LOCAL hTrans
+   LOCAL aTrans
+   LOCAL n
+
+   FOR n := 1 TO Len( aFiles )
+      hb_FNameSplit( aFiles[ n ],,, @cExt )
+      IF Lower( cExt ) == ".hbl"
+         cTrans := hb_memoRead( aFiles[ n ] )
+         IF !hb_i18n_Check( cTrans )
+            hbmk_OutErr( hb_StrFormat( I_( "Error: Wrong file format: %1$s" ), aFiles[ n ] ) )
+            EXIT
+         ELSE
+            IF hTrans == NIL
+               hTrans := __i18n_hashTable( hb_i18n_RestoreTable( cTrans ) )
+            ELSE
+               __i18n_hashJoin( hTrans, __i18n_hashTable( hb_i18n_RestoreTable( cTrans ) ) )
+            ENDIF
+         ENDIF
+      ELSE
+         aTrans := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg )
+         IF aTrans == NIL
+            hbmk_OutErr( hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
+         ELSE
+            hTrans := __i18n_potArrayToHash( aTrans,, hTrans )
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN hTrans
+
+STATIC PROCEDURE POTMerge( aFiles, cFileOut )
+   LOCAL cErrorMsg
+   LOCAL aTrans := LoadPOTFiles( aFiles )
+
+   IF aTrans != NIL
+      IF !__i18n_potArraySave( cFileOut, aTrans, @cErrorMsg )
+         hbmk_OutErr( hb_StrFormat( I_( ".pot merge error: %1$s" ), cErrorMsg ) )
+      ENDIF
+   ENDIF
+
+   RETURN
+
 STATIC FUNCTION GenHbl( aFiles, cFileOut, lEmpty )
    LOCAL cHblBody
    LOCAL pI18N
@@ -5159,6 +5230,17 @@ STATIC FUNCTION GenHbl( aFiles, cFileOut, lEmpty )
    ENDIF
 
    RETURN lRetVal
+
+STATIC PROCEDURE AutoTrans( cFileIn, aFiles, cFileOut )
+   LOCAL cErrorMsg
+
+   IF !__I18N_potArraySave( cFileOut, ;
+         __I18N_potArrayTrans( LoadPOTFiles( { cFileIn } ), ;
+                               LoadPOTFilesAsHash( aFiles ) ), @cErrorMsg )
+      hbmk_OutErr( hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
+   ENDIF
+
+   RETURN
 
 #define _VCS_UNKNOWN    0
 #define _VCS_SVN        1
@@ -5394,7 +5476,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-workdir=<dir>"    , hb_StrFormat( I_( "working directory for incremental build mode\n(default: %1$s/arch/comp)" ), _WORKDIR_DEF_ ) },;
       NIL,;
       { "-hbl[=<output>]"   , I_( "output .hbl filename. ${lng} macro is accepted in filename" ) },;
-      { "-lng=<languages>"  , I_( "list of languages to be replaced in ${lng} macros in .pot filenames and output .hbl filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ) },;
+      { "-lng=<languages>"  , I_( "list of languages to be replaced in ${lng} macros in .pot filenames and output .hbl/.pot filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ) },;
+      { "-pot=<output>"     , I_( "create .pot file from source. Merge it with previous .pot file of the same name" ) },;
       NIL,;
       { "-hbcmp|-clipper"   , I_( "stop after creating the object files\ncreate link/copy hbmk to hbcmp/clipper for the same effect" ) },;
       { "-hbcc"             , I_( "stop after creating the object files and accept raw C flags\ncreate link/copy hbmk to hbcc for the same effect" ) },;

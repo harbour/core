@@ -79,7 +79,7 @@ msgstr "mindent £jra‚p¡t (l‚pcs‹zetes zemm¢dban)"
 
 #: hbmk2.prg:5407
 #, c-format
-msgid "list of languages to be replaced in ${lng} macros in .pot filenames and output .hbl filenames. Comma separared list:\\n-lng=en-EN,hu-HU,de"
+msgid "list of languages to be replaced in ${lng} macros in .pot filenames and output .hbl/.pot filenames. Comma separared list:\\n-lng=en-EN,hu-HU,de"
 msgstr "nyelvek list ja, amelyek a .pot ‚s .hbl  llom nyokban lev‹ ${lng} makr¢kba kerlnek behelyettes¡t‚sre. Vessz‹vel elv lasztott lista:\\n-lng=en-EN,hu-HU,de"
 
 #: hbmk2.prg:2591
