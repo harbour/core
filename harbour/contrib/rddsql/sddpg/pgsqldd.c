@@ -473,7 +473,10 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea )
 {
    if ( pArea->pResult )
+   {
       PQclear( (PGresult *) pArea->pResult );
+      pArea->pResult = NULL;
+   }
    return HB_SUCCESS;
 }
 

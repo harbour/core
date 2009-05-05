@@ -447,7 +447,10 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 static HB_ERRCODE mysqlClose( SQLBASEAREAP pArea )
 {
    if ( pArea->pResult )
+   {
       mysql_free_result( (MYSQL_RES*) pArea->pResult );
+      pArea->pResult = NULL;
+   }
    return HB_SUCCESS;
 }
 
