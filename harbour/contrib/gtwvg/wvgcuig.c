@@ -97,6 +97,7 @@ static PHB_GOBJS hb_wvg_ObjectNew( PHB_GTWVT pWVT )
    gObj->iHandle = iHandle;
    gObj->iState  = GOBJ_OBJSTATE_ENABLED;
    gObj->lpText  = NULL;
+   gObj->bBlock  = NULL;
 
    hb_retni( iHandle );
 
@@ -153,6 +154,8 @@ HB_FUNC( WVG_CLEARGUIOBJECTS )
         if( pWVT->gObjs->hBrush )
            if( pWVT->gObjs->bDestroyBrush )
               DeleteObject( pWVT->gObjs->hBrush );
+        if( pWVT->gObjs->bBlock )
+           hb_itemRelease( pWVT->gObjs->bBlock );
 #if ! defined( HB_OS_WIN_CE )
         if( pWVT->gObjs->iPicture )
            if( pWVT->gObjs->bDestroyPicture )
@@ -1434,23 +1437,191 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 #endif
 }
 /*----------------------------------------------------------------------*/
+/*
+   Wvg_Object( nObj, bBlock )
+   nObj == one of the objects == GOBJ_OBJTYPE_ROUNDRECT | GOBJ_OBJTYPE_IMAGE | etc
+   bBlock == Block returning the array conataining as many elements as necessary for the given object
+             Also it will return those array elements in the same order expected by the object to draw
+
+   This protocol is necessary for dyanamic coordinates which might have been changed by the
+   applications, like TBrowse dimensions.
+
+   Wvg_Object( GOBJ_OBJTYPE_BOXRAISED, {|| oBrw:nTop, oBrw:nLeft, oBrw:nBottom, oBrw:nRight, {-2,-2,2,2} } )
+*/
+HB_FUNC( WVG_OBJECT )
+{
+   PHB_GTWVT pWVT = hb_wvt_gtGetWVT();
+   HB_GOBJS *gObj = hb_wvg_ObjectNew( pWVT );
+
+   gObj->iObjType = GOBJ_OBJTYPE_OBJECT;
+
+   gObj->iData    = hb_parni( 1 );      /* Object to be executed */
+   gObj->bBlock   = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
+
+   gObj->gObjNext = pWVT->gObjs;
+   pWVT->gObjs    = gObj;
+}
+/*----------------------------------------------------------------------*/
+/*
+ *    Wvg_Object( GOBJ_OBJTYPE_GRIDVERT, {|| { nTop, nBottom, aCols, nCols, aPxlOff } } )
+ *                                                  aPxlOff[ 1 ] and aPxlOff[ 3 ] used
+ */
+static void hb_wvg_GridVert( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT *uRect )
+{
+   PHB_ITEM pCols = hb_arrayGetItemPtr( pArray, 3 );
+   int iTabs = hb_arrayLen( pCols );
+
+   if(  iTabs > 0 )
+   {
+      int x, i, iTop, iBottom;
+
+      iTop    = ( hb_arrayGetNI( pArray, 1 ) * ( int ) pWVT->PTEXTSIZE.y );
+      iBottom = ( ( hb_arrayGetNI( pArray, 2 ) + 1 ) * ( int ) pWVT->PTEXTSIZE.y ) - 1;
+
+      if( ( iTop    >= uRect->top && iTop    <= uRect->bottom ) ||
+          ( iBottom >= uRect->top && iBottom <= uRect->bottom ) )
+      {
+         HDC hdc = pWVT->hGuiDC;
+         SelectObject( hdc, pWVT->currentPen );
+         for ( i = 1; i <= iTabs; i++ )
+         {
+            x = ( hb_arrayGetNI( pCols, i ) * pWVT->PTEXTSIZE.x );
+            MoveToEx( hdc, x, iTop, NULL );
+            LineTo( hdc, x, iBottom );
+         }
+
+         /* Play it on screen too directly as this area is not going to be revalidated
+          * we are not to invalidate this region as it is redrawn many many times.
+          * perhaps we can avoid drawing on the image ???
+          */
+         hdc = pWVT->hdc;
+         SelectObject( hdc, pWVT->currentPen );
+         for ( i = 1; i <= iTabs; i++ )
+         {
+            x = ( hb_arrayGetNI( pCols, i ) * pWVT->PTEXTSIZE.x );
+            MoveToEx( hdc, x, iTop, NULL );
+            LineTo( hdc, x, iBottom );
+         }
+      }
+   }
+}
+/*----------------------------------------------------------------------*/
+
+static void hb_wvg_GridHorz( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT *uRect )
+{
+   int   iAtRow = hb_arrayGetNI( pArray, 1 );
+   int   iRows  = hb_arrayGetNI( pArray, 4 );
+   int   i, y, iLeft, iRight, iTop, iBottom;
+   HDC   hdc;
+
+   iLeft   = ( hb_arrayGetNI( pArray, 2 ) * pWVT->PTEXTSIZE.x );
+   iRight  = ( ( ( hb_arrayGetNI( pArray, 3 ) + 1 ) * pWVT->PTEXTSIZE.x ) - 1 );
+   iTop    = iAtRow * pWVT->PTEXTSIZE.y;
+   iBottom = ( iAtRow + iRows ) * pWVT->PTEXTSIZE.y;  // do not add 1
+
+   if( ( uRect->left > iRight ) || ( uRect->top > iBottom ) ||
+                   ( uRect->bottom < iTop ) || ( uRect->right < iLeft ) )
+   {
+      return;
+   }
+
+   hdc = pWVT->hdc;
+   SelectObject( hdc, pWVT->currentPen );
+   for ( i = 0; i < iRows; i++ )
+   {
+      y = ( ( iAtRow ) * pWVT->PTEXTSIZE.y );
+      MoveToEx( hdc, iLeft, y, NULL );
+      LineTo( hdc, iRight, y );
+      iAtRow++;
+   }
+
+   hdc = pWVT->hGuiDC;
+   SelectObject( hdc, pWVT->currentPen );
+   for ( i = 0; i < iRows; i++ )
+   {
+      y = ( ( iAtRow ) * pWVT->PTEXTSIZE.y );
+      MoveToEx( hdc, iLeft, y, NULL );
+      LineTo( hdc, iRight, y );
+      iAtRow++;
+   }
+}
+/*----------------------------------------------------------------------*/
 /*                       Owner Draw Implementation                      */
 /*----------------------------------------------------------------------*/
 void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect )
 {
    PHB_GOBJS gObj = pWVT->gObjs;
    int iTop, iLeft, iBottom, iRight;
+   int iObjType;
 
    while( gObj )
    {
+      iObjType = 0;
+
       if( gObj->iState == GOBJ_OBJSTATE_ENABLED )
       {
-         iTop    = ( pWVT->PTEXTSIZE.y * gObj->iTop  ) + gObj->aOffset.iTop;
-         iLeft   = ( pWVT->PTEXTSIZE.x * gObj->iLeft ) + gObj->aOffset.iLeft;
-         iBottom = ( pWVT->PTEXTSIZE.y * ( gObj->iBottom + 1 ) ) - 1 + gObj->aOffset.iBottom;
-         iRight  = ( pWVT->PTEXTSIZE.x * ( gObj->iRight  + 1 ) ) - 1 + gObj->aOffset.iRight;
+         if( gObj->iObjType == GOBJ_OBJTYPE_OBJECT )
+         {
+            if( hb_vmRequestReenter() )
+            {
+               PHB_ITEM pArray;
 
-         switch( gObj->iObjType )
+               hb_vmPushEvalSym();
+               hb_vmPush( gObj->bBlock );
+               hb_vmSend( 0 );
+
+               pArray = hb_param( -1, HB_IT_ARRAY );
+
+               if( pArray && hb_arrayLen( pArray ) >= 3 )
+               {
+                  iObjType = gObj->iData;
+
+                  if( iObjType == GOBJ_OBJTYPE_GRIDVERT )
+                  {
+                     if( hb_arrayGetNI( pArray, 4 ) > 0 )
+                     {
+                        hb_wvg_GridVert( pWVT, pArray, uRect );
+                     }
+                  }
+                  else if( iObjType == GOBJ_OBJTYPE_GRIDHORZ )
+                  {
+                     hb_wvg_GridHorz( pWVT, pArray, uRect );
+                  }
+                  else
+                  {
+                     /* Take care of offsets 5th element */
+                     iTop    = ( pWVT->PTEXTSIZE.y *   hb_arrayGetNI( pArray,1 ) );
+                     iLeft   = ( pWVT->PTEXTSIZE.x *   hb_arrayGetNI( pArray,2 ) );
+                     iBottom = ( pWVT->PTEXTSIZE.y * ( hb_arrayGetNI( pArray,3 ) + 1 ) ) - 1;
+                     iRight  = ( pWVT->PTEXTSIZE.x * ( hb_arrayGetNI( pArray,4 ) + 1 ) ) - 1;
+                  }
+               }
+               else
+               {
+                  iObjType = 0;
+               }
+               /*  C A R E F U L */
+               #if 0
+               if( pArray )
+               {
+                  //hb_itemRelease( pArray );
+                  //pArray = NULL;
+               }
+               #endif
+               hb_vmRequestRestore();
+            }
+         }
+         else
+         {
+            iObjType = gObj->iObjType;
+
+            iTop    = ( pWVT->PTEXTSIZE.y * gObj->iTop  ) + gObj->aOffset.iTop;
+            iLeft   = ( pWVT->PTEXTSIZE.x * gObj->iLeft ) + gObj->aOffset.iLeft;
+            iBottom = ( pWVT->PTEXTSIZE.y * ( gObj->iBottom + 1 ) ) - 1 + gObj->aOffset.iBottom;
+            iRight  = ( pWVT->PTEXTSIZE.x * ( gObj->iRight  + 1 ) ) - 1 + gObj->aOffset.iRight;
+         }
+
+         switch( iObjType )
          {
             case GOBJ_OBJTYPE_BOXRAISED:
             case GOBJ_OBJTYPE_BOXRECESSED:
@@ -1472,7 +1643,7 @@ void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect )
                }
                else
                {
-                  switch( gObj->iObjType )
+                  switch( iObjType )
                   {
                   case GOBJ_OBJTYPE_BOXRAISED:
                      hb_wvg_BoxRaised( pWVT, iLeft-1, iTop-1, iRight+1, iBottom+1 );
@@ -1511,7 +1682,7 @@ void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect )
                }
                else
                {
-                  switch( gObj->iObjType )
+                  switch( iObjType )
                   {
 
                   case GOBJ_OBJTYPE_LINE:

@@ -222,9 +222,7 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    int iIndex;
 
    HB_WVT_LOCK
-
    s_wvtWindows[ pWVT->iHandle ] = NULL;
-
    if( --s_wvtCount == 0 )
    {
       hb_wvt_gtReleaseGuiData();
@@ -233,7 +231,6 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
       if( pWVT->hInstance )
          UnregisterClass( s_szClassName, pWVT->hInstance );
    }
-
    HB_WVT_UNLOCK
 
    if( pWVT->pszSelectCopy )
@@ -298,6 +295,8 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
         if( pWVT->gObjs->hBrush )
            if( pWVT->gObjs->bDestroyBrush )
               DeleteObject( pWVT->gObjs->hBrush );
+        if( pWVT->gObjs->bBlock )
+           hb_itemRelease( pWVT->gObjs->bBlock );
 #if ! defined( HB_OS_WIN_CE )
         if( pWVT->gObjs->iPicture )
            if( pWVT->gObjs->bDestroyPicture )
@@ -1043,9 +1042,11 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
       }
    }
 
-   SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
-
    HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+   {
+      int iAttr = SWP_DRAWFRAME | SWP_NOZORDER | SWP_DEFERERASE;
+      SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, iAttr );
+   }
 
    if( pWVT->CaretExist && !pWVT->CaretHidden )
       hb_gt_wvt_UpdateCaret( pWVT );
@@ -1874,7 +1875,14 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
+   #if 1
    PHB_GTWVT pWVT = hb_gt_wvt_Find( hWnd );
+   #else
+   /*
+    *  The protocl below generates RT error somehwo at some other part of the code
+    */
+   PHB_GTWVT pWVT = ( PHB_GTWVT ) GetWindowLongPtr( hWnd, GWL_USERDATA );
+   #endif
 
    if( pWVT ) switch( message )
    {
@@ -2309,6 +2317,34 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
    return ( width <= maxWidth ) && ( height <= maxHeight );
 }
 
+static void hb_gt_wvt_ShowWindow( PHB_GTWVT pWVT )
+{
+   int iCmdShow;
+
+   if( pWVT->pPP->bConfigured )
+   {
+      iCmdShow = pWVT->pPP->bVisible ? SW_SHOWNORMAL : SW_HIDE;
+   }
+   else
+   {
+      /*
+       * If you wish to show window the way you want, put somewhere in your application
+       * ANNOUNCE HB_NOSTARTUPWINDOW
+       * If so compiled, then you need to issue Wvt_ShowWindow( SW_RESTORE )
+       * at the point you desire in your code.
+       */
+      if( hb_dynsymFind( "HB_NOSTARTUPWINDOW" ) != NULL )
+      {
+         iCmdShow = SW_HIDE;
+      }
+      else
+      {
+         iCmdShow = SW_SHOWNORMAL;
+      }
+   }
+   ShowWindow( pWVT->hWnd, iCmdShow );
+}
+
 static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
 {
    HWND     hWnd, hWndParent;
@@ -2448,13 +2484,17 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
 
 static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 {
-   int iCmdShow;
-
    if( !pWVT->hWnd )
    {
       pWVT->hWnd = hb_gt_wvt_CreateWindow( pWVT, pWVT->bResizable );
       if( !pWVT->hWnd )
          hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
+
+      /* An experimental call - processed at WndProc to recognize pWVT off hWnd */
+      #if 0
+      SetWindowLongPtr( pWVT->hWnd, GWL_USERDATA, ( LONG_PTR ) pWVT );
+      #endif
+
 #if 0
       if( ! GetSystemMetrics( SM_REMOTESESSION ) )
       {
@@ -2515,37 +2555,12 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
          }
       }
 
-      /* Manage Windows Open Mode */
-      {
-         if( pWVT->pPP->bConfigured )
-         {
-            iCmdShow = pWVT->pPP->bVisible ? SW_SHOWNORMAL : SW_HIDE;
-         }
-         else
-         {
-            /*
-             * If you wish to show window the way you want, put somewhere in your application
-             * ANNOUNCE HB_NOSTARTUPWINDOW
-             * If so compiled, then you need to issue Wvt_ShowWindow( SW_RESTORE )
-             * at the point you desire in your code.
-             */
-            if( hb_dynsymFind( "HB_NOSTARTUPWINDOW" ) != NULL )
-            {
-               iCmdShow = SW_HIDE;
-            }
-            else
-            {
-               iCmdShow = SW_SHOWNORMAL;
-            }
-         }
-         ShowWindow( pWVT->hWnd, iCmdShow );
-         UpdateWindow( pWVT->hWnd );
-      }
+      /* Show | Update Window */
+      hb_gt_wvt_ShowWindow( pWVT );
 
       /* Initialize GUI base */
       {
          pWVT->hdc        = GetDC( pWVT->hWnd );
-         pWVT->hCompDC    = CreateCompatibleDC( pWVT->hdc );
          hb_wvt_gtInitGui( pWVT );
 
          if( b_MouseEnable )
@@ -2582,6 +2597,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
    HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
    HB_GTSELF_SEMICOLD( pGT );
+
    /* hb_gt_wvt_CreateConsoleWindow( pWVT ); */
 }
 
@@ -3039,23 +3055,25 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       {
          if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) )
          {
-            /* HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL; */
-            HICON hIconToFree = pWVT->hIcon;
             LPTSTR lpImage;
+            HICON hIcon;
 
             lpImage = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
-            pWVT->bIconToFree = TRUE;
-            pWVT->hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpImage,
+            hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpImage,
                                                IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
             HB_TCHAR_FREE( lpImage );
+            if( hIcon )
+            {
+               if( pWVT->hIcon )
+                  DestroyIcon( pWVT->hIcon );
+
+               pWVT->hIcon = hIcon;
+            }
             if( pWVT->hWnd )
             {
                SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
                SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
             }
-
-            if( hIconToFree )
-               DestroyIcon( hIconToFree );
          }
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) pWVT->hIcon );
          break;
@@ -3065,41 +3083,47 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       {
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            /* HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL; */
-            HICON hIconToFree = pWVT->hIcon;
-            LPTSTR lpIcon;
+            LPTSTR lpImage;
+            HICON hIcon;
 
-            lpIcon = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
-            pWVT->bIconToFree = FALSE;
-            pWVT->hIcon = LoadIcon( pWVT->hInstance, lpIcon );
-            HB_TCHAR_FREE( lpIcon );
+            lpImage = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
+            hIcon = LoadIcon( pWVT->hInstance, lpImage );
+            HB_TCHAR_FREE( lpImage );
+            if( hIcon )
+            {
+               if( pWVT->hIcon )
+                  DestroyIcon( pWVT->hIcon );
+
+               pWVT->hIcon = hIcon;
+            }
 
             if( pWVT->hWnd )
             {
                SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
                SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
             }
-
-            if( hIconToFree )
-               DestroyIcon( hIconToFree );
          }
          else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
-            HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL;
-
-            pWVT->bIconToFree = FALSE;
-            pWVT->hIcon = LoadIcon( pWVT->hInstance,
-                                    MAKEINTRESOURCE( ( HB_LONG )
-                                         hb_itemGetNInt( pInfo->pNewVal ) ) );
-
-            if( pWVT->hWnd )
+            if( hb_itemGetNInt( pInfo->pNewVal ) != 0 )
             {
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
-            }
+               HICON hIcon = LoadIcon( pWVT->hInstance,
+                                       MAKEINTRESOURCE( ( HB_LONG )
+                                                  hb_itemGetNInt( pInfo->pNewVal ) ) );
+               if( hIcon )
+               {
+                  if( pWVT->hIcon )
+                     DestroyIcon( pWVT->hIcon );
 
-            if( hIconToFree )
-               DestroyIcon( hIconToFree );
+                  pWVT->hIcon = hIcon;
+               }
+
+               if( pWVT->hWnd )
+               {
+                  SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
+                  SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
+               }
+            }
          }
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) pWVT->hIcon );
          break;
@@ -3915,6 +3939,7 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
    pWVT = HB_GTWVT_GET( pGT );
    if( pWVT )
    {
+      #if 1
       if( !pWVT->hWnd && pWVT->fInit )
          hb_gt_wvt_CreateConsoleWindow( pWVT );
 
@@ -3923,6 +3948,18 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
          SendNotifyMessage( pWVT->hWnd, WM_MY_UPDATE_CARET, 0, 0 );
          hb_gt_wvt_ProcessMessages( pWVT );
       }
+      #else
+      if( pWVT->hWnd )
+      {
+         if( !pWVT->fInit )
+         {
+            pWVT->fInit = TRUE;
+            hb_gt_wvt_ShowWindow( pWVT );
+         }
+         SendNotifyMessage( pWVT->hWnd, WM_MY_UPDATE_CARET, 0, 0 );
+         hb_gt_wvt_ProcessMessages( pWVT );
+      }
+      #endif
    }
 }
 
@@ -4316,11 +4353,6 @@ static void hb_wvt_gtExitGui( PHB_GTWVT pWVT )
    if( pWVT->hWndTT )
    {
       DestroyWindow( pWVT->hWndTT );
-   }
-   if( pWVT->hCompDC )
-   {
-      DeleteDC( pWVT->hCompDC );
-      pWVT->hCompDC = NULL;
    }
    if( pWVT->hGuiDC )
    {

@@ -79,6 +79,7 @@
 #include <ole2.h>
 #include <oleauto.h>
 #if ! defined( HB_OS_WIN_CE )
+#include <ocidl.h>
 #include <olectl.h>
 #endif
 #include <commdlg.h>
@@ -255,24 +256,6 @@ typedef struct
    int            iRight    ;
 } HB_GOBJ_OFFSET ;
 
-#define GOBJ_OBJTYPE_BOXRAISED          1
-#define GOBJ_OBJTYPE_BOXRECESSED        2
-#define GOBJ_OBJTYPE_BOXGET             3
-#define GOBJ_OBJTYPE_BOXGROUP           4
-#define GOBJ_OBJTYPE_BOXGROUPRAISED     5
-#define GOBJ_OBJTYPE_PICTURE            6
-#define GOBJ_OBJTYPE_LINE               7
-#define GOBJ_OBJTYPE_LINEEX             8
-#define GOBJ_OBJTYPE_LABEL              9
-#define GOBJ_OBJTYPE_LABELEX           10
-#define GOBJ_OBJTYPE_OUTLINE           11
-#define GOBJ_OBJTYPE_ELLIPSE           12
-#define GOBJ_OBJTYPE_RECTANGLE         13
-#define GOBJ_OBJTYPE_ROUNDRECT         14
-#define GOBJ_OBJTYPE_COLORRECT         15
-#define GOBJ_OBJTYPE_SHADEDRECT        16
-#define GOBJ_OBJTYPE_TEXTBOX           17
-#define GOBJ_OBJTYPE_OUTLINEEX         18
 
 typedef struct _tag_GOBJS
 {
@@ -307,6 +290,7 @@ typedef struct _tag_GOBJS
    BOOL           bDestroyPicture ;
    TRIVERTEX      vert[ 2 ]     ;
    LPTSTR         lpText        ;
+   PHB_ITEM       bBlock        ;
    struct _tag_GOBJS * gObjNext ;
 
 } HB_GOBJS, * PHB_GOBJS         ;
@@ -438,8 +422,6 @@ typedef struct
    int       iFactor;                       /* Transparency factor 0~255                                              */
 
    HDC       hdc;                           /* Handle to Windows Device Context                                       */
-   HDC       hCompDC;                       /* Compatible DC to _s.hdc                                                */
-   HDC       hWndDC;
 
    int       LastMenuEvent;                 /* Last menu item selected                                                */
    int       MenuKeyEvent;                  /* User definable event number for windows menu command                   */

@@ -161,6 +161,31 @@
 #define GOBJ_IMAGESOURCE_RESOURCE         2
 #define GOBJ_IMAGESOURCE_FILE             3
 
+
+/* CUI-GUI Draw Objects */
+#define GOBJ_OBJTYPE_BOXRAISED            1
+#define GOBJ_OBJTYPE_BOXRECESSED          2
+#define GOBJ_OBJTYPE_BOXGET               3
+#define GOBJ_OBJTYPE_BOXGROUP             4
+#define GOBJ_OBJTYPE_BOXGROUPRAISED       5
+#define GOBJ_OBJTYPE_PICTURE              6
+#define GOBJ_OBJTYPE_LINE                 7
+#define GOBJ_OBJTYPE_LINEEX               8
+#define GOBJ_OBJTYPE_LABEL                9
+#define GOBJ_OBJTYPE_LABELEX              10
+#define GOBJ_OBJTYPE_OUTLINE              11
+#define GOBJ_OBJTYPE_ELLIPSE              12
+#define GOBJ_OBJTYPE_RECTANGLE            13
+#define GOBJ_OBJTYPE_ROUNDRECT            14
+#define GOBJ_OBJTYPE_COLORRECT            15
+#define GOBJ_OBJTYPE_SHADEDRECT           16
+#define GOBJ_OBJTYPE_TEXTBOX              17
+#define GOBJ_OBJTYPE_OUTLINEEX            18
+#define GOBJ_OBJTYPE_GRIDVERT             19
+#define GOBJ_OBJTYPE_GRIDHORZ             20
+
+#define GOBJ_OBJTYPE_OBJECT               25  /* One of the above objects */
+
 /*----------------------------------------------------------------------*/
 
 #endif /* _HBGTWVG_CH */

@@ -3124,17 +3124,12 @@ HB_FUNC( WVT_SAVESCREEN )
 
    hBmp      = CreateCompatibleBitmap( _s->hdc, iWidth, iHeight ) ;
 
-   #if 0
-   oldBmp = (HBITMAP) SelectObject( _s->hCompDC, hBmp );
-   BitBlt( _s->hCompDC, 0, 0, iWidth, iHeight, _s->hdc, iLeft, iTop, SRCCOPY );
-   SelectObject( _s->hCompDC, oldBmp );
-   #else
    hCompDC = CreateCompatibleDC( _s->hdc );
    oldBmp = (HBITMAP) SelectObject( hCompDC, hBmp );
    BitBlt( hCompDC, 0, 0, iWidth, iHeight, _s->hdc, iLeft, iTop, SRCCOPY );
    SelectObject( hCompDC, oldBmp );
    DeleteDC( hCompDC );
-   #endif
+
    hb_arraySetNI( info, 1, iWidth );
    hb_arraySetNI( info, 2, iHeight );
    hb_arraySetNInt( info, 3, ( HB_PTRDIFF ) hBmp );
@@ -3169,7 +3164,6 @@ HB_FUNC( WVT_RESTSCREEN )
    iWidth  = iRight - iLeft + 1 ;
    iHeight = iBottom - iTop + 1 ;
 
-   #if 1
    hCompDC = CreateCompatibleDC( _s->hdc );
    hBmp    = (HBITMAP) SelectObject( hCompDC, ( HBITMAP ) ( HB_PTRDIFF ) hb_parnint( 5,3 ) );
    if ( hBmp )
@@ -3200,52 +3194,12 @@ HB_FUNC( WVT_RESTSCREEN )
       }
    }
    DeleteDC( hCompDC );
-   #else
-   hBmp    = (HBITMAP) SelectObject( _s->hCompDC, ( HBITMAP ) ( HB_PTRDIFF ) hb_parnint( 5,3 ) );
-   if ( hBmp )
-   {
-      if ( ( iWidth == hb_parni( 5,1 ) )  && ( iHeight == hb_parni( 5,2 ) ) )
-      {
-         if ( BitBlt( _s->hdc,
-                      iLeft,
-                      iTop,
-                      iWidth,
-                      iHeight,
-                      _s->hCompDC,
-                      0,
-                      0,
-                      SRCCOPY ) )
-         {
-            bResult = TRUE;
-         }
-      }
-      else
-      {
-         if ( StretchBlt( _s->hdc,
-                          iLeft,
-                          iTop,
-                          iWidth,
-                          iHeight,
-                          _s->hCompDC,
-                          0,
-                          0,
-                          hb_parni( 5,1 ),
-                          hb_parni( 5,2 ),
-                          SRCCOPY ) )
-         {
-            bResult = TRUE;
-         }
-      }
-   }
-   #endif
-
-   SelectObject( _s->hCompDC, hBmp );
 
    if ( ! bDoNotDestroyBMP )
    {
+      SelectObject( hCompDC, hBmp );
       DeleteObject( ( HBITMAP ) ( HB_PTRDIFF ) hb_parnint( 5,3 ) );
    }
-
    hb_retl( bResult );
 }
 

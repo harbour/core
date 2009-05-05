@@ -406,11 +406,10 @@ METHOD destroy() CLASS WvgCrt
    ENDIF
 
    if ::lModal
-      ::pGT := NIL
-      hb_gtSelect( ::pGTp )
       hb_gtInfo( HB_GTI_ENABLE  , ::pGTp )
+      hb_gtSelect( ::pGTp )
       hb_gtInfo( HB_GTI_SETFOCUS, ::pGTp )
-   endif
+   ENDIF
 
    ::pGT  := NIL
    ::pGTp := NIL
