@@ -302,32 +302,38 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
             PHB_ITEM    pObject, pPtrGC;
             IDispatch** ppDisp;
 
-            /* TODO: save/restore stack return item */
+            if( hb_vmRequestReenter() )
+            {
+               hb_vmPushDynSym( s_pDyns_hb_oleauto );
+               hb_vmPushNil();
+               hb_vmDo( 0 );
 
-            hb_vmPushDynSym( s_pDyns_hb_oleauto );
-            hb_vmPushNil();
-            hb_vmDo( 0 );
+               pObject = hb_itemNew( hb_stackReturnItem() );
 
-            pObject = hb_itemNew( hb_stackReturnItem() );
+               ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
+               *ppDisp = pVariant->n1.n2.n3.pdispVal;
+               pPtrGC = hb_itemPutPtrGC( NULL, ppDisp );
 
-            ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
-            *ppDisp = pVariant->n1.n2.n3.pdispVal;
-            pPtrGC = hb_itemPutPtrGC( NULL, ppDisp );
-
-            /* Item is one more copy of the object */
+               /* Item is one more copy of the object */
 #if HB_OLE_C_API
-            ( *ppDisp )->lpVtbl->AddRef( *ppDisp );
+               ( *ppDisp )->lpVtbl->AddRef( *ppDisp );
 #else
-            ( *ppDisp )->AddRef();
+               ( *ppDisp )->AddRef();
 #endif
 
-            hb_vmPushDynSym( s_pDyns_hObjAssign );
-            hb_vmPush( pObject );
-            hb_vmPush( pPtrGC );
-            hb_vmSend( 1 );
-            hb_itemMove( pItem, pObject );
-            hb_itemRelease( pObject );
-            hb_itemRelease( pPtrGC );
+               hb_vmPushDynSym( s_pDyns_hObjAssign );
+               hb_vmPush( pObject );
+               hb_vmPush( pPtrGC );
+               hb_vmSend( 1 );
+               hb_itemRelease( pPtrGC );
+               hb_vmRequestRestore();
+
+               /* We should store object to pItem after hb_vmRequestRestore(),
+                * because pItem actualy can be stack's return item!
+                */
+               hb_itemMove( pItem, pObject );
+               hb_itemRelease( pObject );
+            }
          }
          break;
       }
@@ -789,6 +795,9 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
 #endif
          FreeParams( &dispparam );
          hb_xfree( szMethodWide );
+
+         /* assign method should return assigned value */
+         hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
 
          hb_setOleError( lOleError );
          if( lOleError != S_OK )
