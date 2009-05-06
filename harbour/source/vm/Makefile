@@ -5,6 +5,11 @@
 ROOT = ../../
 
 HB_HVM_ALL = yes
+ifeq ($(HB_COMPILER),owatcom)
+ifeq ($(HB_ARCHITECTURE),win)
+	HB_HVM_ALL = no
+endif
+endif
 ifeq ($(HB_COMPILER),bcc)
 	HB_HVM_ALL = no
 endif
