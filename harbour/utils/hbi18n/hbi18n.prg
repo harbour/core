@@ -243,6 +243,7 @@ STATIC FUNCTION ExpandWildCards( aFiles )
 
 STATIC FUNCTION LoadFiles( aFiles )
    LOCAL aTrans, aTrans2
+   LOCAL hIndex
    LOCAL cErrorMsg
    LOCAL n
 
@@ -255,7 +256,7 @@ STATIC FUNCTION LoadFiles( aFiles )
       IF aTrans2 == NIL
          ErrorMsg( cErrorMsg )
       ENDIF
-      __I18N_potArrayJoin( aTrans, aTrans2 )
+      __I18N_potArrayJoin( aTrans, aTrans2, @hIndex )
    NEXT
 
    RETURN aTrans

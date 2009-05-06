@@ -448,16 +448,17 @@ FUNCTION __I18N_HASHJOIN( hTrans, hTrans2 )
    RETURN hTrans
 
 
-FUNCTION __I18N_POTARRAYJOIN( aTrans, aTrans2 )
+FUNCTION __I18N_POTARRAYJOIN( aTrans, aTrans2, hIndex )
    LOCAL aItem, aDest, aSrc
-   LOCAL hIndex
    LOCAL ctx
 
-   hIndex := { => }
-   FOR EACH aItem in aTrans
-      ctx := aItem[ _I18N_CONTEXT ] + _I18N_DELIM + aItem[ _I18N_MSGID, 1 ]
-      hIndex[ ctx ] := aItem:__enumIndex()
-   NEXT
+   IF !HB_ISHASH( hIndex )
+      hIndex := { => }
+      FOR EACH aItem in aTrans
+         ctx := aItem[ _I18N_CONTEXT ] + _I18N_DELIM + aItem[ _I18N_MSGID, 1 ]
+         hIndex[ ctx ] := aItem:__enumIndex()
+      NEXT
+   ENDIF
 
    FOR EACH aItem in aTrans2
       ctx := aItem[ _I18N_CONTEXT ] + _I18N_DELIM + aItem[ _I18N_MSGID, 1 ]
