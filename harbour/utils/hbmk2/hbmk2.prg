@@ -36,6 +36,7 @@
  *    entry point override method and detection code for gcc.
  *    rtlink/blinker link script parsers.
  *    POTMerge(), LoadPOTFiles(), LoadPOTFilesAsHash(), GenHbl() and AutoTrans().
+ *       (with local modifications by hbmk author)
  *
  * See COPYING for licensing terms.
  *
@@ -5111,6 +5112,7 @@ STATIC PROCEDURE MakePO( aLNG, cPO, aPOTIN )
       ELSE
          IF s_lDEBUGI18N
             hbmk_OutStd( hb_StrFormat( "MakePO: new unified .po: %1$s", cPOCooked ) )
+            hbmk_OutStd( hb_StrFormat( "MakePO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
          ENDIF
          POTMerge( aPOTIN, cPOCooked )
       ENDIF
@@ -5159,28 +5161,38 @@ STATIC PROCEDURE MakeHBL( aPO, cHBL, aLNG )
 STATIC FUNCTION LoadPOTFiles( aFiles, lIgnoreError )
    LOCAL aTrans, aTrans2
    LOCAL cErrorMsg
-   LOCAL n
+   LOCAL cFileName
 
-   aTrans := __i18n_potArrayLoad( aFiles[ 1 ], @cErrorMsg )
-   IF aTrans != NIL
-      FOR n := 2 TO Len( aFiles )
-         aTrans2 := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg )
+   FOR EACH cFileName IN aFiles
+      cErrorMsg := NIL
+      IF aTrans == NIL
+         aTrans := __i18n_potArrayLoad( cFileName, @cErrorMsg )
+         IF aTrans != NIL
+            IF s_lDEBUGI18N
+               hbmk_OutStd( hb_StrFormat( "LoadPOTFiles(): Loaded: %1$s", cFileName ) )
+            ENDIF
+         ELSE
+            IF ! lIgnoreError
+               hbmk_OutErr( hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
+            ENDIF
+         ENDIF
+      ELSE
+         aTrans2 := __i18n_potArrayLoad( cFileName, @cErrorMsg )
          IF aTrans2 != NIL
             IF s_lDEBUGI18N
-               hbmk_OutStd( hb_StrFormat( "LoadPOTFiles: %1$s", aFiles[ n ] ) )
+               hbmk_OutStd( hb_StrFormat( "LoadPOTFiles(): Loaded: %1$s", cFileName ) )
             ENDIF
             __i18n_potArrayJoin( aTrans, aTrans2 )
          ELSE
             IF ! lIgnoreError
                hbmk_OutErr( hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
-               EXIT
             ENDIF
          ENDIF
-      NEXT
-   ELSE
-      IF ! lIgnoreError
-         hbmk_OutErr( hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
       ENDIF
+   NEXT
+
+   IF s_lDEBUGI18N .AND. aTrans == NIL
+      hbmk_OutErr( "LoadPOTFiles() didn't load anything" )
    ENDIF
 
    RETURN aTrans
@@ -5189,13 +5201,14 @@ STATIC FUNCTION LoadPOTFilesAsHash( aFiles )
    LOCAL cErrorMsg
    LOCAL hTrans
    LOCAL aTrans
-   LOCAL n
+   LOCAL cFileName
 
-   FOR n := 1 TO Len( aFiles )
-      aTrans := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg )
+   FOR EACH cFileName IN aFiles
+      cErrorMsg := NIL
+      aTrans := __i18n_potArrayLoad( cFileName, @cErrorMsg )
       IF aTrans != NIL
          IF s_lDEBUGI18N
-            hbmk_OutStd( hb_StrFormat( "LoadPOTFilesAsHash: %1$s", aFiles[ n ] ) )
+            hbmk_OutStd( hb_StrFormat( "LoadPOTFilesAsHash: %1$s", cFileName ) )
          ENDIF
          hTrans := __i18n_potArrayToHash( aTrans,, hTrans )
       ELSE
@@ -5217,6 +5230,17 @@ STATIC PROCEDURE POTMerge( aFiles, cFileOut )
 
    RETURN
 
+STATIC PROCEDURE AutoTrans( cFileIn, aFiles, cFileOut )
+   LOCAL cErrorMsg
+
+   IF !__I18N_potArraySave( cFileOut, ;
+         __I18N_potArrayTrans( LoadPOTFiles( { cFileIn }, .F. ), ;
+                               LoadPOTFilesAsHash( aFiles ) ), @cErrorMsg )
+      hbmk_OutErr( hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
+   ENDIF
+
+   RETURN
+
 STATIC FUNCTION GenHbl( aFiles, cFileOut, lEmpty )
    LOCAL cHblBody
    LOCAL pI18N
@@ -5234,17 +5258,6 @@ STATIC FUNCTION GenHbl( aFiles, cFileOut, lEmpty )
    ENDIF
 
    RETURN lRetVal
-
-STATIC PROCEDURE AutoTrans( cFileIn, aFiles, cFileOut )
-   LOCAL cErrorMsg
-
-   IF !__I18N_potArraySave( cFileOut, ;
-         __I18N_potArrayTrans( LoadPOTFiles( { cFileIn }, .T. ), ;
-                               LoadPOTFilesAsHash( aFiles ) ), @cErrorMsg )
-      hbmk_OutErr( hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
-   ENDIF
-
-   RETURN
 
 #define _VCS_UNKNOWN    0
 #define _VCS_SVN        1
