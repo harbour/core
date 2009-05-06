@@ -2829,7 +2829,7 @@ FUNCTION hbmk( aArgs )
          s_aRESSRC_TODO := s_aRESSRC
       ENDIF
 
-      IF ! Empty( s_cPO ) .AND. ! Empty( s_aPRG )
+      IF ! Empty( s_cPO ) .AND. ! Empty( s_aPRG ) .AND. Len( s_aPRG_TODO ) > 0
          MakePO( s_aLNG, s_cPO, ListDirExt( s_aPRG, cWorkDir, ".pot" ) )
       ENDIF
 
@@ -5094,29 +5094,57 @@ STATIC PROCEDURE MakePO( aLNG, cPO, aPOTIN )
    LOCAL cPOTemp
    LOCAL cPOCooked
 
+   LOCAL aNew := {}
+   LOCAL aUpd := {}
+
    FOR EACH cLNG IN iif( Empty( aLNG ), { _LNG_MARKER }, aLNG )
-      cPOCooked := StrTran( cPO, _LNG_MARKER, cLNG )
-      IF hb_FileExists( cPOCooked )
-         fhnd := hb_FTempCreateEx( @cPOTemp, NIL, NIL, ".po" )
+      IF cLNG:__enumIndex() == 1
          IF s_lDEBUGI18N
-            hbmk_OutStd( hb_StrFormat( "MakePO: existing/output unified .po: %1$s", cPOCooked ) )
             hbmk_OutStd( hb_StrFormat( "MakePO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
             hbmk_OutStd( hb_StrFormat( "MakePO: unified .po: %1$s", cPOTemp ) )
          ENDIF
+         fhnd := hb_FTempCreateEx( @cPOTemp, NIL, NIL, ".po" )
          IF fhnd != F_ERROR
             FClose( fhnd )
             POTMerge( aPOTIN, cPOTemp )
-            AutoTrans( cPOTemp, { cPOCooked }, cPOCooked )
-            FErase( cPOTemp )
+         ELSE
+            hbmk_OutStd( I_( "Error: Cannot create temporary file." ) )
          ENDIF
+      ENDIF
+      cPOCooked := StrTran( cPO, _LNG_MARKER, cLNG )
+      IF hb_FileExists( cPOCooked )
+         IF s_lDEBUGI18N
+            hbmk_OutStd( hb_StrFormat( "MakePO: existing/output unified .po: %1$s", cPOCooked ) )
+         ENDIF
+         AutoTrans( cPOTemp, { cPOCooked }, cPOCooked )
+         AAdd( aUpd, cLNG )
       ELSE
          IF s_lDEBUGI18N
             hbmk_OutStd( hb_StrFormat( "MakePO: new unified .po: %1$s", cPOCooked ) )
-            hbmk_OutStd( hb_StrFormat( "MakePO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
          ENDIF
-         POTMerge( aPOTIN, cPOCooked )
+         hb_FCopy( cPOTemp, cPOCooked )
+         AAdd( aNew, cLNG )
       ENDIF
    NEXT
+
+   IF ! Empty( cPOTemp )
+      FErase( cPOTemp )
+   ENDIF
+
+   IF ! Empty( aNew )
+      IF Empty( aLNG )
+         hbmk_OutStd( hb_StrFormat( I_( "Created .po file: %1$s" ), cPO ) )
+      ELSE
+         hbmk_OutStd( hb_StrFormat( I_( "Created .po file '%1$s' for language(s): %2$s" ), cPO, ArrayToList( aNew, ", " ) ) )
+      ENDIF
+   ENDIF
+   IF ! Empty( aUpd )
+      IF Empty( aLNG )
+         hbmk_OutStd( hb_StrFormat( I_( "Updated .po file: %1$s" ), cPO ) )
+      ELSE
+         hbmk_OutStd( hb_StrFormat( I_( "Updated .po file '%1$s' for language(s): %2$s" ), cPO, ArrayToList( aUpd, ", " ) ) )
+      ENDIF
+   ENDIF
 
    RETURN
 
@@ -5126,6 +5154,8 @@ STATIC PROCEDURE MakeHBL( aPO, cHBL, aLNG )
    LOCAL cLNG
    LOCAL tLNG
    LOCAL aPO_TODO
+
+   LOCAL aNew := {}
 
    IF ! Empty( aPO )
       IF s_lDEBUGI18N
@@ -5152,8 +5182,17 @@ STATIC PROCEDURE MakeHBL( aPO, cHBL, aLNG )
                hbmk_OutStd( hb_StrFormat( "po: %1$s -> %2$s", ArrayToList( aPO_TODO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
             ENDIF
             GenHbl( aPO_TODO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
+            AAdd( aNew, cLNG )
          ENDIF
       NEXT
+   ENDIF
+
+   IF ! Empty( aNew )
+      IF Empty( aLNG )
+         hbmk_OutStd( hb_StrFormat( I_( "Created .hbl file: %1$s" ), cHBL ) )
+      ELSE
+         hbmk_OutStd( hb_StrFormat( I_( "Created .hbl file '%1$s' for language(s): %2$s" ), cHBL, ArrayToList( aNew, ", " ) ) )
+      ENDIF
    ENDIF
 
    RETURN
@@ -5423,7 +5462,7 @@ STATIC PROCEDURE ShowHelp( lLong )
    LOCAL aText_Basic := {;
       I_( "Syntax:" ),;
       "",;
-      I_( "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.pot|.po|.hbl]>" ),;
+      I_( "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>" ),;
       "",;
       I_( "Options:" ) }
 
