@@ -79,8 +79,8 @@ msgstr "mindent £jraÇp°t (lÇpcsãzetes Åzemm¢dban)"
 
 #: hbmk2.prg:5407
 #, c-format
-msgid "list of languages to be replaced in ${lng} macros in .pot filenames and output .hbl/.pot filenames. Comma separared list:\\n-lng=en-EN,hu-HU,de"
-msgstr "nyelvek list†ja, amelyek a .pot Çs .hbl †llom†nyokban levã ${lng} makr¢kba kerÅlnek behelyettes°tÇsre. Vesszãvel elv†lasztott lista:\\n-lng=en-EN,hu-HU,de"
+msgid "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbl/.pot filenames. Comma separared list:\\n-lng=en-EN,hu-HU,de"
+msgstr "nyelvek list†ja, amelyek a .pot/.po Çs .hbl †llom†nyokban levã ${lng} makr¢kba kerÅlnek behelyettes°tÇsre. Vesszãvel elv†lasztott lista:\\n-lng=en-EN,hu-HU,de"
 
 #: hbmk2.prg:2591
 #, c-format
@@ -274,8 +274,8 @@ msgstr "†lljon meg az object †llom†nyok lÇtrehoz†sa ut†n\\nA hbmk program hbcmp/
 
 #: hbmk2.prg:5319
 #, c-format
-msgid "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.pot|.hbl]>"
-msgstr "  hbmk [kapcsol¢k] [<parancs†llom†ny[s]>] <forr†s[.prg|.c|.obj|.o|.rc|.res|.pot|.hbl]>"
+msgid "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
+msgstr "  hbmk [kapcsol¢k] [<parancs†llom†ny[s]>] <forr†s[.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
 
 #: hbmk2.prg:5407
 #, c-format
@@ -286,11 +286,6 @@ msgstr "mutassa a vÇgrehajtand¢ parancsokat, anÇlkÅl hogy vÇgrehajtan† ãket"
 #, c-format
 msgid "Error: Cannot open file: %1$s"
 msgstr "Hiba: F†jl nem nyithat¢ meg: %1$s"
-
-#: hbmk2.prg:5068
-#, c-format
-msgid "pot: in: %1$s"
-msgstr "pot: in: %1$s"
 
 #: hbmk2.prg:5302
 #, c-format
@@ -469,8 +464,8 @@ msgstr "Hiba: Munkakînyvt†r nem hozhat¢ lÇtre: %1$s"
 
 #: hbmk2.prg:5418
 #, c-format
-msgid ".hbp options (they should come in separate lines): libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pots=[.pot files], incpaths=[paths], inctrypaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\\nLines starting with '#' char are ignored"
-msgstr ".hbp opci¢k (kÅlîn sorokba °rand¢k): libs=[<libnevek>], gt=[gtnÇv], prgflags=[Harbour opci¢k], cflags=[C ford°t¢ opci¢k], resflags=[erãforr†s ford°t¢ kapcsol¢k], ldflags=[szerkesztã kapcsol¢k], libpaths=[£tvonalak], pots=[.pot f†jlok], incpaths=[£tvonalak], inctrypaths=[£tvonalak], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<szîveg>\\n'#' karakterrel kezdãdã sorokat figyelmen k°vÅl hagyja"
+msgid ".hbp options (they should come in separate lines): libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\\nLines starting with '#' char are ignored"
+msgstr ".hbp opci¢k (kÅlîn sorokba °rand¢k): libs=[<libnevek>], gt=[gtnÇv], prgflags=[Harbour opci¢k], cflags=[C ford°t¢ opci¢k], resflags=[erãforr†s ford°t¢ kapcsol¢k], ldflags=[szerkesztã kapcsol¢k], libpaths=[£tvonalak], pos=[.po f†jlok], incpaths=[£tvonalak], inctrypaths=[£tvonalak], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<szîveg>\\n'#' karakterrel kezdãdã sorokat figyelmen k°vÅl hagyja"
 
 #: hbmk2.prg:2616
 #, c-format

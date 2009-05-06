@@ -6,6 +6,6 @@
 -mt
 hbmk2.prg
 
-hbmk2.${lng}.pot
+hbmk2.${lng}.po
 -hbl=hbmk2.${lng}.hbl
 -lng=hu_HU
