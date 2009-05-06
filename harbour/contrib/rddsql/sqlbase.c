@@ -492,8 +492,10 @@ static HB_ERRCODE sqlbaseClose( SQLBASEAREAP pArea )
    }
 
    if ( pArea->szQuery )
-     hb_xfree( pArea->szQuery );
-
+   {
+      hb_xfree( pArea->szQuery );
+      pArea->szQuery = NULL;
+   }
    return HB_SUCCESS;
 }
 
