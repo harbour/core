@@ -127,7 +127,7 @@ static HB_EXPR_FUNC( hb_compExprUseNE );
 static HB_EXPR_FUNC( hb_compExprUseIN );
 static HB_EXPR_FUNC( hb_compExprUseNegate );
 
-/* other helper functions 
+/* other helper functions
 */
 #if defined( HB_MACRO_SUPPORT )
    static void hb_compExprCodeblockPush( HB_EXPR_PTR, HB_COMP_DECL );
@@ -1846,15 +1846,19 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   if( strncmp( "GETTEXT", &pName->value.asSymbol[ ulPos ], 7 ) == 0 )
                   {
                      ulPos += 7;
-                     if( pName->value.asSymbol[ ulPos ] == '_' )
+                     if( strncmp( "_STRICT", &pName->value.asSymbol[ ulPos ], 7 ) == 0 )
                      {
-                        ++ulPos;
-                        if( strcmp( "STRICT", &pName->value.asSymbol[ ulPos ] ) == 0 )
+                        ulPos += 7;
+                        if( !pName->value.asSymbol[ ulPos ] || pName->value.asSymbol[ ulPos ] == '_' )
                            fI18nFunc = fStrict = TRUE;
-                        else if( strcmp( "NOOP", &pName->value.asSymbol[ ulPos ] ) == 0 )
+                     }
+                     else if( strncmp( "_NOOP", &pName->value.asSymbol[ ulPos ], 5 ) == 0 )
+                     {
+                        ulPos += 5;
+                        if( !pName->value.asSymbol[ ulPos ] || pName->value.asSymbol[ ulPos ] == '_' )
                            fI18nFunc = fNoop = TRUE;
                      }
-                     else if( !pName->value.asSymbol[ ulPos ] )
+                     else if( !pName->value.asSymbol[ ulPos ] || pName->value.asSymbol[ ulPos ] == '_' )
                         fI18nFunc = TRUE;
                   }
                   if( fI18nFunc )
@@ -1869,7 +1873,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                         pCount = pArg;
                         pArg = pArg->pNext;
                         --usCount;
-                        if( pCount->ExprType <= HB_ET_FUNREF && 
+                        if( pCount->ExprType <= HB_ET_FUNREF &&
                             pCount->ExprType != HB_ET_NUMERIC )
                         {
                            iWarning = HB_COMP_WARN_PARAM_TYPE;
@@ -1958,10 +1962,10 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                            hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_COUNT, buf, fPlural ? "2 or 3" : "1 or 2" );
                         }
                      }
-                     /* hb_i18n_gettext_noop() is not a real function. It is used to 
-                        force writing of string to .pot file. So, we should try to 
-                        replace function call by first argument regardless fI18n flag 
-                        and warnings. 
+                     /* hb_i18n_gettext_noop() is not a real function. It is used to
+                        force writing of string to .pot file. So, we should try to
+                        replace function call by first argument regardless fI18n flag
+                        and warnings.
                       */
                      else if( fNoop && usCount )
                      {
@@ -4339,7 +4343,7 @@ static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, BOOL bLateEval, HB_COMP
 
 /* This generates a push pcode for early evaluation of a macro
 */
-#if !defined(HB_MACRO_SUPPORT) 
+#if !defined(HB_MACRO_SUPPORT)
 static void hb_compExprCodeblockExtPush( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
    hb_compGenPCodeN( ( BYTE * ) pSelf->value.asCodeblock.string,
@@ -4370,7 +4374,7 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    }
    else
    {
-      /* everything else is macro compiled at runtime 
+      /* everything else is macro compiled at runtime
        * {|| &variable+1} => &( '{|| &variable+1}' )
        */
       HB_EXPR_PTR pNew;
@@ -4533,7 +4537,7 @@ static void hb_compExprPushSendPopPush( HB_EXPR_PTR pObj, HB_EXPR_PTR pValue,
  *
  * a:b( COUNT() ):c := a:b( COUNT() ):c + 1
  *
- * in strict Clipper compatibility mode 
+ * in strict Clipper compatibility mode
  * (HB_SUPPORT_HARBOUR is not set: -kc compiler switch ) and
  *
  * temp := a:b( COUNT() ), temp:c += 1
