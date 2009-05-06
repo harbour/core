@@ -5199,6 +5199,7 @@ STATIC PROCEDURE MakeHBL( aPO, cHBL, aLNG )
 
 STATIC FUNCTION LoadPOTFiles( aFiles, lIgnoreError )
    LOCAL aTrans, aTrans2
+   LOCAL hIndex
    LOCAL cErrorMsg
    LOCAL cFileName
 
@@ -5221,7 +5222,7 @@ STATIC FUNCTION LoadPOTFiles( aFiles, lIgnoreError )
             IF s_lDEBUGI18N
                hbmk_OutStd( hb_StrFormat( "LoadPOTFiles(): Loaded: %1$s", cFileName ) )
             ENDIF
-            __i18n_potArrayJoin( aTrans, aTrans2 )
+            __i18n_potArrayJoin( aTrans, aTrans2, @hIndex )
          ELSE
             IF ! lIgnoreError
                hbmk_OutErr( hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
