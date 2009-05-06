@@ -31,7 +31,9 @@ else
     then
         export HB_GPM_MOUSE=yes
     fi
-    if [ -z "$HB_WITHOUT_GTSLN" ] && ! test_reqpkg libslang2-dev
+    if [ -z "$HB_WITHOUT_GTSLN" ] && \
+       ! test_reqpkg libslang2-dev && \
+       ! test_reqpkg libslang1-dev
     then
         export HB_WITHOUT_GTSLN=yes
     fi
