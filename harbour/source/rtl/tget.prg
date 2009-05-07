@@ -430,7 +430,7 @@ METHOD reset() CLASS GET
       ::lEdit    := .F.
       ::lMinus   := .F.
       ::rejected := .F.
-      ::typeOut  := !( ::type $ "CNDL" ) .OR. ( ::nPos == 0 ) /* ; Simple .F. in CA-Cl*pper [vszakats] */
+      ::typeOut  := !( ::type $ "CNDTL" ) .OR. ( ::nPos == 0 ) /* ; Simple .F. in CA-Cl*pper [vszakats] */
       ::display()
    ENDIF
 
@@ -516,7 +516,7 @@ METHOD varPut( xValue ) CLASS GET
    LOCAL i
    LOCAL aValue
 
-   IF ISBLOCK( ::bBlock ) .AND. ValType( xValue ) $ "CNDLU"
+   IF ISBLOCK( ::bBlock ) .AND. ValType( xValue ) $ "CNDTLU"
       aSubs := ::xSubScript
       IF ISARRAY( aSubs ) .AND. ! Empty( aSubs )
          nLen := Len( aSubs )
@@ -955,7 +955,7 @@ METHOD setColorSpec( cColorSpec ) CLASS GET
 #endif
 
    /* NOTE: CA-Cl*pper oddity. [vszakats] */
-   ELSEIF ValType( cColorSpec ) $ "UNDBA"
+   ELSEIF ValType( cColorSpec ) $ "UNDTBA"
 
       RETURN NIL
 
@@ -1042,6 +1042,7 @@ METHOD picture( cPicture ) CLASS GET
    LOCAL nAt
    LOCAL nFor
    LOCAL cNum
+   LOCAL cChar
 
    IF PCount() > 0
 
@@ -1072,12 +1073,16 @@ METHOD picture( cPicture ) CLASS GET
                IF "D" $ ::cPicFunc
 
                   ::cPicMask := Set( _SET_DATEFORMAT )
-                  ::cPicMask := StrTran( ::cPicmask, "y", "9" )
-                  ::cPicMask := StrTran( ::cPicmask, "Y", "9" )
-                  ::cPicMask := StrTran( ::cPicmask, "m", "9" )
-                  ::cPicMask := StrTran( ::cPicmask, "M", "9" )
-                  ::cPicMask := StrTran( ::cPicmask, "d", "9" )
-                  ::cPicMask := StrTran( ::cPicmask, "D", "9" )
+                  FOR EACH cChar IN "yYmMdD"
+                     ::cPicMask := StrTran( ::cPicmask, cChar, "9" )
+                  NEXT
+
+               ELSEIF "T" $ ::cPicFunc
+
+                  ::cPicMask := Set( _SET_TIMEFORMAT )
+                  FOR EACH cChar IN "yYmMdDhHsSfF"
+                     ::cPicMask := StrTran( ::cPicmask, cChar, "9" )
+                  NEXT
 
                ENDIF
 
@@ -1107,7 +1112,7 @@ METHOD picture( cPicture ) CLASS GET
                ::cPicMask := cPicture
             ENDIF
 
-            IF ::cType == "D"
+            IF ::cType == "D" .OR. ::cType == "T"
                ::cPicMask := LTrim( ::cPicMask )
             ENDIF
          ENDIF
@@ -1117,18 +1122,24 @@ METHOD picture( cPicture ) CLASS GET
 
       IF Empty( ::cPicMask ) .OR. ::cPicture == NIL
 
-         DO CASE
-         CASE ::cType == "D"
+         SWITCH ::cType
+         CASE "D"
 
             ::cPicMask := Set( _SET_DATEFORMAT )
-            ::cPicMask := StrTran( ::cPicmask, "y", "9" )
-            ::cPicMask := StrTran( ::cPicmask, "Y", "9" )
-            ::cPicMask := StrTran( ::cPicmask, "m", "9" )
-            ::cPicMask := StrTran( ::cPicmask, "M", "9" )
-            ::cPicMask := StrTran( ::cPicmask, "d", "9" )
-            ::cPicMask := StrTran( ::cPicmask, "D", "9" )
+            FOR EACH cChar IN "yYmMdD"
+               ::cPicMask := StrTran( ::cPicmask, cChar, "9" )
+            NEXT
+            EXIT
 
-         CASE ::cType == "N"
+         CASE "T"
+
+            ::cPicMask := Set( _SET_TIMEFORMAT )
+            FOR EACH cChar IN "yYmMdDhHsSfF"
+               ::cPicMask := StrTran( ::cPicmask, cChar, "9" )
+            NEXT
+            EXIT
+
+         CASE "N"
 
             cNum := Str( ::xVarGet )
             IF ( nAt := At( ".", cNum ) ) > 0
@@ -1137,13 +1148,17 @@ METHOD picture( cPicture ) CLASS GET
             ELSE
                ::cPicMask := Replicate( "9", Len( cNum ) )
             ENDIF
+            EXIT
 
-         CASE ::cType == "C" .AND. ::cPicFunc == "@9"
+         CASE "C"
 
-            ::cPicMask := Replicate( "9", Len( ::xVarGet ) )
-            ::cPicFunc := ""
+            IF ::cPicFunc == "@9"
+               ::cPicMask := Replicate( "9", Len( ::xVarGet ) )
+               ::cPicFunc := ""
+            ENDIF
+            EXIT
 
-         ENDCASE
+         ENDSWITCH
 
       ENDIF
 
@@ -1151,8 +1166,8 @@ METHOD picture( cPicture ) CLASS GET
 
       ::lPicComplex := .F.
       IF ! Empty( ::cPicMask )
-         FOR nFor := 1 TO Len( ::cPicMask )
-            IF !( SubStr( ::cPicMask, nFor, 1 ) $ "!ANX9#" )
+         FOR EACH cChar IN ::cPicMask
+            IF !( cChar $ "!ANX9#" )
                ::lPicComplex := .T.
                EXIT
             ENDIF
@@ -1172,7 +1187,7 @@ METHOD PutMask( xValue, lEdit ) CLASS GET
 
    DEFAULT lEdit TO ::hasFocus
 
-   IF !( ValType( xValue ) $ "CNDL" )
+   IF !( ValType( xValue ) $ "CNDTL" )
       xValue := ""
    ENDIF
 
@@ -1236,7 +1251,7 @@ METHOD PutMask( xValue, lEdit ) CLASS GET
       ENDIF
    ENDIF
 
-   IF ::cType == "D" .AND. ::badDate
+   IF ( ::cType == "D" .OR. ::cType == "T" ) .AND. ::badDate
       cBuffer := ::cBuffer
    ENDIF
 
@@ -1251,6 +1266,7 @@ METHOD unTransform() CLASS GET
    LOCAL nFor
    LOCAL lMinus
    LOCAL lHasDec
+   LOCAL cChar
 
    IF ::hasFocus
 
@@ -1258,8 +1274,8 @@ METHOD unTransform() CLASS GET
 
       IF ISCHARACTER( cBuffer )
 
-         DO CASE
-         CASE ::cType == "C"
+         SWITCH ::cType
+         CASE "C"
 
             IF "R" $ ::cPicFunc
                xValue := ""
@@ -1271,8 +1287,9 @@ METHOD unTransform() CLASS GET
             ELSE
                xValue := cBuffer
             ENDIF
+            EXIT
 
-         CASE ::cType == "N"
+         CASE "N"
 
             lMinus := .F.
             IF "X" $ ::cPicFunc
@@ -1293,7 +1310,8 @@ METHOD unTransform() CLASS GET
             ENDIF
             cBuffer := Space( ::FirstEditable() - 1 ) + SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 )
 
-            IF "D" $ ::cPicFunc
+            IF "D" $ ::cPicFunc .OR. ;
+               "T" $ ::cPicFunc
                FOR nFor := ::FirstEditable() TO ::LastEditable()
                   IF !::IsEditable( nFor )
                      cBuffer := Left( cBuffer, nFor - 1 ) + Chr( 1 ) + SubStr( cBuffer, nFor + 1 )
@@ -1337,8 +1355,8 @@ METHOD unTransform() CLASS GET
             cBuffer := PadL( StrTran( cBuffer, " ", "" ), Len( cBuffer ) )
 
             IF lMinus
-               FOR nFor := 1 TO Len( cBuffer )
-                  IF IsDigit( SubStr( cBuffer, nFor, 1 ) ) .OR. SubStr( cBuffer, nFor, 1 ) == "."
+               FOR EACH cChar IN cBuffer
+                  IF IsDigit( cChar ) .OR. cChar == "."
                      EXIT
                   ENDIF
                NEXT
@@ -1352,21 +1370,30 @@ METHOD unTransform() CLASS GET
 
             xValue := Val( cBuffer )
 
-         CASE ::cType == "L"
+            EXIT
+
+         CASE "L"
 
             cBuffer := Upper( cBuffer )
                xValue := "T" $ cBuffer .OR. ;
                          "Y" $ cBuffer .OR. ;
                          hb_LangMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) $ cBuffer
+            EXIT
 
-         CASE ::cType == "D"
+         CASE "D"
 
             IF "E" $ ::cPicFunc
                cBuffer := SubStr( cBuffer, 4, 3 ) + SubStr( cBuffer, 1, 3 ) + SubStr( cBuffer, 7 )
             ENDIF
             xValue := CToD( cBuffer )
+            EXIT
 
-         ENDCASE
+         CASE "T"
+
+            xValue := hb_CToT( cBuffer )
+            EXIT
+
+         ENDSWITCH
 
       ELSE
          ::lClear  := .F.
@@ -1443,10 +1470,18 @@ METHOD badDate() CLASS GET
 
    LOCAL xValue
 
-   RETURN ::hasFocus .AND. ;
-      ::type == "D" .AND. ;
-      ( xValue := ::unTransform() ) == hb_SToD() .AND. ;
-      !( ::cBuffer == Transform( xValue, ::cPicture ) )
+   IF ::hasFocus
+      SWITCH ::type
+      CASE "D"
+         RETURN ( xValue := ::unTransform() ) == hb_SToD() .AND. ;
+                !( ::cBuffer == Transform( xValue, ::cPicture ) )
+      CASE "T"
+         RETURN ( xValue := ::unTransform() ) == hb_SToT( "" ) .AND. ;
+                !( ::cBuffer == Transform( xValue, ::cPicture ) )
+      ENDSWITCH
+   ENDIF
+
+   RETURN .F.
 
 #ifdef HB_C52_UNDOC
 
@@ -1656,6 +1691,8 @@ METHOD DeleteAll() CLASS GET
          ::lMinus2 := .F.
       CASE ::cType == "D"
          xValue := hb_SToD()
+      CASE ::cType == "T"
+         xValue := hb_SToT( "" )
       CASE ::cType == "L"
          xValue := .F.
       ENDCASE
@@ -1684,16 +1721,13 @@ METHOD IsEditable( nPos ) CLASS GET
 
    cChar := SubStr( ::cPicMask, nPos, 1 )
 
-   DO CASE
-   CASE ::cType == "C"
-      RETURN cChar $ "!ANX9#LY"
-   CASE ::cType == "N"
-      RETURN cChar $ "9#$*"
-   CASE ::cType == "D"
-      RETURN cChar == "9"
-   CASE ::cType == "L"
-      RETURN cChar $ "LY#" /* CA-Cl*pper 5.2 undocumented: # allow T,F,Y,N for Logical [ckedem] */
-   ENDCASE
+   SWITCH ::cType
+   CASE "C" ; RETURN cChar $ "!ANX9#LY"
+   CASE "N" ; RETURN cChar $ "9#$*"
+   CASE "D"
+   CASE "T" ; RETURN cChar == "9"
+   CASE "L" ; RETURN cChar $ "LY#" /* CA-Cl*pper 5.2 undocumented: # allow T,F,Y,N for Logical [ckedem] */
+   ENDSWITCH
 
    RETURN .F.
 
@@ -1701,8 +1735,8 @@ METHOD Input( cChar ) CLASS GET
 
    LOCAL cPic
 
-   DO CASE
-   CASE ::cType == "N"
+   SWITCH ::cType
+   CASE "N"
 
       DO CASE
       CASE cChar == "-"
@@ -1716,20 +1750,30 @@ METHOD Input( cChar ) CLASS GET
       CASE ! ( cChar $ "0123456789+" )
          RETURN ""
       ENDCASE
+      EXIT
 
-   CASE ::cType == "D"
+   CASE "D"
 
       IF !( cChar $ "0123456789" )
          RETURN ""
       ENDIF
+      EXIT
 
-   CASE ::cType == "L"
+   CASE "T"
+
+      IF !( cChar $ "0123456789" )
+         RETURN ""
+      ENDIF
+      EXIT
+
+   CASE "L"
 
       IF !( Upper( cChar ) $ "YNTF" )
          RETURN ""
       ENDIF
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    IF ! Empty( ::cPicFunc )
       cChar := Left( Transform( cChar, ::cPicFunc ), 1 ) /* Left needed for @D */
