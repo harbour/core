@@ -322,7 +322,7 @@ STATIC FUNCTION DbfInfo( aInfo )
 
    FOR nFor := 1 TO FCount()
 
-      xValue := FieldGet( nFor )
+      xValue := __Dbg():GetExprValue( "FieldGet(" + hb_NToS( nFor ) + ")" )
       xType  := ValType( xValue )
 
       DO CASE
