@@ -1120,7 +1120,7 @@ METHOD picture( cPicture ) CLASS GET
 
       /* Generate default picture mask if not specified. */
 
-      IF Empty( ::cPicMask ) .OR. ::cPicture == NIL
+      IF ( Empty( ::cPicMask ) .OR. ::cPicture == NIL ) .AND. ::cType != NIL
 
          SWITCH ::cType
          CASE "D"
@@ -1272,7 +1272,7 @@ METHOD unTransform() CLASS GET
 
       cBuffer := ::cBuffer
 
-      IF ISCHARACTER( cBuffer )
+      IF ISCHARACTER( cBuffer ) .AND. ::cType != NIL
 
          SWITCH ::cType
          CASE "C"
@@ -1721,13 +1721,15 @@ METHOD IsEditable( nPos ) CLASS GET
 
    cChar := SubStr( ::cPicMask, nPos, 1 )
 
-   SWITCH ::cType
-   CASE "C" ; RETURN cChar $ "!ANX9#LY"
-   CASE "N" ; RETURN cChar $ "9#$*"
-   CASE "D"
-   CASE "T" ; RETURN cChar == "9"
-   CASE "L" ; RETURN cChar $ "LY#" /* CA-Cl*pper 5.2 undocumented: # allow T,F,Y,N for Logical [ckedem] */
-   ENDSWITCH
+   IF ::cType != NIL
+      SWITCH ::cType
+      CASE "C" ; RETURN cChar $ "!ANX9#LY"
+      CASE "N" ; RETURN cChar $ "9#$*"
+      CASE "D"
+      CASE "T" ; RETURN cChar == "9"
+      CASE "L" ; RETURN cChar $ "LY#" /* CA-Cl*pper 5.2 undocumented: # allow T,F,Y,N for Logical [ckedem] */
+      ENDSWITCH
+   ENDIF
 
    RETURN .F.
 
@@ -1735,45 +1737,48 @@ METHOD Input( cChar ) CLASS GET
 
    LOCAL cPic
 
-   SWITCH ::cType
-   CASE "N"
+   IF ::cType != NIL
 
-      DO CASE
-      CASE cChar == "-"
-         ::lMinus2 := .T.  /* The minus symbol can be written in any place */
-         ::lMinus := .T.
+      SWITCH ::cType
+      CASE "N"
 
-      CASE cChar $ ".,"
-         ::toDecPos()
-         RETURN ""
+         DO CASE
+         CASE cChar == "-"
+            ::lMinus2 := .T.  /* The minus symbol can be written in any place */
+            ::lMinus := .T.
 
-      CASE ! ( cChar $ "0123456789+" )
-         RETURN ""
-      ENDCASE
-      EXIT
+         CASE cChar $ ".,"
+            ::toDecPos()
+            RETURN ""
 
-   CASE "D"
+         CASE ! ( cChar $ "0123456789+" )
+            RETURN ""
+         ENDCASE
+         EXIT
 
-      IF !( cChar $ "0123456789" )
-         RETURN ""
-      ENDIF
-      EXIT
+      CASE "D"
 
-   CASE "T"
+         IF !( cChar $ "0123456789" )
+            RETURN ""
+         ENDIF
+         EXIT
 
-      IF !( cChar $ "0123456789" )
-         RETURN ""
-      ENDIF
-      EXIT
+      CASE "T"
 
-   CASE "L"
+         IF !( cChar $ "0123456789" )
+            RETURN ""
+         ENDIF
+         EXIT
 
-      IF !( Upper( cChar ) $ "YNTF" )
-         RETURN ""
-      ENDIF
-      EXIT
+      CASE "L"
 
-   ENDSWITCH
+         IF !( Upper( cChar ) $ "YNTF" )
+            RETURN ""
+         ENDIF
+         EXIT
+
+      ENDSWITCH
+   ENDIF
 
    IF ! Empty( ::cPicFunc )
       cChar := Left( Transform( cChar, ::cPicFunc ), 1 ) /* Left needed for @D */

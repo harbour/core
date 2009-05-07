@@ -71,9 +71,9 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       RETURN NIL
    ENDIF
 
-   cMessage := ""
-
    IF ISARRAY( xMessage )
+
+      cMessage := ""
 
       lFirst := .T.
       FOR nEval := 1 TO Len( xMessage )
@@ -82,21 +82,10 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
             lFirst := .F.
          ENDIF
       NEXT
-
+   ELSEIF ISCHARACTER( xMessage )
+      cMessage := StrTran( xMessage, ";", Chr( 10 ) )
    ELSE
-
-      DO CASE
-      CASE ValType( xMessage ) $ "CM" ; cMessage := StrTran( xMessage, ";", Chr( 10 ) )
-      CASE hb_isNumeric( xMessage )   ; cMessage := hb_NToS( xMessage )
-      CASE hb_isDate( xMessage )      ; cMessage := DToC( xMessage )
-      CASE hb_isTimeStamp( xMessage ) ; cMessage := hb_TToC( xMessage )
-      CASE hb_isLogical( xMessage )   ; cMessage := iif( xMessage, ".T.", ".F." )
-      CASE hb_isObject( xMessage )    ; cMessage := xMessage:className + " Object"
-      CASE hb_isSymbol( xMessage )    ; cMessage := "@" + xMessage:Name + "()"
-      CASE hb_isBlock( xMessage )     ; cMessage := "{||...}"
-      OTHERWISE                       ; cMessage := "NIL"
-      ENDCASE
-
+      cMessage := hb_CStr( xMessage )
    ENDIF
 
 #else
