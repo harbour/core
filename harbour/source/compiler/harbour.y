@@ -90,7 +90,7 @@ static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExpr
 static void hb_compEnumNext( HB_COMP_DECL, HB_EXPR_PTR pExpr, int descend );
 static void hb_compEnumEnd( HB_COMP_DECL, HB_EXPR_PTR pExpr );
 
-static void hb_compSwitchStart( HB_COMP_DECL );
+static void hb_compSwitchStart( HB_COMP_DECL, HB_EXPR_PTR );
 static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR );
 static void hb_compSwitchEnd( HB_COMP_DECL );
 
@@ -261,6 +261,7 @@ extern void yyerror( HB_COMP_DECL, const char * );     /* parsing error manageme
 %type <asExpr>  FieldAlias FieldVarAlias
 %type <asExpr>  PostOp
 %type <asExpr>  ForVar ForList ForExpr ForArgs
+%type <asExpr>  SwitchStart SwitchBegin
 %type <asCodeblock> CBSTART
 %type <asMessage> SendId
 %type <asVarType> AsType StrongType AsArrayType AsArray
@@ -1710,7 +1711,7 @@ Descend    : /* default up */     { $$ =  1; }
 DoSwitch    : SwitchBegin
                {
                   hb_compLoopStart( HB_COMP_PARAM, FALSE );
-                  hb_compSwitchStart( HB_COMP_PARAM );
+                  hb_compSwitchStart( HB_COMP_PARAM, $1 );
                   hb_compGenJump( 0, HB_COMP_PARAM );
                }
                SwitchCases
@@ -1723,6 +1724,7 @@ DoSwitch    : SwitchBegin
             | SwitchBegin
               EndSwitch
                {
+                  HB_COMP_EXPR_DELETE( $1 );
                   hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
                }
             ;
@@ -1740,12 +1742,13 @@ EndSwitchID : ENDSWITCH
             ;
 
 SwitchStart : DOSWITCH
-               { ++HB_COMP_PARAM->functions.pLast->wSwitchCounter;
+               {
+                  ++HB_COMP_PARAM->functions.pLast->wSwitchCounter;
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                }
               Expression Crlf
                {
-                  HB_COMP_EXPR_DELETE( hb_compExprGenPush( $3, HB_COMP_PARAM ) );
+                  $$ = hb_compExprReduce( $3, HB_COMP_PARAM );
                }
             ;
 
@@ -2577,7 +2580,7 @@ static void hb_compEnumEnd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    hb_compGenPCode1( HB_P_ENUMEND, HB_COMP_PARAM );
 }
 
-static void hb_compSwitchStart( HB_COMP_DECL )
+static void hb_compSwitchStart( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
    HB_SWITCHCMD_PTR pSwitch = (HB_SWITCHCMD_PTR) hb_xgrab( sizeof( HB_SWITCHCMD ) );
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
@@ -2586,7 +2589,7 @@ static void hb_compSwitchStart( HB_COMP_DECL )
    pSwitch->pLast  = NULL;
    pSwitch->ulDefault = 0;
    pSwitch->ulOffset = pFunc->lPCodePos;
-   pSwitch->iCount = 0;
+   pSwitch->pExpr = pExpr;
    pSwitch->pPrev = pFunc->pSwitch;
    pFunc->pSwitch = pSwitch;
 }
@@ -2605,10 +2608,9 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
       pCase->ulOffset = pFunc->lPCodePos;
       pCase->pNext = NULL;
       pExpr = hb_compExprReduce( pExpr, HB_COMP_PARAM );
-      if( !(hb_compExprIsLong(pExpr) || hb_compExprIsString(pExpr)) )
-      {
+      if( !( hb_compExprIsLong( pExpr ) || hb_compExprIsString( pExpr ) ) )
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_NOT_LITERAL_CASE, NULL, NULL );
-      }
+
       pCase->pExpr = pExpr;
 
       if( pFunc->pSwitch->pLast )
@@ -2620,7 +2622,6 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
       {
          pFunc->pSwitch->pCases = pFunc->pSwitch->pLast = pCase;
       }
-      pFunc->pSwitch->iCount++;
       if( hb_compExprIsString( pExpr ) && hb_compExprAsStringLen(pExpr) > 255 )
       {
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_STR, NULL, NULL );
@@ -2637,70 +2638,110 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
       else
       {
          pFunc->pSwitch->ulDefault = pFunc->lPCodePos;
-         pFunc->pSwitch->iCount++;
       }
    }
 }
 
 static void hb_compSwitchEnd( HB_COMP_DECL )
 {
-   BOOL fLongOptimize = HB_COMP_PARAM->fLongOptimize;
-   BOOL fMacroText = ( HB_COMP_PARAM->supported & HB_COMPFLAG_MACROTEXT ) != 0;
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
-   HB_SWITCHCASE_PTR pCase = pFunc->pSwitch->pCases;
-   HB_SWITCHCASE_PTR pTmp;
-   HB_SWITCHCMD_PTR pTmpSw;
-   ULONG ulExitPos;
+   HB_SWITCHCMD_PTR pSwitch = pFunc->pSwitch;
+   HB_EXPR_PTR pExpr = pSwitch->pExpr;
+   HB_SWITCHCASE_PTR pCase, pTmp;
+   ULONG ulExitPos, ulCountPos;
+   int iCount = 0;
 
    /* skip switch pcode if there was no EXIT in the last CASE
     * or in the DEFAULT case
    */
    ulExitPos = hb_compGenJump( 0, HB_COMP_PARAM );
+   hb_compGenJumpHere( pSwitch->ulOffset + 1, HB_COMP_PARAM );
 
-   hb_compGenJumpHere( pFunc->pSwitch->ulOffset + 1, HB_COMP_PARAM );
-   hb_compGenPCode3( HB_P_SWITCH, HB_LOBYTE( pFunc->pSwitch->iCount ), HB_HIBYTE( pFunc->pSwitch->iCount ), HB_COMP_PARAM );
-   HB_COMP_PARAM->fLongOptimize = FALSE;
-   HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACROTEXT;
-   while( pCase )
+   pCase = pSwitch->pCases;
+   if( hb_compExprIsLong( pExpr ) || hb_compExprIsString( pExpr ) )
    {
-      if( pCase->pExpr )
+      BOOL fGen = FALSE;
+      while( pCase )
+      {
+         if( hb_compExprIsLong( pCase->pExpr ) )
+         {
+            fGen = hb_compExprIsLong( pExpr ) &&
+                   hb_compExprAsLongNum( pExpr ) ==
+                   hb_compExprAsLongNum( pCase->pExpr );
+         }
+         else if( hb_compExprIsString( pCase->pExpr ) )
+         {
+            fGen = hb_compExprIsString( pExpr ) &&
+                   hb_compExprAsStringLen( pExpr ) ==
+                   hb_compExprAsStringLen( pCase->pExpr ) &&
+                   memcmp( hb_compExprAsString( pExpr ),
+                           hb_compExprAsString( pCase->pExpr ),
+                           hb_compExprAsStringLen( pExpr ) ) == 0;
+         }
+         if( fGen )
+         {
+            hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ),
+                                 pCase->ulOffset, HB_COMP_PARAM );
+            break;
+         }
+         pCase = pCase->pNext;
+      }
+      if( pSwitch->ulDefault && !fGen )
+      {
+         hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ),
+                              pSwitch->ulDefault, HB_COMP_PARAM );
+      }
+   }
+   else
+   {
+      BOOL fLongOptimize = HB_COMP_PARAM->fLongOptimize;
+      BOOL fMacroText = ( HB_COMP_PARAM->supported & HB_COMPFLAG_MACROTEXT ) != 0;
+
+      pExpr = hb_compExprGenPush( pExpr, HB_COMP_PARAM );
+      ulCountPos = pFunc->lPCodePos + 1;
+      hb_compGenPCode3( HB_P_SWITCH, 0, 0, HB_COMP_PARAM );
+      HB_COMP_PARAM->fLongOptimize = FALSE;
+      HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACROTEXT;
+      while( pCase )
       {
          if( hb_compExprIsLong( pCase->pExpr ) || hb_compExprIsString( pCase->pExpr ) )
          {
-            HB_COMP_EXPR_DELETE( hb_compExprGenPush( pCase->pExpr, HB_COMP_PARAM ) );
-            hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ), pCase->ulOffset, HB_COMP_PARAM );
+            iCount++;
+            pCase->pExpr = hb_compExprGenPush( pCase->pExpr, HB_COMP_PARAM );
+            hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ),
+                                 pCase->ulOffset, HB_COMP_PARAM );
          }
-         else
-         {
-            HB_COMP_EXPR_DELETE( pCase->pExpr );
-         }
+         pCase = pCase->pNext;
       }
-      pCase = pCase->pNext;
-   }
+      if( pSwitch->ulDefault )
+      {
+         iCount++;
+         hb_compGenPCode1( HB_P_PUSHNIL, HB_COMP_PARAM );
+         hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ),
+                              pSwitch->ulDefault, HB_COMP_PARAM );
+      }
+      HB_PUT_LE_UINT16( pFunc->pCode + ulCountPos, iCount );
 
-   if( pFunc->pSwitch->ulDefault )
-   {
-      hb_compGenPCode1( HB_P_PUSHNIL, HB_COMP_PARAM );
-      hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ),
-                           pFunc->pSwitch->ulDefault, HB_COMP_PARAM );
+      HB_COMP_PARAM->fLongOptimize = fLongOptimize;
+      if( fMacroText )
+         HB_COMP_PARAM->supported |= HB_COMPFLAG_MACROTEXT;
    }
-
-   HB_COMP_PARAM->fLongOptimize = fLongOptimize;
-   if( fMacroText )
-      HB_COMP_PARAM->supported |= HB_COMPFLAG_MACROTEXT;
 
    hb_compGenJumpHere( ulExitPos, HB_COMP_PARAM );
 
-   pCase = pFunc->pSwitch->pCases;
+   if( pExpr )
+      HB_COMP_EXPR_DELETE( pExpr );
+
+   pCase = pSwitch->pCases;
    while( pCase )
    {
+      HB_COMP_EXPR_DELETE( pCase->pExpr );
       pTmp = pCase->pNext;
       hb_xfree( (void *)pCase );
       pCase = pTmp;
    }
-   pTmpSw = pFunc->pSwitch;
-   pFunc->pSwitch = pFunc->pSwitch->pPrev;
-   hb_xfree( pTmpSw );
+   pFunc->pSwitch = pSwitch->pPrev;
+   hb_xfree( pSwitch );
 }
 
 /* Release all switch statements
@@ -2721,6 +2762,8 @@ void hb_compSwitchKill( HB_COMP_DECL, PFUNCTION pFunc )
       }
       pSwitch = pFunc->pSwitch;
       pFunc->pSwitch = pSwitch->pPrev;
+      if( pSwitch->pExpr )
+         HB_COMP_EXPR_DELETE( pSwitch->pExpr );
       hb_xfree( (void *) pSwitch );
    }
 }

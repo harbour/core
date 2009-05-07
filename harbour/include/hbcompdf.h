@@ -365,9 +365,9 @@ typedef struct HB_SWITCHCASE_
 typedef struct HB_SWITCHCMD_
 {
    ULONG ulOffset;
-   int iCount;
    HB_SWITCHCASE_PTR pCases;
    HB_SWITCHCASE_PTR pLast;
+   HB_EXPR_PTR pExpr;
    ULONG ulDefault;
    struct HB_SWITCHCMD_ *pPrev;
 } HB_SWITCHCMD, *HB_SWITCHCMD_PTR;
