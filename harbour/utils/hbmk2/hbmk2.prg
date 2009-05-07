@@ -4801,6 +4801,9 @@ STATIC PROCEDURE PlatformPRGFlags( aOPTPRG )
 
       #if   defined( __PLATFORM__WINDOWS )
          AAdd( aOPTPRG, "-undef:__PLATFORM__WINDOWS" )
+         IF s_lXHB
+            AAdd( aOPTPRG, "-undef:__PLATFORM__Windows" )
+         ENDIF
          #if defined( __PLATFORM__WINCE )
             AAdd( aOPTPRG, "-undef:__PLATFORM__WINCE" )
          #endif
@@ -4809,6 +4812,9 @@ STATIC PROCEDURE PlatformPRGFlags( aOPTPRG )
       #elif defined( __PLATFORM__OS2 )
          AAdd( aOPTPRG, "-undef:__PLATFORM__OS2" )
       #elif defined( __PLATFORM__LINUX )
+         IF s_lXHB
+            AAdd( aOPTPRG, "-undef:__PLATFORM__Linux" )
+         ENDIF
          AAdd( aOPTPRG, "-undef:__PLATFORM__LINUX" )
          AAdd( aOPTPRG, "-undef:__PLATFORM__UNIX" )
       #elif defined( __PLATFORM__DARWIN )
@@ -4829,8 +4835,14 @@ STATIC PROCEDURE PlatformPRGFlags( aOPTPRG )
       CASE s_cARCH == "wce"
          AAdd( aOPTPRG, "-D__PLATFORM__WINDOWS" )
          AAdd( aOPTPRG, "-D__PLATFORM__WINCE" )
+         IF s_lXHB
+            AAdd( aOPTPRG, "-D__PLATFORM__Windows" )
+         ENDIF
       CASE s_cARCH == "win"
          AAdd( aOPTPRG, "-D__PLATFORM__WINDOWS" )
+         IF s_lXHB
+            AAdd( aOPTPRG, "-D__PLATFORM__Windows" )
+         ENDIF
       CASE s_cARCH == "dos"
          AAdd( aOPTPRG, "-D__PLATFORM__DOS" )
       CASE s_cARCH == "os2"
@@ -4838,6 +4850,9 @@ STATIC PROCEDURE PlatformPRGFlags( aOPTPRG )
       CASE s_cARCH == "linux"
          AAdd( aOPTPRG, "-D__PLATFORM__LINUX" )
          AAdd( aOPTPRG, "-D__PLATFORM__UNIX" )
+         IF s_lXHB
+            AAdd( aOPTPRG, "-D__PLATFORM__Linux" )
+         ENDIF
       CASE s_cARCH == "darwin"
          AAdd( aOPTPRG, "-D__PLATFORM__DARWIN" )
          AAdd( aOPTPRG, "-D__PLATFORM__UNIX" )
@@ -5101,7 +5116,7 @@ STATIC PROCEDURE MakePO( aLNG, cPO, aPOTIN )
       IF cLNG:__enumIndex() == 1
          IF s_lDEBUGI18N
             hbmk_OutStd( hb_StrFormat( "MakePO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
-            hbmk_OutStd( hb_StrFormat( "MakePO: unified .po: %1$s", cPOTemp ) )
+            hbmk_OutStd( hb_StrFormat( "MakePO: temp unified .po: %1$s", cPOTemp ) )
          ENDIF
          fhnd := hb_FTempCreateEx( @cPOTemp, NIL, NIL, ".po" )
          IF fhnd != F_ERROR
@@ -5114,13 +5129,13 @@ STATIC PROCEDURE MakePO( aLNG, cPO, aPOTIN )
       cPOCooked := StrTran( cPO, _LNG_MARKER, cLNG )
       IF hb_FileExists( cPOCooked )
          IF s_lDEBUGI18N
-            hbmk_OutStd( hb_StrFormat( "MakePO: existing/output unified .po: %1$s", cPOCooked ) )
+            hbmk_OutStd( hb_StrFormat( "MakePO: updating unified .po: %1$s", cPOCooked ) )
          ENDIF
          AutoTrans( cPOTemp, { cPOCooked }, cPOCooked )
          AAdd( aUpd, cLNG )
       ELSE
          IF s_lDEBUGI18N
-            hbmk_OutStd( hb_StrFormat( "MakePO: new unified .po: %1$s", cPOCooked ) )
+            hbmk_OutStd( hb_StrFormat( "MakePO: creating unified .po: %1$s", cPOCooked ) )
          ENDIF
          hb_FCopy( cPOTemp, cPOCooked )
          AAdd( aNew, cLNG )
@@ -5133,16 +5148,16 @@ STATIC PROCEDURE MakePO( aLNG, cPO, aPOTIN )
 
    IF ! Empty( aNew )
       IF Empty( aLNG )
-         hbmk_OutStd( hb_StrFormat( I_( "Created .po file: %1$s" ), cPO ) )
+         hbmk_OutStd( hb_StrFormat( I_( "Created .po file '%1$s'" ), cPO ) )
       ELSE
-         hbmk_OutStd( hb_StrFormat( I_( "Created .po file '%1$s' for language(s): %2$s" ), cPO, ArrayToList( aNew, ", " ) ) )
+         hbmk_OutStd( hb_StrFormat( I_( "Created .po file '%1$s' for language(s): %2$s" ), cPO, ArrayToList( aNew, "," ) ) )
       ENDIF
    ENDIF
    IF ! Empty( aUpd )
       IF Empty( aLNG )
-         hbmk_OutStd( hb_StrFormat( I_( "Updated .po file: %1$s" ), cPO ) )
+         hbmk_OutStd( hb_StrFormat( I_( "Updated .po file '%1$s'" ), cPO ) )
       ELSE
-         hbmk_OutStd( hb_StrFormat( I_( "Updated .po file '%1$s' for language(s): %2$s" ), cPO, ArrayToList( aUpd, ", " ) ) )
+         hbmk_OutStd( hb_StrFormat( I_( "Updated .po file '%1$s' for language(s): %2$s" ), cPO, ArrayToList( aUpd, "," ) ) )
       ENDIF
    ENDIF
 
@@ -5189,45 +5204,29 @@ STATIC PROCEDURE MakeHBL( aPO, cHBL, aLNG )
 
    IF ! Empty( aNew )
       IF Empty( aLNG )
-         hbmk_OutStd( hb_StrFormat( I_( "Created .hbl file: %1$s" ), cHBL ) )
+         hbmk_OutStd( hb_StrFormat( I_( "Created .hbl file '%1$s'" ), cHBL ) )
       ELSE
-         hbmk_OutStd( hb_StrFormat( I_( "Created .hbl file '%1$s' for language(s): %2$s" ), cHBL, ArrayToList( aNew, ", " ) ) )
+         hbmk_OutStd( hb_StrFormat( I_( "Created .hbl file '%1$s' for language(s): %2$s" ), cHBL, ArrayToList( aNew, "," ) ) )
       ENDIF
    ENDIF
 
    RETURN
 
 STATIC FUNCTION LoadPOTFiles( aFiles, lIgnoreError )
-   LOCAL aTrans, aTrans2
+   LOCAL aTrans := {}, aTrans2
    LOCAL hIndex
    LOCAL cErrorMsg
    LOCAL cFileName
 
    FOR EACH cFileName IN aFiles
-      cErrorMsg := NIL
-      IF aTrans == NIL
-         aTrans := __i18n_potArrayLoad( cFileName, @cErrorMsg )
-         IF aTrans != NIL
-            IF s_lDEBUGI18N
-               hbmk_OutStd( hb_StrFormat( "LoadPOTFiles(): Loaded: %1$s", cFileName ) )
-            ENDIF
-         ELSE
-            IF ! lIgnoreError
-               hbmk_OutErr( hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
-            ENDIF
-         ENDIF
+      aTrans2 := __i18n_potArrayLoad( cFileName, @cErrorMsg )
+      IF aTrans2 != NIL
+         __i18n_potArrayJoin( aTrans, aTrans2, @hIndex )
       ELSE
-         aTrans2 := __i18n_potArrayLoad( cFileName, @cErrorMsg )
-         IF aTrans2 != NIL
-            IF s_lDEBUGI18N
-               hbmk_OutStd( hb_StrFormat( "LoadPOTFiles(): Loaded: %1$s", cFileName ) )
-            ENDIF
-            __i18n_potArrayJoin( aTrans, aTrans2, @hIndex )
-         ELSE
-            IF ! lIgnoreError
-               hbmk_OutErr( hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
-            ENDIF
+         IF ! lIgnoreError
+            hbmk_OutErr( hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
          ENDIF
+         cErrorMsg := NIL
       ENDIF
    NEXT
 
@@ -5248,7 +5247,7 @@ STATIC FUNCTION LoadPOTFilesAsHash( aFiles )
       aTrans := __i18n_potArrayLoad( cFileName, @cErrorMsg )
       IF aTrans != NIL
          IF s_lDEBUGI18N
-            hbmk_OutStd( hb_StrFormat( "LoadPOTFilesAsHash: %1$s", cFileName ) )
+            hbmk_OutStd( hb_StrFormat( "LoadPOTFilesAsHash(): %1$s", cFileName ) )
          ENDIF
          hTrans := __i18n_potArrayToHash( aTrans,, hTrans )
       ELSE

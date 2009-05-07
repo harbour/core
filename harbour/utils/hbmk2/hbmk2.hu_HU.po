@@ -604,13 +604,13 @@ msgstr "Alapbe†ll°t†sok feldolgoz†sa: %1$s"
 
 #: hbmk2.prg:5143
 #, c-format
-msgid "Updated .po file: %1$s"
-msgstr ".po f†jl friss°tve: %1$s"
+msgid "Updated .po file '%1$s'"
+msgstr "'%1$s' .po f†jl friss°tve"
 
 #: hbmk2.prg:5192
 #, c-format
-msgid "Created .hbl file: %1$s"
-msgstr ".po f†jl lÇtrehozva: %1$s"
+msgid "Created .hbl file '%1$s'"
+msgstr "'%1$s' .hbl f†jl lÇtrehozva"
 
 #: hbmk2.prg:5556
 #, c-format
@@ -724,8 +724,8 @@ msgstr "Hiba: Dinamikus fÅggvÇnykînyvt†r szerkesztã futtat†sakor. %1$s:"
 
 #: hbmk2.prg:5136
 #, c-format
-msgid "Created .po file: %1$s"
-msgstr ".po f†jl lÇtrehozva: %1$s"
+msgid "Created .po file '%1$s'"
+msgstr "'%1$s' .po f†jl lÇtrehozva"
 
 #: hbmk2.prg:5556
 #, c-format
