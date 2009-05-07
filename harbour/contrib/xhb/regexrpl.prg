@@ -64,7 +64,7 @@ FUNCTION hb_RegexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, n
    LOCAL cSearch, nStart, nLenSearch, nLenReplace
    //LOCAL nEnd
 
-   IF !HB_ISREGEXSTRING( cRegex )
+   IF !HB_ISREGEX( cRegex )
      pRegex := HB_RegExComp( cRegEx )
    ELSE
      pRegex := cRegEx

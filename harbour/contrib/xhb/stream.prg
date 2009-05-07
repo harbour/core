@@ -172,9 +172,11 @@ METHOD Read( sBuffer, nOffset, nCount ) CLASS TStreamFileReader
 
    LOCAL nRead
 
+/*
    IF ! HB_IsByRef( @sBuffer )
       Throw( ErrorNew( "Stream", 0, 1002, ProcName(), "Buffer not BYREF.", HB_aParams() ) )
    ENDIF
+*/
 
    nRead := FRead( ::Handle, @sBuffer, nCount, nOffset )
 

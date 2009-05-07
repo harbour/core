@@ -140,6 +140,34 @@ HB_FUNC( XHB__KEYBOARD )
    }
 }
 
+HB_FUNC( HB_CREATELEN8 )
+{
+   char buffer[ 8 ];
+   HB_LONG llValue;
+
+   if( ISNUM( 1 ) )
+   {
+      llValue = hb_parnint( 1 );
+      HB_PUT_LE_UINT64( buffer, llValue );
+      hb_retclen( buffer, 8 );
+   }
+   else if( ISBYREF( 1 ) && ISNUM( 2 ) )
+   {
+      llValue = hb_parnint( 2 );
+      HB_PUT_LE_UINT64( buffer, llValue );
+      hb_storclen( buffer, 8, 1 );
+   }
+}
+
+HB_FUNC( HB_GETLEN8 )
+{
+   char * buffer = hb_parc( 1 );
+   if( buffer && hb_parclen( 1 ) >= 8 )
+      hb_retnint( HB_GET_LE_UINT64( buffer ) );
+   else
+      hb_retni( -1 );
+}
+
 HB_FUNC_EXTERN( HB_DESERIALIZE );
 
 HB_FUNC( HB_DESERIALBEGIN )

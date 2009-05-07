@@ -86,11 +86,15 @@
 #define EXCEPTION_ILLEGAL_INSTRUCTION       STATUS_ILLEGAL_INSTRUCTION
 #endif
 
-extern PHB_FUNC pHVMFuncService;
-
 /**************************************************
 * Global definition, valid for all systems
 ***************************************************/
+
+HB_EXTERN_BEGIN
+BOOL hb_isService( void );
+void hb_serviceExit( void );
+HB_EXTERN_END
+
 
 static void s_serviceSetHBSig( void );
 static void s_serviceSetDflSig( void );
@@ -261,7 +265,7 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
    to fix as soon as thread support is ready on OS/2
 */
 #if defined(HB_THREAD_SUPPORT) && ! defined(HB_OS_OS2)
-void * s_signalListener( void * my_stack )
+static void * s_signalListener( void * my_stack )
 {
    static BOOL bFirst = TRUE;
    sigset_t passall;
@@ -698,6 +702,13 @@ static int s_translateSignal( UINT sig, UINT subsig )
    return HB_SIGNAL_UNKNOWN;
 }
 
+static void hb_service_exit( void* cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   hb_serviceExit();
+}
+
 /**
 * Initializes signal handler system
 */
@@ -718,6 +729,7 @@ static void s_signalHandlersInit()
 
    sp_hooks = hb_itemNew( NULL );
    hb_arrayNew( sp_hooks, 0 );
+   hb_vmAtQuit( hb_service_exit, NULL );
 }
 
 /*****************************************************************************
@@ -771,7 +783,6 @@ HB_FUNC( HB_STARTSERVICE )
 
    /* let's begin */
    sb_isService = TRUE;
-   pHVMFuncService = ( PHB_FUNC ) hb_isService;
 
    /* in windows, we just detach from console */
    #ifdef HB_OS_WIN
@@ -793,7 +804,7 @@ HB_FUNC( HB_STARTSERVICE )
 * Been called. C version useful for internal api
 */
 
-BOOL hb_isService()
+BOOL hb_isService( void )
 {
    return sb_isService;
 }
@@ -803,13 +814,14 @@ BOOL hb_isService()
 * Called from hb_vmQuit()
 */
 
-void hb_serviceExit()
+void hb_serviceExit( void )
 {
    if( sp_hooks != NULL )
    {
       /* reset default signal handling */
       s_serviceSetDflSig();
       hb_itemRelease( sp_hooks );
+      sp_hooks = NULL;
    }
 }
 
