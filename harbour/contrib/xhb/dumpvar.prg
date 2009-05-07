@@ -243,7 +243,7 @@ STATIC FUNCTION DShowHash( hVar, lRecursive, nIndent, nRecursionLevel, nMaxRecur
    //TraceLog( "DShowHash: hVar, ValType( hVar ), lRecursive", hVar, ValType( hVar ), ValToPrg( hVar ), lRecursive )
 
    IF ValType( hVar ) == "H"
-      aKeys := hb_HGetKeys( hVar )
+      aKeys := hb_HKeys( hVar )
       cString += Space( nIndent ) + "{" + CRLF
       FOR EACH xKey IN aKeys
           xVal := hVar[ xKey ]
