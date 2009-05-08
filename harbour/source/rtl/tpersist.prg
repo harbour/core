@@ -228,6 +228,9 @@ STATIC FUNCTION ValToText( uValue )
       cText := DToS( uValue )
       cText := "0d" + iif( Empty( cText ), "00000000", cText )
 
+   CASE cType == "T"
+      cText := 't"' + hb_TSToStr( uValue, .T. ) + '"'
+
    OTHERWISE
       cText := hb_ValToStr( uValue )
    ENDCASE

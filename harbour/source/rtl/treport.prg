@@ -209,7 +209,7 @@ METHOD New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nReco
       err:subSystem := "FRMLBL"
       Eval( ErrorBlock(), err )
    ELSE
-      /* NOTE: CA-Cl*pper does an RTrim() on the filename here, 
+      /* NOTE: CA-Cl*pper does an RTrim() on the filename here,
                but in Harbour we're using _SET_TRIMFILENAME. */
       IF Set( _SET_DEFEXTENSIONS )
          hb_FNameSplit( cFRMName, NIL, NIL, @cExt )
@@ -1142,8 +1142,8 @@ METHOD LoadReportFile( cFrmFile ) CLASS HBReportForm
 */
 
 METHOD GetExpr( nPointer ) CLASS HBReportForm
-   LOCAL nExprOffset       
-   LOCAL nExprLength       
+   LOCAL nExprOffset
+   LOCAL nExprLength
    LOCAL nOffsetOffset := 0
    LOCAL cString := ""
 
@@ -1314,6 +1314,8 @@ METHOD GetColumn( cFieldsBuffer, nOffset ) CLASS HBReportForm
          aColumn[ RCT_PICT ] := Replicate("X", aColumn[ RCT_WIDTH ])
       CASE cType == "D"
          aColumn[ RCT_PICT ] := "@D"
+      CASE cType == "T"
+         aColumn[ RCT_PICT ] := "@T"
       CASE cType == "N"
          IF aColumn[ RCT_DECIMALS ] != 0
             aColumn[ RCT_PICT ] := Replicate("9", aColumn[ RCT_WIDTH ] - aColumn[ RCT_DECIMALS ] -1) + "." + ;
@@ -1377,6 +1379,8 @@ STATIC FUNCTION MakeAStr( uVar, cType )
    DO CASE
    CASE Upper( cType ) == "D"
       cString := DToC( uVar )
+   CASE Upper( cType ) == "T"
+      cString := hb_TToC( uVar )
    CASE Upper( cType ) == "L"
       cString := iif( uVar, "T", "F" )
    CASE Upper( cType ) == "N"

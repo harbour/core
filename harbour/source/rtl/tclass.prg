@@ -71,8 +71,8 @@
  *
  */
 
-/* NOTE: This .prg is also used by the debugger subsystem, 
-         therefore we need this switch to avoid an infinite 
+/* NOTE: This .prg is also used by the debugger subsystem,
+         therefore we need this switch to avoid an infinite
          loop when launching it. [vszakats] */
 #pragma DEBUGINFO=OFF
 
@@ -310,21 +310,26 @@ STATIC FUNCTION Instance()
 
 STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
 
-   LOCAL c
-
    DEFAULT lNoInit TO .F.
    DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
 
    /* Default Init for Logical and numeric */
    IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
-      c := Upper( Left( cType, 1 ) )
-      IF c == "L"       /* Logical */
+      SWITCH Upper( Left( cType, 1 ) )
+      CASE "L"       /* Logical */
          xInit := .F.
-      ELSEIF c $ "NI"   /* Numeric or Integer */
+         EXIT
+      CASE "I"       /* Numeric or Integer */
+      CASE "N"       /* Numeric or Integer */
          xInit := 0
-      ELSEIF c == "D"   /* Date */
+         EXIT
+      CASE "D"       /* Date */
          xInit := hb_SToD()
-      ENDIF
+         EXIT
+      CASE "T"       /* Timestamp */
+         xInit := hb_SToT( "" )
+         EXIT
+      ENDSWITCH
    ENDIF
 
    AAdd( QSelf():aDatas, { cData, xInit, cType, nScope } )
@@ -346,8 +351,6 @@ STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
 
 STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
-   LOCAL c
-
    DEFAULT lNoInit TO .F.
    DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
 
@@ -355,14 +358,21 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
    /* Default Init for Logical and numeric */
    IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
-      c := Upper( Left( cType, 1 ) )
-      IF c == "L"       /* Logical */
+      SWITCH Upper( Left( cType, 1 ) )
+      CASE "L"       /* Logical */
          xInit := .F.
-      ELSEIF c $ "NI"   /* Numeric or Integer */
+         EXIT
+      CASE "I"       /* Numeric or Integer */
+      CASE "N"       /* Numeric or Integer */
          xInit := 0
-      ELSEIF c == "D"   /* Date */
+         EXIT
+      CASE "D"       /* Date */
          xInit := hb_SToD()
-      ENDIF
+         EXIT
+      CASE "T"       /* Timestamp */
+         xInit := hb_SToT( "" )
+         EXIT
+      ENDSWITCH
    ENDIF
 
    AAdd( QSelf():aClsDatas, { cData, xInit, cType, nScope } )
