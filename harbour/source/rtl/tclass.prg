@@ -245,9 +245,9 @@ STATIC PROCEDURE Create( /* MetaClass */ )
    /* local messages... */
 
    FOR EACH n IN ::aDatas
-      __clsAddMsg( hClass, n[ HB_OO_DATA_SYMBOL ]       , n, ;
+      __clsAddMsg( hClass, n[ HB_OO_DATA_SYMBOL ]       , n:__enumIndex(), ;
                    HB_OO_MSG_ACCESS, n[ HB_OO_DATA_VALUE ], n[ HB_OO_DATA_SCOPE ] )
-      __clsAddMsg( hClass, "_" + n[ HB_OO_DATA_SYMBOL ] , n, ;
+      __clsAddMsg( hClass, "_" + n[ HB_OO_DATA_SYMBOL ] , n:__enumIndex(), ;
                    HB_OO_MSG_ASSIGN, n[ HB_OO_DATA_TYPE ] , n[ HB_OO_DATA_SCOPE ] )
    NEXT
 
@@ -258,9 +258,9 @@ STATIC PROCEDURE Create( /* MetaClass */ )
 
    nClassBegin := __CLS_CNTCLSDATA( hClass )
    FOR EACH n IN ::aClsDatas
-      __clsAddMsg( hClass, n[ HB_OO_CLSD_SYMBOL ]      , n + nClassBegin,;
+      __clsAddMsg( hClass, n[ HB_OO_CLSD_SYMBOL ]      , n:__enumIndex() + nClassBegin,;
                    HB_OO_MSG_CLSACCESS, n[ HB_OO_CLSD_VALUE ], n[ HB_OO_CLSD_SCOPE ] )
-      __clsAddMsg( hClass, "_" + n[ HB_OO_CLSD_SYMBOL ], n + nClassBegin,;
+      __clsAddMsg( hClass, "_" + n[ HB_OO_CLSD_SYMBOL ], n:__enumIndex() + nClassBegin,;
                    HB_OO_MSG_CLSASSIGN,                      , n[ HB_OO_CLSD_SCOPE ] )
    NEXT
 

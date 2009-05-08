@@ -31,33 +31,34 @@ PROCEDURE Main()
       ? "7) OpenOffice Writer"
       ? "8) OpenOffice Open"
       ? "9) Send mail via CDO"
+      ? "a) Read ADODB table"
       ? "0) Quit"
       ? "> "
 
       nOption := Inkey( 0 )
       ?? Chr( nOption )
 
-      nOption -= Asc( "0" )
-
-      IF nOption == 1
+      IF     nOption == Asc( "1" )
          Exm_MSExcel()
-      ELSEIF nOption == 2
+      ELSEIF nOption == Asc( "2" )
          Exm_MSWord()
-      ELSEIF nOption == 3
+      ELSEIF nOption == Asc( "3" )
          Exm_MSOutlook()
-      ELSEIF nOption == 4
+      ELSEIF nOption == Asc( "4" )
          Exm_MSOutlook2()
-      ELSEIF nOption == 5
+      ELSEIF nOption == Asc( "5" )
          Exm_IExplorer()
-      ELSEIF nOption == 6
+      ELSEIF nOption == Asc( "6" )
          Exm_OOCalc()
-      ELSEIF nOption == 7
+      ELSEIF nOption == Asc( "7" )
          Exm_OOWriter()
-      ELSEIF nOption == 8
+      ELSEIF nOption == Asc( "8" )
          Exm_OOOpen()
-      ELSEIF nOption == 9
+      ELSEIF nOption == Asc( "9" )
          Exm_CDO()
-      ELSEIF nOption == 0
+      ELSEIF nOption == Asc( "a" )
+         Exm_ADODB()
+      ELSEIF nOption == Asc( "0" )
          EXIT
       ENDIF
    ENDDO
@@ -389,5 +390,37 @@ STATIC PROCEDURE Exm_CDO()
    ELSE
       ? "Error: CDO subsystem not available (needs Windows XP or upper).", OLEErrorText()
    ENDIF
+
+   RETURN
+
+#define adOpenForwardOnly      0
+#define adOpenKeyset           1
+#define adOpenDynamic          2
+#define adOpenStatic           3
+
+#define adLockReadOnly         1
+#define adLockPessimistic      2
+#define adLockOptimistic       3
+#define adLockBatchOptimistic  4
+
+#define adUseNone              1
+#define adUseServer            2
+#define adUseClient            3
+
+STATIC PROCEDURE Exm_ADODB()
+
+   LOCAL oRs := CreateObject( "ADODB.Recordset" )
+
+   oRs:Open( "SELECT * FROM test ORDER BY First", ;
+      "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + hb_DirBase() + "\..\..\hbodbc\tests\test.mdb",;
+      adOpenForwardOnly,;
+      adLockReadOnly )
+
+   DO WHILE ! oRs:EOF
+       ? oRs:Fields( "First" ):Value
+       oRs:MoveNext()
+   ENDDO
+
+   oRs:Close()
 
    RETURN
