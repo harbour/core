@@ -120,6 +120,8 @@
 #define _COMPDETE_cCOMP     3
 #define _COMPDETE_cCCPREFIX 4
 
+#define _LNG_MARKER         "${lng}"
+
 #define _WORKDIR_DEF_       ".hbmk"
 
 ANNOUNCE HB_GTSYS
@@ -149,6 +151,7 @@ STATIC s_lTRACE := .F.
 STATIC s_lDONTEXEC := .F.
 STATIC s_lXHB := .F.
 STATIC s_cUILNG
+STATIC s_cUICDP
 
 STATIC s_lDEBUGTIME := .F.
 STATIC s_lDEBUGINC := .F.
@@ -410,22 +413,16 @@ FUNCTION hbmk( aArgs )
 
    LOCAL nStart := Seconds()
 
-   IF Empty( s_cUILNG := GetEnv( "LC_ALL" ) )
-      IF Empty( s_cUILNG := GetEnv( "LC_MESSAGES" ) )
-         IF Empty( s_cUILNG := GetEnv( "LANG" ) )
-            s_cUILNG := "en_EN"
-         ENDIF
-      ENDIF
-   ENDIF
+   GetUILangCDP( @s_cUILNG, @s_cUICDP )
 
-   IF !( s_cUILNG == "en_EN" )
+   IF !( s_cUILNG == "en-EN" )
       tmp := "${hb_root}hbmk2.${lng}.hbl"
       tmp := StrTran( tmp, "${hb_root}", PathSepToSelf( DirAddPathSep( hb_DirBase() ) ) )
-      tmp := StrTran( tmp, "${lng}", s_cUILNG )
+      tmp := StrTran( tmp, "${lng}", StrTran( s_cUILNG, "-", "_" ) )
       IF hb_i18n_check( tmp := hb_MemoRead( tmp ) )
          hb_i18n_set( hb_i18n_restoretable( tmp ) )
       ENDIF
-      hb_cdpSelect( SubStr( I_( "cdp=EN" ), Len( "cdp=" ) + 1 ) )
+      hb_cdpSelect( s_cUICDP )
    ENDIF
 
    IF Empty( aArgs )
@@ -5101,8 +5098,6 @@ STATIC FUNCTION rtlnk_process( cCommands, cFileOut, aFileList, aLibList, ;
 
 /* .hbl generation */
 
-#define _LNG_MARKER "${lng}"
-
 STATIC PROCEDURE MakePO( aLNG, cPO, aPOTIN )
    LOCAL cLNG
    LOCAL fhnd
@@ -5112,7 +5107,7 @@ STATIC PROCEDURE MakePO( aLNG, cPO, aPOTIN )
    LOCAL aNew := {}
    LOCAL aUpd := {}
 
-   FOR EACH cLNG IN iif( Empty( aLNG ), { _LNG_MARKER }, aLNG )
+   FOR EACH cLNG IN iif( Empty( aLNG ) .OR. !( _LNG_MARKER $ cPO ), { _LNG_MARKER }, aLNG )
       IF cLNG:__enumIndex() == 1
          IF s_lDEBUGI18N
             hbmk_OutStd( hb_StrFormat( "MakePO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
@@ -5183,7 +5178,7 @@ STATIC PROCEDURE MakeHBL( aPO, cHBL, aLNG )
          cHBL := FN_ExtSet( cHBL, ".hbl" )
       ENDIF
 
-      FOR EACH cLNG IN iif( Empty( aLNG ), { _LNG_MARKER }, aLNG )
+      FOR EACH cLNG IN iif( Empty( aLNG ) .OR. !( _LNG_MARKER $ cHBL ), { _LNG_MARKER }, aLNG )
          tLNG := NIL
          hb_FGetDateTime( StrTran( cHBL, _LNG_MARKER, cLNG ), @tLNG )
          aPO_TODO := {}
@@ -5440,13 +5435,35 @@ FUNCTION hbmk_KEYW( cKeyword )
 
    RETURN .F.
 
+/* TODO: Extend for rest of platforms, add proper CDP detection */
+
+STATIC PROCEDURE GetUILangCDP( /* @ */ cLNG, /* @ */ cCDP )
+   LOCAL tmp
+
+   IF Empty( cLNG := GetEnv( "LC_ALL" ) )
+      IF Empty( cLNG := GetEnv( "LC_MESSAGES" ) )
+         IF Empty( cLNG := GetEnv( "LANG" ) )
+            cLNG := "en-EN"
+         ENDIF
+      ENDIF
+   ENDIF
+
+   /* Strip encoding information */
+   IF ( tmp := At( ".", cLNG ) ) > 0
+      cLNG := Left( cLNG, tmp - 1 )
+   ENDIF
+   cLNG := StrTran( cLNG, "_", "-" )
+   cCDP := Upper( SubStr( I_( "cdp=EN" ), Len( "cdp=" ) + 1 ) )
+
+   RETURN
+
 STATIC PROCEDURE ShowHeader()
 
    OutStd( "Harbour Make " + HBRawVersion() + hb_osNewLine() +;
            "Copyright (c) 1999-2009, Viktor Szakats" + hb_osNewLine() +;
            "http://www.harbour-project.org/" + hb_osNewLine() )
 
-   IF !( s_cUILNG == "en_EN" )
+   IF !( s_cUILNG == "en-EN" )
       OutStd( hb_StrFormat( I_( "Translation (%1$s): (add your name here)" ), s_cUILNG ), hb_osNewLine() )
    ENDIF
 
