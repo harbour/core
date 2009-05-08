@@ -319,7 +319,7 @@ HB_FUNC( HB_STOT )
       hb_rettdt( lDate, lTime );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_rettdt( 0, 0 );
 }
 
 HB_FUNC( HB_HOUR )

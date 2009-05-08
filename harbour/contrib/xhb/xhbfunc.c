@@ -54,6 +54,7 @@
 #include "hbapigt.h"
 #include "hbapiitm.h"
 #include "hbapigt.h"
+#include "hbapicls.h"
 
 #if 0
 
@@ -210,6 +211,12 @@ HB_FUNC( HB_ARRAYID )  /* for debugging: returns the array's "address" so dual r
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
    hb_retptr( pArray ? hb_arrayId( pArray ) : NULL );
+}
+
+HB_FUNC( __SENDRAWMSG )
+{
+   hb_dbg_objSendMessage( 0, hb_param( 1, HB_IT_ANY ),
+                          hb_param( 2, HB_IT_ANY ), 3 );
 }
 
 /* Hash utem functions */

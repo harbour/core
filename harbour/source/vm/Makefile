@@ -4,6 +4,8 @@
 
 ROOT = ../../
 
+ifeq ($(HB_HVM_ALL),)
+
 HB_HVM_ALL = yes
 ifeq ($(HB_COMPILER),owatcom)
 ifeq ($(HB_ARCHITECTURE),win)
@@ -27,6 +29,8 @@ ifeq ($(HB_COMPILER),xcc)
 endif
 ifeq ($(HB_COMPILER),dmc)
 	HB_HVM_ALL = no
+endif
+export HB_HVM_ALL
 endif
 
 ifeq ($(HB_ARCHITECTURE),win)

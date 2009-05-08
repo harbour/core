@@ -4133,6 +4133,46 @@ static HARBOUR hb___msgClassName( void )
 }
 
 
+static int hb_methodType( PMETHOD pMethod )
+{
+   if     ( pMethod->pFuncSym == &s___msgSetClsData ||
+            pMethod->pFuncSym == &s___msgGetClsData ||
+            pMethod->pFuncSym == &s___msgSetShrData ||
+            pMethod->pFuncSym == &s___msgGetShrData )
+      return HB_OO_MSG_CLASSDATA;
+
+   else if( pMethod->pFuncSym == &s___msgSetData ||
+            pMethod->pFuncSym == &s___msgGetData )
+      return HB_OO_MSG_DATA;
+
+   else if( pMethod->pFuncSym == &s___msgEvalInline )
+      return HB_OO_MSG_INLINE;
+
+   else if( pMethod->pFuncSym == &s___msgVirtual )
+      return HB_OO_MSG_VIRTUAL;
+
+   else if( pMethod->pFuncSym == &s___msgSuper )
+      return HB_OO_MSG_SUPER;
+
+   else if( pMethod->pFuncSym == &s___msgRealClass )
+      return HB_OO_MSG_REALCLASS;
+
+   else if( pMethod->pFuncSym == &s___msgDelegate )
+      return HB_OO_MSG_DELEGATE;
+
+   else if( pMethod->pFuncSym == &s___msgPerform )
+      return HB_OO_MSG_PERFORM;
+
+   else if( pMethod->pMessage == s___msgOnError.pDynSym )
+      return HB_OO_MSG_ONERROR;
+
+   else if( pMethod->pMessage == s___msgDestructor.pDynSym )
+      return HB_OO_MSG_DESTRUCTOR;
+
+   else
+      return HB_OO_MSG_METHOD;
+}
+
 /*
  * <aMessages> := <obj>:ClassSel()
  *
@@ -4145,20 +4185,23 @@ static HARBOUR hb___msgClassSel( void )
 
    if( uiClass && uiClass <= s_uiClasses )
    {
-      PHB_ITEM pReturn = hb_itemNew( NULL );
+      PHB_ITEM pReturn, pItem;
       PCLASS  pClass  = s_pClasses[ uiClass ];
       PMETHOD pMethod = pClass->pMethods;
       ULONG ulLimit = hb_clsMthNum( pClass ), ulPos = 0;
-      USHORT nParam;
+      USHORT nParam, nScope;
+      BOOL lFull;
 
       nParam = hb_pcount() > 0 ? ( USHORT ) hb_parni( 1 ) : HB_MSGLISTALL;
-      hb_arrayNew( pReturn, pClass->uiMethods );
+      nScope = hb_pcount() > 1 ? ( USHORT ) hb_parni( 2 ) : 0;
+      lFull = hb_pcount() > 2 && ISLOG( 3 ) && hb_parl( 3 );
+      pReturn = hb_itemArrayNew( pClass->uiMethods );
 
       do
       {
          if( pMethod->pMessage )  /* Hash Entry used ? */
          {
-            if( ( nParam == HB_MSGLISTALL )  ||
+            if( ( nParam == HB_MSGLISTALL ) ||
                 ( nParam == HB_MSGLISTCLASS &&
                   (
                     ( pMethod->pFuncSym == &s___msgSetClsData ) ||
@@ -4177,8 +4220,21 @@ static HARBOUR hb___msgClassSel( void )
                 )
               )
             {
-               hb_arraySetC( pReturn, ++ulPos,
-                             pMethod->pMessage->pSymbol->szName );
+               if( nScope == 0 || ( pMethod->uiScope & nScope ) != 0 )
+               {
+                  if( lFull )
+                  {
+                     pItem = hb_arrayGetItemPtr( pReturn, ++ulPos );
+                     hb_arrayNew( pItem, 4 );
+                     hb_arraySetC( pItem, HB_OO_DATA_SYMBOL,
+                                   pMethod->pMessage->pSymbol->szName );
+                     hb_arraySetNI( pItem, HB_OO_DATA_TYPE, hb_methodType( pMethod) );
+                     hb_arraySetNI( pItem, HB_OO_DATA_SCOPE, pMethod->uiScope );
+                  }
+                  else
+                     hb_arraySetC( pReturn, ++ulPos,
+                                   pMethod->pMessage->pSymbol->szName );
+               }
             }
          }
          ++pMethod;
