@@ -168,7 +168,7 @@ FUNCTION HBClass()
 STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
 
    LOCAL Self := QSelf()
-   LOCAL nSuper, i
+   LOCAL i
 
    DEFAULT lModuleFriendly TO .F.
 
@@ -180,13 +180,12 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
       ::asSuper := { xSuper }
    ELSEIF ISARRAY( xSuper )
       ::asSuper := {}
-      nSuper := Len( xSuper )
-      FOR i := 1 TO nSuper
-         IF !Empty( xSuper[ i ] )
-            IF ISCHARACTER( xSuper[ i ] )
-               AAdd( ::asSuper, __DynsN2Sym( xSuper[ i ] ) )
-            ELSEIF hb_isSymbol( xSuper[ i ] )
-               AAdd( ::asSuper, xSuper[ i ] )
+      FOR EACH i IN xSuper
+         IF ! Empty( i )
+            IF ISCHARACTER( i )
+               AAdd( ::asSuper, __DynsN2Sym( i ) )
+            ELSEIF hb_isSymbol( i )
+               AAdd( ::asSuper, i )
             ENDIF
          ENDIF
       NEXT
@@ -212,25 +211,23 @@ STATIC PROCEDURE Create( /* MetaClass */ )
 
    LOCAL Self := QSelf()
    LOCAL n
-   LOCAL nLenDatas := Len( ::aDatas ) /* Datas local to the class !! */
-   LOCAL nLen := Len( ::asSuper )
    LOCAL nClassBegin
    LOCAL hClass
    LOCAL ahSuper := {}
 
 /* Self:Class := MetaClass */
 
-   FOR n := 1 TO nLen
-      hClass := __clsInstSuper( ::asSuper[ n ] ) /* Super handle available */
+   FOR EACH n IN ::asSuper
+      hClass := __clsInstSuper( n ) /* Super handle available */
       IF hClass != 0
          AAdd( ahSuper, hClass )
       ENDIF
    NEXT
 
-   hClass := __clsNew( ::cName, nLenDatas, ahSuper, ::sClassFunc, ::lModFriendly )
+   hClass := __clsNew( ::cName, Len( ::aDatas ), ahSuper, ::sClassFunc, ::lModFriendly )
    ::hClass := hClass
 
-   IF !EMPTY( ahSuper )
+   IF ! Empty( ahSuper )
       IF ahSuper[ 1 ] != 0
          __clsAddMsg( hClass, "SUPER"  , 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
          __clsAddMsg( hClass, "__SUPER", 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
@@ -240,45 +237,40 @@ STATIC PROCEDURE Create( /* MetaClass */ )
 
    // We will work here on the MetaClass object to add the Class Method
    // as needed
-   //nLen := Len( ::aClsMethods )
-   //FOR n := 1 TO nLen
+   //FOR EACH n IN ::aClsMethods
    // // do it
    //NEXT
    ////
 
    /* local messages... */
 
-   FOR n := 1 TO nLenDatas
-      __clsAddMsg( hClass, ::aDatas[ n ][ HB_OO_DATA_SYMBOL ]       , n, ;
-                   HB_OO_MSG_ACCESS, ::aDatas[ n ][ HB_OO_DATA_VALUE ], ::aDatas[ n ][ HB_OO_DATA_SCOPE ] )
-      __clsAddMsg( hClass, "_" + ::aDatas[ n ][ HB_OO_DATA_SYMBOL ] , n, ;
-                   HB_OO_MSG_ASSIGN, ::aDatas[ n ][ HB_OO_DATA_TYPE ] , ::aDatas[ n ][ HB_OO_DATA_SCOPE ] )
+   FOR EACH n IN ::aDatas
+      __clsAddMsg( hClass, n[ HB_OO_DATA_SYMBOL ]       , n, ;
+                   HB_OO_MSG_ACCESS, n[ HB_OO_DATA_VALUE ], n[ HB_OO_DATA_SCOPE ] )
+      __clsAddMsg( hClass, "_" + n[ HB_OO_DATA_SYMBOL ] , n, ;
+                   HB_OO_MSG_ASSIGN, n[ HB_OO_DATA_TYPE ] , n[ HB_OO_DATA_SCOPE ] )
    NEXT
 
-   nLen := Len( ::aMethods )
-   FOR n := 1 TO nLen
-      __clsAddMsg( hClass, ::aMethods[ n ][ HB_OO_MTHD_SYMBOL ], ::aMethods[ n ][ HB_OO_MTHD_PFUNCTION ],;
-                   HB_OO_MSG_METHOD, NIL, ::aMethods[ n ][ HB_OO_MTHD_SCOPE ] )
+   FOR EACH n IN ::aMethods
+      __clsAddMsg( hClass, n[ HB_OO_MTHD_SYMBOL ], n[ HB_OO_MTHD_PFUNCTION ],;
+                   HB_OO_MSG_METHOD, NIL, n[ HB_OO_MTHD_SCOPE ] )
    NEXT
 
-   nLen := Len( ::aClsDatas )
    nClassBegin := __CLS_CNTCLSDATA( hClass )
-   FOR n := 1 TO nLen
-      __clsAddMsg( hClass, ::aClsDatas[ n ][ HB_OO_CLSD_SYMBOL ]      , n + nClassBegin,;
-                   HB_OO_MSG_CLSACCESS, ::aClsDatas[ n ][ HB_OO_CLSD_VALUE ], ::aClsDatas[ n ][ HB_OO_CLSD_SCOPE ] )
-      __clsAddMsg( hClass, "_" + ::aClsDatas[ n ][ HB_OO_CLSD_SYMBOL ], n + nClassBegin,;
-                   HB_OO_MSG_CLSASSIGN,                                     , ::aClsDatas[ n ][ HB_OO_CLSD_SCOPE ] )
+   FOR EACH n IN ::aClsDatas
+      __clsAddMsg( hClass, n[ HB_OO_CLSD_SYMBOL ]      , n + nClassBegin,;
+                   HB_OO_MSG_CLSACCESS, n[ HB_OO_CLSD_VALUE ], n[ HB_OO_CLSD_SCOPE ] )
+      __clsAddMsg( hClass, "_" + n[ HB_OO_CLSD_SYMBOL ], n + nClassBegin,;
+                   HB_OO_MSG_CLSASSIGN,                      , n[ HB_OO_CLSD_SCOPE ] )
    NEXT
 
-   nLen := Len( ::aInlines )
-   FOR n := 1 TO nLen
-      __clsAddMsg( hClass, ::aInlines[ n ][ HB_OO_MTHD_SYMBOL ], ::aInlines[ n ][ HB_OO_MTHD_PFUNCTION ],;
-                   HB_OO_MSG_INLINE, NIL, ::aInlines[ n ][ HB_OO_MTHD_SCOPE ] )
+   FOR EACH n IN ::aInlines
+      __clsAddMsg( hClass, n[ HB_OO_MTHD_SYMBOL ], n[ HB_OO_MTHD_PFUNCTION ],;
+                   HB_OO_MSG_INLINE, NIL, n[ HB_OO_MTHD_SCOPE ] )
    NEXT
 
-   nLen := Len( ::aVirtuals )
-   FOR n := 1 TO nLen
-      __clsAddMsg( hClass, ::aVirtuals[ n ], n, HB_OO_MSG_VIRTUAL )
+   FOR EACH n IN ::aVirtuals
+      __clsAddMsg( hClass, n, n:__enumIndex(), HB_OO_MSG_VIRTUAL )
    NEXT
 
    IF ::sOnError != NIL
@@ -290,15 +282,13 @@ STATIC PROCEDURE Create( /* MetaClass */ )
    ENDIF
 
    /* Friend Classes */
-   nLen := Len( ::asFriendClass )
-   FOR n := 1 TO nLen
-      __clsAddFriend( ::hClass, ::asFriendClass[ n ] )
+   FOR EACH n IN ::asFriendClass
+      __clsAddFriend( ::hClass, n )
    NEXT
 
    /* Friend Functions */
-   nLen := Len( ::asFriendFunc )
-   FOR n := 1 TO nLen
-      __clsAddFriend( ::hClass, ::asFriendFunc[ n ] )
+   FOR EACH n IN ::asFriendFunc
+      __clsAddFriend( ::hClass, n )
    NEXT
 
    RETURN
@@ -339,11 +329,10 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
 STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
 
    LOCAL i
-   LOCAL nParam := Len( aData )
 
-   FOR i := 1 TO nParam
-      IF ISCHARACTER( aData[ i ] )
-         QSelf():AddData( aData[ i ], xInit, cType, nScope, lNoInit )
+   FOR EACH i IN aData
+      IF ISCHARACTER( i )
+         QSelf():AddData( i, xInit, cType, nScope, lNoInit )
       ENDIF
    NEXT
 
@@ -382,11 +371,10 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
 
    LOCAL i
-   LOCAL nParam := Len( aData )
 
-   FOR i := 1 TO nParam
-      IF ISCHARACTER( aData[ i ] )
-         QSelf():AddClassData( aData[ i ], xInit, cType, nScope, lNoInit )
+   FOR EACH i IN aData
+      IF ISCHARACTER( i )
+         QSelf():AddClassData( i, xInit, cType, nScope, lNoInit )
       ENDIF
    NEXT
 
@@ -431,8 +419,8 @@ STATIC PROCEDURE AddDelegate( xMethod, nAccScope, nAsgScope, cType, cDelegMsg, c
    IF ISCHARACTER( xMethod )
       AAdd( QSelf():aDelegates, { xMethod, nAccScope, nAsgScope, cType, cDelegMsg, cDelegClass } )
    ELSEIF ISARRAY( xMethod )
-      FOR i := 1 TO Len( xMethod )
-         AAdd( QSelf():aDelegates, { xMethod[ i ], nAccScope, nAsgScope, cType, cDelegMsg, cDelegClass } )
+      FOR EACH i IN xMethod
+         AAdd( QSelf():aDelegates, { i, nAccScope, nAsgScope, cType, cDelegMsg, cDelegClass } )
       NEXT
    ENDIF
 
