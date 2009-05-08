@@ -317,7 +317,7 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
          xInit := hb_SToD()
          EXIT
       CASE "T"       /* Timestamp */
-         xInit := hb_SToT( "" )
+         xInit := hb_SToT()
          EXIT
       ENDSWITCH
    ENDIF
@@ -359,7 +359,7 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
          xInit := hb_SToD()
          EXIT
       CASE "T"       /* Timestamp */
-         xInit := hb_SToT( "" )
+         xInit := hb_SToT()
          EXIT
       ENDSWITCH
    ENDIF

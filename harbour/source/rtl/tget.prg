@@ -1476,7 +1476,7 @@ METHOD badDate() CLASS GET
          RETURN ( xValue := ::unTransform() ) == hb_SToD() .AND. ;
                 !( ::cBuffer == Transform( xValue, ::cPicture ) )
       CASE "T"
-         RETURN ( xValue := ::unTransform() ) == hb_SToT( "" ) .AND. ;
+         RETURN ( xValue := ::unTransform() ) == hb_SToT() .AND. ;
                 !( ::cBuffer == Transform( xValue, ::cPicture ) )
       ENDSWITCH
    ENDIF
@@ -1692,7 +1692,7 @@ METHOD DeleteAll() CLASS GET
       CASE ::cType == "D"
          xValue := hb_SToD()
       CASE ::cType == "T"
-         xValue := hb_SToT( "" )
+         xValue := hb_SToT()
       CASE ::cType == "L"
          xValue := .F.
       ENDCASE

@@ -409,18 +409,21 @@ STATIC PROCEDURE Exm_CDO()
 
 STATIC PROCEDURE Exm_ADODB()
 
-   LOCAL oRs := CreateObject( "ADODB.Recordset" )
+   LOCAL oRs
 
-   oRs:Open( "SELECT * FROM test ORDER BY First", ;
-      "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + hb_DirBase() + "\..\..\hbodbc\tests\test.mdb",;
-      adOpenForwardOnly,;
-      adLockReadOnly )
+   IF ( oRs := CreateObject( "ADODB.Recordset" ) ) != NIL
 
-   DO WHILE ! oRs:EOF
-       ? oRs:Fields( "First" ):Value
-       oRs:MoveNext()
-   ENDDO
+      oRs:Open( "SELECT * FROM test ORDER BY First", ;
+         "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + hb_DirBase() + "\..\..\hbodbc\tests\test.mdb",;
+         adOpenForwardOnly,;
+         adLockReadOnly )
 
-   oRs:Close()
+      DO WHILE ! oRs:EOF
+          ? oRs:Fields( "First" ):Value
+          oRs:MoveNext()
+      ENDDO
+
+      oRs:Close()
+   ENDIF
 
    RETURN

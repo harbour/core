@@ -240,9 +240,9 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
       oError:CanDefault  := .T.
 
       FOR n := 0 To oConnection:Errors:Count - 1
-          oError:Description += oConnection:Errors(n):Description
+         oError:Description += oConnection:Errors(n):Description
 #ifdef __XHARBOUR__
-          __OutDebug( oConnection:Errors(n):Description )
+         __OutDebug( oConnection:Errors(n):Description )
 #endif
       NEXT
 

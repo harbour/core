@@ -6,6 +6,7 @@
  * Harbour Project source code
  * This file contains source for first ODBC routines.
  *
+ * Copyright 2009 Viktor Szakats <harbour.01 syenar.hu>
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
@@ -509,12 +510,12 @@ HB_FUNC( SQLSETCONNECTATTR ) /* hDbc, nOption, uOption */
 #if ODBCVER >= 0x0300
    hb_retni( SQLSetConnectAttr( ( SQLHDBC ) hb_parptr( 1 ),
                                 ( SQLINTEGER ) hb_parnl( 2 ),
-                                ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
+                                ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parc( 3 ) : ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
                                 ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
 #else
    hb_retni( SQLSetConnectOption( ( SQLHDBC ) hb_parptr( 1 ),
                                   ( SQLUSMALLINT ) hb_parnl( 2 ),
-                                  ( SQLULEN ) ISCHAR( 3 ) ? ( SQLULEN ) hb_parcx( 3 ) : hb_parnl( 3 ) ) );
+                                  ( SQLULEN ) ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : hb_parnl( 3 ) ) );
 #endif
 }
 
@@ -523,12 +524,12 @@ HB_FUNC( SQLSETSTMTATTR ) /* hStmt, nOption, uOption --> nRetCode */
 #if ODBCVER >= 0x0300
    hb_retni( SQLSetStmtAttr( ( SQLHSTMT ) hb_parptr( 1 ),
                              ( SQLINTEGER ) hb_parnl( 2 ),
-                             ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
+                             ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parc( 3 ) : ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
                              ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
 #else
    hb_retni( SQLSetStmtOption( ( SQLHSTMT ) hb_parptr( 1 ),
                                ( SQLUSMALLINT ) hb_parnl( 2 ),
-                               ( SQLULEN ) ISCHAR( 3 ) ? ( SQLULEN ) hb_parcx( 3 ) : hb_parnl( 3 ) ) );
+                               ( SQLULEN ) ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : hb_parnl( 3 ) ) );
 #endif
 }
 
