@@ -322,6 +322,7 @@ FUNCTION hbmk( aArgs )
    LOCAL s_lINC := .F.
    LOCAL s_lCLEAN := .F.
    LOCAL s_nJOBS := 1
+   LOCAL s_lBEEP := .F.
 
    LOCAL aCOMPDET
    LOCAL aCOMPDET_LOCAL
@@ -1094,6 +1095,9 @@ FUNCTION hbmk( aArgs )
       CASE cParamL == "-map"             ; s_lMAP       := .T.
       CASE cParamL == "-map-" .OR. ;
            cParamL == "-nomap"           ; s_lMAP       := .F.
+      CASE cParamL == "-beep"            ; s_lBEEP      := .T.
+      CASE cParamL == "-beep-" .OR. ;
+           cParamL == "-nobeep"          ; s_lBEEP      := .F.
       CASE cParamL == "-rebuild"         ; s_lINC       := .T. ; s_lREBUILD := .T.
       CASE cParamL == "-clean"           ; s_lINC       := .T. ; s_lCLEAN := .T.
       CASE cParamL == "-inc"             ; s_lINC       := .T.
@@ -3370,6 +3374,11 @@ FUNCTION hbmk( aArgs )
             ENDIF
          ENDIF
 
+         IF s_lBEEP
+            DoBeep( nErrorLevel == 0 )
+            s_lBEEP := .F.
+         ENDIF
+
          IF s_lRUN .AND. ! lCreateLib .AND. ! lCreateDyn
             #if defined( __PLATFORM__UNIX )
                IF Empty( FN_DirGet( s_cPROGNAME ) )
@@ -3394,7 +3403,25 @@ FUNCTION hbmk( aArgs )
       hbmk_OutStd( hb_StrFormat( I_( "Running time: %1$ss" ), hb_ntos( TimeElapsed( nStart, Seconds() ) ) ) )
    ENDIF
 
+   IF s_lBEEP
+      DoBeep( nErrorLevel == 0 )
+   ENDIF
+
    RETURN nErrorLevel
+
+STATIC PROCEDURE DoBeep( lSuccess )
+   LOCAL nRepeat := iif( lSuccess, 1, 2 )
+   LOCAL tmp
+
+   IF hb_gtInfo( HB_GTI_ISGRAPHIC )
+      FOR tmp := 1 TO nRepeat
+         Tone( 800, 3.5 )
+      NEXT
+   ELSE
+      OutStd( Replicate( Chr( 7 ), nRepeat ) )
+   ENDIF
+
+   RETURN
 
 STATIC FUNCTION CompileCLoop( aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, nJob, nJobs )
    LOCAL lResult := .T.
@@ -5524,6 +5551,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-[no]map"          , I_( "create (or not) a map file" ) },;
       { "-[no]strip"        , I_( "strip (no strip) binaries" ) },;
       { "-[no]trace"        , I_( "show commands executed" ) },;
+      { "-[no]beep"         , I_( "beep (or don't) when finished" ) },;
       { "-traceonly"        , I_( "show commands to be executed, but don't execute them" ) },;
       { "-[no]compr[=lev]"  , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) },;
       { "-[no]run"          , I_( "run/don't run output executable" ) },;
