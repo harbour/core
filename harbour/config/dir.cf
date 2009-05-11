@@ -45,7 +45,9 @@ else
 DIRS_CLEAN = $(foreach dir, $(DIRS_MK), $(dir).clean)
 DIRS_INST  = $(foreach dir, $(DIRS_MK), $(dir).inst)
 
+ifneq ($(_HB_BLD),yes)
 first   :: $(DIRS_MK)
+endif
 install :: $(DIRS_INST)
 clean   :: $(DIRS_CLEAN)
 
@@ -62,7 +64,7 @@ $(DIRS_CLEAN) ::
 	+$(MK) -C $(@:.clean=) clean
 
 $(DIRS_INST) ::
-	+$(MK) -C $(@:.inst=) install
+	+$(MK) -C $(@:.inst=) install _HB_BLD=yes
 
 $(DIRS_MK) ::
 	+$(MK) -C $(@)

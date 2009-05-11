@@ -2122,7 +2122,7 @@ int hb_rddRegister( const char * szDriver, USHORT uiType )
       return 1;
 
    hb_snprintf( szGetFuncTable, sizeof( szGetFuncTable ), "%s_GETFUNCTABLE",
-             szDriver );
+                szDriver );
    pGetFuncTable = hb_dynsymFindName( szGetFuncTable );
    if( !pGetFuncTable )
       return 2;              /* Not valid RDD */

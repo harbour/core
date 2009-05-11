@@ -33,6 +33,8 @@ endif
 export HB_HVM_ALL
 endif
 
+DIRS=
+
 ifeq ($(HB_ARCHITECTURE),win)
 	ifeq ($(HB_COMPILER),mingw)
 		C_MAIN = mainwin.c
@@ -108,7 +110,7 @@ LIBNAME=hbvm
 HB_USER_CFLAGS:=$(subst -DHB_MT_VM,,$(HB_USER_CFLAGS))
 ifneq ($(HB_ARCHITECTURE),dos)
 ifneq ($(HB_MT),no)
-   DIRS+= vmmt
+	DIRS+= vmmt
 endif
 endif
 
