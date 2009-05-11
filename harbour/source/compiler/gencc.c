@@ -1794,6 +1794,8 @@ static HB_GENC_FUNC( hb_p_pushdate )
 
 static HB_GENC_FUNC( hb_p_pushtimestamp )
 {
+   HB_GENC_LABEL();
+
    fprintf( cargo->yyc, "\thb_xvmPushTimeStamp( %ldL, %ldL );\n",
             ( long ) HB_PCODE_MKLONG( &pFunc->pCode[ lPCodePos + 1 ] ),
             ( long ) HB_PCODE_MKLONG( &pFunc->pCode[ lPCodePos + 5 ] ) );
@@ -1823,6 +1825,7 @@ static HB_GENC_FUNC( hb_p_localaddint )
 static HB_GENC_FUNC( hb_p_localinc )
 {
    int iLocal = HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
+
    HB_GENC_LABEL();
 
    if( HB_GENC_GETLABEL( lPCodePos + 3 ) == 0 &&
@@ -2005,6 +2008,7 @@ static HB_GENC_FUNC( hb_p_withobjectend )
 static HB_GENC_FUNC( hb_p_withobjectmessage )
 {
    USHORT usSym = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
+
    HB_GENC_LABEL();
 
    if( usSym == 0xFFFF )
