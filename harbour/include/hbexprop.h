@@ -201,6 +201,7 @@ extern BOOL hb_compExprReduceLEN( HB_EXPR_PTR, HB_COMP_DECL );
 extern BOOL hb_compExprReduceASC( HB_EXPR_PTR, HB_COMP_DECL );
 extern BOOL hb_compExprReduceINT( HB_EXPR_PTR, HB_COMP_DECL );
 extern BOOL hb_compExprReduceEMPTY( HB_EXPR_PTR, HB_COMP_DECL );
+extern BOOL hb_compExprReduceSTOT( HB_EXPR_PTR, USHORT usCount, HB_COMP_DECL );
 extern BOOL hb_compExprReduceSTOD( HB_EXPR_PTR, USHORT usCount, HB_COMP_DECL );
 extern BOOL hb_compExprReduceDTOS( HB_EXPR_PTR, HB_COMP_DECL );
 extern BOOL hb_compExprReduceCTOD( HB_EXPR_PTR, HB_COMP_DECL );

@@ -2152,6 +2152,68 @@ BOOL hb_compExprReduceINT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return FALSE;
 }
 
+BOOL hb_compExprReduceSTOT( HB_EXPR_PTR pSelf, USHORT usCount, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pArg = pParms ? pParms->value.asList.pExprList : NULL;
+   HB_EXPR_PTR pExpr = NULL;
+
+   if( usCount == 0 )
+   {
+      pExpr = hb_compExprNewTimeStamp( 0, 0, HB_COMP_PARAM );
+   }
+   else if( pArg && pArg->ExprType == HB_ET_STRING )
+   {
+      long lDate, lTime;
+
+      hb_timeStampStrRawGet( pArg->value.asString.string, &lDate, &lTime );
+      pExpr = hb_compExprNewTimeStamp( lDate, lTime, HB_COMP_PARAM );
+   }
+
+   if( pExpr )
+   {
+      if( pSelf->value.asFunCall.pParms )
+         HB_COMP_EXPR_FREE( pParms );
+      HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
+      memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+      HB_COMP_EXPR_CLEAR( pExpr );
+      return TRUE;
+   }
+
+   return FALSE;
+}
+
+BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pArg = pParms ? pParms->value.asList.pExprList : NULL;
+   HB_EXPR_PTR pExpr = NULL;
+
+   if( usCount == 0 )
+   {
+      pExpr = hb_compExprNewDate( 0, HB_COMP_PARAM );
+   }
+   else if( pArg && pArg->ExprType == HB_ET_STRING &&
+            ( pArg->ulLength >= 7 || pArg->ulLength == 0 ) )
+   {
+      pExpr = hb_compExprNewDate( pArg->ulLength == 0 ? 0 :
+                                  hb_dateEncStr( pArg->value.asString.string ),
+                                  HB_COMP_PARAM );
+   }
+
+   if( pExpr )
+   {
+      if( pSelf->value.asFunCall.pParms )
+         HB_COMP_EXPR_FREE( pParms );
+      HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
+      memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+      HB_COMP_EXPR_CLEAR( pExpr );
+      return TRUE;
+   }
+
+   return FALSE;
+}
+
 BOOL hb_compExprReduceDTOS( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
    HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
@@ -2167,40 +2229,6 @@ BOOL hb_compExprReduceDTOS( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       pExpr = hb_compExprNewString( szDate, 8, TRUE, HB_COMP_PARAM );
 
       HB_COMP_EXPR_FREE( pParms );
-      HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
-      memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
-      HB_COMP_EXPR_CLEAR( pExpr );
-      return TRUE;
-   }
-
-   return FALSE;
-}
-
-BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_COMP_DECL )
-{
-   if( usCount == 1 )
-   {
-      HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-      HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
-
-      if( pArg->ExprType == HB_ET_STRING && ( pArg->ulLength == 8 || pArg->ulLength == 0 ) )
-      {
-         HB_EXPR_PTR pExpr = hb_compExprNewDate( pArg->ulLength == 0 ? 0 :
-                                  hb_dateEncStr( pArg->value.asString.string ),
-                                  HB_COMP_PARAM );
-
-         HB_COMP_EXPR_FREE( pParms );
-         HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
-         memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
-         HB_COMP_EXPR_CLEAR( pExpr );
-         return TRUE;
-      }
-   }
-   else
-   {
-      HB_EXPR_PTR pExpr = hb_compExprNewDate( 0, HB_COMP_PARAM );
-
-      HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pParms );
       HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
       memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
       HB_COMP_EXPR_CLEAR( pExpr );

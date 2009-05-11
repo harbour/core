@@ -1708,6 +1708,10 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   if( usCount < 2 && HB_SUPPORT_HARBOUR )
                      hb_compExprReduceSTOD( pSelf, usCount, HB_COMP_PARAM );
                }
+               else if( strcmp( "HB_STOT", pName->value.asSymbol ) == 0 )
+               {
+                  hb_compExprReduceSTOT( pSelf, usCount, HB_COMP_PARAM );
+               }
                else if( strcmp( "DTOS", pName->value.asSymbol ) == 0 )
                {
                   if( usCount == 1 )
