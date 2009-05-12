@@ -32,9 +32,7 @@
 /* TOFIX: Clipper defines a clipped window for Alert() [vszakats] */
 
 /* NOTE: Clipper will return NIL if the first parameter is not a string, but
-         this is not documented. This implementation converts the first
-         parameter to a string if another type was passed. You can switch back
-         to Clipper compatible mode by undefining constant HB_EXTENSION. [vszakats] */
+         this is not documented. [vszakats] */
 
 /* NOTE: Clipper handles these buttons { "Ok", "", "Cancel" } in a buggy way.
          This is fixed. [vszakats] */

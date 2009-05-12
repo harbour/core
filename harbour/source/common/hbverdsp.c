@@ -181,9 +181,6 @@ void hb_verBuildInfo( void )
 #if defined( HB_COMPAT_CLIP )
    hb_conOutErr( "(CLIP) ", 0 );
 #endif
-#if defined( HB_EXTENSION )
-   hb_conOutErr( "(dirty extensions) ", 0 );
-#endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "---------------------------", 0 );

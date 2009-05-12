@@ -98,11 +98,7 @@ HB_FUNC( SAVESCREEN )
    USHORT uiTop, uiLeft, uiBottom, uiRight;
    ULONG  ulSize;
    void * pBuffer;
-#if defined( HB_EXTENSION )
-   BOOL fNoCheck = hb_parl( 5 );
-#else
    BOOL fNoCheck = FALSE;
-#endif
 
    hb_getScreenRange( &uiTop, &uiBottom, fNoCheck, TRUE );
    hb_getScreenRange( &uiLeft, &uiRight, fNoCheck, FALSE );
@@ -119,11 +115,7 @@ HB_FUNC( RESTSCREEN )
    if( ISCHAR( 5 ) )
    {
       USHORT uiTop, uiLeft, uiBottom, uiRight;
-#if defined( HB_EXTENSION )
-      BOOL fNoCheck = hb_parl( 6 );
-#else
       BOOL fNoCheck = FALSE;
-#endif
 
       hb_getScreenRange( &uiTop, &uiBottom, fNoCheck, TRUE );
       hb_getScreenRange( &uiLeft, &uiRight, fNoCheck, FALSE );

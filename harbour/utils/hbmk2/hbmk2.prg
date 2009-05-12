@@ -376,6 +376,7 @@ FUNCTION hbmk( aArgs )
    LOCAL cPostfix
    LOCAL nEmbedLevel
 
+   LOCAL lSkipBuild := .F.
    LOCAL lStopAfterInit := .F.
    LOCAL lStopAfterHarbour := .F.
    LOCAL lStopAfterCComp := .F.
@@ -442,6 +443,7 @@ FUNCTION hbmk( aArgs )
       CASE cParamL            == "-quiet"   ; s_lQuiet := .T. ; s_lInfo := .F.
       CASE Left( cParamL, 6 ) == "-comp="   ; s_cCOMP := SubStr( cParam, 7 )
       CASE Left( cParamL, 6 ) == "-arch="   ; s_cARCH := SubStr( cParam, 7 )
+      CASE cParamL            == "-hbrun"   ; lSkipBuild := .T. ; s_lRUN := .T.
       CASE cParamL            == "-hbcmp" .OR. ;
            cParamL            == "-clipper" ; s_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .F.
       CASE cParamL            == "-hbcc"    ; s_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptCFlag := .T.
@@ -1048,6 +1050,7 @@ FUNCTION hbmk( aArgs )
       DO CASE
       CASE Left( cParamL, 6 ) == "-comp=" .OR. ;
            Left( cParamL, 6 ) == "-arch=" .OR. ;
+           cParamL            == "-hbrun" .OR. ;
            cParamL            == "-hbcmp" .OR. ;
            cParamL            == "-hbcc"  .OR. ;
            cParamL            == "-hblnk" .OR. ;
@@ -1275,6 +1278,7 @@ FUNCTION hbmk( aArgs )
          cParam := ArchCompFilter( cParam )
          IF ! Empty( cParam )
             lStopAfterInit := .T.
+            s_lRUN := .F.
          ENDIF
 
       CASE Left( cParamL, Len( "-prgflag=" ) ) == "-prgflag="
@@ -2372,7 +2376,7 @@ FUNCTION hbmk( aArgs )
 
          IF !( s_cCOMP $ "icc|iccia64" )
             cBin_Res := "rc.exe"
-            cOpt_Res := "{FR} /fo {OS} {IR}"
+            cOpt_Res := "{FR} /fo {OS} {IR}" /* NOTE: No /nologo option as of MSVC 2008. [vszakats] */
             cResExt := ".res"
          ENDIF
 
@@ -2492,7 +2496,7 @@ FUNCTION hbmk( aArgs )
 
    /* Generate header with repository ID information */
 
-   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour
       IF ! Empty( s_cVCSHEAD )
          tmp1 := VCSID( s_cVCSDIR, @tmp2 )
          /* Use the same EOL for all platforms to avoid unnecessary rebuilds. */
@@ -2511,7 +2515,7 @@ FUNCTION hbmk( aArgs )
 
    /* Header paths */
 
-   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour
       FOR EACH tmp IN s_aINCPATH
          AAdd( s_aOPTPRG, "-i" + tmp )
          AAdd( s_aOPTC, StrTran( cOptIncMask, "{DI}", tmp ) )
@@ -2521,7 +2525,7 @@ FUNCTION hbmk( aArgs )
 
    /* Do header detection and create incremental file list for .c files */
 
-   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour
 
       headstate := NIL
 
@@ -2556,7 +2560,7 @@ FUNCTION hbmk( aArgs )
 
    /* Create incremental file list for .prg files */
 
-   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour
 
       /* Incremental */
 
@@ -2584,7 +2588,7 @@ FUNCTION hbmk( aArgs )
 
    /* Harbour compilation */
 
-   IF ! lStopAfterInit .AND. Len( s_aPRG_TODO ) > 0 .AND. ! s_lCLEAN
+   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. Len( s_aPRG_TODO ) > 0 .AND. ! s_lCLEAN
 
       IF s_lINC .AND. ! s_lQuiet
          hbmk_OutStd( I_( "Compiling Harbour sources..." ) )
@@ -2677,7 +2681,7 @@ FUNCTION hbmk( aArgs )
       ENDIF
    ENDIF
 
-   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour
 
       /* Do entry function detection on platform required and supported */
       IF ! s_lDONTEXEC .AND. ! lStopAfterCComp .AND. s_cMAIN == NIL
@@ -3373,29 +3377,6 @@ FUNCTION hbmk( aArgs )
                ENDIF
             ENDIF
          ENDIF
-
-         IF s_lBEEP
-            DoBeep( nErrorLevel == 0 )
-            s_lBEEP := .F.
-         ENDIF
-
-         IF s_lRUN .AND. ! lCreateLib .AND. ! lCreateDyn
-            #if defined( __PLATFORM__UNIX )
-               IF Empty( FN_DirGet( s_cPROGNAME ) )
-                  s_cPROGNAME := "." + hb_osPathSeparator() + s_cPROGNAME
-               ENDIF
-            #endif
-            cCommand := AllTrim( PathSepToTarget( s_cPROGNAME ) + " " + ArrayToList( s_aOPTRUN ) )
-            IF s_lTRACE
-               IF ! s_lQuiet
-                  hbmk_OutStd( I_( "Running executable:" ) )
-               ENDIF
-               OutStd( cCommand, hb_osNewLine() )
-            ENDIF
-            IF ! s_lDONTEXEC
-               nErrorLevel := hbmk_run( cCommand )
-            ENDIF
-         ENDIF
       ENDIF
    ENDIF
 
@@ -3405,6 +3386,36 @@ FUNCTION hbmk( aArgs )
 
    IF s_lBEEP
       DoBeep( nErrorLevel == 0 )
+   ENDIF
+
+   IF ! lStopAfterHarbour .AND. ! lStopAfterCComp .AND. ;
+      ! lCreateLib .AND. ! lCreateDyn .AND. ;
+      nErrorLevel == 0 .AND. ! s_lCLEAN .AND. s_lRUN
+      #if defined( __PLATFORM__UNIX )
+         IF Empty( FN_DirGet( s_cPROGNAME ) )
+            s_cPROGNAME := "." + hb_osPathSeparator() + s_cPROGNAME
+         ENDIF
+      #endif
+      cCommand := PathSepToTarget( s_cPROGNAME )
+      #if defined( __PLATFORM__WINDOWS )
+      IF s_lGUI
+         IF hb_osIsWinNT()
+            cCommand := 'start "" "' + cCommand + '"'
+         ELSE
+            cCommand := 'start ' + cCommand
+         ENDIF
+      ENDIF
+      #endif
+      cCommand := AllTrim( cCommand + " " + ArrayToList( s_aOPTRUN ) )
+      IF s_lTRACE
+         IF ! s_lQuiet
+            hbmk_OutStd( I_( "Running executable:" ) )
+         ENDIF
+         OutStd( cCommand, hb_osNewLine() )
+      ENDIF
+      IF ! s_lDONTEXEC
+         nErrorLevel := hb_run( cCommand )
+      ENDIF
    ENDIF
 
    RETURN nErrorLevel
@@ -5580,6 +5591,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-lng=<languages>"  , I_( "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ) },;
       { "-po=<output>"      , I_( "create/update .po file from source. Merge it with previous .po file of the same name" ) },;
       NIL,;
+      { "-hbrun"            , I_( "run target" ) },;
       { "-hbcmp|-clipper"   , I_( "stop after creating the object files\ncreate link/copy hbmk to hbcmp/clipper for the same effect" ) },;
       { "-hbcc"             , I_( "stop after creating the object files and accept raw C flags\ncreate link/copy hbmk to hbcc for the same effect" ) },;
       { "-hblnk"            , I_( "accept raw linker flags" ) },;

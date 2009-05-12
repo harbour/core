@@ -151,67 +151,18 @@ static ULONG hb_mlGetLine( char * pszString, ULONG ulLen, ULONG ulOffset,
    return ulOffset;
 }
 
-static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
+static PHB_EOL_INFO hb_mlGetEOLs( int * piEOLs )
 {
    PHB_EOL_INFO pEOLs = NULL;
-   int iEOLs = 0;
 
-#ifdef HB_EXTENSION
-   char * szEOL;
-   ULONG ulLen, ul;
+   pEOLs = ( PHB_EOL_INFO ) hb_xgrab( sizeof( HB_EOL_INFO ) );
+   pEOLs->szEOL = hb_setGetEOL();
+   if( !pEOLs->szEOL || !pEOLs->szEOL[ 0 ] )
+      pEOLs->szEOL = hb_conNewLine();
+   pEOLs->ulLen = strlen( pEOLs->szEOL );
 
-   szEOL = hb_parc( iParam );
-   if( szEOL )
-   {
-      ulLen = hb_parclen( iParam );
-      if( ulLen )
-      {
-         pEOLs = ( PHB_EOL_INFO ) hb_xgrab( sizeof( HB_EOL_INFO ) );
-         pEOLs->szEOL = szEOL;
-         pEOLs->ulLen = ulLen;
-         iEOLs = 1;
-      }
-   }
-   else if( ISARRAY( iParam ) )
-   {
-      PHB_ITEM pArray = hb_param( iParam, HB_IT_ARRAY );
-      ULONG ulSize = hb_arrayLen( pArray );
-      for( ul = 1; ul <= ulSize; ++ul )
-      {
-         if( hb_arrayGetCLen( pArray, ul ) > 0 )
-            ++iEOLs;
-      }
-      if( iEOLs )
-      {
-         iEOLs = 0;
-         pEOLs = ( PHB_EOL_INFO ) hb_xgrab( sizeof( HB_EOL_INFO ) * iEOLs );
-         for( ul = 1; ul <= ulSize; ++ul )
-         {
-            ulLen = hb_arrayGetCLen( pArray, ul );
-            if( ulLen > 0 )
-            {
-               pEOLs[ iEOLs ].szEOL = hb_arrayGetCPtr( pArray, ul );
-               pEOLs[ iEOLs ].ulLen = ulLen;
-               ++iEOLs;
-            }
-         }
-      }
-   }
-#else
-   HB_SYMBOL_UNUSED( iParam );
-#endif
+   * piEOLs = pEOLs->ulLen ? 1 : 0;
 
-   if( iEOLs == 0 )
-   {
-      pEOLs = ( PHB_EOL_INFO ) hb_xgrab( sizeof( HB_EOL_INFO ) );
-      pEOLs->szEOL = hb_setGetEOL();
-      if( !pEOLs->szEOL || !pEOLs->szEOL[ 0 ] )
-         pEOLs->szEOL = hb_conNewLine();
-      pEOLs->ulLen = strlen( pEOLs->szEOL );
-      iEOLs = pEOLs->ulLen ? 1 : 0;
-   }
-
-   * piEOLs = iEOLs;
    return pEOLs;
 }
 
@@ -233,7 +184,7 @@ static char * hb_mlGetParams( int iParAdd, ULONG * pulLen, ULONG * pulLineLength
       * pulLen = hb_parclen( 1 );
       * pulTabSize = ISNUM( 3 + iParAdd ) ? hb_parnl( 3 + iParAdd ) : 4;
       * pfWordWrap = ISLOG( 4 + iParAdd ) ? hb_parl( 4 + iParAdd ) : TRUE;
-      * pEOLs = hb_mlGetEOLs( 5 + iParAdd, piEOLs );
+      * pEOLs = hb_mlGetEOLs( piEOLs );
 #ifdef HB_C52_STRICT
       if( * pulLineLength > 254 )
          * pulLineLength = 79;

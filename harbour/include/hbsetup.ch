@@ -68,7 +68,6 @@
 /* #define HB_COMPAT_FOXPRO */    /* Enable FoxPro extensions */
 /* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
 /* #define HB_COMPAT_CLIP */      /* Enable CLIP extensions */
-/* #define HB_EXTENSION */        /* Enable Harbour non-portable extensions */
 
 /* ***********************************************************************
  * Leave this #define if you want to allow usage of legacy Harbour 1.0.0/Clipper
