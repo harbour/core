@@ -122,6 +122,9 @@
    #include <utime.h>
    #include <sys/types.h>
    #include <sys/wait.h>
+   #if defined( HB_OS_LINUX )
+      #include <sys/time.h>
+   #endif
 #endif
 
 #if ( defined(__DMC__) || defined(__BORLANDC__) || \
@@ -971,8 +974,13 @@ BOOL hb_fsGetFileTime( BYTE * pszFileName, LONG * plJulian, LONG * plMillisec )
 #  endif
 
          *plJulian = hb_dateEncode( ft.tm_year + 1900, ft.tm_mon + 1, ft.tm_mday );
+#if defined( HB_OS_LINUX ) && ( defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
+    defined( __GLIBC__ ) && defined( __GLIBC_MINOR__ ) && \
+           ( __GLIBC__ > 2 || ( __GLIBC__ == 2 && __GLIBC_MINOR__ >= 6 ) )
+         *plMillisec = hb_timeEncode( ft.tm_hour, ft.tm_min, ft.tm_sec, sStat.st_mtim.tv_nsec / 1000000 );
+#else
          *plMillisec = hb_timeEncode( ft.tm_hour, ft.tm_min, ft.tm_sec, 0 );
-
+#endif
          fResult = TRUE;
       }
       hb_fsSetIOError( fResult, 0 );
@@ -1193,7 +1201,6 @@ BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec )
       }
       else
       {
-         struct utimbuf buf;
          struct tm new_value;
          time_t tim;
 
@@ -1229,8 +1236,20 @@ BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec )
 #  else
          new_value = *gmtime( &tim );
 #  endif
-         buf.actime = buf.modtime = mktime( &new_value );
-         fResult = utime( ( char * ) pszFileName, &buf ) == 0;
+#if defined( HB_OS_LINUX )
+         {
+            struct timeval times[2];
+            times[ 0 ].tv_sec = times[ 1 ].tv_sec = mktime( &new_value );
+            times[ 0 ].tv_usec = times[ 1 ].tv_usec = iMSec * 1000;
+            fResult = utimes( ( char * ) pszFileName, times ) == 0;
+         }
+#else
+         {
+            struct utimbuf buf;
+            buf.actime = buf.modtime = mktime( &new_value );
+            fResult = utime( ( char * ) pszFileName, &buf ) == 0;
+         }
+#endif
       }
       hb_fsSetIOError( fResult, 0 );
       hb_vmLock();
