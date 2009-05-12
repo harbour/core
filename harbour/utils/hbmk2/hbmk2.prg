@@ -297,6 +297,7 @@ FUNCTION hbmk( aArgs )
    LOCAL s_aOBJA
    LOCAL s_aOBJUSER
    LOCAL s_aCLEAN
+   LOCAL s_aINSTPATH
    LOCAL s_lHB_PCRE := .T.
    LOCAL s_lHB_ZLIB := .T.
    LOCAL s_cMAIN := NIL
@@ -821,22 +822,13 @@ FUNCTION hbmk( aArgs )
             ENDIF
          ELSE
             IF Empty( s_cCOMP ) .AND. ! Empty( aCOMPDET )
-               /* Look for this compiler first */
+               /* Check compilers */
                FOR tmp := 1 TO Len( aCOMPDET )
-                  IF aCOMPDET[ tmp ][ _COMPDET_cCOMP ] == cSelfCOMP .AND. Eval( aCOMPDET[ tmp ][ _COMPDET_bBlock ] )
+                  IF Eval( aCOMPDET[ tmp ][ _COMPDET_bBlock ] )
                      s_cCOMP := aCOMPDET[ tmp ][ _COMPDET_cCOMP ]
                      EXIT
                   ENDIF
                NEXT
-               IF Empty( s_cCOMP )
-                  /* Check the rest of compilers */
-                  FOR tmp := 1 TO Len( aCOMPDET )
-                     IF !( aCOMPDET[ tmp ][ _COMPDET_cCOMP ] == cSelfCOMP ) .AND. Eval( aCOMPDET[ tmp ][ _COMPDET_bBlock ] )
-                        s_cCOMP := aCOMPDET[ tmp ][ _COMPDET_cCOMP ]
-                        EXIT
-                     ENDIF
-                  NEXT
-               ENDIF
             ENDIF
             IF Empty( s_cCOMP ) .AND. s_cARCH $ "win|wce"
                /* Autodetect embedded MinGW installation */
@@ -966,6 +958,7 @@ FUNCTION hbmk( aArgs )
    s_cHBL := NIL
    s_cPO := NIL
    s_aLNG := {}
+   s_aINSTPATH := {}
 
    /* Collect all command line parameters */
    aParams := {}
@@ -1249,12 +1242,12 @@ FUNCTION hbmk( aArgs )
             AAdd( s_aLIBPATH, cParam )
          ENDIF
 
-      CASE Left( cParamL, 2 ) == "-i" .AND. ;
-           Len( cParamL ) > 2
+      CASE Left( cParamL, Len( "-instpath=" ) ) == "-instpath=" .AND. ;
+           Len( cParamL ) > Len( "-instpath=" )
 
-         cParam := MacroProc( tmp := ArchCompFilter( SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
+         cParam := MacroProc( tmp := ArchCompFilter( SubStr( cParam, Len( "-instpath=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF ! Empty( cParam )
-            AAdd( s_aINCPATH, PathSepToTarget( cParam ) )
+            AAdd( s_aINSTPATH, PathSepToTarget( cParam ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-incpath=" ) ) == "-incpath=" .AND. ;
@@ -1271,6 +1264,14 @@ FUNCTION hbmk( aArgs )
          cParam := MacroProc( tmp := ArchCompFilter( SubStr( cParam, Len( "-inctrypath=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
          IF ! Empty( cParam )
             AAdd( s_aINCTRYPATH, PathSepToTarget( cParam ) )
+         ENDIF
+
+      CASE Left( cParamL, 2 ) == "-i" .AND. ;
+           Len( cParamL ) > 2
+
+         cParam := MacroProc( tmp := ArchCompFilter( SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
+         IF ! Empty( cParam )
+            AAdd( s_aINCPATH, PathSepToTarget( cParam ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-stop" ) ) == "-stop"
@@ -3376,6 +3377,21 @@ FUNCTION hbmk( aArgs )
                   OutErr( cCommand, hb_osNewLine() )
                ENDIF
             ENDIF
+         ENDIF
+
+         IF ! Empty( s_aINSTPATH )
+            FOR EACH tmp IN s_aINSTPATH
+               IF Empty( FN_NameExtGet( tmp ) )
+                  tmp1 := DirAddPathSep( PathSepToSelf( tmp ) ) + FN_NameExtGet( s_cPROGNAME )
+               ELSE
+                  tmp1 := PathSepToSelf( tmp )
+               ENDIF
+               IF hb_FCopy( s_cPROGNAME, tmp1 ) == F_ERROR
+                  hbmk_OutErr( hb_StrFormat( I_( "Warning: Copying target to %1$s failed with %2$s." ), tmp1, hb_ntos( FError() ) ) )
+               ELSEIF s_lInfo
+                  hbmk_OutStd( hb_StrFormat( I_( "Copied target to %1$s" ), tmp1 ) )
+               ENDIF
+            NEXT
          ENDIF
       ENDIF
    ENDIF
@@ -5567,6 +5583,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-[no]compr[=lev]"  , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) },;
       { "-[no]run"          , I_( "run/don't run output executable" ) },;
       { "-vcshead=<file>"   , I_( "generate .ch header file with local repository information. SVN, Git and Mercurial are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
+      { "-instpath=<path>"  , I_( "copy target to <path>. if <path> is a directory, it should end with path separator. can be specified multiple times" ) },;
       { "-nohbp"            , I_( "do not process .hbp files in current directory" ) },;
       { "-stop"             , I_( "stop without doing anything" ) },;
       NIL,;
