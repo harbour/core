@@ -424,6 +424,21 @@ HB_FUNC( HB_GZPUTS )
 }
 
 /*
+ * HB_GZPUTC( <pGZipStream>, <nByte> ) => <nResult>
+ */
+HB_FUNC( HB_GZPUTC )
+{
+   if( ISNUM( 2 ) )
+   {
+      gzFile gz = hb_gzParam( 1 );
+      if( gz )
+         hb_retni( gzputc( gz, hb_parni( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/*
  * HB_GZGETC( <pGZipStream> ) => <nByte>
  */
 HB_FUNC( HB_GZGETC )
