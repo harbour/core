@@ -190,3 +190,9 @@ Note that last dollar sign is mandatory.
 Run these commands and commit:
 svn propset svn:keywords "Author Date Id Revision" "filename"
 svn propset svn:eol-style native "filename"
+
+
+[ Copyright (c) 1999-2009 Viktor Szakats <harbour.01 syenar.hu>
+  Licensed under Creative Commons Attribution-ShareAlike 3.0:
+  http://creativecommons.org/licenses/by-sa/3.0/
+  See COPYING. ]

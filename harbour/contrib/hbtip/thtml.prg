@@ -414,7 +414,7 @@ METHOD Next() CLASS THtmlIterator
          lExit      := .T.
          oFound     := NIL
          ::nCurrent := 0
-      END
+      END SEQUENCE
    ENDDO
 RETURN oFound
 
@@ -642,7 +642,7 @@ METHOD isType( nType ) CLASS THtmlNode
       lRet := hb_bitAnd( ::htmlTagType[2], nType ) > 0
    RECOVER
       lRet := .F.
-   END
+   END SEQUENCE
 
 RETURN lRet
 
@@ -715,7 +715,8 @@ METHOD parseHtml( parser ) CLASS THtmlNode
          ELSEIF Chr(10) $ cText
             cText := Trim(cText)
             nPos := Len(cText) + 1
-            DO WHILE nPos > 0 .AND. SubStr( cText, --nPos, 1 ) $ Chr(9)+Chr(10)+Chr(13) ; ENDDO
+            DO WHILE nPos > 0 .AND. SubStr( cText, --nPos, 1 ) $ Chr(9)+Chr(10)+Chr(13)
+            ENDDO
             oThisTag:addNode( THtmlNode():new( oThisTag, "_text_", , Left(cText,nPos) ) )
          ELSE
             oThisTag:addNode( THtmlNode():new( oThisTag, "_text_", , cText ) )
@@ -815,7 +816,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
 
             ENDIF
          ENDIF
-      END
+      ENDSWITCH
 
       IF lRewind
          oThisTag := oThisTag:parent
@@ -859,7 +860,8 @@ METHOD parseHtmlFixed( parser ) CLASS THtmlNode
    ENDIF
 
    // back to "<"
-   DO WHILE !( P_PREV( parser ) == "<" ) ; ENDDO /* NOTE: != changed to !( == ) */
+   DO WHILE !( P_PREV( parser ) == "<" )
+   ENDDO /* NOTE: != changed to !( == ) */
 
    nEnd  := parser:p_pos
    ::addNode( THtmlNode():new( self, "_text_", , SubStr( parser:p_Str, nStart, nEnd - nStart ) ) )
@@ -1065,8 +1067,8 @@ METHOD toString( nIndent ) CLASS THtmlNode
 #else
       FOR EACH oNode IN ::htmlContent
           IF .NOT. oNode:isInline() .OR. oNode:htmlTagName == "!--"
-            cHtml += chr(13)+Chr(10)
-         ENDIF
+             cHtml += chr(13)+Chr(10)
+          ENDIF
          cHtml += oNode:toString( nIndent+1 )
       NEXT
 #endif
@@ -1106,7 +1108,7 @@ METHOD attrToString() CLASS THtmlNode
       RECOVER
          // Tag has no attributes
          aAttr := {}
-      END
+      END SEQUENCE
       cAttr := ""
       hb_HEval( ::htmlAttributes, {|cKey,cValue| cAttr+=__AttrToStr( cKey, cValue, aAttr, self ) } )
    ENDIF
@@ -1231,7 +1233,7 @@ METHOD getAttribute( cName ) CLASS THtmlNode
       cValue := hHash[cName]
    RECOVER
       cValue := NIL
-   END
+   END SEQUENCE
 RETURN cValue
 
 
@@ -1348,7 +1350,7 @@ STATIC FUNCTION __ParseAttr( parser )
 
       OTHERWISE
          aAttr[nMode] += cChr
-      END
+      ENDSWITCH
    ENDDO
 
    IF .NOT. aAttr[1] == ""
@@ -1375,7 +1377,7 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
    RECOVER
       // Tag has no attributes
       aAttr := {}
-   END
+   END SEQUENCE
 
    IF ( nPos := AScan( aAttr, {|a| a[1] == Lower( cName ) } ) ) == 0
       // Tag doesn't have this attribute
@@ -1407,7 +1409,7 @@ METHOD delAttribute( cName ) CLASS THtmlNode
          lRet := .T.
       RECOVER
          lRet := .F.
-      END
+      END SEQUENCE
    ENDIF
 RETURN lRet
 
@@ -1425,7 +1427,7 @@ METHOD isAttribute( cName ) CLASS THtmlNode
       lRet := hb_HHasKey( ::getAttributes(), cName )
    RECOVER
       lRet := .F.
-   END
+   END SEQUENCE
 RETURN lRet
 
 
@@ -1625,7 +1627,7 @@ FUNCTION THtmlTagType( cTagName )
       aType := shTagTypes[ cTagName ]
    RECOVER
       aType := shTagTypes[ "_text_" ]
-   END
+   END SEQUENCE
 RETURN aType
 
 
@@ -1644,7 +1646,7 @@ FUNCTION THtmlIsValid( cTagName, cAttrName )
       ENDIF
    RECOVER
       lRet := .F.
-   END
+   END SEQUENCE
 RETURN lRet
 
 /*
@@ -4370,7 +4372,8 @@ FUNCTION AnsiToHtml( cAnsiText )
       nEnd  := parser:p_pos
       cText := SubStr( parser:p_str, nStart, nEnd-nStart )
 
-      DO WHILE .NOT. ( (cChr := P_NEXT(parser)) $ "; " )  .AND. .NOT. parser:p_pos == 0; ENDDO
+      DO WHILE .NOT. ( (cChr := P_NEXT(parser)) $ "; " )  .AND. .NOT. parser:p_pos == 0
+      ENDDO
 
       SWITCH cChr
       CASE ";"
@@ -4390,7 +4393,7 @@ FUNCTION AnsiToHtml( cAnsiText )
          nStart    := nEnd
          cHtmlText += "&amp;" + SubStr( cText, 2 )
          LOOP
-      END
+      ENDSWITCH
 
       nStart := parser:p_pos
       FOR EACH aEntity IN saHtmlAnsiEntities

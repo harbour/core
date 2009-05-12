@@ -365,11 +365,11 @@ METHOD ReadAll() CLASS tIPClientHTTP
    ENDIF
    IF ::bChunked
       cChunk:=::read()
-      while cChunk != nil
+      do while cChunk != nil
          cOut+=cChunk
       // ::nLength:=-1
          cChunk:=::read()
-      end
+      enddo
    else
       return(::read())
    endif
@@ -571,7 +571,7 @@ METHOD PostMultiPart( cPostData, cQuery ) CLASS tIPClientHTTP
       nbuf:=8192
       nRead:=nBuf
       //cBuf:=space(nBuf)
-      while nRead == nBuf
+      do while nRead == nBuf
          //nRead := FRead( nFile,@cBuf,nBuf)
          cBuf:=FReadstr( nFile,nBuf)
          nRead:=len(cBuf)
@@ -580,7 +580,7 @@ METHOD PostMultiPart( cPostData, cQuery ) CLASS tIPClientHTTP
          ENDIF
 */
          cData+=cBuf
-      end
+      enddo
       fClose(nFile)
       cData+=cCrlf
    NEXT
@@ -631,5 +631,3 @@ METHOD WriteAll( cFile ) CLASS tIPClientHTTP
    endif
 
    RETURN lSuccess
-
-

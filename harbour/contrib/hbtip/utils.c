@@ -7,7 +7,6 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -69,28 +68,30 @@
 #include "hbvm.h"
 #include "hbdate.h"
 
-#ifndef HB_OS_WIN
-   #include <time.h>
-#else
+#ifdef HB_OS_WIN
    #include <windows.h>
+#else
+   #include <time.h>
 #endif
 
 #ifndef TIME_ZONE_ID_INVALID
-   #define TIME_ZONE_ID_INVALID (DWORD)0xFFFFFFFF
+   #define TIME_ZONE_ID_INVALID ( DWORD ) 0xFFFFFFFF
 #endif
 
 /************************************************************
 * Useful internet timestamp based on RFC822
 */
 
-/* sadly, many strftime windows implementations are broken */
-#ifdef HB_OS_WIN
-
 HB_FUNC( TIP_TIMESTAMP )
 {
    PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-   ULONG ulHour = hb_parl(2);
+   ULONG ulHour = hb_parnl( 2 );
    int nLen;
+   char *szRet = ( char * ) hb_xgrab( 64 );
+
+/* sadly, many strftime windows implementations are broken */
+#ifdef HB_OS_WIN
+
    TIME_ZONE_INFORMATION tzInfo;
    LONG lDate;
    int iYear, iMonth, iDay;
@@ -100,25 +101,14 @@ HB_FUNC( TIP_TIMESTAMP )
          "Apr", "May", "Jun",
          "Jul", "Aug", "Sep",
          "Oct", "Nov", "Dec" };
-   char *szRet = (char *) hb_xgrab( 64 );
    SYSTEMTIME st;
 
-
-   if ( !ulHour )
-   {
-      ulHour = 0;
-   }
-
-   if ( GetTimeZoneInformation( &tzInfo ) == TIME_ZONE_ID_INVALID )
-   {
+   if( GetTimeZoneInformation( &tzInfo ) == TIME_ZONE_ID_INVALID )
       tzInfo.Bias = 0;
-   }
    else
-   {
       tzInfo.Bias -= tzInfo.Bias;
-   }
 
-   if ( !pDate )
+   if( !pDate )
    {
       GetLocalTime( &st );
 
@@ -142,34 +132,13 @@ HB_FUNC( TIP_TIMESTAMP )
             (int)( tzInfo.Bias % 60 > 0 ? - tzInfo.Bias % 60 : tzInfo.Bias % 60 ) );
    }
 
-
    nLen = strlen( szRet );
-
-   if ( nLen < 64 )
-   {
-      szRet = (char *) hb_xrealloc( szRet, nLen + 1 );
-   }
-   hb_retclen_buffer( szRet, nLen );
-
-}
 
 #else
 
-HB_FUNC( TIP_TIMESTAMP )
-{
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-   ULONG ulHour = hb_parl(2);
-   int nLen;
-   char szDate[9];
+   char szDate[ 9 ];
    struct tm tmTime;
    time_t current;
-
-   char *szRet = (char *) hb_xgrab( 64 );
-
-   if ( !ulHour )
-   {
-      ulHour = 0;
-   }
 
    /* init time structure anyway */
    time( &current );
@@ -204,14 +173,13 @@ HB_FUNC( TIP_TIMESTAMP )
 
    nLen = strftime( szRet, 64, "%a, %d %b %Y %H:%M:%S %z", &tmTime );
 
+#endif
+
    if ( nLen < 64 )
-   {
-      szRet = (char *) hb_xrealloc( szRet, nLen + 1 );
-   }
+      szRet = ( char * ) hb_xrealloc( szRet, nLen + 1 );
+
    hb_retclen_buffer( szRet, nLen );
 }
-
-#endif
 
 /** Detects the mimetype of a given file */
 

@@ -200,7 +200,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
          ENDIF
       RECOVER
          lReturn := .F.
-      END
+      END SEQUENCE
 
    ENDIF
 
@@ -212,7 +212,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       oUrl := tUrl():New( "smtp://" + cUser + "@" + cServer + "/" + cTo )
    RECOVER
       lReturn := .F.
-   END
+   END SEQUENCE
 
    IF !lReturn
       RETURN .F.
@@ -256,7 +256,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       oInmail := tIPClientSMTP():New( oUrl, lTrace)
    RECOVER
       lReturn := .F.
-   END
+   END SEQUENCE
 
    IF !lReturn
       RETURN .F.
@@ -268,7 +268,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
       IF oInMail:OpenSecure()
 
-         WHILE .T.
+         DO WHILE .T.
             oInMail:GetOk()
             IF oInMail:cReply == NIL
                EXIT
@@ -314,7 +314,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
          oInmail := tIPClientsmtp():New( oUrl, lTrace)
       RECOVER
          lReturn := .F.
-      END
+      END SEQUENCE
 
       oInmail:nConnTimeout:=nTimeOut
 

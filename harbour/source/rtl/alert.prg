@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ALERT() function
+ * ALERT(), HB_ALERT() functions
  *
  * Released to Public Domain by Vladimir Kazimirchik <v_kazimirchik@yahoo.com>
  * www - http://www.harbour-project.org
@@ -39,21 +39,14 @@
 /* NOTE: Clipper handles these buttons { "Ok", "", "Cancel" } in a buggy way.
          This is fixed. [vszakats] */
 
-/* NOTE: nDelay parameter is a Harbour extension. */
-
 #ifdef HB_C52_UNDOC
 STATIC s_lNoAlert
 #endif
 
-FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
-   LOCAL cMessage
+FUNCTION Alert( cMessage, aOptions, cColorNorm )
    LOCAL cColorHigh
    LOCAL aOptionsOK
    LOCAL nEval
-#ifdef HB_EXTENSION
-   LOCAL lFirst
-   LOCAL cLine
-#endif
 
 #ifdef HB_C52_UNDOC
 
@@ -65,7 +58,62 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
 #endif
 
-#ifdef HB_EXTENSION
+   IF ! ISCHARACTER( cMessage )
+      RETURN NIL
+   ENDIF
+
+   cMessage := StrTran( cMessage, ";", Chr( 10 ) )
+
+   IF ! ISARRAY( aOptions )
+      aOptions := {}
+   ENDIF
+
+   IF ! ISCHARACTER( cColorNorm ) .OR. Empty( cColorNorm )
+      cColorNorm := "W+/R" // first pair color (Box line and Text)
+      cColorHigh := "W+/B" // second pair color (Options buttons)
+   ELSE
+      cColorHigh := StrTran( StrTran( iif( At( "/", cColorNorm ) == 0, "N", SubStr( cColorNorm, At( "/", cColorNorm ) + 1 ) ) + "/" +;
+                                      iif( At( "/", cColorNorm ) == 0, cColorNorm, Left( cColorNorm, At( "/", cColorNorm ) - 1 ) ), "+", "" ), "*", "" )
+   ENDIF
+
+   aOptionsOK := {}
+   FOR nEval := 1 TO Len( aOptions )
+      IF ISCHARACTER( aOptions[ nEval ] ) .AND. ! Empty( aOptions[ nEval ] )
+         AAdd( aOptionsOK, aOptions[ nEval ] )
+      ENDIF
+   NEXT
+
+   IF Len( aOptionsOK ) == 0
+      aOptionsOK := { "Ok" }
+#ifdef HB_C52_STRICT
+   /* NOTE: Clipper allows only four options [vszakats] */
+   ELSEIF Len( aOptionsOK ) > 4
+      ASize( aOptionsOK, 4 )
+#endif
+   ENDIF
+
+   RETURN hb_gtAlert( cMessage, aOptionsOK, cColorNorm, cColorHigh )
+
+/* NOTE: xMessage can be of any type. This is a Harbour extension over Alert(). */
+/* NOTE: nDelay parameter is a Harbour extension over Alert(). */
+
+FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
+   LOCAL cMessage
+   LOCAL cColorHigh
+   LOCAL aOptionsOK
+   LOCAL nEval
+   LOCAL lFirst
+   LOCAL cLine
+
+#ifdef HB_C52_UNDOC
+
+   DEFAULT s_lNoAlert TO hb_argCheck( "NOALERT" )
+
+   IF s_lNoAlert
+      RETURN NIL
+   ENDIF
+
+#endif
 
    IF PCount() == 0
       RETURN NIL
@@ -88,21 +136,11 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       cMessage := hb_CStr( xMessage )
    ENDIF
 
-#else
-
-   IF !ISCHARACTER( xMessage )
-      RETURN NIL
-   ENDIF
-
-   cMessage := StrTran( xMessage, ";", Chr( 10 ) )
-
-#endif
-
-   IF !ISARRAY( aOptions )
+   IF ! ISARRAY( aOptions )
       aOptions := {}
    ENDIF
 
-   IF !ISCHARACTER( cColorNorm ) .OR. EMPTY( cColorNorm )
+   IF !ISCHARACTER( cColorNorm ) .OR. Empty( cColorNorm )
       cColorNorm := "W+/R" // first pair color (Box line and Text)
       cColorHigh := "W+/B" // second pair color (Options buttons)
    ELSE
@@ -112,7 +150,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    aOptionsOK := {}
    FOR nEval := 1 TO Len( aOptions )
-      IF ISCHARACTER( aOptions[ nEval ] ) .AND. !Empty( aOptions[ nEval ] )
+      IF ISCHARACTER( aOptions[ nEval ] ) .AND. ! Empty( aOptions[ nEval ] )
          AAdd( aOptionsOK, aOptions[ nEval ] )
       ENDIF
    NEXT

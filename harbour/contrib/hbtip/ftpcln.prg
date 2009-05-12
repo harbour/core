@@ -357,7 +357,7 @@ METHOD TransferStart() CLASS tIPClientFTP
          IF ! Empty( ::nDefaultSndBuffSize )
             ::InetSndBufSize( skt, ::nDefaultSndBuffSize )
          ENDIF
-   
+
          IF ! Empty( ::nDefaultRcvBuffSize )
             ::InetRcvBufSize( skt, ::nDefaultRcvBuffSize )
          ENDIF
@@ -446,33 +446,35 @@ METHOD UserCommand( cCommand, lPasv, lReadPort, lGetReply ) CLASS tIPClientFTP
 RETURN .t.
 
 
-METHOD ReadAuxPort(cLocalFile) CLASS tIPClientFTP
-   LOCAL cRet, cList := "",nFile:=0
+METHOD ReadAuxPort( cLocalFile ) CLASS tIPClientFTP
+   LOCAL cRet
+   LOCAL cList := ""
+   LOCAL nFile := 0
 
-   IF .not. ::TransferStart()
+   IF ! ::TransferStart()
       RETURN NIL
-   END
-   IF !empty(cLocalFile)
-      nFile:=fcreate(cLocalFile)
+   ENDIF
+   IF ! Empty( cLocalFile )
+      nFile := FCreate( cLocalFile )
    ENDIF
    cRet := ::super:Read( 512 )
-   WHILE cRet != NIL .and. len( cRet ) > 0
-      IF nFile>0
-         fwrite(nFile,cRet)
-      else
-            cList += cRet
+   DO WHILE cRet != NIL .AND. Len( cRet ) > 0
+      IF nFile > 0
+         FWrite( nFile, cRet )
+      ELSE
+         cList += cRet
       ENDIF
       cRet := ::super:Read( 512 )
-   END
+   ENDDO
 
    HB_InetClose( ::SocketCon )
    ::SocketCon := ::SocketControl
    IF ::GetReply()
-   IF nFile>0
-      fclose(nFile)
-      return(.t.)
-   ENDIF
-    RETURN cList
+      IF nFile > 0
+         FClose( nFile )
+         RETURN .t.
+      ENDIF
+      RETURN cList
    ENDIF
 RETURN NIL
 
@@ -836,11 +838,11 @@ METHOD listFiles( cFileSpec ) CLASS tIPClientFTP
    FOR EACH cEntry IN aList
 
       IF Empty( cEntry ) //PM:09-08-2007 Needed because of the new HB_aTokens()
-      
+
          hb_ADel(aList, cEntry:__enumIndex(), .T.)
-      
+
       ELSE
-   
+
          aFile         := Array( F_LEN+3 )
          nStart        := 1
          nEnd          := hb_At( Chr(32), cEntry, nStart )

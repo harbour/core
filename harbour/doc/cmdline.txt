@@ -10,21 +10,21 @@ compiler and #pragma directives in the source code.
 
 The command line always overrides the envvar.
 
-Note that some switches are not accepted in envvar, 
+Note that some switches are not accepted in envvar,
 some others in #pragmas.
 
 First the parser should start to step through
-all the tokens in the string separated by 
+all the tokens in the string separated by
 whitespace. (or just walk through all argv[])
 
 1.) If the token begins with "-", it
     should be treated as a new style switch.
 
   One or more switch characters can follow
-  this. The "-" sign inside the token 
+  this. The "-" sign inside the token
   will turn off the switch.
 
-  If the switch has an argument all the following 
+  If the switch has an argument all the following
   characters are treated as part of the argument.
 
   The "/" sign has no special meaning here.
@@ -44,7 +44,7 @@ whitespace. (or just walk through all argv[])
 
   -w- -w -w-            ( finally: !W )
 
-2.) If the token begins with "/", it 
+2.) If the token begins with "/", it
     should be treated as a compatibility style switch.
 
   The parser scans the token for the next "/" sign or EOS
@@ -55,7 +55,7 @@ whitespace. (or just walk through all argv[])
   allowing the usage of quote characters. This is mostly
   a problem on systems which use "/" as path separator.
 
-  The "-" sign has no special meaning here, it can't be 
+  The "-" sign has no special meaning here, it can't be
   used to disable a switch.
 
   /w/n                  ( W N )
@@ -72,14 +72,14 @@ The Harbour switches are always case insensitive.
 In the Harbour commandline the two style can be used together:
 harbour -wnes2 /gc0/q0 -iC:\hello
 
-Exceptions: 
+Exceptions:
 
-- Handlig of the /CREDIT undocumented switch 
+- Handlig of the /CREDIT undocumented switch
   on Harbour command line is unusual, check the current code
   for this.
 
 - The CLIPPER, HARBOUR and Harbour application
-  command line parsing is a different beast, 
+  command line parsing is a different beast,
   see cmdarg.c for a NOTE.
 
   Just some examples for the various accepted forms:
@@ -91,4 +91,8 @@ Exceptions:
 
   "//" should always be used on the command line.
 
-Viktor Szakats <viktor.szakats@syenar.hu>
+
+[ Copyright (c) 1999-2009 Viktor Szakats <harbour.01 syenar.hu>
+  Licensed under Creative Commons Attribution-ShareAlike 3.0:
+  http://creativecommons.org/licenses/by-sa/3.0/
+  See COPYING. ]
