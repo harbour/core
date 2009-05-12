@@ -64,19 +64,11 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-/* NOTE: The second parameter is a Harbour extension. In CA-Cl*pper the
-         function will return an empty string if called with more than one
-         parameter. [vszakats] */
-
 HB_FUNC( GETENV )
 {
    PHB_ITEM pName = hb_param( 1, HB_IT_STRING );
 
-#ifdef HB_EXTENSION
-   if( pName )
-#else
    if( pName && hb_pcount() == 1 )
-#endif
    {
       char * pszName = hb_itemGetC( pName );
       ULONG ulName = strlen( pszName );
@@ -121,11 +113,8 @@ HB_FUNC( GETENV )
          {
             if( szValue )
                hb_xfree( szValue );
-#ifdef HB_EXTENSION
-            hb_retc( hb_parc( 2 ) );
-#else
+
             hb_retc( NULL );
-#endif
          }
       }
       else

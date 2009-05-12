@@ -88,15 +88,6 @@ HB_FUNC( HB_AT )
       hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if defined( HB_EXTENSION )
-
-HB_FUNC( AT )
-{
-   HB_FUNC_EXEC( HB_AT );
-}
-
-#else
-
 HB_FUNC( AT )
 {
    PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
@@ -110,5 +101,3 @@ HB_FUNC( AT )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-#endif

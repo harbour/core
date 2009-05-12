@@ -162,9 +162,5 @@ HB_FUNC( HB_MEMOWRIT )
 
 HB_FUNC( MEMOWRIT )
 {
-#ifdef HB_EXTENSION
-   hb_retl( hb_memowrit( hb_parinfo( 0 ) == 3 && ISLOG( 3 ) ? hb_parl( 3 ) : TRUE ) );
-#else
    hb_retl( hb_memowrit( TRUE ) );
-#endif
 }

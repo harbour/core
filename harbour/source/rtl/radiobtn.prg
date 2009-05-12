@@ -56,11 +56,11 @@
 #include "color.ch"
 #include "common.ch"
 
-/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but 
+/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
 
-/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*() 
-         functions to generate screen output. Harbour uses Disp*() 
+/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*()
+         functions to generate screen output. Harbour uses Disp*()
          functions only. [vszakats] */
 
 #ifdef HB_COMPAT_C53
@@ -140,7 +140,7 @@ METHOD select( lState ) CLASS RADIOBUTTN
    RETURN Self
 
 METHOD killFocus() CLASS RADIOBUTTN
-   
+
    IF ::lHasFocus
       ::lHasFocus := .F.
 
@@ -188,7 +188,7 @@ METHOD display() CLASS RADIOBUTTN
    RETURN Self
 
 METHOD isAccel( xKey ) CLASS RADIOBUTTN
-   
+
    LOCAL nPos
    LOCAL cCaption
 
@@ -240,7 +240,7 @@ METHOD buffer() CLASS RADIOBUTTN
    RETURN ::lBuffer
 
 METHOD data( cData ) CLASS RADIOBUTTN
-   
+
    IF PCount() > 0
       ::cData := iif( cData == NIL, NIL, __eInstVar53( Self, "DATA", cData, "C", 1001 ) )
    ENDIF
@@ -289,7 +289,7 @@ METHOD colorSpec( cColorSpec ) CLASS RADIOBUTTN
    RETURN ::cColorSpec
 
 METHOD fBlock( bFBlock ) CLASS RADIOBUTTN
-   
+
    IF PCount() > 0
       ::bFBlock := iif( bFBlock == NIL, NIL, __eInstVar53( Self, "FBLOCK", bFBlock, "B", 1001 ) )
    ENDIF
@@ -308,7 +308,7 @@ METHOD row( nRow ) CLASS RADIOBUTTN
    RETURN ::nRow
 
 METHOD sBlock( bSBlock ) CLASS RADIOBUTTN
-   
+
    IF PCount() > 0
       ::bSBlock := iif( bSBlock == NIL, NIL, __eInstVar53( Self, "SBLOCK", bSBlock, "B", 1001 ) )
    ENDIF
@@ -360,12 +360,5 @@ METHOD New( nRow, nCol, cCaption, cData ) CLASS RADIOBUTTN
 
 FUNCTION RadioButto( nRow, nCol, cCaption, cData ) /* NOTE: cData argument is undocumented */
    RETURN HBRadioButton():New( nRow, nCol, cCaption, cData )
-
-#ifdef HB_EXTENSION
-
-FUNCTION RadioButton( nRow, nCol, cCaption, cData ) /* NOTE: cData argument is undocumented */
-   RETURN HBRadioButton():New( nRow, nCol, cCaption, cData )
-
-#endif
 
 #endif

@@ -111,6 +111,8 @@
    #xtranslate hb_ADel([<x,...>])          => ADel(<x>)
    #xtranslate hb_At([<x,...>])            => At(<x>)
 
+   #xtranslate hb_GetEnv([<x,...>])        => GetEnv(<x>)
+
    #xtranslate hb_i18n_gettext(<x>)        => i18n(<x>)
 
    #xtranslate hb_ARGV([<x,...>])          => hb_CMDARGARGV(<x>)
@@ -212,6 +214,9 @@
    #xtranslate AIns(<a>,<n>,[<x,...>])         => hb_AIns(<a>,<n>,<x>)
    #xtranslate ADel(<a>,<n>,<l>)               => hb_ADel(<a>,<n>,<l>)
    #xtranslate At(<a>,<b>,[<x,...>])           => hb_At(<a>,<b>,<x>)
+
+   #xtranslate GetEnv([<x,...>])               => hb_GetEnv(<x>)
+   #xtranslate MemoWrit(<x>,<y>,<z>)           => iif( hb_isLogical(<z>) .AND. <z>, MemoWrit(<x>,<y>), hb_MemoWrit(<x>,<y>) )
 
    #xtranslate i18n(<x>)                       => hb_i18n_gettext(<x>)
 

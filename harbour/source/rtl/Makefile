@@ -205,6 +205,7 @@ PRG_SOURCES=\
 	perfuncs.prg \
 	profiler.prg \
 	pushbtn.prg  \
+	radiobhb.prg \
 	radiobtn.prg \
 	radiogrp.prg \
 	readkey.prg  \
