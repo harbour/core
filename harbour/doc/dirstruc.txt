@@ -237,6 +237,10 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
+|   +---hbwinprn        - WIN_PRN Class, specific to printing on Windows
+|   |   |
+|   |   +---tests       - Test programs.
+|   |
 |   +---hbziparc        - Compatibility interface with ZipArchive general
 |   |   |                 purpose compression library to work with ZIP files.
 |   |   |
