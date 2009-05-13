@@ -2054,6 +2054,11 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                update area flags, Druzus */
             hb_adsUpdateAreaFlags( pArea );
          }
+         /* workaround for ACE bug: character fields longer then 23 bytes are
+          * increased by one byte when read by AdsGetField() [druzus].
+          */
+         if( u32Length > ( ULONG ) pField->uiLen )
+            u32Length = pField->uiLen;
          hb_itemPutCL( pItem, ( char * ) pBuffer, u32Length );
          break;
 
