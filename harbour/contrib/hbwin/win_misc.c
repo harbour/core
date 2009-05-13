@@ -222,3 +222,30 @@ HB_FUNC( WAPI_SETERRORMODE )
 {
    hb_retni( SetErrorMode( ( UINT ) hb_parni( 1 ) ) );
 }
+
+HB_FUNC( WAPI_MESSAGEBOX )
+{
+   LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   LPTSTR lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+   HWND hWnd = ISNUM( 1 ) ? ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ) :
+                            ( HWND ) hb_parptr( 1 );
+   hb_retni( MessageBox( hWnd, lpStr1, lpStr2, hb_parni( 4 ) ) );
+   HB_TCHAR_FREE( lpStr1 );
+   HB_TCHAR_FREE( lpStr2 );
+}
+
+/* TODO: Add embedded zero support by using hb_mbntowc() */
+HB_FUNC( WIN_ANSITOWIDE )
+{
+   BSTR wString = hb_mbtowc( hb_parcx( 1 ) );
+
+   hb_retclen_buffer( ( char * ) wString, SysStringLen( wString ) );
+}
+
+/* TODO: Add embedded zero support by using hb_wcntomb() */
+HB_FUNC( WIN_WIDETOANSI )
+{
+   char * cString = hb_wctomb( ( wchar_t * ) hb_parcx( 1 ) );
+
+   hb_retclen_buffer( cString, strlen( cString ) );
+}
