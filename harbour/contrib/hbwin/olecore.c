@@ -154,7 +154,7 @@ static wchar_t* AnsiToWide( const char* szString )
    int       iLen;
    wchar_t*  szWide;
 
-   iLen  = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, szString, -1, NULL, 0 );
+   iLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, szString, -1, NULL, 0 );
    szWide = ( wchar_t* ) hb_xgrab( iLen * sizeof( wchar_t ) );
    MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, szString, -1, szWide, iLen );
    return szWide;

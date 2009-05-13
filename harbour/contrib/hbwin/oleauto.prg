@@ -50,19 +50,20 @@
  *
  */
 
-#define HB_CLS_NOTOBJECT  // avoid definition of method: INIT
+#define HB_CLS_NOTOBJECT  /* avoid definition of method: INIT */
 #include "hbclass.ch"
 
 
 REQUEST __GETMESSAGE
 
-CLASS HB_OleAuto
-   DATA __hObj
-   DATA __hObjEnum
+CREATE CLASS HB_OleAuto
+   VAR __hObj
+   VAR __hObjEnum
 
    METHOD __enumStart( enum, lDescend )
    METHOD __enumSkip( enum, lDescend )
    METHOD __enumStop()
+
    ERROR HANDLER __OnError()
 ENDCLASS
 
@@ -121,4 +122,3 @@ FUNC CreateObject( ... )
       oOle:__hObj := hOle
    ENDIF
 RETURN oOle
-

@@ -60,17 +60,19 @@
 // A specialized HBEditor which can simulate MemoEdit() behaviour
 CREATE CLASS HBMemoEditor INHERIT HBEditor
 
-   VAR xUserFunction                      // User Function called to change default MemoEdit() behaviour
+   VAR lCallKeyboardHook AS LOGICAL INIT .F. // To avoid recursive calls in endless loop. [jarabal]
 
-   METHOD MemoInit( xUserFunction )       // This method is called after ::New() returns to perform ME_INIT actions
-   METHOD Edit()                          // Calls super:Edit( nKey ) but is needed to handle configurable keys
-   METHOD KeyboardHook( nKey )            // Gets called every time there is a key not handled directly by HBEditor
-   METHOD IdleHook()                      // Gets called every time there are no more keys to hanlde
+   VAR xUserFunction                         // User Function called to change default MemoEdit() behaviour
 
-   METHOD HandleUserKey( nKey, nUserKey ) // Handles keys returned to MemoEdit() by user function
-   METHOD xDo( nStatus )                  // Calls xUserFunction saving and restoring cursor position and shape
+   METHOD MemoInit( xUserFunction )          // This method is called after ::New() returns to perform ME_INIT actions
+   METHOD Edit()                             // Calls super:Edit( nKey ) but is needed to handle configurable keys
+   METHOD KeyboardHook( nKey )               // Gets called every time there is a key not handled directly by HBEditor
+   METHOD IdleHook()                         // Gets called every time there are no more keys to hanlde
 
-   METHOD MoveCursor( nKey )              // Redefined to properly managed CTRL-W
+   METHOD HandleUserKey( nKey, nUserKey )    // Handles keys returned to MemoEdit() by user function
+   METHOD xDo( nStatus )                     // Calls xUserFunction saving and restoring cursor position and shape
+
+   METHOD MoveCursor( nKey )                 // Redefined to properly managed CTRL-W
 
 ENDCLASS
 
@@ -149,7 +151,11 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
    LOCAL nCol
 
    IF ISCHARACTER( ::xUserFunction )
-      ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
+      IF ! ::lCallKeyboardHook // To avoid recursive calls in endless loop. [jarabal]
+         ::lCallKeyboardHook := .T.
+         ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
+         ::lCallKeyboardHook := .F.
+      ENDIF
    ELSE
       IF nKey == K_ESC
          IF ::lDirty .AND. Set( _SET_SCOREBOARD )
@@ -187,28 +193,22 @@ METHOD IdleHook() CLASS HBMemoEditor
 
 METHOD HandleUserKey( nKey, nUserKey ) CLASS HBMemoEditor
 
-   // HBEditor does not handle these keys and would call ::KeyboardHook() causing infinite loop
-   LOCAL aUnHandledKeys := { K_CTRL_J, K_CTRL_K, K_CTRL_L, K_CTRL_N, K_CTRL_O,;
-                             K_CTRL_P, K_CTRL_Q, K_CTRL_T, K_CTRL_U, K_F1 }
-
    DO CASE
    // I won't reach this point during ME_INIT since ME_DEFAULT ends initialization phase of MemoEdit()
    CASE nUserKey == ME_DEFAULT
 
       // HBEditor is not able to handle keys with a value higher than 256, but I have to tell him
       // that user wants to save text
-      IF ( nKey <= 256 .OR. nKey == K_ALT_W ) .AND. AScan( aUnHandledKeys, nKey ) == 0
+      IF ( nKey <= 256 .OR. nKey == K_ALT_W )
          ::super:Edit( nKey )
       ENDIF
 
    // TOFIX: Not CA-Cl*pper compatible, see teditor.prg
    CASE ( nUserKey >= 1 .AND. nUserKey <= 31 ) .OR. nUserKey == K_ALT_W
-      IF AScan( aUnHandledKeys, nUserKey ) == 0
-         ::super:Edit( nUserKey )
-      ENDIF
+      ::super:Edit( nUserKey )
 
    CASE nUserKey == ME_DATA
-      IF nKey <= 256 .AND. AScan( aUnHandledKeys, nKey ) == 0
+      IF nKey <= 256
          ::super:Edit( nKey )
       ENDIF
 
