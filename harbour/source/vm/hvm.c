@@ -2859,8 +2859,6 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
 static void hb_vmAddInt( HB_ITEM_PTR pResult, LONG lAdd )
 {
-   double dNewVal;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_vmAddInt(%p,%ld)", pResult, lAdd));
 
    if( HB_IS_BYREF( pResult ) )
@@ -2877,22 +2875,24 @@ static void hb_vmAddInt( HB_ITEM_PTR pResult, LONG lAdd )
       if( lAdd >= 0 ? lResult >= lVal : lResult <  lVal )
       {
          HB_ITEM_PUT_NUMINTRAW( pResult, lResult );
-         return;
       }
       else
       {
-         dNewVal = ( double ) lVal + lAdd;
+         pResult->type = HB_IT_DOUBLE;
+         pResult->item.asDouble.value = ( double ) lVal + lAdd;;
+         pResult->item.asDouble.length = HB_DBL_LENGTH( pResult->item.asDouble.value );
+         pResult->item.asDouble.decimal = 0;
       }
+   }
+   else if( HB_IS_DOUBLE( pResult ) )
+   {
+      pResult->item.asDouble.value += lAdd;
+      pResult->item.asDouble.length = HB_DBL_LENGTH( pResult->item.asDouble.value );
    }
    else if( HB_IS_DATETIME( pResult ) )
    {
       pResult->type &= ~HB_IT_DEFAULT;
       pResult->item.asDateTime.julian += lAdd;
-      return;
-   }
-   else if( HB_IS_DOUBLE( pResult ) )
-   {
-      dNewVal = pResult->item.asDouble.value + lAdd;
    }
    else if( hb_objHasOperator( pResult, HB_OO_OP_PLUS ) )
    {
@@ -2900,7 +2900,6 @@ static void hb_vmAddInt( HB_ITEM_PTR pResult, LONG lAdd )
       hb_vmPushLong( lAdd );
       hb_objOperatorCall( HB_OO_OP_PLUS, pResult, pResult, hb_stackItemFromTop( -1 ), NULL );
       hb_stackPop();
-      return;
    }
    else
    {
@@ -2915,17 +2914,7 @@ static void hb_vmAddInt( HB_ITEM_PTR pResult, LONG lAdd )
          hb_itemMove( pResult, pSubst );
          hb_itemRelease( pSubst );
       }
-      return;
    }
-
-   if( !HB_IS_DOUBLE( pResult ) )
-   {
-      pResult->type = HB_IT_DOUBLE;
-      pResult->item.asDouble.decimal = 0;
-   }
-
-   pResult->item.asDouble.value = dNewVal;
-   pResult->item.asDouble.length = HB_DBL_LENGTH( dNewVal );
 }
 
 /* NOTE: Clipper is resetting the number width on a negate. */
@@ -3071,6 +3060,9 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
       HB_LONG lNumber2 = HB_ITEM_GET_NUMINTRAW( pItem2 );
       HB_LONG lResult = lNumber1 + lNumber2;
 
+      if( HB_IS_COMPLEX( pResult ) )
+         hb_itemClear( pResult );
+
       if( lNumber2 >= 0 ? lResult >= lNumber1 : lResult < lNumber1 )
       {
          HB_ITEM_PUT_NUMINTRAW( pResult, lResult );
@@ -3184,6 +3176,9 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
       HB_LONG lNumber2 = HB_ITEM_GET_NUMINTRAW( pItem2 );
       HB_LONG lResult = lNumber1 - lNumber2;
 
+      if( HB_IS_COMPLEX( pResult ) )
+         hb_itemClear( pResult );
+
       if( lNumber2 <= 0 ? lResult >= lNumber1 : lResult < lNumber1 )
       {
          HB_ITEM_PUT_NUMINTRAW( pResult, lResult );
@@ -3214,7 +3209,11 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
       if( lTime != 0 )
          hb_itemPutNDDec( pResult, hb_timeStampPackDT( lJulian, lTime ), HB_TIMEDIFF_DEC );
       else
+      {
+         if( HB_IS_COMPLEX( pResult ) )
+            hb_itemClear( pResult );
          HB_ITEM_PUT_NUMINTRAW( pResult, lJulian );
+      }
    }
    else if( HB_IS_DATETIME( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
    {
@@ -3286,6 +3285,8 @@ static void hb_vmMult( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
    {
       HB_LONG lResult = ( HB_LONG ) pItem1->item.asInteger.value *
                         ( HB_LONG ) pItem2->item.asInteger.value;
+      if( HB_IS_COMPLEX( pResult ) )
+         hb_itemClear( pResult );
       HB_ITEM_PUT_NUMINTRAW( pResult, lResult );
    }
    else
