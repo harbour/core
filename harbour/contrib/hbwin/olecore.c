@@ -238,7 +238,7 @@ static void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
 
                pDisp = hb_oleParam( -1 );
 
-               /* pVariant will be freed using VariantClear(). 
+               /* pVariant will be freed using VariantClear().
                   We increment reference count to keep OLE object alive */
 #if HB_OLE_C_API
                pDisp->lpVtbl->AddRef( pDisp );
@@ -249,7 +249,7 @@ static void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
                pVariant->n1.n2.n3.pdispVal = pDisp;
             }
          }
-         else 
+         else
          {
             SAFEARRAY*      pSafeArray;
             SAFEARRAYBOUND  sabound[ 1 ];
@@ -641,14 +641,14 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
    {
       if( variant.n1.n2.vt == VT_UNKNOWN )
 #if HB_OLE_C_API
-         lOleError = ( variant.n1.n2.n3.punkVal )->lpVtbl->QueryInterface( variant.n1.n2.n3.punkVal, 
+         lOleError = ( variant.n1.n2.n3.punkVal )->lpVtbl->QueryInterface( variant.n1.n2.n3.punkVal,
                        &IID_IEnumVARIANT, ( void** ) ( void * ) &pEnum );
 #else
          lOleError = ( variant.n1.n2.n3.punkVal )->QueryInterface( IID_IEnumVARIANT, ( void** ) ( void * ) &pEnum );
 #endif
       else if( variant.n1.n2.vt == VT_DISPATCH )
 #if HB_OLE_C_API
-         lOleError = ( variant.n1.n2.n3.pdispVal )->lpVtbl->QueryInterface( variant.n1.n2.n3.pdispVal, 
+         lOleError = ( variant.n1.n2.n3.pdispVal )->lpVtbl->QueryInterface( variant.n1.n2.n3.pdispVal,
                        &IID_IEnumVARIANT, ( void** ) ( void * ) &pEnum );
 #else
          lOleError = ( variant.n1.n2.n3.pdispVal )->QueryInterface( IID_IEnumVARIANT, ( void** ) ( void * ) &pEnum );
@@ -710,27 +710,27 @@ HB_FUNC( OLEERRORTEXT )
 {
    switch( hb_getOleError() )
    {
-      case S_OK:                    hb_retc_null();                        break;
-      case CO_E_CLASSSTRING:        hb_retc( "CO_E_CLASSSTRING" );         break;
-      case OLE_E_WRONGCOMPOBJ:      hb_retc( "OLE_E_WRONGCOMPOBJ" );       break;
-      case REGDB_E_CLASSNOTREG:     hb_retc( "REGDB_E_CLASSNOTREG" );      break;
-      case REGDB_E_WRITEREGDB:      hb_retc( "REGDB_E_WRITEREGDB" );       break;
-      case E_OUTOFMEMORY:           hb_retc( "E_OUTOFMEMORY" );            break;
-      case E_INVALIDARG:            hb_retc( "E_INVALIDARG" );             break;
-      case E_UNEXPECTED:            hb_retc( "E_UNEXPECTED" );             break;
-      case DISP_E_UNKNOWNNAME:      hb_retc( "DISP_E_UNKNOWNNAME" );       break;
-      case DISP_E_UNKNOWNLCID:      hb_retc( "DISP_E_UNKNOWNLCID" );       break;
-      case DISP_E_BADPARAMCOUNT:    hb_retc( "DISP_E_BADPARAMCOUNT" );     break;
-      case DISP_E_BADVARTYPE:       hb_retc( "DISP_E_BADVARTYPE" );        break;
-      case DISP_E_EXCEPTION:        hb_retc( "DISP_E_EXCEPTION" );         break;
-      case DISP_E_MEMBERNOTFOUND:   hb_retc( "DISP_E_MEMBERNOTFOUND" );    break;
-      case DISP_E_NONAMEDARGS:      hb_retc( "DISP_E_NONAMEDARGS" );       break;
-      case DISP_E_OVERFLOW:         hb_retc( "DISP_E_OVERFLOW" );          break;
-      case DISP_E_PARAMNOTFOUND:    hb_retc( "DISP_E_PARAMNOTFOUND" );     break;
-      case DISP_E_TYPEMISMATCH:     hb_retc( "DISP_E_TYPEMISMATCH" );      break;
-      case DISP_E_UNKNOWNINTERFACE: hb_retc( "DISP_E_UNKNOWNINTERFACE" );  break;
-      case DISP_E_PARAMNOTOPTIONAL: hb_retc( "DISP_E_PARAMNOTOPTIONAL" );  break;
-      default:                      hb_retc( "Unknown OLE error" );        break;
+      case S_OK:                    hb_retc_null();                              break;
+      case CO_E_CLASSSTRING:        hb_retc_const( "CO_E_CLASSSTRING" );         break;
+      case OLE_E_WRONGCOMPOBJ:      hb_retc_const( "OLE_E_WRONGCOMPOBJ" );       break;
+      case REGDB_E_CLASSNOTREG:     hb_retc_const( "REGDB_E_CLASSNOTREG" );      break;
+      case REGDB_E_WRITEREGDB:      hb_retc_const( "REGDB_E_WRITEREGDB" );       break;
+      case E_OUTOFMEMORY:           hb_retc_const( "E_OUTOFMEMORY" );            break;
+      case E_INVALIDARG:            hb_retc_const( "E_INVALIDARG" );             break;
+      case E_UNEXPECTED:            hb_retc_const( "E_UNEXPECTED" );             break;
+      case DISP_E_UNKNOWNNAME:      hb_retc_const( "DISP_E_UNKNOWNNAME" );       break;
+      case DISP_E_UNKNOWNLCID:      hb_retc_const( "DISP_E_UNKNOWNLCID" );       break;
+      case DISP_E_BADPARAMCOUNT:    hb_retc_const( "DISP_E_BADPARAMCOUNT" );     break;
+      case DISP_E_BADVARTYPE:       hb_retc_const( "DISP_E_BADVARTYPE" );        break;
+      case DISP_E_EXCEPTION:        hb_retc_const( "DISP_E_EXCEPTION" );         break;
+      case DISP_E_MEMBERNOTFOUND:   hb_retc_const( "DISP_E_MEMBERNOTFOUND" );    break;
+      case DISP_E_NONAMEDARGS:      hb_retc_const( "DISP_E_NONAMEDARGS" );       break;
+      case DISP_E_OVERFLOW:         hb_retc_const( "DISP_E_OVERFLOW" );          break;
+      case DISP_E_PARAMNOTFOUND:    hb_retc_const( "DISP_E_PARAMNOTFOUND" );     break;
+      case DISP_E_TYPEMISMATCH:     hb_retc_const( "DISP_E_TYPEMISMATCH" );      break;
+      case DISP_E_UNKNOWNINTERFACE: hb_retc_const( "DISP_E_UNKNOWNINTERFACE" );  break;
+      case DISP_E_PARAMNOTOPTIONAL: hb_retc_const( "DISP_E_PARAMNOTOPTIONAL" );  break;
+      default:                      hb_retc_const( "Unknown OLE error" );        break;
    }
 }
 
