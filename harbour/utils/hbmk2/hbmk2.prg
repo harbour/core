@@ -1339,8 +1339,8 @@ FUNCTION hbmk( aArgs )
       CASE Left( cParamL, Len( "-runflag=" ) ) == "-runflag="
 
          cParam := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-runflag=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
-         IF Left( cParam, 1 ) $ cOptPrefix
-            AAdd( s_aOPTRUN , PathSepToTarget( hbmk, cParam, 2 ) )
+         IF ! Empty( cParam )
+            AAdd( s_aOPTRUN, cParam )
          ENDIF
 
       CASE Left( cParamL, Len( "-workdir=" ) ) == "-workdir="
@@ -3400,7 +3400,7 @@ FUNCTION hbmk( aArgs )
       hbmk_OutStd( hb_StrFormat( I_( "Running time: %1$ss" ), hb_ntos( TimeElapsed( nStart, Seconds() ) ) ) )
    ENDIF
 
-   IF s_lBEEP
+   IF ! lSkipBuild .AND. s_lBEEP
       DoBeep( nErrorLevel == 0 )
    ENDIF
 
@@ -4084,9 +4084,11 @@ STATIC FUNCTION DirBuild( cDir )
                IF hb_DirCreate( cDirTemp ) != 0
                   RETURN .F.
                ENDIF
-               IF Lower( cDirItem ) == _WORKDIR_DEF_
-                  hb_FSetAttr( cDirTemp, FC_HIDDEN )
-               ENDIF
+               #if ! defined( __PLATFORM__UNIX )
+                  IF Lower( cDirItem ) == _WORKDIR_DEF_
+                     hb_FSetAttr( cDirTemp, FC_HIDDEN )
+                  ENDIF
+               #endif
             ENDIF
          ENDIF
       NEXT
@@ -4174,7 +4176,7 @@ STATIC FUNCTION FN_DirExtSet( cFileName, cDirNew, cExtNew )
    RETURN hb_FNameMerge( cDir, cName, cExt )
 
 STATIC FUNCTION FN_Expand( cFileName )
-#ifdef __PLATFORM__UNIX
+#if defined( __PLATFORM__UNIX )
    RETURN { cFileName }
 #else
    LOCAL aFileList
