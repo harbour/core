@@ -167,18 +167,6 @@ static ULONG hb_hrbFindSymbol( const char * szName, PHB_DYNF pDynFunc, ULONG ulL
    return SYM_NOT_FOUND;
 }
 
-static void hb_hrbFreeSymbols( PHB_SYMB pSymbols, ULONG ulSymbols )
-{
-   ULONG ul;
-
-   for( ul = 0; ul < ulSymbols; ul++ )
-   {
-      if( pSymbols[ ul ].szName )
-         hb_xfree( ( void * ) pSymbols[ ul ].szName );
-   }
-   hb_xfree( pSymbols );
-}
-
 static void hb_hrbInitStatic( PHRB_BODY pHrbBody )
 {
    if( ! pHrbBody->fInit && ! pHrbBody->fExit )
@@ -320,6 +308,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
       ULONG ulBodyOffset = 0;
       ULONG ulSize;                                /* Size of function */
       ULONG ul, ulPos;
+      char * buffer, ch;
 
       PHB_SYMB pSymRead;                           /* Symbols read     */
       PHB_DYNF pDynFunc;                           /* Functions read   */
@@ -350,13 +339,38 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
          return NULL;
       }
 
-      pSymRead = ( PHB_SYMB ) hb_xgrab( pHrbBody->ulSymbols * sizeof( HB_SYMB ) );
+      /* calculate the size of dynamic symbol table */
+      ulPos = ulBodyOffset;
+      ulSize = 0;
 
       for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )  /* Read symbols in .hrb */
       {
-         pSymRead[ ul ].szName = hb_hrbReadId( szHrbBody, ulBodySize, &ulBodyOffset );
-         if( pSymRead[ ul ].szName == NULL || ulBodyOffset + 2 > ulBodySize )
-            break;
+         while( ulBodyOffset < ulBodySize )
+         {
+            ++ulSize;
+            if( szHrbBody[ ulBodyOffset++ ] == 0 )
+               break;
+         }
+         ulBodyOffset += 2;
+         if( ulBodyOffset >= ulBodySize )
+         {
+            hb_hrbUnLoad( pHrbBody );
+            hb_errRT_BASE( EG_CORRUPTION, 9997, NULL, HB_ERR_FUNCNAME, 0 );
+            return NULL;
+         }
+      }
+
+      ulBodyOffset = ulPos;
+      ul = pHrbBody->ulSymbols * sizeof( HB_SYMB );
+      pSymRead = ( PHB_SYMB ) hb_xgrab( ulSize + ul );
+      buffer = ( ( char * ) pSymRead ) + ul;
+
+      for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )  /* Read symbols in .hrb */
+      {
+         pSymRead[ ul ].szName = buffer;
+         do
+            ch = *buffer++ = szHrbBody[ ulBodyOffset++ ];
+         while( ch );
          pSymRead[ ul ].scope.value = ( BYTE ) szHrbBody[ ulBodyOffset++ ];
          pSymRead[ ul ].value.pCodeFunc = ( PHB_PCODEFUNC ) ( HB_PTRDIFF ) szHrbBody[ ulBodyOffset++ ];
          pSymRead[ ul ].pDynSym = NULL;
@@ -369,11 +383,10 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
          }
       }
 
-      if( ul < pHrbBody->ulSymbols ||
-          /* Read number of functions */
-          ! hb_hrbReadValue( szHrbBody, ulBodySize, &ulBodyOffset, &pHrbBody->ulFuncs ) )
+      /* Read number of functions */
+      if( ! hb_hrbReadValue( szHrbBody, ulBodySize, &ulBodyOffset, &pHrbBody->ulFuncs ) )
       {
-         hb_hrbFreeSymbols( pSymRead, ul );
+         hb_xfree( pSymRead );
          hb_hrbUnLoad( pHrbBody );
          hb_errRT_BASE( EG_CORRUPTION, 9997, NULL, HB_ERR_FUNCNAME, 0 );
          return NULL;
@@ -411,7 +424,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
 
          if( ul < pHrbBody->ulFuncs )
          {
-            hb_hrbFreeSymbols( pSymRead, pHrbBody->ulSymbols );
+            hb_xfree( pSymRead );
             hb_hrbUnLoad( pHrbBody );
             hb_errRT_BASE( EG_CORRUPTION, 9998, NULL, HB_ERR_FUNCNAME, 0 );
             return NULL;
@@ -460,7 +473,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
                char szName[ HB_SYMBOL_NAME_LEN + 1 ];
 
                hb_strncpy( szName, pSymRead[ ul ].szName, sizeof( szName ) - 1 );
-               hb_hrbFreeSymbols( pSymRead, pHrbBody->ulSymbols );
+               hb_xfree( pSymRead );
                hb_hrbUnLoad( pHrbBody );
                hb_errRT_BASE( EG_ARG, 6101, "Unknown or unregistered symbol", szName, 0 );
                return NULL;
@@ -480,7 +493,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
              * we allocated and disactivate static initialization [druzus]
              */
             pHrbBody->pSymRead = pHrbBody->pModuleSymbols->pModuleSymbols;
-            hb_hrbFreeSymbols( pSymRead, pHrbBody->ulSymbols );
+            hb_xfree( pSymRead );
 
             pHrbBody->fInit = TRUE;
          }
@@ -496,7 +509,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
       }
       else
       {
-         hb_hrbFreeSymbols( pSymRead, pHrbBody->ulSymbols );
+         hb_xfree( pSymRead );
          hb_hrbUnLoad( pHrbBody );
          pHrbBody = NULL;
       }
