@@ -125,11 +125,7 @@ HB_FUNC( RTRIM )
       char * szText = hb_itemGetCPtr( pText );
 
       ulSrc = hb_itemGetCLen( pText );
-#ifdef HB_EXTENSION
-      ulLen = hb_strRTrimLen( szText, ulSrc, ISLOG( 2 ) && hb_parl( 2 ) );
-#else
       ulLen = hb_strRTrimLen( szText, ulSrc, FALSE );
-#endif
 
       if( ulLen == ulSrc )
          hb_itemReturn( pText );
@@ -161,11 +157,7 @@ HB_FUNC( ALLTRIM )
       char * szText = hb_itemGetCPtr( pText );
 
       ulSrc = hb_itemGetCLen( pText );
-#ifdef HB_EXTENSION
-      ulLen = hb_strRTrimLen( szText, ulSrc, ISLOG( 2 ) && hb_parl( 2 ) );
-#else
       ulLen = hb_strRTrimLen( szText, ulSrc, FALSE );
-#endif
       szText = hb_strLTrim( szText, &ulLen );
 
       if( ulLen == ulSrc )

@@ -93,11 +93,7 @@ static HB_FUNCINFO hb_StdFunc[] =
    { "RLOCK"     , 0,  0 },
    { "ROUND"     , 2,  2 },
    { "ROW"       , 0,  0 },
-#if defined( HB_EXTENSION )
-   { "RTRIM"     , 1,  2 }, /* Second parameter is a Harbour extension */
-#else
    { "RTRIM"     , 1,  1 },
-#endif
    { "SECONDS"   , 0,  0 },
    { "SELECT"    , 0,  1 },
    { "SETPOS"    , 2,  2 },
@@ -108,11 +104,7 @@ static HB_FUNCINFO hb_StdFunc[] =
    { "SUBSTR"    , 2,  3 },
    { "TIME"      , 0,  0 },
    { "TRANSFORM" , 2,  2 },
-#if defined( HB_EXTENSION )
-   { "TRIM"      , 1,  2 }, /* Second parameter is a Harbour extension */
-#else
    { "TRIM"      , 1,  1 },
-#endif
    { "TYPE"      , 1,  1 },
    { "UPPER"     , 1,  1 },
    { "VAL"       , 1,  1 },

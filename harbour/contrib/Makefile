@@ -19,7 +19,6 @@ DIRS=\
 	hbmzip \
 	hbnf \
 	hbodbc \
-	hbole \
 	hbsqlit3 \
 	hbtip \
 	hbtpathy \

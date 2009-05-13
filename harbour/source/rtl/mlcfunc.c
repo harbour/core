@@ -153,7 +153,7 @@ static ULONG hb_mlGetLine( char * pszString, ULONG ulLen, ULONG ulOffset,
 
 static PHB_EOL_INFO hb_mlGetEOLs( int * piEOLs )
 {
-   PHB_EOL_INFO pEOLs = NULL;
+   PHB_EOL_INFO pEOLs;
 
    pEOLs = ( PHB_EOL_INFO ) hb_xgrab( sizeof( HB_EOL_INFO ) );
    pEOLs->szEOL = hb_setGetEOL();

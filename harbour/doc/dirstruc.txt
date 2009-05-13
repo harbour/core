@@ -196,10 +196,6 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
-|   +---hbole           - Windows OLE Automation library.
-|   |   |
-|   |   +---tests       - Demonstration program.
-|   |
 |   +---hbpgsql         - Harbour Low Level API for Postgres RDBMS.
 |   |   |
 |   |   +---tests       - Test programs.
