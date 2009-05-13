@@ -95,6 +95,7 @@
 /* TODO: Further clean hbmk context var usage (hbmk2 scope, project scope,
          adding rest of variables). */
 /* TODO: Finish C++/C mode selection. */
+/* TODO: Incremental .pot to .po merge. */
 /* TODO: Add a way to fallback to stop if required headers couldn't be found.
          This needs a way to spec what key headers to look for. */
 
@@ -2300,8 +2301,8 @@ FUNCTION hbmk( aArgs )
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
          IF hbmk[ _HBMK_lMAP ]
-            AAdd( hbmk[ _HBMK_aOPTC ], "-Fm" )
-            AAdd( hbmk[ _HBMK_aOPTD ], "-Fm" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "/map" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "/map" )
          ENDIF
          IF hbmk[ _HBMK_cCOMP ] == "msvcarm"
             /* NOTE: Copied from .cf. Probably needs cleaning. */
