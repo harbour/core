@@ -18,9 +18,10 @@ endif
 ifeq ($(HB_WITH_HBWIN),yes)
 
 C_SOURCES = \
+	olecore.c \
+	oleinit.c \
 	win_dll.c \
 	win_misc.c \
-	win_ole.c \
 	win_osc.c \
 	win_prn1.c \
 	win_prn2.c \
@@ -31,15 +32,16 @@ C_SOURCES = \
 	wapi_winuser.c \
 
 PRG_SOURCES = \
+	oleauto.prg \
 	win_os.prg \
 	win_reg.prg \
-	win_tole.prg \
 	win_tprn.prg \
 	win_tprt.prg \
 
 C_HEADERS = \
 	hbwapi.h \
 	hbwin.h \
+	hbwinole.h \
 
 PRG_HEADERS = \
 	hbwin.ch \
