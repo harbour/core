@@ -22,6 +22,8 @@ C_SOURCES = \
 	win_misc.c \
 	win_ole.c \
 	win_osc.c \
+	win_prn1.c \
+	win_prn2.c \
 	win_prt.c \
 	win_regc.c \
 	wapi_commctrl.c \
@@ -32,6 +34,7 @@ PRG_SOURCES = \
 	win_os.prg \
 	win_reg.prg \
 	win_tole.prg \
+	win_tprn.prg \
 	win_tprt.prg \
 
 C_HEADERS = \

@@ -1,5 +1,5 @@
 /*
- * $Id: win_tprn.prg 10694 2009-03-25 15:34:09Z vszakats $
+ * $Id$
  */
 
 /*

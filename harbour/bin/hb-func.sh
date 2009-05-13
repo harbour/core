@@ -110,7 +110,7 @@ mk_hbgetlibsctb()
         then
             libs="$libs gtwin"
         fi
-        echo "$libs hbct hbnf hbmzip hbcrypt hbtip xhb hbgd hbfimage rddsql sddfb sddmy sddpg hbodbc hbpgsql hbmysql hbfbird rddads rddado hbhpdf hbvpdf hbcurl hbwin hbwinprn gtwvg gtalleg hbsqlit3 hbbtree $HB_USER_LIBS"
+        echo "$libs hbct hbnf hbmzip hbcrypt hbtip xhb hbgd hbfimage rddsql sddfb sddmy sddpg hbodbc hbpgsql hbmysql hbfbird rddads rddado hbhpdf hbvpdf hbcurl hbwin gtwvg gtalleg hbsqlit3 hbbtree $HB_USER_LIBS"
         #"hbgf hbgt hbbmcdx hbmisc hbole hbtpathy hbwhat hbziparc hbmsql"
     else
         echo "$@"

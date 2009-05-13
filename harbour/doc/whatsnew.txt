@@ -306,7 +306,6 @@ Core
 
 Contrib
 =============================
-- WIN_PRN printing class moved out of hbwin lib and placed in hbwinprn lib
 - hbblat new Blat interface class for Windows
   (Contributed by Francesco Saverio Giudice).
 - hbmzip fixed GPF in HB_ZIPDELETEFILE() when file has comment.

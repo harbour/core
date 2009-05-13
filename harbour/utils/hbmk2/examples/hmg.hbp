@@ -19,6 +19,6 @@
 # contribs
 {win}libs=crypt edit editex graph ini report
 # Harbour contribs
-{win}libs=hbmzip hbwin hbwinprn
+{win}libs=hbmzip hbwin
 # system
 {win}libs=vfw32

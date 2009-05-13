@@ -1,5 +1,5 @@
 /*
- * $Id: testprn.prg 10170 2009-02-04 08:49:22Z vszakats $
+ * $Id$
  */
 
 #define FORM_A4 9
