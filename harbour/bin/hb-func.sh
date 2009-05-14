@@ -252,6 +252,9 @@ mk_hbtools()
     if [ -n "${CC_HB_USER_LDFLAGS}" ]; then
         echo "ldflags=${CC_HB_USER_LDFLAGS}">> ${hb_hbmkcfg}
     fi
+    if [ -n "${HB_USER_LIBS}" ]; then
+        echo "libs=${HB_USER_LIBS}">> ${hb_hbmkcfg}
+    fi
     if [ "${HB_GPM_MOUSE}" = "yes" ]; then
         echo "libs=gpm">> ${hb_hbmkcfg}
     fi
