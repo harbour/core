@@ -68,7 +68,7 @@
 #include "ace.h"
 
 /* Autodetect ACE version. */
-#if   defined(ADS_KEEP_AOF_PLAN)
+#if   defined(DANISH_ADS_CS_AS_1252)
    #define _ADS_LIB_VERSION 910 /* or upper */
 #elif defined(ADS_NOTIFICATION_CONNECTION)
    #define _ADS_LIB_VERSION 900
