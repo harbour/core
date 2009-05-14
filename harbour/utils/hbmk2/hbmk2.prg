@@ -1500,6 +1500,21 @@ FUNCTION hbmk( aArgs )
       RETURN 4
    ENDIF
 
+   /* Decide about output name */
+   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+
+      /* If -o with full name wasn't specified, let's
+         make it the first source file specified. */
+      DEFAULT s_cPROGNAME TO FN_NameGet( s_cFIRST )
+
+      /* Combine output dir with output name. */
+      IF ! Empty( s_cPROGDIR )
+         hb_FNameSplit( s_cPROGNAME, @cDir, @cName, @cExt )
+         s_cPROGNAME := hb_FNameMerge( iif( Empty( cDir ), s_cPROGDIR, cDir ), cName, cExt )
+      ENDIF
+   ENDIF
+
+   /* Decide about working dir */
    IF ! lStopAfterInit
       IF hbmk[ _HBMK_lINC ]
          IF cWorkDir == NIL
@@ -1512,21 +1527,6 @@ FUNCTION hbmk( aArgs )
          ENDIF
       ELSE
          cWorkDir := ""
-      ENDIF
-   ENDIF
-
-   /* Decide about output name */
-
-   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
-
-      /* If -o with full name wasn't specified, let's
-         make it the first source file specified. */
-      DEFAULT s_cPROGNAME TO FN_NameGet( s_cFIRST )
-
-      /* Combine output dir with output name. */
-      IF ! Empty( s_cPROGDIR )
-         hb_FNameSplit( s_cPROGNAME, @cDir, @cName, @cExt )
-         s_cPROGNAME := hb_FNameMerge( iif( Empty( cDir ), s_cPROGDIR, cDir ), cName, cExt )
       ENDIF
    ENDIF
 
@@ -1688,9 +1688,9 @@ FUNCTION hbmk( aArgs )
          IF lStopAfterCComp
             IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( s_aPRG ) + Len( s_aC ) ) == 1
                IF hbmk[ _HBMK_cARCH ] == "darwin"
-                  AAdd( hbmk[ _HBMK_aOPTL ], "-o {OO}" )
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-o {OO}" )
                ELSE
-                  AAdd( hbmk[ _HBMK_aOPTL ], "-o{OO}" )
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-o{OO}" )
                ENDIF
             ENDIF
          ELSE
@@ -1841,7 +1841,7 @@ FUNCTION hbmk( aArgs )
          ENDIF
          IF lStopAfterCComp
             IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( s_aPRG ) + Len( s_aC ) ) == 1
-               AAdd( hbmk[ _HBMK_aOPTL ], "-o{OO}" )
+               AAdd( hbmk[ _HBMK_aOPTC ], "-o{OO}" )
             ENDIF
          ELSE
             AAdd( hbmk[ _HBMK_aOPTL ], "-o{OE}" )
@@ -1914,7 +1914,7 @@ FUNCTION hbmk( aArgs )
          /* OS/2 needs a space between -o and file name following it */
          IF lStopAfterCComp
             IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( s_aPRG ) + Len( s_aC ) ) == 1
-               AAdd( hbmk[ _HBMK_aOPTL ], "-o {OO}" )
+               AAdd( hbmk[ _HBMK_aOPTC ], "-o {OO}" )
             ENDIF
          ELSE
             AAdd( hbmk[ _HBMK_aOPTL ], "-o {OE}" )
@@ -1959,7 +1959,7 @@ FUNCTION hbmk( aArgs )
          ENDIF
          IF lStopAfterCComp
             IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( s_aPRG ) + Len( s_aC ) ) == 1
-               AAdd( hbmk[ _HBMK_aOPTL ], "-o{OO}" )
+               AAdd( hbmk[ _HBMK_aOPTC ], "-o{OO}" )
             ENDIF
          ELSE
             AAdd( hbmk[ _HBMK_aOPTL ], "-o{OE}" )
@@ -1994,6 +1994,13 @@ FUNCTION hbmk( aArgs )
             cOpt_CompC += " {IC} -fo={OO}"
          ELSE
             cOpt_CompC += " {LC}"
+         ENDIF
+         IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
+            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+               AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OO}" )
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OD}" )
+            ENDIF
          ENDIF
          cBin_Link := "wlink.exe"
          cOpt_Link := "SYS causeway {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
@@ -2039,6 +2046,13 @@ FUNCTION hbmk( aArgs )
             cOpt_CompC += " {IC} -fo={OO}"
          ELSE
             cOpt_CompC += " {LC}"
+         ENDIF
+         IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
+            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+               AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OO}" )
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OD}" )
+            ENDIF
          ENDIF
          cBin_Link := "wlink.exe"
          cOpt_Link := "{FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
@@ -2109,6 +2123,13 @@ FUNCTION hbmk( aArgs )
          ELSE
             cOpt_CompC += " {LC}"
          ENDIF
+         IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
+            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+               AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OO}" )
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OD}" )
+            ENDIF
+         ENDIF
          cBin_Link := "wlink.exe"
          cOpt_Link := "{FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          cBin_Lib := "wlib.exe"
@@ -2154,6 +2175,13 @@ FUNCTION hbmk( aArgs )
             cOpt_CompC += " {IC} -fo={OO}"
          ELSE
             cOpt_CompC += " {LC}"
+         ENDIF
+         IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
+            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+               AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OO}" )
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OD}" )
+            ENDIF
          ENDIF
          cBin_Link := "wlink"
          cOpt_Link := "SYS LINUX {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
@@ -2400,7 +2428,12 @@ FUNCTION hbmk( aArgs )
             cBin_Res := "porc.exe"
          ENDIF
          cBin_Dyn := cBin_Link
-         cOpt_CompC := "/c /Ze /Go {FC} {IC} /Fo{OO}"
+         cOpt_CompC := "/c /Ze /Go {FC}"
+         IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+            cOpt_CompC += " {LC} /Fo{OO}"
+         ELSE
+            cOpt_CompC += " {IC}"
+         ENDIF
          cOptIncMask := "/I{DI}"
          cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
          DO CASE
@@ -2424,10 +2457,12 @@ FUNCTION hbmk( aArgs )
          IF hbmk[ _HBMK_lMT ]
             AAdd( hbmk[ _HBMK_aOPTC ], "/MT" )
          ENDIF
-         IF !( lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn )
-            AAdd( hbmk[ _HBMK_aOPTL ], "/out:{OE}" )
+         IF hbmk[ _HBMK_lINC ]
+            IF ! Empty( cWorkDir )
+               AAdd( hbmk[ _HBMK_aOPTC ], "/Fo{OO}" )
+            ENDIF
          ENDIF
-         cOpt_Link := "{LO} {DL} {FL} {LL} {LS}"
+         cOpt_Link := "/out:{OE} {LO} {DL} {FL} {LL} {LS}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
          IF hbmk[ _HBMK_lSHARED ]
@@ -2715,9 +2750,12 @@ FUNCTION hbmk( aArgs )
                         "LNK4217: locally defined symbol ... imported in function ..."
                         if using 'dllimport'. [vszakats] */
                tmp := ""
-            CASE hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin" ; tmp := "__attribute__ (( dllimport ))"
-            CASE hbmk[ _HBMK_cCOMP ] $ "bcc|owatcom"                       ; tmp := "__declspec( dllimport )"
-            OTHERWISE                                          ; tmp := "_declspec( dllimport )"
+            CASE hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin"
+               tmp := "__attribute__ (( dllimport ))"
+            CASE hbmk[ _HBMK_cCOMP ] $ "bcc|owatcom"
+               tmp := "__declspec( dllimport )"
+            OTHERWISE
+               tmp := "_declspec( dllimport )"
             ENDCASE
 
             /* Create list of requested symbols */
