@@ -68,7 +68,7 @@ HB_FUNC( WIN_SHELLEXECUTE )
    LPTSTR lpParameters = ISCHAR( 4 ) ? HB_TCHAR_CONVTO( hb_parc( 4 ) ) : NULL;
    LPTSTR lpDirectory  = ISCHAR( 5 ) ? HB_TCHAR_CONVTO( hb_parc( 5 ) ) : NULL;
 
-   hb_retnint( ( HB_PTRDIFF ) ShellExecute( ( HWND ) ( ISPOINTER( 1 ) ? hb_parptr( 1 ) : ( void * ) ( HB_PTRDIFF ) hb_parnint( 1 ) ),
+   hb_retnint( ( HB_PTRDIFF ) ShellExecute( ( HWND ) hb_parptr( 1 ),
                                             ( LPCTSTR ) lpOperation, /* edit, explore, open, print, play?, properties? */
                                             ( LPCTSTR ) lpFile,
                                             ( LPCTSTR ) lpParameters,

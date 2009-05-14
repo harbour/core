@@ -92,6 +92,7 @@ PROCEDURE Main()
    /* Get some standard Windows folders */
 
    hDLL := DllLoad( "shell32.dll" )
+   ? ValType( hDLL )
    cData := Space( MAX_PATH )
    ? CallDllBool( GetProcAddress( hDLL, "SHGetSpecialFolderPath" ), 0, @cData, CSIDL_APPDATA, 0 )
    ? cData
