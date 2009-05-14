@@ -227,9 +227,7 @@ HB_FUNC( WAPI_MESSAGEBOX )
 {
    LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    LPTSTR lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   HWND hWnd = ISNUM( 1 ) ? ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ) :
-                            ( HWND ) hb_parptr( 1 );
-   hb_retni( MessageBox( hWnd, lpStr1, lpStr2, hb_parni( 4 ) ) );
+   hb_retni( MessageBox( ( HWND ) hb_parptr( 1 ), lpStr1, lpStr2, hb_parni( 4 ) ) );
    HB_TCHAR_FREE( lpStr1 );
    HB_TCHAR_FREE( lpStr2 );
 }
@@ -248,4 +246,24 @@ HB_FUNC( WIN_WIDETOANSI )
    char * cString = hb_wctomb( ( wchar_t * ) hb_parcx( 1 ) );
 
    hb_retclen_buffer( cString, strlen( cString ) );
+}
+
+HB_FUNC( WAPI_LOADLIBRARY )
+{
+   hb_retptr( LoadLibraryA( ( LPCSTR ) hb_parcx( 1 ) ) );
+}
+
+HB_FUNC( WAPI_FREELIBRARY )
+{
+   hb_retl( FreeLibrary( ( HMODULE ) hb_parptr( 1 ) ) );
+}
+
+HB_FUNC( WIN_N2P )
+{
+   hb_retptr( ( void * ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
+}
+
+HB_FUNC( WIN_P2N )
+{
+   hb_retnint( ( HB_PTRDIFF ) hb_parptr( 1 ) );
 }

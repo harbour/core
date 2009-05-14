@@ -749,11 +749,68 @@ static LPVOID hb_getprocaddress( HMODULE hDLL, int iProc )
 #endif
 }
 
+HB_FUNC( LOADLIBRARY )
+{
+   hb_retnint( ( HB_PTRDIFF ) LoadLibraryA( ( LPCSTR ) hb_parcx( 1 ) ) );
+}
+
+HB_FUNC( FREELIBRARY )
+{
+   if( ISPOINTER( 1 ) )
+      hb_retl( FreeLibrary( ( HMODULE ) hb_parptr( 1 ) ) );
+   else if( ISNUM( 1 ) )
+      hb_retl( FreeLibrary( ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+   else
+      hb_retl( FALSE );
+}
+
+HB_FUNC( GETPROCADDRESS )
+{
+   HMODULE hDLL;
+
+   if( HB_ISNUM( 1 ) )
+      hDLL = ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   else
+      hDLL = ( HMODULE ) hb_parptr( 1 );
+
+   hb_retptr( hDLL ? ( void * ) hb_getprocaddress( hDLL, 2 ) : NULL );
+}
+
 #ifdef HB_COMPAT_XPP
+
+HB_FUNC( DLLLOAD )
+{
+   HB_FUNC_EXEC( LOADLIBRARY );
+}
+
+HB_FUNC( DLLUNLOAD )
+{
+   HB_FUNC_EXEC( FREELIBRARY );
+}
+
+HB_FUNC( DLLCALL )
+{
+   HMODULE hDLL;
+
+   if( HB_ISPOINTER( 1 ) )
+      hDLL = ( HMODULE ) hb_parptr( 1 );
+   else if( HB_ISNUM( 1 ) )
+      hDLL = ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   else
+      hDLL = LoadLibraryA( hb_parcx( 1 ) );
+
+   if( hDLL && ( HB_PTRDIFF ) hDLL >= 32 )
+   {
+      DllExec( hb_parni( 2 ), 0, hb_getprocaddress( ( HMODULE ) hDLL, 3 ), NULL, hb_pcount(), 4 );
+
+      if( ISCHAR( 1 ) )
+         FreeLibrary( hDLL );
+   }
+}
 
 HB_FUNC( DLLPREPARECALL )
 {
-#if !defined(HB_OS_WIN_CE)
+#if ! defined(HB_OS_WIN_CE)
    PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) hb_gcAlloc( sizeof( XPP_DLLEXEC ), _DLLUnload );
    char * pszErrorText;
 
@@ -806,45 +863,6 @@ HB_FUNC( DLLPREPARECALL )
 #endif
 }
 
-HB_FUNC( DLLLOAD )
-{
-   hb_retnint( ( HB_PTRDIFF ) LoadLibraryA( ( LPCSTR ) hb_parcx( 1 ) ) ) ;
-
-/* Proper, but incompatible version:
-   hb_retptr( LoadLibraryA( ( LPCSTR ) hb_parcx( 1 ) ) ) ;
-*/
-}
-
-HB_FUNC( DLLUNLOAD )
-{
-   if( ISPOINTER( 1 ) )
-      hb_retl( FreeLibrary( ( HMODULE ) hb_parptr( 1 ) ) ) ;
-   else if( ISNUM( 1 ) )
-      hb_retl( FreeLibrary( ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) ) ;
-   else
-      hb_retl( FALSE );
-}
-
-HB_FUNC( DLLCALL )
-{
-   HMODULE hDLL;
-
-   if( HB_ISPOINTER( 1 ) )
-      hDLL = ( HMODULE ) hb_parptr( 1 );
-   else if( HB_ISNUM( 1 ) )
-      hDLL = ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 );
-   else
-      hDLL = LoadLibraryA( hb_parcx( 1 ) );
-
-   if( hDLL && ( HB_PTRDIFF ) hDLL >= 32 )
-   {
-      DllExec( hb_parni( 2 ), 0, hb_getprocaddress( ( HMODULE ) hDLL, 3 ), NULL, hb_pcount(), 4 );
-
-      if( ISCHAR( 1 ) )
-         FreeLibrary( hDLL );
-   }
-}
-
 HB_FUNC( DLLEXECUTECALL )
 {
    PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) hb_parptr( 1 );
@@ -856,28 +874,6 @@ HB_FUNC( DLLEXECUTECALL )
 #endif
 
 /* ------------------------------------------------------------------ */
-
-HB_FUNC( LOADLIBRARY )
-{
-   HB_FUNC_EXEC( DLLLOAD );
-}
-
-HB_FUNC( FREELIBRARY )
-{
-   HB_FUNC_EXEC( DLLUNLOAD );
-}
-
-HB_FUNC( GETPROCADDRESS )
-{
-   HMODULE hDLL;
-
-   if( HB_ISNUM( 1 ) )
-      hDLL = ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 );
-   else
-      hDLL = ( HMODULE ) hb_parptr( 1 );
-
-   hb_retptr( hDLL ? ( void * ) hb_getprocaddress( hDLL, 2 ) : NULL );
-}
 
 /* Call a DLL function from (x)Harbour, the first parameter is a pointer returned from
    GetProcAddress() above. Note that it is hardcoded to use PASCAL calling convention. */

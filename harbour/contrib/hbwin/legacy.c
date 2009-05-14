@@ -115,14 +115,14 @@ HB_FUNC( SETLASTERROR )
    SetLastError( hb_parnl( 1 ) );
 }
 
-#if 0
-
-HB_FUNC_EXTERN( WAPI_MESSAGEBOX );
-
 /* Deprecated. Compatibility with old OLE implementation. */
 HB_FUNC( MESSAGEBOX )
 {
-   HB_FUNC_EXEC( WAPI_MESSAGEBOX );
+   LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   LPTSTR lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+   HWND hWnd = ISNUM( 1 ) ? ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ) :
+                            ( HWND ) hb_parptr( 1 );
+   hb_retni( MessageBox( hWnd, lpStr1, lpStr2, hb_parni( 4 ) ) );
+   HB_TCHAR_FREE( lpStr1 );
+   HB_TCHAR_FREE( lpStr2 );
 }
-
-#endif
