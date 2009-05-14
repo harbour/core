@@ -57,7 +57,7 @@
 #include "common.ch"
 #include "inkey.ch"
 
-/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but 
+/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
 
 #ifdef HB_COMPAT_C53
@@ -297,17 +297,10 @@ METHOD getAccel( nKey ) CLASS TOPBARMENU
       cKey := SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 )
 
       FOR n := 1 TO ::nItemCount
-      
+
          IF ( nAt := At( "&", ::aItems[ n ]:caption ) ) > 0 .AND. ;
             Upper( SubStr( ::aItems[ n ]:caption, nAt + 1, 1 ) ) == cKey
-      
-#ifdef HB_EXTENSION
-            IF ::aItems[ n ]:enabled
-#endif
-               RETURN n
-#ifdef HB_EXTENSION
-            ENDIF
-#endif
+            RETURN n
          ENDIF
       NEXT
    ENDIF
@@ -348,13 +341,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS TOPBARMENU
          nColumn := aItems[ n ]:__col
 
          IF nMCol >= nColumn .AND. nMCol <= nColumn + Len( aItems[ n ]:caption )
-#ifdef HB_EXTENSION
-            IF aItems[ n ]:enabled
-#endif
-               RETURN n
-#ifdef HB_EXTENSION
-            ENDIF
-#endif
+            RETURN n
          ENDIF
       NEXT
    ENDIF

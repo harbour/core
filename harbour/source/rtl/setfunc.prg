@@ -55,23 +55,19 @@
 
 PROCEDURE __SetFunction( nFunctionKey, xKeySeq )
 
-   /* NOTE: CA-Cl*pper will not handle F11 and F12 here. 
+   /* NOTE: CA-Cl*pper will not handle F11 and F12 here.
             This is a Harbour extension. [vszakats] */
 
    DO CASE
-      CASE nFunctionKey == 1  ; nFunctionKey := K_F1
-#ifdef HB_EXTENSION
-      CASE nFunctionKey == 11 ; nFunctionKey := K_F11
-      CASE nFunctionKey == 12 ; nFunctionKey := K_F12
+   CASE nFunctionKey == 1  ; nFunctionKey := K_F1
+#ifndef HB_C52_STRICT
+   CASE nFunctionKey == 11 ; nFunctionKey := K_F11
+   CASE nFunctionKey == 12 ; nFunctionKey := K_F12
 #endif
-      OTHERWISE               ; nFunctionKey := -nFunctionKey + 1
+   OTHERWISE               ; nFunctionKey := -nFunctionKey + 1
    ENDCASE
 
-#ifdef HB_EXTENSION
-   IF ISCHARACTER( xKeySeq ) .OR. ISNUMBER( xKeySeq ) .OR. ISARRAY( xKeySeq )
-#else
    IF ISCHARACTER( xKeySeq )
-#endif
       SetKey( nFunctionKey, {|| __Keyboard(), hb_KeyPut( xKeySeq ) } )
    ELSE
       SetKey( nFunctionKey, NIL )

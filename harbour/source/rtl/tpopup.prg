@@ -381,13 +381,7 @@ METHOD getShortCt( nKey ) CLASS POPUPMENU
 
    FOR nPos := 1 TO nLen
       IF aItems[ nPos ]:shortcut == nKey
-#ifdef HB_EXTENSION
-         IF aItems[ nPos ]:enabled
-            RETURN nPos
-         ENDIF
-#else
          RETURN nPos
-#endif
       ENDIF
    NEXT
 
@@ -437,10 +431,6 @@ METHOD hitTest( nMRow, nMCol ) CLASS POPUPMENU
 
       nPos := nMRow - ::nTop
       DO CASE
-#ifdef HB_EXTENSION
-      CASE !::aItems[ nPos ]:enabled
-         RETURN HTNOWHERE
-#endif
       CASE ::aItems[ nPos ]:caption == MENU_SEPARATOR
          RETURN HTSEPARATOR
       OTHERWISE

@@ -207,7 +207,6 @@ ULONG hb_fsAttrFromRaw( ULONG raw_attr )
    if( raw_attr & FILE_ATTRIBUTE_SYSTEM )    ulAttr |= HB_FA_SYSTEM;
    if( raw_attr & FILE_ATTRIBUTE_NORMAL )    ulAttr |= HB_FA_NORMAL;
 
-#ifdef HB_EXTENSION
    /* Note that FILE_ATTRIBUTE_NORMAL is not needed
       HB_FA_DEVICE not supported
       HB_FA_VOLCOMP needs to be checked */
@@ -221,7 +220,6 @@ ULONG hb_fsAttrFromRaw( ULONG raw_attr )
    /* not defined in some older winnt.h  */
    if( raw_attr & 0x00002000 )                   ulAttr |= HB_FA_NOTINDEXED;
    if( raw_attr & 0x00008000 )                   ulAttr |= HB_FA_VOLCOMP;
-#endif
 
 #elif defined(HB_OS_UNIX)
 
@@ -292,7 +290,6 @@ ULONG hb_fsAttrToRaw( ULONG ulAttr )
    if( ulAttr & HB_FA_SYSTEM )    raw_attr |= FILE_ATTRIBUTE_SYSTEM;
    if( ulAttr & HB_FA_NORMAL )    raw_attr |= FILE_ATTRIBUTE_NORMAL;
 
-#ifdef HB_EXTENSION
    /* Note that FILE_ATTRIBUTE_NORMAL is not needed
       HB_FA_DEVICE not supported
       HB_FA_VOLCOMP needs to be checked */
@@ -304,7 +301,6 @@ ULONG hb_fsAttrToRaw( ULONG ulAttr )
    if( ulAttr & HB_FA_OFFLINE )    raw_attr |= FILE_ATTRIBUTE_OFFLINE;
    if( ulAttr & HB_FA_NOTINDEXED ) raw_attr |= 0x00002000; /* FILE_ATTRIBUTE_NOT_CONTENT_INDEXED not defined in some older winnt.h */
    if( ulAttr & HB_FA_VOLCOMP )    raw_attr |= 0x00008000;
-#endif
 
 #elif defined(HB_OS_UNIX)
 
@@ -349,17 +345,6 @@ ULONG hb_fsAttrEncode( const char * szAttr )
          case 'V': ulAttr |= HB_FA_LABEL;      break;
          case 'D': ulAttr |= HB_FA_DIRECTORY;  break;
          case 'A': ulAttr |= HB_FA_ARCHIVE;    break;
-#ifdef HB_EXTENSION
-         case 'E': ulAttr |= HB_FA_ENCRYPTED;  break;
-         case 'T': ulAttr |= HB_FA_TEMPORARY;  break;
-         case 'P': ulAttr |= HB_FA_SPARSE;     break;
-         case 'L': ulAttr |= HB_FA_REPARSE;    break;
-         case 'C': ulAttr |= HB_FA_COMPRESSED; break;
-         case 'O': ulAttr |= HB_FA_OFFLINE;    break;
-         case 'X': ulAttr |= HB_FA_NOTINDEXED; break;
-         case 'I': ulAttr |= HB_FA_DEVICE;     break;
-         case 'M': ulAttr |= HB_FA_VOLCOMP;    break;
-#endif
       }
 
       pos++;
@@ -386,17 +371,6 @@ char * hb_fsAttrDecode( ULONG ulAttr, char * szAttr )
    if( ulAttr & HB_FA_LABEL      ) *ptr++ = 'V';
    if( ulAttr & HB_FA_DIRECTORY  ) *ptr++ = 'D';
    if( ulAttr & HB_FA_ARCHIVE    ) *ptr++ = 'A';
-#ifdef HB_EXTENSION
-   if( ulAttr & HB_FA_ENCRYPTED  ) *ptr++ = 'E';
-   if( ulAttr & HB_FA_TEMPORARY  ) *ptr++ = 'T';
-   if( ulAttr & HB_FA_SPARSE     ) *ptr++ = 'P';
-   if( ulAttr & HB_FA_REPARSE    ) *ptr++ = 'L';
-   if( ulAttr & HB_FA_COMPRESSED ) *ptr++ = 'C';
-   if( ulAttr & HB_FA_OFFLINE    ) *ptr++ = 'O';
-   if( ulAttr & HB_FA_NOTINDEXED ) *ptr++ = 'X';
-   if( ulAttr & HB_FA_DEVICE     ) *ptr++ = 'I';
-   if( ulAttr & HB_FA_VOLCOMP    ) *ptr++ = 'M';
-#endif
 
    *ptr = '\0';
 

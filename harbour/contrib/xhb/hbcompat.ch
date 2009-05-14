@@ -112,6 +112,7 @@
    #xtranslate hb_At([<x,...>])            => At(<x>)
 
    #xtranslate hb_GetEnv([<x,...>])        => GetEnv(<x>)
+   #xtranslate hb_SetKey([<x,...>])        => SetKey(<x>)
 
    #xtranslate hb_i18n_gettext(<x>)        => i18n(<x>)
 
@@ -216,6 +217,7 @@
    #xtranslate At(<a>,<b>,[<x,...>])           => hb_At(<a>,<b>,<x>)
 
    #xtranslate GetEnv([<x,...>])               => hb_GetEnv(<x>)
+   #xtranslate SetKey([<x,...>])               => hb_SetKey(<x>)
    #xtranslate MemoWrit(<x>,<y>,<z>)           => iif( hb_isLogical(<z>) .AND. <z>, MemoWrit(<x>,<y>), hb_MemoWrit(<x>,<y>) )
 
    #xtranslate i18n(<x>)                       => hb_i18n_gettext(<x>)

@@ -70,7 +70,7 @@ typedef struct HB_SETKEY_
    struct HB_SETKEY_ * next;
 } HB_SETKEY, * PHB_SETKEY;
 
-typedef struct 
+typedef struct
 {
    PHB_SETKEY sk_list;
 } HB_SK_DATA, * PHB_SK_DATA;
@@ -196,25 +196,46 @@ HB_FUNC( SETKEY )
          sk_list_tmp = sk_findkey( hb_itemGetNI( pKeyCode ), sk_data->sk_list, &sk_list_end );
 
          if( sk_list_tmp )
+            hb_itemReturn( sk_list_tmp->pAction );
+      }
+      else
+      {
+         /* Set a SETKEY value */
+         sk_add( &sk_data->sk_list, TRUE, hb_itemGetNI( pKeyCode ),
+                 hb_param( 2, HB_IT_BLOCK ), NULL );
+      }
+   }
+}
+
+HB_FUNC( HB_SETKEY )
+{
+   PHB_ITEM pKeyCode = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pKeyCode )
+   {
+      PHB_SK_DATA sk_data = ( PHB_SK_DATA ) hb_stackGetTSD( &s_skData );
+
+      if( hb_pcount() == 1 )
+      {
+         /* Get a SETKEY value */
+         PHB_SETKEY sk_list_tmp, sk_list_end;
+
+         /* sk_list_end is not used in this context */
+         sk_list_tmp = sk_findkey( hb_itemGetNI( pKeyCode ), sk_data->sk_list, &sk_list_end );
+
+         if( sk_list_tmp )
          {
-#if defined( HB_EXTENSION )
             PHB_ITEM pIsActiveResults = sk_list_tmp->pIsActive ? hb_vmEvalBlockV( sk_list_tmp->pIsActive, 1, pKeyCode ) : NULL;
 
             if( pIsActiveResults == NULL || ! HB_IS_LOGICAL( pIsActiveResults ) || hb_itemGetL( pIsActiveResults ) )
-#endif
                hb_itemReturn( sk_list_tmp->pAction );
          }
       }
       else
       {
          /* Set a SETKEY value */
-#if defined( HB_EXTENSION )
          sk_add( &sk_data->sk_list, TRUE, hb_itemGetNI( pKeyCode ),
                  hb_param( 2, HB_IT_BLOCK ), hb_param( 3, HB_IT_BLOCK ) );
-#else
-         sk_add( &sk_data->sk_list, TRUE, hb_itemGetNI( pKeyCode ),
-                 hb_param( 2, HB_IT_BLOCK ), NULL );
-#endif
       }
    }
 }
