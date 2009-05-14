@@ -178,17 +178,6 @@ CREATE CLASS GET
    METHOD exitState( xValue ) SETGET
    METHOD reader( xValue ) SETGET
 
-#ifdef HB_EXTENSION
-   METHOD hideInput( lHideInput ) SETGET
-   METHOD style( cStyle ) SETGET
-#endif
-
-#ifdef HB_COMPAT_XPP
-   MESSAGE _end() METHOD end()
-   MESSAGE _assign() METHOD assign()
-   MESSAGE _delete() METHOD delete()
-#endif
-
    PROTECTED:
 
 #ifndef HB_COMPAT_C53
@@ -1955,26 +1944,6 @@ METHOD Reader( xValue ) CLASS GET
    ENDIF
 
    RETURN ::bReader
-
-#ifdef HB_EXTENSION
-
-METHOD hideInput( lHideInput ) CLASS GET
-
-   IF lHideInput != NIL
-      ::lHideInput := __eInstVar53( Self, "HIDEINPUT", lHideInput, "L", 1001 )
-   ENDIF
-
-   RETURN ::lHideInput
-
-METHOD style( cStyle ) CLASS GET
-
-   IF cStyle != NIL
-      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 1 } )
-   ENDIF
-
-   RETURN ::cStyle
-
-#endif
 
 /* ------------------------------------------------------------------------- */
 

@@ -220,6 +220,7 @@ PRG_SOURCES=\
 	teditor.prg  \
 	text.prg     \
 	tget.prg     \
+	tgethb.prg   \
 	tgetint.prg  \
 	tgetlist.prg \
 	tgetx.prg    \
