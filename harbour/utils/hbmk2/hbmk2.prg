@@ -175,7 +175,7 @@ REQUEST hbmk_KEYW
 #define _HBMK_aOPTD             29
 #define _HBMK_lSHARED           30
 #define _HBMK_lSTATICFULL       31
-#define _HBMK_lSHAREABLE        32
+#define _HBMK_lSHAREDDIST       32
 #define _HBMK_lNULRDD           33
 #define _HBMK_lMAP              34
 #define _HBMK_lSTRIP            35
@@ -437,7 +437,7 @@ FUNCTION hbmk( aArgs )
    hbmk[ _HBMK_lXHB ] := .F.
    hbmk[ _HBMK_lSHARED ] := NIL
    hbmk[ _HBMK_lSTATICFULL ] := NIL
-   hbmk[ _HBMK_lSHAREABLE ] := NIL
+   hbmk[ _HBMK_lSHAREDDIST ] := NIL
    hbmk[ _HBMK_lNULRDD ] := .F.
    hbmk[ _HBMK_lMAP ] := .F.
    hbmk[ _HBMK_lSTRIP ] := .F.
@@ -1076,11 +1076,11 @@ FUNCTION hbmk( aArgs )
            cParamL == "-mconsole"        ; hbmk[ _HBMK_lGUI ]       := .F. /* Compatibility */
       CASE cParamL == "-mt"              ; hbmk[ _HBMK_lMT ]        := .T.
       CASE cParamL == "-st"              ; hbmk[ _HBMK_lMT ]        := .F.
-      CASE cParamL == "-shared"          ; hbmk[ _HBMK_lSHARED ]    := .T. ; hbmk[ _HBMK_lSTATICFULL ] := .F.
-      CASE cParamL == "-static"          ; hbmk[ _HBMK_lSHARED ]    := .F. ; hbmk[ _HBMK_lSTATICFULL ] := .F.
-      CASE cParamL == "-fullstatic"      ; hbmk[ _HBMK_lSHARED ]    := .F. ; hbmk[ _HBMK_lSTATICFULL ] := .T.
-      CASE cParamL == "-shareable"       ; hbmk[ _HBMK_lSHAREABLE ] := .T.
-      CASE cParamL == "-shareable-"      ; hbmk[ _HBMK_lSHAREABLE ] := .F.
+      CASE cParamL == "-shared"          ; hbmk[ _HBMK_lSHARED ]    := .T. ; hbmk[ _HBMK_lSTATICFULL ] := .F. ; hbmk[ _HBMK_lSHAREDDIST ] := NIL
+      CASE cParamL == "-fullshared"      ; hbmk[ _HBMK_lSHARED ]    := .T. ; hbmk[ _HBMK_lSTATICFULL ] := .F. ; hbmk[ _HBMK_lSHAREDDIST ] := .T.
+      CASE cParamL == "-fixshared"       ; hbmk[ _HBMK_lSHARED ]    := .T. ; hbmk[ _HBMK_lSTATICFULL ] := .F. ; hbmk[ _HBMK_lSHAREDDIST ] := .F.
+      CASE cParamL == "-static"          ; hbmk[ _HBMK_lSHARED ]    := .F. ; hbmk[ _HBMK_lSTATICFULL ] := .F. ; hbmk[ _HBMK_lSHAREDDIST ] := NIL
+      CASE cParamL == "-fullstatic"      ; hbmk[ _HBMK_lSHARED ]    := .F. ; hbmk[ _HBMK_lSTATICFULL ] := .T. ; hbmk[ _HBMK_lSHAREDDIST ] := NIL
       CASE cParamL == "-bldf"            ; s_lBLDFLGP   := s_lBLDFLGC := s_lBLDFLGL := .T.
       CASE cParamL == "-bldf-"           ; s_lBLDFLGP   := s_lBLDFLGC := s_lBLDFLGL := .F.
       CASE Left( cParamL, 6 ) == "-bldf="
@@ -1543,9 +1543,9 @@ FUNCTION hbmk( aArgs )
       /* Merge user libs from command line and envvar. Command line has priority. */
       hbmk[ _HBMK_aLIBUSER ] := ArrayAJoin( { hbmk[ _HBMK_aLIBUSER ], hbmk[ _HBMK_aLIBUSERGT ], ListToArray( PathSepToTarget( hbmk, GetEnv( "HB_USER_LIBS" ) ) ) } )
 
-      DEFAULT hbmk[ _HBMK_lSHAREABLE ] TO lSysLoc
+      DEFAULT hbmk[ _HBMK_lSHAREDDIST ] TO lSysLoc
 
-      IF hbmk[ _HBMK_lSHAREABLE ]
+      IF hbmk[ _HBMK_lSHAREDDIST ]
          cPrefix := ""
       ELSE
          cPrefix := PathNormalize( s_cHB_DYN_INSTALL )
@@ -5525,7 +5525,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-gui|-std"         , I_( "create GUI/console executable" ) },;
       { "-main=<mainfunc>"  , I_( "override the name of starting function/procedure" ) },;
       { "-fullstatic"       , I_( "link with all static libs" ) },;
-      { "-shareable"        , I_( "create shareable (without absolute dir reference to shared library) binaries in shared mode (default: on when Harbour is installed on system location, off otherwise) (*nix only)" ) },;
+      { "-[full|fix]shared" , I_( "create binaries without/with absolute dir reference to shared Harbour library (default: 'fullshared' when Harbour is installed on system location, 'fixshared' otherwise) (*nix only)" ) },;
       { "-nulrdd[-]"        , I_( "link with nulrdd" ) },;
       { "-[no]debug"        , I_( "add/exclude C compiler debug info" ) },;
       { "-[no]optim"        , I_( "toggle C compiler optimizations (default: on)" ) },;

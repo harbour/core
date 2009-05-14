@@ -728,6 +728,29 @@ static HB_GARBAGE_FUNC( _DLLUnload )
 }
 #endif
 
+static LPVOID hb_getprocaddress( HMODULE hDLL, int iProc )
+{
+#if defined(HB_OS_WIN_CE)
+   HB_SYMBOL_UNUSED( hDLL );
+   HB_SYMBOL_UNUSED( iProc );
+   return NULL;
+#else
+   LPVOID lpFunction = ( LPVOID ) GetProcAddress( hDLL, ISCHAR( iProc ) ? ( LPCSTR ) hb_parc( iProc ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( iProc ) );
+
+   if( ! lpFunction && ISCHAR( iProc ) ) /* try with ANSI suffix? */
+   {
+      char * pszFuncName = ( char * ) hb_xgrab( hb_parclen( iProc ) + 2 );
+      hb_strncpy( pszFuncName, hb_parc( iProc ), hb_parclen( iProc ) );
+      lpFunction = ( LPVOID ) GetProcAddress( hDLL, hb_strncat( pszFuncName, "A", hb_parclen( iProc ) + 1 ) );
+      hb_xfree( pszFuncName );
+   }
+
+   return lpFunction;
+#endif
+}
+
+#ifdef HB_COMPAT_XPP
+
 HB_FUNC( DLLPREPARECALL )
 {
 #if !defined(HB_OS_WIN_CE)
@@ -785,7 +808,11 @@ HB_FUNC( DLLPREPARECALL )
 
 HB_FUNC( DLLLOAD )
 {
+   hb_retnint( ( HB_PTRDIFF ) LoadLibraryA( ( LPCSTR ) hb_parcx( 1 ) ) ) ;
+
+/* Proper, but incompatible version:
    hb_retptr( LoadLibraryA( ( LPCSTR ) hb_parcx( 1 ) ) ) ;
+*/
 }
 
 HB_FUNC( DLLUNLOAD )
@@ -796,35 +823,6 @@ HB_FUNC( DLLUNLOAD )
       hb_retl( FreeLibrary( ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) ) ;
    else
       hb_retl( FALSE );
-}
-
-HB_FUNC( DLLEXECUTECALL )
-{
-   PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) hb_parptr( 1 );
-
-   if( xec && xec->dwType == _DLLEXEC_SIGNATURE && xec->hDLL && xec->lpFunc )
-      DllExec( 0, 0, NULL, xec, hb_pcount(), 2 );
-}
-
-static LPVOID hb_getprocaddress( HMODULE hDLL, int iProc )
-{
-#if defined(HB_OS_WIN_CE)
-   HB_SYMBOL_UNUSED( hDLL );
-   HB_SYMBOL_UNUSED( iProc );
-   return NULL;
-#else
-   LPVOID lpFunction = ( LPVOID ) GetProcAddress( hDLL, ISCHAR( iProc ) ? ( LPCSTR ) hb_parc( iProc ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( iProc ) );
-
-   if( ! lpFunction && ISCHAR( iProc ) ) /* try with ANSI suffix? */
-   {
-      char * pszFuncName = ( char * ) hb_xgrab( hb_parclen( iProc ) + 2 );
-      hb_strncpy( pszFuncName, hb_parc( iProc ), hb_parclen( iProc ) );
-      lpFunction = ( LPVOID ) GetProcAddress( hDLL, hb_strncat( pszFuncName, "A", hb_parclen( iProc ) + 1 ) );
-      hb_xfree( pszFuncName );
-   }
-
-   return lpFunction;
-#endif
 }
 
 HB_FUNC( DLLCALL )
@@ -847,6 +845,16 @@ HB_FUNC( DLLCALL )
    }
 }
 
+HB_FUNC( DLLEXECUTECALL )
+{
+   PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) hb_parptr( 1 );
+
+   if( xec && xec->dwType == _DLLEXEC_SIGNATURE && xec->hDLL && xec->lpFunc )
+      DllExec( 0, 0, NULL, xec, hb_pcount(), 2 );
+}
+
+#endif
+
 /* ------------------------------------------------------------------ */
 
 HB_FUNC( LOADLIBRARY )
@@ -857,17 +865,6 @@ HB_FUNC( LOADLIBRARY )
 HB_FUNC( FREELIBRARY )
 {
    HB_FUNC_EXEC( DLLUNLOAD );
-}
-
-HB_FUNC( GETLASTERROR )
-{
-   hb_retnl( GetLastError() );
-}
-
-HB_FUNC( SETLASTERROR )
-{
-   hb_retnl( GetLastError() );
-   SetLastError( hb_parnl( 1 ) );
 }
 
 HB_FUNC( GETPROCADDRESS )

@@ -42,6 +42,7 @@ ifneq ($(HB_WITHOUT_ODBC),yes)
 
 C_SOURCES= \
 	odbc.c \
+	odbcold.c \
 
 PRG_SOURCES= \
 	todbc.prg \

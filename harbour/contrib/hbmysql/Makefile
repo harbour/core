@@ -20,6 +20,7 @@ HB_USER_CFLAGS += $(foreach d, $(HB_INC_MYSQL_OK), -I$(d))
 
 C_SOURCES=\
 	mysql.c \
+	mysqlold.c \
 
 PRG_SOURCES=\
 	tmysql.prg \

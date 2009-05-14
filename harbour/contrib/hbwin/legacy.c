@@ -102,6 +102,19 @@ HB_FUNC( WIDETOANSI )
    HB_FUNC_EXEC( WIN_WIDETOANSI );
 }
 
+/* Deprecated. Please use WAPI_GETLASTERROR(). */
+HB_FUNC( GETLASTERROR )
+{
+   hb_retnl( GetLastError() );
+}
+
+/* Deprecated. Please use WAPI_SETLASTERROR(). */
+HB_FUNC( SETLASTERROR )
+{
+   hb_retnl( GetLastError() );
+   SetLastError( hb_parnl( 1 ) );
+}
+
 #if 0
 
 HB_FUNC_EXTERN( WAPI_MESSAGEBOX );

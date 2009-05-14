@@ -119,7 +119,7 @@ HB_FUNC( WINPORTOPEN )
 
    s_WinFcn = FCNCREATEFILE;
    s_WinError = 0;
-   if( ( hCommPort = CreateFile( s_PortData[ Port ].Name, 
+   if( ( hCommPort = CreateFile( s_PortData[ Port ].Name,
                                  GENERIC_READ | GENERIC_WRITE,
                                  0,
                                  0,
@@ -234,7 +234,7 @@ HB_FUNC( WINPORTOPEN )
    /* Constant, in milliseconds, used to calculate the total time-out period for read operations.
       For each read operation, this value is added to the product of the s_ReadTotalTimeoutMultiplier
       member and the requested number of bytes. */
-   NewTimeouts.ReadTotalTimeoutConstant = ( s_ReadIntervalTimeout == -1 ? 0 : s_ReadTotalTimeoutConstant );
+   NewTimeouts.ReadTotalTimeoutConstant = ( s_ReadTotalTimeoutConstant == -1 ? 0 : s_ReadTotalTimeoutConstant );
 
    /* A value of zero for both the s_ReadTotalTimeoutMultiplier and s_ReadTotalTimeoutConstant members
       indicates that total time-outs are not used for read operations ...
@@ -429,7 +429,7 @@ HB_FUNC( WINPORTQUEUESTATUS )
       hb_storl( ComStat.fXoffSent, 6 );
       hb_stornl( ComStat.cbInQue, 7 );
       hb_stornl( ComStat.cbOutQue, 8 ); /* This value will be zero for a nonoverlapped write */
-      
+
       hb_retl( TRUE );
    }
 }
