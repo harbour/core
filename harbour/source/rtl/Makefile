@@ -78,6 +78,7 @@ C_SOURCES=\
 	hbstrsh.c    \
 	hbtoken.c    \
 	hbzlib.c     \
+	hbzlibgz.c   \
 	idle.c       \
 	inkey.c      \
 	inkeyapi.c   \

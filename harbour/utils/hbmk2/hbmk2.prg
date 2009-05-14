@@ -175,28 +175,29 @@ REQUEST hbmk_KEYW
 #define _HBMK_aOPTD             29
 #define _HBMK_lSHARED           30
 #define _HBMK_lSTATICFULL       31
-#define _HBMK_lNULRDD           32
-#define _HBMK_lMAP              33
-#define _HBMK_lSTRIP            34
-#define _HBMK_lOPTIM            35
-#define _HBMK_nCOMPR            36
-#define _HBMK_lRUN              37
-#define _HBMK_lINC              38
+#define _HBMK_lSHAREABLE        32
+#define _HBMK_lNULRDD           33
+#define _HBMK_lMAP              34
+#define _HBMK_lSTRIP            35
+#define _HBMK_lOPTIM            36
+#define _HBMK_nCOMPR            37
+#define _HBMK_lRUN              38
+#define _HBMK_lINC              39
 
-#define _HBMK_aPO               39
-#define _HBMK_cHBL              40
-#define _HBMK_aLNG              41
-#define _HBMK_cPO               42
+#define _HBMK_aPO               40
+#define _HBMK_cHBL              41
+#define _HBMK_aLNG              42
+#define _HBMK_cPO               43
 
-#define _HBMK_lDEBUGTIME        43
-#define _HBMK_lDEBUGINC         44
-#define _HBMK_lDEBUGSTUB        45
-#define _HBMK_lDEBUGI18N        46
+#define _HBMK_lDEBUGTIME        44
+#define _HBMK_lDEBUGINC         45
+#define _HBMK_lDEBUGSTUB        46
+#define _HBMK_lDEBUGI18N        47
 
-#define _HBMK_cCCPATH           47
-#define _HBMK_cCCPREFIX         48
+#define _HBMK_cCCPATH           48
+#define _HBMK_cCCPREFIX         49
 
-#define _HBMK_MAX_              48
+#define _HBMK_MAX_              49
 
 PROCEDURE Main( ... )
    LOCAL aArgs := hb_AParams()
@@ -436,6 +437,7 @@ FUNCTION hbmk( aArgs )
    hbmk[ _HBMK_lXHB ] := .F.
    hbmk[ _HBMK_lSHARED ] := NIL
    hbmk[ _HBMK_lSTATICFULL ] := NIL
+   hbmk[ _HBMK_lSHAREABLE ] := NIL
    hbmk[ _HBMK_lNULRDD ] := .F.
    hbmk[ _HBMK_lMAP ] := .F.
    hbmk[ _HBMK_lSTRIP ] := .F.
@@ -1077,6 +1079,8 @@ FUNCTION hbmk( aArgs )
       CASE cParamL == "-shared"          ; hbmk[ _HBMK_lSHARED ]    := .T. ; hbmk[ _HBMK_lSTATICFULL ] := .F.
       CASE cParamL == "-static"          ; hbmk[ _HBMK_lSHARED ]    := .F. ; hbmk[ _HBMK_lSTATICFULL ] := .F.
       CASE cParamL == "-fullstatic"      ; hbmk[ _HBMK_lSHARED ]    := .F. ; hbmk[ _HBMK_lSTATICFULL ] := .T.
+      CASE cParamL == "-shareable"       ; hbmk[ _HBMK_lSHAREABLE ] := .T.
+      CASE cParamL == "-shareable-"      ; hbmk[ _HBMK_lSHAREABLE ] := .F.
       CASE cParamL == "-bldf"            ; s_lBLDFLGP   := s_lBLDFLGC := s_lBLDFLGL := .T.
       CASE cParamL == "-bldf-"           ; s_lBLDFLGP   := s_lBLDFLGC := s_lBLDFLGL := .F.
       CASE Left( cParamL, 6 ) == "-bldf="
@@ -1539,7 +1543,9 @@ FUNCTION hbmk( aArgs )
       /* Merge user libs from command line and envvar. Command line has priority. */
       hbmk[ _HBMK_aLIBUSER ] := ArrayAJoin( { hbmk[ _HBMK_aLIBUSER ], hbmk[ _HBMK_aLIBUSERGT ], ListToArray( PathSepToTarget( hbmk, GetEnv( "HB_USER_LIBS" ) ) ) } )
 
-      IF lSysLoc
+      DEFAULT hbmk[ _HBMK_lSHAREABLE ] TO lSysLoc
+
+      IF hbmk[ _HBMK_lSHAREABLE ]
          cPrefix := ""
       ELSE
          cPrefix := PathNormalize( s_cHB_DYN_INSTALL )
@@ -1748,11 +1754,11 @@ FUNCTION hbmk( aArgs )
             ENDCASE
          ENDIF
 
-         IF IsGTRequested( hbmk[ _HBMK_aLIBCOREGT ], hbmk[ _HBMK_lSHARED ], "gtcrs" )
+         IF IsGTRequested( hbmk, "gtcrs" )
             /* TOFIX: Sometimes 'ncur194' is needed. */
             AAdd( s_aLIBSYS, IIF( hbmk[ _HBMK_cARCH ] == "sunos", "curses", "ncurses" ) )
          ENDIF
-         IF IsGTRequested( hbmk[ _HBMK_aLIBCOREGT ], hbmk[ _HBMK_lSHARED ], "gtsln" )
+         IF IsGTRequested( hbmk, "gtsln" )
             AAdd( s_aLIBSYS, "slang" )
             /* Add paths, where this isn't a system component */
             DO CASE
@@ -1763,7 +1769,7 @@ FUNCTION hbmk( aArgs )
                AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" )
             ENDCASE
          ENDIF
-         IF IsGTRequested( hbmk[ _HBMK_aLIBCOREGT ], hbmk[ _HBMK_lSHARED ], "gtxwc" )
+         IF IsGTRequested( hbmk, "gtxwc" )
             IF hb_DirExists( "/usr/X11R6/lib64" )
                AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib64" )
             ENDIF
@@ -4532,11 +4538,11 @@ STATIC PROCEDURE HBP_ProcessOne( hbmk, cFileName )
 
    RETURN
 
-STATIC FUNCTION IsGTRequested( aLIBCOREGT, lSHARED, cWhichGT )
+STATIC FUNCTION IsGTRequested( hbmk, cWhichGT )
 
-   IF ! lSHARED
+   IF ! hbmk[ _HBMK_lSHARED ]
       /* Check if it's a core GT. */
-      RETURN AScan( aLIBCOREGT, {|tmp| Lower( tmp ) == cWhichGT } ) > 0
+      RETURN AScan( hbmk[ _HBMK_aLIBCOREGT ], {|tmp| Lower( tmp ) == cWhichGT } ) > 0
    ENDIF
 
    RETURN .F.
@@ -5519,6 +5525,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-gui|-std"         , I_( "create GUI/console executable" ) },;
       { "-main=<mainfunc>"  , I_( "override the name of starting function/procedure" ) },;
       { "-fullstatic"       , I_( "link with all static libs" ) },;
+      { "-shareable"        , I_( "create shareable (without absolute dir reference to shared library) binaries in shared mode (default: on when Harbour is installed on system location, off otherwise) (*nix only)" ) },;
       { "-nulrdd[-]"        , I_( "link with nulrdd" ) },;
       { "-[no]debug"        , I_( "add/exclude C compiler debug info" ) },;
       { "-[no]optim"        , I_( "toggle C compiler optimizations (default: on)" ) },;
