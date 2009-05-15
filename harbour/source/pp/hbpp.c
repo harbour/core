@@ -603,10 +603,6 @@ int main( int argc, char * argv[] )
    int iSVNID = 0, iResult = 0, iQuiet = 0, i;
    PHB_PP_STATE pState;
 
-   printf( "Harbour Preprocessor %d.%d.%d\n",
-      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE );
-   printf( "Copyright (c) 1999-2009, http://www.harbour-project.org/\n" );
-
    pState = hb_pp_new();
 
    if( argc >= 2 )
@@ -626,7 +622,7 @@ int main( int argc, char * argv[] )
                      iQuiet = 1;
                   else if( argv[i][2] == '-' && !argv[i][3] )
                      iQuiet = 0;
-                  else if( argv[i][2] >= '0' && argv[i][2] <= '1' && !argv[i][3] )
+                  else if( argv[i][2] >= '0' && argv[i][2] <= '2' && !argv[i][3] )
                      iQuiet = argv[i][2] - '0';
                   else
                      szFile = NULL;
@@ -701,6 +697,13 @@ int main( int argc, char * argv[] )
             }
          }
       }
+   }
+
+   if( iQuiet < 2 )
+   {
+      printf( "Harbour Preprocessor %d.%d.%d\n",
+         HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE );
+      printf( "Copyright (c) 1999-2009, http://www.harbour-project.org/\n" );
    }
 
    if( szFile )
