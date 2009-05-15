@@ -99,7 +99,19 @@
          This needs a way to spec what key headers to look for. */
 
 ANNOUNCE HB_GTSYS
+
 REQUEST HB_GT_CGI_DEFAULT
+
+/* Include these for -pause support. */
+#if defined( __PLATFORM__WINDOWS )
+   REQUEST HB_GT_WIN
+#elif defined( __PLATFORM__DOS )
+   REQUEST HB_GT_DOS
+#elif defined( __PLATFORM__OS2 )
+   REQUEST HB_GT_OS2
+#elif defined( __PLATFORM__UNIX )
+   REQUEST HB_GT_TRM
+#endif
 
 REQUEST HB_CODEPAGE_DE850
 REQUEST HB_CODEPAGE_ES850
@@ -205,6 +217,8 @@ PROCEDURE Main( ... )
    LOCAL cName
    LOCAL tmp
 
+   LOCAL lPause := hb_gtInfo( HB_GTI_ISGRAPHIC )
+
    /* Emulate -hbcmp, -hbcc, -hblnk switches when certain
       self names are detected.
       For compatibility with hbmk script aliases. */
@@ -238,9 +252,9 @@ PROCEDURE Main( ... )
       ENDCASE
    ENDIF
 
-   nResult := hbmk( aArgs )
+   nResult := hbmk( aArgs, @lPause )
 
-   IF nResult != 0 .AND. hb_gtInfo( HB_GTI_ISGRAPHIC )
+   IF nResult != 0 .AND. lPause
       OutStd( I_( "Press any key to continue..." ) )
       Inkey( 0 )
    ENDIF
@@ -264,7 +278,7 @@ STATIC FUNCTION hbmk_run( cCmd )
    RETURN result
 #endif
 
-FUNCTION hbmk( aArgs )
+FUNCTION hbmk( aArgs, /* @ */ lPause )
 
    LOCAL hbmk[ _HBMK_MAX_ ]
 
@@ -1061,6 +1075,7 @@ FUNCTION hbmk( aArgs )
 
       CASE cParamL == "-quiet"           ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
       CASE cParamL == "-info"            ; hbmk[ _HBMK_lInfo ] := .T.
+      CASE cParamL == "-pause"           ; lPause := .T.
       CASE cParamL == "-hblib"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .T. ; lCreateDyn := .F.
       CASE cParamL == "-hbdyn"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .T.
       CASE cParamL == "-gui" .OR. ;
@@ -1495,6 +1510,9 @@ FUNCTION hbmk( aArgs )
    /* Start doing the make process. */
    IF ! lStopAfterInit .AND. ( Len( s_aPRG ) + Len( s_aC ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) == 0
       hbmk_OutErr( I_( "Error: No source files were specified." ) )
+      IF s_lBEEP
+         DoBeep( .F. )
+      ENDIF
       RETURN 4
    ENDIF
 
@@ -1521,6 +1539,9 @@ FUNCTION hbmk( aArgs )
          AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + cWorkDir + hb_osPathSeparator() ) /* NOTE: Ending path sep is important. */
          IF ! DirBuild( cWorkDir )
             hbmk_OutErr( hb_StrFormat( I_( "Error: Working directory cannot be created: %1$s" ), cWorkDir ) )
+            IF s_lBEEP
+               DoBeep( .F. )
+            ENDIF
             RETURN 9
          ENDIF
       ELSE
@@ -2669,6 +2690,9 @@ FUNCTION hbmk( aArgs )
                   IF ( tmp := hb_compile( "", aCommand ) ) != 0
                      hbmk_OutErr( hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
                      OutErr( ArrayToList( aCommand ), hb_osNewLine() )
+                     IF s_lBEEP
+                        DoBeep( .F. )
+                     ENDIF
                      RETURN 6
                   ENDIF
                ENDIF
@@ -2685,6 +2709,9 @@ FUNCTION hbmk( aArgs )
                      hbmk_OutErr( hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
                   ENDIF
                   OutErr( ArrayToList( thread[ 2 ] ), hb_osNewLine() )
+                  IF s_lBEEP
+                     DoBeep( .F. )
+                  ENDIF
                   RETURN 6
                ENDIF
             NEXT
@@ -2713,6 +2740,9 @@ FUNCTION hbmk( aArgs )
             hbmk_OutErr( hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s:" ), hb_ntos( tmp ) ) )
             IF ! hbmk[ _HBMK_lQuiet ]
                OutErr( cCommand, hb_osNewLine() )
+            ENDIF
+            IF s_lBEEP
+               DoBeep( .F. )
             ENDIF
             RETURN 6
          ENDIF
@@ -2823,6 +2853,9 @@ FUNCTION hbmk( aArgs )
             hbmk_OutErr( I_( "Warning: Stub helper .c program couldn't be created." ) )
             IF ! hbmk[ _HBMK_lINC ]
                AEval( ListDirExt( s_aPRG, cWorkDir, ".c" ), {|tmp| FErase( tmp ) } )
+            ENDIF
+            IF s_lBEEP
+               DoBeep( .F. )
             ENDIF
             RETURN 5
          ENDIF
@@ -5626,6 +5659,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-comp=<comp>"      , I_( "use specific C compiler. Same as HB_COMPILER envvar\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
       { "-lang=<lang>"      , I_( "override default language. Similar to HB_LANG envvar." ) },;
       { "--version"         , I_( "display version header only" ) },;
+      { "-beep"             , I_( "enable single beep on successful exit, double beep on failure" ) },;
+      { "-pause"            , I_( "force waiting for a key on exit in case of failure (with alternate GTs only)" ) },;
       { "-info"             , I_( "turn on informational messages" ) },;
       { "-quiet"            , I_( "suppress all screen messages" ) } }
 
