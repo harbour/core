@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Misc Windows API functions
+ * Windows API functions (winbase)
  *
  * Copyright 2009 Viktor Szakats <harbour.01 syenar hu>
  * www - http://www.harbour-project.org
@@ -55,8 +55,6 @@
 #include "hbapi.h"
 #include "hbwapi.h"
 
-/*----------------------------------------------------------------------*/
-
 HB_FUNC( WAPI_GETCOMMANDLINE )
 {
    char * buffer = HB_TCHAR_CONVFROM( GetCommandLine() );
@@ -74,7 +72,41 @@ HB_FUNC( WAPI_GETCOMMANDLINE )
 
    HB_TCHAR_FREE( buffer );
 }
-/*----------------------------------------------------------------------*/
+
+HB_FUNC( WAPI_GETLASTERROR )
+{
+   hb_retnl( ( long ) GetLastError() );
+}
+
+HB_FUNC( WAPI_SETLASTERROR )
+{
+   SetLastError( ( DWORD ) hb_parnl( 1 ) );
+}
+
+HB_FUNC( WAPI_SETERRORMODE )
+{
+   hb_retni( SetErrorMode( ( UINT ) hb_parni( 1 ) ) );
+}
+
+HB_FUNC( WAPI_LOADLIBRARY )
+{
+   hb_retptr( LoadLibraryA( ( LPCSTR ) hb_parcx( 1 ) ) );
+}
+
+HB_FUNC( WAPI_FREELIBRARY )
+{
+   hb_retl( FreeLibrary( ( HMODULE ) hb_parptr( 1 ) ) );
+}
+
+HB_FUNC( WAPI_GETPROCADDRESS )
+{
+#if defined(HB_OS_WIN_CE)
+   hb_retptr( NULL );
+#else
+   hb_retptr( ( void * ) GetProcAddress( ( HMODULE ) hb_parptr( 1 ), ISCHAR( 2 ) ? ( LPCSTR ) hb_parc( 2 ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
+#endif
+}
+
 /*
 HMODULE WINAPI GetModuleHandle( __in_opt LPCTSTR lpModuleName );
 */
@@ -87,4 +119,3 @@ HB_FUNC( WAPI_GETMODULEHANDLE )
    if( ISCHAR( 1 ) )
       HB_TCHAR_FREE( lpModuleName );
 }
-/*----------------------------------------------------------------------*/

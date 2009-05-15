@@ -208,30 +208,6 @@ HB_FUNC( WIN_GETCOMMANDLINEPARAM )
    HB_TCHAR_FREE( buffer );
 }
 
-HB_FUNC( WAPI_GETLASTERROR )
-{
-   hb_retnl( ( long ) GetLastError() );
-}
-
-HB_FUNC( WAPI_SETLASTERROR )
-{
-   SetLastError( ( DWORD ) hb_parnl( 1 ) );
-}
-
-HB_FUNC( WAPI_SETERRORMODE )
-{
-   hb_retni( SetErrorMode( ( UINT ) hb_parni( 1 ) ) );
-}
-
-HB_FUNC( WAPI_MESSAGEBOX )
-{
-   LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-   LPTSTR lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   hb_retni( MessageBox( ( HWND ) hb_parptr( 1 ), lpStr1, lpStr2, hb_parni( 4 ) ) );
-   HB_TCHAR_FREE( lpStr1 );
-   HB_TCHAR_FREE( lpStr2 );
-}
-
 /* TODO: Add embedded zero support by using hb_mbntowc() */
 HB_FUNC( WIN_ANSITOWIDE )
 {
@@ -246,16 +222,6 @@ HB_FUNC( WIN_WIDETOANSI )
    char * cString = hb_wctomb( ( wchar_t * ) hb_parcx( 1 ) );
 
    hb_retclen_buffer( cString, strlen( cString ) );
-}
-
-HB_FUNC( WAPI_LOADLIBRARY )
-{
-   hb_retptr( LoadLibraryA( ( LPCSTR ) hb_parcx( 1 ) ) );
-}
-
-HB_FUNC( WAPI_FREELIBRARY )
-{
-   hb_retl( FreeLibrary( ( HMODULE ) hb_parptr( 1 ) ) );
 }
 
 HB_FUNC( WIN_N2P )

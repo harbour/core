@@ -3,7 +3,11 @@
  */
 
 /*
- * Pritpal Bedi <pritpal@vouchcac.com> 17Feb2009
+ * Harbour Project source code:
+ * Windows API functions (winuser)
+ *
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009 Viktor Szakats <harbour.01 syenar hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,7 +56,17 @@
 
 #include "hbapi.h"
 #include "hbwapi.h"
+
 #include <winuser.h>
+
+HB_FUNC( WAPI_MESSAGEBOX )
+{
+   LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   LPTSTR lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+   hb_retni( MessageBox( ( HWND ) hb_parptr( 1 ), lpStr1, lpStr2, hb_parni( 4 ) ) );
+   HB_TCHAR_FREE( lpStr1 );
+   HB_TCHAR_FREE( lpStr2 );
+}
 
 /*-----------------------------------------------------------------------/
               BEGIN SCROLLBAR MANIPULATION WINAPI FUNCTIONS

@@ -63,7 +63,6 @@
 
   Simple example
 
-
   TO DO:    Colour printing
             etc....
 
@@ -71,21 +70,19 @@
 
 */
 
-#ifndef HB_OS_WIN_USED
-#  define HB_OS_WIN_USED
-#endif
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 #include "hbapiitm.h"
 
 #if defined(HB_OS_WIN) && !defined(HB_OS_WIN_CE)
 
-#  include <windows.h>
-#  include <winspool.h>
+#include <windows.h>
+#include <winspool.h>
 
-#  ifndef INVALID_FILE_SIZE
-#     define INVALID_FILE_SIZE (DWORD)0xFFFFFFFF
-#  endif
+#ifndef INVALID_FILE_SIZE
+   #define INVALID_FILE_SIZE ( DWORD ) 0xFFFFFFFF
+#endif
 
 static HB_GARBAGE_FUNC( win_HDC_release )
 {
@@ -230,16 +227,16 @@ HB_FUNC( WIN_TEXTOUT )
 
    if( hDC && ulLen )
    {
-      int iLen = ( int ) hb_parnl( 5 );
+      int iLen = hb_parni( 5 );
 
       if( iLen > ( int ) ulLen )
          iLen = ( int ) ulLen;
 
       if( iLen > 0 )
       {
-         int iRow = ( int ) hb_parnl( 2 );
-         int iCol = ( int ) hb_parnl( 3 );
-         int iWidth = ISNUM( 6 ) ? ( int ) hb_parnl( 6 ) : 0;
+         int iRow = hb_parni( 2 );
+         int iCol = hb_parni( 3 );
+         int iWidth = hb_parni( 6 ); /* defaults to 0 */
          LPTSTR lpData = HB_TCHAR_CONVNTO( hb_parc( 4 ), iLen );
 
          if( hb_parnl( 7 ) == 1 )
@@ -282,7 +279,7 @@ HB_FUNC( WIN_GETTEXTSIZE )
 
    if( hDC && ulLen )
    {
-      int iLen = ( int ) hb_parnl( 3 );
+      int iLen = hb_parni( 3 );
       LPTSTR lpData;
       SIZE sSize;
 
@@ -348,13 +345,13 @@ HB_FUNC( WIN_CREATEFONT )
    BOOL Result = FALSE;
    HDC hDC = win_HDC_par( 1 );
    HFONT hFont;
-   char *pszFont = hb_parc( 2 );
+   char * pszFont = hb_parc( 2 );
    LPTSTR lpFont = pszFont ? HB_TCHAR_CONVTO( pszFont ) : NULL;
-   int iHeight = ( int ) hb_parnl( 3 );
-   int iMul = ( int ) hb_parnl( 4 );
-   int iDiv = ( int ) hb_parnl( 5 );
+   int iHeight = hb_parni( 3 );
+   int iMul = hb_parni( 4 );
+   int iDiv = hb_parni( 5 );
    int iWidth;
-   int iWeight = ( int ) hb_parnl( 6 );
+   int iWeight = hb_parni( 6 );
    DWORD dwUnderLine = ( DWORD ) hb_parl( 7 );
    DWORD dwItalic = ( DWORD ) hb_parl( 8 );
    DWORD dwCharSet = ( DWORD ) hb_parnl( 9 );

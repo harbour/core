@@ -452,16 +452,7 @@ FUNCTION hbmk( aArgs )
    hbmk[ _HBMK_lDEBUGI18N ] := .F.
 
    GetUILangCDP( @hbmk[ _HBMK_cUILNG ], @hbmk[ _HBMK_cUICDP ] )
-
-   IF !( hbmk[ _HBMK_cUILNG ] == "en-EN" )
-      tmp := "${hb_root}hbmk2.${lng}.hbl"
-      tmp := StrTran( tmp, "${hb_root}", PathSepToSelf( DirAddPathSep( hb_DirBase() ) ) )
-      tmp := StrTran( tmp, "${lng}", StrTran( hbmk[ _HBMK_cUILNG ], "-", "_" ) )
-      IF hb_i18n_check( tmp := hb_MemoRead( tmp ) )
-         hb_i18n_set( hb_i18n_restoretable( tmp ) )
-      ENDIF
-      hb_cdpSelect( hbmk[ _HBMK_cUICDP ] )
-   ENDIF
+   SetUILang( hbmk )
 
    IF Empty( aArgs )
       ShowHeader( hbmk )
@@ -479,6 +470,7 @@ FUNCTION hbmk( aArgs )
       CASE cParamL            == "-quiet"   ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
       CASE Left( cParamL, 6 ) == "-comp="   ; hbmk[ _HBMK_cCOMP ] := SubStr( cParam, 7 )
       CASE Left( cParamL, 6 ) == "-arch="   ; hbmk[ _HBMK_cARCH ] := SubStr( cParam, 7 )
+      CASE Left( cParamL, 6 ) == "-lang="   ; hbmk[ _HBMK_cUILNG ] := SubStr( cParam, 7 ) ; SetUILang( hbmk )
       CASE cParamL            == "-hbrun"   ; lSkipBuild := .T. ; hbmk[ _HBMK_lRUN ] := .T.
       CASE cParamL            == "-hbcmp" .OR. ;
            cParamL            == "-clipper" ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .F.
@@ -5442,16 +5434,14 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
 
    RETURN .F.
 
-/* TODO: Extend for rest of platforms, add proper CDP detection */
+/* TODO: Add proper CDP detection */
 
 STATIC PROCEDURE GetUILangCDP( /* @ */ cLNG, /* @ */ cCDP )
    LOCAL tmp
 
-   IF Empty( cLNG := GetEnv( "LC_ALL" ) )
-      IF Empty( cLNG := GetEnv( "LC_MESSAGES" ) )
-         IF Empty( cLNG := GetEnv( "LANG" ) )
-            cLNG := "en-EN"
-         ENDIF
+   IF Empty( cLNG := GetEnv( "HB_LANG" ) )
+      IF Empty( cLNG := hb_UserLang() )
+         cLNG := "en-EN"
       ENDIF
    ENDIF
 
@@ -5461,6 +5451,21 @@ STATIC PROCEDURE GetUILangCDP( /* @ */ cLNG, /* @ */ cCDP )
    ENDIF
    cLNG := StrTran( cLNG, "_", "-" )
    cCDP := Upper( SubStr( I_( "cdp=EN" ), Len( "cdp=" ) + 1 ) )
+
+   RETURN
+
+STATIC PROCEDURE SetUILang( hbmk )
+   LOCAL tmp
+
+   IF hbmk[ _HBMK_cUILNG ] == "en-EN"
+      hb_i18n_set( NIL )
+   ELSE
+      tmp := "${hb_root}hbmk2.${lng}.hbl"
+      tmp := StrTran( tmp, "${hb_root}", PathSepToSelf( DirAddPathSep( hb_DirBase() ) ) )
+      tmp := StrTran( tmp, "${lng}", StrTran( hbmk[ _HBMK_cUILNG ], "-", "_" ) )
+      hb_i18n_set( iif( hb_i18n_check( tmp := hb_MemoRead( tmp ) ), hb_i18n_restoretable( tmp ), NIL ) )
+      hb_cdpSelect( hbmk[ _HBMK_cUICDP ] )
+   ENDIF
 
    RETURN
 
@@ -5580,6 +5585,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       NIL,;
       { "-arch=<arch>"      , I_( "assume specific architecure. Same as HB_ARCHITECTURE envvar" ) },;
       { "-comp=<comp>"      , I_( "use specific C compiler. Same as HB_COMPILER envvar\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
+      { "-lang=<lang>"      , I_( "override default language. Similar to HB_LANG envvar." ) },;
       { "--version"         , I_( "display version header only" ) },;
       { "-info"             , I_( "turn on informational messages" ) },;
       { "-quiet"            , I_( "suppress all screen messages" ) } }

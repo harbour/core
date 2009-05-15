@@ -85,6 +85,7 @@ C_SOURCES=\
 	is.c         \
 	isprint.c    \
 	itemseri.c   \
+	lang.c       \
 	langapi.c    \
 	left.c       \
 	len.c        \

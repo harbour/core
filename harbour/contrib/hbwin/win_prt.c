@@ -625,7 +625,7 @@ HB_FUNC( WINPORTTIMEOUTS )
    if( ISNUM( 1 ) )
    {
       Tmp = s_ReadIntervalTimeout;
-      s_ReadIntervalTimeout = hb_parnl( 1 );
+      s_ReadIntervalTimeout = hb_parni( 1 );
       hb_stornl( Tmp, 1 );
    }
    else
@@ -634,7 +634,7 @@ HB_FUNC( WINPORTTIMEOUTS )
    if( ISNUM( 2 ) )
    {
       Tmp = s_ReadTotalTimeoutMultiplier;
-      s_ReadTotalTimeoutMultiplier = hb_parnl( 2 );
+      s_ReadTotalTimeoutMultiplier = hb_parni( 2 );
       hb_stornl( Tmp, 2 );
    }
    else
@@ -643,7 +643,7 @@ HB_FUNC( WINPORTTIMEOUTS )
    if( ISNUM( 3 ) )
    {
       Tmp = s_ReadTotalTimeoutConstant;
-      s_ReadTotalTimeoutConstant = hb_parnl( 3 );
+      s_ReadTotalTimeoutConstant = hb_parni( 3 );
       hb_stornl( Tmp, 3 );
    }
    else
@@ -652,7 +652,7 @@ HB_FUNC( WINPORTTIMEOUTS )
    if( ISNUM( 4 ) )
    {
       Tmp = s_WriteTotalTimeoutMultiplier;
-      s_WriteTotalTimeoutMultiplier = hb_parnl( 4 );
+      s_WriteTotalTimeoutMultiplier = hb_parni( 4 );
       hb_stornl( Tmp, 4 );
    }
    else
@@ -661,7 +661,7 @@ HB_FUNC( WINPORTTIMEOUTS )
    if( ISNUM( 5 ) )
    {
       Tmp = s_WriteTotalTimeoutConstant;
-      s_WriteTotalTimeoutConstant = hb_parnl( 5 );
+      s_WriteTotalTimeoutConstant = hb_parni( 5 );
       hb_stornl( Tmp, 5 );
    }
    else
@@ -673,8 +673,8 @@ HB_FUNC( WINPORTTIMEOUTS )
 
 HB_FUNC( WINPORTBUFFERS )
 {
-   s_InQueue = hb_parnl( 1 );
-   s_OutQueue = hb_parnl( 2 );
+   s_InQueue = hb_parni( 1 );
+   s_OutQueue = hb_parni( 2 );
 }
 
 
