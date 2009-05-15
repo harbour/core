@@ -5168,14 +5168,14 @@ STATIC PROCEDURE RebuildPO( hbmk, aPOTIN )
    ENDIF
 
    IF ! Empty( aNew )
-      IF Empty( hbmk[ _HBMK_aLNG ] )
+      IF Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ hbmk[ _HBMK_cPO ] )
          hbmk_OutStd( hb_StrFormat( I_( "Created .po file '%1$s'" ), hbmk[ _HBMK_cPO ] ) )
       ELSE
          hbmk_OutStd( hb_StrFormat( I_( "Created .po file '%1$s' for language(s): %2$s" ), hbmk[ _HBMK_cPO ], ArrayToList( aNew, "," ) ) )
       ENDIF
    ENDIF
    IF ! Empty( aUpd )
-      IF Empty( hbmk[ _HBMK_aLNG ] )
+      IF Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ hbmk[ _HBMK_cPO ] )
          hbmk_OutStd( hb_StrFormat( I_( "Rebuilt .po file '%1$s'" ), hbmk[ _HBMK_cPO ] ) )
       ELSE
          hbmk_OutStd( hb_StrFormat( I_( "Rebuilt .po file '%1$s' for language(s): %2$s" ), hbmk[ _HBMK_cPO ], ArrayToList( aUpd, "," ) ) )
@@ -5196,7 +5196,7 @@ STATIC PROCEDURE UpdatePO( hbmk, aPOTIN )
       AAdd( aUpd, cLNG )
    NEXT
 
-   IF Empty( hbmk[ _HBMK_aLNG ] )
+   IF Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ hbmk[ _HBMK_cPO ] )
       hbmk_OutStd( hb_StrFormat( I_( "Updated .po file '%1$s'" ), hbmk[ _HBMK_cPO ] ) )
    ELSE
       hbmk_OutStd( hb_StrFormat( I_( "Updated .po file '%1$s' for language(s): %2$s" ), hbmk[ _HBMK_cPO ], ArrayToList( aUpd, "," ) ) )
@@ -5212,6 +5212,7 @@ STATIC PROCEDURE MakeHBL( hbmk, cHBL )
    LOCAL cLNG
    LOCAL tLNG
    LOCAL aPO_TODO
+   LOCAL lUpdateNeeded
 
    LOCAL aNew := {}
 
@@ -5229,24 +5230,26 @@ STATIC PROCEDURE MakeHBL( hbmk, cHBL )
       FOR EACH cLNG IN iif( Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ cHBL ), { _LNG_MARKER }, hbmk[ _HBMK_aLNG ] )
          tLNG := NIL
          hb_FGetDateTime( StrTran( cHBL, _LNG_MARKER, cLNG ), @tLNG )
+         lUpdateNeeded := .F.
          aPO_TODO := {}
          FOR EACH cPO IN hbmk[ _HBMK_aPO ]
-            IF _LNG_MARKER $ cPO .AND. ( tLNG == NIL .OR. ( hb_FGetDateTime( StrTran( cPO, _LNG_MARKER, cLNG ), @tPO ) .AND. tPO > tLNG ) )
-               AAdd( aPO_TODO, StrTran( cPO, _LNG_MARKER, cLNG ) )
+            IF tLNG == NIL .OR. ( hb_FGetDateTime( StrTran( cPO, _LNG_MARKER, cLNG ), @tPO ) .AND. tPO > tLNG )
+               lUpdateNeeded := .T.
             ENDIF
+            AAdd( aPO_TODO, StrTran( cPO, _LNG_MARKER, cLNG ) )
          NEXT
-         IF ! Empty( aPO_TODO )
+         IF lUpdateNeeded
             IF hbmk[ _HBMK_lDEBUGI18N ]
-               hbmk_OutStd( hb_StrFormat( "po: %1$s -> %2$s", ArrayToList( aPO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
+               hbmk_OutStd( hb_StrFormat( "po: %1$s -> %2$s", ArrayToList( aPO_TODO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
             ENDIF
-            GenHbl( hbmk, aPO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
+            GenHbl( hbmk, aPO_TODO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
             AAdd( aNew, cLNG )
          ENDIF
       NEXT
    ENDIF
 
    IF ! Empty( aNew )
-      IF Empty( hbmk[ _HBMK_aLNG ] )
+      IF Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ cHBL )
          hbmk_OutStd( hb_StrFormat( I_( "Created .hbl file '%1$s'" ), cHBL ) )
       ELSE
          hbmk_OutStd( hb_StrFormat( I_( "Created .hbl file '%1$s' for language(s): %2$s" ), cHBL, ArrayToList( aNew, "," ) ) )
@@ -5334,7 +5337,7 @@ STATIC PROCEDURE AutoTrans( hbmk, cFileIn, aFiles, cFileOut )
 STATIC FUNCTION GenHbl( hbmk, aFiles, cFileOut, lEmpty )
    LOCAL cHblBody
    LOCAL pI18N
-   LOCAL aTrans := LoadPOTFiles( hbmk, aFiles, .F. )
+   LOCAL aTrans := LoadPOTFiles( hbmk, aFiles, NIL, .F. )
    LOCAL lRetVal := .F.
 
    IF ISARRAY( aTrans )
