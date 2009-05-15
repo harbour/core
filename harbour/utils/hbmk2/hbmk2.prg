@@ -35,7 +35,7 @@
  *    bash script with similar purpose for gcc family.
  *    entry point override method and detection code for gcc.
  *    rtlink/blinker link script parsers.
- *    POTMerge(), LoadPOTFiles(), LoadPOTFilesAsHash(), GenHbl() and AutoTrans().
+ *    POTMerge(), LoadPOTFilesAsHash(), GenHbl() and AutoTrans().
  *       (with local modifications by hbmk author)
  *
  * See COPYING for licensing terms.
@@ -95,7 +95,6 @@
 /* TODO: Further clean hbmk context var usage (hbmk2 scope, project scope,
          adding rest of variables). */
 /* TODO: Finish C++/C mode selection. */
-/* TODO: Incremental .pot to .po merge. */
 /* TODO: Add a way to fallback to stop if required headers couldn't be found.
          This needs a way to spec what key headers to look for. */
 
@@ -183,21 +182,22 @@ REQUEST hbmk_KEYW
 #define _HBMK_nCOMPR            37
 #define _HBMK_lRUN              38
 #define _HBMK_lINC              39
+#define _HBMK_lREBUILDPO        40
 
-#define _HBMK_aPO               40
-#define _HBMK_cHBL              41
-#define _HBMK_aLNG              42
-#define _HBMK_cPO               43
+#define _HBMK_aPO               41
+#define _HBMK_cHBL              42
+#define _HBMK_aLNG              43
+#define _HBMK_cPO               44
 
-#define _HBMK_lDEBUGTIME        44
-#define _HBMK_lDEBUGINC         45
-#define _HBMK_lDEBUGSTUB        46
-#define _HBMK_lDEBUGI18N        47
+#define _HBMK_lDEBUGTIME        45
+#define _HBMK_lDEBUGINC         46
+#define _HBMK_lDEBUGSTUB        47
+#define _HBMK_lDEBUGI18N        48
 
-#define _HBMK_cCCPATH           48
-#define _HBMK_cCCPREFIX         49
+#define _HBMK_cCCPATH           49
+#define _HBMK_cCCPREFIX         50
 
-#define _HBMK_MAX_              49
+#define _HBMK_MAX_              50
 
 PROCEDURE Main( ... )
    LOCAL aArgs := hb_AParams()
@@ -445,6 +445,7 @@ FUNCTION hbmk( aArgs )
    hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF
    hbmk[ _HBMK_lRUN ] := .F.
    hbmk[ _HBMK_lINC ] := .F.
+   hbmk[ _HBMK_lREBUILDPO ] := .F.
 
    hbmk[ _HBMK_lDEBUGTIME ] := .F.
    hbmk[ _HBMK_lDEBUGINC ] := .F.
@@ -1099,6 +1100,7 @@ FUNCTION hbmk( aArgs )
       CASE cParamL == "-beep-" .OR. ;
            cParamL == "-nobeep"          ; s_lBEEP      := .F.
       CASE cParamL == "-rebuild"         ; hbmk[ _HBMK_lINC ]       := .T. ; hbmk[ _HBMK_lREBUILD ] := .T.
+      CASE cParamL == "-rebuildpo"       ; hbmk[ _HBMK_lREBUILDPO ] := .T.
       CASE cParamL == "-clean"           ; hbmk[ _HBMK_lINC ]       := .T. ; s_lCLEAN := .T.
       CASE cParamL == "-inc"             ; hbmk[ _HBMK_lINC ]       := .T.
       CASE cParamL == "-inc-" .OR. ;
@@ -2873,8 +2875,14 @@ FUNCTION hbmk( aArgs )
          s_aRESSRC_TODO := s_aRESSRC
       ENDIF
 
-      IF ! Empty( hbmk[ _HBMK_cPO ] ) .AND. ! Empty( s_aPRG ) .AND. Len( s_aPRG_TODO ) > 0
-         MakePO( hbmk, ListDirExt( s_aPRG, cWorkDir, ".pot" ) )
+      IF hbmk[ _HBMK_lREBUILDPO ]
+         IF ! Empty( hbmk[ _HBMK_cPO ] ) .AND. ! Empty( s_aPRG )
+            RebuildPO( hbmk, ListDirExt( s_aPRG, cWorkDir, ".pot" ) )
+         ENDIF
+      ELSE
+         IF ! Empty( hbmk[ _HBMK_cPO ] ) .AND. Len( s_aPRG_TODO ) > 0
+            UpdatePO( hbmk, ListDirExt( s_aPRG_TODO, cWorkDir, ".pot" ) )
+         ENDIF
       ENDIF
 
       IF Len( hbmk[ _HBMK_aPO ] ) > 0 .AND. hbmk[ _HBMK_cHBL ] != NIL .AND. ! s_lCLEAN
@@ -5081,9 +5089,9 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
 
    RETURN .T.
 
-/* .hbl generation */
+/* .po generation */
 
-STATIC PROCEDURE MakePO( hbmk, aPOTIN )
+STATIC PROCEDURE RebuildPO( hbmk, aPOTIN )
    LOCAL cLNG
    LOCAL fhnd
    LOCAL cPOTemp
@@ -5098,10 +5106,10 @@ STATIC PROCEDURE MakePO( hbmk, aPOTIN )
          IF fhnd != F_ERROR
             FClose( fhnd )
             IF hbmk[ _HBMK_lDEBUGI18N ]
-               hbmk_OutStd( hb_StrFormat( "MakePO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
-               hbmk_OutStd( hb_StrFormat( "MakePO: temp unified .po: %1$s", cPOTemp ) )
+               hbmk_OutStd( hb_StrFormat( "RebuildPO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
+               hbmk_OutStd( hb_StrFormat( "RebuildPO: temp unified .po: %1$s", cPOTemp ) )
             ENDIF
-            POTMerge( hbmk, aPOTIN, cPOTemp )
+            POTMerge( hbmk, aPOTIN, NIL, cPOTemp )
          ELSE
             hbmk_OutStd( I_( "Error: Cannot create temporary unified .po file." ) )
          ENDIF
@@ -5109,13 +5117,13 @@ STATIC PROCEDURE MakePO( hbmk, aPOTIN )
       cPOCooked := StrTran( hbmk[ _HBMK_cPO ], _LNG_MARKER, cLNG )
       IF hb_FileExists( cPOCooked )
          IF hbmk[ _HBMK_lDEBUGI18N ]
-            hbmk_OutStd( hb_StrFormat( "MakePO: updating unified .po: %1$s", cPOCooked ) )
+            hbmk_OutStd( hb_StrFormat( "RebuildPO: updating unified .po: %1$s", cPOCooked ) )
          ENDIF
          AutoTrans( hbmk, cPOTemp, { cPOCooked }, cPOCooked )
          AAdd( aUpd, cLNG )
       ELSE
          IF hbmk[ _HBMK_lDEBUGI18N ]
-            hbmk_OutStd( hb_StrFormat( "MakePO: creating unified .po: %1$s", cPOCooked ) )
+            hbmk_OutStd( hb_StrFormat( "RebuildPO: creating unified .po: %1$s", cPOCooked ) )
          ENDIF
          hb_FCopy( cPOTemp, cPOCooked )
          AAdd( aNew, cLNG )
@@ -5135,13 +5143,35 @@ STATIC PROCEDURE MakePO( hbmk, aPOTIN )
    ENDIF
    IF ! Empty( aUpd )
       IF Empty( hbmk[ _HBMK_aLNG ] )
-         hbmk_OutStd( hb_StrFormat( I_( "Updated .po file '%1$s'" ), hbmk[ _HBMK_cPO ] ) )
+         hbmk_OutStd( hb_StrFormat( I_( "Rebuilt .po file '%1$s'" ), hbmk[ _HBMK_cPO ] ) )
       ELSE
-         hbmk_OutStd( hb_StrFormat( I_( "Updated .po file '%1$s' for language(s): %2$s" ), hbmk[ _HBMK_cPO ], ArrayToList( aUpd, "," ) ) )
+         hbmk_OutStd( hb_StrFormat( I_( "Rebuilt .po file '%1$s' for language(s): %2$s" ), hbmk[ _HBMK_cPO ], ArrayToList( aUpd, "," ) ) )
       ENDIF
    ENDIF
 
    RETURN
+
+/* .po update */
+
+STATIC PROCEDURE UpdatePO( hbmk, aPOTIN )
+   LOCAL cLNG
+
+   LOCAL aUpd := {}
+
+   FOR EACH cLNG IN iif( Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ hbmk[ _HBMK_cPO ] ), { _LNG_MARKER }, hbmk[ _HBMK_aLNG ] )
+      POTMerge( hbmk, aPOTIN, StrTran( hbmk[ _HBMK_cPO ], _LNG_MARKER, cLNG ), StrTran( hbmk[ _HBMK_cPO ], _LNG_MARKER, cLNG ) )
+      AAdd( aUpd, cLNG )
+   NEXT
+
+   IF Empty( hbmk[ _HBMK_aLNG ] )
+      hbmk_OutStd( hb_StrFormat( I_( "Updated .po file '%1$s'" ), hbmk[ _HBMK_cPO ] ) )
+   ELSE
+      hbmk_OutStd( hb_StrFormat( I_( "Updated .po file '%1$s' for language(s): %2$s" ), hbmk[ _HBMK_cPO ], ArrayToList( aUpd, "," ) ) )
+   ENDIF
+
+   RETURN
+
+/* .hbl generation */
 
 STATIC PROCEDURE MakeHBL( hbmk, cHBL )
    LOCAL cPO
@@ -5192,11 +5222,19 @@ STATIC PROCEDURE MakeHBL( hbmk, cHBL )
 
    RETURN
 
-STATIC FUNCTION LoadPOTFiles( hbmk, aFiles, lIgnoreError )
-   LOCAL aTrans := {}, aTrans2
+STATIC FUNCTION LoadPOTFiles( hbmk, aFiles, cFileBase, lIgnoreError )
+   LOCAL aTrans, aTrans2
    LOCAL hIndex
    LOCAL cErrorMsg
    LOCAL cFileName
+
+   IF ! Empty( cFileBase )
+      aTrans := __i18n_potArrayLoad( cFileBase, @cErrorMsg )
+   ENDIF
+
+   IF aTrans == NIL
+      aTrans := {}
+   ENDIF
 
    FOR EACH cFileName IN aFiles
       aTrans2 := __i18n_potArrayLoad( cFileName, @cErrorMsg )
@@ -5237,9 +5275,9 @@ STATIC FUNCTION LoadPOTFilesAsHash( hbmk, aFiles )
 
    RETURN hTrans
 
-STATIC PROCEDURE POTMerge( hbmk, aFiles, cFileOut )
+STATIC PROCEDURE POTMerge( hbmk, aFiles, cFileBase, cFileOut )
    LOCAL cErrorMsg
-   LOCAL aTrans := LoadPOTFiles( hbmk, aFiles, .T. )
+   LOCAL aTrans := LoadPOTFiles( hbmk, aFiles, cFileBase, .T. )
 
    IF aTrans != NIL
       IF !__i18n_potArraySave( cFileOut, aTrans, @cErrorMsg )
@@ -5253,7 +5291,7 @@ STATIC PROCEDURE AutoTrans( hbmk, cFileIn, aFiles, cFileOut )
    LOCAL cErrorMsg
 
    IF !__I18N_potArraySave( cFileOut, ;
-         __I18N_potArrayTrans( LoadPOTFiles( hbmk, { cFileIn }, .F. ), ;
+         __I18N_potArrayTrans( LoadPOTFiles( hbmk, {}, cFileIn, .F. ), ;
                                LoadPOTFilesAsHash( hbmk, aFiles ) ), @cErrorMsg )
       hbmk_OutErr( hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
    ENDIF
@@ -5567,6 +5605,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-hbl[=<output>]"   , I_( "output .hbl filename. ${lng} macro is accepted in filename" ) },;
       { "-lng=<languages>"  , I_( "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ) },;
       { "-po=<output>"      , I_( "create/update .po file from source. Merge it with previous .po file of the same name" ) },;
+      { "-rebuildpo"        , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
       { "-hbrun"            , I_( "run target" ) },;
       { "-hbcmp|-clipper"   , I_( "stop after creating the object files\ncreate link/copy hbmk to hbcmp/clipper for the same effect" ) },;
