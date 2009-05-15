@@ -148,7 +148,7 @@ FUNCTION __I18N_POTARRAYLOAD( cFile, cErrorMsg )
                ELSE
                   aItem[ _I18N_SOURCE ] += " "
                ENDIF
-               aItem[ _I18N_SOURCE ] += ltrim( substr( cLine, 3 ) )
+               aItem[ _I18N_SOURCE ] += strtran( ltrim( substr( cLine, 3 ) ), "\", "/" )
 /*
             ELSEIF cLine = "#,"   // flags
                cLine := ltrim( substr( cLine, 3 ) )
