@@ -549,8 +549,6 @@ TROUBLESHOOTING
      versions when building Harbour.
    - Remove all old, unnecessary envvar settings from your environment.
      Use only those documented in this file.
-   - Pay attention to CLIPPER and HARBOUR envvars, for a Harbour build
-     it's best to clear them.
    - Try to do no or only small modifications at once to command examples
      included in this file. If it doesn't work, fall back to documented
      examples as is.
