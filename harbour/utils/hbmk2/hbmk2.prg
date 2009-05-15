@@ -5237,9 +5237,9 @@ STATIC PROCEDURE MakeHBL( hbmk, cHBL )
          NEXT
          IF ! Empty( aPO_TODO )
             IF hbmk[ _HBMK_lDEBUGI18N ]
-               hbmk_OutStd( hb_StrFormat( "po: %1$s -> %2$s", ArrayToList( aPO_TODO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
+               hbmk_OutStd( hb_StrFormat( "po: %1$s -> %2$s", ArrayToList( aPO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
             ENDIF
-            GenHbl( hbmk, aPO_TODO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
+            GenHbl( hbmk, aPO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
             AAdd( aNew, cLNG )
          ENDIF
       NEXT
