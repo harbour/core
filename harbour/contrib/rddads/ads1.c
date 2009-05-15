@@ -2055,8 +2055,8 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                u32Length = pField->uiType == HB_FT_STRING ? pField->uiLen : 0;
                memset( pBuffer, ' ', u32Length );
             }
-            hb_itemPutCL( pItem, ( char * ) pBuffer, u32Length );
          }
+         hb_itemPutCL( pItem, ( char * ) pBuffer, u32Length );
          break;
 
       case HB_FT_TIME:
