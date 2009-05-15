@@ -8,4 +8,4 @@ hbmk2.prg
 
 hbmk2.${lng}.po
 -hbl=hbmk2.${lng}.hbl
--lng=hu_HU
+-lng=hu_HU,pt_BR

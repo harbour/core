@@ -5514,7 +5514,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
            "http://www.harbour-project.org/" + hb_osNewLine() )
 
    IF !( hbmk[ _HBMK_cUILNG ] == "en-EN" )
-      OutStd( hb_StrFormat( I_( "English (%1$s) translation: (add your name here)" ), hbmk[ _HBMK_cUILNG ] ), hb_osNewLine() )
+      OutStd( hb_StrFormat( I_( "Translation (%1$s): (add your name here)" ), hbmk[ _HBMK_cUILNG ] ), hb_osNewLine() )
    ENDIF
 
    OutStd( hb_osNewLine() )

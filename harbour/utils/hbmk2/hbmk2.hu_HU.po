@@ -234,7 +234,7 @@ msgstr "Haszn lat:"
 
 #: hbmk2.prg:5450
 #, c-format
-msgid "English (%1$s) translation: (add your name here)"
+msgid "Translation (%1$s): (add your name here)"
 msgstr "Magyar (%1$s) ford¡t s: Copyright (c) 2009, Szak ts Viktor"
 
 #: hbmk2.prg:5556
