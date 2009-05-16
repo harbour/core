@@ -14,6 +14,7 @@ DIRS=\
 	sddmy \
 	sddpg \
 	sddfb \
+	sddodbc \
 
 include $(TOP)$(ROOT)config/lib.cf
 include $(TOP)$(ROOT)config/dir.cf

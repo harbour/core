@@ -2,4 +2,4 @@
 # $Id$
 #
 
-libs=rddsql sddfb sddmy sddpg
+libs=rddsql

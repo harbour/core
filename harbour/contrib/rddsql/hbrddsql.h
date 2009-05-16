@@ -154,6 +154,7 @@ typedef struct _SQLDDCONNECTION
 {
    struct _SDDNODE *    pSDD;
    void*                hConnection;
+   void*                hCargo;
    int                  iError;
    char*                szError;
    char*                szQuery;

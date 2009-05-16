@@ -56,6 +56,8 @@
 #include "hbrddsql.h"
 #include "rddsys.ch"
 
+#include "hbtrace.h"
+
 
 #define SUPERTABLE ( &sqlbaseSuper )
 
@@ -778,7 +780,6 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnec
    SQLDDCONNECTION*   pConn;
 
    HB_SYMBOL_UNUSED( pRDD );
-   /* TraceLog( NULL, "RDDINFO index: %d type:%04X\n", (int) uiIndex, pItem->type ); */
 
    ulConn = ulConnect ? ulConnect : s_ulConnectionCurrent;
    if ( ulConn > 0 && ulConn < s_ulConnectionCount && s_pConnection[ --ulConn ].hConnection )
