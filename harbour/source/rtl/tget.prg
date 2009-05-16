@@ -1255,7 +1255,6 @@ METHOD unTransform() CLASS GET
    LOCAL nFor
    LOCAL lMinus
    LOCAL lHasDec
-   LOCAL cChar
 
    IF ::hasFocus
 
@@ -1344,8 +1343,8 @@ METHOD unTransform() CLASS GET
             cBuffer := PadL( StrTran( cBuffer, " ", "" ), Len( cBuffer ) )
 
             IF lMinus
-               FOR EACH cChar IN cBuffer
-                  IF IsDigit( cChar ) .OR. cChar == "."
+               FOR nFor := 1 TO Len( cBuffer )
+                  IF IsDigit( SubStr( cBuffer, nFor, 1 ) ) .OR. SubStr( cBuffer, nFor, 1 ) == "."
                      EXIT
                   ENDIF
                NEXT
