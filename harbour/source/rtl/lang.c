@@ -56,22 +56,17 @@
 
 HB_FUNC( HB_USERLANG )
 {
-   char * ietf = NULL;
-   BOOL bFree = FALSE;
+   char * ietf;
+   BOOL bFree;
 
+   ietf = hb_getenv( "LC_ALL" );
    if( ! ietf )
    {
-      bFree = TRUE;
-      ietf = hb_getenv( "LC_ALL" );
+      ietf = hb_getenv( "LC_MESSAGES" );
       if( ! ietf )
-      {
-         ietf = hb_getenv( "LC_MESSAGES" );
-         if( ! ietf )
-            ietf = hb_getenv( "LANG" );
-      }
-      if( ! ietf )
-         bFree = FALSE;
+         ietf = hb_getenv( "LANG" );
    }
+   bFree = ( ietf != NULL );
 
 #if defined(HB_OS_WIN)
    if( ! ietf )
