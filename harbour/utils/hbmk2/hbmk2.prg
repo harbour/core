@@ -876,6 +876,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                FOR tmp := 1 TO Len( aCOMPDET )
                   IF ! Empty( tmp1 := Eval( aCOMPDET[ tmp ][ _COMPDET_bBlock ] ) )
                      hbmk[ _HBMK_cCOMP ] := aCOMPDET[ tmp ][ _COMPDET_cCOMP ]
+                     /* NOTE: Hack to tweak bcc setup by hbmk2 to include one
+                              compiler lib dir to lib search path. */
                      IF hbmk[ _HBMK_cCOMP ] == "bcc"
                         AAdd( hbmk[ _HBMK_aLIBPATH ], _BCC_PSDK_LIBPATH( tmp1 ) )
                      ENDIF
@@ -913,8 +915,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             hbmk_OutErr( hb_StrFormat( I_( "Error: Compiler value unknown: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
             RETURN 2
          ENDIF
+         /* NOTE: Hack to tweak bcc setup by hbmk2 to include one
+                  compiler lib dir to lib search path. */
          IF hbmk[ _HBMK_cCOMP ] == "bcc"
-            AAdd( hbmk[ _HBMK_aLIBPATH ], _BCC_PSDK_LIBPATH( _BCC_BIN_DETECT() ) )
+            IF ! Empty( tmp1 := _BCC_BIN_DETECT() )
+               AAdd( hbmk[ _HBMK_aLIBPATH ], _BCC_PSDK_LIBPATH( tmp1 ) )
+            ENDIF
          ENDIF
          IF hbmk[ _HBMK_cARCH ] $ "win|wce"
             /* Detect cross platform CCPREFIX and CCPATH if embedded MinGW installation is detected */
