@@ -154,6 +154,9 @@ REQUEST hbmk_KEYW
 
 #define _WORKDIR_DEF_           ".hbmk"
 
+#define _BCC_BIN_DETECT()       FindInPath( "bcc32" )
+#define _BCC_PSDK_LIBPATH( p )  PathNormalize( FN_DirGet( p ) + ".." + hb_osPathSeparator() + "Lib" + hb_osPathSeparator() + "PSDK" )
+
 #define _HBMK_lQuiet            1
 #define _HBMK_lInfo             2
 #define _HBMK_cARCH             3
@@ -708,8 +711,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       OTHERWISE     ; cDynLibExt := ".so"
       ENDSWITCH
    CASE hbmk[ _HBMK_cARCH ] == "dos"
-      aCOMPDET := { { {|| FindInPath( "gcc"      ) != NIL }, "djgpp"   },;
-                    { {|| FindInPath( "wpp386"   ) != NIL }, "owatcom" } } /* TODO: Add full support for wcc386 */
+      aCOMPDET := { { {|| FindInPath( "gcc"      ) }, "djgpp"   },;
+                    { {|| FindInPath( "wpp386"   ) }, "owatcom" } } /* TODO: Add full support for wcc386 */
       aCOMPSUP := { "djgpp", "gcc", "owatcom" }
       cBin_CompPRG := "harbour" + s_cHBPOSTFIX + ".exe"
       s_aLIBHBGT := { "gtdos" }
@@ -723,8 +726,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       cOpt_CprsMin := "-1"
       cOpt_CprsMax := "-9"
    CASE hbmk[ _HBMK_cARCH ] == "os2"
-      aCOMPDET := { { {|| FindInPath( "gcc"      ) != NIL }, "gcc"     },;
-                    { {|| FindInPath( "wpp386"   ) != NIL }, "owatcom" } } /* TODO: Add full support for wcc386 */
+      aCOMPDET := { { {|| FindInPath( "gcc"      ) }, "gcc"     },;
+                    { {|| FindInPath( "wpp386"   ) }, "owatcom" } } /* TODO: Add full support for wcc386 */
       aCOMPSUP := { "gcc", "owatcom" }
       cBin_CompPRG := "harbour" + s_cHBPOSTFIX + ".exe"
       s_aLIBHBGT := { "gtos2" }
@@ -736,19 +739,21 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    CASE hbmk[ _HBMK_cARCH ] == "win"
       /* Order is significant.
          owatcom also keeps a cl.exe in its binary dir. */
-      aCOMPDET := { { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" ) != NIL }, "mingw"   },; /* TODO: Add full support for g++ */
-                    { {|| FindInPath( "wpp386"   ) != NIL .AND. ;
-                          ! Empty( GetEnv( "WATCOM" ) ) }, "owatcom" },; /* TODO: Add full support for wcc386 */
-                    { {|| FindInPath( "ml64"     ) != NIL }, "msvc64"  },;
-                    { {|| FindInPath( "cl"       ) != NIL .AND. ;
-                          FindInPath( "wpp386"   ) == NIL }, "msvc"    },;
-                    { {|| FindInPath( "bcc32"    ) != NIL }, "bcc"     },;
-                    { {|| FindInPath( "porc64"   ) != NIL }, "pocc64"  },;
-                    { {|| FindInPath( "pocc"     ) != NIL }, "pocc"    },;
-                    { {|| ( tmp1 := FindInPath( "icl" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ) }, "iccia64" },;
-                    { {|| FindInPath( "icl"      ) != NIL }, "icc"     },;
-                    { {|| FindInPath( "cygstart" ) != NIL }, "cygwin"  },;
-                    { {|| FindInPath( "xcc"      ) != NIL }, "xcc"     } }
+      aCOMPDET := { { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" ) }, "mingw"   },; /* TODO: Add full support for g++ */
+                    { {|| iif( ! Empty( GetEnv( "WATCOM" ) ),;
+                               FindInPath( "wpp386"   ),;
+                               NIL )               }, "owatcom" },; /* TODO: Add full support for wcc386 */
+                    { {|| FindInPath( "ml64"     ) }, "msvc64"  },;
+                    { {|| iif( FindInPath( "wpp386"   ) == NIL,;
+                               FindInPath( "cl"       ),;
+                               NIL )                      }, "msvc"    },;
+                    { {|| _BCC_BIN_DETECT()        }, "bcc"     },;
+                    { {|| FindInPath( "porc64"   ) }, "pocc64"  },;
+                    { {|| FindInPath( "pocc"     ) }, "pocc"    },;
+                    { {|| iif( ( tmp1 := FindInPath( "icl" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ), tmp1, NIL ) }, "iccia64" },;
+                    { {|| FindInPath( "icl"      ) }, "icc"     },;
+                    { {|| FindInPath( "cygstart" ) }, "cygwin"  },;
+                    { {|| FindInPath( "xcc"      ) }, "xcc"     } }
       aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "icc", "pocc", "xcc", "cygwin",;
                     "mingw64", "msvc64", "msvcia64", "iccia64", "pocc64" }
       cBin_CompPRG := "harbour" + s_cHBPOSTFIX + ".exe"
@@ -766,9 +771,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       s_aLIBSYSCORE := { "kernel32", "user32", "gdi32", "advapi32", "ws2_32" }
       s_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "ole32", "oleaut32", "uuid", "mpr", "winmm", "mapi32", "imm32", "msimg32" }
    CASE hbmk[ _HBMK_cARCH ] == "wce"
-      aCOMPDET := { { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" ) != NIL }, "mingwarm" },;
-                    { {|| FindInPath( "cl"       ) != NIL }, "msvcarm" },;
-                    { {|| FindInPath( "pocc"     ) != NIL }, "poccarm" } }
+      aCOMPDET := { { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" ) }, "mingwarm" },;
+                    { {|| FindInPath( "cl"       ) }, "msvcarm" },;
+                    { {|| FindInPath( "pocc"     ) }, "poccarm" } }
       aCOMPSUP := { "mingwarm", "msvcarm", "poccarm" }
       cBin_CompPRG := "harbour" + s_cHBPOSTFIX + ".exe"
       s_aLIBHBGT := { "gtwvt", "gtgui" }
@@ -848,6 +853,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
           { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } }
    ENDIF
 
+   hbmk[ _HBMK_aLIBPATH ] := {}
+   hbmk[ _HBMK_aINCPATH ] := {}
+
    /* Autodetect compiler */
 
    IF lStopAfterHarbour
@@ -866,8 +874,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             IF Empty( hbmk[ _HBMK_cCOMP ] ) .AND. ! Empty( aCOMPDET )
                /* Check compilers */
                FOR tmp := 1 TO Len( aCOMPDET )
-                  IF Eval( aCOMPDET[ tmp ][ _COMPDET_bBlock ] )
+                  IF ! Empty( tmp1 := Eval( aCOMPDET[ tmp ][ _COMPDET_bBlock ] ) )
                      hbmk[ _HBMK_cCOMP ] := aCOMPDET[ tmp ][ _COMPDET_cCOMP ]
+                     IF hbmk[ _HBMK_cCOMP ] == "bcc"
+                        AAdd( hbmk[ _HBMK_aLIBPATH ], _BCC_PSDK_LIBPATH( tmp1 ) )
+                     ENDIF
                      EXIT
                   ENDIF
                NEXT
@@ -902,6 +913,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             hbmk_OutErr( hb_StrFormat( I_( "Error: Compiler value unknown: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
             RETURN 2
          ENDIF
+         IF hbmk[ _HBMK_cCOMP ] == "bcc"
+            AAdd( hbmk[ _HBMK_aLIBPATH ], _BCC_PSDK_LIBPATH( _BCC_BIN_DETECT() ) )
+         ENDIF
          IF hbmk[ _HBMK_cARCH ] $ "win|wce"
             /* Detect cross platform CCPREFIX and CCPATH if embedded MinGW installation is detected */
             FOR tmp := 1 TO Len( aCOMPDET_LOCAL )
@@ -919,9 +933,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    ENDIF
 
    /* Finish detecting bin/lib/include dirs */
-
-   hbmk[ _HBMK_aLIBPATH ] := {}
-   hbmk[ _HBMK_aINCPATH ] := {}
 
    IF Empty( s_cHB_BIN_INSTALL )
       s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "bin"

@@ -9,7 +9,7 @@
 libs=hbbmcdx hbbtree hbclipsm hbcrypt hbct hbgt hbmisc hbmzip hbnf hbvpdf hbziparc rddsql xhb
 
 # contribs portable, with external dependencies:
-libs=hbcurl hbfbird hbgd hbmsql hbmysql hbpgsql sddfb sddmy sddpg
+libs=hbcurl hbfbird hbgd hbmsql hbmysql hbpgsql hbqt sddfb sddmy sddpg
 
 # contribs with limited availability (some with external dependencies):
 {!pocc&!xcc&!dmc&!owatcom}libs=gtalleg
