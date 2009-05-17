@@ -146,6 +146,7 @@ static void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
 static void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL );
 static void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction, HB_COMP_DECL );
 static HB_EXPR_PTR hb_compExprReduceList( HB_EXPR_PTR pExpr, HB_COMP_DECL );
+static BOOL hb_compExprIsMemvarAlias( const char *szAlias );
 
 
 const HB_EXPR_FUNC_PTR hb_comp_ExprTable[ HB_EXPR_COUNT ] = {
@@ -838,11 +839,8 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
          }
          else if( pExp->ExprType == HB_ET_ALIASVAR )
          {
-            const char *szAlias = pExp->value.asAlias.pAlias->value.asSymbol;
-            int iLen = strlen( szAlias );
-            if( ( iLen == 1 || ( iLen >= 4 && iLen <= 6 ) ) &&
-                memcmp( szAlias, "MEMVAR", iLen ) == 0 &&
-                pExp->value.asAlias.pVar->ExprType == HB_ET_VARIABLE )
+            if( pExp->value.asAlias.pVar->ExprType == HB_ET_VARIABLE &&
+                hb_compExprIsMemvarAlias( pExp->value.asAlias.pAlias->value.asSymbol ) )
             {  /* @M-> @MEMVAR-> or @MEMVA-> or @MEMV-> */
                HB_GEN_FUNC1( PushMemvarRef, pExp->value.asAlias.pVar->value.asSymbol );
                break;
@@ -1257,6 +1255,28 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
       {
          HB_EXPR_PTR pIdx;
 
+         /* Clipper forces memvar context for undeclared variables used with
+          * array index, f.e.: var[ n ]
+          * but not for code like: ( var )[ n ]
+          */
+         if( pSelf->value.asList.pExprList->ExprType == HB_ET_VARIABLE )
+         {
+#if !defined( HB_MACRO_SUPPORT )
+            int iScope;
+            hb_compVariableFind( HB_COMP_PARAM, pSelf->value.asList.pExprList->value.asSymbol, NULL, &iScope );
+            if( iScope == HB_VS_UNDECLARED )
+            {
+               hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_MEMVAR_ASSUMED,
+                                  pSelf->value.asList.pExprList->value.asSymbol, NULL );
+#else
+            if( hb_macroLocalVarGetPos( pSelf->value.asList.pExprList->value.asSymbol, HB_COMP_PARAM ) == 0 )
+            {
+#endif
+               pSelf->value.asList.pExprList = hb_compExprNewAliasVar(
+                              hb_compExprNewAlias( "MEMVAR", HB_COMP_PARAM ),
+                              pSelf->value.asList.pExprList, HB_COMP_PARAM );
+            }
+         }
          pSelf->value.asList.pExprList = HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_REDUCE );
          pSelf->value.asList.pIndex = HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_REDUCE );
          pIdx = pSelf->value.asList.pIndex;
@@ -1368,33 +1388,40 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
 
          if( pSelf->value.asList.reference && HB_SUPPORT_ARRSTR )
          {
-            if( pSelf->value.asList.pExprList->ExprType == HB_ET_VARIABLE )
+            HB_EXPR_PTR pList = pSelf->value.asList.pExprList;
+            if( pList->ExprType == HB_ET_VARIABLE )
             {
-               pSelf->value.asList.pExprList->ExprType = HB_ET_VARREF;
-               HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
-               pSelf->value.asList.pExprList->ExprType = HB_ET_VARIABLE;
+               pList->ExprType = HB_ET_VARREF;
+               HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
+               pList->ExprType = HB_ET_VARIABLE;
             }
-            else if( pSelf->value.asList.pExprList->ExprType == HB_ET_SEND )
+            else if( pList->ExprType == HB_ET_ALIASVAR &&
+                     pList->value.asAlias.pVar->ExprType == HB_ET_VARIABLE &&
+                     hb_compExprIsMemvarAlias( pList->value.asAlias.pAlias->value.asSymbol ) )
             {
-               hb_compExprPushSendPop( pSelf->value.asList.pExprList, HB_COMP_PARAM );
+               HB_GEN_FUNC1( PushMemvarRef, pList->value.asAlias.pVar->value.asSymbol );
+            }
+            else if( pList->ExprType == HB_ET_SEND )
+            {
+               hb_compExprPushSendPop( pList, HB_COMP_PARAM );
                HB_GEN_FUNC1( PCode1, HB_P_PUSHOVARREF );
             }
-            else if( pSelf->value.asList.pExprList->ExprType == HB_ET_ARRAYAT &&
-                     !pSelf->value.asList.pExprList->value.asList.reference )
+            else if( pList->ExprType == HB_ET_ARRAYAT &&
+                     !pList->value.asList.reference )
             {
-               pSelf->value.asList.pExprList->value.asList.reference = TRUE;
-               HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
-               pSelf->value.asList.pExprList->value.asList.reference = FALSE;
+               pList->value.asList.reference = TRUE;
+               HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
+               pList->value.asList.reference = FALSE;
             }
-            else if( pSelf->value.asList.pExprList->ExprType == HB_ET_MACRO &&
-                     pSelf->value.asList.pExprList->value.asMacro.SubType == HB_ET_MACRO_VAR )
+            else if( pList->ExprType == HB_ET_MACRO &&
+                     pList->value.asMacro.SubType == HB_ET_MACRO_VAR )
             {
-               pSelf->value.asList.pExprList->value.asMacro.SubType = HB_ET_MACRO_REFER;
-               HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
-               pSelf->value.asList.pExprList->value.asMacro.SubType = HB_ET_MACRO_VAR;
+               pList->value.asMacro.SubType = HB_ET_MACRO_REFER;
+               HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
+               pList->value.asMacro.SubType = HB_ET_MACRO_VAR;
             }
             else
-               HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
+               HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
          }
          else
             HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
@@ -1432,33 +1459,40 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          /* arrays also are passed by reference */
          if( HB_SUPPORT_ARRSTR )
          {
-            if( pSelf->value.asList.pExprList->ExprType == HB_ET_VARIABLE )
+            HB_EXPR_PTR pList = pSelf->value.asList.pExprList;
+            if( pList->ExprType == HB_ET_VARIABLE )
             {
-               pSelf->value.asList.pExprList->ExprType = HB_ET_VARREF;
-               HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
-               pSelf->value.asList.pExprList->ExprType = HB_ET_VARIABLE;
+               pList->ExprType = HB_ET_VARREF;
+               HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
+               pList->ExprType = HB_ET_VARIABLE;
             }
-            else if( pSelf->value.asList.pExprList->ExprType == HB_ET_SEND )
+            else if( pList->ExprType == HB_ET_ALIASVAR &&
+                     pList->value.asAlias.pVar->ExprType == HB_ET_VARIABLE &&
+                     hb_compExprIsMemvarAlias( pList->value.asAlias.pAlias->value.asSymbol ) )
             {
-               hb_compExprPushSendPop( pSelf->value.asList.pExprList, HB_COMP_PARAM );
+               HB_GEN_FUNC1( PushMemvarRef, pList->value.asAlias.pVar->value.asSymbol );
+            }
+            else if( pList->ExprType == HB_ET_SEND )
+            {
+               hb_compExprPushSendPop( pList, HB_COMP_PARAM );
                HB_GEN_FUNC1( PCode1, HB_P_PUSHOVARREF );
             }
-            else if( pSelf->value.asList.pExprList->ExprType == HB_ET_ARRAYAT &&
-                     !pSelf->value.asList.pExprList->value.asList.reference )
+            else if( pList->ExprType == HB_ET_ARRAYAT &&
+                     !pList->value.asList.reference )
             {
-               pSelf->value.asList.pExprList->value.asList.reference = TRUE;
-               HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
-               pSelf->value.asList.pExprList->value.asList.reference = FALSE;
+               pList->value.asList.reference = TRUE;
+               HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
+               pList->value.asList.reference = FALSE;
             }
-            else if( pSelf->value.asList.pExprList->ExprType == HB_ET_MACRO &&
-                     pSelf->value.asList.pExprList->value.asMacro.SubType == HB_ET_MACRO_VAR )
+            else if( pList->ExprType == HB_ET_MACRO &&
+                     pList->value.asMacro.SubType == HB_ET_MACRO_VAR )
             {
-               pSelf->value.asList.pExprList->value.asMacro.SubType = HB_ET_MACRO_REFER;
-               HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
-               pSelf->value.asList.pExprList->value.asMacro.SubType = HB_ET_MACRO_VAR;
+               pList->value.asMacro.SubType = HB_ET_MACRO_REFER;
+               HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
+               pList->value.asMacro.SubType = HB_ET_MACRO_VAR;
             }
             else
-               HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
+               HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
          }
          else
             HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
@@ -5239,4 +5273,12 @@ static HB_EXPR_PTR hb_compExprReduceList( HB_EXPR_PTR pList, HB_COMP_DECL )
       pExpr  = pNext;
    }
    return pList;
+}
+
+static BOOL hb_compExprIsMemvarAlias( const char *szAlias )
+{
+   int iLen = strlen( szAlias );
+   /* @M-> @MEMVAR-> or @MEMVA-> or @MEMV-> */
+   return ( iLen == 1 || ( iLen >= 4 && iLen <= 6 ) ) &&
+          memcmp( szAlias, "MEMVAR", iLen ) == 0;
 }

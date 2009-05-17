@@ -254,6 +254,28 @@ static void hb_compI18nEscapeString( FILE* file, const char* szText )
    }
 }
 
+static char * hb_compI18nFileName( char* szBuffer, const char* szFileName )
+{
+   UINT ui = 0;
+   char ch;
+
+   do
+   {
+      if( ui == HB_PATH_MAX - 1 )
+         ch = '\0';
+      else
+      {
+         ch = szFileName[ ui ];
+         if( ch == '\\' )
+            ch = '/';
+      }
+      szBuffer[ ui++ ] = ch;
+   }
+   while( ch );
+
+   return szBuffer;
+}
+
 BOOL hb_compI18nSave( HB_COMP_DECL, BOOL fFinal )
 {
    PHB_I18NTABLE    pI18n;
@@ -321,10 +343,12 @@ BOOL hb_compI18nSave( HB_COMP_DECL, BOOL fFinal )
    {
       pString = &pI18n->pString[ uiIndex ];
 
-      fprintf( file, "#: %s:%d", pString->pPos.szFile, pString->pPos.uiLine );
+      fprintf( file, "#: %s:%d", hb_compI18nFileName( szFileName, pString->pPos.szFile ),
+                                 pString->pPos.uiLine );
 
       for( uiLine = 0; uiLine < pString->uiPosCount; ++uiLine )
-         fprintf( file, " %s:%d", pString->pPosLst[ uiLine ].szFile, pString->pPosLst[ uiLine ].uiLine );
+         fprintf( file, " %s:%d", hb_compI18nFileName( szFileName, pString->pPosLst[ uiLine ].szFile ),
+                                  pString->pPosLst[ uiLine ].uiLine );
 
       fprintf( file, "\n#, c-format\n" );
 

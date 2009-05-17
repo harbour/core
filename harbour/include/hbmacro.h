@@ -157,6 +157,7 @@ extern void hb_macroGenPushString( const char * szText, ULONG ulStrLen, HB_COMP_
 extern void hb_macroCodeBlockStart( HB_COMP_DECL );
 extern void hb_macroCodeBlockEnd( HB_COMP_DECL );
 
+extern int  hb_macroLocalVarGetPos( const char * szVarName, HB_COMP_DECL );
 extern BOOL hb_macroIsValidMacroText( const char *, ULONG );
 
 #endif /* HB_MACRO_SUPPORT */

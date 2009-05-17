@@ -520,7 +520,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
 
             case HB_FT_DATE:
             {
-               DATE_STRUCT  val = {0};
+               DATE_STRUCT  val = {0,0,0};
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_DATE, &val, sizeof( val ), &iLen ) ) )
                {
                   pItem = hb_itemPutD( NULL, val.year, val.month, val.day );
@@ -530,7 +530,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
 
             case HB_FT_TIME:
             {
-               TIME_STRUCT  val = {0};
+               TIME_STRUCT  val = {0,0,0};
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_TIME, &val, sizeof( val ), &iLen ) ) )
                {
                   pItem = hb_itemPutTDT( NULL, 0, hb_timeEncode( val.hour, val.minute, val.second, 0 ) );
@@ -540,7 +540,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
 
             case HB_FT_DAYTIME:
             {
-               TIMESTAMP_STRUCT  val = {0};
+               TIMESTAMP_STRUCT  val = {0,0,0,0,0,0,0};
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_TIMESTAMP, &val, sizeof( val ), &iLen ) ) )
                {
                   pItem = hb_itemPutTDT( NULL, hb_dateEncode( val.year, val.month, val.day ), 

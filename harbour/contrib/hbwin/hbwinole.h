@@ -92,7 +92,8 @@
 
 HB_EXTERN_BEGIN
 
-HB_EXPORT void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant );
-HB_EXPORT void hb_oleInit( void );
+HB_EXPORT void     hb_oleInit( void );
+HB_EXPORT void     hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant );
+HB_EXPORT PHB_ITEM hb_oleItemPut( PHB_ITEM pItem, IDispatch* pDisp );
 
 HB_EXTERN_END

@@ -5325,6 +5325,7 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
    char szResult[ 65 ];
    char * pSrc, * pDst, * szPlatform;
    int iYear, iMonth, iDay, i;
+   LONG lDate, lTime;
 
    /* __PLATFORM__* */
    pSrc = szPlatform = hb_verPlatform();
@@ -5376,6 +5377,17 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
    szResult[ 9 ] = '"';
    szResult[ 10 ] = '\0';
    hb_pp_addDefine( pState, "__TIME__", szResult );
+
+   /* __TIMESTAMP__ */
+   szResult[ 0 ] = 't';
+   szResult[ 1 ] = '"';
+   hb_timeStampGet( &lDate, &lTime );
+   hb_timeStampStr( szResult + 2, lDate, lTime );
+   i = ( int ) strlen( szResult );
+   szResult[ i++ ] = '"';
+   szResult[ i ] = '\0';
+   hb_pp_addDefine( pState, "__TIMESTAMP__", szResult );
+
    hb_pp_addDefine( pState, "__FILE__", &s_pp_dynamicResult );
    hb_pp_addDefine( pState, "__LINE__", &s_pp_dynamicResult );
 

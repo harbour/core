@@ -278,6 +278,16 @@ static void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
 }
 
 
+PHB_ITEM hb_oleItemPut( PHB_ITEM pItem, IDispatch* pDisp )
+{
+   IDispatch** ppDisp;
+
+   ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
+   *ppDisp = pDisp;
+
+   return hb_itemPutPtrGC( pItem, ppDisp );
+}
+
 void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 {
    switch( pVariant->n1.n2.vt )

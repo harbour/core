@@ -1040,7 +1040,7 @@ HB_FUNC( HB_SETMACRO )
 /* ************************************************************************* */
 
 /* returns the order + 1 of a variable if defined or zero */
-static int hb_macroLocalVarGetPos( const char * szVarName, HB_COMP_DECL )
+int hb_macroLocalVarGetPos( const char * szVarName, HB_COMP_DECL )
 {
    int iVar = 1;
    HB_CBVAR_PTR pVars = HB_PCODE_DATA->pLocals;
@@ -1049,16 +1049,8 @@ static int hb_macroLocalVarGetPos( const char * szVarName, HB_COMP_DECL )
    {
       if( pVars->szName && ! strcmp( pVars->szName, szVarName ) )
          return iVar;
-      else
-      {
-         if( pVars->pNext )
-         {
-            pVars = pVars->pNext;
-            iVar++;
-         }
-         else
-            return 0;
-      }
+      pVars = pVars->pNext;
+      iVar++;
    }
    return 0;
 }

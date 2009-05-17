@@ -2066,6 +2066,7 @@ BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
 #if defined( HB_HASH_MSG_ITEMS )
    if( HB_IS_HASH( pObject ) )
    {
+      HB_STACK_TLS_PRELOAD
       PHB_ITEM pIndex = hb_itemPutCConst( hb_stackAllocItem(), pMessage->szName + 1 );
       PHB_ITEM pValue = hb_hashGetItemRefPtr( pObject, pIndex );
       hb_stackPop();
