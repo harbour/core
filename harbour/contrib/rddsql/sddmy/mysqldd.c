@@ -95,7 +95,6 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE mysqlClose( SQLBASEAREAP pArea );
 static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
 static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-static HB_ERRCODE mysqlGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength );
 
 
 static SDDNODE mysqldd =

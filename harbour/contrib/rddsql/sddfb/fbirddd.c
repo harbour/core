@@ -77,8 +77,6 @@ static HB_ERRCODE fbExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
 static HB_ERRCODE fbOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE fbClose( SQLBASEAREAP pArea );
 static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
-static HB_ERRCODE fbGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-static HB_ERRCODE fbGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength );
 
 
 static SDDNODE firebirddd = {

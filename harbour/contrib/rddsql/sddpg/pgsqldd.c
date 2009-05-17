@@ -95,9 +95,7 @@ static HB_ERRCODE pgsqlDisconnect( SQLDDCONNECTION* pConnection );
 static HB_ERRCODE pgsqlExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
 static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea );
-static HB_ERRCODE pgsqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
 static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-static HB_ERRCODE pgsqlGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength );
 
 
 static SDDNODE pgsqldd = {

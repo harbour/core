@@ -66,8 +66,6 @@ static HB_ERRCODE odbcExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
 static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE odbcClose( SQLBASEAREAP pArea );
 static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
-static HB_ERRCODE odbcGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-static HB_ERRCODE odbcGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength );
 
 
 static SDDNODE odbcdd =
