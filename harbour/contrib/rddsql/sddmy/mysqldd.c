@@ -109,7 +109,7 @@ static SDDNODE mysqldd =
    (SDDFUNC_CLOSE)      mysqlClose,
    (SDDFUNC_GOTO)       mysqlGoTo,
    (SDDFUNC_GETVALUE)   mysqlGetValue,
-   (SDDFUNC_GETVARLEN)  mysqlGetVarLen
+   (SDDFUNC_GETVARLEN)  NULL
 };
 
 
@@ -179,8 +179,6 @@ static USHORT hb_errRT_MySQLDD( ULONG ulGenCode, ULONG ulSubCode, const char * s
 static HB_ERRCODE mysqlConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 {
    MYSQL*   pMySql;
-
-/*   TraceLog( NULL, "mysqlConnect type:%04X s2:%s s3:%s s4:%s s5:%s\n", pItem->type, hb_arrayGetCPtr( pItem, 2 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ), hb_arrayGetCPtr( pItem, 5 ) ); */
 
    pMySql = mysql_init( NULL );
    if ( ! mysql_real_connect( pMySql, hb_arrayGetCPtr( pItem, 2 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ),
@@ -600,14 +598,5 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pI
       hb_itemRelease( pError );
       return HB_FAILURE;
    }
-   return HB_SUCCESS;
-}
-
-
-static HB_ERRCODE mysqlGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength )
-{
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( uiIndex );
-   HB_SYMBOL_UNUSED( pLength );
    return HB_SUCCESS;
 }

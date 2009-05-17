@@ -90,8 +90,8 @@ static SDDNODE firebirddd = {
    (SDDFUNC_OPEN)       fbOpen,
    (SDDFUNC_CLOSE)      fbClose,
    (SDDFUNC_GOTO)       fbGoTo,
-   (SDDFUNC_GETVALUE)   fbGetValue,
-   (SDDFUNC_GETVARLEN)  fbGetVarLen
+   (SDDFUNC_GETVALUE)   NULL,
+   (SDDFUNC_GETVARLEN)  NULL
 };
 
 
@@ -575,23 +575,5 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
       pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
       pArea->fPositioned = TRUE;
    }
-   return HB_SUCCESS;
-}
-
-
-static HB_ERRCODE fbGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
-{
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( uiIndex );
-   HB_SYMBOL_UNUSED( pItem );
-   return HB_SUCCESS;
-}
-
-
-static HB_ERRCODE fbGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength )
-{
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( uiIndex );
-   HB_SYMBOL_UNUSED( pLength );
    return HB_SUCCESS;
 }

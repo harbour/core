@@ -123,7 +123,7 @@ static HB_GARBAGE_FUNC( hb_oleenum_destructor )
 }
 
 
-static IDispatch* hb_oleParam( int iParam )
+IDispatch* hb_oleParam( int iParam )
 {
    IDispatch**  ppDisp = ( IDispatch** ) hb_parptrGC( hb_ole_destructor, iParam );
 
@@ -175,7 +175,7 @@ static char* WideToAnsi( const wchar_t* szWide )
 
 /* Item <-> Variant conversion */
 
-static void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
+void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
 {
    wchar_t*  szString;
 

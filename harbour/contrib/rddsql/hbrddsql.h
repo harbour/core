@@ -357,5 +357,6 @@ int hb_sddRegister( PSDDNODE pSdd );
 #define ESQLDD_STMTFREE            1908
 #define ESQLDD_FETCH               1909
 #define ESQLDD_LOWMEMORY           1910
+#define ESQLDD_NULLSDD             1911
 
 #endif

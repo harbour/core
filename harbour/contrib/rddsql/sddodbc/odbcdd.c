@@ -80,8 +80,8 @@ static SDDNODE odbcdd =
    (SDDFUNC_OPEN)       odbcOpen,
    (SDDFUNC_CLOSE)      odbcClose,
    (SDDFUNC_GOTO)       odbcGoTo,
-   (SDDFUNC_GETVALUE)   odbcGetValue,
-   (SDDFUNC_GETVARLEN)  odbcGetVarLen
+   (SDDFUNC_GETVALUE)   NULL,
+   (SDDFUNC_GETVARLEN)  NULL
 };
 
 
@@ -591,23 +591,5 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
       pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
       pArea->fPositioned = TRUE;
    }
-   return HB_SUCCESS;
-}
-
-
-static HB_ERRCODE odbcGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
-{
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( uiIndex );
-   HB_SYMBOL_UNUSED( pItem );
-   return HB_SUCCESS;
-}
-
-
-static HB_ERRCODE odbcGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength )
-{
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( uiIndex );
-   HB_SYMBOL_UNUSED( pLength );
    return HB_SUCCESS;
 }

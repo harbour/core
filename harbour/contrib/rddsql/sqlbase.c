@@ -64,30 +64,6 @@
 #define CONNECTION_LIST_EXPAND    4
 
 
-/*==================== SDD registration =====================================*/
-
-static PSDDNODE s_pSdd = NULL;
-
-
-int hb_sddRegister( PSDDNODE pSdd )
-{
-   PSDDNODE pNode = s_pSdd;
-
-   while ( pNode )
-   {
-      if ( ! hb_stricmp( pNode->Name, pSdd->Name ) )
-         return 0;
-      pNode = pNode->pNext;
-   }
-   pSdd->pNext = s_pSdd;
-   s_pSdd = pSdd;
-   return 1;
-}
-
-
-
-/*==================== SQLBASE code ===========================================*/
-
 static USHORT             s_rddidSQLBASE = 0;
 static SQLDDCONNECTION*   s_pConnection = NULL;
 static ULONG              s_ulConnectionCount = 0;
@@ -95,6 +71,7 @@ static ULONG              s_ulConnectionCurrent = 0;
 
 static RDDFUNCS sqlbaseSuper;
 
+#define static
 
 static HB_ERRCODE hb_errRT_SQLBASE( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation )
 {
@@ -108,6 +85,152 @@ static HB_ERRCODE hb_errRT_SQLBASE( ULONG ulGenCode, ULONG ulSubCode, const char
      hb_itemRelease( pError );
    }
    return iRet;
+}
+
+
+/*================ NULL SDD ==========================================================*/
+
+static HB_ERRCODE sddConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
+static HB_ERRCODE sddDisconnect( SQLDDCONNECTION* pConnection );
+static HB_ERRCODE sddExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
+static HB_ERRCODE sddOpen( SQLBASEAREAP pArea );
+static HB_ERRCODE sddClose( SQLBASEAREAP pArea );
+static HB_ERRCODE sddGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
+static HB_ERRCODE sddGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+static HB_ERRCODE sddGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength );
+
+
+static SDDNODE sddNull = {
+   NULL,
+   "NULL",
+   (SDDFUNC_CONNECT)    sddConnect,
+   (SDDFUNC_DISCONNECT) sddDisconnect,
+   (SDDFUNC_EXECUTE)    sddExecute,
+   (SDDFUNC_OPEN)       sddOpen,
+   (SDDFUNC_CLOSE)      sddClose,
+   (SDDFUNC_GOTO)       sddGoTo,
+   (SDDFUNC_GETVALUE)   sddGetValue,
+   (SDDFUNC_GETVARLEN)  sddGetVarLen
+};
+
+
+static HB_ERRCODE sddConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
+{
+   HB_SYMBOL_UNUSED( pConnection );
+   HB_SYMBOL_UNUSED( pItem );
+   hb_errRT_SQLBASE( EG_UNSUPPORTED, ESQLDD_NULLSDD, NULL, NULL );
+   return HB_FAILURE;
+}
+
+
+static HB_ERRCODE sddDisconnect( SQLDDCONNECTION* pConnection )
+{
+   HB_SYMBOL_UNUSED( pConnection );
+   hb_errRT_SQLBASE( EG_UNSUPPORTED, ESQLDD_NULLSDD, NULL, NULL );
+   return HB_FAILURE;
+}
+
+
+static HB_ERRCODE sddExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
+{
+   HB_SYMBOL_UNUSED( pConnection );
+   HB_SYMBOL_UNUSED( pItem );
+   hb_errRT_SQLBASE( EG_UNSUPPORTED, ESQLDD_NULLSDD, NULL, NULL );
+   return HB_FAILURE;
+}
+
+
+static HB_ERRCODE sddOpen( SQLBASEAREAP pArea )
+{
+   HB_SYMBOL_UNUSED( pArea );
+   hb_errRT_SQLBASE( EG_UNSUPPORTED, ESQLDD_NULLSDD, NULL, NULL );
+   return HB_FAILURE;
+}
+
+
+static HB_ERRCODE sddClose( SQLBASEAREAP pArea )
+{
+   HB_SYMBOL_UNUSED( pArea );
+   return HB_SUCCESS;
+}
+
+
+static HB_ERRCODE sddGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
+{
+   if ( ulRecNo <= 0 || ulRecNo > pArea->ulRecCount )
+   {
+      pArea->pRecord = pArea->pRow[ 0 ];
+      pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
+
+      pArea->fPositioned = FALSE;
+   }
+   else
+   {
+      pArea->pRecord = pArea->pRow[ ulRecNo ];
+      pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
+
+      pArea->fPositioned = TRUE;
+   }
+   return HB_SUCCESS;
+}
+
+
+static HB_ERRCODE sddGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+{
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( uiIndex );
+   HB_SYMBOL_UNUSED( pItem );
+   hb_errRT_SQLBASE( EG_UNSUPPORTED, ESQLDD_NULLSDD, NULL, NULL );
+   return HB_FAILURE;
+}
+
+
+static HB_ERRCODE sddGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength )
+{
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( uiIndex );
+   HB_SYMBOL_UNUSED( pLength );
+   hb_errRT_SQLBASE( EG_UNSUPPORTED, ESQLDD_NULLSDD, NULL, NULL );
+   return HB_SUCCESS;
+}
+
+
+/*==================== SDD registration =====================================*/
+
+static PSDDNODE s_pSdd = NULL;
+
+
+int hb_sddRegister( PSDDNODE pSdd )
+{
+   PSDDNODE pNode = s_pSdd;
+
+   /* "Inheritance" from NULL SDD */
+   if( pSdd->Connect == NULL )
+      pSdd->Connect = sddNull.Connect;
+   if( pSdd->Disconnect == NULL )
+      pSdd->Disconnect = sddNull.Disconnect;
+   if( pSdd->Execute == NULL )
+      pSdd->Execute = sddNull.Execute;
+   if( pSdd->Open == NULL )
+      pSdd->Open = sddNull.Open;
+   if( pSdd->Close == NULL )
+      pSdd->Close = sddNull.Close;
+   if( pSdd->GoTo == NULL )
+      pSdd->GoTo = sddNull.GoTo;
+   if( pSdd->GetValue == NULL )
+      pSdd->GetValue = sddNull.GetValue;
+   if( pSdd->GetVarLen == NULL )
+      pSdd->GetVarLen = sddNull.GetVarLen;
+
+   while ( pNode )
+   {
+      if ( ! hb_stricmp( pNode->Name, pSdd->Name ) )
+         return 0;
+      pNode = pNode->pNext;
+   }
+   pSdd->pNext = s_pSdd;
+   s_pSdd = pSdd;
+   return 1;
 }
 
 
@@ -262,12 +385,6 @@ static HB_ERRCODE sqlbaseSkipRaw( SQLBASEAREAP pArea, LONG lToSkip )
 
 static HB_ERRCODE sqlbaseAppend( SQLBASEAREAP pArea, BOOL bUnLockAll )
 {
-/*
-   PHB_ITEM   pArray;
-   PHB_ITEM   pItem;
-   USHORT     us;
-*/
-
    HB_SYMBOL_UNUSED( bUnLockAll );
 
    /* This GOTO is GOCOLD + GOEOF */
@@ -284,21 +401,6 @@ static HB_ERRCODE sqlbaseAppend( SQLBASEAREAP pArea, BOOL bUnLockAll )
       pArea->ulRecMax += SQLDD_ROWSET_RESIZE;
    }
 
-/*  Sita padaro GOHOT
-   pArray = hb_itemNew( NULL );
-   hb_arrayNew( pArray, pArea->uiFieldCount );
-   for ( us = 1; us <= pArea->uiFieldCount; us++ )
-   {
-      pItem = hb_itemNew( NULL );
-      if ( SELF_GETVALUE( (AREAP) pArea, us, pItem ) == HB_SUCCESS )
-         hb_arraySetForward( pArray, us, pItem );
-
-      hb_itemRelease( pItem );
-   }
-   pArea->pRecord = pArray;
-   pArea->bRecordFlags = SQLDD_FLAG_CACHED;
-   pArea->fRecordChanged = TRUE;
-*/
    pArea->fAppend = pArea->fPositioned = TRUE;
    pArea->ulRecCount++;
    pArea->ulRecNo = pArea->ulRecCount;
@@ -325,6 +427,7 @@ static HB_ERRCODE sqlbaseDeleted( SQLBASEAREAP pArea, BOOL* pDeleted )
    * pDeleted = pArea->bRecordFlags & SQLDD_FLAG_DELETED;
    return HB_SUCCESS;
 }
+
 
 static HB_ERRCODE sqlbaseGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
@@ -522,6 +625,10 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
       pArea->pConnection = & s_pConnection[ pArea->ulConnection - 1 ];
       pArea->pSDD = pArea->pConnection->pSDD;
    }
+   else
+   {
+      pArea->pSDD = &sddNull;
+   }
 
    pItemEof = hb_itemArrayNew( pArea->uiFieldCount );
 
@@ -616,6 +723,7 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
       SELF_CLOSE( (AREAP) pArea );
       return HB_FAILURE;
    }
+
    return SELF_GOTOP( (AREAP) pArea );
 }
 
@@ -1087,6 +1195,8 @@ static RDDFUNCS sqlbaseTable =
    ( DBENTRYP_SVP )   NULL                        /* sqlbaseWhoCares */
 };
 
+
+/*================ Module initialization code ========================================*/
 
 static void hb_sqlbaseInit( void * cargo )
 {

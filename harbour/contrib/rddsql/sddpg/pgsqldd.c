@@ -108,9 +108,9 @@ static SDDNODE pgsqldd = {
    (SDDFUNC_EXECUTE)    pgsqlExecute,
    (SDDFUNC_OPEN)       pgsqlOpen,
    (SDDFUNC_CLOSE)      pgsqlClose,
-   (SDDFUNC_GOTO)       pgsqlGoTo,
+   (SDDFUNC_GOTO)       NULL,
    (SDDFUNC_GETVALUE)   pgsqlGetValue,
-   (SDDFUNC_GETVARLEN)  pgsqlGetVarLen
+   (SDDFUNC_GETVARLEN)  NULL
 };
 
 
@@ -481,26 +481,6 @@ static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea )
 }
 
 
-static HB_ERRCODE pgsqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
-{
-   if ( ulRecNo <= 0 || ulRecNo > pArea->ulRecCount )
-   {
-      pArea->pRecord = pArea->pRow[ 0 ];
-      pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
-
-      pArea->fPositioned = FALSE;
-   }
-   else
-   {
-      pArea->pRecord = pArea->pRow[ ulRecNo ];
-      pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
-
-      pArea->fPositioned = TRUE;
-   }
-   return HB_SUCCESS;
-}
-
-
 static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD   pField;
@@ -582,11 +562,3 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pI
    return HB_SUCCESS;
 }
 
-
-static HB_ERRCODE pgsqlGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength )
-{
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( uiIndex );
-   HB_SYMBOL_UNUSED( pLength );
-   return HB_SUCCESS;
-}
