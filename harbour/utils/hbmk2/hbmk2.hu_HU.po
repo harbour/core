@@ -5,202 +5,212 @@
 #: hbmk2.prg:1206 hbmk2.prg:1255
 #, c-format
 msgid "Warning: Invalid -gt value ignored: %1$s"
-msgstr "Figyelem: Hib s -gt ‚rt‚k figyelmen k¡vl hagyva: %1$s"
+msgstr "Figyelem: Hibás -gt érték figyelmen kívül hagyva: %1$s"
 
 #: hbmk2.prg:3011 hbmk2.prg:3130
 #, c-format
 msgid "Warning: C compiler script couldn't be created, continuing in command line."
-msgstr "Figyelem: C ford¡t¢ parancs llom nya ne hozhat¢ l‚tre, folytat s parancssorban."
+msgstr "Figyelem: C fordító parancsállománya ne hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:214 hbmk2.prg:260
 #, c-format
 msgid "Press any key to continue..."
-msgstr "Folytat shoz ss”n le egy billentyût..."
+msgstr "Folytatáshoz üssön le egy billentyût..."
 
 #: hbmk2.prg:1198 hbmk2.prg:1247
 #, c-format
 msgid "Warning: Invalid -main value ignored: %1$s"
-msgstr "Figyelem: Hib s -main ‚rt‚k figyelmen k¡vl hagyva: %1$s"
+msgstr "Figyelem: Hibás -main érték figyelmen kívül hagyva: %1$s"
 
 #: hbmk2.prg:5138 hbmk2.prg:5210
 #, c-format
 msgid "Created .po file '%1$s' for language(s): %2$s"
-msgstr "'%1$s' .po f jl l‚trehozva a k”vetkez‹ nyelv(ek)hez: %2$s"
+msgstr "'%1$s' .po fájl létrehozva a következõ nyelv(ek)hez: %2$s"
 
 #: hbmk2.prg:428 hbmk2.prg:5563
 #, c-format
 msgid "cdp=EN"
-msgstr "cdp=HU852"
+msgstr "cdp=HUISO"
+
+#: hbmk2.prg:1000
+#, c-format
+msgid "wdo=EN"
+msgstr "wdo=HU852"
+
+#: hbmk2.prg:1000
+#, c-format
+msgid "nix=EN"
+msgstr "nix=HUISO"
 
 #: hbmk2.prg:2615 hbmk2.prg:2713
 #, c-format
 msgid "Harbour compiler command (internal):"
-msgstr "Habour ford¡t si parancs (bels‹):"
+msgstr "Habour fordítási parancs (belsõ):"
 
 #: hbmk2.prg:2627 hbmk2.prg:2642 hbmk2.prg:2725 hbmk2.prg:2743
 #, c-format
 msgid "Error: Running Harbour compiler. %1$s"
-msgstr "Hiba: Harbour ford¡t¢ futtat sakor. %1$s"
+msgstr "Hiba: Harbour fordító futtatásakor. %1$s"
 
 #: hbmk2.prg:744 hbmk2.prg:802
 #, c-format
 msgid "Error: Architecture value unknown: %1$s"
-msgstr "Hiba: Ismeretlen architekt£ra: %1$s"
+msgstr "Hiba: Ismeretlen architektúra: %1$s"
 
 #: hbmk2.prg:3027 hbmk2.prg:3146
 #, c-format
 msgid "C compiler script:"
-msgstr "C ford¡t¢ parancs llom ny:"
+msgstr "C fordító parancsállomány:"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\\n-lng=en-EN,hu-HU,de"
-msgstr "nyelvek list ja, amelyek a .pot/.po ‚s .hbl/.po  llom nyokban lev‹ ${lng} makr¢kba kerlnek behelyettes¡t‚sre. Vessz‹vel elv lasztott lista:\\n-lng=en-EN,hu-HU,de"
+msgstr "nyelvek listája, amelyek a .pot/.po és .hbl/.po állományokban levõ ${lng} makrókba kerülnek behelyettesítésre. Vesszõvel elválasztott lista:\\n-lng=en-EN,hu-HU,de"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "rebuild all (in incremental build mode)"
-msgstr "mindent £jra‚p¡t (l‚pcs‹zetes zemm¢dban)"
+msgstr "mindent újraépít (lépcsõzetes üzemmódban)"
 
 #: hbmk2.prg:868 hbmk2.prg:919
 #, c-format
 msgid "Error: Compiler value unknown: %1$s"
-msgstr "Hiba: Ismeretlen ford¡t¢: %1$s"
+msgstr "Hiba: Ismeretlen fordító: %1$s"
 
 #: hbmk2.prg:913 hbmk2.prg:978
 #, c-format
 msgid "Using Harbour: %1$s %2$s %3$s %4$s"
-msgstr "Detekt lt Harbour: %1$s %2$s %3$s %4$s"
+msgstr "Detektált Harbour: %1$s %2$s %3$s %4$s"
 
 #: hbmk2.prg:856 hbmk2.prg:907
 #, c-format
 msgid "Autodetected compiler: %1$s"
-msgstr "Detekt lt ford¡t¢: %1$s"
+msgstr "Detektált fordító: %1$s"
 
 #: hbmk2.prg:633 hbmk2.prg:689
 #, c-format
 msgid "Autodetected architecture: %1$s"
-msgstr "Detekt lt architekt£ra: %1$s"
+msgstr "Detektált architektúra: %1$s"
 
 #: hbmk2.prg:3363 hbmk2.prg:3482
 #, c-format
 msgid "Compression command:"
-msgstr "T”m”r¡t‚si parancs:"
+msgstr "Tömörítési parancs:"
 
 #: hbmk2.prg:1394 hbmk2.prg:4239 hbmk2.prg:1459 hbmk2.prg:4355
 #, c-format
 msgid "Processing: %1$s"
-msgstr "Feldolgoz s alatt: %1$s"
+msgstr "Feldolgozás alatt: %1$s"
 
 #: hbmk2.prg:2843 hbmk2.prg:2962
 #, c-format
 msgid "Compiling resources..."
-msgstr "Er‹forr sok ford¡t sa..."
+msgstr "Erõforrások fordítása..."
 
 #: hbmk2.prg:797 hbmk2.prg:855
 #, c-format
 msgid "Error: Harbour locations couldn't be determined."
-msgstr "Hiba: Harbour k”nyvt rakat nem sikerlt meghat rozni."
+msgstr "Hiba: Harbour könyvtárakat nem sikerült meghatározni."
 
 #: hbmk2.prg:2670 hbmk2.prg:2774
 #, c-format
 msgid "Error: Running Harbour compiler. %1$s"
-msgstr "Hiba: Harbour ford¡t¢ futtat sakor. %1$s"
+msgstr "Hiba: Harbour fordító futtatásakor. %1$s"
 
 #: hbmk2.prg:1503 hbmk2.prg:1543
 #, c-format
 msgid "Error: No source files were specified."
-msgstr "Hiba: Nincs megadva forr s f jl."
+msgstr "Hiba: Nincs megadva forrás fájl."
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "pass flag to linker (static library)"
-msgstr "kapcsol¢ tov bb¡t sa (statikus fggv‚nyk”nyvt r) szerkeszt‹nek"
+msgstr "kapcsoló továbbítása (statikus függvénykönyvtár) szerkesztõnek"
 
 #: hbmk2.prg:2777 hbmk2.prg:2887
 #, c-format
 msgid "Warning: Stub helper .c program couldn't be created."
-msgstr "Figyelem: .c seg‚d llom nyt nem sikerlt l‚trehozni."
+msgstr "Figyelem: .c segédállományt nem sikerült létrehozni."
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "add/exclude C compiler debug info"
-msgstr "C ford¡t¢ debug inform ci¢ hozz ad sa (vagy sem)"
+msgstr "C fordító debug információ hozzáadása (vagy sem)"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "pass flag to linker (dynamic library)"
-msgstr "kapcsol¢ tov bb¡t sa (dinamikus fggv‚nyk”nyvt r) szerkeszt‹nek"
+msgstr "kapcsoló továbbítása (dinamikus függvénykönyvtár) szerkesztõnek"
 
 #: hbmk2.prg:862 hbmk2.prg:913
 #, c-format
 msgid "Couldn't detect any supported C compiler in your PATH.\\nPlease setup one or set -comp= option or envvar HB_COMPILER to one of these values: %1$s"
-msgstr "Nem sikerlt automatikusan detekt lni egyetlen C ford¡t¢t sem a PATH-ban.\\nK‚rem, telep¡tsen egyet vagy  ll¡tsa a -comp= kapcsol¢t vagy a HB_COMPILER k”rnyezeti v ltoz¢t a k”vetkez‹ ‚rt‚kek valamelyik‚re: %1$s"
+msgstr "Nem sikerült automatikusan detektálni egyetlen C fordítót sem a PATH-ban.\\nKérem, telepítsen egyet vagy állítsa a -comp= kapcsolót vagy a HB_COMPILER környezeti változót a következõ értékek valamelyikére: %1$s"
 
 #: hbmk2.prg:777 hbmk2.prg:835
 #, c-format
 msgid "Error: HB_INSTALL_PREFIX not set, failed to autodetect."
-msgstr "Hiba: HB_INSTALL_PREFIX nincs megadva, automata detekt l s nem j rt sikerrel."
+msgstr "Hiba: HB_INSTALL_PREFIX nincs megadva, automata detektálás nem járt sikerrel."
 
 #: hbmk2.prg:860 hbmk2.prg:911
 #, c-format
 msgid "Please choose a C compiler by using -comp= option or envvar HB_COMPILER.\\nYou have the following choices on your platform: %1$s"
-msgstr "K‚rem, v lasszon C ford¡t¢t a -comp= kapcsol¢ vagy a HB_COMPILER k”rnyezeti v ltoz¢ seg¡ts‚g‚vel.\\nA k”vetkez‹ lehet‹s‚gek k”zl v laszthat: %1$s"
+msgstr "Kérem, válasszon C fordítót a -comp= kapcsoló vagy a HB_COMPILER környezeti változó segítségével.\\nA következõ lehetõségek közül választhat: %1$s"
 
 #: hbmk2.prg:3334 hbmk2.prg:3453
 #, c-format
 msgid "Post processor command:"
-msgstr "Ut¢feldolgoz¢ parancs:"
+msgstr "Utófeldolgozó parancs:"
 
 #: hbmk2.prg:1514 hbmk2.prg:1572
 #, c-format
 msgid "Error: Working directory cannot be created: %1$s"
-msgstr "Hiba: Munkak”nyvt r nem hozhat¢ l‚tre: %1$s"
+msgstr "Hiba: Munkakönyvtár nem hozható létre: %1$s"
 
 #: hbmk2.prg:3037 hbmk2.prg:3430 hbmk2.prg:3156 hbmk2.prg:3594
 #, c-format
 msgid "Error: Running C compiler. %1$s"
-msgstr "Hiba: C ford¡t¢ futtat sakor. %1$s"
+msgstr "Hiba: C fordító futtatásakor. %1$s"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "additional path to autodetect .c header locations"
-msgstr "tov bbi keres‚si £tvonal a .c fejl‚cek automatikus detekt l s hoz"
+msgstr "további keresési útvonal a .c fejlécek automatikus detektálásához"
 
 #: hbmk2.prg:3428 hbmk2.prg:3592
 #, c-format
 msgid "Error: Running C compiler job #%1$s. %2$s"
-msgstr "Hiba: C ford¡t¢ futtat sa. %1$s. sz l. %2$s"
+msgstr "Hiba: C fordító futtatása. %1$s. szál. %2$s"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "link with nulrdd"
-msgstr "nulrdd haszn lata"
+msgstr "nulrdd használata"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "show commands to be executed, but don't execute them"
-msgstr "mutassa a v‚grehajtand¢ parancsokat, an‚lkl hogy v‚grehajtan  ‹ket"
+msgstr "mutassa a végrehajtandó parancsokat, anélkül hogy végrehajtaná õket"
 
 #: hbmk2.prg:5057 hbmk2.prg:5131
 #, c-format
 msgid "Error: Cannot open file: %1$s"
-msgstr "Hiba: F jl nem nyithat¢ meg: %1$s"
+msgstr "Hiba: Fájl nem nyitható meg: %1$s"
 
 #: hbmk2.prg:5567 hbmk2.prg:5715
 #, c-format
 msgid "Platform filters are accepted in each .hbp line and with several options.\\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
-msgstr "A szûr‹k az egyes .hbp sorokban haszn lhat¢k ‚s sz mos opci¢ eset‚n t mogatottak.\\nSzûr‹ form tum: {[!][<arch>|<comp>|<keyword>]}. Szûr‹k kombin lhat¢k '&', '|' oper torokkal ‚s z r¢jelekkel csoportos¡that¢k. Pl.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
+msgstr "A szûrõk az egyes .hbp sorokban használhatók és számos opció esetén támogatottak.\\nSzûrõ formátum: {[!][<arch>|<comp>|<keyword>]}. Szûrõk kombinálhatók '&', '|' operátorokkal és zárójelekkel csoportosíthatók. Pl.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "output .hbl filename. ${lng} macro is accepted in filename"
-msgstr "kimeneti .hbl f jln‚v. ${lng} makr¢ haszn lhat¢ a f jln‚vben"
+msgstr "kimeneti .hbl fájlnév. ${lng} makró használható a fájlnévben"
 
 #: hbmk2.prg:5194 hbmk2.prg:5291
 #, c-format
 msgid "Created .hbl file '%1$s' for language(s): %2$s"
-msgstr "'%1$s' .hbl f jl l‚trehozva a k”vetkez‹ nyelv(ek)hez: %2$s"
+msgstr "'%1$s' .hbl fájl létrehozva a következõ nyelv(ek)hez: %2$s"
 
 #: hbmk2.prg:5254 hbmk2.prg:5344
 #, c-format
@@ -215,67 +225,67 @@ msgstr "Hiba: %1$s"
 #: hbmk2.prg:5295 hbmk2.prg:5385
 #, c-format
 msgid "Error: Cannot create file: %1$s"
-msgstr "Hiba: F jl nem hozhat¢ l‚tre: %1$s"
+msgstr "Hiba: Fájl nem hozható létre: %1$s"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "do not process .hbp files in current directory"
-msgstr "aktu lis k”nyvt rban lev‹ .hbp f jlokat ne dolgozza fel"
+msgstr "aktuális könyvtárban levõ .hbp fájlokat ne dolgozza fel"
 
 #: hbmk2.prg:5471 hbmk2.prg:5610
 #, c-format
 msgid "Notes:"
-msgstr "Megjegyz‚sek:"
+msgstr "Megjegyzések:"
 
 #: hbmk2.prg:5467 hbmk2.prg:5606
 #, c-format
 msgid "Syntax:"
-msgstr "Haszn lat:"
+msgstr "Használat:"
 
 #: hbmk2.prg:5450 hbmk2.prg:5589
 #, c-format
 msgid "Translation (%1$s): (add your name here)"
-msgstr "Magyar (%1$s) ford¡t s: Copyright (c) 2009, Szak ts Viktor"
+msgstr "Magyar (%1$s) fordítás: Copyright (c) 2009, Szakáts Viktor"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "stop after creating the object files\\ncreate link/copy hbmk to hbcmp/clipper for the same effect"
-msgstr " lljon meg az object  llom nyok l‚trehoz sa ut n\\nA hbmk program hbcmp/clipper nevekre val¢ m sol s val/ tnevez‚s‚vel hasonl¢ hat s ‚rhet el"
+msgstr "álljon meg az object állományok létrehozása után\\nA hbmk program hbcmp/clipper nevekre való másolásával/átnevezésével hasonló hatás érhet el"
 
 #: hbmk2.prg:5467 hbmk2.prg:5606
 #, c-format
 msgid "Options:"
-msgstr "Kapcsol¢k:"
+msgstr "Kapcsolók:"
 
 #: hbmk2.prg:5485 hbmk2.prg:5624
 #, c-format
 msgid "Supported <comp> values for each supported <arch> value:"
-msgstr "Az egyes <arch> ‚rt‚kekhez tartoz¢ <comp> ‚rt‚kek a k”vetkez‹k:"
+msgstr "Az egyes <arch> értékekhez tartozó <comp> értékek a következõk:"
 
 #: hbmk2.prg:5494 hbmk2.prg:5633
 #, c-format
 msgid "link with static/shared libs"
-msgstr "haszn ljon a szerkeszt‚skor statikus/dinamikus fggv‚nyk”nyvt rakat"
+msgstr "használjon a szerkesztéskor statikus/dinamikus függvénykönyvtárakat"
 
 #: hbmk2.prg:5494 hbmk2.prg:5633
 #, c-format
 msgid "link with <libname> library"
-msgstr "szerkessze be <libname> fggv‚nyk”nyvt rat"
+msgstr "szerkessze be <libname> függvénykönyvtárat"
 
 #: hbmk2.prg:5497 hbmk2.prg:5636
 #, c-format
 msgid "long help"
-msgstr "teljes s£g¢"
+msgstr "teljes súgó"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "link with all static libs"
-msgstr "csak statikus fggv‚nyk”nyvt rak haszn lata"
+msgstr "csak statikus függvénykönyvtárak használata"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "create (or not) a map file"
-msgstr "k‚sz¡tsen (vagy ne) t‚rk‚p (map) f jlt"
+msgstr "készítsen (vagy ne) térkép (map) fájlt"
 
 #: hbmk2.prg:5017 hbmk2.prg:5091
 #, c-format
@@ -285,312 +295,312 @@ msgstr "Blinker ECHO: %1$s"
 #: hbmk2.prg:5567 hbmk2.prg:5715
 #, c-format
 msgid ".hbp options (they should come in separate lines): libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\\nLines starting with '#' char are ignored"
-msgstr ".hbp opci¢k (kl”n sorokba ¡rand¢k): libs=[<libnevek>], gt=[gtn‚v], prgflags=[Harbour opci¢k], cflags=[C ford¡t¢ opci¢k], resflags=[er‹forr s ford¡t¢ kapcsol¢k], ldflags=[szerkeszt‹ kapcsol¢k], libpaths=[£tvonalak], pos=[.po f jlok], incpaths=[£tvonalak], inctrypaths=[£tvonalak], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<sz”veg>\\n'#' karakterrel kezd‹d‹ sorokat figyelmen k¡vl hagyja"
+msgstr ".hbp opciók (külön sorokba írandók): libs=[<libnevek>], gt=[gtnév], prgflags=[Harbour opciók], cflags=[C fordító opciók], resflags=[erõforrás fordító kapcsolók], ldflags=[szerkesztõ kapcsolók], libpaths=[útvonalak], pos=[.po fájlok], incpaths=[útvonalak], inctrypaths=[útvonalak], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<szöveg>\\n'#' karakterrel kezdõdõ sorokat figyelmen kívül hagyja"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "strip (no strip) binaries"
-msgstr "t vol¡tsa el (vagy ne) a kimenetr‹l az extra bels‹ inform ci¢kat (strip)"
+msgstr "távolítsa el (vagy ne) a kimenetrõl az extra belsõ információkat (strip)"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "run/don't run output executable"
-msgstr "futtassa/ne az elk‚szlt alkalmaz st"
+msgstr "futtassa/ne az elkészült alkalmazást"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "stop without doing anything"
-msgstr " lljon meg an‚lkl hogy b rmit csin lna"
+msgstr "álljon meg anélkül hogy bármit csinálna"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "pass flag to resource compiler (Windows only)"
-msgstr "tov bb¡tsa a kapcsol¢t az er‹forr s ford¡t¢nak (csak Windows-on)"
+msgstr "továbbítsa a kapcsolót az erõforrás fordítónak (csak Windows-on)"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "enable incremental build mode"
-msgstr "kapcsolja be a l‚pcs‹zetes (incremental) zemm¢dot"
+msgstr "kapcsolja be a lépcsõzetes (incremental) üzemmódot"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "pass flag to Harbour"
-msgstr "kapcsol¢ tov bb¡t sa Harbour ford¡t¢nak"
+msgstr "kapcsoló továbbítása Harbour fordítónak"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "pass flag to C compiler"
-msgstr "kapcsol¢ tov bb¡t sa C ford¡t¢nak"
+msgstr "kapcsoló továbbítása C fordítónak"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "output Harbour dynamic library directory"
-msgstr "visszat‚r a Harbour dinamikus fggv‚nyk”nyvt rak k”nyvt r val"
+msgstr "visszatér a Harbour dinamikus függvénykönyvtárak könyvtárával"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "start n compilation threads (MT platforms/builds only)"
-msgstr "n sz lon futtassa a ford¡t¢kat (csak t mogatott platformokon)"
+msgstr "n szálon futtassa a fordítókat (csak támogatott platformokon)"
 
 #: hbmk2.prg:5567 hbmk2.prg:5715
 #, c-format
 msgid "Multiple -l, -L and <script> parameters are accepted."
-msgstr "T”bb -l, -L ‚s <parancs llom ny> kapcsol¢/param‚ter is megengedett."
+msgstr "Több -l, -L és <parancsállomány> kapcsoló/paraméter is megengedett."
 
 #: hbmk2.prg:5567 hbmk2.prg:5715
 #, c-format
 msgid ".hbp option files in current dir are automatically processed."
-msgstr "Az aktu lis k”nyvt rban lev‹ .hbp f jlok automatikusan feldolgoz sra kerlnek."
+msgstr "Az aktuális könyvtárban levõ .hbp fájlok automatikusan feldolgozásra kerülnek."
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "assume specific architecure. Same as HB_ARCHITECTURE envvar"
-msgstr "haszn lja a megadott architekt£ra k¢dot. Ugyanaz mint a HB_ARCHITECTURE k”rnyezeti v ltoz¢."
+msgstr "használja a megadott architektúra kódot. Ugyanaz mint a HB_ARCHITECTURE környezeti változó."
 
 #: hbmk2.prg:5567 hbmk2.prg:5715
 #, c-format
 msgid "<script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>."
-msgstr "<script> lehet <@script> (.hbm f jl), <script.hbm> vagy <script.hbp>."
+msgstr "<script> lehet <@script> (.hbm fájl), <script.hbm> vagy <script.hbp>."
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "accept raw linker flags"
-msgstr "kapcsol¢kat adja tov bb a szerkeszt‹nek"
+msgstr "kapcsolókat adja tovább a szerkesztõnek"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "create static library"
-msgstr "statikus fggv‚nyk”nyvt r l‚trehoz sa"
+msgstr "statikus függvénykönyvtár létrehozása"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "create dynamic library"
-msgstr "dinamikus fggv‚nyk”nyvt r l‚trehoz sa"
+msgstr "dinamikus függvénykönyvtár létrehozása"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "enable xhb mode (experimental)"
-msgstr "kapcsolja be az xhb zemm¢dot (k¡s‚rleti)"
+msgstr "kapcsolja be az xhb üzemmódot (kísérleti)"
 
 #: hbmk2.prg:5567 hbmk2.prg:5715
 #, c-format
 msgid "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbp."
-msgstr "%1$s opci¢ f jl a hbmk k”nyvt r ban mindig feldolgoz sra kerl amennyiben l‚tezik. *nix platformokon a f jl a ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc k”nyvt rak (ebben a sorrendben) szint‚n ellen‹rz‚sre kerl. Az f jl form tuma megegyezik a .hbp-vel."
+msgstr "%1$s opció fájl a hbmk könyvtárában mindig feldolgozásra kerül amennyiben létezik. *nix platformokon a fájl a ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc könyvtárak (ebben a sorrendben) szintén ellenõrzésre kerül. Az fájl formátuma megegyezik a .hbp-vel."
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "output Harbour binary directory"
-msgstr "visszat‚r a Harbour program k”nyvt rral"
+msgstr "visszatér a Harbour program könyvtárral"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "output Harbour header directory"
-msgstr "visszat‚r a Harbour fejl‚c k”nyvt rral"
+msgstr "visszatér a Harbour fejléc könyvtárral"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "display version header only"
-msgstr "csak a verzi¢sz m kijelz‚se"
+msgstr "csak a verziószám kijelzése"
 
 #: hbmk2.prg:5567 hbmk2.prg:5715
 #, c-format
 msgid "Defaults and feature support vary by architecture/compiler."
-msgstr "Az alap‚rtelmez‚sek ‚s az egyes kapcsol¢k t mogat sa architekt£r nk‚nt/ford¡t¢nk‚nt v ltozhat"
+msgstr "Az alapértelmezések és az egyes kapcsolók támogatása architektúránként/fordítónként változhat"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "turn on informational messages"
-msgstr "t j‚koztat¢ zenetek bekapcsol sa"
+msgstr "tájékoztató üzenetek bekapcsolása"
 
 #: hbmk2.prg:5567 hbmk2.prg:5715
 #, c-format
 msgid "Regular Harbour compiler options are also accepted."
-msgstr "Norm l Harbour ford¡t¢ kapcsol¢k is megadhat¢k."
+msgstr "Normál Harbour fordító kapcsolók is megadhatók."
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "suppress all screen messages"
-msgstr "semmit ne ¡rjon a k‚perny‹re"
+msgstr "semmit ne írjon a képernyõre"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "create GUI/console executable"
-msgstr "GUI/konzol alkalmaz s l‚trehoz sa"
+msgstr "GUI/konzol alkalmazás létrehozása"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "override the name of starting function/procedure"
-msgstr "adjon meg alternat¡v kezd‹-/bel‚p‚si fggv‚nynevet"
+msgstr "adjon meg alternatív kezdõ-/belépési függvénynevet"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "toggle C compiler optimizations (default: on)"
-msgstr "C ford¡t¢ optimaliz l si szintj‚t  ll¡tja (alap‚rtelmez‚s: be)"
+msgstr "C fordító optimalizálási szintjét állítja (alapértelmezés: be)"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "compress executable/dynamic lib (needs UPX)\\n<lev> can be: min, max, def"
-msgstr "t”m”r¡tse a v‚geredm‚nyt (UPX szks‚ges)\\n<lev> lehet: min, max, def"
+msgstr "tömörítse a végeredményt (UPX szükséges)\\n<lev> lehet: min, max, def"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "inherit .prg/.c/linker flags (or none) from Harbour build"
-msgstr "”r”k”lje a .prg/.c/szerkeszt‹ kapcsol¢kat (vagy ne) a Harbourt¢l"
+msgstr "örökölje a .prg/.c/szerkesztõ kapcsolókat (vagy ne) a Harbourtól"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "control source header parsing (in incremental build mode)\\n<m> can be: full, partial (default), off"
-msgstr "finomhangolja a forr s llom nyok automatikus fejl‚c detekt l st (l‚pcs‹zetes zemm¢dban)\\n<m> lehet: full, partial (default), off"
+msgstr "finomhangolja a forrásállományok automatikus fejléc detektálást (lépcsõzetes üzemmódban)\\n<m> lehet: full, partial (default), off"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "stop after creating the object files and accept raw C flags\\ncreate link/copy hbmk to hbcc for the same effect"
-msgstr " lljon meg az object  llom nyok l‚trehoz sa ut n ‚s tov bb¡tsa a kapcsol¢kat a C ford¡t¢nak\\nA hbmk program hbcc n‚vre val¢ m sol s val/ tnevez‚s‚vel hasonl¢ hat s ‚rhet el"
+msgstr "álljon meg az object állományok létrehozása után és továbbítsa a kapcsolókat a C fordítónak\\nA hbmk program hbcc névre való másolásával/átnevezésével hasonló hatás érhet el"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "use specific C compiler. Same as HB_COMPILER envvar\\nSpecial value:\\n - bld: use original build settings (default on *nix)"
-msgstr "haszn lja a megadott C ford¡t¢t. Ugyanaz mint a HB_COMPILER k”rnyezeti v ltoz¢\\nSpeci lis ‚rt‚k:\\n - bld: haszn lja a Harbour ford¡t s hoz haszn ltat (*nix-okon alap‚rtelmez‚s)"
+msgstr "használja a megadott C fordítót. Ugyanaz mint a HB_COMPILER környezeti változó\\nSpeciális érték:\\n - bld: használja a Harbour fordításához használtat (*nix-okon alapértelmezés)"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "generate .ch header file with local repository information. SVN, Git and Mercurial are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository"
-msgstr "hozzon l‚tre egy .ch fejl‚cet a helyi forr sok verzi¢k”vet‹ (VCS) adatb zisbeli adataival. SVN, Git ‚s Mercurial t mogatottak. Gener lt fejl‚c _HBMK_VCS_TYPE_ makr¢ja adja vissza a VCS t¡pus t, m¡g _HBMK_VCS_ID_ az aktu lis  llapot egyedi azonos¡t¢j t"
+msgstr "hozzon létre egy .ch fejlécet a helyi források verziókövetõ (VCS) adatbázisbeli adataival. SVN, Git és Mercurial támogatottak. Generált fejléc _HBMK_VCS_TYPE_ makrója adja vissza a VCS típusát, míg _HBMK_VCS_ID_ az aktuális állapot egyedi azonosítóját"
 
 #: hbmk2.prg:2504 hbmk2.prg:2590
 #, c-format
 msgid "Generating VCS header: %1$s"
-msgstr "VCS (verzi¢k”vet‹ rendszer) fejl‚c l‚trehoz sa: %1$s"
+msgstr "VCS (verziókövetõ rendszer) fejléc létrehozása: %1$s"
 
 #: hbmk2.prg:3385 hbmk2.prg:3541
 #, c-format
 msgid "Running executable:"
-msgstr "Alkalmaz s futtat sa:"
+msgstr "Alkalmazás futtatása:"
 
 #: hbmk2.prg:2589 hbmk2.prg:2687
 #, c-format
 msgid "Compiling Harbour sources..."
-msgstr "Harbour forr sok ford¡t sa..."
+msgstr "Harbour források fordítása..."
 
 #: hbmk2.prg:3119 hbmk2.prg:3238
 #, c-format
 msgid "Target up to date: %1$s"
-msgstr "Kimenet nem ig‚nyel friss¡t‚st: %1$s"
+msgstr "Kimenet nem igényel frissítést: %1$s"
 
 #: hbmk2.prg:2613 hbmk2.prg:2711
 #, c-format
 msgid "Harbour compiler command (internal) job #%1$s:"
-msgstr "Harbour ford¡t¢ parancs (bels‹) %1$s. sz l:"
+msgstr "Harbour fordító parancs (belsõ) %1$s. szál:"
 
 #: hbmk2.prg:2869 hbmk2.prg:2908 hbmk2.prg:2988 hbmk2.prg:3027
 #, c-format
 msgid "Error: Running resource compiler. %1$s"
-msgstr "Hiba: Er‹forr s ford¡t¢ futtat sakor. %1$s"
+msgstr "Hiba: Erõforrás fordító futtatásakor. %1$s"
 
 #: hbmk2.prg:5494 hbmk2.prg:5633
 #, c-format
 msgid "additional path to search for libraries"
-msgstr "tov bbi keres‚si £tvonal k”nyvt rakhoz"
+msgstr "további keresési útvonal könyvtárakhoz"
 
 #: hbmk2.prg:2664 hbmk2.prg:2768
 #, c-format
 msgid "Harbour compiler command:"
-msgstr "Harbour ford¡t¢ parancsa:"
+msgstr "Harbour fordító parancsa:"
 
 #: hbmk2.prg:3239 hbmk2.prg:3358
 #, c-format
 msgid "Creating dynamic library... %1$s"
-msgstr "Dinamikus fggv‚nyk”nyvt r l‚trehoz sa... %1$s"
+msgstr "Dinamikus függvénykönyvtár létrehozása... %1$s"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "pass flag to linker (executable)"
-msgstr "kapcsol¢ tov bb¡t sa (alkalmaz s) szerkeszt‹nek"
+msgstr "kapcsoló továbbítása (alkalmazás) szerkesztõnek"
 
 #: hbmk2.prg:5494 hbmk2.prg:5633
 #, c-format
 msgid "additional path to search for headers"
-msgstr "tov bbi keres‚si £tvonal a fejl‚cekhez"
+msgstr "további keresési útvonal a fejlécekhez"
 
 #: hbmk2.prg:2640 hbmk2.prg:2741
 #, c-format
 msgid "Error: Running Harbour compiler job #%1$s. %2$s"
-msgstr "Hiba: Harbour ford¡t¢ futtat sakor. %1$s. sz l. %2$s"
+msgstr "Hiba: Harbour fordító futtatásakor. %1$s. szál. %2$s"
 
 #: hbmk2.prg:3397 hbmk2.prg:3513
 #, c-format
 msgid "Running time: %1$ss"
-msgstr "Fut si id‹: %1$smp"
+msgstr "Futási idõ: %1$smp"
 
 #: hbmk2.prg:3022 hbmk2.prg:3420 hbmk2.prg:3141 hbmk2.prg:3584
 #, c-format
 msgid "C compiler command:"
-msgstr "C ford¡t¢ parancsa:"
+msgstr "C fordító parancsa:"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "create/update .po file from source. Merge it with previous .po file of the same name"
-msgstr "hozzon l‚tre/friss¡tse a .po f lj a forr sk¢d alapj n. Haszn lja a megl‚v‹ .po f jlban lev‹ ford¡t sokat"
+msgstr "hozzon létre/frissítse a .po fálj a forráskód alapján. Használja a meglévõ .po fájlban levõ fordításokat"
 
 #: hbmk2.prg:5494 hbmk2.prg:5633
 #, c-format
 msgid "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at runtime"
-msgstr "szerkessze be a GT<name> GT meghajt¢t. T”bb ilyen is megadhat¢, az els‹ lesz az alap‚rtelmez‚s"
+msgstr "szerkessze be a GT<name> GT meghajtót. Több ilyen is megadható, az elsõ lesz az alapértelmezés"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "pass flag to output executable when -run option is used"
-msgstr "tov bb¡tsa a kapcsol¢t a l‚trehozott alkalmaz snak, -run kapcsol¢ haszn latakor"
+msgstr "továbbítsa a kapcsolót a létrehozott alkalmazásnak, -run kapcsoló használatakor"
 
 #: hbmk2.prg:2890 hbmk2.prg:3009
 #, c-format
 msgid "Warning: Resource compiler script couldn't be created, continuing in command line."
-msgstr "Figyelem: Er‹forr s ford¡t¢ parancs llom nya ne hozhat¢ l‚tre, folytat s parancssorban."
+msgstr "Figyelem: Erõforrás fordító parancsállománya ne hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:2951 hbmk2.prg:3070
 #, c-format
 msgid "Compiling..."
-msgstr "Ford¡t s..."
+msgstr "Fordítás..."
 
 #: hbmk2.prg:3615 hbmk2.prg:3779
 #, c-format
 msgid "Autodetected header dir for %1$s: %2$s"
-msgstr "Detekt lt k”nyvt r %1$s fejl‚chez: %2$s"
+msgstr "Detektált könyvtár %1$s fejléchez: %2$s"
 
 #: hbmk2.prg:5494 hbmk2.prg:5633
 #, c-format
 msgid "link with multi/single-thread VM"
-msgstr "t”bbsz l£/egysz l£ virtu lis g‚p haszn lata"
+msgstr "többszálú/egyszálú virtuális gép használata"
 
 #: hbmk2.prg:3225 hbmk2.prg:3344
 #, c-format
 msgid "Error: Running lib command. %1$s"
-msgstr "Hiba: Statikus fggv‚nyk”nyvt r l‚trehoz sakor. %1$s"
+msgstr "Hiba: Statikus függvénykönyvtár létrehozásakor. %1$s"
 
 #: hbmk2.prg:4619 hbmk2.prg:4676
 #, c-format
 msgid "Warning: File cannot be found: %1$s"
-msgstr "Figyelem: F jl nem tal lhat¢: %1$s"
+msgstr "Figyelem: Fájl nem található: %1$s"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "clean (in incremental build mode)"
-msgstr "t”rl‚s (l‚pcs‹zetes zemm¢dban)"
+msgstr "törlés (lépcsõzetes üzemmódban)"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "output Harbour static library directory"
-msgstr "visszat‚r a Harbour statikus fggv‚nyk”nyvt rak k”nyvt r val"
+msgstr "visszatér a Harbour statikus függvénykönyvtárak könyvtárával"
 
 #: hbmk2.prg:4792 hbmk2.prg:5111 hbmk2.prg:4851
 #, c-format
 msgid "Error: Cannot create temporary file."
-msgstr "Hiba: Ideiglenes f jl nem hozhat¢ l‚tre."
+msgstr "Hiba: Ideiglenes fájl nem hozható létre."
 
 #: hbmk2.prg:2863 hbmk2.prg:2898 hbmk2.prg:2982 hbmk2.prg:3017
 #, c-format
 msgid "Resource compiler command:"
-msgstr "Er‹forr s ford¡t¢ parancsa:"
+msgstr "Erõforrás fordító parancsa:"
 
 #: hbmk2.prg:5215 hbmk2.prg:5227 hbmk2.prg:5317
 #, c-format
@@ -600,22 +610,22 @@ msgstr ".pot hiba: %1$s"
 #: hbmk2.prg:4202 hbmk2.prg:4343
 #, c-format
 msgid "Processing configuration: %1$s"
-msgstr "Alapbe ll¡t sok feldolgoz sa: %1$s"
+msgstr "Alapbeállítások feldolgozása: %1$s"
 
 #: hbmk2.prg:5143 hbmk2.prg:5236
 #, c-format
 msgid "Updated .po file '%1$s'"
-msgstr "'%1$s' .po f jl friss¡tve"
+msgstr "'%1$s' .po fájl frissítve"
 
 #: hbmk2.prg:5192 hbmk2.prg:5289
 #, c-format
 msgid "Created .hbl file '%1$s'"
-msgstr "'%1$s' .hbl f jl l‚trehozva"
+msgstr "'%1$s' .hbl fájl létrehozva"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "inherit all/no (default) flags from Harbour build"
-msgstr "”r”k”lj”n minden/semmi (alap‚rt.) kapcsol¢t a Harbourt¢l"
+msgstr "örököljön minden/semmi (alapért.) kapcsolót a Harbourtól"
 
 #: hbmk2.prg:4380 hbmk2.prg:4446
 #, c-format
@@ -625,214 +635,214 @@ msgstr "%1$s"
 #: hbmk2.prg:2902 hbmk2.prg:3021
 #, c-format
 msgid "Resource compiler script:"
-msgstr "Er‹forr s ford¡t¢ parancs llom nya:"
+msgstr "Erõforrás fordító parancsállománya:"
 
 #: hbmk2.prg:5467 hbmk2.prg:5606
 #, c-format
 msgid "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
-msgstr "  hbmk [kapcsol¢k] [<parancs llom ny[s]>] <forr s[.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
+msgstr "  hbmk [kapcsolók] [<parancsállomány[s]>] <forrás[.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
 
 #: hbmk2.prg:3020 hbmk2.prg:3418 hbmk2.prg:3139 hbmk2.prg:3582
 #, c-format
 msgid "C compiler command job #%1$s:"
-msgstr "C ford¡t¢ parancs. %1$s. sz l:"
+msgstr "C fordító parancs. %1$s. szál:"
 
 #: hbmk2.prg:5145 hbmk2.prg:5238
 #, c-format
 msgid "Updated .po file '%1$s' for language(s): %2$s"
-msgstr "'%1$s' .po f jl friss¡tve a k”vetkez‹ nyelv(ek)hez: %2$s"
+msgstr "'%1$s' .po fájl frissítve a következõ nyelv(ek)hez: %2$s"
 
 #: hbmk2.prg:3056 hbmk2.prg:3175
 #, c-format
 msgid "Error: Running C compiler job #%1$s. %2$s"
-msgstr "Hiba: C ford¡t¢ futtat sakor. %1$s. sz l. %2$s"
+msgstr "Hiba: C fordító futtatásakor. %1$s. szál. %2$s"
 
 #: hbmk2.prg:3058 hbmk2.prg:3177
 #, c-format
 msgid "Error: Running C compiler. %1$s"
-msgstr "Hiba: C ford¡t¢ futtat sakor. %1$s"
+msgstr "Hiba: C fordító futtatásakor. %1$s"
 
 #: hbmk2.prg:3069 hbmk2.prg:3188
 #, c-format
 msgid "Error: This architecture/compiler isn't implemented."
-msgstr "Hiba: Ez a platform/ford¡t¢ nincs megval¢s¡tva."
+msgstr "Hiba: Ez a platform/fordító nincs megvalósítva."
 
 #: hbmk2.prg:3170 hbmk2.prg:3289
 #, c-format
 msgid "Error: Running linker. %1$s"
-msgstr "Hiba: Szerkeszt‹ futtat sa k”zben. %1$s"
+msgstr "Hiba: Szerkesztõ futtatása közben. %1$s"
 
 #: hbmk2.prg:3164 hbmk2.prg:3283
 #, c-format
 msgid "Linker script:"
-msgstr "Szerkeszt‹ parancs llom nya:"
+msgstr "Szerkesztõ parancsállománya:"
 
 #: hbmk2.prg:3125 hbmk2.prg:3244
 #, c-format
 msgid "Linking... %1$s"
-msgstr "Szerkeszt‚s... %1$s"
+msgstr "Szerkesztés... %1$s"
 
 #: hbmk2.prg:3160 hbmk2.prg:3279
 #, c-format
 msgid "Linker command:"
-msgstr "Szerkeszt‹ parancs:"
+msgstr "Szerkesztõ parancs:"
 
 #: hbmk2.prg:3152 hbmk2.prg:3271
 #, c-format
 msgid "Warning: Link script couldn't be created, continuing in command line."
-msgstr "Figyelem: Szerkeszt‹ parancs llom nya ne hozhat¢ l‚tre, folytat s parancssorban."
+msgstr "Figyelem: Szerkesztõ parancsállománya ne hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:3184 hbmk2.prg:3303
 #, c-format
 msgid "Creating static library... %1$s"
-msgstr "Statikus fggv‚nyk”nyvt r l‚trehoz sa... %1$s"
+msgstr "Statikus függvénykönyvtár létrehozása... %1$s"
 
 #: hbmk2.prg:3215 hbmk2.prg:3334
 #, c-format
 msgid "Lib command:"
-msgstr "Statikus fggv‚nyk”nyvt r l‚trehoz s parancsa:"
+msgstr "Statikus függvénykönyvtár létrehozás parancsa:"
 
 #: hbmk2.prg:3207 hbmk2.prg:3326
 #, c-format
 msgid "Warning: Lib script couldn't be created, continuing in command line."
-msgstr "Figyelem: Statikus fggv‚nyk”nyvt r l‚trehoz s parancs llom nya nem hozhat¢ l‚tre, folytat s parancssorban."
+msgstr "Figyelem: Statikus függvénykönyvtár létrehozás parancsállománya nem hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:3219 hbmk2.prg:3338
 #, c-format
 msgid "Lib script:"
-msgstr "Statikus fggv‚nyk”nyvt r l‚trehoz s parancs llom nya:"
+msgstr "Statikus függvénykönyvtár létrehozás parancsállománya:"
 
 #: hbmk2.prg:3264 hbmk2.prg:3383
 #, c-format
 msgid "Warning: Dynamic lib link script couldn't be created, continuing in command line."
-msgstr "Figyelem: Dinamikus fggv‚nyk”nyvt r parancs llom nya nem hozhat¢ l‚tre, folytat s parancssorban."
+msgstr "Figyelem: Dinamikus függvénykönyvtár parancsállománya nem hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:3272 hbmk2.prg:3391
 #, c-format
 msgid "Dynamic lib link command:"
-msgstr "Dinamikus fggv‚nyk”nyvt r szerkeszt‹ parancsa:"
+msgstr "Dinamikus függvénykönyvtár szerkesztõ parancsa:"
 
 #: hbmk2.prg:3276 hbmk2.prg:3395
 #, c-format
 msgid "Dynamic lib link script:"
-msgstr "Dinamikus fggv‚nyk”nyvt r szerkeszt‹ parancs llom nya:"
+msgstr "Dinamikus függvénykönyvtár szerkesztõ parancsállománya:"
 
 #: hbmk2.prg:3282 hbmk2.prg:3401
 #, c-format
 msgid "Error: Running dynamic lib link command. %1$s"
-msgstr "Hiba: Dinamikus fggv‚nyk”nyvt r szerkeszt‹ futtat sakor. %1$s"
+msgstr "Hiba: Dinamikus függvénykönyvtár szerkesztõ futtatásakor. %1$s"
 
 #: hbmk2.prg:5136 hbmk2.prg:5208
 #, c-format
 msgid "Created .po file '%1$s'"
-msgstr "'%1$s' .po f jl l‚trehozva"
+msgstr "'%1$s' .po fájl létrehozva"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "working directory for incremental build mode\\n(default: %1$s/arch/comp)"
-msgstr "munkak”nyvt r l‚pcs‹zetes zemm¢d haszn latakor\\n(alap‚rtelmez‚s: %1$s/arch/comp)"
+msgstr "munkakönyvtár lépcsõzetes üzemmód használatakor\\n(alapértelmezés: %1$s/arch/comp)"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "emulate Clipper compatible linker behavior\\ncreate link/copy hbmk to rtlink/blinker/exospace for the same effect"
-msgstr "emul ljon Clipper kompatibilis szerkeszt‹ zemm¢dot.\\nA hbmk program rtlink/blinker/exospace nevekre val¢ m sol s val/ tnevez‚s‚vel hasonl¢ hat s ‚rhet el"
+msgstr "emuláljon Clipper kompatibilis szerkesztõ üzemmódot.\\nA hbmk program rtlink/blinker/exospace nevekre való másolásával/átnevezésével hasonló hatás érhet el"
 
 #: hbmk2.prg:5567 hbmk2.prg:5715
 #, c-format
 msgid "Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}"
-msgstr "Sz mos .hbp opci¢ban ‚s parancssori megfelel‹ikben (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) haszn lhat¢k makr¢k: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}"
+msgstr "Számos .hbp opcióban és parancssori megfelelõikben (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) használhatók makrók: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}"
 
 #: hbmk2.prg:3340 hbmk2.prg:3459
 #, c-format
 msgid "Warning: Running post processor command. %1$s:"
-msgstr "Figyelem: Ut¢feldolgoz¢ parancs hib val t‚rt vissza. %1$s:"
+msgstr "Figyelem: Utófeldolgozó parancs hibával tért vissza. %1$s:"
 
 #: hbmk2.prg:3369 hbmk2.prg:3488
 #, c-format
 msgid "Warning: Running compression command. %1$s:"
-msgstr "Figyelem: T”m”r¡t‹ futtat sa hib val t‚rt vissza. %1$s:"
+msgstr "Figyelem: Tömörítõ futtatása hibával tért vissza. %1$s:"
 
 #: hbmk2.prg:5266 hbmk2.prg:5356
 #, c-format
 msgid ".pot merge error: %1$s"
-msgstr ".pot ”sszev logat s hiba: %1$s"
+msgstr ".pot összeválogatás hiba: %1$s"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
 msgid "show commands executed"
-msgstr "mutassa a v‚grehajtott parancsokat"
+msgstr "mutassa a végrehajtott parancsokat"
 
 #: hbmk2.prg:5494 hbmk2.prg:5633
 #, c-format
 msgid "output file name"
-msgstr "kimeneti f jln‚v"
+msgstr "kimeneti fájlnév"
 
 #: hbmk2.prg:3505
 #, c-format
 msgid "Copied target to %1$s"
-msgstr "C‚l kim solva %1$s n‚ven"
+msgstr "Cél kimásolva %1$s néven"
 
 #: hbmk2.prg:2603
 #, c-format
 msgid "Generating timestamp header: %1$s"
-msgstr "Id‹pont fejl‚c l‚trehoz sa: %1$s"
+msgstr "Idõpont fejléc létrehozása: %1$s"
 
 #: hbmk2.prg:5217
 #, c-format
 msgid "Rebuilt .po file '%1$s' for language(s): %2$s"
-msgstr "'%1$s' .po f jl £jragener lva a k”vetkez‹ nyelv(ek)hez: %2$s"
+msgstr "'%1$s' .po fájl újragenerálva a következõ nyelv(ek)hez: %2$s"
 
 #: hbmk2.prg:5704
 #, c-format
 msgid "force waiting for a key on exit in case of failure (with alternate GTs only)"
-msgstr "v rjon billentyûre sikertelen befejez‚s eset‚n. (csak alternat¡v GT haszn lata eset‚n)"
+msgstr "várjon billentyûre sikertelen befejezés esetén. (csak alternatív GT használata esetén)"
 
 #: hbmk2.prg:5704
 #, c-format
 msgid "override default language. Similar to HB_LANG envvar."
-msgstr "fellb¡r lja az alap‚rtelmezett nyelvet. Hasonl¢an HB_LANG k”rnyezeti v ltoz¢hoz."
+msgstr "felülbírálja az alapértelmezett nyelvet. Hasonlóan HB_LANG környezeti változóhoz."
 
 #: hbmk2.prg:5704
 #, c-format
 msgid "recreate .po file, thus removing all obsolete entries in it"
-msgstr "Gener lja £jra a .po f jlt, t”r”lve ez ltal minden szks‚gtelen bejegyz‚st"
+msgstr "Generálja újra a .po fájlt, törölve ezáltal minden szükségtelen bejegyzést"
 
 #: hbmk2.prg:5704
 #, c-format
 msgid "enable (or disable) single beep on successful exit, double beep on failure"
-msgstr "egyszeri s¡pol s sikeres v‚grehajt s eset‚n, dupla s¡pol s hiba eset‚n"
+msgstr "egyszeri sípolás sikeres végrehajtás esetén, dupla sípolás hiba esetén"
 
 #: hbmk2.prg:5704
 #, c-format
 msgid "create shared Harbour binaries without/with absolute dir reference to Harbour library (default: 'fullshared' when Harbour is installed on system location, 'fixshared' otherwise) (fix/full option in *nix only)"
-msgstr "haszn ljon a szerkeszt‚skor dinamikus fggv‚nyk”nyvt rakat k”zvetlen hivatkoz s n‚lkl/hivtakoz ssal a dinamikus Harbour fggv‚nyk”nyvt r fel‚. (alap‚rtelmez‚s: 'fullshared', ha a Harbour telep¡tve van) (fix/full opci¢ csak *nix rendszereken)"
+msgstr "használjon a szerkesztéskor dinamikus függvénykönyvtárakat közvetlen hivatkozás nélkül/hivtakozással a dinamikus Harbour függvénykönyvtár felé. (alapértelmezés: 'fullshared', ha a Harbour telepítve van) (fix/full opció csak *nix rendszereken)"
 
 #: hbmk2.prg:5704
 #, c-format
 msgid "copy target to <path>. if <path> is a directory, it should end with path separator. can be specified multiple times"
-msgstr "c‚l m sol sa <path> £tvonalra. Ha <path> egy k”nyvt r, k”nyvt relv laszt¢ karakterrel kell v‚gz‹dj”n. T”bbsz”r is megadhat¢."
+msgstr "cél másolása <path> útvonalra. Ha <path> egy könyvtár, könyvtárelválasztó karakterrel kell végzõdjön. Többször is megadható."
 
 #: hbmk2.prg:5704
 #, c-format
 msgid "run target"
-msgstr "c‚l futtat sa"
+msgstr "cél futtatása"
 
 #: hbmk2.prg:5183
 #, c-format
 msgid "Error: Cannot create temporary unified .po file."
-msgstr "Hiba: Nem sikerlt l‚trehozni az ideiglenes .po f jlt."
+msgstr "Hiba: Nem sikerült létrehozni az ideiglenes .po fájlt."
 
 #: hbmk2.prg:5215
 #, c-format
 msgid "Rebuilt .po file '%1$s'"
-msgstr "'%1$s' .po f jl £jragener lva"
+msgstr "'%1$s' .po fájl újragenerálva"
 
 #: hbmk2.prg:5704
 #, c-format
 msgid "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build"
-msgstr "hozzon l‚tre egy .ch fejl‚cet id‹pont adatokkal. Gener lt fejl‚c _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ makr¢i az aktu lis d tumokkal kerlnek felt”lt‚sre"
+msgstr "hozzon létre egy .ch fejlécet idõpont adatokkal. Generált fejléc _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ makrói az aktuális dátumokkal kerülnek feltöltésre"
 
 #: hbmk2.prg:3503
 #, c-format
 msgid "Warning: Copying target to %1$s failed with %2$s."
-msgstr "Figyelem: C‚l m sol sa %1$s helyre sikertelen. Hibak¢d: %2$s"
+msgstr "Figyelem: Cél másolása %1$s helyre sikertelen. Hibakód: %2$s"

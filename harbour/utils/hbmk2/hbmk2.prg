@@ -113,15 +113,14 @@ REQUEST HB_GT_CGI_DEFAULT
    REQUEST HB_GT_TRM
 #endif
 
-REQUEST HB_CODEPAGE_DE850
-REQUEST HB_CODEPAGE_ES850
-REQUEST HB_CODEPAGE_FR850
-REQUEST HB_CODEPAGE_HU852
-REQUEST HB_CODEPAGE_IT850
-REQUEST HB_CODEPAGE_PL852
-REQUEST HB_CODEPAGE_PT850
-REQUEST HB_CODEPAGE_RU866
-REQUEST HB_CODEPAGE_UA866
+REQUEST HB_CODEPAGE_DE850, HB_CODEPAGE_DEISO
+REQUEST HB_CODEPAGE_ES850, HB_CODEPAGE_ESISO
+REQUEST HB_CODEPAGE_FR850, HB_CODEPAGE_FRISO
+REQUEST HB_CODEPAGE_HU852, HB_CODEPAGE_HUISO
+REQUEST HB_CODEPAGE_IT850, HB_CODEPAGE_ITISO
+REQUEST HB_CODEPAGE_PL852, HB_CODEPAGE_PLISO
+REQUEST HB_CODEPAGE_PT850, HB_CODEPAGE_PTISO
+REQUEST HB_CODEPAGE_RU866, HB_CODEPAGE_RUISO
 
 REQUEST hbmk_ARCH
 REQUEST hbmk_COMP
@@ -5603,6 +5602,8 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
 STATIC PROCEDURE GetUILangCDP( /* @ */ cLNG, /* @ */ cCDP )
    LOCAL tmp
 
+   cCDP := ""
+
    IF Empty( cLNG := GetEnv( "HB_LANG" ) )
       IF Empty( cLNG := hb_UserLang() )
          cLNG := "en-EN"
@@ -5611,10 +5612,10 @@ STATIC PROCEDURE GetUILangCDP( /* @ */ cLNG, /* @ */ cCDP )
 
    /* Strip encoding information */
    IF ( tmp := At( ".", cLNG ) ) > 0
+      cCDP := SubStr( cLNG, tmp + 1 )
       cLNG := Left( cLNG, tmp - 1 )
    ENDIF
    cLNG := StrTran( cLNG, "_", "-" )
-   cCDP := Upper( SubStr( I_( "cdp=EN" ), Len( "cdp=" ) + 1 ) )
 
    RETURN
 
@@ -5628,8 +5629,12 @@ STATIC PROCEDURE SetUILang( hbmk )
       tmp := StrTran( tmp, "${hb_root}", PathSepToSelf( DirAddPathSep( hb_DirBase() ) ) )
       tmp := StrTran( tmp, "${lng}", StrTran( hbmk[ _HBMK_cUILNG ], "-", "_" ) )
       hb_i18n_set( iif( hb_i18n_check( tmp := hb_MemoRead( tmp ) ), hb_i18n_restoretable( tmp ), NIL ) )
-      hb_cdpSelect( hbmk[ _HBMK_cUICDP ] )
    ENDIF
+
+   hb_cdpSelect( Upper( SubStr( I_( "cdp=EN" ), Len( "cdp=" ) + 1 ) ) )
+
+   /* Intentionally doing runtime branching to include both strings in translation files. */
+   hb_setDispCP( Upper( SubStr( iif( hb_Version( HB_VERSION_UNIX_COMPAT ), I_( "nix=EN" ), I_( "wdo=EN" ) ), Len( "xxx=" ) + 1 ) ) )
 
    RETURN
 
