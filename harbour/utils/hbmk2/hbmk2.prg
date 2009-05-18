@@ -1993,6 +1993,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTL ], "{LL}" )
             aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
          ENDIF
+         IF hbmk[ _HBMK_lMAP ]
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map {OM}" )
+         ENDIF
          IF ! hbmk[ _HBMK_lSHARED ]
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
          ENDIF
