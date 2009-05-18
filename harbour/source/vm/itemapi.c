@@ -84,13 +84,6 @@
  *
  */
 
-#if !defined(__DJGPP__)
-#  include <math.h> /* For log() */
-#endif
-#if defined(_MSC_VER) || defined(__IBMCPP__) || (__BORLANDC__ > 1040) || defined(__WATCOMC__) /* Use this only above Borland C++ 3.1 */
-#  include <float.h>  /* for _finite() and _isnan() */
-#endif
-
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbvm.h"
@@ -106,6 +99,9 @@
 
 #if defined(HB_OS_SUNOS)
 #  include <ieeefp.h>
+#elif defined(_MSC_VER) || defined(__BORLANDC__) || \
+      defined(__WATCOMC__) || defined(__IBMCPP__)
+#  include <float.h>  /* for _finite() and _isnan() */
 #endif
 
 PHB_ITEM hb_itemNew( PHB_ITEM pNull )
@@ -1114,19 +1110,7 @@ PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
       pItem = hb_itemNew( NULL );
 
    if( iWidth <= 0 || iWidth > 99 )
-   {
-#if defined(__BORLANDC__) && (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
-      /* Borland C compiled app crashes if a "NaN" double is compared
-       * with another double [martin vogel]
-       */
-      if( _isnan( dNumber ) )
-      {
-         iWidth = 20;
-      }
-      else
-#endif
       iWidth = HB_DBL_LENGTH( dNumber );
-   }
 
    if( iDec < 0 )
    {
@@ -2272,6 +2256,8 @@ BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int iDec )
 #elif defined(__GNUC__) || defined(__DJGPP__) || defined(__LCC__)
 #  define HB_FINITE_DBL(d)    ( finite(d)!=0 )
 #else
+      int iTODO;
+
       /* added infinity check for Borland C [martin vogel] */
       /* Borland C 5.5 has _finite() function, if it's necessary
          we can reenable this code for older DOS BCC versions
