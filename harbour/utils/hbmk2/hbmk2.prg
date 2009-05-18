@@ -155,7 +155,6 @@ REQUEST hbmk_KEYW
 #define _WORKDIR_DEF_           ".hbmk"
 
 #define _BCC_BIN_DETECT()       FindInPath( "bcc32" )
-#define _BCC_PSDK_LIBPATH( p )  PathNormalize( FN_DirGet( p ) + ".." + hb_osPathSeparator() + "Lib" + hb_osPathSeparator() + "PSDK" )
 
 #define _HBMK_lQuiet            1
 #define _HBMK_lInfo             2
@@ -393,6 +392,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    LOCAL cBin_Res
    LOCAL cBin_Lib
    LOCAL cBin_Dyn
+   LOCAL cPath_CompC
    LOCAL nErrorLevel := 0
    LOCAL tmp, tmp1, tmp2, array
    LOCAL cScriptFile
@@ -853,10 +853,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
           { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } }
    ENDIF
 
-   hbmk[ _HBMK_aLIBPATH ] := {}
-   hbmk[ _HBMK_aINCPATH ] := {}
-
    /* Autodetect compiler */
+
+   cPath_CompC := NIL
 
    IF lStopAfterHarbour
       /* If we're just compiling .prg to .c we don't need a C compiler. */
@@ -874,13 +873,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             IF Empty( hbmk[ _HBMK_cCOMP ] ) .AND. ! Empty( aCOMPDET )
                /* Check compilers */
                FOR tmp := 1 TO Len( aCOMPDET )
-                  IF ! Empty( tmp1 := Eval( aCOMPDET[ tmp ][ _COMPDET_bBlock ] ) )
+                  IF ! Empty( cPath_CompC := Eval( aCOMPDET[ tmp ][ _COMPDET_bBlock ] ) )
                      hbmk[ _HBMK_cCOMP ] := aCOMPDET[ tmp ][ _COMPDET_cCOMP ]
-                     /* NOTE: Hack to tweak bcc setup by hbmk2 to include one
-                              compiler lib dir to lib search path. */
-                     IF hbmk[ _HBMK_cCOMP ] == "bcc"
-                        AAdd( hbmk[ _HBMK_aLIBPATH ], _BCC_PSDK_LIBPATH( tmp1 ) )
-                     ENDIF
                      EXIT
                   ENDIF
                NEXT
@@ -915,13 +909,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             hbmk_OutErr( hb_StrFormat( I_( "Error: Compiler value unknown: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
             RETURN 2
          ENDIF
-         /* NOTE: Hack to tweak bcc setup by hbmk2 to include one
-                  compiler lib dir to lib search path. */
-         IF hbmk[ _HBMK_cCOMP ] == "bcc"
-            IF ! Empty( tmp1 := _BCC_BIN_DETECT() )
-               AAdd( hbmk[ _HBMK_aLIBPATH ], _BCC_PSDK_LIBPATH( tmp1 ) )
-            ENDIF
-         ENDIF
          IF hbmk[ _HBMK_cARCH ] $ "win|wce"
             /* Detect cross platform CCPREFIX and CCPATH if embedded MinGW installation is detected */
             FOR tmp := 1 TO Len( aCOMPDET_LOCAL )
@@ -937,6 +924,23 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
       ENDIF
    ENDIF
+
+   hbmk[ _HBMK_aLIBPATH ] := {}
+   hbmk[ _HBMK_aINCPATH ] := {}
+
+   /* Tweaks to compiler environments */
+
+   DO CASE
+   CASE hbmk[ _HBMK_cCOMP ] == "bcc"
+      /* NOTE: Hack to tweak bcc setup by hbmk2 to include one additional
+               compiler lib dir to lib search path. */
+      IF Empty( cPath_CompC )
+         cPath_CompC := _BCC_BIN_DETECT()
+      ENDIF
+      IF ! Empty( cPath_CompC )
+         AAdd( hbmk[ _HBMK_aLIBPATH ], PathNormalize( FN_DirGet( cPath_CompC ) + ".." + hb_osPathSeparator() + "Lib" + hb_osPathSeparator() + "PSDK" ) )
+      ENDIF
+   ENDCASE
 
    /* Finish detecting bin/lib/include dirs */
 

@@ -254,7 +254,9 @@ METHOD xDo( nStatus ) CLASS HBMemoEditor
 
 METHOD MoveCursor( nKey ) CLASS HBMemoEditor
 
-   IF nKey == K_CTRL_END // same value as CTRL-W
+   IF nKey == K_CTRL_END .OR. ;
+      nKey == K_CTRL_W
+
       ::lSaved := .T.
       ::lExitEdit := .T.
    ELSE
