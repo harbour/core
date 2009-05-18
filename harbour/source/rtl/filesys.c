@@ -122,7 +122,7 @@
    #include <utime.h>
    #include <sys/types.h>
    #include <sys/wait.h>
-   #if defined( HB_OS_LINUX )
+   #if defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
       #include <sys/time.h>
    #endif
 #endif
@@ -1236,7 +1236,7 @@ BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec )
 #  else
          new_value = *gmtime( &tim );
 #  endif
-#if defined( HB_OS_LINUX )
+#if defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
          {
             struct timeval times[2];
             times[ 0 ].tv_sec = times[ 1 ].tv_sec = mktime( &new_value );

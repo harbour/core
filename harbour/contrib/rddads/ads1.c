@@ -2875,7 +2875,7 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
    pArea->uiRecordLen = (USHORT) u32Length;
    /* Alloc record buffer - because it's also used for some extended types
       conversion it has to be at least 25 bytes size */
-   pArea->pRecord = ( BYTE * ) hb_xgrab( HB_MAX( pArea->uiRecordLen, pArea->maxFieldLen ) + 1 );
+   pArea->pRecord = ( BYTE * ) hb_xgrab( HB_MAX( ( ULONG ) pArea->uiRecordLen, pArea->maxFieldLen ) + 1 );
 
    return SELF_GOTOP( ( AREAP ) pArea );
 }
@@ -3335,7 +3335,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    pArea->uiRecordLen = (USHORT) u32Length;
    /* Alloc record buffer - because it's also used for some extended types
       conversion it has to be at least 25 bytes size */
-   pArea->pRecord = ( BYTE * ) hb_xgrab( HB_MAX( pArea->uiRecordLen, pArea->maxFieldLen ) + 1 );
+   pArea->pRecord = ( BYTE * ) hb_xgrab( HB_MAX( ( ULONG ) pArea->uiRecordLen, pArea->maxFieldLen ) + 1 );
 
    /* If successful call SUPER_OPEN to finish system jobs */
    if( SUPER_OPEN( ( AREAP ) pArea, pOpenInfo ) == HB_FAILURE )
