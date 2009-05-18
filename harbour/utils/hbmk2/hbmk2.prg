@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Harbour Make
+ * Harbour Make (alias hbmk, alias hbmk2)
  *
  * Copyright 1999-2009 Viktor Szakats <harbour.01 syenar.hu>
  * www - http://www.harbour-project.org
@@ -221,6 +221,11 @@ PROCEDURE Main( ... )
 
    LOCAL lPause := hb_gtInfo( HB_GTI_ISGRAPHIC )
 
+   LOCAL aArgsTarget
+   LOCAL nTarget
+   LOCAL nTargetTODO
+   LOCAL lHadTarget
+
    /* Emulate -hbcmp, -hbcc, -hblnk switches when certain
       self names are detected.
       For compatibility with hbmk script aliases. */
@@ -254,7 +259,49 @@ PROCEDURE Main( ... )
       ENDCASE
    ENDIF
 
-   nResult := hbmk( aArgs, @lPause )
+   /* Handle multitarget command lines */
+
+   nTargetTODO := 1
+   DO WHILE .T.
+
+      aArgsTarget := {}
+      nTarget := 0
+      lHadTarget := .F.
+
+      FOR EACH tmp IN aArgs
+         DO CASE
+         CASE Lower( FN_ExtGet( tmp ) ) == ".hbt" .AND. ! lHadTarget
+            nTarget++
+            IF nTarget == nTargetTODO
+               AAdd( aArgsTarget, tmp )
+            ENDIF
+         CASE Lower( tmp ) == "-target"
+            nTarget++
+            lHadTarget := .T.
+         CASE Lower( tmp ) == "-notarget"
+            lHadTarget := .F.
+         OTHERWISE
+            IF ! lHadTarget .OR. nTarget == nTargetTODO
+               AAdd( aArgsTarget, tmp )
+            ENDIF
+         ENDCASE
+      NEXT
+
+      /* Exit if there was no more projects found on the command line */
+      IF nTarget < nTargetTODO
+         EXIT
+      ENDIF
+
+      /* Build one target */
+      nResult := hbmk( aArgsTarget, @lPause )
+
+      /* Exit on first failure */
+      IF nResult != 0
+         EXIT
+      ENDIF
+
+      nTargetTODO++
+   ENDDO
 
    IF nResult != 0 .AND. lPause
       OutStd( I_( "Press any key to continue..." ) )
@@ -1051,7 +1098,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             nEmbedLevel := 1
             HBM_Load( aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
          ENDIF
-      CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
+      CASE Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
+           Lower( FN_ExtGet( cParam ) ) == ".hbt"
          nEmbedLevel := 1
          HBM_Load( aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
       OTHERWISE
@@ -1464,14 +1512,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE FN_ExtGet( cParamL ) == ".prg"
 
          cParam := ArchCompFilter( hbmk, cParam )
-         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
             AAdd( s_aPRG    , PathSepToTarget( hbmk, cParam ) )
             DEFAULT s_cFIRST TO PathSepToSelf( cParam )
          NEXT
 
       CASE FN_ExtGet( cParamL ) == ".rc"
 
-         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
             AAdd( s_aRESSRC , PathSepToTarget( hbmk, cParam ) )
          NEXT
 
@@ -1481,11 +1529,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             /* For MinGW family add .res files as source input, as they
                will need to be converted to coff format with windres (just
                like plain .rc files) before feeding them to gcc. */
-            FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
+            FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
                AAdd( s_aRESSRC , PathSepToTarget( hbmk, cParam ) )
             NEXT
          ELSE
-            FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
+            FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
                AAdd( s_aRESCMP , PathSepToTarget( hbmk, cParam ) )
             NEXT
          ENDIF
@@ -1498,7 +1546,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE FN_ExtGet( cParamL ) == ".o" .OR. ;
            FN_ExtGet( cParamL ) == ".obj"
 
-         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
             AAdd( s_aOBJUSER, PathSepToTarget( hbmk, cParam ) )
             DEFAULT s_cFIRST TO PathSepToSelf( cParam )
          NEXT
@@ -1507,7 +1555,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
            FN_ExtGet( cParamL ) == ".cpp" /* .cc, .cxx, .cx */
 
          cParam := ArchCompFilter( hbmk, cParam )
-         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
             AAdd( s_aC      , PathSepToTarget( hbmk, cParam ) )
             DEFAULT s_cFIRST TO PathSepToSelf( cParam )
          NEXT
@@ -1515,7 +1563,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE FN_ExtGet( cParamL ) $ ".po" .OR. ;
            FN_ExtGet( cParamL ) $ ".pot"
 
-         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aPO ], PathSepToTarget( hbmk, cParam ) )
          NEXT
 
@@ -4288,14 +4336,20 @@ STATIC FUNCTION FN_DirExtSet( cFileName, cDirNew, cExtNew )
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
 
-STATIC FUNCTION FN_Expand( cFileName )
-#if defined( __PLATFORM__UNIX )
-   RETURN { cFileName }
-#else
+STATIC FUNCTION FN_Expand( cFileName, lCommandLine )
    LOCAL aFileList
    LOCAL aFile
    LOCAL aDir
    LOCAL cExt
+
+#if defined( __PLATFORM__UNIX )
+   /* Disable expansion if this came from the command line */
+   IF lCommandLine
+      RETURN { cFileName }
+   ENDIF
+#else
+   HB_SYMBOL_UNUSED( lCommandLine )
+#endif
 
    IF ! FN_HasWildcard( cFileName )
       RETURN { cFileName }
@@ -4312,7 +4366,6 @@ STATIC FUNCTION FN_Expand( cFileName )
    NEXT
 
    RETURN aFileList
-#endif
 
 STATIC FUNCTION FN_HasWildcard( cFileName )
    RETURN "?" $ cFileName .OR. ;
@@ -4660,7 +4713,8 @@ STATIC PROCEDURE HBM_Load( aParams, cFileName, /* @ */ nEmbedLevel )
                         nEmbedLevel++
                         HBM_Load( aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
                      ENDIF
-                  CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
+                  CASE Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
+                       Lower( FN_ExtGet( cParam ) ) == ".hbt"
                      IF nEmbedLevel < 3
                         nEmbedLevel++
                         HBM_Load( aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */

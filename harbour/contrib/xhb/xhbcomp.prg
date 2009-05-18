@@ -60,9 +60,9 @@ ANNOUNCE XHB_LIB
  * It should not be used in user code. [druzus]
  */
 #xcommand OPTIONAL INHERIT <!className!> =>                 ;
-            if type( <"className">+"()" ) == "UI"          ;;
-               aadd( oClass:asSuper, @__<className>() )    ;;
-            end
+            IF Type( <"className">+"()" ) == "UI"          ;;
+               AAdd( oClass:asSuper, @__<className>() )    ;;
+            ENDIF
 
 
 INIT PROCEDURE xhb_Init()
