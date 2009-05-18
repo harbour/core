@@ -151,7 +151,8 @@ REQUEST hbmk_KEYW
 
 #define _LNG_MARKER             "${lng}"
 
-#define _WORKDIR_DEF_           ".hbmk"
+#define _WORKDIR_BASE_          ".hbmk"
+#define _WORKDIR_DEF_           ( _WORKDIR_BASE_ + hb_osPathSeparator() + hbmk[ _HBMK_cARCH ] + hb_osPathSeparator() + hbmk[ _HBMK_cCOMP ] )
 
 #define _BCC_BIN_DETECT()       FindInPath( "bcc32" )
 
@@ -1595,7 +1596,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    ENDIF
 
    /* Decide about output name */
-   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+   IF ! lStopAfterInit
 
       /* If -o with full name wasn't specified, let's
          make it the first source file specified. */
@@ -1611,9 +1612,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    /* Decide about working dir */
    IF ! lStopAfterInit
       IF hbmk[ _HBMK_lINC ]
-         IF cWorkDir == NIL
-            cWorkDir := _WORKDIR_DEF_ + hb_osPathSeparator() + hbmk[ _HBMK_cARCH ] + hb_osPathSeparator() + hbmk[ _HBMK_cCOMP ]
-         ENDIF
+         DEFAULT cWorkDir TO FN_DirGet( s_cPROGNAME ) + _WORKDIR_DEF_
          AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + cWorkDir + hb_osPathSeparator() ) /* NOTE: Ending path sep is important. */
          IF ! DirBuild( cWorkDir )
             hbmk_OutErr( hb_StrFormat( I_( "Error: Working directory cannot be created: %1$s" ), cWorkDir ) )
@@ -3486,7 +3485,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          DirUnbuild( cWorkDir )
       ENDIF
 
-      IF nErrorLevel == 0 .AND. ! lStopAfterCComp .AND. ! s_lCLEAN
+      IF nErrorLevel == 0 .AND. ! s_lCLEAN
 
          IF ! Empty( cBin_Post )
 
@@ -4245,7 +4244,7 @@ STATIC FUNCTION DirBuild( cDir )
                   RETURN .F.
                ENDIF
                #if ! defined( __PLATFORM__UNIX )
-                  IF Lower( cDirItem ) == _WORKDIR_DEF_
+                  IF Lower( cDirItem ) == _WORKDIR_BASE_
                      hb_FSetAttr( cDirTemp, FC_HIDDEN )
                   ENDIF
                #endif
@@ -5597,12 +5596,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
 
    RETURN .F.
 
-/* TODO: Add proper CDP detection */
-
 STATIC PROCEDURE GetUILangCDP( /* @ */ cLNG, /* @ */ cCDP )
-   LOCAL tmp
-
-   cCDP := ""
 
    IF Empty( cLNG := GetEnv( "HB_LANG" ) )
       IF Empty( cLNG := hb_UserLang() )
@@ -5610,12 +5604,8 @@ STATIC PROCEDURE GetUILangCDP( /* @ */ cLNG, /* @ */ cCDP )
       ENDIF
    ENDIF
 
-   /* Strip encoding information */
-   IF ( tmp := At( ".", cLNG ) ) > 0
-      cCDP := SubStr( cLNG, tmp + 1 )
-      cLNG := Left( cLNG, tmp - 1 )
-   ENDIF
    cLNG := StrTran( cLNG, "_", "-" )
+   cCDP := "" /* TODO: 1) Detect it 2) use it - this would need generic Harbour CP support */
 
    RETURN
 
@@ -5631,9 +5621,11 @@ STATIC PROCEDURE SetUILang( hbmk )
       hb_i18n_set( iif( hb_i18n_check( tmp := hb_MemoRead( tmp ) ), hb_i18n_restoretable( tmp ), NIL ) )
    ENDIF
 
+   /* Setup input CP of the translation */
    hb_cdpSelect( Upper( SubStr( I_( "cdp=EN" ), Len( "cdp=" ) + 1 ) ) )
 
-   /* Intentionally doing runtime branching to include both strings in translation files. */
+   /* Setup output CP, separate for Windows/DOS/OS2 and *nix systems */
+   /* NOTE: Intentionally doing runtime branching to include both strings in translation files. */
    hb_setDispCP( Upper( SubStr( iif( hb_Version( HB_VERSION_UNIX_COMPAT ), I_( "nix=EN" ), I_( "wdo=EN" ) ), Len( "xxx=" ) + 1 ) ) )
 
    RETURN
@@ -5731,7 +5723,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-[no]head[=<m>]"   , I_( "control source header parsing (in incremental build mode)\n<m> can be: full, partial (default), off" ) },;
       { "-rebuild"          , I_( "rebuild all (in incremental build mode)" ) },;
       { "-clean"            , I_( "clean (in incremental build mode)" ) },;
-      { "-workdir=<dir>"    , hb_StrFormat( I_( "working directory for incremental build mode\n(default: %1$s/arch/comp)" ), _WORKDIR_DEF_ ) },;
+      { "-workdir=<dir>"    , hb_StrFormat( I_( "working directory for incremental build mode\n(default: %1$s/arch/comp)" ), _WORKDIR_BASE_ ) },;
       NIL,;
       { "-hbl[=<output>]"   , I_( "output .hbl filename. ${lng} macro is accepted in filename" ) },;
       { "-lng=<languages>"  , I_( "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ) },;
