@@ -356,7 +356,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
             }
 
             case HB_FT_MEMO:
-               pItem = hb_itemPutC( NULL, "" );
+               pItem = hb_itemPutC( NULL, NULL );
                break;
 
             case HB_FT_INTEGER:
@@ -376,7 +376,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
                break;
 
             case HB_FT_DATE:
-               pItem = hb_itemPutDS( NULL, "" );
+               pItem = hb_itemPutDS( NULL, NULL );
                break;
 
             default:
@@ -443,8 +443,8 @@ static HB_ERRCODE fbClose( SQLBASEAREAP pArea )
    {
       isc_stmt_handle  stmt = ( isc_stmt_handle ) pArea->pStmt;
 
-      /* We can not pass here ( isc_stmt_handle* ) &pArea->pStmt. 
-         It will not work on 64bit big-endian system, since on 64bit 
+      /* We can not pass here ( isc_stmt_handle* ) &pArea->pStmt.
+         It will not work on 64bit big-endian system, since on 64bit
          handle is unsigned int */
       isc_dsql_free_statement( status, &stmt, DSQL_drop );
       pArea->pStmt = NULL;

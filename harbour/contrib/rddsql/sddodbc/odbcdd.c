@@ -158,7 +158,7 @@ static HB_ERRCODE odbcConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
       {
          cBuffer[ 0 ] ='\0';
 
-         if( SQL_SUCCEEDED( SQLDriverConnect( hConnect, NULL, ( SQLCHAR* ) hb_arrayGetCPtr( pItem, 2 ), hb_arrayGetCLen( pItem, 2 ),  
+         if( SQL_SUCCEEDED( SQLDriverConnect( hConnect, NULL, ( SQLCHAR* ) hb_arrayGetCPtr( pItem, 2 ), hb_arrayGetCLen( pItem, 2 ),
                                               cBuffer, 1024, &iLen, SQL_DRIVER_NOPROMPT ) ) )
          {
             pConnection->hConnection = ( void* ) hConnect;
@@ -244,7 +244,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
 
-   uiFields = ( USHORT ) iNameLen; 
+   uiFields = ( USHORT ) iNameLen;
    SELF_SETFIELDEXTENT( (AREAP) pArea, uiFields );
 
    pItemEof = hb_itemArrayNew( uiFields );
@@ -342,7 +342,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
             }
 
             case HB_FT_MEMO:
-               pItem = hb_itemPutC( NULL, "" );
+               pItem = hb_itemPutC( NULL, NULL );
                break;
 
             case HB_FT_INTEGER:
@@ -541,7 +541,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
                TIMESTAMP_STRUCT  val = {0,0,0,0,0,0,0};
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_TIMESTAMP, &val, sizeof( val ), &iLen ) ) )
                {
-                  pItem = hb_itemPutTDT( NULL, hb_dateEncode( val.year, val.month, val.day ), 
+                  pItem = hb_itemPutTDT( NULL, hb_dateEncode( val.year, val.month, val.day ),
                                          hb_timeEncode( val.hour, val.minute, val.second, val.fraction / 1000000 ) );
                }
                break;

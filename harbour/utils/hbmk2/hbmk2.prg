@@ -642,9 +642,19 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
    IF Empty( hbmk[ _HBMK_cARCH ] )
       hbmk[ _HBMK_cARCH ] := Lower( GetEnv( "HB_ARCHITECTURE" ) )
+#if 0
+      IF Empty( hbmk[ _HBMK_cARCH ] )
+         hbmk[ _HBMK_cARCH ] := Lower( GetEnv( "HB_ARCH" ) )
+      ENDIF
+#endif
    ENDIF
    IF Empty( hbmk[ _HBMK_cCOMP ] )
       hbmk[ _HBMK_cCOMP ] := Lower( GetEnv( "HB_COMPILER" ) )
+#if 0
+      IF Empty( hbmk[ _HBMK_cCOMP ] )
+         hbmk[ _HBMK_cCOMP ] := Lower( GetEnv( "HB_COMP" ) )
+      ENDIF
+#endif
    ENDIF
 
    /* Autodetect architecture */
@@ -4749,9 +4759,11 @@ STATIC FUNCTION MacroProc( hbmk, cString, cDirParent )
          ELSE
             cMacro := PathSepToSelf( cDirParent )
          ENDIF
-      CASE cMacro == "HB_ARCH" .OR. cMacro == "HB_ARCHITECTURE"
+      CASE cMacro == "HB_ARCH" .OR. ;
+           cMacro == "HB_ARCHITECTURE"
          cMacro := hbmk[ _HBMK_cARCH ]
-      CASE cMacro == "HB_COMP" .OR. cMacro == "HB_COMPILER"
+      CASE cMacro == "HB_COMP" .OR. ;
+           cMacro == "HB_COMPILER"
          cMacro := hbmk[ _HBMK_cCOMP ]
       CASE cMacro == "HB_CPU"
          cMacro := hbmk_CPU( hbmk )
@@ -5628,14 +5640,14 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-gui|-std"         , I_( "create GUI/console executable" ) },;
       { "-main=<mainfunc>"  , I_( "override the name of starting function/procedure" ) },;
       { "-fullstatic"       , I_( "link with all static libs" ) },;
-      { "-[full|fix]shared" , I_( "create binaries without/with absolute dir reference to shared Harbour library (default: 'fullshared' when Harbour is installed on system location, 'fixshared' otherwise) (*nix only)" ) },;
+      { "-[full|fix]shared" , I_( "create shared Harbour binaries without/with absolute dir reference to Harbour library (default: 'fullshared' when Harbour is installed on system location, 'fixshared' otherwise) (fix/full option in *nix only)" ) },;
       { "-nulrdd[-]"        , I_( "link with nulrdd" ) },;
       { "-[no]debug"        , I_( "add/exclude C compiler debug info" ) },;
       { "-[no]optim"        , I_( "toggle C compiler optimizations (default: on)" ) },;
       { "-[no]map"          , I_( "create (or not) a map file" ) },;
       { "-[no]strip"        , I_( "strip (no strip) binaries" ) },;
       { "-[no]trace"        , I_( "show commands executed" ) },;
-      { "-[no]beep"         , I_( "beep (or don't) when finished" ) },;
+      { "-[no]beep"         , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) },;
       { "-traceonly"        , I_( "show commands to be executed, but don't execute them" ) },;
       { "-[no]compr[=lev]"  , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) },;
       { "-[no]run"          , I_( "run/don't run output executable" ) },;
@@ -5686,7 +5698,6 @@ STATIC PROCEDURE ShowHelp( lLong )
       { "-comp=<comp>"      , I_( "use specific C compiler. Same as HB_COMPILER envvar\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
       { "-lang=<lang>"      , I_( "override default language. Similar to HB_LANG envvar." ) },;
       { "--version"         , I_( "display version header only" ) },;
-      { "-beep"             , I_( "enable single beep on successful exit, double beep on failure" ) },;
       { "-pause"            , I_( "force waiting for a key on exit in case of failure (with alternate GTs only)" ) },;
       { "-info"             , I_( "turn on informational messages" ) },;
       { "-quiet"            , I_( "suppress all screen messages" ) } }

@@ -419,7 +419,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
                break;
 
             case HB_FT_DATE:
-               pItem = hb_itemPutDS( NULL, "" );
+               pItem = hb_itemPutDS( NULL, NULL );
                break;
 
             default:
@@ -559,4 +559,3 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pI
    }
    return HB_SUCCESS;
 }
-

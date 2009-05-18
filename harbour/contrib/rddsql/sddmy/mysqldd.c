@@ -367,7 +367,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
             }
 
             case HB_FT_MEMO:
-               pItem = hb_itemPutC( NULL, "" );
+               pItem = hb_itemPutC( NULL, NULL );
                break;
 
             case HB_FT_INTEGER:
@@ -383,7 +383,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
                break;
 
             case HB_FT_DATE:
-               pItem = hb_itemPutDS( NULL, "" );
+               pItem = hb_itemPutDS( NULL, NULL );
                break;
 
             default:
