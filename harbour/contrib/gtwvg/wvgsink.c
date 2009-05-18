@@ -101,6 +101,7 @@
 #include "hbvm.h"
 #include "hbstack.h"
 #include "hbthread.h"
+#include "hbwinole.h"
 
 #include <shlobj.h>
 #include <objbase.h>
@@ -110,15 +111,6 @@
 #endif
 #include <ole2.h>
 #include <oleauto.h>
-
-
-#if defined( __cplusplus ) && \
-   ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
-     ( defined(__WATCOMC__) && ( __WATCOMC__ >= 1280 ) ) )
-#  define HB_ID_REF( id )     id
-#else
-#  define HB_ID_REF( id )     ( &(id) )
-#endif
 
 /*----------------------------------------------------------------------*/
 
@@ -139,9 +131,9 @@ typedef HRESULT ( CALLBACK *PATLAXATTACHCONTROL )( HWND, IUnknown** );
 typedef HRESULT ( CALLBACK *PATLAXCREATECONTROL )( LPCOLESTR, HWND, IStream*, IUnknown** );
 typedef HRESULT ( CALLBACK *PATLAXCREATECONTROLEX )( LPCOLESTR, HWND, IStream*, IUnknown**, IUnknown**, REFIID, IUnknown* );
 /*----------------------------------------------------------------------*/
-HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem );
+//void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem );
 
-HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant );
+//HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant );
 
 /* Switch it on when required tracing. While committing switch it off */
 #if 0
@@ -623,7 +615,7 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
                                PellesC was generating GPF at this point
                                After commenting it out, I could not see any difference in objects
                                I play with. Cannot say why did I retained it so long.            */
-                        #if 0
+                        #if 1
                         ( ( MyRealIEventHandler* ) thisobj )->device_event_interface_iid = rriid;
                         #endif
 
@@ -637,9 +629,6 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
                         {
                            hr = S_OK;
                         }
-#if 0
-hb_ToOutDebug( " Do = %i", i++ );
-#endif
                      }
                      else
                      {
@@ -671,7 +660,7 @@ HB_FUNC( HB_AX_SHUTDOWNCONNECTIONPOINT )
 hb_ToOutDebug( "---------------------------------------------" );
 #endif
    #if 1
-   if ( hSink->pIConnectionPoint )
+   if ( hSink && hSink->pIConnectionPoint )
    {
       hSink->dwEventCookie = 0;
       hSink->pIConnectionPoint->lpVtbl->Release( hSink->pIConnectionPoint );
@@ -680,7 +669,7 @@ hb_ToOutDebug( "---------------------------------------------" );
    #endif
 
    #if 1
-   if( hSink->pEvents )
+   if( hSink && hSink->pEvents )
    {
       hb_itemRelease( hSink->pEvents );
    }
@@ -696,7 +685,8 @@ hb_ToOutDebug( "---------------------------------------------" );
 /*----------------------------------------------------------------------*/
 HB_FUNC( HB_AX_RELEASEOBJECT )
 {
-   IDispatch * pDisp = ( IDispatch * ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   //IDispatch * pDisp = ( IDispatch * ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   IDispatch * pDisp = ( IDispatch * ) hb_oleParam( 1 );
    s_nOleError = pDisp->lpVtbl->Release( pDisp );
 }
 /*----------------------------------------------------------------------*/
@@ -707,7 +697,7 @@ HB_FUNC( HB_AX_SETUPCONNECTIONPOINT )
    LPIID                riid  = ( LPIID ) &IID_IDispatch;
    int                  n = 0;
 
-   hr = SetupConnectionPoint( ( device_interface* ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( REFIID ) riid, ( void** ) (void*) &hSink, &n ) ;
+   hr = SetupConnectionPoint( ( device_interface* ) hb_oleParam( 1 ), ( REFIID ) riid, ( void** ) (void*) &hSink, &n ) ;
 
    hSink->pEvents = hb_itemNew( hb_param( 4, HB_IT_ANY ) );
 
@@ -881,7 +871,7 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
          {
             pUnk->lpVtbl->QueryInterface( pUnk, HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
             pUnk->lpVtbl->Release( pUnk );
-            hb_retnint( ( HB_PTRDIFF ) obj );
+            hb_itemReturnRelease( hb_oleItemPut( NULL, obj ) );
 
             #if 0
             {
@@ -898,7 +888,7 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
 
             pUnkCtrl->lpVtbl->QueryInterface( pUnkCtrl, HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
             pUnkCtrl->lpVtbl->Release( pUnkCtrl );
-            hb_retnint( ( long ) obj );
+            hb_itemReturnRelease( hb_oleItemPut( NULL, obj ) );
 
             GetClientRect( hContainer, &rc );
             MoveWindow( GetDlgItem( hContainer, ( int ) id ), 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
@@ -906,17 +896,17 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
          #endif
          else
          {
-            hb_retnint( 0 );
+            hb_ret();
          }
       }
       else
       {
-         hb_retnint( 0 );
+         hb_ret();
       }
    }
    else
    {
-      hb_retnint( 0 );
+      hb_ret();
    }
 
    /* return the container handle */
@@ -991,23 +981,22 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) /* HWND hWnd = handle of control container wind
             pUnk->lpVtbl->QueryInterface( pUnk, HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
             pUnk->lpVtbl->Release( pUnk );
             GetClientRect( hWnd, &rc );
-            /* MoveWindow( GetDlgItem( hParent, ( int ) id ), 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE ); */
             MoveWindow( hWnd, 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
-            hb_retnint( ( HB_PTRDIFF ) obj );
+            hb_itemReturnRelease( hb_oleItemPut( NULL, obj ) );
          }
          else
          {
-            hb_retnint( 0 );
+            hb_ret();
          }
       }
       else
       {
-         hb_retnint( 0 );
+         hb_ret();
       }
    }
    else
    {
-      hb_retnint( 0 );
+      hb_ret();
    }
 
    /* return the control handle */

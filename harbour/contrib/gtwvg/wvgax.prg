@@ -81,7 +81,7 @@ STATIC  nRef := 0
 
 /*----------------------------------------------------------------------*/
 
-CLASS WvgActiveXControl FROM TOleAuto, WvgWindow
+CLASS WvgActiveXControl FROM HB_OleAuto, WvgWindow
 
    DATA   CLSID                              INIT ''
    DATA   server                             INIT NIL
@@ -90,7 +90,6 @@ CLASS WvgActiveXControl FROM TOleAuto, WvgWindow
    DATA   visible                            INIT .T.
    DATA   default                            INIT .F.
    DATA   cancel                             INIT .F.
-   DATA   hObj
 
    DATA   interface
    DATA   interfaceName
@@ -155,7 +154,7 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
    ::CLSID      := cCLSID
    ::license    := cLicense
 
-   ::hObj       := 0
+   ::__hObj     := NIL
    ::hSink      := 0
 
    ::hContainer := ::oParent:getHWND()
@@ -169,32 +168,29 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
    ::nID := ::oParent:GetControlId()
 
    #if 1
-   ::hObj := HB_AX_AtlAxGetControl( "ATLAXWin", ::hContainer, ::CLSID, ::nID, ;
+   ::__hObj := HB_AX_AtlAxGetControl( "ATLAXWin", ::hContainer, ::CLSID, ::nID, ;
                                     ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ;
                                     ::style, ::exStyle, NIL, @hx, @pUnk )
    #else
-   ::hObj := HB_AX_AtlAxCreateControl( "ATLAXWin", ::hContainer, ::CLSID, ::nID, ;
+   ::__hObj := HB_AX_AtlAxCreateControl( "ATLAXWin", ::hContainer, ::CLSID, ::nID, ;
                                     ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ;
                                     ::style, ::exStyle, NIL, @hx, @pUnk )
    #endif
-   if ::hObj == 0
-      Return NIL
+   if empty( ::__hObj )
+      RETURN NIL
    endif
-
-   /* Required as to AddRef() to self */
-   TOleAuto():New( ::hObj )
 
    ::oParent:addChild( SELF )
    ::hWnd := hx
 
    HB_AX_AtlSetVerb( ::hWnd, pUnk, -4 )
 
-   IF ::hObj <> 0  .AND. !Empty( ::hEvents )
+   IF !Empty( ::__hObj ) .AND. !Empty( ::hEvents )
       ::AdviseEvents()
    ENDIF
 
    #if 0
-   HB_AX_LoadTypeInfo( ::hObj )
+   HB_AX_LoadTypeInfo( ::__hObj )
    #endif
 
    RETURN Self
@@ -223,7 +219,7 @@ METHOD Destroy() CLASS WvgActiveXControl
 
    BEGIN SEQUENCE
 
-   IF hb_IsNumeric( ::hObj ) .and. ::hObj <> 0
+   IF !empty( ::__hObj )
 
       IF Win_IsWindow( ::hWnd )
          Win_DestroyWindow( ::hWnd )
@@ -241,12 +237,13 @@ METHOD Destroy() CLASS WvgActiveXControl
 
    ENDSEQUENCE
    ErrorBlock( bError )
+
    RETURN NIL
 /*----------------------------------------------------------------------*/
 METHOD adviseEvents() CLASS WvgActiveXControl
    LOCAL  n, hSink, xRet
 
-   xRet := HB_AX_SetupConnectionPoint( ::hObj, @hSink, @n, ::hEvents )
+   xRet := HB_AX_SetupConnectionPoint( ::__hObj, @hSink, @n, ::hEvents )
    ::hSink := hSink
 
    RETURN xRet
