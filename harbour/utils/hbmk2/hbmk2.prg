@@ -238,24 +238,24 @@ PROCEDURE Main( ... )
 
       IF Left( tmp, 1 ) == "x"
          tmp := SubStr( tmp, 2 )
-         AAdd( aArgs, "-xhb" )
+         hb_AIns( aArgs, 1, "-xhb", .T. )
       ENDIF
 
       DO CASE
       CASE Right( tmp, 5 ) == "hbcmp" .OR. ;
            Left(  tmp, 5 ) == "hbcmp" .OR. ;
-           tmp == "clipper"                ; AAdd( aArgs, "-hbcmp" )
+           tmp == "clipper"                ; hb_AIns( aArgs, 1, "-hbcmp", .T. )
       CASE Right( tmp, 4 ) == "hbcc" .OR. ;
-           Left(  tmp, 4 ) == "hbcc"       ; AAdd( aArgs, "-hbcc" )
+           Left(  tmp, 4 ) == "hbcc"       ; hb_AIns( aArgs, 1, "-hbcc", .T. )
       CASE Right( tmp, 5 ) == "hblnk" .OR. ;
-           Left(  tmp, 5 ) == "hblnk"      ; AAdd( aArgs, "-hblnk" )
+           Left(  tmp, 5 ) == "hblnk"      ; hb_AIns( aArgs, 1, "-hblnk", .T. )
       CASE tmp == "rtlink" .OR. ;
            tmp == "exospace" .OR. ;
-           tmp == "blinker"                ; AAdd( aArgs, "-rtlink" )
+           tmp == "blinker"                ; hb_AIns( aArgs, 1, "-rtlink", .T. )
       CASE Right( tmp, 5 ) == "hblib" .OR. ;
-           Left(  tmp, 5 ) == "hblib"      ; AAdd( aArgs, "-hblib" )
+           Left(  tmp, 5 ) == "hblib"      ; hb_AIns( aArgs, 1, "-hblib", .T. )
       CASE Right( tmp, 5 ) == "hbdyn" .OR. ;
-           Left(  tmp, 5 ) == "hbdyn"      ; AAdd( aArgs, "-hbdyn" )
+           Left(  tmp, 5 ) == "hbdyn"      ; hb_AIns( aArgs, 1, "-hbdyn", .T. )
       ENDCASE
    ENDIF
 
