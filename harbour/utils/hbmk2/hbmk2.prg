@@ -288,7 +288,7 @@ PROCEDURE Main( ... )
       NEXT
 
       /* Exit if there was no more projects found on the command line */
-      IF nTarget < nTargetTODO .AND. !( nTargetTODO == 1 .AND. ! Empty( aArgsTarget ) )
+      IF nTarget < nTargetTODO .AND. nTargetTODO != 1
          EXIT
       ENDIF
 
