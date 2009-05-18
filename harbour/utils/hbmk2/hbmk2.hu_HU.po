@@ -104,8 +104,8 @@ msgstr "Hiba: Harbour kînyvt†rakat nem sikerÅlt meghat†rozni."
 
 #: hbmk2.prg:2670 hbmk2.prg:2774
 #, c-format
-msgid "Error: Running Harbour compiler. %1$s:"
-msgstr "Hiba: Harbour ford°t¢ futtat†sakor. %1$s:"
+msgid "Error: Running Harbour compiler. %1$s"
+msgstr "Hiba: Harbour ford°t¢ futtat†sakor. %1$s"
 
 #: hbmk2.prg:1503 hbmk2.prg:1543
 #, c-format
@@ -159,8 +159,8 @@ msgstr "Hiba: Munkakînyvt†r nem hozhat¢ lÇtre: %1$s"
 
 #: hbmk2.prg:3037 hbmk2.prg:3430 hbmk2.prg:3156 hbmk2.prg:3594
 #, c-format
-msgid "Error: Running C compiler. %1$s:"
-msgstr "Hiba: C ford°t¢ futtat†sakor: %1$s:"
+msgid "Error: Running C compiler. %1$s"
+msgstr "Hiba: C ford°t¢ futtat†sakor. %1$s"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
@@ -169,8 +169,8 @@ msgstr "tov†bbi keresÇsi £tvonal a .c fejlÇcek automatikus detekt†l†s†hoz"
 
 #: hbmk2.prg:3428 hbmk2.prg:3592
 #, c-format
-msgid "Error: Running C compiler job #%1$s. %2$s:"
-msgstr "Hiba: C ford°t¢ futtat†sa. %1$s. sz†l. %2$s:"
+msgid "Error: Running C compiler job #%1$s. %2$s"
+msgstr "Hiba: C ford°t¢ futtat†sa. %1$s. sz†l. %2$s"
 
 #: hbmk2.prg:5556 hbmk2.prg:5704
 #, c-format
@@ -484,8 +484,8 @@ msgstr "Harbour ford°t¢ parancs (belsã) %1$s. sz†l:"
 
 #: hbmk2.prg:2869 hbmk2.prg:2908 hbmk2.prg:2988 hbmk2.prg:3027
 #, c-format
-msgid "Error: Running resource compiler. %1$s:"
-msgstr "Hiba: Erãforr†s ford°t¢ futtat†sakor. %1$s:"
+msgid "Error: Running resource compiler. %1$s"
+msgstr "Hiba: Erãforr†s ford°t¢ futtat†sakor. %1$s"
 
 #: hbmk2.prg:5494 hbmk2.prg:5633
 #, c-format
@@ -564,8 +564,8 @@ msgstr "tîbbsz†l£/egysz†l£ virtu†lis gÇp haszn†lata"
 
 #: hbmk2.prg:3225 hbmk2.prg:3344
 #, c-format
-msgid "Error: Running lib command. %1$s:"
-msgstr "Hiba: Statikus fÅggvÇnykînyvt†r lÇtrehoz†sakor. %1$s:"
+msgid "Error: Running lib command. %1$s"
+msgstr "Hiba: Statikus fÅggvÇnykînyvt†r lÇtrehoz†sakor. %1$s"
 
 #: hbmk2.prg:4619 hbmk2.prg:4676
 #, c-format
@@ -659,8 +659,8 @@ msgstr "Hiba: Ez a platform/ford°t¢ nincs megval¢s°tva."
 
 #: hbmk2.prg:3170 hbmk2.prg:3289
 #, c-format
-msgid "Error: Running linker. %1$s:"
-msgstr "Hiba: Szerkesztã futtat†sa kîzben. %1$s:"
+msgid "Error: Running linker. %1$s"
+msgstr "Hiba: Szerkesztã futtat†sa kîzben. %1$s"
 
 #: hbmk2.prg:3164 hbmk2.prg:3283
 #, c-format
@@ -719,8 +719,8 @@ msgstr "Dinamikus fÅggvÇnykînyvt†r szerkesztã parancs†llom†nya:"
 
 #: hbmk2.prg:3282 hbmk2.prg:3401
 #, c-format
-msgid "Error: Running dynamic lib link command. %1$s:"
-msgstr "Hiba: Dinamikus fÅggvÇnykînyvt†r szerkesztã futtat†sakor. %1$s:"
+msgid "Error: Running dynamic lib link command. %1$s"
+msgstr "Hiba: Dinamikus fÅggvÇnykînyvt†r szerkesztã futtat†sakor. %1$s"
 
 #: hbmk2.prg:5136 hbmk2.prg:5208
 #, c-format

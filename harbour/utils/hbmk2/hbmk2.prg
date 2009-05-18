@@ -288,7 +288,7 @@ PROCEDURE Main( ... )
       NEXT
 
       /* Exit if there was no more projects found on the command line */
-      IF nTarget < nTargetTODO
+      IF nTarget < nTargetTODO .AND. !( nTargetTODO == 1 .AND. ! Empty( aArgsTarget ) )
          EXIT
       ENDIF
 
@@ -1277,11 +1277,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
       CASE Left( cParamL, 5 ) == "-hbl="
 
-         hbmk[ _HBMK_cHBL ] := PathSepToTarget( hbmk, SubStr( cParam, 6 ) )
+         hbmk[ _HBMK_cHBL ] := PathSepToTarget( hbmk, PathProc( SubStr( cParam, 6 ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
 
       CASE Left( cParamL, 4 ) == "-po="
 
-         hbmk[ _HBMK_cPO ] := PathSepToTarget( hbmk, SubStr( cParam, 5 ) )
+         hbmk[ _HBMK_cPO ] := PathSepToTarget( hbmk, PathProc( SubStr( cParam, 5 ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
 
       CASE Left( cParamL, 5 ) == "-hbl"
 
@@ -1318,7 +1318,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
       CASE Left( cParam, 2 ) == "-o" .AND. ! lStopAfterHarbour
 
-         tmp := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
+         tmp := PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( tmp )
             tmp := PathSepToSelf( tmp )
             hb_FNameSplit( tmp, @cDir, @cName, @cExt )
@@ -1337,7 +1337,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE Left( cParam, 2 ) == "-L" .AND. ;
            Len( cParam ) > 2
 
-         cParam := PathSepToTarget( hbmk, MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
+         cParam := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] ) )
          IF ! Empty( cParam ) .AND. hb_DirExists( cParam )
             AAdd( hbmk[ _HBMK_aLIBPATH ], cParam )
          ENDIF
@@ -1345,7 +1345,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE Left( cParamL, Len( "-instpath=" ) ) == "-instpath=" .AND. ;
            Len( cParamL ) > Len( "-instpath=" )
 
-         cParam := MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, Len( "-instpath=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
+         cParam := PathProc( MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, Len( "-instpath=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
             AAdd( s_aINSTPATH, PathSepToTarget( hbmk, cParam ) )
          ENDIF
@@ -1353,7 +1353,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE Left( cParamL, Len( "-incpath=" ) ) == "-incpath=" .AND. ;
            Len( cParamL ) > Len( "-incpath=" )
 
-         cParam := MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, Len( "-incpath=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
+         cParam := PathProc( MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, Len( "-incpath=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
             AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, cParam ) )
          ENDIF
@@ -1361,7 +1361,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE Left( cParamL, Len( "-inctrypath=" ) ) == "-inctrypath=" .AND. ;
            Len( cParamL ) > Len( "-inctrypath=" )
 
-         cParam := MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, Len( "-inctrypath=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
+         cParam := PathProc( MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, Len( "-inctrypath=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
             AAdd( hbmk[ _HBMK_aINCTRYPATH ], PathSepToTarget( hbmk, cParam ) )
          ENDIF
@@ -1369,7 +1369,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE Left( cParamL, 2 ) == "-i" .AND. ;
            Len( cParamL ) > 2
 
-         cParam := MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
+         cParam := PathProc( MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
             AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, cParam ) )
          ENDIF
@@ -1438,19 +1438,19 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
       CASE Left( cParamL, Len( "-workdir=" ) ) == "-workdir="
 
-         cWorkDir := PathSepToTarget( hbmk, MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-workdir=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
+         cWorkDir := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-workdir=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] ) )
 
       CASE Left( cParamL, Len( "-vcshead=" ) ) == "-vcshead="
 
          s_cVCSDIR := FN_DirGet( aParam[ _PAR_cFileName ] )
-         s_cVCSHEAD := PathSepToTarget( hbmk, MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-vcshead=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
+         s_cVCSHEAD := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-vcshead=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] ) )
          IF Empty( FN_ExtGet( s_cVCSHEAD ) )
             s_cVCSHEAD := FN_ExtSet( s_cVCSHEAD, ".ch" )
          ENDIF
 
       CASE Left( cParamL, Len( "-tshead=" ) ) == "-tshead="
 
-         s_cTSHEAD := PathSepToTarget( hbmk, MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-tshead=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
+         s_cTSHEAD := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-tshead=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] ) )
          IF Empty( FN_ExtGet( s_cTSHEAD ) )
             s_cTSHEAD := FN_ExtSet( s_cTSHEAD, ".ch" )
          ENDIF
@@ -1569,7 +1569,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
       CASE FN_ExtGet( cParamL ) == ".hbl"
 
-         hbmk[ _HBMK_cHBL ] := PathSepToTarget( hbmk, cParam )
+         hbmk[ _HBMK_cHBL ] := PathSepToTarget( hbmk, PathProc( cParam, aParam[ _PAR_cFileName ] ) )
 
       OTHERWISE
 
@@ -2819,7 +2819,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
 
          IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-            hbmk_OutErr( hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s:" ), hb_ntos( tmp ) ) )
+            hbmk_OutErr( hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
             IF ! hbmk[ _HBMK_lQuiet ]
                OutErr( cCommand, hb_osNewLine() )
             ENDIF
@@ -3033,7 +3033,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                ENDIF
 
                IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp1 := hbmk_run( cCommand ) ) != 0
-                  hbmk_OutErr( hb_StrFormat( I_( "Error: Running resource compiler. %1$s:" ), hb_ntos( tmp1 ) ) )
+                  hbmk_OutErr( hb_StrFormat( I_( "Error: Running resource compiler. %1$s" ), hb_ntos( tmp1 ) ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand, hb_osNewLine() )
                   ENDIF
@@ -3072,7 +3072,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDIF
 
             IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-               hbmk_OutErr( hb_StrFormat( I_( "Error: Running resource compiler. %1$s:" ), hb_ntos( tmp ) ) )
+               hbmk_OutErr( hb_StrFormat( I_( "Error: Running resource compiler. %1$s" ), hb_ntos( tmp ) ) )
                IF ! hbmk[ _HBMK_lQuiet ]
                   OutErr( cCommand, hb_osNewLine() )
                ENDIF
@@ -3201,7 +3201,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                         AAdd( aThreads, { hb_threadStart( @hbmk_run(), cCommand ), cCommand } )
                      ELSE
                         IF ( tmp := hbmk_run( cCommand ) ) != 0
-                           hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler. %1$s:" ), hb_ntos( tmp ) ) )
+                           hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler. %1$s" ), hb_ntos( tmp ) ) )
                            IF ! hbmk[ _HBMK_lQuiet ]
                               OutErr( cCommand, hb_osNewLine() )
                            ENDIF
@@ -3334,7 +3334,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                ENDIF
 
                IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-                  hbmk_OutErr( hb_StrFormat( I_( "Error: Running linker. %1$s:" ), hb_ntos( tmp ) ) )
+                  hbmk_OutErr( hb_StrFormat( I_( "Error: Running linker. %1$s" ), hb_ntos( tmp ) ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand, hb_osNewLine() )
                   ENDIF
@@ -3389,7 +3389,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                ENDIF
 
                IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-                  hbmk_OutErr( hb_StrFormat( I_( "Error: Running lib command. %1$s:" ), hb_ntos( tmp ) ) )
+                  hbmk_OutErr( hb_StrFormat( I_( "Error: Running lib command. %1$s" ), hb_ntos( tmp ) ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand, hb_osNewLine() )
                   ENDIF
@@ -3446,7 +3446,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                ENDIF
 
                IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-                  hbmk_OutErr( hb_StrFormat( I_( "Error: Running dynamic lib link command. %1$s:" ), hb_ntos( tmp ) ) )
+                  hbmk_OutErr( hb_StrFormat( I_( "Error: Running dynamic lib link command. %1$s" ), hb_ntos( tmp ) ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand, hb_osNewLine() )
                   ENDIF
@@ -3637,9 +3637,9 @@ STATIC FUNCTION CompileCLoop( hbmk, aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cOb
 
       IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp1 := hbmk_run( cCommand ) ) != 0
          IF nJobs > 1
-            hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler job #%1$s. %2$s:" ), hb_ntos( nJob ), hb_ntos( tmp1 ) ) )
+            hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler job #%1$s. %2$s" ), hb_ntos( nJob ), hb_ntos( tmp1 ) ) )
          ELSE
-            hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler. %1$s:" ), hb_ntos( tmp1 ) ) )
+            hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler. %1$s" ), hb_ntos( tmp1 ) ) )
          ENDIF
          IF ! hbmk[ _HBMK_lQuiet ]
             OutErr( cCommand, hb_osNewLine() )
@@ -4451,7 +4451,7 @@ STATIC PROCEDURE HBP_ProcessOne( hbmk, cFileName )
 
       CASE Lower( Left( cLine, Len( "libpaths="     ) ) ) == "libpaths="     ; cLine := SubStr( cLine, Len( "libpaths="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathSepToTarget( hbmk, MacroProc( hbmk, StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
+            cItem := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, StrStripQuote( cItem ), FN_DirGet( cFileName ) ), FN_DirGet( cFileName ) ) )
             IF ! Empty( cItem ) .AND. hb_DirExists( cItem )
                IF AScan( hbmk[ _HBMK_aLIBPATH ], {|tmp| tmp == cItem } ) == 0
                   AAdd( hbmk[ _HBMK_aLIBPATH ], cItem )
@@ -4461,7 +4461,7 @@ STATIC PROCEDURE HBP_ProcessOne( hbmk, cFileName )
 
       CASE Lower( Left( cLine, Len( "incpaths="     ) ) ) == "incpaths="     ; cLine := SubStr( cLine, Len( "incpaths="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathSepToTarget( hbmk, MacroProc( hbmk, StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
+            cItem := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, StrStripQuote( cItem ), FN_DirGet( cFileName ) ), FN_DirGet( cFileName ) ) )
             IF AScan( hbmk[ _HBMK_aINCPATH ], {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( hbmk[ _HBMK_aINCPATH ], cItem )
             ENDIF
@@ -4469,7 +4469,7 @@ STATIC PROCEDURE HBP_ProcessOne( hbmk, cFileName )
 
       CASE Lower( Left( cLine, Len( "inctrypaths="  ) ) ) == "inctrypaths="  ; cLine := SubStr( cLine, Len( "inctrypaths="  ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathSepToTarget( hbmk, MacroProc( hbmk, StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
+            cItem := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, StrStripQuote( cItem ), FN_DirGet( cFileName ) ), FN_DirGet( cFileName ) ) )
             IF AScan( hbmk[ _HBMK_aINCTRYPATH ], {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( hbmk[ _HBMK_aINCTRYPATH ], cItem )
             ENDIF
@@ -5476,15 +5476,15 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
    SWITCH nType
    CASE _VCS_SVN
       cType := "svn"
-      cCommand := "svnversion"
+      cCommand := "svnversion" + iif( Empty( cDir ), "", " " + cDir )
       EXIT
    CASE _VCS_GIT
       cType := "git"
-      cCommand := "git rev-parse --short HEAD"
+      cCommand := "git" + iif( Empty( cDir ), "", " --work-tree=" + cDir + ".git" ) + " rev-parse --short HEAD"
       EXIT
    CASE _VCS_MERCURIAL
       cType := "mercurial"
-      cCommand := "hg head"
+      cCommand := "hg head" + iif( Empty( cDir ), "", " -R " + cDir )
       EXIT
    CASE _VCS_CVS
       cType := "cvs"

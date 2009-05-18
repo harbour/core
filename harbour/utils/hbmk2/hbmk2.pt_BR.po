@@ -15,7 +15,7 @@ msgstr "Pressione qualquer tecla para continuar..."
 #: hbmk2.prg:5294
 #, c-format
 msgid  "  -bldf[-]           inherit all/no (default) flags from Harbour build"
-msgstr "  -bldf[-] 			  herda ou nao todos os flags da compilacao do harbour"
+msgstr "  -bldf[-]           herda ou nao todos os flags da compilacao do harbour"
 
 #: hbmk2.prg:788
 #, c-format
@@ -30,7 +30,7 @@ msgstr "hbmk: Detectando compilador: %1$s"
 #: hbmk2.prg:5294
 #, c-format
 msgid  "  -inctrypath=<p>    additional path to autodetect .c header locations"
-msgstr "  -inctrypath=<p>	  path adicional para localizacao dos cabecalhos *.c"
+msgstr "  -inctrypath=<p>    path adicional para localizacao dos cabecalhos *.c"
 
 #: hbmk2.prg:1262 hbmk2.prg:4074
 #, c-format
@@ -50,7 +50,7 @@ msgstr "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatco
 #: hbmk2.prg:5294
 #, c-format
 msgid  "  -traceonly         show commands to be executed, but don't execute them"
-msgstr "  -traceonly			  apenas exibe os comandos a serem executados"
+msgstr "  -traceonly         apenas exibe os comandos a serem executados"
 
 #: hbmk2.prg:5294
 #, c-format
