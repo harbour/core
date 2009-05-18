@@ -287,6 +287,8 @@ HB_FUNC( HB_USERLANG )
       {
          if( ietf[ tmp ] == '.' )
             break;
+         else if( ietf[ tmp ] == '_' )
+            ietf[ tmp ] = '-';
       }
 
       hb_retclen_buffer( ietf, tmp );
