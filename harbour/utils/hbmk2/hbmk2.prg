@@ -3048,7 +3048,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             IF "{SCRIPT}" $ cOpt_Res
                fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
                IF fhnd != F_ERROR
-                  FWrite( fhnd, StrTran( cOpt_Res, "{SCRIPT}", "" ) )
+                  FWrite( fhnd, StrTran( cOpt_Res, "{SCRIPT}" ) )
                   FClose( fhnd )
                   cOpt_Res := "@" + cScriptFile
                ELSE
@@ -3169,7 +3169,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                   IF "{SCRIPT}" $ cOpt_CompCLoop
                      fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".cpl" )
                      IF fhnd != F_ERROR
-                        FWrite( fhnd, StrTran( cOpt_CompCLoop, "{SCRIPT}", "" ) )
+                        FWrite( fhnd, StrTran( cOpt_CompCLoop, "{SCRIPT}" ) )
                         FClose( fhnd )
                         cOpt_CompCLoop := "@" + cScriptFile
                      ELSE
@@ -3310,7 +3310,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                IF "{SCRIPT}" $ cOpt_Link
                   fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
                   IF fhnd != F_ERROR
-                     FWrite( fhnd, StrTran( cOpt_Link, "{SCRIPT}", "" ) )
+                     FWrite( fhnd, StrTran( cOpt_Link, "{SCRIPT}" ) )
                      FClose( fhnd )
                      cOpt_Link := "@" + cScriptFile
                   ELSE
@@ -3365,7 +3365,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                IF "{SCRIPT}" $ cOpt_Lib
                   fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
                   IF fhnd != F_ERROR
-                     FWrite( fhnd, StrTran( cOpt_Lib, "{SCRIPT}", "" ) )
+                     FWrite( fhnd, StrTran( cOpt_Lib, "{SCRIPT}" ) )
                      FClose( fhnd )
                      cOpt_Lib := "@" + cScriptFile
                   ELSE
@@ -3422,7 +3422,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                IF "{SCRIPT}" $ cOpt_Dyn
                   fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
                   IF fhnd != F_ERROR
-                     FWrite( fhnd, StrTran( cOpt_Dyn, "{SCRIPT}", "" ) )
+                     FWrite( fhnd, StrTran( cOpt_Dyn, "{SCRIPT}" ) )
                      FClose( fhnd )
                      cOpt_Dyn := "@" + cScriptFile
                   ELSE
@@ -5500,7 +5500,7 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
          tmp := At( Chr( 10 ), cStdOut )
          IF tmp > 0
             cStdOut := Left( cStdOut, tmp - 1 )
-            cResult := hb_ntos( Val( AllTrim( StrTran( cStdOut, '"', "" ) ) ) + 1 )
+            cResult := hb_ntos( Val( AllTrim( StrTran( cStdOut, '"' ) ) ) + 1 )
          ENDIF
       ENDIF
    ENDSWITCH
@@ -5520,15 +5520,15 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
             /* 10959<n> */
          CASE _VCS_GIT
             /* fe3bb56<n> */
-            cStdOut := StrTran( cStdOut, Chr( 13 ), "" )
-            cResult := StrTran( cStdOut, Chr( 10 ), "" )
+            cStdOut := StrTran( cStdOut, Chr( 13 ) )
+            cResult := StrTran( cStdOut, Chr( 10 ) )
             EXIT
          CASE _VCS_MERCURIAL
             /* changeset:   696:9e33729cafae<n>... */
             tmp := At( Chr( 10 ), cStdOut )
             IF tmp > 0
                cStdOut := Left( cStdOut, tmp - 1 )
-               cResult := AllTrim( StrTran( cStdOut, "changeset:", "" ) )
+               cResult := AllTrim( StrTran( cStdOut, "changeset:" ) )
             ENDIF
             EXIT
          ENDSWITCH
@@ -5645,7 +5645,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
    RETURN
 
 STATIC FUNCTION HBRawVersion()
-   RETURN StrTran( Version(), "Harbour ", "" )
+   RETURN StrTran( Version(), "Harbour " )
 
 STATIC PROCEDURE ShowHelp( lLong )
 

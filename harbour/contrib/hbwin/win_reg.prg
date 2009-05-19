@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Windows registry API
  *
- * Copyright 2008 Viktor Szakats <harbour.01 syenar.hu>
+ * Copyright 2008-2009 Viktor Szakats <harbour.01 syenar.hu>
  * Copyright 2004 Peter Rees <peter@rees.co.nz>
  *                Rees Software & Systems Ltd
  * www - http://www.harbour-project.org
@@ -56,8 +56,7 @@
 
 /* ------------------------------------------------------------------- */
 
-/* Usage: win_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry ) */
-PROCEDURE win_regPathSplit( cRegPath, nHKEY, cKey, cEntry )
+PROCEDURE win_regPathSplit( cRegPath, /* @ */ nHKEY, /* @ */ cKey, /* @ */ cEntry )
    LOCAL cHKEY
    LOCAL tmp
 
@@ -136,13 +135,11 @@ FUNCTION win_regWrite( cRegPath, xValue )
 #define REG_FULL_RESOURCE_DESCRIPTOR   9   // Resource list in the hardware description
 #define REG_RESOURCE_REQUIREMENTS_LIST 10
 
-#define ERROR_SUCCESS                  0
-
-FUNCTION QueryRegistry( nHKEYHandle, cKeyName, cEntryName, xValue, lSetIt )
-   LOCAL xKey := GetRegistry( nHKEYHandle, cKeyName, cEntryName )
+FUNCTION QueryRegistry( nHKEY, cKeyName, cEntryName, xValue, lSetIt )
+   LOCAL xKey := GetRegistry( nHKEY, cKeyName, cEntryName )
 
    LOCAL cValType := ValType( xValue )
-   LOCAL rVal
+   LOCAL lRetVal
 
    DEFAULT lSetIT TO .F.
 
@@ -154,25 +151,22 @@ FUNCTION QueryRegistry( nHKEYHandle, cKeyName, cEntryName, xValue, lSetIt )
       cValType := ValType( xValue )
    ENDIF
 
-   rVal := ( xKey != NIL .AND. xValue != NIL .AND. cValType == ValType( xKey ) .AND. xValue == xKey )
-   IF ! rVal .AND. lSetIt
-      rVal := SetRegistry( nHKEYHandle, cKeyName, cEntryName, xValue )
+   lRetVal := ( xKey != NIL .AND. xValue != NIL .AND. cValType == ValType( xKey ) .AND. xValue == xKey )
+   IF ! lRetVal .AND. lSetIt
+      lRetVal := SetRegistry( nHKEY, cKeyName, cEntryName, xValue )
    ENDIF
 
-   RETURN rVal
+   RETURN lRetVal
 
-FUNCTION GetRegistry( nHKEYHandle, cKeyName, cEntryName, xDefault )
+FUNCTION GetRegistry( nHKEY, cKeyName, cEntryName, xDefault )
    LOCAL xRetVal := xDefault
-   LOCAL nKeyHandle := 0
+   LOCAL pKeyHandle
    LOCAL nValueType
 
-   DEFAULT nHKeyHandle TO 0
+   IF win_RegOpenKeyEx( nHKEY, cKeyName, 0, KEY_QUERY_VALUE, @pKeyHandle )
 
-   IF win_RegOpenKeyEx( nHKEYHandle, cKeyName, 0, KEY_QUERY_VALUE, @nKeyHandle ) == ERROR_SUCCESS
-
-      nValueType := 0
       /* retrieve the length of the value */
-      IF win_RegQueryValueEx( nKeyHandle, cEntryName, 0, @nValueType, @xRetVal ) > 0
+      IF win_RegQueryValueEx( pKeyHandle, cEntryName, 0, @nValueType, @xRetVal ) > 0
 
          IF nValueType == REG_DWORD .OR. ;
             nValueType == REG_DWORD_LITTLE_ENDIAN .OR. ;
@@ -184,46 +178,45 @@ FUNCTION GetRegistry( nHKEYHandle, cKeyName, cEntryName, xDefault )
          ENDIF
       ENDIF
 
-      win_RegCloseKey( nKeyHandle )
+      win_RegCloseKey( pKeyHandle )
    ENDIF
 
    RETURN xRetVal
 
-FUNCTION SetRegistry( nHKEYHandle, cKeyName, cEntryName, xValue )
+FUNCTION SetRegistry( nHKEY, cKeyName, cEntryName, xValue )
    LOCAL cName
    LOCAL nValueType
-   LOCAL rVal := .F.
-   LOCAL cType
-   LOCAL nKeyHandle := 0
-   LOCAL nResult := 1
+   LOCAL lRetVal := .F.
+   LOCAL pKeyHandle
 
-   DEFAULT nHKeyHandle TO 0
-
-   IF win_RegCreateKeyEx( nHKEYHandle, cKeyName, 0, 0, 0, KEY_SET_VALUE, 0, @nKeyHandle, @nResult ) == ERROR_SUCCESS
+   IF win_RegCreateKeyEx( nHKEY, cKeyName, 0, 0, 0, KEY_SET_VALUE, 0, @pKeyHandle )
 
       /* no support for Arrays, Codeblock ... */
-      cType := ValType( xValue )
-
-      DO CASE
-      CASE cType == "L"
+      SWITCH ValType( xValue )
+      CASE "L"
          nValueType := REG_DWORD
          cName := iif( xValue, 1, 0 )
-      CASE cType == "D"
+         EXIT
+      CASE "D"
          nValueType := REG_SZ
          cName := DToS( xValue )
-      CASE cType == "N"
+         EXIT
+      CASE "N"
          nValueType := REG_DWORD
          cName := xValue
-      CASE cType $ "CM"
+         EXIT
+      CASE "C"
+      CASE "M"
          nValueType := REG_SZ
          cName := xValue
-      ENDCASE
+         EXIT
+      ENDSWITCH
 
       IF cName != NIL
-         rVal := ( win_RegSetValueEx( nKeyHandle, cEntryName, 0, nValueType, cName ) == ERROR_SUCCESS )
+         lRetVal := win_RegSetValueEx( pKeyHandle, cEntryName, 0, nValueType, cName )
       ENDIF
 
-      win_RegCloseKey( nKeyHandle )
+      win_RegCloseKey( pKeyHandle )
    ENDIF
 
-   RETURN rVal
+   RETURN lRetVal

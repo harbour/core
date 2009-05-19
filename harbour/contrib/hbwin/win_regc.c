@@ -5,8 +5,9 @@
 /*
  * Harbour Project source code:
  *
- *     Copyright 2004 Peter Rees <peter@rees.co.nz>
- *                    Rees Software & Systems Ltd
+ * Copyright 2008-2009 Viktor Szakats <harbour.01 syenar.hu>
+ * Copyright 2004 Peter Rees <peter@rees.co.nz>
+ *                Rees Software & Systems Ltd
  *
  * www - http://www.harbour-project.org
  *
@@ -61,13 +62,13 @@ static HKEY hb_regkeyconv( HB_PTRUINT nKey )
    {
    case 1:
       return ( HKEY ) HKEY_CLASSES_ROOT;
+   case 0:
    case 2:
       return ( HKEY ) HKEY_CURRENT_USER;
 #if ! defined( HB_OS_WIN_CE )
    case 3:
       return ( HKEY ) HKEY_CURRENT_CONFIG;
 #endif
-   case 0:
    case 4:
       return ( HKEY ) HKEY_LOCAL_MACHINE;
    case 5:
@@ -79,58 +80,49 @@ static HKEY hb_regkeyconv( HB_PTRUINT nKey )
 
 HB_FUNC( WIN_REGCREATEKEYEX )
 {
-   HKEY hWnd = ( HKEY ) ( HB_PTRUINT ) hb_parnint( 8 );
-   ULONG nResult = hb_parnl( 9 );
-   LPTSTR lpText = HB_TCHAR_CONVTO( hb_parc( 2 ) );
+   LPTSTR lpText = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   HKEY hkResult = NULL;
+   DWORD dwDisposition = 0;
 
-   if( RegCreateKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
-                       lpText,
-                       0,
-                       NULL,
-                       hb_parnl( 5 ),
-                       hb_parnl( 6 ),
-                       NULL,
-                       &hWnd,
-                       &nResult ) == ERROR_SUCCESS )
-   {
-      hb_stornint( ( HB_PTRUINT ) hWnd, 8 );
-      hb_stornl( nResult, 9 );
+   hb_retl( RegCreateKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
+                            lpText,
+                            0,
+                            NULL,
+                            hb_parnl( 5 ) /* dwOptions */,
+                            hb_parnl( 6 ) /* samDesired */,
+                            NULL /* lpSecurityAttributes */,
+                            &hkResult,
+                            &dwDisposition ) == ERROR_SUCCESS );
 
-      hb_retnl( ERROR_SUCCESS );
-   }
-   else
-      hb_retnl( -1 );
+   hb_storptr( hkResult, 8 );
+   hb_stornl( dwDisposition, 9 );
 
    HB_TCHAR_FREE( lpText );
 }
 
 HB_FUNC( WIN_REGOPENKEYEX )
 {
-   HKEY hWnd;
-   LPTSTR lpText = HB_TCHAR_CONVTO( hb_parc( 2 ) );
+   LPTSTR lpText = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   HKEY hkResult = NULL;
 
-   if( RegOpenKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
-                     lpText,
-                     0,
-                     hb_parnl( 4 ),
-                     &hWnd ) == ERROR_SUCCESS )
-   {
-      hb_stornint( ( HB_PTRUINT ) hWnd, 5 );
-      hb_retnl( ERROR_SUCCESS );
-   }
-   else
-      hb_retnl( -1 );
+   hb_retl( RegOpenKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
+                          lpText,
+                          0 /* dwOptions */,
+                          hb_parnl( 4 ) /* samDesired */,
+                          &hkResult ) == ERROR_SUCCESS );
+
+   hb_storptr( hkResult, 5 );
 
    HB_TCHAR_FREE( lpText );
 }
 
 HB_FUNC( WIN_REGQUERYVALUEEX )
 {
+   LPTSTR lpKey = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    DWORD nType = 0;
    DWORD nSize = 0;
-   LPTSTR lpKey = HB_TCHAR_CONVTO( hb_parc( 2 ) );
 
-   if( RegQueryValueEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
+   if( RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
                         lpKey,
                         NULL,
                         &nType,
@@ -141,48 +133,47 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
       {
          BYTE * cValue = ( BYTE * ) hb_xgrab( nSize + 1 );
 
-         RegQueryValueEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
+         RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
                           lpKey,
                           NULL,
                           &nType,
                           ( BYTE * ) cValue,
                           &nSize );
 
-         hb_stornl( nType, 4 );
-
          if( ! hb_storclen_buffer( ( char * ) cValue, nSize, 5 ) )
             hb_xfree( cValue );
       }
    }
-   HB_TCHAR_FREE( lpKey );
 
+   hb_stornl( nType, 4 );
    hb_retnl( nSize );
+
+   HB_TCHAR_FREE( lpKey );
 }
 
 HB_FUNC( WIN_REGSETVALUEEX )
 {
+   LPTSTR lpKey = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    DWORD nType = ( DWORD ) hb_parnl( 4 );
-   LPTSTR lpKey = HB_TCHAR_CONVTO( hb_parc( 2 ) );
 
-   if( nType != REG_DWORD )
+   if( nType == REG_DWORD )
    {
-      BYTE * cValue = ( BYTE * ) hb_parc( 5 );
-      hb_retni( RegSetValueEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
-                               lpKey,
-                               0,
-                               nType,
-                               ( BYTE * ) cValue,
-                               hb_parclen( 5 ) + 1 ) );
+      DWORD nSpace = ( DWORD ) hb_parnl( 5 );
+      hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
+                              lpKey,
+                              0,
+                              nType,
+                              ( BYTE * ) &nSpace,
+                              sizeof( REG_DWORD ) ) == ERROR_SUCCESS );
    }
    else
    {
-      DWORD nSpace = ( DWORD ) hb_parnl( 5 );
-      hb_retni( RegSetValueEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
-                               lpKey,
-                               0,
-                               nType,
-                               ( BYTE * ) &nSpace,
-                               sizeof( REG_DWORD ) ) );
+      hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
+                              lpKey,
+                              0,
+                              nType,
+                              ( BYTE * ) hb_parcx( 5 ) /* cValue */,
+                              hb_parclen( 5 ) + 1 ) == ERROR_SUCCESS );
    }
 
    HB_TCHAR_FREE( lpKey );
@@ -190,5 +181,5 @@ HB_FUNC( WIN_REGSETVALUEEX )
 
 HB_FUNC( WIN_REGCLOSEKEY )
 {
-   hb_retnl( RegCloseKey( ( HKEY ) ( HB_PTRUINT ) hb_parnint( 1 ) ) );
+   hb_retl( RegCloseKey( ( HKEY ) hb_parptr( 1 ) ) == ERROR_SUCCESS );
 }

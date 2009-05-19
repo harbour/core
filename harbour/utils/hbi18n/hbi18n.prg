@@ -150,7 +150,7 @@ PROCEDURE Main( ... )
 
 
 STATIC FUNCTION HBRawVersion()
-   RETURN StrTran( Version(), "Harbour ", "" )
+   RETURN StrTran( Version(), "Harbour " )
 
 STATIC PROCEDURE Logo()
 
