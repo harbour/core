@@ -475,7 +475,7 @@ msgstr "Megjegyzések:"
 #: hbmk2.prg:5633
 #, c-format
 msgid "nix=EN"
-msgstr "nix=HUISO"
+msgstr "nix=UTF8"
 
 #: hbmk2.prg:5758
 #, c-format
@@ -836,4 +836,3 @@ msgstr "munkakönyvtár lépcsõzetes üzemmód használatakor\\n(alapértelmezés: %1$s/
 #, c-format
 msgid "Error: Cannot create temporary unified .po file."
 msgstr "Hiba: Nem sikerült létrehozni az ideiglenes .po fájlt."
-

@@ -172,7 +172,7 @@ STATIC PROCEDURE Syntax()
            "                translations from other .pot or .hbl files" + HB_OSNewLine() + ;
            "    -o<outfile> output file name" + HB_OSNewLine() + ;
            "                default is first .pot file name with" + HB_OSNewLine() + ;
-           "                .po_ (merge) or .hbl extension" + HB_OSNewLine() + ;
+           "                .po (merge) or .hbl extension" + HB_OSNewLine() + ;
            "    -e          do not strip empty translation rules from .hbl files" + HB_OSNewLine() + ;
            "    -q          quiet mode" + HB_OSNewLine() + ;
            HB_OSNewLine() )
@@ -296,9 +296,9 @@ STATIC PROCEDURE Merge( aFiles, cFileOut )
    LOCAL cErrorMsg
 
    IF Empty( cFileOut )
-      cFileOut := FileExt( aFiles[ 1 ], ".pot", .T. )
+      cFileOut := FileExt( aFiles[ 1 ], ".po", .T. )
    ELSE
-      cFileOut := FileExt( cFileOut, ".pot", .F. )
+      cFileOut := FileExt( cFileOut, ".po", .F. )
    ENDIF
 
    IF !__I18N_potArraySave( cFileOut, LoadFiles( aFiles ), @cErrorMsg )
@@ -332,9 +332,9 @@ STATIC PROCEDURE AutoTrans( cFileIn, aFiles, cFileOut )
    LOCAL cErrorMsg
 
    IF Empty( cFileOut )
-      cFileOut := FileExt( cFileIn, ".pot", .T. )
+      cFileOut := FileExt( cFileIn, ".po", .T. )
    ELSE
-      cFileOut := FileExt( cFileOut, ".pot", .F. )
+      cFileOut := FileExt( cFileOut, ".po", .F. )
    ENDIF
 
    IF !__I18N_potArraySave( cFileOut, ;

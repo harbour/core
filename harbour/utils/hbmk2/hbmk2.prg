@@ -157,6 +157,9 @@ REQUEST hbmk_KEYW
 
 #define _BCC_BIN_DETECT()       FindInPath( "bcc32" )
 
+#define OutStd( x )             low_OutStd( hbmk[ _HBMK_lUTF8 ], x )
+#define OutErr( x )             low_OutErr( hbmk[ _HBMK_lUTF8 ], x )
+
 #define _HBMK_lQuiet            1
 #define _HBMK_lInfo             2
 #define _HBMK_cARCH             3
@@ -212,7 +215,9 @@ REQUEST hbmk_KEYW
 #define _HBMK_cCCPATH           49
 #define _HBMK_cCCPREFIX         50
 
-#define _HBMK_MAX_              50
+#define _HBMK_lUTF8             51
+
+#define _HBMK_MAX_              51
 
 PROCEDURE Main( ... )
    LOCAL aArgs := hb_AParams()
@@ -221,6 +226,7 @@ PROCEDURE Main( ... )
    LOCAL tmp
 
    LOCAL lPause := hb_gtInfo( HB_GTI_ISGRAPHIC )
+   LOCAL lUTF8
 
    LOCAL aArgsTarget
    LOCAL nTarget
@@ -294,7 +300,7 @@ PROCEDURE Main( ... )
       ENDIF
 
       /* Build one target */
-      nResult := hbmk( aArgsTarget, @lPause )
+      nResult := hbmk( aArgsTarget, @lPause, @lUTF8 )
 
       /* Exit on first failure */
       IF nResult != 0
@@ -305,7 +311,7 @@ PROCEDURE Main( ... )
    ENDDO
 
    IF nResult != 0 .AND. lPause
-      OutStd( I_( "Press any key to continue..." ) )
+      low_OutStd( lUTF8, I_( "Press any key to continue..." ) )
       Inkey( 0 )
    ENDIF
 
@@ -328,7 +334,7 @@ STATIC FUNCTION hbmk_run( cCmd )
    RETURN result
 #endif
 
-FUNCTION hbmk( aArgs, /* @ */ lPause )
+FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
    LOCAL hbmk[ _HBMK_MAX_ ]
 
@@ -491,6 +497,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
    hbmk[ _HBMK_lQuiet ] := .F.
    hbmk[ _HBMK_lInfo ] := .F.
+   hbmk[ _HBMK_lUTF8 ] := .F.
 
    hbmk[ _HBMK_lGUI ] := .F.
    hbmk[ _HBMK_lMT ] := .F.
@@ -520,9 +527,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    GetUILangCDP( @hbmk[ _HBMK_cUILNG ], @hbmk[ _HBMK_cUICDP ] )
    SetUILang( hbmk )
 
+   lUTF8 := hbmk[ _HBMK_lUTF8 ]
+
    IF Empty( aArgs )
       ShowHeader( hbmk )
-      ShowHelp()
+      ShowHelp( hbmk )
       RETURN 19
    ENDIF
 
@@ -551,7 +560,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
            cParamL == "--help"
 
          ShowHeader( hbmk )
-         ShowHelp( .T. )
+         ShowHelp( hbmk, .T. )
          RETURN 19
 
       CASE cParamL == "--version"
@@ -734,7 +743,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       ENDSWITCH
       IF ! Empty( hbmk[ _HBMK_cARCH ] )
          IF hbmk[ _HBMK_lInfo ]
-            hbmk_OutStd( hb_StrFormat( I_( "Autodetected architecture: %1$s" ), hbmk[ _HBMK_cARCH ] ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected architecture: %1$s" ), hbmk[ _HBMK_cARCH ] ) )
          ENDIF
       ENDIF
    ENDIF
@@ -847,7 +856,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       s_aLIBSYSCORE := { "wininet", "ws2", "commdlg", "commctrl" }
       s_aLIBSYSMISC := { "uuid", "ole32" }
    OTHERWISE
-      hbmk_OutErr( hb_StrFormat( I_( "Error: Architecture value unknown: %1$s" ), hbmk[ _HBMK_cARCH ] ) )
+      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Architecture value unknown: %1$s" ), hbmk[ _HBMK_cARCH ] ) )
       RETURN 1
    ENDCASE
 
@@ -880,7 +889,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG )
          s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".."
       OTHERWISE
-         hbmk_OutErr( I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect." ) )
+         hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect." ) )
          RETURN 3
       ENDCASE
       /* Detect special *nix dir layout (/bin, /lib/harbour, /include/harbour) */
@@ -900,7 +909,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    ENDIF
    IF Empty( s_cHB_INSTALL_PREFIX ) .AND. ;
       ( Empty( s_cHB_BIN_INSTALL ) .OR. Empty( s_cHB_LIB_INSTALL ) .OR. Empty( s_cHB_INC_INSTALL ) )
-      hbmk_OutErr( I_( "Error: Harbour locations couldn't be determined." ) )
+      hbmk_OutErr( hbmk, I_( "Error: Harbour locations couldn't be determined." ) )
       RETURN 3
    ENDIF
 
@@ -952,19 +961,19 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
          IF ! Empty( hbmk[ _HBMK_cCOMP ] )
             IF hbmk[ _HBMK_lInfo ]
-               hbmk_OutStd( hb_StrFormat( I_( "Autodetected C compiler: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected C compiler: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
             ENDIF
          ELSE
             IF Empty( aCOMPDET )
-               hbmk_OutErr( hb_StrFormat( I_( "Please choose a C compiler by using -comp= option or envvar HB_COMPILER.\nYou have the following choices on your platform: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Please choose a C compiler by using -comp= option or envvar HB_COMPILER.\nYou have the following choices on your platform: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ELSE
-               hbmk_OutErr( hb_StrFormat( I_( "Couldn't detect any supported C compiler in your PATH.\nPlease setup one or set -comp= option or envvar HB_COMPILER to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Couldn't detect any supported C compiler in your PATH.\nPlease setup one or set -comp= option or envvar HB_COMPILER to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ENDIF
             RETURN 2
          ENDIF
       ELSE
          IF AScan( aCOMPSUP, {|tmp| tmp == hbmk[ _HBMK_cCOMP ] } ) == 0
-            hbmk_OutErr( hb_StrFormat( I_( "Error: Compiler value unknown: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
+            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Compiler value unknown: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
             RETURN 2
          ENDIF
          IF hbmk[ _HBMK_cARCH ] $ "win|wce"
@@ -1023,9 +1032,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    DEFAULT s_cHB_DYN_INSTALL TO s_cHB_LIB_INSTALL
 
    IF hbmk[ _HBMK_lInfo ]
-      hbmk_OutStd( hb_StrFormat( I_( "Using Harbour: %1$s %2$s %3$s %4$s" ), s_cHB_BIN_INSTALL, s_cHB_INC_INSTALL, s_cHB_LIB_INSTALL, s_cHB_DYN_INSTALL ) )
+      hbmk_OutStd( hbmk, hb_StrFormat( I_( "Using Harbour: %1$s %2$s %3$s %4$s" ), s_cHB_BIN_INSTALL, s_cHB_INC_INSTALL, s_cHB_LIB_INSTALL, s_cHB_DYN_INSTALL ) )
       IF ! Empty( cPath_CompC )
-         hbmk_OutStd( hb_StrFormat( I_( "Using C compiler: %1$s" ), cPath_CompC ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Using C compiler: %1$s" ), cPath_CompC ) )
       ENDIF
    ENDIF
 
@@ -1100,12 +1109,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDIF
          ELSE
             nEmbedLevel := 1
-            HBM_Load( aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
+            HBM_Load( hbmk, aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
          ENDIF
       CASE Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
            Lower( FN_ExtGet( cParam ) ) == ".hbt"
          nEmbedLevel := 1
-         HBM_Load( aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
+         HBM_Load( hbmk, aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
       OTHERWISE
          AAdd( aParams, { cParam, "", 0 } )
       ENDCASE
@@ -1296,7 +1305,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF IsValidHarbourID( cParam := SubStr( cParam, 7 ) )
             s_cMAIN := "@" + cParam
          ELSE
-            hbmk_OutErr( hb_StrFormat( I_( "Warning: Invalid -main value ignored: %1$s" ), cParam ) )
+            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Invalid -main value ignored: %1$s" ), cParam ) )
          ENDIF
 
       CASE Left( cParamL, 3 ) == "-gt"
@@ -1304,7 +1313,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          cParam := ArchCompFilter( hbmk, SubStr( cParam, 2 ) )
          IF hbmk[ _HBMK_cGT ] == NIL
             IF ! SetupForGT( cParam, @hbmk[ _HBMK_cGT ], @hbmk[ _HBMK_lGUI ] )
-               hbmk_OutErr( hb_StrFormat( I_( "Warning: Invalid -gt value ignored: %1$s" ), cParam ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Invalid -gt value ignored: %1$s" ), cParam ) )
                cParam := NIL
             ENDIF
          ENDIF
@@ -1508,7 +1517,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
 
          IF hbmk[ _HBMK_lInfo ]
-            hbmk_OutStd( hb_StrFormat( I_( "Processing: %1$s" ), cParam ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cParam ) )
          ENDIF
 
          HBP_ProcessOne( hbmk, cParam )
@@ -1592,9 +1601,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
    /* Start doing the make process. */
    IF ! lStopAfterInit .AND. ( Len( s_aPRG ) + Len( s_aC ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) == 0
-      hbmk_OutErr( I_( "Error: No source files were specified." ) )
+      hbmk_OutErr( hbmk, I_( "Error: No source files were specified." ) )
       IF s_lBEEP
-         DoBeep( .F. )
+         DoBeep( hbmk, .F. )
       ENDIF
       RETURN 4
    ENDIF
@@ -1619,9 +1628,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          DEFAULT cWorkDir TO FN_DirGet( s_cPROGNAME ) + _WORKDIR_DEF_
          AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + cWorkDir + hb_osPathSeparator() ) /* NOTE: Ending path sep is important. */
          IF ! DirBuild( cWorkDir )
-            hbmk_OutErr( hb_StrFormat( I_( "Error: Working directory cannot be created: %1$s" ), cWorkDir ) )
+            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Working directory cannot be created: %1$s" ), cWorkDir ) )
             IF s_lBEEP
-               DoBeep( .F. )
+               DoBeep( hbmk, .F. )
             ENDIF
             RETURN 9
          ENDIF
@@ -2637,7 +2646,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          /* Update only if something changed to trigger rebuild only if really needed */
          IF !( hb_MemoRead( s_cVCSHEAD ) == tmp )
             IF hbmk[ _HBMK_lInfo ]
-               hbmk_OutStd( hb_StrFormat( I_( "Generating VCS header: %1$s" ), s_cVCSHEAD ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Generating VCS header: %1$s" ), s_cVCSHEAD ) )
             ENDIF
             hb_MemoWrit( s_cVCSHEAD, tmp )
          ENDIF
@@ -2650,7 +2659,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                 "#define _HBMK_BUILD_TIME_      " + '"' + SubStr( hb_TToS( tmp1 ), 9, 6 ) + '"' + Chr( 10 ) +;
                 "#define _HBMK_BUILD_TIMESTAMP_ " + '"' +         hb_TToS( tmp1 )         + '"' + Chr( 10 )
          IF hbmk[ _HBMK_lInfo ]
-            hbmk_OutStd( hb_StrFormat( I_( "Generating timestamp header: %1$s" ), s_cTSHEAD ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Generating timestamp header: %1$s" ), s_cTSHEAD ) )
          ENDIF
          hb_MemoWrit( s_cTSHEAD, tmp )
       ENDIF
@@ -2677,7 +2686,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          s_aC_DONE := {}
          FOR EACH tmp IN s_aC
             IF hbmk[ _HBMK_lDEBUGINC ]
-               hbmk_OutStd( hb_StrFormat( "debuginc: C %1$s %2$s", tmp, FN_DirExtSet( tmp, cWorkDir, cObjExt ) ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: C %1$s %2$s", tmp, FN_DirExtSet( tmp, cWorkDir, cObjExt ) ) )
             ENDIF
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
@@ -2711,7 +2720,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          s_aPRG_TODO := {}
          FOR EACH tmp IN s_aPRG
             IF hbmk[ _HBMK_lDEBUGINC ]
-               hbmk_OutStd( hb_StrFormat( "debuginc: PRG %1$s %2$s",;
+               hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: PRG %1$s %2$s",;
                   FN_ExtSet( tmp, ".prg" ),;
                   FN_DirExtSet( tmp, cWorkDir, ".c" ) ) )
             ENDIF
@@ -2734,7 +2743,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    IF ! lSkipBuild .AND. ! lStopAfterInit .AND. Len( s_aPRG_TODO ) > 0 .AND. ! s_lCLEAN
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ]
-         hbmk_OutStd( I_( "Compiling Harbour sources..." ) )
+         hbmk_OutStd( hbmk, I_( "Compiling Harbour sources..." ) )
       ENDIF
 
       IF ! Empty( hbmk[ _HBMK_cPO ] )
@@ -2758,13 +2767,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             IF hbmk[ _HBMK_lTRACE ]
                IF ! hbmk[ _HBMK_lQuiet ]
                   IF Len( aTODO:__enumBase() ) > 1
-                     hbmk_OutStd( hb_StrFormat( I_( "Harbour compiler command (internal) job #%1$s:" ), hb_ntos( aTODO:__enumIndex() ) ) )
+                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Harbour compiler command (internal) job #%1$s:" ), hb_ntos( aTODO:__enumIndex() ) ) )
                   ELSE
-                     hbmk_OutStd( I_( "Harbour compiler command (internal):" ) )
+                     hbmk_OutStd( hbmk, I_( "Harbour compiler command (internal):" ) )
                   ENDIF
                ENDIF
                OutStd( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG +;
-                       " " + ArrayToList( aCommand ), hb_osNewLine() )
+                       " " + ArrayToList( aCommand ) + hb_osNewLine() )
             ENDIF
 
             IF ! hbmk[ _HBMK_lDONTEXEC ]
@@ -2772,10 +2781,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                   AAdd( aThreads, { hb_threadStart( @hb_compile(), "", aCommand ), aCommand } )
                ELSE
                   IF ( tmp := hb_compile( "", aCommand ) ) != 0
-                     hbmk_OutErr( hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
-                     OutErr( ArrayToList( aCommand ), hb_osNewLine() )
+                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
+                     OutErr( ArrayToList( aCommand ) + hb_osNewLine() )
                      IF s_lBEEP
-                        DoBeep( .F. )
+                        DoBeep( hbmk, .F. )
                      ENDIF
                      RETURN 6
                   ENDIF
@@ -2788,13 +2797,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                hb_threadJoin( thread[ 1 ], @tmp )
                IF tmp != 0
                   IF Len( aThreads ) > 1
-                     hbmk_OutErr( hb_StrFormat( I_( "Error: Running Harbour compiler job #%1$s. %2$s" ), hb_ntos( thread:__enumIndex() ), hb_ntos( tmp ) ) )
+                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler job #%1$s. %2$s" ), hb_ntos( thread:__enumIndex() ), hb_ntos( tmp ) ) )
                   ELSE
-                     hbmk_OutErr( hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
+                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
                   ENDIF
-                  OutErr( ArrayToList( thread[ 2 ] ), hb_osNewLine() )
+                  OutErr( ArrayToList( thread[ 2 ] ) + hb_osNewLine() )
                   IF s_lBEEP
-                     DoBeep( .F. )
+                     DoBeep( hbmk, .F. )
                   ENDIF
                   RETURN 6
                ENDIF
@@ -2815,18 +2824,18 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
          IF hbmk[ _HBMK_lTRACE ]
             IF ! hbmk[ _HBMK_lQuiet ]
-               hbmk_OutStd( I_( "Harbour compiler command:" ) )
+               hbmk_OutStd( hbmk, I_( "Harbour compiler command:" ) )
             ENDIF
-            OutStd( cCommand, hb_osNewLine() )
+            OutStd( cCommand + hb_osNewLine() )
          ENDIF
 
          IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-            hbmk_OutErr( hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
+            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
             IF ! hbmk[ _HBMK_lQuiet ]
-               OutErr( cCommand, hb_osNewLine() )
+               OutErr( cCommand + hb_osNewLine() )
             ENDIF
             IF s_lBEEP
-               DoBeep( .F. )
+               DoBeep( hbmk, .F. )
             ENDIF
             RETURN 6
          ENDIF
@@ -2934,12 +2943,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             ENDIF
             FClose( fhnd )
          ELSE
-            hbmk_OutErr( I_( "Warning: Stub helper .c program couldn't be created." ) )
+            hbmk_OutErr( hbmk, I_( "Warning: Stub helper .c program couldn't be created." ) )
             IF ! hbmk[ _HBMK_lINC ]
                AEval( ListDirExt( s_aPRG, cWorkDir, ".c" ), {|tmp| FErase( tmp ) } )
             ENDIF
             IF s_lBEEP
-               DoBeep( .F. )
+               DoBeep( hbmk, .F. )
             ENDIF
             RETURN 5
          ENDIF
@@ -2979,7 +2988,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          s_aRESSRC_TODO := {}
          FOR EACH tmp IN s_aRESSRC
             IF hbmk[ _HBMK_lDEBUGINC ]
-               hbmk_OutStd( hb_StrFormat( "debuginc: RESSRC %1$s %2$s", tmp, FN_DirExtSet( tmp, cWorkDir, cResExt ) ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: RESSRC %1$s %2$s", tmp, FN_DirExtSet( tmp, cWorkDir, cResExt ) ) )
             ENDIF
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, cWorkDir, cResExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
@@ -3009,7 +3018,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       IF Len( s_aRESSRC_TODO ) > 0 .AND. ! Empty( cBin_Res ) .AND. ! s_lCLEAN
 
          IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ]
-            hbmk_OutStd( I_( "Compiling resources..." ) )
+            hbmk_OutStd( hbmk, I_( "Compiling resources..." ) )
          ENDIF
 
          /* Compiling resource */
@@ -3029,15 +3038,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
                IF hbmk[ _HBMK_lTRACE ]
                   IF ! hbmk[ _HBMK_lQuiet ]
-                     hbmk_OutStd( I_( "Resource compiler command:" ) )
+                     hbmk_OutStd( hbmk, I_( "Resource compiler command:" ) )
                   ENDIF
-                  OutStd( cCommand, hb_osNewLine() )
+                  OutStd( cCommand + hb_osNewLine() )
                ENDIF
 
                IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp1 := hbmk_run( cCommand ) ) != 0
-                  hbmk_OutErr( hb_StrFormat( I_( "Error: Running resource compiler. %1$s" ), hb_ntos( tmp1 ) ) )
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running resource compiler. %1$s" ), hb_ntos( tmp1 ) ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
-                     OutErr( cCommand, hb_osNewLine() )
+                     OutErr( cCommand + hb_osNewLine() )
                   ENDIF
                   nErrorLevel := 6
                   EXIT
@@ -3056,7 +3065,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                   FClose( fhnd )
                   cOpt_Res := "@" + cScriptFile
                ELSE
-                  hbmk_OutErr( I_( "Warning: Resource compiler script couldn't be created, continuing in command line." ) )
+                  hbmk_OutErr( hbmk, I_( "Warning: Resource compiler script couldn't be created, continuing in command line." ) )
                ENDIF
             ENDIF
 
@@ -3064,19 +3073,19 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
             IF hbmk[ _HBMK_lTRACE ]
                IF ! hbmk[ _HBMK_lQuiet ]
-                  hbmk_OutStd( I_( "Resource compiler command:" ) )
+                  hbmk_OutStd( hbmk, I_( "Resource compiler command:" ) )
                ENDIF
-               OutStd( cCommand, hb_osNewLine() )
+               OutStd( cCommand + hb_osNewLine() )
                IF ! Empty( cScriptFile )
-                  hbmk_OutStd( I_( "Resource compiler script:" ) )
-                  OutStd( hb_MemoRead( cScriptFile ), hb_osNewLine() )
+                  hbmk_OutStd( hbmk, I_( "Resource compiler script:" ) )
+                  OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
                ENDIF
             ENDIF
 
             IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-               hbmk_OutErr( hb_StrFormat( I_( "Error: Running resource compiler. %1$s" ), hb_ntos( tmp ) ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running resource compiler. %1$s" ), hb_ntos( tmp ) ) )
                IF ! hbmk[ _HBMK_lQuiet ]
-                  OutErr( cCommand, hb_osNewLine() )
+                  OutErr( cCommand + hb_osNewLine() )
                ENDIF
                nErrorLevel := 8
             ENDIF
@@ -3094,7 +3103,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             s_aPRG_DONE := {}
             FOR EACH tmp IN s_aPRG
                IF hbmk[ _HBMK_lDEBUGINC ]
-                  hbmk_OutStd( hb_StrFormat( "debuginc: CPRG %1$s %2$s",;
+                  hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CPRG %1$s %2$s",;
                      FN_DirExtSet( tmp, cWorkDir, ".c" ),;
                      FN_DirExtSet( tmp, cWorkDir, cObjExt ) ) )
                ENDIF
@@ -3117,7 +3126,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF ! Empty( cBin_CompC )
 
             IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ]
-               hbmk_OutStd( I_( "Compiling..." ) )
+               hbmk_OutStd( hbmk, I_( "Compiling..." ) )
             ENDIF
 
             /* Compiling */
@@ -3177,7 +3186,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                         FClose( fhnd )
                         cOpt_CompCLoop := "@" + cScriptFile
                      ELSE
-                        hbmk_OutErr( I_( "Warning: C compiler script couldn't be created, continuing in command line." ) )
+                        hbmk_OutErr( hbmk, I_( "Warning: C compiler script couldn't be created, continuing in command line." ) )
                      ENDIF
                   ENDIF
 
@@ -3186,15 +3195,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                   IF hbmk[ _HBMK_lTRACE ]
                      IF ! hbmk[ _HBMK_lQuiet ]
                         IF Len( aTODO:__enumBase() ) > 1
-                           hbmk_OutStd( hb_StrFormat( I_( "C compiler command job #%1$s:" ), hb_ntos( aTODO:__enumIndex() ) ) )
+                           hbmk_OutStd( hbmk, hb_StrFormat( I_( "C compiler command job #%1$s:" ), hb_ntos( aTODO:__enumIndex() ) ) )
                         ELSE
-                           hbmk_OutStd( I_( "C compiler command:" ) )
+                           hbmk_OutStd( hbmk, I_( "C compiler command:" ) )
                         ENDIF
                      ENDIF
-                     OutStd( cCommand, hb_osNewLine() )
+                     OutStd( cCommand + hb_osNewLine() )
                      IF ! Empty( cScriptFile )
-                        hbmk_OutStd( I_( "C compiler script:" ) )
-                        OutStd( hb_MemoRead( cScriptFile ), hb_osNewLine() )
+                        hbmk_OutStd( hbmk, I_( "C compiler script:" ) )
+                        OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
                      ENDIF
                   ENDIF
 
@@ -3203,9 +3212,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                         AAdd( aThreads, { hb_threadStart( @hbmk_run(), cCommand ), cCommand } )
                      ELSE
                         IF ( tmp := hbmk_run( cCommand ) ) != 0
-                           hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler. %1$s" ), hb_ntos( tmp ) ) )
+                           hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C compiler. %1$s" ), hb_ntos( tmp ) ) )
                            IF ! hbmk[ _HBMK_lQuiet ]
-                              OutErr( cCommand, hb_osNewLine() )
+                              OutErr( cCommand + hb_osNewLine() )
                            ENDIF
                            nErrorLevel := 6
                         ENDIF
@@ -3222,12 +3231,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                      hb_threadJoin( thread[ 1 ], @tmp )
                      IF tmp != 0
                         IF Len( aThreads ) > 1
-                           hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler job #%1$s. %2$s" ), hb_ntos( thread:__enumIndex() ), hb_ntos( tmp ) ) )
+                           hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C compiler job #%1$s. %2$s" ), hb_ntos( thread:__enumIndex() ), hb_ntos( tmp ) ) )
                         ELSE
-                           hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler. %1$s" ), hb_ntos( tmp ) ) )
+                           hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C compiler. %1$s" ), hb_ntos( tmp ) ) )
                         ENDIF
                         IF ! hbmk[ _HBMK_lQuiet ]
-                           OutErr( thread[ 2 ], hb_osNewLine() )
+                           OutErr( thread[ 2 ] + hb_osNewLine() )
                         ENDIF
                         nErrorLevel := 6
                      ENDIF
@@ -3235,7 +3244,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                ENDIF
             ENDIF
          ELSE
-            hbmk_OutErr( I_( "Error: This architecture/compiler isn't implemented." ) )
+            hbmk_OutErr( hbmk, I_( "Error: This architecture/compiler isn't implemented." ) )
             nErrorLevel := 8
          ENDIF
       ENDIF
@@ -3247,7 +3256,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
 
             IF hbmk[ _HBMK_lDEBUGINC ]
-               hbmk_OutStd( hb_StrFormat( "debuginc: target %1$s", s_cPROGNAME ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: target %1$s", s_cPROGNAME ) )
             ENDIF
 
             IF hb_FGetDateTime( s_cPROGNAME, @tTarget )
@@ -3256,7 +3265,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                IF lTargetUpToDate
                   FOR EACH tmp IN ArrayAJoin( { s_aOBJ, s_aOBJUSER, s_aOBJA, s_aRESSRC, s_aRESCMP } )
                      IF hbmk[ _HBMK_lDEBUGINC ]
-                        hbmk_OutStd( hb_StrFormat( "debuginc: EXEDEP %1$s", tmp ) )
+                        hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: EXEDEP %1$s", tmp ) )
                      ENDIF
                      IF ! hb_FGetDateTime( tmp, @tmp1 ) .OR. tmp1 > tTarget
                         lTargetUpToDate := .F.
@@ -3269,7 +3278,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                   FOR EACH tmp IN s_aLIBRAW
                      IF ! Empty( tmp2 := FindLib( hbmk, tmp, hbmk[ _HBMK_aLIBPATH ], cLibExt ) )
                         IF hbmk[ _HBMK_lDEBUGINC ]
-                           hbmk_OutStd( hb_StrFormat( "debuginc: EXEDEPLIB %1$s", tmp2 ) )
+                           hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: EXEDEPLIB %1$s", tmp2 ) )
                         ENDIF
                         IF ! hb_FGetDateTime( tmp2, @tmp1 ) .OR. tmp1 > tTarget
                            lTargetUpToDate := .F.
@@ -3285,13 +3294,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       IF nErrorLevel == 0 .AND. ( Len( s_aOBJ ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) > 0 .AND. ! s_lCLEAN
 
          IF lTargetUpToDate
-            hbmk_OutStd( hb_StrFormat( I_( "Target up to date: %1$s" ), s_cPROGNAME ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Target up to date: %1$s" ), s_cPROGNAME ) )
          ELSE
             DO CASE
             CASE ! lStopAfterCComp .AND. ! Empty( cBin_Link )
 
                IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ]
-                  hbmk_OutStd( hb_StrFormat( I_( "Linking... %1$s" ), PathSepToTarget( hbmk, s_cPROGNAME ) ) )
+                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Linking... %1$s" ), PathSepToTarget( hbmk, s_cPROGNAME ) ) )
                ENDIF
 
                /* Linking */
@@ -3318,7 +3327,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                      FClose( fhnd )
                      cOpt_Link := "@" + cScriptFile
                   ELSE
-                     hbmk_OutErr( I_( "Warning: Link script couldn't be created, continuing in command line." ) )
+                     hbmk_OutErr( hbmk, I_( "Warning: Link script couldn't be created, continuing in command line." ) )
                   ENDIF
                ENDIF
 
@@ -3326,19 +3335,19 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
                IF hbmk[ _HBMK_lTRACE ]
                   IF ! hbmk[ _HBMK_lQuiet ]
-                     hbmk_OutStd( I_( "Linker command:" ) )
+                     hbmk_OutStd( hbmk, I_( "Linker command:" ) )
                   ENDIF
-                  OutStd( cCommand, hb_osNewLine() )
+                  OutStd( cCommand + hb_osNewLine() )
                   IF ! Empty( cScriptFile )
-                     hbmk_OutStd( I_( "Linker script:" ) )
-                     OutStd( hb_MemoRead( cScriptFile ), hb_osNewLine() )
+                     hbmk_OutStd( hbmk, I_( "Linker script:" ) )
+                     OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
                   ENDIF
                ENDIF
 
                IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-                  hbmk_OutErr( hb_StrFormat( I_( "Error: Running linker. %1$s" ), hb_ntos( tmp ) ) )
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running linker. %1$s" ), hb_ntos( tmp ) ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
-                     OutErr( cCommand, hb_osNewLine() )
+                     OutErr( cCommand + hb_osNewLine() )
                   ENDIF
                   nErrorLevel := 7
                ENDIF
@@ -3350,7 +3359,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             CASE lStopAfterCComp .AND. lCreateLib .AND. ! Empty( cBin_Lib )
 
                IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ]
-                  hbmk_OutStd( hb_StrFormat( I_( "Creating static library... %1$s" ), PathSepToTarget( hbmk, s_cPROGNAME ) ) )
+                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Creating static library... %1$s" ), PathSepToTarget( hbmk, s_cPROGNAME ) ) )
                ENDIF
 
                /* Lib creation (static) */
@@ -3373,7 +3382,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                      FClose( fhnd )
                      cOpt_Lib := "@" + cScriptFile
                   ELSE
-                     hbmk_OutErr( I_( "Warning: Lib script couldn't be created, continuing in command line." ) )
+                     hbmk_OutErr( hbmk, I_( "Warning: Lib script couldn't be created, continuing in command line." ) )
                   ENDIF
                ENDIF
 
@@ -3381,19 +3390,19 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
                IF hbmk[ _HBMK_lTRACE ]
                   IF ! hbmk[ _HBMK_lQuiet ]
-                     hbmk_OutStd( I_( "Lib command:" ) )
+                     hbmk_OutStd( hbmk, I_( "Lib command:" ) )
                   ENDIF
-                  OutStd( cCommand, hb_osNewLine() )
+                  OutStd( cCommand + hb_osNewLine() )
                   IF ! Empty( cScriptFile )
-                     hbmk_OutStd( I_( "Lib script:" ) )
-                     OutStd( hb_MemoRead( cScriptFile ), hb_osNewLine() )
+                     hbmk_OutStd( hbmk, I_( "Lib script:" ) )
+                     OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
                   ENDIF
                ENDIF
 
                IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-                  hbmk_OutErr( hb_StrFormat( I_( "Error: Running lib command. %1$s" ), hb_ntos( tmp ) ) )
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running lib command. %1$s" ), hb_ntos( tmp ) ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
-                     OutErr( cCommand, hb_osNewLine() )
+                     OutErr( cCommand + hb_osNewLine() )
                   ENDIF
                   nErrorLevel := 7
                ENDIF
@@ -3405,7 +3414,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             CASE lStopAfterCComp .AND. lCreateDyn .AND. ! Empty( cBin_Dyn )
 
                IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ]
-                  hbmk_OutStd( hb_StrFormat( I_( "Creating dynamic library... %1$s" ), PathSepToTarget( hbmk, s_cPROGNAME ) ) )
+                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Creating dynamic library... %1$s" ), PathSepToTarget( hbmk, s_cPROGNAME ) ) )
                ENDIF
 
                /* Lib creation (dynamic) */
@@ -3430,7 +3439,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                      FClose( fhnd )
                      cOpt_Dyn := "@" + cScriptFile
                   ELSE
-                     hbmk_OutErr( I_( "Warning: Dynamic lib link script couldn't be created, continuing in command line." ) )
+                     hbmk_OutErr( hbmk, I_( "Warning: Dynamic lib link script couldn't be created, continuing in command line." ) )
                   ENDIF
                ENDIF
 
@@ -3438,19 +3447,19 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
                IF hbmk[ _HBMK_lTRACE ]
                   IF ! hbmk[ _HBMK_lQuiet ]
-                     hbmk_OutStd( I_( "Dynamic lib link command:" ) )
+                     hbmk_OutStd( hbmk, I_( "Dynamic lib link command:" ) )
                   ENDIF
-                  OutStd( cCommand, hb_osNewLine() )
+                  OutStd( cCommand + hb_osNewLine() )
                   IF ! Empty( cScriptFile )
-                     hbmk_OutStd( I_( "Dynamic lib link script:" ) )
-                     OutStd( hb_MemoRead( cScriptFile ), hb_osNewLine() )
+                     hbmk_OutStd( hbmk, I_( "Dynamic lib link script:" ) )
+                     OutStd( hb_MemoRead( cScriptFile ) + hb_osNewLine() )
                   ENDIF
                ENDIF
 
                IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-                  hbmk_OutErr( hb_StrFormat( I_( "Error: Running dynamic lib link command. %1$s" ), hb_ntos( tmp ) ) )
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running dynamic lib link command. %1$s" ), hb_ntos( tmp ) ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
-                     OutErr( cCommand, hb_osNewLine() )
+                     OutErr( cCommand + hb_osNewLine() )
                   ENDIF
                   nErrorLevel := 7
                ENDIF
@@ -3467,7 +3476,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
       IF ! Empty( s_cCSTUB )
          IF hbmk[ _HBMK_lDEBUGSTUB ]
-            hbmk_OutStd( hb_StrFormat( "Stub kept for debug: %1$s", s_cCSTUB ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( "Stub kept for debug: %1$s", s_cCSTUB ) )
          ELSE
             FErase( s_cCSTUB )
          ENDIF
@@ -3500,15 +3509,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
             IF hbmk[ _HBMK_lTRACE ]
                IF ! hbmk[ _HBMK_lQuiet ]
-                  hbmk_OutStd( I_( "Post processor command:" ) )
+                  hbmk_OutStd( hbmk, I_( "Post processor command:" ) )
                ENDIF
-               OutStd( cCommand, hb_osNewLine() )
+               OutStd( cCommand + hb_osNewLine() )
             ENDIF
 
             IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-               hbmk_OutErr( hb_StrFormat( I_( "Warning: Running post processor command. %1$s:" ), hb_ntos( tmp ) ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Running post processor command. %1$s:" ), hb_ntos( tmp ) ) )
                IF ! hbmk[ _HBMK_lQuiet ]
-                  OutErr( cCommand, hb_osNewLine() )
+                  OutErr( cCommand + hb_osNewLine() )
                ENDIF
             ENDIF
          ENDIF
@@ -3529,15 +3538,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
             IF hbmk[ _HBMK_lTRACE ]
                IF ! hbmk[ _HBMK_lQuiet ]
-                  hbmk_OutStd( I_( "Compression command:" ) )
+                  hbmk_OutStd( hbmk, I_( "Compression command:" ) )
                ENDIF
-               OutStd( cCommand, hb_osNewLine() )
+               OutStd( cCommand + hb_osNewLine() )
             ENDIF
 
             IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( cCommand ) ) != 0
-               hbmk_OutErr( hb_StrFormat( I_( "Warning: Running compression command. %1$s:" ), hb_ntos( tmp ) ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Running compression command. %1$s:" ), hb_ntos( tmp ) ) )
                IF ! hbmk[ _HBMK_lQuiet ]
-                  OutErr( cCommand, hb_osNewLine() )
+                  OutErr( cCommand + hb_osNewLine() )
                ENDIF
             ENDIF
          ENDIF
@@ -3550,9 +3559,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                   tmp1 := PathSepToSelf( tmp )
                ENDIF
                IF hb_FCopy( s_cPROGNAME, tmp1 ) == F_ERROR
-                  hbmk_OutErr( hb_StrFormat( I_( "Warning: Copying target to %1$s failed with %2$s." ), tmp1, hb_ntos( FError() ) ) )
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying target to %1$s failed with %2$s." ), tmp1, hb_ntos( FError() ) ) )
                ELSEIF hbmk[ _HBMK_lInfo ]
-                  hbmk_OutStd( hb_StrFormat( I_( "Copied target to %1$s" ), tmp1 ) )
+                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied target to %1$s" ), tmp1 ) )
                ENDIF
             NEXT
          ENDIF
@@ -3560,11 +3569,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
    ENDIF
 
    IF hbmk[ _HBMK_lDEBUGTIME ]
-      hbmk_OutStd( hb_StrFormat( I_( "Running time: %1$ss" ), hb_ntos( TimeElapsed( nStart, Seconds() ) ) ) )
+      hbmk_OutStd( hbmk, hb_StrFormat( I_( "Running time: %1$ss" ), hb_ntos( TimeElapsed( nStart, Seconds() ) ) ) )
    ENDIF
 
    IF ! lSkipBuild .AND. s_lBEEP
-      DoBeep( nErrorLevel == 0 )
+      DoBeep( hbmk, nErrorLevel == 0 )
    ENDIF
 
    IF ! lStopAfterHarbour .AND. ! lStopAfterCComp .AND. ;
@@ -3588,9 +3597,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
       cCommand := AllTrim( cCommand + " " + ArrayToList( s_aOPTRUN ) )
       IF hbmk[ _HBMK_lTRACE ]
          IF ! hbmk[ _HBMK_lQuiet ]
-            hbmk_OutStd( I_( "Running executable:" ) )
+            hbmk_OutStd( hbmk, I_( "Running executable:" ) )
          ENDIF
-         OutStd( cCommand, hb_osNewLine() )
+         OutStd( cCommand + hb_osNewLine() )
       ENDIF
       IF ! hbmk[ _HBMK_lDONTEXEC ]
          nErrorLevel := hb_run( cCommand )
@@ -3599,7 +3608,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
    RETURN nErrorLevel
 
-STATIC PROCEDURE DoBeep( lSuccess )
+STATIC PROCEDURE DoBeep( hbmk, lSuccess )
    LOCAL nRepeat := iif( lSuccess, 1, 2 )
    LOCAL tmp
 
@@ -3629,22 +3638,22 @@ STATIC FUNCTION CompileCLoop( hbmk, aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cOb
       IF hbmk[ _HBMK_lTRACE ]
          IF ! hbmk[ _HBMK_lQuiet ]
             IF nJobs > 1
-               hbmk_OutStd( hb_StrFormat( I_( "C compiler command job #%1$s:" ), hb_ntos( nJob ) ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( I_( "C compiler command job #%1$s:" ), hb_ntos( nJob ) ) )
             ELSE
-               hbmk_OutStd( I_( "C compiler command:" ) )
+               hbmk_OutStd( hbmk, I_( "C compiler command:" ) )
             ENDIF
          ENDIF
-         OutStd( cCommand, hb_osNewLine() )
+         OutStd( cCommand + hb_osNewLine() )
       ENDIF
 
       IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp1 := hbmk_run( cCommand ) ) != 0
          IF nJobs > 1
-            hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler job #%1$s. %2$s" ), hb_ntos( nJob ), hb_ntos( tmp1 ) ) )
+            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C compiler job #%1$s. %2$s" ), hb_ntos( nJob ), hb_ntos( tmp1 ) ) )
          ELSE
-            hbmk_OutErr( hb_StrFormat( I_( "Error: Running C compiler. %1$s" ), hb_ntos( tmp1 ) ) )
+            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C compiler. %1$s" ), hb_ntos( tmp1 ) ) )
          ENDIF
          IF ! hbmk[ _HBMK_lQuiet ]
-            OutErr( cCommand, hb_osNewLine() )
+            OutErr( cCommand + hb_osNewLine() )
          ENDIF
          lResult := .F.
          EXIT
@@ -3740,7 +3749,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
    hb_HSet( headstate[ _HEADSTATE_hFiles ], cFileName, .T. )
 
    IF hbmk[ _HBMK_lDEBUGINC ]
-      hbmk_OutStd( hb_StrFormat( "debuginc: HEADER %1$s", cFileName ) )
+      hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: HEADER %1$s", cFileName ) )
    ENDIF
 
    IF ! hb_FGetDateTime( cFileName, @tTimeSelf )
@@ -3826,7 +3835,7 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, aINCTRYPATH )
             IF AScan( hbmk[ _HBMK_aINCPATH ], { |tmp| tmp == cDir } ) == 0
                AAdd( hbmk[ _HBMK_aINCPATH ], cDir )
                IF hbmk[ _HBMK_lInfo ]
-                  hbmk_OutStd( hb_StrFormat( I_( "Autodetected header dir for %1$s: %2$s" ), cFileName, cDir ) )
+                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected header dir for %1$s: %2$s" ), cFileName, cDir ) )
                ENDIF
             ENDIF
             RETURN DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName
@@ -4395,7 +4404,7 @@ STATIC PROCEDURE HBP_ProcessAll( hbmk, lConfigOnly )
    FOR EACH cDir IN aCFGDirs
       IF hb_FileExists( cFileName := ( PathNormalize( DirAddPathSep( cDir ) ) + HBMK_CFG_NAME ) )
          IF ! hbmk[ _HBMK_lQuiet ]
-            hbmk_OutStd( hb_StrFormat( I_( "Processing configuration: %1$s" ), cFileName ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing configuration: %1$s" ), cFileName ) )
          ENDIF
          HBP_ProcessOne( hbmk, cFileName )
          EXIT
@@ -4407,7 +4416,7 @@ STATIC PROCEDURE HBP_ProcessAll( hbmk, lConfigOnly )
          cFileName := aFile[ F_NAME ]
          IF !( cFileName == HBMK_CFG_NAME ) .AND. Lower( FN_ExtGet( cFileName ) ) == ".hbp"
             IF ! hbmk[ _HBMK_lQuiet ]
-               hbmk_OutStd( hb_StrFormat( I_( "Processing: %1$s" ), cFileName ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cFileName ) )
             ENDIF
             HBP_ProcessOne( hbmk, cFileName )
          ENDIF
@@ -4498,7 +4507,7 @@ STATIC PROCEDURE HBP_ProcessOne( hbmk, cFileName )
       CASE Lower( Left( cLine, Len( "echo="         ) ) ) == "echo="         ; cLine := SubStr( cLine, Len( "echo="         ) + 1 )
          cLine := MacroProc( hbmk, cLine, FN_DirGet( cFileName ) )
          IF ! Empty( cLine )
-            OutStd( hb_StrFormat( I_( "%1$s" ), cLine ), hb_osNewLine() )
+            OutStd( hb_StrFormat( I_( "%1$s" ), cLine ) + hb_osNewLine() )
          ENDIF
 
       CASE Lower( Left( cLine, Len( "prgflags="     ) ) ) == "prgflags="     ; cLine := SubStr( cLine, Len( "prgflags="     ) + 1 )
@@ -4684,7 +4693,7 @@ STATIC FUNCTION ValueIsF( cString )
    RETURN cString == "no" .OR. ;
           cString == "0" /* Compatibility */
 
-STATIC PROCEDURE HBM_Load( aParams, cFileName, /* @ */ nEmbedLevel )
+STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, /* @ */ nEmbedLevel )
    LOCAL cFile
    LOCAL cLine
    LOCAL cParam
@@ -4713,13 +4722,13 @@ STATIC PROCEDURE HBM_Load( aParams, cFileName, /* @ */ nEmbedLevel )
                            cParam := FN_ExtSet( cParam, ".hbm" )
                         ENDIF
                         nEmbedLevel++
-                        HBM_Load( aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
+                        HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
                      ENDIF
                   CASE Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
                        Lower( FN_ExtGet( cParam ) ) == ".hbt"
                      IF nEmbedLevel < 3
                         nEmbedLevel++
-                        HBM_Load( aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
+                        HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
                      ENDIF
                   OTHERWISE
                      AAdd( aParams, { cParam, cFileName, cLine:__enumIndex() } )
@@ -4729,7 +4738,7 @@ STATIC PROCEDURE HBM_Load( aParams, cFileName, /* @ */ nEmbedLevel )
          ENDIF
       NEXT
    ELSE
-      hbmk_OutErr( hb_StrFormat( I_( "Warning: File cannot be found: %1$s" ), cFileName ) )
+      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: File cannot be found: %1$s" ), cFileName ) )
    ENDIF
 
    RETURN
@@ -4879,7 +4888,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
             ENDIF
          NEXT
       ELSEIF ! Empty( cExecNM := FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "nm" ) )
-         cFuncList := commandResult( cExecNM + " " + cFile + " -g -n --defined-only -C" )
+         cFuncList := commandResult( hbmk, cExecNM + " " + cFile + " -g -n --defined-only -C" )
          IF ( n := At( " T HB_FUN_", cFuncList ) ) != 0
             n += 10
             DO WHILE ( c := SubStr( cFuncList, n++, 1 ) ) = "_" .OR. ;
@@ -4892,7 +4901,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
 
    RETURN cFuncName
 
-STATIC FUNCTION commandResult( cCommand, nResult )
+STATIC FUNCTION commandResult( hbmk, cCommand, nResult )
    LOCAL hFile, cFileName, cResult
 
    hFile := hb_FTempCreateEx( @cFileName )
@@ -4904,7 +4913,7 @@ STATIC FUNCTION commandResult( cCommand, nResult )
       cResult := hb_MemoRead( cFileName )
       FErase( cFileName )
    ELSE
-      hbmk_OutErr( I_( "Error: Cannot create temporary file." ) )
+      hbmk_OutErr( hbmk, I_( "Error: Cannot create temporary file." ) )
    ENDIF
 
    RETURN cResult
@@ -5144,7 +5153,7 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
          IF nMode == RTLNK_MODE_NONE
             /* blinker extension */
             IF Upper( cLine ) = "ECHO "
-               hbmk_OutStd( hb_StrFormat( I_( "Blinker ECHO: %1$s" ), SubStr( cLine, 6 ) ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Blinker ECHO: %1$s" ), SubStr( cLine, 6 ) ) )
                LOOP
             ELSEIF Upper( cLine ) = "BLINKER "
                /* skip blinker commands */
@@ -5184,7 +5193,7 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
                cWord := SubStr( cWord, 2 )
                cCommands := rtlnk_read( @cWord, aPrevFiles )
                IF cCommands == NIL
-                  hbmk_OutErr( hb_StrFormat( I_( "Error: Cannot open file: %1$s" ), cWord ) )
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Cannot open file: %1$s" ), cWord ) )
                   RETURN .F.
                ENDIF
                IF !rtlnk_process( hbmk, cCommands, @cFileOut, @aFileList, @aLibList, ;
@@ -5231,24 +5240,24 @@ STATIC PROCEDURE RebuildPO( hbmk, aPOTIN )
          IF fhnd != F_ERROR
             FClose( fhnd )
             IF hbmk[ _HBMK_lDEBUGI18N ]
-               hbmk_OutStd( hb_StrFormat( "RebuildPO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
-               hbmk_OutStd( hb_StrFormat( "RebuildPO: temp unified .po: %1$s", cPOTemp ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( "RebuildPO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( "RebuildPO: temp unified .po: %1$s", cPOTemp ) )
             ENDIF
             POTMerge( hbmk, aPOTIN, NIL, cPOTemp )
          ELSE
-            hbmk_OutStd( I_( "Error: Cannot create temporary unified .po file." ) )
+            hbmk_OutStd( hbmk, I_( "Error: Cannot create temporary unified .po file." ) )
          ENDIF
       ENDIF
       cPOCooked := StrTran( hbmk[ _HBMK_cPO ], _LNG_MARKER, cLNG )
       IF hb_FileExists( cPOCooked )
          IF hbmk[ _HBMK_lDEBUGI18N ]
-            hbmk_OutStd( hb_StrFormat( "RebuildPO: updating unified .po: %1$s", cPOCooked ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( "RebuildPO: updating unified .po: %1$s", cPOCooked ) )
          ENDIF
          AutoTrans( hbmk, cPOTemp, { cPOCooked }, cPOCooked )
          AAdd( aUpd, cLNG )
       ELSE
          IF hbmk[ _HBMK_lDEBUGI18N ]
-            hbmk_OutStd( hb_StrFormat( "RebuildPO: creating unified .po: %1$s", cPOCooked ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( "RebuildPO: creating unified .po: %1$s", cPOCooked ) )
          ENDIF
          hb_FCopy( cPOTemp, cPOCooked )
          AAdd( aNew, cLNG )
@@ -5261,16 +5270,16 @@ STATIC PROCEDURE RebuildPO( hbmk, aPOTIN )
 
    IF ! Empty( aNew )
       IF Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ hbmk[ _HBMK_cPO ] )
-         hbmk_OutStd( hb_StrFormat( I_( "Created .po file '%1$s'" ), hbmk[ _HBMK_cPO ] ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created .po file '%1$s'" ), hbmk[ _HBMK_cPO ] ) )
       ELSE
-         hbmk_OutStd( hb_StrFormat( I_( "Created .po file '%1$s' for language(s): %2$s" ), hbmk[ _HBMK_cPO ], ArrayToList( aNew, "," ) ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created .po file '%1$s' for language(s): %2$s" ), hbmk[ _HBMK_cPO ], ArrayToList( aNew, "," ) ) )
       ENDIF
    ENDIF
    IF ! Empty( aUpd )
       IF Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ hbmk[ _HBMK_cPO ] )
-         hbmk_OutStd( hb_StrFormat( I_( "Rebuilt .po file '%1$s'" ), hbmk[ _HBMK_cPO ] ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Rebuilt .po file '%1$s'" ), hbmk[ _HBMK_cPO ] ) )
       ELSE
-         hbmk_OutStd( hb_StrFormat( I_( "Rebuilt .po file '%1$s' for language(s): %2$s" ), hbmk[ _HBMK_cPO ], ArrayToList( aUpd, "," ) ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Rebuilt .po file '%1$s' for language(s): %2$s" ), hbmk[ _HBMK_cPO ], ArrayToList( aUpd, "," ) ) )
       ENDIF
    ENDIF
 
@@ -5289,9 +5298,9 @@ STATIC PROCEDURE UpdatePO( hbmk, aPOTIN )
    NEXT
 
    IF Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ hbmk[ _HBMK_cPO ] )
-      hbmk_OutStd( hb_StrFormat( I_( "Updated .po file '%1$s'" ), hbmk[ _HBMK_cPO ] ) )
+      hbmk_OutStd( hbmk, hb_StrFormat( I_( "Updated .po file '%1$s'" ), hbmk[ _HBMK_cPO ] ) )
    ELSE
-      hbmk_OutStd( hb_StrFormat( I_( "Updated .po file '%1$s' for language(s): %2$s" ), hbmk[ _HBMK_cPO ], ArrayToList( aUpd, "," ) ) )
+      hbmk_OutStd( hbmk, hb_StrFormat( I_( "Updated .po file '%1$s' for language(s): %2$s" ), hbmk[ _HBMK_cPO ], ArrayToList( aUpd, "," ) ) )
    ENDIF
 
    RETURN
@@ -5310,7 +5319,7 @@ STATIC PROCEDURE MakeHBL( hbmk, cHBL )
 
    IF ! Empty( hbmk[ _HBMK_aPO ] )
       IF hbmk[ _HBMK_lDEBUGI18N ]
-         hbmk_OutStd( hb_StrFormat( "po: in: %1$s", ArrayToList( hbmk[ _HBMK_aPO ] ) ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( "po: in: %1$s", ArrayToList( hbmk[ _HBMK_aPO ] ) ) )
       ENDIF
       IF Empty( cHBL )
          cHBL := FN_NameGet( hbmk[ _HBMK_aPO ][ 1 ] )
@@ -5332,7 +5341,7 @@ STATIC PROCEDURE MakeHBL( hbmk, cHBL )
          NEXT
          IF lUpdateNeeded
             IF hbmk[ _HBMK_lDEBUGI18N ]
-               hbmk_OutStd( hb_StrFormat( "po: %1$s -> %2$s", ArrayToList( aPO_TODO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( "po: %1$s -> %2$s", ArrayToList( aPO_TODO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
             ENDIF
             GenHbl( hbmk, aPO_TODO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
             AAdd( aNew, cLNG )
@@ -5342,9 +5351,9 @@ STATIC PROCEDURE MakeHBL( hbmk, cHBL )
 
    IF ! Empty( aNew )
       IF Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ cHBL )
-         hbmk_OutStd( hb_StrFormat( I_( "Created .hbl file '%1$s'" ), cHBL ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created .hbl file '%1$s'" ), cHBL ) )
       ELSE
-         hbmk_OutStd( hb_StrFormat( I_( "Created .hbl file '%1$s' for language(s): %2$s" ), cHBL, ArrayToList( aNew, "," ) ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created .hbl file '%1$s' for language(s): %2$s" ), cHBL, ArrayToList( aNew, "," ) ) )
       ENDIF
    ENDIF
 
@@ -5370,14 +5379,14 @@ STATIC FUNCTION LoadPOTFiles( hbmk, aFiles, cFileBase, lIgnoreError )
          __i18n_potArrayJoin( aTrans, aTrans2, @hIndex )
       ELSE
          IF ! lIgnoreError
-            hbmk_OutErr( hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
+            hbmk_OutErr( hbmk, hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
          ENDIF
          cErrorMsg := NIL
       ENDIF
    NEXT
 
    IF hbmk[ _HBMK_lDEBUGI18N ] .AND. aTrans == NIL
-      hbmk_OutErr( "LoadPOTFiles() didn't load anything" )
+      hbmk_OutErr( hbmk, "LoadPOTFiles() didn't load anything" )
    ENDIF
 
    RETURN aTrans
@@ -5393,11 +5402,11 @@ STATIC FUNCTION LoadPOTFilesAsHash( hbmk, aFiles )
       aTrans := __i18n_potArrayLoad( cFileName, @cErrorMsg )
       IF aTrans != NIL
          IF hbmk[ _HBMK_lDEBUGI18N ]
-            hbmk_OutStd( hb_StrFormat( "LoadPOTFilesAsHash(): %1$s", cFileName ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( "LoadPOTFilesAsHash(): %1$s", cFileName ) )
          ENDIF
          hTrans := __i18n_potArrayToHash( aTrans,, hTrans )
       ELSE
-         hbmk_OutErr( hb_StrFormat( I_( "Warning: %1$s" ), cErrorMsg ) )
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: %1$s" ), cErrorMsg ) )
       ENDIF
    NEXT
 
@@ -5409,7 +5418,7 @@ STATIC PROCEDURE POTMerge( hbmk, aFiles, cFileBase, cFileOut )
 
    IF aTrans != NIL
       IF !__i18n_potArraySave( cFileOut, aTrans, @cErrorMsg )
-         hbmk_OutErr( hb_StrFormat( I_( ".pot merge error: %1$s" ), cErrorMsg ) )
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( ".pot merge error: %1$s" ), cErrorMsg ) )
       ENDIF
    ENDIF
 
@@ -5421,7 +5430,7 @@ STATIC PROCEDURE AutoTrans( hbmk, cFileIn, aFiles, cFileOut )
    IF !__I18N_potArraySave( cFileOut, ;
          __I18N_potArrayTrans( LoadPOTFiles( hbmk, {}, cFileIn, .F. ), ;
                                LoadPOTFilesAsHash( hbmk, aFiles ) ), @cErrorMsg )
-      hbmk_OutErr( hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
+      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
    ENDIF
 
    RETURN
@@ -5438,7 +5447,7 @@ STATIC FUNCTION GenHbl( hbmk, aFiles, cFileOut, lEmpty )
       IF hb_MemoWrit( cFileOut, cHblBody )
          lRetVal := .T.
       ELSE
-         hbmk_OutErr( hb_StrFormat( I_( "Error: Cannot create file: %1$s" ), cFileOut ) )
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Cannot create file: %1$s" ), cFileOut ) )
       ENDIF
    ENDIF
 
@@ -5630,7 +5639,12 @@ STATIC PROCEDURE SetUILang( hbmk )
 
    /* Setup output CP, separate for Windows/DOS/OS2 and *nix systems */
    /* NOTE: Intentionally doing runtime branching to include both strings in translation files. */
-   hb_setDispCP( Upper( SubStr( iif( hb_Version( HB_VERSION_UNIX_COMPAT ), I_( "nix=EN" ), I_( "wdo=EN" ) ), Len( "xxx=" ) + 1 ) ) )
+   tmp := Upper( SubStr( iif( hb_Version( HB_VERSION_UNIX_COMPAT ), I_( "nix=EN" ), I_( "wdo=EN" ) ), Len( "xxx=" ) + 1 ) )
+   IF tmp == "UTF8" .OR. tmp == "UTF-8"
+      hbmk[ _HBMK_lUTF8 ] := .T.
+   ELSE
+      hb_setDispCP( tmp )
+   ENDIF
 
    RETURN
 
@@ -5641,7 +5655,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
            "http://www.harbour-project.org/" + hb_osNewLine() )
 
    IF !( hbmk[ _HBMK_cUILNG ] == "en-EN" )
-      OutStd( hb_StrFormat( I_( "Translation (%1$s): (add your name here)" ), hbmk[ _HBMK_cUILNG ] ), hb_osNewLine() )
+      OutStd( hb_StrFormat( I_( "Translation (%1$s): (add your name here)" ), hbmk[ _HBMK_cUILNG ] ) + hb_osNewLine() )
    ENDIF
 
    OutStd( hb_osNewLine() )
@@ -5651,7 +5665,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
 STATIC FUNCTION HBRawVersion()
    RETURN StrTran( Version(), "Harbour " )
 
-STATIC PROCEDURE ShowHelp( lLong )
+STATIC PROCEDURE ShowHelp( hbmk, lLong )
 
    LOCAL aText_Basic := {;
       I_( "Syntax:" ),;
@@ -5771,19 +5785,19 @@ STATIC PROCEDURE ShowHelp( lLong )
    DEFAULT lLong TO .F.
 
    AEval( aText_Basic, {|tmp| OutStd( tmp + hb_osNewLine() ) } )
-   AEval( aOpt_Basic, {|tmp| OutOpt( tmp ) } )
+   AEval( aOpt_Basic, {|tmp| OutOpt( hbmk, tmp ) } )
    IF lLong
-      AEval( aOpt_Long, {|tmp| OutOpt( tmp ) } )
+      AEval( aOpt_Long, {|tmp| OutOpt( hbmk, tmp ) } )
       AEval( aText_Notes, {|tmp| OutStd( tmp + hb_osNewLine() ) } )
-      AEval( aNotes, {|tmp| OutNote( tmp ) } )
+      AEval( aNotes, {|tmp| OutNote( hbmk, tmp ) } )
       AEval( aText_Supp, {|tmp| OutStd( tmp + hb_osNewLine() ) } )
    ELSE
-      AEval( aOpt_Help, {|tmp| OutOpt( tmp ) } )
+      AEval( aOpt_Help, {|tmp| OutOpt( hbmk, tmp ) } )
    ENDIF
 
    RETURN
 
-STATIC PROCEDURE OutOpt( aOpt )
+STATIC PROCEDURE OutOpt( hbmk, aOpt )
    LOCAL nLine
    LOCAL nLines
    LOCAL tmp
@@ -5808,7 +5822,7 @@ STATIC PROCEDURE OutOpt( aOpt )
 
    RETURN
 
-STATIC PROCEDURE OutNote( cText )
+STATIC PROCEDURE OutNote( hbmk, cText )
    LOCAL nLine
    LOCAL nLines
    LOCAL tmp
@@ -5828,7 +5842,7 @@ STATIC PROCEDURE OutNote( cText )
 
    RETURN
 
-STATIC PROCEDURE hbmk_OutStd( cText )
+STATIC PROCEDURE hbmk_OutStd( hbmk, cText )
    LOCAL nLine
    LOCAL nLines
    LOCAL tmp
@@ -5848,7 +5862,7 @@ STATIC PROCEDURE hbmk_OutStd( cText )
 
    RETURN
 
-STATIC PROCEDURE hbmk_OutErr( cText )
+STATIC PROCEDURE hbmk_OutErr( hbmk, cText )
    LOCAL nLine
    LOCAL nLines
    LOCAL tmp
@@ -5866,4 +5880,15 @@ STATIC PROCEDURE hbmk_OutErr( cText )
       ENDIF
    NEXT
 
+   RETURN
+
+#undef OutStd
+#undef OutErr
+
+STATIC PROCEDURE low_OutStd( lUTF8, cString )
+   OutStd( iif( lUTF8, hb_StrToUTF8( cString ), cString ) )
+   RETURN
+
+STATIC PROCEDURE low_OutErr( lUTF8, cString )
+   OutErr( iif( lUTF8, hb_StrToUTF8( cString ), cString ) )
    RETURN
