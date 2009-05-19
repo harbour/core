@@ -504,6 +504,13 @@ HB_FUNC( XHB_MULT )
       double dValue = hb_itemGetNDDec( pValue, &iDec );
       hb_retndlen( ( double ) uc * dValue, 0, iDec );
    }
+   else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
+            hb_itemGetCLen( pValue ) == 1 )
+   {
+      UCHAR uc1 = ( UCHAR ) hb_itemGetCPtr( pSelf )[0],
+            uc2 = ( UCHAR ) hb_itemGetCPtr( pValue )[0];
+      hb_retnint( uc1 * uc2 );
+   }
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1083, NULL, "*", 2, pSelf, pValue );
@@ -529,11 +536,12 @@ HB_FUNC( XHB_DIV )
       else
          hb_retnd( hb_itemGetND( pSelf ) / uc );
    }
-   else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
-            pValue && HB_IS_NUMERIC( pValue ) )
+   else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 && pValue &&
+            ( HB_IS_NUMERIC( pValue ) || hb_itemGetCLen( pValue ) == 1 ) )
    {
       UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pSelf )[0];
-      double dDivisor = hb_itemGetND( pValue );
+      double dDivisor = HB_IS_NUMERIC( pValue ) ? hb_itemGetND( pValue ) :
+                        ( double ) ( ( UCHAR ) hb_itemGetCPtr( pValue )[0] );
 
       if( dDivisor == 0 )
       {
@@ -569,11 +577,12 @@ HB_FUNC( XHB_MOD )
       else
          hb_retnd( fmod( hb_itemGetND( pSelf ), ( double ) uc ) );
    }
-   else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
-            pValue && HB_IS_NUMERIC( pValue ) )
+   else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 && pValue &&
+            ( HB_IS_NUMERIC( pValue ) || hb_itemGetCLen( pValue ) == 1 ) )
    {
       UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pSelf )[0];
-      double dDivisor = hb_itemGetND( pValue );
+      double dDivisor = HB_IS_NUMERIC( pValue ) ? hb_itemGetND( pValue ) :
+                        ( double ) ( ( UCHAR ) hb_itemGetCPtr( pValue )[0] );
 
       if( dDivisor == 0 )
       {
@@ -607,6 +616,13 @@ HB_FUNC( XHB_POW )
    {
       UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pSelf )[0];
       hb_retnd( pow( ( double ) uc, hb_itemGetND( pValue ) ) );
+   }
+   else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
+            hb_itemGetCLen( pValue ) == 1 )
+   {
+      UCHAR uc1 = ( UCHAR ) hb_itemGetCPtr( pSelf )[0],
+            uc2 = ( UCHAR ) hb_itemGetCPtr( pValue )[0];
+      hb_retnd( pow( ( double ) uc1, ( double ) uc2 ) );
    }
    else
    {
