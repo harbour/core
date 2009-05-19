@@ -113,6 +113,7 @@ REQUEST HB_GT_CGI_DEFAULT
    REQUEST HB_GT_TRM
 #endif
 
+/* Extend as needed */
 REQUEST HB_CODEPAGE_DE850, HB_CODEPAGE_DEISO
 REQUEST HB_CODEPAGE_ES850, HB_CODEPAGE_ESISO
 REQUEST HB_CODEPAGE_FR850, HB_CODEPAGE_FRISO
@@ -940,10 +941,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
                /* Autodetect embedded MinGW installation */
                FOR tmp := 1 TO Len( aCOMPDET_LOCAL )
                   IF hbmk[ _HBMK_cARCH ] == aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cARCH ] .AND. ;
-                     ! Empty( tmp1 := Eval( aCOMPDET_LOCAL[ tmp ][ _COMPDETE_bBlock ], aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cCCPREFIX ] ) )
+                     ! Empty( cPath_CompC := Eval( aCOMPDET_LOCAL[ tmp ][ _COMPDETE_bBlock ], aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cCCPREFIX ] ) )
                      hbmk[ _HBMK_cCOMP ] := aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cCOMP ]
                      hbmk[ _HBMK_cCCPREFIX ] := aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cCCPREFIX ]
-                     hbmk[ _HBMK_cCCPATH ] := tmp1
+                     hbmk[ _HBMK_cCCPATH ] := cPath_CompC
                      EXIT
                   ENDIF
                NEXT
@@ -951,7 +952,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
          ENDIF
          IF ! Empty( hbmk[ _HBMK_cCOMP ] )
             IF hbmk[ _HBMK_lInfo ]
-               hbmk_OutStd( hb_StrFormat( I_( "Autodetected compiler: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
+               hbmk_OutStd( hb_StrFormat( I_( "Autodetected C compiler: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
             ENDIF
          ELSE
             IF Empty( aCOMPDET )
@@ -971,8 +972,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
             FOR tmp := 1 TO Len( aCOMPDET_LOCAL )
                IF aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cARCH ] == hbmk[ _HBMK_cARCH ] .AND. ;
                   aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cCOMP ] == hbmk[ _HBMK_cCOMP ]
-                  IF ! Empty( tmp1 := Eval( aCOMPDET_LOCAL[ tmp ][ _COMPDETE_bBlock ], aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cCCPREFIX ] ) )
-                     hbmk[ _HBMK_cCCPATH ] := tmp1
+                  IF ! Empty( cPath_CompC := Eval( aCOMPDET_LOCAL[ tmp ][ _COMPDETE_bBlock ], aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cCCPREFIX ] ) )
+                     hbmk[ _HBMK_cCCPATH ] := cPath_CompC
                   ENDIF
                   hbmk[ _HBMK_cCCPREFIX ] := aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cCCPREFIX ]
                   EXIT
@@ -1023,6 +1024,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause )
 
    IF hbmk[ _HBMK_lInfo ]
       hbmk_OutStd( hb_StrFormat( I_( "Using Harbour: %1$s %2$s %3$s %4$s" ), s_cHB_BIN_INSTALL, s_cHB_INC_INSTALL, s_cHB_LIB_INSTALL, s_cHB_DYN_INSTALL ) )
+      IF ! Empty( cPath_CompC )
+         hbmk_OutStd( hb_StrFormat( I_( "Using C compiler: %1$s" ), cPath_CompC ) )
+      ENDIF
    ENDIF
 
    s_cHB_BIN_INSTALL := PathSepToTarget( hbmk, s_cHB_BIN_INSTALL )
@@ -5782,6 +5786,7 @@ STATIC PROCEDURE ShowHelp( lLong )
 STATIC PROCEDURE OutOpt( aOpt )
    LOCAL nLine
    LOCAL nLines
+   LOCAL tmp
 
    IF Empty( aOpt )
       OutStd( hb_osNewLine() )
@@ -5789,13 +5794,15 @@ STATIC PROCEDURE OutOpt( aOpt )
       aOpt[ 2 ] := StrTran( aOpt[ 2 ], "\n", hb_osNewLine() )
       nLines := MLCount( aOpt[ 2 ], MaxCol() - 21 )
       FOR nLine := 1 TO nLines
-         OutStd( "  " )
-         IF nLine == 1
-            OutStd( PadR( aOpt[ 1 ], 19 ) )
-         ELSE
-            OutStd( Space( 19 ) )
+         IF ! Empty( tmp := MemoLine( aOpt[ 2 ], MaxCol() - 21, nLine ) )
+            OutStd( "  " )
+            IF nLine == 1
+               OutStd( PadR( aOpt[ 1 ], 19 ) )
+            ELSE
+               OutStd( Space( 19 ) )
+            ENDIF
+            OutStd( tmp + hb_osNewLine() )
          ENDIF
-         OutStd( MemoLine( aOpt[ 2 ], MaxCol() - 21, nLine ) + hb_osNewLine() )
       NEXT
    ENDIF
 
@@ -5804,16 +5811,19 @@ STATIC PROCEDURE OutOpt( aOpt )
 STATIC PROCEDURE OutNote( cText )
    LOCAL nLine
    LOCAL nLines
+   LOCAL tmp
 
    cText := StrTran( cText, "\n", hb_osNewLine() )
    nLines := MLCount( cText, MaxCol() - 4 )
    FOR nLine := 1 TO nLines
-      IF nLine == 1
-         OutStd( "  - " )
-      ELSE
-         OutStd( "    " )
-      ENDIF
-      OutStd( MemoLine( cText, MaxCol() - 4, nLine ) + hb_osNewLine() )
+      IF ! Empty( tmp := MemoLine( cText, MaxCol() - 4, nLine ) )
+         IF nLine == 1
+            OutStd( "  - " )
+         ELSE
+            OutStd( "    " )
+         ENDIF
+         OutStd( tmp + hb_osNewLine() )
+     ENDIF
    NEXT
 
    RETURN
@@ -5821,16 +5831,19 @@ STATIC PROCEDURE OutNote( cText )
 STATIC PROCEDURE hbmk_OutStd( cText )
    LOCAL nLine
    LOCAL nLines
+   LOCAL tmp
 
    cText := StrTran( cText, "\n", hb_osNewLine() )
    nLines := MLCount( cText, MaxCol() - 6 )
    FOR nLine := 1 TO nLines
-      IF nLine == 1
-         OutStd( "hbmk: " )
-      ELSE
-         OutStd( "      " )
+      IF ! Empty( tmp := MemoLine( cText, MaxCol() - 4, nLine ) )
+         IF nLine == 1
+            OutStd( "hbmk: " )
+         ELSE
+            OutStd( "      " )
+         ENDIF
+         OutStd( tmp + hb_osNewLine() )
       ENDIF
-      OutStd( MemoLine( cText, MaxCol() - 4, nLine ) + hb_osNewLine() )
    NEXT
 
    RETURN
@@ -5838,16 +5851,19 @@ STATIC PROCEDURE hbmk_OutStd( cText )
 STATIC PROCEDURE hbmk_OutErr( cText )
    LOCAL nLine
    LOCAL nLines
+   LOCAL tmp
 
    cText := StrTran( cText, "\n", hb_osNewLine() )
    nLines := MLCount( cText, MaxCol() - 6 )
    FOR nLine := 1 TO nLines
-      IF nLine == 1
-         OutErr( "hbmk: " )
-      ELSE
-         OutErr( "      " )
+      IF ! Empty( tmp := MemoLine( cText, MaxCol() - 4, nLine ) )
+         IF nLine == 1
+            OutErr( "hbmk: " )
+         ELSE
+            OutErr( "      " )
+         ENDIF
+         OutErr( tmp + hb_osNewLine() )
       ENDIF
-      OutErr( MemoLine( cText, MaxCol() - 4, nLine ) + hb_osNewLine() )
    NEXT
 
    RETURN

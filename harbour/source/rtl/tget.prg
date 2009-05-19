@@ -1091,7 +1091,7 @@ METHOD picture( cPicture ) CLASS GET
 
                IF "Z" $ ::cPicFunc
                   ::lPicBlankZero := .T.
-                  ::cPicFunc := StrTran( ::cPicFunc, "Z", "" )
+                  ::cPicFunc := StrTran( ::cPicFunc, "Z" )
                ENDIF
 
                IF ::cPicFunc == "@"
@@ -1181,7 +1181,7 @@ METHOD PutMask( xValue, lEdit ) CLASS GET
    ENDIF
 
    IF ::hasFocus
-      cPicFunc := StrTran( cPicfunc, "B", "" )
+      cPicFunc := StrTran( cPicfunc, "B" )
       IF cPicFunc == "@"
          cPicFunc := ""
       ENDIF
@@ -1332,7 +1332,7 @@ METHOD unTransform() CLASS GET
                NEXT
             ENDIF
 
-            cBuffer := StrTran( cBuffer, Chr( 1 ), "" )
+            cBuffer := StrTran( cBuffer, Chr( 1 ) )
 
             cBuffer := StrTran( cBuffer, "$", " " )
             cBuffer := StrTran( cBuffer, "*", " " )
@@ -1340,7 +1340,7 @@ METHOD unTransform() CLASS GET
             cBuffer := StrTran( cBuffer, "(", " " )
             cBuffer := StrTran( cBuffer, ")", " " )
 
-            cBuffer := PadL( StrTran( cBuffer, " ", "" ), Len( cBuffer ) )
+            cBuffer := PadL( StrTran( cBuffer, " " ), Len( cBuffer ) )
 
             IF lMinus
                FOR nFor := 1 TO Len( cBuffer )
