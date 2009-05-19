@@ -197,7 +197,7 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    iccia64  - Intel(R) C/C++ IA64
    bcc      - Borland/CodeGear C++ 4.x and above
    pocc     - Pelles C 4.5 and above
-   pocc64   - Pelles C 5.0 x64
+   pocc64   - Pelles C 5.0 x64 and above
    xcc      - Pelles C for xhb
    cygwin   - Cygwin GNU C
 
@@ -205,7 +205,7 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    ----------
    mingwarm - MinGW GNU C ARM
    msvcarm  - Microsoft Visual C++ ARM
-   poccarm  - Pelles C 5.0 ARM
+   poccarm  - Pelles C 5.0 ARM and above
 
    DOS (32-bit)
    ---
