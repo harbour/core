@@ -7,7 +7,7 @@
  * OLE library
  *
  * Copyright 2000, 2003 Jose F. Gimenez (JFG) <jfgimenez@wanadoo.es>
- * Copyright 2008 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
+ * Copyright 2008, 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -67,24 +67,35 @@ typedef struct
 
 static HB_TSD_NEW( s_oleData, sizeof( HB_OLEDATA ), NULL, NULL );
 #define hb_getOleData()       ( ( PHB_OLEDATA ) hb_stackGetTSD( &s_oleData ) )
-#define hb_getOleError()      ( hb_getOleData()->lOleError )
-#define hb_setOleError( e )   do { hb_getOleData()->lOleError = ( e ); } while( 0 )
 
-HB_FUNC_EXTERN( HB_OLEAUTO );
+
+HB_FUNC_EXTERN( WIN_OLEAUTO );
+
+
+void hb_oleSetError( HRESULT lOleError )
+{
+   hb_getOleData()->lOleError = lOleError;
+}
+
+
+HRESULT hb_oleGetError( void )
+{
+   return hb_getOleData()->lOleError;
+}
 
 
 static void hb_olecore_init( void* cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   s_pDyns_hb_oleauto = hb_dynsymGetCase( "HB_OLEAUTO" );
+   s_pDyns_hb_oleauto = hb_dynsymGetCase( "WIN_OLEAUTO" );
    s_pDyns_hObjAccess = hb_dynsymGetCase( "__HOBJ" );
    s_pDyns_hObjAssign = hb_dynsymGetCase( "___HOBJ" );
 
    if( s_pDyns_hObjAccess == s_pDyns_hObjAssign )
    {
       /* Never executed. Just force linkage */
-      HB_FUNC_EXEC( HB_OLEAUTO );
+      HB_FUNC_EXEC( WIN_OLEAUTO );
    }
 
    hb_oleInit();
@@ -228,7 +239,7 @@ void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
       case HB_IT_OBJECT: /* or ARRAY */
          if( HB_IS_OBJECT( pItem ) )
          {
-            if( hb_stricmp( hb_objGetClsName( pItem ), "HB_OLEAUTO" ) == 0 )
+            if( hb_clsIsParent( hb_objGetClass( pItem ), "WIN_OLEAUTO" ) )
             {
                IDispatch * pDisp;
 
@@ -470,11 +481,10 @@ static void FreeParams( DISPPARAMS * dispparam )
 
 /* PRG level functions and methods */
 
-HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
+HB_FUNC( __OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 {
    wchar_t*    cCLSID;
-   GUID        ClassID, iid;
-   BOOL        fIID = FALSE;
+   GUID        ClassID, iid = IID_IDispatch;
    IDispatch*  pDisp = NULL;
    IDispatch** ppDisp;
    const char* cOleName = hb_parc( 1 );
@@ -497,22 +507,20 @@ HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
             cCLSID = AnsiToWide( cID );
             lOleError = CLSIDFromString( (LPOLESTR) cCLSID, &iid );
             hb_xfree( cCLSID );
-            fIID = TRUE;
          }
          else if( hb_parclen( 2 ) == ( ULONG ) sizeof( iid ) )
          {
             memcpy( (LPVOID) &iid, cID, sizeof( iid ) );
-            fIID = TRUE;
          }
       }
 
       if( lOleError == S_OK )
-         lOleError = CoCreateInstance( HB_ID_REF( ClassID ), NULL, CLSCTX_SERVER, fIID ? HB_ID_REF( iid ) : HB_ID_REF( IID_IDispatch ), ( void** ) ( void * ) &pDisp );
+         lOleError = CoCreateInstance( HB_ID_REF( ClassID ), NULL, CLSCTX_SERVER, HB_ID_REF( iid ), ( void** ) ( void * ) &pDisp );
    }
    else
       lOleError = CO_E_CLASSSTRING;
 
-   hb_setOleError( lOleError );
+   hb_oleSetError( lOleError );
    if( lOleError == S_OK )
    {
       ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
@@ -524,7 +532,7 @@ HB_FUNC( OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 }
 
 
-HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
+HB_FUNC( __OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 {
    BSTR        wCLSID;
    IID         ClassID, iid;
@@ -576,7 +584,7 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    else
       lOleError = CO_E_CLASSSTRING;
 
-   hb_setOleError( lOleError );
+   hb_oleSetError( lOleError );
    if( lOleError == S_OK )
    {
       ppDisp = ( IDispatch** ) hb_gcAlloc( sizeof( IDispatch* ), hb_ole_destructor );
@@ -585,32 +593,6 @@ HB_FUNC( OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    }
    else
       hb_ret();
-}
-
-
-HB_FUNC( OLERELEASE )
-{
-   IDispatch** ppDisp = ( IDispatch** ) hb_parptrGC( hb_ole_destructor, 1 );
-   HRESULT     lOleError;
-
-   if( ppDisp && *ppDisp )
-   {
-#if HB_OLE_C_API
-      lOleError = ( HRESULT ) ( *ppDisp )->lpVtbl->Release( *ppDisp );
-#else
-      lOleError = ( HRESULT ) ( *ppDisp )->Release();
-#endif
-      hb_setOleError( lOleError );
-      if( lOleError == S_OK )
-      {
-         *ppDisp = NULL;
-         hb_retl( TRUE );
-      }
-      else
-         hb_retl( FALSE );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
@@ -626,7 +608,7 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
 
    if( hb_parl( 2 ) )
    {
-      hb_setOleError( S_OK );
+      hb_oleSetError( S_OK );
       hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
@@ -665,7 +647,7 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
 #endif
       else
       {
-         hb_setOleError( lOleError );
+         hb_oleSetError( lOleError );
          hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
          return;
       }
@@ -676,7 +658,7 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
       {
          IEnumVARIANT**  ppEnum;
 
-         hb_setOleError( S_OK );
+         hb_oleSetError( S_OK );
 
          ppEnum = ( IEnumVARIANT** ) hb_gcAlloc( sizeof( IEnumVARIANT* ), hb_oleenum_destructor );
          *ppEnum = pEnum;
@@ -684,7 +666,7 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
          return;
       }
    }
-   hb_setOleError( lOleError );
+   hb_oleSetError( lOleError );
    hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
@@ -710,15 +692,22 @@ HB_FUNC( __OLEENUMNEXT )
 }
 
 
-HB_FUNC( OLEERROR )
+HB_FUNC( WIN_OLEERROR )
 {
-   hb_retnl( hb_getOleError() );
+   hb_retnl( hb_oleGetError() );
 }
 
 
-HB_FUNC( OLEERRORTEXT )
+HB_FUNC( WIN_OLEERRORTEXT )
 {
-   switch( hb_getOleError() )
+   HRESULT  lOleError;
+
+   if( ISNUM( 1 ) )
+      lOleError = hb_parnl( 1 );
+   else
+      lOleError = hb_oleGetError();
+
+   switch( lOleError )
    {
       case S_OK:                    hb_retc_null();                              break;
       case CO_E_CLASSSTRING:        hb_retc_const( "CO_E_CLASSSTRING" );         break;
@@ -740,12 +729,18 @@ HB_FUNC( OLEERRORTEXT )
       case DISP_E_TYPEMISMATCH:     hb_retc_const( "DISP_E_TYPEMISMATCH" );      break;
       case DISP_E_UNKNOWNINTERFACE: hb_retc_const( "DISP_E_UNKNOWNINTERFACE" );  break;
       case DISP_E_PARAMNOTOPTIONAL: hb_retc_const( "DISP_E_PARAMNOTOPTIONAL" );  break;
-      default:                      hb_retc_const( "Unknown OLE error" );        break;
+      default:                      
+      {
+         char   buf[ 16 ];
+
+         hb_snprintf( buf, 16, "0x%08x", lOleError );
+         hb_retc( buf );
+      }
    }
 }
 
 
-HB_FUNC( HB_OLEAUTO___ONERROR )
+HB_FUNC( WIN_OLEAUTO___ONERROR )
 {
    IDispatch*  pDisp;
    const char* szMethod;
@@ -809,7 +804,7 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
          /* assign method should return assigned value */
          hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
 
-         hb_setOleError( lOleError );
+         hb_oleSetError( lOleError );
          if( lOleError != S_OK )
             hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
          return;
@@ -850,13 +845,13 @@ HB_FUNC( HB_OLEAUTO___ONERROR )
       hb_oleVariantToItem( hb_stackReturnItem(), &variant );
       VariantClear( &variant );
 
-      hb_setOleError( lOleError );
+      hb_oleSetError( lOleError );
       if( lOleError != S_OK )
          hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
 
-   hb_setOleError( lOleError );
+   hb_oleSetError( lOleError );
 
    /* TODO: add description containing TypeName of the object */
    if( szMethod[ 0 ] == '_' )

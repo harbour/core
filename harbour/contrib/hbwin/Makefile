@@ -18,9 +18,10 @@ endif
 ifeq ($(HB_WITH_HBWIN),yes)
 
 C_SOURCES = \
-	legacyc.c \
 	olecore.c \
 	oleinit.c \
+	axcore.c \
+	legacyc.c \
 	win_dll.c \
 	win_misc.c \
 	win_osc.c \
@@ -34,6 +35,7 @@ C_SOURCES = \
 
 PRG_SOURCES = \
 	oleauto.prg \
+	axfunc.prg \
 	win_os.prg \
 	win_reg.prg \
 	win_tprn.prg \

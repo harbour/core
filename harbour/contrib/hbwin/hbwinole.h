@@ -77,6 +77,7 @@
 #endif
 
 #include <ole2.h>
+#include <ocidl.h>
 
 /* macros used to hide type of interface: C or C++
  */
@@ -93,6 +94,8 @@
 HB_EXTERN_BEGIN
 
 HB_EXPORT void       hb_oleInit( void );
+HB_EXPORT HRESULT    hb_oleGetError( void );
+HB_EXPORT void       hb_oleSetError( HRESULT lOleError );
 HB_EXPORT void       hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem );
 HB_EXPORT void       hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant );
 HB_EXPORT IDispatch* hb_oleParam( int iParam );

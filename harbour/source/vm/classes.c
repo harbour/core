@@ -1238,7 +1238,7 @@ BOOL hb_clsIsParent( USHORT uiClass, const char * szParentName )
          PHB_DYNS pMsg = hb_dynsymFindName( szParentName );
 
          if( pMsg )
-            return hb_clsHasParent( s_pClasses[ uiClass ], pMsg );
+            return hb_clsHasParent( pClass, pMsg );
       }
    }
 

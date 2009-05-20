@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * OLE Automation object
  *
- * Copyright 2008 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
+ * Copyright 2008, 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -54,11 +54,11 @@
 #include "hbclass.ch"
 
 
-REQUEST __GETMESSAGE
-
-CREATE CLASS HB_OleAuto
+CREATE CLASS WIN_OLEAUTO
    VAR __hObj
    VAR __hObjEnum
+   VAR __hSink
+   VAR __cargo
 
    METHOD __enumStart( enum, lDescend )
    METHOD __enumSkip( enum, lDescend )
@@ -68,7 +68,7 @@ CREATE CLASS HB_OleAuto
 ENDCLASS
 
 
-METHOD __enumStart( enum, lDescend ) CLASS HB_OLEAUTO
+METHOD __enumStart( enum, lDescend ) CLASS WIN_OLEAUTO
    LOCAL hObjEnum
 
    hObjEnum := __OLEENUMCREATE( ::__hObj, lDescend )
@@ -85,7 +85,7 @@ METHOD __enumStart( enum, lDescend ) CLASS HB_OLEAUTO
 RETURN .F.
 
 
-METHOD __enumSkip( enum, lDescend ) CLASS HB_OLEAUTO
+METHOD __enumSkip( enum, lDescend ) CLASS WIN_OLEAUTO
    LOCAL lContinue, xValue
 
    HB_SYMBOL_UNUSED( lDescend )
@@ -95,30 +95,30 @@ METHOD __enumSkip( enum, lDescend ) CLASS HB_OLEAUTO
 RETURN lContinue
 
 
-METHOD PROCEDURE __enumStop() CLASS HB_OLEAUTO
+METHOD PROCEDURE __enumStop() CLASS WIN_OLEAUTO
    ::__hObjEnum := NIL     /* activate autodestructor */
 RETURN
 
 
 /* OLE functions */
 
-FUNC GetActiveObject( ... )
+FUNC WIN_OleGetActiveObject( ... )
    LOCAL oOle, hOle
 
-   hOle := OleGetActiveObject( ... )
+   hOle := __OleGetActiveObject( ... )
    IF ! EMPTY( hOle )
-      oOle := HB_OleAuto()
+      oOle := WIN_OleAuto()
       oOle:__hObj := hOle
    ENDIF
 RETURN oOle
 
 
-FUNC CreateObject( ... )
+FUNC WIN_OleCreateObject( ... )
    LOCAL oOle, hOle
 
-   hOle := OleCreateObject( ... )
+   hOle := __OleCreateObject( ... )
    IF ! EMPTY( hOle )
-      oOle := HB_OleAuto()
+      oOle := WIN_OleAuto()
       oOle:__hObj := hOle
    ENDIF
 RETURN oOle
