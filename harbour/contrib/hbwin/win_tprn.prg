@@ -5,11 +5,9 @@
 /*
  * Harbour Project source code:
  * Printing subsystem for Windows using GUI printing
- *     Copyright 2004 Peter Rees <peter@rees.co.nz>
- *                    Rees Software & Systems Ltd
  *
- * See COPYING for licensing terms.
- *
+ * Copyright 2004 Peter Rees <peter@rees.co.nz>
+ *                Rees Software & Systems Ltd
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -53,7 +51,6 @@
 */
 
 /*
-
   TPRINT() was designed to make it easy to emulate Clipper Dot Matrix printing.
   Dot Matrix printing was in CPI ( Characters per inch & Lines per inch ).
   Even though "Mapping Mode" for TPRINT() is MM_TEXT, ::SetFont() accepts the
@@ -63,86 +60,18 @@
 
   Simple example
 
-
-  TO DO:    Colour printing
-            etc....
+  TODO: Colour printing
+        etc....
 
   Peter Rees 21 January 2004 <peter@rees.co.nz>
-
 */
-
-#ifndef __PLATFORM__WINDOWS
-
-PROCEDURE WIN_PRN()
-   RETURN
-
-#else
 
 #include "hbclass.ch"
 #include "common.ch"
 
-// Cut from wingdi.h
+#include "hbwin.ch"
 
-#define MM_TEXT             1
-#define MM_LOMETRIC         2
-#define MM_HIMETRIC         3
-#define MM_LOENGLISH        4
-#define MM_HIENGLISH        5
-
-// Device Parameters for GetDeviceCaps()
-
-#define HORZSIZE            4   // Horizontal size in millimeters
-#define VERTSIZE            6   // Vertical size in millimeters
-#define HORZRES             8   // Horizontal width in pixels
-#define VERTRES             10  // Vertical height in pixels
-#define NUMBRUSHES          16  // Number of brushes the device has
-#define NUMPENS             18  // Number of pens the device has
-#define NUMFONTS            22  // Number of fonts the device has
-#define NUMCOLORS           24  // Number of colors the device supports
-#define RASTERCAPS          38  // Bitblt capabilities
-
-#define LOGPIXELSX          88  // Logical pixels/inch in X
-#define LOGPIXELSY          90  // Logical pixels/inch in Y
-
-#define PHYSICALWIDTH       110 // Physical Width in device units
-#define PHYSICALHEIGHT      111 // Physical Height in device units
-#define PHYSICALOFFSETX     112 // Physical Printable Area x margin
-#define PHYSICALOFFSETY     113 // Physical Printable Area y margin
-#define SCALINGFACTORX      114 // Scaling factor x
-#define SCALINGFACTORY      115 // Scaling factor y
-
-/* bin selections */
-#define DMBIN_FIRST         DMBIN_UPPER
-#define DMBIN_UPPER         1
-#define DMBIN_ONLYONE       1
-#define DMBIN_LOWER         2
-#define DMBIN_MIDDLE        3
-#define DMBIN_MANUAL        4
-#define DMBIN_ENVELOPE      5
-#define DMBIN_ENVMANUAL     6
-#define DMBIN_AUTO          7
-#define DMBIN_TRACTOR       8
-#define DMBIN_SMALLFMT      9
-#define DMBIN_LARGEFMT      10
-#define DMBIN_LARGECAPACITY 11
-#define DMBIN_CASSETTE      14
-#define DMBIN_FORMSOURCE    15
-#define DMBIN_LAST          DMBIN_FORMSOURCE
-
-/* print qualities */
-#define DMRES_DRAFT         (-1)
-#define DMRES_LOW           (-2)
-#define DMRES_MEDIUM        (-3)
-#define DMRES_HIGH          (-4)
-
-/* duplex enable */
-#define DMDUP_SIMPLEX    1
-#define DMDUP_VERTICAL   2
-#define DMDUP_HORIZONTAL 3
-
-#define MM_TO_INCH 25.4
-
-CLASS WIN_PRN
+CREATE CLASS WIN_PRN
 
    METHOD New( cPrinter )
    METHOD Create()                  // CreatesDC and sets "Courier New" font, set Orientation, Copies, Bin#
@@ -173,13 +102,13 @@ CLASS WIN_PRN
    METHOD CharSet( nCharSet )
 
 
-   METHOD SetPos( nX, nY )                             // **WARNING** : (Col,Row) _NOT_ (Row,Col)
+   METHOD SetPos( nX, nY )                             // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
    METHOD SetColor( nClrText, nClrPane, nAlign ) INLINE (;
           ::TextColor := nClrText, ::BkColor := nClrPane, ::TextAlign := nAlign,;
           win_SetColor( ::hPrinterDC, nClrText, nClrPane, nAlign ) )
 
    METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign )     // nAlign : 0 == left, 1 == right, 2 == centered
-   METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign ) // **WARNING** : (Col,Row) _NOT_ (Row,Col)
+   METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign ) // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
 
 
    METHOD SetPen( nStyle, nWidth, nColor ) INLINE (;
@@ -275,13 +204,13 @@ CLASS WIN_PRN
 ENDCLASS
 
 METHOD New( cPrinter ) CLASS WIN_PRN
-   ::PrinterName := IIF( EMPTY( cPrinter ), GetDefaultPrinter(), cPrinter )
+   ::PrinterName := iif( Empty( cPrinter ), GetDefaultPrinter(), cPrinter )
    RETURN Self
 
 METHOD Create() CLASS WIN_PRN
    LOCAL lResult := .F.
    ::Destroy()                            // Finish current print job if any
-   IF ! EMPTY( ::hPrinterDC := win_CreateDC( ::PrinterName ) )
+   IF ! Empty( ::hPrinterDC := win_CreateDC( ::PrinterName ) )
 
       // Set Form Type
       // Set Number of Copies
@@ -291,7 +220,7 @@ METHOD Create() CLASS WIN_PRN
       win_SetDocumentProperties( ::hPrinterDC, ::PrinterName, ::FormType, ::Landscape, ::Copies, ::BinNumber, ::fDuplexType, ::fPrintQuality )
       // Set mapping mode to pixels, topleft down
       win_SetMapMode( ::hPrinterDC, MM_TEXT )
-//    win_SetTextCharacterExtra( ::hPrinterDC, 0 ); // do not add extra char spacing even if bold
+//    win_SetTextCharacterExtra( ::hPrinterDC, 0 ) // do not add extra char spacing even if bold
       // Get Margins etc... here
       ::PageWidth        := win_GetDeviceCaps( ::hPrinterDC, PHYSICALWIDTH )
       ::PageHeight       := win_GetDeviceCaps( ::hPrinterDC, PHYSICALHEIGHT )
@@ -299,7 +228,7 @@ METHOD Create() CLASS WIN_PRN
       ::RightMargin      := ( ::PageWidth - ::LeftMargin ) + 1
       ::PixelsPerInchY   := win_GetDeviceCaps( ::hPrinterDC, LOGPIXELSY )
       ::PixelsPerInchX   := win_GetDeviceCaps( ::hPrinterDC, LOGPIXELSX )
-      ::LineHeight       := INT( ::PixelsPerInchY / 6 )  // Default 6 lines per inch == # of pixels per line
+      ::LineHeight       := Int( ::PixelsPerInchY / 6 )  // Default 6 lines per inch == # of pixels per line
       ::TopMargin        := win_GetDeviceCaps( ::hPrinterDC, PHYSICALOFFSETY )
       ::BottomMargin     := ( ::PageHeight - ::TopMargin ) + 1
 
@@ -322,7 +251,7 @@ METHOD Create() CLASS WIN_PRN
    RETURN lResult
 
 METHOD Destroy() CLASS WIN_PRN
-   IF !EMPTY( ::hPrinterDc )
+   IF ! Empty( ::hPrinterDc )
       IF ::Printing
          ::EndDoc()
       ENDIF
@@ -333,7 +262,7 @@ METHOD Destroy() CLASS WIN_PRN
 METHOD StartDoc( cDocName ) CLASS WIN_PRN
    LOCAL lResult
 
-   DEFAULT cDocName TO win_GetExeFileName() + " [" + DToC( Date() ) + ' - ' + Time() + "]"
+   DEFAULT cDocName TO win_GetExeFileName() + " [" + DToC( Date() ) + " - " + Time() + "]"
 
    IF ( lResult := win_StartDoc( ::hPrinterDc, cDocName ) )
       IF !( lResult := ::StartPage( ::hPrinterDc ) )
@@ -403,7 +332,7 @@ METHOD EndPage( lStartNewPage ) CLASS WIN_PRN
    win_EndPage( ::hPrinterDC )
    IF lStartNewPage
       ::StartPage()
-      IF win_OS_ISWIN9X() // Reset font on Win9X
+      IF OS_ISWIN9X() // Reset font on Win9X
          ::SetFont()
       ENDIF
    ENDIF
@@ -432,10 +361,10 @@ METHOD SetFont( cFontName, nPointSize, nWidth, nBold, lUnderline, lItalic, nChar
       ::FontPointSize := nPointSize
    ENDIF
    IF nWidth != NIL
-      cType := VALTYPE( nWidth )
+      cType := ValType( nWidth )
       IF cType == "A"
          ::FontWidth := nWidth
-      ELSEIF cType == "N" .AND. !EMPTY( nWidth )
+      ELSEIF cType == "N" .AND. ! Empty( nWidth )
          ::FontWidth := { 1, nWidth }
       ELSE
          ::FontWidth := { 0, 0 }
@@ -508,7 +437,7 @@ METHOD SetDuplexType( nDuplexType ) CLASS WIN_PRN
    LOCAL nOldValue := ::fDuplexType
    IF nDuplexType != NIL
       ::fNewDuplexType := nDuplexType
-      IF !::Printing
+      IF ! ::Printing
          ::fDuplexType := nDuplexType
       ENDIF
    ENDIF
@@ -518,23 +447,25 @@ METHOD SetPrintQuality( nPrintQuality ) CLASS WIN_PRN
    LOCAL nOldValue := ::fPrintQuality
    IF nPrintQuality != NIL
       ::fNewPrintQuality := nPrintQuality
-      IF !::Printing
+      IF ! ::Printing
          ::fPrintQuality := nPrintQuality
       ENDIF
    ENDIF
    RETURN nOldValue
 
 METHOD GetFonts() CLASS WIN_PRN
-   RETURN win_ENUMFONTS( ::hPrinterDC )
+   RETURN win_EnumFonts( ::hPrinterDC )
 
-METHOD SetPos(nPosX, nPosY) CLASS WIN_PRN
+METHOD SetPos( nPosX, nPosY ) CLASS WIN_PRN
    LOCAL aOldValue := { ::PosX, ::PosY }
+
    IF nPosX != NIL
-      ::PosX := INT( nPosX )
+      ::PosX := Int( nPosX )
    ENDIF
    IF nPosY != NIL
-      ::PosY := INT( nPosY )
+      ::PosY := Int( nPosY )
    ENDIF
+
    RETURN aOldValue
 
 METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
@@ -547,7 +478,9 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
       DEFAULT nAlign TO 0
 
       nPosX := win_TextOut( ::hPrinterDC, ::PosX, ::PosY, cString, LEN( cString ), ::fCharWidth, nAlign )
+
       ::HavePrinted := .T.
+
       IF lUpdatePosX
          ::PosX += nPosX
       ENDIF
@@ -555,6 +488,7 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
          ::NewLine()
       ENDIF
    ENDIF
+
    RETURN .T.
 
 METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
@@ -564,7 +498,7 @@ METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign ) CLASS W
 
 METHOD GetCharWidth() CLASS WIN_PRN
    LOCAL nWidth
-   IF ::FontWidth[ 2 ] < 0 .AND. !EMPTY( ::FontWidth[ 1 ] )
+   IF ::FontWidth[ 2 ] < 0 .AND. ! Empty( ::FontWidth[ 1 ] )
       nWidth := win_MulDiv( ::FontWidth[ 1 ], ::PixelsPerInchX, ::FontWidth[ 2 ] )
    ELSE
       nWidth := win_GetCharSize( ::hPrinterDC )
@@ -576,7 +510,7 @@ METHOD GetCharHeight() CLASS WIN_PRN
 
 METHOD GetTextWidth( cString ) CLASS WIN_PRN
    LOCAL nWidth
-   IF ::FontWidth[ 2 ] < 0 .AND. !EMPTY( ::FontWidth[ 1 ] )
+   IF ::FontWidth[ 2 ] < 0 .AND. ! Empty( ::FontWidth[ 1 ] )
       nWidth := LEN( cString ) * ::CharWidth
    ELSE
       nWidth := win_GetTextSize( ::hPrinterDC, cString, LEN( cString ) )  // Return Width in device units
@@ -588,7 +522,7 @@ METHOD GetTextHeight( cString ) CLASS WIN_PRN
 
 METHOD DrawBitMap( oBmp ) CLASS WIN_PRN
    LOCAL lResult := .F.
-   IF ::BitMapsOk .AND. ::Printing .AND. !EMPTY( oBmp:BitMap )
+   IF ::BitMapsOk .AND. ::Printing .AND. ! Empty( oBmp:BitMap )
       IF ( lResult := win_DrawBitMap( ::hPrinterDc, oBmp:BitMap, oBmp:Rect[ 1 ], oBmp:Rect[ 2 ], oBmp:rect[ 3 ], oBmp:Rect[ 4 ] ) )
          ::HavePrinted := .T.
       ENDIF
@@ -600,28 +534,28 @@ METHOD SetPrc( nRow, nCol ) CLASS WIN_PRN
    RETURN NIL
 
 METHOD PROW() CLASS WIN_PRN
-   RETURN INT( ( ::PosY- ::TopMargin ) / ::LineHeight )   // No test for Div by ZERO
+   RETURN Int( ( ::PosY- ::TopMargin ) / ::LineHeight )   // No test for Div by ZERO
 
 METHOD PCOL() CLASS WIN_PRN
-   RETURN INT( ( ::PosX - ::LeftMargin ) / ::CharWidth )   // Uses width of current character
+   RETURN Int( ( ::PosX - ::LeftMargin ) / ::CharWidth )   // Uses width of current character
 
 METHOD MaxRow() CLASS WIN_PRN
-   RETURN INT( ( ( ::BottomMargin - ::TopMargin ) + 1) / ::LineHeight ) - 1
+   RETURN Int( ( ( ::BottomMargin - ::TopMargin ) + 1) / ::LineHeight ) - 1
 
 METHOD MaxCol() CLASS WIN_PRN
-   RETURN INT( ( ( ::RightMargin - ::LeftMargin ) + 1 ) / ::CharWidth ) - 1
+   RETURN Int( ( ( ::RightMargin - ::LeftMargin ) + 1 ) / ::CharWidth ) - 1
 
 METHOD MM_TO_POSX( nMm ) CLASS WIN_PRN
-   RETURN INT( ( ( nMM * ::PixelsPerInchX ) / MM_TO_INCH ) - ::LeftMargin )
+   RETURN Int( ( ( nMM * ::PixelsPerInchX ) / MM_TO_INCH ) - ::LeftMargin )
 
 METHOD MM_TO_POSY( nMm ) CLASS WIN_PRN
-   RETURN INT( ( ( nMM * ::PixelsPerInchY ) / MM_TO_INCH ) - ::TopMargin )
+   RETURN Int( ( ( nMM * ::PixelsPerInchY ) / MM_TO_INCH ) - ::TopMargin )
 
 METHOD INCH_TO_POSX( nInch ) CLASS WIN_PRN
-   RETURN INT( ( nInch * ::PixelsPerInchX  ) - ::LeftMargin )
+   RETURN Int( ( nInch * ::PixelsPerInchX  ) - ::LeftMargin )
 
 METHOD INCH_TO_POSY( nInch ) CLASS WIN_PRN
-   RETURN INT( ( nInch * ::PixelsPerInchY ) - ::TopMargin )
+   RETURN Int( ( nInch * ::PixelsPerInchY ) - ::TopMargin )
 
 METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnderLine, lItalic, nCharSet, lNewLine, lUpdatePosX, nColor, nAlign ) CLASS WIN_PRN
    LOCAL lCreated := .F.
@@ -631,11 +565,11 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
    DEFAULT nPointSize TO ::FontPointSize
 
    IF cFont != NIL
-      cType := VALTYPE( nWidth )
-      IF cType == 'A'
+      cType := ValType( nWidth )
+      IF cType == "A"
          nDiv   := nWidth[ 1 ]
          nWidth := nWidth[ 2 ]
-      ELSEIF cType == 'N' .AND. !EMPTY( nWidth )
+      ELSEIF cType == "N" .AND. ! Empty( nWidth )
          nDiv := 1
       ENDIF
       lCreated := win_CreateFont( ::hPrinterDC, cFont, nPointSize, nDiv, nWidth, nBold, lUnderLine, lItalic, nCharSet )
@@ -654,16 +588,17 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
 
 // Bitmap class
 
-CLASS WIN_BMP
+CREATE CLASS WIN_BMP
 
-EXPORTED:
+   EXPORTED:
 
    METHOD New()
    METHOD LoadFile( cFileName )
    METHOD Create()
    METHOD Destroy()
    METHOD Draw( oPrn, arectangle )
-   VAR Rect     INIT { 0,0,0,0 }        // Coordinates to print BitMap
+
+   VAR Rect     INIT { 0, 0, 0, 0 }     // Coordinates to print BitMap
                                         //   XDest,                    // x-coord of destination upper-left corner
                                         //   YDest,                    // y-coord of destination upper-left corner
                                         //   nDestWidth,               // width of destination rectangle
@@ -679,7 +614,7 @@ METHOD New() CLASS WIN_BMP
 METHOD LoadFile( cFileName ) CLASS WIN_BMP
    ::FileName := cFileName
    ::Bitmap := win_LoadBitMapFile( ::FileName )
-   RETURN ! EMPTY( ::Bitmap )
+   RETURN ! Empty( ::Bitmap )
 
 METHOD Create() CLASS WIN_BMP  // Compatibility function for Alaska Xbase++
    RETURN Self
@@ -691,7 +626,11 @@ METHOD Draw( oPrn, aRectangle ) CLASS WIN_BMP // Pass a TPRINT class reference &
    ::Rect := aRectangle
    RETURN oPrn:DrawBitMap( Self )
 
-CLASS XBPBITMAP FROM WIN_BMP // Compatibility Class for Alaska Xbase++
+#ifdef HB_COMPAT_XPP
+
+/* Compatibility Class for Alaska Xbase++ */
+
+CREATE CLASS XBPBITMAP FROM WIN_BMP
 ENDCLASS
 
 #endif

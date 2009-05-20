@@ -7,6 +7,8 @@
  * hbwin header
  *
  * Copyright 2008 Viktor Szakats <harbour.01 syenar.hu>
+ * Copyright 2004 Peter Rees <peter@rees.co.nz>
+ *                Rees Software & Systems Ltd
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -53,13 +55,17 @@
 #ifndef HBWIN_CH_
 #define HBWIN_CH_
 
-#define HKEY_CLASSES_ROOT                  0x80000000
-#define HKEY_CURRENT_USER                  0x80000001
-#define HKEY_LOCAL_MACHINE                 0x80000002
-#define HKEY_USERS                         0x80000003
-#define HKEY_PERFORMANCE_DATA              0x80000004
-#define HKEY_CURRENT_CONFIG                0x80000005
-#define HKEY_DYN_DATA                      0x80000006
+/* Registry related values */
+
+#define HKEY_CLASSES_ROOT      0x80000000
+#define HKEY_CURRENT_USER      0x80000001
+#define HKEY_LOCAL_MACHINE     0x80000002
+#define HKEY_USERS             0x80000003
+#define HKEY_PERFORMANCE_DATA  0x80000004
+#define HKEY_CURRENT_CONFIG    0x80000005
+#define HKEY_DYN_DATA          0x80000006
+
+/* win_Port() related values */
 
 /* The following are from winbase.h */
 
@@ -103,5 +109,68 @@
 #ifndef INVALID_HANDLE_VALUE
 #define INVALID_HANDLE_VALUE    -1
 #endif
+
+/* win_Prn() related values */
+
+/* Cut from wingdi.h */
+
+#define MM_TEXT                1
+#define MM_LOMETRIC            2
+#define MM_HIMETRIC            3
+#define MM_LOENGLISH           4
+#define MM_HIENGLISH           5
+
+/* Device Parameters for win_GetDeviceCaps() */
+
+#define HORZSIZE               4   // Horizontal size in millimeters
+#define VERTSIZE               6   // Vertical size in millimeters
+#define HORZRES                8   // Horizontal width in pixels
+#define VERTRES                10  // Vertical height in pixels
+#define NUMBRUSHES             16  // Number of brushes the device has
+#define NUMPENS                18  // Number of pens the device has
+#define NUMFONTS               22  // Number of fonts the device has
+#define NUMCOLORS              24  // Number of colors the device supports
+#define RASTERCAPS             38  // Bitblt capabilities
+
+#define LOGPIXELSX             88  // Logical pixels/inch in X
+#define LOGPIXELSY             90  // Logical pixels/inch in Y
+
+#define PHYSICALWIDTH          110 // Physical Width in device units
+#define PHYSICALHEIGHT         111 // Physical Height in device units
+#define PHYSICALOFFSETX        112 // Physical Printable Area x margin
+#define PHYSICALOFFSETY        113 // Physical Printable Area y margin
+#define SCALINGFACTORX         114 // Scaling factor x
+#define SCALINGFACTORY         115 // Scaling factor y
+
+/* bin selections */
+#define DMBIN_FIRST            DMBIN_UPPER
+#define DMBIN_UPPER            1
+#define DMBIN_ONLYONE          1
+#define DMBIN_LOWER            2
+#define DMBIN_MIDDLE           3
+#define DMBIN_MANUAL           4
+#define DMBIN_ENVELOPE         5
+#define DMBIN_ENVMANUAL        6
+#define DMBIN_AUTO             7
+#define DMBIN_TRACTOR          8
+#define DMBIN_SMALLFMT         9
+#define DMBIN_LARGEFMT         10
+#define DMBIN_LARGECAPACITY    11
+#define DMBIN_CASSETTE         14
+#define DMBIN_FORMSOURCE       15
+#define DMBIN_LAST             DMBIN_FORMSOURCE
+
+/* print qualities */
+#define DMRES_DRAFT            ( -1 )
+#define DMRES_LOW              ( -2 )
+#define DMRES_MEDIUM           ( -3 )
+#define DMRES_HIGH             ( -4 )
+
+/* duplex enable */
+#define DMDUP_SIMPLEX          1
+#define DMDUP_VERTICAL         2
+#define DMDUP_HORIZONTAL       3
+
+#define MM_TO_INCH             25.4
 
 #endif /* HBWIN_CH_ */

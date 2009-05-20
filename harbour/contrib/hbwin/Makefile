@@ -18,7 +18,7 @@ endif
 ifeq ($(HB_WITH_HBWIN),yes)
 
 C_SOURCES = \
-	legacy.c \
+	legacyc.c \
 	olecore.c \
 	oleinit.c \
 	win_dll.c \
