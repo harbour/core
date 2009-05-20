@@ -50,34 +50,48 @@
  *
  */
 
+/* This functions are deprecated, kept for compatibility with old
+   OLE implementation. Please update your code to use this new API,
+   the old one will be removed in a future revision. [vszakats] */
+
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
 
-HB_FUNC_EXTERN( OLEERRORTEXT );
+HB_FUNC_EXTERN( WIN_OLECREATEOBJECT );
 
-/* Deprecated. Compatibility with old OLE implementation. */
+HB_FUNC( CREATEOBJECT )
+{
+   HB_FUNC_EXEC( WIN_OLECREATEOBJECT );
+}
+
+HB_FUNC_EXTERN( WIN_OLEGETACTIVEOBJECT );
+
+HB_FUNC( GETACTIVEOBJECT )
+{
+   HB_FUNC_EXEC( WIN_OLEGETACTIVEOBJECT );
+}
+
+HB_FUNC_EXTERN( WIN_OLEERROR );
+
+HB_FUNC( OLEERROR )
+{
+   HB_FUNC_EXEC( WIN_OLEERROR );
+}
+
+HB_FUNC_EXTERN( WIN_OLEERRORTEXT );
+
 HB_FUNC( OLE2TXTERROR )
 {
-   HB_FUNC_EXEC( OLEERRORTEXT );
+   HB_FUNC_EXEC( WIN_OLEERRORTEXT );
 }
 
-HB_FUNC_EXTERN( HB_OLEAUTO );
-
-/* Deprecated. Compatibility with old OLE implementation. */
-HB_FUNC( TOLEAUTO )
-{
-   HB_FUNC_EXEC( HB_OLEAUTO );
-}
-
-/* Deprecated. Compatibility with old OLE implementation. */
 /* Original version returned NULL for empty strings. */
 LPWSTR hb_oleAnsiToWide( LPSTR cString )
 {
    return hb_mbtowc( cString );
 }
 
-/* Deprecated. Compatibility with old OLE implementation. */
 /* Original version returned NULL for empty strings. */
 LPSTR hb_oleWideToAnsi( BSTR wString )
 {
@@ -86,7 +100,6 @@ LPSTR hb_oleWideToAnsi( BSTR wString )
 
 HB_FUNC_EXTERN( WIN_ANSITOWIDE );
 
-/* Deprecated. Compatibility with old OLE implementation. */
 /* Original version may have returned NIL in some error situations. */
 HB_FUNC( ANSITOWIDE )
 {
@@ -95,27 +108,25 @@ HB_FUNC( ANSITOWIDE )
 
 HB_FUNC_EXTERN( WIN_WIDETOANSI );
 
-/* Deprecated. Compatibility with old OLE implementation. */
 /* Original version may have returned NIL in some error situations. */
 HB_FUNC( WIDETOANSI )
 {
    HB_FUNC_EXEC( WIN_WIDETOANSI );
 }
 
-/* Deprecated. Please use WAPI_GETLASTERROR(). */
+/* Please use WAPI_GETLASTERROR(). */
 HB_FUNC( GETLASTERROR )
 {
    hb_retnl( GetLastError() );
 }
 
-/* Deprecated. Please use WAPI_SETLASTERROR(). */
+/* Please use WAPI_SETLASTERROR(). */
 HB_FUNC( SETLASTERROR )
 {
    hb_retnl( GetLastError() );
    SetLastError( hb_parnl( 1 ) );
 }
 
-/* Deprecated. Compatibility with old OLE implementation. */
 HB_FUNC( MESSAGEBOX )
 {
    LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );

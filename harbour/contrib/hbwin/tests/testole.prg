@@ -70,7 +70,7 @@ STATIC PROCEDURE Exm_MSExcel()
    LOCAL oExcel, oWorkBook, oWorkSheet, oAS
    LOCAL nI, nCount
 
-   IF ( oExcel := CreateObject( "Excel.Application" ) ) != NIL
+   IF ( oExcel := win_oleCreateObject( "Excel.Application" ) ) != NIL
 
       oWorkBook := oExcel:WorkBooks:Add()
 
@@ -142,7 +142,7 @@ STATIC PROCEDURE Exm_MSExcel()
 
       oExcel:Quit()
    ELSE
-      Alert( "Error: MS Excel not available. [" + OLEErrorText()+ "]" )
+      Alert( "Error: MS Excel not available. [" + win_oleErrorText()+ "]" )
    ENDIF
 
    RETURN
@@ -151,7 +151,7 @@ STATIC PROCEDURE Exm_MSExcel()
 STATIC PROCEDURE Exm_MSWord()
    LOCAL oWord, oText
 
-   IF ( oWord := CreateObject( "Word.Application" ) ) != NIL
+   IF ( oWord := win_oleCreateObject( "Word.Application" ) ) != NIL
 
       oWord:Documents:Add()
 
@@ -165,7 +165,7 @@ STATIC PROCEDURE Exm_MSWord()
       oWord:Visible := .T.
       oWord:WindowState := 1 /* Maximize */
    ELSE
-      ? "Error. MS Word not available.", OLEErrorText()
+      ? "Error. MS Word not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -174,12 +174,12 @@ STATIC PROCEDURE Exm_MSWord()
 STATIC PROCEDURE Exm_MSOutlook()
    LOCAL oOL, oList
 
-   IF ( oOL := CreateObject( "Outlook.Application" ) ) != NIL
+   IF ( oOL := win_oleCreateObject( "Outlook.Application" ) ) != NIL
       oList := oOL:CreateItem( 7 /* olDistributionListItem */ )
       oList:DLName := "Distribution List"
       oList:Display( .F. )
    ELSE
-      ? "Error. MS Outlook not available.", OLEErrorText()
+      ? "Error. MS Outlook not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -189,7 +189,7 @@ STATIC PROCEDURE Exm_MSOutlook2()
    LOCAL oOL, oLista, oMail
    LOCAL i
 
-   IF ( oOL := CreateObject( "Outlook.Application" ) ) != NIL
+   IF ( oOL := win_oleCreateObject( "Outlook.Application" ) ) != NIL
 
       oMail := oOL:CreateItem( 0 /* olMailItem */ )
 
@@ -205,7 +205,7 @@ STATIC PROCEDURE Exm_MSOutlook2()
       oLista:Save()
       oLista:Close( 0 )
    ELSE
-      ? "Error. MS Outlook not available.", OLEErrorText()
+      ? "Error. MS Outlook not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -214,11 +214,11 @@ STATIC PROCEDURE Exm_MSOutlook2()
 STATIC PROCEDURE Exm_IExplorer()
    LOCAL oIE
 
-   IF ( oIE := CreateObject( "InternetExplorer.Application" ) ) != NIL
+   IF ( oIE := win_oleCreateObject( "InternetExplorer.Application" ) ) != NIL
       oIE:Visible := .T.
       oIE:Navigate( "http://www.harbour-project.org" )
    ELSE
-      ? "Error. IExplorer not available.", OLEErrorText()
+      ? "Error. IExplorer not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -227,7 +227,7 @@ STATIC PROCEDURE Exm_IExplorer()
 STATIC PROCEDURE Exm_OOCalc()
    LOCAL oServiceManager, oDesktop, oDoc, oSheet
 
-   IF ( oServiceManager := CreateObject( "com.sun.star.ServiceManager" ) ) != NIL
+   IF ( oServiceManager := win_oleCreateObject( "com.sun.star.ServiceManager" ) ) != NIL
       oDesktop := oServiceManager:createInstance( "com.sun.star.frame.Desktop" )
       oDoc := oDesktop:loadComponentFromURL( "private:factory/scalc", "_blank", 0, {} )
 
@@ -257,7 +257,7 @@ STATIC PROCEDURE Exm_OOCalc()
       oSheet:getCellRangeByName( "A3" ):setPropertyValue( "CellBackColor", 255 ) // blue
       oSheet:getCellRangeByName( "B3" ):setPropertyValue( "CharColor", 255 * 256 * 256 ) // red
    ELSE
-      ? "Error. OpenOffice not available.", OLEErrorText()
+      ? "Error. OpenOffice not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -266,7 +266,7 @@ STATIC PROCEDURE Exm_OOCalc()
 STATIC PROCEDURE Exm_OOWriter()
    LOCAL oServiceManager, oDesktop, oDoc, oText, oCursor, oTable, oRow, oCell, oCellCursor, oRows
 
-   IF ( oServiceManager := CreateObject( "com.sun.star.ServiceManager" ) ) != NIL
+   IF ( oServiceManager := win_oleCreateObject( "com.sun.star.ServiceManager" ) ) != NIL
       oDesktop := oServiceManager:createInstance( "com.sun.star.frame.Desktop" )
       oDoc := oDesktop:loadComponentFromURL( "private:factory/swriter", "_blank", 0, {} )
 
@@ -310,7 +310,7 @@ STATIC PROCEDURE Exm_OOWriter()
       oCursor:setPropertyValue( "CharColor", 255 )
       oText:insertString( oCursor, "Good bye!", .F. )
    ELSE
-      ? "Error. OpenOffice not available.", OLEErrorText()
+      ? "Error. OpenOffice not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -324,7 +324,7 @@ STATIC PROCEDURE Exm_OOOpen()
 
    LOCAL cDir
 
-   IF ( oOO_ServiceManager := CreateObject( "com.sun.star.ServiceManager" ) ) != NIL
+   IF ( oOO_ServiceManager := win_oleCreateObject( "com.sun.star.ServiceManager" ) ) != NIL
 
       hb_FNameSplit( hb_ArgV( 0 ), @cDir )
 
@@ -342,7 +342,7 @@ STATIC PROCEDURE Exm_OOOpen()
       oOO_Desktop := NIL
       oOO_PropVal01 := NIL
    ELSE
-      ? "Error: OpenOffice not available.", OLEErrorText()
+      ? "Error: OpenOffice not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -365,9 +365,9 @@ STATIC PROCEDURE Exm_CDO()
    LOCAL oCDOMsg
    LOCAL oCDOConf
 
-   IF ( oCDOMsg := CreateObject( "CDO.Message" ) ) != NIL
+   IF ( oCDOMsg := win_oleCreateObject( "CDO.Message" ) ) != NIL
 
-      oCDOConf := CreateObject( "CDO.Configuration" )
+      oCDOConf := win_oleCreateObject( "CDO.Configuration" )
 
       oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/sendusing"):Value := 2 // ; cdoSendUsingPort
       oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserver"):Value := "localhost"
@@ -385,10 +385,10 @@ STATIC PROCEDURE Exm_CDO()
       BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
          oCDOMsg:Send()
       RECOVER
-         ? "Error: CDO send error.", OLEErrorText()
+         ? "Error: CDO send error.", win_oleErrorText()
       END SEQUENCE
    ELSE
-      ? "Error: CDO subsystem not available (needs Windows XP or upper).", OLEErrorText()
+      ? "Error: CDO subsystem not available (needs Windows XP or upper).", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -411,7 +411,7 @@ STATIC PROCEDURE Exm_ADODB()
 
    LOCAL oRs
 
-   IF ( oRs := CreateObject( "ADODB.Recordset" ) ) != NIL
+   IF ( oRs := win_oleCreateObject( "ADODB.Recordset" ) ) != NIL
 
       oRs:Open( "SELECT * FROM test ORDER BY First", ;
          "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + hb_DirBase() + "\..\..\hbodbc\tests\test.mdb",;

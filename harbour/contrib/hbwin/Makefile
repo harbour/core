@@ -34,6 +34,7 @@ C_SOURCES = \
 	wapi_winuser.c \
 
 PRG_SOURCES = \
+	legacy.prg \
 	oleauto.prg \
 	axfunc.prg \
 	win_os.prg \

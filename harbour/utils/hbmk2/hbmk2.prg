@@ -4371,9 +4371,14 @@ STATIC FUNCTION FN_Expand( cFileName, lCommandLine )
    cExt := FN_ExtGet( cFileName )
    aDir := Directory( cFileName )
    FOR EACH aFile IN aDir
-      IF FN_ExtGet( aFile[ F_NAME ] ) == cExt /* Workaround to not find 'hello.prga' when looking for '*.prg' */
+#if defined( __PLATFORM__WINDOWS )
+      /* Workaround to not find 'hello.prga' when looking for '*.prg' */
+      IF Lower( FN_ExtGet( aFile[ F_NAME ] ) ) == Lower( cExt )
+#endif
          AAdd( aFilelist, hb_FNameMerge( FN_DirGet( cFileName ), aFile[ F_NAME ] ) )
+#if defined( __PLATFORM__WINDOWS )
       ENDIF
+#endif
    NEXT
 
    RETURN aFileList
