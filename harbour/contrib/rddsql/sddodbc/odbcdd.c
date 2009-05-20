@@ -158,8 +158,14 @@ static HB_ERRCODE odbcConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
       {
          cBuffer[ 0 ] ='\0';
 
-         if( SQL_SUCCEEDED( SQLDriverConnect( hConnect, NULL, ( SQLCHAR* ) hb_arrayGetCPtr( pItem, 2 ), hb_arrayGetCLen( pItem, 2 ),
-                                              cBuffer, 1024, &iLen, SQL_DRIVER_NOPROMPT ) ) )
+         if( SQL_SUCCEEDED( SQLDriverConnect( hConnect,
+                                              NULL,
+                                              ( SQLCHAR* ) hb_arrayGetCPtr( pItem, 2 ),
+                                              ( SQLSMALLINT ) hb_arrayGetCLen( pItem, 2 ),
+                                              cBuffer,
+                                              HB_SIZEOFARRAY( cBuffer ),
+                                              &iLen,
+                                              SQL_DRIVER_NOPROMPT ) ) )
          {
             pConnection->hConnection = ( void* ) hConnect;
             pConnection->hCargo = ( void* ) hEnv;
@@ -266,7 +272,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       pFieldInfo.atomName[ MAX_FIELD_NAME ] = '\0';
       hb_strUpper( (char *) pFieldInfo.atomName, MAX_FIELD_NAME + 1 );
 
-      pFieldInfo.uiLen = uiSize;
+      pFieldInfo.uiLen = ( USHORT ) uiSize;
       pFieldInfo.uiDec = iDec;
 
       /* HB_TRACE( HB_TR_ALWAYS, ("field: name=%s type=%d len=%d dec=%d null=%d", pFieldInfo.atomName, iDataType, uiSize, iDec, iNull ) ); */
@@ -448,6 +454,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
       pArray = hb_itemArrayNew( pArea->uiFieldCount );
       for ( ui = 1; ui <= pArea->uiFieldCount; ui++ )
       {
+         iLen = SQL_NULL_DATA;
          pItem = NULL;
          res = 0;
          pField = pArea->lpFields + ui - 1;
