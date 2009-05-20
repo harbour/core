@@ -467,6 +467,22 @@ HB_FUNC( SETCANCEL )
    hb_setSetItem( HB_SET_CANCEL, hb_param( 1, HB_IT_LOGICAL ) );
 }
 
+static void hb_set_PRINTFILE_default( PHB_SET_STRUCT pSet )
+{
+   if( pSet->HB_SET_PRINTFILE )
+      hb_xfree( pSet->HB_SET_PRINTFILE );
+
+#if defined(HB_OS_UNIX)
+   pSet->HB_SET_PRINTFILE = hb_strdup( "|lpr" );
+#elif defined(HB_OS_DOS)
+   pSet->HB_SET_PRINTFILE = hb_strdup( "PRN" );
+#elif defined(HB_OS_WIN) || defined(HB_OS_OS2)
+   pSet->HB_SET_PRINTFILE = hb_strdup( "LPT1" );
+#else
+   pSet->HB_SET_PRINTFILE = hb_strdup( "PRN" ); /* TOFIX */
+#endif
+}
+
 HB_FUNC( SET )
 {
    HB_STACK_TLS_PRELOAD
@@ -816,7 +832,13 @@ HB_FUNC( SET )
       case HB_SET_PRINTFILE:
          hb_retc( pSet->HB_SET_PRINTFILE );
          if( args > 1 && ! HB_IS_NIL( pArg2 ) )
-            pSet->HB_SET_PRINTFILE = set_string( pArg2, pSet->HB_SET_PRINTFILE );
+         {
+            /* With SET PRINTER TO or Set( _SET_PRINTFILE, "" ) are expected to activate the default printer [jarabal] */
+            if( hb_itemGetCLen( pArg2 ) == 0 )
+               hb_set_PRINTFILE_default( pSet );
+            else
+               pSet->HB_SET_PRINTFILE = set_string( pArg2, pSet->HB_SET_PRINTFILE );
+         }
          if( args > 2 )
             bFlag = set_logical( pArg3, FALSE );
          else
@@ -1096,15 +1118,8 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->hb_set_path = NULL;
    pSet->HB_SET_PRINTER = FALSE;
    /* Default printer device */
-#if defined(HB_OS_UNIX)
-   pSet->HB_SET_PRINTFILE = hb_strdup( "|lpr" );
-#elif defined(HB_OS_DOS)
-   pSet->HB_SET_PRINTFILE = hb_strdup( "PRN" );
-#elif defined(HB_OS_WIN) || defined(HB_OS_OS2)
-   pSet->HB_SET_PRINTFILE = hb_strdup( "LPT1" );
-#else
-   pSet->HB_SET_PRINTFILE = hb_strdup( "PRN" ); /* TOFIX */
-#endif
+   pSet->HB_SET_PRINTFILE = NULL;
+   hb_set_PRINTFILE_default( pSet );
    pSet->hb_set_printhan = FS_ERROR;
    pSet->HB_SET_SCOREBOARD = TRUE;
    pSet->HB_SET_SCROLLBREAK = TRUE;
