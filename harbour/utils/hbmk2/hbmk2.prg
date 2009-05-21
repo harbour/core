@@ -4357,9 +4357,6 @@ STATIC FUNCTION FN_Expand( cFileName, lCommandLine )
    LOCAL aFileList
    LOCAL aFile
    LOCAL aDir
-#if defined( __PLATFORM__WINDOWS )
-   LOCAL cExt
-#endif
 
 #if defined( __PLATFORM__UNIX )
    /* Disable expansion if this came from the command line */
@@ -4376,19 +4373,9 @@ STATIC FUNCTION FN_Expand( cFileName, lCommandLine )
 
    aFileList := {}
 
-#if defined( __PLATFORM__WINDOWS )
-   cExt := FN_ExtGet( cFileName )
-#endif
    aDir := Directory( cFileName )
    FOR EACH aFile IN aDir
-#if defined( __PLATFORM__WINDOWS )
-      /* Workaround to not find 'hello.prga' when looking for '*.prg' */
-      IF Lower( FN_ExtGet( aFile[ F_NAME ] ) ) == Lower( cExt )
-#endif
-         AAdd( aFilelist, hb_FNameMerge( FN_DirGet( cFileName ), aFile[ F_NAME ] ) )
-#if defined( __PLATFORM__WINDOWS )
-      ENDIF
-#endif
+      AAdd( aFilelist, hb_FNameMerge( FN_DirGet( cFileName ), aFile[ F_NAME ] ) )
    NEXT
 
    RETURN aFileList
