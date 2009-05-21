@@ -12,6 +12,15 @@
 # a performance boost on a slow system.
 .SUFFIXES:
 
+need := 3.81
+ok := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
+
+ifeq ($(ok),)
+
+all: ; @echo Error: GNU Make version $(MAKE_VERSION) found, $(need) or upper needed for Harbour.
+
+else
+
 GRANDP = ../../
 HB_ARCH := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 
@@ -56,3 +65,5 @@ HB_LIB_COMPILE :=
 endif
 
 include $(TOP)$(ROOT)config/$(HB_ARCH).cf
+
+endif
