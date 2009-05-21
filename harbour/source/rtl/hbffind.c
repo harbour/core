@@ -570,11 +570,11 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 #if defined(__XCC__) || (defined(__POCC__) && __POCC__ >= 500)
                /* NOTE: PellesC 5.00.1 will go into an infinite loop if we don't
                         split this into two operations. [vszakats] */
-               ffind->size = ( HB_FOFFSET ) info->pFindFileData.nFileSizeLow;
+               ffind->size  = ( HB_FOFFSET ) info->pFindFileData.nFileSizeLow;
                ffind->size += ( HB_FOFFSET ) info->pFindFileData.nFileSizeHigh << 32;
 #else
                ffind->size = ( HB_FOFFSET ) info->pFindFileData.nFileSizeLow +
-                     ( ( HB_FOFFSET ) info->pFindFileData.nFileSizeHigh << 32 );
+                           ( ( HB_FOFFSET ) info->pFindFileData.nFileSizeHigh << 32 );
 #endif
             }
 
@@ -609,34 +609,27 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
       char dirname[ HB_PATH_MAX ];
-      char string[ HB_PATH_MAX ];
 
       bFound = FALSE;
 
       /* TODO: HB_FA_LABEL handling */
 
-      string[ 0 ] = '\0';
       if( ffind->bFirst )
       {
          char * pos;
 
          ffind->bFirst = FALSE;
 
-         dirname[ 0 ] = '\0';
-         info->pattern[ 0 ] = '\0';
-
-         /* hb_strncpy( string, pszFileName, sizeof( string ) - 1 ); */
-         hb_strncpy( string, ffind->pszFileMask, sizeof( string ) - 1 );
-         pos = strrchr( string, HB_OS_PATH_DELIM_CHR );
+         hb_strncpy( dirname, ffind->pszFileMask, sizeof( dirname ) - 1 );
+         pos = strrchr( dirname, HB_OS_PATH_DELIM_CHR );
          if( pos )
          {
             hb_strncpy( info->pattern, pos + 1, sizeof( info->pattern ) - 1 );
             *( pos + 1 ) = '\0';
-            hb_strncpy( dirname, string, sizeof( dirname ) - 1 );
          }
          else
          {
-            hb_strncpy( info->pattern, string, sizeof( info->pattern ) - 1 );
+            hb_strncpy( info->pattern, dirname, sizeof( info->pattern ) - 1 );
             dirname[ 0 ] = '.';
             dirname[ 1 ] = HB_OS_PATH_DELIM_CHR;
             dirname[ 2 ] = '\0';
@@ -652,8 +645,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       {
          while( ( info->entry = readdir( info->dir ) ) != NULL )
          {
-            hb_strncpy( string, info->entry->d_name, sizeof( string ) - 1 );
-            if( hb_strMatchFile( string, info->pattern ) )
+            if( hb_strMatchFile( info->entry->d_name, info->pattern ) )
             {
                bFound = TRUE;
                break;

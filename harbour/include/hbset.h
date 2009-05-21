@@ -145,8 +145,9 @@ typedef enum
 typedef struct
 {
    /* Lower case members are indirectly related to a SET */
-   HB_FHANDLE     hb_set_althan;
    BOOL           hb_set_century;
+   BOOL           hb_set_prndevice;
+   HB_FHANDLE     hb_set_althan;
    HB_FHANDLE     hb_set_extrahan;
    HB_FHANDLE     hb_set_printhan;
    HB_PATHNAMES * hb_set_path;
@@ -233,6 +234,10 @@ typedef void * PHB_SET_STRUCT;
 #define HB_SET_CASE_LOWER  1
 #define HB_SET_CASE_UPPER  2
 
+#define HB_SET_PRN_ANY     0
+#define HB_SET_PRN_CON     1
+#define HB_SET_PRN_DEV     2
+
 #define HB_SET_DBFLOCK_DEFAULT    0
 #define HB_SET_DBFLOCK_CLIP       1
 #define HB_SET_DBFLOCK_CL53       2
@@ -259,11 +264,13 @@ extern HB_EXPORT BOOL       hb_setSetItem2( HB_set_enum set_specifier, PHB_ITEM 
 
 extern HB_EXPORT HB_PATHNAMES * hb_setGetFirstSetPath( void );
 
-extern HB_EXPORT HB_FHANDLE hb_setGetAltHan( void );
 extern HB_EXPORT BOOL       hb_setGetCentury( void );
 extern HB_EXPORT BOOL       hb_setSetCentury( BOOL );
+
+extern HB_EXPORT HB_FHANDLE hb_setGetAltHan( void );
 extern HB_EXPORT HB_FHANDLE hb_setGetExtraHan( void );
 extern HB_EXPORT HB_FHANDLE hb_setGetPrintHan( void );
+extern HB_EXPORT HB_FHANDLE hb_setGetPrinterHandle( int );
 extern HB_EXPORT BOOL       hb_setGetAlternate( void );
 extern HB_EXPORT char *     hb_setGetAltFile( void );
 extern HB_EXPORT BOOL       hb_setGetAutOpen( void );

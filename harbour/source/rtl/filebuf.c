@@ -83,6 +83,7 @@ typedef struct _HB_FILE
    ULONG          inode;
    int            used;
    BOOL           shared;
+   BOOL           readonly;
    HB_FHANDLE     hFile;
    PHB_FLOCK      pLocks;
    UINT           uiLocks;
@@ -128,7 +129,7 @@ static PHB_FILE hb_fileFind( ULONG device, ULONG inode )
    return NULL;
 }
 
-static PHB_FILE hb_fileNew( HB_FHANDLE hFile, BOOL fShared,
+static PHB_FILE hb_fileNew( HB_FHANDLE hFile, BOOL fShared, BOOL fReadonly,
                             ULONG device, ULONG inode, BOOL fBind )
 {
    PHB_FILE pFile = hb_fileFind( device, inode );
@@ -137,10 +138,11 @@ static PHB_FILE hb_fileNew( HB_FHANDLE hFile, BOOL fShared,
    {
       pFile = ( PHB_FILE ) hb_xgrab( sizeof( HB_FILE ) );
       memset( pFile, 0, sizeof( HB_FILE ) );
-      pFile->device = device;
-      pFile->inode  = inode;
-      pFile->hFile  = hFile;
-      pFile->shared = fShared;
+      pFile->device   = device;
+      pFile->inode    = inode;
+      pFile->hFile    = hFile;
+      pFile->shared   = fShared;
+      pFile->readonly = fReadonly;
 
       if( fBind )
       {
@@ -310,11 +312,12 @@ PHB_FILE hb_fileExtOpen( BYTE * pFilename, BYTE * pDefExt,
    struct stat statbuf;
    BOOL fResult;
 #endif
-   BOOL fShared;
+   BOOL fShared, fReadonly;
    HB_FHANDLE hFile;
    BYTE * pszFile;
 
    fShared = ( uiExFlags & ( FO_DENYREAD | FO_DENYWRITE | FO_EXCLUSIVE ) ) == 0;
+   fReadonly = ( uiExFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) ) == FO_READ;
    pszFile = hb_fsExtName( pFilename, pDefExt, uiExFlags, pPaths );
 
 #if defined( HB_OS_UNIX )
@@ -325,12 +328,12 @@ PHB_FILE hb_fileExtOpen( BYTE * pFilename, BYTE * pDefExt,
 
    if( fResult )
    {
-
       hb_threadEnterCriticalSection( &s_fileMtx );
       pFile = hb_fileFind( statbuf.st_dev, statbuf.st_ino );
       if( pFile )
       {
-         if( !fShared || ! pFile->shared || ( uiExFlags & FXO_TRUNCATE ) != 0 )
+         if( !fShared || ! pFile->shared || ( uiExFlags & FXO_TRUNCATE ) != 0 ||
+             ( !fReadonly && pFile->readonly ) )
             fResult = FALSE;
          else
             pFile->used++;
@@ -372,16 +375,17 @@ PHB_FILE hb_fileExtOpen( BYTE * pFilename, BYTE * pDefExt,
             device = ( ULONG ) statbuf.st_dev;
             inode  = ( ULONG ) statbuf.st_ino;
          }
-         hb_fsSetIOError( fResult, 0 );
          hb_vmLock();
 #endif
 
          hb_threadEnterCriticalSection( &s_fileMtx );
-         pFile = hb_fileNew( hFile, fShared, device, inode, TRUE );
+         pFile = hb_fileNew( hFile, fShared, fReadonly, device, inode, TRUE );
          hb_threadLeaveCriticalSection( &s_fileMtx );
 
-         if( pFile->hFile != hFile )
+         if( !pFile || pFile->hFile != hFile )
             hb_fsClose( hFile );
+         if( !pFile )
+            hb_fsSetError( 32 );
       }
    }
    hb_xfree( pszFile );
@@ -496,7 +500,7 @@ PHB_FILE hb_fileCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix,
 
    hFile = hb_fsCreateTemp( pszDir, pszPrefix, ulAttr, pszName );
    if( hFile != FS_ERROR )
-      pFile = hb_fileNew( hFile, FALSE, 0, 0, FALSE );
+      pFile = hb_fileNew( hFile, FALSE, FALSE, 0, 0, FALSE );
 
    return pFile;
 }
@@ -512,7 +516,7 @@ PHB_FILE hb_fileCreateTempEx( BYTE * pszName,
 
    hFile = hb_fsCreateTempEx( pszName, pszDir, pszPrefix, pszExt, ulAttr );
    if( hFile != FS_ERROR )
-      pFile = hb_fileNew( hFile, FALSE, 0, 0, FALSE );
+      pFile = hb_fileNew( hFile, FALSE, FALSE, 0, 0, FALSE );
 
    return pFile;
 }

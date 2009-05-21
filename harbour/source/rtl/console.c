@@ -226,27 +226,29 @@ void hb_conOutErr( const char * pStr, ULONG ulLen )
 /* Output an item to the screen and/or printer and/or alternate */
 void hb_conOutAlt( const char * pStr, ULONG ulLen )
 {
+   HB_FHANDLE hFile;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutAlt(%s, %lu)", pStr, ulLen));
 
    if( hb_setGetConsole() )
       hb_gtWriteCon( ( BYTE * ) pStr, ulLen );
 
-   if( hb_setGetAlternate() && hb_setGetAltHan() != FS_ERROR )
+   if( hb_setGetAlternate() && ( hFile = hb_setGetAltHan() ) != FS_ERROR )
    {
       /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
-      hb_fsWriteLarge( hb_setGetAltHan(), ( BYTE * ) pStr, ulLen );
+      hb_fsWriteLarge( hFile, ( BYTE * ) pStr, ulLen );
    }
 
-   if( hb_setGetExtraHan() != FS_ERROR )
+   if( ( hFile = hb_setGetExtraHan() ) != FS_ERROR )
    {
       /* Print to extra file if valid alternate file */
-      hb_fsWriteLarge( hb_setGetExtraHan(), ( BYTE * ) pStr, ulLen );
+      hb_fsWriteLarge( hFile, ( BYTE * ) pStr, ulLen );
    }
 
-   if( hb_setGetPrinter() && hb_setGetPrintHan() != FS_ERROR )
+   if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_CON ) ) != FS_ERROR )
    {
       /* Print to printer if SET PRINTER ON and valid printer file */
-      hb_fsWriteLarge( hb_setGetPrintHan(), ( BYTE * ) pStr, ulLen );
+      hb_fsWriteLarge( hFile, ( BYTE * ) pStr, ulLen );
       hb_prnPos()->col += ( USHORT ) ulLen;
    }
 }
@@ -254,13 +256,14 @@ void hb_conOutAlt( const char * pStr, ULONG ulLen )
 /* Output an item to the screen and/or printer */
 static void hb_conOutDev( const char * pStr, ULONG ulLen )
 {
+   HB_FHANDLE hFile;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutDev(%s, %lu)", pStr, ulLen));
 
-   if( hb_setGetPrintHan() != FS_ERROR &&
-       hb_stricmp( hb_setGetDevice(), "PRINTER" ) == 0 )
+   if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_DEV ) ) != FS_ERROR )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
-      hb_fsWriteLarge( hb_setGetPrintHan(), ( BYTE * ) pStr, ulLen );
+      hb_fsWriteLarge( hFile, ( BYTE * ) pStr, ulLen );
       hb_prnPos()->col += ( USHORT ) ulLen;
    }
    else
@@ -343,9 +346,11 @@ HB_FUNC( QQOUT ) /* writes a list of values to the current device (screen or pri
 
 HB_FUNC( QOUT )
 {
+   HB_FHANDLE hFile;
+
    hb_conOutAlt( s_szCrLf, s_iCrLfLen );
 
-   if( hb_setGetPrinter() && hb_setGetPrintHan() != FS_ERROR )
+   if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_CON ) ) != FS_ERROR )
    {
       BYTE buf[ 256 ];
       PHB_PRNPOS pPrnPos = hb_prnPos();
@@ -359,13 +364,13 @@ HB_FUNC( QOUT )
          {
             BYTE * pBuf = ( BYTE * ) hb_xgrab( pPrnPos->col );
             memset( pBuf, ' ', pPrnPos->col );
-            hb_fsWrite( hb_setGetPrintHan(), pBuf, pPrnPos->col );
+            hb_fsWrite( hFile, pBuf, pPrnPos->col );
             hb_xfree( pBuf );
          }
          else
          {
             memset( buf, ' ', pPrnPos->col );
-            hb_fsWrite( hb_setGetPrintHan(), buf, pPrnPos->col );
+            hb_fsWrite( hFile, buf, pPrnPos->col );
          }
       }
    }
@@ -376,11 +381,12 @@ HB_FUNC( QOUT )
 HB_FUNC( __EJECT ) /* Ejects the current page from the printer */
 {
    PHB_PRNPOS pPrnPos;
+   HB_FHANDLE hFile;
 
-   if( hb_setGetPrintHan() != FS_ERROR )
+   if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_ANY ) ) != FS_ERROR )
    {
       static const BYTE s_byEop[ 4 ] = { 0x0C, 0x0D, 0x00, 0x00 }; /* Buffer is 4 bytes to make CodeGuard happy */
-      hb_fsWrite( hb_setGetPrintHan(), s_byEop, 2 );
+      hb_fsWrite( hFile, s_byEop, 2 );
    }
 
    pPrnPos = hb_prnPos();
@@ -399,13 +405,14 @@ HB_FUNC( PCOL ) /* Returns the current printer row position */
 
 static void hb_conDevPos( SHORT iRow, SHORT iCol )
 {
+   HB_FHANDLE hFile;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_conDevPos(%hd, %hd)", iRow, iCol));
 
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */
 
-   if( hb_setGetPrintHan() != FS_ERROR &&
-       hb_stricmp( hb_setGetDevice(), "PRINTER" ) == 0 )
+   if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_DEV ) ) != FS_ERROR )
    {
       USHORT uiPRow = ( USHORT ) iRow;
       USHORT uiPCol = ( USHORT ) iCol + ( USHORT ) hb_setGetMargin();
@@ -434,7 +441,7 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
             {
                if( iPtr + s_iCrLfLen > ( int ) sizeof( buf ) )
                {
-                  hb_fsWrite( hb_setGetPrintHan(), buf, ( USHORT ) iPtr );
+                  hb_fsWrite( hFile, buf, ( USHORT ) iPtr );
                   iPtr = 0;
                }
                memcpy( &buf[ iPtr ], s_szCrLf, s_iCrLfLen );
@@ -453,7 +460,7 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
          {
             if( iPtr == ( int ) sizeof( buf ) )
             {
-               hb_fsWrite( hb_setGetPrintHan(), buf, ( USHORT ) iPtr );
+               hb_fsWrite( hFile, buf, ( USHORT ) iPtr );
                iPtr = 0;
             }
             buf[ iPtr++ ] = ' ';
@@ -461,7 +468,7 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
          }
 
          if( iPtr )
-            hb_fsWrite( hb_setGetPrintHan(), buf, ( SHORT ) iPtr );
+            hb_fsWrite( hFile, buf, ( SHORT ) iPtr );
       }
    }
    else

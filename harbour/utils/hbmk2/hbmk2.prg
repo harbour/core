@@ -4357,7 +4357,9 @@ STATIC FUNCTION FN_Expand( cFileName, lCommandLine )
    LOCAL aFileList
    LOCAL aFile
    LOCAL aDir
+#if defined( __PLATFORM__WINDOWS )
    LOCAL cExt
+#endif
 
 #if defined( __PLATFORM__UNIX )
    /* Disable expansion if this came from the command line */
@@ -4374,7 +4376,9 @@ STATIC FUNCTION FN_Expand( cFileName, lCommandLine )
 
    aFileList := {}
 
+#if defined( __PLATFORM__WINDOWS )
    cExt := FN_ExtGet( cFileName )
+#endif
    aDir := Directory( cFileName )
    FOR EACH aFile IN aDir
 #if defined( __PLATFORM__WINDOWS )
