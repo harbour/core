@@ -992,8 +992,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       ENDIF
    ENDIF
 
-   hbmk[ _HBMK_aLIBPATH ] := {}
    hbmk[ _HBMK_aINCPATH ] := {}
+   hbmk[ _HBMK_aLIBPATH ] := {}
 
    /* Tweaks to compiler environments */
 
@@ -1005,6 +1005,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cPath_CompC := _BCC_BIN_DETECT()
       ENDIF
       IF ! Empty( cPath_CompC )
+         /* NOTE: Automatically configure bcc installation with missing configuration. [vszakats] */
+         IF ! hb_FileExists( FN_DirGet( cPath_CompC ) + ".." + hb_osPathSeparator() + "Bin" + hb_osPathSeparator() + "bcc32.cfg" ) .OR. ;
+            ! hb_FileExists( FN_DirGet( cPath_CompC ) + ".." + hb_osPathSeparator() + "Bin" + hb_osPathSeparator() + "ilink32.cfg" )
+            AAdd( hbmk[ _HBMK_aINCPATH ], PathNormalize( FN_DirGet( cPath_CompC ) + ".." + hb_osPathSeparator() + "Include" ) )
+            AAdd( hbmk[ _HBMK_aLIBPATH ], PathNormalize( FN_DirGet( cPath_CompC ) + ".." + hb_osPathSeparator() + "Lib" ) )
+         ENDIF
          AAdd( hbmk[ _HBMK_aLIBPATH ], PathNormalize( FN_DirGet( cPath_CompC ) + ".." + hb_osPathSeparator() + "Lib" + hb_osPathSeparator() + "PSDK" ) )
       ENDIF
    ENDCASE

@@ -5,6 +5,7 @@
 # ---------------------------------------------------------------
 # See GNU make docs here:
 #    http://www.gnu.org/software/make/manual/make.html
+#    http://www.jgc.org/feeds/topic-gnumake.xml
 # ---------------------------------------------------------------
 
 # This isn't strictly necessary, but it does signficantly reduce
