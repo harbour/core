@@ -1698,6 +1698,7 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
    LOCAL cName
    LOCAL aVars
    LOCAL aBVars
+   LOCAL hSkip
 
    aBVars := {}
 
@@ -1710,11 +1711,23 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
    ENDIF
 
    IF ::lShowPrivates
+      /* CA-Cl*pper shows only local private variables in monitor
+       * We are marking non local private variables with "^" character
+       */
       nCount := __mvDbgInfo( HB_MV_PRIVATE )
-      FOR n := nCount TO 1 STEP -1
-         xValue := __mvDbgInfo( HB_MV_PRIVATE, n, @cName )
-         AAdd( aBVars, { cName, xValue, "Private" } )
-      NEXT
+      IF nCount > 0
+         m := __mvDbgInfo( HB_MV_PRIVATE_LOCAL, ::nProcLevel )
+         hSkip := { => }
+         hb_hAllocate( hSkip, nCount )
+         FOR n := nCount TO 1 STEP -1
+            xValue := __mvDbgInfo( HB_MV_PRIVATE, n, @cName )
+            IF ! cName $ hSkip
+               AAdd( aBVars, { cName, xValue, "Private" + iif( m > 0, "", "^" ) } )
+               hSkip[ cName ] := NIL
+            ENDIF
+            --m
+         NEXT
+      ENDIF
    ENDIF
 
    IF ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_LINE ] != NIL

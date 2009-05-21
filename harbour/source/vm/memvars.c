@@ -861,11 +861,29 @@ static HB_DYNS_FUNC( hb_memvarCountPublics )
    return TRUE;
 }
 
+static ULONG hb_memvarGetBaseOffset( int iProcLevel )
+{
+   HB_STACK_TLS_PRELOAD
+
+   if( iProcLevel > 0 )
+   {
+      int iLevel = hb_stackCallDepth();
+      if( iProcLevel < iLevel )
+      {
+         LONG lOffset = hb_stackBaseProcOffset( iLevel - iProcLevel - 1 );
+         if( lOffset > 0 )
+            return hb_stackItem( lOffset )->item.asSymbol.stackstate->ulPrivateBase;
+      }
+   }
+
+   return hb_stackBaseItem()->item.asSymbol.stackstate->ulPrivateBase;
+}
+
 /* Count the number of variables with given scope
  */
-static int hb_memvarCount( int iScope )
+static int hb_memvarCount( int iScope, int iLevel )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarCount(%d)", iScope));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarCount(%d,%d)", iScope, iLevel));
 
    if( iScope == HB_MV_PUBLIC )
    {
@@ -874,10 +892,16 @@ static int hb_memvarCount( int iScope )
       hb_dynsymProtectEval( hb_memvarCountPublics, ( void * ) &iPublicCnt );
       return iPublicCnt;
    }
-   else
+   else  /* number of PRIVATE variables */
    {
       HB_STACK_TLS_PRELOAD
-      return hb_stackGetPrivateStack()->count;  /* number of PRIVATE variables */
+
+      if( iScope == HB_MV_PRIVATE_LOCAL )
+         return hb_stackGetPrivateStack()->count - hb_memvarGetBaseOffset( iLevel );
+      else if( iScope == HB_MV_PRIVATE_GLOBAL )
+         return hb_memvarGetBaseOffset( iLevel );
+      else
+         return hb_stackGetPrivateStack()->count;
    }
 }
 
@@ -1193,47 +1217,25 @@ HB_FUNC( __MVDBGINFO )
    HB_STACK_TLS_PRELOAD
    int iCount = hb_pcount();
 
-   if( iCount == 1 )          /* request for a number of variables */
-      hb_retni( hb_memvarCount( hb_parni( 1 ) ) );
+   if( iCount == 1 || iCount == 2 )          /* request for a number of variables */
+      hb_retni( hb_memvarCount( hb_parni( 1 ), hb_parni( 2 ) ) );
 
-   else if( iCount >= 2 )     /* request for a value of variable */
+   else if( iCount > 2 )     /* request for a value of variable */
    {
       HB_ITEM_PTR pValue;
       const char * szName;
 
       pValue = hb_memvarDebugVariable( hb_parni( 1 ), hb_parni( 2 ), &szName );
 
-      if( pValue )
+      if( pValue )   /* the requested variable was found */
       {
-         /*the requested variable was found
-          */
-         if( iCount >= 3 && ISBYREF( 3 ) )
-         {
-            /* we have to use this variable regardless of its current value
-             */
-            HB_ITEM_PTR pName = hb_param( 3, HB_IT_ANY );
-
-            hb_itemPutC( pName, szName ); /* clear an old value and copy a new one */
-            /* szName points directly to a symbol name - it cannot be released
-             */
-         }
+         hb_storc( szName, 3 );
          hb_itemReturn( pValue );
-         /* pValue points directly to the item structure used by this variable
-          * this item cannot be released
-          */
       }
       else
       {
          hb_ret(); /* return NIL value */
-
-         if( iCount >= 3 && ISBYREF( 3 ) )
-         {
-            /* we have to use this variable regardless of its current value
-             */
-            HB_ITEM_PTR pName = hb_param( 3, HB_IT_ANY );
-
-            hb_itemPutC( pName, "?" ); /* clear an old value and copy a new one */
-         }
+         hb_storc( "?", 3 );
       }
    }
 }
