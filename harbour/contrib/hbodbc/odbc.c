@@ -79,6 +79,12 @@
 
 #include "hbapi.h"
 
+#if !defined( HB_OS_WIN )
+#  define HB_TCHAR_CONVTO( s )      ( ( char * ) ( s ) )
+#  define HB_TCHAR_CONVFROM( s )    ( ( char * ) ( s ) )
+#  define HB_TCHAR_FREE( s )        HB_SYMBOL_UNUSED( s )
+#endif
+
 #if defined( HB_OS_LINUX ) && defined( __WATCOMC__ )
 #include "/usr/include/sql.h"
 #include "/usr/include/sqlext.h"
@@ -125,10 +131,7 @@ HB_FUNC( SQLDRIVERCONNECT ) /* hDbc, @cConnectString --> nRetCode */
 {
    SQLSMALLINT wLen;
    SQLRETURN ret;
-
-#if defined( HB_OS_WIN ) && defined( UNICODE )
-
-   SQLTCHAR * lpStr = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   SQLTCHAR * lpStr = ( SQLTCHAR * ) HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    SQLTCHAR buffer[ 1024 ];
    buffer[ 0 ] = '\0';
    ret = SQLDriverConnect( ( SQLHDBC ) hb_parptr( 1 ),
@@ -146,29 +149,16 @@ HB_FUNC( SQLDRIVERCONNECT ) /* hDbc, @cConnectString --> nRetCode */
       hb_storc( szStr, 3 );
       HB_TCHAR_FREE( szStr );
    }
-#else
-   SQLTCHAR buffer[ 1024 ];
-   buffer[ 0 ] = '\0';
-   ret = SQLDriverConnect( ( SQLHDBC ) hb_parptr( 1 ),
-                           ( SQLHWND ) NULL,
-                           ( SQLTCHAR * ) hb_parcx( 2 ),
-                           ( SQLSMALLINT ) hb_parclen( 2 ),
-                           ( SQLTCHAR * ) buffer,
-                           ( SQLSMALLINT ) HB_SIZEOFARRAY( buffer ),
-                           ( SQLSMALLINT * ) &wLen,
-                           ( SQLUSMALLINT ) SQL_DRIVER_COMPLETE );
-   hb_storc( ( char * ) buffer, 3 );
-#endif
    hb_retni( ret );
 }
 
 HB_FUNC( SQLCONNECT ) /* hDbc, cDSN, cUseName, cPassword --> nRetCode */
 {
    SQLRETURN ret;
-#if defined( HB_OS_WIN ) && defined( UNICODE )
-   SQLTCHAR * lpDSN      = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-   SQLTCHAR * lpUseName  = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   SQLTCHAR * lpPassword = HB_TCHAR_CONVTO( hb_parcx( 4 ) );
+
+   SQLTCHAR * lpDSN      = ( SQLTCHAR * ) HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   SQLTCHAR * lpUseName  = ( SQLTCHAR * ) HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+   SQLTCHAR * lpPassword = ( SQLTCHAR * ) HB_TCHAR_CONVTO( hb_parcx( 4 ) );
 
    ret =  SQLConnect( ( SQLHDBC ) hb_parptr( 1 ),
                       ( SQLTCHAR * ) lpDSN,
@@ -181,15 +171,7 @@ HB_FUNC( SQLCONNECT ) /* hDbc, cDSN, cUseName, cPassword --> nRetCode */
    HB_TCHAR_FREE( lpDSN );
    HB_TCHAR_FREE( lpUseName );
    HB_TCHAR_FREE( lpPassword );
-#else
-   ret =  SQLConnect( ( SQLHDBC ) hb_parptr( 1 ),
-                      ( SQLTCHAR * ) hb_parcx( 2 ),
-                      ( SQLSMALLINT ) hb_parclen( 2 ),
-                      ( SQLTCHAR * ) hb_parcx( 3 ),
-                      ( SQLSMALLINT ) hb_parclen( 3 ),
-                      ( SQLTCHAR * ) hb_parcx( 4 ),
-                      ( SQLSMALLINT ) hb_parclen( 4 ) );
-#endif
+
    hb_retni( ret );
 }
 
@@ -223,17 +205,11 @@ HB_FUNC( SQLFREESTMT ) /* hStmt, nType --> nRetCode */
 
 HB_FUNC( SQLEXECDIRECT ) /* hStmt, cStatement --> nRetCode */
 {
-#if defined( HB_OS_WIN ) && defined( UNICODE )
-   SQLTCHAR * lpStr = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   SQLTCHAR * lpStr = ( SQLTCHAR * ) HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    hb_retni( SQLExecDirect( ( SQLHSTMT ) hb_parptr( 1 ),
                             ( SQLTCHAR * ) lpStr,
                             ( SQLINTEGER ) hb_parclen( 2 ) ) );
    HB_TCHAR_FREE( lpStr );
-#else
-   hb_retni( SQLExecDirect( ( SQLHSTMT ) hb_parptr( 1 ),
-                            ( SQLTCHAR * ) hb_parcx( 2 ),
-                            ( SQLINTEGER ) hb_parclen( 2 ) ) );
-#endif
 }
 
 HB_FUNC( SQLFETCH ) /* hStmt --> nRetCode */
@@ -458,24 +434,16 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
 
    if( ISBYREF( 4 ) )
    {
-#if defined( HB_OS_WIN ) && defined( UNICODE )
       char * szStr = HB_TCHAR_CONVFROM( buffer );
       hb_storc( szStr, 4 );
       HB_TCHAR_FREE( szStr );
-#else
-      hb_storc( ( char * ) buffer, 4 );
-#endif
    }
    hb_stornl( ( long ) lError, 5 );
    if( ISBYREF( 6 ) )
    {
-#if defined( HB_OS_WIN ) && defined( UNICODE )
       char * szStr = HB_TCHAR_CONVFROM( szErrorMsg );
       hb_storc( szStr, 6 );
       HB_TCHAR_FREE( szStr );
-#else
-      hb_storc( ( char * ) szErrorMsg, 6 );
-#endif
    }
 }
 
@@ -592,17 +560,11 @@ HB_FUNC( SQLROLLBACK ) /* hEnv, hDbc */
 
 HB_FUNC( SQLPREPARE ) /* hStmt, cStatement --> nRetCode */
 {
-#if defined( HB_OS_WIN ) && defined( UNICODE )
-   SQLTCHAR * lpStr = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   SQLTCHAR * lpStr = ( SQLTCHAR * ) HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    hb_retni( SQLPrepare( ( SQLHSTMT ) hb_parptr( 1 ),
                          ( SQLTCHAR * ) lpStr,
                          ( SQLINTEGER  ) SQL_NTS ) );
    HB_TCHAR_FREE( lpStr );
-#else
-   hb_retni( SQLPrepare( ( SQLHSTMT ) hb_parptr( 1 ),
-                         ( SQLTCHAR * ) hb_parcx( 2 ),
-                         ( SQLINTEGER  ) SQL_NTS ) );
-#endif
 }
 
 HB_FUNC( SQLEXECUTE ) /* hStmt --> nRetCode */
@@ -619,17 +581,12 @@ HB_FUNC( SQLEXECUTESCALAR )
 
    if( result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO )
    {
-#if defined( HB_OS_WIN ) && defined( UNICODE )
-      SQLTCHAR * lpStr = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+      SQLTCHAR * lpStr = ( SQLTCHAR * ) HB_TCHAR_CONVTO( hb_parcx( 1 ) );
       result = SQLExecDirect( ( SQLHSTMT ) hStmt,
                               ( SQLTCHAR * ) lpStr,
                               ( SQLINTEGER ) SQL_NTS );
       HB_TCHAR_FREE( lpStr );
-#else
-      result = SQLExecDirect( ( SQLHSTMT ) hStmt,
-                              ( SQLTCHAR * ) hb_parcx( 1 ),
-                              ( SQLINTEGER ) SQL_NTS );
-#endif
+
       if( result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO )
       {
          result = SQLFetch( ( SQLHSTMT ) hStmt );

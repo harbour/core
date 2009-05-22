@@ -62,6 +62,7 @@
 
 #if !defined( HB_OS_WIN )
 #  define HB_TCHAR_CONVTO( s )      ( ( char * ) ( s ) )
+#  define HB_TCHAR_CONVFROM( s )    ( ( char * ) ( s ) )
 #  define HB_TCHAR_FREE( s )        HB_SYMBOL_UNUSED( s )
 #endif
 
