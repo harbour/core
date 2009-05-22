@@ -71,11 +71,6 @@
  */
 HB_FUNC( QT_QPUSHBUTTON )
 {
-  if( hb_pcount() >= 2 )
-    hb_retptr( ( QPushButton* ) new QPushButton( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 2 ), hbqt_par_QWidget( 3 ) ) );
-  else if( hb_pcount() >= 1 )
-    hb_retptr( ( QPushButton* ) new QPushButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
-  else
     hb_retptr( ( QPushButton* ) new QPushButton( hbqt_par_QWidget( 1 ) ) );
 }
 

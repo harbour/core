@@ -86,7 +86,7 @@ EXIT PROCEDURE Qt_End()
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
-   Local oLabel
+   Local oLabel, oBtn
    Local oWnd, oSize
    Local oMenuBar, pIcon
    Local oMenuA, pAction
@@ -121,6 +121,12 @@ PROCEDURE Main()
    oLabel:setText( "Testing Harbour + Qt" )
    oLabel:move( 200,100 )
    oLabel:show()
+
+   oBtn := QPushButton():new( QT_PTROF( oWnd ) )
+   oBtn:setText( "Push Button" )
+   oBtn:resize( 100,50 )
+   oBtn:move( 200,150 )
+   oBtn:show()
 
    oWnd:Show()
 
