@@ -112,6 +112,21 @@
 
 /* win_Prn() related values */
 
+#define FORM_A4                9
+
+#define PS_SOLID               0
+
+#define RGB( nR, nG, nB )      ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
+
+#define RGB_BLACK              RGB( 0x00, 0x00, 0x00 )
+#define RGB_BLUE               RGB( 0x00, 0x00, 0x85 )
+#define RGB_GREEN              RGB( 0x00, 0x85, 0x00 )
+#define RGB_CYAN               RGB( 0x00, 0x85, 0x85 )
+#define RGB_RED                RGB( 0x85, 0x00, 0x00 )
+#define RGB_MAGENTA            RGB( 0x85, 0x00, 0x85 )
+#define RGB_BROWN              RGB( 0x85, 0x85, 0x00 )
+#define RGB_WHITE              RGB( 0xC6, 0xC6, 0xC6 )
+
 /* Cut from wingdi.h */
 
 #define MM_TEXT                1

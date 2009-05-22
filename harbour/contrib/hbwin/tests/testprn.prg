@@ -2,20 +2,7 @@
  * $Id$
  */
 
-#define FORM_A4 9
-
-#define PS_SOLID            0
-
-#define RGB( nR,nG,nB )   ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
-
-#define BLACK          RGB( 0x0 ,0x0 ,0x0  )
-#define BLUE           RGB( 0x0 ,0x0 ,0x85 )
-#define GREEN          RGB( 0x0 ,0x85,0x0  )
-#define CYAN           RGB( 0x0 ,0x85,0x85 )
-#define RED            RGB( 0x85,0x0 ,0x0  )
-#define MAGENTA        RGB( 0x85,0x0 ,0x85 )
-#define BROWN          RGB( 0x85,0x85,0x0  )
-#define WHITE          RGB( 0xC6,0xC6,0xC6 )
+#include "hbwin.ch"
 
 PROCEDURE Main()
    LOCAL nPrn := 1
@@ -62,7 +49,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
       IF !oPrinter:startDoc( "Win_Prn(Doc name in Printer Properties)" )
          Alert( "StartDoc() failed" )
       ELSE
-         oPrinter:SetPen(PS_SOLID, 1, RED)
+         oPrinter:SetPen(PS_SOLID, 1, RGB_RED)
          oPrinter:Bold(800)
          oPrinter:TextOut(oPrinter:PrinterName+": MaxRow() = "+STR(oPrinter:MaxRow(),4)+"   MaxCol() = "+STR(oPrinter:MaxCol(),4))
          oPrinter:Bold(0)     // Normal
@@ -147,7 +134,7 @@ STATIC PROCEDURE PrintBitMap( oPrn, cBitFile )
 
    IF Empty( cBitFile )
       *
-   ELSEIF !File( cBitFile )
+   ELSEIF ! hb_FileExists( cBitFile )
       Alert( cBitFile + " not found " )
    ELSE
       oBMP := Win_BMP():New()

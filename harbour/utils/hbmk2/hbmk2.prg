@@ -915,11 +915,30 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       RETURN 3
    ENDIF
 
+   aCOMPDET_LOCAL := {}
+
    IF hbmk[ _HBMK_cARCH ] $ "win|wce"
-      aCOMPDET_LOCAL := {;
-          { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw"   + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "win", "mingw"   , ""                     } ,;
-          { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw64" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "win", "mingw64" , "x86_64-pc-mingw32-"   } ,;
-          { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } }
+
+      #if defined( __PLATFORM__WINDOWS )
+
+         AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw"   + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "win", "mingw"   , ""                     } )
+         AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw64" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "win", "mingw64" , "x86_64-pc-mingw32-"   } )
+         AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
+
+      #elif defined( __PLATFORM__LINUX )
+
+         IF Empty( hbmk[ _HBMK_cCCPATH ] ) .AND. ;
+            Empty( hbmk[ _HBMK_cCCPREFIX ] )
+
+            DO CASE
+            CASE hbmk[ _HBMK_cCOMP ] $ "mingw"
+               AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := "/opt/xmingw/bin"   , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" ), tmp1, NIL ) }, "win", "mingw"   , "i386-mingw-" } )
+            CASE hbmk[ _HBMK_cCOMP ] $ "mingwarm"
+               AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
+            ENDCASE
+         ENDIF
+
+      #endif
    ENDIF
 
    /* Autodetect compiler */

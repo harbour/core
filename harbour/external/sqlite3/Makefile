@@ -23,6 +23,9 @@ endif
 ifeq ($(HB_ARCHITECTURE),os2)
 HB_WITH_SQLITE3=yes
 endif
+ifeq ($(HB_COMPILER),mingwarm)
+HB_WITH_SQLITE3=no
+endif
 ifeq ($(HB_COMPILER),poccarm)
 HB_WITH_SQLITE3=no
 endif
