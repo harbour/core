@@ -458,6 +458,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL cPrefix
    LOCAL cPostfix
    LOCAL nEmbedLevel
+   LOCAL cCCEXT_mingw
 
    LOCAL lSkipBuild := .F.
    LOCAL lStopAfterInit := .F.
@@ -481,8 +482,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
    LOCAL cDir, cName, cExt
    LOCAL headstate
-
-   LOCAL lNIX := hb_Version( HB_VERSION_UNIX_COMPAT )
 
    LOCAL cSelfFlagPRG := hb_Version( HB_VERSION_FLAG_PRG )
    LOCAL cSelfFlagC   := hb_Version( HB_VERSION_FLAG_C )
@@ -753,6 +752,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    hbmk[ _HBMK_cCCPATH ]   := GetEnv( "HB_CCPATH" )
    hbmk[ _HBMK_cCCPREFIX ] := GetEnv( "HB_CCPREFIX" )
 
+   #if defined( __PLATFORM__UNIX )
+      cCCEXT_mingw := ""
+   #else
+      cCCEXT_mingw := ".exe"
+   #endif
+
    /* Setup architecture dependent data */
 
    DO CASE
@@ -921,9 +926,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       #if defined( __PLATFORM__WINDOWS )
 
-         AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw"   + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "win", "mingw"   , ""                     } )
-         AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw64" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "win", "mingw64" , "x86_64-pc-mingw32-"   } )
-         AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
+         AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw"   + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw"   , ""                     } )
+         AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw64" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw64" , "x86_64-pc-mingw32-"   } )
+         AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
 
       #elif defined( __PLATFORM__UNIX )
 
@@ -932,9 +937,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
             DO CASE
             CASE hbmk[ _HBMK_cCOMP ] $ "mingw"
-               AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := "/opt/xmingw/bin"   , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" ), tmp1, NIL ) }, "win", "mingw"   , "i386-mingw-" } )
+               AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := "/opt/xmingw/bin"   , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw"   , "i386-mingw-" } )
             CASE hbmk[ _HBMK_cCOMP ] $ "mingwarm"
-               AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
+               AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
             ENDCASE
          ENDIF
 
@@ -1351,10 +1356,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          ENDIF
 
-      CASE ! lNIX .AND. Left( cParamL, 2 ) == "/o" .AND. ! lStopAfterHarbour
+#if ! defined( __PLATFORM__UNIX )
+      CASE Left( cParamL, 2 ) == "/o" .AND. ! lStopAfterHarbour
 
          /* Swallow this switch. We don't pass it to Harbour, as it may badly
             interact with hbmk. */
+#endif
 
       CASE Left( cParam, 2 ) == "-o" .AND. ! lStopAfterHarbour
 
@@ -1922,7 +1929,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( s_lCPP != NIL .AND. s_lCPP, "g++", "gcc" ) /* Not using an .exe extension here. */
+         cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( s_lCPP != NIL .AND. s_lCPP, "g++", "gcc" ) + cCCEXT_mingw
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -1945,7 +1952,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
-         cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar"
+         cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + cCCEXT_mingw
          cOpt_Lib := "{FA} rcs {OL} {LO}"
          cLibObjPrefix := NIL
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
@@ -2002,7 +2009,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          s_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
          IF hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm" .AND. Len( s_aRESSRC ) > 0
-            cBin_Res := hbmk[ _HBMK_cCCPREFIX ] + "windres"
+            cBin_Res := hbmk[ _HBMK_cCCPREFIX ] + "windres" + cCCEXT_mingw
             cResExt := ".reso"
             cOpt_Res := "{FR} {IR} -O coff -o {OS}"
             IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
