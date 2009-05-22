@@ -6,8 +6,13 @@ ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
 include $(TOP)$(ROOT)config/global.cf
-# this make version does not work correctly parallel execution rules below
-ifeq ($(MAKE_VERSION),3.79.1)
+
+# these make versions does not work correctly with
+# parallel execution rules below
+OLD_MAKE:=$(MAKE_VERSION:3.7%=YES)
+OLD_MAKE:=$(OLD_MAKE:3.80%=OLD)
+
+ifeq ($(OLD_MAKE),YES)
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/dir.cf
 endif
 
