@@ -60,6 +60,11 @@
 #include <sql.h>
 #include <sqlext.h>
 
+#if !defined( HB_OS_WIN )
+#  define HB_TCHAR_CONVTO( s )      ( ( char * ) ( s ) )
+#  define HB_TCHAR_FREE( s )        HB_SYMBOL_UNUSED( s )
+#endif
+
 static HB_ERRCODE odbcConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
 static HB_ERRCODE odbcDisconnect( SQLDDCONNECTION* pConnection );
 static HB_ERRCODE odbcExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );

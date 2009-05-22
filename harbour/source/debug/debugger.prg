@@ -1722,7 +1722,7 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
          FOR n := nCount TO 1 STEP -1
             xValue := __mvDbgInfo( HB_MV_PRIVATE, n, @cName )
             IF ! cName $ hSkip
-               AAdd( aBVars, { cName, xValue, "Private" + iif( m > 0, "", "^" ) } )
+               AAdd( aBVars, { cName, xValue,  iif( m > 0, "Private", "Private^" ) } )
                hSkip[ cName ] := NIL
             ENDIF
             --m

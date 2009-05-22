@@ -53,10 +53,20 @@
 
 #include "hbwinole.h"
 
+#if defined( HB_OS_WIN_CE )
+   #define HBTEXT( x ) TEXT( x )
+#else
+   #define HBTEXT( x ) x
+#endif
+
+typedef BOOL      ( CALLBACK * PHB_AX_WININIT )( void );
+typedef BOOL      ( CALLBACK * PHB_AX_WINTERM )( void );
+typedef HRESULT   ( CALLBACK * PHB_AX_GETCTRL )( HWND, IUnknown** );
+
 static HMODULE s_hLib = NULL;
 
-static BOOL    ( CALLBACK *s_pAtlAxWinTerm )( void );
-static HRESULT ( CALLBACK *s_pAtlAxGetControl )( HWND, IUnknown** );
+static PHB_AX_WINTERM   s_pAtlAxWinTerm = NULL;
+static PHB_AX_GETCTRL   s_pAtlAxGetControl = NULL;
 
 
 static void hb_ax_exit( void* cargo )
@@ -78,20 +88,19 @@ static void hb_ax_exit( void* cargo )
 
 static int hb_ax_init( void )
 {
-   BOOL    ( CALLBACK *pAtlAxWinInit )( void );
+   PHB_AX_WININIT pAtlAxWinInit;
 
    if( s_hLib == NULL )
    {
-      s_hLib = LoadLibrary( "atl.dll" );
+      s_hLib = LoadLibrary( TEXT( "atl.dll" ) );
       if( ( unsigned long ) s_hLib <= 32 )
       {
          s_hLib = NULL;
          return 0;
       }
-      pAtlAxWinInit = GetProcAddress( s_hLib, "AtlAxWinInit" );
-      s_pAtlAxWinTerm = GetProcAddress( s_hLib, "AtlAxWinTerm" );
-      s_pAtlAxGetControl = GetProcAddress( s_hLib, "AtlAxGetControl" );
-
+      pAtlAxWinInit      = ( PHB_AX_WININIT ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinInit" ) );
+      s_pAtlAxWinTerm    = ( PHB_AX_WINTERM ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinTerm" ) );
+      s_pAtlAxGetControl = ( PHB_AX_GETCTRL ) GetProcAddress( s_hLib, HBTEXT( "AtlAxGetControl" ) );
       if( pAtlAxWinInit )
          ( *pAtlAxWinInit )();
 
@@ -319,10 +328,10 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
             if( lOleError == S_OK )
             {
                pSink = ( ISink* ) hb_gcAlloc( sizeof( ISink ), hb_sink_destructor ); /* TODO: GlobalAlloc GMEM_FIXED ??? */
-               pSink->lpVtbl = &ISink_Vtbl;
+               pSink->lpVtbl = ( IDispatchVtbl * ) &ISink_Vtbl;
                pSink->count = 2; /* 1 for pCP->Advice() param and 1 for Harbour collectible pointer [Mindaugas] */
                pSink->pItemHandler = hb_itemNew( pItemBlock );
-      
+
 #if HB_OLE_C_API
                lOleError = pCP->lpVtbl->Advise( pCP, ( IUnknown* ) pSink, &dwCookie );
 #else
@@ -330,7 +339,7 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
 #endif
                pSink->pConnectionPoint = pCP;
                pSink->dwCookie = dwCookie;
-      
+
                hb_retptrGC( pSink );
             }
 #if HB_OLE_C_API
