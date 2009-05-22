@@ -22,7 +22,7 @@ HOW TO BUILD AND INSTALL HARBOUR
    For all platforms you'll need:
 
    * Supported ANSI C compiler
-   * GNU Make (3.81 or upper)
+   * GNU Make (3.81 or upper recommended)
 
    Linux/Darwin/BSD/HP-UX/Solaris
    ------------------------------
@@ -538,11 +538,6 @@ TROUBLESHOOTING
    Please evaluate these points before reporting an issue on the mailing list.
 
    - Make sure to have carefully read this document.
-   - Make sure to use a supported GNU Make version as indicated in
-     this document. Older versions are buggy and won't work.
-     Typical problem encountered with buggy GNU Make:
-        *** missing `endef', unterminated `define'.  Stop.
-        *** missing `endif'.  Stop.
    - Make sure to do a 'clean' before doing a build after refreshing
      the sources.
    - Make sure to do a fresh checkout from the sf.net source repository

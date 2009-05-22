@@ -13,7 +13,7 @@
 # a performance boost on a slow system.
 .SUFFIXES:
 
-need := 3.81
+need := 3.70
 ok := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
 
 ifeq ($(ok),)

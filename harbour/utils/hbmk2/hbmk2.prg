@@ -925,7 +925,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw64" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "win", "mingw64" , "x86_64-pc-mingw32-"   } )
          AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe" ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
 
-      #elif defined( __PLATFORM__LINUX )
+      #elif defined( __PLATFORM__UNIX )
 
          IF Empty( hbmk[ _HBMK_cCCPATH ] ) .AND. ;
             Empty( hbmk[ _HBMK_cCCPREFIX ] )
@@ -1922,7 +1922,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( s_lCPP != NIL .AND. s_lCPP, "g++.exe", "gcc.exe" )
+         cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( s_lCPP != NIL .AND. s_lCPP, "g++", "gcc" ) /* Not using an .exe extension here. */
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -1945,13 +1945,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
-         cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar.exe"
+         cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar"
          cOpt_Lib := "{FA} rcs {OL} {LO}"
          cLibObjPrefix := NIL
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
-            cBin_Lib   := hbmk[ _HBMK_cCCPATH ] + "\" + cBin_Lib
-            cBin_CompC := hbmk[ _HBMK_cCCPATH ] + "\" + cBin_CompC
-            cBin_Link  := hbmk[ _HBMK_cCCPATH ] + "\" + cBin_Link
+            cBin_Lib   := hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib
+            cBin_CompC := hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC
+            cBin_Link  := hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link
          ENDIF
          IF !( hbmk[ _HBMK_cARCH ] == "wce" )
             IF hbmk[ _HBMK_lGUI ]
@@ -2006,7 +2006,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cResExt := ".reso"
             cOpt_Res := "{FR} {IR} -O coff -o {OS}"
             IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
-               cBin_Res := hbmk[ _HBMK_cCCPATH ] + "\" + cBin_Res
+               cBin_Res := hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Res
             ENDIF
          ENDIF
 

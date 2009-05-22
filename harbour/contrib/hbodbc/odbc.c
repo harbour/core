@@ -357,7 +357,7 @@ HB_FUNC( SQLCOLATTRIBUTE ) /* hStmt, nCol, nField, @cName, nLen, @nBufferLen, @n
                              ( SQLSMALLINT * ) &wBufLen,
                              ( SQLLEN * ) &wNumPtr );
 #else
-   SQLINTEGER  wNumPtr   = hb_parnl( 7 );
+   SQLINTEGER  wNumPtr   = ( SQLINTEGER ) hb_parnl( 7 );
    result = SQLColAttributes( ( SQLHSTMT ) hb_parptr( 1 ),
                               ( SQLUSMALLINT ) hb_parni( 2 ),
                               ( SQLUSMALLINT ) hb_parni( 3 ),
