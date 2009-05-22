@@ -147,8 +147,6 @@ static HB_ERRCODE odbcConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 {
    SQLHENV       hEnv = NULL;
    SQLHDBC       hConnect = NULL;
-   SQLCHAR       cBuffer[ 1024 ];
-   SQLSMALLINT   iLen = 1024;
 
    if( SQL_SUCCEEDED( SQLAllocHandle( SQL_HANDLE_ENV, SQL_NULL_HANDLE, &hEnv ) ) )
    {
@@ -156,21 +154,29 @@ static HB_ERRCODE odbcConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 
       if( SQL_SUCCEEDED( SQLAllocHandle( SQL_HANDLE_DBC, hEnv, &hConnect ) ) )
       {
+         SQLTCHAR *    lpStr = ( SQLTCHAR * ) HB_TCHAR_CONVTO( hb_arrayGetCPtr( pItem, 2 ) );
+         SQLTCHAR      cBuffer[ 1024 ];
+         SQLSMALLINT   iLen = 1024;
+
          cBuffer[ 0 ] ='\0';
 
          if( SQL_SUCCEEDED( SQLDriverConnect( hConnect,
                                               NULL,
-                                              ( SQLCHAR* ) hb_arrayGetCPtr( pItem, 2 ),
+                                              lpStr,
                                               ( SQLSMALLINT ) hb_arrayGetCLen( pItem, 2 ),
                                               cBuffer,
                                               HB_SIZEOFARRAY( cBuffer ),
                                               &iLen,
                                               SQL_DRIVER_NOPROMPT ) ) )
          {
+            HB_TCHAR_FREE( lpStr );
             pConnection->hConnection = ( void* ) hConnect;
             pConnection->hCargo = ( void* ) hEnv;
             return HB_SUCCESS;
          }
+         else
+            HB_TCHAR_FREE( lpStr );
+
          SQLFreeHandle( SQL_HANDLE_DBC, hConnect );
       }
       SQLFreeHandle( SQL_HANDLE_ENV, hEnv );
@@ -190,6 +196,7 @@ static HB_ERRCODE odbcDisconnect( SQLDDCONNECTION* pConnection )
 
 static HB_ERRCODE odbcExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 {
+   SQLTCHAR *   lpStr;
    SQLHSTMT     hStmt;
    SQLLEN       iCount;
 
@@ -201,16 +208,22 @@ static HB_ERRCODE odbcExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 
    pConnection->ulAffectedRows = 0;
 
-   if ( SQL_SUCCEEDED( SQLExecDirect( hStmt, ( SQLCHAR* ) hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) ) ) )
+   lpStr = ( SQLTCHAR * ) HB_TCHAR_CONVTO( hb_itemGetCPtr( pItem ) );
+
+   if ( SQL_SUCCEEDED( SQLExecDirect( hStmt, lpStr, hb_itemGetCLen( pItem ) ) ) )
    {
+      HB_TCHAR_FREE( lpStr );
+
       if ( SQL_SUCCEEDED( SQLRowCount( hStmt, &iCount ) ) )
       {
          if( iCount > 0 )
-           pConnection->ulAffectedRows = ( ULONG ) iCount;
+            pConnection->ulAffectedRows = ( ULONG ) iCount;
          SQLFreeStmt( hStmt, SQL_DROP );
          return HB_SUCCESS;
       }
    }
+   else
+      HB_TCHAR_FREE( lpStr );
 
    /* TODO: error processing */
 
@@ -221,9 +234,10 @@ static HB_ERRCODE odbcExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 
 static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 {
+   SQLTCHAR *   lpStr;
    SQLHSTMT     hStmt;
    SQLSMALLINT  iNameLen, iDataType, iDec, iNull;
-   SQLCHAR      cName[ 256 ];
+   SQLTCHAR     cName[ 256 ];
    SQLULEN      uiSize;
    PHB_ITEM     pItemEof, pItem;
    DBFIELDINFO  pFieldInfo;
@@ -236,12 +250,17 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
 
-   if ( ! SQL_SUCCEEDED( SQLExecDirect( hStmt, ( SQLCHAR* ) pArea->szQuery, strlen( pArea->szQuery ) ) ) )
+   lpStr = ( SQLTCHAR * ) HB_TCHAR_CONVTO( pArea->szQuery );
+
+   if ( ! SQL_SUCCEEDED( SQLExecDirect( hStmt, lpStr, strlen( pArea->szQuery ) ) ) )
    {
+      HB_TCHAR_FREE( lpStr );
       SQLFreeStmt( hStmt, SQL_DROP );
       hb_errRT_ODBCDD( EG_OPEN, ESQLDD_INVALIDQUERY, NULL, pArea->szQuery, 0 );
       return HB_FAILURE;
    }
+   else
+      HB_TCHAR_FREE( lpStr );
 
    if ( ! SQL_SUCCEEDED( SQLNumResultCols( hStmt, &iNameLen ) ) )
    {
@@ -260,7 +279,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    bError = FALSE;
    for ( uiIndex = 0; uiIndex < uiFields; uiIndex++  )
    {
-      if ( ! SQL_SUCCEEDED( SQLDescribeCol( hStmt, ( SQLSMALLINT ) uiIndex + 1, ( SQLCHAR* ) cName, 256, &iNameLen, &iDataType, &uiSize, &iDec, &iNull ) ) )
+      if ( ! SQL_SUCCEEDED( SQLDescribeCol( hStmt, ( SQLSMALLINT ) uiIndex + 1, ( SQLTCHAR* ) cName, HB_SIZEOFARRAY( cName ), &iNameLen, &iDataType, &uiSize, &iDec, &iNull ) ) )
       {
          hb_itemRelease( pItemEof );
          SQLFreeStmt( hStmt, SQL_DROP );
@@ -463,6 +482,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
             case HB_FT_STRING:
             {
                /* TODO: it is not clear for me, how can I get string length */
+               /* TODO: UNICODE support */
 
                char *  val = ( char * ) hb_xgrab( 1024 );
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_CHAR, ( SQLCHAR * ) val, 1024, &iLen ) ) )
