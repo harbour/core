@@ -1781,9 +1781,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
-            cBin_Lib   := hbmk[ _HBMK_cCCPATH ] + "/" + cBin_Lib
-            cBin_CompC := hbmk[ _HBMK_cCCPATH ] + "/" + cBin_CompC
-            cBin_Link  := hbmk[ _HBMK_cCCPATH ] + "/" + cBin_Link
+            cBin_Lib   := hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib
+            cBin_CompC := hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC
+            cBin_Link  := hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link
          ENDIF
          cLibPathPrefix := "-L"
          cLibPathSep := " "

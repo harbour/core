@@ -185,12 +185,12 @@ static HB_GARBAGE_FUNC( hb_sink_destructor )
 }
 
 
-static HRESULT STDMETHODCALLTYPE QueryInterface( IDispatch* this, REFIID riid, void** ppRet )
+static HRESULT STDMETHODCALLTYPE QueryInterface( IDispatch* lpThis, REFIID riid, void** ppRet )
 {
    if( IsEqualIID( riid, &IID_IUnknown ) || IsEqualIID( riid, &IID_IDispatch ) )
    {
-      *ppRet = ( void* ) this;
-      ( ( ISink* ) this)->lpVtbl->AddRef( this );
+      *ppRet = ( void* ) lpThis;
+      ( ( ISink* ) lpThis)->lpVtbl->AddRef( lpThis );
       return S_OK;
    }
    *ppRet = NULL;
@@ -198,34 +198,34 @@ static HRESULT STDMETHODCALLTYPE QueryInterface( IDispatch* this, REFIID riid, v
 }
 
 
-static ULONG STDMETHODCALLTYPE AddRef( IDispatch* this )
+static ULONG STDMETHODCALLTYPE AddRef( IDispatch* lpThis )
 {
-   return ++( ( ISink* ) this)->count;
+   return ++( ( ISink* ) lpThis)->count;
 }
 
 
-static ULONG STDMETHODCALLTYPE Release( IDispatch* this )
+static ULONG STDMETHODCALLTYPE Release( IDispatch* lpThis )
 {
-   if( --( ( ISink* ) this)->count == 0 )
+   if( --( ( ISink* ) lpThis)->count == 0 )
    {
-      hb_xfree( this );
+      hb_xfree( lpThis );
       return 0;
    }
-   return ( ( ISink* ) this)->count;
+   return ( ( ISink* ) lpThis)->count;
 }
 
 
-static HRESULT STDMETHODCALLTYPE GetTypeInfoCount( IDispatch* this, UINT* pInfoCount )
+static HRESULT STDMETHODCALLTYPE GetTypeInfoCount( IDispatch* lpThis, UINT* pInfoCount )
 {
-   HB_SYMBOL_UNUSED( this );
+   HB_SYMBOL_UNUSED( lpThis );
    HB_SYMBOL_UNUSED( pInfoCount );
    return E_NOTIMPL;
 }
 
 
-static HRESULT STDMETHODCALLTYPE GetTypeInfo( IDispatch* this, UINT iTInfo, LCID lcid, ITypeInfo** ppTypeInfo )
+static HRESULT STDMETHODCALLTYPE GetTypeInfo( IDispatch* lpThis, UINT iTInfo, LCID lcid, ITypeInfo** ppTypeInfo )
 {
-   HB_SYMBOL_UNUSED( this );
+   HB_SYMBOL_UNUSED( lpThis );
    HB_SYMBOL_UNUSED( iTInfo );
    HB_SYMBOL_UNUSED( lcid );
    HB_SYMBOL_UNUSED( ppTypeInfo );
@@ -233,9 +233,9 @@ static HRESULT STDMETHODCALLTYPE GetTypeInfo( IDispatch* this, UINT iTInfo, LCID
 }
 
 
-static HRESULT STDMETHODCALLTYPE GetIDsOfNames( IDispatch* this, REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId )
+static HRESULT STDMETHODCALLTYPE GetIDsOfNames( IDispatch* lpThis, REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId )
 {
-   HB_SYMBOL_UNUSED( this );
+   HB_SYMBOL_UNUSED( lpThis );
    HB_SYMBOL_UNUSED( riid );
    HB_SYMBOL_UNUSED( rgszNames );
    HB_SYMBOL_UNUSED( cNames );
@@ -245,7 +245,7 @@ static HRESULT STDMETHODCALLTYPE GetIDsOfNames( IDispatch* this, REFIID riid, LP
 }
 
 
-static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* this, DISPID dispid, REFIID riid,
+static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFIID riid,
                                          LCID lcid, WORD wFlags, DISPPARAMS* pParams,
                                          VARIANT* pVarResult, EXCEPINFO* pExcepInfo, UINT* puArgErr )
 {
@@ -261,12 +261,12 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* this, DISPID dispid, REFIID 
    if( ! IsEqualIID( riid, &IID_NULL ) )
       return DISP_E_UNKNOWNINTERFACE;
 
-   if( ! ( ( ISink* ) this)->pItemHandler )
+   if( ! ( ( ISink* ) lpThis)->pItemHandler )
       return S_OK;
 
    hb_vmPushState();
    hb_vmPushSymbol( &hb_symEval );
-   hb_vmPush( ( ( ISink* ) this)->pItemHandler );
+   hb_vmPush( ( ( ISink* ) lpThis)->pItemHandler );
    hb_vmPushLong( dispid );
 
    iCount = pParams->cArgs;
