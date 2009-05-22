@@ -17,10 +17,10 @@
 # --with mysql       - build hbmysql lib and sddmy for sqlrdd
 # --with pgsql       - build hbpgsql lib and sddpg for sqlrdd
 # --with fbsql       - build hbfbird lib and sddfb for sqlrdd
+# --with odbc        - build hbodbc lib and sddodbc for sqlrdd
+# --with ads         - build rddads RDD
 # --with gd          - build hbgd lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
-# --with ads         - build rddads RDD
-# --with odbc        - build hbodbc lib
 # --without gpllib   - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build hbnf lib (nanforum lib)
 # --without x11      - do not build GTXWC

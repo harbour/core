@@ -16,10 +16,10 @@
 # --with mysql       - build hbmysql lib and sddmy for sqlrdd
 # --with pgsql       - build hbpgsql lib and sddpg for sqlrdd
 # --with fbsql       - build hbfbird lib and sddfb for sqlrdd
+# --with odbc        - build hbodbc lib and sddodbc for sqlrdd
 # --with gd          - build hbgd lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
 # --with ads         - build rddads RDD
-# --with odbc        - build hbodbc lib
 # --with curl        - build hbcurl lib
 # --with libharu     - build hbhpdf lib
 # --without nf       - do not build nanforum lib
@@ -676,11 +676,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/*.so
 %{_libdir}/*.so
 
-%{?_with_odbc:%files odbc}
-%{?_with_odbc:%defattr(644,root,root,755)}
-%{?_with_odbc:%dir %{_libdir}/%{name}}
-%{?_with_odbc:%{_libdir}/%{name}/libhbodbc.a}
-
 %{?_with_curl:%files curl}
 %{?_with_curl:%defattr(644,root,root,755)}
 %{?_with_curl:%dir %{_libdir}/%{name}}
@@ -695,6 +690,12 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_ads:%defattr(644,root,root,755)}
 %{?_with_ads:%dir %{_libdir}/%{name}}
 %{?_with_ads:%{_libdir}/%{name}/librddads.a}
+
+%{?_with_odbc:%files odbc}
+%{?_with_odbc:%defattr(644,root,root,755)}
+%{?_with_odbc:%dir %{_libdir}/%{name}}
+%{?_with_odbc:%{_libdir}/%{name}/libhbodbc.a}
+%{?_with_odbc:%{_libdir}/%{name}/libsddodbc.a}
 
 %{?_with_mysql:%files mysql}
 %{?_with_mysql:%defattr(644,root,root,755)}
