@@ -1926,7 +1926,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
-            IF !( hbmk[ _HBMK_cCOMP ] == "cygwin" )
+            IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw"
                cOpt_CompC += " -march=i586 -mtune=pentiumpro"
             ENDIF
             IF ! hbmk[ _HBMK_lDEBUG ]
