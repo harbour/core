@@ -760,6 +760,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
    /* Setup architecture dependent data */
 
+   cBin_CompPRG := "harbour" + s_cHBPOSTFIX
+
    DO CASE
    CASE hbmk[ _HBMK_cARCH ] $ "bsd|hpux|sunos|linux" .OR. hbmk[ _HBMK_cARCH ] == "darwin" /* Separated to avoid match with 'win' */
       IF hbmk[ _HBMK_cARCH ] == "linux"
@@ -767,11 +769,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       ELSE
          aCOMPSUP := { "gcc" }
       ENDIF
-      cBin_CompPRG := "harbour" + s_cHBPOSTFIX
       s_aLIBHBGT := { "gttrm" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gttrm"
       cDynLibNamePrefix := "lib"
-      cBinExt := NIL
+      cBinExt := ""
       cOptPrefix := "-"
       IF hbmk[ _HBMK_cARCH ] == "linux"
          cBin_Cprs := "upx"
@@ -788,7 +789,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       aCOMPDET := { { {|| FindInPath( "gcc"      ) }, "djgpp"   },;
                     { {|| FindInPath( "wpp386"   ) }, "owatcom" } } /* TODO: Add full support for wcc386 */
       aCOMPSUP := { "djgpp", "gcc", "owatcom" }
-      cBin_CompPRG := "harbour" + s_cHBPOSTFIX + ".exe"
       s_aLIBHBGT := { "gtdos" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtdos"
       cDynLibNamePrefix := ""
@@ -803,7 +803,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       aCOMPDET := { { {|| FindInPath( "gcc"      ) }, "gcc"     },;
                     { {|| FindInPath( "wpp386"   ) }, "owatcom" } } /* TODO: Add full support for wcc386 */
       aCOMPSUP := { "gcc", "owatcom" }
-      cBin_CompPRG := "harbour" + s_cHBPOSTFIX + ".exe"
       s_aLIBHBGT := { "gtos2" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtos2"
       cDynLibNamePrefix := ""
@@ -830,7 +829,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                     { {|| FindInPath( "xcc"      ) }, "xcc"     } }
       aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "icc", "pocc", "xcc", "cygwin",;
                     "mingw64", "msvc64", "msvcia64", "iccia64", "pocc64" }
-      cBin_CompPRG := "harbour" + s_cHBPOSTFIX + ".exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtwin"
       cDynLibNamePrefix := ""
@@ -849,7 +847,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                     { {|| FindInPath( "cl"       ) }, "msvcarm" },;
                     { {|| FindInPath( "pocc"     ) }, "poccarm" } }
       aCOMPSUP := { "mingwarm", "msvcarm", "poccarm" }
-      cBin_CompPRG := "harbour" + s_cHBPOSTFIX + ".exe"
       s_aLIBHBGT := { "gtwvt", "gtgui" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtwvt"
       cDynLibNamePrefix := ""
@@ -887,13 +884,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    s_cHB_INSTALL_PREFIX := PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) )
    IF Empty( s_cHB_INSTALL_PREFIX )
       DO CASE
-      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG )
+      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG + cBinExt )
          s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".."
-      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + "bin" + hb_osPathSeparator() + cBin_CompPRG )
+      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
          s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() )
-      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG )
+      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
          s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".."
-      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG )
+      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
          s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".."
       OTHERWISE
          hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect." ) )
@@ -2806,7 +2803,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                      hbmk_OutStd( hbmk, I_( "Harbour compiler command (internal):" ) )
                   ENDIF
                ENDIF
-               OutStd( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG +;
+               OutStd( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt +;
                        " " + ArrayToList( aCommand ) + hb_osNewLine() )
             ENDIF
 
@@ -2847,7 +2844,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          /* Use external compiler */
 
          cCommand := DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) +;
-                     cBin_CompPRG +;
+                     cBin_CompPRG + cBinExt +;
                      " " + iif( lCreateLib .OR. lCreateDyn, "-n1", iif( hbmk[ _HBMK_lXHB ], "-n", "-n2" ) ) +;
                      " " + ArrayToList( s_aPRG_TODO ) +;
                      iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;

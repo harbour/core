@@ -78,7 +78,7 @@ HOW TO BUILD AND INSTALL HARBOUR
    Windows with MinGW + msys
    -------------------------
       Make sure to have msys and MinGW properly configured.
-      msys should be put in PATH _before_ MinGW.
+      msys should be put in PATH *before* MinGW.
 
       > set HB_INSTALL_PREFIX=<DIR>
       > sh make_gnu.sh install
@@ -486,7 +486,7 @@ EXAMPLES
       ---
 
       --8<--
-      rem ; Add these _before_ above sample scripts to configure 3rd party dependencies.
+      rem ; Add these *before* above sample scripts to configure 3rd party dependencies.
       rem   For 'mingw' and 'cygwin' you'll have to use forward slashes and
       rem   also cygwin drive notation for 'cygwin'.
       set HB_INC_ADS=C:\ads\acesdk
@@ -504,9 +504,8 @@ EXAMPLES
       -->8--
 
       --8<--
-      rem ; Add these _before_ above sample scripts to configure 3rd party dependencies
-      rem   for implib generation. This is needed for non-GCC compilers and isn't
-      rem   supported for GCC ones. These envvars must point to the *root directory* of
+      rem ; Add these *before* above sample scripts to configure 3rd party dependencies
+      rem   for implib generation. These envvars must point to the *root directory* of
       rem   given projects.
       set HB_DIR_ADS=C:\ads\acesdk
       set HB_DIR_ALLEGRO=C:\allegro
