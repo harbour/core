@@ -23,6 +23,7 @@ HOW TO BUILD AND INSTALL HARBOUR
 
    * Supported ANSI C compiler
    * GNU Make (3.81 or upper recommended)
+   * Harbour sources (1.1.0dev or upper)
 
    Linux/Darwin/BSD/HP-UX/Solaris
    ------------------------------
@@ -154,9 +155,10 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_QT=C:\Qt\4.5.1\include
    HB_INC_SQLITE3=C:\sqlite3 (defaults to locally hosted version on win/os2)
 
-   NOTES: - For mingw+msys and cygwin you have to use forward slashes
+   NOTES: - For MinGW + msys and cygwin you have to use forward slashes
             and also cygwin drive notation for cygwin.
-          - Spaces in directory names isn't currently supported.
+          - Spaces in directory names aren't currently supported.
+            (you can use short name alias on Windows platform, though)
           - Don't put the dir inside double quotes.
           - Use absolute paths.
 
@@ -529,6 +531,34 @@ EXAMPLES
       set PATH=C:\devl\NSIS-2.44;%PATH%
       call mpkg_win.bat > log-%HB_COMPILER%.txt 2>&1
       -->8--
+
+
+HOW TO GET THE HARBOUR SOURCES
+==============================
+
+   1.) Most likely you're reading this file as part of the Harbour
+       source code package. If not, read along.
+
+   2.) Harbour source repository
+
+       You'll need Subversion (SVN) version control software installed
+       on your system, and issue this command:
+          svn co https://harbour-project.svn.sf.net/svnroot/harbour-project/trunk/harbour
+
+       You can get subsequent updates using this command:
+          svn update
+
+   3.) Harbour nightly sources (update once a day from source repository)
+
+       Download source archive from any of these links and unpack:
+          http://harbour-project.org/harbour-nightly.zip
+          http://harbour-project.org/harbour-nightly.tgz
+          http://harbour-project.org/harbour-nightly.gz2
+
+   4.) Harbour source download (stable)
+
+       Download source archive from this page and unpack:
+          http://sourceforge.net/project/showfiles.php?group_id=681&package_id=192305
 
 
 TROUBLESHOOTING
