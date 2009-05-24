@@ -158,7 +158,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    NOTES: - For MinGW + msys and cygwin you have to use forward slashes
             and also cygwin drive notation for cygwin.
           - Spaces in directory names aren't currently supported.
-            (you can use short name alias on Windows platform, though)
+            (You can use short name alias on Windows platform, though)
           - Don't put the dir inside double quotes.
           - Use absolute paths.
 
@@ -278,8 +278,8 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
       HB_PPGEN_PATH=<HARBOUR_NATIVE_BUILD_DIR>\bin
 
    You need these when building for a platform different than host.
-   For this to work, you will need to point above envvars to
-   a native Harbour build available on your system. You don't need
+   For this to work, you will need to point above environment variables
+   to a native Harbour build available on your system. You don't need
    a full native build, harbour, hbpp and hbmk2 executables are
    enough for the process to succeed.
 
@@ -507,8 +507,8 @@ EXAMPLES
 
       --8<--
       rem ; Add these *before* above sample scripts to configure 3rd party dependencies
-      rem   for implib generation. These envvars must point to the *root directory* of
-      rem   given projects.
+      rem   for implib generation. These environment variables must point to the *root
+      rem   directory* of given projects.
       set HB_DIR_ADS=C:\ads\acesdk
       set HB_DIR_ALLEGRO=C:\allegro
       set HB_DIR_APOLLO=C:\Apollo
@@ -575,7 +575,7 @@ TROUBLESHOOTING
         svn export https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
    - Keep you PATH clean from old, mixed compiler tools or other Harbour
      versions when building Harbour.
-   - Remove all old, unnecessary envvar settings from your environment.
+   - Remove all old, unnecessary environment variables from your environment.
      Use only those documented in this file.
    - Try to do no or only small modifications at once to command examples
      included in this file. If it doesn't work, fall back to documented
