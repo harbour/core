@@ -162,6 +162,9 @@ REQUEST hbmk_KEYW
 #define OutStd( x )             low_OutStd( hbmk[ _HBMK_lUTF8 ], x )
 #define OutErr( x )             low_OutErr( hbmk[ _HBMK_lUTF8 ], x )
 
+/* This requires Set( _SET_EXACT, .F. ) */
+#define LEFTEQUAL( l, r )       ( l = r )
+
 #define _HBMK_lQuiet            1
 #define _HBMK_lInfo             2
 #define _HBMK_cARCH             3
@@ -235,6 +238,8 @@ PROCEDURE Main( ... )
    LOCAL nTargetTODO
    LOCAL lHadTarget
 
+   LOCAL lOldExact := Set( _SET_EXACT, .F. )
+
    /* Emulate -hbcmp, -hbcc, -hblnk switches when certain
       self names are detected.
       For compatibility with hbmk script aliases. */
@@ -279,10 +284,10 @@ PROCEDURE Main( ... )
 
       FOR EACH tmp IN aArgs
          DO CASE
-         CASE Lower( FN_ExtGet( tmp ) ) == ".hbt" .AND. ! lHadTarget
+         CASE Lower( Left( tmp, Len( "-target=" ) ) ) == "-target="
             nTarget++
             IF nTarget == nTargetTODO
-               AAdd( aArgsTarget, tmp )
+               AAdd( aArgsTarget, SubStr( tmp, Len( "-target=" ) + 1 ) )
             ENDIF
          CASE Lower( tmp ) == "-target"
             nTarget++
@@ -318,6 +323,8 @@ PROCEDURE Main( ... )
    ENDIF
 
    ErrorLevel( nResult )
+
+   Set( _SET_EXACT, lOldExact )
 
    RETURN
 
@@ -1140,8 +1147,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             nEmbedLevel := 1
             HBM_Load( hbmk, aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
          ENDIF
-      CASE Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
-           Lower( FN_ExtGet( cParam ) ) == ".hbt"
+      CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
          nEmbedLevel := 1
          HBM_Load( hbmk, aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
       OTHERWISE
@@ -4751,8 +4757,7 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, /* @ */ nEmbedLevel )
                         nEmbedLevel++
                         HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
                      ENDIF
-                  CASE Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
-                       Lower( FN_ExtGet( cParam ) ) == ".hbt"
+                  CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
                      IF nEmbedLevel < 3
                         nEmbedLevel++
                         HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
@@ -4906,7 +4911,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
       IF cExt == ".c"
          FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFile ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
             cLine := AllTrim( cLine )
-            IF cLine = '{ "' .AND. "HB_FS_FIRST" $ cLine
+            IF LEFTEQUAL( cLine, '{ "' ) .AND. "HB_FS_FIRST" $ cLine
                n := 4
                DO WHILE ( c := SubStr( cLine, n++, 1 ) ) != '"'
                   cFuncName += c
@@ -4918,7 +4923,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
          cFuncList := commandResult( hbmk, cExecNM + " " + cFile + " -g -n --defined-only -C" )
          IF ( n := At( " T HB_FUN_", cFuncList ) ) != 0
             n += 10
-            DO WHILE ( c := SubStr( cFuncList, n++, 1 ) ) = "_" .OR. ;
+            DO WHILE ( c := SubStr( cFuncList, n++, 1 ) ) == "_" .OR. ;
                   IsDigit( c ) .OR. IsAlpha( c )
                cFuncName += c
             ENDDO
@@ -5176,13 +5181,13 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
    ENDIF
    FOR EACH cLine IN hb_ATokens( cCommands, Chr( 10 ) )
       cLine := AllTrim( cLine )
-      IF !Empty( cLine ) .AND. !cLine = "#" .AND. !cLine = "//"
+      IF !Empty( cLine ) .AND. ! LEFTEQUAL( cLine, "#" ) .AND. ! LEFTEQUAL( cLine, "//" )
          IF nMode == RTLNK_MODE_NONE
             /* blinker extension */
-            IF Upper( cLine ) = "ECHO "
+            IF LEFTEQUAL( Upper( cLine ), "ECHO " )
                hbmk_OutStd( hbmk, hb_StrFormat( I_( "Blinker ECHO: %1$s" ), SubStr( cLine, 6 ) ) )
                LOOP
-            ELSEIF Upper( cLine ) = "BLINKER "
+            ELSEIF LEFTEQUAL( Upper( cLine ), "BLINKER " )
                /* skip blinker commands */
                LOOP
             ELSE /* TODO: add other blinker commands */
@@ -5216,7 +5221,7 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
                ELSEIF nMode == RTLNK_MODE_SKIPNEXT
                   nMode := RTLNK_MODE_SKIP
                ENDIF
-            ELSEIF cWord = "@"
+            ELSEIF LEFTEQUAL( cWord, "@" )
                cWord := SubStr( cWord, 2 )
                cCommands := rtlnk_read( @cWord, aPrevFiles )
                IF cCommands == NIL
@@ -5230,16 +5235,16 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
             ELSE
                cWord := Upper( cWord )
                IF Len( cWord ) >= 2
-                  IF "OUTPUT" = cWord
+                  IF LEFTEQUAL( "OUTPUT", cWord )
                      nMode := RTLNK_MODE_OUT
-                  ELSEIF "FILE" = cWord
+                  ELSEIF LEFTEQUAL( "FILE", cWord )
                      nMode := RTLNK_MODE_FILE
-                  ELSEIF "LIBRARY" = cWord
+                  ELSEIF LEFTEQUAL( "LIBRARY", cWord )
                      nMode := RTLNK_MODE_LIB
-                  ELSEIF "MODULE" = cWord .OR. ;
-                         "EXCLUDE" = cWord .OR. ;
-                         "REFER" = cWord .OR. ;
-                         "INTO" = cWord
+                  ELSEIF LEFTEQUAL( "MODULE", cWord ) .OR. ;
+                         LEFTEQUAL( "EXCLUDE", cWord ) .OR. ;
+                         LEFTEQUAL( "REFER", cWord ) .OR. ;
+                         LEFTEQUAL( "INTO", cWord )
                      nMode := RTLNK_MODE_SKIP
                   ENDIF
                ENDIF
