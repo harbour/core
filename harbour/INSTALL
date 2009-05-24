@@ -188,19 +188,19 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    Windows (recommended)
    -------
    mingw    - MinGW GNU C
-   mingw64  - MinGW GNU C x64
+   mingw64  - MinGW GNU C x86-64
    msvc     - Microsoft Visual C++
-   msvc64   - Microsoft Visual C++ x64
-   msvcia64 - Microsoft Visual C++ IA64
+   msvc64   - Microsoft Visual C++ x86-64
+   msvcia64 - Microsoft Visual C++ IA-64
 
    Windows (supported, but not recommended, features may be missing)
    -------
    owatcom  - Open Watcom C++
    icc      - Intel(R) C/C++
-   iccia64  - Intel(R) C/C++ IA64
+   iccia64  - Intel(R) C/C++ IA-64
    bcc      - Borland/CodeGear C++ 4.x and above
    pocc     - Pelles C 4.5 and above
-   pocc64   - Pelles C 5.0 x64 and above
+   pocc64   - Pelles C 5.0 x86-64 and above
    xcc      - Pelles C for xhb
    cygwin   - Cygwin GNU C
 
@@ -320,7 +320,7 @@ EXAMPLES
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
 
-      --- MSVC 2008 x64 (requires native x86 Harbour binaries)
+      --- MSVC 2008 x86-64 (requires native x86 Harbour binaries)
       call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_amd64
       rem
       set HB_COMPILER=msvc64
@@ -373,7 +373,7 @@ EXAMPLES
       sh make_gnu.sh %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
 
-      --- MinGW GCC for x64 (requires native x86 Harbour binaries)
+      --- MinGW GCC for x86-64 (requires native x86 Harbour binaries)
       set PATH=C:\devl\MinGW-440-64\bin;%PATH%
       set HB_CCPREFIX=x86_64-pc-mingw32-
       rem
@@ -445,7 +445,7 @@ EXAMPLES
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
 
-      --- Pelles C x64 (requires native x86 Harbour binaries)
+      --- Pelles C x86-64 (requires native x86 Harbour binaries)
       set PATH=C:\devl\PellesC-501-64\bin;%PATH%
       set INCLUDE=C:\devl\PellesC-501-64\include;C:\devl\PellesC-501-64\include\win;%INCLUDE%
       set LIB=C:\devl\PellesC-501-64\lib;C:\devl\PellesC-501-64\lib\win64;%LIB%
