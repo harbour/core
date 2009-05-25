@@ -1,5 +1,5 @@
 #
-# $Id: Makefile 10963 2009-04-30 13:18:04Z druzus $
+# $Id: $
 #
 
 ifeq ($(HB_MAIN),)
