@@ -93,7 +93,6 @@
 /* TODO: Add support for dynamic library creation for rest of compilers. */
 /* TODO: Further clean hbmk context var usage (hbmk2 scope, project scope,
          adding rest of variables). */
-/* TODO: Finish C++/C mode selection. */
 /* TODO: Add a way to fallback to stop if required headers couldn't be found.
          This needs a way to spec what key headers to look for. */
 
@@ -5756,6 +5755,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-nulrdd[-]"        , I_( "link with nulrdd" ) },;
       { "-[no]debug"        , I_( "add/exclude C compiler debug info. For Harbour level debug, use Harbour option -b as usual" ) },;
       { "-[no]optim"        , I_( "toggle C compiler optimizations (default: on)" ) },;
+      { "-[no]cpp[=def]"    , I_( "force C/C++ mode or reset to default" ) },;
       { "-[no]map"          , I_( "create (or not) a map file" ) },;
       { "-[no]strip"        , I_( "strip (no strip) binaries" ) },;
       { "-[no]trace"        , I_( "show commands executed" ) },;
