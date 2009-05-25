@@ -187,7 +187,7 @@ static HB_GARBAGE_FUNC( hb_sink_destructor )
 
 static HRESULT STDMETHODCALLTYPE QueryInterface( IDispatch* lpThis, REFIID riid, void** ppRet )
 {
-   if( IsEqualIID( riid, &IID_IUnknown ) || IsEqualIID( riid, &IID_IDispatch ) )
+   if( IsEqualIID( riid, HB_ID_REF( IID_IUnknown ) ) || IsEqualIID( riid, HB_ID_REF( IID_IDispatch ) ) )
    {
       *ppRet = ( void* ) lpThis;
       ( ( ISink* ) lpThis)->lpVtbl->AddRef( lpThis );
@@ -258,7 +258,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
    HB_SYMBOL_UNUSED( pExcepInfo );
    HB_SYMBOL_UNUSED( puArgErr );
 
-   if( ! IsEqualIID( riid, &IID_NULL ) )
+   if( ! IsEqualIID( riid, HB_ID_REF( IID_NULL ) ) )
       return DISP_E_UNKNOWNINTERFACE;
 
    if( ! ( ( ISink* ) lpThis)->pItemHandler )
