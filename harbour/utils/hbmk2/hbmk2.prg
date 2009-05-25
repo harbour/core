@@ -304,7 +304,7 @@ PROCEDURE Main( ... )
          CASE Lower( tmp ) == "-target"
             nTarget++
             lHadTarget := .T.
-         CASE Lower( tmp ) == "-notarget"
+         CASE Lower( tmp ) == "-alltarget"
             lHadTarget := .F.
          OTHERWISE
             IF ! lHadTarget .OR. nTarget == nTargetTODO
@@ -5721,10 +5721,6 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       "",;
       I_( "Options:" ) }
 
-   LOCAL aText_Notes := {;
-      "",;
-      I_( "Notes:" ) }
-
    LOCAL aText_Supp := {;
       "",;
       I_( "Supported <comp> values for each supported <arch> value:" ),;
@@ -5795,6 +5791,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-po=<output>"      , I_( "create/update .po file from source. Merge it with previous .po file of the same name" ) },;
       { "-rebuildpo"        , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
+      { "-target=<script>"  , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbm file (available on command line only)" ) },;
+      { "-target"           , I_( "marks beginning of options belonging to a new build target (available on command line only)" ) },;
+      { "-alltarget"        , I_( "marks beginning of common options belonging to all targets (available on command line only)" ) },;
+      NIL,;
       { "-hbrun"            , I_( "run target" ) },;
       { "-hbcmp|-clipper"   , I_( "stop after creating the object files\ncreate link/copy hbmk to hbcmp/clipper for the same effect" ) },;
       { "-hbcc"             , I_( "stop after creating the object files and accept raw C flags\ncreate link/copy hbmk to hbcc for the same effect" ) },;
@@ -5818,10 +5818,14 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-info"             , I_( "turn on informational messages" ) },;
       { "-quiet"            , I_( "suppress all screen messages" ) } }
 
+   LOCAL aText_Notes := {;
+      "",;
+      I_( "Notes:" ) }
+
    LOCAL aNotes := {;
-      I_( "<script> can be <@script> (.hbm file), <script.hbm> or <script.hbl>." ),;
-      I_( "Regular Harbour compiler options are also accepted." ),;
+      I_( "<script> can be <@script> (.hbm format), <script.hbm>, <script.hbp> (marks a new target) or <script.hbl>." ),;
       I_( "Multiple -l, -L and <script> parameters are accepted." ),;
+      I_( "Regular Harbour compiler options are also accepted." ),;
       hb_StrFormat( I_( "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbl." ), HBMK_CFG_NAME ),;
       I_( ".hbl option files in current dir are automatically processed." ),;
       I_( ".hbl options (they should come in separate lines): libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\nLines starting with '#' char are ignored" ),;
