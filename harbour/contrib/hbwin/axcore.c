@@ -283,7 +283,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
       hb_itemRelease( pItem );
    }
 
-   hb_vmDo( iCount + 1 );
+   hb_vmDo( ( USHORT ) iCount + 1 );
 
    if( pVarResult )
       hb_oleItemToVariant( pVarResult, hb_stackReturnItem() );
