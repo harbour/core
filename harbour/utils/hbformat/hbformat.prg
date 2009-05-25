@@ -828,7 +828,7 @@ METHOD SetOption( cLine, i, aIni ) CLASS CODEFORMAT
       IF __ObjHasMsg( Self, cToken1 )
          IF Empty( cToken2 )
             xRes := ""
-         ELSEIF IsDigit( cToken2 )
+         ELSEIF IsDigit( cToken2 ) .OR. ( Left( cToken2,1 ) == '-' .AND. IsDigit( Ltrim(Substr(cToken2,2)) ) )
             xRes := Val( cToken2 )
          ELSEIF Isalpha( cToken2 )
             IF ( cTemp := Upper( cToken2 ) ) == "ON" .OR. cTemp == "YES"
