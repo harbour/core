@@ -483,7 +483,7 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
                               cToken1 == "end"
                            IF nPos != 0 .AND. nDeep > 0 .AND. aDeep[nDeep] != nPos
                               DO WHILE ( nPos := Ascan( ::aContr, { |a|a[4] == cToken1 }, ;
-                                    nPos ) ) != 0 .AND. aDeep[nDeep] != nPos
+                                    nPos + 1 ) ) != 0 .AND. aDeep[nDeep] != nPos
                               ENDDO
                            ENDIF
                            IF nDeep > 0 .AND. aDeep[nDeep] == nPos .OR. cToken1 == "end"
