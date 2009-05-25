@@ -210,23 +210,24 @@ REQUEST hbmk_KEYW
 #define _HBMK_lRUN              38
 #define _HBMK_lINC              39
 #define _HBMK_lREBUILDPO        40
+#define _HBMK_lMINIPO           41
 
-#define _HBMK_aPO               41
-#define _HBMK_cHBI              42
-#define _HBMK_aLNG              43
-#define _HBMK_cPO               44
+#define _HBMK_aPO               42
+#define _HBMK_cHBI              43
+#define _HBMK_aLNG              44
+#define _HBMK_cPO               45
 
-#define _HBMK_lDEBUGTIME        45
-#define _HBMK_lDEBUGINC         46
-#define _HBMK_lDEBUGSTUB        47
-#define _HBMK_lDEBUGI18N        48
+#define _HBMK_lDEBUGTIME        46
+#define _HBMK_lDEBUGINC         47
+#define _HBMK_lDEBUGSTUB        48
+#define _HBMK_lDEBUGI18N        49
 
-#define _HBMK_cCCPATH           49
-#define _HBMK_cCCPREFIX         50
+#define _HBMK_cCCPATH           50
+#define _HBMK_cCCPREFIX         51
 
-#define _HBMK_lUTF8             51
+#define _HBMK_lUTF8             52
 
-#define _HBMK_MAX_              51
+#define _HBMK_MAX_              52
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -539,6 +540,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    hbmk[ _HBMK_lRUN ] := .F.
    hbmk[ _HBMK_lINC ] := .F.
    hbmk[ _HBMK_lREBUILDPO ] := .F.
+   hbmk[ _HBMK_lMINIPO ] := .F.
 
    hbmk[ _HBMK_lDEBUGTIME ] := .F.
    hbmk[ _HBMK_lDEBUGINC ] := .F.
@@ -1257,6 +1259,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
            cParamL == "-nobeep"          ; s_lBEEP      := .F.
       CASE cParamL == "-rebuild"         ; hbmk[ _HBMK_lINC ]       := .T. ; hbmk[ _HBMK_lREBUILD ] := .T.
       CASE cParamL == "-rebuildpo"       ; hbmk[ _HBMK_lREBUILDPO ] := .T.
+      CASE cParamL == "-minipo"          ; hbmk[ _HBMK_lMINIPO ]    := .T.
+      CASE cParamL == "-minipo-" .OR. ;
+           cParamL == "-nominipo"        ; hbmk[ _HBMK_lMINIPO ]    := .F.
       CASE cParamL == "-clean"           ; hbmk[ _HBMK_lINC ]       := .T. ; s_lCLEAN := .T.
       CASE cParamL == "-inc"             ; hbmk[ _HBMK_lINC ]       := .T.
       CASE cParamL == "-inc-" .OR. ;
@@ -5463,7 +5468,7 @@ STATIC PROCEDURE POTMerge( hbmk, aFiles, cFileBase, cFileOut )
    LOCAL aTrans := LoadPOTFiles( hbmk, aFiles, cFileBase, .T. )
 
    IF aTrans != NIL
-      IF !__i18n_potArraySave( cFileOut, aTrans, @cErrorMsg )
+      IF !__i18n_potArraySave( cFileOut, aTrans, @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
          hbmk_OutErr( hbmk, hb_StrFormat( I_( ".pot merge error: %1$s" ), cErrorMsg ) )
       ENDIF
    ENDIF
@@ -5475,7 +5480,7 @@ STATIC PROCEDURE AutoTrans( hbmk, cFileIn, aFiles, cFileOut )
 
    IF !__I18N_potArraySave( cFileOut, ;
          __I18N_potArrayTrans( LoadPOTFiles( hbmk, {}, cFileIn, .F. ), ;
-                               LoadPOTFilesAsHash( hbmk, aFiles ) ), @cErrorMsg )
+                               LoadPOTFilesAsHash( hbmk, aFiles ) ), @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
       hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
    ENDIF
 
@@ -5789,6 +5794,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-hbi[=<output>]"   , I_( "output .hbi filename. ${lng} macro is accepted in filename" ) },;
       { "-lng=<languages>"  , I_( "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbi/.po filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ) },;
       { "-po=<output>"      , I_( "create/update .po file from source. Merge it with previous .po file of the same name" ) },;
+      { "-[no]minipo"       , I_( "don't (or do) add Harbour version number and source file reference to .po (default: add them)" ) },;
       { "-rebuildpo"        , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
       { "-target=<script>"  , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbm file (available on command line only)" ) },;

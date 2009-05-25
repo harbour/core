@@ -313,34 +313,34 @@ static HRESULT STDMETHODCALLTYPE QueryInterface( IEventHandler *self, REFIID vTa
     * IDispatch GUID, then we'll return the IExample3, since it can masquerade
     * as an IDispatch too
     */
-   if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IUnknown ) ) )
+   if( IsEqualIID( vTableGuid, HB_ID_REF( IID_IUnknown ) ) )
    {
       *ppv = ( IUnknown * ) self;
       /* Increment the count of callers who have an outstanding pointer to self object */
 #ifdef __HBTOOUT__
-hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IUnknown ) ) )" );
+hb_ToOutDebug( ".................................if( IsEqualIID( vTableGuid, HB_ID_REF( IID_IUnknown ) ) )" );
 #endif
       HB_VTBL( self )->AddRef( HB_THIS( self ) );
       return S_OK;
    }
 
-   if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IDispatch ) ) )
+   if( IsEqualIID( vTableGuid, HB_ID_REF( IID_IDispatch ) ) )
    {
       *ppv = ( IDispatch * ) self;
 #ifdef __HBTOOUT__
-hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IDispatch ) ) )" );
+hb_ToOutDebug( ".................................if( IsEqualIID( vTableGuid, HB_ID_REF( IID_IDispatch ) ) )" );
 #endif
       HB_VTBL( self )->AddRef( HB_THIS( self ) );
       return S_OK;
    }
 
-   if ( IsEqualIID( vTableGuid, HB_ID_REF( ( ( MyRealIEventHandler * ) self )->device_event_interface_iid ) ) )
+   if( IsEqualIID( vTableGuid, HB_ID_REF( ( ( MyRealIEventHandler * ) self )->device_event_interface_iid ) ) )
    {
       if( ++( ( ( MyRealIEventHandler * ) self )->iID_riid ) == 1 )
       {
          *ppv = ( IDispatch* ) self;
 #ifdef __HBTOOUT__
-hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB_ID_REF( ( ( MyRealIEventHandler * ) self )->device_event_interface_iid ) ) )" );
+hb_ToOutDebug( ".................................if( IsEqualIID( vTableGuid, HB_ID_REF( ( ( MyRealIEventHandler * ) self )->device_event_interface_iid ) ) )" );
 #endif
          HB_VTBL( self )->AddRef( HB_THIS( self ) );
       }
@@ -379,7 +379,7 @@ static ULONG STDMETHODCALLTYPE Release( IEventHandler *self )
 hb_ToOutDebug( "static ULONG STDMETHODCALLTYPE Release( IEventHandler *self )->count = %i",
                                            ( ( MyRealIEventHandler * ) self )->count - 1 );
 #endif
-   if ( --( ( MyRealIEventHandler * ) self )->count == 0 )
+   if( --( ( MyRealIEventHandler * ) self )->count == 0 )
    {
       if( ( ( MyRealIEventHandler * ) self)->pSelf )
       {
@@ -455,7 +455,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *self, DISPID dispid, REF
    #endif
 
    /* We implement only a "default" interface */
-   if ( !IsEqualIID( riid, HB_ID_REF( IID_NULL ) ) )
+   if( !IsEqualIID( riid, HB_ID_REF( IID_NULL ) ) )
    {
       return( ( HRESULT ) DISP_E_UNKNOWNINTERFACE );
    }
@@ -466,12 +466,12 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *self, DISPID dispid, REF
    HB_SYMBOL_UNUSED( puArgErr );
 
    Key = hb_itemNew( NULL );
-   if ( hb_hashScan( ( ( MyRealIEventHandler * ) self )->pEvents, hb_itemPutNL( Key, dispid ), &ulPos ) )
+   if( hb_hashScan( ( ( MyRealIEventHandler * ) self )->pEvents, hb_itemPutNL( Key, dispid ), &ulPos ) )
    {
       PHB_ITEM pArray = hb_hashGetValueAt( ( ( MyRealIEventHandler * ) self )->pEvents, ulPos );
       PHB_ITEM pExec  = hb_arrayGetItemPtr( pArray, 1 );
 
-      if ( pExec )
+      if( pExec )
       {
          hb_vmPushState();
 
@@ -487,7 +487,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *self, DISPID dispid, REF
                PHB_ITEM pObject = hb_arrayGetItemPtr( pArray, 3 );
 
                hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( hb_itemGetCPtr( pExec ) ) ) );
-               if ( HB_IS_OBJECT( pObject ) )
+               if( HB_IS_OBJECT( pObject ) )
                   hb_vmPush( pObject );
                else
                   hb_vmPushNil();
@@ -516,23 +516,19 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *self, DISPID dispid, REF
          }
 
          /* execute */
-         hb_vmDo( iArg );
+         hb_vmDo( ( USHORT ) iArg );
 
-         for( i=iArg; i > 0; i-- )
+         for( i = iArg; i > 0; i-- )
          {
             if( HB_IS_BYREF( pItemArray[ iArg-i ] ) )
-            {
                hb_oleItemToVariant( &( params->rgvarg[ iArg-i ] ), pItemArray[ iArg-i ] );
-            }
          }
 
          /* Pritpal */
-         if ( iArg )
+         if( iArg )
          {
-            for( i=iArg; i > 0; i-- )
-            {
+            for( i = iArg; i > 0; i-- )
                hb_itemRelease( pItemArray[ i-1 ] );
-            }
          }
          hb_vmPopState();
       }
@@ -597,13 +593,13 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
       ( ( MyRealIEventHandler * ) thisobj )->iID_riid = 0;
 
       hr = HB_VTBL( thisobj )->QueryInterface( HB_THIS_( thisobj ) HB_ID_REF( IID_IUnknown ), (void **) (void*) &pIUnknown );
-      if (hr == S_OK && pIUnknown)
+      if(hr == S_OK && pIUnknown)
       {
          hr = HB_VTBL( pdevice_interface )->QueryInterface( HB_THIS_( pdevice_interface ) HB_ID_REF( IID_IConnectionPointContainer ), (void**) (void*) &pIConnectionPointContainerTemp);
-         if ( hr == S_OK && pIConnectionPointContainerTemp )
+         if( hr == S_OK && pIConnectionPointContainerTemp )
          {
             hr = HB_VTBL( pIConnectionPointContainerTemp )->EnumConnectionPoints( HB_THIS_( pIConnectionPointContainerTemp ) &m_pIEnumConnectionPoints );
-            if ( hr == S_OK && m_pIEnumConnectionPoints )
+            if( hr == S_OK && m_pIEnumConnectionPoints )
             {
                do
                {
@@ -611,7 +607,7 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
                   if( hr == S_OK )
                   {
                      hr = HB_VTBL( m_pIConnectionPoint )->GetConnectionInterface( HB_THIS_( m_pIConnectionPoint ) &rriid );
-                     if ( hr == S_OK )
+                     if( hr == S_OK )
                      {
                         /**************           This has to be review         *******************
                                PellesC was generating GPF at this point
@@ -622,7 +618,7 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
                         #endif
 
                         hr = HB_VTBL( m_pIConnectionPoint )->Advise( HB_THIS_( m_pIConnectionPoint ) pIUnknown, &dwCookie );
-                        if ( hr == S_OK )
+                        if( hr == S_OK )
                         {
                            ( ( MyRealIEventHandler* ) thisobj )->pIConnectionPoint = m_pIConnectionPoint;
                            ( ( MyRealIEventHandler* ) thisobj )->dwEventCookie     = dwCookie;
@@ -662,7 +658,7 @@ HB_FUNC( HB_AX_SHUTDOWNCONNECTIONPOINT )
 hb_ToOutDebug( "---------------------------------------------" );
 #endif
    #if 1
-   if ( hSink && hSink->pIConnectionPoint )
+   if( hSink && hSink->pIConnectionPoint )
    {
       hSink->dwEventCookie = 0;
       HB_VTBL( hSink->pIConnectionPoint )->Release( HB_THIS( hSink->pIConnectionPoint ) );
@@ -773,9 +769,9 @@ HB_FUNC( HB_AX_ATLAXWININIT )
 #else
          AtlAxWinInit = ( PATLAXWININIT ) GetProcAddress( hLib, "AtlAxWinInit" );
 #endif
-         if ( AtlAxWinInit )
+         if( AtlAxWinInit )
          {
-            if ( ( AtlAxWinInit )() )
+            if( ( AtlAxWinInit )() )
             {
                bRet = TRUE;
             }
@@ -837,7 +833,7 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
 #else
    AtlAxCreateControl = ( PATLAXCREATECONTROL ) GetProcAddress( hLib, "AtlAxCreateControl" );
 #endif
-   if ( AtlAxCreateControl )
+   if( AtlAxCreateControl )
    {
       LPTSTR cCaption = HB_TCHAR_CONVTO( Caption );
       LPTSTR cClass = HB_TCHAR_CONVTO( szClass );
@@ -1100,8 +1096,8 @@ typedef struct  {
 int LoadTypeInformation( IDispatch* pDisp ) /* pass dispatch interface */
 {
    /*UINT nTypeInfoCount;
-    *m_hRet = m_pDisp->GetTypeInfoCount(&nTypeInfoCount);
-    *if(m_hRet!=S_OK||nTypeInfoCount==0)
+    *m_hRet = m_pDisp->GetTypeInfoCount( &nTypeInfoCount );
+    *if( m_hRet != S_OK || nTypeInfoCount == 0 )
     *{
     *   #ifdef XYDISPDRIVER_DEBUG
     *   _tprintf(_T("GetTypeInfoCount failed or no type info: %x\n"),m_hRet);
@@ -1111,7 +1107,7 @@ int LoadTypeInformation( IDispatch* pDisp ) /* pass dispatch interface */
    ITypeInfo*   pTypeInfo;
    TYPEATTR*    pTypeAttr;
    HRESULT      hr;
-   int          i,j;
+   int          i, j;
    unsigned int nCount;
    int          m_nMethodCount;
    int          m_nVarCount;
@@ -1186,7 +1182,7 @@ int LoadTypeInformation( IDispatch* pDisp ) /* pass dispatch interface */
       }
 
       pTypeInfo->lpVtbl->ReleaseTypeAttr( pTypeInfo, pTypeAttr );
-      pTypeInfo->lpVtbl->Release(pTypeInfo);
+      pTypeInfo->lpVtbl->Release( pTypeInfo );
 
       if( pTempAttr == NULL )
       {
@@ -1216,7 +1212,7 @@ int LoadTypeInformation( IDispatch* pDisp ) /* pass dispatch interface */
 
    hb_ToOutDebug( "--------------- looping through methods ----------------");
 
-   for( i=0; i < m_nMethodCount; i++ )
+   for( i = 0; i < m_nMethodCount; i++ )
    {
       FUNCDESC* pFuncDesc;
       hr = pTypeInfo->lpVtbl->GetFuncDesc( pTypeInfo, i, &pFuncDesc );
@@ -1268,7 +1264,7 @@ int LoadTypeInformation( IDispatch* pDisp ) /* pass dispatch interface */
 
       VariantInit( m_pDispInfo[i].m_pOutput );
       m_pDispInfo[i].m_vtOutputType = pFuncDesc->elemdescFunc.tdesc.vt;
-      if( m_pDispInfo[i].m_vtOutputType==VT_VOID||m_pDispInfo[i].m_vtOutputType==VT_NULL )
+      if( m_pDispInfo[i].m_vtOutputType == VT_VOID || m_pDispInfo[i].m_vtOutputType == VT_NULL )
       {
          m_pDispInfo[i].m_vtOutputType = VT_EMPTY;
       }
@@ -1278,7 +1274,7 @@ int LoadTypeInformation( IDispatch* pDisp ) /* pass dispatch interface */
                             m_pDispInfo[i].m_bstrName,    /* wide-character string */
                             -1,            /* number of chars in string.           */
                             cBuffer,       /* buffer for new string                */
-                            128,           /* size of buffer                       */
+                            sizeof( cBuffer ),  /* size of buffer                       */
                             NULL,          /* default for unmappable chars         */
                             NULL           /* set when default char used           */
                          );
@@ -1294,11 +1290,11 @@ int LoadTypeInformation( IDispatch* pDisp ) /* pass dispatch interface */
       m_pDispInfo[i].m_pParamTypes = (WORD*) hb_xgrab( sizeof(WORD) * (m_pDispInfo[i].m_nParamCount+1));
       for( j=0; j<m_pDispInfo[i].m_nParamCount; j++ )
       {
-         if( pFuncDesc->lprgelemdescParam[j].tdesc.vt==VT_SAFEARRAY )
+         if( pFuncDesc->lprgelemdescParam[j].tdesc.vt == VT_SAFEARRAY )
          {
             m_pDispInfo[i].m_pParamTypes[j] = (pFuncDesc->lprgelemdescParam[j].tdesc.lptdesc->vt)|VT_ARRAY;
          }
-         else if( pFuncDesc->lprgelemdescParam[j].tdesc.vt==VT_PTR )
+         else if( pFuncDesc->lprgelemdescParam[j].tdesc.vt == VT_PTR )
          {
             m_pDispInfo[i].m_pParamTypes[j] = (pFuncDesc->lprgelemdescParam[j].tdesc.lptdesc->vt)|VT_BYREF;
          }
@@ -1313,10 +1309,10 @@ int LoadTypeInformation( IDispatch* pDisp ) /* pass dispatch interface */
 
    hb_ToOutDebug( "--------------- looping through var count -------------------");
 
-   for( i=m_nMethodCount; i<m_nMethodCount+m_nVarCount; i++ )
+   for( i = m_nMethodCount; i < m_nMethodCount + m_nVarCount; i++ )
    {
       VARDESC* pVarDesc;
-      hr = pTypeInfo->lpVtbl->GetVarDesc(pTypeInfo, i-m_nMethodCount, &pVarDesc);
+      hr = pTypeInfo->lpVtbl->GetVarDesc(pTypeInfo, i - m_nMethodCount, &pVarDesc);
       if( hr != S_OK )
       {
          pTypeInfo->lpVtbl->ReleaseTypeAttr( pTypeInfo, pTypeAttr );
@@ -1328,12 +1324,12 @@ int LoadTypeInformation( IDispatch* pDisp ) /* pass dispatch interface */
       m_pDispInfo[i].m_dispID = pVarDesc->memid;
       m_pDispInfo[i+m_nVarCount].m_dispID = m_pDispInfo[i].m_dispID;
 
-      hr = pTypeInfo->lpVtbl->GetNames( pTypeInfo, m_pDispInfo[i].m_dispID ,&m_pDispInfo[i].m_bstrName,1,&nCount );
+      hr = pTypeInfo->lpVtbl->GetNames( pTypeInfo, m_pDispInfo[i].m_dispID, &m_pDispInfo[i].m_bstrName, 1, &nCount );
       if( hr != S_OK )
       {
-         pTypeInfo->lpVtbl->ReleaseVarDesc(pTypeInfo, pVarDesc);
-         pTypeInfo->lpVtbl->ReleaseTypeAttr(pTypeInfo, pTypeAttr);
-         pTypeInfo->lpVtbl->Release(pTypeInfo);
+         pTypeInfo->lpVtbl->ReleaseVarDesc( pTypeInfo, pVarDesc );
+         pTypeInfo->lpVtbl->ReleaseTypeAttr( pTypeInfo, pTypeAttr );
+         pTypeInfo->lpVtbl->Release( pTypeInfo );
          /*m_nMethodCount = m_nVarCount = m_nDispInfoCount = 0; */
          /* free memory                                         */
          return 0;
@@ -1354,13 +1350,13 @@ int LoadTypeInformation( IDispatch* pDisp ) /* pass dispatch interface */
          break;
       default:
          m_pDispInfo[i].m_wFlag = 0;
-         m_pDispInfo[i+m_nVarCount].m_wFlag = 0;
+         m_pDispInfo[i + m_nVarCount].m_wFlag = 0;
          break;
       }
       m_pDispInfo[i].m_pOutput = ( VARIANT* ) hb_xgrab( sizeof( VARIANT ) );/* new VARIANT; */
       ::VariantInit( m_pDispInfo[i].m_pOutput );
       m_pDispInfo[i+m_nVarCount].m_pOutput = ( VARIANT* ) hb_xgrab( sizeof( VARIANT ) ); /* new VARIANT; */
-      VariantInit( m_pDispInfo[i+m_nVarCount].m_pOutput );
+      VariantInit( m_pDispInfo[i + m_nVarCount].m_pOutput );
       pTypeInfo->lpVtbl->ReleaseVarDesc( pTypeInfo, pVarDesc );
    }
 
@@ -1397,11 +1393,11 @@ HB_FUNC( HB_AX_ADVISEEVENTS )
    bstrClassID = hb_oleAnsiToSysString( hb_parcx( 2 ) );
    hr = IIDFromString( bstrClassID, ( LPIID ) &iid );
    SysFreeString( bstrClassID );
-   if ( hr == S_OK )
+   if( hr == S_OK )
    {
 hb_ToOutDebug( "<<<<<<<<<<<<<<<  1  >>>>>>>>>>>>" );
       thisobj = ( IEventHandler * ) GlobalAlloc( GMEM_FIXED, sizeof(MyRealIEventHandler ) );
-      if ( !( thisobj ) )
+      if( !( thisobj ) )
       {
          hr = E_OUTOFMEMORY;
       }
@@ -1420,11 +1416,11 @@ hb_ToOutDebug( "<<<<<<<<<<<<<<<  3  >>>>>>>>>>>>");
             {
 hb_ToOutDebug( "<<<<<<<<<<<<<<<  4  >>>>>>>>>>>>");
                hr = pCPC->lpVtbl->FindConnectionPoint( pCPC, (REFIID)&iid, &pCP );
-               if ( hr == S_OK )
+               if( hr == S_OK )
                {
 hb_ToOutDebug( "<<<<<<<<<<<<<<<  5  >>>>>>>>>>>>");
                   hr = pCP->lpVtbl->Advise( pCP, pIUnknown, &dwCookie );
-                  if ( hr == S_OK )
+                  if( hr == S_OK )
                   {
 hb_ToOutDebug( "<<<<<<<<<<<<<<<  6  >>>>>>>>>>>>");
                      ((MyRealIEventHandler *) thisobj)->device_event_interface_iid = iid;
