@@ -1503,10 +1503,10 @@ static BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, USHORT usCh, XWC_CharTrans *
          break;
 
       case HB_GTXVG_SQUARE:
-         rect[0].x = ( ( cellx - rect[0].width ) >> 1 );
-         rect[0].y = ( ( celly - rect[0].height ) >> 1 );
          rect[0].width = cellx - HB_MAX(cellx >> 2, 2);
          rect[0].height = rect[0].width;
+         rect[0].x = ( ( cellx - rect[0].width ) >> 1 );
+         rect[0].y = ( ( celly - rect[0].height ) >> 1 );
          size = 1;
          type = CH_RECT;
          break;

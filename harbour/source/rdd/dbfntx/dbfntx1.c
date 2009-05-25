@@ -1048,11 +1048,12 @@ static BOOL hb_ntxTagHeaderCheck( LPTAGINFO pTag )
    {
       if( pTag->HeadBlock )
       {
-         BYTE buffer[ 12 ];
-         if( hb_ntxBlockRead( pTag->Owner, pTag->HeadBlock, buffer, 12 ) )
+         BYTE buffer[ NTX_TAGHEAD_HEADSIZE ];
+         if( hb_ntxBlockRead( pTag->Owner, pTag->HeadBlock, buffer, NTX_TAGHEAD_HEADSIZE ) )
          {
-            pTag->Signature = HB_GET_LE_UINT16( ( ( LPNTXHEADER ) buffer )->type );
-            pTag->RootBlock = HB_GET_LE_UINT32( ( ( LPNTXHEADER ) buffer )->root );
+            LPNTXHEADER pHeader = ( LPNTXHEADER ) buffer;
+            pTag->Signature = HB_GET_LE_UINT16( pHeader->type );
+            pTag->RootBlock = HB_GET_LE_UINT32( pHeader->root );
             hb_ntxTagUpdateFlags( pTag );
          }
       }
@@ -1698,7 +1699,7 @@ static HB_ERRCODE hb_ntxTagHeaderSave( LPTAGINFO pTag )
 {
    LPNTXINDEX pIndex = pTag->Owner;
    NTXHEADER Header;
-   int iSize = 12, type, version = 0, iLen;
+   int iSize = NTX_ROOTHEAD_HEADSIZE, type, version = 0, iLen;
    ULONG next = 0;
 
    if( pIndex->Compound )
@@ -1744,7 +1745,8 @@ static HB_ERRCODE hb_ntxTagHeaderSave( LPTAGINFO pTag )
 
    if( pIndex->Update )
    {
-      memset( ( BYTE * ) &Header + 12, 0, sizeof( NTXHEADER ) - 12 );
+      memset( ( BYTE * ) &Header + NTX_ROOTHEAD_HEADSIZE, 0,
+              sizeof( NTXHEADER ) - NTX_ROOTHEAD_HEADSIZE );
 
       HB_PUT_LE_UINT16( Header.item_size, pTag->KeyLength + 8 );
       HB_PUT_LE_UINT16( Header.key_size,  pTag->KeyLength );

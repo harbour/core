@@ -93,6 +93,9 @@ HB_EXTERN_BEGIN
 #define NTX_PAGES_PER_TAG                 8
 #define NTX_STACKSIZE                    32     /* Maximum page stack size */
 
+#define NTX_ROOTHEAD_HEADSIZE            12
+#define NTX_TAGHEAD_HEADSIZE              8
+
 /* index file structures - defined as BYTEs to avoid alignment problems */
 
 typedef struct _NTXHEADER     /* Header of NTX file */

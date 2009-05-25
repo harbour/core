@@ -50,6 +50,8 @@
  *
  */
 
+REQUEST __objSetClass
+
 FUNCTION hb_VALTOEXP( xVal )
    LOCAL cVal
    LOCAL v := ValType( xVal )

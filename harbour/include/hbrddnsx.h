@@ -202,6 +202,9 @@ HB_EXTERN_BEGIN
 #define NSX_IGNORE_REC_NUM    0x0UL
 #define NSX_MAX_REC_NUM       0xFFFFFFFFUL
 
+#define NSX_ROOTHEAD_HEADSIZE 14
+#define NSX_TAGHEAD_HEADSIZE  6
+
 
 /*
  * type of key expression

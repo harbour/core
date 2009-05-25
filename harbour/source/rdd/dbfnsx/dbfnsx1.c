@@ -1277,13 +1277,16 @@ static BOOL hb_nsxTagHeaderCheck( LPTAGINFO pTag )
    {
       if( pTag->HeadBlock )
       {
-         BYTE buffer[ 6 ];
-         if( hb_nsxBlockRead( pTag->pIndex, pTag->HeadBlock, buffer, sizeof( buffer ) ) &&
-             ( ( LPNSXTAGHEADER ) buffer )->Signature[0] == NSX_SIGNATURE )
+         BYTE buffer[ NSX_TAGHEAD_HEADSIZE ];
+         if( hb_nsxBlockRead( pTag->pIndex, pTag->HeadBlock, buffer, NSX_TAGHEAD_HEADSIZE ) )
          {
-            pTag->TagFlags = ( ( LPNSXTAGHEADER ) buffer )->TagFlags[0];
-            pTag->RootBlock = HB_GET_LE_UINT32( ( ( LPNSXTAGHEADER ) buffer )->RootPage );
-            hb_nsxTagUpdateFlags( pTag );
+            LPNSXTAGHEADER pHeader = ( LPNSXTAGHEADER ) buffer;
+            if( pHeader->Signature[0] == NSX_SIGNATURE )
+            {
+               pTag->TagFlags = pHeader->TagFlags[0];
+               pTag->RootBlock = HB_GET_LE_UINT32( pHeader->RootPage );
+               hb_nsxTagUpdateFlags( pTag );
+            }
          }
       }
    }
@@ -1570,8 +1573,10 @@ static void hb_nsxPageInit( LPPAGEINFO pPage )
 static void hb_nsxPageFree( LPTAGINFO pTag, LPPAGEINFO pPage )
 {
    hb_nsxSetPageType( pPage, 'f' );
-   HB_PUT_LE_UINT32( ( ( LPNSXROOTHEADER ) pPage->buffer )->FreePage,
-                     pTag->pIndex->NextAvail );
+   {
+      LPNSXROOTHEADER pHeader = ( LPNSXROOTHEADER ) pPage->buffer;
+      HB_PUT_LE_UINT32( pHeader->FreePage, pTag->pIndex->NextAvail );
+   }
    pTag->pIndex->NextAvail = pPage->Page;
    pTag->pIndex->Changed = pPage->Changed = TRUE;
 }
@@ -1619,8 +1624,11 @@ static LPPAGEINFO hb_nsxPageNew( LPTAGINFO pTag, BOOL fNull )
       pPage = hb_nsxPageLoad( pTag, pTag->pIndex->NextAvail );
       if( ! pPage )
          return NULL;
-      pTag->pIndex->NextAvail = HB_GET_LE_UINT32(
-                     ( ( LPNSXROOTHEADER ) pPage->buffer )->FreePage );
+      else
+      {
+         LPNSXROOTHEADER pHeader = ( LPNSXROOTHEADER ) pPage->buffer;
+         pTag->pIndex->NextAvail = HB_GET_LE_UINT32( pHeader->FreePage );
+      }
    }
    else
    {
@@ -1886,7 +1894,7 @@ static HB_ERRCODE hb_nsxTagHeaderSave( LPTAGINFO pTag )
 {
    LPNSXINDEX pIndex = pTag->pIndex;
    NSXTAGHEADER Header;
-   int iSize = 6;
+   int iSize = NSX_TAGHEAD_HEADSIZE;
 
    if( !pTag->HeadBlock )
    {
@@ -1909,7 +1917,8 @@ static HB_ERRCODE hb_nsxTagHeaderSave( LPTAGINFO pTag )
       USHORT type = hb_nsxKeyTypeRaw( pTag->KeyType );
       int iLen;
 
-      memset( ( BYTE * ) &Header + 6, 0, sizeof( Header ) - 6 );
+      memset( ( BYTE * ) &Header + NSX_TAGHEAD_HEADSIZE, 0,
+              sizeof( Header ) - NSX_TAGHEAD_HEADSIZE );
 
       HB_PUT_LE_UINT16( Header.KeyType, type );
       HB_PUT_LE_UINT16( Header.KeySize,  pTag->KeyLength );
@@ -1988,7 +1997,7 @@ static void hb_nsxIndexFree( LPNSXINDEX pIndex )
  */
 static HB_ERRCODE hb_nsxIndexHeaderSave( LPNSXINDEX pIndex )
 {
-   int iSize = pIndex->Update ? NSX_PAGELEN : 14;
+   int iSize = pIndex->Update ? NSX_PAGELEN : NSX_ROOTHEAD_HEADSIZE;
 
    pIndex->Version++;
    pIndex->Version &= 0xFFFF;

@@ -1682,7 +1682,7 @@ static HB_GENC_FUNC( hb_p_switch )
 {
    USHORT usCases = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), us;
    ULONG ulStart = lPCodePos, ulNewPos;
-   BOOL fNum = FALSE, fStr = FALSE;
+   BOOL fNum = FALSE, fStr = FALSE, fDefault = FALSE;
 
    HB_GENC_LABEL();
 
@@ -1701,6 +1701,7 @@ static HB_GENC_FUNC( hb_p_switch )
             break;
          case HB_P_PUSHNIL:
             /* default clause */
+            fDefault = TRUE;
             lPCodePos++;
             break;
       }
@@ -1777,6 +1778,8 @@ static HB_GENC_FUNC( hb_p_switch )
       fprintf( cargo->yyc, "\t\t{\n\t\t\thb_stackPop();\n\t\t\tgoto lab%05ld;\n\t\t}\n",
                HB_GENC_GETLABEL( ulNewPos ) );
    }
+   if( !fDefault )
+      fprintf( cargo->yyc, "\t\thb_stackPop();\n" );
    if( fStr || fNum )
       fprintf( cargo->yyc, "\t}\n" );
 
