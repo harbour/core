@@ -9,6 +9,7 @@ DIRS=\
 	hbmk2 \
 	hbi18n \
 	hbtest \
+	hbformat \
 	$(HB_UTILS) \
 
 #	hbextern \
