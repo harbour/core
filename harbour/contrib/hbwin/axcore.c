@@ -133,13 +133,8 @@ HB_FUNC( __AXGETCONTROL ) /* ( hWnd ) --> pDisp */
 
    if( lOleError == S_OK )
    {
-#if HB_OLE_C_API
-      lOleError = pUnk->lpVtbl->QueryInterface( pUnk, &IID_IDispatch, ( void** ) ( void * ) &pDisp );
-      pUnk->lpVtbl->Release( pUnk );
-#else
-      lOleError = pUnk->QueryInterface( IID_IDispatch, ( void** ) ( void * ) &pDisp );
-      pUnk->Release();
-#endif
+      lOleError = HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IDispatch ), ( void** ) ( void * ) &pDisp );
+      HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
    }
 
    hb_oleSetError( lOleError );
@@ -151,6 +146,21 @@ HB_FUNC( __AXGETCONTROL ) /* ( hWnd ) --> pDisp */
 }
 
 /* ======================== Event handler support ======================== */
+
+#if !defined( HB_OLE_C_API )
+typedef struct
+{
+   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IDispatch*, REFIID, void** );
+   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IDispatch* );
+   ULONG   ( STDMETHODCALLTYPE * Release ) ( IDispatch* );
+   HRESULT ( STDMETHODCALLTYPE * GetTypeInfoCount ) ( IDispatch*, UINT* );
+   HRESULT ( STDMETHODCALLTYPE * GetTypeInfo ) ( IDispatch*,  UINT, LCID, ITypeInfo** );
+   HRESULT ( STDMETHODCALLTYPE * GetIDsOfNames ) ( IDispatch*, REFIID, LPOLESTR*, UINT, LCID, DISPID* );
+   HRESULT ( STDMETHODCALLTYPE * Invoke ) ( IDispatch*, DISPID, REFIID, LCID, WORD, DISPPARAMS*, VARIANT*, EXCEPINFO*, UINT* );
+} IDispatchVtbl;
+#endif
+
+
 typedef struct {
    IDispatchVtbl*          lpVtbl;
    DWORD                   count;
@@ -171,17 +181,12 @@ static HB_GARBAGE_FUNC( hb_sink_destructor )
    }
    if( pSink->pConnectionPoint )
    {
-#if HB_OLE_C_API
-      pSink->pConnectionPoint->lpVtbl->Unadvise( pSink->pConnectionPoint, pSink->dwCookie );
-      pSink->pConnectionPoint->lpVtbl->Release( pSink->pConnectionPoint );
-#else
-      pSink->pConnectionPoint->Unadvise( pSink->dwCookie );
-      pSink->pConnectionPoint->Release();
-#endif
+      HB_VTBL( pSink->pConnectionPoint )->Unadvise( HB_THIS_( pSink->pConnectionPoint ) pSink->dwCookie );
+      HB_VTBL( pSink->pConnectionPoint )->Release( HB_THIS( pSink->pConnectionPoint ) );
       pSink->pConnectionPoint = NULL;
       pSink->dwCookie = 0;
    }
-   pSink->lpVtbl->Release( ( IDispatch* ) pSink );
+   HB_VTBL( ( IDispatch* ) pSink )->Release( HB_THIS( ( IDispatch* ) pSink ) );
 }
 
 
@@ -190,7 +195,7 @@ static HRESULT STDMETHODCALLTYPE QueryInterface( IDispatch* lpThis, REFIID riid,
    if( IsEqualIID( riid, HB_ID_REF( IID_IUnknown ) ) || IsEqualIID( riid, HB_ID_REF( IID_IDispatch ) ) )
    {
       *ppRet = ( void* ) lpThis;
-      ( ( ISink* ) lpThis)->lpVtbl->AddRef( lpThis );
+      HB_VTBL( lpThis )->AddRef( HB_THIS( lpThis ) );
       return S_OK;
    }
    *ppRet = NULL;
@@ -313,18 +318,10 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
    {
       if( pItemBlock )
       {
-#if HB_OLE_C_API
-         lOleError = pDisp->lpVtbl->QueryInterface( pDisp, &IID_IConnectionPointContainer, ( void** ) ( void* ) &pCPC );
-#else
-         lOleError = pDisp->QueryInterface( IID_IConnectionPointContainer, ( void** ) ( void* ) &pCPC );
-#endif
+         lOleError = HB_VTBL( pDisp )->QueryInterface( HB_THIS_( pDisp ) HB_ID_REF( IID_IConnectionPointContainer ), ( void** ) ( void* ) &pCPC );
          if ( lOleError == S_OK )
          {
-#if HB_OLE_C_API
-            lOleError = pCPC->lpVtbl->FindConnectionPoint( pCPC, &IID_IDispatch, &pCP );
-#else
-            lOleError = pCPC->FindConnectionPoint( IID_IDispatch, &pCP );
-#endif
+            lOleError = HB_VTBL( pCPC )->FindConnectionPoint( HB_THIS_( pCPC ) HB_ID_REF( IID_IDispatch ), &pCP );
             if( lOleError == S_OK )
             {
                pSink = ( ISink* ) hb_gcAlloc( sizeof( ISink ), hb_sink_destructor ); /* TODO: GlobalAlloc GMEM_FIXED ??? */
@@ -332,21 +329,13 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
                pSink->count = 2; /* 1 for pCP->Advice() param and 1 for Harbour collectible pointer [Mindaugas] */
                pSink->pItemHandler = hb_itemNew( pItemBlock );
 
-#if HB_OLE_C_API
-               lOleError = pCP->lpVtbl->Advise( pCP, ( IUnknown* ) pSink, &dwCookie );
-#else
-               lOleError = pCP->Advise( ( IUnknown* ) pSink, &dwCookie );
-#endif
+               lOleError = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) ( IUnknown* ) pSink, &dwCookie );
                pSink->pConnectionPoint = pCP;
                pSink->dwCookie = dwCookie;
 
                hb_retptrGC( pSink );
             }
-#if HB_OLE_C_API
-            pCPC->lpVtbl->Release( pCPC );
-#else
-            pCPC->Release();
-#endif
+            HB_VTBL( pCPC )->Release( HB_THIS( pCPC ) );
          }
 
          hb_oleSetError( lOleError );

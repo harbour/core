@@ -84,11 +84,16 @@
 #if defined( __cplusplus ) && !defined( CINTERFACE ) && \
    ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
      ( defined(__WATCOMC__) && ( __WATCOMC__ >= 1270 ) ) )
-#  define HB_OLE_C_API        0
 #  define HB_ID_REF( id )     ( id )
+#  define HB_VTBL( pSelf )    ( pSelf )
+#  define HB_THIS( pSelf ) 
+#  define HB_THIS_( pSelf ) 
 #else
 #  define HB_OLE_C_API        1
 #  define HB_ID_REF( id )     ( &id )
+#  define HB_VTBL( pSelf )    ( pSelf )->lpVtbl
+#  define HB_THIS( pSelf )    ( pSelf )
+#  define HB_THIS_( pSelf )   ( pSelf ),
 #endif
 
 HB_EXTERN_BEGIN

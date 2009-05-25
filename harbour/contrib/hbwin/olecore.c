@@ -108,11 +108,7 @@ static HB_GARBAGE_FUNC( hb_ole_destructor )
 
    if( *ppDisp )
    {
-#if HB_OLE_C_API
-      ( *ppDisp )->lpVtbl->Release( *ppDisp );
-#else
-      ( *ppDisp )->Release();
-#endif
+      HB_VTBL( *ppDisp )->Release( HB_THIS( *ppDisp ) );
       *ppDisp = NULL;
    }
 }
@@ -124,11 +120,7 @@ static HB_GARBAGE_FUNC( hb_oleenum_destructor )
 
    if( *ppEnum )
    {
-#if HB_OLE_C_API
-      ( *ppEnum )->lpVtbl->Release( *ppEnum );
-#else
-      ( *ppEnum )->Release();
-#endif
+      HB_VTBL( *ppEnum )->Release( HB_THIS( *ppEnum ) );
       *ppEnum = NULL;
    }
 }
@@ -251,11 +243,7 @@ void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
 
                /* pVariant will be freed using VariantClear().
                   We increment reference count to keep OLE object alive */
-#if HB_OLE_C_API
-               pDisp->lpVtbl->AddRef( pDisp );
-#else
-               pDisp->AddRef();
-#endif
+               HB_VTBL( pDisp )->AddRef( HB_THIS( pDisp ) );
                pVariant->n1.n2.vt = VT_DISPATCH;
                pVariant->n1.n2.n3.pdispVal = pDisp;
             }
@@ -336,11 +324,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
                pPtrGC = hb_itemPutPtrGC( NULL, ppDisp );
 
                /* Item is one more copy of the object */
-#if HB_OLE_C_API
-               ( *ppDisp )->lpVtbl->AddRef( *ppDisp );
-#else
-               ( *ppDisp )->AddRef();
-#endif
+               HB_VTBL( *ppDisp )->AddRef( HB_THIS( *ppDisp ) );
 
                hb_vmPushDynSym( s_pDyns_hObjAssign );
                hb_vmPush( pObject );
@@ -535,8 +519,7 @@ HB_FUNC( __OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 HB_FUNC( __OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 {
    BSTR        wCLSID;
-   IID         ClassID, iid;
-   BOOL        fIID = FALSE;
+   IID         ClassID, iid = IID_IDispatch;
    IDispatch*  pDisp = NULL;
    IDispatch** ppDisp;
    IUnknown*   pUnk = NULL;
@@ -560,12 +543,10 @@ HB_FUNC( __OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
             wCLSID = (BSTR) AnsiToWide( (LPSTR) cID );
             lOleError = CLSIDFromString( wCLSID, &iid );
             hb_xfree( wCLSID );
-            fIID = TRUE;
          }
          else if( hb_parclen( 2 ) == ( ULONG ) sizeof( iid ) )
          {
             memcpy( ( LPVOID ) &iid, cID, sizeof( iid ) );
-            fIID = TRUE;
          }
       }
 
@@ -574,11 +555,7 @@ HB_FUNC( __OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
          lOleError = GetActiveObject( HB_ID_REF( ClassID ), NULL, &pUnk );
 
          if ( lOleError == S_OK )
-#if HB_OLE_C_API
-            lOleError = pUnk->lpVtbl->QueryInterface( pUnk, fIID ? &iid : &IID_IDispatch, ( void** ) ( void * ) &pDisp );
-#else
-            lOleError = pUnk->QueryInterface( fIID ? iid : IID_IDispatch, ( void** ) ( void * ) &pDisp );
-#endif
+            lOleError = HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( iid ), ( void** ) ( void * ) &pDisp );
       }
    }
    else
@@ -617,34 +594,21 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
    memset( &dispparam, 0, sizeof( dispparam ) ); /* empty parameters */
    VariantInit( &variant );
 
-#if HB_OLE_C_API
-   lOleError = pDisp->lpVtbl->Invoke( pDisp, DISPID_NEWENUM, &IID_NULL,
-                                      LOCALE_USER_DEFAULT,
-                                      DISPATCH_PROPERTYGET,
-                                      &dispparam, &variant, &excep, &uiArgErr );
-#else
-   lOleError = pDisp->Invoke( DISPID_NEWENUM, IID_NULL,
-                              LOCALE_USER_DEFAULT,
-                              DISPATCH_PROPERTYGET,
-                              &dispparam, &variant, &excep, &uiArgErr );
-#endif
+   lOleError = HB_VTBL( pDisp )->Invoke( HB_THIS_( pDisp ) DISPID_NEWENUM, HB_ID_REF( IID_NULL ),
+                                         LOCALE_USER_DEFAULT,
+                                         DISPATCH_PROPERTYGET,
+                                         &dispparam, &variant, &excep, &uiArgErr );
 
    if( lOleError == S_OK )
    {
       if( variant.n1.n2.vt == VT_UNKNOWN )
-#if HB_OLE_C_API
-         lOleError = ( variant.n1.n2.n3.punkVal )->lpVtbl->QueryInterface( variant.n1.n2.n3.punkVal,
-                       &IID_IEnumVARIANT, ( void** ) ( void * ) &pEnum );
-#else
-         lOleError = ( variant.n1.n2.n3.punkVal )->QueryInterface( IID_IEnumVARIANT, ( void** ) ( void * ) &pEnum );
-#endif
+         lOleError = HB_VTBL( variant.n1.n2.n3.punkVal )->QueryInterface( 
+                            HB_THIS_( variant.n1.n2.n3.punkVal )
+                            HB_ID_REF( IID_IEnumVARIANT ), ( void** ) ( void * ) &pEnum );
       else if( variant.n1.n2.vt == VT_DISPATCH )
-#if HB_OLE_C_API
-         lOleError = ( variant.n1.n2.n3.pdispVal )->lpVtbl->QueryInterface( variant.n1.n2.n3.pdispVal,
-                       &IID_IEnumVARIANT, ( void** ) ( void * ) &pEnum );
-#else
-         lOleError = ( variant.n1.n2.n3.pdispVal )->QueryInterface( IID_IEnumVARIANT, ( void** ) ( void * ) &pEnum );
-#endif
+         lOleError = HB_VTBL( variant.n1.n2.n3.pdispVal )->QueryInterface( 
+                            HB_THIS_( variant.n1.n2.n3.pdispVal )
+                            HB_ID_REF( IID_IEnumVARIANT ), ( void** ) ( void * ) &pEnum );
       else
       {
          hb_oleSetError( lOleError );
@@ -677,11 +641,7 @@ HB_FUNC( __OLEENUMNEXT )
    VARIANTARG     variant;
 
    VariantInit( &variant );
-#if HB_OLE_C_API
-   if( pEnum->lpVtbl->Next( pEnum, 1, &variant, NULL ) == S_OK )
-#else
-   if( pEnum->Next( 1, &variant, NULL ) == S_OK )
-#endif
+   if( HB_VTBL( pEnum )->Next( HB_THIS_( pEnum ) 1, &variant, NULL ) == S_OK )
    {
       hb_oleVariantToItem( hb_stackReturnItem(), &variant );
       VariantClear( &variant );
@@ -770,13 +730,8 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
    if( szMethod[ 0 ] == '_' && hb_pcount() > 0 )
    {
       pMemberArray = &szMethodWide[ 1 ];
-#if HB_OLE_C_API
-      lOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, &pMemberArray,
-                                                1, LOCALE_USER_DEFAULT, &dispid );
-#else
-      lOleError = pDisp->GetIDsOfNames( IID_NULL, &pMemberArray,
-                                        1, LOCALE_USER_DEFAULT, &dispid );
-#endif
+      lOleError = HB_VTBL( pDisp )->GetIDsOfNames( HB_THIS_( pDisp ) HB_ID_REF( IID_NULL ), &pMemberArray,
+                                                   1, LOCALE_USER_DEFAULT, &dispid );
 
       if( lOleError == S_OK )
       {
@@ -787,17 +742,10 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
          dispparam.rgdispidNamedArgs = &lPropPut;
          dispparam.cNamedArgs = 1;
 
-#if HB_OLE_C_API
-         lOleError = pDisp->lpVtbl->Invoke( pDisp, dispid, &IID_NULL,
-                                            LOCALE_USER_DEFAULT,
-                                            DISPATCH_PROPERTYPUT, &dispparam,
-                                            NULL, &excep, &uiArgErr );
-#else
-         lOleError = pDisp->Invoke( dispid, IID_NULL,
-                                    LOCALE_USER_DEFAULT,
-                                    DISPATCH_PROPERTYPUT, &dispparam,
-                                    NULL, &excep, &uiArgErr );
-#endif
+         lOleError = HB_VTBL( pDisp )->Invoke( HB_THIS_( pDisp ) dispid, HB_ID_REF( IID_NULL ),
+                                               LOCALE_USER_DEFAULT,
+                                               DISPATCH_PROPERTYPUT, &dispparam,
+                                               NULL, &excep, &uiArgErr );
          FreeParams( &dispparam );
          hb_xfree( szMethodWide );
 
@@ -814,13 +762,8 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
    /* Try property get and invoke */
 
    pMemberArray = szMethodWide;
-#if HB_OLE_C_API
-   lOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, &pMemberArray,
-                                             1, LOCALE_USER_DEFAULT, &dispid );
-#else
-   lOleError = pDisp->GetIDsOfNames( IID_NULL, &pMemberArray,
-                                     1, LOCALE_USER_DEFAULT, &dispid );
-#endif
+   lOleError = HB_VTBL( pDisp )->GetIDsOfNames( HB_THIS_( pDisp ) HB_ID_REF( IID_NULL ), 
+                                                &pMemberArray, 1, LOCALE_USER_DEFAULT, &dispid );
    hb_xfree( szMethodWide );
 
    if( lOleError == S_OK )
@@ -829,17 +772,10 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
       VariantInit( &variant );
       GetParams( &dispparam );
 
-#if HB_OLE_C_API
-      lOleError = pDisp->lpVtbl->Invoke( pDisp, dispid, &IID_NULL,
+      lOleError = HB_VTBL( pDisp )->Invoke( HB_THIS_( pDisp ) dispid, HB_ID_REF( IID_NULL ),
                                          LOCALE_USER_DEFAULT,
                                          DISPATCH_PROPERTYGET | DISPATCH_METHOD,
                                          &dispparam, &variant, &excep, &uiArgErr );
-#else
-      lOleError = pDisp->Invoke( dispid, IID_NULL,
-                                 LOCALE_USER_DEFAULT,
-                                 DISPATCH_PROPERTYGET | DISPATCH_METHOD,
-                                 &dispparam, &variant, &excep, &uiArgErr );
-#endif
       FreeParams( &dispparam );
 
       hb_oleVariantToItem( hb_stackReturnItem(), &variant );
