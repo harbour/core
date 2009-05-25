@@ -1,5 +1,5 @@
 #
-# $Id: $
+# $Id$
 #
 
 ifeq ($(HB_MAIN),)
