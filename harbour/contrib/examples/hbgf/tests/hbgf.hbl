@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+{win}libs=hbgfwin
+{os2}libs=hbgfos2
+{linux|darwin|bsd|sunos}libs=hbgfgtk

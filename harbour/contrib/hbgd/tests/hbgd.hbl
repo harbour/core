@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+libs=hbgd
+{win}libs=bgd
+{linux}libs=gdlib png jpeg freetype m

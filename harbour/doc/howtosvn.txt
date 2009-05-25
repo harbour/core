@@ -42,18 +42,14 @@ by Viktor Szakats
  6) SVN COMMIT --editor-cmd notepad.exe --username sfuser
     Change notepad.exe to the editor of your choice and platform.
     Change "sfuser" to your sf.net username.
- 7) New email message, paste the new ChangeLog entry
- 8) Copy and paste the ChangeLog entry header to the subject after
-    "CHANGELOG: "
- 9) The SVN pops up a window with the changed filenames
-10) Check if all the changed filenames are referred in the ChangeLog entry,
+ 7) The SVN pops up a window with the changed filenames
+ 8) Check if all the changed filenames are referred in the ChangeLog entry,
     if not, make the corrections and start again
-11) Paste the ChangeLog entry header to the SVN window, save, exit
-12) SVN is now uploading,
+ 9) Paste the ChangeLog entry header to the SVN window, save, exit
+10) SVN is now uploading,
     if there are any errors, make the corrections and start again
-13) Always check if the upload session ended without errors.
-14) Send the email message containing the changes
-15) Go offline (if needed)
+11) Always check if the upload session ended without errors.
+12) Go offline (if needed)
 
 alternative method:
 by Ryszard Glab
@@ -85,7 +81,7 @@ Important notes:
     placement.
     Add the new filename to the related makefiles.
     (*) There are some exceptions: ChangeLog.*, Makefile, COPYING,
-        ERRATA and TODO for example.
+        ERRATA, TODO and INSTALL for example.
 
 1.3 Here's how to format your ChangeLog entries
 ===============================================

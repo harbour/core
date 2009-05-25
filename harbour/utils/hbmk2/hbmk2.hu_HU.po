@@ -179,8 +179,8 @@ msgstr "Hiba: Harbour könyvtárakat nem sikerült meghatározni."
 
 #: hbmk2.prg:5758
 #, c-format
-msgid "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\\n-lng=en-EN,hu-HU,de"
-msgstr "nyelvek listája, amelyek a .pot/.po és .hbl/.po állományokban levõ ${lng} makrókba kerülnek behelyettesítésre. Vesszõvel elválasztott lista:\\n-lng=en-EN,hu-HU,de"
+msgid "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbi/.po filenames. Comma separared list:\\n-lng=en-EN,hu-HU,de"
+msgstr "nyelvek listája, amelyek a .pot/.po és .hbi/.po állományokban levõ ${lng} makrókba kerülnek behelyettesítésre. Vesszõvel elválasztott lista:\\n-lng=en-EN,hu-HU,de"
 
 #: hbmk2.prg:2737
 #, c-format
@@ -219,13 +219,13 @@ msgstr "'%1$s' .po fájl frissítve a következõ nyelv(ek)hez: %2$s"
 
 #: hbmk2.prg:5345
 #, c-format
-msgid "Created .hbl file '%1$s'"
-msgstr "'%1$s' .hbl fájl létrehozva"
+msgid "Created .hbi file '%1$s'"
+msgstr "'%1$s' .hbi fájl létrehozva"
 
 #: hbmk2.prg:5347
 #, c-format
-msgid "Created .hbl file '%1$s' for language(s): %2$s"
-msgstr "'%1$s' .hbl fájl létrehozva a következõ nyelv(ek)hez: %2$s"
+msgid "Created .hbi file '%1$s' for language(s): %2$s"
+msgstr "'%1$s' .hbi fájl létrehozva a következõ nyelv(ek)hez: %2$s"
 
 #: hbmk2.prg:3339
 #, c-format
@@ -434,8 +434,8 @@ msgstr "kapcsoló továbbítása (statikus függvénykönyvtár) szerkesztõnek"
 
 #: hbmk2.prg:5758
 #, c-format
-msgid "output .hbl filename. ${lng} macro is accepted in filename"
-msgstr "kimeneti .hbl fájlnév. ${lng} makró használható a fájlnévben"
+msgid "output .hbi filename. ${lng} macro is accepted in filename"
+msgstr "kimeneti .hbi fájlnév. ${lng} makró használható a fájlnévben"
 
 #: hbmk2.prg:5187
 #, c-format
@@ -719,8 +719,8 @@ msgstr "Hiba: C fordító futtatásakor. %1$s"
 
 #: hbmk2.prg:5661
 #, c-format
-msgid "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
-msgstr "  hbmk [kapcsolók] [<parancsállomány[s]>] <forrás[.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
+msgid "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbi]>"
+msgstr "  hbmk [kapcsolók] [<parancsállomány[s]>] <forrás[.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbi]>"
 
 #: hbmk2.prg:2937
 #, c-format
@@ -734,8 +734,8 @@ msgstr "többszálú/egyszálú virtuális gép használata"
 
 #: hbmk2.prg:5758
 #, c-format
-msgid "add/exclude C compiler debug info"
-msgstr "C fordító debug információ hozzáadása (vagy sem)"
+msgid "add/exclude C compiler debug info. For Harbour level debug, use Harbour option -b as usual"
+msgstr "C fordító debug információ hozzáadása (vagy sem). Harbour szintû debughoz használja a -b kapcsolót"
 
 #: hbmk2.prg:2640
 #, c-format

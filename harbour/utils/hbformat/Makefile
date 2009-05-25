@@ -6,29 +6,25 @@ ifeq ($(HB_MAIN),)
 HB_MAIN = std
 endif
 
-HVMLIB = hbvm
-ifneq ($(HB_ARCHITECTURE),dos)
-ifneq ($(HB_MT),no)
-   HVMLIB = hbvmmt
-endif
-endif
-
 ROOT = ../../
 
 PRG_SOURCES=\
 	hbformat.prg \
 
+C_SOURCES=\
+	hbformac.c \
+
 PRG_MAIN=hbformat.prg
 
 LIBS=\
 	hbdebug \
-	$(HVMLIB) \
+	hbvm \
 	hbrtl \
 	hblang \
 	hbcpage \
 	hbnulrdd \
 	hbrtl \
-	$(HVMLIB) \
+	hbvm \
 	hbmacro \
 	hbcommon \
 	hbpp \

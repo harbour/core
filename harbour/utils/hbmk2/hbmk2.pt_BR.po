@@ -469,7 +469,7 @@ msgstr ""
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "  -hbl[=<output>]    output .hbl filename. ${lng} macro is accepted in filename"
+msgid "  -hbi[=<output>]    output .hbi filename. ${lng} macro is accepted in filename"
 msgstr ""
 
 #: hbmk2.prg:5294
@@ -479,7 +479,7 @@ msgstr ""
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "                     filenames and output .hbl filenames. Comma separared list:"
+msgid "                     filenames and output .hbi filenames. Comma separared list:"
 msgstr ""
 
 #: hbmk2.prg:5294
@@ -724,7 +724,7 @@ msgstr ""
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "  -nohbp             do not process .hbp files in current directory"
+msgid "  -nohbl             do not process .hbl files in current directory"
 msgstr ""
 
 #: hbmk2.prg:5294
@@ -809,7 +809,7 @@ msgstr ""
 
 #: hbmk2.prg:5180
 #, c-format
-msgid "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.pot|.hbl]>"
+msgid "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.pot|.hbi]>"
 msgstr ""
 
 #: hbmk2.prg:5450 hbmk2.prg:5644
@@ -984,7 +984,7 @@ msgstr ""
 
 #: hbmk2.prg:5758
 #, c-format
-msgid "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\\n-lng=en-EN,hu-HU,de"
+msgid "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbi/.po filenames. Comma separared list:\\n-lng=en-EN,hu-HU,de"
 msgstr ""
 
 #: hbmk2.prg:3532
@@ -1014,12 +1014,12 @@ msgstr ""
 
 #: hbmk2.prg:5345
 #, c-format
-msgid "Created .hbl file '%1$s'"
+msgid "Created .hbi file '%1$s'"
 msgstr ""
 
 #: hbmk2.prg:5347
 #, c-format
-msgid "Created .hbl file '%1$s' for language(s): %2$s"
+msgid "Created .hbi file '%1$s' for language(s): %2$s"
 msgstr ""
 
 #: hbmk2.prg:3339
@@ -1224,7 +1224,7 @@ msgstr ""
 
 #: hbmk2.prg:5758
 #, c-format
-msgid "output .hbl filename. ${lng} macro is accepted in filename"
+msgid "output .hbi filename. ${lng} macro is accepted in filename"
 msgstr ""
 
 #: hbmk2.prg:5187
@@ -1494,7 +1494,7 @@ msgstr ""
 
 #: hbmk2.prg:5661
 #, c-format
-msgid "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>"
+msgid "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbi]>"
 msgstr ""
 
 #: hbmk2.prg:2937
@@ -1591,4 +1591,3 @@ msgstr ""
 #, c-format
 msgid "Error: Cannot create temporary unified .po file."
 msgstr ""
-

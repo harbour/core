@@ -1,8 +1,0 @@
-#
-# $Id$
-#
-
-libs=hbblat blat
-
-# for the tests only
-libs=hbwin

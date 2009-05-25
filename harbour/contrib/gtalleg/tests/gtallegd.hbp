@@ -1,9 +1,0 @@
-#
-# $Id$
-#
-
-# shared linking
-
-libs=gtalleg
-{win}libs=alleg
-{linux}ldflags="`allegro-config --libs 2>/dev/null`"

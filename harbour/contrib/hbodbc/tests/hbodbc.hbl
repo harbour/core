@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+
+libs=hbodbc
+{win}libs=odbc32

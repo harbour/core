@@ -1,0 +1,5 @@
+#
+# $Id$
+#
+
+libs=hbsqlit3 sqlite3

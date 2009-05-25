@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    Harbour i18n .pot/.hbl file manger
+ *    Harbour i18n .pot/.hbi file manger
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -54,7 +54,7 @@
 #include "directry.ch"
 
 #define _HB_I18N_MERGE  1
-#define _HB_I18N_GENHBL 2
+#define _HB_I18N_GENHBI 2
 #define _HB_I18N_TRANS  3
 
 PROCEDURE Main( ... )
@@ -85,7 +85,7 @@ PROCEDURE Main( ... )
             IF nMode != 0
                lError := .T.
             ELSE
-               nMode := _HB_I18N_GENHBL
+               nMode := _HB_I18N_GENHBI
             ENDIF
          ELSEIF param == "a"
             IF nMode != 0
@@ -121,7 +121,7 @@ PROCEDURE Main( ... )
    IF nMode == _HB_I18N_TRANS
       FOR n := 1 TO Len( aFiles )
          hb_FNameSplit( aFiles[ n ],,, @cExt )
-         IF !Lower( cExt ) == ".hbl"
+         IF !Lower( cExt ) == ".hbi"
             cFileIn := aFiles[ n ]
             HB_ADel( aFiles, n, .T. )
             EXIT
@@ -140,8 +140,8 @@ PROCEDURE Main( ... )
 
    IF nMode == _HB_I18N_MERGE
       Merge( aFiles, cFileOut )
-   ELSEIF nMode == _HB_I18N_GENHBL
-      GenHbl( aFiles, cFileOut, lEmpty )
+   ELSEIF nMode == _HB_I18N_GENHBI
+      GenHBI( aFiles, cFileOut, lEmpty )
    ELSEIF nMode == _HB_I18N_TRANS
       AutoTrans( cFileIn, aFiles, cFileOut )
    ENDIF
@@ -154,7 +154,7 @@ STATIC FUNCTION HBRawVersion()
 
 STATIC PROCEDURE Logo()
 
-   OutStd( "Harbour i18n .pot/.hbl file manager " + HBRawVersion() + HB_OSNewLine() +;
+   OutStd( "Harbour i18n .pot/.hbi file manager " + HBRawVersion() + HB_OSNewLine() +;
            "Copyright (c) 2009, Przemyslaw Czerpak" + HB_OSNewLine() + ;
            "http://www.harbour-project.org/" + HB_OSNewLine() +;
            HB_OSNewLine() )
@@ -167,13 +167,13 @@ STATIC PROCEDURE Syntax()
    OutStd( "Syntax: hbi18n -m | -g | -a [-o<outfile>] [-e] [-q] <files1[.pot] ...>" + HB_OSNewLine() + ;
            HB_OSNewLine() + ;
            "    -m          merge given .pot files" + HB_OSNewLine() + ;
-           "    -g          generate .hbl file from given .pot files" + HB_OSNewLine() + ;
+           "    -g          generate .hbi file from given .pot files" + HB_OSNewLine() + ;
            "    -a          add automatic translations to 1-st .pot file using" + HB_OSNewLine() + ;
-           "                translations from other .pot or .hbl files" + HB_OSNewLine() + ;
+           "                translations from other .pot or .hbi files" + HB_OSNewLine() + ;
            "    -o<outfile> output file name" + HB_OSNewLine() + ;
            "                default is first .pot file name with" + HB_OSNewLine() + ;
-           "                .po (merge) or .hbl extension" + HB_OSNewLine() + ;
-           "    -e          do not strip empty translation rules from .hbl files" + HB_OSNewLine() + ;
+           "                .po (merge) or .hbi extension" + HB_OSNewLine() + ;
+           "    -e          do not strip empty translation rules from .hbi files" + HB_OSNewLine() + ;
            "    -q          quiet mode" + HB_OSNewLine() + ;
            HB_OSNewLine() )
 
@@ -270,7 +270,7 @@ STATIC FUNCTION LoadFilesAsHash( aFiles )
 
    FOR n := 1 TO Len( aFiles )
       hb_FNameSplit( aFiles[ n ],,, @cExt )
-      IF Lower( cExt ) == ".hbl"
+      IF Lower( cExt ) == ".hbi"
          cTrans := hb_memoRead( aFiles[ n ] )
          IF !HB_I18N_Check( cTrans )
             ErrorMsg( "Wrong file format: " + aFiles[ n ] )
@@ -308,20 +308,20 @@ STATIC PROCEDURE Merge( aFiles, cFileOut )
    RETURN
 
 
-STATIC PROCEDURE GenHbl( aFiles, cFileOut, lEmpty )
-   LOCAL cHblBody
+STATIC PROCEDURE GenHBI( aFiles, cFileOut, lEmpty )
+   LOCAL cHBIBody
    LOCAL pI18N
 
    IF Empty( cFileOut )
-      cFileOut := FileExt( aFiles[ 1 ], ".hbl", .T. )
+      cFileOut := FileExt( aFiles[ 1 ], ".hbi", .T. )
    ELSE
-      cFileOut := FileExt( cFileOut, ".hbl", .F. )
+      cFileOut := FileExt( cFileOut, ".hbi", .F. )
    ENDIF
 
    pI18N := __I18N_hashTable( __I18N_potArrayToHash( LoadFiles( aFiles ), ;
                                                      lEmpty ) )
-   cHblBody := HB_I18N_SaveTable( pI18N )
-   IF !hb_memoWrit( cFileOut, cHblBody )
+   cHBIBody := HB_I18N_SaveTable( pI18N )
+   IF !hb_memoWrit( cFileOut, cHBIBody )
       ErrorMsg( "cannot create file: " + cFileOut )
    ENDIF
 

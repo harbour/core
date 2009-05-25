@@ -392,7 +392,9 @@ track of all files (read the FAQ if you don't know what SVN is).
     |
     +---hbextern        - hbextern.ch generator.
     |
-    +---hbi18n          - Harbour i18n .pot/.hbl file manager.
+    +---hbformat        - Harbour Source Formatter utility.
+    |
+    +---hbi18n          - Harbour i18n .pot/.hbi file manager.
     |
     +---hbmk            - Harbour Make utility.
     |   |

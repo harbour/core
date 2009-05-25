@@ -35,14 +35,13 @@
  *    bash script with similar purpose for gcc family.
  *    entry point override method and detection code for gcc.
  *    rtlink/blinker link script parsers.
- *    POTMerge(), LoadPOTFilesAsHash(), GenHbl() and AutoTrans().
+ *    POTMerge(), LoadPOTFilesAsHash(), GenHBI() and AutoTrans().
  *       (with local modifications by hbmk author)
  *
  * See COPYING for licensing terms.
  *
  */
 
-#pragma linenumber=on
 /* Optimizations */
 #pragma -km+
 #pragma -ko+
@@ -72,11 +71,11 @@
          _core_ (official interfaces preferred), C compilers and OS
          details on the smallest possible level.
          Instead, 3rd party Harbour packages are recommended to
-         maintain and provide .hbp files themselves, as part of
+         maintain and provide .hbl files themselves, as part of
          their standard distribution packages. You can find a few
-         such .hbp examples in the 'examples' directory.
+         such .hbl examples in the 'examples' directory.
          For Harbour contribs, the recommended method is to supply
-         and maintain .hbp files in their respective directories,
+         and maintain .hbl files in their respective directories,
          usually under tests (or utils, samples). As of this
          writing, most of them has one created.
          Thank you. [vszakats] */
@@ -97,6 +96,10 @@
 /* TODO: Finish C++/C mode selection. */
 /* TODO: Add a way to fallback to stop if required headers couldn't be found.
          This needs a way to spec what key headers to look for. */
+
+#ifndef _HBMK_EMBEDDED_
+
+#pragma linenumber=on
 
 ANNOUNCE HB_GTSYS
 
@@ -124,6 +127,8 @@ REQUEST HB_CODEPAGE_IT850, HB_CODEPAGE_ITISO
 REQUEST HB_CODEPAGE_PL852, HB_CODEPAGE_PLISO
 REQUEST HB_CODEPAGE_PT850, HB_CODEPAGE_PTISO
 REQUEST HB_CODEPAGE_RU866, HB_CODEPAGE_RUISO
+
+#endif
 
 REQUEST hbmk_ARCH
 REQUEST hbmk_COMP
@@ -208,7 +213,7 @@ REQUEST hbmk_KEYW
 #define _HBMK_lREBUILDPO        40
 
 #define _HBMK_aPO               41
-#define _HBMK_cHBL              42
+#define _HBMK_cHBI              42
 #define _HBMK_aLNG              43
 #define _HBMK_cPO               44
 
@@ -223,6 +228,8 @@ REQUEST hbmk_KEYW
 #define _HBMK_lUTF8             51
 
 #define _HBMK_MAX_              51
+
+#ifndef _HBMK_EMBEDDED_
 
 PROCEDURE Main( ... )
    LOCAL aArgs := hb_AParams()
@@ -284,6 +291,11 @@ PROCEDURE Main( ... )
 
       FOR EACH tmp IN aArgs
          DO CASE
+         CASE Lower( FN_ExtGet( tmp ) ) == ".hbp" .AND. ! lHadTarget
+            nTarget++
+            IF nTarget == nTargetTODO
+               AAdd( aArgsTarget, tmp )
+            ENDIF
          CASE Lower( Left( tmp, Len( "-target=" ) ) ) == "-target="
             nTarget++
             IF nTarget == nTargetTODO
@@ -327,6 +339,8 @@ PROCEDURE Main( ... )
    Set( _SET_EXACT, lOldExact )
 
    RETURN
+
+#endif
 
 STATIC FUNCTION hbmk_run( cCmd )
 #if defined( __PLATFORM__DOS )
@@ -460,7 +474,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL tmp, tmp1, tmp2, array
    LOCAL cScriptFile
    LOCAL fhnd
-   LOCAL lNOHBP
+   LOCAL lNOHBL
    LOCAL lSysLoc
    LOCAL cPrefix
    LOCAL cPostfix
@@ -1093,7 +1107,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    IF    Lower( GetEnv( "HB_MT"     ) ) == "mt" ; hbmk[ _HBMK_lMT ]     := .T. ; ENDIF /* Compatibility */
    IF ValueIsT( GetEnv( "HB_MT"     ) )         ; hbmk[ _HBMK_lMT ]     := .T. ; ENDIF
    IF ValueIsT( GetEnv( "HB_GUI"    ) )         ; hbmk[ _HBMK_lGUI ]    := .T. ; ENDIF
-   IF ValueIsT( GetEnv( "HB_SHARED" ) )         ; hbmk[ _HBMK_lSHARED ] := .T. ; hbmk[ _HBMK_lSTATICFULL ] := .F. ; ENDIF
+   IF ValueIsT( GetEnv( "HB_SHARED" ) )         ; hbmk[ _HBMK_lSHARED ] := .T. ; hbmk[ _HBMK_lSTATICFULL ] := .F. ; hbmk[ _HBMK_lSHAREDDIST ] := NIL ; ENDIF
    IF ValueIsT( GetEnv( "HB_DEBUG"  ) )         ; hbmk[ _HBMK_lDEBUG ]  := .T. ; ENDIF
    IF ValueIsT( GetEnv( "HB_NULRDD" ) )         ; hbmk[ _HBMK_lNULRDD ] := .T. ; ENDIF
 
@@ -1124,7 +1138,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    s_cPROGNAME := NIL
    s_cFIRST := NIL
    hbmk[ _HBMK_aPO ] := {}
-   hbmk[ _HBMK_cHBL ] := NIL
+   hbmk[ _HBMK_cHBI ] := NIL
    hbmk[ _HBMK_cPO ] := NIL
    hbmk[ _HBMK_aLNG ] := {}
    s_aINSTPATH := {}
@@ -1147,7 +1161,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             nEmbedLevel := 1
             HBM_Load( hbmk, aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
          ENDIF
-      CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
+      CASE Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
+           Lower( FN_ExtGet( cParam ) ) == ".hbp"
          nEmbedLevel := 1
          HBM_Load( hbmk, aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
       OTHERWISE
@@ -1156,15 +1171,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    NEXT
 
    /* Process command line (1st pass) */
-   lNOHBP := .F.
+   lNOHBL := .F.
    FOR EACH aParam IN aParams
-      IF Lower( aParam[ _PAR_cParam ] ) == "-nohbp"
-         lNOHBP := .T.
+      IF Lower( aParam[ _PAR_cParam ] ) == "-nohbl"
+         lNOHBL := .T.
       ENDIF
    NEXT
 
    /* Process automatic control files. */
-   HBP_ProcessAll( hbmk, lNOHBP )
+   HBL_ProcessAll( hbmk, lNOHBL )
 
    /* Build with shared libs by default, if we're installed to default system locations. */
 
@@ -1191,7 +1206,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
            cParamL            == "-hbcmp" .OR. ;
            cParamL            == "-hbcc"  .OR. ;
            cParamL            == "-hblnk" .OR. ;
-           cParamL            == "-nohbp" .OR. ;
+           cParamL            == "-nohbl" .OR. ;
            cParamL            == "-xhb" .OR. ;
            cParamL            == "-clipper" .OR. ;
            cParamL            == "-rtlink" .OR. ;
@@ -1323,17 +1338,17 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             hbmk[ _HBMK_aLNG ] := ListToArray( cParam, "," )
          ENDIF
 
-      CASE Left( cParamL, 5 ) == "-hbl="
+      CASE Left( cParamL, 5 ) == "-hbi="
 
-         hbmk[ _HBMK_cHBL ] := PathSepToTarget( hbmk, PathProc( SubStr( cParam, 6 ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
+         hbmk[ _HBMK_cHBI ] := PathSepToTarget( hbmk, PathProc( SubStr( cParam, 6 ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
 
       CASE Left( cParamL, 4 ) == "-po="
 
          hbmk[ _HBMK_cPO ] := PathSepToTarget( hbmk, PathProc( SubStr( cParam, 5 ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
 
-      CASE Left( cParamL, 5 ) == "-hbl"
+      CASE Left( cParamL, 5 ) == "-hbi"
 
-         hbmk[ _HBMK_cHBL ] := ""
+         hbmk[ _HBMK_cHBI ] := ""
 
       CASE Left( cParamL, 6 ) == "-main="
 
@@ -1540,7 +1555,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aLIBUSER ], PathSepToTarget( hbmk, cParam ) )
          ENDIF
 
-      CASE FN_ExtGet( cParamL ) == ".hbp"
+      CASE FN_ExtGet( cParamL ) == ".hbl"
 
          cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
 
@@ -1557,7 +1572,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cParam ) )
          ENDIF
 
-         HBP_ProcessOne( hbmk, cParam )
+         HBL_ProcessOne( hbmk, cParam )
 
       CASE FN_ExtGet( cParamL ) == ".prg"
 
@@ -1617,9 +1632,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aPO ], PathSepToTarget( hbmk, cParam ) )
          NEXT
 
-      CASE FN_ExtGet( cParamL ) == ".hbl"
+      CASE FN_ExtGet( cParamL ) == ".hbi"
 
-         hbmk[ _HBMK_cHBL ] := PathSepToTarget( hbmk, PathProc( cParam, aParam[ _PAR_cFileName ] ) )
+         hbmk[ _HBMK_cHBI ] := PathSepToTarget( hbmk, PathProc( cParam, aParam[ _PAR_cFileName ] ) )
 
       OTHERWISE
 
@@ -3048,8 +3063,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
       ENDIF
 
-      IF Len( hbmk[ _HBMK_aPO ] ) > 0 .AND. hbmk[ _HBMK_cHBL ] != NIL .AND. ! s_lCLEAN
-         MakeHBL( hbmk, hbmk[ _HBMK_cHBL ] )
+      IF Len( hbmk[ _HBMK_aPO ] ) > 0 .AND. hbmk[ _HBMK_cHBI ] != NIL .AND. ! s_lCLEAN
+         MakeHBI( hbmk, hbmk[ _HBMK_cHBI ] )
       ENDIF
 
       IF Len( s_aRESSRC_TODO ) > 0 .AND. ! Empty( cBin_Res ) .AND. ! s_lCLEAN
@@ -4417,7 +4432,7 @@ STATIC FUNCTION FN_HasWildcard( cFileName )
 
 #define HBMK_CFG_NAME  "hbmk.cfg"
 
-STATIC PROCEDURE HBP_ProcessAll( hbmk, lConfigOnly )
+STATIC PROCEDURE HBL_ProcessAll( hbmk, lConfigOnly )
    LOCAL aFile
    LOCAL cDir
    LOCAL cFileName
@@ -4439,19 +4454,19 @@ STATIC PROCEDURE HBP_ProcessAll( hbmk, lConfigOnly )
          IF ! hbmk[ _HBMK_lQuiet ]
             hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing configuration: %1$s" ), cFileName ) )
          ENDIF
-         HBP_ProcessOne( hbmk, cFileName )
+         HBL_ProcessOne( hbmk, cFileName )
          EXIT
       ENDIF
    NEXT
 
    IF ! lConfigOnly
-      FOR EACH aFile IN Directory( "*" + ".hbp" )
+      FOR EACH aFile IN Directory( "*" + ".hbl" )
          cFileName := aFile[ F_NAME ]
-         IF !( cFileName == HBMK_CFG_NAME ) .AND. Lower( FN_ExtGet( cFileName ) ) == ".hbp"
+         IF !( cFileName == HBMK_CFG_NAME ) .AND. Lower( FN_ExtGet( cFileName ) ) == ".hbl"
             IF ! hbmk[ _HBMK_lQuiet ]
                hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cFileName ) )
             ENDIF
-            HBP_ProcessOne( hbmk, cFileName )
+            HBL_ProcessOne( hbmk, cFileName )
          ENDIF
       NEXT
    ENDIF
@@ -4460,7 +4475,7 @@ STATIC PROCEDURE HBP_ProcessAll( hbmk, lConfigOnly )
 
 #define _EOL          Chr( 10 )
 
-STATIC PROCEDURE HBP_ProcessOne( hbmk, cFileName )
+STATIC PROCEDURE HBL_ProcessOne( hbmk, cFileName )
    LOCAL cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
    LOCAL cLine
    LOCAL cItem
@@ -5337,9 +5352,9 @@ STATIC PROCEDURE UpdatePO( hbmk, aPOTIN )
 
    RETURN
 
-/* .hbl generation */
+/* .hbi generation */
 
-STATIC PROCEDURE MakeHBL( hbmk, cHBL )
+STATIC PROCEDURE MakeHBI( hbmk, cHBI )
    LOCAL cPO
    LOCAL tPO
    LOCAL cLNG
@@ -5353,16 +5368,16 @@ STATIC PROCEDURE MakeHBL( hbmk, cHBL )
       IF hbmk[ _HBMK_lDEBUGI18N ]
          hbmk_OutStd( hbmk, hb_StrFormat( "po: in: %1$s", ArrayToList( hbmk[ _HBMK_aPO ] ) ) )
       ENDIF
-      IF Empty( cHBL )
-         cHBL := FN_NameGet( hbmk[ _HBMK_aPO ][ 1 ] )
+      IF Empty( cHBI )
+         cHBI := FN_NameGet( hbmk[ _HBMK_aPO ][ 1 ] )
       ENDIF
-      IF Empty( FN_ExtGet( cHBL ) )
-         cHBL := FN_ExtSet( cHBL, ".hbl" )
+      IF Empty( FN_ExtGet( cHBI ) )
+         cHBI := FN_ExtSet( cHBI, ".hbi" )
       ENDIF
 
-      FOR EACH cLNG IN iif( Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ cHBL ), { _LNG_MARKER }, hbmk[ _HBMK_aLNG ] )
+      FOR EACH cLNG IN iif( Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ cHBI ), { _LNG_MARKER }, hbmk[ _HBMK_aLNG ] )
          tLNG := NIL
-         hb_FGetDateTime( StrTran( cHBL, _LNG_MARKER, cLNG ), @tLNG )
+         hb_FGetDateTime( StrTran( cHBI, _LNG_MARKER, cLNG ), @tLNG )
          lUpdateNeeded := .F.
          aPO_TODO := {}
          FOR EACH cPO IN hbmk[ _HBMK_aPO ]
@@ -5373,19 +5388,19 @@ STATIC PROCEDURE MakeHBL( hbmk, cHBL )
          NEXT
          IF lUpdateNeeded
             IF hbmk[ _HBMK_lDEBUGI18N ]
-               hbmk_OutStd( hbmk, hb_StrFormat( "po: %1$s -> %2$s", ArrayToList( aPO_TODO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( "po: %1$s -> %2$s", ArrayToList( aPO_TODO ), StrTran( cHBI, _LNG_MARKER, cLNG ) ) )
             ENDIF
-            GenHbl( hbmk, aPO_TODO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
+            GenHBI( hbmk, aPO_TODO, StrTran( cHBI, _LNG_MARKER, cLNG ) )
             AAdd( aNew, cLNG )
          ENDIF
       NEXT
    ENDIF
 
    IF ! Empty( aNew )
-      IF Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ cHBL )
-         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created .hbl file '%1$s'" ), cHBL ) )
+      IF Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ cHBI )
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created .hbi file '%1$s'" ), cHBI ) )
       ELSE
-         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created .hbl file '%1$s' for language(s): %2$s" ), cHBL, ArrayToList( aNew, "," ) ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created .hbi file '%1$s' for language(s): %2$s" ), cHBI, ArrayToList( aNew, "," ) ) )
       ENDIF
    ENDIF
 
@@ -5467,16 +5482,16 @@ STATIC PROCEDURE AutoTrans( hbmk, cFileIn, aFiles, cFileOut )
 
    RETURN
 
-STATIC FUNCTION GenHbl( hbmk, aFiles, cFileOut, lEmpty )
-   LOCAL cHblBody
+STATIC FUNCTION GenHBI( hbmk, aFiles, cFileOut, lEmpty )
+   LOCAL cHBIBody
    LOCAL pI18N
    LOCAL aTrans := LoadPOTFiles( hbmk, aFiles, NIL, .F. )
    LOCAL lRetVal := .F.
 
    IF ISARRAY( aTrans )
       pI18N := __i18n_hashTable( __i18n_potArrayToHash( aTrans, lEmpty ) )
-      cHblBody := hb_i18n_SaveTable( pI18N )
-      IF hb_MemoWrit( cFileOut, cHblBody )
+      cHBIBody := hb_i18n_SaveTable( pI18N )
+      IF hb_MemoWrit( cFileOut, cHBIBody )
          lRetVal := .T.
       ELSE
          hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Cannot create file: %1$s" ), cFileOut ) )
@@ -5660,7 +5675,7 @@ STATIC PROCEDURE SetUILang( hbmk )
    IF hbmk[ _HBMK_cUILNG ] == "en-EN"
       hb_i18n_set( NIL )
    ELSE
-      tmp := "${hb_root}hbmk2.${lng}.hbl"
+      tmp := "${hb_root}hbmk2.${lng}.hbi"
       tmp := StrTran( tmp, "${hb_root}", PathSepToSelf( DirAddPathSep( hb_DirBase() ) ) )
       tmp := StrTran( tmp, "${lng}", StrTran( hbmk[ _HBMK_cUILNG ], "-", "_" ) )
       hb_i18n_set( iif( hb_i18n_check( tmp := hb_MemoRead( tmp ) ), hb_i18n_restoretable( tmp ), NIL ) )
@@ -5702,7 +5717,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
    LOCAL aText_Basic := {;
       I_( "Syntax:" ),;
       "",;
-      I_( "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>" ),;
+      I_( "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbi]>" ),;
       "",;
       I_( "Options:" ) }
 
@@ -5743,7 +5758,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-fullstatic"       , I_( "link with all static libs" ) },;
       { "-[full|fix]shared" , I_( "create shared Harbour binaries without/with absolute dir reference to Harbour library (default: 'fullshared' when Harbour is installed on system location, 'fixshared' otherwise) (fix/full option in *nix only)" ) },;
       { "-nulrdd[-]"        , I_( "link with nulrdd" ) },;
-      { "-[no]debug"        , I_( "add/exclude C compiler debug info" ) },;
+      { "-[no]debug"        , I_( "add/exclude C compiler debug info. For Harbour level debug, use Harbour option -b as usual" ) },;
       { "-[no]optim"        , I_( "toggle C compiler optimizations (default: on)" ) },;
       { "-[no]map"          , I_( "create (or not) a map file" ) },;
       { "-[no]strip"        , I_( "strip (no strip) binaries" ) },;
@@ -5755,7 +5770,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-vcshead=<file>"   , I_( "generate .ch header file with local repository information. SVN, Git and Mercurial are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
       { "-tshead=<file>"    , I_( "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) },;
       { "-instpath=<path>"  , I_( "copy target to <path>. if <path> is a directory, it should end with path separator. can be specified multiple times" ) },;
-      { "-nohbp"            , I_( "do not process .hbp files in current directory" ) },;
+      { "-nohbl"            , I_( "do not process .hbl files in current directory" ) },;
       { "-stop"             , I_( "stop without doing anything" ) },;
       NIL,;
       { "-bldf[-]"          , I_( "inherit all/no (default) flags from Harbour build" ) },;
@@ -5775,8 +5790,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-clean"            , I_( "clean (in incremental build mode)" ) },;
       { "-workdir=<dir>"    , hb_StrFormat( I_( "working directory for incremental build mode\n(default: %1$s/arch/comp)" ), _WORKDIR_BASE_ ) },;
       NIL,;
-      { "-hbl[=<output>]"   , I_( "output .hbl filename. ${lng} macro is accepted in filename" ) },;
-      { "-lng=<languages>"  , I_( "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ) },;
+      { "-hbi[=<output>]"   , I_( "output .hbi filename. ${lng} macro is accepted in filename" ) },;
+      { "-lng=<languages>"  , I_( "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbi/.po filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ) },;
       { "-po=<output>"      , I_( "create/update .po file from source. Merge it with previous .po file of the same name" ) },;
       { "-rebuildpo"        , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
@@ -5804,14 +5819,14 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-quiet"            , I_( "suppress all screen messages" ) } }
 
    LOCAL aNotes := {;
-      I_( "<script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>." ),;
+      I_( "<script> can be <@script> (.hbm file), <script.hbm> or <script.hbl>." ),;
       I_( "Regular Harbour compiler options are also accepted." ),;
       I_( "Multiple -l, -L and <script> parameters are accepted." ),;
-      hb_StrFormat( I_( "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbp." ), HBMK_CFG_NAME ),;
-      I_( ".hbp option files in current dir are automatically processed." ),;
-      I_( ".hbp options (they should come in separate lines): libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\nLines starting with '#' char are ignored" ),;
-      I_( "Platform filters are accepted in each .hbp line and with several options.\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
-      I_( "Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}" ),;
+      hb_StrFormat( I_( "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbl." ), HBMK_CFG_NAME ),;
+      I_( ".hbl option files in current dir are automatically processed." ),;
+      I_( ".hbl options (they should come in separate lines): libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\nLines starting with '#' char are ignored" ),;
+      I_( "Platform filters are accepted in each .hbl line and with several options.\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
+      I_( "Certain .hbl lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}" ),;
       I_( "Defaults and feature support vary by architecture/compiler." ) }
 
    DEFAULT lLong TO .F.

@@ -1,7 +1,0 @@
-#
-# $Id$
-#
-
-libs=hbhpdf libhpdf libpng
-# for the tests only
-libs=hbct

@@ -52,6 +52,10 @@
 
 #include "hbclass.ch"
 
+#include "common.ch"
+
+#define rf_FullPath() hb_ArgV( 0 )
+
 #ifndef _CODEFORMAT_EMBEDDED_
 
 MEMVAR cFunctions
@@ -63,7 +67,7 @@ FUNCTION MAIN( ... )
    // Altd( 2 ); Altd()
    aParams := hb_AParams()
 
-   IF Empty( aParams ) .OR. ( Left( cFileName := Atail(aParams ),1 ) $ "@/-" )
+   IF Empty( aParams ) .OR. ( Left( cFileName := Atail(aParams ), 1 ) $ "@/-" )
       About()
       RETURN Nil
    ENDIF
@@ -168,10 +172,12 @@ FUNCTION DirEval( cInitDir, cMask, lRecur, bCode )
 
    LOCAL i, nLen, aFiles
 
-   IF Right( cInitDir, 1 ) != Set( _SET_DIRSEPARATOR ); cInitDir += Set( _SET_DIRSEPARATOR ); ENDIF
-   cMask := Iif( cMask == Nil, "*.*", Upper( cMask ) )
+   IF Right( cInitDir, 1 ) != Set( _SET_DIRSEPARATOR )
+      cInitDir += Set( _SET_DIRSEPARATOR )
+   ENDIF
+   cMask := Iif( cMask == Nil, hb_osFileMask(), Upper( cMask ) )
 
-   aFiles := Directory( cInitDir + "*.*", "HSD" )
+   aFiles := Directory( cInitDir + hb_osFileMask(), "HSD" )
    nLen := Len( aFiles )
    FOR i := 1 TO nLen
       IF "D" $ aFiles[ i,5 ]
@@ -189,7 +195,7 @@ FUNCTION DirEval( cInitDir, cMask, lRecur, bCode )
 
 STATIC FUNCTION About()
 
-   ? "Harbour source formatter " + Version()
+   ?? "Harbour Source Formatter " + HBRawVersion()
    ? "Copyright (c) 2009, Alexander S.Kresin"
    ? "http://www.harbour-project.org/"
    ?
@@ -198,6 +204,9 @@ STATIC FUNCTION About()
 
    RETURN Nil
 
+STATIC FUNCTION HBRawVersion()
+   RETURN StrTran( Version(), "Harbour " )
+
 #endif
 
 CLASS CODEFORMAT
@@ -205,7 +214,7 @@ CLASS CODEFORMAT
    DATA cEol
    DATA nLineErr, nErr, cLineErr
 
-   DATA nEol           INIT  - 1      // Eol: -1 - no change, 1 - DOS, 2 - UNIX
+   DATA nEol           INIT  - 1     // Eol: -1 - no change, 1 - DOS, 2 - UNIX
    DATA lNoTabs        INIT .T.      // If true, converts all tabs to spaces
    DATA lIndent        INIT .T.      // If true, indent code
    DATA lCase          INIT .T.      // If true, make case conversion
@@ -223,7 +232,7 @@ CLASS CODEFORMAT
    DATA nCaseCmd       INIT   1      // Case of commands ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
    DATA nCaseBoo       INIT   1      // Case of boolean operators ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
    DATA nCaseFnc       INIT   4      // Case of functions ( -1 - no change, 1 - upper, 2 - lower, 3 - title, 4 - as in pattern )
-   DATA nCaseUnk       INIT  - 1      // Case of functions ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
+   DATA nCaseUnk       INIT  - 1     // Case of functions ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
    DATA nCaseDrt       INIT   2      // Case of directives ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
    DATA nSpaceDrt      INIT   0      // Number of spaces after # in directives ( -1 - no change )
    DATA nLineFnc       INIT   1      // -1 - no change, 1 - insert empty line before a function ( procedure,class ) declaration, 2 - remove it
@@ -303,17 +312,17 @@ METHOD New( aParams ) CLASS CODEFORMAT
       ::cFunctions += ","
    ENDIF
    IF ! ( ",STR," $ Upper( ::cFunctions ) )
-      ::cFunctions += "AAdd,Abs,AChoice,AClone,ACopy,ADel,ADir,AEval,AFields,AFill,AIns,Alert,Alias,AllTrim,Altd,"
-      ::cFunctions += "Array,Asc,ASize,ASort,At,Bin2i,Bin2l,Bin2w,Bof,Browse,Cdow,Chr,Cmonth,Col,Ctod,Curdir,"
+      ::cFunctions += "AAdd,Abs,AChoice,AClone,ACopy,ADel,ADir,AEval,AFields,AFill,AIns,Alert,Alias,AllTrim,AltD,"
+      ::cFunctions += "Array,Asc,ASize,ASort,At,Bin2I,Bin2L,Bin2W,Bof,Browse,CDow,Chr,CMonth,Col,CToD,CurDir,"
       ::cFunctions += "Date,Day,dbAppend,dbClearFil,dbClearInd,dbCloseAll,dbCloseArea,dbCommit,dbCreate,dbDelete,dbEdit,dbEval,Dbf,dbFilter,dbGoBottom,dbGoto,dbRecall,dbReindex,dbRelation,dbRLock,dbRSelect,dbRunLock,"
-      ::cFunctions += "dbSeek,dbSelectArea,dbSetDriver,dbSetFilter,dbSetIndex,dbSetOrder,dbSetRelat,dbSkip,dbStruct,dbUnlock,dbUseArea,Deleted,Descend,Devout,Devpos,"
-      ::cFunctions += "Directory,DiskSpace,DispBegin,DispBox,DispCount,DispEnd,DispOut,DosError,Dow,Dtoc,Dtos,Empty,Eof,Errorblock,Errorlevel,Eval,Exp,FClose,FCount,FCreate,FErase,FError,FieldBlock,FieldGet,FieldName,"
-      ::cFunctions += "FieldPos,FieldPut,Fieldwblock,File,Fklabel,Fkmax,FLock,FOpen,Found,FRead,FReadstr,FRename,FSeek,FWrite,Getenv,Hardcr,Header,Iif,IndexExt,IndexKey,IndexOrd,Inkey,Int,Isalpha,Isarray,Ischaracter,"
-      ::cFunctions += "IsDate,IsDigit,IsLogic,IsLower,IsNumber,IsPrinter,IsUpper,I2bin,L2bin,LastKey,LastRec,Left,Len,Lower,LTrim,LUpdate,MakeDir,Max,MaxCol,MaxRow,MCol,MemoEdit,MemoLine,MemoRead,"
-      ::cFunctions += "Memory,MemoTran,MemoWrite,MemvarBlock,Min,Mlcount,Mlctopos,Mlpos,Mod,Month,Mpostolc,NetErr,NetName,NextKey,Nosnow,Os,OrdBagExt,OrdBagName,OrdCreate,OrdDestroy,OrdFor,OrdKey,OrdListAdd,"
-      ::cFunctions += "OrdListClear,OrdListRebuild,OrdName,OrdNumber,OrdSetFocus,OutErr,OutStd,Pad,PadR,PadL,PCol,PCount,ProcLine,ProcName,PRow,QQout,Qout,Rat,Rddlist,Rddname,Rddsetdefault,Readexit,Readinsert,Readkey,"
-      ::cFunctions += "ReadModal,ReadVar,RecCount,RecNo,RecSize,Replicate,RestScreen,Right,RLock,Round,Row,RTrim,SaveScreen,Scroll,Seconds,Select,Set,Setblink,Setcancel,Setcolor,Setcursor,Setkey,Setmode,Setpos,Setprc,"
-      ::cFunctions += "Soundex,Space,Sqrt,Str,StrZero,StrTran,Stuff,SubStr,Time,Tone,Transform,Trim,Type,Updated,Upper,Used,Val,ValType,Version,Word,Year,"
+      ::cFunctions += "dbSeek,dbSelectArea,dbSetDriver,dbSetFilter,dbSetIndex,dbSetOrder,dbSetRelat,dbSkip,dbStruct,dbUnlock,dbUseArea,Deleted,Descend,DevOut,DevPos,"
+      ::cFunctions += "Directory,DiskSpace,DispBegin,DispBox,DispCount,DispEnd,DispOut,DosError,Dow,Dtoc,Dtos,Empty,Eof,ErrorBlock,ErrorLevel,Eval,Exp,FClose,FCount,FCreate,FErase,FError,FieldBlock,FieldGet,FieldName,"
+      ::cFunctions += "FieldPos,FieldPut,FieldWBlock,File,FkLabel,FkMax,FLock,FOpen,Found,FRead,FReadStr,FRename,FSeek,FWrite,GetEnv,HardCR,Header,iif,IndexExt,IndexKey,IndexOrd,Inkey,Int,IsAlpha,ISARRAY,ISCHARACTER,"
+      ::cFunctions += "ISDATE,IsDigit,ISLOGICAL,IsLower,ISNUMBER,IsPrinter,IsUpper,I2Bin,L2Bin,LastKey,LastRec,Left,Len,Lower,LTrim,LUpdate,MakeDir,Max,MaxCol,MaxRow,MCol,MemoEdit,MemoLine,MemoRead,"
+      ::cFunctions += "Memory,MemoTran,MemoWrite,MemvarBlock,Min,MLCount,MLCToPos,MLPos,Mod,Month,MPosToLC,NetErr,NetName,NextKey,NoSnow,OS,OrdBagExt,OrdBagName,OrdCreate,OrdDestroy,OrdFor,OrdKey,OrdListAdd,"
+      ::cFunctions += "OrdListClear,OrdListRebuild,OrdName,OrdNumber,OrdSetFocus,OutErr,OutStd,Pad,PadR,PadL,PCol,PCount,ProcLine,ProcName,PRow,QQOut,QOut,RAt,rddList,rddName,rddSetDefault,ReadExit,ReadInsert,ReadKey,"
+      ::cFunctions += "ReadModal,ReadVar,RecCount,RecNo,RecSize,Replicate,RestScreen,Right,RLock,Round,Row,RTrim,SaveScreen,Scroll,Seconds,Select,Set,Setblink,Setcancel,Setcolor,SetCursor,SetKey,SetMode,SetPos,SetPrc,"
+      ::cFunctions += "SoundEx,Space,Sqrt,Str,StrZero,StrTran,Stuff,SubStr,Time,Tone,Transform,Trim,Type,Updated,Upper,Used,Val,ValType,Version,Word,Year,"
    ENDIF
 
    IF ::nEol == 2
@@ -574,7 +583,7 @@ METHOD FormatLine( cLine, lContinued ) CLASS CODEFORMAT
       RETURN cLine
    ENDIF
 
-   IF lContinued == Nil; lContinued := .F. ; ENDIF
+   DEFAULT lContinued TO .F.
    lFirst := !lContinued
 
    nLen := Len( cLine )
@@ -737,7 +746,7 @@ METHOD ConvertCmd( cLine, nBegin, nEnd, lFirstOnly ) CLASS CODEFORMAT
    LOCAL nPos, cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
 
    IF ::lCase
-      IF lFirstOnly == Nil; lFirstOnly := .F. ; ENDIF
+      DEFAULT lFirstOnly TO .F.
       IF ( ( nPos := At( "," + cToken, ::cCommands ) ) != 0 .AND. ( Len(cToken ) >= 4 ;
             .OR. SubStr( ::cCommands, nPos + Len( cToken ) + 1, 1 ) == ',' ) ) ;
             .OR. ;
@@ -860,7 +869,7 @@ METHOD SetOption( cLine, i, aIni ) CLASS CODEFORMAT
       ::cLineErr := cLine
    ENDIF
 
-   RETURN ( ::nErr == 0 )
+   RETURN ::nErr == 0
 
 METHOD ReadIni( cIniName ) CLASS CODEFORMAT
 
@@ -948,7 +957,8 @@ STATIC FUNCTION FindNotQuoted( subs, stroka, nPos2 )
 
    LOCAL nPos1, i, c, nState := 0, cSymb
 
-   IF nPos2 == Nil; nPos2 := 1; ENDIF
+   DEFAULT nPos2 TO 1
+
    DO WHILE .T.
       IF ( nPos1 := hb_At( subs, stroka, nPos2 ) ) == 0
          EXIT
@@ -973,76 +983,3 @@ STATIC FUNCTION FindNotQuoted( subs, stroka, nPos2 )
    ENDDO
 
    RETURN nPos1
-
-#pragma BEGINDUMP
-#include "hbapi.h"
-#include "hbapiitm.h"
-
-/*  rf_FileRead( cText, @cEol ) */
-HB_FUNC( RF_FILEREAD )
-{
-   char * szText = hb_parc( 1 );
-   char * ptr, * ptr1;
-   unsigned long ul, ulLines = 0;
-   PHB_ITEM temp;
-   PHB_ITEM arr;
-
-   ptr = szText;
-   while( *ptr )
-   {
-      if( *ptr == '\r' || *ptr == '\n' )
-      {
-         if( !ulLines )
-         {
-            if ISBYREF( 2 )
-               hb_storclen( ptr, ( *(ptr+1) == '\r' || *(ptr+1) == '\n' )? 2:1, 2 );
-         }
-         if( *(ptr+1) == '\r' || *(ptr+1) == '\n' )
-         {
-            ptr ++;
-         }
-         ulLines ++;
-      }
-      ptr ++;
-   }
-   ptr --;
-   if( *ptr != '\r' && *ptr != '\n' )
-      ulLines ++;
-
-   arr = hb_itemArrayNew( ulLines );
-
-   ptr = ptr1 = szText;
-   ul = 1;
-   while( *ptr )
-   {
-      if( *ptr == '\r' || *ptr == '\n' )
-      {
-         temp = hb_itemPutCL( NULL, ptr1, ptr - ptr1 );
-         hb_itemArrayPut( arr, ul, temp );
-         hb_itemRelease( temp );
-
-         if( *(ptr+1) == '\r' || *(ptr+1) == '\n' )
-         {
-            ptr ++;
-         }
-         ptr1 = ptr + 1;
-         ul ++;
-      }
-      ptr ++;
-   }
-   if( ul == ulLines )
-   {
-      temp = hb_itemPutCL( NULL, ptr1, ptr - ptr1 );
-      hb_itemArrayPut( arr, ul, temp );
-      hb_itemRelease( temp );
-   }
-   hb_itemReturn( arr );
-   hb_itemRelease( arr );
-}
-
-HB_FUNC( RF_FULLPATH )
-{
-   hb_retc( hb_cmdargARGV()[0] );
-}
-
-#pragma ENDDUMP

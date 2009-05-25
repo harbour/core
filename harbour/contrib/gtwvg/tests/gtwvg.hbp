@@ -1,8 +1,0 @@
-#
-# $Id$
-#
-
-{win}gt=gtwvg
-{win}libs=hbwin
-gui=yes
-mt=yes
