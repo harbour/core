@@ -82,10 +82,6 @@
 
 #define HB_OS_WIN_USED
 
-#ifndef CINTERFACE
-   #define CINTERFACE 1
-#endif
-
 #ifdef __XHARBOUR__
    #include "hbvmopt.h"
 #else
@@ -93,7 +89,6 @@
 #endif
 
 #include <windows.h>
-#include <oaidl.h>
 #include "hbapi.h"
 #include "item.api"
 #include "hbapiitm.h"
@@ -103,14 +98,9 @@
 #include "hbthread.h"
 #include "hbwinole.h"
 
-#include <shlobj.h>
-#include <objbase.h>
-#include <ocidl.h>
 #if ! defined( HB_OS_WIN_CE )
 #include <olectl.h>
 #endif
-#include <ole2.h>
-#include <oleauto.h>
 
 /*----------------------------------------------------------------------*/
 
@@ -278,9 +268,22 @@ typedef struct {
    PHB_DYNS   pSymbol;
 } EventMap;
 
+#if !defined( HB_OLE_C_API )
+typedef struct
+{
+   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IEventHandler*, REFIID, void** );
+   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IEventHandler* );
+   ULONG   ( STDMETHODCALLTYPE * Release ) ( IEventHandler* );
+   HRESULT ( STDMETHODCALLTYPE * GetTypeInfoCount ) ( IEventHandler*, UINT* );
+   HRESULT ( STDMETHODCALLTYPE * GetTypeInfo ) ( IEventHandler*,  UINT, LCID, ITypeInfo** );
+   HRESULT ( STDMETHODCALLTYPE * GetIDsOfNames ) ( IEventHandler*, REFIID, LPOLESTR*, UINT, LCID, DISPID* );
+   HRESULT ( STDMETHODCALLTYPE * Invoke ) ( IEventHandler*, DISPID, REFIID, LCID, WORD, DISPPARAMS*, VARIANT*, EXCEPINFO*, UINT* );
+} IEventHandlerVtbl;
+#endif
+
 
 typedef struct {
-   IEventHandler*          lpVtbl;
+   IEventHandlerVtbl*      lpVtbl;
    int                     count;
    IConnectionPoint*       pIConnectionPoint;  /* Ref counted of course. */
    DWORD                   dwEventCookie;
@@ -317,7 +320,7 @@ static HRESULT STDMETHODCALLTYPE QueryInterface( IEventHandler *self, REFIID vTa
 #ifdef __HBTOOUT__
 hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IUnknown ) ) )" );
 #endif
-      self->lpVtbl->AddRef( self );
+      HB_VTBL( self )->AddRef( HB_THIS( self ) );
       return S_OK;
    }
 
@@ -327,7 +330,7 @@ hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB
 #ifdef __HBTOOUT__
 hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IDispatch ) ) )" );
 #endif
-      self->lpVtbl->AddRef( self );
+      HB_VTBL( self )->AddRef( HB_THIS( self ) );
       return S_OK;
    }
 
@@ -339,7 +342,7 @@ hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB
 #ifdef __HBTOOUT__
 hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB_ID_REF( ( ( MyRealIEventHandler * ) self )->device_event_interface_iid ) ) )" );
 #endif
-         self->lpVtbl->AddRef( self );
+         HB_VTBL( self )->AddRef( HB_THIS( self ) );
       }
       return S_OK;
    }
@@ -588,27 +591,26 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
    }
    else
    {
-      thisobj->lpVtbl = ( IEventHandlerVtbl * ) &IEventHandler_Vtbl;
-
+      ( ( MyRealIEventHandler* ) thisobj)->lpVtbl = ( IEventHandlerVtbl * ) &IEventHandler_Vtbl;
       ( ( MyRealIEventHandler * ) thisobj )->pSelf = NULL;
       ( ( MyRealIEventHandler * ) thisobj )->count = 0;
       ( ( MyRealIEventHandler * ) thisobj )->iID_riid = 0;
 
-      hr = thisobj->lpVtbl->QueryInterface( thisobj, HB_ID_REF( IID_IUnknown ), (void **) (void*) &pIUnknown );
+      hr = HB_VTBL( thisobj )->QueryInterface( HB_THIS_( thisobj ) HB_ID_REF( IID_IUnknown ), (void **) (void*) &pIUnknown );
       if (hr == S_OK && pIUnknown)
       {
-         hr = pdevice_interface->lpVtbl->QueryInterface( pdevice_interface, HB_ID_REF( IID_IConnectionPointContainer ), (void**) (void*) &pIConnectionPointContainerTemp);
+         hr = HB_VTBL( pdevice_interface )->QueryInterface( HB_THIS_( pdevice_interface ) HB_ID_REF( IID_IConnectionPointContainer ), (void**) (void*) &pIConnectionPointContainerTemp);
          if ( hr == S_OK && pIConnectionPointContainerTemp )
          {
-            hr = pIConnectionPointContainerTemp->lpVtbl->EnumConnectionPoints( pIConnectionPointContainerTemp, &m_pIEnumConnectionPoints );
+            hr = HB_VTBL( pIConnectionPointContainerTemp )->EnumConnectionPoints( HB_THIS_( pIConnectionPointContainerTemp ) &m_pIEnumConnectionPoints );
             if ( hr == S_OK && m_pIEnumConnectionPoints )
             {
                do
                {
-                  hr = m_pIEnumConnectionPoints->lpVtbl->Next( m_pIEnumConnectionPoints, 1, &m_pIConnectionPoint, NULL );
+                  hr = HB_VTBL( m_pIEnumConnectionPoints )->Next( HB_THIS_( m_pIEnumConnectionPoints ) 1, &m_pIConnectionPoint, NULL );
                   if( hr == S_OK )
                   {
-                     hr = m_pIConnectionPoint->lpVtbl->GetConnectionInterface( m_pIConnectionPoint, &rriid );
+                     hr = HB_VTBL( m_pIConnectionPoint )->GetConnectionInterface( HB_THIS_( m_pIConnectionPoint ) &rriid );
                      if ( hr == S_OK )
                      {
                         /**************           This has to be review         *******************
@@ -619,7 +621,7 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
                         ( ( MyRealIEventHandler* ) thisobj )->device_event_interface_iid = rriid;
                         #endif
 
-                        hr = m_pIConnectionPoint->lpVtbl->Advise( m_pIConnectionPoint, pIUnknown, &dwCookie );
+                        hr = HB_VTBL( m_pIConnectionPoint )->Advise( HB_THIS_( m_pIConnectionPoint ) pIUnknown, &dwCookie );
                         if ( hr == S_OK )
                         {
                            ( ( MyRealIEventHandler* ) thisobj )->pIConnectionPoint = m_pIConnectionPoint;
@@ -636,13 +638,13 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
                      }
                   }
                } while( hr == S_OK );
-               m_pIEnumConnectionPoints->lpVtbl->Release( m_pIEnumConnectionPoints );
+               HB_VTBL( m_pIEnumConnectionPoints )->Release( HB_THIS( m_pIEnumConnectionPoints ) );
                m_pIEnumConnectionPoints = NULL;
             }
-            pIConnectionPointContainerTemp->lpVtbl->Release( pIConnectionPointContainerTemp );
+            HB_VTBL( pIConnectionPointContainerTemp )->Release( HB_THIS( pIConnectionPointContainerTemp ) );
             pIConnectionPointContainerTemp = NULL;
          }
-         pIUnknown->lpVtbl->Release( pIUnknown );
+         HB_VTBL( pIUnknown )->Release( HB_THIS( pIUnknown ) );
          pIUnknown = NULL;
       }
    }
@@ -663,7 +665,7 @@ hb_ToOutDebug( "---------------------------------------------" );
    if ( hSink && hSink->pIConnectionPoint )
    {
       hSink->dwEventCookie = 0;
-      hSink->pIConnectionPoint->lpVtbl->Release( hSink->pIConnectionPoint );
+      HB_VTBL( hSink->pIConnectionPoint )->Release( HB_THIS( hSink->pIConnectionPoint ) );
       hSink->pIConnectionPoint = NULL;
    }
    #endif
@@ -687,7 +689,7 @@ HB_FUNC( HB_AX_RELEASEOBJECT )
 {
    //IDispatch * pDisp = ( IDispatch * ) ( HB_PTRDIFF ) hb_parnint( 1 );
    IDispatch * pDisp = ( IDispatch * ) hb_oleParam( 1 );
-   s_nOleError = pDisp->lpVtbl->Release( pDisp );
+   s_nOleError = HB_VTBL( pDisp )->Release( HB_THIS( pDisp ) );
 }
 /*----------------------------------------------------------------------*/
 HB_FUNC( HB_AX_SETUPCONNECTIONPOINT )
@@ -869,8 +871,8 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
          #if 1
          if( pUnk )
          {
-            pUnk->lpVtbl->QueryInterface( pUnk, HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
-            pUnk->lpVtbl->Release( pUnk );
+            HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
+            HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
             hb_itemReturnRelease( hb_oleItemPut( NULL, obj ) );
 
             #if 0
@@ -978,8 +980,8 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) /* HWND hWnd = handle of control container wind
 
          if( pUnk )
          {
-            pUnk->lpVtbl->QueryInterface( pUnk, HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
-            pUnk->lpVtbl->Release( pUnk );
+            HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
+            HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
             GetClientRect( hWnd, &rc );
             MoveWindow( hWnd, 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
             hb_itemReturnRelease( hb_oleItemPut( NULL, obj ) );
@@ -1021,13 +1023,13 @@ HB_FUNC( HB_AX_ATLSETVERB )
       IUnknown *pUnk = ( IUnknown* ) ( HB_PTRDIFF ) hb_parnint( 2 );
 
       IOleObject *lpOleObject = NULL;
-      if( SUCCEEDED( pUnk->lpVtbl->QueryInterface( pUnk, HB_ID_REF( IID_IOleObject ), ( void** ) ( void* ) &lpOleObject ) ) )
+      if( SUCCEEDED( HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IOleObject ), ( void** ) ( void* ) &lpOleObject ) ) )
       {
          IOleClientSite* lpOleClientSite;
 
-         pUnk->lpVtbl->Release( pUnk );
+         HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
 
-         if( SUCCEEDED( lpOleObject->lpVtbl->GetClientSite( lpOleObject, &lpOleClientSite ) ) )
+         if( SUCCEEDED( HB_VTBL( lpOleObject )->GetClientSite( HB_THIS_( lpOleObject ) &lpOleClientSite ) ) )
          {
             MSG Msg;
             RECT rct;
@@ -1035,7 +1037,7 @@ HB_FUNC( HB_AX_ATLSETVERB )
             memset( &Msg, 0, sizeof( MSG ) );
             GetClientRect( hwnd, &rct );
 
-            lpOleObject->lpVtbl->DoVerb( lpOleObject, hb_parni( 3 ), &Msg, lpOleClientSite, 0, hwnd, &rct );
+            HB_VTBL( lpOleObject )->DoVerb( HB_THIS_( lpOleObject ) hb_parni( 3 ), &Msg, lpOleClientSite, 0, hwnd, &rct );
          }
       }
    }
