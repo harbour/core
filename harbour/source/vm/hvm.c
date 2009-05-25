@@ -4747,74 +4747,86 @@ static void hb_vmEnumEnd( void )
    }
 }
 
-static const BYTE * hb_vmSwitch( const BYTE * pCode, USHORT casesCnt )
+static PHB_ITEM hb_vmSwitchGet( void )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ITEM_PTR pSwitch = hb_stackItemFromTop( -1 );
-   BOOL fFound = FALSE;
+   PHB_ITEM pSwitch = hb_stackItemFromTop( -1 );
 
    if( !( HB_IS_NUMINT( pSwitch ) || HB_IS_STRING( pSwitch ) ) )
    {
       HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_ARG, 3104, NULL, "SWITCH", 1, pSwitch );
 
       if( !pResult )
-         return pCode;
+         return NULL;
 
       hb_itemMove( pSwitch, pResult );
       hb_itemRelease( pResult );
    }
 
-   while( !fFound && casesCnt-- )
+   return pSwitch;
+}
+
+static const BYTE * hb_vmSwitch( const BYTE * pCode, USHORT casesCnt )
+{
+   HB_STACK_TLS_PRELOAD
+   HB_ITEM_PTR pSwitch = hb_vmSwitchGet();
+
+   if( pSwitch )
    {
-      switch( pCode[ 0 ] )
+      BOOL fFound = FALSE;
+
+      while( !fFound && casesCnt-- )
       {
-         case HB_P_PUSHLONG:
-            if( HB_IS_NUMINT( pSwitch ) )
-            {
-               fFound = HB_ITEM_GET_NUMINTRAW( pSwitch ) == HB_PCODE_MKLONG( &pCode[ 1 ] );
-            }
-            pCode += 5;
-            break;
+         switch( pCode[ 0 ] )
+         {
+            case HB_P_PUSHLONG:
+               if( HB_IS_NUMINT( pSwitch ) )
+               {
+                  fFound = HB_ITEM_GET_NUMINTRAW( pSwitch ) == HB_PCODE_MKLONG( &pCode[ 1 ] );
+               }
+               pCode += 5;
+               break;
 
-         case HB_P_PUSHSTRSHORT:
-            if( HB_IS_STRING( pSwitch ) )
-            {
-               /*fFound = hb_itemStrCmp( pItem1, pItem2, bExact );*/
-               fFound = ( ULONG ) pCode[ 1 ] - 1 == pSwitch->item.asString.length &&
-                        memcmp( pSwitch->item.asString.value,
-                                ( char * ) &pCode[ 2 ],
-                                pSwitch->item.asString.length ) == 0;
-            }
-            pCode += 2 + pCode[ 1 ];
-            break;
+            case HB_P_PUSHSTRSHORT:
+               if( HB_IS_STRING( pSwitch ) )
+               {
+                  /*fFound = hb_itemStrCmp( pItem1, pItem2, bExact );*/
+                  fFound = ( ULONG ) pCode[ 1 ] - 1 == pSwitch->item.asString.length &&
+                           memcmp( pSwitch->item.asString.value,
+                                   ( char * ) &pCode[ 2 ],
+                                   pSwitch->item.asString.length ) == 0;
+               }
+               pCode += 2 + pCode[ 1 ];
+               break;
 
-         case HB_P_PUSHNIL:
-            /* default clause */
-            fFound = TRUE;
-            pCode++;
-            break;
-      }
+            case HB_P_PUSHNIL:
+               /* default clause */
+               fFound = TRUE;
+               pCode++;
+               break;
+         }
 
-      switch( pCode[ 0 ] )
-      {
-         case HB_P_JUMPNEAR:
-            if( fFound )
-               pCode += ( signed char ) pCode[ 1 ];
-            else
-               pCode += 2;
-            break;
-         case HB_P_JUMP:
-            if( fFound )
-               pCode += HB_PCODE_MKSHORT( &pCode[ 1 ] );
-            else
-               pCode += 3;
-            break;
-         case HB_P_JUMPFAR:
-            if( fFound )
-               pCode += HB_PCODE_MKINT24( &pCode[ 1 ] );
-            else
-               pCode += 4;
-            break;
+         switch( pCode[ 0 ] )
+         {
+            case HB_P_JUMPNEAR:
+               if( fFound )
+                  pCode += ( signed char ) pCode[ 1 ];
+               else
+                  pCode += 2;
+               break;
+            case HB_P_JUMP:
+               if( fFound )
+                  pCode += HB_PCODE_MKSHORT( &pCode[ 1 ] );
+               else
+                  pCode += 3;
+               break;
+            case HB_P_JUMPFAR:
+               if( fFound )
+                  pCode += HB_PCODE_MKINT24( &pCode[ 1 ] );
+               else
+                  pCode += 4;
+               break;
+         }
       }
    }
    hb_stackPop();
@@ -8657,6 +8669,15 @@ void hb_xvmEnumEnd( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmEnumEnd()"));
 
    hb_vmEnumEnd();
+}
+
+BOOL hb_xvmSwitchGet( PHB_ITEM * pSwitchPtr )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmSwitchGet(%p)", pSwitchPtr));
+
+   * pSwitchPtr = hb_vmSwitchGet();
+
+   HB_XVM_RETURN
 }
 
 void hb_xvmSetLine( USHORT uiLine )

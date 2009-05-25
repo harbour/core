@@ -93,6 +93,8 @@ extern HB_EXPORT void   hb_xvmWithObjectStart( void );            /* prepare WIT
 extern HB_EXPORT void   hb_xvmWithObjectEnd( void );              /* rewind the stack after normal WITH OBJECT */
 extern HB_EXPORT void   hb_xvmWithObjectMessage( PHB_SYMB );      /* send WITH OBJECT message to current WITH OBJECT control variable */
 
+extern HB_EXPORT BOOL   hb_xvmSwitchGet( PHB_ITEM * );
+
 extern HB_EXPORT void   hb_xvmSetLine( USHORT uiLine );           /* set .prg line number information */
 
 extern HB_EXPORT void   hb_xvmFrame( int iLocals, int iParams );  /* increases the stack pointer for the amount of locals and params suplied */

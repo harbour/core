@@ -1725,15 +1725,20 @@ static HB_GENC_FUNC( hb_p_switch )
 
    if( fStr || fNum )
    {
-      fprintf( cargo->yyc, "\t{\n\t\tPHB_ITEM pSwitch = hb_stackItemFromTop( -1 );\n"
-                           "\t\tHB_TYPE type = hb_itemType( pSwitch );\n" );
+      fprintf( cargo->yyc, "\t{\n\t\tPHB_ITEM pSwitch;\n\t\tHB_TYPE type;\n" );
+      if( fStr )
+         fprintf( cargo->yyc, "\t\tchar * pszText;\n\t\tULONG ulLen;\n" );
+      if( fNum )
+         fprintf( cargo->yyc, "\t\tlong lVal;\n" );
+      fprintf( cargo->yyc, "\t\tif( hb_xvmSwitchGet( &pSwitch ) ) break;\n"
+                           "\t\ttype = hb_itemType( pSwitch );\n" );
       if( fStr )
       {
-         fprintf( cargo->yyc, "\t\tchar * pszText = (type & HB_IT_STRING) ? hb_itemGetCPtr( pSwitch ) : NULL;\n" );
-         fprintf( cargo->yyc, "\t\tULONG ulLen = pszText ? hb_itemGetCLen( pSwitch ) : 0;\n" );
+         fprintf( cargo->yyc, "\t\tpszText = (type & HB_IT_STRING) ? hb_itemGetCPtr( pSwitch ) : NULL;\n" );
+         fprintf( cargo->yyc, "\t\tulLen = pszText ? hb_itemGetCLen( pSwitch ) : 0;\n" );
       }
       if( fNum )
-         fprintf( cargo->yyc, "\t\tlong lVal = (type & HB_IT_NUMINT) ? hb_itemGetNL( pSwitch ) : 0;\n\n" );
+         fprintf( cargo->yyc, "\t\tlVal = (type & HB_IT_NUMINT) ? hb_itemGetNL( pSwitch ) : 0;\n\n" );
    }
 
    lPCodePos = ulStart + 3;
