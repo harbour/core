@@ -8673,6 +8673,8 @@ void hb_xvmEnumEnd( void )
 
 BOOL hb_xvmSwitchGet( PHB_ITEM * pSwitchPtr )
 {
+   HB_STACK_TLS_PRELOAD
+
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmSwitchGet(%p)", pSwitchPtr));
 
    * pSwitchPtr = hb_vmSwitchGet();
