@@ -8,6 +8,7 @@ LIBNAME=xhb
 
 C_SOURCES=\
 	cstructc.c \
+	datesxhb.c \
 	dbf2txt.c \
 	dbgfxc.c \
 	filestat.c \

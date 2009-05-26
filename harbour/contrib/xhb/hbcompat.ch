@@ -111,6 +111,14 @@
    #xtranslate hb_ADel([<x,...>])          => ADel(<x>)
    #xtranslate hb_At([<x,...>])            => At(<x>)
 
+   #xtranslate hb_DateTime()               => DateTime()
+   #xtranslate hb_Hour([<x>])              => Hour(<x>)
+   #xtranslate hb_Minute([<x>])            => Minute(<x>)
+   #xtranslate hb_TToS([<x>])              => TToS(<x>)
+   #xtranslate hb_SToT([<x>])              => SToT(<x>)
+   #xtranslate hb_TToC([<x,...>])          => TToC(<x>)
+   #xtranslate hb_CToT([<x,...>])          => CToT(<x>)
+
    #xtranslate hb_GetEnv([<x,...>])        => GetEnv(<x>)
    #xtranslate hb_SetKey([<x,...>])        => SetKey(<x>)
 
@@ -215,6 +223,14 @@
    #xtranslate AIns(<a>,<n>,[<x,...>])         => hb_AIns(<a>,<n>,<x>)
    #xtranslate ADel(<a>,<n>,<l>)               => hb_ADel(<a>,<n>,<l>)
    #xtranslate At(<a>,<b>,[<x,...>])           => hb_At(<a>,<b>,<x>)
+
+   #xtranslate DateTime()                      => hb_DateTime()
+   #xtranslate Hour([<x>])                     => hb_Hour(<x>)
+   #xtranslate Minute([<x>])                   => hb_Minute(<x>)
+   #xtranslate TToS([<x>])                     => hb_TToS(<x>)
+   #xtranslate SToT([<x>])                     => hb_SToT(<x>)
+   #xtranslate TToC([<x,...>])                 => hb_TToC(<x>)
+   #xtranslate CToT([<x,...>])                 => hb_CToT(<x>)
 
    #xtranslate GetEnv([<x,...>])               => hb_GetEnv(<x>)
    #xtranslate SetKey([<x,...>])               => hb_SetKey(<x>)
