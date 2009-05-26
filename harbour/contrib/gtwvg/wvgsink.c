@@ -69,6 +69,12 @@
                           (((DWORD)((WORD)((DWORD_PTR)(b) & 0xffff))) << 16)))
 #endif
 
+#if defined( HB_OS_WIN_CE )
+   #define HBTEXT( x ) TEXT( x )
+#else
+   #define HBTEXT( x ) x
+#endif
+
 /*----------------------------------------------------------------------*/
 
 static HMODULE  hLib = NULL;
@@ -87,7 +93,7 @@ typedef HRESULT ( CALLBACK *PATLAXCREATECONTROLEX )( LPCOLESTR, HWND, IStream*, 
 #endif
 
 #ifdef __HBTOOUT__
-void hb_ToOutDebug( const char * sTraceMsg, ... );
+void extern hb_ToOutDebug( const char * sTraceMsg, ... );
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -325,9 +331,9 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *self, DISPID dispid, REF
    PHB_ITEM   *pItems;
    PHB_ITEM   Key;
 
-   #if 0
-   hb_ToOutDebug( "event = %i",(int)dispid );
-   #endif
+#if 0
+hb_ToOutDebug( "event = %i",(int)dispid );
+#endif
 
    /* We implement only a "default" interface */
    if( !IsEqualIID( riid, HB_ID_REF( IID_NULL ) ) )
@@ -592,17 +598,12 @@ HB_FUNC( HB_AX_ATLAXWININIT )
 
       if( hLib )
       {
-#if defined( UNICODE ) && defined( GetProcAddress )
-         AtlAxWinInit = ( PATLAXWININIT ) GetProcAddressW( hLib, TEXT( "AtlAxWinInit" ) );
-#else
-         AtlAxWinInit = ( PATLAXWININIT ) GetProcAddress( hLib, "AtlAxWinInit" );
-#endif
+         AtlAxWinInit = ( PATLAXWININIT ) GetProcAddress( hLib, HBTEXT( "AtlAxWinInit" ) );
+
          if( AtlAxWinInit )
          {
             if( ( AtlAxWinInit )() )
-            {
                bRet = TRUE;
-            }
          }
 
          if( !bRet )
@@ -613,9 +614,7 @@ HB_FUNC( HB_AX_ATLAXWININIT )
       }
    }
    else
-   {
       bRet = TRUE;
-   }
 
    hb_retl( bRet );
 }
@@ -628,11 +627,8 @@ HB_FUNC( HB_AX_ATLAXWINTERM )
 
    if( hLib )
    {
-#if defined( UNICODE ) && defined( GetProcAddress )
-      AtlAxWinTerm = ( PATLAXWINTERM ) GetProcAddressW( hLib, TEXT( "AtlAxWinTerm" ) );
-#else
-      AtlAxWinTerm = ( PATLAXWINTERM ) GetProcAddress( hLib, "AtlAxWinTerm" );
-#endif
+      AtlAxWinTerm = ( PATLAXWINTERM ) GetProcAddress( hLib, HBTEXT( "AtlAxWinTerm" ) );
+
       if( AtlAxWinTerm )
       {
          if( AtlAxWinTerm() )
@@ -656,63 +652,38 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) /* HWND hWnd = handle of control container wind
    IUnknown  *pUnk = NULL;
    IDispatch *obj;
    PATLAXGETCONTROL AtlAxGetControl;
-   RECT  rc;
-   HWND  hWnd = NULL;
-   char  *lpcclass = hb_parc( 1 );
+   HWND  hWnd      = NULL;
+   char  *lpcclass = hb_parcx( 1 );
    HWND  hParent   = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 2 );
-   char  *Caption  = ISNIL(  4 ) ? "" : hb_parc( 3 );
-   HMENU id        = ISNIL(  4 ) ? ( HMENU ) ( HB_PTRDIFF ) -1 : ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 4 );
-   int   x         = ISNIL(  5 ) ? 0 : hb_parni( 5 );
-   int   y         = ISNIL(  6 ) ? 0 : hb_parni( 6 );
-   int   w         = ISNIL(  7 ) ? 0 : hb_parni( 7 );
-   int   h         = ISNIL(  8 ) ? 0 : hb_parni( 8 );
-   int   Style     = ISNIL(  9 ) ? WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS : hb_parni( 9 );
-   int   Exstyle   = ISNIL( 10 ) ? 0 : hb_parni( 10 );
-   char *lpLic     = ISNIL( 11 ) ? NULL : hb_parc( 11 );
+   char  *Caption  = HB_ISCHAR(  3 ) ? hb_parc( 3 ) : "" ;
+   HMENU id        = HB_ISNUM(  4 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 4 ) : ( HMENU ) ( HB_PTRDIFF ) -1 ;
+   int   x         = HB_ISNUM(  5 ) ? hb_parni(  5 ) : 0;
+   int   y         = HB_ISNUM(  6 ) ? hb_parni(  6 ) : 0;
+   int   w         = HB_ISNUM(  7 ) ? hb_parni(  7 ) : 0;
+   int   h         = HB_ISNUM(  8 ) ? hb_parni(  8 ) : 0;
+   int   Style     = HB_ISNUM(  9 ) ? hb_parni(  9 ) : WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+   int   Exstyle   = HB_ISNUM( 10 ) ? hb_parni( 10 ) : 0;
 
-#if defined( UNICODE ) && defined( GetProcAddress )
-   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddressW( hLib, TEXT( "AtlAxGetControl" ) );
-#else
-   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( hLib, "AtlAxGetControl" );
-#endif
+   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( hLib, HBTEXT( "AtlAxGetControl" ) );
    if( AtlAxGetControl )
    {
       LPTSTR cCaption = HB_TCHAR_CONVTO( Caption );
       LPTSTR cClass = HB_TCHAR_CONVTO( lpcclass );
-      LPTSTR cLic = HB_TCHAR_CONVTO( lpLic );
 
-      if( ISNIL( 11 ) )
-         hWnd = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h, hParent, id,
-                                      GetModuleHandle( NULL ), NULL );
-      else
-         hWnd = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h, hParent, id,
-                                      GetModuleHandle( NULL ), NULL /*cLic*/ );
-
+      hWnd = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h, hParent, id,
+                                                                GetModuleHandle( NULL ), NULL );
       HB_TCHAR_FREE( cCaption );
       HB_TCHAR_FREE( cClass );
-      HB_TCHAR_FREE( cLic );
 
       if( hWnd )
       {
-#if ! defined( HB_OS_WIN_CE )
-         SendMessage( hWnd,
-                      ( ( UINT ) WM_SETFONT ),
-                      ( ( WPARAM ) GetStockObject( DEFAULT_GUI_FONT ) ),
-                      ( ( LPARAM ) ( MAKELPARAM( FALSE, 0 ) ) ) );
-#else
-         SendMessage( hWnd,
-                      ( ( UINT ) WM_SETFONT ),
-                      ( ( WPARAM ) GetStockObject( OEM_FIXED_FONT ) ),
-                      ( ( LPARAM ) ( MAKELPARAM( FALSE, 0 ) ) ) );
-#endif
          ( AtlAxGetControl )( hWnd, &pUnk );
 
          if( pUnk )
          {
             HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
             HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
-            GetClientRect( hWnd, &rc );
-            MoveWindow( hWnd, 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
+
             hb_itemReturnRelease( hb_oleItemPut( NULL, obj ) );
          }
          else
@@ -732,12 +703,99 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) /* HWND hWnd = handle of control container wind
 
    /* return the control handle */
    if ISBYREF( 12 )
-   {
       hb_stornint( ( HB_PTRDIFF ) hWnd, 12 );
-   }
    if ISBYREF( 13 )
-   {
       hb_stornint( ( HB_PTRDIFF ) pUnk, 13 );
+}
+
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( HB_AX_ATLCREATEWINDOW ) /* HWND hWnd = handle of control container window */
+{
+   HWND  hWnd;
+   char  *lpcclass = hb_parcx( 1 );
+   HWND  hParent   = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 2 );
+   char  *Caption  = HB_ISCHAR(  3 ) ? hb_parc( 3 ) : "" ;
+   HMENU id        = HB_ISNUM(  4 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 4 ) : ( HMENU ) ( HB_PTRDIFF ) -1 ;
+   int   x         = HB_ISNUM(  5 ) ? hb_parni(  5 ) : 0;
+   int   y         = HB_ISNUM(  6 ) ? hb_parni(  6 ) : 0;
+   int   w         = HB_ISNUM(  7 ) ? hb_parni(  7 ) : 0;
+   int   h         = HB_ISNUM(  8 ) ? hb_parni(  8 ) : 0;
+   int   Style     = HB_ISNUM(  9 ) ? hb_parni(  9 ) : WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+   int   Exstyle   = HB_ISNUM( 10 ) ? hb_parni( 10 ) : 0;
+
+   LPTSTR cClass = HB_TCHAR_CONVTO( lpcclass );
+   LPTSTR cCaption = HB_TCHAR_CONVTO( Caption );
+
+   hWnd = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h, hParent, id,
+                                                             GetModuleHandle( NULL ), NULL );
+   HB_TCHAR_FREE( cCaption );
+   HB_TCHAR_FREE( cClass );
+
+   hb_retnint( ( HB_PTRDIFF ) hWnd );
+}
+
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( HB_AX_ATLGETCONTROL ) /* HWND hWnd = handle of control container window */
+{
+   PATLAXGETCONTROL AtlAxGetControl;
+   IDispatch        *obj;
+   IUnknown         *pUnk = NULL;
+   HWND             hWnd = ( ISPOINTER( 1 ) ? ( HWND ) hb_parptr( 1 ) : ( HWND )( HB_PTRDIFF ) hb_parnint( 1 ) );
+
+   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( hLib, HBTEXT( "AtlAxGetControl" ) );
+   if( AtlAxGetControl )
+   {
+      if( hWnd )
+      {
+         ( AtlAxGetControl )( hWnd, &pUnk );
+
+         if( pUnk )
+         {
+            HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
+            HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
+
+            hb_itemReturnRelease( hb_oleItemPut( NULL, obj ) );
+            if( ISBYREF( 2 ) )
+            {
+               hb_stornint( ( HB_PTRDIFF ) pUnk, 2 );
+            }
+         }
+         else
+         {
+            hb_ret();
+         }
+      }
+      else
+      {
+         hb_ret();
+      }
+   }
+   else
+   {
+      hb_ret();
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( HB_AX_ATLGETUNKNOWN ) /* HWND hWnd = handle of control container window */
+{
+   PATLAXGETCONTROL AtlAxGetControl;
+   IUnknown         *pUnk = NULL;
+   HWND             hWnd = ( ISPOINTER( 1 ) ? ( HWND ) hb_parptr( 1 ) : ( HWND )( HB_PTRDIFF ) hb_parnint( 1 ) );
+
+   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( hLib, HBTEXT( "AtlAxGetControl" ) );
+   if( AtlAxGetControl )
+   {
+      if( hWnd )
+      {
+         ( AtlAxGetControl )( hWnd, &pUnk );
+
+         if( pUnk )
+            hb_retnint( ( HB_PTRDIFF ) pUnk );
+      }
    }
 }
 
