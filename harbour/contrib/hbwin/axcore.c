@@ -81,6 +81,7 @@ static void hb_ax_exit( void* cargo )
       s_pAtlAxWinTerm = NULL;
 
       FreeLibrary( s_hLib );
+
       s_hLib = NULL;
    }
 }
@@ -145,6 +146,106 @@ HB_FUNC( __AXGETCONTROL ) /* ( hWnd ) --> pDisp */
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( WIN_AXATLGETCONTROL )
+{
+   HB_FUNC_EXEC( __AXGETCONTROL );
+}
+
+HB_FUNC( WIN_AXCREATEWINDOW ) /* ( hWndContainer, CLSID, menuID=0, x, y, w, h, style, exstyle ) --> pWnd */
+{
+   HWND  hWnd;
+   char  *Cls      = "ATLAXWin";
+   HWND  hParent   = ( HWND ) hb_parptr( 1 );
+   char  *Caption  = hb_parcx( 2 );
+   HMENU id        = HB_ISNUM(  3 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 3 ) : ( HMENU ) ( HB_PTRDIFF ) -1 ;
+   int   x         = HB_ISNUM(  4 ) ? hb_parni(  4 ) : 0;
+   int   y         = HB_ISNUM(  5 ) ? hb_parni(  5 ) : 0;
+   int   w         = HB_ISNUM(  6 ) ? hb_parni(  6 ) : 0;
+   int   h         = HB_ISNUM(  7 ) ? hb_parni(  7 ) : 0;
+   int   Style     = HB_ISNUM(  8 ) ? hb_parni(  8 ) : WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+   int   Exstyle   = HB_ISNUM(  9 ) ? hb_parni(  9 ) : 0;
+
+   LPTSTR cCaption = HB_TCHAR_CONVTO( Caption );
+   LPTSTR cClass = HB_TCHAR_CONVTO( Cls );
+
+   hWnd = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h, hParent, id,
+                                                             GetModuleHandle( NULL ), NULL );
+   HB_TCHAR_FREE( cCaption );
+   HB_TCHAR_FREE( cClass );
+
+   hb_retptr( ( void * ) ( HB_PTRDIFF ) hWnd );
+}
+
+HB_FUNC( WIN_AXGETUNKNOWN ) /* ( hWnd ) --> pUnk */
+{
+   IUnknown*   pUnk = NULL;
+   HRESULT     lOleError;
+
+   if( ! s_pAtlAxGetControl )
+   {
+      hb_oleSetError( S_OK );
+      hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 3012, "ActiveX not initialized", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      return;
+   }
+
+   lOleError = ( *s_pAtlAxGetControl )( ( HWND ) hb_parptr( 1 ), &pUnk );
+
+   hb_oleSetError( lOleError );
+
+   if( lOleError == S_OK )
+      hb_retptr( pUnk );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( WIN_AXSETVERB ) /* ( hWndAx, iVerb ) --> hResult */
+{
+   HWND        hWnd = ( HWND ) hb_parptr( 1 );
+   IUnknown*   pUnk = NULL;
+   HRESULT     lOleError;
+
+   if( ! s_pAtlAxGetControl )
+   {
+      hb_oleSetError( S_OK );
+      hb_errRT_BASE_SubstR( EG_UNSUPPORTED, 3012, "ActiveX not initialized", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      return;
+   }
+
+   lOleError = ( *s_pAtlAxGetControl )( hWnd, &pUnk );
+
+   if( lOleError == S_OK )
+   {
+      IOleObject *lpOleObject = NULL;
+
+      lOleError = HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IOleObject ), ( void** ) ( void* ) &lpOleObject );
+      if( lOleError == S_OK )
+      {
+         IOleClientSite* lpOleClientSite;
+
+         lOleError = HB_VTBL( lpOleObject )->GetClientSite( HB_THIS_( lpOleObject ) &lpOleClientSite );
+         if( lOleError == S_OK )
+         {
+            MSG Msg;
+            RECT rct;
+
+            memset( &Msg, 0, sizeof( MSG ) );
+            GetClientRect( hWnd, &rct );
+            HB_VTBL( lpOleObject )->DoVerb( HB_THIS_( lpOleObject ) hb_parni( 2 ), &Msg, lpOleClientSite, 0, hWnd, &rct );
+         }
+      }
+   }
+
+   hb_oleSetError( lOleError );
+
+   hb_retni( ( int ) lOleError );
+}
+
+HB_FUNC( WIN_AXRELEASEOBJECT )
+{
+   IDispatch * pDisp = hb_oleParam( 1 );
+   HB_VTBL( pDisp )->Release( HB_THIS( pDisp ) );
+}
+
 /* ======================== Event handler support ======================== */
 
 #if !defined( HB_OLE_C_API )
@@ -205,12 +306,14 @@ static HRESULT STDMETHODCALLTYPE QueryInterface( IDispatch* lpThis, REFIID riid,
 
 static ULONG STDMETHODCALLTYPE AddRef( IDispatch* lpThis )
 {
+/* hb_ToOutDebug("AddRef count = %i ", ( ( ISink* ) lpThis)->count ); */
    return ++( ( ISink* ) lpThis)->count;
 }
 
 
 static ULONG STDMETHODCALLTYPE Release( IDispatch* lpThis )
 {
+/* hb_ToOutDebug("Release count = %i ", ( ( ISink* ) lpThis)->count ); */
    if( --( ( ISink* ) lpThis)->count == 0 )
    {
       hb_xfree( lpThis );
@@ -346,3 +449,71 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
          hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
 }
+
+
+HB_FUNC( __XAXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
+{
+   IConnectionPointContainer*  pCPC = NULL;
+   IEnumConnectionPoints*      pEnumCPs = NULL;
+   IConnectionPoint*           pCP = NULL;
+   ISink*                      pSink;
+   HRESULT                     lOleError, hr;
+   DWORD                       dwCookie = 0;
+   IDispatch*                  pDisp = hb_oleParam( 1 );
+   PHB_ITEM                    pItemBlock = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+   IID                         rriid;
+
+   if( pDisp )
+   {
+      if( pItemBlock )
+      {
+         lOleError = HB_VTBL( pDisp )->QueryInterface( HB_THIS_( pDisp ) HB_ID_REF( IID_IConnectionPointContainer ), ( void** ) ( void* ) &pCPC );
+         if ( lOleError == S_OK && pCPC )
+         {
+            lOleError = HB_VTBL( pCPC )->EnumConnectionPoints( HB_THIS_( pCPC ) &pEnumCPs );
+            if ( lOleError == S_OK && pEnumCPs )
+            {
+               hr = S_OK;
+               do
+               {
+                  lOleError = HB_VTBL( pEnumCPs )->Next( HB_THIS_( pEnumCPs ) 1, &pCP, NULL );
+                  if( lOleError == S_OK )
+                  {
+                     lOleError = HB_VTBL( pCP )->GetConnectionInterface( HB_THIS_( pCP ) &rriid );
+                     if ( lOleError == S_OK )
+                     {
+                        pSink = ( ISink* ) hb_gcAlloc( sizeof( ISink ), hb_sink_destructor ); /* TODO: GlobalAlloc GMEM_FIXED ??? */
+                        pSink->lpVtbl = ( IDispatchVtbl * ) &ISink_Vtbl;
+                        pSink->count = 0; /* We do not need to increment it here, Advise will do it auto */
+                        pSink->pItemHandler = hb_itemNew( pItemBlock );
+
+                        lOleError = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) ( IUnknown* ) pSink, &dwCookie );
+
+                        pSink->pConnectionPoint = pCP;
+                        pSink->dwCookie = dwCookie;
+                        hb_retptrGC( pSink );
+                        hr = 1;
+                     }
+                     else
+                     {
+                        lOleError = S_OK;
+                     }
+                  }
+               } while( hr == S_OK );
+               HB_VTBL( pEnumCPs )->Release( HB_THIS( pEnumCPs ) );
+               pEnumCPs = NULL;
+            }
+            HB_VTBL( pCPC )->Release( HB_THIS( pCPC ) );
+            pCPC = NULL;
+         }
+
+         hb_oleSetError( lOleError );
+         if( lOleError != S_OK )
+            hb_errRT_BASE_SubstR( EG_ARG, 3012, "Failed to obtain connection point", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      }
+      else
+         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+}
+
+
