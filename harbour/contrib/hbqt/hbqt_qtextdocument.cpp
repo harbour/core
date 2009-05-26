@@ -199,7 +199,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_END )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND )
 {
-   hb_retptr( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( hbqt_par_QString( 2 ), *hbqt_par_QTextCursor( 3 ), ( HB_ISNIL( 4 ) ? ( QTextDocument::FindFlags ) 0 : ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
+   hb_retptr( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( hbqt_par_QString( 2 ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) );
 }
 
 /*
@@ -207,7 +207,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND_1 )
 {
-   hb_retptr( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( *hbqt_par_QRegExp( 2 ), *hbqt_par_QTextCursor( 3 ), ( HB_ISNIL( 4 ) ? ( QTextDocument::FindFlags ) 0 : ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
+   hb_retptr( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( *hbqt_par_QRegExp( 2 ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) );
 }
 
 /*
@@ -215,7 +215,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND_1 )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND_2 )
 {
-   hb_retptr( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( hbqt_par_QString( 2 ), ( HB_ISNIL( 3 ) ? 0 : hb_parni( 3 ) ), ( HB_ISNIL( 4 ) ? ( QTextDocument::FindFlags ) 0 : ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
+   hb_retptr( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( hbqt_par_QString( 2 ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) );
 }
 
 /*
@@ -223,7 +223,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND_2 )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND_3 )
 {
-   hb_retptr( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( *hbqt_par_QRegExp( 2 ), ( HB_ISNIL( 3 ) ? 0 : hb_parni( 3 ) ), ( HB_ISNIL( 4 ) ? ( QTextDocument::FindFlags ) 0 : ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) ) );
+   hb_retptr( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( *hbqt_par_QRegExp( 2 ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ) );
 }
 
 /*

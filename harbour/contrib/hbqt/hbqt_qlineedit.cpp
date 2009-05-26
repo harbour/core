@@ -110,7 +110,7 @@ HB_FUNC( QT_QLINEEDIT_CREATESTANDARDCONTEXTMENU )
  */
 HB_FUNC( QT_QLINEEDIT_CURSORBACKWARD )
 {
-   hbqt_par_QLineEdit( 1 )->cursorBackward( hb_parl( 2 ), ( HB_ISNIL( 3 ) ? 1 : hb_parni( 3 ) ) );
+   hbqt_par_QLineEdit( 1 )->cursorBackward( hb_parl( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 1 ) );
 }
 
 /*
@@ -118,7 +118,7 @@ HB_FUNC( QT_QLINEEDIT_CURSORBACKWARD )
  */
 HB_FUNC( QT_QLINEEDIT_CURSORFORWARD )
 {
-   hbqt_par_QLineEdit( 1 )->cursorForward( hb_parl( 2 ), ( HB_ISNIL( 3 ) ? 1 : hb_parni( 3 ) ) );
+   hbqt_par_QLineEdit( 1 )->cursorForward( hb_parl( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 1 ) );
 }
 
 /*

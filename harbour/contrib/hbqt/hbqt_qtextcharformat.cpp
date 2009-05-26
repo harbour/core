@@ -333,7 +333,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT_SETFONTSTRIKEOUT )
  */
 HB_FUNC( QT_QTEXTCHARFORMAT_SETFONTSTYLEHINT )
 {
-   hbqt_par_QTextCharFormat( 1 )->setFontStyleHint( ( QFont::StyleHint ) hb_parni( 2 ), ( HB_ISNIL( 3 ) ? ( QFont::StyleStrategy ) QFont::PreferDefault : ( QFont::StyleStrategy ) hb_parni( 3 ) ) );
+   hbqt_par_QTextCharFormat( 1 )->setFontStyleHint( ( QFont::StyleHint ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QFont::StyleStrategy ) hb_parni( 3 ) : ( QFont::StyleStrategy ) QFont::PreferDefault ) );
 }
 
 /*

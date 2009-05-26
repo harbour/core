@@ -231,7 +231,7 @@ HB_FUNC( QT_QHTTP_REQUEST_1 )
  */
 HB_FUNC( QT_QHTTP_SETHOST )
 {
-   hb_retni( hbqt_par_QHttp( 1 )->setHost( hbqt_par_QString( 2 ), ( HB_ISNIL( 3 ) ? 80 : hb_parni( 3 ) ) ) );
+   hb_retni( hbqt_par_QHttp( 1 )->setHost( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 80 ) ) );
 }
 
 /*
@@ -239,7 +239,7 @@ HB_FUNC( QT_QHTTP_SETHOST )
  */
 HB_FUNC( QT_QHTTP_SETHOST_1 )
 {
-   hb_retni( hbqt_par_QHttp( 1 )->setHost( hbqt_par_QString( 2 ), ( QHttp::ConnectionMode ) hb_parni( 3 ), ( HB_ISNIL( 4 ) ? 0 : hb_parni( 4 ) ) ) );
+   hb_retni( hbqt_par_QHttp( 1 )->setHost( hbqt_par_QString( 2 ), ( QHttp::ConnectionMode ) hb_parni( 3 ), hb_parni( 4 ) ) );
 }
 
 /*

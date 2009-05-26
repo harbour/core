@@ -1224,7 +1224,7 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, USHORT uiIndex, LPDBORDERINFO 
    switch( uiIndex )
    {
       case DBOI_CONDITION:
-         hb_itemPutC( pOrderInfo->itmResult, pTag->szForExpr ? pTag->szForExpr : "" );
+         hb_itemPutC( pOrderInfo->itmResult, pTag->szForExpr );
          break;
 
       case DBOI_EXPRESSION:
@@ -1331,11 +1331,11 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, USHORT uiIndex, LPDBORDERINFO 
          break;
 
       case DBOI_BAGNAME:
-         hb_itemPutC( pOrderInfo->itmResult, "" );
+         hb_itemPutC( pOrderInfo->itmResult, NULL );
          break;
 
       case DBOI_FULLPATH :
-         hb_itemPutC( pOrderInfo->itmResult, "" );
+         hb_itemPutC( pOrderInfo->itmResult, NULL );
          break;
 
       case DBOI_BAGEXT:

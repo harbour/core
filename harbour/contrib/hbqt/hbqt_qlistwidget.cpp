@@ -287,7 +287,7 @@ HB_FUNC( QT_QLISTWIDGET_SETSORTINGENABLED )
  */
 HB_FUNC( QT_QLISTWIDGET_SORTITEMS )
 {
-   hbqt_par_QListWidget( 1 )->sortItems( ( HB_ISNIL( 2 ) ? ( Qt::SortOrder ) Qt::AscendingOrder : ( Qt::SortOrder ) hb_parni( 2 ) ) );
+   hbqt_par_QListWidget( 1 )->sortItems( ( HB_ISNUM( 2 ) ? ( Qt::SortOrder ) hb_parni( 2 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) );
 }
 
 /*
@@ -319,7 +319,7 @@ HB_FUNC( QT_QLISTWIDGET_CLEAR )
  */
 HB_FUNC( QT_QLISTWIDGET_SCROLLTOITEM )
 {
-   hbqt_par_QListWidget( 1 )->scrollToItem( hbqt_par_QListWidgetItem( 2 ), ( HB_ISNIL( 3 ) ? ( QAbstractItemView::ScrollHint ) QListWidget::EnsureVisible : ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) ) );
+   hbqt_par_QListWidget( 1 )->scrollToItem( hbqt_par_QListWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QListWidget::EnsureVisible ) );
 }
 
 

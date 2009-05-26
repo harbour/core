@@ -218,7 +218,7 @@ HB_FUNC( QT_QTEXTLAYOUT_MINIMUMWIDTH )
  */
 HB_FUNC( QT_QTEXTLAYOUT_NEXTCURSORPOSITION )
 {
-   hb_retni( hbqt_par_QTextLayout( 1 )->nextCursorPosition( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? ( QTextLayout::CursorMode ) QTextLayout::SkipCharacters : ( QTextLayout::CursorMode ) hb_parni( 3 ) ) ) );
+   hb_retni( hbqt_par_QTextLayout( 1 )->nextCursorPosition( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QTextLayout::CursorMode ) hb_parni( 3 ) : ( QTextLayout::CursorMode ) QTextLayout::SkipCharacters ) ) );
 }
 
 /*
@@ -250,7 +250,7 @@ HB_FUNC( QT_QTEXTLAYOUT_PREEDITAREATEXT )
  */
 HB_FUNC( QT_QTEXTLAYOUT_PREVIOUSCURSORPOSITION )
 {
-   hb_retni( hbqt_par_QTextLayout( 1 )->previousCursorPosition( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? ( QTextLayout::CursorMode ) QTextLayout::SkipCharacters : ( QTextLayout::CursorMode ) hb_parni( 3 ) ) ) );
+   hb_retni( hbqt_par_QTextLayout( 1 )->previousCursorPosition( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QTextLayout::CursorMode ) hb_parni( 3 ) : ( QTextLayout::CursorMode ) QTextLayout::SkipCharacters ) ) );
 }
 
 /*

@@ -110,7 +110,7 @@ HB_FUNC( QT_QWEBPAGE_CURRENTFRAME )
  */
 HB_FUNC( QT_QWEBPAGE_FINDTEXT )
 {
-   hb_retl( hbqt_par_QWebPage( 1 )->findText( hbqt_par_QString( 2 ), ( HB_ISNIL( 3 ) ? ( QWebPage::FindFlags ) 0 : ( QWebPage::FindFlags ) hb_parni( 3 ) ) ) );
+   hb_retl( hbqt_par_QWebPage( 1 )->findText( hbqt_par_QString( 2 ), ( QWebPage::FindFlags ) hb_parni( 3 ) ) );
 }
 
 /*

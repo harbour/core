@@ -1899,7 +1899,7 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, USHORT uiIndex, LPDBORDERI
    switch( uiIndex )
    {
       case DBOI_CONDITION:
-         pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, ( pTag ? pTag->szForExpr : "" ) );
+         pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, ( pTag ? pTag->szForExpr : NULL ) );
          if ( pTag && pOrderInfo->itmNewVal && HB_IS_STRING( pOrderInfo->itmNewVal ) )
          {
             if ( pTag->szForExpr != NULL )
@@ -1940,7 +1940,7 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, USHORT uiIndex, LPDBORDERI
          break;
 
       case DBOI_EXPRESSION:
-         pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, pTag ? pTag->szKeyExpr : "" );
+         pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, pTag ? pTag->szKeyExpr : NULL );
          break;
 
       case DBOI_POSITION:
@@ -1979,7 +1979,7 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, USHORT uiIndex, LPDBORDERI
          break;
 */
       case DBOI_NAME:
-         pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, pTag ? pTag->szName : "" );
+         pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, pTag ? pTag->szName : NULL );
          break;
 
       case DBOI_NUMBER:
@@ -2011,7 +2011,7 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, USHORT uiIndex, LPDBORDERI
             pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, szType );
          }
          else
-            pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, "" );
+            pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, NULL );
          break;
 
       case DBOI_KEYSIZE:

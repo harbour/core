@@ -220,7 +220,7 @@ HB_FUNC( QT_QTEXTEDIT_ENSURECURSORVISIBLE )
  */
 HB_FUNC( QT_QTEXTEDIT_FIND )
 {
-   hb_retl( hbqt_par_QTextEdit( 1 )->find( hbqt_par_QString( 2 ), ( HB_ISNIL( 3 ) ? ( QTextDocument::FindFlags ) 0 : ( QTextDocument::FindFlags ) hb_parni( 3 ) ) ) );
+   hb_retl( hbqt_par_QTextEdit( 1 )->find( hbqt_par_QString( 2 ), ( QTextDocument::FindFlags ) hb_parni( 3 ) ) );
 }
 
 /*
@@ -316,7 +316,7 @@ HB_FUNC( QT_QTEXTEDIT_MERGECURRENTCHARFORMAT )
  */
 HB_FUNC( QT_QTEXTEDIT_MOVECURSOR )
 {
-   hbqt_par_QTextEdit( 1 )->moveCursor( ( QTextCursor::MoveOperation ) hb_parni( 2 ), ( HB_ISNIL( 3 ) ? ( QTextCursor::MoveMode ) QTextCursor::MoveAnchor : ( QTextCursor::MoveMode ) hb_parni( 3 ) ) );
+   hbqt_par_QTextEdit( 1 )->moveCursor( ( QTextCursor::MoveOperation ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QTextCursor::MoveMode ) hb_parni( 3 ) : ( QTextCursor::MoveMode ) QTextCursor::MoveAnchor ) );
 }
 
 /*
@@ -724,7 +724,7 @@ HB_FUNC( QT_QTEXTEDIT_UNDO )
  */
 HB_FUNC( QT_QTEXTEDIT_ZOOMIN )
 {
-   hbqt_par_QTextEdit( 1 )->zoomIn( ( HB_ISNIL( 2 ) ? 1 : hb_parni( 2 ) ) );
+   hbqt_par_QTextEdit( 1 )->zoomIn( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 1 ) );
 }
 
 /*
@@ -732,7 +732,7 @@ HB_FUNC( QT_QTEXTEDIT_ZOOMIN )
  */
 HB_FUNC( QT_QTEXTEDIT_ZOOMOUT )
 {
-   hbqt_par_QTextEdit( 1 )->zoomOut( ( HB_ISNIL( 2 ) ? 1 : hb_parni( 2 ) ) );
+   hbqt_par_QTextEdit( 1 )->zoomOut( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 1 ) );
 }
 
 

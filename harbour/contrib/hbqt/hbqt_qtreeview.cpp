@@ -229,7 +229,7 @@ HB_FUNC( QT_QTREEVIEW_ROOTISDECORATED )
  */
 HB_FUNC( QT_QTREEVIEW_SCROLLTO )
 {
-   hbqt_par_QTreeView( 1 )->scrollTo( *hbqt_par_QModelIndex( 2 ), ( HB_ISNIL( 3 ) ? ( QTreeView::ScrollHint ) QTreeView::EnsureVisible : ( QTreeView::ScrollHint ) hb_parni( 3 ) ) );
+   hbqt_par_QTreeView( 1 )->scrollTo( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? ( QTreeView::ScrollHint ) hb_parni( 3 ) : ( QTreeView::ScrollHint ) QTreeView::EnsureVisible ) );
 }
 
 /*

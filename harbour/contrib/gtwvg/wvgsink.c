@@ -331,9 +331,8 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *self, DISPID dispid, REF
 
    /* We implement only a "default" interface */
    if( !IsEqualIID( riid, HB_ID_REF( IID_NULL ) ) )
-   {
       return( ( HRESULT ) DISP_E_UNKNOWNINTERFACE );
-   }
+
    HB_SYMBOL_UNUSED( lcid );
    HB_SYMBOL_UNUSED( wFlags );
    HB_SYMBOL_UNUSED( result );
@@ -396,18 +395,14 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *self, DISPID dispid, REF
          for( i = iArg; i > 0; i-- )
          {
             if( HB_IS_BYREF( pItemArray[ iArg-i ] ) )
-            {
                hb_oleItemToVariant( &( params->rgvarg[ iArg-i ] ), pItemArray[ iArg-i ] );
-            }
          }
 
          /* Pritpal */
          if( iArg )
          {
             for( i = iArg; i > 0; i-- )
-            {
                hb_itemRelease( pItemArray[ i-1 ] );
-            }
          }
          hb_vmPopState();
       }
@@ -491,14 +486,10 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
                            ( ( MyRealIEventHandler* ) thisobj )->dwEventCookie     = dwCookie;
                         }
                         else
-                        {
                            hr = S_OK;
-                        }
                      }
                      else
-                     {
                         hr = S_OK;
-                     }
                   }
                } while( hr == S_OK );
                HB_VTBL( m_pIEnumConnectionPoints )->Release( HB_THIS( m_pIEnumConnectionPoints ) );
@@ -782,4 +773,3 @@ HB_FUNC( HB_AX_ATLSETVERB )
 }
 
 /*----------------------------------------------------------------------*/
-

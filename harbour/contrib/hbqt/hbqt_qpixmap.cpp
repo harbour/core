@@ -218,7 +218,7 @@ HB_FUNC( QT_QPIXMAP_ISQBITMAP )
  */
 HB_FUNC( QT_QPIXMAP_LOAD )
 {
-   hb_retl( hbqt_par_QPixmap( 1 )->load( hbqt_par_QString( 2 ), hbqt_par_char( 3 ), ( HB_ISNIL( 4 ) ? ( Qt::ImageConversionFlags ) Qt::AutoColor : ( Qt::ImageConversionFlags ) hb_parni( 4 ) ) ) );
+   hb_retl( hbqt_par_QPixmap( 1 )->load( hbqt_par_QString( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::ImageConversionFlags ) hb_parni( 4 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) );
 }
 
 /*
@@ -226,7 +226,7 @@ HB_FUNC( QT_QPIXMAP_LOAD )
  */
 HB_FUNC( QT_QPIXMAP_LOADFROMDATA )
 {
-   hb_retl( hbqt_par_QPixmap( 1 )->loadFromData( *hbqt_par_QByteArray( 2 ), hbqt_par_char( 3 ), ( HB_ISNIL( 4 ) ? ( Qt::ImageConversionFlags ) Qt::AutoColor : ( Qt::ImageConversionFlags ) hb_parni( 4 ) ) ) );
+   hb_retl( hbqt_par_QPixmap( 1 )->loadFromData( *hbqt_par_QByteArray( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::ImageConversionFlags ) hb_parni( 4 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) );
 }
 
 /*
@@ -250,7 +250,7 @@ HB_FUNC( QT_QPIXMAP_RECT )
  */
 HB_FUNC( QT_QPIXMAP_SAVE )
 {
-   hb_retl( hbqt_par_QPixmap( 1 )->save( hbqt_par_QString( 2 ), hbqt_par_char( 3 ), ( HB_ISNIL( 4 ) ? -1 : hb_parni( 4 ) ) ) );
+   hb_retl( hbqt_par_QPixmap( 1 )->save( hbqt_par_QString( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ) );
 }
 
 /*
@@ -258,7 +258,7 @@ HB_FUNC( QT_QPIXMAP_SAVE )
  */
 HB_FUNC( QT_QPIXMAP_SAVE_1 )
 {
-   hb_retl( hbqt_par_QPixmap( 1 )->save( hbqt_par_QIODevice( 2 ), hbqt_par_char( 3 ), ( HB_ISNIL( 4 ) ? -1 : hb_parni( 4 ) ) ) );
+   hb_retl( hbqt_par_QPixmap( 1 )->save( hbqt_par_QIODevice( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ) );
 }
 
 /*
@@ -266,7 +266,7 @@ HB_FUNC( QT_QPIXMAP_SAVE_1 )
  */
 HB_FUNC( QT_QPIXMAP_SCALED )
 {
-   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->scaled( *hbqt_par_QSize( 2 ), ( HB_ISNIL( 3 ) ? ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio : ( Qt::AspectRatioMode ) hb_parni( 3 ) ), ( HB_ISNIL( 4 ) ? ( Qt::TransformationMode ) Qt::FastTransformation : ( Qt::TransformationMode ) hb_parni( 4 ) ) ) ) );
+   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->scaled( *hbqt_par_QSize( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::AspectRatioMode ) hb_parni( 3 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 4 ) ? ( Qt::TransformationMode ) hb_parni( 4 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ) );
 }
 
 /*
@@ -274,7 +274,7 @@ HB_FUNC( QT_QPIXMAP_SCALED )
  */
 HB_FUNC( QT_QPIXMAP_SCALED_1 )
 {
-   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->scaled( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNIL( 4 ) ? ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio : ( Qt::AspectRatioMode ) hb_parni( 4 ) ), ( HB_ISNIL( 5 ) ? ( Qt::TransformationMode ) Qt::FastTransformation : ( Qt::TransformationMode ) hb_parni( 5 ) ) ) ) );
+   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->scaled( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::AspectRatioMode ) hb_parni( 4 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 5 ) ? ( Qt::TransformationMode ) hb_parni( 5 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ) );
 }
 
 /*
@@ -282,7 +282,7 @@ HB_FUNC( QT_QPIXMAP_SCALED_1 )
  */
 HB_FUNC( QT_QPIXMAP_SCALEDTOHEIGHT )
 {
-   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->scaledToHeight( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? ( Qt::TransformationMode ) Qt::FastTransformation : ( Qt::TransformationMode ) hb_parni( 3 ) ) ) ) );
+   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->scaledToHeight( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::TransformationMode ) hb_parni( 3 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ) );
 }
 
 /*
@@ -290,7 +290,7 @@ HB_FUNC( QT_QPIXMAP_SCALEDTOHEIGHT )
  */
 HB_FUNC( QT_QPIXMAP_SCALEDTOWIDTH )
 {
-   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->scaledToWidth( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? ( Qt::TransformationMode ) Qt::FastTransformation : ( Qt::TransformationMode ) hb_parni( 3 ) ) ) ) );
+   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->scaledToWidth( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::TransformationMode ) hb_parni( 3 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ) );
 }
 
 /*
@@ -330,7 +330,7 @@ HB_FUNC( QT_QPIXMAP_TOIMAGE )
  */
 HB_FUNC( QT_QPIXMAP_TRANSFORMED )
 {
-   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->transformed( *hbqt_par_QTransform( 2 ), ( HB_ISNIL( 3 ) ? ( Qt::TransformationMode ) Qt::FastTransformation : ( Qt::TransformationMode ) hb_parni( 3 ) ) ) ) );
+   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->transformed( *hbqt_par_QTransform( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::TransformationMode ) hb_parni( 3 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ) );
 }
 
 /*
@@ -338,7 +338,7 @@ HB_FUNC( QT_QPIXMAP_TRANSFORMED )
  */
 HB_FUNC( QT_QPIXMAP_TRANSFORMED_1 )
 {
-   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->transformed( *hbqt_par_QMatrix( 2 ), ( HB_ISNIL( 3 ) ? ( Qt::TransformationMode ) Qt::FastTransformation : ( Qt::TransformationMode ) hb_parni( 3 ) ) ) ) );
+   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->transformed( *hbqt_par_QMatrix( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::TransformationMode ) hb_parni( 3 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ) );
 }
 
 /*

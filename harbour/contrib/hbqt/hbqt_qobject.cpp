@@ -104,7 +104,7 @@ HB_FUNC( QT_QOBJECT_CHILDREN )
  */
 HB_FUNC( QT_QOBJECT_CONNECT )
 {
-   hb_retl( hbqt_par_QObject( 1 )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNIL( 5 ) ? ( Qt::ConnectionType ) Qt::AutoConnection : ( Qt::ConnectionType ) hb_parni( 5 ) ) ) );
+   hb_retl( hbqt_par_QObject( 1 )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNUM( 5 ) ? ( Qt::ConnectionType ) hb_parni( 5 ) : ( Qt::ConnectionType ) Qt::AutoConnection ) ) );
 }
 
 /*

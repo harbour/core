@@ -77,7 +77,7 @@ HB_FUNC( QT_QEVENTLOOP )
  */
 HB_FUNC( QT_QEVENTLOOP_EXEC )
 {
-   hb_retni( hbqt_par_QEventLoop( 1 )->exec( ( HB_ISNIL( 2 ) ? ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents : ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) ) ) );
+   hb_retni( hbqt_par_QEventLoop( 1 )->exec( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ) );
 }
 
 /*
@@ -85,7 +85,7 @@ HB_FUNC( QT_QEVENTLOOP_EXEC )
  */
 HB_FUNC( QT_QEVENTLOOP_EXIT )
 {
-   hbqt_par_QEventLoop( 1 )->exit( ( HB_ISNIL( 2 ) ? 0 : hb_parni( 2 ) ) );
+   hbqt_par_QEventLoop( 1 )->exit( hb_parni( 2 ) );
 }
 
 /*
@@ -101,7 +101,7 @@ HB_FUNC( QT_QEVENTLOOP_ISRUNNING )
  */
 HB_FUNC( QT_QEVENTLOOP_PROCESSEVENTS )
 {
-   hb_retl( hbqt_par_QEventLoop( 1 )->processEvents( ( HB_ISNIL( 2 ) ? ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents : ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) ) ) );
+   hb_retl( hbqt_par_QEventLoop( 1 )->processEvents( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ) );
 }
 
 /*

@@ -97,7 +97,7 @@ HB_FUNC( QT_QTREEWIDGET_ADDTOPLEVELITEM )
  */
 HB_FUNC( QT_QTREEWIDGET_CLOSEPERSISTENTEDITOR )
 {
-   hbqt_par_QTreeWidget( 1 )->closePersistentEditor( hbqt_par_QTreeWidgetItem( 2 ), ( HB_ISNIL( 3 ) ? 0 : hb_parni( 3 ) ) );
+   hbqt_par_QTreeWidget( 1 )->closePersistentEditor( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -129,7 +129,7 @@ HB_FUNC( QT_QTREEWIDGET_CURRENTITEM )
  */
 HB_FUNC( QT_QTREEWIDGET_EDITITEM )
 {
-   hbqt_par_QTreeWidget( 1 )->editItem( hbqt_par_QTreeWidgetItem( 2 ), ( HB_ISNIL( 3 ) ? 0 : hb_parni( 3 ) ) );
+   hbqt_par_QTreeWidget( 1 )->editItem( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -217,7 +217,7 @@ HB_FUNC( QT_QTREEWIDGET_ITEMWIDGET )
  */
 HB_FUNC( QT_QTREEWIDGET_OPENPERSISTENTEDITOR )
 {
-   hbqt_par_QTreeWidget( 1 )->openPersistentEditor( hbqt_par_QTreeWidgetItem( 2 ), ( HB_ISNIL( 3 ) ? 0 : hb_parni( 3 ) ) );
+   hbqt_par_QTreeWidget( 1 )->openPersistentEditor( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -377,7 +377,7 @@ HB_FUNC( QT_QTREEWIDGET_EXPANDITEM )
  */
 HB_FUNC( QT_QTREEWIDGET_SCROLLTOITEM )
 {
-   hbqt_par_QTreeWidget( 1 )->scrollToItem( hbqt_par_QTreeWidgetItem( 2 ), ( HB_ISNIL( 3 ) ? ( QAbstractItemView::ScrollHint ) QTreeWidget::EnsureVisible : ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) ) );
+   hbqt_par_QTreeWidget( 1 )->scrollToItem( hbqt_par_QTreeWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QTreeWidget::EnsureVisible ) );
 }
 
 

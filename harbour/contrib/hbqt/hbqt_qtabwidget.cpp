@@ -101,7 +101,7 @@ HB_FUNC( QT_QTABWIDGET_CLEAR )
  */
 HB_FUNC( QT_QTABWIDGET_CORNERWIDGET )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QTabWidget( 1 )->cornerWidget( ( HB_ISNIL( 2 ) ? ( Qt::Corner ) Qt::TopRightCorner : ( Qt::Corner ) hb_parni( 2 ) ) ) );
+   hb_retptr( ( QWidget* ) hbqt_par_QTabWidget( 1 )->cornerWidget( ( HB_ISNUM( 2 ) ? ( Qt::Corner ) hb_parni( 2 ) : ( Qt::Corner ) Qt::TopRightCorner ) ) );
 }
 
 /*
@@ -205,7 +205,7 @@ HB_FUNC( QT_QTABWIDGET_REMOVETAB )
  */
 HB_FUNC( QT_QTABWIDGET_SETCORNERWIDGET )
 {
-   hbqt_par_QTabWidget( 1 )->setCornerWidget( hbqt_par_QWidget( 2 ), ( HB_ISNIL( 3 ) ? ( Qt::Corner ) Qt::TopRightCorner : ( Qt::Corner ) hb_parni( 3 ) ) );
+   hbqt_par_QTabWidget( 1 )->setCornerWidget( hbqt_par_QWidget( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::Corner ) hb_parni( 3 ) : ( Qt::Corner ) Qt::TopRightCorner ) );
 }
 
 /*

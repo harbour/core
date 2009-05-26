@@ -78,7 +78,7 @@ HB_FUNC( QT_QBOXLAYOUT )
  */
 HB_FUNC( QT_QBOXLAYOUT_ADDLAYOUT )
 {
-   hbqt_par_QBoxLayout( 1 )->addLayout( hbqt_par_QLayout( 2 ), ( HB_ISNIL( 3 ) ? 0 : hb_parni( 3 ) ) );
+   hbqt_par_QBoxLayout( 1 )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -102,7 +102,7 @@ HB_FUNC( QT_QBOXLAYOUT_ADDSPACING )
  */
 HB_FUNC( QT_QBOXLAYOUT_ADDSTRETCH )
 {
-   hbqt_par_QBoxLayout( 1 )->addStretch( ( HB_ISNIL( 2 ) ? 0 : hb_parni( 2 ) ) );
+   hbqt_par_QBoxLayout( 1 )->addStretch( hb_parni( 2 ) );
 }
 
 /*
@@ -118,7 +118,7 @@ HB_FUNC( QT_QBOXLAYOUT_ADDSTRUT )
  */
 HB_FUNC( QT_QBOXLAYOUT_ADDWIDGET )
 {
-   hbqt_par_QBoxLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ), ( HB_ISNIL( 3 ) ? 0 : hb_parni( 3 ) ), ( HB_ISNIL( 4 ) ? ( Qt::Alignment ) 0 : ( Qt::Alignment ) hb_parni( 4 ) ) );
+   hbqt_par_QBoxLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), ( Qt::Alignment ) hb_parni( 4 ) );
 }
 
 /*
@@ -134,7 +134,7 @@ HB_FUNC( QT_QBOXLAYOUT_DIRECTION )
  */
 HB_FUNC( QT_QBOXLAYOUT_INSERTLAYOUT )
 {
-   hbqt_par_QBoxLayout( 1 )->insertLayout( hb_parni( 2 ), hbqt_par_QLayout( 3 ), ( HB_ISNIL( 4 ) ? 0 : hb_parni( 4 ) ) );
+   hbqt_par_QBoxLayout( 1 )->insertLayout( hb_parni( 2 ), hbqt_par_QLayout( 3 ), hb_parni( 4 ) );
 }
 
 /*
@@ -158,7 +158,7 @@ HB_FUNC( QT_QBOXLAYOUT_INSERTSPACING )
  */
 HB_FUNC( QT_QBOXLAYOUT_INSERTSTRETCH )
 {
-   hbqt_par_QBoxLayout( 1 )->insertStretch( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? 0 : hb_parni( 3 ) ) );
+   hbqt_par_QBoxLayout( 1 )->insertStretch( hb_parni( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -166,7 +166,7 @@ HB_FUNC( QT_QBOXLAYOUT_INSERTSTRETCH )
  */
 HB_FUNC( QT_QBOXLAYOUT_INSERTWIDGET )
 {
-   hbqt_par_QBoxLayout( 1 )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), ( HB_ISNIL( 4 ) ? 0 : hb_parni( 4 ) ), ( HB_ISNIL( 5 ) ? ( Qt::Alignment ) 0 : ( Qt::Alignment ) hb_parni( 5 ) ) );
+   hbqt_par_QBoxLayout( 1 )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ), ( Qt::Alignment ) hb_parni( 5 ) );
 }
 
 /*

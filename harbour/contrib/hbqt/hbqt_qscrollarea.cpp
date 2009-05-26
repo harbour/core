@@ -85,7 +85,7 @@ HB_FUNC( QT_QSCROLLAREA_ALIGNMENT )
  */
 HB_FUNC( QT_QSCROLLAREA_ENSUREVISIBLE )
 {
-   hbqt_par_QScrollArea( 1 )->ensureVisible( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNIL( 4 ) ? 50 : hb_parni( 4 ) ), ( HB_ISNIL( 5 ) ? 50 : hb_parni( 5 ) ) );
+   hbqt_par_QScrollArea( 1 )->ensureVisible( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 50 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 50 ) );
 }
 
 /*
@@ -93,7 +93,7 @@ HB_FUNC( QT_QSCROLLAREA_ENSUREVISIBLE )
  */
 HB_FUNC( QT_QSCROLLAREA_ENSUREWIDGETVISIBLE )
 {
-   hbqt_par_QScrollArea( 1 )->ensureWidgetVisible( hbqt_par_QWidget( 2 ), ( HB_ISNIL( 3 ) ? 50 : hb_parni( 3 ) ), ( HB_ISNIL( 4 ) ? 50 : hb_parni( 4 ) ) );
+   hbqt_par_QScrollArea( 1 )->ensureWidgetVisible( hbqt_par_QWidget( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 50 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 50 ) );
 }
 
 /*

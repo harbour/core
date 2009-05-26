@@ -344,8 +344,8 @@ HB_FUNC( WIN_GETDLGITEM )
 HB_FUNC( WIN_MESSAGEBOX )
 {
    HWND   hWnd = ISNIL( 1 ) ? GetActiveWindow() : ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) ;
-   LPTSTR lpMsg = HB_TCHAR_CONVTO( ISNIL( 2 ) ? "" : hb_parc( 2 ) );
-   LPTSTR lpTitle = HB_TCHAR_CONVTO( ISNIL( 3 ) ? "Info" : hb_parc( 3 ) );
+   LPTSTR lpMsg = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   LPTSTR lpTitle = HB_TCHAR_CONVTO( ISCHAR( 3 ) ? hb_parc( 3 ) : "Info" );
 
    hb_retni( MessageBox( hWnd, lpMsg, lpTitle, ISNIL( 4 ) ? MB_OK : hb_parni( 4 ) ) );
 
@@ -896,7 +896,7 @@ HB_FUNC( WIN_CREATEWINDOWEX )
    LPTSTR szClassName;
 
    szClassName = HB_TCHAR_CONVTO( hb_parc( 2 ) );
-   szWinName = HB_TCHAR_CONVTO( ISNIL( 3 ) ? "" : hb_parc( 3 ) );
+   szWinName = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
 
    hWnd = CreateWindowEx( ( DWORD ) hb_parnint( 1 ),
                           szClassName,
@@ -1870,7 +1870,7 @@ PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, BOOL bEmpty )
 
    if( bEmpty )
    {
-      hb_arraySetC( aFont ,   1, "" );
+      hb_arraySetC( aFont ,   1, NULL );
       hb_arraySetNL( aFont,   2, 0  );
       hb_arraySetNL( aFont,   3, 0  );
       hb_arraySetNL( aFont,   4, 0  );

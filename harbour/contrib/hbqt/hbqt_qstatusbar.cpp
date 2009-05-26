@@ -77,7 +77,7 @@ HB_FUNC( QT_QSTATUSBAR )
  */
 HB_FUNC( QT_QSTATUSBAR_ADDPERMANENTWIDGET )
 {
-   hbqt_par_QStatusBar( 1 )->addPermanentWidget( hbqt_par_QWidget( 2 ), ( HB_ISNIL( 3 ) ? 0 : hb_parni( 3 ) ) );
+   hbqt_par_QStatusBar( 1 )->addPermanentWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -85,7 +85,7 @@ HB_FUNC( QT_QSTATUSBAR_ADDPERMANENTWIDGET )
  */
 HB_FUNC( QT_QSTATUSBAR_ADDWIDGET )
 {
-   hbqt_par_QStatusBar( 1 )->addWidget( hbqt_par_QWidget( 2 ), ( HB_ISNIL( 3 ) ? 0 : hb_parni( 3 ) ) );
+   hbqt_par_QStatusBar( 1 )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) );
 }
 
 /*
@@ -101,7 +101,7 @@ HB_FUNC( QT_QSTATUSBAR_CURRENTMESSAGE )
  */
 HB_FUNC( QT_QSTATUSBAR_INSERTPERMANENTWIDGET )
 {
-   hb_retni( hbqt_par_QStatusBar( 1 )->insertPermanentWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), ( HB_ISNIL( 4 ) ? 0 : hb_parni( 4 ) ) ) );
+   hb_retni( hbqt_par_QStatusBar( 1 )->insertPermanentWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ) ) );
 }
 
 /*
@@ -109,7 +109,7 @@ HB_FUNC( QT_QSTATUSBAR_INSERTPERMANENTWIDGET )
  */
 HB_FUNC( QT_QSTATUSBAR_INSERTWIDGET )
 {
-   hb_retni( hbqt_par_QStatusBar( 1 )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), ( HB_ISNIL( 4 ) ? 0 : hb_parni( 4 ) ) ) );
+   hb_retni( hbqt_par_QStatusBar( 1 )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ) ) );
 }
 
 /*
@@ -149,7 +149,7 @@ HB_FUNC( QT_QSTATUSBAR_CLEARMESSAGE )
  */
 HB_FUNC( QT_QSTATUSBAR_SHOWMESSAGE )
 {
-   hbqt_par_QStatusBar( 1 )->showMessage( hbqt_par_QString( 2 ), ( HB_ISNIL( 3 ) ? 0 : hb_parni( 3 ) ) );
+   hbqt_par_QStatusBar( 1 )->showMessage( hbqt_par_QString( 2 ), hb_parni( 3 ) );
 }
 
 

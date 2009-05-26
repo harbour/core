@@ -540,7 +540,7 @@ HB_FUNC( QT_QURL_SETUSERNAME )
  */
 HB_FUNC( QT_QURL_TOENCODED )
 {
-   hb_retptr( new QByteArray( hbqt_par_QUrl( 1 )->toEncoded( ( HB_ISNIL( 2 ) ? ( QUrl::FormattingOptions ) QUrl::None : ( QUrl::FormattingOptions ) hb_parni( 2 ) ) ) ) );
+   hb_retptr( new QByteArray( hbqt_par_QUrl( 1 )->toEncoded( ( HB_ISNUM( 2 ) ? ( QUrl::FormattingOptions ) hb_parni( 2 ) : ( QUrl::FormattingOptions ) QUrl::None ) ) ) );
 }
 
 /*
@@ -556,7 +556,7 @@ HB_FUNC( QT_QURL_TOLOCALFILE )
  */
 HB_FUNC( QT_QURL_TOSTRING )
 {
-   hb_retc( hbqt_par_QUrl( 1 )->toString( ( HB_ISNIL( 2 ) ? ( QUrl::FormattingOptions ) QUrl::None : ( QUrl::FormattingOptions ) hb_parni( 2 ) ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QUrl( 1 )->toString( ( HB_ISNUM( 2 ) ? ( QUrl::FormattingOptions ) hb_parni( 2 ) : ( QUrl::FormattingOptions ) QUrl::None ) ).toLatin1().data() );
 }
 
 /*

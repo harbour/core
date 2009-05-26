@@ -109,7 +109,7 @@ HB_FUNC( QT_QFTP_CLOSE )
  */
 HB_FUNC( QT_QFTP_CONNECTTOHOST )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->connectToHost( hbqt_par_QString( 2 ), ( HB_ISNIL( 3 ) ? 21 : hb_parni( 3 ) ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->connectToHost( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 21 ) ) );
 }
 
 /*
@@ -157,7 +157,7 @@ HB_FUNC( QT_QFTP_ERRORSTRING )
  */
 HB_FUNC( QT_QFTP_GET )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->get( hbqt_par_QString( 2 ), hbqt_par_QIODevice( 3 ), ( HB_ISNIL( 4 ) ? ( QFtp::TransferType ) QFtp::Binary : ( QFtp::TransferType ) hb_parni( 4 ) ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->get( hbqt_par_QString( 2 ), hbqt_par_QIODevice( 3 ), ( HB_ISNUM( 4 ) ? ( QFtp::TransferType ) hb_parni( 4 ) : ( QFtp::TransferType ) QFtp::Binary ) ) );
 }
 
 /*
@@ -197,7 +197,7 @@ HB_FUNC( QT_QFTP_MKDIR )
  */
 HB_FUNC( QT_QFTP_PUT )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->put( hbqt_par_QIODevice( 2 ), hbqt_par_QString( 3 ), ( HB_ISNIL( 4 ) ? ( QFtp::TransferType ) QFtp::Binary : ( QFtp::TransferType ) hb_parni( 4 ) ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->put( hbqt_par_QIODevice( 2 ), hbqt_par_QString( 3 ), ( HB_ISNUM( 4 ) ? ( QFtp::TransferType ) hb_parni( 4 ) : ( QFtp::TransferType ) QFtp::Binary ) ) );
 }
 
 /*
@@ -205,7 +205,7 @@ HB_FUNC( QT_QFTP_PUT )
  */
 HB_FUNC( QT_QFTP_PUT_1 )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->put( *hbqt_par_QByteArray( 2 ), hbqt_par_QString( 3 ), ( HB_ISNIL( 4 ) ? ( QFtp::TransferType ) QFtp::Binary : ( QFtp::TransferType ) hb_parni( 4 ) ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->put( *hbqt_par_QByteArray( 2 ), hbqt_par_QString( 3 ), ( HB_ISNUM( 4 ) ? ( QFtp::TransferType ) hb_parni( 4 ) : ( QFtp::TransferType ) QFtp::Binary ) ) );
 }
 
 /*

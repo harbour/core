@@ -78,7 +78,7 @@ HB_FUNC( QT_QWEBVIEW )
  */
 HB_FUNC( QT_QWEBVIEW_FINDTEXT )
 {
-   hb_retl( hbqt_par_QWebView( 1 )->findText( hbqt_par_QString( 2 ), ( HB_ISNIL( 3 ) ? ( QWebPage::FindFlags ) 0 : ( QWebPage::FindFlags ) hb_parni( 3 ) ) ) );
+   hb_retl( hbqt_par_QWebView( 1 )->findText( hbqt_par_QString( 2 ), ( QWebPage::FindFlags ) hb_parni( 3 ) ) );
 }
 
 /*
@@ -118,7 +118,7 @@ HB_FUNC( QT_QWEBVIEW_LOAD )
  */
 HB_FUNC( QT_QWEBVIEW_LOAD_1 )
 {
-   hbqt_par_QWebView( 1 )->load( *hbqt_par_QNetworkRequest( 2 ), ( HB_ISNIL( 3 ) ? ( QNetworkAccessManager::Operation ) QNetworkAccessManager::GetOperation : ( QNetworkAccessManager::Operation ) hb_parni( 3 ) ), *hbqt_par_QByteArray( 4 ) );
+   hbqt_par_QWebView( 1 )->load( *hbqt_par_QNetworkRequest( 2 ), ( HB_ISNUM( 3 ) ? ( QNetworkAccessManager::Operation ) hb_parni( 3 ) : ( QNetworkAccessManager::Operation ) QNetworkAccessManager::GetOperation ), *hbqt_par_QByteArray( 4 ) );
 }
 
 /*

@@ -91,7 +91,7 @@ HB_FUNC( QT_QICON )
  */
 HB_FUNC( QT_QICON_ACTUALSIZE )
 {
-   hb_retptr( new QSize( hbqt_par_QIcon( 1 )->actualSize( *hbqt_par_QSize( 2 ), ( HB_ISNIL( 3 ) ? ( QIcon::Mode ) QIcon::Normal : ( QIcon::Mode ) hb_parni( 3 ) ), ( HB_ISNIL( 4 ) ? ( QIcon::State ) QIcon::Off : ( QIcon::State ) hb_parni( 4 ) ) ) ) );
+   hb_retptr( new QSize( hbqt_par_QIcon( 1 )->actualSize( *hbqt_par_QSize( 2 ), ( HB_ISNUM( 3 ) ? ( QIcon::Mode ) hb_parni( 3 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 4 ) ? ( QIcon::State ) hb_parni( 4 ) : ( QIcon::State ) QIcon::Off ) ) ) );
 }
 
 /*
@@ -107,7 +107,7 @@ HB_FUNC( QT_QICON_ADDFILE )
  */
 HB_FUNC( QT_QICON_ADDPIXMAP )
 {
-   hbqt_par_QIcon( 1 )->addPixmap( *hbqt_par_QPixmap( 2 ), ( HB_ISNIL( 3 ) ? ( QIcon::Mode ) QIcon::Normal : ( QIcon::Mode ) hb_parni( 3 ) ), ( HB_ISNIL( 4 ) ? ( QIcon::State ) QIcon::Off : ( QIcon::State ) hb_parni( 4 ) ) );
+   hbqt_par_QIcon( 1 )->addPixmap( *hbqt_par_QPixmap( 2 ), ( HB_ISNUM( 3 ) ? ( QIcon::Mode ) hb_parni( 3 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 4 ) ? ( QIcon::State ) hb_parni( 4 ) : ( QIcon::State ) QIcon::Off ) );
 }
 
 /*
@@ -131,7 +131,7 @@ HB_FUNC( QT_QICON_ISNULL )
  */
 HB_FUNC( QT_QICON_PAINT )
 {
-   hbqt_par_QIcon( 1 )->paint( hbqt_par_QPainter( 2 ), *hbqt_par_QRect( 3 ), ( HB_ISNIL( 4 ) ? ( Qt::Alignment ) Qt::AlignCenter : ( Qt::Alignment ) hb_parni( 4 ) ), ( HB_ISNIL( 5 ) ? ( QIcon::Mode ) QIcon::Normal : ( QIcon::Mode ) hb_parni( 5 ) ), ( HB_ISNIL( 6 ) ? ( QIcon::State ) QIcon::Off : ( QIcon::State ) hb_parni( 6 ) ) );
+   hbqt_par_QIcon( 1 )->paint( hbqt_par_QPainter( 2 ), *hbqt_par_QRect( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::Alignment ) hb_parni( 4 ) : ( Qt::Alignment ) Qt::AlignCenter ), ( HB_ISNUM( 5 ) ? ( QIcon::Mode ) hb_parni( 5 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 6 ) ? ( QIcon::State ) hb_parni( 6 ) : ( QIcon::State ) QIcon::Off ) );
 }
 
 /*
@@ -139,7 +139,7 @@ HB_FUNC( QT_QICON_PAINT )
  */
 HB_FUNC( QT_QICON_PAINT_1 )
 {
-   hbqt_par_QIcon( 1 )->paint( hbqt_par_QPainter( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), ( HB_ISNIL( 7 ) ? ( Qt::Alignment ) Qt::AlignCenter : ( Qt::Alignment ) hb_parni( 7 ) ), ( HB_ISNIL( 8 ) ? ( QIcon::Mode ) QIcon::Normal : ( QIcon::Mode ) hb_parni( 8 ) ), ( HB_ISNIL( 9 ) ? ( QIcon::State ) QIcon::Off : ( QIcon::State ) hb_parni( 9 ) ) );
+   hbqt_par_QIcon( 1 )->paint( hbqt_par_QPainter( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), ( HB_ISNUM( 7 ) ? ( Qt::Alignment ) hb_parni( 7 ) : ( Qt::Alignment ) Qt::AlignCenter ), ( HB_ISNUM( 8 ) ? ( QIcon::Mode ) hb_parni( 8 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 9 ) ? ( QIcon::State ) hb_parni( 9 ) : ( QIcon::State ) QIcon::Off ) );
 }
 
 /*
@@ -147,7 +147,7 @@ HB_FUNC( QT_QICON_PAINT_1 )
  */
 HB_FUNC( QT_QICON_PIXMAP )
 {
-   hb_retptr( new QPixmap( hbqt_par_QIcon( 1 )->pixmap( *hbqt_par_QSize( 2 ), ( HB_ISNIL( 3 ) ? ( QIcon::Mode ) QIcon::Normal : ( QIcon::Mode ) hb_parni( 3 ) ), ( HB_ISNIL( 4 ) ? ( QIcon::State ) QIcon::Off : ( QIcon::State ) hb_parni( 4 ) ) ) ) );
+   hb_retptr( new QPixmap( hbqt_par_QIcon( 1 )->pixmap( *hbqt_par_QSize( 2 ), ( HB_ISNUM( 3 ) ? ( QIcon::Mode ) hb_parni( 3 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 4 ) ? ( QIcon::State ) hb_parni( 4 ) : ( QIcon::State ) QIcon::Off ) ) ) );
 }
 
 /*
@@ -155,7 +155,7 @@ HB_FUNC( QT_QICON_PIXMAP )
  */
 HB_FUNC( QT_QICON_PIXMAP_1 )
 {
-   hb_retptr( new QPixmap( hbqt_par_QIcon( 1 )->pixmap( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNIL( 4 ) ? ( QIcon::Mode ) QIcon::Normal : ( QIcon::Mode ) hb_parni( 4 ) ), ( HB_ISNIL( 5 ) ? ( QIcon::State ) QIcon::Off : ( QIcon::State ) hb_parni( 5 ) ) ) ) );
+   hb_retptr( new QPixmap( hbqt_par_QIcon( 1 )->pixmap( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( QIcon::Mode ) hb_parni( 4 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 5 ) ? ( QIcon::State ) hb_parni( 5 ) : ( QIcon::State ) QIcon::Off ) ) ) );
 }
 
 /*
@@ -163,7 +163,7 @@ HB_FUNC( QT_QICON_PIXMAP_1 )
  */
 HB_FUNC( QT_QICON_PIXMAP_2 )
 {
-   hb_retptr( new QPixmap( hbqt_par_QIcon( 1 )->pixmap( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? ( QIcon::Mode ) QIcon::Normal : ( QIcon::Mode ) hb_parni( 3 ) ), ( HB_ISNIL( 4 ) ? ( QIcon::State ) QIcon::Off : ( QIcon::State ) hb_parni( 4 ) ) ) ) );
+   hb_retptr( new QPixmap( hbqt_par_QIcon( 1 )->pixmap( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QIcon::Mode ) hb_parni( 3 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 4 ) ? ( QIcon::State ) hb_parni( 4 ) : ( QIcon::State ) QIcon::Off ) ) ) );
 }
 
 

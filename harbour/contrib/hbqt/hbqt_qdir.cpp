@@ -135,7 +135,7 @@ HB_FUNC( QT_QDIR_DIRNAME )
  */
 HB_FUNC( QT_QDIR_ENTRYINFOLIST )
 {
-   hb_retptr( new QFileInfoList( hbqt_par_QDir( 1 )->entryInfoList( *hbqt_par_QStringList( 2 ), ( HB_ISNIL( 3 ) ? ( QDir::Filters ) QDir::NoFilter : ( QDir::Filters ) hb_parni( 3 ) ), ( HB_ISNIL( 4 ) ? ( QDir::SortFlags ) QDir::NoSort : ( QDir::SortFlags ) hb_parni( 4 ) ) ) ) );
+   hb_retptr( new QFileInfoList( hbqt_par_QDir( 1 )->entryInfoList( *hbqt_par_QStringList( 2 ), ( HB_ISNUM( 3 ) ? ( QDir::Filters ) hb_parni( 3 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 4 ) ? ( QDir::SortFlags ) hb_parni( 4 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) );
 }
 
 /*
@@ -143,7 +143,7 @@ HB_FUNC( QT_QDIR_ENTRYINFOLIST )
  */
 HB_FUNC( QT_QDIR_ENTRYINFOLIST_1 )
 {
-   hb_retptr( new QFileInfoList( hbqt_par_QDir( 1 )->entryInfoList( ( HB_ISNIL( 2 ) ? ( QDir::Filters ) QDir::NoFilter : ( QDir::Filters ) hb_parni( 2 ) ), ( HB_ISNIL( 3 ) ? ( QDir::SortFlags ) QDir::NoSort : ( QDir::SortFlags ) hb_parni( 3 ) ) ) ) );
+   hb_retptr( new QFileInfoList( hbqt_par_QDir( 1 )->entryInfoList( ( HB_ISNUM( 2 ) ? ( QDir::Filters ) hb_parni( 2 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 3 ) ? ( QDir::SortFlags ) hb_parni( 3 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) );
 }
 
 /*
@@ -151,7 +151,7 @@ HB_FUNC( QT_QDIR_ENTRYINFOLIST_1 )
  */
 HB_FUNC( QT_QDIR_ENTRYLIST )
 {
-   hb_retptr( new QStringList( hbqt_par_QDir( 1 )->entryList( *hbqt_par_QStringList( 2 ), ( HB_ISNIL( 3 ) ? ( QDir::Filters ) QDir::NoFilter : ( QDir::Filters ) hb_parni( 3 ) ), ( HB_ISNIL( 4 ) ? ( QDir::SortFlags ) QDir::NoSort : ( QDir::SortFlags ) hb_parni( 4 ) ) ) ) );
+   hb_retptr( new QStringList( hbqt_par_QDir( 1 )->entryList( *hbqt_par_QStringList( 2 ), ( HB_ISNUM( 3 ) ? ( QDir::Filters ) hb_parni( 3 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 4 ) ? ( QDir::SortFlags ) hb_parni( 4 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) );
 }
 
 /*
@@ -159,7 +159,7 @@ HB_FUNC( QT_QDIR_ENTRYLIST )
  */
 HB_FUNC( QT_QDIR_ENTRYLIST_1 )
 {
-   hb_retptr( new QStringList( hbqt_par_QDir( 1 )->entryList( ( HB_ISNIL( 2 ) ? ( QDir::Filters ) QDir::NoFilter : ( QDir::Filters ) hb_parni( 2 ) ), ( HB_ISNIL( 3 ) ? ( QDir::SortFlags ) QDir::NoSort : ( QDir::SortFlags ) hb_parni( 3 ) ) ) ) );
+   hb_retptr( new QStringList( hbqt_par_QDir( 1 )->entryList( ( HB_ISNUM( 2 ) ? ( QDir::Filters ) hb_parni( 2 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 3 ) ? ( QDir::SortFlags ) hb_parni( 3 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ) );
 }
 
 /*

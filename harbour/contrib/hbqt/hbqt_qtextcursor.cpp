@@ -441,7 +441,7 @@ HB_FUNC( QT_QTEXTCURSOR_MERGECHARFORMAT )
  */
 HB_FUNC( QT_QTEXTCURSOR_MOVEPOSITION )
 {
-   hb_retl( hbqt_par_QTextCursor( 1 )->movePosition( ( QTextCursor::MoveOperation ) hb_parni( 2 ), ( HB_ISNIL( 3 ) ? ( QTextCursor::MoveMode ) QTextCursor::MoveAnchor : ( QTextCursor::MoveMode ) hb_parni( 3 ) ), ( HB_ISNIL( 4 ) ? 1 : hb_parni( 4 ) ) ) );
+   hb_retl( hbqt_par_QTextCursor( 1 )->movePosition( ( QTextCursor::MoveOperation ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QTextCursor::MoveMode ) hb_parni( 3 ) : ( QTextCursor::MoveMode ) QTextCursor::MoveAnchor ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 1 ) ) );
 }
 
 /*
@@ -547,7 +547,7 @@ HB_FUNC( QT_QTEXTCURSOR_SETCHARFORMAT )
  */
 HB_FUNC( QT_QTEXTCURSOR_SETPOSITION )
 {
-   hbqt_par_QTextCursor( 1 )->setPosition( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? ( QTextCursor::MoveMode ) QTextCursor::MoveAnchor : ( QTextCursor::MoveMode ) hb_parni( 3 ) ) );
+   hbqt_par_QTextCursor( 1 )->setPosition( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QTextCursor::MoveMode ) hb_parni( 3 ) : ( QTextCursor::MoveMode ) QTextCursor::MoveAnchor ) );
 }
 
 /*

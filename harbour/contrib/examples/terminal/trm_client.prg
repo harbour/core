@@ -206,14 +206,10 @@ STATIC FUNCTION ResolveParams( cAddress, cPort, cAppln, cParams, cDirectory )
       TCHAR buffer[ MAX_PATH ];
 
       iSize = GetModuleFileName( NULL, buffer, MAX_PATH );
-      if ( iSize > 0 )
-      {
+      if( iSize > 0 )
          hb_retc( HB_TCHAR_CONVFROM( buffer ) );
-      }
       else
-      {
-         hb_retc( "" );
-      }
+         hb_retc( NULL );
    }
 
    if !empty( cPath )

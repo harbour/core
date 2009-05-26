@@ -202,7 +202,7 @@ HB_FUNC( QT_QTEXTSTREAM_READALL )
  */
 HB_FUNC( QT_QTEXTSTREAM_READLINE )
 {
-   hb_retc( hbqt_par_QTextStream( 1 )->readLine( ( HB_ISNIL( 2 ) ? 0 : hb_parni( 2 ) ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextStream( 1 )->readLine( hb_parni( 2 ) ).toLatin1().data() );
 }
 
 /*

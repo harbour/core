@@ -77,7 +77,7 @@ HB_FUNC( QT_QDESKTOPWIDGET )
  */
 HB_FUNC( QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY )
 {
-   hb_retptr( new QRect( hbqt_par_QDesktopWidget( 1 )->availableGeometry( ( HB_ISNIL( 2 ) ? -1 : hb_parni( 2 ) ) ) ) );
+   hb_retptr( new QRect( hbqt_par_QDesktopWidget( 1 )->availableGeometry( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) ) );
 }
 
 /*
@@ -125,7 +125,7 @@ HB_FUNC( QT_QDESKTOPWIDGET_PRIMARYSCREEN )
  */
 HB_FUNC( QT_QDESKTOPWIDGET_SCREEN )
 {
-   hb_retptr( ( QWidget* ) hbqt_par_QDesktopWidget( 1 )->screen( ( HB_ISNIL( 2 ) ? -1 : hb_parni( 2 ) ) ) );
+   hb_retptr( ( QWidget* ) hbqt_par_QDesktopWidget( 1 )->screen( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) );
 }
 
 /*
@@ -133,7 +133,7 @@ HB_FUNC( QT_QDESKTOPWIDGET_SCREEN )
  */
 HB_FUNC( QT_QDESKTOPWIDGET_SCREENGEOMETRY )
 {
-   hb_retptr( new QRect( hbqt_par_QDesktopWidget( 1 )->screenGeometry( ( HB_ISNIL( 2 ) ? -1 : hb_parni( 2 ) ) ) ) );
+   hb_retptr( new QRect( hbqt_par_QDesktopWidget( 1 )->screenGeometry( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) ) );
 }
 
 /*

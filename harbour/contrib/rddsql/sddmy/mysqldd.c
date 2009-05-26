@@ -524,7 +524,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pI
          if ( pValue )
             hb_itemPutCL( pItem, pValue, ulLen );
          else
-            hb_itemPutCL( pItem, "", 0 );
+            hb_itemPutC( pItem, NULL );
 #endif
          break;
       }
@@ -533,7 +533,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pI
          if ( pValue )
             hb_itemPutCL( pItem, pValue, ulLen );
          else
-            hb_itemPutCL( pItem, "", 0 );
+            hb_itemPutC( pItem, NULL );
 
          hb_itemSetCMemo( pItem );
          break;

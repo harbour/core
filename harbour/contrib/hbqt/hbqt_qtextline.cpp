@@ -86,7 +86,7 @@ HB_FUNC( QT_QTEXTLINE_CURSORTOX )
 {
    int iCursorPos = 0;
 
-   hb_retnd( hbqt_par_QTextLine( 1 )->cursorToX( &iCursorPos, ( HB_ISNIL( 3 ) ? ( QTextLine::Edge ) QTextLine::Leading : ( QTextLine::Edge ) hb_parni( 3 ) ) ) );
+   hb_retnd( hbqt_par_QTextLine( 1 )->cursorToX( &iCursorPos, ( HB_ISNUM( 3 ) ? ( QTextLine::Edge ) hb_parni( 3 ) : ( QTextLine::Edge ) QTextLine::Leading ) ) );
 
    hb_storni( iCursorPos, 2 );
 }
@@ -96,7 +96,7 @@ HB_FUNC( QT_QTEXTLINE_CURSORTOX )
  */
 HB_FUNC( QT_QTEXTLINE_CURSORTOX_1 )
 {
-   hb_retnd( hbqt_par_QTextLine( 1 )->cursorToX( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? ( QTextLine::Edge ) QTextLine::Leading : ( QTextLine::Edge ) hb_parni( 3 ) ) ) );
+   hb_retnd( hbqt_par_QTextLine( 1 )->cursorToX( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QTextLine::Edge ) hb_parni( 3 ) : ( QTextLine::Edge ) QTextLine::Leading ) ) );
 }
 
 /*
@@ -232,7 +232,7 @@ HB_FUNC( QT_QTEXTLINE_X )
  */
 HB_FUNC( QT_QTEXTLINE_XTOCURSOR )
 {
-   hb_retni( hbqt_par_QTextLine( 1 )->xToCursor( hb_parnd( 2 ), ( HB_ISNIL( 3 ) ? ( QTextLine::CursorPosition ) QTextLine::CursorBetweenCharacters : ( QTextLine::CursorPosition ) hb_parni( 3 ) ) ) );
+   hb_retni( hbqt_par_QTextLine( 1 )->xToCursor( hb_parnd( 2 ), ( HB_ISNUM( 3 ) ? ( QTextLine::CursorPosition ) hb_parni( 3 ) : ( QTextLine::CursorPosition ) QTextLine::CursorBetweenCharacters ) ) );
 }
 
 /*

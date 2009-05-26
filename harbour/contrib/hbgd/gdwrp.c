@@ -243,12 +243,10 @@ static PHB_ITEM hb_gdFontItemNew( gdFontPtr font )
 
 static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
 {
-   void *iptr;
+   void * iptr;
 
-   if ( !( fhandle ) )
-   {
+   if( ! fhandle )
       fhandle = 0; /* 0 = std input */
-   }
 
    /* Read file */
    iptr = ( BYTE * ) hb_xgrab( sz );
@@ -263,10 +261,10 @@ static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
 
 static void * LoadImageFromFile( char *szFile, int *sz )
 {
-   void *iptr;
+   void * iptr;
    HB_FHANDLE fhandle;
 
-   if ( ( fhandle = hb_fsOpen( ( BYTE * ) szFile, FO_READ ) ) != FS_ERROR )
+   if( ( fhandle = hb_fsOpen( ( BYTE * ) szFile, FO_READ ) ) != FS_ERROR )
    {
       /* get lenght */
       *sz = hb_fsSeek( fhandle, 0, FS_END );
@@ -296,10 +294,8 @@ static void * LoadImageFromFile( char *szFile, int *sz )
 
 static void SaveImageToHandle( HB_FHANDLE fhandle, void *iptr, int sz )
 {
-   if ( !(fhandle) )
-   {
+   if( ! fhandle )
       fhandle = 1; /* 1 = std output */
-   }
 
    /* Write Image */
    hb_fsWriteLarge( fhandle, ( BYTE *) iptr, (ULONG) sz );
@@ -311,7 +307,7 @@ static void SaveImageToFile( char *szFile, void *iptr, int sz )
 {
    HB_FHANDLE fhandle;
 
-   if ( ( fhandle = hb_fsCreate( ( BYTE * ) szFile, FC_NORMAL ) ) != FS_ERROR )
+   if( ( fhandle = hb_fsCreate( ( BYTE * ) szFile, FC_NORMAL ) ) != FS_ERROR )
    {
       /* Write Image */
       SaveImageToHandle( fhandle, ( BYTE *) iptr, (ULONG) sz );
@@ -328,13 +324,13 @@ static void GDImageCreateFrom( int nType )
    gdImagePtr im = NULL;
    char *szFile;
    int sz;
-   void *iptr;
+   void * iptr;
 
    /*TraceLog( NULL, "Params = %i, 1 = %i, 2 = %i \n\r", hb_pcount(), hb_parinfo( 1 ), hb_parinfo( 2 ) );*/
 
-   if ( hb_pcount() == 1 &&
+   if( hb_pcount() == 1 &&
         ( hb_parinfo( 1 ) & HB_IT_STRING )
-      )
+     )
    {
       /* Retrieve file name */
       szFile = hb_parcx( 1 );
@@ -343,10 +339,10 @@ static void GDImageCreateFrom( int nType )
    }
 
    /* From Image Pointer + size */
-   else if ( hb_pcount() == 2 &&
+   else if( hb_pcount() == 2 &&
         ( hb_parinfo( 1 ) & HB_IT_POINTER ) &&
         ( hb_parinfo( 2 ) & HB_IT_NUMERIC )
-      )
+     )
    {
 
       /* Retrieve image pointer */
@@ -356,10 +352,10 @@ static void GDImageCreateFrom( int nType )
    }
 
    /* From file handle */
-   else if ( hb_pcount() == 2 &&
+   else if( hb_pcount() == 2 &&
         ( hb_parinfo( 1 ) & HB_IT_NUMERIC ) &&
         ( hb_parinfo( 2 ) & HB_IT_NUMERIC )
-      )
+     )
    {
 
       HB_FHANDLE fhandle;
@@ -383,7 +379,7 @@ static void GDImageCreateFrom( int nType )
       return;
    }
 
-   if ( iptr && sz )
+   if( iptr && sz )
    {
       /* Create Image */
       switch ( nType )
@@ -418,9 +414,9 @@ static void GDImageCreateFrom( int nType )
 
 static void GDImageSaveTo( int nType )
 {
-   if ( hb_pcount() >= 1 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() >= 1 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER
+     )
    {
       gdImagePtr im;
       char *szFile;
@@ -433,9 +429,9 @@ static void GDImageSaveTo( int nType )
       im = hb_parGdImage( 1 );
 
       /* Get file name or an output handler or NIL it I want a return string */
-      if ( !( ISNIL(2) ||
-              hb_parinfo( 2 ) & HB_IT_STRING ||
-              hb_parinfo( 2 ) & HB_IT_NUMERIC ) )
+      if( !( ISNIL( 2 ) ||
+             hb_parinfo( 2 ) & HB_IT_STRING ||
+             hb_parinfo( 2 ) & HB_IT_NUMERIC ) )
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0,
             "Second argument must be NIL or numeric or a string.",
@@ -447,7 +443,7 @@ static void GDImageSaveTo( int nType )
       /* Retrieve compression level */
       /*TraceLog( NULL, "Count = %i\n\r", hb_pcount() ); */
       /* check if is numeric */
-      if ( !( ISNIL(3) || hb_parinfo( 3 ) & HB_IT_NUMERIC ) )
+      if( !( ISNIL( 3 ) || hb_parinfo( 3 ) & HB_IT_NUMERIC ) )
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0,
             "Tirdh argument must be NIL or numeric.",
@@ -456,11 +452,11 @@ static void GDImageSaveTo( int nType )
          return;
       }
 
-      if ( nType == IMAGE_JPEG )
+      if( nType == IMAGE_JPEG )
       {
          /* check range */
          level = ( hb_parinfo( 3 ) & HB_IT_NUMERIC ? hb_parni( 3 ) : -1 );
-         if ( !( level >= -1 && level <= 95 ) )
+         if( !( level >= -1 && level <= 95 ) )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                "Compression level must be -1 (default) or a value between 0 and 95.",
@@ -469,11 +465,11 @@ static void GDImageSaveTo( int nType )
             return;
          }
       }
-      else if ( nType == IMAGE_PNG )
+      else if( nType == IMAGE_PNG )
       {
          /* check range */
          level = ( hb_parinfo( 3 ) & HB_IT_NUMERIC ? hb_parni( 3 ) : -1 );
-         if ( !( level >= -1 && level <= 9 ) )
+         if( !( level >= -1 && level <= 9 ) )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                "Compression level must be -1 (default) or a value between 0 and 9.",
@@ -482,9 +478,9 @@ static void GDImageSaveTo( int nType )
             return;
          }
       }
-      else if ( nType == IMAGE_WBMP )
+      else if( nType == IMAGE_WBMP )
       {
-         if ( !( hb_parinfo( 3 ) & HB_IT_NUMERIC ) )
+         if( !( hb_parinfo( 3 ) & HB_IT_NUMERIC ) )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                "Foreground color nedeed",
@@ -520,14 +516,14 @@ static void GDImageSaveTo( int nType )
       }
 
       /* If i get a file name */
-      if ( hb_parinfo( 2 ) & HB_IT_STRING )
+      if( hb_parinfo( 2 ) & HB_IT_STRING )
       {
          szFile = hb_parcx( 2 );
          SaveImageToFile( szFile, iptr, sz );
       }
 
       /* Write to file handle (1 = std output) */
-      else if ( hb_parinfo( 2 ) & HB_IT_NUMERIC )
+      else if( hb_parinfo( 2 ) & HB_IT_NUMERIC )
       {
          /* Write to std output or to a passed file */
          fhandle = ( hb_parnl( 2 ) > -1 ) ? hb_parnl( 2 ) : 1 ; /* 1 = std output */
@@ -592,9 +588,9 @@ HB_FUNC( GDVERSIONNUMBER )
 
 HB_FUNC( GDIMAGECREATE ) /* gdImagePtr gdImageCreate(sx, sy) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC )
    {
       gdImagePtr im;
       int sx, sy;
@@ -634,9 +630,9 @@ HB_FUNC( GDIMAGECREATEPALETTE ) /* gdImagePtr gdImageCreatePalette(sx, sy) */
 
 HB_FUNC( GDIMAGECREATETRUECOLOR ) /* gdImageCreateTrueColor(sx, sy) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC )
    {
       gdImagePtr im;
       int sx, sy;
@@ -760,8 +756,8 @@ HB_FUNC( GDIMAGEGD ) /* original: void gdImageGD(gdImagePtr im, FILE *out) */
 */
 HB_FUNC( GDIMAGEDESTROY ) /* gdImageDestroy(gdImagePtr im) */
 {
-   if ( hb_pcount() == 1 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER )
+   if( hb_pcount() == 1 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER )
    {
       /*
       gdImagePtr im;
@@ -799,12 +795,12 @@ HB_FUNC( GDIMAGEDESTROY ) /* gdImageDestroy(gdImagePtr im) */
 
 HB_FUNC( GDIMAGESETPIXEL ) /* void gdImageSetPixel(gdImagePtr im, int x, int y, int color) */
 {
-   if ( hb_pcount() == 4 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 4 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int x, y;
@@ -840,14 +836,14 @@ HB_FUNC( GDIMAGESETPIXEL ) /* void gdImageSetPixel(gdImagePtr im, int x, int y, 
 
 HB_FUNC( GDIMAGELINE ) /* void gdImageLine(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
-   if ( hb_pcount() == 6 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 6 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int x1, y1, x2, y2;
@@ -886,14 +882,14 @@ HB_FUNC( GDIMAGELINE ) /* void gdImageLine(gdImagePtr im, int x1, int y1, int x2
 
 HB_FUNC( GDIMAGEDASHEDLINE ) /* void gdImageDashedLine(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
-   if ( hb_pcount() == 6 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 6 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int x1, y1, x2, y2;
@@ -933,11 +929,11 @@ HB_FUNC( GDIMAGEDASHEDLINE ) /* void gdImageDashedLine(gdImagePtr im, int x1, in
 HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPointPtr points, int pointsTotal, int color) */
                           /* implementation: void gdImagePolygon(gdImagePtr im, gdPointPtr points, int color) */
 {
-   if ( hb_pcount() == 3 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_ARRAY   &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 3 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_ARRAY   &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       /*gdPointPtr points; */
@@ -990,11 +986,11 @@ HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPoin
 HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im, gdPointPtr points, int pointsTotal, int color) */
                               /* implementation: void gdImageOpenPolygon(gdImagePtr im, gdPointPtr points, int color) */
 {
-   if ( hb_pcount() == 3 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_ARRAY   &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 3 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_ARRAY   &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       /*gdPointPtr points; */
@@ -1047,14 +1043,14 @@ HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im
 
 HB_FUNC( GDIMAGERECTANGLE ) /* void gdImageRectangle(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
-   if ( hb_pcount() == 6 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 6 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int x1, y1, x2, y2;
@@ -1094,11 +1090,11 @@ HB_FUNC( GDIMAGERECTANGLE ) /* void gdImageRectangle(gdImagePtr im, int x1, int 
 HB_FUNC( GDIMAGEFILLEDPOLYGON ) /* original: void gdImageFilledPolygon(gdImagePtr im, gdPointPtr points, int pointsTotal, int color) */
                                 /* implementation: void gdImageFilledPolygon(gdImagePtr im, gdPointPtr points, int color) */
 {
-   if ( hb_pcount() == 3 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_ARRAY   &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 3 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_ARRAY   &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       /*gdPointPtr points; */
@@ -1150,14 +1146,14 @@ HB_FUNC( GDIMAGEFILLEDPOLYGON ) /* original: void gdImageFilledPolygon(gdImagePt
 
 HB_FUNC( GDIMAGEFILLEDRECTANGLE ) /* void gdImageFilledRectangle(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
-   if ( hb_pcount() == 6 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 6 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int x1, y1, x2, y2;
@@ -1196,16 +1192,16 @@ HB_FUNC( GDIMAGEFILLEDRECTANGLE ) /* void gdImageFilledRectangle(gdImagePtr im, 
 
 HB_FUNC( GDIMAGEARC ) /* void gdImageArc(gdImagePtr im, int cx, int cy, int w, int h, int s, int e, int color) */
 {
-   if ( hb_pcount() == 8 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 8 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 8 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 8 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int cx, cy, w, h, s, e, color;
@@ -1245,16 +1241,16 @@ HB_FUNC( GDIMAGEARC ) /* void gdImageArc(gdImagePtr im, int cx, int cy, int w, i
 
 HB_FUNC( GDIMAGEFILLEDARC ) /* void gdImageFilledArc(gdImagePtr im, int cx, int cy, int w, int h, int s, int e, int color[, int style]) */
 {
-   if ( hb_pcount() >= 8 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 8 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() >= 8 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 8 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int cx, cy, w, h, s, e, color, style;
@@ -1299,14 +1295,14 @@ HB_FUNC( GDIMAGEFILLEDARC ) /* void gdImageFilledArc(gdImagePtr im, int cx, int 
 
 HB_FUNC( GDIMAGEFILLEDELLIPSE ) /* void gdImageFilledEllipse(gdImagePtr im, int cx, int cy, int w, int h, int color) */
 {
-   if ( hb_pcount() == 6 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 6 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int cx, cy, w, h, color;
@@ -1344,13 +1340,13 @@ HB_FUNC( GDIMAGEFILLEDELLIPSE ) /* void gdImageFilledEllipse(gdImagePtr im, int 
 
 HB_FUNC( GDIMAGEFILLTOBORDER ) /* void gdImageFillToBorder(gdImagePtr im, int x, int y, int border, int color) */
 {
-   if ( hb_pcount() == 5 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 5 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int x, y, border, color;
@@ -1390,14 +1386,14 @@ HB_FUNC( GDIMAGEFILLTOBORDER ) /* void gdImageFillToBorder(gdImagePtr im, int x,
 #if HB_GD_VERS( 2, 0, 35 )
 HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, int w, int h, int color) */
 {
-   if ( hb_pcount() == 6 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 6 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int cx, cy, w, h, color;
@@ -1436,12 +1432,12 @@ HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, 
 
 HB_FUNC( GDIMAGEFILL ) /* void gdImageFill(gdImagePtr im, int x, int y, int color) */
 {
-   if ( hb_pcount() == 4 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 4 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int x, y, color;
@@ -1475,10 +1471,10 @@ HB_FUNC( GDIMAGEFILL ) /* void gdImageFill(gdImagePtr im, int x, int y, int colo
 
 HB_FUNC( GDIMAGESETANTIALIASED ) /* void gdImageSetAntiAliased(gdImagePtr im, int color) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int color;
@@ -1509,11 +1505,11 @@ HB_FUNC( GDIMAGESETANTIALIASED ) /* void gdImageSetAntiAliased(gdImagePtr im, in
 
 HB_FUNC( GDIMAGESETANTIALIASEDDONTBLEND ) /* void gdImageSetAntiAliasedDontBlend(gdImagePtr im, int c, int dont_blend) */
 {
-   if ( hb_pcount() == 3 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 3 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int color;
@@ -1548,10 +1544,10 @@ HB_FUNC( GDIMAGESETANTIALIASEDDONTBLEND ) /* void gdImageSetAntiAliasedDontBlend
 
 HB_FUNC( GDIMAGESETBRUSH ) /* void gdImageSetBrush(gdImagePtr im, gdImagePtr brush) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_POINTER
+     )
    {
       gdImagePtr im;
       gdImagePtr brush;
@@ -1582,10 +1578,10 @@ HB_FUNC( GDIMAGESETBRUSH ) /* void gdImageSetBrush(gdImagePtr im, gdImagePtr bru
 
 HB_FUNC( GDIMAGESETTILE ) /* void gdImageSetTile(gdImagePtr im, gdImagePtr tile) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_POINTER
+     )
    {
       gdImagePtr im;
       gdImagePtr tile;
@@ -1617,10 +1613,10 @@ HB_FUNC( GDIMAGESETTILE ) /* void gdImageSetTile(gdImagePtr im, gdImagePtr tile)
 HB_FUNC( GDIMAGESETSTYLE ) /* original: void gdImageSetStyle(gdImagePtr im, int *style, int styleLength) */
                            /* implementation: void gdImageSetStyle(gdImagePtr im, int *style) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_ARRAY
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_ARRAY
+     )
    {
       gdImagePtr im;
       PHB_ITEM pStyles;
@@ -1661,10 +1657,10 @@ HB_FUNC( GDIMAGESETSTYLE ) /* original: void gdImageSetStyle(gdImagePtr im, int 
 
 HB_FUNC( GDIMAGESETTHICKNESS ) /* void gdImageSetThickness(gdImagePtr im, int thickness) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int thickness;
@@ -1702,10 +1698,10 @@ HB_FUNC( GDIMAGESETTHICKNESS ) /* void gdImageSetThickness(gdImagePtr im, int th
 
 HB_FUNC( GDIMAGEALPHABLENDING ) /* void gdImageAlphaBlending(gdImagePtr im, int blending) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_LOGICAL
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_LOGICAL
+     )
    {
       gdImagePtr im;
       int blending;
@@ -1736,10 +1732,10 @@ HB_FUNC( GDIMAGEALPHABLENDING ) /* void gdImageAlphaBlending(gdImagePtr im, int 
 
 HB_FUNC( GDIMAGESAVEALPHA ) /* void gdImageSaveAlpha(gdImagePtr im, int saveFlag) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_LOGICAL
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_LOGICAL
+     )
    {
       gdImagePtr im;
       int saveFlag;
@@ -1770,13 +1766,13 @@ HB_FUNC( GDIMAGESAVEALPHA ) /* void gdImageSaveAlpha(gdImagePtr im, int saveFlag
 
 HB_FUNC( GDIMAGESETCLIP ) /* void gdImageSetClip(gdImagePtr im, int x1, int y1, int x2, int y2) */
 {
-   if ( hb_pcount() == 5 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 5 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int x1, y1, x2, y2;
@@ -1812,9 +1808,9 @@ HB_FUNC( GDIMAGESETCLIP ) /* void gdImageSetClip(gdImagePtr im, int x1, int y1, 
 HB_FUNC( GDIMAGEGETCLIP ) /* original: void gdImageGetClip(gdImagePtr im, int *x1P, int *y1P, int *x2P, int *y2P) */
                           /* implementation: array gdImageGetClip(gdImagePtr im) */
 {
-   if ( hb_pcount() == 1 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 1 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER
+     )
    {
       gdImagePtr im;
       int x1, y1, x2, y2;
@@ -1858,9 +1854,9 @@ HB_FUNC( GDIMAGEGETCLIP ) /* original: void gdImageGetClip(gdImagePtr im, int *x
 
 HB_FUNC( GDIMAGECOLORSTOTAL ) /* int gdImageColorsTotal(gdImagePtr im) */
 {
-   if ( hb_pcount() == 1 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 1 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER
+     )
    {
       gdImagePtr im;
 
@@ -1887,10 +1883,10 @@ HB_FUNC( GDIMAGECOLORSTOTAL ) /* int gdImageColorsTotal(gdImagePtr im) */
 
 HB_FUNC( GDIMAGEALPHA ) /* int gdImageAlpha(gdImagePtr im, int color) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int color;
@@ -1921,10 +1917,10 @@ HB_FUNC( GDIMAGEALPHA ) /* int gdImageAlpha(gdImagePtr im, int color) */
 
 HB_FUNC( GDIMAGERED ) /* int gdImageRed(gdImagePtr im, int color) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int color;
@@ -1955,10 +1951,10 @@ HB_FUNC( GDIMAGERED ) /* int gdImageRed(gdImagePtr im, int color) */
 
 HB_FUNC( GDIMAGEGREEN ) /* int gdImageGreen(gdImagePtr im, int color) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int color;
@@ -1989,10 +1985,10 @@ HB_FUNC( GDIMAGEGREEN ) /* int gdImageGreen(gdImagePtr im, int color) */
 
 HB_FUNC( GDIMAGEBLUE ) /* int gdImageBlue(gdImagePtr im, int color) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int color;
@@ -2023,9 +2019,9 @@ HB_FUNC( GDIMAGEBLUE ) /* int gdImageBlue(gdImagePtr im, int color) */
 
 HB_FUNC( GDIMAGESX ) /* int gdImageSX(gdImagePtr im) */
 {
-   if ( hb_pcount() == 1 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 1 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER
+     )
    {
       gdImagePtr im;
 
@@ -2052,9 +2048,9 @@ HB_FUNC( GDIMAGESX ) /* int gdImageSX(gdImagePtr im) */
 
 HB_FUNC( GDIMAGESY ) /* int gdImageSX(gdImagePtr im) */
 {
-   if ( hb_pcount() == 1 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 1 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER
+     )
    {
       gdImagePtr im;
 
@@ -2081,14 +2077,14 @@ HB_FUNC( GDIMAGESY ) /* int gdImageSX(gdImagePtr im) */
 
 HB_FUNC( GDIMAGEGETPIXEL ) /* int gdImageGetPixel(gdImagePtr im, int x, int y) */
 {
-   if ( hb_pcount() == 3 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 3 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
-      int x,y;
+      int x, y;
 
       /* Retrieve image pointer */
       im = hb_parGdImage( 1 );
@@ -2117,14 +2113,14 @@ HB_FUNC( GDIMAGEGETPIXEL ) /* int gdImageGetPixel(gdImagePtr im, int x, int y) *
 
 HB_FUNC( GDIMAGEBOUNDSSAFE ) /* int gdImageBoundsSafe(gdImagePtr im, int x, int y) */
 {
-   if ( hb_pcount() == 3 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 3 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
-      int x,y;
+      int x, y;
 
       /* Retrieve image pointer */
       im = hb_parGdImage( 1 );
@@ -2153,9 +2149,9 @@ HB_FUNC( GDIMAGEBOUNDSSAFE ) /* int gdImageBoundsSafe(gdImagePtr im, int x, int 
 
 HB_FUNC( GDIMAGEGETINTERLACED ) /* int gdImageGetInterlaced(gdImagePtr im) */
 {
-   if ( hb_pcount() == 1 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 1 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER
+     )
    {
       gdImagePtr im;
 
@@ -2182,9 +2178,9 @@ HB_FUNC( GDIMAGEGETINTERLACED ) /* int gdImageGetInterlaced(gdImagePtr im) */
 
 HB_FUNC( GDIMAGEGETTRANSPARENT ) /* int gdImageGetTransparent(gdImagePtr im) */
 {
-   if ( hb_pcount() == 1 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 1 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER
+     )
    {
       gdImagePtr im;
 
@@ -2211,9 +2207,9 @@ HB_FUNC( GDIMAGEGETTRANSPARENT ) /* int gdImageGetTransparent(gdImagePtr im) */
 
 HB_FUNC( GDIMAGETRUECOLOR ) /* int gdImageTrueColor(gdImagePtr im) */
 {
-   if ( hb_pcount() == 1 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 1 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER
+     )
    {
       gdImagePtr im;
 
@@ -2240,11 +2236,11 @@ HB_FUNC( GDIMAGETRUECOLOR ) /* int gdImageTrueColor(gdImagePtr im) */
 
 HB_FUNC( GDIMAGETRUECOLORTOPALETTE ) /* void gdImageTrueColorToPalette (gdImagePtr im, int ditherFlag, int colorsWanted) */
 {
-   if ( hb_pcount() == 3 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_LOGICAL &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 3 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_LOGICAL &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int ditherFlag, colorsWanted;
@@ -2278,11 +2274,11 @@ HB_FUNC( GDIMAGETRUECOLORTOPALETTE ) /* void gdImageTrueColorToPalette (gdImageP
 
 HB_FUNC( GDIMAGECREATEPALETTEFROMTRUECOLOR ) /* gdImagePtr gdImageCreatePaletteFromTrueColor(gdImagePtr im, int ditherFlag, int colorsWanted) */
 {
-   if ( hb_pcount() == 3 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_LOGICAL &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 3 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_LOGICAL &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       gdImagePtr imNew;
@@ -2320,14 +2316,14 @@ HB_FUNC( GDIMAGECREATEPALETTEFROMTRUECOLOR ) /* gdImagePtr gdImageCreatePaletteF
 
 HB_FUNC( GDIMAGEPALETTEPIXEL ) /* int gdImagePalettePixel(gdImagePtr im, int x, int y) */
 {
-   if ( hb_pcount() == 3 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 3 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
-      int x,y;
+      int x, y;
 
       /* Retrieve image pointer */
       im = hb_parGdImage( 1 );
@@ -2356,14 +2352,14 @@ HB_FUNC( GDIMAGEPALETTEPIXEL ) /* int gdImagePalettePixel(gdImagePtr im, int x, 
 
 HB_FUNC( GDIMAGETRUECOLORPIXEL ) /* int gdImageTrueColorPixel(gdImagePtr im, int x, int y) */
 {
-   if ( hb_pcount() == 3 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 3 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
-      int x,y;
+      int x, y;
 
       /* Retrieve image pointer */
       im = hb_parGdImage( 1 );
@@ -2392,9 +2388,9 @@ HB_FUNC( GDIMAGETRUECOLORPIXEL ) /* int gdImageTrueColorPixel(gdImagePtr im, int
 
 HB_FUNC( GDIMAGEGETTHICKNESS ) /* void gdImageGetThickness(gdImagePtr im) */
 {
-   if ( hb_pcount() == 1 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 1 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER
+     )
    {
       gdImagePtr im;
 
@@ -2496,19 +2492,19 @@ HB_FUNC( GDFONTGETTINY ) /* gdFontPtr gdFontGetTiny(void) */
 HB_FUNC( GDIMAGESTRING ) /* void gdImageChar(gdImagePtr im, gdFontPtr font, int x, int y, int c, int color) */
                          /* void gdImageString(gdImagePtr im, gdFontPtr font, int x, int y, unsigned char *s, int color) */
 {
-   if ( hb_pcount() == 6 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_POINTER &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_STRING  &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 6 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_POINTER &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_STRING  &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
-      gdFontPtr  font;
+      gdFontPtr font;
       int x, y, c, color;
-      unsigned char *s;
+      unsigned char * s;
 
       /* Retrieve image pointer */
       im = hb_parGdImage( 1 );
@@ -2524,7 +2520,7 @@ HB_FUNC( GDIMAGESTRING ) /* void gdImageChar(gdImagePtr im, gdFontPtr font, int 
       color = hb_parni( 6 );
 
       /* Write char */
-      if ( hb_parclen(5) == 1 )
+      if( hb_parclen(5) == 1 )
       {
          /* Retrieve char value */
          c = hb_parni( 5 );
@@ -2556,19 +2552,19 @@ HB_FUNC( GDIMAGESTRING ) /* void gdImageChar(gdImagePtr im, gdFontPtr font, int 
 HB_FUNC( GDIMAGESTRINGUP ) /* void gdImageCharUp(gdImagePtr im, gdFontPtr font, int x, int y, int c, int color) */
                            /* void gdImageStringUp(gdImagePtr im, gdFontPtr font, int x, int y, unsigned char *s, int color) */
 {
-   if ( hb_pcount() == 6 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_POINTER &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_STRING  &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 6 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_POINTER &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_STRING  &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
-      gdFontPtr  font;
+      gdFontPtr font;
       int x, y, c, color;
-      unsigned char *s;
+      unsigned char * s;
 
       /* Retrieve image pointer */
       im = hb_parGdImage( 1 );
@@ -2584,7 +2580,7 @@ HB_FUNC( GDIMAGESTRINGUP ) /* void gdImageCharUp(gdImagePtr im, gdFontPtr font, 
       color = hb_parni( 6 );
 
       /* Write char */
-      if ( hb_parclen(5) == 1 )
+      if( hb_parclen(5) == 1 )
       {
          /* Retrieve char value */
          c = hb_parni( 5 );
@@ -2618,17 +2614,17 @@ HB_FUNC( GDIMAGESTRINGFTEX )
 {
    /* TraceLog( NULL, "Parameters: %i, Type 1 =%i=\n\r", hb_pcount(), hb_parinfo( 1 ) ); */
 
-   if ( hb_pcount() >= 9 &&
-        ( ISNIL(1) || hb_parinfo( 1 ) & ( HB_IT_POINTER ) ) &&
-        hb_parinfo( 2 ) & HB_IT_ARRAY   &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_STRING  &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 9 ) & HB_IT_STRING
-      )
+   if( hb_pcount() >= 9 &&
+        ( ISNIL( 1 ) || hb_parinfo( 1 ) & ( HB_IT_POINTER ) ) &&
+       hb_parinfo( 2 ) & HB_IT_ARRAY   &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_STRING  &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 8 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 9 ) & HB_IT_STRING
+     )
    {
       gdImagePtr im;
       gdFTStringExtra extra;
@@ -2690,27 +2686,27 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       resolution  = 96;
 
       /* Retrieve line spacing */
-      if ( hb_parinfo( 10 ) & HB_IT_DOUBLE )
+      if( hb_parinfo( 10 ) & HB_IT_DOUBLE )
       {
          linespacing = hb_parnd( 10 );
          flags |= gdFTEX_LINESPACE;
       }
 
       /* Retrieve charmap */
-      if ( hb_parinfo( 11 ) & HB_IT_NUMERIC )
+      if( hb_parinfo( 11 ) & HB_IT_NUMERIC )
       {
          charmap = hb_parni( 11 );
          flags |= gdFTEX_CHARMAP;
       }
 
       /* Retrieve resolution */
-      if ( hb_parinfo( 12 ) & HB_IT_NUMERIC )
+      if( hb_parinfo( 12 ) & HB_IT_NUMERIC )
       {
          resolution = hb_parni( 12 );
          flags |= gdFTEX_RESOLUTION;
       }
 
-      if ( !( flags == 0 ) )
+      if( !( flags == 0 ) )
       {
          extra.flags       = flags;
          extra.linespacing = ( flags & gdFTEX_LINESPACE  ? linespacing : 1.05 );
@@ -2721,7 +2717,7 @@ HB_FUNC( GDIMAGESTRINGFTEX )
 
       /* Write string */
       err = gdImageStringFTEx(im, &aRect[0], fg, fontname, ptsize, angle, x, y, string, ( !( flags == 0 ) ? &extra : 0 ));
-      if ( !( err ) )
+      if( !( err ) )
       {
          /* Save in array the correct text rectangle dimensions */
          PHB_ITEM pArray;
@@ -2756,19 +2752,19 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
 {
    /*TraceLog( NULL, "Parameters: %i, Type 9 =%i=\n\r", hb_pcount(), hb_parinfo( 10 ) ); */
 
-   if ( hb_pcount() == 11 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 7 ) & HB_IT_STRING  &&
-        hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-        ( ISNIL( 9 ) || ( hb_parinfo( 9 ) & HB_IT_STRING ) ) &&
-        ( ISNIL( 10 ) || ( hb_parinfo( 10 ) & HB_IT_STRING ) ) &&
-        hb_parinfo( 11 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 11 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 7 ) & HB_IT_STRING  &&
+       hb_parinfo( 8 ) & HB_IT_NUMERIC &&
+       ( ISNIL( 9 ) || ( hb_parinfo( 9 ) & HB_IT_STRING ) ) &&
+       ( ISNIL( 10 ) || ( hb_parinfo( 10 ) & HB_IT_STRING ) ) &&
+       hb_parinfo( 11 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int cx, cy;
@@ -2849,9 +2845,9 @@ HB_FUNC( GDFONTCACHESHUTDOWN ) /* void gdFontCacheShutdown (void) */
 
 HB_FUNC( GDFONTGETWIDTH )
 {
-   if ( hb_pcount() == 1 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 1 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER
+     )
    {
       gdFontPtr font;
 
@@ -2878,9 +2874,9 @@ HB_FUNC( GDFONTGETWIDTH )
 
 HB_FUNC( GDFONTGETHEIGHT )
 {
-   if ( hb_pcount() == 1 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 1 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER
+     )
    {
       gdFontPtr font;
 
@@ -2911,12 +2907,12 @@ HB_FUNC( GDFONTGETHEIGHT )
 
 HB_FUNC( GDIMAGECOLORALLOCATE ) /* int gdImageColorAllocate(gdImagePtr im, int r, int g, int b) */
 {
-   if ( hb_pcount() == 4 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 4 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int r, g, b;
@@ -2953,10 +2949,10 @@ HB_FUNC( GDIMAGECOLORALLOCATE ) /* int gdImageColorAllocate(gdImagePtr im, int r
 
 HB_FUNC( GDIMAGECOLORDEALLOCATE ) /* void gdImageColorDeallocate(gdImagePtr im, int color) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int color;
@@ -2987,13 +2983,13 @@ HB_FUNC( GDIMAGECOLORDEALLOCATE ) /* void gdImageColorDeallocate(gdImagePtr im, 
 
 HB_FUNC( GDIMAGECOLORALLOCATEALPHA ) /* int gdImageColorAllocateAlpha(gdImagePtr im, int r, int g, int b, int a) */
 {
-   if ( hb_pcount() == 5 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 5 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int r, g, b;
@@ -3035,12 +3031,12 @@ HB_FUNC( GDIMAGECOLORALLOCATEALPHA ) /* int gdImageColorAllocateAlpha(gdImagePtr
 
 HB_FUNC( GDIMAGECOLORCLOSEST ) /* int gdImageColorClosest(gdImagePtr im, int r, int g, int b) */
 {
-   if ( hb_pcount() == 4 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 4 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int r, g, b;
@@ -3077,13 +3073,13 @@ HB_FUNC( GDIMAGECOLORCLOSEST ) /* int gdImageColorClosest(gdImagePtr im, int r, 
 
 HB_FUNC( GDIMAGECOLORCLOSESTALPHA ) /* int gdImageColorClosestAlpha(gdImagePtr im, int r, int g, int b, int a) */
 {
-   if ( hb_pcount() == 5 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 5 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int r, g, b;
@@ -3125,12 +3121,12 @@ HB_FUNC( GDIMAGECOLORCLOSESTALPHA ) /* int gdImageColorClosestAlpha(gdImagePtr i
 
 HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /*  gdImageColorClosestHWB(gdImagePtr im, int r, int g, int b) */
 {
-   if ( hb_pcount() == 4 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 4 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int r, g, b;
@@ -3167,12 +3163,12 @@ HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /*  gdImageColorClosestHWB(gdImagePtr im, int 
 
 HB_FUNC( GDIMAGECOLOREXACT ) /* int gdImageColorExact(gdImagePtr im, int r, int g, int b) */
 {
-   if ( hb_pcount() == 4 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 4 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int r, g, b;
@@ -3209,12 +3205,12 @@ HB_FUNC( GDIMAGECOLOREXACT ) /* int gdImageColorExact(gdImagePtr im, int r, int 
 
 HB_FUNC( GDIMAGECOLORRESOLVE ) /* int gdImageColorResolve(gdImagePtr im, int r, int g, int b) */
 {
-   if ( hb_pcount() == 4 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 4 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int r, g, b;
@@ -3251,13 +3247,13 @@ HB_FUNC( GDIMAGECOLORRESOLVE ) /* int gdImageColorResolve(gdImagePtr im, int r, 
 
 HB_FUNC( GDIMAGECOLORRESOLVEALPHA ) /* int gdImageColorResolveAlpha(gdImagePtr im, int r, int g, int b, int a) */
 {
-   if ( hb_pcount() == 5 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 5 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int r, g, b;
@@ -3299,10 +3295,10 @@ HB_FUNC( GDIMAGECOLORRESOLVEALPHA ) /* int gdImageColorResolveAlpha(gdImagePtr i
 
 HB_FUNC( GDIMAGECOLORTRANSPARENT ) /* void gdImageColorTransparent(gdImagePtr im, int color) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int color;
@@ -3333,11 +3329,11 @@ HB_FUNC( GDIMAGECOLORTRANSPARENT ) /* void gdImageColorTransparent(gdImagePtr im
 
 HB_FUNC( GDTRUECOLOR ) /* int gdTrueColor(int red, int green, int blue) */
 {
-   if ( hb_pcount() == 3 &&
-        hb_parinfo( 1 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 3 &&
+       hb_parinfo( 1 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC
+     )
    {
       int r, g, b;
       int color;
@@ -3370,12 +3366,12 @@ HB_FUNC( GDTRUECOLOR ) /* int gdTrueColor(int red, int green, int blue) */
 
 HB_FUNC( GDTRUECOLORALPHA ) /* int gdTrueColorAlpha(int red, int green, int blue, int alpha) */
 {
-   if ( hb_pcount() == 4 &&
-        hb_parinfo( 1 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 4 &&
+       hb_parinfo( 1 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC
+     )
    {
       int r, g, b, a;
       int color;
@@ -3413,16 +3409,16 @@ HB_FUNC( GDTRUECOLORALPHA ) /* int gdTrueColorAlpha(int red, int green, int blue
 
 HB_FUNC( GDIMAGECOPY ) /* void gdImageCopy(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int w, int h) */
 {
-   if ( hb_pcount() == 8 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_POINTER &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 8 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 8 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_POINTER &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 8 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr dst, src;
       int dstX, dstY, srcX, srcY, w, h;
@@ -3467,18 +3463,18 @@ HB_FUNC( GDIMAGECOPY ) /* void gdImageCopy(gdImagePtr dst, gdImagePtr src, int d
 
 HB_FUNC( GDIMAGECOPYRESIZED ) /* void gdImageCopyResized(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int dstW, int dstH, int srcW, int srcH) */
 {
-   if ( hb_pcount() == 10 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_POINTER &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 9 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 10 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 10 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_POINTER &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 8 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 9 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 10 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr dst, src;
       int dstX, dstY, srcX, srcY;
@@ -3531,18 +3527,18 @@ HB_FUNC( GDIMAGECOPYRESIZED ) /* void gdImageCopyResized(gdImagePtr dst, gdImage
 
 HB_FUNC( GDIMAGECOPYRESAMPLED ) /* void gdImageCopyResampled(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int dstW, int dstH, int srcW, int srcH) */
 {
-   if ( hb_pcount() == 10 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_POINTER &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 9 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 10 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 10 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_POINTER &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 8 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 9 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 10 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr dst, src;
       int dstX, dstY, srcX, srcY;
@@ -3595,17 +3591,17 @@ HB_FUNC( GDIMAGECOPYRESAMPLED ) /* void gdImageCopyResampled(gdImagePtr dst, gdI
 
 HB_FUNC( GDIMAGECOPYROTATED ) /* void gdImageCopyRotated(gdImagePtr dst, gdImagePtr src, double dstX, double dstY, int srcX, int srcY, int srcW, int srcH, int angle) */
 {
-   if ( hb_pcount() == 9 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_POINTER &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 9 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 9 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_POINTER &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 8 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 9 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr dst, src;
       double dstX, dstY;
@@ -3655,17 +3651,17 @@ HB_FUNC( GDIMAGECOPYROTATED ) /* void gdImageCopyRotated(gdImagePtr dst, gdImage
 
 HB_FUNC( GDIMAGECOPYMERGE ) /* void gdImageCopyMerge(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int w, int h, int pct) */
 {
-   if ( hb_pcount() == 9 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_POINTER &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 9 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 9 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_POINTER &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 8 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 9 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr dst, src;
       int dstX, dstY, srcX, srcY, w, h, pct;
@@ -3714,17 +3710,17 @@ HB_FUNC( GDIMAGECOPYMERGE ) /* void gdImageCopyMerge(gdImagePtr dst, gdImagePtr 
 
 HB_FUNC( GDIMAGECOPYMERGEGRAY ) /* void gdImageCopyMergeGray(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int w, int h, int pct) */
 {
-   if ( hb_pcount() == 9 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_POINTER &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 9 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 9 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_POINTER &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 8 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 9 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr dst, src;
       int dstX, dstY, srcX, srcY, w, h, pct;
@@ -3773,10 +3769,10 @@ HB_FUNC( GDIMAGECOPYMERGEGRAY ) /* void gdImageCopyMergeGray(gdImagePtr dst, gdI
 
 HB_FUNC( GDIMAGEPALETTECOPY ) /* void gdImagePaletteCopy(gdImagePtr dst, gdImagePtr src) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_POINTER
+     )
    {
       gdImagePtr dst, src;
 
@@ -3805,10 +3801,10 @@ HB_FUNC( GDIMAGEPALETTECOPY ) /* void gdImagePaletteCopy(gdImagePtr dst, gdImage
 
 HB_FUNC( GDIMAGESQUARETOCIRCLE ) /* void gdImageSquareToCircle(gdImagePtr im, int radius) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int radius;
@@ -3839,10 +3835,10 @@ HB_FUNC( GDIMAGESQUARETOCIRCLE ) /* void gdImageSquareToCircle(gdImagePtr im, in
 
 HB_FUNC( GDIMAGESHARPEN ) /* void gdImageSharpen(gdImagePtr im, int pct) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
       int pct;
@@ -3877,10 +3873,10 @@ HB_FUNC( GDIMAGESHARPEN ) /* void gdImageSharpen(gdImagePtr im, int pct) */
 
 HB_FUNC( GDIMAGECOMPARE ) /* int gdImageCompare(gdImagePtr im1, gdImagePtr im2) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_POINTER
+     )
    {
       gdImagePtr dst, src;
 
@@ -3909,10 +3905,10 @@ HB_FUNC( GDIMAGECOMPARE ) /* int gdImageCompare(gdImagePtr im1, gdImagePtr im2) 
 
 HB_FUNC( GDIMAGEINTERLACE ) /* void gdImageInterlace(gdImagePtr im, int interlace) */
 {
-   if ( hb_pcount() == 2 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_LOGICAL
-      )
+   if( hb_pcount() == 2 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_LOGICAL
+     )
    {
       gdImagePtr im;
       int interlace;
@@ -3947,7 +3943,7 @@ static void AddImageToFile( char *szFile, void *iptr, int sz )
 {
    HB_FHANDLE fhandle;
 
-   if ( ( fhandle = hb_fsOpen( ( BYTE * ) szFile, FO_READWRITE ) ) != FS_ERROR )
+   if( ( fhandle = hb_fsOpen( ( BYTE * ) szFile, FO_READWRITE ) ) != FS_ERROR )
    {
       /* move to end of file */
       hb_fsSeek(fhandle, 0, FS_END);
@@ -3964,15 +3960,15 @@ static void AddImageToFile( char *szFile, void *iptr, int sz )
 /* implementation: (void *) gdImageGifAnimBegin( gdImagePtr im, cFile | nHandle, int GlobalCM, int Loops); */
 HB_FUNC( GDIMAGEGIFANIMBEGIN )
 {
-   if ( hb_pcount() == 4 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
+   if( hb_pcount() == 4 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
         ( hb_parinfo( 2 ) & HB_IT_STRING || hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) ) &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC
-      )
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC
+     )
    {
       gdImagePtr im;
-      void *iptr;
+      void * iptr;
       int size;
       int GlobalCM, Loops;
 
@@ -3989,14 +3985,14 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
       iptr = gdImageGifAnimBeginPtr(im, &size, GlobalCM, Loops);
 
       /* Check if 2nd parameter is a file name or an handle */
-      if ( hb_parinfo( 2 ) & HB_IT_STRING )
+      if( hb_parinfo( 2 ) & HB_IT_STRING )
       {
          char *szFile;
          szFile = hb_parcx( 2 );
 
          SaveImageToFile( szFile, iptr, size );
       }
-      else if ( hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) )
+      else if( hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) )
       {
          HB_FHANDLE fhandle;
 
@@ -4026,19 +4022,19 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
 /* implementation: (void *) gdImageGifAnimAdd( gdImagePtr im, cFile | nHandle, int LocalCM, int LeftOfs, int TopOfs, int Delay, int Disposal, gdImagePtr previm); */
 HB_FUNC( GDIMAGEGIFANIMADD )
 {
-   if ( hb_pcount() == 8 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        ( hb_parinfo( 2 ) & HB_IT_STRING || hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) ) &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-        ( hb_parinfo( 8 ) & HB_IT_POINTER || ISNIL( 8 ) )
-      )
+   if( hb_pcount() == 8 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       ( hb_parinfo( 2 ) & HB_IT_STRING || hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) ) &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 7 ) & HB_IT_NUMERIC &&
+       ( hb_parinfo( 8 ) & HB_IT_POINTER || ISNIL( 8 ) )
+     )
    {
       gdImagePtr im, previm;
-      void *iptr;
+      void * iptr;
       int size;
       int LocalCM, LeftOfs, TopOfs, Delay, Disposal;
 
@@ -4056,14 +4052,14 @@ HB_FUNC( GDIMAGEGIFANIMADD )
       iptr = gdImageGifAnimAddPtr(im, &size, LocalCM, LeftOfs, TopOfs, Delay, Disposal, previm);
 
       /* Check if 2nd parameter is a file name or an handle */
-      if ( hb_parinfo( 2 ) & HB_IT_STRING )
+      if( hb_parinfo( 2 ) & HB_IT_STRING )
       {
-         char *szFile;
+         char * szFile;
          szFile = hb_parcx( 2 );
 
          AddImageToFile( szFile, iptr, size );
       }
-      else if ( hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) )
+      else if( hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) )
       {
          HB_FHANDLE fhandle;
 
@@ -4095,25 +4091,25 @@ HB_FUNC( GDIMAGEGIFANIMADD )
 /* implementation: gdImageGifAnimEnd( cFile | nHandle ); */
 HB_FUNC( GDIMAGEGIFANIMEND )
 {
-   if ( hb_pcount() == 1 &&
-        ( hb_parinfo( 1 ) & HB_IT_STRING || hb_parinfo( 1 ) & HB_IT_NUMERIC || ISNIL( 1 ) )
-      )
+   if( hb_pcount() == 1 &&
+       ( hb_parinfo( 1 ) & HB_IT_STRING || hb_parinfo( 1 ) & HB_IT_NUMERIC || ISNIL( 1 ) )
+     )
    {
-      void *iptr;
+      void * iptr;
       int size;
 
       /* Run function and return value */
-      iptr = gdImageGifAnimEndPtr(&size);
+      iptr = gdImageGifAnimEndPtr( &size );
 
       /* Check if 1st parameter is a file name or an handle */
-      if ( hb_parinfo( 1 ) & HB_IT_STRING )
+      if( hb_parinfo( 1 ) & HB_IT_STRING )
       {
-         char *szFile;
+         char * szFile;
          szFile = hb_parcx( 1 );
 
          AddImageToFile( szFile, iptr, size );
       }
-      else if ( hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) )
+      else if( hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) )
       {
          HB_FHANDLE fhandle;
 

@@ -623,8 +623,8 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
 
             CASE aA[ PRT_CAST ] $ cIntegers
                s := 'hb_parni( '+ cHBIdx +' )'
-               IF !empty( aA[ PRT_DEFAULT ] )
-                  aA[ PRT_BODY ] := '( HB_ISNIL( '+cHBIdx+' ) ? '+aA[ PRT_DEFAULT ]+' : '+ s + ' )'
+               IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
+                  aA[ PRT_BODY ] := '( HB_ISNUM( '+cHBIdx+' ) ? ' + s + ' : ' + aA[ PRT_DEFAULT ] + ' )'
                ELSE
                   aA[ PRT_BODY ] := s
                ENDIF
@@ -646,15 +646,15 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
 
             CASE ( '::' $ aA[ PRT_CAST ] )
                s := '( '+ aA[ PRT_CAST ] +' ) hb_parni( '+ cHBIdx +' )'
-               IF !empty( aA[ PRT_DEFAULT ] )
+               IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
                   IF ascan( aEnum, aA[ PRT_DEFAULT ] ) > 0
                      ss := cWidget+'::'+aA[ PRT_DEFAULT ]
                   ELSE
                      ss := IF( '::' $ aA[ PRT_DEFAULT ], aA[ PRT_DEFAULT ], ;
-                        IF( isDigit( left( aA[ PRT_DEFAULT ],1 ) ), aA[ PRT_DEFAULT ], cWidget+'::'+aA[ PRT_DEFAULT ] ) )
+                        IF( isDigit( left( aA[ PRT_DEFAULT ], 1 ) ), aA[ PRT_DEFAULT ], cWidget+'::'+aA[ PRT_DEFAULT ] ) )
                   ENDIF
                   ss := '( '+ aA[ PRT_CAST ] +' ) '+ss
-                  aA[ PRT_BODY ] := '( HB_ISNIL( '+cHBIdx+' ) ? '+ ss +' : '+ s + ' )'
+                  aA[ PRT_BODY ] := '( HB_ISNUM( '+cHBIdx+' ) ? ' + s + ' : ' + ss + ' )'
                ELSE
                   aA[ PRT_BODY ] := s
                ENDIF

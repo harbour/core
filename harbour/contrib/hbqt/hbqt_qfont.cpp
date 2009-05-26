@@ -376,7 +376,7 @@ HB_FUNC( QT_QFONT_SETSTYLE )
  */
 HB_FUNC( QT_QFONT_SETSTYLEHINT )
 {
-   hbqt_par_QFont( 1 )->setStyleHint( ( QFont::StyleHint ) hb_parni( 2 ), ( HB_ISNIL( 3 ) ? ( QFont::StyleStrategy ) QFont::PreferDefault : ( QFont::StyleStrategy ) hb_parni( 3 ) ) );
+   hbqt_par_QFont( 1 )->setStyleHint( ( QFont::StyleHint ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QFont::StyleStrategy ) hb_parni( 3 ) : ( QFont::StyleStrategy ) QFont::PreferDefault ) );
 }
 
 /*

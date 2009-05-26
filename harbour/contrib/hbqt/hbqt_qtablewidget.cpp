@@ -340,7 +340,7 @@ HB_FUNC( QT_QTABLEWIDGET_SETVERTICALHEADERLABELS )
  */
 HB_FUNC( QT_QTABLEWIDGET_SORTITEMS )
 {
-   hbqt_par_QTableWidget( 1 )->sortItems( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? ( Qt::SortOrder ) Qt::AscendingOrder : ( Qt::SortOrder ) hb_parni( 3 ) ) );
+   hbqt_par_QTableWidget( 1 )->sortItems( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::SortOrder ) hb_parni( 3 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) );
 }
 
 /*
@@ -452,7 +452,7 @@ HB_FUNC( QT_QTABLEWIDGET_REMOVEROW )
  */
 HB_FUNC( QT_QTABLEWIDGET_SCROLLTOITEM )
 {
-   hbqt_par_QTableWidget( 1 )->scrollToItem( hbqt_par_QTableWidgetItem( 2 ), ( HB_ISNIL( 3 ) ? ( QAbstractItemView::ScrollHint ) QTableWidget::EnsureVisible : ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) ) );
+   hbqt_par_QTableWidget( 1 )->scrollToItem( hbqt_par_QTableWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QTableWidget::EnsureVisible ) );
 }
 
 

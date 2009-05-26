@@ -126,7 +126,7 @@ HB_FUNC( QT_QMAINWINDOW_ADDTOOLBAR_2 )
  */
 HB_FUNC( QT_QMAINWINDOW_ADDTOOLBARBREAK )
 {
-   hbqt_par_QMainWindow( 1 )->addToolBarBreak( ( HB_ISNIL( 2 ) ? ( Qt::ToolBarArea ) Qt::TopToolBarArea : ( Qt::ToolBarArea ) hb_parni( 2 ) ) );
+   hbqt_par_QMainWindow( 1 )->addToolBarBreak( ( HB_ISNUM( 2 ) ? ( Qt::ToolBarArea ) hb_parni( 2 ) : ( Qt::ToolBarArea ) Qt::TopToolBarArea ) );
 }
 
 /*
@@ -270,7 +270,7 @@ HB_FUNC( QT_QMAINWINDOW_RESTOREDOCKWIDGET )
  */
 HB_FUNC( QT_QMAINWINDOW_RESTORESTATE )
 {
-   hb_retl( hbqt_par_QMainWindow( 1 )->restoreState( *hbqt_par_QByteArray( 2 ), ( HB_ISNIL( 3 ) ? 0 : hb_parni( 3 ) ) ) );
+   hb_retl( hbqt_par_QMainWindow( 1 )->restoreState( *hbqt_par_QByteArray( 2 ), hb_parni( 3 ) ) );
 }
 
 /*
@@ -278,7 +278,7 @@ HB_FUNC( QT_QMAINWINDOW_RESTORESTATE )
  */
 HB_FUNC( QT_QMAINWINDOW_SAVESTATE )
 {
-   hb_retptr( new QByteArray( hbqt_par_QMainWindow( 1 )->saveState( ( HB_ISNIL( 2 ) ? 0 : hb_parni( 2 ) ) ) ) );
+   hb_retptr( new QByteArray( hbqt_par_QMainWindow( 1 )->saveState( hb_parni( 2 ) ) ) );
 }
 
 /*

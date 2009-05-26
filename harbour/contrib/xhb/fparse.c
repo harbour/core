@@ -251,7 +251,7 @@ void hb_ParseLine( PHB_ITEM pReturn, char * szText, int iDelimiter, int * iWord 
           if ( szText[ iLen - 1 ] == iDelimiter )
           {
              word_count ++;
-             hb_arrayAddForward( pReturn, hb_itemPutC( pTemp, "" ));
+             hb_arrayAddForward( pReturn, hb_itemPutC( pTemp, NULL ) );
           }
 
           /* store number of words */

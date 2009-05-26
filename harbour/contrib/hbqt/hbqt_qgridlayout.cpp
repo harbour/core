@@ -78,7 +78,7 @@ HB_FUNC( QT_QGRIDLAYOUT )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDITEM )
 {
-   hbqt_par_QGridLayout( 1 )->addItem( hbqt_par_QLayoutItem( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNIL( 5 ) ? 1 : hb_parni( 5 ) ), ( HB_ISNIL( 6 ) ? 1 : hb_parni( 6 ) ), ( HB_ISNIL( 7 ) ? ( Qt::Alignment ) 0 : ( Qt::Alignment ) hb_parni( 7 ) ) );
+   hbqt_par_QGridLayout( 1 )->addItem( hbqt_par_QLayoutItem( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 1 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : 1 ), ( Qt::Alignment ) hb_parni( 7 ) );
 }
 
 /*
@@ -86,7 +86,7 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDITEM )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDLAYOUT )
 {
-   hbqt_par_QGridLayout( 1 )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNIL( 5 ) ? ( Qt::Alignment ) 0 : ( Qt::Alignment ) hb_parni( 5 ) ) );
+   hbqt_par_QGridLayout( 1 )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( Qt::Alignment ) hb_parni( 5 ) );
 }
 
 /*
@@ -94,7 +94,7 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDLAYOUT )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDLAYOUT_1 )
 {
-   hbqt_par_QGridLayout( 1 )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), ( HB_ISNIL( 7 ) ? ( Qt::Alignment ) 0 : ( Qt::Alignment ) hb_parni( 7 ) ) );
+   hbqt_par_QGridLayout( 1 )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), ( Qt::Alignment ) hb_parni( 7 ) );
 }
 
 /*
@@ -102,7 +102,7 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDLAYOUT_1 )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET )
 {
-   hbqt_par_QGridLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNIL( 5 ) ? ( Qt::Alignment ) 0 : ( Qt::Alignment ) hb_parni( 5 ) ) );
+   hbqt_par_QGridLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( Qt::Alignment ) hb_parni( 5 ) );
 }
 
 /*
@@ -110,7 +110,7 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET_1 )
 {
-   hbqt_par_QGridLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), ( HB_ISNIL( 7 ) ? ( Qt::Alignment ) 0 : ( Qt::Alignment ) hb_parni( 7 ) ) );
+   hbqt_par_QGridLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), ( Qt::Alignment ) hb_parni( 7 ) );
 }
 
 /*

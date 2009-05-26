@@ -245,7 +245,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_TEXT )
  */
 HB_FUNC( QT_QABSTRACTBUTTON_ANIMATECLICK )
 {
-   hbqt_par_QAbstractButton( 1 )->animateClick( ( HB_ISNIL( 2 ) ? 100 : hb_parni( 2 ) ) );
+   hbqt_par_QAbstractButton( 1 )->animateClick( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 100 ) );
 }
 
 /*

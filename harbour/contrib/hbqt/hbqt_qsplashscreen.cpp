@@ -118,7 +118,7 @@ HB_FUNC( QT_QSPLASHSCREEN_CLEARMESSAGE )
  */
 HB_FUNC( QT_QSPLASHSCREEN_SHOWMESSAGE )
 {
-   hbqt_par_QSplashScreen( 1 )->showMessage( hbqt_par_QString( 2 ), ( HB_ISNIL( 3 ) ? Qt::AlignLeft : hb_parni( 3 ) ), *hbqt_par_QColor( 4 ) );
+   hbqt_par_QSplashScreen( 1 )->showMessage( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::AlignLeft ), *hbqt_par_QColor( 4 ) );
 }
 
 

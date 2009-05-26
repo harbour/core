@@ -141,7 +141,7 @@ HB_FUNC( QT_QCOMBOBOX_DUPLICATESENABLED )
  */
 HB_FUNC( QT_QCOMBOBOX_FINDDATA )
 {
-   hb_retni( hbqt_par_QComboBox( 1 )->findData( *hbqt_par_QVariant( 2 ), ( HB_ISNIL( 3 ) ? Qt::UserRole : hb_parni( 3 ) ), ( HB_ISNIL( 4 ) ? ( Qt::MatchFlags ) Qt::MatchExactly | Qt::MatchCaseSensitive : ( Qt::MatchFlags ) hb_parni( 4 ) ) ) );
+   hb_retni( hbqt_par_QComboBox( 1 )->findData( *hbqt_par_QVariant( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::UserRole ), ( HB_ISNUM( 4 ) ? ( Qt::MatchFlags ) hb_parni( 4 ) : ( Qt::MatchFlags ) Qt::MatchExactly | Qt::MatchCaseSensitive ) ) );
 }
 
 /*
@@ -149,7 +149,7 @@ HB_FUNC( QT_QCOMBOBOX_FINDDATA )
  */
 HB_FUNC( QT_QCOMBOBOX_FINDTEXT )
 {
-   hb_retni( hbqt_par_QComboBox( 1 )->findText( hbqt_par_QString( 2 ), ( HB_ISNIL( 3 ) ? ( Qt::MatchFlags ) Qt::MatchExactly | Qt::MatchCaseSensitive : ( Qt::MatchFlags ) hb_parni( 3 ) ) ) );
+   hb_retni( hbqt_par_QComboBox( 1 )->findText( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::MatchFlags ) hb_parni( 3 ) : ( Qt::MatchFlags ) Qt::MatchExactly | Qt::MatchCaseSensitive ) ) );
 }
 
 /*
@@ -229,7 +229,7 @@ HB_FUNC( QT_QCOMBOBOX_ISEDITABLE )
  */
 HB_FUNC( QT_QCOMBOBOX_ITEMDATA )
 {
-   hb_retptr( new QVariant( hbqt_par_QComboBox( 1 )->itemData( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? Qt::UserRole : hb_parni( 3 ) ) ) ) );
+   hb_retptr( new QVariant( hbqt_par_QComboBox( 1 )->itemData( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::UserRole ) ) ) );
 }
 
 /*
@@ -373,7 +373,7 @@ HB_FUNC( QT_QCOMBOBOX_SETINSERTPOLICY )
  */
 HB_FUNC( QT_QCOMBOBOX_SETITEMDATA )
 {
-   hbqt_par_QComboBox( 1 )->setItemData( hb_parni( 2 ), *hbqt_par_QVariant( 3 ), ( HB_ISNIL( 4 ) ? Qt::UserRole : hb_parni( 4 ) ) );
+   hbqt_par_QComboBox( 1 )->setItemData( hb_parni( 2 ), *hbqt_par_QVariant( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::UserRole ) );
 }
 
 /*

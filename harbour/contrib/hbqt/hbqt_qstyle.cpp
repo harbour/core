@@ -109,7 +109,7 @@ HB_FUNC( QT_QSTYLE_DRAWITEMPIXMAP )
  */
 HB_FUNC( QT_QSTYLE_DRAWITEMTEXT )
 {
-   hbqt_par_QStyle( 1 )->drawItemText( hbqt_par_QPainter( 2 ), *hbqt_par_QRect( 3 ), hb_parni( 4 ), *hbqt_par_QPalette( 5 ), hb_parl( 6 ), hbqt_par_QString( 7 ), ( HB_ISNIL( 8 ) ? ( QPalette::ColorRole ) QPalette::NoRole : ( QPalette::ColorRole ) hb_parni( 8 ) ) );
+   hbqt_par_QStyle( 1 )->drawItemText( hbqt_par_QPainter( 2 ), *hbqt_par_QRect( 3 ), hb_parni( 4 ), *hbqt_par_QPalette( 5 ), hb_parl( 6 ), hbqt_par_QString( 7 ), ( HB_ISNUM( 8 ) ? ( QPalette::ColorRole ) hb_parni( 8 ) : ( QPalette::ColorRole ) QPalette::NoRole ) );
 }
 
 /*

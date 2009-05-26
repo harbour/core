@@ -364,7 +364,7 @@ HB_FUNC( QT_QWIDGET_GRABMOUSE_1 )
  */
 HB_FUNC( QT_QWIDGET_GRABSHORTCUT )
 {
-   hb_retni( hbqt_par_QWidget( 1 )->grabShortcut( *hbqt_par_QKeySequence( 2 ), ( HB_ISNIL( 3 ) ? ( Qt::ShortcutContext ) Qt::WindowShortcut : ( Qt::ShortcutContext ) hb_parni( 3 ) ) ) );
+   hb_retni( hbqt_par_QWidget( 1 )->grabShortcut( *hbqt_par_QKeySequence( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ShortcutContext ) hb_parni( 3 ) : ( Qt::ShortcutContext ) Qt::WindowShortcut ) ) );
 }
 
 /*
