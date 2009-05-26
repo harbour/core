@@ -26,6 +26,7 @@ C_SOURCES=\
 
 PRG_HEADERS=\
 	ads.ch \
+	adsextrn.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

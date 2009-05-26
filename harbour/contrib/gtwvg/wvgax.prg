@@ -66,24 +66,24 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
-
-/*----------------------------------------------------------------------*/
-
-STATIC  nRef := 0
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
-CLASS WvgActiveXControl FROM HB_OleAuto, WvgWindow
+STATIC  s_nRef := 0
 
-   DATA   CLSID                              INIT ''
+/*----------------------------------------------------------------------*/
+
+CLASS WvgActiveXControl FROM win_OleAuto, WvgWindow
+
+   DATA   CLSID                              INIT ""
    DATA   server                             INIT NIL
    DATA   license                            INIT NIL
    DATA   controlFlags                       INIT 0
@@ -139,7 +139,7 @@ METHOD New( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgActiv
 
    ::style      := WS_CHILD + WS_VISIBLE + WS_CLIPCHILDREN + WS_CLIPSIBLINGS
    ::objType    := objTypeActiveX
-   ::className  := 'WVGACTIVEX'
+   ::className  := "WVGACTIVEX"
 
    RETURN Self
 /*----------------------------------------------------------------------*/
@@ -162,7 +162,7 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
    IF ValType( ::hContainer ) + ValType( ::CLSID ) != "NC"
       RETURN( NIL )
    ELSEIF HB_AX_AtlAxWinInit()
-      nRef++
+      s_nRef++
    ENDIF
 
    ::nID := ::oParent:GetControlId()
@@ -230,7 +230,7 @@ METHOD Destroy() CLASS WvgActiveXControl
          ::hSink := NIL
       ENDIF
 
-      IF --nRef == 0
+      IF --s_nRef == 0
         /*  HB_AX_AtlAxWinTerm()  */
       ENDIF
    ENDIF
@@ -301,9 +301,9 @@ CLASS AutomationObject
 
    DATA   interface             AS NUMERIC   READONLY
    DATA   interfaceName         AS CHARACTER READONLY
-   DATA   CLSID                 AS CHARACTER READONLY INIT ' '
-   DATA   server                AS CHARACTER READONLY INIT ' '
-   DATA   license               AS CHARACTER READONLY INIT ' '
+   DATA   CLSID                 AS CHARACTER READONLY INIT " "
+   DATA   server                AS CHARACTER READONLY INIT " "
+   DATA   license               AS CHARACTER READONLY INIT " "
    DATA   cargo
 
    METHOD create( cProgID, cServerName, cLicense )
@@ -389,4 +389,3 @@ METHOD onError( oError ) CLASS AutomationObject
    RETURN xValue
 #endif
 /*----------------------------------------------------------------------*/
-

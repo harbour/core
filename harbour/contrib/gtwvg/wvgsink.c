@@ -77,7 +77,7 @@
 
 /*----------------------------------------------------------------------*/
 
-static HMODULE  hLib = NULL;
+static HMODULE  s_hLib = NULL;
 
 typedef BOOL    ( CALLBACK *PATLAXWININIT )( void );
 typedef BOOL    ( CALLBACK *PATLAXWINTERM )( void );
@@ -209,7 +209,8 @@ typedef struct
 } IEventHandlerVtbl;
 #endif
 
-typedef struct {
+typedef struct
+{
    IEventHandlerVtbl*      lpVtbl;
    int                     count;
    IConnectionPoint*       pIConnectionPoint;  /* Ref counted of course. */
@@ -260,12 +261,12 @@ hb_ToOutDebug( "..................if ( IsEqualIID( vTableGuid, HB_ID_REF( ( ( My
       return S_OK;
    }
    *ppv = 0;
-   return( E_NOINTERFACE );
+   return E_NOINTERFACE;
 }
 
 static ULONG STDMETHODCALLTYPE AddRef( IEventHandler *self )
 {
-   return( ++( ( MyRealIEventHandler * ) self )->count );
+   return ++( ( MyRealIEventHandler * ) self )->count;
 }
 
 
@@ -279,12 +280,12 @@ static ULONG STDMETHODCALLTYPE Release( IEventHandler *self )
       }
 
       if( ( MyRealIEventHandler * ) self )
-      {
          GlobalFree( ( MyRealIEventHandler * ) self );
-      }
-      return( ( ULONG ) 0 );
+
+      return ( ULONG ) 0;
    }
-   return( ( ULONG ) ( ( MyRealIEventHandler * ) self )->count );
+   else
+      return ( ULONG ) ( ( MyRealIEventHandler * ) self )->count;
 }
 
 static HRESULT STDMETHODCALLTYPE GetTypeInfoCount( IEventHandler *self, UINT *pCount )
@@ -381,12 +382,16 @@ hb_ToOutDebug( "event = %i",(int)dispid );
          }
 
          iArg = params->cArgs;
+
+         if( iArg > HB_SIZEOFARRAY( pItemArray ) )
+            iArg = HB_SIZEOFARRAY( pItemArray );
+
          for( i = 1; i <= iArg; i++ )
          {
             pItem = hb_itemNew( NULL );
-            hb_oleVariantToItem( pItem, &( params->rgvarg[ iArg-i ] ) );
-            pItemArray[ i-1 ] = pItem;
-            ulRefMask |= ( 1L << (i-1) );                                /* set bit i */
+            hb_oleVariantToItem( pItem, &( params->rgvarg[ iArg - i ] ) );
+            pItemArray[ i - 1 ] = pItem;
+            ulRefMask |= ( 1L << ( i - 1 ) );                                /* set bit i */
          }
 
          if( iArg )
@@ -400,15 +405,15 @@ hb_ToOutDebug( "event = %i",(int)dispid );
 
          for( i = iArg; i > 0; i-- )
          {
-            if( HB_IS_BYREF( pItemArray[ iArg-i ] ) )
-               hb_oleItemToVariant( &( params->rgvarg[ iArg-i ] ), pItemArray[ iArg-i ] );
+            if( HB_IS_BYREF( pItemArray[ iArg - i ] ) )
+               hb_oleItemToVariant( &( params->rgvarg[ iArg - i ] ), pItemArray[ iArg - i ] );
          }
 
          /* Pritpal */
          if( iArg )
          {
             for( i = iArg; i > 0; i-- )
-               hb_itemRelease( pItemArray[ i-1 ] );
+               hb_itemRelease( pItemArray[ i - 1 ] );
          }
          hb_vmPopState();
       }
@@ -420,7 +425,8 @@ hb_ToOutDebug( "event = %i",(int)dispid );
 
 /*----------------------------------------------------------------------*/
 
-static const IEventHandlerVtbl IEventHandler_Vtbl = {
+static const IEventHandlerVtbl IEventHandler_Vtbl =
+{
    QueryInterface,
    AddRef,
    Release,
@@ -449,13 +455,9 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
    HB_SYMBOL_UNUSED( pn );
 
    thisobj = ( IEventHandler * ) GlobalAlloc( GMEM_FIXED, sizeof( MyRealIEventHandler ) );
-   if( !( thisobj ) )
+   if( thisobj )
    {
-      hr = E_OUTOFMEMORY;
-   }
-   else
-   {
-      ( ( MyRealIEventHandler* ) thisobj)->lpVtbl = ( IEventHandlerVtbl * ) &IEventHandler_Vtbl;
+      ( ( MyRealIEventHandler * ) thisobj )->lpVtbl = ( IEventHandlerVtbl * ) &IEventHandler_Vtbl;
       ( ( MyRealIEventHandler * ) thisobj )->pSelf = NULL;
       ( ( MyRealIEventHandler * ) thisobj )->count = 0;
       ( ( MyRealIEventHandler * ) thisobj )->iID_riid = 0;
@@ -508,6 +510,8 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
          pIUnknown = NULL;
       }
    }
+   else
+      hr = E_OUTOFMEMORY;
 
    *pThis = ( void * ) thisobj;
 
@@ -527,9 +531,7 @@ HB_FUNC( HB_AX_SHUTDOWNCONNECTIONPOINT )
    }
 
    if( hSink && hSink->pEvents )
-   {
       hb_itemRelease( hSink->pEvents );
-   }
 }
 
 /*----------------------------------------------------------------------*/
@@ -557,7 +559,7 @@ HB_FUNC( HB_AX_ATLAXWININIT )
 {
    BOOL bRet = FALSE;
 
-   if( !hLib )
+   if( !s_hLib )
    {
       PATLAXWININIT AtlAxWinInit;
 
@@ -594,11 +596,11 @@ HB_FUNC( HB_AX_ATLAXWININIT )
         * developers of few well known MS-Win GUI projects for [x]Harbour.
         * Please remember about it.
         */
-      hLib = LoadLibrary( szLibName );
+      s_hLib = LoadLibrary( szLibName );
 
-      if( hLib )
+      if( s_hLib )
       {
-         AtlAxWinInit = ( PATLAXWININIT ) GetProcAddress( hLib, HBTEXT( "AtlAxWinInit" ) );
+         AtlAxWinInit = ( PATLAXWININIT ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinInit" ) );
 
          if( AtlAxWinInit )
          {
@@ -608,8 +610,8 @@ HB_FUNC( HB_AX_ATLAXWININIT )
 
          if( !bRet )
          {
-            FreeLibrary( hLib );
-            hLib = NULL;
+            FreeLibrary( s_hLib );
+            s_hLib = NULL;
          }
       }
    }
@@ -625,16 +627,16 @@ HB_FUNC( HB_AX_ATLAXWINTERM )
    PATLAXWINTERM AtlAxWinTerm;
    BOOL          bRet = FALSE;
 
-   if( hLib )
+   if( s_hLib )
    {
-      AtlAxWinTerm = ( PATLAXWINTERM ) GetProcAddress( hLib, HBTEXT( "AtlAxWinTerm" ) );
+      AtlAxWinTerm = ( PATLAXWINTERM ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinTerm" ) );
 
       if( AtlAxWinTerm )
       {
          if( AtlAxWinTerm() )
          {
-            FreeLibrary( hLib );
-            hLib = NULL;
+            FreeLibrary( s_hLib );
+            s_hLib = NULL;
             bRet = TRUE;
          }
       }
@@ -655,7 +657,7 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) /* HWND hWnd = handle of control container wind
    HWND  hWnd      = NULL;
    char  *lpcclass = hb_parcx( 1 );
    HWND  hParent   = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 2 );
-   char  *Caption  = HB_ISCHAR(  3 ) ? hb_parc( 3 ) : "" ;
+   char  *Caption  = hb_parcx( 3 );
    HMENU id        = HB_ISNUM(  4 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 4 ) : ( HMENU ) ( HB_PTRDIFF ) -1 ;
    int   x         = HB_ISNUM(  5 ) ? hb_parni(  5 ) : 0;
    int   y         = HB_ISNUM(  6 ) ? hb_parni(  6 ) : 0;
@@ -664,7 +666,7 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) /* HWND hWnd = handle of control container wind
    int   Style     = HB_ISNUM(  9 ) ? hb_parni(  9 ) : WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
    int   Exstyle   = HB_ISNUM( 10 ) ? hb_parni( 10 ) : 0;
 
-   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( hLib, HBTEXT( "AtlAxGetControl" ) );
+   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( s_hLib, HBTEXT( "AtlAxGetControl" ) );
    if( AtlAxGetControl )
    {
       LPTSTR cCaption = HB_TCHAR_CONVTO( Caption );
@@ -686,26 +688,12 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) /* HWND hWnd = handle of control container wind
 
             hb_itemReturnRelease( hb_oleItemPut( NULL, obj ) );
          }
-         else
-         {
-            hb_ret();
-         }
       }
-      else
-      {
-         hb_ret();
-      }
-   }
-   else
-   {
-      hb_ret();
    }
 
    /* return the control handle */
-   if ISBYREF( 12 )
-      hb_stornint( ( HB_PTRDIFF ) hWnd, 12 );
-   if ISBYREF( 13 )
-      hb_stornint( ( HB_PTRDIFF ) pUnk, 13 );
+   hb_stornint( ( HB_PTRDIFF ) hWnd, 12 );
+   hb_stornint( ( HB_PTRDIFF ) pUnk, 13 );
 }
 
 /*----------------------------------------------------------------------*/
@@ -715,7 +703,7 @@ HB_FUNC( HB_AX_ATLCREATEWINDOW ) /* HWND hWnd = handle of control container wind
    HWND  hWnd;
    char  *lpcclass = hb_parcx( 1 );
    HWND  hParent   = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 2 );
-   char  *Caption  = HB_ISCHAR(  3 ) ? hb_parc( 3 ) : "" ;
+   char  *Caption  = hb_parcx( 3 );
    HMENU id        = HB_ISNUM(  4 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 4 ) : ( HMENU ) ( HB_PTRDIFF ) -1 ;
    int   x         = HB_ISNUM(  5 ) ? hb_parni(  5 ) : 0;
    int   y         = HB_ISNUM(  6 ) ? hb_parni(  6 ) : 0;
@@ -744,7 +732,7 @@ HB_FUNC( HB_AX_ATLGETCONTROL ) /* HWND hWnd = handle of control container window
    IUnknown         *pUnk = NULL;
    HWND             hWnd = ( ISPOINTER( 1 ) ? ( HWND ) hb_parptr( 1 ) : ( HWND )( HB_PTRDIFF ) hb_parnint( 1 ) );
 
-   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( hLib, HBTEXT( "AtlAxGetControl" ) );
+   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( s_hLib, HBTEXT( "AtlAxGetControl" ) );
    if( AtlAxGetControl )
    {
       if( hWnd )
@@ -757,24 +745,9 @@ HB_FUNC( HB_AX_ATLGETCONTROL ) /* HWND hWnd = handle of control container window
             HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
 
             hb_itemReturnRelease( hb_oleItemPut( NULL, obj ) );
-            if( ISBYREF( 2 ) )
-            {
-               hb_stornint( ( HB_PTRDIFF ) pUnk, 2 );
-            }
-         }
-         else
-         {
-            hb_ret();
+            hb_stornint( ( HB_PTRDIFF ) pUnk, 2 );
          }
       }
-      else
-      {
-         hb_ret();
-      }
-   }
-   else
-   {
-      hb_ret();
    }
 }
 
@@ -786,7 +759,7 @@ HB_FUNC( HB_AX_ATLGETUNKNOWN ) /* HWND hWnd = handle of control container window
    IUnknown         *pUnk = NULL;
    HWND             hWnd = ( ISPOINTER( 1 ) ? ( HWND ) hb_parptr( 1 ) : ( HWND )( HB_PTRDIFF ) hb_parnint( 1 ) );
 
-   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( hLib, HBTEXT( "AtlAxGetControl" ) );
+   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( s_hLib, HBTEXT( "AtlAxGetControl" ) );
    if( AtlAxGetControl )
    {
       if( hWnd )

@@ -576,7 +576,7 @@ static HB_ERRCODE adsScopeSet( ADSAREAP pArea, ADSHANDLE hOrder, USHORT nScope, 
                   UNSIGNED16 ucLen = ( UNSIGNED16 ) hb_itemGetCLen( pItem );
                   UNSIGNED8 *pucScope = ( UNSIGNED8 * ) hb_itemGetCPtr( pItem );
 #if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
-                  UNSIGNED8 pszKeyFree = NULL;
+                  UNSIGNED8 * pszKeyFree = NULL;
 #endif
 #ifdef ADS_USE_OEM_TRANSLATION
                   if( hb_ads_bOEM )
@@ -584,14 +584,14 @@ static HB_ERRCODE adsScopeSet( ADSAREAP pArea, ADSHANDLE hOrder, USHORT nScope, 
 #if ADS_LIB_VERSION >= 600
                      u16DataType = ADS_RAWKEY;
 #else
-                     pucScope = pszKeyFree = ( UNSIGNED8 * ) hb_adsOemToAnsi( ( char * ) pucScope, uiLen );
+                     pucScope = pszKeyFree = ( UNSIGNED8 * ) hb_adsOemToAnsi( ( char * ) pucScope, ucLen );
 #endif
                   }
 #endif
                   AdsSetScope( hOrder, nScope, pucScope, ucLen, u16DataType );
 #if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
                   if( pszKeyFree )
-                     hb_adsOemAnsiFree( pszKeyFree );
+                     hb_adsOemAnsiFree( ( char * ) pszKeyFree );
 #endif
                }
                break;
@@ -944,12 +944,12 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
    UNSIGNED32 u32RecNo = 0, u32NewRec;
    UNSIGNED16 u16SeekType = ( bSoftSeek ) ? ADS_SOFTSEEK : ADS_HARDSEEK,
               u16KeyType, u16Found, u16KeyLen;
-   UNSIGNED8 *pszKey, pKeyBuf[ 8 ];
+   UNSIGNED8 * pszKey, pKeyBuf[ 8 ];
    double dValue;
-   UNSIGNED8  *pucSavedKey = NULL;
+   UNSIGNED8 * pucSavedKey = NULL;
    UNSIGNED16 u16SavedKeyLen = ADS_MAX_KEY_LENGTH;  /* this may be longer than the actual seek expression, so we don't pass it along */
 #if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
-   UNSIGNED8 pszKeyFree = NULL;
+   UNSIGNED8 * pszKeyFree = NULL;
 #endif
 
    HB_TRACE(HB_TR_DEBUG, ("adsSeek(%p, %d, %p, %d)", pArea, bSoftSeek, pKey, bFindLast));
@@ -999,7 +999,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
       else
       {
          dValue = hb_itemGetTD( pKey );
-         pszKey = ( UNSIGNED8* ) &dValue;
+         pszKey = ( UNSIGNED8 * ) &dValue;
          u16KeyLen = ( UNSIGNED16 ) sizeof( double );
          u16KeyType = ADS_DOUBLEKEY;
       }
@@ -1007,13 +1007,13 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
    else if( HB_IS_NUMERIC( pKey ) )
    {
       dValue = hb_itemGetND( pKey );
-      pszKey = ( UNSIGNED8* ) &dValue;
+      pszKey = ( UNSIGNED8 * ) &dValue;
       u16KeyLen = ( UNSIGNED16 ) sizeof( double );
       u16KeyType = ADS_DOUBLEKEY;
    }
    else if( HB_IS_LOGICAL( pKey ) )
    {
-      pszKey = ( UNSIGNED8* ) ( hb_itemGetL( pKey ) ? "1" : "0" );
+      pszKey = ( UNSIGNED8 * ) ( hb_itemGetL( pKey ) ? "1" : "0" );
       u16KeyLen = 1;
       u16KeyType = ADS_STRINGKEY;
    }
@@ -1022,7 +1022,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
       commonError( pArea, EG_DATATYPE, 1020, 0, NULL, 0, NULL );
 #if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
       if( pszKeyFree )
-         hb_adsOemAnsiFree( pszKeyFree );
+         hb_adsOemAnsiFree( ( char * ) pszKeyFree );
 #endif
       return HB_FAILURE;
    }
@@ -1072,7 +1072,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
       pArea->fBof = FALSE;
 #if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
       if( pszKeyFree )
-         hb_adsOemAnsiFree( pszKeyFree );
+         hb_adsOemAnsiFree( ( char * ) pszKeyFree );
 #endif
       return errCode;
    }
@@ -1148,7 +1148,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
             hb_xfree( pucSavedKey );
 #if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
          if( pszKeyFree )
-            hb_adsOemAnsiFree( pszKeyFree );
+            hb_adsOemAnsiFree( ( char * ) pszKeyFree );
 #endif
          return HB_FAILURE;
       }
@@ -1187,7 +1187,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
       hb_xfree( pucSavedKey );
 #if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
    if( pszKeyFree )
-      hb_adsOemAnsiFree( pszKeyFree );
+      hb_adsOemAnsiFree( ( char * ) pszKeyFree );
 #endif
 
    return HB_SUCCESS;
