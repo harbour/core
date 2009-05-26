@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -85,7 +85,7 @@
 CLASS WvgRadioButton  INHERIT  WvgWindow, DataRef
 
    DATA     autosize                              INIT .F.
-   DATA     caption                               INIT ''
+   DATA     caption                               INIT ""
    DATA     pointerFocus                          INIT .T.
    DATA     selection                             INIT .F.
 
@@ -109,7 +109,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadio
    ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + BS_AUTORADIOBUTTON
-   ::className   := 'BUTTON'
+   ::className   := "BUTTON"
    ::objType     := objTypeRadioButton
 
    RETURN Self
@@ -191,4 +191,3 @@ METHOD setCaption( xCaption ) CLASS WvgRadioButton
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

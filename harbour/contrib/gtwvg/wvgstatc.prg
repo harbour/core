@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -85,7 +85,7 @@
 CLASS WvgStatic  INHERIT  WvgWindow
 
    DATA     autoSize                              INIT .F.
-   DATA     caption                               INIT ''
+   DATA     caption                               INIT ""
    DATA     clipParent                            INIT .T.
    DATA     clipSiblings                          INIT .F.
    DATA     options                               INIT -1 /* WVGSTATIC_TEXT_LEFT */
@@ -113,7 +113,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStati
 
    ::style       := WS_CHILD + WS_CLIPCHILDREN
    ::exStyle     := WS_EX_NOPARENTNOTIFY
-   ::className   := 'STATIC'
+   ::className   := "STATIC"
    ::objType     := objTypeStatic
 
    RETURN Self
@@ -384,6 +384,3 @@ A window receives this message through its WindowProc function.
 
 #endif
 /*----------------------------------------------------------------------*/
-
-
-

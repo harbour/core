@@ -74,9 +74,9 @@ FUNCTION MAIN( ... )
 
    FOR i := 1 TO Len( aParams )
       IF Left( aParams[i], 1 ) $ "-/"
-         IF SubStr( aParams[i], 2 ) == 'r'
+         IF SubStr( aParams[i], 2 ) == "r"
             lRecursive := .T.
-            aParams[i] := '#'
+            aParams[i] := "#"
             EXIT
          ENDIF
       ENDIF
@@ -90,10 +90,10 @@ FUNCTION MAIN( ... )
 
    oRef:bCallBack := { |a, i|FCallBack( a, i ) }
 
-   IF '*' $ cFileName .OR. '?' $ cFileName
-      cInitDir := Iif( ( i := Rat( '\', cFileName ) ) == 0, ;
-         Iif( ( i := Rat( '/', cFileName ) ) == 0, ;
-         '.' + Set( _SET_DIRSEPARATOR ), Left( cFileName, i ) ), ;
+   IF "*" $ cFileName .OR. "?" $ cFileName
+      cInitDir := Iif( ( i := Rat( "\", cFileName ) ) == 0, ;
+         Iif( ( i := Rat( "/", cFileName ) ) == 0, ;
+         "." + Set( _SET_DIRSEPARATOR ), Left( cFileName, i ) ), ;
          Left( cFileName, i ) )
       cFileName := Iif( i == 0, cFileName, SubStr( cFileName, i + 1 ) )
       DirEval( cInitDir, cFileName, lRecursive, { |name|Reformat( oRef,name ) } )
@@ -272,8 +272,8 @@ METHOD New( aParams ) CLASS CODEFORMAT
    LOCAL i, cParam, cIniName := rf_FullPath()
 
    ::nErr := 0
-   cIniName := Iif( ( i := Rat( '\', cIniName ) ) = 0, ;
-      Iif( ( i := Rat( '/', cIniName ) ) = 0, "", Left( cIniName, i ) ), ;
+   cIniName := Iif( ( i := Rat( "\", cIniName ) ) = 0, ;
+      Iif( ( i := Rat( "/", cIniName ) ) = 0, "", Left( cIniName, i ) ), ;
       Left( cIniName, i ) ) + "hbformat.ini"
    IF !::ReadIni( cIniName )
       RETURN Self
@@ -423,7 +423,7 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
          ENDIF
          IF !lPragmaDump .AND. ::lIndent .AND. ( !lComment .OR. nPosComment > 1 )
             aFile[i] := cLineAll
-            IF i == 1 .OR. Right( aFile[i-1], 1 ) != ';'
+            IF i == 1 .OR. Right( aFile[i-1], 1 ) != ";"
                nPosSep := 1
                nLineSegment := 1
                DO WHILE .T.
@@ -440,7 +440,7 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
                   nStatePrev := nState
                   cToken1 := Lower( hb_TokenGet( cLine, 1 ) )
                   cToken2 := Lower( hb_TokenGet( cLine, 2 ) )
-                  IF Left( cToken1, 1 ) == '#'
+                  IF Left( cToken1, 1 ) == "#"
                   ELSEIF ( "static" = cToken1 .AND. ;
                         ( "function" = cToken2 .OR. "procedure" = cToken2 ) ) .OR. ;
                         "function" = cToken1 .OR. "procedure" = cToken1 ;
@@ -588,19 +588,21 @@ METHOD FormatLine( cLine, lContinued ) CLASS CODEFORMAT
 
    nLen := Len( cLine )
 
-   DO WHILE SubStr( cLine, nPos, 1 ) == ' '; nPos ++ ; ENDDO
+   DO WHILE SubStr( cLine, nPos, 1 ) == " "
+      nPos ++
+   ENDDO
 
-   IF !lContinued .AND. Left( cLine, 1 ) == '#'
+   IF !lContinued .AND. Left( cLine, 1 ) == "#"
       IF ::lSpaces .AND. ::nSpaceDrt != - 1
          cLine := Left( cLine, nPos ) + Space( ::nSpaceDrt ) + LTrim( SubStr( cLine, nPos + 1 ) )
       ENDIF
       nLen := Len( cLine )
       IF ::lCase .AND. ::nCaseDrt != - 1
          nPos ++
-         DO WHILE SubStr( cLine, nPos, 1 ) == ' '; nPos ++ ; ENDDO
+         DO WHILE SubStr( cLine, nPos, 1 ) == " "; nPos ++ ; ENDDO
          i := nPos
-         DO WHILE nPos <= nLen .AND. SubStr( cLine, nPos, 1 ) >= 'A'; nPos ++ ; ENDDO
-         IF SubStr( cLine, nPos, 1 ) >= 'A'
+         DO WHILE nPos <= nLen .AND. SubStr( cLine, nPos, 1 ) >= "A"; nPos ++ ; ENDDO
+         IF SubStr( cLine, nPos, 1 ) >= "A"
             nPos ++
          ENDIF
          cToken := SubStr( cLine, i, nPos - i )
@@ -612,13 +614,13 @@ METHOD FormatLine( cLine, lContinued ) CLASS CODEFORMAT
       FOR i := nPos TO nLen
          c := SubStr( cLine, i, 1 )
          IF nState <= FL_STATE_STRING
-            IF ( c >= '0' .AND. c <= '9' ) .OR. ( c >= 'A' .AND. c <= 'Z' ) ;
-                  .OR. ( c >= 'a' .AND. c <= 'z' ) .OR. c == '_'
+            IF ( c >= "0" .AND. c <= "9" ) .OR. ( c >= "A" .AND. c <= "Z" ) ;
+                  .OR. ( c >= "a" .AND. c <= "z" ) .OR. c == "_"
                IF nState < FL_STATE_STRING .OR. ( nState == FL_STATE_STRING .AND. nEnd > nBegin )
                   IF nState == FL_STATE_STRING
                      ::ConvertCmd( @cLine, nBegin, nEnd )
                   ENDIF
-                  IF c >= 'A'
+                  IF c >= "A"
                      nState := FL_STATE_STRING
                      nBegin := nEnd := i
                   ELSE
@@ -634,9 +636,9 @@ METHOD FormatLine( cLine, lContinued ) CLASS CODEFORMAT
                ENDIF
                cSymb  := c
                nState := FL_STATE_QUOTED
-            ELSEIF c == '['
+            ELSEIF c == "["
                nState := FL_STATE_SQBR
-            ELSEIF c == '/' .AND. ( ( c := SubStr( cLine, i + 1, 1 ) ) == '/' .OR. c == '*' )
+            ELSEIF c == "/" .AND. ( ( c := SubStr( cLine, i + 1, 1 ) ) == "/" .OR. c == "*" )
                IF nState == FL_STATE_STRING
                   IF nEnd == nBegin
                      nEnd := i
@@ -644,29 +646,29 @@ METHOD FormatLine( cLine, lContinued ) CLASS CODEFORMAT
                   ::ConvertCmd( @cLine, nBegin, nEnd )
                ENDIF
                EXIT
-            ELSEIF c == ' '
+            ELSEIF c == " "
                nEnd := i
                i ++
-               DO WHILE i <= nLen .AND. SubStr( cLine, i, 1 ) == ' '; i ++ ; ENDDO
+               DO WHILE i <= nLen .AND. SubStr( cLine, i, 1 ) == " "; i ++ ; ENDDO
                i --
-            ELSEIF c == '(' .OR. c == '{'
-               aBrackets[ Iif( c=='(', 1, 2 ) ] ++
+            ELSEIF c == "(" .OR. c == "{"
+               aBrackets[ Iif( c=="(", 1, 2 ) ] ++
                IF nState == FL_STATE_STRING
                   IF nEnd == nBegin
                      nEnd := i
                   ENDIF
-                  IF ( !lFirst .OR. !::ConvertCmd( @cLine,nBegin,nEnd, .T. ) ) .AND. c == '('
+                  IF ( !lFirst .OR. !::ConvertCmd( @cLine,nBegin,nEnd, .T. ) ) .AND. c == "("
                      ::ConvertFnc( @cLine, nBegin, nEnd )
                   ENDIF
                ENDIF
-               IF ::lSpaces .AND. aBrackets[ Iif( c=='(', 1, 2 ) ] <= ::nBr4Brac .AND. ;
+               IF ::lSpaces .AND. aBrackets[ Iif( c=="(", 1, 2 ) ] <= ::nBr4Brac .AND. ;
                      i < nLen .AND. !( SubStr( cLine,i + 1,1 ) $ " )}" )
                   nA := i
                ENDIF
                nState := FL_STATE_ANY
-            ELSEIF c == '.'
+            ELSEIF c == "."
                IF nState == FL_STATE_STRING
-                  IF nBegin > 1 .AND. SubStr( cLine, nBegin - 1, 1 ) == '.' .AND. nEnd == nBegin
+                  IF nBegin > 1 .AND. SubStr( cLine, nBegin - 1, 1 ) == "." .AND. nEnd == nBegin
                      ::ConvertBool( @cLine, nBegin, i )
                      IF Len( cLine ) != nLen
                         /*  If .not. was converted to ! */
@@ -684,32 +686,32 @@ METHOD FormatLine( cLine, lContinued ) CLASS CODEFORMAT
                   ENDIF
                ENDIF
                nState := FL_STATE_ANY
-            ELSEIF c == ','
+            ELSEIF c == ","
                IF aBrackets[1] <= ::nBr4Comma .AND. aBrackets[2] <= ::nBr4Comma
                   nA := i
                ENDIF
                nState := FL_STATE_ANY
-            ELSEIF c == '!' .AND. SubStr( cLine, i + 1, 1 ) != '='
+            ELSEIF c == "!" .AND. SubStr( cLine, i + 1, 1 ) != "="
                IF nState == FL_STATE_STRING
                   IF nEnd == nBegin
                      nEnd := i
                   ENDIF
                   ::ConvertCmd( @cLine, nBegin, nEnd )
                ENDIF
-               nState := Iif( SubStr( cLine,i + 1,1 ) == '=', FL_STATE_OP, FL_STATE_ANY )
-            ELSEIF c $ cOperators .OR. ( c == ':' .AND. SubStr( cLine,i + 1,1 ) == '=' )
+               nState := Iif( SubStr( cLine,i + 1,1 ) == "=", FL_STATE_OP, FL_STATE_ANY )
+            ELSEIF c $ cOperators .OR. ( c == ":" .AND. SubStr( cLine,i + 1,1 ) == "=" )
                nB := i
                IF SubStr( cLine, i + 1, 1 ) $ cOperators
                   i ++
                ENDIF
                nA := i
                nState := FL_STATE_OP
-            ELSEIF c == ')' .OR. c == '}'
-               IF ::lSpaces .AND. aBrackets[ Iif( c=='(', 1, 2 ) ] <= ::nBr4Brac .AND. ;
-                     i > 1 .AND. !( SubStr( cLine,i - 1,1 ) $ ' ({' )
+            ELSEIF c == ")" .OR. c == "}"
+               IF ::lSpaces .AND. aBrackets[ Iif( c=="(", 1, 2 ) ] <= ::nBr4Brac .AND. ;
+                     i > 1 .AND. !( SubStr( cLine,i - 1,1 ) $ " ({" )
                   nB := i
                ENDIF
-               aBrackets[ Iif( c==')', 1, 2 ) ] --
+               aBrackets[ Iif( c==")", 1, 2 ) ] --
                nState := FL_STATE_ANY
             ELSE
                nState := FL_STATE_ANY
@@ -717,19 +719,19 @@ METHOD FormatLine( cLine, lContinued ) CLASS CODEFORMAT
             IF lFirst .AND. nState != FL_STATE_STRING
                lFirst := .F.
             ENDIF
-            IF nA != 0 .AND. ::lSpaces .AND. nA < nLen .AND. SubStr( cLine, nA + 1, 1 ) != ' '
-               cLine := Left( cLine, nA ) + ' ' + SubStr( cLine, nA + 1 )
+            IF nA != 0 .AND. ::lSpaces .AND. nA < nLen .AND. SubStr( cLine, nA + 1, 1 ) != " "
+               cLine := Left( cLine, nA ) + " " + SubStr( cLine, nA + 1 )
                nLen ++
                i ++
             ENDIF
-            IF nB != 0 .AND. ::lSpaces .AND. nB > 1 .AND. SubStr( cLine, nB - 1, 1 ) != ' '
-               cLine := Left( cLine, nB - 1 ) + ' ' + SubStr( cLine, nB )
+            IF nB != 0 .AND. ::lSpaces .AND. nB > 1 .AND. SubStr( cLine, nB - 1, 1 ) != " "
+               cLine := Left( cLine, nB - 1 ) + " " + SubStr( cLine, nB )
                nLen ++
                i ++
             ENDIF
             nA := nB := 0
          ELSEIF ( nState == FL_STATE_QUOTED .AND. c == cSymb ) .OR. ;
-               ( nState == FL_STATE_SQBR .AND. c == ']' )
+               ( nState == FL_STATE_SQBR .AND. c == "]" )
             nState := FL_STATE_ANY
          ENDIF
          IF i == nLen .AND. lFirst .AND. nState == FL_STATE_STRING
@@ -748,11 +750,11 @@ METHOD ConvertCmd( cLine, nBegin, nEnd, lFirstOnly ) CLASS CODEFORMAT
    IF ::lCase
       DEFAULT lFirstOnly TO .F.
       IF ( ( nPos := At( "," + cToken, ::cCommands ) ) != 0 .AND. ( Len(cToken ) >= 4 ;
-            .OR. SubStr( ::cCommands, nPos + Len( cToken ) + 1, 1 ) == ',' ) ) ;
+            .OR. SubStr( ::cCommands, nPos + Len( cToken ) + 1, 1 ) == "," ) ) ;
             .OR. ;
             ( !lFirstOnly .AND. ;
             ( nPos := At( "," + cToken, ::cClauses ) ) != 0 .AND. ( Len( cToken ) >= 4 ;
-            .OR. SubStr( ::cClauses, nPos + Len( cToken ) + 1, 1 ) == ',' ) )
+            .OR. SubStr( ::cClauses, nPos + Len( cToken ) + 1, 1 ) == "," ) )
          IF ::nCaseCmd > 0
             IF ::nCaseCmd > 1
                cToken := Iif( ::nCaseCmd == 2, Lower( cToken ), Left( cToken,1 ) + ;
@@ -801,7 +803,7 @@ METHOD ConvertBool( cLine, nBegin, nEnd ) CLASS CODEFORMAT
    IF ::lCase
       IF ( nPos := At( "," + cToken + ",", cBool ) ) != 0
          IF ::lCnvNot .AND. nPos == 1
-            cLine := Left( cLine, nBegin - 2 ) + '!' + SubStr( cLine, nEnd + 1 )
+            cLine := Left( cLine, nBegin - 2 ) + "!" + SubStr( cLine, nEnd + 1 )
          ELSE
             IF ::nCaseBoo > 0
                IF ::nCaseBoo > 1
@@ -828,7 +830,7 @@ METHOD SetOption( cLine, i, aIni ) CLASS CODEFORMAT
       IF __ObjHasMsg( Self, cToken1 )
          IF Empty( cToken2 )
             xRes := ""
-         ELSEIF IsDigit( cToken2 ) .OR. ( Left( cToken2,1 ) == '-' .AND. IsDigit( Ltrim(Substr(cToken2,2)) ) )
+         ELSEIF IsDigit( cToken2 ) .OR. ( Left( cToken2,1 ) == "-" .AND. IsDigit( Ltrim(Substr(cToken2,2)) ) )
             xRes := Val( cToken2 )
          ELSEIF Isalpha( cToken2 )
             IF ( cTemp := Upper( cToken2 ) ) == "ON" .OR. cTemp == "YES"
@@ -880,7 +882,7 @@ METHOD ReadIni( cIniName ) CLASS CODEFORMAT
       nLen := Len( aIni )
       FOR i := 1 TO nLen
          IF !Empty( aIni[i] := AllTrim( aIni[i] ) ) .AND. ;
-               ( c := Left( aIni[i],1 ) ) != ';' .AND. c != '#'
+               ( c := Left( aIni[i],1 ) ) != ";" .AND. c != "#"
             IF !::SetOption( aIni[i], @i, aIni )
                EXIT
             ENDIF
@@ -907,16 +909,16 @@ METHOD Array2File( cFileName, aFile ) CLASS CODEFORMAT
 
    LOCAL handle, i, nLen := Len( aFile ), cName, cBakName
 
-   cName := Iif( ( i := Rat('.',cFileName ) ) == 0, cFileName, SubStr( cFileName,1,i - 1 ) )
+   cName := Iif( ( i := Rat(".",cFileName ) ) == 0, cFileName, SubStr( cFileName,1,i - 1 ) )
    IF Empty( ::cExtSave )
-      cBakName := cName + Iif( Left( ::cExtBack,1 ) != '.', '.', "" ) + ::cExtBack
+      cBakName := cName + Iif( Left( ::cExtBack,1 ) != ".", ".", "" ) + ::cExtBack
       IF FRename( cFileName, cBakName ) == - 1
          RETURN .F.
       ENDIF
    ENDIF
 
    IF !Empty( ::cExtSave )
-      cFileName := cName + Iif( Left( ::cExtSave,1 ) != '.', '.', "" ) + ::cExtSave
+      cFileName := cName + Iif( Left( ::cExtSave,1 ) != ".", ".", "" ) + ::cExtSave
    ENDIF
    handle := FCreate( cFileName )
    FOR i := 1 TO nLen
@@ -969,10 +971,10 @@ STATIC FUNCTION FindNotQuoted( subs, stroka, nPos2 )
             IF c == '"' .OR. c == "'"
                cSymb  := c
                nState := 1
-            ELSEIF c == '['
+            ELSEIF c == "["
                nState := 2
             ENDIF
-         ELSEIF ( nState == 1 .AND. c == cSymb ) .OR. ( nState == 2 .AND. c == ']' )
+         ELSEIF ( nState == 1 .AND. c == cSymb ) .OR. ( nState == 2 .AND. c == "]" )
             nState := 0
          ENDIF
       NEXT

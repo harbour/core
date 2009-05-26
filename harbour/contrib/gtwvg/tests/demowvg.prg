@@ -25,12 +25,12 @@
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 
-#include      "inkey.ch"
-#include     "common.ch"
-#include     "wvtwin.ch"
-#include   "hbgtinfo.ch"
-#include    "hbgtwvg.ch"
-#include   "wvgparts.ch"
+#include "inkey.ch"
+#include "common.ch"
+#include "wvtwin.ch"
+#include "hbgtinfo.ch"
+#include "hbgtwvg.ch"
+#include "wvgparts.ch"
 
 REQUEST DbfCdx
 REQUEST DbfNtx
@@ -4370,4 +4370,3 @@ FUNCTION Vou_CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidde
    RETURN oCrt
 
 /*----------------------------------------------------------------------*/
-

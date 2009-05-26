@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -115,8 +115,8 @@ CLASS WvgTreeView  INHERIT  WvgWindow, DataRef
 
    DATA     hParentSelected
    DATA     hItemSelected
-   DATA     textParentSelected                    INIT ''
-   DATA     textItemSelected                      INIT ''
+   DATA     textParentSelected                    INIT ""
+   DATA     textItemSelected                      INIT ""
 
    METHOD   setColorFG( nRGB )                    INLINE Win_TreeView_SetTextColor( ::hWnd, nRGB )
    METHOD   setColorBG( nRGB )                    INLINE Win_TreeView_SetBkColor( ::hWnd, nRGB )
@@ -313,7 +313,7 @@ METHOD itemSelected( xParam ) CLASS WvgTreeView
 /*----------------------------------------------------------------------*/
 CLASS WvgTreeViewItem
 
-   DATA     caption                               INIT ''
+   DATA     caption                               INIT ""
    DATA     dllName                               INIT NIL
    DATA     expandedImage                         INIT -1
    DATA     image                                 INIT -1
@@ -324,7 +324,7 @@ CLASS WvgTreeViewItem
    DATA     oParent
    DATA     oWnd
 
-   DATA     className                              INIT 'TREEVIEWITEM'
+   DATA     className                              INIT "TREEVIEWITEM"
    DATA     objType                                INIT objTypeTreeViewItem
 
    METHOD   new()

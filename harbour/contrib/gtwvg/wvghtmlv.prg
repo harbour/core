@@ -66,14 +66,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -137,7 +137,7 @@ CLASS WvgHTMLViewer INHERIT WvgActiveXControl
    ASSIGN   documentComplete( bBlock )            INLINE ::sl_documentComplete := bBlock
    METHOD   xDocumentComplete()
 
-   DATA     CLSID                                 INIT   'Shell.Explorer'      PROTECTED
+   DATA     CLSID                                 INIT   "Shell.Explorer"      PROTECTED
 
    ENDCLASS
 
@@ -251,4 +251,3 @@ METHOD setHTML( cHTML ) CLASS WvgHTMLViewer
    RETURN self
 
 /*----------------------------------------------------------------------*/
-

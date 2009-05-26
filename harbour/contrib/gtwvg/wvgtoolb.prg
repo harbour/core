@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -239,7 +239,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
       #if 0
       CASE aNMMouse[ NMH_code ] == TBN_GETINFOTIPA
          IF ( nObj := ascan( ::aItems, {|e_| e_[ 1 ] == aNMMouse[ NMH_dwItemSpec ] } ) ) > 0
-            Wvg_SetToolbarButtonTip( aNM[ 2 ], 'This is grand tooltip' )
+            Wvg_SetToolbarButtonTip( aNM[ 2 ], "This is grand tooltip" )
             RETURN EVENT_HANDELLED
          ENDIF
       #endif
@@ -323,14 +323,14 @@ METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey,
 
    DO CASE
 
-   CASE cType == 'C'
-      IF ( '.' $ xImage ) .or. ( '/' $ xImage ) .or. ( '\' $ xImage ) .or. ( ':' $ xImage ) .or. file( xImage )
+   CASE cType == "C"
+      IF ( "." $ xImage ) .or. ( "/" $ xImage ) .or. ( "\" $ xImage ) .or. ( ":" $ xImage ) .or. file( xImage )
          hBitmap := Wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
       ELSE
          hBitmap := Wvg_PrepareBitmapFromResourceName( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
       ENDIF
 
-   CASE cType == 'N'
+   CASE cType == "N"
       hBitmap := Wvg_PrepareBitmapFromResourceID( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
 
    ENDCASE
@@ -473,9 +473,9 @@ CLASS WvgToolbarButton
 
    DATA     enabled                               INIT .T.
    DATA     index                                 INIT 0
-   DATA     key                                   INIT ''
+   DATA     key                                   INIT ""
    DATA     style                                 INIT WVGTOOLBAR_BUTTON_DEFAULT
-   DATA     caption                               INIT ''
+   DATA     caption                               INIT ""
    DATA     image                                 INIT NIL
    DATA     disabledImage                         INIT NIL
    DATA     hotImage                              INIT NIL
@@ -487,8 +487,8 @@ CLASS WvgToolbarButton
    DATA     top                                   INIT 0
    DATA     width                                 INIT 0
    DATA     height                                INIT 0
-   DATA     description                           INIT ''
-   DATA     tooltipText                           INIT ''
+   DATA     description                           INIT ""
+   DATA     tooltipText                           INIT ""
    DATA     command                               INIT 0
 
    METHOD   new()

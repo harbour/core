@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -223,7 +223,7 @@ METHOD currentSize() CLASS WvgSysWindow
 CLASS WvgFontDialog INHERIT WvgSysWindow
 
    /* Appearance */
-   DATA     title                                 INIT   ''
+   DATA     title                                 INIT   ""
    DATA     buttonApply                           INIT   .F.
    DATA     buttonCancel                          INIT   .T.
    DATA     buttonHelp                            INIT   .F.
@@ -250,7 +250,7 @@ CLASS WvgFontDialog INHERIT WvgSysWindow
    DATA     outLine                               INIT   .T.
    DATA     previewBGClr                          INIT   RGB( 255,255,255 )
    DATA     previewFGClr                          INIT   RGB( 0,0,0 )
-   DATA     previewString                         INIT   ' '
+   DATA     previewString                         INIT   " "
    DATA     printerPS                             INIT   NIL
    DATA     screenPS                              INIT   NIL
 
@@ -338,7 +338,7 @@ METHOD create( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialo
 
    ::WvgSysWindow:create( oParent, oOwner )
 
-   ::nWndProc := hb_AsCallBack( 'WNDPROC', Self )
+   ::nWndProc := hb_AsCallBack( "WNDPROC", Self )
 
    RETURN Self
 
@@ -470,8 +470,8 @@ METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
    oWvgFont:underscore       := aFont[ 6 ]
    oWvgFont:strikeOut        := aFont[ 7 ]
    oWvgFont:codePage         := aFont[ 8 ]
-   oWvgFont:setCompoundName( trim( aFont[ 1 ] +' '+ IF( oWvgFont:bold, 'Bold ', '' ) + ;
-                                                    IF( oWvgFont:italic, 'Italic', '' ) ) )
+   oWvgFont:setCompoundName( trim( aFont[ 1 ] +" "+ IF( oWvgFont:bold, "Bold ", "" ) + ;
+                                                    IF( oWvgFont:italic, "Italic", "" ) ) )
    oWvgFont:create()
 
    RETURN oWvgFont
@@ -492,7 +492,7 @@ CLASS WvgFont
    DATA     oPS
    DATA     hdc
 
-   DATA     familyName                            INIT   ''
+   DATA     familyName                            INIT   ""
    DATA     height                                INIT   0
    DATA     nominalPointSize                      INIT   0
 
@@ -510,7 +510,7 @@ CLASS WvgFont
    DATA     fixed                                 INIT   .F.
    DATA     antiAliased                           INIT   .F.
 
-   DATA     compoundName                          INIT   ''
+   DATA     compoundName                          INIT   ""
    METHOD   setCompoundName( cName )              INLINE ::compoundName := cName
 
    DATA     generic                               INIT   .T.
@@ -628,4 +628,3 @@ METHOD createFont() CLASS WvgFont
    RETURN ::hFont
 
 /*----------------------------------------------------------------------*/
-

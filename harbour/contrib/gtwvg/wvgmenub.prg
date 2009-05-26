@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -126,11 +126,11 @@ CLASS wvgMenuBar INHERIT wvgWindow
    CLASSVAR nMenuItemID                            INIT 0
    DATA     nPass                                  INIT 0
 
-   DATA     caption                                INIT ''
+   DATA     caption                                INIT ""
    DATA     nItemID                                INIT 0
    DATA     aIds                                   INIT {}
 
-   DATA     className                              INIT 'MENUBAR'
+   DATA     className                              INIT "MENUBAR"
 
    ENDCLASS
 
@@ -264,7 +264,7 @@ METHOD addItem( aItem, p2, p3, p4 ) CLASS wvgMenuBar
    LOCAL nItemIndex, cCaption
    LOCAL xCaption, bAction, nStyle, nAttrib
 
-   if PCount() == 1 .and. valtype( aItem ) == 'A'
+   if PCount() == 1 .and. valtype( aItem ) == "A"
       ASize( aItem, 4 )
       xCaption := aItem[ 1 ]
       bAction  := aItem[ 2 ]
@@ -285,25 +285,25 @@ METHOD addItem( aItem, p2, p3, p4 ) CLASS wvgMenuBar
    /* xCaption : NIL | cPrompt | ncResource | oMenu */
 
    switch valtype( xCaption )
-   case 'U'
+   case "U"
       /* Separator */
       aItem := { MF_SEPARATOR, 0, 0, NIL }
       exit
 
-   case 'C'
-      if left( xCaption,1 ) == '-'
+   case "C"
+      if left( xCaption,1 ) == "-"
          aItem := { MF_SEPARATOR, 0, 0, NIL }
       else
          aItem := { MF_STRING, ++::nMenuItemID, xCaption, bAction }
       endif
       exit
 
-   case 'O'
+   case "O"
       cCaption := IF( bAction == NIL, xCaption:title, bAction )
       aItem    := { MF_POPUP , xCaption:hMenu , cCaption, xCaption }
       exit
 
-   case 'N'
+   case "N"
       /* Resource ID */
       exit
 
@@ -313,11 +313,11 @@ METHOD addItem( aItem, p2, p3, p4 ) CLASS wvgMenuBar
    Win_AppendMenu( ::hMenu, aItem[ 1 ], aItem[ 2 ], aItem[ 3 ] )
 
    IF ++::nPass == 1
-      IF ::oParent:className $ 'WVGCRT,WVGDIALOG'
+      IF ::oParent:className $ "WVGCRT,WVGDIALOG"
          Win_SetMenu( ::oParent:getHWND(), ::hMenu )
       ENDIF
    ELSE
-      IF ::oParent:className $ 'WVGCRT,WVGDIALOG'
+      IF ::oParent:className $ "WVGCRT,WVGDIALOG"
          Win_DrawMenubar( ::oParent:getHWND() )
       ENDIF
    ENDIF
@@ -532,7 +532,7 @@ METHOD onMenuKey( xParam ) CLASS wvgMenuBar
 
 CLASS wvgMenu INHERIT wvgMenuBar
 
-   DATA     title                                 INIT  ''
+   DATA     title                                 INIT  ""
 
    METHOD   new()
    METHOD   create()
@@ -569,7 +569,7 @@ METHOD create( oParent, aPresParams, lVisible ) CLASS wvgMenu
    ::aPresParams := aPresParams
    ::visible     := lVisible
 
-   ::className := 'POPUPMENU'
+   ::className := "POPUPMENU"
 
    ::hMenu := Win_CreatePopupMenu()
 
@@ -605,4 +605,3 @@ METHOD popUp( oXbp, aPos, nDefaultItem, nControl ) CLASS wvgMenu
    RETURN 0
 
 /*----------------------------------------------------------------------*/
-

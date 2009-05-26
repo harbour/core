@@ -548,12 +548,12 @@ HOW TO GET THE HARBOUR SOURCES
        You can get subsequent updates using this command:
           svn update
 
-   3.) Harbour nightly sources (update once a day from source repository)
+   3.) Harbour nightly sources (updated once a day from source repository)
 
        Download source archive from any of these links and unpack:
           http://harbour-project.org/harbour-nightly.zip
           http://harbour-project.org/harbour-nightly.tgz
-          http://harbour-project.org/harbour-nightly.gz2
+          http://harbour-project.org/harbour-nightly.bz2
 
    4.) Harbour source download (stable)
 
@@ -569,10 +569,8 @@ TROUBLESHOOTING
    - Make sure to have carefully read this document.
    - Make sure to do a 'clean' before doing a build after refreshing
      the sources.
-   - Make sure to do a fresh checkout from the sf.net source repository
-     to a new local directory and start over.
-     Use this command for the checkout:
-        svn export https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+   - Make sure to install fresh source tree in a new local directory and start over.
+     See HOW TO GET THE HARBOUR SOURCES section for instructions to get the source.
    - Keep you PATH clean from old, mixed compiler tools or other Harbour
      versions when building Harbour.
    - Remove all old, unnecessary environment variables from your environment.

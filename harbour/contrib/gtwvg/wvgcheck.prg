@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -85,7 +85,7 @@
 CLASS WvgCheckBox  INHERIT  WvgWindow, DataRef
 
    DATA     autosize                              INIT .F.
-   DATA     caption                               INIT ''
+   DATA     caption                               INIT ""
    DATA     pointerFocus                          INIT .T.
    DATA     selection                             INIT .F.
 
@@ -114,7 +114,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCheck
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + BS_PUSHBUTTON + BS_AUTOCHECKBOX /*+ BS_NOTIFY */
-   ::className   := 'BUTTON'
+   ::className   := "BUTTON"
    ::objType     := objTypeCheckBox
 
    RETURN Self
@@ -209,4 +209,3 @@ METHOD setCaption( xCaption ) CLASS WvgCheckBox
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

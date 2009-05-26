@@ -65,21 +65,21 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 #if 0
 
-#include 'xhb.ch'
-#include 'cstruct.ch'
-#include 'wintypes.ch'
+#include "xhb.ch"
+#include "cstruct.ch"
+#include "wintypes.ch"
 
 typedef struct tagPOINT {;
     LONG x;
@@ -663,5 +663,3 @@ by the x, y, nWidth, and nHeight parameters of CreateWindowEx.
 
 #endif
 /*----------------------------------------------------------------------*/
-
-

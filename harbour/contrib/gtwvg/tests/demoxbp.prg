@@ -18,12 +18,12 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include      "inkey.ch"
-#include     "common.ch"
-#include     "wvtwin.ch"
-#include   "hbgtinfo.ch"
-#include    "hbgtwvg.ch"
-#include   "wvgparts.ch"
+#include "inkey.ch"
+#include "common.ch"
+#include "wvtwin.ch"
+#include "hbgtinfo.ch"
+#include "hbgtwvg.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -443,7 +443,3 @@ STATIC FUNCTION HB_GTSYS()
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-
-
-
-

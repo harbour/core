@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -84,7 +84,7 @@
 
 CLASS WvgStatusBar  INHERIT  WvgWindow /* WvgActiveXControl */
 
-   DATA     caption                               INIT ''
+   DATA     caption                               INIT ""
    DATA     sizeGrip                              INIT .T.
 
    DATA     aItems                                INIT {}
@@ -336,11 +336,11 @@ CLASS WvgStatusBarPanel
    DATA     bevel                                 INIT WVGSTATUSBAR_BEVEL_INSET
    DATA     enabled                               INIT .T.
    DATA     index                                 INIT 0
-   DATA     key                                   INIT ''
+   DATA     key                                   INIT ""
    DATA     style                                 INIT WVGSTATUSBAR_PANEL_TEXT
-   DATA     sl_caption                            INIT ''
+   DATA     sl_caption                            INIT ""
    DATA     image                                 INIT NIL
-   DATA     tooltipText                           INIT ''
+   DATA     tooltipText                           INIT ""
    DATA     visible                               INIT .T.
    DATA     left                                  INIT 0
    DATA     width                                 INIT 0

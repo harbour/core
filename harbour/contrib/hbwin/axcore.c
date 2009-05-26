@@ -89,10 +89,10 @@ static void hb_ax_exit( void* cargo )
 
 static int hb_ax_init( void )
 {
-   PHB_AX_WININIT pAtlAxWinInit;
-
    if( s_hLib == NULL )
    {
+      PHB_AX_WININIT pAtlAxWinInit;
+
       s_hLib = LoadLibrary( TEXT( "atl.dll" ) );
       if( ( unsigned long ) s_hLib <= 32 )
       {
@@ -153,27 +153,22 @@ HB_FUNC( WIN_AXATLGETCONTROL )
 
 HB_FUNC( WIN_AXCREATEWINDOW ) /* ( hWndContainer, CLSID, menuID=0, x, y, w, h, style, exstyle ) --> pWnd */
 {
-   HWND  hWnd;
-   char  *Cls      = "ATLAXWin";
-   HWND  hParent   = ( HWND ) hb_parptr( 1 );
-   char  *Caption  = hb_parcx( 2 );
-   HMENU id        = HB_ISNUM(  3 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 3 ) : ( HMENU ) ( HB_PTRDIFF ) -1 ;
-   int   x         = HB_ISNUM(  4 ) ? hb_parni(  4 ) : 0;
-   int   y         = HB_ISNUM(  5 ) ? hb_parni(  5 ) : 0;
-   int   w         = HB_ISNUM(  6 ) ? hb_parni(  6 ) : 0;
-   int   h         = HB_ISNUM(  7 ) ? hb_parni(  7 ) : 0;
-   int   Style     = HB_ISNUM(  8 ) ? hb_parni(  8 ) : WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
-   int   Exstyle   = HB_ISNUM(  9 ) ? hb_parni(  9 ) : 0;
+   LPTSTR cCaption = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
 
-   LPTSTR cCaption = HB_TCHAR_CONVTO( Caption );
-   LPTSTR cClass = HB_TCHAR_CONVTO( Cls );
+   hb_retptr( ( void * ) ( HB_PTRDIFF ) CreateWindowEx( HB_ISNUM( 9 ) /* Exstyle */,
+                                                        TEXT( "ATLAXWin" ),
+                                                        cCaption,
+                                                        HB_ISNUM( 8 ) ? hb_parni( 8 ) : WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS /* Style */,
+                                                        hb_parni( 4 ) /* x */,
+                                                        hb_parni( 5 ) /* y */,
+                                                        hb_parni( 6 ) /* w */,
+                                                        hb_parni( 7 ) /* h */,
+                                                        ( HWND ) hb_parptr( 1 ) /* hParent */,
+                                                        HB_ISPOINTER( 3 ) ? ( HMENU ) hb_parptr( 3 ) : ( HMENU ) ( HB_PTRDIFF ) -1 /* id */,
+                                                        GetModuleHandle( NULL ),
+                                                        NULL ) );
 
-   hWnd = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h, hParent, id,
-                                                             GetModuleHandle( NULL ), NULL );
    HB_TCHAR_FREE( cCaption );
-   HB_TCHAR_FREE( cClass );
-
-   hb_retptr( ( void * ) ( HB_PTRDIFF ) hWnd );
 }
 
 HB_FUNC( WIN_AXGETUNKNOWN ) /* ( hWnd ) --> pUnk */
@@ -255,7 +250,7 @@ typedef struct
    ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IDispatch* );
    ULONG   ( STDMETHODCALLTYPE * Release ) ( IDispatch* );
    HRESULT ( STDMETHODCALLTYPE * GetTypeInfoCount ) ( IDispatch*, UINT* );
-   HRESULT ( STDMETHODCALLTYPE * GetTypeInfo ) ( IDispatch*,  UINT, LCID, ITypeInfo** );
+   HRESULT ( STDMETHODCALLTYPE * GetTypeInfo ) ( IDispatch*, UINT, LCID, ITypeInfo** );
    HRESULT ( STDMETHODCALLTYPE * GetIDsOfNames ) ( IDispatch*, REFIID, LPOLESTR*, UINT, LCID, DISPID* );
    HRESULT ( STDMETHODCALLTYPE * Invoke ) ( IDispatch*, DISPID, REFIID, LCID, WORD, DISPPARAMS*, VARIANT*, EXCEPINFO*, UINT* );
 } IDispatchVtbl;
@@ -273,7 +268,7 @@ typedef struct {
 
 static HB_GARBAGE_FUNC( hb_sink_destructor )
 {
-   ISink*  pSink = ( ISink* ) Cargo;
+   ISink * pSink = ( ISink * ) Cargo;
 
    if( pSink->pItemHandler )
    {
@@ -306,20 +301,18 @@ static HRESULT STDMETHODCALLTYPE QueryInterface( IDispatch* lpThis, REFIID riid,
 
 static ULONG STDMETHODCALLTYPE AddRef( IDispatch* lpThis )
 {
-/* hb_ToOutDebug("AddRef count = %i ", ( ( ISink* ) lpThis)->count ); */
-   return ++( ( ISink* ) lpThis)->count;
+   return ++( ( ISink* ) lpThis )->count;
 }
 
 
 static ULONG STDMETHODCALLTYPE Release( IDispatch* lpThis )
 {
-/* hb_ToOutDebug("Release count = %i ", ( ( ISink* ) lpThis)->count ); */
-   if( --( ( ISink* ) lpThis)->count == 0 )
+   if( --( ( ISink* ) lpThis )->count == 0 )
    {
       hb_xfree( lpThis );
       return 0;
    }
-   return ( ( ISink* ) lpThis)->count;
+   return ( ( ISink* ) lpThis )->count;
 }
 
 
@@ -374,7 +367,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
 
    hb_vmPushState();
    hb_vmPushSymbol( &hb_symEval );
-   hb_vmPush( ( ( ISink* ) lpThis)->pItemHandler );
+   hb_vmPush( ( ( ISink* ) lpThis )->pItemHandler );
    hb_vmPushLong( dispid );
 
    iCount = pParams->cArgs;
@@ -409,25 +402,26 @@ static const IDispatchVtbl ISink_Vtbl = {
 
 HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
 {
-   IConnectionPointContainer*  pCPC = NULL;
-   IConnectionPoint*           pCP = NULL;
-   ISink*                      pSink;
-   HRESULT                     lOleError;
-   DWORD                       dwCookie = 0;
-   IDispatch*                  pDisp = hb_oleParam( 1 );
-   PHB_ITEM                    pItemBlock = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+   IDispatch * pDisp = hb_oleParam( 1 );
 
    if( pDisp )
    {
+      PHB_ITEM pItemBlock = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+
       if( pItemBlock )
       {
+         IConnectionPointContainer*  pCPC = NULL;
+         IConnectionPoint*           pCP = NULL;
+         HRESULT                     lOleError;
+
          lOleError = HB_VTBL( pDisp )->QueryInterface( HB_THIS_( pDisp ) HB_ID_REF( IID_IConnectionPointContainer ), ( void** ) ( void* ) &pCPC );
-         if ( lOleError == S_OK )
+         if( lOleError == S_OK )
          {
             lOleError = HB_VTBL( pCPC )->FindConnectionPoint( HB_THIS_( pCPC ) HB_ID_REF( IID_IDispatch ), &pCP );
             if( lOleError == S_OK )
             {
-               pSink = ( ISink* ) hb_gcAlloc( sizeof( ISink ), hb_sink_destructor ); /* TODO: GlobalAlloc GMEM_FIXED ??? */
+               DWORD dwCookie = 0;
+               ISink * pSink = ( ISink* ) hb_gcAlloc( sizeof( ISink ), hb_sink_destructor ); /* TODO: GlobalAlloc GMEM_FIXED ??? */
                pSink->lpVtbl = ( IDispatchVtbl * ) &ISink_Vtbl;
                pSink->count = 2; /* 1 for pCP->Advice() param and 1 for Harbour collectible pointer [Mindaugas] */
                pSink->pItemHandler = hb_itemNew( pItemBlock );
@@ -450,39 +444,39 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
    }
 }
 
-
 HB_FUNC( __XAXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
 {
-   IConnectionPointContainer*  pCPC = NULL;
-   IEnumConnectionPoints*      pEnumCPs = NULL;
-   IConnectionPoint*           pCP = NULL;
-   ISink*                      pSink;
-   HRESULT                     lOleError, hr;
-   DWORD                       dwCookie = 0;
-   IDispatch*                  pDisp = hb_oleParam( 1 );
-   PHB_ITEM                    pItemBlock = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
-   IID                         rriid;
+   IDispatch * pDisp = hb_oleParam( 1 );
 
    if( pDisp )
    {
+      PHB_ITEM pItemBlock = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+
       if( pItemBlock )
       {
+         IConnectionPointContainer*  pCPC = NULL;
+         IEnumConnectionPoints*      pEnumCPs = NULL;
+         IConnectionPoint*           pCP = NULL;
+         HRESULT                     lOleError;
+         IID                         rriid;
+
          lOleError = HB_VTBL( pDisp )->QueryInterface( HB_THIS_( pDisp ) HB_ID_REF( IID_IConnectionPointContainer ), ( void** ) ( void* ) &pCPC );
-         if ( lOleError == S_OK && pCPC )
+         if( lOleError == S_OK && pCPC )
          {
             lOleError = HB_VTBL( pCPC )->EnumConnectionPoints( HB_THIS_( pCPC ) &pEnumCPs );
-            if ( lOleError == S_OK && pEnumCPs )
+            if( lOleError == S_OK && pEnumCPs )
             {
-               hr = S_OK;
+               HRESULT hr = S_OK;
                do
                {
                   lOleError = HB_VTBL( pEnumCPs )->Next( HB_THIS_( pEnumCPs ) 1, &pCP, NULL );
                   if( lOleError == S_OK )
                   {
                      lOleError = HB_VTBL( pCP )->GetConnectionInterface( HB_THIS_( pCP ) &rriid );
-                     if ( lOleError == S_OK )
+                     if( lOleError == S_OK )
                      {
-                        pSink = ( ISink* ) hb_gcAlloc( sizeof( ISink ), hb_sink_destructor ); /* TODO: GlobalAlloc GMEM_FIXED ??? */
+                        DWORD dwCookie = 0;
+                        ISink * pSink = ( ISink* ) hb_gcAlloc( sizeof( ISink ), hb_sink_destructor ); /* TODO: GlobalAlloc GMEM_FIXED ??? */
                         pSink->lpVtbl = ( IDispatchVtbl * ) &ISink_Vtbl;
                         pSink->count = 0; /* We do not need to increment it here, Advise will do it auto */
                         pSink->pItemHandler = hb_itemNew( pItemBlock );
@@ -495,16 +489,12 @@ HB_FUNC( __XAXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
                         hr = 1;
                      }
                      else
-                     {
                         lOleError = S_OK;
-                     }
                   }
                } while( hr == S_OK );
                HB_VTBL( pEnumCPs )->Release( HB_THIS( pEnumCPs ) );
-               pEnumCPs = NULL;
             }
             HB_VTBL( pCPC )->Release( HB_THIS( pCPC ) );
-            pCPC = NULL;
          }
 
          hb_oleSetError( lOleError );
@@ -515,5 +505,3 @@ HB_FUNC( __XAXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
          hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
 }
-
-

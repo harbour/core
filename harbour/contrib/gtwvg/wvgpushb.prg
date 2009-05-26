@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -86,7 +86,7 @@ CLASS WvgPushButton  INHERIT  WvgWindow
 
    DATA     autosize                              INIT .F.
    DATA     border                                INIT .T.
-   DATA     caption                               INIT ''
+   DATA     caption                               INIT ""
    DATA     pointerFocus                          INIT .T.
    DATA     preSelect                             INIT .F.
    DATA     drawMode                              INIT WVG_DRAW_NORMAL
@@ -116,7 +116,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushB
    ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + BS_PUSHBUTTON  /*+ BS_NOTIFY + BS_PUSHLIKE */
-   ::className   := 'BUTTON'
+   ::className   := "BUTTON"
    ::objType     := objTypePushButton
 
    RETURN Self
@@ -535,4 +535,3 @@ with the CreateWindow or CreateWindowEx function, you can specify any of the but
 
 #endif
 /*----------------------------------------------------------------------*/
-

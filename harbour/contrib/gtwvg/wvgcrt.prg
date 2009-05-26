@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -86,14 +86,14 @@ CLASS WvgCrt  INHERIT  WvgWindow, WvgPartHandler
    DATA     clipChildren                          INIT  .F.
    DATA     closable                              INIT  .T.
    DATA     fontHeight                            INIT  16
-   DATA     fontName                              INIT  'Courier New'
+   DATA     fontName                              INIT  "Courier New"
    DATA     fontWidth                             INIT  8
    DATA     gridMove                              INIT  .F.
    DATA     icon                                  INIT  0
    DATA     minMax                                INIT  .T.
    DATA     sysMenu                               INIT  .T.
    DATA     taskList                              INIT  .T.
-   DATA     title                                 INIT  ' '
+   DATA     title                                 INIT  " "
    DATA     titleBar                              INIT  .T.
    DATA     visible                               INIT  .T.
 
@@ -107,7 +107,7 @@ CLASS WvgCrt  INHERIT  WvgWindow, WvgPartHandler
    DATA     mouseMode                             INIT  1          /* Determines whether mouse coordinates are given as graphics or text coordinates.*/
    DATA     modalResult                           INIT  NIL        /* Specifies the result of a modal dialog.                                        */
    DATA     aSyncFlush                            INIT  .F.        /* Determines the display behavior of text-mode output.                           */
-   DATA     tooltipText                           INIT  ''
+   DATA     tooltipText                           INIT  ""
    DATA     useShortCuts                          INIT  .F.        /* Enables shortcut keys for the system menu                                      */
    DATA     xSize                                 INIT  640 READONLY
    DATA     ySize                                 INIT  400 READONLY
@@ -244,7 +244,7 @@ EXPORTED:
    DATA     pGTp
    DATA     pGT
    DATA     objType                               INIT  objTypeCrt
-   DATA     ClassName                             INIT  'WVGCRT'
+   DATA     ClassName                             INIT  "WVGCRT"
 
    METHOD   setFocus()
 
@@ -311,10 +311,10 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCr
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    if ::lModal
-      ::pGT  := hb_gtCreate( 'WVG' )
+      ::pGT  := hb_gtCreate( "WVG" )
       ::pGTp := hb_gtSelect( ::pGT )
    else
-      hb_gtReload( 'WVG' )
+      hb_gtReload( "WVG" )
       ::pGT := hb_gtSelect()
    endif
 
@@ -335,7 +335,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCr
    IF hb_isNumeric( ::icon )
       hb_gtInfo( HB_GTI_ICONRES, ::icon )
    ELSE
-      IF ( '.ico' $ lower( ::icon ) )
+      IF ( ".ico" $ lower( ::icon ) )
          hb_gtInfo( HB_GTI_ICONFILE, ::icon )
       ELSE
          hb_gtInfo( HB_GTI_ICONRES, ::icon )
@@ -343,7 +343,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCr
    ENDIF
 
    /* CreateWindow() be forced to execute */
-   ? ' '
+   ? " "
    ::hWnd := hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
 
    hb_gtInfo( HB_GTI_RESIZABLE , ::resizable )
@@ -560,7 +560,7 @@ METHOD setFont() CLASS WvgCrt
 
 METHOD setFontCompoundName() CLASS WvgCrt
 
-   RETURN ''
+   RETURN ""
 
 /*----------------------------------------------------------------------*/
 

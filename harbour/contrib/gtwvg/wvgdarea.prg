@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -84,7 +84,7 @@
 
 CLASS WvgDrawingArea  INHERIT  WvgWindow
 
-   DATA     caption                               INIT ''
+   DATA     caption                               INIT ""
    DATA     clipParent                            INIT .T.
    DATA     clipSiblings                          INIT .T.
 
@@ -102,7 +102,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDrawi
 
    ::style       := WS_CHILD
    ::exStyle     := 0
-   ::className   := 'DrawingArea'
+   ::className   := "DrawingArea"
    ::objType     := objTypeDA
    ::visible     := .t.
 
@@ -172,4 +172,3 @@ METHOD destroy() CLASS WvgDrawingArea
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-

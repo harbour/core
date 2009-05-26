@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -140,7 +140,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgMLE
 
    ::style       := WS_CHILD + ES_MULTILINE + ES_WANTRETURN
    ::exStyle     := WS_EX_CLIENTEDGE
-   ::className   := 'EDIT'
+   ::className   := "EDIT"
    ::objType     := objTypeMLE
 
    RETURN Self
@@ -249,4 +249,3 @@ METHOD destroy() CLASS WvgMLE
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-

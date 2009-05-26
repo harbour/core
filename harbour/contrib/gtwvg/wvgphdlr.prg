@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -212,7 +212,7 @@ METHOD delChild( oWvg ) CLASS WvgPartHandler
 METHOD setName( nNameId ) CLASS WvgPartHandler
    LOCAL nOldNameId := ::nNameId
 
-   IF Valtype( nNameId ) == 'N'
+   IF Valtype( nNameId ) == "N"
       ::nNameID := nNameId
    ENDIF
 
@@ -223,7 +223,7 @@ METHOD setName( nNameId ) CLASS WvgPartHandler
 METHOD setOwner( oWvg ) CLASS WvgPartHandler
    LOCAL oOldXbp := ::oOwner
 
-   IF valtype( oWvg ) == 'O'
+   IF valtype( oWvg ) == "O"
       ::oOwner := oWvg
    ENDIF
 
@@ -234,7 +234,7 @@ METHOD setOwner( oWvg ) CLASS WvgPartHandler
 METHOD setParent( oWvg ) CLASS WvgPartHandler
    LOCAL oOldXbp := ::oParent
 
-   IF valtype( oWvg ) == 'O'
+   IF valtype( oWvg ) == "O"
       ::oParent := oWvg
    ENDIF
 

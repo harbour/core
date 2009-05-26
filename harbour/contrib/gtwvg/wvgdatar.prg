@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -144,10 +144,10 @@ METHOD setData( xValue, mp2 ) CLASS DataRef
 
    DO CASE
 
-   CASE ::className == 'BUTTON'     /* CheckBox, Radio, 3State */
+   CASE ::className == "BUTTON"     /* CheckBox, Radio, 3State */
       ::sendMessage( BM_SETCHECK, IF( ::sl_editBuffer, BST_CHECKED, BST_UNCHECKED ), 0 )
 
-   CASE ::className == 'LISTBOX'    /* Single Selection */
+   CASE ::className == "LISTBOX"    /* Single Selection */
       IF !empty( ::sl_editBuffer )
          RETURN Win_LbSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
       ENDIF
@@ -191,4 +191,3 @@ METHOD validate( xParam ) CLASS DataRef
    RETURN .t.
 
 /*----------------------------------------------------------------------*/
-

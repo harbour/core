@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 CLASS WvgDialog FROM WvgWindow
@@ -106,7 +106,7 @@ METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDial
 
    ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::className   := 'WVGDIALOG'
+   ::className   := "WVGDIALOG"
    ::resizeMode  := 0
    ::mouseMode   := 0
    ::objType     := objTypeDialog
@@ -121,10 +121,10 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDi
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    if ::lModal
-      ::pGT  := hb_gtCreate( 'WGU' )
+      ::pGT  := hb_gtCreate( "WGU" )
       ::pGTp := hb_gtSelect( ::pGT )
    else
-      hb_gtReload( 'WGU' )
+      hb_gtReload( "WGU" )
       ::pGT := hb_gtSelect()
    endif
 
@@ -234,4 +234,3 @@ METHOD menuBar() CLASS WvgDialog
 
    RETURN ::oMenu
 /*----------------------------------------------------------------------*/
-

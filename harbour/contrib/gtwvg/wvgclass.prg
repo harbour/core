@@ -150,7 +150,7 @@ CLASS wvtDialog
    DATA   nUseObj
    DATA   oMenu
    DATA   aDialogKeys           INIT {}
-   DATA   cDialogID             INIT ''
+   DATA   cDialogID             INIT ""
 
    /*  Tooltip Management  */
    DATA   nTooltipWidth
@@ -158,7 +158,7 @@ CLASS wvtDialog
    DATA   nTooltipTextColor
 
    /*  Miscellaneous  */
-   DATA   ClassName             INIT 'WVTDIALOG'
+   DATA   ClassName             INIT "WVTDIALOG"
    DATA   cPaintBlockID
    DATA   nPaintID              INIT 1
    DATA   nObjID                INIT 5000
@@ -240,7 +240,7 @@ METHOD New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth,nFontBold,nFont
    ::cPaintBlockID       := strzero( Hb_Random( 99999998 ),8 )
    ::nObjOver            := 0
    ::nKey                := 0
-   ::cColor              := 'N/W'
+   ::cColor              := "N/W"
    ::nUseObj             := 0
    ::lGui                := Wvt_SetGui( .f. )
 
@@ -326,7 +326,7 @@ METHOD Destroy() CLASS wvtDialog
 
    aeval( ::aObjects, {|o| o:destroy() } )
 
-   Wvt_SetTooltip( 0,0,0,0,'' )
+   Wvt_SetTooltip( 0,0,0,0,"" )
    Wvt_SetTooltipActive( ::oldToolTipActive )
    Wvt_setTooltipWidth( ::oldTooltipWidth )
    Wvt_SetTooltipBkColor( ::oldTooltipBkColor )
@@ -465,7 +465,7 @@ METHOD Inkey() CLASS wvtDialog
                   ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_SCROLLBAR
 
                oObj := ::aObjects[ ::nObjOver ]
-               if oObj:oParent:ClassName == 'WVTBROWSE'
+               if oObj:oParent:ClassName == "WVTBROWSE"
                   nID := oObj:oParent:nID
                   if ( n := ascan( ::aObjects, {|o| o:nID == nID } ) ) > 0
                      ::nCurObj := n
@@ -494,13 +494,13 @@ METHOD Inkey() CLASS wvtDialog
          endif
 
          if ::nObjOver == 0
-            Wvt_SetTooltip( 0,0,0,0,'' )
+            Wvt_SetTooltip( 0,0,0,0,"" )
 
          elseif ::oObjOver:lActive
             ::oObjOver:SetTooltip()
 
          else
-            Wvt_SetTooltip( 0,0,0,0,'' )
+            Wvt_SetTooltip( 0,0,0,0,"" )
 
          endif
       endif
@@ -750,7 +750,7 @@ CLASS WvtObject
    DATA   aChildren             INIT {}
    DATA   aPaint                INIT {}
    DATA   bPaint
-   DATA   ClassName             INIT ''
+   DATA   ClassName             INIT ""
 
    DATA   nObjID                INIT 900000
    DATA   nPointer
@@ -769,8 +769,8 @@ CLASS WvtObject
 
    DATA   nMRow                 INIT 0
    DATA   nMCol                 INIT 0
-   DATA   cColorHilite          INIT 'W+/B*'
-   DATA   cColorDehilite        INIT 'W/N*'
+   DATA   cColorHilite          INIT "W+/B*"
+   DATA   cColorDehilite        INIT "W/N*"
 
    DATA   nTextColor
    DATA   nBackColor
@@ -792,7 +792,7 @@ CLASS WvtObject
    DATA   nAlignVert
    DATA   nAngle
 
-   ACCESS ToolTip               INLINE iif( ::cTooltip == nil, '', ::cTooltip )
+   ACCESS ToolTip               INLINE iif( ::cTooltip == nil, "", ::cTooltip )
    ASSIGN ToolTip( cTip )       INLINE ::cToolTip := cTip
 
    DATA   bHandleEvent
@@ -876,64 +876,64 @@ METHOD New( oParent, nType, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtObject
    switch nType
 
    case DLG_OBJ_BROWSE
-      ::ClassName := 'WVTBROWSE'
+      ::ClassName := "WVTBROWSE"
       exit
 
    case DLG_OBJ_STATIC
-      ::ClassName := 'WVTSTATIC'
+      ::ClassName := "WVTSTATIC"
       ::lTabStop  := .f.
       exit
 
    case DLG_OBJ_GETS
-      ::ClassName := 'WVTGETS'
+      ::ClassName := "WVTGETS"
       exit
 
    case DLG_OBJ_IMAGE
-      ::ClassName := 'WVTIMAGE'
+      ::ClassName := "WVTIMAGE"
       ::lTabStop  := .f.
       exit
 
    case DLG_OBJ_PUSHBUTTON
-      ::ClassName := 'WVTPUSHBUTTON'
+      ::ClassName := "WVTPUSHBUTTON"
       exit
 
    case DLG_OBJ_BUTTON
-      ::ClassName := 'WVTBUTTON'
+      ::ClassName := "WVTBUTTON"
       ::lTabStop  := .f.
       exit
 
    case DLG_OBJ_TOOLBAR
-      ::ClassName := 'WVTTOOLBAR'
+      ::ClassName := "WVTTOOLBAR"
       ::lTabStop  := .f.
       exit
 
    case DLG_OBJ_LABEL
-      ::ClassName := 'WVTLABEL'
+      ::ClassName := "WVTLABEL"
       ::lTabStop  := .f.
       exit
 
    case DLG_OBJ_SCROLLBAR
-      ::ClassName := 'WVTSCROLLBAR'
+      ::ClassName := "WVTSCROLLBAR"
       ::lTabStop  := .f.
       exit
 
    case DLG_OBJ_STATUSBAR
-      ::ClassName := 'WVTSTATUSBAR'
+      ::ClassName := "WVTSTATUSBAR"
       ::lTabStop  := .f.
       exit
 
    case DLG_OBJ_BANNER
-      ::ClassName := 'WVTBANNER'
+      ::ClassName := "WVTBANNER"
       ::lTabStop  := .f.
       exit
 
    case DLG_OBJ_TEXTBOX
-      ::ClassName := 'WVTTEXTBOX'
+      ::ClassName := "WVTTEXTBOX"
       ::lTabStop  := .f.
       exit
 
    case DLG_OBJ_PROGRESSBAR
-      ::ClassName := 'WVTPROGRESSBAR'
+      ::ClassName := "WVTPROGRESSBAR"
       ::lTabStop  := .f.
       exit
 
@@ -1032,7 +1032,7 @@ CLASS WvtBrowse FROM WvtObject
    DATA   bTotalColumns
    DATA   bCurrentColumn
 
-   ACCESS cDesc                 INLINE iif( ::cText == nil, '', ::cText )
+   ACCESS cDesc                 INLINE iif( ::cText == nil, "", ::cText )
    ASSIGN cDesc( cText )        INLINE ::cText := cText
 
    METHOD New()
@@ -1175,7 +1175,7 @@ METHOD Refresh() CLASS WvtBrowse
 METHOD HandleEvent( nKey ) CLASS WvtBrowse
    Local lRet := .f.
 
-   if valtype( ::bHandleEvent ) == 'B'
+   if valtype( ::bHandleEvent ) == "B"
       lRet := eval( ::bHandleEvent, self, ::oParent:cPaintBlockID, ::oBrw, nKey )
    endif
 
@@ -1187,7 +1187,7 @@ METHOD NotifyChild( nIndex, nKey, oCurObj ) CLASS WvtBrowse
    Local xData, i
 
    if nIndex > 0 .and. nIndex <= len( ::aChildren )
-      if valtype( ::aChildren[ nIndex, OBJ_CHILD_DATABLOCK ] ) == 'B'
+      if valtype( ::aChildren[ nIndex, OBJ_CHILD_DATABLOCK ] ) == "B"
          xData := eval( ::aChildren[ nIndex, OBJ_CHILD_DATABLOCK ] )
       endif
 
@@ -1218,7 +1218,7 @@ METHOD NotifyChild( nIndex, nKey, oCurObj ) CLASS WvtBrowse
 METHOD Hilite() CLASS WvtBrowse
    LOCAL b := ::oBrw
 
-   DispOutAt( b:nTop-2, b:nLeft-2, pad( ' '+::cDesc, b:nRight-b:nLeft+5 ), ::cColorHilite )
+   DispOutAt( b:nTop-2, b:nLeft-2, pad( " "+::cDesc, b:nRight-b:nLeft+5 ), ::cColorHilite )
 
    RETURN Self
 
@@ -1227,7 +1227,7 @@ METHOD Hilite() CLASS WvtBrowse
 METHOD DeHilite() CLASS WvtBrowse
    LOCAL b := ::oBrw
 
-   DispOutAt( b:nTop-2, b:nLeft-2, pad( ' '+::cDesc, b:nRight-b:nLeft+5 ), ::cColorDeHilite )
+   DispOutAt( b:nTop-2, b:nLeft-2, pad( " "+::cDesc, b:nRight-b:nLeft+5 ), ::cColorDeHilite )
 
    RETURN Self
 
@@ -1345,7 +1345,7 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtStatusBar
 
    ::Super:New( oParent, DLG_OBJ_STATUSBAR, nID, nTop, nLeft, nBottom, nRight )
 
-   ::cColor  := 'N/W'
+   ::cColor  := "N/W"
 
    RETURN Self
 
@@ -1418,7 +1418,7 @@ METHOD Update( nPanel, cText, cColor )
    if nPanel > 0 .and. nPanel <= len( ::aPanels )
       oPanel        := ::aPanels[ nPanel ]
       oPanel:Text   := cText
-      oPanel:cColor := iif( cColor == nil, 'N/W', cColor )
+      oPanel:cColor := iif( cColor == nil, "N/W", cColor )
       oPanel:Refresh()
    endif
 
@@ -1514,8 +1514,8 @@ METHOD Refresh() CLASS WvtPanel
 
 CLASS WvtLabel FROM WvtObject
 
-   ACCESS Text                  INLINE iif( ::cText == nil, '', ::cText )
-   ASSIGN Text( cTxt )          INLINE ::cText := iif( cTxt == nil, '', cTxt )
+   ACCESS Text                  INLINE iif( ::cText == nil, "", ::cText )
+   ASSIGN Text( cTxt )          INLINE ::cText := iif( cTxt == nil, "", cTxt )
 
    METHOD New()
    METHOD Create()
@@ -1576,7 +1576,7 @@ RETURN Self
 
 METHOD SetText( cTxt ) CLASS WvtLabel
 
-   if valtype( cTxt ) == 'C'
+   if valtype( cTxt ) == "C"
       ::Text := cTxt
       ::Refresh()
    endif
@@ -1587,7 +1587,7 @@ METHOD SetText( cTxt ) CLASS WvtLabel
 
 METHOD SetTextColor( nRGB ) CLASS WvtLabel
 
-   if valtype( nRGB ) == 'N'
+   if valtype( nRGB ) == "N"
       ::nTextColor := nRGB
       ::nTextColorHoverOff := nRGB
       ::Refresh()
@@ -1599,7 +1599,7 @@ METHOD SetTextColor( nRGB ) CLASS WvtLabel
 
 METHOD SetBackColor( nRGB ) CLASS WvtLabel
 
-   if valtype( nRGB ) == 'N'
+   if valtype( nRGB ) == "N"
       ::nBackColor := nRGB
       ::nBackColorHoverOff := nRGB
       ::Refresh()
@@ -1739,7 +1739,7 @@ METHOD Create() CLASS WvtToolBar
 METHOD Refresh() CLASS WvtToolBar
 
    if ::lFloating
-      DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, '         ', 'n/w' )
+      DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, "         ", "n/w" )
    else
       Wvt_InvalidateRect( ::nTop, ::nLeft, ::nTop, ::nLeft )
    endif
@@ -1770,7 +1770,7 @@ METHOD AddButton( cFileImage, bBlock, cTooltip ) CLASS WvtToolBar
    oObj:nLeft      := ::nBtnLeft + 1
    oObj:nBottom    := ::nBottom
 
-   if valtype( cFileImage ) == 'C'
+   if valtype( cFileImage ) == "C"
       oObj:nBtnType   := TLB_BUTTON_TYPE_IMAGE
       oObj:nRight     := oObj:nLeft + nCol - 1
       oObj:cFileImage := cFileImage
@@ -1982,7 +1982,7 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtImage
 METHOD Create() CLASS WvtImage
 
    ::bPaint := {|| iif( file( ::cImage ), ;
-        Wvt_DrawImage( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cImage ),'' ) }
+        Wvt_DrawImage( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cImage ),"" ) }
 
    aadd( ::aPaint, { ::bPaint,;
                { WVT_BLOCK_IMAGE, ::nTop, ::nLeft, ::nBottom, ::nRight } } )
@@ -2242,7 +2242,7 @@ CLASS WvtGets FROM WvtObject
    DATA   nLastGet              INIT  1
    DATA   nCurGet               INIT  1
    DATA   GetList               INIT  {}
-   DATA   cDesc                 INIT  ''
+   DATA   cDesc                 INIT  ""
 
    METHOD New()
    METHOD Create()
@@ -2277,7 +2277,7 @@ METHOD Create() CLASS WvtGets
    for i := 1 to len( ::aGetList )
       GetList := {}
 
-      DEFAULT ::aGetList[ i,7 ] TO 'N/W*,N/W*,,,N/GR*'
+      DEFAULT ::aGetList[ i,7 ] TO "N/W*,N/W*,,,N/GR*"
       DEFAULT ::aGetList[ i,5 ] TO {|| .T. }
       DEFAULT ::aGetList[ i,6 ] TO {|| .T. }
 
@@ -2368,7 +2368,7 @@ METHOD SetData( /*aData*/ )
 
 METHOD Hilite() CLASS WvtGets
 
-   DispOutAt( ::nTop, ::nLeft, pad( ' '+::cDesc, ::nRight-::nLeft+1 ), ::cColorHilite )
+   DispOutAt( ::nTop, ::nLeft, pad( " "+::cDesc, ::nRight-::nLeft+1 ), ::cColorHilite )
 
    RETURN Self
 
@@ -2376,7 +2376,7 @@ METHOD Hilite() CLASS WvtGets
 
 METHOD DeHilite() CLASS WvtGets
 
-   DispOutAt( ::nTop, ::nLeft, pad( ' '+::cDesc, ::nRight-::nLeft+1 ), ::cColorDeHilite )
+   DispOutAt( ::nTop, ::nLeft, pad( " "+::cDesc, ::nRight-::nLeft+1 ), ::cColorDeHilite )
 
    RETURN Self
 
@@ -2659,7 +2659,7 @@ METHOD GetPos() CLASS WvtScrollBar
 
 METHOD SetTooltip() CLASS WvtScrollBar
 
-   ::Tooltip := ltrim( str( ::nCurrent,12,0 ) ) + ' / ' + ;
+   ::Tooltip := ltrim( str( ::nCurrent,12,0 ) ) + " / " + ;
                 ltrim( str( ::nTotal  ,12,0 ) )
 
    Wvt_SetToolTip( ::nTop, ::nLeft, ::nBottom, ::nRight, ::Tooltip )
@@ -2891,8 +2891,8 @@ CLASS WvtBanner FROM WvtObject
    DATA   nTimeDelay            INIT 0.5    /* One-half Second */
    DATA   nDirection            INIT 0      /* LEFT 1-RIGHT */
    DATA   nCharToSkip           INIT 1
-   DATA   cText                 INIT ''
-   DATA   cDispText             INIT ''
+   DATA   cText                 INIT ""
+   DATA   cDispText             INIT ""
    DATA   nTextLen              INIT 0
    DATA   nTextIndex            INIT 0
 
@@ -3059,7 +3059,7 @@ METHOD HoverOff() CLASS WvtBanner
 
 CLASS WvtTextBox FROM WvtObject
 
-   DATA   cText                 INIT ''
+   DATA   cText                 INIT ""
 
    METHOD New()
    METHOD Create()
@@ -3170,7 +3170,7 @@ CLASS WvtProgressBar FROM WvtObject
    DATA   nCurrent              INIT 0
    DATA   nTotal                INIT 1
    DATA   nPercent              INIT 0
-   DATA   cBackColor            INIT 'W/W'
+   DATA   cBackColor            INIT "W/W"
 
    DATA   cScreen
 
@@ -3237,7 +3237,7 @@ METHOD Display( nCurrent, nTotal ) CLASS WvtProgressBar
 METHOD Activate() CLASS WvtProgressBar
 
    ::cScreen := SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
-   DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, '         ', ::cBackColor )
+   DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, "         ", ::cBackColor )
    ::lActive := .t.
 
    RETURN Self

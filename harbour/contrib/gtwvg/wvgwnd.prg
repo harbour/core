@@ -65,14 +65,14 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbclass.ch'
-#include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
+#include "hbclass.ch"
+#include "common.ch"
+#include "inkey.ch"
+#include "hbgtinfo.ch"
 
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
  * To Switch Over from ASCALLBACK() to SET/GET_Prop() calls
@@ -104,7 +104,7 @@ CLASS WvgWindow  INHERIT  WvgPartHandler
    /*  RUNTIME DATA */
    DATA     dropZone                              INIT  .F.
    DATA     helpLink
-   DATA     tooltipText                           INIT  ''
+   DATA     tooltipText                           INIT  ""
 
    DATA     clr_FG
    DATA     clr_BG
@@ -230,7 +230,7 @@ EXPORTED:
    METHOD   killDisplayFocus()                    SETGET
 
 
-   DATA     title                                 INIT   ' '
+   DATA     title                                 INIT   " "
    DATA     icon                                  INIT   0
    DATA     closable                              INIT   .T.
    DATA     resizable                             INIT   .t.
@@ -241,7 +241,7 @@ EXPORTED:
    DATA     pGTp
    DATA     pGT
    DATA     objType                               INIT   objTypeNone
-   DATA     className                             INIT   ''
+   DATA     className                             INIT   ""
 
    METHOD   setFocus()
    METHOD   sendMessage()
@@ -373,7 +373,7 @@ METHOD destroy() CLASS WvgWindow
 METHOD SetWindowProcCallback() CLASS WvgWindow
 
    #ifdef __BYASCALLBACK__
-   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self )
+   ::nWndProc := hb_AsCallBack( "CONTROLWNDPROC", Self )
    ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
    #endif
 
@@ -450,7 +450,7 @@ METHOD setColorBG( nRGB ) CLASS WvgWindow
          ::clr_BG := nRGB
          ::hBrushBG := hBrush
 
-         IF ::className == 'WVGDIALOG'
+         IF ::className == "WVGDIALOG"
             Wvg_SetCurrentBrush( ::hWnd, ::hBrushBG )
          ENDIF
       ENDIF
@@ -609,7 +609,7 @@ METHOD setFont() CLASS WvgWindow
 
 METHOD setFontCompoundName( xFont ) CLASS WvgWindow
    LOCAL cOldFont, s, n, nPoint, cFont, cAttr, cFace
-   LOCAL aAttr := { 'normal','italic','bold' }
+   LOCAL aAttr := { "normal","italic","bold" }
 
    cOldFont := ::fnt_COMMPOUNDNAME
 
@@ -625,10 +625,10 @@ METHOD setFontCompoundName( xFont ) CLASS WvgWindow
             n := at( cAttr, s )
             cFont := substr( cFont,1,n-1 )
          ELSE
-            cAttr := 'normal'
+            cAttr := "normal"
          ENDIF
 
-         IF ( n := at( '.', cFont ) ) > 0
+         IF ( n := at( ".", cFont ) ) > 0
             nPoint := val( substr( cFont,1,n-1 ) )
             cFont  := substr( cFont,n+1 )
          ELSE

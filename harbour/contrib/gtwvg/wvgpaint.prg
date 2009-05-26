@@ -64,7 +64,7 @@
 
 /*----------------------------------------------------------------------*/
 
-thread static t_paint_:= { { '', {} } }
+thread static t_paint_:= { { "", {} } }
 
 /*----------------------------------------------------------------------*/
 /*
@@ -390,14 +390,14 @@ Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
 Function Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu )
    LOCAL hDlg, cType, xTemplate, nDlgMode
 
-   if valtype( cbDlgProc ) == 'C'
+   if valtype( cbDlgProc ) == "C"
       cbDlgProc := upper( cbDlgProc )
    endif
 
    cType    := Valtype( acnDlg )
-   nDlgMode := iif( cType == 'C', 0, iif( cType == 'N', 1, 2 ) )
+   nDlgMode := iif( cType == "C", 0, iif( cType == "N", 1, 2 ) )
 
-   if cType == 'A'
+   if cType == "A"
       xTemplate := Wvt__MakeDlgTemplate( acnDlg[ 1 ] , acnDlg[  2 ] , acnDlg[  3 ] , acnDlg[  4 ] , ;
                                          acnDlg[ 5 ] , acnDlg[  6 ] , acnDlg[  7 ] , acnDlg[  8 ] , ;
                                          acnDlg[ 9 ] , acnDlg[ 10 ] , acnDlg[ 11 ] , acnDlg[ 12 ] )
@@ -413,7 +413,7 @@ Function Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
 
       endif
 
-      if valtype( nTimerTicks ) == 'N'
+      if valtype( nTimerTicks ) == "N"
          Win_SetTimer( hDlg, 1001, nTimerTicks )
 
       endif
@@ -432,14 +432,14 @@ Function Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
 Function Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
    LOCAL nResult, cType, xTemplate, nDlgMode
 
-   if valtype( cbDlgProc ) == 'C'
+   if valtype( cbDlgProc ) == "C"
       cbDlgProc := upper( cbDlgProc )
    endif
 
    cType    := Valtype( acnDlg )
-   nDlgMode := iif( cType == 'C', 0, iif( cType == 'N', 1, 2 ) )
+   nDlgMode := iif( cType == "C", 0, iif( cType == "N", 1, 2 ) )
 
-   if cType == 'A'
+   if cType == "A"
       xTemplate := Wvt__MakeDlgTemplate( acnDlg[ 1 ] , acnDlg[  2 ] , acnDlg[  3 ] , acnDlg[  4 ] , ;
                                          acnDlg[ 5 ] , acnDlg[  6 ] , acnDlg[  7 ] , acnDlg[  8 ] , ;
                                          acnDlg[ 9 ] , acnDlg[ 10 ] , acnDlg[ 11 ] , acnDlg[ 12 ] )
@@ -459,10 +459,10 @@ Wvt_GetOpenFileName( hWnd, @cPath, cTitle, aFilter, nFlags, cInitDir, cDefExt, n
 hWnd:     Handle to parent window
 cPath:    (optional) if OFN_ALLOWMULTISELECT the path is stored
 cTitle:   Window Title
-aFilter:  Array of Files Types i.e. { {'Data Bases','*.dbf'},{'Clipper','*.prg'} }
+aFilter:  Array of Files Types i.e. { {"Data Bases","*.dbf"},{"Clipper","*.prg"} }
 nFlags:   OFN_* values default to OFN_EXPLORER
 cInitDir: Initial directory
-cDefExt:  Default Extension i.e. 'DBF'
+cDefExt:  Default Extension i.e. "DBF"
 nIndex:   Index position of types
 
 Returns:  If OFN_ALLOWMULTISELECT
@@ -472,7 +472,7 @@ Returns:  If OFN_ALLOWMULTISELECT
           endif
 */
 FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, aFilter, nFlags, cIniDir, cDefExt, nIndex )
-   local aFiles, cRet, cFile, n, x, c := ''
+   local aFiles, cRet, cFile, n, x, c := ""
 
    IF aFilter == nil
       aFilter := {}
@@ -502,11 +502,11 @@ FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, aFilter, nFlags, cIniDir, cDe
 
       cFile := STRTRAN( cFile,cPath )
       IF !EMPTY( cFile ) /* user selected more than 1 file */
-         c := ''
+         c := ""
          FOR n := 1 TO LEN( cFile )
              IF SUBSTR( cFile,n,1 ) == CHR( 0 )
-                AADD( aFiles,STRTRAN( cPath, CHR( 0 ) ) +'\'+ c )
-                c:=''
+                AADD( aFiles,STRTRAN( cPath, CHR( 0 ) ) +"\"+ c )
+                c:=""
                 LOOP
              END
              c += SUBSTR( cFile,n,1 )
@@ -514,7 +514,7 @@ FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, aFilter, nFlags, cIniDir, cDe
         ELSE
          /*
          cFile:=cPath
-         x:=RAT('\',cFile)
+         x:=RAT("\",cFile)
          cPath:=LEFT(cFile,x-1)
          */
          aFiles := { STRTRAN( cPath, CHR( 0 ) ) }
@@ -534,17 +534,17 @@ Wvt_GetSaveFileName( hWnd, cFile, cTitle, aFilter, nFlags, cInitDir, cDefExt, nI
 hWnd:     Handle to parent window
 cFile:    (optional) Default FileName
 cTitle:   Window Title
-aFilter:  Array of Files Types i.e. { {'Data Bases','*.dbf'},{'Clipper','*.prg'} }
+aFilter:  Array of Files Types i.e. { {"Data Bases","*.dbf"},{"Clipper","*.prg"} }
 nFlags:   OFN_* values default to OFN_EXPLORER
 cInitDir: Initial directory
-cDefExt:  Default Extension i.e. 'DBF'
+cDefExt:  Default Extension i.e. "DBF"
 nIndex:   Index position of types
 
 Returns:  FileName.
 */
 
 FUNCTION WVT_GetSaveFileName( hWnd, cFile, cTitle, aFilter, nFlags, cIniDir, cDefExt, nIndex )
-   local n,c:=''
+   local n,c:=""
 
    IF aFilter == nil
       aFilter := {}
@@ -567,8 +567,8 @@ FUNCTION WVT_GetSaveFileName( hWnd, cFile, cTitle, aFilter, nFlags, cIniDir, cDe
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include 'hbgtinfo.ch'
-#include 'hbgtwvg.ch'
+#include "hbgtinfo.ch"
+#include "hbgtwvg.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -586,13 +586,13 @@ FUNCTION Wvt_GetTitle()
 
 FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
 
-   if     valtype( ncIconRes ) == 'N'
+   if     valtype( ncIconRes ) == "N"
       Hb_GtInfo( HB_GTI_ICONRES, ncIconRes )
 
-   elseif valtype( cIconName ) == 'C'
+   elseif valtype( cIconName ) == "C"
       Hb_GtInfo( HB_GTI_ICONRES, cIconName )
 
-   elseif valtype( ncIconRes ) == 'C'
+   elseif valtype( ncIconRes ) == "C"
       Hb_GtInfo( HB_GTI_ICONFILE, ncIconRes )
 
    endif
