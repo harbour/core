@@ -21,7 +21,6 @@ C_SOURCES = \
 	olecore.c \
 	oleinit.c \
 	axcore.c \
-	axcore1.c \
 	legacyc.c \
 	win_dll.c \
 	win_misc.c \

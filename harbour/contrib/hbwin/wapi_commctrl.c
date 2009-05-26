@@ -762,16 +762,12 @@ HB_FUNC( WAPI_TABCTRL_GETUNICODEFORMAT )
 
 HB_FUNC( WAPI_TABCTRL_CREATE )
 {
-   HWND hwnd;
-   LONG style;
-   LONG hFont;
-   HWND hbutton;
-   hwnd    = ( HWND ) wapi_par_HWND( 1 );
-   style   = ( LONG ) hb_parnl( 6 ); /* defaults to 0 */
-   hFont   = SendMessage( hwnd, WM_GETFONT, 0, 0 );
-   hbutton = CreateWindowEx( 0, WC_TABCONTROL, NULL, style, hb_parni( 2 ), hb_parni( 3 ) , hb_parni( 4 ), hb_parni( 5 ), hwnd, NULL, GetModuleHandle( NULL ), NULL );
+   HWND hwnd = ( HWND ) wapi_par_HWND( 1 );
+   LONG style = ( LONG ) hb_parnl( 6 ); /* defaults to 0 */
+   HFONT hFont = ( HFONT ) SendMessage( hwnd, WM_GETFONT, 0, 0 );
+   HWND hbutton = CreateWindowEx( 0, WC_TABCONTROL, NULL, style, hb_parni( 2 ), hb_parni( 3 ) , hb_parni( 4 ), hb_parni( 5 ), hwnd, NULL, GetModuleHandle( NULL ), NULL );
    SendMessage( hbutton, ( UINT ) WM_SETFONT, ( WPARAM ) hFont, 1 );
-   hb_retnint( ( HB_PTRDIFF ) hbutton );
+   wapi_ret_HANDLE( hbutton );
 }
 
 /*----------------------------------------------------------------------*/
