@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * Advantage Database Server RDD (Management functions)
  *
+ * Copyright 2008 Viktor Szakats <harbour.01 syenar.hu>
  * Copyright 2001 Brian Hays <bhays@abacuslaw.com>
  * www - http://www.harbour-project.org
  *
@@ -61,9 +62,9 @@ static ADSHANDLE s_hMgmtHandle = 0;
 
 HB_FUNC( ADSMGCONNECT )
 {
-   hb_retnl( AdsMgConnect( ( UNSIGNED8 * ) hb_parcx( 1 ) /* pucServerName */, 
-                           ( UNSIGNED8 * ) hb_parc( 2 ) /* pucUserName */, 
-                           ( UNSIGNED8 * ) hb_parc( 3 ) /* pucPassword */, 
+   hb_retnl( AdsMgConnect( ( UNSIGNED8 * ) hb_parcx( 1 ) /* pucServerName */,
+                           ( UNSIGNED8 * ) hb_parc( 2 ) /* pucUserName */,
+                           ( UNSIGNED8 * ) hb_parc( 3 ) /* pucPassword */,
                            &s_hMgmtHandle ) );
 }
 
@@ -97,7 +98,7 @@ HB_FUNC( ADSMGGETSERVERTYPE )
 {
    UNSIGNED16 usServerType = 0;
 
-   hb_retnl( AdsMgGetServerType( s_hMgmtHandle, 
+   hb_retnl( AdsMgGetServerType( s_hMgmtHandle,
                                  &usServerType ) == AE_SUCCESS ? usServerType : 0 );
 }
 
@@ -430,7 +431,7 @@ HB_FUNC( ADSMGGETUSERNAMES )
  *       [3] Login user name for data dictionary connections (ADS 6.0 and above)
  *       [4] Client machine IP address (ADS 6.0 and above)
  *       [5] lock type ADS_MGMT_NO_LOCK ADS_MGMT_RECORD_LOCK ADS_MGMT_FILE_LOCK
- *       
+ *
  *       returns the advantage error code if it fails.
  */
 HB_FUNC( ADSMGGETLOCKOWNER )
@@ -469,7 +470,7 @@ HB_FUNC( ADSMGGETLOCKOWNER )
 #endif
 }
 
-/* NOTE: For a newer edition of this function, which also returns locktype 
+/* NOTE: For a newer edition of this function, which also returns locktype
          info, see ADSMGGETOPENTABLES2(). */
 HB_FUNC( ADSMGGETOPENTABLES ) /* nMaxNumberOfFilesToReturn, cUserName, nConnection */
 {

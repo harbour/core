@@ -116,6 +116,6 @@ HB_FUNC( WAPI_GETMODULEHANDLE )
 
    wapi_ret_HANDLE( GetModuleHandle( lpModuleName ) );
 
-   if( ISCHAR( 1 ) )
+   if( lpModuleName )
       HB_TCHAR_FREE( lpModuleName );
 }

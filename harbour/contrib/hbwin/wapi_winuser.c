@@ -272,7 +272,7 @@ HB_FUNC( WAPI_LOADBITMAP )
    if( ISNUM( 2 ) )
       lpBmp = ( LPTSTR ) MAKEINTRESOURCE( wapi_par_INT( 2 ) );
    else
-      lpBmp = ( LPTSTR ) HB_TCHAR_CONVTO( hb_parc( 2 ) );
+      lpBmp = ( LPTSTR ) HB_TCHAR_CONVTO( hb_parcx( 2 ) );
 
    hbmp = LoadBitmap( hinst, lpBmp );
    if( hbmp )

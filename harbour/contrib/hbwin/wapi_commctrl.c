@@ -471,7 +471,7 @@ HB_FUNC( WAPI_IMAGELIST_WRITEEX )
 HB_FUNC( WAPI_TABCTRL_INSERTITEM )
 {
    TC_ITEM item;
-   LPTSTR szText = HB_TCHAR_CONVTO( hb_parc( 3 ) );
+   LPTSTR szText = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
    item.iImage  = ISNUM( 4 ) ? wapi_par_INT( 4 ) : -1;
@@ -554,7 +554,7 @@ HB_FUNC( WAPI_TABCTRL_SETIMAGELIST )
 HB_FUNC( WAPI_TABCTRL_SETITEM )
 {
    TC_ITEM item;
-   LPTSTR szText = HB_TCHAR_CONVTO( hb_parc( 3 ) );
+   LPTSTR szText = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
    item.iImage  = ISNUM( 4 ) ? wapi_par_INT( 4 ) : -1;
@@ -763,10 +763,8 @@ HB_FUNC( WAPI_TABCTRL_GETUNICODEFORMAT )
 HB_FUNC( WAPI_TABCTRL_CREATE )
 {
    HWND hwnd = ( HWND ) wapi_par_HWND( 1 );
-   LONG style = ( LONG ) hb_parnl( 6 ); /* defaults to 0 */
-   HFONT hFont = ( HFONT ) SendMessage( hwnd, WM_GETFONT, 0, 0 );
-   HWND hbutton = CreateWindowEx( 0, WC_TABCONTROL, NULL, style, hb_parni( 2 ), hb_parni( 3 ) , hb_parni( 4 ), hb_parni( 5 ), hwnd, NULL, GetModuleHandle( NULL ), NULL );
-   SendMessage( hbutton, ( UINT ) WM_SETFONT, ( WPARAM ) hFont, 1 );
+   HWND hbutton = CreateWindowEx( 0, WC_TABCONTROL, NULL, ( LONG ) hb_parnl( 6 ) /* style */, hb_parni( 2 ), hb_parni( 3 ) , hb_parni( 4 ), hb_parni( 5 ), hwnd, NULL, GetModuleHandle( NULL ), NULL );
+   SendMessage( hbutton, ( UINT ) WM_SETFONT, ( WPARAM ) ( HFONT ) SendMessage( hwnd, WM_GETFONT, 0, 0 ), 1 );
    wapi_ret_HANDLE( hbutton );
 }
 
@@ -776,7 +774,7 @@ HB_FUNC( WAPI_TABCTRL_CREATE )
 HB_FUNC( WAPI_TABCTRL_ADDITEM )
 {
    int     iCount = TabCtrl_GetItemCount( wapi_par_HWND( 1 ) );
-   LPTSTR  szText = HB_TCHAR_CONVTO( hb_parc( 2 ) );
+   LPTSTR  szText = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    TC_ITEM item;
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;

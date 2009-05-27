@@ -3768,6 +3768,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
    LOCAL tmp
    LOCAL cNameExtL
    LOCAL cExt
+   LOCAL cHeader
 
    STATIC s_aExcl := { "windows.h", "ole2.h", "os2.h" }
 
@@ -3845,18 +3846,27 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
       FClose( fhnd )
    ENDIF
 
+   cHeader := NIL
    nPos := 1
-   DO WHILE ( tmp := hb_At( '#include "', cFile, nPos ) ) > 0
-      nPos := tmp + Len( '#include "' )
-      IF ( tmp := hb_At( '"', cFile, nPos ) ) > 0
-         IF FindNewerHeaders( hbmk, SubStr( cFile, nPos, tmp - nPos ),;
-               iif( lCMode, FN_DirGet( cFileName ), cParentDir ), tTimeParent, lIncTry, lCMode, @headstate, nEmbedLevel + 1 )
-            headstate[ _HEADSTATE_lAnyNewer ] := .T.
-            /* Let it continue if we want to scan for header locations */
-            IF ! lIncTry
-               RETURN .T.
-            ENDIF
+   DO WHILE .T.
+
+      IF ( tmp := hb_At( '#include "', cFile, nPos ) ) > 0
+         nPos := tmp + Len( '#include "' )
+         IF ( tmp := hb_At( '"', cFile, nPos ) ) > 0
+            cHeader := SubStr( cFile, nPos, tmp - nPos )
          ENDIF
+      ELSE
+         EXIT
+      ENDIF
+
+      IF cHeader != NIL .AND. ;
+         FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), tTimeParent, lIncTry, lCMode, @headstate, nEmbedLevel + 1 )
+         headstate[ _HEADSTATE_lAnyNewer ] := .T.
+         /* Let it continue if we want to scan for header locations */
+         IF ! lIncTry
+            RETURN .T.
+         ENDIF
+         cHeader := NIL
       ENDIF
    ENDDO
 
