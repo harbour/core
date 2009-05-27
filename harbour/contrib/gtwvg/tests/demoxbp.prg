@@ -355,15 +355,15 @@ STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
    oTBar:create()
 
-   oTBar:addItem( "New"       , 'c:\harbour\contrib\gtwvg\tests\v_new.bmp'    )
-   oTBar:addItem( "Select"    , 'c:\harbour\contrib\gtwvg\tests\v_selct1.bmp' )
+   oTBar:addItem( "New"       , hb_DirBase() + 'v_new.bmp'    )
+   oTBar:addItem( "Select"    , hb_DirBase() + 'v_selct1.bmp' )
    oTBar:addItem( )
-   oTBar:addItem( "FontDlg"   , 'c:\harbour\contrib\gtwvg\tests\v_calend.bmp' )
-   oTBar:addItem( "Tools"     , 'c:\harbour\contrib\gtwvg\tests\v_lock.bmp'   )
-   oTBar:addItem( "Index"     , 'c:\harbour\contrib\gtwvg\tests\v_index.bmp'  )
+   oTBar:addItem( "FontDlg"   , hb_DirBase() + 'v_calend.bmp' )
+   oTBar:addItem( "Tools"     , hb_DirBase() + 'v_lock.bmp'   )
+   oTBar:addItem( "Index"     , hb_DirBase() + 'v_index.bmp'  )
    oTBar:addItem( )
-   oTBar:addItem( "Show"      , 'c:\harbour\contrib\gtwvg\tests\v_clclt.bmp'  )
-   oTBar:addItem( "Hide"      , 'c:\harbour\contrib\gtwvg\tests\v_notes1.bmp' )
+   oTBar:addItem( "Show"      , hb_DirBase() + 'v_clclt.bmp'  )
+   oTBar:addItem( "Hide"      , hb_DirBase() + 'v_notes1.bmp' )
 
    RETURN oTBar
 

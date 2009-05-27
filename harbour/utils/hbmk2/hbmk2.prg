@@ -150,6 +150,7 @@ REQUEST hbmk_KEYW
 
 #define _COMPDET_bBlock         1
 #define _COMPDET_cCOMP          2
+#define _COMPDET_cCCPREFIX      3 /* optional */
 
 #define _COMPDETE_bBlock        1
 #define _COMPDETE_cARCH         2
@@ -848,7 +849,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                     { {|| iif( ( tmp1 := FindInPath( "icl" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ), tmp1, NIL ) }, "iccia64" },;
                     { {|| FindInPath( "icl"      ) }, "icc"     },;
                     { {|| FindInPath( "cygstart" ) }, "cygwin"  },;
-                    { {|| FindInPath( "xcc"      ) }, "xcc"     } }
+                    { {|| FindInPath( "xcc"      ) }, "xcc"     },;
+                    { {|| FindInPath( "x86_64-pc-mingw32-gcc" ) }, "mingw64", "x86_64-pc-mingw32-" } }
       aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "icc", "pocc", "xcc", "cygwin",;
                     "mingw64", "msvc64", "msvcia64", "iccia64", "pocc64" }
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
@@ -867,7 +869,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    CASE hbmk[ _HBMK_cARCH ] == "wce"
       aCOMPDET := { { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" ) }, "mingwarm" },;
                     { {|| FindInPath( "cl"       ) }, "msvcarm" },;
-                    { {|| FindInPath( "pocc"     ) }, "poccarm" } }
+                    { {|| FindInPath( "pocc"     ) }, "poccarm" },;
+                    { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-" } }
       aCOMPSUP := { "mingwarm", "msvcarm", "poccarm" }
       s_aLIBHBGT := { "gtwvt", "gtgui" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtwvt"
@@ -987,6 +990,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                FOR tmp := 1 TO Len( aCOMPDET )
                   IF ! Empty( cPath_CompC := Eval( aCOMPDET[ tmp ][ _COMPDET_bBlock ] ) )
                      hbmk[ _HBMK_cCOMP ] := aCOMPDET[ tmp ][ _COMPDET_cCOMP ]
+                     IF Len( aCOMPDET[ tmp ] ) >= _COMPDET_cCCPREFIX
+                        hbmk[ _HBMK_cCCPREFIX ] := aCOMPDET[ tmp ][ _COMPDET_cCCPREFIX ]
+                     ENDIF
                      EXIT
                   ENDIF
                NEXT
@@ -2838,7 +2844,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                ELSE
                   IF ( tmp := hb_compile( "", aCommand ) ) != 0
                      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
-                     OutErr( ArrayToList( aCommand ) + hb_osNewLine() )
+                     OutErr( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt +;
+                             " " + ArrayToList( aCommand ) + hb_osNewLine() )
                      IF s_lBEEP
                         DoBeep( hbmk, .F. )
                      ENDIF
@@ -4980,77 +4987,99 @@ STATIC FUNCTION commandResult( hbmk, cCommand, nResult )
    RETURN cResult
 
 STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
+   LOCAL aUnd
+   LOCAL aDef
+   LOCAL cMacro
+   LOCAL nPos
 
    IF !( hbmk[ _HBMK_cARCH ] == hb_Version( HB_VERSION_BUILD_ARCH ) ) .OR. ;
       hbmk[ _HBMK_cARCH ] == "wce"
 
+      aUnd := {}
+      aDef := {}
+
       #if   defined( __PLATFORM__WINDOWS )
-         AAdd( aOPTPRG, "-undef:__PLATFORM__WINDOWS" )
+         AAdd( aUnd, "__PLATFORM__WINDOWS" )
          IF hbmk[ _HBMK_lXHB ]
-            AAdd( aOPTPRG, "-undef:__PLATFORM__Windows" )
+            AAdd( aUnd, "__PLATFORM__Windows" )
          ENDIF
          #if defined( __PLATFORM__WINCE )
-            AAdd( aOPTPRG, "-undef:__PLATFORM__WINCE" )
+            AAdd( aUnd, "__PLATFORM__WINCE" )
          #endif
       #elif defined( __PLATFORM__DOS )
-         AAdd( aOPTPRG, "-undef:__PLATFORM__DOS" )
+         AAdd( aUnd, "__PLATFORM__DOS" )
       #elif defined( __PLATFORM__OS2 )
-         AAdd( aOPTPRG, "-undef:__PLATFORM__OS2" )
+         AAdd( aUnd, "__PLATFORM__OS2" )
       #elif defined( __PLATFORM__LINUX )
          IF hbmk[ _HBMK_lXHB ]
-            AAdd( aOPTPRG, "-undef:__PLATFORM__Linux" )
+            AAdd( aUnd, "__PLATFORM__Linux" )
          ENDIF
-         AAdd( aOPTPRG, "-undef:__PLATFORM__LINUX" )
-         AAdd( aOPTPRG, "-undef:__PLATFORM__UNIX" )
+         AAdd( aUnd, "__PLATFORM__LINUX" )
+         AAdd( aUnd, "__PLATFORM__UNIX" )
       #elif defined( __PLATFORM__DARWIN )
-         AAdd( aOPTPRG, "-undef:__PLATFORM__DARWIN" )
-         AAdd( aOPTPRG, "-undef:__PLATFORM__UNIX" )
+         AAdd( aUnd, "__PLATFORM__DARWIN" )
+         AAdd( aUnd, "__PLATFORM__UNIX" )
       #elif defined( __PLATFORM__BSD )
-         AAdd( aOPTPRG, "-undef:__PLATFORM__BSD" )
-         AAdd( aOPTPRG, "-undef:__PLATFORM__UNIX" )
+         AAdd( aUnd, "__PLATFORM__BSD" )
+         AAdd( aUnd, "__PLATFORM__UNIX" )
       #elif defined( __PLATFORM__SUNOS )
-         AAdd( aOPTPRG, "-undef:__PLATFORM__SUNOS" )
-         AAdd( aOPTPRG, "-undef:__PLATFORM__UNIX" )
+         AAdd( aUnd, "__PLATFORM__SUNOS" )
+         AAdd( aUnd, "__PLATFORM__UNIX" )
       #elif defined( __PLATFORM__HPUX )
-         AAdd( aOPTPRG, "-undef:__PLATFORM__HPUX" )
-         AAdd( aOPTPRG, "-undef:__PLATFORM__UNIX" )
+         AAdd( aUnd, "__PLATFORM__HPUX" )
+         AAdd( aUnd, "__PLATFORM__UNIX" )
       #endif
 
       DO CASE
       CASE hbmk[ _HBMK_cARCH ] == "wce"
-         AAdd( aOPTPRG, "-D__PLATFORM__WINDOWS" )
-         AAdd( aOPTPRG, "-D__PLATFORM__WINCE" )
+         AAdd( aDef, "__PLATFORM__WINDOWS" )
+         AAdd( aDef, "__PLATFORM__WINCE" )
          IF hbmk[ _HBMK_lXHB ]
-            AAdd( aOPTPRG, "-D__PLATFORM__Windows" )
+            AAdd( aDef, "__PLATFORM__Windows" )
          ENDIF
       CASE hbmk[ _HBMK_cARCH ] == "win"
-         AAdd( aOPTPRG, "-D__PLATFORM__WINDOWS" )
+         AAdd( aDef, "__PLATFORM__WINDOWS" )
          IF hbmk[ _HBMK_lXHB ]
-            AAdd( aOPTPRG, "-D__PLATFORM__Windows" )
+            AAdd( aDef, "__PLATFORM__Windows" )
          ENDIF
       CASE hbmk[ _HBMK_cARCH ] == "dos"
-         AAdd( aOPTPRG, "-D__PLATFORM__DOS" )
+         AAdd( aDef, "__PLATFORM__DOS" )
       CASE hbmk[ _HBMK_cARCH ] == "os2"
-         AAdd( aOPTPRG, "-D__PLATFORM__OS2" )
+         AAdd( aDef, "__PLATFORM__OS2" )
       CASE hbmk[ _HBMK_cARCH ] == "linux"
-         AAdd( aOPTPRG, "-D__PLATFORM__LINUX" )
-         AAdd( aOPTPRG, "-D__PLATFORM__UNIX" )
+         AAdd( aDef, "__PLATFORM__LINUX" )
+         AAdd( aDef, "__PLATFORM__UNIX" )
          IF hbmk[ _HBMK_lXHB ]
-            AAdd( aOPTPRG, "-D__PLATFORM__Linux" )
+            AAdd( aDef, "__PLATFORM__Linux" )
          ENDIF
       CASE hbmk[ _HBMK_cARCH ] == "darwin"
-         AAdd( aOPTPRG, "-D__PLATFORM__DARWIN" )
-         AAdd( aOPTPRG, "-D__PLATFORM__UNIX" )
+         AAdd( aDef, "__PLATFORM__DARWIN" )
+         AAdd( aDef, "__PLATFORM__UNIX" )
       CASE hbmk[ _HBMK_cARCH ] == "bsd"
-         AAdd( aOPTPRG, "-D__PLATFORM__BDS" )
-         AAdd( aOPTPRG, "-D__PLATFORM__UNIX" )
+         AAdd( aDef, "__PLATFORM__BDS" )
+         AAdd( aDef, "__PLATFORM__UNIX" )
       CASE hbmk[ _HBMK_cARCH ] == "sunos"
-         AAdd( aOPTPRG, "-D__PLATFORM__SUNOS" )
-         AAdd( aOPTPRG, "-D__PLATFORM__UNIX" )
+         AAdd( aDef, "__PLATFORM__SUNOS" )
+         AAdd( aDef, "__PLATFORM__UNIX" )
       CASE hbmk[ _HBMK_cARCH ] == "hpux"
-         AAdd( aOPTPRG, "-D__PLATFORM__HPUX" )
-         AAdd( aOPTPRG, "-D__PLATFORM__UNIX" )
+         AAdd( aDef, "__PLATFORM__HPUX" )
+         AAdd( aDef, "__PLATFORM__UNIX" )
       ENDCASE
+
+      /* Delete macros present in both lists */
+      FOR EACH cMacro IN aUnd DESCEND
+         IF ( nPos := AScan( aDef, {| tmp | tmp == cMacro } ) ) > 0
+            hb_ADel( aUnd, cMacro:__enumIndex(), .T. )
+            hb_ADel( aDef, nPos, .T. )
+         ENDIF
+      NEXT
+
+      FOR EACH cMacro IN aUnd
+         AAdd( aOPTPRG, "-undef:" + cMacro )
+      NEXT
+      FOR EACH cMacro IN aDef
+         AAdd( aOPTPRG, "-D" + cMacro )
+      NEXT
    ENDIF
 
    RETURN

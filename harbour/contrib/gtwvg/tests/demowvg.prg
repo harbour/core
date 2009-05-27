@@ -2743,8 +2743,8 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
       oCom:mapEvent( evBtnUp, {|nBtn| if( nBtn == 2, oCom:oParent:sendMessage( WM_CLOSE,0,0 ), NIL ) } )
 
    case nActiveX == 3
-      hb_gtInfo( HB_GTI_WINTITLE, 'file://C:\harbour\contrib\gtwvg\tests\myharu.pdf' )
-      oCom:CLSID := 'file://C:\harbour\contrib\gtwvg\tests\myharu.pdf'
+      hb_gtInfo( HB_GTI_WINTITLE, 'file://' + hb_DirBase() + 'myharu.pdf' )
+      oCom:CLSID := 'file://' + hb_DirBase() + 'myharu.pdf'
       oCom:mapEvent( 269, {|| QOut( ' E X P L O R E R - 2 6 9' ) } )
 
    case nActiveX == 4
@@ -2774,7 +2774,7 @@ Static Function ExeActiveX( nActiveX, oCom, xParam )
    //
    if nActiveX == 1
       oCom:AddressBar := .t.
-      hb_gtInfo( HB_GTI_WINTITLE, IF( empty( xParam ), 'http://www.harbour.vouch.info', xParam ) )
+      hb_gtInfo( HB_GTI_WINTITLE, IIF( empty( xParam ), 'http://www.harbour.vouch.info', xParam ) )
       oCom:Navigate( IF( empty( xParam ), 'http://www.harbour.vouch.info', xParam ) )
 
    elseif nActiveX == 4
@@ -2783,7 +2783,7 @@ Static Function ExeActiveX( nActiveX, oCom, xParam )
       oCom:Draw2Clipboard()
 
    elseif nActiveX == 5
-      oCom:loadMultiPage( 'c:\myharu.pdf', 2 )
+      oCom:loadMultiPage( hb_DirBase() + 'myharu.pdf', 2 )
       oCom:addGradientBorder( 10, RGB( 12,20,233 ), RGB( 100,255,20 ), 0 )
       oCom:drawText( 10,10,'Vouch' )
       //oCom:emboss( 3,0 )
@@ -3389,15 +3389,15 @@ STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
    oTBar:create()
 
-   oTBar:addItem( "New"       , 'c:\harbour\contrib\gtwvg\tests\v_new.bmp'    )
-   oTBar:addItem( "Select"    , 'c:\harbour\contrib\gtwvg\tests\v_selct1.bmp' )
+   oTBar:addItem( "New"       , hb_DirBase() + 'v_new.bmp'    )
+   oTBar:addItem( "Select"    , hb_DirBase() + 'v_selct1.bmp' )
    oTBar:addItem( )
-   oTBar:addItem( "FontDlg"   , 'c:\harbour\contrib\gtwvg\tests\v_calend.bmp' )
-   oTBar:addItem( "Tools"     , 'c:\harbour\contrib\gtwvg\tests\v_lock.bmp'   )
-   oTBar:addItem( "Index"     , 'c:\harbour\contrib\gtwvg\tests\v_index.bmp'  )
+   oTBar:addItem( "FontDlg"   , hb_DirBase() + 'v_calend.bmp' )
+   oTBar:addItem( "Tools"     , hb_DirBase() + 'v_lock.bmp'   )
+   oTBar:addItem( "Index"     , hb_DirBase() + 'v_index.bmp'  )
    oTBar:addItem( )
-   oTBar:addItem( "Show"      , 'c:\harbour\contrib\gtwvg\tests\v_clclt.bmp'  )
-   oTBar:addItem( "Hide"      , 'c:\harbour\contrib\gtwvg\tests\v_notes1.bmp' )
+   oTBar:addItem( "Show"      , hb_DirBase() + 'v_clclt.bmp'  )
+   oTBar:addItem( "Hide"      , hb_DirBase() + 'v_notes1.bmp' )
    RETURN oTBar
 
 //----------------------------------------------------------------------//
@@ -3798,15 +3798,15 @@ STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
    oTBar:create()
 
-   oTBar:addItem( "New"       , 'c:\harbour\contrib\gtwvg\tests\v_new.bmp'    )
-   oTBar:addItem( "Select"    , 'c:\harbour\contrib\gtwvg\tests\v_selct1.bmp' )
+   oTBar:addItem( "New"       , hb_DirBase() + 'v_new.bmp'    )
+   oTBar:addItem( "Select"    , hb_DirBase() + 'v_selct1.bmp' )
    oTBar:addItem( )
-   oTBar:addItem( "FontDlg"   , 'c:\harbour\contrib\gtwvg\tests\v_calend.bmp' )
-   oTBar:addItem( "Tools"     , 'c:\harbour\contrib\gtwvg\tests\v_lock.bmp'   )
-   oTBar:addItem( "Index"     , 'c:\harbour\contrib\gtwvg\tests\v_index.bmp'  )
+   oTBar:addItem( "FontDlg"   , hb_DirBase() + 'v_calend.bmp' )
+   oTBar:addItem( "Tools"     , hb_DirBase() + 'v_lock.bmp'   )
+   oTBar:addItem( "Index"     , hb_DirBase() + 'v_index.bmp'  )
    oTBar:addItem( )
-   oTBar:addItem( "Show"      , 'c:\harbour\contrib\gtwvg\tests\v_clclt.bmp'  )
-   oTBar:addItem( "Hide"      , 'c:\harbour\contrib\gtwvg\tests\v_notes1.bmp' )
+   oTBar:addItem( "Show"      , hb_DirBase() + 'v_clclt.bmp'  )
+   oTBar:addItem( "Hide"      , hb_DirBase() + 'v_notes1.bmp' )
 
    RETURN oTBar
 

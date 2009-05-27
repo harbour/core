@@ -1551,7 +1551,7 @@ static void hb_wvg_GridHorz( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT *uRect )
 void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect )
 {
    PHB_GOBJS gObj = pWVT->gObjs;
-   int iTop, iLeft, iBottom, iRight;
+   int iTop = 0, iLeft = 0, iBottom = 0, iRight = 0;
    int iObjType;
 
    while( gObj )
@@ -1763,4 +1763,3 @@ void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect )
    }
 }
 /*----------------------------------------------------------------------*/
-
