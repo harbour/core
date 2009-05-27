@@ -481,9 +481,9 @@ HB_FUNC( PRINTFILERAW )
    LONG Result = -1;
 
    if( ISCHAR( 1 ) && ISCHAR( 2 ) )
-      Result = hb_PrintFileRaw( ( UCHAR * ) hb_parcx( 1 ) /* cPrinterName */,
-                                ( UCHAR * ) hb_parcx( 2 ) /* cFileName */,
-                                ISCHAR( 3 ) ? ( UCHAR * ) hb_parcx( 3 ) : ( UCHAR * ) hb_parcx( 2 ) /* cDocName */ );
+      Result = hb_PrintFileRaw( ( UCHAR * ) hb_parc( 1 ) /* cPrinterName */,
+                                ( UCHAR * ) hb_parc( 2 ) /* cFileName */,
+                                ISCHAR( 3 ) ? ( UCHAR * ) hb_parc( 3 ) : ( UCHAR * ) hb_parc( 2 ) /* cDocName */ );
 
    hb_retnl( Result );
 }
