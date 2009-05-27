@@ -442,7 +442,7 @@ then
     export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} -L${HB_LIB_INSTALL} -l%{name}"
     export HB_USER_PRGFLAGS="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${HB_USER_PRGFLAGS}"
 
-    for utl in hbmk2 hbrun hbi18n
+    for utl in hbmk2 hbrun hbi18n hbformat
     do
         pushd utils/${utl}
         rm -fR "./${HB_ARCHITECTURE}/${HB_COMPILER}"
@@ -616,8 +616,9 @@ rm -rf $RPM_BUILD_ROOT
 #%{_bindir}/hbtest
 %{_bindir}/hbrun
 %{_bindir}/hbi18n
-%{_bindir}/hbmk.cfg
+%{_bindir}/hbformat
 %{_bindir}/hbmk2
+%verify(not md5 mtime) %config %{_bindir}/hbmk.cfg
 %{_mandir}/man1/*.1*
 %dir %{_includedir}/%{name}
 %attr(644,root,root) %{_includedir}/%{name}/*

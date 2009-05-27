@@ -911,16 +911,16 @@ extern HB_EXPORT PHB_ITEM  hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFor
 
 /* architecture dependent number conversions */
 extern HB_EXPORT void      hb_put_ieee754( BYTE * ptr, double d );
-extern HB_EXPORT double    hb_get_ieee754( BYTE * ptr );
+extern HB_EXPORT double    hb_get_ieee754( const BYTE * ptr );
 extern HB_EXPORT void      hb_put_ord_ieee754( BYTE * ptr, double d );
-extern HB_EXPORT double    hb_get_ord_ieee754( BYTE * ptr );
-extern HB_EXPORT double    hb_get_rev_double( BYTE * ptr );
-extern HB_EXPORT double    hb_get_std_double( BYTE * ptr );
+extern HB_EXPORT double    hb_get_ord_ieee754( const BYTE * ptr );
+extern HB_EXPORT double    hb_get_rev_double( const BYTE * ptr );
+extern HB_EXPORT double    hb_get_std_double( const BYTE * ptr );
 
 #if defined( HB_LONG_LONG_OFF )
-extern HB_EXPORT double    hb_get_le_int64( BYTE * ptr );
-extern HB_EXPORT double    hb_get_le_uint64( BYTE * ptr );
-extern HB_EXPORT void      hb_put_le_uint64( BYTE * ptr, double d );
+extern HB_EXPORT double    hb_get_le_int64( const BYTE * ptr );
+extern HB_EXPORT double    hb_get_le_uint64( const BYTE * ptr );
+extern HB_EXPORT void      hb_put_le_uint64( const BYTE * ptr, double d );
 #endif
 
 /* dynamic symbol table management */

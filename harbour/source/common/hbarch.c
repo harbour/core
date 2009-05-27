@@ -119,7 +119,7 @@ void hb_put_ieee754( BYTE * ptr, double d )
 #endif
 }
 
-double hb_get_ieee754( BYTE * ptr )
+double hb_get_ieee754( const BYTE * ptr )
 {
    int iExp, iSig;
 #if defined( HB_LONG_LONG_OFF )
@@ -194,7 +194,7 @@ void hb_put_ord_ieee754( BYTE * ptr, double d )
    HB_PUT_BE_UINT32( ptr + 4, l1 );
 }
 
-double hb_get_ord_ieee754( BYTE * ptr )
+double hb_get_ord_ieee754( const BYTE * ptr )
 {
    int iExp, iSig;
    UINT32 l1, l2;
@@ -225,46 +225,58 @@ double hb_get_ord_ieee754( BYTE * ptr )
  * some compilers does not like constraction used by in HB_GET_LE_DOUBLE
  * macro => d = { ... }
  */
-double hb_get_rev_double( BYTE * ptr )
+double hb_get_rev_double( const BYTE * ptr )
 {
-   union {
-      double dbl;
-      BYTE buffer[ 8 ];
-   } u;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_get_rev_double(%p)", ptr));
 
-   u.buffer[ 0 ] = ptr[ 7 ];
-   u.buffer[ 1 ] = ptr[ 6 ];
-   u.buffer[ 2 ] = ptr[ 5 ];
-   u.buffer[ 3 ] = ptr[ 4 ];
-   u.buffer[ 4 ] = ptr[ 3 ];
-   u.buffer[ 5 ] = ptr[ 2 ];
-   u.buffer[ 6 ] = ptr[ 1 ];
-   u.buffer[ 7 ] = ptr[ 0 ];
+   {
+#if defined( __GNUC__ )
+      return _hb_get_rev_double( ptr );
+#else
+      union {
+         double dbl;
+         BYTE buffer[ 8 ];
+      } u;
 
-   return u.dbl;
+      u.buffer[ 0 ] = ptr[ 7 ];
+      u.buffer[ 1 ] = ptr[ 6 ];
+      u.buffer[ 2 ] = ptr[ 5 ];
+      u.buffer[ 3 ] = ptr[ 4 ];
+      u.buffer[ 4 ] = ptr[ 3 ];
+      u.buffer[ 5 ] = ptr[ 2 ];
+      u.buffer[ 6 ] = ptr[ 1 ];
+      u.buffer[ 7 ] = ptr[ 0 ];
+
+      return u.dbl;
+#endif
+   }
 }
 
-double hb_get_std_double( BYTE * ptr )
+double hb_get_std_double( const BYTE * ptr )
 {
-   union {
-      double dbl;
-      BYTE buffer[ 8 ];
-   } u;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_get_std_double(%p)", ptr));
 
-   u.buffer[ 0 ] = ptr[ 0 ];
-   u.buffer[ 1 ] = ptr[ 1 ];
-   u.buffer[ 2 ] = ptr[ 2 ];
-   u.buffer[ 3 ] = ptr[ 3 ];
-   u.buffer[ 4 ] = ptr[ 4 ];
-   u.buffer[ 5 ] = ptr[ 5 ];
-   u.buffer[ 6 ] = ptr[ 6 ];
-   u.buffer[ 7 ] = ptr[ 7 ];
+   {
+#if defined( __GNUC__ )
+      return _hb_get_std_double( ptr );
+#else
+      union {
+         double dbl;
+         BYTE buffer[ 8 ];
+      } u;
 
-   return u.dbl;
+      u.buffer[ 0 ] = ptr[ 0 ];
+      u.buffer[ 1 ] = ptr[ 1 ];
+      u.buffer[ 2 ] = ptr[ 2 ];
+      u.buffer[ 3 ] = ptr[ 3 ];
+      u.buffer[ 4 ] = ptr[ 4 ];
+      u.buffer[ 5 ] = ptr[ 5 ];
+      u.buffer[ 6 ] = ptr[ 6 ];
+      u.buffer[ 7 ] = ptr[ 7 ];
+
+      return u.dbl;
+#endif
+   }
 }
 
 #if defined( HB_LONG_LONG_OFF )
@@ -275,7 +287,7 @@ double hb_get_std_double( BYTE * ptr )
  * values. They are necessary for extracting such number from PCODE,
  * databases or serialization streams in RPC
  */
-double hb_get_le_uint64( BYTE * ptr )
+double hb_get_le_uint64( const BYTE * ptr )
 {
    UINT32 l1, l2;
 
@@ -286,7 +298,7 @@ double hb_get_le_uint64( BYTE * ptr )
    return ldexp( ( double ) l2, 32 ) + ( double ) l1;
 }
 
-double hb_get_le_int64( BYTE * ptr )
+double hb_get_le_int64( const BYTE * ptr )
 {
    UINT32 l1;
    INT32 l2;
