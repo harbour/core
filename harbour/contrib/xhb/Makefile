@@ -58,6 +58,7 @@ PRG_SOURCES=\
 	xhbcomp.prg \
 	xhberr.prg \
 	xhbmt.prg \
+	xhbver.prg \
 
 PRG_HEADERS=\
 	hbcompat.ch \

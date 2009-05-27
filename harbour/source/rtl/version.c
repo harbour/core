@@ -138,6 +138,14 @@ HB_FUNC( HB_VERSION )
       #endif
       break;
 
+   case HB_VERSION_COMPILER_CPP:
+      #if defined( __cplusplus )
+         hb_retl( TRUE );
+      #else
+         hb_retl( FALSE );
+      #endif
+      break;
+
    case HB_VERSION_PLATFORM:
       #if defined( HB_OS_DOS )
          hb_retc_const( "DOS" );
