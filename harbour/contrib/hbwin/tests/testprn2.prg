@@ -35,6 +35,6 @@ STATIC PROCEDURE PrnTest( cPrinter, cFileName )
       hb_MemoWrit( cFileName := "_hbtest.prn", "Hello World!" + Chr( 12 ) )
    ENDIF
 
-   Alert( PrintFileRaw( cPrinter, cFileName, "testing raw printing" ) )
+   Alert( "PrintFileRaw() returned: " + hb_ntos( PrintFileRaw( cPrinter, cFileName, "testing raw printing" ) ) )
 
    RETURN
