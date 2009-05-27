@@ -66,7 +66,7 @@
 #define wapi_par_HIMAGELIST( n ) ( ( HIMAGELIST ) hb_parptr( n ) )
 #define wapi_par_HFONT( n )      ( ( HFONT      ) hb_parptr( n ) )
 #define wapi_par_HINSTANCE( n )  ( ( HINSTANCE  ) hb_parptr( n ) )
-#define wapi_par_COLORREF( n )   ( ( COLORREF   ) hb_parnl( n ) )
+#define wapi_par_COLORREF( n )   ( ( COLORREF   ) hb_parnint( n ) )
 
 #define wapi_par_STRUCT( n )     ( hb_parc( n ) )
 
@@ -82,7 +82,7 @@
 #define wapi_ret_L( b )          ( hb_retl( b ) )
 
 #define wapi_ret_HANDLE( h )     ( hb_retptr( h ) )
-#define wapi_ret_HRESULT( hr )   ( hb_retnl( hr ) )
-#define wapi_ret_COLORREF( cr )  ( hb_retnl( cr ) )
+#define wapi_ret_HRESULT( hr )   ( hb_retnint( hr ) )
+#define wapi_ret_COLORREF( cr )  ( hb_retnint( cr ) )
 
 #endif /* __HBWAPI_H */

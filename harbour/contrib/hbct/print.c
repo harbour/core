@@ -162,7 +162,7 @@ HB_FUNC( PRINTREADY )
    HB_SYMBOL_UNUSED( uiPort );
 #endif
 
-   hb_retl( ( Status == 0x90 ) );
+   hb_retl( Status == 0x90 );
 }
 
 
@@ -198,5 +198,39 @@ HB_FUNC( PRINTSEND )
       else
          hb_retni( 0 );
    }
+
+#elif defined( HB_OS_WIN_32 )
+
+   char * szPort = "lpt1";
+   char * szChr = " ";
+   char * szStr = NULL;
+   USHORT usLen = 0, usRet = 0;
+
+   if( ISNUM( 1 ) )
+   {
+      szChr[ 0 ] = ( char ) hb_parni( 1 );
+      szStr = szChr;
+      usLen = 1;
+   }
+   else if( ISCHAR( 1 ) )
+   {
+      szStr = hb_parc( 1 );
+      usLen = ( USHORT ) hb_parclen( 1 );
+   }
+
+   if( ISNUM( 2 ) )
+      szPort[ 3 ] = ( char ) hb_parni( 2 ) + '0';
+
+   if( usLen )
+   {
+      HB_FHANDLE hFile = hb_fsOpen( ( BYTE * ) szPort, FO_WRITE );
+      if( hFile != FS_ERROR )
+      {
+         usRet = hb_fsWrite( hFile, ( BYTE * ) szStr, usLen );
+         hb_fsClose( hFile );
+      }
+   }
+   hb_retni( usRet );
+
 #endif
 }

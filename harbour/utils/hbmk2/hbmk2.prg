@@ -349,7 +349,7 @@ STATIC FUNCTION hbmk_run( cCmd )
    LOCAL h := hb_ProcessOpen( cCmd )
    LOCAL result
    IF h != F_ERROR
-      result := hb_processValue( h )
+      result := hb_ProcessValue( h )
       hb_ProcessClose( h, .T. )
    ELSE
       result := -1
@@ -5938,6 +5938,9 @@ STATIC PROCEDURE hbmk_OutErr( hbmk, cText )
    NEXT
 
    RETURN
+
+/* NOTE: Hacks to implement UTF-8 output.
+         It's not yet natively supported by core. [vszakats] */
 
 #undef OutStd
 #undef OutErr

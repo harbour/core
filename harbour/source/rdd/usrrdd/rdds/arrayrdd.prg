@@ -645,7 +645,7 @@ STATIC FUNCTION AR_SKIPRAW( nWA, nRecords )
             nResult := AR_GOTO( nWA, 1 )
             aWAData[ WADATA_BOF ]   := .T.
             // Hack for dbf1.c hack GOTOP
-            aWAData[ WADATA_FORCEBOF ] := .T.
+            // aWAData[ WADATA_FORCEBOF ] := .T.
 
       ELSE
 
@@ -706,20 +706,22 @@ STATIC FUNCTION AR_DELETE( nWA )
 
    ENDIF
 
-   IF aOpenInfo[ UR_OI_SHARED ] .AND. !( aScan( aWAData[ WADATA_LOCKS ], aWAData[ WADATA_RECNO ] ) > 0  )
+   IF ! aWAData[ WADATA_EOF ]
+      IF aOpenInfo[ UR_OI_SHARED ] .AND. !( aScan( aWAData[ WADATA_LOCKS ], aWAData[ WADATA_RECNO ] ) > 0  )
 
-      oError := ErrorNew()
-      oError:GenCode     := EG_UNLOCKED
-      oError:SubCode     := 1022 // EDBF_UNLOCKED
-      oError:Description := HB_LANGERRMSG( EG_UNLOCKED )
-      oError:FileName    := aOpenInfo[ UR_OI_NAME ]
-      UR_SUPER_ERROR( nWA, oError )
-      RETURN HB_FAILURE
+         oError := ErrorNew()
+         oError:GenCode     := EG_UNLOCKED
+         oError:SubCode     := 1022 // EDBF_UNLOCKED
+         oError:Description := HB_LANGERRMSG( EG_UNLOCKED )
+         oError:FileName    := aOpenInfo[ UR_OI_NAME ]
+         UR_SUPER_ERROR( nWA, oError )
+         RETURN HB_FAILURE
 
-   ENDIF
+      ENDIF
 
-   IF Len( aRecInfo ) > 0 .AND. aWAData[ WADATA_RECNO ] <= Len( aRecInfo )
-      aRecInfo[ aWAData[ WADATA_RECNO ] ][ RECDATA_DELETED ] := .T.
+      IF Len( aRecInfo ) > 0 .AND. aWAData[ WADATA_RECNO ] <= Len( aRecInfo )
+         aRecInfo[ aWAData[ WADATA_RECNO ] ][ RECDATA_DELETED ] := .T.
+      ENDIF
    ENDIF
 
    RETURN HB_SUCCESS
@@ -733,7 +735,7 @@ STATIC FUNCTION AR_DELETED( nWA, lDeleted )
    hb_ToOutDebug( "AR_DELETED(): nWA = %i, lDeleted = %s\n\r", nWA, lDeleted )
 #endif
 
-   //lDeleted := .F.
+   // lDeleted := .F.
    IF Len( aRecInfo ) > 0 .AND. aWAData[ WADATA_RECNO ] <= Len( aRecInfo )
       lDeleted := aRecInfo[ aWAData[ WADATA_RECNO ] ][ RECDATA_DELETED ]
    ELSE
@@ -773,13 +775,41 @@ STATIC FUNCTION AR_APPEND( nWA, nRecords )
    ENDIF
 
    aRecord := BlankRecord( aStruct )
-   aAdd( aRecords, aRecord )
-   aAdd( aRecInfo, AR_RECDATAINIT() )
+   AAdd( aRecords, aRecord )
+   AAdd( aRecInfo, AR_RECDATAINIT() )
    AR_GOBOTTOM( nWA )
 
    /* TODO: SHARED ACCESS */
 
    RETURN HB_SUCCESS
+
+STATIC FUNCTION AR_LOCK( nWA, aLock )
+   HB_SYMBOL_UNUSED( nWA )
+   HB_SYMBOL_UNUSED( aLock )
+/*
+   LOCAL aWAData  := USRRDD_AREADATA( nWA )
+   LOCAL nReg     := iif( aLock[ UR_LI_RECORD ] == NIL, aWAData[ WADATA_RECNO ], aLock[ UR_LI_RECORD ] )
+   LOCAL aRecInfo
+
+   IF aWAData[ WADATA_EOF ]
+      aLock[ UR_LI_RESULT ] := .t.
+   ELSE
+      aRecInfo := aWAData[ WADATA_DATABASE, DATABASE_RECINFO, nReg ]
+      IF aWAData[ WADATA_OPENINFO, UR_OI_SHARED ]
+         IF aRecInfo[ RECDATA_LOCKED ] == nWA
+            aLock[ UR_LI_RESULT ] := .T.
+         ELSEIF aRecInfo[ RECDATA_LOCKED ] != 0
+            aLock[ UR_LI_RESULT ] := .F.
+         ELSE
+            aRecInfo[ RECDATA_LOCKED ] := nWA
+            aLock[ UR_LI_RESULT ] := .T.
+         ENDIF
+      ELSE
+         aLock[ UR_LI_RESULT ] := .T.
+      ENDIF
+   ENDIF
+*/
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_RECID( nWA, nRecNo )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -903,6 +933,9 @@ STATIC FUNCTION AR_ORDINFO( nWA, xMsg, xValue )
 
    RETURN HB_SUCCESS
 
+STATIC FUNCTION AR_DUMMY()
+   RETURN HB_SUCCESS
+
 /*
  * This function have to exist in all RDD and then name have to be in
  * format: <RDDNAME>_GETFUNCTABLE
@@ -913,6 +946,7 @@ FUNCTION ARRAYRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 
    aMyFunc[ UR_INIT         ] := ( @AR_INIT()         )
    aMyFunc[ UR_NEW          ] := ( @AR_NEW()          )
+   aMyFunc[ UR_FLUSH        ] := ( @AR_DUMMY()        )
    aMyFunc[ UR_CREATE       ] := ( @AR_CREATE()       )
    aMyFunc[ UR_CREATEFIELDS ] := ( @AR_CREATEFIELDS() )
    aMyFunc[ UR_OPEN         ] := ( @AR_OPEN()         )
@@ -929,6 +963,7 @@ FUNCTION ARRAYRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_GOTOP        ] := ( @AR_GOTOP()        )
    aMyFunc[ UR_GOBOTTOM     ] := ( @AR_GOBOTTOM()     )
    aMyFunc[ UR_RECID        ] := ( @AR_RECID()        )
+   aMyFunc[ UR_LOCK         ] := ( @AR_LOCK()         )
    aMyFunc[ UR_RECCOUNT     ] := ( @AR_RECCOUNT()     )
    aMyFunc[ UR_GETVALUE     ] := ( @AR_GETVALUE()     )
    aMyFunc[ UR_PUTVALUE     ] := ( @AR_PUTVALUE()     )
@@ -1103,6 +1138,18 @@ FUNCTION hb_FileArrayRdd( cFullName )
 
    ENDIF
    RETURN ( nReturn == HB_SUCCESS )
+
+FUNCTION hb_setArryRdd( aArray )
+   LOCAL aRecInfo
+   LOCAL nWA      := Select()
+   LOCAL aDBFData := USRRDD_AREADATA( nWA )[ WADATA_DATABASE ]
+   aDBFData[ DATABASE_RECORDS ] := aArray
+   aDBFData[ DATABASE_RECINFO ] := Array( Len( aArray ) )
+   FOR EACH aRecInfo IN aDBFData[ DATABASE_RECINFO ]
+      aRecInfo := AR_RECDATAINIT()
+   NEXT
+   AR_GOTOP( nWA )
+   RETURN NIL
 
 STATIC FUNCTION BlankRecord( aStruct )
    LOCAL nLenStruct := Len( aStruct )
@@ -1306,32 +1353,32 @@ STATIC FUNCTION DecEmptyValue( xVal )
    LOCAL cType := ValType( xVal )
 
    SWITCH cType
-   CASE 'C'  // Char
-   CASE 'M'  // Memo
+   CASE "C"  // Char
+   CASE "M"  // Memo
         xRet := ""
         EXIT
-   CASE 'D'  // Date
-        xRet := CTOD('')
+   CASE "D"  // Date
+        xRet := hb_STOD()
         EXIT
-   CASE 'L'  // Logical
+   CASE "L"  // Logical
         xRet := .F.
         EXIT
-   CASE 'N'  // Number
+   CASE "N"  // Number
         xRet := 0
         EXIT
-   CASE 'B'  // code block
+   CASE "B"  // code block
         xRet := {|| NIL }
         EXIT
-   CASE 'A'  // array
+   CASE "A"  // array
         xRet := {}
         EXIT
-   CASE 'H'  // hash
+   CASE "H"  // hash
         xRet := {=>}
         EXIT
-   CASE 'U'  // undefined
+   CASE "U"  // undefined
         xRet := NIL
         EXIT
-   CASE 'O'  // Object
+   CASE "O"  // Object
         xRet := NIL   // Or better another value ?
         EXIT
    OTHERWISE

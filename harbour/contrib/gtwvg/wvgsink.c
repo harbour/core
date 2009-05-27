@@ -383,7 +383,7 @@ hb_ToOutDebug( "event = %i",(int)dispid );
 
          iArg = params->cArgs;
 
-         if( iArg > HB_SIZEOFARRAY( pItemArray ) )
+         if( iArg > ( int ) HB_SIZEOFARRAY( pItemArray ) )
             iArg = HB_SIZEOFARRAY( pItemArray );
 
          for( i = 1; i <= iArg; i++ )

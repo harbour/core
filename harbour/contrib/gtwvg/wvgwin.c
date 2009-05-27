@@ -677,7 +677,7 @@ HB_FUNC( WIN_CHOOSECOLOR )
    COLORREF    crCustClr[ 16 ];
    int         i;
 
-   for( i = 0; i < HB_SIZEOFARRAY( crCustClr ); i++ )
+   for( i = 0; i < ( int ) HB_SIZEOFARRAY( crCustClr ); i++ )
       crCustClr[ i ] = ( ISARRAY( 2 ) ? ( COLORREF ) hb_parnl( 2, i+1 ) : GetSysColor( COLOR_BTNFACE ) );
 
    cc.lStructSize   = sizeof( CHOOSECOLOR );
