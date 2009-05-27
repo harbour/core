@@ -61,8 +61,8 @@
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
-#include 'hbgtinfo.ch'
-#include 'fileio.ch'
+#include "hbgtinfo.ch"
+#include "fileio.ch"
 #include "setcurs.ch"
 
 //----------------------------------------------------------------------//
@@ -78,11 +78,11 @@
 #define TIMER_CLOCK            5020
 #define TIMER_REFRESH          5030
 
-#define COMPILE( cStr )        &( '{|v| '+cStr+ '}' )
+#define COMPILE( cStr )        &( "{|v| "+cStr+ "}" )
 #define CR_LF                  chr(13)+chr(10)
 #define NTRIM( n )             ltrim( str( n ) )
 
-#define VouchClientVersion     '0.9.4'
+#define VouchClientVersion     "0.9.4"
 
 #define __TRACE__
 
@@ -100,7 +100,7 @@ static lReceiving        := .f.
 static lSending          := .f.
 static lTraceLog         := .f.
 static nTrace            := 0
-static aDat              := { {'',''} }
+static aDat              := { {"",""} }
 
 //----------------------------------------------------------------------//
 #pragma BEGINDUMP
@@ -136,7 +136,7 @@ Function Main( cAddress, cPort, cAppln, cParams, cDirectory )
    TrmInitFont()
 
    SetCursor( SC_NONE )
-   SetColor( 'W/N' )
+   SetColor( "W/N" )
    SetBlink( .T. )
 
    CLS
@@ -150,25 +150,25 @@ Function Main( cAddress, cPort, cAppln, cParams, cDirectory )
 
    Socket := Hb_InetConnect( cAddress, Val( cPort ) )
    IF Hb_InetErrorCode( Socket ) != 0
-       DispOutAt( 17,0, padc( "Can't connect with " + cAddress +" : " + Hb_InetErrorDesc( Socket ),maxcol()+1 ), 'w+/n' )
-       DispOutAt( 18,0, padc( "Press a key to terminate the program...", maxcol()+1 ), 'w+/n' )
+       DispOutAt( 17,0, padc( "Can't connect with " + cAddress +" : " + Hb_InetErrorDesc( Socket ),maxcol()+1 ), "w+/n" )
+       DispOutAt( 18,0, padc( "Press a key to terminate the program...", maxcol()+1 ), "w+/n" )
        Inkey( 0 )
        RETURN  nil
    ENDIF
 
-   // Wvt_SetTitle( '[ '+cAddress+' ][ '+cPort+' ]' )
-   hb_gtInfo( HB_GTI_WINTITLE, '[ '+cAddress+' ][ '+cPort+' ]' )
-   DispOutAt( 18,0, padc( "Connection Secured",maxcol()+1 ), 'w+/n' )
-   // Wvt_SetTitle( '[ '+cAddress+' ][ '+cPort+' ]'+'[Secured]' )
-   hb_gtInfo( HB_GTI_WINTITLE, '[ '+cAddress+' ][ '+cPort+' ]'+'[Secured]' )
+   // Wvt_SetTitle( "[ "+cAddress+" ][ "+cPort+" ]" )
+   hb_gtInfo( HB_GTI_WINTITLE, "[ "+cAddress+" ][ "+cPort+" ]" )
+   DispOutAt( 18,0, padc( "Connection Secured",maxcol()+1 ), "w+/n" )
+   // Wvt_SetTitle( "[ "+cAddress+" ][ "+cPort+" ]"+"[Secured]" )
+   hb_gtInfo( HB_GTI_WINTITLE, "[ "+cAddress+" ][ "+cPort+" ]"+"[Secured]" )
 
-   cText := 'VOUCH|'+ cAppln +'|'+ cParams +'|'+ cDirectory +'|'
+   cText := "VOUCH|"+ cAppln +"|"+ cParams +"|"+ cDirectory +"|"
 
    Hb_InetSend( Socket, cText + CR_LF )
 
    if TrmReceiveALine( Socket, @cResponse )
-      if ( n := at( ';', cResponse ) ) > 0
-         if substr( cResponse,1,n-1 ) == 'CONNECT'
+      if ( n := at( ";", cResponse ) ) > 0
+         if substr( cResponse,1,n-1 ) == "CONNECT"
             TrmServeServer( Socket, cAddress, substr( cResponse,n+1 ) )
          endif
       endif
@@ -196,9 +196,9 @@ STATIC FUNCTION ResolveParams( cAddress, cPort, cAppln, cParams, cDirectory )
 
    if PCount() == 1
       cFile    := cAddress
-      cAddress := ''
+      cAddress := ""
    else
-      cFile := 'vclient.ini'
+      cFile := "vclient.ini"
    endif
 
    cPath := HB_INLINE(){
@@ -213,7 +213,7 @@ STATIC FUNCTION ResolveParams( cAddress, cPort, cAppln, cParams, cDirectory )
    }
 
    if !empty( cPath )
-      n := rat( '\', cPath )
+      n := rat( "\", cPath )
       if n > 0
          cPath := substr( cPath, 1, n )
       endif
@@ -223,16 +223,16 @@ STATIC FUNCTION ResolveParams( cAddress, cPort, cAppln, cParams, cDirectory )
    lFile := file( cFile )
 
    if empty( cAddress ) .and. lFile
-      alert( 'File found: '+cFile )
+      alert( "File found: "+cFile )
       lFile := .t.
       cTxt   := memoread( cFile )
       nLines := mlCount( cTxt,254,3,.f. )
       for i  := 1 to nLines
          if !empty( cLine := memoLine( cTxt,254,i,3,.f. ) )
-            if ( n := at( '#',cLine ) ) > 0
+            if ( n := at( "#",cLine ) ) > 0
                cLine := substr( cLine,1,n-1 )
             endif
-            if ( n := at( '=',cLine ) ) > 0
+            if ( n := at( "=",cLine ) ) > 0
                if !empty( cVal := alltrim( substr( cLine,n+1 ) ) )
                   aadd( dat_,{ lower( alltrim( substr( cLine,1,n-1 ) ) ),cVal } )
                endif
@@ -241,19 +241,19 @@ STATIC FUNCTION ResolveParams( cAddress, cPort, cAppln, cParams, cDirectory )
       next
 
       if !empty( dat_ )
-         if ( n := ascan( dat_, {|e_| e_[ 1 ] == 'serverip' } ) ) > 0
+         if ( n := ascan( dat_, {|e_| e_[ 1 ] == "serverip" } ) ) > 0
             cAddress := dat_[ n,2 ]
          endif
-         if ( n := ascan( dat_, {|e_| e_[ 1 ] == 'serverport' } ) ) > 0
+         if ( n := ascan( dat_, {|e_| e_[ 1 ] == "serverport" } ) ) > 0
             cPort := dat_[ n,2 ]
          endif
-         if ( n := ascan( dat_, {|e_| e_[ 1 ] == 'application' } ) ) > 0
+         if ( n := ascan( dat_, {|e_| e_[ 1 ] == "application" } ) ) > 0
             cAppln := dat_[ n,2 ]
          endif
-         if ( n := ascan( dat_, {|e_| e_[ 1 ] == 'parameters' } ) ) > 0
+         if ( n := ascan( dat_, {|e_| e_[ 1 ] == "parameters" } ) ) > 0
             cParams := dat_[ n,2 ]
          endif
-         if ( n := ascan( dat_, {|e_| e_[ 1 ] == 'initdirectory' } ) ) > 0
+         if ( n := ascan( dat_, {|e_| e_[ 1 ] == "initdirectory" } ) ) > 0
             cDirectory := dat_[ n,2 ]
          endif
       endif
@@ -261,25 +261,25 @@ STATIC FUNCTION ResolveParams( cAddress, cPort, cAppln, cParams, cDirectory )
 
    if !empty( cAddress )
       if empty( cPort ) .or. empty( cAppln )
-         cAddress := ''
+         cAddress := ""
       endif
    endif
 
    // Defaults to Vouch Server
    //
    if empty( cAddress )
-      cAddress   := 'vouch.dynalias.com'
-      cPort      := '2011'
-      cAppln     := '\Creative.acp\VouchRMT\Vouch.exe'
-      cParams    := '\creative.dat\vouchsvr'
-      cDirectory := '\Creative.acp\VouchRMT\'
+      cAddress   := "vouch.dynalias.com"
+      cPort      := "2011"
+      cAppln     := "\Creative.acp\VouchRMT\Vouch.exe"
+      cParams    := "\creative.dat\vouchsvr"
+      cDirectory := "\Creative.acp\VouchRMT\"
    endif
 
    if empty( cParams )
-      cParams := ''
+      cParams := ""
    endif
    if empty( cDirectory )
-      cDirectory := ''
+      cDirectory := ""
    endif
 
    Return nil
@@ -290,7 +290,7 @@ Function TrmServeServer( Socket, cAddress, cServerInfo )
    Local nPort, hDlg, a_, nError
    Local nSeconds := Seconds()
 
-   a_:= hb_aTokens( cServerInfo, ';' )
+   a_:= hb_aTokens( cServerInfo, ";" )
    nPort := val( a_[ 2 ] )
 
    commSocket := Hb_INetConnect( cAddress, nPort )
@@ -304,8 +304,8 @@ Function TrmServeServer( Socket, cAddress, cServerInfo )
    enddo
    IF Hb_InetErrorCode( commSocket ) != 0
       Hb_INetClose( Socket )
-      DispOutAt( 17,0, padc( "Can't connect with " + cAddress+": " + Hb_InetErrorDesc( commSocket ),maxcol()+1), 'w+/n' )
-      DispOutAt( 18,0, padc( "Press a key to terminate the program", maxcol()+1 ), 'w+/n' )
+      DispOutAt( 17,0, padc( "Can't connect with " + cAddress+": " + Hb_InetErrorDesc( commSocket ),maxcol()+1), "w+/n" )
+      DispOutAt( 18,0, padc( "Press a key to terminate the program", maxcol()+1 ), "w+/n" )
       Inkey(0)
       quit
    ENDIF
@@ -314,7 +314,7 @@ Function TrmServeServer( Socket, cAddress, cServerInfo )
    //
    Hb_INetTimeout( commSocket, -1 )
 
-   Hb_INetSend( Socket, 'ARCONNECTED' + CR_LF )
+   Hb_INetSend( Socket, "ARCONNECTED" + CR_LF )
    Hb_INetClose( Socket )
 
    Wvt_SetTimer( TIMER_RECEIVE,   10 )
@@ -350,7 +350,7 @@ Function TrmReceiveServer()
       if ( nBytes := Hb_INetDataReady( commSocket ) ) > 0
 
          Hb_INetTimeout( commSocket, 10 )
-         cBuffer := Hb_INetRecvEndBlock( commSocket, '|/END\|', @nBytes )
+         cBuffer := Hb_INetRecvEndBlock( commSocket, "|/END\|", @nBytes )
          Hb_INetTimeout( commSocket, -1 )
          if nBytes > 0 .and. !empty( cBuffer )
             nTotalBytes += nBytes
@@ -362,10 +362,10 @@ Function TrmReceiveServer()
                endif
 
                do case
-               case cCommand == 'SCR'
+               case cCommand == "SCR"
                   nScreens++
-                  a_:= Str2A( cData, '</E?>' )
-                  b_:= hb_aTokens( a_[ 1 ], ';' )
+                  a_:= Str2A( cData, "</E?>" )
+                  b_:= hb_aTokens( a_[ 1 ], ";" )
                   aeval( b_, {|e,i| b_[ i ] := val( e ) } )
 
                   n := ( b_[ 3 ]-b_[ 1 ]+1 ) * ( b_[ 4 ]-b_[ 2 ]+1 )
@@ -382,24 +382,24 @@ Function TrmReceiveServer()
                                                 ( BYTE* ) hb_parc( 6 ) );
                   }
 
-               case cCommand == 'CRS'
-                  a_:= hb_aTokens( @cData, ';' )
+               case cCommand == "CRS"
+                  a_:= hb_aTokens( @cData, ";" )
                   SetPos( val( a_[ 1 ] ), val( a_[ 2 ] ) )
                   SetCursor( val( a_[ 3 ] ) )
 
-               case cCommand == 'ID'
+               case cCommand == "ID"
                   // Verify if objects are serialized and executed accordingly
 
-               case cCommand == 'MUSIC'
+               case cCommand == "MUSIC"
                   PlayMusic( cData )
 
-               case cCommand == 'CLK_ONOFF'
-                  SetClock( cData == 'TRUE' )
+               case cCommand == "CLK_ONOFF"
+                  SetClock( cData == "TRUE" )
 
-               case cCommand == 'CLK_INFO'
+               case cCommand == "CLK_INFO"
                   SetClockInfo( cData )
 
-               case cCommand == 'BLK'
+               case cCommand == "BLK"
                   BEGIN SEQUENCE
                      Eval( COMPILE( cData ) )
                   ENDSEQUENCE
@@ -455,15 +455,15 @@ Function Wvt_Key( nKey )
 //----------------------------------------------------------------------//
 
 Static Function TrmFetchCommand( cBuffer, cData )
-   Local cToken, c, cCmd := ''
+   Local cToken, c, cCmd := ""
    Local n
 
-   if left( @cBuffer,1 ) == '<'
-      if ( n := at( '>', @cBuffer ) ) > 0
+   if left( @cBuffer,1 ) == "<"
+      if ( n := at( ">", @cBuffer ) ) > 0
          c := substr( cBuffer, 2, n-2 )
          cBuffer := substr( cBuffer, n+1 )
 
-         cToken := '</'+ c +'>'
+         cToken := "</"+ c +">"
          if ( n := at( cToken, cBuffer ) ) > 0
             cData := substr( cBuffer, 1, n-1 )
             cBuffer := substr( cBuffer, n+len( cToken ) )
@@ -500,37 +500,37 @@ Static Function TrmReceiveALine( Socket, cInfo )
 Static Function uiDebug( p1,p2,p3,p4,p5,p6,p7,p8,p9,p10 )
    #ifdef __TRACE__
 
-   Local cDebug := ''
+   Local cDebug := ""
 
    if p1 <> nil
       cDebug += uiXtos( p1 )
    endif
    if p2 <> nil
-      cDebug += '   ' + uiXtos( p2 )
+      cDebug += "   " + uiXtos( p2 )
    endif
    if p3 <> nil
-      cDebug += '   ' + uiXtos( p3 )
+      cDebug += "   " + uiXtos( p3 )
    endif
    if p4 <> nil
-      cDebug += '   ' + uiXtos( p4 )
+      cDebug += "   " + uiXtos( p4 )
    endif
    if p5 <> nil
-      cDebug += '   ' + uiXtos( p5 )
+      cDebug += "   " + uiXtos( p5 )
    endif
    if p6 <> nil
-      cDebug += '   ' + uiXtos( p6 )
+      cDebug += "   " + uiXtos( p6 )
    endif
    if p7 <> nil
-      cDebug += '   ' + uiXtos( p7 )
+      cDebug += "   " + uiXtos( p7 )
    endif
    if p8 <> nil
-      cDebug += '   ' + uiXtos( p8 )
+      cDebug += "   " + uiXtos( p8 )
    endif
    if p9 <> nil
-      cDebug += '   ' + uiXtos( p9 )
+      cDebug += "   " + uiXtos( p9 )
    endif
    if p10 <> nil
-      cDebug += '   ' + uiXtos( p10 )
+      cDebug += "   " + uiXtos( p10 )
    endif
 
    if lTraceLog
@@ -548,19 +548,19 @@ Static Function TrmXtoS( xVar )
    Local cType := valtype( xVar )
 
    do case
-   case cType $ 'CM'
+   case cType $ "CM"
 
-   case cType == 'N'
+   case cType == "N"
       xVar := ltrim( str( xVar ) )
 
-   case cType == 'D'
+   case cType == "D"
       xVar := dtoc( xVar )
 
-   case cType == 'L'
-      xVar := if( xVar, 'T','F' )
+   case cType == "L"
+      xVar := if( xVar, "T","F" )
 
    otherwise
-      xVar := ''
+      xVar := ""
 
    endcase
 
@@ -589,24 +589,24 @@ Static Function Str2A( cStr, cDel )
 //----------------------------------------------------------------------//
 
 Static Function uiXtos( xVar )
-   Local cVar := ''
+   Local cVar := ""
    Local cType := valtype( xVar )
 
    do case
-   case cType == 'C'
+   case cType == "C"
       cVar := xVar
 
-   case cType == 'N'
+   case cType == "N"
       cVar := str( xVar )
 
-   case cType == 'D'
+   case cType == "D"
       cVar := dtoc( xVar )
 
-   case cType == 'L'
-      cVar := if( xVar, 'Yes','No ' )
+   case cType == "L"
+      cVar := if( xVar, "Yes","No " )
 
    otherwise
-      cVar := 'NIL'
+      cVar := "NIL"
 
    endcase
 
@@ -630,8 +630,8 @@ Static Function TrmInitFont()
       #endif
 
    #else
-      Local cFont     := GetEnv( 'VouchFont' )
-      Local nSize     := val( GetEnv( 'VouchFontSize' ) )
+      Local cFont     := GetEnv( "VouchFont" )
+      Local nSize     := val( GetEnv( "VouchFontSize" ) )
       Local nScrWidth
 
       Wvt_SetCodepage( 255 )
@@ -639,7 +639,7 @@ Static Function TrmInitFont()
       hb_setTermCP( "EN" )
 
       if empty( cFont )
-         cFont := 'Courier New'
+         cFont := "Courier New"
       endif
       if empty( nSize )
          nScrWidth := Wvt_GetScreenWidth()
@@ -669,13 +669,13 @@ Static Function TrmInitFont()
 Static Function TrmDispLogin( cAddress, cPort )
    Local nMaxCol := maxcol()+1
 
-   DispOutAt( 0,0, padc( "Vouch Client "+VouchClientVersion, nMaxCol ), 'W+/r' )
+   DispOutAt( 0,0, padc( "Vouch Client "+VouchClientVersion, nMaxCol ), "W+/r" )
 
-   DispOutAt( 10,0, padc( '...Please Wait...', nMaxCol ), 'W+/N' )
-   DispOutAt( 12,0, padc( 'Securing Server Connection', nMaxCol ), 'W+/N' )
-   DispOutAt( 13,0, padc( 'Address[ '+cAddress+' ]  Port[ '+cPort+' ]', nMaxCol ), 'W+/N' )
+   DispOutAt( 10,0, padc( "...Please Wait...", nMaxCol ), "W+/N" )
+   DispOutAt( 12,0, padc( "Securing Server Connection", nMaxCol ), "W+/N" )
+   DispOutAt( 13,0, padc( "Address[ "+cAddress+" ]  Port[ "+cPort+" ]", nMaxCol ), "W+/N" )
 
-   DispOutAt( maxrow(), 0, padc( 'the software that GROWS with you', nMaxCol ), 'W+/r' )
+   DispOutAt( maxrow(), 0, padc( "the software that GROWS with you", nMaxCol ), "W+/r" )
 
    Return nil
 
@@ -689,7 +689,7 @@ Static Function SetClockInfo( cData )
    lInfo := aclone( aInfo )
 
    if cData <> NIL
-      a_:= hb_aTokens( cData, ';' )
+      a_:= hb_aTokens( cData, ";" )
       if len( a_ ) >= 3
          aInfo := { val( a_[ 1 ] ), val( a_[ 2 ] ), a_[ 3 ] }
       endif
@@ -705,7 +705,7 @@ Static Function SetClock( lOnOff )
 
    oClock := lClock
 
-   if valtype( lOnOff ) == 'L'
+   if valtype( lOnOff ) == "L"
       lClock := lOnOff
    endif
 
@@ -734,22 +734,22 @@ Static Function DispClock()
 Static Function PlayMusic( cTheme )
 
    do case
-   case cTheme == 'THUD'
+   case cTheme == "THUD"
       tone(60,0.5)
 
-   case cTheme == 'WAITON'
+   case cTheme == "WAITON"
       tone(800,1); tone(1600,1)
 
-   case cTheme == 'WAITOFF'
+   case cTheme == "WAITOFF"
       tone(1600,1); tone(800,1)
 
-   case cTheme == 'CHARGE'
+   case cTheme == "CHARGE"
       Eval( {|| tone(523,2),tone(698,2),tone(880,2),tone(1046,4),tone(880,2),tone(1046,8) } )
 
-   case cTheme == 'NANNYBOO'
+   case cTheme == "NANNYBOO"
       AEval( {{196,2},{196,2},{164,2},{220,2},{196,4},{164,4}}, {|a| tone(a[1],a[2]) } )
 
-   case cTheme == 'BADKEY'
+   case cTheme == "BADKEY"
       tone(480,0.25); tone(240,0.25)
 
    endcase
@@ -769,18 +769,18 @@ Static Function PlayMusic( cTheme )
 #define S_DEF       9
 
 Static Function GetForm( cForm )
-   Local cReply := ''
+   Local cReply := ""
    Local i, scr , n,s
    Local aFields := {}
    Local a_:={}
    Local frm_:={}
    Local getlist := {}
 
-   aFields := hb_aTokens( cForm, '^' )
+   aFields := hb_aTokens( cForm, "^" )
 
    for i := 1 to len( aFields )
-      //a_:= Str2A( aFields[ i ], ',' )
-      a_:= hb_aTokens( aFields[ i ], ',' )
+      //a_:= Str2A( aFields[ i ], "," )
+      a_:= hb_aTokens( aFields[ i ], "," )
 
       a_[ S_LEN ] := val(a_[ S_LEN ])
       a_[ S_DEC ] := val(a_[ S_DEC ])
@@ -788,21 +788,21 @@ Static Function GetForm( cForm )
       a_[ S_COL ] := val(a_[ S_COL ])
 
       if empty( a_[ S_CLR ] )
-         a_[ S_CLR ] := 'W+/BG,W+/B'
+         a_[ S_CLR ] := "W+/BG,W+/B"
       endif
       if empty( a_[ S_PIC ] )
-         a_[ S_PIC ] := '@ '
+         a_[ S_PIC ] := "@ "
       endif
 
       do case
-      case a_[ S_TYP ] == 'C'
+      case a_[ S_TYP ] == "C"
          a_[ S_DEF ] := pad( a_[ S_DEF ], a_[ S_LEN ] )
-      case a_[ S_TYP ] == 'N'
+      case a_[ S_TYP ] == "N"
          a_[ S_DEF ] := val( a_[ S_DEF ] )
-      case a_[ S_TYP ] == 'D'
+      case a_[ S_TYP ] == "D"
          a_[ S_DEF ] := ctod( a_[ S_DEF ] )
-      case a_[ S_TYP ] == 'L'
-         a_[ S_DEF ] := if( a_[ S_DEF ] == 'T', .t., .f. )
+      case a_[ S_TYP ] == "L"
+         a_[ S_DEF ] := if( a_[ S_DEF ] == "T", .t., .f. )
       endcase
 
       /*
@@ -815,7 +815,7 @@ Static Function GetForm( cForm )
    scr := savescreen( 0,0,maxrow(),maxcol() )
    cls
    for i := 1 to len( frm_ )
-      DispOutAt( frm_[ i,S_ROW ], frm_[ i,S_COL ]-10, frm_[ i,S_LBL ], 'W+/B' )
+      DispOutAt( frm_[ i,S_ROW ], frm_[ i,S_COL ]-10, frm_[ i,S_LBL ], "W+/B" )
       @ frm_[ i,S_ROW ], frm_[ i,S_COL ] GET frm_[ i,S_DEF ] ;
         PICTURE frm_[ i,S_PIC ] COLOR frm_[ i,S_CLR ]
    next
@@ -823,7 +823,7 @@ Static Function GetForm( cForm )
 
    RestScreen( 0,0,maxrow(),maxcol(),scr )
    for i := 1 to len( frm_ )
-      cReply += TrmXtos( frm_[ i,S_DEF ] ) + '^'
+      cReply += TrmXtos( frm_[ i,S_DEF ] ) + "^"
    next
 
    Return cReply

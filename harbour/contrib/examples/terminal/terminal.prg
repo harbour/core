@@ -61,9 +61,9 @@
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
-#include 'common.ch'
-#include 'wvtwin.ch'
-#include 'terminal.ch'
+#include "common.ch"
+#include "wvtwin.ch"
+#include "terminal.ch"
 
 //----------------------------------------------------------------------//
 
@@ -72,7 +72,7 @@
 #define BTM                             t_[ 3 ]
 #define RGT                             t_[ 4 ]
 
-#define ENDBLOCK                        '|/END\|'
+#define ENDBLOCK                        "|/END\|"
 
 #define NTRIM( n )                      ltrim( str( n ) )
 
@@ -180,9 +180,9 @@ Static Function RmtSvrInitAsServer( cServerInfo, Socket, nTimeoutClient )
       // Wait for 1 minutes maximum : W A T C H  INI Controlled
       //
       Hb_INetTimeout( Socket, nTimeoutClient )
-TrmDebug( 'SERVER: Connection Established!', INetPort( Socket ) )
+TrmDebug( "SERVER: Connection Established!", INetPort( Socket ) )
    else
-TrmDebug( 'SERVER: Connection Failed' )
+TrmDebug( "SERVER: Connection Failed" )
    endif
 
    Return lRet
@@ -204,13 +204,13 @@ Static Function RmtSvrAcceptClient( Socket, pClientSocket )
 
       exit
 
-TrmDebug( 'SvrConnectClient()', i++, 'TRY...' )
+TrmDebug( "SvrConnectClient()", i++, "TRY..." )
    enddo
 
    if lRet
-TrmDebug( 'CLIENT: Connection Established!', INetPort( pClientSocket ) )
+TrmDebug( "CLIENT: Connection Established!", INetPort( pClientSocket ) )
    else
-TrmDebug( 'CLIENT: Connection TimedOut!' )
+TrmDebug( "CLIENT: Connection TimedOut!" )
    endif
 
    Return .t.
@@ -221,11 +221,11 @@ Function RmtSvrSendClient( nMode, xData )
    Local cScr, cCurs, nError, nBytesSent, nBytesToSend, t_, cOdd, cEvn, cOdd0, cEvn0
    Local lSendCurs   := .f.
    Local lSendScrn   := .f.
-   Local cData       := ''
+   Local cData       := ""
 
-   static cCursor    := '     '
-   static cSOdd      := '     '
-   static cSEvn      := '     '
+   static cCursor    := "     "
+   static cSOdd      := "     "
+   static cSEvn      := "     "
    static n          := 0
    static nScreen    := 0
 
@@ -237,9 +237,9 @@ Function RmtSvrSendClient( nMode, xData )
 
          do case
          case nMode == SND_SCREEN
-            cCurs := NTRIM( Row() ) +';'+ ;
-                     NTRIM( Col() ) +';'+ ;
-                     NTRIM( Set( _SET_CURSOR ) ) +';'
+            cCurs := NTRIM( Row() ) +";"+ ;
+                     NTRIM( Col() ) +";"+ ;
+                     NTRIM( Set( _SET_CURSOR ) ) +";"
 
             if !( cCurs == cCursor )
                lSendCurs := .t.
@@ -520,4 +520,3 @@ Function TrmDummy()
    Return nil
 
 //----------------------------------------------------------------------//
-

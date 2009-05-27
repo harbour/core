@@ -101,7 +101,7 @@ ENDIF
          SetPaletteIndex()
 
       CASE nKey == K_F8
-         #include 'setcurs.ch'
+         #include "setcurs.ch"
          SetCursor( 2 )
          SetKey( K_F12, {||  SetCursor( 2 ) } )
          @ maxrow()-6, 5 GET cVar  COLOR 'W+/B'

@@ -66,7 +66,7 @@
    as a remote server.
 */
 
-#include 'hbgtinfo.ch'
+#include "hbgtinfo.ch"
 
 
 #define __REMOTE__
@@ -91,9 +91,9 @@ FUNCTION Main( cServerInfo )
    LOCAL nSel
    LOCAL nServerPort
 
-   SetColor( 'N/W,W/B,W+/N' )
+   SetColor( "N/W,W/B,W+/N" )
    CLS
-   ? ' '
+   ? " "
 
    #ifdef __REMOTE__
       // This can be redefined in case user want another format
@@ -110,9 +110,9 @@ FUNCTION Main( cServerInfo )
       ENDIF
    #endif
 
-   aadd( aMenu, { 'Play Music', {|| App_PlayMusic() } } )
-   aadd( aMenu, { ' '         , {|| NIL             } } )
-   aadd( aMenu, { 'Show Clock', {|| App_DispClock() } } )
+   aadd( aMenu, { "Play Music", {|| App_PlayMusic() } } )
+   aadd( aMenu, { " "         , {|| NIL             } } )
+   aadd( aMenu, { "Show Clock", {|| App_DispClock() } } )
 
    aeval( aMenu, {|e_| aadd( aOptions, e_[ 1 ] ) } )
 
@@ -145,8 +145,8 @@ FUNCTION App_DispClock()
 //----------------------------------------------------------------------//
 
 FUNCTION App_PlayMusic()
-   LOCAL cTheme   := 'CHARGE'
-   LOCAL aOptions := {'THUD','WAITON','WAITOFF','CHARGE','NANNYBOO','BADKEY' }
+   LOCAL cTheme   := "CHARGE"
+   LOCAL aOptions := {"THUD","WAITON","WAITOFF","CHARGE","NANNYBOO","BADKEY" }
    LOCAL cScr     := SaveScreen( 0, 0, maxrow(), maxcol() )
    LOCAL nSel
 
@@ -164,32 +164,32 @@ FUNCTION App_PlayMusic()
 
    DO CASE
 
-   case cTheme == 'THUD'
+   case cTheme == "THUD"
       #ifndef __REMOTE__
       tone(60,0.5)
       #endif
 
-   case cTheme == 'WAITON'
+   case cTheme == "WAITON"
       #ifndef __REMOTE__
       tone(800,1); tone(1600,1)
       #endif
 
-   case cTheme == 'WAITOFF'
+   case cTheme == "WAITOFF"
       #ifndef __REMOTE__
       tone(1600,1); tone(800,1)
       #endif
 
-   case cTheme == 'CHARGE'
+   case cTheme == "CHARGE"
       #ifndef __REMOTE__
       Eval( {|| tone(523,2),tone(698,2),tone(880,2),tone(1046,4),tone(880,2),tone(1046,8) } )
       #endif
 
-   case cTheme == 'NANNYBOO'
+   case cTheme == "NANNYBOO"
       #ifndef __REMOTE__
       AEval( {{196,2},{196,2},{164,2},{220,2},{196,4},{164,4}}, {|a| tone(a[1],a[2]) } )
       #endif
 
-   case cTheme == 'BADKEY'
+   case cTheme == "BADKEY"
       #ifndef __REMOTE__
       tone(480,0.25); tone(240,0.25)
       #endif
@@ -203,4 +203,3 @@ FUNCTION App_PlayMusic()
    RETURN nil
 
 //----------------------------------------------------------------------//
-

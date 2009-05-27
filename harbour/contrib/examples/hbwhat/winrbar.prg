@@ -16,10 +16,10 @@
 
 #include "winstruc.ch"
 
-#include 'hbwhat.ch'
+#include "hbwhat.ch"
 #include "commctrl.ch"
 
-#include 'debug.ch'
+#include "debug.ch"
 //----------------------------------------------------------------------//
 pragma pack(4)
 
@@ -198,4 +198,3 @@ METHOD AddBand( nMask,nStyle,hChild,cxMin,cyMin,cx,cText,hBmp,nPos )
    // Add the band
    RETURN VWN_SendMessage(::hWnd, RB_INSERTBAND, -1, rbBand:value ) != 0
 //----------------------------------------------------------------------//
-

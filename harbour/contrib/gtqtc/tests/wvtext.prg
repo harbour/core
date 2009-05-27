@@ -189,7 +189,7 @@ STATIC FUNCTION Boxes()
    LOCAL cTitle
 
    CLS
-   #include 'Box.ch'
+   #include "box.ch"
 
    DispBox  ( 2-1, 4,10-1,35,B_SINGLE       , cClr )
    DispOutAt( 5-1, 4, chr( 195 ), cClr )

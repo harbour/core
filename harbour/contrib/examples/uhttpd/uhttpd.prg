@@ -99,7 +99,7 @@
 #include "inkey.ch"
 #include "error.ch"
 #include "hbmemory.ch"
-#include 'hbgtinfo.ch'
+#include "hbgtinfo.ch"
 
 #include "hbextern.ch"   // need this to use with HRB
 

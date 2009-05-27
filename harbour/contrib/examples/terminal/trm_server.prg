@@ -61,7 +61,7 @@
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
-#include 'inkey.ch'
+#include "inkey.ch"
 #include "setcurs.ch"
 
 //----------------------------------------------------------------------//
@@ -95,7 +95,7 @@ Function Main( cPort )
    MutexDB       := HB_MutexCreate()
    MutexCount    := HB_MutexCreate()
 
-   SetColor( 'W+/N' )
+   SetColor( "W+/N" )
    SetCursor( SC_NONE )
 
    BuildScreen()
@@ -104,7 +104,7 @@ Function Main( cPort )
 
    Socket := hb_InetServer( val( cPort ) )
 
-   DispOutAt( 3, 0, padc( "Waiting for connections on port " + cPort, nMaxCol ), 'W+/N' )
+   DispOutAt( 3, 0, padc( "Waiting for connections on port " + cPort, nMaxCol ), "W+/N" )
 
    hView   := hb_ThreadStart( @ViewUpdate()    , Socket )
    hAccept := hb_ThreadStart( @AcceptIncoming(), Socket )
@@ -123,7 +123,7 @@ Function Main( cPort )
       ENDIF
    ENDDO
 
-   DispOutAt( maxrow()-2, 0, padc( 'Please kill the window if not closed automatically',nMaxCol ), 'W+/N' )
+   DispOutAt( maxrow()-2, 0, padc( "Please kill the window if not closed automatically",nMaxCol ), "W+/N" )
 
    hb_InetClose( Socket )
    hb_InetCleanup()

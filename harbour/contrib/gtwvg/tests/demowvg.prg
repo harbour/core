@@ -4013,9 +4013,9 @@ STATIC FUNCTION FetchText( nMode )
    RETURN cText
 /*----------------------------------------------------------------------*/
 #if 0
-#include 'memoedit.ch'
-#include 'setcurs.ch'
-#include 'inkey.ch'
+#include "memoedit.ch"
+#include "setcurs.ch"
+#include "inkey.ch"
 
 Function Editmemo()
    Local cText := 'This is initial text'
