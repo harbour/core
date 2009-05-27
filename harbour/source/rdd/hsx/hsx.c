@@ -665,7 +665,7 @@ static int hb_hsxHdrFlush( int iHandle )
    if( pHSX->fHdrChanged )
    {
       BYTE headrBuf[ HSXHEADER_LEN ];
-      LPHSXHEADER pHeader = ( LPHSXHEADER ) headrBuf;
+      LPHSXHEADER pHeader = ( LPHSXHEADER ) ( void * ) headrBuf;
       USHORT uiBits = 0, uiSize = pHSX->uiRecordSize;
 
       while( uiSize >>= 1 )
@@ -732,7 +732,7 @@ static int hb_hsxHdrRead( int iHandle )
 {
    LPHSXINFO pHSX = hb_hsxGetPointer( iHandle );
    BYTE headrBuf[ HSXHEADER_LEN ];
-   LPHSXHEADER pHeader = ( LPHSXHEADER ) headrBuf;
+   LPHSXHEADER pHeader = ( LPHSXHEADER ) ( void * ) headrBuf;
    int iResult = HSX_SUCCESS;
 
    if( ! pHSX )

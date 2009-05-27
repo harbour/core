@@ -1280,7 +1280,7 @@ static BOOL hb_nsxTagHeaderCheck( LPTAGINFO pTag )
          BYTE buffer[ NSX_TAGHEAD_HEADSIZE ];
          if( hb_nsxBlockRead( pTag->pIndex, pTag->HeadBlock, buffer, NSX_TAGHEAD_HEADSIZE ) )
          {
-            LPNSXTAGHEADER pHeader = ( LPNSXTAGHEADER ) buffer;
+            LPNSXTAGHEADER pHeader = ( LPNSXTAGHEADER ) ( void * ) buffer;
             if( pHeader->Signature[0] == NSX_SIGNATURE )
             {
                pTag->TagFlags = pHeader->TagFlags[0];

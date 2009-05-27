@@ -489,7 +489,7 @@ static int hb_socketConnect( HB_SOCKET_STRUCT *Socket )
    /* we'll be using a nonblocking function */
    hb_socketSetNonBlocking( Socket );
 
-   iErr1 = connect( Socket->com, (struct sockaddr *) &Socket->remote, sizeof(Socket->remote) );
+   iErr1 = connect( Socket->com, (struct sockaddr *) (void *) &Socket->remote, sizeof(Socket->remote) );
    if( iErr1 != 0 )
    {
 #if defined(HB_OS_WIN)
@@ -1704,7 +1704,7 @@ HB_FUNC( HB_INETSERVER )
 
    hb_vmUnlock();
 
-   if( bind( Socket->com, (struct sockaddr *) &Socket->remote, sizeof(Socket->remote) ) )
+   if( bind( Socket->com, (struct sockaddr *) (void *) &Socket->remote, sizeof(Socket->remote) ) )
    {
       HB_SOCKET_SET_ERROR( Socket );
       HB_INET_CLOSE( Socket->com );
@@ -1767,7 +1767,7 @@ HB_FUNC( HB_INETACCEPT )
       {
          /* On error (e.g. async connection closed) , com will be -1 and
             errno == 22 (invalid argument ) */
-         incoming = accept( Socket->com, (struct sockaddr *) &si_remote, &Len );
+         incoming = accept( Socket->com, (struct sockaddr *) (void *) &si_remote, &Len );
 
          if( incoming == ( HB_SOCKET_T ) -1 )
          {
@@ -1985,7 +1985,7 @@ HB_FUNC( HB_INETDGRAMBIND )
 
    hb_vmUnlock();
 
-   if( bind( Socket->com, (struct sockaddr *) &Socket->remote, sizeof(Socket->remote) ) )
+   if( bind( Socket->com, (struct sockaddr *) (void *) &Socket->remote, sizeof(Socket->remote) ) )
    {
       HB_SOCKET_SET_ERROR( Socket );
       HB_INET_CLOSE( Socket->com );
@@ -2108,7 +2108,7 @@ HB_FUNC( HB_INETDGRAMSEND )
    if( hb_selectWriteSocket( Socket ) )
    {
       Socket->count = sendto( Socket->com, szBuffer, iLen, 0,
-            (const struct sockaddr *) &Socket->remote, sizeof( Socket->remote ) );
+            (const struct sockaddr *) (void *) &Socket->remote, sizeof( Socket->remote ) );
    }
 
    hb_vmLock();
@@ -2173,7 +2173,7 @@ HB_FUNC( HB_INETDGRAMRECV )
       if( hb_selectReadSocket( Socket ) )
       {
          iLen = recvfrom( Socket->com, Buffer, iMaxLen, 0,
-               (struct sockaddr *) &Socket->remote, &iDtLen );
+               (struct sockaddr *) (void *) &Socket->remote, &iDtLen );
       }
       iTimeElapsed += Socket->timeout;
       if( Socket->caPeriodic )

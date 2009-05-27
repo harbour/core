@@ -1051,7 +1051,7 @@ static BOOL hb_ntxTagHeaderCheck( LPTAGINFO pTag )
          BYTE buffer[ NTX_TAGHEAD_HEADSIZE ];
          if( hb_ntxBlockRead( pTag->Owner, pTag->HeadBlock, buffer, NTX_TAGHEAD_HEADSIZE ) )
          {
-            LPNTXHEADER pHeader = ( LPNTXHEADER ) buffer;
+            LPNTXHEADER pHeader = ( LPNTXHEADER ) ( void * ) buffer;
             pTag->Signature = HB_GET_LE_UINT16( pHeader->type );
             pTag->RootBlock = HB_GET_LE_UINT32( pHeader->root );
             hb_ntxTagUpdateFlags( pTag );

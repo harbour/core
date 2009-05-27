@@ -2855,9 +2855,9 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
       * puiCount = RDDFUNCSCOUNT;
       uiSize = ( USHORT ) hb_arrayLen( pMethods );
 
-      pUsrFunction = ( DBENTRYP_V * ) &usrFuncTable;
-      pRddFunction = ( DBENTRYP_V * ) &rddFuncTable;
-      pFunction = ( DBENTRYP_V * ) &funcTable;
+      pUsrFunction = ( const DBENTRYP_V * ) ( const void * ) &usrFuncTable;
+      pRddFunction = ( const DBENTRYP_V * ) ( const void * ) &rddFuncTable;
+      pFunction    = ( DBENTRYP_V * ) ( void * ) &funcTable;
 
       for( uiCount = 1; uiCount <= RDDFUNCSCOUNT; ++uiCount )
       {
