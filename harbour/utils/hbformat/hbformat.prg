@@ -90,7 +90,7 @@ FUNCTION MAIN( ... )
 
    oRef:bCallBack := { |a, i|FCallBack( a, i ) }
 
-   IF "*" $ cFileName .OR. "?" $ cFileName
+   IF "*" $ cFileName
       cInitDir := Iif( ( i := Rat( "\", cFileName ) ) == 0, ;
          Iif( ( i := Rat( "/", cFileName ) ) == 0, ;
          "." + Set( _SET_DIRSEPARATOR ), Left( cFileName, i ) ), ;
@@ -156,8 +156,6 @@ STATIC FUNCTION CmpMsk( strcmp, mask )
                nPos1 ++
             ENDDO
          ENDIF
-      ELSEIF c == "?"
-         nPos1 ++
       ELSE
          IF c != SubStr( strcmp, nPos1, 1 )
             RETURN .F.
