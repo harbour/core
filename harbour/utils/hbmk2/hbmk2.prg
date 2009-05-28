@@ -65,30 +65,29 @@
 #include "hbgtinfo.ch"
 #include "hbver.ch"
 
-/* NOTE: Keep this code clean from any kind of contribs and Harbour
-         level 3rd party library/tool information. This (the hbmk)
-         component shall only contain hard-wired knowledge on Harbour
-         _core_ (official interfaces preferred), C compilers and OS
-         details on the smallest possible level.
-         Instead, 3rd party Harbour packages are recommended to
-         maintain and provide .hbc files themselves, as part of
-         their standard distribution packages. You can find a few
-         such .hbc examples in the 'examples' directory.
-         For Harbour contribs, the recommended method is to supply
-         and maintain .hbc files in their respective directories,
-         usually under tests (or utils, samples). As of this
+/* NOTE: Keep this code clean from any kind of contribs and Harbour level
+         3rd party library/tool information. This (the hbmk) component
+         shall only contain hard-wired knowledge on Harbour _core_
+         (official interfaces preferred), C compilers and OS details on
+         the smallest possible level.
+         Instead, 3rd party Harbour packages are recommended to maintain
+         and provide .hbc files themselves, as part of their standard
+         distribution packages. You can find a few such .hbc examples in
+         the 'examples' directory. For Harbour contribs, the recommended
+         method is to supply and maintain .hbc files in their respective
+         directories, usually under tests (or utils, samples). As of this
          writing, most of them has one created.
          Thank you. [vszakats] */
 
-/* TODO: Create temporary .c files with mangled names, to
-         avoid incidentally overwriting existing .c file with the
-         same name. Problems to solve: -hbcc compatibility (the
-         feature has to be disabled when this switch is uses).
-         Collision with -o harbour option isn't a problem, since
-         we're overriding it already fo hbmk, but we will need to
-         deal with "/" prefixed variant. Since we need to use -o
-         Harbour switch, it will be a problem also when user tries
-         to use -p option, .ppo files will be generated in temp dir. */
+/* TODO: Create temporary .c files with mangled names, to avoid
+         incidentally overwriting existing .c file with the same name.
+         Problems to solve: -hbcc compatibility (the feature has to be
+         disabled when this switch is uses). Collision with -o harbour
+         option isn't a problem, since we're overriding it already for
+         hbmk, but we will need to deal with "/" prefixed variant. Since
+         we need to use -o Harbour switch, it will be a problem also when
+         user tries to use -p option, .ppo files will be generated in temp
+         dir. */
 /* TODO: Add support for library creation for rest of compilers. */
 /* TODO: Add support for dynamic library creation for rest of compilers. */
 /* TODO: Further clean hbmk context var usage (hbmk2 scope, project scope,
@@ -5697,7 +5696,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
       RETURN .T.
    ENDIF
 
-   IF ( cKeyword == "unix"     .AND. ( hbmk[ _HBMK_cARCH ] $ "bsd|hpux|sunos|linux" .OR. hbmk[ _HBMK_cARCH ] == "darwin" )   ) .OR. ;
+   IF ( cKeyword == "unix"     .AND. ( hbmk[ _HBMK_cARCH ] $ "bsd|hpux|sunos|linux" .OR. hbmk[ _HBMK_cARCH ] == "darwin" ) ) .OR. ;
       ( cKeyword == "allwin"   .AND. hbmk[ _HBMK_cARCH ] $ "win|wce"                                             ) .OR. ;
       ( cKeyword == "allgcc"   .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin|djgpp"         ) .OR. ;
       ( cKeyword == "allmingw" .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"                              ) .OR. ;
