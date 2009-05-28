@@ -137,3 +137,33 @@ HB_FUNC( MESSAGEBOX )
    HB_TCHAR_FREE( lpStr1 );
    HB_TCHAR_FREE( lpStr2 );
 }
+
+HB_FUNC_EXTERN( WIN_CREATEDC              ) ; HB_FUNC( CREATEDC              ) { HB_FUNC_EXEC( WIN_CREATEDC              ); }
+HB_FUNC_EXTERN( WIN_STARTDOC              ) ; HB_FUNC( STARTDOC              ) { HB_FUNC_EXEC( WIN_STARTDOC              ); }
+HB_FUNC_EXTERN( WIN_ENDDOC                ) ; HB_FUNC( ENDDOC                ) { HB_FUNC_EXEC( WIN_ENDDOC                ); }
+HB_FUNC_EXTERN( WIN_ABORTDOC              ) ; HB_FUNC( ABORTDOC              ) { HB_FUNC_EXEC( WIN_ABORTDOC              ); }
+HB_FUNC_EXTERN( WIN_DELETEDC              ) ; HB_FUNC( DELETEDC              ) { HB_FUNC_EXEC( WIN_DELETEDC              ); }
+HB_FUNC_EXTERN( WIN_STARTPAGE             ) ; HB_FUNC( STARTPAGE             ) { HB_FUNC_EXEC( WIN_STARTPAGE             ); }
+HB_FUNC_EXTERN( WIN_ENDPAGE               ) ; HB_FUNC( ENDPAGE               ) { HB_FUNC_EXEC( WIN_ENDPAGE               ); }
+HB_FUNC_EXTERN( WIN_TEXTOUT               ) ; HB_FUNC( TEXTOUT               ) { HB_FUNC_EXEC( WIN_TEXTOUT               ); }
+HB_FUNC_EXTERN( WIN_GETTEXTSIZE           ) ; HB_FUNC( GETTEXTSIZE           ) { HB_FUNC_EXEC( WIN_GETTEXTSIZE           ); }
+HB_FUNC_EXTERN( WIN_GETCHARSIZE           ) ; HB_FUNC( GETCHARSIZE           ) { HB_FUNC_EXEC( WIN_GETCHARSIZE           ); }
+HB_FUNC_EXTERN( WIN_GETDEVICECAPS         ) ; HB_FUNC( GETDEVICECAPS         ) { HB_FUNC_EXEC( WIN_GETDEVICECAPS         ); }
+HB_FUNC_EXTERN( WIN_SETMAPMODE            ) ; HB_FUNC( SETMAPMODE            ) { HB_FUNC_EXEC( WIN_SETMAPMODE            ); }
+HB_FUNC_EXTERN( WIN_MULDIV                ) ; HB_FUNC( MULDIV                ) { HB_FUNC_EXEC( WIN_MULDIV                ); }
+HB_FUNC_EXTERN( WIN_CREATEFONT            ) ; HB_FUNC( CREATEFONT            ) { HB_FUNC_EXEC( WIN_CREATEFONT            ); }
+HB_FUNC_EXTERN( WIN_GETPRINTERFONTNAME    ) ; HB_FUNC( GETPRINTERFONTNAME    ) { HB_FUNC_EXEC( WIN_GETPRINTERFONTNAME    ); }
+HB_FUNC_EXTERN( WIN_BITMAPSOK             ) ; HB_FUNC( BITMAPSOK             ) { HB_FUNC_EXEC( WIN_BITMAPSOK             ); }
+HB_FUNC_EXTERN( WIN_SETDOCUMENTPROPERTIES ) ; HB_FUNC( SETDOCUMENTPROPERTIES ) { HB_FUNC_EXEC( WIN_SETDOCUMENTPROPERTIES ); }
+HB_FUNC_EXTERN( WIN_LOADBITMAPFILE        ) ; HB_FUNC( LOADBITMAPFILE        ) { HB_FUNC_EXEC( WIN_LOADBITMAPFILE        ); }
+HB_FUNC_EXTERN( WIN_DRAWBITMAP            ) ; HB_FUNC( DRAWBITMAP            ) { HB_FUNC_EXEC( WIN_DRAWBITMAP            ); }
+HB_FUNC_EXTERN( WIN_ENUMFONTS             ) ; HB_FUNC( ENUMFONTS             ) { HB_FUNC_EXEC( WIN_ENUMFONTS             ); }
+HB_FUNC_EXTERN( WIN_GETEXEFILENAME        ) ; HB_FUNC( GETEXEFILENAME        ) { HB_FUNC_EXEC( WIN_GETEXEFILENAME        ); }
+HB_FUNC_EXTERN( WIN_SETCOLOR              ) ; HB_FUNC( SETCOLOR              ) { HB_FUNC_EXEC( WIN_SETCOLOR              ); }
+HB_FUNC_EXTERN( WIN_SETPEN                ) ; HB_FUNC( SETPEN                ) { HB_FUNC_EXEC( WIN_SETPEN                ); }
+HB_FUNC_EXTERN( WIN_FILLRECT              ) ; HB_FUNC( FILLRECT              ) { HB_FUNC_EXEC( WIN_FILLRECT              ); }
+HB_FUNC_EXTERN( WIN_LINETO                ) ; HB_FUNC( LINETO                ) { HB_FUNC_EXEC( WIN_LINETO                ); }
+HB_FUNC_EXTERN( WIN_RECTANGLE             ) ; HB_FUNC( RECTANGLE             ) { HB_FUNC_EXEC( WIN_RECTANGLE             ); }
+HB_FUNC_EXTERN( WIN_ARC                   ) ; HB_FUNC( ARC                   ) { HB_FUNC_EXEC( WIN_ARC                   ); }
+HB_FUNC_EXTERN( WIN_ELLIPSE               ) ; HB_FUNC( ELLIPSE               ) { HB_FUNC_EXEC( WIN_ELLIPSE               ); }
+HB_FUNC_EXTERN( WIN_SETBKMODE             ) ; HB_FUNC( SETBKMODE             ) { HB_FUNC_EXEC( WIN_SETBKMODE             ); }

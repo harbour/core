@@ -4912,6 +4912,12 @@ STATIC FUNCTION MacroProc( hbmk, cString, cDirParent )
          cMacro := hbmk[ _HBMK_cCOMP ]
       CASE cMacro == "HB_CPU"
          cMacro := hbmk_CPU( hbmk )
+      CASE cMacro == "HB_MAJOR"
+         cMacro := hb_ntos( hb_Version( HB_VERSION_MAJOR ) )
+      CASE cMacro == "HB_MINOR"
+         cMacro := hb_ntos( hb_Version( HB_VERSION_MINOR ) )
+      CASE cMacro == "HB_RELEASE"
+         cMacro := hb_ntos( hb_Version( HB_VERSION_RELEASE ) )
       CASE ! Empty( GetEnv( cMacro ) )
          cMacro := GetEnv( cMacro )
       OTHERWISE

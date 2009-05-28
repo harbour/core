@@ -123,6 +123,6 @@ FUNCTION hb_buildinfo( n )
    v[ _HB_VM_OPTIMIZATION        ] := 2   /* Emulate xhb */
    v[ _HB_LANG_ID                ] := hb_LangSelect()
    v[ _HB_ARRAY_MODE             ] := 0   /* Emulate xhb */
-   v[ _HB_CREDITS                ] := { "See 'harbour /credits'" }
+   v[ _HB_CREDITS                ] := { "See 'harbour -credits'" }
 
    RETURN iif( ISNUMBER( n ), iif( n <= Len( v ), v[ n ], NIL ), v )
