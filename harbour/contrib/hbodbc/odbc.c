@@ -80,9 +80,10 @@
 #include "hbapi.h"
 
 #if !defined( HB_OS_WIN )
-#  define HB_TCHAR_CONVTO( s )      ( ( char * ) ( s ) )
-#  define HB_TCHAR_CONVFROM( s )    ( ( char * ) ( s ) )
-#  define HB_TCHAR_FREE( s )        HB_SYMBOL_UNUSED( s )
+#  define HB_TCHAR_CONVTO( s )       ( ( char * ) ( s ) )
+#  define HB_TCHAR_CONVFROM( s )     ( ( char * ) ( s ) )
+#  define HB_TCHAR_CONVNFROM( s, l ) ( ( char * ) ( s ) )
+#  define HB_TCHAR_FREE( s )         HB_SYMBOL_UNUSED( s )
 #endif
 
 #if defined( HB_OS_LINUX ) && defined( __WATCOMC__ )
@@ -323,13 +324,9 @@ HB_FUNC( SQLDESCRIBECOL ) /* hStmt, nCol, @cName, nLen, @nBufferLen, @nDataType,
    {
       if( ISBYREF( 3 ) )
       {
-#if defined( HB_OS_WIN ) && defined( UNICODE )
-         char * szStr = HB_TCHAR_CONVFROM( buffer );
-         hb_storc( szStr, 3 );
+         char * szStr = HB_TCHAR_CONVNFROM( buffer, wBufLen );
+         hb_storclen( szStr, ( long ) wBufLen, 3 );
          HB_TCHAR_FREE( szStr );
-#else
-         hb_storclen( ( char * ) buffer, ( long ) wBufLen, 3 );
-#endif
       }
       hb_storni( ( int ) wBufLen, 5 );
       hb_storni( ( int ) wDataType, 6 );
