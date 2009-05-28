@@ -176,9 +176,7 @@ static void hb_itemPushList( ULONG ulRefMask, ULONG ulPCount, PHB_ITEM** pItems 
             hb_vmPush( &itmRef );
          }
          else
-         {
             hb_vmPush( ( *pItems )[ ulParam ] );
-         }
       }
    }
 }
@@ -653,8 +651,7 @@ HB_FUNC( WVG_AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
 
    hb_oleSetError( lOleError );
 
-   hb_retni( ( int ) lOleError );
+   hb_retnl( lOleError );
 }
 
 /*----------------------------------------------------------------------*/
-
