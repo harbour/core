@@ -17,6 +17,9 @@ HB_GT_LIST=\
 # verify if GT drivers exist
 HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
 
+# Favor size for CE builds.
+HB_GCMODE=0
+
 HB_FLAGSEXTRA = -D__PLATFORM__WINCE
 
 ifeq ($(HB_DYNLIB),yes)

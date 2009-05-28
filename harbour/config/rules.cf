@@ -27,7 +27,7 @@ endif
 HB := $(HB)harbour$(EXE_EXT)
 
 ifeq ($(HB_GCMODE),)
-   HB_GCMODE=3
+   HB_GCMODE=0
 endif
 HB_FLAGS := -i$(HB_INC_COMPILE) -q0 -w3 -es2 -kmo $(HB_PDBG)
 HB_RULE = $(HB) $? -n1 $(HB_FLAGS) -gc$(HB_GCMODE) $(HB_FLAGSEXTRA) $(HB_USER_PRGFLAGS)

@@ -9,9 +9,6 @@ EXE_EXT = .exe
 LIB_PREF = lib
 LIB_EXT = .a
 
-# Favor size for CE builds.
-HB_GCMODE=0
-
 CC = $(HB_CCPREFIX)gcc
 CC_IN = -c
 CC_OUT = -o

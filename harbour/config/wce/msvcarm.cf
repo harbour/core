@@ -11,9 +11,6 @@ EXE_EXT = .exe
 LIB_PREF =
 LIB_EXT = .lib
 
-# Favor size for CE builds.
-HB_GCMODE=0
-
 ifeq ($(HB_VISUALC_VER_PRE80),)
 CC = cl.exe
 else

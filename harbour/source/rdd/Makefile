@@ -4,6 +4,10 @@
 
 ROOT = ../../
 
+ifneq ($(HB_ARCHITECTURE),wce)
+	HB_GCMODE=3
+endif
+
 C_SOURCES=\
 	dbcmd.c \
 	dbcmd53.c \
