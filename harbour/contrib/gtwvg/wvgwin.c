@@ -85,6 +85,10 @@
 #  define DUMMYUNIONNAME5
 #endif
 
+#if !defined( GCLP_HBRBACKGROUND )
+#  define GCLP_HBRBACKGROUND   -10
+#endif
+
 #include "gtwvg.h"
 #include "hbwapi.h"
 #include <windowsx.h>
