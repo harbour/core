@@ -4796,7 +4796,7 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, /* @ */ nEmbedLevel )
                IF ! Empty( cParam )
                   DO CASE
                   CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" )
-                     IF nEmbedLevel < 3
+                     IF nEmbedLevel < 10
                         cParam := SubStr( cParam, 2 )
                         IF Empty( FN_ExtGet( cParam ) )
                            cParam := FN_ExtSet( cParam, ".hbm" )
@@ -4805,7 +4805,7 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, /* @ */ nEmbedLevel )
                         HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
                      ENDIF
                   CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
-                     IF nEmbedLevel < 3
+                     IF nEmbedLevel < 10
                         nEmbedLevel++
                         HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
                      ENDIF
