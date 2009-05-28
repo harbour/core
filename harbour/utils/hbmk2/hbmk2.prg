@@ -1999,7 +1999,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          ENDIF
          IF hbmk[ _HBMK_lMAP ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map {OM}" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
          ENDIF
          IF hbmk[ _HBMK_lSHARED ]
             AAdd( hbmk[ _HBMK_aLIBPATH ], s_cHB_BIN_INSTALL )
@@ -2074,7 +2074,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPathSep := " "
          cLibLibExt := ".a"
          IF hbmk[ _HBMK_lMAP ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map {OM}" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
          ENDIF
          IF hbmk[ _HBMK_lSHARED ]
             AAdd( hbmk[ _HBMK_aLIBPATH ], s_cHB_BIN_INSTALL )
@@ -2128,7 +2128,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
          ENDIF
          IF hbmk[ _HBMK_lMAP ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map {OM}" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
          ENDIF
          IF ! hbmk[ _HBMK_lSHARED ]
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
