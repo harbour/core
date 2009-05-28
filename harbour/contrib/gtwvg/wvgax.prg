@@ -77,10 +77,6 @@
 
 /*----------------------------------------------------------------------*/
 
-STATIC  s_nRef := 0
-
-/*----------------------------------------------------------------------*/
-
 CLASS WvgActiveXControl FROM win_OleAuto, WvgWindow
 
    DATA   CLSID                              INIT ""
@@ -100,8 +96,8 @@ CLASS WvgActiveXControl FROM win_OleAuto, WvgWindow
    DATA   hContainer
    DATA   hSink
 
-
-   DATA   hhOBJ
+   DATA   ClassName
+   DATA   nEventHandler
 
    METHOD New()
    METHOD Create()
@@ -126,6 +122,7 @@ CLASS WvgActiveXControl FROM win_OleAuto, WvgWindow
    METHOD mapEvent( nEvent, bBlock )
 
    METHOD handleEvent()
+   METHOD HandleOleEvents()
 
 PROTECTED:
    METHOD adviseEvents()
@@ -133,67 +130,94 @@ PROTECTED:
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
+
 METHOD New( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgActiveXControl
 
    ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style      := WS_CHILD + WS_VISIBLE + WS_CLIPCHILDREN + WS_CLIPSIBLINGS
    ::objType    := objTypeActiveX
-   ::className  := "WVGACTIVEX"
+   ::className  := 'WIN_OLEAUTO'
 
    RETURN Self
-/*----------------------------------------------------------------------*/
-METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLicense ) CLASS WvgActiveXControl
-   LOCAL hx, pUnk
 
-   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+/*----------------------------------------------------------------------*/
+
+METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLicense ) CLASS WvgActiveXControl
+   LOCAL hObj, hWnd
+
+   ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    DEFAULT cCLSID   TO ::CLSID
    DEFAULT cLicense TO ::license
 
    ::CLSID      := cCLSID
    ::license    := cLicense
-
-   ::__hObj     := NIL
    ::hSink      := 0
-
    ::hContainer := ::oParent:getHWND()
 
    IF ValType( ::hContainer ) + ValType( ::CLSID ) != "NC"
       RETURN( NIL )
-   ELSEIF HB_AX_AtlAxWinInit()
-      s_nRef++
    ENDIF
 
-   ::nID := ::oParent:GetControlId()
+   ::hWnd := NIL
+   ::nID  := ::oParent:GetControlId()
 
-   #if 1
-   ::__hObj := HB_AX_AtlAxGetControl( "ATLAXWin", ::hContainer, ::CLSID, ::nID, ;
-                                    ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ;
-                                    ::style, ::exStyle, NIL, @hx, @pUnk )
-   #else
-   ::__hObj := HB_AX_AtlAxCreateControl( "ATLAXWin", ::hContainer, ::CLSID, ::nID, ;
-                                    ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ;
-                                    ::style, ::exStyle, NIL, @hx, @pUnk )
-   #endif
-   if empty( ::__hObj )
+   Wvg_AxInit()
+
+   hWnd := Wvg_AxCreateWindow( Win_N2P( ::hContainer ), ::CLSID, ::nID, ;
+                                 ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ;
+                                 ::style, ::exStyle )
+   IF empty( hWnd )
+      RETURN nil
+   ENDIF
+
+   hObj := Wvg_AxGetControl( hWnd )
+   if empty( hObj )
       RETURN NIL
-   endif
+   ENDIF
+
+   Wvg_AxDoVerb( hWnd, -4 )
+
+   ::__hObj := hObj
+   ::hWnd   := Win_P2N( hWnd )
 
    ::oParent:addChild( SELF )
-   ::hWnd := hx
-
-   HB_AX_AtlSetVerb( ::hWnd, pUnk, -4 )
 
    IF !Empty( ::__hObj ) .AND. !Empty( ::hEvents )
+#if 1
+/* hb_ToOutDebug( "AdviseEvents() ----hWnd = %i", hWnd ) */
+      ::nEventHandler := "AdviseEvents"
       ::AdviseEvents()
+#else
+/* hb_ToOutDebug( "__AxRegisterHandler() ----hWnd = %i", ::hWnd ) */
+      ::nEventHandler := "AxRegisterHandler"
+      ::__hSink := __AxRegisterHandler( ::__hObj, {|n,...| ::handleOleEvents( n, ... ) } )
+#endif
    ENDIF
 
-   #if 0
-   HB_AX_LoadTypeInfo( ::__hObj )
-   #endif
-
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD handleOleEvents( nEvent, ... ) CLASS WvgActiveXControl
+   LOCAL aBlocks, i, bBlock, xResult
+
+   hb_idleSleep()
+   IF !empty( ::hEvents )
+      IF hb_hHasKey( ::hEvents, nEvent )
+         aBlocks := ::hEvents[ nEvent ]
+         FOR i := 1 TO len( aBlocks )
+            bBlock := aBlocks[ i ]
+            IF hb_isBlock( bBlock )
+               xResult := eval( bBlock, ... )
+            ENDIF
+         NEXT
+      ENDIF
+   ENDIF
+
+   RETURN xResult
+
 /*----------------------------------------------------------------------*/
 
 METHOD handleEvent( nEvent, aInfo ) CLASS WvgActiveXControl
@@ -215,35 +239,26 @@ METHOD handleEvent( nEvent, aInfo ) CLASS WvgActiveXControl
 /*----------------------------------------------------------------------*/
 
 METHOD Destroy() CLASS WvgActiveXControl
-   LOCAL bError := ErrorBlock()
-
-   BEGIN SEQUENCE
 
    IF !empty( ::__hObj )
-
       IF Win_IsWindow( ::hWnd )
          Win_DestroyWindow( ::hWnd )
       ENDIF
 
-      IF ::hSink <> 0
-         HB_AX_ShutDownConnectionPoint( ::hSink )
-         ::hSink := NIL
-      ENDIF
-
-      IF --s_nRef == 0
-        /*  HB_AX_AtlAxWinTerm()  */
+      IF ::nEventHandler == "AdviseEvents"
+         IF !empty( ::hSink )
+            Wvg_AxShutDownConnectionPoint( ::hSink )
+            ::hSink := NIL
+         ENDIF
       ENDIF
    ENDIF
-
-   ENDSEQUENCE
-   ErrorBlock( bError )
 
    RETURN NIL
 /*----------------------------------------------------------------------*/
 METHOD adviseEvents() CLASS WvgActiveXControl
-   LOCAL  n, hSink, xRet
+   LOCAL  hSink, xRet
 
-   xRet := HB_AX_SetupConnectionPoint( ::__hObj, @hSink, @n, ::hEvents )
+   xRet := Wvg_AxSetupConnectionPoint( ::__hObj, @hSink, ::hEvents )
    ::hSink := hSink
 
    RETURN xRet
@@ -389,3 +404,4 @@ METHOD onError( oError ) CLASS AutomationObject
    RETURN xValue
 #endif
 /*----------------------------------------------------------------------*/
+

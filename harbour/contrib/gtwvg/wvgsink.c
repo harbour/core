@@ -75,76 +75,81 @@
    #define HBTEXT( x ) x
 #endif
 
-/*----------------------------------------------------------------------*/
-
-static HMODULE  s_hLib = NULL;
-
-typedef BOOL    ( CALLBACK *PATLAXWININIT )( void );
-typedef BOOL    ( CALLBACK *PATLAXWINTERM )( void );
-typedef HRESULT ( CALLBACK *PATLAXGETCONTROL )( HWND, IUnknown** );
-typedef HRESULT ( CALLBACK *PATLAXATTACHCONTROL )( HWND, IUnknown** );
-typedef HRESULT ( CALLBACK *PATLAXCREATECONTROL )( LPCOLESTR, HWND, IStream*, IUnknown** );
-typedef HRESULT ( CALLBACK *PATLAXCREATECONTROLEX )( LPCOLESTR, HWND, IStream*, IUnknown**, IUnknown**, REFIID, IUnknown* );
-
-/*----------------------------------------------------------------------*/
-
 #if 0
 #define __HBTOOUT__
 #endif
-
 #ifdef __HBTOOUT__
 void extern hb_ToOutDebug( const char * sTraceMsg, ... );
 #endif
 
 /*----------------------------------------------------------------------*/
 
-#if !defined( StringCchCat )
-   #ifdef UNICODE
-      #define StringCchCat(d,n,s)   hb_wcncpy( (d), (s), (n) - 1 )
-   #else
-      #define StringCchCat(d,n,s)   hb_xstrncpy( (d), (s), (n) - 1 )
-   #endif
-#endif
+static HMODULE  s_hLib = NULL;
 
-/*
- * This function copies szText to destination buffer.
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- */
-char * hb_xstrncpy( char * pDest, const char * pSource, ULONG ulLen )
+typedef BOOL      ( CALLBACK * PHB_AX_WININIT )( void );
+typedef BOOL      ( CALLBACK * PHB_AX_WINTERM )( void );
+typedef HRESULT   ( CALLBACK * PHB_AX_GETCTRL )( HWND, IUnknown** );
+
+static PHB_AX_WINTERM   s_pAtlAxWinTerm = NULL;
+static PHB_AX_GETCTRL   s_pAtlAxGetControl = NULL;
+
+/*----------------------------------------------------------------------*/
+
+static void hb_ax_exit( void* cargo )
 {
-   ULONG ulDst, ulSrc;
+   HB_SYMBOL_UNUSED( cargo );
 
-   pDest[ ulLen ] = 0;
-   ulDst = strlen( pDest );
-   if( ulDst < ulLen )
+   if( s_hLib )
    {
-      ulSrc = strlen( pSource );
-      if( ulDst + ulSrc > ulLen )
-         ulSrc = ulLen - ulDst;
-
-      memcpy( &pDest[ ulDst ], pSource, ulSrc );
-      pDest[ ulDst + ulSrc ] = 0;
+#if 0
+hb_ToOutDebug( "Terminating 1" );
+#endif
+      if( s_pAtlAxWinTerm )
+      {
+#if 0
+hb_ToOutDebug( "Terminating 2" );
+#endif
+         if( ( *s_pAtlAxWinTerm ) () )
+         {
+#if 0
+hb_ToOutDebug( "Terminating 3" );
+#endif
+            s_pAtlAxWinTerm = NULL;
+            s_pAtlAxGetControl = NULL;
+         }
+      }
+      FreeLibrary( s_hLib );
+      s_hLib = NULL;
    }
-   return pDest;
+}
+
+static int hb_ax_init( void )
+{
+   if( s_hLib == NULL )
+   {
+      PHB_AX_WININIT pAtlAxWinInit;
+
+      s_hLib = LoadLibrary( TEXT( "atl.dll" ) );
+      if( ( unsigned long ) s_hLib <= 32 )
+      {
+         s_hLib = NULL;
+         return 0;
+      }
+      pAtlAxWinInit      = ( PHB_AX_WININIT ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinInit" ) );
+      s_pAtlAxWinTerm    = ( PHB_AX_WINTERM ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinTerm" ) );
+      s_pAtlAxGetControl = ( PHB_AX_GETCTRL ) GetProcAddress( s_hLib, HBTEXT( "AtlAxGetControl" ) );
+      if( pAtlAxWinInit )
+         ( *pAtlAxWinInit )();
+
+      hb_vmAtQuit( hb_ax_exit, NULL );
+   }
+   return 1;
 }
 
 
-wchar_t *hb_wcncpy( wchar_t *dstW, const wchar_t *srcW, unsigned long ulLen )
+HB_FUNC( WVG_AXINIT )
 {
-   ULONG ulDst, ulSrc;
-
-   dstW[ ulLen ] = 0;
-   ulDst = lstrlenW( dstW );
-   if( ulDst < ulLen )
-   {
-      ulSrc = lstrlenW( srcW );
-      if( ulDst + ulSrc > ulLen )
-         ulSrc = ulLen - ulDst;
-      memcpy( &dstW[ ulDst ], srcW, ulSrc * sizeof( wchar_t ) );
-      dstW[ ulDst + ulSrc ] = 0;
-   }
-   return dstW;
+   hb_retl( hb_ax_init() );
 }
 
 /*----------------------------------------------------------------------*/
@@ -185,27 +190,25 @@ static void hb_itemPushList( ULONG ulRefMask, ULONG ulPCount, PHB_ITEM** pItems 
 
 DECLARE_INTERFACE_ ( INTERFACE, IDispatch )
 {
-   /* IUnknown functions */
-   STDMETHOD  ( QueryInterface ) ( THIS_ REFIID, void ** ) PURE;
-   STDMETHOD_ ( ULONG, AddRef )  ( THIS ) PURE;
-   STDMETHOD_ ( ULONG, Release ) ( THIS ) PURE;
-   /* IDispatch functions */
-   STDMETHOD ( GetTypeInfoCount ) ( THIS_ UINT * ) PURE;
-   STDMETHOD ( GetTypeInfo ) ( THIS_ UINT, LCID, ITypeInfo ** ) PURE;
-   STDMETHOD ( GetIDsOfNames ) ( THIS_ REFIID, LPOLESTR *, UINT, LCID, DISPID * ) PURE;
-   STDMETHOD ( Invoke ) ( THIS_ DISPID, REFIID, LCID, WORD, DISPPARAMS *, VARIANT *, EXCEPINFO *, UINT * ) PURE;
+   STDMETHOD  ( QueryInterface   ) ( THIS_ REFIID, void ** ) PURE;
+   STDMETHOD_ ( ULONG, AddRef    ) ( THIS ) PURE;
+   STDMETHOD_ ( ULONG, Release   ) ( THIS ) PURE;
+   STDMETHOD  ( GetTypeInfoCount ) ( THIS_ UINT * ) PURE;
+   STDMETHOD  ( GetTypeInfo      ) ( THIS_ UINT, LCID, ITypeInfo ** ) PURE;
+   STDMETHOD  ( GetIDsOfNames    ) ( THIS_ REFIID, LPOLESTR *, UINT, LCID, DISPID * ) PURE;
+   STDMETHOD  ( Invoke           ) ( THIS_ DISPID, REFIID, LCID, WORD, DISPPARAMS *, VARIANT *, EXCEPINFO *, UINT * ) PURE;
 };
 
 #if !defined( HB_OLE_C_API )
 typedef struct
 {
-   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IEventHandler*, REFIID, void** );
-   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IEventHandler* );
-   ULONG   ( STDMETHODCALLTYPE * Release ) ( IEventHandler* );
+   HRESULT ( STDMETHODCALLTYPE * QueryInterface   ) ( IEventHandler*, REFIID, void** );
+   ULONG   ( STDMETHODCALLTYPE * AddRef           ) ( IEventHandler* );
+   ULONG   ( STDMETHODCALLTYPE * Release          ) ( IEventHandler* );
    HRESULT ( STDMETHODCALLTYPE * GetTypeInfoCount ) ( IEventHandler*, UINT* );
-   HRESULT ( STDMETHODCALLTYPE * GetTypeInfo ) ( IEventHandler*,  UINT, LCID, ITypeInfo** );
-   HRESULT ( STDMETHODCALLTYPE * GetIDsOfNames ) ( IEventHandler*, REFIID, LPOLESTR*, UINT, LCID, DISPID* );
-   HRESULT ( STDMETHODCALLTYPE * Invoke ) ( IEventHandler*, DISPID, REFIID, LCID, WORD, DISPPARAMS*, VARIANT*, EXCEPINFO*, UINT* );
+   HRESULT ( STDMETHODCALLTYPE * GetTypeInfo      ) ( IEventHandler*,  UINT, LCID, ITypeInfo** );
+   HRESULT ( STDMETHODCALLTYPE * GetIDsOfNames    ) ( IEventHandler*, REFIID, LPOLESTR*, UINT, LCID, DISPID* );
+   HRESULT ( STDMETHODCALLTYPE * Invoke           ) ( IEventHandler*, DISPID, REFIID, LCID, WORD, DISPPARAMS*, VARIANT*, EXCEPINFO*, UINT* );
 } IEventHandlerVtbl;
 #endif
 
@@ -272,12 +275,14 @@ static ULONG STDMETHODCALLTYPE AddRef( IEventHandler *self )
 
 static ULONG STDMETHODCALLTYPE Release( IEventHandler *self )
 {
+#ifdef __HBTOOUT__
+hb_ToOutDebug( "Release %i", ( ( MyRealIEventHandler * ) self )->count );
+#endif
+
    if( --( ( MyRealIEventHandler * ) self )->count == 0 )
    {
       if( ( ( MyRealIEventHandler * ) self)->pSelf )
-      {
          hb_itemRelease( ( ( MyRealIEventHandler * ) self )->pSelf );
-      }
 
       if( ( MyRealIEventHandler * ) self )
          GlobalFree( ( MyRealIEventHandler * ) self );
@@ -345,6 +350,9 @@ hb_ToOutDebug( "event = %i",(int)dispid );
    HB_SYMBOL_UNUSED( result );
    HB_SYMBOL_UNUSED( pexcepinfo );
    HB_SYMBOL_UNUSED( puArgErr );
+
+   /* Don't know but this speed ups the OLE load time */
+   Sleep( 10 );
 
    Key = hb_itemNew( NULL );
    if( hb_hashScan( ( ( MyRealIEventHandler * ) self )->pEvents, hb_itemPutNL( Key, dispid ), &ulPos ) )
@@ -440,7 +448,7 @@ typedef IEventHandler device_interface;
 
 /*----------------------------------------------------------------------*/
 
-static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID riid, void** pThis, int* pn )
+static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID riid, void** pThis )
 {
    IConnectionPointContainer*  pIConnectionPointContainerTemp = NULL;
    IUnknown*                   pIUnknown;
@@ -452,7 +460,6 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
    DWORD                       dwCookie = 0;
 
    HB_SYMBOL_UNUSED( riid );
-   HB_SYMBOL_UNUSED( pn );
 
    thisobj = ( IEventHandler * ) GlobalAlloc( GMEM_FIXED, sizeof( MyRealIEventHandler ) );
    if( thisobj )
@@ -519,293 +526,70 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
 }
 /*----------------------------------------------------------------------*/
 
-HB_FUNC( HB_AX_SHUTDOWNCONNECTIONPOINT )
-{
-   MyRealIEventHandler* hSink = ( MyRealIEventHandler * ) ( HB_PTRDIFF ) hb_parnint( 1 );
-
-   if( hSink && hSink->pIConnectionPoint )
-   {
-      hSink->dwEventCookie = 0;
-      HB_VTBL( hSink->pIConnectionPoint )->Release( HB_THIS( hSink->pIConnectionPoint ) );
-      hSink->pIConnectionPoint = NULL;
-   }
-
-   if( hSink && hSink->pEvents )
-      hb_itemRelease( hSink->pEvents );
-}
-
-/*----------------------------------------------------------------------*/
-
-HB_FUNC( HB_AX_SETUPCONNECTIONPOINT )
+HB_FUNC( WVG_AXSETUPCONNECTIONPOINT )
 {
    HRESULT              hr;
    MyRealIEventHandler* hSink = NULL;
    LPIID                riid  = ( LPIID ) &IID_IDispatch;
-   int                  n = 0;
 
-   hr = SetupConnectionPoint( ( device_interface* ) hb_oleParam( 1 ), ( REFIID ) riid, ( void** ) (void*) &hSink, &n ) ;
+   hr = SetupConnectionPoint( ( device_interface* ) hb_oleParam( 1 ), ( REFIID ) riid, ( void** ) (void*) &hSink ) ;
 
-   hSink->pEvents = hb_itemNew( hb_param( 4, HB_IT_ANY ) );
+   hSink->pEvents = hb_itemNew( hb_param( 3, HB_IT_ANY ) );
 
-   hb_stornint( ( HB_PTRDIFF ) hSink, 2 );
-   hb_storni( n, 3 );
+   hb_storptr( hSink, 2 );
    hb_retnl( hr );
 }
 
 /*----------------------------------------------------------------------*/
-/*                ActiveX Container Management Interface                */
-/*----------------------------------------------------------------------*/
-HB_FUNC( HB_AX_ATLAXWININIT )
+
+HB_FUNC( WVG_AXSHUTDOWNCONNECTIONPOINT )
 {
-   BOOL bRet = FALSE;
+   MyRealIEventHandler* pSink = ( MyRealIEventHandler * ) hb_parptr( 1 );
 
-   if( !s_hLib )
+   if( pSink && pSink->pIConnectionPoint )
    {
-      PATLAXWININIT AtlAxWinInit;
-
-      TCHAR szLibName[ MAX_PATH + 1 ] = { 0 };
-
-      /* please always check if given function need size in TCHARs or bytes
-       * in MS documentation.
-       */
-      GetSystemDirectory( szLibName, MAX_PATH );
-
-      /* TEXT() macro can be used for literal (and only for literal) string
-       * values. It creates array of TCHAR items with given text. It cannot
-       * be used to ecapsulate non literal values. In different [x]Harbour
-       * source code you may find things like TEXT( hb_parc( 1 ) ) - it's
-       * a technical nonsense written by someone who has no idea what this
-       * macro does.
-       * Use new string functions (StringCchCat() in this case) which always
-       * set trailing 0 in the given buffer just like hb_strn*() functions.
-       * [l]str[n]cat() is absolute and should not be used by new code. It does
-       * not guarantee buffer overflow protection and/or setting trailing 0.
-       * StringCch*() functions operate on TCHAR types.
-       */
-      StringCchCat( szLibName, MAX_PATH + 1, TEXT( "\\atl.dll" ) );
-
-       /* Please note that I intentionally removed any casting when szLibName
-        * is passed to WinAPI functions. Such casting can pacify warnings so
-        * program will be compiled but code will be still wrong so it does not
-        * fix anything and only makes much harder later fixing when someone
-        * will look for wrong code which is not UNICODE ready. The wrong casting
-        * related to different character representations used only to pacify
-        * warnings is the biggest problem in MS-Win 3-rd party code written
-        * for [x]Harbour because it only hides bugs and then people have to
-        * look for the code line by line to fix it. I dedicated above note to
-        * developers of few well known MS-Win GUI projects for [x]Harbour.
-        * Please remember about it.
-        */
-      s_hLib = LoadLibrary( szLibName );
-
-      if( s_hLib )
-      {
-         AtlAxWinInit = ( PATLAXWININIT ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinInit" ) );
-
-         if( AtlAxWinInit )
-         {
-            if( ( AtlAxWinInit )() )
-               bRet = TRUE;
-         }
-
-         if( !bRet )
-         {
-            FreeLibrary( s_hLib );
-            s_hLib = NULL;
-         }
-      }
+      HB_VTBL( pSink->pIConnectionPoint )->Unadvise( HB_THIS_( pSink->pIConnectionPoint ) pSink->dwEventCookie );
+      HB_VTBL( pSink->pIConnectionPoint )->Release( HB_THIS( pSink->pIConnectionPoint ) );
+      pSink->pIConnectionPoint = NULL;
+      pSink->dwEventCookie = 0;
    }
-   else
-      bRet = TRUE;
+   if( pSink && pSink->pEvents )
+      hb_itemRelease( pSink->pEvents );
 
-   hb_retl( bRet );
-}
-/*----------------------------------------------------------------------*/
-
-HB_FUNC( HB_AX_ATLAXWINTERM )
-{
-   PATLAXWINTERM AtlAxWinTerm;
-   BOOL          bRet = FALSE;
-
-   if( s_hLib )
-   {
-      AtlAxWinTerm = ( PATLAXWINTERM ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinTerm" ) );
-
-      if( AtlAxWinTerm )
-      {
-         if( AtlAxWinTerm() )
-         {
-            FreeLibrary( s_hLib );
-            s_hLib = NULL;
-            bRet = TRUE;
-         }
-      }
-   }
-   hb_retl( bRet );
-}
-
-/*----------------------------------------------------------------------*/
-/*
- *    ::hObj := HB_AX_AtlAxGetControl( "ATLAXWin", ::hContainer, ::CLSID, ::nID, ;
- *                   ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ::style, ::exStyle, @hx )
- */
-HB_FUNC( HB_AX_ATLAXGETCONTROL ) /* HWND hWnd = handle of control container window */
-{
-   IUnknown  *pUnk = NULL;
-   IDispatch *obj;
-   PATLAXGETCONTROL AtlAxGetControl;
-   HWND  hWnd      = NULL;
-   char  *lpcclass = hb_parcx( 1 );
-   HWND  hParent   = ( ISPOINTER( 2 ) ? ( HWND ) hb_parptr( 2 ) : ( HWND )( HB_PTRDIFF ) hb_parnint( 2 ) );
-   char  *Caption  = hb_parcx( 3 );
-   HMENU id        = HB_ISNUM(  4 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 4 ) : ( HMENU ) ( HB_PTRDIFF ) -1 ;
-   int   x         = HB_ISNUM(  5 ) ? hb_parni(  5 ) : 0;
-   int   y         = HB_ISNUM(  6 ) ? hb_parni(  6 ) : 0;
-   int   w         = HB_ISNUM(  7 ) ? hb_parni(  7 ) : 0;
-   int   h         = HB_ISNUM(  8 ) ? hb_parni(  8 ) : 0;
-   int   Style     = HB_ISNUM(  9 ) ? hb_parni(  9 ) : WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
-   int   Exstyle   = HB_ISNUM( 10 ) ? hb_parni( 10 ) : 0;
-
-   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( s_hLib, HBTEXT( "AtlAxGetControl" ) );
-   if( AtlAxGetControl )
-   {
-      LPTSTR cCaption = HB_TCHAR_CONVTO( Caption );
-      LPTSTR cClass = HB_TCHAR_CONVTO( lpcclass );
-
-      hWnd = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h, hParent, id,
-                                                                GetModuleHandle( NULL ), NULL );
-      HB_TCHAR_FREE( cCaption );
-      HB_TCHAR_FREE( cClass );
-
-      if( hWnd )
-      {
-         ( AtlAxGetControl )( hWnd, &pUnk );
-
-         if( pUnk )
-         {
-            HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
-            HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
-
-            hb_itemReturnRelease( hb_oleItemPut( NULL, obj ) );
-         }
-      }
-   }
-
-   /* return the control handle */
-   hb_stornint( ( HB_PTRDIFF ) hWnd, 12 );
-   hb_stornint( ( HB_PTRDIFF ) pUnk, 13 );
+   /* in CPP mode following line GPFs on any OLE whose count becomes 0 */
+   HB_VTBL( ( IEventHandler* ) pSink )->Release( HB_THIS( ( IEventHandler* ) pSink ) );
 }
 
 /*----------------------------------------------------------------------*/
 
-HB_FUNC( HB_AX_ATLCREATEWINDOW ) /* ( hWndContainer, CLSID, menuID=0, x, y, w, h, style, exstyle ) --> pWnd */
+HB_FUNC( WVG_AXCREATEWINDOW ) /* ( hWndContainer, CLSID, menuID=0, x, y, w, h, style, exstyle ) --> pWnd */
 {
    LPTSTR cCaption = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
 
-   hb_retptr( ( void * ) ( HB_PTRDIFF ) CreateWindowEx( HB_ISNUM( 9 ) /* Exstyle */,
-                                                        TEXT( "ATLAXWin" ),
-                                                        cCaption,
-                                                        HB_ISNUM( 8 ) ? hb_parni( 8 ) : WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS /* Style */,
-                                                        hb_parni( 4 ) /* x */,
-                                                        hb_parni( 5 ) /* y */,
-                                                        hb_parni( 6 ) /* w */,
-                                                        hb_parni( 7 ) /* h */,
-                                                        ( HWND ) hb_parptr( 1 ) /* hParent */,
-                                                        HB_ISPOINTER( 3 ) ? ( HMENU ) hb_parptr( 3 ) : ( HMENU ) ( HB_PTRDIFF ) -1 /* id */,
-                                                        GetModuleHandle( NULL ),
-                                                        NULL ) );
+   hb_retptr( ( void * ) ( HB_PTRDIFF ) CreateWindowEx(
+               HB_ISNUM( 9 ) ? hb_parnl( 9 ) : 0 /* Exstyle */,
+               TEXT( "ATLAXWin" ),
+               cCaption,
+               HB_ISNUM( 8 ) ? hb_parni( 8 ) : WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS /* Style */,
+               hb_parni( 4 ) /* x */,
+               hb_parni( 5 ) /* y */,
+               hb_parni( 6 ) /* w */,
+               hb_parni( 7 ) /* h */,
+               ( HWND ) hb_parptr( 1 ) /* hParent */,
+               HB_ISPOINTER( 3 ) ? ( HMENU ) hb_parptr( 3 ) : ( HMENU ) ( HB_PTRDIFF ) -1 /* id */,
+               GetModuleHandle( NULL ),
+               NULL ) );
 
    HB_TCHAR_FREE( cCaption );
 }
 
 /*----------------------------------------------------------------------*/
 
-HB_FUNC( HB_AX_ATLGETCONTROL ) /* HWND hWnd = handle of control container window */
+HB_FUNC( WVG_AXGETCONTROL ) /* HWND hWnd = handle of control container window */
 {
-   PATLAXGETCONTROL AtlAxGetControl;
-   IDispatch        *obj;
-   IUnknown         *pUnk = NULL;
-   HWND             hWnd = ( ISPOINTER( 1 ) ? ( HWND ) hb_parptr( 1 ) : ( HWND )( HB_PTRDIFF ) hb_parnint( 1 ) );
-
-   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( s_hLib, HBTEXT( "AtlAxGetControl" ) );
-   if( AtlAxGetControl )
-   {
-      if( hWnd )
-      {
-         ( AtlAxGetControl )( hWnd, &pUnk );
-
-         if( pUnk )
-         {
-            HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
-            HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
-
-            hb_itemReturnRelease( hb_oleItemPut( NULL, obj ) );
-            hb_stornint( ( HB_PTRDIFF ) pUnk, 2 );
-         }
-      }
-   }
-}
-
-/*----------------------------------------------------------------------*/
-
-HB_FUNC( HB_AX_ATLGETUNKNOWN ) /* HWND hWnd = handle of control container window */
-{
-   PATLAXGETCONTROL AtlAxGetControl;
-   IUnknown         *pUnk = NULL;
-   HWND             hWnd = ( ISPOINTER( 1 ) ? ( HWND ) hb_parptr( 1 ) : ( HWND )( HB_PTRDIFF ) hb_parnint( 1 ) );
-
-   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( s_hLib, HBTEXT( "AtlAxGetControl" ) );
-   if( AtlAxGetControl )
-   {
-      if( hWnd )
-      {
-         ( AtlAxGetControl )( hWnd, &pUnk );
-
-         if( pUnk )
-            hb_retnint( ( HB_PTRDIFF ) pUnk );
-      }
-   }
-}
-
-/*----------------------------------------------------------------------*/
-
-HB_FUNC( HB_AX_ATLSETVERB )
-{
-   HWND hwnd = ( ISPOINTER( 1 ) ? ( HWND ) hb_parptr( 1 ) : ( HWND )( HB_PTRDIFF ) hb_parnint( 1 ) );
-
-   if( hwnd )
-   {
-      IUnknown *pUnk = ( IUnknown* ) ( HB_PTRDIFF ) hb_parnint( 2 );
-
-      IOleObject *lpOleObject = NULL;
-      if( SUCCEEDED( HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IOleObject ), ( void** ) ( void* ) &lpOleObject ) ) )
-      {
-         IOleClientSite* lpOleClientSite;
-
-         HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
-
-         if( SUCCEEDED( HB_VTBL( lpOleObject )->GetClientSite( HB_THIS_( lpOleObject ) &lpOleClientSite ) ) )
-         {
-            MSG Msg;
-            RECT rct;
-
-            memset( &Msg, 0, sizeof( MSG ) );
-            GetClientRect( hwnd, &rct );
-
-            HB_VTBL( lpOleObject )->DoVerb( HB_THIS_( lpOleObject ) hb_parni( 3 ), &Msg, lpOleClientSite, 0, hwnd, &rct );
-         }
-      }
-   }
-}
-
-/*----------------------------------------------------------------------*/
-
-#if 0
-
-HB_FUNC( WVG_AXGETUNKNOWN ) /* ( hWnd ) --> pUnk */
-{
-   IUnknown*   pUnk = NULL;
-   HRESULT     lOleError;
+   IDispatch   *obj;
+   IUnknown    *pUnk = NULL;
+   HWND        hWnd = ( HWND ) hb_parptr( 1 );
 
    if( ! s_pAtlAxGetControl )
    {
@@ -814,15 +598,21 @@ HB_FUNC( WVG_AXGETUNKNOWN ) /* ( hWnd ) --> pUnk */
       return;
    }
 
-   lOleError = ( *s_pAtlAxGetControl )( ( HWND ) hb_parptr( 1 ), &pUnk );
+   if( hWnd )
+   {
+      ( *s_pAtlAxGetControl )( hWnd, &pUnk );
 
-   hb_oleSetError( lOleError );
+      if( pUnk )
+      {
+         HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
+         HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
 
-   if( lOleError == S_OK )
-      hb_retptr( pUnk );
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         hb_itemReturnRelease( hb_oleItemPut( NULL, obj ) );
+      }
+   }
 }
+
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WVG_AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
 {
@@ -866,66 +656,5 @@ HB_FUNC( WVG_AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
    hb_retni( ( int ) lOleError );
 }
 
-HB_FUNC( __XAXREGISTERHANDLER )  /* ( pDisp, bHandler ) --> pSink */
-{
-   IDispatch * pDisp = hb_oleParam( 1 );
+/*----------------------------------------------------------------------*/
 
-   if( pDisp )
-   {
-      PHB_ITEM pItemBlock = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
-
-      if( pItemBlock )
-      {
-         IConnectionPointContainer*  pCPC = NULL;
-         IEnumConnectionPoints*      pEnumCPs = NULL;
-         IConnectionPoint*           pCP = NULL;
-         HRESULT                     lOleError;
-         IID                         rriid;
-
-         lOleError = HB_VTBL( pDisp )->QueryInterface( HB_THIS_( pDisp ) HB_ID_REF( IID_IConnectionPointContainer ), ( void** ) ( void* ) &pCPC );
-         if( lOleError == S_OK && pCPC )
-         {
-            lOleError = HB_VTBL( pCPC )->EnumConnectionPoints( HB_THIS_( pCPC ) &pEnumCPs );
-            if( lOleError == S_OK && pEnumCPs )
-            {
-               HRESULT hr = S_OK;
-               do
-               {
-                  lOleError = HB_VTBL( pEnumCPs )->Next( HB_THIS_( pEnumCPs ) 1, &pCP, NULL );
-                  if( lOleError == S_OK )
-                  {
-                     lOleError = HB_VTBL( pCP )->GetConnectionInterface( HB_THIS_( pCP ) &rriid );
-                     if( lOleError == S_OK )
-                     {
-                        DWORD dwCookie = 0;
-                        ISink * pSink = ( ISink* ) hb_gcAlloc( sizeof( ISink ), hb_sink_destructor ); /* TODO: GlobalAlloc GMEM_FIXED ??? */
-                        pSink->lpVtbl = ( IDispatchVtbl * ) &ISink_Vtbl;
-                        pSink->count = 0; /* We do not need to increment it here, Advise will do it auto */
-                        pSink->pItemHandler = hb_itemNew( pItemBlock );
-
-                        lOleError = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) ( IUnknown* ) pSink, &dwCookie );
-
-                        pSink->pConnectionPoint = pCP;
-                        pSink->dwCookie = dwCookie;
-                        hb_retptrGC( pSink );
-                        hr = 1;
-                     }
-                     else
-                        lOleError = S_OK;
-                  }
-               } while( hr == S_OK );
-               HB_VTBL( pEnumCPs )->Release( HB_THIS( pEnumCPs ) );
-            }
-            HB_VTBL( pCPC )->Release( HB_THIS( pCPC ) );
-         }
-
-         hb_oleSetError( lOleError );
-         if( lOleError != S_OK )
-            hb_errRT_BASE_SubstR( EG_ARG, 3012, "Failed to obtain connection point", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-      }
-      else
-         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-   }
-}
-
-#endif

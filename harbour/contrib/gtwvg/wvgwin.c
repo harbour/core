@@ -85,13 +85,13 @@
 #  define DUMMYUNIONNAME5
 #endif
 
-#if !defined( GCLP_HBRBACKGROUND )
-#  define GCLP_HBRBACKGROUND   -10
-#endif
-
 #include "gtwvg.h"
 #include "hbwapi.h"
 #include <windowsx.h>
+
+#if !defined( GCLP_HBRBACKGROUND )
+#  define GCLP_HBRBACKGROUND   -10
+#endif
 
 #define WIN_STATUSBAR_MAX_PARTS         256
 
