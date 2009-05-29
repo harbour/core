@@ -6,6 +6,10 @@
 -mt
 hbmk2.prg
 
+-l{shared}hbcplr
+-l{shared}hbpp
+-l{shared}hbcommon
+
 hbmk2.${lng}.po
--hbl=hbmk2.${lng}.hbl
+-hbi=hbmk2.${lng}.hbi
 -lng=hu_HU,pt_BR

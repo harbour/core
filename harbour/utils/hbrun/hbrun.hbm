@@ -3,3 +3,7 @@
 #
 
 hbrun.prg
+
+-l{shared}hbcplr
+-l{shared}hbpp
+-l{shared}hbcommon

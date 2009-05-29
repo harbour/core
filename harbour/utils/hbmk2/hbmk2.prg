@@ -5724,9 +5724,10 @@ FUNCTION hbmk_CPU( hbmk )
 
 FUNCTION hbmk_KEYW( hbmk, cKeyword )
 
-   IF cKeyword == iif( hbmk[ _HBMK_lMT ]   , "mt"   , "st"      ) .OR. ;
-      cKeyword == iif( hbmk[ _HBMK_lGUI ]  , "gui"  , "std"     ) .OR. ;
-      cKeyword == iif( hbmk[ _HBMK_lDEBUG ], "debug", "nodebug" )
+   IF cKeyword == iif( hbmk[ _HBMK_lMT ]    , "mt"    , "st"      ) .OR. ;
+      cKeyword == iif( hbmk[ _HBMK_lGUI ]   , "gui"   , "std"     ) .OR. ;
+      cKeyword == iif( hbmk[ _HBMK_lDEBUG ] , "debug" , "nodebug" ) .OR. ;
+      cKeyword == iif( hbmk[ _HBMK_lSHARED ], "shared", "static"  )
       RETURN .T.
    ENDIF
 
