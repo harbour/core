@@ -208,11 +208,13 @@
 #define WVGSB_SLIDERTRACK                         5
 #define WVGSB_ENDTRACK                            6
 #define WVGSB_ENDSCROLL                           7
-#define WVGSB_TOP                                11
-#define WVGSB_BOTTOM                             12
+#define WVGSB_TOP                                 11
+#define WVGSB_BOTTOM                              12
 
 #define WVGTABPAGE_TAB_BOTTOM                     2
 #define WVGTABPAGE_TAB_TOP                        4
+
+#define WVGTOOLBAR_BUTTON_SEPARATOR               4
 
 #endif /* #ifndef _WVG_CH */
 

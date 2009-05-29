@@ -294,12 +294,13 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 /*----------------------------------------------------------------------*/
 
 METHOD sendToolbarMessage( nMsg, p1, p2 ) CLASS WvgToolBar
-   RETURN Win_SendToolbarMessage( ::hWnd, nMsg, p1, p2 )
+
+   RETURN Win_SendToolbarMessage( ::pWnd, nMsg, p1, p2 )
 
 /*----------------------------------------------------------------------*/
 
 METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB ) CLASS WvgToolBar
-   LOCAL oBtn, hBitmap, cType, nBtn
+   LOCAL oBtn, pBitmap, cType, nBtn
 
    HB_SYMBOL_UNUSED( xDisabledImage )
    HB_SYMBOL_UNUSED( xHotImage )
@@ -319,32 +320,30 @@ METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey,
    oBtn:command := 100 + oBtn:index
 
    cType   := valtype( xImage )
-   hBitmap := 0
 
    DO CASE
 
    CASE cType == "C"
       IF ( "." $ xImage ) .or. ( "/" $ xImage ) .or. ( "\" $ xImage ) .or. ( ":" $ xImage ) .or. file( xImage )
-         hBitmap := Wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
+         pBitmap := Wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
       ELSE
-         hBitmap := Wvg_PrepareBitmapFromResourceName( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
+         pBitmap := Wvg_PrepareBitmapFromResourceName( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
       ENDIF
 
    CASE cType == "N"
-      hBitmap := Wvg_PrepareBitmapFromResourceID( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
+      pBitmap := Wvg_PrepareBitmapFromResourceID( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
 
    ENDCASE
 
-   IF !empty( hBitmap )
-      oBtn:image := hBitmap
+   IF !empty( pBitmap )
+      oBtn:image := pBitmap
 
       IF !empty( nMapRGB )
-         nBtn := WAPI_ImageList_AddMasked( ::hImageList, hBitmap, nMapRGB )
+         nBtn := WAPI_ImageList_AddMasked( ::hImageList, pBitmap, nMapRGB )
       ELSE
-         nBtn := WAPI_ImageList_Add( ::hImageList, hBitmap )
+         nBtn := WAPI_ImageList_Add( ::hImageList, pBitmap )
       ENDIF
-
-      WVG_AddToolbarButton( ::hWnd, nBtn, oBtn:caption, oBtn:command, 1, ::showToolTips )
+      WVG_AddToolbarButton( ::pWnd, nBtn, oBtn:caption, oBtn:command, 1, ::showToolTips )
 
       /* Set Button Size */
       ::SendToolbarMessage( TB_SETBUTTONSIZE, ::buttonWidth, ::buttonHeight )
@@ -355,7 +354,7 @@ METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey,
       #endif
       ::sendToolbarMessage( TB_AUTOSIZE )
    ELSE
-      Wvg_AddToolbarButton( ::hWnd, , , oBtn:command, 3, .f. )
+      Wvg_AddToolbarButton( ::pWnd, , , oBtn:command, 3, .f. )
 
    ENDIF
 

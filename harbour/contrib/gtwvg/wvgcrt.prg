@@ -318,16 +318,14 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCr
       ::pGT := hb_gtSelect()
    endif
 
-   if ::lModal
+   IF ::lModal
       ::style := WS_POPUP + WS_CAPTION + WS_SYSMENU
-      #if 0
-      if !( ::resizable )
-         ::exStyle := WS_EX_DLGMODALFRAME
-         ::style += WS_DLGFRAME
+      IF ::resizable
+         ::style += WS_MINIMIZEBOX + WS_MAXIMIZEBOX + WS_THICKFRAME
       ENDIF
-      #endif
-   endif
+   ENDIF
 
+   hb_gtInfo( HB_GTI_RESIZABLE, ::resizable )
    hb_gtInfo( HB_GTI_PRESPARAMS, { ::exStyle, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
                            ::maxRow+1, ::maxCol+1, ::pGTp, .F., lRowCol, HB_WNDTYPE_CRT } )
    hb_gtInfo( HB_GTI_SETFONT, { ::fontName, ::fontHeight, ::fontWidth } )
@@ -346,7 +344,6 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCr
    ? " "
    ::hWnd := hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
 
-   hb_gtInfo( HB_GTI_RESIZABLE , ::resizable )
    Hb_GtInfo( HB_GTI_CLOSABLE  , ::closable  )
    hb_gtInfo( HB_GTI_WINTITLE  , ::title     )
    hb_gtInfo( HB_GTI_RESIZEMODE, if( ::resizeMode == HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_FONT ) )

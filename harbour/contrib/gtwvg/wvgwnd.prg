@@ -247,6 +247,7 @@ EXPORTED:
    METHOD   sendMessage()
 
    DATA     hWnd
+   DATA     pWnd
    DATA     aPos                                  INIT   { 0,0 }
    DATA     aSize                                 INIT   { 0,0 }
    DATA     aPresParams                           INIT   {}
@@ -378,12 +379,13 @@ METHOD SetWindowProcCallback() CLASS WvgWindow
    #endif
 
    #ifdef __BYSETPROP__
-   ::nOldProc := WVG_SetWindowProcBlock( ::hWnd, {|h,m,w,l| ::ControlWndProc( h,m,w,l ) } )
+   ::nOldProc := WVG_SetWindowProcBlock( ::pWnd, {|h,m,w,l| ::ControlWndProc( h,m,w,l ) } )
    #endif
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
 METHOD captureMouse() CLASS WvgWindow
 
    RETURN Self
@@ -529,12 +531,7 @@ METHOD setSize( aSize, lPaint ) CLASS WvgWindow
 
       SWITCH ::objType
 
-      CASE objTypeCrt
-         hb_gtInfo( HB_GTI_SCREENWIDTH , aSize[ 1 ] )
-         hb_gtInfo( HB_GTI_SCREENHEIGHT, aSize[ 2 ] )
-         EXIT
-
-      OTHERWISE
+      CASE objTypeDialog
          /*Win_MoveWindow( ::hWnd, 0, 0, aSize[ 1 ], aSize[ 2 ], lPaint ) */
          Win_SetWindowSize( ::hWnd, aSize[ 1 ], aSize[ 2 ], lPaint )
          EXIT
@@ -1256,6 +1253,7 @@ METHOD createControl() CLASS WvgWindow
 
    IF ( hWnd <> 0 )
       ::hWnd := hWnd
+      ::pWnd := WIN_N2P( hWnd )
       ::sendMessage( WM_SETFONT, Win_GetStockObject( DEFAULT_GUI_FONT ), 1 )
    ENDIF
 
@@ -1265,7 +1263,7 @@ METHOD createControl() CLASS WvgWindow
 METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
    LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj, nReturn
 
-   #if 0
+   #if 1
    hb_ToOutDebug( "%s:wndProc( %i  %i  %i  %i )", __ObjGetClsName( self ), hWnd, nMessage, nwParam, nlParam )
    #endif
 
@@ -1384,4 +1382,5 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
 FUNCTION hb_toOut( ... )
    RETURN hb_ToOutDebug( ... )
 #endif
+
 /*----------------------------------------------------------------------*/

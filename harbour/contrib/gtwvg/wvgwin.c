@@ -870,11 +870,8 @@ HB_FUNC( WIN_MAKELPARAM )
 HB_FUNC( WIN_CREATEWINDOWEX )
 {
    HWND hWnd;
-   LPTSTR szWinName;
-   LPTSTR szClassName;
-
-   szClassName = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-   szWinName = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+   LPTSTR szClassName = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   LPTSTR szWinName = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
 
    hWnd = CreateWindowEx( ( DWORD ) hb_parnint( 1 ),
                           szClassName,
@@ -892,29 +889,6 @@ HB_FUNC( WIN_CREATEWINDOWEX )
 
    hb_retnint( ( HB_PTRDIFF ) hWnd );
 }
-/*----------------------------------------------------------------------*/
-#if 0
-HB_FUNC( WIN_CREATETOOLBAREX )
-{
-   HWND hWnd;
-
-   hWnd = CreateToolbarEx( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
-                           ( DWORD ) hb_parnint( 2 ),
-                           hb_parni( 3 ),
-                           hb_parni( 4 ),
-                           ISNIL( 5 ) ? NULL : ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 5 ),
-                           ISNIL( 6 ) ? 0 : hb_parnint( 6 ),
-                           ISNIL( 7 ) ? NULL : ( LPCTBBUTTON ) ( HB_PTRDIFF ) hb_parnint( 7 ),
-                           hb_parni(  8 ),
-                           hb_parni(  9 ),
-                           hb_parni( 10 ),
-                           hb_parni( 11 ),
-                           hb_parni( 12 ),
-                           sizeof( TBBUTTON ) );
-
-   hb_retnint( ( HB_PTRDIFF ) hWnd );
-}
-#endif
 /*----------------------------------------------------------------------*/
 /*
  *              Bitmap Management Function . Coutesy GTWVW
@@ -1234,7 +1208,8 @@ HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
    hBitmap = hPrepareBitmap( hb_parc( 1 ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
                              ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 0 );
 
-   hb_retnint( ( HB_PTRDIFF ) hBitmap );
+   //hb_retnint( ( HB_PTRDIFF ) hBitmap );
+   hb_retptr( ( void * ) hBitmap );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1246,7 +1221,8 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCEID )
    hBitmap = hPrepareBitmap( ( char * ) NULL, hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
                              ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 2 );
 
-   hb_retnint( ( HB_PTRDIFF ) hBitmap );
+   //hb_retnint( ( HB_PTRDIFF ) hBitmap );
+   hb_retptr( ( void * ) hBitmap );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1258,7 +1234,8 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
    hBitmap = hPrepareBitmap( hb_parc( 1 ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
                              ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 1 );
 
-   hb_retnint( ( HB_PTRDIFF ) hBitmap );
+   //hb_retnint( ( HB_PTRDIFF ) hBitmap );
+   hb_retptr( ( void * ) hBitmap );
 }
 /*----------------------------------------------------------------------*/
 
@@ -2108,7 +2085,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
    TBBUTTON    tbb;
    TBADDBITMAP tbab;
    BOOL        bSuccess;
-   HWND        hWndTB = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   HWND        hWndTB = wapi_par_HWND( 1 );
    int         iCommand = hb_parni( 4 );
    TCHAR *     szCaption;
 
@@ -2121,9 +2098,9 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          /* set bitmap */
          tbab.hInst = NULL;
 #if (_WIN32_IE >= 0x0500)
-         tbab.nID   = ( UINT_PTR ) wapi_par_HBITMAP( 2 );
+         tbab.nID   = ( UINT_PTR ) ( HBITMAP ) hb_parni( 2 );
 #else
-         tbab.nID   = ( UINT ) wapi_par_HBITMAP( 2 );
+         tbab.nID   = ( UINT ) ( HBITMAP ) hb_parni( 2 );
 #endif
          iNewBitmap = ( int ) SendMessage( hWndTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab );
 
@@ -2470,3 +2447,4 @@ HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
 }
 
 /*----------------------------------------------------------------------*/
+
