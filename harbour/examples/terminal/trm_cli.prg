@@ -336,9 +336,9 @@ Function TrmReceiveServer()
                   n := ( b_[ 3 ]-b_[ 1 ]+1 ) * ( b_[ 4 ]-b_[ 2 ]+1 )
 
                   cOdd1 := substr( a_[ 2 ], 1, b_[ 5 ] )
-                  cOdd  := hb_uncompress( n, cOdd1 )
+                  cOdd  := hb_zuncompress( cOdd1, n )
                   cEvn1 := substr( a_[ 2 ], b_[ 5 ]+1 )
-                  cEvn  := hb_uncompress( n, cEvn1 )
+                  cEvn  := hb_zuncompress( cEvn1, n )
 
                   PUTSCREENATTRIB( b_[ 1 ], b_[ 2 ], b_[ 3 ], b_[ 4 ], cOdd, cEvn )
 

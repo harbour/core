@@ -156,7 +156,7 @@ Static Function RmtSvrInitAsServer( cServerInfo, Socket, nTimeoutClient )
       // Wait for 1 minutes maximum : W A T C H  INI Controlled
       //
       Hb_INetTimeout( Socket, nTimeoutClient )
-TrmDebug( "SERVER: Connection Established!", INetPort( Socket ) )
+TrmDebug( "SERVER: Connection Established!", hb_INetPort( Socket ) )
    else
 TrmDebug( "SERVER: Connection Failed" )
    endif
@@ -184,7 +184,7 @@ TrmDebug( "SvrConnectClient()", i++, "TRY..." )
    enddo
 
    if lRet
-TrmDebug( "CLIENT: Connection Established!", INetPort( pClientSocket ) )
+TrmDebug( "CLIENT: Connection Established!", hb_INetPort( pClientSocket ) )
    else
 TrmDebug( "CLIENT: Connection TimedOut!" )
    endif
@@ -239,8 +239,8 @@ Function RmtSvrSendClient( nMode, xData )
             if lSendScrn
                nScreen++
 
-               cOdd0 := hb_compress( cOdd )
-               cEvn0 := hb_compress( cEvn )
+               cOdd0 := hb_zcompress( cOdd )
+               cEvn0 := hb_zcompress( cEvn )
 
                cData := '<SCR>'    +;
                         NTRIM( TOP ) +';'+ NTRIM( LFT ) +';'+ NTRIM( BTM ) +';'+ NTRIM( RGT ) +';'+;
@@ -276,10 +276,10 @@ Function RmtSvrSendClient( nMode, xData )
          if len( cData ) > 0
             cData        += ENDBLOCK
             nBytesToSend := len( cData )
-            nBytesSent   := INetSendAll( commSocket, cData, nBytesToSend )
+            nBytesSent   := hb_INetSendAll( commSocket, cData, nBytesToSend )
 
             if nBytesSent <> nBytesToSend
-               nError := INetErrorCode( commSocket )
+               nError := hb_INetErrorCode( commSocket )
 TrmDebug( n,'E','VouchServer - SvrSendClient : ', nError, nBytesSent, nBytesToSend )
 
                do case
@@ -308,10 +308,10 @@ Static Function RmtSvrReceiveClient()
    static lInProcess := .f.
 
    if !lInProcess
-      if INetDataReady( commSocket ) > 0
+      if hb_INetDataReady( commSocket ) > 0
          lInProcess := .t.
 
-         cKey := INetRecvLine( commSocket, @nBytes )
+         cKey := hb_INetRecvLine( commSocket, @nBytes )
 
          if nBytes > 0
             Wvt_Keyboard( val( cKey ) )
@@ -319,9 +319,9 @@ Static Function RmtSvrReceiveClient()
          elseif nBytes == 1
 
          else
-            nError := INetErrorCode( commSocket )
+            nError := hb_INetErrorCode( commSocket )
             if ascan( { -2, WSAECONNABORTED, WSAECONNRESET }, nError ) > 0
-TrmDebug( 'VouchAsServer - Quitting : Error =', INetErrorCode( commSocket ), 'nBytes =', nBytes )
+TrmDebug( 'VouchAsServer - Quitting : Error =', hb_INetErrorCode( commSocket ), 'nBytes =', nBytes )
                DbCloseAll()
                Quit
             endif
@@ -350,7 +350,7 @@ Function Wvt_Timer( wParam )
 
    case TIMER_PING
       if !( lSendingClient )
-         INetSendAll( commSocket, ENDBLOCK )
+         hb_INetSendAll( commSocket, ENDBLOCK )
       endif
       exit
 
