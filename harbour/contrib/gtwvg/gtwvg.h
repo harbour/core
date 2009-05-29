@@ -602,6 +602,8 @@ BOOL        HB_EXPORT   hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, 
 BOOL        HB_EXPORT   hb_wvt_gtDestroyPicture( IPicture * iPicture );
 #endif
 BOOL        HB_EXPORT   hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char * image );
+void        HB_EXPORT   hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib );
+void        HB_EXPORT   hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib );
 
 LPWORD      HB_EXPORT   lpwAlign( LPWORD lpIn );
 int         HB_EXPORT   nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn );

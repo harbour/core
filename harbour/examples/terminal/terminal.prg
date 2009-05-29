@@ -92,30 +92,6 @@ STATIC srvrSocket
 STATIC commSocket
 STATIC lSendingClient := .f.
 
-//----------------------------------------------------------------------//
-#pragma BEGINDUMP
-
-#include "hbapi.h"
-#include "hbgtcore.h"
-
-#include <windows.h>
-
-#if 0
-#define TIMER_RECEIVE                   1001
-#define TIMER_SEND                      1002
-#define TIMER_PING                      1010
-#endif
-
-HB_FUNC( OUTPUTDEBUGSTRING )
-{
-   OutputDebugString( hb_parc( 1 ) );
-}
-
-extern void hb_wvt_GetStringAttrib( USHORT, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib );
-
-#pragma ENDDUMP
-//----------------------------------------------------------------------//
-
 Function RmtSvrInitialize( cServerInfo, nTimeoutClient, nTimeRefresh )
    Local lExit    := .t.
    Local nTimeOut := 50   // PICK FROM EXTERNASL SOURCE
@@ -252,22 +228,7 @@ Function RmtSvrSendClient( nMode, xData )
             cOdd := ""
             cEvn := ""
 
-            HB_INLINE( TOP,LFT,BTM,RGT,@cOdd,@cEvn ){
-               ULONG uiSize;
-               void * pBuffer;
-               void * qBuffer;
-
-               hb_gtRectSize( hb_parnl( 1 ),hb_parnl( 2 ),hb_parnl( 3 ),hb_parnl( 4 ),&uiSize );
-               pBuffer = hb_xgrab( (uiSize/2)+1 );
-               qBuffer = hb_xgrab( (uiSize/2)+1 );
-
-               hb_wvt_GetStringAttrib( hb_parnl( 1 ),hb_parnl( 2 ),hb_parnl( 3 ),hb_parnl( 4 ), pBuffer, qBuffer );
-               hb_storclen( pBuffer, (uiSize/2), 5 );
-               hb_storclen( qBuffer, (uiSize/2), 6 );
-
-               hb_xfree( pBuffer );
-               hb_xfree( qBuffer );
-            }
+            GETSCREENATTRIB( TOP,LFT,BTM,RGT,@cOdd,@cEvn )
 
             if !( cSOdd == cOdd ) .or. !( cSEvn == cEvn )
                lSendScrn := .t.

@@ -170,7 +170,7 @@ HB_EXTERN_BEGIN
       #endif
       #if !defined( INITCOMMONCONTROLSEX )
          typedef struct tagINITCOMMONCONTROLSEX {
-             DWORD dwSize;             /* size of this structure                           */
+             DWORD dwSize;             /* size of this structure */
              DWORD dwICC;              /* flags indicating which classes to be initialized */
          } INITCOMMONCONTROLSEX, *LPINITCOMMONCONTROLSEX;
       #endif

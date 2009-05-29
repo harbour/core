@@ -11,7 +11,7 @@
 -inctrypath={linux}/usr/include
 -inctrypath={linux}/usr/include/glib-2.0
 
--cflag=`pkg-config --cflags gtk+-2.0`
+"-cflag=`pkg-config --cflags gtk+-2.0`"
 
 creawin.c
 general.c

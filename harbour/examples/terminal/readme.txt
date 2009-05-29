@@ -27,7 +27,7 @@ Terminal Client
    Link      => GTWVG
    Run       => trm_client.exe  <IP - 127.0.0.1 | vouch.dynalias.com>
                                 <Port where Terminal Server is Listening - 2011>
-                                <Harbour Application - c:\harbour\contrib\examples\terminal\trm_appn.exe>
+                                <Harbour Application - c:\harbour\contrib\examples\terminal\trm_app.exe>
                                 [Parameters - Norammly Supplied to Appln - Separated by SPACE ]
                                 [InitDirectory - Harbour Application's Startup Folder ]
    Mode      => ST ( Single Threaded )
@@ -39,7 +39,7 @@ Terminal Client
 
       ServerIP      =  127.0.0.1 | vouch.dynalias.com
       ServerPort    =  2011
-      Application   =  c:\harbour\contrib\examples\terminal\trm_appn.exe
+      Application   =  c:\harbour\contrib\examples\terminal\trm_app.exe
       Parameters    =  any number of parameters separated by a space
       InitDirectory =  Complete Folder path from where Harbour Appln will be invoked.
 
@@ -49,7 +49,7 @@ Terminal Client
 
 Harbour Application
 ===================
-   Source(s)  => trm_appn.prg | Your program sources +
+   Source(s)  => trm_app.prg | Your program sources +
                  terminal.prg +
                  terminal.ch
    Link       => GTWVG
@@ -129,4 +129,3 @@ The Bottom Line
 Regards
 Pritpal Bedi <pritpal@vouchcac.com>
 a student of software analysis & design
-
