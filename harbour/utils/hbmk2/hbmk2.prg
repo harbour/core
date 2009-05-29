@@ -574,8 +574,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       CASE Left( cParamL, 6 ) == "-arch="   ; hbmk[ _HBMK_cARCH ] := SubStr( cParam, 7 )
       CASE Left( cParamL, 6 ) == "-lang="   ; hbmk[ _HBMK_cUILNG ] := SubStr( cParam, 7 ) ; SetUILang( hbmk )
       CASE cParamL            == "-hbrun"   ; lSkipBuild := .T. ; hbmk[ _HBMK_lRUN ] := .T.
+      CASE cParamL            == "-hbraw"   ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .T. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .F. ; lAcceptCFlag := .F. ; lAcceptLDFlag := .F.
       CASE cParamL            == "-hbcmp" .OR. ;
-           cParamL            == "-clipper" ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .F.
+           cParamL            == "-clipper" ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .F. ; lAcceptCFlag := .F. ; lAcceptLDFlag := .F.
       CASE cParamL            == "-hbcc"    ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptCFlag := .T.
       CASE cParamL            == "-hblnk"   ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDFlag := .T.
       CASE cParamL            == "-rtlink" .OR. ;
@@ -1217,6 +1218,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       CASE Left( cParamL, 6 ) == "-comp=" .OR. ;
            Left( cParamL, 6 ) == "-arch=" .OR. ;
            cParamL            == "-hbrun" .OR. ;
+           cParamL            == "-hbraw" .OR. ;
            cParamL            == "-hbcmp" .OR. ;
            cParamL            == "-hbcc"  .OR. ;
            cParamL            == "-hblnk" .OR. ;
@@ -2746,8 +2748,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    IF ! lSkipBuild .AND. ! lStopAfterInit
       FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
          AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + tmp )
-         AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", tmp ) )
-         AAdd( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", tmp ) )
+         IF ! lStopAfterHarbour
+            AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", tmp ) )
+            AAdd( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", tmp ) )
+         ENDIF
       NEXT
    ENDIF
 
@@ -4830,7 +4834,8 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, /* @ */ nEmbedLevel )
                         nEmbedLevel++
                         HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
                      ENDIF
-                  CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
+                  CASE Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
+                       Lower( FN_ExtGet( cParam ) ) == ".hbp"
                      IF nEmbedLevel < 10
                         nEmbedLevel++
                         HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
@@ -5888,6 +5893,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-alltarget"        , I_( "marks beginning of common options belonging to all targets (available on command line only)" ) },;
       NIL,;
       { "-hbrun"            , I_( "run target" ) },;
+      { "-hbraw"            , I_( "stop after running Harbour compiler" ) },;
       { "-hbcmp|-clipper"   , I_( "stop after creating the object files\ncreate link/copy hbmk to hbcmp/clipper for the same effect" ) },;
       { "-hbcc"             , I_( "stop after creating the object files and accept raw C flags\ncreate link/copy hbmk to hbcc for the same effect" ) },;
       { "-hblnk"            , I_( "accept raw linker flags" ) },;

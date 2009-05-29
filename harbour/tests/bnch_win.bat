@@ -22,7 +22,7 @@
 @rem    - envvar HB_BENCH_RUNS set to number of times tests are run (default: 3)
 @rem    - C compiler configured (just like you'd do for hbmk2)
 @rem    - Running it using this command:
-@rem      'hbbm_win.bat > results.txt 2>&1'
+@rem      'bnch_win.bat > results.txt 2>&1'
 @rem ---------------------------------------------------------------
 
 @if not "%OS%" == "Windows_NT" goto END
