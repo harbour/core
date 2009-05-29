@@ -44,7 +44,7 @@ if not "%HB_DYNLIB%" == "yes" goto _SKIP_DLL_BIN
       %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbmk2-dll    %~dp0..\utils\hbmk2\hbmk2.hbp
       %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbtest-dll   %~dp0..\utils\hbtest\hbtest.hbp
       %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbi18n-dll   %~dp0..\utils\hbi18n\hbi18n.hbp
-      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbformat-dll %~dp0..\utils\hbi18n\hbformat.hbp
+      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbformat-dll %~dp0..\utils\hbformat\hbformat.hbp
    )
    endlocal
 
