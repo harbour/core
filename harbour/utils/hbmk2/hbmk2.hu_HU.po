@@ -479,8 +479,8 @@ msgstr "nix=UTF8"
 
 #: hbmk2.prg:5758
 #, c-format
-msgid "do not process .hbp files in current directory"
-msgstr "aktuális könyvtárban levõ .hbp fájlokat ne dolgozza fel"
+msgid "do not process .hbc files in current directory"
+msgstr "aktuális könyvtárban levõ .hbc fájlokat ne dolgozza fel"
 
 #: hbmk2.prg:5758
 #, c-format
@@ -524,8 +524,8 @@ msgstr "használja a megadott architektúra kódot. Ugyanaz mint a HB_ARCHITECTURE 
 
 #: hbmk2.prg:5769
 #, c-format
-msgid ".hbp option files in current dir are automatically processed."
-msgstr "Az aktuális könyvtárban levõ .hbp fájlok automatikusan feldolgozásra kerülnek."
+msgid ".hbc option files in current dir are automatically processed."
+msgstr "Az aktuális könyvtárban levõ .hbc fájlok automatikusan feldolgozásra kerülnek."
 
 #: hbmk2.prg:5758
 #, c-format
@@ -544,8 +544,8 @@ msgstr "dinamikus függvénykönyvtár létrehozása"
 
 #: hbmk2.prg:5769
 #, c-format
-msgid "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbp."
-msgstr "%1$s opció fájl a hbmk könyvtárában mindig feldolgozásra kerül amennyiben létezik. *nix platformokon a fájl a ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc könyvtárak (ebben a sorrendben) szintén ellenõrzésre kerül. Az fájl formátuma megegyezik a .hbp-vel."
+msgid "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbc."
+msgstr "%1$s opció fájl a hbmk könyvtárában mindig feldolgozásra kerül amennyiben létezik. *nix platformokon a fájl a ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc könyvtárak (ebben a sorrendben) szintén ellenõrzésre kerül. Az fájl formátuma megegyezik a .hbc-vel."
 
 #: hbmk2.prg:5758
 #, c-format
@@ -559,8 +559,8 @@ msgstr "visszatér a Harbour fejléc könyvtárral"
 
 #: hbmk2.prg:5769
 #, c-format
-msgid "Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}"
-msgstr "Számos .hbp opcióban és parancssori megfelelõikben (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) használhatók makrók: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}"
+msgid "Certain .hbc lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}"
+msgstr "Számos .hbc opcióban és parancssori megfelelõikben (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) használhatók makrók: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}"
 
 #: hbmk2.prg:5758
 #, c-format
@@ -569,8 +569,8 @@ msgstr "csak a verziószám kijelzése"
 
 #: hbmk2.prg:5769
 #, c-format
-msgid "<script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>."
-msgstr "<script> lehet <@script> (.hbm fájl), <script.hbm> vagy <script.hbp>."
+msgid "<script> can be <@script> (.hbm file), <script.hbm> or <script.hbc>."
+msgstr "<script> lehet <@script> (.hbm fájl), <script.hbm> vagy <script.hbc>."
 
 #: hbmk2.prg:5769
 #, c-format
@@ -704,8 +704,8 @@ msgstr "Alapbeállítások feldolgozása: %1$s"
 
 #: hbmk2.prg:5769
 #, c-format
-msgid ".hbp options (they should come in separate lines): libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\\nLines starting with '#' char are ignored"
-msgstr ".hbp opciók (külön sorokba írandók): libs=[<libnevek>], gt=[gtnév], prgflags=[Harbour opciók], cflags=[C fordító opciók], resflags=[erõforrás fordító kapcsolók], ldflags=[szerkesztõ kapcsolók], libpaths=[útvonalak], pos=[.po fájlok], incpaths=[útvonalak], inctrypaths=[útvonalak], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<szöveg>\\n'#' karakterrel kezdõdõ sorokat figyelmen kívül hagyja"
+msgid ".hbc options (they should come in separate lines): libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\\nLines starting with '#' char are ignored"
+msgstr ".hbc opciók (külön sorokba írandók): libs=[<libnevek>], gt=[gtnév], prgflags=[Harbour opciók], cflags=[C fordító opciók], resflags=[erõforrás fordító kapcsolók], ldflags=[szerkesztõ kapcsolók], libpaths=[útvonalak], pos=[.po fájlok], incpaths=[útvonalak], inctrypaths=[útvonalak], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<szöveg>\\n'#' karakterrel kezdõdõ sorokat figyelmen kívül hagyja"
 
 #: hbmk2.prg:5264
 #, c-format
@@ -809,8 +809,8 @@ msgstr "Statikus függvénykönyvtár létrehozás parancsa:"
 
 #: hbmk2.prg:5769
 #, c-format
-msgid "Platform filters are accepted in each .hbp line and with several options.\\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
-msgstr "A szûrõk az egyes .hbp sorokban használhatók és számos opció esetén támogatottak.\\nSzûrõ formátum: {[!][<arch>|<comp>|<keyword>]}. Szûrõk kombinálhatók '&', '|' operátorokkal és zárójelekkel csoportosíthatók. Pl.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
+msgid "Platform filters are accepted in each .hbc line and with several options.\\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
+msgstr "A szûrõk az egyes .hbc sorokban használhatók és számos opció esetén támogatottak.\\nSzûrõ formátum: {[!][<arch>|<comp>|<keyword>]}. Szûrõk kombinálhatók '&', '|' operátorokkal és zárójelekkel csoportosíthatók. Pl.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
 
 #: hbmk2.prg:3225 hbmk2.prg:3642
 #, c-format

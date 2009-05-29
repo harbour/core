@@ -249,8 +249,8 @@ msgstr "  -hbcc              parar apos criar os objetos e processar os flags C"
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "    The file format is the same as .hbp."
-msgstr "    O formato do arquivo é o mesmo que um .hbp"
+msgid "    The file format is the same as .hbc."
+msgstr "    O formato do arquivo é o mesmo que um .hbc"
 
 #: hbmk2.prg:5294
 #, c-format
@@ -564,7 +564,7 @@ msgstr ""
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "  - .hbp options (they should come in separate lines):"
+msgid "  - .hbc options (they should come in separate lines):"
 msgstr ""
 
 #: hbmk2.prg:5294
@@ -594,12 +594,12 @@ msgstr ""
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "  - Platform filters are accepted in each .hbp line and with several options."
+msgid "  - Platform filters are accepted in each .hbc line and with several options."
 msgstr ""
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "  - Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,"
+msgid "  - Certain .hbc lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,"
 msgstr ""
 
 #: hbmk2.prg:5294
@@ -699,7 +699,7 @@ msgstr ""
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "  - <script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>."
+msgid "  - <script> can be <@script> (.hbm file), <script.hbm> or <script.hbc>."
 msgstr ""
 
 #: hbmk2.prg:5294
@@ -799,7 +799,7 @@ msgstr ""
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "  - .hbp option files in current dir are automatically processed."
+msgid "  - .hbc option files in current dir are automatically processed."
 msgstr ""
 
 #: hbmk2.prg:5294
@@ -1264,7 +1264,7 @@ msgstr ""
 
 #: hbmk2.prg:5758
 #, c-format
-msgid "do not process .hbp files in current directory"
+msgid "do not process .hbc files in current directory"
 msgstr ""
 
 #: hbmk2.prg:5758
@@ -1299,7 +1299,7 @@ msgstr ""
 
 #: hbmk2.prg:5769
 #, c-format
-msgid ".hbp option files in current dir are automatically processed."
+msgid ".hbc option files in current dir are automatically processed."
 msgstr ""
 
 #: hbmk2.prg:5758
@@ -1319,7 +1319,7 @@ msgstr ""
 
 #: hbmk2.prg:5769
 #, c-format
-msgid "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbp."
+msgid "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbc."
 msgstr ""
 
 #: hbmk2.prg:5758
@@ -1334,7 +1334,7 @@ msgstr ""
 
 #: hbmk2.prg:5769
 #, c-format
-msgid "Certain .hbp lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}"
+msgid "Certain .hbc lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}"
 msgstr ""
 
 #: hbmk2.prg:5758
@@ -1344,7 +1344,7 @@ msgstr ""
 
 #: hbmk2.prg:5769
 #, c-format
-msgid "<script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>."
+msgid "<script> can be <@script> (.hbm file), <script.hbm> or <script.hbc>."
 msgstr ""
 
 #: hbmk2.prg:5769
@@ -1479,7 +1479,7 @@ msgstr ""
 
 #: hbmk2.prg:5769
 #, c-format
-msgid ".hbp options (they should come in separate lines): libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\\nLines starting with '#' char are ignored"
+msgid ".hbc options (they should come in separate lines): libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\\nLines starting with '#' char are ignored"
 msgstr ""
 
 #: hbmk2.prg:5264
@@ -1564,7 +1564,7 @@ msgstr ""
 
 #: hbmk2.prg:5769
 #, c-format
-msgid "Platform filters are accepted in each .hbp line and with several options.\\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
+msgid "Platform filters are accepted in each .hbc line and with several options.\\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
 msgstr ""
 
 #: hbmk2.prg:3225 hbmk2.prg:3642
