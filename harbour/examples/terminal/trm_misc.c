@@ -57,45 +57,6 @@
 
 #include <shellapi.h>
 
-// CreateProcess( cExe, cCmdLineArgs, nFlags, cEnvPair, cInitDirectory, @aProcessInfo )
-//
-HB_FUNC( CREATEPROCESS )
-{
-  LPCTSTR               lpApplicationName;    // name of executable module
-  LPTSTR                lpCommandLine;        // command line string
-  LPSECURITY_ATTRIBUTES lpProcessAttributes;  // SD
-  LPSECURITY_ATTRIBUTES lpThreadAttributes;   // SD
-  BOOL                  bInheritHandles;      // handle inheritance option
-  DWORD                 dwCreationFlags;      // creation flags
-  LPVOID                lpEnvironment;        // new environment block
-  LPCTSTR               lpCurrentDirectory;   // current directory name
-  LPSTARTUPINFO         lpStartupInfo;        // startup information
-  LPPROCESS_INFORMATION lpProcessInformation; // process information
-
-  lpApplicationName   = NULL;//hb_parc( 1 );
-  lpCommandLine       = hb_parc( 1 );
-  lpProcessAttributes = NULL;
-  lpThreadAttributes  = NULL;
-  bInheritHandles     = TRUE;
-  dwCreationFlags     = 0;    //ISNUM( 3 ) ? hb_parnl( 3 ) : CREATE_NEW_CONSOLE;
-  lpEnvironment       = NULL; //ISCHAR( 4 ) ? hb_parc( 4 ) : NULL;
-  lpCurrentDirectory  = NULL; //ISCHAR( 5 ) ? hb_parc( 5 ) : NULL;
-  lpStartupInfo       = NULL;
-
-  hb_retl(
-     CreateProcess(
-        lpApplicationName,
-        lpCommandLine,
-        lpProcessAttributes,
-        lpThreadAttributes,
-        bInheritHandles,
-        dwCreationFlags,
-        lpEnvironment,
-        lpCurrentDirectory,
-        lpStartupInfo,
-        NULL ) );
-}
-
 HB_FUNC( SHELLEXECUTE )
 {
    ShellExecute( NULL,

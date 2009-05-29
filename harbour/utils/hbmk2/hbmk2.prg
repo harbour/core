@@ -35,7 +35,7 @@
  *    bash script with similar purpose for gcc family.
  *    entry point override method and detection code for gcc.
  *    rtlink/blinker link script parsers.
- *    POTMerge(), LoadPOTFilesAsHash(), GenHBI() and AutoTrans().
+ *    POTMerge(), LoadPOTFilesAsHash(), GenHBL() and AutoTrans().
  *       (with local modifications by hbmk author)
  *
  * See COPYING for licensing terms.
@@ -218,7 +218,7 @@ REQUEST hbmk_KEYW
 #define _HBMK_lMINIPO           42
 
 #define _HBMK_aPO               43
-#define _HBMK_cHBI              44
+#define _HBMK_cHBL              44
 #define _HBMK_aLNG              45
 #define _HBMK_cPO               46
 
@@ -1153,7 +1153,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    s_cPROGNAME := NIL
    s_cFIRST := NIL
    hbmk[ _HBMK_aPO ] := {}
-   hbmk[ _HBMK_cHBI ] := NIL
+   hbmk[ _HBMK_cHBL ] := NIL
    hbmk[ _HBMK_cPO ] := NIL
    hbmk[ _HBMK_aLNG ] := {}
    hbmk[ _HBMK_aINSTPATH ] := {}
@@ -1357,17 +1357,17 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             hbmk[ _HBMK_aLNG ] := ListToArray( cParam, "," )
          ENDIF
 
-      CASE Left( cParamL, 5 ) == "-hbi="
+      CASE Left( cParamL, 5 ) == "-hbl="
 
-         hbmk[ _HBMK_cHBI ] := PathSepToTarget( hbmk, PathProc( SubStr( cParam, 6 ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
+         hbmk[ _HBMK_cHBL ] := PathSepToTarget( hbmk, PathProc( SubStr( cParam, 6 ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
 
       CASE Left( cParamL, 4 ) == "-po="
 
          hbmk[ _HBMK_cPO ] := PathSepToTarget( hbmk, PathProc( SubStr( cParam, 5 ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
 
-      CASE Left( cParamL, 5 ) == "-hbi"
+      CASE Left( cParamL, 5 ) == "-hbl"
 
-         hbmk[ _HBMK_cHBI ] := ""
+         hbmk[ _HBMK_cHBL ] := ""
 
       CASE Left( cParamL, 6 ) == "-main="
 
@@ -1658,9 +1658,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aPO ], PathSepToTarget( hbmk, cParam ) )
          NEXT
 
-      CASE FN_ExtGet( cParamL ) == ".hbi"
+      CASE FN_ExtGet( cParamL ) == ".hbl"
 
-         hbmk[ _HBMK_cHBI ] := PathSepToTarget( hbmk, PathProc( cParam, aParam[ _PAR_cFileName ] ) )
+         hbmk[ _HBMK_cHBL ] := PathSepToTarget( hbmk, PathProc( cParam, aParam[ _PAR_cFileName ] ) )
 
       OTHERWISE
 
@@ -3092,8 +3092,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
       ENDIF
 
-      IF Len( hbmk[ _HBMK_aPO ] ) > 0 .AND. hbmk[ _HBMK_cHBI ] != NIL .AND. ! s_lCLEAN
-         MakeHBI( hbmk, hbmk[ _HBMK_cHBI ] )
+      IF Len( hbmk[ _HBMK_aPO ] ) > 0 .AND. hbmk[ _HBMK_cHBL ] != NIL .AND. ! s_lCLEAN
+         MakeHBL( hbmk, hbmk[ _HBMK_cHBL ] )
       ENDIF
 
       IF Len( s_aRESSRC_TODO ) > 0 .AND. ! Empty( cBin_Res ) .AND. ! s_lCLEAN
@@ -5446,9 +5446,9 @@ STATIC PROCEDURE UpdatePO( hbmk, aPOTIN )
 
    RETURN
 
-/* .hbi generation */
+/* .hbl generation */
 
-STATIC PROCEDURE MakeHBI( hbmk, cHBI )
+STATIC PROCEDURE MakeHBL( hbmk, cHBL )
    LOCAL cPO
    LOCAL tPO
    LOCAL cLNG
@@ -5462,16 +5462,16 @@ STATIC PROCEDURE MakeHBI( hbmk, cHBI )
       IF hbmk[ _HBMK_lDEBUGI18N ]
          hbmk_OutStd( hbmk, hb_StrFormat( "po: in: %1$s", ArrayToList( hbmk[ _HBMK_aPO ] ) ) )
       ENDIF
-      IF Empty( cHBI )
-         cHBI := FN_NameGet( hbmk[ _HBMK_aPO ][ 1 ] )
+      IF Empty( cHBL )
+         cHBL := FN_NameGet( hbmk[ _HBMK_aPO ][ 1 ] )
       ENDIF
-      IF Empty( FN_ExtGet( cHBI ) )
-         cHBI := FN_ExtSet( cHBI, ".hbi" )
+      IF Empty( FN_ExtGet( cHBL ) )
+         cHBL := FN_ExtSet( cHBL, ".hbl" )
       ENDIF
 
-      FOR EACH cLNG IN iif( Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ cHBI ), { _LNG_MARKER }, hbmk[ _HBMK_aLNG ] )
+      FOR EACH cLNG IN iif( Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ cHBL ), { _LNG_MARKER }, hbmk[ _HBMK_aLNG ] )
          tLNG := NIL
-         hb_FGetDateTime( StrTran( cHBI, _LNG_MARKER, cLNG ), @tLNG )
+         hb_FGetDateTime( StrTran( cHBL, _LNG_MARKER, cLNG ), @tLNG )
          lUpdateNeeded := .F.
          aPO_TODO := {}
          FOR EACH cPO IN hbmk[ _HBMK_aPO ]
@@ -5482,19 +5482,19 @@ STATIC PROCEDURE MakeHBI( hbmk, cHBI )
          NEXT
          IF lUpdateNeeded
             IF hbmk[ _HBMK_lDEBUGI18N ]
-               hbmk_OutStd( hbmk, hb_StrFormat( "po: %1$s -> %2$s", ArrayToList( aPO_TODO ), StrTran( cHBI, _LNG_MARKER, cLNG ) ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( "po: %1$s -> %2$s", ArrayToList( aPO_TODO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
             ENDIF
-            GenHBI( hbmk, aPO_TODO, StrTran( cHBI, _LNG_MARKER, cLNG ) )
+            GenHBL( hbmk, aPO_TODO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
             AAdd( aNew, cLNG )
          ENDIF
       NEXT
    ENDIF
 
    IF ! Empty( aNew )
-      IF Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ cHBI )
-         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created .hbi file '%1$s'" ), cHBI ) )
+      IF Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ cHBL )
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created .hbl file '%1$s'" ), cHBL ) )
       ELSE
-         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created .hbi file '%1$s' for language(s): %2$s" ), cHBI, ArrayToList( aNew, "," ) ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created .hbl file '%1$s' for language(s): %2$s" ), cHBL, ArrayToList( aNew, "," ) ) )
       ENDIF
    ENDIF
 
@@ -5576,16 +5576,16 @@ STATIC PROCEDURE AutoTrans( hbmk, cFileIn, aFiles, cFileOut )
 
    RETURN
 
-STATIC FUNCTION GenHBI( hbmk, aFiles, cFileOut, lEmpty )
-   LOCAL cHBIBody
+STATIC FUNCTION GenHBL( hbmk, aFiles, cFileOut, lEmpty )
+   LOCAL cHBLBody
    LOCAL pI18N
    LOCAL aTrans := LoadPOTFiles( hbmk, aFiles, NIL, .F. )
    LOCAL lRetVal := .F.
 
    IF ISARRAY( aTrans )
       pI18N := __i18n_hashTable( __i18n_potArrayToHash( aTrans, lEmpty ) )
-      cHBIBody := hb_i18n_SaveTable( pI18N )
-      IF hb_MemoWrit( cFileOut, cHBIBody )
+      cHBLBody := hb_i18n_SaveTable( pI18N )
+      IF hb_MemoWrit( cFileOut, cHBLBody )
          lRetVal := .T.
       ELSE
          hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Cannot create file: %1$s" ), cFileOut ) )
@@ -5770,7 +5770,7 @@ STATIC PROCEDURE SetUILang( hbmk )
    IF hbmk[ _HBMK_cUILNG ] == "en-EN"
       hb_i18n_set( NIL )
    ELSE
-      tmp := "${hb_root}hbmk2.${lng}.hbi"
+      tmp := "${hb_root}hbmk2.${lng}.hbl"
       tmp := StrTran( tmp, "${hb_root}", PathSepToSelf( DirAddPathSep( hb_DirBase() ) ) )
       tmp := StrTran( tmp, "${lng}", StrTran( hbmk[ _HBMK_cUILNG ], "-", "_" ) )
       hb_i18n_set( iif( hb_i18n_check( tmp := hb_MemoRead( tmp ) ), hb_i18n_restoretable( tmp ), NIL ) )
@@ -5812,7 +5812,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
    LOCAL aText_Basic := {;
       I_( "Syntax:" ),;
       "",;
-      I_( "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbi]>" ),;
+      I_( "  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl]>" ),;
       "",;
       I_( "Options:" ) }
 
@@ -5883,8 +5883,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-clean"            , I_( "clean (in incremental build mode)" ) },;
       { "-workdir=<dir>"    , hb_StrFormat( I_( "working directory for incremental build mode\n(default: %1$s/arch/comp)" ), _WORKDIR_BASE_ ) },;
       NIL,;
-      { "-hbi[=<output>]"   , I_( "output .hbi filename. ${lng} macro is accepted in filename" ) },;
-      { "-lng=<languages>"  , I_( "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbi/.po filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ) },;
+      { "-hbl[=<output>]"   , I_( "output .hbl filename. ${lng} macro is accepted in filename" ) },;
+      { "-lng=<languages>"  , I_( "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ) },;
       { "-po=<output>"      , I_( "create/update .po file from source. Merge it with previous .po file of the same name" ) },;
       { "-[no]minipo"       , I_( "don't (or do) add Harbour version number and source file reference to .po (default: add them)" ) },;
       { "-rebuildpo"        , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;

@@ -11,5 +11,5 @@ hbmk2.prg
 -l{shared}hbcommon
 
 hbmk2.${lng}.po
--hbi=hbmk2.${lng}.hbi
+-hbl=hbmk2.${lng}.hbl
 -lng=hu_HU,pt_BR
