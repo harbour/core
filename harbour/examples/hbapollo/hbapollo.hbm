@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+-hblib
+-ohbapollo
+-inc
+-q0 -w3 -es2 -l
+-i${HB_INC_APOLLO}
+
+apollo.c
+apollo1.prg

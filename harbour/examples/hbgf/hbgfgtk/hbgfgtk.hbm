@@ -1,0 +1,28 @@
+#
+# $Id$
+#
+
+-hblib
+-ohbgfgtk
+-inc
+-q0 -w3 -es2 -l
+-i${HB_INC_GTK}
+
+-inctrypath={linux}/usr/include
+-inctrypath={linux}/usr/include/glib-2.0
+
+-cflag=`pkg-config --cflags gtk+-2.0`
+
+creawin.c
+general.c
+creamenu.c
+creabutt.c
+dispatch.c
+msginfo.c
+mainlgtk.c
+
+form.prg
+menu.prg
+button.prg
+menuitem.prg
+winctrl.prg

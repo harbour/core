@@ -38,6 +38,7 @@ C_SOURCES=\
 	errapi.c     \
 	errapiu.c    \
 	errint.c     \
+	errintlo.c   \
 	file.c       \
 	filebuf.c    \
 	filehb.c     \

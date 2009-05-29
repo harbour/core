@@ -1,0 +1,20 @@
+#
+# $Id$
+#
+
+-hblib
+-ohbgfwin
+-inc
+-q0 -w3 -es2 -l
+
+"-echo={!winall}This library builds on win/wce only."
+-stop{!winall}
+
+winapi.c
+
+button.prg
+edit.prg
+form.prg
+menu.prg
+menuitem.prg
+winctrl.prg

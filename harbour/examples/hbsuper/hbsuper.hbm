@@ -1,7 +1,11 @@
+#
+# $Id$
+#
+
 -hblib
 -ohbsuper
 -inc
--q0 -w1 -es2 -gc0 -l
+-q0 -w1 -es2 -l
 
 hbsuper.prg
 

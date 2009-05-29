@@ -1,0 +1,14 @@
+#
+# $Id$
+#
+
+-hblib
+-ohbsqlit2
+-inc
+-q0 -w3 -es2 -l
+-i${HB_INC_SQLITE2}
+
+"-echo={dos}This library doesn't build on DOS."
+-stop{dos}
+
+hbsqlit2.c

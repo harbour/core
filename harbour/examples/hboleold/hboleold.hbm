@@ -1,0 +1,14 @@
+#
+# $Id$
+#
+
+-hblib
+-ohboleold
+-inc
+-q0 -w3 -es2 -l
+
+"-echo={!winall}This library builds on win/wce only."
+-stop{!winall}
+
+win_ole.c
+win_tole.prg

@@ -1,0 +1,20 @@
+#
+# $Id$
+#
+
+-hblib
+-ohbgfos2
+-inc
+-q0 -w3 -es2 -l
+
+"-echo={!os2}This library builds on os2 only."
+-stop{!os2}
+
+os2pm.c
+
+tform.prg
+tmenu.prg
+tmenuit.prg
+winctrl.prg
+button.prg
+edit.prg

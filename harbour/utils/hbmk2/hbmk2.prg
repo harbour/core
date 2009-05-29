@@ -166,6 +166,10 @@ REQUEST hbmk_KEYW
 #define OutStd( x )             low_OutStd( hbmk[ _HBMK_lUTF8 ], x )
 #define OutErr( x )             low_OutErr( hbmk[ _HBMK_lUTF8 ], x )
 
+#define HB_ISALPHA( c )         ( Upper( c ) >= "A" .AND. Upper( c ) <= "Z" )
+#define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == '_' )
+#define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR(c) .OR. IsDigit( c ) )
+
 /* This requires Set( _SET_EXACT, .F. ) */
 #define LEFTEQUAL( l, r )       ( l = r )
 
@@ -1458,6 +1462,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF ! Empty( cParam )
             lStopAfterInit := .T.
             hbmk[ _HBMK_lRUN ] := .F.
+         ENDIF
+
+      CASE Left( cParamL, Len( "-echo=" ) ) == "-echo="
+
+         cParam := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-echo=" ) + 1 ) ), FN_DirGet( aParam[ _PAR_cFileName ] ) )
+         IF ! Empty( cParam )
+            OutStd( hb_StrFormat( I_( "%1$s" ), cParam ) + hb_osNewLine() )
          ENDIF
 
       CASE Left( cParamL, Len( "-prgflag=" ) ) == "-prgflag="
@@ -4439,6 +4450,10 @@ STATIC FUNCTION FN_Expand( cFileName, lCommandLine )
    LOCAL aFile
    LOCAL aDir
 
+   IF Empty( cFileName )
+      RETURN {}
+   ENDIF
+
 #if defined( __PLATFORM__UNIX )
    /* Disable expansion if this came from the command line */
    IF lCommandLine
@@ -4863,8 +4878,9 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
          cFilterHarb := ""
          cValue := ""
          FOR nPos := 1 TO Len( cFilterSrc )
-            IF IsDigit( SubStr( cFilterSrc, nPos, 1 ) ) .OR. ;
-               IsAlpha( SubStr( cFilterSrc, nPos, 1 ) )
+            IF iif( Empty( cValue ),;
+                  HB_ISFIRSTIDCHAR( SubStr( cFilterSrc, nPos, 1 ) ),;
+                  HB_ISNEXTIDCHAR( SubStr( cFilterSrc, nPos, 1 ) ) )
                cValue += SubStr( cFilterSrc, nPos, 1 )
             ELSE
                IF ! Empty( cValue )
@@ -4883,13 +4899,17 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
          cFilterHarb := StrTran( cFilterHarb, "|", ".OR." )
 
          /* Evaluate filter */
-         bFilter := &( "{| hbmk |" + cFilterHarb + "}" )
-         IF ISBLOCK( bFilter )
-            IF ISLOGICAL( xResult := Eval( bFilter, hbmk ) ) .AND. xResult
-               RETURN cItem
+
+         BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+            bFilter := &( "{| hbmk |" + cFilterHarb + "}" )
+            IF ! ISBLOCK( bFilter ) .OR. ! ISLOGICAL( xResult := Eval( bFilter, hbmk ) ) .OR. ! xResult
+               cItem := ""
             ENDIF
-         ENDIF
-         RETURN ""
+         RECOVER
+            cItem := ""
+         END SEQUENCE
+
+         RETURN cItem
       ENDIF
    ENDIF
 
@@ -4943,10 +4963,6 @@ STATIC FUNCTION MacroProc( hbmk, cString, cDirParent )
 
 STATIC FUNCTION TimeElapsed( nStartSec, nEndSec )
    RETURN Round( ( nEndSec - iif( nEndSec < nStartSec, nStartSec - 86399, nStartSec ) ), 1 )
-
-#define HB_ISALPHA( c )         ( Upper( c ) >= "A" .AND. Upper( c ) <= "Z" )
-#define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == '_' )
-#define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR(c) .OR. IsDigit( c ) )
 
 STATIC FUNCTION IsValidHarbourID( cName )
    LOCAL tmp
@@ -5840,6 +5856,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-instpath=<path>"  , I_( "copy target to <path>. if <path> is a directory, it should end with path separator. can be specified multiple times" ) },;
       { "-nohbc"            , I_( "do not process .hbc files in current directory" ) },;
       { "-stop"             , I_( "stop without doing anything" ) },;
+      { "-echo=<text>"      , I_( "echo text on screen" ) },;
       NIL,;
       { "-bldf[-]"          , I_( "inherit all/no (default) flags from Harbour build" ) },;
       { "-bldf=[p][c][l]"   , I_( "inherit .prg/.c/linker flags (or none) from Harbour build" ) },;
