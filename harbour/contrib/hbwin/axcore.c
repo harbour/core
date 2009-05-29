@@ -94,7 +94,7 @@ static int hb_ax_init( void )
       PHB_AX_WININIT pAtlAxWinInit;
 
       s_hLib = LoadLibrary( TEXT( "atl.dll" ) );
-      if( ( unsigned long ) s_hLib <= 32 )
+      if( ( unsigned long ) ( HB_PTRDIFF ) s_hLib <= 32 )
       {
          s_hLib = NULL;
          return 0;

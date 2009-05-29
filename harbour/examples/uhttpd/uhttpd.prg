@@ -1764,7 +1764,7 @@ FUNCTION uhttpd_GetHeader( cType )
 PROCEDURE uhttpd_DelHeader( cType )
    LOCAL nPos := hb_HPos( _HTTP_RESPONSE, cType )
    IF nPos > 0
-      hb_HDel( _HTTP_RESPONSE, nPos )
+      hb_HDelAt( _HTTP_RESPONSE, nPos )
    ENDIF
    RETURN
 /*
