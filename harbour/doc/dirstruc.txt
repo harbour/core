@@ -394,7 +394,7 @@ track of all files (read the FAQ if you don't know what SVN is).
     |
     +---hbformat        - Harbour Source Formatter utility.
     |
-    +---hbi18n          - Harbour i18n .pot/.hbi file manager.
+    +---hbi18n          - Harbour i18n .pot/.hbl file manager.
     |
     +---hbmk            - Harbour Make utility.
     |   |

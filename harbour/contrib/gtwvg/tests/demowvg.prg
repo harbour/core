@@ -3676,7 +3676,7 @@ FUNCTION demoxbp()
    oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
 
    // Read file into LOCAL variable
-   cText   := MemoRead( 'gtwvg.hbp' )
+   cText   := MemoRead( 'gtwvg.hbc' )
    // Create MLE, specify position using :create() and
    // assign data code block accessing LOCAL variable
    oMLE    := WvgMLE():new()

@@ -40,11 +40,11 @@ if not "%HB_DYNLIB%" == "yes" goto _SKIP_DLL_BIN
    setlocal
    if "%HB_BIN_COMPILE%" == "" set HB_BIN_COMPILE=%HB_BIN_INSTALL%
    if exist "%HB_BIN_INSTALL%\*.dll" (
-      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbrun-dll    %~dp0..\utils\hbrun\hbrun.hbm
-      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbmk2-dll    %~dp0..\utils\hbmk2\hbmk2.hbm
-      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbtest-dll   %~dp0..\utils\hbtest\hbtest.hbm
-      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbi18n-dll   %~dp0..\utils\hbi18n\hbi18n.hbm
-      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbformat-dll %~dp0..\utils\hbi18n\hbformat.hbm
+      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbrun-dll    %~dp0..\utils\hbrun\hbrun.hbp
+      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbmk2-dll    %~dp0..\utils\hbmk2\hbmk2.hbp
+      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbtest-dll   %~dp0..\utils\hbtest\hbtest.hbp
+      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbi18n-dll   %~dp0..\utils\hbi18n\hbi18n.hbp
+      %HB_BIN_COMPILE%\hbmk2 -q0 -shared -o%HB_BIN_INSTALL%\hbformat-dll %~dp0..\utils\hbi18n\hbformat.hbp
    )
    endlocal
 

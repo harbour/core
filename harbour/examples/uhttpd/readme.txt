@@ -4,8 +4,8 @@
 
 uHTTPD micro web server
 
-Build it without GD: ..\..\bin\hbmk uhttpd.hbm
-Build it with    GD: ..\..\bin\hbmk uhttpdgd.hbm
+Build it without GD: ..\..\bin\hbmk uhttpd.hbp
+Build it with    GD: ..\..\bin\hbmk uhttpdgd.hbp
   [ This one needs bgd.dll. Please download it from:
   http://www.libgd.org/releases/gd-latest-win32.zip ]
 

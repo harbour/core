@@ -11,7 +11,7 @@
     patch -N -i hbsuper.dif
 
 4.) Build it:
-    hbmk2 hbsuper.hbm
+    hbmk2 hbsuper.hbp
 
 5.) You're done.
 

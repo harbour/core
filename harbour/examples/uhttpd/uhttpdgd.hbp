@@ -2,7 +2,7 @@
 # $Id$
 #
 
-@uhttpd.hbm
+@uhttpd.hbp
 -DGD_SUPPORT
 -lhbgd -lhbct
 -lbgd{win}
