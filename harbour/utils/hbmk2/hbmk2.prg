@@ -4942,6 +4942,8 @@ STATIC FUNCTION MacroProc( hbmk, cString, cDirParent )
          cMacro := hbmk[ _HBMK_cCOMP ]
       CASE cMacro == "HB_CPU"
          cMacro := hbmk_CPU( hbmk )
+      CASE cMacro == "HB_WORK"
+         cMacro := _WORKDIR_BASE_
       CASE cMacro == "HB_MAJOR"
          cMacro := hb_ntos( hb_Version( HB_VERSION_MAJOR ) )
       CASE cMacro == "HB_MINOR"
