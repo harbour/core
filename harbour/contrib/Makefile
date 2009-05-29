@@ -55,8 +55,6 @@ endif
 
 DIRS += $(HB_CONTRIB_ADDONS)
 
-# DIRS += examples
-
 ifneq ($(DIRS),)
 include $(TOP)$(ROOT)config/dir.cf
 else
