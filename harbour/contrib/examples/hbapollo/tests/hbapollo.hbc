@@ -1,6 +1,0 @@
-#
-# $Id$
-#
-
-libs={!dos}hbapollo
-libs={win}sde61

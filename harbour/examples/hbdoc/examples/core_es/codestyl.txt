@@ -1,0 +1,225 @@
+/*
+ * $Id$
+ */
+
+/* Note los siguientes comentarios que podemos usar en cualquier lugar
+
+   NOTE: Notas 
+   TODO: Algo que deber¡a ser agregado aqu¡
+   TOFIX: Algo que necesita ser corregido 
+   OBSOLETE: Algo que podr¡a ser removido de aqu¡
+   QUESTION: Yo tuve algunas dudas en este punto pero Yo podr¡a no tener
+             una respuesta.
+   OPT: Algo es comentado para mejorar la performance
+
+   como un ejemplo: */
+
+
+Est ndar de Codificaci¢n de Harbour
+===================================
+(basado mayormente en los est ndares de codificaci¢n de PHP)
+
+
+Implementaci¢n de C¢digo
+------------------------
+
+[0] Documente su c¢digo en los archivos fuentes y en los archivos de texto
+    que van a constituir el manual. [tm]
+
+[1] Funciones que reciben punteros a recursos no deber¡an liberar a ‚stos.
+  por ejemplo, la funci¢n  int mail( char *to, char *from) NO deber¡a
+  liberar la memoria a la que apuntan los punteros "to" y "from".
+  Excepciones:
+
+  - Las funciones dise¤adas para liberar aquel recurso.
+    por ejemplo, hb_xfree()
+
+  - La funci¢n que recibe un argumento booleano, que controla cuando la 
+    funci¢n puede liberar sus argumentos (si es cierto - la funci¢n 
+    debe liberar sus argumentos, si es falso - no debe hacerlo).
+    
+[2] Funciones que est n estrechamente ligadas ¢ integradas con otras 
+    funciones dentro del mismo m¢dulo, y conf¡an en ese comportamiento 
+    poco trivial entre una y otra, deber¡an ser documentadas como tal y 
+    declaradas 'static'. Ellas deber¡an ser evitadas de ser posible.
+
+[3] Use definciones y macros cuando sea posible, as¡ estas constantes 
+    tienen nombres significativos y pueden ser f cilmente manipulados.
+    Use TRUE  en lugar de 1 (en un contexto booleano)
+    Use FALSE en lugar de 0 (en un contexto booleano)
+    Use NULL  en lugar de 0 (en un contexto de un puntero)
+    Siempre use el prefijo 'HB_' para definiciones de nuevos tipos
+    de datos y macros.
+    Use ¢ bi‚n el prefijo 'PHB_' ¢ el sufijo '_PTR' para tipos de datos 
+    que son punteros.
+    
+    por ejemplo:
+    HB_ITEM
+    PHB_ITEM
+    HB_ITEM_PTR 
+
+[4] Cuando escriba funciones que traten con cadenas, aseg£rese de recordar
+    que Harbour mantiene la propiedad del tama¤o de cada cadena, y que 
+    esta no deber¡a ser calculada con strlen().  Escriba sus funciones de 
+    forma tal que estas tomen ventaja de la propiedad tama¤o ¢ longitud,
+    tanto por eficiencia, como para que sean seguras en el tratamiento 
+    de cadenas binarias.
+    Funciones que cambien cadenas y obtengan sus nuevas longitudes mientras
+    hacen esto, deber¡an devolver esa nueva longitud, as¡ no tienen que
+    recalcularlas con strlen().
+
+[5] NUNCA USE strncat().  Si Ud. est  absolutamente seguro de lo que est 
+    haciendo, chequee este documento de nuevo, y reci‚n entonces considere
+    usarlo, y a£n as¡ trate de evitarlo.
+
+[6] Use assert(). No solamente buenos assert encuentran errores, sino 
+    que tambi‚n ayuda con la legibilidad del c¢digo fuente. 
+     - No use assert para el manejo de errores. Use assert solamente para
+       la condici¢n que debe ser siempre cierta.
+     - No use asignaciones en condiciones assert. Si Ud. asigna dentro
+       de una condici¢n assert, Ud. se arriesga a un evasivo error que 
+       podr¡a ser muy dif¡cil de encontrar en una contruccion de depuraci¢n
+       debido al efecto lateral de la asignaci¢n.
+       Llamadas a funciones en condiciones assert tambi‚n pueden causar 
+       este problema, si ellos modifican uno de sus argumentos ¢ variables
+       globales.
+
+[7] Cuando desee inactivar c¢digo coment ndolo, utilice una sentencia #if 
+    y NO utilice #if 0 solamente.  En su lugar use "<cvs username here>_0"
+    Por ejemplo #if FOO_0, donde FOO es su nombre de usuario del CVS.
+    Esto permite un seguimiento m s f cil del por qu‚ el c¢digo fu‚ anulado 
+    al ser comentado, especialmente en librer¡as empaquetadas.
+
+[8] Use  hb_xgrab()/hb_xalloc(), hb_xfree(), hb_xrealloc(), hb_xsize() 
+    para manejar la asignaci¢n de memoria. Estas funciones implementan  
+    un mecanismo interno "safety-net" que asegura la des-asignaci¢n de 
+    cualquier memoria no liberada al final de la aplicaci¢n.
+    Ellas proveen tambi‚n valiosa informaci¢n sobre asignaci¢n y 
+    desbordamiento, mientras se ejecutan en modo depuraci¢n (debug mode).
+
+
+Convenci¢n para los Nombres
+---------------------------
+
+[1] Los nombres de funciones para nivel-de-usuario definidas en el c¢digo 
+    fuente en C deber¡an ser encerradas dentro de la macro HB_FUNC().
+    Ellas deber¡an estar en may£sculas.
+    El nombre deber¡a ser prefijado con HB_' si esta funci¢n es una extensi¢n
+    al conjunto de funciones definidas en Clipper.
+    Las abreviaturas en el nombre no deber¡an ser usadas cuando ellas 
+    disminuyan la legibilidad ¢ el significado de la funci¢n.
+
+[2] Los nombres de variables deben ser significativos.  Los nombres de 
+    variables de una letra deben ser evitados, excepto para lugares donde 
+    la variable no tiene un real significado ¢ tiene un significado trivial 
+    (por ej.   for (i=0; i<100; i++) ...).
+
+[3] Los nombres de variables deber¡an usar la as¡ llamada notaci¢n H£ngara.
+    Use letras en min£sculas y no use el gui¢n inferior '_' (underscore)
+    para separar entre palabras.
+    
+    Bien:
+    pMemoryPtr
+    
+    Mal:
+    p_memory_ptr
+
+[4] Variables est ticas deben ser prefijadas con 's_'
+
+[5] Variables Globales (variables compartidas entre m¢dulos) deber¡an ser
+    prefijadas con 'hb_<module_prefix>' por ej. hb_vm_bDebug, hb_gc_pStart
+   
+
+Sintaxis e Indentaci¢n
+----------------------
+
+[1] Nunca use comentarios estilo C++ (por ej. // comentario).  
+    Siempre use comentarios estilo C en su lugar.
+    Harbour est  escrito en C, y el prop¢sito es compilarlo bajo cualquier
+    compilador ANSI-C compatible.  Aunque piense que muchos compiladores 
+    aceptan comentarios estilo C++ el c¢digo C, Ud. tiene que asegurarse
+    que su c¢digo pueda compilarse en otros compiladores tambi‚n.
+
+[2] No use el estilo K&R (Kerningham y Ritchie). por supuesto nosotros no
+    podemos y no queremos forzar a nadie a usar un estilo que el/ella no 
+    use, pero al final, cuando su c¢digo vaya dentro de la parte principal
+    de Harbour ¢ de uno de sus m¢dulos est ndares, por favor no use el 
+    estilo K&R.  Esto se aplica a todo, comenzando con los estilos de  
+    indentaci¢n y comentarios hasta la sintaxis de la declaraci¢n de la 
+    funci¢n.
+
+    Vea tambi‚n
+    http://www.tuxedo.org/~esr/jargon/html/entry/indent-style.html
+    
+[3] Sea generoso con los espacios en blanco y las llaves. 
+    Siempre es preferible:
+
+    if( cualquier_cosa )
+    {
+       bar;
+    }
+
+    a esto:
+
+    if(cualquier_cosa)bar;
+    
+    y a esto:
+    
+    if( cualquier_cosa )
+       bar;
+
+    Mantenga una l¡nea vac¡a entre la secci¢n de declaraci¢n de variables y
+    las sentencias de un block, as¡ como tambi‚n entre grupos de sentencias 
+    de un block.
+
+[4] Cuando indente, use tres espacios (NO use tabs). Es importante mantener
+    consistencia en la indentaci¢n as¡ las definiciones, comentarios y
+    estructuras de control permanecen correctamente alineados.
+
+
+Documentaci¢n
+-------------
+
+[1] Siempre que le sea posible documente Ud. mismo las funciones que
+    desarrolle. 
+    Generalmente es dif¡cil entender el c¢digo escrito por otra persona,
+    m s a£n cuando involucra algoritmos fuera de lo c¢mun, atributos
+    y variables del sistema ¢ datos que el documentador no dispone.
+    Esto es particularmente evidente en funciones de bajo nivel.
+
+[2] Transcurrido un cierto tiempo, se dificulta la tarea de Documentaci¢n
+    debido a que es necesario leer y releer el c¢digo varias veces (aunque 
+    la tarea la haga el propio desarrollador). Esto es evidente cuando no
+    se utilizan variables con un nombre adecuado para la tarea que realizan
+    (s¢lo se utilizan letras).
+    Por eso se pide encarecidamente que NO se dejen funciones ¢ 
+    procedimientos sin documentar.
+
+[3] Si la funci¢n ¢ procedimiento que se est  tratando de documentar, hace 
+    a su vez llamados a funciones no documentadas del sistema y el 
+    desarrollador original no est  disponible, podr¡a ser muy dif¡cil ¢ tal
+    vez imposible de documentar.
+
+[4] Rastrear cuales funciones est n documentadas y cuales no y si est n 
+    total ¢ parcialmente documentadas es un malgasto de recursos adicional
+    en tiempo y en gente.
+
+[5] Si Ud. es el desarrollador de la funci¢n, No se preocupe por la 
+    narrativa. Es m s importante saber qu‚ hace la funci¢n qu‚ argumentos
+    recibe, para qu‚ sirven y especialmente qu‚ dato/s se devuelven.
+
+[6] Si Ud. es el desarrollador de la funci¢n, y utiliza variables ¢ 
+    funciones no documentadas del sistema, por favor expliquelas tanto como 
+    sea posible.
+    Si utiliza alg£n algoritmo raro, explique brevemente qu‚ hace y como
+    funciona.
+
+[7] Las aclaraciones ¢ explicaciones que ponga en el cuerpo de la funci¢n
+    enci‚rrelas entre el par /* */ por favor no utilice la doble barra //
+    para comentarios porque disminuye su portabilidad.
+
+[8] Recuerde... el proceso de documentaci¢n consume mucho tiempo, usualmente
+    lleva m s tiempo escribir la documentaci¢n de una funci¢n que la funci¢n
+    propiamente dicha.
+
+

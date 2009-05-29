@@ -1,0 +1,183 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2001 Ryszard Glab <rglab@imid.med.pl>
+ *   Documentaci¢n en Ingl‚s de codeblock.txt
+ *
+ * Copyright 2001 Alejandro de G rate <alex_degarate@hotmail.com>
+ *   Traducci¢n al Espa¤ol de codeblock.txt
+ *
+ * Vea COPYING por los t‚rminos de la licencia.
+ *
+ */
+
+Implementaci¢n de Harbour de codeblocks (bloques de c¢digo)
+===========================================================
+
+Compilaci¢n de un codeblock
+  Durante el tiempo de Compilaci¢n, el codeblock es almacenado en la 
+  siguiente forma:
+  - la cabecera
+  - la ristra de bytes de pcodes
+
+La cabecera almacena informaci¢n acerca de variables locales 
+referenciadas.
++0: el byte pcode para _PUSHBLOCK
++1: el n£mero de bytes que definen a un codeblock
++3: el n£mero de par metros codeblock (declarados entre || en el codeblock)
++5: n£mero de variables locales usadas declaradas en el procedimiento /
+    funci¢n donde el codeblock es creado.
++7: La lista de las posiciones de variables locales de los procedimientos /
+    funciones, en la pila eval del procedimiento / funci¢n. Cada variable
+    local usada en un codeblock usa 2 bytes en esta lista. Cuando son 
+    usados codeblocks anidados, entonces esta lista es creada solamente 
+    en el codeblock m s externo.
++x: La ristra de bytes pcode, siguiendo a la cabecera.
++y: El byte pcode para _ENDBLOCK
+
+
+Creaci¢n de un codeblock
+========================
+ Cuando el opcode HB_P_PUSHBLOCK es ejecutado entonces la estructura 
+HB_ITEM es creada y puesta en la pila de evaluaci¢n. El tipo de item 
+es IT_BLOCK.
+El valor de este item es un puntero a la estructura HB_CODEBLOCK. 
+Adicionalmente este item almacena la base de las variables est ticas 
+definidas para el procedimiento/funci¢n actual. - esto es usado durante 
+la evaluaci¢n de un codeblock cuando la evaluaci¢n es llamada desde 
+c¢digo desde otro m¢dulo PRG. Tambi‚n el n£mero de par metros esperados 
+es almacenado.
+
+ La estructura HB_CODEBLOCK almacena un puntero a la ristra (stream) 
+de pcodes que es ejecutada durante la evaluaci¢n de un codeblock. 
+Este almacena tambi‚n el puntero a la tabla con referencia a variables 
+locales. Valores de todas las variables locales definidas en un 
+procedimiento y usadas en un codeblock son reemplazadas con una 
+referencia a un valor almacenado en un pool de variables de memoria 
+global. Esto permite el correcto acceso a variables locales aisladas 
+en un codeblock devuelto desde ‚sta funci¢n (sea directamente en una
+sentencia RETURN ¢ indirectamente por asignarlo ‚ste a una variable 
+est tica ¢ MEMVAR). 
+Este reemplazo autom tico e incondicional es requerido porque no hay 
+un m‚todo seguro de encontrar si un codeblock ser  accedido desde 
+fuera de una funci¢n d¢nde ‚ste es creado.
+
+Cuando son usados codeblocks anidados, solamente el codeblock m s 
+externo crea la tabla - todo codeblock interno usa esta tabla. 
+Esto permite compartir la tabla entre codeblocks anidados - , la 
+tabla es borrada si no hay m s referencias a ella. 
+Esto es causado por el hecho que un codeblock interno puede ser 
+creado durante la evaluaci¢n del codeblock exterior cuando las 
+variables locales no existen como en este ejemplo:
+
+PROCEDURE MAIN()
+PRIVATE foo, bar
+
+  Test()
+  EVAL( foo )
+  EVAL( bar )
+
+RETURN
+
+PROCEDURE Test()
+LOCAL a:='FOO', b:='BAR'
+
+  foo ={ || a + ( bar:=EVAL( {|| b} ) ) }
+
+RETURN
+
+
+Evaluaci¢n de un codeblock
+==========================
+Los par metros pasados a un codeblock son puestos en la pila de 
+evaluaci¢n antes de la evaluaci¢n del codeblock. Ellos son accedidos 
+exactamente igual que cualquier par metro de funci¢n. Cuando un 
+par metro de codeblock es referenciado, entonces su posici¢n en 
+la pila de evaluaci¢n es usada.
+Cuando una variable local de un procedimiento es referenciada 
+entonces el ¡ndice dentro de la tabla de posiciones de variables 
+locales (copiada de la cabecera) es usada. El valor negativo es 
+usado como un ¡ndice para distinguirlo de la referencia a un 
+par metro del codeblock.
+
+
+Incompatibilidad con Clipper
+============================
+
+1) Variables locales aisladas pasadas por referencia
+   -------------------------------------------------
+Hay una peque¤a diferencia entre el manejo de las variables pasadas 
+por referencia en un codeblock.
+El siguiente c¢digo lo explica (gracias a David G. Holm)
+
+Function Main()
+Local nTest
+Local bBlock1 := MakeBlock()
+Local bBlock2 := {|| DoThing( @nTest ), qout("From Main: ", nTest ) }
+
+   eval( bBlock1 )
+   eval( bBlock2 )
+
+Return( NIL )
+
+Function MakeBlock()
+Local nTest
+Return( {|| DoThing( @nTest ), qout("From MakeBlock: ", nTest ) } )
+
+
+Function DoThing( n )
+   n := 42
+Return( NIL )
+
+
+   En Clipper esto produce:
+Desde MakeBlock = NIL
+Desde Main      = 42 
+
+En Harbour esta produce: (esta es la salida correcta, en mi opini¢n ) 
+Desde MakeBlock = 42
+Desde Main      = 42 
+
+
+2) Alcance de variables sin declarar
+   ---------------------------------
+Considere el siguiente c¢digo:
+
+PROCEDURE MAIN()
+LOCAL cb
+  cb :=Detach()
+  ? EVAL( cb, 10 )
+
+RETURN
+
+FUNCTION Detach()
+LOCAL b:={|x| x+a}
+LOCAL a:=0
+RETURN b
+
+En Clipper la variable 'a' en un codeblock tiene alcance *local* ,
+sin embargo en Harbour la variable 'a' tiene un alcance *privado*. 
+Como resultado de ello, en Clipper este c¢digo imprimir  10 y en 
+Harbour este producir  "error de argumento" en la operaci¢n '+'.
+Esto ser  cierto cuando la variable 'a' sea declarada como PRIVATE.
+
+PROCEDURE MAIN()
+LOCAL cb
+PRIVATE a
+  cb := Detach()
+  ? EVAL( cb, 10 )
+RETURN
+
+El c¢digo de arriba tambi‚n produce 10 en Clipper (a£n si es 
+compilado con el switch -a ¢ -v).
+  
+
+
+
+
+

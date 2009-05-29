@@ -1,0 +1,1385 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2002 Alejandro de G rate <alex_degarate@hotmail.com>
+ * Documentaci¢n en Espa¤ol de:
+ *        subcodes.txt
+ *
+ * Documentaci¢n en Ingl‚s Luiz Rafael Culik
+ *
+ * Proposition:
+ *
+ *   If the error is raised in the same condition as in Clipper then
+ *   the same subcode number should be used.
+ *   Errors specific to the Harbour and generated in RTL modules
+ *   should start from 3000
+ *   Errors generated in tools functions should start from 4000
+ *
+ * Vea COPYING por los t‚rminos de la licencia.
+ *
+ */
+
+/* ************************************************************************** */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1003
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Intento de acceder a una variable inexistente u oculta (hidden)
+ *  $DESCRIPTION$
+ *      La variable especificada no fue hallada.
+ *      Si esta variable es un campo de una base de datos, asegurese que la
+ *      base de datos este abierta.
+ *      Si esta es una variable privada o publica entonces Ud. primero debe
+ *      crearla usando la sentencia PRIVATE o PUBLIC.
+ *  $FUNCTION$
+ *
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1068
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      El dato usado no es del tipo LOGICO.
+ *  $FUNCTION$
+ *
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1068
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Error de limite al intentar acceder al array
+ *  $DESCRIPTION$
+ *      Se intenta obtener un valor desde un dato que no es array.
+ *  $FUNCTION$
+ *
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1069
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Error de limite al intentar acceder al array
+ *  $DESCRIPTION$
+ *      Se intenta establecer un valor a un dato que no es array.
+ *  $FUNCTION$
+ *
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1078
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      Los tipos de los argumentos comparados no coinciden.
+ *  $FUNCTION$
+ *      ==
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1072
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      Los tipos de los argumentos comparados no coinciden.
+ *  $FUNCTION$
+ *      <>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1073
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      Los tipos de los argumentos comparados no coinciden.
+ *  $FUNCTION$
+ *      <
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1074
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      Los tipos de los argumentos comparados no coinciden.
+ *  $FUNCTION$
+ *      <=
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1075
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      Los tipos de los argumentos comparados no coinciden.
+ *  $FUNCTION$
+ *      >
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1076
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      Los tipos de los argumentos comparados no coinciden.
+ *  $FUNCTION$
+ *      >=
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1077
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      La operaci¢n no esta permitida para los argumentos pasados.
+ *      El argumento no es un valor del tipo LOGICAL.
+ *  $FUNCTION$
+ *      !, .NOT.
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1078
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      El tipo de uno ¢ ambos argumentos no es del tipo LOGICAL.
+ *  $FUNCTION$
+ *      .AND.
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1079
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      El tipo de uno ¢ ambos argumentos no es del tipo LOGICAL.
+ *  $FUNCTION$
+ *      .OR.
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1076
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      El valor del argumento no puede ser incrementado.
+ *  $FUNCTION$
+ *      ++
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1081
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      La operaci¢n de suma no esta permitida para los argumentos usados.
+ *  $FUNCTION$
+ *      +
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1082
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      La operaci¢n de resta no esta permitida para los argumentos
+ *      usados.
+ *  $FUNCTION$
+ *      -
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1100
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento Incorrecto
+ *  $DESCRIPTION$
+ *      El argumento especificado no es una cadena.
+ *  $FUNCTION$
+ *      RTRIM(), TRIM()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1101
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento Incorrecto
+ *  $DESCRIPTION$
+ *      El argumento especificado no es una cadena.
+ *  $FUNCTION$
+ *      LTRIM()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1102
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El primer argumento pasado a la funci¢n no es una cadena.
+ *  $FUNCTION$
+ *      UPPER()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1103
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El primer argumento pasado a la funci¢n no es una cadena.
+ *  $FUNCTION$
+ *      LOWER()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1104
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento Incorrecto
+ *  $DESCRIPTION$
+ *      El argumento especificado no es un valor numerico.
+ *  $FUNCTION$
+ *      CHR
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1105
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      Los argumentos pasados a la funci¢n son de un tipo incorrecto.
+ *  $FUNCTION$
+ *      SPACE()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1106
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      Los argumentos pasados a la funci¢n son de un tipo incorrecto.
+ *  $FUNCTION$
+ *      REPLICATE()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1107
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento Incorrecto
+ *  $DESCRIPTION$
+ *      El argumento especificado no es una cadena.
+ *  $FUNCTION$
+ *      ASC()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1108
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento Incorrecto
+ *  $DESCRIPTION$
+ *      El argumento especificado no es una cadena.
+ *  $FUNCTION$
+ *      AT()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1076
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      Los argumentos del operador pesos '$' no son cadenas.
+ *  $FUNCTION$
+ *      Simbolo pesos ($)
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1110
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El primer argumento pasado a la funci¢n no es una cadena.
+ *  $FUNCTION$
+ *      SUBSTR()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1110
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El tipo de argumento pasado no es una cadena ni un array.
+ *  $FUNCTION$
+ *      LEN()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1112
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n son del tipo
+ *      incorrecto.
+ *  $FUNCTION$
+ *      YEAR()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1113
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n son del tipo
+ *      incorrecto.
+ *  $FUNCTION$
+ *      MONTH
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1114
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n son del tipo
+ *      incorrecto.
+ *  $FUNCTION$
+ *      DAY()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1115
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n son del tipo
+ *      incorrecto.
+ *  $FUNCTION$
+ *      DOW()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1116
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n son del tipo
+ *      incorrecto.
+ *  $FUNCTION$
+ *      CMONTH()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1117
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n son del tipo
+ *      incorrecto.
+ *  $FUNCTION$
+ *      CDOW()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1120
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n son del tipo
+ *      incorrecto.
+ *  $FUNCTION$
+ *      DTOS
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1122
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento Incorrecto
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n son del tipo
+ *      incorrecto.
+ *  $FUNCTION$
+ *      TRANSFORM()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1124
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento Incorrecto
+ *  $DESCRIPTION$
+ *      El primer argumento pasado a la funci¢n no es una cadena.
+ *  $FUNCTION$
+ *      LEFT()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1126
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El primer argumento pasado a la funci¢n no es una cadena.
+ *  $FUNCTION$
+ *      STRTRAN()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1132
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Error de limite al acceder al array
+ *  $DESCRIPTION$
+ *      El indice especificado para el array es mayor que el numero de
+ *      elementos en el array.
+ *  $FUNCTION$
+ *
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1133
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Error de Limites en la asignaci¢n al array
+ *  $DESCRIPTION$
+ *      El indice especificado para el array es mayor que el numero de
+ *      elementos en el array.
+ *  $FUNCTION$
+ *
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1068
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Error de Limites en la asignaci¢n del elemento al array
+ *  $DESCRIPTION$
+ *      El indice especificado para el array es mayor que el numero de
+ *      elementos en el array.
+ *  $FUNCTION$
+ *
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1085
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n no son del tipo
+ *      numerico.
+ *  $FUNCTION$
+ *      MOD
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1089
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n no son del tipo
+ *      numerico.
+ *  $FUNCTION$
+ *      ABS()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1090
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n no son del tipo
+ *      numerico.
+ *  $FUNCTION$
+ *      INT()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1092
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n no son del tipo
+ *      numerico.
+ *  $FUNCTION$
+ *      MIN()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1093
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n no son del tipo
+ *      numerico.
+ *  $FUNCTION$
+ *      MAX()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1094
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n no son del tipo
+ *      numerico.
+ *  $FUNCTION$
+ *      ROUND
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1095
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n no son del tipo
+ *      numerico.
+ *  $FUNCTION$
+ *      LOG()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1096
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n no son del tipo
+ *      numerico.
+ *  $FUNCTION$
+ *      EXP()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1097
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n no son del tipo
+ *      numerico.
+ *  $FUNCTION$
+ *      SQRT()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1098
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n no son del tipo
+ *      caracter.
+ *  $FUNCTION$
+ *      VAL()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1099
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El argumento (o argumentos) pasados a la funci¢n no son del tipo
+ *      numerico.
+ *  $FUNCTION$
+ *      STR()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/* ************************************************************************** */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/2010
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento Incorrecto
+ *  $DESCRIPTION$
+ *      El argumento pasado no era una cadena conteniendo el nombre de
+ *      archivo a copiar.
+ *  $FUNCTION$
+ *      __COPYFILE()
+ *  $COMPLIANCE$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/2012
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Error de archivo
+ *  $DESCRIPTION$
+ *      Un error ha ocurrido durante el intento de abrir, crear o escribir
+ *      durante la operaci¢n de copia.
+ *  $FUNCTION$
+ *      __COPYFILE()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/2017
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El primer argumento pasado no es un array, y/o el segundo argumento
+ *      no es un codeblock
+ *  $FUNCTION$
+ *      AEVAL()
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/2020
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El valor asado es negativo. Solamente valores mayores a cero son
+ *      permitidos.
+ *  $FUNCTION$
+ *      SET DECIMALS
+ *      SET EPOCH
+ *      SET MARGIN
+ *      SET MESSAGE
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/* ************************************************************************** */
+
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3001
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento Incorrecto
+ *  $DESCRIPTION$
+ *      El tipo de argumento pasado no es un objeto. Solamente datos del
+ *      tipo OBJECT pueden ser clonados por esta funci¢n.
+ *  $FUNCTION$
+ *      OCLONE()
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3002
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      La Superclase no retorna un objeto
+ *  $DESCRIPTION$
+ *      El argumento pasado no es un nombre de una clase definida o la
+ *      clase especificada no tiene una Superclase.
+ *  $FUNCTION$
+ *      __INSTSUPER()
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3003
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      No se puede encontrar la Superclase
+ *  $DESCRIPTION$
+ *      El argumento pasado no es un nombre de una clase definida.
+ *  $FUNCTION$
+ *      __INSTSUPER()
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3004
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      No se puede modificar un item DATA en una calse
+ *  $DESCRIPTION$
+ *      Un intento de modificar un miembro de una case fue hecho.
+ *      Solamente INLINE y METHOD pueden ser modificados.
+ *  $FUNCTION$
+ *      CLASSMOD()
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3005
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Incorrect arguments type
+ *  $DESCRIPTION$
+ *      O bien el primer argumento no era un objeto o el segundo argumento
+ *      no era una cadena.
+ *  $FUNCTION$
+ *      ISMESSAGE(), OSEND()
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3007
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento Incorrecto
+ *  $DESCRIPTION$
+ *      Los argumentos pasados estan causando un conflicto en el manejo
+ *      de la solicitud.
+ *      No hay ningun sentido en esperar por siempre cuando no hay
+ *      eventos de entrada !
+ *  $FUNCTION$
+ *      INKEY()
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3008
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Tipo de argumento no v lido
+ *  $DESCRIPTION$
+ *      Los argumentos pasado no son una cadena. Deberia ser una cadena
+ *      con un nombre de variable o array unidimensional de cadenas.
+ *  $FUNCTION$
+ *      __MVPRIVATE(), __MVPUBLIC()
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3009
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento incorrecto pasado a la funci¢n __MVGET
+ *  $DESCRIPTION$
+ *      La funci¢n __MVGET espera solamente un argumento: una cadena con un
+ *      nombre de variable. El valor de esta variable sera devuelto.
+ *  $FUNCTION$
+ *      __MVGET()
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3010
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento incorrecto pasado a la funci¢n __MVPUT
+ *  $DESCRIPTION$
+ *      La funci¢n __MVPUT espera al menos un argumento: una cadena con un
+ *      nombre de variable. El valor de esta variable sera establecido.
+ *  $FUNCTION$
+ *      __MVPUT()
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3011
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      Se intento obtener el argumento de la funci¢n, que no fue pasado.
+ *      El numero de los argumentos requeridos es mayor que el numero
+ *      de argumentos pasados.
+ *  $FUNCTION$
+ *      PVALUE()
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3012
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El primer argumento no es una cadena con el nombre de la
+ *      function / procedure que deberia ser llamado.
+ *  $FUNCTION$
+ *      DO
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3101
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a una funci¢n object/class
+ *  $DESCRIPTION$
+ *      Uno de los argumentos no es del tipo requerido.
+ *  $FUNCTION$
+ *      __OBJ*()
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3102
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Error al intentar modificar o borrar un s¡mbolo de la clase
+ *  $DESCRIPTION$
+ *      Un s¡mbolo deberia ser modificado o borrado de una clase, pero el
+ *      s¡mbolo no existe.
+ *  $FUNCTION$
+ *      __OBJ*()
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3103
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Error al intentar agregar un s¡mbolo a la clase
+ *  $DESCRIPTION$
+ *      Un s¡mbolo deberia ser agregado a la clase, pero el s¡mbolo ya
+ *      existe.
+ *  $FUNCTION$
+ *      __OBJ*()
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+ /* ************************************************************************** */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      TOOLS/4001
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Argumento no v lido pasado a la funci¢n
+ *  $DESCRIPTION$
+ *      El segundo argumento pasado a la funci¢n no es una cadena.
+ *  $FUNCTION$
+ *      ISLEAPYEAR()
+ *  $STATUS$
+ *      Especifico de Harbour
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/* ************************************************************************** */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      TERM/2013
+ *  $CATEGORY$
+ *      Errores de ejecucion
+ *  $ONELINER$
+ *      Error al crear el archivo
+ *  $DESCRIPTION$
+ *      El archivo especificado no puede ser creado debido a algun error
+ *      del sistema operativo.
+ *  $FUNCTION$
+ *      SET, SET ALTERNATE TO
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */ 
+
+

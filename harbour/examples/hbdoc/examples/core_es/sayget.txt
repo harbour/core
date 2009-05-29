@@ -1,0 +1,230 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2003 Alejandro de G rate <alex_degarate@hotmail.com>
+ * Documentaci¢n en Espa¤ol de:
+ *          @...GET, @...SAY
+ *
+ * Vea COPYING por los t‚rminos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      @...GET
+ *  $CATEGORY$
+ *      Comando
+ *  $ONELINER$
+ *      Crea un objeto GET y lo visualiza en pantalla
+ *  $SYNTAX$
+ *      @ <nFila>,<nCol> [SAY <cSay> [PICTURE <cSayPict>] COLOR <cSayColor> ]
+ *                        GET <xVar> [PICTURE <cGetPict>] [COLOR <cGetColor>]
+ *                  [WHEN <lWhen>] [VALID <lValid> / RANGE <xInicio>,<xFin>]
+ *  $ARGUMENTS$
+ *      <nFila>     La fila donde se visualiza el SAY/GET
+ *
+ *      <nCol>      La columna donde se visualiza el SAY/GET
+ *
+ *      <cSay>      Mensaje a visualizar
+ *
+ *      <cSayPict>  Expresi¢n de Caracteres para el PICTURE del SAY
+ *
+ *      <cSayColor> Color a ser Usado por la expresi¢n SAY.
+ *
+ *      <xVar>      El nombre de la variable/campo
+ *
+ *      <cGetPict>  Expresi¢n de Caracteres para el PICTURE del GET
+ *
+ *      <lWhen>     Expresi¢n l¢gica para permitir el GET.
+ *
+ *      <lValida>   Expresi¢n l¢gica para validar la entrada del GET
+ *
+ *      <xInicio>   Valor inferior de RANGE
+ *
+ *      <xFin>      Valor superior de RANGE.
+ *
+ *      <cGetColor> Cadena de Color a ser usada por la expresi¢n GET
+ *  $RETURNS$
+ *      Ninguno
+ *  $DESCRIPTION$
+ *      Este comando agrega un objeto GET al array p£blico reservado llamado
+ *      GETLIST[] y lo muestra en pantalla. El campo ¢ variable a ser
+ *      agregada al objeto GET es especificada en <xVar> y es visualizada
+ *      en las coordenadas fila, columna <nFila>, <nCol>.
+ *
+ *      Si la cl usula SAY es usada el mensaje <cSay> ser  visualizado
+ *      comenzando en <nFila>,<nCol>, mientras que la variable de campo
+ *      <xVar> ser  visualizada en ROW(), COL()+ 1.
+ *
+ *      Si la cl usula PICTURE es usada para la expresi¢n SAY, el molde
+ *      <cSayPicr> es usado, todas las reglas de formato contenidas en ‚l se
+ *      aplicar n. Vea la funci¢n TRANSFORM I, para mayor informaci¢n.
+ *
+ *      Si <cGetPict> es especificado, la cl usula PICTURE de <xVar> ser 
+ *      usada para el objeto GET y todas las reglas de formato ser n
+ *      aplicadas. Vea las reglas de formato para GET en la tabla m s abajo.
+ *
+ *      Si la cl usula WHEN es especificada, entonces <lWhen> se eval£a por
+ *      una condici¢n l¢gica (.T.) y en ese caso el objeto GET ser  activado
+ *      De otro modo el objeto GET ser  saltado y ninguna informaci¢n ser 
+ *      obtenida a trav‚s de la pantalla. El nombre de una funci¢n definida
+ *      por el usuario que retorne true (.T.) ¢ false ( F.) ¢ un codeblock
+ *      puede ser especificado en <lWhen>. Esta cl usula no ser  activada
+ *      hasta que un comando READ ¢ una funci¢n READMODAL() sea ejecutada.
+ *
+ *      Si la cl usula VALID es especificada, <lValida> se eval£a por una
+ *      condici¢n l¢gica (.T.), si se cumple, el GET actual se considera
+ *      v lido y la operatoria del GET continuar  hasta encontrar el pr¢ximo
+ *      objeto GET activo. De lo contrario el cursor permanecer  en este
+ *      objeto GET hasta que la operaci¢n se aborte ¢ la condici¢n en
+ *      <lValid> se cumpla (.T.).  El nombre de una funci¢n definida por
+ *      el usuario que retorne true (.T.) ¢ false ( F.) ¢ un codeblock
+ *      puede ser especificado en <lValida>. Esta cl usula no ser  activada
+ *      hasta que un comando READ ¢ una funci¢n READMODAL() sea ejecutada.
+ *
+ *      Si la cl usula RANGE (rango) es especificada, en lugar de la cl usula
+ *      VALID, los dos valores que limitan el rango deben ser especificados
+ *      en <xInicio> y <xFin>. La variable que se eval£a debe ser del mismo
+ *      tipo que las que constituyen el rango. Si la variable <xVar> es del
+ *      tipo de fecha (DATE), <xInicio> y <xFin> deben ser tambi‚n del tipo
+ *      DATE.  Si la variable <xVar> es del tipo NUMERICo <xInicio> y <xFin>
+ *      deben ser tambi‚n del tipo num‚rico. Si un valor falla el test RANGE,
+ *      un mensaje de "OUT OF RANGE" (fuera de rango) aparecer  en el area
+ *      SCOREBOARD (fila = 0, col. = 60). El mensaje de RANGE puede ser
+ *      desactivado si el comando SET SCOREBOARD ¢ la funcion SET() apropiada
+ *      es puesta a .F.
+ *
+ *      <fixed>
+ *      <table>
+ *      Funci¢n     Reglas de Formateo del GET
+ *        @A        Permite solamente caracteres alfab‚ticos
+ *        @B        Los n£meros ser n justificados a la izquierda
+ *        @C        Todos los n£meros positivos ser n seguidos por CR
+ *        @D        Todas las fechas usar n el formato SET DATE
+ *        @E        Las fechas estar n en formato Brit nico y los n£meros
+ *                  en formato Europeo.
+ *        @K        Permite que un valor sugerido sea visto dentro del GET
+ *                  pero borrado si se presiona alguna tecla que no sea la
+ *                  de cursores cuando el cursor esta en la primera posici¢n
+ *                  en el  rea del GET.
+ *        @R        Los caracteres que se indican ser n insertados
+ *        @S<nSize> Permite el desplazamiento horizontal de un campo ¢
+ *                  variable que es de <nSize> caracteres de ancho.
+ *        @X        Todos los n£meros negativos ser n seguidos por DB
+ *        @Z        Visualiza los valores num‚ricos cero como blancos
+ *        @!        Fuerza la conversi¢n a may£sculas de los caracteres
+ *        @(        Visualiza los n£meros negativos en parentesis con
+ *                  espacios adelante
+ *        @)        Visualiza los n£meros negativos en parentesis sin
+ *                  espacios adelante
+ *      </table>
+ *      </fixed>
+ *
+ *      <fixed>
+ *      <table>
+ *      Molde  Reglas de Formateo del GET
+ *        A    S¢lo caracteres alfab‚ticos son permitidos
+ *        N    S¢lo caracteres alfab‚ticos y num‚ricos son permitidos
+ *        X    Cualquier caracter es permitido
+ *        L    S¢lo T ¢ F son permitidos para datos l¢gicos
+ *        Y    S¢lo Y ¢ N son permitidos para datos l¢gicos
+ *        9    S¢lo digitos, incluyendo signos ser n permitidos
+ *        #    S¢lo digitos, signos y espacios ser n permitidos
+ *        !    Caracteres alfab‚ticos son convertidos a May£sculas
+ *        S    El signo Pesos ser  visualizado en lugar de espacios, delante
+ *             del tipo de dato num‚rico (aqui visto cmo una "S")
+ *        *    El signo Asterisco ser  visualizado en lugar de espacios
+ *             delante del tipo de dato num‚rico
+ *        .    Punto, define la posici¢n del punto decimal
+ *        ,    Coma, define la posici¢n del separado de miles.
+ *      </table>
+ *      </fixed>
+ *      Nota:
+ *      Las funciones de formateo para PICTURE pueden ser agrupadas juntas
+ *      cuando sean usandas conjuntamente con los moldes para PICTURE.
+ *      Sin embargo un espacio en blanco debe ser insertado en la cadena de
+ *      PICTURE si existen ambas: funciones y moldes.
+ *  $EXAMPLES$
+ *      FUNCTION Main()
+ *       LOCAL cVar := Space(50)
+ *       LOCAL nId  := 0
+ *       CLS
+ *       @ 3,1 SAY "Nombre" GET cVar PICTURE "@!S 30"
+ *       @ 4,1 SAY "Ident." GET nId  PICTURE "999.999"
+ *       READ
+ *       ? "El nombre que Ud. ingres¢ es:", cVar
+ *       ? "La Ident. que Ud. ingres¢ es:", nId
+ *      RETURN NIL
+ *  $TESTS$
+ *      Ver ejemplos
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Este comando es totalmente compatible con CA-Cl*pper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librer¡a asociada es rtl
+ *  $SEEALSO$
+ *      @...SAY,READ,TRANSFORM()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      @...SAY
+ *  $CATEGORY$
+ *      Comando
+ *  $ONELINER$
+ *      Visualiza datos en las coordenadas dadas en el dispositivo actual
+ *  $SYNTAX$
+ *      @ <nFila>,<nCol> SAY <xValor> [ PICTURE <cPict> ] [COLOR <cColor>]
+ *  $ARGUMENTS$
+ *      <nFila>    La fila donde se visualiza el SAY
+ *
+ *      <nCol>     La columna donde se visualiza el SAY
+ *
+ *      <xValor>   Valor a visualizar
+ *
+ *      <cPict>    Formato para el PICTURE
+ *
+ *      <cColor>   Cadena de Color
+ *  $RETURNS$
+ *      Ninguno
+ *  $DESCRIPTION$
+ *      Este comando visualiza el contenido de <xValor> en las coordenadas
+ *      <nFila>, <nCol>. Una cl usula PICTURE puede ser especificada en
+ *      <cPict>. Si el dispositivo actual es establecido a la impresora, la
+ *      salida ir  a la impresora; Por defecto todas las salidas son
+ *      dirigidas a la pantalla.
+ *
+ *      Para una lista completa de los Moldes y Funciones para PICTURES, vea
+ *      el comando @...GET
+ *  $EXAMPLES$
+ *      FUNCTION Main
+ *       CLS
+ *       @ 2,1 SAY "Harbour"
+ *       @ 3,1 SAY "is" COLOR "b/r+"
+ *       @ 4,1 SAY "Power" PICTURE "@!"
+ *      RETURN NIL
+ *  $TESTS$
+ *      Ver ejemplos
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Este comando es totalmente compatible con CA-Cl*pper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librer¡a asociada es rtl
+ *  $SEEALSO$
+ *      @...GET,SET DEVICE,TRANSFORM()
+ *  $END$
+ */
+
+

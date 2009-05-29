@@ -386,7 +386,7 @@ Contrib
   with the same name.
 - hbhpdf fixed HPDF_SETINFODATEATTR() function.
 - Added experimental terminal server written in Harbour. Find it
-  in contrib/examples.
+  in /examples.
 - hbgt now properly checks for package version and includes
   feature accordingly.
 - hbwin added WAPI_GETCOMMANDLINE(), WIN_GETCOMMANDLINEPARAM(),

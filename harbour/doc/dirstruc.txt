@@ -38,50 +38,6 @@ track of all files (read the FAQ if you don't know what SVN is).
 +---contrib             - Miscellaneous contribution files. Those are not
 |   |                     part of the official Harbour project.
 |   |
-|   +---examples        - Sample files and small applications.
-|   |   |
-|   |   +---dbu         - Make files (without source) for CA-Cl*pper DBU.
-|   |   |
-|   |   +---guestbk     - Harbour Guests Book.
-|   |   |
-|   |   +---hbsqlit2    - Interface for SQLite 2.x library.
-|   |   |   |
-|   |   |   +---tests   - Test programs.
-|   |   |
-|   |   +---hscript     - Harbour Script.
-|   |   |
-|   |   +---misc        - A few humble demonstration.
-|   |   |
-|   |   +---pe          - Editor.
-|   |   |
-|   |   +---pp          - Harbour Preprocessor as a standalone module.
-|   |   |
-|   |   +---rdddbt      - DBFDBT RDD.
-|   |   |
-|   |   +---rl          - Make files (without source) for CA-Cl*pper RL.
-|   |   |
-|   |   +---terminal    - Harbour terminal server/client.
-|   |   |
-|   |   +---uhttpd      - uHTTPD micro web server.
-|   |       |
-|   |       +-home      - Root directory for the web server.
-|   |       | |
-|   |       | +-cgi-bin - (*)
-|   |       | |
-|   |       | +-css     -
-|   |       | |
-|   |       | +-images  -
-|   |       | |
-|   |       | +-js      -
-|   |       | |
-|   |       | +-xsl     -
-|   |       |
-|   |       +-logs      - Log files. (*)
-|   |       |
-|   |       +-modules   -
-|   |       |
-|   |       +-sessions  - (*)
-|   |
 |   |---gtalleg         - GT subsystem based on Allegro with graphic
 |   |                     extensions.
 |   |
@@ -265,6 +221,50 @@ track of all files (read the FAQ if you don't know what SVN is).
 |       |                 to be complied by Harbour.
 |       |
 |       +---tests       - Test programs.
+|
++---examples        - Sample files and small applications.
+|   |
+|   +---dbu         - Make files (without source) for CA-Cl*pper DBU.
+|   |
+|   +---guestbk     - Harbour Guests Book.
+|   |
+|   +---hbsqlit2    - Interface for SQLite 2.x library.
+|   |   |
+|   |   +---tests   - Test programs.
+|   |
+|   +---hscript     - Harbour Script.
+|   |
+|   +---misc        - A few humble demonstration.
+|   |
+|   +---pe          - Editor.
+|   |
+|   +---pp          - Harbour Preprocessor as a standalone module.
+|   |
+|   +---rdddbt      - DBFDBT RDD.
+|   |
+|   +---rl          - Make files (without source) for CA-Cl*pper RL.
+|   |
+|   +---terminal    - Harbour terminal server/client.
+|   |
+|   +---uhttpd      - uHTTPD micro web server.
+|       |
+|       +-home      - Root directory for the web server.
+|       | |
+|       | +-cgi-bin - (*)
+|       | |
+|       | +-css     -
+|       | |
+|       | +-images  -
+|       | |
+|       | +-js      -
+|       | |
+|       | +-xsl     -
+|       |
+|       +-logs      - Log files. (*)
+|       |
+|       +-modules   -
+|       |
+|       +-sessions  - (*)
 |
 +---debian              - Packaging information for Debian GNU/Linux.
 |

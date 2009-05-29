@@ -1,0 +1,1695 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * GENOS2 support module for hbdoc document Extractor
+ *
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ */
+
+#pragma -w2
+#pragma linenumber=on
+
+#include "directry.ch"
+#include "fileio.ch"
+#include "inkey.ch"
+#include "common.ch"
+
+#include "hbclass.ch"
+
+#include "hbdocdef.ch"
+
+#define CRLF hb_osnewline()
+
+#define DELIM   "$"                 // keyword delimiter
+
+//  output lines on the screen
+#define INFILELINE   10
+#define MODULELINE   12
+#define LINELINE     14
+#define ERRORLINE    20
+#define LONGLINE     600
+#define LONGONELINE  86
+MEMVAR aDirlist
+MEMVAR aDocInfo
+STATIC aAlso
+STATIC nCommentLen
+STATIC lEof
+STATIC aFiTable    := {}
+STATIC aSiTable       := {}
+STATIC aFoiTable      := {}
+STATIC atiTable       := {}
+STATIC nNumTableItems := 0
+
+STATIC lIsTable    := .F.
+STATIC aColorTable := { { "aqua", "" }, { "black", "" }, { "fuchia", "" }, { "grey", "" }, { "green", "" }, { "lime", "" }, { "maroon", "" }, { "navy", "" }, { "olive", "" }, { "purple", "" }, { "red", "" }, { "silver", "" }, { "teal", "" }, { "white", "" }, { "yellow", "" } }
+STATIC aCurDoc        := {}
+STATIC nCurDoc := 1
+
+*+--------------------------------------------------------------------
+*+
+*+    Function ProcessOs2()
+*+
+*+    Called from ( hbdoc.prg    )   2 - function main()
+*+
+*+--------------------------------------------------------------------
+*+
+FUNCTION ProcessOs2()
+
+   //
+
+   //  Copyright (C) 2000 Luiz Rafael Culik
+   //
+   //  Purpose: Process each of the files in the directory
+   //  and generate .tr file format output
+   //  Modification History:
+   //         Version    Date        Who       Notes
+   //          V1.00     1/20/2000   LRC       Initial Version
+   //
+   //  Calling parameters: None
+   //
+   //  Notes: None
+   // -
+   //  LOCAL variables:
+
+   LOCAL i
+   LOCAL j
+   LOCAL nFiles
+   //   LOCAL nCommentLen
+   //   LOCAL lEof
+   LOCAL lDoc
+   LOCAL cBuffer
+   LOCAL nEnd
+   LOCAL nCount
+   LOCAL nAlso
+
+   LOCAL cBar          := "컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�"
+   LOCAL nMode
+   LOCAL cname
+   LOCAL cFuncName
+   LOCAL cOneLine
+   LOCAL cCategory
+   LOCAL cFileName
+   LOCAL nLineCnt
+   LOCAL cSeeAlso
+   LOCAL cTemp
+   LOCAL cChar
+   LOCAL oOs2
+   LOCAL lData         := .F.
+   LOCAL lMethod       := .F.
+   LOCAL lIsDataLink   := .F.
+   LOCAL lIsMethodLink := .F.
+
+   LOCAL lBlankLine     := .F.             // Blank line encountered and sent out
+   LOCAL lAddBlank      := .F.             // Need to add a blank line if next line is not blank
+   LOCAL nReadHandle
+   LOCAL cDoc           := DELIM + "DOC" + DELIM               // DOC keyword
+   LOCAL cEnd           := DELIM + "END" + DELIM               // END keyword
+   LOCAL cFunc          := DELIM + "FUNCNAME" + DELIM          // FUNCNAME keyword
+   LOCAL cCat           := DELIM + "CATEGORY" + DELIM          // CATEGORY keyword
+   LOCAL cOne           := DELIM + "ONELINER" + DELIM          // ONELINER keyword
+   LOCAL cSyn           := DELIM + "SYNTAX" + DELIM            // SYNTAX keyword
+   LOCAL cArg           := DELIM + "ARGUMENTS" + DELIM         // ARGUMENTS keyword
+   LOCAL cRet           := DELIM + "RETURNS" + DELIM           // RETURNS keyword
+   LOCAL cDesc          := DELIM + "DESCRIPTION" + DELIM       // DESCRIPTION keyword
+   LOCAL cExam          := DELIM + "EXAMPLES" + DELIM          // EXAMPLES keyword
+   LOCAL cSee           := DELIM + "SEEALSO" + DELIM           // SEEALSO keyword
+   LOCAL cInc           := DELIM + "INCLUDE" + DELIM           // INCLUDE keyword
+   LOCAL cComm          := DELIM + "COMMANDNAME" + DELIM       // COMMAND keyword
+   LOCAL cCompl         := DELIM + "COMPLIANCE" + DELIM
+   LOCAL cTest          := DELIM + "TESTS" + DELIM
+   LOCAL cStatus        := DELIM + "STATUS" + DELIM
+   LOCAL cPlat          := DELIM + "PLATFORMS" + DELIM
+   LOCAL cFiles         := DELIM + "FILES" + DELIM
+   LOCAL cSubCode       := DELIM + "SUBCODE" + DELIM
+   LOCAL cFunction      := DELIM + "FUNCTION" + DELIM
+   LOCAL cConstruct     := DELIM + "CONSTRUCTOR" + DELIM
+   LOCAL cDatalink      := DELIM + "DATALINK" + DELIM
+   LOCAL cDatanolink    := DELIM + "DATANOLINK" + DELIM
+   LOCAL cMethodslink   := DELIM + "METHODSLINK" + DELIM
+   LOCAL cMethodsNolink := DELIM + "METHODSNOLINK" + DELIM
+   LOCAL cData          := DELIM + "DATA" + DELIM
+   LOCAL cMethod        := DELIM + "METHOD" + DELIM
+   LOCAL cClassDoc      := DELIM + "CLASSDOC" + DELIM
+   LOCAL cTable         := DELIM + "TABLE" + DELIM
+
+   lData         := .F.
+   lMethod       := .F.
+   lIsDataLink   := .F.
+   lIsMethodLink := .F.
+
+   nFiles := LEN( aDirList )
+   //
+   //  Entry Point
+   //
+   //  Put up information labels
+   @ INFILELINE, 20 SAY "Extracting: "
+   @ MODULELINE, 20 SAY "Documenting: "
+   //  loop through all of the files
+   oOs2 := tOS2():new( "ipf\harbour.ipf" )
+   FOR i := 1 TO nFiles
+
+      //  Open file for input
+
+      nCommentLen := IIF( AT( ".asm", Lower( aDirList[ i, F_NAME ] ) ) > 0, 2, 4 )
+      nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
+      @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
+      @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
+      @ LINELINE, 27   SAY "Line:"
+
+      nLineCnt := 0
+
+      IF nReadHandle < 0
+         WRITE_ERROR( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
+         @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
+         LOOP
+      ENDIF
+      lEof := .F.
+      lDoc := .F.
+      //  First find the author
+      ReadFromTop( nReadHandle )
+      DO WHILE .NOT. lEof
+
+         //  Read a line
+
+         cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+         nLineCnt ++
+         IF nLineCnt % 10 == 0
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
+         ENDIF
+         //  check to see if we are in doc mode or getting out of doc mode
+
+         IF AT( cDoc, cBuffer ) > 0 .OR. AT( cClassDoc, cBuffer ) > 0
+            IF lDoc
+               WRITE_ERROR( cDoc + " encountered during extraction of Doc" ;
+                            + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
+            ENDIF
+            lDoc    := .T.
+            cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), ;
+                             nCommentLen ) )
+            nLineCnt ++
+            cCategory := cFuncName := cSeeAlso := ""
+            nMode     := D_IGNORE
+         ELSEIF AT( cEnd, cBuffer ) > 0
+                     nCurDoc ++
+            IF .NOT. lDoc
+               WRITE_ERROR( cEnd + " encountered outside of Doc area at line" ;
+                            + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
+            ELSE
+               //  Add a new entry to our list of files
+
+               IF EMPTY( cCategory )
+                  WRITE_ERROR( "Blank Category",,,, aDirList[ i, F_NAME ] )
+                  cCategory := "Unknown"
+               ENDIF
+               IF EMPTY( cFuncName )
+                  WRITE_ERROR( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
+                  cFuncName := "Unknown"
+               ENDIF
+               AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
+               //  Now close down this little piece
+               lDoc := .F.
+               IF lData .OR. lmethod
+                  oos2:writeText( ":efn." )
+               ENDIF
+               IF .NOT. EMPTY( cSeeAlso )
+                  oOs2:WriteText( ".br")
+                  oOs2:WriteParBold( "See Also:" )
+                  FOR nAlso := 1 TO LEN( aAlso )
+
+                     IF nAlso == 1
+                        oOs2:WriteLink( aAlso[ nAlso ] )
+                     ELSE
+                        oOs2:WriteLink( aAlso[ nAlso ] )
+                     ENDIF
+                  NEXT
+
+               ENDIF
+
+               nMode := D_IGNORE
+            ENDIF
+
+            @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
+         ENDIF
+
+         //  Act on the input
+         IF lDoc
+            //  1) function name
+
+            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) > 0
+               cBuffer := ReadLN( @lEof )
+               nLineCnt ++
+               //  Save the function name
+               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
+               @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
+               @ MODULELINE, 33 SAY cFuncName
+
+               nMode := D_NORMAL
+
+               //  Open a new file
+               IF AT( "FT_", cFuncName ) > 0
+                  cTemp := upper(SUBSTR( cFuncName, 4 ))
+               ELSE
+                  cTemp := upper(cFuncName)
+               ENDIF
+
+               IF ( nEnd := AT( "(", cTemp ) ) > 0
+                  cTemp := LEFT( cTemp, nEnd - 1 )
+               ENDIF
+               cFileName := ""
+
+               //  Strip off any other non-alphabetic/numeric characters
+               FOR j := 1 TO LEN( cTemp )
+                  cChar := SUBSTR( cTemp, j, 1 )
+                  IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
+                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar == "_"
+                     cFileName += cChar
+                  ENDIF
+               NEXT
+
+               //  See if file name is present already. If so then modify
+
+               cFileName := LEFT( cFileName, 40 )
+               nEnd      := 1
+               nCount    := 0
+               DO WHILE nEnd > 0
+                  nEnd := ASCAN( aDocInfo, { | a | a[ 4 ] == cFileName + ".ipf" } )
+                  IF nEnd > 0
+
+                     //  This will break if there are more than 10 files with the same first
+                     //  seven characters. We take our chances.
+
+                     IF LEN( cFileName ) == 40
+                        cFileName := STUFF( cFileName, 40, 1, STR( nCount, 1, 0 ) )
+                     ELSE
+                        cFileName += STR( nCount, 1, 0 )
+                     ENDIF
+                     nCount ++
+                  ENDIF
+               ENDDO
+               //  Add on the extension
+
+               IF oOs2:nHandle < 1
+                  ? "Error creating", cFileName, ".ipf"
+                  WRITE_ERROR( "Error creating",,,, cFileName + ".ipf" )
+               ENDIF
+            ELSEIF ( AT( cdata, cBuffer ) > 0 .AND. GetItem( cBuffer, nCurdoc ) ) .OR. ( AT( cmethod, cBuffer ) > 0 .AND. GetItem( cBuffer, nCurdoc ) )
+
+               IF AT( cdata, cBuffer ) > 0
+                  lData   := .T.
+                  lMethod := .F.
+               ELSEIF AT( cmethod, cBuffer ) > 0
+                  lMethod := .T.
+                  lData   := .F.
+               ENDIF
+               cBuffer := ReadLN( @lEof )
+               nLineCnt ++
+               //  Save the function name
+               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
+               @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
+               @ MODULELINE, 33 SAY cFuncName
+
+               nMode := D_NORMAL
+
+               //  2) Category
+
+            ELSEIF AT( cCat, cBuffer ) > 0
+               cBuffer := ReadLN( @lEof )
+               nLineCnt ++
+               //  get the category
+               cCategory :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
+
+               //  3) One line description
+
+            ELSEIF AT( cOne, cBuffer ) > 0
+               cBuffer := ReadLN( @lEof )
+               nLineCnt ++
+               cOneLine := ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
+               IF LEN( cOneLine ) > LONGONELINE
+                  WRITE_ERROR( "OneLine", cOneLine, nLineCnt, LONGONELINE, ;
+                               aDirList[ i, F_NAME ] )
+               ENDIF
+
+               nMode := D_ONELINE
+               //  Now start writing out what we know
+               IF lData
+                  oOs2:WriteJumpTitle( LEFT( cFilename, AT( ".", cFilename ) - 1 ) + cFuncName, "Data " + cFuncName )
+               ELSEIF lMethod
+                  oOs2:WriteJumpTitle( LEFT( cFilename, AT( ".", cFilename ) - 1 ) + cFuncName, "Method " + cFuncName )
+               ELSE
+
+                  oOs2:WriteTitle( PAD( cFuncName, 40 ), cFuncName ,cCategory)
+                  oOs2:WriteParBold( cOneLine )
+
+               ENDIF
+               //  4) all other stuff
+
+            ELSE
+
+               IF AT( cSyn, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
+                  oOs2:WriteParBold( "Syntax" )
+
+                  nMode     := D_SYNTAX
+                  lAddBlank := .T.
+end
+               ELSEIF AT( cConstruct, cBuffer ) > 0
+                     IF GetItem( cBuffer, nCurdoc )
+                  oOs2:WriteParBold( "Constructor syntax" )
+
+                  nMode     := D_SYNTAX
+                  lAddBlank := .T.
+end
+               ELSEIF AT( cArg, cBuffer ) > 0
+                     IF GetItem( cBuffer, nCurdoc )
+                  IF !lBlankLine
+                     oOs2:WriteText( ".br" )
+                     oOs2:WriteParBold( "Arguments" )
+
+                  ENDIF
+
+                  nMode     := D_ARG
+                  lAddBlank := .T.
+   end
+               ELSEIF AT( cRet, cBuffer ) > 0
+
+                        IF GetItem( cBuffer, nCurdoc )
+                                 IF !lBlankLine
+                     oOs2:WriteText( ".br" )
+                  ENDIF
+
+                  oOs2:WriteParBold( "Returns" )
+
+                  nMode     := D_RETURN
+                  lAddBlank := .T.
+                  end
+
+               ELSEIF AT( cDesc, cBuffer ) > 0
+                                 IF GetItem( cBuffer, nCurdoc )
+
+                  IF !lBlankLine
+                     oOs2:WriteText( ".br" )
+                  ENDIF
+                  oOs2:WriteParBold( "Description" )
+
+                  nMode     := D_DESCRIPTION
+                  lAddBlank := .T.
+                  end
+               ELSEIF AT( cdatalink, cBuffer ) > 0
+                                 IF GetItem( cBuffer, nCurdoc )
+                  IF !lBlankLine
+                     oOs2:WriteText( ".br" )                    //:endpar()
+                  ENDIF
+
+                  oOs2:WriteParBold( "Data" )
+                  nMode     := D_DATALINK
+                  lAddBlank := .T.
+
+                  lIsDataLink := .T.
+               end
+               ELSEIF AT( cDatanolink, cBuffer ) > 0
+                                 IF GetItem( cBuffer, nCurdoc )
+                  IF !lIsDataLink
+                     oOs2:WriteParBold( "Data" )
+
+                  ENDIF
+                  nMode     := D_NORMAL
+                  lAddBlank := .T.
+                  end
+
+               ELSEIF AT( cMethodslink, cBuffer ) > 0
+               IF GetItem( cBuffer, nCurdoc )
+
+                  oOs2:WriteParBold( "Method" )
+                  nMode     := D_METHODLINK
+                  lAddBlank := .T.
+
+                  lIsMethodLink := .T.
+               end
+               ELSEIF AT( cMethodsnolink, cBuffer ) > 0
+               IF GetItem( cBuffer, nCurdoc )
+                  IF !lIsMethodLink
+                     oOs2:WriteParBold( "Methods" )
+                  ENDIF
+
+                  nMode     := D_NORMAL
+                  lAddBlank := .T.
+               end
+               ELSEIF AT( cExam, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
+                  IF !lBlankLine
+                     oOs2:WriteText( ".br" )
+                  ENDIF
+                  oOs2:WriteParBold( "Examples" )
+                  nMode     := D_EXAMPLE
+                  lAddBlank := .T.
+                  end
+               ELSEIF AT( cTest, cBuffer ) > 0
+                     IF GetItem( cBuffer, nCurdoc )
+                  IF !lBlankLine
+                     oOs2:WriteText( ".br" )
+                  ENDIF
+
+                  oOs2:WriteParBold( "Tests" )
+                  nMode     := D_EXAMPLE
+                  lAddBlank := .T.
+                     end
+               ELSEIF AT( cStatus, cBuffer ) > 0
+                        IF GetItem( cBuffer, nCurdoc )
+                  nMode := D_STATUS
+                        end
+               ELSEIF AT( cCompl, cBuffer ) > 0
+                        IF GetItem( cBuffer, nCurdoc )
+                  IF !lBlankLine
+                     oOs2:WriteText( ".br" )
+                  ENDIF
+                  oOs2:WriteParBold( "Compliance" )
+                  nMode     := D_COMPLIANCE
+                  lAddBlank := .T.
+                  end
+               ELSEIF AT( cPlat, cBuffer ) > 0
+                     IF GetItem( cBuffer, nCurdoc )
+                  IF !lBlankLine
+                     oOs2:WriteText( ".br" )
+                  ENDIF
+                  oOs2:WriteParBold( "Platforms" )
+                  nMode     := D_NORMAL
+                  lAddBlank := .T.
+                  end
+               ELSEIF AT( cFiles, cBuffer ) > 0
+                     IF GetItem( cBuffer, nCurdoc )
+                  IF !lBlankLine
+                     oOs2:WriteText( ".br" )
+                  ENDIF
+                  oOs2:WriteParBold( "Files" )
+
+                  nMode     := D_NORMAL
+                  lAddBlank := .T.
+                  end
+               ELSEIF AT( cFunction, cBuffer ) > 0
+                     IF GetItem( cBuffer, nCurdoc )
+                  IF !lBlankLine
+                     oOs2:WriteText( ".br" )
+                  ENDIF
+                  oOs2:WriteParBold( "Function" )
+
+                  nMode     := D_NORMAL
+                  lAddBlank := .T.
+                     end
+               ELSEIF AT( cSee, cBuffer ) > 0
+               IF GetItem( cBuffer, nCurdoc )
+                  nMode := D_SEEALSO
+                  end
+               ELSEIF AT( cInc, cBuffer ) > 0
+               IF GetItem( cBuffer, nCurdoc )
+                  nMode := D_INCLUDE
+end
+                  //  All other input is trimmed of comments and sent out
+
+               ELSE
+                  //  translate any \$ into $
+                  cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
+                  IF nMode == D_SYNTAX
+                     IF LEN( cBuffer ) > LONGLINE
+                        WRITE_ERROR( "Syntax", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+//                   cBuffer := oOs2:DosToOs2Text(cBuffer)
+                     IF AT( "<par>", cBuffer ) > 0
+                        STRTRAN( cBuffer, "<par>", "" )
+                        STRTRAN( cBuffer, "</par>", "" )
+                        cBuffer := ALLTRIM( cBuffer )
+                        cbuFfer := "<par>" + cBuffer + "</par>"
+                     ENDIF
+
+                     procos2desc( cbuffer, oOs2, "Syntax" )
+
+                  ELSEIF nMode == D_RETURN
+
+                     IF LEN( cBuffer ) > LONGLINE
+                        WRITE_ERROR( "Arguments", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+/*                     oOs2:dostoos2Text(cBuffer)*/
+                     procos2desc( cbuffer, oOs2, "Arguments" )
+
+                  ELSEIF nMode == D_ARG
+                     IF LEN( cBuffer ) > LONGLINE
+                        WRITE_ERROR( "Arguments", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+//                     oOs2:DosToOs2Text(cBuffer)
+                     procos2desc( cbuffer, oOs2, "Arguments" )
+                  ELSEIF nMode == D_NORMAL
+                     IF LEN( cBuffer ) > LONGLINE
+                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+//                     oOs2:DosToOs2Text(cBuffer)
+                     procos2desc( cBuffer, oOs2 )
+                  ELSEIF nMode == D_DATALINK
+                     IF LEN( cBuffer ) > LONGLINE
+                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+                     IF lAddBlank
+                        lAddBlank := .F.
+                     ENDIF
+                     cTemp   := SUBSTR( cBuffer, 1, AT( ":", cBuffer ) - 1 )
+                     cBuffer := SUBSTR( cBuffer, AT( ":", cBuffer ) + 1 )
+                     oOs2:WriteJumpLink( LEFT( cfilename, AT( ".", cFilename ) - 1 ) + ALLTRIM( cTemp ), cBuffer )
+                  ELSEIF nMode == D_METHODLINK
+                     IF LEN( cBuffer ) > LONGLINE
+                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+                     IF lAddBlank
+                        lAddBlank := .F.
+                     ENDIF
+                     cTemp   := SUBSTR( cBuffer, 1, AT( "()", cBuffer ) + 1 )
+                     cName   := SUBSTR( cBuffer, 1, AT( "()", cBuffer ) - 1 )
+                     cBuffer := SUBSTR( cBuffer, AT( "()", cBuffer ) + 2 )
+                     oOs2:WriteJumpLink( LEFT( cfilename, AT( ".", cFilename ) - 1 ) + ALLTRIM( cTemp ), cTemp, cBuffer )
+
+                  ELSEIF nMode == D_SEEALSO
+                     IF .NOT. EMPTY( cBuffer )
+                        cSeeAlso := ProcOs2Also( StripFiles( ALLTRIM( cBuffer ) ) )
+                     ENDIF
+                  ELSEIF nMode == D_INCLUDE
+                     //  read next line
+                     IF .NOT. EMPTY( cBuffer )
+                        IF !lBlankLine
+                           oOs2:WriteText( ".br" )
+                        ENDIF
+                     ENDIF
+                  ELSEIF nMode == D_COMPLIANCE
+                     IF LEN( cBuffer ) > LONGLINE
+                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+//      oOs2:DosToOs2Text(cBuffer)
+                     procos2desc( cBuffer, oOs2, "Compliance" )
+
+                  ELSEIF nMode == D_DESCRIPTION
+                     IF LEN( cBuffer ) > LONGLINE
+                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+//      oOs2:DosToOs2Text(cBuffer)
+                     procos2desc( cBuffer, oOs2, "Description" )
+
+                  ELSEIF nMode == D_EXAMPLE
+                     IF LEN( cBuffer ) > LONGLINE
+                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+
+                     IF lAddBlank
+                        oOs2:WriteText( ".br" )                 //:endpar()
+                        lAddBlank := .F.
+                     ENDIF
+//      oOs2:DosToOs2Text(cBuffer)
+                     procos2desc( cBuffer, oOs2, "Example" )
+
+                  ELSEIF nMode == D_STATUS
+                     IF !EMPTY( cBuffer )
+                        oOs2:WriteParBold( "Status" )
+                     ENDIF
+                           oOs2:DosToOs2Text(cBuffer)
+                     ProcStatusOs2( oOs2, cBuffer )
+
+                  ELSE
+
+                     //  unknown data from somewhere
+
+                     WRITE_ERROR( "Unknown Data Type " + cBuffer,, ;
+                                  nLineCnt, ;
+                                  LONGONELINE, aDirList[ i, F_NAME ] )
+
+                  ENDIF
+               ENDIF
+            ENDIF
+         ENDIF
+      ENDDO
+      //  Close down the input file
+
+      FT_FUSE()
+      nCurDoc := 1
+      aCurDoc := {}
+
+   NEXT
+   oOs2:Close()
+RETURN NIL
+
+*+--------------------------------------------------------------------
+*+
+*+    Function ProcStatusOs2()
+*+
+*+    Called from ( genos2.prg   )   1 - function processos2()
+*+
+*+--------------------------------------------------------------------
+*+
+FUNCTION ProcStatusOs2( nWriteHandle, cBuffer )
+
+   IF LEN( ALLTRIM( cBuffer ) ) > 1
+      nWriteHandle:WritePar( cBuffer )
+   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
+      nWriteHandle:WritePar( "Ready" )
+   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
+      nWriteHandle:WritePar( "Started" )
+   ELSE
+      nWriteHandle:WritePar( "Not Started" )
+   ENDIF
+RETURN nil
+
+*+--------------------------------------------------------------------
+*+
+*+    Function ProcOs2Also()
+*+
+*+    Called from ( genos2.prg   )   1 - function processos2()
+*+
+*+--------------------------------------------------------------------
+*+
+FUNCTION ProcOs2Also( cSeealso )
+
+   aAlso := {}
+   aAlso := ListAsArray2( cSeealso, "," )
+RETURN aAlso
+
+*+--------------------------------------------------------------------
+*+
+*+    Function Formatos2Buff()
+*+
+*+    Called from ( genos2.prg   )   1 - function procos2desc()
+*+
+*+--------------------------------------------------------------------
+*+
+FUNCTION Formatos2Buff( cBuffer, cStyle )
+
+   LOCAL cReturn  := ""
+   LOCAL cLine    := ""
+   LOCAL cBuffend := ""
+   LOCAL coline   := ""
+   LOCAL lEndBuff := .F.
+
+   LOCAL nPos
+   LOCAL lArgBold := .F.
+
+   cReturn := cBuffer + " "
+   IF AT( "</par>", cReturn ) > 0 .OR. EMPTY( cBuffer )
+      IF EMPTY( cbuffer )
+         cReturn := ""
+      ENDIF
+      RETURN cReturn
+   ENDIF
+   IF cStyle != "Syntax" .AND. cStyle != "Arguments"
+      DO WHILE !lEndBuff
+         cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+         IF AT( "</par>", cLine ) > 0
+            lEndBuff := .T.
+         ENDIF
+         IF EMPTY( cLine )
+            lEndBuff := .T.
+
+            FT_FSKIP( - 1 )
+         ENDIF
+         IF AT( DELIM, cline ) > 0
+
+            FT_FSKIP( - 1 )
+            lEndBuff := .T.
+         ENDIF
+         IF AT( DELIM, cLine ) == 0
+            cReturn += " "+ ALLTRIM( cLine ) + " "
+         ENDIF
+      ENDDO
+      creturn := STRTRAN( creturn, "<par>", "" )
+      creturn := STRTRAN( creturn, "</par>", "" )
+
+      cReturn := "<par>" + creturn + "    </par>"
+
+   ELSEIF cStyle == "Syntax"
+      cReturn := "<par>" + Alltrim(cReturn) + "</par>"
+
+   ELSEIF cStyle == "Arguments"
+      nPos := 0
+
+
+      IF AT( "<par>", cReturn ) > 0
+         cReturn := STRTRAN( cReturn, "<par>", "" )
+         cReturn := STRTRAN( cReturn, "</par>", "" )
+         nPos    := AT( " ", cReturn )
+         cOLine  := LEFT( cReturn, nPos - 1 )
+         cReturn := STRTRAN( cReturn, coLine, "" )
+         IF AT( "@", cOLine ) > 0 .OR. AT( "()", cOLine ) > 0 .OR. AT( "<", cOLine ) > 0 .OR. AT( "_", cOLine ) > 0
+            lArgBold := .T.
+         ELSE
+            lArgBold := .F.
+         ENDIF
+
+      ENDIF
+
+      DO WHILE !lEndBuff
+         cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+         IF AT( "</par>", cLine ) > 0
+            lEndBuff := .T.
+         ENDIF
+         IF EMPTY( cLine )
+            lEndBuff := .T.
+            FT_FSKIP( - 1 )
+         ENDIF
+         IF AT( DELIM, cline ) > 0
+            FT_FSKIP( - 1 )
+            lEndBuff := .T.
+         ENDIF
+         IF AT( DELIM, cline ) == 0
+            cReturn += " " + ALLTRIM( cLine ) + " "
+         ENDIF
+      ENDDO
+      creturn := STRTRAN( creturn, "<par>", "" )
+      creturn := STRTRAN( creturn, "</par>", "" )
+      IF lArgBold
+         cReturn := "<par><b>" + cOLine + "</b> " + cReturn + "    </par>"
+      ELSE
+         cReturn := "<par>" + cOLine + " " + cReturn + "    </par>"
+      ENDIF
+      lArgBold := .F.
+
+   ENDIF
+RETURN cReturn
+
+*+--------------------------------------------------------------------
+*+
+*+    Function checkos2color()
+*+
+*+    Called from ( genos2.prg   )   1 - function procos2desc()
+*+
+*+--------------------------------------------------------------------
+*+
+FUNCTION checkos2color( cbuffer, ncolorpos )
+
+   LOCAL ncolorend
+   LOCAL nreturn
+   LOCAL cOldColorString
+   LOCAL cReturn
+   LOCAL ccolor
+
+   DO WHILE AT( "<color:", cbuffer ) > 0
+      nColorPos       := AT( "<color:", cBuffer )
+      ccolor          := SUBSTR( cbuffer, ncolorpos + 7 )
+      nColorend       := AT( ">", ccolor )
+      ccolor          := SUBSTR( ccolor, 1, nColorend - 1 )
+      cOldColorString := SUBSTR( cbuffer, ncolorpos )
+      nColorend       := AT( ">", cOldColorString )
+      cOldColorString := SUBSTR( cOldColorString, 1, nColorEnd )
+      nreturn         := ASCAN( acolortable, { | x | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
+      IF nreturn > 0
+         creturn := + acolortable[ nreturn, 2 ]
+      ENDIF
+      cBuffer := STRTRAN( cBuffer, cOldColorString, cReturn )
+   ENDDO
+RETURN cbuffer
+
+*+--------------------------------------------------------------------
+*+
+*+    Function ProcOs2Table()
+*+
+*+    Called from ( genos2.prg   )   1 - function procos2desc()
+*+
+*+--------------------------------------------------------------------
+*+
+FUNCTION ProcOs2Table( cBuffer , nNum )
+
+   LOCAL nPos
+   LOCAL cItem
+   LOCAL cItem2
+   LOCAL cItem3
+   LOCAL cItem4
+   LOCAL nColorpos
+   LOCAL cColor
+   cBuffer := ALLTRIM( cBuffer )
+   IF AT( "<color:", cBuffer ) > 0
+      nColorPos := AT( ":", cBuffer )
+      cColor    := SUBSTR( cBuffer, nColorpos + 1 )
+      nPos      := AT( ">", ccolor )
+      cColor    := SUBSTR( ccolor, 1, nPos - 1 )
+      cBuffer   := STRTRAN( cbuffer, "</color>", "" )
+      cBuffer   := STRTRAN( cbuffer, "<color:", "" )
+      cBuffer   := STRTRAN( cbuffer, ">", "" )
+      cBuffer   := STRTRAN( cBuffer, ccolor, "" )
+      nColorpos := ASCAN( aColorTable, { | x | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
+      cColor    := aColortable[ nColorPos, 2 ]
+   ENDIF
+   IF EMPTY( cBuffer )
+      citem  := ""
+      citem2 := ""
+      citem3 := ""
+      citem4 := ""
+   ELSE
+      cBuffer := STRTRAN( cBuffer, "<", "&lt." )
+      cBuffer := STRTRAN( cBuffer, ">", "&gt." )
+
+      cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+      cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ,,1) )
+      IF nNum == 2
+         cItem2 := SUBSTR( cBuffer, 1 )
+      ELSE
+         cItem2  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+         cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
+      ENDIF
+
+      IF nNum == 3
+         cItem3 := SUBSTR( cBuffer, 1 )
+      ELSEIF nNum > 3
+         cItem3  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+         cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem3, "" ) )
+         cItem4  := SUBSTR( cBuffer, 1 )
+      ENDIF
+   ENDIF
+   IF cColor != NIL
+      AADD( afiTable, "<Font color=" + ccolor + ">" + RTRIM( LTRIM( cItem ) ) + "</font>" )
+      AADD( asiTable, "<Font color=" + ccolor + ">" + cItem2 + "</font>" )
+   ELSE
+      AADD( afiTable, RTRIM( LTRIM( cItem ) ) )
+      AADD( asiTable, cItem2 )
+   ENDIF
+
+   IF cColor != NIL
+      AADD( atiTable, "<Font color=" + ccolor + ">" + cItem3 + "</font>" )
+   ELSE
+      AADD( atiTable, cItem3 )
+   ENDIF
+   IF cColor != NIL
+      AADD( afoiTable, "<Font color=" + ccolor + ">" + cItem4 + "</font>" )
+   ELSE
+      AADD( afoiTable, cItem4 )
+   ENDIF
+
+RETURN Nil
+
+*+--------------------------------------------------------------------
+*+
+*+    Function maxos2elem()
+*+
+*+--------------------------------------------------------------------
+*+
+FUNC maxos2elem( a )
+
+   LOCAL nsize   := LEN( a )
+   LOCAL max     := 0
+   LOCAL tam     := 0
+   LOCAL max2    := 0
+   LOCAL nPos    := 1
+   LOCAL ncount
+   FOR ncount := 1 TO nsize
+      tam := LEN( a[ ncount ] )
+      max := iif( tam > max, tam, max )
+   NEXT
+   nPos := ASCAN( a, { | x | LEN( x ) == max } )
+RETURN max
+
+*+--------------------------------------------------------------------
+*+
+*+    Function Genos2Table()
+*+
+*+    Called from ( genos2.prg   )   1 - function procos2desc()
+*+
+*+--------------------------------------------------------------------
+*+
+FUNCTION Genos2Table( oOs2 )
+    Local x
+    Local cItem,cItem1
+    //Local cItem2,cItem3 // Variables not used in function, it may be deleted?
+//   oos2:WritePar( "" )
+    if nNumTableItems == 2
+        citem  := str(maxos2elem(afitable),2)
+        cItem1 := Str(maxos2elem(asitable),2)
+       oos2:writeText(":table cols="+"'"+cItem  + " " + cItem1 +"'." )
+    elseif nNumTableItems == 3
+       oos2:writeText(":table cols="+"'"+str(maxos2elem(afitable),2) + " " + str(maxos2elem(asitable),2) +  " " +str(maxos2elem(atitable),2) +"'." )
+    elseif nNumTableItems == 4
+       oos2:writeText(":table cols="+"'"+str(maxos2elem(afitable),2) + " " + str(maxos2elem(asitable),2) +  " " +str(maxos2elem(atitable),2) + " " +str(maxos2elem(afoitable),2)+"'." )
+    endif
+
+
+   FOR x := 1 TO LEN( asitable )
+      IF !EMPTY( asitable[ x ] )
+         IF nNumTableItems == 2
+            oos2:Writetext(":row.")
+            oos2:Writetext(":c." + afitable[x])
+            oos2:Writetext(":c." + asitable[x])
+
+         ELSEIF nNumTableItems == 3
+            oos2:Writetext(":row.")
+            oos2:Writetext(":c." + afitable[x])
+            oos2:Writetext(":c." + asitable[x])
+            oos2:Writetext(":c." + atitable[x])
+         ELSEIF nNumTableItems == 4
+            oos2:Writetext(":row.")
+            oos2:Writetext(":c." + afitable[x])
+            oos2:Writetext(":c." + asitable[x])
+            oos2:Writetext(":c." + atitable[x])
+            oos2:Writetext(":c." + afoitable[x])
+         ENDIF
+      ELSE
+            oos2:Writetext(":row.")
+            oos2:Writetext(":c.")
+
+      ENDIF
+   NEXT
+
+   oOs2:Writetext( ":etable." )
+   oos2:WriteText( ".br" )
+   afiTable  := {}
+   asitable  := {}
+   atitable  := {}
+   afoitable := {}
+
+
+RETURN Nil
+
+*+--------------------------------------------------------------------
+*+
+*+    Function Procos2Desc()
+*+
+*+    Called from ( genos2.prg   )   7 - function processos2()
+*+
+*+--------------------------------------------------------------------
+*+
+FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
+
+   LOCAL cLine       := ""
+   LOCAL lArgBold    := .F.
+   LOCAL lHasFixed   := .F.
+   LOCAL npos
+   LOCAL CurPos      := 0
+   LOCAL nColorPos
+   LOCAL ccolor      := ""
+   LOCAL creturn     := ""
+   LOCAL NIDENTLEVEL
+   LOCAL coline
+   LOCAL lEndPar     := .F.
+   LOCAL LFstTableItem := .T.
+   LOCAL lEndFixed := .F.
+   LOCAL lEndTable := .F.
+
+   DEFAULT cStyle TO "Default"
+   lendfixed := .F.
+   IF AT( "<par>", cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle != "Example"
+      cBuffer := "<par>" + cBuffer
+   ENDIF
+   IF EMPTY( cBuffer )
+      oOs2:WriteText( ".br" )
+   ENDIF
+
+   IF cStyle != "Example" .AND. AT( "<table>", cBuffer ) == 0 .AND. AT( "<fixed>", cBuffer ) == 0
+      IF AT( "<par>", cBuffer ) >= 0 .OR. AT( "</par>", cBuffer ) == 0 .AND. !EMPTY( cbuffer )
+         IF AT( "<par>", cBuffer ) > 0 .AND. AT( "</par>", cBuffer ) > 0
+
+            IF cStyle == "Arguments"
+               creturn := cBuffer
+
+               cReturn := STRTRAN( cReturn, "<par>", "" )
+               cReturn := STRTRAN( cReturn, "</par>", "" )
+               cReturn := ALLTRIM( cReturn )
+               nPos    := AT( " ", cReturn )
+               cOLine  := LEFT( cReturn, nPos - 1 )
+               cReturn := STRTRAN( cReturn, coLine, "" )
+               IF AT( "@", cOLine ) > 0 .OR. AT( "()", cOLine ) > 0 .OR. AT( "<", cOLine ) > 0 .OR. AT( "_", cOLine ) > 0
+                  lArgBold := .T.
+               ELSE
+                  lArgBold := .F.
+               ENDIF
+
+               //            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
+               IF lArgBold
+                  cReturn := "<par><b>" + cOLine + "</b> " + cReturn + "  </par>"
+               ELSE
+                  cReturn := "<par>" + cOLine + " " + cReturn + "  </par>"
+               ENDIF
+
+               cbuffer := cReturn
+
+            ENDIF
+
+         ELSE
+            cBuffer := Formatos2Buff( cBuffer, cStyle )
+         ENDIF
+      ENDIF
+   ENDIF
+
+   IF AT( "<par>", cBuffer ) > 0 .AND. AT( "</par>", cBuffer ) > 0
+
+      cBuffer   := STRTRAN( cBuffer, "<par>", "" )
+
+      cBuffer   := STRTRAN( cBuffer, "<em>", ":hp3. " )
+      cBuffer   := STRTRAN( cBuffer, "</em>", ":ehp3. " )
+      cBuffer   := STRTRAN( cBuffer, "<i>", ":hp1. " )
+      cBuffer   := STRTRAN( cBuffer, "</i>", ":ehp1. " )
+      cBuffer   := STRTRAN( cBuffer, "</color>", "" )
+      nColorPos := AT( "<color:", cBuffer )
+      IF ncolorpos > 0
+         checkos2color( @cbuffer, ncolorpos )
+      ENDIF
+
+      IF cStyle == "Description" .OR. cStyle == "Compliance"
+      /*
+         nIdentLevel := 5
+         nPos        := 0
+
+         DO WHILE !lendPar
+            IF nPos == 0
+               cLine := SUBSTR( cBuffer, 1, 220 )
+               nPos  := RAT( " ", cLine )
+               IF nPos > 0
+
+                  cLine := SUBSTR( cBuffer, 1, nPos )
+//                  cline:= Oos2:dostoos2text(cline)
+               ENDIF
+
+            ELSE
+               cLine := SPACE( nidentLevel ) + SUBSTR( cBuffer, curPos, 220 )
+
+               IF AT( "</par>", cLine ) > 0
+                  lEndPar := .T.
+                  cLine   := STRTRAN( cLine, " </par>", "" )
+               ENDIF
+               nPos := RAT( " ", cLine )
+               IF nPos > 0
+                  cLine := SPACE( nidentLevel ) + SUBSTR( cBuffer, curpos, nPos - nIdentlevel )
+                  nPos  -= nIdentlevel
+               ELSE
+                  IF cLine == "</par>"
+                     cLine := ""
+                  ENDIF
+
+               ENDIF
+            ENDIF
+
+            IF !EMPTY( cLine )
+                if AT("<b>",cLine)>0 .or. AT("</b>",cLine)>0
+                      cLine   := STRTRAN( cLine, "<b>", "" )
+                      cLine   := STRTRAN( cLine, "</b>", "" )
+                      oOs2:WriteParBold(cLine,.F.)
+                Else
+                      oos2:WriteText(SPACE(nidentLevel )+ cLine )
+                Endif
+            oOs2:WriteTExt(".br")
+            ENDIF
+            curPos += nPos
+         ENDDO
+*/
+         nIdentLevel := 6
+         nPos        := 0
+/*         IF AT( "</par>", cBuffer ) > 0
+            cBuffer := STRTRAN( cBuffer, "</par>", "" )
+         ENDIF*/
+         IF !EMPTY( cBuffer )
+            //             cBuffer:=SUBSTR(cBuffer,2)
+/*            cBuffer := STRTRAN( cBuffer, "<", "&lt;" )
+            cBuffer := STRTRAN( cBuffer, ">", "&gt;" )
+*/
+            cBuffeR := ALLTRIM( cBuffer )
+            oos2:WritePar2( cBuffer,":p." )
+         ENDIF
+
+      ELSEIF cStyle == "Arguments"
+/*      cBuffer   := STRTRAN( cBuffer, ":", "&colon." )
+      cBuffer   := STRTRAN( cBuffer, "<b>", "hp2." )
+      cBuffer   := STRTRAN( cBuffer, "</b>", "ehp2." )
+         IF AT( "</par>", cBuffer ) > 0
+            cBuffer := STRTRAN( cBuffer, "</par>", "" )
+         ENDIF
+
+
+         IF !EMPTY( cBuffer )
+            cBuffer := SUBSTR( cBuffer, 2 )
+
+            oos2:writetext(cbuffer + hb_OSNewLine() + ".br")
+
+            oOs2:writeText( cBuffer + hb_OSNewLine() + ".br")
+         ENDIF
+         */
+         IF !EMPTY( cBuffer )
+            //             cBuffer:=SUBSTR(cBuffer,2)
+            cBuffeR := ALLTRIM( cBuffer )
+            oos2:WritePar2( cBuffer,":p." )
+         ENDIF
+
+
+      ELSEIF cStyle == "Syntax"
+/*         IF AT( "</par>", cBuffer ) > 0
+            cBuffer := STRTRAN( cBuffer, "</par>", "" )
+         ENDIF*/
+         IF !EMPTY( cBuffer )
+/*            cBuffer := SUBSTR( cBuffer, 2 )
+            oOs2:WriteParBold( cBuffer,.F.)
+            oOs2:writeText(".br")
+            oOs2:writeText(".br")*/
+//            ? cBuffer
+            cBuffer:=Alltrim(cBuffer)
+            oos2:WritePar2( cBuffer,":p.","Syntax" )
+         ENDIF
+      ELSEIF cStyle == "Default"
+/*         IF AT( "</par>", cBuffer ) > 0
+            cBuffer := STRTRAN( cBuffer, "</par>", "" )
+         ENDIF*/
+         IF !EMPTY( cBuffer )
+            cBuffer := alltrim( cBuffer )
+            oOs2:WritePar2( cBuffer ,":p.")
+         ENDIF
+
+      ENDIF
+   ENDIF
+   IF AT( "<fixed>", cBuffer ) > 0 .OR. cStyle = "Example"
+
+      IF AT( "<fixed>", cBuffer ) == 0 .OR. !EMPTY( cBuffer )
+         if AT( "<fixed>", cBuffer ) > 0
+            lHasFixed:=.T.
+         else
+            lHasFixed:=.F.
+         Endif
+
+         cBuffer := STRTRAN( cBuffer, "<par>", "" )
+         cBuffer := STRTRAN( cBuffer, "<fixed>", "" )
+       ENDIF
+       if !lHasFixed
+         oOs2:WritePar( cBuffer )
+         oOs2:WriteTExt(".br")
+      endif
+      DO WHILE !lendFixed
+         cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+         IF AT( "</fixed>", cLine ) > 0
+            lendfixed := .T.
+            cLine     := STRTRAN( cLine, "</fixed>", "" )
+         ENDIF
+         IF AT( DELIM, cLine ) == 0
+            cReturn += ALLTRIM( cLine ) + " "
+         ENDIF
+         IF AT( DELIM, cLine ) > 0
+            FT_FSKIP( - 1 )
+            lEndfixed := .T.
+
+         ENDIF
+         IF AT( DELIM, cLine ) == 0  .and. !lendfixed
+            oOs2:WritePar( cLine )
+            oOs2:WriteTExt(".br")
+         ENDIF
+      ENDDO
+
+   END
+   IF AT( "<table>", cBuffer ) > 0
+      DO WHILE !lendTable
+         cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+         IF AT( "</table>", cLine ) > 0
+            lendTable := .T.
+         ELSE
+            IF LFstTableItem
+               nNumTableItems := GetNumberofTableItems( cLine )
+               procos2table( cline, nNumTableItems )
+               LFstTableItem := .F.
+            ELSE
+               procos2table( cline, nNumTableItems )
+            ENDIF
+
+         ENDIF
+      ENDDO
+      IF lEndTable
+         Genos2Table( oOs2 )
+         LFstTableItem := .T.
+      ENDIF
+   ENDIF
+
+RETURN nil
+
+STATIC FUNCTION ReadFromTop( nh )
+
+   LOCAL cDoc      := DELIM + "DOC" + DELIM                    // DOC keyword
+   LOCAL cEnd      := DELIM + "END" + DELIM                    // END keyword
+   LOCAL cClassDoc := DELIM + "CLASSDOC" + DELIM
+   LOCAL cBuffer   := ""
+   LOCAL NPOS      := 0
+   LOCAL aLocDoc   := {}
+   DO WHILE FREADline( nH, @cBuffer, 4096 )
+      cBuffer := TRIM( SUBSTR( cBuffer, nCommentLen ) )
+      AADD( Alocdoc, CbUFFER )
+      IF AT( cEnd, cBuffer ) > 0
+         AADD( aCurdoc, aLocdoc )
+         aLocDoc := {}
+      ENDIF
+
+   ENDDO
+   lEof := .F.
+   FT_FGOTOP()
+RETURN nil
+
+*+--------------------------------------------------------------------
+*+
+*+    Static Function GetItem()
+*+
+*+    Called from ( genng.prg    )  20 - function processing()
+*+
+*+--------------------------------------------------------------------
+*+
+STATIC FUNCTION GetItem( cItem, nCurdoc )
+
+   LOCAL nPos
+   LOCAL cCuritem
+   LOCAL lReturn := .F.
+   LOCAL xPos
+   xPos := aCurdoc[ nCurdoc ]
+   nPos := ASCAN( xPos, { | x | UPPER( ALLTRIM( x ) ) == UPPER( ALLTRIM( cItem ) ) } )
+   IF nPos > 0
+      cCuritem := xPos[ nPos ]
+      IF AT( "$", xPos[ nPos + 1 ] ) > 0
+         lReturn := .F.
+      ELSE
+         lReturn := .T.
+      ENDIF
+
+   ENDIF
+RETURN lReturn
+
+
+*+--------------------------------------------------------------------
+*+
+*+    Class TOs2
+*+
+*+--------------------------------------------------------------------
+*+
+CLASS TOs2
+
+   DATA cFile
+   DATA nHandle
+   DATA aLinkRef
+   DATA nRef
+   DATA aHeadRef
+   DATA aIndRef
+   METHOD New( cFile )
+   METHOD WritePar( cPar )
+   METHOD WritePar2( cPar,ctag )
+   METHOD WriteLink( cLink )
+   METHOD ScanLink( cLink )
+   METHOD ScanRef( cRef )
+   METHOD ScanInd( cRef )
+   METHOD WriteJumpLink( cLink, cName, cText )
+   METHOD CLOSE()
+   METHOD WriteText( cPar )
+   METHOD WriteParBold( cPar ,lMarg)
+   METHOD WriteTitle( cTopic, cTitle ,cCategorie)
+   METHOD DostoOs2Text( cText )
+   METHOD WriteJumpTitle( cTitle, cTopic )
+ENDCLASS
+
+METHOD New( cFile ) CLASS TOs2
+
+   IF Self:aLinkRef == NIL
+      Self:aLinkRef := {}
+      Self:aHeadRef := {}
+      Self:aIndRef := {}
+      Self:nRef     := 1
+   ENDIF
+
+   IF ISCHARACTER( cFile )
+      Self:cFile   := LOWER( cFile )
+      Self:nHandle := FCREATE( Self:cFile )
+   ENDIF
+
+   FWRITE( Self:nHandle, ":userdoc." + CRLF )
+
+   FWRITE( Self:nHandle, ":docprof toc=123456." + CRLF )
+   FWRITE( Self:nHandle, ":title." + "Harbour Reference Guide" + CRLF )
+
+   FWRITE( Self:nHandle, ".* HBDOC generated IPF Source File." + CRLF )
+
+   FWRITE( Self:nHandle, ".* HBDOC Document Source Extractor, (c)1999-2000 Luiz Rafael Culik." + CRLF )
+
+   RETURN Self
+
+METHOD WritePar( cPar ) CLASS TOs2
+
+   FWRITE( Self:nHandle,  Self:DostoOs2Text( cPar ) + CRLF)
+
+   RETURN Self
+
+METHOD WritePar2( cBuffer,cTag,cStyle ) CLASS TOs2
+   Local aLines:={}
+   LOCAL nPos,cLine:=""
+   Default cStyle to "Default"
+if at("-",cBuffer)>0
+
+Endif
+      cBuffer   := STRTRAN( cBuffer, "<b>", ":hp2." )
+      cBuffer   := STRTRAN( cBuffer, "</b>", ":ehp2." )
+      cBuffer   := STRTRAN( cBuffer, "<par>", "" )
+      cBuffer   := STRTRAN( cBuffer, "</par>", "" )
+      cBuffer   := self:DostoOs2Text(cBuffer)
+
+      aLines:=FormatStringBuffer(cBuffer)
+
+      For nPos:=1 to LEN(aLines)
+        cLine:=aLines[nPos]
+        If nPos==1
+            If !empty(cLine) .and. !( cStyle =="Syntax")
+                FWRITE( Self:nHandle,cTag+  cLine  + CRLF)
+            elseIf !empty(cLine) .and. cStyle =="Syntax"
+                FWRITE( Self:nHandle,cTag+ ":hp2."+ cLine  +":ehp2." +CRLF)
+            Endif
+        Else
+
+            If !empty(cLine) .and. !( cStyle =="Syntax")
+                FWRITE( Self:nHandle, cLine  + CRLF)
+            elseIf !empty(cLine) .and. cStyle =="Syntax"
+                FWRITE( Self:nHandle, ":hp2."+ cLine  +":ehp2." +CRLF)
+            Endif
+        Endif
+      NEXT
+/*
+if cStyle=="Syntax"
+    ? cBuffer
+endif
+         DO WHILE !lendPar
+            IF nPos == 0
+               cLine := SUBSTR( cBuffer, 1, 231 )
+               nPos  := RAT( " ", cLine )
+               IF nPos > 0
+                  cLine := SUBSTR( cBuffer, 1, nPos )
+               ENDIF
+            If !empty(cLine) .and. !(cStyle =="Syntax")
+                FWRITE( Self:nHandle,cTag+  cLine  + CRLF)
+            elseIf !empty(cLine) .and. cStyle =="Syntax"
+                FWRITE( Self:nHandle,cTag+ ":hp2."+ cLine  +":ehp2." +CRLF)
+            Endif
+            if nLen<255
+                lEndpar:=.T.
+                exit
+            endif
+            ELSE
+               cLine :=  SUBSTR( cBuffer, curPos, 231 )
+
+               IF AT( "</par>", cLine ) > 0
+                  lEndPar := .T.
+                  cLine   := STRTRAN( cLine, " </par>", "" )
+               ENDIF
+               nPos := RAT( " ", cLine )
+               IF nPos > 0
+                  cLine :=  SUBSTR( cBuffer, curpos, nPos )
+                  nPos -= 1
+               ELSE
+                  IF cLine == "</par>"
+                     cLine := ""
+                  ENDIF
+
+            ENDIF
+            If !empty(cLine) .and. !(cStyle =="Syntax")
+                FWRITE( Self:nHandle,cTag+  cLine  + CRLF)
+            elseIf !empty(cLine) .and. cStyle =="Syntax"
+                FWRITE( Self:nHandle,cTag+ ":hp2."+ cLine  +":ehp2." +CRLF)
+            Endif
+
+            ENDIF
+
+            curPos += nPos
+? Curpos
+         ENDDO
+*/
+
+   RETURN Self
+
+METHOD WriteText( cPar ) CLASS TOs2
+   FWRITE( Self:nHandle, cPar + CRLF )
+   RETURN Self
+
+
+METHOD WriteParBold( cPar ,lMarg) CLASS TOs2
+   DEFAULT lMarg to .T.
+   IF lMarg
+      FWRITE( Self:nHandle,".br"+CRLF+ ":hp2." + SELF:DosToOs2Text( cPar ) + ":ehp2."+CRLF +".br" + CRLF +":p."+CRLF+":lm margin=6." +CRLF )
+   Else
+      FWRITE( Self:nHandle,":hp2." + SELF:DosToOs2Text( cPar ) + ":ehp2."+CRLF +".br")
+   Endif
+
+   RETURN Self
+
+METHOD WriteTitle( cTopic, cTitle ,cCategory) CLASS TOs2
+
+   LOCAL nItem
+   Local lHead:=.F.
+   LOCAL nrItem,nIItem
+   LOCAL cRefCateg
+   LOCAL cIndCateg
+   cTopic := ALLTRIM( cTopic )
+   cRefCateg:=SetCateg(cCategory )
+   cIndCateg:=SetInd(cCategory)
+
+   IF Self:Scanlink( cTopic ) == 0
+      nItem := ASCAN( Self:aLinkRef, { | a | upper(a[ 1 ]) == upper(cTopic )} )
+   ELSE             // Just in case that nItem>0 so the Link is already referenced
+      nItem := ASCAN( Self:aLinkRef, { | a | upper(a[ 1 ]) == upper(cTopic) } )
+   ENDIF
+//   FWRITE( Self:nHandle, ":h1 res=" + ALLTRIM( STR( nItem ) ) + "." + cTopic + CRLF )
+   If Self:ScanInd(cIndCateg)==0
+      niItem := ASCAN( Self:aIndRef, { | a | upper(a) == upper(cIndCateg )} )
+      FWRITE( Self:nHandle, ":h1 " + ::aIndRef[niItem] + "."+ UPPER( cCategory ) + CRLF)
+      lHead := .T.
+   ELSE             // Just in case that nItem>0 so the Link is already referenced
+      niItem := ASCAN( Self:aIndRef, { | a | upper(a) == upper(cIndCateg) } )
+   ENDIF
+   IF niItem>0 .AND.       lHead
+      FWRITE( Self:nHandle, ":h2 "+ " res=" + ALLTRIM( STR( nItem ) ) + "." + cTopic  + CRLF  )
+   elseIF     niItem>0 .AND.       !lHead
+      FWRITE( Self:nHandle, ":h2 id="+ ::aIndRef[niItem] + " res=" + ALLTRIM( STR( nItem ) ) + "." + cTopic  + CRLF  )
+   Endif
+         lHead:=.F.
+   If Self:ScanRef(cRefCateg)==0
+      nrItem := ASCAN( Self:aHeadRef, { | a | upper(a) == upper(cRefCateg )} )
+      FWRITE( Self:nHandle, ":i1 id=" + ::aHeadRef[nrItem] + "."+ UPPER( cCategory ) + CRLF)
+   ELSE             // Just in case that nItem>0 so the Link is already referenced
+      nrItem := ASCAN( Self:aHeadRef, { | a | upper(a) == upper(cRefCateg) } )
+   ENDIF
+
+   if nritem>0
+
+      FWRITE( Self:nHandle, ":i2 refid=" + ::aHeadRef[nrItem] + "." + UPPER( cTopic ) + CRLF )
+   Endif
+   cTopic := ::DosToOs2Text(cTopic)
+   cTitle := ::DosToOs2Text(cTitle)
+
+   FWRITE( Self:nHandle, ":p." + cTitle + CRLF +".br"+CRLF)
+
+   RETURN Self
+
+METHOD CLOSE() CLASS TOs2
+
+   FWRITE( Self:nHandle, ":euserdoc." + CRLF )
+
+   FCLOSE( Self:nHandle )
+
+   RETURN Self
+
+METHOD WriteLink( cLink ) CLASS TOs2
+
+   LOCAL nItem
+
+   IF Self:Scanlink( cLink ) == 0
+      nItem := ASCAN( Self:aLinkRef, { | a | upper(a[ 1 ]) == upper(cLink) } )                // Again.
+   ELSE
+      nItem := ASCAN( Self:aLinkRef, { | a | upper(a[ 1 ]) == upper(cLink) } )
+
+   ENDIF
+
+   IF nItem == 0
+      nItem := Self:nRef
+   ENDIF
+
+   FWRITE( Self:nHandle, ":link reftype=hd res=" + ALLTRIM( STR( nItem ) ) + "." + Self:aLinkRef[ nItem, 1 ] + ":elink." + CRLF )
+
+   FWRITE( Self:nHandle, ".br" + CRLF )
+
+   RETURN Self
+
+METHOD ScanLink( cLink ) CLASS TOs2
+
+   LOCAL nItem
+
+   nItem := ASCAN( Self:aLinkRef, { | a | Upper(a[ 1 ] )== upper(cLink) } )
+
+   IF nItem == 0
+      AADD( Self:aLinkRef, { upper(cLink), Self:nRef } )
+      Self:nRef ++
+   ENDIF
+
+   RETURN nItem
+
+METHOD ScanRef( cLink ) CLASS TOs2
+
+   LOCAL nItem
+
+   nItem := ASCAN( Self:aHeadRef, { | a | Upper(a)== upper(cLink) } )
+
+   IF nItem == 0
+      AADD( Self:aHeadRef,  upper(cLink))
+   ENDIF
+
+   RETURN nItem
+
+METHOD ScanInd( cLink ) CLASS TOs2
+
+   LOCAL nItem
+
+   nItem := ASCAN( Self:aIndRef, { | a | Upper(a)== upper(cLink) } )
+
+   IF nItem == 0
+      AADD( Self:aIndRef,  upper(cLink))
+   ENDIF
+
+   RETURN nItem
+
+METHOD DosToOs2Text( cText ) CLASS TOs2
+
+   LOCAL cReturn
+
+   cReturn := STRTRAN( cText, "&", "&amp." )
+
+   cReturn := STRTRAN( cReturn, '"', "&cdq." )
+   if at(":hp2.",cReturn)==0 .or. at(":ehp2.",cReturn)==0
+       cReturn := STRTRAN( cReturn, ":", "&colon." )
+    endif
+   cReturn := STRTRAN( cReturn, ",", "&comma." )
+
+   cReturn := STRTRAN( cReturn, "_", "&us." )
+   cReturn := STRTRAN( cReturn, "~", "&tilde." )
+   cReturn := STRTRAN( cReturn, "|", "&splitvbar." )
+
+   cReturn := STRTRAN( cReturn, "/", "&slash." )
+   cReturn := STRTRAN( cReturn,"<&slash.par>","</par>")
+   cReturn := STRTRAN( cReturn, ";", "&semi." )
+   cReturn := STRTRAN( cReturn, ")", "&rpar." )
+   cReturn := STRTRAN( cReturn, "]", "&rbrk.." )
+   cReturn := STRTRAN( cReturn, "}", "&rbrc." )
+   cReturn := STRTRAN( cReturn, "(", "&lpar." )
+   cReturn := STRTRAN( cReturn, "[", "&lbrk." )
+   cReturn := STRTRAN( cReturn, "{", "&lbrc." )
+   cReturn := STRTRAN( cReturn, "=", "&eq." )
+   cReturn := STRTRAN( cReturn, "$", "&dollar." )
+   cReturn := STRTRAN( cReturn, "-", "&minus." )
+
+   RETURN cReturn
+
+METHOD WriteJumpTitle( cTitle, cTopic ) CLASS TOs2
+
+   LOCAL nPos
+   LOCAL cWrite
+
+   nPos := AT( "()", cTitle )
+
+   cTopic := ALLTRIM( HB_OEMTOANSI( cTopic ) )
+
+   cWrite := ":fn id=" + cTopic + "."
+
+   FWRITE( Self:nHandle, cWrite )
+
+   Self:WriteParBold( cTopic )
+
+   RETURN Self
+
+METHOD WriteJumpLink( cLink, cText ) CLASS TOs2
+
+   FWRITE( Self:nHandle, "       :link refid=" + ALLTRIM( HB_OEMTOANSI( cLink ) ) + "reftype=fn." + cLink + ":elink." + cText + CRLF )
+
+   RETURN Self
+
+Static function SetCateg(cRef)
+   Local cReturn
+   cReturn:=Alltrim(left(cRef,5))
+   cReturn+="X"
+   Return cReturn
+
+Static function SetInd(cRef)
+   Local cReturn
+   cReturn:=Alltrim(left(cRef,4))
+   cReturn+="Y"
+   Return cReturn
+
+Static FUNCTION FormatStringBuffer(cBuffer)
+   Local nLen,nPos,aLine:={}
+   Local cLine:=""
+   nLen:=Len(cBuffer)
+
+   WHILE nLen>230
+      If nLen>230
+         cLine:=Substr(cBuffer,1,230)
+         nPos:=RAT(" ",cLine)
+         IF nPos>0
+            cLine:=Substr(cBuffer,1,nPos)
+            cBuffer:=Strtran(cBuffer,cLine,"")
+            AADD(aLine,alltrim(cLine))
+            nLen:=Len(cBuffer)
+         Endif
+         if at("&minus.",cLine)>0 .or. at("&eq.",cLine)>0
+            nPos:=RAT(".",cLine)
+            IF nPos>0
+               cLine:=Substr(cBuffer,1,nPos)
+               cBuffer:=Strtran(cBuffer,cLine,"")
+               AADD(aLine,alltrim(cLine))
+               nLen:=Len(cBuffer)
+            Endif
+         Endif
+      Endif
+   ENDDO
+   IF nLen<=230
+      aadd(aLine,ALLTRIM(cBuffer))
+   ENDIF
+   RETURN aLine

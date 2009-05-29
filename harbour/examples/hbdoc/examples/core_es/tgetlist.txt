@@ -1,0 +1,74 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2002 Alejandro de G rate <alex_degarate@hotmail.com>
+ * Documentaci¢n en Espa¤ol de:
+ *
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ *    Documentaci¢n en Ingl‚s de: READVAR()
+ *
+ * Vea COPYING por los t‚rminos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      READVAR()
+ *  $CATEGORY$
+ *      Data input and output
+ *  $ONELINER$
+ *      Retorna el nombre de la variable del actual GET ¢ MENU
+ *  $SYNTAX$
+ *      READVAR( [<cNombreVar>] ) --> cViejoNombreVar
+ *  $ARGUMENTS$
+ *      <cNombreVar> es el nuevo nombre de la variable a establecer
+ *  $RETURNS$
+ *      READVAR() retorna el viejo nombre de la variable <cViejoNombreVar>.
+ *      Si ninguna variable fue establecida anteriormente, READVAR() retorna
+ *      una cadena vac¡a.
+ *  $DESCRIPTION$
+ *      READVAR() es establecida dentro del comando READ ¢ MENU TO para
+ *      mantener el nombre en may£sculas de la variable del GET / MENU TO
+ *      actual y volverla de nuevo al viejo valor cuando aquellos comandos
+ *      finalizan.
+ *      Ud. no deber¡a normalmente establecer un nombre de variable, sino
+ *      usarlo para obtener el nombre de la variable de un GET cuando se
+ *      ejecuta una clausula VALID ¢ WHEN. ¢ durante la ejecuci¢n de un
+ *      SET KEY y Ud. esta dentro de un READ ¢ MENU TO.
+ *  $EXAMPLES$
+ *      // Visualiza un menu, presione <F1> para ver el nombre de la
+ *      // variable de MENU TO
+ *      CLS
+ *      @ 1, 10 PROMPT "insecto chupador de sangre que infecta camas"
+ *      @ 2, 10 PROMPT "germen; infeccion viral                     "
+ *      @ 3, 10 PROMPT "defecto; snag; (fuente de) malfuncionamiento"
+ *      @ 4, 10 PROMPT "peque¤o microfono oculto                    "
+ *      @ 6, 10 SAY "(Presione F1 por una pista)"
+ *      SET KEY 28 TO ShowVar
+ *      MENU TO What_Is_Bug
+ *
+ *      PROCEDURE ShowVar
+ *       ALERT( READVAR() )        // WHAT_IS_BUG in red ALERT() box
+ *      RETURN
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      READVAR() trabaja exactamente como la funci¢n READKEY() de Clipper.
+ *      Note sin embargo que el par metro <cVarName> no est  documentado
+ *      y es usado internamente por CA-Cl*pper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La Librer¡a es rtl
+ *  $SEEALSO$
+ *      @...GET,@...PROMPT,MENU TO,READ,SET KEY,__AtPrompt(),__MenuTo()
+ *  $END$
+ */
+
+

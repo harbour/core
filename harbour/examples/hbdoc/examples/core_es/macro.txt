@@ -1,0 +1,99 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2002 Alejandro de G rate <alex_degarate@hotmail.com>
+ * Documentaci¢n en Espa¤ol de:  
+ *        Compilador Macro, HB_SETMACRO()
+ *
+ * Vea COPYING por los t‚rminos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      Compilador Macro
+ *  $CATEGORY$
+ *      Documento
+ *  $ONELINER$
+ *      Compilador Macro
+ *  $DESCRIPTION$
+ *
+ *      <b>Invocando al compilador de Macros: </b>
+ *      =================================
+ *
+ *         &variable                     
+ *      ¢
+ *         &( expresi¢n )               
+ *      ¢
+ *         &variable.text                
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_SETMACRO()
+ *  $CATEGORY$
+ *      Compilador Macro
+ *  $ONELINER$
+ *      Habilita/Inhabilita las caracter¡sticas del Compilador Macro
+ *  $SYNTAX$
+ *      HB_SETMACRO( <nOpcion>, [<lOnOff>] ) --> <lSeteoAnterior>
+ *  $ARGUMENTS$
+ *      <nOpcion> Una de las constantes HB_SM_* definidas en set.ch.
+ *
+ *      <lOnOff>  Usar .T. para habilitar ¢ .F. para Inhabilitar una 
+ *                caracter¡stica.
+ *  $RETURNS$
+ *      HB_SETMACRO() retorna el estado anterior de la caracter¡stica
+ *      solicitada.
+ *  $DESCRIPTION$
+ *      Esta funci¢n Habilita / Inhabilita algunas de las caracter¡sticas 
+ *      del Compilador de Macros. Harbour extiende las caracter¡sticas para
+ *      macros comparadas con el conjunto original en Clipper. 
+ *      Habilitando / Inhabilitando algunas de ellas permite mantener una 
+ *      estricta compatibilidad con Clipper.
+ *
+ *      Las caracter¡sticas disponibles son:
+ *
+ *      <b>HB_SM_HARBOUR</b> - Habilita las extensiones de Harbour:
+ *            operadores: ++, --, +=, -=, *=, /=, ^=
+ *            objetos:    asignaciones a una variable de instancia
+ *
+ *      <b>HB_SM_XBASE</b> - Habilita extensiones de otros dialectos Xbase++:
+ *            Expansi¢n de listas de expresiones
+ *
+ *      <b>HB_SM_SHORTCUTS</b> - Habilita la evaluaci¢n optimizada de los
+ *            operadores l¢gicos (.AND., .OR.)
+ *
+ *      <b>HB_SM_PREPROC</b> - Habilita el preprocesamiento de comandos
+ *            Esto es significativo si Harbour es compilado con la bandera
+ *            HB_MACRO_STATEMENTS establecida.
+ *
+ *  $EXAMPLES$
+ *      INIT PROCEDURE IWANTCLIPPER()
+ *        HB_SETMACRO( HB_SM_HARBOUR, .F. )
+ *        HB_SETMACRO( HB_SM_XBASE, .F. )
+ *      RETURN
+ *
+ *  </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es una extensi¢n de Harbour.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      El archivo de cabecera es ..\include\set.ch
+ *      La Librer¡a es macro
+ *  $SEEALSO$
+ *      Compilador Macro
+ *  $END$
+ */ 
+
+

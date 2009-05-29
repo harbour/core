@@ -1,0 +1,1341 @@
+diff -u ori_src\BETWEEN.C .\BETWEEN.C
+--- ori_src\BETWEEN.C	Thu Aug 19 10:28:38 1993
++++ .\BETWEEN.C	Thu May 28 17:56:25 2009
+@@ -63,7 +63,7 @@
+    if (strend >= strstart && (fnd))
+    {
+      size = (strend-strstart+2);
+-     result = _xgrab(size);
++     result = ( char * ) _xgrab(size);
+      for(i = strstart; i <= strend  ;i++)
+        result[knt++] = string[i];
+      result[knt] = NIL;
+diff -u ori_src\MLINE.C .\MLINE.C
+--- ori_src\MLINE.C	Tue Sep 14 14:17:34 1993
++++ .\MLINE.C	Thu May 28 17:54:46 2009
+@@ -1,19 +1,19 @@
+-#include "extend.api"
+-#include "vm.api"
+ 
++#include "hbapi.h"
+ 
+-static unsigned int offset     = 0;
+ 
+-CLIPPER s_mlsetpos()
++static unsigned int s_offset     = 0;
++
++HB_FUNC( S_MLSETPOS )
+ {
+-    offset+=_parni(1);
+-    _ret();
++    s_offset+=hb_parni(1);
++    hb_ret();
+ }
+ 
+-/*ÄÄÄÄÄÄÄÄÄÄclear offset ÄÄÄÄÄÄÄÄÄÄ*/
+-CLIPPER s_mclear()
++/*----------clear s_offset ----------*/
++HB_FUNC( S_MCLEAR )
+ {
+-  offset       = 0;
++  s_offset       = 0;
+ }
+ 
+ #define CH_141 141
+@@ -21,73 +21,63 @@
+ #define CH_10  10
+ #define CH_SP  32
+ 
+-/*ÄÄÄÄÄÄÄÄÄÄget next line, return nil if noneÄÄÄÄÄÄÄÄÄÄÄÄ*/
+-CLIPPER s_getline()
++/*----------get next line, return nil if none------------*/
++HB_FUNC( S_GETLINE )
+ {
+-  HANDLE hSegment;
+   char *outstr ;
+-  char *string = _parc(1);
+-  unsigned int strlen   = _parclen(1);
+-  int linelen  = _parni(2);
++  char *string = hb_parc(1);
++  unsigned int strlen   = hb_parclen(1);
++  int linelen  = hb_parni(2);
+   int gotten   = 0;
+   int findsp   = 0;
+   int findgot  = 0;
+   int endchar = CH_13;
+   unsigned int i;
+ 
+-  if (hSegment = _xvalloc(linelen,0 ))
++  outstr = ( char * ) hb_xgrab( linelen );
++  if (s_offset+1 < strlen)
+      {
+-     outstr = _xvlock(hSegment);
+-     if (offset+1 < strlen)
++     for ( i=s_offset; (i < strlen) && (gotten<linelen) && (string[i]!=CH_141) && (string[i]!=CH_13) ;)
+         {
+-        for ( i=offset; (i < strlen) && (gotten<linelen) && (string[i]!=CH_141) && (string[i]!=CH_13) ;)
+-           {
+-           outstr[gotten]    = string[i];
+-           gotten++;
+-           i++;
+-           }
+-
+-
+-        if ( (string[i]==CH_141) || (string[i]==CH_13))
+-           {
+-           endchar = string[i];
+-           i+=2;
+-           }
+-        else if (string[i]!=CH_SP)
+-           {
+-            endchar = CH_13;
+-            findsp  = i;
+-            findgot = gotten;
+-            while ((string[findsp]!=CH_SP) && (findsp > offset) )
+-                {
+-                findsp--;
+-                findgot--;
+-                }
+-            if (findsp > offset)
+-               {
+-               findsp++;
+-               findgot++;
+-               i = findsp;
+-               gotten = findgot;
+-               endchar = CH_141;
+-               }
+-
++        outstr[gotten]    = string[i];
++        gotten++;
++        i++;
++        }
+ 
+-           }
+ 
+-        offset = i;
++     if ( (string[i]==CH_141) || (string[i]==CH_13))
++        {
++        endchar = string[i];
++        i+=2;
++        }
++     else if (string[i]!=CH_SP)
++        {
++         endchar = CH_13;
++         findsp  = i;
++         findgot = gotten;
++         while ((string[findsp]!=CH_SP) && (findsp > s_offset) )
++             {
++             findsp--;
++             findgot--;
++             }
++         if (findsp > s_offset)
++            {
++            findsp++;
++            findgot++;
++            i = findsp;
++            gotten = findgot;
++            endchar = CH_141;
++            }
+ 
+-        _storni(endchar,3);
+ 
+-        _retclen(outstr,(gotten) );
+         }
+-     else
+-        _ret();
+ 
+-     _xvunlock(hSegment);
+-     _xvfree(hSegment);
++     s_offset = i;
+ 
++     hb_storni(endchar,3);
++
++     hb_retclen(outstr,(gotten) );
+      }
+-  else
+-     _retclen("",0);
++
++  hb_xfree(outstr);
+ }
+diff -u ori_src\R_HCODE.PRG .\R_HCODE.PRG
+--- ori_src\R_HCODE.PRG	Fri Oct 08 12:30:40 1993
++++ .\R_HCODE.PRG	Thu May 28 17:54:46 2009
+@@ -121,7 +121,7 @@
+ local cShowBox                                 // variable to hold makebox()
+                                                // screen
+ 
+-if !file(cReportFile+".DBF")                  // if no report file, exit
++if !file(cReportFile+".dbf")                  // if no report file, exit
+ 	MSG("No Report file present")
+ 	return ''
+ endif
+diff -u ori_src\R_PRINTR.PRG .\R_PRINTR.PRG
+--- ori_src\R_PRINTR.PRG	Thu Nov 02 16:11:18 1995
++++ .\R_PRINTR.PRG	Thu May 28 17:54:46 2009
+@@ -48,7 +48,7 @@
+ ÔÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ
+ */
+ 
+-#include "Inkey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\R_QUIKR.PRG .\R_QUIKR.PRG
+--- ori_src\R_QUIKR.PRG	Fri Oct 08 12:30:42 1993
++++ .\R_QUIKR.PRG	Thu May 28 17:54:46 2009
+@@ -134,7 +134,7 @@
+ 
+ 
+ // must have the report file available, and a dbf open
+-if !file(cReportFile+".DBF")
++if !file(cReportFile+".dbf")
+     MSG("No Report file present")
+     return ''
+ elseif!used()
+diff -u ori_src\R_REPORT.PRG .\R_REPORT.PRG
+--- ori_src\R_REPORT.PRG	Thu Nov 02 16:13:54 1995
++++ .\R_REPORT.PRG	Thu May 28 17:54:46 2009
+@@ -194,7 +194,7 @@
+ next
+ 
+ SELECT 0
+-IF !FILE(slsf_report()+".DBF")
++IF !FILE(slsf_report()+".dbf")
+      rMakeDbf()
+ ENDIF
+ if !SNET_USE(slsf_report(),"__REPORTS",.F.,5,.T.,"Network error opening REPORT file. Keep trying?")
+@@ -228,7 +228,7 @@
+   SETCURSOR(0)
+ 
+   @22,2 SAY "REPORT :"+IIF(EMPTY(aValues[M_TITLE]),"None ",upper(aValues[M_TITLE]))
+-  @22,55 SAY "USING  "+ALIAS()+".DBF"
++  @22,55 SAY "USING  "+ALIAS()+".dbf"
+ 
+   nSelection := RAT_MENU2({;
+                 {2,3 ,'Load REPORT    '},;
+diff -u ori_src\S_1LABEL.PRG .\S_1LABEL.PRG
+--- ori_src\S_1LABEL.PRG	Thu Nov 02 16:59:32 1995
++++ .\S_1LABEL.PRG	Thu May 28 17:54:46 2009
+@@ -6,7 +6,7 @@
+ static nDimLinesBetween
+ 
+ #include "memoedit.ch"
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_2DBRZ.PRG .\S_2DBRZ.PRG
+--- ori_src\S_2DBRZ.PRG	Thu Nov 02 16:59:32 1995
++++ .\S_2DBRZ.PRG	Thu May 28 17:54:46 2009
+@@ -1,6 +1,6 @@
+ static nElement
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_ACHOI.PRG .\S_ACHOI.PRG
+--- ori_src\S_ACHOI.PRG	Thu Nov 02 16:59:32 1995
++++ .\S_ACHOI.PRG	Thu May 28 17:54:46 2009
+@@ -1,4 +1,4 @@
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_APPEND.PRG .\S_APPEND.PRG
+--- ori_src\S_APPEND.PRG	Thu Nov 02 16:59:30 1995
++++ .\S_APPEND.PRG	Thu May 28 17:54:46 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+@@ -128,7 +128,7 @@
+           cFromAlias   := space(30)
+           popread(.t.,"Type in the file name",@cFromAlias,"@K")
+           cFromAlias := UPPER(alltrim(cFromAlias))
+-          cFromAlias += iif(!".DBF"$cFromAlias,".DBF","")
++          cFromAlias += iif(!".dbf"$cFromAlias,".dbf","")
+           if !file(cFromAlias)
+             msg(cFromAlias,"does not exist")
+             cFromAlias := ""
+diff -u ori_src\S_APPT.PRG .\S_APPT.PRG
+--- ori_src\S_APPT.PRG	Thu Nov 02 16:59:30 1995
++++ .\S_APPT.PRG	Thu May 28 17:54:46 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+@@ -199,12 +199,12 @@
+ STATIC FUNCTION checkfile(cApptFile)
+ local lOk := .t.
+ field date,time,desc
+-if !file(cApptFile+".DBF")
++if !file(cApptFile+".dbf")
+    lOk := .f.
+    DBCREATE(cApptFile,{ {"DATE","C",8,0},;
+                         {"TIME","C",5,0},;
+                         {"DESC","C",65,0}})
+-   if file(cApptFile+".DBF")
++   if file(cApptFile+".dbf")
+       lOk := .t.
+    else
+       msg("Problem finding/creating Appointments file")
+diff -u ori_src\S_BDELIM.PRG .\S_BDELIM.PRG
+--- ori_src\S_BDELIM.PRG	Thu Nov 02 16:59:30 1995
++++ .\S_BDELIM.PRG	Thu May 28 17:54:46 2009
+@@ -1,4 +1,4 @@
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_BLDBF.PRG .\S_BLDBF.PRG
+--- ori_src\S_BLDBF.PRG	Fri Oct 08 12:30:34 1993
++++ .\S_BLDBF.PRG	Thu May 28 17:54:46 2009
+@@ -80,8 +80,8 @@
+   RETURN .F.
+ ENDIF
+ 
+-if !(".DBF"$UPPER(cDbfName) )
+-  cDbfName = cDbfName+".DBF"
++if !(".dbf"$UPPER(cDbfName) )
++  cDbfName = cDbfName+".dbf"
+ endif
+ 
+ if !("\"$cDbfName .or. ":"$cDbfName)
+diff -u ori_src\S_BLDNDX.PRG .\S_BLDNDX.PRG
+--- ori_src\S_BLDNDX.PRG	Thu Nov 02 16:59:28 1995
++++ .\S_BLDNDX.PRG	Thu May 28 17:54:46 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_BRSDF.PRG .\S_BRSDF.PRG
+--- ori_src\S_BRSDF.PRG	Thu Nov 02 16:59:28 1995
++++ .\S_BRSDF.PRG	Thu May 28 17:54:46 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_BUILD.PRG .\S_BUILD.PRG
+--- ori_src\S_BUILD.PRG	Thu Nov 02 16:59:28 1995
++++ .\S_BUILD.PRG	Thu May 28 17:54:46 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_BUNGEE.PRG .\S_BUNGEE.PRG
+--- ori_src\S_BUNGEE.PRG	Thu Nov 02 17:11:04 1995
++++ .\S_BUNGEE.PRG	Thu May 28 17:54:46 2009
+@@ -1,7 +1,7 @@
+ 
+ 
+ #include "box.ch"
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+@@ -754,7 +754,7 @@
+             !empty(aCurrentPrompts[nCurrentOption,PROMPTDROPBOX]) .and. ;
+             ASCAN(aCurrentPrompts[nCurrentOption,PROMPTDROPBOX,BOXPROMPTS],;
+                         {|a|EVAL(a[PROMPTACTBLOCK])}) > 0
+-             lDroptoNextLeve := .t.
++             lDroptoNextLevel := .t.
+ 
+         CASE aCurrentPrompts[nCurrentOption,PROMPTTYPE]==TYPEDROPDOWN
+              MSG("Submenu currently inactive")
+diff -u ori_src\S_BXX.PRG .\S_BXX.PRG
+--- ori_src\S_BXX.PRG	Fri Oct 08 12:30:36 1993
++++ .\S_BXX.PRG	Thu May 28 17:54:46 2009
+@@ -79,17 +79,17 @@
+ dispbox(nTop,nLeft,nBottom,nRight,cFrame,cColorString)
+ 
+ DO CASE
+-CASE nShadowPos = SHADOW_LOWER_LEFT .and. nBottom <Maxrow() .and. nLeft > 0
+-   att(nTop+1,nLeft-1,nBottom+1,nLeft-1,nShadowAtt)
+-   att(nBottom+1,nLeft-1,nBottom+1,nRight-1,nShadowAtt)
+-CASE nShadowPos = SHADOW_LOWER_RIGHT .and. nBottom <Maxrow() .and. nRight < Maxcol()
+-   att(nBottom+1,nLeft+1,nBottom+1,nRight+1,nShadowAtt)
+-   att(nTop+1,nRight+1,nBottom+1,nRight+1,nShadowAtt)
+-CASE nShadowPos = SHADOW_UPPER_RIGHT .and. nTop > 0 .and. nRight < Maxcol()
+-   att(nTop-1,nLeft+1,nTop-1,nRight+1,nShadowAtt)
+-   att(nTop,nRight+1,nBottom-1,nRight+1,nShadowAtt)
+-CASE nShadowPos = SHADOW_UPPER_LEFT .and. nTop > 0 .and. nLeft > 0
+-   att(nTop-1,nLeft-1,nTop-1,nRight-1,nShadowAtt)
+-   att(nTop,nLeft-1,nBottom-1,nLeft-1,nShadowAtt)
++CASE nShadowPosition = SHADOW_LOWER_LEFT .and. nBottom <Maxrow() .and. nLeft > 0
++   att(nTop+1,nLeft-1,nBottom+1,nLeft-1,nShadowAttribute)
++   att(nBottom+1,nLeft-1,nBottom+1,nRight-1,nShadowAttribute)
++CASE nShadowPosition = SHADOW_LOWER_RIGHT .and. nBottom <Maxrow() .and. nRight < Maxcol()
++   att(nBottom+1,nLeft+1,nBottom+1,nRight+1,nShadowAttribute)
++   att(nTop+1,nRight+1,nBottom+1,nRight+1,nShadowAttribute)
++CASE nShadowPosition = SHADOW_UPPER_RIGHT .and. nTop > 0 .and. nRight < Maxcol()
++   att(nTop-1,nLeft+1,nTop-1,nRight+1,nShadowAttribute)
++   att(nTop,nRight+1,nBottom-1,nRight+1,nShadowAttribute)
++CASE nShadowPosition = SHADOW_UPPER_LEFT .and. nTop > 0 .and. nLeft > 0
++   att(nTop-1,nLeft-1,nTop-1,nRight-1,nShadowAttribute)
++   att(nTop,nLeft-1,nBottom-1,nLeft-1,nShadowAttribute)
+ ENDCASE
+ return ''
+diff -u ori_src\S_CALCVW.PRG .\S_CALCVW.PRG
+--- ori_src\S_CALCVW.PRG	Fri Oct 08 12:30:40 1993
++++ .\S_CALCVW.PRG	Thu May 28 17:54:46 2009
+@@ -1,6 +1,6 @@
+ 
+-#include "Inkey.ch"
+-#include "Getexit.ch"
++#include "inkey.ch"
++#include "getexit.ch"
+ 
+ /*
+ ÕìÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ
+diff -u ori_src\S_CLAB.PRG .\S_CLAB.PRG
+--- ori_src\S_CLAB.PRG	Thu Nov 02 17:02:54 1995
++++ .\S_CLAB.PRG	Thu May 28 17:54:46 2009
+@@ -1,4 +1,4 @@
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+@@ -416,7 +416,7 @@
+ 
+ //-----------------------------------------------------------------------
+ STATIC FUNCTION PUTLABEL(aContents,aDimensions,cLblDescript)
+-local cLabelfile := slsf_label()+".DBF"
++local cLabelfile := slsf_label()+".dbf"
+ local nOldArea   := select()
+ local cLabelDesc := padr(cLblDescript,30)
+ local lOverWrite := .t.
+@@ -432,7 +432,7 @@
+     MAKEDBF()
+  ENDIF
+ 
+- *- open the LABELS.DBF file
++ *- open the LABELS.dbf file
+  IF !SNET_USE(cLabelFile,"__LABELS",.F.,5,.F.,"Unable to open labels file. Keep trying?")
+     USE
+     EXIT
+@@ -901,7 +901,7 @@
+ 
+ //----------------------------------------------------------
+ STATIC PROC MAKEDBF
+-local cLabelFile := slsf_label()+".DBF"
++local cLabelFile := slsf_label()+".dbf"
+ local nOldArea   := select()
+ SELE 0
+ DBCREATE(cLabelFile,{ ;
+@@ -1011,7 +1011,7 @@
+ 
+ //-------------------------------------------------------------------
+ STATIC FUNCTION LOADLABEL(aContents,aDimensions)
+-local cLabelFile := slsf_label()+".DBF"
++local cLabelFile := slsf_label()+".dbf"
+ local nOldArea   := select()
+ local cAlias     := ALIAS()
+ local nSelection := 0
+@@ -1372,7 +1372,7 @@
+ 
+ 
+ STATIC FUNCTION ERASELABEL()
+-local cLabelFile := slsf_label()+".DBF"
++local cLabelFile := slsf_label()+".dbf"
+ local nOldArea   := select()
+ local cAlias     := ALIAS()
+ local nSelection := 0
+diff -u ori_src\S_CLRFUN.PRG .\S_CLRFUN.PRG
+--- ori_src\S_CLRFUN.PRG	Wed Oct 26 17:30:30 1994
++++ .\S_CLRFUN.PRG	Thu May 28 17:54:46 2009
+@@ -49,7 +49,7 @@
+ ÔíÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ 
+ */
+ Function SattColor()
+-     IF FILE(slsf_color()+".DBF")
++     IF FILE(slsf_color()+".dbf")
+        SattGet("DEFAULT")
+      ELSE
+        sls_normcol('W/B,GR+/R,,,W/N')
+@@ -265,7 +265,7 @@
+ field DSHADATT,DSHADPOS,DEXPLODE
+ local lSuccess := .f.
+ local nOldarea := select()
+-local cFileName := slsf_color()+".DBF"
++local cFileName := slsf_color()+".dbf"
+ cSetName := iif(cSetName==nil,"DEFAULT",cSetName)
+ select 0
+ IF file(cFileName) .and. SNET_USE(cFileName,,.F.,5,.F.)
+@@ -340,7 +340,7 @@
+ field DSHADATT,DSHADPOS,DEXPLODE
+ local lSuccess := .f.
+ local nOldarea := select()
+-local cFileName := slsf_color()+".DBF"
++local cFileName := slsf_color()+".dbf"
+ cSetName := padr(iif(cSetName==nil,"DEFAULT",cSetName),40)
+ 
+ if !file(cFileName)
+@@ -411,7 +411,7 @@
+ field DSHADATT,DSHADPOS,DEXPLODE
+ local nOldarea := select()
+ local nSelection,aSelections,i
+-local cFileName := slsf_color()+".DBF"
++local cFileName := slsf_color()+".dbf"
+ 
+ select 0
+ IF file(cFileName) .and. SNET_USE(cFileName,,.F.,5,.F.) .and. recc() > 0
+@@ -485,7 +485,7 @@
+ field DSHADATT,DSHADPOS,DEXPLODE
+ local nOldarea := select()
+ local nSelection,aSelections,i
+-local cFileName := slsf_color()+".DBF"
++local cFileName := slsf_color()+".dbf"
+ local cSetName := padr(iif(cSetName==nil,"DEFAULT",cSetName),40)
+ if !file(cFileName)
+    dbcreate(cFileName,dbfstruc)
+@@ -554,7 +554,7 @@
+ field DSHADATT,DSHADPOS,DEXPLODE
+ local nOldarea := select()
+ local nSelection,aSelections,aRecnos,i
+-local cFileName := slsf_color()+".DBF"
++local cFileName := slsf_color()+".dbf"
+ local cSetName := padr(iif(cSetName==nil,"DEFAULT",cSetName),40)
+ aSelections := {}
+ aRecnos     := {}
+diff -u ori_src\S_COPY.PRG .\S_COPY.PRG
+--- ori_src\S_COPY.PRG	Fri Jan 21 08:55:22 1994
++++ .\S_COPY.PRG	Thu May 28 17:54:46 2009
+@@ -115,7 +115,7 @@
+     EXIT
+   ENDIF
+   cDbfName := Alltrim(cDbfName)
+-  cDbfName := IIF(.NOT. ".DBF" $ cDbfName, cDbfName+".DBF",cDbfName)
++  cDbfName := IIF(.NOT. ".dbf" $ cDbfName, cDbfName+".dbf",cDbfName)
+   
+   *- if it already exists, don't overwrite it
+   *- loop around and get another filespec
+diff -u ori_src\S_COPYF.PRG .\S_COPYF.PRG
+--- ori_src\S_COPYF.PRG	Fri Oct 08 12:30:50 1993
++++ .\S_COPYF.PRG	Thu May 28 17:54:46 2009
+@@ -174,7 +174,7 @@
+     EXIT
+   ENDIF
+   cDbfName := Alltrim(cDbfName)
+-  cDbfName := IIF(.NOT. ".DBF" $ cDbfName, cDbfName+".DBF",cDbfName)
++  cDbfName := IIF(.NOT. ".dbf" $ cDbfName, cDbfName+".dbf",cDbfName)
+   
+   *- if it already exists, don't overwrite it
+   *- loop around and get another filespec
+diff -u ori_src\S_CVTDEL.PRG .\S_CVTDEL.PRG
+--- ori_src\S_CVTDEL.PRG	Thu Nov 02 17:02:52 1995
++++ .\S_CVTDEL.PRG	Thu May 28 17:54:46 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+@@ -550,7 +550,7 @@
+   IF LASTKEY() = K_ESC .OR. EMPTY(cDbfName)
+     EXIT
+   ENDIF
+-  cDbfname += ".DBF"
++  cDbfname += ".dbf"
+   IF FILE(cDbfName)
+     msg("Database "+cDbfName+" already exists - ",;
+              "Use another name","Or delete that file first")
+diff -u ori_src\S_DATVW.PRG .\S_DATVW.PRG
+--- ori_src\S_DATVW.PRG	Fri Oct 08 12:30:48 1993
++++ .\S_DATVW.PRG	Thu May 28 17:54:46 2009
+@@ -1,5 +1,5 @@
+-#include "Inkey.ch"
+-#include "Getexit.ch"
++#include "inkey.ch"
++#include "getexit.ch"
+ 
+ //------------------------------------------------------------------------
+ /*
+diff -u ori_src\S_DBSTAT.PRG .\S_DBSTAT.PRG
+--- ori_src\S_DBSTAT.PRG	Mon Nov 08 14:58:00 1993
++++ .\S_DBSTAT.PRG	Thu May 28 17:54:46 2009
+@@ -143,17 +143,17 @@
+      @ 12,23 SAY "³ of                     ³"
+      @ 13,23 SAY "ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ"
+      @12,32 SAY TRANS(RECC(),"9999999999")
+-     DBEVAL(bEvalBlock,bFilter,{||showhile(11,32,"9999999999")})
++     DBEVAL(bEvalBlock1,bFilter,{||showhile(11,32,"9999999999")})
+      if lGroup1 .or. lGroup2  //----04-02-1993
+        nAverage := nSum/nCount
+      endif
+      if lGroup2
+        go top
+-       bEvalBlock  := {||nVariance += ;
++       bEvalBlock1 := {||nVariance += ;
+                     ( (nAverage-FIELDGET(FIELDPOS(cFieldName)) )^2 )}
+        @ 11,23 SAY "³ record                 ³"
+        @ 7,23 SAY "Second Pass"
+-       DBEVAL(bEvalBlock,bFilter,{||showhile(11,32,"9999999999")})
++       DBEVAL(bEvalBlock1,bFilter,{||showhile(11,32,"9999999999")})
+        nVariance := nVariance/nCount
+        nStd      := sqrt(nVariance)
+      endif
+diff -u ori_src\S_DPOPS.PRG .\S_DPOPS.PRG
+--- ori_src\S_DPOPS.PRG	Thu Nov 02 17:02:52 1995
++++ .\S_DPOPS.PRG	Thu May 28 17:54:46 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_DUPH.PRG .\S_DUPH.PRG
+--- ori_src\S_DUPH.PRG	Thu Nov 02 17:02:52 1995
++++ .\S_DUPH.PRG	Thu May 28 17:54:46 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+@@ -451,7 +451,7 @@
+     EXIT
+   ENDIF
+   cDbfName := Alltrim(cDbfName)
+-  cDbfName := IIF(.NOT. ".DBF" $ cDbfName, cDbfName+".DBF",cDbfName)
++  cDbfName := IIF(.NOT. ".dbf" $ cDbfName, cDbfName+".dbf",cDbfName)
+   
+   *- if it already exists, don't overwrite it
+   *- loop around and get another filespec
+diff -u ori_src\S_EDITM.PRG .\S_EDITM.PRG
+--- ori_src\S_EDITM.PRG	Thu Nov 02 17:02:50 1995
++++ .\S_EDITM.PRG	Thu May 28 17:54:46 2009
+@@ -2,7 +2,7 @@
+ static lImport,lExport,lChanged,lDone
+ static nBoxTop,nBoxLeft, lDoEdit, nBoxBot
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_EDITMV.PRG .\S_EDITMV.PRG
+--- ori_src\S_EDITMV.PRG	Thu Nov 02 17:02:50 1995
++++ .\S_EDITMV.PRG	Thu May 28 17:54:46 2009
+@@ -3,7 +3,7 @@
+ static nBoxTop,nBoxLeft, nBoxRight, lDoEdit, nBoxBot
+ 
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_EXPORT.PRG .\S_EXPORT.PRG
+--- ori_src\S_EXPORT.PRG	Fri Oct 08 12:30:44 1993
++++ .\S_EXPORT.PRG	Thu May 28 17:54:47 2009
+@@ -147,7 +147,7 @@
+       nRecordSele := menu_v("[Write ASCII file from:]",;
+                              "Tagged Records","Records meeting Query",;
+                              "All Records","Quit")
+-      nRecordSel := iif(nRecordSel>2,0,nRecordSel)
++      nRecordSele := iif(nRecordSele>2,0,nRecordSele)
+       do case
+       case nRecordSele = REC_TAGGED
+          tagit(aTagged,aFieldNames,aFieldDesc,"Merge Records")
+diff -u ori_src\S_FILER.PRG .\S_FILER.PRG
+--- ori_src\S_FILER.PRG	Mon Sep 12 17:20:02 1994
++++ .\S_FILER.PRG	Thu May 28 17:54:47 2009
+@@ -69,7 +69,7 @@
+ local lMarking   := .f.
+ local nMarkStart := 0, nMarkEnd := 0
+ local lMarked    := .f.
+-local lMarkOrSeach
++local lMarkOrSearch
+ local nTbottom
+ local cInstruct1, cInstruct2, nInstruct1, nInstruct2
+ local nAtArrows, nAtPgup, nAtPgdn, nAtHome, nAtEnd, nAtEsc, nAtSearch, nAtMark
+diff -u ori_src\S_FORML.PRG .\S_FORML.PRG
+--- ori_src\S_FORML.PRG	Thu Nov 02 17:02:50 1995
++++ .\S_FORML.PRG	Thu May 28 17:54:47 2009
+@@ -6,7 +6,7 @@
+ 
+ #define MAXFORMSIZE 4000
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+@@ -133,7 +133,7 @@
+ 
+ 
+ * create form if it doesn't exist
+-IF !FILE(cFormsFile+".DBF")
++IF !FILE(cFormsFile+".dbf")
+     blddbf(cFormsFile,"DESCRIPT,C,50:MEMO_ORIG,M:")
+ ENDIF
+ *- open forms.dbf
+diff -u ori_src\S_FORMU.PRG .\S_FORMU.PRG
+--- ori_src\S_FORMU.PRG	Thu Nov 02 17:02:48 1995
++++ .\S_FORMU.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_FREQ.PRG .\S_FREQ.PRG
+--- ori_src\S_FREQ.PRG	Thu Nov 02 17:13:40 1995
++++ .\S_FREQ.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+@@ -329,7 +329,7 @@
+        cPermDbf = Alltrim(cPermDbf)
+        IF !(LASTKEY() = 27 .OR. EMPTY(cPermDbf))
+          cPermDbf = Alltrim(cPermDbf)
+-         cPermDbf =UPPER(cPermDbf)+".DBF"
++         cPermDbf =UPPER(cPermDbf)+".dbf"
+          IF FILE(cPermDbf)
+            msg("Database "+cPermDbf+" already exists - ","Use another name")
+              cPermDbf = ''
+diff -u ori_src\S_FULLD.PRG .\S_FULLD.PRG
+--- ori_src\S_FULLD.PRG	Thu Nov 02 17:02:48 1995
++++ .\S_FULLD.PRG	Thu May 28 17:54:47 2009
+@@ -1,12 +1,12 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+ #endif
+ #define K_MOUSELEFT K_LBUTTONDOWN
+ #define K_MOUSERIGHT K_RBUTTONDOWN
+-#include "Directry.ch"
++#include "directry.ch"
+ 
+ memvar getlist
+ 
+@@ -301,7 +301,7 @@
+ 
+ static function viewit(cFileName)
+ local cBox
+-IF ('.DBF' $ cFileName)
++IF ('.dbf' $ cFileName)
+   *- check for arbitrary amount of available memory
+   *- change this higher or lower, based on your own best guess <g>
+   IF MEMORY(0) > 20
+@@ -316,7 +316,7 @@
+   ENDIF
+ ELSEIF ('.NTX' $ cFileName) .OR. ('.NDX' $ cFileName)
+   msg("Index key for "+cFileName+" is :",nkey(cFileName))
+-ELSEIF !(('.EXE' $ cFileName) .OR. ('.COM' $ cFileName).OR.('.SYS' $ cFileName)  )
++ELSEIF !(('.exe' $ cFileName) .OR. ('.COM' $ cFileName).OR.('.SYS' $ cFileName)  )
+   Fileread(2,2,23,78,cFileName)
+ ENDIF
+ RETURN nil
+diff -u ori_src\S_GETDAT.PRG .\S_GETDAT.PRG
+--- ori_src\S_GETDAT.PRG	Thu Nov 02 17:02:48 1995
++++ .\S_GETDAT.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_GLOBAL.PRG .\S_GLOBAL.PRG
+--- ori_src\S_GLOBAL.PRG	Thu Nov 10 11:02:38 1994
++++ .\S_GLOBAL.PRG	Thu May 28 17:54:47 2009
+@@ -212,7 +212,7 @@
+ ³
+ ³
+ ³ Examples
+-³  #include "Box.ch"
++³  #include "box.ch"
+ ³  sls_FRAME(B_SINGLE+" ")
+ ³
+ ³ Notes:
+diff -u ori_src\S_HELP.PRG .\S_HELP.PRG
+--- ori_src\S_HELP.PRG	Mon Mar 28 10:25:20 1994
++++ .\S_HELP.PRG	Thu May 28 17:54:47 2009
+@@ -84,9 +84,9 @@
+ select 0
+ 
+ *- be sure there's a help DBF/DBT/NDX(NTX)
+-IF FILE(cHelpFile+".DBF") .AND. FILE(cHelpFile+".DBT") .AND.;
++IF FILE(cHelpFile+".dbf") .AND. FILE(cHelpFile+".dbt") .AND.;
+         ( FILE(cHelpFile+indexext())  )
+-  IF !SNET_USE(cHelpFile+".DBF","__HELP",;
++  IF !SNET_USE(cHelpFile+".dbf","__HELP",;
+      .F.,5,.T.,"Network error opening HELP file. Keep trying?")
+   else
+      set index to (cHelpFile)
+diff -u ori_src\S_HELPM.PRG .\S_HELPM.PRG
+--- ori_src\S_HELPM.PRG	Thu Nov 02 17:06:02 1995
++++ .\S_HELPM.PRG	Thu May 28 17:54:47 2009
+@@ -1,6 +1,6 @@
+ #include "memoedit.ch"
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+@@ -436,11 +436,11 @@
+ ///===================================================================
+ ///===================================================================
+ STATIC FUNCTION opendbf(cHelpFile)
+-IF !( FILE(cHelpFile+".DBF") .AND. FILE(cHelpFile+".DBT") )
++IF !( FILE(cHelpFile+".dbf") .AND. FILE(cHelpFile+".dbt") )
+   blddbf(cHelpFile,"h_mod,C,10:h_var,C,10:h_memo,M,10:hw_t,N,2:hw_l,N,2:hw_b,N,2:hw_r,N,2:")
+ ENDIF
+ 
+-IF ( FILE(cHelpFile+".DBF") .AND. FILE(cHelpFile+".DBT") )
++IF ( FILE(cHelpFile+".dbf") .AND. FILE(cHelpFile+".dbt") )
+   IF SNET_USE(cHelpFile,"__HELP",.F.,5,.T.,"Network error opening HELP file. Keep trying?")
+     if !FILE( cHelpFile+INDEXEXT() )
+       INDEX ON __HELP->h_mod+__HELP->h_var TO (cHelpFile)
+diff -u ori_src\S_LIST.PRG .\S_LIST.PRG
+--- ori_src\S_LIST.PRG	Thu Nov 02 17:06:02 1995
++++ .\S_LIST.PRG	Thu May 28 17:54:47 2009
+@@ -1,4 +1,4 @@
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+@@ -167,7 +167,7 @@
+     aList     := {}
+     cListDesc := getlist()
+   CASE nMainSelect =  6
+-    IF FILE(slsf_list()+".DBF")
++    IF FILE(slsf_list()+".dbf")
+       nOldarea = SELECT()
+       SELECT 0
+       IF SNET_USE(slsf_list(),"",.T.,5,.T.,"Network error opening LIST file. Keep trying?")
+@@ -453,7 +453,7 @@
+       EXIT
+     ENDIF
+     IF !"."$cOutFile
+-       cOutFile := cOutFile+".TXT"
++       cOutFile := cOutFile+".txt"
+        msg("File will be sent to disk as "+cOutFile)
+     endif
+     ERASE (getdfp()+cOutFile)
+@@ -587,7 +587,7 @@
+ local cListList  := parselist()
+ 
+ SELE 0
+-IF !FILE(cListFile+".DBF")
++IF !FILE(cListFile+".dbf")
+    DBCREATE(cListFile,{{"DESC","C",45,0},{"LIST","C",200,0}})
+ ENDIF
+ IF SNET_USE(cListFile,"__LIST",.F.,5,.T.,"Network error opening LIST file. Keep trying?")
+@@ -666,7 +666,7 @@
+ local i
+ SELE 0
+ *- check for file
+-IF !FILE(cListFile+".DBF")
++IF !FILE(cListFile+".dbf")
+   msg("No lists stored in this directory")
+ elseif SNET_USE(cListFile,"__LIST",.F.,5,.T.,;
+        "Network error opening LIST file. Keep trying?")
+diff -u ori_src\S_LOTMEN.PRG .\S_LOTMEN.PRG
+--- ori_src\S_LOTMEN.PRG	Thu Nov 02 17:06:00 1995
++++ .\S_LOTMEN.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_MAILM.PRG .\S_MAILM.PRG
+--- ori_src\S_MAILM.PRG	Mon Jan 03 10:36:58 1994
++++ .\S_MAILM.PRG	Thu May 28 17:54:47 2009
+@@ -135,7 +135,7 @@
+       nRecordSele := menu_v("[Write Mailmerge Files from:]",;
+                              "Tagged Records","Records meeting Query",;
+                              "All Records","Quit")
+-      nRecordSel := iif(nRecordSel>3 .or. nRecordSel<=0 ,3,nRecordSel)
++      nRecordSele := iif(nRecordSele>3 .or. nRecordSele<=0 ,3,nRecordSele)
+       do case
+       case nRecordSele = REC_TAGGED
+          tagit(aTagged,aFieldNames,aFieldDesc,"Merge Records")
+diff -u ori_src\S_MCHOI.PRG .\S_MCHOI.PRG
+--- ori_src\S_MCHOI.PRG	Thu Nov 02 17:06:00 1995
++++ .\S_MCHOI.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_MMEMO.PRG .\S_MMEMO.PRG
+--- ori_src\S_MMEMO.PRG	Thu Nov 02 16:06:32 1995
++++ .\S_MMEMO.PRG	Thu May 28 17:54:47 2009
+@@ -44,7 +44,7 @@
+ */
+ 
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_MODIFY.PRG .\S_MODIFY.PRG
+--- ori_src\S_MODIFY.PRG	Thu Nov 02 17:14:48 1995
++++ .\S_MODIFY.PRG	Thu May 28 17:54:47 2009
+@@ -1,7 +1,7 @@
+ 
+ memvar getlist
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+@@ -98,7 +98,7 @@
+        IF LASTKEY() = K_ESC .OR. EMPTY(cDbfName)
+          EXIT
+        ENDIF
+-       cDbfname += ".DBF"
++       cDbfname += ".dbf"
+        IF FILE(cDbfName)
+          msg("Database "+cDbfName+" already exists - ",;
+                   "Use another name","Or delete that file first")
+@@ -106,8 +106,8 @@
+          LOOP
+        ENDIF
+        IF messyn("Copy structure from an existing DBF ?")
+-          if adir("*.DBF") > 0
+-            cFromDbf = popex("*.DBF",'[Datafile]',.T.)
++          if adir("*.dbf") > 0
++            cFromDbf = popex("*.dbf",'[Datafile]',.T.)
+           ELSE
+             msg("No DBFs in this directory")
+             EXIT
+diff -u ori_src\S_MOOSE.PRG .\S_MOOSE.PRG
+--- ori_src\S_MOOSE.PRG	Thu Nov 02 16:17:08 1995
++++ .\S_MOOSE.PRG	Thu May 28 17:54:47 2009
+@@ -98,7 +98,7 @@
+ 
+ */
+ 
+-#INCLUDE "inkey.ch"
++#include "inkey.ch"
+ #define MTOP      1
+ #define MLEFT     2
+ #define MBOTTOM   3
+@@ -747,7 +747,7 @@
+ ³
+ ³  Examples:
+ ³  ---------
+-³  #include "INKEY.CH"
++³  #include "inkey.ch"
+ ³  @10,10 say "<OK>
+ ³  @11,10 say "<Cancel>"
+ ³  aHotAreas  := {  {10,10,10,13}, {11,10,11,18} }
+diff -u ori_src\S_MULMYN.PRG .\S_MULMYN.PRG
+--- ori_src\S_MULMYN.PRG	Thu Nov 02 17:05:58 1995
++++ .\S_MULMYN.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_OLD.PRG .\S_OLD.PRG
+--- ori_src\S_OLD.PRG	Thu Oct 14 13:42:10 1993
++++ .\S_OLD.PRG	Thu May 28 17:54:47 2009
+@@ -277,7 +277,7 @@
+ local lOpened := .f.
+ local cDocDbf := SLSF_OLD()
+ 
+-IF !FILE(cDocDbf+".DBF")
++IF !FILE(cDocDbf+".dbf")
+         dbcreate(cDocDbf,{;
+                       {"TOPIC","C",35,0},;
+                       {"KEYS","M",10,0},;
+diff -u ori_src\S_PCSEL.PRG .\S_PCSEL.PRG
+--- ori_src\S_PCSEL.PRG	Thu Nov 02 17:05:58 1995
++++ .\S_PCSEL.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_POPDIR.PRG .\S_POPDIR.PRG
+--- ori_src\S_POPDIR.PRG	Thu Nov 02 17:05:58 1995
++++ .\S_POPDIR.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+@@ -161,7 +161,7 @@
+ local cBox
+ local nSelect := SELECT()
+ select 0
+-IF ('.DBF' $ cFileName)
++IF ('.dbf' $ cFileName)
+   *- check for arbitrary amount of available memory
+   *- change this higher or lower, based on your own best guess <g>
+   IF MEMORY(0) > 20
+@@ -178,7 +178,7 @@
+   ENDIF
+ ELSEIF ('.NTX' $ cFileName) .OR. ('.NDX' $ cFileName)
+   msg("Index key for "+cFileName+" is :",nkey(cFileName))
+-ELSEIF !(('.EXE' $ cFileName) .OR. ('.COM' $ cFileName).OR.('.SYS' $ cFileName)  )
++ELSEIF !(('.exe' $ cFileName) .OR. ('.COM' $ cFileName).OR.('.SYS' $ cFileName)  )
+   Fileread(2,2,23,78,cFileName)
+ ENDIF
+ SELECT (nSelect)
+diff -u ori_src\S_PULLDN.PRG .\S_PULLDN.PRG
+--- ori_src\S_PULLDN.PRG	Fri Oct 08 12:30:50 1993
++++ .\S_PULLDN.PRG	Thu May 28 17:54:47 2009
+@@ -1,6 +1,6 @@
+ // slight behavior change - boxes are 1 character wider.
+ 
+-#INCLUDE "INKEY.CH"
++#include "inkey.ch"
+ #define   A_BOXTOPBAR     1
+ #define   A_TOPBARCOLOR   2
+ #define   A_MENUBOXCOLOR  3
+diff -u ori_src\S_QUERY.PRG .\S_QUERY.PRG
+--- ori_src\S_QUERY.PRG	Thu Nov 02 17:05:56 1995
++++ .\S_QUERY.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+@@ -93,13 +93,12 @@
+ local lOldexact   := setexact()
+ local nOldarea    := SELECT()
+ local nAtRecord   := RECNO()
+-local cQueryFile  := slsf_query()+".DBF"
++local cQueryFile  := slsf_query()+".dbf"
+ local cQDescription := ""
+ 
+ lUseBuildex := iif(lUseBx#nil,lUseBx,.f.)
+ 
+ EXTERNAL _wildcard
+-CTOD("")
+ 
+ IF !( VALTYPE(cInFieldNames)+VALTYPE(cInFieldDesc)+VALTYPE(cInFieldTypes))=="AAA"
+   nFieldCount := Fcount()+1
+@@ -644,7 +643,7 @@
+ 
+ //ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ static function putquery(cQDescription)
+-local cQueryfile := slsf_query()+".DBF"
++local cQueryfile := slsf_query()+".dbf"
+ local nOldArea   := select()
+ local cQueryDesc := padr(cQDescription,30)
+ local lOverWrite := .t.
+@@ -707,7 +706,7 @@
+ return cQDescription
+ //ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ STATIC FUNCTION GetQuery
+-local cQueryfile := slsf_query()+".DBF"
++local cQueryfile := slsf_query()+".dbf"
+ local nOldArea   := select()
+ local cAlias     := ALIAS()
+ local nSelection := 0
+@@ -1116,7 +1115,7 @@
+ RETURN
+ 
+ STATIC PROC PURGEQ
+-local cQueryFile  := slsf_query()+".DBF"
++local cQueryFile  := slsf_query()+".dbf"
+ local nOldarea    := SELECT()
+ IF FILE(cQueryFile)
+   SELECT 0
+diff -u ori_src\S_READRS.PRG .\S_READRS.PRG
+--- ori_src\S_READRS.PRG	Thu Nov 02 17:09:12 1995
++++ .\S_READRS.PRG	Thu May 28 17:54:47 2009
+@@ -1,7 +1,7 @@
+ 
+ //------------------------------------------------------------------------
+ #include "getexit.ch"
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_RMENU2.PRG .\S_RMENU2.PRG
+--- ori_src\S_RMENU2.PRG	Thu Nov 02 17:09:12 1995
++++ .\S_RMENU2.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_RREAD.PRG .\S_RREAD.PRG
+--- ori_src\S_RREAD.PRG	Thu Nov 02 17:09:12 1995
++++ .\S_RREAD.PRG	Thu May 28 17:54:47 2009
+@@ -1,12 +1,12 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+ #endif
+ #define K_MOUSELEFT K_LBUTTONDOWN
+ #define K_MOUSERIGHT K_RBUTTONDOWN
+-#include "Getexit.ch"
++#include "getexit.ch"
+ 
+ #define K_UNDO          K_CTRL_U
+ 
+diff -u ori_src\S_SCMOD.PRG .\S_SCMOD.PRG
+--- ori_src\S_SCMOD.PRG	Fri Oct 08 12:30:46 1993
++++ .\S_SCMOD.PRG	Thu May 28 17:54:47 2009
+@@ -82,7 +82,7 @@
+ SELECT 0
+ 
+ *- build scroller.dbf if not present
+-IF !FILE(cScrollFile+".DBF")
++IF !FILE(cScrollFile+".dbf")
+    blddbf(cScrollFile,'SMODULE,C,10:SFIELD,C,10:SDESCR,C,25:SSTRING,C,160:SRETURN,C,75:SDBFILE,C,8:SIND,C,8:')
+ ENDIF
+ 
+@@ -210,7 +210,7 @@
+ 
+      do case
+         CASE nSelect = 1
+-           cTempFile := popex("*.DBF","Select DBF")
++           cTempFile := popex("*.dbf","Select DBF")
+            if !empty(cTempFile)
+              cTempfile := left(cTempfile,at(".",cTempFile)-1)
+              if cTempFile==cAlias
+diff -u ori_src\S_SCRBUF.C .\S_SCRBUF.C
+--- ori_src\S_SCRBUF.C	Mon Nov 02 17:15:40 1992
++++ .\S_SCRBUF.C	Thu May 28 17:54:47 2009
+@@ -20,7 +20,7 @@
+    getrow            = _parni(6)-1;
+    top               = top*80;
+    count             = 0;
+-   ret_scr           =  _xgrab(cols*2);
++   ret_scr           = ( char * ) _xgrab(cols*2);
+ 
+    for(i=getrow*cols*2; i< (getrow+1)*cols*2;i++)
+        ret_scr[count++] = inscreenstring[i];
+@@ -47,7 +47,7 @@
+    rows              = bottom-top+1;
+    getcol            = _parni(6)-1;
+    count             = 0;
+-   ret_scr           =  _xgrab(rows*2);
++   ret_scr           = ( char * ) _xgrab(rows*2);
+    lastcol           = (cols*(rows-1)+(getcol)+1)*2 ;
+ 
+    for(i=getcol*2; i< lastcol ;i+=(cols*2))
+@@ -74,7 +74,7 @@
+    every       = _parni(3);
+    scrlen      = _parclen(1);
+    columns     =  scrlen/2;
+-   outscreen   = _xgrab(scrlen);
++   outscreen   = ( char * ) _xgrab(scrlen);
+ 
+    for(i=0; i< columns;i++)
+      {
+diff -u ori_src\S_SCROLL.PRG .\S_SCROLL.PRG
+--- ori_src\S_SCROLL.PRG	Fri Oct 08 12:30:34 1993
++++ .\S_SCROLL.PRG	Thu May 28 17:54:47 2009
+@@ -107,7 +107,7 @@
+ 
+ cProcVar := iif("->"$cProcVar,SUBST(cProcVar,AT(">",cProcVar)+1),cProcVar)
+ 
+-IF !FILE(slsf_scroll()+".DBF")
++IF !FILE(slsf_scroll()+".dbf")
+    msg("Lookup definition file missing - "+slsf_scroll())
+    RETURN ''
+ ENDIF
+diff -u ori_src\S_SETCOL.PRG .\S_SETCOL.PRG
+--- ori_src\S_SETCOL.PRG	Thu Nov 02 17:09:10 1995
++++ .\S_SETCOL.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_SMGETS.PRG .\S_SMGETS.PRG
+--- ori_src\S_SMGETS.PRG	Fri Oct 08 12:30:46 1993
++++ .\S_SMGETS.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+-#include "Inkey.ch"
+-#include "Getexit.ch"
++#include "inkey.ch"
++#include "getexit.ch"
+ 
+ 
+ //------------------------------------------------------------------------
+diff -u ori_src\S_TABMEN.PRG .\S_TABMEN.PRG
+--- ori_src\S_TABMEN.PRG	Thu Nov 02 17:09:10 1995
++++ .\S_TABMEN.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_TAG.PRG .\S_TAG.PRG
+--- ori_src\S_TAG.PRG	Thu Nov 02 17:09:10 1995
++++ .\S_TAG.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_TAGA.PRG .\S_TAGA.PRG
+--- ori_src\S_TAGA.PRG	Thu Nov 02 17:09:08 1995
++++ .\S_TAGA.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_TIME.PRG .\S_TIME.PRG
+--- ori_src\S_TIME.PRG	Thu Nov 02 17:09:08 1995
++++ .\S_TIME.PRG	Thu May 28 17:54:47 2009
+@@ -1,13 +1,13 @@
+ //---------------------------------------------------------------------
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+ #endif
+ #define K_MOUSELEFT K_LBUTTONDOWN
+ #define K_MOUSERIGHT K_RBUTTONDOWN
+-#include "Dbstruct.ch"
++#include "dbstruct.ch"
+ 
+ #define BY_WEEK    1
+ #define BY_WEEKTD  2
+@@ -420,7 +420,7 @@
+   ELSEIF dStartingDate >= dEndingDate
+     msg("Start date is greater than or equal to end date")
+   ELSE
+-    aRanges := fillranges(nRangeType,@dStartingdDate,dEndingDate,nWeekStart,expAsOf)
++    aRanges := fillranges(nRangeType,@dStartingDate,dEndingDate,nWeekStart,expAsOf)
+     EXIT
+   ENDIF
+ END
+@@ -443,7 +443,7 @@
+ return lValid
+ 
+ //-------------------------------------------------------
+-static function fillranges(nRangeType,dStartingdDate,dEndingDate,nWeekStart,expAsof)
++static function fillranges(nRangeType,dStartingDate,dEndingDate,nWeekStart,expAsof)
+ local aRanges := {}
+ LOCAL dThisStart,dThisEnd,dNextStart
+ local cBox := makebox(9,20,14,60)
+@@ -709,7 +709,7 @@
+  popread(.F.,"Name of DBF to send this to:",@cDbfName,"@N")
+  IF !(LASTKEY() = K_ESC .OR. EMPTY(cDbfName))
+     cDbfName := Alltrim(cDbfName)
+-    cDbfName := UPPER(cDbfName)+".DBF"
++    cDbfName := UPPER(cDbfName)+".dbf"
+     IF !FILE(cDbfName)
+       DBCREATE(cDbfName,aStruc)
+       USE (cDbfName)
+diff -u ori_src\S_TODO.PRG .\S_TODO.PRG
+--- ori_src\S_TODO.PRG	Thu Nov 02 17:09:08 1995
++++ .\S_TODO.PRG	Thu May 28 17:54:47 2009
+@@ -1,6 +1,6 @@
+ 
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+@@ -83,7 +83,7 @@
+ cTodoNTX2     := SLSF_TDN2()
+ cTodoNTX3     := SLSF_TDN3()
+ 
+-if !file(cTodoFile+".DBF")
++if !file(cTodoFile+".dbf")
+     BLDDBF(cTodoFile,"CATEGORY,C,10:ITEM,C,60:PRIORITY,C,2:DOBY,D:DONE,L:LONG_DESC,C,231")
+ endif
+ 
+diff -u ori_src\S_VIEWP.PRG .\S_VIEWP.PRG
+--- ori_src\S_VIEWP.PRG	Thu Nov 02 17:09:08 1995
++++ .\S_VIEWP.PRG	Thu May 28 17:54:47 2009
+@@ -4,7 +4,7 @@
+ 
+ #include "getexit.ch"
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_VMEMO.PRG .\S_VMEMO.PRG
+--- ori_src\S_VMEMO.PRG	Thu Nov 02 17:09:06 1995
++++ .\S_VMEMO.PRG	Thu May 28 17:54:47 2009
+@@ -1,5 +1,5 @@
+ 
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press
+diff -u ori_src\S_VVIEW.PRG .\S_VVIEW.PRG
+--- ori_src\S_VVIEW.PRG	Thu Nov 02 17:11:06 1995
++++ .\S_VVIEW.PRG	Thu May 28 17:54:47 2009
+@@ -1,4 +1,4 @@
+-#include "inKey.ch"
++#include "inkey.ch"
+ #ifndef K_LBUTTONDOWN
+  #define K_LBUTTONDOWN   1002   //   mouse left key press
+  #define K_RBUTTONDOWN   1004   //   mouse right key press

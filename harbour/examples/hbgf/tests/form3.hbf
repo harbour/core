@@ -1,0 +1,10 @@
+OBJECT oForm3 AS HBForm3
+
+   ::Caption = "Harbour GUI Framework power"
+   ::Top     = 200
+   ::Left    = 150
+   ::Width   = 400
+   ::Height  = 250
+   ::OnClick = "FormClick"
+
+ENDOBJECT

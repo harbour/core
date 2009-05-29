@@ -1,0 +1,484 @@
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Alejandro de G rate <alex_degarate@hotmail.com>
+ * Documentaci¢n en Espa¤ol de:
+ *           INKEY(), __KEYBOARD(), HB_KEYPUT(), NEXTKEY()
+ *           LASTKEY(), KEYBOARD,   READKEY(), MROW(), MCOL()
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ *    Documentation for: READKEY()
+ *
+ * Vea COPYING por los t‚rminos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      INKEY()
+ *  $CATEGORY$
+ *      Entrada de Consola
+ *  $ONELINER$
+ *      Extrae el pr¢ximo c¢digo de tecla desde el buffer de teclado.
+ *  $SYNTAX$
+ *      INKEY( [<nTiempoEspera>] [,<nEventos>] ) --> nTecla
+ *  $ARGUMENTS$
+ *      <nTiempoEspera> es un valor opcional de tiempo de espera en segundos,
+ *                      con una resoluci¢n de 1/10th de segundo.
+ *                      Si es omitido, INKEY() retorna inmediatamente.
+ *      Si es cero, INKEY() espera hasta que un evento de entrada suceda.
+ *      Si es establecido en cualquier otro valor INKEY() retornara tanto
+ *      cuando un evento de entrada ocurra como cuando el per¡odo de espera
+ *      haya transcurrido.
+ *      Si s¢lo este par metro es especificado y este no es num‚rico, ‚ste
+ *      ser  tratado como si fuera cero. Pero si ambos par metros son
+ *      especificados y este par metro no es num‚rico, este ser  tratado
+ *      como si no estuviese presente.
+ *
+ *      <nEventos> es una m scara opcional de los eventos de entrada que son
+ *                 habilitados.
+ *                 Si es omitida por defecto es hb_set.HB_SET_EVENTMASK.
+ *      M scaras v lidas de entrada se ecuentran en inkey.ch y son explicadas
+ *      m s abajo. Se recomienda usar los nombres de estas m scaras, antes
+ *      que sus valores num‚ricos, en el caso que estos valores num‚ricos
+ *      cambien en futuras versiones de Harbour.
+ *      Para permitir m s de un tipo de evento de entrada, simplemente sume
+ *      varios nombres de m scara todos juntos.
+ *
+ *        <table>
+ *        inkey.ch           Significado de los eventos
+ *
+ *        INKEY_MOVE         permitidos los eventos de movimiento del mouse
+ *        INKEY_LDOWN        permitido apretar el bot¢n izq. del mouse
+ *        INKEY_LUP          permitido soltar el bot¢n izquierdo del mouse
+ *        INKEY_RDOWN        permitido apretar el bot¢n derecho del mouse
+ *        INKEY_RUP          permitido soltar el bot¢n derecho del mouse
+ *        INKEY_KEYBOARD     Todos los eventos de teclado estan permitidos
+ *        INKEY_ALL          Todos los eventos de mouse y teclado estan
+ *                           permitidos
+ *        HB_INKEY_EXTENDED  Codigos Extendidos de teclado son usados
+ *        </table>
+ *      Si el par metro no es num‚rico, este ser  tratado como si hubiese
+ *      sido establecido a hb_set.HB_SET_EVENTMASK.
+ *  $RETURNS$
+ *      INKEY() retorna cero en caso de transcurrido el tiempo de espera sin
+ *      ning£n evento de entrada, de otro modo retorna un valor en el rango
+ *      -39 a 386 para eventos de teclado ¢ en le rango de 1001 a 1007 para
+ *      eventos de mouse.
+ *      Los eventos de mouse y los eventos de teclado que no se pueden
+ *      imprimir son representados por los valores K_<evento> listados en
+ *      el archivo inkey.ch
+ *      Los c¢digo de teclas de los eventos de teclado en el rango de 32 a
+ *      127 son los equivalentes al set de caracteres ASCII. Los c¢digos de
+ *      retorno de eventos de teclado en el rango de 128 a 255 son asumidos
+ *      como imprimibles, pero los resultados pueden variar basados en el
+ *      hardware del teclado y la nacionalidad de su seteo.
+ *
+ *      Los codigos de tecla Extendidos para un teclado de PC consisten de
+ *      scancode y uno o mas valores de desplazamiento (offset).
+ *      Si ningun modificador de teclado fue usado entonces HB_INKEY_NONE
+ *      es agregado. Las teclas <Alt> agregan HB_INKEY_ALT, las teclas
+ *      <Ctrl> agregan HB_INKEY_CTRL, las teclas de desplazamiento (Shift),
+ *      (que se simbolizan con una flecha hacia arriba) agregan
+ *      HB_INKEY_SHIFT, y las teclas adicionales del teclado numerico
+ *      ubicadas a la derecha
+ *      del teclado (teclas KeyPad y CursorPad ) agregan HB_INKEY_ENHANCED.
+ *
+ *      Por ejemplo la tecla <F1> tiene un scancode de 59, asi que si solo
+ *      se pulsa <F1> se obtiene el codigo 315, <Alt+F1> da 443, <Ctrl+F1>
+ *      da 571, <Shift+F1> da 699. <>
+ *
+ *      ??????        And NumPad+/ gives 1077, 1205, 1333, and 1461. At
+ *      this time, the only value that can combine with other values is
+ *      HB_INKEY_ENHANCED (i.e., there are no Alt+Ctl combinations, etc.)
+ *
+ *      Nota: El conjunto de codigos de teclas extendido es mayor que el
+ *      conjunto de codigo de tecla normal. Como resultante de esto, si
+ *      Ud. cambia entre los modos normal y extendido, Ud. debe saber que
+ *      algunos codigos son trasladados como cero en el modo normal (esto
+ *      es debido a que existe el correspondiente codigo para esa tecla en
+ *      modo normal) y que esos codigos seran removidos del buffer de
+ *      entrada del teclado en el modo normal y que Ud. no podr  volver
+ *      atras y obtenerlos luego en modo extendido.
+ *  $DESCRIPTION$
+ *      INKEY() puede ser usada para detectar eventos de entrada, como la
+ *      pulsaci¢n de una tecla, ¢ un click del mouse (arriba y/o abajo).
+ *  $EXAMPLES$
+ *      // Espera a que el usuario presione la tecla Esc
+ *      ? "Por favor, presione la tecla ESC."
+ *      WHILE INKEY( 0.1 ) != K_ESC
+ *      END
+ *  </fixed>
+ *  $TESTS$
+ *      KEYBOARD "AB"; ? INKEY(), INKEY() ==>   65   66
+ *  </fixed>
+ *  $STATUS$
+ *      S
+ *  $COMPLIANCE$
+ *      INKEY() es compatible con la funci¢n INKEY() de Clipper 5.3 con una
+ *      excepci¢n: La funci¢n INKEY() de Harbour dar  un error de argumento
+ *      si el primer par metro es menor ¢ igual a cero y el segundo par metro
+ *      ( ¢ la m scara por defecto ) no es v lida, porque de otra manera
+ *      INKEY() podr¡a no retornar nunca, porque en efecto espera por
+ *      siempre por un un evento que no se va a producir (Nota: En Clipper,
+ *      esto tambi‚n bloquea los eventos SET KEY).
+ *  $FILES$
+ *      La librer¡a es rtl
+ *  $SEEALSO$
+ *      inkey.ch
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __KEYBOARD()
+ *  $CATEGORY$
+ *      Entrada de Consola
+ *  $ONELINER$
+ *      NO LLAMAR A ESTA FUNCION DIRECTAMENTE !
+ *  $SYNTAX$
+ *      KEYBOARD <cString>
+ *      CLEAR TYPEAHEAD
+ *  $ARGUMENTS$
+ *      <cString>  es una cadena opcional para ser colocada en el buffer
+ *                 de teclado de Harbour despu‚s de borrarlo.
+ *                 Nota: El car cter ";" es convertido a CHR(13) (esta es
+ *                       una caracter¡stica no documentada de CA-Cl*pper).
+ *  $RETURNS$
+ *      No hay valor de retorno.
+ *  $DESCRIPTION$
+ *      Borra el buffer de teclado de Harbour y luego inserta una cadena
+ *      opcional en ‚ste.
+ *  $EXAMPLES$
+ *      // Pone la tecla <enter> en el buffer de teclado
+ *      KEYBOARD CHR(13)
+ *
+ *      // Borra el buffer de teclado
+ *      CLEAR TYPEAHEAD
+ *  </fixed>
+ *  $TESTS$
+ *      KEYBOARD CHR(13); ? INKEY() ==> 13
+ *      KEYBOARD ";" ? INKEY() ==> 13
+ *      KEYBOARD "HOLA"; CLEAR TYPEAHEAD; ? INKEY() ==> 0
+ *  </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      __KEYBOARD() es compatible con CA-Cl*pper 5.3
+ *  $FILES$
+ *      La librer¡a es rtl
+ *  $SEEALSO$
+ *    CLEAR TYPEAHEAD,KEYBOARD
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_KEYPUT()
+ *  $CATEGORY$
+ *      Entrada de Consola
+ *  $ONELINER$
+ *      Pone un c¢digo de tecla en el buffer de teclado.
+ *  $SYNTAX$
+ *      HB_KEYPUT( <nInkeyCode> )
+ *  $ARGUMENTS$
+ *      <nInkeyCode>  es el c¢digo de tecla. que deber¡a ser insertado en
+ *                    el buffer de teclado.
+ *  $RETURNS$
+ *      No hay valor de retorno.
+ *  $DESCRIPTION$
+ *      Inserta un c¢digo de tecla en el buffer de teclado.
+ *      El buffer *NO* es borrado en esta operaci¢n. Esta funci¢n permite
+ *      insertar c¢digos de teclas que no estan en el rango de 0 a 255.
+ *      Para insertar m s de un c¢digo, llame a la funci¢n repetidamente.
+ *      El c¢digo cero no puede ser insertado.
+ *  $EXAMPLES$
+ *      // Coloca la tecla de Alt+PgDn key en el buffer de teclado.
+ *      HB_KEYPUT( K_ALT_PGDN )
+ *  </fixed>
+ *  $TESTS$
+ *      HB_KEYPUT( K_ALT_PGDN ) ; ? INKEY() ==> 417
+ *      HB_KEYPUT( K_F11 ) ; ? INKEY() ==> -40
+ *  </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      HB_KEYPUT() es una extensi¢n de Harbour.
+ *  $FILES$
+ *      La librer¡a es rtl
+ *  $SEEALSO$
+ *      KEYBOARD,CLEAR TYPEAHEAD,INKEY()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      NEXTKEY()
+ *  $CATEGORY$
+ *      Entrada de Consola
+ *  $ONELINER$
+ *      Lee la pr¢xima tecla del buffer de teclado sin extraerla
+ *  $SYNTAX$
+ *      NEXTKEY( [<nInputMask>] ) --> nTecla
+ *  $ARGUMENTS$
+ *      <nInputMask> es un valor entero opcional compuesto por una o mas
+ *                   constantes INKEY_ or HB_INKEY_
+ *                   El solo proposito de este argumento es permitir cambiar
+ *                   entre los codigos de tecla HB_INKEY_EXTENDED y usar
+ *                   los codigos de tecla normales compatibles con Clipper.
+ *  $RETURNS$
+ *      <nTecla> el valor del pr¢ximo c¢digo de tecla del buffer de teclado.
+ *  $DESCRIPTION$
+ *      Retorna el valor del pr¢ximo c¢digo de tecla del buffer de teclado
+ *      sin extraerlo.
+ *  $EXAMPLES$
+ *      // Uso de NEXTKEY() con INKEY() para cambiar los caracteres a mostrar
+ *      // ¢ para poder salir del bucle, as¡ el llamador puede detectar
+ *      // la tecla ESC.
+ *      LOCAL nTecla, cChar := "+"
+ *
+ *      WHILE TRUE
+ *         ?? cChar
+ *         nTecla := NEXTKEY()
+ *
+ *         IF nTecla == K_ESC
+ *            EXIT
+ *         ELSE
+ *            IF nTecla != 0
+ *               cChar := CHR( nTecla )
+ *            END IF
+ *         ENDIF
+ *
+ *      END WHILE
+ *  </fixed>
+ *  $TESTS$
+ *      KEYBOARD "AB"; ? NEXTKEY(), NEXTKEY() ==>   65   65
+ *  </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      NEXTKEY() es compatible con CA-Cl*pper 5.3
+ *  $FILES$
+ *      La librer¡a es rtl
+ *  $SEEALSO$
+ *      INKEY(),LASTKEY()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      LASTKEY()
+ *  $CATEGORY$
+ *      Entrada de Consola
+ *  $ONELINER$
+ *      Obtiene el £ltima tecla extraida desde el buffer de teclado.
+ *  $SYNTAX$
+ *      LASTKEY( [<nInputMask>] ) --> nTecla
+ *  $ARGUMENTS$
+ *      <nInputMask> es un valor entero opcional compuesto por una o mas
+ *                   constantes INKEY_ o HB_INKEY_
+ *                   El solo proposito de este argumento es permitir cambiar
+ *                   entre los codigos de tecla HB_INKEY_EXTENDED y usar
+ *                   los codigos de tecla normales compatibles con Clipper.
+ *  $RETURNS$
+ *      <nTecla> la £ltima tecla extraida desde el buffer de teclado.
+ *  $DESCRIPTION$
+ *      LASTKEY() retorna el valor de la £ltima tecla extraida del buffer
+ *      de teclado.
+ *  $EXAMPLES$
+ *      // Continua el bucle a menos que la tecla ESC haya sido presionada
+ *      // en MainFunc()
+ *      WHILE TRUE
+ *
+ *         MainFunc()
+ *         IF LASTKEY() == K_ESC
+ *            EXIT
+ *         ENDIF
+ *
+ *      END WHILE
+ *  </fixed>
+ *  $TESTS$
+ *      KEYBOARD "AB"; ? INKEY(), LASTKEY() ==>   65   65
+ *  </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      LASTKEY() es compatible con CA-Cl*pper 5.3
+ *  $FILES$
+ *      La librer¡a es rtl
+ *  $SEEALSO$
+ *      INKEY(),LASTKEY()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      KEYBOARD
+ *  $CATEGORY$
+ *      Comando
+ *  $ONELINER$
+ *      Rellena el buffer de teclado con una cadena.
+ *  $SYNTAX$
+ *      KEYBOARD <cString>
+ *  $ARGUMENTS$
+ *      <cString>  es la cadena a ser procesada, un caracter a la vez, por
+ *                 el procesador de teclado de Harbour.
+ *  $DESCRIPTION$
+ *      Este comando llena el buffer de entrada con <cString>.
+ *      El n£mero de caracteres que pueden ser puestos en el buffer de
+ *      teclado es controlado por el comando SET TYPEAHEAD y puede estar en
+ *      el rango de 0 a 32622, donde cada caracter corresponde al rango ASCII
+ *      de 0 a 255. Ninguna de las teclas extendidas puede ser puestas en
+ *      el buffer de teclado.
+ *      Haciendo KEYBOARD " " limpiar  el buffer de teclado.
+ *  $EXAMPLES$
+ *      // Coloca la tecla <Enter> en el buffer de teclado.
+ *      KEYBOARD CHR(13)
+ *
+ *      // Borra el buffer de teclado.
+ *      CLEAR TYPEAHEAD
+ *  </fixed>
+ *  $TESTS$
+ *      KEYBOARD CHR(13); ? INKEY() ==> 13
+ *      KEYBOARD "HOLA"; CLEAR TYPEAHEAD; ? INKEY() ==> 0
+ *  </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      __KEYBOARD() es compatible con CA-Cl*pper 5.3
+ *  $SEEALSO$
+ *       CLEAR TYPEAHEAD,__KEYBOARD()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      READKEY()*
+ *  $CATEGORY$
+ *      Entrada y Salida de datos
+ *  $ONELINER$
+ *      Encuentra cual tecla caus¢ la salida del READ
+ *  $SYNTAX$
+ *      READKEY() --> nCodigoTecla
+ *  $ARGUMENTS$
+ *      Ninguno.
+ *  $RETURNS$
+ *      READKEY() retorna un c¢digo num‚rico representando la tecla que
+ *      caus¢ la terminaci¢n del READ.
+ *  $DESCRIPTION$
+ *      READKEY() es usado despu‚s que un READ ha terminado para determinar
+ *      la tecla de salida.
+ *      Si el buffer del GET fu‚ actualizado durante el READ, el valor 256
+ *      es agregado al c¢digo de retorno.
+ *
+ *      <table>
+ *      Tecla de      C¢digo de Retorno   C¢digo de Retorno
+ *       Salida        (no actualizado)     (actualizado)
+ *
+ *      Up                    4                 260
+ *      Down                  5                 261
+ *      Page-Up               6                 262
+ *      Page-Down             7                 263
+ *      Ctrl Page-Up         34                 290
+ *      Ctrl Page-Down       35                 291
+ *      Esc                  12                 268
+ *      Ctrl End             14                 270
+ *      Enter                15                 271
+ *      Key >= 32            15                 271
+ *      de otro modo          0                   0
+ *      </table>
+ *      READKEY() es una funci¢n de compatibilidad, as¡ que trate de no
+ *      usarla. READKEY() es superada por LASTKEY() la que retorna el c¢digo
+ *      de INKEY() para esa tecla. UPDATED() podr¡a ser usado para encontrar
+ *      si el buffer GET hab¡a cambiado durante el READ.
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      READKEY() es compatible con CA-Cl*pper 5.3
+ *  $FILES$
+ *      La librer¡a es rtl
+ *  $SEEALSO$
+ *       @...GET,INKEY(),LASTKEY(),READ,READEXIT(),UPDATED()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MROW()
+ *  $CATEGORY$
+ *      Entrada de Consola
+ *  $ONELINER$
+ *      Retorna la fila de posici¢n del cursor del mouse.
+ *  $SYNTAX$
+ *      MROW() --> nFilaMouse
+ *  $ARGUMENTS$
+ *      Ninguno
+ *  $RETURNS$
+ *      <nFilaMouse> la fila de posici¢n del cursor del mouse.
+ *  $DESCRIPTION$
+ *      Esta funci¢n retorna el fila de posicion actual del cursor del mouse
+ *      En sistemas gr ficos el valor representa filas de pixels.
+ *      En sistemas basados en caracteres el valor representa filas de
+ *      caracteres como en Clipper.
+ *  $EXAMPLES$
+ *      IF MROW() < 1
+ *         ? "El Mouse esta en la fila superior!"
+ *      ENDIF
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      MROW() es compatible con CA-Cl*pper 5.3, pero ha sido extendido para
+ *      trabajar sobre sistemas gr ficos tan bien como en sistemas basados
+ *      en caracteres.
+ *  $PLATFORMS$
+ *      Todas.
+ *  $FILES$
+ *      La librer¡a es rtl
+ *  $SEEALSO$
+ *      MCOL()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MCOL()
+ *  $CATEGORY$
+ *      Entrada de Consola
+ *  $ONELINER$
+ *      Retorna la columna de posici¢n del cursor del mouse.
+ *  $SYNTAX$
+ *      MCOL() --> nColumnaMouse
+ *  $ARGUMENTS$
+ *      Ninguno.
+ *  $RETURNS$
+ *      <nColumnaMouse> la columna de posici¢n del cursor del mouse.
+ *  $DESCRIPTION$
+ *      Esta funci¢n retorna la columna de posici¢n actual del cursor del
+ *      mouse.
+ *      En sistemas gr ficos el valor representa filas de pixels.
+ *      En sistemas basados en caracteres el valor representa filas de
+ *      caracteres como en Clipper.
+ *  $EXAMPLES$
+ *      IF MCOL() < 1
+ *         ? "El Mouse esta sobre el margen izquierdo!"
+ *      ENDIF
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      MCOL() es compatible con CA-Cl*pper 5.3, pero ha sido extendido para
+ *      trabajar sobre sistemas gr ficos tan bien como en sistemas basados
+ *      en caracteres.
+ *  $PLATFORMS$
+ *      Todas.
+ *  $FILES$
+ *      La librer¡a es rtl
+ *  $SEEALSO$
+ *      MROW()
+ *  $END$
+ */
+
+

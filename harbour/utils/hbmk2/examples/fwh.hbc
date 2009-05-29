@@ -4,7 +4,7 @@
 
 # Copy this file to FWH root dir and include it in hbmk2
 # command line to build an app:
-# > hbmk2 test.prg C:\fwh\fwh.hbp
+# > hbmk2 test.prg C:\fwh\fwh.hbc
 
 {win}incpaths=${hb_self}include
 {win}libpaths=${hb_self}lib

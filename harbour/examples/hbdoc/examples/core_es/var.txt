@@ -1,0 +1,920 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2003 Alejandro de G rate <alex_degarate@hotmail.com>
+ * Documentaci¢n en Espa¤ol de:
+ *   __MVPUBLIC(), __MVPRIVATE(), __MVXRELEASE(),
+ *   __MVRELEASE(), __MVSCOPE(), __MVCLEAR(),
+ *   __MVDBGINFO(), __MVEXIST(), __MVGET(), __MVPUT(), MEMVARBLOCK(),
+ *   FIELDBLOCK(), FIELDWBLOCK(), TYPE(), VALTYPE(), HB_ISBYREF()
+ *
+ * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
+ * Documentaci¢n en Ingl‚s de:
+ *   __MVPUBLIC(), __MVPRIVATE(), __MVXRELEASE(),
+ *  __MVRELEASE(), __MVSCOPE(), __MVCLEAR(),
+ *  __MVDBGINFO(), __MVGET(), __MVPUT(), MEMVARBLOCK(),
+ *  TYPE()
+ *
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ * Documentaci¢n en Ingl‚s de: FIELDBLOCK(), FIELDWBLOCK()
+ *
+ * Copyright 2001 Chen Kedem <niki@actcom.co.il>
+ * Documentaci¢n en Ingl‚s de: __MVEXIST()
+ *
+ * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
+ * Documentaci¢n en Ingl‚s de: HB_ISBYREF()
+ *
+ * Vea COPYING por los t‚rminos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __MVPUBLIC()
+ *  $CATEGORY$
+ *      Variable Management
+ *  $ONELINER$
+ *      Esta funci¢n crea una variable PUBLIC
+ *  $SYNTAX$
+ *      __MVPUBLIC( <xNombrevariable> )
+ *  $ARGUMENTS$
+ *      <xNombrevariable>  Es ¢ bien una cadena que contiene el nombre de la
+ *                         variable ¢ un array unidimensional de cadenas con
+ *                         nombres de variables.
+ *                         Los esqueletos ¢ comodines no estan permitidos.
+ *  $RETURNS$
+ *      Nada
+ *  $DESCRIPTION$
+ *      Esta funci¢n puede ser llamada por el compilador Harbour ¢ bien por
+ *      el usuario.
+ *      El compilador siempre pasa un item de tipo IT_SYMBOL que almacena el
+ *      nombre de la variable.
+ *      Si una variable con el mismo nombre ya existe, entonces la nueva
+ *      variable no es creada, el valor previo permanece sin cambios.
+ *      Si esta es la primera variable con ese nombre, entonces la variable
+ *      es inicializada con el valor .T.
+ *  $EXAMPLES$
+ *      Ninguno disponible
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es una extensi¢n de Harbour.
+ *  $FILES$
+ *      La librer¡a asociada es vm
+ *  $SEEALSO$
+ *      __MVPRIVATE(),__MVXRELEASE()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __MVPRIVATE()
+ *  $CATEGORY$
+ *      Variable Management
+ *  $ONELINER$
+ *      Esta funci¢n crea una variable PRIVATE
+ *  $SYNTAX$
+ *      __MVPRIVATE( <xNombrevariable> )
+ *  $ARGUMENTS$
+ *      <xNombrevariable>  Es ¢ bien una cadena que contiene el nombre de la
+ *                         variable ¢ un array unidimensional de cadenas con
+ *                         nombres de variables.
+ *                         Los esqueletos ¢ comodines no estan permitidos.
+ *  $RETURNS$
+ *      Nada
+ *  $DESCRIPTION$
+ *      Esta funci¢n puede ser llamada por el compilador Harbour ¢ bien por
+ *      el usuario.
+ *      El compilador siempre pasa un item de tipo IT_SYMBOL que almacena el
+ *      nombre de la variable.
+ *      Si una variable con el mismo nombre ya existe, entonces el valor de
+ *      la vieja variable es ocultado hasta que la nueva variable sea
+ *      liberada.
+ *      La nueva variable es siempre inicializada con el valor NIL.
+ *  $EXAMPLES$
+ *      Ninguno disponible
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es una extensi¢n de Harbour.
+ *  $FILES$
+ *      La librer¡a asociada es vm
+ *  $SEEALSO$
+ *      __MVPUBLIC(),__MVRELEASE(),__MVXRELEASE()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __MVXRELEASE()
+ *  $CATEGORY$
+ *      Variable Management
+ *  $ONELINER$
+ *      Libera un valor almacenado en una variable PRIVATE or PUBLIC
+ *  $SYNTAX$
+ *      __MVXRELEASE( <xNombrevariable> )
+ *  $ARGUMENTS$
+ *      <xNombrevariable>  Es ¢ bien una cadena que contiene el nombre de la
+ *                         variable ¢ un array unidimensional de cadenas con
+ *                         nombres de variables.
+ *                         Los esqueletos ¢ comodines no estan permitidos.
+ *  $RETURNS$
+ *      Nada
+ *  $DESCRIPTION$
+ *      Esta funci¢n libera valores almacenados en variable de memoria. Esta
+ *      NO DEBE ser llamada directamente, sino que debe ser puesta dentro
+ *      del comando RELEASE.
+ *      Si la variable liberada es una variable PRIVATE entonces la variable
+ *      previamente ocultada con el mismo nombre se vuelve visible despu‚s
+ *      de salir del procedimiento donde la variable liberada fu‚ creada.
+ *      Si Ud. accede la variable liberada en el mismo procedimiento/funci¢n
+ *      donde esta fu‚ creada el valor NIL es devuelto. Ud. puede sin embargo
+ *      asignar un nuevo valor a la variable liberada sin ning£n efecto
+ *      colateral.
+ *
+ *      Esto libera la variable, a£n si esta variable fue creada en un
+ *      procedimiento diferente.
+ *  $EXAMPLES$
+ *
+ *      PROCEDURE MAIN()
+ *        PRIVATE mPrivate
+ *        mPrivate :="PRIVATE from MAIN()"
+ *        ? mPrivate     //PRIVATE from MAIN()
+ *        Test()
+ *        ? mPrivate     //PRIVATE from MAIN()
+ *      RETURN
+ *
+ *
+ *      PROCEDURE Test()
+ *        PRIVATE mPrivate
+ *        mPrivate :="PRIVATE from Test()"
+ *        ? mPrivate           //PRIVATE from TEST()
+ *        RELEASE mPrivate
+ *        ? mPrivate           //NIL
+ *        mPrivate :="Again in Test()"
+ *      RETURN
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es una extensi¢n de Harbour.
+ *  $FILES$
+ *      La librer¡a asociada es vm
+ *  $SEEALSO$
+ *      __MVPRIVATE(),__MVPUBLIC()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __MVRELEASE()
+ *  $CATEGORY$
+ *      Variable Management
+ *  $ONELINER$
+ *      Esta funci¢n libera variables PRIVATE
+ *  $SYNTAX$
+ *      __MVRELEASE( <cMascara>, <lIncludeExclude_flag> )
+ *  $ARGUMENTS$
+ *      <cMascara>  Cadena que contiene la m scara comod¡n para los nombres
+ *                  de variables que ser n liberadas. Los comodines
+ *                  soportados son: '*' y '?'
+ *
+ *      <lIncludeExclude_flag> Valor l¢gico que esecifica si las variables
+ *                  que coinciden con la m scara debieran ser borradas (.T.)
+ *                  ¢ excluidas del borrado si es .F.
+ *  $RETURNS$
+ *      Nada
+ *  $DESCRIPTION$
+ *      Esta funci¢n libera valores almacenados en variable de memoria. Esta
+ *      NO DEBE ser llamada directamente, sino que debe ser puesta dentro
+ *      del comando RELEASE ALL.
+ *      Si la variable liberada es una variable PRIVATE entonces la variable
+ *      previamente ocultada con el mismo nombre se vuelve visible despu‚s
+ *      de salir del procedimiento donde la variable liberada fu‚ creada.
+ *      Si Ud. accede la variable liberada en el mismo procedimiento/funci¢n
+ *      donde esta fu‚ creada el valor NIL es devuelto. Ud. puede sin embargo
+ *      asignar un nuevo valor a la variable liberada sin ning£n efecto
+ *      colateral.
+ *      Variables PUBLIC no son cambiadas por esta funci¢n.
+ *  $EXAMPLES$
+ *      Ninguno
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es una extensi¢n de Harbour.
+ *  $FILES$
+ *      La librer¡a asociada es vm
+ *  $SEEALSO$
+ *      __MVPRIVATE()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __MVSCOPE()
+ *  $CATEGORY$
+ *      Variable Management
+ *  $ONELINER$
+ *      Si la variable existe, entonces retorna su alcance
+ *  $SYNTAX$
+ *      __MVSCOPE( <cNombreVar> )
+ *  $ARGUMENTS$
+ *      <cNombreVar>   Una cadena con el nombre de una variable a chequear
+ *  $RETURNS$
+ *      Los valores simb¢licos son definidos en ../include/hbmemvar.ch
+ *
+ *      <table>
+ *      Macro                Significado
+ *
+ *      HB_MV_NOT_FOUND      La variable no est  declarada (no fu‚ encontrada
+ *                           en la tabla de s¡mbolos)
+ *      HB_MV_UNKNOWN        Si la variable No existe (pero fu‚ encontrada
+ *                           en la tabla de s¡mbolos)
+ *      HB_MV_ERROR          Si la informaci¢n No puede ser obtenida (error
+ *                           de memoria ¢ error de argumento).
+ *      HB_MV_PUBLIC         para variables p£blicas
+ *      HB_MV_PRIVATE_GLOBAL para variables private declaradas fuera del
+ *                           actual FUNCTION/PROCEDURE
+ *      HB_MV_PRIVATE_LOCAL  para variables private declaradas dentro del
+ *                           actual FUNCTION/PROCEDURE
+ *      </table>
+ *      </fixed>
+ *  $EXAMPLES$
+ *
+ *      PROCEDURE MAIN()
+ *        PUBLIC mPublic
+ *        PRIVATE mPrivateGlobal
+ *
+ *        CallProc()
+ *        ? __mvScope( "mPrivateLocal" )      // HB_MV_UNKNOWN
+ *      RETURN
+ *
+ *
+ *      PROCEDURE CallProc()
+ *        PRIVATE mPrivateLocal
+ *
+ *        ? __mvScope( "mPublic" )            // HB_MV_PUBLIC
+ *        ? __mvScope( "mPrivateGlobal" )     // HB_MV_PRIVATE_GLOBAL
+ *        ? __mvScope( "mPrivateLocal" )      // HB_MV_PRIVATE_LOCAL
+ *        ? __mvScope( "mFindMe" )            // HB_MV_NOT_FOUND
+ *
+ *        IF( __mvScope( "mPublic" ) > HB_MV_ERROR )
+ *            ? "la Variable existe"
+ *        ELSE
+ *            ? "la Variable no fu‚ creada a£n"
+ *        ENDIF
+ *
+ *      RETURN
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es una extensi¢n de Harbour.
+ *  $FILES$
+ *      El archivo de cabecera es ../include/hbmemvar.ch
+ *      La librer¡a asociada es vm
+ *  $SEEALSO$
+ *      __MVPRIVATE(),__MVPUBLIC()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __MVCLEAR()
+ *  $CATEGORY$
+ *      Variable Management
+ *  $ONELINER$
+ *      Borra todas las variables PRIVATE y PUBLIC
+ *  $SYNTAX$
+ *      __MVCLEAR()
+ *  $ARGUMENTS$
+ *      Ninguno
+ *  $RETURNS$
+ *      Nada
+ *  $DESCRIPTION$
+ *      Esta funci¢n borra todas las variables PRIVATE y PUBLIC.
+ *      Esta es usada para implementar la sentencia CLEAR MEMORY.
+ *      La memoria ocupada por todas las variables es liberada.
+ *      Cualquier intento de acceder a la variable resultar  en un error
+ *      de ejecuci¢n.
+ *      Ud tiene que reusar la sentencia PRIVATE ¢ PUBLIC para crear de nuevo
+ *      la variable que fue borrada por esta funci¢n.
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es una extensi¢n de Harbour.
+ *  $FILES$
+ *      La librer¡a asociada es vm
+ *  $SEEALSO$
+ *      __MVPRIVATE(),__MVPUBLIC()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __MVDBGINFO()
+ *  $CATEGORY$
+ *      Variable Management
+ *  $ONELINER$
+ *      Retorna informaci¢n sobre las variables para el debugger
+ *  $SYNTAX$
+ *      __MVDBGINFO( <nAlcance> [, <nPosicion> [, @<cNombreVar>] ] )
+ *  $ARGUMENTS$
+ *      <nAlcance> El alcance de las variables sobre las que la informaci¢n
+ *                 es solicitada.
+ *                 Valores Soportados (definidos en hbmemvar.ch):
+ *                  HB_MV_PUBLIC
+ *                  HB_MV_PRIVATE (or any other value)
+ *
+ *      <nPosicion>  La posici¢n de la variable solicitada en la lista de
+ *                   variables con el alcance especificado. Esta deberia
+ *                   comenzar desde la posici¢n 1
+ *
+ *      <cNombreVar> El valor es llenado con un nombre de variable si es
+ *                   pasada por referencia y <nPosicion> es especificada
+ *  $RETURNS$
+ *      El valor retornado depende del n£mero de par metros pasados
+ *  $DESCRIPTION$
+ *      Esta funci¢n obtiene informaci¢n acerca de las variables memvar.
+ *      Esta devuelve ¢ bien el n£merode variables con un alcance dado
+ *      (Cuando el primer argumento es pasado solamente) ¢ un valor de
+ *      variable identificada por su posici¢n en la la lista de variables
+ *      (Cuando el segundo argumento es pasado).
+ *      Esta tambi‚n devuelve el nombre de la variable si el tercer argumento
+ *      opcional es pasado por referencia.
+ *
+ *      Si la variable solicitada no existe (la posici¢n solicitada es mayor
+ *      que el n£mero de variables definidas), entonces el valor NIL es
+ *      devuelto y el nombre de la variable es puesto a  "?"
+ *
+ *      Como la tabla din mica de s¡mbolos es usada para encontrar una
+ *      variable PUBLIC, las variables PUBLICas son siempre ordenadas
+ *      alfab‚ticamente. Las variables PRIVATE son ordenadas en el orden
+ *      de su creaci¢n.
+ *
+ *      Nota:
+ *      Debido a la naturaleza din mica de las variables memvar no hay
+ *      garant¡a que sucesivas llamadas para recuperar el valor de la
+ *      variable PUBLIC <N> retornar  el valor de la misma variable.
+ *  $EXAMPLES$
+ *      #include <hbmemvar.ch>
+ *
+ *      LOCAL nCount, i, xValue, cName
+ *
+ *      nCount =_mvDBGINFO( HB_MV_PUBLIC )
+ *
+ *      FOR i:=1 TO nCount
+ *          xValue =__mvDBGINFO( HB_MV_PUBLIC, i, @cName )
+ *          ? i, cName, xValue
+ *      NEXT
+ *      </fixed>
+ *  $TESTS$
+ *      #include <hbmemvar.ch>
+ *      PROCEDURE MAIN()
+ *
+ *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *
+ *      PUBLIC cPublic:='cPublic in MAIN'
+ *
+ *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *
+ *      PRIVATE cPrivate:='cPrivate in MAIN'
+ *
+ *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *
+ *      CountMemvars()
+ *
+ *      ? 'Back in Main'
+ *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *
+ *      RETURN
+ *
+ *
+ *      PROCEDURE CountMemvars()
+ *        LOCAL i, nCnt, xVal, cName
+ *        PUBLIC ccPublic:='ccPublic'
+ *        PRIVATE ccPrivate:='ccPrivate'
+ *
+ *        ? 'In CountMemvars'
+ *        ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *        ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *
+ *        PRIVATE cPublic:='cPublic'
+ *
+ *        ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *        ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *
+ *        nCnt =__mvDBGINFO( HB_MV_PRIVATE ) +1
+ *
+ *        FOR i :=1 TO nCnt
+ *            xVal =__mvDBGINFO( HB_MV_PRIVATE, i, @cName )
+ *            ? i, '=', cName, xVal
+ *        NEXT
+ *
+ *        nCnt = __mvDBGINFO( HB_MV_PUBLIC ) + 1
+ *
+ *        FOR i :=1 TO nCnt
+ *            xVal = __mvDBGINFO( HB_MV_PUBLIC, i, @cName )
+ *            ? i, '=', cName, xVal
+ *        NEXT
+ *
+ *      RETURN
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n deber¡a ser llamada solamente desde el depurador.
+ *  $FILES$
+ *      La librer¡a asociada es vm
+ *  $SEEALSO$
+ *      __MVSCOPE()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __MVEXIST()
+ *  $CATEGORY$
+ *      Variable Management
+ *  $ONELINER$
+ *      Determina si un nombre dado es una variable PUBLIC ¢ PRIVATE
+ *  $SYNTAX$
+ *      __MVEXIST( <cNombreVar> )  --> <lExisteVar>
+ *  $ARGUMENTS$
+ *      <cNombreVar>  Cadena con el nombre de la variable a chequear
+ *  $RETURNS$
+ *      __MVEXIST() retorna TRUE (.T.) si una MEMVAR llamada <cNombreVar>
+ *      existe actualmente.
+ *  $DESCRIPTION$
+ *      Esta funci¢n determina si una variable PUBLIC ¢ PRIVATE con el
+ *      nombre <cNombreVar> existe ¢ no.
+ *  $EXAMPLES$
+ *      LOCAL   TheLocal
+ *      STATIC  TheStatic
+ *      PUBLIC  ThePublic
+ *      PRIVATE ThePrivate
+ *      ? __MVEXIST( "NotExist"   )        // .F.
+ *      ? __MVEXIST( "TheLocal"   )        // .F.
+ *      ? __MVEXIST( "TheStatic"  )        // .F.
+ *      ? __MVEXIST( "ThePublic"  )        // .T.
+ *      ? __MVEXIST( "ThePrivate" )        // .T.
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es una extensi¢n de Harbour.
+ *  $FILES$
+ *      La librer¡a asociada es vm
+ *  $SEEALSO$
+ *      MEMVAR, PRIVATE, PUBLIC
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __MVGET()
+ *  $CATEGORY$
+ *      Variable Management
+ *  $ONELINER$
+ *      Esta funci¢n retorna el valor de una variable de memoria (MEMVAR)
+ *  $SYNTAX$
+ *      __MVGET( <cNombreVar> )  --> <xVar>
+ *  $ARGUMENTS$
+ *      <cNombreVar>  Cadena con el nombre de la variable
+ *  $RETURNS$
+ *      <xVar> el valor de la variable
+ *  $DESCRIPTION$
+ *      Esta funci¢n devuelve el valor de una variable de memoria PRIVATE ¢
+ *      PUBLIC si la variable existe, de otro modo genera un error en tiempo
+ *      de ejecuci¢n.
+ *      La variable es especificada por su nombre pasado como par metro a la
+ *      funci¢n.
+ *  $EXAMPLES$
+ *      FUNCTION MEMVARBLOCK( cMemvar )
+ *      RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ),;
+ *                                    __MVPUT( cMemvar, x ) ) }
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es una extensi¢n de Harbour.
+ *  $FILES$
+ *      La librer¡a asociada es vm
+ *  $SEEALSO$
+ *      __MVPUT()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __MVPUT()
+ *  $CATEGORY$
+ *      Variable Management
+ *  $ONELINER$
+ *      Esta funci¢n establece el valor de una variable de memoria
+ *  $SYNTAX$
+ *      __MVGET( <cNombreVar> [, <xValor>] )  --> <xValor>
+ *  $ARGUMENTS$
+ *      <cNombreVar> Cadena con el nombre de la variable
+ *
+ *      <xValor>     Un valor de cualquier tipo que puede ser establecido
+ *                   Si no es especificado, entonces NIL es asumido.
+ *  $RETURNS$
+ *      <xValor> Un valor asignado a la variable dada.
+ *  $DESCRIPTION$
+ *      Esta funci¢n establece el valor de una variable de memoria PRIVATE ¢
+ *      PUBLIC si la variable existe, de otro modo genera un error en tiempo
+ *      de ejecuci¢n.
+ *      La variable es especificada por su nombre pasado como par metro a la
+ *      funci¢n.
+ *      Si un valor no es especificado, entonces NIL es asumido.
+ *  $EXAMPLES$
+ *      FUNCTION MEMVARBLOCK( cMemvar )
+ *      RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ),;
+ *                                    __MVPUT( cMemvar, x ) ) }
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es una extensi¢n de Harbour.
+ *  $FILES$
+ *      La librer¡a asociada es vm
+ *  $SEEALSO$
+ *      __MVPUT()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MEMVARBLOCK()
+ *  $CATEGORY$
+ *      Variable Management
+ *  $ONELINER$
+ *      Retorna un codeblock que establece/obtiene el valor de variable
+ *  $SYNTAX$
+ *      MEMVARBLOCK( <cNombreMemvar> ) --> <bBloque>
+ *  $ARGUMENTS$
+ *      <cNombreMemvar> Cadena con el nombre de la variable
+ *  $RETURNS$
+ *      <bBloque> un codeblock que establece/obtiene el valor de variable
+ *  $DESCRIPTION$
+ *      Esta funci¢n devuelve un codeblock que establece/obtiene el valor de
+ *      una variable PRIVATE ¢ PUBLIC.  Cuando este codeblock es evaluado
+ *      sin ning£n par metro pasado, entonces este devuelve el valor actual
+ *      de la variable dada.
+ *      Si el segundo par metro es pasado para la evaluaci¢n del codeblock
+ *      entonces este valor es usado para establecer el nuevo valor de la
+ *      variable dada, el valor pasado es tambi‚n retornado como un valor
+ *      la evaluaci¢n del codeblock.
+ *  $EXAMPLES$
+ *      PROCEDURE MAIN()
+ *        LOCAL cbSetGet
+ *        PUBLIC xPublic
+ *
+ *        cbSetGet = MEMVARBLOCK( "xPublic" )
+ *        EVAL( cbSetGet, "nuevo valor" )
+ *        ? "Valor de la variable xPublic:", EVAL( cbSetGet )
+ *
+ *      RETURN
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es compatible con CA-Cl*pper
+ *  $FILES$
+ *      La Librer¡a es rtl
+ *  $SEEALSO$
+ *      __MVGET(),__MVPUT()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      FIELDBLOCK()
+ *  $CATEGORY$
+ *      Code Block
+ *  $ONELINER$
+ *      Retorna un codeblock que establece/obtiene el valor de un campo
+ *  $SYNTAX$
+ *      FIELDBLOCK( <cFieldName> ) --> bFieldBlock
+ *  $ARGUMENTS$
+ *      <cFieldName>  Es una cadena que contiene el nombre de un campo.
+ *  $RETURNS$
+ *      FIELDBLOCK() retorna un codeblock que cuando es evaluado puede
+ *      obtener el valor del campo ¢ asignar un nuevo valor al campo.
+ *      Si <cFieldName> no es especificado ¢ es de otro tipo distinto a
+ *      CHARACTER, FIELDBLOCK() retorna NIL.
+ *  $DESCRIPTION$
+ *      FIELDBLOCK() retorna un codeblock que establece/obtiene el valor de
+ *      un campo.
+ *      Cuando este campo es evaluado sin ning£n par metro pasado entonces
+ *      este devuelve el valor actual del campo dado.
+ *      Si el codeblock es evaluado con un par metro, entonces su valor es
+ *      usado para establecer un nuevo valor para el campo, este valor es
+ *      tambi‚n retornado por el bloque.
+ *      Si el bloque es evaluado y no hay ning£n campo con el nombre
+ *      <cFieldName> en el  rea actual de trabajo el codeblock devuelve NIL.
+ *
+ *      Note que FIELDBLOCK() trabaja en el  rea actual de trabajo, si Ud.
+ *      necesita usar un  rea de trabajo distinta a la actual, use
+ *      FIELDWBLOCK() en su lugar.
+ *  $EXAMPLES$
+ *      // Abre un archivo llamado Test que tiene un campo llamado "name"
+ *      LOCAL bField
+ *      bFiled := FIELDBLOCK( "name" )
+ *      USE Test
+ *
+ *      ? 'Valor Original del campo "name" :', EVAL( bField )
+ *      EVAL( bField, "Mr X new name" )
+ *      ? 'Nuevo valor para el campo "name" :', EVAL( bField )
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Si el bloque es evaluado y no hay ning£n campo con el nombre
+ *      <cFieldName> en el  rea actual de trabajo, el codeblock devuelve NIL.
+ *
+ *      CA-Cl*pper produce un error BASE/1003 si el campo no existe.
+ *  $FILES$
+ *      La Librer¡a es rtl
+ *  $SEEALSO$
+ *      EVAL(),FIELDWBLOCK(),MEMVARBLOCK()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      FIELDWBLOCK()
+ *  $CATEGORY$
+ *      Code Block
+ *  $ONELINER$
+ *      Retorna un codeblock que setea/obtiene un campo en una  rea dada
+ *  $SYNTAX$
+ *      FIELDWBLOCK( <cFieldName>, <nWorkArea> ) --> bFieldBlock
+ *  $ARGUMENTS$
+ *      <cFieldName> Es una cadena que contiene el nombre de un campo.
+ *
+ *      <nWorkArea>  N£mero de  rea de trabajo en la cual <cFieldName> existe
+ *
+ *  $RETURNS$
+ *      FIELDWBLOCK() retorna un codeblock que cuando es evaluado puede
+ *      obtener el valor del campo ¢ asignar un nuevo valor al campo en un
+ *       rea de trabajo dada.
+ *      Si <cFieldName> no es especificado ¢ es de otro tipo distinto a
+ *      CHARACTER, ¢ si <nWorkArea> no es especificada ¢ no es NUMERICa
+ *      FIELDWBLOCK() retorna NIL.
+ *  $DESCRIPTION$
+ *      FIELDWBLOCK() retorna un codeblock que establece/obtiene el valor de
+ *      un campo para un  rea de trabajo dada.
+ *      Cuando este campo es evaluado sin ning£n par metro pasado entonces
+ *      este devuelve el valor actual del campo dado.
+ *      Si el codeblock es evaluado con un par metro, entonces su valor es
+ *      usado para establecer un nuevo valor para el campo, este valor es
+ *      tambi‚n retornado por el bloque.
+ *      Si el bloque es evaluado y no hay ning£n campo con el nombre
+ *      <cFieldName> en el  rea de trabajo especificada, el codeblock
+ *      devuelve NIL.
+ *  $EXAMPLES$
+ *      LOCAL bField
+ *      // Este bloque trabaja sobre campo "name" que existe en el area 2
+ *      bFiled := FIELDBLOCK( "name", 2 )
+ *
+ *      // Abre el archivo llamado One en el area 1,
+ *      // que tiene un campo llamado "name"
+ *      SELECT 1
+ *      USE One
+ *
+ *      // Abre el archivo llamado Two en el area 2,
+ *      // que tambien tiene un campo llamado "name"
+ *      SELECT 2
+ *      USE Two
+ *      SELECT 1
+ *      ? "Nombres Originales: ", One->name, Two->name
+ *      ? "Nombre para el archivo dos:", EVAL( bField )
+ *      EVAL( bField, "Two tiene un nuevo nombre" )
+ *      ? "y ahora: ", One->name, Two->name
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Si el bloque es evaluado y no hay ning£n campo con el nombre
+ *      <cFieldName> en el  rea de trabajo dada, el codeblock devuelve NIL.
+ *
+ *      CA-Cl*pper produce un error BASE/1003 si el campo no existe.
+ *  $FILES$
+ *      La Librer¡a es rtl
+ *  $SEEALSO$
+ *      EVAL(),FIELDBLOCK(),MEMVARBLOCK()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      TYPE()
+ *  $CATEGORY$
+ *      Miscelanea
+ *  $ONELINER$
+ *      Obtiene el tipo de una expresi¢n
+ *  $SYNTAX$
+ *      TYPE( <cExp> ) --> <cRetType>
+ *  $ARGUMENTS$
+ *      <cExp>  debe ser una expresi¢n de caracteres
+ *  $RETURNS$
+ *      Una cadena <cRetType> indicando el tipo de la expresi¢n pasada.
+ *
+ *      <table>
+ *      cRetType   Significado
+ *
+ *         "A"      Array
+ *         "B"      Block
+ *         "C"      Cadena de Caracteres
+ *         "D"      Fecha (Date)
+ *         "L"      L¢gico
+ *         "M"      Memo
+ *         "N"      Numerico
+ *         "O"      Objeto
+ *         "U"      Variable NIL, local, static, ¢ no enlazada en la funci¢n
+ *         "UE"     Error sintaxis en expression ¢ argumentos invalidos
+ *         "UI"     Funcion con nombre no-reservado fue solicitada
+ *      </table>
+ *
+ *  $DESCRIPTION$
+ *      Esta funci¢n devuelve una cadena que representa el tipo de datos del
+ *      argumento.  Esta puede ser cualquier expresi¢n v lida de Harbour.
+ *
+ *      Si hay un <b>error de sintaxis</b> en la expresi¢n pasada entonces
+ *      "UE" es devuelto.
+ *
+ *      Si hay una llamada a alguna funci¢n de Harbour no-reservada entonces
+ *      "UI" es devuelto (en otras palabras, no hay llamada a la funci¢n UDF
+ *      durante la determinaci¢n de tipo  - este es un comportamiento
+ *      compatible con Clipper). Adicionalmente si la funci¢n de usuario
+ *      solicitada no es enlazada dentro del ejecutable final, entonces "U"
+ *      es devuelto.
+ *
+ *      El tipo de dato de esta expresi¢n es chequeado al invocar al
+ *      compilador de macros y por la evaluaci¢n del c¢digo generado (si es
+ *      que no hay errores de sintaxis).
+ *      Esto causa que TYPE() no pueda determinar un tipo de variable LOCAL
+ *      ¢ STATIC, solamente s¡mbolos visibles en tiempo de ejecuci¢n pueden
+ *      ser chequeados.
+ *
+ *      N¢tese la sutil diferencia entre las funciones TYPE y VALTYPE.
+ *      La funci¢n VALTYPE() no llama al compilador de macros, esta
+ *      simplemente chequea el tipo del argumento pasado, que puede ser de
+ *      cualquier tipo.
+ *      La funci¢n TYPE() requiere un argumento de cadena de caracteres con
+ *      una expresi¢n v lida de Harbour.  El tipo de dato de esta expresi¢n
+ *      es retornado.
+ *  $EXAMPLES$
+ *       ? TYPE( "{ 1, 2 }" )                            // prints "A"
+ *       ? TYPE( "IIF(.T., SUBSTR('TYPE',2,1), .F.)" )   // prints "C"
+ *       ? TYPE( "AT( 'OK', MyUDF())>0" )                // prints "UI"
+ *       ? TYPE( "{ 1, 2 }[ 5 ]" )                       // prints "UE"
+ *
+ *       //--------------------------------------------------------
+ *
+ *       LOCAL c
+ *       PRIVATE a:="A", b:="B"
+ *       ? TYPE( "a + b + c" )     //prints: "U" (variable 'C' es local)
+ *
+ *       //--------------------------------------------------------
+ *
+ *       LOCAL cFilter := SPACE( 60 )
+ *       ACCEPT "Ingrese la expresi¢n de filtro:" TO cFilter
+ *
+ *       IF( TYPE( cFilter ) $ "CDLMN" ) )
+ *          // Esta es una expresi¢n v lida
+ *          SET FILTER TO &cFilter
+ *       ENDIF
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *
+ *      - Incompatibilidad con Clipper:
+ *          En el c¢digo siguiente:
+ *
+ *          PRIVATE lCond := 0
+ *          ? TYPE( "IIF( lCond, 'true', MyUDF() )" )
+ *
+ *          Clipper imprimir  "UE" - en Harbour la salida ser  "UI"
+ *
+ *      - Si "UI" es retornada entonces la sintaxis de la expresi¢n es
+ *          correcta. Sin embargo argumentos inv lidos pueden ser pasados
+ *          a una function/procedure que cause errores de ejecuci¢n durante
+ *          la evaluaci¢n de la expresi¢n.
+ *  $FILES$
+ *      La Librer¡a es rtl
+ *  $SEEALSO$
+ *      VALTYPE()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      VALTYPE()
+ *  $CATEGORY$
+ *      Miscelanea
+ *  $ONELINER$
+ *      Obtiene el tipo de dato de una expresi¢n
+ *  $SYNTAX$
+ *      VALTYPE( <xExp> ) --> <cReturnType>
+ *  $ARGUMENTS$
+ *      <xExp>  es cualquier expresi¢n v lida
+ *  $RETURNS$
+ *      <cReturnType> una caracter indicando el tipo de la expresi¢n pasada
+ *  $DESCRIPTION$
+ *      Esta funci¢n devuelve un s¢lo car cter el cual representa el tipo de
+ *      dato del argumento recibido.
+ *  $EXAMPLES$
+ *      Ver Test
+ *      </fixed>
+ *  $TESTS$
+ *      FUNCTION Test()
+ *         ? ValType( Array( 1 ) )  --> "A"
+ *         ? ValType( {|| 1 + 1 } ) --> "B"
+ *         ? ValType( "HARBOUR" )   --> "C"
+ *         ? ValType( Date() )      --> "D"
+ *         ? ValType( .T. )         --> "L"
+ *         ? ValType( 1 )           --> "N"
+ *         ? ValType( TBrowse() )   --> "O"
+ *         ? ValType( NIL )         --> "U"
+ *      RETURN NIL
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      VALTYPE() es totalmente compatible con CA-Cl*pper.
+ *  $FILES$
+ *      La Librer¡a es rtl
+ *  $SEEALSO$
+ *      TYPE()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_ISBYREF()
+ *  $CATEGORY$
+ *      Miscelanea
+ *  $ONELINER$
+ *      Informa si la variable es pasada por referencia.
+ *  $SYNTAX$
+ *      HB_ISBYREF( @<Var> ) --> <lVarIsByRef>
+ *  $ARGUMENTS$
+ *      @<Var> es la variable a testear pasada por referencia.
+ *  $RETURNS$
+ *      Un valor l¢gico <lVarIsByRef> indicando si la variable es pasada por
+ *      referencia a la funci¢n ¢ procedimiento actual.
+ *  $DESCRIPTION$
+ *      Esta funci¢n devuelve un valor l¢gico indicando si la variable es
+ *      pasada por referencia a la funci¢n ¢ procedimiento actual.
+ *
+ *      ATENCION:
+ *      La variable a testear debe ser pasada por referencia. Si no lo es
+ *      la funci¢n retorna NIL.
+ *      Esta funci¢n esta basada en la forma que Harbour maneja las variables
+ *      por referencia.  Cuando una variable es pasada de este modo, la
+ *      funci¢n ¢ procedimiento que la recibe, recibe un puntero a la
+ *      variable previa, sea esta la variable contenedora de los datos, ¢ un
+ *      puntero a otra variable.  La funci¢n observa si la variable pasada
+ *      apunta a una variable com£n ¢ a la variable pasada por referencia.
+ *  $EXAMPLES$
+ *      Ver Test
+ *  $TESTS$
+ *      FUNCTION Main()
+ *         local cVar := "Test local"
+ *         private nVar := 0
+ *
+ *         Test( @cVar, @nVar, cVar, nVar )
+ *      RETURN NIL
+ *
+ *      PROCEDURE Test( Arg1, Arg2, Arg3, Arg4 )
+ *         ? hb_isbyref( @Arg1 )        // .T.
+ *         ? hb_isbyref( @Arg2 )        // .T.
+ *         ? hb_isbyref( @Arg3 )        // .F.
+ *         ? hb_isbyref( @Arg4 )        // .F.
+ *      RETURN
+ *      </fixed>
+ *  $STATUS$
+ *      S
+ *  $COMPLIANCE$
+ *      Esta funci¢n es una extensi¢n de Harbour.
+ *  $FILES$
+ *      La Librer¡a es rtl
+ *  $SEEALSO$
+ *      VALTYPE()
+ *  $END$
+ */
+
+

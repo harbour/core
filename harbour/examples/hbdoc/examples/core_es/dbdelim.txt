@@ -1,0 +1,101 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
+ *   Documentaci¢n en Ingl‚s de: __dbDelim()
+ *
+ * Copyright 2001 Alejandro de G rate <alex_degarate@hotmail.com>
+ *   Documentaci¢n en Espa¤ol de: __dbDelim()
+ *
+ * Vea COPYING por los t‚rminos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __dbDelim()
+ *  $CATEGORY$
+ *      Conversi¢n
+ *  $ONELINER$
+ *      Copia el contenido de una base de datos a un archivo de texto
+ *      delimitado ¢ agrega el contenido de un archivo de texto
+ *      delimitado a una base de datos.
+ *  $SYNTAX$
+ *      __dbDelim( <lExporta>, <xcArchivo>, [<xcDelim>], [<aCampos>],
+ *      [<bFor>], [<bWhile>], [<nNext>], [<nRegistro>], <lResto>  ) --> NIL
+ *  $ARGUMENTS$
+ *      Si <lExporta> es puesto a .T. copia registros A un archivo
+ *      delimitado.
+ *      Si <lExporta> es .F. agrega registros DESDE un archivo delimitado.
+ *
+ *      <xcArchivo> es el nombre del archivo de texto del cual se va a
+ *      copiar ¢ al que se va agregar datos.
+ *      Si no es especificada una extensi¢n. ".txt" es usada por defecto.
+ *
+ *      <xcDelim> Cualquiera de los caracteres a usar como delimitadores
+ *      de campo (s¢lo el primer caracter es usado). ¢ "BLANK" (en may£sculas
+ *      ¢ min£sculas), el cual elimina los caracteres delimitadores de campo
+ *      y establece el separador de campo a un solo espacio en lugar de una
+ *      coma.
+ *
+ *      <aCampos> Un array con los nombres de los campos a los que se limita
+ *      el proceso. Si no es especificado, ¢ si est  vac¡o, entonces todos
+ *      los campos son procesados.
+ *
+ *      <bFor> Un bloque de c¢digo opcional conteniendo una expresi¢n FOR
+ *      que reducir  el n£mero de registros a ser procesados.
+ *
+ *      <bWhile> Un bloque de c¢digo opcional conteniendo una expresi¢n
+ *      WHILE que reducir  el n£mero de registros a ser procesados.
+ *
+ *      <nNext> Si est  presente, pero <nRegistro> no est  presente,
+ *      especifica procesar este n£mero de registros, empezando con el
+ *      registro actual. Un valor de cero significa no procesar registros.
+ *
+ *      <nRegistro> Si est  presente, especifica el £nico registro a
+ *      procesar un valor de cero significa no procesar ning£n registro.
+ *      Predomina sobre <nNext> y <lResto>.
+ *
+ *      <lResto> Si <lExporta> es .T., y <lResto> es establecido en .T. y
+ *      no hay argumentos <nRegistro>, <nNext> ¢ <bWhile>, entonces
+ *      procesa todos los registros, desde el actual hasta el £ltimo.
+ *  $RETURNS$
+ *      NIL
+ *  $DESCRIPTION$
+ *      __dbDelim() copia todo ¢ el contenido seleccionado, desde una tabla
+ *      de base de datos a un archivo de texto SDF ¢, agrega todo ¢ el
+ *      contenido seleccionado desde un archivo de texto SDF a una tabla de
+ *      base de datos.
+ *  $EXAMPLES$
+ *      // Copia cuentas delinquentes dentro de un archivo de texto
+ *      // delimitado
+ *      USE cuentas NEW
+ *      COPY TO deudas DELIMITED FOR !EMPTY( cuentas->vencidas ) ;
+ *      .AND. DATE() - cuentas->vencidas > 30
+ *
+ *      // Importa nuevos registros de clientes
+ *      USE clientes NEW
+ *      APPEND FROM clientes DELIMITED
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *      S
+ *  $COMPLIANCE$
+ *      Es intenci¢n que __dbDelim() sea totalmente compatible con la funci¢n
+ *      de CA-Cl*pper del mismo nombre y es la implementaci¢n subyacente de
+ *      los comandos: APPEND FROM DELIMITED y COPY TO DELIMITED.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *
+ *  $SEEALSO$
+ *      __dbSDF(), APPEND FROM, COPY TO
+ *  $END$
+ */
+
+

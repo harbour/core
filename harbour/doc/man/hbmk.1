@@ -70,8 +70,8 @@ show commands executed
 .IP "\fB-[no]run\fP" 10
 run/don't run the created executable
 
-.IP "\fB-nohbp\fP" 10
-do not process .hbp files in current directory
+.IP "\fB-nohbc\fP" 10
+do not process .hbc files in current directory
 
 .IP "\fB-hbcc, -hbcmp\fP" 10
 stop after creating the object files
@@ -94,7 +94,7 @@ turn on informational messages
 .IP "\fB-quiet\fP" 10
 suppress all screen messages
 
-<script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>.
+<script> can be <@script> (.hbm file), <script.hbm> or <script.hbc>.
 
 Regular Harbour compiler options are also accepted.
 
@@ -103,17 +103,17 @@ Multiple -l, -L and <script> parameters are accepted.
 hbmk.cfg option file in hbmk directory is always processed if it exists.
 On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour,
 <base>/etc are checked (in that order) before the hbmk directory.
-The file format is the same as .hbp.
+The file format is the same as .hbc.
 
-.hbp option files in current dir are automatically processed.
+.hbc option files in current dir are automatically processed.
 
-.hbp options (they should come in separate lines):
+.hbc options (they should come in separate lines):
 libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]
 cflags=[C compiler flags], ldflags=[Linker flags], libpaths=[lib paths]
 gui|mt|shared|nulrdd|debug|map|strip|run=[yes|no]
 Lines starting with '#' char are ignored
 
-Platform filters are accepted in each .hbp line and with -l options.
+Platform filters are accepted in each .hbc line and with -l options.
 Filter format: {[!][<arch|comp>]}. Filters can be combined
 using '&', '|' operators and grouped by parantheses.
 Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}

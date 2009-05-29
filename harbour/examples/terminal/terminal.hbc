@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+{win}libs=gtwvg hbwin xhb comdlg32 comctl32 shell32 ole32 oleaut32
+mt=yes
+gui=yes

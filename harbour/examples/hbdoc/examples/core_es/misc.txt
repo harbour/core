@@ -1,0 +1,257 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2003 Alejandro de G rate <alex_degarate@hotmail.com>
+ * Documentaci½n en Espa¤ol de:
+ *           OS(), VERSION(), GETENV(), __RUN(), TONE(), RUN
+ *
+ * Copyright 2000 Chen Kedem <niki@actcom.co.il>
+ * Documentaci¢n en Ingl‚s de: TONE()
+ *
+ * Vea COPYING por los t‚rminos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      OS()
+ * $ONELINER$
+ *      Retorna el sistema operativo subyacente.
+ *  $SYNTAX$
+ *      OS() --> <cSistemaOperativo>
+ *  $CATEGORY$
+ *      DOS
+ *  $RETURNS$
+ *      <cSistemaOperativo>  el actual sistema operativo
+ *  $DESCRIPTION$
+ *      Esta funci¢n devuelve el actual sistema operativo como una cadena
+ *      de caracteres.
+ *  $EXAMPLES$
+ *      ? OS()
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      El c¢digo fuente esta en ../source/rtl/version.c
+ *      La librer¡a es rtl
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      VERSION()
+ *  $CATEGORY$
+ *      Entorno
+ *  $ONELINER$
+ *      Retorna la Versi¢n de HARBOUR
+ *  $SYNTAX$
+ *      VERSION()  --> <HbVersion>
+ *  $ARGUMENTS$
+ *      Ninguno
+ *  $RETURNS$
+ *      <HbVersion>   Cadena conteniendo la versi¢n de Harbour
+ *  $DESCRIPTION$
+ *      Esta funci¢n devuelve la actual versi¢n de Harbour.
+ *  $EXAMPLES$
+ *      // Visualiza algo similar a: Harbour Alpha build 40.0 Intl. (Flex)
+ *      ? QOUT( VERSION() )
+ *  $TESTS$
+ *  $STATUS$
+ *      S
+ *  $COMPLIANCE$
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      El c¢digo fuente esta en ../source/rtl/version.c
+ *      La librer¡a es rtl
+ *  $SEEALSO$
+ *      OS()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      GETENV()
+ *  $CATEGORY$
+ *      Entorno
+ *  $ONELINER$
+ *      Obtiene datos de las Variables de Entorno del Sistema Operativo
+ *  $SYNTAX$
+ *      GETENV(<cEntorno>, <cValorxDefecto> )  --> <cResultado>
+ *  $ARGUMENTS$
+ *      <cEntorno>      Variable de Entorno a obtener
+ *
+ *      <cValorxDefecto> Valor opcional a retornar si la variable <cEntorno>
+ *                       no es encontrada.
+ *  $RETURNS$
+ *      <cResultado>     Valor de la variable de Entorno
+ *  $DESCRIPTION$
+ *      Esta funci¢n produce una cadena que es el valor de la variable de
+ *      Entorno <cEntorno>, la cual es almacenada a nivel del sistema
+ *      operativo con el comando SET del mismo.
+ *      Si ninguna variable de Entorno puede ser encontrada, el valor que
+ *      retorne la funci¢n ser  <cValorxDefecto> si ‚ste es pasado, ¢ de lo
+ *      contrario una cadena vac¡a.
+ *  $EXAMPLES$
+ *      QOUT( GETENV('PATH'))
+ *      QOUT( GETENV('CONFIG'))
+ *      QOUT( GETENV('HARBOURCMD', '-n -l -es2'))
+ *      </fixed>
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
+ *      El par metro <cValorxDefecto> es una extensi¢n de Harbour.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      El c¢digo fuente esta en ../source/rtl/gete.c
+ *      La librer¡a es rtl
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __RUN()
+ *  $CATEGORY$
+ *      DOS
+ *  $ONELINER$
+ *      Corre/Ejecuta un programa externo.
+ *  $SYNTAX$
+ *      __RUN( <cComando> )
+ *  $ARGUMENTS$
+ *      <cComando>  Comando a ejecutar
+ *  $DESCRIPTION$
+ *      Este Comando ejecuta un programa externo. Por favor aseg£rese que
+ *      Ud. tiene sufuciente memoria libre para poder ejecutar el programa
+ *      externo.
+ *      No lo use para correr programas que permanecen residentes (en el
+ *      caso del sistema operativo DOS) porque puede causar muchos problemas
+ *
+ *      Nota: El comando RUN es preprocesado en esta funci¢n.
+ *            Se considera una mala pr ctica usar esta funci¢n directamente
+ *            Use el comando RUN en su lugar.
+ *  $EXAMPLES$
+ *      __Run( "edit " + cMyTextFile )    // Corre un Editor externo
+ *      __Run( "command" )                // Da el prompt del DOS (s¢lo DOS)
+ *      </fixed>
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      El c¢digo fuente esta en ../source/rtl/run.c
+ *      La librer¡a es rtl
+ *  $SEEALSO$
+ *      RUN
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      TONE()
+ *  $CATEGORY$
+ *      Miscelanea
+ *  $ONELINER$
+ *      Suena un tono con una frecuencia y duraci¢n especificada.
+ *  $SYNTAX$
+ *      TONE( <nFrecuencia>, <nDuracion> ) --> NIL
+ *  $ARGUMENTS$
+ *      <nFrecuencia>  Un valor num‚rico no negativo que especifica la
+ *                     frecuencia del tono en Hertzios (ciclos por segundo)
+ *
+ *      <nDuracion>   Un valor num‚rico positivo que especifica la duraci¢n
+ *                    del tono en unidades de 1/18 avo de segundo.
+ *  $RETURNS$
+ *      TONE() siempre devuelve NIL.
+ *  $DESCRIPTION$
+ *      TONE() es una funci¢n de sonido que podr¡a ser usada para irritar
+ *      al usuario final, a su perro y al vecindario que lo rodea.
+ *      La frecuencia est  limitada al rango 0 to 32767 Hz. Las frecuencias
+ *      por debajo de 20 Hz son inaudibles.
+ *      Si hay decimales en los argumentos estos se truncan.
+ *  $EXAMPLES$
+ *      IF lOk   // Suena bien
+ *         TONE(  500, 1 )
+ *         TONE( 4000, 1 )
+ *         TONE( 2500, 1 )
+ *      ELSE     // Suena mal
+ *         TONE(  300, 1 )
+ *         TONE(  499, 5 )
+ *         TONE(  700, 5 )
+ *      ENDIF
+ *      </fixed>
+ *  $TESTS$
+ *      TONE( 800, 1 )                       // igual que ? CHR(7)
+ *      TONE( 32000, 200 )                   // algun perro alrededor ?
+ *      TONE( 261, 1 )                       // nota musical - C (DO medio)
+ *      TONE( 400, 0 )                       // pitido corto
+ *      TONE( 700 )                          //
+ *      TONE( 10, 18.2 )                     // demora de 1 segundo
+ *      TONE( -1 )                           // demora de 1/18.2 segundo
+ *      TONE( )                              // demora de 1/18.2 segundo
+ *      </fixed>
+ *  $TESTS$
+ *  $STATUS$
+ *      S
+ *  $COMPLIANCE$
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librer¡a es rtl
+ *  $SEEALSO$
+ *      CHR(),SET BELL
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      RUN
+ *  $CATEGORY$
+ *      Comando
+ *  $ONELINER$
+ *      Corre/Ejecuta un programa externo.
+ *  $SYNTAX$
+ *      RUN  <cComando>
+ *  $ARGUMENTS$
+ *      <cComando>  Comando a ejecutar
+ *  $DESCRIPTION$
+ *      Este Comando ejecuta un programa externo. Por favor aseg£rese que
+ *      Ud. tiene sufuciente memoria libre para poder ejecutar el programa
+ *      externo.
+ *      No lo use para correr programas que permanecen residentes (en el
+ *      caso del sistema operativo DOS) porque puede causar muchos problemas.
+ *  $EXAMPLES$
+ *      RUN  "edit " + cMyTextFile      // Corre un Editor externo
+ *      RUN  "command"                  // Da el prompt del DOS (s¢lo DOS)
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Este es un Comando compatible con CA-Cl*pper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      El c¢digo fuente esta en ../source/rtl/run.c
+ *      La librer¡a es rtl
+ *  $SEEALSO$
+ *      RUN
+ *  $END$
+ */
+
+

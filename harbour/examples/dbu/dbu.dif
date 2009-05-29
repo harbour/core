@@ -1,0 +1,234 @@
+diff -u -x make_dif.bat ..\ori_src\DBU.PRG .\DBU.PRG
+--- ..\ori_src\DBU.PRG	Thu Mar 04 04:20:00 1993
++++ .\DBU.PRG	Fri Dec 19 12:56:30 2008
+@@ -60,6 +60,9 @@
+    SAVE SCREEN                                   && the screen you save...
+    SET SCOREBOARD OFF                            && who's keeping score, anyhow
+    SET KEY 28 TO                                 && some folks need help
++
++   SET DATE ANSI
++   SET CENTURY ON
+    
+    IF (ISCOLOR() .OR. "/C" $ UPPER(param2)) .AND. .NOT. "/M" $ UPPER(param2)
+       * make it pretty
+@@ -378,13 +381,13 @@
+             
+          ENDIF
+          
+-      CASE FILE(com_line + ".VEW")
++      CASE FILE(com_line + ".vew")
+          * look for file name with .VEW extension
+-         com_line = com_line + ".VEW"
++         com_line = com_line + ".vew"
+          
+-      CASE FILE(com_line + ".DBF")
++      CASE FILE(com_line + ".dbf")
+          * look for file name with .DBF extension
+-         com_line = com_line + ".DBF"
++         com_line = com_line + ".dbf"
+          
+       OTHERWISE
+          * file not found..ignore command line
+@@ -395,7 +398,7 @@
+       IF .NOT. EMPTY(com_line)
+          * command line file exists
+          
+-         IF RAT(".VEW", com_line) = LEN(com_line) - 3
++         IF RAT(".vew", Lower( com_line ) ) = LEN(com_line) - 3
+             * assume a valid .VEW file
+             view_file = com_line
+             set_from(.F.)                        && restore view
+diff -u -x make_dif.bat ..\ori_src\DBUCOPY.PRG .\DBUCOPY.PRG
+--- ..\ori_src\DBUCOPY.PRG	Thu Mar 04 04:20:00 1993
++++ .\DBUCOPY.PRG	Fri May 30 14:41:33 2008
+@@ -104,7 +104,7 @@
+ 
+ 	* DBF for normal mode
+ 	files = "dbf_list"
+-	def_ext = ".DBF"
++	def_ext = ".dbf"
+ 
+ 	* when is a filename acceptable?
+ 	fi_done = "not_empty('filename')"
+@@ -208,7 +208,7 @@
+ 
+ 		SELECT (M->cur_area)
+ 
+-		IF RAT(M->def_ext, M->filename) = LEN(M->filename) - 3
++		IF RAT(Lower( M->def_ext ), Lower( M->filename )) = LEN(M->filename) - 3
+ 			* target has default extension..does it exists in current dir?
+ 			add_name = .NOT. FILE(name(M->filename) + M->def_ext)
+ 
+@@ -735,7 +735,7 @@
+ 			cur_el = 1
+ 			rel_row = 0
+ 			files = "dbf_list"
+-			def_ext = ".DBF"
++			def_ext = ".dbf"
+ 			filelist(1)			&& display new list
+ 
+ 		ELSE
+@@ -750,7 +750,7 @@
+ 				cur_el = 1
+ 				rel_row = 0
+ 				files = "txt_list"
+-				def_ext = ".TXT"
++				def_ext = ".txt"
+ 				filelist(1)		&& display new list
+ 
+ 			ENDIF
+@@ -813,7 +813,7 @@
+ 			cur_el = 1
+ 			rel_row = 0
+ 			files = "dbf_list"
+-			def_ext = ".DBF"
++			def_ext = ".dbf"
+ 			filelist(1)			&& display new list
+ 
+ 		ELSE
+@@ -828,7 +828,7 @@
+ 				cur_el = 1
+ 				rel_row = 0
+ 				files = "txt_list"
+-				def_ext = ".TXT"
++				def_ext = ".txt"
+ 				filelist(1)		&& display new list
+ 
+ 			ENDIF
+diff -u -x make_dif.bat ..\ori_src\DBUINDX.PRG .\DBUINDX.PRG
+--- ..\ori_src\DBUINDX.PRG	Thu Mar 04 04:20:00 1993
++++ .\DBUINDX.PRG	Fri May 30 14:40:42 2008
+@@ -240,7 +240,7 @@
+ 		INDEX ON &k_exp TO &filename
+ 		CLOSE INDEX
+ 
+-		IF AT(INDEXEXT(), M->filename) = LEN(M->filename) - 3 .AND.;
++		IF AT(Lower( INDEXEXT() ), Lower( M->filename )) = LEN(M->filename) - 3 .AND.;
+ 		   FILE(name(M->filename) + INDEXEXT()) .AND. M->add_name
+ 			* add only .ntx files in the current directory
+ 
+diff -u -x make_dif.bat ..\ori_src\DBUSTRU.PRG .\DBUSTRU.PRG
+--- ..\ori_src\DBUSTRU.PRG	Thu Mar 04 04:20:00 1993
++++ .\DBUSTRU.PRG	Fri May 30 14:34:49 2008
+@@ -811,7 +811,7 @@
+ 			is_insert = .F.
+ 			filename = stru_name
+ 
+-			IF filebox(".DBF", "dbf_list", "stru_title",;
++			IF filebox(".dbf", "dbf_list", "stru_title",;
+ 					   "do_modstru", .T., 13) <> 0
+ 				* structure created or altered
+ 				stru_name = filename
+@@ -1215,7 +1215,7 @@
+ 		USE
+ 
+ 		* remember if file existed in current directory before
+-		add_name = .NOT. FILE(name(filename) + ".DBF")
++		add_name = .NOT. FILE(name(filename) + ".dbf")
+ 
+ 		IF FILE(filename)
+ 			* file exists..modify structure and save old data
+@@ -1236,11 +1236,11 @@
+ 
+ 			* establish temp filespec and dbt specs in same directory
+ 			name_temp = SUBSTR(filename, 1, RAT("\", filename)) +;
+-						"DDBBUUUU.TMP"
++						"ddbbuuuu.tmp"
+ 			dbt_spec = SUBSTR(filename, 1, RAT(".", filename)) +;
+-					   "DBT"
++					   "dbt"
+ 			dbt_temp = SUBSTR(name_temp, 1, RAT(".", name_temp)) +;
+-					   "DBT"
++					   "dbt"
+ 
+ 			IF FILE(dbt_spec)
+ 				* data file contains memo fields
+@@ -1321,7 +1321,7 @@
+ 			USE
+ 
+ 			IF AT(".DBF", filename) = LEN(filename) - 3 .AND.;
+-			   FILE(name(filename) + ".DBF") .AND. add_name
++			   FILE(name(filename) + ".dbf") .AND. add_name
+ 				* add only .dbf files in the current directory
+ 				i = afull(dbf_list) + 1
+ 
+diff -u -x make_dif.bat ..\ori_src\DBUUTIL.PRG .\DBUUTIL.PRG
+--- ..\ori_src\DBUUTIL.PRG	Thu Mar 04 04:20:00 1993
++++ .\DBUUTIL.PRG	Fri May 30 14:36:26 2008
+@@ -2152,7 +2152,7 @@
+ IF FILE(M->filename)
+ 	* only if the file exists
+ 
+-	IF INDEXEXT() = ".NTX"
++	IF Lower( INDEXEXT() ) = ".ntx"
+ 		* Clipper index file format
+ 		k_pos = 23
+ 
+diff -u -x make_dif.bat ..\ori_src\DBUVIEW.PRG .\DBUVIEW.PRG
+--- ..\ori_src\DBUVIEW.PRG	Thu Mar 04 04:20:00 1993
++++ .\DBUVIEW.PRG	Fri May 30 14:36:04 2008
+@@ -1110,7 +1110,7 @@
+ 
+ 			IF .NOT. (RAT(".", M->filename) > RAT("\", M->filename))
+ 				* no extension entered..provide default
+-				filename = M->filename + ".DBF"
++				filename = M->filename + ".dbf"
+ 
+ 			ENDIF
+ 
+@@ -1141,7 +1141,7 @@
+ 
+ 	ELSE
+ 		* insert or enter or menu selection..use filebox
+-		ret_val = filebox(".DBF", "dbf_list", "dopen_titl",;
++		ret_val = filebox(".dbf", "dbf_list", "dopen_titl",;
+ 						  "do_opendbf", .F., 8) <> 0
+ 
+ 	ENDIF
+@@ -2790,7 +2790,7 @@
+ * get user entered file name..will default to primary + ".VEW"
+ IF EMPTY(M->view_file) .AND. .NOT. EMPTY(dbf[1])
+ 	* default to name of primary data file
+-	filename = name(dbf[1]) + ".VEW"
++	filename = name(dbf[1]) + ".vew"
+ 
+ ELSE
+ 	* whatever the last view was
+@@ -2799,7 +2799,7 @@
+ ENDIF
+ 
+ * it's better in a box
+-filebox(".VEW", "vew_list", "vcrea_titl", "do_creavew", .T., 8)
++filebox(".vew", "vew_list", "vcrea_titl", "do_creavew", .T., 8)
+ 
+ * restore help code
+ help_code = M->old_help
+@@ -2841,7 +2841,7 @@
+ stat_msg("Generating View File")
+ 
+ * add new .VEW files to vew_list if created in current directory only
+-add_name = .NOT. FILE(name(filename) + ".VEW")
++add_name = .NOT. FILE(name(filename) + ".vew")
+ 
+ * create structure extended template
+ CREATE ddbbuuuu.ext
+@@ -3010,8 +3010,8 @@
+ USE
+ 
+ * add file name to array of view files
+-IF AT(".VEW", filename) = LEN(filename) - 3 .AND.;
+-   FILE(name(filename) + ".VEW") .AND. add_name
++IF AT(".vew", Lower(filename)) = LEN(filename) - 3 .AND.;
++   FILE(name(filename) + ".vew") .AND. add_name
+ 	* add only new .VEW files in the current directory
+ 
+ 	* determine number of first empty element
+@@ -3081,7 +3081,7 @@
+ IF M->from_view
+ 	* called from set_view
+ 
+-	IF filebox(".VEW", "vew_list", "vopen_titl", "do_openvew", .F., 8) <> 0
++	IF filebox(".vew", "vew_list", "vopen_titl", "do_openvew", .F., 8) <> 0
+ 		* indicate new View has been set
+ 		keystroke = 13
+ 

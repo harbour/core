@@ -1,0 +1,243 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2002 Chen Kedem <niki@actcom.co.il>
+ *   Documentaci¢n en Ingl‚s de: dirstruc.txt
+ *
+ * Copyright 2002 Alejandro de G rate <alex_degarate@hotmail.com>
+ *   Documentaci¢n en Espa¤ol de: dirstruc.txt
+ *
+ * Vea COPYING por los t‚rminos de la licencia.
+ *
+ */
+
+
+Estructura de directorios de Harbour
+====================================
+
+Siguiendo estan los directorios que existen bajo el arbol de
+Harbour.
+Bajo cada directorio existente en esta lista hay tambi'n un
+directorio especial, llamado CVS, el que deber¡a normalmente
+ser ignorado dado que ‚ste es usado por el CVS para mantener
+la pista de todos los archivos (lea las FAQ, si Ud. no sabe
+qu' es el CVS). Note que el  rbol puede contener otros
+directorios vac¡os.
+Ellos podr¡an ser obsoletos pero no hay una forma sencilla de
+removerlos completamente (Ud. puede usar cvs update -d en
+busca de remover directorios vac¡os)
+
+
+<harbour>              - Directorio principal de Harbour
+|                        Contiene todos los archivos make y Changelog
+|                        (cambios hist¢ricos)
+|
++---bin                - Ejecutables y batch de construcci¢n
+|                        deber¡a contener harbour.exe y otros ejecutables (*)
+|
++---config             - Archivos de Config. (.cf) para the GNU Make system
+|   |
+|   +---bsd            - Archivos de Configuraci¢n espec¡ficos para FreeBSD
+|   |
+|   +---dos            - Archivos de Configuraci¢n espec¡ficos
+|   |                    para DOS.
+|   +---linux          - Archivos de Config. espec¡ficos para GNU/Linux.
+|   |
+|   +---os2            - Archivos de Configuraci¢n espec¡ficos para OS/2.
+|   |
+|   +---win            - Archivos de Config. espec¡ficos para Windows.
+|
+|
++---contrib            - Archivos Miscelaneos de contribuci¢n.
+|   |                    No son parte del proyecto oficial Harbour
+|   |
+|   +---apollo         - funciones para driver de base de datos Apollo
+|   |   |
+|   |   |
+|   |   +---test       - Programas de Testeo
+|   |
+|   +---directx        - Implementaci¢n de DirectDraw para Windows
+|   |   |
+|   |   +---lib        -
+|   |   |   |
+|   |   |   +---vc     -
+|   |   |
+|   |   +---media      -
+|   |   |
+|   |   +---samples    - ejemplos de DirectDraw
+|   |
+|   +---dot            - Pre-Processor/Dot prompt environment.
+|   |
+|   +---hbclip         - Harbour Compatibility Lib. (HCL) para Clipper 5.x
+|   |
+|   +---hbzlib         - Interface para 'zlib' libreria de compresion
+|   |   |                para trabajar con archivos ZIP
+|   |   |
+|   |   +---doc        - Documentos para las funciones ZIP
+|   |
+|   +---hb_struc       - Clase Base Class para manejo interno de creaci¢n
+|   |                    de clases como estructuras
+|   |
+|   +---hgf            - Entorno gr fico (GUI) de Harbour
+|   |   |
+|   |   +---gtk        - Implementaci¢n para entorno GTK+
+|   |   |
+|   |   +---os2pm      - Implementaci¢n para OS/2 Presentation Manager
+|   |   |
+|   |   |
+|   |   +---tests      - Programas de Testeo
+|   |   |
+|   |   +---hbgfwin    - Implementaci¢n para entorno Windows
+|   |
+|   +---htmllib        - HTMLLIB (HTML classes) para Harbour
+|   |
+|   +---libct          - CA-T**ls Compatible Library para Harbour.
+|   |   |
+|   |   +---alt        - version altenativa de funciones CT
+|   |   |
+|   |   +---tests      - Programas de Testeo
+|   |
+|   +---libgt          - GT library port to Harbour.
+|   |   |
+|   |   +---doc        - Documentos para la librer¡a GT
+|   |       |
+|   |       +---en     - Documentaci¢n en Ingl‚s.
+|   |
+|   +---libmisc        - Contribuci¢n Miscel nea
+|   |   |
+|   |   +---doc        - Documentos de contribuci¢n
+|   |   |   |
+|   |   |   +---en     - Documentaci¢n en Ingl‚s.
+|   |   |
+|   |   +---tests      - Programas de Testeo
+|   |
+|   +---libnf          - Libreria Nanforum para Harbour.
+|   |
+|   +---msql           - clases Harbour de acceso a mSQL
+|   |
+|   +---mysql          - clases Harbour de acceso a MySQL
+|   |
+|   +---odbc           - Demostraci¢n de clases de acceso a ODBC
+|   |
+|   +---pdflib         - API PDF de bajo nivel para HBDOC para
+|   |                    PDFlib.
+|   |
+|   +---rdd_ads        - RDD para Advantage Database Server.
+|   |   |
+|   |   +---doc        - Documents para Advantage Database Server RDD.
+|   |       |
+|   |       +---en     - Documentaci¢n en Ingl‚s.
+|   |
+|   +---runjava        - JAVA runner para Harbour Portable Object (#3)
+|   |
+|   +---samples        - Archivos de contribuci¢n miscelaneos
+|   |
+|   +---tprepro        - Clases PreProcessor basadas en la
+|                        libreria de Ejecuci¢n del Preprocessor
+|
++---doc                - Documentaci¢n y notas
+|   |
+|   +---en             - Documentaci¢n en Ingl‚s.
+|   |
+|   +---es             - Documentaci¢n en Espa¤ol.
+|
++---include            - Archivos Include para ambos Harbour y C
+|
++---lib                - Librerias de ejecuci¢n para cada plataforma (*)
+|
++---samples            - Archivos de ejemplo y peque¤as aplicaciones
+|   |
+|   +---guestbk        - Libro de visitantes de Harbour para web
+|   |
+|   +---hscript        - Harbour Script.
+|   |
+|   +---misc           - unos humildes ejemplos
+|   |
+|   +---pe             - Editor
+|
+|
++---source             - Todos los archivos fuentes residen bajo este
+|   |                    directorio
+|   |
+|   +---common         - Funciones Comunes y Optimizador de Expresiones
+|   |
+|   +---compiler       - M¢dulo del Compilador de Harbour
+|   |
+|   +---debug          - Depurador.
+|   |
+|   +---lang           - archivos de mensajes para distintos idiomas
+|   |
+|   +---macro          - Macro compilador
+|   |
+|   +---pp             - Preprocesesador de Harbour
+|   |
+|   +---rdd            - Replaceable Database Driver (RDD)
+|   |   |                Manejador reemplazable de base de datos
+|   |   |
+|   |   +---dbfcdx     - DBFCDX RDD.
+|   |   |
+|   |   +---dbfntx     - DBFNTX RDD.
+|   |   |
+|   |   +---nulsys     - NULL RDD.
+|   |
+|   +---rtl            - Funciones de la librer¡a de ejecuci¢n (RTL)
+|   |   |                y varias implementaciones de Terminales (GT)
+|   |   |
+|   |   +---gtcgi      - GT subsistema para aplicaciones cgi
+|   |   |
+|   |   +---gtcrs      - Subsistema GT basado en ncurses (unix) (#1)
+|   |   |
+|   |   +---gtdos      - Subsistema GT para compiladores de DOS
+|   |   |
+|   |   +---gtos2      - Subsistema GT para compiladores de OS/2
+|   |   |
+|   |   +---gtpca      - Subsistema GT para terminales ANSI
+|   |   |
+|   |   +---gtsln      - Subsistema GT basado en slang (unix) (#1)
+|   |   |
+|   |   +---gtstd      - Subsistema GT para ANSI C stream IO.
+|   |   |
+|   |   +---gtwin      - Subsistema GT para compiladores Windows
+|   |   |
+|   |   +---gt_tpl     - Subsistema GT modelo base
+|   |
+|   +---vm             - Funciones de la Maquina Virtual (VM) e
+|                        internas de la librer¡a de ejecuci¢n (RTL)
+|
++---tests              - Programas de Testeo de Harbour
+|
++---utils              - Utilidades y herramientas que son parte de Harbour
+    |
+    +---hbdoc          - Herramienta generadora de Documentaci¢n
+    |
+    +---hbextern       - generador de hbextern.ch
+    |
+    +---hbmk           - Utilidad Make de Harbour
+    |
+    +---hbpp           - Preprocesador de Harbour como m¢dulo aislado
+    |
+    +---hbrun          - Ejecutor de archivos de Objetos Portables de
+    |                    Harbour (#3)
+    +---hbtest         - Test de Regresi¢n para la libreria RTL
+
+
+Leyenda:
+=======
+(*)    Deber¡a existir en una construcci¢n final si lo
+construye Ud. mismo, en una distribuci¢n normal de CVS este
+directorio est  vac¡o ¢ no contiene todos los archivos.
+
+(#1) Aunque hoy en d¡a existen ports a otros sistemas operativos
+     sus ra¡ces estan en unix.
+
+(#2) Directorio temporal donde se ponen los archivos objeto
+     .obj u otro (dependiendo de la plataforma) a medida
+     que se construyen los ejecutables y las librer¡as.
+     si Ud. construye el compilador Harbour.
+
+(#3) (.hrb), Archivos de formato Harbour Portable Object

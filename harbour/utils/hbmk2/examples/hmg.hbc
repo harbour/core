@@ -4,7 +4,7 @@
 
 # Copy this file to hmg root dir and include it in hbmk2
 # command line to build an app:
-# > hbmk2 test.prg C:\hmg\hmg.hbp
+# > hbmk2 test.prg C:\hmg\hmg.hbc
 
 {win}incpaths=${hb_self}include
 {win}libpaths=${hb_self}lib ${hb_self}harbour\lib

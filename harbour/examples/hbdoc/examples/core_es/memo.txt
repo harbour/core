@@ -1,0 +1,253 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000-2003 Alejandro de G rate <alex_degarate@hotmail.com>
+ * Documentaci¢n en Espa¤ol de: MEMOTRAN(), HARDCR()
+ *                              MEMOREAD(), MEMOWRIT()
+ *
+ * Vea COPYING por los t‚rminos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MEMOTRAN()
+ *  $CATEGORY$
+ *      Cadenas
+ *  $ONELINER$
+ *      Reemplaza los retornos del carro/nueva linea de una cadena
+ *  $SYNTAX$
+ *      MEMOTRAN( <cCadena>, <cDuro>, <cBlando> ) --> <cCadenaConvertida>
+ *  $ARGUMENTS$
+ *      <cCadena> es la cadena de caracteres a convertir.
+ *
+ *      <cDuro> es el car cter para reemplazar los retornos de carro "duro".
+ *              Si no es especificado por defecto es el punto y coma.
+ *
+ *      <cBlando> es el c racter para reemplazar los retornos de carro
+ *               "blandos". Si no es especificado, por defecto es un espacio
+ *                en blanco.
+ *  $RETURNS$
+ *      MEMOTRAN() retorna <cCadenaConvertida>, la cadena transformada.
+ *  $DESCRIPTION$
+ *      Esta funci¢n retorna una cadena donde los caracteres de retorno de
+ *      carro han sido convertidos a los caracteres especificados.
+ *  $EXAMPLES$
+ *      * El siguiente ejemplo formatea un campo memo conteniendo un mensaje
+ *        de error en una cadena adecuada para ser enviada a la funci¢n
+ *        ALERT()
+ *
+ *        cMensaje = MEMOTRAN( Errores->MENSAJE )
+ *        ALERT( cMensaje, aOpciones )
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librer¡a asociada es rtl
+ *  $SEEALSO$
+ *      HARDCR(),STRTRAN()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HARDCR()
+ *  $CATEGORY$
+ *      Cadenas
+ *  $ONELINER$
+ *       Reemplaza los CHR(141) por retornos de carro normal CHR(13)
+ *  $SYNTAX$
+ *      HARDCR( <cCadena> ) --> <cCadenaConvertida>
+ *  $ARGUMENTS$
+ *      <cCadena> es la cadena de caracteres a convertir.
+ *  $RETURNS$
+ *      HARDCR() retorna <cCadenaConvertida>, la cadena transformada.
+ *  $DESCRIPTION$
+ *      Esta funci¢n retorna una cadena/memo donde los caracteres de retorno
+ *      de carro automaticos ¢ "blandos" ( CHR(141) ) son convertidos a
+ *      caracteres de retorno de carro forzado ¢ "duro" CHR(13).
+ *  $EXAMPLES$
+ *      * El siguiente ejemplo asigna a una variable de cadena, el campo memo
+ *        NOTAS existente en la base Clientes, transformado para mostrarlo
+ *        por pantalla.
+ *        cNotas = HARDCR( Clientes->NOTAS )
+ *        ? cNotas
+ *
+ *      * El siguiente ejemplo envia a la impresora el contenido de un campo
+ *        memo.
+ *
+ *        SET DEVICE TO PRINTER
+ *        DEVPOS( nFil, nCol)
+ *        DEVOUT( HARDCR( Clientes->NOTAS ) )
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librer¡a asociada es rtl
+ *  $SEEALSO$
+ *      MEMOTRAN(),STRTRAN()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MEMOREAD()
+ *  $CATEGORY$
+ *      Campo Memo
+ *  $ONELINER$
+ *      Retorna el contenido de un archivo como cadena de caracteres
+ *  $SYNTAX$
+ *      MEMOREAD( <cArchivo> ) --> <cCadena>
+ *  $ARGUMENTS$
+ *      <cArchivo> Nombre del archivo a leer. Debe incluir la extensi¢n.
+ *                 Si el archivo se encuentra en otro subdirectorio, se
+ *                 debe incluir el path.
+ *  $RETURNS$
+ *      Retorna el contenido de un archivo de texto como una cadena de
+ *      caracteres <cCadena>.
+ *      El tama¤o m ximo del archivo, que puede ser le¡do, es el mismo que
+ *      el tama¤o m ximo de una cadena de caracteres (m s de 2 Mb). Harbour
+ *      no tiene el l¡mite de 64 Kb como en Clipper.
+ *      Si <cArchivo> no puede ser encontrado o le¡do, la funci¢n retorna
+ *      una cadena de caracteres, vacia ("").
+ *  $DESCRIPTION$
+ *      MEMOREAD() es una funci¢n que lee el contenido de un archivo de texto
+ *      (hasta ahora) desde un archivo en disco (floppy, HD, CD-ROM, etc.)
+ *      De esa forma Ud. puede manipular el contenido como cualquier cadena
+ *      de caracteres ¢ asignarlo a un campo memo para ser guardado en una
+ *      base de datos.
+ *
+ *      La funci¢n MEMOREAD() es usada junto con MEMOWRIT() y MEMOEDIT()
+ *      para obtener de disco, texto de diferentes fuentes y que podr¡a ser
+ *      objeto de edici¢n, b£squeda, reemplazo, visualizaci¢n, etc. y luego
+ *      ser escrito a la base de datos.
+ *
+ *      Es usada para importar datos desde otras fuentes a la base de datos.
+ *
+ *      Nota:
+ *      MEMOREAD() no usa los seteos SET DEFAULT y SET PATH para buscar por
+ *      <cArchivo>.
+ *      Esta funci¢n busca por <cArchivo> en el directorio actual.
+ *      Si el archivo no se encuentra, entonces MEMOREAD() busca en el path
+ *      del D.O.S.
+ *
+ *      Sobre un entorno de red, MEMOREAD() intenta abrir el archivo
+ *      <cArchivo> en modo de s¢lo-lectura y compartido. Si el archivo es
+ *      usado en modo exclusivo (no compartido) por otro proceso o programa
+ *      la funci¢n devolver  una cadena vacia ("").
+ *
+ *      Es una de las funciones de Clipper m s £til, realmente lo hace f cil.
+ *  $EXAMPLES$
+ *      *  Este ejemplo usa MEMOREAD() para asignar el contenido de un
+ *         archivo de texto a una variable para una b£squeda posterior.
+ *
+ *         cFile   := "account.prg"
+ *         cString := MEMOREAD( cFile )
+ *
+ *         IF AT( "Melina", cString) == 0             // chequea el copyright
+ *            MEMOWRIT( cFile, cCopyright + cString ) // si falta, ponerlo !
+ *         ENDIF
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librer¡a asociada es rtl
+ *  $SEEALSO$
+ *      MEMOEDIT(),MEMOWRIT(),REPLACE
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MEMOWRIT()
+ *  $CATEGORY$
+ *      Campo Memo
+ *  $ONELINER$
+ *      Escribe un campo memo ¢ una cadena a un archivo de texto en disco
+ *  $SYNTAX$
+ *      MEMOWRIT( <cArchivo>, <cCadena>, [<lEscribeEOF>] ) --> lExito
+ *  $ARGUMENTS$
+ *      <cArchivo> Nombre del archivo a leer. Debe incluir la extensi¢n.
+ *                 Si el archivo se encuentra en otro subdirectorio, se
+ *                 debe incluir el path.
+ *
+ *      <cCadena>   Es un campo memo o una cadena de caracteres, a ser
+ *                  escrita en <cArchivo>.
+ *
+ *      <lEscribeEOF> Es una variable l¢gica que determina si el car cter
+ *                    de fin de archivo - CHR(26) - se escribe a disco.
+ *                    Este par metro es opcional. Su valor por defecto es
+ *                    verdadero (.T.)
+ *  $RETURNS$
+ *      La funci¢n devuelve verdadero (.T.) si la operacion de escritura fue
+ *      exitosa, de otro modo, ‚sta devuelve falso (.F.).
+ *  $DESCRIPTION$
+ *      Esta es una funci¢n que escribe un campo memo ¢ una cadena de
+ *      caracteres a un archivo de texto en disco (floppy, HD, CD-ROM, etc.)
+ *      Si Ud. no especifica un path, MEMOWRIT() escribe <cArchivo> en el
+ *      directorio actual. Si <cArchivo> existe ‚ste ser  sobreescrito.
+ *
+ *      Nota:
+ *      Existe un tercer par metro opcional <lEscribeEOF> (que est  ausente
+ *      en Clipper), el cual le permite al programador cambiar en tiempo de
+ *      ejecuci¢n el comportamiento (por defecto) de escribir - siempre -
+ *      el car cter de fin de archivo, CHR(26) como en Clipper.
+ *      Si no existe un tercer parametro, nada cambia, EOF es escrito como
+ *      en Clipper, lo mismo ocurre cuando <lEscribeEOF> es puesto en .T.
+ *      Pero, si <lEscribeEOF> es puesto en .F., el car cter EOF no es
+ *      escrito al final del archivo.
+ *
+ *      La funci¢n MEMOWRIT() es usada junto con MEMOREAD() y MEMOEDIT() para
+ *      grabar a disco texto de diferentes fuentes y que pudo haber sido
+ *      objeto de edici¢n, b£squeda, reemplazo, visualizaci¢n, etc.
+ *
+ *      Esta funci¢n es usada para exportar la base de datos a otro formato.
+ *
+ *      Nota:
+ *      MEMOWRIT() no usa el seteo de directorio SET DEFAULT.
+ *
+ *      Es una de las funciones de Clipper m s £til, realmente lo hace f cil.
+ *  $EXAMPLES$
+ *      *  Este ejemplo usa MEMOWRIT() para escribir el contenido de una
+ *         variable de caracteres a un archivo de texto
+ *
+ *         cFile   := "account.prg"
+ *         cString := MEMOREAD( cFile )
+ *
+ *         IF AT( "Melina", cString) == 0             // chequea el copyright
+ *            MEMOWRIT( cFile, cCopyright + cString ) // si falta, ponerlo !
+ *         ENDIF
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librer¡a asociada es rtl
+ *  $SEEALSO$
+ *      MEMOEDIT(),MEMOREAD()
+ *  $END$
+ */
+
+
+
+

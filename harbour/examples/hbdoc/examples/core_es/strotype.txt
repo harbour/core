@@ -1,0 +1,129 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2001
+ *   Documentaci¢n en Ingl‚s de: strotype.txt
+ *
+ * Copyright 2002 Alejandro de G rate <alex_degarate@hotmail.com>
+ *   Documentaci¢n en Espa¤ol de: strotype.txt
+ *
+ * Vea COPYING por los t‚rminos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      Fuertemente tipeado
+ *  $CATEGORY$
+ *      Documento 
+ *  $ONELINER$
+ *      Chequeo de Tipo en Tiempo de Compilaci¢n
+ *  $DESCRIPTION$
+ *      El Strong Type Checking, podr¡a ser tambi‚n descripto como 
+ *      "Chequeo de tipo en Tiempo de Compilaci¢n". 
+ *      Como Ud. podr¡a saber Clipper genera un error en Tiempo de Ejecuci¢n
+ *      ("Type Mismatch") cuando nosotros intentamos realizar algunas 
+ *      operaciones con el tipo equivocado de variable.
+ *      
+ *      Ejemplos:
+ *
+ *      LOCAL Var1 := "A"
+ *
+ *      ? Var1 * 3       // Error 
+ *
+ *      @ Var1, 7 SAY 'Hello'   // Error 
+ *
+ *      ? SubStr( "Hello", Var1 ) // Error 
+ *      
+ *      Las 3 l¡neas superiores podr¡an todas resultar en un error de Tiempo 
+ *      de Ejecuci¢n, porque Var1 es del tipo CHARACTER, pero las l¡neas de
+ *      arriba la usan como si fuera del tipo NUMERIC.
+ *      
+ *      Usando un chequeo de Tipo Fuerte, ¢ Chequeo de Tipo en Tiempo de 
+ *      Compilaci¢n, el problema de arriba podr¡a haber sido descubierto y
+ *      y reportado en tiempo de compilaci¢n, antes que esperar que el 
+ *      inevitable problema sea descubierto cuando finalmente nosotros 
+ *      ejecutemos el programa.
+ *      
+ *      Los lenguajes fuertemente tipeados permiten al programador "decirle"
+ *      al compilador (declarar) cual es el tipo de cada variable, as¡ el
+ *      compilador puede advertirle al programador, cuando esa variable
+ *      declarada (Strong Typed), es usada en un contexto el cual es 
+ *      incompatible con su tipo declarado.
+ *      
+ *      Por ejemplo si nosotros le "contamos" al compilador que la Var1 de
+ *      arriba es del tipo CHARACTER (LOCAL Var1 AS CHARACTER), el compilador
+ *      de Harbour, podr¡a en devoluci¢n advertirnos que nosotros intentamos
+ *      realizar el calculo:
+ *
+ *      Var1 * 3
+ *      
+ *      porque el compilador sabe que nosotros no podemos realizar la 
+ *      mutiplicaci¢n de un CHARACTER. (Nosotros podr¡amos hacerlo en alg£n
+ *      contexto pero eso esta mas all  del alcance de esta discusi¢n).
+ *      Similarmente nosotros podr¡amos haber sido advertidos cuando 
+ *      intentamos usar Var1 como un numero de Fila ( @ Var1 ), ¢ como el
+ *      segundo operando de la funci¢n SUBSTR(), SUBSTR( "Hello", Var1)
+ *      porque el compilador sabe que esas operaciones requieren un tipo
+ *      NUMERIC antes que CHARACTER.
+ *      
+ *      Lo de arriba puede ahorrarnos un mont¢n de tiempo, se¤alandonos un
+ *      problema del cual no podemos escapar, porque ese c¢digo nunca 
+ *      funcionar  correctamente una vez ejecutado.
+ *      As¡ que antes de esperar al ciclo de testeo, para que tales problemas
+ *      sean descubiertos, (y algunas veces a£n despu‚s de que nosotros 
+ *      hemos distribuido nuestras aplicaciones) en su lugar nosotros podemos
+ *      saber de esos problemas tan pronto como nosotros tipeamos:
+ *      
+ *           HARBOUR ProgName -w3
+ *      
+ *      Harbour tambi‚n ofrece un modo h¡brido, donde puede reportar este
+ *      tipo de problemas, a£n sin el requerimiento que el programador 
+ *      declare el tipo de variables. Esta caracter¡stica es referida como
+ *      Chequeo Adaptativo de Tipo (Adaptive Type Checking).
+ *      No es necesario que el programador haga ning£n cambio en el c¢digo
+ *      para tomar ventaja de ‚sta caracter¡stica. Todos los 3 errores de
+ *      arriba podr¡an haber sido reportados tan efectivamente como si el
+ *      programador hubiera declarado Var1 como de Tipo Fuerte.
+ *      
+ *      Harbour podr¡a haber sido capaz de reportar tales problemas en 
+ *      tiempo de compilaci¢n, porque la asignaci¢n Var1 := "A" implica que
+ *      Var1 es del tipo CHARACTER, hasta que a ‚sta le sea asignado otro
+ *      valor. As¡ entonces Harbour podr¡a "recordar" que Var1 a "adaptado"
+ *      el tipo CHARACTER, y as¡ la multiplicaci¢n subsecuente   Var1 * 3
+ *      ser  reportada como un error, tan pronto como Ud. intente compilar
+ *      tal c¢digo.
+ *      
+ *      La parte hermosa de este modo h¡brido, es que a diferencia de las 
+ *      variables Strong Typed, Ud. no tiene que declarar el c¢digo, as¡
+ *      que no son necesarios cambios en el c¢digo fuente, el Tipo en su
+ *      lugar es asumido por implicaci¢n (el Tipo del valor asignado).
+ *      El otro beneficio es que, es completamente correcto asignar un nuevo
+ *      valor de diferente tipo, en cualquier momento, a esa variable no
+ *      declarada (variante). Tan pronto como nosotros asignemos un nuevo
+ *      tipo, el compilador entonces nos proteger  de usar la variable en un
+ *      contexto incompatible, dado que la variable a "adaptado" este Tipo 
+ *      tan pronto como nosotros le hemos asignado un valor, el cual implica
+ *      un Tipo.
+ *      
+ *      Mientras el Chequeo Adaptativo de Tipo puede ser completamente 
+ *      efectivo en reportar muchos errores comunes, para tener todos los 
+ *      beneficios del Chequeo en Tiempo de Compilaci¢n es recomendado 
+ *      declarar el Tipo de las variables, cuando sea posible.
+ *      
+ *      Las caracter¡sticas del Tipo fuerte (Strong Type), tambi‚n permiten
+ *      la declaraci¢n de par metros esperados (incluyendo opcionales) de las
+ *      funciones definidas por el usuario, asi como tambi‚n el tipo 
+ *      retornado.
+ *      Similarmente, Ud. puede declarar el tipo de cualquier variable de
+ *      Clase, M‚todos y Par metros de M‚todos.
+ *
+ *  $END$
+ */  
+ 
+
