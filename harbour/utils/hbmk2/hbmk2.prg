@@ -2732,7 +2732,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
    /* Header paths */
 
-   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour
+   IF ! lSkipBuild .AND. ! lStopAfterInit
       FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
          AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + tmp )
          AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", tmp ) )
@@ -3362,6 +3362,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF lTargetUpToDate
             hbmk_OutStd( hbmk, hb_StrFormat( I_( "Target up to date: %1$s" ), s_cPROGNAME ) )
          ELSE
+            IF ! DirBuild( FN_DirGet( s_cPROGNAME ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create directory for target %1$s." ), s_cPROGNAME ) )
+            ENDIF
+
             DO CASE
             CASE ! lStopAfterCComp .AND. ! Empty( cBin_Link )
 
@@ -3624,10 +3628,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                ELSE
                   tmp1 := PathSepToSelf( tmp )
                ENDIF
-               IF hb_FCopy( s_cPROGNAME, tmp1 ) == F_ERROR
-                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying target to %1$s failed with %2$s." ), tmp1, hb_ntos( FError() ) ) )
-               ELSEIF hbmk[ _HBMK_lInfo ]
-                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied target to %1$s" ), tmp1 ) )
+               IF DirBuild( FN_DirGet( tmp1 ) )
+                  IF hb_FCopy( s_cPROGNAME, tmp1 ) == F_ERROR
+                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying target to %1$s failed with %2$s." ), tmp1, hb_ntos( FError() ) ) )
+                  ELSEIF hbmk[ _HBMK_lInfo ]
+                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied target to %1$s" ), tmp1 ) )
+                  ENDIF
+               ELSE
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create directory for target install %1$s." ), tmp1 ) )
                ENDIF
             NEXT
          ENDIF
@@ -4221,7 +4229,8 @@ STATIC FUNCTION PathNormalize( cPath, lNormalize )
          SWITCH SubStr( cPath, nLastSep + 1, nNextSep - nLastSep - 1 )
          CASE ".."
             nLastSep := hb_RAt( hb_osPathSeparator(), cPath, 1, nLastSep - 1 )
-            IF nLastSep == 0
+            IF nLastSep == 1 .OR. ;
+               ( ! Empty( hb_osDriveSeparator() ) .AND. nLastSep > 1 .AND. SubStr( cPath, nLastSep - Len( hb_osDriveSeparator() ), Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
                /* Underflow. Return where we are. */
                RETURN cPath
             ENDIF
@@ -4308,6 +4317,8 @@ STATIC FUNCTION DirBuild( cDir )
    LOCAL cDirItem
    LOCAL tmp
 
+   cDir := PathNormalize( PathSepToSelf( cDir ) )
+
    IF ! hb_DirExists( cDir )
 
       cDir := DirAddPathSep( cDir )
@@ -4333,7 +4344,7 @@ STATIC FUNCTION DirBuild( cDir )
                   RETURN .F.
                ENDIF
                #if ! defined( __PLATFORM__UNIX )
-                  IF Lower( cDirItem ) == _WORKDIR_BASE_
+                  IF Lower( Left( cDirItem, Len( _WORKDIR_BASE_ ) ) ) == _WORKDIR_BASE_
                      hb_FSetAttr( cDirTemp, FC_HIDDEN )
                   ENDIF
                #endif
