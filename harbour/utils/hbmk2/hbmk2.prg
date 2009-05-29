@@ -237,10 +237,11 @@ REQUEST hbmk_KEYW
 #ifndef _HBMK_EMBEDDED_
 
 PROCEDURE Main( ... )
-   LOCAL aArgs := hb_AParams()
+   LOCAL aArgsIn := hb_AParams()
+   LOCAL aArgsProc := {}
    LOCAL nResult
    LOCAL cName
-   LOCAL tmp
+   LOCAL tmp, tmp1
 
    LOCAL lPause := hb_gtInfo( HB_GTI_ISGRAPHIC )
    LOCAL lUTF8
@@ -256,7 +257,7 @@ PROCEDURE Main( ... )
       self names are detected.
       For compatibility with hbmk script aliases. */
 
-   IF ! Empty( aArgs )
+   IF ! Empty( aArgsIn )
 
       hb_FNameSplit( hb_argv( 0 ),, @cName )
 
@@ -264,26 +265,43 @@ PROCEDURE Main( ... )
 
       IF Left( tmp, 1 ) == "x"
          tmp := SubStr( tmp, 2 )
-         hb_AIns( aArgs, 1, "-xhb", .T. )
+         AAdd( aArgsProc, "-xhb" )
       ENDIF
 
       DO CASE
       CASE Right( tmp, 5 ) == "hbcmp" .OR. ;
            Left(  tmp, 5 ) == "hbcmp" .OR. ;
-           tmp == "clipper"                ; hb_AIns( aArgs, 1, "-hbcmp", .T. )
+           tmp == "clipper"                ; AAdd( aArgsProc, "-hbcmp" )
       CASE Right( tmp, 4 ) == "hbcc" .OR. ;
-           Left(  tmp, 4 ) == "hbcc"       ; hb_AIns( aArgs, 1, "-hbcc", .T. )
+           Left(  tmp, 4 ) == "hbcc"       ; AAdd( aArgsProc, "-hbcc" )
       CASE Right( tmp, 5 ) == "hblnk" .OR. ;
-           Left(  tmp, 5 ) == "hblnk"      ; hb_AIns( aArgs, 1, "-hblnk", .T. )
+           Left(  tmp, 5 ) == "hblnk"      ; AAdd( aArgsProc, "-hblnk" )
       CASE tmp == "rtlink" .OR. ;
            tmp == "exospace" .OR. ;
-           tmp == "blinker"                ; hb_AIns( aArgs, 1, "-rtlink", .T. )
+           tmp == "blinker"                ; AAdd( aArgsProc, "-rtlink" )
       CASE Right( tmp, 5 ) == "hblib" .OR. ;
-           Left(  tmp, 5 ) == "hblib"      ; hb_AIns( aArgs, 1, "-hblib", .T. )
+           Left(  tmp, 5 ) == "hblib"      ; AAdd( aArgsProc, "-hblib" )
       CASE Right( tmp, 5 ) == "hbdyn" .OR. ;
-           Left(  tmp, 5 ) == "hbdyn"      ; hb_AIns( aArgs, 1, "-hbdyn", .T. )
+           Left(  tmp, 5 ) == "hbdyn"      ; AAdd( aArgsProc, "-hbdyn" )
       ENDCASE
    ENDIF
+
+   /* Expand wildcard project specs */
+
+   FOR EACH tmp IN aArgsIn
+      DO CASE
+      CASE Lower( FN_ExtGet( tmp ) ) == ".hbp"
+         tmp := FN_Expand( tmp, .T. )
+         ASize( aArgsProc, Len( aArgsProc ) + Len( tmp ) )
+         ACopy( tmp, aArgsProc, Len( aArgsProc ) - Len( tmp ) + 1 )
+      CASE Lower( Left( tmp, Len( "-target=" ) ) ) == "-target="
+         FOR EACH tmp1 IN FN_Expand( SubStr( tmp, Len( "-target=" ) + 1 ), .F. )
+            AAdd( aArgsProc, "-target=" + tmp1 )
+         NEXT
+      OTHERWISE
+         AAdd( aArgsProc, tmp )
+      ENDCASE
+   NEXT
 
    /* Handle multitarget command lines */
 
@@ -294,7 +312,7 @@ PROCEDURE Main( ... )
       nTarget := 0
       lHadTarget := .F.
 
-      FOR EACH tmp IN aArgs
+      FOR EACH tmp IN aArgsProc
          DO CASE
          CASE Lower( FN_ExtGet( tmp ) ) == ".hbp" .AND. ! lHadTarget
             nTarget++
