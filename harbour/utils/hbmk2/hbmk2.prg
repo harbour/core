@@ -291,9 +291,9 @@ PROCEDURE Main( ... )
    FOR EACH tmp IN aArgsIn
       DO CASE
       CASE Lower( FN_ExtGet( tmp ) ) == ".hbp"
-         tmp := FN_Expand( tmp, .T. )
-         ASize( aArgsProc, Len( aArgsProc ) + Len( tmp ) )
-         ACopy( tmp, aArgsProc, Len( aArgsProc ) - Len( tmp ) + 1 )
+         FOR EACH tmp1 IN FN_Expand( tmp, .T. )
+            AAdd( aArgsProc, tmp1 )
+         NEXT
       CASE Lower( Left( tmp, Len( "-target=" ) ) ) == "-target="
          FOR EACH tmp1 IN FN_Expand( SubStr( tmp, Len( "-target=" ) + 1 ), .F. )
             AAdd( aArgsProc, "-target=" + tmp1 )
@@ -2443,7 +2443,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cBin_Link := "ilink32.exe"
          cBin_Dyn := cBin_Link
          cOpt_Link := '-Gn -Tpe -L"{DL}" {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} import32.lib cw32mt.lib,, {LS}{SCRIPT}"
-         cOpt_Dyn  := '-Gn -Tpd -L"{DL}" {FD} ' +              "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} import32.lib cw32mt.lib,, {LS}{SCRIPT}"
+         cOpt_Dyn  := '-Gn -Tpd -L"{DL}" {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} import32.lib cw32mt.lib,, {LS}{SCRIPT}"
          cLibPathPrefix := ""
          cLibPathSep := ";"
          IF hbmk[ _HBMK_lGUI ]
@@ -4251,20 +4251,32 @@ STATIC FUNCTION ListToArray( cList, cSep )
 STATIC FUNCTION PathNormalize( cPath, lNormalize )
    LOCAL nLastSep
    LOCAL nNextSep
+   LOCAL lPrefix
 
    DEFAULT lNormalize TO .T.
 
    cPath := DirAddPathSep( cPath )
 
    IF lNormalize
+
+      /* Add leading path sep if there wasn't one (relative dir).
+         We will remove this before returning. */
+      IF ( lPrefix := !( Left( cPath, 1 ) == hb_osPathSeparator() ) )
+         cPath := hb_osPathSeparator() + cPath
+      ENDIF
+
       nLastSep := iif( Left( cPath, 1 ) == hb_osPathSeparator(), 1, 0 )
       DO WHILE ( nNextSep := hb_At( hb_osPathSeparator(), cPath, nLastSep + 1 ) ) > 0
          SWITCH SubStr( cPath, nLastSep + 1, nNextSep - nLastSep - 1 )
          CASE ".."
             nLastSep := hb_RAt( hb_osPathSeparator(), cPath, 1, nLastSep - 1 )
-            IF nLastSep == 1 .OR. ;
+            IF nLastSep == 0 .OR. ;
                ( ! Empty( hb_osDriveSeparator() ) .AND. nLastSep > 1 .AND. SubStr( cPath, nLastSep - Len( hb_osDriveSeparator() ), Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
                /* Underflow. Return where we are. */
+               IF lPrefix
+                  /* Remove leading path sep if we added it */
+                  cPath := SubStr( cPath, 2 )
+               ENDIF
                RETURN cPath
             ENDIF
          CASE "."
@@ -4275,6 +4287,11 @@ STATIC FUNCTION PathNormalize( cPath, lNormalize )
             nLastSep := nNextSep
          ENDSWITCH
       ENDDO
+
+      IF lPrefix
+          /* Remove leading path sep if we added it */
+         cPath := SubStr( cPath, 2 )
+      ENDIF
    ENDIF
 
    RETURN cPath
