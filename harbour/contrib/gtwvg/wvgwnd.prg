@@ -350,7 +350,7 @@ METHOD destroy() CLASS WvgWindow
    ENDIF
 
    #ifdef __BYSETPROP__
-   WVG_ReleaseWindowProcBlock( ::hWnd )
+   WVG_ReleaseWindowProcBlock( ::pWnd )
    #endif
 
    IF Win_IsWindow( ::hWnd )
@@ -1357,7 +1357,7 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
    CASE WM_MOUSEHOVER
       IF ::objType == objTypeScrollBar
          IF ::oParent:objType == objTypeCrt
-            WAPI_SetFocus( ::oParent:hWnd )
+            WAPI_SetFocus( ::oParent:pWnd )
          ENDIF
          RETURN 0
       ENDIF
@@ -1367,7 +1367,7 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
       IF ::objType == objTypeScrollBar
          ::lTracking := .f.
          IF ::oParent:objType == objTypeCrt
-            WAPI_SetFocus( ::oParent:hWnd )
+            WAPI_SetFocus( ::oParent:pWnd )
          ENDIF
       ENDIF
       EXIT

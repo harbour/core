@@ -2345,6 +2345,23 @@ static void hb_gt_wvt_ShowWindow( PHB_GTWVT pWVT )
    ShowWindow( pWVT->hWnd, iCmdShow );
 }
 
+static void hb_gt_wvt_GetBorders( HWND hWnd, int * iBorderLeft, int * iTitlebarHeight, int * iDTWidth, int * iDTHeight )
+{
+   RECT ci, wi;
+   int i;
+
+   GetWindowRect( hWnd, &wi );
+   GetClientRect( hWnd, &ci );
+
+   i = ( wi.right - wi.left - ( ci.right - ci.left ) ) / 2 ;
+   *iBorderLeft = i;
+   *iTitlebarHeight = ( ( wi.bottom - wi.top - ( ci.bottom - ci.top ) ) - i );
+
+   GetWindowRect( GetDesktopWindow(), &wi );
+   *iDTWidth = wi.right - wi.left;
+   *iDTHeight = wi.bottom - wi.top;
+}
+
 static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
 {
    HWND     hWnd, hWndParent;
@@ -2426,8 +2443,32 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
 
             ClientToScreen( hWndParent, &pt );
 
-            pWVT->pPP->x = pt.x;
-            pWVT->pPP->y = pt.y;
+            {  /* keep window within desktop but close to original position */
+               int iBorderLeft, iTitlebarHeight, iDTWidth, iDTHeight, iWidth, iHeight;
+
+               hb_gt_wvt_GetBorders( hWndParent, &iBorderLeft, &iTitlebarHeight, &iDTWidth, &iDTHeight );
+               pWVT->pPP->x = pt.x;
+               pWVT->pPP->y = pt.y;
+
+               if( pWVT->pPP->bRowCols )
+               {
+                  iWidth = ( iBorderLeft * 2 ) + ( pWVT->COLS * pWVT->PTEXTSIZE.x ) + ( iBorderLeft * 2 );;
+                  iHeight = iTitlebarHeight + iBorderLeft + ( pWVT->ROWS * pWVT->PTEXTSIZE.y ) + iTitlebarHeight + iBorderLeft;
+                  pWVT->pPP->width = iWidth;
+                  pWVT->pPP->height = iHeight;
+               }
+               else
+               {
+                  iWidth = pWVT->pPP->width;
+                  iHeight = pWVT->pPP->height;
+               }
+
+               if( ( pWVT->pPP->x + iWidth ) > iDTWidth )
+                  pWVT->pPP->x = HB_MAX( 0, iDTWidth - iWidth );
+
+               if( ( pWVT->pPP->y + iHeight ) > iDTHeight )
+                  pWVT->pPP->y = HB_MAX( 0, iDTHeight - iHeight );
+            }
 
             bByConf = TRUE;
          }

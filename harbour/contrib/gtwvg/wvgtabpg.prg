@@ -142,7 +142,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTa
 
    DEFAULT ::caption TO " "
 
-   WAPI_TabCtrl_InsertItem( ::hWnd, 0, ::caption )
+   WAPI_TabCtrl_InsertItem( ::pWnd, 0, ::caption )
 
    IF ::visible
       ::show()
