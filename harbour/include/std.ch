@@ -425,7 +425,7 @@
 
 #command APPEND [FROM <(f)>] [FIELDS <fields,...>] ;
                 [FOR <for>] [WHILE <while>] [NEXT <next>] ;
-                [RECORD <rec>] [<rest:REST>] [ALL] [VIA <rdd>] 
+                [RECORD <rec>] [<rest:REST>] [ALL] [VIA <rdd>] ;
                 [CODEPAGE <cp>] => ;
          __dbApp( <(f)>, { <(fields)> }, ;
                   <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>, , <cp> )
