@@ -248,7 +248,7 @@ CLASS CODEFORMAT
    DATA cFunctions     INIT  ","
    DATA aContr INIT { { "if","","elseif","endif" }, { "do","while","","enddo" }, ;
       { "while", "", "", "enddo" }, { "for", "", "", "next" }, { "do", "case", "case", "endcase" }, ;
-      { "begin", "sequence", "recover", "end" } }
+      { "begin", "sequence", "recover", "end" }, { "switch", "", "case", "end" } }
 
    DATA   bCallback
 
@@ -344,10 +344,10 @@ METHOD New( aParams ) CLASS CODEFORMAT
 
 METHOD Reformat( aFile ) CLASS CODEFORMAT
 
-   LOCAL i, nLen := Len( aFile ), cToken1, cToken2, nPos
+   LOCAL i, iDelta := 0, nLen := Len( aFile ), cToken1, cToken2, nLenToken, nPos
    LOCAL nPosSep, cLine, cLineAll, nLineSegment
    LOCAL nContrState, nIndent, nDeep := 0, aDeep := {}
-   LOCAL lPragmaDump := .F. , lClass := .F. , lComment := .F. , nPosComment
+   LOCAL lPragmaDump := .F. , lClass := .F. , lComment := .F. , nPosComment := 0, nPosCommPrev
    LOCAL nStatePrev, nState := 0
    PRIVATE cFunctions := Upper( ::cFunctions )
 
@@ -359,6 +359,7 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
       IF ::bCallBack != Nil
          Eval( ::bCallBack, aFile, i )
       ENDIF
+      nPosCommPrev := nPosComment
       nPosComment := 0
       IF ::lIndent
          aFile[i] := StrTran( RTrim( aFile[i] ), Chr( 9 ), " " )
@@ -376,6 +377,7 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
             IF !Empty( cToken1 := SubStr( aFile[i], nPos + 2 ) )
                aFile[i] := Left( aFile[i], nPos + 1 )
                nLen := rf_AINS( aFile, i + 1, cToken1 )
+               iDelta ++
             ENDIF
          ENDIF
       ELSE
@@ -414,6 +416,7 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
                IF !Empty( cToken1 := SubStr( cLineAll, nPos + 2 ) )
                   cLineAll := Left( cLineAll, nPos + 1 )
                   nLen := rf_AINS( aFile, i + 1, cToken1 )
+                  iDelta ++
                ENDIF
             ELSE
                lComment := .T.
@@ -421,12 +424,13 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
          ENDIF
          IF !lPragmaDump .AND. ::lIndent .AND. ( !lComment .OR. nPosComment > 1 )
             aFile[i] := cLineAll
-            IF i == 1 .OR. Right( aFile[i-1], 1 ) != ";"
+            IF i == 1 .OR. Right( aFile[i-1], 1 ) != ";" .OR. nPosCommPrev != 0
                nPosSep := 1
                nLineSegment := 1
                DO WHILE .T.
                   nPos := nPosSep
-                  IF ( nPosSep := FindNotQuoted( ";", aFile[i], nPosSep ) ) != 0 .AND. ;
+                  IF Left( aFile[i],1 ) != "#" .AND. ;
+                        ( nPosSep := FindNotQuoted( ";", aFile[i], nPosSep ) ) != 0 .AND. ;
                         nPosSep < Len( aFile[i] ) .AND. ( nPosComment == 0 .OR. nPosSep < nPosComment )
                      cLine := SubStr( aFile[i], nPos, nPosSep - nPos + 1 )
                   ELSE
@@ -437,32 +441,41 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
                   nContrState := 0
                   nStatePrev := nState
                   cToken1 := Lower( hb_TokenGet( cLine, 1 ) )
+                  nLenToken := Len( cToken1 )
+                  nPos := 2
+                  DO WHILE nPos <= nLenToken .AND. SubStr( cToken1, nPos, 1 ) >= "_"; nPos ++ ; ENDDO
+                  IF nPos <= nLenToken
+                     nLenToken := nPos - 1
+                     cToken1 := Left( cToken1,nLenToken )
+                  ENDIF
                   cToken2 := Lower( hb_TokenGet( cLine, 2 ) )
                   IF Left( cToken1, 1 ) == "#"
-                  ELSEIF ( "static" = cToken1 .AND. ;
+                  ELSEIF nLenToken >= 4 .AND. ( ( "static" = cToken1 .AND. ;
                         ( "function" = cToken2 .OR. "procedure" = cToken2 ) ) .OR. ;
                         "function" = cToken1 .OR. "procedure" = cToken1 ;
                         .OR. ( "method" == cToken1 .AND. !lClass ) .OR. ;
-                        ( "class" == cToken1 .AND. !lClass )
+                        ( "class" == cToken1 .AND. !lClass ) )
                      IF nDeep == 0
                         nState := RF_STATE_FUNC
                         IF "class" == cToken1
                            lClass := .T.
                         ENDIF
                      ELSE
-                        ::nLineErr := i
+                        ::nLineErr := i - iDelta
                         ::nErr := 1
                         ::cLineErr := cLine
                         RETURN .F.
                      ENDIF
-                  ELSEIF "local" = cToken1 .OR. "private" = cToken1       ;
+                  ELSEIF nLenToken >= 4 .AND. ( "local" = cToken1 .OR.  ;
+                        "private" = cToken1 ;
                         .OR. "public" = cToken1 .OR. "field" = cToken1  ;
                         .OR. "static" = cToken1 .OR. "memvar" = cToken1 ;
-                        .OR. "parameters" = cToken1 .OR. "declare" = cToken1
+                        .OR. "parameters" = cToken1 .OR. "declare" = cToken1 )
                      IF nStatePrev == RF_STATE_FUNC
                         nState := RF_STATE_VAR
                      ENDIF
-                  ELSEIF cToken1 == "return" .OR. cToken1 == "endclass"
+                  ELSEIF cToken1 == "return" .OR. cToken1 == "endclass" .OR. ;
+                        ( cToken1 == "end" .AND. cToken2 == "class" )
                      IF nDeep == 0
                         nState := RF_STATE_RET
                      ENDIF
@@ -484,10 +497,10 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
                                     nPos + 1 ) ) != 0 .AND. aDeep[nDeep] != nPos
                               ENDDO
                            ENDIF
-                           IF nDeep > 0 .AND. aDeep[nDeep] == nPos .OR. cToken1 == "end"
+                           IF nDeep > 0 .AND. ( aDeep[nDeep] == nPos .OR. cToken1 == "end" )
                               nDeep --
                            ELSE
-                              ::nLineErr := i
+                              ::nLineErr := i - iDelta
                               ::nErr := 3
                               ::cLineErr := cLine
                               RETURN .F.
@@ -523,6 +536,7 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
                               ( nState == RF_STATE_CODE .AND. ::nLineCode == 1 )
                            IF !Empty( aFile[nPos] )
                               nLen := rf_AINS( aFile, nPos + 1, "" )
+                              iDelta ++
                               i ++
                            ELSE
                               nPos --
@@ -530,6 +544,7 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
                         ENDIF
                         DO WHILE nPos > 1 .AND. Empty( aFile[nPos] )
                            rf_ADEL( aFile, nPos )
+                           iDelta --
                            i --
                            nPos --
                         ENDDO
