@@ -156,6 +156,7 @@
 #define GOBJ_OBJDATA_COLORTEXT            6
 #define GOBJ_OBJDATA_COLORBK              7
 #define GOBJ_OBJDATA_IMAGE                8
+#define GOBJ_OBJDATA_BLOCK                9
 
 #define GOBJ_IMAGESOURCE_SLOT             1
 #define GOBJ_IMAGESOURCE_RESOURCE         2

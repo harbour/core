@@ -287,6 +287,11 @@ HB_FUNC( WVG_SETGOBJDATA )
             case GOBJ_OBJDATA_COLORBK:
                gObj->crRGBBk = ISNUM( 3 ) ? ( COLORREF ) ( HB_PTRDIFF ) hb_parnint( 3 ) : ( COLORREF ) 0;
                break;
+            case GOBJ_OBJDATA_BLOCK:
+               if( gObj->bBlock )
+                  hb_itemRelease( gObj->bBlock );
+               gObj->bBlock = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );
+               break;
             default:
                bSuccess = FALSE;
                break;
@@ -1446,7 +1451,7 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
    This protocol is necessary for dyanamic coordinates which might have been changed by the
    applications, like TBrowse dimensions.
 
-   Wvg_Object( GOBJ_OBJTYPE_BOXRAISED, {|| oBrw:nTop, oBrw:nLeft, oBrw:nBottom, oBrw:nRight, {-2,-2,2,2} } )
+   Wvg_Object( GOBJ_OBJTYPE_BOXRAISED, {|| { oBrw:nTop, oBrw:nLeft, oBrw:nBottom, oBrw:nRight, {-2,-2,2,2} } } )
 */
 HB_FUNC( WVG_OBJECT )
 {
