@@ -7,8 +7,8 @@ CA-Cl*pper installation, and run the batch file to compile.
 
 It's recommended to patch original source code with
 included in this dir .dif file, to make it run smoother
-under various platforms. You can use this command to
-apply the patch:
+under various platforms. You can use GNU Patch to apply
+this patch, with this command:
 
 patch -N -i dbu.dif
 

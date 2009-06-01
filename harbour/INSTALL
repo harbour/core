@@ -355,7 +355,7 @@ EXAMPLES
       ---
 
       --- MinGW GCC
-      set PATH=C:\devl\MinGW-433\bin;%PATH%
+      set PATH=C:\devl\MinGW-440\bin;%PATH%
       rem
       set HB_COMPILER=mingw
       rem
@@ -365,7 +365,7 @@ EXAMPLES
 
       --- MinGW GCC with msys
       set PATH=C:\devl\msys\1.0.11\bin;%PATH%
-      set PATH=C:\devl\MinGW-433\bin;%PATH%
+      set PATH=C:\devl\MinGW-440\bin;%PATH%
       rem
       set HB_COMPILER=mingw
       rem

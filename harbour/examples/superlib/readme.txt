@@ -7,7 +7,7 @@
 
 2.) Unzip SOURCE.ZIP to this directory.
 
-3.) Apply supplied patch to the source:
+3.) Apply supplied patch to the source using GNU Patch:
     patch -N -i hbsuper.dif
 
 4.) Build it:
