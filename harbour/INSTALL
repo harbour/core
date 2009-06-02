@@ -296,7 +296,7 @@ EXAMPLES
              - '%1 %2' can be empty, 'clean', 'install' or 'clean install'
                depending on what you want to do.
              - Windows implib creation setup may change in the future.
-             - Cross compile setup (HB_BIN_COMPILE, HB_COMP_PATH, HB_PPGEN_PATH)
+             - Cross build setup (HB_BIN_COMPILE, HB_COMP_PATH, HB_PPGEN_PATH)
                is tentative.
 
       --- MSVC 2008 + SDK

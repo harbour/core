@@ -71,6 +71,13 @@
    #define hb_OSNewLine() ( Chr( 13 ) + Chr( 10 ) )
 #endif
 
+#ifdef __XHARBOUR__
+   #ifndef HB_COMPAT_C53
+      /* It makes xhb crash. */
+      /* #define HB_COMPAT_C53 */
+   #endif
+#endif
+
 #translate TEST_L_TBR( <x> ) => TEST_C_TBR( o, #<x>, {|| <x> } )
 #translate TEST_L_TBC( <x> ) => TEST_C_TBC( o, #<x>, {|| <x> } )
 
@@ -176,7 +183,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    TEST_L_TBC( TBColumnNew( "test00", { "" }                ) )
 
    s_lCheckResult := .F.
-   
+
    // ;
 
    TBRAssign( NIL )
@@ -311,9 +318,9 @@ PROCEDURE TBRAssign( xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:border        := xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:message       := xVar )
 #endif
-   
+
    RETURN
-   
+
 PROCEDURE TBCAssign( xVar )
    LOCAL o
 
@@ -688,7 +695,7 @@ FUNCTION XToStrX( xValue )
             cRetVal += ", "
          ENDIF
       NEXT
-   
+
       RETURN cRetVal + ' }'
 
    CASE cType == "M" ; RETURN 'M:' + xValue
@@ -741,7 +748,7 @@ STATIC FUNCTION ErrorMessage( oError )
       IF !Empty( oError:filename )
          cMessage += oError:filename + " "
       ENDIF
-      
+
       IF ValType( oError:Args ) == "A"
          cMessage += "A:" + LTrim( Str( Len( oError:Args ) ) ) + ":"
          FOR tmp := 1 TO Len( oError:Args )
@@ -752,11 +759,11 @@ STATIC FUNCTION ErrorMessage( oError )
          NEXT
          cMessage += " "
       ENDIF
-      
+
       IF oError:canDefault .OR. ;
          oError:canRetry .OR. ;
          oError:canSubstitute
-      
+
          cMessage += "F:"
          IF oError:canDefault
             cMessage += "D"
@@ -775,6 +782,11 @@ STATIC FUNCTION ErrorMessage( oError )
    RETURN cMessage
 
 #ifdef __XPP__
+FUNCTION hb_SToD( cDate )
+   RETURN SToD( cDate )
+#endif
+
+#ifdef __XHARBOUR__
 FUNCTION hb_SToD( cDate )
    RETURN SToD( cDate )
 #endif

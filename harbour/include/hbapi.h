@@ -239,7 +239,7 @@ HB_EXTERN_BEGIN
 #define HB_ISSYMBOL( n )      ( hb_param( n, HB_IT_SYMBOL ) != NULL )      /* Not available in CA-Cl*pper. */
 #define HB_ISDATETIME( n )    ( hb_param( n, HB_IT_DATETIME ) != NULL )    /* Not available in CA-Cl*pper. */
 
-/* Compatibility #defined, deprecated */
+/* Compatibility #defines, deprecated */
 #define ISNIL( n )            HB_ISNIL( n )
 #define ISCHAR( n )           HB_ISCHAR( n )
 #define ISNUM( n )            HB_ISNUM( n )

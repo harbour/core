@@ -54,6 +54,7 @@
 #define HB_XHB_H_
 
 #include "hbsetup.h"
+#include "hbdate.h"
 
 HB_EXTERN_BEGIN
 
@@ -67,6 +68,8 @@ extern HB_EXPORT void hb_ToOutDebug( const char * sTraceMsg, ... );
 extern HB_EXPORT BOOL hb_ToLogFileOnOff( BOOL bOnOff );
 extern HB_EXPORT BOOL hb_EmptyLogFile( BOOL bOnOff );
 extern HB_EXPORT void hb_ToLogFile( const char * sFile, const char * sTraceMsg, ... );
+
+#define hb_seconds() hb_dateSeconds()
 
 HB_EXTERN_END
 

@@ -86,8 +86,8 @@
 
 static HB_CODEPAGE s_codepage = { "HRWIN",
     HB_CPID_1250,HB_UNITB_1250,NUMBER_OF_CHARACTERS,
-    "ABCCCDÐEFGHIJKLMNOPQRSŠTUVWZŽXY",
-    "abcccddefghijklmnopqrsštuvwzžxy",
+    "ABCÈÆDÐEFGHIJKLMNOPQRSŠTUVWZŽXY",
+    "abcèædðefghijklmnopqrsštuvwzžxy",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 HB_CODEPAGE_INIT( HRWIN )

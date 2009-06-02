@@ -1,4 +1,4 @@
-/*
+/* 
  * $Id$
  */
 
@@ -84,8 +84,8 @@
 
 static HB_CODEPAGE s_codepage = { "HR437",
     HB_CPID_437,HB_UNITB_437,NUMBER_OF_CHARACTERS,
-    "ABC]^D\\EFGHIJKLMNOPQRS[TUVWZ@XY",
-    "abc}~d|efghijklmnopqrs{tuvwz`xy",
+    "ABC^]D\\EFGHIJKLMNOPQRS[TUVWZ@XY",
+    "abc~}d|efghijklmnopqrs{tuvwz`xy",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 HB_CODEPAGE_INIT( HR437 )

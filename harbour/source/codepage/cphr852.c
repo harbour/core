@@ -86,8 +86,8 @@
 
 static HB_CODEPAGE s_codepage = { "HR852",
     HB_CPID_852,HB_UNITB_852,NUMBER_OF_CHARACTERS,
-    "ABCè¨D—EFGHIJKLMNOPQRSÊTUVWZ¶XY",
-    "abcÜüd–efghijklmnopqrsÁtuvwzßxy",
+    "ABC¨èD—EFGHIJKLMNOPQRSÊTUVWZ¶XY",
+    "abcüÜd–efghijklmnopqrsÁtuvwzßxy",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 HB_CODEPAGE_INIT( HR852 )

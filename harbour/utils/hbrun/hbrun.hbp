@@ -4,6 +4,6 @@
 
 hbrun.prg
 
--l{shared&!(mingw|mingw64|mingwarm)}hbcplr
--l{shared&!(mingw|mingw64|mingwarm)}hbpp
--l{shared&!(mingw|mingw64|mingwarm)}hbcommon
+-l{shared&!allmingw}hbcplr
+-l{shared&!allmingw}hbpp
+-l{shared&!allmingw}hbcommon

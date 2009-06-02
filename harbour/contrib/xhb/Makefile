@@ -7,6 +7,7 @@ ROOT = ../../
 LIBNAME=xhb
 
 C_SOURCES=\
+	bkgtsks.c \
 	cstructc.c \
 	datesxhb.c \
 	dbf2txt.c \

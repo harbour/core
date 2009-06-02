@@ -154,6 +154,7 @@ PRG_SOURCES=\
 	vmasort.prg \
 	while.prg \
 	newrdd.prg \
+	brwpos.prg \
 
 PRG_HEADERS=\
 	db_brows.ch \
