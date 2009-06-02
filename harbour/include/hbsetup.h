@@ -525,6 +525,7 @@
 #  else
    #define HB_ALLOC_SIZE_ATTR( _nParam )
 #  endif
+   #define HB_RESTRICT  __restrict
 #else
    #define HB_PRINTF_FORMAT( _nStr, _nParam )
    #define HB_MALLOC_ATTR
@@ -533,6 +534,7 @@
    #define HB_COLD_ATTR
    #define HB_FLATTEN_ATTR
    #define HB_ALLOC_SIZE_ATTR( _nParam )
+   #define HB_RESTRICT
 #endif
 
 

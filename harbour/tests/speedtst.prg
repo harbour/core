@@ -255,7 +255,7 @@ STATIC FUNCTION spd_logfile()
 #ifndef __HARBOUR__
    RETURN "speedtst.txt"
 #else
-   LOCAL cDir, cName
+   LOCAL cName
    hb_FNameSplit( hb_ArgV( 0 ),, @cName )
    RETURN hb_FNameMerge( , cName, ".txt" )
 #endif

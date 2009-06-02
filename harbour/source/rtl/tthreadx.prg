@@ -122,9 +122,8 @@ PROTECTED:
 HIDDEN:
    VAR pThreadID        AS USUAL             INIT NIL SYNC
 
-
 EXPORTED:
-   METHOD new( nMaxStackSize )
+   METHOD new()
 
 PROTECTED:
    /* METHOD atEnd() */
@@ -145,11 +144,16 @@ EXPORTED:
 
 ENDCLASS
 
-METHOD new( nMaxStackSize ) CLASS TTHREAD
-   IF ISNUMBER( nMaxStackSize )
-      ::maxStackSize := nMaxStackSize
+METHOD new( ... ) CLASS TTHREAD
+   LOCAL nMaxStackSize
+
+   IF PCount() == 1
+      nMaxStackSize := hb_PValue( 1 )
+      IF ISNUMBER( nMaxStackSize )
+         ::maxStackSize := nMaxStackSize
+      ENDIF
    ENDIF
-   ::Init()
+   ::Init( ... )
    RETURN Self
 
 METHOD execute() CLASS TTHREAD
@@ -204,25 +208,38 @@ METHOD start( xAction, ... ) CLASS TTHREAD
       ::active := .T.
       ::pThreadID := hb_threadStart( HB_THREAD_INHERIT_PUBLIC, ;
             { |...|
-               ::startTime := Seconds()
-               ThreadObject( Self )
-               ::result := ::execute( ... )
+               WHILE .T.
+                  ::startTime := Seconds()
+                  ThreadObject( Self )
+                  ::result := ::execute( ... )
+                  IF ISNUMBER( ::interval )
+                     hb_idleSleep( ::interval / 100 )
+                     LOOP
+                  ENDIF
+                  ::startTime := NIL
+               ENDDO
                RETURN NIL
             }, ... )
-   ELSEIF !Empty( xAction ) .AND. ValType( xAction ) $ "CBP"
+   ELSEIF !Empty( xAction ) .AND. ValType( xAction ) $ "CBS"
       ::active := .T.
       ::pThreadID := hb_threadStart( HB_THREAD_INHERIT_PUBLIC, ;
             { |...|
-               ::startTime := Seconds()
-               ThreadObject( Self )
-               IF ::atStart != NIL
-                  EVAL( ::atStart, ... )
-               ENDIF
-               ::result := DO( xAction, ... )
-               IF ::atEnd != NIL
-                  EVAL( ::atEnd, ... )
-               ENDIF
-               ::startTime := NIL
+               WHILE .T.
+                  ::startTime := Seconds()
+                  ThreadObject( Self )
+                  IF ::atStart != NIL
+                     EVAL( ::atStart, ... )
+                  ENDIF
+                  ::result := DO( xAction, ... )
+                  IF ::atEnd != NIL
+                     EVAL( ::atEnd, ... )
+                  ENDIF
+                  ::startTime := NIL
+                  IF ISNUMBER( ::interval )
+                     hb_idleSleep( ::interval / 100 )
+                     LOOP
+                  ENDIF
+               ENDDO
                RETURN NIL
             }, ... )
    ELSE
