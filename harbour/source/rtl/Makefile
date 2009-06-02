@@ -85,6 +85,7 @@ C_SOURCES=\
 	hbzlib.c     \
 	hbzlibgz.c   \
 	idle.c       \
+	idlex.c      \
 	inkey.c      \
 	inkeyapi.c   \
 	is.c         \
