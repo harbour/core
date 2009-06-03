@@ -2,4 +2,4 @@
 # $Id$
 #
 
-libs=rddsql sddmy
+libs=rddsql sddmy libmysql
