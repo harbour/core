@@ -106,10 +106,15 @@ FUNCTION MAIN( ... )
 
 STATIC FUNCTION FCallBack( aFile, nItem )
 
+   STATIC nIter := 0
    LOCAL n := Int( Len( aFile ) / 40 )
 
-   IF nItem % n == 1
+   IF nItem == 1
+      nIter := 0
+   ENDIF
+   IF nItem % n == 1 .AND. nIter < 41
       ?? "."
+      nIter ++
    ENDIF
 
    RETURN Nil
@@ -347,7 +352,7 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
    LOCAL i, iDelta := 0, nLen := Len( aFile ), cToken1, cToken2, nLenToken, nPos
    LOCAL nPosSep, cLine, cLineAll, nLineSegment
    LOCAL nContrState, nIndent, nDeep := 0, aDeep := {}
-   LOCAL lPragmaDump := .F. , lClass := .F. , lComment := .F. , nPosComment := 0, nPosCommPrev
+   LOCAL lPragmaDump := .F. , lClass := .F. , lComment := .F. , nPosComment := 0, lContinue := .F.
    LOCAL nStatePrev, nState := 0
    PRIVATE cFunctions := Upper( ::cFunctions )
 
@@ -359,7 +364,6 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
       IF ::bCallBack != Nil
          Eval( ::bCallBack, aFile, i )
       ENDIF
-      nPosCommPrev := nPosComment
       nPosComment := 0
       IF ::lIndent
          aFile[i] := StrTran( RTrim( aFile[i] ), Chr( 9 ), " " )
@@ -424,7 +428,7 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
          ENDIF
          IF !lPragmaDump .AND. ::lIndent .AND. ( !lComment .OR. nPosComment > 1 )
             aFile[i] := cLineAll
-            IF i == 1 .OR. Right( aFile[i-1], 1 ) != ";" .OR. nPosCommPrev != 0
+            IF !lContinue
                nPosSep := 1
                nLineSegment := 1
                DO WHILE .T.
@@ -565,6 +569,12 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
             ELSE
                // This line is a continuation of previous
                aFile[i] := Space( ::nIndLeft + ::nIndNext * nDeep + ::nIndCont ) + ::FormatLine( aFile[i], .T. )
+            ENDIF
+            IF ( nPosComment > 0 .AND. Right(Trim(Left( aFile[i],nPosComment-1 )),1) == ';' ) ;
+                  .OR. ( nPosComment == 0 .AND. Right( aFile[i],1 ) == ';' )
+               lContinue := .T.
+            ELSE
+               lContinue := .F.
             ENDIF
          ELSEIF !lPragmaDump
             aFile[i] := ::FormatLine( aFile[i] )
