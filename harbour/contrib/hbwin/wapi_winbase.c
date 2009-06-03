@@ -107,9 +107,7 @@ HB_FUNC( WAPI_GETPROCADDRESS )
 #endif
 }
 
-/*
-HMODULE WINAPI GetModuleHandle( __in_opt LPCTSTR lpModuleName );
-*/
+/* HMODULE WINAPI GetModuleHandle( __in_opt LPCTSTR lpModuleName ); */
 HB_FUNC( WAPI_GETMODULEHANDLE )
 {
    LPTSTR lpModuleName = ISCHAR( 1 ) ? ( LPTSTR ) HB_TCHAR_CONVTO( hb_parc( 1 ) ) : ( LPTSTR ) NULL;
@@ -118,4 +116,10 @@ HB_FUNC( WAPI_GETMODULEHANDLE )
 
    if( lpModuleName )
       HB_TCHAR_FREE( lpModuleName );
+}
+
+/* VOID WINAPI Sleep( __in DWORD dwMilliseconds ); */
+HB_FUNC( WAPI_SLEEP )
+{
+   Sleep( ( DWORD ) hb_parnl( 1 ) );
 }

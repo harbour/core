@@ -54,7 +54,10 @@
 
 #ifdef HB_COMPAT_XPP
 
-HB_FUNC( SLEEP )
+/* NOTE: Not using the original name SLEEP() as it collides with
+         other implementations with the same name (FlagsShip, CLIP)
+         which also expects parameter differently. [vszakats] */
+HB_FUNC( XPP_SLEEP )
 {
    hb_idleSleep( ( ( double ) hb_parnl( 1 ) ) / 100 );
 }
