@@ -18,7 +18,7 @@
  *
  */
 
-2008-08-05 21:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+2008-08-05 21:39 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/hbzlib/zconf.h
      + Setting ZLIB_DLL if HB_DYNLIB is defined.
 

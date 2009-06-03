@@ -65,7 +65,7 @@
  *    hb_gtSetColorStr()
  *    hb_gtSetMode()
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
  *    hb_gtDrawShadow()
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Misc Windows API functions
  *
- * Copyright 2008-2009 Viktor Szakats <harbour.01 syenar hu>
+ * Copyright 2008-2009 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

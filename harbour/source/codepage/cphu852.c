@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * National Collation Support Module (HU852)
  *
- * Copyright 1999-2007 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999-2007 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

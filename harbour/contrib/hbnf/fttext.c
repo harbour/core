@@ -159,7 +159,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999-2008 Viktor Szakats (harbour.01 syenar hu)
+ * Copyright 1999-2008 Viktor Szakats (harbour.01 syenar.hu)
  *    _findeol(), _findbol()
  *
  * See COPYING for licensing terms.

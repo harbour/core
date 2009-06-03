@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * OpenSSL API (RAND) - Harbour interface.
  *
- * Copyright 2009 Viktor Szakats <harbour 01 syenar hu>
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

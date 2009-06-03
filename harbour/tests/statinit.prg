@@ -3,7 +3,7 @@
 //
 
 // ; Donated to the public domain by
-//   Viktor Szakats <viktor.szakats@syenar.hu>
+//   Viktor Szakats (harbour.01 syenar.hu)
 
 MEMVAR cMyPubVar
 

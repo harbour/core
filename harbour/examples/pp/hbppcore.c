@@ -54,7 +54,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
  *    __DATE__, __TIME__, __HB_MAIN__ support
  *
  * Copyright 2000 Ron Pinkas <Ron@Profit-Master.com>

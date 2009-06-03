@@ -59,7 +59,7 @@
  *    Cursor declarations
  * See above for licensing terms.
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
  *    Mouse related declarations
  *    Undocumented GT API declarations
  *

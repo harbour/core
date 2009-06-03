@@ -5,7 +5,7 @@
 @echo off
 
 rem ---------------------------------------------------------------
-rem Copyright 2009 Viktor Szakats (viktor.szakats@syenar.hu)
+rem Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
 rem Copyright 2003 Przemyslaw Czerpak (druzus / at / priv.onet.pl)
 rem simple script run after Harbour make install to finish install
 rem process

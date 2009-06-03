@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * xhb HB_BUILDINFO() emulation.
  *
- * Copyright 2009 Viktor Szakats <syenar.01 syenar hu>
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

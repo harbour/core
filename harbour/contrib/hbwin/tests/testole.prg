@@ -9,7 +9,7 @@
  *
  * Copyright 2007 Enrico Maria Giordano e.m.giordano at emagsoftware.it
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * Copyright 2008 Viktor Szakats <harbour.01 syenar.hu>
+ * Copyright 2008 Viktor Szakats (harbour.01 syenar.hu)
  *    Exm_CDO(), Exm_OOOpen()
  *
  * www - http://www.harbour-project.org

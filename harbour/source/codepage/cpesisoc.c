@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * National Collation Support Module (ESISOC - Spanish Clipper compatible)
  *
- * Copyright 2008 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 2008 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  * Spanish support by Antonio Linares <alinares@fivetechsoft.com>
  *

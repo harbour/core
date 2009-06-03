@@ -93,7 +93,7 @@ by Viktor Szakats
   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email_address>
 
   For example:
-    2000-05-27 23:12 UTC+0100 Viktor Szakats <harbour.01 syenar.hu>
+    2000-05-27 23:12 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
 
 - Add a entry body which lists all filenames changed, all of
   them with full path spec. Mention the name of the changed function or
@@ -188,7 +188,7 @@ svn propset svn:keywords "Author Date Id Revision" "filename"
 svn propset svn:eol-style native "filename"
 
 
-[ Copyright (c) 1999-2009 Viktor Szakats <harbour.01 syenar.hu>
+[ Copyright (c) 1999-2009 Viktor Szakats (harbour.01 syenar.hu)
   Licensed under Creative Commons Attribution-ShareAlike 3.0:
   http://creativecommons.org/licenses/by-sa/3.0/
   See COPYING. ]

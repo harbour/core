@@ -11,7 +11,7 @@
 # For further information about the GNU make system please
 # check doc/gmake.txt
 #
-# Copyright 1999-2001 Viktor Szakats (viktor.szakats@syenar.hu)
+# Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 

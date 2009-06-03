@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * OLE library C header
  *
- * Copyright 2009 Viktor Szakats <syenar.01 syenar hu>
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -86,8 +86,8 @@
      ( defined(__WATCOMC__) && ( __WATCOMC__ >= 1270 ) ) )
 #  define HB_ID_REF( id )     ( id )
 #  define HB_VTBL( pSelf )    ( pSelf )
-#  define HB_THIS( pSelf ) 
-#  define HB_THIS_( pSelf ) 
+#  define HB_THIS( pSelf )
+#  define HB_THIS_( pSelf )
 #else
 #  define HB_OLE_C_API        1
 #  define HB_ID_REF( id )     ( &id )

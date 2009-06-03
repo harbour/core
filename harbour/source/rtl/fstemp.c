@@ -7,7 +7,7 @@
  * HB_FTEMPCREATE() function
  *
  * Copyright 2000-2001 Jose Lalin <dezac@corevia.com>
- *                     Viktor Szakats <viktor.szakats@syenar.hu>
+ *                     Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

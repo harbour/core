@@ -3,7 +3,7 @@
  */
 
 // ; Donated to the public domain by
-//   Viktor Szakats <viktor.szakats@syenar.hu>
+//   Viktor Szakats (harbour.01 syenar.hu)
 
 REQUEST HB_LANG_HU852
 REQUEST HB_LANG_KO

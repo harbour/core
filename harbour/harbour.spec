@@ -726,7 +726,7 @@ rm -rf $RPM_BUILD_ROOT
 ######################################################################
 
 %changelog
-* Thu Aug 05 2008 Viktor Szakats (harbour.01 syenar hu)
+* Thu Aug 05 2008 Viktor Szakats (harbour.01 syenar.hu)
 - removed hbdot, hbverfix, hbpptest
 - hbrun now fully replaces hbdot.
 
