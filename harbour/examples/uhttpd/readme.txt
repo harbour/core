@@ -4,8 +4,8 @@
 
 uHTTPD micro web server
 
-Build it without GD: ..\..\bin\hbmk uhttpd.hbp
-Build it with    GD: ..\..\bin\hbmk uhttpdgd.hbp
+Build it without GD: hbmk2 uhttpd.hbp
+Build it with    GD: hbmk2 uhttpdgd.hbp
   [ This one needs bgd.dll. Please download it from:
   http://www.libgd.org/releases/gd-latest-win32.zip ]
 
@@ -15,7 +15,7 @@ built-in socket functions.
 To see accepted parameters run: uhttpd -?
 Parameters can also be defined using uhttpd.ini file.
 
-Before starting please build modules in modules folder using bldhrb.bat
+Before starting please build modules using: hbmk2 modules.hbp
 
 Once started connect to uhttpd using:
 http://localhost:8082
