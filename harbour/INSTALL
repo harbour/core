@@ -70,11 +70,12 @@ HOW TO BUILD AND INSTALL HARBOUR
       > hello
       You should see 'Hello world!' on screen.
 
-      NOTE: <DIR> is your destination directory where executables,
-            libraries and headers will be created. Use absolute paths
-            only. For a peace of mind, avoid using spaces, quotes
-            in the name. You can leave it empty, in this case the
-            results will be created under the current directory tree.
+      NOTES: - <DIR> is your destination directory where executables,
+               libraries and headers will be created. Use absolute paths
+               only. For a peace of mind, avoid using spaces, quotes
+               in the name. You can leave it empty, in this case the
+               results will be created under the current directory tree.
+             - With mingw, sh.exe (part of msys) mustn't be in the PATH.
 
    Windows with MinGW + msys
    -------------------------
@@ -354,7 +355,7 @@ EXAMPLES
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
 
-      --- MinGW GCC
+      --- MinGW GCC (make sure msys (sh.exe) isn't in the PATH)
       set PATH=C:\devl\MinGW-440\bin;%PATH%
       rem
       set HB_COMPILER=mingw

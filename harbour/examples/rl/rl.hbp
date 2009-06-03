@@ -2,6 +2,10 @@
 # $Id$
 #
 
+-orl
+-m -n
+-main=setup
+
 RLBACK.PRG
 RLDIALG.PRG
 RLFRONT.PRG

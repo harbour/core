@@ -48,6 +48,16 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
    ColorSelect( CLR_STANDARD )
 
+   /* NOTE: Undocumented parameter passing handled. ACHOICE()
+            is called in such way in RLDIALG.PRG from RL tool
+            supplied with Clipper 5.x. 6th parameter is the
+            user function and 7th parameter is zero (empty I
+            suppose). [vszakats] */
+   IF Empty( xUserFunc ) .AND. ValType( xSelect ) $ "CB"
+      xUserFunc := xSelect
+      xSelect := NIL
+   ENDIF
+
    lUserFunc := !Empty( xUserFunc ) .AND. ValType( xUserFunc ) $ "CB"
 
 
@@ -107,7 +117,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    DO WHILE !lFinished
 
       IF nMode != AC_GOTO .AND. nMode != AC_NOITEM
-         nKey  := Inkey( 0 ) 
+         nKey  := Inkey( 0 )
          nMode := AC_IDLE
       ENDIF
 
