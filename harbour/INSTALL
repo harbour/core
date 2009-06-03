@@ -543,7 +543,7 @@ HOW TO GET THE HARBOUR SOURCES
 
        You'll need Subversion (SVN) version control software installed
        on your system, and issue this command:
-          svn co https://harbour-project.svn.sf.net/svnroot/harbour-project/trunk/harbour
+          svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
 
        You can get subsequent updates using this command:
           svn update

@@ -162,6 +162,8 @@ REQUEST hbmk_KEYW
 
 #define _LNG_MARKER             "${lng}"
 
+#define _HBMK_CFG_NAME          "hbmk.cfg"
+
 #define _WORKDIR_BASE_          ".hbmk"
 #define _WORKDIR_DEF_           ( _WORKDIR_BASE_ + hb_osPathSeparator() + hbmk[ _HBMK_cARCH ] + hb_osPathSeparator() + hbmk[ _HBMK_cCOMP ] )
 
@@ -4539,8 +4541,6 @@ STATIC FUNCTION FN_HasWildcard( cFileName )
    RETURN "?" $ cFileName .OR. ;
           "*" $ cFileName
 
-#define HBMK_CFG_NAME  "hbmk.cfg"
-
 STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
    LOCAL aFile
    LOCAL cDir
@@ -4559,7 +4559,7 @@ STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
    #endif
 
    FOR EACH cDir IN aCFGDirs
-      IF hb_FileExists( cFileName := ( PathNormalize( DirAddPathSep( cDir ) ) + HBMK_CFG_NAME ) )
+      IF hb_FileExists( cFileName := ( PathNormalize( DirAddPathSep( cDir ) ) + _HBMK_CFG_NAME ) )
          IF ! hbmk[ _HBMK_lQuiet ]
             hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing configuration: %1$s" ), cFileName ) )
          ENDIF
@@ -4571,7 +4571,7 @@ STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
    IF ! lConfigOnly
       FOR EACH aFile IN Directory( "*" + ".hbc" )
          cFileName := aFile[ F_NAME ]
-         IF !( cFileName == HBMK_CFG_NAME ) .AND. Lower( FN_ExtGet( cFileName ) ) == ".hbc"
+         IF !( cFileName == _HBMK_CFG_NAME ) .AND. Lower( FN_ExtGet( cFileName ) ) == ".hbc"
             IF ! hbmk[ _HBMK_lQuiet ]
                hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cFileName ) )
             ENDIF
@@ -4582,7 +4582,7 @@ STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
 
    RETURN
 
-#define _EOL          Chr( 10 )
+#define _EOL                    Chr( 10 )
 
 STATIC PROCEDURE HBC_ProcessOne( hbmk, cFileName )
    LOCAL cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
@@ -5190,14 +5190,14 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
 
    RETURN
 
-#define RTLNK_MODE_NONE       0
-#define RTLNK_MODE_OUT        1
-#define RTLNK_MODE_FILE       2
-#define RTLNK_MODE_FILENEXT   3
-#define RTLNK_MODE_LIB        4
-#define RTLNK_MODE_LIBNEXT    5
-#define RTLNK_MODE_SKIP       6
-#define RTLNK_MODE_SKIPNEXT   7
+#define RTLNK_MODE_NONE         0
+#define RTLNK_MODE_OUT          1
+#define RTLNK_MODE_FILE         2
+#define RTLNK_MODE_FILENEXT     3
+#define RTLNK_MODE_LIB          4
+#define RTLNK_MODE_LIBNEXT      5
+#define RTLNK_MODE_SKIP         6
+#define RTLNK_MODE_SKIPNEXT     7
 
 STATIC PROCEDURE rtlnk_libtrans( aLibList )
    STATIC hTrans := { ;
@@ -5649,11 +5649,11 @@ STATIC FUNCTION GenHBL( hbmk, aFiles, cFileOut, lEmpty )
 
    RETURN lRetVal
 
-#define _VCS_UNKNOWN    0
-#define _VCS_SVN        1
-#define _VCS_GIT        2
-#define _VCS_MERCURIAL  3
-#define _VCS_CVS        4
+#define _VCS_UNKNOWN            0
+#define _VCS_SVN                1
+#define _VCS_GIT                2
+#define _VCS_MERCURIAL          3
+#define _VCS_CVS                4
 
 STATIC FUNCTION VCSDetect( cDir )
 
@@ -5888,7 +5888,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
 
    LOCAL aOpt_Basic := {;
       { "-o<outname>"       , I_( "output file name" ) },;
-      { "-l<libname>"       , I_( "link with <libname> library" ) },;
+      { "-l<libname>"       , I_( "link with <libname> library. <libname> should be without path, extension and lib prefix (unless part of libname)." ) },;
       { "-L<libpath>"       , I_( "additional path to search for libraries" ) },;
       { "-i<p>|-incpath=<p>", I_( "additional path to search for headers" ) },;
       { "-static|-shared"   , I_( "link with static/shared libs" ) },;
@@ -5982,7 +5982,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( "<script> can be <@script> (.hbm format), <script.hbm>, <script.hbp> (marks a new target) or <script.hbc>." ),;
       I_( "Multiple -l, -L and <script> parameters are accepted." ),;
       I_( "Regular Harbour compiler options are also accepted." ),;
-      hb_StrFormat( I_( "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbc." ), HBMK_CFG_NAME ),;
+      hb_StrFormat( I_( "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbc." ), _HBMK_CFG_NAME ),;
       I_( ".hbc config files in current dir are automatically processed." ),;
       I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\nLines starting with '#' char are ignored" ),;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
