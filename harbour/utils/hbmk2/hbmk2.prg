@@ -163,6 +163,7 @@ REQUEST hbmk_KEYW
 #define _LNG_MARKER             "${lng}"
 
 #define _HBMK_CFG_NAME          "hbmk.cfg"
+#define _HBMK_AUTOHBM_NAME      "hbmk.hbm"
 
 #define _WORKDIR_BASE_          ".hbmk"
 #define _WORKDIR_DEF_           ( _WORKDIR_BASE_ + hb_osPathSeparator() + hbmk[ _HBMK_cARCH ] + hb_osPathSeparator() + hbmk[ _HBMK_cCOMP ] )
@@ -1200,8 +1201,18 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    hbmk[ _HBMK_aLNG ] := {}
    hbmk[ _HBMK_aINSTPATH ] := {}
 
-   /* Collect all command line parameters */
    aParams := {}
+
+   /* Process automatic make files in current dir. */
+   IF hb_FileExists( _HBMK_AUTOHBM_NAME )
+      IF ! hbmk[ _HBMK_lQuiet ]
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing local make script: %1$s" ), _HBMK_AUTOHBM_NAME ) )
+      ENDIF
+      nEmbedLevel := 1
+      HBM_Load( hbmk, aParams, _HBMK_AUTOHBM_NAME, @nEmbedLevel )
+   ENDIF
+
+   /* Collect all command line parameters */
    FOR EACH cParam IN aArgs
       DO CASE
       CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" )
@@ -2902,8 +2913,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                ELSE
                   IF ( tmp := hb_compile( "", aCommand ) ) != 0
                      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
-                     OutErr( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt +;
-                             " " + ArrayToList( aCommand ) + hb_osNewLine() )
+                     IF ! hbmk[ _HBMK_lQuiet ]
+                        OutErr( DirAddPathSep( PathSepToSelf( s_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt +;
+                                " " + ArrayToList( aCommand ) + hb_osNewLine() )
+                     ENDIF
                      IF s_lBEEP
                         DoBeep( hbmk, .F. )
                      ENDIF
@@ -2922,7 +2935,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   ELSE
                      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
                   ENDIF
-                  OutErr( ArrayToList( thread[ 2 ] ) + hb_osNewLine() )
+                  IF ! hbmk[ _HBMK_lQuiet ]
+                     OutErr( ArrayToList( thread[ 2 ] ) + hb_osNewLine() )
+                  ENDIF
                   IF s_lBEEP
                      DoBeep( hbmk, .F. )
                   ENDIF
@@ -5983,6 +5998,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( "Multiple -l, -L and <script> parameters are accepted." ),;
       I_( "Regular Harbour compiler options are also accepted." ),;
       hb_StrFormat( I_( "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbc." ), _HBMK_CFG_NAME ),;
+      hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
       I_( ".hbc config files in current dir are automatically processed." ),;
       I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\nLines starting with '#' char are ignored" ),;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
