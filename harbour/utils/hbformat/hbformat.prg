@@ -352,7 +352,7 @@ METHOD Reformat( aFile ) CLASS CODEFORMAT
    LOCAL i, iDelta := 0, nLen := Len( aFile ), cToken1, cToken2, nLenToken, nPos
    LOCAL nPosSep, cLine, cLineAll, nLineSegment
    LOCAL nContrState, nIndent, nDeep := 0, aDeep := {}
-   LOCAL lPragmaDump := .F. , lClass := .F. , lComment := .F. , nPosComment := 0, lContinue := .F.
+   LOCAL lPragmaDump := .F. , lClass := .F. , lComment := .F. , nPosComment, lContinue := .F.
    LOCAL nStatePrev, nState := 0
    PRIVATE cFunctions := Upper( ::cFunctions )
 
