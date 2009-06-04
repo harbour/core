@@ -13,8 +13,8 @@ HARBOUR
                                        http://www.harbour-project.org/
 
 
-HOW TO BUILD AND INSTALL HARBOUR
-================================
+HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
+============================================
 
    NOTE: Before reporting a problem on the mailing list, please make
          sure to read the TROUBLESHOOTING section in this file.
@@ -79,6 +79,8 @@ HOW TO BUILD AND INSTALL HARBOUR
 
    Windows with MinGW + msys
    -------------------------
+   (for plain MinGW *without* msys, which is the recommended way: see above)
+
       Make sure to have msys and MinGW properly configured.
       msys should be put in PATH *before* MinGW.
 
