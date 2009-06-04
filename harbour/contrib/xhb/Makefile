@@ -26,6 +26,7 @@ C_SOURCES=\
 	xhbat.c \
 	xhbcopyf.c \
 	xhbenum.c \
+	xhberrc.c \
 	xhbfunc.c \
 	xhbis.c \
 	xhbmsgs.c \

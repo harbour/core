@@ -4618,7 +4618,7 @@ STATIC PROCEDURE HBC_ProcessOne( hbmk, cFileName )
       DO CASE
       CASE Lower( Left( cLine, Len( "pos="         ) ) ) == "pos="           ; cLine := SubStr( cLine, Len( "pos="          ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathSepToTarget( hbmk, MacroProc( hbmk, StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
+            cItem := PathSepToTarget( hbmk, PathProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
             IF AScan( hbmk[ _HBMK_aPO ], {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( hbmk[ _HBMK_aPO ], cItem )
             ENDIF
@@ -5507,6 +5507,12 @@ STATIC PROCEDURE UpdatePO( hbmk, aPOTIN )
       POTMerge( hbmk, aPOTIN, StrTran( hbmk[ _HBMK_cPO ], _LNG_MARKER, cLNG ), StrTran( hbmk[ _HBMK_cPO ], _LNG_MARKER, cLNG ) )
       AAdd( aUpd, cLNG )
    NEXT
+
+   IF hbmk[ _HBMK_lDEBUGI18N ]
+      hbmk_OutStd( hbmk, hb_StrFormat( "UpdatePO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
+      hbmk_OutStd( hbmk, hb_StrFormat( "UpdatePO: for .po: %1$s", hbmk[ _HBMK_cPO ] ) )
+      hbmk_OutStd( hbmk, hb_StrFormat( "UpdatePO: for languages: %1$s", ArrayToList( hbmk[ _HBMK_aLNG ], ", " ) ) )
+   ENDIF
 
    IF Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ hbmk[ _HBMK_cPO ] )
       hbmk_OutStd( hbmk, hb_StrFormat( I_( "Updated .po file '%1$s'" ), hbmk[ _HBMK_cPO ] ) )
