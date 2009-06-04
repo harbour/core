@@ -30,7 +30,9 @@ C_SOURCES=\
 	xhbis.c \
 	xhbmsgs.c \
 	xhbqself.c \
+	xhbsave.c \
 	xhbscr.c \
+	xhbtrim.c \
 	xhbwith.c \
 	xstrdel.c \
 
