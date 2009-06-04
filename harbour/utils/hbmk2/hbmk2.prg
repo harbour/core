@@ -165,6 +165,9 @@ REQUEST hbmk_KEYW
 #define _HBMK_CFG_NAME          "hbmk.cfg"
 #define _HBMK_AUTOHBM_NAME      "hbmk.hbm"
 
+#define _HBMK_NEST_MAX          10
+#define _HBMK_HEAD_NEST_MAX     10
+
 #define _WORKDIR_BASE_          ".hbmk"
 #define _WORKDIR_DEF_           ( _WORKDIR_BASE_ + hb_osPathSeparator() + hbmk[ _HBMK_cARCH ] + hb_osPathSeparator() + hbmk[ _HBMK_cCOMP ] )
 
@@ -507,7 +510,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL lSysLoc
    LOCAL cPrefix
    LOCAL cPostfix
-   LOCAL nEmbedLevel
    LOCAL cCCEXT_mingw
 
    LOCAL lSkipBuild := .F.
@@ -1208,8 +1210,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       IF ! hbmk[ _HBMK_lQuiet ]
          hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing local make script: %1$s" ), _HBMK_AUTOHBM_NAME ) )
       ENDIF
-      nEmbedLevel := 1
-      HBM_Load( hbmk, aParams, _HBMK_AUTOHBM_NAME, @nEmbedLevel )
+      HBM_Load( hbmk, aParams, _HBMK_AUTOHBM_NAME, 1 )
    ENDIF
 
    /* Collect all command line parameters */
@@ -1226,13 +1227,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                DEFAULT s_cFIRST TO s_aOBJUSER[ 1 ]
             ENDIF
          ELSE
-            nEmbedLevel := 1
-            HBM_Load( hbmk, aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
+            HBM_Load( hbmk, aParams, cParam, 1 ) /* Load parameters from script file */
          ENDIF
       CASE Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
            Lower( FN_ExtGet( cParam ) ) == ".hbp"
-         nEmbedLevel := 1
-         HBM_Load( hbmk, aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
+         HBM_Load( hbmk, aParams, cParam, 1 ) /* Load parameters from script file */
       OTHERWISE
          AAdd( aParams, { cParam, "", 0 } )
       ENDCASE
@@ -1640,7 +1639,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cParam ) )
          ENDIF
 
-         HBC_ProcessOne( hbmk, cParam )
+         HBC_ProcessOne( hbmk, cParam, 1 )
 
       CASE FN_ExtGet( cParamL ) == ".prg"
 
@@ -3873,7 +3872,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
       RETURN .F.
    ENDIF
 
-   IF nEmbedLevel > 10
+   IF nEmbedLevel > _HBMK_HEAD_NEST_MAX
       RETURN .F.
    ENDIF
 
@@ -4578,7 +4577,7 @@ STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
          IF ! hbmk[ _HBMK_lQuiet ]
             hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing configuration: %1$s" ), cFileName ) )
          ENDIF
-         HBC_ProcessOne( hbmk, cFileName )
+         HBC_ProcessOne( hbmk, cFileName, 1 )
          EXIT
       ENDIF
    NEXT
@@ -4590,7 +4589,7 @@ STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
             IF ! hbmk[ _HBMK_lQuiet ]
                hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cFileName ) )
             ENDIF
-            HBC_ProcessOne( hbmk, cFileName )
+            HBC_ProcessOne( hbmk, cFileName, 1 )
          ENDIF
       NEXT
    ENDIF
@@ -4599,10 +4598,13 @@ STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
 
 #define _EOL                    Chr( 10 )
 
-STATIC PROCEDURE HBC_ProcessOne( hbmk, cFileName )
-   LOCAL cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
+STATIC PROCEDURE HBC_ProcessOne( hbmk, cFileName, nEmbedLevel  )
+   LOCAL cFile
    LOCAL cLine
    LOCAL cItem
+   LOCAL tmp
+
+   cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
 
    IF ! hb_osNewLine() == _EOL
       cFile := StrTran( cFile, hb_osNewLine(), _EOL )
@@ -4629,6 +4631,35 @@ STATIC PROCEDURE HBC_ProcessOne( hbmk, cFileName )
             cItem := PathSepToTarget( hbmk, MacroProc( hbmk, StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
             IF AScan( hbmk[ _HBMK_aLIBUSER ], {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( hbmk[ _HBMK_aLIBUSER ], cItem )
+            ENDIF
+         NEXT
+
+      CASE Lower( Left( cLine, Len( "hbcs="         ) ) ) == "hbcs="         ; cLine := SubStr( cLine, Len( "hbcs="         ) + 1 )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            IF nEmbedLevel < _HBMK_NEST_MAX
+
+               cItem := PathProc( MacroProc( hbmk, StrStripQuote( cItem ), FN_DirGet( cFileName ) ), FN_DirGet( cFileName ) )
+
+               IF Empty( FN_ExtGet( cItem ) )
+                  cItem := FN_ExtSet( cItem, ".hbc" )
+               ENDIF
+
+               IF ! hb_FileExists( cItem )
+                  FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
+                     IF hb_FileExists( DirAddPathSep( tmp ) + FN_NameExtGet( cItem ) )
+                        cItem := DirAddPathSep( tmp ) + FN_NameExtGet( cItem )
+                        EXIT
+                     ENDIF
+                  NEXT
+               ENDIF
+
+               IF hbmk[ _HBMK_lInfo ]
+                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cItem ) )
+               ENDIF
+
+               HBC_ProcessOne( hbmk, cItem, nEmbedLevel + 1 )
+            ELSE
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot nest deeper in %1$s" ), cFileName ) )
             ENDIF
          NEXT
 
@@ -4873,7 +4904,7 @@ STATIC FUNCTION ValueIsF( cString )
    RETURN cString == "no" .OR. ;
           cString == "0" /* Compatibility */
 
-STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, /* @ */ nEmbedLevel )
+STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nEmbedLevel )
    LOCAL cFile
    LOCAL cLine
    LOCAL cParam
@@ -4896,19 +4927,21 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, /* @ */ nEmbedLevel )
                IF ! Empty( cParam )
                   DO CASE
                   CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" )
-                     IF nEmbedLevel < 10
+                     IF nEmbedLevel < _HBMK_NEST_MAX
                         cParam := SubStr( cParam, 2 )
                         IF Empty( FN_ExtGet( cParam ) )
                            cParam := FN_ExtSet( cParam, ".hbm" )
                         ENDIF
-                        nEmbedLevel++
-                        HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
+                        HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), nEmbedLevel + 1 ) /* Load parameters from script file */
+                     ELSE
+                        hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot nest deeper in %1$s" ), cFileName ) )
                      ENDIF
                   CASE Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
                        Lower( FN_ExtGet( cParam ) ) == ".hbp"
-                     IF nEmbedLevel < 10
-                        nEmbedLevel++
-                        HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
+                     IF nEmbedLevel < _HBMK_NEST_MAX
+                        HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), nEmbedLevel + 1 ) /* Load parameters from script file */
+                     ELSE
+                        hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot nest deeper in %1$s" ), cFileName ) )
                      ENDIF
                   OTHERWISE
                      AAdd( aParams, { cParam, cFileName, cLine:__enumIndex() } )
@@ -6006,9 +6039,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       hb_StrFormat( I_( "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbc." ), _HBMK_CFG_NAME ),;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
       I_( ".hbc config files in current dir are automatically processed." ),;
-      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\nLines starting with '#' char are ignored" ),;
+      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\nLines starting with '#' char are ignored" ),;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
-      I_( "Certain .hbc lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}" ),;
+      I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}" ),;
       I_( "Defaults and feature support vary by architecture/compiler." ) }
 
    DEFAULT lLong TO .F.

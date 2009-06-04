@@ -220,7 +220,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Jose Lalin <dezac corevia.com>\n"
          "Kwon, Oh-Chul <ohchul fivetech.net>\n"
          "Leslee Griffith <les.griffith vantagesystems.ca>\n"
-         "Lorenzo Fiorini <lorenzo_fiorini teamwork.it>\n"
+         "Lorenzo Fiorini <lorenzo.fiorini gmail.com>\n"
          "Luis Krause Mantilla <lkrausem shaw.ca>\n"
          "Luiz Rafael Culik <culik sl.conex.net>\n"
          "Manuel Ruiz <mrt joca.es>\n"
