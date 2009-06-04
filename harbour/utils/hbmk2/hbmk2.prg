@@ -1625,7 +1625,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       CASE FN_ExtGet( cParamL ) == ".hbc"
 
-         cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+         cParam := PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, cParam ), FN_DirGet( aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
 
          IF ! hb_FileExists( cParam )
             FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
