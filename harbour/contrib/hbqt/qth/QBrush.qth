@@ -54,6 +54,12 @@
 ;              Header File to Generate QT Wrapper Sources
 ;
 
+<CLASS>
+Inherits = 
+Type     = Core
+New      = 
+</CLASS>
+
 <CODE>
 #include <QtGui/QBrush>
 
