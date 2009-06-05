@@ -211,7 +211,7 @@
    #endif
 
    #undef SHORT                           /* 2 bytes signed */
-   typedef short int SHORT;
+   typedef signed short int SHORT;
 
    #undef USHORT                          /* 2 bytes unsigned */
    typedef unsigned short int USHORT;
@@ -249,7 +249,7 @@
    #if ! defined(HB_DONT_DEFINE_BASIC_TYPES) && ! defined(_WINNT_H)
       #if !defined(LONGLONG)
          #if defined(__GNUC__)
-            typedef long long LONGLONG;
+            typedef signed long long LONGLONG;
          #else
             typedef __int64 LONGLONG;
          #endif
@@ -314,7 +314,7 @@
 #endif
 
 #if USHRT_MAX == 0xffff
-   typedef short int           hbI16;
+   typedef signed short int    hbI16;
    typedef unsigned short int  hbU16;
    #define hbI16Min            SHRT_MIN
    #define hbI16Max            SHRT_MAX
@@ -343,7 +343,7 @@
 #endif
 
 #if UINT_MAX == 0xFFFFFFFF
-   typedef int                 hbI32;
+   typedef signed int          hbI32;
    typedef unsigned int        hbU32;
    #define hbI32Min            INT_MIN
    #define hbI32Max            INT_MAX
@@ -352,7 +352,7 @@
       typedef UINT         UINT32;
 #  endif
 #  if !defined( INT32 )
-      typedef int          INT32;
+      typedef signed int   INT32;
 #  endif
 #  if !defined( UINT32_MAX )
 #     define UINT32_MAX    UINT_MAX
@@ -364,7 +364,7 @@
 #     define INT32_MIN     INT_MIN
 #  endif
 #elif ULONG_MAX == 0xFFFFFFFF
-   typedef long                hbI32;
+   typedef signed long         hbI32;
    typedef unsigned long       hbU32;
    #define hbI32Min            LONG_MIN
    #define hbI32Max            LONG_MAX
@@ -400,16 +400,16 @@
 #endif
 
 #if defined( HB_ARCH_64BIT ) && !defined( HB_OS_WIN_64 )
-   typedef long                hbI64;
+   typedef signed long         hbI64;
    typedef unsigned long       hbU64;
    #define hbI64Min            LONG_MIN
    #define hbI64Max            LONG_MAX
    #define hbU64Max            ULONG_MAX
 #  if !defined( UINT64 )
-     typedef ULONG        UINT64;
+     typedef ULONG         UINT64;
 #  endif
 #  if !defined( INT64 )
-     typedef LONG         INT64;
+     typedef LONG          INT64;
 #  endif
 #  if !defined( UINT64_MAX )
 #    define UINT64_MAX    ULONG_MAX
@@ -427,19 +427,19 @@
    #define hbI64Max            LONGLONG_MAX
    #define hbU64Max            ULONGLONG_MAX
 #  if !defined( UINT64 )
-     typedef ULONGLONG    UINT64;
+     typedef ULONGLONG     UINT64;
 #  endif
 #  if !defined( INT64 )
-     typedef LONGLONG     INT64;
+     typedef LONGLONG      INT64;
 #  endif
 #  if !defined( UINT64_MAX )
-#    define UINT64_MAX    ULONGLONG_MAX
+#    define UINT64_MAX     ULONGLONG_MAX
 #  endif
 #  if !defined( INT64_MAX )
-#    define INT64_MAX     LONGLONG_MAX
+#    define INT64_MAX      LONGLONG_MAX
 #  endif
 #  if !defined( INT64_MIN )
-#    define INT64_MIN     LONGLONG_MIN
+#    define INT64_MIN      LONGLONG_MIN
 #  endif
 #endif
 
