@@ -4988,12 +4988,13 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
 */
 
 STATIC FUNCTION ArchCompFilter( hbmk, cItem )
-   LOCAL nStart, nEnd, nPos
+   LOCAL nStart, nEnd
    LOCAL cFilterSrc
    LOCAL cFilterHarb
    LOCAL bFilter
    LOCAL xResult
    LOCAL cValue
+   LOCAL cChar
 
    LOCAL cExpr := "( hbmk_ARCH( hbmk ) == Lower( '%1' ) .OR. " +;
                     "hbmk_COMP( hbmk ) == Lower( '%1' ) .OR. " +;
@@ -5012,22 +5013,22 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
          /* Parse filter and convert it to Harbour expression */
          cFilterHarb := ""
          cValue := ""
-         FOR nPos := 1 TO Len( cFilterSrc )
+         FOR EACH cChar IN cFilterSrc
             IF iif( Empty( cValue ),;
-                  HB_ISFIRSTIDCHAR( SubStr( cFilterSrc, nPos, 1 ) ),;
-                  HB_ISNEXTIDCHAR( SubStr( cFilterSrc, nPos, 1 ) ) )
-               cValue += SubStr( cFilterSrc, nPos, 1 )
+                  HB_ISFIRSTIDCHAR( cChar ),;
+                  HB_ISNEXTIDCHAR( cChar ) )
+               cValue += cChar
             ELSE
                IF ! Empty( cValue )
-                  cFilterHarb += StrTran( cExpr, "%1", cValue ) + SubStr( cFilterSrc, nPos, 1 )
+                  cFilterHarb += StrTran( cExpr, "%1", cValue ) + cChar
                   cValue := ""
                ELSE
-                  cFilterHarb += SubStr( cFilterSrc, nPos, 1 )
+                  cFilterHarb += cChar
                ENDIF
             ENDIF
          NEXT
          IF ! Empty( cValue )
-            cFilterHarb += StrTran( cExpr, "%1", cValue ) + SubStr( cFilterSrc, nPos, 1 )
+            cFilterHarb += StrTran( cExpr, "%1", cValue )
          ENDIF
 
          cFilterHarb := StrTran( cFilterHarb, "&", ".AND." )

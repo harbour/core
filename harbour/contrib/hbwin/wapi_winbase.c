@@ -88,6 +88,14 @@ HB_FUNC( WAPI_GETCURRENTTHREAD )
    wapi_ret_HANDLE( GetCurrentThread() );
 }
 
+HB_FUNC( WAPI_SETPROCESSWORKINGSETSIZE )
+{
+   hb_retl( ( BOOL ) SetProcessWorkingSetSize(
+      wapi_par_HANDLE( 1 ) /* hProcess */,
+      ( SIZE_T ) hb_parnint( 2 ) /* dwMinimumWorkingSetSize */,
+      ( SIZE_T ) hb_parnint( 3 ) /* dwMaximumWorkingSetSize */ ) );
+}
+
 HB_FUNC( WAPI_GETLASTERROR )
 {
    hb_retnl( ( long ) GetLastError() );
