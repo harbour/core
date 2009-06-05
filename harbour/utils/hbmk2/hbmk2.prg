@@ -191,58 +191,63 @@ REQUEST hbmk_KEYW
 #define _HBMK_aLIBCOREGT        6
 #define _HBMK_cGT               7
 
-#define _HBMK_lGUI              8
-#define _HBMK_lMT               9
-#define _HBMK_lDEBUG            10
-#define _HBMK_nHEAD             11
-#define _HBMK_aINCPATH          12
-#define _HBMK_aINCTRYPATH       13
-#define _HBMK_lREBUILD          14
-#define _HBMK_lTRACE            15
-#define _HBMK_lDONTEXEC         16
-#define _HBMK_nHBMODE           17
-#define _HBMK_cUILNG            18
-#define _HBMK_cUICDP            19
-#define _HBMK_aLIBUSER          20
-#define _HBMK_aLIBUSERGT        21
-#define _HBMK_aLIBPATH          22
-#define _HBMK_aLIBDYNHAS        23
-#define _HBMK_aINSTPATH         24
-#define _HBMK_aOPTC             25
-#define _HBMK_aOPTPRG           26
-#define _HBMK_aOPTRES           27
-#define _HBMK_aOPTL             28
-#define _HBMK_aOPTA             29
-#define _HBMK_aOPTD             30
-#define _HBMK_lSHARED           31
-#define _HBMK_lSTATICFULL       32
-#define _HBMK_lSHAREDDIST       33
-#define _HBMK_lNULRDD           34
-#define _HBMK_lMAP              35
-#define _HBMK_lSTRIP            36
-#define _HBMK_lOPTIM            37
-#define _HBMK_nCOMPR            38
-#define _HBMK_lRUN              39
-#define _HBMK_lINC              40
-#define _HBMK_lREBUILDPO        41
-#define _HBMK_lMINIPO           42
+#define _HBMK_cHB_BIN_INSTALL   8
+#define _HBMK_cHB_LIB_INSTALL   9
+#define _HBMK_cHB_DYN_INSTALL   10
+#define _HBMK_cHB_INC_INSTALL   11
 
-#define _HBMK_aPO               43
-#define _HBMK_cHBL              44
-#define _HBMK_aLNG              45
-#define _HBMK_cPO               46
+#define _HBMK_lGUI              12
+#define _HBMK_lMT               13
+#define _HBMK_lDEBUG            14
+#define _HBMK_nHEAD             15
+#define _HBMK_aINCPATH          16
+#define _HBMK_aINCTRYPATH       17
+#define _HBMK_lREBUILD          18
+#define _HBMK_lTRACE            19
+#define _HBMK_lDONTEXEC         20
+#define _HBMK_nHBMODE           21
+#define _HBMK_cUILNG            22
+#define _HBMK_cUICDP            23
+#define _HBMK_aLIBUSER          24
+#define _HBMK_aLIBUSERGT        25
+#define _HBMK_aLIBPATH          26
+#define _HBMK_aLIBDYNHAS        27
+#define _HBMK_aINSTPATH         28
+#define _HBMK_aOPTC             29
+#define _HBMK_aOPTPRG           30
+#define _HBMK_aOPTRES           31
+#define _HBMK_aOPTL             32
+#define _HBMK_aOPTA             33
+#define _HBMK_aOPTD             34
+#define _HBMK_lSHARED           35
+#define _HBMK_lSTATICFULL       36
+#define _HBMK_lSHAREDDIST       37
+#define _HBMK_lNULRDD           38
+#define _HBMK_lMAP              39
+#define _HBMK_lSTRIP            40
+#define _HBMK_lOPTIM            41
+#define _HBMK_nCOMPR            42
+#define _HBMK_lRUN              43
+#define _HBMK_lINC              44
+#define _HBMK_lREBUILDPO        45
+#define _HBMK_lMINIPO           46
 
-#define _HBMK_lDEBUGTIME        47
-#define _HBMK_lDEBUGINC         48
-#define _HBMK_lDEBUGSTUB        49
-#define _HBMK_lDEBUGI18N        50
+#define _HBMK_aPO               47
+#define _HBMK_cHBL              48
+#define _HBMK_aLNG              49
+#define _HBMK_cPO               50
 
-#define _HBMK_cCCPATH           51
-#define _HBMK_cCCPREFIX         52
+#define _HBMK_lDEBUGTIME        51
+#define _HBMK_lDEBUGINC         52
+#define _HBMK_lDEBUGSTUB        53
+#define _HBMK_lDEBUGI18N        54
 
-#define _HBMK_lUTF8             53
+#define _HBMK_cCCPATH           55
+#define _HBMK_cCCPREFIX         56
 
-#define _HBMK_MAX_              53
+#define _HBMK_lUTF8             57
+
+#define _HBMK_MAX_              58
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -1136,10 +1141,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       ENDIF
    ENDIF
 
-   s_cHB_BIN_INSTALL := PathSepToTarget( hbmk, s_cHB_BIN_INSTALL )
-   s_cHB_LIB_INSTALL := PathSepToTarget( hbmk, s_cHB_LIB_INSTALL )
-   s_cHB_DYN_INSTALL := PathSepToTarget( hbmk, s_cHB_DYN_INSTALL )
-   s_cHB_INC_INSTALL := PathSepToTarget( hbmk, s_cHB_INC_INSTALL )
+   /* Make a copy to hbmk structure so that we can use it in deeper
+      functions. The only reason I kept the local version is to
+      keep above code parts easier to read. [vszakats] */
+   hbmk[ _HBMK_cHB_BIN_INSTALL ] := s_cHB_BIN_INSTALL := PathSepToTarget( hbmk, s_cHB_BIN_INSTALL )
+   hbmk[ _HBMK_cHB_LIB_INSTALL ] := s_cHB_LIB_INSTALL := PathSepToTarget( hbmk, s_cHB_LIB_INSTALL )
+   hbmk[ _HBMK_cHB_DYN_INSTALL ] := s_cHB_DYN_INSTALL := PathSepToTarget( hbmk, s_cHB_DYN_INSTALL )
+   hbmk[ _HBMK_cHB_INC_INSTALL ] := s_cHB_INC_INSTALL := PathSepToTarget( hbmk, s_cHB_INC_INSTALL )
 
    /* Add main Harbour library dir to lib path list */
    AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], s_cHB_LIB_INSTALL )
@@ -5076,6 +5084,14 @@ STATIC FUNCTION MacroProc( hbmk, cString, cDirParent )
          cMacro := hb_ntos( hb_Version( HB_VERSION_MINOR ) )
       CASE cMacro == "HB_RELEASE"
          cMacro := hb_ntos( hb_Version( HB_VERSION_RELEASE ) )
+      CASE cMacro == "HB_BIN"
+         cMacro := hbmk[ _HBMK_cHB_BIN_INSTALL ]
+      CASE cMacro == "HB_LIB"
+         cMacro := hbmk[ _HBMK_cHB_LIB_INSTALL ]
+      CASE cMacro == "HB_DYN"
+         cMacro := hbmk[ _HBMK_cHB_DYN_INSTALL ]
+      CASE cMacro == "HB_INC"
+         cMacro := hbmk[ _HBMK_cHB_INC_INSTALL ]
       CASE ! Empty( GetEnv( cMacro ) )
          cMacro := GetEnv( cMacro )
       OTHERWISE
@@ -6059,7 +6075,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( ".hbc config files in current dir are automatically processed." ),;
       I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\nLines starting with '#' char are ignored" ),;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
-      I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}" ),;
+      I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}" ),;
       I_( "Defaults and feature support vary by architecture/compiler." ) }
 
    DEFAULT lLong TO .F.
