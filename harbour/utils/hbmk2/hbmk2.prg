@@ -3096,6 +3096,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                              '#endif'                                                               + hb_osNewLine() )
             ENDIF
             FClose( fhnd )
+
+            IF hbmk[ _HBMK_lDEBUGSTUB ]
+               OutStd( "C stub dump:" + hb_osNewLine() )
+               OutStd( hb_MemoRead( s_cCSTUB ) )
+            ENDIF
          ELSE
             hbmk_OutErr( hbmk, I_( "Warning: Stub helper .c program couldn't be created." ) )
             IF ! hbmk[ _HBMK_lINC ]
@@ -3640,11 +3645,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       /* Cleanup */
 
       IF ! Empty( s_cCSTUB )
-         IF hbmk[ _HBMK_lDEBUGSTUB ]
-            hbmk_OutStd( hbmk, hb_StrFormat( "Stub kept for debug: %1$s", s_cCSTUB ) )
-         ELSE
-            FErase( s_cCSTUB )
-         ENDIF
+         FErase( s_cCSTUB )
          FErase( FN_DirExtSet( s_cCSTUB, cWorkDir, cObjExt ) )
       ENDIF
       IF ! hbmk[ _HBMK_lINC ] .OR. s_lCLEAN
