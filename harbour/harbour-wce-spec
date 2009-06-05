@@ -25,7 +25,7 @@
 ######################################################################
 
 %define name      harbour-wce
-%define version   1.1.0
+%define version   2.0.0
 %define releasen  dev
 %define hb_pref   hbwce
 %define hb_ccpath /opt/mingw32ce/bin

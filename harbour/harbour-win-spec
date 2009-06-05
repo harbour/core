@@ -25,7 +25,7 @@
 ######################################################################
 
 %define name      harbour-win
-%define version   1.1.0
+%define version   2.0.0
 %define releasen  dev
 %define hb_pref   hbw
 %define hb_ccpath /opt/xmingw/bin

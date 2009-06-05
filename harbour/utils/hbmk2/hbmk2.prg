@@ -3443,7 +3443,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             hbmk_OutStd( hbmk, hb_StrFormat( I_( "Target up to date: %1$s" ), s_cPROGNAME ) )
          ELSE
             IF ! DirBuild( FN_DirGet( s_cPROGNAME ) )
-               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create directory for target %1$s." ), s_cPROGNAME ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create directory for target '%1$s'." ), s_cPROGNAME ) )
+            ENDIF
+
+            IF hbmk[ _HBMK_lREBUILD ]
+               IF hb_FileExists( PathSepToTarget( hbmk, s_cPROGNAME ) ) .AND. ;
+                  FErase( PathSepToTarget( hbmk, s_cPROGNAME ) ) == F_ERROR
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot delete existing target '%1$s'." ), s_cPROGNAME ) )
+               ENDIF
             ENDIF
 
             DO CASE

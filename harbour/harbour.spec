@@ -66,7 +66,7 @@
 
 %define name     harbour
 %define dname    Harbour
-%define version  1.1.0
+%define version  2.0.0
 %define releasen dev
 %define hb_pref  hb
 %define hb_arch  export HB_ARCHITECTURE=linux
@@ -726,7 +726,7 @@ rm -rf $RPM_BUILD_ROOT
 ######################################################################
 
 %changelog
-* Thu Aug 05 2008 Viktor Szakats (harbour.01 syenar.hu)
+* Thu Aug 05 2008 Viktor Szakats (harbour.01 syenar hu)
 - removed hbdot, hbverfix, hbpptest
 - hbrun now fully replaces hbdot.
 
