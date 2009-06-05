@@ -130,8 +130,8 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   WriteINIStr "$SMPROGRAMS\Harbour Project\Links\Mailing lists.url"              "InternetShortcut" "URL" "http://www.harbour-project.org/mailing.html"
   WriteINIStr "$SMPROGRAMS\Harbour Project\Links\Developers' mail archives.url"  "InternetShortcut" "URL" "http://lists.harbour-project.org/pipermail/harbour/"
 ; WriteINIStr "$SMPROGRAMS\Harbour Project\Links\Users' mail archives.url"       "InternetShortcut" "URL" "http://lists.harbour-project.org/pipermail/harbour-users/"
-  WriteINIStr "$SMPROGRAMS\Harbour Project\Links\Sourceforge page.url"           "InternetShortcut" "URL" "https://sourceforge.net/projects/harbour-project/"
-  WriteINIStr "$SMPROGRAMS\Harbour Project\Links\Development timeline.url"       "InternetShortcut" "URL" "https://apps.sourceforge.net/trac/harbour-project/timeline"
+  WriteINIStr "$SMPROGRAMS\Harbour Project\Links\Sourceforge page.url"           "InternetShortcut" "URL" "http://sourceforge.net/projects/harbour-project/"
+  WriteINIStr "$SMPROGRAMS\Harbour Project\Links\Development timeline.url"       "InternetShortcut" "URL" "http://apps.sourceforge.net/trac/harbour-project/timeline"
 
 SectionEnd
 

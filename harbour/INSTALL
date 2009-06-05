@@ -162,7 +162,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
             and also cygwin drive notation for cygwin.
           - Spaces in directory names aren't currently supported.
             (You can use short name alias on Windows platform, though)
-          - Don't put the dir inside double quotes.
+          - Don't put directory names inside double quotes.
           - Use absolute paths.
 
    Darwin (OS X)
@@ -601,10 +601,10 @@ FOR MORE INFORMATION
    http://lists.harbour-project.org/pipermail/harbour-users/
 
    Sourceforge page:
-   https://sourceforge.net/projects/harbour-project/
+   http://sourceforge.net/projects/harbour-project/
 
    Development timeline:
-   https://apps.sourceforge.net/trac/harbour-project/timeline
+   http://apps.sourceforge.net/trac/harbour-project/timeline
 
    Source repository browser:
    http://harbour-project.svn.sourceforge.net/viewvc/harbour-project/
@@ -613,7 +613,7 @@ FOR MORE INFORMATION
    svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project harbour-project
 
    Miscellaneous documents:
-   /doc directory under this dir.
+   /doc directory under this directory.
 
 
 
