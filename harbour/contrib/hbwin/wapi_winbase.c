@@ -73,6 +73,21 @@ HB_FUNC( WAPI_GETCOMMANDLINE )
    HB_TCHAR_FREE( buffer );
 }
 
+HB_FUNC( WAPI_GETCURRENTPROCESS )
+{
+   wapi_ret_HANDLE( GetCurrentProcess() );
+}
+
+HB_FUNC( WAPI_GETCURRENTPROCESSID )
+{
+   hb_retnint( GetCurrentProcessId() );
+}
+
+HB_FUNC( WAPI_GETCURRENTTHREAD )
+{
+   wapi_ret_HANDLE( GetCurrentThread() );
+}
+
 HB_FUNC( WAPI_GETLASTERROR )
 {
    hb_retnl( ( long ) GetLastError() );
