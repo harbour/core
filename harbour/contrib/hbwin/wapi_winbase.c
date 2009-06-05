@@ -90,10 +90,14 @@ HB_FUNC( WAPI_GETCURRENTTHREAD )
 
 HB_FUNC( WAPI_SETPROCESSWORKINGSETSIZE )
 {
-   hb_retl( ( BOOL ) SetProcessWorkingSetSize(
+#if ! defined(HB_OS_WIN_CE)
+   wapi_ret_L( SetProcessWorkingSetSize(
       wapi_par_HANDLE( 1 ) /* hProcess */,
       ( SIZE_T ) hb_parnint( 2 ) /* dwMinimumWorkingSetSize */,
       ( SIZE_T ) hb_parnint( 3 ) /* dwMaximumWorkingSetSize */ ) );
+#else
+   wapi_ret_L( FALSE );
+#endif
 }
 
 HB_FUNC( WAPI_GETLASTERROR )

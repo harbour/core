@@ -2100,12 +2100,14 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_gt_wvt_FitSizeRows( pWVT );
          return 0;
 
+#if ! defined(HB_OS_WIN_CE)
       case WM_NCLBUTTONDBLCLK:
          if( !pWVT->bMaximized )
          {
             hb_gt_wvt_Maximize( pWVT );
          }
          return 0;
+#endif
 
       case WM_SYSCOMMAND:
          switch( wParam )

@@ -275,8 +275,6 @@ HB_FUNC( WAPI_SHOWSCROLLBAR )
 #endif
 }
 /*----------------------------------------------------------------------*/
-/*                                                                      */
-/*----------------------------------------------------------------------*/
 /*
 HWND SetFocus( HWND hWnd );
 */
@@ -288,20 +286,14 @@ HB_FUNC( WAPI_SETFOCUS )
 #if 0
 HB_FUNC( WAPI_LOADBITMAP )
 {
-   HINSTANCE hinst = wapi_par_HINSTANCE( 1 );
    LPTSTR lpBmp;
-   HBITMAP hbmp;
 
    if( ISNUM( 2 ) )
       lpBmp = ( LPTSTR ) MAKEINTRESOURCE( wapi_par_INT( 2 ) );
    else
       lpBmp = ( LPTSTR ) HB_TCHAR_CONVTO( hb_parcx( 2 ) );
 
-   hbmp = LoadBitmap( hinst, lpBmp );
-   if( hbmp )
-      wapi_ret_NINT( ( long ) hbmp );
-   else
-      wapi_ret_NI( 0 );
+   hb_retptr( LoadBitmap( wapi_par_HINSTANCE( 1 ), lpBmp ) );
 
    if( ! ISNUM( 2 ) )
       HB_TCHAR_FREE( lpBmp );
