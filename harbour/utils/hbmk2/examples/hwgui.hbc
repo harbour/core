@@ -6,8 +6,8 @@
 # command line to build an app:
 # > hbmk2 test.prg C:\hwgui\hwgui.hbc
 
-{win}incpaths=${hb_self}include
-{win}libpaths=${hb_self}lib
+{win}incpaths=include
+{win}libpaths=lib
 
 {win}gt=gtgui
 

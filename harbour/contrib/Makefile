@@ -27,6 +27,7 @@ DIRS=\
 	hbziparc \
 	rddado \
 	xhb \
+	xpp \
 
 # contribs with external dependencies
 DIRS +=\
