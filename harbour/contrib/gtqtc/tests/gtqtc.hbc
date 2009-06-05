@@ -5,7 +5,8 @@
 {allwin}libpaths=${HB_DIR_QT}\lib
 
 {mingw|mingwce|(gcc&(linux|darwin))}libs=supc++
-{!darwin}libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
+{allwin}libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
+{linux}libs=QtCore QtGui QtNetwork QtWebKit
 {darwin}libs=/Library/Frameworks/QtCore.framework/QtCore
 {darwin}libs=/Library/Frameworks/QtGui.framework/QtGui
 {darwin}libs=/Library/Frameworks/QtNetwork.framework/QtNetwork
