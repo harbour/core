@@ -75,6 +75,8 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
+#if defined(HB_OS_WIN) && !defined(HB_OS_WIN_CE)
+
 #include <winspool.h>
 
 #ifndef INVALID_FILE_SIZE
@@ -687,3 +689,5 @@ HB_FUNC( WIN_SETBKMODE )
 {
    hb_retnl( SetBkMode( win_HDC_par( 1 ), hb_parnl( 2 ) ) );
 }
+
+#endif
