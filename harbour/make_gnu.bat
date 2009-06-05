@@ -91,6 +91,13 @@ if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
    rem on Windows NT and upper. [vszakats]
 
    set _HB_MAKE=make.exe
+
+   if "%HB_ARCHITECTURE%" == "dos" goto SKIP_WINDLL
+
+   if not exist config\mingw32-make.exe goto _FM_NOLOCAL
+   set _HB_MAKE=config\mingw32-make.exe
+   goto _FM_DONE
+   :_FM_NOLOCAL
    if not "%OS%" == "Windows_NT" goto _FM_DONE
    set _HB_CHECK=mingw32-make.exe
    if exist "%_HB_CHECK%" ( set _HB_MAKE=%_HB_CHECK%&& goto _FM_DONE )
@@ -114,7 +121,6 @@ if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
    rem It will automatically build Harbour in two passes, one for
    rem the .dlls and a final pass for the regular version.
 
-   if "%HB_ARCHITECTURE%" == "dos" goto SKIP_WINDLL
    if not "%HB_BUILD_DLL%" == "yes" goto SKIP_WINDLL
 
    if "%HB_COMPILER%" == "mingw"    goto DO_GCC

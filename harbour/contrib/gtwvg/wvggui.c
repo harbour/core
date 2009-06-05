@@ -82,6 +82,8 @@
  *
  */
 
+/* TOFIX: ? Several errors when using MSVS 2010 Beta 1 */
+#if ! defined(_MSC_VER) || _MSC_VER < 1600
 
 #define HB_OS_WIN_USED
 
@@ -2276,4 +2278,6 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
    #pragma data_seg( HB_MSC_START_SEGMENT )
    static HB_$INITSYM hb_vm_auto__hb_startup_gt_Init_ = _hb_startup_gt_Init_;
    #pragma data_seg()
+#endif
+
 #endif

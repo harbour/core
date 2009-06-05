@@ -232,6 +232,7 @@
    Visual Studio .NET 2003, version 7.1    1310
    Visual Studio 2005, version 8.0         1400
    Visual Studio 2008, version 9.0         1500
+   Visual Studio 2010, version 10.0        1600
 */
 
 /* ***********************************************************************
