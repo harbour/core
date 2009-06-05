@@ -86,15 +86,10 @@ METHOD new( ... ) CLASS TSIGNAL
    RETURN Self
 
 METHOD wait( nTimeOut ) CLASS TSIGNAL
-   /* TOCHECK: I do not know if strict Xbase++ compatibility needs
-    *          hb_mutexSubscribe() or hb_mutexSubscribeNow()
-    *          Please change it if necessary
-    */
-   RETURN hb_mutexSubscribe( ::mutex, ;
-                             iif( ISNUMBER( nTimeOut ), nTimeOut / 100, ) )
+   RETURN __ClsSyncWait( ::mutex, nTimeOut )
 
 METHOD signal() CLASS TSIGNAL
-   hb_mutexNotify( ::mutex )
+   __ClsSyncSignal( ::mutex )
    RETURN Self
 
 
@@ -105,22 +100,22 @@ METHOD signal() CLASS TSIGNAL
 CREATE CLASS TThread FUNCTION Thread
 
 EXPORTED:
-   VAR cargo            AS USUAL                      SYNC
+   VAR cargo            AS USUAL
    VAR active           AS LOGICAL READONLY  INIT .f.
    VAR deltaTime        AS NUMERIC READONLY  INIT 0
    VAR interval         AS USUAL   READONLY  INIT NIL
    VAR priority         AS NUMERIC READONLY  INIT 0
    VAR startCount       AS NUMERIC READONLY  INIT 0
    VAR startTime        AS USUAL   READONLY  INIT NIL
-   VAR atEnd            AS USUAL             INIT NIL SYNC
-   VAR atStart          AS USUAL             INIT NIL SYNC
-   VAR result           AS USUAL             INIT NIL SYNC
+   VAR atEnd            AS USUAL             INIT NIL
+   VAR atStart          AS USUAL             INIT NIL
+   VAR result           AS USUAL             INIT NIL
 
 PROTECTED:
    VAR maxStackSize     AS USUAL             INIT 50000
 
 HIDDEN:
-   VAR pThreadID        AS USUAL             INIT NIL SYNC
+   VAR pThreadID        AS USUAL             INIT NIL
 
 EXPORTED:
    METHOD new()
@@ -131,11 +126,11 @@ PROTECTED:
    METHOD execute()
 
 EXPORTED:
-   METHOD quit( xResult, nRestart )                   SYNC
+   METHOD quit( xResult, nRestart )
    METHOD setInterval( nHSeconds )
    METHOD setPriority( nPriority )
    METHOD setStartTime( nSeconds )
-   METHOD start()                                     SYNC
+   METHOD start()
    METHOD synchronize( nTimeOut )
    METHOD threadSelf()
    METHOD threadID()
@@ -179,7 +174,7 @@ METHOD quit( xResult, nRestart ) CLASS TTHREAD
    RETURN NIL
 
 METHOD setInterval( nHSeconds ) CLASS TTHREAD
-   IF ISNUMBER( nHSeconds )
+   IF nHSeconds == NIL .OR. ISNUMBER( nHSeconds )
       ::interval := nHSeconds
    ENDIF
    RETURN .F.
@@ -212,11 +207,12 @@ METHOD start( xAction, ... ) CLASS TTHREAD
                   ::startTime := Seconds()
                   ThreadObject( Self )
                   ::result := ::execute( ... )
+                  ::startTime := NIL
                   IF ISNUMBER( ::interval )
                      hb_idleSleep( ::interval / 100 )
                      LOOP
                   ENDIF
-                  ::startTime := NIL
+                  EXIT
                ENDDO
                RETURN NIL
             }, ... )
@@ -239,6 +235,7 @@ METHOD start( xAction, ... ) CLASS TTHREAD
                      hb_idleSleep( ::interval / 100 )
                      LOOP
                   ENDIF
+                  EXIT
                ENDDO
                RETURN NIL
             }, ... )

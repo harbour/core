@@ -571,8 +571,10 @@ DECLARE HBClass ;
    #xcommand SYNC METHOD <MethodName> [<decl,...>] => METHOD <MethodName> [<decl>] SYNC
    #xcommand SYNC CLASS METHOD <MethodName> [<decl,...>] => CLASSMETHOD <MethodName> [<decl>] SYNC
 
-   #xcommand METHOD <!MethodName1!>, <!MethodName2!> [, <!MethodNameN!>] => ;
+   #xcommand METHOD <!MethodName1!>[([<params,...>])], <!MethodName2!>[([<params,...>])] [, <!MethodNameN!>[([<params,...>])]] => ;
              METHOD <MethodName1> [ ; METHOD <MethodName2> ] [ ; METHOD <MethodNameN> ]
+   #xcommand SYNC METHOD <!MethodName1!>[([<params,...>])], <!MethodName2!>[([<params,...>])] [, <!MethodNameN!>[([<params,...>])]] => ;
+             SYNC METHOD <MethodName1> [ ; SYNC METHOD <MethodName2> ] [ ; SYNC METHOD <MethodNameN> ]
 
    #xcommand METHOD <!className!>:<!methodName!>[([<params,...>])] => ;
              METHOD <methodName>( <params> ) CLASS <className>

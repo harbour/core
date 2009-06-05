@@ -340,6 +340,8 @@ extern PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, ULONG ulMilliSec, 
 #if defined( HB_MT_VM ) && defined( _HB_API_INTERNAL_ )
 
 extern void hb_threadMutexUnlockAll( void );
+extern void hb_threadMutexSyncSignal( PHB_ITEM pItemMtx );
+extern BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, ULONG ulMilliSec, PHB_ITEM pItemSync );
 
 #if defined( HB_NO_TLS )
 #  undef HB_USE_TLS
