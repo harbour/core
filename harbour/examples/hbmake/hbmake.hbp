@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+
+# To build 'hbmake', type: 'hbmk2 hbmake.hbp'
+
+hbmake.prg
+hbmakec.c
+
+# Copy to Harbour binary directory for convenience:
+-instpath=${HB_BIN}/
