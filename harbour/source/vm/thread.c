@@ -1561,19 +1561,15 @@ void hb_threadMutexSyncSignal( PHB_ITEM pItemMtx )
       if( pMutex->waiters )
       {
          int iCount = pMutex->waiters;
-         ULONG ulLen;
 
-         if( pMutex->events )
+         if( !pMutex->events )
+            pMutex->events = hb_itemArrayNew( iCount );
+         else
          {
-            ulLen = hb_arrayLen( pMutex->events );
+            ULONG ulLen = hb_arrayLen( pMutex->events );
             iCount -= ulLen;
             if( iCount > 0 )
                hb_arraySize( pMutex->events, ulLen + iCount );
-         }
-         else
-         {
-            ulLen = 0;
-            pMutex->events = hb_itemArrayNew( iCount );
          }
          if( iCount == 1 )
             HB_COND_SIGNAL( pMutex->cond_w );
