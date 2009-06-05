@@ -80,7 +80,6 @@
 
 #define COMPILE( cStr )        &( "{|v| "+cStr+ "}" )
 #define CR_LF                  chr(13)+chr(10)
-#define NTRIM( n )             ltrim( str( n ) )
 
 #define VouchClientVersion     "0.9.4"
 

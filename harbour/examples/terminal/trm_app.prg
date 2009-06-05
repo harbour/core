@@ -77,8 +77,6 @@
 #define SND_CLOCKONOFF                  4
 #define SND_MUSIC                       5
 
-#define NTRIM( n )                      ltrim( str( n ) )
-
 //----------------------------------------------------------------------//
 
 ANNOUNCE HB_NOSTARTUPWINDOW
@@ -103,10 +101,10 @@ FUNCTION Main( cServerInfo )
       RmtSvrSetInfo( cServerInfo )
 
       IF ( nServerPort := RmtSvrSetInfo( 1 ) ) <> NIL .and. nServerPort > 0
-         IF !RmtSvrInitialize( NTRIM( nServerPort ), 60/*nTimeoutClient*/, 0.5 /*nTimeRefresh*/ )
+         IF !RmtSvrInitialize( hb_ntos( nServerPort ), 60/*nTimeoutClient*/, 0.5 /*nTimeRefresh*/ )
             Quit
          ENDIF
-         hb_gtInfo( HB_GTI_WINTITLE, NTRIM( nServerPort ) )
+         hb_gtInfo( HB_GTI_WINTITLE, hb_ntos( nServerPort ) )
       ENDIF
    #endif
 

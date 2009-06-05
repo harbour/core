@@ -110,7 +110,7 @@ Function Main( cPort )
    hAccept := hb_ThreadStart( @AcceptIncoming(), Socket )
 
    DO WHILE .T.
-      nKey := inkey()
+      nKey := inkey(0)
 
       if nKey == K_CTRL_F12
          //hb_ThreadStop( hView )
@@ -198,16 +198,16 @@ PROCEDURE ServeClient( Socket )
          do case
          case cReq == 'AR'
             nServerPort++
-            SvrExecuteAPP( 'trm_app.exe', ltrim( str( nServerPort++ ) ), hb_dirBase() )
+            SvrExecuteAPP( 'trm_app.exe', hb_ntos( nServerPort++ ), hb_dirBase() )
             inkey( 5 )
-            cReply := 'CONNECT;'+'127.0.0.1'+';'+ltrim( str( nServerPort++ ) )+';'
+            cReply := 'CONNECT;' + '127.0.0.1' + ';' + hb_ntos( nServerPort++ ) + ';'
 
          case cReq == 'VOUCH'
             nServerPort++
 
             cCmdLine := a_[ 3 ] +'   '+ ltrim( str( nServerPort ) )
             SvrExecuteAPP( a_[ 2 ], cCmdLine, a_[ 4 ] )
-            cReply := 'CONNECT;'+'127.0.0.1'+';'+ltrim( str( nServerPort ) )+';'+a_[ 2 ]+';'
+            cReply := 'CONNECT;' + '127.0.0.1' + ';' + hb_ntos( nServerPort ) + ';' + a_[ 2 ] + ';'
 
          case cReq == 'ARCONNECTED'
             // No further info required, close connection
@@ -257,10 +257,10 @@ PROCEDURE ServeClient( Socket )
             cReply := 'SCREEN;'+SaveScreen( 0,0,MAXROW(),MAXCOL() )
 
          case cReq == 'INFO'
-            cReply := 'INFO;' + ltrim( str( hb_INetPort( Socket ) ) )+';'+hb_INetAddress( Socket )+';'
+            cReply := 'INFO;' + hb_ntos( hb_INetPort( Socket ) ) + ';' + hb_INetAddress( Socket ) + ';'
 
          otherwise
-            cReply := 'GENERIC;' + 'Request # '+ltrim( str( ++nn,10,0 ) )
+            cReply := 'GENERIC;' + 'Request # '+ hb_ntos( ++nn, 10, 0 )
 
          endcase
 

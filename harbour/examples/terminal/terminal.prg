@@ -74,8 +74,6 @@
 
 #define ENDBLOCK                        "|/END\|"
 
-#define NTRIM( n )                      ltrim( str( n ) )
-
 #define TIMER_RECEIVE                   1001
 #define TIMER_SEND                      1002
 #define TIMER_PING                      1010
@@ -213,9 +211,9 @@ Function RmtSvrSendClient( nMode, xData )
 
          do case
          case nMode == SND_SCREEN
-            cCurs := NTRIM( Row() ) +";"+ ;
-                     NTRIM( Col() ) +";"+ ;
-                     NTRIM( Set( _SET_CURSOR ) ) +";"
+            cCurs := hb_ntos( Row() ) +";"+ ;
+                     hb_ntos( Col() ) +";"+ ;
+                     hb_ntos( Set( _SET_CURSOR ) ) +";"
 
             if !( cCurs == cCursor )
                lSendCurs := .t.
@@ -243,16 +241,16 @@ Function RmtSvrSendClient( nMode, xData )
                cEvn0 := hb_zcompress( cEvn )
 
                cData := '<SCR>'    +;
-                        NTRIM( TOP ) +';'+ NTRIM( LFT ) +';'+ NTRIM( BTM ) +';'+ NTRIM( RGT ) +';'+;
-                        NTRIM( len( cOdd0 ) ) +';'+ ;
-                        NTRIM( len( cEvn0 ) ) +';'+ ;
+                        hb_ntos( TOP ) +';'+ hb_ntos( LFT ) +';'+ hb_ntos( BTM ) +';'+ hb_ntos( RGT ) +';'+;
+                        hb_ntos( len( cOdd0 ) ) +';'+ ;
+                        hb_ntos( len( cEvn0 ) ) +';'+ ;
                         '</E?>'    +;
                         cOdd0      +;
                         cEvn0      +;
                         '</E?>'    +;
                         '</SCR>'   +;
                         '<CRS>' + cCurs + '</CRS>' +;
-                        '<ID>' + NTRIM( nScreen )+ '</ID>'
+                        '<ID>' + hb_ntos( nScreen )+ '</ID>'
 
             elseif lSendCurs
                cData := '<CRS>'+ cCurs +'</CRS>'
