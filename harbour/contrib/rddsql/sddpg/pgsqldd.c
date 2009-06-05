@@ -261,7 +261,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    status = PQresultStatus( pResult );
    if ( status != PGRES_TUPLES_OK && status != PGRES_COMMAND_OK )
    {
-      hb_errRT_PostgreSQLDD( EG_OPEN, ESQLDD_INVALIDQUERY, PQresultErrorMessage( pResult ), pArea->szQuery, status );
+      hb_errRT_PostgreSQLDD( EG_OPEN, ESQLDD_INVALIDQUERY, PQresultErrorMessage( pResult ), pArea->szQuery, ( USHORT ) status );
       return HB_FAILURE;
    }
 

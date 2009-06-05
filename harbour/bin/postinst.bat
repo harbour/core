@@ -113,6 +113,16 @@ if "%HB_BUILD_IMPLIB%" == "yes" (
          goto END
       )
 
+      if "%HB_COMPILER%" == "msvc64" (
+
+         if exist "%HB_DIR_CURL%\libcurl.dll"              call :P_MSVC_IMPLIB "%HB_DIR_CURL%\libcurl.dll"      "%HB_LIB_INSTALL%\libcurl.lib"
+         if exist "%HB_DIR_CURL%\bin\libcurl.dll"          call :P_MSVC_IMPLIB "%HB_DIR_CURL%\bin\libcurl.dll"  "%HB_LIB_INSTALL%\libcurl.lib"
+         if exist "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"  copy /b /y "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"   "%HB_LIB_INSTALL%\fbclient.lib"
+         if exist "%HB_DIR_MYSQL%\lib\opt\libmySQL.lib"    copy /b /y "%HB_DIR_MYSQL%\lib\opt\libmySQL.lib"     "%HB_LIB_INSTALL%\libmySQL.lib"
+
+         goto END
+      )
+
       if "%HB_COMPILER%" == "mingw" (
 
          if exist "%HB_DIR_ADS%\Redistribute\ace32.lib"    copy /b /y "%HB_DIR_ADS%\Redistribute\ace32.lib"    "%HB_LIB_INSTALL%\libace32.a"
@@ -139,6 +149,16 @@ if "%HB_BUILD_IMPLIB%" == "yes" (
          if exist "%HB_DIR_QT%\lib\libQtGui4.a"            copy /b /y "%HB_DIR_QT%\lib\libQtGui4.a"            "%HB_LIB_INSTALL%\libQtGui4.a"
          if exist "%HB_DIR_QT%\lib\libQtNetwork4.a"        copy /b /y "%HB_DIR_QT%\lib\libQtNetwork4.a"        "%HB_LIB_INSTALL%\libQtNetwork4.a"
          if exist "%HB_DIR_QT%\lib\libQtWebKit4.a"         copy /b /y "%HB_DIR_QT%\lib\libQtWebKit4.a"         "%HB_LIB_INSTALL%\libQtWebKit4.a"
+
+         goto END
+      )
+
+      if "%HB_COMPILER%" == "mingw64" (
+
+         if exist "%HB_DIR_CURL%\lib\libcurl.a"            copy /b /y "%HB_DIR_CURL%\lib\libcurl.a"            "%HB_LIB_INSTALL%\libcurl.a"
+         if exist "%HB_DIR_CURL%\lib\libcurldll.a"         copy /b /y "%HB_DIR_CURL%\lib\libcurldll.a"         "%HB_LIB_INSTALL%\libcurldll.a"
+         if exist "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"  copy /b /y "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"  "%HB_LIB_INSTALL%\libfbclient.a"
+         if exist "%HB_DIR_MYSQL%\lib\opt\libmySQL.lib"    copy /b /y "%HB_DIR_MYSQL%\lib\opt\libmySQL.lib"    "%HB_LIB_INSTALL%\liblibmysql.a"
 
          goto END
       )

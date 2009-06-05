@@ -52,13 +52,12 @@ HB_FUNC( FT_DESCEND )
 {
 #if defined(HB_OS_DOS) || defined(HB_OS_WIN)
    {
+      PHB_ITEM iP = hb_itemParam( 1 );
+      HB_TYPE uiType = hb_itemType( iP );
 
-      auto PHB_ITEM iP = hb_itemParam( 1 );
-      auto HB_TYPE uiType = hb_itemType( iP );
-
-      auto PHB_ITEM iR = NULL;
-      auto USHORT uiLen, n;
-      auto char * pDescend;
+      PHB_ITEM iR = NULL;
+      USHORT uiLen, n;
+      char * pDescend;
 
       if ( ( uiType & HB_IT_NUMERIC ) && ( uiType & HB_IT_DOUBLE ) )
          iR = hb_itemPutND( 0, 0 - hb_itemGetND( iP ) );

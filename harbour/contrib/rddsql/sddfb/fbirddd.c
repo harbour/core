@@ -466,7 +466,7 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
    XSQLVAR*        pVar;
    PHB_ITEM        pItem, pArray;
    USHORT          ui;
-   long            lErr;
+   ISC_STATUS      lErr;
    short           iType;
 
    while ( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )

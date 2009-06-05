@@ -55,6 +55,7 @@
 /* Translations for Harbour programs compiled with Xbase++ compiler */
 
 #else
+#ifdef __HARBOUR__
 
 /* Translations for Xbase++ programs compiled with Harbour compiler */
 
@@ -70,4 +71,5 @@
 /* NOTE: Several other Xbase++ function are currently implemented using
          original Xbase++ names. */
 
+#endif
 #endif

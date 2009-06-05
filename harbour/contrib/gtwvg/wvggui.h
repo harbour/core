@@ -62,6 +62,12 @@
    #define CINTERFACE 1
 #endif
 
+#ifndef _WIN32_IE
+   #ifndef __MINGW64__
+      #define _WIN32_IE 0x0400
+   #endif
+#endif
+
 /*----------------------------------------------------------------------*/
 
 #include <windows.h>
@@ -90,12 +96,6 @@
 #include "hbgfxdef.ch"
 
 #include "hbgtwvg.ch"
-
-#ifndef _WIN32_IE
-   #ifndef __MINGW64__
-      #define _WIN32_IE 0x0400
-   #endif
-#endif
 
 HB_EXTERN_BEGIN
 
