@@ -3847,7 +3847,7 @@ STATIC FUNCTION SetupForGT( cGT_New, /* @ */ cGT, /* @ */ lGUI )
 #define _HEADSTATE_lAnyNewer    2
 #define _HEADSTATE_MAX_         2
 
-STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lIncTry, lCMode, /* @ */ headstate, nEmbedLevel )
+STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lIncTry, lCMode, /* @ */ headstate, nNestingLevel )
    LOCAL cFile
    LOCAL fhnd
    LOCAL nPos
@@ -3859,10 +3859,10 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
 
    STATIC s_aExcl := { "windows.h", "ole2.h", "os2.h" }
 
-   DEFAULT nEmbedLevel TO 1
+   DEFAULT nNestingLevel TO 1
    DEFAULT cParentDir TO FN_DirGet( cFileName )
 
-   IF nEmbedLevel == 1
+   IF nNestingLevel == 1
       headstate := Array( _HEADSTATE_MAX_ )
       headstate[ _HEADSTATE_hFiles ] := hb_Hash()
       headstate[ _HEADSTATE_lAnyNewer ] := .F.
@@ -3872,7 +3872,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
       RETURN .F.
    ENDIF
 
-   IF nEmbedLevel > _HBMK_HEAD_NEST_MAX
+   IF nNestingLevel > _HBMK_HEAD_NEST_MAX
       RETURN .F.
    ENDIF
 
@@ -3947,7 +3947,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
       ENDIF
 
       IF cHeader != NIL .AND. ;
-         FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), tTimeParent, lIncTry, lCMode, @headstate, nEmbedLevel + 1 )
+         FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), tTimeParent, lIncTry, lCMode, @headstate, nNestingLevel + 1 )
          headstate[ _HEADSTATE_lAnyNewer ] := .T.
          /* Let it continue if we want to scan for header locations */
          IF ! lIncTry
@@ -4598,7 +4598,7 @@ STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
 
 #define _EOL                    Chr( 10 )
 
-STATIC PROCEDURE HBC_ProcessOne( hbmk, cFileName, nEmbedLevel  )
+STATIC PROCEDURE HBC_ProcessOne( hbmk, cFileName, nNestingLevel  )
    LOCAL cFile
    LOCAL cLine
    LOCAL cItem
@@ -4636,7 +4636,7 @@ STATIC PROCEDURE HBC_ProcessOne( hbmk, cFileName, nEmbedLevel  )
 
       CASE Lower( Left( cLine, Len( "hbcs="         ) ) ) == "hbcs="         ; cLine := SubStr( cLine, Len( "hbcs="         ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            IF nEmbedLevel < _HBMK_NEST_MAX
+            IF nNestingLevel < _HBMK_NEST_MAX
 
                cItem := PathProc( MacroProc( hbmk, StrStripQuote( cItem ), FN_DirGet( cFileName ) ), FN_DirGet( cFileName ) )
 
@@ -4657,7 +4657,7 @@ STATIC PROCEDURE HBC_ProcessOne( hbmk, cFileName, nEmbedLevel  )
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cItem ) )
                ENDIF
 
-               HBC_ProcessOne( hbmk, cItem, nEmbedLevel + 1 )
+               HBC_ProcessOne( hbmk, cItem, nNestingLevel + 1 )
             ELSE
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot nest deeper in %1$s" ), cFileName ) )
             ENDIF
@@ -4904,7 +4904,7 @@ STATIC FUNCTION ValueIsF( cString )
    RETURN cString == "no" .OR. ;
           cString == "0" /* Compatibility */
 
-STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nEmbedLevel )
+STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
    LOCAL cFile
    LOCAL cLine
    LOCAL cParam
@@ -4927,19 +4927,19 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nEmbedLevel )
                IF ! Empty( cParam )
                   DO CASE
                   CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" )
-                     IF nEmbedLevel < _HBMK_NEST_MAX
+                     IF nNestingLevel < _HBMK_NEST_MAX
                         cParam := SubStr( cParam, 2 )
                         IF Empty( FN_ExtGet( cParam ) )
                            cParam := FN_ExtSet( cParam, ".hbm" )
                         ENDIF
-                        HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), nEmbedLevel + 1 ) /* Load parameters from script file */
+                        HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), nNestingLevel + 1 ) /* Load parameters from script file */
                      ELSE
                         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot nest deeper in %1$s" ), cFileName ) )
                      ENDIF
                   CASE Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
                        Lower( FN_ExtGet( cParam ) ) == ".hbp"
-                     IF nEmbedLevel < _HBMK_NEST_MAX
-                        HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), nEmbedLevel + 1 ) /* Load parameters from script file */
+                     IF nNestingLevel < _HBMK_NEST_MAX
+                        HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), nNestingLevel + 1 ) /* Load parameters from script file */
                      ELSE
                         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot nest deeper in %1$s" ), cFileName ) )
                      ENDIF

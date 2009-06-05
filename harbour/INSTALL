@@ -196,12 +196,12 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    msvc64   - Microsoft Visual C++ x86-64
    msvcia64 - Microsoft Visual C++ IA-64
 
-   Windows (supported, but not recommended, features may be missing)
+   Windows (supported, some features may be missing)
    -------
    owatcom  - Open Watcom C++
+   bcc      - Borland/CodeGear C++ 4.x and above
    icc      - Intel(R) C/C++
    iccia64  - Intel(R) C/C++ IA-64
-   bcc      - Borland/CodeGear C++ 4.x and above
    pocc     - Pelles C 4.5 and above
    pocc64   - Pelles C 5.0 x86-64 and above
    xcc      - Pelles C for xhb
@@ -575,7 +575,9 @@ TROUBLESHOOTING
    - Make sure to install fresh source tree in a new local directory and start over.
      See HOW TO GET THE HARBOUR SOURCES section for instructions to get the source.
    - Keep you PATH clean from old, mixed compiler tools or other Harbour
-     versions when building Harbour.
+     versions when building Harbour. The surest way to achieve this is to leave
+     only GNU Make directory and compiler directory in PATH (order significant):
+       PATH=C:\<makedir>;C:\<compilerdir>
    - Remove all old, unnecessary environment variables from your environment.
      Use only those documented in this file.
    - Try to do no or only small modifications at once to command examples
