@@ -48,9 +48,11 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
           belonging to other C compilers are interfering with your setup.
           For the list of supported compilers, please look up the
           relevant section in this file.
-      3.) Make sure to have GNU Make. Certain older versions and builds
-          are untested and may not work. We recommend the one distributed
-          by MinGW team. Use this link to get it:
+      3.) Make sure to have GNU Make. If you build for MinGW target,
+          you can skip this point, since you already have GNU Make ready
+          to use. Certain older GNU Make versions and builds are untested
+          and may not work. We recommend the one distributed by MinGW team.
+          Use this link to get it:
             https://sourceforge.net/project/showfiles.php?group_id=2435&package_id=23918
           If you have it, you have three choices:
           - Copy mingw32-make.exe or make.exe into a separate directory

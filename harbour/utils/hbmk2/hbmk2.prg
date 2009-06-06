@@ -79,6 +79,9 @@
          writing, most of them has one created.
          Thank you. [vszakats] */
 
+/* TODO: Support debug/release modes. Some default setting can be set
+         accordingly, and user can use it to further tweak settings. */
+/* TODO: Support unicode/non-unicode build modes. */
 /* TODO: Create temporary .c files with mangled names, to avoid
          incidentally overwriting existing .c file with the same name.
          Problems to solve: -hbcc compatibility (the feature has to be
@@ -160,6 +163,10 @@ REQUEST hbmk_KEYW
 #define _HBMODE_HB10            1
 #define _HBMODE_XHB             2
 
+#define _CONF_RELEASE           0 /* No debug */
+#define _CONF_DEBUG             1 /* Harbour level debug */
+#define _CONF_FULLDEBUG         2 /* Harbour + C level debug */
+
 #define _LNG_MARKER             "${lng}"
 
 #define _HBMK_CFG_NAME          "hbmk.cfg"
@@ -231,23 +238,25 @@ REQUEST hbmk_KEYW
 #define _HBMK_lINC              44
 #define _HBMK_lREBUILDPO        45
 #define _HBMK_lMINIPO           46
+#define _HBMK_lUNICODE          47
+#define _HBMK_nCONF             48
 
-#define _HBMK_aPO               47
-#define _HBMK_cHBL              48
-#define _HBMK_aLNG              49
-#define _HBMK_cPO               50
+#define _HBMK_aPO               49
+#define _HBMK_cHBL              50
+#define _HBMK_aLNG              51
+#define _HBMK_cPO               52
 
-#define _HBMK_lDEBUGTIME        51
-#define _HBMK_lDEBUGINC         52
-#define _HBMK_lDEBUGSTUB        53
-#define _HBMK_lDEBUGI18N        54
+#define _HBMK_lDEBUGTIME        53
+#define _HBMK_lDEBUGINC         54
+#define _HBMK_lDEBUGSTUB        55
+#define _HBMK_lDEBUGI18N        56
 
-#define _HBMK_cCCPATH           55
-#define _HBMK_cCCPREFIX         56
+#define _HBMK_cCCPATH           57
+#define _HBMK_cCCPREFIX         58
 
-#define _HBMK_lUTF8             57
+#define _HBMK_lUTF8             59
 
-#define _HBMK_MAX_              58
+#define _HBMK_MAX_              59
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -577,6 +586,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    hbmk[ _HBMK_lINC ] := .F.
    hbmk[ _HBMK_lREBUILDPO ] := .F.
    hbmk[ _HBMK_lMINIPO ] := .F.
+   hbmk[ _HBMK_lUNICODE ] := .F.
+   hbmk[ _HBMK_nCONF ] := _CONF_RELEASE
 
    hbmk[ _HBMK_lDEBUGTIME ] := .F.
    hbmk[ _HBMK_lDEBUGINC ] := .F.
@@ -2572,13 +2583,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_lOPTIM ]
             IF hbmk[ _HBMK_cCOMP ] == "msvcarm"
                IF Empty( GetEnv( "HB_VISUALC_VER_PRE80" ) )
-                  cOpt_CompC += " -Od -Os -Gy -GS- -EHsc- -Gm -Zi -GR-"
+                  cOpt_CompC += " -Od -Os -Gy -GS- -Gm -Zi -GR-"
                ELSE
-                  cOpt_CompC += " -Oxsb1 -EHsc -YX -GF"
+                  cOpt_CompC += " -Oxsb1 -YX -GF"
                ENDIF
             ELSE
                IF Empty( GetEnv( "HB_VISUALC_VER_PRE80" ) )
-                  cOpt_CompC += " -Ot2b1 -EHs-c-"
+                  cOpt_CompC += " -Ot2b1"
                ELSE
                   cOpt_CompC += " -Ogt2yb1p -GX- -G6 -YX"
                ENDIF
@@ -5872,11 +5883,13 @@ FUNCTION hbmk_CPU( hbmk )
    RETURN ""
 
 FUNCTION hbmk_KEYW( hbmk, cKeyword )
+   LOCAL tmp
 
-   IF cKeyword == iif( hbmk[ _HBMK_lMT ]    , "mt"    , "st"      ) .OR. ;
-      cKeyword == iif( hbmk[ _HBMK_lGUI ]   , "gui"   , "std"     ) .OR. ;
-      cKeyword == iif( hbmk[ _HBMK_lDEBUG ] , "debug" , "nodebug" ) .OR. ;
-      cKeyword == iif( hbmk[ _HBMK_lSHARED ], "shared", "static"  )
+   IF cKeyword == iif( hbmk[ _HBMK_lMT ]     , "mt"      , "st"      ) .OR. ;
+      cKeyword == iif( hbmk[ _HBMK_lGUI ]    , "gui"     , "std"     ) .OR. ;
+      cKeyword == iif( hbmk[ _HBMK_lDEBUG ]  , "debug"   , "nodebug" ) .OR. ;
+      cKeyword == iif( hbmk[ _HBMK_lSHARED ] , "shared"  , "static"  ) .OR. ;
+      cKeyword == iif( hbmk[ _HBMK_lUNICODE ], "unicode" , "ascii"   )
       RETURN .T.
    ENDIF
 
@@ -5896,6 +5909,11 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
    ENDIF
 
    IF cKeyword == hbmk_CPU( hbmk )
+      RETURN .T.
+   ENDIF
+
+   tmp := GetEnv( cKeyword )
+   IF ! Empty( tmp ) .AND. !( tmp == "0" ) .AND. !( Lower( tmp ) == "no" )
       RETURN .T.
    ENDIF
 
