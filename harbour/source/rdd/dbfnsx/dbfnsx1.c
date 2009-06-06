@@ -2401,30 +2401,35 @@ static BOOL hb_nsxTagGetCurKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiKey )
    if( hb_nsxIsLeaf( pPage ) )
    {
       if( uiKey >= pPage->uiKeys )
+      {
          pTag->CurKeyInfo->rec = pTag->CurKeyInfo->page = 0;
-      else if( pTag->CurKeyInfo->rec == 0 ||
-          pTag->CurKeyInfo->page != pPage->Page ||
-          uiKey < pTag->CurKeyNo || pTag->CurKeyOffset == 0 )
-      {
-         pTag->CurKeyOffset = NSX_LEAFKEYOFFSET;
-         pTag->CurKeyNo = ( USHORT ) -1;
-         hb_nsxTagGetPrevKey( pTag, pTag->CurKeyInfo->val, pTag->stackLevel - 1 );
       }
-      pTag->CurKeyInfo->page = pPage->Page;
-
-      while( pTag->CurKeyNo != uiKey )
+      else
       {
-         pTag->CurKeyOffset = hb_nsxLeafGetKey( pTag, pPage,
-                                                pTag->CurKeyOffset,
-                                                pTag->CurKeyInfo->val,
-                                                &pTag->CurKeyInfo->rec );
-         if( pTag->CurKeyOffset == 0 )
+         if( pTag->CurKeyInfo->rec == 0 ||
+             pTag->CurKeyInfo->page != pPage->Page ||
+             uiKey < pTag->CurKeyNo || pTag->CurKeyOffset == 0 )
          {
-            hb_nsxCorruptError( pTag->pIndex );
-            pTag->CurKeyInfo->rec = 0;
-            return FALSE;
+            pTag->CurKeyOffset = NSX_LEAFKEYOFFSET;
+            pTag->CurKeyNo = ( USHORT ) -1;
+            hb_nsxTagGetPrevKey( pTag, pTag->CurKeyInfo->val, pTag->stackLevel - 1 );
          }
-         pTag->CurKeyNo++;
+         pTag->CurKeyInfo->page = pPage->Page;
+
+         while( pTag->CurKeyNo != uiKey )
+         {
+            pTag->CurKeyOffset = hb_nsxLeafGetKey( pTag, pPage,
+                                                   pTag->CurKeyOffset,
+                                                   pTag->CurKeyInfo->val,
+                                                   &pTag->CurKeyInfo->rec );
+            if( pTag->CurKeyOffset == 0 )
+            {
+               hb_nsxCorruptError( pTag->pIndex );
+               pTag->CurKeyInfo->rec = 0;
+               return FALSE;
+            }
+            pTag->CurKeyNo++;
+         }
       }
    }
    else if( uiKey && uiKey <= pPage->uiKeys )
