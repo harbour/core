@@ -780,6 +780,7 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
    PHB_ITEM pThItm = ( PHB_ITEM ) Cargo;
    ULONG ulPCount, ulParam;
    PHB_THREADSTATE pThread;
+   BOOL fSend = FALSE;
 
    pThread = ( PHB_THREADSTATE ) hb_itemGetPtrGC( pThItm, hb_threadDestructor );
 
@@ -794,6 +795,7 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
       {
          hb_vmPushSymbol( &hb_symEval );
          hb_vmPush( pStart );
+         fSend = TRUE;
       }
       else if( HB_IS_SYMBOL( pStart ) )
       {
@@ -817,7 +819,10 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
       hb_itemRelease( pThread->pParams );
       pThread->pParams = NULL;
 
-      hb_vmDo( ( USHORT ) ( ulPCount - 1 ) );
+      if( fSend )
+         hb_vmSend( ( USHORT ) ( ulPCount - 1 ) );
+      else
+         hb_vmDo( ( USHORT ) ( ulPCount - 1 ) );
    }
    else
    {

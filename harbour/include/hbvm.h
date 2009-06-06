@@ -133,6 +133,7 @@ extern HB_EXPORT void     hb_vmRequestRestore( void );
 
 /* Execution */
 extern HB_EXPORT void     hb_vmDo( USHORT uiParams );      /* invoke the virtual machine */
+extern HB_EXPORT void     hb_vmProc( USHORT uiParams );     /* executes a function or procedure */
 extern HB_EXPORT void     hb_vmFunction( USHORT uiParams ); /* executes a function */
 extern HB_EXPORT void     hb_vmSend( USHORT uiParams ); /* sends a message to an object */
 extern HB_EXPORT PHB_ITEM hb_vmEvalBlock( PHB_ITEM pBlockItem ); /* executes passed codeblock with no arguments */

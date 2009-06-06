@@ -1086,13 +1086,13 @@ void hb_clsDoInit( void )
       PHB_DYNS pFuncSym = hb_dynsymFindName( s_pszFuncNames[i] );
       if( pFuncSym && hb_dynsymIsFunction( pFuncSym ) )
       {
-         PHB_ITEM pObject;
+         PHB_ITEM pReturn = hb_stackReturnItem();
+         hb_itemSetNil( pReturn );
          hb_vmPushDynSym( pFuncSym );
          hb_vmPushNil();
          hb_vmDo( 0 );
-         pObject = hb_stackReturnItem();
-         if( HB_IS_OBJECT( pObject ) )
-            *( s_puiHandles[i] ) = pObject->item.asArray.value->uiClass;
+         if( HB_IS_OBJECT( pReturn ) )
+            *( s_puiHandles[i] ) = pReturn->item.asArray.value->uiClass;
       }
    }
 }
@@ -3788,7 +3788,7 @@ HB_FUNC( __CLSINSTSUPER )
       {
          hb_vmPushSymbol( pClassFuncSym );
          hb_vmPushNil();
-         hb_vmFunction( 0 ); /* Execute super class */
+         hb_vmDo( 0 ); /* Execute super class */
 
          if( hb_vmRequestQuery() == 0 )
          {

@@ -315,7 +315,7 @@ void hb_evalBlock0( PHB_ITEM pCodeBlock )
 {
    hb_vmPushSymbol( &hb_symEval );
    hb_vmPush( pCodeBlock );
-   hb_vmFunction( 0 );
+   hb_vmSend( 0 );
 }
 
 /* undocumented Clipper _cEval1() */
@@ -324,7 +324,7 @@ void hb_evalBlock1( PHB_ITEM pCodeBlock, PHB_ITEM pParam )
    hb_vmPushSymbol( &hb_symEval );
    hb_vmPush( pCodeBlock );
    hb_vmPush( pParam );
-   hb_vmFunction( 1 );
+   hb_vmSend( 1 );
 }
 
 /* same functionality but with a NULL terminated list of parameters */
@@ -345,7 +345,7 @@ void hb_evalBlock( PHB_ITEM pCodeBlock, ... )
    }
    va_end( args );
 
-   hb_vmFunction( uiParams );
+   hb_vmSend( uiParams );
 }
 
 HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
@@ -367,7 +367,7 @@ HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
             hb_vmPushSymbol( &hb_symEval );
             hb_vmPush( pCodeBlock );
             hb_vmPushLong( lStart );
-            hb_vmFunction( 1 );
+            hb_vmSend( 1 );
 
             lStart += lStep;
 
@@ -383,7 +383,7 @@ HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
             hb_vmPushSymbol( &hb_symEval );
             hb_vmPush( pCodeBlock );
             hb_vmPushLong( lStart );
-            hb_vmFunction( 1 );
+            hb_vmSend( 1 );
 
             lStart += lStep;
          }
@@ -567,4 +567,17 @@ BOOL hb_execFromArray( PHB_ITEM pParam )
    hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 
    return FALSE;
+}
+
+/* hb_execMsg( <sFuncSym>, <object>, [<params,...>] ) -> <xResult>
+ * Execute <sFuncSym> with <object> set as QSELF() value
+ */
+HB_FUNC( HB_EXECMSG )
+{
+   int iParams = hb_pcount();
+
+   if( iParams >= 2 && ISSYMBOL( 1 ) )
+      hb_vmProc( ( USHORT ) ( iParams - 2 ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

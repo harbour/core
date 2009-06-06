@@ -977,7 +977,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
                   hb_vmPush( pValue );
                   hb_vmPush( pBaseArray->pItems + ulStart );
                   hb_vmPushLong( ++ulStart );
-                  hb_vmDo( 2 );
+                  hb_vmSend( 2 );
 
                   if( HB_IS_LOGICAL( hb_stackReturnItem() ) && hb_stackReturnItem()->item.asLogical.value )
                      return ulStart;
@@ -1144,7 +1144,7 @@ ULONG hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG
                   else
                      hb_vmPushNil();
                   hb_vmPushLong( ulStart + 1 );
-                  hb_vmDo( 2 );
+                  hb_vmSend( 2 );
 
                   if( HB_IS_LOGICAL( hb_stackReturnItem() ) && hb_stackReturnItem()->item.asLogical.value )
                      return ulStart + 1;
@@ -1302,7 +1302,7 @@ BOOL hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * p
                hb_vmPush( bBlock );
                hb_vmPush( pBaseArray->pItems + ulStart );
                hb_vmPushLong( ulStart + 1 );
-               hb_vmDo( 2 );
+               hb_vmSend( 2 );
             }
             while( --ulCount > 0 && ++ulStart < pBaseArray->ulLen );
             /*

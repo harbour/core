@@ -5438,6 +5438,7 @@ static void hb_vmMacroFunc( USHORT uiArgSets )
 
    lArgs = hb_vmArgsJoin( -1, uiArgSets );
    hb_stackDecrease( uiArgSets );
+   hb_itemSetNil( hb_stackReturnItem() );
    hb_vmDo( ( USHORT ) lArgs );
    hb_stackPushReturn();
 }
@@ -5451,6 +5452,7 @@ static void hb_vmMacroSend( USHORT uiArgSets )
 
    lArgs = hb_vmArgsJoin( -1, uiArgSets );
    hb_stackDecrease( uiArgSets );
+   hb_itemSetNil( hb_stackReturnItem() );
    hb_vmSend( ( USHORT ) lArgs );
    hb_stackPushReturn();
 }
@@ -5619,6 +5621,63 @@ static void hb_vmSwapAlias( void )
 /* ------------------------------- */
 /* Execution                       */
 /* ------------------------------- */
+
+void hb_vmProc( USHORT uiParams )
+{
+   HB_STACK_TLS_PRELOAD
+   HB_STACK_STATE sStackState;
+   PHB_SYMB pSym;
+#ifndef HB_NO_PROFILER
+   ULONG ulClock = 0;
+   BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
+#endif
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmProc(%hu)", uiParams));
+
+#ifndef HB_NO_PROFILER
+   if( bProfiler )
+      ulClock = ( ULONG ) clock();
+#endif
+
+   /* Poll the console keyboard
+   #if !defined( HB_GUI )
+      hb_inkeyPoll();
+   #endif
+   */
+
+   pSym = hb_stackNewFrame( &sStackState, uiParams )->item.asSymbol.value;
+   HB_VM_FUNCUNREF( pSym );
+   if( HB_VM_ISFUNC( pSym ) )
+   {
+      HB_TRACE_PRG(("Calling: %s", pSym->szName));
+
+#ifndef HB_NO_PROFILER
+      if( bProfiler && pSym->pDynSym )
+         pSym->pDynSym->ulRecurse++;
+#endif
+
+      HB_VM_EXECUTE( pSym );
+
+#ifndef HB_NO_PROFILER
+      if( bProfiler && pSym->pDynSym )
+      {
+         pSym->pDynSym->ulCalls++;                   /* profiler support */
+         /* Time spent has to be added only inside topmost call of a recursive function */
+         if( --pSym->pDynSym->ulRecurse == 0 )
+            pSym->pDynSym->ulTime += clock() - ulClock; /* profiler support */
+      }
+#endif
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_NOFUNC, 1001, NULL, pSym->szName, HB_ERR_ARGS_BASEPARAMS );
+
+#ifndef HB_NO_DEBUG
+   if( sStackState.fDebugging )
+      hb_vmDebuggerEndProc();
+#endif
+
+   hb_stackOldFrame( &sStackState );
+}
 
 void hb_vmDo( USHORT uiParams )
 {
