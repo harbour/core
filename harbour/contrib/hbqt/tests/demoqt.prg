@@ -119,14 +119,16 @@ PROCEDURE Main()
 
    oLabel := QLabel():New( QT_PTROF( oWnd ) )
    oLabel:setText( "Testing Harbour + Qt" )
-   oLabel:move( 200,100 )
+   oLabel:move( 30,260 )
    oLabel:show()
 
    oBtn := QPushButton():new( QT_PTROF( oWnd ) )
    oBtn:setText( "Push Button" )
    oBtn:resize( 100,50 )
-   oBtn:move( 200,150 )
+   oBtn:move( 30,300 )
    oBtn:show()
+
+   Build_Grid( oWnd )
 
    oWnd:Show()
 
@@ -420,6 +422,36 @@ STATIC FUNCTION Dummies()
    oSome := QWindowsStyle():new()
    oSome := QWindowsXPStyle():new()
    oSome := QWizard():new()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Build_Grid( oWnd )
+   LOCAL oGrid, oBrushBackItem0x0, oBrushForeItem0x0, oGridItem0x0
+
+   oGrid := QTableWidget():new( QT_PTROF( oWnd ) )
+   oGrid:setRowCount( 2 )
+   oGrid:setColumnCount( 4 )
+   //
+   oBrushBackItem0x0 := QBrush():new()
+   oBrushBackItem0x0:setStyle( 1 )        // Solid Color
+   oBrushBackItem0x0:setColor_1( 10 )     // http://doc.qtsoftware.com/4.5/qt.html#GlobalColor-enum
+   //
+   oBrushForeItem0x0 := QBrush():new()
+   oBrushForeItem0x0:setColor_1( 7 )
+   //
+   oGridItem0x0 := QTableWidgetItem():new()
+   oGridItem0x0:setBackground( oBrushBackItem0x0:pPtr )
+   oGridItem0x0:setForeground( oBrushForeItem0x0:pPtr )
+   oGridItem0x0:setText( "Item 0x0" )
+   //
+   oGrid:setItem( 0, 0, oGridItem0x0:pPtr )
+   //
+   oGrid:Move( 30 , 50 )
+   oGrid:ReSize( 550 , 200 )
+   //
+   oGrid:Show()
 
    RETURN nil
 
