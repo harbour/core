@@ -916,6 +916,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       aCOMPDET := { { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" ) }, "mingwarm" },;
                     { {|| FindInPath( "cl"       ) }, "msvcarm" },;
                     { {|| FindInPath( "pocc"     ) }, "poccarm" },;
+                    { {|| FindInPath( "arm-mingw32ce-gcc" ) }, "mingwarm", "arm-mingw32ce-" } ,;
                     { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-" } }
       aCOMPSUP := { "mingwarm", "msvcarm", "poccarm" }
       s_aLIBHBGT := { "gtwvt", "gtgui" }
@@ -996,6 +997,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw"   + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw"   , ""                     } )
          AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw64" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw64" , "x86_64-pc-mingw32-"   } )
+         AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-"       } )
          AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwce" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
 
       #elif defined( __PLATFORM__UNIX )
@@ -1007,6 +1009,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             CASE hbmk[ _HBMK_cCOMP ] $ "mingw"
                AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := "/opt/xmingw/bin"   , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw"   , "i386-mingw-" } )
             CASE hbmk[ _HBMK_cCOMP ] $ "mingwarm"
+               AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-" } )
                AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
             ENDCASE
          ENDIF
