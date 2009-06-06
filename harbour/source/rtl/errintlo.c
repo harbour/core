@@ -93,15 +93,15 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
       hb_dateToday( &iYear, &iMonth, &iDay );
       hb_dateTimeStr( szTime );
 
-      fprintf( hLog, HB_I_("Application Internal Error - %s\n"), hb_cmdargARGVN( 0 ) );
-      fprintf( hLog, HB_I_("Terminated at: %04d.%02d.%02d %s\n"), iYear, iMonth, iDay, szTime );
+      fprintf( hLog, "Application Internal Error - %s\n", hb_cmdargARGVN( 0 ) );
+      fprintf( hLog, "Terminated at: %04d.%02d.%02d %s\n", iYear, iMonth, iDay, szTime );
       if( *hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) )
-         fprintf( hLog, HB_I_("Info: %s\n"), hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) );
+         fprintf( hLog, "Info: %s\n", hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) );
    }
 
    hb_conOutErr( hb_conNewLine(), 0 );
    if( fLang )
-      hb_snprintf( buffer, sizeof( buffer ), ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR ), ulIntCode );
+      hb_snprintf( buffer, sizeof( buffer ), hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR ), ulIntCode );
    else
       hb_snprintf( buffer, sizeof( buffer ), "Unrecoverable error %lu: ", ulIntCode );
 
@@ -109,10 +109,11 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
    if( hLog )
       fprintf( hLog, "%s", buffer );
 
+   if( !szText && fLang )
+      szText = hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode - 9000 );
+
    if( szText )
       hb_snprintf( buffer, sizeof( buffer ), szText, szPar1, szPar2 );
-   else if( fLang )
-      hb_snprintf( buffer, sizeof( buffer ), ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode - 9000 ), szPar1, szPar2 );
    else
       buffer[ 0 ] = '\0';
 
@@ -126,7 +127,7 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
    {
       char msg[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
 
-      hb_snprintf( msg, sizeof( msg ), HB_I_("Called from %s(%hu)%s%s\n"), buffer, uiLine, *file ? HB_I_(" in ") : "", file );
+      hb_snprintf( msg, sizeof( msg ), "Called from %s(%hu)%s%s\n", buffer, uiLine, *file ? " in " : "", file );
 
       hb_conOutErr( msg, 0 );
       if( hLog )
