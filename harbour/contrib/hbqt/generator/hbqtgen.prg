@@ -635,8 +635,12 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                aA[ PRT_BODY ] := '&qr'+cDocNM
                aA[ PRT_DOC  ] := '@n'+ cDocNM
 
-            CASE aA[ PRT_CAST ] $ 'double,qreal'
+            CASE aA[ PRT_CAST ] $ 'double,qreal,float'
                aA[ PRT_BODY ] := 'hb_parnd( '+ cHBIdx +' )'
+               aA[ PRT_DOC  ] := 'n'+ cDocNM
+
+            CASE aA[ PRT_CAST ] == 'uchar'
+               aA[ PRT_BODY ] := '( char ) hb_parni( '+ cHBIdx +' )'
                aA[ PRT_DOC  ] := 'n'+ cDocNM
 
             CASE ( '::' $ aA[ PRT_CAST ] ) .and. aA[ PRT_L_FAR ]
@@ -784,6 +788,10 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
             CASE aA[ PRT_CAST ] == 'bool'
                cCmd := 'hb_retl( '+ cCmn +' )'
                cPrgRet := 'l'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'char' .AND. aA[ PRT_L_FAR ]
+               cCmd := 'hb_retc( '+ cCmn +' )'
+               cPrgRet := 'c'+cDocNM
 
             CASE aA[ PRT_CAST ] == 'char'
                cCmd := 'hb_retni( '+ cCmn +' )'
@@ -1236,10 +1244,8 @@ STATIC FUNCTION Build_HBQT_H( cPathOut )
    aadd( txt_, "#ifndef __HBQT_H                                                                              " )
    aadd( txt_, "#define __HBQT_H                                                                              " )
    aadd( txt_, "                                                                                              " )
-//   aadd( txt_, "#include <qglobal.h>                                                                          " )
    aadd( txt_, "#include <QtGui/QTextDocumentFragment>                                                        " )
    aadd( txt_, "#include <QtGui/QTextDocument>                                                                " )
-   aadd( txt_, "/* #include <QtGui/QTextDocumentWriter> */                                                    " )
    aadd( txt_, "#include <QtGui/QTextBlock>                                                                   " )
    aadd( txt_, "#include <QtGui/QTextCursor>                                                                  " )
    aadd( txt_, "                                                                                              " )
@@ -1448,6 +1454,18 @@ STATIC FUNCTION Build_HBQT_H( cPathOut )
    aadd( txt_, "#define hbqt_par_QTextLayout( n )            ( ( QTextLayout* ) hb_parptr( n ) )              " )
    aadd( txt_, "#define hbqt_par_QTextLength( n )            ( ( QTextLength* ) hb_parptr( n ) )              " )
    aadd( txt_, "#define hbqt_par_QTextLine( n )              ( ( QTextLine* ) hb_parptr( n ) )                " )
+   aadd( txt_, "#define hbqt_par_QGradient( n )              ( ( QGradient* ) hb_parptr( n ) )                " )
+   aadd( txt_, "#define hbqt_par_QLinearGradient( n )        ( ( QLinearGradient* ) hb_parptr( n ) )          " )
+   aadd( txt_, "#define hbqt_par_QRadialGradient( n )        ( ( QRadialGradient* ) hb_parptr( n ) )          " )
+   aadd( txt_, "#define hbqt_par_QConicalGradient( n )       ( ( QConicalGradient* ) hb_parptr( n ) )         " )
+   aadd( txt_, "#define hbqt_par_QGradientStops( n )         ( ( QGradientStops* ) hb_parptr( n ) )           " )
+   aadd( txt_, "#define hbqt_par_QImageReader( n )           ( ( QImageReader* ) hb_parptr( n ) )             " )
+   aadd( txt_, "#define hbqt_par_QImageWriter( n )           ( ( QImageWriter* ) hb_parptr( n ) )             " )
+   aadd( txt_, "#define hbqt_par_QResource( n )              ( ( QResource* ) hb_parptr( n ) )                " )
+   aadd( txt_, "#define hbqt_par_QSizePolicy( n )            ( ( QSizePolicy* ) hb_parptr( n ) )              " )
+   aadd( txt_, "#define hbqt_par_QSound( n )                 ( ( QSound* ) hb_parptr( n ) )                   " )
+   aadd( txt_, "#define hbqt_par_QStandardItem( n )          ( ( QStandardItem* ) hb_parptr( n ) )            " )
+   aadd( txt_, "#define hbqt_par_QStandardItemModel( n )     ( ( QStandardItemModel* ) hb_parptr( n ) )       " )
    aadd( txt_, "                                                                                              " )
    aadd( txt_, "#define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )                     " )
    aadd( txt_, "#define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )                              " )
@@ -2479,3 +2497,4 @@ STATIC FUNCTION Build_Demo()
    RETURN CreateTarget( cFile, txt_ )
 
 /*----------------------------------------------------------------------*/
+

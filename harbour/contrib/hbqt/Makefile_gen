@@ -23,6 +23,7 @@ CPP_SOURCES=\
 	hbqt_qcombobox.cpp \
 	hbqt_qcommandlinkbutton.cpp \
 	hbqt_qcommonstyle.cpp \
+	hbqt_qconicalgradient.cpp \
 	hbqt_qcoreapplication.cpp \
 	hbqt_qdateedit.cpp \
 	hbqt_qdatetimeedit.cpp \
@@ -44,18 +45,24 @@ CPP_SOURCES=\
 	hbqt_qformlayout.cpp \
 	hbqt_qframe.cpp \
 	hbqt_qftp.cpp \
+	hbqt_qgradient.cpp \
 	hbqt_qgridlayout.cpp \
 	hbqt_qgroupbox.cpp \
 	hbqt_qhboxlayout.cpp \
 	hbqt_qheaderview.cpp \
 	hbqt_qhttp.cpp \
 	hbqt_qicon.cpp \
+	hbqt_qimage.cpp \
+	hbqt_qimagereader.cpp \
+	hbqt_qimagewriter.cpp \
 	hbqt_qinputdialog.cpp \
 	hbqt_qinputevent.cpp \
 	hbqt_qlabel.cpp \
 	hbqt_qlayout.cpp \
 	hbqt_qlayoutitem.cpp \
 	hbqt_qlcdnumber.cpp \
+	hbqt_qline.cpp \
+	hbqt_qlineargradient.cpp \
 	hbqt_qlineedit.cpp \
 	hbqt_qlistview.cpp \
 	hbqt_qlistwidget.cpp \
@@ -69,7 +76,9 @@ CPP_SOURCES=\
 	hbqt_qpagesetupdialog.cpp \
 	hbqt_qpainter.cpp \
 	hbqt_qpaintevent.cpp \
+	hbqt_qpalette.cpp \
 	hbqt_qpen.cpp \
+	hbqt_qpicture.cpp \
 	hbqt_qpixmap.cpp \
 	hbqt_qpoint.cpp \
 	hbqt_qpointf.cpp \
@@ -78,20 +87,26 @@ CPP_SOURCES=\
 	hbqt_qprogressbar.cpp \
 	hbqt_qprogressdialog.cpp \
 	hbqt_qpushbutton.cpp \
+	hbqt_qradialgradient.cpp \
 	hbqt_qrect.cpp \
 	hbqt_qrectf.cpp \
 	hbqt_qradiobutton.cpp \
 	hbqt_qregion.cpp \
+	hbqt_qresource.cpp \
 	hbqt_qscrollarea.cpp \
 	hbqt_qscrollbar.cpp \
 	hbqt_qsignalmapper.cpp \
 	hbqt_qsize.cpp \
 	hbqt_qsizef.cpp \
 	hbqt_qsizegrip.cpp \
+	hbqt_qsizepolicy.cpp \
 	hbqt_qslider.cpp \
+	hbqt_qsound.cpp \
 	hbqt_qspinbox.cpp \
 	hbqt_qsplashscreen.cpp \
 	hbqt_qsplitter.cpp \
+	hbqt_qstandarditem.cpp \
+	hbqt_qstandarditemmodel.cpp \
 	hbqt_qstatusbar.cpp \
 	hbqt_qstyle.cpp \
 	hbqt_qtabbar.cpp \
@@ -169,10 +184,12 @@ PRG_SOURCES=\
 	TQCalendarWidget.prg \
 	TQCheckBox.prg \
 	TQClipboard.prg \
+	TQColor.prg \
 	TQColorDialog.prg \
 	TQComboBox.prg \
 	TQCommandLinkButton.prg \
 	TQCommonStyle.prg \
+	TQConicalGradient.prg \
 	TQDateEdit.prg \
 	TQDateTimeEdit.prg \
 	TQDesktopWidget.prg \
@@ -193,18 +210,24 @@ PRG_SOURCES=\
 	TQFormLayout.prg \
 	TQFrame.prg \
 	TQFtp.prg \
+	TQGradient.prg \
 	TQGridLayout.prg \
 	TQGroupBox.prg \
 	TQHBoxLayout.prg \
 	TQHeaderView.prg \
 	TQHttp.prg \
 	TQIcon.prg \
+	TQImage.prg \
+	TQImageReader.prg \
+	TQImageWriter.prg \
 	TQInputDialog.prg \
 	TQInputEvent.prg \
 	TQLabel.prg \
 	TQLayout.prg \
 	TQLayoutItem.prg \
 	TQLCDNumber.prg \
+	TQLine.prg \
+	TQLinearGradient.prg \
 	TQLineEdit.prg \
 	TQListView.prg \
 	TQListWidget.prg \
@@ -218,7 +241,9 @@ PRG_SOURCES=\
 	TQPageSetupDialog.prg \
 	TQPainter.prg \
 	TQPaintEvent.prg \
+	TQPalette.prg \
 	TQPen.prg \
+	TQPicture.prg \
 	TQPixmap.prg \
 	TQPoint.prg \
 	TQPointF.prg \
@@ -227,20 +252,26 @@ PRG_SOURCES=\
 	TQProgressBar.prg \
 	TQProgressDialog.prg \
 	TQPushButton.prg \
+	TQRadialGradient.prg \
 	TQRect.prg \
 	TQRectF.prg \
 	TQRadioButton.prg \
 	TQRegion.prg \
+	TQResource.prg \
 	TQScrollArea.prg \
 	TQScrollBar.prg \
 	TQSignalMapper.prg \
 	TQSize.prg \
 	TQSizeF.prg \
 	TQSizeGrip.prg \
+	TQSizePolicy.prg \
 	TQSlider.prg \
+	TQSound.prg \
 	TQSpinBox.prg \
 	TQSplashScreen.prg \
 	TQSplitter.prg \
+	TQStandardItem.prg \
+	TQStandardItemModel.prg \
 	TQStatusBar.prg \
 	TQStyle.prg \
 	TQTabBar.prg \

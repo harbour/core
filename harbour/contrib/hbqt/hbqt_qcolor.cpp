@@ -73,7 +73,7 @@ QColor ( Qt::GlobalColor color )
  */
 HB_FUNC( QT_QCOLOR )
 {
-
+   hb_retptr( ( QColor* ) new QColor() );
 }
 
 /*
