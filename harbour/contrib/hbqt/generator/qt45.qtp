@@ -115,8 +115,10 @@ QSplitter.qth
 QStandardItem.qth
 QStandardItemModel.qth
 QStatusBar.qth
+
 QStyle.qth
 QStyledItemDelegate.qth
+
 QStyleHintReturn.qth
 QStyleHintReturnMask.qth
 QStyleHintReturnVariant.qth
@@ -133,6 +135,17 @@ QStyleOptionHeader.qth
 QStyleOptionMenuItem.qth
 QStyleOptionProgressBar.qth
 QStyleOptionSizeGrip.qth
+QStyleOptionSlider.qth
+QStyleOptionSpinBox.qth
+QStyleOptionTab.qth
+QStyleOptionTabBarBase.qth
+QStyleOptionWidgetFrame.qth
+QStyleOptionTitleBar.qth
+QStyleOptionToolBar.qth
+QStyleOptionToolBox.qth
+QStyleOptionToolButton.qth
+QStyleOptionViewItem.qth
+QStyleOptionPainter.qth
 
 QTabBar.qth
 QTableView.qth

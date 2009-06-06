@@ -125,6 +125,15 @@ CPP_SOURCES=\
 	hbqt_qstyleoptionmenuitem.cpp \
 	hbqt_qstyleoptionprogressbar.cpp \
 	hbqt_qstyleoptionsizegrip.cpp \
+	hbqt_qstyleoptionslider.cpp \
+	hbqt_qstyleoptionspinbox.cpp \
+	hbqt_qstyleoptiontab.cpp \
+	hbqt_qstyleoptiontabbarbase.cpp \
+	hbqt_qstyleoptiontitlebar.cpp \
+	hbqt_qstyleoptiontoolbar.cpp \
+	hbqt_qstyleoptiontoolbox.cpp \
+	hbqt_qstyleoptiontoolbutton.cpp \
+	hbqt_qstyleoptionviewitem.cpp \
 	hbqt_qtabbar.cpp \
 	hbqt_qtableview.cpp \
 	hbqt_qtablewidget.cpp \
@@ -306,6 +315,15 @@ PRG_SOURCES=\
 	TQStyleOptionMenuItem.prg \
 	TQStyleOptionProgressBar.prg \
 	TQStyleOptionSizeGrip.prg \
+	TQStyleOptionSlider.prg \
+	TQStyleOptionSpinBox.prg \
+	TQStyleOptionTab.prg \
+	TQStyleOptionTabBarBase.prg \
+	TQStyleOptionTitleBar.prg \
+	TQStyleOptionToolBar.prg \
+	TQStyleOptionToolBox.prg \
+	TQStyleOptionToolButton.prg \
+	TQStyleOptionViewItem.prg \
 	TQTabBar.prg \
 	TQTableView.prg \
 	TQTableWidget.prg \
