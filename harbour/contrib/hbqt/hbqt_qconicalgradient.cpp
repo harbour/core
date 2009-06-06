@@ -68,7 +68,7 @@
  * QConicalGradient ( const QPointF & center, qreal angle )
  * QConicalGradient ( qreal cx, qreal cy, qreal angle )
  */
-HB_FUNC( QT_ )
+HB_FUNC( QT_QCONICALGRADIENT )
 {
    hb_retptr( ( QConicalGradient* ) new QConicalGradient() );
 }

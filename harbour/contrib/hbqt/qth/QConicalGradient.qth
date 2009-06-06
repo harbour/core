@@ -57,7 +57,7 @@
 <CLASS>
 Inherits = QGradient
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 <CODE>
@@ -69,7 +69,7 @@ New      =
  * QConicalGradient ( const QPointF & center, qreal angle )
  * QConicalGradient ( qreal cx, qreal cy, qreal angle )
  */
-HB_FUNC( QT_ )
+HB_FUNC( QT_QCONICALGRADIENT )
 {
    hb_retptr( ( QConicalGradient* ) new QConicalGradient() );
 }
@@ -94,7 +94,3 @@ void setCenter ( qreal x, qreal y )
 
 <SIGNALS>
 </SIGNALS>
-
-
-
-

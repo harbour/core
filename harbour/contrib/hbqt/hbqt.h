@@ -58,7 +58,6 @@
 
 #include <QtGui/QTextDocumentFragment>
 #include <QtGui/QTextDocument>
-/* #include <QtGui/QTextDocumentWriter> */
 #include <QtGui/QTextBlock>
 #include <QtGui/QTextCursor>
 

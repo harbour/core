@@ -68,7 +68,7 @@
  * QLinearGradient ( const QPointF & start, const QPointF & finalStop )
  * QLinearGradient ( qreal x1, qreal y1, qreal x2, qreal y2 )
  */
-HB_FUNC( QT_ )
+HB_FUNC( QT_QLINEARGRADIENT )
 {
    hb_retptr( ( QLinearGradient* ) new QLinearGradient() );
 }
