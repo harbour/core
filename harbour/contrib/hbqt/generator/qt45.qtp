@@ -12,6 +12,7 @@
 
 
 QAbstractButton.qth
+QAbstractItemModel.qth
 QAbstractItemView.qth
 QAbstractPrintDialog.qth
 QAbstractScrollArea.qth
@@ -139,13 +140,13 @@ QStyleOptionSlider.qth
 QStyleOptionSpinBox.qth
 QStyleOptionTab.qth
 QStyleOptionTabBarBase.qth
-QStyleOptionWidgetFrame.qth
+QStyleOptionTabWidgetFrame.qth
 QStyleOptionTitleBar.qth
 QStyleOptionToolBar.qth
 QStyleOptionToolBox.qth
 QStyleOptionToolButton.qth
 QStyleOptionViewItem.qth
-QStyleOptionPainter.qth
+QStylePainter.qth
 
 QTabBar.qth
 QTableView.qth
@@ -176,6 +177,7 @@ QTextItem.qth
 QTextLayout.qth
 QTextLength.qth
 QTextLine.qth
+QTextObject.qth
 
 QTextStream.qth
 QTimeEdit.qth

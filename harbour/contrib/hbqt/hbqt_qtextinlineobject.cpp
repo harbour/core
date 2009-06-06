@@ -67,7 +67,7 @@
  * QTextInlineObject ( int i, QTextEngine * e )
  *
  */
-HB_FUNC( QT_Q )
+HB_FUNC( QT_QTEXTINLINEOBJECT )
 {
    hb_retptr( ( QTextInlineObject* ) new QTextInlineObject( hb_parni( 1 ), hbqt_par_QTextEngine( 2 ) ) );
 }

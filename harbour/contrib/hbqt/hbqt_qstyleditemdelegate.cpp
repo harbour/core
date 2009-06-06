@@ -67,7 +67,7 @@
  * QStyledItemDelegate ( QObject * parent = 0 )
  * ~QStyledItemDelegate ()
  */
-HB_FUNC( QT_QSTYLEITEMDELEGATE )
+HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 {
    hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
 }

@@ -68,7 +68,7 @@
  * QStyleOption ( const QStyleOption & other )
  * ~QStyleOption ()
  */
-HB_FUNC( QT_STYLEOPTION )
+HB_FUNC( QT_QSTYLEOPTION )
 {
    hb_retptr( ( QStyleOption* ) new QStyleOption() );
 }

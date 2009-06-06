@@ -304,6 +304,8 @@
 #define hbqt_par_QStyleOptionToolButton( n ) ( ( QStyleOptionToolButton* ) hb_parptr( n ) )
 #define hbqt_par_QStyleOptionViewItem( n )   ( ( QStyleOptionViewItem* ) hb_parptr( n ) )
 #define hbqt_par_QStylePainter( n )          ( ( QStylePainter* ) hb_parptr( n ) )
+#define hbqt_par_QTextObject( n )            ( ( QTextObject* ) hb_parptr( n ) )
+#define hbqt_par_QModelIndexList( n )        ( ( QModelIndexList* ) hb_parptr( n ) )
 
 #define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )
 #define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )

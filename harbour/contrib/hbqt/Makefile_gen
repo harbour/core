@@ -5,6 +5,7 @@
 
 CPP_SOURCES=\
 	hbqt_qabstractbutton.cpp \
+	hbqt_qabstractitemmodel.cpp \
 	hbqt_qabstractitemview.cpp \
 	hbqt_qabstractprintdialog.cpp \
 	hbqt_qabstractscrollarea.cpp \
@@ -129,11 +130,13 @@ CPP_SOURCES=\
 	hbqt_qstyleoptionspinbox.cpp \
 	hbqt_qstyleoptiontab.cpp \
 	hbqt_qstyleoptiontabbarbase.cpp \
+	hbqt_qstyleoptiontabwidgetframe.cpp \
 	hbqt_qstyleoptiontitlebar.cpp \
 	hbqt_qstyleoptiontoolbar.cpp \
 	hbqt_qstyleoptiontoolbox.cpp \
 	hbqt_qstyleoptiontoolbutton.cpp \
 	hbqt_qstyleoptionviewitem.cpp \
+	hbqt_qstylepainter.cpp \
 	hbqt_qtabbar.cpp \
 	hbqt_qtableview.cpp \
 	hbqt_qtablewidget.cpp \
@@ -163,6 +166,7 @@ CPP_SOURCES=\
 	hbqt_qtextlayout.cpp \
 	hbqt_qtextlength.cpp \
 	hbqt_qtextline.cpp \
+	hbqt_qtextobject.cpp \
 	hbqt_qtextstream.cpp \
 	hbqt_qtimeedit.cpp \
 	hbqt_qtimer.cpp \
@@ -197,6 +201,7 @@ C_HEADERS=\
 
 PRG_SOURCES=\
 	TQAbstractButton.prg \
+	TQAbstractItemModel.prg \
 	TQAbstractItemView.prg \
 	TQAbstractPrintDialog.prg \
 	TQAbstractScrollArea.prg \
@@ -319,11 +324,13 @@ PRG_SOURCES=\
 	TQStyleOptionSpinBox.prg \
 	TQStyleOptionTab.prg \
 	TQStyleOptionTabBarBase.prg \
+	TQStyleOptionTabWidgetFrame.prg \
 	TQStyleOptionTitleBar.prg \
 	TQStyleOptionToolBar.prg \
 	TQStyleOptionToolBox.prg \
 	TQStyleOptionToolButton.prg \
 	TQStyleOptionViewItem.prg \
+	TQStylePainter.prg \
 	TQTabBar.prg \
 	TQTableView.prg \
 	TQTableWidget.prg \
@@ -353,6 +360,7 @@ PRG_SOURCES=\
 	TQTextLayout.prg \
 	TQTextLength.prg \
 	TQTextLine.prg \
+	TQTextObject.prg \
 	TQTextStream.prg \
 	TQTimeEdit.prg \
 	TQTimer.prg \

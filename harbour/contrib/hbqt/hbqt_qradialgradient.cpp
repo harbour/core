@@ -70,7 +70,7 @@
  * QRadialGradient ( const QPointF & center, qreal radius )
  * QRadialGradient ( qreal cx, qreal cy, qreal radius )
  */
-HB_FUNC( QT_RADIALGRADIENT )
+HB_FUNC( QT_QRADIALGRADIENT )
 {
    hb_retptr( ( QRadialGradient* ) new QRadialGradient() );
 }
