@@ -11,6 +11,7 @@ fname=`sed -n -e 's/\(%define \+name \+\)\(.*\)/\2/p' ${rootdir}${specfile}`
 fversion=`sed -n -e 's/\(%define \+version \+\)\(.*\)/\2/p' ${rootdir}${specfile}`
 frelease=`sed -n -e 's/\(%define \+release \+\)\(.*\)/\2/p' ${rootdir}${specfile}`
 fullname="${fname}-${fversion}-${frelease}"
+fullTmpname=tmp/${fullname}
 
 srcName=${fullname}.src
 srcTarName=${srcName}.tar.gz
@@ -18,7 +19,7 @@ srcZipName=${srcName}.zip
 
 rm_dir(){
 
-  [ -d ${fullname} ] && rm -r ${fullname}
+  [ -d ${fullTmpname} ] && rm -r ${fullTmpname}
 
 }
 
@@ -30,9 +31,9 @@ build_dir() {
 
   for fname in ${listDir} ; do
     if [ -d ${rootdir}${fname} ] ; then
-      mkdir -p ${fullname}/${fname}
+      mkdir -p ${fullTmpname}/${fname}
     elif [ -f ${rootdir}${fname} ] ; then
-      cp ${rootdir}${fname} ${fullname}/${fname}
+      cp ${rootdir}${fname} ${fullTmpname}/${fname}
     fi
   done
 
@@ -40,13 +41,13 @@ build_dir() {
 
 build_tgz() {
 
-  tar -cvzf ${srcTarName} ${fullname}
+  tar -C tmp -cvzf ${srcTarName} ${fullname}
 
 }
 
 build_zip() {
 
-  zip -r9 ${srcZipName} ${fullname}
+  ( cd tmp ; zip -r9 ../${srcZipName} ${fullname} )
 
 }
 
