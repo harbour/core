@@ -1,0 +1,14 @@
+
+2008-09-09 06:00 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  Rev 122
+
+  * This release build and links the libraries and samples on the following
+    environments:
+
+    - Linux (GNU): Fedora 8, Fedora 9, Ubuntu 8.04, openSUSE 11
+    - Windows XP (MSVC) (MINGW)
+    - Windows Vista (MINGW)
+
+    Harbour and xHarbour compilers tested:
+      - Current CVS/SVN versions to date.
+        (after minor fixes on xHarbour Linux builds)
