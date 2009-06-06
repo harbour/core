@@ -1724,7 +1724,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       OTHERWISE
 
-         IF ! Empty( cParam ) .AND. !( FN_ExtGet( cParamL ) ) $ ".ch|.hpp|.hxx|.h"
+         cParam := ArchCompFilter( hbmk, cParam )
+         IF ! Empty( cParam )
             cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
             AAdd( s_aPRG    , PathSepToTarget( hbmk, cParam ) )
             DEFAULT s_cFIRST TO PathSepToSelf( cParam )
