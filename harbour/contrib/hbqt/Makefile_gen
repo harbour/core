@@ -109,6 +109,22 @@ CPP_SOURCES=\
 	hbqt_qstandarditemmodel.cpp \
 	hbqt_qstatusbar.cpp \
 	hbqt_qstyle.cpp \
+	hbqt_qstyleditemdelegate.cpp \
+	hbqt_qstylehintreturn.cpp \
+	hbqt_qstylehintreturnmask.cpp \
+	hbqt_qstylehintreturnvariant.cpp \
+	hbqt_qstyleoption.cpp \
+	hbqt_qstyleoptionbutton.cpp \
+	hbqt_qstyleoptioncombobox.cpp \
+	hbqt_qstyleoptioncomplex.cpp \
+	hbqt_qstyleoptiondockwidget.cpp \
+	hbqt_qstyleoptionfocusrect.cpp \
+	hbqt_qstyleoptionframe.cpp \
+	hbqt_qstyleoptiongroupbox.cpp \
+	hbqt_qstyleoptionheader.cpp \
+	hbqt_qstyleoptionmenuitem.cpp \
+	hbqt_qstyleoptionprogressbar.cpp \
+	hbqt_qstyleoptionsizegrip.cpp \
 	hbqt_qtabbar.cpp \
 	hbqt_qtableview.cpp \
 	hbqt_qtablewidget.cpp \
@@ -274,6 +290,22 @@ PRG_SOURCES=\
 	TQStandardItemModel.prg \
 	TQStatusBar.prg \
 	TQStyle.prg \
+	TQStyledItemDelegate.prg \
+	TQStyleHintReturn.prg \
+	TQStyleHintReturnMask.prg \
+	TQStyleHintReturnVariant.prg \
+	TQStyleOption.prg \
+	TQStyleOptionButton.prg \
+	TQStyleOptionComboBox.prg \
+	TQStyleOptionComplex.prg \
+	TQStyleOptionDockWidget.prg \
+	TQStyleOptionFocusRect.prg \
+	TQStyleOptionFrame.prg \
+	TQStyleOptionGroupBox.prg \
+	TQStyleOptionHeader.prg \
+	TQStyleOptionMenuItem.prg \
+	TQStyleOptionProgressBar.prg \
+	TQStyleOptionSizeGrip.prg \
 	TQTabBar.prg \
 	TQTableView.prg \
 	TQTableWidget.prg \

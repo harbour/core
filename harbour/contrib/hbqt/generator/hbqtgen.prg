@@ -278,7 +278,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    LOCAL cFile, cWidget, cExt, cPath, cOrg, cCPP, cPRG
    LOCAL cQth, cFileCpp
    LOCAL s, n, hHandle, nFuncs, nCnvrtd
-   LOCAL b_, txt_, enum_, code_, func_, dummy_, cpp_, cmntd_, doc_
+   LOCAL b_, txt_, enum_, code_, func_, dummy_, cpp_, cmntd_, doc_, vrb_, varbls_
    LOCAL class_, cls_, protos_, slots_, enums_
 
    hb_fNameSplit( cProFile, @cPath, @cWidget, @cExt )
@@ -334,6 +334,9 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    /* Pull out Prototypes   */
    protos_ := PullOutSection( @cQth, 'PROTOS' )
 
+   /* Pull out Variables */
+   varbls_ := PullOutSection( @cQth, 'VARIABLES' )
+
    /* Pull Out Signals      */
    slots_  := PullOutSection( @cQth, 'SLOTS'  )
 
@@ -379,6 +382,41 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       ENDIF
 
       IF ParseProto( s, cWidget, @txt_, @doc_, enum_, func_ )
+         nCnvrtd++
+      ELSE
+         aadd( dummy_, cOrg )
+      ENDIF
+   NEXT
+
+   FOR EACH s IN varbls_
+      cOrg := s
+
+      IF empty( s := alltrim( s ) )
+         LOOP
+      ENDIF
+      /* Check if it is not ANSI C Comment */
+      IF left( alltrim( cOrg ),1 ) $ '/*'
+         LOOP
+      ENDIF
+      /* Another comment tokens */
+      IF empty( s ) .or. left( s,1 ) $ '#;'
+         LOOP
+      ENDIF
+
+      nFuncs++
+
+      /* Check if proto is commented out */
+      IF left( s,2 ) == '//'
+         aadd( cmntd_, cOrg )
+         LOOP
+      ENDIF
+      /* Lists - Later */
+      IF '<' $ s
+         aadd( dummy_, cOrg )
+         LOOP
+      ENDIF
+
+      IF ParseVariables( s, cWidget, @txt_, @doc_, enum_, func_ )
          nCnvrtd++
       ELSE
          aadd( dummy_, cOrg )
@@ -942,6 +980,147 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
+   LOCAL aRet, aA, aArgus, aArg, aPar, aPre
+   LOCAL n, nn, nHBIdx
+   LOCAL cPre, cPar, cRet, cFun, cParas, cDocs, cCmd, cPas, s, ss
+   LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cHBIdx, cDocNM
+   LOCAL lSuccess
+   LOCAL cIntegers := 'int,qint16,qint32,qint64,quint16,quint32,quint64,qlonglong,qulonglong,QRgb,QChar'
+
+   cParas := ''
+   cDocs  := ''
+
+   aRet := {}; aArgus := {}
+   n := at( ' ', cProto )
+   IF n > 0
+      IF .t.
+         cRet := alltrim( substr( cProto, 1, n-1 ) )
+         cFun := alltrim( substr( cProto, n+1    ) )
+
+         aRet := array( PRT_ATTRB_MAX )
+
+         /* Normalize */
+         aRet[ PRT_CAST ] := cRet
+         aRet[ PRT_NAME ] := aRet[ PRT_CAST ]
+
+         IF ascan( aEnum, {|e| IF( empty( e ), .f., e == aRet[ PRT_CAST ] ) } ) > 0
+            aRet[ PRT_CAST ] := cWidget + '::' + aRet[ PRT_CAST ]
+         ENDIF
+
+         /* Build complete code line */
+         IF .t.
+            aA     := aRet
+            cWdg   := 'hbqt_par_'+ cWidget +'( 1 )->'
+            cCmn   := cWdg + cFun
+            cDocNM := THIS_PROPER( aA[ PRT_NAME ] )
+
+            DO CASE
+            CASE aA[ PRT_CAST ] == 'T'
+               cCmd := 'hb_ret( '+ cCmn +' )'
+               cPrgRet := 'x'+cDocNM
+
+            CASE aA[ PRT_CAST ] $ cIntegers
+               cCmd := 'hb_retni( '+ cCmn +' )'
+               cPrgRet := 'n'+cDocNM
+
+            CASE aA[ PRT_CAST ] $ 'double,qreal'
+               cCmd := 'hb_retnd( '+ cCmn +' )'
+               cPrgRet := 'n'+cDocNM
+
+            CASE ( '::' $ aA[ PRT_CAST ] )
+               cCmd := 'hb_retni( ( '+ aA[ PRT_CAST ] +' ) ' + cCmn +' )'
+               cPrgRet := 'n'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'bool'
+               cCmd := 'hb_retl( '+ cCmn +' )'
+               cPrgRet := 'l'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'char*'
+               cCmd := 'hb_retc( '+ cCmn +' )'
+               cPrgRet := 'c'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'char'
+               cCmd := 'hb_retni( '+ cCmn +' )'
+               cPrgRet := 'c'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'QString'
+               cCmd := 'hb_retc( '+ cCmn +'.toLatin1().data()' +' )'
+               cPrgRet := 'c'+cDocNM
+
+            CASE aA[ PRT_CAST ] == 'FT_Face'
+               cCmd := 'hb_retc( '+ cCmn +' )'
+               cPrgRet := 'c'+cDocNM
+
+            OTHERWISE
+               /* No attribute is attached to return value */
+               IF left( aA[ PRT_CAST ], 1 ) == 'Q'
+                  cCmd := 'hb_retptr( new '+ aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
+                  cPrgRet := 'p'+cDocNM
+
+               ELSE
+                  OutStd( '<<< '+cProto + ' | ' + aA[ PRT_CAST ]+' >>>'  + s_NewLine )
+                  cCmd := ''
+                  cPrgRet := ''
+
+               ENDIF
+
+            ENDCASE
+
+            IF !empty( cCmd )
+               cCmd := strtran( cCmd, '(  )', '()' ) +';'
+            ENDIF
+         ENDIF
+      ENDIF
+   ENDIF
+
+   IF ( lSuccess := !empty( cCmd ) )
+      IF ( n := ascan( func_, {|e_| e_[ 1 ] == cFun } ) ) > 0
+         func_[ n,2 ]++
+         cHBFunc := cFun + '_' + hb_ntos( func_[ n,2 ] )
+      ELSE
+         cHBFunc := cFun
+         aadd( func_, { cFun, 0 } )
+      ENDIF
+
+      aadd( txt_, "/*" )
+      aadd( txt_, " * "+ strtran( cProto, chr(13), '' ) )
+      aadd( txt_, " */" )
+
+      aadd( txt_, "HB_FUNC( QT_" + upper( cWidget ) +"_"+ upper( cHBFunc ) +" )" )
+      aadd( txt_, "{"  )
+
+      /* Insert parameters by reference */
+      IF !empty( aPre )
+         FOR n := 1 TO len( aPre )
+            aadd( txt_, "   "+ aPre[ n, 1 ] )
+         NEXT
+         aadd( txt_, ""   )
+      ENDIF
+
+      /* One line function body */
+      aadd( txt_, "   "+ cCmd )
+
+      /* Return values back to PRG */
+      IF !empty( aPre )
+         aadd( txt_, ""   )
+         FOR n := 1 TO len( aPre )
+            aadd( txt_, "   "+ aPre[ n,4 ]+"( " + aPre[ n,3 ] +", "+ hb_ntos( aPre[ n,2 ] ) +" );" )
+         NEXT
+      ENDIF
+
+      aadd( txt_, "}"  )
+      aadd( txt_, ""   )
+
+      aadd( doc_, 'Qt_'+ cWidget + '_' + cHBFunc +'( p'+ cWidget + ;
+                        IF( empty( cDocs ), '', ', '+ cDocs ) +' ) -> '+ cPrgRet )
+      aadd( doc_, '' )
+   ENDIF
+
+   RETURN lSuccess
+
+/*----------------------------------------------------------------------*/
+
 STATIC FUNCTION BuildHeader( txt_, nMode )
 
    aadd( txt_, "/*"                                                                            )
@@ -1244,6 +1423,8 @@ STATIC FUNCTION Build_HBQT_H( cPathOut )
    aadd( txt_, "#ifndef __HBQT_H                                                                              " )
    aadd( txt_, "#define __HBQT_H                                                                              " )
    aadd( txt_, "                                                                                              " )
+   aadd( txt_, "#include <qglobal.h>                                                                          " )
+   aadd( txt_, "                                                                                              " )
    aadd( txt_, "#include <QtGui/QTextDocumentFragment>                                                        " )
    aadd( txt_, "#include <QtGui/QTextDocument>                                                                " )
    aadd( txt_, "#include <QtGui/QTextBlock>                                                                   " )
@@ -1466,6 +1647,19 @@ STATIC FUNCTION Build_HBQT_H( cPathOut )
    aadd( txt_, "#define hbqt_par_QSound( n )                 ( ( QSound* ) hb_parptr( n ) )                   " )
    aadd( txt_, "#define hbqt_par_QStandardItem( n )          ( ( QStandardItem* ) hb_parptr( n ) )            " )
    aadd( txt_, "#define hbqt_par_QStandardItemModel( n )     ( ( QStandardItemModel* ) hb_parptr( n ) )       " )
+   aadd( txt_, "#define hbqt_par_QItemEditorFactory( n )     ( ( QItemEditorFactory* ) hb_parptr( n ) )       " )
+   aadd( txt_, "#define hbqt_par_QStyledItemDelegate( n )    ( ( QStyledItemDelegate* ) hb_parptr( n ) )      " )
+   aadd( txt_, "#define hbqt_par_QStyleOptionViewItem( n )   ( ( QStyleOptionViewItem* ) hb_parptr( n ) )     " )
+   aadd( txt_, "#define hbqt_par_QStyleOptionButton( n )     ( ( QStyleOptionButton* ) hb_parptr( n ) )       " )
+   aadd( txt_, "#define hbqt_par_QStyleOptionComboBox( n )   ( ( QStyleOptionComboBox* ) hb_parptr( n ) )     " )
+   aadd( txt_, "#define hbqt_par_QStyleOptionDockWidget( n ) ( ( QStyleOptionDockWidget* ) hb_parptr( n ) )   " )
+   aadd( txt_, "#define hbqt_par_QStyleOptionFocusRect( n )  ( ( QStyleOptionFocusRect* ) hb_parptr( n ) )    " )
+   aadd( txt_, "#define hbqt_par_QStyleOptionFrame( n )      ( ( QStyleOptionFrame* ) hb_parptr( n ) )        " )
+   aadd( txt_, "#define hbqt_par_QStyleOptionGroupBox( n )   ( ( QStyleOptionGroupBox* ) hb_parptr( n ) )     " )
+   aadd( txt_, "#define hbqt_par_QStyleOptionHeader( n )     ( ( QStyleOptionHeader* ) hb_parptr( n ) )       " )
+   aadd( txt_, "#define hbqt_par_QStyleOptionMenuItem( n )   ( ( QStyleOptionMenuItem* ) hb_parptr( n ) )     " )
+   aadd( txt_, "#define hbqt_par_QStyleOptionProgressBar( n )( ( QStyleOptionProgressBar* ) hb_parptr( n ) )  " )
+   aadd( txt_, "#define hbqt_par_QStyleOptionSizeGrip( n )   ( ( QStyleOptionSizeGrip* ) hb_parptr( n ) )     " )
    aadd( txt_, "                                                                                              " )
    aadd( txt_, "#define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )                     " )
    aadd( txt_, "#define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )                              " )

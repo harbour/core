@@ -56,6 +56,8 @@
 #ifndef __HBQT_H
 #define __HBQT_H
 
+#include <qglobal.h>
+
 #include <QtGui/QTextDocumentFragment>
 #include <QtGui/QTextDocument>
 #include <QtGui/QTextBlock>
@@ -278,6 +280,19 @@
 #define hbqt_par_QSound( n )                 ( ( QSound* ) hb_parptr( n ) )
 #define hbqt_par_QStandardItem( n )          ( ( QStandardItem* ) hb_parptr( n ) )
 #define hbqt_par_QStandardItemModel( n )     ( ( QStandardItemModel* ) hb_parptr( n ) )
+#define hbqt_par_QItemEditorFactory( n )     ( ( QItemEditorFactory* ) hb_parptr( n ) )
+#define hbqt_par_QStyledItemDelegate( n )    ( ( QStyledItemDelegate* ) hb_parptr( n ) )
+#define hbqt_par_QStyleOptionViewItem( n )   ( ( QStyleOptionViewItem* ) hb_parptr( n ) )
+#define hbqt_par_QStyleOptionButton( n )     ( ( QStyleOptionButton* ) hb_parptr( n ) )
+#define hbqt_par_QStyleOptionComboBox( n )   ( ( QStyleOptionComboBox* ) hb_parptr( n ) )
+#define hbqt_par_QStyleOptionDockWidget( n ) ( ( QStyleOptionDockWidget* ) hb_parptr( n ) )
+#define hbqt_par_QStyleOptionFocusRect( n )  ( ( QStyleOptionFocusRect* ) hb_parptr( n ) )
+#define hbqt_par_QStyleOptionFrame( n )      ( ( QStyleOptionFrame* ) hb_parptr( n ) )
+#define hbqt_par_QStyleOptionGroupBox( n )   ( ( QStyleOptionGroupBox* ) hb_parptr( n ) )
+#define hbqt_par_QStyleOptionHeader( n )     ( ( QStyleOptionHeader* ) hb_parptr( n ) )
+#define hbqt_par_QStyleOptionMenuItem( n )   ( ( QStyleOptionMenuItem* ) hb_parptr( n ) )
+#define hbqt_par_QStyleOptionProgressBar( n )( ( QStyleOptionProgressBar* ) hb_parptr( n ) )
+#define hbqt_par_QStyleOptionSizeGrip( n )   ( ( QStyleOptionSizeGrip* ) hb_parptr( n ) )
 
 #define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )
 #define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )
