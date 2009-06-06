@@ -1711,8 +1711,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             DEFAULT s_cFIRST TO PathSepToSelf( cParam )
          NEXT
 
-      CASE FN_ExtGet( cParamL ) $ ".po" .OR. ;
-           FN_ExtGet( cParamL ) $ ".pot"
+      CASE FN_ExtGet( cParamL ) == ".po" .OR. ;
+           FN_ExtGet( cParamL ) == ".pot"
 
          FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aPO ], PathSepToTarget( hbmk, cParam ) )
@@ -1724,7 +1724,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       OTHERWISE
 
-         IF ! Empty( cParam )
+         IF ! Empty( cParam ) .AND. !( FN_ExtGet( cParamL ) ) $ ".ch|.hpp|.hxx|.h"
             cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
             AAdd( s_aPRG    , PathSepToTarget( hbmk, cParam ) )
             DEFAULT s_cFIRST TO PathSepToSelf( cParam )
