@@ -5773,6 +5773,7 @@ STATIC FUNCTION VCSDetect( cDir )
    CASE hb_DirExists( cDir + ".git" ) ; RETURN _VCS_GIT
    CASE hb_DirExists( cDir + ".hg" )  ; RETURN _VCS_MERCURIAL
    CASE hb_DirExists( cDir + "CVS" )  ; RETURN _VCS_CVS
+   CASE hb_DirExists( cDir + "_svn" ) ; RETURN _VCS_SVN /* NOTE: When SVN_ASP_DOT_NET_HACK envvar is set. [vszakats] */
    ENDCASE
 
    RETURN _VCS_UNKNOWN
