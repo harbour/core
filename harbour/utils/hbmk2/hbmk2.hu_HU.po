@@ -509,8 +509,8 @@ msgstr "használjon a szerkesztéskor statikus/dinamikus függvénykönyvtárakat"
 
 #: hbmk2.prg:5688
 #, c-format
-msgid "link with <libname> library"
-msgstr "szerkessze be <libname> függvénykönyvtárat"
+msgid "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of libname)."
+msgstr "szerkessze be <libname> függvénykönyvtárat. <libname>-ben nem szerepelhet útvonal, kiterjesztés és 'lib' elõtag (kivéve ha az a név része)."
 
 #: hbmk2.prg:5758
 #, c-format
