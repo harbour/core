@@ -6,13 +6,12 @@
 
 {mingw|mingwce|(gcc&(linux|darwin))}libs=supc++
 libs=hbqt
-{allwin}libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
+{allwin&!HB_QT_STATIC}libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
+{allwin&HB_QT_STATIC}libs=QtCore QtGui QtNetwork QtWebKit
 {linux}libs=QtCore QtGui QtNetwork QtWebKit
 {darwin}libs=/Library/Frameworks/QtCore.framework/QtCore
 {darwin}libs=/Library/Frameworks/QtGui.framework/QtGui
 {darwin}libs=/Library/Frameworks/QtNetwork.framework/QtNetwork
 {darwin}libs=/Library/Frameworks/QtWebKit.framework/QtWebKit
-# static libs
-#libs=QtCore QtGui QtNetwork QtWebKit
 gui=yes
 gt=gtnul
