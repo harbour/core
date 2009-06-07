@@ -5220,7 +5220,7 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
    LOCAL nPos
 
    IF !( hbmk[ _HBMK_cARCH ] == hb_Version( HB_VERSION_BUILD_ARCH ) ) .OR. ;
-      hbmk[ _HBMK_cARCH ] == "wce"
+      !( hbmk[ _HBMK_cCOMP ] == hb_Version( HB_VERSION_BUILD_COMP ) )
 
       aUnd := {}
       aDef := {}
@@ -5257,6 +5257,22 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
          AAdd( aUnd, "__PLATFORM__UNIX" )
       #endif
 
+      #if   defined( __ARCH16BIT__ )
+         AAdd( aUnd, "__ARCH16BIT__" )
+      #elif defined( __ARCH32BIT__ )
+         AAdd( aUnd, "__ARCH32BIT__" )
+      #elif defined( __ARCH64BIT__ )
+         AAdd( aUnd, "__ARCH64BIT__" )
+      #endif
+
+      #if   defined( __LITTLE_ENDIAN__ )
+         AAdd( aUnd, "__LITTLE_ENDIAN__" )
+      #elif defined( __BIG_ENDIAN__ )
+         AAdd( aUnd, "__BIG_ENDIAN__" )
+      #elif defined( __PDP_ENDIAN__ )
+         AAdd( aUnd, "__PDP_ENDIAN__" )
+      #endif
+
       DO CASE
       CASE hbmk[ _HBMK_cARCH ] == "wce"
          AAdd( aDef, "__PLATFORM__WINDOWS" )
@@ -5291,6 +5307,31 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       CASE hbmk[ _HBMK_cARCH ] == "hpux"
          AAdd( aDef, "__PLATFORM__HPUX" )
          AAdd( aDef, "__PLATFORM__UNIX" )
+      ENDCASE
+
+      /* Setup those CPU flags which we can be sure about.
+         This is not fully generic solution, cross builds
+         to *nix systems aren't covered. Anyway, it's not
+         recommended to use these macros in .prg code.
+         [vszakats] */
+      DO CASE
+      CASE hbmk[ _HBMK_cARCH ] $ "dos|os2"
+         AAdd( aDef, "__LITTLE_ENDIAN__" )
+         AAdd( aDef, "__ARCH32BIT__" )
+      CASE hbmk[ _HBMK_cARCH ] $ "wce|win"
+         AAdd( aDef, "__LITTLE_ENDIAN__" ) /* Windows is currently little-endian on all supported CPUs. */
+         IF hbmk[ _HBMK_cCOMP ] == "mingw64" .OR. ;
+            hbmk[ _HBMK_cCOMP ] == "msvc64" .OR. ;
+            hbmk[ _HBMK_cCOMP ] == "pocc64" .OR. ;
+            hbmk[ _HBMK_cCOMP ] == "msvcia64" .OR. ;
+            hbmk[ _HBMK_cCOMP ] == "iccia64"
+            AAdd( aDef, "__ARCH64BIT__" )
+         ELSE
+            AAdd( aDef, "__ARCH32BIT__" )
+         ENDIF
+      OTHERWISE
+         /* NOTE: Users will have to manually #define fitting macros for
+                  given platform + compiler settings. We could only guess. */
       ENDCASE
 
       /* Delete macros present in both lists */
@@ -5886,16 +5927,16 @@ FUNCTION hbmk_CPU( hbmk )
 
    DO CASE
    CASE hbmk[ _HBMK_cCOMP ] $ "gcc|gpp|cygwin|owatcom|bcc|icc|xcc" .OR. ;
-        hbmk[ _HBMK_cCOMP ] == "pocc" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "mingw" .OR. ;
-        hbmk[ _HBMK_cCOMP ] == "msvc"
+        hbmk[ _HBMK_cCOMP ] == "msvc" .OR. ;
+        hbmk[ _HBMK_cCOMP ] == "pocc"
       RETURN "x86"
    CASE hbmk[ _HBMK_cCOMP ] == "mingw64" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "msvc64" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "pocc64"
       RETURN "x86_64"
-   CASE hbmk[ _HBMK_cCOMP ] == "iccia64" .OR. ;
-        hbmk[ _HBMK_cCOMP ] == "msvcia64"
+   CASE hbmk[ _HBMK_cCOMP ] == "msvcia64" .OR. ;
+        hbmk[ _HBMK_cCOMP ] == "iccia64"
       RETURN "ia64"
    CASE hbmk[ _HBMK_cCOMP ] == "mingwarm" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "msvcarm" .OR. ;
