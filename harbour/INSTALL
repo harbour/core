@@ -167,6 +167,14 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
           - Don't put directory names inside double quotes.
           - Use absolute paths.
 
+   Windows/Windows CE
+   ------------------
+   Some contribs support build mode in which they be linked *statically*
+   with 3rd party components:
+
+   HB_ALLEGRO_STATIC=yes
+   HB_QT_STATIC=yes
+
    Darwin (OS X)
    -------------
    1.) Install MacPorts, follow their instructions:
