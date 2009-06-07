@@ -13,6 +13,7 @@
 {darwin}libs=/Library/Frameworks/QtNetwork.framework/QtNetwork
 {darwin}libs=/Library/Frameworks/QtWebKit.framework/QtWebKit
 gui=yes
-gt=gtqtc
+{!HB_QT_STATIC}gt=gtqtc
+{HB_QT_STATIC}gt=gtqtcs
 # optional
 mt=yes

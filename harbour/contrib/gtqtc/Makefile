@@ -57,6 +57,11 @@ endif
 
 ifneq ($(strip $(HB_INC_QT_OK)),)
 
+ifneq ($(HB_QT_STATIC),)
+LIBNAME=gtqtcs
+HB_USER_CFLAGS += -DQT_NODLL
+endif
+
 ifneq ($(strip $(HB_INC_QT_OK)),spec)
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_QT_OK), -I$(d) -I$(d)/Qt -I$(d)/QtCore -I$(d)/QtGui -I$(d)/QtNetwork -I$(d)/QtWebKit)
 endif

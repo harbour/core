@@ -5,7 +5,9 @@
 {allwin}libpaths=${HB_DIR_QT}\lib
 
 {mingw|mingwce|(gcc&(linux|darwin))}libs=supc++
-libs=hbqt
+{!HB_QT_STATIC}libs=hbqt
+{HB_QT_STATIC}libs=hbqts
+{win}libs=version shlwapi
 {allwin&!HB_QT_STATIC}libs=QtCore4 QtGui4 QtNetwork4 QtWebKit4
 {allwin&HB_QT_STATIC}libs=QtCore QtGui QtNetwork QtWebKit
 {linux}libs=QtCore QtGui QtNetwork QtWebKit

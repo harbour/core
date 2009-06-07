@@ -24,6 +24,11 @@ HB_INC_ALLEGRO_OK += $(foreach d, $(HB_INC_ALLEGRO), $(if $(wildcard $(d)/allegr
 
 ifneq ($(strip $(HB_INC_ALLEGRO_OK)),)
 
+ifneq ($(HB_ALLEGRO_STATIC),)
+LIBNAME=gtallegs
+HB_USER_CFLAGS += -DALLEGRO_STATICLINK
+endif
+
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_ALLEGRO_OK), -I$(d))
 
 C_SOURCES=\
