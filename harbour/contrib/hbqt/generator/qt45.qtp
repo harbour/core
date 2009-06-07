@@ -39,6 +39,7 @@ QDesktopWidget.qth
 QDial.qth
 QDialog.qth
 QDir.qth
+QDirModel.qth
 QDockWidget.qth
 QDoubleSpinBox.qth
 QErrorMessage.qth

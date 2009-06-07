@@ -75,16 +75,16 @@ HB_FUNC( QT_QABSTRACTITEMVIEW )
 </CODE>
 
 <ENUMS>
+flags EditTriggers
 enum DragDropMode { NoDragDrop, DragOnly, DropOnly, DragDrop, InternalMove }
 enum EditTrigger { NoEditTriggers, CurrentChanged, DoubleClicked, SelectedClicked, ..., AllEditTriggers }
-flags EditTriggers
 enum ScrollHint { EnsureVisible, PositionAtTop, PositionAtBottom, PositionAtCenter }
 enum ScrollMode { ScrollPerItem, ScrollPerPixel }
 enum SelectionBehavior { SelectItems, SelectRows, SelectColumns }
 enum SelectionMode { SingleSelection, ContiguousSelection, ExtendedSelection, MultiSelection, NoSelection }
 </ENUMS>
 
-</PROTOS>
+<PROTOS>
 bool alternatingRowColors () const
 int autoScrollMargin () const
 void closePersistentEditor ( const QModelIndex & index )

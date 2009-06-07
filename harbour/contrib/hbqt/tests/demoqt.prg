@@ -86,7 +86,7 @@ EXIT PROCEDURE Qt_End()
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
-   Local oLabel, oBtn
+   Local oLabel, oBtn, oDA, oTabBar
    Local oWnd, oSize
    Local oMenuBar, pIcon
    Local oMenuA, pAction
@@ -98,16 +98,13 @@ PROCEDURE Main()
    pIcon := oWnd:windowIcon()
 
    /* The method 2 */
-   oWnd:resize( 640, 400 )
-   #if 0
-   /* The method 2 */
-   oSize := QSize():new()
-   oSize:setWidth( 640 )
-   oSize:setHeight( 400 )
-   oWnd:resize_1( QT_PTROF( oSize ) )
-   #endif
+   oWnd:resize( 900, 500 )
+
+   oDA := QWidget():new( oWnd )
+   oWnd:setCentralWidget( QT_PTROF( oDA ) )
 
    Build_MenuBar( oWnd )
+   Build_ToolBar( oWnd )
 
    oSBar := QStatusBar():new( QT_PTROF( oWnd ) )
    oWnd:setStatusBar( QT_PTROF( oSBar ) )
@@ -117,18 +114,11 @@ PROCEDURE Main()
    oStyle:standardIcon( 2 )
    oWnd:setStyle( QT_PTROF( oStyle ) )
 
-   oLabel := QLabel():New( QT_PTROF( oWnd ) )
-   oLabel:setText( "Testing Harbour + Qt" )
-   oLabel:move( 30,260 )
-   oLabel:show()
-
-   oBtn := QPushButton():new( QT_PTROF( oWnd ) )
-   oBtn:setText( "Push Button" )
-   oBtn:resize( 100,50 )
-   oBtn:move( 30,300 )
-   oBtn:show()
-
-   Build_Grid( oWnd )
+   Build_Label( oDA, { 30,190 }, { 300, 30 } )
+   Build_PushButton( oDA, { 30,240 }, { 100,50 } )
+   Build_Grid( oDA )
+   Build_Tabs( oDA )
+   Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
 
    oWnd:Show()
 
@@ -170,7 +160,261 @@ STATIC FUNCTION Build_MenuBar( oWnd )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION MsgInfo( cMsg )
+STATIC FUNCTION Build_ToolBar( oWnd )
+   LOCAL oTB, oAct
+
+   /* Create a Toolbar Object */
+   oTB := QToolBar():new( QT_PTROF( oWnd ) )
+
+   /* Create an action */
+   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct:setText( "&New" )
+   oAct:setIcon( "new.png" )
+   oAct:setToolTip( "A New File" )
+   /* Attach codeblock to be triggered */
+   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
+   /* Attach Action with Toolbar */
+   oTB:addAction( QT_PTROF( oAct ) )
+
+   /* Create another action */
+   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct:setText( "&Open" )
+   oAct:setIcon( "open.png" )
+   oAct:setToolTip( "Select a file to be opened!" )
+   /* Attach codeblock to be triggered */
+   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
+   /* Attach Action with Toolbar */
+   oTB:addAction( QT_PTROF( oAct ) )
+
+   oTB:addSeparator()
+
+   /* Create another action */
+   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct:setText( "&Save" )
+   oAct:setIcon( "save.png" )
+   oAct:setToolTip( "Save this file!" )
+   /* Attach codeblock to be triggered */
+   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
+   /* Attach Action with Toolbar */
+   oTB:addAction( QT_PTROF( oAct ) )
+
+   /* Add this toolbar with main window */
+   oWnd:addToolBar_1( QT_PTROF( oTB ) )
+
+   ///////////////////////////////////////////////////////////
+
+   /* Build another toolbar - we will have two toolbats now */
+   oTB := QToolBar():new( QT_PTROF( oWnd ) )
+
+   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct:setText( "&Colors" )
+   oAct:setToolTip( "Colors Dialog" )
+   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors", w, l ) } )
+   oTB:addAction( QT_PTROF( oAct ) )
+
+   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct:setText( "&Fonts" )
+   oAct:setToolTip( "Fonts Dialog" )
+   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts", w, l ) } )
+   oTB:addAction( QT_PTROF( oAct ) )
+
+   oTB:addSeparator()
+
+   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct:setText( "&PgSetup" )
+   oAct:setToolTip( "Page Setup Dialog" )
+   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )
+   oTB:addAction( QT_PTROF( oAct ) )
+
+   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct:setText( "&Preview" )
+   oAct:setToolTip( "Page Preview Dialog" )
+   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview", w, l ) } )
+   oTB:addAction( QT_PTROF( oAct ) )
+
+   oTB:addSeparator()
+
+   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct:setText( "&Webpage" )
+   oAct:setToolTip( "Web Browser Dialog" )
+   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage", w, l ) } )
+   oTB:addAction( QT_PTROF( oAct ) )
+
+   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct:setText( "&Wizard" )
+   oAct:setToolTip( "Generic Wizard Dialog" )
+   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard", w, l ) } )
+   oTB:addAction( QT_PTROF( oAct ) )
+
+   /* Add this toolbar with main window */
+   oWnd:addToolBar_1( QT_PTROF( oTB ) )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize )
+
+   oBtn := QPushButton():new( QT_PTROF( oWnd ) )
+   oBtn:setText( "Push Button" )
+   oBtn:move( aPos[ 1 ],aPos[ 2 ] )
+   oBtn:resize( aSize[ 1 ],aSize[ 2 ] )
+   oBtn:show()
+   Qt_Connect_Signal( QT_PTROF( oBtn ), QT_EVE_CLICKED, {|| MsgInfo( "Push Button Pressed" ) } )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Build_Grid( oWnd )
+   LOCAL oGrid, oBrushBackItem0x0, oBrushForeItem0x0, oGridItem0x0
+
+   oGrid := QTableWidget():new( QT_PTROF( oWnd ) )
+   oGrid:setRowCount( 2 )
+   oGrid:setColumnCount( 4 )
+   //
+   oBrushBackItem0x0 := QBrush():new()
+   oBrushBackItem0x0:setStyle( 1 )        // Solid Color
+   oBrushBackItem0x0:setColor_1( 10 )     // http://doc.qtsoftware.com/4.5/qt.html#GlobalColor-enum
+   //
+   oBrushForeItem0x0 := QBrush():new()
+   oBrushForeItem0x0:setColor_1( 7 )
+   //
+   oGridItem0x0 := QTableWidgetItem():new()
+   oGridItem0x0:setBackground( QT_PTROF( oBrushBackItem0x0 ) )
+   oGridItem0x0:setForeground( QT_PTROF( oBrushForeItem0x0 ) )
+   oGridItem0x0:setText( "Item 0x0" )
+   //
+   oGrid:setItem( 0, 0, QT_PTROF( oGridItem0x0 ) )
+   //
+   oGrid:Move( 30, 30 )
+   oGrid:ReSize( 450, 150 )
+   //
+   oGrid:Show()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Build_Tabs( oWnd )
+   LOCAL oTabWidget, oTab1, oTab2, oTab3
+
+   oTabWidget := QTabWidget():new( QT_PTROF( oWnd ) )
+
+   oTab1 := QWidget():new( QT_PTROF( oTabWidget ) )
+   oTab2 := QWidget():new( QT_PTROF( oTabWidget ) )
+   oTab3 := QWidget():new( QT_PTROF( oTabWidget ) )
+
+   oTabWidget:addTab( QT_PTROF( oTab1 ), "Folders"  )
+   oTabWidget:addTab( QT_PTROF( oTab2 ), "Controls" )
+   oTabWidget:addTab( QT_PTROF( oTab3 ), "TextBox"  )
+
+   oTabWidget:move( 510, 5 )
+   oTabWidget:resize( 360, 400 )
+   oTabWidget:show()
+
+   Build_Treeview( oTab1 )
+   Build_Controls( oTab2 )
+   Build_TextBox( oTab3 )
+
+   RETURN { oTab1, oTab2, oTab3 }
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Build_TreeView( oWnd )
+   LOCAL oTV, oDModel
+
+   oTV := QTreeView():new( QT_PTROF( oWnd ) )
+
+   oDirModel := QDirModel():new( QT_PTROF( oTV ) )
+   oTV:setModel( QT_PTROF( oDirModel ) )
+   oTV:move( 5, 7 )
+   oTV:resize( 345, 365 )
+   OTV:show()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Build_TextBox( oWnd )
+   LOCAL oTextBox
+
+   oTextBox := QTextEdit():new( QT_PTROF( oWnd ) )
+   oTextBox:Move( 5, 7 )
+   oTextBox:Resize( 345,365 )
+   oTextBox:setAcceptRichText( .t. )
+   oTextBox:setPlainText( "This is Harbour QT implementation" )
+   oTextBox:Show()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Build_Controls( oWnd )
+   LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton
+
+   oEdit := QLineEdit():new( QT_PTROF( oWnd ) )
+   oEdit:move( 5, 10 )
+   oEdit:resize( 345, 30 )
+   oEdit:setMaxLength( 40 )
+   oEdit:setText( "TextBox Testing Max Length = 40" )
+   oEdit:setAlignment( 1 )   // 1: Left  2: Right  4: center 8: use all textbox length
+   oEdit:show()
+
+   oComboBox := QComboBox():New( QT_PTROF( oWnd ) )
+   oComboBox:move( 5, 60 )
+   oComboBox:resize( 345, 30 )
+   oComboBox:show()
+
+   oCheckBox := QCheckBox():New( QT_PTROF( oWnd ) )
+   oCheckBox:setText( "Testing CheckBox HbQt" )
+   oCheckBox:move( 5, 110 )
+   oCheckBox:resize( 345, 30 )
+   oCheckBox:show()
+
+   oSpinBox := QSpinBox():New( QT_PTROF( oWnd ) )
+   oSpinBox:Move( 5, 160 )
+   oSpinBox:ReSize( 345, 30 )
+   oSpinBox:Show()
+
+   oRadioButton := QRadioButton():New( QT_PTROF( oWnd ) )
+   oRadioButton:Move( 5, 210 )
+   oRadioButton:ReSize( 345, 30 )
+   oRadioButton:Show()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Build_ProgressBar( oWnd, aPos, aSize )
+   LOCAL oProgressBar
+
+   oProgressBar := QProgressBar():New( QT_PTROF( oWnd ) )
+   oProgressBar:SetRange( 1, 1500 )
+   oProgressBar:Setvalue( 500 )
+   oProgressBar:Move( aPos[ 1 ], aPos[ 2 ] )
+   oProgressBar:ReSize( aSize[ 1 ], aSize[ 2 ] )
+   oProgressBar:Show()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Build_Label( oWnd, aPos, aSize )
+   LOCAL oLabel
+
+   oLabel := QLabel():New( QT_PTROF( oWnd ) )
+   oLabel:SetTextFormat( 1 )  // 0 text plain  1 RichText
+   oLabel:SetText( [<font color="Blue" size=6 ><u>This is a</u> <i>Label</i> in <b>Harbour QT</b></font>] )
+   oLabel:Move( aPos[ 1 ], aPos[ 2 ] )
+   oLabel:ReSize( aSize[ 1 ], aSize[ 2 ] )
+   oLabel:Show()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION MsgInfo( cMsg )
    LOCAL oMB
 
    oMB := QMessageBox():new()
@@ -422,36 +666,6 @@ STATIC FUNCTION Dummies()
    oSome := QWindowsStyle():new()
    oSome := QWindowsXPStyle():new()
    oSome := QWizard():new()
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION Build_Grid( oWnd )
-   LOCAL oGrid, oBrushBackItem0x0, oBrushForeItem0x0, oGridItem0x0
-
-   oGrid := QTableWidget():new( QT_PTROF( oWnd ) )
-   oGrid:setRowCount( 2 )
-   oGrid:setColumnCount( 4 )
-   //
-   oBrushBackItem0x0 := QBrush():new()
-   oBrushBackItem0x0:setStyle( 1 )        // Solid Color
-   oBrushBackItem0x0:setColor_1( 10 )     // http://doc.qtsoftware.com/4.5/qt.html#GlobalColor-enum
-   //
-   oBrushForeItem0x0 := QBrush():new()
-   oBrushForeItem0x0:setColor_1( 7 )
-   //
-   oGridItem0x0 := QTableWidgetItem():new()
-   oGridItem0x0:setBackground( oBrushBackItem0x0:pPtr )
-   oGridItem0x0:setForeground( oBrushForeItem0x0:pPtr )
-   oGridItem0x0:setText( "Item 0x0" )
-   //
-   oGrid:setItem( 0, 0, oGridItem0x0:pPtr )
-   //
-   oGrid:Move( 30 , 50 )
-   oGrid:ReSize( 550 , 200 )
-   //
-   oGrid:Show()
 
    RETURN nil
 

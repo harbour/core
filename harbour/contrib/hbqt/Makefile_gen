@@ -32,6 +32,7 @@ CPP_SOURCES=\
 	hbqt_qdial.cpp \
 	hbqt_qdialog.cpp \
 	hbqt_qdir.cpp \
+	hbqt_qdirmodel.cpp \
 	hbqt_qdockwidget.cpp \
 	hbqt_qdoublespinbox.cpp \
 	hbqt_qerrormessage.cpp \
@@ -226,6 +227,7 @@ PRG_SOURCES=\
 	TQDial.prg \
 	TQDialog.prg \
 	TQDir.prg \
+	TQDirModel.prg \
 	TQDockWidget.prg \
 	TQDoubleSpinBox.prg \
 	TQErrorMessage.prg \
