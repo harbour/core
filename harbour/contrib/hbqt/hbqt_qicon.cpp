@@ -99,7 +99,7 @@ HB_FUNC( QT_QICON_ACTUALSIZE )
  */
 HB_FUNC( QT_QICON_ADDFILE )
 {
-   hbqt_par_QIcon( 1 )->addFile( hbqt_par_QString( 2 ), *hbqt_par_QSize( 3 ) );
+   hbqt_par_QIcon( 1 )->addFile( hbqt_par_QString( 2 ), ( HB_ISNIL( 3 ) ? QSize() : *hbqt_par_QSize( 3 ) ), ( HB_ISNUM( 4 ) ? ( QIcon::Mode ) hb_parni( 4 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 5 ) ? ( QIcon::State ) hb_parni( 5 ) : ( QIcon::State ) QIcon::Off ) );
 }
 
 /*

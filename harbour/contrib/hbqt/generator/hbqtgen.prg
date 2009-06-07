@@ -524,7 +524,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
    aRet := {}; aArgus := {}
    n := at( '(', cProto )
    IF n > 0
-      nn := at( ')', cProto )
+      nn := rat( ')', cProto )
       IF nn > 0
          /* Pull out pre-mid-post components */
          cPre := alltrim( substr( cProto,   1, n-1    ) )
@@ -541,26 +541,6 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
             cRet := ''
          ENDIF
 
-         /*  Parse Parameters
-          *    - const QTransform &
-          *    - bool
-          *    - void
-          *    - int
-          *    - quint32
-          *    - quint64
-          *    - QString
-          *    - QIcon
-          *    - const QPen &
-          *    - Qt::BGMode
-          *    - one of the enum values without ::
-          *
-          *
-          *  Return values of known types
-          *    - int(32,64), bool, QString, enums (int)
-          *    - QPoint, QSize, QRect           [ should we manupulate as QT class ? ]
-          *
-          *  Rest all as pointers to classes
-          */
          aRet := array( PRT_ATTRB_MAX )
 
          aRet[ PRT_L_CONST ] := 'const'   $ cRet  .or. 'const'   $ cPas
@@ -728,8 +708,17 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                aA[ PRT_DOC  ] := 'p'+ cDocNM
 
             CASE aA[ PRT_L_AND ] .and. aA[ PRT_L_CONST ]
+               s := '*hbqt_par_' + aA[ PRT_CAST ] + '( ' + cHBIdx + ' )'
+               IF !empty( aA[ PRT_DEFAULT ] ) .and. ( '(' $ aA[ PRT_DEFAULT ] )
+                  aA[ PRT_BODY ] := '( HB_ISNIL( '+cHBIdx+' ) ? ' + aA[ PRT_DEFAULT ] +' : '+ s +' )'
+               ELSE
+                  aA[ PRT_BODY ] := s
+               ENDIF
+               aA[ PRT_DOC  ] := 'p'+ cDocNM
+               #if 0
                aA[ PRT_BODY ] := '*hbqt_par_' + aA[ PRT_CAST ] + '( ' + cHBIdx + ' )'
                aA[ PRT_DOC  ] := 'p'+ cDocNM
+               #endif
 
             CASE aA[ PRT_L_AND ]
                #if 0
@@ -738,47 +727,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                   aA[ PRT_BODY ] := '*hbqt_par_' + aA[ PRT_CAST ] + '( ' + cHBIdx + ' )'
                #endif
                aA[ PRT_DOC  ] := 'p'+ cDocNM
-#if 0
-            CASE aA[ PRT_CAST ] == 'HFONT'
-               aA[ PRT_BODY ] := IF( aA[ PRT_L_CONST ], '*','' ) +'hbqt_par_HFONT( '+ cHBIdx +' )'
-               aA[ PRT_DOC  ] := 'h'+ cDocNM
 
-            CASE aA[ PRT_CAST ] == 'HDC'
-               aA[ PRT_BODY ] := '*hbqt_par_HDC( '+ cHBIdx +' )'
-               aA[ PRT_DOC  ] := 'h'+ cDocNM
-
-            CASE aA[ PRT_CAST ] == 'WId'
-               aA[ PRT_BODY ] := 'hbqt_par_WId( '+ cHBIdx +' )'
-               aA[ PRT_DOC  ] := 'h'+ cDocNM
-
-            CASE aA[ PRT_CAST ] == 'HRGN'
-               aA[ PRT_BODY ] := 'hbqt_par_HRGN( '+ cHBIdx +' )'
-               aA[ PRT_DOC  ] := 'h'+ cDocNM
-
-            CASE aA[ PRT_CAST ] == 'QRect'
-               aA[ PRT_BODY ] := 'hbqt_const_QRect( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'a'+ cDocNM
-
-            CASE aA[ PRT_CAST ] == 'QSize'
-               aA[ PRT_BODY ] := 'hbqt_const_QSize( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'a'+ cDocNM
-
-            CASE aA[ PRT_CAST ] == 'QPoint'
-               aA[ PRT_BODY ] := 'hbqt_const_QPoint( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'a'+ cDocNM
-
-            CASE aA[ PRT_CAST ] == 'QRectF'
-               aA[ PRT_BODY ] := 'hbqt_const_QRectF( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'a'+ cDocNM
-
-            CASE aA[ PRT_CAST ] == 'QSizeF'
-               aA[ PRT_BODY ] := 'hbqt_const_QSizeF( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'a'+ cDocNM
-
-            CASE aA[ PRT_CAST ] == 'QPointF'
-               aA[ PRT_BODY ] := 'hbqt_const_QPointF( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'a'+ cDocNM
-#endif
             OTHERWISE
                aA[ PRT_BODY ] := ''
                aA[ PRT_DOC  ] := ''
@@ -804,8 +753,12 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
 
             DO CASE
             CASE aA[ PRT_CAST ] == 'T'
+               #if 0
                cCmd := 'hb_ret( '+ cCmn +' )'
                cPrgRet := 'x'+cDocNM
+               #endif
+               cCmd := 'hb_retptr( '+ cCmn +' )'
+               cPrgRet := 'p'+cDocNM
 
             CASE aA[ PRT_CAST ] == 'void'
                cCmd := cCmn
@@ -1674,6 +1627,9 @@ STATIC FUNCTION Build_HBQT_H( cPathOut )
    aadd( txt_, "#define hbqt_par_QTextObject( n )            ( ( QTextObject* ) hb_parptr( n ) )              " )
    aadd( txt_, "#define hbqt_par_QModelIndexList( n )        ( ( QModelIndexList* ) hb_parptr( n ) )          " )
    aadd( txt_, "#define hbqt_par_QDirModel( n )              ( ( QDirModel* ) hb_parptr( n ) )                " )
+   aadd( txt_, "#define hbqt_par_QList( n )                  ( ( QList<void*>* ) hb_parptr( n ) )             " )
+   aadd( txt_, "#define hbqt_par_QStringListModel( n )       ( ( QStringListModel* ) hb_parptr( n ) )         " )
+   aadd( txt_, "#define hbqt_par_QAbstractListModel( n )     ( ( QAbstractListModel* ) hb_parptr( n ) )       " )
    aadd( txt_, "                                                                                              " )
    aadd( txt_, "#define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )                     " )
    aadd( txt_, "#define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )                              " )
@@ -2506,9 +2462,10 @@ STATIC FUNCTION Build_Demo()
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '   Build_Label( oDA, { 30,190 }, { 300, 30 } )                                                                            ' )
    aadd( txt_, '   Build_PushButton( oDA, { 30,240 }, { 100,50 } )                                                                        ' )
-   aadd( txt_, '   Build_Grid( oDA )                                                                                                      ' )
-   aadd( txt_, '   Build_Tabs( oDA )                                                                                                      ' )
+   aadd( txt_, '   Build_Grid( oDA, { 30, 30 }, { 450,150 } )                                                                             ' )
+   aadd( txt_, '   Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )                                                                            ' )
    aadd( txt_, '   Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )                                                                       ' )
+   aadd( txt_, '   Build_ListBox( oDA, { 310,240 }, { 150, 100 } )                                                                        ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '   oWnd:Show()                                                                                                            ' )
    aadd( txt_, '                                                                                                                          ' )
@@ -2644,6 +2601,7 @@ STATIC FUNCTION Build_Demo()
    aadd( txt_, '/*----------------------------------------------------------------------*/                                                ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, 'STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize )                                                                     ' )
+   aadd( txt_, '   LOCAL oBtn                                                                                                             ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '   oBtn := QPushButton():new( QT_PTROF( oWnd ) )                                                                          ' )
    aadd( txt_, '   oBtn:setText( "Push Button" )                                                                                          ' )
@@ -2656,7 +2614,7 @@ STATIC FUNCTION Build_Demo()
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '/*----------------------------------------------------------------------*/                                                ' )
    aadd( txt_, '                                                                                                                          ' )
-   aadd( txt_, 'STATIC FUNCTION Build_Grid( oWnd )                                                                                        ' )
+   aadd( txt_, 'STATIC FUNCTION Build_Grid( oWnd, aPos, aSize )                                                                           ' )
    aadd( txt_, '   LOCAL oGrid, oBrushBackItem0x0, oBrushForeItem0x0, oGridItem0x0                                                        ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '   oGrid := QTableWidget():new( QT_PTROF( oWnd ) )                                                                        ' )
@@ -2677,8 +2635,8 @@ STATIC FUNCTION Build_Demo()
    aadd( txt_, '   //                                                                                                                     ' )
    aadd( txt_, '   oGrid:setItem( 0, 0, QT_PTROF( oGridItem0x0 ) )                                                                        ' )
    aadd( txt_, '   //                                                                                                                     ' )
-   aadd( txt_, '   oGrid:Move( 30, 30 )                                                                                                   ' )
-   aadd( txt_, '   oGrid:ReSize( 450, 150 )                                                                                               ' )
+   aadd( txt_, '   oGrid:Move( aPos[ 1 ], aPos[ 2 ] )                                                                                     ' )
+   aadd( txt_, '   oGrid:ReSize( aSize[ 1 ], aSize[ 2 ] )                                                                                 ' )
    aadd( txt_, '   //                                                                                                                     ' )
    aadd( txt_, '   oGrid:Show()                                                                                                           ' )
    aadd( txt_, '                                                                                                                          ' )
@@ -2686,7 +2644,7 @@ STATIC FUNCTION Build_Demo()
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '/*----------------------------------------------------------------------*/                                                ' )
    aadd( txt_, '                                                                                                                          ' )
-   aadd( txt_, 'STATIC FUNCTION Build_Tabs( oWnd )                                                                                        ' )
+   aadd( txt_, 'STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )                                                                           ' )
    aadd( txt_, '   LOCAL oTabWidget, oTab1, oTab2, oTab3                                                                                  ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '   oTabWidget := QTabWidget():new( QT_PTROF( oWnd ) )                                                                     ' )
@@ -2699,8 +2657,8 @@ STATIC FUNCTION Build_Demo()
    aadd( txt_, '   oTabWidget:addTab( QT_PTROF( oTab2 ), "Controls" )                                                                     ' )
    aadd( txt_, '   oTabWidget:addTab( QT_PTROF( oTab3 ), "TextBox"  )                                                                     ' )
    aadd( txt_, '                                                                                                                          ' )
-   aadd( txt_, '   oTabWidget:move( 510, 5 )                                                                                              ' )
-   aadd( txt_, '   oTabWidget:resize( 360, 400 )                                                                                          ' )
+   aadd( txt_, '   oTabWidget:Move( aPos[ 1 ], aPos[ 2 ] )                                                                                ' )
+   aadd( txt_, '   oTabWidget:ReSize( aSize[ 1 ], aSize[ 2 ] )                                                                            ' )
    aadd( txt_, '   oTabWidget:show()                                                                                                      ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '   Build_Treeview( oTab1 )                                                                                                ' )
@@ -2712,7 +2670,7 @@ STATIC FUNCTION Build_Demo()
    aadd( txt_, '/*----------------------------------------------------------------------*/                                                ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, 'STATIC FUNCTION Build_TreeView( oWnd )                                                                                    ' )
-   aadd( txt_, '   LOCAL oTV, oDModel                                                                                                     ' )
+   aadd( txt_, '   LOCAL oTV, oDirModel                                                                                                   ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '   oTV := QTreeView():new( QT_PTROF( oWnd ) )                                                                             ' )
    aadd( txt_, '                                                                                                                          ' )
@@ -2721,6 +2679,34 @@ STATIC FUNCTION Build_Demo()
    aadd( txt_, '   oTV:move( 5, 7 )                                                                                                       ' )
    aadd( txt_, '   oTV:resize( 345, 365 )                                                                                                 ' )
    aadd( txt_, '   OTV:show()                                                                                                             ' )
+   aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, '   RETURN nil                                                                                                             ' )
+   aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/                                                ' )
+   aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, 'STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )                                                                        ' )
+   aadd( txt_, '   LOCAL oListBox, oStrList, oStrModel                                                                                    ' )
+   aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, '   oListBox := QListView():New( QT_PTROF( oWnd ) )                                                                        ' )
+   aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, '   oStrList := QStringList():new( QT_PTROF( oListBox ) )                                                                  ' )
+   aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, '   oStrList:append( "India"          )                                                                                    ' )
+   aadd( txt_, '   oStrList:append( "United States"  )                                                                                    ' )
+   aadd( txt_, '   oStrList:append( "England"        )                                                                                    ' )
+   aadd( txt_, '   oStrList:append( "Japan"          )                                                                                    ' )
+   aadd( txt_, '   oStrList:append( "Hungary"        )                                                                                    ' )
+   aadd( txt_, '   oStrList:append( "Argentina"      )                                                                                    ' )
+   aadd( txt_, '   oStrList:append( "China"          )                                                                                    ' )
+   aadd( txt_, '   oStrList:sort()                                                                                                        ' )
+   aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, '   oStrModel := QStringListModel():new( QT_PTROF( oListBox ) )                                                            ' )
+   aadd( txt_, '   oStrModel:setStringList( QT_PTROF( oStrList ) )                                                                        ' )
+   aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, '   oListBox:setModel( QT_PTROF( oStrModel ) )                                                                             ' )
+   aadd( txt_, '   oListBox:Move( aPos[ 1 ], aPos[ 2 ] )                                                                                  ' )
+   aadd( txt_, '   oListBox:ReSize( aSize[ 1 ], aSize[ 2 ] )                                                                              ' )
+   aadd( txt_, '   oListBox:Show()                                                                                                        ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '   RETURN nil                                                                                                             ' )
    aadd( txt_, '                                                                                                                          ' )
@@ -2741,7 +2727,7 @@ STATIC FUNCTION Build_Demo()
    aadd( txt_, '/*----------------------------------------------------------------------*/                                                ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, 'STATIC FUNCTION Build_Controls( oWnd )                                                                                    ' )
-   aadd( txt_, '   LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton                                                              ' )
+   aadd( txt_, '   LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton, oVariant                                                    ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '   oEdit := QLineEdit():new( QT_PTROF( oWnd ) )                                                                           ' )
    aadd( txt_, '   oEdit:move( 5, 10 )                                                                                                    ' )
@@ -2752,6 +2738,10 @@ STATIC FUNCTION Build_Demo()
    aadd( txt_, '   oEdit:show()                                                                                                           ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '   oComboBox := QComboBox():New( QT_PTROF( oWnd ) )                                                                       ' )
+   aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, '   oComboBox:addItem( "First"  )                                                                                          ' )
+   aadd( txt_, '   oComboBox:addItem( "Second" )                                                                                          ' )
+   aadd( txt_, '   oComboBox:addItem( "Third"  )                                                                                          ' )
    aadd( txt_, '   oComboBox:move( 5, 60 )                                                                                                ' )
    aadd( txt_, '   oComboBox:resize( 345, 30 )                                                                                            ' )
    aadd( txt_, '   oComboBox:show()                                                                                                       ' )
@@ -3058,6 +3048,20 @@ STATIC FUNCTION Build_Demo()
    aadd( txt_, '   oSome := QWizard():new()                                                                                               ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '   RETURN nil                                                                                                             ' )
+   aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/                                                ' )
+   aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, '#PRAGMA BEGINDUMP                                                                                                         ' )
+   aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, '#include <windows.h>                                                                                                      ' )
+   aadd( txt_, '#include "hbapi.h"                                                                                                        ' )
+   aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, 'HB_FUNC( UIDEBUG )                                                                                                        ' )
+   aadd( txt_, '{                                                                                                                         ' )
+   aadd( txt_, '   OutputDebugString( hb_parc( 1 ) );                                                                                     ' )
+   aadd( txt_, '}                                                                                                                         ' )
+   aadd( txt_, '                                                                                                                          ' )
+   aadd( txt_, '#PRAGMA ENDDUMP                                                                                                           ' )
    aadd( txt_, '                                                                                                                          ' )
    aadd( txt_, '/*----------------------------------------------------------------------*/                                                ' )
    aadd( txt_, '                                                                                                                          ' )

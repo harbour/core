@@ -84,7 +84,7 @@ CREATE CLASS QHttp INHERIT QObject
    METHOD  request_1( pHeader, pData, pTo )    INLINE  Qt_QHttp_request_1( ::pPtr, pHeader, pData, pTo )
    METHOD  setHost( cHostName, nPort )         INLINE  Qt_QHttp_setHost( ::pPtr, cHostName, nPort )
    METHOD  setHost_1( cHostName, nMode, nPort )  INLINE  Qt_QHttp_setHost_1( ::pPtr, cHostName, nMode, nPort )
-   METHOD  setProxy( cHost, nPort, cUsername )  INLINE  Qt_QHttp_setProxy( ::pPtr, cHost, nPort, cUsername )
+   METHOD  setProxy( cHost, nPort, cUsername, cPassword )  INLINE  Qt_QHttp_setProxy( ::pPtr, cHost, nPort, cUsername, cPassword )
    METHOD  setProxy_1( pProxy )                INLINE  Qt_QHttp_setProxy_1( ::pPtr, pProxy )
    METHOD  setSocket( pSocket )                INLINE  Qt_QHttp_setSocket( ::pPtr, pSocket )
    METHOD  setUser( cUserName, cPassword )     INLINE  Qt_QHttp_setUser( ::pPtr, cUserName, cPassword )

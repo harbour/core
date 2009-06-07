@@ -72,7 +72,7 @@ CREATE CLASS QWebView INHERIT QWidget
    METHOD  page()                              INLINE  Qt_QWebView_page( ::pPtr )
    METHOD  pageAction( nAction )               INLINE  Qt_QWebView_pageAction( ::pPtr, nAction )
    METHOD  selectedText()                      INLINE  Qt_QWebView_selectedText( ::pPtr )
-   METHOD  setContent( pData, cMimeType )      INLINE  Qt_QWebView_setContent( ::pPtr, pData, cMimeType )
+   METHOD  setContent( pData, cMimeType, pBaseUrl )  INLINE  Qt_QWebView_setContent( ::pPtr, pData, cMimeType, pBaseUrl )
    METHOD  setHtml( cHtml, pBaseUrl )          INLINE  Qt_QWebView_setHtml( ::pPtr, cHtml, pBaseUrl )
    METHOD  setPage( pPage )                    INLINE  Qt_QWebView_setPage( ::pPtr, pPage )
    METHOD  setTextSizeMultiplier( nFactor )    INLINE  Qt_QWebView_setTextSizeMultiplier( ::pPtr, nFactor )

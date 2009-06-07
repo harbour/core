@@ -76,7 +76,7 @@ CREATE CLASS QFtp INHERIT QObject
    METHOD  get( cFile, pDev, nType )           INLINE  Qt_QFtp_get( ::pPtr, cFile, pDev, nType )
    METHOD  hasPendingCommands()                INLINE  Qt_QFtp_hasPendingCommands( ::pPtr )
    METHOD  list( cDir )                        INLINE  Qt_QFtp_list( ::pPtr, cDir )
-   METHOD  login( cUser )                      INLINE  Qt_QFtp_login( ::pPtr, cUser )
+   METHOD  login( cUser, cPassword )           INLINE  Qt_QFtp_login( ::pPtr, cUser, cPassword )
    METHOD  mkdir( cDir )                       INLINE  Qt_QFtp_mkdir( ::pPtr, cDir )
    METHOD  put( pDev, cFile, nType )           INLINE  Qt_QFtp_put( ::pPtr, pDev, cFile, nType )
    METHOD  put_1( pData, cFile, nType )        INLINE  Qt_QFtp_put_1( ::pPtr, pData, cFile, nType )

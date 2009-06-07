@@ -116,9 +116,10 @@ PROCEDURE Main()
 
    Build_Label( oDA, { 30,190 }, { 300, 30 } )
    Build_PushButton( oDA, { 30,240 }, { 100,50 } )
-   Build_Grid( oDA )
-   Build_Tabs( oDA )
+   Build_Grid( oDA, { 30, 30 }, { 450,150 } )
+   Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
    Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
+   Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
    oWnd:Show()
 
@@ -254,6 +255,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize )
+   LOCAL oBtn
 
    oBtn := QPushButton():new( QT_PTROF( oWnd ) )
    oBtn:setText( "Push Button" )
@@ -266,7 +268,7 @@ STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Build_Grid( oWnd )
+STATIC FUNCTION Build_Grid( oWnd, aPos, aSize )
    LOCAL oGrid, oBrushBackItem0x0, oBrushForeItem0x0, oGridItem0x0
 
    oGrid := QTableWidget():new( QT_PTROF( oWnd ) )
@@ -287,8 +289,8 @@ STATIC FUNCTION Build_Grid( oWnd )
    //
    oGrid:setItem( 0, 0, QT_PTROF( oGridItem0x0 ) )
    //
-   oGrid:Move( 30, 30 )
-   oGrid:ReSize( 450, 150 )
+   oGrid:Move( aPos[ 1 ], aPos[ 2 ] )
+   oGrid:ReSize( aSize[ 1 ], aSize[ 2 ] )
    //
    oGrid:Show()
 
@@ -296,7 +298,7 @@ STATIC FUNCTION Build_Grid( oWnd )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Build_Tabs( oWnd )
+STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
    LOCAL oTabWidget, oTab1, oTab2, oTab3
 
    oTabWidget := QTabWidget():new( QT_PTROF( oWnd ) )
@@ -309,8 +311,8 @@ STATIC FUNCTION Build_Tabs( oWnd )
    oTabWidget:addTab( QT_PTROF( oTab2 ), "Controls" )
    oTabWidget:addTab( QT_PTROF( oTab3 ), "TextBox"  )
 
-   oTabWidget:move( 510, 5 )
-   oTabWidget:resize( 360, 400 )
+   oTabWidget:Move( aPos[ 1 ], aPos[ 2 ] )
+   oTabWidget:ReSize( aSize[ 1 ], aSize[ 2 ] )
    oTabWidget:show()
 
    Build_Treeview( oTab1 )
@@ -322,7 +324,7 @@ STATIC FUNCTION Build_Tabs( oWnd )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_TreeView( oWnd )
-   LOCAL oTV, oDModel
+   LOCAL oTV, oDirModel
 
    oTV := QTreeView():new( QT_PTROF( oWnd ) )
 
@@ -331,6 +333,34 @@ STATIC FUNCTION Build_TreeView( oWnd )
    oTV:move( 5, 7 )
    oTV:resize( 345, 365 )
    OTV:show()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
+   LOCAL oListBox, oStrList, oStrModel
+
+   oListBox := QListView():New( QT_PTROF( oWnd ) )
+
+   oStrList := QStringList():new( QT_PTROF( oListBox ) )
+
+   oStrList:append( "India"          )
+   oStrList:append( "United States"  )
+   oStrList:append( "England"        )
+   oStrList:append( "Japan"          )
+   oStrList:append( "Hungary"        )
+   oStrList:append( "Argentina"      )
+   oStrList:append( "China"          )
+   oStrList:sort()
+
+   oStrModel := QStringListModel():new( QT_PTROF( oListBox ) )
+   oStrModel:setStringList( QT_PTROF( oStrList ) )
+
+   oListBox:setModel( QT_PTROF( oStrModel ) )
+   oListBox:Move( aPos[ 1 ], aPos[ 2 ] )
+   oListBox:ReSize( aSize[ 1 ], aSize[ 2 ] )
+   oListBox:Show()
 
    RETURN nil
 
@@ -351,7 +381,7 @@ STATIC FUNCTION Build_TextBox( oWnd )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_Controls( oWnd )
-   LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton
+   LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton, oVariant
 
    oEdit := QLineEdit():new( QT_PTROF( oWnd ) )
    oEdit:move( 5, 10 )
@@ -362,6 +392,10 @@ STATIC FUNCTION Build_Controls( oWnd )
    oEdit:show()
 
    oComboBox := QComboBox():New( QT_PTROF( oWnd ) )
+
+   oComboBox:addItem( "First"  )
+   oComboBox:addItem( "Second" )
+   oComboBox:addItem( "Third"  )
    oComboBox:move( 5, 60 )
    oComboBox:resize( 345, 30 )
    oComboBox:show()
@@ -671,3 +705,16 @@ STATIC FUNCTION Dummies()
 
 /*----------------------------------------------------------------------*/
 
+#PRAGMA BEGINDUMP
+
+#include <windows.h>
+#include "hbapi.h"
+
+HB_FUNC( UIDEBUG )
+{
+   OutputDebugString( hb_parc( 1 ) );
+}
+
+#PRAGMA ENDDUMP
+
+/*----------------------------------------------------------------------*/

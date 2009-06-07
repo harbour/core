@@ -307,6 +307,9 @@
 #define hbqt_par_QTextObject( n )            ( ( QTextObject* ) hb_parptr( n ) )
 #define hbqt_par_QModelIndexList( n )        ( ( QModelIndexList* ) hb_parptr( n ) )
 #define hbqt_par_QDirModel( n )              ( ( QDirModel* ) hb_parptr( n ) )
+#define hbqt_par_QList( n )                  ( ( QList<void*>* ) hb_parptr( n ) )
+#define hbqt_par_QStringListModel( n )       ( ( QStringListModel* ) hb_parptr( n ) )
+#define hbqt_par_QAbstractListModel( n )     ( ( QAbstractListModel* ) hb_parptr( n ) )
 
 #define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )
 #define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )

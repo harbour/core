@@ -150,8 +150,6 @@ CREATE CLASS QWidget INHERIT QObject, QPaintDevice
    METHOD  releaseMouse()                      INLINE  Qt_QWidget_releaseMouse( ::pPtr )
    METHOD  releaseShortcut( nId )              INLINE  Qt_QWidget_releaseShortcut( ::pPtr, nId )
    METHOD  removeAction( pAction )             INLINE  Qt_QWidget_removeAction( ::pPtr, pAction )
-   METHOD  render( pTarget, pTargetOffset )    INLINE  Qt_QWidget_render( ::pPtr, pTarget, pTargetOffset )
-   METHOD  render_1( pPainter, pTargetOffset )  INLINE  Qt_QWidget_render_1( ::pPtr, pPainter, pTargetOffset )
    METHOD  repaint( nX, nY, nW, nH )           INLINE  Qt_QWidget_repaint( ::pPtr, nX, nY, nW, nH )
    METHOD  repaint_1( pRect )                  INLINE  Qt_QWidget_repaint_1( ::pPtr, pRect )
    METHOD  repaint_2( pRgn )                   INLINE  Qt_QWidget_repaint_2( ::pPtr, pRgn )

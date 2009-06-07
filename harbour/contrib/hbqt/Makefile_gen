@@ -7,6 +7,7 @@ CPP_SOURCES=\
 	hbqt_qabstractbutton.cpp \
 	hbqt_qabstractitemmodel.cpp \
 	hbqt_qabstractitemview.cpp \
+	hbqt_qabstractlistmodel.cpp \
 	hbqt_qabstractprintdialog.cpp \
 	hbqt_qabstractscrollarea.cpp \
 	hbqt_qabstractslider.cpp \
@@ -66,6 +67,7 @@ CPP_SOURCES=\
 	hbqt_qline.cpp \
 	hbqt_qlineargradient.cpp \
 	hbqt_qlineedit.cpp \
+	hbqt_qlist.cpp \
 	hbqt_qlistview.cpp \
 	hbqt_qlistwidget.cpp \
 	hbqt_qlistwidgetitem.cpp \
@@ -110,6 +112,8 @@ CPP_SOURCES=\
 	hbqt_qstandarditem.cpp \
 	hbqt_qstandarditemmodel.cpp \
 	hbqt_qstatusbar.cpp \
+	hbqt_qstringlist.cpp \
+	hbqt_qstringlistmodel.cpp \
 	hbqt_qstyle.cpp \
 	hbqt_qstyleditemdelegate.cpp \
 	hbqt_qstylehintreturn.cpp \
@@ -204,6 +208,7 @@ PRG_SOURCES=\
 	TQAbstractButton.prg \
 	TQAbstractItemModel.prg \
 	TQAbstractItemView.prg \
+	TQAbstractListModel.prg \
 	TQAbstractPrintDialog.prg \
 	TQAbstractScrollArea.prg \
 	TQAbstractSlider.prg \
@@ -261,6 +266,7 @@ PRG_SOURCES=\
 	TQLine.prg \
 	TQLinearGradient.prg \
 	TQLineEdit.prg \
+	TQList.prg \
 	TQListView.prg \
 	TQListWidget.prg \
 	TQListWidgetItem.prg \
@@ -305,6 +311,8 @@ PRG_SOURCES=\
 	TQStandardItem.prg \
 	TQStandardItemModel.prg \
 	TQStatusBar.prg \
+	TQStringList.prg \
+	TQStringListModel.prg \
 	TQStyle.prg \
 	TQStyledItemDelegate.prg \
 	TQStyleHintReturn.prg \

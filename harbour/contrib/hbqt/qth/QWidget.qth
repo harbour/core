@@ -188,8 +188,8 @@ void releaseKeyboard ()
 void releaseMouse ()
 void releaseShortcut ( int id )
 void removeAction ( QAction * action )
-void render ( QPaintDevice * target, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
-void render ( QPainter * painter, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
+//void render ( QPaintDevice * target, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
+//void render ( QPainter * painter, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
 #
 #  As a normalized behavior, int types are the best.
 #    
@@ -273,7 +273,7 @@ void setWindowModality ( Qt::WindowModality windowModality )
 void setWindowOpacity ( qreal level )
 void setWindowRole ( const QString & role )
 void setWindowState ( Qt::WindowStates windowState )
-void setWindowSurface ( QWindowSurface * surface )   (preliminary)
+void setWindowSurface ( QWindowSurface * surface )   
 QSize size () const
 virtual QSize sizeHint () const
 QSize sizeIncrement () const

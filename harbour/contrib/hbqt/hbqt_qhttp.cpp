@@ -247,7 +247,7 @@ HB_FUNC( QT_QHTTP_SETHOST_1 )
  */
 HB_FUNC( QT_QHTTP_SETPROXY )
 {
-   hb_retni( hbqt_par_QHttp( 1 )->setProxy( hbqt_par_QString( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ) ) );
+   hb_retni( hbqt_par_QHttp( 1 )->setProxy( hbqt_par_QString( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ), hbqt_par_QString( 5 ) ) );
 }
 
 /*

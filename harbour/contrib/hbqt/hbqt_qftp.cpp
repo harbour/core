@@ -181,7 +181,7 @@ HB_FUNC( QT_QFTP_LIST )
  */
 HB_FUNC( QT_QFTP_LOGIN )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->login( hbqt_par_QString( 2 ) ) );
+   hb_retni( hbqt_par_QFtp( 1 )->login( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
 }
 
 /*

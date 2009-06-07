@@ -64,7 +64,7 @@ CREATE CLASS QIcon
    METHOD  New()
 
    METHOD  actualSize( pSize, nMode, nState )  INLINE  Qt_QIcon_actualSize( ::pPtr, pSize, nMode, nState )
-   METHOD  addFile( cFileName, pSize )         INLINE  Qt_QIcon_addFile( ::pPtr, cFileName, pSize )
+   METHOD  addFile( cFileName, pSize, nMode, nState )  INLINE  Qt_QIcon_addFile( ::pPtr, cFileName, pSize, nMode, nState )
    METHOD  addPixmap( pPixmap, nMode, nState )  INLINE  Qt_QIcon_addPixmap( ::pPtr, pPixmap, nMode, nState )
    METHOD  cacheKey()                          INLINE  Qt_QIcon_cacheKey( ::pPtr )
    METHOD  isNull()                            INLINE  Qt_QIcon_isNull( ::pPtr )

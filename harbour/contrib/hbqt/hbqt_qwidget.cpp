@@ -60,7 +60,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 213/216 [ 98.61% ] ]
+ *  Constructed[ 211/214 [ 98.60% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -792,22 +792,6 @@ HB_FUNC( QT_QWIDGET_REMOVEACTION )
 }
 
 /*
- * void render ( QPaintDevice * target, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
- */
-HB_FUNC( QT_QWIDGET_RENDER )
-{
-   hbqt_par_QWidget( 1 )->render( hbqt_par_QPaintDevice( 2 ), *hbqt_par_QPoint( 3 ) );
-}
-
-/*
- * void render ( QPainter * painter, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
- */
-HB_FUNC( QT_QWIDGET_RENDER_1 )
-{
-   hbqt_par_QWidget( 1 )->render( hbqt_par_QPainter( 2 ), *hbqt_par_QPoint( 3 ) );
-}
-
-/*
  * void repaint ( int x, int y, int w, int h )
  */
 HB_FUNC( QT_QWIDGET_REPAINT )
@@ -1344,7 +1328,7 @@ HB_FUNC( QT_QWIDGET_SETWINDOWSTATE )
 }
 
 /*
- * void setWindowSurface ( QWindowSurface * surface )   (preliminary)
+ * void setWindowSurface ( QWindowSurface * surface )
  */
 HB_FUNC( QT_QWIDGET_SETWINDOWSURFACE )
 {

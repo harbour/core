@@ -98,7 +98,7 @@ HB_FUNC( QT_QPIXMAP_CACHEKEY )
  */
 HB_FUNC( QT_QPIXMAP_COPY )
 {
-   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->copy( *hbqt_par_QRect( 2 ) ) ) );
+   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->copy( ( HB_ISNIL( 2 ) ? QRect() : *hbqt_par_QRect( 2 ) ) ) ) );
 }
 
 /*
