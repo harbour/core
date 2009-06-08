@@ -80,7 +80,7 @@ msgstr "kapcsoló továbbítása (alkalmazás) szerkesztõnek"
 #: hbmk2.prg:2763
 #, c-format
 msgid "Harbour compiler command (internal):"
-msgstr "Habour fordítási parancs (belsõ):"
+msgstr "Harbour fordítási parancs (belsõ):"
 
 #: hbmk2.prg:1026
 #, c-format

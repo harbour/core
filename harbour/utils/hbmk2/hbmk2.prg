@@ -477,7 +477,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL s_lBEEP := .F.
 
    LOCAL aCOMPDET
-   LOCAL aCOMPDET_LOCAL
+   LOCAL aCOMPDET_EMBED
    LOCAL aCOMPSUP
 
    LOCAL cLibPrefix
@@ -1011,16 +1011,16 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       s_cHB_INSTALL_PREFIX := ""
    ENDIF
 
-   aCOMPDET_LOCAL := {}
+   aCOMPDET_EMBED := {}
 
    IF hbmk[ _HBMK_cARCH ] $ "win|wce"
 
       #if defined( __PLATFORM__WINDOWS )
 
-         AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw"    + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw"   , ""                     } )
-         AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw64"  + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw64" , "x86_64-pc-mingw32-"   } )
-         AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwarm" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-"       } )
-         AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwarm" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw"    + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw"   , ""                     } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingw64"  + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw64" , "x86_64-pc-mingw32-"   } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwarm" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-"       } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( s_cHB_INSTALL_PREFIX ) + "mingwarm" + hb_osPathSeparator() + "bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
 
       #elif defined( __PLATFORM__UNIX )
 
@@ -1029,10 +1029,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
             DO CASE
             CASE hbmk[ _HBMK_cCOMP ] $ "mingw"
-               AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := "/opt/xmingw/bin"   , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw"   , "i386-mingw-" } )
+               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/xmingw/bin"   , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw"   , "i386-mingw-" } )
             CASE hbmk[ _HBMK_cCOMP ] $ "mingwarm"
-               AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-" } )
-               AAdd( aCOMPDET_LOCAL, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
+               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-" } )
+               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
             ENDCASE
          ENDIF
 
@@ -1070,11 +1070,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
             IF Empty( hbmk[ _HBMK_cCOMP ] ) .AND. hbmk[ _HBMK_cARCH ] $ "win|wce"
                /* Autodetect embedded MinGW installation */
-               FOR tmp := 1 TO Len( aCOMPDET_LOCAL )
-                  IF hbmk[ _HBMK_cARCH ] == aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cARCH ] .AND. ;
-                     ! Empty( cPath_CompC := Eval( aCOMPDET_LOCAL[ tmp ][ _COMPDETE_bBlock ], aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cCCPREFIX ] ) )
-                     hbmk[ _HBMK_cCOMP ] := aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cCOMP ]
-                     hbmk[ _HBMK_cCCPREFIX ] := aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cCCPREFIX ]
+               FOR tmp := 1 TO Len( aCOMPDET_EMBED )
+                  IF hbmk[ _HBMK_cARCH ] == aCOMPDET_EMBED[ tmp ][ _COMPDETE_cARCH ] .AND. ;
+                     ! Empty( cPath_CompC := Eval( aCOMPDET_EMBED[ tmp ][ _COMPDETE_bBlock ], aCOMPDET_EMBED[ tmp ][ _COMPDETE_cCCPREFIX ] ) )
+                     hbmk[ _HBMK_cCOMP ] := aCOMPDET_EMBED[ tmp ][ _COMPDETE_cCOMP ]
+                     hbmk[ _HBMK_cCCPREFIX ] := aCOMPDET_EMBED[ tmp ][ _COMPDETE_cCCPREFIX ]
                      hbmk[ _HBMK_cCCPATH ] := cPath_CompC
                      EXIT
                   ENDIF
@@ -1100,13 +1100,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          IF hbmk[ _HBMK_cARCH ] $ "win|wce"
             /* Detect cross platform CCPREFIX and CCPATH if embedded MinGW installation is detected */
-            FOR tmp := 1 TO Len( aCOMPDET_LOCAL )
-               IF aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cARCH ] == hbmk[ _HBMK_cARCH ] .AND. ;
-                  aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cCOMP ] == hbmk[ _HBMK_cCOMP ]
-                  IF ! Empty( cPath_CompC := Eval( aCOMPDET_LOCAL[ tmp ][ _COMPDETE_bBlock ], aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cCCPREFIX ] ) )
-                     hbmk[ _HBMK_cCCPATH ] := cPath_CompC
-                  ENDIF
-                  hbmk[ _HBMK_cCCPREFIX ] := aCOMPDET_LOCAL[ tmp ][ _COMPDETE_cCCPREFIX ]
+            FOR tmp := 1 TO Len( aCOMPDET_EMBED )
+               IF aCOMPDET_EMBED[ tmp ][ _COMPDETE_cARCH ] == hbmk[ _HBMK_cARCH ] .AND. ;
+                  aCOMPDET_EMBED[ tmp ][ _COMPDETE_cCOMP ] == hbmk[ _HBMK_cCOMP ] .AND. ;
+                  ! Empty( cPath_CompC := Eval( aCOMPDET_EMBED[ tmp ][ _COMPDETE_bBlock ], aCOMPDET_EMBED[ tmp ][ _COMPDETE_cCCPREFIX ] ) )
+                  hbmk[ _HBMK_cCCPATH ] := cPath_CompC
+                  hbmk[ _HBMK_cCCPREFIX ] := aCOMPDET_EMBED[ tmp ][ _COMPDETE_cCCPREFIX ]
                   EXIT
                ENDIF
             NEXT
