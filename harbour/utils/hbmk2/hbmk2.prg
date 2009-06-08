@@ -2782,12 +2782,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       ENDCASE
 
       IF lCreateDyn .AND. hbmk[ _HBMK_cARCH ] $ "win|wce"
-         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB .OR. ;
+            hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10
             AAdd( hbmk[ _HBMK_aOPTC ], "-D__EXPORT__" )
-            AAdd( aLIB_BASE1, "dllmain" ) /* TOFIX */
          ELSE
             AAdd( hbmk[ _HBMK_aOPTC ], "-DHB_DYNLIB" )
-            /* AAdd( aLIB_BASE1, "hbmaindllp" ) */
          ENDIF
       ENDIF
    ENDIF

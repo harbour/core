@@ -17,6 +17,11 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-08 18:57 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+  * utils/hbmk2/hbmk2.prg
+    ! Possible fix to -hbdyn in -xhb mode.
+    ! Fix to -hbdyn in -hb10 mode.
+
 2009-06-08 18:47 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   * INSTALL
     % Removed section dealing with GNU Make configuration on Windows.
