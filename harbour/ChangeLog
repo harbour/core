@@ -17,6 +17,11 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-08 14:48 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+  - utils/hbmk2/examples/hwgui.hbc
+    - Deleted file. Now it's hosted by hwgui repository, in
+      its ready-to-use location. Thanks Alexander.
+
 2009-06-08 14:33 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   * config/wce/mingwarm.cf
     ! Fixed 'del' command receiving wrongly formed path seps
