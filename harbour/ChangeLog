@@ -17,6 +17,16 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-08 18:25 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed again -hbdyn generation by removing hbmaindllp lib
+      from the liblist. This was added as part of a fix, so I'm
+      not sure what is the good and final solution. Anyway it
+      looks like this lib isn't to be used for .dll, or only for
+      pure pcode ones. So it's probably better to leave it as
+      a manual user option: -l{win}hbmaindllp
+      If someone knows more, pls speak up.
+
 2009-06-08 17:53 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   * utils/hbmk2/hbmk2.hu_HU.po
     ! Typo.

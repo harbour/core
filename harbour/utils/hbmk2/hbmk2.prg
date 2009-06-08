@@ -2787,7 +2787,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( aLIB_BASE1, "dllmain" ) /* TOFIX */
          ELSE
             AAdd( hbmk[ _HBMK_aOPTC ], "-DHB_DYNLIB" )
-            AAdd( aLIB_BASE1, "hbmaindllp" )
+            /* AAdd( aLIB_BASE1, "hbmaindllp" ) */
          ENDIF
       ENDIF
    ENDIF
