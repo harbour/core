@@ -17,6 +17,11 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-08 14:33 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+  * config/wce/mingwarm.cf
+    ! Fixed 'del' command receiving wrongly formed path seps
+      in non-msys mode when lib creation failed.
+
 2009-06-08 14:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
     * removed unnecessary stack preloading in hb_vmProc() and MT builds

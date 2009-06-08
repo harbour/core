@@ -141,7 +141,12 @@ endif
 endif
 
 ifeq ($(AR_RULE),)
-AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(LIB_DIR)/$@
+ifeq ($(SHLVL),) # COMMAND.COM
+LIB_DIR_DOS_ = $(subst /,\,$(LIB_DIR))\$@
+else
+LIB_DIR_DOS_ = $(LIB_DIR)/$@
+endif
+AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(LIB_DIR_DOS_)
 # our libs have a lot of cross referenced now and we have to group them
 # until we won't have cleaned them
 LINKLIBS = $(LINKPATHS) -Wl,--start-group $(LDLIBS) -Wl,--end-group $(SYSLIBS)
