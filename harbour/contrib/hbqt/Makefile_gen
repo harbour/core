@@ -12,6 +12,7 @@ CPP_SOURCES=\
 	hbqt_qabstractscrollarea.cpp \
 	hbqt_qabstractslider.cpp \
 	hbqt_qabstractspinbox.cpp \
+	hbqt_qabstracttablemodel.cpp \
 	hbqt_qaction.cpp \
 	hbqt_qapplication.cpp \
 	hbqt_qbitmap.cpp \
@@ -40,6 +41,7 @@ CPP_SOURCES=\
 	hbqt_qevent.cpp \
 	hbqt_qeventloop.cpp \
 	hbqt_qfiledialog.cpp \
+	hbqt_qfilesystemmodel.cpp \
 	hbqt_qfocusframe.cpp \
 	hbqt_qfont.cpp \
 	hbqt_qfontcombobox.cpp \
@@ -75,6 +77,7 @@ CPP_SOURCES=\
 	hbqt_qmenu.cpp \
 	hbqt_qmenubar.cpp \
 	hbqt_qmessagebox.cpp \
+	hbqt_qmodelindex.cpp \
 	hbqt_qobject.cpp \
 	hbqt_qpaintdevice.cpp \
 	hbqt_qpagesetupdialog.cpp \
@@ -213,6 +216,7 @@ PRG_SOURCES=\
 	TQAbstractScrollArea.prg \
 	TQAbstractSlider.prg \
 	TQAbstractSpinBox.prg \
+	TQAbstractTableModel.prg \
 	TQAction.prg \
 	TQBitmap.prg \
 	TQBoxLayout.prg \
@@ -239,6 +243,7 @@ PRG_SOURCES=\
 	TQEvent.prg \
 	TQEventLoop.prg \
 	TQFileDialog.prg \
+	TQFileSystemModel.prg \
 	TQFocusFrame.prg \
 	TQFont.prg \
 	TQFontComboBox.prg \
@@ -274,6 +279,7 @@ PRG_SOURCES=\
 	TQMenu.prg \
 	TQMenuBar.prg \
 	TQMessageBox.prg \
+	TQModelIndex.prg \
 	TQObject.prg \
 	TQPaintDevice.prg \
 	TQPageSetupDialog.prg \

@@ -19,6 +19,7 @@ QAbstractPrintDialog.qth
 QAbstractScrollArea.qth
 QAbstractSlider.qth
 QAbstractSpinBox.qth
+QAbstractTableModel.qth
 QAction.qth
 QApplication.qth
 QBitmap.qth
@@ -47,6 +48,7 @@ QErrorMessage.qth
 QEvent.qth
 QEventLoop.qth
 QFileDialog.qth
+QFileSystemModel.qth
 QFocusFrame.qth
 QFont.qth
 QFontComboBox.qth
@@ -82,6 +84,7 @@ QMainWindow.qth
 QMenu.qth
 QMenuBar.qth
 QMessageBox.qth
+QModelIndex.qth
 QObject.qth
 QPaintDevice.qth
 QPageSetupDialog.qth

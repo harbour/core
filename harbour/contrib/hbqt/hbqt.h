@@ -310,6 +310,8 @@
 #define hbqt_par_QList( n )                  ( ( QList<void*>* ) hb_parptr( n ) )
 #define hbqt_par_QStringListModel( n )       ( ( QStringListModel* ) hb_parptr( n ) )
 #define hbqt_par_QAbstractListModel( n )     ( ( QAbstractListModel* ) hb_parptr( n ) )
+#define hbqt_par_QAbstractTableModel( n )    ( ( QAbstractTableModel* ) hb_parptr( n ) )
+#define hbqt_par_QFileSystemModel( n )       ( ( QFileSystemModel* ) hb_parptr( n ) )
 
 #define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )
 #define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )
