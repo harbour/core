@@ -148,8 +148,8 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_QT=C:\Qt\4.5.1\include
    HB_INC_SQLITE3=C:\sqlite3 (defaults to locally hosted version on win/os2)
 
-   NOTES: - For MinGW + msys and cygwin you have to use forward slashes
-            and also cygwin drive notation for cygwin.
+   NOTES: - For MinGW + msys and Cygwin you have to use forward slashes
+            and also Cygwin drive notation for Cygwin.
           - Spaces in directory names aren't currently supported.
             (You can use short name alias on Windows platform, though)
           - Don't put directory names inside double quotes.
@@ -305,7 +305,6 @@ EXAMPLES
       call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
       rem
       set HB_COMPILER=msvc
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -314,7 +313,6 @@ EXAMPLES
       call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
       rem
       set HB_COMPILER=msvc
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -323,10 +321,8 @@ EXAMPLES
       call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_amd64
       rem
       set HB_COMPILER=msvc64
-      rem
       set HB_BIN_COMPILE=C:\hb-msvc\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -335,7 +331,6 @@ EXAMPLES
       call "%ProgramFiles%\Microsoft Visual Studio 8\VC\vcvarsall.bat"
       rem
       set HB_COMPILER=msvc
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -345,7 +340,6 @@ EXAMPLES
       rem
       set HB_COMPILER=msvc
       set HB_VISUALC_VER_PRE80=yes
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -354,17 +348,15 @@ EXAMPLES
       set PATH=C:\devl\MinGW-440\bin;%PATH%
       rem
       set HB_COMPILER=mingw
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
 
-      --- MinGW GCC with msys
+      --- MinGW GCC + msys
       set PATH=C:\devl\msys\1.0.11\bin;%PATH%
       set PATH=C:\devl\MinGW-440\bin;%PATH%
       rem
       set HB_COMPILER=mingw
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       sh make_gnu.sh %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -376,7 +368,6 @@ EXAMPLES
       rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -386,10 +377,8 @@ EXAMPLES
       rem
       set HB_ARCHITECTURE=wce
       set HB_COMPILER=mingwarm
-      rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -401,7 +390,6 @@ EXAMPLES
       SET INCLUDE=%WATCOM%\H;%WATCOM%\H\NT
       rem
       set HB_COMPILER=owatcom
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -410,7 +398,6 @@ EXAMPLES
       call "%ProgramFiles%\Intel\Compiler\C++\10.1.014\IA32\Bin\iclvars.bat"
       rem
       set HB_COMPILER=icc
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -419,7 +406,6 @@ EXAMPLES
       set PATH=C:\devl\bcc55\bin;%PATH%
       rem
       set HB_COMPILER=bcc
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -430,7 +416,6 @@ EXAMPLES
       set LIB=C:\devl\PellesC-501\lib;C:\devl\PellesC-501\lib\win;%LIB%
       rem
       set HB_COMPILER=pocc
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -441,10 +426,8 @@ EXAMPLES
       set LIB=C:\devl\PellesC-501-64\lib;C:\devl\PellesC-501-64\lib\win64;%LIB%
       rem
       set HB_COMPILER=pocc64
-      rem
       set HB_BIN_COMPILE=C:\hb-pocc\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -456,10 +439,8 @@ EXAMPLES
       rem
       set HB_ARCHITECTURE=wce
       set HB_COMPILER=poccarm
-      rem
       set HB_BIN_COMPILE=C:\hb-pocc\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
-      rem
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -470,15 +451,14 @@ EXAMPLES
       set LIBRARY_PATH=/cygdrive/c/devl/cygwin/usr/lib:/cygdrive/c/devl/cygwin/usr/lib/w32api
       rem
       set HB_COMPILER=cygwin
-      rem
       set HB_INSTALL_PREFIX=/cygdrive/c/hb-%HB_COMPILER%
       sh make_gnu.sh %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
 
       --8<--
       rem ; Add these *before* above sample scripts to configure 3rd party dependencies.
-      rem   For 'mingw' and 'cygwin' you'll have to use forward slashes and
-      rem   also cygwin drive notation for 'cygwin'.
+      rem   For 'MinGW + msys' and Cygwin you'll have to use forward slashes and
+      rem   also Cygwin drive notation for Cygwin.
       set HB_INC_ADS=C:\ads\acesdk
       set HB_INC_ALLEGRO=C:\allegro\include
       set HB_INC_APOLLO=C:\Apollo\include
