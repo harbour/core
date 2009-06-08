@@ -388,7 +388,6 @@ EXAMPLES
 
       --- MinGW GCC for x86-64 (requires native x86 Harbour binaries)
       set PATH=C:\devl\MinGW-440-64\bin;%PATH%
-      set HB_CCPREFIX=x86_64-pc-mingw32-
       rem
       set HB_COMPILER=mingw64
       rem
@@ -401,7 +400,6 @@ EXAMPLES
 
       --- MinGW GCC for WinCE/ARM (requires native x86 Harbour binaries)
       set PATH=C:\devl\MinGW-410-ce\opt\mingw32ce\bin;%PATH%
-      set HB_CCPREFIX=arm-wince-mingw32ce-
       rem
       set HB_ARCHITECTURE=wce
       set HB_COMPILER=mingwarm

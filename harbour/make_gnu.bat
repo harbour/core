@@ -94,6 +94,9 @@ if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
 
    if "%HB_ARCHITECTURE%" == "dos" goto SKIP_WINDLL
 
+   if "%HB_COMPILER%%HB_CCPREFIX%" == "mingw64"  set HB_CCPREFIX=x86_64-pc-mingw32-
+   if "%HB_COMPILER%%HB_CCPREFIX%" == "mingwarm" set HB_CCPREFIX=arm-wince-mingw32ce-
+
    if not exist config\mingw32-make.exe goto _FM_NOLOCAL
    set _HB_MAKE=config\mingw32-make.exe
    goto _FM_DONE
