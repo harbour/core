@@ -33,6 +33,9 @@
   * mpkg_win.bat
   * mpkg_win.nsi
     ! Fixed to include ChangeLog* instead of ChangeLog alone.
+    + Added support for HB_DIR_NSIS envvar to specify the
+      location of Nullsoft Installer. Value should end with
+      backslash if specified.
 
 2009-06-08 11:05 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   * ChangeLog
