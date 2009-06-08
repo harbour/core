@@ -17,6 +17,10 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-08 14:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+    * removed unnecessary stack preloading in hb_vmProc() and MT builds
+
 2009-06-08 13:00 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   * make_gnu.bat
   * INSTALL
@@ -266,7 +270,7 @@
              QProgressBar()
              QTabWidget()
 
-	:tabs host:
+        :tabs host:
              QTreeView()
              QLineEdit()
              QComboBox()

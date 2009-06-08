@@ -5624,7 +5624,6 @@ static void hb_vmSwapAlias( void )
 
 void hb_vmProc( USHORT uiParams )
 {
-   HB_STACK_TLS_PRELOAD
    HB_STACK_STATE sStackState;
    PHB_SYMB pSym;
 #ifndef HB_NO_PROFILER
