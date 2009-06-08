@@ -23,7 +23,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
    * Supported ANSI C compiler
    * GNU Make (3.81 or upper)
-   * Harbour sources (1.1.0dev or upper)
+   * Harbour sources (2.0.0dev or upper)
 
    Linux/Darwin/BSD/HP-UX/Solaris
    ------------------------------
