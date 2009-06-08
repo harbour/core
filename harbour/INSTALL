@@ -320,9 +320,10 @@ EXAMPLES
       --- MSVC 2008 x86-64 (requires native x86 Harbour binaries)
       call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_amd64
       rem
-      set HB_COMPILER=msvc64
       set HB_BIN_COMPILE=C:\hb-msvc\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
+      rem
+      set HB_COMPILER=msvc64
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -338,8 +339,9 @@ EXAMPLES
       --- MSVC .NET 2003 (untested)
       call "%ProgramFiles%\Microsoft Visual Studio .NET 2003\VC7\vcvarsall.bat"
       rem
-      set HB_COMPILER=msvc
       set HB_VISUALC_VER_PRE80=yes
+      rem
+      set HB_COMPILER=msvc
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -364,10 +366,10 @@ EXAMPLES
       --- MinGW GCC for x86-64 (requires native x86 Harbour binaries)
       set PATH=C:\devl\MinGW-440-64\bin;%PATH%
       rem
-      set HB_COMPILER=mingw64
-      rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
+      rem
+      set HB_COMPILER=mingw64
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -375,10 +377,11 @@ EXAMPLES
       --- MinGW GCC for WinCE/ARM (requires native x86 Harbour binaries)
       set PATH=C:\devl\MinGW-410-ce\opt\mingw32ce\bin;%PATH%
       rem
-      set HB_ARCHITECTURE=wce
-      set HB_COMPILER=mingwarm
       set HB_BIN_COMPILE=C:\hb-mingw\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
+      rem
+      set HB_ARCHITECTURE=wce
+      set HB_COMPILER=mingwarm
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -425,9 +428,10 @@ EXAMPLES
       set INCLUDE=C:\devl\PellesC-501-64\include;C:\devl\PellesC-501-64\include\win;%INCLUDE%
       set LIB=C:\devl\PellesC-501-64\lib;C:\devl\PellesC-501-64\lib\win64;%LIB%
       rem
-      set HB_COMPILER=pocc64
       set HB_BIN_COMPILE=C:\hb-pocc\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
+      rem
+      set HB_COMPILER=pocc64
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -437,10 +441,11 @@ EXAMPLES
       set INCLUDE=C:\devl\PellesC-501\include\wince;C:\devl\PellesC-501\include;%INCLUDE%
       set LIB=C:\devl\PellesC-501\lib;C:\devl\PellesC-501\lib\wince;%INCLUDE%
       rem
-      set HB_ARCHITECTURE=wce
-      set HB_COMPILER=poccarm
       set HB_BIN_COMPILE=C:\hb-pocc\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
+      rem
+      set HB_ARCHITECTURE=wce
+      set HB_COMPILER=poccarm
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---

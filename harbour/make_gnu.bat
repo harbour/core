@@ -27,24 +27,24 @@ rem Setup defaults.
 
 if "%HB_ARCHITECTURE%" == "" if not "%WINDIR%" == "" set HB_ARCHITECTURE=win
 if "%HB_ARCHITECTURE%" == ""                         set HB_ARCHITECTURE=dos
-if "%HB_COMPILER%"     == "" if not "%WINDIR%" == "" goto HELP
+if "%HB_COMPILER%"     == "" if not "%WINDIR%" == "" goto WIN_AUTODETECT
 if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
-if "%HB_INSTALL_PREFIX%" == "" if "%OS%" == "Windows_NT" set HB_INSTALL_PREFIX=%~dp0
+:CONTINUE_MAKE
 
-rem Set to constant value to be consistent with the non-GNU make files.
+   if "%HB_INSTALL_PREFIX%" == "" if "%OS%" == "Windows_NT" set HB_INSTALL_PREFIX=%~dp0
 
-if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
-if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
-if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
-if "%HB_DOC_INSTALL%" == "" set HB_DOC_INSTALL=%HB_INSTALL_PREFIX%\doc
+   rem Set to constant value to be consistent with the non-GNU make files.
+   if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
+   if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
+   if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
+   if "%HB_DOC_INSTALL%" == "" set HB_DOC_INSTALL=%HB_INSTALL_PREFIX%\doc
 
-rem Try to create install dirs.
-
-if not exist %HB_BIN_INSTALL%\*.* md %HB_BIN_INSTALL%
-if not exist %HB_LIB_INSTALL%\*.* md %HB_LIB_INSTALL%
-if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
-if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
+   rem Try to create install dirs.
+   if not exist %HB_BIN_INSTALL%\*.* md %HB_BIN_INSTALL%
+   if not exist %HB_LIB_INSTALL%\*.* md %HB_LIB_INSTALL%
+   if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
+   if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
 
 :START
 
@@ -52,6 +52,34 @@ if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
    if "%HB_COMPILER%" == "" goto BAD_COMP
 
    goto MAKE
+
+:WIN_AUTODETECT
+
+   rem We need some batch features to autodetect compiler
+   if not "%OS%" == "Windows_NT" goto HELP
+
+   rem Order is significant
+   call :COMP_DET_ONE gcc.exe                     mingw    win
+   call :COMP_DET_ONE wpp386.exe                  owatcom  win
+   call :COMP_DET_ONE ml64.exe                    msvc64   win
+   call :COMP_DET_ONE icl.exe                     icc      win
+   call :COMP_DET_ONE cl.exe                      msvc     win
+   call :COMP_DET_ONE bcc32.exe                   bcc      win
+   call :COMP_DET_ONE porc64.exe                  pocc64   win
+   call :COMP_DET_ONE pocc.exe                    pocc     win
+   call :COMP_DET_ONE cygstart.exe                cygwin   win
+   call :COMP_DET_ONE xcc.exe                     xcc      win
+   call :COMP_DET_ONE x86_64-pc-mingw32-gcc.exe   mingw64  win x86_64-pc-mingw32-
+   call :COMP_DET_ONE arm-wince-mingw32ce-gcc.exe mingwarm wce arm-wince-mingw32ce-
+   call :COMP_DET_ONE arm-mingw32ce-gcc.exe       mingwarm wce arm-mingw32ce-
+
+   if "%HB_COMPILER%" == "" ( echo HB_COMPILER couldn't be automatically determined. && goto HELP )
+
+   echo Autodetected HB_COMPILER: %HB_COMPILER%
+   echo Autodetected HB_ARCHITECTURE: %HB_ARCHITECTURE%
+   if not "%HB_CCPREFIX%" == "" echo Autodetected HB_CCPREFIX: %HB_CCPREFIX%
+
+   goto CONTINUE_MAKE
 
 :HELP
 
@@ -175,5 +203,22 @@ if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
    set CLIPPER=%_HB_CLIPPER_OLD%
    set _HB_HARBOUR_OLD=
    set _HB_CLIPPER_OLD=
+   goto END
+
+:COMP_DET_ONE
+
+   if not "%HB_COMPILER%" == "" goto END
+   if exist "%1" ( set HB_COMPILER=%2&& set HB_ARCHITECTURE=%3&& set HB_CCPREFIX=%4&& goto _CDO_EXIT )
+   set _PATH=%PATH%
+   :_CDO_LOOP
+   for /F "delims=; tokens=1,2*" %%p in ("%_PATH%") do (
+      if exist "%%p\%1" ( set HB_COMPILER=%2&& set HB_ARCHITECTURE=%3&& set HB_CCPREFIX=%4&& goto _CDO_EXIT )
+      if exist "%%p%1"  ( set HB_COMPILER=%2&& set HB_ARCHITECTURE=%3&& set HB_CCPREFIX=%4&& goto _CDO_EXIT )
+      set _PATH=%%~q;%%~r
+   )
+   if not "%_PATH%"==";" goto _CDO_LOOP
+   :_CDO_EXIT
+   set _PATH=
+   goto END
 
 :END

@@ -17,6 +17,20 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-08 21:09 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+  * make_gnu.bat
+    + Added C compiler autodetection. This feature will kick
+      in if HB_COMPILER is left empty.
+      (works for all compilers except msvcarm and poccarm)
+
+  * utils/hbmk2/hbmk2.prg
+    + Added -nohblib option which will omit all static core
+      Harbour libraries from link commands. Works only in
+      the command line.
+
+  * INSTALL
+    * Minor.
+
 2009-06-08 18:57 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   * utils/hbmk2/hbmk2.prg
     ! Possible fix to -hbdyn in -xhb mode.

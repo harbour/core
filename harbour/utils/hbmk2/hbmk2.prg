@@ -467,6 +467,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL s_cVCSHEAD
    LOCAL s_cTSHEAD
    LOCAL s_cHBPOSTFIX := ""
+   LOCAL s_lNOHBLIB := .F.
 
    LOCAL s_lCPP := NIL
    LOCAL s_lBLDFLGP := .F.
@@ -629,6 +630,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       CASE cParamL            == "-xhb"     ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_XHB
       CASE cParamL            == "-hb10"    ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB10
       CASE cParamL            == "-hbc"     ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_RAW_C ; lAcceptCFlag := .T.
+      CASE cParamL            == "-nohblib" ; s_lNOHBLIB := .T.
       CASE cParamL == "-help" .OR. ;
            cParamL == "--help"
 
@@ -775,6 +777,21 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          "dbfntxmt" ,;
          "dbfcdxmt" ,;
          "dbffptmt" }
+   ENDIF
+
+   IF s_lNOHBLIB
+      aLIB_BASE1 := {}
+      aLIB_BASE2 := {}
+      aLIB_BASE_GT := {}
+      aLIB_BASE_PCRE := {}
+      aLIB_BASE_ZLIB := {}
+      aLIB_BASE_DEBUG := {}
+      aLIB_BASE_CPLR := {}
+      aLIB_BASE_ST := {}
+      aLIB_BASE_MT := {}
+      aLIB_BASE_NULRDD := {}
+      aLIB_BASE_RDD_ST := {}
+      aLIB_BASE_RDD_MT := {}
    ENDIF
 
    /* Load architecture / compiler settings (compatibility) */
@@ -1301,6 +1318,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
            cParamL            == "-xhb" .OR. ;
            cParamL            == "-hb10" .OR. ;
            cParamL            == "-hbc" .OR. ;
+           cParamL            == "-nohblib" .OR. ;
            cParamL            == "-clipper" .OR. ;
            cParamL            == "-rtlink" .OR. ;
            cParamL            == "-blinker" .OR. ;
@@ -1878,6 +1896,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       */
 
       /* Assemble library list */
+
+      IF s_lNOHBLIB
+         hbmk[ _HBMK_aLIBCOREGT ] := {}
+      ENDIF
 
       s_aLIBVM := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_MT, aLIB_BASE_ST )
       aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, hbmk[ _HBMK_aLIBCOREGT ] } )
@@ -6133,6 +6155,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-hb10"             , I_( "enable Harbour 1.0.x compatibility mode (experimental)" ) },;
       { "-xhb"              , I_( "enable xhb mode (experimental)" ) },;
       { "-hbc"              , I_( "enable pure C mode (experimental)" ) },;
+      { "-nohblib"          , I_( "do not use static core Harbour libraries when linking" ) },;
       { "-rtlink"           , "" },;
       { "-blinker"          , "" },;
       { "-exospace"         , I_( "emulate Clipper compatible linker behavior\ncreate link/copy hbmk to rtlink/blinker/exospace for the same effect" ) },;
