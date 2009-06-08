@@ -22,7 +22,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
    For all platforms you'll need:
 
    * Supported ANSI C compiler
-   * GNU Make (3.81 or upper recommended)
+   * GNU Make (3.81 or upper)
    * Harbour sources (1.1.0dev or upper)
 
    Linux/Darwin/BSD/HP-UX/Solaris
@@ -48,20 +48,8 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
           belonging to other C compilers are interfering with your setup.
           For the list of supported compilers, please look up the
           relevant section in this file.
-      3.) Make sure to have GNU Make. If you build for MinGW target,
-          you can skip this point, since you already have GNU Make ready
-          to use. Certain older GNU Make versions and builds are untested
-          and may not work. We recommend the one distributed by MinGW team.
-          Use this link to get it:
-            https://sourceforge.net/project/showfiles.php?group_id=2435&package_id=23918
-          If you have it, you have three choices:
-          - Copy mingw32-make.exe or make.exe into a separate directory
-            and add that directory to the beginning of your PATH.
-            (recommended)
-          - Put mingw32-make.exe anywhere in your PATH.
-          - Put mingw32-make.exe in Harbour source root dir.
-          If you're using MinGW compiler, you don't have to bother with
-          all this.
+      3.) GNU Make is included in the source package. No configuration
+          is needed.
 
       > set HB_COMPILER=<mingw|msvc|owatcom|bcc|pocc|...>
       > set HB_INSTALL_PREFIX=<DIR>
@@ -318,7 +306,6 @@ EXAMPLES
       rem
       set HB_COMPILER=msvc
       rem
-      set PATH=C:\devl\make-3.81;%PATH%
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -328,7 +315,6 @@ EXAMPLES
       rem
       set HB_COMPILER=msvc
       rem
-      set PATH=C:\devl\make-3.81;%PATH%
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -341,7 +327,6 @@ EXAMPLES
       set HB_BIN_COMPILE=C:\hb-msvc\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
       rem
-      set PATH=C:\devl\make-3.81;%PATH%
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -351,7 +336,6 @@ EXAMPLES
       rem
       set HB_COMPILER=msvc
       rem
-      set PATH=C:\devl\make-3.81;%PATH%
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -362,7 +346,6 @@ EXAMPLES
       set HB_COMPILER=msvc
       set HB_VISUALC_VER_PRE80=yes
       rem
-      set PATH=C:\devl\make-3.81;%PATH%
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -419,7 +402,6 @@ EXAMPLES
       rem
       set HB_COMPILER=owatcom
       rem
-      set PATH=C:\devl\make-3.81;%PATH%
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -429,7 +411,6 @@ EXAMPLES
       rem
       set HB_COMPILER=icc
       rem
-      set PATH=C:\devl\make-3.81;%PATH%
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -439,7 +420,6 @@ EXAMPLES
       rem
       set HB_COMPILER=bcc
       rem
-      set PATH=C:\devl\make-3.81;%PATH%
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -451,7 +431,6 @@ EXAMPLES
       rem
       set HB_COMPILER=pocc
       rem
-      set PATH=C:\devl\make-3.81;%PATH%
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -466,7 +445,6 @@ EXAMPLES
       set HB_BIN_COMPILE=C:\hb-pocc\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
       rem
-      set PATH=C:\devl\make-3.81;%PATH%
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -482,7 +460,6 @@ EXAMPLES
       set HB_BIN_COMPILE=C:\hb-pocc\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
       rem
-      set PATH=C:\devl\make-3.81;%PATH%
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -539,7 +516,7 @@ EXAMPLES
       --8<--
       rem ; To create installation packages (.exe + .zip),
       rem   replace last line (calling make_gnu.bat) with these two:
-      set PATH=C:\devl\NSIS-2.44;%PATH%
+      set HB_DIR_NSIS=C:\devl\NSIS-2.44\
       call mpkg_win.bat > log-%HB_COMPILER%.txt 2>&1
       -->8--
 
@@ -580,7 +557,7 @@ TROUBLESHOOTING
    - Make sure to have carefully read this document.
    - Make sure to do a 'clean' before doing a build after refreshing
      the sources.
-   - Make sure to install fresh source tree* in a new local directory and
+   - Make sure to install fresh source tree in a new local directory and
      start over. See HOW TO GET THE HARBOUR SOURCES section for instructions
      to get the source.
    - Keep you PATH clean from old, mixed compiler tools or other Harbour

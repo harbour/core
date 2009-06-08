@@ -17,6 +17,14 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-08 18:47 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+  * INSTALL
+    % Removed section dealing with GNU Make configuration on Windows.
+      Not needed anymore.
+    % Removed GNU Make configuration from examples. Not needed.
+    + Example changed to use HB_DIR_NSIS, instead of modifying PATH.
+    ! Minor recent typo.
+
 2009-06-08 18:25 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   * utils/hbmk2/hbmk2.prg
     ! Fixed again -hbdyn generation by removing hbmaindllp lib
