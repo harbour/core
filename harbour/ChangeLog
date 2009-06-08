@@ -17,6 +17,11 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-08 11:59 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+  * mpkg_win.bat
+  * mpkg_win.nsi
+    ! Fixed to include ChangeLog* instead of ChangeLog alone.
+
 2009-06-08 11:05 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   * ChangeLog
   + ChangeLog-old

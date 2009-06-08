@@ -77,7 +77,7 @@ Section "Main components" hb_main
   File /nonfatal "$%HB_INSTALL_PREFIX%\ERRATA"
   File /nonfatal "$%HB_INSTALL_PREFIX%\INSTALL"
   File /nonfatal "$%HB_INSTALL_PREFIX%\TODO"
-  File /nonfatal "$%HB_INSTALL_PREFIX%\ChangeLog"
+  File /nonfatal "$%HB_INSTALL_PREFIX%\ChangeLog*"
 
   SetOutPath $INSTDIR\bin
   File "$%HB_BIN_INSTALL%\*.*"

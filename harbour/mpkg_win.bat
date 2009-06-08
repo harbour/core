@@ -15,6 +15,7 @@ rem    - Windows NT or upper
 rem    - NullSoft Installer installed (NSIS)
 rem         https://sourceforge.net/project/showfiles.php?group_id=22049&package_id=15374
 rem    - makensis.exe (part of NSIS) in PATH
+rem         or HB_DIR_NSIS envvar set to its dir with an ending backslash.
 rem    - Info-ZIP zip.exe in PATH
 rem         https://sourceforge.net/project/showfiles.php?group_id=118012
 rem    - HB_COMPILER envvar configured (see INSTALL doc)
@@ -59,11 +60,11 @@ if exist "%HB_BIN_INSTALL%\*.lib" del "%HB_BIN_INSTALL%\*.lib"
 if exist "%HB_BIN_INSTALL%\*.exp" del "%HB_BIN_INSTALL%\*.exp"
 
 rem ; Post-build installation
-xcopy /D /Y ChangeLog "%HB_INSTALL_PREFIX%\"
-xcopy /D /Y COPYING   "%HB_INSTALL_PREFIX%\"
-xcopy /D /Y ERRATA    "%HB_INSTALL_PREFIX%\"
-xcopy /D /Y INSTALL   "%HB_INSTALL_PREFIX%\"
-xcopy /D /Y TODO      "%HB_INSTALL_PREFIX%\"
+xcopy /D /Y ChangeLog* "%HB_INSTALL_PREFIX%\"
+xcopy /D /Y COPYING    "%HB_INSTALL_PREFIX%\"
+xcopy /D /Y ERRATA     "%HB_INSTALL_PREFIX%\"
+xcopy /D /Y INSTALL    "%HB_INSTALL_PREFIX%\"
+xcopy /D /Y TODO       "%HB_INSTALL_PREFIX%\"
 
 rem ; Build .zip package
 if exist %HB_PKGNAME%.zip del %HB_PKGNAME%.zip
@@ -73,7 +74,7 @@ zip -9 -X -r -o %~dp0%HB_PKGNAME%.zip . -i %HB_DIRNAME%\*
 popd
 
 rem ; Build installer package
-makensis.exe %~dp0mpkg_win.nsi
+%HB_DIR_NSIS%makensis.exe %~dp0mpkg_win.nsi
 
 :MK_ERROR
 
