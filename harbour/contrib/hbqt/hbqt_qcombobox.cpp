@@ -77,7 +77,7 @@ HB_FUNC( QT_QCOMBOBOX )
  */
 HB_FUNC( QT_QCOMBOBOX_ADDITEM )
 {
-   hbqt_par_QComboBox( 1 )->addItem( hbqt_par_QString( 2 ), ( HB_ISNIL( 3 ) ? QVariant() : *hbqt_par_QVariant( 3 ) ) );
+   hbqt_par_QComboBox( 1 )->addItem( hbqt_par_QString( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) );
 }
 
 /*
@@ -85,7 +85,7 @@ HB_FUNC( QT_QCOMBOBOX_ADDITEM )
  */
 HB_FUNC( QT_QCOMBOBOX_ADDITEM_1 )
 {
-   hbqt_par_QComboBox( 1 )->addItem( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 3 ), ( HB_ISNIL( 4 ) ? QVariant() : *hbqt_par_QVariant( 4 ) ) );
+   hbqt_par_QComboBox( 1 )->addItem( QIcon( hbqt_par_QString( 2 ) ), hbqt_par_QString( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QVariant( 4 ) : QVariant() ) );
 }
 
 /*
@@ -181,7 +181,7 @@ HB_FUNC( QT_QCOMBOBOX_ICONSIZE )
  */
 HB_FUNC( QT_QCOMBOBOX_INSERTITEM )
 {
-   hbqt_par_QComboBox( 1 )->insertItem( hb_parni( 2 ), hbqt_par_QString( 3 ), ( HB_ISNIL( 4 ) ? QVariant() : *hbqt_par_QVariant( 4 ) ) );
+   hbqt_par_QComboBox( 1 )->insertItem( hb_parni( 2 ), hbqt_par_QString( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QVariant( 4 ) : QVariant() ) );
 }
 
 /*
@@ -189,7 +189,7 @@ HB_FUNC( QT_QCOMBOBOX_INSERTITEM )
  */
 HB_FUNC( QT_QCOMBOBOX_INSERTITEM_1 )
 {
-   hbqt_par_QComboBox( 1 )->insertItem( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ), hbqt_par_QString( 4 ), ( HB_ISNIL( 5 ) ? QVariant() : *hbqt_par_QVariant( 5 ) ) );
+   hbqt_par_QComboBox( 1 )->insertItem( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ), hbqt_par_QString( 4 ), ( HB_ISPOINTER( 5 ) ? *hbqt_par_QVariant( 5 ) : QVariant() ) );
 }
 
 /*

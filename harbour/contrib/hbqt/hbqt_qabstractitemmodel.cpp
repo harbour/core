@@ -103,7 +103,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_CANFETCHMORE )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_COLUMNCOUNT )
 {
-   hb_retni( hbqt_par_QAbstractItemModel( 1 )->columnCount( ( HB_ISNIL( 2 ) ? QModelIndex() : *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retni( hbqt_par_QAbstractItemModel( 1 )->columnCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -143,7 +143,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_FLAGS )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_HASCHILDREN )
 {
-   hb_retl( hbqt_par_QAbstractItemModel( 1 )->hasChildren( ( HB_ISNIL( 2 ) ? QModelIndex() : *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retl( hbqt_par_QAbstractItemModel( 1 )->hasChildren( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -151,7 +151,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_HASCHILDREN )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_HASINDEX )
 {
-   hb_retl( hbqt_par_QAbstractItemModel( 1 )->hasIndex( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNIL( 4 ) ? QModelIndex() : *hbqt_par_QModelIndex( 4 ) ) ) );
+   hb_retl( hbqt_par_QAbstractItemModel( 1 )->hasIndex( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -167,7 +167,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_HEADERDATA )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_INDEX )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNIL( 4 ) ? QModelIndex() : *hbqt_par_QModelIndex( 4 ) ) ) ) );
+   hb_retptr( new QModelIndex( hbqt_par_QAbstractItemModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) );
 }
 
 /*
@@ -175,7 +175,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_INDEX )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_INSERTCOLUMN )
 {
-   hb_retl( hbqt_par_QAbstractItemModel( 1 )->insertColumn( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? QModelIndex() : *hbqt_par_QModelIndex( 3 ) ) ) );
+   hb_retl( hbqt_par_QAbstractItemModel( 1 )->insertColumn( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -183,7 +183,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_INSERTCOLUMN )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_INSERTCOLUMNS )
 {
-   hb_retl( hbqt_par_QAbstractItemModel( 1 )->insertColumns( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNIL( 4 ) ? QModelIndex() : *hbqt_par_QModelIndex( 4 ) ) ) );
+   hb_retl( hbqt_par_QAbstractItemModel( 1 )->insertColumns( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -191,7 +191,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_INSERTCOLUMNS )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_INSERTROW )
 {
-   hb_retl( hbqt_par_QAbstractItemModel( 1 )->insertRow( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? QModelIndex() : *hbqt_par_QModelIndex( 3 ) ) ) );
+   hb_retl( hbqt_par_QAbstractItemModel( 1 )->insertRow( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -199,7 +199,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_INSERTROW )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_INSERTROWS )
 {
-   hb_retl( hbqt_par_QAbstractItemModel( 1 )->insertRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNIL( 4 ) ? QModelIndex() : *hbqt_par_QModelIndex( 4 ) ) ) );
+   hb_retl( hbqt_par_QAbstractItemModel( 1 )->insertRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -231,7 +231,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_PARENT )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_REMOVECOLUMN )
 {
-   hb_retl( hbqt_par_QAbstractItemModel( 1 )->removeColumn( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? QModelIndex() : *hbqt_par_QModelIndex( 3 ) ) ) );
+   hb_retl( hbqt_par_QAbstractItemModel( 1 )->removeColumn( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -239,7 +239,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_REMOVECOLUMN )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_REMOVECOLUMNS )
 {
-   hb_retl( hbqt_par_QAbstractItemModel( 1 )->removeColumns( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNIL( 4 ) ? QModelIndex() : *hbqt_par_QModelIndex( 4 ) ) ) );
+   hb_retl( hbqt_par_QAbstractItemModel( 1 )->removeColumns( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -247,7 +247,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_REMOVECOLUMNS )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_REMOVEROW )
 {
-   hb_retl( hbqt_par_QAbstractItemModel( 1 )->removeRow( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? QModelIndex() : *hbqt_par_QModelIndex( 3 ) ) ) );
+   hb_retl( hbqt_par_QAbstractItemModel( 1 )->removeRow( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -255,7 +255,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_REMOVEROW )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_REMOVEROWS )
 {
-   hb_retl( hbqt_par_QAbstractItemModel( 1 )->removeRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNIL( 4 ) ? QModelIndex() : *hbqt_par_QModelIndex( 4 ) ) ) );
+   hb_retl( hbqt_par_QAbstractItemModel( 1 )->removeRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -263,7 +263,7 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_REMOVEROWS )
  */
 HB_FUNC( QT_QABSTRACTITEMMODEL_ROWCOUNT )
 {
-   hb_retni( hbqt_par_QAbstractItemModel( 1 )->rowCount( ( HB_ISNIL( 2 ) ? QModelIndex() : *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retni( hbqt_par_QAbstractItemModel( 1 )->rowCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
 }
 
 /*

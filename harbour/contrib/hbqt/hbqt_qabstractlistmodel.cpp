@@ -77,7 +77,7 @@ HB_FUNC( QT_QABSTRACTLISTMODEL )
  */
 HB_FUNC( QT_QABSTRACTLISTMODEL_INDEX )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QAbstractListModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNIL( 4 ) ? QModelIndex() : *hbqt_par_QModelIndex( 4 ) ) ) ) );
+   hb_retptr( new QModelIndex( hbqt_par_QAbstractListModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) );
 }
 
 

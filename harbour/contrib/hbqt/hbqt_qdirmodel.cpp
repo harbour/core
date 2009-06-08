@@ -78,7 +78,7 @@ HB_FUNC( QT_QDIRMODEL )
  */
 HB_FUNC( QT_QDIRMODEL_COLUMNCOUNT )
 {
-   hb_retni( hbqt_par_QDirModel( 1 )->columnCount( ( HB_ISNIL( 2 ) ? QModelIndex() : *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retni( hbqt_par_QDirModel( 1 )->columnCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -150,7 +150,7 @@ HB_FUNC( QT_QDIRMODEL_FLAGS )
  */
 HB_FUNC( QT_QDIRMODEL_HASCHILDREN )
 {
-   hb_retl( hbqt_par_QDirModel( 1 )->hasChildren( ( HB_ISNIL( 2 ) ? QModelIndex() : *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retl( hbqt_par_QDirModel( 1 )->hasChildren( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -174,7 +174,7 @@ HB_FUNC( QT_QDIRMODEL_ICONPROVIDER )
  */
 HB_FUNC( QT_QDIRMODEL_INDEX )
 {
-   hb_retptr( new QModelIndex( hbqt_par_QDirModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNIL( 4 ) ? QModelIndex() : *hbqt_par_QModelIndex( 4 ) ) ) ) );
+   hb_retptr( new QModelIndex( hbqt_par_QDirModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ) );
 }
 
 /*
@@ -278,7 +278,7 @@ HB_FUNC( QT_QDIRMODEL_RMDIR )
  */
 HB_FUNC( QT_QDIRMODEL_ROWCOUNT )
 {
-   hb_retni( hbqt_par_QDirModel( 1 )->rowCount( ( HB_ISNIL( 2 ) ? QModelIndex() : *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retni( hbqt_par_QDirModel( 1 )->rowCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -374,7 +374,7 @@ HB_FUNC( QT_QDIRMODEL_SUPPORTEDDROPACTIONS )
  */
 HB_FUNC( QT_QDIRMODEL_REFRESH )
 {
-   hbqt_par_QDirModel( 1 )->refresh( ( HB_ISNIL( 2 ) ? QModelIndex() : *hbqt_par_QModelIndex( 2 ) ) );
+   hbqt_par_QDirModel( 1 )->refresh( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) );
 }
 
 

@@ -183,7 +183,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_DOCUMENTMARGIN )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_DRAWCONTENTS )
 {
-   hbqt_par_QTextDocument( 1 )->drawContents( hbqt_par_QPainter( 2 ), ( HB_ISNIL( 3 ) ? QRectF() : *hbqt_par_QRectF( 3 ) ) );
+   hbqt_par_QTextDocument( 1 )->drawContents( hbqt_par_QPainter( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QRectF( 3 ) : QRectF() ) );
 }
 
 /*
@@ -559,7 +559,7 @@ HB_FUNC( QT_QTEXTDOCUMENT_TEXTWIDTH )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_TOHTML )
 {
-   hb_retc( hbqt_par_QTextDocument( 1 )->toHtml( ( HB_ISNIL( 2 ) ? QByteArray() : *hbqt_par_QByteArray( 2 ) ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextDocument( 1 )->toHtml( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ) ).toLatin1().data() );
 }
 
 /*

@@ -162,7 +162,7 @@ HB_FUNC( QT_QIMAGE_CONVERTTOFORMAT )
  */
 HB_FUNC( QT_QIMAGE_COPY )
 {
-   hb_retptr( new QImage( hbqt_par_QImage( 1 )->copy( ( HB_ISNIL( 2 ) ? QRect() : *hbqt_par_QRect( 2 ) ) ) ) );
+   hb_retptr( new QImage( hbqt_par_QImage( 1 )->copy( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) ) ) );
 }
 
 /*

@@ -59,6 +59,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QModelIndex>
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -83,6 +84,12 @@ class Slots: public QObject
    void stateChanged( int state );
    void pressed();
    void released();
+   void activated( int index );
+   void currentIndexChanged( int index );
+   void highlighted( int index );
+   void returnPressed();
+   void clicked_model( const QModelIndex & index );
+   void viewportEntered();
 };
 
 #endif

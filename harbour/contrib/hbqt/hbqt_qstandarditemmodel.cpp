@@ -125,7 +125,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_INDEXFROMITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTCOLUMN )
 {
-   hb_retl( hbqt_par_QStandardItemModel( 1 )->insertColumn( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? QModelIndex() : *hbqt_par_QModelIndex( 3 ) ) ) );
+   hb_retl( hbqt_par_QStandardItemModel( 1 )->insertColumn( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -133,7 +133,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTCOLUMN )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTROW )
 {
-   hb_retl( hbqt_par_QStandardItemModel( 1 )->insertRow( hb_parni( 2 ), ( HB_ISNIL( 3 ) ? QModelIndex() : *hbqt_par_QModelIndex( 3 ) ) ) );
+   hb_retl( hbqt_par_QStandardItemModel( 1 )->insertRow( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
 }
 
 /*

@@ -118,7 +118,7 @@ HB_FUNC( QT_QWEBVIEW_LOAD )
  */
 HB_FUNC( QT_QWEBVIEW_LOAD_1 )
 {
-   hbqt_par_QWebView( 1 )->load( *hbqt_par_QNetworkRequest( 2 ), ( HB_ISNUM( 3 ) ? ( QNetworkAccessManager::Operation ) hb_parni( 3 ) : ( QNetworkAccessManager::Operation ) QNetworkAccessManager::GetOperation ), ( HB_ISNIL( 4 ) ? QByteArray() : *hbqt_par_QByteArray( 4 ) ) );
+   hbqt_par_QWebView( 1 )->load( *hbqt_par_QNetworkRequest( 2 ), ( HB_ISNUM( 3 ) ? ( QNetworkAccessManager::Operation ) hb_parni( 3 ) : ( QNetworkAccessManager::Operation ) QNetworkAccessManager::GetOperation ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QByteArray( 4 ) : QByteArray() ) );
 }
 
 /*
@@ -150,7 +150,7 @@ HB_FUNC( QT_QWEBVIEW_SELECTEDTEXT )
  */
 HB_FUNC( QT_QWEBVIEW_SETCONTENT )
 {
-   hbqt_par_QWebView( 1 )->setContent( *hbqt_par_QByteArray( 2 ), hbqt_par_QString( 3 ), ( HB_ISNIL( 4 ) ? QUrl() : *hbqt_par_QUrl( 4 ) ) );
+   hbqt_par_QWebView( 1 )->setContent( *hbqt_par_QByteArray( 2 ), hbqt_par_QString( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QUrl( 4 ) : QUrl() ) );
 }
 
 /*
@@ -158,7 +158,7 @@ HB_FUNC( QT_QWEBVIEW_SETCONTENT )
  */
 HB_FUNC( QT_QWEBVIEW_SETHTML )
 {
-   hbqt_par_QWebView( 1 )->setHtml( hbqt_par_QString( 2 ), ( HB_ISNIL( 3 ) ? QUrl() : *hbqt_par_QUrl( 3 ) ) );
+   hbqt_par_QWebView( 1 )->setHtml( hbqt_par_QString( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QUrl( 3 ) : QUrl() ) );
 }
 
 /*

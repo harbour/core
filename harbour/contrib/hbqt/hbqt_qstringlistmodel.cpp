@@ -93,7 +93,7 @@ HB_FUNC( QT_QSTRINGLISTMODEL_FLAGS )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_INSERTROWS )
 {
-   hb_retl( hbqt_par_QStringListModel( 1 )->insertRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNIL( 4 ) ? QModelIndex() : *hbqt_par_QModelIndex( 4 ) ) ) );
+   hb_retl( hbqt_par_QStringListModel( 1 )->insertRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -101,7 +101,7 @@ HB_FUNC( QT_QSTRINGLISTMODEL_INSERTROWS )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_REMOVEROWS )
 {
-   hb_retl( hbqt_par_QStringListModel( 1 )->removeRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNIL( 4 ) ? QModelIndex() : *hbqt_par_QModelIndex( 4 ) ) ) );
+   hb_retl( hbqt_par_QStringListModel( 1 )->removeRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
 }
 
 /*
@@ -109,7 +109,7 @@ HB_FUNC( QT_QSTRINGLISTMODEL_REMOVEROWS )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_ROWCOUNT )
 {
-   hb_retni( hbqt_par_QStringListModel( 1 )->rowCount( ( HB_ISNIL( 2 ) ? QModelIndex() : *hbqt_par_QModelIndex( 2 ) ) ) );
+   hb_retni( hbqt_par_QStringListModel( 1 )->rowCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
 }
 
 /*

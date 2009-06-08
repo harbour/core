@@ -54,10 +54,19 @@
 
 #define QT_PTROF( oObj )  ( oObj:pPtr )
 
-#define QT_EVE_TRIGGERED   "triggered(bool)"
-#define QT_EVE_TRIGGERED_B "triggered(bool)"
-#define QT_EVE_HOVERED     "hovered()"
-#define QT_EVE_CLICKED     "clicked()"
+#define QT_EVE_TRIGGERED             "triggered()"
+#define QT_EVE_TRIGGERED_B           "triggered(bool)"
+#define QT_EVE_HOVERED               "hovered()"
+#define QT_EVE_CLICKED               "clicked()"
+#define QT_EVE_STATECHANGED_I        "stateChanged(int)"
+#define QT_EVE_PRESSED               "pressed()"
+#define QT_EVE_RELEASED              "released()"
+#define QT_EVE_ACTIVATED_I           "activated(int)"
+#define QT_EVE_CURRENTINDEXCHANGED_I "currentIndexChanged(int)"
+#define QT_EVE_HIGHLIGHTED_I         "highlighted(int)"
+#define QT_EVE_RETURNPRESSED         "returnPressed()"
+#define QT_EVE_CLICKED_M             "clicked(QModelIndex)"
+#define QT_EVE_VIEWPORTENTERED       "viewportEntered()"
 
 /*----------------------------------------------------------------------*/
 /*
@@ -93,6 +102,7 @@ PROCEDURE Main()
    LOCAL oPS, oPPrv, oMB, oWZ, oCD, oWP, oSBar, oStyle
 
    oWnd := QMainWindow():new()
+   oWnd:setMouseTracking( .t. )
    oWnd:setWindowTitle( "Testing - QMainWindow, QMenu, QMenuBar and QAction " )
    oWnd:setWindowIcon( "test" )
    pIcon := oWnd:windowIcon()
@@ -327,7 +337,8 @@ STATIC FUNCTION Build_TreeView( oWnd )
    LOCAL oTV, oDirModel
 
    oTV := QTreeView():new( QT_PTROF( oWnd ) )
-
+   oTV:setMouseTracking( .t. )
+   Qt_Connect_Signal( QT_PTROF( oTV ), QT_EVE_HOVERED, {|o,i| uiDebug( "oTV:hovered" ) } )
    oDirModel := QDirModel():new( QT_PTROF( oTV ) )
    oTV:setModel( QT_PTROF( oDirModel ) )
    oTV:move( 5, 7 )
@@ -339,9 +350,11 @@ STATIC FUNCTION Build_TreeView( oWnd )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
-   LOCAL oListBox, oStrList, oStrModel
+   LOCAL oListBox, oStrList, oStrModel, oAct
 
    oListBox := QListView():New( QT_PTROF( oWnd ) )
+   oListBox:setMouseTracking( .t. )
+   Qt_Connect_Signal( QT_PTROF( oListBox ), QT_EVE_HOVERED, {|o,i| uiDebug( "oListBox:hovered" ) } )
 
    oStrList := QStringList():new( QT_PTROF( oListBox ) )
 
@@ -384,6 +397,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton, oVariant
 
    oEdit := QLineEdit():new( QT_PTROF( oWnd ) )
+   Qt_Connect_Signal( QT_PTROF( oEdit ), QT_EVE_RETURNPRESSED, {|o,i| MsgInfo( oEdit:text() ) } )
    oEdit:move( 5, 10 )
    oEdit:resize( 345, 30 )
    oEdit:setMaxLength( 40 )
@@ -392,15 +406,17 @@ STATIC FUNCTION Build_Controls( oWnd )
    oEdit:show()
 
    oComboBox := QComboBox():New( QT_PTROF( oWnd ) )
-
    oComboBox:addItem( "First"  )
    oComboBox:addItem( "Second" )
    oComboBox:addItem( "Third"  )
+   Qt_Connect_Signal( QT_PTROF( oComboBox ), QT_EVE_HIGHLIGHTED_I        , {|o,i| uiDebug( oComboBox:itemText( i ) ) } )
+   Qt_Connect_Signal( QT_PTROF( oComboBox ), QT_EVE_CURRENTINDEXCHANGED_I, {|o,i| MsgInfo( oComboBox:itemText( i ) ) } )
    oComboBox:move( 5, 60 )
    oComboBox:resize( 345, 30 )
    oComboBox:show()
 
    oCheckBox := QCheckBox():New( QT_PTROF( oWnd ) )
+   Qt_Connect_Signal( QT_PTROF( oCheckBox ), QT_EVE_STATECHANGED_I, {|o,i| MsgInfo( IF( i == 0,"Uncheckd","Checked" ) ) } )
    oCheckBox:setText( "Testing CheckBox HbQt" )
    oCheckBox:move( 5, 110 )
    oCheckBox:resize( 345, 30 )
@@ -412,6 +428,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    oSpinBox:Show()
 
    oRadioButton := QRadioButton():New( QT_PTROF( oWnd ) )
+   Qt_Connect_Signal( QT_PTROF( oRadioButton ), QT_EVE_CLICKED, {|o,i| MsgInfo( "Checked" ) } )
    oRadioButton:Move( 5, 210 )
    oRadioButton:ReSize( 345, 30 )
    oRadioButton:Show()
@@ -718,3 +735,4 @@ HB_FUNC( UIDEBUG )
 #PRAGMA ENDDUMP
 
 /*----------------------------------------------------------------------*/
+
