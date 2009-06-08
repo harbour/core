@@ -200,7 +200,7 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
 
    Windows (recommended)
    -------
-   mingw    - MinGW GNU C
+   mingw    - MinGW GNU C 3.4.2 and above
    mingw64  - MinGW GNU C x86-64
    msvc     - Microsoft Visual C++
    msvc64   - Microsoft Visual C++ x86-64
@@ -213,7 +213,7 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    icc      - Intel(R) C/C++
    iccia64  - Intel(R) C/C++ IA-64
    pocc     - Pelles C 4.5 and above
-   pocc64   - Pelles C 5.0 x86-64 and above
+   pocc64   - Pelles C x86-64 5.0 and above
    xcc      - Pelles C for xhb
    cygwin   - Cygwin GNU C
 
@@ -221,7 +221,7 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    ----------
    mingwarm - MinGW GNU C ARM
    msvcarm  - Microsoft Visual C++ ARM
-   poccarm  - Pelles C 5.0 ARM and above
+   poccarm  - Pelles C ARM 5.0 and above
 
    DOS (32-bit)
    ---
