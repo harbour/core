@@ -17,6 +17,18 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-09 15:59 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+  * harbour-win-spec
+  * harbour-wce-spec
+  * mpkg_win.bat
+  * include/hbver.h
+  * harbour.spec
+    * Changed version to 2.0.0beta1 (from 2.0.0dev)
+    ; NOTE: Everyone is encouraged to create binary releases
+            for various platforms and try this new with real apps.
+            We can even upload these binary releases to
+            sf.net.
+
 2009-06-09 14:56 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   * utils/hbmk2/hbmk2.prg
     * Synced HB_DYNLIB handling with GNU Make. This means

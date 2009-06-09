@@ -27,7 +27,7 @@ if not "%OS%" == "Windows_NT" goto END
 setlocal
 
 rem ; Basic setup
-set HB_VERSION=2.0.0dev
+set HB_VERSION=2.0.0beta1
 if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=win
 set HB_PKGNAME=harbour-%HB_VERSION%-%HB_ARCHITECTURE%-%HB_COMPILER%
 set HB_DIRNAME=harbour-%HB_ARCHITECTURE%-%HB_COMPILER%
