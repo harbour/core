@@ -1090,7 +1090,7 @@ void hb_clsDoInit( void )
          hb_itemSetNil( pReturn );
          hb_vmPushDynSym( pFuncSym );
          hb_vmPushNil();
-         hb_vmDo( 0 );
+         hb_vmProc( 0 );
          if( HB_IS_OBJECT( pReturn ) )
             *( s_puiHandles[i] ) = pReturn->item.asArray.value->uiClass;
       }
@@ -3788,7 +3788,7 @@ HB_FUNC( __CLSINSTSUPER )
       {
          hb_vmPushSymbol( pClassFuncSym );
          hb_vmPushNil();
-         hb_vmDo( 0 ); /* Execute super class */
+         hb_vmProc( 0 ); /* Execute super class */
 
          if( hb_vmRequestQuery() == 0 )
          {

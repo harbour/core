@@ -822,7 +822,7 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
       if( fSend )
          hb_vmSend( ( USHORT ) ( ulPCount - 1 ) );
       else
-         hb_vmDo( ( USHORT ) ( ulPCount - 1 ) );
+         hb_vmProc( ( USHORT ) ( ulPCount - 1 ) );
    }
    else
    {

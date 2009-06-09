@@ -156,7 +156,7 @@ PHB_ITEM hb_evalLaunch( PHB_EVALINFO pEvalInfo )
          if( pItem )
             hb_vmSend( uiParam );
          else
-            hb_vmDo( uiParam );
+            hb_vmProc( uiParam );
          pResult = hb_itemNew( hb_stackReturnItem() );
       }
    }
@@ -252,7 +252,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, ULONG ulPCount, ... )
             if( pItem )
                hb_vmSend( ( USHORT ) ulPCount );
             else
-               hb_vmDo( ( USHORT ) ulPCount );
+               hb_vmProc( ( USHORT ) ulPCount );
 
             pResult = hb_itemNew( hb_stackReturnItem() );
             hb_vmRequestRestore();
@@ -295,7 +295,7 @@ PHB_ITEM hb_itemDoC( const char * szFunc, ULONG ulPCount, ... )
                   hb_vmPush( va_arg( va, PHB_ITEM ) );
                va_end( va );
             }
-            hb_vmDo( ( unsigned short ) ulPCount );
+            hb_vmProc( ( unsigned short ) ulPCount );
             pResult = hb_itemNew( hb_stackReturnItem() );
             hb_vmRequestRestore();
          }
@@ -496,7 +496,7 @@ HB_FUNC( HB_EXECFROMARRAY )
       if( pSelf )
          hb_vmSend( usPCount );
       else
-         hb_vmDo( usPCount );
+         hb_vmProc( usPCount );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -558,7 +558,7 @@ BOOL hb_execFromArray( PHB_ITEM pParam )
          if( pSelf )
             hb_vmSend( usPCount );
          else
-            hb_vmDo( usPCount );
+            hb_vmProc( usPCount );
 
          return TRUE;
       }
@@ -577,7 +577,11 @@ HB_FUNC( HB_EXECMSG )
    int iParams = hb_pcount();
 
    if( iParams >= 2 && ISSYMBOL( 1 ) )
+   {
+      PHB_ITEM pBase = hb_stackBaseItem();
+      pBase->item.asSymbol.paramcnt = pBase->item.asSymbol.paramdeclcnt = 0;
       hb_vmProc( ( USHORT ) ( iParams - 2 ) );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

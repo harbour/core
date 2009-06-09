@@ -186,7 +186,7 @@ HB_FUNC( HB_LIBDO )
             hb_vmPush( hb_stackItemFromBase( uiParam ) );
          }
 
-         hb_vmDo( ( USHORT ) ( uiPCount - 1 ) );
+         hb_vmProc( ( USHORT ) ( uiPCount - 1 ) );
       }
    }
 }

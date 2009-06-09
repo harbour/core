@@ -77,7 +77,7 @@ HB_FUNC( EVAL )
          hb_vmPush( hb_stackItemFromBase( uiParam ) );
       }
 
-      hb_vmDo( ( USHORT ) ( uiPCount - 1 ) );
+      hb_vmSend( ( USHORT ) ( uiPCount - 1 ) );
    }
    else
    {

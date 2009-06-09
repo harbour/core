@@ -192,7 +192,7 @@ static void hb_hrbInitStatic( PHRB_BODY pHrbBody )
 
             hb_vmPushSymbol( &(pHrbBody->pSymRead[ ul ]) );
             hb_vmPushNil();
-            hb_vmDo( 0 );
+            hb_vmProc( 0 );
 
          }
       }
@@ -219,7 +219,7 @@ static void hb_hrbInit( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
                hb_vmPushNil();
                for( i = 0; i < iPCount; i++ )
                   hb_vmPush( pParams[ i ] );
-               hb_vmDo( ( USHORT ) iPCount );
+               hb_vmProc( ( USHORT ) iPCount );
                if( hb_vmRequestQuery() != 0 )
                   break;
             }
@@ -247,7 +247,7 @@ static void hb_hrbExit( PHRB_BODY pHrbBody )
             {
                hb_vmPushSymbol( pHrbBody->pSymRead + ul );
                hb_vmPushNil();
-               hb_vmDo( 0 );
+               hb_vmProc( 0 );
                if( hb_vmRequestQuery() != 0 )
                   break;
             }
@@ -584,7 +584,7 @@ static void hb_hrbDo( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
       for( i = 0; i < iPCount; i++ )
          hb_vmPush( pParams[ i ] );
 
-      hb_vmDo( ( USHORT ) iPCount );
+      hb_vmProc( ( USHORT ) iPCount );
 
       pRetVal = hb_itemNew( NULL );
       hb_itemMove( pRetVal, hb_stackReturnItem() );

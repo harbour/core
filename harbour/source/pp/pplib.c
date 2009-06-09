@@ -126,7 +126,7 @@ static void hb_pp_StdRules( PHB_ITEM ppItem )
       hb_vmPushDynSym( s_pDynSym );
       hb_vmPushNil();
       hb_vmPush( ppItem );
-      hb_vmDo( 1 );
+      hb_vmProc( 1 );
    }
 }
 

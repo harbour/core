@@ -2143,7 +2143,7 @@ int hb_rddRegister( const char * szDriver, USHORT uiType )
    hb_vmPushPointer( ( void * ) &pRddNewNode->pTable );
    hb_vmPushPointer( ( void * ) &pRddNewNode->pSuperTable );
    hb_vmPushInteger( s_uiRddCount );
-   hb_vmDo( 4 );
+   hb_vmProc( 4 );
    if( hb_parni( -1 ) != HB_SUCCESS )
       iResult = 3;                        /* Invalid FUNCTABLE */
    else

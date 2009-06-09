@@ -93,7 +93,7 @@ static PHB_ITEM hb_pp_Get( void )
       {
          hb_vmPushDynSym( s_pDynSym );
          hb_vmPushNil();
-         hb_vmDo( 0 );
+         hb_vmProc( 0 );
       }
       if( hb_param( -1, HB_IT_POINTER ) )
          s_pp = hb_itemNew( hb_param( -1, HB_IT_POINTER ) );
@@ -120,11 +120,11 @@ HB_FUNC( __PPADDRULE )
             hb_vmPush( pLine );
          else
             hb_vmPushNil();
-         hb_vmDo( 2 );
+         hb_vmProc( 2 );
       }
    }
 }
-   
+
 HB_FUNC( __PREPROCESS )
 {
    static PHB_DYNS s_pDynSym = NULL;
@@ -143,7 +143,7 @@ HB_FUNC( __PREPROCESS )
             hb_vmPush( pLine );
          else
             hb_vmPushNil();
-         hb_vmDo( 2 );
+         hb_vmProc( 2 );
       }
    }
 }

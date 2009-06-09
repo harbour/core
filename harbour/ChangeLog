@@ -17,6 +17,30 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-09 10:38 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/eval.c
+    * update number of parameters in HB_EXECMSG() to keep the HVM stack
+      clean for any external code which can try to make some HVM stack
+      tracing/scanning
+
+  * harbour/source/vm/evalhb.c
+    ! use hb_vmSend() instead of hb_vmDo()
+
+  * harbour/source/pp/pplib.c
+  * harbour/source/pp/pplib3.c
+  * harbour/source/vm/runner.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/thread.c
+  * harbour/source/vm/eval.c
+  * harbour/source/vm/dynlibhb.c
+  * harbour/source/vm/classes.c
+  * harbour/source/rtl/do.c
+  * harbour/source/rtl/xhelp.c
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbf1.c
+    % use hb_vmProc() instead of hb_vmDo() in all places where context is
+      well known as function or procedure call
+
 2009-06-08 22:36 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvgcore.c
   * harbour/contrib/gtwvg/wvgcuig.c

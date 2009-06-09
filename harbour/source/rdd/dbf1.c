@@ -479,12 +479,12 @@ static BOOL hb_dbfTriggerDo( DBFAREAP pArea, int iEvent,
 #else
             hb_vmPush( pItem );
 #endif
-            hb_vmDo( 4 );
+            hb_vmProc( 4 );
          }
          else
          {
             /* SIx3 makes: hb_vmPushInteger( 0 ); */
-            hb_vmDo( 3 );
+            hb_vmProc( 3 );
          }
          fResult = hb_parl( -1 );
          hb_vmRequestRestore();

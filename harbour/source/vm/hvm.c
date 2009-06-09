@@ -377,7 +377,7 @@ static void hb_vmDoInitClip( void )
    {
       hb_vmPushSymbol( pDynSym->pSymbol );
       hb_vmPushNil();
-      hb_vmDo( 0 );
+      hb_vmProc( 0 );
    }
 }
 
@@ -1029,7 +1029,7 @@ void hb_vmInit( BOOL bStartMainProc )
          }
       }
 
-      hb_vmDo( ( USHORT ) iArgCount ); /* invoke it with number of supplied parameters */
+      hb_vmProc( ( USHORT ) iArgCount ); /* invoke it with number of supplied parameters */
    }
 }
 
@@ -1569,25 +1569,25 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* Execution */
 
          case HB_P_DO:
-            hb_vmDo( HB_PCODE_MKUSHORT( &pCode[ 1 ] ) );
+            hb_vmProc( HB_PCODE_MKUSHORT( &pCode[ 1 ] ) );
             pCode += 3;
             break;
 
          case HB_P_DOSHORT:
-            hb_vmDo( pCode[ 1 ] );
+            hb_vmProc( pCode[ 1 ] );
             pCode += 2;
             break;
 
          case HB_P_FUNCTION:
             hb_itemSetNil( hb_stackReturnItem() );
-            hb_vmDo( HB_PCODE_MKUSHORT( &pCode[ 1 ] ) );
+            hb_vmProc( HB_PCODE_MKUSHORT( &pCode[ 1 ] ) );
             hb_stackPushReturn();
             pCode += 3;
             break;
 
          case HB_P_FUNCTIONSHORT:
             hb_itemSetNil( hb_stackReturnItem() );
-            hb_vmDo( pCode[ 1 ] );
+            hb_vmProc( pCode[ 1 ] );
             hb_stackPushReturn();
             pCode += 2;
             break;
@@ -5426,7 +5426,7 @@ static void hb_vmMacroDo( USHORT uiArgSets )
 
    lArgs = hb_vmArgsJoin( -1, uiArgSets );
    hb_stackDecrease( uiArgSets );
-   hb_vmDo( ( USHORT ) lArgs );
+   hb_vmProc( ( USHORT ) lArgs );
 }
 
 static void hb_vmMacroFunc( USHORT uiArgSets )
@@ -5439,7 +5439,7 @@ static void hb_vmMacroFunc( USHORT uiArgSets )
    lArgs = hb_vmArgsJoin( -1, uiArgSets );
    hb_stackDecrease( uiArgSets );
    hb_itemSetNil( hb_stackReturnItem() );
-   hb_vmDo( ( USHORT ) lArgs );
+   hb_vmProc( ( USHORT ) lArgs );
    hb_stackPushReturn();
 }
 
@@ -5989,7 +5989,7 @@ static void hb_vmDebugEntry( int nMode, int nLine, char *szName, int nIndex, PHB
          hb_vmPushNil();
          hb_vmPushInteger( HB_DBG_MODULENAME );
          hb_vmPushString( szName, strlen( szName ) );
-         hb_vmDo( 2 );
+         hb_vmProc( 2 );
          break;
 
       case HB_DBG_LOCALNAME:
@@ -5998,7 +5998,7 @@ static void hb_vmDebugEntry( int nMode, int nLine, char *szName, int nIndex, PHB
          hb_vmPushInteger( HB_DBG_LOCALNAME );
          hb_vmPushInteger( nIndex );
          hb_vmPushString( szName, strlen( szName ) );
-         hb_vmDo( 3 );
+         hb_vmProc( 3 );
          break;
 
       case HB_DBG_STATICNAME:
@@ -6008,7 +6008,7 @@ static void hb_vmDebugEntry( int nMode, int nLine, char *szName, int nIndex, PHB
          hb_vmPush( pFrame );                   /* current static frame */
          hb_vmPushInteger( nIndex );            /* variable index */
          hb_vmPushString( szName, strlen( szName ) );
-         hb_vmDo( 4 );
+         hb_vmProc( 4 );
          break;
 
       case HB_DBG_SHOWLINE:
@@ -6016,7 +6016,7 @@ static void hb_vmDebugEntry( int nMode, int nLine, char *szName, int nIndex, PHB
          hb_vmPushNil();
          hb_vmPushInteger( HB_DBG_SHOWLINE );
          hb_vmPushInteger( nLine );
-         hb_vmDo( 2 );
+         hb_vmProc( 2 );
          break;
 
       case HB_DBG_ENDPROC:
@@ -6024,7 +6024,7 @@ static void hb_vmDebugEntry( int nMode, int nLine, char *szName, int nIndex, PHB
          hb_vmPushDynSym( s_pDynsDbgEntry );
          hb_vmPushNil();
          hb_vmPushInteger( HB_DBG_ENDPROC );
-         hb_vmDo( 1 );
+         hb_vmProc( 1 );
          hb_stackPopReturn();       /* restores the previous returned value */
          break;
 
@@ -6033,14 +6033,14 @@ static void hb_vmDebugEntry( int nMode, int nLine, char *szName, int nIndex, PHB
          hb_vmPushDynSym( s_pDynsDbgEntry );
          hb_vmPushNil();
          hb_vmPushInteger( HB_DBG_GETENTRY );
-         hb_vmDo( 1 );
+         hb_vmProc( 1 );
          break;
 
       case HB_DBG_VMQUIT:
          hb_vmPushDynSym( s_pDynsDbgEntry );
          hb_vmPushNil();
          hb_vmPushInteger( HB_DBG_VMQUIT );
-         hb_vmDo( 1 );
+         hb_vmProc( 1 );
          break;
    }
 }
@@ -7477,7 +7477,7 @@ void hb_vmInitSymbolGroup( void * hNewDynLib, int argc, char * argv[] )
                   {
                      hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
                      hb_vmPushNil();
-                     hb_vmDo( 0 );
+                     hb_vmProc( 0 );
                   }
                }
                pLastSymbols->fInitStatics = FALSE;
@@ -7510,7 +7510,7 @@ void hb_vmInitSymbolGroup( void * hNewDynLib, int argc, char * argv[] )
                         {
                            hb_vmPushString( argv[i], strlen( argv[i] ) );
                         }
-                        hb_vmDo( ( USHORT ) argc );
+                        hb_vmProc( ( USHORT ) argc );
                      }
                   }
                }
@@ -7546,7 +7546,7 @@ void hb_vmExitSymbolGroup( void * hDynLib )
                   {
                      hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
                      hb_vmPushNil();
-                     hb_vmDo( 0 );
+                     hb_vmProc( 0 );
                   }
                }
             }
@@ -7837,7 +7837,7 @@ static void hb_vmDoInitStatics( void )
             {
                hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
                hb_vmPushNil();
-               hb_vmDo( 0 );
+               hb_vmProc( 0 );
             }
          }
          pLastSymbols->fInitStatics = FALSE;
@@ -7884,7 +7884,7 @@ static void hb_vmDoInitFunctions( void )
                   }
                }
 
-               hb_vmDo( ( USHORT ) iArgCount );
+               hb_vmProc( ( USHORT ) iArgCount );
             }
          }
       }
@@ -7920,7 +7920,7 @@ static void hb_vmDoExitFunctions( void )
                {
                   hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
                   hb_vmPushNil();
-                  hb_vmDo( 0 );
+                  hb_vmProc( 0 );
                   if( hb_stackGetActionRequest() )
                      /* QUIT or BREAK was issued - stop processing
                      */
@@ -8780,7 +8780,7 @@ BOOL hb_xvmDo( USHORT uiParams )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmDo(%hu)", uiParams));
 
-   hb_vmDo( uiParams );
+   hb_vmProc( uiParams );
 
    HB_XVM_RETURN
 }
@@ -8792,7 +8792,7 @@ BOOL hb_xvmFunction( USHORT uiParams )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmFunction(%hu)", uiParams));
 
    hb_itemSetNil( hb_stackReturnItem() );
-   hb_vmDo( uiParams );
+   hb_vmProc( uiParams );
    hb_stackPushReturn();
 
    HB_XVM_RETURN
