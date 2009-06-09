@@ -984,14 +984,14 @@ HB_FUNC( WVT_SETPEN )
    COLORREF crColor;
    HPEN     hPen;
 
-   if ( ISNIL( 1 ) )
+   if ( !HB_ISNUM( 1 ) )
    {
       hb_retl( FALSE );
    }
 
    iPenStyle = hb_parni( 1 ) ;
-   iPenWidth = ISNIL( 2 ) ? 0 : hb_parni( 2 );
-   crColor   = ISNIL( 3 ) ? RGB( 0,0,0 ) : ( COLORREF ) hb_parnl( 3 );
+   iPenWidth = hb_parni( 2 );
+   crColor   = HB_ISNUM( 3 ) ? ( COLORREF ) hb_parnl( 3 ) : RGB( 0,0,0 );
 
    hPen      = CreatePen( iPenStyle, iPenWidth, crColor );
 
@@ -1022,14 +1022,14 @@ HB_FUNC( WVT_SETBRUSH )
    HBRUSH   hBrush;
    LOGBRUSH lb = { 0,0,0 };
 
-   if ( ISNIL( 1 ) )
+   if ( !HB_ISNUM( 1 ) )
    {
       hb_retl( FALSE );
    }
 
    lb.lbStyle = hb_parnl( 1 );
-   lb.lbColor = ISNIL( 2 ) ? RGB( 0,0,0 ) : ( COLORREF ) hb_parnl( 2 ) ;
-   lb.lbHatch = ISNIL( 3 ) ? 0 : hb_parnl( 3 );
+   lb.lbColor = HB_ISNUM( 2 ) ? ( COLORREF ) hb_parnl( 2 ) : RGB( 0,0,0 );
+   lb.lbHatch = hb_parnl( 3 );
 #if ! defined( HB_OS_WIN_CE )
    hBrush     = CreateBrushIndirect( &lb );
 #else
@@ -1217,22 +1217,22 @@ HB_FUNC( WVT_DRAWLABEL )
    HFONT    hFont, hOldFont, hOldFontGui;
    LOGFONT  logfont;// = { 0 };
 
-   logfont.lfEscapement     = ( ISNIL(  5 ) ? 0 : ( hb_parni( 5 ) * 10 ) );
+   logfont.lfEscapement     = hb_parni( 5 ) * 10;
    logfont.lfOrientation    = 0;
-   logfont.lfWeight         = ( ISNIL( 11 ) ? 0 : hb_parni( 11 ) );
-   logfont.lfItalic         = ( ISNIL( 14 ) ? 0 : ( BYTE ) hb_parl( 14 ) );
-   logfont.lfUnderline      = ( ISNIL( 15 ) ? 0 : ( BYTE ) hb_parl( 15 ) );
-   logfont.lfStrikeOut      = ( ISNIL( 16 ) ? 0 : ( BYTE ) hb_parl( 16 ) );
-   logfont.lfCharSet        = ( ISNIL( 13 ) ? ( BYTE ) _s->CodePage : ( BYTE ) hb_parni( 13 ) );
+   logfont.lfWeight         = hb_parni( 11 );
+   logfont.lfItalic         = ( BYTE ) hb_parl( 14 );
+   logfont.lfUnderline      = ( BYTE ) hb_parl( 15 );
+   logfont.lfStrikeOut      = ( BYTE ) hb_parl( 16 );
+   logfont.lfCharSet        = ( !HB_ISNUM( 13 ) ? ( BYTE ) _s->CodePage : ( BYTE ) hb_parni( 13 ) );
    logfont.lfOutPrecision   = 0;
    logfont.lfClipPrecision  = 0;
-   logfont.lfQuality        = ( ISNIL( 12 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 12 ) );
+   logfont.lfQuality        = ( !HB_ISNUM( 12 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 12 ) );
    logfont.lfPitchAndFamily = FF_DONTCARE;
-   logfont.lfHeight         = ( ISNIL(  9 ) ? _s->fontHeight : hb_parni(  9 ) );
-   logfont.lfWidth          = ( ISNIL( 10 ) ? (_s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 10 ) );
+   logfont.lfHeight         = ( !HB_ISNUM(  9 ) ? _s->fontHeight : hb_parni(  9 ) );
+   logfont.lfWidth          = ( !HB_ISNUM( 10 ) ? (_s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 10 ) );
 
 
-   HB_TCHAR_CPTO( logfont.lfFaceName, ( ISNIL( 8 ) ? _s->fontFace : hb_parcx( 8 ) ), sizeof( logfont.lfFaceName )-1 );
+   HB_TCHAR_CPTO( logfont.lfFaceName, ( !HB_ISCHAR( 8 ) ? _s->fontFace : hb_parcx( 8 ) ), sizeof( logfont.lfFaceName )-1 );
 
    hFont = CreateFontIndirect( &logfont );
    if ( hFont )
@@ -1247,7 +1247,7 @@ HB_FUNC( WVT_DRAWLABEL )
 
       SetBkColor( _s->hdc, bgClr );
       SetTextColor( _s->hdc, fgClr );
-      SetTextAlign( _s->hdc, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
+      SetTextAlign( _s->hdc, ( !HB_ISNUM( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
       hOldFont = ( HFONT ) SelectObject( _s->hdc, hFont );
 
       ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
@@ -1258,7 +1258,7 @@ HB_FUNC( WVT_DRAWLABEL )
       {
          SetBkColor( _s->hGuiDC, bgClr );
          SetTextColor( _s->hGuiDC, fgClr );
-         SetTextAlign( _s->hGuiDC, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
+         SetTextAlign( _s->hGuiDC, ( !HB_ISNUM( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
          hOldFontGui = ( HFONT ) SelectObject( _s->hGuiDC, hFont );
 
          ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
@@ -1296,7 +1296,7 @@ HB_FUNC( WVT_DRAWOUTLINE )
 
    if ( ISNUM( 5 ) )
    {
-      hPen = CreatePen( hb_parni( 5 ), 0, ( ISNIL( 7 ) ? 0 : ( COLORREF ) hb_parnl( 7 ) ) );
+      hPen = CreatePen( hb_parni( 5 ), 0, ( !HB_ISNUM( 7 ) ? 0 : ( COLORREF ) hb_parnl( 7 ) ) );
       if ( hPen )
       {
          hOldPen = (HPEN) SelectObject( _s->hdc, hPen );
@@ -1354,12 +1354,12 @@ HB_FUNC( WVT_DRAWLINE )
    HPEN     hPen, hOldPen, hOldPenGUI;
 
    /*   Resolve Parameters   */
-   iOrient = ISNIL( 5 ) ? 0 : hb_parni( 5 );
-   iFormat = ISNIL( 6 ) ? 0 : hb_parni( 6 );
-   iAlign  = ISNIL( 7 ) ? 0 : hb_parni( 7 );
-   iStyle  = ISNIL( 8 ) ? 0 : hb_parni( 8 );
-   iThick  = ISNIL( 9 ) ? 0 : hb_parni( 9 );
-   cr      = ISNIL(10 ) ? 0 : ( COLORREF ) hb_parnl( 10 );
+   iOrient = hb_parni( 5 );
+   iFormat = hb_parni( 6 );
+   iAlign  = hb_parni( 7 );
+   iStyle  = hb_parni( 8 );
+   iThick  = hb_parni( 9 );
+   cr      = !HB_ISNUM( 10 ) ? 0 : ( COLORREF ) hb_parnl( 10 );
 
    x       = iLeft ;
    y       = iTop ;
@@ -1612,8 +1612,8 @@ HB_FUNC( WVT_DRAWROUNDRECT )
    int iRight  = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parni( 5,4 );
    int iHt, iWd;
 
-   iHt     = ISNIL( 6 ) ? 0 : hb_parni( 6 );
-   iWd     = ISNIL( 7 ) ? 0 : hb_parni( 7 );
+   iHt     = hb_parni( 6 );
+   iWd     = hb_parni( 7 );
 
    SelectObject( _s->hdc, _s->currentBrush );
    SelectObject( _s->hdc, _s->currentPen   );
@@ -1810,11 +1810,11 @@ HB_FUNC( WVT_DRAWBUTTON )
    HBRUSH   hBrush;
 
    BOOL     bText     = ISCHAR( 5 );
-   BOOL     bImage    = !( ISNIL( 6 ) );
-   int      iFormat   = ISNIL(  7 ) ? 0 : hb_parni( 7 );
-   COLORREF textColor = ISNIL(  8 ) ? _s->COLORS[ 0 ] : ( COLORREF ) hb_parnl( 8 ) ;
-   COLORREF bkColor   = ISNIL(  9 ) ? _s->COLORS[ 7 ] : ( COLORREF ) hb_parnl( 9 ) ;
-   /* int      iImageAt  = ISNIL( 10 ) ? 0 : hb_parni( 10 ); */
+   BOOL     bImage    = ( HB_ISNUM( 6 ) || HB_ISCHAR( 6 ) );
+   int      iFormat   = hb_parni( 7 );
+   COLORREF textColor = !HB_ISNUM(  8 ) ? _s->COLORS[ 0 ] : ( COLORREF ) hb_parnl( 8 ) ;
+   COLORREF bkColor   = !HB_ISNUM(  9 ) ? _s->COLORS[ 7 ] : ( COLORREF ) hb_parnl( 9 ) ;
+   /* int      iImageAt  = hb_parni( 10 ); */
 
    xy         = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );;
    iTop       = xy.y + hb_parni( 11,1 );
@@ -2081,7 +2081,7 @@ HB_FUNC( WVT_DRAWLABELEX )
 
       SetBkColor( _s->hdc, bgClr );
       SetTextColor( _s->hdc, fgClr );
-      SetTextAlign( _s->hdc, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
+      SetTextAlign( _s->hdc, ( !HB_ISNUM( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
       SelectObject( _s->hdc, _s->pGUI->hUserFonts[ iSlot ] );
 
       ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
@@ -2090,7 +2090,7 @@ HB_FUNC( WVT_DRAWLABELEX )
       {
          SetBkColor( _s->hGuiDC, bgClr );
          SetTextColor( _s->hGuiDC, fgClr );
-         SetTextAlign( _s->hGuiDC, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
+         SetTextAlign( _s->hGuiDC, ( !HB_ISNUM( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
          SelectObject( _s->hGuiDC, _s->pGUI->hUserFonts[ iSlot ] );
 
          ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
@@ -2127,9 +2127,9 @@ HB_FUNC( WVT_DRAWLINEEX )
    iRight  = xy.x-1 + hb_parni( 9,4 );
 
    /* Resolve Parameters */
-   iOrient = ISNIL( 5 ) ? 0 : hb_parni( 5 );
-   iFormat = ISNIL( 6 ) ? 0 : hb_parni( 6 );
-   iAlign  = ISNIL( 7 ) ? 0 : hb_parni( 7 );
+   iOrient = hb_parni( 5 );
+   iFormat = hb_parni( 6 );
+   iAlign  = hb_parni( 7 );
 
    x       = iLeft ;
    y       = iTop ;
@@ -2518,7 +2518,7 @@ HB_FUNC( WVT_DRAWSCROLLBUTTON )
    POINT    * Point;
    POINT    xy = { 0,0 };
    int      iHeight, iOff;
-   BOOL     bDepressed = ISNIL( 7 ) ? FALSE : hb_parl( 7 ) ;
+   BOOL     bDepressed = hb_parl( 7 ) ;
 
    Point      = ( POINT * ) hb_xgrab( 3 * sizeof( POINT ) );
    iOff       = 6;
@@ -2744,7 +2744,7 @@ HB_FUNC( WVT_DRAWSHADEDRECT )
       int iBottom     = ( _s->PTEXTSIZE.y * ( hb_parni( 3 ) + 1 ) ) - 1 + hb_parni( 5,3 );
       int iRight      = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parni( 5,4 );
 
-      int iMode       = ISNIL( 6 ) ? GRADIENT_FILL_RECT_H : hb_parni( 6 ) ;
+      int iMode       = !HB_ISNUM( 6 ) ? GRADIENT_FILL_RECT_H : hb_parni( 6 ) ;
 
       vert[ 0 ].x     = iLeft;
       vert[ 0 ].y     = iTop;
@@ -2821,7 +2821,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
    SetTextAlign( _s->hdc, TA_TOP | TA_LEFT | TA_NOUPDATECP );
    SetTextColor( _s->hdc, fgClr );
    SetBkColor( _s->hdc, bgClr );
-   SetBkMode( _s->hdc, ISNIL( 11 ) ? OPAQUE : hb_parni( 11 ) );
+   SetBkMode( _s->hdc, !HB_ISNUM( 11 ) ? OPAQUE : hb_parni( 11 ) );
    SelectObject( _s->hdc, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 12 ) );
 
    DrawText( _s->hdc, text, lstrlen( text ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
@@ -2831,7 +2831,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
       SetTextAlign( _s->hGuiDC, TA_TOP | TA_LEFT | TA_NOUPDATECP );
       SetTextColor( _s->hGuiDC, fgClr );
       SetBkColor( _s->hGuiDC, bgClr );
-      SetBkMode( _s->hGuiDC, ISNIL( 11 ) ? OPAQUE : hb_parni( 11 ) );
+      SetBkMode( _s->hGuiDC, !HB_ISNUM( 11 ) ? OPAQUE : hb_parni( 11 ) );
       SelectObject( _s->hGuiDC, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 12 ) );
 
       DrawText( _s->hGuiDC, text, lstrlen( text ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
@@ -2861,9 +2861,9 @@ HB_FUNC( WVT_DRAWPROGRESSBAR )
    RECT     rc = { 0,0,0,0 };
 
    iPercent   = hb_parni( 6 );
-   bImage     = ISNIL(  9 ) ? FALSE : TRUE ;
-   bVertical  = ISNIL( 10 ) ? FALSE : hb_parl( 10 ) ;
-   iDirection = ISNIL( 11 ) ? 0 : hb_parni( 11 );
+   bImage     = HB_ISCHAR(  9 );
+   bVertical  = hb_parl( 10 ) ;
+   iDirection = hb_parni( 11 );
 
    if ( bVertical )
    {
@@ -2916,7 +2916,7 @@ HB_FUNC( WVT_DRAWPROGRESSBAR )
    }
    else
    {
-      crBarColor  = ISNIL( 8 ) ? _s->COLORS[ 0 ] : ( COLORREF ) hb_parnl( 8 );
+      crBarColor  = !HB_ISNUM( 8 ) ? _s->COLORS[ 0 ] : ( COLORREF ) hb_parnl( 8 );
 
       lb.lbStyle  = BS_SOLID;
       lb.lbColor  = crBarColor;
@@ -2951,21 +2951,21 @@ HB_FUNC( WVT_CREATEFONT )
 
    LOGFONT  logfont; /* = { 0,0,0 }; */
 
-   logfont.lfEscapement     = ( ISNIL( 10 ) ? 0 : ( hb_parni( 10 ) * 10 ) );
+   logfont.lfEscapement     = hb_parni( 10 ) * 10;
    logfont.lfOrientation    = 0;
-   logfont.lfWeight         = ( ISNIL(  4 ) ? 0 : hb_parni( 4 ) );
-   logfont.lfItalic         = ( ISNIL(  5 ) ? 0 : ( BYTE ) hb_parl(  5 ) );
-   logfont.lfUnderline      = ( ISNIL(  6 ) ? 0 : ( BYTE ) hb_parl(  6 ) );
-   logfont.lfStrikeOut      = ( ISNIL(  7 ) ? 0 : ( BYTE ) hb_parl(  7 ) );
-   logfont.lfCharSet        = ( ISNIL(  8 ) ? ( BYTE ) _s->CodePage : ( BYTE ) hb_parni( 8 ) );
+   logfont.lfWeight         = ( hb_parni( 4 ) );
+   logfont.lfItalic         = ( BYTE ) hb_parl(  5 );
+   logfont.lfUnderline      = ( BYTE ) hb_parl(  6 );
+   logfont.lfStrikeOut      = ( BYTE ) hb_parl(  7 );
+   logfont.lfCharSet        = ( !HB_ISNUM(  8 ) ? ( BYTE ) _s->CodePage : ( BYTE ) hb_parni( 8 ) );
    logfont.lfOutPrecision   = 0;
    logfont.lfClipPrecision  = 0;
-   logfont.lfQuality        = ( ISNIL( 9 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 9 ) );
+   logfont.lfQuality        = ( !HB_ISNUM( 9 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 9 ) );
    logfont.lfPitchAndFamily = FF_DONTCARE;
-   logfont.lfHeight         = ( ISNIL(  2 ) ? _s->fontHeight : hb_parni( 2 ) );
-   logfont.lfWidth          = ( ISNIL(  3 ) ? ( _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 3 ) );
+   logfont.lfHeight         = ( !HB_ISNUM(  2 ) ? _s->fontHeight : hb_parni( 2 ) );
+   logfont.lfWidth          = ( !HB_ISNUM(  3 ) ? ( _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 3 ) );
 
-   HB_TCHAR_CPTO( logfont.lfFaceName, ( ISNIL( 1 ) ? _s->fontFace : hb_parcx( 1 ) ), sizeof( logfont.lfFaceName )-1 );
+   HB_TCHAR_CPTO( logfont.lfFaceName, ( !HB_ISCHAR( 1 ) ? _s->fontFace : hb_parcx( 1 ) ), sizeof( logfont.lfFaceName )-1 );
 
    hb_retnint( ( HB_PTRDIFF ) CreateFontIndirect( &logfont ) );
 }
@@ -3035,21 +3035,21 @@ HB_FUNC( WVT_LOADFONT )
    int      iSlot = hb_parni( 1 ) - 1;
    HFONT    hFont;
 
-   logfont.lfEscapement     = ( ISNIL( 11 ) ? 0 : ( hb_parni( 11 ) * 10 ) );
+   logfont.lfEscapement     = hb_parni( 11 ) * 10;
    logfont.lfOrientation    = 0;
-   logfont.lfWeight         = ( ISNIL(  5 ) ? 0 : hb_parni( 5 ) );
-   logfont.lfItalic         = ( ISNIL(  6 ) ? 0 : ( BYTE ) hb_parl(  6 ) );
-   logfont.lfUnderline      = ( ISNIL(  7 ) ? 0 : ( BYTE ) hb_parl(  7 ) );
-   logfont.lfStrikeOut      = ( ISNIL(  8 ) ? 0 : ( BYTE ) hb_parl(  8 ) );
-   logfont.lfCharSet        = ( ISNIL(  9 ) ? ( BYTE ) _s->CodePage : ( BYTE ) hb_parni( 9 ) );
+   logfont.lfWeight         = hb_parni( 5 );
+   logfont.lfItalic         = ( BYTE ) hb_parl(  6 );
+   logfont.lfUnderline      = ( BYTE ) hb_parl(  7 );
+   logfont.lfStrikeOut      = ( BYTE ) hb_parl(  8 );
+   logfont.lfCharSet        = ( !HB_ISNUM(  9 ) ? ( BYTE ) _s->CodePage : ( BYTE ) hb_parni( 9 ) );
    logfont.lfOutPrecision   = 0;
    logfont.lfClipPrecision  = 0;
-   logfont.lfQuality        = ( ISNIL( 10 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 10 ) );
+   logfont.lfQuality        = ( !HB_ISNUM( 10 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 10 ) );
    logfont.lfPitchAndFamily = FF_DONTCARE;
-   logfont.lfHeight         = ( ISNIL(  3 ) ? _s->fontHeight : hb_parni( 3 ) );
-   logfont.lfWidth          = ( ISNIL(  4 ) ? ( _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 4 ) );
+   logfont.lfHeight         = ( !HB_ISNUM(  3 ) ? _s->fontHeight : hb_parni( 3 ) );
+   logfont.lfWidth          = ( !HB_ISNUM(  4 ) ? ( _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 4 ) );
 
-   HB_TCHAR_CPTO( logfont.lfFaceName, ( ISNIL( 2 ) ? _s->fontFace : hb_parcx( 2 ) ), sizeof( logfont.lfFaceName )-1 );
+   HB_TCHAR_CPTO( logfont.lfFaceName, ( !HB_ISCHAR( 2 ) ? _s->fontFace : hb_parcx( 2 ) ), sizeof( logfont.lfFaceName )-1 );
 
    hFont = CreateFontIndirect( &logfont );
    if ( hFont )
@@ -3075,9 +3075,9 @@ HB_FUNC( WVT_LOADPEN )
    HPEN     hPen;
    int      iSlot = hb_parni( 1 ) - 1;
 
-   iPenStyle = ISNIL( 2 ) ? 0 : hb_parni( 2 ) ;
-   iPenWidth = ISNIL( 3 ) ? 0 : hb_parni( 3 );
-   crColor   = ISNIL( 4 ) ? RGB( 0,0,0 ) : ( COLORREF ) hb_parnl( 4 );
+   iPenStyle = hb_parni( 2 ) ;
+   iPenWidth = hb_parni( 3 );
+   crColor   = !HB_ISNUM( 4 ) ? RGB( 0,0,0 ) : ( COLORREF ) hb_parnl( 4 );
 
    hPen      = CreatePen( iPenStyle, iPenWidth, crColor );
 
@@ -3151,7 +3151,7 @@ HB_FUNC( WVT_RESTSCREEN )
    HDC     hCompDC;
 
    BOOL    bResult = FALSE;
-   BOOL    bDoNotDestroyBMP = ISNIL( 6 ) ? FALSE : hb_parl( 6 );
+   BOOL    bDoNotDestroyBMP = hb_parl( 6 );
 
    xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );;
    iTop    = xy.y;

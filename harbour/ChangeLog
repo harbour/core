@@ -17,6 +17,13 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-08 22:36 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvgcore.c
+  * harbour/contrib/gtwvg/wvgcuig.c
+  * harbour/contrib/gtwvg/wvgutils.c
+  * harbour/contrib/gtwvg/wvgwin.c
+    ! ISNIL() => HB_IS*()
+
 2009-06-08 21:09 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   * make_gnu.bat
     + Added C compiler autodetection. This feature will kick

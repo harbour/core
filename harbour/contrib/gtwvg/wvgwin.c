@@ -141,9 +141,9 @@ HB_FUNC( WIN_SENDMESSAGE )
 
    hb_retnl( ( ULONG ) SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
                                     ( UINT ) hb_parni( 2 ),
-                                    ( ISNIL( 3 ) ? 0 : ( WPARAM ) hb_parnint( 3 ) ),
+                                    ( !HB_ISNUM( 3 ) ? 0 : ( WPARAM ) hb_parnint( 3 ) ),
                                     ( ISNIL( 4 ) ? 0 : ( cText ? ( LPARAM ) ( LPSTR ) cText :
-                                       ( ISCHAR( 4 ) ? ( LPARAM )( LPSTR ) hb_parc( 4 ) :
+                                       ( HB_ISCHAR( 4 ) ? ( LPARAM )( LPSTR ) hb_parc( 4 ) :
                                            ( LPARAM ) hb_parnint( 4 ) ) ) ) )
            );
 
@@ -339,11 +339,11 @@ HB_FUNC( WIN_GETDLGITEM )
 
 HB_FUNC( WIN_MESSAGEBOX )
 {
-   HWND   hWnd = ISNIL( 1 ) ? GetActiveWindow() : ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   HWND   hWnd = HB_ISNUM( 1 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) : GetActiveWindow();
    LPTSTR lpMsg = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-   LPTSTR lpTitle = HB_TCHAR_CONVTO( ISCHAR( 3 ) ? hb_parc( 3 ) : "Info" );
+   LPTSTR lpTitle = HB_TCHAR_CONVTO( HB_ISCHAR( 3 ) ? hb_parc( 3 ) : "Info" );
 
-   hb_retni( MessageBox( hWnd, lpMsg, lpTitle, ISNIL( 4 ) ? MB_OK : hb_parni( 4 ) ) );
+   hb_retni( MessageBox( hWnd, lpMsg, lpTitle, HB_ISNUM( 4 ) ? hb_parni( 4 ) : MB_OK  ) );
 
    HB_TCHAR_FREE( lpTitle );
    HB_TCHAR_FREE( lpMsg );
@@ -376,7 +376,7 @@ HB_FUNC( WIN_LOADICON )
 {
    HICON hIcon;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       hIcon = LoadIcon( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
    }
@@ -468,8 +468,8 @@ HB_FUNC( WIN_CREATEBRUSH )
    LOGBRUSH lb = { 0,0,0 };
 
    lb.lbStyle = hb_parni( 1 );
-   lb.lbColor = ISNIL( 2 ) ? RGB( 0, 0, 0 ) : ( COLORREF ) hb_parnl( 2 );
-   lb.lbHatch = ISNIL( 3 ) ? 0 : hb_parni( 3 );
+   lb.lbColor = HB_ISNUM( 2 ) ? ( COLORREF ) hb_parnl( 2 ) : RGB( 0, 0, 0 );
+   lb.lbHatch = hb_parni( 3 );
 #if ! defined( HB_OS_WIN_CE )
    hb_retnint( ( HB_PTRDIFF ) CreateBrushIndirect( &lb ) );
 #else
@@ -653,14 +653,14 @@ HB_FUNC( WIN_NOT )
 HB_FUNC( WIN_TRACKPOPUPMENU )
 {
    HMENU hMenu  = ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 );
-   UINT  uFlags = ISNIL( 2 ) ? TPM_CENTERALIGN | TPM_RETURNCMD : hb_parnl( 2 );
-   int   x      = ISNIL( 3 ) ? 0 : hb_parni( 3 );
-   int   y      = ISNIL( 4 ) ? 0 : hb_parni( 4 );
-   HWND  hWnd   = ISNIL( 5 ) ? GetActiveWindow() : ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 );
+   UINT  uFlags = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : TPM_CENTERALIGN | TPM_RETURNCMD;
+   int   x      = hb_parni( 3 );
+   int   y      = hb_parni( 4 );
+   HWND  hWnd   = HB_ISNUM( 5 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ) : GetActiveWindow();
 
    POINT xy = { 0,0 };
 
-   if( ISNIL( 3 ) )
+   if( !HB_ISNUM( 3 ) )
    {
       GetCursorPos( &xy );
    }
@@ -685,10 +685,10 @@ HB_FUNC( WIN_CHOOSECOLOR )
       crCustClr[ i ] = ( ISARRAY( 2 ) ? ( COLORREF ) hb_parnl( 2, i+1 ) : GetSysColor( COLOR_BTNFACE ) );
 
    cc.lStructSize   = sizeof( CHOOSECOLOR );
-   cc.hwndOwner     = ISNIL( 4 ) ? NULL : ( HWND ) ( HB_PTRDIFF ) hb_parnint( 4 );
-   cc.rgbResult     = ISNIL( 1 ) ?  0 : ( COLORREF ) hb_parnl( 1 );
+   cc.hwndOwner     = HB_ISNUM( 4 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 4 ) : NULL;
+   cc.rgbResult     = ( COLORREF ) ( HB_ISNUM( 1 ) ? hb_parnl( 1 ) : 0 );
    cc.lpCustColors  = crCustClr;
-   cc.Flags         = ( WORD ) ( ISNIL( 3 ) ? CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN : hb_parnl( 3 ) );
+   cc.Flags         = ( WORD ) ( HB_ISNUM( 3 ) ? hb_parnl( 3 ) : CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
 
    if( ChooseColor( &cc ) )
       hb_retnl( cc.rgbResult );
@@ -880,8 +880,8 @@ HB_FUNC( WIN_CREATEWINDOWEX )
                           hb_parni( 5 ), hb_parni( 6 ),
                           hb_parni( 7 ), hb_parni( 8 ),
                           ( HWND ) ( HB_PTRDIFF ) hb_parnint( 9 ),
-                          ISNIL( 10 ) ? NULL : ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 10 ),
-                          ISNIL( 11 ) ? ( HINSTANCE ) wvg_hInstance() : ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 11 ),
+                          HB_ISNUM( 10 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 10 ) : NULL,
+                          HB_ISNUM( 11 ) ? ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 11 ) : ( HINSTANCE ) wvg_hInstance(),
                           NULL );
 
    HB_TCHAR_FREE( szClassName );
@@ -1303,7 +1303,7 @@ HB_FUNC( WVG_STATUSBARSETTEXT )
 
    if( hWndSB && IsWindow( hWndSB ) )
    {
-      int    iPart = ISNUM( 2 ) ? hb_parni( 2 ) : 1;
+      int    iPart = HB_ISNUM( 2 ) ? hb_parni( 2 ) : 1;
       TCHAR  szText[ 1024 ];
       int    iFlags;
       TCHAR  *szCaption;
@@ -1577,7 +1577,7 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
                           TVIS_OVERLAYMASK | TVIS_STATEIMAGEMASK | TVIS_USERMASK;
 
    tvis.item.state      = 0;        /* TVI_BOLD */
-   tvis.hParent         = ISNIL( 2 ) ? NULL : ( HTREEITEM ) wvg_parhandle( 2 );
+   tvis.hParent         = HB_ISNUM( 2 ) ? ( HTREEITEM ) wvg_parhandle( 2 ) : NULL;
    tvis.item.pszText    = text;
 
    hb_retnint( ( HB_PTRDIFF ) TreeView_InsertItem( wvg_parhwnd( 1 ), &tvis ) );
@@ -1875,7 +1875,7 @@ HB_FUNC( WVG_CHOOSEFONT )
    {
       HB_TCHAR_CPTO( lf.lfFaceName, hb_parcx( 3 ), sizeof( lf.lfFaceName ) - 1 );
    }
-   if( ( ! ISNIL( 4 ) ) && hb_parnl( 4 ) )
+   if( HB_ISNUM( 4 ) && hb_parnl( 4 ) )
    {
       HDC hdc = GetDC( hWnd );
       PointSize = -MulDiv( ( LONG ) hb_parnl( 4 ), GetDeviceCaps( hdc, LOGPIXELSY ), 72 );
@@ -2008,11 +2008,11 @@ HB_FUNC( WVG_FONTCREATE )
  */
 HB_FUNC( WVG_POINTSIZETOHEIGHT )
 {
-   HDC hdc = ISNIL( 1 ) ? GetDC( GetDesktopWindow() ) : wvg_parhdc( 1 );
+   HDC hdc = HB_ISNUM( 1 ) ? wvg_parhdc( 1 ) : GetDC( GetDesktopWindow() );
 
    hb_retnl( ( LONG ) -MulDiv( ( LONG ) hb_parnl( 2 ), GetDeviceCaps( hdc, LOGPIXELSY ), 72 ) );
 
-   if( ISNIL( 1 ) )
+   if( !HB_ISNUM( 1 ) )
       ReleaseDC( GetDesktopWindow(), hdc );
 }
 
@@ -2022,11 +2022,11 @@ HB_FUNC( WVG_POINTSIZETOHEIGHT )
  */
 HB_FUNC( WVG_HEIGHTTOPOINTSIZE )
 {
-   HDC hdc = ISNIL( 1 ) ? GetDC( GetDesktopWindow() ) : wvg_parhdc( 1 );
+   HDC hdc = HB_ISNUM( 1 ) ? wvg_parhdc( 1 ) : GetDC( GetDesktopWindow() );
 
    hb_retnl( ( LONG ) -MulDiv( hb_parnl( 2 ), 72, GetDeviceCaps( hdc, LOGPIXELSY ) ) );
 
-   if( ISNIL( 1 ) )
+   if( !HB_ISNUM( 1 ) )
       ReleaseDC( GetDesktopWindow(), hdc );
 }
 
@@ -2062,7 +2062,7 @@ HB_FUNC( WIN_SETLAYEREDWINDOWATTRIBUTES )
       if( pfnLayered )
       {
          HWND hWnd = wapi_par_HWND( 1 );
-         COLORREF cr = ISNIL( 2 ) ? RGB( 255,255,255 ) : wapi_par_COLORREF( 2 );
+         COLORREF cr = HB_ISNUM( 2 ) ? wapi_par_COLORREF( 2 ) : RGB( 255,255,255 );
 
          SetWindowLong( hWnd, GWL_EXSTYLE, GetWindowLong( hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
 
