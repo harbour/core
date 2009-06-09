@@ -66,10 +66,11 @@
 HB_FUNC( DO )
 {
    USHORT uiPCount = ( USHORT ) hb_pcount();
+   PHB_ITEM pSelf = NULL;
 
    if( uiPCount > 0 )
    {
-      PHB_ITEM pItem = hb_param( 1, HB_IT_ANY ), pSelf = NULL;
+      PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
       if( HB_IS_STRING( pItem ) )
       {

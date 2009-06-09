@@ -17,6 +17,10 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-09 10:54 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/do.c
+    ! fixed mistake in previous commit
+
 2009-06-09 10:38 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/eval.c
     * update number of parameters in HB_EXECMSG() to keep the HVM stack
