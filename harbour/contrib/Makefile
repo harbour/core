@@ -38,7 +38,6 @@ DIRS +=\
 	hbfimage \
 	hbgd \
 	hbhpdf \
-	hbmsql \
 	hbmysql \
 	hbpgsql \
 	hbqt \

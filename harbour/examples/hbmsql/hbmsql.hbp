@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+-hblib
+
+-ohbmsql
+
+msql.c
+tmsql.prg

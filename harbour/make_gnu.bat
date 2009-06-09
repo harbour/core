@@ -5,26 +5,16 @@
 @echo off
 
 rem ---------------------------------------------------------------
-rem This is a generic template file, if it doesn't fit your own needs
-rem please DON'T MODIFY IT.
-rem
-rem Instead, make a local copy and modify that one, or make a call to
-rem this batch file from your customized one. [vszakats]
-rem ---------------------------------------------------------------
-
-rem ---------------------------------------------------------------
-rem Template to initialize the environment before starting
-rem the GNU make system for Harbour
-rem
-rem For further information about the GNU make system please
-rem check doc/gmake.txt
-rem
 rem Copyright 1999-2009 Viktor Szakats (harbour.01 syenar.hu)
 rem See COPYING for licensing terms.
+rem
+rem Initialize environment for GNU Make system to build Harbour
+rem
+rem For further information about the GNU Make system please
+rem check doc/gmake.txt
 rem ---------------------------------------------------------------
 
-rem Setup defaults.
-
+rem Setup defaults
 if "%HB_ARCHITECTURE%" == "" if not "%WINDIR%" == "" set HB_ARCHITECTURE=win
 if "%HB_ARCHITECTURE%" == ""                         set HB_ARCHITECTURE=dos
 if "%HB_COMPILER%"     == "" if not "%WINDIR%" == "" goto WIN_AUTODETECT
@@ -34,7 +24,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
    if "%HB_INSTALL_PREFIX%" == "" if "%OS%" == "Windows_NT" set HB_INSTALL_PREFIX=%~dp0
 
-   rem Set to constant value to be consistent with the non-GNU make files.
+   rem Set to constant value.
    if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
    if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
    if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
@@ -45,8 +35,6 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    if not exist %HB_LIB_INSTALL%\*.* md %HB_LIB_INSTALL%
    if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
    if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
-
-:START
 
    if "%HB_ARCHITECTURE%" == "" goto BAD_ARCH
    if "%HB_COMPILER%" == "" goto BAD_COMP
@@ -145,7 +133,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    set _HB_PATH=
 
    rem ---------------------------------------------------------------
-   rem Start the GNU make system
+   rem Start the GNU Make system
 
    rem ---------------------------------------------------------------
    rem Special build mode when HB_BUILD_DLL=yes on Windows platform.

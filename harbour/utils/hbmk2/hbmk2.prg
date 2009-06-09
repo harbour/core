@@ -1813,7 +1813,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    /* Decide about working dir */
    IF ! lStopAfterInit
       IF hbmk[ _HBMK_lINC ]
-         DEFAULT cWorkDir TO FN_DirGet( s_cPROGNAME ) + _WORKDIR_DEF_
+         /* NOTE: We store -hbdyn objects in different dirs by default as - for Windows
+                  platforms - they're always built using different compilation options
+                  than normal targets. [vszakats] */
+         IF lCreateDyn .AND. hbmk[ _HBMK_cARCH ] $ "win|wce"
+            DEFAULT cWorkDir TO FN_DirGet( s_cPROGNAME ) + _WORKDIR_DEF_ + hb_osPathSeparator() + "hbdyn"
+         ELSE
+            DEFAULT cWorkDir TO FN_DirGet( s_cPROGNAME ) + _WORKDIR_DEF_
+         ENDIF
          AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + cWorkDir + hb_osPathSeparator() ) /* NOTE: Ending path sep is important. */
          IF ! DirBuild( cWorkDir )
             hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Working directory cannot be created: %1$s" ), cWorkDir ) )

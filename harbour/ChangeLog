@@ -17,6 +17,35 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-09 10:51 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+  * INSTALL
+    * Minor simplification.
+
+  * make_gnu.bat
+    * Minor cleanup.
+    - Deleted 'don't modify, this is a template' text.
+
+  * utils/hbmk2/hbmk2.prg
+    + Targets will now get an alternate workdir by default
+      on win/wce platforms when using -hbdyn.
+    ; TOFIX: ? HB_DYNLIB usage should be cleaned and synced with
+             GNU Make system.
+             Current HB_DYNLIB usage:
+                GNU Make system: ( win or wce ) and non-gcc
+                hbmk2: ( win or wce )
+
+  * contrib/Makefile
+  - contrib/hbmsql
+  + examples/hbmsql
+    * Moved hbmsql to examples.
+
+  - examples/hbmsql/Makefile
+  + examples/hbmsql/hbmsql.hbp
+    + Changed GNU Make file to hbmk2 make file.
+
+  * examples/hbmake/hbmake.hbp
+    * Minor to comment.
+
 2009-06-09 10:54 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/do.c
     ! fixed mistake in previous commit
