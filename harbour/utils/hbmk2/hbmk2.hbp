@@ -6,9 +6,9 @@
 -mt
 hbmk2.prg
 
--l{shared&!allmingw}hbcplr
--l{shared&!allmingw}hbpp
--l{shared&!allmingw}hbcommon
+-lhbcplr
+-lhbpp
+-lhbcommon
 
 hbmk2.${lng}.po
 -hbl=hbmk2.${lng}.hbl

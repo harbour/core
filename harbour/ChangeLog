@@ -17,6 +17,24 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-09 14:56 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+  * utils/hbmk2/hbmk2.prg
+    * Synced HB_DYNLIB handling with GNU Make. This means
+      that from now on hbmk2 won't use -DHB_DYNDLL C compiler
+      switch in -hbdyn mode for mingw/cygwin compilers.
+
+  * ChangeLog
+    * Updated status of some TODO/TOFIX entries.
+
+  * contrib/rddsql/sddodbc/tests/sddodbc.hbc
+    + Added odbc32 to lib list for win platform.
+
+  * utils/hbmk2/hbmk2.hbp
+  * utils/hbrun/hbrun.hbp
+    * Removed mingw specific hack which made benefit from
+      the fact that mingw-made .dlls export all public symbols,
+      when built for shared.
+
 2009-06-09 10:51 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   * INSTALL
     * Minor simplification.
@@ -32,7 +50,7 @@
              GNU Make system.
              Current HB_DYNLIB usage:
                 GNU Make system: ( win or wce ) and non-gcc
-                hbmk2: ( win or wce )
+                hbmk2: ( win or wce ) [DONE]
 
   * contrib/Makefile
   - contrib/hbmsql
@@ -7402,7 +7420,7 @@
 
   * utils/hbmk2/hbmk2.prg
     ! Fixed shared libnames for MinGW family.
-    ; TOFIX: Still doesn't build shared-mode executables.
+    ; TOFIX: Still doesn't build shared-mode executables. [DONE]
 
 2009-04-02 13:42 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   * bin/hb-mkdyn.bat
@@ -8015,7 +8033,7 @@
              Or, if this is no good solution for owatcom users, or not
              an option and performace is more important, we must rename
              owatcom Harbour .dlls to a distinct name: harbour[mt]-11-ow.dll.
-             We should try to avoid that.
+             We should try to avoid that. [SOLVED]
 
   * config/win/bcc.cf
     % -4 -> -6 for Pentium Pro instructions. Looking at the generated

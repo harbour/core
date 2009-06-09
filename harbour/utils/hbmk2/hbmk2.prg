@@ -1816,7 +1816,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          /* NOTE: We store -hbdyn objects in different dirs by default as - for Windows
                   platforms - they're always built using different compilation options
                   than normal targets. [vszakats] */
-         IF lCreateDyn .AND. hbmk[ _HBMK_cARCH ] $ "win|wce"
+         /* NOTE: We only use different shared object flags when compiling for
+                  "( win || wce ) & !( allmingw | cygwin )". This may change in the future.
+                  IMPORTANT: Keep this condition in sync with setting -DHB_DYNLIB C compiler flag */
+         IF lCreateDyn .AND. hbmk[ _HBMK_cARCH ] $ "win|wce" .AND. !( hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm|cygwin" )
             DEFAULT cWorkDir TO FN_DirGet( s_cPROGNAME ) + _WORKDIR_DEF_ + hb_osPathSeparator() + "hbdyn"
          ELSE
             DEFAULT cWorkDir TO FN_DirGet( s_cPROGNAME ) + _WORKDIR_DEF_
@@ -2810,7 +2813,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       CASE hbmk[ _HBMK_cARCH ] == "linux" .AND. hbmk[ _HBMK_cCOMP ] == "icc"
       ENDCASE
 
-      IF lCreateDyn .AND. hbmk[ _HBMK_cARCH ] $ "win|wce"
+      /* NOTE: We only use different shared object flags when compiling for
+               "( win || wce ) & !( allmingw | cygwin )". This may change in the future.
+               IMPORTANT: Keep this condition in sync with workdir default settings */
+      IF lCreateDyn .AND. hbmk[ _HBMK_cARCH ] $ "win|wce" .AND. !( hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm|cygwin" )
          IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB .OR. ;
             hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10
             AAdd( hbmk[ _HBMK_aOPTC ], "-D__EXPORT__" )

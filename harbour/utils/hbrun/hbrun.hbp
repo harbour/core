@@ -4,6 +4,6 @@
 
 hbrun.prg
 
--l{shared&!allmingw}hbcplr
--l{shared&!allmingw}hbpp
--l{shared&!allmingw}hbcommon
+-lhbcplr
+-lhbpp
+-lhbcommon
