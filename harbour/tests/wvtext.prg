@@ -233,7 +233,7 @@ PROCEDURE thFunc()
    if ( nBrowser % 2 ) != 0
       Hb_GtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
    endif
-   Hb_GtInfo( HB_GTI_WINTITLE, 'Test.dbf    ['+if( ( nBrowser % 2 ) != 0, 'RESIZABLE_BY_ROWS', 'RESIZABLE_BY_FONT' )+']' )
+   Hb_GtInfo( HB_GTI_WINTITLE, 'test.dbf    ['+if( ( nBrowser % 2 ) != 0, 'RESIZABLE_BY_ROWS', 'RESIZABLE_BY_FONT' )+']' )
 
    SetCursor( 0 )
 

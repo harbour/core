@@ -106,6 +106,11 @@ then
     export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbpgsql"
 fi
 
+if test_reqpkg libqt4-dev
+then
+    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbqt"
+fi
+
 if [ -z "${TOINST_LST}" ] || [ "$1" = "--force" ]
 then
     . ./bin/pack_src.sh

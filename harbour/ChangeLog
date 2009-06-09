@@ -17,6 +17,17 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-09 22:44 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+  * mpkg_deb.sh
+    + Added hbqt lib. Submitted by Davor Siklic. Thank you.
+
+  * tests/wvtext.prg
+    ! Filename converted to lowercase.
+
+  - contrib/hbqt/tests/wvtext.prg
+  - contrib/gtqtc/tests/wvtext.prg
+    - Deleted duplicates of this demo.
+
 2009-06-09 21:14 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   * INSTALL
     * Harbour version cleaned from postfix.
