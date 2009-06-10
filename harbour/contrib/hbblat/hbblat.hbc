@@ -2,4 +2,5 @@
 # $Id$
 #
 
-libs=hbblat blat
+libs=hbblat
+libs=blat

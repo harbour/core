@@ -49,7 +49,7 @@ endif
 
 RM = del
 RD = rmdir
-CP = $(COMSPEC) /Ccopy
+CP = $(COMSPEC) /Cxcopy /D
 MV = move
 MD = md
 

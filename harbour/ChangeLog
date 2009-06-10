@@ -17,11 +17,87 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-10 19:36 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+  * config/dos/global.cf
+    ! Fixed to use xcopy instead of copy to 'install' files.
+      This means long filenames (and also casing) will be retained.
+      This also means that now 'install' actually works.
+      It may also mean that creating a DJGPP build isn't anymore
+      possible on a pure DOS system, I can't remember when xcopy
+      was introduced. Anyway I think it's better to have this
+      requirement than not having a proper DOS build at all
+      (since long years).
+      This also means that our DOS release cannot even be *used*
+      in pure DOS environment, since our long filenames will
+      be chopped when extracting the distro .zip. Only final
+      .exes are able to run under DOS.
+      We still have the option to implement full short name
+      support, but I'm not sure this has any importance anymore.
+      If we don't want to do this, we can finally lift some
+      restrictions which tied our hands so far, based on the
+      fact that DOS builds cannot even be created and run on
+      real DOS. So, this means:
+        - We may use long filenames as distro name.
+        - We may convert DOS platform as a target only platform,
+          similar to WinCE/ARM.
+        - If we do the above, we may even embed our DOS
+          libs in Windows distro, and build DOS apps using
+            hbmk2 hello.prg -arch=dos
+        - We may use long filename anywhere in our tree.
+          (but we must check first if long names are also
+          supported for headers, dirnames and source names)
+      If you have an opinion, please tell.
+
+  * config/dos/global.cf
+    ! Adding ending pathsep to DOC_SUBDIR to make xcopy happy
+      and not ask if the target is a file or directory.
+    ; TOFIX: Anyhow, DOC_SUBDIR feature simply doesn't work since
+             very long, so we should do something about it in the future.
+
+  * debian/changelog
+    + Added new version entry. (Thanks Guy)
+
+  * bin/postinst.bat
+    ! Added workaround to make it work under DOS.
+      (avoiding 'Out of environment space' error)
+
+  + mpkg_dos.bat
+    + Added DOS package generator batch. Very similar
+      to mpkg_win.bat, maybe we should merge them in
+      the future.
+
+  * mpkg_win.bat
+    * Using short name for main dir, just to sync it with
+      DOS version.
+
+  * utils/hbformat/hbformat.prg
+    + Changed default GT to GTCGI.
+
+  * utils/hbmk2/hbmk2.prg
+    ! Added workaround for dos/djgpp anomaly in hb_DirBase()
+      (and also hb_ProgName()) where path contains forward
+      slashed instead of backslashes.
+    ; TOFIX: In core.
+
+  * source/vm/Makefile
+    ! Disabled hbvmall for dos build because of thid djgpp error:
+      ---
+      gcc -I. -I../../../../include  -Wall -W -O3    -c ../../hvmall.c -ohvmall.o
+      In file included from ../../../../include/hbmath.h:60,
+                      from ../../itemapi.c:97,
+                      from ../../hvmall.c:67:
+      c:/devl/djgpp/include/libm/math.h:97: error: redefinition of 'struct exception'
+      ---
+
+  * contrib/hbblat/hbblat.hbc
+  * contrib/hbhpdf/hbhpdf.hbc
+    * Minor formatting.
+
 2009-06-10 13:19 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
-   + examples/hbmsql/tests/hbmk.hbm
-   - examples/hbmsql/tests/hbmsql.hbc
-   + examples/hbmsql/hbmsql.hbc
-     * hbmk2 make file rearrangement continued.
+  + examples/hbmsql/tests/hbmk.hbm
+  - examples/hbmsql/tests/hbmsql.hbc
+  + examples/hbmsql/hbmsql.hbc
+    * hbmk2 make file rearrangement continued.
 
 2009-06-10 13:17 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   + contrib/gtalleg/tests/hbmk.hbm

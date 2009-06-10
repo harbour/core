@@ -2,4 +2,5 @@
 # $Id$
 #
 
-libs=hbhpdf libhpdf libpng
+libs=hbhpdf
+libs=libhpdf libpng

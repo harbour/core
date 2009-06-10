@@ -30,6 +30,9 @@ endif
 ifeq ($(HB_COMPILER),dmc)
 	HB_HVM_ALL = no
 endif
+ifeq ($(HB_ARCHITECTURE),dos)
+	HB_HVM_ALL = no
+endif
 export HB_HVM_ALL
 endif
 

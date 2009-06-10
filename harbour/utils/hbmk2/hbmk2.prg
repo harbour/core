@@ -103,7 +103,6 @@
 #pragma linenumber=on
 
 ANNOUNCE HB_GTSYS
-
 REQUEST HB_GT_CGI_DEFAULT
 
 /* Include these for -pause support. */
@@ -187,6 +186,13 @@ REQUEST hbmk_KEYW
 #define HB_ISALPHA( c )         ( Upper( c ) >= "A" .AND. Upper( c ) <= "Z" )
 #define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == '_' )
 #define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR(c) .OR. IsDigit( c ) )
+
+/* Workaround for dos/djgpp bug */
+#if defined( __PLATFORM__DOS )
+   #define HB_DIRBASE()         StrTran( hb_DirBase(), "/", "\" )
+#else
+   #define HB_DIRBASE()         hb_DirBase()
+#endif
 
 /* This requires Set( _SET_EXACT, .F. ) */
 #define LEFTEQUAL( l, r )       ( l = r )
@@ -975,10 +981,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
 
       /* Detect system locations to enable shared library option by default */
-      lSysLoc := hb_DirBase() == "/usr/local/bin/" .OR. ;
-                 hb_DirBase() == "/usr/bin/" .OR. ;
-                 hb_DirBase() == "/opt/harbour/" .OR. ;
-                 hb_DirBase() == "/opt/bin/"
+      lSysLoc := HB_DIRBASE() == "/usr/local/bin/" .OR. ;
+                 HB_DIRBASE() == "/usr/bin/" .OR. ;
+                 HB_DIRBASE() == "/opt/harbour/" .OR. ;
+                 HB_DIRBASE() == "/opt/bin/"
 
       s_cHB_BIN_INSTALL := PathSepToSelf( GetEnv( "HB_BIN_INSTALL" ) )
       s_cHB_LIB_INSTALL := PathSepToSelf( GetEnv( "HB_LIB_INSTALL" ) )
@@ -987,14 +993,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       s_cHB_INSTALL_PREFIX := PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) )
       IF Empty( s_cHB_INSTALL_PREFIX )
          DO CASE
-         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG + cBinExt )
-            s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".."
-         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
-            s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() )
-         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
-            s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".."
-         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
-            s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".."
+         CASE hb_FileExists( DirAddPathSep( HB_DIRBASE() ) + cBin_CompPRG + cBinExt )
+            s_cHB_INSTALL_PREFIX := DirAddPathSep( HB_DIRBASE() ) + ".."
+         CASE hb_FileExists( DirAddPathSep( HB_DIRBASE() ) + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
+            s_cHB_INSTALL_PREFIX := DirAddPathSep( HB_DIRBASE() )
+         CASE hb_FileExists( DirAddPathSep( HB_DIRBASE() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
+            s_cHB_INSTALL_PREFIX := DirAddPathSep( HB_DIRBASE() ) + ".." + hb_osPathSeparator() + ".."
+         CASE hb_FileExists( DirAddPathSep( HB_DIRBASE() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
+            s_cHB_INSTALL_PREFIX := DirAddPathSep( HB_DIRBASE() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".."
          OTHERWISE
             hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect." ) )
             RETURN 3
@@ -4202,8 +4208,8 @@ STATIC FUNCTION FindInPath( cFileName )
    ENDIF
 
    /* Check in the dir of this executable. */
-   IF ! Empty( hb_DirBase() )
-      IF hb_FileExists( cFileName := hb_FNameMerge( hb_DirBase(), cName, cExt ) )
+   IF ! Empty( HB_DIRBASE() )
+      IF hb_FileExists( cFileName := hb_FNameMerge( HB_DIRBASE(), cName, cExt ) )
          RETURN cFileName
       ENDIF
    ENDIF
@@ -4662,11 +4668,11 @@ STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
    #if defined( __PLATFORM__UNIX )
       aCFGDirs := { GetEnv( "HOME" ) + "/.harbour/",;
                     "/etc/harbour",;
-                    DirAddPathSep( hb_DirBase() ) + "../etc/harbour",;
-                    DirAddPathSep( hb_DirBase() ) + "../etc",;
-                    hb_DirBase() }
+                    DirAddPathSep( HB_DIRBASE() ) + "../etc/harbour",;
+                    DirAddPathSep( HB_DIRBASE() ) + "../etc",;
+                    HB_DIRBASE() }
    #else
-      aCFGDirs := { hb_DirBase() }
+      aCFGDirs := { HB_DIRBASE() }
    #endif
 
    FOR EACH cDir IN aCFGDirs
@@ -5133,7 +5139,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cDirParent )
 
       DO CASE
       CASE cMacro == "HB_ROOT"
-         cMacro := PathSepToSelf( DirAddPathSep( hb_DirBase() ) )
+         cMacro := PathSepToSelf( DirAddPathSep( HB_DIRBASE() ) )
       CASE cMacro == "HB_SELF"
          IF Empty( cDirParent )
             cMacro := ""
@@ -6036,7 +6042,7 @@ STATIC PROCEDURE SetUILang( hbmk )
       hb_i18n_set( NIL )
    ELSE
       tmp := "${hb_root}hbmk2.${lng}.hbl"
-      tmp := StrTran( tmp, "${hb_root}", PathSepToSelf( DirAddPathSep( hb_DirBase() ) ) )
+      tmp := StrTran( tmp, "${hb_root}", PathSepToSelf( DirAddPathSep( HB_DIRBASE() ) ) )
       tmp := StrTran( tmp, "${lng}", StrTran( hbmk[ _HBMK_cUILNG ], "-", "_" ) )
       hb_i18n_set( iif( hb_i18n_check( tmp := hb_MemoRead( tmp ) ), hb_i18n_restoretable( tmp ), NIL ) )
    ENDIF
