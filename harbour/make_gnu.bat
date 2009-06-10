@@ -110,9 +110,6 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
    if "%HB_ARCHITECTURE%" == "dos" goto SKIP_WINDLL
 
-   if "%HB_COMPILER%%HB_CCPREFIX%" == "mingw64"  set HB_CCPREFIX=x86_64-pc-mingw32-
-   if "%HB_COMPILER%%HB_CCPREFIX%" == "mingwarm" set HB_CCPREFIX=arm-wince-mingw32ce-
-
    if not exist config\mingw32-make.exe goto _FM_NOLOCAL
    set _HB_MAKE=config\mingw32-make.exe
    goto _FM_DONE
@@ -141,6 +138,9 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    rem the .dlls and a final pass for the regular version.
 
    if not "%HB_BUILD_DLL%" == "yes" goto SKIP_WINDLL
+
+   if "%HB_COMPILER%%HB_CCPREFIX%" == "mingw64"  set HB_CCPREFIX=x86_64-pc-mingw32-
+   if "%HB_COMPILER%%HB_CCPREFIX%" == "mingwarm" set HB_CCPREFIX=arm-wince-mingw32ce-
 
    if "%HB_COMPILER%" == "mingw"    goto DO_GCC
    if "%HB_COMPILER%" == "mingw64"  goto DO_GCC

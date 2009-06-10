@@ -14,7 +14,7 @@ ifeq ($(SHLVL),) # COMMAND.COM
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every commands will be separated by LF
 define inst_file
-$(CP) $(file) $(subst /,\,$(INSTALL_DIR))
+$(COMSPEC) /Cxcopy /Y /I $(file) $(subst /,\,$(INSTALL_DIR))
 
 endef
 

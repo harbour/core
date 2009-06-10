@@ -14,7 +14,7 @@ install::
 
 else
 INSTALL_OBJS = $(DOC_FILES)
-INSTALL_DIR = $(HB_DOC_INSTALL)$(DOC_SUBDIR)/
+INSTALL_DIR = $(HB_DOC_INSTALL)$(DOC_SUBDIR)
 
 include $(TOP)$(ROOT)config/install.cf
 endif
