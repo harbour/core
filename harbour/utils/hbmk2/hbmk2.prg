@@ -2216,6 +2216,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
+         cBin_Lib := "ar.exe"
+         cOpt_Lib := "{FA} rcs {OL} {LO}"
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
          ENDIF
@@ -2257,13 +2259,33 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
          ELSE
-            cOpt_CompC += " {LC}{SCRIPT}"
+            /* NOTE: For some reason DJGPP gcc launched from Windows builds
+                     (win/dos cross-build scenario using -arch=dos switch)
+                     won't work when external script usage is attempted:
+                     ---
+                     gcc.exe: @c:/devl/djgpp/tmp\lxwp3x.cpl: No such file or directory (ENOENT)
+                     gcc.exe: no input files
+                     ---
+                     I have no idea why, tried to execute using hb_run(),
+                     tried with the same filename parameter as the DOS build
+                     generated, to no avail. Interestingly same *gcc in link mode*
+                     doesn't suffer from this problem on equal conditions.
+                     This hack will introduce command line size limitations,
+                     which can be overcome by using -inc hbmk2 switch.
+                     [vszakats] */
+            #if defined( __PLATFORM__DOS )
+               cOpt_CompC += " {LC}{SCRIPT}"
+            #else
+               cOpt_CompC += " {LC}"
+            #endif
          ENDIF
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}{SCRIPT}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
+         cBin_Lib := "ar.exe"
+         cOpt_Lib := "{FA} rcs {OL} {LO}"
          IF hbmk[ _HBMK_cCOMP ] == "djgpp"
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} -Wl,--end-group" )
          ELSE
