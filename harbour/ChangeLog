@@ -17,6 +17,12 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-10 13:19 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+   + examples/hbmsql/tests/hbmk.hbm
+   - examples/hbmsql/tests/hbmsql.hbc
+   + examples/hbmsql/hbmsql.hbc
+     * hbmk2 make file rearrangement continued.
+
 2009-06-10 13:17 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   + contrib/gtalleg/tests/hbmk.hbm
   - contrib/gtalleg/tests/gtalleg.hbc
