@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+../hbblat.hbc
+
+-lhbwin
