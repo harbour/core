@@ -25,7 +25,7 @@ setlocal
 rem ; Basic setup
 set HB_VERSION=200
 if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=dos
-set HB_PKGNAME=hb%HB_VERSION%
+set HB_PKGNAME=hb%HB_VERSION%%HB_COMPILER:~0,2%
 set HB_DIRNAME=%HB_PKGNAME%
 
 rem ; Dir setup

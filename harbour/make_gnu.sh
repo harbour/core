@@ -176,7 +176,11 @@ if [ "$HB_ARCHITECTURE" = "win" ] || \
    [ "$HB_ARCHITECTURE" = "dos" ] || \
    [ "$HB_ARCHITECTURE" = "os2" ]; then
     if [ -z "$HB_DOC_INSTALL" ]; then export HB_DOC_INSTALL="$HB_INSTALL_PREFIX/doc"; fi
-    mkdir -p "$HB_BIN_INSTALL" "$HB_LIB_INSTALL" "$HB_INC_INSTALL" "$HB_DOC_INSTALL"
+fi
+
+if test_param "$@"; then
+    mkdir -p "$HB_BIN_INSTALL" "$HB_LIB_INSTALL" "$HB_INC_INSTALL"
+    [ -z "$HB_DOC_INSTALL" ] || mkdir -p "$HB_DOC_INSTALL" "$HB_DOC_INSTALL/en-EN"
 fi
 
 if [ -z "$HB_ARCHITECTURE" ]; then
@@ -219,3 +223,14 @@ else
        find . -type d -name "$HB_ARCHITECTURE" | xargs rmdir 2> /dev/null
     fi
 fi
+
+test_param()
+{
+    local inst
+    inst=no
+    while [ $# != 0 ] && [ "$inst" != yes ]; do
+        [ "$1" = install ] && inst=yes
+        shift
+    done
+    [ "$inst" = yes ]
+ }

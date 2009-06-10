@@ -34,10 +34,11 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    if "%HB_DOC_INSTALL%" == "" set HB_DOC_INSTALL=%HB_INSTALL_PREFIX%\doc
 
    rem Try to create install dirs.
-   if not exist %HB_BIN_INSTALL%\*.* md %HB_BIN_INSTALL%
-   if not exist %HB_LIB_INSTALL%\*.* md %HB_LIB_INSTALL%
-   if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
-   if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
+   if not exist %HB_BIN_INSTALL%\*.*       md %HB_BIN_INSTALL%
+   if not exist %HB_LIB_INSTALL%\*.*       md %HB_LIB_INSTALL%
+   if not exist %HB_INC_INSTALL%\*.*       md %HB_INC_INSTALL%
+   if not exist %HB_DOC_INSTALL%\*.*       md %HB_DOC_INSTALL%
+   if not exist %HB_DOC_INSTALL%\en-EN\*.* md %HB_DOC_INSTALL%\en-EN
 
    goto MAKE
 
@@ -108,8 +109,12 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
    set _HB_MAKE=make.exe
 
-   if "%HB_ARCHITECTURE%" == "dos" goto SKIP_WINDLL
+   if not "%HB_ARCHITECTURE%" == "dos" goto _FM_WIN
+   if not exist config\djg-make.exe goto SKIP_WINDLL
+   set _HB_MAKE=config\djg-make.exe
+   goto _FM_DONE
 
+   :_FM_WIN
    if not exist config\mingw32-make.exe goto _FM_NOLOCAL
    set _HB_MAKE=config\mingw32-make.exe
    goto _FM_DONE

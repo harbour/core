@@ -106,7 +106,7 @@ ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
 
 /* Include these for -pause support. */
-#if defined( __PLATFORM__WINCE )
+#if   defined( __PLATFORM__WINCE )
    REQUEST HB_GT_WVT
 #elif defined( __PLATFORM__WINDOWS )
    REQUEST HB_GT_WIN

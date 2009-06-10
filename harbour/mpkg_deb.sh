@@ -49,7 +49,7 @@ then
     export HB_WITHOUT_X11=yes
 fi
 
-export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbsqlit3 hbtip hbtpathy hbvpdf hbziparc xhb"
+export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnf hbsqlit3 hbtip hbtpathy hbvpdf hbziparc xhb"
 
 if [ ! -f "/usr/include/hpdf.h" ] && \
    [ ! -f "/usr/local/include/hpdf.h" ]
@@ -81,7 +81,7 @@ then
 fi
 
 if test_reqpkg libgd-xpm-dev || \
-   test_reqpkg libgd2-xpm-dev 
+   test_reqpkg libgd2-xpm-dev
 then
     export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbgd"
 fi
