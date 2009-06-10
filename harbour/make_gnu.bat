@@ -22,6 +22,9 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
 :CONTINUE_MAKE
 
+   if "%HB_ARCHITECTURE%" == "" goto BAD_ARCH
+   if "%HB_COMPILER%" == "" goto BAD_COMP
+
    if "%HB_INSTALL_PREFIX%" == "" if "%OS%" == "Windows_NT" set HB_INSTALL_PREFIX=%~dp0
 
    rem Set to constant value.
@@ -35,9 +38,6 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    if not exist %HB_LIB_INSTALL%\*.* md %HB_LIB_INSTALL%
    if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
    if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
-
-   if "%HB_ARCHITECTURE%" == "" goto BAD_ARCH
-   if "%HB_COMPILER%" == "" goto BAD_COMP
 
    goto MAKE
 

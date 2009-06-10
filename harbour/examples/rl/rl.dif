@@ -1,6 +1,6 @@
-diff -u ori_src\RLBACK.PRG .\RLBACK.PRG
---- ori_src\RLBACK.PRG	Mon May 20 05:31:00 1996
-+++ .\RLBACK.PRG	Wed Jun 03 11:30:32 2009
+diff -u rlori/rlback.prg rlpat/rlback.prg
+--- rlori/rlback.prg	1996-05-20 05:31:00.000000000 +0200
++++ rlpat/rlback.prg	2009-06-10 08:24:18.000000000 +0200
 @@ -312,10 +312,10 @@
     sub_hdr_offset, page_width_offset, lns_per_page_offset, left_mrgn_offset,;
     right_mgrn_offset, col_count_offset, dbl_space_offset,;
@@ -185,9 +185,42 @@ diff -u ori_src\RLBACK.PRG .\RLBACK.PRG
                  frm_pe +;
                  CHR(plus_byte)
  write_len = LEN(write_item)
-diff -u ori_src\RLFRONT.PRG .\RLFRONT.PRG
---- ori_src\RLFRONT.PRG	Mon May 20 05:31:00 1996
-+++ .\RLFRONT.PRG	Wed Jun 03 11:31:30 2009
+@@ -1296,7 +1296,7 @@
+ 
+ ** NO extension **
+ IF AT(".", file) = 0
+-   file = TRIM(file) + ".DBF"
++   file = TRIM(file) + ".dbf"
+ ENDIF
+ 
+ ** Calculate record_size, field_count and data_offset **
+diff -u rlori/rlfront.prg rlpat/rlfront.prg
+--- rlori/rlfront.prg	1996-05-20 05:31:00.000000000 +0200
++++ rlpat/rlfront.prg	2009-06-10 08:23:53.000000000 +0200
+@@ -158,9 +158,9 @@
+ 		CASE rl_choice == 1
+ 
+ 			// Select REPORT FORM
+-			DECLARE files[adir("*.FRM") + 1]
++			DECLARE files[adir("*.frm") + 1]
+ 			afill(files,"")
+-			adir("*.FRM", files)
++			adir("*.frm", files)
+ 
+ 			IF multibox(7, 17, 7, 5, file_box) = 0      // <esc> or cancel?
+ 				LOOP
+@@ -172,9 +172,9 @@
+ 		CASE rl_choice == 2
+ 
+ 			// Select LABEL FORM
+-			DECLARE files[adir("*.LBL") + 1]
++			DECLARE files[adir("*.lbl") + 1]
+ 			afill(files,"")
+-			adir("*.LBL", files)
++			adir("*.lbl", files)
+ 
+ 			IF multibox(7, 17, 7, 5, file_box) = 0      // <esc> or cancel?
+ 				LOOP
 @@ -828,10 +828,10 @@
  
  // translate semicolons into lines and stuff array
@@ -350,3 +383,16 @@ diff -u ori_src\RLFRONT.PRG .\RLFRONT.PRG
  @ 19,25 GET frm_subhdr
  
  READ    
+@@ -1913,10 +1913,10 @@
+ 
+ IF AT(".", fname) == 0
+ 	IF type == "L"
+-		open = TRIM(fname) + ".LBL"
++		open = TRIM(fname) + ".lbl"
+ 	ENDIF
+ 	IF type == "R"
+-		open = TRIM(fname) + ".FRM"
++		open = TRIM(fname) + ".frm"
+ 	ENDIF
+ ELSE
+ 	open = TRIM(fname)

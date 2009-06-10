@@ -561,25 +561,25 @@ FOR MORE INFORMATION
    Home:
    http://www.harbour-project.org/
 
-   Mailing lists:
-   http://www.harbour-project.org/mailing.html
-
-   Developers' mail archives:
+   Developers' Mail Archives:
    http://lists.harbour-project.org/pipermail/harbour/
 
-   Users' mail archives:
+   Users' Mail Archives:
    http://lists.harbour-project.org/pipermail/harbour-users/
 
-   Sourceforge page:
+   Public Newsgroup:
+   http://groups.google.com/group/comp.lang.clipper/
+
+   Sourceforge Page:
    http://sourceforge.net/projects/harbour-project/
 
-   Development timeline:
+   Development Timeline:
    http://apps.sourceforge.net/trac/harbour-project/timeline
 
-   Source repository browser:
+   Source Repository Browser:
    http://harbour-project.svn.sourceforge.net/viewvc/harbour-project/
 
-   Source repository checkout (anonymous):
+   Source Repository Checkout (anonymous):
    svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project harbour-project
 
    Miscellaneous documents:

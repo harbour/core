@@ -1,6 +1,6 @@
-diff -u -x make_dif.bat ..\ori_src\DBU.PRG .\DBU.PRG
---- ..\ori_src\DBU.PRG	Thu Mar 04 04:20:00 1993
-+++ .\DBU.PRG	Fri Dec 19 12:56:30 2008
+diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
+--- dbu52ori/dbu.prg	1993-03-04 04:20:00.000000000 +0100
++++ dbu52pat/dbu.prg	2009-06-10 01:37:40.000000000 +0200
 @@ -60,6 +60,9 @@
     SAVE SCREEN                                   && the screen you save...
     SET SCOREBOARD OFF                            && who's keeping score, anyhow
@@ -38,9 +38,9 @@ diff -u -x make_dif.bat ..\ori_src\DBU.PRG .\DBU.PRG
              * assume a valid .VEW file
              view_file = com_line
              set_from(.F.)                        && restore view
-diff -u -x make_dif.bat ..\ori_src\DBUCOPY.PRG .\DBUCOPY.PRG
---- ..\ori_src\DBUCOPY.PRG	Thu Mar 04 04:20:00 1993
-+++ .\DBUCOPY.PRG	Fri May 30 14:41:33 2008
+diff -u dbu52ori/dbucopy.prg dbu52pat/dbucopy.prg
+--- dbu52ori/dbucopy.prg	1993-03-04 04:20:00.000000000 +0100
++++ dbu52pat/dbucopy.prg	2009-06-10 01:37:40.000000000 +0200
 @@ -104,7 +104,7 @@
  
  	* DBF for normal mode
@@ -95,9 +95,9 @@ diff -u -x make_dif.bat ..\ori_src\DBUCOPY.PRG .\DBUCOPY.PRG
  				filelist(1)		&& display new list
  
  			ENDIF
-diff -u -x make_dif.bat ..\ori_src\DBUINDX.PRG .\DBUINDX.PRG
---- ..\ori_src\DBUINDX.PRG	Thu Mar 04 04:20:00 1993
-+++ .\DBUINDX.PRG	Fri May 30 14:40:42 2008
+diff -u dbu52ori/dbuindx.prg dbu52pat/dbuindx.prg
+--- dbu52ori/dbuindx.prg	1993-03-04 04:20:00.000000000 +0100
++++ dbu52pat/dbuindx.prg	2009-06-10 01:37:40.000000000 +0200
 @@ -240,7 +240,7 @@
  		INDEX ON &k_exp TO &filename
  		CLOSE INDEX
@@ -107,9 +107,9 @@ diff -u -x make_dif.bat ..\ori_src\DBUINDX.PRG .\DBUINDX.PRG
  		   FILE(name(M->filename) + INDEXEXT()) .AND. M->add_name
  			* add only .ntx files in the current directory
  
-diff -u -x make_dif.bat ..\ori_src\DBUSTRU.PRG .\DBUSTRU.PRG
---- ..\ori_src\DBUSTRU.PRG	Thu Mar 04 04:20:00 1993
-+++ .\DBUSTRU.PRG	Fri May 30 14:34:49 2008
+diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
+--- dbu52ori/dbustru.prg	1993-03-04 04:20:00.000000000 +0100
++++ dbu52pat/dbustru.prg	2009-06-10 01:39:17.000000000 +0200
 @@ -811,7 +811,7 @@
  			is_insert = .F.
  			filename = stru_name
@@ -143,18 +143,20 @@ diff -u -x make_dif.bat ..\ori_src\DBUSTRU.PRG .\DBUSTRU.PRG
  
  			IF FILE(dbt_spec)
  				* data file contains memo fields
-@@ -1321,7 +1321,7 @@
+@@ -1320,8 +1320,8 @@
+          CREATE &filename FROM ddbbuuuu.ext ALIAS cAlias
  			USE
  
- 			IF AT(".DBF", filename) = LEN(filename) - 3 .AND.;
+-			IF AT(".DBF", filename) = LEN(filename) - 3 .AND.;
 -			   FILE(name(filename) + ".DBF") .AND. add_name
++			IF AT(".dbf", Lower(filename)) = LEN(filename) - 3 .AND.;
 +			   FILE(name(filename) + ".dbf") .AND. add_name
  				* add only .dbf files in the current directory
  				i = afull(dbf_list) + 1
  
-diff -u -x make_dif.bat ..\ori_src\DBUUTIL.PRG .\DBUUTIL.PRG
---- ..\ori_src\DBUUTIL.PRG	Thu Mar 04 04:20:00 1993
-+++ .\DBUUTIL.PRG	Fri May 30 14:36:26 2008
+diff -u dbu52ori/dbuutil.prg dbu52pat/dbuutil.prg
+--- dbu52ori/dbuutil.prg	1993-03-04 04:20:00.000000000 +0100
++++ dbu52pat/dbuutil.prg	2009-06-10 01:37:40.000000000 +0200
 @@ -2152,7 +2152,7 @@
  IF FILE(M->filename)
  	* only if the file exists
@@ -164,9 +166,9 @@ diff -u -x make_dif.bat ..\ori_src\DBUUTIL.PRG .\DBUUTIL.PRG
  		* Clipper index file format
  		k_pos = 23
  
-diff -u -x make_dif.bat ..\ori_src\DBUVIEW.PRG .\DBUVIEW.PRG
---- ..\ori_src\DBUVIEW.PRG	Thu Mar 04 04:20:00 1993
-+++ .\DBUVIEW.PRG	Fri May 30 14:36:04 2008
+diff -u dbu52ori/dbuview.prg dbu52pat/dbuview.prg
+--- dbu52ori/dbuview.prg	1993-03-04 04:20:00.000000000 +0100
++++ dbu52pat/dbuview.prg	2009-06-10 01:37:40.000000000 +0200
 @@ -1110,7 +1110,7 @@
  
  			IF .NOT. (RAT(".", M->filename) > RAT("\", M->filename))

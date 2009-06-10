@@ -17,6 +17,36 @@
    past entries belonging to author(s): Viktor Szakats.
 */
 
+2009-06-10 09:45 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+   * INSTALL
+     + Added comp.lang.clipper as public forum.
+
+   * make_gnu.bat
+     ! Minor.
+
+   * source/pp/hbpp.c
+     ! Added version status to banner.
+
+   * examples/superlib/hbsuper.hbp
+   * examples/superlib/hbsuper.dif
+   * examples/superlib/readme.txt
+   * examples/dbu/dbu.hbp
+   - examples/dbu/dbu.dif
+   + examples/dbu/dbu52.dif
+   + examples/dbu/dbu53.dif
+   * examples/dbu/readme.txt
+   * examples/rl/rl.hbp
+   * examples/rl/rl.dif
+   * examples/rl/readme.txt
+     * Updated instructions: New item for *nix users to convert
+       to lowercase and native EOL format, added hbmk2 command
+       for all projects, separate 5.2/5.3 DBU patches.
+     + Added separate patch for C53 version of DBU sources.
+     * Converted all original filename references to lowercase.
+     ! Fixed a few bugs in previous patches.
+     ! Fixed .dif files to work on both *nix and non-*nix systems
+       (had to create them on *nix then convert them to have consistent EOLs)
+
 2009-06-09 22:44 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
   * mpkg_deb.sh
     + Added hbqt lib. Submitted by Davor Siklic. Thank you.

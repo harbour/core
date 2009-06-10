@@ -7,12 +7,15 @@
 
 2.) Unzip SOURCE.ZIP to this directory.
 
-3.) Apply supplied patch to the source using GNU Patch:
+3.) *nix users will need convert original filenames to lowercase
+    and EOLs to native format (f.e. with dos2unix).
+
+4.) Apply supplied patch to the source using GNU Patch:
     patch -N -i hbsuper.dif
 
-4.) Build it:
+5.) Build it:
     hbmk2 hbsuper.hbp
 
-5.) You're done.
+6.) You're done.
 
 [vszakats]

@@ -1,6 +1,6 @@
-diff -u ori_src\BETWEEN.C .\BETWEEN.C
---- ori_src\BETWEEN.C	Thu Aug 19 10:28:38 1993
-+++ .\BETWEEN.C	Thu May 28 17:56:25 2009
+diff -u superori/between.c superpat/between.c
+--- superori/between.c	1993-08-19 10:28:38.000000000 +0200
++++ superpat/between.c	2009-06-10 08:44:26.000000000 +0200
 @@ -63,7 +63,7 @@
     if (strend >= strstart && (fnd))
     {
@@ -10,9 +10,9 @@ diff -u ori_src\BETWEEN.C .\BETWEEN.C
       for(i = strstart; i <= strend  ;i++)
         result[knt++] = string[i];
       result[knt] = NIL;
-diff -u ori_src\MLINE.C .\MLINE.C
---- ori_src\MLINE.C	Tue Sep 14 14:17:34 1993
-+++ .\MLINE.C	Thu May 28 17:54:46 2009
+diff -u superori/mline.c superpat/mline.c
+--- superori/mline.c	1993-09-14 14:17:34.000000000 +0200
++++ superpat/mline.c	2009-06-10 08:44:26.000000000 +0200
 @@ -1,19 +1,19 @@
 -#include "extend.api"
 -#include "vm.api"
@@ -157,9 +157,9 @@ diff -u ori_src\MLINE.C .\MLINE.C
 +
 +  hb_xfree(outstr);
  }
-diff -u ori_src\R_HCODE.PRG .\R_HCODE.PRG
---- ori_src\R_HCODE.PRG	Fri Oct 08 12:30:40 1993
-+++ .\R_HCODE.PRG	Thu May 28 17:54:46 2009
+diff -u superori/r_hcode.prg superpat/r_hcode.prg
+--- superori/r_hcode.prg	1993-10-08 11:30:40.000000000 +0100
++++ superpat/r_hcode.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -121,7 +121,7 @@
  local cShowBox                                 // variable to hold makebox()
                                                 // screen
@@ -169,9 +169,9 @@ diff -u ori_src\R_HCODE.PRG .\R_HCODE.PRG
  	MSG("No Report file present")
  	return ''
  endif
-diff -u ori_src\R_PRINTR.PRG .\R_PRINTR.PRG
---- ori_src\R_PRINTR.PRG	Thu Nov 02 16:11:18 1995
-+++ .\R_PRINTR.PRG	Thu May 28 17:54:46 2009
+diff -u superori/r_printr.prg superpat/r_printr.prg
+--- superori/r_printr.prg	1995-11-02 16:11:18.000000000 +0100
++++ superpat/r_printr.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -48,7 +48,7 @@
  ิออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
  */
@@ -181,9 +181,9 @@ diff -u ori_src\R_PRINTR.PRG .\R_PRINTR.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\R_QUIKR.PRG .\R_QUIKR.PRG
---- ori_src\R_QUIKR.PRG	Fri Oct 08 12:30:42 1993
-+++ .\R_QUIKR.PRG	Thu May 28 17:54:46 2009
+diff -u superori/r_quikr.prg superpat/r_quikr.prg
+--- superori/r_quikr.prg	1993-10-08 11:30:42.000000000 +0100
++++ superpat/r_quikr.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -134,7 +134,7 @@
  
  
@@ -193,9 +193,9 @@ diff -u ori_src\R_QUIKR.PRG .\R_QUIKR.PRG
      MSG("No Report file present")
      return ''
  elseif!used()
-diff -u ori_src\R_REPORT.PRG .\R_REPORT.PRG
---- ori_src\R_REPORT.PRG	Thu Nov 02 16:13:54 1995
-+++ .\R_REPORT.PRG	Thu May 28 17:54:46 2009
+diff -u superori/r_report.prg superpat/r_report.prg
+--- superori/r_report.prg	1995-11-02 16:13:54.000000000 +0100
++++ superpat/r_report.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -194,7 +194,7 @@
  next
  
@@ -214,9 +214,9 @@ diff -u ori_src\R_REPORT.PRG .\R_REPORT.PRG
  
    nSelection := RAT_MENU2({;
                  {2,3 ,'Load REPORT    '},;
-diff -u ori_src\S_1LABEL.PRG .\S_1LABEL.PRG
---- ori_src\S_1LABEL.PRG	Thu Nov 02 16:59:32 1995
-+++ .\S_1LABEL.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_1label.prg superpat/s_1label.prg
+--- superori/s_1label.prg	1995-11-02 16:59:32.000000000 +0100
++++ superpat/s_1label.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -6,7 +6,7 @@
  static nDimLinesBetween
  
@@ -226,9 +226,9 @@ diff -u ori_src\S_1LABEL.PRG .\S_1LABEL.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_2DBRZ.PRG .\S_2DBRZ.PRG
---- ori_src\S_2DBRZ.PRG	Thu Nov 02 16:59:32 1995
-+++ .\S_2DBRZ.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_2dbrz.prg superpat/s_2dbrz.prg
+--- superori/s_2dbrz.prg	1995-11-02 16:59:32.000000000 +0100
++++ superpat/s_2dbrz.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -1,6 +1,6 @@
  static nElement
  
@@ -237,18 +237,18 @@ diff -u ori_src\S_2DBRZ.PRG .\S_2DBRZ.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_ACHOI.PRG .\S_ACHOI.PRG
---- ori_src\S_ACHOI.PRG	Thu Nov 02 16:59:32 1995
-+++ .\S_ACHOI.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_achoi.prg superpat/s_achoi.prg
+--- superori/s_achoi.prg	1995-11-02 16:59:32.000000000 +0100
++++ superpat/s_achoi.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -1,4 +1,4 @@
 -#include "inKey.ch"
 +#include "inkey.ch"
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_APPEND.PRG .\S_APPEND.PRG
---- ori_src\S_APPEND.PRG	Thu Nov 02 16:59:30 1995
-+++ .\S_APPEND.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_append.prg superpat/s_append.prg
+--- superori/s_append.prg	1995-11-02 16:59:30.000000000 +0100
++++ superpat/s_append.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -265,9 +265,9 @@ diff -u ori_src\S_APPEND.PRG .\S_APPEND.PRG
            if !file(cFromAlias)
              msg(cFromAlias,"does not exist")
              cFromAlias := ""
-diff -u ori_src\S_APPT.PRG .\S_APPT.PRG
---- ori_src\S_APPT.PRG	Thu Nov 02 16:59:30 1995
-+++ .\S_APPT.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_appt.prg superpat/s_appt.prg
+--- superori/s_appt.prg	1995-11-02 16:59:30.000000000 +0100
++++ superpat/s_appt.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -290,18 +290,18 @@ diff -u ori_src\S_APPT.PRG .\S_APPT.PRG
        lOk := .t.
     else
        msg("Problem finding/creating Appointments file")
-diff -u ori_src\S_BDELIM.PRG .\S_BDELIM.PRG
---- ori_src\S_BDELIM.PRG	Thu Nov 02 16:59:30 1995
-+++ .\S_BDELIM.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_bdelim.prg superpat/s_bdelim.prg
+--- superori/s_bdelim.prg	1995-11-02 16:59:30.000000000 +0100
++++ superpat/s_bdelim.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -1,4 +1,4 @@
 -#include "inKey.ch"
 +#include "inkey.ch"
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_BLDBF.PRG .\S_BLDBF.PRG
---- ori_src\S_BLDBF.PRG	Fri Oct 08 12:30:34 1993
-+++ .\S_BLDBF.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_bldbf.prg superpat/s_bldbf.prg
+--- superori/s_bldbf.prg	1993-10-08 11:30:34.000000000 +0100
++++ superpat/s_bldbf.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -80,8 +80,8 @@
    RETURN .F.
  ENDIF
@@ -313,9 +313,9 @@ diff -u ori_src\S_BLDBF.PRG .\S_BLDBF.PRG
  endif
  
  if !("\"$cDbfName .or. ":"$cDbfName)
-diff -u ori_src\S_BLDNDX.PRG .\S_BLDNDX.PRG
---- ori_src\S_BLDNDX.PRG	Thu Nov 02 16:59:28 1995
-+++ .\S_BLDNDX.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_bldndx.prg superpat/s_bldndx.prg
+--- superori/s_bldndx.prg	1995-11-02 16:59:28.000000000 +0100
++++ superpat/s_bldndx.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -323,9 +323,9 @@ diff -u ori_src\S_BLDNDX.PRG .\S_BLDNDX.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_BRSDF.PRG .\S_BRSDF.PRG
---- ori_src\S_BRSDF.PRG	Thu Nov 02 16:59:28 1995
-+++ .\S_BRSDF.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_brsdf.prg superpat/s_brsdf.prg
+--- superori/s_brsdf.prg	1995-11-02 16:59:28.000000000 +0100
++++ superpat/s_brsdf.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -333,9 +333,9 @@ diff -u ori_src\S_BRSDF.PRG .\S_BRSDF.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_BUILD.PRG .\S_BUILD.PRG
---- ori_src\S_BUILD.PRG	Thu Nov 02 16:59:28 1995
-+++ .\S_BUILD.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_build.prg superpat/s_build.prg
+--- superori/s_build.prg	1995-11-02 16:59:28.000000000 +0100
++++ superpat/s_build.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -343,9 +343,9 @@ diff -u ori_src\S_BUILD.PRG .\S_BUILD.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_BUNGEE.PRG .\S_BUNGEE.PRG
---- ori_src\S_BUNGEE.PRG	Thu Nov 02 17:11:04 1995
-+++ .\S_BUNGEE.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_bungee.prg superpat/s_bungee.prg
+--- superori/s_bungee.prg	1995-11-02 17:11:04.000000000 +0100
++++ superpat/s_bungee.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -1,7 +1,7 @@
  
  
@@ -364,9 +364,9 @@ diff -u ori_src\S_BUNGEE.PRG .\S_BUNGEE.PRG
  
          CASE aCurrentPrompts[nCurrentOption,PROMPTTYPE]==TYPEDROPDOWN
               MSG("Submenu currently inactive")
-diff -u ori_src\S_BXX.PRG .\S_BXX.PRG
---- ori_src\S_BXX.PRG	Fri Oct 08 12:30:36 1993
-+++ .\S_BXX.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_bxx.prg superpat/s_bxx.prg
+--- superori/s_bxx.prg	1993-10-08 11:30:36.000000000 +0100
++++ superpat/s_bxx.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -79,17 +79,17 @@
  dispbox(nTop,nLeft,nBottom,nRight,cFrame,cColorString)
  
@@ -397,9 +397,9 @@ diff -u ori_src\S_BXX.PRG .\S_BXX.PRG
 +   att(nTop,nLeft-1,nBottom-1,nLeft-1,nShadowAttribute)
  ENDCASE
  return ''
-diff -u ori_src\S_CALCVW.PRG .\S_CALCVW.PRG
---- ori_src\S_CALCVW.PRG	Fri Oct 08 12:30:40 1993
-+++ .\S_CALCVW.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_calcvw.prg superpat/s_calcvw.prg
+--- superori/s_calcvw.prg	1993-10-08 11:30:40.000000000 +0100
++++ superpat/s_calcvw.prg	2009-06-10 08:44:26.000000000 +0200
 @@ -1,6 +1,6 @@
  
 -#include "Inkey.ch"
@@ -409,9 +409,9 @@ diff -u ori_src\S_CALCVW.PRG .\S_CALCVW.PRG
  
  /*
  ี์อออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
-diff -u ori_src\S_CLAB.PRG .\S_CLAB.PRG
---- ori_src\S_CLAB.PRG	Thu Nov 02 17:02:54 1995
-+++ .\S_CLAB.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_clab.prg superpat/s_clab.prg
+--- superori/s_clab.prg	1995-11-02 17:02:54.000000000 +0100
++++ superpat/s_clab.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,4 +1,4 @@
 -#include "inKey.ch"
 +#include "inkey.ch"
@@ -463,9 +463,9 @@ diff -u ori_src\S_CLAB.PRG .\S_CLAB.PRG
  local nOldArea   := select()
  local cAlias     := ALIAS()
  local nSelection := 0
-diff -u ori_src\S_CLRFUN.PRG .\S_CLRFUN.PRG
---- ori_src\S_CLRFUN.PRG	Wed Oct 26 17:30:30 1994
-+++ .\S_CLRFUN.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_clrfun.prg superpat/s_clrfun.prg
+--- superori/s_clrfun.prg	1994-10-26 16:30:30.000000000 +0100
++++ superpat/s_clrfun.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -49,7 +49,7 @@
  ิํอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ 
  */
@@ -520,9 +520,9 @@ diff -u ori_src\S_CLRFUN.PRG .\S_CLRFUN.PRG
  local cSetName := padr(iif(cSetName==nil,"DEFAULT",cSetName),40)
  aSelections := {}
  aRecnos     := {}
-diff -u ori_src\S_COPY.PRG .\S_COPY.PRG
---- ori_src\S_COPY.PRG	Fri Jan 21 08:55:22 1994
-+++ .\S_COPY.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_copy.prg superpat/s_copy.prg
+--- superori/s_copy.prg	1994-01-21 08:55:22.000000000 +0100
++++ superpat/s_copy.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -115,7 +115,7 @@
      EXIT
    ENDIF
@@ -532,9 +532,9 @@ diff -u ori_src\S_COPY.PRG .\S_COPY.PRG
    
    *- if it already exists, don't overwrite it
    *- loop around and get another filespec
-diff -u ori_src\S_COPYF.PRG .\S_COPYF.PRG
---- ori_src\S_COPYF.PRG	Fri Oct 08 12:30:50 1993
-+++ .\S_COPYF.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_copyf.prg superpat/s_copyf.prg
+--- superori/s_copyf.prg	1993-10-08 11:30:50.000000000 +0100
++++ superpat/s_copyf.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -174,7 +174,7 @@
      EXIT
    ENDIF
@@ -544,9 +544,9 @@ diff -u ori_src\S_COPYF.PRG .\S_COPYF.PRG
    
    *- if it already exists, don't overwrite it
    *- loop around and get another filespec
-diff -u ori_src\S_CVTDEL.PRG .\S_CVTDEL.PRG
---- ori_src\S_CVTDEL.PRG	Thu Nov 02 17:02:52 1995
-+++ .\S_CVTDEL.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_cvtdel.prg superpat/s_cvtdel.prg
+--- superori/s_cvtdel.prg	1995-11-02 17:02:52.000000000 +0100
++++ superpat/s_cvtdel.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -563,9 +563,9 @@ diff -u ori_src\S_CVTDEL.PRG .\S_CVTDEL.PRG
    IF FILE(cDbfName)
      msg("Database "+cDbfName+" already exists - ",;
               "Use another name","Or delete that file first")
-diff -u ori_src\S_DATVW.PRG .\S_DATVW.PRG
---- ori_src\S_DATVW.PRG	Fri Oct 08 12:30:48 1993
-+++ .\S_DATVW.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_datvw.prg superpat/s_datvw.prg
+--- superori/s_datvw.prg	1993-10-08 11:30:48.000000000 +0100
++++ superpat/s_datvw.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
 -#include "Inkey.ch"
 -#include "Getexit.ch"
@@ -574,9 +574,9 @@ diff -u ori_src\S_DATVW.PRG .\S_DATVW.PRG
  
  //------------------------------------------------------------------------
  /*
-diff -u ori_src\S_DBSTAT.PRG .\S_DBSTAT.PRG
---- ori_src\S_DBSTAT.PRG	Mon Nov 08 14:58:00 1993
-+++ .\S_DBSTAT.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_dbstat.prg superpat/s_dbstat.prg
+--- superori/s_dbstat.prg	1993-11-08 14:58:00.000000000 +0100
++++ superpat/s_dbstat.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -143,17 +143,17 @@
       @ 12,23 SAY "ณ of                     ณ"
       @ 13,23 SAY "ภฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤู"
@@ -598,9 +598,9 @@ diff -u ori_src\S_DBSTAT.PRG .\S_DBSTAT.PRG
         nVariance := nVariance/nCount
         nStd      := sqrt(nVariance)
       endif
-diff -u ori_src\S_DPOPS.PRG .\S_DPOPS.PRG
---- ori_src\S_DPOPS.PRG	Thu Nov 02 17:02:52 1995
-+++ .\S_DPOPS.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_dpops.prg superpat/s_dpops.prg
+--- superori/s_dpops.prg	1995-11-02 17:02:52.000000000 +0100
++++ superpat/s_dpops.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -608,9 +608,9 @@ diff -u ori_src\S_DPOPS.PRG .\S_DPOPS.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_DUPH.PRG .\S_DUPH.PRG
---- ori_src\S_DUPH.PRG	Thu Nov 02 17:02:52 1995
-+++ .\S_DUPH.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_duph.prg superpat/s_duph.prg
+--- superori/s_duph.prg	1995-11-02 17:02:52.000000000 +0100
++++ superpat/s_duph.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -627,9 +627,9 @@ diff -u ori_src\S_DUPH.PRG .\S_DUPH.PRG
    
    *- if it already exists, don't overwrite it
    *- loop around and get another filespec
-diff -u ori_src\S_EDITM.PRG .\S_EDITM.PRG
---- ori_src\S_EDITM.PRG	Thu Nov 02 17:02:50 1995
-+++ .\S_EDITM.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_editm.prg superpat/s_editm.prg
+--- superori/s_editm.prg	1995-11-02 17:02:50.000000000 +0100
++++ superpat/s_editm.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -2,7 +2,7 @@
  static lImport,lExport,lChanged,lDone
  static nBoxTop,nBoxLeft, lDoEdit, nBoxBot
@@ -639,9 +639,9 @@ diff -u ori_src\S_EDITM.PRG .\S_EDITM.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_EDITMV.PRG .\S_EDITMV.PRG
---- ori_src\S_EDITMV.PRG	Thu Nov 02 17:02:50 1995
-+++ .\S_EDITMV.PRG	Thu May 28 17:54:46 2009
+diff -u superori/s_editmv.prg superpat/s_editmv.prg
+--- superori/s_editmv.prg	1995-11-02 17:02:50.000000000 +0100
++++ superpat/s_editmv.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -3,7 +3,7 @@
  static nBoxTop,nBoxLeft, nBoxRight, lDoEdit, nBoxBot
  
@@ -651,9 +651,9 @@ diff -u ori_src\S_EDITMV.PRG .\S_EDITMV.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_EXPORT.PRG .\S_EXPORT.PRG
---- ori_src\S_EXPORT.PRG	Fri Oct 08 12:30:44 1993
-+++ .\S_EXPORT.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_export.prg superpat/s_export.prg
+--- superori/s_export.prg	1993-10-08 11:30:44.000000000 +0100
++++ superpat/s_export.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -147,7 +147,7 @@
        nRecordSele := menu_v("[Write ASCII file from:]",;
                               "Tagged Records","Records meeting Query",;
@@ -663,9 +663,9 @@ diff -u ori_src\S_EXPORT.PRG .\S_EXPORT.PRG
        do case
        case nRecordSele = REC_TAGGED
           tagit(aTagged,aFieldNames,aFieldDesc,"Merge Records")
-diff -u ori_src\S_FILER.PRG .\S_FILER.PRG
---- ori_src\S_FILER.PRG	Mon Sep 12 17:20:02 1994
-+++ .\S_FILER.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_filer.prg superpat/s_filer.prg
+--- superori/s_filer.prg	1994-09-12 17:20:02.000000000 +0200
++++ superpat/s_filer.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -69,7 +69,7 @@
  local lMarking   := .f.
  local nMarkStart := 0, nMarkEnd := 0
@@ -675,9 +675,9 @@ diff -u ori_src\S_FILER.PRG .\S_FILER.PRG
  local nTbottom
  local cInstruct1, cInstruct2, nInstruct1, nInstruct2
  local nAtArrows, nAtPgup, nAtPgdn, nAtHome, nAtEnd, nAtEsc, nAtSearch, nAtMark
-diff -u ori_src\S_FORML.PRG .\S_FORML.PRG
---- ori_src\S_FORML.PRG	Thu Nov 02 17:02:50 1995
-+++ .\S_FORML.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_forml.prg superpat/s_forml.prg
+--- superori/s_forml.prg	1995-11-02 17:02:50.000000000 +0100
++++ superpat/s_forml.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -6,7 +6,7 @@
  
  #define MAXFORMSIZE 4000
@@ -696,9 +696,9 @@ diff -u ori_src\S_FORML.PRG .\S_FORML.PRG
      blddbf(cFormsFile,"DESCRIPT,C,50:MEMO_ORIG,M:")
  ENDIF
  *- open forms.dbf
-diff -u ori_src\S_FORMU.PRG .\S_FORMU.PRG
---- ori_src\S_FORMU.PRG	Thu Nov 02 17:02:48 1995
-+++ .\S_FORMU.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_formu.prg superpat/s_formu.prg
+--- superori/s_formu.prg	1995-11-02 17:02:48.000000000 +0100
++++ superpat/s_formu.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -706,9 +706,9 @@ diff -u ori_src\S_FORMU.PRG .\S_FORMU.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_FREQ.PRG .\S_FREQ.PRG
---- ori_src\S_FREQ.PRG	Thu Nov 02 17:13:40 1995
-+++ .\S_FREQ.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_freq.prg superpat/s_freq.prg
+--- superori/s_freq.prg	1995-11-02 17:13:40.000000000 +0100
++++ superpat/s_freq.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -725,9 +725,9 @@ diff -u ori_src\S_FREQ.PRG .\S_FREQ.PRG
           IF FILE(cPermDbf)
             msg("Database "+cPermDbf+" already exists - ","Use another name")
               cPermDbf = ''
-diff -u ori_src\S_FULLD.PRG .\S_FULLD.PRG
---- ori_src\S_FULLD.PRG	Thu Nov 02 17:02:48 1995
-+++ .\S_FULLD.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_fulld.prg superpat/s_fulld.prg
+--- superori/s_fulld.prg	1995-11-02 17:02:48.000000000 +0100
++++ superpat/s_fulld.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,12 +1,12 @@
  
 -#include "inKey.ch"
@@ -761,9 +761,9 @@ diff -u ori_src\S_FULLD.PRG .\S_FULLD.PRG
    Fileread(2,2,23,78,cFileName)
  ENDIF
  RETURN nil
-diff -u ori_src\S_GETDAT.PRG .\S_GETDAT.PRG
---- ori_src\S_GETDAT.PRG	Thu Nov 02 17:02:48 1995
-+++ .\S_GETDAT.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_getdat.prg superpat/s_getdat.prg
+--- superori/s_getdat.prg	1995-11-02 17:02:48.000000000 +0100
++++ superpat/s_getdat.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -771,9 +771,9 @@ diff -u ori_src\S_GETDAT.PRG .\S_GETDAT.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_GLOBAL.PRG .\S_GLOBAL.PRG
---- ori_src\S_GLOBAL.PRG	Thu Nov 10 11:02:38 1994
-+++ .\S_GLOBAL.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_global.prg superpat/s_global.prg
+--- superori/s_global.prg	1994-11-10 11:02:38.000000000 +0100
++++ superpat/s_global.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -212,7 +212,7 @@
  ณ
  ณ
@@ -783,9 +783,9 @@ diff -u ori_src\S_GLOBAL.PRG .\S_GLOBAL.PRG
  ณ  sls_FRAME(B_SINGLE+" ")
  ณ
  ณ Notes:
-diff -u ori_src\S_HELP.PRG .\S_HELP.PRG
---- ori_src\S_HELP.PRG	Mon Mar 28 10:25:20 1994
-+++ .\S_HELP.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_help.prg superpat/s_help.prg
+--- superori/s_help.prg	1994-03-28 10:25:20.000000000 +0200
++++ superpat/s_help.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -84,9 +84,9 @@
  select 0
  
@@ -798,9 +798,9 @@ diff -u ori_src\S_HELP.PRG .\S_HELP.PRG
       .F.,5,.T.,"Network error opening HELP file. Keep trying?")
    else
       set index to (cHelpFile)
-diff -u ori_src\S_HELPM.PRG .\S_HELPM.PRG
---- ori_src\S_HELPM.PRG	Thu Nov 02 17:06:02 1995
-+++ .\S_HELPM.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_helpm.prg superpat/s_helpm.prg
+--- superori/s_helpm.prg	1995-11-02 17:06:02.000000000 +0100
++++ superpat/s_helpm.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,6 +1,6 @@
  #include "memoedit.ch"
  
@@ -823,9 +823,9 @@ diff -u ori_src\S_HELPM.PRG .\S_HELPM.PRG
    IF SNET_USE(cHelpFile,"__HELP",.F.,5,.T.,"Network error opening HELP file. Keep trying?")
      if !FILE( cHelpFile+INDEXEXT() )
        INDEX ON __HELP->h_mod+__HELP->h_var TO (cHelpFile)
-diff -u ori_src\S_LIST.PRG .\S_LIST.PRG
---- ori_src\S_LIST.PRG	Thu Nov 02 17:06:02 1995
-+++ .\S_LIST.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_list.prg superpat/s_list.prg
+--- superori/s_list.prg	1995-11-02 17:06:02.000000000 +0100
++++ superpat/s_list.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,4 +1,4 @@
 -#include "inKey.ch"
 +#include "inkey.ch"
@@ -868,9 +868,9 @@ diff -u ori_src\S_LIST.PRG .\S_LIST.PRG
    msg("No lists stored in this directory")
  elseif SNET_USE(cListFile,"__LIST",.F.,5,.T.,;
         "Network error opening LIST file. Keep trying?")
-diff -u ori_src\S_LOTMEN.PRG .\S_LOTMEN.PRG
---- ori_src\S_LOTMEN.PRG	Thu Nov 02 17:06:00 1995
-+++ .\S_LOTMEN.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_lotmen.prg superpat/s_lotmen.prg
+--- superori/s_lotmen.prg	1995-11-02 17:06:00.000000000 +0100
++++ superpat/s_lotmen.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -878,9 +878,9 @@ diff -u ori_src\S_LOTMEN.PRG .\S_LOTMEN.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_MAILM.PRG .\S_MAILM.PRG
---- ori_src\S_MAILM.PRG	Mon Jan 03 10:36:58 1994
-+++ .\S_MAILM.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_mailm.prg superpat/s_mailm.prg
+--- superori/s_mailm.prg	1994-01-03 10:36:58.000000000 +0100
++++ superpat/s_mailm.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -135,7 +135,7 @@
        nRecordSele := menu_v("[Write Mailmerge Files from:]",;
                               "Tagged Records","Records meeting Query",;
@@ -890,9 +890,9 @@ diff -u ori_src\S_MAILM.PRG .\S_MAILM.PRG
        do case
        case nRecordSele = REC_TAGGED
           tagit(aTagged,aFieldNames,aFieldDesc,"Merge Records")
-diff -u ori_src\S_MCHOI.PRG .\S_MCHOI.PRG
---- ori_src\S_MCHOI.PRG	Thu Nov 02 17:06:00 1995
-+++ .\S_MCHOI.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_mchoi.prg superpat/s_mchoi.prg
+--- superori/s_mchoi.prg	1995-11-02 17:06:00.000000000 +0100
++++ superpat/s_mchoi.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -900,9 +900,9 @@ diff -u ori_src\S_MCHOI.PRG .\S_MCHOI.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_MMEMO.PRG .\S_MMEMO.PRG
---- ori_src\S_MMEMO.PRG	Thu Nov 02 16:06:32 1995
-+++ .\S_MMEMO.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_mmemo.prg superpat/s_mmemo.prg
+--- superori/s_mmemo.prg	1995-11-02 16:06:32.000000000 +0100
++++ superpat/s_mmemo.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -44,7 +44,7 @@
  */
  
@@ -912,9 +912,9 @@ diff -u ori_src\S_MMEMO.PRG .\S_MMEMO.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_MODIFY.PRG .\S_MODIFY.PRG
---- ori_src\S_MODIFY.PRG	Thu Nov 02 17:14:48 1995
-+++ .\S_MODIFY.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_modify.prg superpat/s_modify.prg
+--- superori/s_modify.prg	1995-11-02 17:14:48.000000000 +0100
++++ superpat/s_modify.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,7 +1,7 @@
  
  memvar getlist
@@ -944,9 +944,9 @@ diff -u ori_src\S_MODIFY.PRG .\S_MODIFY.PRG
            ELSE
              msg("No DBFs in this directory")
              EXIT
-diff -u ori_src\S_MOOSE.PRG .\S_MOOSE.PRG
---- ori_src\S_MOOSE.PRG	Thu Nov 02 16:17:08 1995
-+++ .\S_MOOSE.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_moose.prg superpat/s_moose.prg
+--- superori/s_moose.prg	1995-11-02 16:17:08.000000000 +0100
++++ superpat/s_moose.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -98,7 +98,7 @@
  
  */
@@ -965,9 +965,9 @@ diff -u ori_src\S_MOOSE.PRG .\S_MOOSE.PRG
  ณ  @10,10 say "<OK>
  ณ  @11,10 say "<Cancel>"
  ณ  aHotAreas  := {  {10,10,10,13}, {11,10,11,18} }
-diff -u ori_src\S_MULMYN.PRG .\S_MULMYN.PRG
---- ori_src\S_MULMYN.PRG	Thu Nov 02 17:05:58 1995
-+++ .\S_MULMYN.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_mulmyn.prg superpat/s_mulmyn.prg
+--- superori/s_mulmyn.prg	1995-11-02 17:05:58.000000000 +0100
++++ superpat/s_mulmyn.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -975,9 +975,9 @@ diff -u ori_src\S_MULMYN.PRG .\S_MULMYN.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_OLD.PRG .\S_OLD.PRG
---- ori_src\S_OLD.PRG	Thu Oct 14 13:42:10 1993
-+++ .\S_OLD.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_old.prg superpat/s_old.prg
+--- superori/s_old.prg	1993-10-14 12:42:10.000000000 +0100
++++ superpat/s_old.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -277,7 +277,7 @@
  local lOpened := .f.
  local cDocDbf := SLSF_OLD()
@@ -987,9 +987,9 @@ diff -u ori_src\S_OLD.PRG .\S_OLD.PRG
          dbcreate(cDocDbf,{;
                        {"TOPIC","C",35,0},;
                        {"KEYS","M",10,0},;
-diff -u ori_src\S_PCSEL.PRG .\S_PCSEL.PRG
---- ori_src\S_PCSEL.PRG	Thu Nov 02 17:05:58 1995
-+++ .\S_PCSEL.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_pcsel.prg superpat/s_pcsel.prg
+--- superori/s_pcsel.prg	1995-11-02 17:05:58.000000000 +0100
++++ superpat/s_pcsel.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -997,9 +997,9 @@ diff -u ori_src\S_PCSEL.PRG .\S_PCSEL.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_POPDIR.PRG .\S_POPDIR.PRG
---- ori_src\S_POPDIR.PRG	Thu Nov 02 17:05:58 1995
-+++ .\S_POPDIR.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_popdir.prg superpat/s_popdir.prg
+--- superori/s_popdir.prg	1995-11-02 17:05:58.000000000 +0100
++++ superpat/s_popdir.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -1025,9 +1025,9 @@ diff -u ori_src\S_POPDIR.PRG .\S_POPDIR.PRG
    Fileread(2,2,23,78,cFileName)
  ENDIF
  SELECT (nSelect)
-diff -u ori_src\S_PULLDN.PRG .\S_PULLDN.PRG
---- ori_src\S_PULLDN.PRG	Fri Oct 08 12:30:50 1993
-+++ .\S_PULLDN.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_pulldn.prg superpat/s_pulldn.prg
+--- superori/s_pulldn.prg	1993-10-08 11:30:50.000000000 +0100
++++ superpat/s_pulldn.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,6 +1,6 @@
  // slight behavior change - boxes are 1 character wider.
  
@@ -1036,9 +1036,9 @@ diff -u ori_src\S_PULLDN.PRG .\S_PULLDN.PRG
  #define   A_BOXTOPBAR     1
  #define   A_TOPBARCOLOR   2
  #define   A_MENUBOXCOLOR  3
-diff -u ori_src\S_QUERY.PRG .\S_QUERY.PRG
---- ori_src\S_QUERY.PRG	Thu Nov 02 17:05:56 1995
-+++ .\S_QUERY.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_query.prg superpat/s_query.prg
+--- superori/s_query.prg	1995-11-02 17:05:56.000000000 +0100
++++ superpat/s_query.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -1088,9 +1088,9 @@ diff -u ori_src\S_QUERY.PRG .\S_QUERY.PRG
  local nOldarea    := SELECT()
  IF FILE(cQueryFile)
    SELECT 0
-diff -u ori_src\S_READRS.PRG .\S_READRS.PRG
---- ori_src\S_READRS.PRG	Thu Nov 02 17:09:12 1995
-+++ .\S_READRS.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_readrs.prg superpat/s_readrs.prg
+--- superori/s_readrs.prg	1995-11-02 17:09:12.000000000 +0100
++++ superpat/s_readrs.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,7 +1,7 @@
  
  //------------------------------------------------------------------------
@@ -1100,9 +1100,9 @@ diff -u ori_src\S_READRS.PRG .\S_READRS.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_RMENU2.PRG .\S_RMENU2.PRG
---- ori_src\S_RMENU2.PRG	Thu Nov 02 17:09:12 1995
-+++ .\S_RMENU2.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_rmenu2.prg superpat/s_rmenu2.prg
+--- superori/s_rmenu2.prg	1995-11-02 17:09:12.000000000 +0100
++++ superpat/s_rmenu2.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -1110,9 +1110,9 @@ diff -u ori_src\S_RMENU2.PRG .\S_RMENU2.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_RREAD.PRG .\S_RREAD.PRG
---- ori_src\S_RREAD.PRG	Thu Nov 02 17:09:12 1995
-+++ .\S_RREAD.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_rread.prg superpat/s_rread.prg
+--- superori/s_rread.prg	1995-11-02 17:09:12.000000000 +0100
++++ superpat/s_rread.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,12 +1,12 @@
  
 -#include "inKey.ch"
@@ -1128,9 +1128,9 @@ diff -u ori_src\S_RREAD.PRG .\S_RREAD.PRG
  
  #define K_UNDO          K_CTRL_U
  
-diff -u ori_src\S_SCMOD.PRG .\S_SCMOD.PRG
---- ori_src\S_SCMOD.PRG	Fri Oct 08 12:30:46 1993
-+++ .\S_SCMOD.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_scmod.prg superpat/s_scmod.prg
+--- superori/s_scmod.prg	1993-10-08 11:30:46.000000000 +0100
++++ superpat/s_scmod.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -82,7 +82,7 @@
  SELECT 0
  
@@ -1149,9 +1149,9 @@ diff -u ori_src\S_SCMOD.PRG .\S_SCMOD.PRG
             if !empty(cTempFile)
               cTempfile := left(cTempfile,at(".",cTempFile)-1)
               if cTempFile==cAlias
-diff -u ori_src\S_SCRBUF.C .\S_SCRBUF.C
---- ori_src\S_SCRBUF.C	Mon Nov 02 17:15:40 1992
-+++ .\S_SCRBUF.C	Thu May 28 17:54:47 2009
+diff -u superori/s_scrbuf.c superpat/s_scrbuf.c
+--- superori/s_scrbuf.c	1992-11-02 17:15:40.000000000 +0100
++++ superpat/s_scrbuf.c	2009-06-10 08:44:27.000000000 +0200
 @@ -20,7 +20,7 @@
     getrow            = _parni(6)-1;
     top               = top*80;
@@ -1179,9 +1179,9 @@ diff -u ori_src\S_SCRBUF.C .\S_SCRBUF.C
  
     for(i=0; i< columns;i++)
       {
-diff -u ori_src\S_SCROLL.PRG .\S_SCROLL.PRG
---- ori_src\S_SCROLL.PRG	Fri Oct 08 12:30:34 1993
-+++ .\S_SCROLL.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_scroll.prg superpat/s_scroll.prg
+--- superori/s_scroll.prg	1993-10-08 11:30:34.000000000 +0100
++++ superpat/s_scroll.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -107,7 +107,7 @@
  
  cProcVar := iif("->"$cProcVar,SUBST(cProcVar,AT(">",cProcVar)+1),cProcVar)
@@ -1191,9 +1191,9 @@ diff -u ori_src\S_SCROLL.PRG .\S_SCROLL.PRG
     msg("Lookup definition file missing - "+slsf_scroll())
     RETURN ''
  ENDIF
-diff -u ori_src\S_SETCOL.PRG .\S_SETCOL.PRG
---- ori_src\S_SETCOL.PRG	Thu Nov 02 17:09:10 1995
-+++ .\S_SETCOL.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_setcol.prg superpat/s_setcol.prg
+--- superori/s_setcol.prg	1995-11-02 17:09:10.000000000 +0100
++++ superpat/s_setcol.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -1201,9 +1201,9 @@ diff -u ori_src\S_SETCOL.PRG .\S_SETCOL.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_SMGETS.PRG .\S_SMGETS.PRG
---- ori_src\S_SMGETS.PRG	Fri Oct 08 12:30:46 1993
-+++ .\S_SMGETS.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_smgets.prg superpat/s_smgets.prg
+--- superori/s_smgets.prg	1993-10-08 11:30:46.000000000 +0100
++++ superpat/s_smgets.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
 -#include "Inkey.ch"
 -#include "Getexit.ch"
@@ -1212,9 +1212,9 @@ diff -u ori_src\S_SMGETS.PRG .\S_SMGETS.PRG
  
  
  //------------------------------------------------------------------------
-diff -u ori_src\S_TABMEN.PRG .\S_TABMEN.PRG
---- ori_src\S_TABMEN.PRG	Thu Nov 02 17:09:10 1995
-+++ .\S_TABMEN.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_tabmen.prg superpat/s_tabmen.prg
+--- superori/s_tabmen.prg	1995-11-02 17:09:10.000000000 +0100
++++ superpat/s_tabmen.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -1222,9 +1222,9 @@ diff -u ori_src\S_TABMEN.PRG .\S_TABMEN.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_TAG.PRG .\S_TAG.PRG
---- ori_src\S_TAG.PRG	Thu Nov 02 17:09:10 1995
-+++ .\S_TAG.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_tag.prg superpat/s_tag.prg
+--- superori/s_tag.prg	1995-11-02 17:09:10.000000000 +0100
++++ superpat/s_tag.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -1232,9 +1232,9 @@ diff -u ori_src\S_TAG.PRG .\S_TAG.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_TAGA.PRG .\S_TAGA.PRG
---- ori_src\S_TAGA.PRG	Thu Nov 02 17:09:08 1995
-+++ .\S_TAGA.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_taga.prg superpat/s_taga.prg
+--- superori/s_taga.prg	1995-11-02 17:09:08.000000000 +0100
++++ superpat/s_taga.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -1242,9 +1242,9 @@ diff -u ori_src\S_TAGA.PRG .\S_TAGA.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_TIME.PRG .\S_TIME.PRG
---- ori_src\S_TIME.PRG	Thu Nov 02 17:09:08 1995
-+++ .\S_TIME.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_time.prg superpat/s_time.prg
+--- superori/s_time.prg	1995-11-02 17:09:08.000000000 +0100
++++ superpat/s_time.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,13 +1,13 @@
  //---------------------------------------------------------------------
  
@@ -1288,9 +1288,9 @@ diff -u ori_src\S_TIME.PRG .\S_TIME.PRG
      IF !FILE(cDbfName)
        DBCREATE(cDbfName,aStruc)
        USE (cDbfName)
-diff -u ori_src\S_TODO.PRG .\S_TODO.PRG
---- ori_src\S_TODO.PRG	Thu Nov 02 17:09:08 1995
-+++ .\S_TODO.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_todo.prg superpat/s_todo.prg
+--- superori/s_todo.prg	1995-11-02 17:09:08.000000000 +0100
++++ superpat/s_todo.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,6 +1,6 @@
  
  
@@ -1308,9 +1308,9 @@ diff -u ori_src\S_TODO.PRG .\S_TODO.PRG
      BLDDBF(cTodoFile,"CATEGORY,C,10:ITEM,C,60:PRIORITY,C,2:DOBY,D:DONE,L:LONG_DESC,C,231")
  endif
  
-diff -u ori_src\S_VIEWP.PRG .\S_VIEWP.PRG
---- ori_src\S_VIEWP.PRG	Thu Nov 02 17:09:08 1995
-+++ .\S_VIEWP.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_viewp.prg superpat/s_viewp.prg
+--- superori/s_viewp.prg	1995-11-02 17:09:08.000000000 +0100
++++ superpat/s_viewp.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -4,7 +4,7 @@
  
  #include "getexit.ch"
@@ -1320,9 +1320,9 @@ diff -u ori_src\S_VIEWP.PRG .\S_VIEWP.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_VMEMO.PRG .\S_VMEMO.PRG
---- ori_src\S_VMEMO.PRG	Thu Nov 02 17:09:06 1995
-+++ .\S_VMEMO.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_vmemo.prg superpat/s_vmemo.prg
+--- superori/s_vmemo.prg	1995-11-02 17:09:06.000000000 +0100
++++ superpat/s_vmemo.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,5 +1,5 @@
  
 -#include "inKey.ch"
@@ -1330,9 +1330,9 @@ diff -u ori_src\S_VMEMO.PRG .\S_VMEMO.PRG
  #ifndef K_LBUTTONDOWN
   #define K_LBUTTONDOWN   1002   //   mouse left key press
   #define K_RBUTTONDOWN   1004   //   mouse right key press
-diff -u ori_src\S_VVIEW.PRG .\S_VVIEW.PRG
---- ori_src\S_VVIEW.PRG	Thu Nov 02 17:11:06 1995
-+++ .\S_VVIEW.PRG	Thu May 28 17:54:47 2009
+diff -u superori/s_vview.prg superpat/s_vview.prg
+--- superori/s_vview.prg	1995-11-02 17:11:06.000000000 +0100
++++ superpat/s_vview.prg	2009-06-10 08:44:27.000000000 +0200
 @@ -1,4 +1,4 @@
 -#include "inKey.ch"
 +#include "inkey.ch"

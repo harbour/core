@@ -6,6 +6,6 @@
 -m -n
 -main=setup
 
-RLBACK.PRG
-RLDIALG.PRG
-RLFRONT.PRG
+rlfront.prg
+rlback.prg
+rldialg.prg
