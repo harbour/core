@@ -112,7 +112,7 @@ typedef struct
 typedef sqlite3_stmt *psqlite3_stmt;
 
 /**
-   destructor, it's executed automatically 
+   destructor, it's executed automatically
 */
 
 static HB_GARBAGE_FUNC( hb_sqlite3_destructor )
@@ -236,7 +236,7 @@ BOOL hb_sqlite3_store( void *pMemAddr, int iType, int iParam )
 
 /**
    Callbacs helpers:
-      Compile-Time Authorization Callback 
+      Compile-Time Authorization Callback
       A Callback To Handle SQLITE_BUSY Errors
       Query Progress Callbacks
       Commit And Rollback Notification Callback
@@ -387,7 +387,7 @@ static void hook_rollback( void *Cargo )
    sqlite3_libversion()         -> cVersion
    sqlite3_libversion_number()  -> nVersionNumber
 
-   Returns values equivalent to the header constants 
+   Returns values equivalent to the header constants
    SQLITE_VERSION and SQLITE_VERSION_NUMBER.
 */
 
@@ -410,17 +410,23 @@ HB_FUNC( SQLITE3_LIBVERSION_NUMBER )
    allocated by sqlite3_initialize()
 */
 
-#if SQLITE_VERSION_NUMBER >= 3006000
 HB_FUNC( SQLITE3_INITIALIZE )
 {
+#if SQLITE_VERSION_NUMBER >= 3006000
    hb_retni( sqlite3_initialize() );
+#else
+   hb_retni( -1 );
+#endif /* SQLITE_VERSION_NUMBER >= 3006000 */
 }
 
 HB_FUNC( SQLITE3_SHUTDOWN )
 {
+#if SQLITE_VERSION_NUMBER >= 3006000
    hb_retni( sqlite3_shutdown() );
-}
+#else
+   hb_retni( -1 );
 #endif /* SQLITE_VERSION_NUMBER >= 3006000 */
+}
 
 /**
    Enable Or Disable Extended Result Codes
@@ -446,8 +452,8 @@ HB_FUNC( SQLITE3_EXTENDED_RESULT_CODES )
    Error Codes And Messages
 
    sqlite3_errcode( db ) -> returns the numeric result code or extended result
-                            code 
-   sqlite3_errmsg( db )  -> return English-language text 
+                            code
+   sqlite3_errmsg( db )  -> return English-language text
                             that describes the error
 */
 
@@ -465,9 +471,9 @@ HB_FUNC( SQLITE3_ERRCODE )
    }
 }
 
-#if SQLITE_VERSION_NUMBER >= 3006005
 HB_FUNC( SQLITE3_EXTENDED_ERRCODE )
 {
+#if SQLITE_VERSION_NUMBER >= 3006005
    HB_SQLITE3  *pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, TRUE );
 
    if( pHbSqlite3 && pHbSqlite3->db )
@@ -478,8 +484,10 @@ HB_FUNC( SQLITE3_EXTENDED_ERRCODE )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError(1) );
    }
-}
+#else
+   hb_retni( -1 );
 #endif /* SQLITE_VERSION_NUMBER >= 3006005 */
+}
 
 HB_FUNC( SQLITE3_ERRMSG )
 {
@@ -529,7 +537,7 @@ HB_FUNC( SQLITE3_LAST_INSERT_ROWID )
 /**
    Name Of The Folder Holding Temporary Files
 
-   sqlite3_temp_directory( cDirName ) -> lResult (TRUE/FALSE) 
+   sqlite3_temp_directory( cDirName ) -> lResult (TRUE/FALSE)
 */
 
 HB_FUNC( SQLITE3_TEMP_DIRECTORY )
@@ -623,9 +631,9 @@ HB_FUNC( SQLITE3_OPEN )
    }
 }
 
-#if SQLITE_VERSION_NUMBER >= 3005000
 HB_FUNC( SQLITE3_OPEN_V2 )
 {
+#if SQLITE_VERSION_NUMBER >= 3005000
    sqlite3  *db;
    BOOL     fFree;
    char     *pszdbName = ( char * ) hb_fsNameConv( ( BYTE * ) hb_parcx(1), &fFree );
@@ -650,12 +658,14 @@ HB_FUNC( SQLITE3_OPEN_V2 )
    {
       hb_xfree( pszdbName );
    }
-}
+#else
+   hb_retptr( NULL );
 #endif /* SQLITE_VERSION_NUMBER >= 3005000 */
+}
 
 /**
    One-Step Query Execution Interface
-   
+
    sqlite3_exec( db, cSQLTEXT, [pCallbackFunc]|[cCallbackFunc] ) -> nResultCode
 */
 
@@ -711,7 +721,7 @@ HB_FUNC( SQLITE3_EXEC )
 /**
    Compiling An SQL Statement
 
-   sqlite3_prepare( db, cSQLTEXT ) 
+   sqlite3_prepare( db, cSQLTEXT )
    -> return pointer to compiled statement or NIL if error occurs
 
    TODO: pszTail?
@@ -767,16 +777,16 @@ HB_FUNC( SQLITE3_COMPLETE )
 
 /**
    This interface can be used to retrieve a saved copy of the original SQL text
-   used to create a prepared statement 
+   used to create a prepared statement
    if that statement was compiled using either sqlite3_prepare()
 
    sqlite3_sql( pStmt ) -> cSQLTEXT
 */
 
-/* TOFIX: verify the exact SQLITE3 version */
-#if SQLITE_VERSION_NUMBER > 3004001
 HB_FUNC( SQLITE3_SQL )
 {
+/* TOFIX: verify the exact SQLITE3 version */
+#if SQLITE_VERSION_NUMBER > 3004001
    psqlite3_stmt  pStmt = ( psqlite3_stmt ) hb_parptr( 1 );
 
    if( pStmt )
@@ -787,18 +797,20 @@ HB_FUNC( SQLITE3_SQL )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError(1) );
    }
-}
+#else
+   hb_retc( NULL );
 #endif
+}
 
 /**
    Prepared Statement Status.
-   
+
    sqlite3_stmt_status( pStmt, nOp, lResetFlag) -> nStatus
 */
 
-#if SQLITE_VERSION_NUMBER >= 3006004
 HB_FUNC( SQLITE3_STMT_STATUS )
 {
+#if SQLITE_VERSION_NUMBER >= 3006004
    psqlite3_stmt  pStmt = ( psqlite3_stmt ) hb_parptr( 1 );
 
    if( pStmt )
@@ -809,8 +821,10 @@ HB_FUNC( SQLITE3_STMT_STATUS )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError(1) );
    }
-}
+#else
+   hb_retni( -1 );
 #endif /* SQLITE_VERSION_NUMBER >= 3006004 */
+}
 
 /**
    Find The Database Handle Associated With A Prepared Statement
@@ -836,7 +850,7 @@ HB_FUNC( SQLITE3_DB_HANDLE )
 
 /**
    Evaluate An Prepared SQL Statement
- 
+
    sqlite3_step( pStmt ) -> nResultCode
 */
 
@@ -859,8 +873,8 @@ HB_FUNC( SQLITE3_STEP )
 
    sqlite3_clear_bindings( pStmt ) -> nResultCode
 
-   Contrary to the intuition of many, 
-   sqlite3_reset() does not reset the bindings on a prepared statement. 
+   Contrary to the intuition of many,
+   sqlite3_reset() does not reset the bindings on a prepared statement.
    Use this routine to reset all host parameters to NULL.
 */
 
@@ -932,10 +946,10 @@ int sqlite3_bind_zeroblob(sqlite3_stmt*, int, int n)
 /**
    Binding Values To Prepared Statements
 
-   These routines return SQLITE_OK on success or an error code if anything 
-   goes wrong. 
-   SQLITE_RANGE is returned if the parameter index is out of range. 
-   SQLITE_NOMEM is returned if malloc fails. 
+   These routines return SQLITE_OK on success or an error code if anything
+   goes wrong.
+   SQLITE_RANGE is returned if the parameter index is out of range.
+   SQLITE_NOMEM is returned if malloc fails.
    SQLITE_MISUSE is returned if these routines are called on a virtual machine
    that is the wrong state or which has already been finalized.
 */
@@ -1169,7 +1183,7 @@ HB_FUNC( SQLITE3_COLUMN_COUNT )
    SQLITE3_TEXT        3
    SQLITE_BLOB         4
    SQLITE_NULL         5
-   
+
    Declared Datatype Of A Query Result (see doc)
    sqlite3_column_decltype( pStmt, nIndex ) -> nColumnDeclType
 */
@@ -1223,7 +1237,7 @@ HB_FUNC( SQLITE3_COLUMN_NAME )
 }
 
 /**
-   sqlite3_column_bytes( pStmt, columnIndex ) 
+   sqlite3_column_bytes( pStmt, columnIndex )
    -> returns the number of bytes in that BLOB or string
 
    Results Values From A Query
@@ -1426,16 +1440,16 @@ HB_FUNC( SQLITE3_GET_TABLE )
 /**
    Extract Metadata About A Column Of A Table
    based on
-   int sqlite3_table_column_metadata( 
-     sqlite3 *db,                - IN:  Connection handle 
-     const char *zDbName,        - IN:  Database name or NULL 
-     const char *zTableName,     - IN:  Table name 
-     const char *zColumnName,    - IN:  Column name 
-     char const **pzDataType,    - OUT: Declared data type 
-     char const **pzCollSeq,     - OUT: Collation sequence name 
-     int *pNotNull,              - OUT: True if NOT NULL constraint exists 
-     int *pPrimaryKey,           - OUT: True if column part of PK 
-     int *pAutoinc               - OUT: True if column is auto-increment 
+   int sqlite3_table_column_metadata(
+     sqlite3 *db,                - IN:  Connection handle
+     const char *zDbName,        - IN:  Database name or NULL
+     const char *zTableName,     - IN:  Table name
+     const char *zColumnName,    - IN:  Column name
+     char const **pzDataType,    - OUT: Declared data type
+     char const **pzCollSeq,     - OUT: Collation sequence name
+     int *pNotNull,              - OUT: True if NOT NULL constraint exists
+     int *pPrimaryKey,           - OUT: True if column part of PK
+     int *pAutoinc               - OUT: True if column is auto-increment
    );
 */
 
@@ -1537,15 +1551,15 @@ HB_FUNC( SQLITE3_COLUMN_ORIGIN_NAME )
 #endif /* SQLITE_ENABLE_COLUMN_METADATA */
 
 /*
-   BLOB I/O 
+   BLOB I/O
 */
 
 /**
    Open A BLOB For Incremental I/O
 
-   Open a handle to the blob located in row iRow, column zColumn, table zTable 
+   Open a handle to the blob located in row iRow, column zColumn, table zTable
    in database zDb. i.e. the same blob that would be selected by:
- 
+
    SELECT zColumn FROM zDb.zTable WHERE rowid = iRow;
 */
 
@@ -1718,7 +1732,7 @@ HB_FUNC( SQLITE3_ENABLE_SHARED_CACHE )
    Tracing And Profiling Functions
 
    sqlite3_trace( db, lOnOff )
-   sqlite3_profile( db, lOnOff ) 
+   sqlite3_profile( db, lOnOff )
 */
 
 static void SQL3ProfileLog( void *sFile, const char *sProfileMsg, sqlite3_uint64 int64 )
@@ -1778,7 +1792,7 @@ HB_FUNC( SQLITE3_TRACE )
 }
 
 /**
-   BLOB Import/export 
+   BLOB Import/export
 */
 
 HB_FUNC( SQLITE3_FILE_TO_BUFF )
@@ -1822,7 +1836,7 @@ HB_FUNC( SQLITE3_BUFF_TO_FILE )
 }
 
 /**
-   Causes any pending database operation to abort and return at its 
+   Causes any pending database operation to abort and return at its
    earliest opportunity.
 
    sqlite3_interrupt( db) -> Nil
@@ -2144,8 +2158,8 @@ HB_FUNC( SQLITE3_SET_AUTHORIZER )
 }
 
 /**
-   This API is used to overwrite the contents of one database with that 
-   of another. It is useful either for creating backups of databases or 
+   This API is used to overwrite the contents of one database with that
+   of another. It is useful either for creating backups of databases or
    for copying in-memory databases to or from persistent files.
 
    ! Experimental !
@@ -2159,9 +2173,9 @@ HB_FUNC( SQLITE3_SET_AUTHORIZER )
    sqlite3_backup_pagecount( pBackup ) -> nResult
 */
 
-#if SQLITE_VERSION_NUMBER >= 3006011
 HB_FUNC( SQLITE3_BACKUP_INIT )
 {
+#if SQLITE_VERSION_NUMBER >= 3006011
    HB_SQLITE3     *pHbSqlite3Dest = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, TRUE );
    HB_SQLITE3     *pHbSqlite3Source = ( HB_SQLITE3 * ) hb_sqlite3_param( 3, HB_SQLITE3_DB, TRUE );
    sqlite3_backup *pBackup;
@@ -2180,6 +2194,7 @@ HB_FUNC( SQLITE3_BACKUP_INIT )
       }
    }
    else
+#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
    {
       hb_retptr( NULL );
    }
@@ -2187,6 +2202,7 @@ HB_FUNC( SQLITE3_BACKUP_INIT )
 
 HB_FUNC( SQLITE3_BACKUP_STEP )
 {
+#if SQLITE_VERSION_NUMBER >= 3006011
    sqlite3_backup *pBackup = ( sqlite3_backup * ) hb_parptr( 1 );
 
    if( pBackup )
@@ -2194,6 +2210,7 @@ HB_FUNC( SQLITE3_BACKUP_STEP )
       hb_retni( sqlite3_backup_step(pBackup, hb_parni(2)) );
    }
    else
+#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
    {
       hb_retni( -1 );
    }
@@ -2201,6 +2218,7 @@ HB_FUNC( SQLITE3_BACKUP_STEP )
 
 HB_FUNC( SQLITE3_BACKUP_FINISH )
 {
+#if SQLITE_VERSION_NUMBER >= 3006011
    sqlite3_backup *pBackup = ( sqlite3_backup * ) hb_parptr( 1 );
 
    if( pBackup )
@@ -2208,6 +2226,7 @@ HB_FUNC( SQLITE3_BACKUP_FINISH )
       hb_retni( sqlite3_backup_finish(pBackup) );
    }
    else
+#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
    {
       hb_retni( -1 );
    }
@@ -2215,6 +2234,7 @@ HB_FUNC( SQLITE3_BACKUP_FINISH )
 
 HB_FUNC( SQLITE3_BACKUP_REMAINING )
 {
+#if SQLITE_VERSION_NUMBER >= 3006011
    sqlite3_backup *pBackup = ( sqlite3_backup * ) hb_parptr( 1 );
 
    if( pBackup )
@@ -2222,6 +2242,7 @@ HB_FUNC( SQLITE3_BACKUP_REMAINING )
       hb_retni( sqlite3_backup_remaining(pBackup) );
    }
    else
+#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
    {
       hb_retni( -1 );
    }
@@ -2229,6 +2250,7 @@ HB_FUNC( SQLITE3_BACKUP_REMAINING )
 
 HB_FUNC( SQLITE3_BACKUP_PAGECOUNT )
 {
+#if SQLITE_VERSION_NUMBER >= 3006011
    sqlite3_backup *pBackup = ( sqlite3_backup * ) hb_parptr( 1 );
 
    if( pBackup )
@@ -2236,11 +2258,11 @@ HB_FUNC( SQLITE3_BACKUP_PAGECOUNT )
       hb_retni( sqlite3_backup_pagecount(pBackup) );
    }
    else
+#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
    {
       hb_retni( -1 );
    }
 }
-#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
 
 /**
    Memory Allocator Statistics
@@ -2249,18 +2271,25 @@ HB_FUNC( SQLITE3_BACKUP_PAGECOUNT )
    sqlite3_memory_highwater( lResetFlag ) -> nResult
 */
 
-/* TOFIX: verify the exact SQLITE3 version */
-#if SQLITE_VERSION_NUMBER > 3004001
 HB_FUNC( SQLITE3_MEMORY_USED )
 {
+/* TOFIX: verify the exact SQLITE3 version */
+#if SQLITE_VERSION_NUMBER > 3004001
    hb_retnint( sqlite3_memory_used() );
+#else
+   hb_retnint( -1 );
+#endif
 }
 
 HB_FUNC( SQLITE3_MEMORY_HIGHWATER )
 {
+/* TOFIX: verify the exact SQLITE3 version */
+#if SQLITE_VERSION_NUMBER > 3004001
    hb_retnint( sqlite3_memory_highwater(( int ) hb_parl(1)) );
-}
+#else
+   hb_retnint( -1 );
 #endif
+}
 
 /**
    Test To See If The Library Is Threadsafe
@@ -2268,13 +2297,15 @@ HB_FUNC( SQLITE3_MEMORY_HIGHWATER )
    sqlite3_threadsafe() -> nResult
 */
 
-/* TOFIX: verify the exact SQLITE3 version */
-#if SQLITE_VERSION_NUMBER > 3004001
 HB_FUNC( SQLITE3_THREADSAFE )
 {
+/* TOFIX: verify the exact SQLITE3 version */
+#if SQLITE_VERSION_NUMBER > 3004001
    hb_retni( sqlite3_threadsafe() );
-}
+#else
+   hb_retni( -1 );
 #endif
+}
 
 /**
    SQLite Runtime Status
@@ -2282,9 +2313,9 @@ HB_FUNC( SQLITE3_THREADSAFE )
    sqlite3_status( nOp, @nCurrent, @nHighwater, lResetFlag);
 */
 
-#if SQLITE_VERSION_NUMBER >= 3006000
 HB_FUNC( SQLITE3_STATUS )
 {
+#if SQLITE_VERSION_NUMBER >= 3006000
    int   iCurrent, iHighwater;
 
    if( hb_pcount() > 3 && (HB_ISNUM(2) && HB_ISBYREF(2)) && (HB_ISNUM(3) && HB_ISBYREF(3)) )
@@ -2295,11 +2326,11 @@ HB_FUNC( SQLITE3_STATUS )
       hb_storni( iHighwater, 3 );
    }
    else
+#endif /* SQLITE_VERSION_NUMBER >= 3006000 */
    {
       hb_retni( -1 );
    }
 }
-#endif /* SQLITE_VERSION_NUMBER >= 3006000 */
 
 /**
    Database Connection Status
@@ -2307,9 +2338,9 @@ HB_FUNC( SQLITE3_STATUS )
    sqlite3_db_status( pDb, nOp, @nCurrent, @nHighwater, lResetFlag);
 */
 
-#if SQLITE_VERSION_NUMBER >= 3006001
 HB_FUNC( SQLITE3_DB_STATUS )
 {
+#if SQLITE_VERSION_NUMBER >= 3006001
    int         iCurrent, iHighwater;
    HB_SQLITE3  *pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, TRUE );
 
@@ -2321,8 +2352,8 @@ HB_FUNC( SQLITE3_DB_STATUS )
       hb_storni( iHighwater, 4 );
    }
    else
+#endif /* SQLITE_VERSION_NUMBER >= 3006001 */
    {
       hb_retni( -1 );
    }
 }
-#endif /* SQLITE_VERSION_NUMBER >= 3006001 */
