@@ -410,7 +410,7 @@ EXAMPLES
       ---
 
       --- Borland/CodeGear C++
-      set PATH=C:\Borland\BCC55\bin;%PATH%
+      set PATH=C:\Borland\BCC55\Bin;%PATH%
       rem
       set HB_COMPILER=bcc
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
@@ -418,9 +418,9 @@ EXAMPLES
       ---
 
       --- Pelles C
-      set PATH=%ProgramFiles%\PellesC\bin;%PATH%
-      set INCLUDE=%ProgramFiles%\PellesC\include;%ProgramFiles%\PellesC\include\win;%INCLUDE%
-      set LIB=%ProgramFiles%\PellesC\lib;%ProgramFiles%\PellesC\lib\win;%LIB%
+      set PATH=%ProgramFiles%\PellesC\Bin;%PATH%
+      set INCLUDE=%ProgramFiles%\PellesC\Include;%ProgramFiles%\PellesC\Include\Win;%INCLUDE%
+      set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\Win;%LIB%
       rem
       set HB_COMPILER=pocc
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
@@ -428,9 +428,9 @@ EXAMPLES
       ---
 
       --- Pelles C x86-64 (requires native x86 Harbour binaries)
-      set PATH=%ProgramFiles%\PellesC-64\bin;%PATH%
-      set INCLUDE=%ProgramFiles%\PellesC-64\include;%ProgramFiles%\PellesC-64\include\win;%INCLUDE%
-      set LIB=%ProgramFiles%\PellesC-64\lib;%ProgramFiles%\PellesC-64\lib\win64;%LIB%
+      set PATH=%ProgramFiles%\PellesC\Bin;%PATH%
+      set INCLUDE=%ProgramFiles%\PellesC\Include;%ProgramFiles%\PellesC\Include\Win;%INCLUDE%
+      set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\Win64;%LIB%
       rem
       set HB_BIN_COMPILE=C:\hb-pocc\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
@@ -441,9 +441,9 @@ EXAMPLES
       ---
 
       --- Pelles C WinCE/ARM (requires native x86 Harbour binaries)
-      set PATH=%ProgramFiles%\PellesC\bin;%PATH%
-      set INCLUDE=%ProgramFiles%\PellesC\include\wince;%ProgramFiles%\PellesC\include;%INCLUDE%
-      set LIB=%ProgramFiles%\PellesC\lib;%ProgramFiles%\PellesC\lib\wince;%INCLUDE%
+      set PATH=%ProgramFiles%\PellesC\Bin;%PATH%
+      set INCLUDE=%ProgramFiles%\PellesC\Include\WinCE;%ProgramFiles%\PellesC\Include;%INCLUDE%
+      set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\WinCE;%LIB%
       rem
       set HB_BIN_COMPILE=C:\hb-pocc\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%

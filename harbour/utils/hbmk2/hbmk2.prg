@@ -925,7 +925,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                                FindInPath( "cl"       ),;
                                NIL )                      }, "msvc"    },;
                     { {|| _BCC_BIN_DETECT()        }, "bcc"     },;
-                    { {|| FindInPath( "porc64"   ) }, "pocc64"  },;
+                    { {|| iif( FindInPath( "dbgeng.lib", GetEnv( "LIB" ) ) != NIL .AND. ( tmp1 := FindInPath( "pocc" ) ) != NIL, tmp1, NIL ) }, "pocc64"  },;
                     { {|| FindInPath( "pocc"     ) }, "pocc"    },;
                     { {|| iif( ( tmp1 := FindInPath( "icl" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ), tmp1, NIL ) }, "iccia64" },;
                     { {|| FindInPath( "icl"      ) }, "icc"     },;
@@ -4210,7 +4210,7 @@ STATIC FUNCTION LibExists( hbmk, cDir, cLib, cLibExt )
 
    RETURN NIL
 
-STATIC FUNCTION FindInPath( cFileName )
+STATIC FUNCTION FindInPath( cFileName, cPath )
    LOCAL cDir
    LOCAL cName
    LOCAL cExt
@@ -4236,13 +4236,15 @@ STATIC FUNCTION FindInPath( cFileName )
       ENDIF
    ENDIF
 
+   DEFAULT cPath TO GetEnv( "PATH" )
+
    /* Check in the PATH. */
    #if defined( __PLATFORM__WINDOWS ) .OR. ;
        defined( __PLATFORM__DOS ) .OR. ;
        defined( __PLATFORM__OS2 )
-   FOR EACH cDir IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator(), .T., .T. )
+   FOR EACH cDir IN hb_ATokens( cPath, hb_osPathListSeparator(), .T., .T. )
    #else
-   FOR EACH cDir IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
+   FOR EACH cDir IN hb_ATokens( cPath, hb_osPathListSeparator() )
    #endif
       IF ! Empty( cDir )
          IF hb_FileExists( cFileName := hb_FNameMerge( DirAddPathSep( StrStripQuote( cDir ) ), cName, cExt ) )
