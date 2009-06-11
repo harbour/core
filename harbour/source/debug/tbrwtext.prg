@@ -261,6 +261,7 @@ METHOD Search( cString, lCaseSensitive, nMode ) CLASS HBBrwText
 
    LOCAL bMove
    LOCAL lFound := .F.
+   LOCAL n
 
    IF !lCaseSensitive
       cString := Upper( cString )
@@ -276,9 +277,12 @@ METHOD Search( cString, lCaseSensitive, nMode ) CLASS HBBrwText
       bMove := {|| ::Skip( -1 ) }
    ENDCASE
 
+   n := ::nRow
+
    DO WHILE Eval( bMove ) != 0
-      IF cString $ IIF( lCaseSensitive, ::cCurLine, Upper( ::cCurLine ) )
+      IF cString $ IIF( lCaseSensitive, ::aRows[ ::nRow ], Upper( ::aRows[ ::nRow ] ) )
          lFound := .T.
+         ::oBrw:MoveCursor( ::nRow - n )
          ::RefreshAll()
          EXIT
       ENDIF
