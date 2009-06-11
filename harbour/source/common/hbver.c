@@ -199,14 +199,14 @@ char * hb_verPlatform( void )
          }
       }
 
-      /* Host OS detection: Windows NT/2000 */
+      /* Host OS detection: Windows NT family */
 
       {
          regs.HB_XREGS.ax = 0x3306;
          HB_DOS_INT86( 0x21, &regs, &regs );
 
          if( regs.HB_XREGS.bx == 0x3205 )
-            hb_strncat( pszPlatform, " (Windows NT/2000)", PLATFORM_BUF_SIZE );
+            hb_strncat( pszPlatform, " (Windows NT)", PLATFORM_BUF_SIZE );
       }
 
       /* Host OS detection: OS/2 */

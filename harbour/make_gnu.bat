@@ -162,7 +162,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    set HB_EXTERNALLIBS=no
    set HB_EXTERNAL_ADDONS=
    %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-   if errorlevel 1 echo GNU Make returned: %ERRORLEVEL%
+   if errorlevel 1 echo GNU Make returned: %ERRORLEVEL%
    set HB_DYNLIB=no
    set HB_CONTRIBLIBS=%_HB_CONTRIBLIBS%
    set HB_CONTRIB_ADDONS=%_HB_CONTRIB_ADDONS%
@@ -173,20 +173,20 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    set _HB_EXTERNALLIBS=
    set _HB_EXTERNAL_ADDONS=
    %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-   if errorlevel 1 echo GNU Make returned: %ERRORLEVEL%
+   if errorlevel 1 echo GNU Make returned: %ERRORLEVEL%
    goto MAKE_DONE
 
 :DO_GCC
 
    set HB_DYNLIB=no
    %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-   if errorlevel 1 echo GNU Make returned: %ERRORLEVEL%
+   if errorlevel 1 echo GNU Make returned: %ERRORLEVEL%
    goto MAKE_DONE
 
 :SKIP_WINDLL
 
    %_HB_MAKE% %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-   if errorlevel 1 echo GNU Make returned: %ERRORLEVEL%
+   if errorlevel 1 echo GNU Make returned: %ERRORLEVEL%
    goto MAKE_DONE
 
 :MAKE_DONE

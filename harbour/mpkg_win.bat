@@ -74,7 +74,7 @@ zip -9 -X -r -o %~dp0%HB_PKGNAME%.zip . -i %HB_DIRNAME%\*
 popd
 
 rem ; Build installer package
-%HB_DIR_NSIS%makensis.exe %~dp0mpkg_win.nsi
+"%HB_DIR_NSIS%makensis.exe" %~dp0mpkg_win.nsi
 
 :MK_ERROR
 

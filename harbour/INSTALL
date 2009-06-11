@@ -351,7 +351,7 @@ EXAMPLES
       ---
 
       --- MinGW GCC (make sure msys (sh.exe) isn't in the PATH)
-      set PATH=C:\devl\MinGW-440\bin;%PATH%
+      set PATH=C:\mingw\bin;%PATH%
       rem
       set HB_COMPILER=mingw
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
@@ -359,8 +359,8 @@ EXAMPLES
       ---
 
       --- MinGW GCC + msys
-      set PATH=C:\devl\msys\1.0.11\bin;%PATH%
-      set PATH=C:\devl\MinGW-440\bin;%PATH%
+      set PATH=C:\msys\1.0.11\bin;%PATH%
+      set PATH=C:\mingw\bin;%PATH%
       rem
       set HB_COMPILER=mingw
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
@@ -368,7 +368,7 @@ EXAMPLES
       ---
 
       --- MinGW GCC for x86-64 (requires native x86 Harbour binaries)
-      set PATH=C:\devl\MinGW-440-64\bin;%PATH%
+      set PATH=C:\mingw64\bin;%PATH%
       rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
@@ -379,7 +379,7 @@ EXAMPLES
       ---
 
       --- MinGW GCC for WinCE/ARM (requires native x86 Harbour binaries)
-      set PATH=C:\devl\MinGW-410-ce\opt\mingw32ce\bin;%PATH%
+      set PATH=C:\mingwce\opt\mingw32ce\bin;%PATH%
       rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
@@ -391,7 +391,7 @@ EXAMPLES
       ---
 
       --- Open Watcom C++
-      SET WATCOM=C:\devl\owatcom-1.8
+      SET WATCOM=C:\watcom
       SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
       SET EDPATH=%WATCOM%\EDDAT
       SET INCLUDE=%WATCOM%\H;%WATCOM%\H\NT
@@ -410,7 +410,7 @@ EXAMPLES
       ---
 
       --- Borland/CodeGear C++
-      set PATH=C:\devl\bcc55\bin;%PATH%
+      set PATH=C:\Borland\BCC55\bin;%PATH%
       rem
       set HB_COMPILER=bcc
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
@@ -418,9 +418,9 @@ EXAMPLES
       ---
 
       --- Pelles C
-      set PATH=C:\devl\PellesC-501\bin;%PATH%
-      set INCLUDE=C:\devl\PellesC-501\include;C:\devl\PellesC-501\include\win;%INCLUDE%
-      set LIB=C:\devl\PellesC-501\lib;C:\devl\PellesC-501\lib\win;%LIB%
+      set PATH=%ProgramFiles%\PellesC\bin;%PATH%
+      set INCLUDE=%ProgramFiles%\PellesC\include;%ProgramFiles%\PellesC\include\win;%INCLUDE%
+      set LIB=%ProgramFiles%\PellesC\lib;%ProgramFiles%\PellesC\lib\win;%LIB%
       rem
       set HB_COMPILER=pocc
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
@@ -428,9 +428,9 @@ EXAMPLES
       ---
 
       --- Pelles C x86-64 (requires native x86 Harbour binaries)
-      set PATH=C:\devl\PellesC-501-64\bin;%PATH%
-      set INCLUDE=C:\devl\PellesC-501-64\include;C:\devl\PellesC-501-64\include\win;%INCLUDE%
-      set LIB=C:\devl\PellesC-501-64\lib;C:\devl\PellesC-501-64\lib\win64;%LIB%
+      set PATH=%ProgramFiles%\PellesC-64\bin;%PATH%
+      set INCLUDE=%ProgramFiles%\PellesC-64\include;%ProgramFiles%\PellesC-64\include\win;%INCLUDE%
+      set LIB=%ProgramFiles%\PellesC-64\lib;%ProgramFiles%\PellesC-64\lib\win64;%LIB%
       rem
       set HB_BIN_COMPILE=C:\hb-pocc\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
@@ -441,9 +441,9 @@ EXAMPLES
       ---
 
       --- Pelles C WinCE/ARM (requires native x86 Harbour binaries)
-      set PATH=C:\devl\PellesC-501\bin;%PATH%
-      set INCLUDE=C:\devl\PellesC-501\include\wince;C:\devl\PellesC-501\include;%INCLUDE%
-      set LIB=C:\devl\PellesC-501\lib;C:\devl\PellesC-501\lib\wince;%INCLUDE%
+      set PATH=%ProgramFiles%\PellesC\bin;%PATH%
+      set INCLUDE=%ProgramFiles%\PellesC\include\wince;%ProgramFiles%\PellesC\include;%INCLUDE%
+      set LIB=%ProgramFiles%\PellesC\lib;%ProgramFiles%\PellesC\lib\wince;%INCLUDE%
       rem
       set HB_BIN_COMPILE=C:\hb-pocc\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
@@ -455,9 +455,9 @@ EXAMPLES
       ---
 
       --- Cygwin GCC
-      set PATH=C:\devl\cygwin\bin;%PATH%
-      set C_INCLUDE_PATH=/cygdrive/c/devl/cygwin/usr/include:/cygdrive/c/devl/cygwin/usr/include/w32api
-      set LIBRARY_PATH=/cygdrive/c/devl/cygwin/usr/lib:/cygdrive/c/devl/cygwin/usr/lib/w32api
+      set PATH=C:\cygwin\bin;%PATH%
+      set C_INCLUDE_PATH=/cygdrive/c/cygwin/usr/include:/cygdrive/c/cygwin/usr/include/w32api
+      set LIBRARY_PATH=/cygdrive/c/cygwin/usr/lib:/cygdrive/c/cygwin/usr/lib/w32api
       rem
       set HB_COMPILER=cygwin
       set HB_INSTALL_PREFIX=/cygdrive/c/hb-%HB_COMPILER%
@@ -505,7 +505,7 @@ EXAMPLES
       --8<--
       rem ; To create installation packages (.exe + .zip),
       rem   replace last line (calling make_gnu.bat) with these two:
-      set HB_DIR_NSIS=C:\devl\NSIS-2.44\
+      set HB_DIR_NSIS=%ProgramFiles%\NSIS\
       call mpkg_win.bat > log-%HB_COMPILER%.txt 2>&1
       -->8--
 
@@ -513,8 +513,8 @@ EXAMPLES
    ---
 
       --- Delorie GNU C
-      set DJGPP=C:\devl\djgpp\djgpp.env
-      set PATH=C:\devl\djgpp\bin;%PATH%
+      set DJGPP=C:\djgpp\djgpp.env
+      set PATH=C:\djgpp\bin;%PATH%
       rem
       set HB_ARCHITECTURE=dos
       set HB_COMPILER=djgpp
@@ -523,25 +523,25 @@ EXAMPLES
       ---
 
       --- Open Watcom C++
-      SET WATCOM=C:\devl\owatcom-1.8
-      SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
+      SET WATCOM=C:\watcom
+      SET PATH=%WATCOM%\BINW;%PATH%
       SET EDPATH=%WATCOM%\EDDAT
-      SET INCLUDE=%WATCOM%\H;%WATCOM%\H\NT
+      SET INCLUDE=%WATCOM%\H
       rem
       set HB_ARCHITECTURE=dos
       set HB_COMPILER=owatcom
       set HB_INSTALL_PREFIX=C:\hb-ow
-      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      call make_gnu.bat %1 %2 > log-ow.txt 2>&1
       ---
 
       --8<--
       rem ; Add these *before* above sample scripts to configure 3rd party dependencies.
       rem   You have to use 8.3 path notation.
-      set HB_INC_ALLEGRO=C:\devl\ALLEGR~1.2\include
-      set HB_INC_FIREBIRD=C:\devl\FIREBI~1.4\include
-      set HB_INC_GD=C:\devl\GD-20~1.34\include
-      set HB_INC_MYSQL=C:\devl\MYSQL-~1.67\include
-      set HB_INC_PGSQL=C:\devl\PGSQL-~1.3\include
+      set HB_INC_ALLEGRO=C:\ALLEGR~1.2\include
+      set HB_INC_FIREBIRD=C:\FIREBI~1.4\include
+      set HB_INC_GD=C:\GD-20~1.34\include
+      set HB_INC_MYSQL=C:\MYSQL-~1.67\include
+      set HB_INC_PGSQL=C:\PGSQL-~1.3\include
       -->8--
 
       --8<--
@@ -549,6 +549,23 @@ EXAMPLES
       rem   replace last line (calling make_gnu.bat) with this one:
       call mpkg_dos.bat > log-%HB_COMPILER%.txt 2>&1
       -->8--
+
+   OS/2
+   ----
+
+      --- Open Watcom C++
+      SET WATCOM=C:\watcom
+      SET PATH=%WATCOM%\BINP;%WATCOM%\BINW;%PATH%
+      SET BEGINLIBPATH=%WATCOM%\BINP\DLL
+      SET EDPATH=%WATCOM%\EDDAT
+      SET INCLUDE=%WATCOM%\H;%WATCOM%\H\OS2
+      SET HELP=%WATCOM%\BINP\HELP;%HELP%
+      SET BOOKSHELF=%WATCOM%\BINP\HELP;%BOOKSHELF%
+      rem
+      set HB_COMPILER=owatcom
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu_os2.cmd %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
 
 
 HOW TO GET THE HARBOUR SOURCES
