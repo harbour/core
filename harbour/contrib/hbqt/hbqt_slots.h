@@ -58,8 +58,13 @@
 #define SLOTS_H
 
 #include <QObject>
+#include <QMainWindow>
 #include <QList>
 #include <QModelIndex>
+#include <QEvent>
+#include <QKeyEvent>
+#include <QMouseEvent>
+
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -68,7 +73,7 @@ class Slots: public QObject
 {
    Q_OBJECT
 
-   public:
+public:
    Slots( QObject *parent = 0 );
    ~Slots();
    QList<QWidget*> list1;
@@ -76,7 +81,7 @@ class Slots: public QObject
    QList<PHB_ITEM> list3;
    QList<bool> list4;
 
-   public slots:
+public slots:
    void clicked();
    void triggered();
    void triggered( bool checked );
@@ -90,6 +95,85 @@ class Slots: public QObject
    void returnPressed();
    void clicked_model( const QModelIndex & index );
    void viewportEntered();
+   bool event( QEvent *event );
+   void keyPressEvent( QKeyEvent * event );
+   void mouseMoveEvent( QMouseEvent * event );
+
+#if 0
+   void accessibleEvent();
+   void actionEvent();
+   void childEvent();
+   void closeEvent();
+   void customEvent();
+   void dragLeaveEvent();
+   void dropEvent();
+   void dynamicPropertyChangeEvent();
+   void fileOpenEvent();
+   void focusEvent();
+   void graphicsSceneEvent();
+   void helpEvent();
+   void hideEvent();
+   void hoverEvent();
+   void iconDragEvent();
+   void inputEvent();
+   void inputMethodEvent();
+   void moveEvent();
+   void paintEvent();
+   void resizeEvent();
+   void shortcutEvent();
+   void showEvent();
+   void statusTipEvent();
+   void timerEvent();
+   void whatsThisClickedEvent();
+   void windowStateChangeEvent();
+#endif
+};
+
+
+class MyDrawingArea : public QWidget
+{
+   Q_OBJECT
+
+public:
+   MyDrawingArea( QWidget *parent = 0 );
+   virtual ~MyDrawingArea( void );
+
+   #if 0
+protected slots:
+   void keyReleaseEvent( QKeyEvent * event );
+   void mousePressEvent( QMouseEvent * event );
+   void mouseReleaseEvent( QMouseEvent * event );
+   void mouseDoubleClickEvent( QMouseEvent * event );
+   void paintEvent( QPaintEvent * event );
+   void resizeEvent( QResizeEvent * event );
+   void wheelEvent( QWheelEvent * event );
+   void timerEvent( QTimerEvent * event );
+   void focusInEvent( QFocusEvent * event );
+   void focusOutEvent( QFocusEvent * event );
+   void moveEvent( QMoveEvent * event );
+   bool event( QEvent * event );
+   #endif
+   void keyPressEvent( QKeyEvent * event );
+   void mouseMoveEvent( QMouseEvent * event );
+
+signals:
+   void sg_mouseMoveEvent( QMouseEvent * event );
+   void sg_keyPressEvent( QKeyEvent * event );
+
+};
+
+
+class MyMainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    MyMainWindow();
+    virtual ~MyMainWindow();
+
+public:
+    void closeEvent( QCloseEvent *event );
+
 };
 
 #endif

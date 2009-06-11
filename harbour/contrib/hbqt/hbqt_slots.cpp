@@ -65,6 +65,7 @@
 #include <QWidget>
 #include <QString>
 #include <QList>
+#include <QKeyEvent>
 
 #define HBQT_EVT_CLICKED          1
 #define HBQT_EVT_TRIGGERED        2
@@ -78,6 +79,7 @@
 
 static Slots *s = NULL;
 
+/*----------------------------------------------------------------------*/
 
 static void SlotsExec( QWidget* widget, QString event, PHB_ITEM pItem )
 {
@@ -129,6 +131,65 @@ Slots::Slots( QObject* parent ) : QObject( parent )
 
 Slots::~Slots()
 {
+}
+
+bool Slots::event( QEvent * event )
+{
+   bool bAccepted = true;
+   QObject *widget = qobject_cast<QObject *>( sender() );
+   for( int i = 0; i < list1.size(); ++i )
+   {
+      if( ( QObject* ) list1.at( i ) == ( QObject* ) widget )
+      {
+         if( ( ( QString ) list2.at( i ) == ( QString ) "event()" ) && ( ( bool ) list4.at( i ) == true ) )
+         {
+            PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QWidget * ) widget );
+            PHB_ITEM pEvent   = hb_itemPutPtr( NULL, event );
+            bAccepted = hb_vmEvalBlockV( ( PHB_ITEM ) list3.at( i ), 2, pWidget, pEvent );
+            hb_itemRelease( pWidget );
+            hb_itemRelease( pEvent );
+         }
+      }
+   }
+   return bAccepted;
+}
+
+void Slots::keyPressEvent( QKeyEvent * event )
+{
+   QObject *widget = qobject_cast<QObject *>( sender() );
+   for( int i = 0; i < list1.size(); ++i )
+   {
+      if( ( QObject* ) list1.at( i ) == ( QObject* ) widget )
+      {
+         if( ( ( QString ) list2.at( i ) == ( QString ) "keyPressEvent()" ) && ( ( bool ) list4.at( i ) == true ) )
+         {
+            PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QWidget * ) widget );
+            PHB_ITEM pEvent   = hb_itemPutPtr( NULL, event );
+            hb_vmEvalBlockV( ( PHB_ITEM ) list3.at( i ), 2, pWidget, pEvent );
+            hb_itemRelease( pWidget );
+            hb_itemRelease( pEvent );
+         }
+      }
+   }
+}
+
+void Slots::mouseMoveEvent( QMouseEvent * event )
+{
+   QObject *widget = qobject_cast<QObject *>( sender() );
+   for( int i = 0; i < list1.size(); ++i )
+   {
+      if( ( QObject* ) list1.at( i ) == ( QObject* ) widget )
+      {
+         if( ( ( QString ) list2.at( i ) == ( QString ) "mouseMoveEvent()" ) && ( ( bool ) list4.at( i ) == true ) )
+         {
+            PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QWidget * ) widget );
+            PHB_ITEM pEvent   = hb_itemPutPtr( NULL, event );
+            hb_vmEvalBlockV( ( PHB_ITEM ) list3.at( i ), 2, pWidget, pEvent );
+            hb_itemRelease( pWidget );
+            hb_itemRelease( pEvent );
+         }
+      }
+   }
 }
 
 void Slots::clicked()
@@ -249,7 +310,9 @@ HB_FUNC( QT_CONNECT_SIGNAL )
 
    /* create object s, if not created yet */
    if( s == NULL )
+   {
       s = new Slots();
+   }
 
    /* connect signal with slot
     * if the list become to long, more classes can be created
@@ -275,7 +338,7 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    }
    if( signal == ( QString ) "viewportEntered()" )
    {
-      ret = widget->connect( widget, SIGNAL( viewportEntered() ), s, SLOT( viewportEntered() ) , Qt::AutoConnection );
+      ret = widget->connect( widget, SIGNAL( viewportEntered() )  , s, SLOT( viewportEntered() ) , Qt::AutoConnection );
    }
    if( signal == ( QString ) "pressed()" )
    {
@@ -283,34 +346,56 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    }
    if( signal == ( QString ) "released()" )
    {
-      ret = widget->connect( widget, SIGNAL( released() )         , s, SLOT( released() )         , Qt::AutoConnection );
+      ret = widget->connect( widget, SIGNAL( released() )         ,
+                             s, SLOT( released() ), Qt::AutoConnection );
    }
    /*                   Events with int parameter                 */
    if( signal == ( QString ) "stateChanged(int)" )
    {
-      ret = widget->connect( widget, SIGNAL( stateChanged( int ) ), s, SLOT( stateChanged( int ) ), Qt::AutoConnection );
+      ret = widget->connect( widget, SIGNAL( stateChanged( int ) ),
+                             s, SLOT( stateChanged( int ) ), Qt::AutoConnection );
    }
    if( signal == ( QString ) "activated(int)" )
    {
-      ret = widget->connect( widget, SIGNAL( activated( int ) )   , s, SLOT( activated( int ) )   , Qt::AutoConnection );
+      ret = widget->connect( widget, SIGNAL( activated( int ) ),
+                             s, SLOT( activated( int ) )   , Qt::AutoConnection );
    }
    if( signal == ( QString ) "currentIndexChanged(int)" )
    {
-      ret = widget->connect( widget, SIGNAL( currentIndexChanged( int ) ), s, SLOT( currentIndexChanged( int ) ), Qt::AutoConnection );
+      ret = widget->connect( widget, SIGNAL( currentIndexChanged( int ) ),
+                             s, SLOT( currentIndexChanged( int ) ), Qt::AutoConnection );
    }
    if( signal == ( QString ) "highlighted(int)" )
    {
-      ret = widget->connect( widget, SIGNAL( highlighted( int ) ) , s, SLOT( highlighted( int ) ) , Qt::AutoConnection );
+      ret = widget->connect( widget, SIGNAL( highlighted( int ) ) ,
+                             s, SLOT( highlighted( int ) ) , Qt::AutoConnection );
    }
    /*                    Events with bool parameter               */
    if( signal == ( QString ) "triggered(bool)" )
    {
-      ret = widget->connect( widget, SIGNAL( triggered( bool ) )  , s, SLOT( triggered( bool ) )  , Qt::AutoConnection );
+      ret = widget->connect( widget, SIGNAL( triggered( bool ) ),
+                             s, SLOT( triggered( bool ) )  , Qt::AutoConnection );
    }
    /*                    Events with miscellaneous parameters     */
    if( signal == ( QString ) "clicked(QModelIndex)" )
    {
-      ret = widget->connect( widget, SIGNAL( clicked_model( const QModelIndex & ) ), s, SLOT( clicked( const QModelIndex & ) ) , Qt::AutoConnection );
+      ret = widget->connect( widget, SIGNAL( clicked_model( const QModelIndex & ) ),
+                             s, SLOT( clicked( const QModelIndex & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "event()" )
+   {
+      ret = widget->connect( widget, SIGNAL( event( QEvent * ) ),
+                             s, SLOT( event( QEvent * ) ) , Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "keyPressEvent()" )
+   {
+      ret = widget->connect( widget, SIGNAL( sg_keyPressEvent( QKeyEvent * ) ),
+                             s, SLOT( keyPressEvent( QKeyEvent * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "mouseMoveEvent()" )
+   {
+      ret = widget->connect( widget, SIGNAL( sg_mouseMoveEvent( QMouseEvent * ) ),
+                             s, SLOT( mouseMoveEvent( QMouseEvent * ) ), Qt::AutoConnection );
    }
 
    /* return connect result */
@@ -377,64 +462,65 @@ void release_codeblocks( void )
    }
 }
 
-#if 0
-HB_FUNC( QT_CONNECT_SIGNAL_1 )
+/*----------------------------------------------------------------------*/
+
+MyMainWindow::MyMainWindow()
 {
-   QWidget * widget    = ( QWidget* ) hb_parptr( 1 ); /* get sender */
-   int       signal    = hb_parni( 2 );                /* get signal */
-   PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) ); /* get codeblock */
-   bool      ret       = false;                       /* return value */
-
-   /* create object s, if not created yet */
-   if( s == NULL )
-      s = new Slots();
-
-   /* connect signal with slot
-    * if the list become to long, more classes can be created
-    * TODO: parameter Qt::AutoConnection
-    */
-   switch( signal )
-   {
-   case HBQT_EVT_CLICKED:
-      ret = widget->connect( widget, SIGNAL( clicked() )          , s, SLOT( clicked() )          , Qt::AutoConnection );
-      break;
-   case HBQT_EVT_TRIGGERED:
-      ret = widget->connect( widget, SIGNAL( triggered() )        , s, SLOT( triggered() )        , Qt::AutoConnection );
-      break;
-   case HBQT_EVT_TRIGGERED_BOOL:
-      ret = widget->connect( widget, SIGNAL( triggered( bool ) )  , s, SLOT( triggered( bool ) )  , Qt::AutoConnection );
-      break;
-   case HBQT_EVT_HOVERED:
-      ret = widget->connect( widget, SIGNAL( hovered() )          , s, SLOT( hovered() )          , Qt::AutoConnection );
-      break;
-   case HBQT_EVT_STATECHANGED:
-      ret = widget->connect( widget, SIGNAL( stateChanged( int ) ), s, SLOT( stateChanged( int ) ), Qt::AutoConnection );
-      break;
-   case HBQT_EVT_PRESSED:
-      ret = widget->connect( widget, SIGNAL( pressed() )          , s, SLOT( pressed() )          , Qt::AutoConnection );
-      break;
-   case HBQT_EVT_RELEASED:
-      ret = widget->connect( widget, SIGNAL( released() )         , s, SLOT( released() )         , Qt::AutoConnection );
-      break;
-   }
-
-   /* return connect result */
-   hb_retl( ret );
-
-   /* if connected: store widget, signal, codeblock and flag
-    * TODO: locate a inactive entry and use it
-    */
-   if( ret == true )
-   {
-      s->list1 << widget;
-      s->list2 << signal;
-      s->list3 << codeblock;
-      s->list4 << true;
-   }
+   Qt::WindowFlags flags = Qt::WindowCloseButtonHint    | Qt::WindowMaximizeButtonHint |
+                           Qt::WindowMinimizeButtonHint | Qt::WindowSystemMenuHint     |
+                           Qt::CustomizeWindowHint      | Qt::WindowTitleHint          |
+                           Qt::Window ;
+   setWindowFlags( flags );
+   setFocusPolicy( Qt::StrongFocus );
+   setAttribute( Qt::WA_DeleteOnClose );
 }
-#endif
+
+MyMainWindow::~MyMainWindow( void )
+{
+}
+
+void MyMainWindow::closeEvent( QCloseEvent *event )
+{
+   event->accept();
+}
+
+MyDrawingArea::MyDrawingArea(QWidget *parent)
+    : QWidget(parent)
+{
+   setAttribute( Qt::WA_StaticContents );
+   setAttribute( Qt::WA_PaintOnScreen );
+   setAttribute( Qt::WA_DeleteOnClose );
+
+   setFocusPolicy( Qt::StrongFocus );
+   setMouseTracking( true );
+
+   setAttribute( Qt::WA_InputMethodEnabled, true );
+}
+
+MyDrawingArea::~MyDrawingArea( void )
+{
+}
+void MyDrawingArea::mouseMoveEvent( QMouseEvent * event )
+{
+   emit sg_mouseMoveEvent( event );
+}
+void MyDrawingArea::keyPressEvent( QKeyEvent * event )
+{
+   emit sg_keyPressEvent( event );
+}
+
+HB_FUNC( QT_MYMAINWINDOW )
+{
+   hb_retptr( ( MyMainWindow * ) new MyMainWindow() );
+}
+
+HB_FUNC( QT_MYDRAWINGAREA )
+{
+   hb_retptr( ( MyDrawingArea * ) new MyDrawingArea() );
+}
 
 /*----------------------------------------------------------------------*/
 #endif
+
 
 

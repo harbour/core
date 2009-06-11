@@ -69,6 +69,7 @@ QImageReader.qth
 QImageWriter.qth
 QInputDialog.qth
 QInputEvent.qth
+QKeyEvent.qth
 QLabel.qth
 QLayout.qth
 QLayoutItem.qth
@@ -85,6 +86,7 @@ QMenu.qth
 QMenuBar.qth
 QMessageBox.qth
 QModelIndex.qth
+QMouseEvent.qth
 QObject.qth
 QPaintDevice.qth
 QPageSetupDialog.qth
