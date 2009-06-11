@@ -8,6 +8,9 @@ HB_BUILD_MODE = c
 ifeq ($(HB_ARCHITECTURE),wce)
 HB_USER_CFLAGS += -D_WIN32_WCE
 endif
+ifeq ($(HB_COMPILER),djgpp)
+HB_USER_CFLAGS += -DSQLITE_OS_OTHER
+endif
 
 ROOT = ../../
 
@@ -21,6 +24,9 @@ ifeq ($(HB_ARCHITECTURE),wce)
 HB_WITH_SQLITE3=yes
 endif
 ifeq ($(HB_ARCHITECTURE),os2)
+HB_WITH_SQLITE3=yes
+endif
+ifeq ($(HB_ARCHITECTURE),dos)
 HB_WITH_SQLITE3=yes
 endif
 ifeq ($(HB_COMPILER),mingwarm)
