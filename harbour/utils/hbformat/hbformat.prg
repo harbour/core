@@ -94,12 +94,16 @@ FUNCTION MAIN( ... )
    oRef:bCallBack := { |a, i|FCallBack( a, i ) }
 
    IF "*" $ cFileName
-      cInitDir := Iif( ( i := Rat( "\", cFileName ) ) == 0, ;
-         Iif( ( i := Rat( "/", cFileName ) ) == 0, ;
-         "." + Set( _SET_DIRSEPARATOR ), Left( cFileName, i ) ), ;
-         Left( cFileName, i ) )
-      cFileName := Iif( i == 0, cFileName, SubStr( cFileName, i + 1 ) )
-      DirEval( cInitDir, cFileName, lRecursive, { |name|Reformat( oRef,name ) } )
+      IF ( i := Rat( ".", cFileName ) ) == 0 .OR. Substr( cFileName,i+1,1 ) < "A"
+         ? "Wrong mask"
+      ELSE
+         cInitDir := Iif( ( i := Rat( "\", cFileName ) ) == 0, ;
+            Iif( ( i := Rat( "/", cFileName ) ) == 0, ;
+            "." + Set( _SET_DIRSEPARATOR ), Left( cFileName, i ) ), ;
+            Left( cFileName, i ) )
+         cFileName := Iif( i == 0, cFileName, SubStr( cFileName, i + 1 ) )
+         DirEval( cInitDir, cFileName, lRecursive, { |name|Reformat( oRef,name ) } )
+      ENDIF
    ELSE
       Reformat( oRef, cFileName )
    ENDIF
@@ -109,15 +113,10 @@ FUNCTION MAIN( ... )
 
 STATIC FUNCTION FCallBack( aFile, nItem )
 
-   STATIC nIter := 0
    LOCAL n := Int( Len( aFile ) / 40 )
 
-   IF nItem == 1
-      nIter := 0
-   ENDIF
-   IF nItem % n == 1 .AND. nIter < 41
+   IF nItem % n == 1
       ?? "."
-      nIter ++
    ENDIF
 
    RETURN Nil
@@ -128,10 +127,10 @@ STATIC FUNCTION Reformat( oRef, cFileName )
 
    IF !Empty( aFile := oRef:File2Array( cFileName ) )
       ? "Reformatting " + cFileName
-      ? "<" + Space( 41 ) + ">"
-      Devpos( Row(), 1 )
+      ? "<"
       IF oRef:Reformat( aFile )
          oRef:Array2File( cFileName, aFile )
+         ?? ">"
       ELSE
          ? "Error", oRef:nErr, "on line", oRef:nLineErr, ":", oRef:cLineErr
       ENDIF
@@ -220,7 +219,8 @@ CLASS CODEFORMAT
    DATA cEol
    DATA nLineErr, nErr, cLineErr
 
-   DATA nEol           INIT  - 1     // Eol: -1 - no change, 1 - DOS, 2 - UNIX
+   DATA nEol           INIT  - 1     // Eol: -1 - no change, 0 - OS default, 1 - DOS, 2 - UNIX
+   DATA lFCaseLow      INIT .F.      // If true, convert file name to lower case
    DATA lNoTabs        INIT .T.      // If true, converts all tabs to spaces
    DATA lIndent        INIT .T.      // If true, indent code
    DATA lCase          INIT .T.      // If true, make case conversion
@@ -333,8 +333,10 @@ METHOD New( aParams ) CLASS CODEFORMAT
 
    IF ::nEol == 2
       ::cEol := Chr( 10 )
-   ELSEIF ::nEol > 0
+   ELSEIF ::nEol == 1
       ::cEol := Chr( 13 ) + Chr( 10 )
+   ELSEIF ::nEol == 0
+      ::cEol := hb_osNewLine()
    ENDIF
    IF ::lIndent
       ::lNoTabs := .T.
@@ -933,7 +935,7 @@ METHOD File2Array( cFileName ) CLASS CODEFORMAT
 
 METHOD Array2File( cFileName, aFile ) CLASS CODEFORMAT
 
-   LOCAL handle, i, nLen := Len( aFile ), cName, cBakName
+   LOCAL handle, i, nLen := Len( aFile ), cName, cBakName, cPath
 
    cName := Iif( ( i := Rat(".",cFileName ) ) == 0, cFileName, SubStr( cFileName,1,i - 1 ) )
    IF Empty( ::cExtSave )
@@ -946,6 +948,13 @@ METHOD Array2File( cFileName, aFile ) CLASS CODEFORMAT
    IF !Empty( ::cExtSave )
       cFileName := cName + Iif( Left( ::cExtSave,1 ) != ".", ".", "" ) + ::cExtSave
    ENDIF
+   IF ::lFCaseLow
+      cPath := Iif( ( i := Rat( '\', cFileName ) ) == 0, ;
+            Iif( ( i := Rat( '/', cFileName ) ) == 0, "", Left( cFileName, i ) ), ;
+            Left( cFileName, i ) )
+      cFileName := cPath + Lower( Iif( i == 0, cFileName, Substr( cFileName, i+1 ) ) )
+   ENDIF
+
    handle := FCreate( cFileName )
    FOR i := 1 TO nLen
       IF aFile[i] == Nil
