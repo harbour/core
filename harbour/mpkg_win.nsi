@@ -126,12 +126,12 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   CreateShortCut "$SMPROGRAMS\Harbour Project\Harbour Project.lnk" "$INSTDIR" "" "$INSTDIR" 0
   CreateShortCut "$SMPROGRAMS\Harbour Project\hbrun.lnk" "$INSTDIR\bin\hbrun.exe" "-v" "$INSTDIR\bin\hbrun.exe" 0
   CreateDirectory "$SMPROGRAMS\Harbour Project\Links"
-  WriteINIStr "$SMPROGRAMS\Harbour Project\Links\Home.url"                       "InternetShortcut" "URL" "http://www.harbour-project.org/"
-  WriteINIStr "$SMPROGRAMS\Harbour Project\Links\Mailing lists.url"              "InternetShortcut" "URL" "http://www.harbour-project.org/mailing.html"
-  WriteINIStr "$SMPROGRAMS\Harbour Project\Links\Developers' mail archives.url"  "InternetShortcut" "URL" "http://lists.harbour-project.org/pipermail/harbour/"
-; WriteINIStr "$SMPROGRAMS\Harbour Project\Links\Users' mail archives.url"       "InternetShortcut" "URL" "http://lists.harbour-project.org/pipermail/harbour-users/"
-  WriteINIStr "$SMPROGRAMS\Harbour Project\Links\Sourceforge page.url"           "InternetShortcut" "URL" "http://sourceforge.net/projects/harbour-project/"
-  WriteINIStr "$SMPROGRAMS\Harbour Project\Links\Development timeline.url"       "InternetShortcut" "URL" "http://apps.sourceforge.net/trac/harbour-project/timeline"
+  WriteINIStr     "$SMPROGRAMS\Harbour Project\Links\Homepage.url"                   "InternetShortcut" "URL" "http://www.harbour-project.org/"
+  WriteINIStr     "$SMPROGRAMS\Harbour Project\Links\User Forums.url"                "InternetShortcut" "URL" "http://apps.sourceforge.net/phpbb/harbour-project/"
+; WriteINIStr     "$SMPROGRAMS\Harbour Project\Links\User Newsgroup.url"             "InternetShortcut" "URL" "http://groups.google.com/group/comp.lang.clipper/"
+  WriteINIStr     "$SMPROGRAMS\Harbour Project\Links\Sourceforge Page.url"           "InternetShortcut" "URL" "http://sourceforge.net/projects/harbour-project/"
+  WriteINIStr     "$SMPROGRAMS\Harbour Project\Links\Developers' Mail Archives.url"  "InternetShortcut" "URL" "http://lists.harbour-project.org/pipermail/harbour/"
+  WriteINIStr     "$SMPROGRAMS\Harbour Project\Links\Development Timeline.url"       "InternetShortcut" "URL" "http://apps.sourceforge.net/trac/harbour-project/timeline"
 
 SectionEnd
 
