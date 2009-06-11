@@ -22,6 +22,9 @@ endif
 ifeq ($(HB_ARCHITECTURE),os2)
 HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
 endif
+ifeq ($(HB_ARCHITECTURE),dos)
+HB_INC_SQLITE3 += $(TOP)$(ROOT)external/sqlite3
+endif
 endif
 endif
 
