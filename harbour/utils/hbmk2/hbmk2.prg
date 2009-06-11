@@ -2250,7 +2250,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompC := iif( s_lCPP != NIL .AND. s_lCPP, "gxx.exe", "gcc.exe" )
+         cBin_CompC := iif( s_lCPP != NIL .AND. s_lCPP, "gpp.exe", "gcc.exe" )
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"

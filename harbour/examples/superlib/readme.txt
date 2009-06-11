@@ -8,7 +8,8 @@
 2.) Unzip SOURCE.ZIP to this directory.
 
 3.) *nix users will need convert original filenames to lowercase
-    and EOLs to native format (f.e. with dos2unix).
+    and EOLs to native format, using this command:
+    hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpace=no *.prg
 
 4.) Apply supplied patch to the source using GNU Patch:
     patch -N -i hbsuper.dif
