@@ -5989,7 +5989,8 @@ FUNCTION hbmk_COMP( hbmk )
 FUNCTION hbmk_CPU( hbmk )
 
    DO CASE
-   CASE hbmk[ _HBMK_cCOMP ] $ "gcc|gpp|cygwin|owatcom|bcc|icc|xcc" .OR. ;
+   CASE hbmk[ _HBMK_cARCH ] $ "dos|os2" .OR. ;
+        hbmk[ _HBMK_cCOMP ] $ "gcc|gpp|cygwin|owatcom|bcc|icc|xcc" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "mingw" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "msvc" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "pocc"
