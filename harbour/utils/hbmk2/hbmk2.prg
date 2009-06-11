@@ -2285,7 +2285,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPathSep := " "
          cLibLibExt := ".a"
          cBin_Lib := "ar.exe"
-         cOpt_Lib := "{FA} rcs {OL} {LO}"
+         cOpt_Lib := "{FA} rcs {OL} {LO}{SCRIPT}"
          IF hbmk[ _HBMK_cCOMP ] == "djgpp"
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} -Wl,--end-group" )
          ELSE

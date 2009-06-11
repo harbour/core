@@ -621,20 +621,20 @@ TROUBLESHOOTING
 FOR MORE INFORMATION
 ====================
 
-   Home:
+   Homepage:
    http://www.harbour-project.org/
 
-   Developers' Mail Archives:
-   http://lists.harbour-project.org/pipermail/harbour/
+   User Forums:
+   http://apps.sourceforge.net/phpbb/harbour-project/
 
-   Users' Mail Archives:
-   http://lists.harbour-project.org/pipermail/harbour-users/
-
-   Public Newsgroup:
+   User Newsgroup:
    http://groups.google.com/group/comp.lang.clipper/
 
    Sourceforge Page:
    http://sourceforge.net/projects/harbour-project/
+
+   Developers' Mail Archives:
+   http://lists.harbour-project.org/pipermail/harbour/
 
    Development Timeline:
    http://apps.sourceforge.net/trac/harbour-project/timeline
@@ -643,7 +643,7 @@ FOR MORE INFORMATION
    http://harbour-project.svn.sourceforge.net/viewvc/harbour-project/
 
    Source Repository Checkout (anonymous):
-   svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project harbour-project
+   svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
 
    Miscellaneous documents:
    /doc directory under this directory.
