@@ -168,7 +168,16 @@ diff -u dbu52ori/dbuutil.prg dbu52pat/dbuutil.prg
  
 diff -u dbu52ori/dbuview.prg dbu52pat/dbuview.prg
 --- dbu52ori/dbuview.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbuview.prg	2009-06-10 01:37:40.000000000 +0200
++++ dbu52pat/dbuview.prg	2009-06-12 14:42:30.000000000 +0200
+@@ -1102,7 +1102,7 @@
+ 		KEYBOARD CHR(M->keystroke)
+ 
+ 		* entry in place
+-		filename = enter_rc(dbf[M->cur_area],M->f_row,M->d_col,64,"@K!S8",;
++		filename = enter_rc(dbf[M->cur_area],M->f_row,M->d_col,64,"@KS8",;
+ 							M->color1)
+ 
+ 		IF .NOT. EMPTY(M->filename)
 @@ -1110,7 +1110,7 @@
  
  			IF .NOT. (RAT(".", M->filename) > RAT("\", M->filename))
@@ -187,6 +196,15 @@ diff -u dbu52ori/dbuview.prg dbu52pat/dbuview.prg
  						  "do_opendbf", .F., 8) <> 0
  
  	ENDIF
+@@ -1269,7 +1269,7 @@
+ 	KEYBOARD CHR(M->keystroke)
+ 
+ 	* entry in place
+-	filename = enter_rc(M->org_file,M->d_row,M->d_col,64,"@K!S8",M->color1)
++	filename = enter_rc(M->org_file,M->d_row,M->d_col,64,"@KS8",M->color1)
+ 
+ 	IF .NOT. EMPTY(M->filename)
+ 		* something entered
 @@ -2790,7 +2790,7 @@
  * get user entered file name..will default to primary + ".VEW"
  IF EMPTY(M->view_file) .AND. .NOT. EMPTY(dbf[1])

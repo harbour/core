@@ -11,8 +11,8 @@
 
 3.) *nix users will need convert original filenames to lowercase
     and EOLs to native format, using this command:
-    hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no *.c
-    hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no *.prg
+    hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no "*.c"
+    hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no "*.prg"
 
 4.) Apply supplied patch to the source using GNU Patch:
     patch -lNi hbsuper.dif
