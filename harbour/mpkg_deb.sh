@@ -14,6 +14,13 @@
 test_reqpkg()
 {
     dpkg -l "$1" 2> /dev/null | grep '^ii' &> /dev/null
+    status="$?"
+    if [ -n "$2" ] && [ $status -eq 0 ]
+    then
+        dpkg --compare-versions `dpkg -s "$1" 2> /dev/null | grep "^Version:" | cut -d' ' -f2` ge $2
+        status="$?"
+    fi
+    return "$status"
 }
 
 TOINST_LST=""
@@ -106,7 +113,7 @@ then
     export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbpgsql"
 fi
 
-if test_reqpkg libqt4-dev
+if test_reqpkg libqt4-dev "4.5.0"
 then
     export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbqt"
 fi

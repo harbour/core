@@ -156,7 +156,16 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  
 diff -u dbu52ori/dbuutil.prg dbu52pat/dbuutil.prg
 --- dbu52ori/dbuutil.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbuutil.prg	2009-06-10 01:37:40.000000000 +0200
++++ dbu52pat/dbuutil.prg	2009-06-12 17:43:43.000000000 +0200
+@@ -950,7 +950,7 @@
+ 		SET KEY 24 TO clear_gets
+ 
+ 		* call entry in place function
+-		name_temp = enter_rc(M->filename,M->irow,M->wl+9,64,"@K!S20",M->color9)
++		name_temp = enter_rc(M->filename,M->irow,M->wl+9,64,"@KS20",M->color9)
+ 
+ 		* release down arrow
+ 		SET KEY 24 TO
 @@ -2152,7 +2152,7 @@
  IF FILE(M->filename)
  	* only if the file exists

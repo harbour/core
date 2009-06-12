@@ -147,8 +147,8 @@ static void adsSetSend( void )
 }
 
 static HB_ERRCODE commonError( ADSAREAP pArea, USHORT uiGenCode, USHORT uiSubCode,
-                            USHORT uiOsCode, const char * szFileName,
-                            USHORT uiFlags, PHB_ITEM * pErrorPtr )
+                               USHORT uiOsCode, const char * szFileName,
+                               USHORT uiFlags, PHB_ITEM * pErrorPtr )
 {
    PHB_ITEM pError;
    HB_ERRCODE errCode = HB_FAILURE;
@@ -2530,7 +2530,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       else if( ulRetVal == AE_TABLE_READONLY )
          commonError( pArea, EG_READONLY, EDBF_READONLY, 0, NULL, 0, NULL );
       else if( ulRetVal == AE_DATA_TOO_LONG )
-         commonError( pArea, EG_DATAWIDTH, EDBF_DATAWIDTH, 0, NULL, 0, NULL );
+         return commonError( pArea, EG_DATAWIDTH, EDBF_DATAWIDTH, 0, NULL, EF_CANDEFAULT, NULL );
       else
          commonError( pArea, EG_WRITE, ( USHORT ) ulRetVal, 0, NULL, 0, NULL );
       return HB_FAILURE;

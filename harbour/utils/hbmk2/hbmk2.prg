@@ -5181,6 +5181,10 @@ STATIC FUNCTION MacroProc( hbmk, cString, cDirParent )
          cMacro := hb_ntos( hb_Version( HB_VERSION_MINOR ) )
       CASE cMacro == "HB_RELEASE"
          cMacro := hb_ntos( hb_Version( HB_VERSION_RELEASE ) )
+      CASE cMacro == "HB_STATUS"
+         cMacro := hb_Version( HB_VERSION_STATUS )
+      CASE cMacro == "HB_REVISION"
+         cMacro := hb_ntos( hb_Version( HB_VERSION_REVISION ) )
       CASE cMacro == "HB_BIN"
          cMacro := hbmk[ _HBMK_cHB_BIN_INSTALL ]
       CASE cMacro == "HB_LIB"
