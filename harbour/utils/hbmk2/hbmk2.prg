@@ -869,7 +869,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    DO CASE
    CASE hbmk[ _HBMK_cARCH ] $ "bsd|hpux|sunos|linux" .OR. hbmk[ _HBMK_cARCH ] == "darwin" /* Separated to avoid match with 'win' */
       IF hbmk[ _HBMK_cARCH ] == "linux"
-         aCOMPSUP := { "gcc", "gpp", "owatcom", "icc" }
+         aCOMPSUP := { "gcc", "gpp", "watcom", "icc" }
       ELSE
          aCOMPSUP := { "gcc" }
       ENDIF
@@ -890,9 +890,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       OTHERWISE     ; cDynLibExt := ".so"
       ENDSWITCH
    CASE hbmk[ _HBMK_cARCH ] == "dos"
-      aCOMPDET := { { {|| FindInPath( "gcc"      ) }, "djgpp"   },;
-                    { {|| FindInPath( "wpp386"   ) }, "owatcom" } } /* TODO: Add full support for wcc386 */
-      aCOMPSUP := { "djgpp", "gcc", "owatcom" }
+      aCOMPDET := { { {|| FindInPath( "gcc"      ) }, "djgpp"  },;
+                    { {|| FindInPath( "wpp386"   ) }, "watcom" } } /* TODO: Add full support for wcc386 */
+      aCOMPSUP := { "djgpp", "gcc", "watcom" }
       s_aLIBHBGT := { "gtdos" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtdos"
       cDynLibNamePrefix := ""
@@ -904,9 +904,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       cOpt_CprsMin := "-1"
       cOpt_CprsMax := "-9"
    CASE hbmk[ _HBMK_cARCH ] == "os2"
-      aCOMPDET := { { {|| FindInPath( "gcc"      ) }, "gcc"     },;
-                    { {|| FindInPath( "wpp386"   ) }, "owatcom" } } /* TODO: Add full support for wcc386 */
-      aCOMPSUP := { "gcc", "owatcom" }
+      aCOMPDET := { { {|| FindInPath( "gcc"      ) }, "gcc"    },;
+                    { {|| FindInPath( "wpp386"   ) }, "watcom" } } /* TODO: Add full support for wcc386 */
+      aCOMPSUP := { "gcc", "watcom" }
       s_aLIBHBGT := { "gtos2" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtos2"
       cDynLibNamePrefix := ""
@@ -915,24 +915,24 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       cOptPrefix := "-/"
    CASE hbmk[ _HBMK_cARCH ] == "win"
       /* Order is significant.
-         owatcom also keeps a cl.exe in its binary dir. */
+         watcom also keeps a cl.exe in its binary dir. */
       aCOMPDET := { { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" ) }, "mingw"   },; /* TODO: Add full support for g++ */
                     { {|| iif( ! Empty( GetEnv( "WATCOM" ) ),;
                                FindInPath( "wpp386"   ),;
-                               NIL )               }, "owatcom" },; /* TODO: Add full support for wcc386 */
-                    { {|| FindInPath( "ml64"     ) }, "msvc64"  },;
+                               NIL )               }, "watcom" },; /* TODO: Add full support for wcc386 */
+                    { {|| FindInPath( "ml64"     ) }, "msvc64" },;
                     { {|| iif( FindInPath( "wpp386"   ) == NIL,;
                                FindInPath( "cl"       ),;
                                NIL )                      }, "msvc"    },;
-                    { {|| _BCC_BIN_DETECT()        }, "bcc"     },;
+                    { {|| _BCC_BIN_DETECT()        }, "bcc"    },;
                     { {|| iif( FindInPath( "dbgeng.lib", GetEnv( "LIB" ) ) != NIL .AND. ( tmp1 := FindInPath( "pocc" ) ) != NIL, tmp1, NIL ) }, "pocc64"  },;
-                    { {|| FindInPath( "pocc"     ) }, "pocc"    },;
+                    { {|| FindInPath( "pocc"     ) }, "pocc"   },;
                     { {|| iif( ( tmp1 := FindInPath( "icl" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ), tmp1, NIL ) }, "iccia64" },;
-                    { {|| FindInPath( "icl"      ) }, "icc"     },;
-                    { {|| FindInPath( "cygstart" ) }, "cygwin"  },;
-                    { {|| FindInPath( "xcc"      ) }, "xcc"     },;
+                    { {|| FindInPath( "icl"      ) }, "icc"    },;
+                    { {|| FindInPath( "cygstart" ) }, "cygwin" },;
+                    { {|| FindInPath( "xcc"      ) }, "xcc"    },;
                     { {|| FindInPath( "x86_64-pc-mingw32-gcc" ) }, "mingw64", "x86_64-pc-mingw32-" } }
-      aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "icc", "pocc", "xcc", "cygwin",;
+      aCOMPSUP := { "mingw", "msvc", "bcc", "watcom", "icc", "pocc", "xcc", "cygwin",;
                     "mingw64", "msvc64", "msvcia64", "iccia64", "pocc64" }
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtwin"
@@ -944,7 +944,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       cOpt_Cprs := "{OB}"
       cOpt_CprsMin := "-1"
       cOpt_CprsMax := "-9"
-      /* NOTE: Some targets (pocc and owatcom) need kernel32 explicitly. */
+      /* NOTE: Some targets (pocc and watcom) need kernel32 explicitly. */
       s_aLIBSYSCORE := { "kernel32", "user32", "gdi32", "advapi32", "ws2_32" }
       s_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "ole32", "oleaut32", "uuid", "mpr", "winmm", "mapi32", "imm32", "msimg32" }
    CASE hbmk[ _HBMK_cARCH ] == "wce"
@@ -1926,7 +1926,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
       ENDIF
 
-      IF hbmk[ _HBMK_cCOMP ] $ "owatcom|gpp" .AND. s_lCPP == NIL
+      IF hbmk[ _HBMK_cCOMP ] $ "watcom|gpp" .AND. s_lCPP == NIL
          s_lCPP := .T.
       ENDIF
 
@@ -2310,7 +2310,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
 
       /* Watcom family */
-      CASE hbmk[ _HBMK_cARCH ] == "dos" .AND. hbmk[ _HBMK_cCOMP ] == "owatcom"
+      CASE hbmk[ _HBMK_cARCH ] == "dos" .AND. hbmk[ _HBMK_cCOMP ] == "watcom"
          cLibPrefix := "LIB "
          cLibExt := ".lib"
          cObjPrefix := "FILE "
@@ -2360,7 +2360,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTL ], "OP MAP" )
          ENDIF
 
-      CASE hbmk[ _HBMK_cARCH ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "owatcom"
+      CASE hbmk[ _HBMK_cARCH ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "watcom"
          cLibPrefix := "LIB "
          cLibExt := ".lib"
          cObjPrefix := "FILE "
@@ -2438,7 +2438,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cResPrefix := "OP res="
          ENDIF
 
-      CASE hbmk[ _HBMK_cARCH ] == "os2" .AND. hbmk[ _HBMK_cCOMP ] == "owatcom"
+      CASE hbmk[ _HBMK_cARCH ] == "os2" .AND. hbmk[ _HBMK_cCOMP ] == "watcom"
          cLibPrefix := "LIB "
          cLibExt := ".lib"
          cObjPrefix := "FILE "
@@ -2491,7 +2491,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTL ], "OP MAP" )
          ENDIF
 
-      CASE hbmk[ _HBMK_cARCH ] == "linux" .AND. hbmk[ _HBMK_cCOMP ] == "owatcom"
+      CASE hbmk[ _HBMK_cARCH ] == "linux" .AND. hbmk[ _HBMK_cCOMP ] == "watcom"
          cLibPrefix := "LIB "
          cLibExt := ".lib"
          cObjPrefix := "FILE "
@@ -3120,7 +3120,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   tmp := ""
                CASE hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin"
                   tmp := "__attribute__ (( dllimport ))"
-               CASE hbmk[ _HBMK_cCOMP ] $ "bcc|owatcom"
+               CASE hbmk[ _HBMK_cCOMP ] $ "bcc|watcom"
                   tmp := "__declspec( dllimport )"
                OTHERWISE
                   tmp := "_declspec( dllimport )"
@@ -4130,7 +4130,7 @@ STATIC FUNCTION FindLib( hbmk, cLib, aLIBPATH, cLibExt )
    LOCAL tmp
 
    /* Check libs in their full paths */
-   IF hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcarm|bcc|pocc|pocc64|poccarm|owatcom"
+   IF hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcarm|bcc|pocc|pocc64|poccarm|watcom"
       IF ! Empty( FN_DirGet( cLib ) )
          IF hb_FileExists( cLib := FN_ExtSet( cLib, cLibExt ) )
             RETURN cLib
@@ -4145,7 +4145,7 @@ STATIC FUNCTION FindLib( hbmk, cLib, aLIBPATH, cLibExt )
    ENDIF
 
    /* Check in current dir */
-   IF hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcarm|bcc|pocc|pocc64|poccarm|owatcom"
+   IF hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcarm|bcc|pocc|pocc64|poccarm|watcom"
       IF ! Empty( tmp := LibExists( hbmk, "", cLib, cLibExt ) )
          RETURN tmp
       ENDIF
@@ -5990,7 +5990,7 @@ FUNCTION hbmk_CPU( hbmk )
 
    DO CASE
    CASE hbmk[ _HBMK_cARCH ] $ "dos|os2" .OR. ;
-        hbmk[ _HBMK_cCOMP ] $ "gcc|gpp|cygwin|owatcom|bcc|icc|xcc" .OR. ;
+        hbmk[ _HBMK_cCOMP ] $ "gcc|gpp|cygwin|watcom|bcc|icc|xcc" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "mingw" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "msvc" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "pocc"
@@ -6115,13 +6115,13 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
    LOCAL aText_Supp := {;
       "",;
       I_( "Supported <comp> values for each supported <arch> value:" ),;
-      "  - linux  : gcc, owatcom, icc",;
+      "  - linux  : gcc, watcom, icc",;
       "  - darwin : gcc",;
-      "  - win    : mingw, msvc, bcc, owatcom, icc, pocc, cygwin,",;
+      "  - win    : mingw, msvc, bcc, watcom, icc, pocc, cygwin,",;
       "  -          mingw64, msvc64, msvcia64, iccia64, pocc64, xcc",;
       "  - wce    : mingwarm, msvcarm, poccarm",;
-      "  - os2    : gcc, owatcom",;
-      "  - dos    : djgpp, owatcom",;
+      "  - os2    : gcc, watcom",;
+      "  - dos    : djgpp, watcom",;
       "  - bsd    : gcc",;
       "  - hpux   : gcc",;
       "  - sunos  : gcc" }
@@ -6229,7 +6229,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
       I_( ".hbc config files in current dir are automatically processed." ),;
       I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\nLines starting with '#' char are ignored" ),;
-      I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
+      I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}" ),;
       I_( "Defaults and feature support vary by architecture/compiler." ) }
 

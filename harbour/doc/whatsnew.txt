@@ -66,7 +66,7 @@ General
 - GNU Make system no longer needs -r parameter.
 - GNU Make system will now generate hbfm and hbfmmt lib for all compilers.
   Added few more similar unification cleanups.
-- Implemented .dll generation for msvc, msvc64, bcc and owatcom when using
+- Implemented .dll generation for msvc, msvc64, bcc and watcom when using
   GNU Make system.
 - Added support for Open Watcom 1.8 (it's recommended over 1.7).
 - Added support for import lib generation when using GNU Make with msvc and vcc.
@@ -84,7 +84,7 @@ General
   process on all supported platforms and compilers.
 - Several steps to make the build process simpler and requiring the
   less amount of preparation.
-- Fixed missing owatcom support for HB_USER_LDFLAGS.
+- Fixed missing watcom support for HB_USER_LDFLAGS.
 - Added support for MSVC IA64 mode. (untested)
 - Added support for HB_CONTRIBLIBS=no to disable building of all contribs.
 - Added ability to generate Windows installer and .zip distribution file.
@@ -421,7 +421,7 @@ Known build issues
 - Using Pelles C 5.00.1 in 64-bit mode, HB_INET*() functions
   won't work.
 - gtalleg contrib may not compile on all platforms/compilers.
-- hbssl won't work with owatcom on win platform due to OpenSSL
+- hbssl won't work with watcom on win platform due to OpenSSL
   header compatibility problems.
 
 

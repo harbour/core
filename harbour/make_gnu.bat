@@ -27,13 +27,13 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
    if "%HB_INSTALL_PREFIX%" == "" if "%OS%" == "Windows_NT" set HB_INSTALL_PREFIX=%~dp0
 
-   rem Set to constant value.
+   rem Set to constant value
    if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
    if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
    if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
    if "%HB_DOC_INSTALL%" == "" set HB_DOC_INSTALL=%HB_INSTALL_PREFIX%\doc
 
-   rem Try to create install dirs.
+   rem Create install dirs
    if not exist %HB_BIN_INSTALL%\*.*       md %HB_BIN_INSTALL%
    if not exist %HB_LIB_INSTALL%\*.*       md %HB_LIB_INSTALL%
    if not exist %HB_INC_INSTALL%\*.*       md %HB_INC_INSTALL%
@@ -49,7 +49,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
    rem Order is significant
    call :COMP_DET_ONE gcc.exe                     mingw    win
-   call :COMP_DET_ONE wpp386.exe                  owatcom  win
+   call :COMP_DET_ONE wpp386.exe                  watcom   win
    call :COMP_DET_ONE ml64.exe                    msvc64   win
    call :COMP_DET_ONE icl.exe                     icc      win
    call :COMP_DET_ONE cl.exe                      msvc     win

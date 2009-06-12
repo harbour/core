@@ -27,7 +27,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
    Linux/Darwin/BSD/HP-UX/Solaris
    ------------------------------
-      $ export HB_COMPILER=<[gcc]|owatcom|icc|gpp>
+      $ export HB_COMPILER=<[gcc]|watcom|icc|gpp>
       $ export HB_INSTALL_PREFIX=<DIR>
       $ ./make_gnu.sh
       $ sudo ./make_gnu.sh install
@@ -51,7 +51,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       3.) GNU Make is included in the source package. No configuration
           is needed.
 
-      > set HB_COMPILER=<mingw|msvc|owatcom|bcc|pocc|...>
+      > set HB_COMPILER=<mingw|msvc|watcom|bcc|pocc|...>
       > set HB_INSTALL_PREFIX=<DIR>
       > make_gnu.bat install
 
@@ -99,7 +99,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
    DOS
    ---
       > set HB_ARCHITECTURE=dos
-      > set HB_COMPILER=<[djgpp]|owatcom>
+      > set HB_COMPILER=<[djgpp]|watcom>
       > set HB_INSTALL_PREFIX=<DIR>
       > make_gnu.bat install
 
@@ -109,7 +109,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
    OS/2
    ----
-      > set HB_COMPILER=<[gcc]|owatcom>
+      > set HB_COMPILER=<[gcc]|watcom>
       > set HB_INSTALL_PREFIX=<DIR>
       > make_gnu_os2.cmd install
 
@@ -184,7 +184,7 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    -----
    gcc      - GNU C
    gpp      - GNU C++
-   owatcom  - Open Watcom C++
+   watcom   - Open Watcom C++
    icc      - Intel(R) C/C++
 
    Darwin/BSD/HP-UX/Solaris
@@ -201,7 +201,7 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
 
    Windows (supported, some features may be missing)
    -------
-   owatcom  - Open Watcom C++
+   watcom   - Open Watcom C++
    bcc      - Borland/CodeGear C++ 4.x and above
    icc      - Intel(R) C/C++
    iccia64  - Intel(R) C/C++ IA-64
@@ -219,12 +219,12 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    DOS (32-bit)
    ---
    djgpp    - Delorie GNU C
-   owatcom  - Open Watcom C++ 9.x and above
+   watcom   - Open Watcom C++ 9.x and above
 
    OS/2
    ----
    gcc      - EMX GNU C
-   owatcom  - Open Watcom C++
+   watcom   - Open Watcom C++
 
 
 OPTIONS AVAILABLE WHEN BUILDING HARBOUR
@@ -396,7 +396,7 @@ EXAMPLES
       SET EDPATH=%WATCOM%\EDDAT
       SET INCLUDE=%WATCOM%\H;%WATCOM%\H\NT
       rem
-      set HB_COMPILER=owatcom
+      set HB_COMPILER=watcom
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -529,7 +529,7 @@ EXAMPLES
       SET INCLUDE=%WATCOM%\H
       rem
       set HB_ARCHITECTURE=dos
-      set HB_COMPILER=owatcom
+      set HB_COMPILER=watcom
       set HB_INSTALL_PREFIX=C:\hb-ow
       call make_gnu.bat %1 %2 > log-ow.txt 2>&1
       ---
@@ -562,7 +562,7 @@ EXAMPLES
       SET HELP=%WATCOM%\BINP\HELP;%HELP%
       SET BOOKSHELF=%WATCOM%\BINP\HELP;%BOOKSHELF%
       rem
-      set HB_COMPILER=owatcom
+      set HB_COMPILER=watcom
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu_os2.cmd %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---

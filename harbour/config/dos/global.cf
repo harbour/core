@@ -36,7 +36,7 @@ MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 ifeq ($(COMSPEC),) #location of command.com
    COMSPEC := command.com
 else
-   ifneq ($(HB_COMPILER),owatcom)
+   ifneq ($(HB_COMPILER),watcom)
       #Use standard dos path, which is already set up.
    else
       ifeq ($(HB_COMPILER),djgpp)

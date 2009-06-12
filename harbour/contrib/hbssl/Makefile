@@ -9,7 +9,7 @@ LIBNAME=hbssl
 HB_INC_OPENSSL_OK =
 
 ifneq ($(HB_ARCHITECTURE),dos)
-ifneq ($(HB_COMPILER),owatcom)
+ifneq ($(HB_COMPILER),watcom)
 
 ifeq ($(HB_INC_OPENSSL),)
 ifeq ($(HB_XBUILD),)

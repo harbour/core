@@ -12,7 +12,7 @@ LIBNAME=libhpdf
 
 ifeq ($(HB_WITH_LIBHPDF),)
 HB_WITH_LIBHPDF=yes
-ifeq ($(HB_COMPILER),owatcom)
+ifeq ($(HB_COMPILER),watcom)
 HB_WITH_LIBHPDF=no
 endif
 ifeq ($(HB_COMPILER),pocc64)

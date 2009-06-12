@@ -44,8 +44,8 @@ msgstr "    ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom},"
-msgstr "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom},"
+msgid "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom},"
+msgstr "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom},"
 
 #: hbmk2.prg:5294
 #, c-format
@@ -614,7 +614,7 @@ msgstr ""
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "    linux  : gcc, owatcom, icc"
+msgid "    linux  : gcc, watcom, icc"
 msgstr ""
 
 #: hbmk2.prg:5294
@@ -629,12 +629,12 @@ msgstr ""
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "    os2    : gcc, owatcom"
+msgid "    os2    : gcc, watcom"
 msgstr ""
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "    dos    : djgpp, owatcom"
+msgid "    dos    : djgpp, watcom"
 msgstr ""
 
 #: hbmk2.prg:5294
@@ -729,7 +729,7 @@ msgstr ""
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "    win    : mingw, msvc, bcc, owatcom, icc, pocc, cygwin,"
+msgid "    win    : mingw, msvc, bcc, watcom, icc, pocc, cygwin,"
 msgstr ""
 
 #: hbmk2.prg:5180
@@ -1564,7 +1564,7 @@ msgstr ""
 
 #: hbmk2.prg:5769
 #, c-format
-msgid "Platform filters are accepted in each .hbc line and with several options.\\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
+msgid "Platform filters are accepted in each .hbc line and with several options.\\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
 msgstr ""
 
 #: hbmk2.prg:3225 hbmk2.prg:3642

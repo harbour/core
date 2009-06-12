@@ -12,7 +12,7 @@ libs=hbbmcdx hbbtree hbclipsm hbcrypt hbct hbgt hbmisc hbmzip hbnf hbvpdf hbzipa
 libs=hbcurl hbfbird hbgd hbhpdf hbmsql hbmysql hbpgsql hbqt sddfb sddmy sddpg
 
 # contribs with limited availability (some with external dependencies):
-{!pocc&!xcc&!dmc&!owatcom}libs=gtalleg
+{!pocc&!xcc&!dmc&!watcom}libs=gtalleg
 {!dos}libs=hbapollo hbfimage hbssl hbtip rddads
 {linux|win|os2}libs=hbtpathy
 {win}libs=gtwvg hbblat hbgfwin hbwin rddado
@@ -20,4 +20,4 @@ libs=hbcurl hbfbird hbgd hbhpdf hbmsql hbmysql hbpgsql hbqt sddfb sddmy sddpg
 {linux}libs=hbgfgtk
 {os2}libs=hbgfos2
 {!rsxnt}libs=hbodbc
-{!dos&!bsd&!hpux&!pocc}libs=hbsqlit3
+{!bsd&!hpux&!pocc}libs=hbsqlit3

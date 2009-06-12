@@ -38,7 +38,7 @@ if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_mingw64"  goto DO_GCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_mingwarm" goto DO_GCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_cygwin"   goto DO_GCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_bcc"      goto DO_BCC
-if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_owatcom"  goto DO_OWATCOM
+if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_watcom"   goto DO_WATCOM
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc"     goto DO_POCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "win_pocc64"   goto DO_POCC
 if "%HB_ARCHITECTURE%_%HB_COMPILER%" == "wce_poccarm"  goto DO_POCC
@@ -278,7 +278,7 @@ rmdir _dll
 
 goto END
 
-:DO_OWATCOM
+:DO_WATCOM
 
 echo Making .dlls for %HB_ARCHITECTURE% / %HB_COMPILER%...
 

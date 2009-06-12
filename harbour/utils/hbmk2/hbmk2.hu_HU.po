@@ -809,8 +809,8 @@ msgstr "Statikus függvénykönyvtár létrehozás parancsa:"
 
 #: hbmk2.prg:5769
 #, c-format
-msgid "Platform filters are accepted in each .hbc line and with several options.\\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
-msgstr "A szûrõk az egyes .hbc sorokban használhatók és számos opció esetén támogatottak.\\nSzûrõ formátum: {[!][<arch>|<comp>|<keyword>]}. Szûrõk kombinálhatók '&', '|' operátorokkal és zárójelekkel csoportosíthatók. Pl.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
+msgid "Platform filters are accepted in each .hbc line and with several options.\\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
+msgstr "A szûrõk az egyes .hbc sorokban használhatók és számos opció esetén támogatottak.\\nSzûrõ formátum: {[!][<arch>|<comp>|<keyword>]}. Szûrõk kombinálhatók '&', '|' operátorokkal és zárójelekkel csoportosíthatók. Pl.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}"
 
 #: hbmk2.prg:3225 hbmk2.prg:3642
 #, c-format

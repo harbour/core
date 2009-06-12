@@ -19,7 +19,7 @@ endif
 ifeq ($(HB_COMPILER),mingw64)
 HB_WITH_QT=no
 endif
-ifeq ($(HB_COMPILER),owatcom)
+ifeq ($(HB_COMPILER),watcom)
 HB_WITH_QT=no
 endif
 ifeq ($(HB_COMPILER),bcc)
