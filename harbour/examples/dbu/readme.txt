@@ -12,10 +12,10 @@
 3.) Apply supplied patch to the source using GNU Patch:
 
     For CA-Cl*pper 5.2e sources:
-       patch -N -i dbu52.dif
+       patch -lNi dbu52.dif
 
     For CA-Cl*pper 5.3b sources:
-       patch -N -i dbu53.dif
+       patch -lNi dbu53.dif
 
 4.) Build it:
     hbmk2 dbu.hbp

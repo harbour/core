@@ -10,7 +10,7 @@
     hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no *.prg
 
 3.) Apply supplied patch to the source using GNU Patch:
-    patch -N -i rl.dif
+    patch -lNi rl.dif
 
 4.) Build it:
     hbmk2 rl.hbp

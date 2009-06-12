@@ -12,7 +12,7 @@
     hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no *.prg
 
 4.) Apply supplied patch to the source using GNU Patch:
-    patch -N -i hbsuper.dif
+    patch -lNi hbsuper.dif
 
 5.) Build it:
     hbmk2 hbsuper.hbp
