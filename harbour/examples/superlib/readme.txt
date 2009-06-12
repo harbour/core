@@ -2,13 +2,16 @@
  * $Id$
  */
 
-1.) Download original sources of SuperLib 3.5 from this link and unpack it:
+1.) Download original sources of SuperLib 3.5 from this page:
     http://www.the-oasis.net/ftpmaster.php3?content=ftplib.htm
 
-2.) Unzip SOURCE.ZIP to this directory.
+2.) Unpack it:
+    unzip supfree.zip
+    unzip SOURCE.ZIP
 
 3.) *nix users will need convert original filenames to lowercase
     and EOLs to native format, using this command:
+    hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no *.c
     hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no *.prg
 
 4.) Apply supplied patch to the source using GNU Patch:
