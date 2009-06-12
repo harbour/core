@@ -1005,25 +1005,20 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect." ) )
             RETURN 3
          ENDCASE
-         /* Detect special *nix dir layout (/bin, /lib/harbour, /include/harbour) */
-         IF hb_FileExists( DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "include" +;
-                                            hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) +;
-                                            hb_osPathSeparator() + "hbvm.h" )
-            IF Empty( s_cHB_BIN_INSTALL )
-               s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "bin"
-            ENDIF
-            IF Empty( s_cHB_LIB_INSTALL )
-               s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "lib" + hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" )
-            ENDIF
-            IF Empty( s_cHB_INC_INSTALL )
-               s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "include" + hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" )
-            ENDIF
-         ENDIF
       ENDIF
-      IF Empty( s_cHB_INSTALL_PREFIX ) .AND. ;
-         ( Empty( s_cHB_BIN_INSTALL ) .OR. Empty( s_cHB_LIB_INSTALL ) .OR. Empty( s_cHB_INC_INSTALL ) )
-         hbmk_OutErr( hbmk, I_( "Error: Harbour locations couldn't be determined." ) )
-         RETURN 3
+      /* Detect special *nix dir layout (/bin, /lib/harbour, /include/harbour) */
+      IF hb_FileExists( DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "include" +;
+                                         hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) +;
+                                         hb_osPathSeparator() + "hbvm.h" )
+         IF Empty( s_cHB_BIN_INSTALL )
+            s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "bin"
+         ENDIF
+         IF Empty( s_cHB_LIB_INSTALL )
+            s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "lib" + hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" )
+         ENDIF
+         IF Empty( s_cHB_INC_INSTALL )
+            s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "include" + hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" )
+         ENDIF
       ENDIF
    ELSE
       lSysLoc := .F.
