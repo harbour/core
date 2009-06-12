@@ -158,7 +158,7 @@ if not "%HB_LIB_INSTALL%" == "" (
       goto END
    )
 
-   if "%HB_COMPILER%" == "owatcom" (
+   if "%HB_COMPILER%" == "watcom" (
 
       if exist "%HB_DIR_ADS%\Redistribute\ace32.dll"    wlib.exe -q -o="%HB_LIB_INSTALL%\ace32.lib"     "%HB_DIR_ADS%\Redistribute\ace32.dll"
       if exist "%HB_DIR_ADS%\ace32.dll"                 wlib.exe -q -o="%HB_LIB_INSTALL%\ace32.lib"     "%HB_DIR_ADS%\ace32.dll"
