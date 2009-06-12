@@ -378,11 +378,18 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
                else if ( strncmp( bp, "gt", iAmpLen ) == 0 ) chr = '>';
                else if ( strncmp( bp, "quot", iAmpLen ) == 0 ) chr = '"';
                else if ( strncmp( bp, "apos", iAmpLen ) == 0 ) chr = '\'';
+               else if ( *bp == '#' )
+               {
+                  if ( *(++bp) == 'x' )   /* Hexadecimal */
+                     chr = ( ( *( bp + 1 ) - '0' ) << 4 ) + ( *( bp + 2 ) - '0' );
+                  else     /* Decimal */
+                     chr = atoi( bp );
+               }
                /** Reducing an SGS length is legal */
                buf_attrib->length = iPosAmper;
                mxml_sgs_append_char( buf_attrib, ( char ) chr );
             }
-            else if ( ! HB_ISALPHA( chr ) )
+            else if ( ! ( HB_ISALPHA( chr ) || HB_ISDIGIT( chr ) || ( chr == '#' ) ) )
             {
                /* error - we have something like &amp &amp */
                hbxml_set_doc_status( ref, pDoc, pNode, MXML_STATUS_MALFORMED, MXML_ERROR_WRONGENTITY );
@@ -432,7 +439,7 @@ static MXML_STATUS mxml_attribute_write( MXML_OUTPUT *out, PHBXML_ATTRIBUTE pAtt
    mxml_output_char( out, '=' );
    mxml_output_char( out, '"' );
 
-   if ( style & MXML_STYLE_NOESCAPE )
+   if ( ! ( style & MXML_STYLE_NOESCAPE ) )
    {
       mxml_output_string_escape( out, hb_itemGetCPtr( pAttr->pValue ) );
    }
@@ -706,9 +713,7 @@ static PHB_ITEM mxml_node_clone( PHB_ITEM pTg )
 
 HB_FUNC( HBXML_NODE_CLONE )
 {
-   PHB_ITEM pClone = mxml_node_clone( hb_param( 1, HB_IT_OBJECT ) );
-
-   hb_itemRelease( hb_itemReturn( pClone ) );
+   hb_itemReturnRelease( mxml_node_clone( hb_param( 1, HB_IT_OBJECT ) ) );
 }
 
 /**
@@ -747,9 +752,7 @@ static PHB_ITEM mxml_node_clone_tree( PHB_ITEM pTg )
 
 HB_FUNC( HBXML_NODE_CLONE_TREE )
 {
-   PHB_ITEM pClone = mxml_node_clone_tree( hb_param( 1, HB_IT_OBJECT ) );
-
-   hb_itemRelease( hb_itemReturn( pClone ) );
+   hb_itemReturnRelease( mxml_node_clone_tree( hb_param( 1, HB_IT_OBJECT ) ) );
 }
 
 /* reads a data node */

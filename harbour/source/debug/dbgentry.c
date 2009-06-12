@@ -1673,7 +1673,7 @@ HB_FUNC( __DBGGETEXPRVALUE )
       if( pItem )
       {
          hb_storl( TRUE, 3 );
-         hb_itemRelease( hb_itemReturn( pItem ) );
+         hb_itemReturnRelease( pItem );
       }
       else
          hb_storl( FALSE, 3 );
@@ -1684,7 +1684,7 @@ HB_FUNC( __DBGGETSOURCEFILES )
 {
    void * ptr = hb_parptr( 1 );
    if( ptr )
-      hb_itemRelease( hb_itemReturn( hb_dbgGetSourceFiles( ptr ) ) );
+      hb_itemReturnRelease( hb_dbgGetSourceFiles( ptr ) );
 }
 
 HB_FUNC( __DBGISVALIDSTOPLINE )

@@ -1848,7 +1848,7 @@ HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, LONG l
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
-    hb_retl( 0 );
+    hb_retl( FALSE );
   }
 }
 
@@ -1860,7 +1860,7 @@ HB_FUNC( HB_BTREEDELETE )  /* hb_BTreeDelete( hb_BTree_Handle, CHAR cKey, LONG l
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
-    hb_retl( 0 );
+    hb_retl( FALSE );
   }
 }
 
@@ -1920,7 +1920,7 @@ HB_FUNC( HB_BTREESEEK )  /* hb_BTreeSeek( hb_BTree_Handle, CHAR cKey, LONG lData
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
-    hb_retl( 0 );
+    hb_retl( FALSE );
   }
 }
 
@@ -1931,7 +1931,8 @@ HB_FUNC( HB_BTREEINFO )  /* hb_BTreeInfo( hb_BTree_Handle, [index] ) -> aResults
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
 
   if ( pBTree )
-    switch ( hb_parni( 2 ) ) {
+    switch ( hb_parni( 2 ) )
+    {
     case HB_BTREEINFO_FILENAME:  hb_retc( ( char * ) pBTree->szFileName ); break;
     case HB_BTREEINFO_PAGESIZE:  hb_retni( pBTree->usPageSize ); break;
     case HB_BTREEINFO_KEYSIZE:   hb_retni( pBTree->usKeySize ); break;
@@ -1941,40 +1942,20 @@ HB_FUNC( HB_BTREEINFO )  /* hb_BTreeInfo( hb_BTree_Handle, [index] ) -> aResults
     case HB_BTREEINFO_KEYCOUNT:  hb_retnl( pBTree->ulKeyCount ); break;
     case HB_BTREEINFO_ALL:
     default:  /* build an array and store all elements from above into it */
-    {
-      PHB_ITEM temp, info = hb_itemArrayNew( HB_BTREEINFO__SIZE );
+      {
+        PHB_ITEM info = hb_itemArrayNew( HB_BTREEINFO__SIZE );
 
-      temp = hb_itemPutC( NULL, ( char * ) pBTree->szFileName );
-      hb_itemArrayPut( info, HB_BTREEINFO_FILENAME, temp );
-      hb_itemRelease( temp );
+        hb_arraySetC(  info, HB_BTREEINFO_FILENAME, ( char * ) pBTree->szFileName );
+        hb_arraySetNI( info, HB_BTREEINFO_PAGESIZE, pBTree->usPageSize );
+        hb_arraySetNI( info, HB_BTREEINFO_KEYSIZE , pBTree->usKeySize );
+        hb_arraySetNI( info, HB_BTREEINFO_MAXKEYS , pBTree->usMaxKeys );
+        hb_arraySetNI( info, HB_BTREEINFO_MINKEYS , pBTree->usMinKeys );
+        hb_arraySetNL( info, HB_BTREEINFO_FLAGS   , pBTree->ulFlags );
+        hb_arraySetNL( info, HB_BTREEINFO_KEYCOUNT, pBTree->ulKeyCount );
 
-      temp = hb_itemPutNI( NULL, pBTree->usPageSize );
-      hb_itemArrayPut( info, HB_BTREEINFO_PAGESIZE, temp );
-      hb_itemRelease( temp );
-
-      temp = hb_itemPutNI( NULL, pBTree->usKeySize );
-      hb_itemArrayPut( info, HB_BTREEINFO_KEYSIZE , temp );
-      hb_itemRelease( temp );
-
-      temp = hb_itemPutNI( NULL, pBTree->usMaxKeys );
-      hb_itemArrayPut( info, HB_BTREEINFO_MAXKEYS , temp );
-      hb_itemRelease( temp );
-
-      temp = hb_itemPutNI( NULL, pBTree->usMinKeys );
-      hb_itemArrayPut( info, HB_BTREEINFO_MINKEYS , temp );
-      hb_itemRelease( temp );
-
-      temp = hb_itemPutNL( NULL, pBTree->ulFlags );
-      hb_itemArrayPut( info, HB_BTREEINFO_FLAGS   , temp );
-      hb_itemRelease( temp );
-
-      temp = hb_itemPutNL( NULL, pBTree->ulKeyCount );
-      hb_itemArrayPut( info, HB_BTREEINFO_KEYCOUNT, temp );
-      hb_itemRelease( temp );
-
-      hb_itemRelease( hb_itemReturn( info ) );
+        hb_itemReturnRelease( info );
+      }
     }
-  }
 }
 
 #if 0
