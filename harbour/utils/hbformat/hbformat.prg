@@ -926,7 +926,7 @@ METHOD File2Array( cFileName ) CLASS CODEFORMAT
 
    IF hb_FileExists( cFileName )
       aFile := rf_FileRead( MemoRead( cFileName ), @cEol )
-      IF ::nEol <= 0
+      IF ::nEol < 0
          ::cEol := cEol
       ENDIF
    ENDIF

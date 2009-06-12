@@ -76,6 +76,11 @@ HB_FUNC( RF_FILEREAD )
          }
          ulLines ++;
       }
+      else if( (unsigned int)(*ptr) < 9 )
+      {
+         hb_ret();
+         return;
+      }
       ptr ++;
    }
    ptr --;
@@ -102,7 +107,11 @@ HB_FUNC( RF_FILEREAD )
    }
 
    if( ul == ulLines )
+   {
+      if( *(ptr-1) == 0x1A )
+         ptr --;
       hb_arraySetCL( arr, ul, ptr1, ptr - ptr1 );
+   }
 
    hb_itemReturnRelease( arr );
 }
