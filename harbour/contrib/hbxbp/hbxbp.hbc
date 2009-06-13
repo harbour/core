@@ -4,3 +4,5 @@
 
 libs=hbxbp
 hbcs=../hbqt/hbqt.hbc
+
+{allwin}gt=gtgui

@@ -260,8 +260,8 @@ HB_FUNC( ASORT )
       ULONG ulCount = hb_parnl( 3 );
 
       hb_arraySort( pArray,
-                    ISNUM( 2 ) ? &ulStart : NULL,
-                    ISNUM( 3 ) ? &ulCount : NULL,
+                    HB_ISNUM( 2 ) ? &ulStart : NULL,
+                    HB_ISNUM( 3 ) ? &ulCount : NULL,
                     hb_param( 4, HB_IT_BLOCK ) );
 
       hb_itemReturn( pArray ); /* ASort() returns the array itself */

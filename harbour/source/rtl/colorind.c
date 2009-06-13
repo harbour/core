@@ -54,7 +54,7 @@
 
 HB_FUNC( HB_COLORINDEX )
 {
-   if( ISCHAR( 1 ) && ISNUM( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
       char * pszColor = hb_parc( 1 );
       ULONG ulColorPos;

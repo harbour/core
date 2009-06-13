@@ -90,7 +90,7 @@ HB_FUNC( ARRAY )
 
       for( iParam = 1; iParam <= iPCount; iParam++ )
       {
-         if( ! ISNUM( iParam ) )
+         if( ! HB_ISNUM( iParam ) )
          {
             bError = TRUE;
             break;
@@ -137,7 +137,7 @@ HB_FUNC( ASIZE )
 {
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
-   if( pArray && ISNUM( 2 ) )
+   if( pArray && HB_ISNUM( 2 ) )
    {
       long lSize = hb_parnl( 2 );
 
@@ -213,7 +213,7 @@ HB_FUNC( AFILL )
          LONG lStart = hb_parnl( 3 ), lCount = hb_parnl( 4 );
 
          /* Explicy lCount of 0 - Nothing to do! */
-         if( ISNUM( 4 ) && lCount == 0 )
+         if( HB_ISNUM( 4 ) && lCount == 0 )
             return;
          /* Clipper aborts if negative start. */
          else if( lStart < 0 )
@@ -234,8 +234,8 @@ HB_FUNC( AFILL )
          ulCount = ( ULONG ) lCount;
          hb_arrayFill( pArray,
                        pValue,
-                       ISNUM( 3 ) ? &ulStart : NULL,
-                       ISNUM( 4 ) ? &ulCount : NULL );
+                       HB_ISNUM( 3 ) ? &ulStart : NULL,
+                       HB_ISNUM( 4 ) ? &ulCount : NULL );
       }
    }
    else
@@ -260,8 +260,8 @@ HB_FUNC( ASCAN )
       ULONG ulCount = hb_parnl( 4 );
 
       hb_retnint( hb_arrayScan( pArray, pValue,
-                                ISNUM( 3 ) ? &ulStart : NULL,
-                                ISNUM( 4 ) ? &ulCount : NULL,
+                                HB_ISNUM( 3 ) ? &ulStart : NULL,
+                                HB_ISNUM( 4 ) ? &ulCount : NULL,
                                 FALSE ) );
    }
    else
@@ -280,8 +280,8 @@ HB_FUNC( HB_ASCAN )
       ULONG ulCount = hb_parnl( 4 );
 
       hb_retnint( hb_arrayScan( pArray, pValue,
-                                ISNUM( 3 ) ? &ulStart : NULL,
-                                ISNUM( 4 ) ? &ulCount : NULL,
+                                HB_ISNUM( 3 ) ? &ulStart : NULL,
+                                HB_ISNUM( 4 ) ? &ulCount : NULL,
                                 hb_parl( 5 ) ) );
    }
    else
@@ -299,8 +299,8 @@ HB_FUNC( HB_RASCAN )
       ULONG ulCount = hb_parnl( 4 );
 
       hb_retnint( hb_arrayRevScan( pArray, pValue,
-                                   ISNUM( 3 ) ? &ulStart : NULL,
-                                   ISNUM( 4 ) ? &ulCount : NULL,
+                                   HB_ISNUM( 3 ) ? &ulStart : NULL,
+                                   HB_ISNUM( 4 ) ? &ulCount : NULL,
                                    hb_parl( 5 ) ) );
    }
    else
@@ -318,7 +318,7 @@ HB_FUNC( HB_AINS )
       if( lPos == 0 )
          lPos = 1;
 
-      if( ISLOG( 4 ) && hb_parl( 4 ) )
+      if( HB_ISLOG( 4 ) && hb_parl( 4 ) )
       {
          ULONG ulLen = hb_arrayLen( pArray ) + 1;
          if( lPos >= 1 && ( ULONG ) lPos <= ulLen )
@@ -327,7 +327,7 @@ HB_FUNC( HB_AINS )
 
       if( hb_arrayIns( pArray, lPos ) )
       {
-         if( ! ISNIL( 3 ) )
+         if( ! HB_ISNIL( 3 ) )
             hb_arraySet( pArray, lPos, hb_param( 3, HB_IT_ANY ) );
       }
 
@@ -348,7 +348,7 @@ HB_FUNC( HB_ADEL )
 
       if( hb_arrayDel( pArray, lPos ) )
       {
-         if( ISLOG( 3 ) && hb_parl( 3 ) )
+         if( HB_ISLOG( 3 ) && hb_parl( 3 ) )
             hb_arraySize( pArray, hb_arrayLen( pArray ) - 1 );
       }
 
@@ -371,8 +371,8 @@ HB_FUNC( AEVAL )
 
       hb_arrayEval( pArray,
                     pBlock,
-                    ISNUM( 3 ) ? &ulStart : NULL,
-                    ISNUM( 4 ) ? &ulCount : NULL );
+                    HB_ISNUM( 3 ) ? &ulStart : NULL,
+                    HB_ISNUM( 4 ) ? &ulCount : NULL );
 
       hb_itemReturn( hb_stackItemFromBase( 1 ) ); /* AEval() returns the array itself */
    }
@@ -396,9 +396,9 @@ HB_FUNC( ACOPY )
 
          hb_arrayCopy( pSrcArray,
                        pDstArray,
-                       ISNUM( 3 ) ? &ulStart : NULL,
-                       ISNUM( 4 ) ? &ulCount : NULL,
-                       ISNUM( 5 ) ? &ulTarget : NULL );
+                       HB_ISNUM( 3 ) ? &ulStart : NULL,
+                       HB_ISNUM( 4 ) ? &ulCount : NULL,
+                       HB_ISNUM( 5 ) ? &ulTarget : NULL );
       }
 
       hb_itemReturn( hb_stackItemFromBase( 2 ) ); /* ACopy() returns the target array */

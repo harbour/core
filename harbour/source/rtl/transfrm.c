@@ -966,7 +966,7 @@ HB_FUNC( TRANSFORM )
          hb_retclen_buffer( szResult, ( ulParamS && ulResultPos > ulParamS ) ? ulParamS : ulResultPos );
       }
    }
-   else if( pPic || ISNIL( 2 ) ) /* Picture is an empty string or NIL */
+   else if( pPic || HB_ISNIL( 2 ) ) /* Picture is an empty string or NIL */
    {
       if( HB_IS_STRING( pValue ) )
       {

@@ -152,7 +152,7 @@ static BOOL hb_copyfile( const char * szSource, const char * szDest )
 
 HB_FUNC( __COPYFILE )
 {
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       if( ! hb_copyfile( hb_parc( 1 ), hb_parc( 2 ) ) )
          hb_retl( FALSE );

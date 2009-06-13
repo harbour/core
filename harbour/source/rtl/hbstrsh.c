@@ -60,7 +60,7 @@ HB_FUNC( HB_STRSHRINK )
    if( pText )
    {
       long lLen = hb_itemGetCLen( pText );
-      long lShrinkBy = ISNUM( 2 ) ? hb_parnl( 2 ) : 1;
+      long lShrinkBy = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : 1;
 
       if( lShrinkBy > 0 )
       {

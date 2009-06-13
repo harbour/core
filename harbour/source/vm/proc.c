@@ -107,11 +107,11 @@ HB_FUNC( PROCFILE )
 #ifndef HB_C52_STRICT
    PHB_SYMB pSym = NULL;
 
-   if( ISSYMBOL( 1 ) )
+   if( HB_ISSYMBOL( 1 ) )
    {
       pSym = hb_itemGetSymbol( hb_param( 1, HB_IT_SYMBOL ) );
    }
-   else if( ISCHAR( 1 ) )
+   else if( HB_ISCHAR( 1 ) )
    {
       PHB_DYNS pDynSym = hb_dynsymFindName( hb_parc( 1 ) );
 

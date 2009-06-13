@@ -3273,5 +3273,5 @@ static BOOL hb_fsDisableWaitLocks( int iSet )
 
 HB_FUNC( HB_DISABLEWAITLOCKS )
 {
-   hb_retl( hb_fsDisableWaitLocks( ISLOG( 1 ) ? ( hb_parl( 1 ) ? 1 : 0 ) : -1 ) );
+   hb_retl( hb_fsDisableWaitLocks( HB_ISLOG( 1 ) ? ( hb_parl( 1 ) ? 1 : 0 ) : -1 ) );
 }

@@ -1791,7 +1791,7 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
             if( pMsg == s___msgEnumIndex.pDynSym )
             {
                hb_itemPutNL( hb_stackReturnItem(), pEnum->item.asEnum.offset );
-               if( hb_pcount() > 0 && ISNUM( 1 ) )
+               if( hb_pcount() > 0 && HB_ISNUM( 1 ) )
                   pEnum->item.asEnum.offset = hb_itemGetNL( hb_param( 1, HB_IT_ANY ) );
                return &s___msgEnumIndex;
             }
@@ -4133,7 +4133,7 @@ HB_FUNC( __CLSSYNCWAIT )
       }
    }
 
-   if( ISNUM( 2 ) )
+   if( HB_ISNUM( 2 ) )
    {
       double dTimeOut = hb_parnd( 2 );
       if( dTimeOut > 0 )
@@ -4254,7 +4254,7 @@ static HARBOUR hb___msgClassSel( void )
 
       nParam = hb_pcount() > 0 ? ( USHORT ) hb_parni( 1 ) : HB_MSGLISTALL;
       nScope = hb_pcount() > 1 ? ( USHORT ) hb_parni( 2 ) : 0;
-      lFull = hb_pcount() > 2 && ISLOG( 3 ) && hb_parl( 3 );
+      lFull = hb_pcount() > 2 && HB_ISLOG( 3 ) && hb_parl( 3 );
       pReturn = hb_itemArrayNew( pClass->uiMethods );
 
       do
@@ -4876,7 +4876,7 @@ HB_FUNC( __CLSGETPROPERTIES )
       ULONG ulLimit, ulCount;
       USHORT uiScope = HB_OO_CLSTP_PERSIST;
 
-      if( ISLOG( 2 ) && hb_parl( 2 ) )
+      if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
          uiScope |= HB_OO_CLSTP_EXPORTED;
 
       ulCount = 0;
@@ -4977,7 +4977,7 @@ HB_FUNC( __CLSUNLOCKDEF )
    PHB_ITEM pClsDst = hb_param( 1, HB_IT_BYREF ),
             pClsSrc = hb_param( 2, HB_IT_ANY );
 
-   if( pClsDst && pClsSrc && HB_IS_NIL( pClsDst ) && !ISBYREF( 2 ) )
+   if( pClsDst && pClsSrc && HB_IS_NIL( pClsDst ) && ! HB_ISBYREF( 2 ) )
    {
       /* intentional low level hack to eliminate race condition in
        * unprotected readonly access.

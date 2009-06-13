@@ -69,11 +69,11 @@ HB_FUNC( SETMOUSE )
 
    hb_retl( hb_mouseGetCursor() );
 
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
       hb_mouseSetCursor( hb_parl( 1 ) );
 
-   fRow = ISNUM( 2 );
-   fCol = ISNUM( 3 );
+   fRow = HB_ISNUM( 2 );
+   fCol = HB_ISNUM( 3 );
 
    if( fRow || fCol )
    {

@@ -2902,7 +2902,7 @@ HB_FUNC( USRRDD_ID )
 {
    AREAP pArea;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
       pArea = hb_usrGetAreaPointer( hb_parni( 1 ) );
    else
       pArea = ( AREAP ) hb_parptr( 1 );
@@ -2915,7 +2915,7 @@ HB_FUNC( USRRDD_AREADATA )
 {
    AREAP pArea;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
       pArea = hb_usrGetAreaPointer( hb_parni( 1 ) );
    else
       pArea = ( AREAP ) hb_parptr( 1 );
@@ -2936,7 +2936,7 @@ HB_FUNC( USRRDD_AREARESULT )
 {
    AREAP pArea;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
       pArea = hb_usrGetAreaPointer( hb_parni( 1 ) );
    else
       pArea = ( AREAP ) hb_parptr( 1 );
@@ -2958,9 +2958,9 @@ HB_FUNC( USRRDD_SETBOF )
 {
    AREAP pArea;
 
-   if( ISLOG( 2 ) )
+   if( HB_ISLOG( 2 ) )
    {
-      if( ISNUM( 1 ) )
+      if( HB_ISNUM( 1 ) )
          pArea = hb_usrGetAreaPointer( hb_parni( 1 ) );
       else
          pArea = ( AREAP ) hb_parptr( 1 );
@@ -2974,9 +2974,9 @@ HB_FUNC( USRRDD_SETEOF )
 {
    AREAP pArea;
 
-   if( ISLOG( 2 ) )
+   if( HB_ISLOG( 2 ) )
    {
-      if( ISNUM( 1 ) )
+      if( HB_ISNUM( 1 ) )
          pArea = hb_usrGetAreaPointer( hb_parni( 1 ) );
       else
          pArea = ( AREAP ) hb_parptr( 1 );
@@ -2990,9 +2990,9 @@ HB_FUNC( USRRDD_SETFOUND )
 {
    AREAP pArea;
 
-   if( ISLOG( 2 ) )
+   if( HB_ISLOG( 2 ) )
    {
-      if( ISNUM( 1 ) )
+      if( HB_ISNUM( 1 ) )
          pArea = hb_usrGetAreaPointer( hb_parni( 1 ) );
       else
          pArea = ( AREAP ) hb_parptr( 1 );
@@ -3006,9 +3006,9 @@ HB_FUNC( USRRDD_SETTOP )
 {
    AREAP pArea;
 
-   if( ISLOG( 2 ) )
+   if( HB_ISLOG( 2 ) )
    {
-      if( ISNUM( 1 ) )
+      if( HB_ISNUM( 1 ) )
          pArea = hb_usrGetAreaPointer( hb_parni( 1 ) );
       else
          pArea = ( AREAP ) hb_parptr( 1 );
@@ -3022,9 +3022,9 @@ HB_FUNC( USRRDD_SETBOTTOM )
 {
    AREAP pArea;
 
-   if( ISLOG( 2 ) )
+   if( HB_ISLOG( 2 ) )
    {
-      if( ISNUM( 1 ) )
+      if( HB_ISNUM( 1 ) )
          pArea = hb_usrGetAreaPointer( hb_parni( 1 ) );
       else
          pArea = ( AREAP ) hb_parptr( 1 );
@@ -3058,7 +3058,7 @@ static AREAP hb_usrGetAreaParam( int iParams )
 
    if( iParams <= hb_pcount() )
    {
-      if( ISNUM( 1 ) )
+      if( HB_ISNUM( 1 ) )
          pArea = hb_usrGetAreaPointer( hb_parni( 1 ) );
       else
          pArea = ( AREAP ) hb_parptr( 1 );
@@ -3346,11 +3346,11 @@ HB_FUNC_UR_SUPER( PUTREC )
 
    if( pArea )
    {
-      if( ISPOINTER( 2 ) )
+      if( HB_ISPOINTER( 2 ) )
       {
          hb_retni( SUPER_PUTREC( pArea, ( BYTE * ) hb_parptr( 2 ) ) );
       }
-      else if( ISCHAR( 2 ) )
+      else if( HB_ISCHAR( 2 ) )
       {
          hb_retni( SUPER_PUTREC( pArea, ( BYTE * ) hb_parc( 2 ) ) );
       }
@@ -4063,7 +4063,7 @@ HB_FUNC_UR_SUPER( COMPILE )
 
    if( pArea )
    {
-      if( ISCHAR( 2 ) )
+      if( HB_ISCHAR( 2 ) )
       {
          hb_retni( SUPER_COMPILE( pArea, ( BYTE * ) hb_parc( 2 ) ) );
       }

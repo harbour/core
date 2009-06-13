@@ -467,7 +467,7 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 
       if( pMemvar )
       {
-         if( HB_IS_BYREF( pMemvar ) && !HB_IS_ENUM( pMemvar ) )
+         if( HB_IS_BYREF( pMemvar ) && ! HB_IS_ENUM( pMemvar ) )
             hb_itemCopy( pItem, pMemvar );
          else
          {
@@ -492,7 +492,7 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
             pMemvar = hb_dynsymGetMemvar( pDyn );
             if( pMemvar )
             {
-               if( HB_IS_BYREF( pMemvar ) && !HB_IS_ENUM( pMemvar ) )
+               if( HB_IS_BYREF( pMemvar ) && ! HB_IS_ENUM( pMemvar ) )
                   hb_itemCopy( pItem, pMemvar );
                else
                {
@@ -1178,7 +1178,7 @@ HB_FUNC( __MVRELEASE )
    HB_STACK_TLS_PRELOAD
    int iCount = hb_pcount();
 
-   if( iCount && ISCHAR( 1 ) )
+   if( iCount && HB_ISCHAR( 1 ) )
    {
       BOOL bIncludeVar;
       const char * pszMask;
@@ -1461,7 +1461,7 @@ HB_FUNC( __MVSAVE )
    HB_STACK_TLS_PRELOAD
 
    /* Clipper also checks for the number of arguments here */
-   if( hb_pcount() == 3 && ISCHAR( 1 ) && ISCHAR( 2 ) && ISLOG( 3 ) )
+   if( hb_pcount() == 3 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISLOG( 3 ) )
    {
       PHB_ITEM pError = NULL;
       PHB_FNAME pFileName;
@@ -1534,9 +1534,9 @@ HB_FUNC( __MVRESTORE )
    /* Clipper checks for the number of arguments here here, but we cannot
       in Harbour since we have two optional parameters as an extension. */
 #ifdef HB_C52_STRICT
-   if( hb_pcount() == 2 && ISCHAR( 1 ) && ISLOG( 2 ) )
+   if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISLOG( 2 ) )
 #else
-   if( ISCHAR( 1 ) && ISLOG( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISLOG( 2 ) )
 #endif
    {
       HB_STACK_TLS_PRELOAD
@@ -1593,7 +1593,7 @@ HB_FUNC( __MVRESTORE )
          bIncludeMask = TRUE;
 #else
          pszMask = hb_memvarGetMask( 3 );
-         bIncludeMask = !ISLOG( 4 ) || hb_parl( 4 );
+         bIncludeMask = ! HB_ISLOG( 4 ) || hb_parl( 4 );
 #endif
 
          while( hb_fsRead( fhnd, buffer, HB_MEM_REC_LEN ) == HB_MEM_REC_LEN )

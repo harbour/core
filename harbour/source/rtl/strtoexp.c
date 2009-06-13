@@ -90,7 +90,7 @@ HB_FUNC( HB_STRTOEXP )
                break;
          }
       }
-      if( iType == 7 || ( ISLOG( 2 ) && hb_parl( 2 ) ) )
+      if( iType == 7 || ( HB_ISLOG( 2 ) && hb_parl( 2 ) ) )
       {
          ulRet = ulLen + 3 + uQ;
          pDst = pszResult = ( char * ) hb_xgrab( ulRet + 1 );

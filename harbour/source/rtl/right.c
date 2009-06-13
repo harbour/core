@@ -60,7 +60,7 @@ HB_FUNC( RIGHT )
 {
    PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
-   if( pText && ISNUM( 2 ) )
+   if( pText && HB_ISNUM( 2 ) )
    {
       long lLen = hb_parnl( 2 );
       if( lLen <= 0 )

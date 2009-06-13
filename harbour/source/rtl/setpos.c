@@ -66,7 +66,7 @@
 
 HB_FUNC( SETPOS ) /* Sets the screen position */
 {
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
+   if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
       hb_gtSetPos( ( SHORT ) hb_parni( 1 ), ( SHORT ) hb_parni( 2 ) );
 }
 

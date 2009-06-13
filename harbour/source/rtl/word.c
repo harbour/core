@@ -59,7 +59,7 @@
 
 HB_FUNC( WORD )
 {
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
       hb_retni( hb_parni( 1 ) );
    else
       hb_errRT_BASE( EG_ARG, 1091, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

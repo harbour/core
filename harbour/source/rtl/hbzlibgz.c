@@ -104,7 +104,7 @@ HB_FUNC( HB_GZOPEN )
 HB_FUNC( HB_GZDOPEN )
 {
    char * cMode = hb_parc( 2 );
-   if( ISNUM( 1 ) && cMode )
+   if( HB_ISNUM( 1 ) && cMode )
    {
       gzFile gz = gzdopen( hb_parni( 1 ), cMode );
       if( gz )
@@ -141,7 +141,7 @@ HB_FUNC( HB_GZCLOSE )
  */
 HB_FUNC( HB_GZSETPARAMS )
 {
-   if( ISNUM( 2 ) && ISNUM( 3 ) )
+   if( HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
       gzFile gz = hb_gzParam( 1 );
       if( gz )
@@ -156,7 +156,7 @@ HB_FUNC( HB_GZSETPARAMS )
  */
 HB_FUNC( HB_GZREAD )
 {
-   PHB_ITEM pBuffer = ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
+   PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
 
    if( pBuffer )
    {
@@ -164,7 +164,7 @@ HB_FUNC( HB_GZREAD )
       if( gz )
       {
          pBuffer = hb_itemUnShareString( pBuffer );
-         hb_retni( gzread( gz, hb_itemGetCPtr( pBuffer ), ISNUM( 3 ) ?
+         hb_retni( gzread( gz, hb_itemGetCPtr( pBuffer ), HB_ISNUM( 3 ) ?
                      ( ULONG ) hb_parnl( 3 ) : hb_itemGetCLen( pBuffer ) ) );
       }
    }
@@ -182,7 +182,7 @@ HB_FUNC( HB_GZWRITE )
    {
       gzFile gz = hb_gzParam( 1 );
       if( gz )
-         hb_retni( gzwrite( gz, szData, ISNUM( 3 ) ?
+         hb_retni( gzwrite( gz, szData, HB_ISNUM( 3 ) ?
                             ( ULONG ) hb_parnl( 3 ) : hb_parclen( 2 ) ) );
    }
    else
@@ -236,7 +236,7 @@ HB_FUNC( HB_GZPUTS )
  */
 HB_FUNC( HB_GZPUTC )
 {
-   if( ISNUM( 2 ) )
+   if( HB_ISNUM( 2 ) )
    {
       gzFile gz = hb_gzParam( 1 );
       if( gz )
@@ -261,7 +261,7 @@ HB_FUNC( HB_GZGETC )
  */
 HB_FUNC( HB_GZUNGETC )
 {
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       gzFile gz = hb_gzParam( 2 );
       if( gz )
@@ -278,7 +278,7 @@ HB_FUNC( HB_GZFLUSH )
 {
    gzFile gz = hb_gzParam( 1 );
    if( gz )
-      hb_retni( gzflush( gz, ISNUM( 2 ) ? hb_parni( 2 ) : Z_SYNC_FLUSH ) );
+      hb_retni( gzflush( gz, HB_ISNUM( 2 ) ? hb_parni( 2 ) : Z_SYNC_FLUSH ) );
 }
 
 /*
@@ -286,11 +286,11 @@ HB_FUNC( HB_GZFLUSH )
  */
 HB_FUNC( HB_GZSEEK )
 {
-   if( ISNUM( 2 ) )
+   if( HB_ISNUM( 2 ) )
    {
       gzFile gz = hb_gzParam( 1 );
       if( gz )
-         hb_retnint( gzseek( gz, ( z_off_t ) hb_parnint( 2 ), ISNUM( 3 ) ?
+         hb_retnint( gzseek( gz, ( z_off_t ) hb_parnint( 2 ), HB_ISNUM( 3 ) ?
                              hb_parni( 3 ) : SEEK_SET ) );
    }
    else

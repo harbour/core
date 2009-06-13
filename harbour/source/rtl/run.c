@@ -60,7 +60,7 @@
 
 HB_FUNC( __RUN )
 {
-   if( ISCHAR( 1 ) && hb_gtSuspend() == 0 )
+   if( HB_ISCHAR( 1 ) && hb_gtSuspend() == 0 )
    {
       char * pszCommand = hb_itemGetC( hb_param( 1, HB_IT_STRING ) );
       BOOL fFree;

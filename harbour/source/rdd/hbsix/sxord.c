@@ -91,15 +91,15 @@ static BOOL hb_sxOrdParam( LPDBORDERINFO pInfo )
 {
    memset( pInfo, 0, sizeof( DBORDERINFO ) );
 
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       pInfo->itmOrder = hb_param( 1, HB_IT_STRING );
       pInfo->atomBagName = hb_param( 2, HB_IT_STRING );
    }
-   else if( ISNUM( 1 ) )
+   else if( HB_ISNUM( 1 ) )
    {
       pInfo->itmOrder = hb_param( 1, HB_IT_NUMERIC );
-      if( ! ISNIL( 2 ) ) /* hb_pcount() > 2 */
+      if( ! HB_ISNIL( 2 ) ) /* hb_pcount() > 2 */
       {
          pInfo->atomBagName = hb_param( 2, HB_IT_NUMERIC );
          if( hb_parni( 2 ) <= 0 )
@@ -296,7 +296,7 @@ HB_FUNC( SX_CLRSCOPE )
 
       if( hb_sxOrdParam( &Info ) )
       {
-         int iScope = ISNUM( 1 ) ? hb_parni( 1 ) : 2;
+         int iScope = HB_ISNUM( 1 ) ? hb_parni( 1 ) : 2;
          Info.itmResult = hb_itemNew( NULL );
          if( iScope )
             SELF_ORDINFO( pArea, DBOI_SCOPEBOTTOMCLEAR, &Info );
@@ -319,7 +319,7 @@ HB_FUNC( SX_SETSCOPE )
       {
          int iScope = hb_parni( 1 );
          Info.itmResult = hb_itemNew( NULL );
-         if( !ISNIL( 2 ) )
+         if( ! HB_ISNIL( 2 ) )
             Info.itmNewVal = hb_param( 2, HB_IT_ANY );
          SELF_ORDINFO( pArea, ( USHORT ) ( iScope ? DBOI_SCOPEBOTTOM : DBOI_SCOPETOP ), &Info );
          hb_itemReturnRelease( Info.itmResult );
@@ -461,7 +461,7 @@ HB_FUNC( SX_INDEXTYPE )
       DBORDERINFO Info;
       if( hb_sxOrdParam( &Info ) )
       {
-         if( hb_pcount() == 1 && ISCHAR( 1 ) )
+         if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
          {
             Info.atomBagName = Info.itmOrder;
             Info.itmOrder = NULL;
@@ -559,7 +559,7 @@ HB_FUNC( SX_KEYSKIP )
 
    if( pArea )
    {
-      if( SELF_SKIPRAW( pArea, ISNUM( 1 ) ? hb_parnl( 1 ) : 1 ) == HB_SUCCESS )
+      if( SELF_SKIPRAW( pArea, HB_ISNUM( 1 ) ? hb_parnl( 1 ) : 1 ) == HB_SUCCESS )
       {
          if( SELF_EOF( pArea, &fBEof ) == HB_SUCCESS && !fBEof )
             fResult = SELF_BOF( pArea, &fBEof ) == HB_SUCCESS && !fBEof;
@@ -652,7 +652,7 @@ HB_FUNC( SX_SEEKLAST )
    if( pArea && hb_pcount() > 0 )
    {
       PHB_ITEM pKey = hb_param( 1, HB_IT_ANY );
-      BOOL bSoftSeek = ISLOG( 2 ) && hb_parl( 2 );
+      BOOL bSoftSeek = HB_ISLOG( 2 ) && hb_parl( 2 );
 
       if( SELF_SEEK( pArea, bSoftSeek, pKey, TRUE ) == HB_SUCCESS )
       {
@@ -683,7 +683,7 @@ HB_FUNC( SX_WILDSEEK )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    char * szPattern = hb_parc( 1 );
-   BOOL fCont = ISLOG( 2 ) && hb_parl( 2 );
+   BOOL fCont = HB_ISLOG( 2 ) && hb_parl( 2 );
    BOOL fFound = FALSE;
    int iOrder = 0;
 

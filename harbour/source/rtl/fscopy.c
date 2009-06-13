@@ -96,7 +96,7 @@ HB_FUNC( HB_FCOPY )
 {
    USHORT uiError = 2;
 
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       hb_retni( hb_fsCopy( ( BYTE * ) hb_parc( 1 ),
                            ( BYTE * ) hb_parc( 2 ) ) ? 0 : F_ERROR );

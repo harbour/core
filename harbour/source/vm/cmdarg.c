@@ -388,14 +388,14 @@ int hb_cmdargNum( const char * pszName )
 
 HB_FUNC( HB_ARGCHECK )
 {
-   hb_retl( ISCHAR( 1 ) ? hb_cmdargCheck( hb_parc( 1 ) ) : FALSE );
+   hb_retl( HB_ISCHAR( 1 ) ? hb_cmdargCheck( hb_parc( 1 ) ) : FALSE );
 }
 
 /* Returns the value of an internal switch */
 
 HB_FUNC( HB_ARGSTRING )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char * pszValue = hb_cmdargString( hb_parc( 1 ) );
 

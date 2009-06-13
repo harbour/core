@@ -200,7 +200,7 @@ HB_FUNC_STATIC( CANDEFAULT )
 
 HB_FUNC_STATIC( _CANDEFAULT )
 {
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
    {
       PHB_ITEM pError = hb_stackSelfItem();
       BOOL fCan = hb_parl( 1 );
@@ -222,7 +222,7 @@ HB_FUNC_STATIC( CANRETRY )
 
 HB_FUNC_STATIC( _CANRETRY )
 {
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
    {
       PHB_ITEM pError = hb_stackSelfItem();
       BOOL fCan = hb_parl( 1 );
@@ -244,7 +244,7 @@ HB_FUNC_STATIC( CANSUBST )
 
 HB_FUNC_STATIC( _CANSUBST )
 {
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
    {
       PHB_ITEM pError = hb_stackSelfItem();
       BOOL fCan = hb_parl( 1 );
@@ -501,7 +501,7 @@ HB_FUNC( DOSERROR )
 
    hb_retni( pErrData->uiErrorDOS );
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
       pErrData->uiErrorDOS = ( USHORT ) hb_parni( 1 );
 }
 

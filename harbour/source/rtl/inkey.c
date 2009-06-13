@@ -107,9 +107,9 @@ HB_FUNC( INKEY )
 
    do
    {
-      iKey = hb_inkey( uiPCount == 1 || ( uiPCount > 1 && ISNUM( 1 ) ),
+      iKey = hb_inkey( uiPCount == 1 || ( uiPCount > 1 && HB_ISNUM( 1 ) ),
                        hb_parnd( 1 ),
-                       ISNUM( 2 ) ? hb_parni( 2 ) : hb_setGetEventMask() );
+                       HB_ISNUM( 2 ) ? hb_parni( 2 ) : hb_setGetEventMask() );
 
       if( iKey == 0 || !pInkeyBlock || !pInkeyBlock->after )
          break;
@@ -169,7 +169,7 @@ HB_FUNC( __KEYBOARD )
    /* Clear the typeahead buffer without reallocating the keyboard buffer */
    hb_inkeyReset();
 
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
       hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
 }
 
@@ -180,15 +180,15 @@ HB_FUNC( HB_KEYCLEAR )
 
 HB_FUNC( HB_KEYPUT )
 {
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       hb_inkeyPut( hb_parni( 1 ) );
    }
-   else if( ISCHAR( 1 ) )
+   else if( HB_ISCHAR( 1 ) )
    {
       hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
    }
-   else if( ISARRAY( 1 ) )
+   else if( HB_ISARRAY( 1 ) )
    {
       PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
       ULONG ulIndex;
@@ -212,15 +212,15 @@ HB_FUNC( HB_KEYPUT )
 
 HB_FUNC( HB_KEYINS )
 {
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       hb_inkeyIns( hb_parni( 1 ) );
    }
-   else if( ISCHAR( 1 ) )
+   else if( HB_ISCHAR( 1 ) )
    {
       hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
    }
-   else if( ISARRAY( 1 ) )
+   else if( HB_ISARRAY( 1 ) )
    {
       PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
       ULONG ulIndex;
@@ -244,16 +244,16 @@ HB_FUNC( HB_KEYINS )
 
 HB_FUNC( NEXTKEY )
 {
-   hb_retni( hb_inkeyNext( ISNUM( 1 ) ? hb_parni( 1 ) : hb_setGetEventMask() ) );
+   hb_retni( hb_inkeyNext( HB_ISNUM( 1 ) ? hb_parni( 1 ) : hb_setGetEventMask() ) );
 }
 
 HB_FUNC( LASTKEY )
 {
-   hb_retni( hb_inkeyLast( ISNUM( 1 ) ? hb_parni( 1 ) : INKEY_ALL ) );
+   hb_retni( hb_inkeyLast( HB_ISNUM( 1 ) ? hb_parni( 1 ) : INKEY_ALL ) );
 }
 
 HB_FUNC( HB_SETLASTKEY )
 {
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
       hb_retni( hb_inkeySetLast( hb_parni( 1 ) ) );
 }

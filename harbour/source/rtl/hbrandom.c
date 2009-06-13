@@ -73,9 +73,9 @@ HB_FUNC( HB_RANDOM )
 {
    double dRnd = hb_random_num();
 
-   if( ! ISNUM( 1 ) )
+   if( ! HB_ISNUM( 1 ) )
       hb_retnd( dRnd );
-   else if( ! ISNUM( 2 ) )
+   else if( ! HB_ISNUM( 2 ) )
       hb_retnd( dRnd * hb_parnd( 1 ) );
    else
    {
@@ -103,9 +103,9 @@ HB_FUNC( HB_RANDOMINT )
 {
    double dRnd = hb_random_num();
 
-   if( ! ISNUM( 1 ) )
+   if( ! HB_ISNUM( 1 ) )
       hb_retni( dRnd >= 0.5 ? 0 : 1 );
-   else if( ! ISNUM( 2 ) )
+   else if( ! HB_ISNUM( 2 ) )
       hb_retnint( ( HB_LONG ) ( 1 + ( dRnd * hb_parnint( 1 ) ) ) );
    else
    {
@@ -123,7 +123,7 @@ HB_FUNC( HB_RANDOMINT )
 
 HB_FUNC( HB_RANDOMSEED )
 {
-   srand( ISNUM( 1 ) ? ( unsigned ) hb_parni( 1 ) : ( unsigned ) hb_dateMilliSeconds() );
+   srand( HB_ISNUM( 1 ) ? ( unsigned ) hb_parni( 1 ) : ( unsigned ) hb_dateMilliSeconds() );
    s_fInit = TRUE;
 }
 

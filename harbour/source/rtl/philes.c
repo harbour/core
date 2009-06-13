@@ -61,10 +61,10 @@
 
 HB_FUNC( FOPEN )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       hb_retnint( ( HB_NHANDLE ) hb_fsOpen( ( BYTE * ) hb_parc( 1 ),
-                  ISNUM( 2 ) ? ( USHORT ) hb_parni( 2 ) : FO_READ | FO_COMPAT ) );
+                  HB_ISNUM( 2 ) ? ( USHORT ) hb_parni( 2 ) : FO_READ | FO_COMPAT ) );
       hb_fsSetFError( hb_fsError() );
    }
    else
@@ -77,10 +77,10 @@ HB_FUNC( FOPEN )
 
 HB_FUNC( FCREATE )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       hb_retnint( ( HB_NHANDLE ) hb_fsCreate( ( BYTE * ) hb_parc( 1 ),
-                  ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL ) );
+                  HB_ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL ) );
       hb_fsSetFError( hb_fsError() );
    }
    else
@@ -92,11 +92,11 @@ HB_FUNC( FCREATE )
 
 HB_FUNC( HB_FCREATE )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       hb_retnint( ( HB_NHANDLE ) hb_fsCreateEx( ( BYTE * ) hb_parc( 1 ),
-                  ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL,
-                  ISNUM( 3 ) ? ( USHORT ) hb_parni( 3 ) : FO_COMPAT ) );
+                  HB_ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL,
+                  HB_ISNUM( 3 ) ? ( USHORT ) hb_parni( 3 ) : FO_COMPAT ) );
       hb_fsSetFError( hb_fsError() );
    }
    else
@@ -112,7 +112,7 @@ HB_FUNC( FREAD )
    USHORT uiError = 0;
    ULONG ulRead = 0;
 
-   if( ISNUM( 1 ) && pBuffer && ISBYREF( 2 ) && ISNUM( 3 ) )
+   if( HB_ISNUM( 1 ) && pBuffer && HB_ISBYREF( 2 ) && HB_ISNUM( 3 ) )
    {
       ulRead = hb_parnl( 3 );
 
@@ -147,11 +147,11 @@ HB_FUNC( FWRITE )
 {
    USHORT uiError = 0;
 
-   if( ISNUM( 1 ) && ISCHAR( 2 ) )
+   if( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) )
    {
       ULONG nLen = hb_parclen( 2 );
 
-      if( ISNUM( 3 ) )
+      if( HB_ISNUM( 3 ) )
       {
          ULONG nWrite = ( ULONG ) hb_parnl( 3 );
          if( nWrite < nLen )
@@ -176,7 +176,7 @@ HB_FUNC( FERROR )
 HB_FUNC( FCLOSE )
 {
    USHORT uiError = 0;
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       hb_fsClose( hb_numToHandle( hb_parnint( 1 ) ) );
       uiError = hb_fsError();
@@ -191,7 +191,7 @@ HB_FUNC( FERASE )
 {
    USHORT uiError = 3;
 
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       hb_retni( hb_fsDelete( ( BYTE * ) hb_parc( 1 ) ) ? 0 : F_ERROR );
       uiError = hb_fsError();
@@ -205,7 +205,7 @@ HB_FUNC( FRENAME )
 {
    USHORT uiError = 2;
 
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       hb_retni( hb_fsRename( ( BYTE * ) hb_parc( 1 ),
                              ( BYTE * ) hb_parc( 2 ) ) ? 0 : F_ERROR );
@@ -220,11 +220,11 @@ HB_FUNC( FSEEK )
 {
    USHORT uiError = 0;
 
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
+   if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
       hb_retnint( hb_fsSeekLarge( hb_numToHandle( hb_parnint( 1 ) ),
                                   hb_parnint( 2 ),
-                                  ISNUM( 3 ) ? ( USHORT ) hb_parni( 3 ) : FS_SET ) );
+                                  HB_ISNUM( 3 ) ? ( USHORT ) hb_parni( 3 ) : FS_SET ) );
       uiError = hb_fsError();
    }
    else
@@ -237,7 +237,7 @@ HB_FUNC( FREADSTR )
 {
    USHORT uiError = 0;
 
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
+   if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
       ULONG ulToRead = ( ULONG ) hb_parnl( 2 );
 
@@ -318,7 +318,7 @@ HB_FUNC( HB_FEOF )
 {
    USHORT uiError = 6;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       hb_retl( hb_fsEof( hb_numToHandle( hb_parnint( 1 ) ) ) );
       uiError = hb_fsError();
@@ -332,7 +332,7 @@ HB_FUNC( HB_FCOMMIT )
 {
    USHORT uiError = 6;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       hb_fsCommit( hb_numToHandle( hb_parnint( 1 ) ) );
       uiError = hb_fsError();
@@ -346,7 +346,7 @@ HB_FUNC( HB_FLOCK )
    USHORT uiError = 0;
    BOOL fResult = FALSE;
 
-   if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) )
+   if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
       fResult = hb_fsLockLarge( hb_numToHandle( hb_parnint( 1 ) ),
                                 ( HB_FOFFSET ) hb_parnint( 2 ),
@@ -363,7 +363,7 @@ HB_FUNC( HB_FUNLOCK )
    USHORT uiError = 0;
    BOOL fResult = FALSE;
 
-   if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) )
+   if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
       fResult = hb_fsLockLarge( hb_numToHandle( hb_parnint( 1 ) ),
                                 ( HB_FOFFSET ) hb_parnint( 2 ),
@@ -393,13 +393,13 @@ HB_FUNC( HB_FSETDATETIME )
 {
    LONG lDate = -1, lTime = -1;
 
-   if( ISTIMESTAMP( 2 ) )
+   if( HB_ISTIMESTAMP( 2 ) )
       hb_partdt( &lDate, &lTime, 2 );
    else
    {
-      if( ISDATE( 2 ) )
+      if( HB_ISDATE( 2 ) )
          lDate = hb_pardl( 2 );
-      if( ISCHAR( 3 ) )
+      if( HB_ISCHAR( 3 ) )
       {
          int iHour, iMinutes, iSeconds, iMSec;
          if( hb_timeStrGet( hb_parc( 3 ), &iHour, &iMinutes, &iSeconds, &iMSec ) )
@@ -416,7 +416,7 @@ HB_FUNC( HB_FGETDATETIME )
 
    if( hb_fsGetFileTime( ( UCHAR * ) hb_parcx( 1 ), &lJulian, &lMillisec ) )
    {
-      if( ISBYREF( 3 ) )
+      if( HB_ISBYREF( 3 ) )
       {
          char buf[ 13 ];
          hb_timeStr( buf, lMillisec );

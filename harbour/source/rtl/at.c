@@ -64,8 +64,8 @@ HB_FUNC( HB_AT )
    if( pText && pSub )
    {
       ULONG ulTextLength = hb_itemGetCLen( pText );
-      ULONG ulStart = ISNUM( 3 ) ? hb_parnl( 3 ) : 1;
-      ULONG ulEnd = ISNUM( 4 ) ? ( ULONG ) hb_parnl( 4 ) : ulTextLength;
+      ULONG ulStart = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : 1;
+      ULONG ulEnd = HB_ISNUM( 4 ) ? ( ULONG ) hb_parnl( 4 ) : ulTextLength;
       ULONG ulPos;
 
       if( ulStart > ulTextLength || ulEnd < ulStart )

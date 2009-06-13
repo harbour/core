@@ -94,8 +94,8 @@ HB_FUNC( MEMOTRAN )
    if( pString )
    {
       char * pszResult = ( char * ) hb_xgrab( hb_itemGetCLen( pString ) + 1 );
-      char cHardcr = ISCHAR( 2 ) ? *hb_parc( 2 ) : ';';
-      char cSoftcr = ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ';
+      char cHardcr = HB_ISCHAR( 2 ) ? *hb_parc( 2 ) : ';';
+      char cSoftcr = HB_ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ';
       ULONG ulResultLen;
 
       hb_strMemotran( pszResult, &ulResultLen, hb_itemGetCPtr( pString ), hb_itemGetCLen( pString ), cHardcr, cSoftcr );

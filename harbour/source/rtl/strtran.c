@@ -77,7 +77,7 @@ HB_FUNC( STRTRAN )
          const char * szReplace;
          ULONG ulStart;
 
-         ulStart = ( ISNUM( 4 ) ? hb_parnl( 4 ) : 1 );
+         ulStart = ( HB_ISNUM( 4 ) ? hb_parnl( 4 ) : 1 );
 
          if( !ulStart )
          {
@@ -102,7 +102,7 @@ HB_FUNC( STRTRAN )
                ulReplace = 0;
             }
 
-            if( ISNUM( 5 ) )
+            if( HB_ISNUM( 5 ) )
             {
                ulCount = hb_parnl( 5 );
                bAll = FALSE;

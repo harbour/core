@@ -57,7 +57,7 @@
 /* converts an ASCII code to a character value */
 HB_FUNC( CHR )
 {
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
                CHR() cases where the passed parameter is a constant which

@@ -576,7 +576,7 @@ HB_FUNC( HB_EXECMSG )
 {
    int iParams = hb_pcount();
 
-   if( iParams >= 2 && ISSYMBOL( 1 ) )
+   if( iParams >= 2 && HB_ISSYMBOL( 1 ) )
    {
       PHB_ITEM pBase = hb_stackBaseItem();
       pBase->item.asSymbol.paramcnt = pBase->item.asSymbol.paramdeclcnt = 0;

@@ -98,7 +98,7 @@ HB_FUNC( HB_RAT )
          BOOL bFound = FALSE;
          long lStart;
 
-         if( ISNUM( 3 ) )
+         if( HB_ISNUM( 3 ) )
          {
             lStart = hb_parnl( 3 );
             if( lStart >= 1 )
@@ -109,7 +109,7 @@ HB_FUNC( HB_RAT )
          else
             lStart = 0;
 
-         if( ISNUM( 4 ) )
+         if( HB_ISNUM( 4 ) )
          {
             long lEnd = hb_parnl( 4 );
 

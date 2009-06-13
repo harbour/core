@@ -70,9 +70,9 @@ HB_FUNC( SX_FNAMEPARSER )
 
       pFileName = hb_fsFNameSplit( szFileName );
 
-      if( !ISLOG( 2 ) || !hb_parl( 2 ) )
+      if( ! HB_ISLOG( 2 ) || ! hb_parl( 2 ) )
          pFileName->szPath = NULL;
-      if( !ISLOG( 3 ) || !hb_parl( 3 ) )
+      if( ! HB_ISLOG( 3 ) || ! hb_parl( 3 ) )
          pFileName->szExtension = NULL;
 
       if( !hb_setGetTrimFileName() )

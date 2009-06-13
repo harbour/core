@@ -58,7 +58,7 @@
 
 HB_FUNC( REPLICATE )
 {
-   if( ISCHAR( 1 ) && ISNUM( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
       long lTimes = hb_parnl( 2 );
 

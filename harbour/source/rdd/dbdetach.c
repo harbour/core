@@ -105,12 +105,12 @@ HB_FUNC( HB_DBREQUEST )
    BOOL fNewArea, fWait;
    AREAP pArea;
 
-   if( ISNIL( 1 ) || ISCHAR( 1 ) )
+   if( HB_ISNIL( 1 ) || HB_ISCHAR( 1 ) )
    {
       szAlias = hb_parc( 1 );
-      fNewArea = ISLOG( 2 ) && hb_parl( 2 );
-      fWait = ISLOG( 4 ) && hb_parl( 4 );
-      pCargo = ISBYREF( 3 ) ? hb_itemNew( NULL ) : NULL;
+      fNewArea = HB_ISLOG( 2 ) && hb_parl( 2 );
+      fWait = HB_ISLOG( 4 ) && hb_parl( 4 );
+      pCargo = HB_ISBYREF( 3 ) ? hb_itemNew( NULL ) : NULL;
 
       pArea = hb_rddRequestArea( szAlias, pCargo, fNewArea, fWait );
       if( pArea )

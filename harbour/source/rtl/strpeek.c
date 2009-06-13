@@ -60,7 +60,7 @@ HB_FUNC( STRPEEK )
 {
    PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
-   if( pText && ISNUM( 2 ) )
+   if( pText && HB_ISNUM( 2 ) )
    {
       ULONG ulPos = hb_parnl( 2 );
 
@@ -78,7 +78,7 @@ HB_FUNC( STRPOKE )
 {
    PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
-   if( pText && ISNUM( 2 ) && ISNUM( 3 ) )
+   if( pText && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
       ULONG ulPos = hb_parnl( 2 );
 

@@ -11286,7 +11286,7 @@ HB_FUNC( __SETPROFILER )
    hb_retl( FALSE );
 #else
    hb_retl( hb_bProfiler );
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
       hb_bProfiler = hb_parl( 1 );
 #endif
 }
@@ -11300,7 +11300,7 @@ HB_FUNC( __TRACEPRGCALLS )
    HB_STACK_TLS_PRELOAD
 #if defined( HB_PRG_TRACE )
    hb_retl( hb_bTracePrgCalls );
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
       hb_bTracePrgCalls = hb_parl( 1 );
 #else
    hb_retl( FALSE );
@@ -11343,7 +11343,7 @@ HB_FUNC( ERRORLEVEL )
 
    hb_retni( s_nErrorLevel );
 
-   /* NOTE: This should be ISNUM( 1 ), but it's sort of a Clipper bug that it
+   /* NOTE: This should be HB_ISNUM( 1 ), but it's sort of a Clipper bug that it
             accepts other types also and considers them zero. [vszakats] */
 
    if( hb_pcount() >= 1 )

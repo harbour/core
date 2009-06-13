@@ -79,7 +79,7 @@
 
 HB_FUNC( CTOD )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
       hb_retdl( hb_dateUnformat( hb_parc( 1 ), hb_setGetDateFormat() ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1119, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -87,7 +87,7 @@ HB_FUNC( CTOD )
 
 HB_FUNC( HB_CTOD )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       const char * szFormat = hb_parc( 2 );
 
@@ -101,7 +101,7 @@ HB_FUNC( HB_CTOD )
 
 HB_FUNC( DTOC )
 {
-   if( ISDATETIME( 1 ) )
+   if( HB_ISDATETIME( 1 ) )
    {
       char szDate[ 9 ];
       char szFormatted[ 11 ];
@@ -114,7 +114,7 @@ HB_FUNC( DTOC )
 
 HB_FUNC( HB_DTOC )
 {
-   if( ISDATETIME( 1 ) )
+   if( HB_ISDATETIME( 1 ) )
    {
       char szDate[ 9 ];
       char szFormatted[ 11 ];
@@ -130,7 +130,7 @@ HB_FUNC( HB_DTOC )
 
 HB_FUNC( DTOS )
 {
-   if( ISDATETIME( 1 ) )
+   if( HB_ISDATETIME( 1 ) )
    {
       char szDate[ 9 ];
 
@@ -376,7 +376,7 @@ HB_FUNC( HB_TSTOSTR )
       char szBuffer[ 24 ];
 
       hb_timeStampStr( szBuffer, lDate, lTime );
-      if( ISLOG( 2 ) && hb_parl( 2 ) )
+      if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
       {
          if( lTime == 0 )
          {

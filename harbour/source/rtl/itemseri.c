@@ -1225,7 +1225,7 @@ HB_FUNC( HB_SERIALIZE )
    if( pItem )
    {
       ULONG ulSize;
-      char * pBuffer = hb_itemSerialize( pItem, ISLOG( 2 ) && hb_parl( 2 ), &ulSize );
+      char * pBuffer = hb_itemSerialize( pItem, HB_ISLOG( 2 ) && hb_parl( 2 ), &ulSize );
       hb_retclen_buffer( pBuffer, ulSize );
    }
 }

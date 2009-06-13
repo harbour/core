@@ -81,7 +81,7 @@ HB_FUNC( PADC )
                char cPad;
                long ulPad = ( ( ULONG ) lLen - ulSize ) >> 1;
 
-               cPad = ( ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ' );
+               cPad = ( HB_ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ' );
                hb_xmemset( szResult, cPad, ulPad );
                hb_xmemcpy( szResult + ulPad, szText, ulSize );
                hb_xmemset( szResult + ulPad + ulSize, cPad,

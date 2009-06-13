@@ -140,6 +140,6 @@ HB_FOFFSET hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
 
 HB_FUNC( HB_FSIZE )
 {
-   hb_retnint( ISCHAR( 1 ) ? hb_fsFSize( ( BYTE * ) hb_parc( 1 ),
-                                    ISLOG( 2 ) ? hb_parl( 2 ) : TRUE ) : 0 );
+   hb_retnint( HB_ISCHAR( 1 ) ? hb_fsFSize( ( BYTE * ) hb_parc( 1 ),
+                                    HB_ISLOG( 2 ) ? hb_parl( 2 ) : TRUE ) : 0 );
 }

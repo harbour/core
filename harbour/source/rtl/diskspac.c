@@ -84,7 +84,7 @@ HB_FUNC( DISKSPACE )
 
 #if defined(HB_OS_DOS)
    {
-      USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
+      USHORT uiDrive = HB_ISNUM( 1 ) ? hb_parni( 1 ) : 0;
       union REGS regs;
 
       regs.HB_XREGS.dx = uiDrive;
@@ -177,7 +177,7 @@ HB_FUNC( DISKSPACE )
    }
 #elif defined(HB_OS_OS2)
    {
-      USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
+      USHORT uiDrive = HB_ISNUM( 1 ) ? hb_parni( 1 ) : 0;
       struct _FSALLOCATE fsa;
 
       /* Query level 1 info from filesystem */

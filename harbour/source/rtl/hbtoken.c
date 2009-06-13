@@ -217,10 +217,10 @@ static BOOL hb_tokenParam( int iParam, ULONG ulSkip,
          while( ulLen && szLine[ ulLen - 1 ] == szDelim[ 0 ] )
             --ulLen;
       }
-      if( ISLOG( iParam + 1 ) && hb_parl( iParam + 1 ) )
+      if( HB_ISLOG( iParam + 1 ) && hb_parl( iParam + 1 ) )
       {
          iFlags |= _HB_TOK_RESPECT_DQUOTE | _HB_TOK_RESPECT_SQUOTE;
-         if( ISLOG( iParam + 2 ) && hb_parl( iParam + 2 ) )
+         if( HB_ISLOG( iParam + 2 ) && hb_parl( iParam + 2 ) )
             iFlags &= ~_HB_TOK_RESPECT_SQUOTE;
       }
    }

@@ -240,22 +240,23 @@ HB_EXTERN_BEGIN
 #define HB_ISDATETIME( n )    ( hb_param( n, HB_IT_DATETIME ) != NULL )    /* Not available in CA-Cl*pper. */
 
 /* Compatibility #defines, deprecated */
-#define ISNIL( n )            HB_ISNIL( n )
-#define ISCHAR( n )           HB_ISCHAR( n )
-#define ISNUM( n )            HB_ISNUM( n )
-#define ISLOG( n )            HB_ISLOG( n )
-#define ISDATE( n )           HB_ISDATE( n )
-#define ISTIMESTAMP( n )      HB_ISTIMESTAMP( n )
-#define ISMEMO( n )           HB_ISMEMO( n )
-#define ISBYREF( n )          HB_ISBYREF( n )
-#define ISARRAY( n )          HB_ISARRAY( n )
-#define ISOBJECT( n )         HB_ISOBJECT( n )
-#define ISBLOCK( n )          HB_ISBLOCK( n )
-#define ISPOINTER( n )        HB_ISPOINTER( n )
-#define ISHASH( n )           HB_ISHASH( n )
-#define ISSYMBOL( n )         HB_ISSYMBOL( n )
-#define ISDATETIME( n )       HB_ISDATETIME( n )
-
+#ifdef HB_LEGACY_LEVEL3
+   #define ISNIL( n )            HB_ISNIL( n )
+   #define ISCHAR( n )           HB_ISCHAR( n )
+   #define ISNUM( n )            HB_ISNUM( n )
+   #define ISLOG( n )            HB_ISLOG( n )
+   #define ISDATE( n )           HB_ISDATE( n )
+   #define ISTIMESTAMP( n )      HB_ISTIMESTAMP( n )
+   #define ISMEMO( n )           HB_ISMEMO( n )
+   #define ISBYREF( n )          HB_ISBYREF( n )
+   #define ISARRAY( n )          HB_ISARRAY( n )
+   #define ISOBJECT( n )         HB_ISOBJECT( n )
+   #define ISBLOCK( n )          HB_ISBLOCK( n )
+   #define ISPOINTER( n )        HB_ISPOINTER( n )
+   #define ISHASH( n )           HB_ISHASH( n )
+   #define ISSYMBOL( n )         HB_ISSYMBOL( n )
+   #define ISDATETIME( n )       HB_ISDATETIME( n )
+#endif
 
 #ifdef _HB_API_INTERNAL_
 

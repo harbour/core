@@ -82,4 +82,7 @@
 #define HB_LEGACY_LEVEL2
 #endif
 
+/* Future level of legacy cleanup */
+#define HB_LEGACY_LEVEL3
+
 #endif /* HB_SETUP_CH_ */

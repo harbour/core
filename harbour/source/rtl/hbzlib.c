@@ -104,9 +104,9 @@ HB_FUNC( HB_ZLIBVERSION )
  */
 HB_FUNC( HB_ZCOMPRESSBOUND )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
       hb_retnint( compressBound( hb_parclen( 1 ) ) );
-   else if( ISNUM( 1 ) )
+   else if( HB_ISNUM( 1 ) )
       hb_retnint( compressBound( ( uLong ) hb_parnint( 1 ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -135,7 +135,7 @@ HB_FUNC( HB_ZCOMPRESS )
 
       if( ulLen )
       {
-         PHB_ITEM pBuffer = ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
+         PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
          uLong ulDstLen;
          char * pDest;
          int iResult;
@@ -148,14 +148,14 @@ HB_FUNC( HB_ZCOMPRESS )
          }
          else
          {
-            ulDstLen = ISNUM( 2 ) ? ( uLong ) hb_parnint( 2 ) :
+            ulDstLen = HB_ISNUM( 2 ) ? ( uLong ) hb_parnint( 2 ) :
                                     compressBound( ulLen );
             pDest = ( char * ) hb_xalloc( ulDstLen + 1 );
          }
 
          if( pDest )
          {
-            if( ISNUM( 4 ) )
+            if( HB_ISNUM( 4 ) )
                iResult = compress2( ( Bytef * ) pDest, &ulDstLen, ( Bytef * ) szData, ulLen, hb_parni( 4 ) );
             else
                iResult = compress( ( Bytef * ) pDest, &ulDstLen, ( Bytef * ) szData, ulLen );
@@ -191,7 +191,7 @@ HB_FUNC( HB_ZCOMPRESS )
  */
 HB_FUNC( HB_ZUNCOMPRESS )
 {
-   PHB_ITEM pBuffer = ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
+   PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
    char * szData = hb_parc( 1 );
 
    if( szData )
@@ -212,7 +212,7 @@ HB_FUNC( HB_ZUNCOMPRESS )
          }
          else
          {
-            ulDstLen = ISNUM( 2 ) ? ( uLong ) hb_parnint( 2 ) :
+            ulDstLen = HB_ISNUM( 2 ) ? ( uLong ) hb_parnint( 2 ) :
                                     hb_zlibUncompressedSize( szData, ulLen );
             pDest = ( char * ) hb_xalloc( ulDstLen + 1 );
          }

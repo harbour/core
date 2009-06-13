@@ -1221,7 +1221,7 @@ HB_FUNC( HB_THREADWAIT )
    int iThreads = -1;
 
    pThreads = pAlloc;
-   if( ISARRAY( 1 ) )
+   if( HB_ISARRAY( 1 ) )
    {
       PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
       int iLen = ( int ) hb_arrayLen( pArray ), i;
@@ -1252,13 +1252,13 @@ HB_FUNC( HB_THREADWAIT )
 
    if( iThreads > 0 )
    {
-      if( ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
       {
          double dTimeOut = hb_parnd( 2 );
          ulMilliSec = dTimeOut > 0 ? ( ULONG ) ( dTimeOut * 1000 ) : 0;
       }
 
-      if( ISLOG( 3 ) )
+      if( HB_ISLOG( 3 ) )
          fAll = hb_parl( 3 );
 
       hb_retni( hb_threadWait( pThreads, iThreads, fAll, ulMilliSec ) );
@@ -1303,7 +1303,7 @@ HB_FUNC( HB_THREADTERMINATEALL )
 HB_FUNC( HB_THREADONCE )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
-   if( pItem && ISBYREF( 1 ) && ( HB_IS_NIL( pItem ) || HB_IS_LOGICAL( pItem ) ) )
+   if( pItem && HB_ISBYREF( 1 ) && ( HB_IS_NIL( pItem ) || HB_IS_LOGICAL( pItem ) ) )
    {
       HB_STACK_TLS_PRELOAD
       BOOL fFirstCall = FALSE;
@@ -2216,7 +2216,7 @@ HB_FUNC( HB_MUTEXLOCK )
    if( pItem )
    {
       HB_STACK_TLS_PRELOAD
-      if( ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
       {
          ULONG ulMilliSec = 0;
          double dTimeOut = hb_parnd( 2 );
@@ -2265,7 +2265,7 @@ HB_FUNC( HB_MUTEXSUBSCRIBE )
       HB_STACK_TLS_PRELOAD
       PHB_ITEM pResult;
 
-      if( ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
       {
          ULONG ulMilliSec = 0;
          double dTimeOut = hb_parnd( 2 );
@@ -2296,7 +2296,7 @@ HB_FUNC( HB_MUTEXSUBSCRIBENOW )
       HB_STACK_TLS_PRELOAD
       PHB_ITEM pResult;
 
-      if( ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
       {
          ULONG ulMilliSec = 0;
          double dTimeOut = hb_parnd( 2 );

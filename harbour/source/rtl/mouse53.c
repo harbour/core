@@ -79,13 +79,13 @@ HB_FUNC( MSETCURSOR )
 {
    hb_retl( hb_mouseGetCursor() );
 
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
       hb_mouseSetCursor( hb_parl( 1 ) );
 }
 
 HB_FUNC( MROW )
 {
-   if( ISLOG( 1 ) && hb_parl( 1 ) )
+   if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
    {
       int iRow, iCol;
 
@@ -98,7 +98,7 @@ HB_FUNC( MROW )
 
 HB_FUNC( MCOL )
 {
-   if( ISLOG( 1 ) && hb_parl( 1 ) )
+   if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
    {
       int iRow, iCol;
 
@@ -111,7 +111,7 @@ HB_FUNC( MCOL )
 
 HB_FUNC( MSETPOS )
 {
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
+   if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
       hb_mouseSetPos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
@@ -129,7 +129,7 @@ HB_FUNC( MDBLCLK )
 {
    hb_retni( hb_mouseGetDoubleClickSpeed() );
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       hb_mouseSetDoubleClickSpeed( hb_parni( 1 ) );
    }
@@ -152,7 +152,7 @@ HB_FUNC( MSAVESTATE )
 
 HB_FUNC( MRESTSTATE )
 {
-   if( ISCHAR( 1 ) && hb_parclen( 1 ) == ( ULONG ) hb_mouseStorageSize() )
+   if( HB_ISCHAR( 1 ) && hb_parclen( 1 ) == ( ULONG ) hb_mouseStorageSize() )
    {
       hb_mouseRestoreState( ( BYTE * ) hb_parc( 1 ) );
    }
@@ -162,8 +162,8 @@ HB_FUNC( MSETBOUNDS )
 {
    hb_mouseSetBounds( hb_parni( 1 ), /* Defaults to zero on bad type */
                       hb_parni( 2 ), /* Defaults to zero on bad type */
-                      ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow(),
-                      ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol() );
+                      HB_ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow(),
+                      HB_ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol() );
 }
 
 #endif

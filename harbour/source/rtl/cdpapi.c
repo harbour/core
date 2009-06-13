@@ -1186,7 +1186,7 @@ HB_FUNC( HB_CDPSELECT )
 {
    hb_retc( hb_cdpID() );
 
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
       hb_cdpSelectID( hb_parc( 1 ) );
 }
 
@@ -1252,7 +1252,7 @@ HB_FUNC( HB_STRTOUTF8 )
 
    if( ulLen )
    {
-      PHB_CODEPAGE cdp = ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_vmCDP();
+      PHB_CODEPAGE cdp = HB_ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_vmCDP();
 
       if( cdp )
       {
@@ -1270,7 +1270,7 @@ HB_FUNC( HB_STRTOUTF8 )
 
 HB_FUNC( HB_UTF8CHR )
 {
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       char utf8Char[ HB_MAX_UTF8 ];
       int iLen;
@@ -1295,7 +1295,7 @@ HB_FUNC( HB_UTF8TOSTR )
 
       if( ulLen )
       {
-         PHB_CODEPAGE cdp = ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_vmCDP();
+         PHB_CODEPAGE cdp = HB_ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_vmCDP();
 
          if( cdp )
          {
@@ -1320,7 +1320,7 @@ HB_FUNC( HB_UTF8SUBSTR )
    char *szString = hb_parc( 1 );
    int iPCount = hb_pcount();
 
-   if( szString && ( iPCount < 2 || ( ISNUM( 2 ) && ( iPCount < 3 || ISNUM( 3 ) ) ) ) )
+   if( szString && ( iPCount < 2 || ( HB_ISNUM( 2 ) && ( iPCount < 3 || HB_ISNUM( 3 ) ) ) ) )
    {
       char *szDest = NULL;
       ULONG ulLen = hb_parclen( 1 ), ulDest = 0;
@@ -1352,7 +1352,7 @@ HB_FUNC( HB_UTF8LEFT )
 {
    char *szString = hb_parc( 1 );
 
-   if( szString && ISNUM( 2 ) )
+   if( szString && HB_ISNUM( 2 ) )
    {
       LONG lLen = hb_parnl( 2 );
       ULONG ulDest = 0;
@@ -1375,7 +1375,7 @@ HB_FUNC( HB_UTF8RIGHT )
 {
    char *szString = hb_parc( 1 );
 
-   if( szString && ISNUM( 2 ) )
+   if( szString && HB_ISNUM( 2 ) )
    {
       LONG lLen = hb_parnl( 2 ), lFrom;
       ULONG ulLen = hb_parclen( 1 ), ulDest = 0;
@@ -1403,7 +1403,7 @@ HB_FUNC( HB_UTF8PEEK )
 {
    char *szString = hb_parc( 1 );
 
-   if( szString && ISNUM( 2 ) )
+   if( szString && HB_ISNUM( 2 ) )
    {
       ULONG ulPos = hb_parnl( 2 );
       ULONG ulLen = hb_parclen( 1 );
@@ -1421,7 +1421,7 @@ HB_FUNC( HB_UTF8POKE )
 {
    PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
-   if( pText && ISNUM( 2 ) && ISNUM( 3 ) )
+   if( pText && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
       char *szString = hb_itemGetCPtr( pText );
       ULONG ulLen = hb_parclen( 1 ), ulPos;
@@ -1451,7 +1451,7 @@ HB_FUNC( HB_UTF8POKE )
             memcpy( szResult, szString, ulPos );
             u16toutf8( ( BYTE * ) & szResult[ulPos], uc );
             memcpy( szResult + ulPos + n, szString + ulPos + n2, ulLen - ulPos - n2 );
-            if( ISBYREF( 1 ) )
+            if( HB_ISBYREF( 1 ) )
                hb_storclen( szResult, ulLen - n2 + n, 1 );
             hb_retclen_buffer( szResult, ulLen - n2 + n );
          }
@@ -1467,7 +1467,7 @@ HB_FUNC( HB_UTF8STUFF )
 {
    char *szString = hb_parc( 1 );
 
-   if( szString && ISNUM( 2 ) && ISNUM( 3 ) && ISCHAR( 4 ) )
+   if( szString && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISCHAR( 4 ) )
    {
       ULONG ulLen = hb_parclen( 1 );
       ULONG ulPos = hb_parnl( 2 );

@@ -71,7 +71,7 @@ HB_FUNC( HB_DISKSPACE )
 {
    char szPathBuf[ 4 ];
    char * szPath = hb_parc( 1 );
-   USHORT uiType = ISNUM( 2 ) ? ( USHORT ) hb_parni( 2 ) : HB_DISK_AVAIL;
+   USHORT uiType = HB_ISNUM( 2 ) ? ( USHORT ) hb_parni( 2 ) : HB_DISK_AVAIL;
    double dSpace = 0.0;
 
    if( uiType > HB_DISK_TOTAL )
@@ -80,7 +80,7 @@ HB_FUNC( HB_DISKSPACE )
    if( !szPath )
    {
 #ifdef HB_OS_HAS_DRIVE_LETTER
-      if( ISNUM( 1 ) )
+      if( HB_ISNUM( 1 ) )
       {
          szPathBuf[ 0 ] = ( char ) hb_parni( 1 ) + 'A' - 1;
          szPathBuf[ 1 ] = HB_OS_DRIVE_DELIM_CHR;

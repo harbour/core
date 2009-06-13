@@ -71,7 +71,7 @@ HB_FUNC( ISCOLOR )
 
 HB_FUNC( NOSNOW )
 {
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
       hb_gtSetSnowFlag( hb_parl( 1 ) );
 }
 
@@ -80,9 +80,9 @@ HB_FUNC( SETMODE )
    USHORT uiRows, uiCols;
 
    hb_gtScrDim( &uiRows, &uiCols );
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
       uiRows = ( USHORT ) hb_parni( 1 );
-   if( ISNUM( 2 ) )
+   if( HB_ISNUM( 2 ) )
       uiCols = ( USHORT ) hb_parni( 2 );
 
    hb_retl( hb_gtSetMode( uiRows, uiCols ) == HB_SUCCESS );

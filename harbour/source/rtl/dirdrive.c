@@ -59,7 +59,7 @@
 
 HB_FUNC( DIRCHANGE )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
       hb_retni( hb_fsChDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : hb_fsError() );
    else
       hb_retni( F_ERROR );
@@ -70,7 +70,7 @@ HB_FUNC( DIRCHANGE )
 
 HB_FUNC( MAKEDIR )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
       hb_retni( hb_fsMkDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : hb_fsError() );
    else
       hb_retni( F_ERROR );
@@ -78,7 +78,7 @@ HB_FUNC( MAKEDIR )
 
 HB_FUNC( DIRREMOVE )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
       hb_retni( hb_fsRmDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : hb_fsError() );
    else
       hb_retni( F_ERROR );

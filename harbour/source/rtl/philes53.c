@@ -60,7 +60,7 @@
 HB_FUNC( FSETDEVMOD )
 {
    /* C53 checks only number of parameters: hb_pcount() == 2 */
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
+   if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
       hb_fsSetDevMode( hb_numToHandle( hb_parnint( 1 ) ), ( USHORT ) hb_parni( 2 ) );
       hb_fsSetFError( hb_fsError() );

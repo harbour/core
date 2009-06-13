@@ -316,7 +316,7 @@ BOOL hb_strMatchFile( const char * szString, const char * szPattern )
 
 HB_FUNC( HB_WILDMATCH )
 {
-   hb_retl( ( ! ISCHAR( 1 ) || ! ISCHAR( 2 ) ) ? FALSE :
+   hb_retl( ( ! HB_ISCHAR( 1 ) || ! HB_ISCHAR( 2 ) ) ? FALSE :
             hb_parl( 3 ) ? hb_strMatchWildExact( hb_parc( 2 ), hb_parc( 1 ) ) :
                            hb_strMatchWild( hb_parc( 2 ), hb_parc( 1 ) ) );
 }
@@ -328,6 +328,6 @@ HB_FUNC( HB_WILDMATCHI )
 
 HB_FUNC( HB_FILEMATCH )
 {
-   hb_retl( ( ! ISCHAR( 1 ) || ! ISCHAR( 2 ) ) ? FALSE :
+   hb_retl( ( ! HB_ISCHAR( 1 ) || ! HB_ISCHAR( 2 ) ) ? FALSE :
             hb_strMatchFile( hb_parc( 1 ), hb_parc( 2 ) ) );
 }

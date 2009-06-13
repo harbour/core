@@ -60,7 +60,7 @@ HB_FUNC( SUBSTR )
 {
    PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
-   if( pText && ISNUM( 2 ) )
+   if( pText && HB_ISNUM( 2 ) )
    {
       long lPos = hb_parnl( 2 );
       long lSize = ( long ) hb_itemGetCLen( pText );
@@ -82,7 +82,7 @@ HB_FUNC( SUBSTR )
 
          if( hb_pcount() >= 3 )
          {
-            if( ISNUM( 3 ) )
+            if( HB_ISNUM( 3 ) )
             {
                lLen = hb_parnl( 3 );
 

@@ -80,7 +80,7 @@ HB_FUNC( PADR )
                char * szResult = ( char * ) hb_xgrab( lLen + 1 );
                char cPad;
 
-               cPad = ( ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ' );
+               cPad = ( HB_ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ' );
                hb_xmemcpy( szResult, szText, ulSize );
                hb_xmemset( szResult + ulSize, cPad, ( ULONG ) lLen - ulSize );
 

@@ -178,7 +178,7 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
          iEOLs = 1;
       }
    }
-   else if( ISARRAY( iParam ) )
+   else if( HB_ISARRAY( iParam ) )
    {
       PHB_ITEM pArray = hb_param( iParam, HB_IT_ARRAY );
       ULONG ulSize = hb_arrayLen( pArray );
@@ -228,7 +228,7 @@ static char * hb_mlGetParams( int iParAdd, ULONG * pulLen, ULONG * pulLineLength
    char * pszString = hb_parc( 1 );
    if( pszString )
    {
-      if( ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
       {
          if( hb_parnd( 2 ) <= 0 )
             return NULL;
@@ -237,8 +237,8 @@ static char * hb_mlGetParams( int iParAdd, ULONG * pulLen, ULONG * pulLineLength
       else
          * pulLineLength = 79;
       * pulLen = hb_parclen( 1 );
-      * pulTabSize = ISNUM( 3 + iParAdd ) ? hb_parnl( 3 + iParAdd ) : 4;
-      * pfWordWrap = ISLOG( 4 + iParAdd ) ? hb_parl( 4 + iParAdd ) : TRUE;
+      * pulTabSize = HB_ISNUM( 3 + iParAdd ) ? hb_parnl( 3 + iParAdd ) : 4;
+      * pfWordWrap = HB_ISLOG( 4 + iParAdd ) ? hb_parl( 4 + iParAdd ) : TRUE;
       * pEOLs = hb_mlGetEOLs( 5 + iParAdd, piEOLs );
 #ifdef HB_C52_STRICT
       if( * pulLineLength > 254 )
@@ -381,7 +381,7 @@ HB_FUNC( MLCTOPOS )
 
    if( pszString )
    {
-      if( ulLineLength > 4 && ulLine && ISNUM( 4 ) )
+      if( ulLineLength > 4 && ulLine && HB_ISNUM( 4 ) )
       {
          while( --ulLine && ulOffset < ulLen )
             ulOffset = hb_mlGetLine( pszString, ulLen, ulOffset,

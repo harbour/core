@@ -62,7 +62,7 @@
 
 static BOOL hb_numParam( int iParam, HB_LONG * plNum )
 {
-   if( ISNUM( iParam ) )
+   if( HB_ISNUM( iParam ) )
    {
       *plNum = hb_parnint( iParam );
       return TRUE;

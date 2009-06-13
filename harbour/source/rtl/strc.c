@@ -93,7 +93,7 @@ HB_FUNC( HB_STRCDECODE )
    if( pText )
    {
       ULONG ulLen = hb_itemGetCLen( pText );
-      BOOL fCont = ISLOG( 2 ) && hb_parl( 2 );
+      BOOL fCont = HB_ISLOG( 2 ) && hb_parl( 2 );
       if( ulLen > 0 )
       {
          const char * pszSrc = hb_itemGetCPtr( pText );
@@ -148,7 +148,7 @@ HB_FUNC( HB_STRCDECODE )
                --ulLen;
             }
          }
-         if( ulLen == 0 && ( !fCont || ISBYREF( 2 ) ) )
+         if( ulLen == 0 && ( !fCont || HB_ISBYREF( 2 ) ) )
          {
             hb_retclen_buffer( pszDst, ulDst );
             hb_storl( fCont, 2 );

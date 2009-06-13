@@ -479,13 +479,13 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
 
 HB_FUNC( DEVPOS ) /* Sets the screen and/or printer position */
 {
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
+   if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
       hb_conDevPos( ( SHORT ) hb_parni( 1 ), ( SHORT ) hb_parni( 2 ) );
 }
 
 HB_FUNC( SETPRC ) /* Sets the current printer row and column positions */
 {
-   if( hb_pcount() == 2 && ISNUM( 1 ) && ISNUM( 2 ) )
+   if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
       PHB_PRNPOS pPrnPos = hb_prnPos();
       pPrnPos->row = ( USHORT ) hb_parni( 1 );
@@ -499,7 +499,7 @@ HB_FUNC( DEVOUT ) /* writes a single value to the current device (screen or prin
    ULONG ulLen;
    BOOL fFree;
 
-   if( ISCHAR( 2 ) )
+   if( HB_ISCHAR( 2 ) )
    {
       char szOldColor[ HB_CLRSTR_LEN ];
 
@@ -530,7 +530,7 @@ HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected b
    ULONG ulLen;
    BOOL bFreeReq;
 
-   if( ISCHAR( 2 ) )
+   if( HB_ISCHAR( 2 ) )
    {
       char szOldColor[ HB_CLRSTR_LEN ];
 
@@ -567,7 +567,7 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
    ULONG ulLen;
    BOOL bFreeReq;
 
-   if( ISCHAR( 4 ) )
+   if( HB_ISCHAR( 4 ) )
    {
       char szOldColor[ HB_CLRSTR_LEN ];
 
@@ -607,9 +607,9 @@ HB_FUNC( HB_DISPOUTAT )
 
       pszString = hb_itemStringCon( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
 
-      if( ISCHAR( 4 ) )
+      if( HB_ISCHAR( 4 ) )
          iColor = hb_gtColorToN( hb_parc( 4 ) );
-      else if( ISNUM( 4 ) )
+      else if( HB_ISNUM( 4 ) )
          iColor = hb_parni( 4 );
       else
          iColor = -1;
@@ -631,9 +631,9 @@ HB_FUNC( HB_DISPOUTATBOX )
    ULONG nStringLen = hb_parclen( 3 );
    int iColor;
 
-   if( ISCHAR( 4 ) )
+   if( HB_ISCHAR( 4 ) )
       iColor = hb_gtColorToN( hb_parc( 4 ) );
-   else if( ISNUM( 4 ) )
+   else if( HB_ISNUM( 4 ) )
       iColor = hb_parni( 4 );
    else
       iColor = hb_gtGetCurrColor();

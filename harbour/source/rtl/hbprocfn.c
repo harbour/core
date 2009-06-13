@@ -69,11 +69,11 @@ HB_FUNC( HB_PROCESSOPEN )
    ULONG ulPID;
 
    if( szName &&
-       ( pStdIn  || ISNIL( 2 ) ) &&
-       ( pStdOut || ISNIL( 3 ) ) &&
-       ( pStdErr || ISNIL( 4 ) ) &&
-       ( ISLOG( 5 ) || ISNIL( 5 ) ) &&
-       ( ISBYREF( 6 ) || ISNIL( 6 ) ) &&
+       ( pStdIn  || HB_ISNIL( 2 ) ) &&
+       ( pStdOut || HB_ISNIL( 3 ) ) &&
+       ( pStdErr || HB_ISNIL( 4 ) ) &&
+       ( HB_ISLOG( 5 ) || HB_ISNIL( 5 ) ) &&
+       ( HB_ISBYREF( 6 ) || HB_ISNIL( 6 ) ) &&
        ( !pStdIn || ( pStdIn != pStdOut && pStdIn != pStdErr ) ) )
    {
       phStdIn  = pStdIn  ? &hStdIn  : NULL;
@@ -102,7 +102,7 @@ HB_FUNC( HB_PROCESSVALUE )
 {
    HB_FHANDLE hProcess = hb_numToHandle( hb_parnint( 1 ) );
 
-   if( hProcess != 0 && hProcess != FS_ERROR && ( hb_pcount() < 2 || ISLOG( 2 ) ) )
+   if( hProcess != 0 && hProcess != FS_ERROR && ( hb_pcount() < 2 || HB_ISLOG( 2 ) ) )
       hb_retni( hb_fsProcessValue( hProcess, hb_pcount() < 2 || hb_parl( 2 ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -112,7 +112,7 @@ HB_FUNC( HB_PROCESSCLOSE )
 {
    HB_FHANDLE hProcess = hb_numToHandle( hb_parnint( 1 ) );
 
-   if( hProcess != 0 && hProcess != FS_ERROR && ( hb_pcount() < 2 || ISLOG( 2 ) ) )
+   if( hProcess != 0 && hProcess != FS_ERROR && ( hb_pcount() < 2 || HB_ISLOG( 2 ) ) )
       hb_retl( hb_fsProcessClose( hProcess, hb_pcount() < 2 || hb_parl( 2 ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

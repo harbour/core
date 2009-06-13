@@ -177,7 +177,7 @@ HB_FUNC( HB_GETENV )
          szValue = hb_getenv( pszName );
          if( szValue && szValue[ 0 ] != '\0' )
          {
-            if( ! ISLOG( 3 ) || hb_parl( 3 ) )
+            if( ! HB_ISLOG( 3 ) || hb_parl( 3 ) )
             {
                /* Convert from OS codepage */
                BOOL fFree;
@@ -216,7 +216,7 @@ HB_FUNC( HB_SETENV )
       char * pszValue = hb_parc( 2 );
       BOOL fFreeName = FALSE, fFreeVal = FALSE;
 
-      if( ( ! ISLOG( 3 ) || hb_parl( 3 ) ) )
+      if( ( ! HB_ISLOG( 3 ) || hb_parl( 3 ) ) )
       {
          pszName = ( char * ) hb_osEncode( ( BYTE * ) pszName, &fFreeName );
          if( pszValue )

@@ -1665,7 +1665,7 @@ HB_FUNC( __DBGGETEXPRVALUE )
    {
       PHB_ITEM pItem;
 
-      if( ISCHAR( 2 ) )
+      if( HB_ISCHAR( 2 ) )
          pItem = hb_dbgGetExpressionValue( hb_parptr( 1 ), hb_parc( 2 ) );
       else
          pItem = hb_dbgGetWatchValue( hb_parptr( 1 ), hb_parni( 2 ) - 1 );

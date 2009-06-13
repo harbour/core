@@ -138,7 +138,7 @@ HB_FUNC( DBSKIPPER )
 
       if( SELF_RECCOUNT( pArea, &ulRecords ) == HB_SUCCESS && ulRecords > 0 )
       {
-         if( ISNUM( 1 ) )
+         if( HB_ISNUM( 1 ) )
             lRecs = hb_parnl( 1 );
 
          if( lRecs == 0 )
