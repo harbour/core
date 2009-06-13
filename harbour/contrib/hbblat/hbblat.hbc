@@ -2,5 +2,7 @@
 # $Id$
 #
 
+incpaths=.
+
 libs=hbblat
 libs=blat

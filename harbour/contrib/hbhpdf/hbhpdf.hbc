@@ -2,5 +2,7 @@
 # $Id$
 #
 
+incpaths=.
+
 libs=hbhpdf
 libs=libhpdf libpng

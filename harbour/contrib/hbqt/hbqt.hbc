@@ -2,6 +2,8 @@
 # $Id$
 #
 
+incpaths=.
+
 {allwin}libpaths=${HB_DIR_QT}\lib
 
 {mingw|mingwce|(gcc&(linux|darwin))}libs=supc++

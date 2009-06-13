@@ -2,4 +2,6 @@
 # $Id$
 #
 
+incpaths=.
+
 {win}libs=hbwin
