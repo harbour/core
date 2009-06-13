@@ -70,6 +70,7 @@ QImageWriter.qth
 QInputDialog.qth
 QInputEvent.qth
 QKeyEvent.qth
+QKeySequence.qth
 QLabel.qth
 QLayout.qth
 QLayoutItem.qth

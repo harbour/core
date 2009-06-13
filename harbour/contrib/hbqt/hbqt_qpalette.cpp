@@ -74,7 +74,29 @@
  */
 HB_FUNC( QT_QPALETTE )
 {
-   hb_retptr( ( QPalette* ) new QPalette() );
+   if( hb_pcount() >= 2 )
+   {
+      hb_retptr( ( QPalette* ) new QPalette() );
+   }
+   else if( hb_pcount() == 1 )
+   {
+      if( HB_ISPOINTER( 1 ) )
+      {
+         hb_retptr( ( QPalette* ) new QPalette( *hbqt_par_QColor( 1 ) ) );
+      }
+      else if( HB_ISNUM( 1 ) )
+      {
+         hb_retptr( ( QPalette* ) new QPalette( ( Qt::GlobalColor ) hb_parni( 1 ) ) );
+      }
+      else
+      {
+         hb_retptr( ( QPalette* ) new QPalette() );
+      }
+   }
+   else
+   {
+      hb_retptr( ( QPalette* ) new QPalette() );
+   }
 }
 
 /*
@@ -278,19 +300,19 @@ HB_FUNC( QT_QPALETTE_SETBRUSH_1 )
 }
 
 /*
- * void setColor ( ColorGroup group, ColorRole role, const QColor & color )
+ * void setColor ( ColorRole role, const QColor & color )
  */
 HB_FUNC( QT_QPALETTE_SETCOLOR )
 {
-   hbqt_par_QPalette( 1 )->setColor( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ), *hbqt_par_QColor( 4 ) );
+   hbqt_par_QPalette( 1 )->setColor( ( QPalette::ColorRole ) hb_parni( 2 ), *hbqt_par_QColor( 3 ) );
 }
 
 /*
- * void setColor ( ColorRole role, const QColor & color )
+ * void setColor ( ColorGroup group, ColorRole role, const QColor & color )
  */
 HB_FUNC( QT_QPALETTE_SETCOLOR_1 )
 {
-   hbqt_par_QPalette( 1 )->setColor( ( QPalette::ColorRole ) hb_parni( 2 ), *hbqt_par_QColor( 3 ) );
+   hbqt_par_QPalette( 1 )->setColor( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ), *hbqt_par_QColor( 4 ) );
 }
 
 /*

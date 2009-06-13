@@ -52,6 +52,7 @@
  */
 /*----------------------------------------------------------------------*/
 
+
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbapiitm.h"
@@ -66,6 +67,7 @@
 #include <QString>
 #include <QList>
 #include <QKeyEvent>
+#include <QAction>
 
 #define HBQT_EVT_CLICKED          1
 #define HBQT_EVT_TRIGGERED        2
@@ -75,6 +77,7 @@
 #define HBQT_EVT_PRESSED          6
 #define HBQT_EVT_RELEASED         7
 
+#include <windows.h>
 /*----------------------------------------------------------------------*/
 
 static Slots *s = NULL;
@@ -90,7 +93,26 @@ static void SlotsExec( QWidget* widget, QString event, PHB_ITEM pItem )
         if( ( ( QString ) s->list2.at( i ) == event ) && ( ( bool ) s->list4.at( i ) == true ) )
         {
            PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+           hb_vmEvalBlockV( ( PHB_ITEM ) s->list3.at( i ), 1, pWidget );
+           hb_itemRelease( pWidget );
+        }
+      }
+   }
+   if( pItem != NULL )
+   {
+      hb_itemRelease( pItem );
+   }
+}
 
+static void SlotsExecAction( QAction* widget, QString event, PHB_ITEM pItem )
+{
+   for( int i = 0; i < s->list1.size(); ++i )
+   {
+      if( ( QAction* ) s->list5.at( i ) == widget )
+      {
+        if( ( ( QString ) s->list2.at( i ) == event ) && ( ( bool ) s->list4.at( i ) == true ) )
+        {
+           PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QAction* ) widget );
            hb_vmEvalBlockV( ( PHB_ITEM ) s->list3.at( i ), 1, pWidget );
            hb_itemRelease( pWidget );
         }
@@ -112,7 +134,6 @@ static void SlotsExecInt( QWidget* widget, QString event, PHB_ITEM pItem, int iV
          {
             PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
             PHB_ITEM pState = hb_itemPutNI( NULL, iValue );
-
             hb_vmEvalBlockV( ( PHB_ITEM ) s->list3.at( i ), 2, pWidget, pState );
             hb_itemRelease( pWidget );
             hb_itemRelease( pState );
@@ -192,6 +213,25 @@ void Slots::mouseMoveEvent( QMouseEvent * event )
    }
 }
 
+void Slots::hovered( QAction * action )
+{
+   QObject *widget = qobject_cast<QObject *>( sender() );
+   for( int i = 0; i < list1.size(); ++i )
+   {
+      if( ( QObject* ) list1.at( i ) == ( QObject* ) widget )
+      {
+         if( ( ( QString ) list2.at( i ) == ( QString ) "hovered(action)" ) && ( ( bool ) list4.at( i ) == true ) )
+         {
+            PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QWidget * ) widget );
+            PHB_ITEM pEvent   = hb_itemPutPtr( NULL, action );
+            hb_vmEvalBlockV( ( PHB_ITEM ) list3.at( i ), 2, pWidget, pEvent );
+            hb_itemRelease( pWidget );
+            hb_itemRelease( pEvent );
+         }
+      }
+   }
+}
+
 void Slots::clicked()
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
@@ -224,8 +264,12 @@ void Slots::released()
 
 void Slots::hovered()
 {
-   QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExec( widget, ( QString ) "hovered()", NULL );
+   //QWidget *widget = qobject_cast<QWidget *>( sender() );
+   QAction *widget = qobject_cast<QAction *>( sender() );
+   if( widget )
+   {
+      SlotsExecAction( widget, ( QString ) "hovered()", NULL );
+   }
 }
 
 void Slots::triggered()
@@ -298,6 +342,8 @@ void Slots::clicked_model( const QModelIndex & index )
    }
 }
 
+
+
 /*
  * harbour function to connect signals with slots
  */
@@ -307,6 +353,7 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    QString   signal    = hb_parc( 2 );                /* get signal */
    PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) ); /* get codeblock */
    bool      ret       = false;                       /* return value */
+   bool      bAct      = false;
 
    /* create object s, if not created yet */
    if( s == NULL )
@@ -335,6 +382,7 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    if( signal == ( QString ) "hovered()" )
    {
       ret = widget->connect( widget, SIGNAL( hovered() )          , s, SLOT( hovered() )          , Qt::AutoConnection );
+      bAct = true;
    }
    if( signal == ( QString ) "viewportEntered()" )
    {
@@ -397,6 +445,11 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = widget->connect( widget, SIGNAL( sg_mouseMoveEvent( QMouseEvent * ) ),
                              s, SLOT( mouseMoveEvent( QMouseEvent * ) ), Qt::AutoConnection );
    }
+   if( signal == ( QString ) "hovered(action)" )
+   {
+      ret = widget->connect( widget, SIGNAL( hovered( QAction * ) ),
+                             s, SLOT( hovered( QAction * ) ), Qt::AutoConnection );
+   }
 
    /* return connect result */
    hb_retl( ret );
@@ -406,7 +459,16 @@ HB_FUNC( QT_CONNECT_SIGNAL )
     */
    if( ret == true )
    {
-      s->list1 << widget;
+      if( bAct )
+      {
+         s->list5 << ( QAction* ) hb_parptr( 1 );
+         s->list1 << NULL;
+      }
+      else
+      {
+         s->list5 << NULL;
+         s->list1 << widget;
+      }
       s->list2 << signal;
       s->list3 << codeblock;
       s->list4 << true;
@@ -490,6 +552,7 @@ MyDrawingArea::MyDrawingArea(QWidget *parent)
    setAttribute( Qt::WA_StaticContents );
    setAttribute( Qt::WA_PaintOnScreen );
    setAttribute( Qt::WA_DeleteOnClose );
+   setAttribute( Qt::WA_WindowPropagation );
 
    setFocusPolicy( Qt::StrongFocus );
    setMouseTracking( true );
@@ -521,6 +584,4 @@ HB_FUNC( QT_MYDRAWINGAREA )
 
 /*----------------------------------------------------------------------*/
 #endif
-
-
 

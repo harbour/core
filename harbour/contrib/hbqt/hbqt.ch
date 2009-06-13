@@ -194,4 +194,33 @@
 #define QEvent_KeyboardLayoutChange                169      // The keyboard layout has changed.
 #define QEvent_DynamicPropertyChange               170      // A dynamic property was added, changed or removed from the object. User events should have values b
 
+#define QPalette_Window                            10       // A general background color.
+#define QPalette_Background                        10       // This value is obsolete. Use Window instead.
+#define QPalette_WindowText                        0        // A general foreground color.
+#define QPalette_Foreground                        0        // This value is obsolete. Use WindowText instead.
+#define QPalette_Base                              9        // Used mostly as the background color for text entry widgets, but can also be used for other painting - such as the background of combobox drop down lists and toolbar handles. It is usually white or another light color.
+#define QPalette_AlternateBase                     16       // Used as the alternate background color in views with alternating row colors (see QAbstractItemView_setAlternatingRowColors()).
+#define QPalette_ToolTipBase                       18       // Used as the background color for QToolTip and QWhatsThis. Tool tips use the Inactive color group of QPalette, because tool tips are not active windows.
+#define QPalette_ToolTipText                       19       // Used as the foreground color for QToolTip and QWhatsThis. Tool tips use the Inactive color group of QPalette, because tool tips are not active windows.
+#define QPalette_Text                              6        // The foreground color used with Base. This is usually the same as the WindowText, in which case it must provide good contrast with Window and Base.
+#define QPalette_Button                            1        // The general button background color. This background can be different from Window as some styles require a different background color for buttons.
+#define QPalette_ButtonText                        8        // A foreground color used with the Button color.
+#define QPalette_BrightText                        7        // A text color that is very different from WindowText, and contrasts well with e.g. Dark. Typically used for text that needs to be drawn where Text or WindowText would give poor contrast, such as on pressed push buttons. Note that text colors can be used for things other than just words; text colors are usually used for text, but it's quite common to use the text color roles for lines, icons, etc.
+/*
+ * There are some color roles used mostly for 3D bevel and shadow effects.
+ * All of these are normally derived from Window, and used in ways that depend on that
+ * relationship. For example, buttons depend on it to make the bevels look attractive,
+ * and Motif scroll bars depend on Mid to be slightly different from Window.
+ */
+#define QPalette_Light                             2        // Lighter than Button color.
+#define QPalette_Midlight                          3        // Between Button and Light.
+#define QPalette_Dark                              4        // Darker than Button.
+#define QPalette_Mid                               5        // Between Button and Dark.
+#define QPalette_Shadow                            11       // A very dark color. By default, the shadow color is Qt_black.
+#define QPalette_Highlight                         12       // A color to indicate a selected item or the current item. By default, the highlight color is Qt_darkBlue.
+#define QPalette_HighlightedText                   13       // A text color that contrasts with Highlight. By default, the highlighted text color is Qt_white.
+#define QPalette_Link                              14       // A text color used for unvisited hyperlinks. By default, the link color is Qt_blue.
+#define QPalette_LinkVisited                       15       // A text color used for already visited hyperlinks. By default, the linkvisited color is Qt_magenta.
+#define QPalette_NoRole                            17       // No role; this special role is often used to indicate that a role has not been assigned.
+
 /*----------------------------------------------------------------------*/

@@ -77,6 +77,7 @@ public:
    Slots( QObject *parent = 0 );
    ~Slots();
    QList<QWidget*> list1;
+   QList<QAction*> list5;
    QList<QString> list2;
    QList<PHB_ITEM> list3;
    QList<bool> list4;
@@ -95,9 +96,10 @@ public slots:
    void returnPressed();
    void clicked_model( const QModelIndex & index );
    void viewportEntered();
-   bool event( QEvent *event );
+   bool event( QEvent * event );
    void keyPressEvent( QKeyEvent * event );
    void mouseMoveEvent( QMouseEvent * event );
+   void hovered( QAction * action );
 
 #if 0
    void accessibleEvent();

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file hbqt_slots.h
 **
-** Created: Thu Jun 11 00:20:48 2009
+** Created: Sat Jun 13 14:02:48 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_Slots[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-      16,   12, // methods
+      17,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -45,6 +45,7 @@ static const uint qt_meta_data_Slots[] = {
      243,  237,  232,    6, 0x0a,
      258,  237,    6,    6, 0x0a,
      284,  237,    6,    6, 0x0a,
+     320,  313,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -58,7 +59,8 @@ static const char qt_meta_stringdata_Slots[] = {
     "clicked_model(QModelIndex)\0viewportEntered()\0"
     "bool\0event\0event(QEvent*)\0"
     "keyPressEvent(QKeyEvent*)\0"
-    "mouseMoveEvent(QMouseEvent*)\0"
+    "mouseMoveEvent(QMouseEvent*)\0action\0"
+    "hovered(QAction*)\0"
 };
 
 const QMetaObject Slots::staticMetaObject = {
@@ -103,9 +105,10 @@ int Slots::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r; }  break;
         case 14: keyPressEvent((*reinterpret_cast< QKeyEvent*(*)>(_a[1]))); break;
         case 15: mouseMoveEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 16: hovered((*reinterpret_cast< QAction*(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 16;
+        _id -= 17;
     }
     return _id;
 }

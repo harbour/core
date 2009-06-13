@@ -314,6 +314,7 @@
 #define hbqt_par_QFileSystemModel( n )       ( ( QFileSystemModel* ) hb_parptr( n ) )
 #define hbqt_par_QKeyEvent( n )              ( ( QKeyEvent* ) hb_parptr( n ) )
 #define hbqt_par_QMouseEvent( n )            ( ( QMouseEvent* ) hb_parptr( n ) )
+#define hbqt_par_QKeySequence( n )           ( ( QKeySequence* ) hb_parptr( n ) )
 
 #define hbqt_par_QString( n )                ( ( QString ) hb_parc( n ) )
 #define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )

@@ -73,7 +73,33 @@ QColor ( Qt::GlobalColor color )
  */
 HB_FUNC( QT_QCOLOR )
 {
-   hb_retptr( ( QColor* ) new QColor() );
+   if( hb_pcount() == 1 )
+   {
+      if( HB_ISNUM( 1 ) && hb_parni( 1 ) < 25 )
+      {
+         hb_retptr( ( QColor* ) new QColor( ( Qt::GlobalColor ) hb_parni( 1 ) ) );
+      }
+      else if( HB_ISNUM( 1 ) )
+      {
+         hb_retptr( ( QColor* ) new QColor( ( QRgb ) hb_parni( 1 ) ) );
+      }
+      else if( HB_ISPOINTER( 1 ) )
+      {
+         hb_retptr( ( QColor* ) new QColor( *hbqt_par_QColor( 1 ) ) );
+      }
+      else if( HB_ISCHAR( 1 ) )
+      {
+         hb_retptr( ( QColor* ) new QColor( hbqt_par_QString( 1 ) ) );
+      }
+      else
+      {
+         hb_retptr( ( QColor* ) new QColor() );
+      }
+   }
+   else
+   {
+      hb_retptr( ( QColor* ) new QColor() );
+   }
 }
 
 /*
@@ -493,27 +519,19 @@ HB_FUNC( QT_QCOLOR_SETREDF )
 }
 
 /*
- * void setRgb ( int r, int g, int b, int a = 255 )
- */
-HB_FUNC( QT_QCOLOR_SETRGB )
-{
-   hbqt_par_QColor( 1 )->setRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) );
-}
-
-/*
  * void setRgb ( QRgb rgb )
  */
-HB_FUNC( QT_QCOLOR_SETRGB_1 )
+HB_FUNC( QT_QCOLOR_SETRGB )
 {
    hbqt_par_QColor( 1 )->setRgb( hb_parni( 2 ) );
 }
 
 /*
- * void setRgbF ( qreal r, qreal g, qreal b, qreal a = 1.0 )
+ * void setRgb ( int r, int g, int b, int a = 255 )
  */
-HB_FUNC( QT_QCOLOR_SETRGBF )
+HB_FUNC( QT_QCOLOR_SETRGB_1 )
 {
-   hbqt_par_QColor( 1 )->setRgbF( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
+   hbqt_par_QColor( 1 )->setRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) );
 }
 
 /*
@@ -522,6 +540,14 @@ HB_FUNC( QT_QCOLOR_SETRGBF )
 HB_FUNC( QT_QCOLOR_SETRGBA )
 {
    hbqt_par_QColor( 1 )->setRgba( hb_parni( 2 ) );
+}
+
+/*
+ * void setRgbF ( qreal r, qreal g, qreal b, qreal a = 1.0 )
+ */
+HB_FUNC( QT_QCOLOR_SETRGBF )
+{
+   hbqt_par_QColor( 1 )->setRgbF( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
 }
 
 /*
