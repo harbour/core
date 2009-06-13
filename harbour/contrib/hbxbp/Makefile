@@ -38,10 +38,8 @@ endif
 
 ifeq ($(HB_WITH_QT),yes)
 
-CPP_SOURCES=\
-	apigeneric.cpp \
-
 PRG_SOURCES=\
+	xbp_temp.prg \
 	xbpgeneric.prg \
 	xbpdialog.prg \
 	xbpwindow.prg \

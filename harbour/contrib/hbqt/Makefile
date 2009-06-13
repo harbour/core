@@ -68,6 +68,9 @@ endif
 
 include $(TOP)$(ROOT)contrib/hbqt/Makefile_gen
 
+PRG_HEADERS=\
+   hbqt.ch \
+
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf

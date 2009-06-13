@@ -150,3 +150,13 @@ HB_FUNC( WAPI_SLEEP )
 {
    Sleep( ( DWORD ) hb_parnl( 1 ) );
 }
+
+HB_FUNC( WAPI_OUTPUTDEBUGSTRING )
+{
+   LPTSTR lpOutputString = ISCHAR( 1 ) ? ( LPTSTR ) HB_TCHAR_CONVTO( hb_parc( 1 ) ) : ( LPTSTR ) NULL;
+
+   OutputDebugString( lpOutputString );
+
+   if( lpOutputString )
+      HB_TCHAR_FREE( lpOutputString );
+}
