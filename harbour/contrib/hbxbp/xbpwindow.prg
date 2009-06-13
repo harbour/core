@@ -72,7 +72,9 @@
 
 #include "hbgtwvg.ch"
 #include "xbp.ch"
+#include "appevent.ch"
 #include "apig.ch"
+#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
  * To Switch Over from ASCALLBACK() to SET/GET_Prop() calls
@@ -92,6 +94,7 @@
 CLASS XbpWindow  INHERIT  XbpPartHandler
 
    DATA     oWidget
+   ACCESS   pWidget                               INLINE  IF( empty( ::oWidget ), NIL, QT_PTROF( ::oWidget ) )
 
    /*  CONFIGURATION */
    DATA     animate                               INIT  .F.
@@ -178,7 +181,7 @@ EXPORTED:
    /*  SETTINGS  */
    DATA     hBrushBG
    METHOD   setColorBG( nRGB )
-   METHOD   setColorFG( nRGB )                    INLINE ::clr_FG := nRGB, ::invalidateRect()
+   METHOD   setColorFG( nRGB )
    METHOD   setFont()
    METHOD   setFontCompoundName()
    METHOD   setPresParam()
@@ -279,11 +282,15 @@ EXPORTED:
    METHOD   isDerivedFrom()
    METHOD   setWindowProcCallback()
 
+   METHOD   grabEvent()
+
+   DATA     oPalette
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS XbpWindow
+METHOD XbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
@@ -305,7 +312,7 @@ METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS XbpWind
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS XbpWindow
+METHOD XbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
@@ -327,7 +334,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS XbpWi
 
 /*----------------------------------------------------------------------*/
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS XbpWindow
+METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
@@ -341,7 +348,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Xb
 
 /*----------------------------------------------------------------------*/
 
-METHOD destroy() CLASS XbpWindow
+METHOD XbpWindow:destroy()
    #if 0
    hb_ToOutDebug( "          %s:destroy() XbpWindow()", __objGetClsName( self ) )
    #endif
@@ -373,7 +380,31 @@ METHOD destroy() CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD SetWindowProcCallback() CLASS XbpWindow
+METHOD XbpWindow:grabEvent( pEvent )
+   LOCAL oEvent, nType
+
+   nType := Qt_QEvent_type( pEvent )
+
+   DO CASE
+   CASE nType == QEvent_MouseMove
+      oEvent := QMouseEvent()
+      oEvent:pPtr := pEvent
+      SetAppEvent( xbeM_Motion, { oEvent:x(), oEvent:y() }, oEvent:button(), self )
+      oEvent:setAccepted( .t. )
+
+   CASE nType == QEvent_KeyPress
+      oEvent := QKeyEvent()
+      oEvent:pPtr := pEvent
+      SetAppEvent( xbeP_Keyboard, oEvent:key, oEvent:text, self )
+      oEvent:setAccepted( .t. )
+
+   ENDCASE
+
+   RETURN .t.
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:SetWindowProcCallback()
 
    #ifdef __BYSETPROP__
    ::nOldProc := QTG_SetWindowProcBlock( ::pWnd, {|h,m,w,l| ::ControlWndProc( h,m,w,l ) } )
@@ -383,13 +414,13 @@ METHOD SetWindowProcCallback() CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD captureMouse() CLASS XbpWindow
+METHOD XbpWindow:captureMouse()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD disable() CLASS XbpWindow
+METHOD XbpWindow:disable()
 
    IF Qtc_EnableWindow( ::hWnd, .f. )
       ::is_enabled := .f.
@@ -400,7 +431,7 @@ METHOD disable() CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD enable() CLASS XbpWindow
+METHOD XbpWindow:enable()
 
    IF Qtc_EnableWindow( ::hWnd, .t. )
       ::is_enabled := .t.
@@ -411,7 +442,7 @@ METHOD enable() CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD hide() CLASS XbpWindow
+METHOD XbpWindow:hide()
 
    IF hb_isObject( ::oWidget )
       ::oWidget:hide()
@@ -422,62 +453,91 @@ METHOD hide() CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD invalidateRect( aRect ) CLASS XbpWindow
+METHOD XbpWindow:invalidateRect( aRect )
 
    RETURN Qtc_InvalidateRect( ::hWnd, aRect )
 
 /*----------------------------------------------------------------------*/
 
-METHOD lockPS() CLASS XbpWindow
+METHOD XbpWindow:lockPS()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD lockUpdate() CLASS XbpWindow
+METHOD XbpWindow:lockUpdate()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setColorBG( nRGB ) CLASS XbpWindow
-   LOCAL hBrush
+METHOD XbpWindow:setColorBG( nRGB )
+   LOCAL cClass
 
    IF hb_isNumeric( nRGB )
-      hBrush := Qtc_CreateBrush( QBS_SOLID, nRGB, 0 )
-      IF hBrush <> 0
-         ::clr_BG := nRGB
-         ::hBrushBG := hBrush
-
-         IF ::className == "WVGDIALOG"
-            QTG_SetCurrentBrush( ::hWnd, ::hBrushBG )
-         ENDIF
+      IF empty( ::oPalette )
+         ::oPalette := QPalette():new()
       ENDIF
+      cClass := upper( ::ClassName )
+
+      DO CASE
+      CASE cClass $ 'XBPPUSHBUTTON,XBPMENUBAR,XBPMENU'
+         ::oPalette:setColor( QPalette_Button    , QT_PTROF( QColor():new( nRGB ) ) )
+      OTHERWISE
+         ::oPalette:setColor( QPalette_Background, QT_PTROF( QColor():new( nRGB ) ) )
+      ENDCASE
+
+      ::oWidget:setPalette( QT_PTROF( ::oPalette ) )
    ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setModalState() CLASS XbpWindow
+METHOD XbpWindow:setColorFG( nRGB )
+   LOCAL cClass
+
+   IF hb_isNumeric( nRGB )
+      IF empty( ::oPalette )
+         ::oPalette := QPalette():new()
+      ENDIF
+
+      cClass := upper( ::ClassName )
+
+      DO CASE
+      CASE cClass $ 'XBPPUSHBUTTON,XBPMENUBAR,XBPMENU'
+         ::oPalette:setColor( QPalette_ButtonText, QT_PTROF( QColor():new( nRGB ) ) )
+      OTHERWISE
+         ::oPalette:setColor( QPalette_Foreground, QT_PTROF( QColor():new( nRGB ) ) )
+         ::oPalette:setColor( QPalette_Text      , QT_PTROF( QColor():new( nRGB ) ) )
+      ENDCASE
+
+      ::oWidget:setPalette( QT_PTROF( ::oPalette ) )
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setPointer() CLASS XbpWindow
+METHOD XbpWindow:setModalState()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setTrackPointer() CLASS XbpWindow
+METHOD XbpWindow:setPointer()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setPos( aPos, lPaint ) CLASS XbpWindow
+METHOD XbpWindow:setTrackPointer()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:setPos( aPos, lPaint )
 
    IF hb_isArray( aPos )
       DEFAULT lPaint TO .T.
@@ -488,7 +548,7 @@ METHOD setPos( aPos, lPaint ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD setPosAndSize( aPos, aSize, lPaint ) CLASS XbpWindow
+METHOD XbpWindow:setPosAndSize( aPos, aSize, lPaint )
 
    IF hb_isArray( aPos ) .and. hb_isArray( aSize )
       DEFAULT lPaint TO .T.
@@ -501,7 +561,7 @@ METHOD setPosAndSize( aPos, aSize, lPaint ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD setSize( aSize, lPaint ) CLASS XbpWindow
+METHOD XbpWindow:setSize( aSize, lPaint )
 
    IF hb_isArray( aSize )
       DEFAULT lPaint TO .T.
@@ -512,7 +572,7 @@ METHOD setSize( aSize, lPaint ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD isDerivedFrom( cClassORoObject ) CLASS XbpWindow
+METHOD XbpWindow:isDerivedFrom( cClassORoObject )
    LOCAL lTrue := .f.
    LOCAL cCls := __ObjGetClsName( self )
 
@@ -533,7 +593,7 @@ METHOD isDerivedFrom( cClassORoObject ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD show() CLASS XbpWindow
+METHOD XbpWindow:show()
 
    ::oWidget:show()
    ::is_hidden      := .f.
@@ -543,38 +603,38 @@ METHOD show() CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD toBack() CLASS XbpWindow
+METHOD XbpWindow:toBack()
 
    RETURN Qtc_SetWindowPosToBack( ::hWnd )
 
 /*----------------------------------------------------------------------*/
 
-METHOD toFront() CLASS XbpWindow
+METHOD XbpWindow:toFront()
 
    /*RETURN Win_SetForegroundWindow( ::hWnd ) */
    RETURN Qtc_SetWindowPosToTop( ::hWnd )
 
 /*----------------------------------------------------------------------*/
 
-METHOD unlockPS() CLASS XbpWindow
+METHOD XbpWindow:unlockPS()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD winDevice() CLASS XbpWindow
+METHOD XbpWindow:winDevice()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setFont() CLASS XbpWindow
+METHOD XbpWindow:setFont()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD setFontCompoundName( xFont ) CLASS XbpWindow
+METHOD XbpWindow:setFontCompoundName( xFont )
    LOCAL cOldFont, s, n, nPoint, cFont, cAttr, cFace
    LOCAL aAttr := { "normal","italic","bold" }
 
@@ -614,37 +674,37 @@ METHOD setFontCompoundName( xFont ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD setPresParam() CLASS XbpWindow
+METHOD XbpWindow:setPresParam()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD currentPos() CLASS XbpWindow
+METHOD XbpWindow:currentPos()
 
    RETURN { ::oWidget:x(), ::oWidget:y() }
 
 /*----------------------------------------------------------------------*/
 
-METHOD currentSize() CLASS XbpWindow
+METHOD XbpWindow:currentSize()
 
    RETURN { ::oWidget:width(), ::oWidget:height() }
 
 /*----------------------------------------------------------------------*/
 
-METHOD getHWND() CLASS XbpWindow
+METHOD XbpWindow:getHWND()
 
    RETURN QT_PTROF( ::oWidget )
 
 /*----------------------------------------------------------------------*/
 
-METHOD getModalState() CLASS XbpWindow
+METHOD XbpWindow:getModalState()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD hasInputFocus() CLASS XbpWindow
+METHOD XbpWindow:hasInputFocus()
 
    RETURN Self
 
@@ -652,7 +712,7 @@ METHOD hasInputFocus() CLASS XbpWindow
  *                           Callback Methods
 /*----------------------------------------------------------------------*/
 
-METHOD enter( xParam ) CLASS XbpWindow
+METHOD XbpWindow:enter( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_enter )
       eval( ::sl_enter, xParam, NIL, Self )
@@ -668,7 +728,7 @@ METHOD enter( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD leave( xParam ) CLASS XbpWindow
+METHOD XbpWindow:leave( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_leave )
       eval( ::sl_leave, NIL, NIL, Self )
@@ -684,7 +744,7 @@ METHOD leave( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD lbClick( xParam ) CLASS XbpWindow
+METHOD XbpWindow:lbClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbClick )
       eval( ::sl_lbClick, xParam, NIL, Self )
@@ -700,7 +760,7 @@ METHOD lbClick( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD lbDblClick( xParam ) CLASS XbpWindow
+METHOD XbpWindow:lbDblClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbDblClick )
       eval( ::sl_lbDblClick, xParam, NIL, Self )
@@ -716,7 +776,7 @@ METHOD lbDblClick( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD lbDown( xParam ) CLASS XbpWindow
+METHOD XbpWindow:lbDown( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbDown )
       eval( ::sl_lbDown, xParam, NIL, Self )
@@ -732,7 +792,7 @@ METHOD lbDown( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD lbUp( xParam ) CLASS XbpWindow
+METHOD XbpWindow:lbUp( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbUp )
       eval( ::sl_lbUp, xParam, NIL, Self )
@@ -748,7 +808,7 @@ METHOD lbUp( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD mbClick( xParam ) CLASS XbpWindow
+METHOD XbpWindow:mbClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbClick )
       eval( ::sl_mbClick, xParam, NIL, Self )
@@ -764,7 +824,7 @@ METHOD mbClick( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD mbDblClick( xParam ) CLASS XbpWindow
+METHOD XbpWindow:mbDblClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbDblClick )
       eval( ::sl_mbDblClick, xParam, NIL, Self )
@@ -780,7 +840,7 @@ METHOD mbDblClick( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD mbDown( xParam ) CLASS XbpWindow
+METHOD XbpWindow:mbDown( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbDown )
       eval( ::sl_mbDown, xParam, NIL, Self )
@@ -796,7 +856,7 @@ METHOD mbDown( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD mbUp( xParam ) CLASS XbpWindow
+METHOD XbpWindow:mbUp( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbUp )
       eval( ::sl_mbUp, xParam, NIL, Self )
@@ -812,7 +872,7 @@ METHOD mbUp( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD motion( xParam ) CLASS XbpWindow
+METHOD XbpWindow:motion( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_motion )
       eval( ::sl_motion, xParam, NIL, Self )
@@ -828,7 +888,7 @@ METHOD motion( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD rbClick( xParam ) CLASS XbpWindow
+METHOD XbpWindow:rbClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbClick )
       eval( ::sl_rbClick, xParam, NIL, Self )
@@ -844,7 +904,7 @@ METHOD rbClick( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD rbDblClick( xParam ) CLASS XbpWindow
+METHOD XbpWindow:rbDblClick( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbDblClick )
       eval( ::sl_rbDblClick, xParam, NIL, Self )
@@ -860,7 +920,7 @@ METHOD rbDblClick( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD rbDown( xParam ) CLASS XbpWindow
+METHOD XbpWindow:rbDown( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbDown )
       eval( ::sl_rbDown, xParam, NIL, Self )
@@ -876,7 +936,7 @@ METHOD rbDown( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD rbUp( xParam ) CLASS XbpWindow
+METHOD XbpWindow:rbUp( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbUp )
       eval( ::sl_rbUp, xParam, NIL, Self )
@@ -892,7 +952,7 @@ METHOD rbUp( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD wheel( xParam ) CLASS XbpWindow
+METHOD XbpWindow:wheel( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_wheel )
       eval( ::sl_wheel, xParam, NIL, Self )
@@ -910,7 +970,7 @@ METHOD wheel( xParam ) CLASS XbpWindow
  *                           Other Messages
 /*----------------------------------------------------------------------*/
 
-METHOD close( xParam ) CLASS XbpWindow
+METHOD XbpWindow:close( xParam )
    if ::objType == objTypeCrt
       if hb_isNil( xParam ) .and. hb_isBlock( ::sl_close )
          eval( ::sl_close, NIL, NIL, Self )
@@ -926,7 +986,7 @@ METHOD close( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD helpRequest( xParam ) CLASS XbpWindow
+METHOD XbpWindow:helpRequest( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::sl_helpRequest )
       eval( ::sl_helpRequest, NIL, NIL, Self )
@@ -942,7 +1002,7 @@ METHOD helpRequest( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD keyboard( xParam ) CLASS XbpWindow
+METHOD XbpWindow:keyboard( xParam )
 
    if hb_isNumeric( xParam ) .and. hb_isBlock( ::sl_keyboard )
       eval( ::sl_keyboard, xParam, NIL, Self )
@@ -958,7 +1018,7 @@ METHOD keyboard( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD killDisplayFocus( xParam ) CLASS XbpWindow
+METHOD XbpWindow:killDisplayFocus( xParam )
    if ::objType == objTypeCrt
       if hb_isNil( xParam ) .and. hb_isBlock( ::sl_killDisplayFocus )
          eval( ::sl_killDisplayFocus, NIL, NIL, Self )
@@ -974,7 +1034,7 @@ METHOD killDisplayFocus( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD killInputFocus( xParam ) CLASS XbpWindow
+METHOD XbpWindow:killInputFocus( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::sl_killInputFocus )
       eval( ::sl_killInputFocus, NIL, NIL, Self )
@@ -990,7 +1050,7 @@ METHOD killInputFocus( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD move( xParam ) CLASS XbpWindow
+METHOD XbpWindow:move( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_move )
       eval( ::sl_move, xParam, NIL, Self )
@@ -1006,7 +1066,7 @@ METHOD move( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD paint( xParam ) CLASS XbpWindow
+METHOD XbpWindow:paint( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_paint )
       eval( ::sl_paint, xParam, NIL, Self )
@@ -1022,7 +1082,7 @@ METHOD paint( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD quit( xParam, xParam1 ) CLASS XbpWindow
+METHOD XbpWindow:quit( xParam, xParam1 )
 
    if hb_isNumeric( xParam ) .and. hb_isBlock( ::sl_quit )
       eval( ::sl_quit, xParam, xParam1, Self )
@@ -1038,7 +1098,7 @@ METHOD quit( xParam, xParam1 ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD resize( xParam, xParam1 ) CLASS XbpWindow
+METHOD XbpWindow:resize( xParam, xParam1 )
 
    if hb_isArray( xParam ) .and. hb_isArray( xParam1 ) .and. hb_isBlock( ::sl_resize )
       eval( ::sl_resize, xParam, xParam1, Self )
@@ -1054,7 +1114,7 @@ METHOD resize( xParam, xParam1 ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD setDisplayFocus( xParam ) CLASS XbpWindow
+METHOD XbpWindow:setDisplayFocus( xParam )
 
    if ::objType == objTypeCrt
       if hb_isNil( xParam ) .and. hb_isBlock( ::setDisplayFocus )
@@ -1071,7 +1131,7 @@ METHOD setDisplayFocus( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD setInputFocus( xParam ) CLASS XbpWindow
+METHOD XbpWindow:setInputFocus( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::sl_setInputFocus )
       eval( ::sl_setInputFocus, NIL, NIL, Self )
@@ -1087,7 +1147,7 @@ METHOD setInputFocus( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD dragEnter( xParam, xParam1 ) CLASS XbpWindow
+METHOD XbpWindow:dragEnter( xParam, xParam1 )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragEnter )
       eval( ::sl_dragEnter, xParam, xParam1, Self )
@@ -1103,7 +1163,7 @@ METHOD dragEnter( xParam, xParam1 ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD dragMotion( xParam ) CLASS XbpWindow
+METHOD XbpWindow:dragMotion( xParam )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragMotion )
       eval( ::sl_dragMotion, xParam, NIL, Self )
@@ -1119,7 +1179,7 @@ METHOD dragMotion( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD dragLeave( xParam ) CLASS XbpWindow
+METHOD XbpWindow:dragLeave( xParam )
 
    if hb_isNil( xParam ) .and. hb_isBlock( ::sl_dragLeave )
       eval( ::sl_dragLeave, NIL, NIL, Self )
@@ -1135,7 +1195,7 @@ METHOD dragLeave( xParam ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD dragDrop( xParam, xParam1 ) CLASS XbpWindow
+METHOD XbpWindow:dragDrop( xParam, xParam1 )
 
    if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragDrop )
       eval( ::sl_dragDrop, xParam, xParam1, Self )
@@ -1151,7 +1211,7 @@ METHOD dragDrop( xParam, xParam1 ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS XbpWindow
+METHOD XbpWindow:Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
@@ -1171,7 +1231,7 @@ METHOD Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS X
 
 /*----------------------------------------------------------------------*/
 
-METHOD setFocus() CLASS XbpWindow
+METHOD XbpWindow:setFocus()
 
    ::sendMessage( QWM_ACTIVATE, 1, 0 )
 
@@ -1179,13 +1239,13 @@ METHOD setFocus() CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD sendMessage( nMessage, nlParam, nwParam ) CLASS XbpWindow
+METHOD XbpWindow:sendMessage( nMessage, nlParam, nwParam )
 
    RETURN Qtc_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
 
 /*----------------------------------------------------------------------*/
 
-METHOD findObjectByHandle( hWnd ) CLASS XbpWindow
+METHOD XbpWindow:findObjectByHandle( hWnd )
    LOCAL nObj
 
    IF len( ::aChildren ) > 0
@@ -1198,7 +1258,7 @@ METHOD findObjectByHandle( hWnd ) CLASS XbpWindow
 
 /*----------------------------------------------------------------------*/
 
-METHOD createControl() CLASS XbpWindow
+METHOD XbpWindow:createControl()
    LOCAL hWnd
 
    ::nID := ::oParent:GetControlId()
@@ -1224,7 +1284,7 @@ METHOD createControl() CLASS XbpWindow
    RETURN Self
 /*----------------------------------------------------------------------*/
 
-METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS XbpWindow
+METHOD XbpWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
    LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj, nReturn
 
    #if 1

@@ -194,9 +194,6 @@
 #define XBPSLE_RIGHT                              2
 #define XBPSLE_CENTER                             3
 
-#define XBPMENUBAR_MIS_SEPARATOR                  4
-#define XBPMENUBAR_MIS_BUTTONSEPARATOR            512
-
 /* SCROLLBAR */
 #define XBPSCROLL_HORIZONTAL                      1
 #define XBPSCROLL_VERTICAL                        2
@@ -215,6 +212,18 @@
 #define XBPTABPAGE_TAB_TOP                        4
 
 #define XBPTOOLBAR_BUTTON_SEPARATOR               4
+
+#define XBPMENUBAR_MIS_BUTTONSEPARATOR            512
+#define XBPMENUBAR_MIS_STATIC                     256
+#define XBPMENUBAR_MIS_SEPARATOR                  4
+
+#define XBPMENUBAR_MIA_NODISMISS                  32
+#define XBPMENUBAR_MIA_FRAMED                     4096
+#define XBPMENUBAR_MIA_CHECKED                    8192
+#define XBPMENUBAR_MIA_DISABLED                   16384
+#define XBPMENUBAR_MIA_HILITED                    32768
+#define XBPMENUBAR_MIA_DEFAULT                    65536
+#define XBPMENUBAR_MIA_OWNERDRAW                  131072
 
 #endif /* #ifndef _XBP_CH */
 

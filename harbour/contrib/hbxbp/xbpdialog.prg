@@ -92,8 +92,6 @@ CLASS XbpDialog FROM XbpWindow
    METHOD   configure()
    METHOD   destroy()
 
-   METHOD   grabEvent()
-
    METHOD   showModal()                           INLINE NIL
    METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
    METHOD   getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
@@ -106,7 +104,6 @@ CLASS XbpDialog FROM XbpWindow
    METHOD   calcFrameRect()                       INLINE ::aRect := Qtc_GetWindowRect( ::hWnd ),;
                                                          { ::aRect[ 1 ], ::aRect[ 2 ], ;
                                                          ::aRect[ 3 ]-::aRect[ 1 ], ::aRect[ 4 ]-::aRect[ 2 ] }
-
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -140,10 +137,8 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::oWidget:setWindowIcon( ::icon )
    ENDIF
 
-   ::drawingArea := QWidget()
-   ::drawingArea:pPtr := QT_MyDrawingArea()
-
-   ::oWidget:setCentralWidget( QT_PTROF( ::drawingArea ) )
+   ::drawingArea := XbpDrawingArea():new( self, , {0,0}, ::aSize, , .t. ):create()
+   ::oWidget:setCentralWidget( QT_PTROF( ::drawingArea:oWidget ) )
 
    ::oWidget:resize( ::aSize[ 1 ], ::aSize[ 2 ] )
    ::oWidget:move( ::aPos[ 1 ], ::aPos[ 2 ] )
@@ -153,12 +148,12 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::oWidget:show()
    ENDIF
 
-   ::oEventLoop := QEventLoop():new( QT_PTROF( ::drawingArea ) )
+   ::oEventLoop := QEventLoop():new( QT_PTROF( ::drawingArea:oWidget ) )
 
    SetAppWindow( self )
 
-   Qt_Connect_Signal( QT_PTROF( ::drawingArea ), "keyPressEvent()" , {|o,pEvent| ::grabEvent( pEvent, o ) } )
-   Qt_Connect_Signal( QT_PTROF( ::drawingArea ), "mouseMoveEvent()", {|o,pEvent| ::grabEvent( pEvent, o ) } )
+   Qt_Connect_Signal( QT_PTROF( ::drawingArea:oWidget ), "keyPressEvent()" , {|o,pEvent| ::grabEvent( pEvent, o ) } )
+   Qt_Connect_Signal( QT_PTROF( ::drawingArea:oWidget ), "mouseMoveEvent()", {|o,pEvent| ::grabEvent( pEvent, o ) } )
 
    RETURN Self
 
@@ -174,6 +169,8 @@ METHOD XbpDialog:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
 METHOD XbpDialog:destroy()
 
+   ::oEventLoop:exit()
+
    IF hb_isObject( ::oMenu )
       ::oMenu:destroy()
    ENDIF
@@ -182,41 +179,9 @@ METHOD XbpDialog:destroy()
       aeval( ::aChildren, {|o| o:destroy() } )
    ENDIF
 
-   IF !empty( ::hBrushBG )
-      Qtc_DeleteObject( ::hBrushBG )
-   ENDIF
-
-   ::oEventLoop:exit()
-   ::drawingArea:close()
    ::oWidget:close()
 
    RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpDialog:grabEvent( pEvent, o )
-   LOCAL oEvent, nType
-
-   HB_SYMBOL_UNUSED( o )
-
-   nType := Qt_QEvent_type( pEvent )
-
-   DO CASE
-   CASE nType == QEvent_MouseMove
-      oEvent := QMouseEvent()
-      oEvent:pPtr := pEvent
-      SetAppEvent( xbeM_Motion, { oEvent:x(), oEvent:y() }, oEvent:button(), self )
-      oEvent:setAccepted( .t. )
-
-   CASE nType == QEvent_KeyPress
-      oEvent := QKeyEvent()
-      oEvent:pPtr := pEvent
-      SetAppEvent( xbeP_Keyboard, oEvent:key, oEvent:text, self )
-      oEvent:setAccepted( .t. )
-
-   ENDCASE
-
-   RETURN .t.
 
 /*----------------------------------------------------------------------*/
 
@@ -256,13 +221,15 @@ METHOD XbpDialog:getFrameState()
 METHOD XbpDialog:menuBar()
 
    IF !( hb_isObject( ::oMenu ) )
-//      ::oMenu := XbpMenuBar():New( self ):create()
+      ::oMenu := XbpMenuBar():New( self ):create()
    ENDIF
 
    RETURN ::oMenu
 
 /*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*
+ *                            XbpDrawingArea
+ */
 /*----------------------------------------------------------------------*/
 
 CLASS XbpDrawingArea  INHERIT  XbpWindow
@@ -275,6 +242,8 @@ CLASS XbpDrawingArea  INHERIT  XbpWindow
    METHOD   create()
    METHOD   destroy()
    METHOD   handleEvent()
+   METHOD   setColorFG( nRGB )                    INLINE ::oParent:setColorFG( nRGB )
+   METHOD   setColorBG( nRGB )                    INLINE ::oParent:setColorBG( nRGB )
 
    ENDCLASS
 
@@ -302,11 +271,8 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::oParent:addChild( SELF )
 
-   /* Wvg_RegisterClass_ByName( ::className ) */
-   ::createControl()
-   ::SetWindowProcCallback()
-
-   ::show()
+   ::oWidget := QWidget()
+   ::oWidget:pPtr := QT_MyDrawingArea()
 
    RETURN Self
 
@@ -349,7 +315,7 @@ METHOD XbpDrawingArea:destroy()
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
 
-   ::xbpWindow:destroy()
+   ::oWidget:close()
 
    RETURN NIL
 

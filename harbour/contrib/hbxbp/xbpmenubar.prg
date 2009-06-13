@@ -70,10 +70,22 @@
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
-//#include "hbgtwvg.ch"
-//#include "wvtwin.ch"
+#include "hbgtwvg.ch"
 #include "xbp.ch"
+#include "appevent.ch"
 #include "apig.ch"
+#include "hbqt.ch"
+
+/*----------------------------------------------------------------------*/
+
+#define QTC_MENITEM_CAPTION                1
+#define QTC_MENITEM_BLOCK                  2
+#define QTC_MENITEM_STYLE                  3
+#define QTC_MENITEM_ATTRIB                 4
+
+#define QTC_MENUITEM_ADD                   1
+#define QTC_MENUITEM_INSERT                2
+#define QTC_MENUITEM_REPLACE               3
 
 /*----------------------------------------------------------------------*/
 
@@ -118,11 +130,10 @@ CLASS xbpMenuBar INHERIT xbpWindow
    METHOD   measureItem()                         SETGET
    METHOD   onMenuKey()                           SETGET
 
-   METHOD   findMenuItemById()
-   METHOD   findMenuPosById()
    METHOD   DelAllItems()
 
    DATA     aMenuItems                             INIT {}
+   DATA     aOrgItems                              INIT {}
 
    CLASSVAR nMenuItemID                            INIT 0
    DATA     nPass                                  INIT 0
@@ -131,13 +142,17 @@ CLASS xbpMenuBar INHERIT xbpWindow
    DATA     nItemID                                INIT 0
    DATA     aIds                                   INIT {}
 
-   DATA     className                              INIT "MENUBAR"
+   DATA     className                              INIT "XbpMenuBar"
+
+   METHOD   ExeBlock()
+   METHOD   ExeHovered()
+   METHOD   PlaceItem()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD new( oParent, aPresParams, lVisible ) CLASS xbpMenuBar
+METHOD xbpMenuBar:new( oParent, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT aPresParams TO ::aPresParams
@@ -147,13 +162,13 @@ METHOD new( oParent, aPresParams, lVisible ) CLASS xbpMenuBar
    ::aPresParams := aPresParams
    ::visible     := lVisible
 
-   ::wvgWindow:new( ::oParent, , , , ::aPresParams, ::visible )
+   ::xbpWindow:new( ::oParent, , , , ::aPresParams, ::visible )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, aPresParams, lVisible ) CLASS xbpMenuBar
+METHOD xbpMenuBar:create( oParent, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT aPresParams TO ::aPresParams
@@ -163,28 +178,13 @@ METHOD create( oParent, aPresParams, lVisible ) CLASS xbpMenuBar
    ::aPresParams := aPresParams
    ::visible     := lVisible
 
-   ::wvgWindow:create( ::oParent, , , , ::aPresParams, ::visible )
+   ::xbpWindow:create( ::oParent, , , , ::aPresParams, ::visible )
 
-   ::hMenu := Qtc_CreateMenu()
+   ::oWidget := QMenuBar():new( ::oParent:pWidget )
 
-   if ::hMenu <> 0
-      /*  check for if the parent already has a menu
-          we need to destroy that first
-          TO DO
-      */
-      /* finally set the menu */
-      #if 0
-      Qtc_SetMenu( ::oParent:getHWND(), ::hMenu )
-      #endif
+   ::oParent:oWidget:setMenuBar( ::pWidget )
 
-      /* how to make menu invisible ? */
-      if ( ::visible )
-         #if 0
-         Qtc_ShowWindow( ::oParent:getHWND(), QSW_MINIMIZE )
-         Qtc_ShowWindow( ::oParent:getHWND(), QSW_NORMAL   )
-         #endif
-      endif
-
+   if !empty( ::oWidget )
       ::oParent:oMenu := Self
    endif
 
@@ -192,7 +192,7 @@ METHOD create( oParent, aPresParams, lVisible ) CLASS xbpMenuBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD configure( oParent, aPresParams, lVisible ) CLASS xbpMenuBar
+METHOD xbpMenuBar:configure( oParent, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT aPresParams TO ::aPresParams
@@ -206,22 +206,19 @@ METHOD configure( oParent, aPresParams, lVisible ) CLASS xbpMenuBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD destroy() CLASS xbpMenuBar
+METHOD xbpMenuBar:destroy()
 
-   IF !empty( ::hMenu )
+   IF !empty( ::oWidget )
       ::DelAllItems()
-
-      IF !Qtc_DestroyMenu( ::hMenu )
-      ENDIF
-
-      ::hMenu := 0
+      ::oWidget:close()
+      ::oWidget := NIL
    ENDIF
 
-   RETURN( .T. )
+   RETURN ( .T. )
 
 /*----------------------------------------------------------------------*/
 
-METHOD delAllItems() CLASS xbpMenuBar
+METHOD xbpMenuBar:delAllItems()
    LOCAL lResult:= .T.,  nItems
 
    nItems := ::numItems()
@@ -234,16 +231,16 @@ METHOD delAllItems() CLASS xbpMenuBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD delItem( nItemNum ) CLASS xbpMenuBar
+METHOD xbpMenuBar:delItem( nItemIndex )
    LOCAL lResult:= .F.
 
-   IF nItemNum > 0 .AND. nItemNum <= ::numItems()
-      IF ::aMenuItems[ nItemNum,QTC_MENU_TYPE ] == QMF_POPUP
-         ::aMenuItems[ nItemNum,QTC_MENU_MENUOBJ ]:Destroy()
+   IF nItemIndex > 0 .AND. nItemIndex <= ::numItems()
+      IF ::aMenuItems[ nItemIndex,QTC_MENU_TYPE ] == QMF_POPUP
+         ::aMenuItems[ nItemIndex,QTC_MENU_MENUOBJ ]:Destroy()
       ENDIF
 
-      IF ( lResult:= Qtc_DeleteMenu( ::hMenu, nItemNum-1, QMF_BYPOSITION ) ) /* Remember ZERO base */
-         ADEL( ::aMenuItems, nItemNum )
+      IF ( lResult:= Qtc_DeleteMenu( ::hMenu, nItemIndex-1, QMF_BYPOSITION ) ) /* Remember ZERO base */
+         ADEL( ::aMenuItems, nItemIndex )
          ASIZE( ::aMenuItems, LEN( ::aMenuItems ) - 1 )
       ELSE
       ENDIF
@@ -253,186 +250,274 @@ METHOD delItem( nItemNum ) CLASS xbpMenuBar
 
 /*----------------------------------------------------------------------*/
 /*
- * { xCaption, bAction, nStyle, nAttrb }
+ * xCaption : NIL | cPrompt | ncResource | oMenu
  */
-METHOD addItem( aItem, p2, p3, p4 ) CLASS xbpMenuBar
-   LOCAL nItemIndex, cCaption
-   LOCAL xCaption, bAction, nStyle, nAttrib
+METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
+   LOCAL nItemIndex, cCaption, cIcon, oAction, aItem, cType, pOldAct, nMenuItemId, n, cKey, oKey
+   LOCAL lInsert := ( nMode == QTC_MENUITEM_INSERT )
 
-   if PCount() == 1 .and. valtype( aItem ) == "A"
-      ASize( aItem, 4 )
-      xCaption := aItem[ 1 ]
-      bAction  := aItem[ 2 ]
-      nStyle   := aItem[ 3 ]
-      nAttrib  := aItem[ 4 ]
-   else
-      xCaption := aItem
-      bAction  := p2
-      nStyle   := p3
-      nAttrib  := p4
-   endif
-
-   HB_SYMBOL_UNUSED( nStyle )
-   HB_SYMBOL_UNUSED( nAttrib )
+   IF lInsert
+      pOldAct := ::aMenuItems[ nPos, 5 ]
+   ENDIF
 
    nItemIndex  := ::numItems() + 1
+   nMenuItemId := ++::nMenuItemID
 
-   /* xCaption : NIL | cPrompt | ncResource | oMenu */
+   cType := valtype( xCaption )
+   DO CASE
+   CASE cType == "U" .or. empty( xCaption ) .or. nStyle == XBPMENUBAR_MIS_SEPARATOR
+      oAction := QAction()
+      IF lInsert
+         oAction:pPtr := ::oWidget:insertSeparator()
+      ELSE
+         oAction:pPtr := ::oWidget:addSeparator()
+      ENDIF
+      aItem := { QMF_SEPARATOR, 0, 0, NIL, NIL, oAction }
 
-   switch valtype( xCaption )
-   case "U"
-      /* Separator */
-      aItem := { QMF_SEPARATOR, 0, 0, NIL }
-      exit
+   CASE cType == "C"
+      oAction := QAction():new( QT_PTROF( ::oWidget ) )
+      cCaption := strtran( xCaption, '~', '&' )
+      IF ( n := at( '|', cCaption ) ) > 0
+         cIcon := substr( cCaption, 1, n-1 )
+         cCaption := substr( cCaption, n+1 )
+      ENDIF
+      IF ( n := at( chr( K_TAB ), cCaption ) ) > 0
+         cKey := substr( cCaption, n+1 )
+         cCaption := substr( cCaption, 1, n-1 )
+      ENDIF
 
-   case "C"
-      if left( xCaption,1 ) == "-"
-         aItem := { QMF_SEPARATOR, 0, 0, NIL }
-      else
-         aItem := { QMF_STRING, ++::nMenuItemID, xCaption, bAction }
-      endif
-      exit
+      IF file( cIcon )
+         oAction:setIcon( cIcon )
+      ENDIF
+      oAction:setText( cCaption )
+      IF !empty( cKey )
+         oKey := QKeySequence():new( cKey )
+         oAction:setShortcut( QT_PTROF( oKey ) )
+      ENDIF
 
-   case "O"
+      Qt_Connect_Signal( QT_PTROF( oAction ), "triggered(bool)", {|| ::exeBlock( nMenuItemID ) } )
+      Qt_Connect_Signal( QT_PTROF( oAction ), "hovered()"      , {|| ::exeHovered( nMenuItemID ) } )
+
+      DO CASE
+      CASE nAttrb == XBPMENUBAR_MIA_CHECKED
+         oAction:setCheckable( .t. )
+         oAction:setChecked( .t. )
+
+      CASE nAttrb == XBPMENUBAR_MIA_DISABLED
+         oAction:setDisabled( .t. )
+
+      CASE nAttrb == XBPMENUBAR_MIA_HILITED
+         ::oWidget:setActiveAction( QT_PTROF( oAction ) )
+
+      CASE nAttrb == XBPMENUBAR_MIA_DEFAULT
+         ::oWidget:setDefaultAction( QT_PTROF( oAction ) )
+
+      CASE nAttrb == XBPMENUBAR_MIA_FRAMED
+
+      CASE nAttrb == XBPMENUBAR_MIA_OWNERDRAW
+
+      CASE nAttrb == XBPMENUBAR_MIA_NODISMISS
+
+      ENDCASE
+
+      IF nStyle == XBPMENUBAR_MIS_STATIC
+         oAction:setDisabled( .t. )
+      ENDIF
+
+      IF nMode == QTC_MENUITEM_ADD
+         ::oWidget:addAction_4( QT_PTROF( oAction ) )
+      ELSE
+         ::oWidget:insertAction( QT_PTROF( pOldAct ), QT_PTROF( oAction ) )
+      ENDIF
+
+      aItem := { QMF_STRING, nMenuItemID, xCaption, bAction, oAction }
+
+   CASE cType == "O"
       cCaption := IF( bAction == NIL, xCaption:title, bAction )
-      aItem    := { QMF_POPUP , xCaption:hMenu , cCaption, xCaption }
-      exit
+      aItem    := { QMF_POPUP, xCaption:oWidget, cCaption, xCaption }
+      IF hb_isChar( cCaption )
+         xCaption:oWidget:setTitle( strtran( cCaption, '~','&' ) )
+      ENDIF
 
-   case "N"
+   CASE cType == "N"
       /* Resource ID */
-      exit
 
-   end
+   ENDCASE
 
-   aadd( ::aMenuItems, aItem )
-   Qtc_AppendMenu( ::hMenu, aItem[ 1 ], aItem[ 2 ], aItem[ 3 ] )
+   IF     nMode == QTC_MENUITEM_ADD
+      aadd( ::aMenuItems, aItem )
+      aadd( ::aOrgItems , { xCaption, bAction, nStyle, nAttrb } )
 
-   IF ++::nPass == 1
-      IF ::oParent:className $ "XBPCRT,XBPDIALOG"
-         Qtc_SetMenu( ::oParent:getHWND(), ::hMenu )
-      ENDIF
-   ELSE
-      IF ::oParent:className $ "XBPCRT,XBPDIALOG"
-         Qtc_DrawMenubar( ::oParent:getHWND() )
-      ENDIF
+   ELSEIF nMode == QTC_MENUITEM_INSERT
+      asize( ::aMenuItems, ::numItems + 1 )
+      asize( ::aOrgItems, ::numItems + 1 )
+      ains( ::aMenuItems, nPos )
+      ains( ::aOrgItems, nPos )
+      ::aMenuItems[ nPos ] := aItem
+      ::aOrgItems[ nPos ] := { xCaption, bAction, nStyle, nAttrb }
+
+   ELSEIF nMode == QTC_MENUITEM_REPLACE
+
    ENDIF
 
    RETURN nItemIndex
 
 /*----------------------------------------------------------------------*/
 
-METHOD findMenuItemById( nId ) CLASS xbpMenuBar
-   LOCAL x, aResult :={}
+METHOD xbpMenuBar:addItem( aItem )
+   LOCAL xCaption, bAction, nStyle, nAttrib
 
-   IF !empty( nId )
-      x := ::numItems()
+   IF PCount() == 1 .and. valtype( aItem ) == "A"
+      ASize( aItem, 4 )
 
-      DO WHILE x > 0 .AND. empty( aResult )
+      xCaption := aItem[ 1 ]
+      bAction  := aItem[ 2 ]
+      nStyle   := aItem[ 3 ]
+      nAttrib  := aItem[ 4 ]
 
-         IF ::aMenuItems[ x, QTC_MENU_TYPE ] == QMF_POPUP
-            aResult:= ::aMenuItems[ x,QTC_MENU_MENUOBJ ]:findMenuItemById( nId )
-
-         ELSEIF ::aMenuItems[ x, QTC_MENU_IDENTIFIER ] == nId
-            aResult := { x, ::aMenuItems[ x, QTC_MENU_ACTION ], ::sl_itemSelected, Self }
-
-         ENDIF
-         x--
-      ENDDO
+      DEFAULT nStyle  TO 0
+      DEFAULT nAttrib TO 0
+   ELSE
+      RETURN 0
    ENDIF
 
-   RETURN ( aResult )
+   RETURN ::placeItem( xCaption, bAction, nStyle, nAttrib, QTC_MENUITEM_ADD )
 
 /*----------------------------------------------------------------------*/
 
-METHOD findMenuPosById( nId ) CLASS xbpMenuBar
-   LOCAL x, nPos
+METHOD xbpMenuBar:insItem( nItemIndex, aItem )
+   LOCAL xCaption, bAction, nStyle, nAttrib
 
-   IF !empty( nId )
-      x := ::numItems()
+   IF nItemIndex > 0 .and. nItemIndex <= ::numItems .and. hb_isArray( aItem )
+      ASize( aItem, 4 )
 
-      DO WHILE x > 0 .AND. empty( nPos )
+      xCaption := aItem[ 1 ]
+      bAction  := aItem[ 2 ]
+      nStyle   := aItem[ 3 ]
+      nAttrib  := aItem[ 4 ]
 
-         IF ::aMenuItems[ x,QTC_MENU_TYPE ] == QMF_POPUP
-            nPos := ::aMenuItems[ x,QTC_MENU_MENUOBJ ]:findMenuPosById( nId )
-
-         ELSEIF ::aMenuItems[ x,QTC_MENU_IDENTIFIER ] == nId
-            nPos := x
-
-         ENDIF
-         x--
-      ENDDO
+      DEFAULT nStyle  TO 0
+      DEFAULT nAttrib TO 0
+   ELSE
+      RETURN 0
    ENDIF
 
-   RETURN ( nPos )
+   RETURN ::placeItem( xCaption, bAction, nStyle, nAttrib, QTC_MENUITEM_INSERT, nItemIndex )
 
 /*----------------------------------------------------------------------*/
 
-METHOD checkItem( nItemNum, lCheck ) CLASS xbpMenuBar
-   LOCAL nRet := -1
+METHOD xbpMenuBar:setItem( nItemIndex, aItem )
+
+   HB_SYMBOL_UNUSED( nItemIndex )
+   HB_SYMBOL_UNUSED( aItem )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD xbpMenuBar:exeBlock( nMenuItemID )
+   LOCAL nIndex := ascan( ::aMenuItems, {|e_| e_[ 2 ] == nMenuItemID } )
+
+   IF nIndex > 0
+      IF hb_isBlock( ::aMenuItems[ nIndex,4 ] )
+         eval( ::aMenuItems[ nIndex,4 ] )
+      ELSE
+         IF hb_isBlock( ::sl_itemSelected )
+            eval( ::sl_itemSelected, nIndex, NIL, Self )
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD xbpMenuBar:exeHovered( nMenuItemID )
+   LOCAL nIndex := ascan( ::aMenuItems, {|e_| e_[ 2 ] == nMenuItemID } )
+
+   IF nIndex > 0
+      IF hb_isBlock( ::sl_itemMarked )
+         eval( ::sl_itemMarked, nIndex, NIL, Self )
+      ENDIF
+   ENDIF
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD xbpMenuBar:checkItem( nItemIndex, lCheck )
+   LOCAL lChecked
 
    DEFAULT lCheck TO .T.
 
-   IF !empty( ::hMenu ) .AND. !empty( nItemNum )
-      nRet := Qtc_CheckMenuItem( ::hMenu, nItemNum, QMF_BYPOSITION + IF( lCheck, QMF_CHECKED, QMF_UNCHECKED ) )
+   IF !empty( ::aMenuItems ) .AND. !empty( nItemIndex ) .AND. nItemIndex <= ::numItems
+      ::aMenuItems[ nItemIndex, 5 ]:setChecked( lCheck )
+      lChecked := ::aMenuItems[ nItemIndex, 5 ]:isChecked()
    ENDIF
 
-   RETURN IF( nRet == -1, .F., .T. )
+   RETURN IF( lCheck, lChecked, !lChecked )
 
 /*----------------------------------------------------------------------*/
 
-METHOD enableItem( nItemNum ) CLASS xbpMenuBar
+METHOD xbpMenuBar:enableItem( nItemIndex )
    LOCAL lSuccess := .f.
 
-   IF !empty( ::hMenu ) .AND. !empty( nItemNum )
-      lSuccess := Qtc_EnableMenuItem( ::hMenu, nItemNum-1, QMF_BYPOSITION + QMF_ENABLED )
+   IF !empty( ::aMenuItems ) .AND. !empty( nItemIndex ) .AND. nItemIndex <= ::numItems
+      ::aMenuItems[ nItemIndex, 5 ]:setEnabled( .t. )
+      lSuccess := ::aMenuItems[ nItemIndex, 5 ]:isEnabled()
    ENDIF
 
    RETURN ( lSuccess )
 
 /*----------------------------------------------------------------------*/
 
-METHOD disableItem( nItemNum ) CLASS xbpMenuBar
+METHOD xbpMenuBar:disableItem( nItemIndex )
    LOCAL lSuccess := .f.
 
-   IF !empty( ::hMenu ) .AND. !empty( nItemNum )
-      lSuccess := Qtc_EnableMenuItem( ::hMenu, nItemNum-1, QMF_BYPOSITION + QMF_GRAYED )
+   IF !empty( ::aMenuItems ) .AND. !empty( nItemIndex ) .AND. nItemIndex <= ::numItems
+      ::aMenuItems[ nItemIndex, 5 ]:setDisabled( .t. )
+      lSuccess := !( ::aMenuItems[ nItemIndex, 5 ]:isEnabled() )
    ENDIF
 
    RETURN ( lSuccess )
 
 /*----------------------------------------------------------------------*/
 
-METHOD getItem() CLASS xbpMenuBar
+METHOD xbpMenuBar:getItem( nItemIndex )
+   LOCAL aItem
 
-   RETURN Self
+   IF !empty( ::aMenuItems ) .AND. !empty( nItemIndex ) .AND. nItemIndex <= ::numItems
+      aItem := ::aOrgItems[ nItemIndex ]
+   ENDIF
 
-/*----------------------------------------------------------------------*/
-
-METHOD insItem() CLASS xbpMenuBar
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD isItemChecked() CLASS xbpMenuBar
-
-   RETURN Self
+   RETURN aItem
 
 /*----------------------------------------------------------------------*/
 
-METHOD isItemEnabled() CLASS xbpMenuBar
+METHOD xbpMenuBar:isItemChecked( nItemIndex )
+   LOCAL lChecked := .f.
 
-   RETURN Self
+   IF !empty( ::aMenuItems ) .AND. !empty( nItemIndex ) .AND. nItemIndex <= ::numItems
+      lChecked := ::aMenuItems[ nItemIndex, 5 ]:isChecked()
+   ENDIF
+
+   RETURN lChecked
 
 /*----------------------------------------------------------------------*/
 
-METHOD selectItem() CLASS xbpMenuBar
+METHOD xbpMenuBar:isItemEnabled( nItemIndex )
+   LOCAL lEnabled := .t.
 
-   RETURN Self
+   IF !empty( ::aMenuItems ) .AND. !empty( nItemIndex ) .AND. nItemIndex <= ::numItems
+      lEnabled := ::aMenuItems[ nItemIndex, 5 ]:isEnabled()
+   ENDIF
+
+   RETURN lEnabled
 
 /*----------------------------------------------------------------------*/
 
-METHOD setItem() CLASS xbpMenuBar
+METHOD xbpMenuBar:selectItem( nItemIndex )
+
+   HB_SYMBOL_UNUSED( nItemIndex )
 
    RETURN Self
 
@@ -440,7 +525,7 @@ METHOD setItem() CLASS xbpMenuBar
 /*                         Callback Methods                             */
 /*----------------------------------------------------------------------*/
 
-METHOD beginMenu( xParam ) CLASS xbpMenuBar
+METHOD xbpMenuBar:beginMenu( xParam )
 
    if hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_beginMenu := xParam
@@ -451,7 +536,7 @@ METHOD beginMenu( xParam ) CLASS xbpMenuBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD endMenu( xParam ) CLASS xbpMenuBar
+METHOD xbpMenuBar:endMenu( xParam )
 
    if hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_endMenu := xParam
@@ -462,7 +547,7 @@ METHOD endMenu( xParam ) CLASS xbpMenuBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD itemMarked( xParam ) CLASS xbpMenuBar
+METHOD xbpMenuBar:itemMarked( xParam )
 
    if hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_itemMarked := xParam
@@ -473,7 +558,7 @@ METHOD itemMarked( xParam ) CLASS xbpMenuBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD itemSelected( xParam ) CLASS xbpMenuBar
+METHOD xbpMenuBar:itemSelected( xParam )
 
    if hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_itemSelected := xParam
@@ -484,7 +569,7 @@ METHOD itemSelected( xParam ) CLASS xbpMenuBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD drawItem( xParam ) CLASS xbpMenuBar
+METHOD xbpMenuBar:drawItem( xParam )
 
    if hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_drawItem := xParam
@@ -495,7 +580,7 @@ METHOD drawItem( xParam ) CLASS xbpMenuBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD measureItem( xParam ) CLASS xbpMenuBar
+METHOD xbpMenuBar:measureItem( xParam )
 
    if hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_measureItem := xParam
@@ -506,7 +591,7 @@ METHOD measureItem( xParam ) CLASS xbpMenuBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD onMenuKey( xParam ) CLASS xbpMenuBar
+METHOD xbpMenuBar:onMenuKey( xParam )
 
    if hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_onMenuKey := xParam
@@ -540,7 +625,7 @@ CLASS xbpMenu INHERIT xbpMenuBar
 
 /*----------------------------------------------------------------------*/
 
-METHOD new( oParent, aPresParams, lVisible ) CLASS xbpMenu
+METHOD xbpMenu:new( oParent, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT aPresParams TO ::aPresParams
@@ -550,11 +635,13 @@ METHOD new( oParent, aPresParams, lVisible ) CLASS xbpMenu
    ::aPresParams := aPresParams
    ::visible     := lVisible
 
+   ::className   := "XbpMenu"
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD create( oParent, aPresParams, lVisible ) CLASS xbpMenu
+METHOD xbpMenu:create( oParent, aPresParams, lVisible )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT aPresParams TO ::aPresParams
@@ -564,27 +651,27 @@ METHOD create( oParent, aPresParams, lVisible ) CLASS xbpMenu
    ::aPresParams := aPresParams
    ::visible     := lVisible
 
-   ::className := "POPUPMENU"
+   ::oWidget := QMenu():new( ::oParent:pWidget )
 
-   ::hMenu := Qtc_CreatePopupMenu()
+   ::oParent:oWidget:addMenu( ::pWidget )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD getTitle() CLASS xbpMenu
+METHOD xbpMenu:getTitle()
 
    RETURN ::title
 
 /*----------------------------------------------------------------------*/
 
-METHOD setTitle( cTitle )
+METHOD xbpMenu:setTitle( cTitle )
 
    RETURN ::title := cTitle
 
 /*----------------------------------------------------------------------*/
 
-METHOD popUp( oXbp, aPos, nDefaultItem, nControl ) CLASS xbpMenu
+METHOD xbpMenu:popUp( oXbp, aPos, nDefaultItem, nControl )
    LOCAL nCmd, aMenuItem
 
    HB_SYMBOL_UNUSED( nDefaultItem )

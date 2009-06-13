@@ -53,19 +53,32 @@
 #include "common.ch"
 #include "xbp.ch"
 #include "appevent.ch"
+#include "inkey.ch"
 
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
    LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize
 
+   /* Create Application Window */
    oDlg := GuiStdDialog( 'Harbour - Xbase++ - QT Dialog [ Press "Q" to Exit ]' )
-   aSize := AppDesktop():currentSize()
 
+   /* Obtain desktop dimensions */
+   aSize := AppDesktop():currentSize()
+   /* Place on the center of desktop */
    oDlg:setPos( { ( aSize[ 1 ] - oDlg:currentSize()[ 1 ] ) / 2, ;
                   ( aSize[ 2 ] - oDlg:currentSize()[ 2 ] ) / 2 } )
+
+   /* Install menu system */
+   Build_MenuBar( oDlg )
+
+   /* Make background color of :drawingArea different */
+   oDlg:drawingArea:setColorBG( GraMakeRGBColor( { 134,128,164 } ) )
+
+   /* Present the dialog on the screen */
    oDlg:Show()
 
+   /* Enter Xbase++ Event Loop - still with limited functionality but working */
    DO WHILE .t.
       nEvent := AppEvent( @mp1, @mp2, @oXbp )
 
@@ -74,23 +87,103 @@ PROCEDURE Main()
       ENDIF
    ENDDO
 
+   /* Very important - destroy resources */
    oDlg:destroy()
 
    RETURN
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION GuiStdDialog( cTitle )
+STATIC FUNCTION GuiStdDialog( cTitle )
    LOCAL oDlg
 
    DEFAULT cTitle TO "Standard Dialog Window"
 
-   oDlg          := XbpDialog():new( , , {10,10}, {600,400}, , .f. )
+   oDlg          := XbpDialog():new( , , {10,10}, {900,500}, , .f. )
+
+   /* NOTE: method to install the windows icon is bit different than Windows */
+   /* So curretly we can only place disk icon file only */
    oDlg:icon     :=  "test"
+
+   /* TODO: still not implemented*/
    oDlg:taskList := .T.
+
    oDlg:title    := cTitle
    oDlg:create()
 
    RETURN oDlg
 
 /*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Build_MenuBar( oDlg )
+   LOCAL oMenuBar, oSubMenu
+
+   oMenuBar := XbpMenuBar():new( oDlg ):create()
+
+   /* Define submenu in procedural style.
+    * The numeric index of the selected menu item
+    * is passed to the Callback code block -> mp1
+    */
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   //
+   oSubMenu:title := "~Procedural"
+   oSubMenu:addItem( { "Play Charge ~1",   } )
+   oSubMenu:addItem( { "Play Nannyboo ~2", } )
+   oSubMenu:itemSelected := {|mp1| MyFunctionXbp( 100+mp1 ) }
+   //
+   oMenuBar:addItem( { oSubMenu, NIL } )
+   //
+   oSubMenu:disableItem( 2 )
+
+   /* Define submenu in the functional style:
+    * A menu item executes a code block that calls a function
+    */
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Functional"
+   oSubMenu:addItem( { "Play Opening ~1"+chr(K_TAB)+"Ctrl+U", {|| MyFunctionXbp( 1 ) } } )
+   oSubMenu:addItem( { "Play Closing ~2", {|| MyFunctionXbp( 2 ) } } )
+   oSubMenu:addItem( { NIL, NIL, XBPMENUBAR_MIS_SEPARATOR, NIL } )
+   oSubMenu:addItem( { "new.png|~MessageBox", {|| MyFunctionXbp( 3 ) }, , XBPMENUBAR_MIA_HILITED } )
+   //
+   oMenuBar:addItem( { oSubMenu, NIL } )
+   //
+   oSubMenu:insItem( 2, { "This executes MsgBox()", {|| MyFunctionXbp( 103 ) }, , XBPMENUBAR_MIA_CHECKED } )
+   //
+   oSubMenu:itemMarked := {|mp1| IF( mp1 == 5, MsgBox( "WOW - ::itemMarked - Activated" ), NIL ) }
+   //
+   oSubMenu:setColorFG( GraMakeRGBColor( { 255,  1,  1 } ) )
+   oSubMenu:setColorBG( GraMakeRGBColor( { 134,128,250 } ) )
+
+   Return nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION MyFunctionXbp( nMode )
+
+   DO CASE
+   CASE nMode == 1
+      MsgBox( "Play Opening ~1" )
+
+   CASE nMode == 2
+      MsgBox( "Play Closing ~2" )
+
+   CASE nMode == 3
+      MsgBox( "new.png|~MessageBox" )
+
+   CASE nMode == 101
+      MsgBox( "101 - Play Charge" )
+
+   CASE nMode == 102
+      MsgBox( "102 - Play Nanyboo" )
+
+   CASE nMode == 103
+      MsgBox( "This executes MsgBox()" )
+
+   ENDCASE
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+
+

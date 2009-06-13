@@ -187,6 +187,39 @@ FUNCTION AppDesktop()
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION MsgBox( cMsg, cTitle )
+   LOCAL oMB
+
+   DEFAULT cTitle TO ""
+
+   oMB := QMessageBox():new()
+   oMB:setInformativeText( cMsg )
+   IF !empty( cTitle )
+      oMB:setWindowTitle( cTitle )
+   ENDIF
+   oMB:show()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION GraMakeRGBColor( aRGB )
+   LOCAL nRGB
+
+   IF hb_isArray( aRGB ) .and. len( aRGB ) == 3
+      IF hb_isNumeric( aRGB[ 1 ] ) .and. ( aRGB[ 1 ] >= 0 ) .and. ( aRGB[ 1 ] <= 255 )
+         IF hb_isNumeric( aRGB[ 2 ] ) .and. ( aRGB[ 2 ] >= 0 ) .and. ( aRGB[ 2 ] <= 255 )
+            IF hb_isNumeric( aRGB[ 3 ] ) .and. ( aRGB[ 3 ] >= 0 ) .and. ( aRGB[ 3 ] <= 255 )
+               nRGB := ( aRGB[ 1 ] + ( aRGB[ 2 ] * 256 ) + ( aRGB[ 3 ] * 256 * 256 ) )
+            ENDIF
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN nRGB
+
+/*----------------------------------------------------------------------*/
+
 #ifndef __DEBUG__
 
 #PRAGMA BEGINDUMP
