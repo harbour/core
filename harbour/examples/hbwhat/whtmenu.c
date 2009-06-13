@@ -164,7 +164,7 @@ HB_FUNC( VWN_TRACKPOPUPMENU )
 {
  RECT rc ;
 
- if (!ISNIL(7)) {
+ if (!HB_ISNIL(7)) {
    rc.left   = hb_parni(7,1);
    rc.top    = hb_parni(7,2);
    rc.right  = hb_parni(7,3);

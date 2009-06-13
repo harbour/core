@@ -173,7 +173,7 @@ HB_FUNC( HB_FREADLINE )
    USHORT i, iTerms;
    BOOL bFound, bEOF;
 
-   if( ( !ISBYREF( 2 ) ) || ( !ISNUM( 1 ) ) )
+   if( ( !HB_ISBYREF( 2 ) ) || ( !HB_ISNUM( 1 ) ) )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 4,
          hb_paramError( 1 ),
@@ -183,9 +183,9 @@ HB_FUNC( HB_FREADLINE )
       return;
    }
 
-   if( ISARRAY( 3 ) || ISCHAR( 3 ) )
+   if( HB_ISARRAY( 3 ) || HB_ISCHAR( 3 ) )
    {
-      if( ISARRAY( 3 ) )
+      if( HB_ISARRAY( 3 ) )
       {
          pTerm1 = hb_param( 3, HB_IT_ARRAY );
          iTerms = ( USHORT ) hb_arrayLen( pTerm1 );

@@ -123,13 +123,13 @@ HB_FUNC( VWN_CREATEDC )
 {
    DEVMODE *lpInitData = NULL;
 
-   if ( ! ISNIL( 4 ) )
+   if ( ! HB_ISNIL( 4 ) )
         lpInitData = (DEVMODE *) hb_parc( 4 ); //hb_param( 4, HB_IT_STRING)->item.asString.value ;
 
    HB_RETWH( CreateDC((LPCTSTR) hb_parcx( 1 )  ,       // pointer to string specifying driver name
                               (LPCTSTR) hb_parcx( 2 )  ,       // pointer to string specifying device name
                               NULL                    ,       // do not use; set to NULL
-                              ISNIL( 4 ) ? NULL : lpInitData // pointer to optional printer data
+                              HB_ISNIL( 4 ) ? NULL : lpInitData // pointer to optional printer data
                              )
            );
 }
@@ -144,11 +144,11 @@ HB_FUNC( VWN_RESETDC )
 
    DEVMODE *lpInitData = NULL;
 
-   if ( ! ISNIL( 2 ) )
+   if ( ! HB_ISNIL( 2 ) )
         lpInitData = (DEVMODE *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING)->item.asString.value ;
 
    HB_RETWH( ResetDCA( (HDC) HB_PARWH( 1 ),
-                               ISNIL( 2 )? NULL : lpInitData ) );
+                               HB_ISNIL( 2 )? NULL : lpInitData ) );
 
 }
 

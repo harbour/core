@@ -29,7 +29,7 @@ HB_FUNC( VWN_TABCTRL_CREATE )
    HWND hbutton;
    LRESULT hFont;
    LONG style;
-   style = ISNIL(6) ? 0 : (LONG) hb_parnl(6);
+   style = HB_ISNIL(6) ? 0 : (LONG) hb_parnl(6);
    hwnd = (HWND) HB_PARWH (1);
    hFont = SendMessage( hwnd, WM_GETFONT, 0, 0);
    hbutton = CreateWindowEx(0, WC_TABCONTROL, NULL , style, hb_parni(2), hb_parni(3) , hb_parni(4), hb_parni(5) , hwnd,NULL, GetModuleHandle(NULL) , NULL );
@@ -47,7 +47,7 @@ HB_FUNC( VWN_TABCTRL_ADDITEM )
    TC_ITEM item;
 
    item.mask = TCIF_TEXT | TCIF_IMAGE;
-   item.iImage = ISNIL(3) ? -1 : (LONG) hb_parnl(3);
+   item.iImage = HB_ISNIL(3) ? -1 : (LONG) hb_parnl(3);
    item.pszText = (LPSTR) hb_parcx(2);
 
    hb_retni( TabCtrl_InsertItem( (HWND) HB_PARWH(1), iCount, &item) );
@@ -59,7 +59,7 @@ HB_FUNC( VWN_TABCTRL_INSERTITEM )
 {
    TC_ITEM item;
    item.mask = TCIF_TEXT | TCIF_IMAGE;
-   item.iImage = ISNIL(4) ? -1 : (LONG) hb_parnl(4);
+   item.iImage = HB_ISNIL(4) ? -1 : (LONG) hb_parnl(4);
    item.pszText = (LPSTR) hb_parcx(2);
    hb_retni( TabCtrl_InsertItem( (HWND) HB_PARWH(1), (INT) hb_parni(3), &item) );
 }
@@ -207,7 +207,7 @@ HB_FUNC( VWN_TABCTRL_ADJUSTRECT )
 {
   RECT rc;
 
-  if ( ISARRAY(3) )
+  if ( HB_ISARRAY(3) )
   {
      rc.left   = hb_parnl(3,1);
      rc.top    = hb_parnl(3,2);

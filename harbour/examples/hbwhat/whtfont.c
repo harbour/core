@@ -38,7 +38,7 @@ int CALLBACK GenericCallblockProc( LONG param1, LONG param2, int wParam, LPARAM 
 HB_FUNC( VWN_CREATEFONT )
 {
 
-   if ( ISARRAY(1))
+   if ( HB_ISARRAY(1))
    {
       HB_RETWH( CreateFont( hb_parni( 1, 1 )         ,  // nHeight
                                     hb_parni( 1, 2 )         ,  // nWidth
@@ -59,11 +59,11 @@ HB_FUNC( VWN_CREATEFONT )
    }
    else
    {
-      HB_RETWH( CreateFont( ISNIL(1) ? 0 : hb_parni( 1 )         ,  // nHeight
-                                    ISNIL(2) ? 0 : hb_parni( 2 )         ,  // nWidth
-                                    ISNIL(3) ? 0 : hb_parni( 3 )         ,  // nEscapement
-                                    ISNIL(4) ? 0 : hb_parni( 4 )         ,  // nOrientation
-                                    ISNIL(5) ? 0 : hb_parni( 5 )         ,  // fnWeight
+      HB_RETWH( CreateFont( HB_ISNIL(1) ? 0 : hb_parni( 1 )         ,  // nHeight
+                                    HB_ISNIL(2) ? 0 : hb_parni( 2 )         ,  // nWidth
+                                    HB_ISNIL(3) ? 0 : hb_parni( 3 )         ,  // nEscapement
+                                    HB_ISNIL(4) ? 0 : hb_parni( 4 )         ,  // nOrientation
+                                    HB_ISNIL(5) ? 0 : hb_parni( 5 )         ,  // fnWeight
                                     (DWORD) hb_parnl( 6 ) ,  // fdwItalic
                                     (DWORD) hb_parnl( 7 ) ,  // fdwUnderline
                                     (DWORD) hb_parnl( 8 ) ,  // fdwStrikeOut
@@ -139,7 +139,7 @@ HB_FUNC( VWN_ENUMFONTFAMILIES )
 {
    LPARAM        lParam        ;
 
-   if ( ISBLOCK( 3 ) )
+   if ( HB_ISBLOCK( 3 ) )
    {
      lParam = (LPARAM) (PHB_ITEM ) hb_param( 3, HB_IT_BLOCK );
 
@@ -169,7 +169,7 @@ HB_FUNC( VWN_ENUMFONTFAMILIESEX )
    LOGFONT *LogFont = (LOGFONT * ) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
    LPARAM  lParam  ;
 
-   if ( ISBLOCK( 3 ) )
+   if ( HB_ISBLOCK( 3 ) )
    {
      lParam = (LPARAM) (PHB_ITEM ) hb_param( 3, HB_IT_BLOCK );
 
@@ -202,7 +202,7 @@ HB_FUNC( VWN_ENUMFONTS )
 {
    LPARAM lParam ;
 
-   if ( ISBLOCK( 3 ) )
+   if ( HB_ISBLOCK( 3 ) )
    {
      lParam = (LPARAM) (PHB_ITEM ) hb_param( 3, HB_IT_BLOCK );
 
@@ -301,19 +301,19 @@ HB_FUNC( VWN_GETFONTDATA )
 {
    char * cBuffer = NULL;
    DWORD dwRet ;
-   if ( ! ISNIL( 5 ) && ( hb_parnl( 5 ) > 0 ) )
+   if ( ! HB_ISNIL( 5 ) && ( hb_parnl( 5 ) > 0 ) )
       cBuffer = (char *) hb_xgrab( hb_parnl(5));
 
    dwRet = GetFontData( (HDC) HB_PARWH( 1 )  ,
                                  (DWORD) hb_parnl( 2 ),
                                  (DWORD) hb_parnl( 3 ),
-                                 ( ISNIL( 5 ) || ( hb_parnl( 5 ) <= 0 ) ) ? NULL :cBuffer  ,
-                                 (DWORD) ISNIL( 5 ) ? 0 : hb_parnl( 5 )
+                                 ( HB_ISNIL( 5 ) || ( hb_parnl( 5 ) <= 0 ) ) ? NULL :cBuffer  ,
+                                 (DWORD) HB_ISNIL( 5 ) ? 0 : hb_parnl( 5 )
                       );
 
    hb_retnl( (LONG) dwRet );
 
-   if ( ! ISNIL( 5 ) && ( hb_parnl( 5 ) > 0 ) )
+   if ( ! HB_ISNIL( 5 ) && ( hb_parnl( 5 ) > 0 ) )
    {
       hb_storclen(cBuffer, dwRet, 4 );
       hb_xfree( cBuffer );

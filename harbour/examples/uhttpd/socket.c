@@ -58,13 +58,13 @@
 
 static int hb_parnidef( int iParam, int iValue )
 {
-   return ISNUM( iParam ) ? hb_parni( iParam ) : iValue;
+   return HB_ISNUM( iParam ) ? hb_parni( iParam ) : iValue;
 }
 
 
 static SOCKET hb_parsocket( int iParam )
 {
-   return ISPOINTER( iParam ) ? ( SOCKET ) hb_parptr( 1 ) : INVALID_SOCKET;
+   return HB_ISPOINTER( iParam ) ? ( SOCKET ) hb_parptr( 1 ) : INVALID_SOCKET;
 }
 
 
@@ -200,7 +200,7 @@ HB_FUNC ( SOCKET_ACCEPT )
 
    hb_retsocket( accept( hb_parsocket( 1 ), &saddr, &iSize ) );
 
-   if( ISBYREF( 2 ) )
+   if( HB_ISBYREF( 2 ) )
    {
       PHB_ITEM pItem = hb_itemPutSockaddr( NULL, &saddr );
       hb_itemParamStoreForward( 2, pItem );
@@ -309,7 +309,7 @@ HB_FUNC ( SOCKET_SELECT )
    }
 
    /* Default forever */
-   lTimeout = ISNUM( 4 ) ? hb_parnl( 4 ) : -1;
+   lTimeout = HB_ISNUM( 4 ) ? hb_parnl( 4 ) : -1;
 
    if( lTimeout == -1 )
    {
@@ -325,7 +325,7 @@ HB_FUNC ( SOCKET_SELECT )
    }
 
    pArray = hb_param( 1, HB_IT_ARRAY );
-   if( pArray && ISBYREF( 1 ) )
+   if( pArray && HB_ISBYREF( 1 ) )
    {
       ulLen = hb_arrayLen( pArray );
       pItem = hb_itemNew( NULL );
@@ -346,7 +346,7 @@ HB_FUNC ( SOCKET_SELECT )
    }
 
    pArray = hb_param( 2, HB_IT_ARRAY );
-   if( pArray && ISBYREF( 2 ) )
+   if( pArray && HB_ISBYREF( 2 ) )
    {
       ulLen = hb_arrayLen( pArray );
       pItem = hb_itemNew( NULL );
@@ -367,7 +367,7 @@ HB_FUNC ( SOCKET_SELECT )
    }
 
    pArray = hb_param( 3, HB_IT_ARRAY );
-   if( pArray && ISBYREF( 3 ) )
+   if( pArray && HB_ISBYREF( 3 ) )
    {
       ulLen = hb_arrayLen( pArray );
       pItem = hb_itemNew( NULL );
@@ -397,7 +397,7 @@ HB_FUNC ( SOCKET_GETSOCKNAME )
    int               iSize = sizeof( struct sockaddr );
 
    hb_retni( getsockname( hb_parsocket( 1 ), &saddr, &iSize ) );
-   if( ISBYREF( 2 ) )
+   if( HB_ISBYREF( 2 ) )
    {
       PHB_ITEM pItem = hb_itemPutSockaddr( NULL, &saddr );
       hb_itemParamStoreForward( 2, pItem );
@@ -412,7 +412,7 @@ HB_FUNC ( SOCKET_GETPEERNAME )
    int               iSize = sizeof( struct sockaddr );
 
    hb_retni( getpeername( hb_parsocket( 1 ), &saddr, &iSize ) );
-   if( ISBYREF( 2 ) )
+   if( HB_ISBYREF( 2 ) )
    {
       PHB_ITEM pItem = hb_itemPutSockaddr( NULL, &saddr );
       hb_itemParamStoreForward( 2, pItem );

@@ -158,9 +158,9 @@ HB_FUNC( VWN_CREATEPROGRESSBAR )
    HWND hPBar, hParentWindow = (HWND) HB_PARWH(1);
    RECT rcClient;
    LONG ProgressBarStyle;
-   BOOL bBorder = ISNIL(7) ? FALSE : hb_parl(7);
-   int cyVScroll = ISNIL(6) ? GetSystemMetrics( SM_CYVSCROLL ): hb_parni(6);
-   LONG nStyle = ISNIL(8) ? 0 : hb_parnl(8);
+   BOOL bBorder = HB_ISNIL(7) ? FALSE : hb_parl(7);
+   int cyVScroll = HB_ISNIL(6) ? GetSystemMetrics( SM_CYVSCROLL ): hb_parni(6);
+   LONG nStyle = HB_ISNIL(8) ? 0 : hb_parnl(8);
 
    int x1, y1, nwidth, nheight;
    if( hb_pcount() > 2 )

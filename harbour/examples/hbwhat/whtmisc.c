@@ -335,17 +335,17 @@ HB_FUNC( VWN_MESSAGEBOX )
 {
  // LPCSTR lpCaption =  hb_parcx(3);
 
-  hb_retnl( MessageBox( ISNIL(1) ? NULL : (HWND) HB_PARWH(1) ,
+  hb_retnl( MessageBox( HB_ISNIL(1) ? NULL : (HWND) HB_PARWH(1) ,
                         (LPCSTR) hb_parcx(2),
-                        ISNIL(3) ? NULL : (LPCSTR) hb_parcx(3) ,
-                        ISNIL(4) ? 0 : (UINT) hb_parnl(4) ) );
+                        HB_ISNIL(3) ? NULL : (LPCSTR) hb_parcx(3) ,
+                        HB_ISNIL(4) ? 0 : (UINT) hb_parnl(4) ) );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( VWN_MESSAGEBEEP )
 {
-  hb_retl( MessageBeep( ISNIL(1) ? ( UINT ) 0xFFFFFFFF : ( UINT ) hb_parnl(1) ) );
+  hb_retl( MessageBeep( HB_ISNIL(1) ? ( UINT ) 0xFFFFFFFF : ( UINT ) hb_parnl(1) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -456,12 +456,12 @@ HB_FUNC( VWN_CREATEMUTEX )
 {
    SECURITY_ATTRIBUTES *sa = NULL;
 
-   if( ISCHAR(1) )
+   if( HB_ISCHAR(1) )
    {
        sa = (SECURITY_ATTRIBUTES *) hb_parc( 1 ); //hb_param( 1, HB_IT_STRING )->item.asString.value;
    }
 
-   HB_RETWH( CreateMutex( ISNIL( 1 ) ? NULL : sa, hb_parnl( 2 ), hb_parcx( 3 ) ) );
+   HB_RETWH( CreateMutex( HB_ISNIL( 1 ) ? NULL : sa, hb_parnl( 2 ), hb_parcx( 3 ) ) );
 }
 
 //----------------------------------------------------------------------------
@@ -517,7 +517,7 @@ HB_FUNC( VWN_GETCLASSINFO )
 {
    WNDCLASS WndClass  ;
 
-   if ( GetClassInfo( ISNIL(1) ? NULL : (HINSTANCE) HB_PARWH( 1 ),
+   if ( GetClassInfo( HB_ISNIL(1) ? NULL : (HINSTANCE) HB_PARWH( 1 ),
                       (LPCSTR) hb_parcx( 2 ), &WndClass ) )
 
 
@@ -542,7 +542,7 @@ HB_FUNC( VWN_GETCLASSINFOEX )
 {
    WNDCLASSEX WndClassEx ;
 
-   if ( GetClassInfoEx( ISNIL(1) ? NULL : (HINSTANCE) HB_PARWH( 1 ),
+   if ( GetClassInfoEx( HB_ISNIL(1) ? NULL : (HINSTANCE) HB_PARWH( 1 ),
                             (LPCSTR) hb_parcx( 2 ), &WndClassEx ) )
 
       hb_retclen( (char*) &WndClassEx, sizeof(WNDCLASSEX) );

@@ -1374,7 +1374,7 @@ HB_FUNC( MESSAGEBOX )
 {
    LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    LPTSTR lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   HWND hWnd = ISNUM( 1 ) ? ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ) :
+   HWND hWnd = HB_ISNUM( 1 ) ? ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ) :
                             ( HWND ) hb_parptr( 1 );
    hb_retni( MessageBox( hWnd, lpStr1, lpStr2, hb_parni( 4 ) ) );
    HB_TCHAR_FREE( lpStr1 );
@@ -1403,7 +1403,7 @@ HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID [, cIID ] [, cLicense ] ) */
 
    /*HB_TRACE(HB_TR_INFO, ("Result: %p\n", s_nOleError));*/
 
-   if( ISCHAR( 2 ) )
+   if( HB_ISCHAR( 2 ) )
    {
       if( hb_parcx( 2 )[ 0 ] == '{' )
       {
@@ -1419,7 +1419,7 @@ HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID [, cIID ] [, cLicense ] ) */
 
    if( SUCCEEDED( s_nOleError ) )
    {
-      if( ISCHAR( 3 ) )
+      if( HB_ISCHAR( 3 ) )
       {
          LPVOID * pCFPtr = NULL;
 
@@ -1533,7 +1533,7 @@ static HRESULT OleSetProperty( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDis
    pDispParams->cNamedArgs = 1;
 
    /* 1 Based!!! */
-   if( ( ISBYREF( 1 ) ) || ISARRAY( 1 ) )
+   if( ( HB_ISBYREF( 1 ) ) || HB_ISARRAY( 1 ) )
    {
       memset( ( LPBYTE ) &s_excep, 0, sizeof( s_excep ) );
 

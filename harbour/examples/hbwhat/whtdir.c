@@ -81,7 +81,7 @@ HB_FUNC( VWN_GETTEMPFILENAME )
 
    GetTempFileName( (LPCSTR) hb_parcx( 1 ),
                             (LPCSTR) hb_parcx( 2 ),
-                            (UINT) ( ISNIL(3) ? 0 : hb_parni( 3 ) ) ,
+                            (UINT) ( HB_ISNIL(3) ? 0 : hb_parni( 3 ) ) ,
                             (LPSTR) cPath
                            );
    hb_retc( cPath);
@@ -266,7 +266,7 @@ HB_FUNC( VWN_GETVOLUMEPATHNAME )
       bResult = pGVPN( (LPCSTR) hb_parcx( 1 ), buffer, MAX_PATH );
    }
    hb_retl( bResult );
-   if ( ISBYREF( 2 ) )
+   if ( HB_ISBYREF( 2 ) )
    {
       hb_storc( buffer ,2 );
    }
@@ -330,7 +330,7 @@ HB_FUNC( VWN_GETVOLUMEINFORMATION )
   char *FileSystemNameBuffer = (char *) hb_xgrab( MAX_PATH )  ;
   BOOL bRet;
 
-  bRet = GetVolumeInformation( ISNIL(1) ? NULL : (LPCTSTR) hb_parcx(1) ,
+  bRet = GetVolumeInformation( HB_ISNIL(1) ? NULL : (LPCTSTR) hb_parcx(1) ,
                                   (LPTSTR) VolumeNameBuffer              ,
                                   MAX_PATH                               ,
                                   &VolumeSerialNumber                    ,
@@ -340,11 +340,11 @@ HB_FUNC( VWN_GETVOLUMEINFORMATION )
                                   MAX_PATH );
   if ( bRet  )
   {
-     if ( ISBYREF( 2 ) )  hb_storc ((char *) VolumeNameBuffer, 2 );
-     if ( ISBYREF( 3 ) )  hb_stornl( (LONG)  VolumeSerialNumber, 3 );
-     if ( ISBYREF( 4 ) )  hb_stornl( (LONG)  MaximumComponentLength, 4 );
-     if ( ISBYREF( 5 ) )  hb_stornl( (LONG)  FileSystemFlags, 5 );
-     if ( ISBYREF( 6 ) )  hb_storc ((char *) FileSystemNameBuffer, 6 );
+     if ( HB_ISBYREF( 2 ) )  hb_storc ((char *) VolumeNameBuffer, 2 );
+     if ( HB_ISBYREF( 3 ) )  hb_stornl( (LONG)  VolumeSerialNumber, 3 );
+     if ( HB_ISBYREF( 4 ) )  hb_stornl( (LONG)  MaximumComponentLength, 4 );
+     if ( HB_ISBYREF( 5 ) )  hb_stornl( (LONG)  FileSystemFlags, 5 );
+     if ( HB_ISBYREF( 6 ) )  hb_storc ((char *) FileSystemNameBuffer, 6 );
   }
 
   hb_retl(bRet);

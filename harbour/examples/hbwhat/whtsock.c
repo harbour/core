@@ -42,12 +42,12 @@ HB_FUNC( VWN_ACCEPT )
    char *addr  ;
    int addrlen ;
 
-   if ( ISNIL(2) )
+   if ( HB_ISNIL(2) )
       hb_retnl( (LONG) accept( (SOCKET) hb_parnl(1), NULL, NULL ) );
    else
    {
       addr = hb_parcx(2);
-      addrlen = ISNIL(3) ? hb_parni(3) : ( int ) hb_parclen(2);
+      addrlen = HB_ISNIL(3) ? hb_parni(3) : ( int ) hb_parclen(2);
       hb_retnl( (LONG) accept( (SOCKET) hb_parnl(1), ( struct sockaddr *) addr, &addrlen ) );
       hb_storclen( addr, addrlen, 2 );
       hb_storni( addrlen, 3);
@@ -112,7 +112,7 @@ HB_FUNC( VWN_IOCTLSOCKET )
 HB_FUNC( VWN_GETPEERNAME )
 {
    char *name  = (char *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
-   int addrlen = ISNIL(3) ? hb_parni(3) : ( int ) hb_parclen(2);
+   int addrlen = HB_ISNIL(3) ? hb_parni(3) : ( int ) hb_parclen(2);
 
    hb_retni( (int ) getpeername((SOCKET) hb_parnl( 1 ), ( struct sockaddr *) name, &addrlen ) );
    hb_storclen( name, addrlen, 2 );
@@ -128,7 +128,7 @@ HB_FUNC( VWN_GETPEERNAME )
 HB_FUNC( VWN_GETSOCKNAME )
 {
    char *name  = (char *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
-   int addrlen = ISNIL(3) ? hb_parni(3) : ( int ) hb_parclen(2);
+   int addrlen = HB_ISNIL(3) ? hb_parni(3) : ( int ) hb_parclen(2);
 
    hb_retni( (int ) getsockname((SOCKET) hb_parnl( 1 ), ( struct sockaddr *) name, &addrlen ) );
    hb_storclen( name, addrlen, 2 );
@@ -235,7 +235,7 @@ HB_FUNC( VWN_RECV )
    int iRet;
 
    iRet = recv((SOCKET) hb_parnl( 1 ), buf, iBuffLen, hb_parni( 4 ) );
-   if ( iRet && ISBYREF( 2 ) )
+   if ( iRet && HB_ISBYREF( 2 ) )
       hb_storclen( buf, iRet, 2 );
 
    hb_retni( iRet );
@@ -264,10 +264,10 @@ HB_FUNC( VWN_RECVFROM )
                               &iAddrLen
                               );
 
-   if ( iRet && ISBYREF( 2 ) )
+   if ( iRet && HB_ISBYREF( 2 ) )
       hb_storclen( buf, iRet, 2 );
 
-   if ( iAddrLen && ISBYREF(5) )
+   if ( iAddrLen && HB_ISBYREF(5) )
       hb_storclen(from, iAddrLen, 5 );
 
    hb_retni( iRet );
@@ -288,16 +288,16 @@ HB_FUNC( VWN_SOCKSELECT )
    fd_set   *exceptfds = NULL;
    struct timeval  *timeout = NULL;
 
-   if ( ISCHAR( 2 ) )
+   if ( HB_ISCHAR( 2 ) )
       readfds = (fd_set *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
 
-   if ( ISCHAR( 3 ) )
+   if ( HB_ISCHAR( 3 ) )
       writefds = (fd_set *) hb_parc( 3 ); //hb_param( 3, HB_IT_STRING )->item.asString.value ;
 
-   if ( ISCHAR( 4 ) )
+   if ( HB_ISCHAR( 4 ) )
       exceptfds = (fd_set *) hb_parc( 4 ); //hb_param( 4, HB_IT_STRING )->item.asString.value ;
 
-   if ( ISCHAR( 5 ) )
+   if ( HB_ISCHAR( 5 ) )
       timeout = (struct timeval *) hb_parc( 4 ); //hb_param( 4, HB_IT_STRING )->item.asString.value ;
 
    hb_retni(( int ) select( hb_parni( 1 ),
@@ -307,11 +307,11 @@ HB_FUNC( VWN_SOCKSELECT )
                             timeout
                            ) );
 
-    if ( ISCHAR( 2 ) && ISBYREF( 2 ) )
+    if ( HB_ISCHAR( 2 ) && HB_ISBYREF( 2 ) )
        hb_storclen( ( char *) readfds, sizeof(fd_set), 2 );
-    if ( ISCHAR( 3 ) && ISBYREF( 3 ) )
+    if ( HB_ISCHAR( 3 ) && HB_ISBYREF( 3 ) )
        hb_storclen( ( char *) writefds, sizeof(fd_set), 3 );
-    if ( ISCHAR( 4 ) && ISBYREF( 4 ) )
+    if ( HB_ISCHAR( 4 ) && HB_ISBYREF( 4 ) )
        hb_storclen( ( char *) exceptfds, sizeof(fd_set), 4 );
 
  }
@@ -335,11 +335,11 @@ HB_FUNC( VWN_SEND )
 HB_FUNC( VWN_SENDTO )
 {
 
-   int  iBuffLen = (ISNIL(3) ? ( ISNIL(2) ? 0 : ( int ) hb_parclen(2) ) : hb_parni(3));
+   int  iBuffLen = (ISNIL(3) ? ( HB_ISNIL(2) ? 0 : ( int ) hb_parclen(2) ) : hb_parni(3));
    struct sockaddr *to = NULL;
    int iToLen = 0 ;
 
-   if ( ISCHAR( 5 ) )
+   if ( HB_ISCHAR( 5 ) )
    {
      to = (struct sockaddr *) hb_parc( 5 ); //hb_param( 5, HB_IT_STRING )->item.asString.value ;
      iToLen = (ISNIL(6) ? (ISNIL(5) ? 0 : ( int ) hb_parclen(5) ) : hb_parni(6));
@@ -479,7 +479,7 @@ HB_FUNC( VWN_WSASTARTUP )
 
    hb_retni( (int ) WSAStartup( ( WORD ) hb_parni( 1 ), &WSAData ) );
 
-   if ( ISBYREF( 2 ) )
+   if ( HB_ISBYREF( 2 ) )
      hb_storclen( ( char * ) &WSAData, sizeof( WSADATA ), 2 );
 }
 
@@ -577,7 +577,7 @@ HB_FUNC( VWN_WSAASYNCGETSERVBYNAME )
    if( ( hRet = WSAAsyncGetServByName( (HWND)         HB_PARWH( 1 ),
                                      (unsigned int) hb_parni( 2 ),
                                      ( char *)      hb_parcx( 3 ) ,
-                                     ISNIL( 4 ) ? NULL : ( char *) hb_parcx( 4 ) ,
+                                     HB_ISNIL( 4 ) ? NULL : ( char *) hb_parcx( 4 ) ,
                                      ( char *)      buf          ,
                                      ( int)         MAXGETHOSTSTRUCT ) ) != 0 )
 
@@ -605,7 +605,7 @@ HB_FUNC( VWN_WSAASYNCGETSERVBYPORT )
    if( ( hRet = WSAAsyncGetServByPort( (HWND) HB_PARWH( 1 )        ,
                                       (unsigned int) hb_parni( 2 ),
                                        hb_parni( 3 )              ,
-                                       ISNIL( 4 ) ? NULL : ( char *) hb_parcx( 4 ) ,
+                                       HB_ISNIL( 4 ) ? NULL : ( char *) hb_parcx( 4 ) ,
                                        ( char *)      buf         ,
                                        ( int)         MAXGETHOSTSTRUCT  ) ) != 0 )
 
@@ -811,16 +811,16 @@ HB_FUNC( VWN_WSAACCEPT )
 {
 //   SOCKET          s              ;
    struct sockaddr addr           ;
-   INT           addrlen  = ISBYREF( 2 ) ? 0 : sizeof(addr)  ;
+   INT           addrlen  = HB_ISBYREF( 2 ) ? 0 : sizeof(addr)  ;
    SOCKET sRet ;
 
    sRet = WSAAccept( (SOCKET) hb_parnl( 1 )   ,
                      &addr                    ,
                      &addrlen                 ,
                      _WSACondFunc              ,
-                     ISNIL( 3 ) ? 0 : (DWORD_PTR) hb_parnl( 3 ) );
+                     HB_ISNIL( 3 ) ? 0 : (DWORD_PTR) hb_parnl( 3 ) );
 
-   if( ( sRet != INVALID_SOCKET ) && ISBYREF( 2 ) )
+   if( ( sRet != INVALID_SOCKET ) && HB_ISBYREF( 2 ) )
         hb_storclen( ( char * ) &addr, addrlen, 2 );
 
     hb_retnl( ( ULONG ) sRet );
@@ -855,7 +855,7 @@ HB_FUNC( VWN_WSACONNECT )
    int             iRet         ;
 
 
-   if( !ISNIL( 3 ) )
+   if( !HB_ISNIL( 3 ) )
    {
      CallerData.len =
      CallerData.buf =
@@ -865,7 +865,7 @@ HB_FUNC( VWN_WSACONNECT )
     iRet = WSAConnect( (SOCKET) hb_parnl( 1 )            ,
                         name           ,
                         hb_parclen( 2 ),
-                        ISNIL( 3 ) ? NULL : CallerData ,
+                        HB_ISNIL( 3 ) ? NULL : CallerData ,
                         lpCalleeData ,
                         lpSQOS       ,
                         lpGQOS

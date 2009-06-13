@@ -81,9 +81,9 @@ HB_FUNC( VWN_EXTTEXTOUT )
    UINT i      ;
    char * cText = hb_parcx( 6 );
 
-   rcOk = ( ISARRAY(5) && Array2Rect(hb_param(5, HB_IT_ARRAY), &rc) );
+   rcOk = ( HB_ISARRAY(5) && Array2Rect(hb_param(5, HB_IT_ARRAY), &rc) );
 
-   if ( ISARRAY(7) )
+   if ( HB_ISARRAY(7) )
    {
        iCount = hb_parinfa(7,0);
        lpDx = (INT *) hb_xgrab( iCount * sizeof( INT ) );
@@ -100,7 +100,7 @@ HB_FUNC( VWN_EXTTEXTOUT )
                          rcOk ? &rc : NULL      ,
                          (LPCSTR) cText         ,
                          (UINT) strlen( cText ) ,
-                         ISARRAY(7) ? lpDx : NULL
+                         HB_ISARRAY(7) ? lpDx : NULL
                          ) );
 
    if (ISARRAY(7))
@@ -119,13 +119,13 @@ HB_FUNC( VWN_DRAWTEXT )
    char *cText = hb_parcx( 2 );
    RECT rc;
 
-   if ( ISARRAY( 3 ) && Array2Rect( hb_param( 3, HB_IT_ARRAY ), &rc ) )
+   if ( HB_ISARRAY( 3 ) && Array2Rect( hb_param( 3, HB_IT_ARRAY ), &rc ) )
       hb_retni( DrawText(
                (HDC) HB_PARWH( 1 ),   // handle of device context
                (LPCTSTR) cText,           // address of string
                strlen( cText ),         // number of characters in string
                &rc,
-               ISNIL(4) ? DT_LEFT : hb_parni( 4 ) ) );
+               HB_ISNIL(4) ? DT_LEFT : hb_parni( 4 ) ) );
    else
       hb_retni( 0 );
 }
@@ -142,16 +142,16 @@ HB_FUNC( VWN_DRAWTEXTEX )
    RECT rc;
    DRAWTEXTPARAMS *dtp = NULL;
 
-   if ( ISCHAR( 5 ))
+   if ( HB_ISCHAR( 5 ))
       dtp = (DRAWTEXTPARAMS *) hb_parc( 5 ); //hb_param( 5, HB_IT_STRING )->item.asString.value;
 
-   if ( ISARRAY( 3 ) && Array2Rect( hb_param( 3, HB_IT_ARRAY ), &rc ) )
+   if ( HB_ISARRAY( 3 ) && Array2Rect( hb_param( 3, HB_IT_ARRAY ), &rc ) )
       hb_retni( DrawTextEx( (HDC) HB_PARWH( 1 ),     // handle of device context
                             (LPTSTR) cText    ,     // address of string
                             strlen( cText )    ,     // number of characters in string
                             (LPRECT) &rc,
-                            ISNIL(4) ? DT_LEFT : hb_parni( 4 )       ,
-                            ISCHAR(5) ? (LPDRAWTEXTPARAMS) dtp : NULL
+                            HB_ISNIL(4) ? DT_LEFT : hb_parni( 4 )       ,
+                            HB_ISCHAR(5) ? (LPDRAWTEXTPARAMS) dtp : NULL
                            ) );
    else
       hb_retni( 0 );
@@ -171,7 +171,7 @@ HB_FUNC( VWN_TABBEDTEXTOUT )
    int *aiTabs ;
    int i       ;
 
-   if ( ISARRAY( 5 ) )
+   if ( HB_ISARRAY( 5 ) )
    {
       iCount = hb_parinfa(5,0);
       aiTabs = (INT *) hb_xgrab( iCount * sizeof( INT ) );
@@ -230,7 +230,7 @@ HB_FUNC( VWN_GETTABBEDTEXTEXTENT )
    int *aiTabs ;
    int i       ;
 
-   if ( ISARRAY( 3 ) )
+   if ( HB_ISARRAY( 3 ) )
    {
       iCount = hb_parinfa(3,0);
       aiTabs = (INT *) hb_xgrab( iCount * sizeof( INT ) );

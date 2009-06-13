@@ -43,7 +43,7 @@ HB_FUNC( VWN_CREATEMAPPEDBITMAP )
    HB_RETWH( CreateMappedBitmap( (HINSTANCE) HB_PARWH(1),
                                        (int) hb_parni(2),
                                        (UINT) hb_parni(3),
-                                       ISNIL(4) ? NULL : (COLORMAP *) cm ,
+                                       HB_ISNIL(4) ? NULL : (COLORMAP *) cm ,
                                        (int) hb_parni(5) ) );
 }
 
@@ -59,7 +59,7 @@ HB_FUNC( VWN_CREATETOOLBAREX )
                                      (DWORD)hb_parnl(2),      // style
                                      (UINT) hb_parni(3),      // id,
                                      (int) hb_parni(4),       // number of btn images in bmp
-                                     ISNIL(5) ? NULL : (HINSTANCE) HB_PARWH(5), // hInst of bmp
+                                     HB_ISNIL(5) ? NULL : (HINSTANCE) HB_PARWH(5), // hInst of bmp
                                      (UINT) hb_parnl(6),      // resource id, or hBmp handle
                                      (LPCTBBUTTON) hb_parcx(7),// array of button structures
                                      (int) hb_parni(8),         // number of buttons to add

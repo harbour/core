@@ -30,7 +30,7 @@
 
 HB_FUNC( VWN_LOADICON )
 {
-   HB_RETWH( LoadIcon(  ( ISNIL(1) ? NULL : (HINSTANCE) HB_PARWH( 1 ) ) ,
+   HB_RETWH( LoadIcon(  ( HB_ISNIL(1) ? NULL : (HINSTANCE) HB_PARWH( 1 ) ) ,
              (hb_parinfo(2)==HB_IT_STRING ? hb_parcx(2) : MAKEINTRESOURCE( (WORD) hb_parni(2))) ) );
 }
 
@@ -43,7 +43,7 @@ HB_FUNC( VWN_LOADICON )
 HB_FUNC( VWN_CREATEICON )
 {
 
-   HB_RETWH( CreateIcon(  ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH( 1 ),
+   HB_RETWH( CreateIcon(  HB_ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH( 1 ),
                                 hb_parni( 2 )            ,
                                 hb_parni( 3 )            ,
                                 (BYTE) hb_parni( 4 )     ,
@@ -127,7 +127,7 @@ HB_FUNC( VWN_CREATEICONFROMRESOURCEEX )
 
 HB_FUNC( VWN_LOADIMAGE )
 {
-   HB_RETWH( LoadImage( ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH( 1 ),
+   HB_RETWH( LoadImage( HB_ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH( 1 ),
                                (LPCSTR) hb_parcx( 2 )    ,
                                (UINT) hb_parni( 3 )     ,
                                hb_parni( 4 )            ,
@@ -227,7 +227,7 @@ HB_FUNC( VWN_GETICONINFO )
 #ifndef __WATCOMC__
 HB_FUNC( VWN_DUPLICATEICON )
 {
-   HB_RETWH( DuplicateIcon(  ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH( 1 ),
+   HB_RETWH( DuplicateIcon(  HB_ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH( 1 ),
                                    (HICON) HB_PARWH( 2 )
                                  ) );
 }
@@ -242,7 +242,7 @@ HB_FUNC( VWN_EXTRACTASSOCIATEDICON )
 
    lpiIcon = (WORD) hb_parni( 2 );
 
-   hiRet = ExtractAssociatedIcon( ( ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH( 1 ) ) ,
+   hiRet = ExtractAssociatedIcon( ( HB_ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH( 1 ) ) ,
                                              (LPSTR) hb_parcx( 2 )     ,
                                              &lpiIcon
                                 );
@@ -261,7 +261,7 @@ HB_FUNC( VWN_EXTRACTASSOCIATEDICON )
 
 HB_FUNC( VWN_EXTRACTICON )
 {
-   HB_RETWH( ExtractIcon( ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH( 1 ),
+   HB_RETWH( ExtractIcon( HB_ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH( 1 ),
                                  (LPCSTR) hb_parcx( 2 )    ,
                                  (UINT) hb_parni( 3 )
                                ) );

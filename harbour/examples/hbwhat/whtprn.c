@@ -31,9 +31,9 @@ HB_FUNC( VWN_STARTDOC )
    DOCINFO di;
    di.cbSize       = sizeof(DOCINFO);
    di.lpszDocName  = hb_parcx( 2 );
-   di.lpszOutput   = (LPTSTR) ( ISNIL( 3 ) ? NULL : hb_parcx( 3 ) );
-   di.lpszDatatype = (LPTSTR) ( ISNIL( 4 ) ? NULL : hb_parcx( 4 ) );
-   di.fwType       = (DWORD)  ( ISNIL( 5 ) ? 0 : hb_parnl( 5 ) );
+   di.lpszOutput   = (LPTSTR) ( HB_ISNIL( 3 ) ? NULL : hb_parcx( 3 ) );
+   di.lpszDatatype = (LPTSTR) ( HB_ISNIL( 4 ) ? NULL : hb_parcx( 4 ) );
+   di.fwType       = (DWORD)  ( HB_ISNIL( 5 ) ? 0 : hb_parnl( 5 ) );
 
    hb_retni( StartDoc( (HDC) HB_PARWH( 1 ), &di ) );
 }

@@ -260,7 +260,7 @@ HB_FUNC( VWN_COPYACCELERATORTABLE )
    PHB_ITEM aSub ;
    int i ;
 
-   if ( ISARRAY(2) && ((iCount=hb_parinfa(2,0)) > 0 ) )
+   if ( HB_ISARRAY(2) && ((iCount=hb_parinfa(2,0)) > 0 ) )
       lpAccelDst = (LPACCEL) hb_xgrab( iCount * sizeof(ACCEL) );
 
    iRet = CopyAcceleratorTable( (HACCEL) HB_PARWH( 1 ) ,

@@ -43,7 +43,7 @@ extern void Size2ArrayEx( SIZE *siz  ,  PHB_ITEM aSize);
 HB_FUNC( VWN_LOADBITMAP )
 {
    HB_RETWH( LoadBitmap(
-             ISNIL(1) ? GetModuleHandle( NULL ): (HINSTANCE) HB_PARWH(1) ,
+             HB_ISNIL(1) ? GetModuleHandle( NULL ): (HINSTANCE) HB_PARWH(1) ,
              hb_parinfo(2)==HB_IT_STRING ?
                        (LPCTSTR) hb_parcx( 2 ) :
                        MAKEINTRESOURCE( (WORD) hb_parni(2)) ) );
@@ -60,8 +60,8 @@ HB_FUNC( VWN_DRAWBITMAP )
    DWORD dwraster = (ISNIL(3))? SRCCOPY : hb_parnl(3);
    HBITMAP hBitmap = (HBITMAP) HB_PARWH( 2 );
    BITMAP  bitmap;
-   int nWidthDest = ( hb_pcount() >=5 && !ISNIL(6) )? hb_parni(6):0;
-   int nHeightDest = ( hb_pcount()>=6 && !ISNIL(7) )? hb_parni(7):0;
+   int nWidthDest = ( hb_pcount() >=5 && !HB_ISNIL(6) )? hb_parni(6):0;
+   int nHeightDest = ( hb_pcount()>=6 && !HB_ISNIL(7) )? hb_parni(7):0;
 
    SelectObject( hDCmem, hBitmap );
    GetObject( hBitmap, sizeof( BITMAP ), ( LPVOID ) &bitmap );
@@ -592,7 +592,7 @@ HB_FUNC( VWN_GETDIBITS )
                         (HBITMAP) HB_PARWH( 2 )   ,
                         (UINT) hb_parni( 3 )      ,
                         (UINT) hb_parni( 4 )      ,
-                        ISNIL(5) ? NULL : lpvBits ,
+                        HB_ISNIL(5) ? NULL : lpvBits ,
                         bmi                       ,
                         (UINT) hb_parni( 7 )
                         ) );

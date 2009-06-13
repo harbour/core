@@ -151,7 +151,7 @@ HB_FUNC( WINGETTEXT )
 HB_FUNC( MSGINFO )
 {
    LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) ),
-          lpStr2 = HB_TCHAR_CONVTO( ISCHAR( 2 ) ? hb_parc( 3 ) : ( char * ) "Information" );
+          lpStr2 = HB_TCHAR_CONVTO( HB_ISCHAR( 2 ) ? hb_parc( 3 ) : ( char * ) "Information" );
 
    hb_retni( MessageBox( GetActiveWindow(), lpStr1, lpStr2, MB_OK | MB_ICONINFORMATION ) );
 
@@ -170,14 +170,14 @@ HB_FUNC( WINADDMENUITEM )
 {
    LPTSTR lpszText = NULL;
    MENUITEMINFO mii;
-   HMENU hSubMenu = ( ! ISNIL( 4 ) ) ? ( HMENU ) hb_parptr( 4 ) : 0;
+   HMENU hSubMenu = ( ! HB_ISNIL( 4 ) ) ? ( HMENU ) hb_parptr( 4 ) : 0;
 
    mii.cbSize = sizeof( MENUITEMINFO );
    mii.fMask = MIIM_TYPE | MIIM_STATE | MIIM_ID | ( hSubMenu ? MIIM_SUBMENU : 0 );
    mii.fState = ! hb_parl( 6 ) ? MFS_DISABLED : 0;
    mii.wID = hb_parni( 5 );
    mii.hSubMenu = hSubMenu;
-   if( ISCHAR( 2 ) )
+   if( HB_ISCHAR( 2 ) )
    {
       lpszText = HB_TCHAR_CONVTO( hb_parc( 1 ) );
       mii.dwTypeData = lpszText;

@@ -65,7 +65,7 @@ HB_FUNC( VWN_GETSCROLLRANGE )
 
    if ( GetScrollRange( (HWND) HB_PARWH( 1 ), hb_parni( 2 ), lpMinPos, lpMaxPos ) )
    {
-      if ( ISBYREF(3) && ISBYREF(4) )
+      if ( HB_ISBYREF(3) && HB_ISBYREF(4) )
       {
          hb_storni(3,*lpMinPos);
          hb_storni(4,*lpMaxPos);

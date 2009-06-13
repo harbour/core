@@ -69,8 +69,8 @@ HB_FUNC( VWN_GETPROFILESTRING )
    DWORD nSize = 1024 ;
    LPTSTR bBuffer = (LPTSTR) hb_xgrab( nSize );
    DWORD dwLen ;
-   char * lpSection = ISNIL( 1 ) ? NULL : hb_parcx( 1 );
-   char * lpEntry   = ISNIL( 2 ) ? NULL : hb_parcx( 2 );
+   char * lpSection = HB_ISNIL( 1 ) ? NULL : hb_parcx( 1 );
+   char * lpEntry   = HB_ISNIL( 2 ) ? NULL : hb_parcx( 2 );
    char * lpDefault = hb_parc ( 3 );
 
    for( ;; )
@@ -101,8 +101,8 @@ HB_FUNC( VWN_GETPRIVATEPROFILESTRING )
    DWORD nSize = 1024 ;
    LPTSTR bBuffer = (LPTSTR) hb_xgrab( nSize );
    DWORD dwLen ;
-   char * lpSection  = ISNIL( 1 ) ? NULL : hb_parcx( 1 );
-   char * lpEntry    = ISNIL( 2 ) ? NULL : hb_parcx( 2 );
+   char * lpSection  = HB_ISNIL( 1 ) ? NULL : hb_parcx( 1 );
+   char * lpEntry    = HB_ISNIL( 2 ) ? NULL : hb_parcx( 2 );
    char * lpDefault  = hb_parcx( 3 );
    char * lpFileName = hb_parcx( 4 );
 
@@ -133,8 +133,8 @@ HB_FUNC( VWN_GETPRIVATEPROFILESTRING )
 HB_FUNC( VWN_WRITEPROFILESTRING )
 {
    char * lpSection = hb_parcx( 1 );
-   char * lpEntry = ISCHAR(2) ? hb_parcx( 2 ) : NULL ;
-   char * lpData = ISCHAR(3) ? hb_parcx( 3 ) : NULL ;
+   char * lpEntry = HB_ISCHAR(2) ? hb_parcx( 2 ) : NULL ;
+   char * lpData = HB_ISCHAR(3) ? hb_parcx( 3 ) : NULL ;
 
    if ( WriteProfileString( lpSection , lpEntry , lpData) )
       hb_retl( TRUE );
@@ -146,8 +146,8 @@ HB_FUNC( VWN_WRITEPROFILESTRING )
 HB_FUNC( VWN_WRITEPRIVATEPROFILESTRING )
 {
    char * lpSection = hb_parcx( 1 );
-   char * lpEntry = ISCHAR(2) ? hb_parcx( 2 ) : NULL ;
-   char * lpData = ISCHAR(3) ? hb_parcx( 3 ) : NULL ;
+   char * lpEntry = HB_ISCHAR(2) ? hb_parcx( 2 ) : NULL ;
+   char * lpData = HB_ISCHAR(3) ? hb_parcx( 3 ) : NULL ;
    char * lpFileName= hb_parcx( 4 );
 
    if ( WritePrivateProfileString( lpSection , lpEntry , lpData , lpFileName ) )

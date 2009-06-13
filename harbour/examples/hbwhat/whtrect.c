@@ -501,7 +501,7 @@ HB_FUNC( VWN_RECTVISIBLE )
 {
    RECT rc;
 
-   if ( ISARRAY(2) && Array2Rect( hb_param(2,HB_IT_ARRAY), &rc ))
+   if ( HB_ISARRAY(2) && Array2Rect( hb_param(2,HB_IT_ARRAY), &rc ))
       hb_retl( RectVisible( (HDC) HB_PARWH( 1 ), &rc ) );
    else
       hb_retl(0);

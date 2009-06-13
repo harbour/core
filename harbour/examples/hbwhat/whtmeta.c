@@ -174,11 +174,11 @@ HB_FUNC( VWN_CREATEENHMETAFILE )
 {
    RECT rc ;
 
-   if ( ISARRAY(3) && Array2Rect( hb_param(3,HB_IT_ARRAY), &rc ))
+   if ( HB_ISARRAY(3) && Array2Rect( hb_param(3,HB_IT_ARRAY), &rc ))
       HB_RETWH( CreateEnhMetaFile( (HDC) HB_PARWH( 1 )  ,
                                            (LPCSTR) hb_parcx( 2 ),
                                            &rc                  ,
-                                           ISNIL(4) ? NULL : (LPCSTR) hb_parcx( 4 )
+                                           HB_ISNIL(4) ? NULL : (LPCSTR) hb_parcx( 4 )
                                         ) );
 
 
@@ -240,7 +240,7 @@ HB_FUNC( VWN_PLAYENHMETAFILE )
 {
    RECT  rc ;
 
-   if ( ISARRAY(3) && Array2Rect( hb_param(3,HB_IT_ARRAY), &rc ))
+   if ( HB_ISARRAY(3) && Array2Rect( hb_param(3,HB_IT_ARRAY), &rc ))
       hb_retl( PlayEnhMetaFile( (HDC) HB_PARWH( 1 )         ,
                                 (HENHMETAFILE) HB_PARWH( 2 ),
                                 &rc
@@ -398,7 +398,7 @@ HB_FUNC( VWN_ENUMENHMETAFILE )
 
    RECT  rc ;
 
-   if ( ISARRAY(5) && Array2Rect( hb_param(5,HB_IT_ARRAY), &rc ))
+   if ( HB_ISARRAY(5) && Array2Rect( hb_param(5,HB_IT_ARRAY), &rc ))
 
    hb_retl( EnumEnhMetaFile( (HDC) HB_PARWH( 1 )         ,
                              (HENHMETAFILE) HB_PARWH( 2 ),

@@ -193,7 +193,7 @@ HB_FUNC( WINGETTEXT )
 HB_FUNC( MSGINFO )
 {
    HWND hWnd = WinQueryActiveWindow( HWND_DESKTOP);
-   PCSZ szCaption = ISCHAR( 2 ) ? ( PCSZ ) hb_parc( 2 ) : ( PCSZ ) "Information";
+   PCSZ szCaption = HB_ISCHAR( 2 ) ? ( PCSZ ) hb_parc( 2 ) : ( PCSZ ) "Information";
 
    hb_retnl( WinMessageBox( HWND_DESKTOP, hWnd, ( PCSZ ) hb_parc( 1 ), szCaption,
              0, MB_INFORMATION | MB_OK | MB_MOVEABLE | MB_APPLMODAL ) );
@@ -228,7 +228,7 @@ HB_FUNC( WINADDMENUITEM )
    MENUITEM mit;
 
    mit.iPosition   = hb_parni( 3 );
-   mit.afStyle     = IIF( ISCHAR( 2 ), MIS_TEXT, MIS_SEPARATOR );
+   mit.afStyle     = IIF( HB_ISCHAR( 2 ), MIS_TEXT, MIS_SEPARATOR );
    mit.afAttribute = IIF( ! hb_parl( 6 ), MIA_DISABLED, 0 );
    mit.id          = hb_parni( 5 );
    mit.hwndSubMenu = hb_parnl( 4 );
@@ -279,8 +279,8 @@ HB_FUNC( WINSETOWNER )
 HB_FUNC( WINSENDMSG )
 {
    hb_retnl( ( LONG ) WinSendMsg( ( HWND ) hb_parnl( 1 ), hb_parnl( 2 ),
-             ( MPARAM ) IIF( ISCHAR( 3 ), (ULONG) hb_parc( 3 ), (ULONG) hb_parnl( 3 ) ),
-             ( MPARAM ) IIF( ISCHAR( 4 ), (ULONG) hb_parc( 4 ), (ULONG) hb_parnl( 4 ) ) ) );
+             ( MPARAM ) IIF( HB_ISCHAR( 3 ), (ULONG) hb_parc( 3 ), (ULONG) hb_parnl( 3 ) ),
+             ( MPARAM ) IIF( HB_ISCHAR( 4 ), (ULONG) hb_parc( 4 ), (ULONG) hb_parnl( 4 ) ) ) );
 }
 
 

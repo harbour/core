@@ -78,12 +78,12 @@ HB_FUNC( VWN_POSTMESSAGE )
 
    hb_retnl( (LONG) PostMessage( (HWND) HB_PARWH( 1 ), (UINT) hb_parni( 2 ),
                                 (ISNIL(3) ? 0 : (WPARAM) hb_parnint( 3 ))   ,
-                                (ISNIL(4) ? 0 : ( ISBYREF(4)? (LPARAM) (LPSTR) cText : ( ISCHAR(4) ? (LPARAM)(LPSTR) hb_parcx(4) : (LPARAM) hb_parnint( 4 ))))
+                                (ISNIL(4) ? 0 : ( HB_ISBYREF(4)? (LPARAM) (LPSTR) cText : ( HB_ISCHAR(4) ? (LPARAM)(LPSTR) hb_parcx(4) : (LPARAM) hb_parnint( 4 ))))
                                )
             );
 
 
-   if( ISBYREF( 4 ) )
+   if( HB_ISBYREF( 4 ) )
    {
       hb_storclen( cText, hb_parcsiz(4), 4 );
       hb_xfree( cText );
@@ -98,7 +98,7 @@ HB_FUNC( VWN_SENDMESSAGE )
    char *cText = NULL;
 
 
-   if( ISBYREF(4) )
+   if( HB_ISBYREF(4) )
    {
       cText = (char*) hb_xgrab( hb_parcsiz(4) );
       hb_xmemcpy( cText, hb_parcx(4), hb_parcsiz(4) );
@@ -106,7 +106,7 @@ HB_FUNC( VWN_SENDMESSAGE )
 
    hb_retnl( (ULONG) SendMessage( (HWND) HB_PARWH( 1 ), (UINT) hb_parni( 2 ),
                                   (ISNIL(3) ? 0 : (WPARAM) hb_parnint( 3 ))   ,
-                                  (ISNIL(4) ? 0 : ( ISBYREF(4)? (LPARAM) (LPSTR) cText : ( ISCHAR(4) ? (LPARAM)(LPSTR) hb_parcx(4) : (LPARAM) hb_parnint( 4 ))))
+                                  (ISNIL(4) ? 0 : ( HB_ISBYREF(4)? (LPARAM) (LPSTR) cText : ( HB_ISCHAR(4) ? (LPARAM)(LPSTR) hb_parcx(4) : (LPARAM) hb_parnint( 4 ))))
                                 )
            );
 
@@ -180,9 +180,9 @@ HB_FUNC( VWN_GETMESSAGE )
   MSG Msg ;
 
   if (GetMessage( &Msg,
-                  ISNIL(2) ? NULL : (HWND) HB_PARWH(2),
-                  ISNIL(3) ? 0 : hb_parnl(3),
-                  ISNIL(4) ? 0 : hb_parnl(4) ) )
+                  HB_ISNIL(2) ? NULL : (HWND) HB_PARWH(2),
+                  HB_ISNIL(3) ? 0 : hb_parnl(3),
+                  HB_ISNIL(4) ? 0 : hb_parnl(4) ) )
     {
       hb_storclen( (LPSTR) &Msg, sizeof(MSG), 1 );
       hb_retl( 1 );
@@ -198,10 +198,10 @@ HB_FUNC( VWN_PEEKMESSAGE )
   MSG Msg ;
 
    if (PeekMessage( (MSG*) &Msg,
-                    ISNIL(2) ? NULL :(HWND) HB_PARWH(2),
-                    ISNIL(3) ? 0 : hb_parnl(3),
-                    ISNIL(4) ? 0 : hb_parnl(4),
-                    ISNIL(5) ? PM_NOREMOVE : hb_parnl(5)))
+                    HB_ISNIL(2) ? NULL :(HWND) HB_PARWH(2),
+                    HB_ISNIL(3) ? 0 : hb_parnl(3),
+                    HB_ISNIL(4) ? 0 : hb_parnl(4),
+                    HB_ISNIL(5) ? PM_NOREMOVE : hb_parnl(5)))
      {
        hb_storclen( (LPSTR) &Msg, sizeof(MSG),1);
        hb_retl( 1 );

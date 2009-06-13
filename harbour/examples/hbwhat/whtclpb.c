@@ -175,7 +175,7 @@ HB_FUNC( VWN_GETCLIPBOARDDATA )
 
 HB_FUNC( VWN_GETCLIPBOARDDATA )
 {
-   WORD    wType = ( ISNIL( 1 ) ? CF_TEXT : ( WORD ) hb_parni( 1 ) );
+   WORD    wType = ( HB_ISNIL( 1 ) ? CF_TEXT : ( WORD ) hb_parni( 1 ) );
    HGLOBAL hMem ;
    HANDLE  hClipMem ;
    LPSTR   lpClip ;

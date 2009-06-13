@@ -30,7 +30,7 @@
 HB_FUNC( VWN_DATETIME_CREATE )
 {
 
-   HB_RETWH( CreateWindowEx( ISNIL( 1 ) ? 0 : hb_parnl( 1 ) ,
+   HB_RETWH( CreateWindowEx( HB_ISNIL( 1 ) ? 0 : hb_parnl( 1 ) ,
                                     "SysDateTimePick32"   ,   // CLASSNAME
                                     0                     ,   // Window Name   // ????????
                                     (DWORD) hb_parnl( 2 ) ,   // nStyle
@@ -41,7 +41,7 @@ HB_FUNC( VWN_DATETIME_CREATE )
                                     (HWND) HB_PARWH( 7 )  ,   // hParent
                                     (HMENU) HB_PARWH( 8 ) ,   // hMenu
                                     GetModuleHandle(NULL) ,   // hInstance
-                                    ISNIL( 9 ) ? NULL : (void *) HB_PARWH( 9 ) ) );   // lpParam
+                                    HB_ISNIL( 9 ) ? NULL : (void *) HB_PARWH( 9 ) ) );   // lpParam
 }
 
 //-----------------------------------------------------------------------------
@@ -122,7 +122,7 @@ HB_FUNC( VWN_DATETIME_GETRANGE )
 
    dwRet = DateTime_GetRange( (HWND) HB_PARWH( 1 ), (SYSTEMTIME *)lpSysTimeArray );
 
-   if( ISBYREF( 2 ) )
+   if( HB_ISBYREF( 2 ) )
       hb_stornl( dwRet, 2 );
 
    aMinMaxDate = hb_itemArrayNew( 2 );
@@ -290,7 +290,7 @@ HB_FUNC( VWN_DATETIME_SETSYSTEMTIME )
 {
    SYSTEMTIME SysTime, *lpSysTime ;
 
-   if ( ISARRAY( 3 ) ) // array
+   if ( HB_ISARRAY( 3 ) ) // array
    {
       SysTime.wYear         = (WORD)  hb_parni( 3, 1 );
       SysTime.wMonth        = (WORD)  hb_parni( 3, 2 );
@@ -304,7 +304,7 @@ HB_FUNC( VWN_DATETIME_SETSYSTEMTIME )
    }
    else
    {
-     if ( ISCHAR(2) )  // xHarbour structure
+     if ( HB_ISCHAR(2) )  // xHarbour structure
      {
         lpSysTime =( SYSTEMTIME *) hb_parc( 3 ); //hb_param( 3, HB_IT_STRING)->item.asString.value;
      }

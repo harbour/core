@@ -132,7 +132,7 @@ endif
 HB_FUNC( VWN_COMMCONFIGDIALOG )
 {
    LPCTSTR      lpszName = ( LPCTSTR ) hb_parcx( 1 );
-   HWND         hwnd     = ISNIL( 2 ) ? NULL : ( HWND ) HB_PARWH( 2 );
+   HWND         hwnd     = HB_ISNIL( 2 ) ? NULL : ( HWND ) HB_PARWH( 2 );
    LPCOMMCONFIG lpCC     = ( LPCOMMCONFIG ) hb_parcx( 3 );
 
    hb_retl( CommConfigDialog( lpszName, hwnd, lpCC ) );
@@ -340,7 +340,7 @@ SetCommConfig( hFile, CommConfig:Value, nSize )
 HB_FUNC( VWN_SETCOMMCONFIG )
 {
    LPCOMMCONFIG lpCC = ( LPCOMMCONFIG ) hb_parcx( 2 );
-   DWORD        size = ISNIL( 3 ) ? ( DWORD ) sizeof( COMMCONFIG ) : ( DWORD ) hb_parnl( 3 );
+   DWORD        size = HB_ISNIL( 3 ) ? ( DWORD ) sizeof( COMMCONFIG ) : ( DWORD ) hb_parnl( 3 );
 
    hb_retl( SetCommConfig( ( HANDLE ) HB_PARWH( 1 ), lpCC, size ) );
 }

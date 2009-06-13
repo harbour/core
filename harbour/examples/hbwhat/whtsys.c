@@ -83,7 +83,7 @@ HB_FUNC( VWN_GETTIMEZONEINFORMATION )
 
  hb_retnl( GetTimeZoneInformation( &tzi ) );
 
- if ( ISBYREF(1) )
+ if ( HB_ISBYREF(1) )
     hb_storclen( (char*) &tzi, sizeof(tzi), 1);
 }
 
@@ -196,7 +196,7 @@ HB_FUNC( VWN_SYSTEMPARAMETERSINFO )
                                 cText,
                                 (UINT) hb_parni( 4 ) ) )
       {
-         if( ISBYREF( 3 ) )
+         if( HB_ISBYREF( 3 ) )
          {
             if( ! hb_storclen_buffer( cText, hb_itemGetCLen( pBuffer ), 3 ) )
                hb_xfree( cText );
@@ -310,7 +310,7 @@ HB_FUNC( VWN_SETTIMER )
    HB_RETWI( SetTimer( (HWND) HB_PARWH( 1 ),
                        ( UINT_PTR ) HB_PARWI( 2 ),
                        (UINT) hb_parni( 3 ),
-                       ISNIL(4) ? NULL : (TIMERPROC) HB_PARWH(4)
+                       HB_ISNIL(4) ? NULL : (TIMERPROC) HB_PARWH(4)
                       ) );
 }
 
@@ -425,7 +425,7 @@ HB_FUNC( VWN_GETLASTERROR )
 HB_FUNC( VWN_FORMATMESSAGE)
 {
    hb_retnl( FormatMessage( (DWORD) hb_parnl( 1 )            ,  // source and processing options
-                            ISNIL( 2) ? NULL : hb_parcx( 2 ) ,  // pointer to  message source
+                            HB_ISNIL( 2) ? NULL : hb_parcx( 2 ) ,  // pointer to  message source
                             (DWORD) hb_parnl( 3 )            ,  // requested message identifier
                             (DWORD) hb_parnl( 4 )            ,  // language identifier for requested message
                             LPTSTR lpBuffer                  ,  // pointer to message buffer
@@ -547,10 +547,10 @@ HB_FUNC( VWN_LOADRESOURCE )
 //
 HB_FUNC( VWN_LOADSTRING )
 {
-   ULONG iLen = ISNIL(3) ? MAX_PATH : (ULONG) hb_parclen( 3 );
+   ULONG iLen = HB_ISNIL(3) ? MAX_PATH : (ULONG) hb_parclen( 3 );
    LPTSTR cText = (char*) hb_xgrab( iLen+1 );
 
-   iLen = LoadString( ( ISNIL(1) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH(1) ),
+   iLen = LoadString( ( HB_ISNIL(1) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH(1) ),
                       (UINT) hb_parni(2) ,
                       (LPTSTR) cText ,
                       iLen );
@@ -609,7 +609,7 @@ HB_FUNC( VWN_TONE )
 HB_FUNC( VWN_GETMODULEFILENAME )
 {
    char szBuffer[ MAX_PATH + 1 ] = {0} ;
-   GetModuleFileNameA( ISNIL(1) ? GetModuleHandle(NULL) : (HMODULE) HB_PARWH( 1 ),
+   GetModuleFileNameA( HB_ISNIL(1) ? GetModuleHandle(NULL) : (HMODULE) HB_PARWH( 1 ),
                        szBuffer  ,
                        MAX_PATH
                      );
@@ -908,8 +908,8 @@ HB_FUNC( VWN_HTMLHELP )
 
  HB_RETWH( HtmlHelp( (HWND)   HB_PARWH( 1 )  ,
                             (LPCSTR) hb_parcx( 2 ) ,
-                            (UINT)   ISNIL(3) ? HH_DISPLAY_TOPIC : hb_parni( 3 )  ,
-                            (DWORD)  ISNIL(4) ? NULL : hb_parnl( 4 )
+                            (UINT)   HB_ISNIL(3) ? HH_DISPLAY_TOPIC : hb_parni( 3 )  ,
+                            (DWORD)  HB_ISNIL(4) ? NULL : hb_parnl( 4 )
                           )
          );
 }
@@ -933,16 +933,16 @@ HB_FUNC( VWN_CREATEFILE )
 
    SECURITY_ATTRIBUTES *sa = NULL;
 
-   if( ISCHAR( 4 ) )
+   if( HB_ISCHAR( 4 ) )
       sa = ( SECURITY_ATTRIBUTES *) hb_parc( 4 ); //hb_param( 4, HB_IT_STRING )->item.asString.value ;
 
    HB_RETWH( CreateFile( (LPCTSTR) hb_parcx(1),
                                 (DWORD)   hb_parnl(2),
                                 (DWORD)   hb_parnl(3),
-                                ISCHAR( 4 ) ? (SECURITY_ATTRIBUTES *) sa : NULL ,
+                                HB_ISCHAR( 4 ) ? (SECURITY_ATTRIBUTES *) sa : NULL ,
                                 (DWORD) hb_parnl(5),
                                 (DWORD) hb_parnl(6),
-                                ISNIL( 7 ) ? NULL : (HANDLE) HB_PARWH(7) ) );
+                                HB_ISNIL( 7 ) ? NULL : (HANDLE) HB_PARWH(7) ) );
 
 }
 
@@ -974,7 +974,7 @@ HB_FUNC( VWN_READFILE )
    BOOL  bRet             ;
    OVERLAPPED *Overlapped = NULL;
 
-   if( ISCHAR( 5 ) )
+   if( HB_ISCHAR( 5 ) )
       Overlapped = ( OVERLAPPED *) hb_parc( 5 ); //hb_param( 5, HB_IT_STRING )->item.asString.value ;
 
 
@@ -982,7 +982,7 @@ HB_FUNC( VWN_READFILE )
                     Buffer                 ,
                     (DWORD)  hb_parnl( 3 ) ,
                     &nRead        ,
-                    ISCHAR( 5 ) ? Overlapped : NULL );
+                    HB_ISCHAR( 5 ) ? Overlapped : NULL );
 
    if ( bRet )
    {
@@ -1009,14 +1009,14 @@ HB_FUNC( VWN_WRITEFILE )
    DWORD nWritten = 0;
    OVERLAPPED *Overlapped = NULL;
 
-   if( ISCHAR( 4 ))
+   if( HB_ISCHAR( 4 ))
      Overlapped = ( OVERLAPPED *) hb_parc( 4 ); //hb_param( 4, HB_IT_STRING )->item.asString.value ;
 
    hb_retl ( WriteFile( (HANDLE)  HB_PARWH( 1 )   ,
                      hb_parcx( 2 )       ,
                      hb_parclen( 2 )    ,
                      &nWritten          ,
-                     ISCHAR( 4 ) ? Overlapped : NULL ) );
+                     HB_ISCHAR( 4 ) ? Overlapped : NULL ) );
 
    hb_stornl( nWritten, 3 );
 }
@@ -1136,7 +1136,7 @@ HB_FUNC( VWN_FILETIMETOSYSTEMTIME )
    {
       hb_retl( TRUE );
 
-      if ( ISBYREF( 2 ) )
+      if ( HB_ISBYREF( 2 ) )
       {
          hb_storclen( ( char * ) &SystemTime , sizeof( SYSTEMTIME ), 2 );
       }

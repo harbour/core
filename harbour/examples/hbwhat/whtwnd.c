@@ -65,7 +65,7 @@ HB_FUNC( VWN_CLOSEWINDOW )
 HB_FUNC( VWN_FINDWINDOW )
 {
 
-   HB_RETWH( FindWindow( (LPCSTR) hb_parcx(1), ISCHAR(2) ? hb_parcx(2):NULL ) );
+   HB_RETWH( FindWindow( (LPCSTR) hb_parcx(1), HB_ISCHAR(2) ? hb_parcx(2):NULL ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -207,12 +207,12 @@ HB_FUNC( VWN_INVALIDATERECT )
    RECT rc;
    BOOL bRectOk ;
 
-   bRectOk = ( ISARRAY( 2 )  &&   Array2Rect( hb_param(2,HB_IT_ARRAY), &rc ) );
+   bRectOk = ( HB_ISARRAY( 2 )  &&   Array2Rect( hb_param(2,HB_IT_ARRAY), &rc ) );
 
    hb_retl( InvalidateRect(
-                           ISNIL(1) ? NULL : (HWND) HB_PARWH( 1 )    ,  // handle of window with changed update region
+                           HB_ISNIL(1) ? NULL : (HWND) HB_PARWH( 1 )    ,  // handle of window with changed update region
                            bRectOk ? &rc : NULL ,  // address of rectangle coordinates
-                           ISLOG(3) ? hb_parl( 3 ) : TRUE         // erase-background flag
+                           HB_ISLOG(3) ? hb_parl( 3 ) : TRUE         // erase-background flag
                           ) );
 }
 
@@ -225,12 +225,12 @@ HB_FUNC( VWN_REDRAWWINDOW )
    RECT rc ;
    BOOL bRectOk ;
 
-   bRectOk = ( ISARRAY(2) && Array2Rect( hb_param(2,HB_IT_ARRAY), &rc ) );
+   bRectOk = ( HB_ISARRAY(2) && Array2Rect( hb_param(2,HB_IT_ARRAY), &rc ) );
 
    hb_retl( RedrawWindow(
                           (HWND) HB_PARWH( 1 )                     ,   // handle of window
                           bRectOk ? &rc : NULL                     ,   // address of structure with update rectangle
-                          ISNIL( 3 ) ? NULL : (HRGN) HB_PARWH( 3 ) ,   // handle of update region
+                          HB_ISNIL( 3 ) ? NULL : (HRGN) HB_PARWH( 3 ) ,   // handle of update region
                           hb_parni( 4 )                                // array of redraw flags
                          ) );
 
@@ -1287,7 +1287,7 @@ HB_FUNC( VWN_ALLOWSETFOREGROUNDWINDOW )
 
    HINSTANCE h = LoadLibraryEx( "user32.dll", NULL, 0 );
    BOOL bASFWRet = (BOOL) FALSE ;
-   DWORD dwProcessId = ISNIL( 1 ) ? ASFW_ANY : (DWORD) hb_parnl( 1 );
+   DWORD dwProcessId = HB_ISNIL( 1 ) ? ASFW_ANY : (DWORD) hb_parnl( 1 );
 
    if( h )
    {

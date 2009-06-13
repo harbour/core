@@ -194,7 +194,7 @@ HB_FUNC( VWN_IMAGELIST_GETICON )
 HB_FUNC( VWN_IMAGELIST_LOADIMAGE )
 {
    HB_RETWH( ImageList_LoadImageA( (HINSTANCE) HB_PARWH(1),
-                                          ISCHAR(2)?(LPCSTR) hb_parcx(2) : MAKEINTRESOURCE(hb_parni(2))   ,
+                                          HB_ISCHAR(2)?(LPCSTR) hb_parcx(2) : MAKEINTRESOURCE(hb_parni(2))   ,
                                            hb_parni(3)           ,
                                            hb_parni(4)           ,
                                            (COLORREF) hb_parnl(5),

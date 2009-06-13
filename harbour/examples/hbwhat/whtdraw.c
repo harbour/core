@@ -131,7 +131,7 @@ HB_FUNC( VWN_DESCRIBEPIXELFORMAT )
                                   nBytes                 ,
                                   &pfd
                                   ) );
-    if ( ISBYREF(3) )
+    if ( HB_ISBYREF(3) )
        hb_storclen( (char*) &pfd, sizeof(PIXELFORMATDESCRIPTOR), 3 );
     //hb_itemPutCRaw( hb_param( -1, HB_IT_ANY ), (char *) pfd , sizeof( PIXELFORMATDESCRIPTOR ) );
 
@@ -401,7 +401,7 @@ HB_FUNC( VWN_POLYPOLYLINE )
    PHB_ITEM aParam ;
    PHB_ITEM aSub ;
 
-   if (ISARRAY( 2 ) && ISARRAY( 3 ) )
+   if (ISARRAY( 2 ) && HB_ISARRAY( 3 ) )
    {
        iPolyCount = hb_parinfa(3,0);
        PolyPoints = (DWORD *) hb_xgrab( iPolyCount * sizeof( DWORD ) );
@@ -470,7 +470,7 @@ HB_FUNC( VWN_POLYDRAW )
    PHB_ITEM aParam ;
    PHB_ITEM aSub ;
 
-   if (ISARRAY( 2 ) && ISCHAR( 3 ) )
+   if (ISARRAY( 2 ) && HB_ISCHAR( 3 ) )
    {
        iCount = hb_parinfa( 2, 0 );
        if ( iCount == hb_parclen( 3 ) )
@@ -778,7 +778,7 @@ HB_FUNC( VWN_POLYPOLYGON )
    PHB_ITEM aParam ;
    PHB_ITEM aSub ;
 
-   if (ISARRAY( 2 ) && ISARRAY( 3 ) )
+   if (ISARRAY( 2 ) && HB_ISARRAY( 3 ) )
    {
        iPolyCount = hb_parinfa(3,0);
        PolyPoints = ( INT *) hb_xgrab( iPolyCount * sizeof( INT ) );
@@ -833,7 +833,7 @@ HB_FUNC( VWN_FILLRECT )
 {
   RECT rc ;
 
-  if ( ISARRAY(2) && Array2Rect( hb_param(2,HB_IT_ARRAY), &rc ))
+  if ( HB_ISARRAY(2) && Array2Rect( hb_param(2,HB_IT_ARRAY), &rc ))
      hb_retni( FillRect((HDC) HB_PARWH( 1 ), &rc, (HBRUSH) HB_PARWH( 3 ) ) );
   else
      hb_retni(0);
@@ -853,7 +853,7 @@ HB_FUNC( VWN_FRAMERECT )
 {
    RECT rc ;
 
-   if ( ISARRAY(2) && Array2Rect( hb_param(2,HB_IT_ARRAY), &rc ))
+   if ( HB_ISARRAY(2) && Array2Rect( hb_param(2,HB_IT_ARRAY), &rc ))
       hb_retni( FrameRect((HDC) HB_PARWH( 1 ), &rc, (HBRUSH) HB_PARWH( 3 ) ) );
    else
       hb_retni(0);
@@ -870,7 +870,7 @@ HB_FUNC( VWN_INVERTRECT )
 {
    RECT rc ;
 
-   if ( ISARRAY(2) && Array2Rect( hb_param(2,HB_IT_ARRAY), &rc ))
+   if ( HB_ISARRAY(2) && Array2Rect( hb_param(2,HB_IT_ARRAY), &rc ))
       hb_retni( InvertRect((HDC) HB_PARWH( 1 ), &rc ) );
    else
       hb_retni(0);

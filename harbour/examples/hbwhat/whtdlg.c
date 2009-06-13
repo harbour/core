@@ -145,7 +145,7 @@ HB_FUNC( VWN_GETDLGITEMTEXT )  // GETDLGITMTEXT
 
 HB_FUNC( VWN_GETLBITEMTEXT )  // GETDLGITMTEXT
 {
-   USHORT iLen = ISNIL(3) ? 255 : ( USHORT ) hb_parni( 3 );
+   USHORT iLen = HB_ISNIL(3) ? 255 : ( USHORT ) hb_parni( 3 );
    char * cText = ( char * ) hb_xgrab( iLen + 1 );
 
    SendMessage(
@@ -167,7 +167,7 @@ HB_FUNC( VWN_CHECKDLGBUTTON )
     hb_retl( CheckDlgButton(
                              (HWND) HB_PARWH( 1 ), // handle of dialog box
                              hb_parni( 2 ),          // identifier of control
-                             ISNUM(3) ? ( UINT ) hb_parni(3) : (UINT) hb_parl(3) ) );
+                             HB_ISNUM(3) ? ( UINT ) hb_parni(3) : (UINT) hb_parl(3) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -225,7 +225,7 @@ HB_FUNC( VWN_DLGDIRLIST )
 HB_FUNC( VWN_DLGDIRSELECTEX )
 {
 
-   USHORT iLen = ISNIL(3) ? MAX_PATH : ( USHORT ) hb_parni( 3 );
+   USHORT iLen = HB_ISNIL(3) ? MAX_PATH : ( USHORT ) hb_parni( 3 );
    char *cText = (char*) hb_xgrab( iLen+1 );
 
    hb_retl( DlgDirSelectEx( (HWND) HB_PARWH( 1 ),
@@ -265,7 +265,7 @@ HB_FUNC( VWN_DLGDIRLISTCOMBOBOX )
 HB_FUNC( VWN_DLGDIRSELECTCOMBOBOXEX )
 {
 
-   USHORT iLen = ISNIL(3) ? MAX_PATH : ( USHORT ) hb_parni( 3 );
+   USHORT iLen = HB_ISNIL(3) ? MAX_PATH : ( USHORT ) hb_parni( 3 );
    char *cText = (char*) hb_xgrab( iLen+1 );
 
    hb_retl( DlgDirSelectComboBoxEx( (HWND) HB_PARWH( 1 ),

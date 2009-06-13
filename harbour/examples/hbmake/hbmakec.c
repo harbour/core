@@ -130,20 +130,20 @@ HB_FUNC( GAUGENEW )
    hb_arraySetNL( pReturn, B_TOP, hb_parni( B_TOP ) );
    hb_arraySetNL( pReturn, B_LEFT, hb_parni( B_LEFT ) );
    hb_arraySetNL( pReturn, B_BOTTOM,
-              ISNUM( B_BOTTOM ) ?
+              HB_ISNUM( B_BOTTOM ) ?
                ( hb_parni( B_BOTTOM ) < hb_parni( B_TOP ) + 2 ?
                    hb_parni( B_TOP ) + 2 : hb_parni( B_BOTTOM ) ) : 0 );
    hb_arraySetNL( pReturn, B_RIGHT,
-              ISNUM( B_RIGHT ) ?
+              HB_ISNUM( B_RIGHT ) ?
                ( hb_parni( B_RIGHT ) < hb_parni( B_LEFT ) + 4 ?
                   hb_parni( B_LEFT ) + 4 : hb_parni( B_RIGHT ) ) : 0 );
-   hb_arraySetC( pReturn, B_BACKCOLOR, ISCHAR( B_BACKCOLOR ) ? hb_parc( B_BACKCOLOR ) : "W/N" );
-   hb_arraySetC( pReturn, B_BARCOLOR, ISCHAR( B_BARCOLOR ) ? hb_parc( B_BARCOLOR ) : "W+/N" );
+   hb_arraySetC( pReturn, B_BACKCOLOR, HB_ISCHAR( B_BACKCOLOR ) ? hb_parc( B_BACKCOLOR ) : "W/N" );
+   hb_arraySetC( pReturn, B_BARCOLOR, HB_ISCHAR( B_BARCOLOR ) ? hb_parc( B_BARCOLOR ) : "W+/N" );
    hb_arraySetL( pReturn, B_DISPLAYNUM,
-              !( ISNUM( B_RIGHT ) &&
-                 ISNUM( B_LEFT ) &&
+              !( HB_ISNUM( B_RIGHT ) &&
+                 HB_ISNUM( B_LEFT ) &&
                  ( hb_parni( B_RIGHT ) < hb_parni( B_LEFT ) + 9 ) ) );
-   hb_arraySetC( pReturn, B_BARCHAR, ISCHAR( B_BARCHAR ) ? hb_parc( B_BARCHAR ) : "\xdb" );
+   hb_arraySetC( pReturn, B_BARCHAR, HB_ISCHAR( B_BARCHAR ) ? hb_parc( B_BARCHAR ) : "\xdb" );
    hb_arraySetNL( pReturn, B_PERCENT, 0 );
 
    hb_itemReturnRelease( pReturn );
@@ -197,7 +197,7 @@ HB_FUNC( GAUGEUPDATE )
 
    if( pArray )
    {
-      hb_gaugeUpdate( pArray, ISNUM( 2 ) ? ( float ) hb_parnd( 2 ) : 0 );
+      hb_gaugeUpdate( pArray, HB_ISNUM( 2 ) ? ( float ) hb_parnd( 2 ) : 0 );
 
       hb_itemReturn( pArray );
    }
@@ -320,7 +320,7 @@ HB_FUNC( HB_FREADLINE )
    USHORT i, iTerms;
    BOOL bFound, bEOF;
 
-   if( ( !ISBYREF( 2 ) ) || ( !ISNUM( 1 ) ) )
+   if( ( !HB_ISBYREF( 2 ) ) || ( !HB_ISNUM( 1 ) ) )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 4,
          hb_paramError( 1 ),
@@ -330,9 +330,9 @@ HB_FUNC( HB_FREADLINE )
       return;
    }
 
-   if( ISARRAY( 3 ) || ISCHAR( 3 ) )
+   if( HB_ISARRAY( 3 ) || HB_ISCHAR( 3 ) )
    {
-      if( ISARRAY( 3 ) )
+      if( HB_ISARRAY( 3 ) )
       {
          pTerm1 = hb_param( 3, HB_IT_ARRAY );
          iTerms = ( USHORT ) hb_arrayLen( pTerm1 );

@@ -95,7 +95,7 @@ HB_FUNC( VWN_SHELLEXECUTE )
    HB_RETWH( ShellExecute( (HWND) HB_PARWH( 1 )     ,
                                   (LPCSTR) hb_parcx( 2 )    ,
                                   (LPCSTR) hb_parcx( 3 )    ,
-                                  ISNIL(4) ? NULL : (LPCSTR) hb_parcx( 4 )    ,
+                                  HB_ISNIL(4) ? NULL : (LPCSTR) hb_parcx( 4 )    ,
                                   (LPCSTR) hb_parcx( 5 )    ,
                                    hb_parni( 6 )
                                  ) );

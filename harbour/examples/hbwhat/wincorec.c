@@ -97,13 +97,13 @@ HB_FUNC( WHT__REGISTERCLASS )
    /*
    wndclass.style         = (ISNIL(1) ? (CS_HREDRAW | CS_VREDRAW | CS_OWNDC | CS_DBLCLKS)  : hb_parni(1) );
    wndclass.lpfnWndProc   = __WndProc ;
-   wndclass.cbClsExtra    = ( ISNIL(2)  ? 0 : hb_parni(2));
-   wndclass.cbWndExtra    = ( ISNIL(3)  ? 0 : hb_parni(3));
-   wndclass.hInstance     = ( ISNIL(4)  ? GetModuleHandle(NULL) : (HANDLE) HB_PARWH(4) );
-   wndclass.hIcon         = ( ISNIL(5)  ? LoadIcon(GetModuleHandle(NULL),"") : (HICON) HB_PARWH(5) );
-   wndclass.hCursor       = ( ISNIL(6)  ? LoadCursor (NULL, IDC_ARROW) : (HCURSOR) HB_PARWH(6) );
-   wndclass.hbrBackground = ( ISNIL(7)  ? (INT) COLOR_WINDOW  + 1 :  (HBRUSH) HB_PARWH(7) );
-   wndclass.lpszMenuName  = (LPCSTR) ( !ISNIL(8) ? hb_parc(8) : NULL );
+   wndclass.cbClsExtra    = ( HB_ISNIL(2)  ? 0 : hb_parni(2));
+   wndclass.cbWndExtra    = ( HB_ISNIL(3)  ? 0 : hb_parni(3));
+   wndclass.hInstance     = ( HB_ISNIL(4)  ? GetModuleHandle(NULL) : (HANDLE) HB_PARWH(4) );
+   wndclass.hIcon         = ( HB_ISNIL(5)  ? LoadIcon(GetModuleHandle(NULL),"") : (HICON) HB_PARWH(5) );
+   wndclass.hCursor       = ( HB_ISNIL(6)  ? LoadCursor (NULL, IDC_ARROW) : (HCURSOR) HB_PARWH(6) );
+   wndclass.hbrBackground = ( HB_ISNIL(7)  ? (INT) COLOR_WINDOW  + 1 :  (HBRUSH) HB_PARWH(7) );
+   wndclass.lpszMenuName  = (LPCSTR) ( !HB_ISNIL(8) ? hb_parc(8) : NULL );
    wndclass.lpszClassName = (LPCSTR) hb_parc(9);
    */
 
@@ -112,7 +112,7 @@ HB_FUNC( WHT__REGISTERCLASS )
 //----------------------------------------------------------------------//
 HB_FUNC( WHT__UNREGISTERCLASS )
 {
-   HANDLE hInst = ( ISNIL(2) ? GetModuleHandle(NULL) : (HANDLE) HB_PARWH(2) );
+   HANDLE hInst = ( HB_ISNIL(2) ? GetModuleHandle(NULL) : (HANDLE) HB_PARWH(2) );
 
    hb_retl( UnregisterClass( hb_parc(1), (HINSTANCE) hInst ) );
 }

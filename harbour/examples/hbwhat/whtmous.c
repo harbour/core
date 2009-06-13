@@ -39,7 +39,7 @@ extern void Size2ArrayEx( SIZE *siz  ,  PHB_ITEM aSize);
 
 HB_FUNC( VWN_LOADCURSOR )
 {
-   HB_RETWH( LoadCursor( ISNIL(1) ? NULL : (HINSTANCE) HB_PARWH(1) ,
+   HB_RETWH( LoadCursor( HB_ISNIL(1) ? NULL : (HINSTANCE) HB_PARWH(1) ,
                     hb_parinfo(2)== HB_IT_STRING ? hb_parcx(2): MAKEINTRESOURCE( hb_parnl( 2 ) ) ) );
 }
 
@@ -160,7 +160,7 @@ HB_FUNC( VWN_CLIPCURSOR )
    RECT rc ;
    BOOL bRectOk ;
 
-   bRectOk = ( ISARRAY( 2 )  &&   Array2Rect( hb_param(1,HB_IT_ARRAY), &rc ) );
+   bRectOk = ( HB_ISARRAY( 2 )  &&   Array2Rect( hb_param(1,HB_IT_ARRAY), &rc ) );
 
    hb_retl(  ClipCursor( bRectOk ? &rc : NULL ) );
 

@@ -72,7 +72,7 @@ HB_FUNC( VWN__FINDTEXT )
    fr.wFindWhatLen     = (WORD) hb_parclen(4);
    fr.wReplaceWithLen  = 0 ;
    fr.lCustData        = 0 ;
-//   fr.lpfnHook         = ISNIL(5) ? NULL : __DlgProc ;
+//   fr.lpfnHook         = HB_ISNIL(5) ? NULL : __DlgProc ;
    fr.lpTemplateName   = NULL ;
 
 
@@ -97,7 +97,7 @@ HB_FUNC( VWN__REPLACETEXT )
    fr.wFindWhatLen     = (WORD) hb_parclen( 4 );
    fr.wReplaceWithLen  = (WORD) hb_parclen( 5 );
    fr.lCustData        = 0 ;
-//   fr.lpfnHook         = ISNIL(5) ? NULL : __DlgProc ;
+//   fr.lpfnHook         = HB_ISNIL(5) ? NULL : __DlgProc ;
    fr.lpTemplateName   = NULL ;
 
    HB_RETWH( FindText( &fr ) );
@@ -182,7 +182,7 @@ HB_FUNC( VWN_CHOOSECOLOR )
                                     // GetSysColor(COLOR_BTNFACE));
 
    cc.lStructSize    = sizeof( CHOOSECOLOR );
-   cc.hwndOwner      = ISNIL(1) ? GetActiveWindow():(HWND) HB_PARWH(1);
+   cc.hwndOwner      = HB_ISNIL(1) ? GetActiveWindow():(HWND) HB_PARWH(1);
    cc.rgbResult      = (COLORREF)ISNIL(2) ?  0 : hb_parnl(2);
    cc.lpCustColors   = crCustClr ;
    cc.Flags          = (WORD) (ISNIL(4) ? CC_ANYCOLOR | CC_FULLOPEN | CC_RGBINIT : hb_parnl(4) );
@@ -275,7 +275,7 @@ HB_FUNC( VWN_SHBROWSEFORFOLDER )
    char *lpBuffer = (char*) hb_xgrab( MAX_PATH + 1 );
    LPITEMIDLIST pidlBrowse;
 
-   SHGetSpecialFolderLocation(hwnd, ISNIL(4) ? CSIDL_DRIVES : hb_parni(4), &pidlBrowse);
+   SHGetSpecialFolderLocation(hwnd, HB_ISNIL(4) ? CSIDL_DRIVES : hb_parni(4), &pidlBrowse);
    BrowseInfo.hwndOwner = hwnd;
    BrowseInfo.pidlRoot = pidlBrowse;
    BrowseInfo.pszDisplayName = lpBuffer;

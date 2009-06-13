@@ -124,7 +124,7 @@ HB_FUNC( VWN_CREATEPOLYPOLYGONRGN )
    PHB_ITEM aParam ;
    PHB_ITEM aSub ;
 
-   if (ISARRAY( 1 ) && ISARRAY( 2 ) )
+   if (ISARRAY( 1 ) && HB_ISARRAY( 2 ) )
    {
        iPolyCount = hb_parinfa(2,0);
        PolyPoints = ( INT *) hb_xgrab( iPolyCount * sizeof( INT ) );
