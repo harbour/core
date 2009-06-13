@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+
+libs=sddmy
+libs=libmysql
+
+hbcs=../rddsql.hbc

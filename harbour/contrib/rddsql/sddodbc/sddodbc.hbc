@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+
+libs=sddodbc
+{win}libs=odbc32
+
+hbcs=../rddsql.hbc

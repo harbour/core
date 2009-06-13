@@ -1,5 +1,0 @@
-#
-# $Id$
-#
-
-libs=rddsql sddmy libmysql
