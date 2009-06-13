@@ -69,7 +69,7 @@ HB_FUNC( STATUSNEW )
 
    hb_arraySetNL( pReturn, ST_ROW, hb_parni( ST_ROW ) );
    hb_arraySetNL( pReturn, ST_COL, hb_parni( ST_COL ) );
-   hb_arraySetC( pReturn, ST_COLOR, ISCHAR( ST_COLOR ) ? hb_parc( ST_COLOR ) : "W+/N" );
+   hb_arraySetC( pReturn, ST_COLOR, HB_ISCHAR( ST_COLOR ) ? hb_parc( ST_COLOR ) : "W+/N" );
    hb_arraySetNL( pReturn, ST_CURRENT, 1 );
 
    hb_itemReturnRelease( pReturn );

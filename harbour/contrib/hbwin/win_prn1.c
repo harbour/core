@@ -100,7 +100,7 @@ static HB_GARBAGE_FUNC( win_HDC_release )
 
 static HDC win_HDC_par( int iParam )
 {
-   if( ISNUM( iParam ) )
+   if( HB_ISNUM( iParam ) )
       return ( HDC ) ( HB_PTRDIFF ) hb_parnint( iParam );
    else
    {
@@ -127,7 +127,7 @@ static HB_GARBAGE_FUNC( win_HPEN_release )
 
 HB_FUNC( WIN_CREATEDC )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       LPTSTR lpText = HB_TCHAR_CONVTO( hb_parc( 1 ) );
       void ** ph = ( void ** ) hb_gcAlloc( sizeof( HDC * ), win_HDC_release );
@@ -170,7 +170,7 @@ HB_FUNC( WIN_ENDDOC )
 
    if( hDC )
    {
-      if( ISLOG( 2 ) && hb_parl( 2 ) )
+      if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
          Result = ( AbortDoc( hDC ) > 0 );
       else
          Result = ( EndDoc( hDC ) > 0 );
@@ -289,7 +289,7 @@ HB_FUNC( WIN_GETTEXTSIZE )
 
       GetTextExtentPoint32( hDC, lpData, iLen, &sSize );       /* Get the length of the text in device size */
 
-      if( ISLOG( 4 ) && !hb_parl( 4 ) )
+      if( HB_ISLOG( 4 ) && !hb_parl( 4 ) )
          Result = ( LONG ) sSize.cy;    /* return the height */
       else
          Result = ( LONG ) sSize.cx;    /* return the width */
@@ -311,7 +311,7 @@ HB_FUNC( WIN_GETCHARSIZE )
       TEXTMETRIC tm;
 
       GetTextMetrics( hDC, &tm );
-      if( ISLOG( 2 ) && hb_parl( 2 ) )
+      if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
          Result = ( LONG ) tm.tmHeight;
       else
          Result = ( LONG ) tm.tmAveCharWidth;
@@ -324,14 +324,14 @@ HB_FUNC( WIN_GETDEVICECAPS )
 {
    HDC hDC = win_HDC_par( 1 );
 
-   hb_retnl( hDC && ISNUM( 2 ) ? ( long ) GetDeviceCaps( hDC, hb_parnl( 2 ) ) : 0 );
+   hb_retnl( hDC && HB_ISNUM( 2 ) ? ( long ) GetDeviceCaps( hDC, hb_parnl( 2 ) ) : 0 );
 }
 
 HB_FUNC( WIN_SETMAPMODE )
 {
    HDC hDC = win_HDC_par( 1 );
 
-   hb_retnl( hDC && ISNUM( 2 ) ? SetMapMode( hDC, hb_parnl( 2 ) ) : 0 );
+   hb_retnl( hDC && HB_ISNUM( 2 ) ? SetMapMode( hDC, hb_parnl( 2 ) ) : 0 );
 }
 
 HB_FUNC( WIN_MULDIV )
@@ -428,22 +428,22 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
             {
                DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, DM_OUT_BUFFER );
 
-               if( ISNUM( 3 ) && hb_parnl( 3 ) )        /* 22/02/2007 don't change if 0 */
+               if( HB_ISNUM( 3 ) && hb_parnl( 3 ) )        /* 22/02/2007 don't change if 0 */
                   pDevMode->dmPaperSize = ( short ) hb_parnl( 3 );
 
-               if( ISLOG( 4 ) )
+               if( HB_ISLOG( 4 ) )
                   pDevMode->dmOrientation = ( short ) ( hb_parl( 4 ) ? 2 : 1 );
 
-               if( ISNUM( 5 ) && hb_parnl( 5 ) > 0 )
+               if( HB_ISNUM( 5 ) && hb_parnl( 5 ) > 0 )
                   pDevMode->dmCopies = ( short ) hb_parnl( 5 );
 
-               if( ISNUM( 6 ) && hb_parnl( 6 ) )        /* 22/02/2007 don't change if 0 */
+               if( HB_ISNUM( 6 ) && hb_parnl( 6 ) )        /* 22/02/2007 don't change if 0 */
                   pDevMode->dmDefaultSource = ( short ) hb_parnl( 6 );
 
-               if( ISNUM( 7 ) && hb_parnl( 7 ) )        /* 22/02/2007 don't change if 0 */
+               if( HB_ISNUM( 7 ) && hb_parnl( 7 ) )        /* 22/02/2007 don't change if 0 */
                   pDevMode->dmDuplex = ( short ) hb_parnl( 7 );
 
-               if( ISNUM( 8 ) && hb_parnl( 8 ) )        /* 22/02/2007 don't change if 0 */
+               if( HB_ISNUM( 8 ) && hb_parnl( 8 ) )        /* 22/02/2007 don't change if 0 */
                   pDevMode->dmPrintQuality = ( short ) hb_parnl( 8 );
 
                Result = ( ResetDC( hDC, pDevMode ) != NULL );
@@ -587,10 +587,10 @@ HB_FUNC( WIN_SETCOLOR )
 
    SetTextColor( hDC, ( COLORREF ) hb_parnl( 2 ) );
 
-   if( ISNUM( 3 ) )
+   if( HB_ISNUM( 3 ) )
       SetBkColor( hDC, ( COLORREF ) hb_parnl( 3 ) );
 
-   if( ISNUM( 4 ) )
+   if( HB_ISNUM( 4 ) )
       SetTextAlign( hDC, hb_parni( 4 ) );
 }
 

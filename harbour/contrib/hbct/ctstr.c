@@ -365,7 +365,7 @@ HB_FUNC( CSETREF )
 {
    hb_retl( ct_getref() );
 
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
    {
       ct_setref( hb_parl( 1 ) );
    }
@@ -449,7 +449,7 @@ HB_FUNC( CSETATMUPA )
 {
    hb_retl( ct_getatmupa() );
 
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
    {
       ct_setatmupa( hb_parl( 1 ) );
    }
@@ -567,7 +567,7 @@ HB_FUNC( SETATLIKE )
 
    /* set new mode if first parameter is CT_SETATLIKE_EXACT (==0)
       or CT_SETATLIKE_WILDCARD (==1) */
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       int iNewMode = hb_parni( 1 );
 
@@ -588,10 +588,10 @@ HB_FUNC( SETATLIKE )
       }
    }
 
-   /* set new wildcard character, if ISCHAR(2) but !ISBYREF(2) */
-   if( ISCHAR( 2 ) )
+   /* set new wildcard character, if HB_ISCHAR(2) but !HB_ISBYREF(2) */
+   if( HB_ISCHAR( 2 ) )
    {
-      if( ISBYREF( 2 ) )
+      if( HB_ISBYREF( 2 ) )
       {
          /* new behaviour: store the current wildcard char in second parameter */
          char cResult;

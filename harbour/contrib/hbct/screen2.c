@@ -67,11 +67,11 @@ HB_FUNC( SAYDOWN )
       int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
 
-      lDelay = ISNUM( 2 ) ? hb_parnl( 2 ) : 4;
+      lDelay = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : 4;
 
       hb_gtGetPos( &sRow, &sCol );
-      iRow = ISNUM( 3 ) ? hb_parni( 3 ) : ( int ) sRow;
-      iCol = ISNUM( 4 ) ? hb_parni( 4 ) : ( int ) sCol;
+      iRow = HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( int ) sRow;
+      iCol = HB_ISNUM( 4 ) ? hb_parni( 4 ) : ( int ) sCol;
       iMaxRow = hb_gtMaxRow();
       iMaxCol = hb_gtMaxCol();
 
@@ -112,13 +112,13 @@ HB_FUNC( SAYSPREAD )
       int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
 
-      lDelay = ISNUM( 2 ) ? hb_parnl( 2 ) : 4;
+      lDelay = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : 4;
 
       iMaxRow = hb_gtMaxRow();
       iMaxCol = hb_gtMaxCol();
       hb_gtGetPos( &sRow, &sCol );
-      iRow = ISNUM( 3 ) ? hb_parni( 3 ) : ( int ) sRow;
-      iCol = ISNUM( 4 ) ? hb_parni( 4 ) : ( iMaxCol >> 1 );
+      iRow = HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( int ) sRow;
+      iCol = HB_ISNUM( 4 ) ? hb_parni( 4 ) : ( iMaxCol >> 1 );
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
@@ -167,14 +167,14 @@ HB_FUNC( SAYMOVEIN )
       long lDelay;
       BOOL fBack;
 
-      lDelay = ISNUM( 2 ) ? hb_parnl( 2 ) : 4;
-      fBack = ISLOG( 5 ) && hb_parl( 5 );
+      lDelay = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : 4;
+      fBack = HB_ISLOG( 5 ) && hb_parl( 5 );
 
       iMaxRow = hb_gtMaxRow();
       iMaxCol = hb_gtMaxCol();
       hb_gtGetPos( &sRow, &sCol );
-      iRow = ISNUM( 3 ) ? hb_parni( 3 ) : ( int ) sRow;
-      iCol = ISNUM( 4 ) ? hb_parni( 4 ) : ( int ) sCol;
+      iRow = HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( int ) sRow;
+      iCol = HB_ISNUM( 4 ) ? hb_parni( 4 ) : ( int ) sCol;
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
@@ -237,12 +237,12 @@ HB_FUNC( CLEARSLOW )
 
    iTop    = hb_parni( 2 );
    iLeft   = hb_parni( 3 );
-   iBottom = ISNUM( 4 ) ? hb_parni( 4 ) : iMaxRow;
-   iRight  = ISNUM( 5 ) ? hb_parni( 5 ) : iMaxCol;
+   iBottom = HB_ISNUM( 4 ) ? hb_parni( 4 ) : iMaxRow;
+   iRight  = HB_ISNUM( 5 ) ? hb_parni( 5 ) : iMaxCol;
 
-   if( ISNUM( 6 ) )
+   if( HB_ISNUM( 6 ) )
       ucChar = ( UCHAR ) hb_parni( 6 );
-   else if( ISCHAR( 6 ) )
+   else if( HB_ISCHAR( 6 ) )
       ucChar = ( UCHAR ) hb_parc( 6 )[0];
    else
       ucChar = ( UCHAR ) hb_gtGetClearChar();
@@ -316,11 +316,11 @@ HB_FUNC( SCREENSTR )
    ULONG ulSize, ulCount = ULONG_MAX;
 
    hb_gtGetPos( &sRow, &sCol );
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
       sRow = ( SHORT ) hb_parni( 1 );
-   if( ISNUM( 2 ) )
+   if( HB_ISNUM( 2 ) )
       sCol = ( SHORT ) hb_parni( 2 );
-   if( ISNUM( 3 ) )
+   if( HB_ISNUM( 3 ) )
       ulCount = hb_parnl( 3 );
    sMaxRow = ( SHORT ) hb_gtMaxRow();
    sMaxCol = ( SHORT ) hb_gtMaxCol();
@@ -367,9 +367,9 @@ HB_FUNC( STRSCREEN )
       SHORT sRow, sCol, sMaxRow, sMaxCol, sC;
 
       hb_gtGetPos( &sRow, &sCol );
-      if( ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
          sRow = ( SHORT ) hb_parni( 2 );
-      if( ISNUM( 3 ) )
+      if( HB_ISNUM( 3 ) )
          sCol = ( SHORT ) hb_parni( 3 );
       sMaxRow = ( SHORT ) hb_gtMaxRow();
       sMaxCol = ( SHORT ) hb_gtMaxCol();
@@ -408,9 +408,9 @@ HB_FUNC( _HB_CTDSPTIME )
 
    sRow = ( SHORT ) hb_parni( 1 );
    sCol = ( SHORT ) hb_parni( 2 );
-   if( ISNUM( 4 ) )
+   if( HB_ISNUM( 4 ) )
       iColor = hb_parni( 4 );
-   else if( ISCHAR( 4 ) )
+   else if( HB_ISCHAR( 4 ) )
    {
       iColor = hb_gtColorToN( hb_parc( 4 ) );
       if( iColor == -1 )
@@ -422,14 +422,14 @@ HB_FUNC( _HB_CTDSPTIME )
    hb_dateTimeStr( szTime );
    iLen = 8;
 
-   if( ISLOG( 3 ) && hb_parl( 3 ) )
+   if( HB_ISLOG( 3 ) && hb_parl( 3 ) )
       iLen -= 3;
 
-   if( ISLOG( 5 ) && hb_parl( 5 ) )
+   if( HB_ISLOG( 5 ) && hb_parl( 5 ) )
    {
       int iHour = ( szTime[0] - '0' ) * 10 + ( szTime[1] - '0' );
 
-      if( ISLOG( 6 ) && hb_parl( 6 ) )
+      if( HB_ISLOG( 6 ) && hb_parl( 6 ) )
          szTime[iLen++] = iHour >= 12 ? 'p' : 'a';
       if( iHour > 12 )
          iHour -= 12;

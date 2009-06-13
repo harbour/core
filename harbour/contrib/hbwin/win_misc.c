@@ -63,17 +63,17 @@ HB_FUNC( WIN_SHELLEXECUTE )
 #if defined( HB_OS_WIN_CE )
    hb_retnint( -1 );
 #else
-   LPTSTR lpOperation  = ISCHAR( 2 ) ? HB_TCHAR_CONVTO( hb_parc( 2 ) ) : NULL;
+   LPTSTR lpOperation  = HB_ISCHAR( 2 ) ? HB_TCHAR_CONVTO( hb_parc( 2 ) ) : NULL;
    LPTSTR lpFile       =               HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   LPTSTR lpParameters = ISCHAR( 4 ) ? HB_TCHAR_CONVTO( hb_parc( 4 ) ) : NULL;
-   LPTSTR lpDirectory  = ISCHAR( 5 ) ? HB_TCHAR_CONVTO( hb_parc( 5 ) ) : NULL;
+   LPTSTR lpParameters = HB_ISCHAR( 4 ) ? HB_TCHAR_CONVTO( hb_parc( 4 ) ) : NULL;
+   LPTSTR lpDirectory  = HB_ISCHAR( 5 ) ? HB_TCHAR_CONVTO( hb_parc( 5 ) ) : NULL;
 
    hb_retnint( ( HB_PTRDIFF ) ShellExecute( ( HWND ) hb_parptr( 1 ),
                                             ( LPCTSTR ) lpOperation, /* edit, explore, open, print, play?, properties? */
                                             ( LPCTSTR ) lpFile,
                                             ( LPCTSTR ) lpParameters,
                                             ( LPCTSTR ) lpDirectory,
-                                            ISNUM( 6 ) ? hb_parni( 6 ) : SW_SHOWNORMAL /* nShowCmd */ ) );
+                                            HB_ISNUM( 6 ) ? hb_parni( 6 ) : SW_SHOWNORMAL /* nShowCmd */ ) );
 
    if( lpOperation )
       HB_TCHAR_FREE( lpOperation );
@@ -87,8 +87,8 @@ HB_FUNC( WIN_SHELLEXECUTE )
 
 HB_FUNC( WIN_RUNDETACHED )
 {
-   LPTSTR lpCommandName = ISCHAR( 1 ) ? HB_TCHAR_CONVTO( hb_parc( 1 ) ) : NULL;
-   LPTSTR lpCommandLine = ISCHAR( 2 ) ? HB_TCHAR_CONVTO( hb_parc( 2 ) ) : NULL;
+   LPTSTR lpCommandName = HB_ISCHAR( 1 ) ? HB_TCHAR_CONVTO( hb_parc( 1 ) ) : NULL;
+   LPTSTR lpCommandLine = HB_ISCHAR( 2 ) ? HB_TCHAR_CONVTO( hb_parc( 2 ) ) : NULL;
 
    STARTUPINFO si;
    PROCESS_INFORMATION pi;

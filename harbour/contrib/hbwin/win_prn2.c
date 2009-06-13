@@ -136,7 +136,7 @@ BOOL hb_PrinterExists( LPSTR pPrinterName )
 
 HB_FUNC( PRINTEREXISTS )
 {
-   hb_retl( ISCHAR( 1 ) && hb_PrinterExists( hb_parc( 1 ) ) );
+   hb_retl( HB_ISCHAR( 1 ) && hb_PrinterExists( hb_parc( 1 ) ) );
 }
 
 BOOL hb_GetDefaultPrinter( char * pPrinterName, LPDWORD pdwBufferSize )
@@ -410,9 +410,9 @@ HB_FUNC( PRINTERPORTTONAME )
    char szDefaultPrinter[ MAXBUFFERSIZE ];
    DWORD pdwBufferSize = sizeof( szDefaultPrinter );
 
-   if( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 &&
+   if( HB_ISCHAR( 1 ) && hb_parclen( 1 ) > 0 &&
        hb_GetPrinterNameByPort( szDefaultPrinter, &pdwBufferSize, hb_parcx( 1 ),
-                                ISLOG( 2 ) ? hb_parl( 2 ) : FALSE ) )
+                                HB_ISLOG( 2 ) ? hb_parl( 2 ) : FALSE ) )
       hb_retc( szDefaultPrinter );
    else
       hb_retc_null();
@@ -480,10 +480,10 @@ HB_FUNC( PRINTFILERAW )
 {
    LONG Result = -1;
 
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
       Result = hb_PrintFileRaw( ( UCHAR * ) hb_parc( 1 ) /* cPrinterName */,
                                 ( UCHAR * ) hb_parc( 2 ) /* cFileName */,
-                                ISCHAR( 3 ) ? ( UCHAR * ) hb_parc( 3 ) : ( UCHAR * ) hb_parc( 2 ) /* cDocName */ );
+                                HB_ISCHAR( 3 ) ? ( UCHAR * ) hb_parc( 3 ) : ( UCHAR * ) hb_parc( 2 ) /* cDocName */ );
 
    hb_retnl( Result );
 }
@@ -513,10 +513,10 @@ HB_FUNC( GETPRINTERS )
    buffer = NULL;
    HB_TRACE( HB_TR_DEBUG, ( "GETPRINTERS()" ) );
 
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
       bPrinterNamesOnly = ! hb_parl( 1 );
 
-   bLocalPrintersOnly = ISLOG( 2 ) ? hb_parl( 2 ) : FALSE;
+   bLocalPrintersOnly = HB_ISLOG( 2 ) ? hb_parl( 2 ) : FALSE;
 
    if( hb_iswinnt() )
    {

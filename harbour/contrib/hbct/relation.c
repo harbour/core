@@ -87,7 +87,7 @@
 
 HB_FUNC( CHARRELA )
 {
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) && ISCHAR( 3 ) && ISCHAR( 4 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISCHAR( 3 ) && HB_ISCHAR( 4 ) )
    {
       char *pcStringToMatch1 = hb_parc( 1 );
       size_t sStrToMatchLen1 = hb_parclen( 1 );
@@ -145,7 +145,7 @@ HB_FUNC( CHARRELA )
 
       hb_retni( 0 );
    }
-   else  /* ISCHAR( 1 ) && ISCHAR( 2 ) && ISCHAR( 3 ) && ISCHAR( 4 ) */
+   else  /* HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISCHAR( 3 ) && HB_ISCHAR( 4 ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
@@ -199,10 +199,10 @@ HB_FUNC( CHARRELREP )
 {
    int iNoRet;
 
-   iNoRet = ct_getref() && ISBYREF( 4 );
+   iNoRet = ct_getref() && HB_ISBYREF( 4 );
 
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) && ISCHAR( 3 ) &&
-       ISCHAR( 4 ) && ISCHAR( 5 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISCHAR( 3 ) &&
+       HB_ISCHAR( 4 ) && HB_ISCHAR( 5 ) )
    {
       char *pcStringToMatch1 = hb_parc( 1 );
       size_t sStrToMatchLen1 = hb_parclen( 1 );
@@ -289,7 +289,7 @@ HB_FUNC( CHARRELREP )
          }
       }
 
-      if( ISBYREF( 4 ) )
+      if( HB_ISBYREF( 4 ) )
       {
          hb_storclen( pcRet, sStrLen2, 4 );
       }
@@ -304,8 +304,8 @@ HB_FUNC( CHARRELREP )
          hb_retclen_buffer( pcRet, sStrLen2 );
       }
    }
-   else  /* ISCHAR( 1 ) && ISCHAR( 2 ) && ISCHAR( 3 ) &&
-            ISCHAR( 4 ) && ISCHAR( 5 ) */
+   else  /* HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISCHAR( 3 ) &&
+            HB_ISCHAR( 4 ) && HB_ISCHAR( 5 ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

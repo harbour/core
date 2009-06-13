@@ -247,7 +247,7 @@ HB_FUNC( FT_PUTKEY )
 {
    BOOL lSuccess = FALSE;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       int iKey = hb_parni(1);
 

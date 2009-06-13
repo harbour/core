@@ -141,7 +141,7 @@ static int ct_doy( LONG lDate )
  */
 HB_FUNC( CTODOW )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *szParam = hb_parc( 1 ), *szDow;
       int iDow, iEqual;
@@ -216,7 +216,7 @@ HB_FUNC( CTODOW )
  */
 HB_FUNC( CTOMONTH )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *szParam = hb_parc( 1 ), *szMonth;
       int iMonth, iEqual;
@@ -293,7 +293,7 @@ HB_FUNC( DMY )
    int iYear, iMonth, iDay;
    BOOL bMode = FALSE;
 
-   if( ISDATETIME( 1 ) )
+   if( HB_ISDATETIME( 1 ) )
    {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    }
@@ -302,7 +302,7 @@ HB_FUNC( DMY )
       hb_dateToday( &iYear, &iMonth, &iDay );
    }
 
-   if( ISLOG( 2 ) )
+   if( HB_ISLOG( 2 ) )
    {
       bMode = hb_parl( 2 );
    }
@@ -392,7 +392,7 @@ HB_FUNC( MDY )
 {
    int iYear, iMonth, iDay;
 
-   if( ISDATETIME( 1 ) )
+   if( HB_ISDATETIME( 1 ) )
    {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    }
@@ -476,20 +476,20 @@ HB_FUNC( ADDMONTH )
    int iYear, iMonth, iDay, iNum, iDays;
    BOOL fTimeStamp = FALSE;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       iNum = hb_parni( 1 );
       hb_dateToday( &iYear, &iMonth, &iDay );
    }
    else
    {
-      if( ISTIMESTAMP( 1 ) )
+      if( HB_ISTIMESTAMP( 1 ) )
       {
          fTimeStamp = TRUE;
          hb_partdt( &lJulian, &lMillisec, 1 );
          hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
       }
-      else if( ISDATE( 1 ) )
+      else if( HB_ISDATE( 1 ) )
          hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
       else
          hb_dateToday( &iYear, &iMonth, &iDay );
@@ -554,7 +554,7 @@ HB_FUNC( DOY )
 {
    LONG lDate;
 
-   if( ISDATETIME( 1 ) )
+   if( HB_ISDATETIME( 1 ) )
    {
       lDate = hb_pardl( 1 );
    }
@@ -600,7 +600,7 @@ HB_FUNC( ISLEAP )
 {
    int iYear, iMonth, iDay;
 
-   if( ISDATETIME( 1 ) )
+   if( HB_ISDATETIME( 1 ) )
    {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    }
@@ -644,8 +644,8 @@ HB_FUNC( ISLEAP )
  */
 HB_FUNC( DAYSTOMONTH )
 {
-   int iMonth = ( ISNUM( 1 ) ? hb_parni( 1 ) : 0 );
-   BOOL bLeap = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
+   int iMonth = ( HB_ISNUM( 1 ) ? hb_parni( 1 ) : 0 );
+   BOOL bLeap = ( HB_ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
 
    hb_retni( ct_daystomonth( iMonth, bLeap ) );
 }
@@ -680,8 +680,8 @@ HB_FUNC( DAYSTOMONTH )
  */
 HB_FUNC( DAYSINMONTH )
 {
-   int iMonth = ( ISNUM( 1 ) ? hb_parni( 1 ) : 0 );
-   BOOL bLeap = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
+   int iMonth = ( HB_ISNUM( 1 ) ? hb_parni( 1 ) : 0 );
+   BOOL bLeap = ( HB_ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
 
    hb_retni( ct_daysinmonth( iMonth, bLeap ) );
 
@@ -720,7 +720,7 @@ HB_FUNC( QUARTER )
 {
    int iYear, iMonth, iDay;
 
-   if( ISDATETIME( 1 ) )
+   if( HB_ISDATETIME( 1 ) )
    {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    }
@@ -768,13 +768,13 @@ HB_FUNC( LASTDAYOM )
    BOOL bLeap = FALSE;
    int iYear, iMonth, iDay;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       iMonth = hb_parni( 1 );
    }
    else
    {
-      if( ISDATETIME( 1 ) )
+      if( HB_ISDATETIME( 1 ) )
       {
          hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
       }
@@ -896,9 +896,9 @@ HB_FUNC( WEEK )
 {
    int iYear, iMonth, iDay, iWeek;
    LONG lDate;
-   BOOL bSWN = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
+   BOOL bSWN = ( HB_ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
 
-   if( ISDATETIME( 1 ) )
+   if( HB_ISDATETIME( 1 ) )
    {
       lDate = hb_pardl( 1 );
       hb_dateDecode( lDate, &iYear, &iMonth, &iDay );

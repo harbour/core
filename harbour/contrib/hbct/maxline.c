@@ -57,7 +57,7 @@ HB_FUNC( MAXLINE )
 {
    LONG lLength = 0;
 
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *pcString = hb_parc( 1 );
       char *pBuffer;

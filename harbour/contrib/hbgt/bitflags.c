@@ -71,14 +71,14 @@ HB_FUNC( GT_SETFLAG )
         unsigned BitPointer;
         unsigned BytePointer;
 
-        if ( ISCHAR(1) )
+        if ( HB_ISCHAR(1) )
         {
                 FlagString = hb_parc(1);
-                if ( ISNUM(2) )
+                if ( HB_ISNUM(2) )
                 {
                         StartBit = hb_parni(2);
                 }
-                if ( ISNUM(3) )
+                if ( HB_ISNUM(3) )
                 {
                         EndBit = hb_parni(3);
                 }
@@ -114,14 +114,14 @@ HB_FUNC( GT_CLRFLAG )
         unsigned BitPointer;
         unsigned BytePointer;
 
-        if ( ISCHAR(1) )
+        if ( HB_ISCHAR(1) )
         {
                 FlagString = hb_parc(1);
-                if ( ISNUM(2) )
+                if ( HB_ISNUM(2) )
                 {
                         StartBit = hb_parni(2);
                 }
-                if ( ISNUM(3) )
+                if ( HB_ISNUM(3) )
                 {
                         EndBit = hb_parni(3);
                 }
@@ -157,10 +157,10 @@ HB_FUNC( GT_ISFLAG  )
         unsigned        BytePointer;
         char            *FlagString;
 
-        if ( ISCHAR(1) )
+        if ( HB_ISCHAR(1) )
         {
                 FlagString = hb_parc(1);
-                if ( ISNUM(2) )
+                if ( HB_ISNUM(2) )
                 {
                         Bit = hb_parni(2);
                 }

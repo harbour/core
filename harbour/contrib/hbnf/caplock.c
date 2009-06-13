@@ -79,7 +79,7 @@ HB_FUNC( FT_CAPLOCK )
       gtInfo.pResult = NULL;
    }
 
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
    {
       iNewState = hb_parl( 1 ) ? ( iState | HB_GTI_KBD_CAPSLOCK ) :
                                  ( iState & ~HB_GTI_KBD_CAPSLOCK );

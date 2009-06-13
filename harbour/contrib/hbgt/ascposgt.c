@@ -24,7 +24,7 @@ HB_FUNC( GT_ASCPOS )
   char *s;
   ULONG p;
 
-  if (ISCHAR(1) && ISNUM(2)) {
+  if (ISCHAR(1) && HB_ISNUM(2)) {
     s = hb_parc(1);
     p = hb_parni(2);
     p--;                            /* decrement p to adjust for c strings */

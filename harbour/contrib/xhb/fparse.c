@@ -678,7 +678,7 @@ HB_FUNC( FPARSELINE )
 
    hb_arrayNew( pReturn, 0 );
 
-   if ( ISCHAR(1) )
+   if ( HB_ISCHAR(1) )
    {
       PHB_ITEM pDelim = hb_param( 2, HB_IT_STRING );
 

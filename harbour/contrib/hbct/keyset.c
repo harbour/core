@@ -71,7 +71,7 @@ static void SetGet( int iFlag )
       gtInfo.pResult = NULL;
    }
 
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
    {
       iNewState = hb_parl( 1 ) ? ( iState | iFlag ) : ( iState & ~iFlag );
       gtInfo.pNewVal = hb_itemPutNI( gtInfo.pNewVal, iNewState );

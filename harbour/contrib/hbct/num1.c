@@ -104,7 +104,7 @@
 
 HB_FUNC( CELSIUS )
 {
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       double dInput = hb_parnd( 1 );
       double dResult;
@@ -171,7 +171,7 @@ HB_FUNC( CELSIUS )
 
 HB_FUNC( FAHRENHEIT )
 {
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       double dInput = hb_parnd( 1 );
       double dResult;
@@ -236,7 +236,7 @@ HB_FUNC( FAHRENHEIT )
 
 HB_FUNC( INFINITY )
 {
-   if( ISLOG( 1 ) && hb_parl( 1 ) )
+   if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
       hb_retnd( DBL_MAX );
    else
       hb_retnd( 93786976294838206460.00 );

@@ -181,7 +181,7 @@ static long hb_hbfskip( int recs )
 
 HB_FUNC( HB_FSKIP )
 {
-   hb_hbfskip( ISNUM( 1 ) ? hb_parni(1) : 1 );
+   hb_hbfskip( HB_ISNUM( 1 ) ? hb_parni(1) : 1 );
 }
 
 HB_FUNC( HB_FREADLN )
@@ -299,7 +299,7 @@ HB_FUNC( HB_FSELECT )
 {
    hb_retni( area + 1 );
 
-   if ( ISNUM(1) )
+   if ( HB_ISNUM(1) )
       area = hb_parni(1) - 1;
 }
 

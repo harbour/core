@@ -26,7 +26,7 @@ HB_FUNC( GT_STRPBRK )
   int l1, l2;
   int p1, p2;
 
-  if (ISCHAR(1) && ISCHAR(2)) {
+  if (ISCHAR(1) && HB_ISCHAR(2)) {
     string = hb_parc(1);
     cset   = hb_parc(2);
     l1     = hb_parclen(1);

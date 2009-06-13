@@ -86,7 +86,7 @@
 
 HB_FUNC( POSDIFF )
 {
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       char *pcString1 = hb_parc( 1 );
       size_t sStrLen1 = hb_parclen( 1 );
@@ -95,7 +95,7 @@ HB_FUNC( POSDIFF )
       char *pc1, *pc2;
       size_t sIgnore;
 
-      if( ISNUM( 3 ) )
+      if( HB_ISNUM( 3 ) )
          sIgnore = hb_parnl( 3 );
       else
          sIgnore = 0;
@@ -132,7 +132,7 @@ HB_FUNC( POSDIFF )
       else
          hb_retni( 0 );
    }
-   else  /* ( ISCHAR( 1 ) && ISCHAR( 2 ) ) */
+   else  /* ( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
@@ -146,7 +146,7 @@ HB_FUNC( POSDIFF )
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
-      else if( ISCHAR( 1 ) || ISCHAR( 2 ) )
+      else if( HB_ISCHAR( 1 ) || HB_ISCHAR( 2 ) )
          hb_retnl( 1 );
       else
          hb_retni( 0 );
@@ -184,7 +184,7 @@ HB_FUNC( POSDIFF )
 
 HB_FUNC( POSEQUAL )
 {
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       char *pcString1 = hb_parc( 1 );
       size_t sStrLen1 = hb_parclen( 1 );
@@ -193,12 +193,12 @@ HB_FUNC( POSEQUAL )
       char *pc1, *pc2;
       size_t sIgnore, sCompare, sCompareCnt, sRet = 0;
 
-      if( ISNUM( 4 ) )
+      if( HB_ISNUM( 4 ) )
          sIgnore = hb_parnl( 4 );
       else
          sIgnore = 0;
 
-      if( ISNUM( 3 ) )
+      if( HB_ISNUM( 3 ) )
          sCompare = hb_parnl( 3 );
       else
          sCompare = ( sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2 ) - sIgnore;
@@ -258,7 +258,7 @@ HB_FUNC( POSEQUAL )
       }
       hb_retni( 0 );
    }
-   else  /* ( ISCHAR( 1 ) && ISCHAR( 2 ) ) */
+   else  /* ( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

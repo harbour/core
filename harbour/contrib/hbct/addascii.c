@@ -125,9 +125,9 @@ HB_FUNC( ADDASCII )
    int iNoRet;
 
    /* suppressing return value ? */
-   iNoRet = ct_getref() && ISBYREF( 1 );
+   iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *pcSource = hb_parc( 1 );
       size_t sLen = hb_parclen( 1 );
@@ -136,12 +136,12 @@ HB_FUNC( ADDASCII )
       LONG lValue;
       int iCarryOver;
 
-      if( ISNUM( 3 ) )
+      if( HB_ISNUM( 3 ) )
          sPos = hb_parnl( 3 );
       else
          sPos = sLen;
 
-      if( sPos > sLen || !ISNUM( 2 ) || sLen == 0 )
+      if( sPos > sLen || ! HB_ISNUM( 2 ) || sLen == 0 )
       {
          int iArgErrorMode = ct_getargerrormode();
 
@@ -162,7 +162,7 @@ HB_FUNC( ADDASCII )
       hb_xmemcpy( pcResult, pcSource, sLen );
 
       lValue = hb_parnl( 2 );
-      if( ISLOG( 4 ) )
+      if( HB_ISLOG( 4 ) )
          iCarryOver = hb_parl( 4 );
       else
          iCarryOver = 0;
@@ -190,7 +190,7 @@ HB_FUNC( ADDASCII )
          pcResult[sPos - 1] = ( char ) ( ( ( LONG ) pcResult[sPos - 1] + lValue ) % 256 );
       }
 
-      if( ISBYREF( 1 ) )
+      if( HB_ISBYREF( 1 ) )
          hb_storclen( pcResult, sLen, 1 );
 
       if( iNoRet )

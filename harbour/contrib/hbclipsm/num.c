@@ -74,7 +74,7 @@ HB_FUNC( DTOR )
 */
 HB_FUNC( NUMASLOG10 )
 {
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       hb_retnd( log10( hb_parnd(1) ) );
    }
@@ -87,7 +87,7 @@ HB_FUNC( NUMGETDECIMALS )
 {
    int iDec = 0;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       hb_itemGetNLen( hb_param( 1, HB_IT_NUMERIC ), NULL, &iDec );
    }
@@ -102,7 +102,7 @@ HB_FUNC( NUMGETLEN )
 {
    ULONG ulLen = 0;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       char * szBuffer = hb_itemStr( hb_param( 1, HB_IT_NUMERIC ), NULL, NULL );
       char * ptr = szBuffer;
@@ -150,7 +150,7 @@ HB_FUNC( RTOD )
 */
 HB_FUNC( SIGN )
 {
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       long lNumber = hb_parnl( 1 );
 

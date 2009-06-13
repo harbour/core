@@ -130,14 +130,14 @@ HB_FUNC( WAPI_GETPROCADDRESS )
 #if defined(HB_OS_WIN_CE)
    hb_retptr( NULL );
 #else
-   hb_retptr( ( void * ) GetProcAddress( ( HMODULE ) hb_parptr( 1 ), ISCHAR( 2 ) ? ( LPCSTR ) hb_parc( 2 ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
+   hb_retptr( ( void * ) GetProcAddress( ( HMODULE ) hb_parptr( 1 ), HB_ISCHAR( 2 ) ? ( LPCSTR ) hb_parc( 2 ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
 #endif
 }
 
 /* HMODULE WINAPI GetModuleHandle( __in_opt LPCTSTR lpModuleName ); */
 HB_FUNC( WAPI_GETMODULEHANDLE )
 {
-   LPTSTR lpModuleName = ISCHAR( 1 ) ? ( LPTSTR ) HB_TCHAR_CONVTO( hb_parc( 1 ) ) : ( LPTSTR ) NULL;
+   LPTSTR lpModuleName = HB_ISCHAR( 1 ) ? ( LPTSTR ) HB_TCHAR_CONVTO( hb_parc( 1 ) ) : ( LPTSTR ) NULL;
 
    wapi_ret_HANDLE( GetModuleHandle( lpModuleName ) );
 
@@ -153,7 +153,7 @@ HB_FUNC( WAPI_SLEEP )
 
 HB_FUNC( WAPI_OUTPUTDEBUGSTRING )
 {
-   LPTSTR lpOutputString = ISCHAR( 1 ) ? ( LPTSTR ) HB_TCHAR_CONVTO( hb_parc( 1 ) ) : ( LPTSTR ) NULL;
+   LPTSTR lpOutputString = HB_ISCHAR( 1 ) ? ( LPTSTR ) HB_TCHAR_CONVTO( hb_parc( 1 ) ) : ( LPTSTR ) NULL;
 
    OutputDebugString( lpOutputString );
 

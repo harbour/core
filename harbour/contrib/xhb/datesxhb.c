@@ -113,7 +113,7 @@ HB_FUNC( HMS2D )
 
 HB_FUNC( TTOD )
 {
-   if( ISDATE( 1 ) )
+   if( HB_ISDATE( 1 ) )
       hb_retdl( hb_pardl( 1 ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1120, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );

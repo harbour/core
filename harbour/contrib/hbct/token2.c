@@ -369,7 +369,7 @@ static void sTokSet( TOKEN_ENVIRONMENT env )
 
 HB_FUNC( TOKENINIT )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *pcString = hb_parc( 1 );
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
@@ -392,7 +392,7 @@ HB_FUNC( TOKENINIT )
       }
 
       /* skip width */
-      if( ISNUM( 3 ) )
+      if( HB_ISNUM( 3 ) )
          ulSkip = hb_parnl( 3 );
       else
          ulSkip = ULONG_MAX;
@@ -465,7 +465,7 @@ HB_FUNC( TOKENINIT )
       }  /* for( ;; ) */
 
       /* save token environment to 4th parameter OR to the static */
-      if( ISBYREF( 4 ) )
+      if( HB_ISBYREF( 4 ) )
       {
          hb_storclen( ( char * ) sTokenEnvironment, sTokEnvGetSize( sTokenEnvironment ), 4 );
          sTokEnvDel( sTokenEnvironment );
@@ -476,13 +476,13 @@ HB_FUNC( TOKENINIT )
       }
       hb_retl( 1 );
    }
-   else  /* ISCHAR( 1 ) */
+   else  /* HB_ISCHAR( 1 ) */
    {
       /* if there is a token environment stored in either the 4th parameter or
          in the static variable -> rewind to first token */
       TOKEN_ENVIRONMENT sTokenEnvironment;
 
-      if( ISCHAR( 4 ) && ISBYREF( 4 ) )
+      if( HB_ISCHAR( 4 ) && HB_ISBYREF( 4 ) )
          sTokenEnvironment = ( TOKEN_ENVIRONMENT ) hb_parc( 4 );
       else
          sTokenEnvironment = s_sTokenEnvironment;
@@ -491,7 +491,7 @@ HB_FUNC( TOKENINIT )
       {
          /* rewind to first token */
          hb_retl( sTokEnvSetPtr( sTokenEnvironment, 0 ) );
-         if( ISCHAR( 4 ) && ISBYREF( 4 ) )
+         if( HB_ISCHAR( 4 ) && HB_ISBYREF( 4 ) )
             hb_storclen( ( char * ) sTokenEnvironment, sTokEnvGetSize( sTokenEnvironment ), 4 );
       }
       else
@@ -575,7 +575,7 @@ HB_FUNC( TOKENINIT )
 
 HB_FUNC( TOKENNEXT )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *pcString = hb_parc( 1 );
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
@@ -584,7 +584,7 @@ HB_FUNC( TOKENNEXT )
       TOKEN_POSITION *psTokenPosition;
 
       /* token environment by parameter ... */
-      if( ISCHAR( 3 ) && ISBYREF( 3 ) )
+      if( HB_ISCHAR( 3 ) && HB_ISBYREF( 3 ) )
       {
          size_t sStrLen3 = ( size_t ) hb_parclen( 3 );
 
@@ -624,7 +624,7 @@ HB_FUNC( TOKENNEXT )
       }
 
       /* nth token or next token ?  */
-      if( ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
       {
          psTokenPosition = sTokEnvGetPosIndex( sTokenEnvironment, hb_parnl( 2 ) - 1 );
          /* no increment here */
@@ -645,7 +645,7 @@ HB_FUNC( TOKENNEXT )
             ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_TOKENNEXT, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
-         if( ISCHAR( 3 ) && ISBYREF( 3 ) )
+         if( HB_ISCHAR( 3 ) && HB_ISBYREF( 3 ) )
          {
             hb_storclen( ( char * ) sTokenEnvironment, sTokEnvGetSize( sTokenEnvironment ), 3 );
             hb_xfree( ( char * ) sTokenEnvironment );
@@ -661,7 +661,7 @@ HB_FUNC( TOKENNEXT )
          hb_retclen( pcString + psTokenPosition->sStartPos,
                      ( psTokenPosition->sEndPos ) - ( psTokenPosition->sStartPos ) );
 
-      if( ISCHAR( 3 ) && ISBYREF( 3 ) )
+      if( HB_ISCHAR( 3 ) && HB_ISBYREF( 3 ) )
       {
          hb_storclen( ( char * ) sTokenEnvironment, sTokEnvGetSize( sTokenEnvironment ), 3 );
          hb_xfree( ( char * ) sTokenEnvironment );
@@ -728,7 +728,7 @@ HB_FUNC( TOKENNUM )
 {
    TOKEN_ENVIRONMENT sTokenEnvironment;
 
-   if( ISCHAR( 1 ) && ISBYREF( 1 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISBYREF( 1 ) )
       sTokenEnvironment = ( TOKEN_ENVIRONMENT ) hb_parc( 1 );
    else
       sTokenEnvironment = s_sTokenEnvironment;
@@ -801,7 +801,7 @@ HB_FUNC( TOKENEND )
 {
    TOKEN_ENVIRONMENT sTokenEnvironment;
 
-   if( ISCHAR( 1 ) && ISBYREF( 1 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISBYREF( 1 ) )
       sTokenEnvironment = ( TOKEN_ENVIRONMENT ) hb_parc( 1 );
    else
       sTokenEnvironment = s_sTokenEnvironment;
@@ -941,10 +941,10 @@ HB_FUNC( TOKENAT )
    TOKEN_ENVIRONMENT sTokenEnvironment;
    TOKEN_POSITION *psTokenPosition;
 
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
       iSeparatorPos = hb_parl( 1 );
 
-   if( ISCHAR( 3 ) && ISBYREF( 3 ) )
+   if( HB_ISCHAR( 3 ) && HB_ISBYREF( 3 ) )
       sTokenEnvironment = ( TOKEN_ENVIRONMENT ) hb_parc( 3 );
    else
       sTokenEnvironment = s_sTokenEnvironment;
@@ -962,7 +962,7 @@ HB_FUNC( TOKENAT )
       return;
    }
 
-   if( ISNUM( 2 ) )
+   if( HB_ISNUM( 2 ) )
       sCurrentIndex = hb_parnl( 2 ) - 1;
    else
       sCurrentIndex = sTokEnvGetPtr( sTokenEnvironment );
@@ -1067,7 +1067,7 @@ HB_FUNC( RESTTOKEN )
    TOKEN_ENVIRONMENT sTokenEnvironment = NULL;
    size_t sStrLen = 1;
 
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       sStrLen = ( size_t ) hb_parclen( 1 );
       if( sStrLen >= sizeof( TOKEN_POSITION ) )

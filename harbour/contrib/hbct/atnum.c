@@ -65,7 +65,7 @@
 /* helper function */
 static void do_atnum( int iSwitch )
 {
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       char *pcStringToMatch = hb_parc( 1 );
       size_t sStrToMatchLen = ( size_t ) hb_parclen( 1 );
@@ -79,7 +79,7 @@ static void do_atnum( int iSwitch )
       char *pc = NULL;
 
       /* eventually ignore some characters */
-      if( ISNUM( 4 ) )
+      if( HB_ISNUM( 4 ) )
          sIgnore = ( size_t ) hb_parnl( 4 );
       else
          sIgnore = 0;
@@ -137,7 +137,7 @@ static void do_atnum( int iSwitch )
       }
 
       /* nth match or last match ? */
-      if( ISNUM( 3 ) && ( ulCounter = hb_parnl( 3 ) ) != 0 )
+      if( HB_ISNUM( 3 ) && ( ulCounter = hb_parnl( 3 ) ) != 0 )
       {
          /* find the <ulCounter>th match */
          char *pcSubStr;
@@ -194,7 +194,7 @@ static void do_atnum( int iSwitch )
             sSubStrLen = sStrLen - ( pcSubStr - pcString );
          }
       }
-      else /* ( ISNUM( 3 ) && ( ulCounter = hb_parnl( 3 ) ) != 0 ) */
+      else /* ( HB_ISNUM( 3 ) && ( ulCounter = hb_parnl( 3 ) ) != 0 ) */
       {
          /* we have to find the last match and return the
             string after that last match */

@@ -662,7 +662,7 @@ HB_FUNC( WIN_OLEERRORTEXT )
 {
    HRESULT  lOleError;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
       lOleError = hb_parnl( 1 );
    else
       lOleError = hb_oleGetError();

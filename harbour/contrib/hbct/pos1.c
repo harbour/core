@@ -79,11 +79,11 @@
 /* helper function for the posxxx() functions */
 static void do_pos1( int iSwitch )
 {
-   if( ISCHAR( 1 ) &&                     /* all functions need string as 1st param */
+   if( HB_ISCHAR( 1 ) &&                     /* all functions need string as 1st param */
        ( iSwitch != DO_POS1_POSRANGE ||   /* that's the only condition for all funcs _except_ POSRANGE */
          ( iSwitch == DO_POS1_POSRANGE && /* In addition, POSRANGE needs .. */
-           ISCHAR( 2 ) &&                 /* .. string as 2nd .. */
-           ISCHAR( 3 ) ) ) )              /* .. and 3rd param */
+           HB_ISCHAR( 2 ) &&                 /* .. string as 2nd .. */
+           HB_ISCHAR( 3 ) ) ) )              /* .. and 3rd param */
    {
       HB_CDP_STUB
       unsigned char *pcString;
@@ -122,12 +122,12 @@ static void do_pos1( int iSwitch )
       pcString = ( unsigned char * ) hb_parc( iParamShift + 1 );
       sStrLen = ( size_t ) hb_parclen( iParamShift + 1 );
 
-      if( ISLOG( iParamShift + 2 ) )
+      if( HB_ISLOG( iParamShift + 2 ) )
          iMode = hb_parl( iParamShift + 2 );
       else
          iMode = 0;
 
-      if( ISNUM( iParamShift + 3 ) )
+      if( HB_ISNUM( iParamShift + 3 ) )
          sIgnore = ( size_t ) hb_parnl( iParamShift + 3 );
       else
          sIgnore = 0;

@@ -111,15 +111,15 @@ HB_FUNC( XHB__KEYBOARD )
       hb_inkeyReset();
    }
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       hb_inkeyPut( hb_parni( 1 ) );
    }
-   else if( ISCHAR( 1 ) )
+   else if( HB_ISCHAR( 1 ) )
    {
       hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
    }
-   else if( ISARRAY( 1 ) )
+   else if( HB_ISARRAY( 1 ) )
    {
       PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
       ULONG ulIndex;
@@ -146,13 +146,13 @@ HB_FUNC( HB_CREATELEN8 )
    char buffer[ 8 ];
    HB_LONG llValue;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       llValue = hb_parnint( 1 );
       HB_PUT_LE_UINT64( buffer, llValue );
       hb_retclen( buffer, 8 );
    }
-   else if( ISBYREF( 1 ) && ISNUM( 2 ) )
+   else if( HB_ISBYREF( 1 ) && HB_ISNUM( 2 ) )
    {
       llValue = hb_parnint( 2 );
       HB_PUT_LE_UINT64( buffer, llValue );

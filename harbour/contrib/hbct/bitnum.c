@@ -83,7 +83,7 @@ static BOOL __numParam( int iParam, HB_LONG * plNum )
       if( !iParam )
          return TRUE;
    }
-   else if( ISNUM( iParam ) )
+   else if( HB_ISNUM( iParam ) )
    {
       *plNum = hb_parnint( iParam );
       return TRUE;
@@ -178,7 +178,7 @@ HB_FUNC( NUMROL )
    if( __numParam( 1, &lValue ) && lValue == ( lValue & 0xffff ) && __numParam( 2, &lShift )
        && lShift == ( lShift & 0xffff ) )
    {
-      if( ISLOG( 3 ) && hb_parl( 3 ) )
+      if( HB_ISLOG( 3 ) && hb_parl( 3 ) )
       {
          USHORT us = ( USHORT ) ( lValue & 0xff ) << ( lShift & 0x07 );
 
@@ -203,7 +203,7 @@ HB_FUNC( NUMMIRR )
 
    if( __numParam( 1, &lValue ) && lValue == ( lValue & 0xffff ) )
    {
-      USHORT usBits = ISLOG( 2 ) && hb_parl( 2 ) ? 8 : 16;
+      USHORT usBits = HB_ISLOG( 2 ) && hb_parl( 2 ) ? 8 : 16;
       USHORT usResult = ( USHORT ) ( lValue >> usBits );
 
       do
@@ -291,7 +291,7 @@ HB_FUNC( INTNEG )
 
    if( __numParam( 1, &lValue ) )
    {
-      BOOL f32Bit = ISLOG( 2 ) && hb_parl( 2 );
+      BOOL f32Bit = HB_ISLOG( 2 ) && hb_parl( 2 );
 
       if( f32Bit )
          hb_retnint( ( INT16 ) lValue );
@@ -308,7 +308,7 @@ HB_FUNC( INTPOS )
 
    if( __numParam( 1, &lValue ) )
    {
-      BOOL f32Bit = ISLOG( 2 ) && hb_parl( 2 );
+      BOOL f32Bit = HB_ISLOG( 2 ) && hb_parl( 2 );
 
       if( f32Bit )
          hb_retnint( ( UINT16 ) lValue );

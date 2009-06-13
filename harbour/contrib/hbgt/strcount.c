@@ -25,7 +25,7 @@ HB_FUNC( GT_STRCOUNT )
   int count, p1, p2, l1, l2;
   int match;
 
-  if (ISCHAR(1) && ISCHAR(2)) {
+  if (ISCHAR(1) && HB_ISCHAR(2)) {
     s1  = hb_parc(1);
     s2  = hb_parc(2);
     l1  = hb_parclen(1);

@@ -264,7 +264,7 @@ HB_FUNC( WOY )
       int iYear, iMonth, iDay;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
-      hb_retni( hb_woy( iYear, iMonth, iDay, ISLOG( 2 ) ? hb_parl( 2 ) : TRUE ) );
+      hb_retni( hb_woy( iYear, iMonth, iDay, HB_ISLOG( 2 ) ? hb_parl( 2 ) : TRUE ) );
    }
    else
       hb_retni( 0 );

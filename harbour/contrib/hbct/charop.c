@@ -82,9 +82,9 @@ static void do_charop( int iSwitch )
    int iNoRet;
 
    /* suppressing return value ? */
-   iNoRet = ct_getref() && ISBYREF( 1 );
+   iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
 
       size_t sStrLen = hb_parclen( 1 );
@@ -196,7 +196,7 @@ static void do_charop( int iSwitch )
          /* ADD */
          case DO_CHAROP_CHARADD:
          {
-            if( ISCHAR( 2 ) )
+            if( HB_ISCHAR( 2 ) )
             {
                char *pucString2 = hb_parc( 2 );
                size_t sStrLen2 = hb_parclen( 2 );
@@ -222,7 +222,7 @@ static void do_charop( int iSwitch )
          /* SUB */
          case DO_CHAROP_CHARSUB:
          {
-            if( ISCHAR( 2 ) )
+            if( HB_ISCHAR( 2 ) )
             {
                char *pucString2 = hb_parc( 2 );
                size_t sStrLen2 = hb_parclen( 2 );
@@ -248,7 +248,7 @@ static void do_charop( int iSwitch )
          /* AND */
          case DO_CHAROP_CHARAND:
          {
-            if( ISCHAR( 2 ) )
+            if( HB_ISCHAR( 2 ) )
             {
                char *pucString2 = hb_parc( 2 );
                size_t sStrLen2 = hb_parclen( 2 );
@@ -273,7 +273,7 @@ static void do_charop( int iSwitch )
          /* OR */
          case DO_CHAROP_CHAROR:
          {
-            if( ISCHAR( 2 ) )
+            if( HB_ISCHAR( 2 ) )
             {
                char *pucString2 = hb_parc( 2 );
                size_t sStrLen2 = hb_parclen( 2 );
@@ -298,7 +298,7 @@ static void do_charop( int iSwitch )
          /* XOR */
          case DO_CHAROP_CHARXOR:
          {
-            if( ISCHAR( 2 ) )
+            if( HB_ISCHAR( 2 ) )
             {
                char *pucString2 = hb_parc( 2 );
                size_t sStrLen2 = hb_parclen( 2 );
@@ -321,7 +321,7 @@ static void do_charop( int iSwitch )
          }
       }  /* endswitch( iSwitch ) */
 
-      if( ISBYREF( 1 ) )
+      if( HB_ISBYREF( 1 ) )
          hb_storclen( ( char * ) pucResult, sStrLen, 1 );
 
       if( iNoRet )
@@ -329,7 +329,7 @@ static void do_charop( int iSwitch )
       else
          hb_retclen_buffer( ( char * ) pucResult, sStrLen );
    }
-   else  /* if( ISCHAR( 1 ) ) */
+   else  /* if( HB_ISCHAR( 1 ) ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode(), iError = 0;

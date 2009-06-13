@@ -93,8 +93,8 @@
 
 HB_FUNC( RANGEREM )
 {
-   if( ( hb_parclen( 1 ) > 0 || ISNUM( 1 ) ) &&
-       ( hb_parclen( 2 ) > 0 || ISNUM( 2 ) ) && ISCHAR( 3 ) )
+   if( ( hb_parclen( 1 ) > 0 || HB_ISNUM( 1 ) ) &&
+       ( hb_parclen( 2 ) > 0 || HB_ISNUM( 2 ) ) && HB_ISCHAR( 3 ) )
    {
       char *pcString = ( char * ) hb_parc( 3 );
       size_t sStrLen = ( size_t ) hb_parclen( 3 );
@@ -104,12 +104,12 @@ HB_FUNC( RANGEREM )
       size_t sRetIndex;
       int iMode, iBool;
 
-      if( ISCHAR( 1 ) )
+      if( HB_ISCHAR( 1 ) )
          ucChar1 = *( ( unsigned char * ) hb_parc( 1 ) );
       else
          ucChar1 = ( unsigned char ) ( hb_parni( 1 ) % 256 );
 
-      if( ISCHAR( 2 ) )
+      if( HB_ISCHAR( 2 ) )
          ucChar2 = *( ( unsigned char * ) hb_parc( 2 ) );
       else
          ucChar2 = ( unsigned char ) ( hb_parni( 2 ) % 256 );
@@ -136,8 +136,8 @@ HB_FUNC( RANGEREM )
       hb_retclen( pcRet, sRetIndex );
       hb_xfree( pcRet );
    }
-   else  /* ( hb_parclen( 1 ) > 0 || ISNUM( 1 ) ) &&
-            ( hb_parclen( 2 ) > 0 || ISNUM( 2 ) ) && ISCHAR( 3 ) */
+   else  /* ( hb_parclen( 1 ) > 0 || HB_ISNUM( 1 ) ) &&
+            ( hb_parclen( 2 ) > 0 || HB_ISNUM( 2 ) ) && HB_ISCHAR( 3 ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
@@ -151,7 +151,7 @@ HB_FUNC( RANGEREM )
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
-      else if( ISCHAR( 3 ) )
+      else if( HB_ISCHAR( 3 ) )
          hb_retclen( hb_parc( 3 ), hb_parclen( 3 ) );
       else
          hb_retc( NULL );
@@ -197,11 +197,11 @@ HB_FUNC( RANGEREM )
 
 HB_FUNC( RANGEREPL )
 {
-   int iNoRef = ct_getref() && ISBYREF( 3 );
+   int iNoRef = ct_getref() && HB_ISBYREF( 3 );
 
-   if( ( hb_parclen( 1 ) > 0 || ISNUM( 1 ) ) &&
-       ( hb_parclen( 2 ) > 0 || ISNUM( 2 ) ) &&
-       ISCHAR( 3 ) && ( hb_parclen( 4 ) > 0 || ISNUM( 4 ) ) )
+   if( ( hb_parclen( 1 ) > 0 || HB_ISNUM( 1 ) ) &&
+       ( hb_parclen( 2 ) > 0 || HB_ISNUM( 2 ) ) &&
+       HB_ISCHAR( 3 ) && ( hb_parclen( 4 ) > 0 || HB_ISNUM( 4 ) ) )
    {
       char *pcString = ( char * ) hb_parc( 3 );
       size_t sStrLen = ( size_t ) hb_parclen( 3 );
@@ -211,17 +211,17 @@ HB_FUNC( RANGEREPL )
       size_t sRetIndex;
       int iMode, iBool;
 
-      if( ISCHAR( 1 ) )
+      if( HB_ISCHAR( 1 ) )
          ucChar1 = *( ( unsigned char * ) hb_parc( 1 ) );
       else
          ucChar1 = ( unsigned char ) ( hb_parni( 1 ) % 256 );
 
-      if( ISCHAR( 2 ) )
+      if( HB_ISCHAR( 2 ) )
          ucChar2 = *( ( unsigned char * ) hb_parc( 2 ) );
       else
          ucChar2 = ( unsigned char ) ( hb_parni( 2 ) % 256 );
 
-      if( ISCHAR( 4 ) )
+      if( HB_ISCHAR( 4 ) )
          ucReplace = *( ( unsigned char * ) hb_parc( 4 ) );
       else
          ucReplace = ( unsigned char ) ( hb_parni( 4 ) % 256 );
@@ -250,7 +250,7 @@ HB_FUNC( RANGEREPL )
          }
       }
 
-      if( ISBYREF( 3 ) )
+      if( HB_ISBYREF( 3 ) )
          hb_storclen( pcRet, sStrLen, 3 );
 
       if( iNoRef )
@@ -263,9 +263,9 @@ HB_FUNC( RANGEREPL )
 
       hb_xfree( pcRet );
    }
-   else  /* ( hb_parclen( 1 ) > 0 || ISNUM( 1 ) ) &&
-            ( hb_parclen( 2 ) > 0 || ISNUM( 2 ) ) &&
-            ISCHAR( 3 ) && ( hb_parclen( 4 ) > 0 || ISNUM( 4 ) ) */
+   else  /* ( hb_parclen( 1 ) > 0 || HB_ISNUM( 1 ) ) &&
+            ( hb_parclen( 2 ) > 0 || HB_ISNUM( 2 ) ) &&
+            HB_ISCHAR( 3 ) && ( hb_parclen( 4 ) > 0 || HB_ISNUM( 4 ) ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
@@ -281,7 +281,7 @@ HB_FUNC( RANGEREPL )
          hb_itemReturnRelease( pSubst );
       else if( iNoRef )
          hb_ret();
-      else if( ISCHAR( 3 ) )
+      else if( HB_ISCHAR( 3 ) )
          hb_retclen( hb_parc( 3 ), hb_parclen( 3 ) );
       else
          hb_retc( NULL );

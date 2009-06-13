@@ -132,9 +132,9 @@ static PHB_FFIND _hb_fileStart( BOOL fNext, ULONG ulAttr )
       if( szFile )
       {
          szFile = ( char * ) hb_fsNameConv( ( BYTE * ) szFile, &fFree );
-         if( ISNUM( 2 ) )
+         if( HB_ISNUM( 2 ) )
             ulAttr = ( ULONG ) hb_parnl( 2 );
-         pFFData->ulAttr = ISLOG( 3 ) && hb_parl( 3 ) ? ulAttr : 0;
+         pFFData->ulAttr = HB_ISLOG( 3 ) && hb_parl( 3 ) ? ulAttr : 0;
          pFFData->ffind = hb_fsFindFirst( szFile, ulAttr );
          if( fFree )
             hb_xfree( szFile );
@@ -211,7 +211,7 @@ HB_FUNC( SETFATTR )
    int iResult;
 
    if( hb_fsSetAttr( ( BYTE * ) hb_parcx( 1 ),
-                        ISNUM( 2 ) ? hb_parnl( 2 ) : HB_FA_ARCHIVE ) )
+                        HB_ISNUM( 2 ) ? hb_parnl( 2 ) : HB_FA_ARCHIVE ) )
       iResult = 0;
    else
       iResult = -1;
@@ -230,7 +230,7 @@ HB_FUNC( SETFDATI )
       PHB_ITEM pDate, pTime;
       LONG lJulian, lMillisec;
 
-      if( ISTIMESTAMP( 1 ) )
+      if( HB_ISTIMESTAMP( 1 ) )
          hb_partdt( &lJulian, &lMillisec, 1 );
       else
       {
@@ -263,7 +263,7 @@ HB_FUNC( FILEDELETE )
 {
    BOOL bReturn = FALSE;
 
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       BYTE * pDirSpec;
       PHB_FFIND ffind;
@@ -271,7 +271,7 @@ HB_FUNC( FILEDELETE )
       BOOL fFree;
 
       pDirSpec = hb_fsNameConv( ( BYTE * ) hb_parc( 1 ), &fFree );
-      if( ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
          ulAttr = hb_parnl( 2 );
 
       if( ( ffind = hb_fsFindFirst( ( char * ) pDirSpec, ulAttr ) ) != NULL )

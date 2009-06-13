@@ -69,10 +69,10 @@ static void do_charswap( int iSwitch )
    int iNoRet;
 
    /* suppress return value ? */
-   iNoRet = ct_getref() && ISBYREF( 1 );
+   iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
    /* param check */
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *pcString = hb_parc( 1 );
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
@@ -93,7 +93,7 @@ static void do_charswap( int iSwitch )
       if( iSwitch == DO_CHARSWAP_WORDSWAP )
       {
          iShift = 4;
-         if( ISLOG( 2 ) && hb_parl( 2 ) )
+         if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
          {
             iSwitch = DO_CHARSWAP_WORDSWAP_CHARSWAP;
          }
@@ -142,7 +142,7 @@ static void do_charswap( int iSwitch )
       }
 
       /* return string */
-      if( ISBYREF( 1 ) )
+      if( HB_ISBYREF( 1 ) )
       {
          hb_storclen( pcRet, sRetIndex, 1 );
       }

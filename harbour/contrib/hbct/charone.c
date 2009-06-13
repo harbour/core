@@ -71,9 +71,9 @@ static void do_charone( int iSwitch )
    size_t sDeleteSetLen;
 
    /* param check */
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
-      if( ISCHAR( 2 ) )
+      if( HB_ISCHAR( 2 ) )
       {
          pcString = hb_parc( 2 );
          sStrLen = ( size_t ) hb_parclen( 2 );
@@ -186,7 +186,7 @@ static void do_charone( int iSwitch )
             break;
       }  /* switch( iSwitch ) */
    }
-   else  /* if( ISCHAR( 1 ) ) */
+   else  /* if( HB_ISCHAR( 1 ) ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

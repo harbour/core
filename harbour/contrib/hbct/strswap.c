@@ -98,13 +98,13 @@ HB_FUNC( STRSWAP )
       int iChange1, iChange2;
       size_t sIndex, sCmpLen;
 
-      if( ( iChange1 = ISBYREF( 1 ) ) != 0 )
+      if( ( iChange1 = HB_ISBYREF( 1 ) ) != 0 )
       {
          pcRet1 = ( char * ) hb_xgrab( sStrLen1 );
          hb_xmemcpy( pcRet1, pcString1, sStrLen1 );
       }
 
-      if( ( iChange2 = ISBYREF( 2 ) ) != 0 )
+      if( ( iChange2 = HB_ISBYREF( 2 ) ) != 0 )
       {
          pcRet2 = ( char * ) hb_xgrab( sStrLen2 );
          hb_xmemcpy( pcRet2, pcString2, sStrLen2 );

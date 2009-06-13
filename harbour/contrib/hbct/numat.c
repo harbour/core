@@ -85,7 +85,7 @@
 
 HB_FUNC( NUMAT )
 {
-   if( ( ISCHAR( 1 ) ) && ( ISCHAR( 2 ) ) )
+   if( ( HB_ISCHAR( 1 ) ) && ( HB_ISCHAR( 2 ) ) )
    {
       char *pcStringToMatch = ( char * ) hb_parc( 1 );
       size_t sStrToMatchLen = ( size_t ) hb_parclen( 1 );
@@ -99,7 +99,7 @@ HB_FUNC( NUMAT )
       char *pc, *pcSubStr;
 
       /* eventually ignore some characters */
-      if( ISNUM( 3 ) )
+      if( HB_ISNUM( 3 ) )
          sIgnore = ( size_t ) hb_parnl( 3 );
       else
          sIgnore = 0;
@@ -155,7 +155,7 @@ HB_FUNC( NUMAT )
 
       hb_retnl( ulCounter - 1 );
    }
-   else  /* ( ISCHAR( 1 ) && ISCHAR( 2 ) ) */
+   else  /* ( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

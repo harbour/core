@@ -622,7 +622,7 @@ HB_FUNC( WINPORTTIMEOUTS )
 {
    long Tmp;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       Tmp = s_ReadIntervalTimeout;
       s_ReadIntervalTimeout = hb_parni( 1 );
@@ -631,7 +631,7 @@ HB_FUNC( WINPORTTIMEOUTS )
    else
       s_ReadIntervalTimeout = -1;
 
-   if( ISNUM( 2 ) )
+   if( HB_ISNUM( 2 ) )
    {
       Tmp = s_ReadTotalTimeoutMultiplier;
       s_ReadTotalTimeoutMultiplier = hb_parni( 2 );
@@ -640,7 +640,7 @@ HB_FUNC( WINPORTTIMEOUTS )
    else
       s_ReadTotalTimeoutMultiplier = -1;
 
-   if( ISNUM( 3 ) )
+   if( HB_ISNUM( 3 ) )
    {
       Tmp = s_ReadTotalTimeoutConstant;
       s_ReadTotalTimeoutConstant = hb_parni( 3 );
@@ -649,7 +649,7 @@ HB_FUNC( WINPORTTIMEOUTS )
    else
       s_ReadTotalTimeoutConstant = -1;
 
-   if( ISNUM( 4 ) )
+   if( HB_ISNUM( 4 ) )
    {
       Tmp = s_WriteTotalTimeoutMultiplier;
       s_WriteTotalTimeoutMultiplier = hb_parni( 4 );
@@ -658,7 +658,7 @@ HB_FUNC( WINPORTTIMEOUTS )
    else
       s_WriteTotalTimeoutMultiplier = -1;
 
-   if( ISNUM( 5 ) )
+   if( HB_ISNUM( 5 ) )
    {
       Tmp = s_WriteTotalTimeoutConstant;
       s_WriteTotalTimeoutConstant = hb_parni( 5 );
@@ -693,7 +693,7 @@ HB_FUNC( WINPORTFCN )
 HB_FUNC( FORMATMESSAGE )
 {
    char Buffer[ 256 ] = "";
-   DWORD Messageid = ISNUM( 1 ) ? ( DWORD ) hb_parnl( 1 ) : GetLastError();
+   DWORD Messageid = HB_ISNUM( 1 ) ? ( DWORD ) hb_parnl( 1 ) : GetLastError();
 
    if( FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, Messageid, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), /* Default language */
            ( LPTSTR ) Buffer, sizeof( Buffer ), NULL) == 0 )
@@ -708,7 +708,7 @@ HB_FUNC( FORMATMESSAGE )
 HB_FUNC( WINPORTDEBUGDCB )
 {
    int Port = hb_parni( 1 );
-   int DebugLevel = ISNUM(2) ? hb_parni( 2 ) : WPDBGBASIC;
+   int DebugLevel = HB_ISNUM(2) ? hb_parni( 2 ) : WPDBGBASIC;
    HANDLE hCommPort = s_PortData[ Port ].Port;
    DCB CurDCB;
    COMMTIMEOUTS CurCOMMTIMEOUTS;

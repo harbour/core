@@ -222,7 +222,7 @@ HB_FUNC( VOLUME )
       char sRootBuf[4], sVolNameBuf[12];
       BOOL fFree;
 
-      if( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 )
+      if( HB_ISCHAR( 1 ) && hb_parclen( 1 ) > 0 )
       {
          sDiskName = hb_fsNameConv( ( BYTE * ) hb_parc( 1 ), &fFree );
 

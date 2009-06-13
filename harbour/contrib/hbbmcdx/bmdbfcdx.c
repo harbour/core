@@ -6882,7 +6882,7 @@ static HB_ERRCODE hb_cdxSeekWild( CDXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pKeyI
 
 HB_FUNC( BM_TURBO )
 {
-    bTurbo = ISLOG( 1 ) ? hb_parl( 1 ) : FALSE;
+    bTurbo = HB_ISLOG( 1 ) ? hb_parl( 1 ) : FALSE;
     hb_retl( bTurbo );
 }
 
@@ -7023,13 +7023,13 @@ HB_FUNC( BM_DBSEEKWILD )
 
     if( pArea )
     {
-       if( !ISNIL( 1 ) )
+       if( ! HB_ISNIL( 1 ) )
        {
           pKey = hb_param( 1, HB_IT_ANY );
-          bSoftSeek = ISLOG( 2 ) ? (BOOL) hb_parl( 2 ) : hb_setGetSoftSeek();
-          bFindLast = ISLOG( 3 ) ? hb_parl( 3 ) : FALSE;
-          bNext     = ISLOG( 4 ) ? hb_parl( 4 ) : FALSE;
-          bAll      = ISLOG( 5 ) ? hb_parl( 5 ) : FALSE;
+          bSoftSeek = HB_ISLOG( 2 ) ? (BOOL) hb_parl( 2 ) : hb_setGetSoftSeek();
+          bFindLast = HB_ISLOG( 3 ) ? hb_parl( 3 ) : FALSE;
+          bNext     = HB_ISLOG( 4 ) ? hb_parl( 4 ) : FALSE;
+          bAll      = HB_ISLOG( 5 ) ? hb_parl( 5 ) : FALSE;
           if( bAll)
           {
              PHB_ITEM pList;

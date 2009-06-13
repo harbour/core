@@ -70,7 +70,7 @@
 static void do_charonly( int iSwitch )
 {
    /* param check */
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       char *pcString = hb_parc( 2 );
       size_t sStrLen = ( size_t ) hb_parclen( 2 );

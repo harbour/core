@@ -110,7 +110,7 @@
 
 HB_FUNC( CHARMIX )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *pcString1 = hb_parc( 1 );
       const char *pcString2;
@@ -131,7 +131,7 @@ HB_FUNC( CHARMIX )
          return;
       }
 
-      if( ISCHAR( 2 ) )
+      if( HB_ISCHAR( 2 ) )
       {
          pcString2 = hb_parc( 2 );
          sLen2 = hb_parclen( 2 );

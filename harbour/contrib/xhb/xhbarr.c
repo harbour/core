@@ -74,16 +74,16 @@ HB_FUNC( ASPLICE )
          return;
       }
 
-      if( ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
       {
          ulStart = ( ULONG ) hb_parnl( 2 );
       }
       else
       {
-         ulStart = ulLen + ( hb_pcount() > 3 && !ISNUM( 3 ) ? 1 : 0 );
+         ulStart = ulLen + ( hb_pcount() > 3 && !HB_ISNUM( 3 ) ? 1 : 0 );
       }
 
-      if( ISNUM( 3 ) )
+      if( HB_ISNUM( 3 ) )
       {
          ulRemove = ( ULONG ) hb_parnl( 3 );
       }
@@ -197,7 +197,7 @@ HB_FUNC( AMERGE )
 
       hb_arraySize( pArray1, ulLen + ulAdd );
 
-      if( ISNUM( 3 ) )
+      if( HB_ISNUM( 3 ) )
       {
          ulStart = hb_parnl( 3 ) - 1;
          if( ulStart > ulLen )

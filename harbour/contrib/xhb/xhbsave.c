@@ -62,13 +62,13 @@ static void hb_getScreenRange( USHORT * pusMin, USHORT * pusMax,
    {
       iMax  = hb_gtMaxRow();
       iFrom = hb_parni( 1 );
-      iTo   = ISNUM( 3 ) ? hb_parni( 3 ) : iMax;
+      iTo   = HB_ISNUM( 3 ) ? hb_parni( 3 ) : iMax;
    }
    else
    {
       iMax = hb_gtMaxCol();
       iFrom = hb_parni( 2 );
-      iTo   = ISNUM( 4 ) ? hb_parni( 4 ) : iMax;
+      iTo   = HB_ISNUM( 4 ) ? hb_parni( 4 ) : iMax;
    }
 
    if( iFrom < 0 )
@@ -112,7 +112,7 @@ HB_FUNC( XHB_SAVESCREEN )
 
 HB_FUNC( XHB_RESTSCREEN )
 {
-   if( ISCHAR( 5 ) )
+   if( HB_ISCHAR( 5 ) )
    {
       USHORT uiTop, uiLeft, uiBottom, uiRight;
       BOOL fNoCheck = hb_parl( 6 );

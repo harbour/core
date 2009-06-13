@@ -809,7 +809,7 @@ HB_FUNC( ATI )
 
 HB_FUNC( HB_EXEC )
 {
-   if( ISSYMBOL( 1 ) )
+   if( HB_ISSYMBOL( 1 ) )
    {
       BOOL fSend = FALSE;
       int iParams = hb_pcount() - 1;

@@ -123,7 +123,7 @@
 
 HB_FUNC( ATREPL )
 {
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       char *pcStringToMatch = hb_parc( 1 );
       size_t sStrToMatchLen = ( size_t ) hb_parclen( 1 );
@@ -143,7 +143,7 @@ HB_FUNC( ATREPL )
       size_t sRetStrLen;
 
       /* eventually ignore some characters */
-      if( ISNUM( 6 ) )
+      if( HB_ISNUM( 6 ) )
          sIgnore = ( size_t ) hb_parnl( 6 );
       else
          sIgnore = 0;
@@ -162,7 +162,7 @@ HB_FUNC( ATREPL )
       }
 
       /* replacement */
-      if( ISCHAR( 3 ) )
+      if( HB_ISCHAR( 3 ) )
       {
          pcReplacement = hb_parc( 3 );
          sReplaceLen = hb_parclen( 3 );
@@ -174,13 +174,13 @@ HB_FUNC( ATREPL )
       }
 
       /* replace mode */
-      if( ISLOG( 5 ) )
+      if( HB_ISLOG( 5 ) )
          iReplaceMode = hb_parl( 5 );
       else
          iReplaceMode = 0;
 
       /* nth match or last match ? */
-      if( ISNUM( 4 ) )
+      if( HB_ISNUM( 4 ) )
          ulCounter = hb_parnl( 4 );
       else
          ulCounter = 0;
@@ -326,7 +326,7 @@ HB_FUNC( ATREPL )
       hb_retclen( pcRetStr, sRetStrLen );
       hb_xfree( pcRetStr );
    }
-   else /* ( ISCHAR( 1 ) && ISCHAR( 2 ) ) */
+   else /* ( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

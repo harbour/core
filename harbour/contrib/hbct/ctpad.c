@@ -61,7 +61,7 @@
 /* helper function for the pad functions */
 static void do_pad( int iSwitch )
 {
-   if( ISCHAR( 1 ) && ISNUM( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
       char *pcString = ( char * ) hb_parc( 1 );
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
@@ -90,7 +90,7 @@ static void do_pad( int iSwitch )
 
       if( hb_parclen( 3 ) > 0 )
          cFill = *( hb_parc( 3 ) );
-      else if( ISNUM( 3 ) )
+      else if( HB_ISNUM( 3 ) )
          cFill = ( char ) ( hb_parnl( 3 ) % 256 );
       else
          cFill = 0x20;
@@ -123,7 +123,7 @@ static void do_pad( int iSwitch )
       }
       hb_retclen_buffer( pcRet, sRetLen );
    }
-   else  /* ISCHAR( 1 ) && ISNUM( 2 ) */
+   else  /* HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

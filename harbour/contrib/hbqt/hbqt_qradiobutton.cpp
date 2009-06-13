@@ -69,7 +69,7 @@
  */
 HB_FUNC( QT_QRADIOBUTTON )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
       hb_retptr( ( QRadioButton* ) new QRadioButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
    else
       hb_retptr( ( QRadioButton* ) new QRadioButton( hbqt_par_QWidget( 1 ) ) );

@@ -195,7 +195,7 @@ void hb_OutDebug( const char * szMsg, ULONG ulMsgLen )
          }
       }
 
-      if( s_iDebugFd > 0 && ISCHAR(1) )
+      if( s_iDebugFd > 0 && HB_ISCHAR(1) )
       {
          fd_set wrds;
          struct timeval tv = { 0, 100000 }; /* wait each time a tenth of second */
@@ -246,6 +246,6 @@ HB_FUNC( HB_OUTDEBUGNAME )
 
 HB_FUNC( HB_OUTDEBUG )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
       hb_OutDebug( hb_parcx( 1 ), hb_parclen( 1 ) );
 }

@@ -108,7 +108,7 @@
 
 HB_FUNC( TABEXPAND )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *pcString = ( char * ) hb_parc( 1 );
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
@@ -122,19 +122,19 @@ HB_FUNC( TABEXPAND )
       size_t sIndex, sLineIndex;
       size_t sTabCnt = 0;
 
-      if( ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
          sTabWidth = hb_parnl( 2 );
       if( ( signed ) sTabWidth <= 0 )
          sTabWidth = 8;
 
-      if( ISNUM( 3 ) )
+      if( HB_ISNUM( 3 ) )
          cFill = ( char ) ( hb_parnl( 3 ) % 256 );
       else if( hb_parclen( 3 ) > 0 )
          cFill = hb_parc( 3 )[0];
       else
          cFill = 0x20;
 
-      if( ISCHAR( 4 ) && hb_parclen( 4 ) > 0 )
+      if( HB_ISCHAR( 4 ) && hb_parclen( 4 ) > 0 )
       {
          pcNewLine = ( char * ) hb_parc( 4 );
          sNewLineLen = hb_parclen( 4 );
@@ -151,14 +151,14 @@ HB_FUNC( TABEXPAND )
       else
          cCR = 13;
 
-      if( ISNUM( 5 ) )
+      if( HB_ISNUM( 5 ) )
          cTab = ( char ) ( hb_parnl( 5 ) % 256 );
       else if( hb_parclen( 5 ) > 0 )
          cTab = hb_parc( 5 )[0];
       else
          cTab = 0x09;
 
-      if( ISLOG( 6 ) )
+      if( HB_ISLOG( 6 ) )
          iIgnore141 = hb_parl( 6 );
       else
          iIgnore141 = 0;
@@ -245,7 +245,7 @@ HB_FUNC( TABEXPAND )
       hb_retclen( pcRet, sRetLen );
       hb_xfree( pcRet );
    }
-   else  /* ISCHAR( 1 ) */
+   else  /* HB_ISCHAR( 1 ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
@@ -309,7 +309,7 @@ HB_FUNC( TABEXPAND )
 
 HB_FUNC( TABPACK )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *pcString = ( char * ) hb_parc( 1 );
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
@@ -322,12 +322,12 @@ HB_FUNC( TABPACK )
       int iIgnore141;
       size_t sIndex, sTabIndex, sFillCount;
 
-      if( ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
          sTabWidth = hb_parnl( 2 );
       if( ( signed ) sTabWidth <= 0 )
          sTabWidth = 8;
 
-      if( ISNUM( 3 ) )
+      if( HB_ISNUM( 3 ) )
          cFill = ( char ) ( hb_parnl( 3 ) % 256 );
       else if( hb_parclen( 3 ) > 0 )
          cFill = hb_parc( 3 )[0];
@@ -347,14 +347,14 @@ HB_FUNC( TABPACK )
       else
          cCR = 13;
 
-      if( ISNUM( 5 ) )
+      if( HB_ISNUM( 5 ) )
          cTab = ( char ) ( hb_parnl( 5 ) % 256 );
       else if( hb_parclen( 5 ) > 0 )
          cTab = hb_parc( 5 )[0];
       else
          cTab = 0x09;
 
-      if( ISLOG( 6 ) )
+      if( HB_ISLOG( 6 ) )
          iIgnore141 = hb_parl( 6 );
       else
          iIgnore141 = 0;
@@ -480,7 +480,7 @@ HB_FUNC( TABPACK )
       hb_retclen( pcRet, sRetLen );
       hb_xfree( pcRet );
    }
-   else  /* ISCHAR( 1 ) */
+   else  /* HB_ISCHAR( 1 ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

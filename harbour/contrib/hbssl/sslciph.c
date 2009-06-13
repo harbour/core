@@ -57,7 +57,7 @@
 
 HB_FUNC( SSL_CIPHER_DESCRIPTION )
 {
-   if( ISPOINTER( 1 ) )
+   if( HB_ISPOINTER( 1 ) )
    {
       char buffer[ 128 ];
 
@@ -71,7 +71,7 @@ HB_FUNC( SSL_CIPHER_DESCRIPTION )
 
 HB_FUNC( SSL_CIPHER_GET_BITS )
 {
-   if( ISPOINTER( 1 ) )
+   if( HB_ISPOINTER( 1 ) )
    {
       int alg_bits = 0;
 
@@ -85,7 +85,7 @@ HB_FUNC( SSL_CIPHER_GET_BITS )
 
 HB_FUNC( SSL_CIPHER_GET_NAME )
 {
-   if( ISPOINTER( 1 ) )
+   if( HB_ISPOINTER( 1 ) )
       hb_retc( hb_parptr( 1 ) ? SSL_CIPHER_get_name( ( SSL_CIPHER * ) hb_parptr( 1 ) ) : NULL );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -93,7 +93,7 @@ HB_FUNC( SSL_CIPHER_GET_NAME )
 
 HB_FUNC( SSL_CIPHER_GET_VERSION )
 {
-   if( ISPOINTER( 1 ) )
+   if( HB_ISPOINTER( 1 ) )
       hb_retc( hb_parptr( 1 ) ? SSL_CIPHER_get_version( ( SSL_CIPHER * ) hb_parptr( 1 ) ) : NULL );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

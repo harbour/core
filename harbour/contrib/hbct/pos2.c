@@ -88,11 +88,11 @@ HB_FUNC( POSCHAR )
 {
    int iNoRet;
 
-   iNoRet = ct_getref() && ISBYREF( 1 );
+   iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
    if( hb_parclen( 1 ) > 0 )
    {
-      if( ( hb_parclen( 2 ) > 0 ) || ISNUM( 2 ) )
+      if( ( hb_parclen( 2 ) > 0 ) || HB_ISNUM( 2 ) )
       {
          char *pcString = hb_parc( 1 );
          size_t sStrLen = hb_parclen( 1 );
@@ -100,12 +100,12 @@ HB_FUNC( POSCHAR )
          char cReplace;
          size_t sPosition;
 
-         if( ISCHAR( 2 ) )
+         if( HB_ISCHAR( 2 ) )
             cReplace = *( hb_parc( 2 ) );
          else
             cReplace = ( char ) ( hb_parnl( 2 ) % 256 );
 
-         if( ISNUM( 3 ) )
+         if( HB_ISNUM( 3 ) )
          {
             sPosition = hb_parnl( 3 );
             if( sPosition == 0 )
@@ -118,7 +118,7 @@ HB_FUNC( POSCHAR )
          hb_xmemcpy( pcRet, pcString, sStrLen );
          *( pcRet + sPosition - 1 ) = cReplace;
 
-         if( ISBYREF( 1 ) )
+         if( HB_ISBYREF( 1 ) )
             hb_storclen( pcRet, sStrLen, 1 );
 
          if( iNoRet )
@@ -129,7 +129,7 @@ HB_FUNC( POSCHAR )
          else
             hb_retclen_buffer( pcRet, sStrLen );
       }
-      else  /* ( hb_parclen( 2 ) > 0 ) || ISNUM( 2 ) */
+      else  /* ( hb_parclen( 2 ) > 0 ) || HB_ISNUM( 2 ) */
       {
          PHB_ITEM pSubst = NULL;
          int iArgErrorMode = ct_getargerrormode();
@@ -201,19 +201,19 @@ HB_FUNC( POSCHAR )
 
 HB_FUNC( POSDEL )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *pcString = hb_parc( 1 );
       size_t sStrLen = hb_parclen( 1 );
       size_t sStartPos, sDelLen;
       char *pcRet;
 
-      if( ISNUM( 3 ) )
+      if( HB_ISNUM( 3 ) )
          sDelLen = hb_parnl( 3 );
       else
          sDelLen = 1;           /* set new standard behavior */
 
-      if( ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
       {
          sStartPos = hb_parnl( 2 );
          if( sStartPos == 0 || sStartPos > sStrLen - sDelLen + 1 )
@@ -245,7 +245,7 @@ HB_FUNC( POSDEL )
 
       hb_retclen_buffer( pcRet, sStrLen - sDelLen );
    }
-   else  /* ISCHAR( 1 ) */
+   else  /* HB_ISCHAR( 1 ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
@@ -295,7 +295,7 @@ HB_FUNC( POSDEL )
 
 HB_FUNC( POSINS )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *pcString = hb_parc( 1 );
       size_t sStrLen = hb_parclen( 1 );
@@ -309,7 +309,7 @@ HB_FUNC( POSINS )
 
          pcInsert = hb_parc( 2 );
 
-         if( ISNUM( 3 ) )
+         if( HB_ISNUM( 3 ) )
          {
             sStartPos = hb_parnl( 3 );
             if( sStartPos == 0 )
@@ -354,7 +354,7 @@ HB_FUNC( POSINS )
       else  /* hb_parclen( 2 ) > 0 */
          hb_retclen( pcString, sStrLen );
    }
-   else  /* ISCHAR( 1 ) */
+   else  /* HB_ISCHAR( 1 ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
@@ -406,9 +406,9 @@ HB_FUNC( POSREPL )
 {
    int iNoRet;
 
-   iNoRet = ct_getref() && ISBYREF( 1 );
+   iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *pcString = hb_parc( 1 );
       size_t sStrLen = hb_parclen( 1 );
@@ -424,7 +424,7 @@ HB_FUNC( POSREPL )
 
          pcReplace = hb_parc( 2 );
 
-         if( ISNUM( 3 ) )
+         if( HB_ISNUM( 3 ) )
          {
             sStartPos = hb_parnl( 3 );
             if( sStartPos == 0 )
@@ -481,7 +481,7 @@ HB_FUNC( POSREPL )
             hb_xmemcpy( pcRet + sStartPos - 1 + sReplLen, pcString + sStartPos - 1 + sReplLen,
                         sStrLen - ( sStartPos - 1 + sReplLen ) );
 
-         if( ISBYREF( 1 ) )
+         if( HB_ISBYREF( 1 ) )
          {
             hb_storclen( pcRet, sRetLen, 1 );
          }
@@ -515,7 +515,7 @@ HB_FUNC( POSREPL )
             hb_retclen( pcString, sStrLen );
       }
    }
-   else  /* ISCHAR( 1 ) */
+   else  /* HB_ISCHAR( 1 ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

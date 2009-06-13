@@ -144,21 +144,21 @@ HB_FUNC( _ASCALLBACK )
 
    int i, iParam;
 
-   if( ISBLOCK( 1 ) )
+   if( HB_ISBLOCK( 1 ) )
    {
       Callback.pDynSym = hb_dynsymGet( "EVAL" );
       Callback.pSelf   = hb_itemNew( hb_param( 1, HB_IT_BLOCK ) );
    }
    else
    {
-      if( ISOBJECT( 2 ) )
+      if( HB_ISOBJECT( 2 ) )
          Callback.pSelf = hb_itemNew( hb_param( 2, HB_IT_OBJECT ) );
       else
          Callback.pSelf = NULL;
 
-      if( ISCHAR( 1 ) )
+      if( HB_ISCHAR( 1 ) )
          Callback.pDynSym = hb_dynsymGet( hb_parc( 1 ) );
-      else if( ISPOINTER( 1 ) )
+      else if( HB_ISPOINTER( 1 ) )
          Callback.pDynSym = ( ( PHB_SYMB ) hb_parptr( 1 ) )->pDynSym;
       else
       {
@@ -175,8 +175,8 @@ HB_FUNC( _ASCALLBACK )
       return;
    }
 
-   Callback.iFormalParams = ISNUM( 3 ) ? hb_parni( 3 ) : 4 ;      /* default to 4 formal parameters */
-   Callback.bVoid         = ISLOG( 4 ) ? hb_parl ( 4 ) : FALSE;   /* default to non-void function   */
+   Callback.iFormalParams = HB_ISNUM( 3 ) ? hb_parni( 3 ) : 4 ;      /* default to 4 formal parameters */
+   Callback.bVoid         = HB_ISLOG( 4 ) ? hb_parl ( 4 ) : FALSE;   /* default to non-void function   */
    Callback.iCargoParams  = hb_pcount() - 4;
 
    Callback.pParams = ( PHB_ITEM * ) hb_xgrab( Callback.iCargoParams * sizeof( PHB_ITEM ) );
@@ -190,7 +190,7 @@ HB_FUNC( _ASCALLBACK )
 
    /* debugging only             */
    /* to see what was generated  */
-   if ( ISBYREF( 5 ) )
+   if ( HB_ISBYREF( 5 ) )
       hb_storclen( ( char * ) pMem, 128, 5 );
 }
 /*----------------------------------------------------------------------*/

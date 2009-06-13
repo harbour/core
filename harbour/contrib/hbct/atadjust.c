@@ -100,7 +100,7 @@
 
 HB_FUNC( ATADJUST )
 {
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) && ISNUM( 3 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISNUM( 3 ) )
    {
       char *pcStringToMatch = hb_parc( 1 );
       size_t sStrToMatchLen = ( size_t ) hb_parclen( 1 );
@@ -120,7 +120,7 @@ HB_FUNC( ATADJUST )
       size_t sRetStrLen;
 
       /* eventually ignore some characters */
-      if( ISNUM( 5 ) )
+      if( HB_ISNUM( 5 ) )
          sIgnore = ( size_t ) hb_parnl( 5 );
       else
          sIgnore = 0;
@@ -160,7 +160,7 @@ HB_FUNC( ATADJUST )
          sAdjustPosition--;     /* makes live easier since C indices start at zero ! */
 
       /* nth match or last match ? */
-      if( ISNUM( 4 ) && ( ulCounter = hb_parnl( 4 ) ) != 0 )
+      if( HB_ISNUM( 4 ) && ( ulCounter = hb_parnl( 4 ) ) != 0 )
       {
          /* find the <ulCounter>th match */
          char *pcSubStr;
@@ -204,7 +204,7 @@ HB_FUNC( ATADJUST )
             sSubStrLen = sStrLen - ( pcSubStr - pcString );
          }
       }
-      else /* ( ISNUM( 4 ) && ( (ulCounter = hb_parnl( 4 ) ) != 0 ) */
+      else /* ( HB_ISNUM( 4 ) && ( (ulCounter = hb_parnl( 4 ) ) != 0 ) */
       {
          /* we have to find the last match */
          switch ( iAtLike )
@@ -232,14 +232,14 @@ HB_FUNC( ATADJUST )
       }
 
       /* adjust string */
-      if( ISCHAR( 6 ) )
+      if( HB_ISCHAR( 6 ) )
       {
          if( hb_parclen( 6 ) > 0 )
             cFillChar = *( hb_parc( 6 ) );
          else
             cFillChar = 0x20;
       }
-      else if( ISNUM( 6 ) )
+      else if( HB_ISNUM( 6 ) )
          cFillChar = ( char ) ( hb_parnl( 6 ) % 256 );
       else
          cFillChar = 0x20;
@@ -314,7 +314,7 @@ HB_FUNC( ATADJUST )
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
-      else if( ISCHAR( 2 ) )
+      else if( HB_ISCHAR( 2 ) )
          hb_retclen( hb_parc( 2 ), hb_parclen( 2 ) );
       else
          hb_retc( NULL );

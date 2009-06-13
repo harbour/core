@@ -147,7 +147,7 @@ static BOOL hb_copyfile( char * szSource, char * szDest, PHB_ITEM pBlock )
 
 HB_FUNC( XHB_COPYFILE )
 {
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       if( ! hb_copyfile( hb_parc( 1 ), hb_parc( 2 ), hb_param( 3, HB_IT_BLOCK ) ) )
          hb_retl( FALSE );

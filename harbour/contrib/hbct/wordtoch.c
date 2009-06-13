@@ -165,7 +165,7 @@ HB_FUNC( WORDTOCHAR )
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
-      else if( ISCHAR( 2 ) )
+      else if( HB_ISCHAR( 2 ) )
          hb_retclen( hb_parc( 2 ), hb_parclen( 2 ) );
       else
          hb_retc( NULL );

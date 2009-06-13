@@ -86,7 +86,7 @@ HB_FUNC( INVERTATTR )
 {
    int iAttr;
 
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       iAttr = hb_gtColorToN( hb_parc( 1 ) );
       if( iAttr == -1 )
@@ -141,7 +141,7 @@ HB_FUNC( INVERTATTR )
 
 HB_FUNC( COLORTON )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       int iColor = hb_gtColorToN( hb_parc( 1 ) );
       hb_retni( iColor == -1 ? 0 : iColor );
@@ -196,11 +196,11 @@ HB_FUNC( NTOCOLOR )
    char szColorString[ 10 ];
    int iColor;
 
-   iColor = ISNUM( 1 ) ? hb_parni( 1 ) : -1;
+   iColor = HB_ISNUM( 1 ) ? hb_parni( 1 ) : -1;
 
    if( iColor >= 0x00 && iColor <= 0xff )
    {
-      if( ISLOG( 2 ) && hb_parl( 2 ) )
+      if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
          hb_gtColorsToString( &iColor, 1, szColorString, 10 );
       else
          hb_snprintf( szColorString, 10, "%02d/%02d", iColor & 0x0f, iColor >> 4 );

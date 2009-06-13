@@ -71,7 +71,7 @@ static const ULONG sulErrorSubcodes[3] = {
 static void do_remove( int iSwitch )
 {
    /* param check */
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *pcString = ( char * ) hb_parc( 1 );
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
@@ -81,7 +81,7 @@ static void do_remove( int iSwitch )
 
       if( hb_parclen( 2 ) > 0 )
          cSearch = *( hb_parc( 2 ) );
-      else if( ISNUM( 2 ) )
+      else if( HB_ISNUM( 2 ) )
          cSearch = ( char ) ( hb_parnl( 2 ) % 256 );
       else
          cSearch = 0x20;

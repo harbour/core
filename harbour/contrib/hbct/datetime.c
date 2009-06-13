@@ -103,7 +103,7 @@ HB_FUNC( BOM )
    LONG lDate;
    int iYear, iMonth, iDay;
 
-   if( ISNIL( 1 ) )
+   if( HB_ISNIL( 1 ) )
    {
       hb_dateToday( &iYear, &iMonth, &iDay );
       lDate = hb_dateEncode( iYear, iMonth, iDay );
@@ -158,7 +158,7 @@ HB_FUNC( EOM )
    LONG lDate;
    int iYear, iMonth, iDay;
 
-   if( ISNIL( 1 ) )
+   if( HB_ISNIL( 1 ) )
    {
       hb_dateToday( &iYear, &iMonth, &iDay );
       lDate = hb_dateEncode( iYear, iMonth, iDay );
@@ -219,7 +219,7 @@ HB_FUNC( BOQ )
    LONG lDate;
    int iYear, iMonth, iDay;
 
-   if( ISNIL( 1 ) )
+   if( HB_ISNIL( 1 ) )
    {
       hb_dateToday( &iYear, &iMonth, &iDay );
       lDate = hb_dateEncode( iYear, iMonth, iDay );
@@ -276,7 +276,7 @@ HB_FUNC( EOQ )
    LONG lDate;
    int iYear, iMonth, iDay;
 
-   if( ISNIL( 1 ) )
+   if( HB_ISNIL( 1 ) )
    {
       hb_dateToday( &iYear, &iMonth, &iDay );
       lDate = hb_dateEncode( iYear, iMonth, iDay );
@@ -338,7 +338,7 @@ HB_FUNC( BOY )
    LONG lDate;
    int iYear, iMonth, iDay;
 
-   if( ISNIL( 1 ) )
+   if( HB_ISNIL( 1 ) )
    {
       hb_dateToday( &iYear, &iMonth, &iDay );
       lDate = hb_dateEncode( iYear, iMonth, iDay );
@@ -393,7 +393,7 @@ HB_FUNC( EOY )
    LONG lDate;
    int iYear, iMonth, iDay;
 
-   if( ISNIL( 1 ) )
+   if( HB_ISNIL( 1 ) )
    {
       hb_dateToday( &iYear, &iMonth, &iDay );
       lDate = hb_dateEncode( iYear, iMonth, iDay );
@@ -433,7 +433,7 @@ HB_FUNC( WOM )
    LONG lDate;
    int iYear, iMonth, iDay;
 
-   if( ISNIL( 1 ) )
+   if( HB_ISNIL( 1 ) )
    {
       hb_dateToday( &iYear, &iMonth, &iDay );
       lDate = hb_dateEncode( iYear, iMonth, iDay );

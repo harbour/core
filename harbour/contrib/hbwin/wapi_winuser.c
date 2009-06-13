@@ -235,7 +235,7 @@ HB_FUNC( WAPI_SETSCROLLINFO )
    wapi_ret_NI( SetScrollInfo( wapi_par_HWND( 1 ),
                                wapi_par_INT( 2 ),
                                si,
-                               ISLOG( 4 ) ? wapi_par_BOOL( 4 ) : TRUE ) );
+                               HB_ISLOG( 4 ) ? wapi_par_BOOL( 4 ) : TRUE ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -258,7 +258,7 @@ HB_FUNC( WAPI_SETSCROLLRANGE )
                                wapi_par_INT( 2 ),
                                wapi_par_INT( 3 ),
                                wapi_par_INT( 4 ),
-                               ISLOG( 5 ) ? wapi_par_BOOL( 5 ) : TRUE ) );
+                               HB_ISLOG( 5 ) ? wapi_par_BOOL( 5 ) : TRUE ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -288,14 +288,14 @@ HB_FUNC( WAPI_LOADBITMAP )
 {
    LPTSTR lpBmp;
 
-   if( ISNUM( 2 ) )
+   if( HB_ISNUM( 2 ) )
       lpBmp = ( LPTSTR ) MAKEINTRESOURCE( wapi_par_INT( 2 ) );
    else
       lpBmp = ( LPTSTR ) HB_TCHAR_CONVTO( hb_parcx( 2 ) );
 
    hb_retptr( LoadBitmap( wapi_par_HINSTANCE( 1 ), lpBmp ) );
 
-   if( ! ISNUM( 2 ) )
+   if( ! HB_ISNUM( 2 ) )
       HB_TCHAR_FREE( lpBmp );
 }
 #endif

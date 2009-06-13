@@ -5081,26 +5081,26 @@ HB_FUNC( ADSCUSTOMIZEAOF )
    pArea = hb_adsGetWorkAreaPointer();
    if( pArea )
    {
-      if( ISNUM( 2 ) )                  /* add, delete or toggle */
+      if( HB_ISNUM( 2 ) )                  /* add, delete or toggle */
          u16Option = ( UNSIGNED16 ) hb_parni( 2 );
 
-      if( ISNIL( 1 ) )                  /* default to current record */
+      if( HB_ISNIL( 1 ) )                  /* default to current record */
       {
          u32NumRecs = 1;
          SELF_RECNO( ( AREAP ) pArea, &ulRecord );
       }
-      else if( ISNUM( 1 ) )             /* Passed a single recno */
+      else if( HB_ISNUM( 1 ) )             /* Passed a single recno */
       {
          u32NumRecs = 1;
          ulRecord = hb_parnl( 1 );
       }
-      else if( ISARRAY( 1 ) )           /* convert array of recnos to C array */
+      else if( HB_ISARRAY( 1 ) )           /* convert array of recnos to C array */
          u32NumRecs = hb_parinfa( 1, 0 );
 
       if( u32NumRecs )
       {
          pu32Records = ( UNSIGNED32 * ) hb_xgrab( u32NumRecs * sizeof( UNSIGNED32 ) );
-         if( ISARRAY( 1 ) )           /* convert array of recnos to C array */
+         if( HB_ISARRAY( 1 ) )           /* convert array of recnos to C array */
          {
             for( ulRecord = 0; ulRecord < u32NumRecs; ulRecord++ )
                pu32Records[ ulRecord ] = hb_parnl( 1, ulRecord + 1 );

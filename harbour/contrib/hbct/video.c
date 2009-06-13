@@ -155,11 +155,11 @@ HB_FUNC( VGAPALETTE )
       hb_retl( FALSE );
       return;
    }
-   if( ISNUM( 1 ) && hb_parni( 1 ) < 16 )
+   if( HB_ISNUM( 1 ) && hb_parni( 1 ) < 16 )
    {
       attr = hb_parni( 1 );
    }
-   else if( ISCHAR( 1 ) )
+   else if( HB_ISCHAR( 1 ) )
    {
       char *s;
 
@@ -348,11 +348,11 @@ HB_FUNC( SETFONT )
 
    if( !area )
       area = 1;
-   if( ISNUM( 3 ) )
+   if( HB_ISNUM( 3 ) )
       offset = hb_parni( 3 );
-   if( ISNUM( 4 ) )
+   if( HB_ISNUM( 4 ) )
       count = hb_parni( 4 );
-   if( ISLOG( 3 ) )
+   if( HB_ISLOG( 3 ) )
       if( hb_parl( 3 ) && count != 0 )
          height = len / count;
 

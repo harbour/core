@@ -61,7 +61,7 @@
 
 HB_FUNC( CURL_MULTI_STRERROR )
 {
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
       hb_retc( curl_multi_strerror( ( CURLMcode ) hb_parnl( 1 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -73,7 +73,7 @@ HB_FUNC( CURL_MULTI_STRERROR )
 
 HB_FUNC( CURL_SHARE_STRERROR )
 {
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
       hb_retc( curl_share_strerror( ( CURLSHcode ) hb_parnl( 1 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -86,7 +86,7 @@ HB_FUNC( CURL_SHARE_STRERROR )
 /* NOTE: Obsolete, superceded by curl_easy_escape() */
 HB_FUNC( CURL_ESCAPE )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char * buffer = curl_escape( hb_parc( 1 ), hb_parclen( 1 ) );
       hb_retc( buffer );
@@ -99,7 +99,7 @@ HB_FUNC( CURL_ESCAPE )
 /* NOTE: Obsolete, superceded by curl_easy_unescape() */
 HB_FUNC( CURL_UNESCAPE )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char * buffer = curl_unescape( hb_parc( 1 ), hb_parclen( 1 ) );
       hb_retc( buffer );

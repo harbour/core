@@ -55,7 +55,7 @@
 /* replaces characters in a string */
 HB_FUNC( STRDEL )
 {
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       char * szText = hb_parcx( 1 );
       ULONG ulText = hb_parclen( 1 );

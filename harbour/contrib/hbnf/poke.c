@@ -74,7 +74,7 @@ HB_FUNC( FT_POKE )
    auto unsigned int ProtMode = hb_cpmiIsProtected();
    auto unsigned char * bytePtr;
 
-   if ( ( PCOUNT >= 3 ) && ( ISNUM( 1 ) ) && ( ISNUM( 2 ) ) && ( ISNUM( 3 ) ) )
+   if ( ( PCOUNT >= 3 ) && ( HB_ISNUM( 1 ) ) && ( HB_ISNUM( 2 ) ) && ( HB_ISNUM( 3 ) ) )
    {
       FP_SEG( bytePtr ) = hb_parni( 1 );
       FP_OFF( bytePtr ) = hb_parni( 2 );

@@ -178,10 +178,10 @@ HB_FUNC( CHARSORT )
    int iNoRet;
 
    /* suppressing return value ? */
-   iNoRet = ct_getref() && ISBYREF( 1 );
+   iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
    /* param check I */
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       /* get parameters */
       char *pcString = hb_parc( 1 );
@@ -190,32 +190,32 @@ HB_FUNC( CHARSORT )
       size_t sElementLen, sIgnore, sSortLen;
       int iDescend;
 
-      if( ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
          sElementLen = hb_parnl( 2 );
       else
          sElementLen = 1;
 
-      if( ISNUM( 3 ) )
+      if( HB_ISNUM( 3 ) )
          ssCompareLen = hb_parnl( 3 );
       else
          ssCompareLen = sElementLen;
 
-      if( ISNUM( 4 ) )
+      if( HB_ISNUM( 4 ) )
          sIgnore = hb_parnl( 4 );
       else
          sIgnore = 0;
 
-      if( ISNUM( 5 ) )
+      if( HB_ISNUM( 5 ) )
          ssElementPos = hb_parnl( 5 );
       else
          ssElementPos = 0;
 
-      if( ISNUM( 6 ) )
+      if( HB_ISNUM( 6 ) )
          sSortLen = hb_parnl( 6 );
       else
          sSortLen = sStrLen - sIgnore;
 
-      if( ISLOG( 7 ) )
+      if( HB_ISLOG( 7 ) )
          iDescend = hb_parl( 7 );
       else
          iDescend = 0;
@@ -250,7 +250,7 @@ HB_FUNC( CHARSORT )
          qsort( pcRet + sIgnore, ( sSortLen / sElementLen ), sElementLen, _hb_do_sortascend );
 
       /* return string */
-      if( ISBYREF( 1 ) )
+      if( HB_ISBYREF( 1 ) )
          hb_storclen( pcRet, sStrLen, 1 );
 
       if( iNoRet )
@@ -261,7 +261,7 @@ HB_FUNC( CHARSORT )
       else
          hb_retclen_buffer( pcRet, sStrLen );
    }
-   else  /* if( ISCHAR( 1 ) ) */
+   else  /* if( HB_ISCHAR( 1 ) ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

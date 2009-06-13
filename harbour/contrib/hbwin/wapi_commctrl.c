@@ -308,7 +308,7 @@ HB_FUNC( WAPI_IMAGELIST_LOADIMAGE )
 {
    LPCTSTR image;
 
-   if( ISCHAR( 2 ) )
+   if( HB_ISCHAR( 2 ) )
       image = ( LPCTSTR ) hb_parc( 2 );
    else
       image = ( LPCTSTR ) MAKEINTRESOURCE( wapi_par_INT( 2 ) );
@@ -480,7 +480,7 @@ HB_FUNC( WAPI_TABCTRL_INSERTITEM )
    LPTSTR szText = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
-   item.iImage  = ISNUM( 4 ) ? wapi_par_INT( 4 ) : -1;
+   item.iImage  = HB_ISNUM( 4 ) ? wapi_par_INT( 4 ) : -1;
    item.pszText = szText;
 
    wapi_ret_NI( TabCtrl_InsertItem( wapi_par_HWND( 1 ), wapi_par_INT( 3 ), &item ) );
@@ -563,7 +563,7 @@ HB_FUNC( WAPI_TABCTRL_SETITEM )
    LPTSTR szText = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
-   item.iImage  = ISNUM( 4 ) ? wapi_par_INT( 4 ) : -1;
+   item.iImage  = HB_ISNUM( 4 ) ? wapi_par_INT( 4 ) : -1;
    item.pszText = szText;
 
    wapi_ret_L( TabCtrl_SetItem( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), &item ) );
@@ -612,7 +612,7 @@ HB_FUNC( WAPI_TABCTRL_SETITEMEXTRA )
 
 HB_FUNC( WAPI_TABCTRL_ADJUSTRECT )
 {
-   if( ISARRAY( 3 ) )
+   if( HB_ISARRAY( 3 ) )
    {
       RECT rc;
 
@@ -784,7 +784,7 @@ HB_FUNC( WAPI_TABCTRL_ADDITEM )
    TC_ITEM item;
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
-   item.iImage  = ISNUM( 3 ) ? wapi_par_INT( 3 ) : -1;
+   item.iImage  = HB_ISNUM( 3 ) ? wapi_par_INT( 3 ) : -1;
    item.pszText = szText;
 
    wapi_ret_NI( TabCtrl_InsertItem( wapi_par_HWND( 1 ), iCount, &item ) );

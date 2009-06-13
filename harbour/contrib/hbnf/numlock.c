@@ -90,7 +90,7 @@ HB_FUNC( FT_NUMLOCK )
       gtInfo.pResult = NULL;
    }
 
-   if( ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
    {
       iNewState = hb_parl( 1 ) ? ( iState | HB_GTI_KBD_NUMLOCK ) :
                                  ( iState & ~HB_GTI_KBD_NUMLOCK );

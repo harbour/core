@@ -80,7 +80,7 @@ static void do_list( int iSwitch )
    }
 
    /* init params */
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       pcString = hb_parc( 1 );
       sStrLen = ( size_t ) hb_parclen( 1 );

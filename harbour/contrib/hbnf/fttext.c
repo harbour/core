@@ -298,11 +298,11 @@ HB_FUNC( FT_FOFFSET )
 
 HB_FUNC( FT_FUSE )
 {
-   int attr = ISNUM( 2 ) ? hb_parni(2) : FO_READWRITE|FO_DENYNONE;
+   int attr = HB_ISNUM( 2 ) ? hb_parni(2) : FO_READWRITE|FO_DENYNONE;
 
    error[area] = 0;
 
-   if ( ISCHAR(1) )
+   if ( HB_ISCHAR(1) )
    {
       handles[area] = hb_fsOpen( ( BYTE * ) hb_parc(1), ( USHORT ) attr ) ;
       if( handles[area] <= 0 )
@@ -394,7 +394,7 @@ HB_FUNC( FT_FSELECT )
    int   oldarea = area + 1;
    int   newArea;
 
-   if ( ISNUM(1) )
+   if ( HB_ISNUM(1) )
    {
       newArea = hb_parni(1);
       if( newArea <= TEXT_WORKAREAS )
@@ -695,7 +695,7 @@ HB_FUNC( FT_FGOBOT )
 
 HB_FUNC( FT_FSKIP )
 {
-   if ( ISNUM(1) )
+   if ( HB_ISNUM(1) )
    {
        if( hb_parnl(1) )
           hb_retnl( _ft_skip( hb_parnl(1) ) );
@@ -1034,7 +1034,7 @@ HB_FUNC( FT_FDELETE )
    destPtr = offset[area] ;
 
    /* skip over deleted records, point to first 'to be retained' record */
-   _ft_skip( ( ISNUM( 1 ) ? hb_parni( 1 ) : 1 ) ) ;
+   _ft_skip( ( HB_ISNUM( 1 ) ? hb_parni( 1 ) : 1 ) ) ;
    srcPtr = hb_fsSeek( handles[area], offset[area], FS_SET );
 
    /* buffer read retained data, write atop old data */
@@ -1126,7 +1126,7 @@ HB_FUNC( FT_FDELETE )
 
 HB_FUNC( FT_FINSERT )
 {
-   int   no_lines = ( ISNUM( 1 ) ? hb_parni( 1 ) : 1 );
+   int   no_lines = ( HB_ISNUM( 1 ) ? hb_parni( 1 ) : 1 );
    int   no_bytes = no_lines * 2 ;
    int   err = 1;
 
@@ -1208,7 +1208,7 @@ HB_FUNC( FT_FINSERT )
 
 HB_FUNC( FT_FAPPEND )
 {
-   int   no_lines = ( ISNUM( 1 ) ? hb_parni( 1 ) : 1 );
+   int   no_lines = ( HB_ISNUM( 1 ) ? hb_parni( 1 ) : 1 );
    int   iRead;
    int   iByteCount;
 
@@ -1332,7 +1332,7 @@ HB_FUNC( FT_FWRITEL )
 {
    BYTE *   theData  = ( BYTE * ) hb_parc( 1 );
    int      iDataLen = hb_parclen( 1 );
-   int      lInsert  = ( ISLOG( 2 ) ? hb_parl( 2 ) : 0 );
+   int      lInsert  = ( HB_ISLOG( 2 ) ? hb_parl( 2 ) : 0 );
    int      err;
    int      iLineLen = 0;
    int      iRead, iEOL;

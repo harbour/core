@@ -54,7 +54,7 @@
 
 HB_FUNC( SETRC )
 {
-   BOOL fRow = ISNUM( 1 ), fCol = ISNUM( 2 );
+   BOOL fRow = HB_ISNUM( 1 ), fCol = HB_ISNUM( 2 );
 
    if( fRow && fCol )
       hb_gtSetPos( ( SHORT ) hb_parni( 1 ), ( SHORT ) hb_parni( 2 ) );

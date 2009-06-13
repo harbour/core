@@ -66,9 +66,9 @@ static void do_justify( int iSwitch )
 
    int iNoRet;
 
-   iNoRet = ct_getref() && ISBYREF( 1 );
+   iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
 
       char *pcString = hb_parc( 1 );
@@ -88,7 +88,7 @@ static void do_justify( int iSwitch )
 
       if( hb_parclen( 2 ) > 0 )
          cJustChar = *( hb_parc( 2 ) );
-      else if( ISNUM( 2 ) )
+      else if( HB_ISNUM( 2 ) )
          cJustChar = ( char ) ( hb_parnl( 2 ) % 256 );
       else
          cJustChar = 0x20;
@@ -128,7 +128,7 @@ static void do_justify( int iSwitch )
             break;
       }
 
-      if( ISBYREF( 1 ) )
+      if( HB_ISBYREF( 1 ) )
          hb_storclen( pcRet, sStrLen, 1 );
 
       if( iNoRet )
@@ -139,7 +139,7 @@ static void do_justify( int iSwitch )
       else
          hb_retclen_buffer( pcRet, sStrLen );
    }
-   else  /* ISCHAR( 1 ) */
+   else  /* HB_ISCHAR( 1 ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

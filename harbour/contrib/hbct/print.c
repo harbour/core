@@ -91,7 +91,7 @@
 
 HB_FUNC( PRINTSTAT )
 {
-   USHORT uiPort = ISNUM( 1 ) ? ( USHORT ) hb_parni( 1 ) : 1;
+   USHORT uiPort = HB_ISNUM( 1 ) ? ( USHORT ) hb_parni( 1 ) : 1;
    int Status = 0;
 
 #if defined(HB_OS_DOS)
@@ -142,7 +142,7 @@ HB_FUNC( PRINTSTAT )
 
 HB_FUNC( PRINTREADY )
 {
-   USHORT uiPort = ISNUM( 1 ) ? ( USHORT ) hb_parni( 1 ) : 1;
+   USHORT uiPort = HB_ISNUM( 1 ) ? ( USHORT ) hb_parni( 1 ) : 1;
    int Status = 0;
 
 #if defined(HB_OS_DOS)
@@ -173,7 +173,7 @@ HB_FUNC( PRINTSEND )
 
    r.x.dx = hb_parni( 2 ) - 1;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       r.h.al = hb_parni( 1 );
       __dpmi_int( 0x17, &r );
@@ -182,7 +182,7 @@ HB_FUNC( PRINTSEND )
       else
          hb_retni( 0 );
    }
-   else if( ISCHAR( 1 ) )
+   else if( HB_ISCHAR( 1 ) )
    {
       char *string = hb_parcx( 1 );
       int i, len = hb_parclen( 1 );
@@ -206,19 +206,19 @@ HB_FUNC( PRINTSEND )
    char * szStr = NULL;
    USHORT usLen = 0, usRet = 0;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       szChr[ 0 ] = ( char ) hb_parni( 1 );
       szStr = szChr;
       usLen = 1;
    }
-   else if( ISCHAR( 1 ) )
+   else if( HB_ISCHAR( 1 ) )
    {
       szStr = hb_parc( 1 );
       usLen = ( USHORT ) hb_parclen( 1 );
    }
 
-   if( ISNUM( 2 ) )
+   if( HB_ISNUM( 2 ) )
       szPort[ 3 ] = ( char ) hb_parni( 2 ) + '0';
 
    if( usLen )

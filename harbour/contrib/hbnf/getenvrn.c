@@ -123,9 +123,9 @@ HB_FUNC( FT_GETE )
       int buffsize = 0;
       int rettype = NORETURN;
 
-      if( ISCHAR( 1 ) )
+      if( HB_ISCHAR( 1 ) )
          rettype = CHARTYPE;
-      if( ISARRAY( 1 ) )
+      if( HB_ISARRAY( 1 ) )
          rettype = ARRAYTYPE;
 
       /* scan strings first and add up total size */
@@ -182,9 +182,9 @@ HB_FUNC( FT_GETE )
 
       char * szEnviron = HB_TCHAR_CONVFROM( lpEnviron );
 
-      if( ISCHAR( 1 ) )
+      if( HB_ISCHAR( 1 ) )
          rettype = CHARTYPE;
-      if( ISARRAY( 1 ) )
+      if( HB_ISARRAY( 1 ) )
          rettype = ARRAYTYPE;
 
       if( rettype == CHARTYPE )

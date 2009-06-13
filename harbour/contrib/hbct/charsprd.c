@@ -72,9 +72,9 @@ HB_FUNC( CHARSPREAD )
          int iTokens = 0, iRepl, iRest, iFirst, i;
          ULONG ul, ulDst, ulRest;
 
-         if( ISCHAR( 3 ) )
+         if( HB_ISCHAR( 3 ) )
             cDelim = hb_parc( 3 )[0];
-         else if( ISNUM( 3 ) )
+         else if( HB_ISNUM( 3 ) )
             cDelim = ( char ) hb_parni( 3 );
 
          for( ul = 0; ul < ulLen; ++ul )

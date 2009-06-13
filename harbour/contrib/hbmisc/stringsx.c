@@ -85,7 +85,7 @@ HB_FUNC( STRDUMP )
 
 HB_FUNC( ROT13 )
 {
-  if( ISCHAR(1) )
+  if( HB_ISCHAR(1) )
     {
       char *szText = hb_parc( 1 );
       ULONG i, lLen = hb_parclen( 1 );

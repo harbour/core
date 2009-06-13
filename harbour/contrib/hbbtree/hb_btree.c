@@ -1806,7 +1806,7 @@ static struct hb_BTree *BTree_GetTreeIndex( const char * GetSource )
 HB_FUNC( HB_BTREEOPEN  )  /* hb_BTreeOpen( CHAR cFileName, ULONG ulFlags [ , int nBuffers=1 ] )  ->  hb_Btree_Handle */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
-  if ( ISCHAR( 1 ) )
+  if ( HB_ISCHAR( 1 ) )
     hb_retni( BTree_SetTreeIndex( hb_BTreeOpen( ( BYTE * ) hb_parc( 1 ), hb_parnl( 2 ), hb_parni( 3 ) ) ) );
   else
   {
@@ -1818,8 +1818,8 @@ HB_FUNC( HB_BTREEOPEN  )  /* hb_BTreeOpen( CHAR cFileName, ULONG ulFlags [ , int
 HB_FUNC( HB_BTREENEW )  /* hb_BTreeNew( CHAR cFileName, int nPageSize, int nKeySize, [ ULONG ulFlags ], [ int nBuffers=1 ] )  ->  hb_Btree_Handle */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
-  if ( ( ( hb_parnl( 4 ) & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY || ISCHAR( 1 ) ) &&
-       ISNUM( 2 ) && ISNUM( 3 ) )
+  if ( ( ( hb_parnl( 4 ) & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY || HB_ISCHAR( 1 ) ) &&
+       HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
   {
     hb_retni( BTree_SetTreeIndex( hb_BTreeNew( ( BYTE * ) hb_parc( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parnl( 4 ), hb_parni( 5 ) ) ) );
   }
@@ -1843,7 +1843,7 @@ HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, LONG l
   /* PHB_ITEM pKeyCode = hb_param( 1, HB_IT_NUMERIC ); */
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
-  if ( ISNUM( 1 ) && ISCHAR( 2 ) && ( hb_pcount() == 2 || GETFLAG( pBTree, IsInMemory ) || ISNUM( 3 ) ) )
+  if ( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) && ( hb_pcount() == 2 || GETFLAG( pBTree, IsInMemory ) || HB_ISNUM( 3 ) ) )
     hb_retl( hb_BTreeInsert( BTree_GetTreeIndex( "hb_btreeinsert" ), ( BYTE * ) hb_parc( 2 ), hb_paramError( 3 ) ) );
   else
   {
@@ -1855,7 +1855,7 @@ HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, LONG l
 HB_FUNC( HB_BTREEDELETE )  /* hb_BTreeDelete( hb_BTree_Handle, CHAR cKey, LONG lData ) -> lSuccess */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
-  if ( ISNUM( 1 ) && ISCHAR( 2 ) && ( hb_pcount() == 2 || ISNUM( 3 ) ) )
+  if ( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) && ( hb_pcount() == 2 || HB_ISNUM( 3 ) ) )
     hb_retl( hb_BTreeDelete( BTree_GetTreeIndex( "hb_btreedelete" ), ( BYTE * ) hb_parc( 2 ), hb_parnl( 3 ) ) );
   else
   {
@@ -1903,7 +1903,7 @@ HB_FUNC( HB_BTREEGOBOTTOM )  /* hb_BTreeGoBottom( hb_BTree_Handle ) --> NIL */
 HB_FUNC( HB_BTREESKIP )  /* hb_BTreeSkip( hb_BTree_Handle, LONG nRecords ) -> LONG nRecordsSkipped */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
-  if ( ISNUM( 1 ) && ISNUM( 2 ) )
+  if ( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
     hb_retnl( hb_BTreeSkip( BTree_GetTreeIndex( "hb_btreeskip" ), hb_parnl( 2 ) ) );
   else
   {
@@ -1915,7 +1915,7 @@ HB_FUNC( HB_BTREESKIP )  /* hb_BTreeSkip( hb_BTree_Handle, LONG nRecords ) -> LO
 HB_FUNC( HB_BTREESEEK )  /* hb_BTreeSeek( hb_BTree_Handle, CHAR cKey, LONG lData, BOOL lSoftSeek ) -> lSuccess */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
-  if ( ISNUM( 1 ) && ISCHAR( 2 ) )
+  if ( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) )
     hb_retl( hb_BTreeSeek( BTree_GetTreeIndex( "hb_btreeseek" ), ( BYTE * ) hb_parc( 2 ), hb_parnl( 3 ), hb_parl( 4 ) ) );
   else
   {
@@ -1961,7 +1961,7 @@ HB_FUNC( HB_BTREEINFO )  /* hb_BTreeInfo( hb_BTree_Handle, [index] ) -> aResults
 #if 0
 HB_FUNB( HB_BTREEEVAL )  /* hb_BTreeEval( hb_BTree_Handle, bBlock, [bForCondition], [bWhileCondition], [nNextRecords], [nRecord], [lRest] ) -- NIL */
 {
-  if ( ISNUM( 1 ) && ISBLOCK( 2 ) )
+  if ( HB_ISNUM( 1 ) && HB_ISBLOCK( 2 ) )
     hb_BTreeEval( BTree_GetTreeIndex( "hb_btreeeval" ), 0 );
   else
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );

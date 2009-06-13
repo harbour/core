@@ -429,7 +429,7 @@ static void GDImageSaveTo( int nType )
       im = hb_parGdImage( 1 );
 
       /* Get file name or an output handler or NIL it I want a return string */
-      if( !( ISNIL( 2 ) ||
+      if( !( HB_ISNIL( 2 ) ||
              hb_parinfo( 2 ) & HB_IT_STRING ||
              hb_parinfo( 2 ) & HB_IT_NUMERIC ) )
       {
@@ -443,7 +443,7 @@ static void GDImageSaveTo( int nType )
       /* Retrieve compression level */
       /*TraceLog( NULL, "Count = %i\n\r", hb_pcount() ); */
       /* check if is numeric */
-      if( !( ISNIL( 3 ) || hb_parinfo( 3 ) & HB_IT_NUMERIC ) )
+      if( !( HB_ISNIL( 3 ) || hb_parinfo( 3 ) & HB_IT_NUMERIC ) )
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0,
             "Tirdh argument must be NIL or numeric.",
@@ -2615,7 +2615,7 @@ HB_FUNC( GDIMAGESTRINGFTEX )
    /* TraceLog( NULL, "Parameters: %i, Type 1 =%i=\n\r", hb_pcount(), hb_parinfo( 1 ) ); */
 
    if( hb_pcount() >= 9 &&
-        ( ISNIL( 1 ) || hb_parinfo( 1 ) & ( HB_IT_POINTER ) ) &&
+        ( HB_ISNIL( 1 ) || hb_parinfo( 1 ) & ( HB_IT_POINTER ) ) &&
        hb_parinfo( 2 ) & HB_IT_ARRAY   &&
        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
        hb_parinfo( 4 ) & HB_IT_STRING  &&
@@ -2761,8 +2761,8 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
        hb_parinfo( 6 ) & HB_IT_NUMERIC &&
        hb_parinfo( 7 ) & HB_IT_STRING  &&
        hb_parinfo( 8 ) & HB_IT_NUMERIC &&
-       ( ISNIL( 9 ) || ( hb_parinfo( 9 ) & HB_IT_STRING ) ) &&
-       ( ISNIL( 10 ) || ( hb_parinfo( 10 ) & HB_IT_STRING ) ) &&
+       ( HB_ISNIL( 9 ) || ( hb_parinfo( 9 ) & HB_IT_STRING ) ) &&
+       ( HB_ISNIL( 10 ) || ( hb_parinfo( 10 ) & HB_IT_STRING ) ) &&
        hb_parinfo( 11 ) & HB_IT_NUMERIC
      )
    {
@@ -3962,7 +3962,7 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
 {
    if( hb_pcount() == 4 &&
        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        ( hb_parinfo( 2 ) & HB_IT_STRING || hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) ) &&
+        ( hb_parinfo( 2 ) & HB_IT_STRING || hb_parinfo( 2 ) & HB_IT_NUMERIC || HB_ISNIL( 2 ) ) &&
        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
        hb_parinfo( 4 ) & HB_IT_NUMERIC
      )
@@ -3992,7 +3992,7 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
 
          SaveImageToFile( szFile, iptr, size );
       }
-      else if( hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) )
+      else if( hb_parinfo( 2 ) & HB_IT_NUMERIC || HB_ISNIL( 2 ) )
       {
          HB_FHANDLE fhandle;
 
@@ -4024,13 +4024,13 @@ HB_FUNC( GDIMAGEGIFANIMADD )
 {
    if( hb_pcount() == 8 &&
        hb_parinfo( 1 ) & HB_IT_POINTER &&
-       ( hb_parinfo( 2 ) & HB_IT_STRING || hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) ) &&
+       ( hb_parinfo( 2 ) & HB_IT_STRING || hb_parinfo( 2 ) & HB_IT_NUMERIC || HB_ISNIL( 2 ) ) &&
        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
        hb_parinfo( 6 ) & HB_IT_NUMERIC &&
        hb_parinfo( 7 ) & HB_IT_NUMERIC &&
-       ( hb_parinfo( 8 ) & HB_IT_POINTER || ISNIL( 8 ) )
+       ( hb_parinfo( 8 ) & HB_IT_POINTER || HB_ISNIL( 8 ) )
      )
    {
       gdImagePtr im, previm;
@@ -4059,7 +4059,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
 
          AddImageToFile( szFile, iptr, size );
       }
-      else if( hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) )
+      else if( hb_parinfo( 2 ) & HB_IT_NUMERIC || HB_ISNIL( 2 ) )
       {
          HB_FHANDLE fhandle;
 
@@ -4092,7 +4092,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
 HB_FUNC( GDIMAGEGIFANIMEND )
 {
    if( hb_pcount() == 1 &&
-       ( hb_parinfo( 1 ) & HB_IT_STRING || hb_parinfo( 1 ) & HB_IT_NUMERIC || ISNIL( 1 ) )
+       ( hb_parinfo( 1 ) & HB_IT_STRING || hb_parinfo( 1 ) & HB_IT_NUMERIC || HB_ISNIL( 1 ) )
      )
    {
       void * iptr;
@@ -4109,7 +4109,7 @@ HB_FUNC( GDIMAGEGIFANIMEND )
 
          AddImageToFile( szFile, iptr, size );
       }
-      else if( hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) )
+      else if( hb_parinfo( 2 ) & HB_IT_NUMERIC || HB_ISNIL( 2 ) )
       {
          HB_FHANDLE fhandle;
 

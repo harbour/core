@@ -144,7 +144,7 @@ HB_FUNC( SQLDRIVERCONNECT ) /* hDbc, @cConnectString --> nRetCode */
                            ( SQLSMALLINT * ) &wLen,
                            ( SQLUSMALLINT ) SQL_DRIVER_COMPLETE );
    HB_TCHAR_FREE( lpStr );
-   if( ISBYREF( 3 ) )
+   if( HB_ISBYREF( 3 ) )
    {
       char * szStr = HB_TCHAR_CONVFROM( buffer );
       hb_storc( szStr, 3 );
@@ -322,7 +322,7 @@ HB_FUNC( SQLDESCRIBECOL ) /* hStmt, nCol, @cName, nLen, @nBufferLen, @nDataType,
 
    if( result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO )
    {
-      if( ISBYREF( 3 ) )
+      if( HB_ISBYREF( 3 ) )
       {
          char * szStr = HB_TCHAR_CONVNFROM( buffer, wBufLen );
          hb_storclen( szStr, ( long ) wBufLen, 3 );
@@ -429,14 +429,14 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
                        ( SQLSMALLINT ) sizeof( szErrorMsg ),
                        ( SQLSMALLINT * ) &wLen ) );
 
-   if( ISBYREF( 4 ) )
+   if( HB_ISBYREF( 4 ) )
    {
       char * szStr = HB_TCHAR_CONVFROM( buffer );
       hb_storc( szStr, 4 );
       HB_TCHAR_FREE( szStr );
    }
    hb_stornl( ( long ) lError, 5 );
-   if( ISBYREF( 6 ) )
+   if( HB_ISBYREF( 6 ) )
    {
       char * szStr = HB_TCHAR_CONVFROM( szErrorMsg );
       hb_storc( szStr, 6 );
@@ -475,12 +475,12 @@ HB_FUNC( SQLSETCONNECTATTR ) /* hDbc, nOption, uOption */
 #if ODBCVER >= 0x0300
    hb_retni( SQLSetConnectAttr( ( SQLHDBC ) hb_parptr( 1 ),
                                 ( SQLINTEGER ) hb_parnl( 2 ),
-                                ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parc( 3 ) : ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
-                                ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
+                                HB_ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parc( 3 ) : ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
+                                HB_ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
 #else
    hb_retni( SQLSetConnectOption( ( SQLHDBC ) hb_parptr( 1 ),
                                   ( SQLUSMALLINT ) hb_parnl( 2 ),
-                                  ( SQLULEN ) ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : hb_parnl( 3 ) ) );
+                                  ( SQLULEN ) HB_ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : hb_parnl( 3 ) ) );
 #endif
 }
 
@@ -489,12 +489,12 @@ HB_FUNC( SQLSETSTMTATTR ) /* hStmt, nOption, uOption --> nRetCode */
 #if ODBCVER >= 0x0300
    hb_retni( SQLSetStmtAttr( ( SQLHSTMT ) hb_parptr( 1 ),
                              ( SQLINTEGER ) hb_parnl( 2 ),
-                             ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parc( 3 ) : ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
-                             ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
+                             HB_ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parc( 3 ) : ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
+                             HB_ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
 #else
    hb_retni( SQLSetStmtOption( ( SQLHSTMT ) hb_parptr( 1 ),
                                ( SQLUSMALLINT ) hb_parnl( 2 ),
-                               ( SQLULEN ) ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : hb_parnl( 3 ) ) );
+                               ( SQLULEN ) HB_ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : hb_parnl( 3 ) ) );
 #endif
 }
 

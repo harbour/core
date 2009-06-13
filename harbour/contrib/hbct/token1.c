@@ -83,7 +83,7 @@ static int siPostSeparator = -1;    /* TODO: make this threadsafe */
 static void do_token1( int iSwitch )
 {
    int iParamCheck = 0;
-   int iNoRef = ct_getref() && ISBYREF( 1 );
+   int iNoRef = ct_getref() && HB_ISBYREF( 1 );
 
    switch ( iSwitch )
    {
@@ -94,7 +94,7 @@ static void do_token1( int iSwitch )
       case DO_TOKEN1_NUMTOKEN:
       case DO_TOKEN1_TOKENLOWER:
       case DO_TOKEN1_TOKENUPPER:
-         iParamCheck = ( ISCHAR( 1 ) );
+         iParamCheck = ( HB_ISCHAR( 1 ) );
          break;
    }
 
@@ -133,14 +133,14 @@ static void do_token1( int iSwitch )
       /* skip width */
       if( iSwitch == DO_TOKEN1_NUMTOKEN )
       {
-         if( ISNUM( 3 ) )
+         if( HB_ISNUM( 3 ) )
             ulSkip = hb_parnl( 3 );
          else
             ulSkip = ULONG_MAX;
       }
       else
       {
-         if( ISNUM( 4 ) )
+         if( HB_ISNUM( 4 ) )
             ulSkip = hb_parnl( 4 );
          else
             ulSkip = ULONG_MAX;
@@ -206,12 +206,12 @@ static void do_token1( int iSwitch )
                   char cRet;
 
                   hb_retc( NULL );
-                  if( ISBYREF( 5 ) )
+                  if( HB_ISBYREF( 5 ) )
                   {
                      cRet = ( char ) siPreSeparator;
                      hb_storclen( &cRet, ( siPreSeparator != -1 ? 1 : 0 ), 5 );
                   }
-                  if( ISBYREF( 6 ) )
+                  if( HB_ISBYREF( 6 ) )
                   {
                      cRet = ( char ) siPostSeparator;
                      hb_storclen( &cRet, ( siPostSeparator != -1 ? 1 : 0 ), 6 );
@@ -228,7 +228,7 @@ static void do_token1( int iSwitch )
 
                case DO_TOKEN1_TOKENLOWER:
                case DO_TOKEN1_TOKENUPPER:
-                  if( ISBYREF( 1 ) )
+                  if( HB_ISBYREF( 1 ) )
                      hb_storclen( pcRet, sRetStrLen, 1 );
 
                   if( iNoRef )
@@ -313,12 +313,12 @@ static void do_token1( int iSwitch )
             else
                hb_retc( NULL );
 
-            if( ISBYREF( 5 ) )
+            if( HB_ISBYREF( 5 ) )
             {
                cRet = ( char ) siPreSeparator;
                hb_storclen( &cRet, ( siPreSeparator != -1 ? 1 : 0 ), 5 );
             }
-            if( ISBYREF( 6 ) )
+            if( HB_ISBYREF( 6 ) )
             {
                cRet = ( char ) siPostSeparator;
                hb_storclen( &cRet, ( siPostSeparator != -1 ? 1 : 0 ), 6 );
@@ -339,7 +339,7 @@ static void do_token1( int iSwitch )
 
          case DO_TOKEN1_TOKENLOWER:
          case DO_TOKEN1_TOKENUPPER:
-            if( ISBYREF( 1 ) )
+            if( HB_ISBYREF( 1 ) )
                hb_storclen( pcRet, sRetStrLen, 1 );
 
             if( iNoRef )
@@ -362,12 +362,12 @@ static void do_token1( int iSwitch )
             int iArgErrorMode = ct_getargerrormode();
             char cRet;
 
-            if( ISBYREF( 5 ) )
+            if( HB_ISBYREF( 5 ) )
             {
                cRet = ( char ) siPreSeparator;
                hb_storclen( &cRet, ( siPreSeparator != -1 ? 1 : 0 ), 5 );
             }
-            if( ISBYREF( 6 ) )
+            if( HB_ISBYREF( 6 ) )
             {
                cRet = ( char ) siPostSeparator;
                hb_storclen( &cRet, ( siPostSeparator != -1 ? 1 : 0 ), 6 );
@@ -792,7 +792,7 @@ HB_FUNC( TOKENSEP )
 {
    char cRet;
 
-   if( ISLOG( 1 ) && hb_parl( 1 ) )
+   if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
    {
       /* return the separator char BEHIND the last token */
       if( siPostSeparator != -1 )

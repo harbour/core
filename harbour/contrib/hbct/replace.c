@@ -72,10 +72,10 @@ static void do_replace( int iSwitch )
 {
 
    /* suppressing return value ? */
-   int iNoRet = ct_getref() && ISBYREF( 1 );
+   int iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
    /* param check */
-   if( ISCHAR( 1 ) && ( hb_parclen( 2 ) > 0 || ISNUM( 2 ) ) )
+   if( HB_ISCHAR( 1 ) && ( hb_parclen( 2 ) > 0 || HB_ISNUM( 2 ) ) )
    {
       char *pcString = ( char * ) hb_parc( 1 );
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
@@ -91,14 +91,14 @@ static void do_replace( int iSwitch )
          return;
       }
 
-      if( ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
          cReplace = ( char ) ( hb_parnl( 2 ) % 256 );
       else
          cReplace = *( ( char * ) hb_parc( 2 ) );
 
       if( hb_parclen( 3 ) > 0 )
          cSearch = *( ( char * ) hb_parc( 3 ) );
-      else if( ISNUM( 3 ) )
+      else if( HB_ISNUM( 3 ) )
          cSearch = ( char ) ( hb_parnl( 3 ) % 256 );
       else
          cSearch = 0x20;
@@ -126,7 +126,7 @@ static void do_replace( int iSwitch )
          }
       }
 
-      if( ISBYREF( 1 ) )
+      if( HB_ISBYREF( 1 ) )
          hb_storclen( pcRet, sStrLen, 1 );
 
       if( iNoRet )
@@ -137,7 +137,7 @@ static void do_replace( int iSwitch )
       else
          hb_retclen_buffer( pcRet, sStrLen );
    }
-   else  /* ISCHAR( 1 ) && ( hb_parclen( 2 ) > 0 || ISNUM( 2 ) ) */
+   else  /* HB_ISCHAR( 1 ) && ( hb_parclen( 2 ) > 0 || HB_ISNUM( 2 ) ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

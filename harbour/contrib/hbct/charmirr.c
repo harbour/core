@@ -106,10 +106,10 @@ HB_FUNC( CHARMIRR )
    int iNoRet;
 
    /* suppressing return value ? */
-   iNoRet = ct_getref() && ISBYREF( 1 );
+   iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
    /* param check */
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
 
       char *pcString = hb_parc( 1 );
@@ -117,7 +117,7 @@ HB_FUNC( CHARMIRR )
       char *pcRet, *pc1, *pc2;
       int iDontMirrorSpaces;
 
-      if( ISLOG( 2 ) )
+      if( HB_ISLOG( 2 ) )
          iDontMirrorSpaces = hb_parl( 2 );
       else
          iDontMirrorSpaces = 0;
@@ -160,7 +160,7 @@ HB_FUNC( CHARMIRR )
       }
 
       /* return string */
-      if( ISBYREF( 1 ) )
+      if( HB_ISBYREF( 1 ) )
          hb_storclen( pcRet, sStrLen, 1 );
 
       if( iNoRet )
@@ -171,7 +171,7 @@ HB_FUNC( CHARMIRR )
       else
          hb_retclen_buffer( pcRet, sStrLen );
    }
-   else /* if( ISCHAR( 1 ) ) */
+   else /* if( HB_ISCHAR( 1 ) ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

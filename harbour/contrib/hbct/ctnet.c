@@ -202,9 +202,9 @@ HB_FUNC( NETREDIR )
    LPTSTR lpLocalDev  = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
    LPTSTR lpSharedRes = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    LPTSTR lpPassword  = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   BOOL bShowError = ( ISLOG( 4 ) ? hb_parl( 4 ) : FALSE );
+   BOOL bShowError = ( HB_ISLOG( 4 ) ? hb_parl( 4 ) : FALSE );
 
-   if( hb_pcount() >= 3 && ISCHAR( 3 ) )
+   if( hb_pcount() >= 3 && HB_ISCHAR( 3 ) )
       dwResult = WNetAddConnection( lpSharedRes, lpPassword, lpLocalDev );
    else
       dwResult = WNetAddConnection( lpSharedRes, NULL, lpLocalDev );

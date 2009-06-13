@@ -184,7 +184,7 @@ HB_FUNC( WVG_SETGOBJSTATE )
          {
             iOState = gObj->iState;
 
-            if( ISNUM( 2 ) )
+            if( HB_ISNUM( 2 ) )
             {
                int iState = hb_parni( 2 );
                if( iOState != iState && iState > 0 && iState <= 4 )
@@ -227,19 +227,19 @@ HB_FUNC( WVG_SETGOBJDATA )
             case GOBJ_OBJDATA_TEXT:
                if( gObj->lpText )
                   HB_TCHAR_FREE( gObj->lpText );
-               gObj->lpText = HB_TCHAR_CONVTO( ISCHAR( 3 ) ? hb_parc( 3 ) : "" );
+               gObj->lpText = HB_TCHAR_CONVTO( HB_ISCHAR( 3 ) ? hb_parc( 3 ) : "" );
                break;
 
 #if ! defined( HB_OS_WIN_CE )
             case GOBJ_OBJDATA_PICTURE:
-               if( ISNUM( 3 ) && hb_parni( 3 ) <= WVT_PICTURES_MAX )
+               if( HB_ISNUM( 3 ) && hb_parni( 3 ) <= WVT_PICTURES_MAX )
                   gObj->iPicture = pWVT->pGUI->iPicture[ hb_parni( 3 ) - 1 ];
                break;
             case GOBJ_OBJDATA_IMAGE:
             {
                IPicture * iPicture = NULL;
 
-               if( ISNUM( 3 ) )
+               if( HB_ISNUM( 3 ) )
                {
                   if( hb_parni( 3 ) <= WVT_PICTURES_MAX )
                      iPicture = pWVT->pGUI->iPicture[ hb_parni( 3 ) - 1 ];
@@ -1276,7 +1276,7 @@ static void hb_wvg_TextBox( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop,
 HB_FUNC( WVG_PICTURE )
 {
 #if ! defined( HB_OS_WIN_CE )
-   if( ISNUM( 6 ) && hb_parni( 6 ) <= WVT_PICTURES_MAX )
+   if( HB_ISNUM( 6 ) && hb_parni( 6 ) <= WVT_PICTURES_MAX )
    {
       PHB_GTWVT pWVT = hb_wvt_gtGetWVT();
       HB_GOBJS *gObj = hb_wvg_ObjectNew( pWVT );
@@ -1327,7 +1327,7 @@ HB_FUNC( WVG_IMAGE )
    switch( iSource )
    {
    case GOBJ_IMAGESOURCE_SLOT:
-      if( ISNUM( 7 ) && hb_parni( 7 ) <= WVT_PICTURES_MAX )
+      if( HB_ISNUM( 7 ) && hb_parni( 7 ) <= WVT_PICTURES_MAX )
       {
          iPicture = pWVT->pGUI->iPicture[ hb_parni( 7 ) - 1 ];
       }

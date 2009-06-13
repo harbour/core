@@ -128,11 +128,11 @@ HB_FUNC( WORDREPL )
    size_t sSearchLen, sReplaceLen;
 
    /* suppressing return value ? */
-   iNoRet = ct_getref() && ISBYREF( 2 );
+   iNoRet = ct_getref() && HB_ISBYREF( 2 );
    iMultiPass = ct_getatmupa();
 
    /* param check */
-   if( ( sSearchLen = ( size_t ) hb_parclen( 1 ) ) / 2 > 0 && ISCHAR( 2 ) &&
+   if( ( sSearchLen = ( size_t ) hb_parclen( 1 ) ) / 2 > 0 && HB_ISCHAR( 2 ) &&
        ( sReplaceLen = ( size_t ) hb_parclen( 3 ) ) / 2 > 0 )
    {
       /* get parameters */
@@ -144,7 +144,7 @@ HB_FUNC( WORDREPL )
       char *pcRet;
       size_t sIndex;
 
-      if( ISLOG( 4 ) )
+      if( HB_ISLOG( 4 ) )
          iMode = hb_parl( 4 );
       else
          iMode = 0;
@@ -199,7 +199,7 @@ HB_FUNC( WORDREPL )
       }
 
       /* return string */
-      if( ISBYREF( 2 ) )
+      if( HB_ISBYREF( 2 ) )
       {
          hb_storclen( pcRet, sStrLen, 2 );
       }
@@ -214,7 +214,7 @@ HB_FUNC( WORDREPL )
          hb_retclen_buffer( pcRet, sStrLen );
       }
    }
-   else  /* ( sSearchLen = ( size_t ) hb_parclen( 1 ) ) / 2 > 0 && ISCHAR( 2 ) &&
+   else  /* ( sSearchLen = ( size_t ) hb_parclen( 1 ) ) / 2 > 0 && HB_ISCHAR( 2 ) &&
             ( sReplaceLen = ( size_t ) hb_parclen( 3 ) ) / 2 > 0 */
    {
       PHB_ITEM pSubst = NULL;
@@ -231,7 +231,7 @@ HB_FUNC( WORDREPL )
          hb_itemReturnRelease( pSubst );
       else if( iNoRet )
          hb_retl( 0 );
-      else if( ISCHAR( 2 ) )
+      else if( HB_ISCHAR( 2 ) )
          hb_retclen( hb_parc( 2 ), hb_parclen( 2 ) );
       else
          hb_retc( NULL );

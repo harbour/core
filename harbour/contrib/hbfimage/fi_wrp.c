@@ -179,7 +179,7 @@ HB_FUNC( FI_SETOUTPUTMESSAGE )
          /* Set the pointer */
          pErrorHandler = hb_parptr( 1 );
       }
-      else if( ISNIL( 1 ) )
+      else if( HB_ISNIL( 1 ) )
       {
          /* do nothing */
       }

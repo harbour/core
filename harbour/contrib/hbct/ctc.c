@@ -248,7 +248,7 @@ HB_FUNC( CSETARGERR )
 {
    hb_retni( ct_getargerrormode() );
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       int iNewMode = hb_parni( 1 );
 

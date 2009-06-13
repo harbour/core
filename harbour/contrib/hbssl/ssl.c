@@ -357,7 +357,7 @@ HB_FUNC( SSL_READ )
          PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
          int nRead;
 
-         if( pBuffer && ISBYREF( 2 ) && ISNUM( 3 ) )
+         if( pBuffer && HB_ISBYREF( 2 ) && HB_ISNUM( 3 ) )
          {
             nRead = hb_parni( 3 );
 
@@ -391,7 +391,7 @@ HB_FUNC( SSL_PEEK )
          PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
          int nRead;
 
-         if( pBuffer && ISBYREF( 2 ) && ISNUM( 3 ) )
+         if( pBuffer && HB_ISBYREF( 2 ) && HB_ISNUM( 3 ) )
          {
             nRead = hb_parni( 3 );
 
@@ -438,7 +438,7 @@ HB_FUNC( SSL_WRITE )
          PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
          ULONG nLen = hb_itemGetCLen( pBuffer );
 
-         if( ISNUM( 3 ) )
+         if( HB_ISNUM( 3 ) )
          {
             ULONG nWrite = ( ULONG ) hb_parnl( 3 );
             if( nWrite < nLen )

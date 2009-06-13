@@ -59,7 +59,7 @@
 */
 HB_FUNC( FILEPATH )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       PHB_FNAME pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
       hb_retc( pFileName->szPath );
@@ -73,7 +73,7 @@ HB_FUNC( FILEPATH )
 */
 HB_FUNC( FILEBASE )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       PHB_FNAME pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
       hb_retc( pFileName->szName );
@@ -87,7 +87,7 @@ HB_FUNC( FILEBASE )
 */
 HB_FUNC( FILEEXT )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       PHB_FNAME pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
       if( pFileName->szExtension != NULL )
@@ -104,7 +104,7 @@ HB_FUNC( FILEEXT )
 */
 HB_FUNC( FILEDRIVE )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       PHB_FNAME pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
       hb_retclen( pFileName->szDrive, 1 ); /* Only the drive letter */

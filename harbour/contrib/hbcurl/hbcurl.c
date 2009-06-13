@@ -65,7 +65,7 @@
 
 #include "hbcurl.ch"
 
-#define HB_CURL_OPT_BOOL( n )      ( ISLOG( n ) ? ( long ) hb_parl( n ) : ( ISNUM( n ) ? hb_parnl( n ) : 1 ) )
+#define HB_CURL_OPT_BOOL( n )      ( HB_ISLOG( n ) ? ( long ) hb_parl( n ) : ( HB_ISNUM( n ) ? hb_parnl( n ) : 1 ) )
 #define HB_CURL_OPT_LARGENUM( n )  ( ( curl_off_t ) hb_parnint( n ) )
 
 /* NOTE: Harbour requires libcurl 7.17.0 or upper.
@@ -216,7 +216,7 @@ void * hb_curl_calloc( size_t nelem, size_t elsize )
 
 HB_FUNC( CURL_GLOBAL_INIT )
 {
-   hb_retnl( ( long ) curl_global_init_mem( ISNUM( 1 ) ? hb_parnl( 1 ) : CURL_GLOBAL_ALL,
+   hb_retnl( ( long ) curl_global_init_mem( HB_ISNUM( 1 ) ? hb_parnl( 1 ) : CURL_GLOBAL_ALL,
                                             hb_curl_xgrab,
                                             hb_curl_xfree,
                                             hb_curl_xrealloc,
@@ -680,7 +680,7 @@ HB_FUNC( CURL_EASY_RECV )
 
 HB_FUNC( CURL_EASY_SETOPT )
 {
-   if( PHB_CURL_is( 1 ) && ISNUM( 2 ) )
+   if( PHB_CURL_is( 1 ) && HB_ISNUM( 2 ) )
    {
       PHB_CURL hb_curl = PHB_CURL_par( 1 );
       CURLcode res = ( CURLcode ) HB_CURLE_ERROR;
@@ -1376,7 +1376,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             {
                hb_curl_file_ul_free( hb_curl );
 
-               if( ISCHAR( 3 ) )
+               if( HB_ISCHAR( 3 ) )
                {
                   hb_curl->ul_name = ( BYTE * ) hb_strdup( hb_parc( 3 ) );
                   hb_curl->ul_handle = FS_ERROR;
@@ -1396,7 +1396,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             {
                hb_curl_file_dl_free( hb_curl );
 
-               if( ISCHAR( 3 ) )
+               if( HB_ISCHAR( 3 ) )
                {
                   hb_curl->dl_name = ( BYTE * ) hb_strdup( hb_parc( 3 ) );
                   hb_curl->dl_handle = FS_ERROR;
@@ -1416,7 +1416,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             {
                hb_curl_buff_ul_free( hb_curl );
 
-               if( ISCHAR( 3 ) )
+               if( HB_ISCHAR( 3 ) )
                {
                   hb_curl->ul_pos = 0;
                   hb_curl->ul_len = hb_parclen( 3 );
@@ -1435,7 +1435,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                hb_curl_buff_dl_free( hb_curl );
 
                hb_curl->dl_pos = 0;
-               hb_curl->dl_len = ISNUM( 3 ) ? hb_parnl( 3 ) : HB_CURL_DL_BUFF_SIZE_INIT;
+               hb_curl->dl_len = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : HB_CURL_DL_BUFF_SIZE_INIT;
                hb_curl->dl_ptr = ( BYTE * ) hb_xgrab( hb_curl->dl_len );
 
                curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, hb_curl_write_buff_callback );
@@ -1494,7 +1494,7 @@ HB_FUNC( CURL_EASY_DL_BUFF_GET )
 /* NOTE: curl_easy_getinfo( curl, x, @nError ) -> xValue */
 HB_FUNC( CURL_EASY_GETINFO )
 {
-   if( PHB_CURL_is( 1 ) && ISNUM( 2 ) )
+   if( PHB_CURL_is( 1 ) && HB_ISNUM( 2 ) )
    {
       PHB_CURL hb_curl = PHB_CURL_par( 1 );
       CURLcode res = ( CURLcode ) HB_CURLE_ERROR;
@@ -1827,7 +1827,7 @@ HB_FUNC( CURL_VERSION_INFO )
 
 HB_FUNC( CURL_EASY_STRERROR )
 {
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
       hb_retc( curl_easy_strerror( ( CURLcode ) hb_parnl( 1 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1838,7 +1838,7 @@ HB_FUNC( CURL_EASY_STRERROR )
 /* NOTE: This returns the number of seconds since January 1st 1970 in the UTC time zone. */
 HB_FUNC( CURL_GETDATE )
 {
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
       hb_retnint( ( HB_LONG ) curl_getdate( hb_parc( 1 ), NULL ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

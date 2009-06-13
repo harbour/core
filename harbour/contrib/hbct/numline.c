@@ -57,12 +57,12 @@ HB_FUNC( NUMLINE )
 {
    LONG lLines = 0;
 
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       char *pcString = hb_parc( 1 );
       char *pBuffer;
       LONG lStrLen = hb_parclen( 1 );
-      LONG lLength = ISNUM( 2 ) ? hb_parnl( 2 ) : 80;
+      LONG lLength = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : 80;
 
       while( lStrLen > 0 )
       {

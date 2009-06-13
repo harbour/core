@@ -139,7 +139,7 @@ static int min3( int a, int b, int c )
 HB_FUNC( STRDIFF )
 {
    /* param check */
-   if( ISCHAR( 1 ) || ISCHAR( 2 ) )
+   if( HB_ISCHAR( 1 ) || HB_ISCHAR( 2 ) )
    {
       /* get parameters */
       char *pcStr1, *pcStr2;
@@ -150,7 +150,7 @@ HB_FUNC( STRDIFF )
       int *piPenalty;
       size_t sRowCnt, sColCnt;
 
-      if( ISCHAR( 1 ) )
+      if( HB_ISCHAR( 1 ) )
       {
          pcStr1 = ( char * ) hb_parc( 1 );
          sStrLen1 = ( size_t ) hb_parclen( 1 );
@@ -161,7 +161,7 @@ HB_FUNC( STRDIFF )
          sStrLen1 = 0;
       }
 
-      if( ISCHAR( 2 ) )
+      if( HB_ISCHAR( 2 ) )
       {
          pcStr2 = ( char * ) hb_parc( 2 );
          sStrLen2 = ( size_t ) hb_parclen( 2 );
@@ -189,17 +189,17 @@ HB_FUNC( STRDIFF )
       }
 
       /* get penalty points */
-      if( ISNUM( 3 ) )
+      if( HB_ISNUM( 3 ) )
          iReplace = hb_parni( 3 );
       else
          iReplace = 3;
 
-      if( ISNUM( 4 ) )
+      if( HB_ISNUM( 4 ) )
          iDelete = hb_parni( 4 );
       else
          iDelete = 6;
 
-      if( ISNUM( 5 ) )
+      if( HB_ISNUM( 5 ) )
          iInsert = hb_parni( 5 );
       else
          iInsert = 1;
@@ -238,7 +238,7 @@ HB_FUNC( STRDIFF )
       hb_retni( MATRIXELEMENT( sStrLen1, sStrLen2 ) );
       hb_xfree( piPenalty );
    }
-   else  /* ISCHAR( 1 ) || ISCHAR( 2 ) */
+   else  /* HB_ISCHAR( 1 ) || HB_ISCHAR( 2 ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

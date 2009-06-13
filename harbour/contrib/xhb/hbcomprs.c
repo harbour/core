@@ -88,7 +88,7 @@ HB_FUNC( HB_COMPRESS )
    int nCompFactor, iFirst;
    int cerr;
 
-   if ( ISNUM(1) )
+   if ( HB_ISNUM(1) )
    {
       nCompFactor = hb_parni( 1 );
       iFirst = 1;
@@ -190,7 +190,7 @@ HB_FUNC( HB_UNCOMPRESS )
 
    pSource = hb_param( 2, HB_IT_STRING );
 
-   if( ! ISNUM(1) || pSource == NULL )
+   if( ! HB_ISNUM(1) || pSource == NULL )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1, hb_paramError(1) );
       return;

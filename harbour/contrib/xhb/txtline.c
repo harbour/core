@@ -247,7 +247,7 @@ HB_FUNC( HB_READLINE )
    PHB_ITEM pOpt;
    BOOL bAlloc_Term1 = FALSE;
 
-   if( !ISCHAR( 1 ) )
+   if( !HB_ISCHAR( 1 ) )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 9, hb_paramError(1), hb_paramError(2), hb_paramError(3), hb_paramError(4),  hb_paramError(5), hb_paramError(6), hb_paramError(7), hb_paramError(8), hb_paramError(9), hb_paramError(10) );
       return;
@@ -256,7 +256,7 @@ HB_FUNC( HB_READLINE )
    ulTextLen = hb_parclen(1);
    uiTabLen  = (USHORT) hb_parclen(4);
 
-   if( ISNUM( 6 ) )
+   if( HB_ISNUM( 6 ) )
    {
       ulStartOffset = hb_parnl( 6 );
    }
@@ -265,7 +265,7 @@ HB_FUNC( HB_READLINE )
       ulStartOffset = 0;
    }
 
-   if( ! ( ISARRAY( 2 ) || ISCHAR( 2 ) ) )
+   if( ! ( HB_ISARRAY( 2 ) || HB_ISCHAR( 2 ) ) )
    {
       if( ! hb_setGetCPtr( HB_SET_EOL ) )
       {

@@ -58,7 +58,7 @@ static int hb_ctColorParam( int iParam, int iDefault )
 {
    int iColor;
 
-   if( ISNUM( iParam ) )
+   if( HB_ISNUM( iParam ) )
       iColor = hb_parni( iParam );
    else if( hb_parclen( iParam ) > 0 )
    {
@@ -97,9 +97,9 @@ HB_FUNC( SETCLEARB )
 {
    int iNew;
 
-   if( ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
       iNew = hb_parni( 1 );
-   else if( ISCHAR( 1 ) )
+   else if( HB_ISCHAR( 1 ) )
       iNew = hb_parc( 1 )[0];
    else
       iNew = 255;
@@ -121,12 +121,12 @@ HB_FUNC( WSETSHADOW )
 
 HB_FUNC( WSETMOVE )
 {
-   hb_retl( hb_ctwSetMoveMode( ISLOG( 1 ) ? hb_parl( 1 ) : -1 ) != 0 );
+   hb_retl( hb_ctwSetMoveMode( HB_ISLOG( 1 ) ? hb_parl( 1 ) : -1 ) != 0 );
 }
 
 HB_FUNC( WSTEP )
 {
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
+   if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
       hb_retni( hb_ctwSetMoveStep( hb_parni( 1 ), hb_parni( 2 ) ) );
    else
       hb_retni( -1 );
@@ -134,17 +134,17 @@ HB_FUNC( WSTEP )
 
 HB_FUNC( WMODE )
 {
-   hb_retni( hb_ctwSetBorderMode( ISLOG( 1 ) ? ( hb_parl( 1 ) ? 1 : 0 ) : -1,
-                                  ISLOG( 2 ) ? ( hb_parl( 2 ) ? 1 : 0 ) : -1,
-                                  ISLOG( 3 ) ? ( hb_parl( 3 ) ? 1 : 0 ) : -1,
-                                  ISLOG( 4 ) ? ( hb_parl( 4 ) ? 1 : 0 ) : -1 ) );
+   hb_retni( hb_ctwSetBorderMode( HB_ISLOG( 1 ) ? ( hb_parl( 1 ) ? 1 : 0 ) : -1,
+                                  HB_ISLOG( 2 ) ? ( hb_parl( 2 ) ? 1 : 0 ) : -1,
+                                  HB_ISLOG( 3 ) ? ( hb_parl( 3 ) ? 1 : 0 ) : -1,
+                                  HB_ISLOG( 4 ) ? ( hb_parl( 4 ) ? 1 : 0 ) : -1 ) );
 }
 
 HB_FUNC( WBOARD )
 {
    hb_retni( hb_ctwSetWindowBoard( hb_parni( 1 ), hb_parni( 2 ),
-                                   ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow(),
-                                   ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol() ) );
+                                   HB_ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow(),
+                                   HB_ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol() ) );
 }
 
 HB_FUNC( WOPEN )
@@ -156,13 +156,13 @@ HB_FUNC( WOPEN )
    hb_retni( hb_ctwCreateWindow( hb_parni( 1 ), hb_parni( 2 ),
                                  hb_parni( 3 ), hb_parni( 4 ),
                                  hb_parl( 5 ), iColor,
-                                 !ISLOG( 7 ) || hb_parl( 7 ) ) );
+                                 !HB_ISLOG( 7 ) || hb_parl( 7 ) ) );
 }
 
 HB_FUNC( WCLOSE )
 {
    /* 1-st parameter (window handle) is Harbour extension */
-   hb_retni( hb_ctwCloseWindow( ISNUM( 1 ) ? hb_parni( 1 ) :
+   hb_retni( hb_ctwCloseWindow( HB_ISNUM( 1 ) ? hb_parni( 1 ) :
                                              hb_ctwCurrentWindow() ) );
 }
 
@@ -174,8 +174,8 @@ HB_FUNC( WACLOSE )
 HB_FUNC( WSELECT )
 {
    /* 2-nd parameter (fBringToTop) is Harbour extension */
-   hb_retni( ISNUM( 1 ) ? hb_ctwSelectWindow( hb_parni( 1 ),
-                                              !ISLOG( 2 ) || hb_parl( 2 ) ) :
+   hb_retni( HB_ISNUM( 1 ) ? hb_ctwSelectWindow( hb_parni( 1 ),
+                                              !HB_ISLOG( 2 ) || hb_parl( 2 ) ) :
                           hb_ctwCurrentWindow() );
 }
 
@@ -210,7 +210,7 @@ HB_FUNC( WBOX )
    BYTE * szBox, szBoxBuf[ 10 ];
    int iColor;
 
-   if( ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       szBox = ( BYTE * ) hb_parc( 1 );
    }
@@ -341,7 +341,7 @@ HB_FUNC( CTWLASTKEY )
 
 HB_FUNC( HBCT_MAXROW ) /* Return the maximum screen/window row number (zero origin) */
 {
-   if( ISLOG( 1 ) && hb_parl( 1 ) )
+   if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
    {
       USHORT uiRows, uiCols;
       hb_gtScrDim( &uiRows, &uiCols );
@@ -353,7 +353,7 @@ HB_FUNC( HBCT_MAXROW ) /* Return the maximum screen/window row number (zero orig
 
 HB_FUNC( HBCT_MAXCOL ) /* Return the maximum screen/window column number (zero origin) */
 {
-   if( ISLOG( 1 ) && hb_parl( 1 ) )
+   if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
    {
       USHORT uiRows, uiCols;
       hb_gtScrDim( &uiRows, &uiCols );
@@ -369,14 +369,14 @@ HB_FUNC( HBCT_MAXCOL ) /* Return the maximum screen/window column number (zero o
 /* Harbour extension */
 HB_FUNC( WHIDE )
 {
-   hb_ctwVisible( ISNUM( 1 ) ? hb_parni( 1 ) : hb_ctwCurrentWindow(),
+   hb_ctwVisible( HB_ISNUM( 1 ) ? hb_parni( 1 ) : hb_ctwCurrentWindow(),
                   HB_CTW_HIDDEN );
 }
 
 /* Harbour extension */
 HB_FUNC( WSHOW )
 {
-   hb_ctwVisible( ISNUM( 1 ) ? hb_parni( 1 ) : hb_ctwCurrentWindow(),
+   hb_ctwVisible( HB_ISNUM( 1 ) ? hb_parni( 1 ) : hb_ctwCurrentWindow(),
                   HB_CTW_VISIBLE );
 }
 
@@ -385,7 +385,7 @@ HB_FUNC( WSHADOW )
 {
    int iAttr;
 
-   iAttr = ISNUM( 1 ) ? hb_parni( 1 ) : HB_CTW_SHADOW_UNDEF;
+   iAttr = HB_ISNUM( 1 ) ? hb_parni( 1 ) : HB_CTW_SHADOW_UNDEF;
    hb_retni( hb_ctwSetWindowShadow( hb_ctwCurrentWindow(), iAttr ) );
 }
 
@@ -394,6 +394,6 @@ HB_FUNC( WLEVEL )
 {
    int iLevel;
 
-   iLevel = ISNUM( 1 ) ? hb_parni( 1 ) : HB_CTW_UNDEF;
+   iLevel = HB_ISNUM( 1 ) ? hb_parni( 1 ) : HB_CTW_UNDEF;
    hb_retni( hb_ctwSetWindowLevel( hb_ctwCurrentWindow(), iLevel ) );
 }

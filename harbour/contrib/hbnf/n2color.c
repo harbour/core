@@ -56,7 +56,7 @@
 
 HB_FUNC( FT_N2COLOR )
 {
-   int iColor = ISNUM( 1 ) ? hb_parni( 1 ) : -1;
+   int iColor = HB_ISNUM( 1 ) ? hb_parni( 1 ) : -1;
 
    if( iColor >= 0x00 && iColor <= 0xff )
    {

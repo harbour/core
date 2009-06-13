@@ -139,7 +139,7 @@ HB_FUNC( HB_ZIPOPEN )
    if( szFileName )
    {
       zipcharpc pszGlobalComment = NULL;
-      zipFile hZip = zipOpen2( szFileName, ISNUM( 2 ) ? hb_parni( 2 ) : APPEND_STATUS_CREATE,
+      zipFile hZip = zipOpen2( szFileName, HB_ISNUM( 2 ) ? hb_parni( 2 ) : APPEND_STATUS_CREATE,
                                &pszGlobalComment, NULL );
       if( hZip )
       {
@@ -188,8 +188,8 @@ HB_FUNC( HB_ZIPFILECREATE )
 
       if( hZip )
       {
-         int iMethod = ISNUM( 7 ) ? hb_parni( 7 ) : Z_DEFLATED;
-         int iLevel = ISNUM( 8 ) ? hb_parni( 8 ) : Z_DEFAULT_COMPRESSION;
+         int iMethod = HB_ISNUM( 7 ) ? hb_parni( 7 ) : Z_DEFLATED;
+         int iLevel = HB_ISNUM( 8 ) ? hb_parni( 8 ) : Z_DEFAULT_COMPRESSION;
          long lJulian, lMillisec;
          int iY, iM, iD;
 
@@ -197,7 +197,7 @@ HB_FUNC( HB_ZIPFILECREATE )
 
          memset( &zfi, 0, sizeof( zfi ) );
 
-         if( ISTIMESTAMP( 3 ) )
+         if( HB_ISTIMESTAMP( 3 ) )
          {
             hb_partdt( &lJulian, &lMillisec, 3 );
             hb_dateDecode( lJulian, &iY, &iM, &iD );
@@ -242,7 +242,7 @@ HB_FUNC( HB_ZIPFILEWRITE )
       zipFile hZip = hb_zipfileParam( 1 );
       ULONG   ulLen = hb_parclen( 2 );
 
-      if( ISNUM( 3 ) && (ULONG) hb_parnl( 3 ) < ulLen )
+      if( HB_ISNUM( 3 ) && (ULONG) hb_parnl( 3 ) < ulLen )
          ulLen = (ULONG) hb_parnl( 3 );
 
       if( hZip )
@@ -318,7 +318,7 @@ HB_FUNC( HB_UNZIPGLOBALINFO )
       if( iResult == UNZ_OK )
       {
          hb_storni( ugi.number_entry, 2 );
-         if( ISBYREF( 3 ) )
+         if( HB_ISBYREF( 3 ) )
          {
             if( ugi.size_comment > 0 )
             {
@@ -431,7 +431,7 @@ HB_FUNC( HB_UNZIPFILEINFO )
          hb_stornl( ufi.compressed_size, 9 );
          hb_storl( ( ufi.flag & 1 ) != 0, 10 );
 
-         if( ufi.size_file_comment > 0 && ISBYREF( 11 ) )
+         if( ufi.size_file_comment > 0 && HB_ISBYREF( 11 ) )
          {
             char * pszComment = ( char * ) hb_xgrab( ufi.size_file_comment + 1 );
 
@@ -479,7 +479,7 @@ HB_FUNC( HB_UNZIPFILEREAD )
 {
    PHB_ITEM  pBuffer = hb_param( 2, HB_IT_STRING );
 
-   if( pBuffer && ISBYREF( 2 ) )
+   if( pBuffer && HB_ISBYREF( 2 ) )
    {
       unzFile hUnzip = hb_unzipfileParam( 1 );
 
@@ -489,7 +489,7 @@ HB_FUNC( HB_UNZIPFILEREAD )
          ULONG     ulSize = hb_parclen( 2 );
          int       iResult;
 
-         if( ISNUM( 3 ) )
+         if( HB_ISNUM( 3 ) )
          {
             ulRead = (ULONG) hb_parnl( 3 );
             if( ulRead < ulSize )
@@ -1008,7 +1008,7 @@ HB_FUNC( HB_ZIPSTOREFILEHANDLE )
 {
    HB_FHANDLE hFile = hb_numToHandle( hb_parnint( 2 ) );
 
-   if( hFile != FS_ERROR && ISCHAR( 3 ) )
+   if( hFile != FS_ERROR && HB_ISCHAR( 3 ) )
    {
       zipFile hZip = hb_zipfileParam( 1 );
 

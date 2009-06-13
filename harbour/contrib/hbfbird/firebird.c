@@ -207,7 +207,7 @@ HB_FUNC( FBEXECUTE )
    ISC_STATUS      status_rollback[ 20 ];
    unsigned short  dialect = ( unsigned short ) hb_parni( 3 );
 
-   if( ISPOINTER( 4 ) )
+   if( HB_ISPOINTER( 4 ) )
    {
       trans = ( isc_tr_handle ) hb_parptr( 4 );
    }
@@ -222,14 +222,14 @@ HB_FUNC( FBEXECUTE )
 
    if( isc_dsql_execute_immediate( status, &db, &trans, 0, exec_str, dialect, NULL ) )
    {
-      if( ! ISPOINTER( 4 ) )
+      if( ! HB_ISPOINTER( 4 ) )
          isc_rollback_transaction( status_rollback, &trans );
 
       hb_retnl( isc_sqlcode( status ) );
       return;
    }
 
-   if( ! ISPOINTER( 4 ) )
+   if( ! HB_ISPOINTER( 4 ) )
    {
       if( isc_commit_transaction( status, &trans ) )
       {
@@ -251,7 +251,7 @@ HB_FUNC( FBQUERY )
    XSQLVAR           * var;
 
    char                sel_str[ MAX_LEN ];
-   unsigned short      dialect = ISNUM( 3 ) ? ( unsigned short ) hb_parni( 3 ) : DIALECT;
+   unsigned short      dialect = HB_ISNUM( 3 ) ? ( unsigned short ) hb_parni( 3 ) : DIALECT;
    int                 i;
    int                 dtype;
    int                 num_cols;
@@ -262,7 +262,7 @@ HB_FUNC( FBQUERY )
 
    hb_strncpy( sel_str, hb_parcx( 2 ), sizeof( sel_str ) - 1 );
 
-   if( ISPOINTER( 4 ) )
+   if( HB_ISPOINTER( 4 ) )
    {
       trans = ( isc_tr_handle ) hb_parptr( 4 );
    }
@@ -372,7 +372,7 @@ HB_FUNC( FBQUERY )
    hb_arraySetPtr( qry_handle, 1, ( void * ) stmt );
    hb_arraySetPtr( qry_handle, 2, ( void * ) sqlda );
 
-   if( ! ISPOINTER( 4 ) )
+   if( ! HB_ISPOINTER( 4 ) )
       hb_arraySetPtr( qry_handle, 3, ( void * ) trans );
 
    hb_arraySetNL( qry_handle, 4, ( long ) num_cols );
@@ -385,7 +385,7 @@ HB_FUNC( FBQUERY )
 
 HB_FUNC( FBFETCH )
 {
-   if( ISARRAY( 1 ) )
+   if( HB_ISARRAY( 1 ) )
    {
       PHB_ITEM aParam = hb_param( 1, HB_IT_ARRAY );
 
@@ -409,7 +409,7 @@ HB_FUNC( FBFETCH )
 
 HB_FUNC( FBFREE )
 {
-   if( ISARRAY( 1 ) )
+   if( HB_ISARRAY( 1 ) )
    {
       PHB_ITEM aParam = hb_param( 1, HB_IT_ARRAY );
 
@@ -616,7 +616,7 @@ HB_FUNC( FBGETBLOB )
    char            p[ MAX_BUFFER ];
    long            blob_stat;
 
-   if( ISPOINTER( 3 ) )
+   if( HB_ISPOINTER( 3 ) )
    {
       trans = ( isc_tr_handle ) hb_parptr( 3 );
    }
@@ -667,7 +667,7 @@ HB_FUNC( FBGETBLOB )
       ERREXIT( status );
    }
 
-   if( ! ISPOINTER( 3 ) )
+   if( ! HB_ISPOINTER( 3 ) )
    {
       if( isc_commit_transaction( status, &trans ) )
       {

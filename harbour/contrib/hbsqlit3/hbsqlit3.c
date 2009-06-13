@@ -2180,7 +2180,7 @@ HB_FUNC( SQLITE3_BACKUP_INIT )
    HB_SQLITE3     *pHbSqlite3Source = ( HB_SQLITE3 * ) hb_sqlite3_param( 3, HB_SQLITE3_DB, TRUE );
    sqlite3_backup *pBackup;
 
-   if( pHbSqlite3Dest && pHbSqlite3Dest->db && pHbSqlite3Source && pHbSqlite3Source->db && ISCHAR(2) && ISCHAR(4) )
+   if( pHbSqlite3Dest && pHbSqlite3Dest->db && pHbSqlite3Source && pHbSqlite3Source->db && HB_ISCHAR(2) && HB_ISCHAR(4) )
    {
       pBackup = sqlite3_backup_init( pHbSqlite3Dest->db, hb_parcx(2), pHbSqlite3Source->db, hb_parcx(4) );
 

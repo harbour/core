@@ -69,12 +69,12 @@ HB_FUNC( EXPAND )
 
          iRepl = hb_parni( 2 );
          i = hb_pcount();
-         if( i == 2 && ISCHAR( 2 ) )
+         if( i == 2 && HB_ISCHAR( 2 ) )
          {
             iRepl = 1;
             cRepl = hb_parc( 2 )[0];
          }
-         else if( i == 2 && iRepl == 0 && ISNUM( 2 ) )
+         else if( i == 2 && iRepl == 0 && HB_ISNUM( 2 ) )
          {
             iRepl = 1;
             cRepl = 0;
@@ -83,9 +83,9 @@ HB_FUNC( EXPAND )
          {
             if( iRepl < 1 )
                iRepl = 1;
-            if( ISNUM( 3 ) )
+            if( HB_ISNUM( 3 ) )
                cRepl = ( char ) hb_parni( 3 );
-            else if( ISCHAR( 3 ) )
+            else if( HB_ISCHAR( 3 ) )
                cRepl = hb_parc( 3 )[0];
             else
                cRepl = ' ';
