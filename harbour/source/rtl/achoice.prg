@@ -486,8 +486,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
       IF lUserFunc
 
-         nUserFunc := iif( nMode != AC_NOITEM,;
-            Do( xUserFunc, nMode, nPos, nPos - nAtTop ), NIL )
+         nUserFunc := Do( xUserFunc, nMode, nPos, nPos - nAtTop )
 
          IF ISNUMBER( nUserFunc )
 

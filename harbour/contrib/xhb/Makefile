@@ -59,10 +59,13 @@ PRG_SOURCES=\
 	trpccli.prg \
 	ttable.prg \
 	txml.prg \
+	xcstr.prg \
+	xdbmodst.prg \
 	xhbcomp.prg \
 	xhberr.prg \
 	xhbmt.prg \
 	xhbver.prg \
+	xthrow.prg \
 
 PRG_HEADERS=\
 	hbcompat.ch \

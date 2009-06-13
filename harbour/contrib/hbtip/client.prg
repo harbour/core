@@ -71,11 +71,12 @@
    Added data ::nWrite to work like ::nRead
 */
 
-#include "hbclass.ch"
+#include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
+#include "hbclass.ch"
+
 #include "tip.ch"
-#include "common.ch"
 
 #DEFINE RCV_BUF_SIZE Int( ::InetRcvBufSize( ::SocketCon ) / 2 )
 #DEFINE SND_BUF_SIZE Int( ::InetSndBufSize( ::SocketCon ) / 2 )
@@ -87,13 +88,13 @@ CLASS tIPClient
 
    CLASSDATA   bInitSocks  INIT .F.
    CLASSDATA   cCRLF       INIT HB_InetCRLF()
-   DATA oUrl                                 // url to wich to connect
-   DATA oCredentials                         // credential needed to access the service
-   DATA nStatus                              // basic status
+   DATA oUrl                                 /* url to wich to connect */
+   DATA oCredentials                         /* credential needed to access the service */
+   DATA nStatus                              /* basic status */
    DATA SocketCon
    Data lTrace
    Data nHandle
-   
+
    DATA nDefaultRcvBuffSize
    DATA nDefaultSndBuffSize
 
@@ -116,7 +117,7 @@ CLASS tIPClient
    DATA bEof
    DATA isOpen INIT .F.
 
-   /** Gauge control; it can be a codeblock or a function pointer. */
+   /* Gauge control; it can be a codeblock or a function pointer. */
    DATA exGauge
 
    DATA Cargo
@@ -136,8 +137,8 @@ CLASS tIPClient
    METHOD lastErrorCode() INLINE ::nLastError
    METHOD lastErrorMessage(SocketCon) INLINE ::INetErrorDesc(SocketCon)
 
-   METHOD InetRcvBufSize( SocketCon, nSizeBuff ) 
-   METHOD InetSndBufSize( SocketCon, nSizeBuff ) 
+   METHOD InetRcvBufSize( SocketCon, nSizeBuff )
+   METHOD InetSndBufSize( SocketCon, nSizeBuff )
 
    PROTECTED:
    DATA nLastError INIT 0
@@ -151,7 +152,7 @@ CLASS tIPClient
    METHOD InetErrorCode(SocketCon)
    METHOD InetErrorDesc(SocketCon)
    METHOD InetConnect( cServer, nPort, SocketCon )
-   
+
    METHOD Log()
 
 ENDCLASS
@@ -160,18 +161,18 @@ ENDCLASS
 METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClient
    LOCAL oErr
 
-   Default lTrace to .F.
+   DEFAULT lTrace TO .F.
 
-   IF .not. ::bInitSocks
+   IF ! ::bInitSocks
       HB_InetInit()
       ::bInitSocks := .T.
    ENDIF
 
-   IF HB_IsString( oUrl )
+   IF ISCHARACTER( oUrl )
       oUrl := tUrl():New( oUrl )
    ENDIF
 
-   IF .NOT. oURL:cProto $ "ftp,http,pop,smtp"
+   IF ! oURL:cProto $ "ftp,http,pop,smtp"
       oErr := ErrorNew()
       oErr:Args          := { Self, oURL:cProto }
       oErr:CanDefault    := .F.
@@ -206,7 +207,7 @@ METHOD Open( cUrl ) CLASS tIPClient
 
    LOCAL nPort
 
-   IF HB_IsString( cUrl )
+   IF ISCHARACTER( cUrl )
       ::oUrl := tUrl():New( cUrl )
    ENDIF
 
@@ -232,9 +233,9 @@ RETURN .T.
 
 METHOD Close() CLASS tIPClient
 
-   local nRet:=-1
+   LOCAL nRet := -1
 
-   IF .not. Empty( ::SocketCon )
+   IF ! Empty( ::SocketCon )
 
       nRet := HB_InetClose( ::SocketCon )
 
@@ -259,17 +260,18 @@ RETURN .T.
 
 
 METHOD Read( nLen ) CLASS tIPClient
-   LOCAL cStr0, cStr1
+   LOCAL cStr0
+   LOCAL cStr1
 
-   IF ::nLength > 0 .and. ::nLength == ::nRead
+   IF ::nLength > 0 .AND. ::nLength == ::nRead
       RETURN NIL
    ENDIF
 
-   IF Empty( nLen ) .or. nLen < 0 .or.( ::nLength > 0 .and. nLen > ::nLength - ::nRead )
+   IF Empty( nLen ) .OR. nLen < 0 .OR.( ::nLength > 0 .AND. nLen > ::nLength - ::nRead )
       nLen := ::nLength - ::nRead
    ENDIF
 
-   IF Empty( nLen ) .or. nLen < 0
+   IF Empty( nLen ) .OR. nLen < 0
       // read till end of stream
       cStr1 := Space( RCV_BUF_SIZE )
       cStr0 := ""
@@ -311,7 +313,7 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS tIPClient
    LOCAL cData
    LOCAL nSent
 
-   IF Empty ( nMode )
+   IF ! ISNUMBER( nMode )
       nMode := FC_NORMAL
    ENDIF
 
@@ -324,11 +326,11 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS tIPClient
    ::nRead   := 0
    ::nStatus := 1
 
-   DO WHILE ::InetErrorCode( ::SocketCon ) == 0 .and. .not. ::bEof
+   DO WHILE ::InetErrorCode( ::SocketCon ) == 0 .AND. ! ::bEof
       cData := ::Read( RCV_BUF_SIZE )
       IF cData == NIL
          IF nFout != NIL
-            Fclose( nFout )
+            FClose( nFout )
          ENDIF
          IF ::InetErrorCode( ::SocketCon ) > 0
             RETURN .F.
@@ -337,15 +339,15 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS tIPClient
          ENDIF
       ENDIF
       IF nFout == NIL
-         nFout := Fcreate( cFile, nMode )
+         nFout := FCreate( cFile, nMode )
          IF nFout < 0
             ::nStatus := 0
             RETURN .F.
          ENDIF
       ENDIF
 
-      IF Fwrite( nFout, cData ) < 0
-         Fclose( nFout )
+      IF FWrite( nFout, cData ) < 0
+         FClose( nFout )
          RETURN .F.
       ENDIF
 
@@ -358,10 +360,11 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS tIPClient
 
    IF nSent > 0
       ::Commit()
-   Endif
+   ENDIF
 
    ::nStatus := 2
-   Fclose( nFout )
+   FClose( nFout )
+
 RETURN .T.
 
 
@@ -374,7 +377,7 @@ METHOD WriteFromFile( cFile ) CLASS tIPClient
 
    ::nWrite  := 0
    ::nStatus := 0
-   nFin := Fopen( cFile, FO_READ )
+   nFin := FOpen( cFile, FO_READ )
    IF nFin < 0
       RETURN .F.
    ENDIF
@@ -391,17 +394,17 @@ METHOD WriteFromFile( cFile ) CLASS tIPClient
 
    ::nStatus := 1
    cData := Space( nBufSize )
-   nLen := Fread( nFin, @cData, nBufSize )
+   nLen := FRead( nFin, @cData, nBufSize )
    DO WHILE nLen > 0
       IF ::Write( @cData, nLen ) != nLen
-         Fclose( nFin )
+         FClose( nFin )
          RETURN .F.
       ENDIF
       nSent += nLen
       IF ! Empty( ::exGauge )
          HB_ExecFromArray( ::exGauge, {nSent, nSize, Self} )
       ENDIF
-      nLen := Fread( nFin, @cData, nBufSize )
+      nLen := FRead( nFin, @cData, nBufSize )
    ENDDO
 
    // it may happen that the file has lenght 0
@@ -410,7 +413,7 @@ METHOD WriteFromFile( cFile ) CLASS tIPClient
    ENDIF
 
    ::nStatus := 2
-   Fclose( nFin )
+   FClose( nFin )
 RETURN .T.
 
 
@@ -419,7 +422,7 @@ HZ: METHOD :getOk() is not declared in TIpClient
 
 METHOD Data( cData ) CLASS tIPClient
    ::InetSendall( ::SocketCon, "DATA" + ::cCRLF )
-   IF .not. ::GetOk()
+   IF ! ::GetOk()
       RETURN .F.
    ENDIF
    ::InetSendall(::SocketCon, cData + ::cCRLF + "." + ::cCRLF )
@@ -435,10 +438,8 @@ METHOD Write( cData, nLen, bCommit ) CLASS tIPClient
 
    ::nLastWrite := ::InetSendall( ::SocketCon,  cData , nLen )
 
-   IF .not. Empty( bCommit ) .and. bCommit
-
+   IF ! Empty( bCommit ) .AND. bCommit
       ::Commit()
-
    ENDIF
 
    ::nWrite += ::nLastWrite
@@ -448,8 +449,7 @@ RETURN ::nLastWrite
 
 
 METHOD InetSendAll( SocketCon, cData, nLen ) CLASS tIPClient
-
-   Local nRet
+   LOCAL nRet
 
    IF Empty( nLen )
       nLen := Len( cData )
@@ -457,89 +457,76 @@ METHOD InetSendAll( SocketCon, cData, nLen ) CLASS tIPClient
 
    nRet := HB_InetSendAll( SocketCon, cData, nLen )
 
-   if ::lTrace
+   IF ::lTrace
       ::Log( SocketCon, nlen, cData, nRet )
-   endif
+   ENDIF
 
-Return nRet
+RETURN nRet
 
 
 
 METHOD InetCount( SocketCon ) CLASS tIPClient
-
-   Local nRet
+   LOCAL nRet
 
    nRet := HB_InetCount( SocketCon )
 
-   if ::lTrace
+   IF ::lTrace
       ::Log( SocketCon, nRet )
-   endif
+   ENDIF
 
-Return nRet
+RETURN nRet
 
 
 
 METHOD InetRecv( SocketCon, cStr1, len ) CLASS tIPClient
-
-   Local nRet
+   LOCAL nRet
 
    nRet := HB_InetRecv( SocketCon, @cStr1, len )
 
-   if ::lTrace
-
+   IF ::lTrace
       ::Log( SocketCon, "", len, iif( nRet >= 0, cStr1, nRet ) )
+   ENDIF
 
-   endif
-
-Return nRet
+RETURN nRet
 
 
 
 METHOD InetRecvLine( SocketCon, nLen, size ) CLASS tIPClient
-
-   Local cRet
+   LOCAL cRet
 
    cRet := HB_InetRecvLine( SocketCon, @nLen, size )
 
-   if ::lTrace
-
+   IF ::lTrace
       ::Log( SocketCon, "", size, cRet )
+   ENDIF
 
-   endif
-
-Return cRet
+RETURN cRet
 
 
 
 METHOD InetRecvAll( SocketCon, cStr1, len ) CLASS tIPClient
-
-   Local nRet
+   LOCAL nRet
 
    nRet := HB_InetRecvAll( SocketCon, @cStr1, len )
 
-   if ::lTrace
-
+   IF ::lTrace
       ::Log( SocketCon, "", len, iif( nRet >= 0, cStr1, nRet ) )
+   ENDIF
 
-   endif
-
-Return nRet
+RETURN nRet
 
 
 
 METHOD InetErrorCode( SocketCon ) CLASS tIPClient
-
-   Local nRet
+   LOCAL nRet
 
    ::nLastError := nRet := HB_InetErrorCode( SocketCon )
 
-   if ::lTrace
-
+   IF ::lTrace
       ::Log( SocketCon, nRet )
+   ENDIF
 
-   endif
-
-Return nRet
+RETURN nRet
 
 
 METHOD InetErrorDesc( SocketCon ) CLASS tIPClient
@@ -547,11 +534,10 @@ METHOD InetErrorDesc( SocketCon ) CLASS tIPClient
 
    DEFAULT SocketCon TO ::SocketCon
 
-   IF .not. Empty( SocketCon )
-
+   IF ! Empty( SocketCon )
       cMsg := HB_InetErrorDesc( SocketCon )
-
    ENDIF
+
 RETURN cMsg
 
 
@@ -563,18 +549,16 @@ METHOD InetConnect( cServer, nPort, SocketCon ) CLASS tIPClient
    IF ! Empty( ::nDefaultSndBuffSize )
       ::InetSndBufSize( SocketCon, ::nDefaultSndBuffSize )
    ENDIF
-   
+
    IF ! Empty( ::nDefaultRcvBuffSize )
       ::InetRcvBufSize( SocketCon, ::nDefaultRcvBuffSize )
    ENDIF
 
-   if ::lTrace
-
+   IF ::lTrace
       ::Log( cServer, nPort, SocketCon )
+   ENDIF
 
-   endif
-
-Return Nil
+RETURN NIL
 
 /* Methods to manage buffers */
 METHOD InetRcvBufSize( SocketCon, nSizeBuff ) CLASS tIPClient
@@ -598,30 +582,30 @@ METHOD Log( ... ) CLASS tIPClient
 
    LOCAL xVar
    LOCAL cMsg := DToS( Date() ) + "-" + Time() + Space( 2 ) + ;
-                 SubStr( ProcName( 1 ), Rat( ":", ProcName( 1 ) ) ) +;
+                 SubStr( ProcName( 1 ), RAt( ":", ProcName( 1 ) ) ) +;
                  "( "
 
-   for each xVar in hb_aParams()
+   FOR EACH xVar IN hb_AParams()
 
       // Preserves CRLF on result
-      if xVar:__enumIndex() < PCount()
+      IF xVar:__enumIndex() < PCount()
          cMsg += StrTran( StrTran( AllTrim( hb_CStr( xVar ) ), Chr( 13 ) ), Chr( 10 ) )
-      else
+      ELSE
          cMsg += hb_CStr( xVar )
-      endif
+      ENDIF
 
       cMsg += iif ( xVar:__enumIndex() < PCount() - 1, ", ", "" )
 
-      if xVar:__enumIndex() == PCount() - 1
+      IF xVar:__enumIndex() == PCount() - 1
          cMsg += " )" + hb_OsNewLine() + ">> "
 
-      elseif xVar:__enumIndex() == PCount()
+      ELSEIF xVar:__enumIndex() == PCount()
          cMsg += " <<" + hb_OsNewLine() + hb_OsNewLine()
 
-      endif
+      ENDIF
 
-   next
+   NEXT
 
-   fWrite( ::nHandle, cMsg )
+   FWrite( ::nHandle, cMsg )
 
 RETURN Self
