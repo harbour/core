@@ -2,6 +2,23 @@
 # $Id$
 #
 
+# Include this file in hbmk2 command line to build an app:
+#   'hbmk2 xhgtk.hbc test.prg'
+
+incpaths=include
+libpaths=lib
+
+{win}gt=gtgui
+
 libs=xhgtk
 
-{linux}ldflags="`pkg-config --libs gtk+-2.0 libglade-2.0`"
+{win}libpaths=${HB_DIR_GTK}/lib
+{win}libpaths=${HB_DIR_GLIB}/lib
+{win}libpaths=${HB_DIR_PANGO}/lib
+{win}libpaths=${HB_DIR_CAIRO}/lib
+{win}libpaths=${HB_DIR_ATK}/lib
+{win}libpaths=${HB_DIR_PNG}/lib
+{win}libpaths=${HB_DIR_GLADE}/lib
+
+{win}libs=gtk-win32-2.0. gdk-win32-2.0. atk-1.0. gdk_pixbuf-2.0. pangowin32-1.0. pangocairo-1.0. cairo pangoft2-1.0. pango-1.0. gobject-2.0. gmodule-2.0. glib-2.0. intl
+{linux|darwin}ldflags="`pkg-config --libs gtk+-2.0 libglade-2.0`"

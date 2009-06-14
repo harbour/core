@@ -1,0 +1,14 @@
+#
+# $Id$
+#
+
+incpaths=include/wxHarbour
+libpaths=.
+libs=wxharbour hbct hbtip
+
+{allmsvc}libpaths=${HB_DIR_WX}\lib\vc_lib
+{bcc}libpaths=${HB_DIR_WX}\lib\bcc_lib
+
+libs=wxbase28 wxbase28_net wxbase28_xml wxmsw28_adv wxmsw28_aui wxmsw28_core wxmsw28_html wxmsw28_media wxmsw28_qa wxmsw28_richtext wxmsw28_xrc
+
+{win}libs=rpcrt4
