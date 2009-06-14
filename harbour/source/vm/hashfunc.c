@@ -126,6 +126,27 @@ HB_FUNC( HB_HGET )
       hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( HB_HGETDEF )
+{
+   PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
+   PHB_ITEM pKey = hb_param( 2, HB_IT_HASHKEY );
+
+   if( pHash && pKey )
+   {
+      PHB_ITEM pDest = hb_hashGetItemPtr( pHash, pKey, HB_HASH_AUTOADD_ACCESS );
+      if( pDest )
+         hb_itemReturn( pDest );
+      else
+      {
+         PHB_ITEM pDefault = hb_param( 3, HB_IT_ANY );
+         if( pDefault )
+            hb_itemReturn( pDefault );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( HB_HSET )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
