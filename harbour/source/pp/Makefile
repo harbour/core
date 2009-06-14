@@ -24,7 +24,6 @@ include $(TOP)$(ROOT)config/lib.cf
 
 INSTALL_RULE_LIBRARIES := $(INSTALL_RULE)
 
-# TOFIX: Convert to backslash *when* needed.
 HB_VERHEADER=$(TOP)$(ROOT)include/hbverbld.h
 
 ifeq ($(HB_CHANGELOG),)
@@ -33,6 +32,12 @@ ifeq ($(HB_CHANGELOG),)
    HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange[Ll]o)
 ifeq ($(HB_CHANGELOG),)
    HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange~1)
+ifeq ($(HB_CHANGELOG),)
+   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange~?)
+ifeq ($(HB_CHANGELOG),)
+   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hang~??)
+endif
+endif
 endif
 endif
 endif
@@ -56,4 +61,4 @@ install::
 	$(INSTALL_RULE_LIBRARIES)
 
 clean::
-	-$(RM) $(HB_VERHEADER)
+	-$(RM) $(subst /,$(DIRSEP),$(HB_VERHEADER))
