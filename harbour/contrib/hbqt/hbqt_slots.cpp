@@ -77,7 +77,6 @@
 #define HBQT_EVT_PRESSED          6
 #define HBQT_EVT_RELEASED         7
 
-#include <windows.h>
 /*----------------------------------------------------------------------*/
 
 static Slots *s = NULL;
@@ -584,4 +583,3 @@ HB_FUNC( QT_MYDRAWINGAREA )
 
 /*----------------------------------------------------------------------*/
 #endif
-
