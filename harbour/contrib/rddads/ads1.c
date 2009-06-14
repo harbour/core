@@ -1645,7 +1645,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             if( pArea->iFileType == ADS_ADT )
 #endif
             {
-               dbFieldInfo.uiType = HB_FT_DAYTIME;
+               dbFieldInfo.uiType = HB_FT_TIMESTAMP;
                dbFieldInfo.uiTypeExtended = ADS_TIMESTAMP;
                dbFieldInfo.uiLen = 8;
             }
@@ -1686,7 +1686,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             {
                if( ( iNameLen == 1 && uiLen == 8 ) || iNameLen > 4 )
                {
-                  dbFieldInfo.uiType = HB_FT_DAYTIME;
+                  dbFieldInfo.uiType = HB_FT_TIMESTAMP;
                   dbFieldInfo.uiTypeExtended = ADS_TIMESTAMP;
                   dbFieldInfo.uiLen = 8;
                }
@@ -1893,7 +1893,7 @@ static HB_ERRCODE adsFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_
          hb_itemPutC( pItem, "TIME" );
          break;
 
-      case HB_FT_DAYTIME:
+      case HB_FT_TIMESTAMP:
          hb_itemPutC( pItem, "TIMESTAMP" );
          break;
 
@@ -2060,7 +2060,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case HB_FT_TIME:
-      case HB_FT_DAYTIME:
+      case HB_FT_TIMESTAMP:
       case HB_FT_MODTIME:
       {
          SIGNED32 lTime = 0, lDate = 0;
@@ -2453,7 +2453,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case HB_FT_TIME:
-      case HB_FT_DAYTIME:
+      case HB_FT_TIMESTAMP:
       case HB_FT_MODTIME:
          if( HB_IS_DATETIME( pItem ) )
          {
@@ -2774,7 +2774,7 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
          case HB_FT_TIME:
             cType = "Time"; /* "T" */
             break;
-         case HB_FT_DAYTIME: /* "@" */
+         case HB_FT_TIMESTAMP: /* "@" */
             cType = "TimeSt";
             break;
          case HB_FT_MODTIME: /* "=" */
@@ -3274,7 +3274,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
             break;
 
          case ADS_TIMESTAMP:
-            dbFieldInfo.uiType = HB_FT_DAYTIME;
+            dbFieldInfo.uiType = HB_FT_TIMESTAMP;
             break;
 
          case ADS_MODTIME:

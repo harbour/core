@@ -385,7 +385,7 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
          case 'T':
             if( uiLen == 8 )
             {
-               pFieldInfo.uiType = HB_FT_DAYTIME;
+               pFieldInfo.uiType = HB_FT_TIMESTAMP;
                pFieldInfo.uiLen = 8;
             }
             else
@@ -396,7 +396,7 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
             break;
 
          case '@':
-            pFieldInfo.uiType = HB_FT_DAYTIME;
+            pFieldInfo.uiType = HB_FT_TIMESTAMP;
             pFieldInfo.uiLen = 8;
             break;
 
@@ -527,7 +527,7 @@ static HB_ERRCODE hb_waFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PH
                hb_itemPutC( pItem, "T" );
                break;
 
-            case HB_FT_DAYTIME:
+            case HB_FT_TIMESTAMP:
                hb_itemPutC( pItem, "@" );
                break;
 

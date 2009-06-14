@@ -1119,7 +1119,7 @@ static HB_ERRCODE hb_delimAddField( DELIMAREAP pArea, LPDBFIELDINFO pFieldInfo )
          pArea->fTransRec = FALSE;
          break;
 
-      case HB_FT_DAYTIME:
+      case HB_FT_TIMESTAMP:
       case HB_FT_MODTIME:
          pFieldInfo->uiType = HB_FT_STRING;
          pFieldInfo->uiLen = 23;

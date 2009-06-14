@@ -188,7 +188,7 @@
 #define HB_FT_INTEGER         6     /* "I" */
 #define HB_FT_DOUBLE          7     /* "B" */
 #define HB_FT_TIME            8     /* "T" */
-#define HB_FT_DAYTIME         9     /* "@" */
+#define HB_FT_TIMESTAMP       9     /* "@" */
 #define HB_FT_MODTIME         10    /* "=" */
 #define HB_FT_ROWVER          11    /* "^" */
 #define HB_FT_AUTOINC         12    /* "+" */

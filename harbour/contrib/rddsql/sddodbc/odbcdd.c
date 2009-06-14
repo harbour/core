@@ -343,7 +343,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          /*  SQL_DATETIME = SQL_DATE = 9 */
          case SQL_TIMESTAMP:
          case SQL_TYPE_TIMESTAMP:
-           pFieldInfo.uiType = HB_FT_DAYTIME;
+           pFieldInfo.uiType = HB_FT_TIMESTAMP;
            break;
 
          default:
@@ -403,7 +403,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
                pItem = hb_itemPutTDT( NULL, 0, 0 );
                break;
 
-           case HB_FT_DAYTIME:
+           case HB_FT_TIMESTAMP:
                pItem = hb_itemPutTDT( NULL, 0, 0 );
                break;
 
@@ -569,7 +569,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
                break;
             }
 
-            case HB_FT_DAYTIME:
+            case HB_FT_TIMESTAMP:
             {
                TIMESTAMP_STRUCT  val = {0,0,0,0,0,0,0};
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_TIMESTAMP, &val, sizeof( val ), &iLen ) ) )

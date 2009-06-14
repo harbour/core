@@ -1956,7 +1956,7 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
          /* no break */
 
       case HB_FT_MODTIME:
-      case HB_FT_DAYTIME:
+      case HB_FT_TIMESTAMP:
          hb_itemPutTDT( pItem, HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ),
                                HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + 4 ) );
          break;
@@ -2399,14 +2399,14 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
                memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], szBuffer, 8 );
             }
          }
-         else if( pField->uiType == HB_FT_DAYTIME ||
+         else if( pField->uiType == HB_FT_TIMESTAMP ||
                   pField->uiType == HB_FT_TIME )
          {
             long lDate, lTime;
 
             hb_itemGetTDT( pItem, &lDate, &lTime );
             ptr = pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
-            if( pField->uiType == HB_FT_DAYTIME )
+            if( pField->uiType == HB_FT_TIMESTAMP )
             {
                HB_PUT_LE_UINT32( ptr, lDate );
                ptr += 4;
@@ -3123,7 +3123,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pArea->uiRecordLen += pField->uiLen;
             break;
 
-         case HB_FT_DAYTIME:
+         case HB_FT_TIMESTAMP:
             pThisField->bType = pArea->bTableType == DB_DBF_VFP ? 'T' : '@';
             pField->uiLen = 8;
             pThisField->bLen = ( BYTE ) pField->uiLen;
@@ -4076,7 +4076,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
          /* types which are not supported by VM - mapped to different ones */
          case 'T':
             if( dbFieldInfo.uiLen == 8 )
-               dbFieldInfo.uiType = HB_FT_DAYTIME;
+               dbFieldInfo.uiType = HB_FT_TIMESTAMP;
             else if( dbFieldInfo.uiLen == 4 )
                dbFieldInfo.uiType = HB_FT_TIME;
             else
@@ -4084,7 +4084,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
             break;
 
          case '@':
-            dbFieldInfo.uiType = HB_FT_DAYTIME;
+            dbFieldInfo.uiType = HB_FT_TIMESTAMP;
             if( dbFieldInfo.uiLen != 8 )
                errCode = HB_FAILURE;
             break;
