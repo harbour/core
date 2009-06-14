@@ -1,0 +1,24 @@
+#
+# $Id$
+#
+
+# Copy this file to 'hmg extended' root dir and include it
+# in hbmk2 command line to build an app:
+# > hbmk2 test.prg C:\minihui\minigui.hbc
+
+{win}incpaths=include
+{win}libpaths=lib harbour/lib
+
+{win}gt=gtgui
+gui=yes
+
+# core
+{win}libs=minigui
+# core #2
+{bcc}libs=cputype propgrid propsheet tsbrowse WinReport
+# core (binary)
+{bcc}libs=dll hbprinter miniprint TMsAgent
+# Harbour contribs
+{win}libs=hbmzip hbwin
+# system
+{win}libs=vfw32
