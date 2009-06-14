@@ -55,7 +55,6 @@
 
 #define HB_GT_NAME  QTC
 
-#include <qglobal.h>
 #include <QtGui/QtGui>
 #include <QtCore/QObject>
 #include <QtCore/QList>
@@ -81,25 +80,17 @@
 #include "hbvm.h"
 #include "hbthread.h"
 
-#define WVT_CHAR_QUEUE_SIZE       4096 //  128
+#define WVT_CHAR_QUEUE_SIZE        4096 //  128
 #define WVT_MAX_TITLE_SIZE         128
 #define WVT_MAX_ROWS               256
 #define WVT_MAX_COLS               256
 #define WVT_MAX_WINDOWS            256
-#if defined( HB_OS_WIN_CE )
-#  define WVT_DEFAULT_ROWS          15
-#  define WVT_DEFAULT_COLS          50
-#  define WVT_DEFAULT_FONT_HEIGHT   12
-#  define WVT_DEFAULT_FONT_WIDTH     8
-#else
-#  define WVT_DEFAULT_ROWS          25
-#  define WVT_DEFAULT_COLS          80
-#  define WVT_DEFAULT_FONT_HEIGHT   20
-#  define WVT_DEFAULT_FONT_WIDTH    10
-#endif
-#define WVT_DEFAULT_FONT_NAME    "Courier New"
+#define WVT_DEFAULT_ROWS           25
+#define WVT_DEFAULT_COLS           80
+#define WVT_DEFAULT_FONT_HEIGHT    20
+#define WVT_DEFAULT_FONT_WIDTH     10
+#define WVT_DEFAULT_FONT_NAME      "Courier New"
 
-//#define QQRGB( r,g,b )  ( ( QRgb ) ( ( r ) + ( g * 256 ) + ( b * 256 * 256 ) ) )
 #define QQRGB( r,g,b )  ( qRgb( r,g,b ) )
 
 #define C_BLACK          RGB( 0x0 ,0x0 ,0x0  )

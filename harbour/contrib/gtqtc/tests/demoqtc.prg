@@ -441,17 +441,25 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
    endcase
 
    RETURN lRet
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+
+FUNCTION Qtc_Out( cMsg )
+
+   RETURN Qtc_OutputDebugString( cMsg )
+
+/*----------------------------------------------------------------------*/
+
 PROCEDURE MyErrorSys( oError )
 
-   ? oError:Description
-   ? oError:args
-   ? oError:genCode
-   ? oError:operation
+   //Qtc_Out( oError:Description )
+   Qtc_Out( oError:args )
+   Qtc_Out( oError:genCode )
+   Qtc_Out( oError:operation )
 
-   ? procname(1), procline(1)
-   ? procname(2), procline(2)
-   ? procname(3), procline(3)
+   Qtc_Out( procname( 1 ) )
+   Qtc_Out( str( procline( 1 ) ) )
+   Qtc_Out( procname( 2 ) )
+   Qtc_Out( str( procline( 2 ) ) )
 
    RETURN
 //----------------------------------------------------------------------//

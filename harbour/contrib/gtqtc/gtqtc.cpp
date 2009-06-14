@@ -61,24 +61,24 @@
 
 #include "gtqtc.h"
 
-static QApplication * app      = NULL;
-static bool           hbqtinit = false;
-
 #define WM_MY_UPDATE_CARET         1700
 
-static int           s_GtId;
-static HB_GT_FUNCS   SuperTable;
-#define HB_GTSUPER   (&SuperTable)
-#define HB_GTID_PTR  (&s_GtId)
+static  QApplication *  app      = NULL;
+static  bool            hbqtinit = false;
+
+static  int             s_GtId;
+static  HB_GT_FUNCS     SuperTable;
+#define HB_GTSUPER      (&SuperTable)
+#define HB_GTID_PTR     (&s_GtId)
 
 #define HB_GTWVT_GET(p) ( ( PHB_GTWVT ) HB_GTLOCAL( p ) )
 
-static HB_CRITICAL_NEW( s_wvtMtx );
+static  HB_CRITICAL_NEW( s_wvtMtx );
 #define HB_WVT_LOCK     hb_threadEnterCriticalSection( &s_wvtMtx );
 #define HB_WVT_UNLOCK   hb_threadLeaveCriticalSection( &s_wvtMtx );
 
-static PHB_GTWVT  s_wvtWindows[ WVT_MAX_WINDOWS ];
-static int        s_wvtCount = 0;
+static  PHB_GTWVT       s_wvtWindows[ WVT_MAX_WINDOWS ];
+static  int             s_wvtCount = 0;
 
 /*----------------------------------------------------------------------*/
 #if 0
