@@ -79,6 +79,8 @@ THREAD STATIC nEventIn  := 0
 THREAD STATIC nEventOut := 0
 THREAD STATIC ts_mutex
 
+STATIC oDummy
+
 /*----------------------------------------------------------------------*/
 
 INIT PROCEDURE Qt_Start()
@@ -122,7 +124,7 @@ FUNCTION AppEvent( mp1, mp2, oXbp )
       nEvent := 0
       mp1    := NIL
       mp2    := NIL
-      oXbp   := NIL
+      oXbp   := oDummy
    ELSE
       nEvent := ts_events[ nEventOut,1 ]
       mp1    := ts_events[ nEventOut,2 ]
@@ -146,6 +148,9 @@ FUNCTION SetAppWindow( oXbp )
    ENDIF
    IF empty( ts_events )
       ts_events := array( EVENT_BUFFER )
+   ENDIF
+   IF empty( oDummy )
+      oDummy := XbpObject():new()
    ENDIF
 
    oldAppWindow := oAppWindow

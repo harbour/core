@@ -63,6 +63,8 @@ PROCEDURE Main()
    /* Create Application Window */
    oDlg := GuiStdDialog( 'Harbour - Xbase++ - QT Dialog [ Press "Q" to Exit ]' )
 
+   SetAppWindow( oDlg )
+
    /* Obtain desktop dimensions */
    aSize := AppDesktop():currentSize()
    /* Place on the center of desktop */
@@ -81,10 +83,10 @@ PROCEDURE Main()
    /* Enter Xbase++ Event Loop - still with limited functionality but working */
    DO WHILE .t.
       nEvent := AppEvent( @mp1, @mp2, @oXbp )
-
-      IF nEvent == xbeP_Keyboard .and. mp1 == 81
+      IF nEvent == xbeP_Close .or. ( nEvent == xbeP_Keyboard .and. mp1 == 81 )
          EXIT
       ENDIF
+      oXbp:handleEvent( nEvent, mp1, mp2 )
    ENDDO
 
    /* Very important - destroy resources */
@@ -118,7 +120,8 @@ STATIC FUNCTION GuiStdDialog( cTitle )
 STATIC FUNCTION Build_MenuBar( oDlg )
    LOCAL oMenuBar, oSubMenu
 
-   oMenuBar := XbpMenuBar():new( oDlg ):create()
+   //oMenuBar := XbpMenuBar():new( oDlg ):create()
+   oMenuBar := SetAppWindow():MenuBar()
 
    /* Define submenu in procedural style.
     * The numeric index of the selected menu item
@@ -144,13 +147,12 @@ STATIC FUNCTION Build_MenuBar( oDlg )
    oSubMenu:addItem( { "Play Closing ~2", {|| MyFunctionXbp( 2 ) } } )
    oSubMenu:addItem( { NIL, NIL, XBPMENUBAR_MIS_SEPARATOR, NIL } )
    oSubMenu:addItem( { "new.png|~MessageBox", {|| MyFunctionXbp( 3 ) }, , XBPMENUBAR_MIA_HILITED } )
-   //
    oMenuBar:addItem( { oSubMenu, NIL } )
    //
    oSubMenu:insItem( 2, { "This executes MsgBox()", {|| MyFunctionXbp( 103 ) }, , XBPMENUBAR_MIA_CHECKED } )
-   //
    oSubMenu:itemMarked := {|mp1| IF( mp1 == 5, MsgBox( "WOW - ::itemMarked - Activated" ), NIL ) }
-   //
+
+   /* Menu colors are being honored in Harbour only */
    oSubMenu:setColorFG( GraMakeRGBColor( { 255,  1,  1 } ) )
    oSubMenu:setColorBG( GraMakeRGBColor( { 134,128,250 } ) )
 

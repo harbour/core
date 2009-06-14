@@ -278,34 +278,11 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpDrawingArea:handleEvent( nMessage, aNM )
-   LOCAL hDC
+METHOD XbpDrawingArea:handleEvent( nEvent, mp1, mp2  )
 
-   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
-
-   DO CASE
-
-   CASE nMessage == HB_GTE_RESIZED
-      IF hb_isBlock( ::sl_resize )
-         eval( ::sl_resize, NIL, NIL, self )
-      ENDIF
-      aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
-      RETURN ( 0 )
-
-   CASE nMessage == HB_GTE_CTLCOLOR
-      hDC := aNM[ 1 ]
-
-      IF hb_isNumeric( ::clr_FG )
-         Qtc_SetTextColor( hDC, ::clr_FG )
-      ENDIF
-      IF hb_isNumeric( ::hBrushBG )
-         Qtc_SetBkMode( hDC, 1 )
-
-         Qtc_FillRect( hDC, { 0,0,::currentSize()[1],::currentSize()[1]}, ::hBrushBG )
-         RETURN ( 0 )
-      ENDIF
-
-   ENDCASE
+   HB_SYMBOL_UNUSED( nEvent )
+   HB_SYMBOL_UNUSED( mp1 )
+   HB_SYMBOL_UNUSED( mp2 )
 
    RETURN ( 1 )
 

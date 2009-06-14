@@ -11,6 +11,8 @@
 #define xbeP_None                                 (001 + xbeB_Event)
 #define xbeP_Keyboard                             (004 + xbeB_Event)
 #define xbeP_User                                 134217728
+#define xbeP_Close                                (056 + xbeB_Event)
+#define xbeP_Quit                                 (057 + xbeB_Event)
 #define xbeM_Motion                               (022 + xbeB_Event)
 
 #define xbeK_ESC                                   27
