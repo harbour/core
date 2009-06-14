@@ -70,7 +70,6 @@
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
-#include "hbgtwvg.ch"
 #include "xbp.ch"
 #include "appevent.ch"
 #include "apig.ch"
@@ -296,4 +295,3 @@ METHOD XbpDrawingArea:destroy()
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-
