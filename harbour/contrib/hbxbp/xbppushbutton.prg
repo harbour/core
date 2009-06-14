@@ -78,12 +78,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
-#endif
-
-/*----------------------------------------------------------------------*/
-
 CLASS XbpPushButton  INHERIT  XbpWindow
 
    DATA     autosize                              INIT .F.

@@ -49,12 +49,12 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 /*----------------------------------------------------------------------*/
-/*                                 Xbp.ch                               */
+/*                                 xbp.ch                               */
 /*----------------------------------------------------------------------*/
 
 #ifndef  _XBP_CH
-
 #define _XBP_CH
 
 /*----------------------------------------------------------------------*/
@@ -224,6 +224,10 @@
 #define XBPMENUBAR_MIA_HILITED                    32768
 #define XBPMENUBAR_MIA_DEFAULT                    65536
 #define XBPMENUBAR_MIA_OWNERDRAW                  131072
+
+#ifndef __DBG_PARTS__
+   #xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#endif
 
 #endif /* #ifndef _XBP_CH */
 

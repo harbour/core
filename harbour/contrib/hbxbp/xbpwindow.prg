@@ -68,13 +68,18 @@
 #include "hbclass.ch"
 #include "common.ch"
 #include "inkey.ch"
-#include "hbgtinfo.ch"
 
-#include "hbgtwvg.ch"
 #include "xbp.ch"
 #include "appevent.ch"
 #include "apig.ch"
 #include "hbqt.ch"
+
+/* TOFIX: Replace these with QT solutions */
+#define HB_GTE_NOTIFY                    10
+#define HB_GTE_COMMAND                   11
+#define HB_GTE_CTLCOLOR                  12
+#define HB_GTE_HSCROLL                   15
+#define HB_GTE_VSCROLL                   16
 
 /*----------------------------------------------------------------------*/
  * To Switch Over from ASCALLBACK() to SET/GET_Prop() calls
@@ -83,10 +88,6 @@
    #define __BYASCALLBACK__
 #else
    #define __BYSETPROP__
-#endif
-
-#ifndef __DBG_PARTS__
-   #xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -1402,13 +1403,6 @@ METHOD XbpWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
 
 /*----------------------------------------------------------------------*/
 
-#if 0
-FUNCTION hb_toOut( ... )
-   RETURN hb_ToOutDebug( ... )
-#endif
-
-/*----------------------------------------------------------------------*/
-
 CLASS XbpObject
 
    METHOD INIT
@@ -1422,10 +1416,3 @@ METHOD XbpObject:INIT()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
-
-
-
-
-
-
