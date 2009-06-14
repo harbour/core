@@ -69,10 +69,21 @@
 #include "common.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
-#include "hbgtwvg.ch"
 
 #include "xbp.ch"
 #include "apig.ch"
+
+/* TOFIX: Replace these with QT solutions */
+#define HB_GTE_MOUSE                      6
+#define HB_GTE_KEYBOARD                   7
+#define HB_GTE_MENU                       9
+#define HB_GTE_NOTIFY                    10
+#define HB_GTE_COMMAND                   11
+#define HB_GTE_CTLCOLOR                  12
+#define HB_GTE_PAINT                     13
+#define HB_GTE_GUIPARTS                  14
+#define HB_GTE_HSCROLL                   15
+#define HB_GTE_VSCROLL                   16
 
 /*----------------------------------------------------------------------*/
 
