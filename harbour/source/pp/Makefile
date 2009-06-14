@@ -32,10 +32,7 @@ ifeq ($(HB_CHANGELOG),)
 ifeq ($(HB_CHANGELOG),)
    HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange[Ll]o)
 ifeq ($(HB_CHANGELOG),)
-   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange~?)
-ifeq ($(HB_CHANGELOG),)
-   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hang~??)
-endif
+   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange~1)
 endif
 endif
 endif
@@ -59,4 +56,4 @@ install::
 	$(INSTALL_RULE_LIBRARIES)
 
 clean::
-	$(RM) $(HB_VERHEADER)
+	-$(RM) $(HB_VERHEADER)

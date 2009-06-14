@@ -103,10 +103,6 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       > set HB_INSTALL_PREFIX=<DIR>
       > make_gnu.bat install
 
-      NOTE: Build process was only tested on Windows host system,
-            and most probably it doesn't work anymore under
-            pure MS-DOS.
-
    OS/2
    ----
       > set HB_COMPILER=<[gcc]|watcom>
@@ -547,6 +543,7 @@ EXAMPLES
       --8<--
       rem ; To create installation packages (.zip),
       rem   replace last line (calling make_gnu.bat) with this one:
+      rem   (this will only work when using Windows host)
       call mpkg_dos.bat > log-%HB_COMPILER%.txt 2>&1
       -->8--
 
