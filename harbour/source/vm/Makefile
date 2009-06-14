@@ -8,9 +8,7 @@ ifeq ($(HB_HVM_ALL),)
 
 HB_HVM_ALL = yes
 ifeq ($(HB_COMPILER),watcom)
-ifeq ($(HB_ARCHITECTURE),win)
 	HB_HVM_ALL = no
-endif
 endif
 ifeq ($(HB_COMPILER),bcc)
 	HB_HVM_ALL = no
@@ -28,9 +26,6 @@ ifeq ($(HB_COMPILER),xcc)
 	HB_HVM_ALL = no
 endif
 ifeq ($(HB_COMPILER),dmc)
-	HB_HVM_ALL = no
-endif
-ifeq ($(HB_ARCHITECTURE),dos)
 	HB_HVM_ALL = no
 endif
 export HB_HVM_ALL

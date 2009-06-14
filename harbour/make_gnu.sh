@@ -22,6 +22,17 @@
 #    http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
 # ---------------------------------------------------------------
 
+test_param()
+{
+    local inst
+    inst=no
+    while [ $# != 0 ] && [ "$inst" != yes ]; do
+        [ "$1" = install ] && inst=yes
+        shift
+    done
+    [ "$inst" = yes ]
+}
+
 if [ -z "$HB_ARCHITECTURE" ]; then
     if [ "$OSTYPE" = "msdosdjgpp" ]; then
         hb_arch="dos"
@@ -224,13 +235,3 @@ else
     fi
 fi
 
-test_param()
-{
-    local inst
-    inst=no
-    while [ $# != 0 ] && [ "$inst" != yes ]; do
-        [ "$1" = install ] && inst=yes
-        shift
-    done
-    [ "$inst" = yes ]
- }

@@ -50,16 +50,13 @@
  *
  */
 
-#include <math.h>
-
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbmath.h"
 
-#ifdef PI
-/* DJGPP defines PI in math.h */
-#undef PI
+#ifndef PI
+#  define PI   ( 3.1415926535897932384626433 )
 #endif
-#define PI  ( 3.1415926535897932384626433 )
 
 /* DtoR( <nDegrees> ) --> nRadians
    Convert an angle size specified in radians to degrees

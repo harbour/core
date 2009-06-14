@@ -27,10 +27,17 @@ INSTALL_RULE_LIBRARIES := $(INSTALL_RULE)
 # TOFIX: Convert to backslash *when* needed.
 HB_VERHEADER=$(TOP)$(ROOT)include/hbverbld.h
 
-ifeq ($(HB_ARCHITECTURE),dos)
-   HB_CHANGELOG=../../../../CHANGE~1
-else
-   HB_CHANGELOG=../../../../ChangeLog
+ifeq ($(HB_CHANGELOG),)
+   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)ChangeLog)
+ifeq ($(HB_CHANGELOG),)
+   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange[Ll]o)
+ifeq ($(HB_CHANGELOG),)
+   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange~?)
+ifeq ($(HB_CHANGELOG),)
+   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hang~??)
+endif
+endif
+endif
 endif
 
 ifneq ($(HB_PP_RULES),)

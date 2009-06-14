@@ -50,10 +50,9 @@
  *
  */
 
-#include <math.h>
-
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbmath.h"
 
 /* Floor( <nNumber> ) --> nInteger
    Return the largest integer that is less than or equal to <nNumber>

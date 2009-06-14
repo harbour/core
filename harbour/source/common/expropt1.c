@@ -55,7 +55,6 @@
  */
 #define  HB_COMMON_SUPPORT
 
-#include <math.h>
 #include "hbmacro.h"
 #include "hbcomp.h"
 

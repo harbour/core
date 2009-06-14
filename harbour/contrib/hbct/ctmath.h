@@ -54,11 +54,7 @@
 #ifndef _CTMATH_H
 #define _CTMATH_H
 
-#ifdef __DJGPP__
-#  include <libm/math.h>
-#else
-#  include <math.h>
-#endif
+#include "hbmath.h"
 #include <float.h>
 #include <limits.h>
 

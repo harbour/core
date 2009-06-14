@@ -55,10 +55,10 @@
  */
 #define  HB_COMMON_SUPPORT
 
-#include <math.h>
 #include "hbmacro.h"
 #include "hbcomp.h"
 #include "hbdate.h"
+#include "hbmath.h"
 
 static BOOL hb_compExprHasMacro( const char * szText, ULONG ulLen, HB_COMP_DECL )
 {

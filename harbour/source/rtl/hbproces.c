@@ -736,10 +736,12 @@ BOOL hb_fsProcessClose( HB_FHANDLE hProcess, BOOL fGentle )
    return fResult;
 }
 
-/* small hack for still missing sysconf() in Watcom 1.8 */
+/* temporary hack for still missing sysconf() in Watcom 1.8 */
 #if defined( HB_OS_LINUX ) && defined( __WATCOMC__ )
 _WCRTLINK long sysconf( int __name )
 {
+   int iTODO;
+
    switch( __name )
    {
       case _SC_OPEN_MAX:

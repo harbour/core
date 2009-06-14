@@ -1361,7 +1361,7 @@ HB_FUNC( WIN_GETMESSAGETEXT )
 {
    TCHAR cText[ 32000 ];
 
-   SendMessage( wvg_parhwnd( 1 ), ( UINT ) hb_parni( 2 ), wvg_parwparam( 3 ), ( LPARAM ) &cText );
+   SendMessage( wvg_parhwnd( 1 ), ( UINT ) hb_parni( 2 ), wvg_parwparam( 3 ), ( LPARAM ) cText );
 
    {
       char * szText = HB_TCHAR_CONVFROM( cText );

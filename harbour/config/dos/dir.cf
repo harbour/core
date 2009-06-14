@@ -27,11 +27,11 @@ DIR_RULE = $(foreach file, $(DIR_LIST), $(dir_mk))
 else  # bash
 DIR_LIST = $(subst \,/,$(DIRS))
 DIR_RULE =\
-	sh -c "for d in $(DIR_LIST); do \
+	for d in $(DIR_LIST); do \
 	  if [ -d $$d ]; then \
 	    $(MAKE) -C $$d $@; \
 	  fi \
-	done"
+	done
 
 endif # ! COMMAND.COM
 

@@ -68,9 +68,6 @@
 
 #define HB_STACK_PRELOAD
 
-#include <math.h>
-#include <time.h>
-
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbstack.h"
@@ -87,6 +84,7 @@
 #include "hbpcode.h"
 #include "hbset.h"
 #include "hbdate.h"
+#include "hbmath.h"
 #include "hbinkey.ch"
 #include "inkey.ch"
 #include "hbdebug.ch"
@@ -94,6 +92,10 @@
 #  include "hbthread.h"
 #endif
 #include "hbmemory.ch"
+
+#ifndef HB_NO_PROFILER
+#  include <time.h>
+#endif
 
 
 HB_FUNC_EXTERN( SYSINIT );

@@ -50,10 +50,9 @@
  *
  */
 
-#include <math.h>
-
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbmath.h"
 
 /* Ceiling( <nNumber> ) --> nInteger
    Return the smallest integer that is greater than or equal to <nNumber>

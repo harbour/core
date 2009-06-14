@@ -50,7 +50,6 @@
  *
  */
 
-#include <math.h>
 #include "hbcomp.h"
 #include "hbmacro.ch"
 
