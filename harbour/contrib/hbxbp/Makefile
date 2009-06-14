@@ -45,11 +45,14 @@ PRG_SOURCES=\
 	xbpwindow.prg \
 	xbpparthandler.prg \
 	xbpmenubar.prg \
+	xbptoolbar.prg \
+	xbppushbutton.prg \
 
 PRG_HEADERS=\
 	xbp.ch \
 	appevent.ch \
 	apig.ch \
+	gra.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

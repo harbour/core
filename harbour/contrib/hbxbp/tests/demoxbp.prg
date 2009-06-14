@@ -54,6 +54,7 @@
 #include "xbp.ch"
 #include "appevent.ch"
 #include "inkey.ch"
+#include "gra.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -72,7 +73,13 @@ PROCEDURE Main()
                   ( aSize[ 2 ] - oDlg:currentSize()[ 2 ] ) / 2 } )
 
    /* Install menu system */
-   Build_MenuBar( oDlg )
+   Build_MenuBar()
+
+   /* Install Toolbar */
+   Build_ToolBar( oDlg:drawingArea )
+
+   /* install Push Buttons */
+   Build_PushButton( oDlg:drawingArea )
 
    /* Make background color of :drawingArea different */
    oDlg:drawingArea:setColorBG( GraMakeRGBColor( { 134,128,164 } ) )
@@ -92,6 +99,11 @@ PROCEDURE Main()
    /* Very important - destroy resources */
    oDlg:destroy()
 
+   RETURN
+
+/*----------------------------------------------------------------------*/
+
+PROCEDURE AppSys()
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -117,7 +129,7 @@ STATIC FUNCTION GuiStdDialog( cTitle )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Build_MenuBar( oDlg )
+STATIC FUNCTION Build_MenuBar()
    LOCAL oMenuBar, oSubMenu
 
    //oMenuBar := XbpMenuBar():new( oDlg ):create()
@@ -164,7 +176,7 @@ STATIC FUNCTION MyFunctionXbp( nMode )
 
    DO CASE
    CASE nMode == 1
-      MsgBox( "Play Opening ~1" )
+      MsgBox( "Play Opening" + STR( GraMakeRGBColor( { 134,128,164 } ) ) )
 
    CASE nMode == 2
       MsgBox( "Play Closing ~2" )
@@ -187,9 +199,58 @@ STATIC FUNCTION MyFunctionXbp( nMode )
 
 /*----------------------------------------------------------------------*/
 
-PROCEDURE AppSys()
-   RETURN
+FUNCTION Build_ToolBar( oDA )
+   LOCAL oTBar
+
+   // Create an XbpToolBar object and
+   // add it at the top of the dialog
+   //
+   oTBar := XbpToolBar():new( oDA )
+   oTBar:create( , , { 0, oDA:currentSize()[ 2 ]-60 }, ;
+                     { oDA:currentSize()[ 1 ], 60 } )
+   //
+   // Add two tool bar buttons, each with a
+   // caption and an image. Constrict the
+   // button image sizes to 32 pixels and
+   // ensure transparency is turned off.
+   //
+   oTBar:imageWidth  := 32
+   oTBar:imageHeight := 32
+
+   /* Harbour does not support resource IDs so giving bitmap files */
+   #ifdef __HARBOUR__
+   oTBar:addItem( "Button #1", "new.png"  )
+   oTBar:addItem( "Button #2", "open.png" )
+   #else
+   oTBar:addItem( "Button #1" )//, 100 )
+   oTBar:addItem( "Button #2" )//, 101 )
+   #endif
+
+   oTBar:transparentColor := GRA_CLR_INVALID
+   oTBar:buttonClick := {|oButton| MsgBox( "Button [" + oButton:caption + "] clicked!" ) }
+
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION Build_PushButton( oDA )
+   LOCAL oXbp
+
+    oXbp := XbpPushButton():new( oDA )
+    oXbp:caption := "A"
+    oXbp:create( , , {30,100}, {100,40} )
+    oXbp:activate:= {|| MsgBox( "Pushbutton A" ) }
+    /* Harbour supports presentation colors */
+    oXbp:setColorBG( GraMakeRGBColor( {133,240,90} ) )
+
+    oXbp := XbpPushButton():new( oDA )
+    oXbp:caption := "new.png"
+    oXbp:create( , , {30,160}, {100,40} )
+    oXbp:activate:= {|| MsgBox( "Pushbutton B" ) }
+    /* Harbour supports presentation colors */
+    oXbp:setColorBG( GraMakeRGBColor( {0,255,255} ) )
+
+    RETURN nil
+
+/*----------------------------------------------------------------------*/
 

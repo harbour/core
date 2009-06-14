@@ -478,10 +478,10 @@ METHOD XbpWindow:setColorBG( nRGB )
       IF empty( ::oPalette )
          ::oPalette := QPalette():new()
       ENDIF
-      cClass := upper( ::ClassName )
 
+      cClass := upper( ::ClassName )
       DO CASE
-      CASE cClass $ 'XBPPUSHBUTTON,XBPMENUBAR,XBPMENU'
+      CASE cClass $ 'XBPPUSHBUTTON,XBPMENUBAR,XBPMENU,XBPTOOLBAR'
          ::oPalette:setColor( QPalette_Button    , QT_PTROF( QColor():new( nRGB ) ) )
       OTHERWISE
          ::oPalette:setColor( QPalette_Background, QT_PTROF( QColor():new( nRGB ) ) )

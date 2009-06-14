@@ -251,11 +251,10 @@ CLASS XbpDrawingArea  INHERIT  XbpWindow
 
 METHOD XbpDrawingArea:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::xbpWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := QWS_CHILD
    ::exStyle     := 0
-   ::className   := "DrawingArea"
+   ::className   := "XbpDrawingArea"
    ::objType     := objTypeDA
    ::visible     := .t.
 

@@ -64,8 +64,6 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-/*----------------------------------------------------------------------*/
-
 PROCEDURE QTC_SHOWWINDOW() ; RETURN
 PROCEDURE QTC_ISICONIC() ; RETURN
 PROCEDURE QTC_ISWINDOW() ; RETURN
@@ -100,4 +98,6 @@ PROCEDURE QTC_FILLRECT() ; RETURN
 PROCEDURE QTC_DELETEMENU() ; RETURN
 PROCEDURE QTC_TRACKPOPUPMENU() ; RETURN
 PROCEDURE HB_TOOUTDEBUG() ; RETURN
-PROCEDURE QTC_OUTPUTDEBUGSTRING() ; RETURN
+PROCEDURE QTC_SENDTOOLBARMESSAGE() ; RETURN
+
+
