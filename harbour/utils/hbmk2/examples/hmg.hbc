@@ -4,7 +4,7 @@
 
 # Copy this file to hmg root dir and include it in hbmk2
 # command line to build an app:
-# > hbmk2 test.prg C:\hmg\hmg.hbc
+# > hbmk2 -hb10 test.prg C:\hmg\hmg.hbc
 
 {win}incpaths=include
 {win}libpaths=lib harbour\lib
@@ -19,6 +19,8 @@
 # contribs
 {win}libs=crypt edit editex graph ini report
 # Harbour contribs
-{win}libs=hbmzip hbwin
+{win}libs=hbmzip
+{win&hb10}libs=hbw32
+{win&!hb10}libs=hbwin
 # system
 {win}libs=vfw32

@@ -3154,19 +3154,41 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
                IF hbmk[ _HBMK_cGT ] != NIL .OR. ;
                   l_cMAIN != NIL
-                  FWrite( fhnd, '#include "hbinit.h"'                                                  + hb_osNewLine() +;
-                                ''                                                                     + hb_osNewLine() +;
-                                'HB_EXTERN_BEGIN'                                                      + hb_osNewLine() +;
-                                'extern ' + tmp + ' void hb_vmSetLinkedMain( const char * szMain );'   + hb_osNewLine() +;
-                                'extern ' + tmp + ' void hb_gtSetDefault( const char * szGtName );'    + hb_osNewLine() +;
-                                'HB_EXTERN_END'                                                        + hb_osNewLine() +;
-                                ''                                                                     + hb_osNewLine() +;
-                                'HB_CALL_ON_STARTUP_BEGIN( _hb_hbmk_setdef_ )'                         + hb_osNewLine() )
+                  IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10 .OR. ;
+                     hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+                     FWrite( fhnd, '#include "hbinit.h"'                                                  + hb_osNewLine() +;
+                                   ''                                                                     + hb_osNewLine() +;
+                                   'HB_EXTERN_BEGIN'                                                      + hb_osNewLine() +;
+                                   'extern ' + tmp + ' const char * s_defaultGT;'                         + hb_osNewLine() +;
+                                   'extern ' + tmp + ' const char * s_pszLinkedMain;'                     + hb_osNewLine() +;
+                                   'HB_EXTERN_END'                                                        + hb_osNewLine() +;
+                                   ''                                                                     + hb_osNewLine() +;
+                                   'HB_CALL_ON_STARTUP_BEGIN( _hb_hbmk_setdef_ )'                         + hb_osNewLine() )
+                  ELSE
+                     FWrite( fhnd, '#include "hbinit.h"'                                                  + hb_osNewLine() +;
+                                   ''                                                                     + hb_osNewLine() +;
+                                   'HB_EXTERN_BEGIN'                                                      + hb_osNewLine() +;
+                                   'extern ' + tmp + ' void hb_vmSetLinkedMain( const char * szMain );'   + hb_osNewLine() +;
+                                   'extern ' + tmp + ' void hb_gtSetDefault( const char * szGtName );'    + hb_osNewLine() +;
+                                   'HB_EXTERN_END'                                                        + hb_osNewLine() +;
+                                   ''                                                                     + hb_osNewLine() +;
+                                   'HB_CALL_ON_STARTUP_BEGIN( _hb_hbmk_setdef_ )'                         + hb_osNewLine() )
+                  ENDIF
                   IF hbmk[ _HBMK_cGT ] != NIL
-                     FWrite( fhnd, '   hb_gtSetDefault( "' + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) + '" );'      + hb_osNewLine() )
+                     IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10 .OR. ;
+                        hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+                        FWrite( fhnd, '   s_defaultGT = "' + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) + '";'           + hb_osNewLine() )
+                     ELSE
+                        FWrite( fhnd, '   hb_gtSetDefault( "' + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) + '" );'      + hb_osNewLine() )
+                     ENDIF
                   ENDIF
                   IF l_cMAIN != NIL
-                     FWrite( fhnd, '   hb_vmSetLinkedMain( "' + Upper( l_cMAIN ) + '" );'              + hb_osNewLine() )
+                     IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10 .OR. ;
+                        hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+                        FWrite( fhnd, '   s_pszLinkedMain = "' + Upper( l_cMAIN ) + '";'                  + hb_osNewLine() )
+                     ELSE
+                        FWrite( fhnd, '   hb_vmSetLinkedMain( "' + Upper( l_cMAIN ) + '" );'              + hb_osNewLine() )
+                     ENDIF
                   ENDIF
                   FWrite( fhnd, 'HB_CALL_ON_STARTUP_END( _hb_hbmk_setdef_ )'                           + hb_osNewLine() +;
                                 ''                                                                     + hb_osNewLine() +;
