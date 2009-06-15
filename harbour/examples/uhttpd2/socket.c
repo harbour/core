@@ -46,7 +46,7 @@
 #include "hbapiitm.h"
 #include "hbvm.h"
 
-#ifdef HB_OS_WIN
+#if defined( HB_OS_WIN )
 #include <windows.h>
 #define socklen_t int
 #define SHUT_RDWR SD_BOTH
@@ -67,13 +67,13 @@ typedef int SOCKET;
 
 static int hb_parnidef( int iParam, int iValue )
 {
-   return ISNUM( iParam ) ? hb_parni( iParam ) : iValue;
+   return HB_ISNUM( iParam ) ? hb_parni( iParam ) : iValue;
 }
 
 
 static SOCKET hb_parsocket( int iParam )
 {
-   return ISPOINTER( iParam ) ? ( SOCKET ) hb_parptr( 1 ) : INVALID_SOCKET;
+   return HB_ISPOINTER( iParam ) ? ( SOCKET ) hb_parptr( 1 ) : INVALID_SOCKET;
 }
 
 
@@ -154,7 +154,7 @@ static PHB_ITEM hb_itemPutSockaddr( PHB_ITEM pItem, const struct sockaddr* saddr
 
 HB_FUNC ( SOCKET_INIT )
 {
-#ifdef HB_OS_WIN
+#if defined( HB_OS_WIN )
    WSADATA  wsad;
 
    hb_retni( WSAStartup( hb_parnidef( 1, 257 ), &wsad ) );
@@ -167,7 +167,7 @@ HB_FUNC ( SOCKET_INIT )
 
 HB_FUNC ( SOCKET_EXIT )
 {
-#ifdef HB_OS_WIN
+#if defined( HB_OS_WIN )
    hb_retni( WSACleanup() );
 #else
    hb_retni( 0 );
@@ -177,7 +177,7 @@ HB_FUNC ( SOCKET_EXIT )
 
 HB_FUNC ( SOCKET_ERROR )
 {
-#ifdef HB_OS_WIN
+#if defined( HB_OS_WIN )
    hb_retni( WSAGetLastError() );
 #else
    hb_retni( h_errno );
@@ -195,7 +195,7 @@ HB_FUNC ( SOCKET_CREATE )
 
 HB_FUNC ( SOCKET_CLOSE )
 {
-#ifdef HB_OS_WIN
+#if defined( HB_OS_WIN )
    hb_retni( closesocket( hb_parsocket( 1 ) ) );
 #else
    hb_retni( close( hb_parsocket( 1 ) ) );
@@ -230,7 +230,7 @@ HB_FUNC ( SOCKET_ACCEPT )
    hb_vmLock();
 
    hb_retsocket( socket );
-   if( ISBYREF( 2 ) )
+   if( HB_ISBYREF( 2 ) )
    {
       pItem = hb_itemPutSockaddr( NULL, &saddr );
       hb_itemParamStoreForward( 2, pItem );
@@ -358,7 +358,7 @@ HB_FUNC ( SOCKET_SELECT )
    }
 
    /* Default forever */
-   lTimeout = ISNUM( 4 ) ? hb_parnl( 4 ) : -1;
+   lTimeout = HB_ISNUM( 4 ) ? hb_parnl( 4 ) : -1;
 
    hb_vmUnlock();
    if( lTimeout == -1 )
@@ -376,7 +376,7 @@ HB_FUNC ( SOCKET_SELECT )
    hb_vmLock();
 
    pArray = hb_param( 1, HB_IT_ARRAY );
-   if( pArray && ISBYREF( 1 ) )
+   if( pArray && HB_ISBYREF( 1 ) )
    {
       ulLen = hb_arrayLen( pArray );
       pItem = hb_itemNew( NULL );
@@ -397,7 +397,7 @@ HB_FUNC ( SOCKET_SELECT )
    }
 
    pArray = hb_param( 2, HB_IT_ARRAY );
-   if( pArray && ISBYREF( 2 ) )
+   if( pArray && HB_ISBYREF( 2 ) )
    {
       ulLen = hb_arrayLen( pArray );
       pItem = hb_itemNew( NULL );
@@ -418,7 +418,7 @@ HB_FUNC ( SOCKET_SELECT )
    }
 
    pArray = hb_param( 3, HB_IT_ARRAY );
-   if( pArray && ISBYREF( 3 ) )
+   if( pArray && HB_ISBYREF( 3 ) )
    {
       ulLen = hb_arrayLen( pArray );
       pItem = hb_itemNew( NULL );
@@ -449,7 +449,7 @@ HB_FUNC ( SOCKET_GETSOCKNAME )
    socklen_t         iSize = sizeof( struct sockaddr );
 
    hb_retni( getsockname( hb_parsocket( 1 ), &saddr, &iSize ) );
-   if( ISBYREF( 2 ) )
+   if( HB_ISBYREF( 2 ) )
    {
       pItem = hb_itemPutSockaddr( NULL, &saddr );
       hb_itemParamStoreForward( 2, pItem );
@@ -465,7 +465,7 @@ HB_FUNC ( SOCKET_GETPEERNAME )
    socklen_t         iSize = sizeof( struct sockaddr );
 
    hb_retni( getpeername( hb_parsocket( 1 ), &saddr, &iSize ) );
-   if( ISBYREF( 2 ) )
+   if( HB_ISBYREF( 2 ) )
    {
       pItem = hb_itemPutSockaddr( NULL, &saddr );
       hb_itemParamStoreForward( 2, pItem );
