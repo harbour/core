@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Compatibility calls.
  *
- * Copyright 2009 {list of individual authors and e-mail addresses}
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -54,9 +54,29 @@
 
 #include "hbclass.ch"
 
+#include "common.ch"
+
 CREATE CLASS TOLEAUTO FROM WIN_OLEAUTO
    /* TODO: Implement compatibility to the required extent */
+   METHOD New( xOle, cIID )
 ENDCLASS
+
+METHOD New( xOle, cIID ) CLASS TOLEAUTO
+
+   IF ISNUMBER( xOle )
+      xOle := win_N2P( xOle )
+   ENDIF
+
+   IF hb_isPointer( xOle )
+      ::__hObj := xOle
+   ELSEIF ISCHARACTER( xOle )
+      xOle := __OleCreateObject( xOle, cIID )
+      IF ! Empty( xOle )
+         ::__hObj := xOle
+      ENDIF
+   ENDIF
+
+   RETURN Self
 
 CREATE CLASS Win32Prn FROM WIN_PRN
 ENDCLASS
