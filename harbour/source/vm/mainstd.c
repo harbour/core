@@ -56,18 +56,12 @@
 HB_EXTERN_BEGIN
 #if defined(__MINGW32__)
 int _CRT_glob = 0;
-#endif
+#elif defined(__DJGPP__)
 
-int main( int argc, char * argv[] )
-{
-   HB_TRACE(HB_TR_DEBUG, ("main(%d, %p)", argc, argv));
+#include <crt0.h>
 
-   hb_cmdargInit( argc, argv );
-   hb_vmInit( TRUE );
-   return hb_vmQuit();
-}
+int _crt0_startup_flags = _CRT0_FLAG_USE_DOS_SLASHES;
 
-#if defined(__DJGPP__)
 char ** __crt0_glob_function( char * _arg )
 {
    /* This function disables command line wildcard expansion. */
@@ -76,6 +70,24 @@ char ** __crt0_glob_function( char * _arg )
    return 0;
 }
 #endif
+
+int main( int argc, char * argv[] )
+{
+   HB_TRACE(HB_TR_DEBUG, ("main(%d, %p)", argc, argv));
+
+#if defined(__DJGPP__)
+   __system_flags =
+         __system_redirect |
+         __system_allow_long_cmds |
+         __system_emulate_command |
+         __system_handle_null_commands |
+         __system_emulate_chdir;
+#endif
+
+   hb_cmdargInit( argc, argv );
+   hb_vmInit( TRUE );
+   return hb_vmQuit();
+}
 
 #if defined(__WATCOMC__) && ( defined(HB_OS_LINUX) || defined(HB_OS_OS2) || defined(HB_OS_WIN) )
 void hb_forceLinkMainStd( void ) {}
