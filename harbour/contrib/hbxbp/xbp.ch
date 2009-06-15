@@ -59,6 +59,12 @@
 
 /*----------------------------------------------------------------------*/
 
+#if defined( __HB_OUTDEBUG__ )
+   #xtranslate HB_OUTDEBUG( [<x>] ) => WAPI_OUTPUTDEBUGSTRING( <x> )
+#else
+   #xtranslate HB_OUTDEBUG( [<x>] ) =>
+#endif
+
 #define DA_MODE                                    1  /* Experimental */
 
 #define objTypeNone                                0

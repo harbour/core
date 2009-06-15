@@ -116,8 +116,6 @@ METHOD XbpDialog:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::mouseMode   := 0
    ::objType     := objTypeDialog
 
-   ::style       := QWS_THICKFRAME+QWS_OVERLAPPED+QWS_CAPTION+QWS_SYSMENU+QWS_MINIMIZEBOX+QWS_MAXIMIZEBOX
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -139,12 +137,9 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::drawingArea := XbpDrawingArea():new( self, , {0,0}, ::aSize, , .t. ):create()
    ::oWidget:setCentralWidget( QT_PTROF( ::drawingArea:oWidget ) )
 
-   ::oWidget:resize( ::aSize[ 1 ], ::aSize[ 2 ] )
-   ::oWidget:move( ::aPos[ 1 ], ::aPos[ 2 ] )
-
+   ::setPosAndSize()
    IF ::visible
-      ::lHasInputFocus := .t.
-      ::oWidget:show()
+      ::show()
    ENDIF
 
    ::oEventLoop := QEventLoop():new( QT_PTROF( ::drawingArea:oWidget ) )

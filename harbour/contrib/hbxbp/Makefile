@@ -47,6 +47,13 @@ PRG_SOURCES=\
 	xbpmenubar.prg \
 	xbptoolbar.prg \
 	xbppushbutton.prg \
+	xbpdataref.prg \
+	xbpcheckbox.prg \
+	xbp3state.prg \
+	xbpradiobutton.prg \
+	xbptabpage.prg \
+	xbplistbox.prg \
+	xbpstatusbar.prg \
 
 PRG_HEADERS=\
 	xbp.ch \

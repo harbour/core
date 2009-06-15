@@ -94,9 +94,6 @@
 
 CLASS XbpWindow  INHERIT  XbpPartHandler
 
-   DATA     oWidget
-   ACCESS   pWidget                               INLINE  IF( empty( ::oWidget ), NIL, QT_PTROF( ::oWidget ) )
-
    /*  CONFIGURATION */
    DATA     animate                               INIT  .F.
    DATA     clipChildren                          INIT  .F.
@@ -285,7 +282,13 @@ EXPORTED:
 
    METHOD   grabEvent()
 
+   DATA     oWidget
+   ACCESS   pWidget                               INLINE  IF( empty( ::oWidget ), NIL, QT_PTROF( ::oWidget ) )
+   ACCESS   pParent                               INLINE  IF( empty( ::oParent ), NIL, QT_PTROF( ::oParent:oWidget ) )
+   DATA     oTabWidget
+   DATA     aTabs                                 INIT  {}
    DATA     oPalette
+   DATA     xDummy
 
    ENDCLASS
 
@@ -350,28 +353,19 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:destroy()
-   #if 0
-   hb_ToOutDebug( "          %s:destroy() XbpWindow()", __objGetClsName( self ) )
-   #endif
 
    IF Len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
       ::aChildren := {}
    ENDIF
+   IF !empty( ::oTabWidget )
+      // It is a HBQT Object...
 
-   #ifdef __BYSETPROP__
-   QTG_ReleaseWindowProcBlock( ::pWnd )
-   #endif
+   ENDIF
 
    IF Qtc_IsWindow( ::hWnd )
       Qtc_DestroyWindow( ::hWnd )
    ENDIF
-
-   #ifdef __BYASCALLBACK__
-   IF !empty( ::nWndProc )
-      hb_FreeCallBack( ::nWndProc )
-   ENDIF
-   #endif
 
    IF ::hBrushBG <> NIL
       Qtc_DeleteObject( ::hBrushBG )
@@ -406,10 +400,6 @@ METHOD XbpWindow:grabEvent( pEvent )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:SetWindowProcCallback()
-
-   #ifdef __BYSETPROP__
-   ::nOldProc := QTG_SetWindowProcBlock( ::pWnd, {|h,m,w,l| ::ControlWndProc( h,m,w,l ) } )
-   #endif
 
    RETURN Self
 
@@ -473,16 +463,16 @@ METHOD XbpWindow:lockUpdate()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setColorBG( nRGB )
-   LOCAL cClass
+   LOCAL cClass  := __ObjGetClsName( self )
 
    IF hb_isNumeric( nRGB )
       IF empty( ::oPalette )
-         ::oPalette := QPalette():new()
+         ::oPalette := QPalette()
+         ::oPalette:pPtr := ::oWidget:palette()
       ENDIF
 
-      cClass := upper( ::ClassName )
       DO CASE
-      CASE cClass $ 'XBPPUSHBUTTON,XBPMENUBAR,XBPMENU,XBPTOOLBAR'
+      CASE cClass $ 'XBPPUSHBUTTON,XBPMENUBAR,XBPMENU,XBPTOOLBAR,XBPTABPAGE,XBPLISTBOX'
          ::oPalette:setColor( QPalette_Button    , QT_PTROF( QColor():new( nRGB ) ) )
       OTHERWISE
          ::oPalette:setColor( QPalette_Background, QT_PTROF( QColor():new( nRGB ) ) )
@@ -496,17 +486,16 @@ METHOD XbpWindow:setColorBG( nRGB )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setColorFG( nRGB )
-   LOCAL cClass
+   LOCAL cClass  := __ObjGetClsName( self )
 
    IF hb_isNumeric( nRGB )
       IF empty( ::oPalette )
-         ::oPalette := QPalette():new()
+         ::oPalette := QPalette()
+         ::oPalette:pPtr := ::oWidget:palette()
       ENDIF
 
-      cClass := upper( ::ClassName )
-
       DO CASE
-      CASE cClass $ 'XBPPUSHBUTTON,XBPMENUBAR,XBPMENU'
+      CASE cClass $ 'XBPPUSHBUTTON,XBPMENUBAR,XBPMENU,XBPTOOLBAR,XBPTABPAGE'
          ::oPalette:setColor( QPalette_ButtonText, QT_PTROF( QColor():new( nRGB ) ) )
       OTHERWISE
          ::oPalette:setColor( QPalette_Foreground, QT_PTROF( QColor():new( nRGB ) ) )
@@ -540,6 +529,8 @@ METHOD XbpWindow:setTrackPointer()
 
 METHOD XbpWindow:setPos( aPos, lPaint )
 
+   DEFAULT aPos TO ::aPos
+
    IF hb_isArray( aPos )
       DEFAULT lPaint TO .T.
       ::oWidget:move( aPos[ 1 ], aPos[ 2 ] )
@@ -550,6 +541,9 @@ METHOD XbpWindow:setPos( aPos, lPaint )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setPosAndSize( aPos, aSize, lPaint )
+
+   DEFAULT aPos  TO ::aPos
+   DEFAULT aSize TO ::aSize
 
    IF hb_isArray( aPos ) .and. hb_isArray( aSize )
       DEFAULT lPaint TO .T.
@@ -563,6 +557,8 @@ METHOD XbpWindow:setPosAndSize( aPos, aSize, lPaint )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setSize( aSize, lPaint )
+
+   DEFAULT aSize TO ::aSize
 
    IF hb_isArray( aSize )
       DEFAULT lPaint TO .T.

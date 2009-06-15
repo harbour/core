@@ -59,7 +59,7 @@
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
-   LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize
+   LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, aTabs
 
    /* Create Application Window */
    oDlg := GuiStdDialog( 'Harbour - Xbase++ - QT Dialog [ Press "Q" to Exit ]' )
@@ -72,17 +72,35 @@ PROCEDURE Main()
    oDlg:setPos( { ( aSize[ 1 ] - oDlg:currentSize()[ 1 ] ) / 2, ;
                   ( aSize[ 2 ] - oDlg:currentSize()[ 2 ] ) / 2 } )
 
+   /* Make background color of :drawingArea different */
+   oDlg:drawingArea:setColorBG( GraMakeRGBColor( { 134,128,164 } ) )
+
    /* Install menu system */
    Build_MenuBar()
+
+   /* Install Statusbar */
+   Build_StatusBar( oDlg )
 
    /* Install Toolbar */
    Build_ToolBar( oDlg:drawingArea )
 
-   /* install Push Buttons */
-   Build_PushButton( oDlg:drawingArea )
+   /* Install Tab Pages */
+   aTabs := Build_TabPages( oDlg )
 
-   /* Make background color of :drawingArea different */
-   oDlg:drawingArea:setColorBG( GraMakeRGBColor( { 134,128,164 } ) )
+   /* Install checkboxes */
+   Build_CheckBox( aTabs[ 3 ] )
+
+   /* Install 3state checkboxes */
+   Build_3State( aTabs[ 3 ] )
+
+   /* Install Radio Buttons */
+   Build_RadioButton( aTabs[ 3 ] )
+
+   /* Install ListBox */
+   Build_ListBox( aTabs[ 1 ] )
+
+   /* Install Push Buttons */
+   Build_PushButton( oDlg:drawingArea )
 
    /* Present the dialog on the screen */
    oDlg:Show()
@@ -165,8 +183,8 @@ STATIC FUNCTION Build_MenuBar()
    oSubMenu:itemMarked := {|mp1| IF( mp1 == 5, MsgBox( "WOW - ::itemMarked - Activated" ), NIL ) }
 
    /* Menu colors are being honored in Harbour only */
-   oSubMenu:setColorFG( GraMakeRGBColor( { 255,  1,  1 } ) )
    oSubMenu:setColorBG( GraMakeRGBColor( { 134,128,250 } ) )
+   oSubMenu:setColorFG( GraMakeRGBColor( { 255,  1,  1 } ) )
 
    Return nil
 
@@ -238,14 +256,14 @@ FUNCTION Build_PushButton( oDA )
 
     oXbp := XbpPushButton():new( oDA )
     oXbp:caption := "A"
-    oXbp:create( , , {30,100}, {100,40} )
+    oXbp:create( , , {30,370}, {100,40} )
     oXbp:activate:= {|| MsgBox( "Pushbutton A" ) }
     /* Harbour supports presentation colors */
     oXbp:setColorBG( GraMakeRGBColor( {133,240,90} ) )
 
     oXbp := XbpPushButton():new( oDA )
     oXbp:caption := "new.png"
-    oXbp:create( , , {30,160}, {100,40} )
+    oXbp:create( , , {140,370}, {100,40} )
     oXbp:activate:= {|| MsgBox( "Pushbutton B" ) }
     /* Harbour supports presentation colors */
     oXbp:setColorBG( GraMakeRGBColor( {0,255,255} ) )
@@ -253,4 +271,172 @@ FUNCTION Build_PushButton( oDA )
     RETURN nil
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION Build_CheckBox( oWnd )
+   LOCAL oXbp
+
+   oXbp := XbpCheckbox():new()
+   oXbp:caption := "A"
+   oXbp:create( oWnd, , {30,30}, {100,30} )
+
+   // Determine state using mp1
+   oXbp:selected := ;
+      {| mp1, mp2, oChk| MsgBox( "Checkbox A", ;
+                       IIf( mp1, "selected" , ;
+                                 "not selected" ) ) }
+
+   // Create second checkbox, specify position using :new()
+   oXbp := XbpCheckbox():new( oWnd, , {30,70}, {100,30} )
+   oXbp:caption := "B"
+   oXbp:create()
+
+   // Determine state using :getData()
+   oXbp:selected := ;
+      {| mp1, mp2, oChk| MsgBox( "Checkbox B", ;
+            IIf( oChk:getData(), "selected", ;
+                                 "not selected" ) ) }
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_3State( oWnd )
+   LOCAL oXbp
+   LOCAL aState := { "not selected", "selected", "undefined" }
+
+   // Create first 3State button, passing the position to :create()
+   //
+   oXbp := Xbp3State():new()
+   oXbp:caption := "3State A"
+   oXbp:create( oWnd, , {130,30}, {100,30} )
+   // Determine current state using mp1
+   oXbp:selected := {| mp1, mp2, oBtn| MsgBox( "3State A", aState[ mp1+1 ] ) }
+
+   // Create second 3State Button, passing the position to :new()
+   //
+   oXbp := Xbp3State():new( oWnd, , {130,70}, {100,30} )
+   oXbp:caption := "3State B"
+   oXbp:create()
+   // Determine current state using :getData()
+   oXbp:selected := {| mp1, mp2, oBtn|  MsgBox( "3State B", aState[ oBtn:getData()+1 ] ) }
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_RadioButton( oStatic )
+   LOCAL bSelected, oRadio
+
+   // Display which radiobutton is selected
+   bSelected := {|mp1,mp2,obj| MsgBox( obj:caption ) }
+
+   // Create four radiobuttons
+   oRadio := XbpRadioButton():new( oStatic,, {30,110}, {80,30} )
+   oRadio:caption   := "COM 1"
+   oRadio:selection :=.T.
+   oRadio:selected  := bSelected
+   oRadio:create()
+
+   oRadio := XbpRadioButton():new( oStatic,, {30,150}, {80,30} )
+   oRadio:caption   := "COM 2"
+   oRadio:selected  := bSelected
+   oRadio:create()
+
+   oRadio := XbpRadioButton():new( oStatic,, {30,190}, {80,30} )
+   oRadio:caption   := "COM 3"
+   oRadio:selected  := bSelected
+   oRadio:create()
+
+   oRadio := XbpRadioButton():new( oStatic,, {30,230}, {80,30} )
+   oRadio:caption   := "COM 4"
+   oRadio:selected  := bSelected
+   oRadio:create()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_TabPages( oDlg )
+   LOCAL oTab1, oTab2, oTab3
+   LOCAL nHeight := 380
+
+   // First tab page is maximized
+
+   oTab1 := XbpTabPage():new( oDlg:drawingArea, , { 510, 20 }, { 360, nHeight } )
+   /* comment our following line to position tabs at the bottom */
+   //oTab1:type := XBPTABPAGE_TAB_BOTTOM
+   oTab1:minimized := .F.
+   oTab1:caption   := "Customer"
+   oTab1:create()
+   oTab1:TabActivate := ;
+       {|| oTab2:minimize(), oTab3:minimize(),;
+           oTab1:maximize(), MsgBox( oTab1:caption ) }
+   oTab1:setColorBG( GraMakeRGBColor( {198,198,198} ) )
+
+   // Second tab page is minimized
+   oTab2 := XbpTabPage():new( oDlg:drawingArea, , { 510, 20 }, { 360, nHeight } )
+   oTab2:caption    := "Order"
+   oTab2:preOffset  := 20
+   oTab2:postOffset := 60
+   oTab2:create()
+   oTab2:TabActivate := ;
+       {|| oTab1:minimize(), oTab3:minimize(),;
+           oTab2:maximize(), MsgBox( oTab2:caption ) }
+
+   // Third tab page is minimized
+   oTab3 := XbpTabPage():new( oDlg:drawingArea, , { 510, 20 }, { 360, nHeight } )
+   oTab3:caption    := "CheckBoxes"
+   oTab3:preOffset  := 40
+   oTab3:postOffset := 40
+   oTab3:create()
+   oTab3:TabActivate := ;
+       {|x,y,oTab| x := y, oTab1:minimize(), oTab2:minimize(),;
+           oTab3:maximize(), MsgBox( oTab:caption ) }
+
+   RETURN { oTab1, oTab2, oTab3 }
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_ListBox( oWnd )
+   LOCAL oListBox, aItems
+
+   aItems := { "India", "United States", "England", "Japan", "Hungary", "Argentina", "China" }
+
+   // Create list box that allows multiple selections
+
+   oListBox := XbpListBox():new()
+   //oListBox:markMode := XBPLISTBOX_MM_MULTIPLE
+   oListBox:create( oWnd, , {10,10}, {150,200} )
+
+   // Copy field names from the DbStruct() array to the list box
+   aeval( aItems, {|e| oListBox:addItem( e ) } )
+
+   // Code block for list box selection:
+   //   The selected fields from the DbStruct()
+   //   array are displayed using QOut()
+   oListBox:ItemSelected := {|mp1, mp2, obj| mp1:=oListBox:getData(), ;
+                              mp2:=oListBox:getItem(mp1), MsgBox( "itemSelected:"+mp2 ) }
+   //oListBox:ItemMarked   := {|mp1, mp2, obj| MsgBox( "itemMarked" ) }
+
+   /* DOES NOT Work */
+   oListBox:setColorBG( GraMakeRGBColor( {127,12,210} ) )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_StatusBar( oWnd )
+   LOCAL oSBar, oPanel
+
+   oSBar := XbpStatusBar():new( oWnd )
+   oSBar:create( oWnd, , { 0,0 }, { oWnd:currentSize()[1],30 } )
+
+   oPanel := oSBar:getItem( 1 )
+   oPanel:caption  := "Harbour-QT-Xbase++ is Ready"
+   oPanel:autosize := XBPSTATUSBAR_AUTOSIZE_SPRING
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
 
