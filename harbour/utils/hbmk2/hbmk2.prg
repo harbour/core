@@ -1679,7 +1679,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDCASE
 
       CASE FN_ExtGet( cParamL ) == ".lib" .OR. ;
-           FN_ExtGet( cParamL ) == cDynLibExt
+           ( ! Empty( cDynLibExt ) .AND. FN_ExtGet( cParamL ) == cDynLibExt )
 
          cParam := ArchCompFilter( hbmk, cParam )
          IF ! Empty( cParam )
