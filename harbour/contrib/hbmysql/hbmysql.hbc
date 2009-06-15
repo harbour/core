@@ -2,4 +2,7 @@
 # $Id$
 #
 
-libs=hbmysql libmysql
+incpaths=.
+
+libs=hbmysql
+libs=libmysql

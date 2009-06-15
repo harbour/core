@@ -1,6 +1,0 @@
-#
-# $Id$
-#
-
-libs=hbssl
-{win}libs=libeay32 ssleay32

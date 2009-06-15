@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+
+incpaths=.
+
+libs=hbsqlit3
+libs=sqlite3

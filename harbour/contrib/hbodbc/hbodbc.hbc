@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+
+incpaths=.
+
+libs=hbodbc
+{win}libs=odbc32

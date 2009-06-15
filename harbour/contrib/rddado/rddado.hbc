@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+
+incpaths=.
+
+{win}libs=rddado
+{win}libs=hbwin

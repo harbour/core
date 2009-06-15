@@ -103,11 +103,11 @@ FUNCTION GetActiveObject( xOle, cIID )
    ENDIF
 
    IF hb_isPointer( xOle )
-      ::__hObj := xOle
+      o:__hObj := xOle
    ELSEIF ISCHARACTER( xOle )
       xOle := __OleGetActiveObject( xOle, cIID )
       IF ! Empty( xOle )
-         ::__hObj := xOle
+         o:__hObj := xOle
       ENDIF
    ENDIF
 
