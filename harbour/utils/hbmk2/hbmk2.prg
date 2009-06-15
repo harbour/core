@@ -1774,8 +1774,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       hbmk[ _HBMK_lSHARED ] := .F.
    ENDIF
 
-   /* Force MT mode off in 1.0.x compatibility mode. */
-   IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10
+   /* Force MT mode off in 1.0.x compatibility and dos mode. */
+   IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10 .OR. ;
+      hbmk[ _HBMK_cARCH ] == "dos"
       hbmk[ _HBMK_lMT ] := .F.
    ENDIF
 
