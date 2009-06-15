@@ -2318,6 +2318,19 @@ HB_FUNC( HB_MUTEXSUBSCRIBENOW )
    }
 }
 
+HB_FUNC( HB_MUTEXWAITERSCOUNT )
+{
+   PHB_ITEM pItem = hb_mutexParam( 1 );
+
+   if( pItem )
+   {
+      PHB_MUTEX pMutex = hb_mutexPtr( pItem );
+
+      if( pMutex )
+         hb_retni( pMutex->waiters );
+   }
+}
+
 HB_FUNC( HB_MTVM )
 {
    HB_STACK_TLS_PRELOAD
