@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+@uhttpd.hbp
+-DGD_SUPPORT
+-lhbgd -lhbct
+-lbgd{win}
+-lgd{!win}
+-L/opt/local/lib{darwin}

@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+
+# Use -DUSE_HB_INET if you want to turn on Harbour internet socket.
+# It's always on on non-Windows systems.
+
+-mt -gui httpsrv.prg cgifunc.prg cookie.prg session.prg httpsrvc.c socket.c

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    HTTPSRV (Micro HTTP server) cgi functions
+ *    uHTTPD (Micro HTTP server) cgi functions
  *
  * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
  * www - http://www.harbour-project.org
@@ -862,3 +862,4 @@ FUNCTION uhttpd_HGetValue( hHash, cKey )
    ENDIF
    //RETURN IIF( cKey IN hHash:Keys, hHash[ cKey ], NIL )
    RETURN xVal
+

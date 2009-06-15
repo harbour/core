@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    HTTPSRV (Micro HTTP server) session functions
+ *    uHTTPD (Micro HTTP server) session functions
  *
  * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
  * www - http://www.harbour-project.org

@@ -1,0 +1,35 @@
+body, td {
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+}
+
+table.ubr {
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  border-width: 1px;
+}
+
+table.ubr th {
+  padding: 0px 4px 0px 4px;
+  background-color: #C0C0C0;
+}
+
+table.ubr tr {
+  background-color: #F0F0F0;
+}
+
+table.ubr tr:hover {
+  background-color: #D0D0FF;
+}
+
+
+tr.ubrr div {
+  width: auto;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+ulnk {
+  text-color:blue;
+  text-decoration:underline;
+}

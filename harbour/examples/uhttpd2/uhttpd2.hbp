@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+-ouhttpd2
+*.prg
+*.c
+-mt
+-gui

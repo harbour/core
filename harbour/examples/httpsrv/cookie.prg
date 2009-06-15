@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    HTTPSRV (Micro HTTP server) cookie functions
+ *    uHTTPD (Micro HTTP server) cookie functions
  *
  * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
  * www - http://www.harbour-project.org
