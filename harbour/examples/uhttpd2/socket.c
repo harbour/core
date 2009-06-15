@@ -152,7 +152,7 @@ static PHB_ITEM hb_itemPutSockaddr( PHB_ITEM pItem, const struct sockaddr* saddr
 }
 
 
-HB_FUNC ( SOCKET_INIT )
+HB_FUNC( SOCKET_INIT )
 {
 #if defined( HB_OS_WIN )
    WSADATA  wsad;
@@ -165,7 +165,7 @@ HB_FUNC ( SOCKET_INIT )
 }
 
 
-HB_FUNC ( SOCKET_EXIT )
+HB_FUNC( SOCKET_EXIT )
 {
 #if defined( HB_OS_WIN )
    hb_retni( WSACleanup() );
@@ -175,7 +175,7 @@ HB_FUNC ( SOCKET_EXIT )
 }
 
 
-HB_FUNC ( SOCKET_ERROR )
+HB_FUNC( SOCKET_ERROR )
 {
 #if defined( HB_OS_WIN )
    hb_retni( WSAGetLastError() );
@@ -185,7 +185,7 @@ HB_FUNC ( SOCKET_ERROR )
 }
 
 
-HB_FUNC ( SOCKET_CREATE )
+HB_FUNC( SOCKET_CREATE )
 {
    hb_retsocket( socket( hb_parnidef( 1, PF_INET ),
                          hb_parnidef( 2, SOCK_STREAM ),
@@ -193,7 +193,7 @@ HB_FUNC ( SOCKET_CREATE )
 }
 
 
-HB_FUNC ( SOCKET_CLOSE )
+HB_FUNC( SOCKET_CLOSE )
 {
 #if defined( HB_OS_WIN )
    hb_retni( closesocket( hb_parsocket( 1 ) ) );
@@ -203,7 +203,7 @@ HB_FUNC ( SOCKET_CLOSE )
 }
 
 
-HB_FUNC ( SOCKET_BIND )
+HB_FUNC( SOCKET_BIND )
 {
    struct sockaddr   sa;
 
@@ -212,13 +212,13 @@ HB_FUNC ( SOCKET_BIND )
 }
 
 
-HB_FUNC ( SOCKET_LISTEN )
+HB_FUNC( SOCKET_LISTEN )
 {
    hb_retni( listen( hb_parsocket( 1 ), hb_parnidef( 2, 10 ) ) );
 }
 
 
-HB_FUNC ( SOCKET_ACCEPT )
+HB_FUNC( SOCKET_ACCEPT )
 {
    PHB_ITEM          pItem;
    SOCKET            socket = hb_parsocket( 1 );
@@ -239,7 +239,7 @@ HB_FUNC ( SOCKET_ACCEPT )
 }
 
 
-HB_FUNC ( SOCKET_SHUTDOWN )
+HB_FUNC( SOCKET_SHUTDOWN )
 {
    SOCKET   socket = hb_parsocket( 1 );
    int      i = hb_parnidef( 2, SHUT_RDWR );
@@ -251,7 +251,7 @@ HB_FUNC ( SOCKET_SHUTDOWN )
 }
 
 
-HB_FUNC ( SOCKET_RECV )
+HB_FUNC( SOCKET_RECV )
 {
    SOCKET   socket = hb_parsocket( 1 );
    int      iLen, iRet, iFlags = hb_parnidef( 4, 0 );
@@ -274,7 +274,7 @@ HB_FUNC ( SOCKET_RECV )
 }
 
 
-HB_FUNC ( SOCKET_SEND )
+HB_FUNC( SOCKET_SEND )
 {
    SOCKET   socket = hb_parsocket( 1 );
    char*    pBuf = hb_parc( 2 );
@@ -288,7 +288,7 @@ HB_FUNC ( SOCKET_SEND )
 }
 
 
-HB_FUNC ( SOCKET_SELECT )
+HB_FUNC( SOCKET_SELECT )
 {
    fd_set             setread, setwrite, seterror;
    BOOL               bRead = 0, bWrite = 0, bError = 0;
@@ -442,7 +442,7 @@ HB_FUNC ( SOCKET_SELECT )
 }
 
 
-HB_FUNC ( SOCKET_GETSOCKNAME )
+HB_FUNC( SOCKET_GETSOCKNAME )
 {
    PHB_ITEM          pItem;
    struct sockaddr   saddr;
@@ -458,7 +458,7 @@ HB_FUNC ( SOCKET_GETSOCKNAME )
 }
 
 
-HB_FUNC ( SOCKET_GETPEERNAME )
+HB_FUNC( SOCKET_GETPEERNAME )
 {
    PHB_ITEM          pItem;
    struct sockaddr   saddr;
@@ -474,7 +474,7 @@ HB_FUNC ( SOCKET_GETPEERNAME )
 }
 
 
-HB_FUNC ( SOCKET_CONNECT )
+HB_FUNC( SOCKET_CONNECT )
 {
    SOCKET   socket = hb_parsocket( 1 );
    struct sockaddr   sa;

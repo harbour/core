@@ -91,8 +91,6 @@
          we need to use -o Harbour switch, it will be a problem also when
          user tries to use -p option, .ppo files will be generated in temp
          dir. */
-/* TODO: Add support for library creation for rest of compilers. */
-/* TODO: Add support for dynamic library creation for rest of compilers. */
 /* TODO: Further clean hbmk context var usage (hbmk2 scope, project scope,
          adding rest of variables). */
 /* TODO: Add a way to fallback to stop if required headers couldn't be found.
@@ -4790,7 +4788,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel  )
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "hbcs="         ) ) ) == "hbcs="         ; cLine := SubStr( cLine, Len( "hbcs="         ) + 1 )
+      CASE Lower( Left( cLine, Len( "hbcs="        ) ) ) == "hbcs="          ; cLine := SubStr( cLine, Len( "hbcs="         ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             IF nNestingLevel < _HBMK_NEST_MAX
 
@@ -4845,7 +4843,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel  )
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "instpaths="   ) ) ) == "instpaths="   ; cLine := SubStr( cLine, Len( "instpaths="   ) + 1 )
+      CASE Lower( Left( cLine, Len( "instpaths="    ) ) ) == "instpaths="    ; cLine := SubStr( cLine, Len( "instpaths="    ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, StrStripQuote( cItem ), FN_DirGet( cFileName ) ), FN_DirGet( cFileName ) ) )
             IF AScan( hbmk[ _HBMK_aINSTPATH ], {|tmp| tmp == cItem } ) == 0
