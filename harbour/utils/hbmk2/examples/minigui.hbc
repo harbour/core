@@ -7,7 +7,9 @@
 # > hbmk2 test.prg C:\minihui\minigui.hbc
 
 {win}incpaths=include
-{win}libpaths=lib harbour/lib
+{win}libpaths=lib
+{win&!xhb}libpaths=harbour/lib
+{win&xhb}libpaths=xLib
 
 {win}gt=gtgui
 gui=yes
@@ -19,6 +21,7 @@ gui=yes
 # core (binary)
 {bcc}libs=dll hbprinter miniprint TMsAgent
 # Harbour contribs
-{win}libs=hbmzip hbwin
+{win}libs=hbmzip
+{win&!xhb}libs=hbwin
 # system
 {win}libs=vfw32
