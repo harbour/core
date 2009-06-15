@@ -117,9 +117,9 @@ LOCAL cUser, oM, oF, oG
   ELSEIF cMethod == "POST"
     DBUSEAREA(.T.,, "users", "users", .T., .T.)
     OrdSetFocus("user")
-    cUser := PADR(HGetDef(post, "user", ""), 16)
+    cUser := PADR(hb_HGetDef(post, "user", ""), 16)
     IF !EMPTY(cUser) .AND. DBSEEK(cUser, .F.) .AND. ! DELETED() .AND. ;
-       PADR(HGetDef(post, "password", ""), 16) == FIELD->PASSWORD
+       PADR(hb_HGetDef(post, "password", ""), 16) == FIELD->PASSWORD
       session["loggedin"] := cUser
       URedirect("main")
     ELSE
@@ -157,10 +157,10 @@ LOCAL cUser, cName, cPassword, cPassword2, oM, oF, oG
   ELSEIF cMethod == "POST"
     DBUSEAREA(.T.,, "users", "users", .T., .F.)
     OrdSetFocus("user")
-    cUser := HGetDef(post, "user", "")
-    cName := HGetDef(post, "name", "")
-    cPassword := HGetDef(post, "password", "")
-    cPassword2 := HGetDef(post, "password2", "")
+    cUser := hb_HGetDef(post, "user", "")
+    cName := hb_HGetDef(post, "name", "")
+    cPassword := hb_HGetDef(post, "password", "")
+    cPassword2 := hb_HGetDef(post, "password2", "")
     GetWidgetById("user"):cValue := cUser
     GetWidgetById("name"):cValue := cName
     IF EMPTY(cUser) .OR. EMPTY(cName) .OR. EMPTY(cPassword) .OR. EMPTY(cPassword2)
@@ -244,9 +244,9 @@ LOCAL cName, cPassword, cPassword2, oM, oG, oF
     oG:Add( UWSubmitNew("save", "Save"), 5, 2 )
   ELSEIF cMethod == "POST"
     DBSEEK(session["loggedin"], .F.)
-    cName := HGetDef(post, "name", "")
-    cPassword := HGetDef(post, "password", "")
-    cPassword2 := HGetDef(post, "password2", "")
+    cName := hb_HGetDef(post, "name", "")
+    cPassword := hb_HGetDef(post, "password", "")
+    cPassword2 := hb_HGetDef(post, "password2", "")
     GetWidgetById("name"):cValue := TRIM(cName)
     IF EMPTY(cName)
       URedirect("?err=1")

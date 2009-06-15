@@ -431,7 +431,7 @@ LOCAL aStack, aURL, aFrame, cI, nI, nL, lRet
   ? "cURL:", cURL
   IF HB_HHasKey(aMap, cURL)
     // aStack[i] = {url_part, function, variables}
-    IF (aStack := HGetDef(session, "_ustack")) == NIL
+    IF (aStack := hb_HGetDef(session, "_ustack")) == NIL
       session["_ustack"] := aStack := {}
     ENDIF
 
@@ -496,12 +496,12 @@ RETURN
 PROC UWDefaultHandler(cMethod)
 LOCAL cID, oW
   IF cMethod == "GET"
-    IF (cID := HGetDef(get, "ajax")) == NIL
+    IF (cID := hb_HGetDef(get, "ajax")) == NIL
       session["_uthis", "main"]:Paint()
     ELSE
       IF (oW := GetWidgetById(cID)) != NIL
         UAddHeader("Content-type", "text/html; charset=windows-1257")
-        oW:Ajax(HGetDef(get, "action"))
+        oW:Ajax(hb_HGetDef(get, "action"))
       ENDIF
     ENDIF
   ENDIF
@@ -517,4 +517,4 @@ RETURN
 
 
 FUNC GetWidgetById(cID)
-RETURN HGetDef(session["_uthis", "idhash"], cID)
+RETURN hb_HGetDef(session["_uthis", "idhash"], cID)
