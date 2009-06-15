@@ -18,7 +18,7 @@ rem
 rem See COPYING for licensing terms.
 rem ---------------------------------------------------------------
 
-if not "%OS%" == "Windows_NT" echo "This Harbour build script requires Windows NT or upper."
+if not "%OS%" == "Windows_NT" echo This Harbour build script requires Windows NT or upper.
 if not "%OS%" == "Windows_NT" goto END
 
 if not "%HB_LIB_INSTALL%" == "" (

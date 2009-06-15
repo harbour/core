@@ -26,7 +26,7 @@ goto INST_%HB_ARCHITECTURE%
 
    rem Windows post install part
 
-   if not "%OS%" == "Windows_NT" echo "This Harbour build script requires Windows NT or upper."
+   if not "%OS%" == "Windows_NT" echo This Harbour build script requires Windows NT or upper.
    if not "%OS%" == "Windows_NT" goto END
 
    if "%HB_COMPILER%" == "mingw"    set HB_DYNLIB=yes
