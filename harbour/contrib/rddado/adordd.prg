@@ -168,8 +168,8 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
    LOCAL cServer     := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 4, ";" )
    LOCAL cUserName   := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 5, ";" )
    LOCAL cPassword   := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 6, ";" )
-   LOCAL oConnection := TOleAuto():New( "ADODB.Connection" )
-   LOCAL oCatalog    := TOleAuto():New( "ADOX.Catalog" )
+   LOCAL oConnection := win_OleCreateObject( "ADODB.Connection" )
+   LOCAL oCatalog    := win_OleCreateObject( "ADOX.Catalog" )
    LOCAL aWAData     := USRRDD_AREADATA( nWA )
    LOCAL oError, n
 
@@ -316,7 +316,7 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
    ENDIF
 
    IF Empty( aOpenInfo[ UR_OI_CONNECT ] )
-      aWAData[ WA_CONNECTION ] := TOleAuto():New( "ADODB.Connection" )
+      aWAData[ WA_CONNECTION ] := win_OleCreateObject( "ADODB.Connection" )
       aWAData[ WA_TABLENAME ] := t_cTableName
       aWAData[ WA_QUERY ]    := t_cQuery
       aWAData[ WA_USERNAME ] := t_cUserName
@@ -371,7 +371,8 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
                                           ";DbName=" + aOpenInfo[ UR_OI_NAME ] )
       ENDCASE
    ELSE
-      aWAData[ WA_CONNECTION ] := TOleAuto():New( aOpenInfo[ UR_OI_CONNECT ], "ADODB.Connection" )
+      aWAData[ WA_CONNECTION ] := win_OleAuto()
+      aWAData[ WA_CONNECTION ]:__hObj := aOpenInfo[ UR_OI_CONNECT ] /* "ADODB.Connection" */
       aWAData[ WA_TABLENAME ] := t_cTableName
       aWAData[ WA_QUERY ]    := t_cQuery
       aWAData[ WA_USERNAME ] := t_cUserName
@@ -388,7 +389,7 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
       aWAData[ WA_QUERY ] := "SELECT * FROM "
    ENDIF
 
-   oRecordSet := TOleAuto():New( "ADODB.Recordset" )
+   oRecordSet := win_OleCreateObject( "ADODB.Recordset" )
 
    IF oRecordSet == NIL
       oError := ErrorNew()
@@ -412,7 +413,7 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
    ENDIF
 
    TRY
-      aWAData[ WA_CATALOG ] := TOleAuto():New( "ADOX.Catalog" )
+      aWAData[ WA_CATALOG ] := win_OleCreateObject( "ADOX.Catalog" )
       aWAData[ WA_CATALOG ]:ActiveConnection := aWAData[ WA_CONNECTION ]
    CATCH
    END TRY
@@ -716,9 +717,9 @@ STATIC FUNCTION ADO_APPEND( nWA, lUnLockAll )
 
    oRecordSet:AddNew()
 
-        TRY
+   TRY
       oRecordSet:Update()
-        CATCH
+   CATCH
    END
 
    RETURN HB_SUCCESS
@@ -854,75 +855,75 @@ STATIC FUNCTION ADO_FIELDINFO( nWA, nField, nInfoType, uInfo )
 
    DO CASE
    CASE nInfoType == DBS_NAME
-       uInfo := oRecordSet:Fields( nField - 1 ):Name
+      uInfo := oRecordSet:Fields( nField - 1 ):Name
 
    CASE nInfoType == DBS_TYPE
-       nType := ADO_GETFIELDTYPE( oRecordSet:Fields( nField - 1 ):Type )
-       DO CASE
-       CASE nType == HB_FT_STRING
-           uInfo := "C"
-       CASE nType == HB_FT_LOGICAL
-           uInfo := "L"
-       CASE nType == HB_FT_MEMO
-           uInfo := "M"
-       CASE nType == HB_FT_OLE
-           uInfo := "G"
+      nType := ADO_GETFIELDTYPE( oRecordSet:Fields( nField - 1 ):Type )
+      DO CASE
+      CASE nType == HB_FT_STRING
+         uInfo := "C"
+      CASE nType == HB_FT_LOGICAL
+         uInfo := "L"
+      CASE nType == HB_FT_MEMO
+         uInfo := "M"
+      CASE nType == HB_FT_OLE
+         uInfo := "G"
 #ifdef HB_FT_PICTURE
-       CASE nType == HB_FT_PICTURE
-           uInfo := "P"
+      CASE nType == HB_FT_PICTURE
+         uInfo := "P"
 #endif
-       CASE nType == HB_FT_ANY
-           uInfo := "V"
-       CASE nType == HB_FT_DATE
-           uInfo := "D"
+      CASE nType == HB_FT_ANY
+         uInfo := "V"
+      CASE nType == HB_FT_DATE
+         uInfo := "D"
 #ifdef HB_FT_DATETIME
-       CASE nType == HB_FT_DATETIME
-           uInfo := "T"
+      CASE nType == HB_FT_DATETIME
+         uInfo := "T"
 #endif
 #ifdef HB_FT_TIMESTAMP
-       CASE nType == HB_FT_TIMESTAMP
-           uInfo := "@"
+      CASE nType == HB_FT_TIMESTAMP
+         uInfo := "@"
 #endif
-       CASE nType == HB_FT_LONG
-           uInfo := "N"
-       CASE nType == HB_FT_INTEGER
-           uInfo := "I"
-       CASE nType == HB_FT_DOUBLE
-           uInfo := "B"
-       OTHERWISE
-           uInfo := "U"
-       ENDCASE
+      CASE nType == HB_FT_LONG
+         uInfo := "N"
+      CASE nType == HB_FT_INTEGER
+         uInfo := "I"
+      CASE nType == HB_FT_DOUBLE
+         uInfo := "B"
+      OTHERWISE
+         uInfo := "U"
+      ENDCASE
 
    CASE nInfoType == DBS_LEN
-        ADO_FIELDINFO( nWA, nField, DBS_TYPE, @nType )
-        IF nType == 'N'
-            nLen := oRecordSet:Fields( nField - 1 ):Precision
-        ELSE
-            nLen := oRecordSet:Fields( nField - 1 ):DefinedSize
-        ENDIF
-        // Un campo mayor de 1024 lo consideramos un campo memo
-        uInfo := iif( nLen > 1024, 10, nLen )
+      ADO_FIELDINFO( nWA, nField, DBS_TYPE, @nType )
+      IF nType == 'N'
+         nLen := oRecordSet:Fields( nField - 1 ):Precision
+      ELSE
+         nLen := oRecordSet:Fields( nField - 1 ):DefinedSize
+      ENDIF
+      // Un campo mayor de 1024 lo consideramos un campo memo
+      uInfo := iif( nLen > 1024, 10, nLen )
 
    CASE nInfoType == DBS_DEC
-        ADO_FIELDINFO( nWA, nField, DBS_LEN, @nLen )
-        ADO_FIELDINFO( nWA, nField, DBS_TYPE, @nType )
-        IF oRecordSet:Fields( nField - 1 ):Type == adInteger
-            uInfo := 0
-        ELSEIF nType == 'N'
-            uInfo := Min( Max( 0, nLen - 1 - oRecordSet:Fields( nField - 1 ):DefinedSize ), 15 )
-        ELSE
-            uInfo := 0
-        ENDIF
+      ADO_FIELDINFO( nWA, nField, DBS_LEN, @nLen )
+      ADO_FIELDINFO( nWA, nField, DBS_TYPE, @nType )
+      IF oRecordSet:Fields( nField - 1 ):Type == adInteger
+         uInfo := 0
+      ELSEIF nType == 'N'
+         uInfo := Min( Max( 0, nLen - 1 - oRecordSet:Fields( nField - 1 ):DefinedSize ), 15 )
+      ELSE
+         uInfo := 0
+      ENDIF
 #ifdef DBS_FLAG
    CASE nInfoType == DBS_FLAG
-        uInfo := 0
+      uInfo := 0
 #endif
 #ifdef DBS_STEP
    CASE nInfoType == DBS_STEP
-        uInfo := 0
+      uInfo := 0
 #endif
    OTHERWISE
-       RETURN HB_FAILURE
+      RETURN HB_FAILURE
    ENDCASE
 
    RETURN HB_SUCCESS
@@ -1198,7 +1199,7 @@ STATIC FUNCTION ADO_ORDCREATE( nWA, aOrderCreateInfo )
 
    TRY
       IF aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes == nil .OR. ! lFound
-         oIndex := TOleAuto():New( "ADOX.Index" )
+         oIndex := win_OleCreateObject( "ADOX.Index" )
          oIndex:Name := iif( ! Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_TAGNAME ], aOrderCreateInfo[ UR_ORCR_CKEY ] )
          oIndex:PrimaryKey := .F.
          oIndex:Unique := aOrderCreateInfo[ UR_ORCR_UNIQUE ]

@@ -187,13 +187,6 @@ REQUEST hbmk_KEYW
 #define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == '_' )
 #define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR(c) .OR. IsDigit( c ) )
 
-/* Workaround for dos/djgpp bug */
-#if defined( __PLATFORM__DOS )
-   #define HB_DIRBASE()         StrTran( hb_DirBase(), "/", "\" )
-#else
-   #define HB_DIRBASE()         hb_DirBase()
-#endif
-
 /* This requires Set( _SET_EXACT, .F. ) */
 #define LEFTEQUAL( l, r )       ( l = r )
 
@@ -981,10 +974,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
 
       /* Detect system locations to enable shared library option by default */
-      lSysLoc := HB_DIRBASE() == "/usr/local/bin/" .OR. ;
-                 HB_DIRBASE() == "/usr/bin/" .OR. ;
-                 HB_DIRBASE() == "/opt/harbour/" .OR. ;
-                 HB_DIRBASE() == "/opt/bin/"
+      lSysLoc := hb_DirBase() == "/usr/local/bin/" .OR. ;
+                 hb_DirBase() == "/usr/bin/" .OR. ;
+                 hb_DirBase() == "/opt/harbour/" .OR. ;
+                 hb_DirBase() == "/opt/bin/"
 
       l_cHB_BIN_INSTALL := PathSepToSelf( GetEnv( "HB_BIN_INSTALL" ) )
       l_cHB_LIB_INSTALL := PathSepToSelf( GetEnv( "HB_LIB_INSTALL" ) )
@@ -993,14 +986,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       l_cHB_INSTALL_PREFIX := PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) )
       IF Empty( l_cHB_INSTALL_PREFIX )
          DO CASE
-         CASE hb_FileExists( DirAddPathSep( HB_DIRBASE() ) + cBin_CompPRG + cBinExt )
-            l_cHB_INSTALL_PREFIX := DirAddPathSep( HB_DIRBASE() ) + ".."
-         CASE hb_FileExists( DirAddPathSep( HB_DIRBASE() ) + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
-            l_cHB_INSTALL_PREFIX := DirAddPathSep( HB_DIRBASE() )
-         CASE hb_FileExists( DirAddPathSep( HB_DIRBASE() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
-            l_cHB_INSTALL_PREFIX := DirAddPathSep( HB_DIRBASE() ) + ".." + hb_osPathSeparator() + ".."
-         CASE hb_FileExists( DirAddPathSep( HB_DIRBASE() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
-            l_cHB_INSTALL_PREFIX := DirAddPathSep( HB_DIRBASE() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".."
+         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG + cBinExt )
+            l_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".."
+         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
+            l_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() )
+         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
+            l_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".."
+         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + cBinExt )
+            l_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".."
          OTHERWISE
             hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect." ) )
             RETURN 3
@@ -2254,25 +2247,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
          ELSE
-            /* NOTE: For some reason DJGPP gcc launched from Windows builds
-                     (win/dos cross-build scenario using -arch=dos switch)
-                     won't work when external script usage is attempted:
-                     ---
-                     gcc.exe: @c:/devl/djgpp/tmp\lxwp3x.cpl: No such file or directory (ENOENT)
-                     gcc.exe: no input files
-                     ---
-                     I have no idea why, tried to execute using hb_run(),
-                     tried with the same filename parameter as the DOS build
-                     generated, to no avail. Interestingly same *gcc in link mode*
-                     doesn't suffer from this problem on equal conditions.
-                     This hack will introduce command line size limitations,
-                     which can be overcome by using -inc hbmk2 switch.
-                     [vszakats] */
-            #if defined( __PLATFORM__DOS )
-               cOpt_CompC += " {LC}{SCRIPT}"
-            #else
-               cOpt_CompC += " {LC}"
-            #endif
+            cOpt_CompC += " {LC}"
          ENDIF
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}{SCRIPT}"
@@ -4247,8 +4222,8 @@ STATIC FUNCTION FindInPath( cFileName, cPath )
    ENDIF
 
    /* Check in the dir of this executable. */
-   IF ! Empty( HB_DIRBASE() )
-      IF hb_FileExists( cFileName := hb_FNameMerge( HB_DIRBASE(), cName, cExt ) )
+   IF ! Empty( hb_DirBase() )
+      IF hb_FileExists( cFileName := hb_FNameMerge( hb_DirBase(), cName, cExt ) )
          RETURN cFileName
       ENDIF
    ENDIF
@@ -4709,11 +4684,11 @@ STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
    #if defined( __PLATFORM__UNIX )
       aCFGDirs := { GetEnv( "HOME" ) + "/.harbour/",;
                     "/etc/harbour",;
-                    DirAddPathSep( HB_DIRBASE() ) + "../etc/harbour",;
-                    DirAddPathSep( HB_DIRBASE() ) + "../etc",;
-                    HB_DIRBASE() }
+                    DirAddPathSep( hb_DirBase() ) + "../etc/harbour",;
+                    DirAddPathSep( hb_DirBase() ) + "../etc",;
+                    hb_DirBase() }
    #else
-      aCFGDirs := { HB_DIRBASE() }
+      aCFGDirs := { hb_DirBase() }
    #endif
 
    FOR EACH cDir IN aCFGDirs
@@ -5217,7 +5192,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cDirParent )
 
       DO CASE
       CASE cMacro == "HB_ROOT"
-         cMacro := PathSepToSelf( DirAddPathSep( HB_DIRBASE() ) )
+         cMacro := PathSepToSelf( DirAddPathSep( hb_DirBase() ) )
       CASE cMacro == "HB_SELF"
          IF Empty( cDirParent )
             cMacro := ""
@@ -6125,7 +6100,7 @@ STATIC PROCEDURE SetUILang( hbmk )
       hb_i18n_set( NIL )
    ELSE
       tmp := "${hb_root}hbmk2.${lng}.hbl"
-      tmp := StrTran( tmp, "${hb_root}", PathSepToSelf( DirAddPathSep( HB_DIRBASE() ) ) )
+      tmp := StrTran( tmp, "${hb_root}", PathSepToSelf( DirAddPathSep( hb_DirBase() ) ) )
       tmp := StrTran( tmp, "${lng}", StrTran( hbmk[ _HBMK_cUILNG ], "-", "_" ) )
       hb_i18n_set( iif( hb_i18n_check( tmp := hb_MemoRead( tmp ) ), hb_i18n_restoretable( tmp ), NIL ) )
    ENDIF

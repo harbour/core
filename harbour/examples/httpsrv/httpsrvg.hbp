@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+# httpsrv with GD support
+
+@httpd.hbp
+-DGD_SUPPORT
+-lhbgd -lhbct
+-lbgd{win}
+-lgd{!win}
+-L/opt/local/lib{darwin}

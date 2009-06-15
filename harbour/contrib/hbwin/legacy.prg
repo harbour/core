@@ -55,29 +55,30 @@
 #include "hbclass.ch"
 
 #include "common.ch"
+#include "error.ch"
+
+#define EG_OLEEXCEPTION 1001
+
+#xcommand TRY                => BEGIN SEQUENCE WITH s_bBreak
+#xcommand CATCH [<!oError!>] => RECOVER [USING <oError>] <-oError->
+#xcommand FINALLY            => ALWAYS
+
+STATIC s_bBreak := { | oError | Break( oError ) }
+
+STATIC PROCEDURE Throw( oError )
+   LOCAL lError := Eval( ErrorBlock(), oError )
+   IF ! ISLOGICAL( lError ) .OR. lError
+      __ErrInHandler()
+   ENDIF
+   Break( oError )
+   RETURN
 
 CREATE CLASS TOLEAUTO FROM WIN_OLEAUTO
    /* TODO: Implement compatibility to the required extent */
+   VAR cClassName
    METHOD New( xOle, cIID )
    METHOD hObj( xOle )
 ENDCLASS
-
-METHOD New( xOle, cIID ) CLASS TOLEAUTO
-
-   IF ISNUMBER( xOle )
-      xOle := win_N2P( xOle )
-   ENDIF
-
-   IF hb_isPointer( xOle )
-      ::__hObj := xOle
-   ELSEIF ISCHARACTER( xOle )
-      xOle := __OleCreateObject( xOle, cIID )
-      IF ! Empty( xOle )
-         ::__hObj := xOle
-      ENDIF
-   ENDIF
-
-   RETURN Self
 
 METHOD hObj( xOle ) CLASS TOLEAUTO
 
@@ -92,11 +93,52 @@ METHOD hObj( xOle ) CLASS TOLEAUTO
 
    RETURN ::__hObj
 
-FUNCTION CreateObject( xOle, cIID )
-   RETURN TOleAuto():New( xOle, cIID )
+METHOD New( xOle, cClass ) CLASS TOLEAUTO
+   LOCAL hOle
+   LOCAL oError
 
-FUNCTION GetActiveObject( xOle, cIID )
-   LOCAL o := TOleAuto():New( xOle, cIID )
+   IF ISNUMBER( xOle )
+      xOle := win_N2P( xOle )
+   ENDIF
+
+   IF hb_isPointer( xOle )
+      ::__hObj := xOle
+      IF ISCHARACTER( cClass )
+         ::cClassName := cClass
+      ELSE
+         ::cClassName := hb_ntos( win_P2N( xOle ) )
+      ENDIF
+   ELSEIF ISCHARACTER( xOle )
+      hOle := __OleCreateObject( xOle )
+      IF Empty( hOle )
+         ::__hObj := hOle
+         ::cClassName := xOle
+      ELSE
+         oError := ErrorNew()
+         oError:Args          := hb_AParams()
+         oError:CanDefault    := .F.
+         oError:CanRetry      := .F.
+         oError:CanSubstitute := .T.
+         oError:Description   := win_OleErrorText()
+         oError:GenCode       := EG_OLEEXCEPTION
+         oError:Operation     := ProcName()
+         oError:Severity      := ES_ERROR
+         oError:SubCode       := -1
+         oError:SubSystem     := "TOleAuto"
+
+         RETURN Throw( oError )
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+FUNCTION CreateObject( xOle, cClass )
+   RETURN TOleAuto():New( xOle, cClass )
+
+FUNCTION GetActiveObject( xOle, cClass )
+   LOCAL o := TOleAuto():New()
+   LOCAL hOle
+   LOCAL oError
 
    IF ISNUMBER( xOle )
       xOle := win_N2P( xOle )
@@ -104,10 +146,30 @@ FUNCTION GetActiveObject( xOle, cIID )
 
    IF hb_isPointer( xOle )
       o:__hObj := xOle
+      IF ISCHARACTER( cClass )
+         o:cClassName := cClass
+      ELSE
+         o:cClassName := hb_ntos( win_P2N( xOle ) )
+      ENDIF
    ELSEIF ISCHARACTER( xOle )
-      xOle := __OleGetActiveObject( xOle, cIID )
-      IF ! Empty( xOle )
-         o:__hObj := xOle
+      hOle := __OleGetActiveObject( xOle )
+      IF ! Empty( hOle )
+         o:__hObj := hOle
+         o:cClassName := xOle
+      ELSE
+         oError := ErrorNew()
+         oError:Args          := hb_AParams()
+         oError:CanDefault    := .F.
+         oError:CanRetry      := .F.
+         oError:CanSubstitute := .T.
+         oError:Description   := win_OleErrorText()
+         oError:GenCode       := EG_OLEEXCEPTION
+         oError:Operation     := ProcName()
+         oError:Severity      := ES_ERROR
+         oError:SubCode       := -1
+         oError:SubSystem     := "TOleAuto"
+
+         RETURN Throw( oError )
       ENDIF
    ENDIF
 

@@ -8,7 +8,7 @@ REQUEST ADORDD
 
 function Main()
 
-   USE Test.mdb VIA "ADORDD" TABLE "Tabla1"
+   USE test.mdb VIA "ADORDD" TABLE "Tabla1"
 
    Browse()
 

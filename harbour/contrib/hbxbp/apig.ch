@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Source file for the Wvg*Classes
+ * Source file for the Xbp*Classes
  *
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * http://www.harbour-project.org

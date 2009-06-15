@@ -2,10 +2,9 @@
  * $Id$
  */
 
+#ifndef _XBP_CH
 
-#ifndef  _XBP_CH
-
-#if defined( __HB_OUTDEBUG__ )
+#if defined( __HB_OUTDEBUG__ ) .AND. defined( __PLATFORM__WINDOWS )
    #xtranslate HB_OUTDEBUG( [<x>] ) => WAPI_OUTPUTDEBUGSTRING( <x> )
 #else
    #xtranslate HB_OUTDEBUG( [<x>] ) =>
@@ -170,6 +169,6 @@
 
 
 #define _XBP_CH
-#endif 
+#endif
 
 /*----------------------------------------------------------------------*/
