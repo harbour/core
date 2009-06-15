@@ -3,13 +3,15 @@
  */
 
 1.) Download original sources of SuperLib 3.5 from this page:
-    http://www.the-oasis.net/ftpmaster.php3?content=ftplib.htm
+       http://www.the-oasis.net/ftpmaster.php3?content=ftplib.htm
+    Direct link:
+       http://www.the-oasis.net/files/library/supfree.zip
 
 2.) Unpack it:
     unzip supfree.zip
     unzip SOURCE.ZIP
 
-3.) *nix users will need convert original filenames to lowercase
+3.) *nix users will need to convert original filenames to lowercase
     and EOLs to native format, using this command:
     hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no "*.c"
     hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no "*.prg"

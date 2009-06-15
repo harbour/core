@@ -5,7 +5,7 @@
 1.) Copy the full content of /SOURCE/DBU from your original
     CA-Cl*pper installation.
 
-2.) *nix users will need convert original filenames to lowercase
+2.) *nix users will need to convert original filenames to lowercase
     and EOLs to native format, using this command:
     hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no "*.prg"
 
