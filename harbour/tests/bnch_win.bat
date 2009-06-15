@@ -25,6 +25,7 @@
 @rem      'bnch_win.bat > results.txt 2>&1'
 @rem ---------------------------------------------------------------
 
+@if not "%OS%" == "Windows_NT" echo "This script requires Windows NT or upper."
 @if not "%OS%" == "Windows_NT" goto END
 
 @rem ; Default settings

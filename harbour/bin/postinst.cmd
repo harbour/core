@@ -21,12 +21,12 @@ echo arch=%HB_ARCHITECTURE%>> %_HBMK_CFG%
 echo comp=%HB_COMPILER%>> %_HBMK_CFG%
 set _HBMK_CFG=
 
-goto inst_%HB_ARCHITECTURE%
+goto INST_%HB_ARCHITECTURE%
 
-:inst_os2
-rem OS/2 post install part
-goto end
+:INST_OS2
 
+   rem OS/2 post install part
+   goto END
 
-:inst_
-:end
+:INST_
+:END

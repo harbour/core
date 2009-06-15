@@ -22,6 +22,7 @@ rem    - HB_COMPILER envvar configured (see INSTALL doc)
 rem    - C compiler and GNU Make configured (see INSTALL doc)
 rem ---------------------------------------------------------------
 
+if not "%OS%" == "Windows_NT" echo "This Harbour build script requires Windows NT or upper."
 if not "%OS%" == "Windows_NT" goto END
 
 setlocal

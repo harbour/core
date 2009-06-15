@@ -12,7 +12,8 @@ rem ---------------------------------------------------------------
 rem NOTE: .prg files have to be compiled with -n1
 rem NOTE: .c   files have to be compiled with -DHB_DYNLIB
 
-if not "%OS%" == "Windows_NT" ( echo This script needs Windows NT or newer. && goto :EOF )
+if not "%OS%" == "Windows_NT" echo "This Harbour build script requires Windows NT or upper."
+if not "%OS%" == "Windows_NT" goto EOF
 
 setlocal
 
