@@ -113,6 +113,9 @@ FUNCTION GetActiveObject( xOle, cIID )
 
    RETURN o
 
+FUNCTION CreateOLEObject( ... )
+   RETURN win_P2N( __OleCreateObject( ... ) )
+
 CREATE CLASS Win32Prn FROM WIN_PRN
 ENDCLASS
 
