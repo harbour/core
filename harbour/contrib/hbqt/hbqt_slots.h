@@ -78,9 +78,9 @@ public:
    ~Slots();
    QList<QWidget*> list1;
    QList<QAction*> list5;
-   QList<QString> list2;
+   QList<QString>  list2;
    QList<PHB_ITEM> list3;
-   QList<bool> list4;
+   QList<bool>     list4;
 
 public slots:
    void clicked();
@@ -103,35 +103,6 @@ public slots:
    void mouseMoveEvent( QMouseEvent * event );
    void hovered( QAction * action );
    void currentChanged( int index );
-
-#if 0
-   void accessibleEvent();
-   void actionEvent();
-   void childEvent();
-   void closeEvent();
-   void customEvent();
-   void dragLeaveEvent();
-   void dropEvent();
-   void dynamicPropertyChangeEvent();
-   void fileOpenEvent();
-   void focusEvent();
-   void graphicsSceneEvent();
-   void helpEvent();
-   void hideEvent();
-   void hoverEvent();
-   void iconDragEvent();
-   void inputEvent();
-   void inputMethodEvent();
-   void moveEvent();
-   void paintEvent();
-   void resizeEvent();
-   void shortcutEvent();
-   void showEvent();
-   void statusTipEvent();
-   void timerEvent();
-   void whatsThisClickedEvent();
-   void windowStateChangeEvent();
-#endif
 };
 
 
@@ -143,21 +114,6 @@ public:
    MyDrawingArea( QWidget *parent = 0 );
    virtual ~MyDrawingArea( void );
 
-   #if 0
-protected slots:
-   void keyReleaseEvent( QKeyEvent * event );
-   void mousePressEvent( QMouseEvent * event );
-   void mouseReleaseEvent( QMouseEvent * event );
-   void mouseDoubleClickEvent( QMouseEvent * event );
-   void paintEvent( QPaintEvent * event );
-   void resizeEvent( QResizeEvent * event );
-   void wheelEvent( QWheelEvent * event );
-   void timerEvent( QTimerEvent * event );
-   void focusInEvent( QFocusEvent * event );
-   void focusOutEvent( QFocusEvent * event );
-   void moveEvent( QMoveEvent * event );
-   bool event( QEvent * event );
-   #endif
    void keyPressEvent( QKeyEvent * event );
    void mouseMoveEvent( QMouseEvent * event );
 
