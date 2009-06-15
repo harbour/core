@@ -94,12 +94,15 @@ public slots:
    void currentIndexChanged( int index );
    void highlighted( int index );
    void returnPressed();
-   void clicked_model( const QModelIndex & index );
+   void clicked( const QModelIndex & index );
+   void doubleClicked( const QModelIndex & index );
+   void entered( const QModelIndex & index );
    void viewportEntered();
    bool event( QEvent * event );
    void keyPressEvent( QKeyEvent * event );
    void mouseMoveEvent( QMouseEvent * event );
    void hovered( QAction * action );
+   void currentChanged( int index );
 
 #if 0
    void accessibleEvent();
@@ -179,4 +182,5 @@ public:
 };
 
 #endif
+
 

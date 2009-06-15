@@ -145,6 +145,28 @@ static void SlotsExecInt( QWidget* widget, QString event, PHB_ITEM pItem, int iV
    }
 }
 
+static void SlotsExecModel( QWidget* widget, QString event, PHB_ITEM pItem, const QModelIndex & index )
+{
+   for( int i = 0; i < s->list1.size(); ++i )
+   {
+      if( ( QWidget* ) s->list1.at( i ) == widget )
+      {
+         if( ( ( QString ) s->list2.at( i ) == event ) && ( ( bool ) s->list4.at( i ) == true ) )
+         {
+            PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+            PHB_ITEM pState = hb_itemPutPtr( NULL, ( QModelIndex * ) new QModelIndex( index ) );
+            hb_vmEvalBlockV( ( PHB_ITEM ) s->list3.at( i ), 2, pWidget, pState );
+            hb_itemRelease( pWidget );
+            hb_itemRelease( pState );
+         }
+      }
+   }
+   if( pItem != NULL )
+   {
+      hb_itemRelease( pItem );
+   }
+}
+
 Slots::Slots( QObject* parent ) : QObject( parent )
 {
 }
@@ -315,33 +337,33 @@ void Slots::currentIndexChanged( int index )
    SlotsExecInt( widget, ( QString ) "currentIndexChanged(int)", NULL, index );
 }
 
+void Slots::currentChanged( int index )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecInt( widget, ( QString ) "currentChanged(int)", NULL, index );
+}
+
 void Slots::highlighted( int index )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
    SlotsExecInt( widget, ( QString ) "highlighted(int)", NULL, index );
 }
 
-void Slots::clicked_model( const QModelIndex & index )
+void Slots::clicked( const QModelIndex & index )
 {
    QWidget * widget = qobject_cast<QWidget *>( sender() );
-   for( int i = 0; i < list1.size(); ++i )
-   {
-      if( ( QWidget * ) list1.at( i ) == ( QWidget * ) widget )
-      {
-         if( ( ( QString ) list2.at( i ) == ( QString ) "clicked(QModelIndex)" ) && ( ( bool ) list4.at( i ) == true ) )
-         {
-            PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget * ) widget );
-            PHB_ITEM pState = hb_itemPutPtr( NULL, ( QModelIndex * ) new QModelIndex( index ) );
-
-            hb_vmEvalBlockV( ( PHB_ITEM ) list3.at( i ), 1, pWidget, pState );
-            hb_itemRelease( pWidget );
-            hb_itemRelease( pState );
-         }
-      }
-   }
+   SlotsExecModel( widget, ( QString ) "clicked(QModelIndex)", NULL, index );
 }
-
-
+void Slots::doubleClicked( const QModelIndex & index )
+{
+   QWidget * widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecModel( widget, ( QString ) "doubleClicked(QModelIndex)", NULL, index );
+}
+void Slots::entered( const QModelIndex & index )
+{
+   QWidget * widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecModel( widget, ( QString ) "entered(QModelIndex)", NULL, index );
+}
 
 /*
  * harbour function to connect signals with slots
@@ -426,8 +448,18 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    /*                    Events with miscellaneous parameters     */
    if( signal == ( QString ) "clicked(QModelIndex)" )
    {
-      ret = widget->connect( widget, SIGNAL( clicked_model( const QModelIndex & ) ),
+      ret = widget->connect( widget, SIGNAL( clicked( const QModelIndex & ) ),
                              s, SLOT( clicked( const QModelIndex & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "doubleClicked(QModelIndex)" )
+   {
+      ret = widget->connect( widget, SIGNAL( doubleClicked( const QModelIndex & ) ),
+                             s, SLOT( doubleClicked( const QModelIndex & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "entered(QModelIndex)" )
+   {
+      ret = widget->connect( widget, SIGNAL( entered( const QModelIndex & ) ),
+                             s, SLOT( entered( const QModelIndex & ) ), Qt::AutoConnection );
    }
    if( signal == ( QString ) "event()" )
    {
@@ -448,6 +480,11 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    {
       ret = widget->connect( widget, SIGNAL( hovered( QAction * ) ),
                              s, SLOT( hovered( QAction * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "currentChanged(int)" )
+   {
+      ret = widget->connect( widget, SIGNAL( currentChanged( int ) ),
+                             s, SLOT( currentChanged( int ) ), Qt::AutoConnection );
    }
 
    /* return connect result */
@@ -583,3 +620,4 @@ HB_FUNC( QT_MYDRAWINGAREA )
 
 /*----------------------------------------------------------------------*/
 #endif
+
