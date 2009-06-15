@@ -88,6 +88,16 @@ static BOOL fsGetTempDirByCase( BYTE * pszName, const char * pszTempDir )
       }
    }
 
+#  if defined(__DJGPP__)
+   if( fOK )
+   {
+      /* convert '/' to '\' */
+      char * pszDelim;
+      while( ( pszDelim = strchr( ( char * ) pszName, '/' ) ) != NULL )
+         *pszDelim = '\\';
+   }
+#  endif
+
    return fOK;
 }
 #endif
@@ -229,6 +239,15 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
 
    pszBuffer[ 0 ] = '\0';
    fResult = ( tmpnam( ( char * ) pszBuffer ) != NULL );
+
+#  if defined(__DJGPP__)
+   {
+      /* convert '/' to '\' */
+      char * pszDelim;
+      while( ( pszDelim = strchr( ( char * ) pszBuffer, '/' ) ) != NULL )
+         *pszDelim = '\\';
+   }
+#  endif
 
 #endif
 

@@ -2594,6 +2594,7 @@ BYTE * hb_fsCurDir( USHORT uiDrive )
 USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
 {
    USHORT uiCurDrv = uiDrive, usError;
+   BYTE * pbyStart;
    BOOL fResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDirBuff(%hu)", uiDrive));
@@ -2605,7 +2606,9 @@ USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
     * It will allow us to add drive emulation in hb_fsCurDrv()/hb_fsChDrv()
     * and hb_fsNameConv()
     */
-#if !( defined(__GNUC__) && ( defined(HB_OS_OS2) || !defined(__MINGW32__) ) )
+#if defined(HB_OS_WIN) || \
+    ( !( defined(HB_OS_OS2) && defined(__GNUC__) ) && \
+      !defined(__MINGW32__) && defined(HAVE_POSIX_IO) )
    if( uiDrive )
    {
       uiCurDrv = hb_fsCurDrv() + 1;
@@ -2628,17 +2631,17 @@ USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
    hb_fsSetIOError( fResult, 0 );
    hb_vmLock();
 
-#elif defined(HAVE_POSIX_IO)
-
-   hb_vmUnlock();
-   fResult = ( getcwd( ( char * ) pbyBuffer, ulLen ) != NULL );
-   hb_fsSetIOError( fResult, 0 );
-   hb_vmLock();
-
 #elif defined(__MINGW32__)
 
    hb_vmUnlock();
    fResult = ( _getdcwd( uiDrive, pbyBuffer, ulLen ) != NULL );
+   hb_fsSetIOError( fResult, 0 );
+   hb_vmLock();
+
+#elif defined(HAVE_POSIX_IO)
+
+   hb_vmUnlock();
+   fResult = ( getcwd( ( char * ) pbyBuffer, ulLen ) != NULL );
    hb_fsSetIOError( fResult, 0 );
    hb_vmLock();
 
@@ -2661,12 +2664,17 @@ USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
 
    if( usError == 0 && pbyBuffer[ 0 ] )
    {
-      BYTE * pbyStart = pbyBuffer;
-
       /* Strip the leading drive spec, and leading backslash if there's one. */
       /* NOTE: A trailing underscore is not returned on this platform,
                so we don't need to strip it. [vszakats] */
 
+#if defined(__DJGPP__)
+      /* convert '/' to '\' */
+      while( ( pbyStart = ( BYTE * ) strchr( ( char * ) pbyBuffer, '/' ) ) != NULL )
+         *pbyStart = '\\';
+#endif
+
+      pbyStart = pbyBuffer;
       ulLen = strlen( ( char * ) pbyBuffer );
 
 #if defined(HB_OS_HAS_DRIVE_LETTER)
