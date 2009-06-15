@@ -12,6 +12,4 @@ DIRS=\
 	hbformat \
 	$(HB_UTILS) \
 
-#	hbextern \
-
 include $(ROOT)config/dir.cf
