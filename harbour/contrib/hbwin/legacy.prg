@@ -59,6 +59,7 @@
 CREATE CLASS TOLEAUTO FROM WIN_OLEAUTO
    /* TODO: Implement compatibility to the required extent */
    METHOD New( xOle, cIID )
+   METHOD hObj( xOle )
 ENDCLASS
 
 METHOD New( xOle, cIID ) CLASS TOLEAUTO
@@ -77,6 +78,40 @@ METHOD New( xOle, cIID ) CLASS TOLEAUTO
    ENDIF
 
    RETURN Self
+
+METHOD hObj( xOle ) CLASS TOLEAUTO
+
+   IF PCount() > 0 .AND. xOle != NIL
+      IF ISNUMBER( xOle )
+         xOle := win_N2P( xOle )
+      ENDIF
+      IF hb_isPointer( xOle )
+         ::__hObj := xOle
+      ENDIF
+   ENDIF
+
+   RETURN ::__hObj
+
+FUNCTION CreateObject( xOle, cIID )
+   RETURN TOleAuto():New( xOle, cIID )
+
+FUNCTION GetActiveObject( xOle, cIID )
+   LOCAL o := TOleAuto():New( xOle, cIID )
+
+   IF ISNUMBER( xOle )
+      xOle := win_N2P( xOle )
+   ENDIF
+
+   IF hb_isPointer( xOle )
+      ::__hObj := xOle
+   ELSEIF ISCHARACTER( xOle )
+      xOle := __OleGetActiveObject( xOle, cIID )
+      IF ! Empty( xOle )
+         ::__hObj := xOle
+      ENDIF
+   ENDIF
+
+   RETURN o
 
 CREATE CLASS Win32Prn FROM WIN_PRN
 ENDCLASS
