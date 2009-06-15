@@ -2,6 +2,8 @@
 # $Id$
 #
 
+{!(linux|win)}skip=yes
+
 incpaths=.
 
 libs=rddads

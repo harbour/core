@@ -2,6 +2,8 @@
 # $Id$
 #
 
+{!(linux|win|os2)}skip=yes
+
 incpaths=.
 
 libs=hbtpathy

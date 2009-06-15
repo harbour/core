@@ -8,5 +8,6 @@ libs=xhb
 
 # xhb has these as part of core, so we're adding them to emulate it.
 # They are not needed to use xhb lib itself.
-libs=hbct hbtip
-{allwin}libs=hbwin
+libs=../hbct/hbct.hbc
+libs=../hbtip/hbtip.hbc
+libs=../hbwin/hbwin.hbc

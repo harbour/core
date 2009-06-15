@@ -4742,11 +4742,16 @@ STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
 
 #define _EOL                    Chr( 10 )
 
-STATIC PROCEDURE HBC_ProcessOne( hbmk, cFileName, nNestingLevel  )
+STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel  )
    LOCAL cFile
    LOCAL cLine
    LOCAL cItem
    LOCAL tmp
+
+   IF ! hb_FileExists( cFileName )
+      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Opening: %1$s" ), cFileName ) )
+      RETURN .F.
+   ENDIF
 
    cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
 
@@ -4762,6 +4767,15 @@ STATIC PROCEDURE HBC_ProcessOne( hbmk, cFileName, nNestingLevel  )
       cLine := AllTrim( ArchCompFilter( hbmk, AllTrim( cLine ) ) )
 
       DO CASE
+      CASE Lower( Left( cLine, Len( "skip="        ) ) ) == "skip="          ; cLine := SubStr( cLine, Len( "skip="         ) + 1 )
+         cLine := MacroProc( hbmk, cLine, FN_DirGet( cFileName ) )
+         IF ValueIsT( cLine )
+            IF hbmk[ _HBMK_lInfo ]
+               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Skipping from: %1$s" ), cFileName ) )
+            ENDIF
+            EXIT
+         ENDIF
+
       CASE Lower( Left( cLine, Len( "pos="         ) ) ) == "pos="           ; cLine := SubStr( cLine, Len( "pos="          ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( hbmk, PathProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
@@ -4772,9 +4786,32 @@ STATIC PROCEDURE HBC_ProcessOne( hbmk, cFileName, nNestingLevel  )
 
       CASE Lower( Left( cLine, Len( "libs="         ) ) ) == "libs="         ; cLine := SubStr( cLine, Len( "libs="         ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathSepToTarget( hbmk, MacroProc( hbmk, StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
-            IF AScan( hbmk[ _HBMK_aLIBUSER ], {|tmp| tmp == cItem } ) == 0
-               AAddNotEmpty( hbmk[ _HBMK_aLIBUSER ], cItem )
+            cItem := MacroProc( hbmk, StrStripQuote( cItem ), FN_DirGet( cFileName ) )
+            IF FN_ExtGet( cItem ) == ".hbc"
+               cItem := PathProc( cItem, FN_DirGet( cFileName ) )
+               IF nNestingLevel < _HBMK_NEST_MAX
+                  IF ! hb_FileExists( cItem )
+                     FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
+                        IF hb_FileExists( DirAddPathSep( tmp ) + FN_NameExtGet( cItem ) )
+                           cItem := DirAddPathSep( tmp ) + FN_NameExtGet( cItem )
+                           EXIT
+                        ENDIF
+                     NEXT
+                  ENDIF
+
+                  IF hbmk[ _HBMK_lInfo ]
+                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cItem ) )
+                  ENDIF
+
+                  HBC_ProcessOne( hbmk, cItem, nNestingLevel + 1 )
+               ELSE
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot nest deeper in %1$s" ), cFileName ) )
+               ENDIF
+            ELSE
+               cItem := PathSepToTarget( hbmk, cItem )
+               IF AScan( hbmk[ _HBMK_aLIBUSER ], {|tmp| tmp == cItem } ) == 0
+                  AAddNotEmpty( hbmk[ _HBMK_aLIBUSER ], cItem )
+               ENDIF
             ENDIF
          NEXT
 
@@ -5022,7 +5059,7 @@ STATIC PROCEDURE HBC_ProcessOne( hbmk, cFileName, nNestingLevel  )
       ENDCASE
    NEXT
 
-   RETURN
+   RETURN .T.
 
 STATIC FUNCTION IsGTRequested( hbmk, cWhichGT )
 
@@ -6249,7 +6286,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       hb_StrFormat( I_( "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbc." ), _HBMK_CFG_NAME ),;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
       I_( ".hbc config files in current dir are automatically processed." ),;
-      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\nLines starting with '#' char are ignored" ),;
+      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}" ),;
       I_( "Defaults and feature support vary by architecture/compiler." ) }

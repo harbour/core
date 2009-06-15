@@ -2,7 +2,9 @@
 # $Id$
 #
 
-{win}gt=gtwvg
-{win}libs=hbwin
+{!win}skip=yes
+
+gt=gtwvg
+libs=..\hbwin\hbwin.hbc
 gui=yes
 mt=yes

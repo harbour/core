@@ -2,7 +2,9 @@
 # $Id$
 #
 
+{!allwin}skip=yes
+
 incpaths=.
 
-{win}libs=rddado
-{win}libs=hbwin
+libs=rddado
+libs=..\hbwin\hbwin.hbc

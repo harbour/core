@@ -5,4 +5,4 @@
 incpaths=.
 
 libs=hbxbp
-hbcs=../hbqt/hbqt.hbc
+libs=../hbqt/hbqt.hbc

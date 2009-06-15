@@ -2,7 +2,7 @@
 # $Id$
 #
 
-libs=sddodbc
-{win}libs=odbc32
+libs=sddfb
+libs=fbclient
 
 libs=../rddsql.hbc

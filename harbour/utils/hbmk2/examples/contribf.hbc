@@ -9,15 +9,14 @@
 libs=hbbmcdx hbbtree hbclipsm hbcrypt hbct hbgt hbmisc hbmzip hbnf hbvpdf hbziparc rddsql xhb
 
 # contribs portable, with external dependencies:
-libs=hbcurl hbfbird hbgd hbhpdf hbmsql hbmysql hbpgsql hbqt sddfb sddmy sddpg
+libs=hbcurl hbfbird hbgd hbhpdf hbmysql hbpgsql hbqt sddfb sddmy sddpg
 
 # contribs with limited availability (some with external dependencies):
 {!pocc&!xcc&!dmc&!watcom}libs=gtalleg
-{!dos}libs=hbapollo hbfimage hbssl hbtip rddads
+{!dos}libs=hbfimage hbssl hbtip
+{linux|win}libs=rddads
 {linux|win|os2}libs=hbtpathy
-{win}libs=gtwvg hbblat hbgfwin hbwin rddado
+{win}libs=gtwvg hbblat hbwin rddado
 {win&!dmc}libs=hbwhat
-{linux}libs=hbgfgtk
-{os2}libs=hbgfos2
 {!rsxnt}libs=hbodbc
 {!bsd&!hpux&!pocc}libs=hbsqlit3

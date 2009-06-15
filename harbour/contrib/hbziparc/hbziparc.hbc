@@ -3,4 +3,4 @@
 #
 
 libs=hbziparc
-hbcs=../hbmzip/hbmzip.hbc
+libs=../hbmzip/hbmzip.hbc
