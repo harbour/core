@@ -64,8 +64,6 @@
 
 #include "hbclass.ch"
 
-#include "xhb.ch"
-
 #include "ttable.ch"
 #include "set.ch"
 #include "ord.ch"
@@ -89,11 +87,11 @@ FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, ;
    LOCAL cOldScreen := SAVESCREEN( MAXROW(), 0, MAXROW(), MAXCOL() + 1 )
    LOCAL lFirstPass := .T.
 
-   DEFAULT cDriver := "DBFCDX"
-   DEFAULT lNew := .T.
-   DEFAULT lOpenMode := NET_OPEN_MODE
-   DEFAULT lReadOnly := .F.
-   DEFAULT nSeconds := snNetDelay
+   DEFAULT cDriver TO "DBFCDX"
+   DEFAULT lNew TO .T.
+   DEFAULT lOpenMode TO NET_OPEN_MODE
+   DEFAULT lReadOnly TO .F.
+   DEFAULT nSeconds TO snNetDelay
 
    slNetOk  := .F.
    nSeconds *= 1.00
@@ -164,8 +162,8 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
       RETURN ( lSuccess )
    ENDIF
 
-   DEFAULT lReleaseLocks := .F.
-   DEFAULT nSeconds := snNetDelay
+   DEFAULT lReleaseLocks TO .F.
+   DEFAULT nSeconds TO snNetDelay
 
    nWaitTime := nSeconds
 
@@ -258,7 +256,7 @@ FUNCTION NetFunc( bBlock, nSeconds )
 
    LOCAL lForever      // Retry forever?
 
-   DEFAULT nSeconds := snNetDelay
+   DEFAULT nSeconds TO snNetDelay
    lForever := ( nSeconds == 0 )
 
    // Keep trying as long as specified or default
@@ -356,7 +354,7 @@ RETURN ( slNetOk )
 
 FUNCTION NetRecLock( nSeconds )
 
-   DEFAULT nSeconds := snNetDelay
+   DEFAULT nSeconds TO snNetDelay
 
    slNetOK := .F.
 
@@ -370,7 +368,7 @@ RETURN ( slNetOK )
 FUNCTION NetFileLock( nSeconds )
 
    slNetOK := .F.
-   DEFAULT nSeconds := snNetDelay
+   DEFAULT nSeconds TO snNetDelay
 
    IF NetLock( NET_FILELOCK,, nSeconds )
       slNetOK := .T.
@@ -382,8 +380,8 @@ RETURN ( slNetOK )
 FUNCTION NetAppend( nSeconds, lReleaseLocks )
 
    LOCAL nOrd
-   DEFAULT lReleaseLocks := .T.
-   DEFAULT nSeconds := snNetDelay
+   DEFAULT lReleaseLocks TO .T.
+   DEFAULT nSeconds TO snNetDelay
    slNetOK := .F.
    nOrd    := ORDSETFOCUS( 0 )          // --> set order to 0 to append ???
 
@@ -419,7 +417,7 @@ RETURN n
 
 
 FUNCTION IsLocked( nRecId )
-default nRecID to recno()
+DEFAULT nRecID TO recno()
 
 RETURN ( ASCAN( DBRLOCKLIST(), { | n | n == nRecID } ) > 0 )
 
@@ -1189,6 +1187,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
          SET( _SET_DELETED, lDelState )
 
       ENDIF
+      EXIT
 
    CASE _WRITE_BUFFER
       IF !EMPTY( ::WriteBuffers )
@@ -1239,10 +1238,11 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
          ENDIF
 
       ENDIF
+      EXIT
 
-   DEFAULT
+   OTHERWISE
 
-   END
+   ENDSWITCH
 
    ( ::Alias )->( DBUNLOCK() )
    ( ::Alias )->( DBGOTO( nRec ) )
@@ -1399,9 +1399,9 @@ METHOD SetOrder( xTag ) CLASS HBTable
    CASE "O"                    // we have an Order-Object
       xTag:SetFocus()
       EXIT
-   DEFAULT
+   OTHERWISE
       ( ::Alias )->( ORDSETFOCUS( 0 ) )
-   END
+   ENDSWITCH
 RETURN nOldOrd
 
 

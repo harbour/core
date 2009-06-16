@@ -233,3 +233,30 @@ HB_FUNC( WIN_P2N )
 {
    hb_retnint( ( HB_PTRDIFF ) hb_parptr( 1 ) );
 }
+
+HB_FUNC( WIN_HINSTANCE )
+{
+   HANDLE hInstance;
+
+   hb_winmainArgGet( &hInstance, NULL, NULL );
+
+   hb_retptr( hInstance );
+}
+
+HB_FUNC( WIN_HPREVINSTANCE )
+{
+   HANDLE hPrevInstance;
+
+   hb_winmainArgGet( NULL, &hPrevInstance, NULL );
+
+   hb_retptr( hPrevInstance );
+}
+
+HB_FUNC( WIN_NCMDSHOW )
+{
+   int nCmdShow;
+
+   hb_winmainArgGet( NULL, NULL, &nCmdShow );
+
+   hb_retni( nCmdShow );
+}
