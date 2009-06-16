@@ -47,17 +47,20 @@
 #include "hbvm.h"
 
 #if defined( HB_OS_WIN )
-#include <windows.h>
-#define socklen_t int
-#define SHUT_RDWR SD_BOTH
+   #define _WINSOCKAPI_  /* Prevents inclusion of winsock.h in windows.h */
+   #define HB_SOCKET_T SOCKET
+   #include <winsock2.h>
+   #include <windows.h>
+   #define socklen_t int
+   #define SHUT_RDWR SD_BOTH
 #else
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#define INVALID_SOCKET (-1)
-typedef int SOCKET;
+   #include <unistd.h>
+   #include <sys/types.h>
+   #include <sys/socket.h>
+   #include <arpa/inet.h>
+   #include <netdb.h>
+   #define INVALID_SOCKET (-1)
+   typedef int SOCKET;
 #endif
 
 #ifdef hb_parnidef
