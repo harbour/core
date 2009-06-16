@@ -77,15 +77,15 @@ HB_FUNC( WAPI_CREATEWINDOWEX )
       ( DWORD )     hb_parnl( 1 ) /* dwExStyle */,
       ( LPCTSTR )   lpStr1 /* lpClassName */,
       ( LPCTSTR )   lpStr2 /* lpWindowName */,
-      HB_ISNUM( 3 ) ? ( DWORD ) hb_parnl( 3 ) : WS_OVERLAPPEDWINDOW /* dwStyle */,
-      HB_ISNUM( 4 ) ? ( int ) hb_parni( 4 ) : ( int ) CW_USEDEFAULT /* x */,
-      HB_ISNUM( 5 ) ? ( int ) hb_parni( 5 ) : ( int ) CW_USEDEFAULT /* y */,
-      ( int )       hb_parni( 6 ) /* nWidth */,
-      ( int )       hb_parni( 7 ) /* nHeight */,
-      HB_ISPOINTER( 8 ) ? ( HWND ) hb_parptr( 8 ) : HWND_DESKTOP /* hWndParent */,
-      ( HMENU )     hb_parptr( 9 ) /* hMenu */,
-      ( HINSTANCE ) hb_parptr( 10 ) /* hInstance */,
-      ( LPVOID )    hb_parptr( 11 ) /* lpParam */ ) );
+      HB_ISNUM( 4 ) ? ( DWORD ) hb_parnl( 4 ) : WS_OVERLAPPEDWINDOW /* dwStyle */,
+      HB_ISNUM( 5 ) ? ( int ) hb_parni( 5 ) : ( int ) CW_USEDEFAULT /* x */,
+      HB_ISNUM( 6 ) ? ( int ) hb_parni( 6 ) : ( int ) CW_USEDEFAULT /* y */,
+      ( int )       hb_parni( 7 ) /* nWidth */,
+      ( int )       hb_parni( 8 ) /* nHeight */,
+      HB_ISPOINTER( 9 ) ? ( HWND ) hb_parptr( 9 ) : HWND_DESKTOP /* hWndParent */,
+      ( HMENU )     hb_parptr( 10 ) /* hMenu */,
+      ( HINSTANCE ) hb_parptr( 11 ) /* hInstance */,
+      ( LPVOID )    hb_parptr( 12 ) /* lpParam */ ) );
 
    HB_TCHAR_FREE( lpStr1 );
    HB_TCHAR_FREE( lpStr2 );
