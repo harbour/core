@@ -2320,6 +2320,7 @@ HB_FUNC( HB_MUTEXSUBSCRIBENOW )
 
 HB_FUNC( HB_MUTEXQUEUEINFO )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_mutexParam( 1 );
 
    if( pItem )
