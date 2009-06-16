@@ -2330,8 +2330,14 @@ HB_FUNC( HB_MUTEXQUEUEINFO )
       {
          hb_storni( pMutex->waiters, 2 );
          hb_stornl( pMutex->events ? hb_arrayLen( pMutex->events ) : 0, 3 );
+         hb_retl( TRUE );
+         return;
       }
    }
+
+   hb_storni( 0, 2 );
+   hb_stornl( 0, 3 );
+   hb_retl( FALSE );
 }
 
 HB_FUNC( HB_MTVM )
