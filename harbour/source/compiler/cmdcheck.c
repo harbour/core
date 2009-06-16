@@ -72,31 +72,32 @@
 
 static ULONG PackDateTime( void )
 {
-   int iYear, iMonth, iDay, iHour, iMinute, iSeconds, iMillisec;
-   BYTE szString[4];
-   BYTE nValue;
+   union
+   {
+      struct
+      {
+         UINT32   second : 6;       /* bits:  0 -  5 */
+         UINT32   minute : 6;       /* bits:  6 - 11 */
+         UINT32   hour   : 5;       /* bits: 12 - 16 */
+         UINT32   day    : 5;       /* bits: 16 - 21 */
+         UINT32   month  : 4;       /* bits: 22 - 25 */
+         UINT32   year   : 6;       /* bits: 26 - 31 */
+      } ts;
+      UINT32 val;
+   } u;
+   int iYear, iMonth, iDay, iHour, iMinute, iSecond, iMillisec;
 
    hb_timeStampGetLocal( &iYear, &iMonth, &iDay,
-                         &iHour, &iMinute, &iSeconds, &iMillisec );
+                         &iHour, &iMinute, &iSecond, &iMillisec );
 
-   nValue = ( BYTE ) ( ( iYear - 1980 ) & ( 2 ^ 6 ) );      /* 6 bits */
-   szString[0] = nValue << 2;
-   nValue = ( BYTE ) ( iMonth );    /* 4 bits */
-   szString[0] |= nValue >> 2;
-   szString[1] = nValue << 6;
-   nValue = ( BYTE ) ( iDay );      /* 5 bits */
-   szString[1] |= nValue << 1;
+   u.ts.year   = iYear - 1980;
+   u.ts.month  = iMonth;
+   u.ts.day    = iDay;
+   u.ts.hour   = iHour;
+   u.ts.minute = iMinute;
+   u.ts.second = iSecond;
 
-   nValue = ( BYTE ) iHour;         /* 5 bits */
-   szString[1] = nValue >> 4;
-   szString[2] = nValue << 4;
-   nValue = ( BYTE ) iMinute;       /* 6 bits */
-   szString[2] |= nValue >> 2;
-   szString[3] = nValue << 6;
-   nValue = ( BYTE ) iSeconds;       /* 6 bits */
-   szString[3] |= nValue;
-
-   return HB_MKLONG( szString[3], szString[2], szString[1], szString[0] );
+   return u.val;
 }
 
 static void hb_notSupportedInfo( HB_COMP_DECL, const char *szSwitch )

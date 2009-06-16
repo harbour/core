@@ -278,9 +278,9 @@ static void do_token1( int iSwitch )
          /* should we find the last token, but string ends with tokenizer, i.e.
             pc points to the last character at the moment ?
             -> break here ! */
-         if( ulTokenCounter == HB_MKULONG( 255, 255, 255, 255 ) )
+         if( ulTokenCounter == 0xFFFFFFFFUL )
          {
-            if( ulSkip == HB_MKULONG( 255, 255, 255, 255 ) )
+            if( ulSkip == 0xFFFFFFFFUL )
             {
                char *t;
                BOOL bLast = TRUE;
@@ -307,7 +307,7 @@ static void do_token1( int iSwitch )
          {
             char cRet;
 
-            if( ( ulTokenCounter == HB_MKULONG( 255, 255, 255, 255 ) ) ||
+            if( ( ulTokenCounter == 0xFFFFFFFFUL ) ||
                 ( ulToken == ulTokenCounter ) )
                hb_retclen( pcSubStr, pc - pcSubStr );
             else
@@ -330,7 +330,7 @@ static void do_token1( int iSwitch )
             break;
 
          case DO_TOKEN1_ATTOKEN:
-            if( ( ulTokenCounter == HB_MKULONG( 255, 255, 255, 255 ) ) ||
+            if( ( ulTokenCounter == 0xFFFFFFFFUL ) ||
                 ( ulToken == ulTokenCounter ) )
                hb_retnl( pcSubStr - pcString + 1 );
             else
