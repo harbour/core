@@ -818,12 +818,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                which are supported on one architecture only. In the future this
                should be automatically extracted from a comp/arch matrix. */
       SWITCH hbmk[ _HBMK_cCOMP ]
+      CASE "mingw"
+      CASE "mingw64"
       CASE "msvc"
       CASE "msvc64"
       CASE "msvcia64"
       CASE "bcc"
       CASE "xcc"
       CASE "pocc"
+      CASE "pocc64"
          hbmk[ _HBMK_cARCH ] := "win"
          EXIT
       CASE "mingwarm"
@@ -6149,8 +6152,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( "Supported <comp> values for each supported <arch> value:" ),;
       "  - linux  : gcc, watcom, icc",;
       "  - darwin : gcc",;
-      "  - win    : mingw, msvc, bcc, watcom, icc, pocc, cygwin,",;
-      "  -          mingw64, msvc64, msvcia64, iccia64, pocc64, xcc",;
+      "  - win    : mingw, msvc, bcc, watcom, icc, pocc, cygwin, xcc,",;
+      "  -          mingw64, msvc64, msvcia64, iccia64, pocc64",;
       "  - wce    : mingwarm, msvcarm, poccarm",;
       "  - os2    : gcc, watcom",;
       "  - dos    : djgpp, watcom",;
