@@ -60,12 +60,10 @@
 #endif
 
 typedef BOOL      ( CALLBACK * PHB_AX_WININIT )( void );
-typedef BOOL      ( CALLBACK * PHB_AX_WINTERM )( void );
 typedef HRESULT   ( CALLBACK * PHB_AX_GETCTRL )( HWND, IUnknown** );
 
 static HMODULE s_hLib = NULL;
 
-static PHB_AX_WINTERM   s_pAtlAxWinTerm = NULL;
 static PHB_AX_GETCTRL   s_pAtlAxGetControl = NULL;
 
 
@@ -75,10 +73,7 @@ static void hb_ax_exit( void* cargo )
 
    if( s_hLib )
    {
-      ( *s_pAtlAxWinTerm )();
-
-      s_pAtlAxWinTerm = NULL;
-      s_pAtlAxWinTerm = NULL;
+      s_pAtlAxGetControl = NULL;
 
       FreeLibrary( s_hLib );
 
@@ -100,8 +95,8 @@ static int hb_ax_init( void )
          return 0;
       }
       pAtlAxWinInit      = ( PHB_AX_WININIT ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinInit" ) );
-      s_pAtlAxWinTerm    = ( PHB_AX_WINTERM ) GetProcAddress( s_hLib, HBTEXT( "AtlAxWinTerm" ) );
       s_pAtlAxGetControl = ( PHB_AX_GETCTRL ) GetProcAddress( s_hLib, HBTEXT( "AtlAxGetControl" ) );
+
       if( pAtlAxWinInit )
          ( *pAtlAxWinInit )();
 
