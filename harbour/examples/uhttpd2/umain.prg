@@ -82,6 +82,7 @@ RETURN UHttpd()
 
 METHOD Run() CLASS UHttpd
 LOCAL hSocket, aRemote, nI, aThreads, aI
+LOCAL nWaiters
 
   IF ! HB_MTVM()
     Self:cError := "Multithread support required"
@@ -147,9 +148,10 @@ LOCAL hSocket, aRemote, nI, aThreads, aI
       IF hSocket == NIL
         Self:LogError("[error] Accept error " + LTRIM(STR(socket_error())))
       ELSE
+        hb_mutexQueueInfo( Self:hmtxQueue, @nWaiters )
         ? "New connection", hSocket
-        ? "Waiters:", hb_mutexWaitersCount(Self:hmtxQueue)
-        IF hb_mutexWaitersCount(Self:hmtxQueue) < 2 .AND. LEN(aThreads) < THREAD_COUNT_MAX
+        ? "Waiters:", nWaiters
+        IF nWaiters < 2 .AND. LEN(aThreads) < THREAD_COUNT_MAX
            /*
               We need two threads in worst case. If first thread becomes a sessioned
               thread, the second one will continue to serve sessionless requests for

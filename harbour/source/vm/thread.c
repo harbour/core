@@ -2318,7 +2318,7 @@ HB_FUNC( HB_MUTEXSUBSCRIBENOW )
    }
 }
 
-HB_FUNC( HB_MUTEXWAITERSCOUNT )
+HB_FUNC( HB_MUTEXQUEUEINFO )
 {
    PHB_ITEM pItem = hb_mutexParam( 1 );
 
@@ -2327,7 +2327,10 @@ HB_FUNC( HB_MUTEXWAITERSCOUNT )
       PHB_MUTEX pMutex = hb_mutexPtr( pItem );
 
       if( pMutex )
-         hb_retni( pMutex->waiters );
+      {
+         hb_storni( pMutex->waiters, 2 );
+         hb_stornl( pMutex->events ? hb_arrayLen( pMutex->events ) : 0, 3 );
+      }
    }
 }
 
