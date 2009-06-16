@@ -204,7 +204,7 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
          ELSE
             IF nType == 1
                cWord := "( " + DBINFO( 33 ) + " - Record Lock )"
-            ELSEIF nType == 1
+            ELSEIF nType == 2
                cWord := "( " + DBINFO( 33 ) + " - File Lock )"
             ELSEIF nType == 3
                cWord := "( " + DBINFO( 33 ) + " - File Append )"
