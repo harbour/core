@@ -1233,7 +1233,39 @@ HB_ERRCODE hb_rddCloseAllParentRelations( AREAP pArea )
    HB_TRACE(HB_TR_DEBUG, ("hb_rddCloseAllParentRelations(%p)", pArea));
 
    if( pArea->uiParents > 0 )
+   {
+      USHORT uiArea = hb_rddGetCurrentWorkAreaNumber();
       errCode = hb_rddIterateWorkAreas( hb_rddCloseParentRel, pArea );
+      hb_rddSelectWorkAreaNumber( uiArea );
+   }
+
+   return errCode;
+}
+
+static HB_ERRCODE hb_rddEvalWABlock( AREAP pArea, void * pBlock )
+{
+   PHB_ITEM pItem;
+
+   hb_rddSelectWorkAreaNumber( pArea->uiArea );
+   pItem = hb_vmEvalBlockOrMacro( pBlock );
+
+   if( hb_vmRequestQuery() != 0 ||
+       ( HB_IS_LOGICAL( pItem ) && ! hb_itemGetL( pItem ) ) )
+      return HB_FAILURE;
+   else
+      return HB_SUCCESS;
+}
+
+HB_ERRCODE hb_rddEvalWA( PHB_ITEM pBlock )
+{
+   HB_ERRCODE errCode;
+   USHORT uiArea;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_rddEvalWA(%p)", pBlock));
+
+   uiArea = hb_rddGetCurrentWorkAreaNumber();
+   errCode = hb_rddIterateWorkAreas( hb_rddEvalWABlock, pBlock );
+   hb_rddSelectWorkAreaNumber( uiArea );
 
    return errCode;
 }

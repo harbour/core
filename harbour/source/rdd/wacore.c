@@ -341,9 +341,13 @@ HB_ERRCODE hb_rddIterateWorkAreas( WACALLBACK pCallBack, void * cargo )
    pRddInfo = hb_stackRDD();
    for( uiIndex = 1; uiIndex < pRddInfo->uiWaMax; uiIndex++ )
    {
-      errCode = pCallBack( ( AREAP ) pRddInfo->waList[ uiIndex ], cargo );
+      AREAP pArea = ( AREAP ) pRddInfo->waList[ uiIndex ];
+      errCode = pCallBack( pArea, cargo );
       if( errCode != HB_SUCCESS )
          break;
+      if( uiIndex >= pRddInfo->uiWaMax ||
+          pArea != ( AREAP ) pRddInfo->waList[ uiIndex ] )
+         uiIndex--;
    }
    return errCode;
 }

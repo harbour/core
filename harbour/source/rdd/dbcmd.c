@@ -2216,3 +2216,13 @@ HB_FUNC( HB_FIELDTYPE )
 
    hb_retc( NULL );
 }
+
+HB_FUNC( HB_WAEVAL )
+{
+   PHB_ITEM pBlock = hb_param( 1, HB_IT_BLOCK );
+
+   if( pBlock )
+      hb_rddEvalWA( pBlock );
+   else
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_USE_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+}

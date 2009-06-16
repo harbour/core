@@ -1689,15 +1689,20 @@ static HB_ERRCODE hb_waError( AREAP pArea, PHB_ITEM pError )
 static HB_ERRCODE hb_waEvalBlock( AREAP pArea, PHB_ITEM pBlock )
 {
    PHB_ITEM pItem;
-   int iCurrArea;
+   int iCurrArea, iUsedArea;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waEvalBlock(%p, %p)", pArea, pBlock));
 
    iCurrArea = hb_rddGetCurrentWorkAreaNumber();
-   if( iCurrArea != pArea->uiArea )
-      hb_rddSelectWorkAreaNumber( pArea->uiArea );
+   iUsedArea = pArea->uiArea;
+   if( iCurrArea != iUsedArea )
+      hb_rddSelectWorkAreaNumber( iUsedArea );
 
    pItem = hb_vmEvalBlockOrMacro( pBlock );
+
+   if( ( AREAP ) hb_rddGetWorkAreaPointer( iUsedArea ) != pArea )
+      return HB_FAILURE;
+
    if( ! pArea->valResult )
       pArea->valResult = hb_itemNew( NULL );
    hb_itemCopy( pArea->valResult, pItem );

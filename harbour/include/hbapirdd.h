@@ -1218,6 +1218,8 @@ extern HB_EXPORT HB_ERRCODE   hb_rddTransRecords(
 extern HB_EXPORT void         hb_tblStructure( AREAP pArea, PHB_ITEM pStruct, USHORT uiSize );
 extern HB_EXPORT HB_ERRCODE   hb_rddCloseAllParentRelations( AREAP pArea );
 
+extern HB_EXPORT HB_ERRCODE   hb_rddEvalWA( PHB_ITEM pBlock );
+
 extern HB_EXPORT HB_ERRCODE   hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo );
 extern HB_EXPORT AREAP        hb_rddRequestArea( char * szAlias, PHB_ITEM pCargo,
                                                  BOOL fNewArea, BOOL fWait );
