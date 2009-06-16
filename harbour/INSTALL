@@ -255,13 +255,13 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_CONTRIBLIBS=no         Don't build any contrib libraries.
    - HB_CONTRIBLIBS=[<list>]   Build space separated <list> of contrib
                                libraries. Build all if left empty.
-   - HB_CONTRIB_ADDONS=<list>  Build additional libraries stored
-                               in the contrib directory.
+   - HB_CONTRIB_ADDONS=<list>  Build space separated <list> of additional
+                               libraries stored in the contrib directory.
    - HB_EXTERNALLIBS=no        Don't build any external libraries.
    - HB_EXTERNALLIBS=[<list>]  Build space separated <list> of external
                                libraries. Build all if left empty.
-   - HB_EXTERNAL_ADDONS=<list> Build additional libraries stored
-                               in the external directory.
+   - HB_EXTERNAL_ADDONS=<list> Build space separated <list> of additional
+                               libraries stored in the external directory.
    - HB_VISUALC_VER_PRE80=yes  Set this if you're using a pre-8.0
                                (= pre-MSVS 2005) version of MSVC compiler.
    - HB_REBUILD_PARSER=yes     To rebuild the language parsers. Typically
