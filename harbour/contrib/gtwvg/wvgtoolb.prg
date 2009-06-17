@@ -264,13 +264,13 @@ METHOD destroy() CLASS WvgToolBar
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems
          IF ::aItems[ i,2 ]:image <> NIL
-            Win_DeleteObject( ::aItems[ i,2 ]:image )
+            WDW_DeleteObject( ::aItems[ i,2 ]:image )
          ENDIF
          IF ::aItems[ i,2 ]:disabledImage <> NIL
-            Win_DeleteObject( ::aItems[ i,2 ]:disabledImage )
+            WDW_DeleteObject( ::aItems[ i,2 ]:disabledImage )
          ENDIF
          IF ::aItems[ i,2 ]:hotImage <> NIL
-            Win_DeleteObject( ::aItems[ i,2 ]:hotImage )
+            WDW_DeleteObject( ::aItems[ i,2 ]:hotImage )
          ENDIF
       NEXT
    ENDIF
@@ -295,7 +295,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
 METHOD sendToolbarMessage( nMsg, p1, p2 ) CLASS WvgToolBar
 
-   RETURN Win_SendToolbarMessage( ::pWnd, nMsg, p1, p2 )
+   RETURN WDW_SendToolbarMessage( ::pWnd, nMsg, p1, p2 )
 
 /*----------------------------------------------------------------------*/
 

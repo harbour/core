@@ -260,13 +260,13 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgStatic
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF hb_isNumeric( ::clr_FG )
-         Win_SetTextColor( aNM[ 1 ], ::clr_FG )
+         WDW_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF hb_isNumeric( ::hBrushBG )
-         Win_SetBkMode( aNM[ 1 ], 1 )
+         WDW_SetBkMode( aNM[ 1 ], 1 )
          RETURN ( ::hBrushBG )
       ELSE
-         RETURN Win_GetCurrentBrush( aNM[ 1 ] )
+         RETURN WDW_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
    ENDCASE
@@ -280,7 +280,7 @@ METHOD destroy() CLASS WvgStatic
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
    IF ::hBitmap <> nil
-      Win_DeleteObject( ::hBitmap )
+      WDW_DeleteObject( ::hBitmap )
    ENDIF
 
    ::wvgWindow:destroy()
@@ -306,16 +306,16 @@ METHOD setCaption( xCaption, cDll )
 
    DO CASE
    CASE ::type == WVGSTATIC_TYPE_TEXT
-      Win_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      WDW_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
 
    CASE ::type == WVGSTATIC_TYPE_BITMAP
       IF ::hBitmap <> nil
-         Win_DeleteObject( ::hBitmap )
+         WDW_DeleteObject( ::hBitmap )
       ENDIF
 
-      ::hBitmap := Win_LoadImage( ::caption, IF( hb_isNUmeric( ::caption ), 1, 2 ) )
+      ::hBitmap := WDW_LoadImage( ::caption, IF( hb_isNUmeric( ::caption ), 1, 2 ) )
 
-      Win_SendMessage( ::hWnd, STM_SETIMAGE, IMAGE_BITMAP, ::hBitmap )
+      WDW_SendMessage( ::hWnd, STM_SETIMAGE, IMAGE_BITMAP, ::hBitmap )
 
    ENDCASE
 

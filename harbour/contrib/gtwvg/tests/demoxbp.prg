@@ -53,7 +53,7 @@ FUNCTION Main()
 
    //--------------------------- StatusBar ---------------------------\\
    oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .t. )
-   oSBar:panelClick := {|oPanel| Win_MessageBox( , oPanel:caption ) }
+   oSBar:panelClick := {|oPanel| WDW_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
    oPanel:caption := 'My Root Panel'
    oPanel1 := oSBar:addItem()
@@ -102,7 +102,7 @@ FUNCTION Main()
    aadd( aParts, 'DataRef'          )
 
    aeval( aParts, {|e| oListBox:addItem( e ) } )
-   oListBox:itemSelected := {|| Win_MessageBox( , oListBox:getCurItem() ) }
+   oListBox:itemSelected := {|| WDW_MessageBox( , oListBox:getCurItem() ) }
    oListBox:setData( 3 )    // show selected 'XbpToolBar'
 
    //--------------------------- PushButton --------------------------\\
@@ -122,7 +122,7 @@ FUNCTION Main()
    oTree:create()
    oTree:setColorBG( RGB( 120,15,240 ) )
    oTree:setColorFG( RGB( 15,240,120 ) )
-   oTree:itemSelected := {|oItem| IF( oItem <> NIL, Win_MessageBox( , oItem:caption ), NIL ) }
+   oTree:itemSelected := {|oItem| IF( oItem <> NIL, WDW_MessageBox( , oItem:caption ), NIL ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 
@@ -185,7 +185,7 @@ FUNCTION Main()
    oRadio  := WvgRadioButton():new( oStatic2,, { 10,10 }, { 100,15 } )
    oRadio:caption   := "Com 1"
    oRadio:selection := .T.
-   oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, Win_MessageBox( , obj:caption + IF( obj:selection, '< S >', '< N >' ) ) }
+   oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, WDW_MessageBox( , obj:caption + IF( obj:selection, '< S >', '< N >' ) ) }
    oRadio:create()
 
    oRadio  := WvgRadioButton():new( oStatic2,, { 10,35 }, { 100,15 } )
@@ -195,7 +195,7 @@ FUNCTION Main()
    oCheck  := WvgCheckBox():New( oStatic2, , { 10,70 }, { 100,15 }, , .t. )
    oCheck:caption   := 'Checkbox A'
    oCheck:create()
-   oCheck:selected  := {|m1,m2,o| m1:=m1,m2:=m2, Win_MessageBox( , IF( o:getData(), 'I am selected','I am not selected' ) ) }
+   oCheck:selected  := {|m1,m2,o| m1:=m1,m2:=m2, WDW_MessageBox( , IF( o:getData(), 'I am selected','I am not selected' ) ) }
 
    // Create first 3State button, passing the position to :create()
    oXbp    := Wvg3State():new()
@@ -209,7 +209,7 @@ FUNCTION Main()
    oXbp:caption := "3 State B"
    oXbp:create( oStatic2 )
    // Determine current state using :getData()
-   oXbp:selected := {| m1,m2,oBtn | m1:=m1,m2:=m2, Win_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
+   oXbp:selected := {| m1,m2,oBtn | m1:=m1,m2:=m2, WDW_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
 
    // Create first SLE, specify position using :create()
    // On :typeOut set the focus to the second SLE
@@ -383,7 +383,7 @@ Static Function MyFunctionXbp( nMode )
       tone( MUSIC_WAITON[1], 1 )
 
    case nMode == 3
-      Win_MessageBox( , "Button clicked!" )
+      WDW_MessageBox( , "Button clicked!" )
 
    case nMode == 101  // Charge
       Eval( {|| tone(523,2),tone(698,2),tone(880,2),tone(1046,4),tone(880,2),tone(1046,8) } )
@@ -415,7 +415,7 @@ STATIC FUNCTION ExeFontDialog( oCrt )
    oFontDlg:familyName       := "Courier New"
    oFontDlg:strikeout        := .T.
    oFontDlg:underscore       := .f.
-   //oFontDlg:activateOk       := {|| Win_MessageBox( , 'activateOK Event Handelled in Windows!' ) }
+   //oFontDlg:activateOk       := {|| WDW_MessageBox( , 'activateOK Event Handelled in Windows!' ) }
    oFontDlg:nominalPointSize := 12
 
    //oFontDlg:size             := .f.

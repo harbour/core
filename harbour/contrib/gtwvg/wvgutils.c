@@ -730,11 +730,11 @@ HB_FUNC( WVT_CREATEPOPUPMENU )
 
 /*----------------------------------------------------------------------*/
 
-HB_FUNC_EXTERN( WIN_APPENDMENU );
+HB_FUNC_EXTERN( WDW_APPENDMENU );
 
 HB_FUNC( WVT_APPENDMENU )
 {
-   HB_FUNC_EXEC( WIN_APPENDMENU );
+   HB_FUNC_EXEC( WDW_APPENDMENU );
 }
 
 /*----------------------------------------------------------------------*/

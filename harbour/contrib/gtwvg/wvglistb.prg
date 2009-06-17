@@ -105,12 +105,12 @@ CLASS WvgListBox  INHERIT  WvgWindow, DataRef
    METHOD   setItemsHeight( nPixel )              INLINE  ::sendMessage( LB_SETITEMHEIGHT, 0, nPixel )
    METHOD   setTopItem( nIndex )                  INLINE  ::sendMessage( LB_SETTOPINDEX, nIndex-1, 0 )
 
-   METHOD   addItem( cItem )                      INLINE  Win_SendMessageText( ::hWnd, LB_ADDSTRING, 0, cItem )
+   METHOD   addItem( cItem )                      INLINE  WDW_SendMessageText( ::hWnd, LB_ADDSTRING, 0, cItem )
    METHOD   clear()                               VIRTUAL
    METHOD   delItem( nIndex )                     INLINE  ::sendMessage( LB_DELETESTRING, nIndex-1, 0 )
-   METHOD   getItem( nIndex )                     INLINE  Win_LbGetText( ::hWnd, nIndex-1 )
+   METHOD   getItem( nIndex )                     INLINE  WDW_LbGetText( ::hWnd, nIndex-1 )
    METHOD   getTabstops()                         VIRTUAL
-   METHOD   insItem( nIndex, cItem )              INLINE  Win_SendMessageText( ::hWnd, LB_INSERTSTRING, nIndex-1, cItem )
+   METHOD   insItem( nIndex, cItem )              INLINE  WDW_SendMessageText( ::hWnd, LB_INSERTSTRING, nIndex-1, cItem )
    METHOD   setColumnWidth()                      VIRTUAL
    METHOD   setItem( nIndex, cItem )              INLINE  ::delItem( nIndex ), ::insItem( nIndex, cItem )
    METHOD   setTabstops()                         VIRTUAL
@@ -195,7 +195,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
 
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ 1 ] == LBN_SELCHANGE
-         ::nCurSelected := Win_LbGetCurSel( ::hWnd )+ 1
+         ::nCurSelected := WDW_LbGetCurSel( ::hWnd )+ 1
 
          IF hb_isBlock( ::sl_itemMarked )
             eval( ::sl_itemMarked, NIL, NIL, self )
@@ -215,13 +215,13 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF hb_isNumeric( ::clr_FG )
-         Win_SetTextColor( aNM[ 1 ], ::clr_FG )
+         WDW_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF hb_isNumeric( ::hBrushBG )
-         Win_SetBkMode( aNM[ 1 ], 1 )
+         WDW_SetBkMode( aNM[ 1 ], 1 )
          RETURN ( ::hBrushBG )
       ELSE
-         RETURN Win_GetCurrentBrush( aNM[ 1 ] )
+         RETURN WDW_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
    ENDCASE

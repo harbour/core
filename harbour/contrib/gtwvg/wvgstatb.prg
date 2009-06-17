@@ -184,13 +184,13 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgStatusBar
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF hb_isNumeric( ::clr_FG )
-         Win_SetTextColor( aNM[ 1 ], ::clr_FG )
+         WDW_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF hb_isNumeric( ::hBrushBG )
-         Win_SetBkMode( aNM[ 1 ], 1 )
+         WDW_SetBkMode( aNM[ 1 ], 1 )
          RETURN ( ::hBrushBG )
       ELSE
-         RETURN Win_GetCurrentBrush( aNM[ 1 ] )
+         RETURN WDW_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
    ENDCASE
