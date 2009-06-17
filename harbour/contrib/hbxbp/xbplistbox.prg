@@ -176,13 +176,12 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    #endif
 
-   ::oParent:AddChild( SELF )
-
 
    ::oWidget  := QListView():New( ::pParent )
-   ::xDummy   := Qt_Connect_Signal( ::pWidget, "clicked(QModelIndex)"      , {|o,i| ::exeBlock( 1,i,o ) } )
-   ::xDummy   := Qt_Connect_Signal( ::pWidget, "doubleClicked(QModelIndex)", {|o,i| ::exeBlock( 2,i,o ) } )
-   ::xDummy   := Qt_Connect_Signal( ::pWidget, "entered(QModelIndex)"      , {|o,i| ::exeBlock( 3,i,o ) } )
+
+   ::Connect( ::pWidget, "clicked(QModelIndex)"      , {|o,i| ::exeBlock( 1,i,o ) } )
+   ::Connect( ::pWidget, "doubleClicked(QModelIndex)", {|o,i| ::exeBlock( 2,i,o ) } )
+   ::Connect( ::pWidget, "entered(QModelIndex)"      , {|o,i| ::exeBlock( 3,i,o ) } )
 
    ::oStrList  := QStringList():new( ::pWidget )
    ::oStrModel := QStringListModel():new( ::pWidget )
@@ -194,6 +193,7 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
+   ::oParent:AddChild( SELF )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -238,7 +238,7 @@ METHOD XbpListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:destroy()
-   ::WvgWindow:destroy()
+   ::xbpWindow:destroy()
    RETURN NIL
 
 /*----------------------------------------------------------------------*/

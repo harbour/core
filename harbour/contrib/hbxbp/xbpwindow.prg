@@ -290,6 +290,9 @@ EXPORTED:
    DATA     oPalette
    DATA     xDummy
 
+   METHOD   connect()
+   DATA     aConnections                          INIT  {}
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -352,26 +355,31 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpWindow:connect( pWidget, cSignal, bBlock )
+
+   IF Qt_Connect_Signal( pWidget, cSignal, bBlock )
+      aadd( ::aConnections, { pWidget, cSignal } )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpWindow:destroy()
+
+   IF len( ::aConnections ) > 0
+      aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ) } )
+      ::aConnections := {}
+   ENDIF
 
    IF Len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
       ::aChildren := {}
    ENDIF
-   IF !empty( ::oTabWidget )
-      // It is a HBQT Object...
 
-   ENDIF
+   ::oWidget:close()
 
-   IF Qtc_IsWindow( ::hWnd )
-      Qtc_DestroyWindow( ::hWnd )
-   ENDIF
-
-   IF ::hBrushBG <> NIL
-      Qtc_DeleteObject( ::hBrushBG )
-   ENDIF
-
-   RETURN Self
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

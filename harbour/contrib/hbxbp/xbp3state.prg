@@ -114,10 +114,10 @@ METHOD Xbp3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oParent:AddChild( SELF )
-
    ::oWidget := QCheckBox():New( QT_PTROF( ::oParent:oWidget ) )
-   Qt_Connect_Signal( ::pWidget, "stateChanged(int)", {|o,i| ::exeBlock( i,o ) } )
+
+   ::Connect( ::pWidget, "stateChanged(int)", {|o,i| ::exeBlock( i,o ) } )
+
    ::oWidget:setTriState( .t. )
 
    ::setPosAndSize()
@@ -137,6 +137,7 @@ METHOD Xbp3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::editBuffer := ::oWidget:checkState()
 
+   ::oParent:AddChild( SELF )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

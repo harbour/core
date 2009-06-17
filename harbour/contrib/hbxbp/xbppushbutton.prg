@@ -109,9 +109,8 @@ CLASS XbpPushButton  INHERIT  XbpWindow
 
 METHOD XbpPushButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   //::style       := WS_CHILD + BS_PUSHBUTTON  /*+ BS_NOTIFY + BS_PUSHLIKE */
    ::className   := "XBPPUSHBUTTON"
    ::objType     := objTypePushButton
 
@@ -123,12 +122,11 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oParent:AddChild( SELF )
-
    ::oWidget := QPushButton():new( QT_PTROF( ::oParent:oWidget ) )
    ::oWidget:move( aPos[ 1 ],aPos[ 2 ] )
    ::oWidget:resize( aSize[ 1 ],aSize[ 2 ] )
-   Qt_Connect_Signal( QT_PTROF( ::oWidget ), "clicked()", {|| ::exeBlock() } )
+
+   ::Connect( QT_PTROF( ::oWidget ), "clicked()", {|| ::exeBlock() } )
 
    IF ::visible
       ::oWidget:show()
@@ -140,6 +138,7 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
       ::oWidget:setDefault( .t. )
    ENDIF
 
+   ::oParent:AddChild( SELF )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -156,8 +155,6 @@ METHOD XbpPushButton:exeBlock()
 
 METHOD XbpPushButton:handleEvent( nEvent, mp1, mp2 )
 
-   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
-
    HB_SYMBOL_UNUSED( nEvent )
    HB_SYMBOL_UNUSED( mp1    )
    HB_SYMBOL_UNUSED( mp2    )
@@ -167,8 +164,6 @@ METHOD XbpPushButton:handleEvent( nEvent, mp1, mp2 )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPushButton:destroy()
-
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
    ::xbpWindow:destroy()
 

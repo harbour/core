@@ -127,15 +127,15 @@ METHOD XbpTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::style += TCS_FOCUSNEVER
    #endif
 
-   ::oParent:AddChild( SELF )
-
    IF empty( ::oParent:oTabWidget )
       /* NOTE: First tab will decide the position and size of the Tab Control
        * One Tab Control per Window can be defined. If another tab control is required then
        * create another static and place tabs on that
        */
       ::oParent:oTabWidget := QTabWidget():new( QT_PTROF( ::oParent:oWidget ) )
-      Qt_Connect_Signal( QT_PTROF( ::oParent:oTabWidget ), "currentChanged(int)" , {|o,i| ::exeBlock( i,o ) } )
+
+      ::Connect( QT_PTROF( ::oParent:oTabWidget ), "currentChanged(int)" , {|o,i| ::exeBlock( i,o ) } )
+
       ::oParent:oTabWidget:move( ::aPos[ 1 ], ::aPos[ 2 ] )
       ::oParent:oTabWidget:resize( ::aSize[ 1 ], ::aSize[ 2 ] )
 
@@ -147,20 +147,17 @@ METHOD XbpTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    oPar := ::oParent:oTabWidget
 
-   //::oWidget := QWidget():new( ::pParent )
-   ::oWidget := QWidget():new()
+   ::oWidget := QWidget():new( ::pParent )
 
    oPar:addTab( ::pWidget, ::caption )
    aadd( ::oParent:aTabs, self )
 
-   ::show()
+   ::setPosAndSize()
    IF ::visible
       ::show()
    ENDIF
-   IF ::minimized
-      ::hide()
-   ENDIF
 
+   ::oParent:AddChild( SELF )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

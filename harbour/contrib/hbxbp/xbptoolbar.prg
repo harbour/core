@@ -154,7 +154,6 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 
    /* Create Toolbar Widget */
-   //::oWidget := QToolBar():new( QT_PTROF( ::oParent:oWidget ) )
    ::oWidget := QToolBar():new( QT_PTROF( oPar:oWidget ) )
 
    /* Add this toolbar with parent */
@@ -183,20 +182,17 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    #endif
 
-   ::oParent:AddChild( SELF )
-
    IF ::visible
       ::show()
    ENDIF
 
+   ::oParent:AddChild( SELF )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpToolbar:destroy()
    LOCAL i, nItems
-
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
 
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems
@@ -258,7 +254,7 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
    ENDIF
 
    /* Attach codeblock to be triggered */
-   Qt_Connect_Signal( QT_PTROF( oBtn:oAction ), "triggered(bool)", {|| ::exeBlock( oBtn ) } )
+   ::Connect( QT_PTROF( oBtn:oAction ), "triggered(bool)", {|| ::exeBlock( oBtn ) } )
 
    /* Attach Action with Toolbar */
    ::oWidget:addAction( QT_PTROF( oBtn:oAction ) )

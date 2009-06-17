@@ -222,3 +222,33 @@ FUNCTION GraMakeRGBColor( aRGB )
    ENDIF
 
    RETURN nRGB
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Xbp_XtoS( xVar )
+   LOCAL cType
+
+   cType := valtype( xVar )
+   DO CASE
+   CASE cType == "N"
+      RETURN str( xVar )
+   CASE cType == "D"
+      RETURN dtoc( xVar )
+   CASE cType == "L"
+      RETURN IF( xVar, "Yes", "No" )
+   CASE cType == "M"
+      RETURN xVar
+   CASE cType == "C"
+      RETURN xVar
+   CASE cType == "A"
+      RETURN "A:"+hb_ntos( len( xVar ) )
+   CASE cType == "O"
+      RETURN "<OBJECT>"
+   OTHERWISE
+      RETURN "<"+cType+">"
+   ENDCASE
+
+   RETURN xVar
+
+/*----------------------------------------------------------------------*/
+

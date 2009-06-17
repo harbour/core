@@ -117,8 +117,6 @@ METHOD XbpStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oParent:AddChild( SELF )
-
    ::oWidget := QStatusBar():new( ::pParent )
    ::oParent:oWidget:setStatusBar( ::pWidget )
    ::oWidget:setSizeGripEnabled( ::sizeGrip )
@@ -128,6 +126,8 @@ METHOD XbpStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ENDIF
 
    ::addItem( , , , , , -1 )
+
+   ::oParent:AddChild( SELF )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -328,7 +328,6 @@ METHOD XbpStatusBarPanel:caption( cCaption )
       ::sl_caption := cCaption
 
       ::oParent:oWidget:showMessage( cCaption )
-      //Wvg_StatusBarSetText( ::oParent:hWnd, ::index, cCaption )
    ENDIF
 
    RETURN Self

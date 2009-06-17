@@ -121,6 +121,9 @@ METHOD XbpDataRef:getData()
 //   CASE cClass == "XBPLISTBOX"
 //      RETURN ::nCurSelected
 
+   CASE cClass == "XBPSCROLLBAR"
+      ::sl_editBuffer := ::oWidget:value()
+
    ENDCASE
 
    IF hb_isBlock( ::dataLink )
@@ -151,26 +154,27 @@ METHOD XbpDataRef:setData( xValue, mp2 )
    CASE cClass == "XBP3STATE"
       ::oWidget:setCheckState( IF( ::sl_editBuffer == 1, 2, IF( ::sl_editBuffer == 2, 1, 0 ) ) )
 
-   CASE cClass == "XBPLISTBOX"   //::className == "LISTBOX"    /* Single Selection */
+   CASE cClass == "XBPLISTBOX"
       IF !empty( ::sl_editBuffer )
          //RETURN Win_LbSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
       ENDIF
       RETURN .f.
 
-   CASE cClass == "XBPTREEVIEW"  //::className == "SysTreeView32"
+   CASE cClass == "XBPTREEVIEW"
       IF ::sl_editBuffer <> NIL .and. ::sl_editBuffer:hItem <> NIL
          //Win_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
       ENDIF
 
-   CASE cClass $ "XBPSLE,XBPMLE" //::className == "EDIT"
+   CASE cClass $ "XBPSLE,XBPMLE"
       IF hb_isChar( ::sl_editBuffer )
          //Win_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
       ENDIF
 
-   CASE ::className == "XBPSCROLLBAR"  //"SCROLLBAR"
+   CASE ::className == "XBPSCROLLBAR"
       IF ::sl_editBuffer <> NIL
-         //WAPI_SetScrollPos( ::pWnd, SB_CTL, ::sl_editBuffer, .t. )
+         ::oWidget:setValue( ::sl_editBuffer )
       ENDIF
+
    ENDCASE
 
    RETURN ::sl_editBuffer

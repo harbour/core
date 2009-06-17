@@ -113,10 +113,9 @@ METHOD XbpRadioButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oParent:addChild( SELF )
-
    ::oWidget := QRadioButton():New( QT_PTROF( ::oParent:oWidget ) )
-   Qt_Connect_Signal( ::pWidget, "clicked()", {|| ::exeBlock() } )
+
+   ::connect( ::pWidget, "clicked()", {|| ::exeBlock() } )
 
    ::setPosAndSize()
    IF ::visible
@@ -128,6 +127,7 @@ METHOD XbpRadioButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
       ::oWidget:setChecked( .t. )
    ENDIF
 
+   ::oParent:AddChild( SELF )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

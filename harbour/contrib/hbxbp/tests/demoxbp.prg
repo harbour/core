@@ -59,6 +59,14 @@
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
+
+   BuildADialog()
+
+   RETURN
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION BuildADialog()
    LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, aTabs
 
    /* Create Application Window */
@@ -101,6 +109,9 @@ PROCEDURE Main()
 
    /* Install Push Buttons */
    Build_PushButton( oDlg:drawingArea )
+
+   /* Install ScrollBar */
+   Build_ScrollBar( aTabs[ 1 ] )
 
    /* Present the dialog on the screen */
    oDlg:Show()
@@ -174,17 +185,22 @@ STATIC FUNCTION Build_MenuBar()
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Functional"
    oSubMenu:addItem( { "Play Opening ~1"+chr(K_TAB)+"Ctrl+U", {|| MyFunctionXbp( 1 ) } } )
-   oSubMenu:addItem( { "Play Closing ~2", {|| MyFunctionXbp( 2 ) } } )
+   oSubMenu:addItem( { "Play Closing ~2"                    , {|| MyFunctionXbp( 2 ) } } )
    oSubMenu:addItem( { NIL, NIL, XBPMENUBAR_MIS_SEPARATOR, NIL } )
-   oSubMenu:addItem( { "new.png|~MessageBox", {|| MyFunctionXbp( 3 ) }, , XBPMENUBAR_MIA_HILITED } )
+   oSubMenu:addItem( { "new.png|~MessageBox"                , {|| MyFunctionXbp( 3 ) }  , , XBPMENUBAR_MIA_HILITED } )
    oMenuBar:addItem( { oSubMenu, NIL } )
    //
-   oSubMenu:insItem( 2, { "This executes MsgBox()", {|| MyFunctionXbp( 103 ) }, , XBPMENUBAR_MIA_CHECKED } )
+   oSubMenu:insItem( 2, { "This executes MsgBox()"          , {|| MyFunctionXbp( 103 ) }, , XBPMENUBAR_MIA_CHECKED } )
    oSubMenu:itemMarked := {|mp1| IF( mp1 == 5, MsgBox( "WOW - ::itemMarked - Activated" ), NIL ) }
 
    /* Menu colors are being honored in Harbour only */
    oSubMenu:setColorBG( GraMakeRGBColor( { 134,128,250 } ) )
    oSubMenu:setColorFG( GraMakeRGBColor( { 255,  1,  1 } ) )
+
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Dialogs"
+   oSubMenu:addItem( { "~One More Instance"+chr(K_TAB)+"Ctrl+M", {|| BuildADialog() } } )
+   oMenuBar:addItem( { oSubMenu, NIL } )
 
    Return nil
 
@@ -439,4 +455,26 @@ FUNCTION Build_StatusBar( oWnd )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION Build_ScrollBar( oWnd )
+   LOCAL oXbpH, oXbpV
+   LOCAL aSize   := oWnd:currentSize()
+   LOCAL nWidth  := aSize[ 1 ]
+   LOCAL nHeight := aSize[ 2 ]
+   LOCAL nFat    := 20
+
+   oXbpH := XbpScrollbar():new()
+   oXbpH:type  := XBPSCROLL_HORIZONTAL
+   oXbpH:range := { 1, 100 }
+   oXbpH:create( oWnd, , { 10,nHeight-50 }, { nWidth-40,nFat } )
+   oXbpH:scroll := {|| oXbpV:setData( oXbpH:getData() ) }
+
+   oXbpV := XbpScrollbar():new()
+   oXbpV:type  := XBPSCROLL_VERTICAL
+   oXbpV:range := { 1, 100 }
+   oXbpV:create( oWnd, , { nWidth-30,10 }, { nFat,nHeight-60 } )
+   oXbpV:scroll := {|| oXbpH:setData( oXbpV:getData() ) }
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
 

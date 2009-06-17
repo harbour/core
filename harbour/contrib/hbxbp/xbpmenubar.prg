@@ -187,6 +187,7 @@ METHOD xbpMenuBar:create( oParent, aPresParams, lVisible )
       ::oParent:oMenu := Self
    endif
 
+   ::oParent:addChild( self )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -207,11 +208,15 @@ METHOD xbpMenuBar:configure( oParent, aPresParams, lVisible )
 
 METHOD xbpMenuBar:destroy()
 
+   #if 0
    IF !empty( ::oWidget )
       ::DelAllItems()
       ::oWidget:close()
       ::oWidget := NIL
    ENDIF
+   #endif
+
+   ::xbpWindow:destroy()
 
    RETURN ( .T. )
 
@@ -284,18 +289,17 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
          cKey := substr( cCaption, n+1 )
          cCaption := substr( cCaption, 1, n-1 )
       ENDIF
-
+      oAction:setText( cCaption )
       IF file( cIcon )
          oAction:setIcon( cIcon )
       ENDIF
-      oAction:setText( cCaption )
       IF !empty( cKey )
          oKey := QKeySequence():new( cKey )
          oAction:setShortcut( QT_PTROF( oKey ) )
       ENDIF
 
-      Qt_Connect_Signal( QT_PTROF( oAction ), "triggered(bool)", {|| ::exeBlock( nMenuItemID ) } )
-      Qt_Connect_Signal( QT_PTROF( oAction ), "hovered()"      , {|| ::exeHovered( nMenuItemID ) } )
+      ::Connect( QT_PTROF( oAction ), "triggered(bool)", {|| ::exeBlock( nMenuItemID ) } )
+      ::Connect( QT_PTROF( oAction ), "hovered()"      , {|| ::exeHovered( nMenuItemID ) } )
 
       DO CASE
       CASE nAttrb == XBPMENUBAR_MIA_CHECKED
@@ -650,10 +654,10 @@ METHOD xbpMenu:create( oParent, aPresParams, lVisible )
    ::aPresParams := aPresParams
    ::visible     := lVisible
 
-   ::oWidget := QMenu():new( ::oParent:pWidget )
-
+   ::oWidget := QMenu():new( ::pParent )
    ::oParent:oWidget:addMenu( ::pWidget )
 
+   ::oParent:addChild( self )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

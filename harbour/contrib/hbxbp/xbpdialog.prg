@@ -146,8 +146,8 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    SetAppWindow( self )
 
-   Qt_Connect_Signal( QT_PTROF( ::drawingArea:oWidget ), "keyPressEvent()" , {|o,pEvent| ::grabEvent( pEvent, o ) } )
-   Qt_Connect_Signal( QT_PTROF( ::drawingArea:oWidget ), "mouseMoveEvent()", {|o,pEvent| ::grabEvent( pEvent, o ) } )
+   ::Connect( QT_PTROF( ::drawingArea:oWidget ), "keyPressEvent()" , {|o,pEvent| ::grabEvent( pEvent, o ) } )
+   ::Connect( QT_PTROF( ::drawingArea:oWidget ), "mouseMoveEvent()", {|o,pEvent| ::grabEvent( pEvent, o ) } )
 
    RETURN Self
 
@@ -165,8 +165,14 @@ METHOD XbpDialog:destroy()
 
    ::oEventLoop:exit()
 
+   #if 0
    IF hb_isObject( ::oMenu )
       ::oMenu:destroy()
+   ENDIF
+
+   IF len( ::aConnections ) > 0
+      aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ) } )
+      ::aConnections := {}
    ENDIF
 
    IF Len( ::aChildren ) > 0
@@ -174,6 +180,9 @@ METHOD XbpDialog:destroy()
    ENDIF
 
    ::oWidget:close()
+   #endif
+
+   ::xbpWindow:destroy()
 
    RETURN nil
 
@@ -234,7 +243,7 @@ CLASS XbpDrawingArea  INHERIT  XbpWindow
 
    METHOD   new()
    METHOD   create()
-   METHOD   destroy()
+   //METHOD   destroy()
    METHOD   handleEvent()
    METHOD   setColorFG( nRGB )                    INLINE ::oParent:setColorFG( nRGB )
    METHOD   setColorBG( nRGB )                    INLINE ::oParent:setColorBG( nRGB )
@@ -280,13 +289,11 @@ METHOD XbpDrawingArea:handleEvent( nEvent, mp1, mp2  )
    RETURN ( 1 )
 
 /*----------------------------------------------------------------------*/
-
+#if 0
 METHOD XbpDrawingArea:destroy()
-
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
 
    ::oWidget:close()
 
    RETURN NIL
-
+#endif
 /*----------------------------------------------------------------------*/
