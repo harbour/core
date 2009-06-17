@@ -53,10 +53,18 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#ifdef HB_COMPAT_XPP
+/* NOTE: This function is a non-CA-Cl*pper function implemented
+         in the original CA-Cl*pper namespace. This should have
+         been marked as HB_COMPAT_*, but it's not, as it's a
+         well-known name with similar functionality under most
+         Clipper dialects and libraries. (differences may exist
+         though, like behaviour for non-string, empty or
+         no-parameter scenarios.
+         Nevertheless this function must be kept in a separate
+         source file to avoid linking errors when a 3rd party
+         library would also define this function. [vszakats] */
 
-/* NOTE: Xbase++ compatible function */
-/* NOTE: Xbase++ checks for the parameter count at compile time */
+#ifndef HB_C52_STRICT
 
 HB_FUNC( STOD )
 {
