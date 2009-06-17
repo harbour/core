@@ -53,8 +53,7 @@
 /* NOTE: Xbase++ has a standard function named dbSkipper(), it's not a
          standard CA-Cl*pper 5.x function, though. */
 
-/* NOTE: This function is exactly the same as Skipped() in BROWDB.PRG */
-
+/* NOTE: This function is exactly the same as Skipped() in browdb.prg */
 
 #ifdef HB_COMPAT_XPP
 

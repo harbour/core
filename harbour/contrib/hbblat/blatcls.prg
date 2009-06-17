@@ -54,7 +54,7 @@
 #include "hbblat.ch"
 #include "hbclass.ch"
 
-CLASS HBBlat
+CREATE CLASS HBBlat
 
    PROTECTED:
    VAR nBlatError              AS NUMERIC INIT BLAT_SUCCESS    // Will contains numerical error returned from BLAT
@@ -210,7 +210,7 @@ METHOD Send() CLASS HBBlat
 
    IF ::nError == BLAT_SUCCESS
       ::nBlatError := hb_BlatSend( ::cCommand )
-      IF ::nBlatError <> 0
+      IF ::nBlatError != 0
          ::nError     := ::nBlatError
          ::cError     := BLAT_TEXT_ERROR
       ELSE
@@ -219,7 +219,7 @@ METHOD Send() CLASS HBBlat
       ::cBlatError := ::TranslateBlatError( ::nBlatError )
    ENDIF
 
-RETURN ::nError
+   RETURN ::nError
 
 PROCEDURE Check() CLASS HBBlat
 
@@ -233,25 +233,25 @@ PROCEDURE Check() CLASS HBBlat
       // The Basics ----------------------------------
 
       // to
-      IF ::cTO == NIL .AND. ::cTOFile == NIL .AND. !::lToUndiscloseRecipients
+      IF ! ISCHARACTER( ::cTO ) .AND. ! ISCHARACTER( ::cTOFile ) .AND. !::lToUndiscloseRecipients
          ::nError := BLAT_ERR_MISSING_TO
          ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_TO )
-         aAdd( ::aErrors, { ::nError, ::cError } )
+         AAdd( ::aErrors, { ::nError, ::cError } )
          IF !::lIgnoreErrors
             RETURN
          ENDIF
       ELSE
-         IF !( ::cTO == NIL )
+         IF ISCHARACTER( ::cTO )
             ::cCommand += " -to " + ::cTo
          ENDIF
       ENDIF
 
       // tofile - optional
-      IF !( ::cTOFile == NIL )
-         IF !File( ::cTOFile )
+      IF ISCHARACTER( ::cTOFile )
+         IF !hb_FileExists( ::cTOFile )
             ::nError := BLAT_ERR_MISSING_TOFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_TOFILE ) + ": " + ::cToFile
-            aAdd( ::aErrors, { ::nError, ::cError } )
+            AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
                RETURN
             ENDIF
@@ -261,16 +261,16 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cc - optional
-      IF !( ::cCC == NIL )
+      IF ISCHARACTER( ::cCC )
          ::cCommand += " -cc " + ::cCC
       ENDIF
 
       // ccfile - optional
-      IF !( ::cCCFile == NIL )
-         IF !File( ::cCCFile )
+      IF ISCHARACTER( ::cCCFile )
+         IF !hb_FileExists( ::cCCFile )
             ::nError := BLAT_ERR_MISSING_CCFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_CCFILE ) + ": " + ::cCCFile
-            aAdd( ::aErrors, { ::nError, ::cError } )
+            AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
                RETURN
             ENDIF
@@ -280,16 +280,16 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // bcc - optional
-      IF !( ::cBCC == NIL )
+      IF ISCHARACTER( ::cBCC )
          ::cCommand += " -bcc " + ::cBCC
       ENDIF
 
       // bccfile - optional
-      IF !( ::cBCCFile == NIL )
-         IF !File( ::cBCCFile )
+      IF ISCHARACTER( ::cBCCFile )
+         IF !hb_FileExists( ::cBCCFile )
             ::nError := BLAT_ERR_MISSING_BCCFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_BCCFILE ) + ": " + ::cBCCFile
-            aAdd( ::aErrors, { ::nError, ::cError } )
+            AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
                RETURN
             ENDIF
@@ -299,8 +299,8 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // nMaxNames
-      IF !( ::nMaxNames == NIL ) .AND. ::nMaxNames > 0
-         ::cCommand += ' -maxNames ' + LTrim( Str( ::nMaxNames ) )
+      IF ISNUMBER( ::nMaxNames ) .AND. ::nMaxNames > 0
+         ::cCommand += ' -maxNames ' + hb_ntos( ::nMaxNames )
       ENDIF
 
       // lToUndiscloseRecipients
@@ -309,7 +309,7 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cSubject - optional
-      IF !( ::cSubject == NIL )
+      IF ISCHARACTER( ::cSubject )
          ::cCommand += ' -subject "' + ::cSubject + '"'
       ENDIF
 
@@ -319,11 +319,11 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cSubjectFile - optional
-      IF !( ::cSubjectFile == NIL )
-         IF !File( ::cSubjectFile )
+      IF ISCHARACTER( ::cSubjectFile )
+         IF !hb_FileExists( ::cSubjectFile )
             ::nError := BLAT_ERR_MISSING_SUBJECTFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_SUBJECTFILE ) + ": " + ::cSubjectFile
-            aAdd( ::aErrors, { ::nError, ::cError } )
+            AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
                RETURN
             ENDIF
@@ -333,11 +333,11 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // bodyfile - optional
-      IF !( ::cBodyFile == NIL )
-         IF !File( ::cBodyFile )
+      IF ISCHARACTER( ::cBodyFile )
+         IF !hb_FileExists( ::cBodyFile )
             ::nError := BLAT_ERR_MISSING_BODYFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_BODYFILE ) + ": " + ::cBodyFile
-            aAdd( ::aErrors, { ::nError, ::cError } )
+            AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
                RETURN
             ENDIF
@@ -347,21 +347,21 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // body
-      IF ::cBody == NIL .AND. ::cBodyFile == NIL
+      IF ! ISCHARACTER( ::cBody ) .AND. ! ISCHARACTER( ::cBodyFile )
          ::nError := BLAT_ERR_MISSING_BODY
          ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_BODY )
-         aAdd( ::aErrors, { ::nError, ::cError } )
+         AAdd( ::aErrors, { ::nError, ::cError } )
          IF !::lIgnoreErrors
             RETURN
          ENDIF
       ELSE
-         IF HB_ISSTRING( ::cBody )
+         IF ISCHARACTER( ::cBody )
             ::cCommand += ' -body "' + ::cBody + '"'
          ELSE
-            IF !File( ::cBodyFile )
+            IF !hb_FileExists( ::cBodyFile )
                ::nError := BLAT_ERR_MISSING_BODYFILE
                ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_BODYFILE ) + ": " + ::cBodyFile
-               aAdd( ::aErrors, { ::nError, ::cError } )
+               AAdd( ::aErrors, { ::nError, ::cError } )
                IF !::lIgnoreErrors
                   RETURN
                ENDIF
@@ -372,11 +372,11 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cSignatureFile
-      IF !( ::cSignatureFile == NIL )
-         IF !File( ::cSignatureFile )
+      IF ISCHARACTER( ::cSignatureFile )
+         IF !hb_FileExists( ::cSignatureFile )
             ::nError := BLAT_ERR_MISSING_SIGNATUREFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_SIGNATUREFILE ) + ": " + ::cSignatureFile
-            aAdd( ::aErrors, { ::nError, ::cError } )
+            AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
                RETURN
             ENDIF
@@ -386,11 +386,11 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cTagFile
-      IF !( ::cTagFile == NIL )
-         IF !File( ::cTagFile )
+      IF ISCHARACTER( ::cTagFile )
+         IF !hb_FileExists( ::cTagFile )
             ::nError := BLAT_ERR_MISSING_TAGFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_TAGFILE ) + ": " + ::cTagFile
-            aAdd( ::aErrors, { ::nError, ::cError } )
+            AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
                RETURN
             ENDIF
@@ -400,11 +400,11 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cPostScriptumFile - optional
-      IF !( ::cPostScriptumFile == NIL )
-         IF !File( ::cPostScriptumFile )
+      IF ISCHARACTER( ::cPostScriptumFile )
+         IF !hb_FileExists( ::cPostScriptumFile )
             ::nError := BLAT_ERR_MISSING_PSFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_PSFILE ) + ": " + ::cPostScriptumFile
-            aAdd( ::aErrors, { ::nError, ::cError } )
+            AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
                RETURN
             ENDIF
@@ -416,7 +416,7 @@ PROCEDURE Check() CLASS HBBlat
       // Registry overrides ------------------------------
 
       // cProfile
-      IF !( ::cProfile == NIL )
+      IF ISCHARACTER( ::cProfile )
          ::cCommand += " -p " + ::cProfile
       ENDIF
 
@@ -426,10 +426,10 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cServerSMTP
-      IF ::cServerSMTP == NIL
+      IF ! ISCHARACTER( ::cServerSMTP )
          ::nError := BLAT_ERR_MISSING_SERVERSMTP
          ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_SERVERSMTP )
-         aAdd( ::aErrors, { ::nError, ::cError } )
+         AAdd( ::aErrors, { ::nError, ::cError } )
          IF !::lIgnoreErrors
             RETURN
          ENDIF
@@ -438,30 +438,30 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cServerNNTP
-      IF !( ::cServerNNTP == NIL )
+      IF ISCHARACTER( ::cServerNNTP )
          ::cCommand += " -serverNNTP " + ::cServerNNTP
       ENDIF
 
       // cServerPOP3
-      IF !( ::cServerPOP3 == NIL )
+      IF ISCHARACTER( ::cServerPOP3 )
          ::cCommand += " -serverPOP3 " + ::cServerPOP3
       ENDIF
 
       // cServerIMAP
-      IF !( ::cServerIMAP == NIL )
+      IF ISCHARACTER( ::cServerIMAP )
          ::cCommand += " -serverIMAP " + ::cServerIMAP
       ENDIF
 
       // cMailFrom
-      IF !( ::cMailFrom == NIL )
+      IF ISCHARACTER( ::cMailFrom )
          ::cCommand += " -mailfrom " + ::cMailFrom
       ENDIF
 
       // cFrom
-      IF ::cFrom == NIL
+      IF ! ISCHARACTER( ::cFrom )
          ::nError := BLAT_ERR_MISSING_FROM
          ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_FROM )
-         aAdd( ::aErrors, { ::nError, ::cError } )
+         AAdd( ::aErrors, { ::nError, ::cError } )
          IF !::lIgnoreErrors
             RETURN
          ENDIF
@@ -470,89 +470,89 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cReplyTo
-      IF !( ::cReplyTo == NIL )
+      IF ISCHARACTER( ::cReplyTo )
          ::cCommand += ' -replyto ' + ::cReplyTo
       ENDIF
 
       // cReplyTo
-      IF !( ::cReplyTo == NIL )
+      IF ISCHARACTER( ::cReplyTo )
          ::cCommand += ' -replyto ' + ::cReplyTo
       ENDIF
 
       // cReturnPath
-      IF !( ::cReturnPath == NIL )
+      IF ISCHARACTER( ::cReturnPath )
          ::cCommand += ' -returnpath ' + ::cReturnPath
       ENDIF
 
       // cSender
-      IF !( ::cSender == NIL )
+      IF ISCHARACTER( ::cSender )
          ::cCommand += ' -sender ' + ::cSender
       ENDIF
 
       // nPortSMTP
-      IF !( ::nPortSMTP == NIL ) .AND. ::nPortSMTP > 0
-         ::cCommand += ' -portSMTP ' + LTrim( Str( ::nPortSMTP ) )
+      IF ISNUMBER( ::nPortSMTP ) .AND. ::nPortSMTP > 0
+         ::cCommand += ' -portSMTP ' + hb_ntos( ::nPortSMTP )
       ENDIF
 
       // nPortNNTP
-      IF !( ::nPortNNTP == NIL ) .AND. ::nPortNNTP > 0
-         ::cCommand += ' -portNNTP ' + LTrim( Str( ::nPortNNTP ) )
+      IF ISNUMBER( ::nPortNNTP ) .AND. ::nPortNNTP > 0
+         ::cCommand += ' -portNNTP ' + hb_ntos( ::nPortNNTP )
       ENDIF
 
       // nPortPOP3
-      IF !( ::nPortPOP3 == NIL ) .AND. ::nPortPOP3 > 0
-         ::cCommand += ' -portPOP3 ' + LTrim( Str( ::nPortPOP3 ) )
+      IF ISNUMBER( ::nPortPOP3 ) .AND. ::nPortPOP3 > 0
+         ::cCommand += ' -portPOP3 ' + hb_ntos( ::nPortPOP3 )
       ENDIF
 
       // nPortIMAP
-      IF !( ::nPortIMAP == NIL ) .AND. ::nPortIMAP > 0
-         ::cCommand += ' -portIMAP ' + LTrim( Str( ::nPortIMAP ) )
+      IF ISNUMBER( ::nPortIMAP ) .AND. ::nPortIMAP > 0
+         ::cCommand += ' -portIMAP ' + hb_ntos( ::nPortIMAP )
       ENDIF
 
       // cUserAUTH
-      IF !( ::cUserAUTH == NIL )
+      IF ISCHARACTER( ::cUserAUTH )
          ::cCommand += ' -u ' + ::cUserAUTH
       ENDIF
 
       // cPasswordAUTH
-      IF !( ::cPasswordAUTH == NIL )
+      IF ISCHARACTER( ::cPasswordAUTH )
          ::cCommand += ' -pw ' + ::cPasswordAUTH
       ENDIF
 
       // cUserPOP3
-      IF !( ::cUserPOP3 == NIL )
+      IF ISCHARACTER( ::cUserPOP3 )
          ::cCommand += ' -pu ' + ::cUserPOP3
       ENDIF
 
       // cPasswordPOP3
-      IF !( ::cPasswordPOP3 == NIL )
+      IF ISCHARACTER( ::cPasswordPOP3 )
          ::cCommand += ' -ppw ' + ::cPasswordPOP3
       ENDIF
 
       // cUserIMAP
-      IF !( ::cUserIMAP == NIL )
+      IF ISCHARACTER( ::cUserIMAP )
          ::cCommand += ' -iu ' + ::cUserIMAP
       ENDIF
 
       // cPasswordIMAP
-      IF !( ::cPasswordIMAP == NIL )
+      IF ISCHARACTER( ::cPasswordIMAP )
          ::cCommand += ' -ipw ' + ::cPasswordIMAP
       ENDIF
 
       // Miscellaneous RFC header switches ----------------------
 
       // cOrganization
-      IF !( ::cOrganization == NIL )
+      IF ISCHARACTER( ::cOrganization )
          ::cCommand += ' -organization ' + ::cOrganization
       ENDIF
 
       // cUserAgent
-      IF !( ::cUserAgent == NIL )
+      IF ISCHARACTER( ::cUserAgent )
          ::cCommand += ' -ua ' + ::cUserAgent
       ENDIF
 
       // cXHeader
-      IF !( ::cXHeader == NIL )
+      IF ISCHARACTER( ::cXHeader )
          ::cCommand += ' -x ' + ::cXHeader
       ENDIF
 
@@ -580,29 +580,29 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cCharSet
-      IF !( ::cCharSet == NIL )
+      IF ISCHARACTER( ::cCharSet )
          ::cCommand += ' -charset ' + ::cCharSet
       ENDIF
 
       // cUserHeader1
-      IF !( ::cUserHeader1 == NIL )
+      IF ISCHARACTER( ::cUserHeader1 )
          ::cCommand += ' -a1 ' + ::cUserHeader1
       ENDIF
 
       // cUserHeader2
-      IF !( ::cUserHeader2 == NIL )
+      IF ISCHARACTER( ::cUserHeader2 )
          ::cCommand += ' -a2 ' + ::cUserHeader2
       ENDIF
 
       // cDSN
-      IF HB_ISSTRING( ::cDSN )
+      IF ISCHARACTER( ::cDSN )
          IF ( "n" $ Lower( ::cDSN ) .OR. "s" $ Lower( ::cDSN ) .OR. ;
               "f" $ Lower( ::cDSN ) .OR. "d" $ Lower( ::cDSN ) )
             ::cCommand += " -dsn " + ::cDSN
          ELSE
             ::nError := BLAT_ERR_WRONG_DSN
             ::cError := ::TranslateBlatError( BLAT_ERR_WRONG_DSN ) + ": " + ::cDSN
-            aAdd( ::aErrors, { ::nError, ::cError } )
+            AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
                RETURN
             ENDIF
@@ -627,70 +627,70 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // nSensitivity
-      IF !( ::nSensitivity == NIL ) .AND. aScan( { 0, 1, 2 }, ::nSensitivity ) > 0
-         ::cCommand += " -sensitivity " + LTrim( Str( ::nSensitivity ) )
+      IF ISNUMBER( ::nSensitivity ) .AND. AScan( { 0, 1, 2 }, ::nSensitivity ) > 0
+         ::cCommand += " -sensitivity " + hb_ntos( ::nSensitivity )
       ENDIF
 
       // Attachment and encoding options --------
 
       // Attach Binary Files
       IF !Empty( ::aAttachBinFiles )
-         IF ::cAttachBinFiles == NIL
-            ::cAttachBinFiles := ""
-         ELSE
+         IF ISCHARACTER( ::cAttachBinFiles )
             ::cAttachBinFiles += ","
+         ELSE
+            ::cAttachBinFiles := ""
          ENDIF
          ::cAttachBinFiles += ArrayToString( ::aAttachBinFiles )
       ENDIF
-      IF HB_ISSTRING( ::cAttachBinFiles )
+      IF ISCHARACTER( ::cAttachBinFiles )
          ::cCommand += " -attach " + ::cAttachBinFiles
       ENDIF
 
       // Attach Text Files
       IF !Empty( ::aAttachTextFiles )
-         IF ::cAttachTextFiles == NIL
-            ::cAttachTextFiles := ""
-         ELSE
+         IF ISCHARACTER( ::cAttachTextFiles )
             ::cAttachTextFiles += ","
+         ELSE
+            ::cAttachTextFiles := ""
          ENDIF
          ::cAttachTextFiles += ArrayToString( ::aAttachTextFiles )
       ENDIF
-      IF HB_ISSTRING( ::cAttachTextFiles )
+      IF ISCHARACTER( ::cAttachTextFiles )
          ::cCommand += " -attacht " + ::cAttachTextFiles
       ENDIF
 
       // Attach INLINE Files
       IF !Empty( ::aAttachInlineFiles )
-         IF ::cAttachInlineFiles == NIL
-            ::cAttachInlineFiles := ""
-         ELSE
+         IF ISCHARACTER( ::cAttachInlineFiles )
             ::cAttachInlineFiles += ","
+         ELSE
+            ::cAttachInlineFiles := ""
          ENDIF
          ::cAttachInlineFiles += ArrayToString( ::aAttachInlineFiles )
       ENDIF
-      IF HB_ISSTRING( ::cAttachInlineFiles )
+      IF ISCHARACTER( ::cAttachInlineFiles )
          ::cCommand += " -attachi " + ::cAttachInlineFiles
       ENDIF
 
       // Attach Html Embedded Files
       IF !Empty( ::aHtmlEmbeddedFiles )
-         IF ::cHtmlEmbeddedFiles == NIL
-            ::cHtmlEmbeddedFiles := ""
-         ELSE
+         IF ISCHARACTER( ::cHtmlEmbeddedFiles )
             ::cHtmlEmbeddedFiles += ","
+         ELSE
+            ::cHtmlEmbeddedFiles := ""
          ENDIF
          ::cHtmlEmbeddedFiles += ArrayToString( ::aHtmlEmbeddedFiles )
       ENDIF
-      IF HB_ISSTRING( ::cHtmlEmbeddedFiles )
+      IF ISCHARACTER( ::cHtmlEmbeddedFiles )
          ::cCommand += " -embed " + ::cHtmlEmbeddedFiles
       ENDIF
 
       // cAttachListBinFile - optional
-      IF !( ::cAttachListBinFile == NIL )
-         IF !File( ::cAttachListBinFile )
+      IF ISCHARACTER( ::cAttachListBinFile )
+         IF !hb_FileExists( ::cAttachListBinFile )
             ::nError := BLAT_ERR_MISSING_ATTACHLISTBINFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_ATTACHLISTBINFILE ) + ": " + ::cAttachListBinFile
-            aAdd( ::aErrors, { ::nError, ::cError } )
+            AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
                RETURN
             ENDIF
@@ -700,11 +700,11 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cAttachListTextFile - optional
-      IF !( ::cAttachListTextFile == NIL )
-         IF !File( ::cAttachListTextFile )
+      IF ISCHARACTER( ::cAttachListTextFile )
+         IF !hb_FileExists( ::cAttachListTextFile )
             ::nError := BLAT_ERR_MISSING_ATTACHLISTTEXTFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_ATTACHLISTTEXTFILE ) + ": " + ::cAttachListTextFile
-            aAdd( ::aErrors, { ::nError, ::cError } )
+            AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
                RETURN
             ENDIF
@@ -714,11 +714,11 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cAttachListEmbeddedFile - optional
-      IF !( ::cAttachListEmbeddedFile == NIL )
-         IF !File( ::cAttachListEmbeddedFile )
+      IF ISCHARACTER( ::cAttachListEmbeddedFile )
+         IF !hb_FileExists( ::cAttachListEmbeddedFile )
             ::nError := BLAT_ERR_MISSING_ATTACHLISTEMBEDDEDFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_ATTACHLISTEMBEDDEDFILE ) + ": " + ::cAttachListEmbeddedFile
-            aAdd( ::aErrors, { ::nError, ::cError } )
+            AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
                RETURN
             ENDIF
@@ -753,16 +753,16 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cAlternateText - optional
-      IF !( ::cAlternateText == NIL )
+      IF ISCHARACTER( ::cAlternateText )
          ::cCommand += ' -alttext ' + ::cAlternateText
       ENDIF
 
       // cAlternateTextFile - optional
-      IF !( ::cAlternateTextFile == NIL )
-         IF !File( ::cAlternateTextFile )
+      IF ISCHARACTER( ::cAlternateTextFile )
+         IF !hb_FileExists( ::cAlternateTextFile )
             ::nError := BLAT_ERR_MISSING_ALTERNATETEXTFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_ALTERNATETEXTFILE ) + ": " + ::cAlternateTextFile
-            aAdd( ::aErrors, { ::nError, ::cError } )
+            AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
                RETURN
             ENDIF
@@ -782,8 +782,8 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // nMultipartSize - optional
-      IF !( ::nMultipartSize == NIL ) .AND. ::nMultipartSize > 0
-         ::cCommand += " -multipart " + LTrim( Str( ::nMultipartSize ) )
+      IF ISNUMBER( ::nMultipartSize ) .AND. ::nMultipartSize > 0
+         ::cCommand += " -multipart " + hb_ntos( ::nMultipartSize )
       ENDIF
 
       // lNoMultipartMessage - optional
@@ -794,7 +794,7 @@ PROCEDURE Check() CLASS HBBlat
       // NNTP specific options ------------------
 
       // cGroups - optional
-      IF HB_ISSTRING( ::cGroups )
+      IF ISCHARACTER( ::cGroups )
          ::cCommand += " -groups " + ::cGroups
       ENDIF
 
@@ -823,7 +823,7 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cLogFile
-      IF !( ::cLogFile == NIL )
+      IF ISCHARACTER( ::cLogFile )
          ::cCommand += ' -log ' + ::cLogFile
       ENDIF
 
@@ -838,16 +838,16 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // nTimeout
-      IF !( ::nTimeout == NIL ) .AND. ::nTimeout > 0
-         ::cCommand += " -ti " + LTrim( Str( ::nTimeout ) )
+      IF ISNUMBER( ::nTimeout ) .AND. ::nTimeout > 0
+         ::cCommand += " -ti " + hb_ntos( ::nTimeout )
       ENDIF
 
       // nTry
-      IF !( ::nTry == NIL )
+      IF ISNUMBER( ::nTry )
          IF ::nTry == BLAT_TRY_INFINITE_KEY
             ::cCommand += " -try " + BLAT_TRY_INFINITE_VALUE
          ELSEIF ::nTry >= 0
-            ::cCommand += " -try " + LTrim( Str( ::nTry ) )
+            ::cCommand += " -try " + hb_ntos( ::nTry )
          ENDIF
       ENDIF
 
@@ -857,7 +857,7 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // cHostname
-      IF !( ::cHostname == NIL )
+      IF ISCHARACTER( ::cHostname )
          ::cCommand += ' -hostname ' + ::cHostname
       ENDIF
 
@@ -867,12 +867,12 @@ PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // nDelay
-      IF !( ::nDelay == NIL ) .AND. ::nDelay > 0
-         ::cCommand += " -delay " + LTrim( Str( ::nDelay ) )
+      IF ISNUMBER( ::nDelay ) .AND. ::nDelay > 0
+         ::cCommand += " -delay " + hb_ntos( ::nDelay )
       ENDIF
 
       // cCommentChar
-      IF !( ::cCommentChar == NIL )
+      IF ISCHARACTER( ::cCommentChar )
          ::cCommand += ' -comment ' + ::cCommentChar
       ENDIF
 
@@ -894,28 +894,28 @@ PROCEDURE Check() CLASS HBBlat
 
    ENDIF
 
-RETURN
+   RETURN
 
 METHOD GetCommand() CLASS HBBlat
    IF !::lChecked
       ::Check()
    ENDIF
-RETURN ::cCommand
+   RETURN ::cCommand
 
 METHOD Error() CLASS HBBlat
-RETURN ::nError
+   RETURN ::nError
 
 METHOD ErrorString() CLASS HBBlat
-RETURN ::cError
+   RETURN ::cError
 
 METHOD GetErrors() CLASS HBBlat
-RETURN ::aErrors
+   RETURN ::aErrors
 
 METHOD BlatError() CLASS HBBlat
-RETURN ::nBlatError
+   RETURN ::nBlatError
 
 METHOD BlatErrorString() CLASS HBBlat
-RETURN ::cBlatError
+   RETURN ::cBlatError
 
 METHOD TranslateBlatError( nErr ) CLASS HBBlat
    LOCAL cError, nPos
@@ -945,7 +945,7 @@ METHOD TranslateBlatError( nErr ) CLASS HBBlat
                       { BLAT_ERR_STRING_EXPECTED                , BLAT_TEXT_ERR_STRING_EXPECTED                }  ;
                     }
 
-   nPos := aScan( aErrors, {|e| e[1] == nErr }, 2 )
+   nPos := AScan( aErrors, {|e| e[ 1 ] == nErr }, 2 )
    IF nPos == 0
       cError := aErrors[ 1, 2 ]  // BLAT_TEXT_ERR_UNKNOWN has to be first error
    ELSE
@@ -954,22 +954,20 @@ METHOD TranslateBlatError( nErr ) CLASS HBBlat
 
    /*
    SWITCH nErr
-      CASE BLAT_SUCCESS
-           cError := BLAT_TEXT_SUCCESS
-           EXIT
+   CASE BLAT_SUCCESS
+      cError := BLAT_TEXT_SUCCESS
+      EXIT
 
-      CASE BLAT_ERR_MESSAGE_NOT_ACCEPTED
-           cError := BLAT_TEXT_ERR_MESSAGE_NOT_ACCEPTED
-           EXIT
+   CASE BLAT_ERR_MESSAGE_NOT_ACCEPTED
+      cError := BLAT_TEXT_ERR_MESSAGE_NOT_ACCEPTED
+      EXIT
 
-      CASE
-
-      OTHERWISE
-           cError := BLAT_TEXT_ERR_UNKNOWN
-   END
+   OTHERWISE
+      cError := BLAT_TEXT_ERR_UNKNOWN
+   ENDSWITCH
    */
 
-RETURN cError
+   RETURN cError
 
 STATIC FUNCTION ArrayToString( aArray )
    LOCAL cString := ""
@@ -977,6 +975,7 @@ STATIC FUNCTION ArrayToString( aArray )
    LOCAL cElem
 
    FOR EACH cElem IN aArray
-       cString += cElem + IIF( cElem:__enumIndex() < nLen, ",", "" )
+      cString += cElem + iif( cElem:__enumIndex() < nLen, ",", "" )
    NEXT
-RETURN cString
+
+   RETURN cString
