@@ -568,7 +568,7 @@ HB_ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
 }
 
 AREAP hb_rddRequestArea( char * szAlias, PHB_ITEM pCargo,
-                                   BOOL fNewArea, BOOL fWait )
+                         BOOL fNewArea, BOOL fWait )
 {
    PHB_DYNS pSymAlias = NULL;
    AREAP pArea = NULL;
