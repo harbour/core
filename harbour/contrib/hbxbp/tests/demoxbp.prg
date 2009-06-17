@@ -197,10 +197,12 @@ STATIC FUNCTION Build_MenuBar()
    oSubMenu:setColorBG( GraMakeRGBColor( { 134,128,250 } ) )
    oSubMenu:setColorFG( GraMakeRGBColor( { 255,  1,  1 } ) )
 
+   #if 0
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Dialogs"
    oSubMenu:addItem( { "~One More Instance"+chr(K_TAB)+"Ctrl+M", {|| BuildADialog() } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
+   #endif
 
    Return nil
 
