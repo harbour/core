@@ -1081,7 +1081,7 @@ static void s_inetRecvPattern( const char * szPattern )
       return;
    }
 
-   iBufferSize = pBufferSize ? hb_itemGetNI( pBufferSize ) : 0;
+   iBufferSize = pBufferSize ? hb_itemGetNI( pBufferSize ) : 80;
    iMax = pMaxSize ? hb_itemGetNI( pMaxSize ) : 0;
 
    hb_vmUnlock();
