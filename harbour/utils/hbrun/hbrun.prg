@@ -107,7 +107,7 @@ PROCEDURE _APPMAIN( cFile, ... )
          OTHERWISE
             hb_FNameSplit( cFile, NIL, NIL, @cExt )
             IF Lower( cExt ) == ".prg"
-               cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n", "-w", "-es2", "-q0", ;
+               cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n2", "-w", "-es2", "-q0", ;
                                        s_aIncDir, cFile )
                IF cFile == NIL
                   ERRORLEVEL( 1 )

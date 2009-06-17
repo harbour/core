@@ -64,6 +64,7 @@
 static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType );
 static int hb_compProcessRSPFile( HB_COMP_DECL, const char * ); /* process response file */
 static int hb_compAutoOpen( HB_COMP_DECL, const char * szPrg, BOOL * bSkipGen, int iFileType );
+static BOOL hb_compRegisterFunc( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cScope, BOOL fError );
 
 
 /* ************************************************************************* */
@@ -385,14 +386,21 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
    PVAR pVar;
    BOOL bFreeVar = TRUE;
 
-   if( ( HB_COMP_PARAM->functions.pLast->funFlags & FUN_FILE_DECL ) != 0 &&
+   if( ( pFunc->funFlags & FUN_FILE_DECL ) != 0 &&
        ( HB_COMP_PARAM->iVarScope == VS_LOCAL ||
          HB_COMP_PARAM->iVarScope == ( VS_PRIVATE | VS_PARAMETER ) ) )
    {
-      /* Variable declaration is outside of function/procedure body.
-         In this case only STATICs, MEMVARs and FIELDs declarations are allowed. */
-      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
-      return;
+      if( HB_COMP_PARAM->iStartProc == 2 &&
+          HB_COMP_PARAM->functions.iCount == 1 && pFunc->szName[0] &&
+          hb_compRegisterFunc( HB_COMP_PARAM, pFunc->szName, pFunc->cScope, FALSE ) )
+         pFunc->funFlags &= ~FUN_FILE_DECL;
+      else
+      {
+         /* Variable declaration is outside of function/procedure body.
+            In this case only STATICs, MEMVARs and FIELDs declarations are allowed. */
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
+         return;
+      }
    }
 
    /* check if we are declaring local/static variable after some
