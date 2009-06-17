@@ -328,9 +328,10 @@ EXTERNAL VERSION
 EXTERNAL WORD
 EXTERNAL YEAR
 
-/* Harbour extensions violating extension namespace rules
-   (but not marked as HB_EXTENSION). */
+/* Harbour extensions violating extension namespace rules.
+   See reasons in source. */
 
+#ifndef HB_C52_STRICT
 EXTERNAL RDDINFO
 EXTERNAL DBDROP
 EXTERNAL DBEXISTS
@@ -338,7 +339,6 @@ EXTERNAL FIELDLEN
 EXTERNAL FIELDDEC
 EXTERNAL FIELDTYPE
 EXTERNAL MMIDDLEDOWN
-#ifndef HB_C52_STRICT
 EXTERNAL STOD
 #endif
 

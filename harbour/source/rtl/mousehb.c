@@ -52,6 +52,8 @@
 
 #include "hbapigt.h"
 
+#ifndef HB_C52_STRICT
+
 /* NOTE: This function is a new Harbour functions implemented in the
          original CA-Cl*pper namespace. It should have been marked as
          HB_EXTENSION, but it's not. */
@@ -62,3 +64,5 @@ HB_FUNC( MMIDDLEDOWN )
 {
    HB_FUNC_EXEC( HB_MMIDDLEDOWN );
 }
+
+#endif
