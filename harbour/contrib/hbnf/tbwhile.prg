@@ -87,13 +87,13 @@
      FIELD last, first
      MEMVAR GetList
 
-     IF ! FILE( "tbnames.dbf" )
+     IF ! hb_FileExists( "tbnames.dbf" )
         MAKE_DBF()
      ENDIF
 
      USE TBNames
 
-     IF ! FILE( "tbnames.ntx" )
+     IF ! hb_FileExists( "tbnames.ntx" )
         INDEX ON last + first TO TBNAMES
      ENDIF
 

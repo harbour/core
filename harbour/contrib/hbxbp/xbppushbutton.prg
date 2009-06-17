@@ -186,7 +186,7 @@ METHOD XbpPushButton:setCaption( xCaption, cDll )
    IF hb_isChar( xCaption )
       ::caption := xCaption
 
-      IF file( xCaption )
+      IF hb_FileExists( xCaption )
          ::oWidget:setIcon( xCaption )
       ELSE
          ::oWidget:setText( xCaption )

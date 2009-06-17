@@ -175,25 +175,25 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
 
    DO CASE
       CASE Lower( Right( cDataBase, 4 ) ) == ".mdb"
-           IF ! File( cDataBase )
+           IF ! hb_FileExists( cDataBase )
               oCatalog:Create( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase )
            ENDIF
            oConnection:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase )
 
       CASE Lower( Right( cDataBase, 4 ) ) == ".xls"
-           IF ! File( cDataBase )
+           IF ! hb_FileExists( cDataBase )
               oCatalog:Create( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Excel 8.0;HDR=YES';Persist Security Info=False" )
            ENDIF
            oConnection:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Excel 8.0;HDR=YES';Persist Security Info=False")
 
       CASE Lower( Right( cDataBase, 3 ) ) == ".db"
-           IF ! File( cDataBase )
+           IF ! hb_FileExists( cDataBase )
               oCatalog:Create( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Paradox 3.x';" )
            ENDIF
            oConnection:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Paradox 3.x';" )
 
       CASE Lower( Right( cDataBase, 4 ) ) == ".fdb"
-           IF ! File( cDataBase )
+           IF ! hb_FileExists( cDataBase )
               oCatalog:Create( "Driver=Firebird/InterBase(r) driver;Uid=" + cUserName + ";Pwd=" + cPassword + ";DbName=" + cDataBase + ";" )
            ENDIF
 #ifdef __XHARBOUR__

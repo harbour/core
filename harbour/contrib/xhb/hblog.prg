@@ -510,7 +510,7 @@ METHOD Open( cProgName ) CLASS HB_LogFile
       RETURN .F.
    ENDIF
 
-   IF File( ::cFileName )
+   IF hb_FileExists( ::cFileName )
       ::nFileHandle := FOpen( ::cFileName, FO_READWRITE )
       IF ::nFileHandle > 0
          Fseek( ::nFileHandle, 0 ,FS_END )
@@ -559,7 +559,7 @@ METHOD Send( nStyle, cMessage, cProgName, nPrio ) CLASS HB_LogFile
          FClose( ::nFileHandle )
 
          IF ::nBackup > 1
-            IF File( ::cFileName +"." + Padl( ::nBackup-1, 3,"0" ) )
+            IF hb_FileExists( ::cFileName +"." + Padl( ::nBackup-1, 3,"0" ) )
                FErase( ::cFileName +"." + Padl( ::nBackup-1, 3,"0" ) )
             ENDIF
             FOR nCount := ::nBackup -1 TO 1 STEP -1

@@ -218,7 +218,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileWriter
 
    ::cFile := cFile
 
-   IF File( cFile )
+   IF hb_FileExists( cFile )
       DEFAULT nMode TO FO_READWRITE
 
       ::Handle := FOpen( cFile, nMode )

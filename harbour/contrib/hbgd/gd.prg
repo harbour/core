@@ -133,7 +133,7 @@ FUNCTION gdImageFromFile( cFile )
   LOCAL hFile := {=>}
   LOCAL oImage
 
-  IF File( cFile )
+  IF hb_FileExists( cFile )
      HB_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
      //TraceLog( cFile, cPath, cName, cExt, cDrive )
      cExt := Lower( cExt )

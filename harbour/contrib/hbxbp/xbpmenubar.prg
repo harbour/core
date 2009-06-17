@@ -290,7 +290,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
          cCaption := substr( cCaption, 1, n-1 )
       ENDIF
       oAction:setText( cCaption )
-      IF file( cIcon )
+      IF hb_FileExists( cIcon )
          oAction:setIcon( cIcon )
       ENDIF
       IF !empty( cKey )

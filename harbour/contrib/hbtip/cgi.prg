@@ -111,7 +111,7 @@ ENDCLASS
 
 METHOD New() CLASS TIpCgi
 
-   local aTemp 
+   local aTemp
    local aVar
    local lPost
    local nCount
@@ -409,7 +409,7 @@ METHOD StartSession( cSID ) CLASS TIpCgi
 
       cFile := ::cSessionSavePath + "SESSIONID_" + cSID
 
-      if file( cFile )
+      if hb_FileExists( cFile )
          if ( nH := FOpen( cFile, FO_READ ) ) != -1
             nFileSize := FSeek( nH, 0, FS_END )
             FSeek( nH, 0, FS_SET )

@@ -179,7 +179,7 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
       xIdentifier := lReleaseLocks
       bOperation  := { | x | DBAPPEND( x ), !NETERR() }
       exit
-   END
+   ENDSWITCH
 
    slNetOk := .F.
 
@@ -286,7 +286,7 @@ FUNCTION NetOpenFiles( aFiles )
 
    FOR EACH xFile IN aFiles
 
-      IF !FILE( xFile[ 1 ] )
+      IF !hb_FileExists( xFile[ 1 ] )
          nRet := - 1
          EXIT
       ENDIF
@@ -294,7 +294,7 @@ FUNCTION NetOpenFiles( aFiles )
       IF NetDbUse( xFile[ 1 ], xFile[ 2 ], snNetDelay, "DBFCDX" )
          IF VALTYPE( xFile[ 3 ] ) == "A"
             FOR EACH cIndex IN xFile[ 3 ]
-               IF FILE( cIndex )
+               IF hb_FileExists( cIndex )
                   ORDLISTADD( cIndex )
                ELSE
                   nRet := - 3
@@ -835,7 +835,7 @@ METHOD OPEN() CLASS HBTable
 
    SELECT( ::Alias )
    ::Area := SELECT()
-   IF ::cOrderBag != NIL .and. FILE( ::cPath + ::cOrderFile )
+   IF ::cOrderBag != NIL .and. hb_FileExists( ::cPath + ::cOrderFile )
 
       SET INDEX TO ( ::cPath + ::cOrderBag )
       ( ::Alias )->( ORDSETFOCUS( 1 ) )
@@ -927,7 +927,7 @@ METHOD FldInit() CLASS HBTable
 
    oNew:Read()
 
-   IF oNew:cOrderBag != NIL .and. FILE( oNew:cPath + oNew:cOrderFile )
+   IF oNew:cOrderBag != NIL .and. hb_FileExists( oNew:cPath + oNew:cOrderFile )
       SET INDEX TO ( oNew:cPath + oNew:cOrderBag )
       ( oNew:Alias )->( ORDSETFOCUS( 1 ) )
    ENDIF
@@ -1289,7 +1289,7 @@ METHOD Reindex() CLASS HBTable
 
       ::Isnet := .F.
 
-      IF FILE( ::cPath + ::cOrderFile )
+      IF hb_FileExists( ::cPath + ::cOrderFile )
          IF FERASE( ::cPath + ::cOrderFile ) != 0
             // --> ALERT(".CDX *NOT* Deleted !!!" )
          ENDIF
@@ -1330,7 +1330,7 @@ METHOD FastReindex() CLASS HBTable
       ::Kill()
 
       ::Isnet := .F.
-      IF FILE( ::cPath + ::cOrderFile )
+      IF hb_FileExists( ::cPath + ::cOrderFile )
          IF FERASE( ::cPath + ::cOrderFile ) != 0
             // --> ALERT(".CDX *NOT* Deleted !!!" )
          ENDIF

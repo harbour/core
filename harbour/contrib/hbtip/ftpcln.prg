@@ -176,10 +176,10 @@ METHOD New( oUrl,lTrace, oCredentials) CLASS tIPClientFTP
    ::nDefaultRcvBuffSize := 65536
 
    if ::ltrace
-      if !file("ftp.log")
+      if !hb_FileExists("ftp.log")
          ::nHandle := fcreate("ftp.log")
       else
-         while file(cFile+hb_NToS(Int(n))+".log")
+         while hb_FileExists(cFile+hb_NToS(Int(n))+".log")
            n++
          enddo
          ::cLogFile:= cFile+hb_NToS(Int(n))+".log"

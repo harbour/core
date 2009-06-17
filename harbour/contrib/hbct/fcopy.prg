@@ -194,7 +194,7 @@ FUNCTION FILEAPPEND( cSrc, cDest )
 
    hSrcFile  := FOPEN( cSrc, FO_READ )
    IF hSrcFile != -1
-      IF !FILE( cDest )
+      IF !hb_FileExists( cDest )
          hDstFile := FCREATE( cDest )
       ELSE
          hDstFile := FOPEN( cDest, FO_WRITE )

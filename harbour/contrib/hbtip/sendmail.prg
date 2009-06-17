@@ -132,7 +132,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
    cUser := StrTran( cUser, "@", "&at;" )
 
-   IF !( (".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. File(cBody) )
+   IF !( (".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists(cBody) )
 
       IF !( Right( cBody, 2 ) == HB_OSNewLine() )
          cBody += HB_OsNewLine()
@@ -225,7 +225,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    oAttach := tipMail():new()
    oAttach:SetEncoder( "7-bit" )
 
-   IF (".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. File(cBody)
+   IF (".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists(cBody)
       cMimeText := "text/html ; charset=ISO-8859-1"
       oAttach:hHeaders[ "Content-Type" ] := cMimeText
       cBodyTemp := cBody

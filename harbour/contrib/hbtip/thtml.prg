@@ -232,7 +232,7 @@ RETURN ::root:toString()
 
 // reads HTML file and parses it into tree of objects
 METHOD readFile( cFileName ) CLASS THtmlDocument
-   IF ! File( cFileName )
+   IF ! hb_FileExists( cFileName )
       RETURN .F.
    ENDIF
    ::changed := .T.

@@ -94,10 +94,10 @@ METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClientPOP
    ::nConnTimeout := 10000
 
    if ::ltrace
-      if !file("pop3.log")
+      if !hb_FileExists("pop3.log")
          ::nHandle := fcreate("pop3.log")
       else
-         while file(cFile+hb_NToS(n)+".log")
+         while hb_FileExists(cFile+hb_NToS(n)+".log")
            n++
          enddo
          ::nHandle := fcreate(cFile+hb_NToS(n)+".log")

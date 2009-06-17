@@ -83,11 +83,11 @@ FUNCTION TraceLog( ... )
    PRIVATE FileHandle
    PRIVATE ProcName, xParam
 
-   /* File() and FOpen()/FCreate() make different assumptions rgdg path,
+   /* hb_FileExists() and FOpen()/FCreate() make different assumptions rgdg path,
       so we have to make sure cFile contains path to avoid ambiguity */
    cFile := cWithPath( cFile )
 
-   IF File( cFile )
+   IF hb_FileExists( cFile )
       FileHandle := FOpen( cFile, 1 )
    ELSE
       FileHandle := FCreate( cFile )
