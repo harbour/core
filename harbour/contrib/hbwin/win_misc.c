@@ -229,3 +229,17 @@ HB_FUNC( WIN_NCMDSHOW )
 
    hb_retni( nCmdShow );
 }
+
+#if 0 /* Enable when name isn't occupied anymore by other contrib. */
+
+HB_FUNC( WIN_LOWORD )
+{
+   hb_retnl( LOWORD( hb_parnl( 1 ) ) );
+}
+
+HB_FUNC( WIN_HIWORD )
+{
+   hb_retnl( HIWORD( hb_parnl( 1 ) ) );
+}
+
+#endif

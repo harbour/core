@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * STOD() function
+ * The declarations for all harbour defined functions/procedures.
  *
- * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,27 +50,40 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapiitm.h"
+#ifndef XPP_EXTERN_CH_
+#define XPP_EXTERN_CH_
 
-/* NOTE: This function is a non-CA-Cl*pper function implemented
-         in the original CA-Cl*pper namespace. This should have
-         been marked as HB_COMPAT_*, but it's not, as it's a
-         well-known name with similar functionality under most
-         Clipper dialects and libraries. (differences may exist
-         though, like behaviour for non-string, empty or
-         no-parameter scenarios.
-         Nevertheless this function must be kept in a separate
-         source file to avoid linking errors when a 3rd party
-         library would also define this function. [vszakats] */
+EXTERNAL XPP_GET
+EXTERNAL XPP_TBROWSE
+EXTERNAL XPP_TBCOLUMN
+EXTERNAL XPP_SLEEP
+EXTERNAL BIN2U
+EXTERNAL DBPACK
+EXTERNAL DBZAP
+EXTERNAL DBCOPYEXTSTRUCT
+EXTERNAL DBCOPYSTRUCT
+EXTERNAL DBJOIN
+EXTERNAL DBLIST
+EXTERNAL DBSORT
+EXTERNAL DBTOTAL
+EXTERNAL DBUPDATE
+EXTERNAL CONVTOANSICP
+EXTERNAL CONVTOOEMCP
+EXTERNAL CURDRIVE
+EXTERNAL DBSKIPPER
+EXTERNAL NUMBUTTONS
+EXTERNAL SETMOUSE
+EXTERNAL STOD
+EXTERNAL U2BIN
+EXTERNAL W2BIN
+EXTERNAL ORDWILDSEEK
+EXTERNAL _DBEXPORT
+EXTERNAL _TYPEFILE
+EXTERNAL THREADID
+EXTERNAL THREADWAIT
+EXTERNAL THREADWAITALL
+EXTERNAL THREADOBJECT
+EXTERNAL THREAD
+EXTERNAL SIGNAL
 
-#ifndef HB_C52_STRICT
-
-HB_FUNC( STOD )
-{
-   PHB_ITEM pDateString = hb_param( 1, HB_IT_STRING );
-
-   hb_retds( hb_itemGetCLen( pDateString ) >= 7 ? hb_itemGetCPtr( pDateString ) : NULL );
-}
-
-#endif
+#endif /* XPP_EXTERN_CH_ */
