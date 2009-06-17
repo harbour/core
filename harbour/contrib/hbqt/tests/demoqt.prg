@@ -338,7 +338,7 @@ STATIC FUNCTION Build_TreeView( oWnd )
 
    oTV := QTreeView():new( QT_PTROF( oWnd ) )
    oTV:setMouseTracking( .t. )
-   Qt_Connect_Signal( QT_PTROF( oTV ), QT_EVE_HOVERED, {|o,i| uiDebug( "oTV:hovered" ) } )
+   //Qt_Connect_Signal( QT_PTROF( oTV ), QT_EVE_HOVERED, {|o,i| uiDebug( "oTV:hovered" ) } )
    oDirModel := QDirModel():new( QT_PTROF( oTV ) )
    oTV:setModel( QT_PTROF( oDirModel ) )
    oTV:move( 5, 7 )
@@ -354,7 +354,7 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
 
    oListBox := QListView():New( QT_PTROF( oWnd ) )
    oListBox:setMouseTracking( .t. )
-   Qt_Connect_Signal( QT_PTROF( oListBox ), QT_EVE_HOVERED, {|o,i| uiDebug( "oListBox:hovered" ) } )
+   //Qt_Connect_Signal( QT_PTROF( oListBox ), QT_EVE_HOVERED, {|o,i| uiDebug( "oListBox:hovered" ) } )
 
    oStrList := QStringList():new( QT_PTROF( oListBox ) )
 

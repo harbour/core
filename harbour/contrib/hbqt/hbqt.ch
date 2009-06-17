@@ -64,6 +64,9 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
+#ifndef _HBQT_CH
+
+
 #define QEvent_None                                0        // Not an event.
 #define QEvent_AccessibilityDescription            130      // Used to query accessibility description texts (QAccessibleEvent).
 #define QEvent_AccessibilityHelp                   119      // Used to query accessibility help texts (QAccessibleEvent).
@@ -223,4 +226,22 @@
 #define QPalette_LinkVisited                       15       // A text color used for already visited hyperlinks. By default, the linkvisited color is Qt_magenta.
 #define QPalette_NoRole                            17       // No role; this special role is often used to indicate that a role has not been assigned.
 
+
+#define QAbstractSlider_SliderNoAction             0
+#define QAbstractSlider_SliderSingleStepAdd        1
+#define QAbstractSlider_SliderSingleStepSub        2
+#define QAbstractSlider_SliderPageStepAdd          3
+#define QAbstractSlider_SliderPageStepSub          4
+#define QAbstractSlider_SliderToMinimum            5
+#define QAbstractSlider_SliderToMaximum            6
+#define QAbstractSlider_SliderMove                 7
+
+#define QAbstractSlider_SliderRangeChange          0
+#define QAbstractSlider_SliderOrientationChange    1
+#define QAbstractSlider_SliderStepsChange          2
+#define QAbstractSlider_SliderValueChange          3
+
 /*----------------------------------------------------------------------*/
+
+#define _HBQT_CH
+#endif

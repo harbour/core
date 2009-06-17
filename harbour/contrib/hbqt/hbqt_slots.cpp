@@ -52,7 +52,6 @@
  */
 /*----------------------------------------------------------------------*/
 
-
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbapiitm.h"
@@ -60,6 +59,10 @@
 #include "hbqt.h"
 
 #if QT_VERSION >= 0x040500
+
+#if 0
+#include <windows.h>
+#endif
 
 #include "hbqt_slots.h"
 
@@ -69,128 +72,127 @@
 #include <QKeyEvent>
 #include <QAction>
 
-#define HBQT_EVT_CLICKED          1
-#define HBQT_EVT_TRIGGERED        2
-#define HBQT_EVT_TRIGGERED_BOOL   3
-#define HBQT_EVT_HOVERED          4
-#define HBQT_EVT_STATECHANGED     5
-#define HBQT_EVT_PRESSED          6
-#define HBQT_EVT_RELEASED         7
-
 /*----------------------------------------------------------------------*/
 
 static Slots *s = NULL;
 
 /*----------------------------------------------------------------------*/
 
-static void SlotsExec( QWidget* widget, QString event, PHB_ITEM pItem )
-{
-   for( int i = 0; i < s->list1.size(); ++i )
-   {
-      if( ( QWidget* ) s->list1.at( i ) == widget )
-      {
-        if( ( ( QString ) s->list2.at( i ) == event ) && ( ( bool ) s->list4.at( i ) == true ) )
-        {
-           PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
-           hb_vmEvalBlockV( ( PHB_ITEM ) s->list3.at( i ), 1, pWidget );
-           hb_itemRelease( pWidget );
-        }
-      }
-   }
-   if( pItem != NULL )
-   {
-      hb_itemRelease( pItem );
-   }
-}
-
-static void SlotsExecAction( QAction* widget, QString event, PHB_ITEM pItem )
-{
-   for( int i = 0; i < s->list1.size(); ++i )
-   {
-      if( ( QAction* ) s->list5.at( i ) == widget )
-      {
-        if( ( ( QString ) s->list2.at( i ) == event ) && ( ( bool ) s->list4.at( i ) == true ) )
-        {
-           PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QAction* ) widget );
-           hb_vmEvalBlockV( ( PHB_ITEM ) s->list3.at( i ), 1, pWidget );
-           hb_itemRelease( pWidget );
-        }
-      }
-   }
-   if( pItem != NULL )
-   {
-      hb_itemRelease( pItem );
-   }
-}
-
-static void SlotsExecInt( QWidget* widget, QString event, PHB_ITEM pItem, int iValue )
-{
-   for( int i = 0; i < s->list1.size(); ++i )
-   {
-      if( ( QWidget* ) s->list1.at( i ) == widget )
-      {
-         if( ( ( QString ) s->list2.at( i ) == event ) && ( ( bool ) s->list4.at( i ) == true ) )
-         {
-            PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
-            PHB_ITEM pState = hb_itemPutNI( NULL, iValue );
-            hb_vmEvalBlockV( ( PHB_ITEM ) s->list3.at( i ), 2, pWidget, pState );
-            hb_itemRelease( pWidget );
-            hb_itemRelease( pState );
-         }
-      }
-   }
-   if( pItem != NULL )
-   {
-      hb_itemRelease( pItem );
-   }
-}
-
-static void SlotsExecModel( QWidget* widget, QString event, PHB_ITEM pItem, const QModelIndex & index )
-{
-   for( int i = 0; i < s->list1.size(); ++i )
-   {
-      if( ( QWidget* ) s->list1.at( i ) == widget )
-      {
-         if( ( ( QString ) s->list2.at( i ) == event ) && ( ( bool ) s->list4.at( i ) == true ) )
-         {
-            PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
-            PHB_ITEM pState = hb_itemPutPtr( NULL, ( QModelIndex * ) new QModelIndex( index ) );
-            hb_vmEvalBlockV( ( PHB_ITEM ) s->list3.at( i ), 2, pWidget, pState );
-            hb_itemRelease( pWidget );
-            hb_itemRelease( pState );
-         }
-      }
-   }
-   if( pItem != NULL )
-   {
-      hb_itemRelease( pItem );
-   }
-}
-
 Slots::Slots( QObject* parent ) : QObject( parent )
 {
 }
-
 Slots::~Slots()
 {
+}
+
+static void SlotsExec( QWidget* widget, char* event )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s->listActv.at( i-1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s->listBlock.at( i-1 ), 1, pWidget );
+         hb_itemRelease( pWidget );
+      }
+   }
+}
+
+static void SlotsExecAction( QAction* widget, char* event )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s->listActv.at( i-1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QAction* ) widget );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s->listBlock.at( i-1 ), 1, pWidget );
+         hb_itemRelease( pWidget );
+      }
+   }
+}
+
+static void SlotsExecInt( QWidget* widget, char* event, int iValue )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s->listActv.at( i-1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+         PHB_ITEM pState = hb_itemPutNI( NULL, iValue );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s->listBlock.at( i-1 ), 2, pWidget, pState );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pState );
+      }
+   }
+}
+
+static void SlotsExecIntInt( QWidget* widget, char* event, int iValue1, int iValue2 )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( i > 0 && ( s->listActv.at( i-1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+         PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
+         PHB_ITEM pValue2 = hb_itemPutNI( NULL, iValue2 );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s->listBlock.at( i-1 ), 3, pWidget, pValue1, pValue2 );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pValue1 );
+         hb_itemRelease( pValue2 );
+      }
+   }
+}
+
+static void SlotsExecModel( QWidget* widget, char* event, const QModelIndex & index )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s->listActv.at( i-1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+         PHB_ITEM pState = hb_itemPutPtr( NULL, ( QModelIndex * ) new QModelIndex( index ) );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s->listBlock.at( i-1 ), 2, pWidget, pState );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pState );
+      }
+   }
+}
+
+static void SlotsExecMouseEvent( QWidget* widget, char* event, QMouseEvent* mevent )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s->listActv.at( i-1 ) == true ) )
+      {
+         PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QWidget * ) widget );
+         PHB_ITEM pEvent   = hb_itemPutPtr( NULL, mevent );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s->listBlock.at( i-1 ), 2, pWidget, pEvent );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pEvent );
+      }
+   }
 }
 
 bool Slots::event( QEvent * event )
 {
    bool bAccepted = true;
    QObject *widget = qobject_cast<QObject *>( sender() );
-   for( int i = 0; i < list1.size(); ++i )
+   if( widget )
    {
-      if( ( QObject* ) list1.at( i ) == ( QObject* ) widget )
+      int i = widget->property( "event()" ).toInt();
+      if( ( i > 0 ) && ( s->listActv.at( i-1 ) == true ) )
       {
-         if( ( ( QString ) list2.at( i ) == ( QString ) "event()" ) && ( ( bool ) list4.at( i ) == true ) )
-         {
-            PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QWidget * ) widget );
-            PHB_ITEM pEvent   = hb_itemPutPtr( NULL, event );
-            bAccepted = hb_vmEvalBlockV( ( PHB_ITEM ) list3.at( i ), 2, pWidget, pEvent );
-            hb_itemRelease( pWidget );
-            hb_itemRelease( pEvent );
-         }
+         PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QWidget * ) widget );
+         PHB_ITEM pEvent   = hb_itemPutPtr( NULL, event );
+         bAccepted = hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( i-1 ), 2, pWidget, pEvent );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pEvent );
       }
    }
    return bAccepted;
@@ -199,37 +201,33 @@ bool Slots::event( QEvent * event )
 void Slots::keyPressEvent( QKeyEvent * event )
 {
    QObject *widget = qobject_cast<QObject *>( sender() );
-   for( int i = 0; i < list1.size(); ++i )
+   if( widget )
    {
-      if( ( QObject* ) list1.at( i ) == ( QObject* ) widget )
+      int i = widget->property( "keyPressEvent()" ).toInt();
+      if( ( i > 0 ) && ( s->listActv.at( i-1 ) == true ) )
       {
-         if( ( ( QString ) list2.at( i ) == ( QString ) "keyPressEvent()" ) && ( ( bool ) list4.at( i ) == true ) )
-         {
-            PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QWidget * ) widget );
-            PHB_ITEM pEvent   = hb_itemPutPtr( NULL, event );
-            hb_vmEvalBlockV( ( PHB_ITEM ) list3.at( i ), 2, pWidget, pEvent );
-            hb_itemRelease( pWidget );
-            hb_itemRelease( pEvent );
-         }
+         PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QWidget * ) widget );
+         PHB_ITEM pEvent   = hb_itemPutPtr( NULL, event );
+         hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( i-1 ), 2, pWidget, pEvent );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pEvent );
       }
    }
 }
 
-void Slots::mouseMoveEvent( QMouseEvent * event )
+void Slots::triggered( bool checked )
 {
    QObject *widget = qobject_cast<QObject *>( sender() );
-   for( int i = 0; i < list1.size(); ++i )
+   if( widget )
    {
-      if( ( QObject* ) list1.at( i ) == ( QObject* ) widget )
+      int i = widget->property( "triggered(bool)" ).toInt();
+      if( ( i > 0 ) && ( s->listActv.at( i-1 ) == true ) )
       {
-         if( ( ( QString ) list2.at( i ) == ( QString ) "mouseMoveEvent()" ) && ( ( bool ) list4.at( i ) == true ) )
-         {
-            PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QWidget * ) widget );
-            PHB_ITEM pEvent   = hb_itemPutPtr( NULL, event );
-            hb_vmEvalBlockV( ( PHB_ITEM ) list3.at( i ), 2, pWidget, pEvent );
-            hb_itemRelease( pWidget );
-            hb_itemRelease( pEvent );
-         }
+         PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QObject * ) widget );
+         PHB_ITEM pChecked = hb_itemPutL( NULL, checked );
+         hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( i-1 ), 2, pWidget, pChecked );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pChecked );
       }
    }
 }
@@ -237,132 +235,133 @@ void Slots::mouseMoveEvent( QMouseEvent * event )
 void Slots::hovered( QAction * action )
 {
    QObject *widget = qobject_cast<QObject *>( sender() );
-   for( int i = 0; i < list1.size(); ++i )
+   if( widget )
    {
-      if( ( QObject* ) list1.at( i ) == ( QObject* ) widget )
+      int i = widget->property( "hovered(action)" ).toInt();
+      if( ( i > 0 ) && ( s->listActv.at( i-1 ) == true ) )
       {
-         if( ( ( QString ) list2.at( i ) == ( QString ) "hovered(action)" ) && ( ( bool ) list4.at( i ) == true ) )
-         {
-            PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QWidget * ) widget );
-            PHB_ITEM pEvent   = hb_itemPutPtr( NULL, action );
-            hb_vmEvalBlockV( ( PHB_ITEM ) list3.at( i ), 2, pWidget, pEvent );
-            hb_itemRelease( pWidget );
-            hb_itemRelease( pEvent );
-         }
+         PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QWidget * ) widget );
+         PHB_ITEM pEvent   = hb_itemPutPtr( NULL, action );
+         hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( i-1 ), 2, pWidget, pEvent );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pEvent );
       }
    }
+}
+
+void Slots::mouseMoveEvent( QMouseEvent * event )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecMouseEvent( widget, ( char* ) "mouseMoveEvent()", event );
 }
 
 void Slots::clicked()
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExec( widget, ( QString ) "clicked()", NULL );
+   SlotsExec( widget, ( char* ) "clicked()" );
 }
-
 void Slots::returnPressed()
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExec( widget, ( QString ) "returnPressed()", NULL );
+   SlotsExec( widget, ( char* ) "returnPressed()" );
 }
-
 void Slots::viewportEntered()
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExec( widget, ( QString ) "viewportEntered()", NULL );
+   SlotsExec( widget, ( char* ) "viewportEntered()" );
 }
-
 void Slots::pressed()
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExec( widget, ( QString ) "pressed()", NULL );
+   SlotsExec( widget, ( char* ) "pressed()" );
 }
-
 void Slots::released()
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExec( widget, ( QString ) "released()", NULL );
+   SlotsExec( widget, ( char* ) "released()" );
 }
-
-void Slots::hovered()
-{
-   //QWidget *widget = qobject_cast<QWidget *>( sender() );
-   QAction *widget = qobject_cast<QAction *>( sender() );
-   if( widget )
-   {
-      SlotsExecAction( widget, ( QString ) "hovered()", NULL );
-   }
-}
-
 void Slots::triggered()
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExec( widget, ( QString ) "triggered()", NULL );
+   SlotsExec( widget, ( char* ) "triggered()" );
 }
-
-void Slots::triggered( bool checked )
+void Slots::hovered()
 {
-   QObject *widget = qobject_cast<QObject *>( sender() );
-   for( int i = 0; i < list1.size(); ++i )
-   {
-      if( ( QObject* ) list1.at( i ) == ( QObject* ) widget )
-      {
-         if( ( ( QString ) list2.at( i ) == ( QString ) "triggered(bool)" ) && ( ( bool ) list4.at( i ) == true ) )
-         {
-            PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QObject * ) widget );
-            PHB_ITEM pChecked = hb_itemPutL( NULL, checked );
-
-            hb_vmEvalBlockV( ( PHB_ITEM ) list3.at( i ), 2, pWidget, pChecked );
-            hb_itemRelease( pWidget );
-            hb_itemRelease( pChecked );
-         }
-      }
-   }
+   QAction *widget = qobject_cast<QAction *>( sender() );
+   SlotsExecAction( widget, ( char* ) "hovered()" );
 }
 
 void Slots::stateChanged( int state )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecInt( widget, ( QString ) "stateChanged(int)", NULL, state );
+   SlotsExecInt( widget, ( char* ) "stateChanged(int)", state );
 }
-
 void Slots::activated( int index )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecInt( widget, ( QString ) "activated(int)", NULL, index );
+   SlotsExecInt( widget, ( char* ) "activated(int)", index );
 }
-
 void Slots::currentIndexChanged( int index )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecInt( widget, ( QString ) "currentIndexChanged(int)", NULL, index );
+   SlotsExecInt( widget, ( char* ) "currentIndexChanged(int)", index );
 }
-
 void Slots::currentChanged( int index )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecInt( widget, ( QString ) "currentChanged(int)", NULL, index );
+   SlotsExecInt( widget, ( char* ) "currentChanged(int)", index );
 }
-
 void Slots::highlighted( int index )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecInt( widget, ( QString ) "highlighted(int)", NULL, index );
+   SlotsExecInt( widget, ( char* ) "highlighted(int)", index );
 }
 
 void Slots::clicked( const QModelIndex & index )
 {
    QWidget * widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecModel( widget, ( QString ) "clicked(QModelIndex)", NULL, index );
+   SlotsExecModel( widget, ( char* ) "clicked(QModelIndex)", index );
 }
 void Slots::doubleClicked( const QModelIndex & index )
 {
    QWidget * widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecModel( widget, ( QString ) "doubleClicked(QModelIndex)", NULL, index );
+   SlotsExecModel( widget, ( char* ) "doubleClicked(QModelIndex)", index );
 }
 void Slots::entered( const QModelIndex & index )
 {
    QWidget * widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecModel( widget, ( QString ) "entered(QModelIndex)", NULL, index );
+   SlotsExecModel( widget, ( char* ) "entered(QModelIndex)", index );
+}
+
+void Slots::actionTriggered( int action )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecInt( widget, ( char* ) "actionTriggered(int)", action );
+}
+void Slots::rangeChanged( int min, int max )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecIntInt( widget, ( char* ) "rangeChanged(int)", min, max );
+}
+void Slots::sliderMoved( int value )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecInt( widget, ( char* ) "sliderMoved(int)", value );
+}
+void Slots::sliderPressed()
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExec( widget, ( char* ) "sliderPressed()" );
+}
+void Slots::sliderReleased()
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExec( widget, ( char* ) "sliderReleased()" );
+}
+void Slots::valueChanged( int value )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecInt( widget, ( char* ) "valueChanged(int)", value );
 }
 
 /*
@@ -374,20 +373,12 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    QString   signal    = hb_parc( 2 );                /* get signal */
    PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) ); /* get codeblock */
    bool      ret       = false;                       /* return value */
-   bool      bAct      = false;
 
-   /* create object s, if not created yet */
    if( s == NULL )
    {
       s = new Slots();
    }
 
-   /* connect signal with slot
-    * if the list become to long, more classes can be created
-    * TODO: parameter Qt::AutoConnection
-    */
-
-   /*                    Events with no parameters                  */
    if( signal == ( QString ) "clicked()" )
    {
       ret = widget->connect( widget, SIGNAL( clicked() )          , s, SLOT( clicked() )          , Qt::AutoConnection );
@@ -403,7 +394,6 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    if( signal == ( QString ) "hovered()" )
    {
       ret = widget->connect( widget, SIGNAL( hovered() )          , s, SLOT( hovered() )          , Qt::AutoConnection );
-      bAct = true;
    }
    if( signal == ( QString ) "viewportEntered()" )
    {
@@ -418,7 +408,6 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = widget->connect( widget, SIGNAL( released() )         ,
                              s, SLOT( released() ), Qt::AutoConnection );
    }
-   /*                   Events with int parameter                 */
    if( signal == ( QString ) "stateChanged(int)" )
    {
       ret = widget->connect( widget, SIGNAL( stateChanged( int ) ),
@@ -439,13 +428,11 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = widget->connect( widget, SIGNAL( highlighted( int ) ) ,
                              s, SLOT( highlighted( int ) ) , Qt::AutoConnection );
    }
-   /*                    Events with bool parameter               */
    if( signal == ( QString ) "triggered(bool)" )
    {
       ret = widget->connect( widget, SIGNAL( triggered( bool ) ),
                              s, SLOT( triggered( bool ) )  , Qt::AutoConnection );
    }
-   /*                    Events with miscellaneous parameters     */
    if( signal == ( QString ) "clicked(QModelIndex)" )
    {
       ret = widget->connect( widget, SIGNAL( clicked( const QModelIndex & ) ),
@@ -486,60 +473,114 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = widget->connect( widget, SIGNAL( currentChanged( int ) ),
                              s, SLOT( currentChanged( int ) ), Qt::AutoConnection );
    }
+   if( signal == ( QString ) "actionTriggered(int)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( actionTriggered(int) ),
+                             s, SLOT( actionTriggered(int) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "rangeChanged(int,int)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( rangeChanged(int,int) ),
+                             s, SLOT( rangeChanged(int,int) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "sliderMoved(int)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( sliderMoved(int) ),
+                             s, SLOT( sliderMoved(int) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "sliderPressed()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( sliderPressed() ),
+                             s, SLOT( sliderPressed() ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "sliderReleased()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( sliderReleased() ),
+                             s, SLOT( sliderReleased() ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "valueChanged(int)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( valueChanged(int) ),
+                             s, SLOT( valueChanged(int) ), Qt::AutoConnection );
+   }
 
-   /* return connect result */
    hb_retl( ret );
 
-   /* if connected: store widget, signal, codeblock and flag
-    * TODO: locate a inactive entry and use it
-    */
    if( ret == true )
    {
-      if( bAct )
+      bool bFound = false;
+      int  i;
+
+      for( i = 0; i < s->listBlock.size(); i++ )
       {
-         s->list5 << ( QAction* ) hb_parptr( 1 );
-         s->list1 << NULL;
+         if( s->listBlock.at( i ) == NULL )
+         {
+            bFound = true;
+            break;
+         }
+      }
+      if( bFound )
+      {
+         s->listBlock[ i ] = codeblock;
+         s->listActv[ i ] = true;
+         widget->setProperty( hb_parc( 2 ), ( int ) i+1 );
       }
       else
       {
-         s->list5 << NULL;
-         s->list1 << widget;
+         s->listBlock << codeblock;
+         s->listActv  << true;
+         widget->setProperty( hb_parc( 2 ), ( int ) s->listBlock.size() );
       }
-      s->list2 << signal;
-      s->list3 << codeblock;
-      s->list4 << true;
    }
 }
-
 
 /*
  * harbour function to disconnect signals
  */
 HB_FUNC( QT_DISCONNECT_SIGNAL )
 {
-   /* TODO */
+   QWidget * widget = ( QWidget* ) hb_parptr( 1 );
+   if( widget )
+   {
+      char * event = hb_parc( 2 );
+      int i = widget->property( event ).toInt();
+
+      if( i > 0 && i <= s->listBlock.size() )
+      {
+         if( s->listBlock.at( i-1 ) != NULL )
+         {
+#if 0
+char buf[40];
+sprintf( buf, "signal %i : %s", i, event );
+OutputDebugString( buf );
+#endif
+            hb_itemRelease( s->listBlock.at( i-1 ) );
+            s->listBlock[ i-1 ] = NULL;
+            s->listActv[ i-1 ] = false;
+         }
+      }
+   }
 }
 
 
 /*
  * harbour function to release all codeblocks storeds
  */
-#if 0
 HB_FUNC( RELEASE_CODEBLOCKS )
 {
    if( s )
    {
-      for( int i = 0; i < s->list1.size(); ++i )
+      for( int i = 0; i < s->listBlock.size(); ++i )
       {
-         if( ( bool ) s->list4.at( i ) == true )
+         if( ( bool ) s->listActv.at( i ) == true )
          {
-            hb_itemRelease( ( PHB_ITEM ) s->list3.at( i ) );
+            hb_itemRelease( ( PHB_ITEM ) s->listBlock.at( i ) );
+            s->listBlock[ i ] = NULL;
+            s->listActv[ i ] = false;
          }
       }
    }
 }
-#endif
-
 
 /*
  * C function to release all codeblocks storeds
@@ -550,11 +591,11 @@ void release_codeblocks( void )
 {
    if( s )
    {
-      for( int i = 0; i < s->list1.size(); ++i )
+      for( int i = 0; i < s->listBlock.size(); ++i )
       {
-         if( ( bool ) s->list4.at( i ) == true )
+         if( ( bool ) s->listActv.at( i ) == true )
          {
-            hb_itemRelease( ( PHB_ITEM ) s->list3.at( i ) );
+            hb_itemRelease( ( PHB_ITEM ) s->listBlock.at( i ) );
          }
       }
    }

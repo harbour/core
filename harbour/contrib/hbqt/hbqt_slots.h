@@ -65,9 +65,44 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 
-
 #include "hbapi.h"
 #include "hbapiitm.h"
+
+/*----------------------------------------------------------------------*/
+
+class MyDrawingArea : public QWidget
+{
+   Q_OBJECT
+
+public:
+   MyDrawingArea( QWidget *parent = 0 );
+   virtual ~MyDrawingArea( void );
+
+   void keyPressEvent( QKeyEvent * event );
+   void mouseMoveEvent( QMouseEvent * event );
+
+signals:
+   void sg_mouseMoveEvent( QMouseEvent * event );
+   void sg_keyPressEvent( QKeyEvent * event );
+
+};
+
+/*----------------------------------------------------------------------*/
+
+class MyMainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    MyMainWindow();
+    virtual ~MyMainWindow();
+
+public:
+    void closeEvent( QCloseEvent *event );
+
+};
+
+/*----------------------------------------------------------------------*/
 
 class Slots: public QObject
 {
@@ -76,11 +111,8 @@ class Slots: public QObject
 public:
    Slots( QObject *parent = 0 );
    ~Slots();
-   QList<QWidget*> list1;
-   QList<QAction*> list5;
-   QList<QString>  list2;
-   QList<PHB_ITEM> list3;
-   QList<bool>     list4;
+   QList<PHB_ITEM> listBlock;
+   QList<bool>     listActv;
 
 public slots:
    void clicked();
@@ -103,40 +135,16 @@ public slots:
    void mouseMoveEvent( QMouseEvent * event );
    void hovered( QAction * action );
    void currentChanged( int index );
+   /* Slots to handle sliders */
+   void actionTriggered( int action );
+   void rangeChanged( int min, int max );
+   void sliderMoved( int value );
+   void sliderPressed();
+   void sliderReleased();
+   void valueChanged( int value );
 };
 
-
-class MyDrawingArea : public QWidget
-{
-   Q_OBJECT
-
-public:
-   MyDrawingArea( QWidget *parent = 0 );
-   virtual ~MyDrawingArea( void );
-
-   void keyPressEvent( QKeyEvent * event );
-   void mouseMoveEvent( QMouseEvent * event );
-
-signals:
-   void sg_mouseMoveEvent( QMouseEvent * event );
-   void sg_keyPressEvent( QKeyEvent * event );
-
-};
-
-
-class MyMainWindow : public QMainWindow
-{
-    Q_OBJECT
-
-public:
-    MyMainWindow();
-    virtual ~MyMainWindow();
-
-public:
-    void closeEvent( QCloseEvent *event );
-
-};
-
+/*----------------------------------------------------------------------*/
 #endif
 
 
