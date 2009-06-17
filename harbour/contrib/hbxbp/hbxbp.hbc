@@ -4,5 +4,5 @@
 
 incpaths=.
 
-libs=hbxbp hbwin
+libs=hbxbp 
 libs=../hbqt/hbqt.hbc
