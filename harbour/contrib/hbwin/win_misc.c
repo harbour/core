@@ -54,37 +54,6 @@
 
 #include "hbapi.h"
 
-#include <shellapi.h>
-
-/* TODO: Add hb_osEncode(). */
-
-HB_FUNC( WIN_SHELLEXECUTE )
-{
-#if defined( HB_OS_WIN_CE )
-   hb_retnint( -1 );
-#else
-   LPTSTR lpOperation  = HB_ISCHAR( 2 ) ? HB_TCHAR_CONVTO( hb_parc( 2 ) ) : NULL;
-   LPTSTR lpFile       =               HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   LPTSTR lpParameters = HB_ISCHAR( 4 ) ? HB_TCHAR_CONVTO( hb_parc( 4 ) ) : NULL;
-   LPTSTR lpDirectory  = HB_ISCHAR( 5 ) ? HB_TCHAR_CONVTO( hb_parc( 5 ) ) : NULL;
-
-   hb_retnint( ( HB_PTRDIFF ) ShellExecute( ( HWND ) hb_parptr( 1 ),
-                                            ( LPCTSTR ) lpOperation, /* edit, explore, open, print, play?, properties? */
-                                            ( LPCTSTR ) lpFile,
-                                            ( LPCTSTR ) lpParameters,
-                                            ( LPCTSTR ) lpDirectory,
-                                            HB_ISNUM( 6 ) ? hb_parni( 6 ) : SW_SHOWNORMAL /* nShowCmd */ ) );
-
-   if( lpOperation )
-      HB_TCHAR_FREE( lpOperation );
-   HB_TCHAR_FREE( lpFile );
-   if( lpParameters )
-      HB_TCHAR_FREE( lpParameters );
-   if( lpDirectory )
-      HB_TCHAR_FREE( lpDirectory );
-#endif
-}
-
 HB_FUNC( WIN_RUNDETACHED )
 {
    LPTSTR lpCommandName = HB_ISCHAR( 1 ) ? HB_TCHAR_CONVTO( hb_parc( 1 ) ) : NULL;
@@ -208,20 +177,20 @@ HB_FUNC( WIN_GETCOMMANDLINEPARAM )
    HB_TCHAR_FREE( buffer );
 }
 
-/* TODO: Add embedded zero support by using hb_mbntowc() */
 HB_FUNC( WIN_ANSITOWIDE )
 {
-   BSTR wString = hb_mbtowc( hb_parcx( 1 ) );
+   unsigned long nLen = hb_parclen( 1 );
+   BSTR wString = hb_mbntowc( hb_parcx( 1 ), nLen );
 
-   hb_retclen_buffer( ( char * ) wString, SysStringLen( wString ) );
+   hb_retclen_buffer( ( char * ) wString, nLen * sizeof( wchar_t ) );
 }
 
-/* TODO: Add embedded zero support by using hb_wcntomb() */
 HB_FUNC( WIN_WIDETOANSI )
 {
-   char * cString = hb_wctomb( ( wchar_t * ) hb_parcx( 1 ) );
+   unsigned long nLen = hb_parclen( 1 );
+   char * cString = hb_wcntomb( ( wchar_t * ) hb_parcx( 1 ), nLen );
 
-   hb_retclen_buffer( cString, strlen( cString ) );
+   hb_retclen_buffer( cString, nLen / sizeof( wchar_t ) );
 }
 
 HB_FUNC( WIN_N2P )

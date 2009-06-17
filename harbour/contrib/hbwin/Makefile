@@ -31,6 +31,7 @@ C_SOURCES = \
 	win_prt.c \
 	win_regc.c \
 	wapi_commctrl.c \
+	wapi_shellapi.c \
 	wapi_winbase.c \
 	wapi_winuser.c \
 
