@@ -166,9 +166,9 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
    char * szEOL;
    ULONG ulLen, ul;
 
-   szEOL = hb_parc( iParam );
-   if( szEOL )
+   if( HB_ISCHAR( iParam ) )
    {
+      szEOL = hb_parc( iParam );
       ulLen = hb_parclen( iParam );
       if( ulLen )
       {
@@ -189,8 +189,8 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
       }
       if( iEOLs )
       {
-         iEOLs = 0;
          pEOLs = ( PHB_EOL_INFO ) hb_xgrab( sizeof( HB_EOL_INFO ) * iEOLs );
+         iEOLs = 0;
          for( ul = 1; ul <= ulSize; ++ul )
          {
             ulLen = hb_arrayGetCLen( pArray, ul );
