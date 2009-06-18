@@ -1081,10 +1081,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       #if defined( __PLATFORM__WINDOWS )
 
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + "mingw"    + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw"   , ""                     } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + "mingw64"  + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw64" , "x86_64-pc-mingw32-"   } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + "mingwarm" + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-"       } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + "mingwarm" + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + "mingw"    + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw"   , ""                    , NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + "mingw64"  + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw64" , "x86_64-pc-mingw32-"  , NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + "mingwarm" + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-"      , NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + "mingwarm" + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-", NIL } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + "djgpp"    + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe"            ), tmp1, NIL ) }, "dos", "djgpp"   , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + "watcom"   + hb_osPathSeparator() + "binnt", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"         ), tmp1, NIL ) }, "win", "watcom"  , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + "watcom"   + hb_osPathSeparator() + "binw" , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"         ), tmp1, NIL ) }, "dos", "watcom"  , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
@@ -1105,10 +1105,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
             DO CASE
             CASE hbmk[ _HBMK_cCOMP ] $ "mingw"
-               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/xmingw/bin"   , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw"   , "i386-mingw-" } )
+               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/xmingw/bin"   , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw"   , "i386-mingw-", NIL } )
             CASE hbmk[ _HBMK_cCOMP ] $ "mingwarm"
-               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-" } )
-               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-" } )
+               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-", NIL } )
+               AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := "/opt/mingw32ce/bin", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-", NIL } )
             ENDCASE
          ENDIF
 
