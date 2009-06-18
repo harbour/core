@@ -319,7 +319,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize, USHORT suMode )
       PHB_SYMB pSymRead;                           /* Symbols read     */
       PHB_DYNF pDynFunc;                           /* Functions read   */
       PHB_DYNS pDynSym;
-      PHB_SYMB pSymFuncExe;                        /* Function duplicated into exe */    
+      PHB_SYMB pSymFuncExe;                        /* Function duplicated into exe */
 
       int iVersion = hb_hrbReadHead( szHrbBody, ulBodySize, &ulBodyOffset );
 
@@ -458,34 +458,32 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize, USHORT suMode )
             else
             {
                pSymRead[ ul ].value.pCodeFunc = ( PHB_PCODEFUNC ) pHrbBody->pDynFunc[ ulPos ].pCodeFunc;
- 
+
                /* does the function already exist in exe with different func ptr ? */
                pDynSym = hb_dynsymFind( pSymRead[ ul ].szName );
                if( pDynSym )
                {
-                 if (pSymRead[ ul ].value.pFunPtr != pDynSym->pSymbol->value.pFunPtr)
+                  if( pSymRead[ ul ].value.pFunPtr != pDynSym->pSymbol->value.pFunPtr )
                   {
-                   if (suMode == HB_HRB_KEEP_LOCAL)
-                   {
-                     /* Public became Static */
-                     pSymRead[ ul ].scope.value |= HB_FS_PCODEFUNC | HB_FS_STATIC ;
-                   }
-                   else if (suMode == HB_HRB_KEEP_GLOBAL)
-                   {
-                    /* Store to overload global one */
-                    pSymRead[ ul ].scope.value |= HB_FS_PCODEFUNC | HB_FS_LOCAL;
-                    pSymFuncExe[ulfunc++] = pSymRead[ ul ];
-                   } 
-                  } 
+                     if( suMode == HB_HRB_KEEP_LOCAL )
+                     {
+                        /* Public became Static */
+                        pSymRead[ ul ].scope.value |= HB_FS_PCODEFUNC | HB_FS_STATIC ;
+                     }
+                     else if( suMode == HB_HRB_KEEP_GLOBAL )
+                     {
+                        /* Store to overload global one */
+                        pSymRead[ ul ].scope.value |= HB_FS_PCODEFUNC | HB_FS_LOCAL;
+                        pSymFuncExe[ ulfunc++ ] = pSymRead[ ul ];
+                     }
+                  }
                }
                else
-               {
-                 pSymRead[ ul ].scope.value |= HB_FS_PCODEFUNC | HB_FS_LOCAL;
-               }              
+                  pSymRead[ ul ].scope.value |= HB_FS_PCODEFUNC | HB_FS_LOCAL;
             }
          }
          else if( pSymRead[ ul ].value.pCodeFunc == ( PHB_PCODEFUNC ) SYM_DEFERRED )
-         {         
+         {
             pSymRead[ ul ].value.pCodeFunc = ( PHB_PCODEFUNC ) SYM_EXTERN;
             pSymRead[ ul ].scope.value |= HB_FS_DEFERRED;
          }
@@ -540,26 +538,23 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize, USHORT suMode )
             /* initialize static variables */
             hb_hrbInitStatic( pHrbBody );
          }
-                  
-         /* working now on function to overload */   
-        for( ul = 0; ul < ulfunc ; ul++ )
-        {
-      
-         pDynSym = hb_dynsymFind( pSymFuncExe[ul].szName );
-         if (pDynSym)
+
+         /* working now on function to overload */
+         for( ul = 0; ul < ulfunc; ul++ )
          {
-          /* Overload global here ...  thanks to Przemek */
-          pHrbBody->CanUnload = FALSE;  // protect from unload
-          hb_vmSetFunction( pDynSym->pSymbol, ( PHB_SYMB ) pSymFuncExe+ul ) ;
-         } 
-               
-        }
-      
-        if (pSymFuncExe)   
-          hb_xfree( pSymFuncExe );         
-         
-        hb_vmUnlockModuleSymbols();         
-         
+            pDynSym = hb_dynsymFind( pSymFuncExe[ ul ].szName );
+            if( pDynSym )
+            {
+               /* Overload global here ...  thanks to Przemek */
+               pHrbBody->CanUnload = FALSE;  /* protect from unload */
+               hb_vmSetFunction( pDynSym->pSymbol, ( PHB_SYMB ) pSymFuncExe + ul );
+            }
+         }
+
+         if( pSymFuncExe )
+            hb_xfree( pSymFuncExe );
+
+         hb_vmUnlockModuleSymbols();
       }
       else
       {
@@ -729,25 +724,26 @@ HB_FUNC( HB_HRBRUN )
       hb_errRT_BASE( EG_ARG, 6103, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/*
+#if 0
+
    HB_HRBLOAD( [<nOptions>, ] <cHrb>, [<xparams>] )
 
-We have the following choices for nOptions :
+   We have the following choices for nOptions :
 
-   HB_HRB_DEFAULT       0     // do not overwrite any functions, ignore
-                              // public HRB functions if functions with
-                              // the same names already exist in HVM
+   HB_HRB_DEFAULT       0     /* do not overwrite any functions, ignore
+                                 public HRB functions if functions with
+                                 the same names already exist in HVM */
 
-   HB_HRB_KEEP_LOCAL    1     // do not overwrite any functions
-                              // but keep local references, so
-                              // if module has public function FOO and
-                              // this function exists also in HVM
-                              // then the function in HRB is converted
-                              // to STATIC one
+   HB_HRB_KEEP_LOCAL    1     /* do not overwrite any functions
+                                 but keep local references, so
+                                 if module has public function FOO and
+                                 this function exists also in HVM
+                                 then the function in HRB is converted
+                                 to STATIC one */
 
-   HB_HRB_KEEP_GLOBAL   2     // overload all existing public functions
+   HB_HRB_KEEP_GLOBAL   2     /* overload all existing public functions */
 
-*/
+#endif
 
 HB_FUNC( HB_HRBLOAD )
 {
@@ -755,26 +751,26 @@ HB_FUNC( HB_HRBLOAD )
    USHORT usMode = HB_HRB_DEFAULT;
    USHORT nParam = 1;
    char * fileOrBody;
-   
-   if (hb_pcount()>1)
+
+   if( hb_pcount() > 1 )
    {
-    if (HB_ISCHAR(1))
-    {
-     ulLen = hb_parclen( 1 );
-     fileOrBody = hb_parc( 1 );
-    }
-    else
-    {
-     usMode = (USHORT) hb_parni(1);
-     ulLen = hb_parclen( 2 );
-     fileOrBody = hb_parc( 2 );
-     nParam = 2;
-    } 
-   } 
+      if( HB_ISCHAR( 1 ) )
+      {
+         ulLen = hb_parclen( 1 );
+         fileOrBody = hb_parc( 1 );
+      }
+      else
+      {
+         usMode = ( USHORT ) hb_parni( 1 );
+         ulLen = hb_parclen( 2 );
+         fileOrBody = hb_parc( 2 );
+         nParam = 2;
+      }
+   }
    else
    {
-     ulLen = hb_parclen( 1 );
-     fileOrBody = hb_parc( 1 );
+      ulLen = hb_parclen( 1 );
+      fileOrBody = hb_parc( 1 );
    }
 
    if( ulLen > 0 )
@@ -842,19 +838,19 @@ HB_FUNC( HB_HRBUNLOAD )
 {
    PHRB_BODY * pHrbPtr = ( PHRB_BODY * ) hb_parptrGC( hb_hrb_Destructor, 1 );
 
-
-    if( pHrbPtr )
-    {
+   if( pHrbPtr )
+   {
       PHRB_BODY pHrbBody = *pHrbPtr;
 
       if( pHrbBody )
       {
          *pHrbPtr = NULL;
-         if( pHrbBody->CanUnload)
-           hb_hrbUnLoad( pHrbBody );
+
+         if( pHrbBody->CanUnload )
+            hb_hrbUnLoad( pHrbBody );
       }
-    }
-    else
+   }
+   else
       hb_errRT_BASE( EG_ARG, 6105, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
