@@ -859,6 +859,43 @@ void hb_vmThreadQuitRequest( void * Cargo )
 
 #endif
 
+void hb_vmSetFunction( PHB_SYMB pOldSym, PHB_SYMB pNewSym )
+{
+   PHB_SYMBOLS pLastSymbols = s_pSymbols;
+   HB_SYMB SymOldBuf, SymNewBuf;
+
+   /* make copy of symbols to eliminate possible problem with
+    * dynamic modification of passed parameters inside the loop
+    */
+   memcpy( &SymOldBuf, pOldSym, sizeof( SymOldBuf ) );
+   pOldSym = &SymOldBuf;
+   memcpy( &SymNewBuf, pNewSym, sizeof( SymNewBuf ) );
+   pNewSym = &SymNewBuf;
+
+   while( pLastSymbols )
+   {
+      if( pLastSymbols->fActive )
+      {
+         USHORT ui, uiSymbols = pLastSymbols->uiModuleSymbols;
+
+         for( ui = 0; ui < uiSymbols; ++ui )
+         {
+            PHB_SYMB pSym = pLastSymbols->pModuleSymbols + ui;
+
+            if( pSym->value.pFunPtr == pOldSym->value.pFunPtr &&
+                ( pSym->value.pFunPtr ||
+                  strcmp( pSym->szName, pOldSym->szName ) == 0 ) )
+            {
+               pSym->value.pFunPtr = pNewSym->value.pFunPtr;
+               pSym->scope.value   = pNewSym->scope.value;
+            }
+         }
+      }
+      pLastSymbols = pLastSymbols->pNext;
+   }
+   
+}
+
 /* application entry point */
 
 void hb_vmInit( BOOL bStartMainProc )

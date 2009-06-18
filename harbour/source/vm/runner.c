@@ -87,6 +87,7 @@ typedef struct
    PHB_SYMB       pSymRead;                     /* Symbols read             */
    PHB_DYNF       pDynFunc;                     /* Functions read           */
    PHB_SYMBOLS    pModuleSymbols;
+   BOOL           CanUnload;
 } HRB_BODY, * PHRB_BODY;
 
 static const BYTE s_szHead[ 4 ] = { 192, 'H', 'R', 'B' };
@@ -98,6 +99,9 @@ static const BYTE s_szHead[ 4 ] = { 192, 'H', 'R', 'B' };
 #define SYM_DEFERRED 3              /* lately bound function             */
 #define SYM_NOT_FOUND 0xFFFFFFFFUL  /* Symbol not found.                 */
 
+#define HB_HRB_DEFAULT       0      /* do not overload anything (like before)      */
+#define HB_HRB_KEEP_LOCAL    1      /* keep local references but convert as static */
+#define HB_HRB_KEEP_GLOBAL   2      /* overload all existing public functions      */
 
 static int hb_hrbReadHead( char * szBody, ULONG ulBodySize, ULONG * pulBodyOffset )
 {
@@ -299,7 +303,9 @@ static void hb_hrbUnLoad( PHRB_BODY pHrbBody )
    hb_xfree( pHrbBody );
 }
 
-static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
+
+
+static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize, USHORT suMode )
 {
    PHRB_BODY pHrbBody = NULL;
 
@@ -307,12 +313,13 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
    {
       ULONG ulBodyOffset = 0;
       ULONG ulSize;                                /* Size of function */
-      ULONG ul, ulPos;
+      ULONG ul, ulPos, ulfunc;
       char * buffer, ch;
 
       PHB_SYMB pSymRead;                           /* Symbols read     */
       PHB_DYNF pDynFunc;                           /* Functions read   */
       PHB_DYNS pDynSym;
+      PHB_SYMB pSymFuncExe;                        /* Function duplicated into exe */    
 
       int iVersion = hb_hrbReadHead( szHrbBody, ulBodySize, &ulBodyOffset );
 
@@ -326,6 +333,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
 
       pHrbBody->fInit = FALSE;
       pHrbBody->fExit = FALSE;
+      pHrbBody->CanUnload = TRUE;
       pHrbBody->lSymStart = -1;
       pHrbBody->ulFuncs = 0;
       pHrbBody->pSymRead = NULL;
@@ -342,6 +350,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
       /* calculate the size of dynamic symbol table */
       ulPos = ulBodyOffset;
       ulSize = 0;
+      ulfunc = 0;
 
       for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )  /* Read symbols in .hrb */
       {
@@ -400,6 +409,10 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
          memset( pDynFunc, 0, pHrbBody->ulFuncs * sizeof( HB_DYNF ) );
          pHrbBody->pDynFunc = pDynFunc;
 
+         /* ok to much space reserved but ... */
+         pSymFuncExe = ( PHB_SYMB ) hb_xgrab( pHrbBody->ulFuncs * sizeof( _HB_SYMB ) );
+         memset( pSymFuncExe, 0, pHrbBody->ulFuncs * sizeof( _HB_SYMB ) );
+
          for( ul = 0; ul < pHrbBody->ulFuncs; ul++ )
          {
             /* Read name of function */
@@ -432,7 +445,6 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
       }
 
       /* End of PCODE loading, now linking */
-
       for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )
       {
          if( pSymRead[ ul ].value.pCodeFunc == ( PHB_PCODEFUNC ) SYM_FUNC )
@@ -446,11 +458,34 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
             else
             {
                pSymRead[ ul ].value.pCodeFunc = ( PHB_PCODEFUNC ) pHrbBody->pDynFunc[ ulPos ].pCodeFunc;
-               pSymRead[ ul ].scope.value |= HB_FS_PCODEFUNC | HB_FS_LOCAL;
+ 
+               /* does the function already exist in exe with different func ptr ? */
+               pDynSym = hb_dynsymFind( pSymRead[ ul ].szName );
+               if( pDynSym )
+               {
+                 if (pSymRead[ ul ].value.pFunPtr != pDynSym->pSymbol->value.pFunPtr)
+                  {
+                   if (suMode == HB_HRB_KEEP_LOCAL)
+                   {
+                     /* Public became Static */
+                     pSymRead[ ul ].scope.value |= HB_FS_PCODEFUNC | HB_FS_STATIC ;
+                   }
+                   else if (suMode == HB_HRB_KEEP_GLOBAL)
+                   {
+                    /* Store to overload global one */
+                    pSymRead[ ul ].scope.value |= HB_FS_PCODEFUNC | HB_FS_LOCAL;
+                    pSymFuncExe[ulfunc++] = pSymRead[ ul ];
+                   } 
+                  } 
+               }
+               else
+               {
+                 pSymRead[ ul ].scope.value |= HB_FS_PCODEFUNC | HB_FS_LOCAL;
+               }              
             }
          }
          else if( pSymRead[ ul ].value.pCodeFunc == ( PHB_PCODEFUNC ) SYM_DEFERRED )
-         {
+         {         
             pSymRead[ ul ].value.pCodeFunc = ( PHB_PCODEFUNC ) SYM_EXTERN;
             pSymRead[ ul ].scope.value |= HB_FS_DEFERRED;
          }
@@ -505,7 +540,26 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
             /* initialize static variables */
             hb_hrbInitStatic( pHrbBody );
          }
-         hb_vmUnlockModuleSymbols();
+                  
+         /* working now on function to overload */   
+        for( ul = 0; ul < ulfunc ; ul++ )
+        {
+      
+         pDynSym = hb_dynsymFind( pSymFuncExe[ul].szName );
+         if (pDynSym)
+         {
+          /* Overload global here ...  thanks to Przemek */
+          pHrbBody->CanUnload = FALSE;  // protect from unload
+          hb_vmSetFunction( pDynSym->pSymbol, ( PHB_SYMB ) pSymFuncExe+ul ) ;
+         } 
+               
+        }
+      
+        if (pSymFuncExe)   
+          hb_xfree( pSymFuncExe );         
+         
+        hb_vmUnlockModuleSymbols();         
+         
       }
       else
       {
@@ -518,7 +572,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
    return pHrbBody;
 }
 
-static PHRB_BODY hb_hrbLoadFromFile( char* szHrb )
+static PHRB_BODY hb_hrbLoadFromFile( char* szHrb, USHORT usMode )
 {
    char szFileName[ HB_PATH_MAX ];
    PHRB_BODY pHrbBody = NULL;
@@ -559,7 +613,7 @@ static PHRB_BODY hb_hrbLoadFromFile( char* szHrb )
          hb_fsReadLarge( hFile, pbyBuffer, ulBodySize );
          pbyBuffer[ ulBodySize ] = '\0';
 
-         pHrbBody = hb_hrbLoad( ( char * ) pbyBuffer, ( ULONG ) ulBodySize );
+         pHrbBody = hb_hrbLoad( ( char * ) pbyBuffer, ( ULONG ) ulBodySize, usMode );
          hb_xfree( pbyBuffer );
       }
       hb_fsClose( hFile );
@@ -644,9 +698,9 @@ HB_FUNC( HB_HRBRUN )
       PHRB_BODY pHrbBody;
 
       if( ulLen > 4 && memcmp( s_szHead, fileOrBody, 4 ) == 0 )
-         pHrbBody = hb_hrbLoad( fileOrBody, ulLen );
+         pHrbBody = hb_hrbLoad( fileOrBody, ulLen, HB_HRB_DEFAULT );
       else
-         pHrbBody = hb_hrbLoadFromFile( fileOrBody );
+         pHrbBody = hb_hrbLoadFromFile( fileOrBody, HB_HRB_DEFAULT );
 
       if( pHrbBody )
       {
@@ -675,23 +729,66 @@ HB_FUNC( HB_HRBRUN )
       hb_errRT_BASE( EG_ARG, 6103, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/*
+   HB_HRBLOAD( [<nOptions>, ] <cHrb>, [<xparams>] )
+
+We have the following choices for nOptions :
+
+   HB_HRB_DEFAULT       0     // do not overwrite any functions, ignore
+                              // public HRB functions if functions with
+                              // the same names already exist in HVM
+
+   HB_HRB_KEEP_LOCAL    1     // do not overwrite any functions
+                              // but keep local references, so
+                              // if module has public function FOO and
+                              // this function exists also in HVM
+                              // then the function in HRB is converted
+                              // to STATIC one
+
+   HB_HRB_KEEP_GLOBAL   2     // overload all existing public functions
+
+*/
+
 HB_FUNC( HB_HRBLOAD )
 {
-   ULONG ulLen = hb_parclen( 1 );
+   ULONG ulLen = 0;
+   USHORT usMode = HB_HRB_DEFAULT;
+   USHORT nParam = 1;
+   char * fileOrBody;
+   
+   if (hb_pcount()>1)
+   {
+    if (HB_ISCHAR(1))
+    {
+     ulLen = hb_parclen( 1 );
+     fileOrBody = hb_parc( 1 );
+    }
+    else
+    {
+     usMode = (USHORT) hb_parni(1);
+     ulLen = hb_parclen( 2 );
+     fileOrBody = hb_parc( 2 );
+     nParam = 2;
+    } 
+   } 
+   else
+   {
+     ulLen = hb_parclen( 1 );
+     fileOrBody = hb_parc( 1 );
+   }
 
    if( ulLen > 0 )
    {
-      char * fileOrBody = hb_parc( 1 );
       PHRB_BODY pHrbBody;
 
       if( ulLen > 4 && memcmp( s_szHead, fileOrBody, 4 ) == 0 )
-         pHrbBody = hb_hrbLoad( fileOrBody, ulLen );
+         pHrbBody = hb_hrbLoad( fileOrBody, ulLen, usMode );
       else
-         pHrbBody = hb_hrbLoadFromFile( fileOrBody );
+         pHrbBody = hb_hrbLoadFromFile( fileOrBody, usMode );
 
       if( pHrbBody )
       {
-         int iPCount = hb_pcount() - 1;
+         int iPCount = hb_pcount() - nParam;
          PHB_ITEM * pParams = NULL;
          int i;
 
@@ -700,7 +797,7 @@ HB_FUNC( HB_HRBLOAD )
             pParams = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * iPCount );
 
             for( i = 0; i < iPCount; i++ )
-               pParams[ i ] = hb_stackItemFromBase( i + 2 );
+               pParams[ i ] = hb_stackItemFromBase( i + 2 + nParam );
          }
 
          hb_hrbInit( pHrbBody, iPCount, pParams );
@@ -745,17 +842,19 @@ HB_FUNC( HB_HRBUNLOAD )
 {
    PHRB_BODY * pHrbPtr = ( PHRB_BODY * ) hb_parptrGC( hb_hrb_Destructor, 1 );
 
-   if( pHrbPtr )
-   {
+
+    if( pHrbPtr )
+    {
       PHRB_BODY pHrbBody = *pHrbPtr;
 
       if( pHrbBody )
       {
          *pHrbPtr = NULL;
-         hb_hrbUnLoad( pHrbBody );
+         if( pHrbBody->CanUnload)
+           hb_hrbUnLoad( pHrbBody );
       }
-   }
-   else
+    }
+    else
       hb_errRT_BASE( EG_ARG, 6105, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
