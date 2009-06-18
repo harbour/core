@@ -334,7 +334,7 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       ENDIF
 
    CASE nEvent == HB_GTE_SETFOCUS
-      /* aeval( ::aChildren, {|o| WVG_InvalidateRect( o:hWnd ) } ) */
+      /* aeval( ::aChildren, {|o| Win_InvalidateRect( o:hWnd ) } ) */
 
       IF hb_isBlock( ::sl_setInputFocus )
          eval( ::sl_setInputFocus, NIL, NIL, Self )
@@ -348,13 +348,13 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       ::lHasInputFocus := .f.
 
    CASE nEvent == HB_GTE_PAINT
-      /* aeval( ::aChildren, {|o| WVG_InvalidateRect( o:hWnd ) } ) */
+      /* aeval( ::aChildren, {|o| Win_InvalidateRect( o:hWnd ) } ) */
 
    CASE nEvent == HB_GTE_GUIPARTS
       /* Eventally every window be checked if it falls within returned rectangle or not
        * then it will avoid a lot of flickering
        */
-      aeval( ::aChildren, {|o| WVG_InvalidateRect( o:hWnd ) } )
+      aeval( ::aChildren, {|o| Win_InvalidateRect( o:hWnd ) } )
 
    CASE nEvent == HB_GTE_CLOSE
       IF hb_isBlock( ::close )

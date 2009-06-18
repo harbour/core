@@ -373,7 +373,7 @@ HB_FUNC( WVT_SETTOOLTIPWIDTH )
 
    int iTipWidth = ( int ) SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 );
 
-   if ( HB_ISNUM( 1 ) )
+   if ( ISNUM( 1 ) )
    {
       SendMessage( _s->hWndTT, TTM_SETMAXTIPWIDTH, 0, ( LPARAM ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
    }
@@ -391,7 +391,7 @@ HB_FUNC( WVT_SETTOOLTIPBKCOLOR )
 
    COLORREF cr = ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 );
 
-   if ( HB_ISNUM( 1 ) )
+   if ( ISNUM( 1 ) )
    {
       SendMessage( _s->hWndTT, TTM_SETTIPBKCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 1 ), 0 );
    }
@@ -408,7 +408,7 @@ HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
 
    COLORREF cr = ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 );
 
-   if ( HB_ISNUM( 1 ) )
+   if ( ISNUM( 1 ) )
    {
       SendMessage( _s->hWndTT, TTM_SETTIPTEXTCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 1 ), 0 );
    }
@@ -481,7 +481,7 @@ HB_FUNC( WVT_SETGUI )
 
    BOOL bGui = _s->bGui;
 
-   if ( HB_ISLOG( 1 ) )
+   if ( ISLOG( 1 ) )
    {
       _s->bGui = hb_parl( 1 );
    }
@@ -621,7 +621,7 @@ HB_FUNC( WVT_SETMOUSEMOVE )
 
    BOOL bMouseMove = _s->MouseMove;
 
-   if( HB_ISLOG( 1 ) )
+   if( ISLOG( 1 ) )
      _s->MouseMove = hb_parl( 1 );
 
    hb_retl( bMouseMove );
@@ -730,11 +730,11 @@ HB_FUNC( WVT_CREATEPOPUPMENU )
 
 /*----------------------------------------------------------------------*/
 
-HB_FUNC_EXTERN( WVG_APPENDMENU );
+HB_FUNC_EXTERN( WIN_APPENDMENU );
 
 HB_FUNC( WVT_APPENDMENU )
 {
-   HB_FUNC_EXEC( WVG_APPENDMENU );
+   HB_FUNC_EXEC( WIN_APPENDMENU );
 }
 
 /*----------------------------------------------------------------------*/
@@ -774,7 +774,7 @@ HB_FUNC( WVT_SETLASTMENUEVENT )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    int iEvent = _s->LastMenuEvent;
-   if ( HB_ISNUM( 1 ) )
+   if ( ISNUM( 1 ) )
       _s->LastMenuEvent = hb_parni( 1 );
 
    hb_retni( iEvent );
@@ -788,7 +788,7 @@ HB_FUNC( WVT_SETMENUKEYEVENT )
 
    int iOldEvent = _s->MenuKeyEvent;
 
-   if( HB_ISNUM( 1 ) )
+   if( ISNUM( 1 ) )
      _s->MenuKeyEvent = hb_parni( 1 );
 
    hb_retni( iOldEvent ) ;
@@ -811,7 +811,7 @@ HB_FUNC( WVT_ENABLESHORTCUTS )
 
    BOOL bWas = _s->EnableShortCuts;
 
-   if( HB_ISLOG( 1 ) )
+   if( ISLOG( 1 ) )
       _s->EnableShortCuts = hb_parl( 1 );
 
    hb_retl( bWas );
@@ -966,7 +966,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
    }
 
    {
-      if ( HB_ISNUM( 3 ) )
+      if ( ISNUM( 3 ) )
       {
          LPTSTR lpTemplate = HB_TCHAR_CONVTO( hb_parc( 1 ) );
          hDlg = CreateDialogIndirect( ( HINSTANCE     ) wvg_hInstance(),
@@ -1342,7 +1342,7 @@ HB_FUNC( WVT_DLGSETICON )
 {
    HICON hIcon;
 
-   if ( HB_ISNUM( 2 ) )
+   if ( ISNUM( 2 ) )
    {
       hIcon = LoadIcon( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 2 ) ) );
    }
@@ -1491,7 +1491,7 @@ void wvt_Size2ArrayEx( SIZE *siz, PHB_ITEM aSize )
 
 /*----------------------------------------------------------------------*/
 
-#define HB_PARTSTR( n )  ( HB_ISCHAR( n ) ? HB_TCHAR_CONVTO( hb_parc(n) ) : NULL )
+#define HB_PARTSTR( n )  ( ISCHAR( n ) ? HB_TCHAR_CONVTO( hb_parc(n) ) : NULL )
 #define HB_PARTFREE( p ) do { if( p ) HB_TCHAR_FREE( p ); } while( 0 )
 
 HB_FUNC( WVT__GETOPENFILENAME )

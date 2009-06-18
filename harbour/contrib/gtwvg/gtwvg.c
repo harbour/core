@@ -4531,7 +4531,7 @@ PHB_GTWVT hb_wvt_gtGetWVT( void )
 
 HB_FUNC( HB_GTINFOEX )
 {
-   if( HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
+   if( ISPOINTER( 1 ) && ISNUM( 2 ) )
    {
       PHB_GT pGT = hb_gt_ItemBase( hb_param( 1, HB_IT_ANY ) );
 

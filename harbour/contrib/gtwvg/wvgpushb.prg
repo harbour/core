@@ -165,10 +165,10 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgPushButton
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF hb_isNumeric( ::clr_FG )
-         WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
+         Win_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF hb_isNumeric( ::hBrushBG )
-         WVG_SetBkMode( aNM[ 1 ], 1 )
+         Win_SetBkMode( aNM[ 1 ], 1 )
          RETURN ( ::hBrushBG )
       ENDIF
 
@@ -202,7 +202,7 @@ METHOD setCaption( xCaption, cDll ) CLASS WvgPushButton
 
    IF hb_isChar( xCaption )
       ::caption := xCaption
-      WVG_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      Win_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
    ENDIF
 
    RETURN Self

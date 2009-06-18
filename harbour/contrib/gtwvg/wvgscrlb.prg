@@ -206,7 +206,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF hb_isNumeric( ::hBrushBG )
-         WVG_SetBkMode( aNM[ 1 ], 1 )
+         Win_SetBkMode( aNM[ 1 ], 1 )
          RETURN ( ::hBrushBG )
       ENDIF
 

@@ -77,7 +77,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS WvgActiveXControl FROM WIN_OleAuto, WvgWindow
+CLASS WvgActiveXControl FROM win_OleAuto, WvgWindow
 
    DATA   CLSID                              INIT ""
    DATA   server                             INIT NIL
@@ -165,7 +165,7 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
 
    Wvg_AxInit()
 
-   hWnd := Wvg_AxCreateWindow( WIN_N2P( ::hContainer ), ::CLSID, ::nID, ;
+   hWnd := Wvg_AxCreateWindow( Win_N2P( ::hContainer ), ::CLSID, ::nID, ;
                                  ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ;
                                  ::style, ::exStyle )
    IF empty( hWnd )
@@ -180,7 +180,7 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
    Wvg_AxDoVerb( hWnd, -4 )
 
    ::__hObj := hObj
-   ::hWnd   := WIN_P2N( hWnd )
+   ::hWnd   := Win_P2N( hWnd )
 
    ::oParent:addChild( SELF )
 
@@ -241,8 +241,8 @@ METHOD handleEvent( nEvent, aInfo ) CLASS WvgActiveXControl
 METHOD Destroy() CLASS WvgActiveXControl
 
    IF !empty( ::__hObj )
-      IF WVG_IsWindow( ::hWnd )
-         WVG_DestroyWindow( ::hWnd )
+      IF Win_IsWindow( ::hWnd )
+         Win_DestroyWindow( ::hWnd )
       ENDIF
 
       IF ::nEventHandler == "AdviseEvents"

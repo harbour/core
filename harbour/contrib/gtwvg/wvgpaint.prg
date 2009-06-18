@@ -275,9 +275,9 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
    DEFAULT aOffSet[ 3 ] TO 0
    DEFAULT aOffSet[ 4 ] TO 0
 
-   nBaseUnits  := WVG_GetDialogBaseUnits()
-   nBaseUnitsX := WVG_LoWord( nBaseUnits )
-   nBaseUnitsY := WVG_HiWord( nBaseUnits )
+   nBaseUnits  := Win_GetDialogBaseUnits()
+   nBaseUnitsX := Win_LoWord( nBaseUnits )
+   nBaseUnitsY := Win_HiWord( nBaseUnits )
 
    nW := aFont[ 7 ] * nCols + aOffSet[ 4 ]
    nH := aFont[ 6 ] * nRows + aOffSet[ 3 ]
@@ -349,9 +349,9 @@ Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
    DEFAULT aOffSet[ 3 ] TO 0
    DEFAULT aOffSet[ 4 ] TO 0
 
-   nBaseUnits  := WVG_GetDialogBaseUnits()
-   nBaseUnitsX := WVG_LoWord( nBaseUnits )
-   nBaseUnitsY := WVG_HiWord( nBaseUnits )
+   nBaseUnits  := Win_GetDialogBaseUnits()
+   nBaseUnitsX := Win_LoWord( nBaseUnits )
+   nBaseUnitsY := Win_HiWord( nBaseUnits )
 
    aXY := Wvt_GetXYFromRowCol( nTop, nLeft )
    nX  := aXY[ 1 ] + aOffSet[ 2 ]
@@ -414,12 +414,12 @@ Function Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
       endif
 
       if valtype( nTimerTicks ) == "N"
-         WVG_SetTimer( hDlg, 1001, nTimerTicks )
+         Win_SetTimer( hDlg, 1001, nTimerTicks )
 
       endif
 
       if hMenu <> nil
-         WVG_SetMenu( hDlg, hMenu )
+         Win_SetMenu( hDlg, hMenu )
 
       endif
 
@@ -482,7 +482,7 @@ FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, aFilter, nFlags, cIniDir, cDe
           c += aFilter[n][1] + chr(0) + aFilter[n][2] + chr(0)
       NEXT
    ENDIF
-   if WVG_AND( nFlags,OFN_ALLOWMULTISELECT ) > 0
+   if WIN_AND( nFlags,OFN_ALLOWMULTISELECT ) > 0
       cFile := space( 32000 )
      ELSE
       cFile := padr( trim( cPath ), 255, chr( 0 ) )
@@ -490,7 +490,7 @@ FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, aFilter, nFlags, cIniDir, cDe
 
    cRet := WVT__GetOpenFileName( hWnd, @cFile, cTitle, c, nFlags, cIniDir, cDefExt, @nIndex )
 
-   if WVG_AND( nFlags,OFN_ALLOWMULTISELECT ) > 0
+   if WIN_AND( nFlags,OFN_ALLOWMULTISELECT ) > 0
       n := AT( CHR(0)+ CHR(0), cFile )
       cFile  := LEFT( cFile,n )
       aFiles := {}

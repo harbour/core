@@ -164,7 +164,7 @@ METHOD create( oParent, aPresParams, lVisible ) CLASS wvgMenuBar
 
    ::wvgWindow:create( ::oParent, , , , ::aPresParams, ::visible )
 
-   ::hMenu := WVG_CreateMenu()
+   ::hMenu := Win_CreateMenu()
 
    if ::hMenu <> 0
       /*  check for if the parent already has a menu
@@ -173,14 +173,14 @@ METHOD create( oParent, aPresParams, lVisible ) CLASS wvgMenuBar
       */
       /* finally set the menu */
       #if 0
-      WVG_SetMenu( ::oParent:getHWND(), ::hMenu )
+      Win_SetMenu( ::oParent:getHWND(), ::hMenu )
       #endif
 
       /* how to make menu invisible ? */
       if ( ::visible )
          #if 0
-         WVG_ShowWindow( ::oParent:getHWND(), SW_MINIMIZE )
-         WVG_ShowWindow( ::oParent:getHWND(), SW_NORMAL )
+         Win_ShowWindow( ::oParent:getHWND(), SW_MINIMIZE )
+         Win_ShowWindow( ::oParent:getHWND(), SW_NORMAL )
          #endif
       endif
 
@@ -210,7 +210,7 @@ METHOD destroy() CLASS wvgMenuBar
    IF !empty( ::hMenu )
       ::DelAllItems()
 
-      IF ! WVG_DestroyMenu( ::hMenu )
+      IF !Win_DestroyMenu( ::hMenu )
          #if 0
          Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {},"wvt.prg" ) )
          #endif
@@ -244,7 +244,7 @@ METHOD delItem( nItemNum ) CLASS wvgMenuBar
          ::aMenuItems[ nItemNum,WVT_MENU_MENUOBJ ]:Destroy()
       ENDIF
 
-      IF ( lResult:= WVG_DeleteMenu( ::hMenu, nItemNum-1, MF_BYPOSITION ) ) /* Remember ZERO base */
+      IF ( lResult:= Win_DeleteMenu( ::hMenu, nItemNum-1, MF_BYPOSITION ) ) /* Remember ZERO base */
          ADEL( ::aMenuItems, nItemNum )
          ASIZE( ::aMenuItems, LEN( ::aMenuItems ) - 1 )
       ELSE
@@ -310,15 +310,15 @@ METHOD addItem( aItem, p2, p3, p4 ) CLASS wvgMenuBar
    end
 
    aadd( ::aMenuItems, aItem )
-   WVG_AppendMenu( ::hMenu, aItem[ 1 ], aItem[ 2 ], aItem[ 3 ] )
+   Win_AppendMenu( ::hMenu, aItem[ 1 ], aItem[ 2 ], aItem[ 3 ] )
 
    IF ++::nPass == 1
       IF ::oParent:className $ "WVGCRT,WVGDIALOG"
-         WVG_SetMenu( ::oParent:getHWND(), ::hMenu )
+         Win_SetMenu( ::oParent:getHWND(), ::hMenu )
       ENDIF
    ELSE
       IF ::oParent:className $ "WVGCRT,WVGDIALOG"
-         WVG_DrawMenubar( ::oParent:getHWND() )
+         Win_DrawMenubar( ::oParent:getHWND() )
       ENDIF
    ENDIF
 
@@ -378,7 +378,7 @@ METHOD checkItem( nItemNum, lCheck ) CLASS wvgMenuBar
    DEFAULT lCheck TO .T.
 
    IF !empty( ::hMenu ) .AND. !empty( nItemNum )
-      nRet := WVG_CheckMenuItem( ::hMenu, nItemNum, MF_BYPOSITION + IF( lCheck, MF_CHECKED, MF_UNCHECKED ) )
+      nRet := Win_CheckMenuItem( ::hMenu, nItemNum, MF_BYPOSITION + IF( lCheck, MF_CHECKED, MF_UNCHECKED ) )
    ENDIF
 
    RETURN IF( nRet == -1, .F., .T. )
@@ -389,7 +389,7 @@ METHOD enableItem( nItemNum ) CLASS wvgMenuBar
    LOCAL lSuccess := .f.
 
    IF !empty( ::hMenu ) .AND. !empty( nItemNum )
-      lSuccess := WVG_EnableMenuItem( ::hMenu, nItemNum-1, MF_BYPOSITION + MF_ENABLED )
+      lSuccess := Win_EnableMenuItem( ::hMenu, nItemNum-1, MF_BYPOSITION + MF_ENABLED )
    ENDIF
 
    RETURN ( lSuccess )
@@ -400,7 +400,7 @@ METHOD disableItem( nItemNum ) CLASS wvgMenuBar
    LOCAL lSuccess := .f.
 
    IF !empty( ::hMenu ) .AND. !empty( nItemNum )
-      lSuccess := WVG_EnableMenuItem( ::hMenu, nItemNum-1, MF_BYPOSITION + MF_GRAYED )
+      lSuccess := Win_EnableMenuItem( ::hMenu, nItemNum-1, MF_BYPOSITION + MF_GRAYED )
    ENDIF
 
    RETURN ( lSuccess )
@@ -571,7 +571,7 @@ METHOD create( oParent, aPresParams, lVisible ) CLASS wvgMenu
 
    ::className := "POPUPMENU"
 
-   ::hMenu := WVG_CreatePopupMenu()
+   ::hMenu := Win_CreatePopupMenu()
 
    RETURN Self
 
@@ -595,7 +595,7 @@ METHOD popUp( oXbp, aPos, nDefaultItem, nControl ) CLASS wvgMenu
    HB_SYMBOL_UNUSED( nDefaultItem )
    HB_SYMBOL_UNUSED( nControl     )
 
-   nCmd := WVG_TrackPopupMenu( ::hMenu, TPM_LEFTALIGN + TPM_TOPALIGN + TPM_RETURNCMD, aPos[ 1 ], aPos[ 2 ], oXbp:hWnd )
+   nCmd := Win_TrackPopupMenu( ::hMenu, TPM_LEFTALIGN + TPM_TOPALIGN + TPM_RETURNCMD, aPos[ 1 ], aPos[ 2 ], oXbp:hWnd )
 
    aMenuItem := ::findMenuItemById( nCmd )
    IF hb_isArray( aMenuItem ) .and. hb_isBlock( aMenuItem[ 2 ] )

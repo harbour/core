@@ -938,11 +938,11 @@ static COLORREF hb_wvt_BgColorParam( int iParam )
 
    COLORREF color;
 
-   if( HB_ISNUM( iParam ) )
+   if( ISNUM( iParam ) )
       color = ( COLORREF ) hb_parnl( iParam );
    else
    {
-      int iColor = HB_ISCHAR( iParam ) ? hb_gtColorToN( hb_parc( iParam ) ) : - 1;
+      int iColor = ISCHAR( iParam ) ? hb_gtColorToN( hb_parc( iParam ) ) : - 1;
       if( iColor == -1 )
          iColor = hb_gtGetCurrColor();
       color = _s->COLORS[ ( ( iColor >> 4 ) & 0x0f ) ];
@@ -959,11 +959,11 @@ static COLORREF hb_wvt_FgColorParam( int iParam )
 
    COLORREF color;
 
-   if( HB_ISNUM( iParam ) )
+   if( ISNUM( iParam ) )
       color = ( COLORREF ) hb_parnl( iParam );
    else
    {
-      int iColor = HB_ISCHAR( iParam ) ? hb_gtColorToN( hb_parc( iParam ) ) : - 1;
+      int iColor = ISCHAR( iParam ) ? hb_gtColorToN( hb_parc( iParam ) ) : - 1;
       if( iColor == -1 )
          iColor = hb_gtGetCurrColor();
       color = _s->COLORS[ ( ( iColor >> 4 ) & 0x0f ) ];
@@ -1182,7 +1182,7 @@ HB_FUNC( WVT_DRAWIMAGE )
    iBottom = xy.y - 1 + hb_parni( 6,3 );
    iRight  = xy.x - 1 + hb_parni( 6,4 );
 
-   if ( HB_ISNUM( 5 ) )
+   if ( ISNUM( 5 ) )
    {
       hb_wvt_gtRenderPicture( iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, _s->pGUI->iPicture[ hb_parni( 5 )-1 ] );
    }
@@ -1294,7 +1294,7 @@ HB_FUNC( WVT_DRAWOUTLINE )
 
    hOldPenGUI = hOldPen = 0;
 
-   if ( HB_ISNUM( 5 ) )
+   if ( ISNUM( 5 ) )
    {
       hPen = CreatePen( hb_parni( 5 ), 0, ( !HB_ISNUM( 7 ) ? 0 : ( COLORREF ) hb_parnl( 7 ) ) );
       if ( hPen )
@@ -1809,7 +1809,7 @@ HB_FUNC( WVT_DRAWBUTTON )
    LOGBRUSH lb = { 0,0,0 };
    HBRUSH   hBrush;
 
-   BOOL     bText     = HB_ISCHAR( 5 );
+   BOOL     bText     = ISCHAR( 5 );
    BOOL     bImage    = ( HB_ISNUM( 6 ) || HB_ISCHAR( 6 ) );
    int      iFormat   = hb_parni( 7 );
    COLORREF textColor = !HB_ISNUM(  8 ) ? _s->COLORS[ 0 ] : ( COLORREF ) hb_parnl( 8 ) ;
@@ -1938,7 +1938,7 @@ HB_FUNC( WVT_DRAWBUTTON )
       int iImageWidth  = ( iRight - iLeft + 1 - 8 );
       int iImageHeight = ( iBottom - iTop + 1 - 8 - iTextHeight );
 
-      if ( HB_ISNUM( 6 ) )
+      if ( ISNUM( 6 ) )
       {
          IPicture *iPicture = _s->pGUI->iPicture[ hb_parni( 6 ) - 1 ];
          hb_wvt_gtRenderPicture( iLeft+4, iTop+4, iImageWidth, iImageHeight, iPicture );
