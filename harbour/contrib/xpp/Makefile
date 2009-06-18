@@ -8,7 +8,6 @@ LIBNAME=xpp
 
 C_SOURCES=\
 	binnumx.c \
-	datesx.c \
 	dbcmdx.c \
 	dbdetacx.c \
 	idlex.c \
