@@ -1,6 +1,15 @@
 diff -u superori/between.c superpat/between.c
 --- superori/between.c	1993-08-19 10:28:38.000000000 +0200
-+++ superpat/between.c	2009-06-10 08:44:26.000000000 +0200
++++ superpat/between.c	2009-06-18 07:36:43.000000000 +0200
+@@ -14,7 +14,7 @@
+ 
+ 
+ #include "extend.h"
+-CLIPPER takeout()
++HB_FUNC( TAKEOUT )
+ {
+    char *string;
+    char *delim;
 @@ -63,7 +63,7 @@
     if (strend >= strstart && (fnd))
     {
@@ -157,6 +166,18 @@ diff -u superori/mline.c superpat/mline.c
 +
 +  hb_xfree(outstr);
  }
+diff -u superori/nextls.c superpat/nextls.c
+--- superori/nextls.c	1993-09-27 09:42:08.000000000 +0100
++++ superpat/nextls.c	2009-06-18 07:36:11.000000000 +0200
+@@ -2,7 +2,7 @@
+ 
+ 
+ /*컴컴컴컴컴get next line, return nil if none컴컴컴컴컴컴*/
+-CLIPPER nextls()
++HB_FUNC( NEXTLS )
+ {
+   char *string = _parc(1);
+   unsigned int strlen   = _parclen(1);
 diff -u superori/r_hcode.prg superpat/r_hcode.prg
 --- superori/r_hcode.prg	1993-10-08 11:30:40.000000000 +0100
 +++ superpat/r_hcode.prg	2009-06-10 08:44:26.000000000 +0200
@@ -1151,7 +1172,16 @@ diff -u superori/s_scmod.prg superpat/s_scmod.prg
               if cTempFile==cAlias
 diff -u superori/s_scrbuf.c superpat/s_scrbuf.c
 --- superori/s_scrbuf.c	1992-11-02 17:15:40.000000000 +0100
-+++ superpat/s_scrbuf.c	2009-06-10 08:44:27.000000000 +0200
++++ superpat/s_scrbuf.c	2009-06-18 07:35:03.000000000 +0200
+@@ -1,7 +1,7 @@
+ 
+ #include "extend.h"
+ 
+-CLIPPER getscrow()
++HB_FUNC( GETSCROW )
+ {
+    char *inscreenstring;                  /* saved screen */
+    char *ret_scr;
 @@ -20,7 +20,7 @@
     getrow            = _parni(6)-1;
     top               = top*80;
@@ -1161,6 +1191,15 @@ diff -u superori/s_scrbuf.c superpat/s_scrbuf.c
  
     for(i=getrow*cols*2; i< (getrow+1)*cols*2;i++)
         ret_scr[count++] = inscreenstring[i];
+@@ -28,7 +28,7 @@
+    _xfree(ret_scr);
+ }
+ 
+-CLIPPER getsccol()
++HB_FUNC( GETSCCOL )
+ {
+    char *inscreenstring;                  /* saved screen */
+    char *ret_scr;
 @@ -47,7 +47,7 @@
     rows              = bottom-top+1;
     getcol            = _parni(6)-1;
@@ -1170,6 +1209,15 @@ diff -u superori/s_scrbuf.c superpat/s_scrbuf.c
     lastcol           = (cols*(rows-1)+(getcol)+1)*2 ;
  
     for(i=getcol*2; i< lastcol ;i+=(cols*2))
+@@ -60,7 +60,7 @@
+ }
+ 
+ 
+-CLIPPER ssprinkle()
++HB_FUNC( SSPRINKLE )
+ {
+    char *oldscreen;                  /* saved screen */
+    char *newscreen;
 @@ -74,7 +74,7 @@
     every       = _parni(3);
     scrlen      = _parclen(1);
