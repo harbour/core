@@ -95,9 +95,9 @@ CLASS WvgDialog FROM WvgWindow
    METHOD   menuBar()
    METHOD   setFrameState( nState )
    METHOD   getFrameState()
-   METHOD   calcClientRect()                      INLINE ::aRect := WDW_GetClientRect( ::hWnd ), ;
+   METHOD   calcClientRect()                      INLINE ::aRect := Win_GetClientRect( ::hWnd ), ;
                                                          { 0, 0, ::aRect[ 3 ], ::aRect[ 4 ] }
-   METHOD   calcFrameRect()                       INLINE ::aRect := WDW_GetWindowRect( ::hWnd ),;
+   METHOD   calcFrameRect()                       INLINE ::aRect := Win_GetWindowRect( ::hWnd ),;
                                                          { ::aRect[ 1 ], ::aRect[ 2 ], ;
                                                          ::aRect[ 3 ]-::aRect[ 1 ], ::aRect[ 4 ]-::aRect[ 2 ] }
    ENDCLASS
@@ -189,7 +189,7 @@ METHOD destroy() CLASS WvgDialog
    ENDIF
 
    IF !empty( ::hBrushBG )
-      WDW_DeleteObject( ::hBrushBG )
+      Win_DeleteObject( ::hBrushBG )
    ENDIF
 
    ::pGT  := NIL
@@ -217,10 +217,10 @@ METHOD setFrameState( nState ) CLASS WvgDialog
 /*----------------------------------------------------------------------*/
 METHOD getFrameState() CLASS WvgDialog
 
-   IF WDW_IsIconic( ::hWnd )
+   IF Win_IsIconic( ::hWnd )
       RETURN WVGDLG_FRAMESTAT_MINIMIZED
    ENDIF
-   IF WDW_IsZoomed( ::hWnd )
+   IF Win_IsZoomed( ::hWnd )
       RETURN WVGDLG_FRAMESTAT_MAXIMIZED
    ENDIF
 

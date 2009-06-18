@@ -353,8 +353,8 @@ METHOD destroy() CLASS WvgWindow
    WVG_ReleaseWindowProcBlock( ::pWnd )
    #endif
 
-   IF WDW_IsWindow( ::hWnd )
-      WDW_DestroyWindow( ::hWnd )
+   IF Win_IsWindow( ::hWnd )
+      Win_DestroyWindow( ::hWnd )
    ENDIF
 
    #ifdef __BYASCALLBACK__
@@ -364,7 +364,7 @@ METHOD destroy() CLASS WvgWindow
    #endif
 
    IF ::hBrushBG <> NIL
-      WDW_DeleteObject( ::hBrushBG )
+      Win_DeleteObject( ::hBrushBG )
    ENDIF
 
    RETURN Self
@@ -375,7 +375,7 @@ METHOD SetWindowProcCallback() CLASS WvgWindow
 
    #ifdef __BYASCALLBACK__
    ::nWndProc := hb_AsCallBack( "CONTROLWNDPROC", Self )
-   ::nOldProc := WDW_SetWndProc( ::hWnd, ::nWndProc )
+   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
    #endif
 
    #ifdef __BYSETPROP__
@@ -394,7 +394,7 @@ METHOD captureMouse() CLASS WvgWindow
 
 METHOD disable() CLASS WvgWindow
 
-   IF WDW_EnableWindow( ::hWnd, .f. )
+   IF Win_EnableWindow( ::hWnd, .f. )
       ::is_enabled := .f.
       RETURN .t.
    ENDIF
@@ -405,7 +405,7 @@ METHOD disable() CLASS WvgWindow
 
 METHOD enable() CLASS WvgWindow
 
-   IF WDW_EnableWindow( ::hWnd, .t. )
+   IF Win_EnableWindow( ::hWnd, .t. )
       ::is_enabled := .t.
       RETURN .t.
    ENDIF
@@ -416,8 +416,8 @@ METHOD enable() CLASS WvgWindow
 
 METHOD hide() CLASS WvgWindow
 
-   IF WDW_IsWindow( ::hWnd )
-      WDW_ShowWindow( ::hWnd, SW_HIDE )
+   IF Win_IsWindow( ::hWnd )
+      Win_ShowWindow( ::hWnd, SW_HIDE )
       ::is_hidden := .t.
    ENDIF
 
@@ -427,7 +427,7 @@ METHOD hide() CLASS WvgWindow
 
 METHOD invalidateRect( aRect ) CLASS WvgWindow
 
-   RETURN WDW_InvalidateRect( ::hWnd, aRect )
+   RETURN Win_InvalidateRect( ::hWnd, aRect )
 
 /*----------------------------------------------------------------------*/
 
@@ -447,7 +447,7 @@ METHOD setColorBG( nRGB ) CLASS WvgWindow
    LOCAL hBrush
 
    IF hb_isNumeric( nRGB )
-      hBrush := WDW_CreateBrush( BS_SOLID, nRGB, 0 )
+      hBrush := Win_CreateBrush( BS_SOLID, nRGB, 0 )
       IF hBrush <> 0
          ::clr_BG := nRGB
          ::hBrushBG := hBrush
@@ -491,7 +491,7 @@ METHOD setPos( aPos, lPaint ) CLASS WvgWindow
          exit
 
       OTHERWISE
-         WDW_SetWindowPosition( ::hWnd, aPos[ 1 ], aPos[ 2 ], lPaint )
+         Win_SetWindowPosition( ::hWnd, aPos[ 1 ], aPos[ 2 ], lPaint )
          EXIT
 
       END
@@ -514,7 +514,7 @@ METHOD setPosAndSize( aPos, aSize, lPaint ) CLASS WvgWindow
 
       OTHERWISE
          /*Win_MoveWindow( ::hWnd, aPos[ 1 ], aPos[ 2 ], aSize[ 1 ], aSize[ 2 ], lPaint ) */
-         WDW_SetWindowPosAndSize( ::hWnd, aPos[ 1 ], aPos[ 2 ], aSize[ 1 ], aSize[ 2 ], lPaint )
+         Win_SetWindowPosAndSize( ::hWnd, aPos[ 1 ], aPos[ 2 ], aSize[ 1 ], aSize[ 2 ], lPaint )
          EXIT
 
       END
@@ -533,7 +533,7 @@ METHOD setSize( aSize, lPaint ) CLASS WvgWindow
 
       CASE objTypeDialog
          /*Win_MoveWindow( ::hWnd, 0, 0, aSize[ 1 ], aSize[ 2 ], lPaint ) */
-         WDW_SetWindowSize( ::hWnd, aSize[ 1 ], aSize[ 2 ], lPaint )
+         Win_SetWindowSize( ::hWnd, aSize[ 1 ], aSize[ 2 ], lPaint )
          EXIT
 
       END
@@ -565,7 +565,7 @@ METHOD isDerivedFrom( cClassORoObject ) CLASS WvgWindow
 
 METHOD show() CLASS WvgWindow
 
-   WDW_ShowWindow( ::hWnd, SW_NORMAL )
+   Win_ShowWindow( ::hWnd, SW_NORMAL )
    ::is_hidden      := .f.
    ::lHasInputFocus := .t.
 
@@ -575,14 +575,14 @@ METHOD show() CLASS WvgWindow
 
 METHOD toBack() CLASS WvgWindow
 
-   RETURN WDW_SetWindowPosToBack( ::hWnd )
+   RETURN Win_SetWindowPosToBack( ::hWnd )
 
 /*----------------------------------------------------------------------*/
 
 METHOD toFront() CLASS WvgWindow
 
-   /*RETURN WDW_SetForegroundWindow( ::hWnd ) */
-   RETURN WDW_SetWindowPosToTop( ::hWnd )
+   /*RETURN Win_SetForegroundWindow( ::hWnd ) */
+   RETURN Win_SetWindowPosToTop( ::hWnd )
 
 /*----------------------------------------------------------------------*/
 
@@ -653,7 +653,7 @@ METHOD setPresParam() CLASS WvgWindow
 METHOD currentPos() CLASS WvgWindow
    LOCAL aRect
 
-   aRect := WDW_GetWindowRect( ::hWnd )
+   aRect := Win_GetWindowRect( ::hWnd )
 
    RETURN { aRect[ 1 ], aRect[ 2 ] }
 
@@ -662,7 +662,7 @@ METHOD currentPos() CLASS WvgWindow
 METHOD currentSize() CLASS WvgWindow
    LOCAL aRect
 
-   aRect := WDW_GetClientRect( ::hWnd )
+   aRect := Win_GetClientRect( ::hWnd )
 
    RETURN { aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ] }
 
@@ -1217,7 +1217,7 @@ METHOD setFocus() CLASS WvgWindow
 
 METHOD sendMessage( nMessage, nlParam, nwParam ) CLASS WvgWindow
 
-   RETURN WDW_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
+   RETURN Win_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
 
 /*----------------------------------------------------------------------*/
 
@@ -1239,7 +1239,7 @@ METHOD createControl() CLASS WvgWindow
 
    ::nID := ::oParent:GetControlId()
 
-   hWnd := WDW_CreateWindowEx( ::exStyle, ;
+   hWnd := Win_CreateWindowEx( ::exStyle, ;
                                ::className, ;
                                "", ;                              /* window name */
                                ::style, ;
@@ -1254,7 +1254,7 @@ METHOD createControl() CLASS WvgWindow
    IF ( hWnd <> 0 )
       ::hWnd := hWnd
       ::pWnd := WIN_N2P( hWnd )
-      ::sendMessage( WM_SETFONT, WDW_GetStockObject( DEFAULT_GUI_FONT ), 1 )
+      ::sendMessage( WM_SETFONT, Win_GetStockObject( DEFAULT_GUI_FONT ), 1 )
    ENDIF
 
    RETURN Self
@@ -1276,8 +1276,8 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
       EXIT
 
    CASE WM_COMMAND
-      nCtrlID   := WDW_LOWORD( nwParam )
-      nNotifctn := WDW_HIWORD( nwParam )
+      nCtrlID   := Win_LOWORD( nwParam )
+      nNotifctn := Win_HIWORD( nwParam )
       hWndCtrl  := nlParam
 
       IF hWndCtrl == 0                            /* It is menu */
@@ -1325,7 +1325,7 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
          nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
 
          IF nReturn == 1
-            RETURN WDW_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
+            RETURN Win_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
          ELSE
             RETURN nReturn
          ENDIF
@@ -1333,11 +1333,11 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
       EXIT
 
    CASE WM_HSCROLL
-      ::handleEvent( HB_GTE_HSCROLL, { WDW_LoWord( nwParam ), WDW_HiWord( nwParam ), nlParam } )
+      ::handleEvent( HB_GTE_HSCROLL, { Win_LoWord( nwParam ), Win_HiWord( nwParam ), nlParam } )
       RETURN 0
 
    CASE WM_VSCROLL
-      nReturn := ::handleEvent( HB_GTE_VSCROLL, { WDW_LoWord( nwParam ), WDW_HiWord( nwParam ), nlParam } )
+      nReturn := ::handleEvent( HB_GTE_VSCROLL, { Win_LoWord( nwParam ), Win_HiWord( nwParam ), nlParam } )
       IF nReturn == EVENT_HANDELLED
          RETURN 0
       ENDIF
@@ -1374,7 +1374,7 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
 #endif
    END
 
-   RETURN WDW_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
+   RETURN Win_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
 
 /*----------------------------------------------------------------------*/
 

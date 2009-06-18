@@ -125,7 +125,7 @@ METHOD new() CLASS WvgBitmap
 METHOD create( oPScompat ) CLASS WvgBitmap
 
    IF oPScompat == NIL
-      ::hDCComp := WDW_GetDC()
+      ::hDCComp := Win_GetDC()
       ::lDCToDestroy := .t.
    ELSE
       ::hDCComp := oPScompat:hDC
@@ -138,10 +138,10 @@ METHOD create( oPScompat ) CLASS WvgBitmap
 METHOD destroy() CLASS WvgBitmap
 
    IF ::hBitmap <> nil
-      WDW_DeleteObject( ::hBitmap )
+      Win_DeleteObject( ::hBitmap )
    ENDIF
    IF ::lDCtoDestroy
-      WDW_ReleaseDC( ::hDCcompat )
+      Win_ReleaseDC( ::hDCcompat )
    ENDIF
 
    RETURN Self

@@ -148,10 +148,10 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgDrawingArea
       hDC := aNM[ 1 ]
 
       IF hb_isNumeric( ::clr_FG )
-         WDW_SetTextColor( hDC, ::clr_FG )
+         Win_SetTextColor( hDC, ::clr_FG )
       ENDIF
       IF hb_isNumeric( ::hBrushBG )
-         WDW_SetBkMode( hDC, 1 )
+         Win_SetBkMode( hDC, 1 )
 
          Wvg_FillRect( hDC, { 0,0,::currentSize()[1],::currentSize()[1]}, ::hBrushBG )
          RETURN ( 0 )

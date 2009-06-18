@@ -453,10 +453,10 @@ METHOD enable() CLASS WvgCrt
 
 METHOD getFrameState() CLASS WvgCrt
 
-   IF WDW_IsIconic( ::hWnd )
+   IF Win_IsIconic( ::hWnd )
       RETURN WVGDLG_FRAMESTAT_MINIMIZED
    ENDIF
-   IF WDW_IsZoomed( ::hWnd )
+   IF Win_IsZoomed( ::hWnd )
       RETURN WVGDLG_FRAMESTAT_MAXIMIZED
    ENDIF
 
@@ -651,7 +651,7 @@ METHOD toBack() CLASS WvgCrt
 /*----------------------------------------------------------------------*/
 
 METHOD toFront() CLASS WvgCrt
-   RETURN WDW_SetWindowPosToTop( ::hWnd )
+   RETURN Win_SetWindowPosToTop( ::hWnd )
 
 /*----------------------------------------------------------------------*/
 
