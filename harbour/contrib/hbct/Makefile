@@ -43,6 +43,7 @@ C_SOURCES =\
 	datetime.c \
 	dattime2.c \
 	dattime3.c \
+	dattime4.c \
 	dbftools.c \
 	disk.c \
 	expand.c \

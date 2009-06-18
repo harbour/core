@@ -7,7 +7,7 @@
  *   CT3 Date & Time functions: - BOM() / EOM()
  *                              - BOQ() / EOQ()
  *                              - BOY() / EOY()
- *                              - WOM() 
+ *                              - WOM()
  *
  * Copyright 2005 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://www.harbour-project.org
@@ -453,39 +453,3 @@ HB_FUNC( WOM )
       hb_retni( 0 );
    }
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      STOD()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      Convert ANSI date string to Harbour date
- *  $SYNTAX$
- *      STOD ([<cDate>]) -> dDate
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      STOD() is compatible with CT3's STOD().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is datetime.prg, library is libct.
- *  $SEEALSO$
- *  $END$
- */
-
-/* this function is allready implemented in RTL when HB_COMPAT_XPP is set */
-#ifndef HB_COMPAT_XPP
-HB_FUNC( STOD )
-{
-   hb_retds( hb_parclen( 1 ) >= 7 ? hb_parc( 1 ) : NULL );
-}
-#endif

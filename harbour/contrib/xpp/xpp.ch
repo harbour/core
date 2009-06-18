@@ -50,12 +50,18 @@
  *
  */
 
+/* NOTE: Add this header before regular Harbour headers. */
+
 #ifdef __XPP__
 
 /* Translations for Harbour programs compiled with Xbase++ compiler */
 
 #else
 #ifdef __HARBOUR__
+
+#ifndef HB_COMPAT_XPP
+#define HB_COMPAT_XPP
+#endif
 
 /* Translations for Xbase++ programs compiled with Harbour compiler */
 
