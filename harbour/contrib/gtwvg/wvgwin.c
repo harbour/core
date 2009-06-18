@@ -137,12 +137,12 @@ HB_FUNC( WVG_HINSTANCE )
 
 HB_FUNC( WIN_SENDMESSAGE )
 {
-   LPTSTR cText = ISBYREF( 4 ) ? HB_TCHAR_CONVTO( hb_parcx( 4 ) ) : NULL;
+   LPTSTR cText = HB_ISBYREF( 4 ) ? HB_TCHAR_CONVTO( hb_parcx( 4 ) ) : NULL;
 
    hb_retnl( ( ULONG ) SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
                                     ( UINT ) hb_parni( 2 ),
                                     ( !HB_ISNUM( 3 ) ? 0 : ( WPARAM ) hb_parnint( 3 ) ),
-                                    ( ISNIL( 4 ) ? 0 : ( cText ? ( LPARAM ) ( LPSTR ) cText :
+                                    ( HB_ISNIL( 4 ) ? 0 : ( cText ? ( LPARAM ) ( LPSTR ) cText :
                                        ( HB_ISCHAR( 4 ) ? ( LPARAM )( LPSTR ) hb_parc( 4 ) :
                                            ( LPARAM ) hb_parnint( 4 ) ) ) ) )
            );
@@ -174,7 +174,7 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
    hb_retnl( ( LONG ) SendDlgItemMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) ,
                                           ( int )  hb_parni( 2 ) ,
                                           ( UINT ) hb_parni( 3 ) ,
-                                          ( ISNUM( 4 ) ? ( WPARAM ) hb_parnint( 4 ) : 0 ),
+                                          ( HB_ISNUM( 4 ) ? ( WPARAM ) hb_parnint( 4 ) : 0 ),
                                           ( cText ? ( LPARAM ) cText : ( LPARAM ) hb_parnint( 5 ) )
                                         ) );
 
@@ -307,7 +307,7 @@ HB_FUNC( WIN_GETDLGITEMTEXT )
 HB_FUNC( WIN_CHECKDLGBUTTON )
 {
    hb_retl( CheckDlgButton( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ),
-                            ( UINT )( ISNUM( 3 ) ? hb_parni( 3 ) : hb_parl( 3 ) ) ) );
+                            ( UINT )( HB_ISNUM( 3 ) ? hb_parni( 3 ) : hb_parl( 3 ) ) ) );
 }
 
 /*----------------------------------------------------------------------*/
@@ -353,7 +353,7 @@ HB_FUNC( WIN_MESSAGEBOX )
 
 HB_FUNC( WIN_INVALIDATERECT )
 {
-   if( ISARRAY( 2 ) )
+   if( HB_ISARRAY( 2 ) )
    {
       RECT rc = { 0, 0, 0, 0 };
 
@@ -682,7 +682,7 @@ HB_FUNC( WIN_CHOOSECOLOR )
    int         i;
 
    for( i = 0; i < ( int ) HB_SIZEOFARRAY( crCustClr ); i++ )
-      crCustClr[ i ] = ( ISARRAY( 2 ) ? ( COLORREF ) hb_parnl( 2, i+1 ) : GetSysColor( COLOR_BTNFACE ) );
+      crCustClr[ i ] = ( HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parnl( 2, i+1 ) : GetSysColor( COLOR_BTNFACE ) );
 
    cc.lStructSize   = sizeof( CHOOSECOLOR );
    cc.hwndOwner     = HB_ISNUM( 4 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 4 ) : NULL;
@@ -775,7 +775,7 @@ HB_FUNC( WIN_APPENDMENU )
    LPTSTR  buffer;
    int     i, iLen;
 
-   if( ISCHAR( 4 ) )
+   if( HB_ISCHAR( 4 ) )
    {
       iLen = hb_parclen( 4 );
       if( iLen > 0 && iLen < 256 )   /* Translate '~' to '&' */
@@ -1361,7 +1361,7 @@ HB_FUNC( WIN_GETMESSAGETEXT )
 {
    TCHAR cText[ 32000 ];
 
-   SendMessage( wvg_parhwnd( 1 ), ( UINT ) hb_parni( 2 ), wvg_parwparam( 3 ), ( LPARAM ) &cText );
+   SendMessage( wvg_parhwnd( 1 ), ( UINT ) hb_parni( 2 ), wvg_parwparam( 3 ), ( LPARAM ) cText );
 
    {
       char * szText = HB_TCHAR_CONVFROM( cText );
@@ -1871,7 +1871,7 @@ HB_FUNC( WVG_CHOOSEFONT )
    HWND        hWnd  = wvg_parhwnd( 1 );
    TCHAR       szStyle[ MAX_PATH + 1 ];
 
-   if( ISCHAR( 3 ) )
+   if( HB_ISCHAR( 3 ) )
    {
       HB_TCHAR_CPTO( lf.lfFaceName, hb_parcx( 3 ), sizeof( lf.lfFaceName ) - 1 );
    }
@@ -1902,9 +1902,9 @@ HB_FUNC( WVG_CHOOSEFONT )
    Flags = Flags | CF_NOSIMULATIONS;        /* ::synthesizeFonts  == .f. */
    #endif
 
-   if( ISLOG( 5 ) &&  hb_parl( 5 ) )
+   if( HB_ISLOG( 5 ) &&  hb_parl( 5 ) )
       Flags = Flags | CF_SCREENFONTS;
-   if( ISLOG( 6 ) &&  hb_parl( 6 ) )
+   if( HB_ISLOG( 6 ) &&  hb_parl( 6 ) )
       Flags = Flags | CF_PRINTERFONTS;
 
    cf.lStructSize      = sizeof( CHOOSEFONT );
@@ -2110,7 +2110,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          HB_TCHAR_FREE( szCaption );
 
          #if 1
-         if( ISLOG( 6 ) && ( hb_parl( 6 ) ) )
+         if( HB_ISLOG( 6 ) && ( hb_parl( 6 ) ) )
          {
             SendMessage( hWndTB, TB_SETMAXTEXTROWS, ( WPARAM ) 0, ( LPARAM ) 0 );
          }

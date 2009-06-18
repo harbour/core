@@ -17,7 +17,7 @@ endif
 ifeq ($(HB_COMPILER),msvc)
 HB_WITH_GTWVG=yes
 endif
-ifeq ($(HB_COMPILER),owatcom)
+ifeq ($(HB_COMPILER),watcom)
 HB_WITH_GTWVG=yes
 endif
 ifeq ($(HB_COMPILER),pocc)
