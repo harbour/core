@@ -5154,6 +5154,8 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
                cParam := StrStripQuote( cParam )
                IF ! Empty( cParam )
                   DO CASE
+                  CASE Lower( cParam ) == "-skip"
+                     RETURN
                   CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" )
                      IF nNestingLevel < _HBMK_NEST_MAX
                         cParam := SubStr( cParam, 2 )
