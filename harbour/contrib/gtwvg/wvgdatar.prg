@@ -119,7 +119,7 @@ METHOD getData() CLASS DataRef
 
    DO CASE
    CASE ::className == "EDIT"
-      ::sl_editBuffer := Win_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
+      ::sl_editBuffer := WVG_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
    ENDCASE
 
    IF hb_isBlock( ::dataLink )
@@ -149,18 +149,18 @@ METHOD setData( xValue, mp2 ) CLASS DataRef
 
    CASE ::className == "LISTBOX"    /* Single Selection */
       IF !empty( ::sl_editBuffer )
-         RETURN Win_LbSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
+         RETURN WVG_LbSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
       ENDIF
       RETURN .f.
 
    CASE ::className == "SysTreeView32"
       IF ::sl_editBuffer <> NIL .and. ::sl_editBuffer:hItem <> NIL
-         Win_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
+         WVG_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
       ENDIF
 
    CASE ::className == "EDIT"
       IF hb_isChar( ::sl_editBuffer )
-         Win_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
+         WVG_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
       ENDIF
 
    CASE ::className == "SCROLLBAR"

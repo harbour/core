@@ -118,9 +118,9 @@ CLASS WvgTreeView  INHERIT  WvgWindow, DataRef
    DATA     textParentSelected                    INIT ""
    DATA     textItemSelected                      INIT ""
 
-   METHOD   setColorFG( nRGB )                    INLINE Win_TreeView_SetTextColor( ::hWnd, nRGB )
-   METHOD   setColorBG( nRGB )                    INLINE Win_TreeView_SetBkColor( ::hWnd, nRGB )
-   METHOD   setColorLines( nRGB )                 INLINE Win_TreeView_SetLineColor( ::hWnd, nRGB )
+   METHOD   setColorFG( nRGB )                    INLINE WVG_TreeView_SetTextColor( ::hWnd, nRGB )
+   METHOD   setColorBG( nRGB )                    INLINE WVG_TreeView_SetBkColor( ::hWnd, nRGB )
+   METHOD   setColorLines( nRGB )                 INLINE WVG_TreeView_SetLineColor( ::hWnd, nRGB )
 
    METHOD   handleEvent( nMessage, aInfo )
 
@@ -332,7 +332,7 @@ CLASS WvgTreeViewItem
    METHOD   configure()
    METHOD   destroy()
 
-   METHOD   expand( lExpand )                      INLINE Win_TreeView_Expand( ::hTree, ::hItem, ;
+   METHOD   expand( lExpand )                      INLINE WVG_TreeView_Expand( ::hTree, ::hItem, ;
                                                             IF( hb_isLogical( lExpand ), lExpand, .t. ) )
    METHOD   isExpanded()
    METHOD   setCaption( cCaption )

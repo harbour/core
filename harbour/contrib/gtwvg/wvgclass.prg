@@ -955,7 +955,7 @@ METHOD Create() CLASS WvtObject
 METHOD Destroy() CLASS WvtObject
 
    if ::hFont <> nil
-      Win_DeleteObject( ::hFont )
+      WVG_DeleteObject( ::hFont )
       ::hFont := nil
    endif
 
@@ -1615,7 +1615,7 @@ METHOD Configure() CLASS WvtLabel
    ::nBackColorHoverOff := ::nBackColor
 
    if ::hFont <> 0
-      Win_DeleteObject( ::hFont )
+      WVG_DeleteObject( ::hFont )
    endif
 
    ::hFont := Wvt_CreateFont( ::cFont, ::nFontHeight, ::nFontWidth, ::nFontWeight, ::lItalic,;
@@ -2961,7 +2961,7 @@ METHOD Create() CLASS WvtBanner
 
 METHOD Destroy() CLASS WvtBanner
 
-   Win_DeleteObject( ::oLabel:hFont )
+   WVG_DeleteObject( ::oLabel:hFont )
 
    RETURN nil
 
