@@ -410,8 +410,8 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize, USHORT suMode )
          pHrbBody->pDynFunc = pDynFunc;
 
          /* ok to much space reserved but ... */
-         pSymFuncExe = ( PHB_SYMB ) hb_xgrab( pHrbBody->ulFuncs * sizeof( _HB_SYMB ) );
-         memset( pSymFuncExe, 0, pHrbBody->ulFuncs * sizeof( _HB_SYMB ) );
+         pSymFuncExe = ( PHB_SYMB ) hb_xgrab( pHrbBody->ulFuncs * sizeof( HB_SYMB ) );
+         memset( pSymFuncExe, 0, pHrbBody->ulFuncs * sizeof( HB_SYMB ) );
 
          for( ul = 0; ul < pHrbBody->ulFuncs; ul++ )
          {
