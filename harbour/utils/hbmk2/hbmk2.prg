@@ -243,21 +243,22 @@ REQUEST hbmk_KEYW
 
 #define _HBMK_aPO               49
 #define _HBMK_cHBL              50
-#define _HBMK_aLNG              51
-#define _HBMK_cPO               52
+#define _HBMK_cHBLDir           51
+#define _HBMK_aLNG              52
+#define _HBMK_cPO               53
 
-#define _HBMK_lDEBUGTIME        53
-#define _HBMK_lDEBUGINC         54
-#define _HBMK_lDEBUGSTUB        55
-#define _HBMK_lDEBUGI18N        56
+#define _HBMK_lDEBUGTIME        54
+#define _HBMK_lDEBUGINC         55
+#define _HBMK_lDEBUGSTUB        56
+#define _HBMK_lDEBUGI18N        57
 
-#define _HBMK_cCCPATH           57
-#define _HBMK_cCCPREFIX         58
-#define _HBMK_cCCPOSTFIX        59
+#define _HBMK_cCCPATH           58
+#define _HBMK_cCCPREFIX         59
+#define _HBMK_cCCPOSTFIX        60
 
-#define _HBMK_lUTF8             60
+#define _HBMK_lUTF8             61
 
-#define _HBMK_MAX_              60
+#define _HBMK_MAX_              61
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -1319,6 +1320,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    l_cFIRST := NIL
    hbmk[ _HBMK_aPO ] := {}
    hbmk[ _HBMK_cHBL ] := NIL
+   hbmk[ _HBMK_cHBLDir ] := ""
    hbmk[ _HBMK_cPO ] := NIL
    hbmk[ _HBMK_aLNG ] := {}
    hbmk[ _HBMK_aINSTPATH ] := {}
@@ -1523,7 +1525,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       CASE Left( cParamL, 5 ) == "-hbl="
 
-         hbmk[ _HBMK_cHBL ] := PathSepToTarget( hbmk, PathProc( SubStr( cParam, 6 ), FN_DirGet( aParam[ _PAR_cFileName ] ) ) )
+         hbmk[ _HBMK_cHBL ] := PathSepToTarget( hbmk, SubStr( cParam, 6 ) )
+         hbmk[ _HBMK_cHBLDir ] := FN_DirGet( aParam[ _PAR_cFileName ] )
 
       CASE Left( cParamL, 4 ) == "-po="
 
@@ -1532,6 +1535,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       CASE Left( cParamL, 5 ) == "-hbl"
 
          hbmk[ _HBMK_cHBL ] := ""
+         hbmk[ _HBMK_cHBLDir ] := ""
 
       CASE Left( cParamL, 6 ) == "-main="
 
@@ -1833,7 +1837,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       CASE FN_ExtGet( cParamL ) == ".hbl"
 
-         hbmk[ _HBMK_cHBL ] := PathSepToTarget( hbmk, PathProc( cParam, aParam[ _PAR_cFileName ] ) )
+         hbmk[ _HBMK_cHBL ] := PathSepToTarget( hbmk, cParam )
+         hbmk[ _HBMK_cHBLDir ] := FN_DirGet( aParam[ _PAR_cFileName ] )
 
       OTHERWISE
 
@@ -3341,6 +3346,16 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
 
          IF Len( hbmk[ _HBMK_aPO ] ) > 0 .AND. hbmk[ _HBMK_cHBL ] != NIL .AND. ! l_lCLEAN
+
+            /* Combine target dir with .hbl output name. */
+
+            hb_FNameSplit( l_cPROGNAME, @tmp )
+            IF Empty( tmp )
+               hbmk[ _HBMK_cHBL ] := PathProc( hbmk[ _HBMK_cHBL ], hbmk[ _HBMK_cHBLDir ] )
+            ELSE
+               hbmk[ _HBMK_cHBL ] := PathProc( hbmk[ _HBMK_cHBL ], tmp )
+            ENDIF
+
             MakeHBL( hbmk, hbmk[ _HBMK_cHBL ] )
          ENDIF
       ENDIF
