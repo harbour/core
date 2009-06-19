@@ -7,9 +7,9 @@ include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 ifeq ($(HB_COMPILER),gpp)
    HB_CMP = g++
 else
-   # intentionally used 'cc' instead of 'gcc' - I'm not an Darwin user
-   # but the system where I was testing it has GCC 2.95 named 'cc'
-   HB_CMP = cc
+   # for old Darwin systems (having GCC 2.95) this may need to be
+   # redefined to 'cc'.
+   HB_CMP = gcc
 endif
 
 OBJ_EXT = .o
