@@ -241,8 +241,8 @@ METHOD handleEvent( nEvent, aInfo ) CLASS WvgActiveXControl
 METHOD Destroy() CLASS WvgActiveXControl
 
    IF !empty( ::__hObj )
-      IF Win_IsWindow( ::hWnd )
-         Win_DestroyWindow( ::hWnd )
+      IF WVG_IsWindow( ::hWnd )
+         WVG_DestroyWindow( ::hWnd )
       ENDIF
 
       IF ::nEventHandler == "AdviseEvents"

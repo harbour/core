@@ -188,7 +188,7 @@ METHOD show() CLASS WvgSysWindow
 
 METHOD setPos( aPos ) CLASS WvgSysWindow
 
-   Win_SetWindowPosition( ::hWnd, aPos[ 1 ], aPos[ 2 ], .f. )
+   WVG_SetWindowPosition( ::hWnd, aPos[ 1 ], aPos[ 2 ], .f. )
 
    RETURN Self
 
@@ -197,7 +197,7 @@ METHOD setPos( aPos ) CLASS WvgSysWindow
 METHOD currentPos() CLASS WvgSysWindow
    LOCAL aRect
 
-   aRect := Win_GetWindowRect( ::hWnd )
+   aRect := WVG_GetWindowRect( ::hWnd )
 
    RETURN { aRect[ 1 ], aRect[ 2 ] }
 
@@ -206,7 +206,7 @@ METHOD currentPos() CLASS WvgSysWindow
 METHOD currentSize() CLASS WvgSysWindow
    LOCAL aRect
 
-   aRect := Win_GetClientRect( ::hWnd )
+   aRect := WVG_GetClientRect( ::hWnd )
 
    RETURN { aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ] }
 
@@ -355,43 +355,43 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
       ::hWnd := hWnd
 
       IF !empty( ::title )
-         Win_setWindowText( ::hWnd, ::title )
+         WVG_SetWindowText( ::hWnd, ::title )
       ENDIF
       IF !( ::buttonCancel )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,IDCANCEL ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,IDCANCEL ), .f. )
       ENDIF
       IF !( ::buttonApply )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,1026 ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1026 ), .f. )
       ENDIF
       IF !( ::buttonHelp )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,1038 ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1038 ), .f. )
       ENDIF
       IF !( ::strikeOut )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,1040 ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1040 ), .f. )
       ENDIF
       IF !( ::underscore )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,1041 ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1041 ), .f. )
       ENDIF
       IF !( ::name )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,1136 ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1136 ), .f. )
       ENDIF
       IF !( ::style )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,1137 ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1137 ), .f. )
       ENDIF
       IF !( ::size )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,1138 ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1138 ), .f. )
       ENDIF
 
       IF ::aPos[ 1 ] > 0 .OR. ::aPos[ 2 ] > 0
-         aRect := Win_GetWindowRect( ::hWnd )
-         Win_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[3]-aRect[1], aRect[4]-aRect[2], .f. )
+         aRect := WVG_GetWindowRect( ::hWnd )
+         WVG_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[3]-aRect[1], aRect[4]-aRect[2], .f. )
       ENDIF
 
       RETURN 1
 
    CASE nMessage == WM_COMMAND
-      nL := Win_LoWord( nwParam )
-      nH := Win_HiWord( nwParam )
+      nL := WVG_LOWORD( nwParam )
+      nH := WVG_HIWORD( nwParam )
 
       HB_SYMBOL_UNUSED( nH )
 
@@ -429,7 +429,7 @@ METHOD display( nMode ) CLASS WvgFontDialog
    IF nMode == 0
       hWnd := ::oParent:hWnd
    ELSE
-      hWnd := Win_GetDesktopWindow()
+      hWnd := WVG_GetDesktopWindow()
    ENDIF
 
    ::ok := .f.
@@ -573,7 +573,7 @@ METHOD configure( cFontName ) CLASS WvgFont
 METHOD destroy() CLASS WvgFont
 
    IF ::hFont <> NIL
-      Win_DeleteObject( ::hFont )
+      WVG_DeleteObject( ::hFont )
    ENDIF
 
    RETURN Self
@@ -591,7 +591,7 @@ METHOD createFont() CLASS WvgFont
    LOCAL aFont
 
    IF ::hFont <> NIL
-      Win_DeleteObject( ::hFont )
+      WVG_DeleteObject( ::hFont )
       ::hFont := NIL
    ENDIF
 

@@ -185,7 +185,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
       ENDCASE
 
    CASE nMessage == HB_GTE_CTLCOLOR
-      RETURN Win_GetStockObject( NULL_BRUSH )
+      RETURN WVG_GetStockObject( NULL_BRUSH )
 
    ENDCASE
 

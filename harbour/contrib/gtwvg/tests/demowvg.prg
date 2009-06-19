@@ -2033,72 +2033,72 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
    Switch ( nMsg )
 
    case WM_TIMER
-      Win_SetDlgItemText( hDlg, ID_EDT_TIME, Time() )
+      WVG_SetDlgItemText( hDlg, ID_EDT_TIME, Time() )
       exit
 
    case WM_COMMAND
       do case
 
       case wParam == ID_CHK_SATIS
-         lClicked := ( Win_IsDlgButtonChecked( hDlg,ID_CHK_SATIS ) == 1 )
-         Win_MessageBox( hDlg, iif( lClicked, "Satisfied", "UnSatisfied" ), "CheckBoxStatus" )
+         lClicked := ( WVG_IsDlgButtonChecked( hDlg,ID_CHK_SATIS ) == 1 )
+         WVG_MessageBox( hDlg, iif( lClicked, "Satisfied", "UnSatisfied" ), "CheckBoxStatus" )
 
       case wParam == ID_RDO_XH
-         Win_MessageBox( hDlg, "(x)Harbour", "Compiler" )
+         WVG_MessageBox( hDlg, "(x)Harbour", "Compiler" )
 
       case wParam == ID_RDO_CLIP
-         Win_MessageBox( hDlg, "Clipper", "Compiler" )
+         WVG_MessageBox( hDlg, "Clipper", "Compiler" )
 
       case wParam == ID_RDO_XBASE
-         Win_MessageBox( hDlg, "Xbase++", "Compiler" )
+         WVG_MessageBox( hDlg, "Xbase++", "Compiler" )
 
       case wParam == ID_MNU_FILE
-         Win_MessageBox( hDlg, "Execute Menu Action!", "File" )
+         WVG_MessageBox( hDlg, "Execute Menu Action!", "File" )
 
       case wParam == ID_MNU_CONTROL
-         Win_MessageBox( hDlg, "Controls are from Windows!", "Controls" )
+         WVG_MessageBox( hDlg, "Controls are from Windows!", "Controls" )
 
-      case Win_LoWord( wParam ) == ID_LST_LIST
-         if Win_HiWord( wParam ) == LBN_SELCHANGE
-            nIndex  := Win_SendMessage( Win_GetDlgItem( hDlg, ID_LST_LIST ), LB_GETCURSEL, 0, 0 )
+      case WVG_LOWORD( wParam ) == ID_LST_LIST
+         if WVG_HIWORD( wParam ) == LBN_SELCHANGE
+            nIndex  := WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_LST_LIST ), LB_GETCURSEL, 0, 0 )
             cPrompt := space( 20 )
-            Win_SendMessage( Win_GetDlgItem( hDlg, ID_LST_LIST ), LB_GETTEXT, nIndex, @cPrompt )
-            Win_MessageBox( hDlg, cPrompt, "ListBox" )
+            WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_LST_LIST ), LB_GETTEXT, nIndex, @cPrompt )
+            WVG_MessageBox( hDlg, cPrompt, "ListBox" )
          endif
 
-      case Win_LoWord( wParam ) == ID_CMB_COMBO
-         if Win_HiWord( wParam ) == CBN_SELCHANGE
-            nIndex  := Win_SendMessage( Win_GetDlgItem( hDlg, ID_CMB_COMBO ), CB_GETCURSEL, 0, 0 )
+      case WVG_LOWORD( wParam ) == ID_CMB_COMBO
+         if WVG_HIWORD( wParam ) == CBN_SELCHANGE
+            nIndex  := WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_CMB_COMBO ), CB_GETCURSEL, 0, 0 )
             cPrompt := space( 20 )
-            Win_SendMessage( Win_GetDlgItem( hDlg, ID_CMB_COMBO ), CB_GETLBTEXT, nIndex, @cPrompt )
-            Win_MessageBox( hDlg, cPrompt, "Combo Box" )
+            WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_CMB_COMBO ), CB_GETLBTEXT, nIndex, @cPrompt )
+            WVG_MessageBox( hDlg, cPrompt, "Combo Box" )
          endif
 
       endcase
       exit
 
    case WM_CTLCOLOREDIT
-      if ( Win_GetDlgItem( hDlg,ID_MLE ) == lParam )
-         Win_SetTextColor( wParam, RGB( 0,0,255 ) )
-         Win_SetBkColor( wParam, RGB( 255,255,200 ) )
+      if ( WVG_GetDlgItem( hDlg,ID_MLE ) == lParam )
+         WVG_SetTextColor( wParam, RGB( 0,0,255 ) )
+         WVG_SetBkColor( wParam, RGB( 255,255,200 ) )
          return ( 1 )
-      elseif ( Win_GetDlgItem( hDlg,ID_EDT_TEXT ) == lParam )
-         Win_SetTextColor( wParam, RGB( 255,255,255 ) )
-         Win_SetBkColor( wParam, RGB( 10,200,45 ) )
+      elseif ( WVG_GetDlgItem( hDlg,ID_EDT_TEXT ) == lParam )
+         WVG_SetTextColor( wParam, RGB( 255,255,255 ) )
+         WVG_SetBkColor( wParam, RGB( 10,200,45 ) )
          Return ( 1 )
       endif
 
       exit
 
    case WM_CTLCOLORSTATIC
-      if ( Win_GetDlgItem( hDlg,ID_STA_TEXT ) == lParam )
-         Win_SetTextColor( wParam, RGB( 255,255,255 ) )
+      if ( WVG_GetDlgItem( hDlg,ID_STA_TEXT ) == lParam )
+         WVG_SetTextColor( wParam, RGB( 255,255,255 ) )
          Return ( 1 )
       endif
       exit
 
    case WM_INITDIALOG
-      Win_SetTimer( hDlg, 5001, 1000 ) // 1 sec
+      WVG_SetTimer( hDlg, 5001, 1000 ) // 1 sec
 
       if empty( t_ahFonts )
          if ( hFont := Wvt_CreateFont( "Times New Roman", 18 ) ) != 0
@@ -2107,28 +2107,28 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
       endif
 
       if len( t_ahFonts ) > 0
-         Win_SendMessage( Win_GetDlgItem( hDlg, ID_MLE ), WM_SETFONT, t_ahFonts[ 1 ], 0 )
+         WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_MLE ), WM_SETFONT, t_ahFonts[ 1 ], 0 )
       endif
 
       if t_hIcon == nil
-         t_hIcon := Win_LoadIcon( "vr_1.ico" )
+         t_hIcon := WVG_LoadIcon( "vr_1.ico" )
       endif
       if t_hIcon != nil .or. t_hIcon != 0
-         Win_SendMessage( Win_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, IMAGE_ICON, t_hIcon )
+         WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, IMAGE_ICON, t_hIcon )
       endif
 
       /*
       if t_hImage == nil
-         t_hImage := Win_LoadImage( "vouch1.bmp", 2 )
+         t_hImage := WVG_LoadImage( "vouch1.bmp", 2 )
       endif
       if t_hImage != nil .and. t_hImage != 0
-         Win_SendMessage( Win_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, IMAGE_BITMAP, t_hImage )
+         WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, IMAGE_BITMAP, t_hImage )
       endif
       */
-      Win_SetDlgItemText( hDlg, ID_MLE      , GetEditText() )
-      Win_CheckDlgButton( hDlg, ID_CHK_SATIS, .t.           )
+      WVG_SetDlgItemText( hDlg, ID_MLE      , GetEditText() )
+      WVG_CheckDlgButton( hDlg, ID_CHK_SATIS, .t.           )
 
-      Win_CheckRadioButton( hDlg, ID_RDO_XH, ID_RDO_XBASE, ID_RDO_XH )
+      WVG_CheckRadioButton( hDlg, ID_RDO_XH, ID_RDO_XBASE, ID_RDO_XH )
 
       Wvt_LBAddString( hDlg, ID_LST_LIST, "(x)Harbour"  )
       Wvt_LBAddString( hDlg, ID_LST_LIST, "Gtwvt"     )
@@ -2147,7 +2147,7 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
 
       Wvt_CBSetCurSel( hDlg, ID_CMB_COMBO, 1 )
 
-      Win_InvalidateRect( hDlg )
+      WVG_InvalidateRect( hDlg )
 
       exit
 
@@ -2155,7 +2155,7 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
       // Do whatevert you want to do with cText
       // Each box will retrieve its own text.
       //
-      cText := Win_GetDlgItemText( hDlg, ID_MLE )
+      cText := WVG_GetDlgItemText( hDlg, ID_MLE )
       cText := nil
       exit
 
@@ -2201,15 +2201,15 @@ EXIT PROCEDURE CleanHandles()
    LOCAL i
 
    for i := 1 to len( t_ahFonts )
-      Win_DeleteObject( t_ahFonts[ i ] )
+      WVG_DeleteObject( t_ahFonts[ i ] )
    next
 
    if t_hIcon != nil
-      Win_DeleteObject( t_hIcon )
+      WVG_DeleteObject( t_hIcon )
    endif
 
    if t_hImage != nil
-      Win_DeleteObject( t_hImage )
+      WVG_DeleteObject( t_hImage )
    endif
 
    Return
@@ -2264,14 +2264,14 @@ FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
 FUNCTION DrawSlide( hDlg, nSlide )
    LOCAL hDC, aRect
 
-   hDC   := Win_GetDC( hDlg )
-   aRect := Win_GetClientRect( hDlg )
+   hDC   := WVG_GetDC( hDlg )
+   aRect := WVG_GetClientRect( hDlg )
 
    Win_Rectangle( hDC, aRect[ 1 ]+10, aRect[ 2 ]+10, aRect[ 3 ]-10, aRect[ 4 ]-10 )
-   Win_DrawImage( hDC, aRect[ 1 ]+10, aRect[ 2 ]+10, aRect[ 3 ] - aRect[ 1 ] -20, ;
+   WVG_DrawImage( hDC, aRect[ 1 ]+10, aRect[ 2 ]+10, aRect[ 3 ] - aRect[ 1 ] -20, ;
                                   aRect[ 4 ] - aRect[ 2 ] - 20, t_aSlides[ nSlide ] )
 
-   Win_ReleaseDC( hDlg,hDC )
+   WVG_ReleaseDC( hDlg,hDC )
 
    Return nil
 //----------------------------------------------------------------------//
@@ -2289,7 +2289,7 @@ Static Function MyFunction( nMode )
       tone( MUSIC_WAITON[1], 1 )
 
    case nMode == 3
-      Win_MessageBox( , "Button clicked!" )
+      WVG_MessageBox( , "Button clicked!" )
 
    case nMode == 101  // Charge
       Eval( {|| tone(523,2),tone(698,2),tone(880,2),tone(1046,4),tone(880,2),tone(1046,8) } )
@@ -2424,7 +2424,7 @@ Function ExecuteActiveX( nActiveX, xParam )
 
    //--------------------------- StatusBar ---------------------------\\
    oSBar   := WvgStatusBar():new( oDA ):create( , , , , , .t. )
-   oSBar:panelClick := {|oPanel| Win_MessageBox( , oPanel:caption ) }
+   oSBar:panelClick := {|oPanel| WVG_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
    oPanel:caption := 'My Root Panel'
    oPanel1 := oSBar:addItem()
@@ -2458,7 +2458,7 @@ Function ExecuteActiveX( nActiveX, xParam )
    oRadio  := WvgRadioButton():new( oStatic2,, { 10,10 }, { 100,15 } )
    oRadio:caption   := "Com 1"
    oRadio:selection := .T.
-   oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, Win_MessageBox( , obj:caption + IF( obj:selection, '< S >', '< N >' ) ) }
+   oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, WVG_MessageBox( , obj:caption + IF( obj:selection, '< S >', '< N >' ) ) }
    oRadio:create()
 
    oRadio              := WvgRadioButton():new( oStatic2,, { 10,35 }, { 100,15 } )
@@ -2468,7 +2468,7 @@ Function ExecuteActiveX( nActiveX, xParam )
    oCheck              := WvgCheckBox():New( oStatic2, , { 10,70 }, { 100,15 }, , .t. )
    oCheck:caption   := 'Checkbox A'
    oCheck:create()
-   oCheck:selected  := {|m1,m2,o| m1:=m1,m2:=m2, Win_MessageBox( , IF( o:getData(), 'I am selected','I am not selected' ) ) }
+   oCheck:selected  := {|m1,m2,o| m1:=m1,m2:=m2, WVG_MessageBox( , IF( o:getData(), 'I am selected','I am not selected' ) ) }
 
    // Create first 3State button, passing the position to :create()
    oXbp                := Wvg3State():new( oStatic2 )
@@ -2482,7 +2482,7 @@ Function ExecuteActiveX( nActiveX, xParam )
    oXbp:caption := "3 State B"
    oXbp:create( oStatic2 )
    // Determine current state using :getData()
-   oXbp:selected := {| m1,m2,oBtn | m1:=m1,m2:=m2, Win_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
+   oXbp:selected := {| m1,m2,oBtn | m1:=m1,m2:=m2, WVG_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
 
    // Create first SLE, specify position using :create()
    // On :typeOut set the focus to the second SLE
@@ -2541,7 +2541,7 @@ Function ExecuteActiveX( nActiveX, xParam )
    aadd( aParts, 'DataRef'       )
 
    aeval( aParts, {|e| oListBox:addItem( e ) } )
-   oListBox:itemSelected := {|| Win_MessageBox( , oListBox:getCurItem() ) }
+   oListBox:itemSelected := {|| WVG_MessageBox( , oListBox:getCurItem() ) }
    oListBox:setData( 3 )
 
    //--------------------------- PushButton --------------------------\\
@@ -2560,7 +2560,7 @@ Function ExecuteActiveX( nActiveX, xParam )
    oTree:create()
    oTree:setColorBG( RGB( 120,15,240 ) )
    oTree:setColorFG( RGB( 15,240,120 ) )
-   oTree:itemSelected := {|oItem| IF( oItem <> NIL, Win_MessageBox( , oItem:caption ), NIL ) }
+   oTree:itemSelected := {|oItem| IF( oItem <> NIL, WVG_MessageBox( , oItem:caption ), NIL ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 
@@ -3058,7 +3058,7 @@ FUNCTION demoxbp()
    //--------------------------- StatusBar ---------------------------\\
    #if 0
    oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .t. )
-   oSBar:panelClick := {|oPanel| Win_MessageBox( , oPanel:caption ) }
+   oSBar:panelClick := {|oPanel| WVG_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
    oPanel:caption := 'My Root Panel'
    oPanel1 := oSBar:addItem()
@@ -3098,7 +3098,7 @@ FUNCTION demoxbp()
    oRadio  := WvgRadioButton():new( oStatic2,, { 10,10 }, { 100,15 } )
    oRadio:caption   := "Com 1"
    oRadio:selection := .T.
-   oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, Win_MessageBox( , obj:caption + IF( obj:selection, '< S >', '< N >' ) ) }
+   oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, WVG_MessageBox( , obj:caption + IF( obj:selection, '< S >', '< N >' ) ) }
    oRadio:create()
 
    oRadio  := WvgRadioButton():new( oStatic2,, { 10,35 }, { 100,15 } )
@@ -3108,7 +3108,7 @@ FUNCTION demoxbp()
    oCheck  := WvgCheckBox():New( oStatic2, , { 10,70 }, { 100,15 }, , .t. )
    oCheck:caption   := 'Checkbox A'
    oCheck:create()
-   oCheck:selected  := {|m1,m2,o| m1:=m1,m2:=m2, Win_MessageBox( , IF( o:getData(), 'I am selected','I am not selected' ) ) }
+   oCheck:selected  := {|m1,m2,o| m1:=m1,m2:=m2, WVG_MessageBox( , IF( o:getData(), 'I am selected','I am not selected' ) ) }
 
    // Create first 3State button, passing the position to :create()
    oXbp    := Wvg3State():new()
@@ -3122,7 +3122,7 @@ FUNCTION demoxbp()
    oXbp:caption := "3 State B"
    oXbp:create( oStatic2 )
    // Determine current state using :getData()
-   oXbp:selected := {| m1,m2,oBtn | m1:=m1,m2:=m2, Win_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
+   oXbp:selected := {| m1,m2,oBtn | m1:=m1,m2:=m2, WVG_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
 
    // Create first SLE, specify position using :create()
    // On :typeOut set the focus to the second SLE
@@ -3188,7 +3188,7 @@ FUNCTION demoxbp()
    aadd( aParts, 'DataRef'          )
 
    aeval( aParts, {|e| oListBox:addItem( e ) } )
-   oListBox:itemSelected := {|| Win_MessageBox( , oListBox:getCurItem() ) }
+   oListBox:itemSelected := {|| WVG_MessageBox( , oListBox:getCurItem() ) }
    oListBox:setData( 3 )    // show selected 'XbpToolBar'
 
    //--------------------------- PushButton --------------------------\\
@@ -3213,7 +3213,7 @@ FUNCTION demoxbp()
    oTree:create()
    oTree:setColorBG( RGB( 120,15,240 ) )
    oTree:setColorFG( RGB( 15,240,120 ) )
-   oTree:itemSelected := {|oItem| IF( oItem <> NIL, Win_MessageBox( , oItem:caption ), NIL ) }
+   oTree:itemSelected := {|oItem| IF( oItem <> NIL, WVG_MessageBox( , oItem:caption ), NIL ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 
@@ -3416,7 +3416,7 @@ Static Function MyFunctionXbp( nMode )
       tone( MUSIC_WAITON[1], 1 )
 
    case nMode == 3
-      Win_MessageBox( , "Button clicked!" )
+      WVG_MessageBox( , "Button clicked!" )
 
    case nMode == 101  // Charge
       Eval( {|| tone(523,2),tone(698,2),tone(880,2),tone(1046,4),tone(880,2),tone(1046,8) } )
@@ -3448,7 +3448,7 @@ STATIC FUNCTION ExeFontDialog( oCrt )
    oFontDlg:familyName       := "Courier New"
    oFontDlg:strikeout        := .T.
    oFontDlg:underscore       := .f.
-   //oFontDlg:activateOk       := {|| Win_MessageBox( , 'activateOK Event Handelled in Windows!' ) }
+   //oFontDlg:activateOk       := {|| WVG_MessageBox( , 'activateOK Event Handelled in Windows!' ) }
    oFontDlg:nominalPointSize := 12
 
    //oFontDlg:size             := .f.
@@ -3496,7 +3496,7 @@ FUNCTION demoxbp()
 
    //--------------------------- StatusBar ---------------------------\\
    oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .t. )
-   oSBar:panelClick := {|oPanel| Win_MessageBox( , oPanel:caption ) }
+   oSBar:panelClick := {|oPanel| WVG_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
    oPanel:caption := 'My Root Panel'
    oPanel1 := oSBar:addItem()
@@ -3545,7 +3545,7 @@ FUNCTION demoxbp()
    aadd( aParts, 'DataRef'          )
 
    aeval( aParts, {|e| oListBox:addItem( e ) } )
-   oListBox:itemSelected := {|| Win_MessageBox( , oListBox:getCurItem() ) }
+   oListBox:itemSelected := {|| WVG_MessageBox( , oListBox:getCurItem() ) }
    oListBox:setData( 3 )    // show selected 'XbpToolBar'
 
    //--------------------------- PushButton --------------------------\\
@@ -3565,7 +3565,7 @@ FUNCTION demoxbp()
    oTree:create()
    oTree:setColorBG( RGB( 120,15,240 ) )
    oTree:setColorFG( RGB( 15,240,120 ) )
-   oTree:itemSelected := {|oItem| IF( oItem <> NIL, Win_MessageBox( , oItem:caption ), NIL ) }
+   oTree:itemSelected := {|oItem| IF( oItem <> NIL, WVG_MessageBox( , oItem:caption ), NIL ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 
@@ -3628,7 +3628,7 @@ FUNCTION demoxbp()
    oRadio  := WvgRadioButton():new( oStatic2,, { 10,10 }, { 100,15 } )
    oRadio:caption   := "Com 1"
    oRadio:selection := .T.
-   oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, Win_MessageBox( , obj:caption + IF( obj:selection, '< S >', '< N >' ) ) }
+   oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, WVG_MessageBox( , obj:caption + IF( obj:selection, '< S >', '< N >' ) ) }
    oRadio:create()
 
    oRadio  := WvgRadioButton():new( oStatic2,, { 10,35 }, { 100,15 } )
@@ -3638,7 +3638,7 @@ FUNCTION demoxbp()
    oCheck  := WvgCheckBox():New( oStatic2, , { 10,70 }, { 100,15 }, , .t. )
    oCheck:caption   := 'Checkbox A'
    oCheck:create()
-   oCheck:selected  := {|m1,m2,o| m1:=m1,m2:=m2, Win_MessageBox( , IF( o:getData(), 'I am selected','I am not selected' ) ) }
+   oCheck:selected  := {|m1,m2,o| m1:=m1,m2:=m2, WVG_MessageBox( , IF( o:getData(), 'I am selected','I am not selected' ) ) }
 
    // Create first 3State button, passing the position to :create()
    oXbp    := Wvg3State():new()
@@ -3652,7 +3652,7 @@ FUNCTION demoxbp()
    oXbp:caption := "3 State B"
    oXbp:create( oStatic2 )
    // Determine current state using :getData()
-   oXbp:selected := {| m1,m2,oBtn | m1:=m1,m2:=m2, Win_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
+   oXbp:selected := {| m1,m2,oBtn | m1:=m1,m2:=m2, WVG_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
 
    // Create first SLE, specify position using :create()
    // On :typeOut set the focus to the second SLE
@@ -3824,7 +3824,7 @@ Static Function MyFunctionXbp( nMode )
       tone( MUSIC_WAITON[1], 1 )
 
    case nMode == 3
-      Win_MessageBox( , "Button clicked!" )
+      WVG_MessageBox( , "Button clicked!" )
 
    case nMode == 101  // Charge
       Eval( {|| tone(523,2),tone(698,2),tone(880,2),tone(1046,4),tone(880,2),tone(1046,8) } )
@@ -3856,7 +3856,7 @@ STATIC FUNCTION ExeFontDialogXbp( oCrt )
    oFontDlg:familyName       := "Courier New"
    oFontDlg:strikeout        := .T.
    oFontDlg:underscore       := .f.
-   //oFontDlg:activateOk       := {|| Win_MessageBox( , 'activateOK Event Handelled in Windows!' ) }
+   //oFontDlg:activateOk       := {|| WVG_MessageBox( , 'activateOK Event Handelled in Windows!' ) }
    oFontDlg:nominalPointSize := 12
 
    //oFontDlg:size             := .f.
