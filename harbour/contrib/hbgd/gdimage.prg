@@ -298,7 +298,7 @@ METHOD New( sx, sy ) CLASS GDImage
    ::Create( sx, sy )
 RETURN Self
 
-METHOD Destruct() CLASS GDImage
+PROCEDURE Destruct() CLASS GDImage
   //__OutDebug( "Destroyed" )
   IF ::lDestroy
      ::Destroy()

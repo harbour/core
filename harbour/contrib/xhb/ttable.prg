@@ -574,7 +574,7 @@ METHOD NEW( cAlias ) CLASS HBRecord
 RETURN Self
 
 
-METHOD GET() CLASS HBRecord
+PROCEDURE GET() CLASS HBRecord
 
    LOCAL xField
 
@@ -586,7 +586,7 @@ METHOD GET() CLASS HBRecord
 RETURN
 
 
-METHOD Put() CLASS HBRecord
+PROCEDURE Put() CLASS HBRecord
 
    LOCAL xField
 
@@ -850,7 +850,7 @@ METHOD OPEN() CLASS HBTable
 RETURN ( lSuccess )
 
 
-METHOD DBMove( nDirection ) CLASS HBTable
+PROCEDURE DBMove( nDirection ) CLASS HBTable
 
    DEFAULT nDirection TO 0
 
@@ -943,7 +943,7 @@ METHOD FldInit() CLASS HBTable
 RETURN oNew
 
 
-METHOD READ( lKeepBuffer ) CLASS HBTable
+PROCEDURE READ( lKeepBuffer ) CLASS HBTable
 
    LOCAL i
    LOCAL nSel   := SELECT( ::Alias )
@@ -973,7 +973,7 @@ METHOD READ( lKeepBuffer ) CLASS HBTable
 RETURN
 
 
-METHOD ReadBlank( lKeepBuffer ) CLASS HBTable
+PROCEDURE ReadBlank( lKeepBuffer ) CLASS HBTable
 
    LOCAL i
    LOCAL nSel   := SELECT( ::Alias )
@@ -1417,7 +1417,7 @@ RETURN aRet
 // Relation Methods
 //
 
-METHOD AddChild( oChild, cKey ) CLASS HBTable                 // ::addChild()
+PROCEDURE AddChild( oChild, cKey ) CLASS HBTable                 // ::addChild()
 
    AADD( ::aChildren, { oChild, cKey } )
    oChild:oParent := Self
@@ -1447,13 +1447,13 @@ METHOD CreateTable( cFile ) CLASS HBTable
 RETURN Self
 
 
-METHOD AddField( f, t, l, d ) CLASS HBTable
+PROCEDURE AddField( f, t, l, d ) CLASS HBTable
 
    AADD( ::aStruc, { f, t, l, d } )
 RETURN
 
 
-METHOD Gentable() CLASS HBTable
+PROCEDURE Gentable() CLASS HBTable
 
    DBCREATE( ::cDbf, ::aStruc, ::Driver )
 RETURN
@@ -1544,7 +1544,7 @@ METHOD New( cTag, cKey, cLabel, cFor, cWhile, lUnique, bEval, nInterval, cOrderB
 RETURN Self
 
 
-METHOD Create() CLASS HBOrder
+PROCEDURE Create() CLASS HBOrder
 
    DEFAULT ::cOrderBag TO ::oTable:cOrderBag
    //? "<<<",::alias, ::cOrderBag
