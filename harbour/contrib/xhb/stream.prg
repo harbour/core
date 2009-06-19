@@ -94,7 +94,7 @@ CREATE CLASS TStream
 
 ENDCLASS
 
-PROCEDURE CopyTo( oTargetStream ) CLASS TStream
+METHOD CopyTo( oTargetStream ) CLASS TStream
 
    LOCAL nBytesToRead := ::nLength
    LOCAL sBuffer := Space( BUFFER_SIZE )
@@ -123,7 +123,7 @@ PROCEDURE CopyTo( oTargetStream ) CLASS TStream
    // Restore.
    ::Seek( nPosition, FS_SET )
 
-   RETURN
+   RETURN Self
 
 CREATE CLASS TStreamFileReader FROM TStream
 
@@ -164,9 +164,9 @@ METHOD New( cFile, nMode ) CLASS TStreamFileReader
 
    RETURN Self
 
-PROCEDURE Finalize CLASS TStreamFileReader
+METHOD Finalize CLASS TStreamFileReader
    ::Close()
-   RETURN
+   RETURN NIL
 
 METHOD Read( sBuffer, nOffset, nCount ) CLASS TStreamFileReader
 
@@ -242,9 +242,9 @@ METHOD New( cFile, nMode ) CLASS TStreamFileWriter
 
    RETURN Self
 
-PROCEDURE Finalize CLASS TStreamFileWriter
+METHOD Finalize CLASS TStreamFileWriter
    ::Close()
-   RETURN
+   RETURN NIL
 
 METHOD Write( sBuffer, nOffset, nCount ) CLASS TStreamFileWriter
 
@@ -260,7 +260,7 @@ METHOD Write( sBuffer, nOffset, nCount ) CLASS TStreamFileWriter
 
    RETURN nWritten
 
-PROCEDURE WriteByte( cByte ) CLASS TStreamFileWriter
+METHOD WriteByte( cByte ) CLASS TStreamFileWriter
 
    LOCAL nWritten := FWrite( ::Handle, cByte, 1 )
 
@@ -270,4 +270,4 @@ PROCEDURE WriteByte( cByte ) CLASS TStreamFileWriter
       Throw( ErrorNew( "Stream", 0, 1006, ProcName(), "Write failed", HB_aParams() ) )
    ENDIF
 
-   RETURN
+   RETURN Self

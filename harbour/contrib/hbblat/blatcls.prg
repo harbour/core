@@ -221,7 +221,7 @@ METHOD Send() CLASS HBBlat
 
    RETURN ::nError
 
-PROCEDURE Check() CLASS HBBlat
+METHOD Check() CLASS HBBlat
 
    // Not using registry, so every parameter has to be explicity set
    // No control apart from existence
@@ -238,7 +238,7 @@ PROCEDURE Check() CLASS HBBlat
          ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_TO )
          AAdd( ::aErrors, { ::nError, ::cError } )
          IF !::lIgnoreErrors
-            RETURN
+            RETURN Self
          ENDIF
       ELSE
          IF ISCHARACTER( ::cTO )
@@ -253,7 +253,7 @@ PROCEDURE Check() CLASS HBBlat
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_TOFILE ) + ": " + ::cToFile
             AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
-               RETURN
+               RETURN Self
             ENDIF
          ELSE
             ::cCommand += " -tf " + ::cToFile
@@ -272,7 +272,7 @@ PROCEDURE Check() CLASS HBBlat
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_CCFILE ) + ": " + ::cCCFile
             AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
-               RETURN
+               RETURN Self
             ENDIF
          ELSE
             ::cCommand += " -cf " + ::cCCFile
@@ -291,7 +291,7 @@ PROCEDURE Check() CLASS HBBlat
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_BCCFILE ) + ": " + ::cBCCFile
             AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
-               RETURN
+               RETURN Self
             ENDIF
          ELSE
             ::cCommand += " -bf " + ::cBCCFile
@@ -325,7 +325,7 @@ PROCEDURE Check() CLASS HBBlat
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_SUBJECTFILE ) + ": " + ::cSubjectFile
             AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
-               RETURN
+               RETURN Self
             ENDIF
          ELSE
             ::cCommand += ' -sf ' + ::cSubjectFile
@@ -339,7 +339,7 @@ PROCEDURE Check() CLASS HBBlat
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_BODYFILE ) + ": " + ::cBodyFile
             AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
-               RETURN
+               RETURN Self
             ENDIF
          ELSE
             ::cCommand += " -bodyF " + ::cBodyFile
@@ -352,7 +352,7 @@ PROCEDURE Check() CLASS HBBlat
          ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_BODY )
          AAdd( ::aErrors, { ::nError, ::cError } )
          IF !::lIgnoreErrors
-            RETURN
+            RETURN Self
          ENDIF
       ELSE
          IF ISCHARACTER( ::cBody )
@@ -363,7 +363,7 @@ PROCEDURE Check() CLASS HBBlat
                ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_BODYFILE ) + ": " + ::cBodyFile
                AAdd( ::aErrors, { ::nError, ::cError } )
                IF !::lIgnoreErrors
-                  RETURN
+                  RETURN Self
                ENDIF
             ELSE
                ::cCommand += " -bodyF " + ::cBodyFile
@@ -378,7 +378,7 @@ PROCEDURE Check() CLASS HBBlat
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_SIGNATUREFILE ) + ": " + ::cSignatureFile
             AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
-               RETURN
+               RETURN Self
             ENDIF
          ELSE
             ::cCommand += ' -sig ' + ::cSignatureFile
@@ -392,7 +392,7 @@ PROCEDURE Check() CLASS HBBlat
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_TAGFILE ) + ": " + ::cTagFile
             AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
-               RETURN
+               RETURN Self
             ENDIF
          ELSE
             ::cCommand += ' -tag ' + ::cTagFile
@@ -406,7 +406,7 @@ PROCEDURE Check() CLASS HBBlat
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_PSFILE ) + ": " + ::cPostScriptumFile
             AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
-               RETURN
+               RETURN Self
             ENDIF
          ELSE
             ::cCommand += ' -ps ' + ::cPostScriptumFile
@@ -431,7 +431,7 @@ PROCEDURE Check() CLASS HBBlat
          ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_SERVERSMTP )
          AAdd( ::aErrors, { ::nError, ::cError } )
          IF !::lIgnoreErrors
-            RETURN
+            RETURN Self
          ENDIF
       ELSE
          ::cCommand += " -server " + ::cServerSMTP
@@ -463,7 +463,7 @@ PROCEDURE Check() CLASS HBBlat
          ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_FROM )
          AAdd( ::aErrors, { ::nError, ::cError } )
          IF !::lIgnoreErrors
-            RETURN
+            RETURN Self
          ENDIF
       ELSE
          ::cCommand += " -f " + ::cFrom
@@ -604,7 +604,7 @@ PROCEDURE Check() CLASS HBBlat
             ::cError := ::TranslateBlatError( BLAT_ERR_WRONG_DSN ) + ": " + ::cDSN
             AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
-               RETURN
+               RETURN Self
             ENDIF
          ENDIF
       ENDIF
@@ -692,7 +692,7 @@ PROCEDURE Check() CLASS HBBlat
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_ATTACHLISTBINFILE ) + ": " + ::cAttachListBinFile
             AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
-               RETURN
+               RETURN Self
             ENDIF
          ELSE
             ::cCommand += " -af " + ::cAttachListBinFile
@@ -706,7 +706,7 @@ PROCEDURE Check() CLASS HBBlat
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_ATTACHLISTTEXTFILE ) + ": " + ::cAttachListTextFile
             AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
-               RETURN
+               RETURN Self
             ENDIF
          ELSE
             ::cCommand += " -atf " + ::cAttachListTextFile
@@ -720,7 +720,7 @@ PROCEDURE Check() CLASS HBBlat
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_ATTACHLISTEMBEDDEDFILE ) + ": " + ::cAttachListEmbeddedFile
             AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
-               RETURN
+               RETURN Self
             ENDIF
          ELSE
             ::cCommand += " -aef " + ::cAttachListEmbeddedFile
@@ -764,7 +764,7 @@ PROCEDURE Check() CLASS HBBlat
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_ALTERNATETEXTFILE ) + ": " + ::cAlternateTextFile
             AAdd( ::aErrors, { ::nError, ::cError } )
             IF !::lIgnoreErrors
-               RETURN
+               RETURN Self
             ENDIF
          ELSE
             ::cCommand += " -alttextf " + ::cAlternateTextFile
@@ -894,7 +894,7 @@ PROCEDURE Check() CLASS HBBlat
 
    ENDIF
 
-   RETURN
+   RETURN Self
 
 METHOD GetCommand() CLASS HBBlat
    IF !::lChecked
