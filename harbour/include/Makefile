@@ -83,6 +83,7 @@ PRG_HEADERS=\
 	hbgfx.ch     \
 	hbgfxdef.ch  \
 	hbgtinfo.ch  \
+	hbhrb.ch     \
 	hbinkey.ch   \
 	hblang.ch    \
 	hbmacro.ch   \

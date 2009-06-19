@@ -133,6 +133,7 @@ PRG_SOURCES=\
 	testerro.prg \
 	testfor.prg \
 	testhtml.prg \
+	testhrb.prg \
 	testid.prg \
 	testinc.prg \
 	testmem.prg \
@@ -170,6 +171,7 @@ BAD_PRG_SOURCES=\
 	dupvars.prg \
 	dynobj.prg \
 	extend1.prg \
+	exthrb.prg \
 	funcarr.prg \
 	inherit.prg \
 	inifiles.prg \

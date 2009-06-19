@@ -70,6 +70,8 @@
 #include "hbset.h"
 #include "hb_io.h"
 
+#include "hbhrb.ch"
+
 typedef struct
 {
    char *         szName;                       /* Name of the function     */
@@ -98,10 +100,6 @@ static const BYTE s_szHead[ 4 ] = { 192, 'H', 'R', 'B' };
 #define SYM_EXTERN   2              /* function defined in other module  */
 #define SYM_DEFERRED 3              /* lately bound function             */
 #define SYM_NOT_FOUND 0xFFFFFFFFUL  /* Symbol not found.                 */
-
-#define HB_HRB_DEFAULT       0      /* do not overload anything (like before)      */
-#define HB_HRB_KEEP_LOCAL    1      /* keep local references but convert as static */
-#define HB_HRB_KEEP_GLOBAL   2      /* overload all existing public functions      */
 
 static int hb_hrbReadHead( char * szBody, ULONG ulBodySize, ULONG * pulBodyOffset )
 {
@@ -723,27 +721,6 @@ HB_FUNC( HB_HRBRUN )
    else
       hb_errRT_BASE( EG_ARG, 6103, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-#if 0
-
-   HB_HRBLOAD( [<nOptions>, ] <cHrb>, [<xparams>] )
-
-   We have the following choices for nOptions :
-
-   HB_HRB_DEFAULT       0     /* do not overwrite any functions, ignore
-                                 public HRB functions if functions with
-                                 the same names already exist in HVM */
-
-   HB_HRB_KEEP_LOCAL    1     /* do not overwrite any functions
-                                 but keep local references, so
-                                 if module has public function FOO and
-                                 this function exists also in HVM
-                                 then the function in HRB is converted
-                                 to STATIC one */
-
-   HB_HRB_KEEP_GLOBAL   2     /* overload all existing public functions */
-
-#endif
 
 HB_FUNC( HB_HRBLOAD )
 {
