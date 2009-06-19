@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * HB_BTree C and Harbour API documentation.
  *
- * Copyright 2002 April White <awhite@mail.rosecom.ca>
+ * Copyright 2002 April White <april@users.sourceforge.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -44,7 +44,7 @@
  *      Subject:  RE: B-tree request </par>
  *         Date:  10 Jul 2000 09:18:50 -0400 </par>
  *         From:  Petra_Recter@prenhall.com </par>
- *           To:  awhite@user.rose.com  [now awhite@mail.rosecom.ca] </par>
+ *           To:  awhite@user.rose.com  [now april@users.sourceforge.net] </par>
  *      </par>
  *      Dear April: </par>
  *      </par>

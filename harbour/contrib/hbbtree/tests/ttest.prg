@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * hb_btree api test
  *
- * Copyright 2000 April White <awhite@mail.rosecom.ca>
+ * Copyright 2000 April White <april@users.sourceforge.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

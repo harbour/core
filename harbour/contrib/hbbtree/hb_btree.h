@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * HB_BTree Harbour C API header.
  *
- * Copyright 2002 April White <awhite@mail.rosecom.ca>
+ * Copyright 2002 April White <april@users.sourceforge.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

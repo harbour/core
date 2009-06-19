@@ -189,7 +189,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Andi Jahja <xharbour cbn.net.id>\n"
          "Antonio Carlos Pantaglione <toninho fwi.com.br>\n"
          "Antonio Linares <alinares fivetechsoft.com>\n"
-         "April White <awhite mail.rosecom.ca>\n"
+         "April White <april users.sourceforge.net>\n"
          "Bil Simser <bsimser home.com>\n"
          "Bill Robertson <arcadia2 sbcglobal.net>\n"
          "Brian Hays <bhays abacuslaw.com>\n"

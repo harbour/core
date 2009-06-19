@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * HB_BTree source.
  *
- * Copyright 2002 April White <awhite@mail.rosecom.ca>
+ * Copyright 2002 April White <april@users.sourceforge.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -42,8 +42,8 @@
   - Removed
   ; Comment
 
-see ChangeLog 2002-07-19 09:10 UTC+0500 April White <awhite@mail.rosecom.ca>
-see ChangeLog 2002-07-14 14:14 UTC+0500 April White <awhite@mail.rosecom.ca>
+see ChangeLog 2002-07-19 09:10 UTC+0500 April White <april@users.sourceforge.net>
+see ChangeLog 2002-07-14 14:14 UTC+0500 April White <april@users.sourceforge.net>
 
     TODO: impliment ulFlags within hb_btreeopen() - see warning above
           - clear im-memory flag

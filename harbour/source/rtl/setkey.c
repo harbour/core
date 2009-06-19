@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * SETKEY() and related functions
  *
- * Copyright 1999 A White <awhite@mail.rosecom.ca>
+ * Copyright 1999 April White <april@users.sourceforge.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
