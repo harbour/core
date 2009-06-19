@@ -2013,7 +2013,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cObjExt := ".o"
          IF hbmk[ _HBMK_cARCH ] == "darwin"
             cBin_Lib := "libtool"
-            cOpt_Lib := "-static {FA} -o {LO} {OL}"
+            cOpt_Lib := "-static {FA} -o {OL} {LO}"
          ELSE
             cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar"
             cOpt_Lib := "{FA} rcs {OL} {LO}"

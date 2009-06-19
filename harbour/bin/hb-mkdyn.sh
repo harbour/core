@@ -125,7 +125,7 @@ fi
 
 if [ "${SLIB_EXT}" = ".dylib" ]; then
     FULLNAME="${BASE}.${VERSION}${SLIB_EXT}"
-    ${HB_CCPREFIX}libtool -dynamic -install_name "${BASE}${SLIB_EXT}" \
+    libtool -dynamic -install_name "${BASE}${SLIB_EXT}" \
         -compatibility_version ${MAJOR}.${MINOR} -current_version ${VERSION} \
         -flat_namespace -undefined warning -multiply_defined suppress -single_module \
         -o "${DSTDIR}/${FULLNAME}" "$@" && \
