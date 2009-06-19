@@ -47,7 +47,7 @@ endif
 # remove it if you have newer compiler version
 #CFLAGS += -Wno-long-double
 
-LD = $(HB_CCPREFIX)cc$(HB_CCPOSTFIX)
+LD = $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 LD_OUT = -o
 
 # Add all libraries specified in CONTRIBS and LIBS.
