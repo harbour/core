@@ -311,7 +311,7 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, ULONG ulBodySize, USHORT us
       ULONG ulSize;                                /* Size of function */
       ULONG ul, ulPos;
       char * buffer, ch;
-      USHORT usBind = ( usMode & HB_HRB_BIND_MASK );
+      USHORT usBind = ( usMode & HB_HRB_BIND_MODEMASK );
 
       PHB_SYMB pSymRead;                           /* Symbols read     */
       PHB_DYNF pDynFunc;                           /* Functions read   */
@@ -473,13 +473,18 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, ULONG ulBodySize, USHORT us
             }
             else if( ( pSymRead[ ul ].scope.value & HB_FS_DEFERRED ) == 0 )
             {
-               char szName[ HB_SYMBOL_NAME_LEN + 1 ];
+               if( ( usMode & HB_HRB_BIND_LAZY ) != 0 )
+                  pSymRead[ ul ].scope.value |= HB_FS_DEFERRED;
+               else
+               {
+                  char szName[ HB_SYMBOL_NAME_LEN + 1 ];
 
-               hb_strncpy( szName, pSymRead[ ul ].szName, sizeof( szName ) - 1 );
-               hb_xfree( pSymRead );
-               hb_hrbUnLoad( pHrbBody );
-               hb_errRT_BASE( EG_ARG, 6101, "Unknown or unregistered symbol", szName, 0 );
-               return NULL;
+                  hb_strncpy( szName, pSymRead[ ul ].szName, sizeof( szName ) - 1 );
+                  hb_xfree( pSymRead );
+                  hb_hrbUnLoad( pHrbBody );
+                  hb_errRT_BASE( EG_ARG, 6101, "Unknown or unregistered symbol", szName, 0 );
+                  return NULL;
+               }
             }
          }
       }
