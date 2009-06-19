@@ -68,7 +68,7 @@
 
 #define HB_HRB_BIND_OVERLOAD     0x2   /* overload all existing public functions */
 
-#define HB_HRB_BIND_FORCELOCAL   0x3   /* covert all public functions to STATIC ones */
+#define HB_HRB_BIND_FORCELOCAL   0x3   /* convert all public functions to STATIC ones */
 
 #define HB_HRB_BIND_MODEMASK     0x3   /* HB_HRB_BIND_* mode mask */
 

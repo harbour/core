@@ -40,6 +40,7 @@ C_SOURCES=\
 	wvgcore.c \
 	wvgutils.c \
 	wvgwin.c \
+	wvgwing.c \
 	wvgsink.c \
 	wvggui.c \
 	wincallb.c \
