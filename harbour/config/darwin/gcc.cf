@@ -121,7 +121,7 @@ LD_RULE = $(LD) $(CFLAGS) $(LD_OUT) $@ $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LIN
 #ARFLAGS = $(HB_USER_AFLAGS)
 #AR_RULE = $(AR) $(ARFLAGS) r $@ $(^F) || $(RM) $@
 LIBTOOL = libtool
-LIBTOOLFLAGS = $(LIBTOOHB_USER_LDFLAGS)
+LIBTOOLFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(LIBTOOL) -static $(LIBTOOLFLAGS) -o $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 RANLIB = ranlib
 
