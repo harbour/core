@@ -221,7 +221,7 @@ METHOD Send() CLASS HBBlat
 
    RETURN ::nError
 
-PROCEDURE Check() CLASS HBBlat
+METHOD Check() CLASS HBBlat
 
    // Not using registry, so every parameter has to be explicity set
    // No control apart from existence

@@ -94,7 +94,7 @@ CREATE CLASS TStream
 
 ENDCLASS
 
-PROCEDURE CopyTo( oTargetStream ) CLASS TStream
+METHOD CopyTo( oTargetStream ) CLASS TStream
 
    LOCAL nBytesToRead := ::nLength
    LOCAL sBuffer := Space( BUFFER_SIZE )
@@ -164,7 +164,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileReader
 
    RETURN Self
 
-PROCEDURE Finalize CLASS TStreamFileReader
+METHOD Finalize CLASS TStreamFileReader
    ::Close()
    RETURN
 
@@ -242,7 +242,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileWriter
 
    RETURN Self
 
-PROCEDURE Finalize CLASS TStreamFileWriter
+METHOD Finalize CLASS TStreamFileWriter
    ::Close()
    RETURN
 
@@ -260,7 +260,7 @@ METHOD Write( sBuffer, nOffset, nCount ) CLASS TStreamFileWriter
 
    RETURN nWritten
 
-PROCEDURE WriteByte( cByte ) CLASS TStreamFileWriter
+METHOD WriteByte( cByte ) CLASS TStreamFileWriter
 
    LOCAL nWritten := FWrite( ::Handle, cByte, 1 )
 
