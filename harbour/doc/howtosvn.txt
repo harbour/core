@@ -5,6 +5,15 @@
 HOW TO USE THE SVN
 ------------------
 
+First and if your OS doesn't have it by default (like Windows, OS/2),
+download the client from this link:
+
+   http://subversion.tigris.org
+
+For a very good free book about svn, look at this link:
+
+   http://svnbook.red-bean.com/
+
 Content
 =======
 
@@ -36,10 +45,10 @@ by Viktor Szakats
 
  1) Do the changes in the source, and in parallel modify ChangeLog
  2) Go online (if needed)
- 3) SVN UPDATE
+ 3) svn update
  4) Resolve all conflicts
  5) Copy the last ChangeLog entry to the clipboard
- 6) SVN COMMIT --editor-cmd notepad.exe --username sfuser
+ 6) svn commit --editor-cmd notepad.exe --username sfuser
     Change notepad.exe to the editor of your choice and platform.
     Change "sfuser" to your sf.net username.
  7) The SVN pops up a window with the changed filenames
@@ -55,19 +64,19 @@ alternative method:
 by Ryszard Glab
 
  1) Do the changes in the source
- 2) Run SVN UPDATE redirecting the output into a file
-    (for example: "SVN update -d >.log"
+ 2) Run 'svn update' redirecting the output into a file
+    (for example: "svn update -d >.log"
  3) Resolve all conflicts, run SVN update again (see point 2), recompile
     all sources, fix all errors
- 4) Run SVN STATUS redirecting the output into a file
+ 4) Run 'svn status' redirecting the output into a file
     (for example: "svn status >.log"
  5) Copy all names of modifed, added or deleted files (files marked with
     'M', 'A' or 'D' flag) from update log into a ChangeLog
  6) Write necessary comments in the ChangeLog
  7) Save all your changes from ChangeLog into a file
- 8) Run SVN UPDATE again
+ 8) Run 'svn update' again
  9) Commit changes running:
-    SVN commit -F file_with_saved_ChangeLog_changes --username sfuser
+    svn commit -F file_with_saved_ChangeLog_changes --username sfuser
  10) Mail file_with_saved_ChangeLog_changes as an email body (do not
     send it as an attachment) to the harbour list
 
@@ -140,7 +149,7 @@ by David G. Holm
    changes and you only need to recompile and retest before committing.
 
 2) Always run 'SVN update' from the 'harbour' directory before you run
-   'SVN commit'. Ideally, you should redirect the output from the update
+   'svn commit'. Ideally, you should redirect the output from the update
    to a file and look at the results to confirm that you are ready to do
    a commit. Any files marked M, A or D are files that you have modified
    or are adding or deleting. Confirm that you have comments for all of
@@ -150,7 +159,7 @@ by David G. Holm
    If you see any conflicts reported in the update output, then you need
    to resolve them before committing. SVN is generally good at merging
    changes, so you probably won't see conflicts very often, but if you
-   edit the ChangeLog file before you run 'SVN update' and other changes
+   edit the ChangeLog file before you run 'svn update' and other changes
    have been committed by others, then ChangeLog will have conflicts. To
    resolve those conflicts, simply remove the conflict markers. What I do
    to avoid conflicts to ChangeLog is to record my changes in changes.txt

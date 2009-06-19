@@ -1,5 +1,5 @@
 //
-// $Id: testhrb.prg 0001 2009-06-18 20:20:41 j. lefebvre $
+// $Id$
 //
 
 // see also exthrb.prg
