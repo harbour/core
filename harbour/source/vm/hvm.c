@@ -874,26 +874,22 @@ void hb_vmSetFunction( PHB_SYMB pOldSym, PHB_SYMB pNewSym )
 
    while( pLastSymbols )
    {
-      if( pLastSymbols->fActive )
+      USHORT ui, uiSymbols = pLastSymbols->uiModuleSymbols;
+
+      for( ui = 0; ui < uiSymbols; ++ui )
       {
-         USHORT ui, uiSymbols = pLastSymbols->uiModuleSymbols;
+         PHB_SYMB pSym = pLastSymbols->pModuleSymbols + ui;
 
-         for( ui = 0; ui < uiSymbols; ++ui )
+         if( pSym->value.pFunPtr == pOldSym->value.pFunPtr &&
+             ( pSym->value.pFunPtr ||
+               strcmp( pSym->szName, pOldSym->szName ) == 0 ) )
          {
-            PHB_SYMB pSym = pLastSymbols->pModuleSymbols + ui;
-
-            if( pSym->value.pFunPtr == pOldSym->value.pFunPtr &&
-                ( pSym->value.pFunPtr ||
-                  strcmp( pSym->szName, pOldSym->szName ) == 0 ) )
-            {
-               pSym->value.pFunPtr = pNewSym->value.pFunPtr;
-               pSym->scope.value   = pNewSym->scope.value;
-            }
+            pSym->value.pFunPtr = pNewSym->value.pFunPtr;
+            pSym->scope.value   = pNewSym->scope.value;
          }
       }
       pLastSymbols = pLastSymbols->pNext;
    }
-   
 }
 
 /* application entry point */

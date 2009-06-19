@@ -1,12 +1,12 @@
 /*
- * $Id: hbhrb.ch 0001 2009-06-18 20:20:54 j. Lefebvre $
+ * $Id$
  */
 
 /*
  * Harbour Project source code:
- * Header file for .hrb API
+ * Header file for dynmaic PCODE modules (HRB) options
  *
- * Copyright 2009 {list of individual authors and e-mail addresses}
+ * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,21 +52,24 @@
 
 /* NOTE: This file is also used by C code. */
 
-#ifndef HB_HBHRB_CH_
-#define HB_HBHRB_CH_
+#ifndef HB_HRB_CH_
+#define HB_HRB_CH_
 
-#define HB_HRB_DEFAULT       0     /* do not overwrite any functions, ignore
-                                      public HRB functions if functions with
-                                      the same names already exist in HVM */
+#define HB_HRB_BIND_DEFAULT      0x0   /* do not overwrite any functions, ignore
+                                          public HRB functions if functions with
+                                          the same names already exist in HVM */
 
-#define HB_HRB_KEEP_LOCAL    1     /* do not overwrite any functions
-                                      but keep local references, so
-                                      if module has public function FOO and
-                                      this function exists also in HVM
-                                      then the function in HRB is converted
-                                      to STATIC one */
+#define HB_HRB_BIND_LOCAL        0x1   /* do not overwrite any functions
+                                          but keep local references, so
+                                          if module has public function FOO and
+                                          this function exists also in HVM
+                                          then the function in HRB is converted
+                                          to STATIC one */
 
-#define HB_HRB_KEEP_GLOBAL   2     /* overload all existing public functions
-                                      will disable HB_HRBUNLOAD() */
+#define HB_HRB_BIND_OVERLOAD     0x2   /* overload all existing public functions */
 
-#endif /* HB_HBHRB_CH_ */
+#define HB_HRB_BIND_FORCELOCAL   0x3   /* covert all public functions to STATIC ones */
+
+#define HB_HRB_BIND_MASK         0x3   /* HB_HRB_BIND_* mask */
+
+#endif /* HB_HRB_CH_ */
