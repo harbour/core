@@ -174,7 +174,7 @@ REQUEST hbmk_KEYW
 #define _HBMK_NEST_MAX          10
 #define _HBMK_HEAD_NEST_MAX     10
 
-#define _COMPEMBED_BASE_        "" /* ( "comp" + hb_osPathSeparator() ) */
+#define _COMPEMBED_BASE_        ( "comp" + hb_osPathSeparator() )
 
 #define _WORKDIR_BASE_          ".hbmk"
 #define _WORKDIR_DEF_           ( _WORKDIR_BASE_ + hb_osPathSeparator() + hbmk[ _HBMK_cARCH ] + hb_osPathSeparator() + hbmk[ _HBMK_cCOMP ] )
@@ -188,8 +188,7 @@ REQUEST hbmk_KEYW
 #define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == '_' )
 #define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR(c) .OR. IsDigit( c ) )
 
-/* This requires Set( _SET_EXACT, .F. ) */
-#define LEFTEQUAL( l, r )       ( l = r )
+#define LEFTEQUAL( l, r )       ( l = r ) /* NOTE: This requires Set( _SET_EXACT, .F. ) */
 
 #define _HBMK_lQuiet            1
 #define _HBMK_lInfo             2
