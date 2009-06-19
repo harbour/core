@@ -15,7 +15,7 @@ EXE_EXT =
 LIB_PREF = lib
 LIB_EXT = .a
 
-CC = $(HB_CCACHE) $(HB_CMP)
+CC = $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
@@ -48,7 +48,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -g
 endif
 
-LD = $(HB_CCACHE) $(HB_CMP)
+LD = $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT = -o
 
 # Add all libraries specified in CONTRIBS and LIBS.
@@ -110,7 +110,7 @@ LINKLIBS += -lm -lrt -ldl -Wl,--end-group
 
 LDFLAGS = $(LINKPATHS)
 
-AR = ar
+AR = $(HB_CCPREFIX)ar
 ARFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(AR) $(ARFLAGS) crs $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 

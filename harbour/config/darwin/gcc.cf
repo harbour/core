@@ -17,7 +17,7 @@ EXE_EXT =
 LIB_PREF = lib
 LIB_EXT = .a
 
-CC = $(HB_CCACHE) $(HB_CMP)
+CC = $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN = -c
 # NOTE: The ending space after -o is important, please preserve it.
 #       Now solved with '$(subst x,x, )' expression.
@@ -47,7 +47,7 @@ endif
 # remove it if you have newer compiler version
 #CFLAGS += -Wno-long-double
 
-LD = cc
+LD = $(HB_CCPREFIX)cc$(HB_CCPOSTFIX)
 LD_OUT = -o
 
 # Add all libraries specified in CONTRIBS and LIBS.

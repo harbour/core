@@ -254,10 +254,11 @@ REQUEST hbmk_KEYW
 
 #define _HBMK_cCCPATH           57
 #define _HBMK_cCCPREFIX         58
+#define _HBMK_cCCPOSTFIX        59
 
-#define _HBMK_lUTF8             59
+#define _HBMK_lUTF8             60
 
-#define _HBMK_MAX_              59
+#define _HBMK_MAX_              60
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -901,8 +902,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       ENDIF
    ENDIF
 
-   hbmk[ _HBMK_cCCPATH ]   := GetEnv( "HB_CCPATH" )
-   hbmk[ _HBMK_cCCPREFIX ] := GetEnv( "HB_CCPREFIX" )
+   hbmk[ _HBMK_cCCPATH ]    := GetEnv( "HB_CCPATH" )
+   hbmk[ _HBMK_cCCPREFIX ]  := GetEnv( "HB_CCPREFIX" )
+   hbmk[ _HBMK_cCCPOSTFIX ] := GetEnv( "HB_CCPOSTFIX" )
 
    #if defined( __PLATFORM__UNIX )
       cCCEXT_mingw := ""
@@ -1103,6 +1105,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          IF Empty( hbmk[ _HBMK_cCCPATH ] ) .AND. ;
             Empty( hbmk[ _HBMK_cCCPREFIX ] ) .AND. ;
+            Empty( hbmk[ _HBMK_cCCPOSTFIX ] ) .AND. ;
             !( hbmk[ _HBMK_cARCH ] == "dos" )
 
             DO CASE
@@ -2008,9 +2011,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar"
-         cOpt_Lib := "{FA} rcs {OL} {LO}"
-         cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( l_lCPP != NIL .AND. l_lCPP, "g++", "gcc" )
+         IF hbmk[ _HBMK_cARCH ] == "darwin"
+            cBin_Lib := "libtool"
+            cOpt_Lib := "-static {FA} -o {LO} {OL}"
+         ELSE
+            cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar"
+            cOpt_Lib := "{FA} rcs {OL} {LO}"
+         ENDIF
+         cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( l_lCPP != NIL .AND. l_lCPP, "g++", "gcc" ) + hbmk[ _HBMK_cCCPOSTFIX ]
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -2165,7 +2173,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( l_lCPP != NIL .AND. l_lCPP, "g++", "gcc" ) + cCCEXT_mingw
+         cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( l_lCPP != NIL .AND. l_lCPP, "g++", "gcc" ) + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT_mingw
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
