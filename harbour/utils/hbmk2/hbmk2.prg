@@ -166,6 +166,9 @@ REQUEST hbmk_KEYW
 #define _CONF_DEBUG             1 /* Harbour level debug */
 #define _CONF_FULLDEBUG         2 /* Harbour + C level debug */
 
+#define _ESC_NONE               0
+#define _ESC_DBLQUOTE           1
+
 #define _LNG_MARKER             "${lng}"
 
 #define _HBMK_CFG_NAME          "hbmk.cfg"
@@ -556,6 +559,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL cOpt_CprsMax
    LOCAL cBin_Post := NIL
    LOCAL cOpt_Post
+   LOCAL nOpt_Esc := NIL
+   LOCAL nCCompVer
 
    LOCAL cCommand
    LOCAL aCommand
@@ -864,6 +869,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       ENDIF
 #endif
    ENDIF
+
+   nCCompVer := Val( GetEnv( "HB_COMPILER_VER" ) ) /* Format: <09><00>[.<00>] = <major><minor>[.<revision>] */
+#if 0
+   IF Empty( nCCompVer )
+      nCCompVer := Val( GetEnv( "HB_COMP_VER" ) )
+   ENDIF
+#endif
 
    /* Autodetect architecture */
 
@@ -1976,7 +1988,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          {OM}     output map name
          {DB}     dir for binaries
          {DI}     dir for includes
-         {DL}     dir for libs
+         {DL}     dirs for libs
          {SCRIPT} save command line to script and pass it to command as @<filename>
       */
 
@@ -2096,14 +2108,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          /* Always inherit/reproduce some flags from self */
 
-         IF     "-mlp64" $ cSelfFlagC ; AAdd( hbmk[ _HBMK_aOPTC ], "-mlp64" )
-         ELSEIF "-mlp32" $ cSelfFlagC ; AAdd( hbmk[ _HBMK_aOPTC ], "-mlp32" )
-         ELSEIF "-m64"   $ cSelfFlagC ; AAdd( hbmk[ _HBMK_aOPTC ], "-m64" )
-         ELSEIF "-m32"   $ cSelfFlagC ; AAdd( hbmk[ _HBMK_aOPTC ], "-m32" )
+         IF     "-mlp64" $ cSelfFlagC ; AAddNotExists( hbmk[ _HBMK_aOPTC ], "-mlp64" )
+         ELSEIF "-mlp32" $ cSelfFlagC ; AAddNotExists( hbmk[ _HBMK_aOPTC ], "-mlp32" )
+         ELSEIF "-m64"   $ cSelfFlagC ; AAddNotExists( hbmk[ _HBMK_aOPTC ], "-m64" )
+         ELSEIF "-m32"   $ cSelfFlagC ; AAddNotExists( hbmk[ _HBMK_aOPTC ], "-m32" )
          ENDIF
 
-         IF     "-fPIC"  $ cSelfFlagC ; AAdd( hbmk[ _HBMK_aOPTC ], "-fPIC" )
-         ELSEIF "-fpic"  $ cSelfFlagC ; AAdd( hbmk[ _HBMK_aOPTC ], "-fpic" )
+         IF     "-fPIC"  $ cSelfFlagC ; AAddNotExists( hbmk[ _HBMK_aOPTC ], "-fPIC" )
+         ELSEIF "-fpic"  $ cSelfFlagC ; AAddNotExists( hbmk[ _HBMK_aOPTC ], "-fpic" )
          ENDIF
 
          DO CASE
@@ -2614,13 +2626,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF l_lCPP != NIL .AND. l_lCPP
             AAdd( hbmk[ _HBMK_aOPTC ], "-P" )
          ENDIF
+         nOpt_Esc := _ESC_DBLQUOTE
          cLibPrefix := NIL
          cLibExt := ".lib"
          cObjExt := ".obj"
          cBin_Lib := "tlib.exe"
-         cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
+         cOpt_Lib := '{FA} "{OL}" {LO}{SCRIPT}'
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
+         cOptIncMask := '-I"{DI}"'
          cBin_CompC := "bcc32.exe"
          cOpt_CompC := "-c -q -tWM"
          IF hbmk[ _HBMK_lOPTIM ]
@@ -2628,12 +2642,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          cOpt_CompC += " {FC} {LC}"
          cBin_Res := "brcc32.exe"
-         cOpt_Res := "{FR} {IR} -fo{OS}"
+         cOpt_Res := '{FR} "{IR}" -fo"{OS}"'
          cResExt := ".res"
          cBin_Link := "ilink32.exe"
          cBin_Dyn := cBin_Link
-         cOpt_Link := '-Gn -Tpe -L"{DL}" {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
-         cOpt_Dyn  := '-Gn -Tpd -L"{DL}" {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
+         cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + ' {LO}, "{OE}", ' + iif( hbmk[ _HBMK_lMAP ], '"{OM}"', "nul" ) + ", {LL} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
+         cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + ' {LO}, "{OD}", ' + iif( hbmk[ _HBMK_lMAP ], '"{OM}"', "nul" ) + ", {LL} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
          cLibPathPrefix := ""
          cLibPathSep := ";"
          IF hbmk[ _HBMK_lGUI ]
@@ -2645,14 +2659,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          IF hbmk[ _HBMK_lINC ]
             IF ! Empty( cWorkDir )
-               AAdd( hbmk[ _HBMK_aOPTC ], "-n{OW}" )
+               AAdd( hbmk[ _HBMK_aOPTC ], '-n"{OW}"' )
             ENDIF
          ELSE
             IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
                IF ( Len( l_aPRG ) + Len( l_aC ) ) == 1
-                  AAdd( hbmk[ _HBMK_aOPTC ], "-o{OO}" )
+                  AAdd( hbmk[ _HBMK_aOPTC ], '-o"{OO}"' )
                ELSE
-                  AAdd( hbmk[ _HBMK_aOPTC ], "-n{OD}" )
+                  AAdd( hbmk[ _HBMK_aOPTC ], '-n"{OD}"' )
                ENDIF
             ENDIF
          ENDIF
@@ -2666,6 +2680,18 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       CASE ( hbmk[ _HBMK_cARCH ] == "win" .AND. hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcia64|icc|iccia64" ) .OR. ;
            ( hbmk[ _HBMK_cARCH ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "msvcarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
+
+         IF Empty( nCCompVer )
+            /* Compatibility with Harbour GNU Make system */
+            IF Empty( GetEnv( "HB_VISUALC_VER_PRE80" ) )
+               nCCompVer := 800 /* Visual Studio 2005 */
+            ELSE
+               nCCompVer := 710 /* Visual Studio .NET 2003 */
+            ENDIF
+            /*  900 : Visual Studio 2008 */
+            /* 1000 : Visual Studio 2010 */
+         ENDIF
+
          IF hbmk[ _HBMK_lDEBUG ]
             IF hbmk[ _HBMK_cCOMP ] == "msvcarm"
                AAdd( hbmk[ _HBMK_aOPTC ], "-Zi" )
@@ -2697,7 +2723,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cBin_Dyn := cBin_Link
          ELSE
             cBin_Lib := "lib.exe"
-            IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. ! Empty( GetEnv( "HB_VISUALC_VER_PRE80" ) )
+            IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. nCCompVer < 800
                cBin_CompC := "clarm.exe"
             ELSE
                cBin_CompC := "cl.exe"
@@ -2705,18 +2731,19 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cBin_Link := "link.exe"
             cBin_Dyn := cBin_Link
          ENDIF
-         cOpt_Lib := "{FA} /out:{OL} {LO}"
-         cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
+         nOpt_Esc := _ESC_DBLQUOTE
+         cOpt_Lib := '/nologo {FA} /out:"{OL}" {LO}'
+         cOpt_Dyn := '{FD} /dll /out:"{OD}" {DL} {LO} {LL} {LS}'
          cOpt_CompC := "-nologo -c -Gs"
          IF hbmk[ _HBMK_lOPTIM ]
             IF hbmk[ _HBMK_cCOMP ] == "msvcarm"
-               IF Empty( GetEnv( "HB_VISUALC_VER_PRE80" ) )
+               IF nCCompVer >= 800
                   cOpt_CompC += " -Od -Os -Gy -GS- -Gm -Zi -GR-"
                ELSE
                   cOpt_CompC += " -Oxsb1 -YX -GF"
                ENDIF
             ELSE
-               IF Empty( GetEnv( "HB_VISUALC_VER_PRE80" ) )
+               IF nCCompVer >= 800
                   cOpt_CompC += " -Ot2b1"
                ELSE
                   cOpt_CompC += " -Ogt2yb1p -GX- -G6 -YX"
@@ -2725,7 +2752,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          cOpt_CompC += " {FC} {LC}"
          cOptIncMask := '-I"{DI}"'
-         cOpt_Link := "-nologo /out:{OE} {LO} {DL} {FL} {LL} {LS}"
+         cOpt_Link := '/nologo /out:"{OE}" {LO} {DL} {FL} {LL} {LS}'
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
          IF hbmk[ _HBMK_lMAP ]
@@ -2761,14 +2788,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          IF hbmk[ _HBMK_lINC ]
             IF ! Empty( cWorkDir )
-               AAdd( hbmk[ _HBMK_aOPTC ], "-Fo{OW}\" ) /* NOTE: Ending path sep is important. */
+               AAdd( hbmk[ _HBMK_aOPTC ], '-Fo"{OW}\"' ) /* NOTE: Ending path sep is important. */
             ENDIF
          ELSE
             IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
                IF ( Len( l_aPRG ) + Len( l_aC ) ) == 1
-                  AAdd( hbmk[ _HBMK_aOPTC ], "-Fo{OO}" )
+                  AAdd( hbmk[ _HBMK_aOPTC ], '-Fo"{OO}"' )
                ELSE
-                  AAdd( hbmk[ _HBMK_aOPTC ], "-Fo{OD}" )
+                  AAdd( hbmk[ _HBMK_aOPTC ], '-Fo"{OD}"' )
                ENDIF
             ENDIF
          ENDIF
@@ -2795,7 +2822,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          IF !( hbmk[ _HBMK_cCOMP ] $ "icc|iccia64" )
             cBin_Res := "rc.exe"
-            cOpt_Res := "{FR} /fo {OS} {IR}" /* NOTE: No /nologo option as of MSVC 2008. [vszakats] */
+            cOpt_Res := '{FR} /fo "{OS}" "{IR}"'
+            IF nCCompVer >= 1000
+               cOpt_Res := "/nologo " + cOpt_Res  /* NOTE: Only in MSVC 2010 and upper. [vszakats] */
+            ENDIF
             cResExt := ".res"
          ENDIF
 
@@ -3117,7 +3147,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                      " " + ArrayToList( l_aPRG_TODO ) +;
                      iif( l_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
                      iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
-                     iif( ! Empty( hbmk[ _HBMK_aOPTPRG ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTPRG ] ), "" )
+                     iif( ! Empty( hbmk[ _HBMK_aOPTPRG ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTPRG ],, nOpt_Esc ), "" )
 
          cCommand := AllTrim( cCommand )
 
@@ -3315,7 +3345,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       ENDIF
       /* Dress obj names. */
       l_aOBJ := ListDirExt( ArrayJoin( l_aPRG, l_aC ), cWorkDir, cObjExt )
-      l_aOBJUSER := ListCook( l_aOBJUSER, NIL, cObjExt )
+      l_aOBJUSER := ListCook( l_aOBJUSER, cObjExt )
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
          l_aRESSRC_TODO := {}
@@ -3398,7 +3428,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                ENDIF
             NEXT
          ELSE
-            cOpt_Res := StrTran( cOpt_Res, "{LR}"  , ArrayToList( l_aRESSRC_TODO ) )
+            cOpt_Res := StrTran( cOpt_Res, "{LR}"  , ArrayToList( l_aRESSRC_TODO,, nOpt_Esc ) )
 
             cOpt_Res := AllTrim( cOpt_Res )
 
@@ -3481,15 +3511,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                                                          GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{FL}"  , iif( l_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                          GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{LR}"  , ArrayToList( ArrayJoin( ListDirExt( l_aRESSRC, cWorkDir, cResExt ), l_aRESCMP ) ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{LO}"  , ArrayToList( ArrayAJoin( { ListCook( l_aOBJUSER, cObjPrefix ), ListCook( l_aPRG_DONE, cObjPrefix, cObjExt ), ListCook( l_aC_DONE, cObjPrefix, cObjExt ) } ) ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( l_aRESSRC, "", cResExt ), l_aRESCMP ), cResPrefix ) ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{LA}"  , ArrayToList( l_aOBJA ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{LL}"  , ArrayToList( l_aLIB ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LR}"  , ArrayToList( ArrayJoin( ListDirExt( l_aRESSRC, cWorkDir, cResExt ), l_aRESCMP ),, nOpt_Esc ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LO}"  , ArrayToList( ArrayAJoin( { l_aOBJUSER, ListCook( l_aPRG_DONE, cObjExt ), ListCook( l_aC_DONE, cObjExt ) } ),, nOpt_Esc, cObjPrefix ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( l_aRESSRC, "", cResExt ), l_aRESCMP ),, nOpt_Esc, cResPrefix ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LA}"  , ArrayToList( l_aOBJA,, nOpt_Esc ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OD}"  , PathSepToTarget( hbmk, FN_DirGet( l_cPROGNAME ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OE}"  , PathSepToTarget( hbmk, l_cPROGNAME ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OM}"  , PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, ".map" ) ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{DL}"  , ArrayToList( ListCook( hbmk[ _HBMK_aLIBPATH ], cLibPathPrefix ), cLibPathSep ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, cLibPathPrefix ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{DB}"  , l_cHB_BIN_INSTALL )
             cOpt_CompC := StrTran( cOpt_CompC, "{DI}"  , l_cHB_INC_INSTALL )
 
@@ -3521,7 +3551,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                aThreads := {}
                FOR EACH aTODO IN ArraySplit( ArrayJoin( ListDirExt( l_aPRG_TODO, cWorkDir, ".c" ), l_aC_TODO ), l_nJOBS )
 
-                  cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( aTODO ) ) )
+                  cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( aTODO,, nOpt_Esc ) ) )
 
                   /* Handle moving the whole command line to a script, if requested. */
                   IF "{SCRIPT}" $ cOpt_CompCLoop
@@ -3645,7 +3675,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create directory for target '%1$s'." ), l_cPROGNAME ) )
             ENDIF
 
-            IF hbmk[ _HBMK_lREBUILD ]
+            IF hbmk[ _HBMK_lREBUILD ] .OR. ;
+               ( ! hbmk[ _HBMK_lINC ] .AND. lStopAfterCComp .AND. lCreateLib .AND. ! Empty( cBin_Lib ) ) /* non-incremental + static lib */
                IF hb_FileExists( PathSepToTarget( hbmk, l_cPROGNAME ) ) .AND. ;
                   FErase( PathSepToTarget( hbmk, l_cPROGNAME ) ) == F_ERROR
                   hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot delete existing target '%1$s'." ), l_cPROGNAME ) )
@@ -3664,13 +3695,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                /* Order is significant */
                cOpt_Link := StrTran( cOpt_Link, "{FL}"  , iif( l_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                           GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LO}"  , ArrayToList( ListCook( ArrayJoin( l_aOBJ, l_aOBJUSER ), cObjPrefix ) ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( l_aRESSRC, cWorkDir, cResExt ), l_aRESCMP ), cResPrefix ) ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( l_aOBJA ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( l_aLIB ) )
+               cOpt_Link := StrTran( cOpt_Link, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, l_aOBJUSER ),, nOpt_Esc, cObjPrefix ) )
+               cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( l_aRESSRC, cWorkDir, cResExt ), l_aRESCMP ),, nOpt_Esc, cResPrefix ) )
+               cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( l_aOBJA,, nOpt_Esc ) )
+               cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc ) )
                cOpt_Link := StrTran( cOpt_Link, "{OE}"  , PathSepToTarget( hbmk, l_cPROGNAME ) )
                cOpt_Link := StrTran( cOpt_Link, "{OM}"  , PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, ".map" ) ) )
-               cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( ListCook( hbmk[ _HBMK_aLIBPATH ], cLibPathPrefix ), cLibPathSep ) )
+               cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, cLibPathPrefix ) )
                cOpt_Link := StrTran( cOpt_Link, "{DB}"  , l_cHB_BIN_INSTALL )
 
                cOpt_Link := AllTrim( cOpt_Link )
@@ -3722,10 +3753,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
                /* Order is significant */
                cOpt_Lib := StrTran( cOpt_Lib, "{FA}"  , GetEnv( "HB_USER_AFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTA ] ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{LO}"  , ArrayToList( ListCook( ArrayJoin( l_aOBJ, l_aOBJUSER ), cLibObjPrefix ) ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{LL}"  , ArrayToList( l_aLIB ) )
+               cOpt_Lib := StrTran( cOpt_Lib, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, l_aOBJUSER ),, nOpt_Esc, cLibObjPrefix ) )
+               cOpt_Lib := StrTran( cOpt_Lib, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{OL}"  , PathSepToTarget( hbmk, l_cPROGNAME ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{DL}"  , ArrayToList( ListCook( hbmk[ _HBMK_aLIBPATH ], cLibPathPrefix ), cLibPathSep ) )
+               cOpt_Lib := StrTran( cOpt_Lib, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, cLibPathPrefix ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{DB}"  , l_cHB_BIN_INSTALL )
 
                cOpt_Lib := AllTrim( cOpt_Lib )
@@ -3777,12 +3808,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
                /* Order is significant */
                cOpt_Dyn := StrTran( cOpt_Dyn, "{FD}"  , GetEnv( "HB_USER_DFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTD ] ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LO}"  , ArrayToList( ListCook( ArrayJoin( l_aOBJ, l_aOBJUSER ), cDynObjPrefix ) ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( l_aRESSRC, cWorkDir, cResExt ), l_aRESCMP ), cResPrefix ) ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LL}"  , ArrayToList( l_aLIB ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, l_aOBJUSER ),, nOpt_Esc, cDynObjPrefix ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( l_aRESSRC, cWorkDir, cResExt ), l_aRESCMP ),, nOpt_Esc, cResPrefix ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OD}"  , PathSepToTarget( hbmk, l_cPROGNAME ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OM}"  , PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, ".map" ) ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{DL}"  , ArrayToList( ListCook( hbmk[ _HBMK_aLIBPATH ], cLibPathPrefix ), cLibPathSep ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, cLibPathPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{DB}"  , l_cHB_BIN_INSTALL )
 
                cOpt_Dyn := AllTrim( cOpt_Dyn )
@@ -4399,6 +4430,14 @@ STATIC FUNCTION ArraySplit( arrayIn, nChunksReq )
 
    RETURN arrayOut
 
+STATIC FUNCTION AAddNotExists( array, xItem )
+
+   IF AScan( array, {|tmp| tmp == xItem } ) == 0
+      AAdd( array, xItem )
+   ENDIF
+
+   RETURN array
+
 STATIC FUNCTION AAddNotEmpty( array, xItem )
 
    IF ! Empty( xItem )
@@ -4455,33 +4494,48 @@ STATIC FUNCTION ListCookLib( hbmk, arraySrc, cPrefix, cExtNew )
    RETURN array
 
 /* Append optional prefix and optional extension to all members */
-STATIC FUNCTION ListCook( arraySrc, cPrefix, cExtNew )
+STATIC FUNCTION ListCook( arraySrc, cExtNew )
    LOCAL array := AClone( arraySrc )
    LOCAL cItem
 
-   FOR EACH cItem IN array
-      IF cPrefix != NIL
-         cItem := cPrefix + cItem
-      ENDIF
-      IF cExtNew != NIL
+   IF cExtNew != NIL
+      FOR EACH cItem IN array
          cItem := FN_ExtSet( cItem, cExtNew )
-      ENDIF
-   NEXT
+      NEXT
+   ENDIF
 
    RETURN array
 
-STATIC FUNCTION ArrayToList( array, cSeparator )
+STATIC FUNCTION ArrayToList( array, cSeparator, nEscapeMode, cPrefix )
    LOCAL cString := ""
    LOCAL tmp
 
    DEFAULT cSeparator TO " "
+   DEFAULT nEscapeMode TO _ESC_NONE
+   DEFAULT cPrefix TO ""
 
-   FOR tmp := 1 TO Len( array )
-      cString += array[ tmp ]
-      IF tmp < Len( array )
-         cString += cSeparator
-      ENDIF
-   NEXT
+   SWITCH nEscapeMode
+   CASE _ESC_NONE
+      FOR tmp := 1 TO Len( array )
+         cString += cPrefix + array[ tmp ]
+         IF tmp < Len( array )
+            cString += cSeparator
+         ENDIF
+      NEXT
+      EXIT
+   CASE _ESC_DBLQUOTE
+      FOR tmp := 1 TO Len( array )
+         IF " " $ array[ tmp ]
+            cString += cPrefix + Chr( 34 ) + array[ tmp ] + Chr( 34 )
+         ELSE
+            cString += cPrefix + array[ tmp ]
+         ENDIF
+         IF tmp < Len( array )
+            cString += cSeparator
+         ENDIF
+      NEXT
+      EXIT
+   ENDSWITCH
 
    RETURN cString
 
