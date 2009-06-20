@@ -495,8 +495,8 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, ULONG ulBodySize, USHORT us
          {
             for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )
             {
-               if( pSymRead[ ul ].value.pCodeFunc != ( PHB_PCODEFUNC ) SYM_EXTERN &&
-                   ( pSymRead[ ul ].scope.value & HB_FS_LOCAL ) != 0 )
+               if( ( pSymRead[ ul ].scope.value &
+                     ( HB_FS_LOCAL | HB_FS_STATIC ) ) == HB_FS_LOCAL )
                {
                   pDynSym = hb_dynsymFind( pSymRead[ ul ].szName );
                   if( pDynSym )
