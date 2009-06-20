@@ -56,6 +56,7 @@ PRG_SOURCES=\
 	xbpscrollbar.prg \
 	xbpsle.prg \
 	xbpmle.prg \
+	xbpspinbutton.prg \
 
 PRG_HEADERS=\
 	xbp.ch \

@@ -119,6 +119,9 @@ PROCEDURE BuildADialog()
    /* Install ScrollBar */
    Build_ScrollBar( aTabs[ 1 ] )
 
+   /* Install Spin Buttons */
+   Build_SpinButtons( aTabs[ 3 ] )
+
    /* Present the dialog on the screen */
    oDlg:Show()
 
@@ -134,7 +137,7 @@ PROCEDURE BuildADialog()
    /* Very important - destroy resources */
    oDlg:destroy()
 
-   RETURN
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
@@ -392,9 +395,7 @@ FUNCTION Build_TabPages( oDlg )
    oTab1:minimized := .F.
    oTab1:caption   := "Customer"
    oTab1:create()
-   oTab1:TabActivate := ;
-       {|| oTab2:minimize(), oTab3:minimize(),;
-           oTab1:maximize(), MsgBox( oTab1:caption ) }
+   oTab1:TabActivate := {|| oTab2:minimize(), oTab3:minimize(), oTab1:maximize() }
    oTab1:setColorBG( GraMakeRGBColor( {198,198,198} ) )
 
    // Second tab page is minimized
@@ -405,7 +406,7 @@ FUNCTION Build_TabPages( oDlg )
    oTab2:create()
    oTab2:TabActivate := ;
        {|| oTab1:minimize(), oTab3:minimize(),;
-           oTab2:maximize(), MsgBox( oTab2:caption ) }
+           oTab2:maximize() }
 
    // Third tab page is minimized
    oTab3 := XbpTabPage():new( oDlg:drawingArea, , { 510, 20 }, { 360, nHeight } )
@@ -414,8 +415,7 @@ FUNCTION Build_TabPages( oDlg )
    oTab3:postOffset := 40
    oTab3:create()
    oTab3:TabActivate := ;
-       {|x,y,oTab| x := y, oTab1:minimize(), oTab2:minimize(),;
-           oTab3:maximize(), MsgBox( oTab:caption ) }
+       {|x,y,oTab| x := y, oTab1:minimize(), oTab2:minimize(), oTab3:maximize() }
 
    RETURN { oTab1, oTab2, oTab3 }
 
@@ -496,7 +496,7 @@ FUNCTION Build_SLEs( oWnd )
    oXbp:setData()
    //oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData(), Qt_QDebug( "Var A =" + cVarA ) }
    //oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData() }
-hb_outDebug("nnnn")
+
    oXbp              := XbpSLE():new()
    oXbp:autoTab      := .T.
    oXbp:bufferLength := 20
@@ -526,6 +526,61 @@ FUNCTION Build_MLE( oWnd )
    // Copy text from LOCAL variable into edit buffer
    // via :dataLink
    oMLE:setData()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_SpinButtons( oWnd )
+   LOCAL oSpinRed, oSpinGreen, oSpinBlue, bBlock
+   LOCAL nGreen := 5, nBlue := 12, nRed := 35
+   LOCAL nX := 230, nY := 190
+
+   // Callback code block
+   bCallback := {|mp1, mp2, oXbp| nRed := oXbp:getData(), ;
+                               RGB( nRed, nGreen, nBlue ) }
+
+   // Create spinbutton for red (without using :dataLink)
+   oSpinRed := XbpSpinButton():new( oWnd,, {nX,nY+00}, {100,40} )
+   oSpinRed:align := 2
+   oSpinRed:fastSpin := .T.
+   oSpinRed:create()
+   oSpinRed:setNumLimits( 0, 255 )
+   oSpinRed:endSpin  := bCallback
+   oSpinRed:keyboard := bCallback
+   oSpinRed:setData( 121 )
+
+   // Callback code block
+   bCallback := {|mp1, mp2, oXbp| oXbp:getData(), ;
+                       RGB( nRed, nGreen, nBlue ) }
+
+   // Create spinbutton for green (using :dataLink)
+   oSpinGreen := XbpSpinButton():new( oWnd,, {nX,nY+50}, {100,40} )
+   oSpinGreen:align := 3
+   oSpinGreen:create()
+   oSpinGreen:setNumLimits( 0, 255 )
+   oSpinGreen:dataLink := {|x| IIf( x==NIL, nGreen, nGreen := x ) }
+   oSpinGreen:endSpin  := bCallback
+   oSpinGreen:keyboard := bCallback
+   oSpinGreen:setData()
+
+   // Create spinbutton for blue (using :dataLink)
+   // (Master is oSpinGreen)
+   oSpinBlue := XbpSpinButton():new( oWnd,, {nX,nY+100}, {100,40} )
+   oSpinBlue:master := oSpinGreen
+   oSpinBlue:create()
+   oSpinBlue:setNumLimits( 0, 255 )
+   oSpinBlue:dataLink := {|x| IIf( x==NIL, nBlue, nBlue := x ) }
+   oSpinBlue:endSpin  := bCallback
+   oSpinBlue:keyboard := bCallback
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION RGB( r, g, b )
+
+   // Display a static window with flashing color of rgb
 
    RETURN nil
 

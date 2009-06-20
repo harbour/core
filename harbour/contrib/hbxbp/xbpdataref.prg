@@ -123,6 +123,9 @@ METHOD XbpDataRef:getData()
    CASE cClass == "XBPSCROLLBAR"
       ::sl_editBuffer := ::oWidget:value()
 
+   CASE cClass == "XBPSPINBUTTON"
+      ::sl_editBuffer := ::oWidget:value()
+
    ENDCASE
 
    IF hb_isBlock( ::dataLink )
@@ -168,6 +171,9 @@ METHOD XbpDataRef:setData( xValue, mp2 )
       IF hb_isChar( ::sl_editBuffer )
          ::oWidget:setText( ::sl_editBuffer )
       ENDIF
+
+   CASE cClass == "XBPSPINBUTTON"
+      ::oWidget:setValue( ::sl_editBuffer )
 
    CASE cClass == "XBPSCROLLBAR"
       IF ::sl_editBuffer <> NIL
