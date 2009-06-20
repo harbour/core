@@ -72,7 +72,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "apig.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -92,17 +91,15 @@ CLASS XbpDialog FROM XbpWindow
    METHOD   destroy()
 
    METHOD   showModal()                           INLINE NIL
-   METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
-   METHOD   getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
+   METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, ::oWidget:setWindowTitle( cTitle )
+   METHOD   getTitle()                            INLINE ::oWidget:windowTitle()
 
    METHOD   menuBar()
    METHOD   setFrameState( nState )
    METHOD   getFrameState()
-   METHOD   calcClientRect()                      INLINE ::aRect := Qtc_GetClientRect( ::hWnd ), ;
-                                                         { 0, 0, ::aRect[ 3 ], ::aRect[ 4 ] }
-   METHOD   calcFrameRect()                       INLINE ::aRect := Qtc_GetWindowRect( ::hWnd ),;
-                                                         { ::aRect[ 1 ], ::aRect[ 2 ], ;
-                                                         ::aRect[ 3 ]-::aRect[ 1 ], ::aRect[ 4 ]-::aRect[ 2 ] }
+   METHOD   calcClientRect()                      INLINE { 0, 0, ::oWidget:width(), ::oWidget:height() }
+   METHOD   calcFrameRect()                       INLINE { ::oWidget:x(), ::oWidget:y(), ;
+                                                           ::oWidget:x()+::oWidget:width(), ::oWidget:y()+::oWidget:height() }
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -111,10 +108,8 @@ METHOD XbpDialog:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::className   := "XbpDialog"
    ::resizeMode  := 0
    ::mouseMode   := 0
-   ::objType     := objTypeDialog
 
    RETURN Self
 
@@ -191,6 +186,8 @@ METHOD XbpDialog:destroy()
 METHOD XbpDialog:setFrameState( nState )
    LOCAL lSuccess := .f.
 
+   HB_SYMBOL_UNUSED( nState )
+   #if 0
    DO CASE
 
    CASE nState == XBPDLG_FRAMESTAT_MINIMIZED
@@ -203,6 +200,7 @@ METHOD XbpDialog:setFrameState( nState )
       RETURN ( ::sendMessage( QWM_SYSCOMMAND, QSC_RESTORE, 0 ) <> 0 )
 
    ENDCASE
+   #endif
 
    RETURN lSuccess
 
@@ -210,12 +208,14 @@ METHOD XbpDialog:setFrameState( nState )
 
 METHOD XbpDialog:getFrameState()
 
+   #if 0
    IF Qtc_IsIconic( ::hWnd )
       RETURN XBPDLG_FRAMESTAT_MINIMIZED
    ENDIF
    IF Qtc_IsZoomed( ::hWnd )
       RETURN XBPDLG_FRAMESTAT_MAXIMIZED
    ENDIF
+   #endif
 
    RETURN XBPDLG_FRAMESTAT_NORMALIZED
 
@@ -255,10 +255,6 @@ CLASS XbpDrawingArea  INHERIT  XbpWindow
 METHOD XbpDrawingArea:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::exStyle     := 0
-   ::className   := "XbpDrawingArea"
-   ::objType     := objTypeDA
    ::visible     := .t.
 
    RETURN Self

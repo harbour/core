@@ -72,19 +72,27 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "apig.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
-#define QTC_MENITEM_CAPTION                1
-#define QTC_MENITEM_BLOCK                  2
-#define QTC_MENITEM_STYLE                  3
-#define QTC_MENITEM_ATTRIB                 4
+#define QTC_MENITEM_CAPTION                       1
+#define QTC_MENITEM_BLOCK                         2
+#define QTC_MENITEM_STYLE                         3
+#define QTC_MENITEM_ATTRIB                        4
 
-#define QTC_MENUITEM_ADD                   1
-#define QTC_MENUITEM_INSERT                2
-#define QTC_MENUITEM_REPLACE               3
+#define QTC_MENUITEM_ADD                          1
+#define QTC_MENUITEM_INSERT                       2
+#define QTC_MENUITEM_REPLACE                      3
+
+#define QMF_POPUP                                 1
+#define QMF_BYPOSITION                            2
+#define QMF_SEPARATOR                             3
+#define QMF_STRING                                4
+#define QMF_CHECKED                               5
+#define QMF_UNCHECKED                             6
+#define QMF_ENABLED                               7
+#define QMF_GRAYED                                8
 
 /*----------------------------------------------------------------------*/
 
@@ -238,6 +246,9 @@ METHOD xbpMenuBar:delAllItems()
 METHOD xbpMenuBar:delItem( nItemIndex )
    LOCAL lResult:= .F.
 
+   HB_SYMBOL_UNUSED( nItemIndex )
+
+   #if 0
    IF nItemIndex > 0 .AND. nItemIndex <= ::numItems()
       IF ::aMenuItems[ nItemIndex,QTC_MENU_TYPE ] == QMF_POPUP
          ::aMenuItems[ nItemIndex,QTC_MENU_MENUOBJ ]:Destroy()
@@ -249,7 +260,7 @@ METHOD xbpMenuBar:delItem( nItemIndex )
       ELSE
       ENDIF
    ENDIF
-
+   #endif
    RETURN lResult
 
 /*----------------------------------------------------------------------*/
@@ -638,8 +649,6 @@ METHOD xbpMenu:new( oParent, aPresParams, lVisible )
    ::aPresParams := aPresParams
    ::visible     := lVisible
 
-   ::className   := "XbpMenu"
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -675,17 +684,11 @@ METHOD xbpMenu:setTitle( cTitle )
 /*----------------------------------------------------------------------*/
 
 METHOD xbpMenu:popUp( oXbp, aPos, nDefaultItem, nControl )
-   LOCAL nCmd, aMenuItem
 
+   HB_SYMBOL_UNUSED( oXbp )
+   HB_SYMBOL_UNUSED( aPos )
    HB_SYMBOL_UNUSED( nDefaultItem )
    HB_SYMBOL_UNUSED( nControl     )
-
-   nCmd := Qtc_TrackPopupMenu( ::hMenu, TPM_LEFTALIGN + TPM_TOPALIGN + TPM_RETURNCMD, aPos[ 1 ], aPos[ 2 ], oXbp:hWnd )
-
-   aMenuItem := ::findMenuItemById( nCmd )
-   IF hb_isArray( aMenuItem ) .and. hb_isBlock( aMenuItem[ 2 ] )
-      Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
-   ENDIF
 
    RETURN 0
 

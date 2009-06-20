@@ -113,6 +113,9 @@ FUNCTION BuildADialog()
    /* Install Single Line Edits */
    Build_SLEs( oDlg:drawingArea )
 
+   /* Install Multi-Line Edit */
+   Build_MLE( aTabs[ 2 ] )
+
    /* Install ScrollBar */
    Build_ScrollBar( aTabs[ 1 ] )
 
@@ -491,8 +494,9 @@ FUNCTION Build_SLEs( oWnd )
    oXbp:dataLink     := {|x| IIf( x==NIL, cVarA, cVarA := x ) }
    oXbp:create()
    oXbp:setData()
-   oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData(), Qt_QDebug( "Var A =" + cVarA ) }
-
+   //oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData(), Qt_QDebug( "Var A =" + cVarA ) }
+   //oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData() }
+hb_outDebug("nnnn")
    oXbp              := XbpSLE():new()
    oXbp:autoTab      := .T.
    oXbp:bufferLength := 20
@@ -507,3 +511,23 @@ FUNCTION Build_SLEs( oWnd )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION Build_MLE( oWnd )
+   LOCAL oMLE
+   LOCAL cText := 'This is Xbase++ compatible implementation of XbpMLE()'
+
+   // Create MLE, specify position using :create() and
+   // assign data code block accessing LOCAL variable
+   oMLE          := XbpMLE():new()
+   oMLE:wordWrap := .F.
+   oMLE:dataLink := {|x| IIf( x==NIL, cText, cText := x ) }
+   oMLE:create( oWnd, , {10,10}, {oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45} )
+
+   // Copy text from LOCAL variable into edit buffer
+   // via :dataLink
+   oMLE:setData()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+

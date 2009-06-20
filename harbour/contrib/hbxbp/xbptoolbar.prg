@@ -72,7 +72,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "apig.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -133,9 +132,6 @@ METHOD XbpToolbar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::className   := "XbpToolBar"
-   ::objType     := objTypeToolBar
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -153,10 +149,7 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       RETURN Self
    ENDIF
 
-   /* Create Toolbar Widget */
    ::oWidget := QToolBar():new( QT_PTROF( oPar:oWidget ) )
-
-   /* Add this toolbar with parent */
    oPar:oWidget:addToolBar_1( ::pWidget )
 
    #if 0
@@ -226,9 +219,9 @@ METHOD XbpToolbar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpToolbar:sendToolbarMessage( nMsg, p1, p2 )
+METHOD XbpToolbar:sendToolbarMessage()
 
-   RETURN QTC_SendToolbarMessage( ::pWnd, nMsg, p1, p2 )
+   RETURN self
 
 /*----------------------------------------------------------------------*/
 

@@ -70,7 +70,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "apig.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -170,7 +169,7 @@ METHOD XbpDataRef:setData( xValue, mp2 )
          ::oWidget:setText( ::sl_editBuffer )
       ENDIF
 
-   CASE ::className == "XBPSCROLLBAR"
+   CASE cClass == "XBPSCROLLBAR"
       IF ::sl_editBuffer <> NIL
          ::oWidget:setValue( ::sl_editBuffer )
       ENDIF

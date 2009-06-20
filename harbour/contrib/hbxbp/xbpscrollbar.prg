@@ -70,7 +70,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "apig.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -105,9 +104,6 @@ CLASS XbpScrollBar  INHERIT  XbpWindow, XbpDataRef
 METHOD XbpScrollBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::className   := "XBPSCROLLBAR"
-   ::objType     := objTypeScrollBar
 
    RETURN Self
 

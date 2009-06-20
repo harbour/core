@@ -70,7 +70,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "apig.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -152,9 +151,6 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
 METHOD XbpListBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::className   := "XBPLISTBOX"
-   ::objType     := objTypeListBox
 
    RETURN Self
 

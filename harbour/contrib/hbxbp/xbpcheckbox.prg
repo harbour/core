@@ -70,7 +70,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "apig.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -102,9 +101,6 @@ CLASS XbpCheckBox  INHERIT  XbpWindow, XbpDataRef
 METHOD XbpCheckBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::className   := "XbpCheckBox"
-   ::objType     := objTypeCheckBox
 
    RETURN Self
 

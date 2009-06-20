@@ -70,7 +70,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "apig.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -108,9 +107,6 @@ CLASS XbpTabPage  INHERIT  XbpWindow
 METHOD XbpTabPage:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::className   := "XbpTabPage"
-   ::objType     := objTypeTabPage
 
    RETURN Self
 

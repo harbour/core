@@ -70,7 +70,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "apig.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -124,9 +123,6 @@ METHOD XbpSLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::className   := "XBPSLE"
-   ::objType     := objTypeSLE
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -156,10 +152,10 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::connectEvent( ::pWidget, QEvent_FocusOut, {|o,e| ::exeBlock( 8, e, o ) } )
 
    ::connect( ::pWidget, "cursorPositionChanged(int,int)" , {|o,i,ii| ::exeBlock( 1, i, ii, o ) } )
-   //::connect( ::pWidget, "editingFinished()"              , {|      | ::exeBlock( 2 ) } )
-   //::connect( ::pWidget, "returnPressed()"                , {|      | ::exeBlock( 3 ) } )
-   //::connect( ::pWidget, "selectionChanged()"             , {|      | ::exeBlock( 4 ) } )
-   ::connect( ::pWidget, "textChanged(QString)"           , {|o,s   | ::exeBlock( 5, s, o ) } )
+   // ::connect( ::pWidget, "editingFinished()"              , {|      | ::exeBlock( 2 ) } )
+   // ::connect( ::pWidget, "returnPressed()"                , {|      | ::exeBlock( 3 ) } )
+   // ::connect( ::pWidget, "selectionChanged()"             , {|      | ::exeBlock( 4 ) } )
+   // ::connect( ::pWidget, "textChanged(QString)"           , {|o,s   | ::exeBlock( 5, s, o ) } )
    ::connect( ::pWidget, "textEdited(QString)"            , {|o,s   | ::exeBlock( 6, s, o ) } )
 
    ::setPosAndSize()
@@ -231,7 +227,9 @@ METHOD XbpSLE:handleEvent( nEvent, mp1, mp2 )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpSLE:destroy()
+
    ::xbpWindow:destroy()
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/

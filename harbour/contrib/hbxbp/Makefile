@@ -56,6 +56,7 @@ PRG_SOURCES=\
 	xbpstatusbar.prg \
 	xbpscrollbar.prg \
 	xbpsle.prg \
+	xbpmle.prg \
 
 PRG_HEADERS=\
 	xbp.ch \

@@ -10,33 +10,9 @@
    #xtranslate HB_OUTDEBUG( [<x>] ) =>
 #endif
 
-#define DA_MODE                                    1  /* Experimental */
-
-#define objTypeNone                                0
-#define objTypeCrt                                 1
-#define objTypeWindow                              2
-#define objTypeActiveX                             3
-#define objTypeDialog                              4
-#define objTypeToolBar                             5
-#define objTypeToolBarButton                       6
-#define objTypeMenu                                7
-#define objTypeStatusBar                           8
-#define objTypePushButton                          9
-#define objTypeComboBox                           10
-#define objTypeListBox                            11
-#define objTypeStatic                             12
-#define objTypeTreeView                           13
-#define objTypeTreeViewItem                       14
-#define objTypeCheckBox                           15
-#define objTypeRadioButton                        16
-#define objType3State                             17
-#define objTypeSLE                                18
-#define objTypeMLE                                19
-#define objTypeDA                                 20
-#define objTypeScrollBar                          21
-#define objTypeTabPage                            22
-
 /*----------------------------------------------------------------------*/
+
+#define QT_PTROF( oObj )                          ( oObj:pPtr )
 
 #define HBXBP_EVENT_HANDLED                       0
 #define HBXBP_EVENT_UNHANDLED                     1

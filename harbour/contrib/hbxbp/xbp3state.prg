@@ -70,7 +70,6 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "apig.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -102,9 +101,6 @@ CLASS Xbp3State  INHERIT  XbpWindow, XbpDataRef
 METHOD Xbp3State:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::className   := "Xbp3State"
-   ::objType     := objType3State
 
    RETURN Self
 

@@ -71,24 +71,7 @@
 
 #include "xbp.ch"
 #include "appevent.ch"
-#include "apig.ch"
 #include "hbqt.ch"
-
-/* TOFIX: Replace these with QT solutions */
-#define HB_GTE_NOTIFY                    10
-#define HB_GTE_COMMAND                   11
-#define HB_GTE_CTLCOLOR                  12
-#define HB_GTE_HSCROLL                   15
-#define HB_GTE_VSCROLL                   16
-
-/*----------------------------------------------------------------------*/
- * To Switch Over from ASCALLBACK() to SET/GET_Prop() calls
- *
-#if 0
-   #define __BYASCALLBACK__
-#else
-   #define __BYSETPROP__
-#endif
 
 /*----------------------------------------------------------------------*/
 
@@ -238,13 +221,7 @@ EXPORTED:
    DATA     closable                              INIT   .T.
    DATA     resizable                             INIT   .t.
    DATA     resizeMode                            INIT   0
-   DATA     style                                 INIT   QWS_OVERLAPPEDWINDOW
-   DATA     exStyle                               INIT   0
    DATA     lModal                                INIT   .f.
-   DATA     pGTp
-   DATA     pGT
-   DATA     objType                               INIT   objTypeNone
-   DATA     className                             INIT   ""
 
    METHOD   setFocus()
    METHOD   sendMessage()
@@ -262,9 +239,6 @@ EXPORTED:
    DATA     mouseMode                             INIT   1
 
    DATA     nID                                   INIT   0
-   DATA     nControlID                            INIT   5000
-   METHOD   createControl()
-   METHOD   getControlID()                        INLINE ++::nControlID
 
    METHOD   Initialize()
 
@@ -273,14 +247,9 @@ EXPORTED:
 
    DATA     oMenu
    METHOD   HandleEvent()                         INLINE ( HBXBP_EVENT_UNHANDLED )
-   METHOD   ControlWndProc()
-   METHOD   findObjectByHandle( hWnd )
-
+   METHOD   grabEvent()
 
    METHOD   isDerivedFrom()
-   METHOD   setWindowProcCallback()
-
-   METHOD   grabEvent()
 
    DATA     oWidget
    ACCESS   pWidget                               INLINE  IF( empty( ::oWidget ), NIL, QT_PTROF( ::oWidget ) )
@@ -426,12 +395,6 @@ METHOD XbpWindow:grabEvent( pEvent )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:SetWindowProcCallback()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD XbpWindow:captureMouse()
 
    RETURN Self
@@ -440,10 +403,8 @@ METHOD XbpWindow:captureMouse()
 
 METHOD XbpWindow:disable()
 
-   IF Qtc_EnableWindow( ::hWnd, .f. )
-      ::is_enabled := .f.
-      RETURN .t.
-   ENDIF
+   ::oWidget:setDisabled( .t. )
+   ::is_enabled := ::oWidget:isEnabled()
 
    RETURN .f.
 
@@ -451,10 +412,8 @@ METHOD XbpWindow:disable()
 
 METHOD XbpWindow:enable()
 
-   IF Qtc_EnableWindow( ::hWnd, .t. )
-      ::is_enabled := .t.
-      RETURN .t.
-   ENDIF
+   ::oWidget:setEnabled( .t. )
+   ::is_enabled := ::oWidget:isEnabled()
 
    RETURN .f.
 
@@ -473,7 +432,9 @@ METHOD XbpWindow:hide()
 
 METHOD XbpWindow:invalidateRect( aRect )
 
-   RETURN Qtc_InvalidateRect( ::hWnd, aRect )
+   HB_SYMBOL_UNUSED( aRect )
+
+   RETURN self
 
 /*----------------------------------------------------------------------*/
 
@@ -629,14 +590,13 @@ METHOD XbpWindow:show()
 
 METHOD XbpWindow:toBack()
 
-   RETURN Qtc_SetWindowPosToBack( ::hWnd )
+   RETURN self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:toFront()
 
-   /*RETURN Win_SetForegroundWindow( ::hWnd ) */
-   RETURN Qtc_SetWindowPosToTop( ::hWnd )
+   RETURN self
 
 /*----------------------------------------------------------------------*/
 
@@ -995,17 +955,12 @@ METHOD XbpWindow:wheel( xParam )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:close( xParam )
-   if ::objType == objTypeCrt
-      if hb_isNil( xParam ) .and. hb_isBlock( ::sl_close )
-         eval( ::sl_close, NIL, NIL, Self )
-         RETURN Self
-      endif
 
-      if hb_isBlock( xParam ) .or. hb_isNil( xParam )
-         ::sl_close := xParam
-         RETURN NIL
-      endif
+   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+      ::sl_close := xParam
+      RETURN NIL
    endif
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1042,18 +997,8 @@ METHOD XbpWindow:keyboard( xParam )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:killDisplayFocus( xParam )
-   if ::objType == objTypeCrt
-      if hb_isNil( xParam ) .and. hb_isBlock( ::sl_killDisplayFocus )
-         eval( ::sl_killDisplayFocus, NIL, NIL, Self )
-         RETURN Self
-      endif
+METHOD XbpWindow:killDisplayFocus()
 
-      if hb_isBlock( xParam ) .or. hb_isNil( xParam )
-         ::sl_killDisplayFocus := xParam
-         RETURN NIL
-      endif
-   endif
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1138,19 +1083,8 @@ METHOD XbpWindow:resize( xParam, xParam1 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:setDisplayFocus( xParam )
+METHOD XbpWindow:setDisplayFocus()
 
-   if ::objType == objTypeCrt
-      if hb_isNil( xParam ) .and. hb_isBlock( ::setDisplayFocus )
-         eval( ::setDisplayFocus, NIL, NIL, Self )
-         RETURN Self
-      endif
-
-      if hb_isBlock( xParam ) .or. hb_isNil( xParam )
-         ::setDisplayFocus := xParam
-         RETURN NIL
-      endif
-   endif
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1257,173 +1191,18 @@ METHOD XbpWindow:Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
 METHOD XbpWindow:setFocus()
 
-   ::sendMessage( QWM_ACTIVATE, 1, 0 )
+   ::oWidget:setFocus()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:sendMessage( nMessage, nlParam, nwParam )
+METHOD XbpWindow:sendMessage()// nMessage, nlParam, nwParam )
 
-   RETURN Qtc_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:findObjectByHandle( hWnd )
-   LOCAL nObj
-
-   IF len( ::aChildren ) > 0
-      IF ( nObj := ascan( ::aChildren, {|o| o:hWnd == hWnd } ) ) > 0
-         RETURN ::aChildren[ nObj ]
-      ENDIF
-   ENDIF
-
-   RETURN NIL
+   RETURN self
 
 /*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:createControl()
-   LOCAL hWnd
-
-   ::nID := ::oParent:GetControlId()
-
-   hWnd := Qtc_CreateWindowEx( ::exStyle, ;
-                               ::className, ;
-                               "", ;                              /* window name */
-                               ::style, ;
-                               ::aPos[ 1 ], ::aPos[ 2 ],;
-                               ::aSize[ 1 ], ::aSize[ 2 ],;
-                               ::oParent:hWnd,;
-                               ::nID,;                            /* hMenu       */
-                               NIL,;                              /* hInstance   */
-                               NIL )                              /* lParam      */
-
-
-   IF ( hWnd <> 0 )
-      ::hWnd := hWnd
-      ::pWnd := QTC_n2p( hWnd )
-      ::sendMessage( QWM_SETFONT, Qtc_GetStockObject( QDEFAULT_GUI_FONT ), 1 )
-   ENDIF
-
-   RETURN Self
 /*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
-   LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj, nReturn
-
-   #if 1
-   hb_ToOutDebug( "%s:wndProc( %i  %i  %i  %i )", __ObjGetClsName( self ), hWnd, nMessage, nwParam, nlParam )
-   #endif
-
-   SWITCH nMessage
-
-   CASE QWM_ERASEBKGND
-      IF ::objType == objTypeDA .and. !empty( ::hBrushBG )
-         ::handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
-      ENDIF
-      EXIT
-
-   CASE QWM_COMMAND
-      nCtrlID   := Qtc_LOWORD( nwParam )
-      nNotifctn := Qtc_HIWORD( nwParam )
-      hWndCtrl  := nlParam
-
-      IF hWndCtrl == 0                            /* It is menu */
-         IF hb_isObject( ::oMenu )
-            IF !empty( aMenuItem := ::oMenu:FindMenuItemById( nCtrlID ) )
-               IF hb_isBlock( aMenuItem[ 2 ] )
-                  Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
-
-               ELSEIF hb_isBlock( aMenuItem[ 3 ] )
-                  Eval( aMenuItem[ 3 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
-
-               ENDIF
-            ENDIF
-         ENDIF
-         RETURN 0
-      ELSE
-         IF ( nObj := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
-            nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_COMMAND, { nNotifctn, nCtrlID, hWndCtrl } )
-            IF hb_isNumeric( nReturn ) .and. nReturn == 0
-               RETURN 0
-            ENDIF
-         ENDIF
-      ENDIF
-      EXIT
-
-   CASE QWM_NOTIFY
-      IF ( nObj := ascan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
-         nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, nlParam } )
-         IF hb_isNumeric( nReturn ) .and. nReturn == HBXBP_EVENT_HANDLED
-            RETURN HBXBP_EVENT_HANDLED
-         ENDIF
-      ENDIF
-      EXIT
-
-   CASE QWM_CTLCOLORLISTBOX
-   CASE QWM_CTLCOLORMSGBOX
-   CASE QWM_CTLCOLOREDIT
-   CASE QWM_CTLCOLORBTN
-   CASE QWM_CTLCOLORDLG
-   CASE QWM_CTLCOLORSCROLLBAR
-   CASE QWM_CTLCOLORSTATIC
-
-      oObj := ::findObjectByHandle( nlParam )
-      IF hb_isObject( oObj )
-         nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
-
-         IF nReturn == 1
-            RETURN Qtc_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
-         ELSE
-            RETURN nReturn
-         ENDIF
-      ENDIF
-      EXIT
-
-   CASE QWM_HSCROLL
-      ::handleEvent( HB_GTE_HSCROLL, { Qtc_LoWord( nwParam ), Qtc_HiWord( nwParam ), nlParam } )
-      RETURN 0
-
-   CASE QWM_VSCROLL
-      nReturn := ::handleEvent( HB_GTE_VSCROLL, { Qtc_LoWord( nwParam ), Qtc_HiWord( nwParam ), nlParam } )
-      IF nReturn == HBXBP_EVENT_HANDLED
-         RETURN 0
-      ENDIF
-      EXIT
-
-   CASE QWM_CAPTURECHANGED
-      EXIT
-#if 0
-   CASE QWM_MOUSEMOVE
-      IF ::objType == objTypeScrollBar
-         IF !( ::lTracking )
-            ::lTracking := Wvg_BeginMouseTracking( ::hWnd )
-         ENDIF
-      ENDIF
-      EXIT
-
-   CASE QWM_MOUSEHOVER
-      IF ::objType == objTypeScrollBar
-         IF ::oParent:objType == objTypeCrt
-            WAPI_SetFocus( ::oParent:hWnd )
-         ENDIF
-         RETURN 0
-      ENDIF
-      EXIT
-
-   CASE QWM_MOUSELEAVE
-      IF ::objType == objTypeScrollBar
-         ::lTracking := .f.
-         IF ::oParent:objType == objTypeCrt
-            WAPI_SetFocus( ::oParent:hWnd )
-         ENDIF
-      ENDIF
-      EXIT
-#endif
-   END
-
-   RETURN Qtc_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
-
 /*----------------------------------------------------------------------*/
 
 CLASS XbpObject
