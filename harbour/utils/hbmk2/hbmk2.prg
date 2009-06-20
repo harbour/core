@@ -168,6 +168,7 @@ REQUEST hbmk_KEYW
 
 #define _ESC_NONE               0
 #define _ESC_DBLQUOTE           1
+#define _ESC_NIX                2
 
 #define _LNG_MARKER             "${lng}"
 
@@ -2022,6 +2023,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
            ( hbmk[ _HBMK_cARCH ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cARCH ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "gpp" )
 
+         nOpt_Esc := _ESC_NIX
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
          ENDIF
@@ -4545,10 +4547,22 @@ STATIC FUNCTION ArrayToList( array, cSeparator, nEscapeMode, cPrefix )
    CASE _ESC_DBLQUOTE
       FOR tmp := 1 TO Len( array )
          IF " " $ array[ tmp ]
+            /* Sloppy */
+            IF Right( array[ tmp ], 1 ) == "\"
+               array[ tmp ] += "\"
+            ENDIF
             cString += cPrefix + '"' + array[ tmp ] + '"'
          ELSE
             cString += cPrefix + array[ tmp ]
          ENDIF
+         IF tmp < Len( array )
+            cString += cSeparator
+         ENDIF
+      NEXT
+      EXIT
+   CASE _ESC_NIX
+      FOR tmp := 1 TO Len( array )
+         cString += cPrefix + FN_Escape( array[ tmp ], nEscapeMode )
          IF tmp < Len( array )
             cString += cSeparator
          ENDIF
@@ -4772,6 +4786,9 @@ STATIC FUNCTION FN_Escape( cFileName, nEscapeMode )
          ENDIF
          RETURN '"' + cFileName + '"'
       ENDIF
+      EXIT
+   CASE _ESC_NIX
+      cFileName := StrTran( cFileName, " ", "\ " )
       EXIT
    ENDSWITCH
 
