@@ -197,18 +197,19 @@
 #define QEvent_GrabKeyboard                        188      // Item gains keyboard grab (QGraphicsItem only).
 #define QEvent_UngrabKeyboard                      189      // Item loses keyboard grab (QGraphicsItem only).
 
-#define QPalette_Window                            10       // A general background color.
-#define QPalette_Background                        10       // This value is obsolete. Use Window instead.
 #define QPalette_WindowText                        0        // A general foreground color.
 #define QPalette_Foreground                        0        // This value is obsolete. Use WindowText instead.
+#define QPalette_Button                            1        // The general button background color. This background can be different from Window as some styles require a different background color for buttons.
+#define QPalette_Text                              6        // The foreground color used with Base. This is usually the same as the WindowText, in which case it must provide good contrast with Window and Base.
+#define QPalette_BrightText                        7        // A text color that is very different from WindowText, and contrasts well with e.g. Dark. Typically used for text that needs to be drawn where Text or WindowText would give poor contrast, such as on pressed push buttons. Note that text colors can be used for things other than just words; text colors are usually used for text, but it's quite common to use the text color roles for lines, icons, etc.
+#define QPalette_ButtonText                        8        // A foreground color used with the Button color.
 #define QPalette_Base                              9        // Used mostly as the background color for text entry widgets, but can also be used for other painting - such as the background of combobox drop down lists and toolbar handles. It is usually white or another light color.
+#define QPalette_Window                            10       // A general background color.
+#define QPalette_Background                        10       // This value is obsolete. Use Window instead.
 #define QPalette_AlternateBase                     16       // Used as the alternate background color in views with alternating row colors (see QAbstractItemView_setAlternatingRowColors()).
 #define QPalette_ToolTipBase                       18       // Used as the background color for QToolTip and QWhatsThis. Tool tips use the Inactive color group of QPalette, because tool tips are not active windows.
 #define QPalette_ToolTipText                       19       // Used as the foreground color for QToolTip and QWhatsThis. Tool tips use the Inactive color group of QPalette, because tool tips are not active windows.
-#define QPalette_Text                              6        // The foreground color used with Base. This is usually the same as the WindowText, in which case it must provide good contrast with Window and Base.
-#define QPalette_Button                            1        // The general button background color. This background can be different from Window as some styles require a different background color for buttons.
-#define QPalette_ButtonText                        8        // A foreground color used with the Button color.
-#define QPalette_BrightText                        7        // A text color that is very different from WindowText, and contrasts well with e.g. Dark. Typically used for text that needs to be drawn where Text or WindowText would give poor contrast, such as on pressed push buttons. Note that text colors can be used for things other than just words; text colors are usually used for text, but it's quite common to use the text color roles for lines, icons, etc.
+
 /*
  * There are some color roles used mostly for 3D bevel and shadow effects.
  * All of these are normally derived from Window, and used in ways that depend on that
@@ -242,18 +243,18 @@
 #define QAbstractSlider_SliderValueChange          3
 
 
-#define Qt_AlignLeft                              1         // 0x0001  // Aligns with the left edge.
-#define Qt_AlignRight                             2         // 0x0002  // Aligns with the right edge.
-#define Qt_AlignHCenter                           4         // 0x0004  // Centers horizontally in the available space.
-#define Qt_AlignJustify                           8         // 0x0008  // Justifies the text in the available space.
+#define Qt_AlignLeft                               1         // 0x0001  // Aligns with the left edge.
+#define Qt_AlignRight                              2         // 0x0002  // Aligns with the right edge.
+#define Qt_AlignHCenter                            4         // 0x0004  // Centers horizontally in the available space.
+#define Qt_AlignJustify                            8         // 0x0008  // Justifies the text in the available space.
 
-#define Qt_AlignTop                               32        // 0x0020  // Aligns with the top.
-#define Qt_AlignBottom                            64        // 0x0040  // Aligns with the bottom.
-#define Qt_AlignVCenter                           128       // 0x0080  // Centers vertically in the available space.
+#define Qt_AlignTop                                32        // 0x0020  // Aligns with the top.
+#define Qt_AlignBottom                             64        // 0x0040  // Aligns with the bottom.
+#define Qt_AlignVCenter                            128       // 0x0080  // Centers vertically in the available space.
 
-#define Qt_AlignCenter                            AlignVCenter+AlignHCenter   // Centers in both dimensions.
+#define Qt_AlignCenter                             AlignVCenter+AlignHCenter   // Centers in both dimensions.
 
-#define Qt_AlignAbsolute                          16        // 0x0010
+#define Qt_AlignAbsolute                           16        // 0x0010
            // If the widget's layout
            // direction is Qt_RightToLeft (instead of Qt_LeftToRight, the default),
            // Qt_AlignLeft refers to the right edge and Qt_AlignRight to the left edge.
@@ -267,10 +268,52 @@
 
 
 
-#define QLineEdit_Normal                          0        // Display characters as they are entered. This is the default.
-#define QLineEdit_NoEcho                          1        // Do not display anything. This may be appropriate for passwords where even the length of the password should be kept secret.
-#define QLineEdit_Password                        2        // Display asterisks instead of the characters actually entered.
-#define QLineEdit_PasswordEchoOnEdit              3
+#define QLineEdit_Normal                           0        // Display characters as they are entered. This is the default.
+#define QLineEdit_NoEcho                           1        // Do not display anything. This may be appropriate for passwords where even the length of the password should be kept secret.
+#define QLineEdit_Password                         2        // Display asterisks instead of the characters actually entered.
+#define QLineEdit_PasswordEchoOnEdit               3
+
+
+/* This enum type is used to define some modifier flags. Some of these flags only
+ * make sense in the context of printing:
+ */
+#define Qt_TextSingleLine                          0x0100    // Treats all whitespace as spaces and prints just one line.
+#define Qt_TextDontClip                            0x0200    // If it's impossible to stay within the given bounds, it prints outside.
+#define Qt_TextExpandTabs                          0x0400    // Makes the U+0009 (ASCII tab) character move to the next tab stop.
+#define Qt_TextShowMnemonic                        0x0800    // Displays the string "&P" as P (see QButton for an example). For an ampersand, use "&&".
+#define Qt_TextWordWrap                            0x1000    // Breaks lines at appropriate points, e.g. at word boundaries.
+#define Qt_TextWrapAnywhere                        0x2000    // Breaks lines anywhere, even within words.
+#define Qt_TextHideMnemonic                        0x8000    // Same as Qt::TextShowMnemonic but doesn't draw the underlines.
+#define Qt_TextDontPrint                           0x4000    // Treat this text as "hidden" and don't print it.
+#define Qt_IncludeTrailingSpaces                   0x08000000// When this option is set, QTextLine::naturalTextWidth() and naturalTextRect()
+                                                             // will return a value that includes the width of trailing spaces in the text; otherwise
+                                                             // this width is excluded.
+#define Qt_TextIncludeTrailingSpaces               0x08000000// Same as IncludeTrailingSpaces
+#define Qt_TextJustificationForced                 0x10000   // Ensures that text lines are justified.
+
+/* You can use as many modifier flags as you want, except that Qt::TextSingleLine
+ * and Qt::TextWordWrap cannot be combined.
+ */
+
+/* This enum is used in widgets that can display both plain text and rich text, e.g. QLabel.
+ * It is used for deciding whether a text string should be interpreted as one or the other.
+ * This is normally done by passing one of the enum values to a setTextFormat() function.
+ */
+#define Qt_PlainText                               0        // The text string is interpreted as a plain text string.
+#define Qt_RichText                                1        // The text string is interpreted as a rich text string.
+#define Qt_AutoText                                2        // The text string is interpreted as for Qt::RichText
+                                                            //   if Qt::mightBeRichText() returns true, otherwise as Qt::PlainText.
+
+/* This enum specifies how a text displaying widget reacts to user input.
+ */
+#define Qt_NoTextInteraction                       0        // No interaction with the text is possible.
+#define Qt_TextSelectableByMouse                   1        // Text can be selected with the mouse and copied to the clipboard using a context menu or standard keyboard shortcuts.
+#define Qt_TextSelectableByKeyboard                2        // Text can be selected with the cursor keys on the keyboard. A text cursor is shown.
+#define Qt_LinksAccessibleByMouse                  4        // Links can be highlighted and activated with the mouse.
+#define Qt_LinksAccessibleByKeyboard               8        // Links can be focused using tab and activated with enter.
+#define Qt_TextEditable                            16       // The text is fully editable.
+#define Qt_TextEditorInteraction   ( TextSelectableByMouse + TextSelectableByKeyboard + TextEditable )  // The default for a text editor.
+#define Qt_TextBrowserInteraction  ( TextSelectableByMouse + LinksAccessibleByMouse + LinksAccessibleByKeyboard )  // The default for QTextBrowser.
 
 /*----------------------------------------------------------------------*/
 
