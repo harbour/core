@@ -291,7 +291,9 @@ EXPORTED:
    DATA     xDummy
 
    METHOD   connect()
+   METHOD   connectEvent()
    DATA     aConnections                          INIT  {}
+   DATA     aEConnections                         INIT  {}
 
    ENDCLASS
 
@@ -356,12 +358,24 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:connect( pWidget, cSignal, bBlock )
+   LOCAL lSuccess
 
-   IF Qt_Connect_Signal( pWidget, cSignal, bBlock )
+   IF ( lSuccess := Qt_Connect_Signal( pWidget, cSignal, bBlock ) )
       aadd( ::aConnections, { pWidget, cSignal } )
    ENDIF
 
-   RETURN Self
+   RETURN lSuccess
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
+   LOCAL lSuccess
+
+   IF ( lSuccess := Qt_Connect_Event( pWidget, nEvent, bBlock ) )
+      aadd( ::aEConnections, { pWidget, nEvent } )
+   ENDIF
+
+   RETURN lSuccess
 
 /*----------------------------------------------------------------------*/
 
@@ -369,6 +383,11 @@ METHOD XbpWindow:destroy()
 
    IF len( ::aConnections ) > 0
       aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ) } )
+      ::aConnections := {}
+   ENDIF
+
+   IF len( ::aEConnections ) > 0
+      aeval( ::aEConnections, {|e_| Qt_DisConnect_Event( e_[ 1 ], e_[ 2 ] ) } )
       ::aConnections := {}
    ENDIF
 

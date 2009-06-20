@@ -112,8 +112,8 @@ METHOD XbpDataRef:getData()
    LOCAL cClass := __ObjGetClsName( self )
 
    DO CASE
-   CASE cClass $ "XBPSLE,XBPMLE" //::className == "EDIT"
-      //::sl_editBuffer := Win_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
+   CASE cClass $ "XBPSLE,XBPMLE"
+      ::sl_editBuffer := ::oWidget:text()
 
    CASE cClass == "XBPRADIOBUTTON"
       ::sl_editBuffer := ::oWidget:isChecked()
@@ -167,7 +167,7 @@ METHOD XbpDataRef:setData( xValue, mp2 )
 
    CASE cClass $ "XBPSLE,XBPMLE"
       IF hb_isChar( ::sl_editBuffer )
-         //Win_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
+         ::oWidget:setText( ::sl_editBuffer )
       ENDIF
 
    CASE ::className == "XBPSCROLLBAR"

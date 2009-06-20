@@ -81,7 +81,7 @@ FUNCTION BuildADialog()
                   ( aSize[ 2 ] - oDlg:currentSize()[ 2 ] ) / 2 } )
 
    /* Make background color of :drawingArea different */
-   oDlg:drawingArea:setColorBG( GraMakeRGBColor( { 134,128,164 } ) )
+   //oDlg:drawingArea:setColorBG( GraMakeRGBColor( { 134,128,164 } ) )
 
    /* Install menu system */
    Build_MenuBar()
@@ -109,6 +109,9 @@ FUNCTION BuildADialog()
 
    /* Install Push Buttons */
    Build_PushButton( oDlg:drawingArea )
+
+   /* Install Single Line Edits */
+   Build_SLEs( oDlg:drawingArea )
 
    /* Install ScrollBar */
    Build_ScrollBar( aTabs[ 1 ] )
@@ -430,13 +433,10 @@ FUNCTION Build_ListBox( oWnd )
    aeval( aItems, {|e| oListBox:addItem( e ) } )
 
    // Code block for list box selection:
-   //   The selected fields from the DbStruct()
-   //   array are displayed using QOut()
    oListBox:ItemSelected := {|mp1, mp2, obj| mp1:=oListBox:getData(), ;
                               mp2:=oListBox:getItem(mp1), MsgBox( "itemSelected:"+mp2 ) }
-   //oListBox:ItemMarked   := {|mp1, mp2, obj| MsgBox( "itemMarked" ) }
 
-   /* DOES NOT Work */
+   /* DOES NOT Work in Harbour  Xbase++ == OK */
    oListBox:setColorBG( GraMakeRGBColor( {127,12,210} ) )
 
    RETURN nil
@@ -480,3 +480,30 @@ FUNCTION Build_ScrollBar( oWnd )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION Build_SLEs( oWnd )
+   LOCAL oXbp
+   LOCAL cVarA := "Test A", cVarB := "Test B"
+
+   // Create second SLE, specify position using :new()
+   oXbp              := XbpSLE():new( oWnd, , {30,150}, {100,30} )
+   oXbp:tabStop      := .T.
+   oXbp:bufferLength := 15
+   oXbp:dataLink     := {|x| IIf( x==NIL, cVarA, cVarA := x ) }
+   oXbp:create()
+   oXbp:setData()
+   oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData(), Qt_QDebug( "Var A =" + cVarA ) }
+
+   oXbp              := XbpSLE():new()
+   oXbp:autoTab      := .T.
+   oXbp:bufferLength := 20
+   // Data code block containing assignment to LOCAL variable
+   oXbp:dataLink     := {|x| IIf( x==NIL, cVarB, cVarB := x ) }
+   oXbp:create( oWnd, , {30,200}, {100,30} )
+   oXbp:setData()
+   // Assign the value of the edit buffer to a LOCAL variable
+   // when the input focus is lost
+   oXbp:killInputFocus := { |x,y,oSLE| oSLE:getData(), MsgBox( "Var B =" + cVarB ) }
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/

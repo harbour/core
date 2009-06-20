@@ -252,3 +252,18 @@ FUNCTION Xbp_XtoS( xVar )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION SetEventFilter()
+   LOCAL pEventFilter
+
+   STATIC sEventFilter
+
+   IF empty( sEventFilter )
+      pEventFilter := QT_QEventFilter()
+      IF hb_isPointer( pEventFilter )
+         sEventFilter := pEventFilter
+      ENDIF
+   ENDIF
+
+   RETURN sEventFilter
+
+/*----------------------------------------------------------------------*/
