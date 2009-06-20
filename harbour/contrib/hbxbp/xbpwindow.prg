@@ -272,7 +272,7 @@ EXPORTED:
    DATA     nWndProc
 
    DATA     oMenu
-   METHOD   HandleEvent()                         INLINE ( 1 )
+   METHOD   HandleEvent()                         INLINE ( HBXBP_EVENT_UNHANDLED )
    METHOD   ControlWndProc()
    METHOD   findObjectByHandle( hWnd )
 
@@ -1354,8 +1354,8 @@ METHOD XbpWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
    CASE QWM_NOTIFY
       IF ( nObj := ascan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
          nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, nlParam } )
-         IF hb_isNumeric( nReturn ) .and. nReturn == EVENT_HANDELLED
-            RETURN EVENT_HANDELLED
+         IF hb_isNumeric( nReturn ) .and. nReturn == HBXBP_EVENT_HANDLED
+            RETURN HBXBP_EVENT_HANDLED
          ENDIF
       ENDIF
       EXIT
@@ -1386,7 +1386,7 @@ METHOD XbpWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    CASE QWM_VSCROLL
       nReturn := ::handleEvent( HB_GTE_VSCROLL, { Qtc_LoWord( nwParam ), Qtc_HiWord( nwParam ), nlParam } )
-      IF nReturn == EVENT_HANDELLED
+      IF nReturn == HBXBP_EVENT_HANDLED
          RETURN 0
       ENDIF
       EXIT
@@ -1429,7 +1429,7 @@ METHOD XbpWindow:ControlWndProc( hWnd, nMessage, nwParam, nlParam )
 CLASS XbpObject
 
    METHOD INIT
-   METHOD HandleEvent()  INLINE ( 1 )
+   METHOD HandleEvent()  INLINE ( HBXBP_EVENT_UNHANDLED )
 
    ENDCLASS
 

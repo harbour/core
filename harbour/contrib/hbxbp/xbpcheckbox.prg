@@ -150,7 +150,7 @@ METHOD XbpCheckBox:handleEvent( nEvent, mp1, mp2 )
    HB_SYMBOL_UNUSED( mp1    )
    HB_SYMBOL_UNUSED( mp2    )
 
-   RETURN EVENT_UNHANDELLED
+   RETURN HBXBP_EVENT_UNHANDLED
 
 /*----------------------------------------------------------------------*/
 

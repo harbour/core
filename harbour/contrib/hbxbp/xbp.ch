@@ -38,8 +38,8 @@
 
 /*----------------------------------------------------------------------*/
 
-#define EVENT_HANDELLED                           0
-#define EVENT_UNHANDELLED                         1
+#define HBXBP_EVENT_HANDLED                       0
+#define HBXBP_EVENT_UNHANDLED                     1
 
 /*----------------------------------------------------------------------*/
 
