@@ -220,7 +220,7 @@
 #endif
 
 #ifdef HB_FM_NEED_INIT
-static BOOL s_fInited = FALSE;
+static BOOL s_fInitedFM = FALSE;
 #endif
 
 #ifdef HB_FM_STATISTICS
@@ -471,7 +471,7 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
       hb_errInternal( HB_EI_XALLOCNULLSIZE, NULL, NULL, NULL );
 
 #ifdef HB_FM_NEED_INIT
-   if( !s_fInited )
+   if( !s_fInitedFM )
       hb_xinit();
 #endif
 
@@ -550,7 +550,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
       hb_errInternal( HB_EI_XGRABNULLSIZE, NULL, NULL, NULL );
 
 #ifdef HB_FM_NEED_INIT
-   if( !s_fInited )
+   if( !s_fInitedFM )
       hb_xinit();
 #endif
 
@@ -903,7 +903,7 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
    HB_TRACE(HB_TR_DEBUG, ("hb_xinit()"));
 
 #ifdef HB_FM_NEED_INIT
-   if( !s_fInited )
+   if( !s_fInitedFM )
    {
 
 #ifdef HB_FM_STATISTICS
@@ -926,7 +926,7 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
       s_hProcessHeap = GetProcessHeap();
 #endif
 
-      s_fInited = TRUE;
+      s_fInitedFM = TRUE;
    }
 #endif /* HB_FM_NEED_INIT */
 }
