@@ -64,9 +64,25 @@
 #include <QEvent>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QLineEdit>
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+
+/*----------------------------------------------------------------------*/
+
+class MyMainWindow : public QMainWindow
+{
+   Q_OBJECT
+
+public:
+   MyMainWindow();
+   virtual ~MyMainWindow();
+
+public:
+   void closeEvent( QCloseEvent *event );
+
+};
 
 /*----------------------------------------------------------------------*/
 
@@ -84,22 +100,6 @@ public:
 signals:
    void sg_mouseMoveEvent( QMouseEvent * event );
    void sg_keyPressEvent( QKeyEvent * event );
-
-};
-
-/*----------------------------------------------------------------------*/
-
-class MyMainWindow : public QMainWindow
-{
-    Q_OBJECT
-
-public:
-    MyMainWindow();
-    virtual ~MyMainWindow();
-
-public:
-    void closeEvent( QCloseEvent *event );
-
 };
 
 /*----------------------------------------------------------------------*/
@@ -111,8 +111,8 @@ class Slots: public QObject
 public:
    Slots( QObject *parent = 0 );
    ~Slots();
-   QList<PHB_ITEM> listBlock;
-   QList<bool>     listActv;
+   QList<PHB_ITEM>  listBlock;
+   QList<bool>      listActv;
 
 public slots:
    void clicked();
@@ -125,23 +125,46 @@ public slots:
    void activated( int index );
    void currentIndexChanged( int index );
    void highlighted( int index );
-   void returnPressed();
    void clicked( const QModelIndex & index );
    void doubleClicked( const QModelIndex & index );
    void entered( const QModelIndex & index );
    void viewportEntered();
-   bool event( QEvent * event );
+   //bool event( QEvent * event, QWidget * w );
    void keyPressEvent( QKeyEvent * event );
    void mouseMoveEvent( QMouseEvent * event );
    void hovered( QAction * action );
    void currentChanged( int index );
-   /* Slots to handle sliders */
+   /* QAbstractSlider() */
    void actionTriggered( int action );
    void rangeChanged( int min, int max );
    void sliderMoved( int value );
    void sliderPressed();
    void sliderReleased();
    void valueChanged( int value );
+   /* QLineEdit() */
+   void cursorPositionChanged( int iOld, int iNew );
+   void editingFinished();
+   void returnPressed();
+   void selectionChanged();
+   void textChanged( const QString & text );
+   void textEdited( const QString & text );
+};
+
+class Events: public QObject
+{
+   Q_OBJECT
+
+public:
+   Events( QObject *parent = 0 );
+   ~Events();
+   //QList<QObject *>    list1;
+   //QList<QEvent::Type> list2;
+   QList<PHB_ITEM>     listBlock;
+   QList<bool>         listActv;
+
+protected:
+   bool eventFilter( QObject * obj, QEvent * event );
+
 };
 
 /*----------------------------------------------------------------------*/

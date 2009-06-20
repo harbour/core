@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'hbqt_slots.h'
 **
-** Created: Tue Jun 16 15:09:19 2009
+** Created: Fri Jun 19 19:01:13 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -17,6 +17,49 @@
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
+static const uint qt_meta_data_MyMainWindow[] = {
+
+ // content:
+       2,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+
+       0        // eod
+};
+
+static const char qt_meta_stringdata_MyMainWindow[] = {
+    "MyMainWindow\0"
+};
+
+const QMetaObject MyMainWindow::staticMetaObject = {
+    { &QMainWindow::staticMetaObject, qt_meta_stringdata_MyMainWindow,
+      qt_meta_data_MyMainWindow, 0 }
+};
+
+const QMetaObject *MyMainWindow::metaObject() const
+{
+    return &staticMetaObject;
+}
+
+void *MyMainWindow::qt_metacast(const char *_clname)
+{
+    if (!_clname) return 0;
+    if (!strcmp(_clname, qt_meta_stringdata_MyMainWindow))
+        return static_cast<void*>(const_cast< MyMainWindow*>(this));
+    return QMainWindow::qt_metacast(_clname);
+}
+
+int MyMainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QMainWindow::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    return _id;
+}
 static const uint qt_meta_data_MyDrawingArea[] = {
 
  // content:
@@ -88,56 +131,13 @@ void MyDrawingArea::sg_keyPressEvent(QKeyEvent * _t1)
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
-static const uint qt_meta_data_MyMainWindow[] = {
-
- // content:
-       2,       // revision
-       0,       // classname
-       0,    0, // classinfo
-       0,    0, // methods
-       0,    0, // properties
-       0,    0, // enums/sets
-       0,    0, // constructors
-
-       0        // eod
-};
-
-static const char qt_meta_stringdata_MyMainWindow[] = {
-    "MyMainWindow\0"
-};
-
-const QMetaObject MyMainWindow::staticMetaObject = {
-    { &QMainWindow::staticMetaObject, qt_meta_stringdata_MyMainWindow,
-      qt_meta_data_MyMainWindow, 0 }
-};
-
-const QMetaObject *MyMainWindow::metaObject() const
-{
-    return &staticMetaObject;
-}
-
-void *MyMainWindow::qt_metacast(const char *_clname)
-{
-    if (!_clname) return 0;
-    if (!strcmp(_clname, qt_meta_stringdata_MyMainWindow))
-        return static_cast<void*>(const_cast< MyMainWindow*>(this));
-    return QMainWindow::qt_metacast(_clname);
-}
-
-int MyMainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
-{
-    _id = QMainWindow::qt_metacall(_c, _id, _a);
-    if (_id < 0)
-        return _id;
-    return _id;
-}
 static const uint qt_meta_data_Slots[] = {
 
  // content:
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-      26,   12, // methods
+      30,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -153,22 +153,26 @@ static const uint qt_meta_data_Slots[] = {
      114,  108,    6,    6, 0x0a,
      129,  108,    6,    6, 0x0a,
      154,  108,    6,    6, 0x0a,
-     171,    6,    6,    6, 0x0a,
-     187,  108,    6,    6, 0x0a,
-     208,  108,    6,    6, 0x0a,
-     235,  108,    6,    6, 0x0a,
-     256,    6,    6,    6, 0x0a,
-     285,  279,  274,    6, 0x0a,
-     300,  279,    6,    6, 0x0a,
-     326,  279,    6,    6, 0x0a,
-     362,  355,    6,    6, 0x0a,
-     380,  108,    6,    6, 0x0a,
-     400,  355,    6,    6, 0x0a,
-     429,  421,    6,    6, 0x0a,
-     457,  451,    6,    6, 0x0a,
-     474,    6,    6,    6, 0x0a,
-     490,    6,    6,    6, 0x0a,
-     507,  451,    6,    6, 0x0a,
+     171,  108,    6,    6, 0x0a,
+     192,  108,    6,    6, 0x0a,
+     219,  108,    6,    6, 0x0a,
+     240,    6,    6,    6, 0x0a,
+     264,  258,    6,    6, 0x0a,
+     290,  258,    6,    6, 0x0a,
+     326,  319,    6,    6, 0x0a,
+     344,  108,    6,    6, 0x0a,
+     364,  319,    6,    6, 0x0a,
+     393,  385,    6,    6, 0x0a,
+     421,  415,    6,    6, 0x0a,
+     438,    6,    6,    6, 0x0a,
+     454,    6,    6,    6, 0x0a,
+     471,  415,    6,    6, 0x0a,
+     499,  489,    6,    6, 0x0a,
+     530,    6,    6,    6, 0x0a,
+     548,    6,    6,    6, 0x0a,
+     564,    6,    6,    6, 0x0a,
+     588,  583,    6,    6, 0x0a,
+     609,  583,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -178,17 +182,20 @@ static const char qt_meta_stringdata_Slots[] = {
     "triggered(bool)\0hovered()\0state\0"
     "stateChanged(int)\0pressed()\0released()\0"
     "index\0activated(int)\0currentIndexChanged(int)\0"
-    "highlighted(int)\0returnPressed()\0"
-    "clicked(QModelIndex)\0doubleClicked(QModelIndex)\0"
+    "highlighted(int)\0clicked(QModelIndex)\0"
+    "doubleClicked(QModelIndex)\0"
     "entered(QModelIndex)\0viewportEntered()\0"
-    "bool\0event\0event(QEvent*)\0"
-    "keyPressEvent(QKeyEvent*)\0"
+    "event\0keyPressEvent(QKeyEvent*)\0"
     "mouseMoveEvent(QMouseEvent*)\0action\0"
     "hovered(QAction*)\0currentChanged(int)\0"
     "actionTriggered(int)\0min,max\0"
     "rangeChanged(int,int)\0value\0"
     "sliderMoved(int)\0sliderPressed()\0"
     "sliderReleased()\0valueChanged(int)\0"
+    "iOld,iNew\0cursorPositionChanged(int,int)\0"
+    "editingFinished()\0returnPressed()\0"
+    "selectionChanged()\0text\0textChanged(QString)\0"
+    "textEdited(QString)\0"
 };
 
 const QMetaObject Slots::staticMetaObject = {
@@ -226,27 +233,73 @@ int Slots::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 7: activated((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 8: currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 9: highlighted((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 10: returnPressed(); break;
-        case 11: clicked((*reinterpret_cast< const QModelIndex(*)>(_a[1]))); break;
-        case 12: doubleClicked((*reinterpret_cast< const QModelIndex(*)>(_a[1]))); break;
-        case 13: entered((*reinterpret_cast< const QModelIndex(*)>(_a[1]))); break;
-        case 14: viewportEntered(); break;
-        case 15: { bool _r = event((*reinterpret_cast< QEvent*(*)>(_a[1])));
-            if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r; }  break;
-        case 16: keyPressEvent((*reinterpret_cast< QKeyEvent*(*)>(_a[1]))); break;
-        case 17: mouseMoveEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
-        case 18: hovered((*reinterpret_cast< QAction*(*)>(_a[1]))); break;
-        case 19: currentChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 20: actionTriggered((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 21: rangeChanged((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 22: sliderMoved((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 23: sliderPressed(); break;
-        case 24: sliderReleased(); break;
-        case 25: valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 10: clicked((*reinterpret_cast< const QModelIndex(*)>(_a[1]))); break;
+        case 11: doubleClicked((*reinterpret_cast< const QModelIndex(*)>(_a[1]))); break;
+        case 12: entered((*reinterpret_cast< const QModelIndex(*)>(_a[1]))); break;
+        case 13: viewportEntered(); break;
+        case 14: keyPressEvent((*reinterpret_cast< QKeyEvent*(*)>(_a[1]))); break;
+        case 15: mouseMoveEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 16: hovered((*reinterpret_cast< QAction*(*)>(_a[1]))); break;
+        case 17: currentChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 18: actionTriggered((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 19: rangeChanged((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 20: sliderMoved((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 21: sliderPressed(); break;
+        case 22: sliderReleased(); break;
+        case 23: valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 24: cursorPositionChanged((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 25: editingFinished(); break;
+        case 26: returnPressed(); break;
+        case 27: selectionChanged(); break;
+        case 28: textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 29: textEdited((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 26;
+        _id -= 30;
     }
+    return _id;
+}
+static const uint qt_meta_data_Events[] = {
+
+ // content:
+       2,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+
+       0        // eod
+};
+
+static const char qt_meta_stringdata_Events[] = {
+    "Events\0"
+};
+
+const QMetaObject Events::staticMetaObject = {
+    { &QObject::staticMetaObject, qt_meta_stringdata_Events,
+      qt_meta_data_Events, 0 }
+};
+
+const QMetaObject *Events::metaObject() const
+{
+    return &staticMetaObject;
+}
+
+void *Events::qt_metacast(const char *_clname)
+{
+    if (!_clname) return 0;
+    if (!strcmp(_clname, qt_meta_stringdata_Events))
+        return static_cast<void*>(const_cast< Events*>(this));
+    return QObject::qt_metacast(_clname);
+}
+
+int Events::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QObject::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
     return _id;
 }
 QT_END_MOC_NAMESPACE

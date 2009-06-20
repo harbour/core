@@ -118,6 +118,7 @@ CREATE CLASS QLineEdit INHERIT QWidget
    METHOD  selectAll()                         INLINE  Qt_QLineEdit_selectAll( ::pPtr )
    METHOD  setText( cQString )                 INLINE  Qt_QLineEdit_setText( ::pPtr, cQString )
    METHOD  undo()                              INLINE  Qt_QLineEdit_undo( ::pPtr )
+   METHOD  event( pEvent )                     INLINE  Qt_QLineEdit_event( ::pPtr, pEvent )
 
    ENDCLASS
 

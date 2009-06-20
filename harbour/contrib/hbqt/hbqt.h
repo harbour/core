@@ -66,6 +66,8 @@
 #if QT_VERSION >= 0x040500
 
 
+#define hbqt_par_QFocusEvent( n )            ( ( QFocusEvent* ) hb_parptr( n ) )
+
 #define hbqt_par_QAbstractButton( n )        ( ( QAbstractButton* ) hb_parptr( n ) )
 #define hbqt_par_QAbstractItemView( n )      ( ( QAbstractItemView* ) hb_parptr( n ) )
 #define hbqt_par_QAbstractItemModel( n )     ( ( QAbstractItemModel* ) hb_parptr( n ) )

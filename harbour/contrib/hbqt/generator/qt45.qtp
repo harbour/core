@@ -49,6 +49,7 @@ QEvent.qth
 QEventLoop.qth
 QFileDialog.qth
 QFileSystemModel.qth
+QFocusEvent.qth
 QFocusFrame.qth
 QFont.qth
 QFontComboBox.qth

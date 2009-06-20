@@ -199,6 +199,7 @@ CPP_SOURCES=\
 	hbqt_base.cpp \
 	hbqt_utils.cpp \
 	hbqt_slots.cpp \
+	hbqt_qfocusevent.cpp \
 	moc_slots.cpp \
 
 
@@ -401,5 +402,6 @@ PRG_SOURCES=\
 	TQWindowsStyle.prg \
 	TQWindowsXPStyle.prg \
 	TQWizard.prg \
+	TQFocusEvent.prg \
 
 

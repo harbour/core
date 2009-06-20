@@ -523,6 +523,13 @@ HB_FUNC( QT_QLINEEDIT_UNDO )
    hbqt_par_QLineEdit( 1 )->undo();
 }
 
+/*
+ * void undo ()
+ */
+HB_FUNC( QT_QLINEEDIT_EVENT )
+{
+   hbqt_par_QLineEdit( 1 )->event( hbqt_par_QEvent( 2 ) );
+}
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

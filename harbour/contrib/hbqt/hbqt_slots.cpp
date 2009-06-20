@@ -60,21 +60,22 @@
 
 #if QT_VERSION >= 0x040500
 
-#if 0
-#include <windows.h>
-#endif
-
 #include "hbqt_slots.h"
+
+#include <windows.h>
 
 #include <QWidget>
 #include <QString>
 #include <QList>
 #include <QKeyEvent>
 #include <QAction>
+#include <QObject>
+#include <QEvent>
 
 /*----------------------------------------------------------------------*/
 
-static Slots *s = NULL;
+static Slots  *s = NULL;
+static Events *e = NULL;
 
 /*----------------------------------------------------------------------*/
 
@@ -147,6 +148,22 @@ static void SlotsExecIntInt( QWidget* widget, char* event, int iValue1, int iVal
    }
 }
 
+static void SlotsExecString( QWidget* widget, char* event, const QString & string )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( i > 0 && ( s->listActv.at( i-1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+         PHB_ITEM pString = hb_itemPutPtr( NULL, string.toLatin1().data() );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s->listBlock.at( i-1 ), 3, pWidget, pString );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pString );
+      }
+   }
+}
+
 static void SlotsExecModel( QWidget* widget, char* event, const QModelIndex & index )
 {
    if( widget )
@@ -179,23 +196,20 @@ static void SlotsExecMouseEvent( QWidget* widget, char* event, QMouseEvent* meve
    }
 }
 
-bool Slots::event( QEvent * event )
+static void SlotsExecFocusEvent( QWidget* widget, char* event, QFocusEvent* mevent )
 {
-   bool bAccepted = true;
-   QObject *widget = qobject_cast<QObject *>( sender() );
    if( widget )
    {
-      int i = widget->property( "event()" ).toInt();
+      int i = widget->property( event ).toInt();
       if( ( i > 0 ) && ( s->listActv.at( i-1 ) == true ) )
       {
          PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QWidget * ) widget );
-         PHB_ITEM pEvent   = hb_itemPutPtr( NULL, event );
-         bAccepted = hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( i-1 ), 2, pWidget, pEvent );
+         PHB_ITEM pEvent   = hb_itemPutPtr( NULL, mevent );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s->listBlock.at( i-1 ), 2, pWidget, pEvent );
          hb_itemRelease( pWidget );
          hb_itemRelease( pEvent );
       }
    }
-   return bAccepted;
 }
 
 void Slots::keyPressEvent( QKeyEvent * event )
@@ -363,6 +377,32 @@ void Slots::valueChanged( int value )
    QWidget *widget = qobject_cast<QWidget *>( sender() );
    SlotsExecInt( widget, ( char* ) "valueChanged(int)", value );
 }
+void Slots::cursorPositionChanged( int iOld, int iNew )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecIntInt( widget, ( char* ) "cursorPositionChanged(int,int)", iOld, iNew );
+}
+void Slots::editingFinished()
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExec( widget, ( char* ) "editingFinished()" );
+}
+void Slots::selectionChanged()
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExec( widget, ( char* ) "selectionChanged()" );
+}
+void Slots::textChanged( const QString & text )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecString( widget, ( char* ) "textChanged(QString)", text );
+}
+void Slots::textEdited( const QString & text )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecString( widget, ( char* ) "textEdited(QString)", text );
+}
+
 
 /*
  * harbour function to connect signals with slots
@@ -448,11 +488,6 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = widget->connect( widget, SIGNAL( entered( const QModelIndex & ) ),
                              s, SLOT( entered( const QModelIndex & ) ), Qt::AutoConnection );
    }
-   if( signal == ( QString ) "event()" )
-   {
-      ret = widget->connect( widget, SIGNAL( event( QEvent * ) ),
-                             s, SLOT( event( QEvent * ) ) , Qt::AutoConnection );
-   }
    if( signal == ( QString ) "keyPressEvent()" )
    {
       ret = widget->connect( widget, SIGNAL( sg_keyPressEvent( QKeyEvent * ) ),
@@ -503,6 +538,36 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = widget->connect( widget,  SIGNAL( valueChanged(int) ),
                              s, SLOT( valueChanged(int) ), Qt::AutoConnection );
    }
+   if( signal == ( QString ) "cursorPositionChanged(int,int)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( cursorPositionChanged(int,int) ),
+                             s, SLOT( cursorPositionChanged(int,int) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "editingFinished()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( editingFinished() ),
+                             s, SLOT( editingFinished() ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "returnPressed()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( returnPressed() ),
+                             s, SLOT( returnPressed() ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "selectionChanged()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( selectionChanged() ),
+                             s, SLOT( selectionChanged() ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "textChanged(QString)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( textChanged( const QString &) ),
+                             s, SLOT( textChanged( const QString & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "textEdited(QString)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( textEdited( const QString &) ),
+                             s, SLOT( textEdited( const QString & ) ), Qt::AutoConnection );
+   }
 
    hb_retl( ret );
 
@@ -527,8 +592,8 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       }
       else
       {
-         s->listBlock << codeblock;
-         s->listActv  << true;
+         s->listBlock  << codeblock;
+         s->listActv   << true;
          widget->setProperty( hb_parc( 2 ), ( int ) s->listBlock.size() );
       }
    }
@@ -549,11 +614,6 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
       {
          if( s->listBlock.at( i-1 ) != NULL )
          {
-#if 0
-char buf[40];
-sprintf( buf, "signal %i : %s", i, event );
-OutputDebugString( buf );
-#endif
             hb_itemRelease( s->listBlock.at( i-1 ) );
             s->listBlock[ i-1 ] = NULL;
             s->listActv[ i-1 ] = false;
@@ -622,6 +682,12 @@ void MyMainWindow::closeEvent( QCloseEvent *event )
 {
    event->accept();
 }
+HB_FUNC( QT_MYMAINWINDOW )
+{
+   hb_retptr( ( MyMainWindow * ) new MyMainWindow() );
+}
+
+/*----------------------------------------------------------------------*/
 
 MyDrawingArea::MyDrawingArea(QWidget *parent)
     : QWidget(parent)
@@ -636,7 +702,6 @@ MyDrawingArea::MyDrawingArea(QWidget *parent)
 
    setAttribute( Qt::WA_InputMethodEnabled, true );
 }
-
 MyDrawingArea::~MyDrawingArea( void )
 {
 }
@@ -648,17 +713,186 @@ void MyDrawingArea::keyPressEvent( QKeyEvent * event )
 {
    emit sg_keyPressEvent( event );
 }
-
-HB_FUNC( QT_MYMAINWINDOW )
-{
-   hb_retptr( ( MyMainWindow * ) new MyMainWindow() );
-}
-
 HB_FUNC( QT_MYDRAWINGAREA )
 {
    hb_retptr( ( MyDrawingArea * ) new MyDrawingArea() );
 }
 
 /*----------------------------------------------------------------------*/
+
+Events::Events( QObject * parent ) : QObject( parent )
+{
+}
+Events::~Events()
+{
+}
+bool Events::eventFilter( QObject * obj, QEvent * event )
+{
+   QEvent::Type eventtype = event->type();
+   int          found;;
+   bool         ret;
+
+   if( ( int ) eventtype == 0 )
+      return true;
+
+   char str[ 10 ];
+   sprintf( str, "%s%i%s", "P", eventtype, "P" );
+   found = obj->property( str ).toInt();
+   if( found == 0 )
+      return false;
+
+   PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject * ) obj );
+   PHB_ITEM pEvent  = hb_itemPutPtr( NULL, ( QEvent * ) event );
+
+   ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 2, pObject, pEvent ) );
+
+   hb_itemRelease( pObject );
+   hb_itemRelease( pEvent  );
+
+   switch( eventtype )
+   {
+     case QEvent::Close:
+     {
+       if( ret ) { event->accept(); } else { event->ignore(); }
+       return true;
+       break;
+     }
+     case QEvent::Enter:
+     {
+       return true;
+       break;
+     }
+     case QEvent::FocusIn:
+     {
+       return false;
+       break;
+     }
+     case QEvent::FocusOut:
+     {
+       return false;
+       break;
+     }
+     case QEvent::Hide:
+     {
+       return true;
+       break;
+     }
+     case QEvent::KeyPress:
+     {
+       return true;
+       break;
+     }
+     case QEvent::KeyRelease:
+     {
+       return true;
+       break;
+     }
+     case QEvent::Leave:
+     {
+       return true;
+       break;
+     }
+     case QEvent::Paint:
+     {
+       return false;
+       break;
+     }
+     case QEvent::Show:
+     {
+       return true;
+       break;
+     }
+     default:
+       break;
+   }
+   return true;
+}
+
+HB_FUNC( QT_QEVENTFILTER )
+{
+   if( e == NULL )
+   {
+      e = new Events();
+   }
+   hb_retptr( ( Events * ) e );
+}
+
+HB_FUNC( QT_CONNECT_EVENT )
+{
+   QObject * object    = ( QObject * ) hb_parptr( 1 );
+   int       type      = hb_parni( 2 );
+   PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) );
+
+   if( e == NULL )
+   {
+      e = new Events();
+   }
+
+   bool bFound = false;
+   int  i;
+   char str[ 10 ];
+   sprintf( str, "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
+
+   for( i = 0; i < e->listBlock.size(); i++ )
+   {
+      if( e->listBlock.at( i ) == NULL )
+      {
+         bFound = true;
+         break;
+      }
+   }
+   if( bFound )
+   {
+      e->listBlock[ i ] = codeblock;
+      e->listActv[ i ] = true;
+      object->setProperty( str, ( int ) i + 1 );
+   }
+   else
+   {
+      e->listBlock << codeblock;
+      e->listActv  << true;
+      object->setProperty( str, ( int ) e->listBlock.size() );
+   }
+
+   hb_retl( true );
+}
+
+HB_FUNC( QT_DISCONNECT_EVENT )
+{
+   QObject * object    = ( QObject * ) hb_parptr( 1 );
+   int       type      = hb_parni( 2 );
+
+   char str[ 10 ];
+   sprintf( str, "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
+
+   int i = object->property( str ).toInt();
+   if( i > 0 && i <= e->listBlock.size() )
+   {
+      if( e->listBlock.at( i-1 ) != NULL )
+      {
+         hb_itemRelease( e->listBlock.at( i-1 ) );
+         e->listBlock[ i-1 ] = NULL;
+         e->listActv[ i-1 ] = false;
+      }
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( QT_QDEBUG )
+{
+   #if defined( _WIN_32 )
+      OutputDebugString( hb_parc( 1 ) );
+   #else
+      qDebug( hb_parc( 1 ) );
+   #endif
+}
+
+/*----------------------------------------------------------------------*/
+
 #endif
+
+
+
+
 
