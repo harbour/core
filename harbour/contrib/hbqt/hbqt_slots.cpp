@@ -62,8 +62,6 @@
 
 #include "hbqt_slots.h"
 
-#include <windows.h>
-
 #include <QWidget>
 #include <QString>
 #include <QList>
@@ -891,8 +889,3 @@ HB_FUNC( QT_QDEBUG )
 /*----------------------------------------------------------------------*/
 
 #endif
-
-
-
-
-
