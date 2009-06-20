@@ -57,16 +57,6 @@
 #include "hbdate.h"
 #include "macroy.h"
 
-#define HB_LEX_ISFIRSTIDCHAR(c)     ( ( (c) >= 'A' && (c) <= 'Z' ) || \
-                                      ( (c) >= 'a' && (c) <= 'z' ) || \
-                                        (c) == '_' )
-#define HB_LEX_ISDIGIT(c)           ( (c) >= '0' && (c) <= '9' )
-#define HB_LEX_ISHEXDIGIT(c)        ( ( (c) >= '0' && (c) <= '9' ) || \
-                                      ( (c) >= 'A' && (c) <= 'F' ) || \
-                                      ( (c) >= 'a' && (c) <= 'f' ) )
-#define HB_LEX_ISNEXTIDCHAR(c)      ( HB_LEX_ISFIRSTIDCHAR(c) || \
-                                      HB_LEX_ISDIGIT(c) )
-
 typedef struct _HB_MACRO_LEX
 {
    char *   pString;
@@ -449,11 +439,11 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          case '.':
             pLex->quote = TRUE;
             if( pLex->ulSrc < pLex->ulLen &&
-                HB_LEX_ISDIGIT( pLex->pString[ pLex->ulSrc ] ) )
+                HB_ISDIGIT( pLex->pString[ pLex->ulSrc ] ) )
             {
                ULONG ul = pLex->ulSrc;
                while( ++ul < pLex->ulLen &&
-                      HB_LEX_ISDIGIT( pLex->pString[ ul ] ) ) {};
+                      HB_ISDIGIT( pLex->pString[ ul ] ) ) {};
                ul -= --pLex->ulSrc;
                return hb_lexNumConv( yylval_ptr, pLex, ul );
             }
@@ -526,7 +516,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          case '&':
             if( pLex->ulSrc < pLex->ulLen )
             {
-               if( HB_LEX_ISFIRSTIDCHAR( pLex->pString[ pLex->ulSrc ] ) )
+               if( HB_ISFIRSTIDCHAR( pLex->pString[ pLex->ulSrc ] ) )
                {
                   /* [&<keyword>[.[<nextidchars>]]]+ */
                   int iParts = 0;
@@ -549,7 +539,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                   }
                   while( pLex->ulLen - pLex->ulSrc > 1 &&
                          pLex->pString[ pLex->ulSrc ] == '&' &&
-                         HB_LEX_ISFIRSTIDCHAR( pLex->pString[ pLex->ulSrc + 1 ] ) );
+                         HB_ISFIRSTIDCHAR( pLex->pString[ pLex->ulSrc + 1 ] ) );
                   if( iParts == 2 && *( pLex->pDst - 1 ) == '.' )
                   {
                      pLex->pDst--;
@@ -574,7 +564,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             return '&';
 
          default:
-            if( HB_LEX_ISDIGIT( ch ) )
+            if( HB_ISDIGIT( ch ) )
             {
                ULONG ul = pLex->ulSrc;
 
@@ -584,7 +574,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                   if( pLex->pString[ ul ] == 'd' || pLex->pString[ ul ] == 'D' )
                   {
                      while( ++ul < pLex->ulLen &&
-                            HB_LEX_ISDIGIT( pLex->pString[ ul ] ) ) {};
+                            HB_ISDIGIT( pLex->pString[ ul ] ) ) {};
                      if( ul - pLex->ulSrc == 9 )
                      {
                         int year, month, day;
@@ -612,39 +602,39 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                            pLex->pString[ ul ] == 'X' )
                   {
                      while( ++ul < pLex->ulLen &&
-                            HB_LEX_ISHEXDIGIT( pLex->pString[ ul ] ) ) {};
+                            HB_ISXDIGIT( pLex->pString[ ul ] ) ) {};
                      if( ul == pLex->ulSrc + 1 )
                         --ul;
                   }
                   else
                   {
                      while( ul < pLex->ulLen &&
-                            HB_LEX_ISDIGIT( pLex->pString[ ul ] ) )
+                            HB_ISDIGIT( pLex->pString[ ul ] ) )
                         ++ul;
                      if( pLex->ulLen - ul > 1 && pLex->pString[ ul ] == '.' &&
-                         HB_LEX_ISDIGIT( pLex->pString[ ul + 1 ] ) )
+                         HB_ISDIGIT( pLex->pString[ ul + 1 ] ) )
                      {
                         while( ++ul < pLex->ulLen &&
-                               HB_LEX_ISDIGIT( pLex->pString[ ul ] ) ) {};
+                               HB_ISDIGIT( pLex->pString[ ul ] ) ) {};
                      }
                   }
                }
                else
                {
                   while( ul < pLex->ulLen &&
-                         HB_LEX_ISDIGIT( pLex->pString[ ul ] ) )
+                         HB_ISDIGIT( pLex->pString[ ul ] ) )
                      ++ul;
                   if( pLex->ulLen - ul > 1 && pLex->pString[ ul ] == '.' &&
-                      HB_LEX_ISDIGIT( pLex->pString[ ul + 1 ] ) )
+                      HB_ISDIGIT( pLex->pString[ ul + 1 ] ) )
                   {
                      while( ++ul < pLex->ulLen &&
-                            HB_LEX_ISDIGIT( pLex->pString[ ul ] ) ) {};
+                            HB_ISDIGIT( pLex->pString[ ul ] ) ) {};
                   }
                }
                ul -= --pLex->ulSrc;
                return hb_lexNumConv( yylval_ptr, pLex, ul );
             }
-            else if( HB_LEX_ISFIRSTIDCHAR( ch ) )
+            else if( HB_ISFIRSTIDCHAR( ch ) )
             {
                ULONG ulLen;
                pLex->quote = FALSE;
@@ -653,7 +643,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                hb_lexIdentCopy( pLex );
                if( pLex->ulLen - pLex->ulSrc > 1 &&
                    pLex->pString[ pLex->ulSrc ] == '&' &&
-                   HB_LEX_ISFIRSTIDCHAR( pLex->pString[ pLex->ulSrc + 1 ] ) )
+                   HB_ISFIRSTIDCHAR( pLex->pString[ pLex->ulSrc + 1 ] ) )
                {
                   /* [<keyword>][&<keyword>[.[<nextidchars>]]]+ */
                   do
@@ -670,7 +660,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                   }
                   while( pLex->ulLen - pLex->ulSrc > 1 &&
                          pLex->pString[ pLex->ulSrc ] == '&' &&
-                         HB_LEX_ISFIRSTIDCHAR( pLex->pString[ pLex->ulSrc + 1 ] ) );
+                         HB_ISFIRSTIDCHAR( pLex->pString[ pLex->ulSrc + 1 ] ) );
                   *pLex->pDst++ = '\0';
                   return MACROTEXT;
                }

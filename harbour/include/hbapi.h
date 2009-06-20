@@ -602,31 +602,51 @@ extern void       hb_gcCollect( void ); /* checks if a single memory block can b
 extern void       hb_gcCollectAll( BOOL fForce ); /* checks if all memory blocks can be released */
 
 /* Extend API */
-extern HB_EXPORT char *     hb_parc( int iParam, ... );  /* retrieve a string parameter */
-extern HB_EXPORT char *     hb_parcx( int iParam, ... );  /* retrieve a string parameter */
-extern HB_EXPORT ULONG      hb_parclen( int iParam, ... ); /* retrieve a string parameter length */
-extern HB_EXPORT ULONG      hb_parcsiz( int iParam, ... ); /* retrieve a by-reference string parameter length, including terminator */
-extern HB_EXPORT char *     hb_pards( int iParam, ... ); /* retrieve a date as a string yyyymmdd */
-extern HB_EXPORT char *     hb_pardsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string yyyymmdd */
-extern HB_EXPORT LONG       hb_pardl( int iParam, ... ); /* retrieve a date as a LONG NUMBER  */
-extern HB_EXPORT double     hb_partd( int iParam, ... ); /* retrieve a timestamp as a double number */
-extern HB_EXPORT BOOL       hb_partdt( LONG * plJulian, LONG * plMilliSec , int iParam, ... ); /* retrieve a timestamp as two long numbers */
-extern HB_EXPORT ULONG      hb_parinfa( int iParamNum, ULONG uiArrayIndex ); /* retrieve length or element type of an array parameter */
 extern HB_EXPORT ULONG      hb_parinfo( int iParam ); /* Determine the param count or data type */
-extern HB_EXPORT int        hb_parl( int iParam, ... ); /* retrieve a logical parameter as an int */
-extern HB_EXPORT double     hb_parnd( int iParam, ... ); /* retrieve a numeric parameter as a double */
-extern HB_EXPORT int        hb_parni( int iParam, ... ); /* retrieve a numeric parameter as a integer */
-extern HB_EXPORT long       hb_parnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
-extern HB_EXPORT HB_LONG    hb_parnint( int iParam, ... ); /* retrieve a numeric parameter as a HB_LONG */
-extern HB_EXPORT void *     hb_parptr( int iParam, ... ); /* retrieve a parameter as a pointer */
-extern HB_EXPORT void *     hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam, ... ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
+extern HB_EXPORT ULONG      hb_parinfa( int iParamNum, ULONG uiArrayIndex ); /* retrieve length or element type of an array parameter */
 extern HB_EXPORT PHB_ITEM   hb_param( int iParam, long lMask ); /* retrieve a generic parameter */
 extern HB_EXPORT PHB_ITEM   hb_paramError( int iParam ); /* Returns either the generic parameter or a NIL item if param not provided */
 extern HB_EXPORT BOOL       hb_extIsArray( int iParam );
 extern HB_EXPORT BOOL       hb_extIsObject( int iParam );
 
+extern HB_EXPORT char *     hb_parc( int iParam );  /* retrieve a string parameter */
+extern HB_EXPORT char *     hb_parcx( int iParam );  /* retrieve a string parameter */
+extern HB_EXPORT ULONG      hb_parclen( int iParam ); /* retrieve a string parameter length */
+extern HB_EXPORT ULONG      hb_parcsiz( int iParam ); /* retrieve a by-reference string parameter length, including terminator */
+extern HB_EXPORT char *     hb_pards( int iParam ); /* retrieve a date as a string yyyymmdd */
+extern HB_EXPORT char *     hb_pardsbuff( char * szDate, int iParam ); /* retrieve a date as a string yyyymmdd */
+extern HB_EXPORT LONG       hb_pardl( int iParam ); /* retrieve a date as a LONG NUMBER  */
+extern HB_EXPORT double     hb_partd( int iParam ); /* retrieve a timestamp as a double number */
+extern HB_EXPORT BOOL       hb_partdt( LONG * plJulian, LONG * plMilliSec , int iParam ); /* retrieve a timestamp as two long numbers */
+extern HB_EXPORT int        hb_parl( int iParam ); /* retrieve a logical parameter as an int */
+extern HB_EXPORT double     hb_parnd( int iParam ); /* retrieve a numeric parameter as a double */
+extern HB_EXPORT int        hb_parni( int iParam ); /* retrieve a numeric parameter as a integer */
+extern HB_EXPORT long       hb_parnl( int iParam ); /* retrieve a numeric parameter as a long */
+extern HB_EXPORT HB_LONG    hb_parnint( int iParam ); /* retrieve a numeric parameter as a HB_LONG */
+extern HB_EXPORT void *     hb_parptr( int iParam ); /* retrieve a parameter as a pointer */
+extern HB_EXPORT void *     hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT LONGLONG   hb_parnll( int iParam, ... ); /* retrieve a numeric parameter as a long long */
+extern HB_EXPORT LONGLONG   hb_parnll( int iParam ); /* retrieve a numeric parameter as a long long */
+#endif
+
+extern HB_EXPORT char *     hb_parvc( int iParam, ... );  /* retrieve a string parameter */
+extern HB_EXPORT char *     hb_parvcx( int iParam, ... );  /* retrieve a string parameter */
+extern HB_EXPORT ULONG      hb_parvclen( int iParam, ... ); /* retrieve a string parameter length */
+extern HB_EXPORT ULONG      hb_parvcsiz( int iParam, ... ); /* retrieve a by-reference string parameter length, including terminator */
+extern HB_EXPORT char *     hb_parvds( int iParam, ... ); /* retrieve a date as a string yyyymmdd */
+extern HB_EXPORT char *     hb_parvdsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string yyyymmdd */
+extern HB_EXPORT LONG       hb_parvdl( int iParam, ... ); /* retrieve a date as a LONG NUMBER  */
+extern HB_EXPORT double     hb_parvtd( int iParam, ... ); /* retrieve a timestamp as a double number */
+extern HB_EXPORT BOOL       hb_parvtdt( LONG * plJulian, LONG * plMilliSec , int iParam, ... ); /* retrieve a timestamp as two long numbers */
+extern HB_EXPORT int        hb_parvl( int iParam, ... ); /* retrieve a logical parameter as an int */
+extern HB_EXPORT double     hb_parvnd( int iParam, ... ); /* retrieve a numeric parameter as a double */
+extern HB_EXPORT int        hb_parvni( int iParam, ... ); /* retrieve a numeric parameter as a integer */
+extern HB_EXPORT long       hb_parvnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
+extern HB_EXPORT HB_LONG    hb_parvnint( int iParam, ... ); /* retrieve a numeric parameter as a HB_LONG */
+extern HB_EXPORT void *     hb_parvptr( int iParam, ... ); /* retrieve a parameter as a pointer */
+extern HB_EXPORT void *     hb_parvptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam, ... ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
+#ifndef HB_LONG_LONG_OFF
+extern HB_EXPORT LONGLONG   hb_parvnll( int iParam, ... ); /* retrieve a numeric parameter as a long long */
 #endif
 
 extern HB_EXPORT int    hb_pcount( void );          /* returns the number of suplied parameters */
@@ -704,22 +724,40 @@ extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns
 #endif /* HB_API_MACROS */
 
 
-extern HB_EXPORT int    hb_storc( const char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
-extern HB_EXPORT int    hb_storclen( const char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
-extern HB_EXPORT int    hb_storclen_buffer( char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string buffer on a variable by reference */
-extern HB_EXPORT int    hb_stords( const char * szDate, int iParam, ... );   /* szDate must have yyyymmdd format */
-extern HB_EXPORT int    hb_stordl( long lJulian, int iParam, ... ); /* lJulian must be a date in Julian format */
-extern HB_EXPORT int    hb_stortd( double dTimeStamp, int iParam, ... ); /* stores a double value as timestamp on a variable by reference */
-extern HB_EXPORT int    hb_stortdt( LONG lJulian, LONG lMilliSec, int iParam, ... ); /* stores two long values as timestamp on a variable by reference */
-extern HB_EXPORT int    hb_storl( int iLogical, int iParam, ... ); /* stores a logical integer on a variable by reference */
-extern HB_EXPORT int    hb_storni( int iValue, int iParam, ... ); /* stores an integer on a variable by reference */
-extern HB_EXPORT int    hb_stornl( long lValue, int iParam, ... ); /* stores a long on a variable by reference */
-extern HB_EXPORT int    hb_stornd( double dValue, int iParam, ... ); /* stores a double on a variable by reference */
-extern HB_EXPORT int    hb_stornint( HB_LONG lValue, int iParam, ... ); /* stores a HB_LONG on a variable by reference */
-extern HB_EXPORT int    hb_storptr( void * pointer, int iParam, ... ); /* stores a pointer on a variable by reference */
-extern HB_EXPORT int    hb_storptrGC( void * pointer, int iParam, ... ); /* stores a pointer to GC block on a variable by reference */
+extern HB_EXPORT int    hb_storc( const char * szText, int iParam ); /* stores a szString on a variable by reference */
+extern HB_EXPORT int    hb_storclen( const char * szText, ULONG ulLength, int iParam ); /* stores a fixed length string on a variable by reference */
+extern HB_EXPORT int    hb_storclen_buffer( char * szText, ULONG ulLength, int iParam ); /* stores a fixed length string buffer on a variable by reference */
+extern HB_EXPORT int    hb_stords( const char * szDate, int iParam );   /* szDate must have yyyymmdd format */
+extern HB_EXPORT int    hb_stordl( long lJulian, int iParam ); /* lJulian must be a date in Julian format */
+extern HB_EXPORT int    hb_stortd( double dTimeStamp, int iParam ); /* stores a double value as timestamp on a variable by reference */
+extern HB_EXPORT int    hb_stortdt( LONG lJulian, LONG lMilliSec, int iParam ); /* stores two long values as timestamp on a variable by reference */
+extern HB_EXPORT int    hb_storl( int iLogical, int iParam ); /* stores a logical integer on a variable by reference */
+extern HB_EXPORT int    hb_storni( int iValue, int iParam ); /* stores an integer on a variable by reference */
+extern HB_EXPORT int    hb_stornl( long lValue, int iParam ); /* stores a long on a variable by reference */
+extern HB_EXPORT int    hb_stornd( double dValue, int iParam ); /* stores a double on a variable by reference */
+extern HB_EXPORT int    hb_stornint( HB_LONG lValue, int iParam ); /* stores a HB_LONG on a variable by reference */
+extern HB_EXPORT int    hb_storptr( void * pointer, int iParam ); /* stores a pointer on a variable by reference */
+extern HB_EXPORT int    hb_storptrGC( void * pointer, int iParam ); /* stores a pointer to GC block on a variable by reference */
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT int    hb_stornll( LONGLONG lValue, int iParam, ... ); /* stores a long long on a variable by reference */
+extern HB_EXPORT int    hb_stornll( LONGLONG lValue, int iParam ); /* stores a long long on a variable by reference */
+#endif
+
+extern HB_EXPORT int    hb_storvc( const char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
+extern HB_EXPORT int    hb_storvclen( const char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
+extern HB_EXPORT int    hb_storvclen_buffer( char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string buffer on a variable by reference */
+extern HB_EXPORT int    hb_storvds( const char * szDate, int iParam, ... );   /* szDate must have yyyymmdd format */
+extern HB_EXPORT int    hb_storvdl( long lJulian, int iParam, ... ); /* lJulian must be a date in Julian format */
+extern HB_EXPORT int    hb_storvtd( double dTimeStamp, int iParam, ... ); /* stores a double value as timestamp on a variable by reference */
+extern HB_EXPORT int    hb_storvtdt( LONG lJulian, LONG lMilliSec, int iParam, ... ); /* stores two long values as timestamp on a variable by reference */
+extern HB_EXPORT int    hb_storvl( int iLogical, int iParam, ... ); /* stores a logical integer on a variable by reference */
+extern HB_EXPORT int    hb_storvni( int iValue, int iParam, ... ); /* stores an integer on a variable by reference */
+extern HB_EXPORT int    hb_storvnl( long lValue, int iParam, ... ); /* stores a long on a variable by reference */
+extern HB_EXPORT int    hb_storvnd( double dValue, int iParam, ... ); /* stores a double on a variable by reference */
+extern HB_EXPORT int    hb_storvnint( HB_LONG lValue, int iParam, ... ); /* stores a HB_LONG on a variable by reference */
+extern HB_EXPORT int    hb_storvptr( void * pointer, int iParam, ... ); /* stores a pointer on a variable by reference */
+extern HB_EXPORT int    hb_storvptrGC( void * pointer, int iParam, ... ); /* stores a pointer to GC block on a variable by reference */
+#ifndef HB_LONG_LONG_OFF
+extern HB_EXPORT int    hb_storvnll( LONGLONG lValue, int iParam, ... ); /* stores a long long on a variable by reference */
 #endif
 
 /* array management */

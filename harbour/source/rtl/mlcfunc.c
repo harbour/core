@@ -453,6 +453,6 @@ HB_FUNC( MPOSTOLC )
       hb_xfree( pEOLs );
    }
    hb_reta( 2 );
-   hb_stornl( ulLine, -1, 1 );
-   hb_stornl( ulCol, -1, 2 );
+   hb_storvnl( ulLine, -1, 1 );
+   hb_storvnl( ulCol, -1, 2 );
 }

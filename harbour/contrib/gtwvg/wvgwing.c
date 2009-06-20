@@ -954,20 +954,20 @@ HB_FUNC( WVG_FONTCREATE )
 
    memset( &lf, 0, sizeof( LOGFONT ) );
 
-   HB_TCHAR_CPTO( lf.lfFaceName,  hb_parcx( 1, 1 ), sizeof( lf.lfFaceName ) - 1 );
-   lf.lfHeight         = ( LONG ) hb_parnl( 1, 2 );
-   lf.lfWidth          = ( LONG ) hb_parnl( 1, 3 );
-   lf.lfWeight         = ( LONG ) hb_parnl( 1, 4 );
-   lf.lfItalic         = ( BYTE ) hb_parl(  1, 5 );
-   lf.lfUnderline      = ( BYTE ) hb_parl(  1, 6 );
-   lf.lfStrikeOut      = ( BYTE ) hb_parl(  1, 7 );
-   lf.lfCharSet        = ( BYTE ) hb_parni( 1, 8 );
-   lf.lfEscapement     = ( BYTE ) hb_parni( 1, 9 );
-   lf.lfOrientation    = ( BYTE ) hb_parni( 1,10 );
-   lf.lfOutPrecision   = ( BYTE ) hb_parni( 1,11 );
-   lf.lfClipPrecision  = ( BYTE ) hb_parni( 1,12 );
-   lf.lfQuality        = ( BYTE ) hb_parni( 1,13 );
-   lf.lfPitchAndFamily = ( BYTE ) hb_parni( 1,14 );
+   HB_TCHAR_CPTO( lf.lfFaceName,  hb_parvcx( 1, 1 ), sizeof( lf.lfFaceName ) - 1 );
+   lf.lfHeight         = ( LONG ) hb_parvnl( 1, 2 );
+   lf.lfWidth          = ( LONG ) hb_parvnl( 1, 3 );
+   lf.lfWeight         = ( LONG ) hb_parvnl( 1, 4 );
+   lf.lfItalic         = ( BYTE ) hb_parvl(  1, 5 );
+   lf.lfUnderline      = ( BYTE ) hb_parvl(  1, 6 );
+   lf.lfStrikeOut      = ( BYTE ) hb_parvl(  1, 7 );
+   lf.lfCharSet        = ( BYTE ) hb_parvni( 1, 8 );
+   lf.lfEscapement     = ( BYTE ) hb_parvni( 1, 9 );
+   lf.lfOrientation    = ( BYTE ) hb_parvni( 1,10 );
+   lf.lfOutPrecision   = ( BYTE ) hb_parvni( 1,11 );
+   lf.lfClipPrecision  = ( BYTE ) hb_parvni( 1,12 );
+   lf.lfQuality        = ( BYTE ) hb_parvni( 1,13 );
+   lf.lfPitchAndFamily = ( BYTE ) hb_parvni( 1,14 );
 
    hFont = CreateFontIndirect( &lf );
 
@@ -1133,10 +1133,10 @@ HB_FUNC( WVG_FILLRECT )
 {
    RECT rc;
 
-   rc.left   = hb_parni( 2,1 );
-   rc.top    = hb_parni( 2,2 );
-   rc.right  = hb_parni( 2,3 );
-   rc.bottom = hb_parni( 2,4 );
+   rc.left   = hb_parvni( 2,1 );
+   rc.top    = hb_parvni( 2,2 );
+   rc.right  = hb_parvni( 2,3 );
+   rc.bottom = hb_parvni( 2,4 );
 
    FillRect( wapi_par_HDC( 1 ), &rc, wapi_par_HBRUSH( 3 ) );
 }

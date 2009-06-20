@@ -4843,8 +4843,8 @@ HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times *
 
          if( pMethod )
          {
-            hb_stornl( pMethod->ulCalls, -1, 1 );
-            hb_stornl( pMethod->ulTime, -1, 2 );
+            hb_storvnl( pMethod->ulCalls, -1, 1 );
+            hb_storvnl( pMethod->ulTime, -1, 2 );
             return;
          }
       }
@@ -4852,8 +4852,8 @@ HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times *
 #else
    hb_reta( 2 );
 #endif
-   hb_stornl( 0, -1, 1 );
-   hb_stornl( 0, -1, 2 );
+   hb_storvnl( 0, -1, 1 );
+   hb_storvnl( 0, -1, 2 );
 }
 
 /* __ClsGetProperties( nClassHandle, [ lAllExported ] ) --> aPropertiesNames

@@ -235,7 +235,7 @@ HB_FUNC ( SOCKET_RECV )
 
 HB_FUNC ( SOCKET_SEND )
 {
-   hb_retni( send( hb_parsocket( 1 ), hb_parc( 2 ), hb_parclen( 2 ), hb_parni( 3, 0 ) ) );
+   hb_retni( send( hb_parsocket( 1 ), hb_parc( 2 ), hb_parclen( 2 ), hb_parnidef( 3, 0 ) ) );
 }
 
 

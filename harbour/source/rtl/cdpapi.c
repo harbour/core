@@ -1241,7 +1241,7 @@ HB_FUNC( HB_CDPLIST )
    hb_reta( iCount );
    for( iPos = 0; iPos < iCount; ++iPos )
    {
-      hb_storc( s_cdpList[iPos]->id, -1, iPos + 1 );
+      hb_storvc( s_cdpList[iPos]->id, -1, iPos + 1 );
    }
 }
 

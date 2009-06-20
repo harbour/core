@@ -256,9 +256,9 @@ HB_FUNC( ADSGETSERVERTIME )
                          &pusTimeBufLen ) == AE_SUCCESS )
    {
       hb_reta( 3 );
-      hb_storc( ( char * ) pucDateBuf, -1, 1 );
-      hb_storc( ( char * ) pucTimeBuf, -1, 2 );
-      hb_stornl( plTime, -1, 3 );
+      hb_storvc( ( char * ) pucDateBuf, -1, 1 );
+      hb_storvc( ( char * ) pucTimeBuf, -1, 2 );
+      hb_storvnl( plTime, -1, 3 );
    }
    /* QUESTION: Returning NIL on error. Is this what we want? [vszakats] */
 #if HB_TR_LEVEL >= HB_TR_DEBUG

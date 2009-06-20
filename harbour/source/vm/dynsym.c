@@ -653,16 +653,16 @@ HB_FUNC( __DYNSGETPRF ) /* profiler: It returns an array with a function or proc
 #endif
 
    hb_reta( 2 );
-   hb_stornl( 0, -1, 1 );
-   hb_stornl( 0, -1, 2 );
+   hb_storvnl( 0, -1, 1 );
+   hb_storvnl( 0, -1, 2 );
 
 #ifndef HB_NO_PROFILER
    if( pDynSym )
    {
       if( hb_dynsymIsFunction( pDynSym ) ) /* it is a function or procedure */
       {
-         hb_stornl( pDynSym->ulCalls, -1, 1 );
-         hb_stornl( pDynSym->ulTime,  -1, 2 );
+         hb_storvnl( pDynSym->ulCalls, -1, 1 );
+         hb_storvnl( pDynSym->ulTime,  -1, 2 );
       }
    }
 #endif

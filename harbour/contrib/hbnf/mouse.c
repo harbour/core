@@ -489,16 +489,16 @@ HB_FUNC( _M_MBUTREL )
    HB_DOS_INT86( 0x33, &regs, &regs );
 
    hb_reta( 4 );
-   hb_storni( regs.HB_XREGS.bx, -1, 1 );
-   hb_storni( regs.HB_XREGS.cx, -1, 2 );
-   hb_storni( regs.HB_XREGS.dx, -1, 3 );
-   hb_storni( regs.HB_XREGS.ax, -1, 4 );
+   hb_storvni( regs.HB_XREGS.bx, -1, 1 );
+   hb_storvni( regs.HB_XREGS.cx, -1, 2 );
+   hb_storvni( regs.HB_XREGS.dx, -1, 3 );
+   hb_storvni( regs.HB_XREGS.ax, -1, 4 );
 #else
    hb_reta( 4 );
-   hb_storni( 0, -1, 1 );
-   hb_storni( 0, -1, 2 );
-   hb_storni( 0, -1, 3 );
-   hb_storni( 0, -1, 4 );
+   hb_storvni( 0, -1, 1 );
+   hb_storvni( 0, -1, 2 );
+   hb_storvni( 0, -1, 3 );
+   hb_storvni( 0, -1, 4 );
 #endif
 }
 

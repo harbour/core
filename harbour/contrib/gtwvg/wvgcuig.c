@@ -322,10 +322,10 @@ HB_FUNC( WVG_BOXRAISED )
    gObj->iBottom          = hb_parni( 3 );
    gObj->iRight           = hb_parni( 4 );
 
-   gObj->aOffset.iTop     = hb_parni( 5,1 );
-   gObj->aOffset.iLeft    = hb_parni( 5,2 );
-   gObj->aOffset.iBottom  = hb_parni( 5,3 );
-   gObj->aOffset.iRight   = hb_parni( 5,4 );
+   gObj->aOffset.iTop     = hb_parvni( 5,1 );
+   gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+   gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+   gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
    gObj->gObjNext = pWVT->gObjs;
    pWVT->gObjs = gObj;
@@ -376,10 +376,10 @@ HB_FUNC( WVG_BOXRECESSED )
    gObj->iBottom          = hb_parni( 3 );
    gObj->iRight           = hb_parni( 4 );
 
-   gObj->aOffset.iTop     = hb_parni( 5,1 );
-   gObj->aOffset.iLeft    = hb_parni( 5,2 );
-   gObj->aOffset.iBottom  = hb_parni( 5,3 );
-   gObj->aOffset.iRight   = hb_parni( 5,4 );
+   gObj->aOffset.iTop     = hb_parvni( 5,1 );
+   gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+   gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+   gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
    gObj->gObjNext = pWVT->gObjs;
    pWVT->gObjs = gObj;
@@ -473,10 +473,10 @@ HB_FUNC( WVG_BOXGROUP )
    gObj->iBottom          = hb_parni( 3 );
    gObj->iRight           = hb_parni( 4 );
 
-   gObj->aOffset.iTop     = hb_parni( 5,1 );
-   gObj->aOffset.iLeft    = hb_parni( 5,2 );
-   gObj->aOffset.iBottom  = hb_parni( 5,3 );
-   gObj->aOffset.iRight   = hb_parni( 5,4 );
+   gObj->aOffset.iTop     = hb_parvni( 5,1 );
+   gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+   gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+   gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
    gObj->gObjNext = pWVT->gObjs;
    pWVT->gObjs = gObj;
@@ -532,10 +532,10 @@ HB_FUNC( WVG_BOXGROUPRAISED )
    gObj->iBottom          = hb_parni( 3 );
    gObj->iRight           = hb_parni( 4 );
 
-   gObj->aOffset.iTop     = hb_parni( 5,1 );
-   gObj->aOffset.iLeft    = hb_parni( 5,2 );
-   gObj->aOffset.iBottom  = hb_parni( 5,3 );
-   gObj->aOffset.iRight   = hb_parni( 5,4 );
+   gObj->aOffset.iTop     = hb_parvni( 5,1 );
+   gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+   gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+   gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
    gObj->gObjNext = pWVT->gObjs;
    pWVT->gObjs = gObj;
@@ -615,10 +615,10 @@ HB_FUNC( WVG_LABEL )
       gObj->iBottom          = hb_parni( 1 );
       gObj->iRight           = hb_parni( 2 );
 
-      gObj->aOffset.iTop     = hb_parni( 3,1 );
-      gObj->aOffset.iLeft    = hb_parni( 3,2 );
-      gObj->aOffset.iBottom  = hb_parni( 3,3 );
-      gObj->aOffset.iRight   = hb_parni( 3,4 );
+      gObj->aOffset.iTop     = hb_parvni( 3,1 );
+      gObj->aOffset.iLeft    = hb_parvni( 3,2 );
+      gObj->aOffset.iBottom  = hb_parvni( 3,3 );
+      gObj->aOffset.iRight   = hb_parvni( 3,4 );
 
 #if defined( UNICODE )
       gObj->lpText           = HB_TCHAR_CONVTO( hb_parc( 4 ) );
@@ -653,10 +653,10 @@ HB_FUNC( WVG_LABELEX )
    gObj->iBottom          = hb_parni( 1 );
    gObj->iRight           = hb_parni( 2 );
 
-   gObj->aOffset.iTop     = hb_parni( 3,1 );
-   gObj->aOffset.iLeft    = hb_parni( 3,2 );
-   gObj->aOffset.iBottom  = hb_parni( 3,3 );
-   gObj->aOffset.iRight   = hb_parni( 3,4 );
+   gObj->aOffset.iTop     = hb_parvni( 3,1 );
+   gObj->aOffset.iLeft    = hb_parvni( 3,2 );
+   gObj->aOffset.iBottom  = hb_parvni( 3,3 );
+   gObj->aOffset.iRight   = hb_parvni( 3,4 );
 
 #if defined( UNICODE )
    gObj->lpText           = HB_TCHAR_CONVTO( hb_parc( 4 ) );
@@ -714,10 +714,10 @@ HB_FUNC( WVG_OUTLINE )
    gObj->iBottom          = hb_parni( 3 );
    gObj->iRight           = hb_parni( 4 );
 
-   gObj->aOffset.iTop     = hb_parni( 5,1 );
-   gObj->aOffset.iLeft    = hb_parni( 5,2 );
-   gObj->aOffset.iBottom  = hb_parni( 5,3 );
-   gObj->aOffset.iRight   = hb_parni( 5,4 );
+   gObj->aOffset.iTop     = hb_parvni( 5,1 );
+   gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+   gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+   gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
    gObj->iWidth           = hb_parni( 6 );  /* iThick */
    gObj->iStyle           = hb_parni( 7 );  /* iShape */
@@ -753,10 +753,10 @@ HB_FUNC( WVG_OUTLINEEX )
    gObj->iBottom          = hb_parni( 3 );
    gObj->iRight           = hb_parni( 4 );
 
-   gObj->aOffset.iTop     = hb_parni( 5,1 );
-   gObj->aOffset.iLeft    = hb_parni( 5,2 );
-   gObj->aOffset.iBottom  = hb_parni( 5,3 );
-   gObj->aOffset.iRight   = hb_parni( 5,4 );
+   gObj->aOffset.iTop     = hb_parvni( 5,1 );
+   gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+   gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+   gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
    if ( pWVT->pGUI->hUserPens[ hb_parni( 6 )-1 ] )
    {
@@ -807,10 +807,10 @@ HB_FUNC( WVG_LINE )
    gObj->iBottom          = hb_parni( 3 );
    gObj->iRight           = hb_parni( 4 );
 
-   gObj->aOffset.iTop     = hb_parni( 5,1 );
-   gObj->aOffset.iLeft    = hb_parni( 5,2 );
-   gObj->aOffset.iBottom  = hb_parni( 5,3 );
-   gObj->aOffset.iRight   = hb_parni( 5,4 );
+   gObj->aOffset.iTop     = hb_parvni( 5,1 );
+   gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+   gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+   gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
    gObj->iOrient          = hb_parni( 6 );
    gObj->iFormat          = hb_parni( 7 );
@@ -842,10 +842,10 @@ HB_FUNC( WVG_LINEEX )
    gObj->iBottom          = hb_parni( 3 );
    gObj->iRight           = hb_parni( 4 );
 
-   gObj->aOffset.iTop     = hb_parni( 5,1 );
-   gObj->aOffset.iLeft    = hb_parni( 5,2 );
-   gObj->aOffset.iBottom  = hb_parni( 5,3 );
-   gObj->aOffset.iRight   = hb_parni( 5,4 );
+   gObj->aOffset.iTop     = hb_parvni( 5,1 );
+   gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+   gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+   gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
    gObj->iOrient          = hb_parni( 6 );
    gObj->iFormat          = hb_parni( 7 );
@@ -990,10 +990,10 @@ HB_FUNC( WVG_ELLIPSE )
    gObj->iBottom          = hb_parni( 3 );
    gObj->iRight           = hb_parni( 4 );
 
-   gObj->aOffset.iTop     = hb_parni( 5,1 );
-   gObj->aOffset.iLeft    = hb_parni( 5,2 );
-   gObj->aOffset.iBottom  = hb_parni( 5,3 );
-   gObj->aOffset.iRight   = hb_parni( 5,4 );
+   gObj->aOffset.iTop     = hb_parvni( 5,1 );
+   gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+   gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+   gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
    gObj->hPen             = pWVT->currentPen;
    gObj->bDestroyPen      = FALSE;
@@ -1030,10 +1030,10 @@ HB_FUNC( WVG_RECTANGLE )
    gObj->iBottom          = hb_parni( 3 );
    gObj->iRight           = hb_parni( 4 );
 
-   gObj->aOffset.iTop     = hb_parni( 5,1 );
-   gObj->aOffset.iLeft    = hb_parni( 5,2 );
-   gObj->aOffset.iBottom  = hb_parni( 5,3 );
-   gObj->aOffset.iRight   = hb_parni( 5,4 );
+   gObj->aOffset.iTop     = hb_parvni( 5,1 );
+   gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+   gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+   gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
    gObj->hPen             = pWVT->currentPen;
    gObj->bDestroyPen      = FALSE;
@@ -1070,10 +1070,10 @@ HB_FUNC( WVG_ROUNDRECT )
    gObj->iBottom          = hb_parni( 3 );
    gObj->iRight           = hb_parni( 4 );
 
-   gObj->aOffset.iTop     = hb_parni( 5,1 );
-   gObj->aOffset.iLeft    = hb_parni( 5,2 );
-   gObj->aOffset.iBottom  = hb_parni( 5,3 );
-   gObj->aOffset.iRight   = hb_parni( 5,4 );
+   gObj->aOffset.iTop     = hb_parvni( 5,1 );
+   gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+   gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+   gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
    gObj->iHeight          = hb_parni( 6 );
    gObj->iWidth           = hb_parni( 7 );
@@ -1117,10 +1117,10 @@ HB_FUNC( WVG_COLORRECT )
       gObj->iBottom          = hb_parni( 3 );
       gObj->iRight           = hb_parni( 4 );
 
-      gObj->aOffset.iTop     = hb_parni( 5,1 );
-      gObj->aOffset.iLeft    = hb_parni( 5,2 );
-      gObj->aOffset.iBottom  = hb_parni( 5,3 );
-      gObj->aOffset.iRight   = hb_parni( 5,4 );
+      gObj->aOffset.iTop     = hb_parvni( 5,1 );
+      gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+      gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+      gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
       gObj->hBrush           = hBrush;
       gObj->bDestroyBrush    = TRUE;
@@ -1155,26 +1155,26 @@ HB_FUNC( WVG_SHADEDRECT )
       gObj->iBottom          = hb_parni( 3 );
       gObj->iRight           = hb_parni( 4 );
 
-      gObj->aOffset.iTop     = hb_parni( 5,1 );
-      gObj->aOffset.iLeft    = hb_parni( 5,2 );
-      gObj->aOffset.iBottom  = hb_parni( 5,3 );
-      gObj->aOffset.iRight   = hb_parni( 5,4 );
+      gObj->aOffset.iTop     = hb_parvni( 5,1 );
+      gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+      gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+      gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
       gObj->iData            = !HB_ISNUM( 6 ) ? GRADIENT_FILL_RECT_H : hb_parni( 6 ) ;
 
       gObj->vert[ 0 ].x      = 0;
       gObj->vert[ 0 ].y      = 0;
-      gObj->vert[ 0 ].Red    = ( COLOR16 ) hb_parni( 7,1 );
-      gObj->vert[ 0 ].Green  = ( COLOR16 ) hb_parni( 7,2 );
-      gObj->vert[ 0 ].Blue   = ( COLOR16 ) hb_parni( 7,3 );
-      gObj->vert[ 0 ].Alpha  = ( COLOR16 ) hb_parni( 7,4 );
+      gObj->vert[ 0 ].Red    = ( COLOR16 ) hb_parvni( 7,1 );
+      gObj->vert[ 0 ].Green  = ( COLOR16 ) hb_parvni( 7,2 );
+      gObj->vert[ 0 ].Blue   = ( COLOR16 ) hb_parvni( 7,3 );
+      gObj->vert[ 0 ].Alpha  = ( COLOR16 ) hb_parvni( 7,4 );
 
       gObj->vert[ 1 ].x      = 0;
       gObj->vert[ 1 ].y      = 0;
-      gObj->vert[ 1 ].Red    = ( COLOR16 ) hb_parni( 8,1 );
-      gObj->vert[ 1 ].Green  = ( COLOR16 ) hb_parni( 8,2 );
-      gObj->vert[ 1 ].Blue   = ( COLOR16 ) hb_parni( 8,3 );
-      gObj->vert[ 1 ].Alpha  = ( COLOR16 ) hb_parni( 8,4 );
+      gObj->vert[ 1 ].Red    = ( COLOR16 ) hb_parvni( 8,1 );
+      gObj->vert[ 1 ].Green  = ( COLOR16 ) hb_parvni( 8,2 );
+      gObj->vert[ 1 ].Blue   = ( COLOR16 ) hb_parvni( 8,3 );
+      gObj->vert[ 1 ].Alpha  = ( COLOR16 ) hb_parvni( 8,4 );
 
       gObj->gObjNext = pWVT->gObjs;
       pWVT->gObjs = gObj;
@@ -1217,10 +1217,10 @@ HB_FUNC( WVG_TEXTBOX )
    gObj->iBottom          = hb_parni( 3 );
    gObj->iRight           = hb_parni( 4 );
 
-   gObj->aOffset.iTop     = hb_parni( 5,1 );
-   gObj->aOffset.iLeft    = hb_parni( 5,2 );
-   gObj->aOffset.iBottom  = hb_parni( 5,3 );
-   gObj->aOffset.iRight   = hb_parni( 5,4 );
+   gObj->aOffset.iTop     = hb_parvni( 5,1 );
+   gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+   gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+   gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
    gObj->lpText           = HB_TCHAR_CONVTO( hb_parc( 6 ) );
 
@@ -1288,10 +1288,10 @@ HB_FUNC( WVG_PICTURE )
       gObj->iBottom          = hb_parni( 3 );
       gObj->iRight           = hb_parni( 4 );
 
-      gObj->aOffset.iTop     = hb_parni( 5,1 );
-      gObj->aOffset.iLeft    = hb_parni( 5,2 );
-      gObj->aOffset.iBottom  = hb_parni( 5,3 );
-      gObj->aOffset.iRight   = hb_parni( 5,4 );
+      gObj->aOffset.iTop     = hb_parvni( 5,1 );
+      gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+      gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+      gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
       gObj->iPicture         = pWVT->pGUI->iPicture[ hb_parni( 6 )-1 ];
       gObj->bDestroyPicture  = FALSE;
@@ -1351,10 +1351,10 @@ HB_FUNC( WVG_IMAGE )
       gObj->iBottom          = hb_parni( 3 );
       gObj->iRight           = hb_parni( 4 );
 
-      gObj->aOffset.iTop     = hb_parni( 5,1 );
-      gObj->aOffset.iLeft    = hb_parni( 5,2 );
-      gObj->aOffset.iBottom  = hb_parni( 5,3 );
-      gObj->aOffset.iRight   = hb_parni( 5,4 );
+      gObj->aOffset.iTop     = hb_parvni( 5,1 );
+      gObj->aOffset.iLeft    = hb_parvni( 5,2 );
+      gObj->aOffset.iBottom  = hb_parvni( 5,3 );
+      gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
       gObj->iPicture         = iPicture;
 

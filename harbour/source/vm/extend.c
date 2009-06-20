@@ -117,6 +117,50 @@ PHB_ITEM  hb_paramError( int iParam )
    return pParam;
 }
 
+ULONG  hb_parinfo( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parinfo(%d)", iParam));
+
+   if( iParam == 0 )
+      return ( ULONG ) hb_pcount();
+   else
+   {
+      if( iParam >= -1 && iParam <= hb_pcount() )
+      {
+         PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+         HB_TYPE uiType = HB_ITEM_TYPE( pItem );
+
+         if( uiType & HB_IT_BYREF )
+            uiType |= HB_ITEM_TYPE( hb_itemUnRef( pItem ) );
+
+         return ( ULONG ) uiType;
+      }
+      else
+         return 0;
+   }
+}
+
+ULONG  hb_parinfa( int iParamNum, ULONG uiArrayIndex )
+{
+   PHB_ITEM pArray;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parinfa(%d, %lu)", iParamNum, uiArrayIndex));
+
+   pArray = hb_param( iParamNum, HB_IT_ARRAY );
+
+   if( pArray )
+   {
+      if( uiArrayIndex == 0 )
+         return hb_arrayLen( pArray );
+      else
+         return ( long ) hb_arrayGetType( pArray, uiArrayIndex );
+   }
+   else
+      return 0;
+}
+
 /* function to be called from pcode DLLs to detect if the extend system
  * is going to use an array item */
 
@@ -162,11 +206,415 @@ BOOL hb_extIsObject( int iParam )
 /* NOTE: Caller should not modify the buffer returned by this function.
          [vszakats] */
 
-char * hb_parc( int iParam, ... )
+char * hb_parc( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parc(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parc(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_STRING( pItem ) )
+         return pItem->item.asString.value;
+   }
+
+   return ( char * ) NULL;
+}
+
+char * hb_parcx( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parcx(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_STRING( pItem ) )
+         return pItem->item.asString.value;
+   }
+
+   return ( char * ) "";
+}
+
+ULONG  hb_parclen( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parclen(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_STRING( pItem ) )
+         return pItem->item.asString.length;
+   }
+
+   return 0;
+}
+
+/* NOTE: Similar to _parclen() but returns the length including the
+         terminating zero byte, and it only works for parameters passed by
+         reference. [vszakats] */
+
+ULONG  hb_parcsiz( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parcsiz(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      /* NOTE: hb_parcsiz() will only work for strings passed by reference.
+               CA-Cl*pper works like this. [vszakats] */
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         pItem = hb_itemUnRef( pItem );
+
+         if( HB_IS_STRING( pItem ) )
+            return pItem->item.asString.length + 1;
+      }
+   }
+
+   return 0;
+}
+
+/* NOTE: Using hb_stackDateBuffer() a temporary date buffer guaranties
+         good behavior when multithreading. */
+
+char  * hb_pards( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_pards(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_DATETIME( pItem ) )
+         return hb_dateDecStr( hb_stackDateBuffer(), pItem->item.asDateTime.julian );
+   }
+
+   return hb_dateDecStr( hb_stackDateBuffer(), 0 );
+}
+
+/* NOTE: szDate must be a 9 chars wide buffer. [vszakats] */
+
+char  * hb_pardsbuff( char * szDate, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_pardsbuff(%p, %d)", szDate, iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_DATETIME( pItem ) )
+         return hb_dateDecStr( szDate, pItem->item.asDateTime.julian );
+   }
+
+   return hb_dateDecStr( szDate, 0 );
+}
+
+/* retrieve a date as long integer - number of days from Julian's day */
+
+LONG  hb_pardl( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_pardl(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_DATETIME( pItem ) )
+         return pItem->item.asDateTime.julian;
+   }
+
+   return hb_itemGetDL( NULL );
+}
+
+double hb_partd( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_partd(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_DATETIME( pItem ) )
+         return hb_timeStampPackDT( pItem->item.asDateTime.julian,
+                                    pItem->item.asDateTime.time );
+   }
+
+   return 0;
+}
+
+BOOL hb_partdt( LONG * plJulian, LONG * plMilliSec , int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_partdt(%p,%p,%d)", plJulian, plMilliSec, iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_DATETIME( pItem ) )
+      {
+         *plJulian = pItem->item.asDateTime.julian;
+         *plMilliSec = pItem->item.asDateTime.time;
+         return TRUE;
+      }
+   }
+
+   return FALSE;
+}
+
+
+int  hb_parl( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parl(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_LOGICAL( pItem ) )
+         return pItem->item.asLogical.value ? 1 : 0;
+   }
+
+   return 0;
+}
+
+double  hb_parnd( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parnd(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_DOUBLE( pItem ) )
+         return pItem->item.asDouble.value;
+      else if( HB_IS_INTEGER( pItem ) )
+         return ( double ) pItem->item.asInteger.value;
+      else if( HB_IS_LONG( pItem ) )
+         return ( double ) pItem->item.asLong.value;
+   }
+
+   return 0;
+}
+
+int  hb_parni( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parni(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_INTEGER( pItem ) )
+         return pItem->item.asInteger.value;
+      else if( HB_IS_LONG( pItem ) )
+         return ( int ) pItem->item.asLong.value;
+      else if( HB_IS_DOUBLE( pItem ) )
+#ifdef __GNUC__
+         return ( int ) ( unsigned int ) pItem->item.asDouble.value;
+#else
+         return ( int ) pItem->item.asDouble.value;
+#endif
+   }
+
+   return 0;
+}
+
+long  hb_parnl( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parnl(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_LONG( pItem ) )
+         return ( long ) pItem->item.asLong.value;
+      else if( HB_IS_INTEGER( pItem ) )
+         return ( long ) pItem->item.asInteger.value;
+      else if( HB_IS_DOUBLE( pItem ) )
+#ifdef __GNUC__
+         return ( long ) ( unsigned long ) pItem->item.asDouble.value;
+#else
+         return ( long ) pItem->item.asDouble.value;
+#endif
+   }
+
+   return 0;
+}
+
+#ifndef HB_LONG_LONG_OFF
+LONGLONG  hb_parnll( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parnll(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_LONG( pItem ) )
+         return ( LONGLONG ) pItem->item.asLong.value;
+      else if( HB_IS_INTEGER( pItem ) )
+         return ( LONGLONG ) pItem->item.asInteger.value;
+      else if( HB_IS_DOUBLE( pItem ) )
+#ifdef __GNUC__
+         return ( LONGLONG ) ( ULONGLONG ) pItem->item.asDouble.value;
+#else
+         return ( LONGLONG ) pItem->item.asDouble.value;
+#endif
+   }
+
+   return 0;
+}
+#endif
+
+HB_LONG  hb_parnint( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parnint(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_LONG( pItem ) )
+         return ( HB_LONG ) pItem->item.asLong.value;
+      else if( HB_IS_INTEGER( pItem ) )
+         return ( HB_LONG ) pItem->item.asInteger.value;
+      else if( HB_IS_DOUBLE( pItem ) )
+#ifdef __GNUC__
+         return ( HB_LONG ) ( HB_ULONG ) pItem->item.asDouble.value;
+#else
+         return ( HB_LONG ) pItem->item.asDouble.value;
+#endif
+   }
+
+   return 0;
+}
+
+void * hb_parptr( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parptr(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_POINTER( pItem ) )
+         return pItem->item.asPointer.value;
+   }
+
+   return NULL;
+}
+
+void * hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parptrGC(%p,%d)", pFunc, iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_POINTER( pItem ) && pItem->item.asPointer.collect &&
+          hb_gcFunc( pItem->item.asPointer.value ) == pFunc )
+         return pItem->item.asPointer.value;
+   }
+
+   return NULL;
+}
+
+/* NOTE: Caller should not modify the buffer returned by this function.
+         [vszakats] */
+
+char * hb_parvc( int iParam, ... )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvc(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -193,11 +641,11 @@ char * hb_parc( int iParam, ... )
    return ( char * ) NULL;
 }
 
-char * hb_parcx( int iParam, ... )
+char * hb_parvcx( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parcx(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvcx(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -224,11 +672,11 @@ char * hb_parcx( int iParam, ... )
    return ( char * ) "";
 }
 
-ULONG  hb_parclen( int iParam, ... )
+ULONG  hb_parvclen( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parclen(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvclen(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -259,17 +707,17 @@ ULONG  hb_parclen( int iParam, ... )
          terminating zero byte, and it only works for parameters passed by
          reference. [vszakats] */
 
-ULONG  hb_parcsiz( int iParam, ... )
+ULONG  hb_parvcsiz( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parcsiz(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvcsiz(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
-      /* NOTE: hb_parcsiz() will only work for strings passed by reference.
+      /* NOTE: hb_parvcsiz() will only work for strings passed by reference.
                CA-Cl*pper works like this. [vszakats] */
 
       if( HB_IS_BYREF( pItem ) )
@@ -298,11 +746,11 @@ ULONG  hb_parcsiz( int iParam, ... )
 /* NOTE: Using hb_stackDateBuffer() a temporary date buffer guaranties
          good behavior when multithreading. */
 
-char  * hb_pards( int iParam, ... )
+char  * hb_parvds( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_pards(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvds(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -331,11 +779,11 @@ char  * hb_pards( int iParam, ... )
 
 /* NOTE: szDate must be a 9 chars wide buffer. [vszakats] */
 
-char  * hb_pardsbuff( char * szDate, int iParam, ... )
+char  * hb_parvdsbuff( char * szDate, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_pardsbuff(%p, %d, ...)", szDate, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvdsbuff(%p, %d, ...)", szDate, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -364,11 +812,11 @@ char  * hb_pardsbuff( char * szDate, int iParam, ... )
 
 /* retrieve a date as long integer - number of days from Julian's day */
 
-LONG  hb_pardl( int iParam, ... )
+LONG  hb_parvdl( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_pardl(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvdl(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -399,11 +847,11 @@ LONG  hb_pardl( int iParam, ... )
    return hb_itemGetDL( NULL );
 }
 
-double hb_partd( int iParam, ... )
+double hb_parvtd( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_partd(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvtd(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -435,11 +883,11 @@ double hb_partd( int iParam, ... )
    return 0;
 }
 
-BOOL hb_partdt( LONG * plJulian, LONG * plMilliSec , int iParam, ... )
+BOOL hb_parvtdt( LONG * plJulian, LONG * plMilliSec , int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_partdt(%p,%p,%d, ...)", plJulian, plMilliSec, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvtdt(%p,%p,%d, ...)", plJulian, plMilliSec, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -473,11 +921,11 @@ BOOL hb_partdt( LONG * plJulian, LONG * plMilliSec , int iParam, ... )
 }
 
 
-int  hb_parl( int iParam, ... )
+int  hb_parvl( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parl(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvl(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -510,11 +958,11 @@ int  hb_parl( int iParam, ... )
    return 0;
 }
 
-double  hb_parnd( int iParam, ... )
+double  hb_parvnd( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parnd(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvnd(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -545,11 +993,11 @@ double  hb_parnd( int iParam, ... )
    return 0;
 }
 
-int  hb_parni( int iParam, ... )
+int  hb_parvni( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parni(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvni(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -563,7 +1011,11 @@ int  hb_parni( int iParam, ... )
       else if( HB_IS_LONG( pItem ) )
          return ( int ) pItem->item.asLong.value;
       else if( HB_IS_DOUBLE( pItem ) )
+#ifdef __GNUC__
+         return ( int ) ( unsigned int ) pItem->item.asDouble.value;
+#else
          return ( int ) pItem->item.asDouble.value;
+#endif
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -580,11 +1032,11 @@ int  hb_parni( int iParam, ... )
    return 0;
 }
 
-long  hb_parnl( int iParam, ... )
+long  hb_parvnl( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parnl(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvnl(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -603,7 +1055,7 @@ long  hb_parnl( int iParam, ... )
 #else
          return ( long ) pItem->item.asDouble.value;
 #endif
-      /* DATETIME TODO: remove it */
+      /* CA-Cl*pper does it */
       else if( HB_IS_DATETIME( pItem ) )
          return ( long ) pItem->item.asDateTime.julian;
       else if( HB_IS_ARRAY( pItem ) )
@@ -623,11 +1075,11 @@ long  hb_parnl( int iParam, ... )
 }
 
 #ifndef HB_LONG_LONG_OFF
-LONGLONG  hb_parnll( int iParam, ... )
+LONGLONG  hb_parvnll( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parnll(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvnll(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -646,9 +1098,6 @@ LONGLONG  hb_parnll( int iParam, ... )
 #else
          return ( LONGLONG ) pItem->item.asDouble.value;
 #endif
-      /* DATETIME TODO: remove it */
-      else if( HB_IS_DATETIME( pItem ) )
-         return ( LONGLONG ) pItem->item.asDateTime.julian;
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -666,11 +1115,11 @@ LONGLONG  hb_parnll( int iParam, ... )
 }
 #endif
 
-HB_LONG  hb_parnint( int iParam, ... )
+HB_LONG  hb_parvnint( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parnint(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvnint(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -689,9 +1138,6 @@ HB_LONG  hb_parnint( int iParam, ... )
 #else
          return ( HB_LONG ) pItem->item.asDouble.value;
 #endif
-      /* DATETIME TODO: remove it */
-      else if( HB_IS_DATETIME( pItem ) )
-         return ( HB_LONG ) pItem->item.asDateTime.julian;
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -708,11 +1154,11 @@ HB_LONG  hb_parnint( int iParam, ... )
    return 0;
 }
 
-void * hb_parptr( int iParam, ... )
+void * hb_parvptr( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parptr(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvptr(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -739,11 +1185,11 @@ void * hb_parptr( int iParam, ... )
    return NULL;
 }
 
-void * hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam, ... )
+void * hb_parvptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parptrGC(%p,%d, ...)", pFunc, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parvptrGC(%p,%d, ...)", pFunc, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -776,50 +1222,6 @@ void * hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam, ... )
    }
 
    return NULL;
-}
-
-ULONG  hb_parinfa( int iParamNum, ULONG uiArrayIndex )
-{
-   PHB_ITEM pArray;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_parinfa(%d, %lu)", iParamNum, uiArrayIndex));
-
-   pArray = hb_param( iParamNum, HB_IT_ARRAY );
-
-   if( pArray )
-   {
-      if( uiArrayIndex == 0 )
-         return hb_arrayLen( pArray );
-      else
-         return ( long ) hb_arrayGetType( pArray, uiArrayIndex );
-   }
-   else
-      return 0;
-}
-
-ULONG  hb_parinfo( int iParam )
-{
-   HB_STACK_TLS_PRELOAD
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_parinfo(%d)", iParam));
-
-   if( iParam == 0 )
-      return ( ULONG ) hb_pcount();
-   else
-   {
-      if( iParam >= -1 && iParam <= hb_pcount() )
-      {
-         PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
-         HB_TYPE uiType = HB_ITEM_TYPE( pItem );
-
-         if( uiType & HB_IT_BYREF )
-            uiType |= HB_ITEM_TYPE( hb_itemUnRef( pItem ) );
-
-         return ( ULONG ) uiType;
-      }
-      else
-         return 0;
-   }
 }
 
 #undef hb_ret
@@ -1099,11 +1501,394 @@ void hb_retptrGC( void * pointer )
 }
 
 
-int hb_storc( const char * szText, int iParam, ... )
+int hb_storc( const char * szText, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storc(%s, %d, ...)", szText, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storc(%s, %d )", szText, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutC( hb_stackReturnItem(), szText );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutC( hb_itemUnRef( pItem ), szText );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+int hb_storclen( const char * szText, ULONG ulLen, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_storclen(%s, %lu, %d)", szText, ulLen, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutCL( hb_stackReturnItem(), szText, ulLen );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutCL( hb_itemUnRef( pItem ), szText, ulLen );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+int hb_storclen_buffer( char * szText, ULONG ulLen, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_storclen_buffer(%s, %lu, %d)", szText, ulLen, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutCLPtr( hb_stackReturnItem(), szText, ulLen );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutCLPtr( hb_itemUnRef( pItem ), szText, ulLen );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+/* szDate must have YYYYMMDD format */
+
+int hb_stords( const char * szDate, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stords(%s, %d)", szDate, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutDS( hb_stackReturnItem(), szDate );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutDS( hb_itemUnRef( pItem ), szDate );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+int hb_stordl( long lJulian, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stordl(%ld, %d)", lJulian, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutDL( hb_stackReturnItem(), lJulian );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutDL( hb_itemUnRef( pItem ), lJulian );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+int hb_stortd( double dTimeStamp, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stortd(%lf, %d)", dTimeStamp, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutTD( hb_stackReturnItem(), dTimeStamp );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutTD( hb_itemUnRef( pItem ), dTimeStamp );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+int hb_stortdt( LONG lJulian, LONG lMilliSec, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stortd(%ld, %ld, %d)", lJulian, lMilliSec, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutTDT( hb_stackReturnItem(), lJulian, lMilliSec );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutTDT( hb_itemUnRef( pItem ), lJulian, lMilliSec );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+int hb_storl( int iLogical, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_storl(%d, %d)", iLogical, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutL( hb_stackReturnItem(), iLogical ? TRUE : FALSE );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutL( hb_itemUnRef( pItem ), iLogical ? TRUE : FALSE );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+int hb_storni( int iValue, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_storni(%d, %d)", iValue, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutNI( hb_stackReturnItem(), iValue );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutNI( hb_itemUnRef( pItem ), iValue );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+int hb_stornl( long lValue, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stornl(%ld, %d)", lValue, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutNL( hb_stackReturnItem(), lValue );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutNL( hb_itemUnRef( pItem ), lValue );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+#ifndef HB_LONG_LONG_OFF
+int hb_stornll( LONGLONG llValue, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stornll(%" PFLL "d, %d)", llValue, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutNLL( hb_stackReturnItem(), llValue );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutNLL( hb_itemUnRef( pItem ), llValue );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+#endif
+
+int hb_stornint( HB_LONG lValue, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stornint(%" PFHL "d, %d)", lValue, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutNInt( hb_stackReturnItem(), lValue );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutNInt( hb_itemUnRef( pItem ), lValue );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+int hb_stornd( double dNumber, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stornd(%lf, %d)", dNumber, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutND( hb_stackReturnItem(), dNumber );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutND( hb_itemUnRef( pItem ), dNumber );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+int hb_storptr( void * pointer, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_storptr(%p, %d)", pointer, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutPtr( hb_stackReturnItem(), pointer );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutPtr( hb_itemUnRef( pItem ), pointer );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+int hb_storptrGC( void * pointer, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_storptrGC(%p, %d)", pointer, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutPtrGC( hb_stackReturnItem(), pointer );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutPtrGC( hb_itemUnRef( pItem ), pointer );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+/* hb_storv*() similar to hb_stor*() but they accepts optional array index
+ * just like Cl*pper's _stor*() functions
+ */
+
+int hb_storvc( const char * szText, int iParam, ... )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvc(%s, %d, ...)", szText, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1132,11 +1917,11 @@ int hb_storc( const char * szText, int iParam, ... )
    return 0;
 }
 
-int hb_storclen( const char * szText, ULONG ulLen, int iParam, ... )
+int hb_storvclen( const char * szText, ULONG ulLen, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storclen(%s, %lu, %d, ...)", szText, ulLen, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvclen(%s, %lu, %d, ...)", szText, ulLen, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1165,11 +1950,11 @@ int hb_storclen( const char * szText, ULONG ulLen, int iParam, ... )
    return 0;
 }
 
-int hb_storclen_buffer( char * szText, ULONG ulLen, int iParam, ... )
+int hb_storvclen_buffer( char * szText, ULONG ulLen, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storclen_buffer(%s, %lu, %d, ...)", szText, ulLen, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvclen_buffer(%s, %lu, %d, ...)", szText, ulLen, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1200,11 +1985,11 @@ int hb_storclen_buffer( char * szText, ULONG ulLen, int iParam, ... )
 
 /* szDate must have YYYYMMDD format */
 
-int hb_stords( const char * szDate, int iParam, ... )
+int hb_storvds( const char * szDate, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stords(%s, %d, ...)", szDate, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvds(%s, %d, ...)", szDate, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1233,11 +2018,11 @@ int hb_stords( const char * szDate, int iParam, ... )
    return 0;
 }
 
-int hb_stordl( long lJulian, int iParam, ... )
+int hb_storvdl( long lJulian, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stordl(%ld, %d, ...)", lJulian, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvdl(%ld, %d, ...)", lJulian, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1266,11 +2051,11 @@ int hb_stordl( long lJulian, int iParam, ... )
    return 0;
 }
 
-int hb_stortd( double dTimeStamp, int iParam, ... )
+int hb_storvtd( double dTimeStamp, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stortd(%lf, %d, ...)", dTimeStamp, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvtd(%lf, %d, ...)", dTimeStamp, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1299,11 +2084,11 @@ int hb_stortd( double dTimeStamp, int iParam, ... )
    return 0;
 }
 
-int hb_stortdt( LONG lJulian, LONG lMilliSec, int iParam, ... )
+int hb_storvtdt( LONG lJulian, LONG lMilliSec, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stortd(%ld, %ld, %d, ...)", lJulian, lMilliSec, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvtd(%ld, %ld, %d, ...)", lJulian, lMilliSec, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1332,11 +2117,11 @@ int hb_stortdt( LONG lJulian, LONG lMilliSec, int iParam, ... )
    return 0;
 }
 
-int hb_storl( int iLogical, int iParam, ... )
+int hb_storvl( int iLogical, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storl(%d, %d, ...)", iLogical, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvl(%d, %d, ...)", iLogical, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1365,11 +2150,11 @@ int hb_storl( int iLogical, int iParam, ... )
    return 0;
 }
 
-int hb_storni( int iValue, int iParam, ... )
+int hb_storvni( int iValue, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storni(%d, %d, ...)", iValue, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvni(%d, %d, ...)", iValue, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1398,11 +2183,11 @@ int hb_storni( int iValue, int iParam, ... )
    return 0;
 }
 
-int hb_stornl( long lValue, int iParam, ... )
+int hb_storvnl( long lValue, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stornl(%ld, %d, ...)", lValue, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvnl(%ld, %d, ...)", lValue, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1432,11 +2217,11 @@ int hb_stornl( long lValue, int iParam, ... )
 }
 
 #ifndef HB_LONG_LONG_OFF
-int hb_stornll( LONGLONG llValue, int iParam, ... )
+int hb_storvnll( LONGLONG llValue, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stornll(%" PFLL "d, %d, ...)", llValue, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvnll(%" PFLL "d, %d, ...)", llValue, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1466,11 +2251,11 @@ int hb_stornll( LONGLONG llValue, int iParam, ... )
 }
 #endif
 
-int hb_stornint( HB_LONG lValue, int iParam, ... )
+int hb_storvnint( HB_LONG lValue, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stornint(%" PFHL "d, %d, ...)", lValue, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvnint(%" PFHL "d, %d, ...)", lValue, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1499,11 +2284,11 @@ int hb_stornint( HB_LONG lValue, int iParam, ... )
    return 0;
 }
 
-int hb_stornd( double dNumber, int iParam, ... )
+int hb_storvnd( double dNumber, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stornd(%lf, %d, ...)", dNumber, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvnd(%lf, %d, ...)", dNumber, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1532,11 +2317,11 @@ int hb_stornd( double dNumber, int iParam, ... )
    return 0;
 }
 
-int hb_storptr( void * pointer, int iParam, ... )
+int hb_storvptr( void * pointer, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storptr(%p, %d, ...)", pointer, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvptr(%p, %d, ...)", pointer, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1565,11 +2350,11 @@ int hb_storptr( void * pointer, int iParam, ... )
    return 0;
 }
 
-int hb_storptrGC( void * pointer, int iParam, ... )
+int hb_storvptrGC( void * pointer, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storptrGC(%p, %d, ...)", pointer, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvptrGC(%p, %d, ...)", pointer, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {

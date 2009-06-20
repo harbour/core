@@ -306,12 +306,12 @@ HB_FUNC( HB_FSELECT )
 HB_FUNC( HB_FINFO )                     /* used for debugging */
 {
    hb_reta( 6 );
-   hb_storni( area+1,         -1, 1);
-   hb_storni( last_rec[area], -1, 2);
-   hb_storni( recno[area],    -1, 3);
-   hb_storni( offset[area],   -1, 4);
-   hb_storni( lastbyte[area], -1, 5);
-   hb_storl ( isEof[area],    -1, 6);
+   hb_storvni( area+1,         -1, 1);
+   hb_storvni( last_rec[area], -1, 2);
+   hb_storvni( recno[area],    -1, 3);
+   hb_storvni( offset[area],   -1, 4);
+   hb_storvni( lastbyte[area], -1, 5);
+   hb_storvl ( isEof[area],    -1, 6);
 }
 
 HB_FUNC( HB_FREADANDSKIP )

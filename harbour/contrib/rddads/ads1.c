@@ -5103,7 +5103,7 @@ HB_FUNC( ADSCUSTOMIZEAOF )
          if( HB_ISARRAY( 1 ) )           /* convert array of recnos to C array */
          {
             for( ulRecord = 0; ulRecord < u32NumRecs; ulRecord++ )
-               pu32Records[ ulRecord ] = hb_parnl( 1, ulRecord + 1 );
+               pu32Records[ ulRecord ] = hb_parvnl( 1, ulRecord + 1 );
          }
          else
             pu32Records[ 0 ] = ulRecord;

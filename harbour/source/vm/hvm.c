@@ -11359,16 +11359,16 @@ HB_FUNC( __OPGETPRF ) /* profiler: It returns an array with an opcode called and
    hb_reta( 2 );
    if( ulOpcode < HB_P_LAST_PCODE )
    {
-      hb_stornl( hb_ulOpcodesCalls[ ulOpcode ], -1, 1 );
-      hb_stornl( hb_ulOpcodesTime[ ulOpcode ],  -1, 2 );
+      hb_storvnl( hb_ulOpcodesCalls[ ulOpcode ], -1, 1 );
+      hb_storvnl( hb_ulOpcodesTime[ ulOpcode ],  -1, 2 );
    }
    else
 #else
    hb_reta( 2 );
 #endif
    {
-      hb_stornl( 0, -1, 1 );
-      hb_stornl( 0, -1, 2 );
+      hb_storvnl( 0, -1, 1 );
+      hb_storvnl( 0, -1, 2 );
    }
 }
 

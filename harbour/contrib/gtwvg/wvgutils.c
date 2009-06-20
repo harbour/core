@@ -181,29 +181,28 @@ HB_FUNC( WVT_CHOOSEFONT )
       PointSize = -MulDiv( lf.lfHeight, 72, GetDeviceCaps( _s->hdc, LOGPIXELSY ) ) ;
 
       hb_reta( 8 );
-      hb_storc(  szFaceName        , -1, 1 );
-      hb_stornl( ( LONG ) PointSize, -1, 2 );
-      hb_storni( lf.lfWidth        , -1, 3 );
-      hb_storni( lf.lfWeight       , -1, 4 );
-      hb_storni( lf.lfQuality      , -1, 5 );
-      hb_storl(  lf.lfItalic       , -1, 6 );
-      hb_storl(  lf.lfUnderline    , -1, 7 );
-      hb_storl(  lf.lfStrikeOut    , -1, 8 );
+      hb_storvc(  szFaceName        , -1, 1 );
+      hb_storvnl( ( LONG ) PointSize, -1, 2 );
+      hb_storvni( lf.lfWidth        , -1, 3 );
+      hb_storvni( lf.lfWeight       , -1, 4 );
+      hb_storvni( lf.lfQuality      , -1, 5 );
+      hb_storvl(  lf.lfItalic       , -1, 6 );
+      hb_storvl(  lf.lfUnderline    , -1, 7 );
+      hb_storvl(  lf.lfStrikeOut    , -1, 8 );
 
       HB_TCHAR_FREE( szFaceName );
    }
    else
    {
       hb_reta( 8 );
-
-      hb_storc(  ""        , -1, 1 );
-      hb_stornl( ( LONG ) 0, -1, 2 );
-      hb_storni( 0         , -1, 3 );
-      hb_storni( 0         , -1, 4 );
-      hb_storni( 0         , -1, 5 );
-      hb_storl(  0         , -1, 6 );
-      hb_storl(  0         , -1, 7 );
-      hb_storl(  0         , -1, 8 );
+      hb_storvc(  ""        , -1, 1 );
+      hb_storvnl( ( LONG ) 0, -1, 2 );
+      hb_storvni( 0         , -1, 3 );
+      hb_storvni( 0         , -1, 4 );
+      hb_storvni( 0         , -1, 5 );
+      hb_storvl(  0         , -1, 6 );
+      hb_storvl(  0         , -1, 7 );
+      hb_storvl(  0         , -1, 8 );
    }
 
    return ;
@@ -224,7 +223,7 @@ HB_FUNC( WVT_CHOOSECOLOR )
 
    for( i = 0 ; i < 16 ; i++ )
    {
-     crCustClr[ i ] = ( HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parnl( 2, i+1 ) : GetSysColor( COLOR_BTNFACE ) ) ;
+     crCustClr[ i ] = ( HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i+1 ) : GetSysColor( COLOR_BTNFACE ) ) ;
    }
 
    cc.lStructSize   = sizeof( CHOOSECOLOR ) ;
@@ -1148,7 +1147,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
 HB_FUNC( WVT__MAKEDLGTEMPLATE )
 {
    WORD  *p, *pdlgtemplate ;
-   WORD  nItems = ( WORD ) hb_parni( 1, 4 ) ;
+   WORD  nItems = ( WORD ) hb_parvni( 1, 4 ) ;
    int   i, nchar ;
    DWORD lStyle ;
 
@@ -1160,32 +1159,32 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
    /*                                                   */
    pdlgtemplate = p = ( PWORD ) LocalAlloc( LPTR, 65534 )  ;
 
-   lStyle = hb_parnl(1,3) ;
+   lStyle = hb_parvnl(1,3) ;
 
    /* start to fill in the dlgtemplate information.  addressing by WORDs */
 
-   *p++ = 1                        ;  /* version    */
-   *p++ = 0xFFFF                   ;  /* signature  */
-   *p++ = LOWORD ( hb_parnl(1,1) ) ;  /* Help Id    */
-   *p++ = HIWORD ( hb_parnl(1,1) ) ;
+   *p++ = 1                         ;  /* version    */
+   *p++ = 0xFFFF                    ;  /* signature  */
+   *p++ = LOWORD ( hb_parvnl(1,1) ) ;  /* Help Id    */
+   *p++ = HIWORD ( hb_parvnl(1,1) ) ;
 
-   *p++ = LOWORD ( hb_parnl(1,2) ) ;  /* ext. style */
-   *p++ = HIWORD ( hb_parnl(1,2) ) ;
+   *p++ = LOWORD ( hb_parvnl(1,2) ) ;  /* ext. style */
+   *p++ = HIWORD ( hb_parvnl(1,2) ) ;
 
-   *p++ = LOWORD (lStyle)          ;
-   *p++ = HIWORD (lStyle)          ;
+   *p++ = LOWORD (lStyle)           ;
+   *p++ = HIWORD (lStyle)           ;
 
-   *p++ = (WORD)   nItems          ;  /* NumberOfItems           */
-   *p++ = (short)  hb_parni(1,5)   ;  /* x                       */
-   *p++ = (short)  hb_parni(1,6)   ;  /* y                       */
-   *p++ = (short)  hb_parni(1,7)   ;  /* cx                      */
-   *p++ = (short)  hb_parni(1,8)   ;  /* cy                      */
-   *p++ = (short)  0               ;  /* Menu (ignored for now.) */
-   *p++ = (short)  0x00            ;  /* Class also ignored      */
+   *p++ = (WORD)   nItems           ;  /* NumberOfItems           */
+   *p++ = (short)  hb_parvni(1,5)   ;  /* x                       */
+   *p++ = (short)  hb_parvni(1,6)   ;  /* y                       */
+   *p++ = (short)  hb_parvni(1,7)   ;  /* cx                      */
+   *p++ = (short)  hb_parvni(1,8)   ;  /* cy                      */
+   *p++ = (short)  0                ;  /* Menu (ignored for now.) */
+   *p++ = (short)  0x00             ;  /* Class also ignored      */
 
    if ( hb_parinfa( 1,11 ) == HB_IT_STRING )
    {
-      nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parc( 1,11 ) ) ;
+      nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parvc( 1,11 ) ) ;
       p += nchar   ;
    }
    else
@@ -1196,11 +1195,11 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
    if ( ( lStyle & DS_SETFONT ) )
    {
-     *p++ = (short) hb_parni(1,12) ;
-     *p++ = (short) hb_parni(1,13) ;
-     *p++ = (short) hb_parni(1,14) ;
+     *p++ = (short) hb_parvni(1,12) ;
+     *p++ = (short) hb_parvni(1,13) ;
+     *p++ = (short) hb_parvni(1,14) ;
 
-     nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parc( 1,15 ) ) ;
+     nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parvc( 1,15 ) ) ;
      p += nchar ;
    } ;
 
@@ -1208,43 +1207,43 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
       /* make sure each item starts on a DWORD boundary */
       p = lpwAlign (p) ;
 
-      *p++ = LOWORD ( hb_parnl(2,i) ) ;  /* help id     */
-      *p++ = HIWORD ( hb_parnl(2,i) ) ;
+      *p++ = LOWORD ( hb_parvnl(2,i) ) ;  /* help id     */
+      *p++ = HIWORD ( hb_parvnl(2,i) ) ;
 
-      *p++ = LOWORD ( hb_parnl(3,i) ) ;  /* ext. style  */
-      *p++ = HIWORD ( hb_parnl(3,i) ) ;
+      *p++ = LOWORD ( hb_parvnl(3,i) ) ;  /* ext. style  */
+      *p++ = HIWORD ( hb_parvnl(3,i) ) ;
 
-      *p++ = LOWORD ( hb_parnl(4,i) ) ;  /* style       */
-      *p++ = HIWORD ( hb_parnl(4,i) ) ;
+      *p++ = LOWORD ( hb_parvnl(4,i) ) ;  /* style       */
+      *p++ = HIWORD ( hb_parvnl(4,i) ) ;
 
-      *p++ = (short)  hb_parni(5,i)   ;  /* x           */
-      *p++ = (short)  hb_parni(6,i)   ;  /* y           */
-      *p++ = (short)  hb_parni(7,i)   ;  /* cx          */
-      *p++ = (short)  hb_parni(8,i)   ;  /* cy          */
+      *p++ = (short)  hb_parvni(5,i)   ;  /* x           */
+      *p++ = (short)  hb_parvni(6,i)   ;  /* y           */
+      *p++ = (short)  hb_parvni(7,i)   ;  /* cx          */
+      *p++ = (short)  hb_parvni(8,i)   ;  /* cy          */
 
-      *p++ = LOWORD ( hb_parnl(9,i) ) ;  /* id          */
-      *p++ = HIWORD ( hb_parnl(9,i) ) ;  /* id          */
+      *p++ = LOWORD ( hb_parvnl(9,i) ) ;  /* id          */
+      *p++ = HIWORD ( hb_parvnl(9,i) ) ;  /* id          */
 
       if ( hb_parinfa( 10,i ) == HB_IT_STRING )
       {
-         nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parc( 10,i ) ) ; /* class */
+         nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parvc( 10,i ) ) ; /* class */
          p += nchar ;
          }
       else
          {
          *p++ = 0xFFFF ;
-         *p++ = (WORD) hb_parni(10,i) ;
+         *p++ = (WORD) hb_parvni(10,i) ;
          }
 
       if ( hb_parinfa( 11,i ) == HB_IT_STRING )
          {
-         nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parc( 11,i ) ) ;  /*  text  */
+         nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parvc( 11,i ) ) ;  /*  text  */
          p += nchar ;
          }
       else
          {
          *p++ = 0xFFFF ;
-         *p++ = (WORD) hb_parni(11,i) ;
+         *p++ = (WORD) hb_parvni(11,i) ;
          }
 
       *p++ = 0x00 ;  /* extras ( in array 12 ) */

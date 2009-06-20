@@ -103,16 +103,16 @@ typedef PHB_ITEM  ITEM;
 
 /* Functions */
 
-#define _parc           hb_parc
-#define _parclen        hb_parclen
-#define _parcsiz        hb_parcsiz
-#define _pards          hb_pards
 #define _parinfa        hb_parinfa
 #define _parinfo        hb_parinfo
-#define _parl           hb_parl
-#define _parnd          hb_parnd
-#define _parni          hb_parni
-#define _parnl          hb_parnl
+#define _parc           hb_parvc
+#define _parclen        hb_parvclen
+#define _parcsiz        hb_parvcsiz
+#define _pards          hb_parvds
+#define _parl           hb_parvl
+#define _parnd          hb_parvnd
+#define _parni          hb_parvni
+#define _parnl          hb_parvnl
 
 #define _ret            hb_ret
 #define _retc           hb_retc
@@ -123,12 +123,12 @@ typedef PHB_ITEM  ITEM;
 #define _retni          hb_retni
 #define _retnl          hb_retnl
 
-#define _storc          hb_storc
-#define _storclen       hb_storclen
-#define _stords         hb_stords
-#define _storl          hb_storl
-#define _stornd         hb_stornd
-#define _storni         hb_storni
-#define _stornl         hb_stornl
+#define _storc          hb_storvc
+#define _storclen       hb_storvclen
+#define _stords         hb_storvds
+#define _storl          hb_storvl
+#define _stornd         hb_storvnd
+#define _storni         hb_storvni
+#define _stornl         hb_storvnl
 
 #endif /* _EXTEND_API */

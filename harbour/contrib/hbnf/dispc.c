@@ -589,7 +589,7 @@ HB_FUNC( _FT_DFINIT )
            if (kcount > 24)
               kcount = 24;
            for (i = 1; i <= kcount; i++)
-              keylist[i - 1] = hb_parni( 9, i ); /* get exit key list */
+              keylist[i - 1] = hb_parvni( 9, i ); /* get exit key list */
         }
         else
         {

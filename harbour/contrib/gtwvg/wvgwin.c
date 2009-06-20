@@ -350,10 +350,10 @@ HB_FUNC( WVG_INVALIDATERECT )
    {
       RECT rc = { 0, 0, 0, 0 };
 
-      rc.left   = hb_parni( 2, 1 );
-      rc.top    = hb_parni( 2, 2 );
-      rc.right  = hb_parni( 2, 3 );
-      rc.bottom = hb_parni( 2, 4 );
+      rc.left   = hb_parvni( 2, 1 );
+      rc.top    = hb_parvni( 2, 2 );
+      rc.right  = hb_parvni( 2, 3 );
+      rc.bottom = hb_parvni( 2, 4 );
 
       hb_retl( InvalidateRect( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), &rc, TRUE ) );
    }
@@ -478,10 +478,10 @@ HB_FUNC( WVG_DRAWTEXT )
    RECT rc = { 0,0,0,0 };
    LPTSTR lpBuffer = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
 
-   rc.left   = hb_parni( 3,1 );
-   rc.top    = hb_parni( 3,2 );
-   rc.right  = hb_parni( 3,3 );
-   rc.bottom = hb_parni( 3,4 );
+   rc.left   = hb_parvni( 3,1 );
+   rc.top    = hb_parvni( 3,2 );
+   rc.right  = hb_parvni( 3,3 );
+   rc.bottom = hb_parvni( 3,4 );
 
    hb_retl( DrawText( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), lpBuffer, lstrlen( lpBuffer ), &rc, hb_parni( 4 ) ) );
    HB_TCHAR_FREE( lpBuffer );
@@ -675,7 +675,7 @@ HB_FUNC( WVG_CHOOSECOLOR )
    int         i;
 
    for( i = 0; i < ( int ) HB_SIZEOFARRAY( crCustClr ); i++ )
-      crCustClr[ i ] = ( HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parnl( 2, i+1 ) : GetSysColor( COLOR_BTNFACE ) );
+      crCustClr[ i ] = ( HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i+1 ) : GetSysColor( COLOR_BTNFACE ) );
 
    cc.lStructSize   = sizeof( CHOOSECOLOR );
    cc.hwndOwner     = HB_ISNUM( 4 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 4 ) : NULL;

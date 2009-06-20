@@ -158,7 +158,7 @@ HB_FUNC( FT_GETE )
          }
          else if( rettype == ARRAYTYPE )
             /* store string to next array element */
-            hb_storc( environ[x], 1, x + 1 );
+            hb_storvc( environ[x], 1, x + 1 );
       }
 
       if( rettype == CHARTYPE )
@@ -226,7 +226,7 @@ HB_FUNC( FT_GETE )
 
          if( rettype == ARRAYTYPE )
             /* store string to next array element */
-            hb_storc( ( char * ) sCurEnv, 1, x + 1 );
+            hb_storvc( ( char * ) sCurEnv, 1, x + 1 );
          x++;
          while( *sCurEnv )
             sCurEnv++;

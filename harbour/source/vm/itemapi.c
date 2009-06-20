@@ -629,7 +629,11 @@ int hb_itemGetNI( PHB_ITEM pItem )
          return ( int ) pItem->item.asLong.value;
 
       else if( HB_IS_DOUBLE( pItem ) )
+#ifdef __GNUC__
+         return ( int ) ( unsigned int ) pItem->item.asDouble.value;
+#else
          return ( int ) pItem->item.asDouble.value;
+#endif
    }
 
    return 0;
@@ -680,10 +684,6 @@ HB_LONG hb_itemGetNInt( PHB_ITEM pItem )
 #else
          return ( HB_LONG ) pItem->item.asDouble.value;
 #endif
-
-      /* DATETIME TODO: remove it */
-      else if( HB_IS_DATETIME( pItem ) )
-         return ( LONG ) pItem->item.asDateTime.julian;
    }
 
    return 0;
@@ -708,10 +708,6 @@ LONGLONG hb_itemGetNLL( PHB_ITEM pItem )
 #else
          return ( LONGLONG ) pItem->item.asDouble.value;
 #endif
-
-      /* DATETIME TODO: remove it */
-      else if( HB_IS_DATETIME( pItem ) )
-         return ( LONGLONG ) pItem->item.asDateTime.julian;
    }
 
    return 0;

@@ -616,17 +616,17 @@ HB_FUNC( WAPI_TABCTRL_ADJUSTRECT )
    {
       RECT rc;
 
-      rc.left   = hb_parnl( 3, 1 );
-      rc.top    = hb_parnl( 3, 2 );
-      rc.right  = hb_parnl( 3, 3 );
-      rc.bottom = hb_parnl( 3, 4 );
+      rc.left   = hb_parvnl( 3, 1 );
+      rc.top    = hb_parvnl( 3, 2 );
+      rc.right  = hb_parvnl( 3, 3 );
+      rc.bottom = hb_parvnl( 3, 4 );
 
       ( void ) TabCtrl_AdjustRect( wapi_par_HWND( 1 ), wapi_par_BOOL( 2 ), &rc );
 
-      hb_stornl( rc.left  , 3, 1 );
-      hb_stornl( rc.top   , 3, 2 );
-      hb_stornl( rc.right , 3, 3 );
-      hb_stornl( rc.bottom, 3, 4 );
+      hb_storvnl( rc.left  , 3, 1 );
+      hb_storvnl( rc.top   , 3, 2 );
+      hb_storvnl( rc.right , 3, 3 );
+      hb_storvnl( rc.bottom, 3, 4 );
    }
 }
 /*----------------------------------------------------------------------*/

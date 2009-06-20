@@ -522,12 +522,12 @@ HB_FUNC( HPDF_SETINFODATEATTR )
 
    memset( &date, 0, sizeof( date ) );
 
-   date.year    = hb_parni( 3, 1 );
-   date.month   = hb_parni( 3, 2 );
-   date.day     = hb_parni( 3, 3 );
-   date.hour    = hb_parni( 3, 4 );
-   date.minutes = hb_parni( 3, 5 );
-   date.seconds = hb_parni( 3, 6 );
+   date.year    = hb_parvni( 3, 1 );
+   date.month   = hb_parvni( 3, 2 );
+   date.day     = hb_parvni( 3, 3 );
+   date.hour    = hb_parvni( 3, 4 );
+   date.minutes = hb_parvni( 3, 5 );
+   date.seconds = hb_parvni( 3, 6 );
    date.ind     = ' ';
 
    hb_retnl( ( long ) HPDF_SetInfoDateAttr( HPDF_Doc_par( 1 ), ( HPDF_InfoType ) hb_parni( 2 ), date ) );
@@ -652,10 +652,10 @@ HB_FUNC( HPDF_PAGE_CREATETEXTANNOT )
 {
    HPDF_Rect rc;
 
-   rc.left   = ( HPDF_REAL ) hb_parnd( 2, 1 );
-   rc.top    = ( HPDF_REAL ) hb_parnd( 2, 2 );
-   rc.right  = ( HPDF_REAL ) hb_parnd( 2, 3 );
-   rc.bottom = ( HPDF_REAL ) hb_parnd( 2, 4 );
+   rc.left   = ( HPDF_REAL ) hb_parvnd( 2, 1 );
+   rc.top    = ( HPDF_REAL ) hb_parvnd( 2, 2 );
+   rc.right  = ( HPDF_REAL ) hb_parvnd( 2, 3 );
+   rc.bottom = ( HPDF_REAL ) hb_parvnd( 2, 4 );
 
    hb_retptr( HPDF_Page_CreateTextAnnot( ( HPDF_Page ) hb_parptr( 1 ), rc, hb_parc( 3 ), ( HPDF_Encoder ) hb_parptr( 4 ) ) );
 }
@@ -666,10 +666,10 @@ HB_FUNC( HPDF_PAGE_CREATELINKANNOT )
 {
    HPDF_Rect rc;
 
-   rc.left   = ( HPDF_REAL ) hb_parnd( 2, 1 );
-   rc.top    = ( HPDF_REAL ) hb_parnd( 2, 2 );
-   rc.right  = ( HPDF_REAL ) hb_parnd( 2, 3 );
-   rc.bottom = ( HPDF_REAL ) hb_parnd( 2, 4 );
+   rc.left   = ( HPDF_REAL ) hb_parvnd( 2, 1 );
+   rc.top    = ( HPDF_REAL ) hb_parvnd( 2, 2 );
+   rc.right  = ( HPDF_REAL ) hb_parvnd( 2, 3 );
+   rc.bottom = ( HPDF_REAL ) hb_parvnd( 2, 4 );
 
    hb_retptr( HPDF_Page_CreateLinkAnnot( ( HPDF_Page ) hb_parptr( 1 ), rc, ( HPDF_Destination ) hb_parptr( 3 ) ) );
 }
@@ -680,10 +680,10 @@ HB_FUNC( HPDF_PAGE_CREATEURILINKANNOT )
 {
    HPDF_Rect rc;
 
-   rc.left   = ( HPDF_REAL ) hb_parnd( 2, 1 );
-   rc.top    = ( HPDF_REAL ) hb_parnd( 2, 2 );
-   rc.right  = ( HPDF_REAL ) hb_parnd( 2, 3 );
-   rc.bottom = ( HPDF_REAL ) hb_parnd( 2, 4 );
+   rc.left   = ( HPDF_REAL ) hb_parvnd( 2, 1 );
+   rc.top    = ( HPDF_REAL ) hb_parvnd( 2, 2 );
+   rc.right  = ( HPDF_REAL ) hb_parvnd( 2, 3 );
+   rc.bottom = ( HPDF_REAL ) hb_parvnd( 2, 4 );
 
    hb_retptr( HPDF_Page_CreateURILinkAnnot( ( HPDF_Page ) hb_parptr( 1 ), rc, hb_parc( 3 ) ) );
 }
@@ -1060,7 +1060,7 @@ HB_FUNC( HPDF_PAGE_SETDASH )
    int i;
 
    for ( i = 0; i < nPtns; i++ )
-      dash.ptn[ i ] = ( HPDF_UINT16 ) hb_parni( 2, i+1 );
+      dash.ptn[ i ] = ( HPDF_UINT16 ) hb_parvni( 2, i+1 );
 
    hb_retnl( ( long ) HPDF_Page_SetDash( ( HPDF_Page ) hb_parptr( 1 ), dash.ptn, nPtns, hb_parni( 4 ) ) );
 }

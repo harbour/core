@@ -888,7 +888,7 @@ PHB_THREADSTATE hb_threadStateNew( void )
 static PHB_THREADSTATE hb_thParam( int iParam, int iPos )
 {
    PHB_THREADSTATE pThread = ( PHB_THREADSTATE )
-                             hb_parptrGC( hb_threadDestructor, iParam, iPos );
+                             hb_parvptrGC( hb_threadDestructor, iParam, iPos );
    if( pThread )
       return pThread;
 

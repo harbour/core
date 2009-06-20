@@ -282,7 +282,7 @@ HB_FUNC( SOCKET_SEND )
    SOCKET   socket = hb_parsocket( 1 );
    char*    pBuf = hb_parc( 2 );
    ULONG    ulLen = hb_parclen( 2 );
-   int      iRet, iFlags = hb_parni( 3, 0 );
+   int      iRet, iFlags = hb_parnidef( 3, 0 );
 
    hb_vmUnlock();
    iRet = send( socket, pBuf, ulLen, iFlags );
