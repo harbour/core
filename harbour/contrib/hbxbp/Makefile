@@ -39,7 +39,6 @@ endif
 ifeq ($(HB_WITH_QT),yes)
 
 PRG_SOURCES=\
-	xbp_temp.prg \
 	xbpgeneric.prg \
 	xbpdialog.prg \
 	xbpwindow.prg \
@@ -61,7 +60,6 @@ PRG_SOURCES=\
 PRG_HEADERS=\
 	xbp.ch \
 	appevent.ch \
-	apig.ch \
 	gra.ch \
 
 include $(TOP)$(ROOT)config/header.cf
