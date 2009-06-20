@@ -471,7 +471,7 @@ char * hb_timeFormat( char * szBuffer, const char * szTimeFormat, LONG lMilliSec
          szTimeBuffer += skip;
       }
       while( count-- )
-         *szTimeBuffer++ = ch;
+         *szTimeBuffer++ = ( char ) ch;
    }
 
    *szTimeBuffer = '\0';
