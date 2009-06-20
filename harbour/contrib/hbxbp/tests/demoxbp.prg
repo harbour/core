@@ -66,7 +66,7 @@ PROCEDURE Main()
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION BuildADialog()
+PROCEDURE BuildADialog()
    LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, aTabs
 
    /* Create Application Window */
@@ -530,4 +530,3 @@ FUNCTION Build_MLE( oWnd )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
-

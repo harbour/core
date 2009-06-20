@@ -2429,6 +2429,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
 
       CASE hbmk[ _HBMK_cARCH ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "watcom"
+         nOpt_Esc := _ESC_DBLQUOTE
          cLibPrefix := "LIB "
          cLibExt := ".lib"
          cObjPrefix := "FILE "
@@ -2453,23 +2454,23 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cOpt_CompC += " -3s"
          ENDIF
          cOpt_CompC += " -zq -bt=NT {FC}"
-         cOptIncMask := "-i{DI}"
+         cOptIncMask := '-i"{DI}"'
          IF hbmk[ _HBMK_lINC ] .AND. ! Empty( cWorkDir )
-            cOpt_CompC += " {IC} -fo={OO}"
+            cOpt_CompC += ' "{IC}" -fo="{OO}"'
          ELSE
             cOpt_CompC += " {LC}"
          ENDIF
          IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
             IF ( Len( l_aPRG ) + Len( l_aC ) ) == 1
-               AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OO}" )
+               AAdd( hbmk[ _HBMK_aOPTC ], '-fo="{OO}"' )
             ELSE
-               AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OD}" )
+               AAdd( hbmk[ _HBMK_aOPTC ], '-fo="{OD}"' )
             ENDIF
          ENDIF
          cBin_Link := "wlink.exe"
-         cOpt_Link := "{FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
+         cOpt_Link := '{FL} NAME "{OE}" {LO} {DL} {LL} {LS}{SCRIPT}'
          cBin_Lib := "wlib.exe"
-         cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
+         cOpt_Lib := '{FA} "{OL}" {LO}{SCRIPT}'
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
          IF hbmk[ _HBMK_lMT ]
@@ -2502,7 +2503,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF Len( l_aRESSRC ) > 0
             cBin_Res := "wrc"
             cResExt := ".res"
-            cOpt_Res := "-r {FR} -zm {IR} -fo={OS}"
+            cOpt_Res := '-r {FR} -zm "{IR}" -fo="{OS}"'
             cResPrefix := "OP res="
          ENDIF
 
@@ -2842,6 +2843,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-Zi" )
          ENDIF
+         nOpt_Esc := _ESC_DBLQUOTE
          cLibPrefix := NIL
          cLibExt := ".lib"
          cObjExt := ".obj"
@@ -2864,12 +2866,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          cOpt_CompC += " {FC}"
          IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( l_aPRG ) + Len( l_aC ) ) == 1
-            cOpt_CompC += " {LC} /Fo{OO}"
+            cOpt_CompC += ' {LC} /Fo"{OO}"'
          ELSE
-            cOpt_CompC += " {IC}"
+            cOpt_CompC += ' "{IC}"'
          ENDIF
-         cOptIncMask := "/I{DI}"
-         cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
+         cOptIncMask := '/I"{DI}"'
+         cOpt_Dyn := '{FD} /dll /out:"{OD}" {DL} {LO} {LL} {LS}'
          DO CASE
          CASE hbmk[ _HBMK_cCOMP ] == "pocc"
             IF hbmk[ _HBMK_lOPTIM ]
@@ -2885,18 +2887,18 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-DHB_NO_WIN_CONSOLE" )
          ENDCASE
-         cOpt_Res := "{FR} /Fo{OS} {IR}"
+         cOpt_Res := '{FR} /Fo"{OS}" "{IR}"'
          cResExt := ".res"
-         cOpt_Lib := "{FA} /out:{OL} {LO}"
+         cOpt_Lib := '{FA} /out:"{OL}" {LO}'
          IF hbmk[ _HBMK_lMT ]
             AAdd( hbmk[ _HBMK_aOPTC ], "/MT" )
          ENDIF
          IF hbmk[ _HBMK_lINC ]
             IF ! Empty( cWorkDir )
-               AAdd( hbmk[ _HBMK_aOPTC ], "/Fo{OO}" )
+               AAdd( hbmk[ _HBMK_aOPTC ], '/Fo"{OO}"' )
             ENDIF
          ENDIF
-         cOpt_Link := "/out:{OE} {LO} {DL} {FL} {LL} {LS}"
+         cOpt_Link := '/out:"{OE}" {LO} {DL} {FL} {LL} {LS}'
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
          IF hbmk[ _HBMK_lSHARED ]
