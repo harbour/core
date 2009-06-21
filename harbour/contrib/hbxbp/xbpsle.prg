@@ -155,7 +155,7 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    // ::connect( ::pWidget, "editingFinished()"              , {|      | ::exeBlock( 2 ) } )
    // ::connect( ::pWidget, "returnPressed()"                , {|      | ::exeBlock( 3 ) } )
    // ::connect( ::pWidget, "selectionChanged()"             , {|      | ::exeBlock( 4 ) } )
-   // ::connect( ::pWidget, "textChanged(QString)"           , {|o,s   | ::exeBlock( 5, s, o ) } )
+   ::connect( ::pWidget, "textChanged(QString)"           , {|o,s   | ::exeBlock( 5, s, o ) } )
    ::connect( ::pWidget, "textEdited(QString)"            , {|o,s   | ::exeBlock( 6, s, o ) } )
 
    ::setPosAndSize()
@@ -174,6 +174,7 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD XbpSLE:exeBlock( nMsg, p1, p2 )
 
+//hb_OutDebug( 'XbpSLE: '+hb_ntos( nMsg ) )
    HB_SYMBOL_UNUSED( p1 )
 
    DO CASE

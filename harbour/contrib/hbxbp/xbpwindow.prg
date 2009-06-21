@@ -77,6 +77,8 @@
 
 CLASS XbpWindow  INHERIT  XbpPartHandler
 
+   DATA     cargo                                 INIT  'HEHEHE'
+
    /*  CONFIGURATION */
    DATA     animate                               INIT  .F.
    DATA     clipChildren                          INIT  .F.

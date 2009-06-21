@@ -57,6 +57,8 @@ PRG_SOURCES=\
 	xbpsle.prg \
 	xbpmle.prg \
 	xbpspinbutton.prg \
+	xbpcombobox.prg \
+	xbptreeview.prg \
 
 PRG_HEADERS=\
 	xbp.ch \

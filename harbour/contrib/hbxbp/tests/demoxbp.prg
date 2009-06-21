@@ -122,6 +122,9 @@ PROCEDURE BuildADialog()
    /* Install Spin Buttons */
    Build_SpinButtons( aTabs[ 3 ] )
 
+   /* Install Combo Box */
+   Build_ComboBox( oDlg:drawingArea )
+
    /* Present the dialog on the screen */
    oDlg:Show()
 
@@ -532,7 +535,7 @@ FUNCTION Build_MLE( oWnd )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_SpinButtons( oWnd )
-   LOCAL oSpinRed, oSpinGreen, oSpinBlue, bBlock
+   LOCAL oSpinRed, oSpinGreen, oSpinBlue, bCallBack
    LOCAL nGreen := 5, nBlue := 12, nRed := 35
    LOCAL nX := 230, nY := 190
 
@@ -580,8 +583,52 @@ FUNCTION Build_SpinButtons( oWnd )
 
 STATIC FUNCTION RGB( r, g, b )
 
+   HB_SYMBOL_UNUSED( r )
+   HB_SYMBOL_UNUSED( g )
+   HB_SYMBOL_UNUSED( b )
+
    // Display a static window with flashing color of rgb
 
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Build_ComboBox( oWnd )
+   LOCAL oCombo, i, bAction
+   LOCAL cDay  := "ZZZZMonday"
+   LOCAL aDays := { "Monday" , "Tuesday"  , "Wednesday", "Thursday", ;
+                    "Friday" , "Saturday" , "Sunday" }
+   LOCAL aPNG  := { 'copy','cut','new','open','paste','save','new' }
+
+   // Create combo box with drop down list box
+   oCombo      := XbpCombobox():new()
+   oCombo:type := XBPCOMBO_DROPDOWN
+   //oCombo:editable := .f.
+   oCombo:create( oWnd,, {30, 20}, {200, 30} )
+
+   // Link data from entry field to LOCAL variable
+   oCombo:XbpSLE:dataLink := {|x| IIf( x==NIL, cDay, cDay := x ) }
+   oCombo:XbpSLE:setData()
+
+   // Code block for selection:
+   //  - assign to LOCAL variable using :getData()
+   //  - display LOCAL variable using DispoutAt()
+   bAction := {|mp1, mp2, obj| obj:XbpSLE:getData(), hb_outDebug( 'Highlighted: '+cDay ) }
+
+   // Assign code block for selection with Up and Down keys
+   oCombo:ItemMarked := bAction
+
+   // Assign code block for selection by left mouse click in list box
+   oCombo:ItemSelected := {|mp1, mp2, obj| obj:XbpSLE:getData(), hb_outDebug( 'Selected: '+cDay ) }
+
+   // Copy data from array to combo box, then discard array
+   FOR i := 1 TO 7
+      oCombo:addItem( aDays[ i ] )
+      /*  the command below is not Xbase++ compatible - will be documented while extended */
+      oCombo:setIcon( i, aPNG[ i ]+'.png' )
+   NEXT
+
+   oCombo:XbpSLE:setData()
    RETURN nil
 
 /*----------------------------------------------------------------------*/

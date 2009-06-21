@@ -143,6 +143,9 @@
 #define XBPMENUBAR_MIA_DEFAULT                    65536
 #define XBPMENUBAR_MIA_OWNERDRAW                  131072
 
+#define XBPCOMBO_SIMPLE                           1
+#define XBPCOMBO_DROPDOWN                         2
+#define XBPCOMBO_DROPDOWNLIST                     3
 
 #define _XBP_CH
 #endif
