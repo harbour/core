@@ -4,10 +4,15 @@
 
 #ifndef _XBP_CH
 
-#if defined( __HB_OUTDEBUG__ ) .AND. defined( __PLATFORM__WINDOWS )
-   #xtranslate HB_OUTDEBUG( [<x>] ) => WAPI_OUTPUTDEBUGSTRING( <x> )
+#if defined( __HB_OUTDEBUG__ )
+   #if defined( __PLATFORM__WINDOWS ) .AND. ! defined( __HB_NOWINDEBUG__ )
+      #xtranslate HB_OUTDEBUG( [<x>] ) => wapi_OutputDebugString( <x> )
+   #else
+      #xtranslate HB_OUTDEBUG( [<x>] ) => hb_TraceString( <x> )
+   #endif
 #else
-   #xtranslate HB_OUTDEBUG( [<x>] ) => HB_SYMBOL_UNUSED( <x> )
+   /* TOFIX: To generate NOOP code. */
+   #xtranslate HB_OUTDEBUG( [<x>] ) => ( Do( NIL ) )
 #endif
 
 /*----------------------------------------------------------------------*/

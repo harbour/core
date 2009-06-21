@@ -71,8 +71,8 @@ void hbqt_ret_QRect( QRect qrc )
 
    hb_arraySetNI( info, 1, qrc.x() );
    hb_arraySetNI( info, 2, qrc.y() );
-   hb_arraySetNI( info, 3, qrc.x()+qrc.width() );
-   hb_arraySetNI( info, 4, qrc.y()+qrc.height() );
+   hb_arraySetNI( info, 3, qrc.x() + qrc.width() );
+   hb_arraySetNI( info, 4, qrc.y() + qrc.height() );
 
    hb_itemReturnRelease( info );
 }
@@ -83,10 +83,10 @@ QRect hbqt_const_QRect( int i )
 {
    QRect qrc;
 
-   qrc.setX( hb_parni( i,1 ) );
-   qrc.setY( hb_parni( i,2 ) );
-   qrc.setWidth( hb_parni( i,3 ) - hb_parni( i,1 ) + 1 );
-   qrc.setHeight( hb_parni( i,4 ) - hb_parni( i,2 ) + 1 );
+   qrc.setX( hb_parvni( i, 1 ) );
+   qrc.setY( hb_parvni( i, 2 ) );
+   qrc.setWidth( hb_parvni( i, 3 ) - hb_parvni( i, 1 ) + 1 );
+   qrc.setHeight( hb_parvni( i, 4 ) - hb_parvni( i, 2 ) + 1 );
 
    return qrc;
 }
@@ -109,8 +109,8 @@ QSize hbqt_const_QSize( int i )
 {
    QSize qsz;
 
-   qsz.setWidth( hb_parni( i,1 ) );
-   qsz.setHeight( hb_parni( i,2 ) );
+   qsz.setWidth( hb_parvni( i, 1 ) );
+   qsz.setHeight( hb_parvni( i, 2 ) );
 
    return qsz;
 }
@@ -133,8 +133,8 @@ QPoint hbqt_const_QPoint( int i )
 {
    QPoint qpt;
 
-   qpt.setX( hb_parni( i,1 ) );
-   qpt.setY( hb_parni( i,2 ) );
+   qpt.setX( hb_parvni( i, 1 ) );
+   qpt.setY( hb_parvni( i, 2 ) );
 
    return qpt;
 }
@@ -147,8 +147,8 @@ void hbqt_ret_QRectF( QRectF qrc )
 
    hb_arraySetND( info, 1, qrc.x() );
    hb_arraySetND( info, 2, qrc.y() );
-   hb_arraySetND( info, 3, qrc.x()+qrc.width() );
-   hb_arraySetND( info, 4, qrc.y()+qrc.height() );
+   hb_arraySetND( info, 3, qrc.x() + qrc.width() );
+   hb_arraySetND( info, 4, qrc.y() + qrc.height() );
 
    hb_itemReturnRelease( info );
 }
@@ -159,10 +159,10 @@ QRectF hbqt_const_QRectF( int i )
 {
    QRectF qrc;
 
-   qrc.setX( hb_parnd( i,1 ) );
-   qrc.setY( hb_parnd( i,2 ) );
-   qrc.setWidth( hb_parnd( i,3 ) - hb_parnd( i,1 ) + 1 );
-   qrc.setHeight( hb_parnd( i,4 ) - hb_parnd( i,2 ) + 1 );
+   qrc.setX( hb_parvnd( i, 1 ) );
+   qrc.setY( hb_parvnd( i, 2 ) );
+   qrc.setWidth( hb_parvnd( i, 3 ) - hb_parvnd( i, 1 ) + 1 );
+   qrc.setHeight( hb_parvnd( i, 4 ) - hb_parvnd( i, 2 ) + 1 );
 
    return qrc;
 }
@@ -185,8 +185,8 @@ QSizeF hbqt_const_QSizeF( int i )
 {
    QSizeF qsz;
 
-   qsz.setWidth( hb_parnd( i,1 ) );
-   qsz.setHeight( hb_parnd( i,2 ) );
+   qsz.setWidth( hb_parvnd( i, 1 ) );
+   qsz.setHeight( hb_parvnd( i, 2 ) );
 
    return qsz;
 }
@@ -209,8 +209,8 @@ QPointF hbqt_const_QPointF( int i )
 {
    QPointF qpt;
 
-   qpt.setX( hb_parnd( i,1 ) );
-   qpt.setY( hb_parnd( i,2 ) );
+   qpt.setX( hb_parvnd( i, 1 ) );
+   qpt.setY( hb_parvnd( i, 2 ) );
 
    return qpt;
 }
@@ -218,4 +218,3 @@ QPointF hbqt_const_QPointF( int i )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-

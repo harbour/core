@@ -614,7 +614,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL cSelfFlagPRG := hb_Version( HB_VERSION_FLAG_PRG )
    LOCAL cSelfFlagC   := hb_Version( HB_VERSION_FLAG_C )
    LOCAL cSelfFlagL   := hb_Version( HB_VERSION_FLAG_LINKER )
-   LOCAL cSelfARCH    := hb_Version( HB_VERSION_BUILD_ARCH )
 
    LOCAL cDL_Version_Alter
    LOCAL cDL_Version
@@ -907,7 +906,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          hbmk[ _HBMK_cARCH ] := "dos"
          EXIT
       OTHERWISE
-         hbmk[ _HBMK_cARCH ] := cSelfARCH
+         hbmk[ _HBMK_cARCH ] := hb_Version( HB_VERSION_BUILD_ARCH )
       ENDSWITCH
       IF ! Empty( hbmk[ _HBMK_cARCH ] )
          IF hbmk[ _HBMK_lInfo ]
@@ -2217,9 +2216,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPathSep := " "
          cLibLibExt := ".a"
          cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + cCCEXT_mingw
-         IF cSelfARCH $ "win|wce"
-            nOpt_Esc := _ESC_DBLQUOTE
-         ENDIF
+#if defined( __PLATFORM__WINDOWS )
+         nOpt_Esc := _ESC_DBLQUOTE
+#endif
          cOpt_Lib := "{FA} rcs {OL} {LO}"
          cLibObjPrefix := NIL
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
