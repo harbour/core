@@ -7,7 +7,7 @@
 #if defined( __HB_OUTDEBUG__ ) .AND. defined( __PLATFORM__WINDOWS )
    #xtranslate HB_OUTDEBUG( [<x>] ) => WAPI_OUTPUTDEBUGSTRING( <x> )
 #else
-   #xtranslate HB_OUTDEBUG( [<x>] ) =>
+   #xtranslate HB_OUTDEBUG( [<x>] ) => HB_SYMBOL_UNUSED( <x> )
 #endif
 
 /*----------------------------------------------------------------------*/

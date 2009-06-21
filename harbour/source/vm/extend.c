@@ -823,14 +823,10 @@ LONG  hb_parvdl( int iParam, ... )
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
       if( HB_IS_BYREF( pItem ) )
-      {
          pItem = hb_itemUnRef( pItem );
-      }
 
       if( HB_IS_DATETIME( pItem ) )
-      {
          return pItem->item.asDateTime.julian;
-      }
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -858,15 +854,11 @@ double hb_parvtd( int iParam, ... )
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
       if( HB_IS_BYREF( pItem ) )
-      {
          pItem = hb_itemUnRef( pItem );
-      }
 
       if( HB_IS_DATETIME( pItem ) )
-      {
          return hb_timeStampPackDT( pItem->item.asDateTime.julian,
                                     pItem->item.asDateTime.time );
-      }
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -894,9 +886,7 @@ BOOL hb_parvtdt( LONG * plJulian, LONG * plMilliSec , int iParam, ... )
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
       if( HB_IS_BYREF( pItem ) )
-      {
          pItem = hb_itemUnRef( pItem );
-      }
 
       if( HB_IS_DATETIME( pItem ) )
       {

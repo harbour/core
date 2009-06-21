@@ -155,7 +155,6 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
 {
    PHB_EOL_INFO pEOLs = NULL;
    int iEOLs = 0;
-   ULONG ulLen = hb_parclen( iParam );
 
 /* NOTE: This is a parameter extension (HB_EXTENSION) which breaks
          our effort to keep strict parameter compatibility with
@@ -164,6 +163,7 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
          Clipper will ignore these parameters and use CRLF EOL hard
          coded. [vszakats] */
 #ifndef HB_C52_STRICT /* HB_EXTENSION */
+   ULONG ulLen = hb_parclen( iParam );
    if( ulLen )
    {
       pEOLs = ( PHB_EOL_INFO ) hb_xgrab( sizeof( HB_EOL_INFO ) );
