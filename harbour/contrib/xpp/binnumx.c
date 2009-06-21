@@ -89,3 +89,24 @@ HB_FUNC( W2BIN )
    HB_PUT_LE_UINT16( szResult, uiValue );
    hb_retclen( szResult, 4 );
 }
+
+HB_FUNC( F2BIN )
+{
+   char buf[ sizeof( double ) ];
+   double d = hb_parnd( 1 );
+
+   HB_PUT_LE_DOUBLE( buf, d );
+   hb_retclen( buf, sizeof( buf ) );
+}
+
+HB_FUNC( BIN2F )
+{
+   if( hb_parclen( 1 ) >= sizeof( double ) )
+   {
+      const char * buf = hb_parc( 1 );
+
+      hb_retnd( HB_GET_LE_DOUBLE( buf ) );
+   }
+   else
+      hb_retnd( 0.0 );
+}
