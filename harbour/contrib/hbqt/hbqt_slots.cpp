@@ -153,9 +153,10 @@ static void SlotsExecString( QWidget* widget, char* event, const QString & strin
       int i = widget->property( event ).toInt();
       if( i > 0 && ( s->listActv.at( i-1 ) == true ) )
       {
+         char * str = string.toLatin1().data();
          PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
-         PHB_ITEM pString = hb_itemPutPtr( NULL, string.toLatin1().data() );
-         hb_vmEvalBlockV( ( PHB_ITEM ) s->listBlock.at( i-1 ), 3, pWidget, pString );
+         PHB_ITEM pString = hb_itemPutCPtr( NULL, str, strlen( str ) );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s->listBlock.at( i-1 ), 2, pWidget, pString );
          hb_itemRelease( pWidget );
          hb_itemRelease( pString );
       }
