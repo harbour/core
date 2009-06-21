@@ -134,11 +134,13 @@ METHOD XbpTreeView:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   LOCAL oW
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oWidget := QTreeView():new( ::pParent )
-
+   ::oWidget := QTreeWidget():new( ::pParent )
+   ::oWidget:setColumnCount( 1 )
+   ::oWidget:setHeaderHidden( .t. )
 
    #if 0
    IF ::alwaysShowSelection
@@ -150,12 +152,14 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ::hasLines
       ::style += TVS_HASLINES + TVS_LINESATROOT
    ENDIF
-
-   //::oRootItem       := WvgTreeViewItem():New()
-   ::oRootItem:hTree := ::hWnd
-   ::oRootItem:oWnd  := Self
    #endif
 
+   ::oRootItem             := XbpTreeViewItem():New()
+   ::oRootItem:hTree       := ::oWidget
+
+   oW      := QTreeWidgetItem()
+   oW:pPtr := ::oWidget:invisibleRootItem()
+   ::oRootItem:oItemWidget := oW
 
    ::setPosAndSize()
    IF ::visible
@@ -163,6 +167,16 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    ::oParent:AddChild( SELF )
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
+
+   HB_SYMBOL_UNUSED( nMsg )
+   HB_SYMBOL_UNUSED( p1 )
+   HB_SYMBOL_UNUSED( p2 )
+
+   RETURN .t.
 
 /*----------------------------------------------------------------------*/
 
@@ -174,70 +188,6 @@ METHOD XbpTreeView:handleEvent( nEvent, mp1, mp2 )
 
    RETURN HBXBP_EVENT_UNHANDLED
 
-#if 0
-METHOD XbpTreeView:handleEvent( mp1, mp2, nEvent )
-   LOCAL hItemSelected, hParentOfSelected, n, aNMHdr
-   LOCAL cParent := space( 20 )
-   LOCAL cText   := space( 20 )
-   LOCAL aHdr
-
-   SWITCH nMessage
-
-   CASE HB_GTE_RESIZED
-      ::sendMessage( WM_SIZE, 0, 0 )
-      RETURN EVENT_HANDELLED
-
-   CASE HB_GTE_COMMAND
-      IF hb_isBlock( ::sl_lbClick )
-         eval( ::sl_lbClick, NIL, NIL, self )
-         RETURN EVENT_HANDELLED
-      ENDIF
-      EXIT
-
-   CASE HB_GTE_NOTIFY
-      aHdr   := Wvg_GetNMHdrInfo( aNM[ 2 ] )
-      aNMHdr := Wvg_GetNMTreeViewInfo( aNM[ 2 ] )
-
-      DO CASE
-
-      CASE aHdr[ NMH_code ] == NM_DBLCLK .OR. aHdr[ NMH_code ] == NM_RETURN
-         ::editBuffer := ::oItemSelected
-         IF hb_isBlock( ::sl_itemSelected )
-            Eval( ::sl_itemSelected, ::oItemSelected, { 0,0,0,0 }, Self )
-         ENDIF
-
-         RETURN .t.
-
-      CASE aNMHdr[ NMH_code ] == TVN_SELCHANGED
-         Wvg_TreeView_GetSelectionInfo( ::hWnd, aNM[ 2 ], @cParent, @cText, @hParentOfSelected, @hItemSelected )
-
-         ::hParentSelected    := hParentOfSelected
-         ::hItemSelected      := hItemSelected
-         ::textParentSelected := trim( cParent )
-         ::textItemSelected   := trim( cText   )
-
-         IF ( n := ascan( ::aItems, {|o| o:hItem == hItemSelected } ) ) > 0
-            ::oItemSelected := ::aItems[ n ]
-         ELSE
-            ::oItemSelected := NIL
-         ENDIF
-
-         IF hb_isBlock( ::sl_itemMarked )
-            Eval( ::sl_itemMarked, ::oItemSelected, { 0,0,0,0 }, Self )
-         ENDIF
-
-         RETURN .t.
-
-      OTHERWISE
-         RETURN .f.
-
-      ENDCASE
-
-      EXIT
-   END
-
-   RETURN EVENT_UNHANDELLED
-#endif
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTreeView:destroy()
@@ -307,6 +257,9 @@ METHOD XbpTreeView:itemSelected( xParam )
 /*----------------------------------------------------------------------*/
 CLASS XbpTreeViewItem
 
+   DATA     oItemWidget
+   ACCESS   pItemWidget                           INLINE IF( hb_isObject( ::oItemWidget ), ::oItemWidget:pPtr, NIL )
+
    DATA     caption                               INIT ""
    DATA     dllName                               INIT NIL
    DATA     expandedImage                         INIT -1
@@ -341,6 +294,29 @@ CLASS XbpTreeViewItem
    ENDCLASS
 /*----------------------------------------------------------------------*/
 
+METHOD XbpTreeViewItem:addItem( xItem )
+   Local oItem
+
+   IF valtype( xItem ) == 'C'
+      oItem := XbpTreeViewItem():New()
+
+      oItem:oParent := self
+      oItem:caption := xItem
+      oItem:oItemWidget := QTreeWidgetItem():new()
+      oItem:oItemWidget:setText( 0, oItem:caption )
+
+      ::oItemWidget:addChild( oItem:oItemWidget:pPtr )
+   ELSE
+      xItem:oParent := self
+      ::oItemWidget:addChild( xItem:oItemWidget:pPtr )
+
+      RETURN xItem
+   ENDIF
+
+   RETURN oItem
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpTreeViewItem:new()
 
    RETURN Self
@@ -348,6 +324,9 @@ METHOD XbpTreeViewItem:new()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTreeViewItem:create()
+
+   ::oItemWidget := QTreeWidgetItem():new()
+   ::oItemWidget:setText( 0,::caption )
 
    RETURN Self
 
@@ -402,26 +381,6 @@ METHOD XbpTreeViewItem:setMarkedImage( nResIdoBitmap )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTreeViewItem:addItem( cCaption )
-   Local oItem, hParent
-
-   oItem := XbpTreeViewItem():New()
-
-   oItem:hTree   := ::hTree
-   oItem:oParent := self
-   oItem:caption := cCaption
-   oItem:oWnd    := ::oWnd
-
-   hParent := if( hb_isObject( oItem:oParent ), oItem:oParent:hItem, NIL )
-
-   //oItem:hItem := Wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:caption )
-
-   aadd( oItem:oWnd:aItems, oItem )
-
-   RETURN oItem
-
-/*----------------------------------------------------------------------*/
-
 METHOD XbpTreeViewItem:delItem()
 
    RETURN NIL
@@ -445,3 +404,4 @@ METHOD XbpTreeViewItem:insItem()
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+

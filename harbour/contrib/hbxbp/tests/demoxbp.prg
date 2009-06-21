@@ -125,13 +125,16 @@ PROCEDURE BuildADialog()
    /* Install Combo Box */
    Build_ComboBox( oDlg:drawingArea )
 
+   /* Install TreeView */
+   Build_TreeView( aTabs[ 4 ] )
+
    /* Present the dialog on the screen */
    oDlg:Show()
 
    /* Enter Xbase++ Event Loop - still with limited functionality but working */
    DO WHILE .t.
       nEvent := AppEvent( @mp1, @mp2, @oXbp )
-      IF nEvent == xbeP_Close .or. ( nEvent == xbeP_Keyboard .and. mp1 == 81 )
+      IF nEvent == xbeP_Close .or. ( nEvent == xbeP_Keyboard .and. ( mp1 == 81 .or. mp1 == 113 ) )
          EXIT
       ENDIF
       oXbp:handleEvent( nEvent, mp1, mp2 )
@@ -147,6 +150,12 @@ PROCEDURE BuildADialog()
 PROCEDURE AppSys()
    RETURN
 
+/*----------------------------------------------------------------------*/
+#ifdef __XPP__
+FUNCTION Hb_OutDebug();RETURN nil
+FUNCTION Hb_Symbol_Unused();RETURN nil
+FUNCTION Hb_NtoS( n );RETURN ltrim( str( n ) )
+#endif
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION GuiStdDialog( cTitle )
@@ -387,7 +396,7 @@ FUNCTION Build_RadioButton( oStatic )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_TabPages( oDlg )
-   LOCAL oTab1, oTab2, oTab3
+   LOCAL oTab1, oTab2, oTab3, oTab4
    LOCAL nHeight := 380
 
    // First tab page is maximized
@@ -396,20 +405,18 @@ FUNCTION Build_TabPages( oDlg )
    /* comment our following line to position tabs at the bottom */
    //oTab1:type := XBPTABPAGE_TAB_BOTTOM
    oTab1:minimized := .F.
-   oTab1:caption   := "Customer"
+   oTab1:caption   := "ListView"
    oTab1:create()
-   oTab1:TabActivate := {|| oTab2:minimize(), oTab3:minimize(), oTab1:maximize() }
+   oTab1:TabActivate := {|| oTab2:minimize(), oTab3:minimize(), oTab4:minimize(), oTab1:maximize() }
    oTab1:setColorBG( GraMakeRGBColor( {198,198,198} ) )
 
    // Second tab page is minimized
    oTab2 := XbpTabPage():new( oDlg:drawingArea, , { 510, 20 }, { 360, nHeight } )
-   oTab2:caption    := "Order"
+   oTab2:caption    := "XbpMLE"
    oTab2:preOffset  := 20
    oTab2:postOffset := 60
    oTab2:create()
-   oTab2:TabActivate := ;
-       {|| oTab1:minimize(), oTab3:minimize(),;
-           oTab2:maximize() }
+   oTab2:TabActivate := {|| oTab1:minimize(), oTab3:minimize(), oTab4:minimize(), oTab2:maximize() }
 
    // Third tab page is minimized
    oTab3 := XbpTabPage():new( oDlg:drawingArea, , { 510, 20 }, { 360, nHeight } )
@@ -418,9 +425,18 @@ FUNCTION Build_TabPages( oDlg )
    oTab3:postOffset := 40
    oTab3:create()
    oTab3:TabActivate := ;
-       {|x,y,oTab| x := y, oTab1:minimize(), oTab2:minimize(), oTab3:maximize() }
+       {|x,y,oTab| x := y, oTab1:minimize(), oTab2:minimize(), oTab4:minimize(), oTab3:maximize() }
 
-   RETURN { oTab1, oTab2, oTab3 }
+   // Third tab page is minimized
+   oTab4 := XbpTabPage():new( oDlg:drawingArea, , { 510, 20 }, { 360, nHeight } )
+   oTab4:caption    := "TreeView"
+   oTab4:preOffset  := 60
+   oTab4:postOffset := 20
+   oTab4:create()
+   oTab4:TabActivate := ;
+       {|x,y,oTab| x := y, oTab1:minimize(), oTab2:minimize(), oTab3:minimize(), oTab4:maximize() }
+
+   RETURN { oTab1, oTab2, oTab3, oTab4 }
 
 /*----------------------------------------------------------------------*/
 
@@ -595,7 +611,7 @@ STATIC FUNCTION RGB( r, g, b )
 
 STATIC FUNCTION Build_ComboBox( oWnd )
    LOCAL oCombo, i, bAction
-   LOCAL cDay  := "ZZZZMonday"
+   LOCAL cDay  := "< Monday >"
    LOCAL aDays := { "Monday" , "Tuesday"  , "Wednesday", "Thursday", ;
                     "Friday" , "Saturday" , "Sunday" }
    LOCAL aPNG  := { 'copy','cut','new','open','paste','save','new' }
@@ -624,11 +640,89 @@ STATIC FUNCTION Build_ComboBox( oWnd )
    // Copy data from array to combo box, then discard array
    FOR i := 1 TO 7
       oCombo:addItem( aDays[ i ] )
+      #ifdef __HARBOUR__
       /*  the command below is not Xbase++ compatible - will be documented while extended */
       oCombo:setIcon( i, aPNG[ i ]+'.png' )
+      #endif
    NEXT
 
    oCombo:XbpSLE:setData()
    RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_TreeView( oWnd )
+   LOCAL i
+   LOCAL oTree := XbpTreeView():new( oWnd, , {10,10}, {oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45} )
+
+   oTree:hasLines   := .T.
+   oTree:hasButtons := .T.
+   oTree:create()
+
+   FOR i := 1 TO 5
+      WorkAreaInfo( oTree, i )
+   NEXT
+
+   RETURN
+
+   ** Build the tree structure for a work area
+
+PROCEDURE WorkAreaInfo( oTree, iIndex )
+   LOCAL oArea, oStatus, oStruct
+
+   // First level in the tree starts with oTree:rootItem
+   oArea := oTree:rootItem:addItem( 'Alias '+hb_ntos( iIndex ) )
+
+   // Second level in the tree begins with a XbpTreeViewItem
+   // Create XbpTreeViewItem explicitly (1st possibility)
+   oStatus         := XbpTreeViewItem():new()
+   oStatus:caption := "STATUS"
+   oStatus:create()
+
+   oArea:addItem( oStatus )
+
+   // Create XbpTreeViewItem implicitly (2nd possibility)
+   oStruct := oArea:addItem( "STRUCTURE" )
+
+   // Create third level in the tree
+   WAStatus( oStatus, iIndex )
+   WAStruct( oStruct, iIndex )
+
+   RETURN
+
+   ** Third level -> status information
+
+PROCEDURE WAStatus( oItem, iIndex )
+   oItem:addItem( "Bof() = "    + IIf( iIndex%2 == 0, ".T.", ".F." ) )
+   oItem:addItem( "Eof() = "    + IIf( iIndex%3 == 0, ".T.", ".F." ) )
+   oItem:addItem( "Found() = "  + IIf( iIndex%4 == 0, ".T.", ".F." ) )
+   oItem:addItem( "Recno() = "  + Ltrim( Str( iIndex  ) ) )
+   oItem:addItem( "LastRec() =" + Ltrim( Str( iIndex )+'....PPP' ) )
+
+   RETURN
+
+   ** Third level -> field information
+
+PROCEDURE WAStruct( oItem, iIndex )
+   LOCAL aStr := {}
+
+   aadd( aStr, { 'Name__'+hb_ntos( iIndex ), 'C', 20, 0 } )
+   aadd( aStr, { 'Birth' , 'D',  8, 0 } )
+   aadd( aStr, { 'Salary', 'N', 10, 2 } )
+
+   AEval( aStr, ;
+     {|a,i,oSub| oSub := oItem:addItem( "FIELD_NAME = " + a[1] ), FieldStruct( oSub, a ) } )
+
+   RETURN
+
+   ** Create fourth level in the tree
+
+PROCEDURE FieldStruct( oItem, aField )
+
+   oItem:addItem( "FIELD_TYPE = " + aField[2] )
+   oItem:addItem( "FIELD_LEN  = " + Str( aField[3], 3 ) )
+   oItem:addItem( "FIELD_DEC  = " + Str( aField[4], 3 ) )
+
+   RETURN
 
 /*----------------------------------------------------------------------*/

@@ -74,7 +74,8 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS XbpComboBox  INHERIT  XbpSLE, XbpListBox
+//CLASS XbpComboBox  INHERIT  XbpSLE, XbpListBox
+CLASS XbpComboBox  INHERIT  XbpWindow
 
    DATA     type                                  INIT    XBPCOMBO_DROPDOWN
    DATA     drawMode                              INIT    XBP_DRAW_NORMAL
@@ -87,10 +88,6 @@ CLASS XbpComboBox  INHERIT  XbpSLE, XbpListBox
 
    METHOD   listBoxFocus( lFocus )                VIRTUAL      // -> lOldFocus
    METHOD   sleSize()                             VIRTUAL      // -> aOldSize
-
-   DATA     sl_xbePDrawItem
-   ACCESS   drawItem                              INLINE  ::sl_xbePDrawItem
-   ASSIGN   drawItem( bBlock )                    INLINE  ::sl_xbePDrawItem := bBlock
 
    METHOD   addItem( cItem )                      INLINE  ::oWidget:addItem( cItem )
    METHOD   setIcon( nItem,cIcon )                INLINE  ::oWidget:setItemIcon( nItem-1,cIcon )
@@ -107,6 +104,7 @@ CLASS XbpComboBox  INHERIT  XbpSLE, XbpListBox
                                                           ::oStrModel:setStringList( QT_PTROF( ::oStrList ) )
    #endif
 
+
    DATA     oSLE
    ACCESS   XbpSLE                                INLINE  ::oSLE
    DATA     oLB
@@ -119,6 +117,10 @@ CLASS XbpComboBox  INHERIT  XbpSLE, XbpListBox
    DATA     sl_itemSelected
    ACCESS   itemSelected                          INLINE ::sl_itemSelected
    ASSIGN   itemSelected( bBlock )                INLINE ::sl_itemSelected := bBlock
+
+   DATA     sl_xbePDrawItem
+   ACCESS   drawItem                              INLINE  ::sl_xbePDrawItem
+   ASSIGN   drawItem( bBlock )                    INLINE  ::sl_xbePDrawItem := bBlock
 
    ENDCLASS
 
@@ -140,12 +142,14 @@ METHOD XbpComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oLB  := XbpListBox():new():create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QComboBox():New( ::pParent )
+
    ::oWidget:setLineEdit( ::XbpSLE:oWidget:pPtr )
    ::oWidget:setEditable( ::XbpSLE:editable )
    ::oWidget:setFrame( ::XbpSLE:border )
 
    ::connect( ::pWidget, "highlighted(int)"        , {|o,i| ::exeBlock( 1,i,o ) } )
-   ::connect( ::pWidget, "currentIndexChanged(int)", {|o,i| ::exeBlock( 2,i,o ) } )
+   //::connect( ::pWidget, "currentIndexChanged(int)", {|o,i| ::exeBlock( 2,i,o ) } )
+   ::connect( ::pWidget, "activated(int)"          , {|o,i| ::exeBlock( 2,i,o ) } )
 
    ::setPosAndSize()
    IF ::visible
