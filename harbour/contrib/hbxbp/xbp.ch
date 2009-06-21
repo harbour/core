@@ -12,7 +12,7 @@
    #endif
 #else
    /* TOFIX: To generate NOOP code. */
-   #xtranslate HB_OUTDEBUG( [<x>] ) => ( Do( NIL ) )
+   #xtranslate HB_OUTDEBUG( [<x>] ) =>
 #endif
 
 /*----------------------------------------------------------------------*/
