@@ -407,6 +407,17 @@ EXAMPLES
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
 
+      --- Intel(R) C++ for IA-64 (requires native x86 Harbour binaries)
+      call "%ProgramFiles%\Intel\Compiler\C++\10.1.025\Itanium\Bin\iclvars.bat"
+      rem
+      set HB_BIN_COMPILE=C:\hb-icc\bin
+      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
+      rem
+      set HB_COMPILER=iccia64
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
       --- Borland/CodeGear C++
       set PATH=C:\Borland\BCC55\Bin;%PATH%
       rem

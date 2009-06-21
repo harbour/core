@@ -2020,7 +2020,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
            ( hbmk[ _HBMK_cARCH ] == "hpux"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cARCH ] == "sunos"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cARCH ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
-           ( hbmk[ _HBMK_cARCH ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "gpp" )
+           ( hbmk[ _HBMK_cARCH ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "gpp" ) .OR. ;
+           ( hbmk[ _HBMK_cARCH ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "icc" )
 
          nOpt_Esc := _ESC_NIX
          IF hbmk[ _HBMK_lDEBUG ]
@@ -2034,10 +2035,19 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cBin_Lib := "libtool"
             cOpt_Lib := "-static {FA} -o {OL} {LO}"
          ELSE
-            cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar"
+            IF hbmk[ _HBMK_cCOMP ] == "icc"
+               cBin_Lib := "xiar"
+            ELSE
+               cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar"
+            ENDIF
             cOpt_Lib := "{FA} rcs {OL} {LO}"
          ENDIF
-         cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( l_lCPP != NIL .AND. l_lCPP, "g++", "gcc" ) + hbmk[ _HBMK_cCCPOSTFIX ]
+         IF hbmk[ _HBMK_cCOMP ] == "icc"
+            cBin_CompC := iif( l_lCPP != NIL .AND. l_lCPP, "icpc", "icc" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_GNU_SOURCE" )
+         ELSE
+            cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( l_lCPP != NIL .AND. l_lCPP, "g++", "gcc" ) + hbmk[ _HBMK_cCCPOSTFIX ]
+         ENDIF
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -2931,8 +2941,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
-      /* TODO */
-      CASE hbmk[ _HBMK_cARCH ] == "linux" .AND. hbmk[ _HBMK_cCOMP ] == "icc"
       ENDCASE
 
       /* NOTE: We only use different shared object flags when compiling for

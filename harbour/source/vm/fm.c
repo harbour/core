@@ -1288,3 +1288,15 @@ HB_FUNC( HB_FM_STAT ) {}
 #else
 HB_FUNC( HB_FM_NOSTAT ) {}
 #endif
+
+#if defined( __cplusplus ) && defined( HB_FM_STATISTICS )
+void * operator new( size_t nSize )
+{
+   return hb_xgrab( nSize );
+}
+
+void operator delete( void * p )
+{
+   hb_xfree( p );
+}
+#endif
