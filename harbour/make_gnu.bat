@@ -58,7 +58,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    call :COMP_DET_ONE pocc.exe                    pocc     win
    call :COMP_DET_ONE cygstart.exe                cygwin   win
    call :COMP_DET_ONE xcc.exe                     xcc      win
-   call :COMP_DET_ONE x86_64-pc-mingw32-gcc.exe   mingw64  win x86_64-pc-mingw32-
+   call :COMP_DET_ONE x86_64-w64-mingw32-gcc.exe  mingw64  win x86_64-w64-mingw32-
    call :COMP_DET_ONE arm-wince-mingw32ce-gcc.exe mingwarm wce arm-wince-mingw32ce-
    call :COMP_DET_ONE arm-mingw32ce-gcc.exe       mingwarm wce arm-mingw32ce-
 

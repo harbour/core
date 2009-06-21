@@ -370,6 +370,7 @@ EXAMPLES
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
       rem
       set HB_COMPILER=mingw64
+      set HB_CCPREFIX=x86_64-w64-mingw32-
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -382,6 +383,7 @@ EXAMPLES
       rem
       set HB_ARCHITECTURE=wce
       set HB_COMPILER=mingwarm
+      set HB_CCPREFIX=arm-wince-mingw32ce-
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
