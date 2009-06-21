@@ -5,14 +5,13 @@
 #ifndef _XBP_CH
 
 #if defined( __HB_OUTDEBUG__ )
-   #if defined( __PLATFORM__WINDOWS ) .AND. ! defined( __HB_NOWINDEBUG__ )
+   #if defined( __PLATFORM__WINDOWS ) .AND. defined( __HB_WINDEBUG__ )
       #xtranslate HB_OUTDEBUG( [<x>] ) => wapi_OutputDebugString( <x> )
    #else
       #xtranslate HB_OUTDEBUG( [<x>] ) => hb_TraceString( <x> )
    #endif
 #else
-   /* TOFIX: To generate NOOP code. */
-   #xtranslate HB_OUTDEBUG( [<x>] ) =>
+   #xtranslate HB_OUTDEBUG( [<x>] ) => iif( .T.,, )
 #endif
 
 /*----------------------------------------------------------------------*/

@@ -140,7 +140,7 @@ PROCEDURE BuildADialog()
    /* Very important - destroy resources */
    oDlg:destroy()
 
-   RETURN nil
+   RETURN
 
 /*----------------------------------------------------------------------*/
 
@@ -613,13 +613,13 @@ STATIC FUNCTION Build_ComboBox( oWnd )
    // Code block for selection:
    //  - assign to LOCAL variable using :getData()
    //  - display LOCAL variable using DispoutAt()
-   bAction := {|mp1, mp2, obj| obj:XbpSLE:getData() }
+   bAction := {|mp1, mp2, obj| obj:XbpSLE:getData(), hb_outDebug( 'Highlighted: '+cDay ) }
 
    // Assign code block for selection with Up and Down keys
    oCombo:ItemMarked := bAction
 
    // Assign code block for selection by left mouse click in list box
-   oCombo:ItemSelected := {|mp1, mp2, obj| obj:XbpSLE:getData() }
+   oCombo:ItemSelected := {|mp1, mp2, obj| obj:XbpSLE:getData(), hb_outDebug( 'Selected: '+cDay ) }
 
    // Copy data from array to combo box, then discard array
    FOR i := 1 TO 7
