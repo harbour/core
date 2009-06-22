@@ -3121,9 +3121,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
             IF ! hbmk[ _HBMK_lDONTEXEC ]
                IF hb_mtvm()
-                  AAdd( aThreads, { hb_threadStart( @hb_compile(), "", aCommand ), aCommand } )
+                  AAdd( aThreads, { hb_threadStart( @hb_compile(), aCommand ), aCommand } )
                ELSE
-                  IF ( tmp := hb_compile( "", aCommand ) ) != 0
+                  IF ( tmp := hb_compile( aCommand ) ) != 0
                      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
                      IF ! hbmk[ _HBMK_lQuiet ]
                         OutErr( FN_Escape( DirAddPathSep( PathSepToSelf( l_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt, nOpt_Esc ) +;
