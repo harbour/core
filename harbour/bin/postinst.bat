@@ -51,6 +51,12 @@ goto INST_%HB_ARCHITECTURE%
 
    :_SKIP_DLL_BIN
 
+   rem ; We build this here, because GNU Make wouldn't add the icon.
+   setlocal
+   if "%HB_BIN_COMPILE%" == "" set HB_BIN_COMPILE=%HB_BIN_INSTALL%
+   %HB_BIN_COMPILE%\hbmk2 -q0 -o%HB_BIN_INSTALL%\hbrun %~dp0..\utils\hbrun\hbrun.hbp
+   endlocal
+
    if "%HB_BUILD_IMPLIB%" == "yes" call %~dp0hb-mkimp.bat
 
    goto END

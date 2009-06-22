@@ -1117,7 +1117,7 @@ extern HB_EXPORT const char * hb_verHB_COMP( void );         /* retrieves a stat
 
 extern HB_EXPORT BOOL   hb_iswinnt( void ); /* return .T. if OS == Windows NT, 2000, XP */
 extern HB_EXPORT BOOL   hb_iswince( void ); /* return .T. if OS is Windows CE or Windows Mobile */
-extern HB_EXPORT BOOL   hb_printerIsReady( char * pszPrinterName );
+extern HB_EXPORT BOOL   hb_printerIsReady( const char * pszPrinterName );
 
 /* OS/Harbour codepage conversion */
 extern HB_EXPORT BYTE * hb_osEncode( BYTE * szFileName, BOOL * pfFree ); /* Convert a string sent to a system call, from Harbour codepage. */

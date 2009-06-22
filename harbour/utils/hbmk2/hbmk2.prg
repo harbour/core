@@ -4565,7 +4565,7 @@ STATIC FUNCTION ArrayToList( array, cSeparator, nEscapeMode, cPrefix )
       EXIT
    CASE _ESC_DBLQUOTE
       FOR tmp := 1 TO Len( array )
-         IF " " $ array[ tmp ]
+         IF " " $ array[ tmp ] .OR. "-" $ array[ tmp ]
             /* Sloppy */
             IF Right( array[ tmp ], 1 ) == "\"
                array[ tmp ] += "\"
@@ -4798,7 +4798,7 @@ STATIC FUNCTION FN_Escape( cFileName, nEscapeMode )
 
    SWITCH nEscapeMode
    CASE _ESC_DBLQUOTE
-      IF " " $ cFileName
+      IF " " $ cFileName .OR. "-" $ cFileName
          /* Sloppy */
          IF Right( cFileName, 1 ) == "\"
             cFileName += "\"
