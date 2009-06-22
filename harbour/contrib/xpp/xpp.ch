@@ -67,6 +67,7 @@
 
 #include "hbclass.ch"
 
+#xtranslate IsPrinter([<x>])   => hb_IsPrinter(<x>)
 #xtranslate DispOutAt(<x,...>) => hb_DispOutAt(<x>)
 #xtranslate Sleep(<x>)         => xpp_Sleep(<x>)
 

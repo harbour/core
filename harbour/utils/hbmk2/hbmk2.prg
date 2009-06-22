@@ -235,34 +235,35 @@ REQUEST hbmk_KEYW
 #define _HBMK_lSHAREDDIST       37
 #define _HBMK_lNULRDD           38
 #define _HBMK_lMAP              39
-#define _HBMK_lSTRIP            40
-#define _HBMK_lOPTIM            41
-#define _HBMK_nCOMPR            42
-#define _HBMK_lRUN              43
-#define _HBMK_lINC              44
-#define _HBMK_lREBUILDPO        45
-#define _HBMK_lMINIPO           46
-#define _HBMK_lUNICODE          47
-#define _HBMK_nCONF             48
+#define _HBMK_lBEEP             40
+#define _HBMK_lSTRIP            41
+#define _HBMK_lOPTIM            42
+#define _HBMK_nCOMPR            43
+#define _HBMK_lRUN              44
+#define _HBMK_lINC              45
+#define _HBMK_lREBUILDPO        46
+#define _HBMK_lMINIPO           47
+#define _HBMK_lUNICODE          48
+#define _HBMK_nCONF             49
 
-#define _HBMK_aPO               49
-#define _HBMK_cHBL              50
-#define _HBMK_cHBLDir           51
-#define _HBMK_aLNG              52
-#define _HBMK_cPO               53
+#define _HBMK_aPO               50
+#define _HBMK_cHBL              51
+#define _HBMK_cHBLDir           52
+#define _HBMK_aLNG              53
+#define _HBMK_cPO               54
 
-#define _HBMK_lDEBUGTIME        54
-#define _HBMK_lDEBUGINC         55
-#define _HBMK_lDEBUGSTUB        56
-#define _HBMK_lDEBUGI18N        57
+#define _HBMK_lDEBUGTIME        55
+#define _HBMK_lDEBUGINC         56
+#define _HBMK_lDEBUGSTUB        57
+#define _HBMK_lDEBUGI18N        58
 
-#define _HBMK_cCCPATH           58
-#define _HBMK_cCCPREFIX         59
-#define _HBMK_cCCPOSTFIX        60
+#define _HBMK_cCCPATH           59
+#define _HBMK_cCCPREFIX         60
+#define _HBMK_cCCPOSTFIX        61
 
-#define _HBMK_lUTF8             61
+#define _HBMK_lUTF8             62
 
-#define _HBMK_MAX_              61
+#define _HBMK_MAX_              62
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -414,7 +415,7 @@ STATIC FUNCTION hbmk_run( cCmd )
 
 STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
 
-   /* TODO: Use CCPREFIX instead of PATH modification, where possible. */
+   /* TODO: Use HB_CCPREFIX instead of PATH modification, where possible. */
 
    /* NOTE: We have to retain existing PATH as we may need some tools
             from it, like upx compressor. [vszakats] */
@@ -531,7 +532,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL l_lBLDFLGL := .F.
    LOCAL l_lCLEAN := .F.
    LOCAL l_nJOBS := 1
-   LOCAL l_lBEEP := .F.
 
    LOCAL aCOMPDET
    LOCAL aCOMPDET_EMBED
@@ -639,6 +639,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    hbmk[ _HBMK_lSHAREDDIST ] := NIL
    hbmk[ _HBMK_lNULRDD ] := .F.
    hbmk[ _HBMK_lMAP ] := .F.
+   hbmk[ _HBMK_lBEEP ] := .F.
    hbmk[ _HBMK_lSTRIP ] := .F.
    hbmk[ _HBMK_lOPTIM ] := .T.
    hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF
@@ -941,12 +942,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       cDynLibNamePrefix := "lib"
       cBinExt := ""
       cOptPrefix := "-"
-      IF hbmk[ _HBMK_cARCH ] == "linux"
-         cBin_Cprs := "upx"
-         cOpt_Cprs := "{OB}"
-         cOpt_CprsMin := "-1"
-         cOpt_CprsMax := "-9"
-      ENDIF
       SWITCH hbmk[ _HBMK_cARCH ]
       CASE "darwin" ; cDynLibExt := ".dylib" ; EXIT
       CASE "hpux"   ; cDynLibExt := ".sl" ; EXIT
@@ -954,7 +949,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       ENDSWITCH
    CASE hbmk[ _HBMK_cARCH ] == "dos"
       aCOMPDET := { { {|| FindInPath( "gcc"      ) }, "djgpp"  },;
-                    { {|| FindInPath( "wpp386"   ) }, "watcom" } } /* TODO: Add full support for wcc386 */
+                    { {|| FindInPath( "wpp386"   ) }, "watcom" } }
       aCOMPSUP := { "djgpp", "gcc", "watcom" }
       l_aLIBHBGT := { "gtdos" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtdos"
@@ -962,13 +957,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       cDynLibExt := ""
       cBinExt := ".exe"
       cOptPrefix := "-/"
-      cBin_Cprs := "upx.exe"
-      cOpt_Cprs := "{OB}"
-      cOpt_CprsMin := "-1"
-      cOpt_CprsMax := "-9"
    CASE hbmk[ _HBMK_cARCH ] == "os2"
       aCOMPDET := { { {|| FindInPath( "gcc"      ) }, "gcc"    },;
-                    { {|| FindInPath( "wpp386"   ) }, "watcom" } } /* TODO: Add full support for wcc386 */
+                    { {|| FindInPath( "wpp386"   ) }, "watcom" } }
       aCOMPSUP := { "gcc", "watcom" }
       l_aLIBHBGT := { "gtos2" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtos2"
@@ -979,10 +970,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    CASE hbmk[ _HBMK_cARCH ] == "win"
       /* Order is significant.
          watcom also keeps a cl.exe in its binary dir. */
-      aCOMPDET := { { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" ) }, "mingw"   },; /* TODO: Add full support for g++ */
+      aCOMPDET := { { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" ) }, "mingw"   },;
                     { {|| iif( ! Empty( GetEnv( "WATCOM" ) ),;
                                FindInPath( "wpp386"   ),;
-                               NIL )               }, "watcom" },; /* TODO: Add full support for wcc386 */
+                               NIL )               }, "watcom" },;
                     { {|| FindInPath( "ml64"     ) }, "msvc64" },;
                     { {|| iif( FindInPath( "wpp386"   ) == NIL,;
                                FindInPath( "cl"       ),;
@@ -1003,10 +994,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       cDynLibExt := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
-      cBin_Cprs := "upx.exe"
-      cOpt_Cprs := "{OB}"
-      cOpt_CprsMin := "-1"
-      cOpt_CprsMax := "-9"
       /* NOTE: Some targets (pocc and watcom) need kernel32 explicitly. */
       l_aLIBSYSCORE := { "kernel32", "user32", "gdi32", "advapi32", "ws2_32" }
       l_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "ole32", "oleaut32", "uuid", "mpr", "winmm", "mapi32", "imm32", "msimg32" }
@@ -1023,10 +1010,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       cDynLibExt := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
-      cBin_Cprs := "upx.exe"
-      cOpt_Cprs := "{OB}"
-      cOpt_CprsMin := "-1"
-      cOpt_CprsMax := "-9"
       l_aLIBSYSCORE := { "wininet", "ws2", "commdlg", "commctrl" }
       l_aLIBSYSMISC := { "uuid", "ole32" }
    OTHERWISE
@@ -1448,9 +1431,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       CASE cParamL == "-map"             ; hbmk[ _HBMK_lMAP ]       := .T.
       CASE cParamL == "-map-" .OR. ;
            cParamL == "-nomap"           ; hbmk[ _HBMK_lMAP ]       := .F.
-      CASE cParamL == "-beep"            ; l_lBEEP      := .T.
+      CASE cParamL == "-beep"            ; hbmk[ _HBMK_lBEEP ]      := .T.
       CASE cParamL == "-beep-" .OR. ;
-           cParamL == "-nobeep"          ; l_lBEEP      := .F.
+           cParamL == "-nobeep"          ; hbmk[ _HBMK_lBEEP ]      := .F.
       CASE cParamL == "-rebuild"         ; hbmk[ _HBMK_lINC ]       := .T. ; hbmk[ _HBMK_lREBUILD ] := .T.
       CASE cParamL == "-rebuildpo"       ; hbmk[ _HBMK_lREBUILDPO ] := .T.
       CASE cParamL == "-minipo"          ; hbmk[ _HBMK_lMINIPO ]    := .T.
@@ -1878,7 +1861,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    /* Start doing the make process. */
    IF ! lStopAfterInit .AND. ( Len( l_aPRG ) + Len( l_aC ) + Len( l_aOBJUSER ) + Len( l_aOBJA ) ) == 0
       hbmk_OutErr( hbmk, I_( "Error: No source files were specified." ) )
-      IF l_lBEEP
+      IF hbmk[ _HBMK_lBEEP ]
          DoBeep( hbmk, .F. )
       ENDIF
       RETURN 4
@@ -1915,7 +1898,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF ! Empty( cWorkDir )
             IF ! DirBuild( cWorkDir )
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Working directory cannot be created: %1$s" ), cWorkDir ) )
-               IF l_lBEEP
+               IF hbmk[ _HBMK_lBEEP ]
                   DoBeep( hbmk, .F. )
                ENDIF
                RETURN 9
@@ -2493,13 +2476,15 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTC ], "-bm" )
          ENDIF
          IF hbmk[ _HBMK_lGUI ]
-            AAdd( hbmk[ _HBMK_aOPTC ], "-bg" ) /* TOFIX */
-            AAdd( hbmk[ _HBMK_aOPTL ], "RU NAT" ) /* TOFIX */
-            AAdd( hbmk[ _HBMK_aOPTL ], "SYSTEM NT_WIN" ) /* TOFIX */
+            /* NOTE: These could probably be optimized */
+            AAdd( hbmk[ _HBMK_aOPTC ], "-bg" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "RU NAT" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "SYSTEM NT_WIN" )
          ELSE
-            AAdd( hbmk[ _HBMK_aOPTC ], "-bc" ) /* TOFIX */
-            AAdd( hbmk[ _HBMK_aOPTL ], "RU CON" ) /* TOFIX */
-            AAdd( hbmk[ _HBMK_aOPTL ], "SYSTEM NT" ) /* TOFIX */
+            /* NOTE: These could probably be optimized */
+            AAdd( hbmk[ _HBMK_aOPTC ], "-bc" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "RU CON" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "SYSTEM NT" )
          ENDIF
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-d2" )
@@ -3145,7 +3130,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                         OutErr( FN_Escape( DirAddPathSep( PathSepToSelf( l_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt, nOpt_Esc ) +;
                                 " " + ArrayToList( aCommand ) + hb_osNewLine() )
                      ENDIF
-                     IF l_lBEEP
+                     IF hbmk[ _HBMK_lBEEP ]
                         DoBeep( hbmk, .F. )
                      ENDIF
                      RETURN 6
@@ -3166,7 +3151,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( ArrayToList( thread[ 2 ] ) + hb_osNewLine() )
                   ENDIF
-                  IF l_lBEEP
+                  IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( hbmk, .F. )
                   ENDIF
                   RETURN 6
@@ -3197,7 +3182,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             IF ! hbmk[ _HBMK_lQuiet ]
                OutErr( cCommand + hb_osNewLine() )
             ENDIF
-            IF l_lBEEP
+            IF hbmk[ _HBMK_lBEEP ]
                DoBeep( hbmk, .F. )
             ENDIF
             RETURN 6
@@ -3339,7 +3324,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                IF ! hbmk[ _HBMK_lINC ]
                   AEval( ListDirExt( l_aPRG, cWorkDir, ".c" ), {|tmp| FErase( tmp ) } )
                ENDIF
-               IF l_lBEEP
+               IF hbmk[ _HBMK_lBEEP ]
                   DoBeep( hbmk, .F. )
                ENDIF
                RETURN 5
@@ -3939,9 +3924,37 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          ENDIF
 
+         /* Setup compressor for host platform */
+
+         #if defined( __PLATFORM__LINUX )
+
+            cBin_Cprs := "upx"
+            cOpt_Cprs := "{OB}"
+            cOpt_CprsMin := "-1"
+            cOpt_CprsMax := "-9"
+
+         #elif defined( __PLATFORM__WINDOWS ) .OR. ;
+               defined( __PLATFORM__DOS )
+
+            cBin_Cprs := "upx.exe"
+            cOpt_Cprs := "{OB}"
+            cOpt_CprsMin := "-1"
+            cOpt_CprsMax := "-9"
+
+         #endif
+
          IF hbmk[ _HBMK_nCOMPR ] != _COMPR_OFF .AND. ! lCreateLib .AND. ! Empty( cBin_Cprs )
 
             /* Executable compression */
+
+            #if defined( __PLATFORM__WINDOWS ) .OR. ;
+                defined( __PLATFORM__DOS )
+
+               /* Use embedded version if present, otherwise it should be in PATH. */
+               IF hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_Cprs )
+                  cBin_Cprs := DirAddPathSep( hb_DirBase() ) + cBin_Cprs
+               ENDIF
+            #endif
 
             DO CASE
             CASE hbmk[ _HBMK_nCOMPR ] == _COMPR_MIN ; cOpt_Cprs += " " + cOpt_CprsMin
@@ -3993,7 +4006,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       hbmk_OutStd( hbmk, hb_StrFormat( I_( "Running time: %1$ss" ), hb_ntos( TimeElapsed( nStart, Seconds() ) ) ) )
    ENDIF
 
-   IF ! lSkipBuild .AND. l_lBEEP
+   IF ! lSkipBuild .AND. hbmk[ _HBMK_lBEEP ]
       DoBeep( hbmk, nErrorLevel == 0 )
    ENDIF
 
@@ -5825,6 +5838,10 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
             ELSEIF LEFTEQUAL( Upper( cLine ), "BLINKER " )
                /* skip blinker commands */
                LOOP
+            ELSEIF LEFTEQUAL( Upper( cLine ), "MAP" )
+               hbmk[ _HBMK_lMAP ] := .T.
+            ELSEIF LEFTEQUAL( Upper( cLine ), "NOBELL" )
+               hbmk[ _HBMK_lBEEP ] := .F.
             ELSE /* TODO: add other blinker commands */
             ENDIF
          ENDIF
