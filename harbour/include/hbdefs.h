@@ -814,7 +814,10 @@ typedef long                hbVMIntMax;       /* TOFIX */
  * These macros are necessary for architectures which need
  * strict alignment for pointers.
  */
-#if !defined( HB_STRICT_ALIGNMENT )
+#if defined( __GNUC__ )
+#  define   HB_PUT_PTR( p, v )     _hb_put_ptr( ( BYTE * ) ( p ), v )
+#  define   HB_GET_PTR( p )        _hb_get_ptr( ( BYTE * ) ( p ) )
+#elif !defined( HB_STRICT_ALIGNMENT )
 #  define   HB_PUT_PTR( p, v )      do { *( void ** ) ( p ) = ( void * ) ( v ); } while ( 0 )
 #  define   HB_GET_PTR( p )         ( *( void ** ) ( p ) )
 #else
@@ -853,6 +856,17 @@ typedef long                hbVMIntMax;       /* TOFIX */
 #  else
 #     define HB_BUILTIN_BSWAP 0
 #  endif
+
+   typedef union
+   {
+      void *   val;
+#  if defined( HB_ARCH_64BIT )
+      BYTE     buf[8];
+#  else
+      BYTE     buf[4];
+#  endif
+   } HB_PTRCAST, * PHB_PTRCAST;
+
    typedef union
    {
       UINT16   val;
@@ -881,6 +895,20 @@ typedef long                hbVMIntMax;       /* TOFIX */
       UINT64   i64;
 #  endif
    } HB_DBLCAST, * PHB_DBLCAST;
+
+   static __inline__ void * _hb_get_ptr( const BYTE * buf )
+   {
+      HB_PTRCAST u;
+      memcpy( u.buf, buf, sizeof( void * ) );
+      return u.val;
+   }
+
+   static __inline__ void _hb_put_ptr( BYTE * buf, void * val )
+   {
+      HB_PTRCAST u;
+      u.val = val;
+      memcpy( buf, u.buf, sizeof( void * ) );
+   }
 
    static __inline__ UINT16 _hb_get_std_uint16( const BYTE * buf )
    {

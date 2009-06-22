@@ -75,7 +75,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 
    /* HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow)); */
 
-   s_argv[ s_argc++ ] = "";
+   s_argv[ s_argc++ ] = ( char * ) "";
 
    pArg = NULL;
 
