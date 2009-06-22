@@ -12,7 +12,7 @@
     unzip SOURCE.ZIP
 
 3.) *nix users will need to convert original filenames to lowercase
-    and EOLs to native format, using this command:
+    and EOLs to native format, using these commands:
     hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no "*.c"
     hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no "*.prg"
 

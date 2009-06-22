@@ -4500,7 +4500,7 @@ static void hb_wvt_gtCreateToolTipWindow( PHB_GTWVT pWVT )
    ti.hwnd      = pWVT->hWnd;
    ti.uId       = 100000;
    ti.hinst     = pWVT->hInstance;
-   ti.lpszText  = TEXT( "" );
+   ti.lpszText  = ( LPTSTR ) TEXT( "" );
    ti.rect.left = ti.rect.top = ti.rect.bottom = ti.rect.right = 0;
 
    /* Add the tool to the control, displaying an error if needed. */

@@ -3,7 +3,7 @@
 #
 
 -hblib
--osuperlib
+-osuper
 -inc
 -q0 -w1 -es2 -l
 

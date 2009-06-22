@@ -434,7 +434,7 @@ LONG hb_PrintFileRaw( UCHAR * cPrinterName, UCHAR * cFileName, UCHAR * cDocName 
       LPTSTR lpDocName = HB_TCHAR_CONVTO( ( char * ) cDocName );
       DocInfo.pDocName = lpDocName;
       DocInfo.pOutputFile = NULL;
-      DocInfo.pDatatype = TEXT( "RAW" );
+      DocInfo.pDatatype = ( LPTSTR ) TEXT( "RAW" );
       if( StartDocPrinter( hPrinter, 1, ( UCHAR * ) & DocInfo ) != 0 )
       {
          if( StartPagePrinter( hPrinter ) != 0 )

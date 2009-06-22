@@ -251,7 +251,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                pass them to make_gnu.bat.
    - HB_BUILD_DEBUG=yes        Create a debug build.
    - HB_BUILD_OPTIM=no         Disable C compiler optimizations.
-   - HB_BUILD_MODE=yes|no      Changes default build mode to C++ or C.
+   - HB_BUILD_MODE=[cpp|c]     Changes default build mode to C++ or C.
    - HB_CONTRIBLIBS=no         Don't build any contrib libraries.
    - HB_CONTRIBLIBS=[<list>]   Build space separated <list> of contrib
                                libraries. Build all if left empty.
