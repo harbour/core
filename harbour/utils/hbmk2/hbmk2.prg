@@ -5808,45 +5808,35 @@ STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
 
    RETURN cFileBody
 
+STATIC FUNCTION rtlnk_tokens( cLine )
+   LOCAL cCh
+
+   FOR EACH cCh IN @cLine
+      IF cCh $ Chr( 9 ) + Chr( 11 ) + Chr( 12 ) + ";"
+         cCh := " "
+      ENDIF
+   NEXT
+
+   RETURN hb_ATokens( StrTran( cLine, ",", " , " ) )
+
 STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
                                aPrevFiles )
-   LOCAL nCh, nMode
    LOCAL cLine, cWord
+   LOCAL nMode
 
-   cCommands := StrTran( StrTran( cCommands, Chr( 13 ) ), ",", " , " )
-   FOR EACH nCh IN @cCommands
-      SWITCH Asc( nCh )
-      CASE 9
-      CASE 11
-      CASE 12
-      CASE Asc( ";" )
-         nCh := " "
-      ENDSWITCH
-   NEXT
+   cCommands := StrTran( StrTran( cCommands, Chr( 13 ) ), "//", "# " )
+
    nMode := RTLNK_MODE_NONE
    IF ! ISARRAY( aPrevFiles )
       aPrevFiles := {}
    ENDIF
    FOR EACH cLine IN hb_ATokens( cCommands, Chr( 10 ) )
       cLine := AllTrim( cLine )
-      IF !Empty( cLine ) .AND. ! LEFTEQUAL( cLine, "#" ) .AND. ! LEFTEQUAL( cLine, "//" )
-         IF nMode == RTLNK_MODE_NONE
-            /* blinker extension */
-            IF LEFTEQUAL( Upper( cLine ), "ECHO " )
-               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Blinker ECHO: %1$s" ), SubStr( cLine, 6 ) ) )
-               LOOP
-            ELSEIF LEFTEQUAL( Upper( cLine ), "BLINKER " )
-               /* skip blinker commands */
-               LOOP
-            ELSEIF LEFTEQUAL( Upper( cLine ), "MAP" )
-               hbmk[ _HBMK_lMAP ] := .T.
-            ELSEIF LEFTEQUAL( Upper( cLine ), "NOBELL" )
-               hbmk[ _HBMK_lBEEP ] := .F.
-            ELSE /* TODO: add other blinker commands */
-            ENDIF
-         ENDIF
-         FOR EACH cWord IN hb_aTokens( cLine )
-            IF nMode == RTLNK_MODE_OUT
+      IF !Empty( cLine )
+         FOR EACH cWord IN rtlnk_tokens( cLine )
+            IF LEFTEQUAL( cWord, "#" )
+               EXIT
+            ELSEIF nMode == RTLNK_MODE_OUT
                cFileOut := cWord
                nMode := RTLNK_MODE_FILENEXT
             ELSEIF nMode == RTLNK_MODE_FILE
@@ -5898,6 +5888,20 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
                          LEFTEQUAL( "REFER", cWord ) .OR. ;
                          LEFTEQUAL( "INTO", cWord )
                      nMode := RTLNK_MODE_SKIP
+                  /* blinker extension */
+                  ELSEIF LEFTEQUAL( "BLINKER", cWord )
+                     /* skip blinker commands */
+                     EXIT
+                  ELSEIF LEFTEQUAL( "ECHO", cWord )
+                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Blinker ECHO: %1$s" ), SubStr( cLine, 6 ) ) )
+                     EXIT
+                  ELSEIF LEFTEQUAL( "MAP", cWord )
+                     hbmk[ _HBMK_lMAP ] := .T.
+                     EXIT
+                  ELSEIF LEFTEQUAL( "NOBELL", cWord )
+                     hbmk[ _HBMK_lBEEP ] := .F.
+                     EXIT
+                  ELSE /* TODO: add other blinker commands */
                   ENDIF
                ENDIF
             ENDIF
