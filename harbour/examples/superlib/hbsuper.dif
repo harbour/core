@@ -311,6 +311,23 @@ diff -u superori/s_appt.prg superpat/s_appt.prg
        lOk := .t.
     else
        msg("Problem finding/creating Appointments file")
+diff -u superori/s_att.prg superpat/s_att.prg
+--- superori/s_att.prg	1995-10-16 13:35:40.000000000 +0100
++++ superpat/s_att.prg	2009-06-22 23:37:06.000000000 +0200
+@@ -42,6 +42,13 @@
+ ณ
+ ิํอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+ */
++
++#ifdef HB_COMPAT_C53
++   #ifndef CLIPPER53
++      #define CLIPPER53
++   #endif
++#endif
++
+ #ifdef CLIPPER53           // if this is Clipper 5.3, check for graphics
+    function att(nTop,nLeft,nBottom,nRight,nAttribute)
+    local nLength := (nRight-nLeft+1)*(nBottom-nTop+1)
 diff -u superori/s_bdelim.prg superpat/s_bdelim.prg
 --- superori/s_bdelim.prg	1995-11-02 16:59:30.000000000 +0100
 +++ superpat/s_bdelim.prg	2009-06-10 08:44:26.000000000 +0200
@@ -911,6 +928,23 @@ diff -u superori/s_mailm.prg superpat/s_mailm.prg
        do case
        case nRecordSele = REC_TAGGED
           tagit(aTagged,aFieldNames,aFieldDesc,"Merge Records")
+diff -u superori/s_makeb.prg superpat/s_makeb.prg
+--- superori/s_makeb.prg	1995-10-16 13:30:20.000000000 +0100
++++ superpat/s_makeb.prg	2009-06-22 23:36:46.000000000 +0200
+@@ -62,6 +62,13 @@
+ ณ 
+ ิํอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ 
+ */
++
++#ifdef HB_COMPAT_C53
++   #ifndef CLIPPER53
++      #define CLIPPER53
++   #endif
++#endif
++
+ #ifdef CLIPPER53        // in 5.3, makebox returns an array
+   FUNCTION makebox(nTop,nLeft,nBottom,nRight,cColorString,nShadowPos)
+   local aSaveUnder
 diff -u superori/s_mchoi.prg superpat/s_mchoi.prg
 --- superori/s_mchoi.prg	1995-11-02 17:06:00.000000000 +0100
 +++ superpat/s_mchoi.prg	2009-06-10 08:44:27.000000000 +0200
@@ -967,17 +1001,23 @@ diff -u superori/s_modify.prg superpat/s_modify.prg
              EXIT
 diff -u superori/s_moose.prg superpat/s_moose.prg
 --- superori/s_moose.prg	1995-11-02 16:17:08.000000000 +0100
-+++ superpat/s_moose.prg	2009-06-10 08:44:27.000000000 +0200
-@@ -98,7 +98,7 @@
++++ superpat/s_moose.prg	2009-06-22 23:36:57.000000000 +0200
+@@ -98,7 +98,13 @@
  
  */
  
 -#INCLUDE "inkey.ch"
++#ifdef HB_COMPAT_C53
++   #ifndef CLIPPER53
++      #define CLIPPER53
++   #endif
++#endif
++
 +#include "inkey.ch"
  #define MTOP      1
  #define MLEFT     2
  #define MBOTTOM   3
-@@ -747,7 +747,7 @@
+@@ -747,7 +753,7 @@
  ณ
  ณ  Examples:
  ณ  ---------
@@ -1355,6 +1395,22 @@ diff -u superori/s_todo.prg superpat/s_todo.prg
 +if !file(cTodoFile+".dbf")
      BLDDBF(cTodoFile,"CATEGORY,C,10:ITEM,C,60:PRIORITY,C,2:DOBY,D:DONE,L:LONG_DESC,C,231")
  endif
+ 
+diff -u superori/s_unbox.prg superpat/s_unbox.prg
+--- superori/s_unbox.prg	1995-10-16 13:33:04.000000000 +0100
++++ superpat/s_unbox.prg	2009-06-22 23:36:35.000000000 +0200
+@@ -64,6 +64,12 @@
+ ิํอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ 
+ */
+ 
++#ifdef HB_COMPAT_C53
++   #ifndef CLIPPER53
++      #define CLIPPER53
++   #endif
++#endif
++
+ #ifdef CLIPPER53        // in 5.3, makebox returns an array
+    FUNCTION UNBOX(cSavedScreen,nTop,nLeft,nBottom,nRight,bRest)
  
 diff -u superori/s_viewp.prg superpat/s_viewp.prg
 --- superori/s_viewp.prg	1995-11-02 17:09:08.000000000 +0100

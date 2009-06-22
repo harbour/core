@@ -130,7 +130,23 @@ PROCEDURE GetReader( oGet )
 FUNCTION GetActive( oGet )
    LOCAL oGetList := __GetListActive()
 
-   IF oGetList != NIL
+   LOCAL oGetActiveOld
+
+   THREAD STATIC t_oGetActive
+
+   IF oGetList == NIL
+      /* NOTE: For complete compatibility we need to make sure this
+               function works even if there is no active getlist.
+               F.e. when 3rd party software manages getlists on its
+               own and still uses this function. [vszakats] */
+      IF PCount() > 0
+         oGetActiveOld := t_oGetActive
+         t_oGetActive := oGet
+         RETURN oGetActiveOld
+      ELSE
+         RETURN t_oGetActive
+      ENDIF
+   ELSE
       IF PCount() > 0
          RETURN oGetList:GetActive( oGet )
       ELSE
