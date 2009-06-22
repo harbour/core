@@ -100,10 +100,8 @@ CLASS XbpPushButton  INHERIT  XbpWindow
    METHOD   handleEvent( nEvent, aInfo )
    METHOD   exeBlock()
 
-   //METHOD   setColorFG()                          INLINE NIL
-   //METHOD   setColorBG()                          INLINE NIL
-
    ENDCLASS
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPushButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )

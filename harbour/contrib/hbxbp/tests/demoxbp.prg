@@ -82,6 +82,7 @@ PROCEDURE BuildADialog()
 
    /* Make background color of :drawingArea different */
    //oDlg:drawingArea:setColorBG( GraMakeRGBColor( { 134,128,164 } ) )
+   //oDlg:drawingArea:setColorFG( GraMakeRGBColor( { 40,120,100 } ) )
 
    /* Install menu system */
    Build_MenuBar()
@@ -408,7 +409,9 @@ FUNCTION Build_TabPages( oDlg )
    oTab1:caption   := "ListView"
    oTab1:create()
    oTab1:TabActivate := {|| oTab2:minimize(), oTab3:minimize(), oTab4:minimize(), oTab1:maximize() }
+   #if 0
    oTab1:setColorBG( GraMakeRGBColor( {198,198,198} ) )
+   #endif
 
    // Second tab page is minimized
    oTab2 := XbpTabPage():new( oDlg:drawingArea, , { 510, 20 }, { 360, nHeight } )
@@ -458,8 +461,10 @@ FUNCTION Build_ListBox( oWnd )
    oListBox:ItemSelected := {|mp1, mp2, obj| mp1:=oListBox:getData(), ;
                               mp2:=oListBox:getItem(mp1), MsgBox( "itemSelected:"+mp2 ) }
 
-   /* DOES NOT Work in Harbour  Xbase++ == OK */
-   oListBox:setColorBG( GraMakeRGBColor( {127,12,210} ) )
+   #if 0
+   oListBox:setColorBG( GraMakeRGBColor( {227,12,110} ) )
+   oListBox:setColorBG( GraMakeRGBColor( { 27,12, 45} ) )
+   #endif
 
    RETURN nil
 
@@ -538,7 +543,7 @@ FUNCTION Build_MLE( oWnd )
    // Create MLE, specify position using :create() and
    // assign data code block accessing LOCAL variable
    oMLE          := XbpMLE():new()
-   oMLE:wordWrap := .F.
+   oMLE:wordWrap := .t.
    oMLE:dataLink := {|x| IIf( x==NIL, cText, cText := x ) }
    oMLE:create( oWnd, , {10,10}, {oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45} )
 
@@ -658,6 +663,7 @@ FUNCTION Build_TreeView( oWnd )
    oTree:hasLines   := .T.
    oTree:hasButtons := .T.
    oTree:create()
+   oTree:itemCollapsed := {|oItem,aRect,oSelf| MsgBox( oItem:caption ) }
 
    FOR i := 1 TO 5
       WorkAreaInfo( oTree, i )
@@ -680,6 +686,9 @@ PROCEDURE WorkAreaInfo( oTree, iIndex )
    oStatus:create()
 
    oArea:addItem( oStatus )
+   #ifdef __HARBOUR__
+   oArea:setImage( 'copy.png' )
+   #endif
 
    // Create XbpTreeViewItem implicitly (2nd possibility)
    oStruct := oArea:addItem( "STRUCTURE" )

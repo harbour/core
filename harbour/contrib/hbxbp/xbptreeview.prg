@@ -91,19 +91,24 @@ CLASS XbpTreeView  INHERIT  XbpWindow, XbpDataRef
    METHOD   destroy()
    METHOD   handleEvent()
    METHOD   exeBlock()
+   METHOD   setStyle()
 
    METHOD   itemFromPos( aPos )
 
    DATA     sl_itemCollapsed
-   DATA     sl_itemExpanded
-   DATA     sl_itemMarked
-   DATA     sl_itemSelected
+   ACCESS   itemCollapsed                         INLINE ::sl_itemCollapsed
+   ASSIGN   itemCollapsed( bBlock )               INLINE ::sl_itemCollapsed := bBlock
 
-   METHOD   itemCollapsed()                       SETGET
-   METHOD   itemExpanded()                        SETGET
-   METHOD   itemMarked()                          SETGET
+   DATA     sl_itemExpanded
+   ACCESS   itemExpanded                          INLINE ::sl_itemExpanded
+   ASSIGN   itemExpanded( bBlock )                INLINE ::sl_itemExpanded := bBlock
+
+   DATA     sl_itemMarked
+   ACCESS   itemMarked                            INLINE ::sl_itemMarked
+   ASSIGN   itemMarked( bBlock )                  INLINE ::sl_itemMarked := bBlock
 
    DATA     oItemSelected
+   DATA     sl_itemSelected
    ACCESS   itemSelected                          INLINE ::sl_itemSelected
    ASSIGN   itemSelected( bBlock )                INLINE ::sl_itemSelected := bBlock
 
@@ -142,6 +147,7 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:setColumnCount( 1 )
    ::oWidget:setHeaderHidden( .t. )
 
+
    #if 0
    IF ::alwaysShowSelection
       ::style += TVS_SHOWSELALWAYS
@@ -154,29 +160,78 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    #endif
 
-   ::oRootItem             := XbpTreeViewItem():New()
-   ::oRootItem:hTree       := ::oWidget
+   ::oRootItem          := XbpTreeViewItem():New()
+   ::oRootItem:hTree    := ::oWidget
+   ::oRootItem:oXbpTree := self
 
-   oW      := QTreeWidgetItem()
-   oW:pPtr := ::oWidget:invisibleRootItem()
-   ::oRootItem:oItemWidget := oW
+   oW                   := QTreeWidgetItem()
+   oW:pPtr              := ::oWidget:invisibleRootItem()
+   ::oRootItem:oWidget  := oW
+
+
+   //::connect( ::pWidget, "currentItemChanged(QTWItem)" , {|o,p1,p2| ::exeBlock(  1, p1, p2, o ) } )
+   //::connect( ::pWidget, "itemActivated(QTWItem)"      , {|o,p1,p2| ::exeBlock(  2, p1, p2, o ) } )
+   //::connect( ::pWidget, "itemChanged(QTWItem)"        , {|o,p1,p2| ::exeBlock(  3, p1, p2, o ) } )
+   ::connect( ::pWidget, "itemClicked(QTWItem)"        , {|o,p1,p2| ::exeBlock(  4, p1, p2, o ) } )
+   ::connect( ::pWidget, "itemCollapsed(QTWItem)"      , {|o,p1,p2| ::exeBlock(  5, p1, p2, o ) } )
+   ::connect( ::pWidget, "itemDoubleClicked(QTWItem)"  , {|o,p1,p2| ::exeBlock(  6, p1, p2, o ) } )
+   //::connect( ::pWidget, "itemEntered(QTWItem)"        , {|o,p1,p2| ::exeBlock(  7, p1, p2, o ) } )
+   ::connect( ::pWidget, "itemExpanded(QTWItem)"       , {|o,p1,p2| ::exeBlock(  8, p1, p2, o ) } )
+   //::connect( ::pWidget, "itemPressed(QTWItem)"        , {|o,p1,p2| ::exeBlock(  9, p1, p2, o ) } )
+   //::connect( ::pWidget, "itemSelectionChanged()"      , {|o,p1,p2| ::exeBlock( 10, p1, p2, o ) } )
 
    ::setPosAndSize()
    IF ::visible
       ::show()
    ENDIF
+   ::setStyle()
    ::oParent:AddChild( SELF )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
+   LOCAL oItem, n
 
    HB_SYMBOL_UNUSED( nMsg )
    HB_SYMBOL_UNUSED( p1 )
    HB_SYMBOL_UNUSED( p2 )
 
-   RETURN .t.
+   hb_outDebug( hb_ntos( nMsg ) )
+
+   IF hb_isPointer( p1 )
+      IF ( n := ascan( ::aItems, {|o| o:oWidget:pPtr == p1 } ) ) > 0
+         oItem := ::aItems[ n ]
+      ENDIF
+   ENDIF
+
+   DO CASE
+   CASE nMsg == 1              // "currentItemChanged(QTWItem)"
+   CASE nMsg == 2              // "itemActivated(QTWItem)"
+   CASE nMsg == 3              // "itemChanged(QTWItem)"
+   CASE nMsg == 4              // "itemClicked(QTWItem)"
+      IF hb_isBlock( ::sl_itemMarked )
+         eval( ::sl_itemMarked, oItem, {0,0,0,0}, self )
+      ENDIF
+   CASE nMsg == 5              // "itemCollapsed(QTWItem)"
+      IF hb_isBlock( ::sl_itemCollapsed )
+         eval( ::sl_itemCollapsed, oItem, {0,0,0,0}, self )
+      ENDIF
+   CASE nMsg == 6              // "itemDoubleClicked(QTWItem)"
+      IF hb_isBlock( ::sl_itemSelected )
+         eval( ::sl_itemSelected, oItem, {0,0,0,0}, self )
+      ENDIF
+   CASE nMsg == 7              // "itemEntered(QTWItem)"
+   CASE nMsg == 8              // "itemExpanded(QTWItem)"
+      IF hb_isBlock( ::sl_itemExpanded )
+         eval( ::sl_itemExpanded, oItem, {0,0,0,0}, self )
+      ENDIF
+   CASE nMsg == 9              // "itemPressed(QTWItem)"
+   CASE nMsg == 10             // "itemSelectionChanged()"
+
+   ENDCASE
+
+   RETURN .f.
 
 /*----------------------------------------------------------------------*/
 
@@ -213,7 +268,7 @@ METHOD XbpTreeView:itemFromPos( aPos )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
+#if 0
 METHOD XbpTreeView:itemCollapsed( xParam )
 
    IF hb_isBlock( xParam ) .or. ( xParam == NIL )
@@ -241,7 +296,7 @@ METHOD XbpTreeView:itemMarked( xParam )
    ENDIF
 
    RETURN Self
-
+#endif
 /*----------------------------------------------------------------------*/
 #if 0
 METHOD XbpTreeView:itemSelected( xParam )
@@ -255,10 +310,11 @@ METHOD XbpTreeView:itemSelected( xParam )
 /*----------------------------------------------------------------------*/
 /*                      Class XbpTreeViewItem                           */
 /*----------------------------------------------------------------------*/
-CLASS XbpTreeViewItem
 
-   DATA     oItemWidget
-   ACCESS   pItemWidget                           INLINE IF( hb_isObject( ::oItemWidget ), ::oItemWidget:pPtr, NIL )
+CLASS XbpTreeViewItem  INHERIT  XbpDataRef
+
+   DATA     oWidget
+   ACCESS   pWidget                               INLINE IF( hb_isObject( ::oWidget ), ::oWidget:pPtr, NIL )
 
    DATA     caption                               INIT ""
    DATA     dllName                               INIT NIL
@@ -266,52 +322,72 @@ CLASS XbpTreeViewItem
    DATA     image                                 INIT -1
    DATA     markedImage                           INIT -1
 
+   DATA     xValue                                             // To be returned by get/set methods
+
    DATA     hTree
    DATA     hItem
    DATA     oParent
-   DATA     oWnd
+   DATA     oXbpTree
+
+   DATA     aChilds                               INIT {}
 
    METHOD   new()
    METHOD   create()
    METHOD   configure()
    METHOD   destroy()
-   #if 0
-   METHOD   expand( lExpand )                      INLINE WVG_TreeView_Expand( ::hTree, ::hItem, ;
-                                                            IF( hb_isLogical( lExpand ), lExpand, .t. ) )
-   #endif
-   METHOD   isExpanded()
-   METHOD   setCaption( cCaption )
+
+   METHOD   expand( lExpand )                     INLINE   ::oWidget:setExpanded( lExpand )
+   METHOD   isExpanded()                          INLINE   ::oWidget:isExpanded()
+
+   METHOD   setCaption( cCaption )                INLINE   ::oWidget:setText( 0, cCaption )
+   METHOD   setImage( xIcon )
    METHOD   setExpandedImage( nResIdoBitmap )
-   METHOD   setImage( nResIdoBitmap )
    METHOD   setMarkedImage( nResIdoBitmap )
 
    METHOD   addItem()
-   METHOD   delItem()
+   METHOD   delItem( oItem )
    METHOD   getChildItems()
    METHOD   getParentItem()
    METHOD   insItem()
 
    ENDCLASS
+
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTreeViewItem:addItem( xItem )
+METHOD XbpTreeViewItem:addItem( xItem, xNormalImage, xMarkedImage, xExpandedImage, cDllName, xValue )
    Local oItem
+
+   HB_SYMBOL_UNUSED( cDllName )
 
    IF valtype( xItem ) == 'C'
       oItem := XbpTreeViewItem():New()
-
-      oItem:oParent := self
       oItem:caption := xItem
-      oItem:oItemWidget := QTreeWidgetItem():new()
-      oItem:oItemWidget:setText( 0, oItem:caption )
-
-      ::oItemWidget:addChild( oItem:oItemWidget:pPtr )
+      oItem:oWidget := QTreeWidgetItem():new()
+      oItem:oWidget:setText( 0, oItem:caption )
    ELSE
-      xItem:oParent := self
-      ::oItemWidget:addChild( xItem:oItemWidget:pPtr )
-
-      RETURN xItem
+      oItem := xItem
    ENDIF
+
+   oItem:oParent := self
+   oItem:oXbpTree := oItem:oParent:oXbpTree
+
+   IF xNormalImage <> NIL
+      oItem:image := xNormalImage
+   ENDIF
+   IF xMarkedImage <> NIL
+      oItem:markedImage := xMarkedImage
+   ENDIF
+   IF xExpandedImage <> NIL
+      oItem:expandedImage := xExpandedImage
+   ENDIF
+   IF xValue <> NIL
+      oItem:xValue := xValue
+   ENDIF
+
+   ::oWidget:addChild( oItem:oWidget:pPtr )
+
+   aadd( oItem:aChilds, oItem )
+   aadd( oItem:oXbpTree:aItems, oItem )
 
    RETURN oItem
 
@@ -325,8 +401,8 @@ METHOD XbpTreeViewItem:new()
 
 METHOD XbpTreeViewItem:create()
 
-   ::oItemWidget := QTreeWidgetItem():new()
-   ::oItemWidget:setText( 0,::caption )
+   ::oWidget := QTreeWidgetItem():new()
+   ::oWidget:setText( 0,::caption )
 
    RETURN Self
 
@@ -344,32 +420,19 @@ METHOD XbpTreeViewItem:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTreeViewItem:isExpanded()
-
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpTreeViewItem:setCaption( cCaption )
-
-   HB_SYMBOL_UNUSED( cCaption )
-
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
 METHOD XbpTreeViewItem:setExpandedImage( nResIdoBitmap )
 
    HB_SYMBOL_UNUSED( nResIdoBitmap )
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTreeViewItem:setImage( nResIdoBitmap )
+METHOD XbpTreeViewItem:setImage( xIcon )
 
-   HB_SYMBOL_UNUSED( nResIdoBitmap )
+   ::oWidget:setIcon( 0, xIcon )
 
-   RETURN NIL
+   RETURN self
 
 /*----------------------------------------------------------------------*/
 
@@ -381,7 +444,14 @@ METHOD XbpTreeViewItem:setMarkedImage( nResIdoBitmap )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTreeViewItem:delItem()
+METHOD XbpTreeViewItem:delItem( oItem )
+   LOCAL n
+
+   IF ( n := ascan( ::aChilds, oItem ) ) > 0
+      ::oWidget:removeChild( ::aChilds[ n ]:oWidget:pPtr )
+      adel( ::aChilds, n )
+      asize( ::aChilds, len( ::aChilds )-1 )
+   ENDIF
 
    RETURN NIL
 
@@ -404,4 +474,19 @@ METHOD XbpTreeViewItem:insItem()
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+/* Another approach - in the making
+ */
+METHOD XbpTreeView:setStyle()
+   LOCAL oS
 
+   oS := XbpStyle():new()
+   oS:xbpPart  := "XbpTreeView"
+   oS:qtWidget := "QTreeWidget"
+   oS:colorFG  := "white"
+   oS:colorBG  := "blue"
+   oS:create()
+   ::oWidget:setStyleSheet( oS:style )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/

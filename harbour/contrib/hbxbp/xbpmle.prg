@@ -91,6 +91,7 @@ CLASS XbpMLE INHERIT XbpWindow, XbpDataRef
    METHOD   destroy()
    METHOD   exeBlock()
    METHOD   handleEvent()
+   METHOD   setStyle()
 
    METHOD   clear()                               VIRTUAL
    METHOD   copyMarked()                          VIRTUAL
@@ -185,6 +186,7 @@ METHOD XbpMLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       eval( ::datalink )
    ENDIF
 
+   ::setStyle()
    ::oParent:addChild( Self )
    RETURN Self
 
@@ -206,60 +208,39 @@ METHOD XbpMLE:handleEvent( nEvent, mp1, mp2 )
 
 /*----------------------------------------------------------------------*/
 
-
-   #if 0
-   DO CASE
-   CASE nMessage == HB_GTE_COMMAND
-      DO CASE
-      CASE aNM[ NMH_code ] == EN_CHANGE
-         ::changed := .t.
-
-      CASE aNM[ NMH_code ] == EN_UPDATE
-
-      CASE aNM[ NMH_code ] == EN_MAXTEXT
-
-      CASE aNM[ NMH_code ] == EN_KILLFOCUS
-         IF hb_isBlock( ::sl_killInputFocus )
-            eval( ::sl_killInputFocus, NIL, NIL, Self )
-         ENDIF
-
-      CASE aNM[ NMH_code ] == EN_SETFOCUS
-         IF hb_isBlock( ::sl_setInputFocus )
-            eval( ::sl_setInputFocus, NIL, NIL, Self )
-         ENDIF
-
-      CASE aNM[ NMH_code ] == EN_HSCROLL
-         IF hb_isBlock( ::sl_hScroll )
-            eval( ::sl_hScroll, NIL, NIL, Self )
-         ENDIF
-
-      CASE aNM[ NMH_code ] == EN_VSCROLL
-         IF hb_isBlock( ::sl_vScroll )
-            eval( ::sl_vScroll, NIL, NIL, Self )
-         ENDIF
-
-      ENDCASE
-
-   CASE nMessage ==  HB_GTE_CTLCOLOR
-      IF hb_isNumeric( ::clr_FG )
-         WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
-      ENDIF
-      IF hb_isNumeric( ::hBrushBG )
-         WVG_SetBkMode( aNM[ 1 ], 1 )
-         RETURN ( ::hBrushBG )
-      ELSE
-         RETURN WVG_GetCurrentBrush( aNM[ 1 ] )
-      ENDIF
-
-   ENDCASE
-   #endif
-
-/*----------------------------------------------------------------------*/
-
 METHOD XbpMLE:destroy()
 
    ::xbpWindow:destroy()
 
    RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpMLE:setStyle()
+   LOCAL s, txt_:={}
+
+   aadd( txt_, ' ' )
+   aadd( txt_, ' QTextEdit {                                               ' )
+   aadd( txt_, '     background-color: white;                              ' )
+   aadd( txt_, '     background-image: url(new.png);                       ' )
+   aadd( txt_, '     background-attachment: scroll;                        ' )
+   aadd( txt_, ' }                                                         ' )
+   #if 0
+   aadd( txt_, 'If the background-image is to be fixed with the viewport:  ' )
+   aadd( txt_, '                                                           ' )
+   aadd( txt_, ' QTextEdit {                                               ' )
+   aadd( txt_, '     background-color: yellow;                             ' )
+   aadd( txt_, '     background-image: url(new.png);                       ' )
+   aadd( txt_, '     background-attachment: fixed;                         ' )
+   aadd( txt_, ' }                                                         ' )
+   #endif
+   aadd( txt_, ' ' )
+
+   s := ""
+   aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
+
+   ::oWidget:setStyleSheet( s )
+
+   RETURN self
 
 /*----------------------------------------------------------------------*/

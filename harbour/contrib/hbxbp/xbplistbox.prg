@@ -93,6 +93,7 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
 
    METHOD   handleEvent()
    METHOD   exeBlock()
+   METHOD   setStyle()
 
    METHOD   setItemsHeight( nPixel )              VIRTUAL
    METHOD   getItemHeight()                       VIRTUAL
@@ -189,6 +190,7 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
+   ::setStyle()
    ::oParent:AddChild( SELF )
    RETURN Self
 
@@ -236,5 +238,50 @@ METHOD XbpListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 METHOD XbpListBox:destroy()
    ::xbpWindow:destroy()
    RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:setStyle()
+   LOCAL s, txt_:={}
+
+   aadd( txt_, '                                                                                             ' )
+   aadd( txt_, ' QListView {                                                                                 ' )
+   aadd( txt_, '     alternate-background-color: yellow;                                                     ' )
+   aadd( txt_, ' }                                                                                           ' )
+   aadd( txt_, '                                                                                             ' )
+   aadd( txt_, ' QListView {                                                                                 ' )
+   aadd( txt_, '     show-decoration-selected: 1; /* make the selection span the entire width of the view */ ' )
+   aadd( txt_, ' }                                                                                           ' )
+   aadd( txt_, '                                                                                             ' )
+   aadd( txt_, ' QListView::item:alternate {                                                                 ' )
+   aadd( txt_, '     background: #EEEEEE;                                                                    ' )
+   aadd( txt_, ' }                                                                                           ' )
+   aadd( txt_, '                                                                                             ' )
+   aadd( txt_, ' QListView::item:selected {                                                                  ' )
+   aadd( txt_, '     border: 1px solid #6a6ea9;                                                              ' )
+   aadd( txt_, ' }                                                                                           ' )
+   aadd( txt_, '                                                                                             ' )
+   aadd( txt_, ' QListView::item:selected:!active {                                                          ' )
+   aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                                 ' )
+   aadd( txt_, '                                 stop: 0 #ABAFE5, stop: 1 #8588B2);                          ' )
+   aadd( txt_, ' }                                                                                           ' )
+   aadd( txt_, '                                                                                             ' )
+   aadd( txt_, ' QListView::item:selected:active {                                                           ' )
+   aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                                 ' )
+   aadd( txt_, '                                 stop: 0 #6a6ea9, stop: 1 #888dd9);                          ' )
+   aadd( txt_, ' }                                                                                           ' )
+   aadd( txt_, '                                                                                             ' )
+   aadd( txt_, ' QListView::item:hover {                                                                     ' )
+   aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                                 ' )
+   aadd( txt_, '                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);                          ' )
+   aadd( txt_, '}                                                                                            ' )
+   aadd( txt_, '                                                                                             ' )
+
+   s := ""
+   aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
+
+   ::oWidget:setStyleSheet( s )
+
+   RETURN self
 
 /*----------------------------------------------------------------------*/

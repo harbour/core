@@ -99,9 +99,8 @@ CLASS XbpTabPage  INHERIT  XbpWindow
    METHOD   handleEvent()
    METHOD   exeBlock()
 
-   METHOD   setColorBG()
-   METHOD   setColorFG()
    ENDCLASS
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTabPage:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -210,29 +209,5 @@ METHOD XbpTabPage:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 METHOD XbpTabPage:destroy()
    ::xbpWindow:destroy()
    RETURN NIL
-
-/*----------------------------------------------------------------------*/
-/*                               TODO                                   */
-METHOD XbpTabPage:setColorBG( nRGB )
-   LOCAL oPalette
-
-   IF hb_isNumeric( nRGB )
-      oPalette := QPalette():new( QT_PTROF( QColor():new( nRGB ) ) )
-      //oPalette:pPtr := ::oWidget:palette()
-
-      //oPalette:setColor( QPalette_Button    , QT_PTROF( QColor():new( nRGB ) ) )
-      //oPalette:setColor( QPalette_Background, QT_PTROF( QColor():new( nRGB ) ) )
-      //::oWidget:setBackGroundRole( QPalette_Dark )
-      ::oWidget:setPalette( QT_PTROF( oPalette ) )
-      //::oParent:oTabWidget:setPalette( QT_PTROF( oPalette ) )
-   ENDIF
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpTabPage:setColorFG()
-
-   RETURN nil
 
 /*----------------------------------------------------------------------*/

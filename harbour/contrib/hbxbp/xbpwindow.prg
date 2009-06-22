@@ -78,6 +78,7 @@
 CLASS XbpWindow  INHERIT  XbpPartHandler
 
    DATA     cargo                                 INIT  ""
+   DATA     styleSheet                            INIT  ""
 
    /*  CONFIGURATION */
    DATA     animate                               INIT  .F.
@@ -266,6 +267,8 @@ EXPORTED:
    DATA     aConnections                          INIT  {}
    DATA     aEConnections                         INIT  {}
 
+   METHOD   setStyle()                            INLINE NIL
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -453,6 +456,7 @@ METHOD XbpWindow:lockUpdate()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setColorBG( nRGB )
+   #if 0
    LOCAL cClass  := __ObjGetClsName( self )
 
    IF hb_isNumeric( nRGB )
@@ -470,12 +474,18 @@ METHOD XbpWindow:setColorBG( nRGB )
 
       ::oWidget:setPalette( QT_PTROF( ::oPalette ) )
    ENDIF
+   #endif
+
+   LOCAL oColor := QColor():new( nRGB )
+
+   ::oWidget:setStyleSheet( "background-color: "+ oColor:name +";" )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setColorFG( nRGB )
+   #if 0
    LOCAL cClass  := __ObjGetClsName( self )
 
    IF hb_isNumeric( nRGB )
@@ -494,6 +504,11 @@ METHOD XbpWindow:setColorFG( nRGB )
 
       ::oWidget:setPalette( QT_PTROF( ::oPalette ) )
    ENDIF
+   #endif
+
+   LOCAL oColor := QColor():new( nRGB )
+
+   ::oWidget:setStyleSheet( "color: "+ oColor:name +";" )
 
    RETURN Self
 
@@ -1219,4 +1234,19 @@ CLASS XbpObject
 METHOD XbpObject:INIT()
    RETURN Self
 
+/*----------------------------------------------------------------------*/
+#if 0           /* A Template */
+METHOD xbpWindow:setStyle()
+   LOCAL s, txt_:={}
+
+   aadd( txt_, ' ' )
+   aadd( txt_, ' ' )
+
+   s := ""
+   aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
+
+   ::oWidget:setStyleSheet( s )
+
+   RETURN self
+#endif
 /*----------------------------------------------------------------------*/

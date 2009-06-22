@@ -124,6 +124,7 @@ CLASS XbpToolBar  INHERIT  XbpWindow
    METHOD   sendToolbarMessage()
 
    METHOD   ExeBlock()
+   METHOD   setStyle()
 
    ENDCLASS
 /*----------------------------------------------------------------------*/
@@ -179,6 +180,7 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
+   ::setStyle()
    ::oParent:AddChild( SELF )
    RETURN Self
 
@@ -361,6 +363,29 @@ METHOD XbpToolbar:buttonDropDown( xParam )
    ENDIF
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpToolbar:setStyle()
+   LOCAL s, txt_:={}
+
+   aadd( txt_, ' ' )
+   aadd( txt_, ' QToolBar {                                                    ' )
+   aadd( txt_, '     background: cyan;                                         ' )
+   aadd( txt_, '     spacing: 3px; /* spacing between items in the tool bar */ ' )
+   aadd( txt_, ' }                                                             ' )
+   aadd( txt_, '                                                               ' )
+   aadd( txt_, ' QToolBar::handle {                                            ' )
+   aadd( txt_, '     image: url(save.png);                                     ' )
+   aadd( txt_, ' }                                                             ' )
+   aadd( txt_, ' ' )
+
+   s := ""
+   aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
+
+   ::oWidget:setStyleSheet( s )
+
+   RETURN self
 
 /*----------------------------------------------------------------------*/
 /*

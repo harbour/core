@@ -154,6 +154,7 @@ CLASS xbpMenuBar INHERIT xbpWindow
    METHOD   ExeBlock()
    METHOD   ExeHovered()
    METHOD   PlaceItem()
+   METHOD   setStyle()
 
    ENDCLASS
 
@@ -194,6 +195,8 @@ METHOD xbpMenuBar:create( oParent, aPresParams, lVisible )
    if !empty( ::oWidget )
       ::oParent:oMenu := Self
    endif
+
+   ::setStyle()
 
    ::oParent:addChild( self )
    RETURN Self
@@ -615,6 +618,39 @@ METHOD xbpMenuBar:onMenuKey( xParam )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD xbpMenuBar:setStyle()
+   LOCAL txt_:={}
+   LOCAL s
+
+   aadd( txt_, 'QMenuBar {                                                                ' )
+   aadd( txt_, '    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,             ' )
+   aadd( txt_, '                                      stop:0 lightgray, stop:1 darkgray); ' )
+   aadd( txt_, '}                                                                         ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, 'QMenuBar::item {                                                          ' )
+   aadd( txt_, '    spacing: 3px; /* spacing between menu bar items */                    ' )
+   aadd( txt_, '    padding: 1px 4px;                                                     ' )
+   aadd( txt_, '    background: transparent;                                              ' )
+   aadd( txt_, '    border-radius: 4px;                                                   ' )
+   aadd( txt_, '}                                                                         ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, 'QMenuBar::item:selected { /* when selected using mouse or keyboard */     ' )
+   aadd( txt_, '    background: #a8a8a8;                                                  ' )
+   aadd( txt_, '}                                                                         ' )
+   aadd( txt_, '                                                                          ' )
+   aadd( txt_, 'QMenuBar::item:pressed {                                                  ' )
+   aadd( txt_, '    background: #888888;                                                  ' )
+   aadd( txt_, '}                                                                         ' )
+
+   s := ""
+   aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
+
+   ::oWidget:setStyleSheet( s )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*
@@ -634,6 +670,7 @@ CLASS xbpMenu INHERIT xbpMenuBar
    METHOD   getTitle()
    METHOD   setTitle()
    METHOD   popup()
+   METHOD   setStyle()
 
    ENDCLASS
 
@@ -666,6 +703,7 @@ METHOD xbpMenu:create( oParent, aPresParams, lVisible )
    ::oWidget := QMenu():new( ::pParent )
    ::oParent:oWidget:addMenu( ::pWidget )
 
+   ::setStyle()
    ::oParent:addChild( self )
    RETURN Self
 
@@ -691,5 +729,88 @@ METHOD xbpMenu:popUp( oXbp, aPos, nDefaultItem, nControl )
    HB_SYMBOL_UNUSED( nControl     )
 
    RETURN 0
+
+/*----------------------------------------------------------------------*/
+
+METHOD xbpMenu:setStyle()
+   LOCAL s, txt_:={}
+
+   aadd( txt_, ' QMenu {                                                                                   ' )
+   aadd( txt_, '     background-color: white;                                                              ' )
+   aadd( txt_, '     margin: 2px; /* some spacing around the menu */                                       ' )
+   aadd( txt_, ' }                                                                                         ' )
+   aadd( txt_, '                                                                                           ' )
+   aadd( txt_, ' QMenu::item {                                                                             ' )
+   aadd( txt_, '     padding: 2px 25px 2px 20px;                                                           ' )
+   aadd( txt_, '     border: 1px solid transparent; /* reserve space for selection border */               ' )
+   aadd( txt_, ' }                                                                                         ' )
+   aadd( txt_, '                                                                                           ' )
+   aadd( txt_, ' QMenu::item:selected {                                                                    ' )
+   aadd( txt_, '     border-color: darkblue;                                                               ' )
+   aadd( txt_, '     background: rgba(100, 100, 100, 150);                                                 ' )
+   aadd( txt_, ' }                                                                                         ' )
+   aadd( txt_, '                                                                                           ' )
+   aadd( txt_, ' QMenu::icon:checked { /* appearance of a "checked" icon */                                ' )
+   aadd( txt_, '     background: gray;                                                                     ' )
+   aadd( txt_, '     border: 1px inset gray;                                                               ' )
+   aadd( txt_, '     position: absolute;                                                                   ' )
+   aadd( txt_, '     top: 1px;                                                                             ' )
+   aadd( txt_, '     right: 1px;                                                                           ' )
+   aadd( txt_, '     bottom: 1px;                                                                          ' )
+   aadd( txt_, '     left: 1px;                                                                            ' )
+   aadd( txt_, ' }                                                                                         ' )
+   aadd( txt_, '                                                                                           ' )
+   aadd( txt_, ' QMenu::separator {                                                                        ' )
+   aadd( txt_, '     height: 2px;                                                                          ' )
+   aadd( txt_, '     background: lightblue;                                                                ' )
+   aadd( txt_, '     margin-left: 10px;                                                                    ' )
+   aadd( txt_, '     margin-right: 5px;                                                                    ' )
+   aadd( txt_, ' }                                                                                         ' )
+   aadd( txt_, '                                                                                           ' )
+   aadd( txt_, ' QMenu::indicator {                                                                        ' )
+   aadd( txt_, '     width: 13px;                                                                          ' )
+   aadd( txt_, '     height: 13px;                                                                         ' )
+   aadd( txt_, ' }                                                                                         ' )
+   aadd( txt_, '                                                                                           ' )
+   aadd( txt_, ' /* non-exclusive indicator = check box style indicator (see QActionGroup::setExclusive) */' )
+   aadd( txt_, ' QMenu::indicator:non-exclusive:unchecked {                                                ' )
+   aadd( txt_, '     image: url(:/images/checkbox_unchecked.png);                                          ' )
+   aadd( txt_, ' }                                                                                         ' )
+   aadd( txt_, '                                                                                           ' )
+   aadd( txt_, ' QMenu::indicator:non-exclusive:unchecked:selected {                                       ' )
+   aadd( txt_, '     image: url(:/images/checkbox_unchecked_hover.png);                                    ' )
+   aadd( txt_, ' }                                                                                         ' )
+   aadd( txt_, '                                                                                           ' )
+   aadd( txt_, ' QMenu::indicator:non-exclusive:checked {                                                  ' )
+   aadd( txt_, '     image: url(:/images/checkbox_checked.png);                                            ' )
+   aadd( txt_, ' }                                                                                         ' )
+   aadd( txt_, '                                                                                           ' )
+   aadd( txt_, ' QMenu::indicator:non-exclusive:checked:selected {                                         ' )
+   aadd( txt_, '     image: url(:/images/checkbox_checked_hover.png);                                      ' )
+   aadd( txt_, ' }                                                                                         ' )
+   aadd( txt_, '                                                                                           ' )
+   aadd( txt_, ' /* exclusive indicator = radio button style indicator (see QActionGroup::setExclusive) */ ' )
+   aadd( txt_, ' QMenu::indicator:exclusive:unchecked {                                                    ' )
+   aadd( txt_, '     image: url(:/images/radiobutton_unchecked.png);                                       ' )
+   aadd( txt_, ' }                                                                                         ' )
+   aadd( txt_, '                                                                                           ' )
+   aadd( txt_, ' QMenu::indicator:exclusive:unchecked:selected {                                           ' )
+   aadd( txt_, '     image: url(:/images/radiobutton_unchecked_hover.png);                                 ' )
+   aadd( txt_, ' }                                                                                         ' )
+   aadd( txt_, '                                                                                           ' )
+   aadd( txt_, ' QMenu::indicator:exclusive:checked {                                                      ' )
+   aadd( txt_, '     image: url(:/images/radiobutton_checked.png);                                         ' )
+   aadd( txt_, ' }                                                                                         ' )
+   aadd( txt_, '                                                                                           ' )
+   aadd( txt_, ' QMenu::indicator:exclusive:checked:selected {                                             ' )
+   aadd( txt_, '     image: url(:/images/radiobutton_checked_hover.png);                                   ' )
+   aadd( txt_, ' }                                                                                         ' )
+
+   s := ""
+   aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
+
+   ::oWidget:setStyleSheet( s )
+
+   RETURN self
 
 /*----------------------------------------------------------------------*/
