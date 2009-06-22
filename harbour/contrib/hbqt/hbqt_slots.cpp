@@ -401,6 +401,95 @@ void Slots::textEdited( const QString & text )
    QWidget *widget = qobject_cast<QWidget *>( sender() );
    SlotsExecString( widget, ( char* ) "textEdited(QString)", text );
 }
+/*  TreeViewWidget */
+void Slots::currentItemChanged( QTreeWidgetItem * current, QTreeWidgetItem * previous )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   if( widget )
+   {
+      int i = widget->property( "currentItemChanged(QTWItem)" ).toInt();
+      if( ( i > 0 ) && ( s->listActv.at( i-1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, widget );
+         PHB_ITEM pItemC  = hb_itemPutPtr( NULL, current );
+         PHB_ITEM pItemP  = hb_itemPutPtr( NULL, previous );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s->listBlock.at( i-1 ), 3, pWidget, pItemC, pItemP );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pItemC );
+         hb_itemRelease( pItemP );
+      }
+   }
+}
+static void SlotsExecTreeWidgetItemInt( QWidget * widget, char* event, QTreeWidgetItem * item, int column )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s->listActv.at( i-1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, widget );
+         PHB_ITEM pItem   = hb_itemPutPtr( NULL, item );
+         if( column != -1001 )
+         {
+            PHB_ITEM pColumn = hb_itemPutNI( NULL, column );
+            hb_vmEvalBlockV( ( PHB_ITEM ) s->listBlock.at( i-1 ), 3, pWidget, pItem, pColumn );
+            hb_itemRelease( pColumn );
+         }
+         else
+         {
+            hb_vmEvalBlockV( ( PHB_ITEM ) s->listBlock.at( i-1 ), 2, pWidget, pItem );
+         }
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pItem );
+      }
+   }
+}
+void Slots::itemActivated( QTreeWidgetItem * item, int column )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemActivated(QTWItem)", item, column );
+}
+void Slots::itemChanged( QTreeWidgetItem * item, int column )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemChanged(QTWItem)", item, column );
+}
+void Slots::itemClicked( QTreeWidgetItem * item, int column )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemClicked(QTWItem)", item, column );
+}
+void Slots::itemDoubleClicked( QTreeWidgetItem * item, int column )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemDoubleClicked(QTWItem)", item, column );
+}
+void Slots::itemEntered( QTreeWidgetItem * item, int column )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemEntered(QTWItem)", item, column );
+}
+void Slots::itemPressed( QTreeWidgetItem * item, int column )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemPressed(QTWItem)", item, column );
+}
+void Slots::itemExpanded( QTreeWidgetItem * item )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemExpanded(QTWItem)", item, -1001 );
+}
+void Slots::itemCollapsed( QTreeWidgetItem * item )
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemCollapsed(QTWItem)", item, -1001 );
+}
+void Slots::itemSelectionChanged()
+{
+   QWidget *widget = qobject_cast<QWidget *>( sender() );
+   SlotsExec( widget, ( char* ) "itemSelectionChanged()" );
+}
+
 
 
 /*
@@ -567,6 +656,60 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = widget->connect( widget,  SIGNAL( textEdited( const QString &) ),
                              s, SLOT( textEdited( const QString & ) ), Qt::AutoConnection );
    }
+   /* QTreeViewWidget */
+   if( signal == ( QString ) "currentItemChanged(QTWItem)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * ) ),
+                             s, SLOT( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "itemActivated(QTWItem)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( itemActivated( QTreeWidgetItem *, int ) ),
+                             s, SLOT( itemActivated( QTreeWidgetItem *, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "itemChanged(QTWItem)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( itemChanged( QTreeWidgetItem *, int ) ),
+                             s, SLOT( itemChanged( QTreeWidgetItem *, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "itemClicked(QTWItem)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( itemClicked( QTreeWidgetItem *, int ) ),
+                             s, SLOT( itemClicked( QTreeWidgetItem *, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "itemCollapsed(QTWItem)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( itemCollapsed( QTreeWidgetItem * ) ),
+                             s, SLOT( itemCollapsed( QTreeWidgetItem * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "itemDoubleClicked(QTWItem)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int ) ),
+                             s, SLOT( itemDoubleClicked( QTreeWidgetItem *, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "itemEntered(QTWItem)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( itemEntered( QTreeWidgetItem *, int ) ),
+                             s, SLOT( itemEntered( QTreeWidgetItem *, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "itemExpanded(QTWItem)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( itemExpanded( QTreeWidgetItem * ) ),
+                             s, SLOT( itemExpanded( QTreeWidgetItem * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "itemPressed(QTWItem)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( itemPressed( QTreeWidgetItem *, int ) ),
+                             s, SLOT( itemPressed( QTreeWidgetItem *, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "itemSelectionChanged()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( itemSelectionChanged() ),
+                             s, SLOT( itemSelectionChanged() ), Qt::AutoConnection );
+   }
+
+
+
 
    hb_retl( ret );
 

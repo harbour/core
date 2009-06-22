@@ -65,6 +65,8 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QLineEdit>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -148,6 +150,17 @@ public slots:
    void selectionChanged();
    void textChanged( const QString & text );
    void textEdited( const QString & text );
+   /* QTreeWidget */
+   void currentItemChanged( QTreeWidgetItem * current, QTreeWidgetItem * previous );
+   void itemActivated( QTreeWidgetItem * item, int column );
+   void itemChanged( QTreeWidgetItem * item, int column );
+   void itemClicked( QTreeWidgetItem * item, int column );
+   void itemCollapsed( QTreeWidgetItem * item );
+   void itemDoubleClicked( QTreeWidgetItem * item, int column );
+   void itemEntered( QTreeWidgetItem * item, int column );
+   void itemExpanded( QTreeWidgetItem * item );
+   void itemPressed( QTreeWidgetItem * item, int column );
+   void itemSelectionChanged();
 };
 
 class Events: public QObject
@@ -157,8 +170,6 @@ class Events: public QObject
 public:
    Events( QObject *parent = 0 );
    ~Events();
-   //QList<QObject *>    list1;
-   //QList<QEvent::Type> list2;
    QList<PHB_ITEM>     listBlock;
    QList<bool>         listActv;
 

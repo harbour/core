@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'hbqt_slots.h'
 **
-** Created: Sat Jun 20 01:36:16 2009
+** Created: Sun Jun 21 14:24:40 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -137,7 +137,7 @@ static const uint qt_meta_data_Slots[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-      30,   12, // methods
+      40,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -173,6 +173,16 @@ static const uint qt_meta_data_Slots[] = {
      564,    6,    6,    6, 0x0a,
      588,  583,    6,    6, 0x0a,
      609,  583,    6,    6, 0x0a,
+     646,  629,    6,    6, 0x0a,
+     712,  700,    6,    6, 0x0a,
+     748,  700,    6,    6, 0x0a,
+     782,  700,    6,    6, 0x0a,
+     821,  816,    6,    6, 0x0a,
+     853,  700,    6,    6, 0x0a,
+     893,  700,    6,    6, 0x0a,
+     927,  816,    6,    6, 0x0a,
+     958,  700,    6,    6, 0x0a,
+     992,    6,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -195,7 +205,17 @@ static const char qt_meta_stringdata_Slots[] = {
     "iOld,iNew\0cursorPositionChanged(int,int)\0"
     "editingFinished()\0returnPressed()\0"
     "selectionChanged()\0text\0textChanged(QString)\0"
-    "textEdited(QString)\0"
+    "textEdited(QString)\0current,previous\0"
+    "currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)\0"
+    "item,column\0itemActivated(QTreeWidgetItem*,int)\0"
+    "itemChanged(QTreeWidgetItem*,int)\0"
+    "itemClicked(QTreeWidgetItem*,int)\0"
+    "item\0itemCollapsed(QTreeWidgetItem*)\0"
+    "itemDoubleClicked(QTreeWidgetItem*,int)\0"
+    "itemEntered(QTreeWidgetItem*,int)\0"
+    "itemExpanded(QTreeWidgetItem*)\0"
+    "itemPressed(QTreeWidgetItem*,int)\0"
+    "itemSelectionChanged()\0"
 };
 
 const QMetaObject Slots::staticMetaObject = {
@@ -253,9 +273,19 @@ int Slots::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 27: selectionChanged(); break;
         case 28: textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 29: textEdited((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 30: currentItemChanged((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< QTreeWidgetItem*(*)>(_a[2]))); break;
+        case 31: itemActivated((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 32: itemChanged((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 33: itemClicked((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 34: itemCollapsed((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1]))); break;
+        case 35: itemDoubleClicked((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 36: itemEntered((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 37: itemExpanded((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1]))); break;
+        case 38: itemPressed((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 39: itemSelectionChanged(); break;
         default: ;
         }
-        _id -= 30;
+        _id -= 40;
     }
     return _id;
 }
