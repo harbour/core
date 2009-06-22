@@ -14,7 +14,7 @@ ifeq ($(HB_ARCHITECTURE),win)
 ifeq ($(HB_COMPILER),mingw)
 ifeq ($(HB_BUILD_MODE),cpp)
 HB_WITH_GTWVG=no
-#else
+else
 HB_WITH_GTWVG=yes
 endif
 endif

@@ -27,7 +27,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
    Linux/Darwin/BSD/HP-UX/Solaris
    ------------------------------
-      $ export HB_COMPILER=<[gcc]|watcom|icc|gpp>
+      $ export HB_COMPILER=<[gcc]|watcom|icc>
       $ export HB_INSTALL_PREFIX=<DIR>
       $ ./make_gnu.sh
       $ sudo ./make_gnu.sh install
@@ -179,7 +179,6 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    Linux
    -----
    gcc      - GNU C
-   gpp      - GNU C++
    watcom   - Open Watcom C++
    icc      - Intel(R) C/C++
 

@@ -1,7 +1,0 @@
-#
-# $Id$
-#
-
-HB_BUILD_MODE=cpp
-
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/gcc.cf
