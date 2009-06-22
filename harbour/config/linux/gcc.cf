@@ -4,10 +4,10 @@
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
-ifeq ($(HB_COMPILER),gpp)
+ifeq ($(HB_BUILD_MODE),cpp)
    HB_CMP = g++
 else
-   HB_CMP = $(HB_COMPILER)
+   HB_CMP = gcc
 endif
 
 OBJ_EXT = .o

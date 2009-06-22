@@ -4,8 +4,11 @@
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
-# set compiler name to icc or icpc
-HB_CMP = $(HB_COMPILER)
+ifeq ($(HB_BUILD_MODE),cpp)
+   HB_CMP = icpc
+else
+   HB_CMP = icc
+endif
 
 OBJ_EXT = .o
 EXE_EXT =

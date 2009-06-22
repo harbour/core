@@ -4,12 +4,18 @@
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
+ifeq ($(HB_BUILD_MODE),cpp)
+   HB_CMP = gpp
+else
+   HB_CMP = gcc
+endif
+
 OBJ_EXT = .o
 EXE_EXT = .exe
 LIB_PREF = lib
 LIB_EXT = .a
 
-CC = gcc
+CC = $(HB_CMP)
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
@@ -27,7 +33,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -g
 endif
 
-LD = gcc
+LD = $(HB_CMP)
 LD_OUT = -o
 LDLIBS = -lm
 

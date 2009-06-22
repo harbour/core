@@ -4,7 +4,7 @@
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
-ifeq ($(HB_COMPILER),gpp)
+ifeq ($(HB_BUILD_MODE),cpp)
    HB_CMP = g++
 else
    # for old Darwin systems (having GCC 2.95) this may need to be

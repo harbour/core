@@ -18,6 +18,13 @@ CC_OUT = -Fo
 CPPFLAGS = -nologo -I. -I$(HB_INC_COMPILE)
 CFLAGS = -Gs
 
+ifeq ($(HB_BUILD_MODE),c)
+CPPFLAGS += -TC
+endif
+ifeq ($(HB_BUILD_MODE),cpp)
+CPPFLAGS += -TP
+endif
+
 ifneq ($(HB_BUILD_WARN),no)
 CFLAGS += -W3
 endif
