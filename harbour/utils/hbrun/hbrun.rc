@@ -50,4 +50,4 @@
  *
  */
 
-ICON1 ICON DISCARDABLE "hbrun.ico"
+ICON1 ICON DISCARDABLE "../../package/harbour.ico"

@@ -20,6 +20,7 @@
   !define MUI_HEADERIMAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Header\win.bmp"
   !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
   !define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\doc\readme.txt"
+  !define MUI_ICON "package\harbour.ico"
 
 SetDateSave on
 SetDatablockOptimize on

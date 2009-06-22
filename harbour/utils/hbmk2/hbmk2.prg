@@ -933,7 +933,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    DO CASE
    CASE hbmk[ _HBMK_cARCH ] $ "bsd|hpux|sunos|linux" .OR. hbmk[ _HBMK_cARCH ] == "darwin" /* Separated to avoid match with 'win' */
       IF hbmk[ _HBMK_cARCH ] == "linux"
-         aCOMPSUP := { "gcc", "gpp", "watcom", "icc" }
+         aCOMPSUP := { "gcc", "watcom", "icc" }
       ELSE
          aCOMPSUP := { "gcc" }
       ENDIF
@@ -1992,7 +1992,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
       ENDIF
 
-      IF hbmk[ _HBMK_cCOMP ] $ "watcom|gpp" .AND. l_lCPP == NIL
+      IF hbmk[ _HBMK_cCOMP ] == "watcom" .AND. l_lCPP == NIL
          l_lCPP := .T.
       ENDIF
 
@@ -2003,7 +2003,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
            ( hbmk[ _HBMK_cARCH ] == "hpux"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cARCH ] == "sunos"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cARCH ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
-           ( hbmk[ _HBMK_cARCH ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "gpp" ) .OR. ;
            ( hbmk[ _HBMK_cARCH ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "icc" )
 
          nOpt_Esc := _ESC_NIX
@@ -4202,7 +4201,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
    cExt := Lower( FN_ExtGet( cFileName ) )
 
    /* Filter out non-source format inputs for MinGW / windres */
-   IF hbmk[ _HBMK_cCOMP ] $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin" .AND. hbmk[ _HBMK_cARCH ] $ "win|wce" .AND. cExt == ".res"
+   IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin" .AND. hbmk[ _HBMK_cARCH ] $ "win|wce" .AND. cExt == ".res"
       RETURN .F.
    ENDIF
 
@@ -4347,7 +4346,7 @@ STATIC FUNCTION LibExists( hbmk, cDir, cLib, cLibExt )
    cDir := DirAddPathSep( PathSepToSelf( cDir ) )
 
    DO CASE
-   CASE hbmk[ _HBMK_cCOMP ] $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin" .AND. hbmk[ _HBMK_cARCH ] $ "win|wce"
+   CASE hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin" .AND. hbmk[ _HBMK_cARCH ] $ "win|wce"
       /* NOTE: ld/gcc option -dll-search-prefix isn't taken into account here,
                So, '<prefix>xxx.dll' format libs won't be found by hbmk. */
       DO CASE
@@ -4358,7 +4357,7 @@ STATIC FUNCTION LibExists( hbmk, cDir, cLib, cLibExt )
       CASE                           hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".dll" )   ) ; RETURN tmp
       CASE                           hb_FileExists( tmp := cDir +         FN_ExtSet( cLib, ".dll" )   ) ; RETURN tmp
       ENDCASE
-   CASE hbmk[ _HBMK_cCOMP ] $ "gcc|gpp" .AND. hbmk[ _HBMK_cARCH ] $ "linux|sunos"
+   CASE hbmk[ _HBMK_cCOMP ] == "gcc" .AND. hbmk[ _HBMK_cARCH ] $ "linux|sunos"
       DO CASE
       CASE                           hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".so" )    ) ; RETURN tmp
       CASE                           hb_FileExists( tmp := cDir + "lib" + FN_ExtSet( cLib, ".a" )     ) ; RETURN tmp
@@ -4509,7 +4508,7 @@ STATIC FUNCTION ListCookLib( hbmk, arraySrc, cExtNew )
    LOCAL cDir
    LOCAL cLibName
 
-   IF hbmk[ _HBMK_cCOMP ] $ "gcc|gpp|mingw|mingw64|mingwarm|djgpp|cygwin"
+   IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|djgpp|cygwin"
       FOR EACH cLibName IN array
          hb_FNameSplit( cLibName, @cDir )
          IF Empty( cDir )
@@ -5491,7 +5490,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
    LOCAL cFuncList, cExecNM, cFuncName, cExt, cLine, n, c
 
    cFuncName := ""
-   IF hbmk[ _HBMK_cCOMP ] $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin"
+   IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin"
       hb_FNameSplit( cFile,,, @cExt )
       IF cExt == ".c"
          FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFile ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
@@ -6257,7 +6256,7 @@ FUNCTION hbmk_CPU( hbmk )
 
    DO CASE
    CASE hbmk[ _HBMK_cARCH ] $ "dos|os2" .OR. ;
-        hbmk[ _HBMK_cCOMP ] $ "gcc|gpp|cygwin|watcom|bcc|icc|xcc" .OR. ;
+        hbmk[ _HBMK_cCOMP ] $ "gcc|cygwin|watcom|bcc|icc|xcc" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "mingw" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "msvc" .OR. ;
         hbmk[ _HBMK_cCOMP ] == "pocc"
@@ -6290,7 +6289,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
 
    IF ( cKeyword == "unix"     .AND. ( hbmk[ _HBMK_cARCH ] $ "bsd|hpux|sunos|linux" .OR. hbmk[ _HBMK_cARCH ] == "darwin" ) ) .OR. ;
       ( cKeyword == "allwin"   .AND. hbmk[ _HBMK_cARCH ] $ "win|wce"                                             ) .OR. ;
-      ( cKeyword == "allgcc"   .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|gpp|mingw|mingw64|mingwarm|cygwin|djgpp"         ) .OR. ;
+      ( cKeyword == "allgcc"   .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp"             ) .OR. ;
       ( cKeyword == "allmingw" .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"                              ) .OR. ;
       ( cKeyword == "allmsvc"  .AND. hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcarm"                                 ) .OR. ;
       ( cKeyword == "allpocc"  .AND. hbmk[ _HBMK_cCOMP ] $ "pocc|pocc64|poccarm"                                 ) .OR. ;
