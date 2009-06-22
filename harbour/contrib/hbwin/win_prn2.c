@@ -72,7 +72,7 @@ BOOL hb_isLegacyDevice( LPSTR pPrinterName )
 {
    BOOL bLegacyDev = FALSE;
    int n = 0;
-   LPSTR pszPrnDev[] =
+   LPCSTR pszPrnDev[] =
       { "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "com1", "com2", "com3", "com4", NULL };
    while( pszPrnDev[ n ] && !bLegacyDev )
    {

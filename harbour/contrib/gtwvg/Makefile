@@ -12,11 +12,7 @@ ifeq ($(HB_WITH_GTWVG),)
 ifeq ($(HB_ARCHITECTURE),win)
 
 ifeq ($(HB_COMPILER),mingw)
-ifeq ($(HB_BUILD_MODE),cpp)
-HB_WITH_GTWVG=no
-else
 HB_WITH_GTWVG=yes
-endif
 endif
 ifeq ($(HB_COMPILER),msvc)
 HB_WITH_GTWVG=yes

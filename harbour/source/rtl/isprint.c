@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-BOOL hb_printerIsReady( char * pszPrinterName )
+BOOL hb_printerIsReady( const char * pszPrinterName )
 {
    BOOL bIsPrinter;
 
@@ -63,32 +63,32 @@ BOOL hb_printerIsReady( char * pszPrinterName )
 
    {
       USHORT uiPort;
-      
+
       if( pszPrinterName == NULL )
          pszPrinterName = "LPT1";
 
       if( hb_strnicmp( pszPrinterName, "PRN", 3 ) == 0 )
       {
          union REGS regs;
-      
+
          regs.h.ah = 2;
          regs.HB_XREGS.dx = 0; /* LPT1 */
-      
+
          HB_DOS_INT86( 0x17, &regs, &regs );
-      
+
          bIsPrinter = ( regs.h.ah == 0x90 );
       }
-      else if( strlen( pszPrinterName ) >= 4 && 
-               hb_strnicmp( pszPrinterName, "LPT", 3 ) == 0 && 
+      else if( strlen( pszPrinterName ) >= 4 &&
+               hb_strnicmp( pszPrinterName, "LPT", 3 ) == 0 &&
                ( uiPort = atoi( pszPrinterName + 3 ) ) > 0 )
       {
          union REGS regs;
-      
+
          regs.h.ah = 2;
          regs.HB_XREGS.dx = uiPort - 1;
-      
+
          HB_DOS_INT86( 0x17, &regs, &regs );
-      
+
          bIsPrinter = ( regs.h.ah == 0x90 );
       }
       else
@@ -106,7 +106,7 @@ BOOL hb_printerIsReady( char * pszPrinterName )
 
    {
       HB_FHANDLE fhnd;
-      
+
       if( pszPrinterName == NULL )
          pszPrinterName = "LPT1";
 

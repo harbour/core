@@ -343,7 +343,7 @@ static LPVOID _GenerateCallback( CALLBACKDATA * pCallback )
 
          memcpy( pMem, pFuncBody, 15 );
          _udp( pMem, 1, pCallbackRecord ) ;                     /* update callbackdata pointer */
-         _ucp( pMem, 6, __CallbackDispatcher, 10 );             /* update code pointer         */
+         _ucp( pMem, 6, ( void * ) __CallbackDispatcher, 10 );  /* update code pointer         */
 
       }
       else
@@ -386,7 +386,7 @@ static LPVOID _GenerateCallback( CALLBACKDATA * pCallback )
 
          memcpy( pMem+iOffset, pFuncEpilog, 20 );
          _udp( pMem, iOffset+1, pCallbackRecord ) ;                    /* update callbackdata pointer */
-         _ucp( pMem, iOffset+6, __CallbackDispatcher, iOffset+ 10 );   /* update code pointer         */
+         _ucp( pMem, iOffset+6, ( void * ) __CallbackDispatcher, iOffset+ 10 );   /* update code pointer         */
          pMem[ iOffset+12 ] = ( BYTE ) ( 0x08 + ( ( pCallback->iFormalParams - 1 )* 4 ) );
          pMem[ iOffset+15 ] = ( BYTE ) ( pCallback->iFormalParams * 4 );
       }
@@ -707,4 +707,3 @@ HB_FUNC( _FREEALLCALLBACKS )
    FuncMemFreeAll();
 }
 /*----------------------------------------------------------------------*/
-
