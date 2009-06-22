@@ -57,8 +57,8 @@ static void hb_compGenArgList( int iFirst, int iLast,
                                int * pArgC, char *** pArgV )
 {
    PHB_ITEM pParam;
-   ULONG ul;
-   int argc = 0, i;
+   ULONG ul, ulLen;
+   int argc = 1, i;
    char ** argv;
 
    for( i = iFirst; i <= iLast; ++i )
@@ -83,6 +83,7 @@ static void hb_compGenArgList( int iFirst, int iLast,
 
    argv = ( char ** ) hb_xgrab( sizeof( char * ) * ( argc + 1 ) );
    argc = 0;
+   argv[ argc++ ] = ( char * ) "";
    for( i = iFirst; i <= iLast; ++i )
    {
       pParam = hb_param( i, HB_IT_ARRAY | HB_IT_STRING );
@@ -90,13 +91,12 @@ static void hb_compGenArgList( int iFirst, int iLast,
       {
          if( HB_IS_ARRAY( pParam ) )
          {
-            ul = hb_arrayLen( pParam );
-            if( ul ) do
+            ulLen = hb_arrayLen( pParam );
+            for( ul = 1; ul <= ulLen; ++ul )
             {
                if( hb_arrayGetType( pParam, ul ) & HB_IT_STRING )
                   argv[ argc++ ] = hb_arrayGetCPtr( pParam, ul );
             }
-            while( --ul );
          }
          else if( HB_IS_STRING( pParam ) )
             argv[ argc++ ] = hb_itemGetCPtr( pParam );
