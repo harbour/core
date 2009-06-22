@@ -648,3 +648,35 @@ STATIC FUNCTION Arguments( oErr )
    ENDIF
 
    RETURN cArguments
+
+FUNCTION __BreakBlock()
+   RETURN {| e | Break( e ) }
+
+FUNCTION __ErrorBlock( )
+   RETURN {| e | __MinimalErrorHandler( e ) }
+
+PROCEDURE __MinimalErrorHandler( oError )
+
+   LOCAL cError := "Error!" + hb_osNewLine()
+
+   IF ValType( oError:Operation ) == 'C'
+      cError += "Operation: " + oError:Operation + hb_osNewLine()
+   ENDIF
+   IF ValType( oError:Description ) == 'C'
+      cError += "Description: " + oError:Description + hb_osNewLine()
+   ENDIF
+   IF ValType( oError:ModuleName ) == 'C'
+      cError += "Source: " + oError:ModuleName + hb_osNewLine()
+   ENDIF
+   IF ValType( oError:ProcName ) == 'C'
+      cError += "Procedure: " + oError:ProcName + hb_osNewLine()
+   ENDIF
+   IF ValType( oError:ProcLine ) == 'N'
+      cError += "Line: " + hb_ntos( oError:ProcLine ) + hb_osNewLine()
+   ENDIF
+
+   OutStd( cError )
+
+   QUIT
+
+   RETURN

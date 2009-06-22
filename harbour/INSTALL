@@ -252,6 +252,8 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_BUILD_DEBUG=yes        Create a debug build.
    - HB_BUILD_OPTIM=no         Disable C compiler optimizations.
    - HB_BUILD_MODE=[cpp|c]     Changes default build mode to C++ or C.
+                               Default is C, except for msvc* and watcom
+                               compilers.
    - HB_CONTRIBLIBS=no         Don't build any contrib libraries.
    - HB_CONTRIBLIBS=[<list>]   Build space separated <list> of contrib
                                libraries. Build all if left empty.
