@@ -3,6 +3,7 @@
 #
 
 hbrun.prg
+hbrun.rc
 
 -lhbcplr
 -lhbpp
