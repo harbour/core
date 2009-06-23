@@ -692,7 +692,7 @@ QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
                -l, -b, -n, -w3
           - To make it easier to work with Harbour, it's recommended to
             put Harbour binary dir into the PATH:
-               set PATH=C:\hb20\bin;%PATH% (on Windows)
+               set PATH=C:\harbour\bin;%PATH% (on Windows)
             (this is not a requirement though)
           - You can access hbmk2 using absolute or relative paths, and
             it will work equally well:

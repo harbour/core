@@ -26,7 +26,7 @@
 
 %define name      harbour-win
 %define version   2.0.0
-%define releasen  beta1
+%define releasen  beta2
 %define hb_pref   hbw
 %define hb_ccpath /opt/xmingw/bin
 %define hb_ccpref i386-mingw-

@@ -171,6 +171,11 @@ REQUEST hbmk_KEYW
 #define _ESC_SINQUOTE_WATCOM    2
 #define _ESC_NIX                3
 
+#define _MACRO_NORM_PREFIX      "$"
+#define _MACRO_LATE_PREFIX      "%"
+#define _MACRO_OPEN             "{"
+#define _MACRO_CLOSE            "}"
+
 #define _LNG_MARKER             "${lng}"
 
 #define _HBMK_CFG_NAME          "hbmk.cfg"
@@ -1588,9 +1593,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       CASE Left( cParam, 2 ) == "-L" .AND. ;
            Len( cParam ) > 2
 
-         cParam := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] ) )
+         cParam := PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
-            AAdd( hbmk[ _HBMK_aLIBPATH ], cParam )
+            AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, cParam ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-instpath=" ) ) == "-instpath=" .AND. ;
@@ -2957,6 +2962,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    ENDIF
 
    DEFAULT nScr_Esc TO nCmd_Esc
+
+   /* Delete all lib paths which contain late-evaluation macros. */
+   FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ] DESCEND
+      IF ( _MACRO_LATE_PREFIX + _MACRO_OPEN ) $ tmp
+         hb_ADel( hbmk[ _HBMK_aLIBPATH ], tmp:__enumIndex(), .T. )
+      ENDIF
+   NEXT
 
    IF ! lStopAfterInit
       IF hbmk[ _HBMK_lINC ]
@@ -5098,35 +5110,45 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel  )
 
       CASE Lower( Left( cLine, Len( "libpaths="     ) ) ) == "libpaths="     ; cLine := SubStr( cLine, Len( "libpaths="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) ) )
+            cItem := PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) )
             IF ! Empty( cItem )
+               cItem := PathNormalize( PathSepToSelf( cItem ) )
                IF AScan( hbmk[ _HBMK_aLIBPATH ], {|tmp| tmp == cItem } ) == 0
-                  AAdd( hbmk[ _HBMK_aLIBPATH ], cItem )
+                  AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, cItem ) )
                ENDIF
             ENDIF
          NEXT
 
       CASE Lower( Left( cLine, Len( "incpaths="     ) ) ) == "incpaths="     ; cLine := SubStr( cLine, Len( "incpaths="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) ) )
-            IF AScan( hbmk[ _HBMK_aINCPATH ], {|tmp| tmp == cItem } ) == 0
-               AAddNotEmpty( hbmk[ _HBMK_aINCPATH ], cItem )
+            cItem := PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) )
+            IF ! Empty( cItem )
+               cItem := PathNormalize( PathSepToSelf( cItem ) )
+               IF AScan( hbmk[ _HBMK_aINCPATH ], {|tmp| tmp == cItem } ) == 0
+                  AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, cItem ) )
+               ENDIF
             ENDIF
          NEXT
 
       CASE Lower( Left( cLine, Len( "inctrypaths="  ) ) ) == "inctrypaths="  ; cLine := SubStr( cLine, Len( "inctrypaths="  ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) ) )
-            IF AScan( hbmk[ _HBMK_aINCTRYPATH ], {|tmp| tmp == cItem } ) == 0
-               AAddNotEmpty( hbmk[ _HBMK_aINCTRYPATH ], cItem )
+            cItem := PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) )
+            IF ! Empty( cItem )
+               cItem := PathNormalize( PathSepToSelf( cItem ) )
+               IF AScan( hbmk[ _HBMK_aINCTRYPATH ], {|tmp| tmp == cItem } ) == 0
+                  AAdd( hbmk[ _HBMK_aINCTRYPATH ], PathSepToTarget( hbmk, cItem ) )
+               ENDIF
             ENDIF
          NEXT
 
       CASE Lower( Left( cLine, Len( "instpaths="    ) ) ) == "instpaths="    ; cLine := SubStr( cLine, Len( "instpaths="    ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) ) )
-            IF AScan( hbmk[ _HBMK_aINSTPATH ], {|tmp| tmp == cItem } ) == 0
-               AAddNotEmpty( hbmk[ _HBMK_aINSTPATH ], cItem )
+            cItem := PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) )
+            IF ! Empty( cItem )
+               cItem := PathNormalize( PathSepToSelf( cItem ) )
+               IF AScan( hbmk[ _HBMK_aINSTPATH ], {|tmp| tmp == cItem } ) == 0
+                  AAdd( hbmk[ _HBMK_aINSTPATH ], PathSepToTarget( hbmk, cItem ) )
+               ENDIF
             ENDIF
          NEXT
 
@@ -5408,9 +5430,9 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
                     "hbmk_COMP( hbmk ) == Lower( '%1' ) .OR. " +;
                     "hbmk_KEYW( hbmk, Lower( '%1' ) ) )"
 
-   IF ( nStart := At( "{", cItem ) ) > 0 .AND. ;
-      !( SubStr( cItem, nStart - 1, 1 ) $ "$%" ) .AND. ;
-      ( nEnd := hb_At( "}", cItem, nStart ) ) > 0
+   IF ( nStart := At( _MACRO_OPEN, cItem ) ) > 0 .AND. ;
+      !( SubStr( cItem, nStart - 1, 1 ) $ ( _MACRO_NORM_PREFIX + _MACRO_LATE_PREFIX ) ) .AND. ;
+      ( nEnd := hb_At( _MACRO_CLOSE, cItem, nStart ) ) > 0
 
       /* Separate filter from the rest of the item */
       cFilterSrc := SubStr( cItem, nStart + 1, nEnd - nStart - 1 )
@@ -5467,13 +5489,13 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, lLateMode )
    LOCAL cStart
 
    IF lLateMode == NIL .OR. ! lLateMode
-      cStart := "${"
+      cStart := _MACRO_NORM_PREFIX + _MACRO_OPEN
    ELSE
-      cStart := "%{"
+      cStart := _MACRO_LATE_PREFIX + _MACRO_OPEN
    ENDIF
 
    DO WHILE ( nStart := At( cStart, cString ) ) > 0 .AND. ;
-            ( nEnd := hb_At( "}", cString, nStart ) ) > 0
+            ( nEnd := hb_At( _MACRO_CLOSE, cString, nStart ) ) > 0
 
       cMacro := Upper( SubStr( cString, nStart + 2, nEnd - nStart - 2 ) )
 
