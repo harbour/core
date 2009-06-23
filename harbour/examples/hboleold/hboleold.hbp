@@ -3,12 +3,12 @@
 #
 
 -hblib
--ohboleold
+-olib/${hb_arch}/${hb_comp}/hboleold
 -inc
 -q0 -w3 -es2 -l
 
-"-echo={!winall}This library builds on win/wce only."
--stop{!winall}
+"-echo={!allwin}This library builds on win/wce only."
+-stop{!allwin}
 
 win_ole.c
 win_tole.prg
