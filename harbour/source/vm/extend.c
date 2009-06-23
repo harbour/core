@@ -634,7 +634,8 @@ char * hb_parvc( int iParam, ... )
          ulArrayIndex = va_arg( va, ULONG );
          va_end( va );
 
-         return hb_arrayGetCPtrNULL( pItem, ulArrayIndex );
+         pItem = hb_arrayGetItemPtr( pItem, ulArrayIndex );
+         return pItem && HB_IS_STRING( pItem ) ? hb_itemGetCPtr( pItem ) : NULL;
       }
    }
 

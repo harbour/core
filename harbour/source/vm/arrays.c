@@ -622,19 +622,6 @@ char * hb_arrayGetCPtr( PHB_ITEM pArray, ULONG ulIndex )
       return ( char * ) "";
 }
 
-/* Variant of hb_arrayGetCPtr() to provide Cl*pper compatibility.
-   [vszakats] */
-
-char * hb_arrayGetCPtrNULL( PHB_ITEM pArray, ULONG ulIndex )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetCPtr(%p, %lu)", pArray, ulIndex));
-
-   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-      return hb_itemGetCPtrNULL( pArray->item.asArray.value->pItems + ulIndex - 1 );
-   else
-      return ( char * ) NULL;
-}
-
 ULONG hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetCLen(%p, %lu)", pArray, ulIndex));

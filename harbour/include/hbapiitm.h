@@ -86,7 +86,6 @@ extern HB_EXPORT ULONG      hb_itemCopyC     ( PHB_ITEM pItem, char * szBuffer, 
 extern HB_EXPORT BOOL       hb_itemFreeC     ( char * szText );
 extern HB_EXPORT char *     hb_itemGetC      ( PHB_ITEM pItem );
 extern HB_EXPORT char *     hb_itemGetCPtr   ( PHB_ITEM pItem );
-extern HB_EXPORT char *     hb_itemGetCPtrNULL( PHB_ITEM pItem );
 extern HB_EXPORT ULONG      hb_itemGetCLen   ( PHB_ITEM pItem );
 extern HB_EXPORT char *     hb_itemGetDS     ( PHB_ITEM pItem, char * szDate );
 extern HB_EXPORT char *     hb_itemGetTS     ( PHB_ITEM pItem, char * szDateTime );

@@ -465,19 +465,6 @@ char * hb_itemGetCPtr( PHB_ITEM pItem )
       return ( char * ) "";
 }
 
-/* Variant of hb_itemGetCPtr() to provide Cl*pper compatibility.
-   [vszakats] */
-
-char * hb_itemGetCPtrNULL( PHB_ITEM pItem )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetCPtrNULL(%p)", pItem));
-
-   if( pItem && HB_IS_STRING( pItem ) )
-      return pItem->item.asString.value;
-   else
-      return ( char * ) NULL;
-}
-
 ULONG hb_itemGetCLen( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetCLen(%p)", pItem));
