@@ -3,8 +3,8 @@
 #
 
 -hblib
-
--ohbmsql
+-olib/${hb_arch}/${hb_comp}/hbmsql
+-inc
 
 msql.c
 tmsql.prg

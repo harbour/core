@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+incpaths=.
+libpaths=lib/${hb_arch}/${hb_comp}
+
+libs=hbsqlit2
+libs=sqlite2

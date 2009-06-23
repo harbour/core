@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+
+{!win}skip=yes
+
+incpaths=.
+libpaths=lib/${hb_arch}/${hb_comp}
+
+libs=hbwhat
+libs=xhb.hbc

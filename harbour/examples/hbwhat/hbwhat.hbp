@@ -3,7 +3,7 @@
 #
 
 -hblib
--ohbwhat
+-olib/${hb_arch}/${hb_comp}/hbwhat
 -inc
 -q0 -w3 -es2 -l
 -i../../contrib/xhb

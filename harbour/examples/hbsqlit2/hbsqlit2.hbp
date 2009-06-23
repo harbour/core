@@ -3,7 +3,7 @@
 #
 
 -hblib
--ohbsqlit2
+-olib/${hb_arch}/${hb_comp}/hbsqlit2
 -inc
 -q0 -w3 -es2 -l
 -i${HB_INC_SQLITE2}

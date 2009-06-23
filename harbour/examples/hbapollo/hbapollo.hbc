@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+
+{dos}skip=yes
+
+incpaths=.
+libpaths=lib/${hb_arch}/${hb_comp}
+
+libs=hbapollo
+libs={win}sde61
