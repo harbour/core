@@ -630,6 +630,75 @@ TROUBLESHOOTING
      examples as is.
 
 
+QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
+==================================================
+
+   For all platforms you'll need two things:
+
+   * Harbour binaries
+
+       Either a Harbour binary distribution or a local Harbour
+       build will be okay. If you're reading this text, it's
+       very likely you have one of these already.
+
+   * Supported ANSI C compiler
+
+       Your compiler of choice has to be placed in the PATH
+       (and configured appropriately according to instructions).
+       If you use Harbour binary distribution on Windows, you
+       already have MinGW compiler embedded in the installation,
+       which will automatically be used, so you don't have to
+       make any extra steps here.
+
+   Examples to build a Harbour application:
+
+   - To build one simple .prg:
+       'hbmk2 hello.prg'
+   - To build multiple .prg sources into one application:
+       'hbmk2 mymain.prg client.prg'
+   - To build an application using a project file:
+       'hbmk2 myapp.hbp'
+   - To build an application using incremental mode:
+       'hbmk2 myapp.hbp -inc'
+   - To build an application which uses a contrib library:
+       'hbmk2 myapp.prg -lhbct'
+   - To build an application which uses a 3rd party library:
+       'hbmk2 myapp.prg -lsuplib -L<path_to_lib>'
+   - To build an application which uses a 3rd party library,
+     and the 3rd party lib has an .hbc file:
+       'hbmk2 myapp.prg rddleto.hbc -L<path_to_letodb>'
+   - To build an application which uses Windows resources:
+       'hbmk2 mymain.prg client.prg myres.rc'
+   - To build an application which links against Harbour dynamic libraries:
+       'hbmk2 -shared hello.prg'
+   - To build an application out of all .prg and .c sources residing
+     in 'source' subdir:
+       'hbmk2 -omyapp source/*.prg source/*.c'
+
+   Examples to build a Harbour static library:
+
+   - To build library 'mylib' from sources:
+       'hbmk2 mylibsrc.prg -omylib -hblib'
+   - To build library 'mylib' from sources using incremental mode:
+       'hbmk2 mylibsrc.prg -omylib -hblib -inc'
+
+   NOTES: - Most of the above features can be combined. F.e. to use
+            incremental build in any of the above commands, just add
+            '-inc' switch.
+          - List all available options:
+            'hbmk2 -help'
+            Besides the ones listed, you can use all regular Harbour
+            compiler command line options, like:
+               -l, -b, -n, -w3
+          - To make it easier to work with Harbour, it's recommended to
+            put Harbour binary dir into the PATH:
+               set PATH=C:\hb20\bin;%PATH% (on Windows)
+            (this is not a requirement though)
+          - You can access hbmk2 using absolute or relative paths, and
+            it will work equally well:
+               'C:\hb20\bin\hbmk2 hello.prg'
+
+
 FOR MORE INFORMATION
 ====================
 
