@@ -673,6 +673,9 @@ hb_lnk_request()
             echo "   hb_gt_szNameDefault = \\"\$gt\\";"
         fi
         if [ -n "\${HB_MAIN_FUNC}" ]; then
+            if [ \${HB_MAIN_FUNC} != \${HB_MAIN_FUNC/x/y} ]; then
+               HB_MAIN_FUNC=\`echo "\${HB_MAIN_FUNC}"|sed -e 's/x\\(..\\)/\\\\\\\\x\\1" "/'\`
+            fi
             echo "   hb_vmSetLinkedMain( \\"\${HB_MAIN_FUNC}\\" );"
         fi
         echo "HB_CALL_ON_STARTUP_END( hb_lnk_SetDefault_build )"

@@ -3251,6 +3251,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                              ''                                                                        + hb_osNewLine() +;
                              '#include "hbapi.h"'                                                      + hb_osNewLine() )
                IF ! Empty( array )
+                  AEval( array, {|tmp, i| array[ i ] := FuncNameEncode( tmp ) } )
                   FWrite( fhnd, ''                                                                     + hb_osNewLine() )
                   AEval( array, {|tmp| FWrite( fhnd, 'HB_FUNC_EXTERN( ' + tmp + ' );'                  + hb_osNewLine() ) } )
                   FWrite( fhnd, ''                                                                     + hb_osNewLine() )
@@ -5475,16 +5476,33 @@ STATIC FUNCTION TimeElapsed( nStartSec, nEndSec )
    RETURN Round( ( nEndSec - iif( nEndSec < nStartSec, nStartSec - 86399, nStartSec ) ), 1 )
 
 STATIC FUNCTION IsValidHarbourID( cName )
-   LOCAL tmp
+   LOCAL c
    IF HB_ISFIRSTIDCHAR( Left( cName, 1 ) )
-      FOR tmp := 2 TO Len( cName )
-         IF ! HB_ISNEXTIDCHAR( SubStr( cName, tmp, 1 ) )
+      FOR EACH c IN SubStr( cName, 2 )
+         IF ! HB_ISNEXTIDCHAR( c )
             RETURN .F.
          ENDIF
       NEXT
       RETURN .T.
    ENDIF
    RETURN .F.
+
+
+STATIC FUNCTION FuncNameEncode( cName )
+   LOCAL cResult, c
+
+   cResult := ""
+   FOR EACH c IN cName
+      IF c == "_" .OR. IsAlpha( c ) .OR. ( ! cResult == "" .AND. IsDigit( c ) )
+         cResult += c
+      ELSE
+         cResult += "x" + Lower( HB_NumToHex( Asc( c ), 2 ) )
+      ENDIF
+   NEXT
+   RETURN cResult
+
+STATIC FUNCTION IsHexDigit( c )
+   RETURN c $ "0123456789ABCDEFabcdef"
 
 /* in GCC LD (except DJGPP) the order of registering init function
  * does not depend directly on the order of linked files. If we want
@@ -5514,7 +5532,12 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
          IF ( n := At( " T HB_FUN_", cFuncList ) ) != 0
             n += 10
             DO WHILE ( c := SubStr( cFuncList, n++, 1 ) ) == "_" .OR. ;
-                  IsDigit( c ) .OR. IsAlpha( c )
+                     IsDigit( c ) .OR. IsAlpha( c )
+               IF c == "x" .AND. IsHexDigit( SubStr( cFuncList, n, 1 ) ) .AND. ;
+                                 IsHexDigit( SubStr( cFuncList, n + 1, 1 ) )
+                  c := HB_HexToNum( SubStr( cFuncList, n, 2 ) )
+                  n += 2
+               ENDIF
                cFuncName += c
             ENDDO
          ENDIF
