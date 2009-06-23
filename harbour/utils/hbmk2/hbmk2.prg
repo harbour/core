@@ -5540,7 +5540,6 @@ STATIC FUNCTION IsValidHarbourID( cName )
    ENDIF
    RETURN .F.
 
-
 STATIC FUNCTION FuncNameEncode( cName )
    LOCAL cResult, c
 

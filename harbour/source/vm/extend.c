@@ -634,7 +634,7 @@ char * hb_parvc( int iParam, ... )
          ulArrayIndex = va_arg( va, ULONG );
          va_end( va );
 
-         return hb_arrayGetCPtr( pItem, ulArrayIndex );
+         return hb_arrayGetCPtrNULL( pItem, ulArrayIndex );
       }
    }
 

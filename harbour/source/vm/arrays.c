@@ -218,14 +218,14 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
             {
                if( pBaseArray->ulAllocated < ulLen )
                {
-                  /* 
+                  /*
                      A common practice is to double allocation buffer size. Thus, making
                      reallocation count logarithmic to total number of added numbers.
-                     I've used here a little different formula. ulAllocated is divided by 
-                     factor 2 ( >> 1 ) and 1 is added to requested size. This algorithm 
+                     I've used here a little different formula. ulAllocated is divided by
+                     factor 2 ( >> 1 ) and 1 is added to requested size. This algorithm
                      has properties:
                        - reallocation count remains asymptoticaly logarithmic;
-                       - saves memory for large arrays, because reallocation buffer 
+                       - saves memory for large arrays, because reallocation buffer
                          size is not doubled, but multiplied by 1.5;
                        - adding of 1, allows reduce reallocation count for small arrays.
                    */
@@ -620,6 +620,19 @@ char * hb_arrayGetCPtr( PHB_ITEM pArray, ULONG ulIndex )
       return hb_itemGetCPtr( pArray->item.asArray.value->pItems + ulIndex - 1 );
    else
       return ( char * ) "";
+}
+
+/* Variant of hb_arrayGetCPtr() to provide Cl*pper compatibility.
+   [vszakats] */
+
+char * hb_arrayGetCPtrNULL( PHB_ITEM pArray, ULONG ulIndex )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetCPtr(%p, %lu)", pArray, ulIndex));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetCPtrNULL( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      return ( char * ) NULL;
 }
 
 ULONG hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex )
