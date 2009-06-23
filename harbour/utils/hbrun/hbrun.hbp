@@ -5,6 +5,9 @@
 hbrun.prg
 hbrun.rc
 
+# for harbour.ico
+-incpath=../../package
+
 -lhbcplr
 -lhbpp
 -lhbcommon
