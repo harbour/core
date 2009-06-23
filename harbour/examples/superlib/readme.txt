@@ -17,11 +17,14 @@
     hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no "*.prg"
 
 4.) Apply supplied patch to the source using GNU Patch:
-    patch -lNi hbsuper.dif
+    patch -lNi superlib.dif
 
 5.) Build it:
-    hbmk2 hbsuper.hbp
+    hbmk2 superlib.hbp
 
 6.) You're done.
+
+7.) Finally, to build an application with SuperLib, use:
+    hbmk2 myapp.prg superlib.hbc
 
 [vszakats]

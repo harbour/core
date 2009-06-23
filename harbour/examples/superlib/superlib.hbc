@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+
+incpaths=.
+libpaths=lib/${hb_arch}/${hb_comp}
+
+libs=super
