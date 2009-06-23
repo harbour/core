@@ -83,7 +83,6 @@ static void hb_compGenArgList( int iFirst, int iLast,
 
    argv = ( char ** ) hb_xgrab( sizeof( char * ) * ( argc + 1 ) );
    argc = 0;
-   argv[ argc++ ] = ( char * ) "";
    for( i = iFirst; i <= iLast; ++i )
    {
       pParam = hb_param( i, HB_IT_ARRAY | HB_IT_STRING );
