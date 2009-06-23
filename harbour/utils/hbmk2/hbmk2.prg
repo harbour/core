@@ -2880,7 +2880,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          cBin_Dyn := cBin_Link
          cOpt_CompC := "/c /Ze"
-         IF !( hbmk[ _HBMK_cCOMP ] == "poccarm" )
+         IF !( hbmk[ _HBMK_cCOMP ] == "poccarm" ) .AND. ;
+            !( hbmk[ _HBMK_cCOMP ] == "xcc" ) /* xcc doesn't have this enabled in default Harbour builds. */
             cOpt_CompC += " /MT"
          ENDIF
          IF !( hbmk[ _HBMK_cCOMP ] == "xcc" )
