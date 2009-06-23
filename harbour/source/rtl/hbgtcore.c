@@ -1528,7 +1528,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
       }
       case HB_GTI_SETWIN:  /* restore screen buffer, cursor shape and possition */
-         if( hb_arrayLen( pInfo->pNewVal ) == 8 )
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) && hb_arrayLen( pInfo->pNewVal ) == 8 )
          {
             HB_GTSELF_DISPBEGIN( pGT );
             if( hb_arrayGetCLen( pInfo->pNewVal, 7 ) > 0 )

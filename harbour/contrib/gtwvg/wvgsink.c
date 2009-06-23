@@ -442,22 +442,23 @@ static const IEventHandlerVtbl IEventHandler_Vtbl =
    Invoke
 };
 
-typedef IEventHandler device_interface;
-
 /*----------------------------------------------------------------------*/
 
-static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID riid, void** pThis )
+typedef IEventHandler device_interface;
+
+HB_FUNC( WVG_AXSETUPCONNECTIONPOINT )
 {
+   HRESULT                     hr;
+   MyRealIEventHandler*        hSink = NULL;
+   device_interface*           pdevice_interface = ( device_interface * ) hb_oleParam( 1 );
+
    IConnectionPointContainer*  pIConnectionPointContainerTemp = NULL;
    IUnknown*                   pIUnknown;
    IConnectionPoint*           m_pIConnectionPoint = NULL;
    IEnumConnectionPoints*      m_pIEnumConnectionPoints;
-   HRESULT                     hr;
    IID                         rriid;
-   register IEventHandler*     thisobj;
+   IEventHandler*              thisobj;
    DWORD                       dwCookie = 0;
-
-   HB_SYMBOL_UNUSED( riid );
 
    thisobj = ( IEventHandler * ) GlobalAlloc( GMEM_FIXED, sizeof( MyRealIEventHandler ) );
    if( thisobj )
@@ -518,19 +519,7 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
    else
       hr = E_OUTOFMEMORY;
 
-   *pThis = ( void * ) thisobj;
-
-   return hr;
-}
-/*----------------------------------------------------------------------*/
-
-HB_FUNC( WVG_AXSETUPCONNECTIONPOINT )
-{
-   HRESULT              hr;
-   MyRealIEventHandler* hSink = NULL;
-   LPIID                riid  = ( LPIID ) &IID_IDispatch;
-
-   hr = SetupConnectionPoint( ( device_interface* ) hb_oleParam( 1 ), ( REFIID ) riid, ( void** ) (void*) &hSink ) ;
+   hSink = ( MyRealIEventHandler * ) thisobj;
 
    hSink->pEvents = hb_itemNew( hb_param( 3, HB_IT_ANY ) );
 
