@@ -2880,6 +2880,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          cBin_Dyn := cBin_Link
          cOpt_CompC := "/c /Ze"
+         IF !( hbmk[ _HBMK_cCOMP ] == "poccarm" )
+            cOpt_CompC += " /MT"
+         ENDIF
          IF !( hbmk[ _HBMK_cCOMP ] == "xcc" )
             cOpt_CompC += " /Go"
          ENDIF
