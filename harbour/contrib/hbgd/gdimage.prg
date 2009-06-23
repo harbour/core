@@ -298,12 +298,12 @@ METHOD New( sx, sy ) CLASS GDImage
    ::Create( sx, sy )
 RETURN Self
 
-METHOD Destruct() CLASS GDImage
+METHOD PROCEDURE Destruct() CLASS GDImage
   //__OutDebug( "Destroyed" )
   IF ::lDestroy
      ::Destroy()
   ENDIF
-RETURN NIL
+RETURN
 
 METHOD Polygon( aPoints, lFilled, color ) CLASS GDImage
   DEFAULT aPoints TO ::aPoints

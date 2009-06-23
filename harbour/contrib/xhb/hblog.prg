@@ -251,7 +251,7 @@ RETURN Self
 * Open all the channels calling their ::Open() method
 */
 
-METHOD Open() CLASS HB_Logger
+METHOD PROCEDURE Open() CLASS HB_Logger
 
    LOCAL oChannel
 
@@ -263,12 +263,12 @@ METHOD Open() CLASS HB_Logger
       oChannel:Open( ::cProgName )
    NEXT
 
-RETURN Self
+RETURN
 
 /**
 * Close all the channels calling their ::Close() method
 */
-METHOD Close() CLASS HB_Logger
+METHOD PROCEDURE Close() CLASS HB_Logger
 
    LOCAL oChannel
 
@@ -280,12 +280,12 @@ METHOD Close() CLASS HB_Logger
       oChannel:Close( ::cProgName )
    NEXT
 
-RETURN Self
+RETURN
 
 /**
 * Send a log message to all the channels
 */
-METHOD Log( cMessage, nPriority ) CLASS HB_Logger
+METHOD PROCEDURE Log( cMessage, nPriority ) CLASS HB_Logger
    LOCAL oChannel
 
    IF nPriority == NIL
@@ -298,7 +298,7 @@ METHOD Log( cMessage, nPriority ) CLASS HB_Logger
       oChannel:Log( ::nStyle, cMessage, ::cProgName, nPriority )
    NEXT
 
-RETURN Self
+RETURN
 
 /**********************************************
 * Logger Channel class (mostly VIRTUAL)
@@ -344,13 +344,13 @@ RETURN Self
 * if the log level is higher or equal than the channel setting
 */
 
-METHOD Log( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
+METHOD PROCEDURE Log( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
 
    IF nPriority <= ::nLevel .and. ::lActive
       ::Send( nStyle, cMessage, cName, nPriority )
    ENDIF
 
-RETURN Self
+RETURN
 
 /**
 * This is an utility functions for subclasses, used to
@@ -459,7 +459,7 @@ METHOD Close( cName ) CLASS HB_LogConsole
 
 RETURN .T.
 
-METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogConsole
+METHOD PROCEDURE Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogConsole
 
    IF ::lRealConsole
       OutStd( ::Format( nStyle, cMessage, cName, nPriority ), HB_OSnewLine() )
@@ -467,7 +467,7 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogConsole
       QOut( ::Format( nStyle, cMessage, cName, nPriority ) )
    ENDIF
 
-RETURN Self
+RETURN
 
 /**********************************************
 * Console channel - to file
@@ -657,14 +657,14 @@ METHOD New( nLevel, nMaxLevel ) CLASS HB_LogDebug
 
 RETURN Self
 
-METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogDebug
+METHOD PROCEDURE Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogDebug
 
    IF .not. Empty( ::nMaxLevel )
       IF nPriority < ::nMaxLevel
-         RETURN Self
+         RETURN
       ENDIF
    ENDIF
 
    HB_OutDebug( ::Format( nStyle, cMessage, cName, nPriority ) )
 
-RETURN Self
+RETURN

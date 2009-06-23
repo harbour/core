@@ -574,7 +574,7 @@ METHOD NEW( cAlias ) CLASS HBRecord
 RETURN Self
 
 
-METHOD GET() CLASS HBRecord
+METHOD PROCEDURE GET() CLASS HBRecord
 
    LOCAL xField
 
@@ -583,10 +583,10 @@ METHOD GET() CLASS HBRecord
       ::buffer[ xField:__EnumIndex() ] := xField:value
    NEXT
 
-RETURN Self
+RETURN
 
 
-METHOD Put() CLASS HBRecord
+METHOD PROCEDURE Put() CLASS HBRecord
 
    LOCAL xField
 
@@ -597,7 +597,7 @@ METHOD Put() CLASS HBRecord
       ENDIF
    NEXT
 
-RETURN Self
+RETURN
 
 /****
 *
@@ -850,7 +850,7 @@ METHOD OPEN() CLASS HBTable
 RETURN ( lSuccess )
 
 
-METHOD DBMove( nDirection ) CLASS HBTable
+METHOD PROCEDURE DBMove( nDirection ) CLASS HBTable
 
    DEFAULT nDirection TO 0
 
@@ -871,7 +871,7 @@ METHOD DBMove( nDirection ) CLASS HBTable
       ( ::Alias )->( DBGOTO( nDirection ) )
    ENDCASE
 
-RETURN Self
+RETURN
 
 // -->
 // -->
@@ -943,7 +943,7 @@ METHOD FldInit() CLASS HBTable
 RETURN oNew
 
 
-METHOD READ( lKeepBuffer ) CLASS HBTable
+METHOD PROCEDURE READ( lKeepBuffer ) CLASS HBTable
 
    LOCAL i
    LOCAL nSel   := SELECT( ::Alias )
@@ -970,10 +970,10 @@ METHOD READ( lKeepBuffer ) CLASS HBTable
 
    SELECT( nSel )
 
-RETURN Self
+RETURN
 
 
-METHOD ReadBlank( lKeepBuffer ) CLASS HBTable
+METHOD PROCEDURE ReadBlank( lKeepBuffer ) CLASS HBTable
 
    LOCAL i
    LOCAL nSel   := SELECT( ::Alias )
@@ -1002,7 +1002,7 @@ METHOD ReadBlank( lKeepBuffer ) CLASS HBTable
    ( ::Alias )->( DBGOTO( nRec ) )
    SELECT( nSel )
 
-RETURN Self
+RETURN
 
 
 METHOD Write( lKeepBuffer ) CLASS HBTable
@@ -1447,16 +1447,16 @@ METHOD CreateTable( cFile ) CLASS HBTable
 RETURN Self
 
 
-METHOD AddField( f, t, l, d ) CLASS HBTable
+METHOD PROCEDURE AddField( f, t, l, d ) CLASS HBTable
 
    AADD( ::aStruc, { f, t, l, d } )
-RETURN Self
+RETURN
 
 
-METHOD Gentable() CLASS HBTable
+METHOD PROCEDURE Gentable() CLASS HBTable
 
    DBCREATE( ::cDbf, ::aStruc, ::Driver )
-RETURN Self
+RETURN
 
 
 METHOD OnError( uParam ) CLASS HBTable
@@ -1544,7 +1544,7 @@ METHOD New( cTag, cKey, cLabel, cFor, cWhile, lUnique, bEval, nInterval, cOrderB
 RETURN Self
 
 
-METHOD Create() CLASS HBOrder
+METHOD PROCEDURE Create() CLASS HBOrder
 
    DEFAULT ::cOrderBag TO ::oTable:cOrderBag
    //? "<<<",::alias, ::cOrderBag
@@ -1555,4 +1555,4 @@ METHOD Create() CLASS HBOrder
 
    ( ::alias )->( ORDCREATE( ::cOrderBag, ::Tag, ::cKey, ;
      ::bKey, ::Unique ) )
-RETURN Self
+RETURN
