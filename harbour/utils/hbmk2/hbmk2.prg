@@ -2883,11 +2883,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF !( hbmk[ _HBMK_cCOMP ] == "xcc" )
             cOpt_CompC += " /Go"
          ENDIF
-         cOpt_CompC += " {FC}"
-         IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( l_aPRG ) + Len( l_aC ) ) == 1
-            cOpt_CompC += " {LC} /Fo{OO}"
-         ELSE
-            cOpt_CompC += " {IC}"
+         cOpt_CompC += " {FC} {IC} /Fo{OO}"
+         IF Empty( cWorkDir )
+            cWorkDir := "."
          ENDIF
          cOptIncMask := "/I{DI}"
          cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
@@ -2911,11 +2909,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cOpt_Lib := "{FA} /out:{OL} {LO}"
          IF hbmk[ _HBMK_lMT ]
             AAdd( hbmk[ _HBMK_aOPTC ], "/MT" )
-         ENDIF
-         IF hbmk[ _HBMK_lINC ]
-            IF ! Empty( cWorkDir )
-               AAdd( hbmk[ _HBMK_aOPTC ], "/Fo{OO}" )
-            ENDIF
          ENDIF
          cOpt_Link := "/out:{OE} {LO} {DL} {FL} {LL} {LS}"
          cLibPathPrefix := "/libpath:"
