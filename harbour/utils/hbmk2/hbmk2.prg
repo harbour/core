@@ -5412,9 +5412,9 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, lLateMode )
 
    LOCAL cStart
 
-   IF lLateMode == NIL
+   IF lLateMode == NIL .OR. ! lLateMode
       cStart := "${"
-   ELSEIF lLateMode
+   ELSE
       cStart := "%{"
    ENDIF
 
