@@ -1514,6 +1514,7 @@ HB_FUNC( __MVSAVE )
          buffer[ 0 ] = '\x1A';
          hb_fsWrite( fhnd, buffer, 1 );
 
+         hb_fsCommit( fhnd );
          hb_fsClose( fhnd );
       }
 

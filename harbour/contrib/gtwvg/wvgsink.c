@@ -449,7 +449,7 @@ typedef IEventHandler device_interface;
 HB_FUNC( WVG_AXSETUPCONNECTIONPOINT )
 {
    HRESULT                     hr;
-   MyRealIEventHandler*        hSink = NULL;
+   MyRealIEventHandler*        hSink;
    device_interface*           pdevice_interface = ( device_interface * ) hb_oleParam( 1 );
 
    IConnectionPointContainer*  pIConnectionPointContainerTemp = NULL;
