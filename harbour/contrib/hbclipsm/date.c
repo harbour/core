@@ -67,7 +67,7 @@ HB_FUNC( MDY )
    int iYearLen;
    int iLen;
 
-   hb_dateDecode( hb_parnl( 1 ), &iYear, &iMonth, &iDay );
+   hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, "MM/DD/YYYY" );
 
    iLen = strlen( hb_dateCMonth( iMonth ) );
@@ -97,7 +97,7 @@ HB_FUNC( DMY )
    int iYearLen;
    int iLen;
 
-   hb_dateDecode( hb_parnl( 1 ), &iYear, &iMonth, &iDay );
+   hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, "MM/DD/YYYY" );
 
    iLen = strlen( hb_dateCMonth( iMonth ) );
