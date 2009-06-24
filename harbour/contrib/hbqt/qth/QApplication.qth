@@ -53,7 +53,10 @@
 ;
 ;              Header File to Generate QT Wrapper Sources
 ;
-
+<CLASS>
+Inherit  = 
+New      = 
+</CLASS>
 
 
 <CODE>
