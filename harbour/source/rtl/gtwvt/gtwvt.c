@@ -2515,22 +2515,25 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       {
          int iX, iY;
 
-         if( !pInfo->pResult )
-         {
+         if( ! pInfo->pResult )
             pInfo->pResult = hb_itemNew( NULL );
-         }
+
          hb_arrayNew( pInfo->pResult, 2 );
          hb_arraySetNI( pInfo->pResult, 2, pWVT->PTEXTSIZE.y * pWVT->ROWS );
          hb_arraySetNI( pInfo->pResult, 1, pWVT->PTEXTSIZE.x * pWVT->COLS );
-         iY = hb_arrayGetNI( pInfo->pNewVal,2 );
-         iX = hb_arrayGetNI( pInfo->pNewVal,1 );
 
-         if( iY  > 0 )
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) && hb_arrayLen( pInfo->pNewVal ) == 2 )
          {
-            BOOL bOldCentre = pWVT->CentreWindow;
-            pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
-            HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iY / pWVT->PTEXTSIZE.y ), ( USHORT ) ( iX / pWVT->PTEXTSIZE.x ) );
-            pWVT->CentreWindow = bOldCentre;
+            iY = hb_arrayGetNI( pInfo->pNewVal, 2 );
+            iX = hb_arrayGetNI( pInfo->pNewVal, 1 );
+
+            if( iY > 0 )
+            {
+               BOOL bOldCentre = pWVT->CentreWindow;
+               pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
+               HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iY / pWVT->PTEXTSIZE.y ), ( USHORT ) ( iX / pWVT->PTEXTSIZE.x ) );
+               pWVT->CentreWindow = bOldCentre;
+            }
          }
          break;
       }

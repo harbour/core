@@ -656,7 +656,7 @@ STATIC FUNCTION Build_ComboBox( oWnd )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION Build_TreeView( oWnd )
+PROCEDURE Build_TreeView( oWnd )
    LOCAL i
    LOCAL oTree := XbpTreeView():new( oWnd, , {10,10}, {oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45} )
 

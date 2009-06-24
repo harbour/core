@@ -3224,39 +3224,46 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          int iX, iY;
 
          if( !pInfo->pResult )
-         {
             pInfo->pResult = hb_itemNew( NULL );
-         }
+
          hb_arrayNew( pInfo->pResult, 2 );
          hb_arraySetNI( pInfo->pResult, 2, pWVT->PTEXTSIZE.y * pWVT->ROWS );
          hb_arraySetNI( pInfo->pResult, 1, pWVT->PTEXTSIZE.x * pWVT->COLS );
-         iY = hb_arrayGetNI( pInfo->pNewVal,2 );
-         iX = hb_arrayGetNI( pInfo->pNewVal,1 );
 
-         if( iY  > 0 )
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) && hb_arrayLen( pInfo->pNewVal ) == 2 )
          {
-            BOOL bOldCentre = pWVT->CentreWindow;
-            pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
-            HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iY / pWVT->PTEXTSIZE.y ), ( USHORT ) ( iX / pWVT->PTEXTSIZE.x ) );
-            pWVT->CentreWindow = bOldCentre;
+            iY = hb_arrayGetNI( pInfo->pNewVal, 2 );
+            iX = hb_arrayGetNI( pInfo->pNewVal, 1 );
+
+            if( iY > 0 )
+            {
+               BOOL bOldCentre = pWVT->CentreWindow;
+               pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
+               HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iY / pWVT->PTEXTSIZE.y ), ( USHORT ) ( iX / pWVT->PTEXTSIZE.x ) );
+               pWVT->CentreWindow = bOldCentre;
+            }
          }
          break;
       }
       case HB_GTI_SETPOSANDSIZE:
       {
-         int iX, iY, iW, iH;
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) && hb_arrayLen( pInfo->pNewVal ) == 2 &&
+             ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_ARRAY ) && hb_arrayLen( pInfo->pNewVal2 ) == 2 )
+         {
+            int iX, iY, iW, iH;
 
-         iX = hb_arrayGetNI( pInfo->pNewVal,1 );
-         iY = hb_arrayGetNI( pInfo->pNewVal,2 );
+            iX = hb_arrayGetNI( pInfo->pNewVal, 1 );
+            iY = hb_arrayGetNI( pInfo->pNewVal, 2 );
 
-         iW = hb_arrayGetNI( pInfo->pNewVal2,1 );
-         iH = hb_arrayGetNI( pInfo->pNewVal2,2 );
+            iW = hb_arrayGetNI( pInfo->pNewVal2, 1 );
+            iH = hb_arrayGetNI( pInfo->pNewVal2, 2 );
 
-         SetWindowPos( pWVT->hWnd, NULL, iX, iY, iW, iH, SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOZORDER );
+            SetWindowPos( pWVT->hWnd, NULL, iX, iY, iW, iH, SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOZORDER );
 
-         hb_gt_wvt_FitSize( pWVT );
+            hb_gt_wvt_FitSize( pWVT );
 
-         hb_wvt_gtSaveGuiState( pWVT );
+            hb_wvt_gtSaveGuiState( pWVT );
+         }
          break;
       }
       case HB_GTI_RESIZABLE:

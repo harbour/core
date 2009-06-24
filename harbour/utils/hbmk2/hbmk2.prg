@@ -1769,8 +1769,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF ! Empty( cParam )
             IF ! hb_FileExists( cParam )
                FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
-                  IF hb_FileExists( DirAddPathSep( MacroProc( hbmk, tmp, cParam, .T. ) ) + FN_NameExtGet( cParam ) )
-                     cParam := DirAddPathSep( MacroProc( hbmk, tmp, cParam, .T. ) ) + FN_NameExtGet( cParam )
+                  IF hb_FileExists( DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cParam, .T. ) ) ) + FN_NameExtGet( cParam ) )
+                     cParam := DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cParam, .T. ) ) ) + FN_NameExtGet( cParam )
                      EXIT
                   ENDIF
                NEXT
@@ -5049,8 +5049,8 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel  )
                IF nNestingLevel < _HBMK_NEST_MAX
                   IF ! hb_FileExists( cItem )
                      FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
-                        IF hb_FileExists( DirAddPathSep( MacroProc( hbmk, tmp, cItem, .T. ) ) + FN_NameExtGet( cItem ) )
-                           cItem := DirAddPathSep( MacroProc( hbmk, tmp, cItem, .T. ) ) + FN_NameExtGet( cItem )
+                        IF hb_FileExists( DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cItem, .T. ) ) ) + FN_NameExtGet( cItem ) )
+                           cItem := DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cItem, .T. ) ) ) + FN_NameExtGet( cItem )
                            EXIT
                         ENDIF
                      NEXT
@@ -5084,8 +5084,8 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel  )
 
                IF ! hb_FileExists( cItem )
                   FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
-                     IF hb_FileExists( DirAddPathSep( MacroProc( hbmk, tmp, cItem, .T. ) ) + FN_NameExtGet( cItem ) )
-                        cItem := DirAddPathSep( MacroProc( hbmk, tmp, cItem, .T. ) ) + FN_NameExtGet( cItem )
+                     IF hb_FileExists( DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cItem, .T. ) ) ) + FN_NameExtGet( cItem ) )
+                        cItem := DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cItem, .T. ) ) ) + FN_NameExtGet( cItem )
                         EXIT
                      ENDIF
                   NEXT
