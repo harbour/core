@@ -539,7 +539,7 @@ void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
    hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, VS_PRIVATE, pValue );
 }
 
-static HB_DYNS_PTR hb_memvarFindSymbol( char * szArg, ULONG ulLen )
+static HB_DYNS_PTR hb_memvarFindSymbol( const char * szArg, ULONG ulLen )
 {
    HB_DYNS_PTR pDynSym = NULL;
 

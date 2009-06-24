@@ -612,14 +612,14 @@ char * hb_arrayGetC( PHB_ITEM pArray, ULONG ulIndex )
       return NULL;
 }
 
-char * hb_arrayGetCPtr( PHB_ITEM pArray, ULONG ulIndex )
+const char * hb_arrayGetCPtr( PHB_ITEM pArray, ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetCPtr(%p, %lu)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetCPtr( pArray->item.asArray.value->pItems + ulIndex - 1 );
    else
-      return ( char * ) "";
+      return "";
 }
 
 ULONG hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex )

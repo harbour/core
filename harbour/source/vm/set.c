@@ -123,7 +123,7 @@ static BOOL set_logical( PHB_ITEM pItem, BOOL bDefault )
          bLogical = hb_itemGetL( pItem );
       else if( HB_IS_STRING( pItem ) )
       {
-         char * szString = hb_itemGetCPtr( pItem );
+         const char * szString = hb_itemGetCPtr( pItem );
          ULONG ulLen = hb_itemGetCLen( pItem );
 
          if( ulLen >= 2

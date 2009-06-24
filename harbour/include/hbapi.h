@@ -602,51 +602,51 @@ extern void       hb_gcCollect( void ); /* checks if a single memory block can b
 extern void       hb_gcCollectAll( BOOL fForce ); /* checks if all memory blocks can be released */
 
 /* Extend API */
-extern HB_EXPORT ULONG      hb_parinfo( int iParam ); /* Determine the param count or data type */
-extern HB_EXPORT ULONG      hb_parinfa( int iParamNum, ULONG uiArrayIndex ); /* retrieve length or element type of an array parameter */
-extern HB_EXPORT PHB_ITEM   hb_param( int iParam, long lMask ); /* retrieve a generic parameter */
-extern HB_EXPORT PHB_ITEM   hb_paramError( int iParam ); /* Returns either the generic parameter or a NIL item if param not provided */
-extern HB_EXPORT BOOL       hb_extIsArray( int iParam );
-extern HB_EXPORT BOOL       hb_extIsObject( int iParam );
+extern HB_EXPORT ULONG        hb_parinfo( int iParam ); /* Determine the param count or data type */
+extern HB_EXPORT ULONG        hb_parinfa( int iParamNum, ULONG uiArrayIndex ); /* retrieve length or element type of an array parameter */
+extern HB_EXPORT PHB_ITEM     hb_param( int iParam, long lMask ); /* retrieve a generic parameter */
+extern HB_EXPORT PHB_ITEM     hb_paramError( int iParam ); /* Returns either the generic parameter or a NIL item if param not provided */
+extern HB_EXPORT BOOL         hb_extIsArray( int iParam );
+extern HB_EXPORT BOOL         hb_extIsObject( int iParam );
 
-extern HB_EXPORT char *     hb_parc( int iParam );  /* retrieve a string parameter */
-extern HB_EXPORT char *     hb_parcx( int iParam );  /* retrieve a string parameter */
-extern HB_EXPORT ULONG      hb_parclen( int iParam ); /* retrieve a string parameter length */
-extern HB_EXPORT ULONG      hb_parcsiz( int iParam ); /* retrieve a by-reference string parameter length, including terminator */
-extern HB_EXPORT char *     hb_pards( int iParam ); /* retrieve a date as a string yyyymmdd */
-extern HB_EXPORT char *     hb_pardsbuff( char * szDate, int iParam ); /* retrieve a date as a string yyyymmdd */
-extern HB_EXPORT LONG       hb_pardl( int iParam ); /* retrieve a date as a LONG NUMBER  */
-extern HB_EXPORT double     hb_partd( int iParam ); /* retrieve a timestamp as a double number */
-extern HB_EXPORT BOOL       hb_partdt( LONG * plJulian, LONG * plMilliSec , int iParam ); /* retrieve a timestamp as two long numbers */
-extern HB_EXPORT int        hb_parl( int iParam ); /* retrieve a logical parameter as an int */
-extern HB_EXPORT double     hb_parnd( int iParam ); /* retrieve a numeric parameter as a double */
-extern HB_EXPORT int        hb_parni( int iParam ); /* retrieve a numeric parameter as a integer */
-extern HB_EXPORT long       hb_parnl( int iParam ); /* retrieve a numeric parameter as a long */
-extern HB_EXPORT HB_LONG    hb_parnint( int iParam ); /* retrieve a numeric parameter as a HB_LONG */
-extern HB_EXPORT void *     hb_parptr( int iParam ); /* retrieve a parameter as a pointer */
-extern HB_EXPORT void *     hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
+extern HB_EXPORT const char * hb_parc( int iParam ); /* retrieve a string parameter */
+extern HB_EXPORT const char * hb_parcx( int iParam ); /* retrieve a string parameter */
+extern HB_EXPORT ULONG        hb_parclen( int iParam ); /* retrieve a string parameter length */
+extern HB_EXPORT ULONG        hb_parcsiz( int iParam ); /* retrieve a by-reference string parameter length, including terminator */
+extern HB_EXPORT char *       hb_pards( int iParam ); /* retrieve a date as a string yyyymmdd */
+extern HB_EXPORT char *       hb_pardsbuff( char * szDate, int iParam ); /* retrieve a date as a string yyyymmdd */
+extern HB_EXPORT LONG         hb_pardl( int iParam ); /* retrieve a date as a LONG NUMBER  */
+extern HB_EXPORT double       hb_partd( int iParam ); /* retrieve a timestamp as a double number */
+extern HB_EXPORT BOOL         hb_partdt( LONG * plJulian, LONG * plMilliSec , int iParam ); /* retrieve a timestamp as two long numbers */
+extern HB_EXPORT int          hb_parl( int iParam ); /* retrieve a logical parameter as an int */
+extern HB_EXPORT double       hb_parnd( int iParam ); /* retrieve a numeric parameter as a double */
+extern HB_EXPORT int          hb_parni( int iParam ); /* retrieve a numeric parameter as a integer */
+extern HB_EXPORT long         hb_parnl( int iParam ); /* retrieve a numeric parameter as a long */
+extern HB_EXPORT HB_LONG      hb_parnint( int iParam ); /* retrieve a numeric parameter as a HB_LONG */
+extern HB_EXPORT void *       hb_parptr( int iParam ); /* retrieve a parameter as a pointer */
+extern HB_EXPORT void *       hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT LONGLONG   hb_parnll( int iParam ); /* retrieve a numeric parameter as a long long */
+extern HB_EXPORT LONGLONG     hb_parnll( int iParam ); /* retrieve a numeric parameter as a long long */
 #endif
 
-extern HB_EXPORT char *     hb_parvc( int iParam, ... );  /* retrieve a string parameter */
-extern HB_EXPORT char *     hb_parvcx( int iParam, ... );  /* retrieve a string parameter */
-extern HB_EXPORT ULONG      hb_parvclen( int iParam, ... ); /* retrieve a string parameter length */
-extern HB_EXPORT ULONG      hb_parvcsiz( int iParam, ... ); /* retrieve a by-reference string parameter length, including terminator */
-extern HB_EXPORT char *     hb_parvds( int iParam, ... ); /* retrieve a date as a string yyyymmdd */
-extern HB_EXPORT char *     hb_parvdsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string yyyymmdd */
-extern HB_EXPORT LONG       hb_parvdl( int iParam, ... ); /* retrieve a date as a LONG NUMBER  */
-extern HB_EXPORT double     hb_parvtd( int iParam, ... ); /* retrieve a timestamp as a double number */
-extern HB_EXPORT BOOL       hb_parvtdt( LONG * plJulian, LONG * plMilliSec , int iParam, ... ); /* retrieve a timestamp as two long numbers */
-extern HB_EXPORT int        hb_parvl( int iParam, ... ); /* retrieve a logical parameter as an int */
-extern HB_EXPORT double     hb_parvnd( int iParam, ... ); /* retrieve a numeric parameter as a double */
-extern HB_EXPORT int        hb_parvni( int iParam, ... ); /* retrieve a numeric parameter as a integer */
-extern HB_EXPORT long       hb_parvnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
-extern HB_EXPORT HB_LONG    hb_parvnint( int iParam, ... ); /* retrieve a numeric parameter as a HB_LONG */
-extern HB_EXPORT void *     hb_parvptr( int iParam, ... ); /* retrieve a parameter as a pointer */
-extern HB_EXPORT void *     hb_parvptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam, ... ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
+extern HB_EXPORT char *       hb_parvc( int iParam, ... ); /* retrieve a string parameter */
+extern HB_EXPORT char *       hb_parvcx( int iParam, ... ); /* retrieve a string parameter */
+extern HB_EXPORT ULONG        hb_parvclen( int iParam, ... ); /* retrieve a string parameter length */
+extern HB_EXPORT ULONG        hb_parvcsiz( int iParam, ... ); /* retrieve a by-reference string parameter length, including terminator */
+extern HB_EXPORT char *       hb_parvds( int iParam, ... ); /* retrieve a date as a string yyyymmdd */
+extern HB_EXPORT char *       hb_parvdsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string yyyymmdd */
+extern HB_EXPORT LONG         hb_parvdl( int iParam, ... ); /* retrieve a date as a LONG NUMBER  */
+extern HB_EXPORT double       hb_parvtd( int iParam, ... ); /* retrieve a timestamp as a double number */
+extern HB_EXPORT BOOL         hb_parvtdt( LONG * plJulian, LONG * plMilliSec , int iParam, ... ); /* retrieve a timestamp as two long numbers */
+extern HB_EXPORT int          hb_parvl( int iParam, ... ); /* retrieve a logical parameter as an int */
+extern HB_EXPORT double       hb_parvnd( int iParam, ... ); /* retrieve a numeric parameter as a double */
+extern HB_EXPORT int          hb_parvni( int iParam, ... ); /* retrieve a numeric parameter as a integer */
+extern HB_EXPORT long         hb_parvnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
+extern HB_EXPORT HB_LONG      hb_parvnint( int iParam, ... ); /* retrieve a numeric parameter as a HB_LONG */
+extern HB_EXPORT void *       hb_parvptr( int iParam, ... ); /* retrieve a parameter as a pointer */
+extern HB_EXPORT void *       hb_parvptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam, ... ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT LONGLONG   hb_parvnll( int iParam, ... ); /* retrieve a numeric parameter as a long long */
+extern HB_EXPORT LONGLONG     hb_parvnll( int iParam, ... ); /* retrieve a numeric parameter as a long long */
 #endif
 
 extern HB_EXPORT int    hb_pcount( void );          /* returns the number of suplied parameters */
@@ -761,70 +761,70 @@ extern HB_EXPORT int    hb_storvnll( LONGLONG lValue, int iParam, ... ); /* stor
 #endif
 
 /* array management */
-extern HB_EXPORT BOOL      hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
-extern HB_EXPORT ULONG     hb_arrayLen( PHB_ITEM pArray ); /* retrieves the array len */
-extern HB_EXPORT BOOL      hb_arrayIsObject( PHB_ITEM pArray ); /* retrieves if the array is an object */
-extern HB_EXPORT void *    hb_arrayId( PHB_ITEM pArray ); /* retrieves the array unique ID */
-extern HB_EXPORT BOOL      hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue ); /* add a new item to the end of an array item */
-extern HB_EXPORT BOOL      hb_arrayAddForward( PHB_ITEM pArray, PHB_ITEM pValue ); /* add a new item to the end of an array item with no incrementing of reference counters */
-extern HB_EXPORT BOOL      hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex ); /* insert a nil item into an array, without changing the length */
-extern HB_EXPORT BOOL      hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex ); /* delete an array item, without changing length */
-extern HB_EXPORT BOOL      hb_arraySize( PHB_ITEM pArray, ULONG ulLen ); /* sets the array total length */
-extern HB_EXPORT BOOL      hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult ); /* retrieve last item in an array */
-extern HB_EXPORT BOOL      hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
-extern HB_EXPORT BOOL      hb_arrayGetItemRef( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* create a reference to an array element */
+extern HB_EXPORT BOOL         hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
+extern HB_EXPORT ULONG        hb_arrayLen( PHB_ITEM pArray ); /* retrieves the array len */
+extern HB_EXPORT BOOL         hb_arrayIsObject( PHB_ITEM pArray ); /* retrieves if the array is an object */
+extern HB_EXPORT void *       hb_arrayId( PHB_ITEM pArray ); /* retrieves the array unique ID */
+extern HB_EXPORT BOOL         hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue ); /* add a new item to the end of an array item */
+extern HB_EXPORT BOOL         hb_arrayAddForward( PHB_ITEM pArray, PHB_ITEM pValue ); /* add a new item to the end of an array item with no incrementing of reference counters */
+extern HB_EXPORT BOOL         hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex ); /* insert a nil item into an array, without changing the length */
+extern HB_EXPORT BOOL         hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex ); /* delete an array item, without changing length */
+extern HB_EXPORT BOOL         hb_arraySize( PHB_ITEM pArray, ULONG ulLen ); /* sets the array total length */
+extern HB_EXPORT BOOL         hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult ); /* retrieve last item in an array */
+extern HB_EXPORT BOOL         hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
+extern HB_EXPORT BOOL         hb_arrayGetItemRef( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* create a reference to an array element */
 /* hb_arrayGetItemPtr() is dangerous, be sure that base ARRAY value will not be changed (f.e. resized) */
-extern HB_EXPORT PHB_ITEM  hb_arrayGetItemPtr( PHB_ITEM pArray, ULONG ulIndex ); /* returns pointer to specified element of the array */
-extern HB_EXPORT ULONG     hb_arrayCopyC( PHB_ITEM pArray, ULONG ulIndex, char * szBuffer, ULONG ulLen ); /* copy a string into an array item */
-extern HB_EXPORT char *    hb_arrayGetC( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string contained on an array element */
-extern HB_EXPORT char *    hb_arrayGetCPtr( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string pointer on an array element */
-extern HB_EXPORT ULONG     hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
-extern HB_EXPORT void *    hb_arrayGetPtr( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the pointer contained on an array element */
-extern HB_EXPORT void *    hb_arrayGetPtrGC( PHB_ITEM pArray, ULONG ulIndex, HB_GARBAGE_FUNC_PTR pFunc ); /* retrieves the GC pointer contained on an array element */
-extern HB_EXPORT PHB_SYMB  hb_arrayGetSymbol( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves symbol contained on an array element */
-extern HB_EXPORT BOOL      hb_arrayGetL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the logical value contained on an array element */
-extern HB_EXPORT int       hb_arrayGetNI( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the int value contained on an array element */
-extern HB_EXPORT long      hb_arrayGetNL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the long numeric value contained on an array element */
-extern HB_EXPORT HB_LONG   hb_arrayGetNInt( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the HB_LONG value contained on an array element */
-extern HB_EXPORT double    hb_arrayGetND( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the double value contained on an array element */
-extern HB_EXPORT char *    hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate ); /* retrieves the date value contained in an array element */
-extern HB_EXPORT long      hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the date value contained in an array element, as a long integer */
-extern HB_EXPORT double    hb_arrayGetTD( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the timestamp value contained in an array element, as a double value */
-extern HB_EXPORT BOOL      hb_arrayGetTDT( PHB_ITEM pArray, ULONG ulIndex, LONG * plJulian, LONG * plMilliSec ); /* retrieves the timestamp value contained in an array element, as two long values */
-extern HB_EXPORT HB_TYPE   hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the type of an array item */
-extern HB_EXPORT BOOL      hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element */
-extern HB_EXPORT BOOL      hb_arraySetForward( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element by forwarding it's value */
-extern HB_EXPORT BOOL      hb_arraySetDS( PHB_ITEM pArray, ULONG ulIndex, const char * szDate );
-extern HB_EXPORT BOOL      hb_arraySetDL( PHB_ITEM pArray, ULONG ulIndex, LONG lDate );
-extern HB_EXPORT BOOL      hb_arraySetTD( PHB_ITEM pArray, ULONG ulIndex, double dTimeStamp );
-extern HB_EXPORT BOOL      hb_arraySetTDT( PHB_ITEM pArray, ULONG ulIndex, LONG lJulian, LONG lMilliSec );
-extern HB_EXPORT BOOL      hb_arraySetL( PHB_ITEM pArray, ULONG ulIndex, BOOL fValue );
-extern HB_EXPORT BOOL      hb_arraySetNI( PHB_ITEM pArray, ULONG ulIndex, int iNumber );
-extern HB_EXPORT BOOL      hb_arraySetNL( PHB_ITEM pArray, ULONG ulIndex, LONG lNumber );
+extern HB_EXPORT PHB_ITEM     hb_arrayGetItemPtr( PHB_ITEM pArray, ULONG ulIndex ); /* returns pointer to specified element of the array */
+extern HB_EXPORT ULONG        hb_arrayCopyC( PHB_ITEM pArray, ULONG ulIndex, char * szBuffer, ULONG ulLen ); /* copy a string into an array item */
+extern HB_EXPORT char *       hb_arrayGetC( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string contained on an array element */
+extern HB_EXPORT const char * hb_arrayGetCPtr( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string pointer on an array element */
+extern HB_EXPORT ULONG        hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
+extern HB_EXPORT void *       hb_arrayGetPtr( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the pointer contained on an array element */
+extern HB_EXPORT void *       hb_arrayGetPtrGC( PHB_ITEM pArray, ULONG ulIndex, HB_GARBAGE_FUNC_PTR pFunc ); /* retrieves the GC pointer contained on an array element */
+extern HB_EXPORT PHB_SYMB     hb_arrayGetSymbol( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves symbol contained on an array element */
+extern HB_EXPORT BOOL         hb_arrayGetL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the logical value contained on an array element */
+extern HB_EXPORT int          hb_arrayGetNI( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the int value contained on an array element */
+extern HB_EXPORT long         hb_arrayGetNL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the long numeric value contained on an array element */
+extern HB_EXPORT HB_LONG      hb_arrayGetNInt( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the HB_LONG value contained on an array element */
+extern HB_EXPORT double       hb_arrayGetND( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the double value contained on an array element */
+extern HB_EXPORT char *       hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate ); /* retrieves the date value contained in an array element */
+extern HB_EXPORT long         hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the date value contained in an array element, as a long integer */
+extern HB_EXPORT double       hb_arrayGetTD( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the timestamp value contained in an array element, as a double value */
+extern HB_EXPORT BOOL         hb_arrayGetTDT( PHB_ITEM pArray, ULONG ulIndex, LONG * plJulian, LONG * plMilliSec ); /* retrieves the timestamp value contained in an array element, as two long values */
+extern HB_EXPORT HB_TYPE      hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the type of an array item */
+extern HB_EXPORT BOOL         hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element */
+extern HB_EXPORT BOOL         hb_arraySetForward( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element by forwarding it's value */
+extern HB_EXPORT BOOL         hb_arraySetDS( PHB_ITEM pArray, ULONG ulIndex, const char * szDate );
+extern HB_EXPORT BOOL         hb_arraySetDL( PHB_ITEM pArray, ULONG ulIndex, LONG lDate );
+extern HB_EXPORT BOOL         hb_arraySetTD( PHB_ITEM pArray, ULONG ulIndex, double dTimeStamp );
+extern HB_EXPORT BOOL         hb_arraySetTDT( PHB_ITEM pArray, ULONG ulIndex, LONG lJulian, LONG lMilliSec );
+extern HB_EXPORT BOOL         hb_arraySetL( PHB_ITEM pArray, ULONG ulIndex, BOOL fValue );
+extern HB_EXPORT BOOL         hb_arraySetNI( PHB_ITEM pArray, ULONG ulIndex, int iNumber );
+extern HB_EXPORT BOOL         hb_arraySetNL( PHB_ITEM pArray, ULONG ulIndex, LONG lNumber );
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT BOOL      hb_arraySetNLL( PHB_ITEM pArray, ULONG ulIndex, LONGLONG llNumber );
+extern HB_EXPORT BOOL         hb_arraySetNLL( PHB_ITEM pArray, ULONG ulIndex, LONGLONG llNumber );
 #endif
-extern HB_EXPORT BOOL      hb_arraySetNInt( PHB_ITEM pArray, ULONG ulIndex, HB_LONG lNumber );
-extern HB_EXPORT BOOL      hb_arraySetND( PHB_ITEM pArray, ULONG ulIndex, double dNumber );
-extern HB_EXPORT BOOL      hb_arraySetC( PHB_ITEM pArray, ULONG ulIndex, const char * szText );
-extern HB_EXPORT BOOL      hb_arraySetCL( PHB_ITEM pArray, ULONG ulIndex, const char * szText, ULONG ulLen );
-extern HB_EXPORT BOOL      hb_arraySetCPtr( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen );
-extern HB_EXPORT BOOL      hb_arraySetPtr( PHB_ITEM pArray, ULONG ulIndex, void * pValue );
-extern HB_EXPORT BOOL      hb_arraySetPtrGC( PHB_ITEM pArray, ULONG ulIndex, void * pValue );
-extern HB_EXPORT BOOL      hb_arraySetSymbol( PHB_ITEM pArray, ULONG ulIndex, PHB_SYMB pSymbol );
-extern HB_EXPORT BOOL      hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* fill an array with a given item */
-extern HB_EXPORT ULONG     hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE */
-extern HB_EXPORT ULONG     hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE in reverted order */
-extern HB_EXPORT BOOL      hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount ); /* execute a code-block for every element of an array item */
-extern HB_EXPORT BOOL      hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart, ULONG * pulCount, ULONG * pulTarget ); /* copy items from one array to another */
-extern HB_EXPORT PHB_ITEM  hb_arrayClone( PHB_ITEM pArray ); /* returns a duplicate of an existing array, including all nested items */
-extern HB_EXPORT BOOL      hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM pBlock ); /* sorts an array item */
-extern HB_EXPORT PHB_ITEM  hb_arrayFromStack( USHORT uiLen ); /* Creates and returns an Array of n Elements from the Eval Stack - Does NOT pop the items. */
-extern HB_EXPORT PHB_ITEM  hb_arrayFromParams( int iLevel ); /* Creates and returns an Array of Generic Parameters for a given call level */
-extern HB_EXPORT PHB_ITEM  hb_arrayBaseParams( void ); /* Creates and returns an Array of Generic Parameters for current base symbol. */
-extern HB_EXPORT PHB_ITEM  hb_arraySelfParams( void ); /* Creates and returns an Array of Generic Parameters for current base symbol with self item */
+extern HB_EXPORT BOOL         hb_arraySetNInt( PHB_ITEM pArray, ULONG ulIndex, HB_LONG lNumber );
+extern HB_EXPORT BOOL         hb_arraySetND( PHB_ITEM pArray, ULONG ulIndex, double dNumber );
+extern HB_EXPORT BOOL         hb_arraySetC( PHB_ITEM pArray, ULONG ulIndex, const char * szText );
+extern HB_EXPORT BOOL         hb_arraySetCL( PHB_ITEM pArray, ULONG ulIndex, const char * szText, ULONG ulLen );
+extern HB_EXPORT BOOL         hb_arraySetCPtr( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen );
+extern HB_EXPORT BOOL         hb_arraySetPtr( PHB_ITEM pArray, ULONG ulIndex, void * pValue );
+extern HB_EXPORT BOOL         hb_arraySetPtrGC( PHB_ITEM pArray, ULONG ulIndex, void * pValue );
+extern HB_EXPORT BOOL         hb_arraySetSymbol( PHB_ITEM pArray, ULONG ulIndex, PHB_SYMB pSymbol );
+extern HB_EXPORT BOOL         hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* fill an array with a given item */
+extern HB_EXPORT ULONG        hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE */
+extern HB_EXPORT ULONG        hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE in reverted order */
+extern HB_EXPORT BOOL         hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount ); /* execute a code-block for every element of an array item */
+extern HB_EXPORT BOOL         hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart, ULONG * pulCount, ULONG * pulTarget ); /* copy items from one array to another */
+extern HB_EXPORT PHB_ITEM     hb_arrayClone( PHB_ITEM pArray ); /* returns a duplicate of an existing array, including all nested items */
+extern HB_EXPORT BOOL         hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM pBlock ); /* sorts an array item */
+extern HB_EXPORT PHB_ITEM     hb_arrayFromStack( USHORT uiLen ); /* Creates and returns an Array of n Elements from the Eval Stack - Does NOT pop the items. */
+extern HB_EXPORT PHB_ITEM     hb_arrayFromParams( int iLevel ); /* Creates and returns an Array of Generic Parameters for a given call level */
+extern HB_EXPORT PHB_ITEM     hb_arrayBaseParams( void ); /* Creates and returns an Array of Generic Parameters for current base symbol. */
+extern HB_EXPORT PHB_ITEM     hb_arraySelfParams( void ); /* Creates and returns an Array of Generic Parameters for current base symbol with self item */
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT LONGLONG  hb_arrayGetNLL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the long long numeric value contained on an array element */
+extern HB_EXPORT LONGLONG     hb_arrayGetNLL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the long long numeric value contained on an array element */
 #endif
 #ifdef _HB_API_INTERNAL_
 /* internal array API not exported */

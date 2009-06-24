@@ -617,7 +617,7 @@ HB_FUNC( __DYNSGETINDEX ) /* Gimme index number of symbol: dsIndex = __dynsymGet
    HB_STACK_TLS_PRELOAD
    PHB_DYNS pDynSym;
    UINT uiPos = 0;
-   char * szName = hb_parc( 1 );
+   const char * szName = hb_parc( 1 );
 
    if( szName )
    {
@@ -671,7 +671,7 @@ HB_FUNC( __DYNSGETPRF ) /* profiler: It returns an array with a function or proc
 HB_FUNC( __DYNSN2PTR )
 {
    HB_STACK_TLS_PRELOAD
-   char * szName = hb_parc( 1 );
+   const char * szName = hb_parc( 1 );
 
    hb_retptr( szName ? hb_dynsymGet( szName ) : NULL );
 }
@@ -679,7 +679,7 @@ HB_FUNC( __DYNSN2PTR )
 HB_FUNC( __DYNSN2SYM )
 {
    HB_STACK_TLS_PRELOAD
-   char * szName = hb_parc( 1 );
+   const char * szName = hb_parc( 1 );
 
    if( szName )
       hb_itemPutSymbol( hb_stackReturnItem(), hb_dynsymGet( szName )->pSymbol );

@@ -3058,7 +3058,7 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
 HB_FUNC( __CLSADDMSG )
 {
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
-   char * szMessage = hb_parc( 2 );
+   const char * szMessage = hb_parc( 2 );
 
    if( szMessage && uiClass && uiClass <= s_uiClasses )
    {
@@ -3374,7 +3374,7 @@ static USHORT hb_clsNew( const char * szClassName, USHORT uiDatas,
  */
 HB_FUNC( __CLSNEW )
 {
-   char * szClassName;
+   const char * szClassName;
    PHB_ITEM pDatas, pSuperArray, pClassFunc, pModFriend;
 
    szClassName = hb_parc( 1 );

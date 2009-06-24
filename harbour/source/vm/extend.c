@@ -206,7 +206,7 @@ BOOL hb_extIsObject( int iParam )
 /* NOTE: Caller should not modify the buffer returned by this function.
          [vszakats] */
 
-char * hb_parc( int iParam )
+const char * hb_parc( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -223,10 +223,10 @@ char * hb_parc( int iParam )
          return pItem->item.asString.value;
    }
 
-   return ( char * ) NULL;
+   return NULL;
 }
 
-char * hb_parcx( int iParam )
+const char * hb_parcx( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -243,7 +243,7 @@ char * hb_parcx( int iParam )
          return pItem->item.asString.value;
    }
 
-   return ( char * ) "";
+   return "";
 }
 
 ULONG  hb_parclen( int iParam )
@@ -320,7 +320,7 @@ char  * hb_pards( int iParam )
 
 /* NOTE: szDate must be a 9 chars wide buffer. [vszakats] */
 
-char  * hb_pardsbuff( char * szDate, int iParam )
+char * hb_pardsbuff( char * szDate, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -635,7 +635,7 @@ char * hb_parvc( int iParam, ... )
          va_end( va );
 
          pItem = hb_arrayGetItemPtr( pItem, ulArrayIndex );
-         return pItem && HB_IS_STRING( pItem ) ? hb_itemGetCPtr( pItem ) : NULL;
+         return pItem && HB_IS_STRING( pItem ) ? ( char * ) hb_itemGetCPtr( pItem ) : NULL;
       }
    }
 
@@ -666,7 +666,7 @@ char * hb_parvcx( int iParam, ... )
          ulArrayIndex = va_arg( va, ULONG );
          va_end( va );
 
-         return hb_arrayGetCPtr( pItem, ulArrayIndex );
+         return ( char * ) hb_arrayGetCPtr( pItem, ulArrayIndex );
       }
    }
 

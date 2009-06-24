@@ -455,14 +455,14 @@ char * hb_itemGetC( PHB_ITEM pItem )
 /* NOTE: Caller should not modify the buffer returned by this function.
          [vszakats] */
 
-char * hb_itemGetCPtr( PHB_ITEM pItem )
+const char * hb_itemGetCPtr( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetCPtr(%p)", pItem));
 
    if( pItem && HB_IS_STRING( pItem ) )
       return pItem->item.asString.value;
    else
-      return ( char * ) "";
+      return "";
 }
 
 ULONG hb_itemGetCLen( PHB_ITEM pItem )
@@ -2549,7 +2549,7 @@ char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
    {
       case HB_IT_STRING:
       case HB_IT_MEMO:
-         buffer = hb_itemGetCPtr( pItem );
+         buffer = ( char * ) hb_itemGetCPtr( pItem );
          * ulLen = hb_itemGetCLen( pItem );
          * bFreeReq = FALSE;
          break;
