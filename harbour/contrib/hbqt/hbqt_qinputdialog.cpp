@@ -392,6 +392,54 @@ HB_FUNC( QT_QINPUTDIALOG_TEXTVALUE )
    hb_retc( hbqt_par_QInputDialog( 1 )->textValue().toLatin1().data() );
 }
 
+/*
+ * double getDouble ( QWidget * parent, const QString & title, const QString & label, double value = 0, double min = -2147483647, double max = 2147483647, int decimals = 1, bool * ok = 0, Qt::WindowFlags flags = 0 )
+ */
+HB_FUNC( QT_QINPUTDIALOG_GETDOUBLE )
+{
+   bool iOk = 0;
+
+   hb_retnd( hbqt_par_QInputDialog( 1 )->getDouble( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ), ( HB_ISNUM( 8 ) ? hb_parni( 8 ) : 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) );
+
+   hb_stornl( iOk, 9 );
+}
+
+/*
+ * int getInt ( QWidget * parent, const QString & title, const QString & label, int value = 0, int min = -2147483647, int max = 2147483647, int step = 1, bool * ok = 0, Qt::WindowFlags flags = 0 )
+ */
+HB_FUNC( QT_QINPUTDIALOG_GETINT )
+{
+   bool iOk = 0;
+
+   hb_retni( hbqt_par_QInputDialog( 1 )->getInt( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : -2147483647 ), ( HB_ISNUM( 7 ) ? hb_parni( 7 ) : 2147483647 ), ( HB_ISNUM( 8 ) ? hb_parni( 8 ) : 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) );
+
+   hb_stornl( iOk, 9 );
+}
+
+/*
+ * QString getItem ( QWidget * parent, const QString & title, const QString & label, const QStringList & items, int current = 0, bool editable = true, bool * ok = 0, Qt::WindowFlags flags = 0 )
+ */
+HB_FUNC( QT_QINPUTDIALOG_GETITEM )
+{
+   bool iOk = 0;
+
+   hb_retc( hbqt_par_QInputDialog( 1 )->getItem( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), *hbqt_par_QStringList( 5 ), hb_parni( 6 ), hb_parl( 7 ), &iOk, ( Qt::WindowFlags ) hb_parni( 9 ) ).toLatin1().data() );
+
+   hb_stornl( iOk, 8 );
+}
+
+/*
+ * QString getText ( QWidget * parent, const QString & title, const QString & label, QLineEdit::EchoMode mode = QLineEdit::Normal, const QString & text = QString(), bool * ok = 0, Qt::WindowFlags flags = 0 )
+ */
+HB_FUNC( QT_QINPUTDIALOG_GETTEXT )
+{
+   bool iOk = 0;
+
+   hb_retc( hbqt_par_QInputDialog( 1 )->getText( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), ( HB_ISNUM( 5 ) ? ( QLineEdit::EchoMode ) hb_parni( 5 ) : ( QLineEdit::EchoMode ) QLineEdit::Normal ), hbqt_par_QString( 6 ), &iOk, ( Qt::WindowFlags ) hb_parni( 8 ) ).toLatin1().data() );
+
+   hb_stornl( iOk, 7 );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

@@ -119,6 +119,15 @@ CREATE CLASS QColor
    METHOD  valueF()                            INLINE  Qt_QColor_valueF( ::pPtr )
    METHOD  yellow()                            INLINE  Qt_QColor_yellow( ::pPtr )
    METHOD  yellowF()                           INLINE  Qt_QColor_yellowF( ::pPtr )
+   METHOD  colorNames()                        INLINE  Qt_QColor_colorNames( ::pPtr )
+   METHOD  fromCmyk( nC, nM, nY, nK, nA )      INLINE  Qt_QColor_fromCmyk( ::pPtr, nC, nM, nY, nK, nA )
+   METHOD  fromCmykF( nC, nM, nY, nK, nA )     INLINE  Qt_QColor_fromCmykF( ::pPtr, nC, nM, nY, nK, nA )
+   METHOD  fromHsv( nH, nS, nV, nA )           INLINE  Qt_QColor_fromHsv( ::pPtr, nH, nS, nV, nA )
+   METHOD  fromHsvF( nH, nS, nV, nA )          INLINE  Qt_QColor_fromHsvF( ::pPtr, nH, nS, nV, nA )
+   METHOD  fromRgb( nRgb )                     INLINE  Qt_QColor_fromRgb( ::pPtr, nRgb )
+   METHOD  fromRgb_1( nR, nG, nB, nA )         INLINE  Qt_QColor_fromRgb_1( ::pPtr, nR, nG, nB, nA )
+   METHOD  fromRgbF( nR, nG, nB, nA )          INLINE  Qt_QColor_fromRgbF( ::pPtr, nR, nG, nB, nA )
+   METHOD  fromRgba( nRgba )                   INLINE  Qt_QColor_fromRgba( ::pPtr, nRgba )
 
    ENDCLASS
 

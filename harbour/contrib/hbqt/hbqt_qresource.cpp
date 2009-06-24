@@ -144,6 +144,30 @@ HB_FUNC( QT_QRESOURCE_SIZE )
    hb_retni( hbqt_par_QResource( 1 )->size() );
 }
 
+/*
+ * bool registerResource ( const QString & rccFileName, const QString & mapRoot = QString() )
+ */
+HB_FUNC( QT_QRESOURCE_REGISTERRESOURCE )
+{
+   hb_retl( hbqt_par_QResource( 1 )->registerResource( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+}
+
+/*
+ * QStringList searchPaths ()
+ */
+HB_FUNC( QT_QRESOURCE_SEARCHPATHS )
+{
+   hb_retptr( new QStringList( hbqt_par_QResource( 1 )->searchPaths() ) );
+}
+
+/*
+ * bool unregisterResource ( const QString & rccFileName, const QString & mapRoot = QString() )
+ */
+HB_FUNC( QT_QRESOURCE_UNREGISTERRESOURCE )
+{
+   hb_retl( hbqt_par_QResource( 1 )->unregisterResource( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

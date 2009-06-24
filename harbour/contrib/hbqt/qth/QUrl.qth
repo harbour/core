@@ -159,6 +159,17 @@ QString toLocalFile () const
 QString toString ( FormattingOptions options = None ) const
 QString userInfo () const
 QString userName () const
+
+
+QString fromAce ( const QByteArray & domain )
+QUrl fromEncoded ( const QByteArray & input )
+QUrl fromEncoded ( const QByteArray & input, ParsingMode parsingMode )
+QUrl fromLocalFile ( const QString & localFile )
+QString fromPercentEncoding ( const QByteArray & input )
+QStringList idnWhitelist ()
+void setIdnWhitelist ( const QStringList & list )
+QByteArray toAce ( const QString & domain )
+QByteArray toPercentEncoding ( const QString & input, const QByteArray & exclude = QByteArray(), const QByteArray & include = QByteArray() )
 </PROTOS>
 
 

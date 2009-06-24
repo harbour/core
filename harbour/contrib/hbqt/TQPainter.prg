@@ -242,6 +242,9 @@ CREATE CLASS QPainter
    METHOD  worldMatrix()                       INLINE  Qt_QPainter_worldMatrix( ::pPtr )
    METHOD  worldMatrixEnabled()                INLINE  Qt_QPainter_worldMatrixEnabled( ::pPtr )
    METHOD  worldTransform()                    INLINE  Qt_QPainter_worldTransform( ::pPtr )
+   METHOD  redirected( pDevice, pOffset )      INLINE  Qt_QPainter_redirected( ::pPtr, pDevice, pOffset )
+   METHOD  restoreRedirected( pDevice )        INLINE  Qt_QPainter_restoreRedirected( ::pPtr, pDevice )
+   METHOD  setRedirected( pDevice, pReplacement, pOffset )  INLINE  Qt_QPainter_setRedirected( ::pPtr, pDevice, pReplacement, pOffset )
 
    ENDCLASS
 

@@ -85,6 +85,10 @@ bool isEmpty () const
 QString toHtml ( const QByteArray & encoding ) const
 QString toHtml () const
 QString toPlainText () const
+
+QTextDocumentFragment fromHtml ( const QString & text )
+QTextDocumentFragment fromHtml ( const QString & text, const QTextDocument * resourceProvider )
+QTextDocumentFragment fromPlainText ( const QString & plainText )
 </PROTOS>
 
 <SLOTS>

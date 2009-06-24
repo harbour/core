@@ -99,6 +99,8 @@ CREATE CLASS QImageReader
    METHOD  supportsOption( nOption )           INLINE  Qt_QImageReader_supportsOption( ::pPtr, nOption )
    METHOD  text( cKey )                        INLINE  Qt_QImageReader_text( ::pPtr, cKey )
    METHOD  textKeys()                          INLINE  Qt_QImageReader_textKeys( ::pPtr )
+   METHOD  imageFormat_1( cFileName )          INLINE  Qt_QImageReader_imageFormat_1( ::pPtr, cFileName )
+   METHOD  imageFormat_2( pDevice )            INLINE  Qt_QImageReader_imageFormat_2( ::pPtr, pDevice )
 
    ENDCLASS
 

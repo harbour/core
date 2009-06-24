@@ -256,6 +256,54 @@ HB_FUNC( QT_QSTYLE_UNPOLISH_1 )
    hbqt_par_QStyle( 1 )->unpolish( hbqt_par_QApplication( 2 ) );
 }
 
+/*
+ * QRect alignedRect ( Qt::LayoutDirection direction, Qt::Alignment alignment, const QSize & size, const QRect & rectangle )
+ */
+HB_FUNC( QT_QSTYLE_ALIGNEDRECT )
+{
+   hb_retptr( new QRect( hbqt_par_QStyle( 1 )->alignedRect( ( Qt::LayoutDirection ) hb_parni( 2 ), ( Qt::Alignment ) hb_parni( 3 ), *hbqt_par_QSize( 4 ), *hbqt_par_QRect( 5 ) ) ) );
+}
+
+/*
+ * int sliderPositionFromValue ( int min, int max, int logicalValue, int span, bool upsideDown = false )
+ */
+HB_FUNC( QT_QSTYLE_SLIDERPOSITIONFROMVALUE )
+{
+   hb_retni( hbqt_par_QStyle( 1 )->sliderPositionFromValue( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parl( 6 ) ) );
+}
+
+/*
+ * int sliderValueFromPosition ( int min, int max, int position, int span, bool upsideDown = false )
+ */
+HB_FUNC( QT_QSTYLE_SLIDERVALUEFROMPOSITION )
+{
+   hb_retni( hbqt_par_QStyle( 1 )->sliderValueFromPosition( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parl( 6 ) ) );
+}
+
+/*
+ * Qt::Alignment visualAlignment ( Qt::LayoutDirection direction, Qt::Alignment alignment )
+ */
+HB_FUNC( QT_QSTYLE_VISUALALIGNMENT )
+{
+   hb_retni( ( Qt::Alignment ) hbqt_par_QStyle( 1 )->visualAlignment( ( Qt::LayoutDirection ) hb_parni( 2 ), ( Qt::Alignment ) hb_parni( 3 ) ) );
+}
+
+/*
+ * QPoint visualPos ( Qt::LayoutDirection direction, const QRect & boundingRectangle, const QPoint & logicalPosition )
+ */
+HB_FUNC( QT_QSTYLE_VISUALPOS )
+{
+   hb_retptr( new QPoint( hbqt_par_QStyle( 1 )->visualPos( ( Qt::LayoutDirection ) hb_parni( 2 ), *hbqt_par_QRect( 3 ), *hbqt_par_QPoint( 4 ) ) ) );
+}
+
+/*
+ * QRect visualRect ( Qt::LayoutDirection direction, const QRect & boundingRectangle, const QRect & logicalRectangle )
+ */
+HB_FUNC( QT_QSTYLE_VISUALRECT )
+{
+   hb_retptr( new QRect( hbqt_par_QStyle( 1 )->visualRect( ( Qt::LayoutDirection ) hb_parni( 2 ), *hbqt_par_QRect( 3 ), *hbqt_par_QRect( 4 ) ) ) );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

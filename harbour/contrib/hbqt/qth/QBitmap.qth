@@ -85,6 +85,9 @@ HB_FUNC( QT_QBITMAP )
 void clear ()
 QBitmap transformed ( const QTransform & matrix ) const
 QBitmap transformed ( const QMatrix & matrix ) const
+
+//QBitmap fromData ( const QSize & size, const uchar * bits, QImage::Format monoFormat = QImage::Format_MonoLSB )
+QBitmap fromImage ( const QImage & image, Qt::ImageConversionFlags flags = Qt::AutoColor )
 </PROTOS>
 
 <SLOTS>

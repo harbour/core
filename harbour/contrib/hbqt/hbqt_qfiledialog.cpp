@@ -60,7 +60,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 44/46 [ 95.65% ] ]
+ *  Constructed[ 45/47 [ 95.74% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -433,6 +433,14 @@ HB_FUNC( QT_QFILEDIALOG_TESTOPTION )
 HB_FUNC( QT_QFILEDIALOG_VIEWMODE )
 {
    hb_retni( ( QFileDialog::ViewMode ) hbqt_par_QFileDialog( 1 )->viewMode() );
+}
+
+/*
+ * QString getExistingDirectory ( QWidget * parent = 0, const QString & caption = QString(), const QString & dir = QString(), Options options = ShowDirsOnly )
+ */
+HB_FUNC( QT_QFILEDIALOG_GETEXISTINGDIRECTORY )
+{
+   hb_retc( hbqt_par_QFileDialog( 1 )->getExistingDirectory( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), ( HB_ISNUM( 5 ) ? ( QFileDialog::Options ) hb_parni( 5 ) : ( QFileDialog::Options ) QFileDialog::ShowDirsOnly ) ).toLatin1().data() );
 }
 
 

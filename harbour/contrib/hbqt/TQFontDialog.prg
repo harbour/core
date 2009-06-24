@@ -70,6 +70,11 @@ CREATE CLASS QFontDialog INHERIT QDialog
    METHOD  setOption( nOption, lOn )           INLINE  Qt_QFontDialog_setOption( ::pPtr, nOption, lOn )
    METHOD  setOptions( nOptions )              INLINE  Qt_QFontDialog_setOptions( ::pPtr, nOptions )
    METHOD  testOption( nOption )               INLINE  Qt_QFontDialog_testOption( ::pPtr, nOption )
+   METHOD  getFont( lOk, pInitial, pParent, cTitle, nOptions )  INLINE  Qt_QFontDialog_getFont( ::pPtr, lOk, pInitial, pParent, cTitle, nOptions )
+   METHOD  getFont_1( lOk, pInitial, pParent, pName )  INLINE  Qt_QFontDialog_getFont_1( ::pPtr, lOk, pInitial, pParent, pName )
+   METHOD  getFont_2( lOk, pInitial, pParent, cTitle )  INLINE  Qt_QFontDialog_getFont_2( ::pPtr, lOk, pInitial, pParent, cTitle )
+   METHOD  getFont_3( lOk, pInitial, pParent )  INLINE  Qt_QFontDialog_getFont_3( ::pPtr, lOk, pInitial, pParent )
+   METHOD  getFont_4( lOk, pParent )           INLINE  Qt_QFontDialog_getFont_4( ::pPtr, lOk, pParent )
 
    ENDCLASS
 

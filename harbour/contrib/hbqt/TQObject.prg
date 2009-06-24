@@ -88,6 +88,10 @@ CREATE CLASS QObject
    METHOD  signalsBlocked()                    INLINE  Qt_QObject_signalsBlocked( ::pPtr )
    METHOD  startTimer( nInterval )             INLINE  Qt_QObject_startTimer( ::pPtr, nInterval )
    METHOD  thread()                            INLINE  Qt_QObject_thread( ::pPtr )
+   METHOD  connect_1( pSender, pSignal, pReceiver, pMethod, nType )  INLINE  Qt_QObject_connect_1( ::pPtr, pSender, pSignal, pReceiver, pMethod, nType )
+   METHOD  disconnect_2( pSender, pSignal, pReceiver, pMethod )  INLINE  Qt_QObject_disconnect_2( ::pPtr, pSender, pSignal, pReceiver, pMethod )
+   METHOD  tr( pSourceText, pDisambiguation, nN )  INLINE  Qt_QObject_tr( ::pPtr, pSourceText, pDisambiguation, nN )
+   METHOD  trUtf8( pSourceText, pDisambiguation, nN )  INLINE  Qt_QObject_trUtf8( ::pPtr, pSourceText, pDisambiguation, nN )
    METHOD  deleteLater()                       INLINE  Qt_QObject_deleteLater( ::pPtr )
 
    ENDCLASS

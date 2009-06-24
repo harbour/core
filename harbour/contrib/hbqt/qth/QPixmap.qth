@@ -139,6 +139,17 @@ QImage toImage () const
 QPixmap transformed ( const QTransform & transform, Qt::TransformationMode mode = Qt::FastTransformation ) const
 QPixmap transformed ( const QMatrix & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
 int width () const
+
+int defaultDepth ()
+QPixmap fromImage ( const QImage & image, Qt::ImageConversionFlags flags = Qt::AutoColor )
+//QPixmap fromMacCGImageRef ( CGImageRef image )
+//QPixmap fromWinHBITMAP ( HBITMAP bitmap, HBitmapFormat format = NoAlpha )
+//QPixmap fromX11Pixmap ( Qt::HANDLE pixmap, ShareMode mode = ImplicitlyShared )
+QPixmap grabWidget ( QWidget * widget, const QRect & rectangle )
+QPixmap grabWidget ( QWidget * widget, int x = 0, int y = 0, int width = -1, int height = -1 )
+//QPixmap grabWindow ( WId window, int x = 0, int y = 0, int width = -1, int height = -1 )
+QTransform trueMatrix ( const QTransform & matrix, int width, int height )
+QMatrix trueMatrix ( const QMatrix & m, int w, int h )
 </PROTOS>
 
 <SLOTS>

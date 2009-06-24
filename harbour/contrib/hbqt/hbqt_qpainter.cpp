@@ -60,7 +60,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 179/185 [ 96.76% ] ]
+ *  Constructed[ 182/188 [ 96.81% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -1523,6 +1523,30 @@ HB_FUNC( QT_QPAINTER_WORLDMATRIXENABLED )
 HB_FUNC( QT_QPAINTER_WORLDTRANSFORM )
 {
    hb_retptr( new QTransform( hbqt_par_QPainter( 1 )->worldTransform() ) );
+}
+
+/*
+ * QPaintDevice * redirected ( const QPaintDevice * device, QPoint * offset = 0 )
+ */
+HB_FUNC( QT_QPAINTER_REDIRECTED )
+{
+   hb_retptr( ( QPaintDevice* ) hbqt_par_QPainter( 1 )->redirected( hbqt_par_QPaintDevice( 2 ), hbqt_par_QPoint( 3 ) ) );
+}
+
+/*
+ * void restoreRedirected ( const QPaintDevice * device )
+ */
+HB_FUNC( QT_QPAINTER_RESTOREREDIRECTED )
+{
+   hbqt_par_QPainter( 1 )->restoreRedirected( hbqt_par_QPaintDevice( 2 ) );
+}
+
+/*
+ * void setRedirected ( const QPaintDevice * device, QPaintDevice * replacement, const QPoint & offset = QPoint() )
+ */
+HB_FUNC( QT_QPAINTER_SETREDIRECTED )
+{
+   hbqt_par_QPainter( 1 )->setRedirected( hbqt_par_QPaintDevice( 2 ), hbqt_par_QPaintDevice( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QPoint( 4 ) : QPoint() ) );
 }
 
 

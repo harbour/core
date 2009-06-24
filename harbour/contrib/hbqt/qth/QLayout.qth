@@ -106,5 +106,7 @@ SizeConstraint sizeConstraint () const
 int spacing () const
 virtual QLayoutItem * takeAt ( int index ) = 0
 void update ()
+
+QSize closestAcceptableSize ( const QWidget * widget, const QSize & size )
 </PROTOS>
 

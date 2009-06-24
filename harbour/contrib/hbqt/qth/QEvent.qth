@@ -84,6 +84,8 @@ bool isAccepted () const
 void setAccepted ( bool accepted )
 bool spontaneous () const
 Type type () const
+
+int registerEventType ( int hint = -1 )
 </PROTOS>
 
 <SLOTS>

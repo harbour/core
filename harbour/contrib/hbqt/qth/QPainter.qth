@@ -271,5 +271,10 @@ QRect window () const
 const QMatrix & worldMatrix () const
 bool worldMatrixEnabled () const
 const QTransform & worldTransform () const
+
+
+QPaintDevice * redirected ( const QPaintDevice * device, QPoint * offset = 0 )
+void restoreRedirected ( const QPaintDevice * device )
+void setRedirected ( const QPaintDevice * device, QPaintDevice * replacement, const QPoint & offset = QPoint() )
 </PROTOS>
 

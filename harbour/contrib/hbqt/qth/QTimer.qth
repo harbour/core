@@ -80,6 +80,8 @@ bool isSingleShot () const
 void setInterval ( int msec )
 void setSingleShot ( bool singleShot )
 int timerId () const
+
+void singleShot ( int msec, QObject * receiver, const char * member )
 </PROTOS>
 
 <SLOTS>

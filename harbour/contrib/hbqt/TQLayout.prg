@@ -91,6 +91,7 @@ CREATE CLASS QLayout INHERIT QObject, QLayoutItem
    METHOD  spacing()                           INLINE  Qt_QLayout_spacing( ::pPtr )
    METHOD  takeAt( nIndex )                    INLINE  Qt_QLayout_takeAt( ::pPtr, nIndex )
    METHOD  update()                            INLINE  Qt_QLayout_update( ::pPtr )
+   METHOD  closestAcceptableSize( pWidget, pSize )  INLINE  Qt_QLayout_closestAcceptableSize( ::pPtr, pWidget, pSize )
 
    ENDCLASS
 

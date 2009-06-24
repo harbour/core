@@ -100,6 +100,14 @@ HB_FUNC( QT_QBITMAP_TRANSFORMED_1 )
    hb_retptr( new QBitmap( hbqt_par_QBitmap( 1 )->transformed( *hbqt_par_QMatrix( 2 ) ) ) );
 }
 
+/*
+ * QBitmap fromImage ( const QImage & image, Qt::ImageConversionFlags flags = Qt::AutoColor )
+ */
+HB_FUNC( QT_QBITMAP_FROMIMAGE )
+{
+   hb_retptr( new QBitmap( hbqt_par_QBitmap( 1 )->fromImage( *hbqt_par_QImage( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ImageConversionFlags ) hb_parni( 3 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) ) );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

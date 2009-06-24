@@ -72,6 +72,12 @@ CREATE CLASS QColorDialog INHERIT QDialog
    METHOD  setOptions( nOptions )              INLINE  Qt_QColorDialog_setOptions( ::pPtr, nOptions )
    METHOD  setVisible( lVisible )              INLINE  Qt_QColorDialog_setVisible( ::pPtr, lVisible )
    METHOD  testOption( nOption )               INLINE  Qt_QColorDialog_testOption( ::pPtr, nOption )
+   METHOD  customColor( nIndex )               INLINE  Qt_QColorDialog_customColor( ::pPtr, nIndex )
+   METHOD  customCount()                       INLINE  Qt_QColorDialog_customCount( ::pPtr )
+   METHOD  getColor( pInitial, pParent, cTitle, nOptions )  INLINE  Qt_QColorDialog_getColor( ::pPtr, pInitial, pParent, cTitle, nOptions )
+   METHOD  getColor_1( pInitial, pParent )     INLINE  Qt_QColorDialog_getColor_1( ::pPtr, pInitial, pParent )
+   METHOD  setCustomColor( nIndex, nColor )    INLINE  Qt_QColorDialog_setCustomColor( ::pPtr, nIndex, nColor )
+   METHOD  setStandardColor( nIndex, nColor )  INLINE  Qt_QColorDialog_setStandardColor( ::pPtr, nIndex, nColor )
 
    ENDCLASS
 

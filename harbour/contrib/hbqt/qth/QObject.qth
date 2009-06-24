@@ -103,6 +103,13 @@ bool setProperty ( const char * name, const QVariant & value )
 bool signalsBlocked () const
 int startTimer ( int interval )
 QThread * thread () const
+
+
+bool connect ( const QObject * sender, const char * signal, const QObject * receiver, const char * method, Qt::ConnectionType type = Qt::AutoConnection )
+bool disconnect ( const QObject * sender, const char * signal, const QObject * receiver, const char * method )
+const QMetaObject staticMetaObject
+QString tr ( const char * sourceText, const char * disambiguation = 0, int n = -1 )
+QString trUtf8 ( const char * sourceText, const char * disambiguation = 0, int n = -1 )
 </PROTOS>
 
 <SLOTS>

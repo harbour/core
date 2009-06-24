@@ -96,6 +96,9 @@ CREATE CLASS QVariant
    METHOD  toUrl()                             INLINE  Qt_QVariant_toUrl( ::pPtr )
    METHOD  type()                              INLINE  Qt_QVariant_type( ::pPtr )
    METHOD  userType()                          INLINE  Qt_QVariant_userType( ::pPtr )
+   METHOD  fromValue( xValue )                 INLINE  Qt_QVariant_fromValue( ::pPtr, xValue )
+   METHOD  nameToType( pName )                 INLINE  Qt_QVariant_nameToType( ::pPtr, pName )
+   METHOD  typeToName( nTyp )                  INLINE  Qt_QVariant_typeToName( ::pPtr, nTyp )
 
    ENDCLASS
 

@@ -99,6 +99,8 @@ void setQuality ( int quality )
 void setText ( const QString & key, const QString & text )
 bool supportsOption ( QImageIOHandler::ImageOption option ) const
 bool write ( const QImage & image )
+
+QList<QByteArray> supportedImageFormats ()
 </PROTOS>
 
 <SLOTS>

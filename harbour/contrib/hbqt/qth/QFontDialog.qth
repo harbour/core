@@ -90,6 +90,13 @@ void setCurrentFont ( const QFont & font )
 void setOption ( FontDialogOption option, bool on = true )
 void setOptions ( FontDialogOptions options )
 bool testOption ( FontDialogOption option ) const
+
+QFont getFont ( bool * ok, const QFont & initial, QWidget * parent, const QString & title, FontDialogOptions options )
+QFont getFont ( bool * ok, const QFont & initial, QWidget * parent, const char * name )
+//QFont getFont ( bool * ok, QWidget * parent, const char * name )
+QFont getFont ( bool * ok, const QFont & initial, QWidget * parent, const QString & title )
+QFont getFont ( bool * ok, const QFont & initial, QWidget * parent = 0 )
+QFont getFont ( bool * ok, QWidget * parent = 0 )
 </PROTOS>
 
 <SIGNALS>

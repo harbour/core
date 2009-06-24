@@ -59,6 +59,15 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 6/7 [ 85.71% ] ]
+ *
+ *  *** Unconvered Prototypes ***
+ *  -----------------------------
+ *
+ *  QList<QKeySequence> keyBindings ( StandardKey key )
+ */
+
 
 #include <QtGui/QKeySequence>
 
@@ -113,6 +122,22 @@ HB_FUNC( QT_QKEYSEQUENCE_MATCHES )
 HB_FUNC( QT_QKEYSEQUENCE_TOSTRING )
 {
    hb_retc( hbqt_par_QKeySequence( 1 )->toString( ( HB_ISNUM( 2 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 2 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ).toLatin1().data() );
+}
+
+/*
+ * QKeySequence fromString ( const QString & str, SequenceFormat format = PortableText )
+ */
+HB_FUNC( QT_QKEYSEQUENCE_FROMSTRING )
+{
+   hb_retptr( new QKeySequence( hbqt_par_QKeySequence( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 3 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ) ) );
+}
+
+/*
+ * QKeySequence mnemonic ( const QString & text )
+ */
+HB_FUNC( QT_QKEYSEQUENCE_MNEMONIC )
+{
+   hb_retptr( new QKeySequence( hbqt_par_QKeySequence( 1 )->mnemonic( hbqt_par_QString( 2 ) ) ) );
 }
 
 

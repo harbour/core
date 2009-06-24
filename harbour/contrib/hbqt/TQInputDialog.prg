@@ -103,6 +103,10 @@ CREATE CLASS QInputDialog INHERIT QDialog
    METHOD  testOption( nOption )               INLINE  Qt_QInputDialog_testOption( ::pPtr, nOption )
    METHOD  textEchoMode()                      INLINE  Qt_QInputDialog_textEchoMode( ::pPtr )
    METHOD  textValue()                         INLINE  Qt_QInputDialog_textValue( ::pPtr )
+   METHOD  getDouble( pParent, cTitle, cLabel, nValue, nMin, nMax, nDecimals, lOk, nFlags )  INLINE  Qt_QInputDialog_getDouble( ::pPtr, pParent, cTitle, cLabel, nValue, nMin, nMax, nDecimals, lOk, nFlags )
+   METHOD  getInt( pParent, cTitle, cLabel, nValue, nMin, nMax, nStep, lOk, nFlags )  INLINE  Qt_QInputDialog_getInt( ::pPtr, pParent, cTitle, cLabel, nValue, nMin, nMax, nStep, lOk, nFlags )
+   METHOD  getItem( pParent, cTitle, cLabel, pItems, nCurrent, lEditable, lOk, nFlags )  INLINE  Qt_QInputDialog_getItem( ::pPtr, pParent, cTitle, cLabel, pItems, nCurrent, lEditable, lOk, nFlags )
+   METHOD  getText( pParent, cTitle, cLabel, nMode, cText, lOk, nFlags )  INLINE  Qt_QInputDialog_getText( ::pPtr, pParent, cTitle, cLabel, nMode, cText, lOk, nFlags )
 
    ENDCLASS
 

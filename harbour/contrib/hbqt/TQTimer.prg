@@ -69,6 +69,7 @@ CREATE CLASS QTimer INHERIT QObject
    METHOD  setInterval( nMsec )                INLINE  Qt_QTimer_setInterval( ::pPtr, nMsec )
    METHOD  setSingleShot( lSingleShot )        INLINE  Qt_QTimer_setSingleShot( ::pPtr, lSingleShot )
    METHOD  timerId()                           INLINE  Qt_QTimer_timerId( ::pPtr )
+   METHOD  singleShot( nMsec, pReceiver, pMember )  INLINE  Qt_QTimer_singleShot( ::pPtr, nMsec, pReceiver, pMember )
    METHOD  start()                             INLINE  Qt_QTimer_start( ::pPtr )
    METHOD  stop()                              INLINE  Qt_QTimer_stop( ::pPtr )
    METHOD  start_1( nMsec )                    INLINE  Qt_QTimer_start_1( ::pPtr, nMsec )

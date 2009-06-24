@@ -113,6 +113,13 @@ virtual QRect subControlRect ( ComplexControl control, const QStyleOptionComplex
 virtual QRect subElementRect ( SubElement element, const QStyleOption * option, const QWidget * widget = 0 ) const = 0
 virtual void unpolish ( QWidget * widget )
 virtual void unpolish ( QApplication * application )
+
+QRect alignedRect ( Qt::LayoutDirection direction, Qt::Alignment alignment, const QSize & size, const QRect & rectangle )
+int sliderPositionFromValue ( int min, int max, int logicalValue, int span, bool upsideDown = false )
+int sliderValueFromPosition ( int min, int max, int position, int span, bool upsideDown = false )
+Qt::Alignment visualAlignment ( Qt::LayoutDirection direction, Qt::Alignment alignment )
+QPoint visualPos ( Qt::LayoutDirection direction, const QRect & boundingRectangle, const QPoint & logicalPosition )
+QRect visualRect ( Qt::LayoutDirection direction, const QRect & boundingRectangle, const QRect & logicalRectangle )
 </PROTOS>
 
 <SLOTS>

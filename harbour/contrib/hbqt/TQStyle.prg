@@ -86,6 +86,12 @@ CREATE CLASS QStyle INHERIT QObject
    METHOD  subElementRect( nElement, pOption, pWidget )  INLINE  Qt_QStyle_subElementRect( ::pPtr, nElement, pOption, pWidget )
    METHOD  unpolish( pWidget )                 INLINE  Qt_QStyle_unpolish( ::pPtr, pWidget )
    METHOD  unpolish_1( pApplication )          INLINE  Qt_QStyle_unpolish_1( ::pPtr, pApplication )
+   METHOD  alignedRect( nDirection, nAlignment, pSize, pRectangle )  INLINE  Qt_QStyle_alignedRect( ::pPtr, nDirection, nAlignment, pSize, pRectangle )
+   METHOD  sliderPositionFromValue( nMin, nMax, nLogicalValue, nSpan, lUpsideDown )  INLINE  Qt_QStyle_sliderPositionFromValue( ::pPtr, nMin, nMax, nLogicalValue, nSpan, lUpsideDown )
+   METHOD  sliderValueFromPosition( nMin, nMax, nPosition, nSpan, lUpsideDown )  INLINE  Qt_QStyle_sliderValueFromPosition( ::pPtr, nMin, nMax, nPosition, nSpan, lUpsideDown )
+   METHOD  visualAlignment( nDirection, nAlignment )  INLINE  Qt_QStyle_visualAlignment( ::pPtr, nDirection, nAlignment )
+   METHOD  visualPos( nDirection, pBoundingRectangle, pLogicalPosition )  INLINE  Qt_QStyle_visualPos( ::pPtr, nDirection, pBoundingRectangle, pLogicalPosition )
+   METHOD  visualRect( nDirection, pBoundingRectangle, pLogicalRectangle )  INLINE  Qt_QStyle_visualRect( ::pPtr, nDirection, pBoundingRectangle, pLogicalRectangle )
 
    ENDCLASS
 

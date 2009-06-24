@@ -72,6 +72,9 @@ CREATE CLASS QResource
    METHOD  setFileName( cFile )                INLINE  Qt_QResource_setFileName( ::pPtr, cFile )
    METHOD  setLocale( pLocale )                INLINE  Qt_QResource_setLocale( ::pPtr, pLocale )
    METHOD  size()                              INLINE  Qt_QResource_size( ::pPtr )
+   METHOD  registerResource( cRccFileName, cMapRoot )  INLINE  Qt_QResource_registerResource( ::pPtr, cRccFileName, cMapRoot )
+   METHOD  searchPaths()                       INLINE  Qt_QResource_searchPaths( ::pPtr )
+   METHOD  unregisterResource( cRccFileName, cMapRoot )  INLINE  Qt_QResource_unregisterResource( ::pPtr, cRccFileName, cMapRoot )
 
    ENDCLASS
 

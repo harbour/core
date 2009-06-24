@@ -36,6 +36,7 @@ QCommonStyle.qth
 QConicalGradient.qth
 QCoreApplication.qth
 QDateEdit.qth
+QDateTime.qth
 QDateTimeEdit.qth
 QDesktopWidget.qth
 QDial.qth
@@ -53,6 +54,7 @@ QFocusEvent.qth
 QFocusFrame.qth
 QFont.qth
 QFontComboBox.qth
+QFontDatabase.qth
 QFontDialog.qth
 QFontInfo.qth
 QFormLayout.qth
@@ -73,6 +75,8 @@ QInputEvent.qth
 QKeyEvent.qth
 QKeySequence.qth
 QLabel.qth
+QLatin1Char.qth
+QLatin1String.qth
 QLayout.qth
 QLayoutItem.qth
 QLCDNumber.qth
@@ -206,6 +210,8 @@ QVariant.qth
 QVBoxLayout.qth
 QWebPage.qth
 QWidget.qth
+QWidgetAction.qth
+QWidgetItem.qth
 QWebView.qth
 QWindowsStyle.qth
 QWindowsXPStyle.qth

@@ -60,7 +60,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 33/36 [ 91.67% ] ]
+ *  Constructed[ 36/39 [ 92.31% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -404,6 +404,30 @@ HB_FUNC( QT_QVARIANT_TYPE )
 HB_FUNC( QT_QVARIANT_USERTYPE )
 {
    hb_retni( hbqt_par_QVariant( 1 )->userType() );
+}
+
+/*
+ * QVariant fromValue ( const T & value )
+ */
+HB_FUNC( QT_QVARIANT_FROMVALUE )
+{
+   hb_retptr( new QVariant( hbqt_par_QVariant( 1 )->fromValue( hb_param( 2, HB_IT_ANY ) ) ) );
+}
+
+/*
+ * Type nameToType ( const char * name )
+ */
+HB_FUNC( QT_QVARIANT_NAMETOTYPE )
+{
+   hb_retni( ( QVariant::Type ) hbqt_par_QVariant( 1 )->nameToType( hbqt_par_char( 2 ) ) );
+}
+
+/*
+ * const char * typeToName ( Type typ )
+ */
+HB_FUNC( QT_QVARIANT_TYPETONAME )
+{
+   hb_retc( hbqt_par_QVariant( 1 )->typeToName( ( QVariant::Type ) hb_parni( 2 ) ) );
 }
 
 

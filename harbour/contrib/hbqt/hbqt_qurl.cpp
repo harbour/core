@@ -60,7 +60,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 60/65 [ 92.31% ] ]
+ *  Constructed[ 69/74 [ 93.24% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -573,6 +573,78 @@ HB_FUNC( QT_QURL_USERINFO )
 HB_FUNC( QT_QURL_USERNAME )
 {
    hb_retc( hbqt_par_QUrl( 1 )->userName().toLatin1().data() );
+}
+
+/*
+ * QString fromAce ( const QByteArray & domain )
+ */
+HB_FUNC( QT_QURL_FROMACE )
+{
+   hb_retc( hbqt_par_QUrl( 1 )->fromAce( *hbqt_par_QByteArray( 2 ) ).toLatin1().data() );
+}
+
+/*
+ * QUrl fromEncoded ( const QByteArray & input )
+ */
+HB_FUNC( QT_QURL_FROMENCODED )
+{
+   hb_retptr( new QUrl( hbqt_par_QUrl( 1 )->fromEncoded( *hbqt_par_QByteArray( 2 ) ) ) );
+}
+
+/*
+ * QUrl fromEncoded ( const QByteArray & input, ParsingMode parsingMode )
+ */
+HB_FUNC( QT_QURL_FROMENCODED_1 )
+{
+   hb_retptr( new QUrl( hbqt_par_QUrl( 1 )->fromEncoded( *hbqt_par_QByteArray( 2 ), ( QUrl::ParsingMode ) hb_parni( 3 ) ) ) );
+}
+
+/*
+ * QUrl fromLocalFile ( const QString & localFile )
+ */
+HB_FUNC( QT_QURL_FROMLOCALFILE )
+{
+   hb_retptr( new QUrl( hbqt_par_QUrl( 1 )->fromLocalFile( hbqt_par_QString( 2 ) ) ) );
+}
+
+/*
+ * QString fromPercentEncoding ( const QByteArray & input )
+ */
+HB_FUNC( QT_QURL_FROMPERCENTENCODING )
+{
+   hb_retc( hbqt_par_QUrl( 1 )->fromPercentEncoding( *hbqt_par_QByteArray( 2 ) ).toLatin1().data() );
+}
+
+/*
+ * QStringList idnWhitelist ()
+ */
+HB_FUNC( QT_QURL_IDNWHITELIST )
+{
+   hb_retptr( new QStringList( hbqt_par_QUrl( 1 )->idnWhitelist() ) );
+}
+
+/*
+ * void setIdnWhitelist ( const QStringList & list )
+ */
+HB_FUNC( QT_QURL_SETIDNWHITELIST )
+{
+   hbqt_par_QUrl( 1 )->setIdnWhitelist( *hbqt_par_QStringList( 2 ) );
+}
+
+/*
+ * QByteArray toAce ( const QString & domain )
+ */
+HB_FUNC( QT_QURL_TOACE )
+{
+   hb_retptr( new QByteArray( hbqt_par_QUrl( 1 )->toAce( hbqt_par_QString( 2 ) ) ) );
+}
+
+/*
+ * QByteArray toPercentEncoding ( const QString & input, const QByteArray & exclude = QByteArray(), const QByteArray & include = QByteArray() )
+ */
+HB_FUNC( QT_QURL_TOPERCENTENCODING )
+{
+   hb_retptr( new QByteArray( hbqt_par_QUrl( 1 )->toPercentEncoding( hbqt_par_QString( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QByteArray( 3 ) : QByteArray() ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QByteArray( 4 ) : QByteArray() ) ) ) );
 }
 
 

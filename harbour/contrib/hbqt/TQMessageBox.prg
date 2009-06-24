@@ -94,6 +94,12 @@ CREATE CLASS QMessageBox INHERIT QDialog
    METHOD  standardButtons()                   INLINE  Qt_QMessageBox_standardButtons( ::pPtr )
    METHOD  text()                              INLINE  Qt_QMessageBox_text( ::pPtr )
    METHOD  textFormat()                        INLINE  Qt_QMessageBox_textFormat( ::pPtr )
+   METHOD  about( pParent, cTitle, cText )     INLINE  Qt_QMessageBox_about( ::pPtr, pParent, cTitle, cText )
+   METHOD  aboutQt( pParent, cTitle )          INLINE  Qt_QMessageBox_aboutQt( ::pPtr, pParent, cTitle )
+   METHOD  critical( pParent, cTitle, cText, nButtons, nDefaultButton )  INLINE  Qt_QMessageBox_critical( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
+   METHOD  information( pParent, cTitle, cText, nButtons, nDefaultButton )  INLINE  Qt_QMessageBox_information( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
+   METHOD  question( pParent, cTitle, cText, nButtons, nDefaultButton )  INLINE  Qt_QMessageBox_question( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
+   METHOD  warning( pParent, cTitle, cText, nButtons, nDefaultButton )  INLINE  Qt_QMessageBox_warning( ::pPtr, pParent, cTitle, cText, nButtons, nDefaultButton )
    METHOD  exec()                              INLINE  Qt_QMessageBox_exec( ::pPtr )
 
    ENDCLASS

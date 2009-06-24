@@ -83,6 +83,9 @@ bool isFinished () const
 int loops () const
 int loopsRemaining () const
 void setLoops ( int number )
+
+bool isAvailable ()
+void play ( const QString & filename )
 </PROTOS>
 
 <SLOTS>

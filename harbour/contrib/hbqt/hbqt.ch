@@ -315,6 +315,44 @@
 #define Qt_TextEditorInteraction   ( TextSelectableByMouse + TextSelectableByKeyboard + TextEditable )  // The default for a text editor.
 #define Qt_TextBrowserInteraction  ( TextSelectableByMouse + LinksAccessibleByMouse + LinksAccessibleByKeyboard )  // The default for QTextBrowser.
 
+
+#define QMessageBox_InvalidRole                    -1        // The button is invalid.
+#define QMessageBox_AcceptRole                     0         // Clicking the button causes the dialog to be accepted (e.g. OK).
+#define QMessageBox_RejectRole                     1         // Clicking the button causes the dialog to be rejected (e.g. Cancel).
+#define QMessageBox_DestructiveRole                2         // Clicking the button causes a destructive change (e.g. for Discarding Changes) and closes the dialog.
+#define QMessageBox_ActionRole                     3         // Clicking the button causes changes to the elements within the dialog.
+#define QMessageBox_HelpRole                       4         // The button can be clicked to request help.
+#define QMessageBox_YesRole                        5         // The button is a "Yes"-like button.
+#define QMessageBox_NoRole                         6         // The button is a "No"-like button.
+#define QMessageBox_ApplyRole                      8         // The button applies current changes.
+#define QMessageBox_ResetRole                      7         // The button resets the dialog's fields to default values.
+                                                             //
+#define QMessageBox_NoIcon                         0         // the message box does not have any icon.
+#define QMessageBox_Question                       4         // an icon indicating that the message is asking a question.
+#define QMessageBox_Information                    1         // an icon indicating that the message is nothing out of the ordinary.
+#define QMessageBox_Warning                        2         // an icon indicating that the message is a warning, but can be dealt with.
+#define QMessageBox_Critical                       3         // an icon indicating that the message represents a critical problem.
+
+#define QMessageBox_Ok                             0x00000400   // An "OK" button defined with the AcceptRole.
+#define QMessageBox_Open                           0x00002000   // A "Open" button defined with the AcceptRole.
+#define QMessageBox_Save                           0x00000800   // A "Save" button defined with the AcceptRole.
+#define QMessageBox_Cancel                         0x00400000   // A "Cancel" button defined with the RejectRole.
+#define QMessageBox_Close                          0x00200000   // A "Close" button defined with the RejectRole.
+#define QMessageBox_Discard                        0x00800000   // A "Discard" or "Don't Save" button, depending on the platform, defined with the DestructiveRole.
+#define QMessageBox_Apply                          0x02000000   // An "Apply" button defined with the ApplyRole.
+#define QMessageBox_Reset                          0x04000000   // A "Reset" button defined with the ResetRole.
+#define QMessageBox_RestoreDefaults                0x08000000   // A "Restore Defaults" button defined with the ResetRole.
+#define QMessageBox_Help                           0x01000000   // A "Help" button defined with the HelpRole.
+#define QMessageBox_SaveAll                        0x00001000   // A "Save All" button defined with the AcceptRole.
+#define QMessageBox_Yes                            0x00004000   // A "Yes" button defined with the YesRole.
+#define QMessageBox_YesToAll                       0x00008000   // A "Yes to All" button defined with the YesRole.
+#define QMessageBox_No                             0x00010000   // A "No" button defined with the NoRole.
+#define QMessageBox_NoToAll                        0x00020000   // A "No to All" button defined with the NoRole.
+#define QMessageBox_Abort                          0x00040000   // An "Abort" button defined with the RejectRole.
+#define QMessageBox_Retry                          0x00080000   // A "Retry" button defined with the AcceptRole.
+#define QMessageBox_Ignore                         0x00100000   // An "Ignore" button defined with the AcceptRole.
+#define QMessageBox_NoButton                       0x00000000   // An invalid button.
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH

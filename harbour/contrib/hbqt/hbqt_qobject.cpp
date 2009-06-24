@@ -60,7 +60,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 26/29 [ 89.66% ] ]
+ *  Constructed[ 30/34 [ 88.24% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -68,6 +68,7 @@
  *  QList<QByteArray> dynamicPropertyNames () const
  *  QList<T> findChildren ( const QString & name = QString() ) const
  *  QList<T> findChildren ( const QRegExp & regExp ) const
+ *  const QMetaObject staticMetaObject
  */
 
 
@@ -281,6 +282,38 @@ HB_FUNC( QT_QOBJECT_STARTTIMER )
 HB_FUNC( QT_QOBJECT_THREAD )
 {
    hb_retptr( ( QThread* ) hbqt_par_QObject( 1 )->thread() );
+}
+
+/*
+ * bool connect ( const QObject * sender, const char * signal, const QObject * receiver, const char * method, Qt::ConnectionType type = Qt::AutoConnection )
+ */
+HB_FUNC( QT_QOBJECT_CONNECT_1 )
+{
+   hb_retl( hbqt_par_QObject( 1 )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ), ( HB_ISNUM( 6 ) ? ( Qt::ConnectionType ) hb_parni( 6 ) : ( Qt::ConnectionType ) Qt::AutoConnection ) ) );
+}
+
+/*
+ * bool disconnect ( const QObject * sender, const char * signal, const QObject * receiver, const char * method )
+ */
+HB_FUNC( QT_QOBJECT_DISCONNECT_2 )
+{
+   hb_retl( hbqt_par_QObject( 1 )->disconnect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ) ) );
+}
+
+/*
+ * QString tr ( const char * sourceText, const char * disambiguation = 0, int n = -1 )
+ */
+HB_FUNC( QT_QOBJECT_TR )
+{
+   hb_retc( hbqt_par_QObject( 1 )->tr( hbqt_par_char( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ).toLatin1().data() );
+}
+
+/*
+ * QString trUtf8 ( const char * sourceText, const char * disambiguation = 0, int n = -1 )
+ */
+HB_FUNC( QT_QOBJECT_TRUTF8 )
+{
+   hb_retc( hbqt_par_QObject( 1 )->trUtf8( hbqt_par_char( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ).toLatin1().data() );
 }
 
 /*

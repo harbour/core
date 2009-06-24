@@ -59,6 +59,15 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 18/19 [ 94.74% ] ]
+ *
+ *  *** Unconvered Prototypes ***
+ *  -----------------------------
+ *
+ *  QList<QByteArray> supportedImageFormats ()
+ */
+
 
 #include <QtGui/QImageWriter>
 

@@ -170,5 +170,18 @@ int value () const
 qreal valueF () const
 int yellow () const
 qreal yellowF () const
+
+
+//bool allowX11ColorNames ()
+QStringList colorNames ()
+QColor fromCmyk ( int c, int m, int y, int k, int a = 255 )
+QColor fromCmykF ( qreal c, qreal m, qreal y, qreal k, qreal a = 1.0 )
+QColor fromHsv ( int h, int s, int v, int a = 255 )
+QColor fromHsvF ( qreal h, qreal s, qreal v, qreal a = 1.0 )
+QColor fromRgb ( QRgb rgb )
+QColor fromRgb ( int r, int g, int b, int a = 255 )
+QColor fromRgbF ( qreal r, qreal g, qreal b, qreal a = 1.0 )
+QColor fromRgba ( QRgb rgba )
+//void setAllowX11ColorNames ( bool enabled )
 </PROTOS>
 

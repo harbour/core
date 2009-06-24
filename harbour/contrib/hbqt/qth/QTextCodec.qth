@@ -96,6 +96,22 @@ QString toUnicode ( const QByteArray & a ) const
 // QString toUnicode ( const char * input, int size, ConverterState * state = 0 ) const
 #
 QString toUnicode ( const char * chars ) const
+
+
+#                Public Statics         I do not know it these will work, though compile OK
+QTextCodec * codecForCStrings ()
+QTextCodec * codecForHtml ( const QByteArray & ba, QTextCodec * defaultCodec )
+QTextCodec * codecForHtml ( const QByteArray & ba )
+QTextCodec * codecForLocale ()
+QTextCodec * codecForMib ( int mib )
+QTextCodec * codecForName ( const QByteArray & name )
+QTextCodec * codecForName ( const char * name )
+QTextCodec * codecForTr ()
+void setCodecForCStrings ( QTextCodec * codec )
+void setCodecForLocale ( QTextCodec * c )
+void setCodecForTr ( QTextCodec * c )
+
+
 </PROTOS>
 
 <SLOTS>

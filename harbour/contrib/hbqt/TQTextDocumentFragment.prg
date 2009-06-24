@@ -67,6 +67,9 @@ CREATE CLASS QTextDocumentFragment
    METHOD  toHtml( pEncoding )                 INLINE  Qt_QTextDocumentFragment_toHtml( ::pPtr, pEncoding )
    METHOD  toHtml_1()                          INLINE  Qt_QTextDocumentFragment_toHtml_1( ::pPtr )
    METHOD  toPlainText()                       INLINE  Qt_QTextDocumentFragment_toPlainText( ::pPtr )
+   METHOD  fromHtml( cText )                   INLINE  Qt_QTextDocumentFragment_fromHtml( ::pPtr, cText )
+   METHOD  fromHtml_1( cText, pResourceProvider )  INLINE  Qt_QTextDocumentFragment_fromHtml_1( ::pPtr, cText, pResourceProvider )
+   METHOD  fromPlainText( cPlainText )         INLINE  Qt_QTextDocumentFragment_fromPlainText( ::pPtr, cPlainText )
 
    ENDCLASS
 

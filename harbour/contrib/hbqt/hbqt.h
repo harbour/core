@@ -66,7 +66,12 @@
 #if QT_VERSION >= 0x040500
 
 
+#define hbqt_par_QWidgetItem( n )            ( ( QWidgetItem* ) hb_parptr( n ) )
+#define hbqt_par_QWidgetAction( n )          ( ( QWidgetAction* ) hb_parptr( n ) )
+#define hbqt_par_QLatin1String( n )          ( ( QLatin1String* ) hb_parptr( n ) )
+#define hbqt_par_QLatin1Char( n )            ( ( QLatin1Char* ) hb_parptr( n ) )
 #define hbqt_par_QFocusEvent( n )            ( ( QFocusEvent* ) hb_parptr( n ) )
+#define hbqt_par_QFontDatabase( n )          ( ( QFontDatabase* ) hb_parptr( n ) )
 
 #define hbqt_par_QAbstractButton( n )        ( ( QAbstractButton* ) hb_parptr( n ) )
 #define hbqt_par_QAbstractItemView( n )      ( ( QAbstractItemView* ) hb_parptr( n ) )

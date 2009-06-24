@@ -66,6 +66,7 @@ CREATE CLASS QBitmap INHERIT QPixmap
    METHOD  clear()                             INLINE  Qt_QBitmap_clear( ::pPtr )
    METHOD  transformed( pMatrix )              INLINE  Qt_QBitmap_transformed( ::pPtr, pMatrix )
    METHOD  transformed_1( pMatrix )            INLINE  Qt_QBitmap_transformed_1( ::pPtr, pMatrix )
+   METHOD  fromImage( pImage, nFlags )         INLINE  Qt_QBitmap_fromImage( ::pPtr, pImage, nFlags )
 
    ENDCLASS
 

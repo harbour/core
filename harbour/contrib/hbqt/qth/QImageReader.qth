@@ -117,6 +117,10 @@ bool supportsAnimation () const
 bool supportsOption ( QImageIOHandler::ImageOption option ) const
 QString text ( const QString & key ) const
 QStringList textKeys () const
+
+QByteArray imageFormat ( const QString & fileName )
+QByteArray imageFormat ( QIODevice * device )
+QList<QByteArray> supportedImageFormats ()
 </PROTOS>
 
 <SLOTS>

@@ -60,7 +60,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 32/33 [ 96.97% ] ]
+ *  Constructed[ 38/39 [ 97.44% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -328,6 +328,54 @@ HB_FUNC( QT_QMESSAGEBOX_TEXT )
 HB_FUNC( QT_QMESSAGEBOX_TEXTFORMAT )
 {
    hb_retni( ( Qt::TextFormat ) hbqt_par_QMessageBox( 1 )->textFormat() );
+}
+
+/*
+ * void about ( QWidget * parent, const QString & title, const QString & text )
+ */
+HB_FUNC( QT_QMESSAGEBOX_ABOUT )
+{
+   hbqt_par_QMessageBox( 1 )->about( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ) );
+}
+
+/*
+ * void aboutQt ( QWidget * parent, const QString & title = QString() )
+ */
+HB_FUNC( QT_QMESSAGEBOX_ABOUTQT )
+{
+   hbqt_par_QMessageBox( 1 )->aboutQt( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ) );
+}
+
+/*
+ * StandardButton critical ( QWidget * parent, const QString & title, const QString & text, StandardButtons buttons = Ok, StandardButton defaultButton = NoButton )
+ */
+HB_FUNC( QT_QMESSAGEBOX_CRITICAL )
+{
+   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->critical( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+}
+
+/*
+ * StandardButton information ( QWidget * parent, const QString & title, const QString & text, StandardButtons buttons = Ok, StandardButton defaultButton = NoButton )
+ */
+HB_FUNC( QT_QMESSAGEBOX_INFORMATION )
+{
+   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->information( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+}
+
+/*
+ * StandardButton question ( QWidget * parent, const QString & title, const QString & text, StandardButtons buttons = Ok, StandardButton defaultButton = NoButton )
+ */
+HB_FUNC( QT_QMESSAGEBOX_QUESTION )
+{
+   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->question( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+}
+
+/*
+ * StandardButton warning ( QWidget * parent, const QString & title, const QString & text, StandardButtons buttons = Ok, StandardButton defaultButton = NoButton )
+ */
+HB_FUNC( QT_QMESSAGEBOX_WARNING )
+{
+   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->warning( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ), hbqt_par_QString( 4 ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
 }
 
 /*

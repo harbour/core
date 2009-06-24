@@ -113,6 +113,14 @@ CREATE CLASS QFont
    METHOD  underline()                         INLINE  Qt_QFont_underline( ::pPtr )
    METHOD  weight()                            INLINE  Qt_QFont_weight( ::pPtr )
    METHOD  wordSpacing()                       INLINE  Qt_QFont_wordSpacing( ::pPtr )
+   METHOD  cleanup()                           INLINE  Qt_QFont_cleanup( ::pPtr )
+   METHOD  initialize()                        INLINE  Qt_QFont_initialize( ::pPtr )
+   METHOD  insertSubstitution( cFamilyName, cSubstituteName )  INLINE  Qt_QFont_insertSubstitution( ::pPtr, cFamilyName, cSubstituteName )
+   METHOD  insertSubstitutions( cFamilyName, pSubstituteNames )  INLINE  Qt_QFont_insertSubstitutions( ::pPtr, cFamilyName, pSubstituteNames )
+   METHOD  removeSubstitution( cFamilyName )   INLINE  Qt_QFont_removeSubstitution( ::pPtr, cFamilyName )
+   METHOD  substitute( cFamilyName )           INLINE  Qt_QFont_substitute( ::pPtr, cFamilyName )
+   METHOD  substitutes( cFamilyName )          INLINE  Qt_QFont_substitutes( ::pPtr, cFamilyName )
+   METHOD  substitutions()                     INLINE  Qt_QFont_substitutions( ::pPtr )
 
    ENDCLASS
 

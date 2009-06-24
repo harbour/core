@@ -60,7 +60,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 211/214 [ 98.60% ] ]
+ *  Constructed[ 214/217 [ 98.62% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -1629,6 +1629,30 @@ HB_FUNC( QT_QWIDGET_X )
 HB_FUNC( QT_QWIDGET_Y )
 {
    hb_retni( hbqt_par_QWidget( 1 )->y() );
+}
+
+/*
+ * QWidget * keyboardGrabber ()
+ */
+HB_FUNC( QT_QWIDGET_KEYBOARDGRABBER )
+{
+   hb_retptr( ( QWidget* ) hbqt_par_QWidget( 1 )->keyboardGrabber() );
+}
+
+/*
+ * QWidget * mouseGrabber ()
+ */
+HB_FUNC( QT_QWIDGET_MOUSEGRABBER )
+{
+   hb_retptr( ( QWidget* ) hbqt_par_QWidget( 1 )->mouseGrabber() );
+}
+
+/*
+ * void setTabOrder ( QWidget * first, QWidget * second )
+ */
+HB_FUNC( QT_QWIDGET_SETTABORDER )
+{
+   hbqt_par_QWidget( 1 )->setTabOrder( hbqt_par_QWidget( 2 ), hbqt_par_QWidget( 3 ) );
 }
 
 /*

@@ -120,6 +120,14 @@ HB_FUNC( QT_QEVENT_TYPE )
    hb_retni( ( QEvent::Type ) hbqt_par_QEvent( 1 )->type() );
 }
 
+/*
+ * int registerEventType ( int hint = -1 )
+ */
+HB_FUNC( QT_QEVENT_REGISTEREVENTTYPE )
+{
+   hb_retni( hbqt_par_QEvent( 1 )->registerEventType( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

@@ -349,6 +349,54 @@ HB_FUNC( QT_QPIXMAP_WIDTH )
    hb_retni( hbqt_par_QPixmap( 1 )->width() );
 }
 
+/*
+ * int defaultDepth ()
+ */
+HB_FUNC( QT_QPIXMAP_DEFAULTDEPTH )
+{
+   hb_retni( hbqt_par_QPixmap( 1 )->defaultDepth() );
+}
+
+/*
+ * QPixmap fromImage ( const QImage & image, Qt::ImageConversionFlags flags = Qt::AutoColor )
+ */
+HB_FUNC( QT_QPIXMAP_FROMIMAGE )
+{
+   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->fromImage( *hbqt_par_QImage( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ImageConversionFlags ) hb_parni( 3 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) ) );
+}
+
+/*
+ * QPixmap grabWidget ( QWidget * widget, const QRect & rectangle )
+ */
+HB_FUNC( QT_QPIXMAP_GRABWIDGET )
+{
+   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->grabWidget( hbqt_par_QWidget( 2 ), *hbqt_par_QRect( 3 ) ) ) );
+}
+
+/*
+ * QPixmap grabWidget ( QWidget * widget, int x = 0, int y = 0, int width = -1, int height = -1 )
+ */
+HB_FUNC( QT_QPIXMAP_GRABWIDGET_1 )
+{
+   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->grabWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : -1 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : -1 ) ) ) );
+}
+
+/*
+ * QTransform trueMatrix ( const QTransform & matrix, int width, int height )
+ */
+HB_FUNC( QT_QPIXMAP_TRUEMATRIX )
+{
+   hb_retptr( new QTransform( hbqt_par_QPixmap( 1 )->trueMatrix( *hbqt_par_QTransform( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) ) );
+}
+
+/*
+ * QMatrix trueMatrix ( const QMatrix & m, int w, int h )
+ */
+HB_FUNC( QT_QPIXMAP_TRUEMATRIX_1 )
+{
+   hb_retptr( new QMatrix( hbqt_par_QPixmap( 1 )->trueMatrix( *hbqt_par_QMatrix( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) ) );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

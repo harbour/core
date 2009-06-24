@@ -166,6 +166,11 @@ int userType () const
 #
 //T value () const
 #
+
+
+QVariant fromValue ( const T & value )
+Type nameToType ( const char * name )
+const char * typeToName ( Type typ )
 </PROTOS>
 
 <SLOTS>

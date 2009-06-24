@@ -107,6 +107,7 @@ CREATE CLASS QFileDialog INHERIT QDialog
    METHOD  setViewMode( nMode )                INLINE  Qt_QFileDialog_setViewMode( ::pPtr, nMode )
    METHOD  testOption( nOption )               INLINE  Qt_QFileDialog_testOption( ::pPtr, nOption )
    METHOD  viewMode()                          INLINE  Qt_QFileDialog_viewMode( ::pPtr )
+   METHOD  getExistingDirectory( pParent, cCaption, cDir, nOptions )  INLINE  Qt_QFileDialog_getExistingDirectory( ::pPtr, pParent, cCaption, cDir, nOptions )
 
    ENDCLASS
 

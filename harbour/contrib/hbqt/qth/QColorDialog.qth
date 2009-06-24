@@ -100,6 +100,14 @@ void setOption ( ColorDialogOption option, bool on = true )
 void setOptions ( ColorDialogOptions options )
 virtual void setVisible ( bool visible )
 bool testOption ( ColorDialogOption option ) const
+
+
+QRgb customColor ( int index )
+int customCount ()
+QColor getColor ( const QColor & initial, QWidget * parent, const QString & title, ColorDialogOptions options = 0 )
+QColor getColor ( const QColor & initial = Qt::white, QWidget * parent = 0 )
+void setCustomColor ( int index, QRgb color )
+void setStandardColor ( int index, QRgb color )
 </PROTOS>
 
 <SIGNALS>

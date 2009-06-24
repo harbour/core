@@ -128,6 +128,66 @@ HB_FUNC( QT_QFONTDIALOG_TESTOPTION )
    hb_retl( hbqt_par_QFontDialog( 1 )->testOption( ( QFontDialog::FontDialogOption ) hb_parni( 2 ) ) );
 }
 
+/*
+ * QFont getFont ( bool * ok, const QFont & initial, QWidget * parent, const QString & title, FontDialogOptions options )
+ */
+HB_FUNC( QT_QFONTDIALOG_GETFONT )
+{
+   bool iOk = 0;
+
+   hb_retptr( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), hbqt_par_QString( 5 ), ( QFontDialog::FontDialogOptions ) hb_parni( 6 ) ) ) );
+
+   hb_stornl( iOk, 2 );
+}
+
+/*
+ * QFont getFont ( bool * ok, const QFont & initial, QWidget * parent, const char * name )
+ */
+HB_FUNC( QT_QFONTDIALOG_GETFONT_1 )
+{
+   bool iOk = 0;
+
+   hb_retptr( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), hbqt_par_char( 5 ) ) ) );
+
+   hb_stornl( iOk, 2 );
+}
+
+/*
+ * QFont getFont ( bool * ok, const QFont & initial, QWidget * parent, const QString & title )
+ */
+HB_FUNC( QT_QFONTDIALOG_GETFONT_2 )
+{
+   bool iOk = 0;
+
+   hb_retptr( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), hbqt_par_QString( 5 ) ) ) );
+
+   hb_stornl( iOk, 2 );
+}
+
+/*
+ * QFont getFont ( bool * ok, const QFont & initial, QWidget * parent = 0 )
+ */
+HB_FUNC( QT_QFONTDIALOG_GETFONT_3 )
+{
+   bool iOk = 0;
+
+   hb_retptr( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ) ) ) );
+
+   hb_stornl( iOk, 2 );
+}
+
+/*
+ * QFont getFont ( bool * ok, QWidget * parent = 0 )
+ */
+HB_FUNC( QT_QFONTDIALOG_GETFONT_4 )
+{
+   bool iOk = 0;
+
+   hb_retptr( new QFont( hbqt_par_QFontDialog( 1 )->getFont( &iOk, hbqt_par_QWidget( 3 ) ) ) );
+
+   hb_stornl( iOk, 2 );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

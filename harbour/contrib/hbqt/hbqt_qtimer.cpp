@@ -121,6 +121,14 @@ HB_FUNC( QT_QTIMER_TIMERID )
 }
 
 /*
+ * void singleShot ( int msec, QObject * receiver, const char * member )
+ */
+HB_FUNC( QT_QTIMER_SINGLESHOT )
+{
+   hbqt_par_QTimer( 1 )->singleShot( hb_parni( 2 ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) );
+}
+
+/*
  * void start ()
  */
 HB_FUNC( QT_QTIMER_START )

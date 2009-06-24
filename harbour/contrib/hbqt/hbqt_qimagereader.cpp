@@ -59,6 +59,15 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 38/39 [ 97.44% ] ]
+ *
+ *  *** Unconvered Prototypes ***
+ *  -----------------------------
+ *
+ *  QList<QByteArray> supportedImageFormats ()
+ */
+
 
 #include <QtGui/QImageReader>
 
@@ -360,6 +369,22 @@ HB_FUNC( QT_QIMAGEREADER_TEXT )
 HB_FUNC( QT_QIMAGEREADER_TEXTKEYS )
 {
    hb_retptr( new QStringList( hbqt_par_QImageReader( 1 )->textKeys() ) );
+}
+
+/*
+ * QByteArray imageFormat ( const QString & fileName )
+ */
+HB_FUNC( QT_QIMAGEREADER_IMAGEFORMAT_1 )
+{
+   hb_retptr( new QByteArray( hbqt_par_QImageReader( 1 )->imageFormat( hbqt_par_QString( 2 ) ) ) );
+}
+
+/*
+ * QByteArray imageFormat ( QIODevice * device )
+ */
+HB_FUNC( QT_QIMAGEREADER_IMAGEFORMAT_2 )
+{
+   hb_retptr( new QByteArray( hbqt_par_QImageReader( 1 )->imageFormat( hbqt_par_QIODevice( 2 ) ) ) );
 }
 
 

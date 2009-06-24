@@ -306,6 +306,14 @@ HB_FUNC( QT_QLAYOUT_UPDATE )
    hbqt_par_QLayout( 1 )->update();
 }
 
+/*
+ * QSize closestAcceptableSize ( const QWidget * widget, const QSize & size )
+ */
+HB_FUNC( QT_QLAYOUT_CLOSESTACCEPTABLESIZE )
+{
+   hb_retptr( new QSize( hbqt_par_QLayout( 1 )->closestAcceptableSize( hbqt_par_QWidget( 2 ), *hbqt_par_QSize( 3 ) ) ) );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

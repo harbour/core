@@ -60,7 +60,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 9/10 [ 90.00% ] ]
+ *  Constructed[ 20/21 [ 95.24% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -151,6 +151,94 @@ HB_FUNC( QT_QTEXTCODEC_TOUNICODE )
 HB_FUNC( QT_QTEXTCODEC_TOUNICODE_1 )
 {
    hb_retc( hbqt_par_QTextCodec( 1 )->toUnicode( hbqt_par_char( 2 ) ).toLatin1().data() );
+}
+
+/*
+ * QTextCodec * codecForCStrings ()
+ */
+HB_FUNC( QT_QTEXTCODEC_CODECFORCSTRINGS )
+{
+   hb_retptr( ( QTextCodec* ) hbqt_par_QTextCodec( 1 )->codecForCStrings() );
+}
+
+/*
+ * QTextCodec * codecForHtml ( const QByteArray & ba, QTextCodec * defaultCodec )
+ */
+HB_FUNC( QT_QTEXTCODEC_CODECFORHTML )
+{
+   hb_retptr( ( QTextCodec* ) hbqt_par_QTextCodec( 1 )->codecForHtml( *hbqt_par_QByteArray( 2 ), hbqt_par_QTextCodec( 3 ) ) );
+}
+
+/*
+ * QTextCodec * codecForHtml ( const QByteArray & ba )
+ */
+HB_FUNC( QT_QTEXTCODEC_CODECFORHTML_1 )
+{
+   hb_retptr( ( QTextCodec* ) hbqt_par_QTextCodec( 1 )->codecForHtml( *hbqt_par_QByteArray( 2 ) ) );
+}
+
+/*
+ * QTextCodec * codecForLocale ()
+ */
+HB_FUNC( QT_QTEXTCODEC_CODECFORLOCALE )
+{
+   hb_retptr( ( QTextCodec* ) hbqt_par_QTextCodec( 1 )->codecForLocale() );
+}
+
+/*
+ * QTextCodec * codecForMib ( int mib )
+ */
+HB_FUNC( QT_QTEXTCODEC_CODECFORMIB )
+{
+   hb_retptr( ( QTextCodec* ) hbqt_par_QTextCodec( 1 )->codecForMib( hb_parni( 2 ) ) );
+}
+
+/*
+ * QTextCodec * codecForName ( const QByteArray & name )
+ */
+HB_FUNC( QT_QTEXTCODEC_CODECFORNAME )
+{
+   hb_retptr( ( QTextCodec* ) hbqt_par_QTextCodec( 1 )->codecForName( *hbqt_par_QByteArray( 2 ) ) );
+}
+
+/*
+ * QTextCodec * codecForName ( const char * name )
+ */
+HB_FUNC( QT_QTEXTCODEC_CODECFORNAME_1 )
+{
+   hb_retptr( ( QTextCodec* ) hbqt_par_QTextCodec( 1 )->codecForName( hbqt_par_char( 2 ) ) );
+}
+
+/*
+ * QTextCodec * codecForTr ()
+ */
+HB_FUNC( QT_QTEXTCODEC_CODECFORTR )
+{
+   hb_retptr( ( QTextCodec* ) hbqt_par_QTextCodec( 1 )->codecForTr() );
+}
+
+/*
+ * void setCodecForCStrings ( QTextCodec * codec )
+ */
+HB_FUNC( QT_QTEXTCODEC_SETCODECFORCSTRINGS )
+{
+   hbqt_par_QTextCodec( 1 )->setCodecForCStrings( hbqt_par_QTextCodec( 2 ) );
+}
+
+/*
+ * void setCodecForLocale ( QTextCodec * c )
+ */
+HB_FUNC( QT_QTEXTCODEC_SETCODECFORLOCALE )
+{
+   hbqt_par_QTextCodec( 1 )->setCodecForLocale( hbqt_par_QTextCodec( 2 ) );
+}
+
+/*
+ * void setCodecForTr ( QTextCodec * c )
+ */
+HB_FUNC( QT_QTEXTCODEC_SETCODECFORTR )
+{
+   hbqt_par_QTextCodec( 1 )->setCodecForTr( hbqt_par_QTextCodec( 2 ) );
 }
 
 

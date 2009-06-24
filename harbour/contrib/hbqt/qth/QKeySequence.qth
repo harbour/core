@@ -96,6 +96,10 @@ uint count () const
 bool isEmpty () const
 SequenceMatch matches ( const QKeySequence & seq ) const
 QString toString ( SequenceFormat format = PortableText ) const
+
+QKeySequence fromString ( const QString & str, SequenceFormat format = PortableText )
+QList<QKeySequence> keyBindings ( StandardKey key )
+QKeySequence mnemonic ( const QString & text )
 </PROTOS>
 
 <SLOTS>

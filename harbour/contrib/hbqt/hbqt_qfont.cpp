@@ -483,6 +483,70 @@ HB_FUNC( QT_QFONT_WORDSPACING )
    hb_retnd( hbqt_par_QFont( 1 )->wordSpacing() );
 }
 
+/*
+ * void cleanup ()
+ */
+HB_FUNC( QT_QFONT_CLEANUP )
+{
+   hbqt_par_QFont( 1 )->cleanup();
+}
+
+/*
+ * void initialize ()
+ */
+HB_FUNC( QT_QFONT_INITIALIZE )
+{
+   hbqt_par_QFont( 1 )->initialize();
+}
+
+/*
+ * void insertSubstitution ( const QString & familyName, const QString & substituteName )
+ */
+HB_FUNC( QT_QFONT_INSERTSUBSTITUTION )
+{
+   hbqt_par_QFont( 1 )->insertSubstitution( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
+}
+
+/*
+ * void insertSubstitutions ( const QString & familyName, const QStringList & substituteNames )
+ */
+HB_FUNC( QT_QFONT_INSERTSUBSTITUTIONS )
+{
+   hbqt_par_QFont( 1 )->insertSubstitutions( hbqt_par_QString( 2 ), *hbqt_par_QStringList( 3 ) );
+}
+
+/*
+ * void removeSubstitution ( const QString & familyName )
+ */
+HB_FUNC( QT_QFONT_REMOVESUBSTITUTION )
+{
+   hbqt_par_QFont( 1 )->removeSubstitution( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * QString substitute ( const QString & familyName )
+ */
+HB_FUNC( QT_QFONT_SUBSTITUTE )
+{
+   hb_retc( hbqt_par_QFont( 1 )->substitute( hbqt_par_QString( 2 ) ).toLatin1().data() );
+}
+
+/*
+ * QStringList substitutes ( const QString & familyName )
+ */
+HB_FUNC( QT_QFONT_SUBSTITUTES )
+{
+   hb_retptr( new QStringList( hbqt_par_QFont( 1 )->substitutes( hbqt_par_QString( 2 ) ) ) );
+}
+
+/*
+ * QStringList substitutions ()
+ */
+HB_FUNC( QT_QFONT_SUBSTITUTIONS )
+{
+   hb_retptr( new QStringList( hbqt_par_QFont( 1 )->substitutions() ) );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

@@ -123,6 +123,15 @@ CREATE CLASS QUrl INHERIT QWidget
    METHOD  toString( nOptions )                INLINE  Qt_QUrl_toString( ::pPtr, nOptions )
    METHOD  userInfo()                          INLINE  Qt_QUrl_userInfo( ::pPtr )
    METHOD  userName()                          INLINE  Qt_QUrl_userName( ::pPtr )
+   METHOD  fromAce( pDomain )                  INLINE  Qt_QUrl_fromAce( ::pPtr, pDomain )
+   METHOD  fromEncoded( pInput )               INLINE  Qt_QUrl_fromEncoded( ::pPtr, pInput )
+   METHOD  fromEncoded_1( pInput, nParsingMode )  INLINE  Qt_QUrl_fromEncoded_1( ::pPtr, pInput, nParsingMode )
+   METHOD  fromLocalFile( cLocalFile )         INLINE  Qt_QUrl_fromLocalFile( ::pPtr, cLocalFile )
+   METHOD  fromPercentEncoding( pInput )       INLINE  Qt_QUrl_fromPercentEncoding( ::pPtr, pInput )
+   METHOD  idnWhitelist()                      INLINE  Qt_QUrl_idnWhitelist( ::pPtr )
+   METHOD  setIdnWhitelist( pList )            INLINE  Qt_QUrl_setIdnWhitelist( ::pPtr, pList )
+   METHOD  toAce( cDomain )                    INLINE  Qt_QUrl_toAce( ::pPtr, cDomain )
+   METHOD  toPercentEncoding( cInput, pExclude, pInclude )  INLINE  Qt_QUrl_toPercentEncoding( ::pPtr, cInput, pExclude, pInclude )
 
    ENDCLASS
 

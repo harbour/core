@@ -67,6 +67,8 @@ CREATE CLASS QKeySequence
    METHOD  isEmpty()                           INLINE  Qt_QKeySequence_isEmpty( ::pPtr )
    METHOD  matches( pSeq )                     INLINE  Qt_QKeySequence_matches( ::pPtr, pSeq )
    METHOD  toString( nFormat )                 INLINE  Qt_QKeySequence_toString( ::pPtr, nFormat )
+   METHOD  fromString( cStr, nFormat )         INLINE  Qt_QKeySequence_fromString( ::pPtr, cStr, nFormat )
+   METHOD  mnemonic( cText )                   INLINE  Qt_QKeySequence_mnemonic( ::pPtr, cText )
 
    ENDCLASS
 

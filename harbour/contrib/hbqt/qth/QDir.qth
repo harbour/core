@@ -121,6 +121,29 @@ void setNameFilters ( const QStringList & nameFilters )
 void setPath ( const QString & path )
 void setSorting ( SortFlags sort )
 SortFlags sorting () const
+
+
+void addSearchPath ( const QString & prefix, const QString & path )
+QString cleanPath ( const QString & path )
+QDir current ()
+QString currentPath ()
+QFileInfoList drives ()
+QString fromNativeSeparators ( const QString & pathName )
+QDir home ()
+QString homePath ()
+bool isAbsolutePath ( const QString & path )
+bool isRelativePath ( const QString & path )
+bool match ( const QString & filter, const QString & fileName )
+bool match ( const QStringList & filters, const QString & fileName )
+QDir root ()
+QString rootPath ()
+QStringList searchPaths ( const QString & prefix )
+//QChar separator ()
+bool setCurrent ( const QString & path )
+void setSearchPaths ( const QString & prefix, const QStringList & searchPaths )
+QDir temp ()
+QString tempPath ()
+QString toNativeSeparators ( const QString & pathName )
 </PROTOS>
 
 

@@ -152,6 +152,54 @@ HB_FUNC( QT_QCOLORDIALOG_TESTOPTION )
    hb_retl( hbqt_par_QColorDialog( 1 )->testOption( ( QColorDialog::ColorDialogOption ) hb_parni( 2 ) ) );
 }
 
+/*
+ * QRgb customColor ( int index )
+ */
+HB_FUNC( QT_QCOLORDIALOG_CUSTOMCOLOR )
+{
+   hb_retni( hbqt_par_QColorDialog( 1 )->customColor( hb_parni( 2 ) ) );
+}
+
+/*
+ * int customCount ()
+ */
+HB_FUNC( QT_QCOLORDIALOG_CUSTOMCOUNT )
+{
+   hb_retni( hbqt_par_QColorDialog( 1 )->customCount() );
+}
+
+/*
+ * QColor getColor ( const QColor & initial, QWidget * parent, const QString & title, ColorDialogOptions options = 0 )
+ */
+HB_FUNC( QT_QCOLORDIALOG_GETCOLOR )
+{
+   hb_retptr( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QString( 4 ), ( QColorDialog::ColorDialogOptions ) hb_parni( 5 ) ) ) );
+}
+
+/*
+ * QColor getColor ( const QColor & initial = Qt::white, QWidget * parent = 0 )
+ */
+HB_FUNC( QT_QCOLORDIALOG_GETCOLOR_1 )
+{
+   hb_retptr( new QColor( hbqt_par_QColorDialog( 1 )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ) ) ) );
+}
+
+/*
+ * void setCustomColor ( int index, QRgb color )
+ */
+HB_FUNC( QT_QCOLORDIALOG_SETCUSTOMCOLOR )
+{
+   hbqt_par_QColorDialog( 1 )->setCustomColor( hb_parni( 2 ), hb_parni( 3 ) );
+}
+
+/*
+ * void setStandardColor ( int index, QRgb color )
+ */
+HB_FUNC( QT_QCOLORDIALOG_SETSTANDARDCOLOR )
+{
+   hbqt_par_QColorDialog( 1 )->setStandardColor( hb_parni( 2 ), hb_parni( 3 ) );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

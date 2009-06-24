@@ -68,6 +68,8 @@ CREATE CLASS QSound
    METHOD  loops()                             INLINE  Qt_QSound_loops( ::pPtr )
    METHOD  loopsRemaining()                    INLINE  Qt_QSound_loopsRemaining( ::pPtr )
    METHOD  setLoops( nNumber )                 INLINE  Qt_QSound_setLoops( ::pPtr, nNumber )
+   METHOD  isAvailable()                       INLINE  Qt_QSound_isAvailable( ::pPtr )
+   METHOD  play( cFilename )                   INLINE  Qt_QSound_play( ::pPtr, cFilename )
 
    ENDCLASS
 

@@ -69,6 +69,7 @@ CREATE CLASS QEvent
    METHOD  setAccepted( lAccepted )            INLINE  Qt_QEvent_setAccepted( ::pPtr, lAccepted )
    METHOD  spontaneous()                       INLINE  Qt_QEvent_spontaneous( ::pPtr )
    METHOD  type()                              INLINE  Qt_QEvent_type( ::pPtr )
+   METHOD  registerEventType( nHint )          INLINE  Qt_QEvent_registerEventType( ::pPtr, nHint )
 
    ENDCLASS
 

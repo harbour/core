@@ -72,6 +72,17 @@ CREATE CLASS QTextCodec
    METHOD  name()                              INLINE  Qt_QTextCodec_name( ::pPtr )
    METHOD  toUnicode( pA )                     INLINE  Qt_QTextCodec_toUnicode( ::pPtr, pA )
    METHOD  toUnicode_1( pChars )               INLINE  Qt_QTextCodec_toUnicode_1( ::pPtr, pChars )
+   METHOD  codecForCStrings()                  INLINE  Qt_QTextCodec_codecForCStrings( ::pPtr )
+   METHOD  codecForHtml( pBa, pDefaultCodec )  INLINE  Qt_QTextCodec_codecForHtml( ::pPtr, pBa, pDefaultCodec )
+   METHOD  codecForHtml_1( pBa )               INLINE  Qt_QTextCodec_codecForHtml_1( ::pPtr, pBa )
+   METHOD  codecForLocale()                    INLINE  Qt_QTextCodec_codecForLocale( ::pPtr )
+   METHOD  codecForMib( nMib )                 INLINE  Qt_QTextCodec_codecForMib( ::pPtr, nMib )
+   METHOD  codecForName( pName )               INLINE  Qt_QTextCodec_codecForName( ::pPtr, pName )
+   METHOD  codecForName_1( pName )             INLINE  Qt_QTextCodec_codecForName_1( ::pPtr, pName )
+   METHOD  codecForTr()                        INLINE  Qt_QTextCodec_codecForTr( ::pPtr )
+   METHOD  setCodecForCStrings( pCodec )       INLINE  Qt_QTextCodec_setCodecForCStrings( ::pPtr, pCodec )
+   METHOD  setCodecForLocale( pC )             INLINE  Qt_QTextCodec_setCodecForLocale( ::pPtr, pC )
+   METHOD  setCodecForTr( pC )                 INLINE  Qt_QTextCodec_setCodecForTr( ::pPtr, pC )
 
    ENDCLASS
 

@@ -112,6 +112,22 @@ HB_FUNC( QT_QSOUND_SETLOOPS )
    hbqt_par_QSound( 1 )->setLoops( hb_parni( 2 ) );
 }
 
+/*
+ * bool isAvailable ()
+ */
+HB_FUNC( QT_QSOUND_ISAVAILABLE )
+{
+   hb_retl( hbqt_par_QSound( 1 )->isAvailable() );
+}
+
+/*
+ * void play ( const QString & filename )
+ */
+HB_FUNC( QT_QSOUND_PLAY )
+{
+   hbqt_par_QSound( 1 )->play( hbqt_par_QString( 2 ) );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

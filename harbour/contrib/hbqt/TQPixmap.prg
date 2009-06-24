@@ -97,6 +97,12 @@ CREATE CLASS QPixmap INHERIT QPaintDevice
    METHOD  transformed( pTransform, nMode )    INLINE  Qt_QPixmap_transformed( ::pPtr, pTransform, nMode )
    METHOD  transformed_1( pMatrix, nMode )     INLINE  Qt_QPixmap_transformed_1( ::pPtr, pMatrix, nMode )
    METHOD  width()                             INLINE  Qt_QPixmap_width( ::pPtr )
+   METHOD  defaultDepth()                      INLINE  Qt_QPixmap_defaultDepth( ::pPtr )
+   METHOD  fromImage( pImage, nFlags )         INLINE  Qt_QPixmap_fromImage( ::pPtr, pImage, nFlags )
+   METHOD  grabWidget( pWidget, pRectangle )   INLINE  Qt_QPixmap_grabWidget( ::pPtr, pWidget, pRectangle )
+   METHOD  grabWidget_1( pWidget, nX, nY, nWidth, nHeight )  INLINE  Qt_QPixmap_grabWidget_1( ::pPtr, pWidget, nX, nY, nWidth, nHeight )
+   METHOD  trueMatrix( pMatrix, nWidth, nHeight )  INLINE  Qt_QPixmap_trueMatrix( ::pPtr, pMatrix, nWidth, nHeight )
+   METHOD  trueMatrix_1( pM, nW, nH )          INLINE  Qt_QPixmap_trueMatrix_1( ::pPtr, pM, nW, nH )
 
    ENDCLASS
 

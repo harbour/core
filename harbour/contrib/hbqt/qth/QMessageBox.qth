@@ -114,6 +114,13 @@ StandardButton standardButton ( QAbstractButton * button ) const
 StandardButtons standardButtons () const
 QString text () const
 Qt::TextFormat textFormat () const
+
+void about ( QWidget * parent, const QString & title, const QString & text )
+void aboutQt ( QWidget * parent, const QString & title = QString() )
+StandardButton critical ( QWidget * parent, const QString & title, const QString & text, StandardButtons buttons = Ok, StandardButton defaultButton = NoButton )
+StandardButton information ( QWidget * parent, const QString & title, const QString & text, StandardButtons buttons = Ok, StandardButton defaultButton = NoButton )
+StandardButton question ( QWidget * parent, const QString & title, const QString & text, StandardButtons buttons = Ok, StandardButton defaultButton = NoButton )
+StandardButton warning ( QWidget * parent, const QString & title, const QString & text, StandardButtons buttons = Ok, StandardButton defaultButton = NoButton )
 </PROTOS>
 
 <SLOTS>

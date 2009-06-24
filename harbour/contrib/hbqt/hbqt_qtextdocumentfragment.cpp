@@ -107,6 +107,30 @@ HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_TOPLAINTEXT )
    hb_retc( hbqt_par_QTextDocumentFragment( 1 )->toPlainText().toLatin1().data() );
 }
 
+/*
+ * QTextDocumentFragment fromHtml ( const QString & text )
+ */
+HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML )
+{
+   hb_retptr( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ) ) ) );
+}
+
+/*
+ * QTextDocumentFragment fromHtml ( const QString & text, const QTextDocument * resourceProvider )
+ */
+HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMHTML_1 )
+{
+   hb_retptr( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromHtml( hbqt_par_QString( 2 ), hbqt_par_QTextDocument( 3 ) ) ) );
+}
+
+/*
+ * QTextDocumentFragment fromPlainText ( const QString & plainText )
+ */
+HB_FUNC( QT_QTEXTDOCUMENTFRAGMENT_FROMPLAINTEXT )
+{
+   hb_retptr( new QTextDocumentFragment( hbqt_par_QTextDocumentFragment( 1 )->fromPlainText( hbqt_par_QString( 2 ) ) ) );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

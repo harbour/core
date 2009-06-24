@@ -614,6 +614,78 @@ HB_FUNC( QT_QCOLOR_YELLOWF )
    hb_retnd( hbqt_par_QColor( 1 )->yellowF() );
 }
 
+/*
+ * QStringList colorNames ()
+ */
+HB_FUNC( QT_QCOLOR_COLORNAMES )
+{
+   hb_retptr( new QStringList( hbqt_par_QColor( 1 )->colorNames() ) );
+}
+
+/*
+ * QColor fromCmyk ( int c, int m, int y, int k, int a = 255 )
+ */
+HB_FUNC( QT_QCOLOR_FROMCMYK )
+{
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->fromCmyk( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : 255 ) ) ) );
+}
+
+/*
+ * QColor fromCmykF ( qreal c, qreal m, qreal y, qreal k, qreal a = 1.0 )
+ */
+HB_FUNC( QT_QCOLOR_FROMCMYKF )
+{
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->fromCmykF( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ) ) ) );
+}
+
+/*
+ * QColor fromHsv ( int h, int s, int v, int a = 255 )
+ */
+HB_FUNC( QT_QCOLOR_FROMHSV )
+{
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->fromHsv( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) ) ) );
+}
+
+/*
+ * QColor fromHsvF ( qreal h, qreal s, qreal v, qreal a = 1.0 )
+ */
+HB_FUNC( QT_QCOLOR_FROMHSVF )
+{
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->fromHsvF( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ) );
+}
+
+/*
+ * QColor fromRgb ( QRgb rgb )
+ */
+HB_FUNC( QT_QCOLOR_FROMRGB )
+{
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->fromRgb( hb_parni( 2 ) ) ) );
+}
+
+/*
+ * QColor fromRgb ( int r, int g, int b, int a = 255 )
+ */
+HB_FUNC( QT_QCOLOR_FROMRGB_1 )
+{
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->fromRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) ) ) );
+}
+
+/*
+ * QColor fromRgbF ( qreal r, qreal g, qreal b, qreal a = 1.0 )
+ */
+HB_FUNC( QT_QCOLOR_FROMRGBF )
+{
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->fromRgbF( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ) );
+}
+
+/*
+ * QColor fromRgba ( QRgb rgba )
+ */
+HB_FUNC( QT_QCOLOR_FROMRGBA )
+{
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->fromRgba( hb_parni( 2 ) ) ) );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

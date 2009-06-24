@@ -354,6 +354,166 @@ HB_FUNC( QT_QDIR_SORTING )
    hb_retni( ( QDir::SortFlags ) hbqt_par_QDir( 1 )->sorting() );
 }
 
+/*
+ * void addSearchPath ( const QString & prefix, const QString & path )
+ */
+HB_FUNC( QT_QDIR_ADDSEARCHPATH )
+{
+   hbqt_par_QDir( 1 )->addSearchPath( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
+}
+
+/*
+ * QString cleanPath ( const QString & path )
+ */
+HB_FUNC( QT_QDIR_CLEANPATH )
+{
+   hb_retc( hbqt_par_QDir( 1 )->cleanPath( hbqt_par_QString( 2 ) ).toLatin1().data() );
+}
+
+/*
+ * QDir current ()
+ */
+HB_FUNC( QT_QDIR_CURRENT )
+{
+   hb_retptr( new QDir( hbqt_par_QDir( 1 )->current() ) );
+}
+
+/*
+ * QString currentPath ()
+ */
+HB_FUNC( QT_QDIR_CURRENTPATH )
+{
+   hb_retc( hbqt_par_QDir( 1 )->currentPath().toLatin1().data() );
+}
+
+/*
+ * QFileInfoList drives ()
+ */
+HB_FUNC( QT_QDIR_DRIVES )
+{
+   hb_retptr( new QFileInfoList( hbqt_par_QDir( 1 )->drives() ) );
+}
+
+/*
+ * QString fromNativeSeparators ( const QString & pathName )
+ */
+HB_FUNC( QT_QDIR_FROMNATIVESEPARATORS )
+{
+   hb_retc( hbqt_par_QDir( 1 )->fromNativeSeparators( hbqt_par_QString( 2 ) ).toLatin1().data() );
+}
+
+/*
+ * QDir home ()
+ */
+HB_FUNC( QT_QDIR_HOME )
+{
+   hb_retptr( new QDir( hbqt_par_QDir( 1 )->home() ) );
+}
+
+/*
+ * QString homePath ()
+ */
+HB_FUNC( QT_QDIR_HOMEPATH )
+{
+   hb_retc( hbqt_par_QDir( 1 )->homePath().toLatin1().data() );
+}
+
+/*
+ * bool isAbsolutePath ( const QString & path )
+ */
+HB_FUNC( QT_QDIR_ISABSOLUTEPATH )
+{
+   hb_retl( hbqt_par_QDir( 1 )->isAbsolutePath( hbqt_par_QString( 2 ) ) );
+}
+
+/*
+ * bool isRelativePath ( const QString & path )
+ */
+HB_FUNC( QT_QDIR_ISRELATIVEPATH )
+{
+   hb_retl( hbqt_par_QDir( 1 )->isRelativePath( hbqt_par_QString( 2 ) ) );
+}
+
+/*
+ * bool match ( const QString & filter, const QString & fileName )
+ */
+HB_FUNC( QT_QDIR_MATCH )
+{
+   hb_retl( hbqt_par_QDir( 1 )->match( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+}
+
+/*
+ * bool match ( const QStringList & filters, const QString & fileName )
+ */
+HB_FUNC( QT_QDIR_MATCH_1 )
+{
+   hb_retl( hbqt_par_QDir( 1 )->match( *hbqt_par_QStringList( 2 ), hbqt_par_QString( 3 ) ) );
+}
+
+/*
+ * QDir root ()
+ */
+HB_FUNC( QT_QDIR_ROOT )
+{
+   hb_retptr( new QDir( hbqt_par_QDir( 1 )->root() ) );
+}
+
+/*
+ * QString rootPath ()
+ */
+HB_FUNC( QT_QDIR_ROOTPATH )
+{
+   hb_retc( hbqt_par_QDir( 1 )->rootPath().toLatin1().data() );
+}
+
+/*
+ * QStringList searchPaths ( const QString & prefix )
+ */
+HB_FUNC( QT_QDIR_SEARCHPATHS )
+{
+   hb_retptr( new QStringList( hbqt_par_QDir( 1 )->searchPaths( hbqt_par_QString( 2 ) ) ) );
+}
+
+/*
+ * bool setCurrent ( const QString & path )
+ */
+HB_FUNC( QT_QDIR_SETCURRENT )
+{
+   hb_retl( hbqt_par_QDir( 1 )->setCurrent( hbqt_par_QString( 2 ) ) );
+}
+
+/*
+ * void setSearchPaths ( const QString & prefix, const QStringList & searchPaths )
+ */
+HB_FUNC( QT_QDIR_SETSEARCHPATHS )
+{
+   hbqt_par_QDir( 1 )->setSearchPaths( hbqt_par_QString( 2 ), *hbqt_par_QStringList( 3 ) );
+}
+
+/*
+ * QDir temp ()
+ */
+HB_FUNC( QT_QDIR_TEMP )
+{
+   hb_retptr( new QDir( hbqt_par_QDir( 1 )->temp() ) );
+}
+
+/*
+ * QString tempPath ()
+ */
+HB_FUNC( QT_QDIR_TEMPPATH )
+{
+   hb_retc( hbqt_par_QDir( 1 )->tempPath().toLatin1().data() );
+}
+
+/*
+ * QString toNativeSeparators ( const QString & pathName )
+ */
+HB_FUNC( QT_QDIR_TONATIVESEPARATORS )
+{
+   hb_retc( hbqt_par_QDir( 1 )->toNativeSeparators( hbqt_par_QString( 2 ) ).toLatin1().data() );
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
