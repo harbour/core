@@ -697,6 +697,8 @@ QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
           - You can access hbmk2 using absolute or relative paths, and
             it will work equally well:
                'C:\hb20\bin\hbmk2 hello.prg'
+          - GNU Make, msys, or any other extra tool is *not* needed
+            to build a Harbour application with above methods.
 
 
 FOR MORE INFORMATION
