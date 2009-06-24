@@ -157,7 +157,7 @@ HB_FUNC( QT_QAPPLICATION_EXEC )
 
 HB_FUNC( QT_QAPPLICATION_SETSTYLE )
 {
-   app->setStyle( hb_parc( 2 ) );
+   app->setStyle( hb_parcx( 2 ) );
 }
 
 HB_FUNC( QT_QAPPLICATION_QUIT )

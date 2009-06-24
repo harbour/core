@@ -68,7 +68,7 @@
  */
 HB_FUNC( QT_QLATIN1STRING )
 {
-   hb_retptr( ( QLatin1String* ) new QLatin1String( hb_parc( 1 ) ) );
+   hb_retptr( ( QLatin1String* ) new QLatin1String( hb_parcx( 1 ) ) );
 }
 
 /*
@@ -83,4 +83,3 @@ HB_FUNC( QT_QLATIN1STRING_LATIN1 )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-

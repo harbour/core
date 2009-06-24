@@ -68,7 +68,7 @@
  */
 HB_FUNC( QT_QLATIN1CHAR )
 {
-   hb_retptr( ( QLatin1Char* ) new QLatin1Char( *hb_parc( 1 ) ) );
+   hb_retptr( ( QLatin1Char* ) new QLatin1Char( *hb_parcx( 1 ) ) );
 }
 
 /*
@@ -91,4 +91,3 @@ HB_FUNC( QT_QLATIN1CHAR_UNICODE )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-

@@ -74,7 +74,7 @@
  */
 HB_FUNC( QT_QTEXTSTREAM )
 {
-   hb_retptr( ( QTextStream* ) new QTextStream( hb_parc( 1 ),
+   hb_retptr( ( QTextStream* ) new QTextStream( hb_parcx( 1 ),
       ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) );
 }
 /*
@@ -377,4 +377,3 @@ HB_FUNC( QT_QTEXTSTREAM_STATUS )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-

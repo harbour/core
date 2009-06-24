@@ -160,7 +160,7 @@ HB_FUNC( QT_QAPPLICATION_EXEC )
 
 HB_FUNC( QT_QAPPLICATION_SETSTYLE )
 {
-   app->setStyle( hb_parc( 2 ) );
+   app->setStyle( hb_parcx( 2 ) );
 }
 
 HB_FUNC( QT_QAPPLICATION_QUIT )
@@ -260,4 +260,3 @@ HB_FUNC( QT_QAPPLICATION_SETSTYLESHEET )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-

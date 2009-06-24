@@ -499,7 +499,7 @@ void Slots::itemSelectionChanged()
 HB_FUNC( QT_CONNECT_SIGNAL )
 {
    QWidget * widget    = ( QWidget* ) hb_parptr( 1 ); /* get sender */
-   QString   signal    = hb_parc( 2 );                /* get signal */
+   QString   signal    = hb_parcx( 2 );               /* get signal */
    PHB_ITEM  codeblock = hb_itemNew( hb_param( 3, HB_IT_BLOCK | HB_IT_BYREF ) ); /* get codeblock */
    bool      ret       = false;                       /* return value */
 
@@ -729,13 +729,13 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       {
          s_s->listBlock[ i ] = codeblock;
          s_s->listActv[ i ] = true;
-         widget->setProperty( hb_parc( 2 ), ( int ) i+1 );
+         widget->setProperty( hb_parcx( 2 ), ( int ) i + 1 );
       }
       else
       {
          s_s->listBlock  << codeblock;
          s_s->listActv   << true;
-         widget->setProperty( hb_parc( 2 ), ( int ) s_s->listBlock.size() );
+         widget->setProperty( hb_parcx( 2 ), ( int ) s_s->listBlock.size() );
       }
    }
 }
@@ -748,7 +748,7 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
    QWidget * widget = ( QWidget* ) hb_parptr( 1 );
    if( widget )
    {
-      char * event = hb_parc( 2 );
+      char * event = hb_parcx( 2 );
       int i = widget->property( event ).toInt();
 
       if( i > 0 && i <= s_s->listBlock.size() )

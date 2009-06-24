@@ -69,7 +69,7 @@ New      =
  */
 HB_FUNC( QT_QLATIN1STRING )
 {
-   hb_retptr( ( QLatin1String* ) new QLatin1String( hb_parc( 1 ) ) );
+   hb_retptr( ( QLatin1String* ) new QLatin1String( hb_parcx( 1 ) ) );
 }
 </CODE>
 
