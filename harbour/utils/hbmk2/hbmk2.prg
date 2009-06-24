@@ -1065,13 +1065,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                                          hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) +;
                                          hb_osPathSeparator() + "hbvm.h" )
          IF Empty( l_cHB_BIN_INSTALL )
-            l_cHB_BIN_INSTALL := PathNormalize( l_cHB_INSTALL_PREFIX ) + "bin"
+            l_cHB_BIN_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "bin" )
          ENDIF
          IF Empty( l_cHB_LIB_INSTALL )
-            l_cHB_LIB_INSTALL := PathNormalize( l_cHB_INSTALL_PREFIX ) + "lib" + hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" )
+            l_cHB_LIB_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" + hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) )
          ENDIF
          IF Empty( l_cHB_INC_INSTALL )
-            l_cHB_INC_INSTALL := PathNormalize( l_cHB_INSTALL_PREFIX ) + "include" + hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" )
+            l_cHB_INC_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" + hb_osPathSeparator() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) )
          ENDIF
       ENDIF
    ELSE
@@ -1089,21 +1089,21 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       #if defined( __PLATFORM__WINDOWS )
 
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw"    + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw"   , ""                    , NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw64"  + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw64" , "x86_64-w64-mingw32-" , NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-"      , NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-", NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "djgpp"    + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe"            ), tmp1, NIL ) }, "dos", "djgpp"   , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binnt", iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"         ), tmp1, NIL ) }, "win", "watcom"  , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw" , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"         ), tmp1, NIL ) }, "dos", "watcom"  , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_osPathSeparator() + "Bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "pocc.exe"           ), tmp1, NIL ) }, "win", "pocc"    , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_osPathSeparator() + "Bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "pocc.exe"           ), tmp1, NIL ) }, "win", "pocc64"  , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_osPathSeparator() + "Bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "pocc.exe"           ), tmp1, NIL ) }, "wce", "poccarm" , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw"    + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw"   , ""                    , NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw64"  + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "win", "mingw64" , "x86_64-w64-mingw32-" , NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-"      , NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT_mingw ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-", NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "djgpp"    + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe"            ), tmp1, NIL ) }, "dos", "djgpp"   , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binnt" ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"         ), tmp1, NIL ) }, "win", "watcom"  , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"         ), tmp1, NIL ) }, "dos", "watcom"  , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_osPathSeparator() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "pocc.exe"           ), tmp1, NIL ) }, "win", "pocc"    , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_osPathSeparator() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "pocc.exe"           ), tmp1, NIL ) }, "win", "pocc64"  , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_osPathSeparator() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "pocc.exe"           ), tmp1, NIL ) }, "wce", "poccarm" , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
 
       #elif defined( __PLATFORM__DOS )
 
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "djgpp"    + hb_osPathSeparator() + "bin"  , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe"            ), tmp1, NIL ) }, "dos", "djgpp"   , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw" , iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"         ), tmp1, NIL ) }, "dos", "watcom"  , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "djgpp"    + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe"            ), tmp1, NIL ) }, "dos", "djgpp"   , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"         ), tmp1, NIL ) }, "dos", "watcom"  , ""                    , {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
 
       #elif defined( __PLATFORM__UNIX )
 
@@ -1230,21 +1230,21 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    /* Finish detecting bin/lib/include dirs */
 
    IF Empty( l_cHB_BIN_INSTALL )
-      l_cHB_BIN_INSTALL := PathNormalize( l_cHB_INSTALL_PREFIX ) + "bin"
+      l_cHB_BIN_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "bin" )
    ENDIF
    IF Empty( l_cHB_LIB_INSTALL )
       /* Autodetect multi-compiler/platform lib structure */
-      IF hb_DirExists( tmp := PathNormalize( l_cHB_INSTALL_PREFIX ) + "lib" +;
+      IF hb_DirExists( tmp := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
                                                hb_osPathSeparator() + hbmk[ _HBMK_cARCH ] +;
                                                hb_osPathSeparator() + hbmk[ _HBMK_cCOMP ] )
-         l_cHB_DYN_INSTALL := PathNormalize( l_cHB_INSTALL_PREFIX ) + "lib"
+         l_cHB_DYN_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" )
          l_cHB_LIB_INSTALL := tmp
       ELSE
-         l_cHB_LIB_INSTALL := PathNormalize( l_cHB_INSTALL_PREFIX ) + "lib"
+         l_cHB_LIB_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" )
       ENDIF
    ENDIF
    IF Empty( l_cHB_INC_INSTALL )
-      l_cHB_INC_INSTALL := PathNormalize( l_cHB_INSTALL_PREFIX ) + "include"
+      l_cHB_INC_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" )
    ENDIF
 
    DEFAULT l_cHB_DYN_INSTALL TO l_cHB_LIB_INSTALL
@@ -1946,7 +1946,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       IF hbmk[ _HBMK_lSHAREDDIST ]
          cPrefix := ""
       ELSE
-         cPrefix := PathNormalize( l_cHB_DYN_INSTALL )
+         cPrefix := DirAddPathSep( l_cHB_DYN_INSTALL )
       ENDIF
 #if 1
       cPostfix := ""
@@ -4660,51 +4660,47 @@ STATIC FUNCTION ListToArray( cList, cSep )
 
    RETURN array
 
+STATIC FUNCTION IsDriveSpec( cDir )
+   IF Empty( hb_osDriveSeparator() )
+      RETURN .F.
+   ENDIF
+   RETURN Len( cDir ) >= Len( hb_osDriveSeparator() ) .AND. ;
+          Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator()
+
 /* NOTE: Can hurt if there are symlinks on the way. */
-/* NOTE: This function also adds an ending separator. */
 STATIC FUNCTION PathNormalize( cPath, lNormalize )
-   LOCAL nLastSep
-   LOCAL nNextSep
-   LOCAL lPrefix
+   LOCAL aDir
+   LOCAL cDir
 
-   DEFAULT lNormalize TO .T.
+   IF ! Empty( cPath )
 
-   cPath := DirAddPathSep( cPath )
+      DEFAULT lNormalize TO .T.
 
-   IF lNormalize
+      IF lNormalize
 
-      /* Add leading path sep if there wasn't one (relative dir).
-         We will remove this before returning. */
-      IF ( lPrefix := !( Left( cPath, 1 ) == hb_osPathSeparator() ) )
-         cPath := hb_osPathSeparator() + cPath
-      ENDIF
+         aDir := hb_ATokens( cPath, hb_osPathSeparator() )
 
-      nLastSep := iif( Left( cPath, 1 ) == hb_osPathSeparator(), 1, 0 )
-      DO WHILE ( nNextSep := hb_At( hb_osPathSeparator(), cPath, nLastSep + 1 ) ) > 0
-         SWITCH SubStr( cPath, nLastSep + 1, nNextSep - nLastSep - 1 )
-         CASE ".."
-            nLastSep := hb_RAt( hb_osPathSeparator(), cPath, 1, nLastSep - 1 )
-            IF nLastSep == 0 .OR. ;
-               ( ! Empty( hb_osDriveSeparator() ) .AND. nLastSep > 1 .AND. SubStr( cPath, nLastSep - Len( hb_osDriveSeparator() ), Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
-               /* Underflow. Return where we are. */
-               IF lPrefix
-                  /* Remove leading path sep if we added it */
-                  cPath := SubStr( cPath, 2 )
+         FOR EACH cDir IN aDir DESCEND
+            IF cDir == "."
+               hb_ADel( aDir, cDir:__enumIndex(), .T. )
+            ELSEIF !( cDir == ".." ) .AND. ;
+               ! Empty( cDir ) .AND. ;
+               ! IsDriveSpec( cDir )
+               IF cDir:__enumIndex() < Len( cDir:__enumBase() ) .AND. ;
+                  aDir[ cDir:__enumIndex() + 1 ] == ".."
+                  hb_ADel( aDir, cDir:__enumIndex() + 1, .T. )
+                  hb_ADel( aDir, cDir:__enumIndex(), .T. )
                ENDIF
-               RETURN cPath
             ENDIF
-         CASE "."
-         CASE ""
-            cPath := Left( cPath, nLastSep ) + SubStr( cPath, nNextSep + 1 )
-            EXIT
-         OTHERWISE
-            nLastSep := nNextSep
-         ENDSWITCH
-      ENDDO
+         NEXT
 
-      IF lPrefix
-          /* Remove leading path sep if we added it */
-         cPath := SubStr( cPath, 2 )
+         cPath := ""
+         FOR EACH cDir IN aDir
+            cPath += cDir
+            IF cDir:__enumIndex() < Len( cDir:__enumBase() )
+               cPath += hb_osPathSeparator()
+            ENDIF
+         NEXT
       ENDIF
    ENDIF
 

@@ -14,7 +14,7 @@
 
   SetCompressor /solid lzma
 
-  !include "MUI.nsh"
+  !include "MUI2.nsh"
 
   !define MUI_HEADERIMAGE
   !define MUI_HEADERIMAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Header\win.bmp"
