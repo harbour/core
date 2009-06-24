@@ -452,7 +452,6 @@ HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
    hBitmap = hPrepareBitmap( hb_parc( 1 ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
                              ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 0 );
 
-   //hb_retnint( ( HB_PTRDIFF ) hBitmap );
    hb_retptr( ( void * ) hBitmap );
 }
 
@@ -465,7 +464,6 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCEID )
    hBitmap = hPrepareBitmap( ( char * ) NULL, hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
                              ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 2 );
 
-   //hb_retnint( ( HB_PTRDIFF ) hBitmap );
    hb_retptr( ( void * ) hBitmap );
 }
 
@@ -478,7 +476,6 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
    hBitmap = hPrepareBitmap( hb_parc( 1 ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
                              ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 1 );
 
-   //hb_retnint( ( HB_PTRDIFF ) hBitmap );
    hb_retptr( ( void * ) hBitmap );
 }
 /*----------------------------------------------------------------------*/
@@ -635,10 +632,10 @@ HB_FUNC( WVG_SETTOOLBARBUTTONTIP )
    LPTSTR pszText = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
 
    lptbgit->cchTextMax = strlen( hb_parcx( 2 ) );
-   //memcpy( lptbgit->pszText, pszText, strlen( hb_parcx( 2 ) ) );
+   /*memcpy( lptbgit->pszText, pszText, strlen( hb_parcx( 2 ) ) );*/
    lptbgit->pszText = pszText;
-//hb_ToOutDebug( hb_parcx( 2 ) );
-//   HB_TCHAR_FREE( pszText );
+/*hb_ToOutDebug( hb_parcx( 2 ) );
+  HB_TCHAR_FREE( pszText ); */
 }
 #endif
 /*----------------------------------------------------------------------*/

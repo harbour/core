@@ -108,8 +108,7 @@ static void hb_wvg_RefreshRect( PHB_GTWVT pWVT, PHB_GOBJS gObj )
 {
    RECT rc = {0,0,0,0};
 
-   // Calculate the region occupied +- 3 pixels as most controls are outside of designated area
-   //
+   /* Calculate the region occupied +- 3 pixels as most controls are outside of designated area */
    rc.top    = ( pWVT->PTEXTSIZE.y * gObj->iTop  ) + gObj->aOffset.iTop  - 3;
    rc.left   = ( pWVT->PTEXTSIZE.x * gObj->iLeft ) + gObj->aOffset.iLeft - 3;
    rc.bottom = ( pWVT->PTEXTSIZE.y * ( gObj->iBottom + 1 ) ) - 1 + gObj->aOffset.iBottom + 3;
@@ -600,7 +599,7 @@ HB_FUNC( WVG_LABEL )
    lf.lfPitchAndFamily    = FF_DONTCARE;
    lf.lfHeight            = ( !HB_ISNUM( 10 ) ? pWVT->fontHeight : hb_parni( 10 ) );
    lf.lfWidth             = ( !HB_ISNUM( 11 ) ? (pWVT->fontWidth < 0 ? -pWVT->fontWidth : pWVT->fontWidth ) : hb_parni( 11 ) );
-   //
+
    HB_TCHAR_CPTO( lf.lfFaceName, ( !HB_ISCHAR( 9 ) ? pWVT->fontFace : hb_parc( 9 ) ), sizeof( lf.lfFaceName )-1 );
 
    hFont = CreateFontIndirect( &lf );
@@ -1522,7 +1521,7 @@ static void hb_wvg_GridHorz( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT *uRect )
    iLeft   = ( hb_arrayGetNI( pArray, 2 ) * pWVT->PTEXTSIZE.x );
    iRight  = ( ( ( hb_arrayGetNI( pArray, 3 ) + 1 ) * pWVT->PTEXTSIZE.x ) - 1 );
    iTop    = iAtRow * pWVT->PTEXTSIZE.y;
-   iBottom = ( iAtRow + iRows ) * pWVT->PTEXTSIZE.y;  // do not add 1
+   iBottom = ( iAtRow + iRows ) * pWVT->PTEXTSIZE.y;  /* do not add 1 */
 
    if( ( uRect->left > iRight ) || ( uRect->top > iBottom ) ||
                    ( uRect->bottom < iTop ) || ( uRect->right < iLeft ) )
@@ -1609,8 +1608,8 @@ void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect )
                #if 0
                if( pArray )
                {
-                  //hb_itemRelease( pArray );
-                  //pArray = NULL;
+                  /*hb_itemRelease( pArray );*/
+                  /*pArray = NULL;*/
                }
                #endif
                hb_vmRequestRestore();

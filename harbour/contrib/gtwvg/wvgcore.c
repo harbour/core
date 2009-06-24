@@ -187,7 +187,7 @@ IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection )
    return ( IPicture * ) iPicture;
 }
 
-//--------------------------------------------------------------------//
+/*--------------------------------------------------------------------*/
 
 IPicture * hb_wvt_gtLoadPicture( char * cImage )
 {
@@ -1215,7 +1215,7 @@ HB_FUNC( WVT_DRAWLABEL )
 
    POINT    xy = { 0,0 };
    HFONT    hFont, hOldFont, hOldFontGui;
-   LOGFONT  logfont;// = { 0 };
+   LOGFONT  logfont;/* = { 0 };*/
 
    logfont.lfEscapement     = hb_parni( 5 ) * 10;
    logfont.lfOrientation    = 0;
@@ -2773,7 +2773,7 @@ HB_FUNC( WVT_DRAWSHADEDRECT )
    }
    hb_retl( bGF );
 }
-//#endif
+/*#endif*/
 
 /*----------------------------------------------------------------------*/
 /*

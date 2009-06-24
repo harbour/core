@@ -1354,8 +1354,8 @@ HB_FUNC( WVT_DLGSETICON )
 
    if ( hIcon )
    {
-      SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon ); // Set Title Bar ICON
-      SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), WM_SETICON, ICON_BIG,   ( LPARAM ) hIcon ); // Set Task List Icon
+      SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon ); /* Set Title Bar ICON */
+      SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), WM_SETICON, ICON_BIG,   ( LPARAM ) hIcon ); /* Set Task List Icon */
    }
 
    if ( hIcon )

@@ -168,7 +168,7 @@ HB_FUNC( _ASCALLBACK )
       }
    }
 
-   if( ! Callback.pDynSym ) // is it actually an error?
+   if( ! Callback.pDynSym ) /* is it actually an error? */
    {
       hb_errRT_BASE_SubstR( EG_ARG, 2, NULL, "AsCallback", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
       hb_retnl( 0 );
@@ -243,20 +243,20 @@ LRESULT __CallbackDispatcher( PCALLBACKDATA pCallback, ... )
    return lResult;
 }
 /*----------------------------------------------------------------------*/
-/*
-//i tylko jedna wersje funkcji callback od dynamicznej allokacji:
+#if 0
+/*i tylko jedna wersje funkcji callback od dynamicznej allokacji: */
 
 LRESULT CALLBACK CallbackTestFunc( LONG hWnd, long nMsg, WPARAM wParam, LPARAM lParam )
 {
-   int iHandle = 0;  // to podmieniasz na numer hanldera
-                     // own address
+   int iHandle = 0;  /* to podmieniasz na numer hanldera */
+                     /* own address */
 
    return CallbackDispacher( iHandle, hWnd, nMsg, wParam, lParam );
 }
 
-//Zas CallbackDispacher() wygladalby tak:
+/*Zas CallbackDispacher() wygladalby tak:*/
 
-*/
+#endif
 
 /*
 
