@@ -4661,10 +4661,7 @@ STATIC FUNCTION ListToArray( cList, cSep )
    RETURN array
 
 STATIC FUNCTION IsDriveSpec( cDir )
-   IF Empty( hb_osDriveSeparator() )
-      RETURN .F.
-   ENDIF
-   RETURN Len( cDir ) >= Len( hb_osDriveSeparator() ) .AND. ;
+   RETURN ! Empty( hb_osDriveSeparator() ) .AND. ;
           Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator()
 
 /* NOTE: Can hurt if there are symlinks on the way. */
