@@ -88,7 +88,7 @@ HB_FUNC( SQLITE_EXECUTE )
 /* Execute a query over the passed table */
 HB_FUNC( SQLITE_QUERY )
 {
-   char * szSQLcom = hb_parcx( 1 );
+   const char * szSQLcom = hb_parcx( 1 );
 
    if( hb_sqlite2_db && sqlite_exec( hb_sqlite2_db, szSQLcom, NULL, NULL, &hb_sqlite2_szErrMsg ) == SQLITE_OK )
    {
@@ -154,36 +154,36 @@ HB_FUNC( SQLITE_SYSCOLUMNS )
    if( hb_sqlite2_db )
    {
       struct Table * pTable = ( struct Table * ) sqliteFindTable( hb_sqlite2_db, ( const char * ) hb_parcx( 1 ), NULL );
-   
+
       if( pTable )
       {
          /* dimension rows array:
             1 is table name
             2 is field number
-            3 to n cols data */ 
-         PHB_ITEM paRows = hb_itemArrayNew( 2 + pTable->nCol );   
+            3 to n cols data */
+         PHB_ITEM paRows = hb_itemArrayNew( 2 + pTable->nCol );
          int iField;
-                                                         
+
          /* the Table structure itself */
          hb_arraySetC( paRows, 1, pTable->zName ); /* save name of table */
          hb_arraySetNL( paRows, 2, pTable->nCol ); /* save number of cols/fields */
-   
+
          for( iField = 0; iField < pTable->nCol; iField++ )
          {
             /* it's a multidimensional array */
             /* four data columns name, default, type, isprimarykey per field */
             PHB_ITEM paCols = hb_itemArrayNew( 4 );
-   
+
             hb_arraySetC( paCols, 1, pTable->aCol[ iField ].zName );
             hb_arraySetC( paCols, 2, pTable->aCol[ iField ].zDflt );
             hb_arraySetC( paCols, 3, pTable->aCol[ iField ].zType );
             hb_arraySetL( paCols, 4, pTable->aCol[ iField ].isPrimKey );
-   
+
             /* put data onto subarray of records */
             hb_itemArrayPut( paRows, 3 + iField, paCols );
             hb_itemRelease( paCols );
          }
-   
+
          hb_itemReturnRelease( paRows );
          return;
       }
@@ -198,14 +198,14 @@ HB_FUNC( SQLITE_FIELDS )
    if( hb_sqlite2_db )
    {
       struct Table * pTable = ( struct Table * ) sqliteFindTable( hb_sqlite2_db, ( const char * ) hb_parcx( 1 ), NULL );
-      
+
       if( pTable )
       {
          int i;
-      
+
          /* the Table structure itself */
          hb_reta( pTable->nCol );
-      
+
          for( i = 0; i < pTable->nCol; i++ )
             hb_storc( pTable->aCol[ i ].zName, -1, 1 + i );
 

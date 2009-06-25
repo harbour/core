@@ -56,8 +56,9 @@
 /* rf_FileRead( cText, @cEol ) */
 HB_FUNC( RF_FILEREAD )
 {
-   char * szText = hb_parcx( 1 );
-   char * ptr, * ptr1;
+   const char * szText = hb_parcx( 1 );
+   const char * ptr;
+   const char * ptr1;
    unsigned long ul, ulLines = 0;
    PHB_ITEM arr;
 

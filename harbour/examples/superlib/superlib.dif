@@ -21,7 +21,7 @@ diff -u superori/between.c superpat/between.c
       result[knt] = NIL;
 diff -u superori/mline.c superpat/mline.c
 --- superori/mline.c	1993-09-14 14:17:34.000000000 +0200
-+++ superpat/mline.c	2009-06-10 08:44:26.000000000 +0200
++++ superpat/mline.c	2009-06-25 13:53:22.000000000 +0200
 @@ -1,19 +1,19 @@
 -#include "extend.api"
 -#include "vm.api"
@@ -65,7 +65,7 @@ diff -u superori/mline.c superpat/mline.c
 -  char *string = _parc(1);
 -  unsigned int strlen   = _parclen(1);
 -  int linelen  = _parni(2);
-+  char *string = hb_parc(1);
++  const char *string = hb_parc(1);
 +  unsigned int strlen   = hb_parclen(1);
 +  int linelen  = hb_parni(2);
    int gotten   = 0;
