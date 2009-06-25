@@ -634,8 +634,8 @@ HB_FUNC( SQLSTOD )
 {
    if( hb_parclen( 1 ) >= 10 )
    {
-      char * szSqlDate = hb_parc( 1 );  /* YYYY-MM-DD */
-      char szHrbDate[ 9 ];              /* YYYYMMDD */
+      const char * szSqlDate = hb_parc( 1 );  /* YYYY-MM-DD */
+      char szHrbDate[ 9 ];                    /* YYYYMMDD */
 
       szHrbDate[ 0 ] = szSqlDate[ 0 ];
       szHrbDate[ 1 ] = szSqlDate[ 1 ];

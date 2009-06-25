@@ -79,7 +79,7 @@ HB_FUNC( QT_QHTTP )
  */
 HB_FUNC( QT_QHTTP_BYTESAVAILABLE )
 {
-   hb_retni( hbqt_par_QHttp( 1 )->bytesAvailable() );
+   hb_retnint( hbqt_par_QHttp( 1 )->bytesAvailable() );
 }
 
 /*
@@ -199,7 +199,7 @@ HB_FUNC( QT_QHTTP_POST_1 )
  */
 HB_FUNC( QT_QHTTP_READ )
 {
-   hb_retni( hbqt_par_QHttp( 1 )->read( hbqt_par_char( 2 ), hb_parni( 3 ) ) );
+   hb_retnint( hbqt_par_QHttp( 1 )->read( hbqt_par_char( 2 ), hb_parnint( 3 ) ) );
 }
 
 /*

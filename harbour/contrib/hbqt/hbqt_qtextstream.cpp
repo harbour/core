@@ -178,7 +178,7 @@ HB_FUNC( QT_QTEXTSTREAM_NUMBERFLAGS )
  */
 HB_FUNC( QT_QTEXTSTREAM_POS )
 {
-   hb_retni( hbqt_par_QTextStream( 1 )->pos() );
+   hb_retnint( hbqt_par_QTextStream( 1 )->pos() );
 }
 
 /*
@@ -186,7 +186,7 @@ HB_FUNC( QT_QTEXTSTREAM_POS )
  */
 HB_FUNC( QT_QTEXTSTREAM_READ )
 {
-   hb_retc( hbqt_par_QTextStream( 1 )->read( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextStream( 1 )->read( hb_parnint( 2 ) ).toLatin1().data() );
 }
 
 /*
@@ -202,7 +202,7 @@ HB_FUNC( QT_QTEXTSTREAM_READALL )
  */
 HB_FUNC( QT_QTEXTSTREAM_READLINE )
 {
-   hb_retc( hbqt_par_QTextStream( 1 )->readLine( hb_parni( 2 ) ).toLatin1().data() );
+   hb_retc( hbqt_par_QTextStream( 1 )->readLine( hb_parnint( 2 ) ).toLatin1().data() );
 }
 
 /*
@@ -242,7 +242,7 @@ HB_FUNC( QT_QTEXTSTREAM_RESETSTATUS )
  */
 HB_FUNC( QT_QTEXTSTREAM_SEEK )
 {
-   hb_retl( hbqt_par_QTextStream( 1 )->seek( hb_parni( 2 ) ) );
+   hb_retl( hbqt_par_QTextStream( 1 )->seek( hb_parnint( 2 ) ) );
 }
 
 /*
@@ -377,3 +377,4 @@ HB_FUNC( QT_QTEXTSTREAM_STATUS )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
+

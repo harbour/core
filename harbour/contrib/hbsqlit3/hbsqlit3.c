@@ -737,7 +737,7 @@ HB_FUNC( SQLITE3_PREPARE )
 
       if( SQL )
       {
-         char           *pSQL = hb_itemGetCPtr( SQL );
+         const char     *pSQL = hb_itemGetCPtr( SQL );
          ULONG          ulLen = hb_itemGetCLen( SQL );
          psqlite3_stmt  pStmt;
          const char     *pszTail;

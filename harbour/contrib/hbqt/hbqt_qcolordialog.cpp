@@ -157,7 +157,7 @@ HB_FUNC( QT_QCOLORDIALOG_TESTOPTION )
  */
 HB_FUNC( QT_QCOLORDIALOG_CUSTOMCOLOR )
 {
-   hb_retni( hbqt_par_QColorDialog( 1 )->customColor( hb_parni( 2 ) ) );
+   hb_retnl( hbqt_par_QColorDialog( 1 )->customColor( hb_parni( 2 ) ) );
 }
 
 /*
@@ -189,7 +189,7 @@ HB_FUNC( QT_QCOLORDIALOG_GETCOLOR_1 )
  */
 HB_FUNC( QT_QCOLORDIALOG_SETCUSTOMCOLOR )
 {
-   hbqt_par_QColorDialog( 1 )->setCustomColor( hb_parni( 2 ), hb_parni( 3 ) );
+   hbqt_par_QColorDialog( 1 )->setCustomColor( hb_parni( 2 ), hb_parnl( 3 ) );
 }
 
 /*
@@ -197,7 +197,7 @@ HB_FUNC( QT_QCOLORDIALOG_SETCUSTOMCOLOR )
  */
 HB_FUNC( QT_QCOLORDIALOG_SETSTANDARDCOLOR )
 {
-   hbqt_par_QColorDialog( 1 )->setStandardColor( hb_parni( 2 ), hb_parni( 3 ) );
+   hbqt_par_QColorDialog( 1 )->setStandardColor( hb_parni( 2 ), hb_parnl( 3 ) );
 }
 
 

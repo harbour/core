@@ -86,7 +86,7 @@ HB_FUNC( QT_QWEBPAGE_ACTION )
  */
 HB_FUNC( QT_QWEBPAGE_BYTESRECEIVED )
 {
-   hb_retni( hbqt_par_QWebPage( 1 )->bytesReceived() );
+   hb_retnint( hbqt_par_QWebPage( 1 )->bytesReceived() );
 }
 
 /*
@@ -302,7 +302,7 @@ HB_FUNC( QT_QWEBPAGE_SWALLOWCONTEXTMENUEVENT )
  */
 HB_FUNC( QT_QWEBPAGE_TOTALBYTES )
 {
-   hb_retni( hbqt_par_QWebPage( 1 )->totalBytes() );
+   hb_retnint( hbqt_par_QWebPage( 1 )->totalBytes() );
 }
 
 /*

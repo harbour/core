@@ -115,7 +115,7 @@ HB_FUNC( QT_QICON_ADDPIXMAP )
  */
 HB_FUNC( QT_QICON_CACHEKEY )
 {
-   hb_retni( hbqt_par_QIcon( 1 )->cacheKey() );
+   hb_retnint( hbqt_par_QIcon( 1 )->cacheKey() );
 }
 
 /*

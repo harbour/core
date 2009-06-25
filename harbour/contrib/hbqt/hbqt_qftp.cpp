@@ -77,7 +77,7 @@ HB_FUNC( QT_QFTP )
  */
 HB_FUNC( QT_QFTP_BYTESAVAILABLE )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->bytesAvailable() );
+   hb_retnint( hbqt_par_QFtp( 1 )->bytesAvailable() );
 }
 
 /*
@@ -221,7 +221,7 @@ HB_FUNC( QT_QFTP_RAWCOMMAND )
  */
 HB_FUNC( QT_QFTP_READ )
 {
-   hb_retni( hbqt_par_QFtp( 1 )->read( hbqt_par_char( 2 ), hb_parni( 3 ) ) );
+   hb_retnint( hbqt_par_QFtp( 1 )->read( hbqt_par_char( 2 ), hb_parnint( 3 ) ) );
 }
 
 /*

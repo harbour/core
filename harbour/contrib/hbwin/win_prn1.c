@@ -142,7 +142,7 @@ HB_FUNC( WIN_STARTDOC )
 
    if( hDC )
    {
-      char * szDocName = hb_parc( 2 );
+      const char * szDocName = hb_parc( 2 );
       LPTSTR lpDocName = szDocName ? HB_TCHAR_CONVTO( szDocName ) : NULL;
       sDoc.cbSize = sizeof( DOCINFO );
       sDoc.lpszDocName = lpDocName;
@@ -339,7 +339,7 @@ HB_FUNC( WIN_CREATEFONT )
    BOOL Result = FALSE;
    HDC hDC = win_HDC_par( 1 );
    HFONT hFont;
-   char * pszFont = hb_parc( 2 );
+   const char * pszFont = hb_parc( 2 );
    LPTSTR lpFont = pszFont ? HB_TCHAR_CONVTO( pszFont ) : NULL;
    int iHeight = hb_parni( 3 );
    int iMul = hb_parni( 4 );
@@ -407,7 +407,7 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
    if( hDC )
    {
       HANDLE hPrinter;
-      char * pszPrinterName = hb_parc( 2 );
+      const char * pszPrinterName = hb_parc( 2 );
       LPTSTR lpPrinterName = pszPrinterName ? HB_TCHAR_CONVTO( pszPrinterName ) : NULL;
 
       if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) )
@@ -461,7 +461,7 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 
 HB_FUNC( WIN_LOADBITMAPFILE )
 {
-   char * pstrFileName = hb_parc( 1 );
+   const char * pstrFileName = hb_parc( 1 );
    BOOL bSuccess = FALSE;
    DWORD dwFileSize = 0, dwHighSize, dwBytesRead;
    HANDLE hFile;

@@ -110,7 +110,7 @@ HB_FUNC( QT_QMODELINDEX_FLAGS )
  */
 HB_FUNC( QT_QMODELINDEX_INTERNALID )
 {
-   hb_retni( hbqt_par_QModelIndex( 1 )->internalId() );
+   hb_retnint( hbqt_par_QModelIndex( 1 )->internalId() );
 }
 
 /*

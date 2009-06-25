@@ -269,12 +269,12 @@ HB_FUNC( PQEXECPARAMS )
       long n = hb_arrayLen( aParam );
       long i;
 
-      char ** paramvalues = ( char ** ) hb_xgrab( sizeof( char * ) * n );
+      const char ** paramvalues = ( const char ** ) hb_xgrab( sizeof( char * ) * n );
 
       for( i = 0; i < n; i++ )
          paramvalues[ i ] = hb_arrayGetCPtr( aParam, i + 1 );
 
-      res = PQexecParams( PGconn_par( 1 ), hb_parcx( 2 ), n, NULL, ( const char * const * ) paramvalues, NULL, NULL, 1 );
+      res = PQexecParams( PGconn_par( 1 ), hb_parcx( 2 ), n, NULL, paramvalues, NULL, NULL, 1 );
 
       hb_xfree( paramvalues );
    }
@@ -552,7 +552,7 @@ HB_FUNC( PQCMDTUPLES )
 
 HB_FUNC( PQESCAPESTRING )
 {
-   char * source = hb_parcx( 1 );
+   const char * source = hb_parcx( 1 );
    size_t size = strlen( source );
    char * dest = ( char * ) hb_xgrab( size * 2 + 1 );
 

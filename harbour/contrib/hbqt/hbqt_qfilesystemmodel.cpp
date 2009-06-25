@@ -317,7 +317,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL_SETROOTPATH )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_SIZE )
 {
-   hb_retni( hbqt_par_QFileSystemModel( 1 )->size( *hbqt_par_QModelIndex( 2 ) ) );
+   hb_retnint( hbqt_par_QFileSystemModel( 1 )->size( *hbqt_par_QModelIndex( 2 ) ) );
 }
 
 /*

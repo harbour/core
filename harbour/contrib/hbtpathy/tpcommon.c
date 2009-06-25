@@ -99,7 +99,7 @@ static unsigned short crctab[ 256 ] = {
 
 HB_FUNC( P_CRC16 )
 {
-   char *ptr = hb_parc( 1 );
+   const char *ptr = hb_parc( 1 );
    int count = hb_parclen( 1 );
 
    register unsigned short crc = 0;
@@ -164,7 +164,7 @@ static ULONG crc32tbl[ 256 ] = {
 
 HB_FUNC( P_CRC32 )
 {
-   char * ptr = hb_parc( 1 );
+   const char * ptr = hb_parc( 1 );
    int count = hb_parclen( 1 );
 
    register ULONG crc = CRC32INIT;

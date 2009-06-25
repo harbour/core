@@ -273,7 +273,7 @@ HB_FUNC( QT_QVARIANT_TOLONGLONG )
 {
    bool iOk = 0;
 
-   hb_retni( hbqt_par_QVariant( 1 )->toLongLong( &iOk ) );
+   hb_retnint( hbqt_par_QVariant( 1 )->toLongLong( &iOk ) );
 
    hb_stornl( iOk, 2 );
 }
@@ -377,7 +377,7 @@ HB_FUNC( QT_QVARIANT_TOULONGLONG )
 {
    bool iOk = 0;
 
-   hb_retni( hbqt_par_QVariant( 1 )->toULongLong( &iOk ) );
+   hb_retnint( hbqt_par_QVariant( 1 )->toULongLong( &iOk ) );
 
    hb_stornl( iOk, 2 );
 }

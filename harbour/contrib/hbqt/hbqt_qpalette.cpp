@@ -160,7 +160,7 @@ HB_FUNC( QT_QPALETTE_BUTTONTEXT )
  */
 HB_FUNC( QT_QPALETTE_CACHEKEY )
 {
-   hb_retni( hbqt_par_QPalette( 1 )->cacheKey() );
+   hb_retnint( hbqt_par_QPalette( 1 )->cacheKey() );
 }
 
 /*

@@ -277,7 +277,7 @@ HB_FUNC( MYSQL_LIST_DBS ) /* MYSQL_RES * mysql_list_dbs( MYSQL *, char * wild );
 HB_FUNC( MYSQL_LIST_TABLES ) /* MYSQL_RES * mysql_list_tables( MYSQL *, char * wild ); */
 {
    MYSQL * mysql = ( MYSQL * ) HB_PARPTR( 1 );
-   char  * cWild = hb_parc( 2 );
+   const char * cWild = hb_parc( 2 );
    MYSQL_RES * mresult = mysql_list_tables( mysql, cWild );
    long nr = ( long ) mysql_num_rows( mresult );
    PHB_ITEM aTables = hb_itemArrayNew( nr );
@@ -317,7 +317,7 @@ HB_FUNC( MYSQL_ESCAPE_STRING )
    hb_retclen_buffer( ( char * ) buffer, iSize );
 }
 
-static char * filetoBuff( char * fname, int * size )
+static char * filetoBuff( const char * fname, int * size )
 {
    char * buffer = NULL;
    HB_FHANDLE handle = hb_fsOpen( ( BYTE * ) fname, FO_READWRITE );

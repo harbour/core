@@ -689,7 +689,7 @@ QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
             'hbmk2 -help'
             Besides the ones listed, you can use all regular Harbour
             compiler command line options, like:
-               -l, -b, -n, -w3
+               -l, -b, -n, -w3 (etc...)
           - To make it easier to work with Harbour, it's recommended to
             put Harbour binary dir into the PATH:
                set PATH=C:\harbour\bin;%PATH% (on Windows)

@@ -73,7 +73,7 @@ HB_FUNC( STRFORMAT )
 
    if( nParNum >= 1 )
    {
-      char * pszMask = hb_parcx( 1 );
+      const char * pszMask = hb_parcx( 1 );
       ULONG  nMaskLen = hb_parclen( 1 );
       ULONG  nMaskPos;
       ULONG  nPos;
@@ -142,7 +142,7 @@ HB_FUNC( STRFORMAT )
 
       hb_retclen_buffer( pszRetValSave, nRetValLen );
 
-      /* Free parameter buffers */ 
+      /* Free parameter buffers */
       for( nPos = 0; nPos < HB_STRFORMAT_PARNUM_MAX_; nPos++ )
       {
          if( strpar[ nPos ].raw && strpar[ nPos ].bFreeReq )

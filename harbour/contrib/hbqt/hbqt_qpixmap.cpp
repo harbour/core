@@ -90,7 +90,7 @@ HB_FUNC( QT_QPIXMAP_ALPHACHANNEL )
  */
 HB_FUNC( QT_QPIXMAP_CACHEKEY )
 {
-   hb_retni( hbqt_par_QPixmap( 1 )->cacheKey() );
+   hb_retnint( hbqt_par_QPixmap( 1 )->cacheKey() );
 }
 
 /*

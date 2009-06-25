@@ -387,7 +387,7 @@ HB_FUNC( QT_QCOLOR_REDF )
  */
 HB_FUNC( QT_QCOLOR_RGB )
 {
-   hb_retni( hbqt_par_QColor( 1 )->rgb() );
+   hb_retnl( hbqt_par_QColor( 1 )->rgb() );
 }
 
 /*
@@ -395,7 +395,7 @@ HB_FUNC( QT_QCOLOR_RGB )
  */
 HB_FUNC( QT_QCOLOR_RGBA )
 {
-   hb_retni( hbqt_par_QColor( 1 )->rgba() );
+   hb_retnl( hbqt_par_QColor( 1 )->rgba() );
 }
 
 /*
@@ -523,7 +523,7 @@ HB_FUNC( QT_QCOLOR_SETREDF )
  */
 HB_FUNC( QT_QCOLOR_SETRGB )
 {
-   hbqt_par_QColor( 1 )->setRgb( hb_parni( 2 ) );
+   hbqt_par_QColor( 1 )->setRgb( hb_parnl( 2 ) );
 }
 
 /*
@@ -539,7 +539,7 @@ HB_FUNC( QT_QCOLOR_SETRGB_1 )
  */
 HB_FUNC( QT_QCOLOR_SETRGBA )
 {
-   hbqt_par_QColor( 1 )->setRgba( hb_parni( 2 ) );
+   hbqt_par_QColor( 1 )->setRgba( hb_parnl( 2 ) );
 }
 
 /*
@@ -659,7 +659,7 @@ HB_FUNC( QT_QCOLOR_FROMHSVF )
  */
 HB_FUNC( QT_QCOLOR_FROMRGB )
 {
-   hb_retptr( new QColor( hbqt_par_QColor( 1 )->fromRgb( hb_parni( 2 ) ) ) );
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->fromRgb( hb_parnl( 2 ) ) ) );
 }
 
 /*
@@ -683,7 +683,7 @@ HB_FUNC( QT_QCOLOR_FROMRGBF )
  */
 HB_FUNC( QT_QCOLOR_FROMRGBA )
 {
-   hb_retptr( new QColor( hbqt_par_QColor( 1 )->fromRgba( hb_parni( 2 ) ) ) );
+   hb_retptr( new QColor( hbqt_par_QColor( 1 )->fromRgba( hb_parnl( 2 ) ) ) );
 }
 
 

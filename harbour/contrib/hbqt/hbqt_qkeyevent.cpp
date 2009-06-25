@@ -116,7 +116,7 @@ HB_FUNC( QT_QKEYEVENT_MODIFIERS )
  */
 HB_FUNC( QT_QKEYEVENT_NATIVEMODIFIERS )
 {
-   hb_retni( hbqt_par_QKeyEvent( 1 )->nativeModifiers() );
+   hb_retnl( hbqt_par_QKeyEvent( 1 )->nativeModifiers() );
 }
 
 /*
@@ -124,7 +124,7 @@ HB_FUNC( QT_QKEYEVENT_NATIVEMODIFIERS )
  */
 HB_FUNC( QT_QKEYEVENT_NATIVESCANCODE )
 {
-   hb_retni( hbqt_par_QKeyEvent( 1 )->nativeScanCode() );
+   hb_retnl( hbqt_par_QKeyEvent( 1 )->nativeScanCode() );
 }
 
 /*
@@ -132,7 +132,7 @@ HB_FUNC( QT_QKEYEVENT_NATIVESCANCODE )
  */
 HB_FUNC( QT_QKEYEVENT_NATIVEVIRTUALKEY )
 {
-   hb_retni( hbqt_par_QKeyEvent( 1 )->nativeVirtualKey() );
+   hb_retnl( hbqt_par_QKeyEvent( 1 )->nativeVirtualKey() );
 }
 
 /*

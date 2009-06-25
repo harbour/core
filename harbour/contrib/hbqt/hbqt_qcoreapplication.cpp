@@ -126,7 +126,7 @@ HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONNAME )
  */
 HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONPID )
 {
-   hb_retni( hbqt_par_QCoreApplication( 1 )->applicationPid() );
+   hb_retnint( hbqt_par_QCoreApplication( 1 )->applicationPid() );
 }
 
 /*

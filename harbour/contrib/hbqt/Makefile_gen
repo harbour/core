@@ -228,7 +228,6 @@ PRG_SOURCES=\
 	TQAbstractSpinBox.prg \
 	TQAbstractTableModel.prg \
 	TQAction.prg \
-	TQCoreApplication.prg \
 	TQApplication.prg \
 	TQBitmap.prg \
 	TQBoxLayout.prg \
@@ -242,6 +241,7 @@ PRG_SOURCES=\
 	TQCommandLinkButton.prg \
 	TQCommonStyle.prg \
 	TQConicalGradient.prg \
+	TQCoreApplication.prg \
 	TQDateEdit.prg \
 	TQDateTime.prg \
 	TQDateTimeEdit.prg \

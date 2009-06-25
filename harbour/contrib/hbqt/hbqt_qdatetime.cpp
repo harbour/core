@@ -88,7 +88,7 @@ HB_FUNC( QT_QDATETIME_ADDDAYS )
  */
 HB_FUNC( QT_QDATETIME_ADDMSECS )
 {
-   hb_retptr( new QDateTime( hbqt_par_QDateTime( 1 )->addMSecs( hb_parni( 2 ) ) ) );
+   hb_retptr( new QDateTime( hbqt_par_QDateTime( 1 )->addMSecs( hb_parnint( 2 ) ) ) );
 }
 
 /*

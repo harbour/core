@@ -66,7 +66,6 @@ FUNCTION Main( ... )
    LOCAL x, cPath, cFile, cExt
    LOCAL aPrjFiles := {}
    LOCAL aProFiles := {}
-   LOCAL lBuilds   := .f.
 
    s_NewLine := hb_OsNewLine()
    s_PathSep := hb_OsPathSeparator()
@@ -271,8 +270,8 @@ STATIC FUNCTION PullOutSection( cQth, cSec )
 STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    LOCAL cFile, cWidget, cExt, cPath, cOrg, cCPP, cPRG
    LOCAL cQth, cFileCpp
-   LOCAL s, n, hHandle, nFuncs, nCnvrtd
-   LOCAL b_, txt_, enum_, code_, func_, dummy_, cpp_, cmntd_, doc_, vrb_, varbls_
+   LOCAL s, n, nFuncs, nCnvrtd
+   LOCAL b_, txt_, enum_, code_, func_, dummy_, cpp_, cmntd_, doc_, varbls_
    LOCAL class_, cls_, protos_, slots_, enums_
 
    hb_fNameSplit( cProFile, @cPath, @cWidget, @cExt )
@@ -427,7 +426,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       #if 0
       IF !empty( enums_ )
          aadd( cpp_, '/*' )
-         aeval( enums_, {|e| IF( !empty( e ), aadd( cpp_, ' *  ' + e ), NIL ) } )
+         aeval( enums_, {|e| iif( !empty( e ), aadd( cpp_, ' *  ' + e ), NIL ) } )
          aadd( cpp_, ' */ ' )
          aadd( cpp_, '' )
       ENDIF
@@ -509,7 +508,9 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
    LOCAL cPre, cPar, cRet, cFun, cParas, cDocs, cCmd, cPas, s, ss
    LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cHBIdx, cDocNM
    LOCAL lSuccess
-   LOCAL cIntegers := 'int,qint16,qint32,qint64,quint16,quint32,quint64,qlonglong,qulonglong,QRgb,QChar'
+   LOCAL cInt := 'int,qint16,quint16,QChar'
+   LOCAL cIntLong := 'qint32,quint32,QRgb'
+   LOCAL cIntLongLong := 'qint64,quint64,qlonglong,qulonglong'
 
    cParas := ''
    cDocs  := ''
@@ -559,7 +560,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
          ENDIF
          aRet[ PRT_NAME ] := aRet[ PRT_CAST ]
 
-         IF ascan( aEnum, {|e| IF( empty( e ), .f., e == aRet[ PRT_CAST ] ) } ) > 0
+         IF ascan( aEnum, {|e| iif( empty( e ), .f., e == aRet[ PRT_CAST ] ) } ) > 0
             aRet[ PRT_CAST ] := cWidget + '::' + aRet[ PRT_CAST ]
          ENDIF
 
@@ -611,7 +612,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                aA[ PRT_NAME ] := cPre
             ENDIF
 
-            IF ascan( aEnum, {|e| IF( empty( e ), .f., e == aA[ PRT_CAST ] ) } ) > 0
+            IF ascan( aEnum, {|e| iif( empty( e ), .f., e == aA[ PRT_CAST ] ) } ) > 0
                aA[ PRT_CAST ] := cWidget + '::' + aA[ PRT_CAST ]
             ENDIF
 
@@ -628,12 +629,22 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                aA[ PRT_DOC  ] := 'x'+ cDocNM
 
             /* Values by reference */
-            CASE aA[ PRT_CAST ] $ cIntegers .and. aA[ PRT_L_FAR ]
-               aadd( aPre, { 'int i'+cDocNM+' = 0;', nHBIdx, 'i'+ cDocNM, 'hb_storni' } )
-               aA[ PRT_BODY ] := '&i'+cDocNM
+            CASE aA[ PRT_CAST ] $ cInt .and. aA[ PRT_L_FAR ]
+               aadd( aPre, { aA[ PRT_CAST ] + ' i' + cDocNM + ' = 0;', nHBIdx, 'i'+ cDocNM, 'hb_storni' } )
+               aA[ PRT_BODY ] := '&i' + cDocNM
                aA[ PRT_DOC  ] := '@n'+ cDocNM
 
-            CASE aA[ PRT_CAST ] $ cIntegers
+            CASE aA[ PRT_CAST ] $ cIntLong .and. aA[ PRT_L_FAR ]
+               aadd( aPre, { aA[ PRT_CAST ] + ' i' + cDocNM + ' = 0;', nHBIdx, 'i'+ cDocNM, 'hb_stornl' } )
+               aA[ PRT_BODY ] := '&i' + cDocNM
+               aA[ PRT_DOC  ] := '@n'+ cDocNM
+
+            CASE aA[ PRT_CAST ] $ cIntLongLong .and. aA[ PRT_L_FAR ]
+               aadd( aPre, { aA[ PRT_CAST ] + ' i' + cDocNM + ' = 0;', nHBIdx, 'i'+ cDocNM, 'hb_stornint' } )
+               aA[ PRT_BODY ] := '&i' + cDocNM
+               aA[ PRT_DOC  ] := '@n'+ cDocNM
+
+            CASE aA[ PRT_CAST ] $ cInt
                s := 'hb_parni( '+ cHBIdx +' )'
                IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
                   aA[ PRT_BODY ] := '( HB_ISNUM( '+cHBIdx+' ) ? ' + s + ' : ' + aA[ PRT_DEFAULT ] + ' )'
@@ -642,9 +653,27 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                ENDIF
                aA[ PRT_DOC  ] := 'n'+ cDocNM
 
+            CASE aA[ PRT_CAST ] $ cIntLong
+               s := 'hb_parnl( '+ cHBIdx +' )'
+               IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
+                  aA[ PRT_BODY ] := '( HB_ISNUM( '+cHBIdx+' ) ? ' + s + ' : ' + aA[ PRT_DEFAULT ] + ' )'
+               ELSE
+                  aA[ PRT_BODY ] := s
+               ENDIF
+               aA[ PRT_DOC  ] := 'n'+ cDocNM
+
+            CASE aA[ PRT_CAST ] $ cIntLongLong
+               s := 'hb_parnint( '+ cHBIdx +' )'
+               IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
+                  aA[ PRT_BODY ] := '( HB_ISNUM( '+cHBIdx+' ) ? ' + s + ' : ' + aA[ PRT_DEFAULT ] + ' )'
+               ELSE
+                  aA[ PRT_BODY ] := s
+               ENDIF
+               aA[ PRT_DOC  ] := 'n'+ cDocNM
+
             CASE aA[ PRT_CAST ] $ 'double,qreal' .and. aA[ PRT_L_FAR ]
-               aadd( aPre, { 'qreal qr'+cDocNM+' = 0;', nHBIdx, 'qr'+ cDocNM, 'hb_stornd'  } )
-               aA[ PRT_BODY ] := '&qr'+cDocNM
+               aadd( aPre, { 'qreal qr' + cDocNM + ' = 0;', nHBIdx, 'qr'+ cDocNM, 'hb_stornd'  } )
+               aA[ PRT_BODY ] := '&qr' + cDocNM
                aA[ PRT_DOC  ] := '@n'+ cDocNM
 
             CASE aA[ PRT_CAST ] $ 'double,qreal,float'
@@ -656,8 +685,8 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                aA[ PRT_DOC  ] := 'n'+ cDocNM
 
             CASE ( '::' $ aA[ PRT_CAST ] ) .and. aA[ PRT_L_FAR ]
-               aadd( aPre, { aA[ PRT_CAST ]+' i'+cDocNM+';', nHBIdx, 'i'+ cDocNM, 'hb_storni' } )
-               aA[ PRT_BODY ] := '&i'+cDocNM
+               aadd( aPre, { aA[ PRT_CAST ]+' i' + cDocNM + ';', nHBIdx, 'i'+ cDocNM, 'hb_storni' } )
+               aA[ PRT_BODY ] := '&i' + cDocNM
                aA[ PRT_DOC  ] := '@n'+ cDocNM
 
             CASE ( '::' $ aA[ PRT_CAST ] )
@@ -666,8 +695,8 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                   IF ascan( aEnum, aA[ PRT_DEFAULT ] ) > 0
                      ss := cWidget+'::'+aA[ PRT_DEFAULT ]
                   ELSE
-                     ss := IF( '::' $ aA[ PRT_DEFAULT ], aA[ PRT_DEFAULT ], ;
-                        IF( isDigit( left( aA[ PRT_DEFAULT ], 1 ) ), aA[ PRT_DEFAULT ], cWidget+'::'+aA[ PRT_DEFAULT ] ) )
+                     ss := iif( '::' $ aA[ PRT_DEFAULT ], aA[ PRT_DEFAULT ], ;
+                        iif( isDigit( left( aA[ PRT_DEFAULT ], 1 ) ), aA[ PRT_DEFAULT ], cWidget+'::'+aA[ PRT_DEFAULT ] ) )
                   ENDIF
                   ss := '( '+ aA[ PRT_CAST ] +' ) '+ss
                   aA[ PRT_BODY ] := '( HB_ISNUM( '+cHBIdx+' ) ? ' + s + ' : ' + ss + ' )'
@@ -677,8 +706,8 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                aA[ PRT_DOC  ] := 'n'+ cDocNM
 
             CASE aA[ PRT_CAST ] == 'bool' .and. aA[ PRT_L_FAR ]
-               aadd( aPre, { 'bool i'+cDocNM+' = 0;', nHBIdx, 'i'+ cDocNM, 'hb_stornl' } )
-               aA[ PRT_BODY ] := '&i'+cDocNM
+               aadd( aPre, { 'bool i' + cDocNM + ' = 0;', nHBIdx, 'i'+ cDocNM, 'hb_stornl' } )
+               aA[ PRT_BODY ] := '&i' + cDocNM
                aA[ PRT_DOC  ] := '@l'+ cDocNM
 
             CASE aA[ PRT_CAST ] == 'bool'
@@ -741,65 +770,73 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
             DO CASE
             CASE aA[ PRT_CAST ] == 'T'
                cCmd := 'hb_retptr( '+ cCmn +' )'
-               cPrgRet := 'p'+cDocNM
+               cPrgRet := 'p' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'void'
                cCmd := cCmn
                cPrgRet := 'NIL'
 
-            CASE aA[ PRT_CAST ] $ cIntegers
+            CASE aA[ PRT_CAST ] $ cInt
                cCmd := 'hb_retni( '+ cCmn +' )'
-               cPrgRet := 'n'+cDocNM
+               cPrgRet := 'n' + cDocNM
+
+            CASE aA[ PRT_CAST ] $ cIntLong
+               cCmd := 'hb_retnl( '+ cCmn +' )'
+               cPrgRet := 'n' + cDocNM
+
+            CASE aA[ PRT_CAST ] $ cIntLongLong
+               cCmd := 'hb_retnint( '+ cCmn +' )'
+               cPrgRet := 'n' + cDocNM
 
             CASE aA[ PRT_CAST ] $ 'double,qreal'
                cCmd := 'hb_retnd( '+ cCmn +' )'
-               cPrgRet := 'n'+cDocNM
+               cPrgRet := 'n' + cDocNM
 
             CASE ( '::' $ aA[ PRT_CAST ] )
                cCmd := 'hb_retni( ( '+ aA[ PRT_CAST ] +' ) ' + cCmn +' )'
-               cPrgRet := 'n'+cDocNM
+               cPrgRet := 'n' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'bool'
                cCmd := 'hb_retl( '+ cCmn +' )'
-               cPrgRet := 'l'+cDocNM
+               cPrgRet := 'l' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'char' .AND. aA[ PRT_L_FAR ]
                cCmd := 'hb_retc( '+ cCmn +' )'
-               cPrgRet := 'c'+cDocNM
+               cPrgRet := 'c' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'char'
                cCmd := 'hb_retni( '+ cCmn +' )'
-               cPrgRet := 'c'+cDocNM
+               cPrgRet := 'c' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'QString'
                cCmd := 'hb_retc( '+ cCmn +'.toLatin1().data()' +' )'
-               cPrgRet := 'c'+cDocNM
+               cPrgRet := 'c' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'FT_Face'
                cCmd := 'hb_retc( '+ cCmn +' )'
-               cPrgRet := 'c'+cDocNM
+               cPrgRet := 'c' + cDocNM
 
             CASE aA[ PRT_L_FAR ]
                cCmd := 'hb_retptr( ( '+ aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
-               cPrgRet := 'p'+cDocNM
+               cPrgRet := 'p' + cDocNM
 
             CASE aA[ PRT_L_AND ] .and. aA[ PRT_L_CONST ]
                cCmd := 'hb_retptr( new '+ aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
-               cPrgRet := 'p'+cDocNM
+               cPrgRet := 'p' + cDocNM
 
             CASE aA[ PRT_L_CONST ]
                cCmd := 'hb_retptr( new '+ aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
-               cPrgRet := 'p'+cDocNM
+               cPrgRet := 'p' + cDocNM
 
             CASE aA[ PRT_L_AND ]
                cCmd := 'hb_retptr( ( '+ aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
-               cPrgRet := 'p'+cDocNM
+               cPrgRet := 'p' + cDocNM
 
             OTHERWISE
                /* No attribute is attached to return value */
                IF left( aA[ PRT_CAST ], 1 ) == 'Q'
                   cCmd := 'hb_retptr( new '+ aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
-                  cPrgRet := 'p'+cDocNM
+                  cPrgRet := 'p' + cDocNM
 
                ELSE
                   OutStd( '<<< '+cProto + ' | ' + aA[ PRT_CAST ]+' >>>'  + s_NewLine )
@@ -856,7 +893,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
       aadd( txt_, ""   )
 
       aadd( doc_, 'Qt_'+ cWidget + '_' + cHBFunc +'( p'+ cWidget + ;
-                        IF( empty( cDocs ), '', ', '+ cDocs ) +' ) -> '+ cPrgRet )
+                        iif( empty( cDocs ), '', ', '+ cDocs ) +' ) -> '+ cPrgRet )
       aadd( doc_, '' )
    ENDIF
 
@@ -865,17 +902,19 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
-   LOCAL aRet, aA, aArgus, aArg, aPar, aPre
-   LOCAL n, nn, nHBIdx
-   LOCAL cPre, cPar, cRet, cFun, cParas, cDocs, cCmd, cPas, s, ss
-   LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cHBIdx, cDocNM
+   LOCAL aRet, aA, aPre
+   LOCAL n
+   LOCAL cRet, cFun, cDocs, cCmd
+   LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cDocNM
    LOCAL lSuccess
-   LOCAL cIntegers := 'int,qint16,qint32,qint64,quint16,quint32,quint64,qlonglong,qulonglong,QRgb,QChar'
+   LOCAL cInt := 'int,qint16,quint16,QChar'
+   LOCAL cIntLong := 'qint32,quint32,QRgb'
+   LOCAL cIntLongLong := 'qint64,quint64,qlonglong,qulonglong'
 
-   cParas := ''
+   aPre   := {}
    cDocs  := ''
 
-   aRet := {}; aArgus := {}
+   aRet := {}
    n := at( ' ', cProto )
    IF n > 0
       IF .t.
@@ -888,7 +927,7 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
          aRet[ PRT_CAST ] := cRet
          aRet[ PRT_NAME ] := aRet[ PRT_CAST ]
 
-         IF ascan( aEnum, {|e| IF( empty( e ), .f., e == aRet[ PRT_CAST ] ) } ) > 0
+         IF ascan( aEnum, {|e| iif( empty( e ), .f., e == aRet[ PRT_CAST ] ) } ) > 0
             aRet[ PRT_CAST ] := cWidget + '::' + aRet[ PRT_CAST ]
          ENDIF
 
@@ -902,48 +941,56 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
             DO CASE
             CASE aA[ PRT_CAST ] == 'T'
                cCmd := 'hb_ret( '+ cCmn +' )'
-               cPrgRet := 'x'+cDocNM
+               cPrgRet := 'x' + cDocNM
 
-            CASE aA[ PRT_CAST ] $ cIntegers
+            CASE aA[ PRT_CAST ] $ cInt
                cCmd := 'hb_retni( '+ cCmn +' )'
-               cPrgRet := 'n'+cDocNM
+               cPrgRet := 'n' + cDocNM
+
+            CASE aA[ PRT_CAST ] $ cIntLong
+               cCmd := 'hb_retnl( '+ cCmn +' )'
+               cPrgRet := 'n' + cDocNM
+
+            CASE aA[ PRT_CAST ] $ cIntLongLong
+               cCmd := 'hb_retnint( '+ cCmn +' )'
+               cPrgRet := 'n' + cDocNM
 
             CASE aA[ PRT_CAST ] $ 'double,qreal'
                cCmd := 'hb_retnd( '+ cCmn +' )'
-               cPrgRet := 'n'+cDocNM
+               cPrgRet := 'n' + cDocNM
 
             CASE ( '::' $ aA[ PRT_CAST ] )
                cCmd := 'hb_retni( ( '+ aA[ PRT_CAST ] +' ) ' + cCmn +' )'
-               cPrgRet := 'n'+cDocNM
+               cPrgRet := 'n' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'bool'
                cCmd := 'hb_retl( '+ cCmn +' )'
-               cPrgRet := 'l'+cDocNM
+               cPrgRet := 'l' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'char*'
                cCmd := 'hb_retc( '+ cCmn +' )'
-               cPrgRet := 'c'+cDocNM
+               cPrgRet := 'c' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'char'
                cCmd := 'hb_retni( '+ cCmn +' )'
-               cPrgRet := 'c'+cDocNM
+               cPrgRet := 'c' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'QString'
                cCmd := 'hb_retc( '+ cCmn +'.toLatin1().data()' +' )'
-               cPrgRet := 'c'+cDocNM
+               cPrgRet := 'c' + cDocNM
 
             CASE aA[ PRT_CAST ] == 'FT_Face'
                cCmd := 'hb_retc( '+ cCmn +' )'
-               cPrgRet := 'c'+cDocNM
+               cPrgRet := 'c' + cDocNM
 
             OTHERWISE
                /* No attribute is attached to return value */
                IF left( aA[ PRT_CAST ], 1 ) == 'Q'
                   cCmd := 'hb_retptr( new '+ aA[ PRT_CAST ] + '( ' + cCmn + ' ) )'
-                  cPrgRet := 'p'+cDocNM
+                  cPrgRet := 'p' + cDocNM
 
                ELSE
-                  OutStd( '<<< '+cProto + ' | ' + aA[ PRT_CAST ]+' >>>'  + s_NewLine )
+                  OutStd( '<<< ' + cProto + ' | ' + aA[ PRT_CAST ] + ' >>>'  + s_NewLine )
                   cCmd := ''
                   cPrgRet := ''
 
@@ -997,7 +1044,7 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
       aadd( txt_, ""   )
 
       aadd( doc_, 'Qt_'+ cWidget + '_' + cHBFunc +'( p'+ cWidget + ;
-                        IF( empty( cDocs ), '', ', '+ cDocs ) +' ) -> '+ cPrgRet )
+                        iif( empty( cDocs ), '', ', '+ cDocs ) +' ) -> '+ cPrgRet )
       aadd( doc_, '' )
    ENDIF
 
@@ -1192,7 +1239,7 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
    aadd( txt_, '' )
 
    n := ascan( cls_, {|e_| left( lower( e_[ 1 ] ),7 ) == 'inherit' .and. !empty( e_[ 2 ] ) } )
-   s := 'CREATE CLASS '+ cWidget + IF( n > 0, ' INHERIT ' + cls_[ n,2 ], '' )
+   s := 'CREATE CLASS '+ cWidget + iif( n > 0, ' INHERIT ' + cls_[ n,2 ], '' )
 
    aadd( txt_, s  )
    aadd( txt_, '' )
@@ -1219,7 +1266,7 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
          cM    := strtran( cM, ss, '' )
          cM    := strtran( cM, '(  )', '()' )
          cM    := strtran( cM, '(  ', '( ' )
-         cM    := IF( len( cM ) > 35, cM, pad( cM,35 ) )
+         cM    := iif( len( cM ) > 35, cM, pad( cM,35 ) )
 
          ss    := 'p'+cWidget
          cCall := strtran( s, ss, '::pPtr' )
@@ -1295,4 +1342,3 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    RETURN CreateTarget( cFile, txt_ )
 
 /*----------------------------------------------------------------------*/
-

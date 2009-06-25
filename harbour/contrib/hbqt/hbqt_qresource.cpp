@@ -141,7 +141,7 @@ HB_FUNC( QT_QRESOURCE_SETLOCALE )
  */
 HB_FUNC( QT_QRESOURCE_SIZE )
 {
-   hb_retni( hbqt_par_QResource( 1 )->size() );
+   hb_retnint( hbqt_par_QResource( 1 )->size() );
 }
 
 /*

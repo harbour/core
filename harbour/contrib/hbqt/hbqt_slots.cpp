@@ -748,7 +748,7 @@ HB_FUNC( QT_DISCONNECT_SIGNAL )
    QWidget * widget = ( QWidget* ) hb_parptr( 1 );
    if( widget )
    {
-      char * event = hb_parcx( 2 );
+      const char * event = hb_parcx( 2 );
       int i = widget->property( event ).toInt();
 
       if( i > 0 && i <= s_s->listBlock.size() )
@@ -809,7 +809,7 @@ MyMainWindow::MyMainWindow()
    Qt::WindowFlags flags = Qt::WindowCloseButtonHint    | Qt::WindowMaximizeButtonHint |
                            Qt::WindowMinimizeButtonHint | Qt::WindowSystemMenuHint     |
                            Qt::CustomizeWindowHint      | Qt::WindowTitleHint          |
-                           Qt::Window ;
+                           Qt::Window;
    setWindowFlags( flags );
    setFocusPolicy( Qt::StrongFocus );
    setAttribute( Qt::WA_DeleteOnClose );

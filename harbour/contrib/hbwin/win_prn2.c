@@ -68,7 +68,7 @@
 
 #define MAXBUFFERSIZE 255
 
-BOOL hb_isLegacyDevice( LPSTR pPrinterName )
+BOOL hb_isLegacyDevice( LPCSTR pPrinterName )
 {
    BOOL bLegacyDev = FALSE;
    int n = 0;
@@ -82,7 +82,7 @@ BOOL hb_isLegacyDevice( LPSTR pPrinterName )
    return bLegacyDev;
 }
 
-BOOL hb_PrinterExists( LPSTR pPrinterName )
+BOOL hb_PrinterExists( LPCSTR pPrinterName )
 {
    BOOL Result = FALSE;
 
@@ -324,7 +324,7 @@ static DWORD IsPrinterErrorn( HANDLE hPrinter )
    return dwError;
 }
 
-static DWORD hb_printerIsReadyn( char * pszPrinterName )
+static DWORD hb_printerIsReadyn( const char * pszPrinterName )
 {
    DWORD dwPrinter = ( DWORD ) -1;
    HANDLE hPrinter;
@@ -344,10 +344,10 @@ static DWORD hb_printerIsReadyn( char * pszPrinterName )
 
 HB_FUNC( XISPRINTER )
 {
-   char szDefaultPrinter[ MAXBUFFERSIZE ], * pszPrinterName;
+   char szDefaultPrinter[ MAXBUFFERSIZE ];
    DWORD pdwBufferSize = sizeof( szDefaultPrinter );
+   const char * pszPrinterName = hb_parc( 1 );
 
-   pszPrinterName = hb_parc( 1 );
    if( !pszPrinterName )
    {
       hb_GetDefaultPrinter( szDefaultPrinter, &pdwBufferSize );
@@ -357,7 +357,7 @@ HB_FUNC( XISPRINTER )
 }
 
 BOOL hb_GetPrinterNameByPort( char * pPrinterName, LPDWORD pdwBufferSize,
-                              char * pPortName, BOOL bSubStr )
+                              const char * pPortName, BOOL bSubStr )
 {
    BOOL Result = FALSE, bFound = FALSE;
    ULONG needed, returned;
