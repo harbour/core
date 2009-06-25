@@ -71,6 +71,7 @@ PROCEDURE BuildADialog()
 
    /* Create Application Window */
    oDlg := GuiStdDialog( 'Harbour - Xbase++ - QT Dialog [ Press "Q" to Exit ]' )
+   oDlg:close := {|| MsgBox( 'You can also close me by Pressing "Q"' ), .f. }
 
    SetAppWindow( oDlg )
 
@@ -136,6 +137,7 @@ PROCEDURE BuildADialog()
    DO WHILE .t.
       nEvent := AppEvent( @mp1, @mp2, @oXbp )
       IF nEvent == xbeP_Close .or. ( nEvent == xbeP_Keyboard .and. ( mp1 == 81 .or. mp1 == 113 ) )
+hb_outDebug( "WOW" )
          EXIT
       ENDIF
       oXbp:handleEvent( nEvent, mp1, mp2 )
@@ -143,7 +145,7 @@ PROCEDURE BuildADialog()
 
    /* Very important - destroy resources */
    oDlg:destroy()
-
+hb_outDebug( "WOWXXXXXXXXXX" )
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -219,9 +221,13 @@ STATIC FUNCTION Build_MenuBar()
    oSubMenu:setColorBG( GraMakeRGBColor( { 134,128,250 } ) )
    oSubMenu:setColorFG( GraMakeRGBColor( { 255,  1,  1 } ) )
 
-   #if 0
+   #if 1
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Dialogs"
+   #if 0
+   oSubMenu:addItem( { "~One More Instance"+chr(K_TAB)+"Ctrl+M", ;
+                                 {|| hb_threadStart( {|| BuildADialog() } ) } } )
+   #endif
    oSubMenu:addItem( { "~One More Instance"+chr(K_TAB)+"Ctrl+M", {|| BuildADialog() } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
    #endif
@@ -656,7 +662,7 @@ STATIC FUNCTION Build_ComboBox( oWnd )
 
 /*----------------------------------------------------------------------*/
 
-PROCEDURE Build_TreeView( oWnd )
+FUNCTION Build_TreeView( oWnd )
    LOCAL i
    LOCAL oTree := XbpTreeView():new( oWnd, , {10,10}, {oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45} )
 

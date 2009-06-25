@@ -355,6 +355,11 @@ METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
 
 METHOD XbpWindow:destroy()
 
+   IF Len( ::aChildren ) > 0
+      aeval( ::aChildren, {|o| o:destroy() } )
+      ::aChildren := {}
+   ENDIF
+
    IF len( ::aConnections ) > 0
       aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ) } )
       ::aConnections := {}
@@ -363,11 +368,7 @@ METHOD XbpWindow:destroy()
    IF len( ::aEConnections ) > 0
       aeval( ::aEConnections, {|e_| Qt_DisConnect_Event( e_[ 1 ], e_[ 2 ] ) } )
       ::aConnections := {}
-   ENDIF
-
-   IF Len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| o:destroy() } )
-      ::aChildren := {}
+      ::oWidget:removeEventFilter( SetEventFilter() )
    ENDIF
 
    ::oWidget:close()
@@ -1237,12 +1238,11 @@ METHOD XbpObject:INIT()
 /*----------------------------------------------------------------------*/
 #if 0           /* A Template */
 METHOD xbpWindow:setStyle()
-   LOCAL s, txt_:={}
+   LOCAL s := "", txt_:={}
 
    aadd( txt_, ' ' )
    aadd( txt_, ' ' )
 
-   s := ""
    aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
 
    ::oWidget:setStyleSheet( s )

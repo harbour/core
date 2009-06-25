@@ -68,6 +68,7 @@
 #include "common.ch"
 
 #include "xbp.ch"
+#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -79,11 +80,14 @@ THREAD STATIC nEventOut := 0
 THREAD STATIC ts_mutex
 
 STATIC oDummy
+STATIC oApp
+STATIC sEventFilter
 
 /*----------------------------------------------------------------------*/
 
 INIT PROCEDURE Qt_Start()
    qt_qapplication()
+   oApp := QApplication():new()
    RETURN
 
 EXIT PROCEDURE Qt_End()
@@ -111,7 +115,9 @@ FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
 FUNCTION AppEvent( mp1, mp2, oXbp )
    LOCAL nEvent
 
-   SetAppWindow():oEventLoop:processEvents()
+
+   oApp:processEvents()
+   //SetAppWindow():oEventLoop:processEvents()
 
    //hb_mutexLock( ts_mutex )
 
@@ -198,6 +204,8 @@ FUNCTION MsgBox( cMsg, cTitle )
 
    oMB := QMessageBox():new()
    oMB:setInformativeText( cMsg )
+   oMB:setIcon( QMessageBox_Information )
+   oMB:setModal( .t. )
    IF !empty( cTitle )
       oMB:setWindowTitle( cTitle )
    ENDIF
@@ -254,8 +262,6 @@ FUNCTION Xbp_XtoS( xVar )
 FUNCTION SetEventFilter()
    LOCAL pEventFilter
 
-   STATIC sEventFilter
-
    IF empty( sEventFilter )
       pEventFilter := QT_QEventFilter()
       IF hb_isPointer( pEventFilter )
@@ -266,3 +272,4 @@ FUNCTION SetEventFilter()
    RETURN sEventFilter
 
 /*----------------------------------------------------------------------*/
+
