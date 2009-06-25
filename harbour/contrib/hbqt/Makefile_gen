@@ -228,6 +228,7 @@ PRG_SOURCES=\
 	TQAbstractSpinBox.prg \
 	TQAbstractTableModel.prg \
 	TQAction.prg \
+	TQCoreApplication.prg \
 	TQApplication.prg \
 	TQBitmap.prg \
 	TQBoxLayout.prg \

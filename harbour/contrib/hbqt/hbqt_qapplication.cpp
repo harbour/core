@@ -71,6 +71,8 @@
 #include "hbapierr.h"
 
 #include <QtGui/QApplication>
+#include <QtCore/QLocale>
+#include <QtGui/QIcon>
 
 void release_codeblocks();
 
@@ -153,7 +155,18 @@ HB_CALL_ON_STARTUP_END( _hb_hbqt_init_ )
    #pragma data_seg()
 #endif
 
-HB_FUNC( QT_QAPPLICATION_EXEC )
+HB_FUNC( QT_QAPPLICATION_EXECUTE )
+{
+   hb_retni( app->exec() );
+}
+
+HB_FUNC( QT_QAPPLICATION_QUIT )
+{
+   app->quit();
+}
+
+#if 0
+HB_FUNC( QT_QAPPLICATION_EXECUTE )
 {
    hb_retni( app->exec() );
 }
@@ -167,6 +180,7 @@ HB_FUNC( QT_QAPPLICATION_QUIT )
 {
    app->quit();
 }
+#endif
 
 /*
  * virtual void commitData ( QSessionManager & manager )
@@ -230,6 +244,542 @@ HB_FUNC( QT_QAPPLICATION_SETINPUTCONTEXT )
 HB_FUNC( QT_QAPPLICATION_STYLESHEET )
 {
    hb_retc( hbqt_par_QApplication( 1 )->styleSheet().toLatin1().data() );
+}
+
+/*
+ * QWidget * activeModalWidget ()
+ */
+HB_FUNC( QT_QAPPLICATION_ACTIVEMODALWIDGET )
+{
+   hb_retptr( ( QWidget* ) hbqt_par_QApplication( 1 )->activeModalWidget() );
+}
+
+/*
+ * QWidget * activePopupWidget ()
+ */
+HB_FUNC( QT_QAPPLICATION_ACTIVEPOPUPWIDGET )
+{
+   hb_retptr( ( QWidget* ) hbqt_par_QApplication( 1 )->activePopupWidget() );
+}
+
+/*
+ * QWidget * activeWindow ()
+ */
+HB_FUNC( QT_QAPPLICATION_ACTIVEWINDOW )
+{
+   hb_retptr( ( QWidget* ) hbqt_par_QApplication( 1 )->activeWindow() );
+}
+
+/*
+ * void alert ( QWidget * widget, int msec = 0 )
+ */
+HB_FUNC( QT_QAPPLICATION_ALERT )
+{
+   hbqt_par_QApplication( 1 )->alert( hbqt_par_QWidget( 2 ), hb_parni( 3 ) );
+}
+
+/*
+ * QWidgetList allWidgets ()
+ */
+HB_FUNC( QT_QAPPLICATION_ALLWIDGETS )
+{
+   hb_retptr( new QWidgetList( hbqt_par_QApplication( 1 )->allWidgets() ) );
+}
+
+/*
+ * void beep ()
+ */
+HB_FUNC( QT_QAPPLICATION_BEEP )
+{
+   hbqt_par_QApplication( 1 )->beep();
+}
+
+/*
+ * void changeOverrideCursor ( const QCursor & cursor )
+ */
+HB_FUNC( QT_QAPPLICATION_CHANGEOVERRIDECURSOR )
+{
+   hbqt_par_QApplication( 1 )->changeOverrideCursor( *hbqt_par_QCursor( 2 ) );
+}
+
+/*
+ * QClipboard * clipboard ()
+ */
+HB_FUNC( QT_QAPPLICATION_CLIPBOARD )
+{
+   hb_retptr( ( QClipboard* ) hbqt_par_QApplication( 1 )->clipboard() );
+}
+
+/*
+ * int colorSpec ()
+ */
+HB_FUNC( QT_QAPPLICATION_COLORSPEC )
+{
+   hb_retni( hbqt_par_QApplication( 1 )->colorSpec() );
+}
+
+/*
+ * int cursorFlashTime ()
+ */
+HB_FUNC( QT_QAPPLICATION_CURSORFLASHTIME )
+{
+   hb_retni( hbqt_par_QApplication( 1 )->cursorFlashTime() );
+}
+
+/*
+ * QDesktopWidget * desktop ()
+ */
+HB_FUNC( QT_QAPPLICATION_DESKTOP )
+{
+   hb_retptr( ( QDesktopWidget* ) hbqt_par_QApplication( 1 )->desktop() );
+}
+
+/*
+ * bool desktopSettingsAware ()
+ */
+HB_FUNC( QT_QAPPLICATION_DESKTOPSETTINGSAWARE )
+{
+   hb_retl( hbqt_par_QApplication( 1 )->desktopSettingsAware() );
+}
+
+/*
+ * int doubleClickInterval ()
+ */
+HB_FUNC( QT_QAPPLICATION_DOUBLECLICKINTERVAL )
+{
+   hb_retni( hbqt_par_QApplication( 1 )->doubleClickInterval() );
+}
+
+/*
+ * int exec ()
+ */
+HB_FUNC( QT_QAPPLICATION_EXEC )
+{
+   hb_retni( hbqt_par_QApplication( 1 )->exec() );
+}
+
+/*
+ * QWidget * focusWidget ()
+ */
+HB_FUNC( QT_QAPPLICATION_FOCUSWIDGET )
+{
+   hb_retptr( ( QWidget* ) hbqt_par_QApplication( 1 )->focusWidget() );
+}
+
+/*
+ * QFont font ()
+ */
+HB_FUNC( QT_QAPPLICATION_FONT )
+{
+   hb_retptr( new QFont( hbqt_par_QApplication( 1 )->font() ) );
+}
+
+/*
+ * QFont font ( const QWidget * widget )
+ */
+HB_FUNC( QT_QAPPLICATION_FONT_1 )
+{
+   hb_retptr( new QFont( hbqt_par_QApplication( 1 )->font( hbqt_par_QWidget( 2 ) ) ) );
+}
+
+/*
+ * QFont font ( const char * className )
+ */
+HB_FUNC( QT_QAPPLICATION_FONT_2 )
+{
+   hb_retptr( new QFont( hbqt_par_QApplication( 1 )->font( hbqt_par_char( 2 ) ) ) );
+}
+
+/*
+ * QFontMetrics fontMetrics ()
+ */
+HB_FUNC( QT_QAPPLICATION_FONTMETRICS )
+{
+   hb_retptr( new QFontMetrics( hbqt_par_QApplication( 1 )->fontMetrics() ) );
+}
+
+/*
+ * QSize globalStrut ()
+ */
+HB_FUNC( QT_QAPPLICATION_GLOBALSTRUT )
+{
+   hb_retptr( new QSize( hbqt_par_QApplication( 1 )->globalStrut() ) );
+}
+
+/*
+ * bool isEffectEnabled ( Qt::UIEffect effect )
+ */
+HB_FUNC( QT_QAPPLICATION_ISEFFECTENABLED )
+{
+   hb_retl( hbqt_par_QApplication( 1 )->isEffectEnabled( ( Qt::UIEffect ) hb_parni( 2 ) ) );
+}
+
+/*
+ * bool isLeftToRight ()
+ */
+HB_FUNC( QT_QAPPLICATION_ISLEFTTORIGHT )
+{
+   hb_retl( hbqt_par_QApplication( 1 )->isLeftToRight() );
+}
+
+/*
+ * bool isRightToLeft ()
+ */
+HB_FUNC( QT_QAPPLICATION_ISRIGHTTOLEFT )
+{
+   hb_retl( hbqt_par_QApplication( 1 )->isRightToLeft() );
+}
+
+/*
+ * Qt::LayoutDirection keyboardInputDirection ()
+ */
+HB_FUNC( QT_QAPPLICATION_KEYBOARDINPUTDIRECTION )
+{
+   hb_retni( ( Qt::LayoutDirection ) hbqt_par_QApplication( 1 )->keyboardInputDirection() );
+}
+
+/*
+ * int keyboardInputInterval ()
+ */
+HB_FUNC( QT_QAPPLICATION_KEYBOARDINPUTINTERVAL )
+{
+   hb_retni( hbqt_par_QApplication( 1 )->keyboardInputInterval() );
+}
+
+/*
+ * QLocale keyboardInputLocale ()
+ */
+HB_FUNC( QT_QAPPLICATION_KEYBOARDINPUTLOCALE )
+{
+   hb_retptr( new QLocale( hbqt_par_QApplication( 1 )->keyboardInputLocale() ) );
+}
+
+/*
+ * Qt::KeyboardModifiers keyboardModifiers ()
+ */
+HB_FUNC( QT_QAPPLICATION_KEYBOARDMODIFIERS )
+{
+   hb_retni( ( Qt::KeyboardModifiers ) hbqt_par_QApplication( 1 )->keyboardModifiers() );
+}
+
+/*
+ * Qt::LayoutDirection layoutDirection ()
+ */
+HB_FUNC( QT_QAPPLICATION_LAYOUTDIRECTION )
+{
+   hb_retni( ( Qt::LayoutDirection ) hbqt_par_QApplication( 1 )->layoutDirection() );
+}
+
+/*
+ * Qt::MouseButtons mouseButtons ()
+ */
+HB_FUNC( QT_QAPPLICATION_MOUSEBUTTONS )
+{
+   hb_retni( ( Qt::MouseButtons ) hbqt_par_QApplication( 1 )->mouseButtons() );
+}
+
+/*
+ * QCursor * overrideCursor ()
+ */
+HB_FUNC( QT_QAPPLICATION_OVERRIDECURSOR )
+{
+   hb_retptr( ( QCursor* ) hbqt_par_QApplication( 1 )->overrideCursor() );
+}
+
+/*
+ * QPalette palette ()
+ */
+HB_FUNC( QT_QAPPLICATION_PALETTE )
+{
+   hb_retptr( new QPalette( hbqt_par_QApplication( 1 )->palette() ) );
+}
+
+/*
+ * QPalette palette ( const QWidget * widget )
+ */
+HB_FUNC( QT_QAPPLICATION_PALETTE_1 )
+{
+   hb_retptr( new QPalette( hbqt_par_QApplication( 1 )->palette( hbqt_par_QWidget( 2 ) ) ) );
+}
+
+/*
+ * QPalette palette ( const char * className )
+ */
+HB_FUNC( QT_QAPPLICATION_PALETTE_2 )
+{
+   hb_retptr( new QPalette( hbqt_par_QApplication( 1 )->palette( hbqt_par_char( 2 ) ) ) );
+}
+
+/*
+ * bool quitOnLastWindowClosed ()
+ */
+HB_FUNC( QT_QAPPLICATION_QUITONLASTWINDOWCLOSED )
+{
+   hb_retl( hbqt_par_QApplication( 1 )->quitOnLastWindowClosed() );
+}
+
+/*
+ * void restoreOverrideCursor ()
+ */
+HB_FUNC( QT_QAPPLICATION_RESTOREOVERRIDECURSOR )
+{
+   hbqt_par_QApplication( 1 )->restoreOverrideCursor();
+}
+
+/*
+ * void setActiveWindow ( QWidget * active )
+ */
+HB_FUNC( QT_QAPPLICATION_SETACTIVEWINDOW )
+{
+   hbqt_par_QApplication( 1 )->setActiveWindow( hbqt_par_QWidget( 2 ) );
+}
+
+/*
+ * void setColorSpec ( int spec )
+ */
+HB_FUNC( QT_QAPPLICATION_SETCOLORSPEC )
+{
+   hbqt_par_QApplication( 1 )->setColorSpec( hb_parni( 2 ) );
+}
+
+/*
+ * void setCursorFlashTime ( int )
+ */
+HB_FUNC( QT_QAPPLICATION_SETCURSORFLASHTIME )
+{
+   hbqt_par_QApplication( 1 )->setCursorFlashTime( hb_parni( 2 ) );
+}
+
+/*
+ * void setDesktopSettingsAware ( bool on )
+ */
+HB_FUNC( QT_QAPPLICATION_SETDESKTOPSETTINGSAWARE )
+{
+   hbqt_par_QApplication( 1 )->setDesktopSettingsAware( hb_parl( 2 ) );
+}
+
+/*
+ * void setDoubleClickInterval ( int )
+ */
+HB_FUNC( QT_QAPPLICATION_SETDOUBLECLICKINTERVAL )
+{
+   hbqt_par_QApplication( 1 )->setDoubleClickInterval( hb_parni( 2 ) );
+}
+
+/*
+ * void setEffectEnabled ( Qt::UIEffect effect, bool enable = true )
+ */
+HB_FUNC( QT_QAPPLICATION_SETEFFECTENABLED )
+{
+   hbqt_par_QApplication( 1 )->setEffectEnabled( ( Qt::UIEffect ) hb_parni( 2 ), hb_parl( 3 ) );
+}
+
+/*
+ * void setFont ( const QFont & font, const char * className = 0 )
+ */
+HB_FUNC( QT_QAPPLICATION_SETFONT )
+{
+   hbqt_par_QApplication( 1 )->setFont( *hbqt_par_QFont( 2 ), hbqt_par_char( 3 ) );
+}
+
+/*
+ * void setGlobalStrut ( const QSize & )
+ */
+HB_FUNC( QT_QAPPLICATION_SETGLOBALSTRUT )
+{
+   hbqt_par_QApplication( 1 )->setGlobalStrut( *hbqt_par_QSize( 2 ) );
+}
+
+/*
+ * void setGraphicsSystem ( const QString & system )
+ */
+HB_FUNC( QT_QAPPLICATION_SETGRAPHICSSYSTEM )
+{
+   hbqt_par_QApplication( 1 )->setGraphicsSystem( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void setKeyboardInputInterval ( int )
+ */
+HB_FUNC( QT_QAPPLICATION_SETKEYBOARDINPUTINTERVAL )
+{
+   hbqt_par_QApplication( 1 )->setKeyboardInputInterval( hb_parni( 2 ) );
+}
+
+/*
+ * void setLayoutDirection ( Qt::LayoutDirection direction )
+ */
+HB_FUNC( QT_QAPPLICATION_SETLAYOUTDIRECTION )
+{
+   hbqt_par_QApplication( 1 )->setLayoutDirection( ( Qt::LayoutDirection ) hb_parni( 2 ) );
+}
+
+/*
+ * void setOverrideCursor ( const QCursor & cursor )
+ */
+HB_FUNC( QT_QAPPLICATION_SETOVERRIDECURSOR )
+{
+   hbqt_par_QApplication( 1 )->setOverrideCursor( *hbqt_par_QCursor( 2 ) );
+}
+
+/*
+ * void setPalette ( const QPalette & palette, const char * className = 0 )
+ */
+HB_FUNC( QT_QAPPLICATION_SETPALETTE )
+{
+   hbqt_par_QApplication( 1 )->setPalette( *hbqt_par_QPalette( 2 ), hbqt_par_char( 3 ) );
+}
+
+/*
+ * void setQuitOnLastWindowClosed ( bool quit )
+ */
+HB_FUNC( QT_QAPPLICATION_SETQUITONLASTWINDOWCLOSED )
+{
+   hbqt_par_QApplication( 1 )->setQuitOnLastWindowClosed( hb_parl( 2 ) );
+}
+
+/*
+ * void setStartDragDistance ( int l )
+ */
+HB_FUNC( QT_QAPPLICATION_SETSTARTDRAGDISTANCE )
+{
+   hbqt_par_QApplication( 1 )->setStartDragDistance( hb_parni( 2 ) );
+}
+
+/*
+ * void setStartDragTime ( int ms )
+ */
+HB_FUNC( QT_QAPPLICATION_SETSTARTDRAGTIME )
+{
+   hbqt_par_QApplication( 1 )->setStartDragTime( hb_parni( 2 ) );
+}
+
+/*
+ * void setStyle ( QStyle * style )
+ */
+HB_FUNC( QT_QAPPLICATION_SETSTYLE )
+{
+   hbqt_par_QApplication( 1 )->setStyle( hbqt_par_QStyle( 2 ) );
+}
+
+/*
+ * QStyle * setStyle ( const QString & style )
+ */
+HB_FUNC( QT_QAPPLICATION_SETSTYLE_1 )
+{
+   hb_retptr( ( QStyle* ) hbqt_par_QApplication( 1 )->setStyle( hbqt_par_QString( 2 ) ) );
+}
+
+/*
+ * void setWheelScrollLines ( int )
+ */
+HB_FUNC( QT_QAPPLICATION_SETWHEELSCROLLLINES )
+{
+   hbqt_par_QApplication( 1 )->setWheelScrollLines( hb_parni( 2 ) );
+}
+
+/*
+ * void setWindowIcon ( const QIcon & icon )
+ */
+HB_FUNC( QT_QAPPLICATION_SETWINDOWICON )
+{
+   hbqt_par_QApplication( 1 )->setWindowIcon( QIcon( hbqt_par_QString( 2 ) ) );
+}
+
+/*
+ * int startDragDistance ()
+ */
+HB_FUNC( QT_QAPPLICATION_STARTDRAGDISTANCE )
+{
+   hb_retni( hbqt_par_QApplication( 1 )->startDragDistance() );
+}
+
+/*
+ * int startDragTime ()
+ */
+HB_FUNC( QT_QAPPLICATION_STARTDRAGTIME )
+{
+   hb_retni( hbqt_par_QApplication( 1 )->startDragTime() );
+}
+
+/*
+ * QStyle * style ()
+ */
+HB_FUNC( QT_QAPPLICATION_STYLE )
+{
+   hb_retptr( ( QStyle* ) hbqt_par_QApplication( 1 )->style() );
+}
+
+/*
+ * void syncX ()
+ */
+HB_FUNC( QT_QAPPLICATION_SYNCX )
+{
+   hbqt_par_QApplication( 1 )->syncX();
+}
+
+/*
+ * QWidget * topLevelAt ( const QPoint & point )
+ */
+HB_FUNC( QT_QAPPLICATION_TOPLEVELAT )
+{
+   hb_retptr( ( QWidget* ) hbqt_par_QApplication( 1 )->topLevelAt( *hbqt_par_QPoint( 2 ) ) );
+}
+
+/*
+ * QWidget * topLevelAt ( int x, int y )
+ */
+HB_FUNC( QT_QAPPLICATION_TOPLEVELAT_1 )
+{
+   hb_retptr( ( QWidget* ) hbqt_par_QApplication( 1 )->topLevelAt( hb_parni( 2 ), hb_parni( 3 ) ) );
+}
+
+/*
+ * QWidgetList topLevelWidgets ()
+ */
+HB_FUNC( QT_QAPPLICATION_TOPLEVELWIDGETS )
+{
+   hb_retptr( new QWidgetList( hbqt_par_QApplication( 1 )->topLevelWidgets() ) );
+}
+
+/*
+ * Type type ()
+ */
+HB_FUNC( QT_QAPPLICATION_TYPE )
+{
+   hb_retni( ( QApplication::Type ) hbqt_par_QApplication( 1 )->type() );
+}
+
+/*
+ * int wheelScrollLines ()
+ */
+HB_FUNC( QT_QAPPLICATION_WHEELSCROLLLINES )
+{
+   hb_retni( hbqt_par_QApplication( 1 )->wheelScrollLines() );
+}
+
+/*
+ * QWidget * widgetAt ( const QPoint & point )
+ */
+HB_FUNC( QT_QAPPLICATION_WIDGETAT )
+{
+   hb_retptr( ( QWidget* ) hbqt_par_QApplication( 1 )->widgetAt( *hbqt_par_QPoint( 2 ) ) );
+}
+
+/*
+ * QWidget * widgetAt ( int x, int y )
+ */
+HB_FUNC( QT_QAPPLICATION_WIDGETAT_1 )
+{
+   hb_retptr( ( QWidget* ) hbqt_par_QApplication( 1 )->widgetAt( hb_parni( 2 ), hb_parni( 3 ) ) );
+}
+
+/*
+ * QIcon windowIcon ()
+ */
+HB_FUNC( QT_QAPPLICATION_WINDOWICON )
+{
+   hb_retptr( new QIcon( hbqt_par_QApplication( 1 )->windowIcon() ) );
 }
 
 /*

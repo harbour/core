@@ -66,6 +66,7 @@
 #if QT_VERSION >= 0x040500
 
 
+#define hbqt_par_QTranslator( n )            ( ( QTranslator* ) hb_parptr( n ) )
 #define hbqt_par_QWidgetItem( n )            ( ( QWidgetItem* ) hb_parptr( n ) )
 #define hbqt_par_QWidgetAction( n )          ( ( QWidgetAction* ) hb_parptr( n ) )
 #define hbqt_par_QLatin1String( n )          ( ( QLatin1String* ) hb_parptr( n ) )

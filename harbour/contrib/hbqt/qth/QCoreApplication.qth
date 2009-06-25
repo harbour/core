@@ -54,6 +54,11 @@
 ;              Header File to Generate QT Wrapper Sources
 ;
 
+<CLASS>
+Inherits = QObject
+Type     = Core
+New      = 
+</CLASS>
 
 
 <CODE>
@@ -64,12 +69,10 @@
  * QCoreApplication ( int & argc, char ** argv )
  * ~QCoreApplication ()
  */
-#if 0
 HB_FUNC( QT_QCOREAPPLICATION )
 {
 
 }
-#endif
 </CODE>
 
 <ENUMS>
@@ -81,6 +84,45 @@ enum Encoding { CodecForTr, UnicodeUTF8, DefaultCodec }
 virtual bool notify ( QObject * receiver, QEvent * event )
 EventFilter setEventFilter ( EventFilter filter )
 // virtual bool winEventFilter ( MSG * msg, long * result )
+
+void addLibraryPath ( const QString & path )
+QString applicationDirPath ()
+QString applicationFilePath ()
+QString applicationName ()
+qint64 applicationPid ()
+QString applicationVersion ()
+QStringList arguments ()
+bool closingDown ()
+int exec ()
+void exit ( int returnCode = 0 )
+void flush ()
+bool hasPendingEvents ()
+void installTranslator ( QTranslator * translationFile )
+QCoreApplication * instance ()
+QStringList libraryPaths ()
+QString organizationDomain ()
+QString organizationName ()
+void postEvent ( QObject * receiver, QEvent * event )
+void postEvent ( QObject * receiver, QEvent * event, int priority )
+void processEvents ( QEventLoop::ProcessEventsFlags flags = QEventLoop::AllEvents )
+void processEvents ( QEventLoop::ProcessEventsFlags flags, int maxtime )
+void removeLibraryPath ( const QString & path )
+void removePostedEvents ( QObject * receiver )
+void removePostedEvents ( QObject * receiver, int eventType )
+void removeTranslator ( QTranslator * translationFile )
+bool sendEvent ( QObject * receiver, QEvent * event )
+void sendPostedEvents ( QObject * receiver, int event_type )
+void sendPostedEvents ()
+void setApplicationName ( const QString & application )
+void setApplicationVersion ( const QString & version )
+void setAttribute ( Qt::ApplicationAttribute attribute, bool on = true )
+void setLibraryPaths ( const QStringList & paths )
+void setOrganizationDomain ( const QString & orgDomain )
+void setOrganizationName ( const QString & orgName )
+bool startingUp ()
+bool testAttribute ( Qt::ApplicationAttribute attribute )
+QString translate ( const char * context, const char * sourceText, const char * disambiguation, Encoding encoding, int n )
+QString translate ( const char * context, const char * sourceText, const char * disambiguation = 0, Encoding encoding = CodecForTr )
 </PROTOS>
 
 <SLOTS>

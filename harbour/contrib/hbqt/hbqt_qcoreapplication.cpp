@@ -60,7 +60,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 2/3 [ 66.67% ] ]
+ *  Constructed[ 40/41 [ 97.56% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -76,12 +76,10 @@
  * QCoreApplication ( int & argc, char ** argv )
  * ~QCoreApplication ()
  */
-#if 0
 HB_FUNC( QT_QCOREAPPLICATION )
 {
 
 }
-#endif
 
 /*
  * virtual bool notify ( QObject * receiver, QEvent * event )
@@ -89,6 +87,310 @@ HB_FUNC( QT_QCOREAPPLICATION )
 HB_FUNC( QT_QCOREAPPLICATION_NOTIFY )
 {
    hb_retl( hbqt_par_QCoreApplication( 1 )->notify( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) ) );
+}
+
+/*
+ * void addLibraryPath ( const QString & path )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_ADDLIBRARYPATH )
+{
+   hbqt_par_QCoreApplication( 1 )->addLibraryPath( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * QString applicationDirPath ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONDIRPATH )
+{
+   hb_retc( hbqt_par_QCoreApplication( 1 )->applicationDirPath().toLatin1().data() );
+}
+
+/*
+ * QString applicationFilePath ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONFILEPATH )
+{
+   hb_retc( hbqt_par_QCoreApplication( 1 )->applicationFilePath().toLatin1().data() );
+}
+
+/*
+ * QString applicationName ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONNAME )
+{
+   hb_retc( hbqt_par_QCoreApplication( 1 )->applicationName().toLatin1().data() );
+}
+
+/*
+ * qint64 applicationPid ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONPID )
+{
+   hb_retni( hbqt_par_QCoreApplication( 1 )->applicationPid() );
+}
+
+/*
+ * QString applicationVersion ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONVERSION )
+{
+   hb_retc( hbqt_par_QCoreApplication( 1 )->applicationVersion().toLatin1().data() );
+}
+
+/*
+ * QStringList arguments ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_ARGUMENTS )
+{
+   hb_retptr( new QStringList( hbqt_par_QCoreApplication( 1 )->arguments() ) );
+}
+
+/*
+ * bool closingDown ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_CLOSINGDOWN )
+{
+   hb_retl( hbqt_par_QCoreApplication( 1 )->closingDown() );
+}
+
+/*
+ * int exec ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_EXEC )
+{
+   hb_retni( hbqt_par_QCoreApplication( 1 )->exec() );
+}
+
+/*
+ * void exit ( int returnCode = 0 )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_EXIT )
+{
+   hbqt_par_QCoreApplication( 1 )->exit( hb_parni( 2 ) );
+}
+
+/*
+ * void flush ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_FLUSH )
+{
+   hbqt_par_QCoreApplication( 1 )->flush();
+}
+
+/*
+ * bool hasPendingEvents ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_HASPENDINGEVENTS )
+{
+   hb_retl( hbqt_par_QCoreApplication( 1 )->hasPendingEvents() );
+}
+
+/*
+ * void installTranslator ( QTranslator * translationFile )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_INSTALLTRANSLATOR )
+{
+   hbqt_par_QCoreApplication( 1 )->installTranslator( hbqt_par_QTranslator( 2 ) );
+}
+
+/*
+ * QCoreApplication * instance ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_INSTANCE )
+{
+   hb_retptr( ( QCoreApplication* ) hbqt_par_QCoreApplication( 1 )->instance() );
+}
+
+/*
+ * QStringList libraryPaths ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_LIBRARYPATHS )
+{
+   hb_retptr( new QStringList( hbqt_par_QCoreApplication( 1 )->libraryPaths() ) );
+}
+
+/*
+ * QString organizationDomain ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_ORGANIZATIONDOMAIN )
+{
+   hb_retc( hbqt_par_QCoreApplication( 1 )->organizationDomain().toLatin1().data() );
+}
+
+/*
+ * QString organizationName ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_ORGANIZATIONNAME )
+{
+   hb_retc( hbqt_par_QCoreApplication( 1 )->organizationName().toLatin1().data() );
+}
+
+/*
+ * void postEvent ( QObject * receiver, QEvent * event )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_POSTEVENT )
+{
+   hbqt_par_QCoreApplication( 1 )->postEvent( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) );
+}
+
+/*
+ * void postEvent ( QObject * receiver, QEvent * event, int priority )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_POSTEVENT_1 )
+{
+   hbqt_par_QCoreApplication( 1 )->postEvent( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ), hb_parni( 4 ) );
+}
+
+/*
+ * void processEvents ( QEventLoop::ProcessEventsFlags flags = QEventLoop::AllEvents )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_PROCESSEVENTS )
+{
+   hbqt_par_QCoreApplication( 1 )->processEvents( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) );
+}
+
+/*
+ * void processEvents ( QEventLoop::ProcessEventsFlags flags, int maxtime )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_PROCESSEVENTS_1 )
+{
+   hbqt_par_QCoreApplication( 1 )->processEvents( ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ), hb_parni( 3 ) );
+}
+
+/*
+ * void removeLibraryPath ( const QString & path )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_REMOVELIBRARYPATH )
+{
+   hbqt_par_QCoreApplication( 1 )->removeLibraryPath( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void removePostedEvents ( QObject * receiver )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_REMOVEPOSTEDEVENTS )
+{
+   hbqt_par_QCoreApplication( 1 )->removePostedEvents( hbqt_par_QObject( 2 ) );
+}
+
+/*
+ * void removePostedEvents ( QObject * receiver, int eventType )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_REMOVEPOSTEDEVENTS_1 )
+{
+   hbqt_par_QCoreApplication( 1 )->removePostedEvents( hbqt_par_QObject( 2 ), hb_parni( 3 ) );
+}
+
+/*
+ * void removeTranslator ( QTranslator * translationFile )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_REMOVETRANSLATOR )
+{
+   hbqt_par_QCoreApplication( 1 )->removeTranslator( hbqt_par_QTranslator( 2 ) );
+}
+
+/*
+ * bool sendEvent ( QObject * receiver, QEvent * event )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_SENDEVENT )
+{
+   hb_retl( hbqt_par_QCoreApplication( 1 )->sendEvent( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) ) );
+}
+
+/*
+ * void sendPostedEvents ( QObject * receiver, int event_type )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_SENDPOSTEDEVENTS )
+{
+   hbqt_par_QCoreApplication( 1 )->sendPostedEvents( hbqt_par_QObject( 2 ), hb_parni( 3 ) );
+}
+
+/*
+ * void sendPostedEvents ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_SENDPOSTEDEVENTS_1 )
+{
+   hbqt_par_QCoreApplication( 1 )->sendPostedEvents();
+}
+
+/*
+ * void setApplicationName ( const QString & application )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_SETAPPLICATIONNAME )
+{
+   hbqt_par_QCoreApplication( 1 )->setApplicationName( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void setApplicationVersion ( const QString & version )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_SETAPPLICATIONVERSION )
+{
+   hbqt_par_QCoreApplication( 1 )->setApplicationVersion( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void setAttribute ( Qt::ApplicationAttribute attribute, bool on = true )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_SETATTRIBUTE )
+{
+   hbqt_par_QCoreApplication( 1 )->setAttribute( ( Qt::ApplicationAttribute ) hb_parni( 2 ), hb_parl( 3 ) );
+}
+
+/*
+ * void setLibraryPaths ( const QStringList & paths )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_SETLIBRARYPATHS )
+{
+   hbqt_par_QCoreApplication( 1 )->setLibraryPaths( *hbqt_par_QStringList( 2 ) );
+}
+
+/*
+ * void setOrganizationDomain ( const QString & orgDomain )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_SETORGANIZATIONDOMAIN )
+{
+   hbqt_par_QCoreApplication( 1 )->setOrganizationDomain( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void setOrganizationName ( const QString & orgName )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_SETORGANIZATIONNAME )
+{
+   hbqt_par_QCoreApplication( 1 )->setOrganizationName( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * bool startingUp ()
+ */
+HB_FUNC( QT_QCOREAPPLICATION_STARTINGUP )
+{
+   hb_retl( hbqt_par_QCoreApplication( 1 )->startingUp() );
+}
+
+/*
+ * bool testAttribute ( Qt::ApplicationAttribute attribute )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_TESTATTRIBUTE )
+{
+   hb_retl( hbqt_par_QCoreApplication( 1 )->testAttribute( ( Qt::ApplicationAttribute ) hb_parni( 2 ) ) );
+}
+
+/*
+ * QString translate ( const char * context, const char * sourceText, const char * disambiguation, Encoding encoding, int n )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_TRANSLATE )
+{
+   hb_retc( hbqt_par_QCoreApplication( 1 )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( QCoreApplication::Encoding ) hb_parni( 5 ), hb_parni( 6 ) ).toLatin1().data() );
+}
+
+/*
+ * QString translate ( const char * context, const char * sourceText, const char * disambiguation = 0, Encoding encoding = CodecForTr )
+ */
+HB_FUNC( QT_QCOREAPPLICATION_TRANSLATE_1 )
+{
+   hb_retc( hbqt_par_QCoreApplication( 1 )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNUM( 5 ) ? ( QCoreApplication::Encoding ) hb_parni( 5 ) : ( QCoreApplication::Encoding ) QCoreApplication::CodecForTr ) ).toLatin1().data() );
 }
 
 /*

@@ -80,10 +80,6 @@ class MyMainWindow : public QMainWindow
 public:
    MyMainWindow();
    virtual ~MyMainWindow();
-
-public:
-   void closeEvent( QCloseEvent *event );
-
 };
 
 /*----------------------------------------------------------------------*/

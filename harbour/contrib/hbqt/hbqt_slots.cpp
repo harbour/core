@@ -814,14 +814,9 @@ MyMainWindow::MyMainWindow()
    setFocusPolicy( Qt::StrongFocus );
    setAttribute( Qt::WA_DeleteOnClose );
 }
-
 MyMainWindow::~MyMainWindow( void )
 {
-}
-
-void MyMainWindow::closeEvent( QCloseEvent *event )
-{
-   event->accept();
+   destroy();
 }
 HB_FUNC( QT_MYMAINWINDOW )
 {
@@ -884,41 +879,20 @@ bool Events::eventFilter( QObject * obj, QEvent * event )
    if( found == 0 )
       return false;
 
-   PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject * ) obj );
-   PHB_ITEM pEvent  = hb_itemPutPtr( NULL, ( QEvent * ) event );
+   PHB_ITEM pObject = hb_itemPutPtr( NULL, obj );
+   PHB_ITEM pEvent  = hb_itemPutPtr( NULL, event );
 
    ret = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 2, pObject, pEvent ) );
 
    hb_itemRelease( pObject );
    hb_itemRelease( pEvent  );
 
-   switch( eventtype )
+   if( eventtype == QEvent::Close )
    {
-     case QEvent::Close:
-     {
-        if( ret )
-           event->accept();
-        else
-           event->ignore();
-        return true;
-     }
-     case QEvent::Enter:
-     case QEvent::Show:
-     case QEvent::Hide:
-     case QEvent::KeyPress:
-     case QEvent::KeyRelease:
-     case QEvent::Leave:
-     {
-        return true;
-     }
-     case QEvent::FocusIn:
-     case QEvent::FocusOut:
-     case QEvent::Paint:
-     {
-        return false;
-     }
-     default:
-        break;
+      if( ret == true )
+         event->accept();
+      else
+         event->ignore();
    }
    return true;
 }
@@ -973,6 +947,7 @@ HB_FUNC( QT_DISCONNECT_EVENT )
 {
    QObject * object    = ( QObject * ) hb_parptr( 1 );
    int       type      = hb_parni( 2 );
+   bool      bRet = false;
 
    char str[ 10 ];
    hb_snprintf( str, sizeof( str ), "%s%i%s", "P", type, "P" );    /* Make it a unique identifier */
@@ -985,8 +960,10 @@ HB_FUNC( QT_DISCONNECT_EVENT )
          hb_itemRelease( s_e->listBlock.at( i - 1 ) );
          s_e->listBlock[ i - 1 ] = NULL;
          s_e->listActv[ i - 1 ] = false;
+         bRet = true;
       }
    }
+   hb_retl( bRet );
 }
 
 /*----------------------------------------------------------------------*/
