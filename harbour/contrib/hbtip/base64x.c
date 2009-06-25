@@ -59,7 +59,7 @@ HB_FUNC( HB_BASE64 )
 
    if( len <= INT_MAX ) /* TOFIX */
    {
-      char * s = hb_parcx( 1 );
+      const char * s = hb_parcx( 1 );
       char * t, * p;
 
       t = p = ( char * ) hb_xgrab( ( 4 * ( ( len + 2 ) / 3 ) + 1 ) * sizeof( *t ) );

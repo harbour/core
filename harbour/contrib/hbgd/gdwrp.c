@@ -259,7 +259,7 @@ static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
 
 /* ---------------------------------------------------------------------------*/
 
-static void * LoadImageFromFile( char *szFile, int *sz )
+static void * LoadImageFromFile( const char *szFile, int *sz )
 {
    void * iptr;
    HB_FHANDLE fhandle;
@@ -303,7 +303,7 @@ static void SaveImageToHandle( HB_FHANDLE fhandle, void *iptr, int sz )
 
 /* ---------------------------------------------------------------------------*/
 
-static void SaveImageToFile( char *szFile, void *iptr, int sz )
+static void SaveImageToFile( const char *szFile, void *iptr, int sz )
 {
    HB_FHANDLE fhandle;
 
@@ -322,7 +322,7 @@ static void SaveImageToFile( char *szFile, void *iptr, int sz )
 static void GDImageCreateFrom( int nType )
 {
    gdImagePtr im = NULL;
-   char *szFile;
+   const char *szFile;
    int sz;
    void * iptr;
 
@@ -419,7 +419,6 @@ static void GDImageSaveTo( int nType )
      )
    {
       gdImagePtr im;
-      char *szFile;
       int sz = 0;
       void *iptr = NULL;
       HB_FHANDLE fhandle;
@@ -518,7 +517,7 @@ static void GDImageSaveTo( int nType )
       /* If i get a file name */
       if( hb_parinfo( 2 ) & HB_IT_STRING )
       {
-         szFile = hb_parcx( 2 );
+         const char *szFile = hb_parcx( 2 );
          SaveImageToFile( szFile, iptr, sz );
       }
 
@@ -2770,7 +2769,7 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
       int cx, cy;
       double radius, textRadius, fillPortion, points;
       char *top;
-      char *bottom;
+      const char *bottom;
       int fgcolor;
       char *font;
       char *err;
@@ -3939,7 +3938,7 @@ HB_FUNC( GDIMAGEINTERLACE ) /* void gdImageInterlace(gdImagePtr im, int interlac
 
 #if HB_GD_VERS( 2, 0, 33 )
 
-static void AddImageToFile( char *szFile, void *iptr, int sz )
+static void AddImageToFile( const char *szFile, void *iptr, int sz )
 {
    HB_FHANDLE fhandle;
 
@@ -3987,8 +3986,7 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
       /* Check if 2nd parameter is a file name or an handle */
       if( hb_parinfo( 2 ) & HB_IT_STRING )
       {
-         char *szFile;
-         szFile = hb_parcx( 2 );
+         const char *szFile = hb_parcx( 2 );
 
          SaveImageToFile( szFile, iptr, size );
       }
@@ -4054,8 +4052,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
       /* Check if 2nd parameter is a file name or an handle */
       if( hb_parinfo( 2 ) & HB_IT_STRING )
       {
-         char * szFile;
-         szFile = hb_parcx( 2 );
+         const char * szFile = hb_parcx( 2 );
 
          AddImageToFile( szFile, iptr, size );
       }
@@ -4104,8 +4101,7 @@ HB_FUNC( GDIMAGEGIFANIMEND )
       /* Check if 1st parameter is a file name or an handle */
       if( hb_parinfo( 1 ) & HB_IT_STRING )
       {
-         char * szFile;
-         szFile = hb_parcx( 1 );
+         const char * szFile = hb_parcx( 1 );
 
          AddImageToFile( szFile, iptr, size );
       }

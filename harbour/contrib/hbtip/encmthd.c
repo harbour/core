@@ -59,7 +59,7 @@
 
 HB_FUNC( TIPENCODERBASE64_ENCODE )
 {
-   char *cData = hb_parc( 1 );
+   const char *cData = hb_parc( 1 );
    char *cRet;
    int nLen = hb_parclen( 1 );
    int nPos = 0, nPosRet = 0;
@@ -188,7 +188,7 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
 
 HB_FUNC( TIPENCODERBASE64_DECODE )
 {
-   char *cData = hb_parc( 1 );
+   const char *cData = hb_parc( 1 );
    unsigned char *cRet;
    int nLen = hb_parclen( 1 );
    int nPos = 0, nPosRet = 0, nPosBlock = 0;
@@ -285,7 +285,7 @@ HB_FUNC( TIPENCODERBASE64_DECODE )
 
 HB_FUNC( TIPENCODERQP_ENCODE )
 {
-   char *cData = hb_parc( 1 );
+   const char *cData = hb_parc( 1 );
    int nLen = hb_parclen( 1 );
    char *cRet;
    unsigned char cElem;
@@ -359,7 +359,7 @@ HB_FUNC( TIPENCODERQP_ENCODE )
 
 HB_FUNC( TIPENCODERQP_DECODE )
 {
-   char *cData = hb_parc( 1 );
+   const char *cData = hb_parc( 1 );
    int nLen = hb_parclen( 1 );
    char *cRet;
    int nPos = 0, nPosRet = 0, nVal;
@@ -435,13 +435,13 @@ HB_FUNC( TIPENCODERQP_DECODE )
 
 HB_FUNC( TIPENCODERURL_ENCODE )
 {
-   char *cData = hb_parc( 1 );
+   const char *cData = hb_parc( 1 );
    int nLen = hb_parclen( 1 );
    BOOL bComplete = hb_parl( 2 );
    char *cRet;
    int nPos = 0, nPosRet = 0, nVal;
    char cElem;
-   
+
    if( hb_pcount() < 2 )
    {
       bComplete = TRUE;
@@ -502,7 +502,7 @@ HB_FUNC( TIPENCODERURL_ENCODE )
 
 HB_FUNC( TIPENCODERURL_DECODE )
 {
-   char *cData = hb_parc( 1 );
+   const char *cData = hb_parc( 1 );
    int nLen = hb_parclen( 1 );
    char *cRet;
    int nPos = 0, nPosRet = 0;

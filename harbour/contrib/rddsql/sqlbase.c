@@ -929,9 +929,9 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnec
 
       case RDDI_CONNECT:
       {
-         PSDDNODE   pNode = NULL;
-         ULONG      ul;
-         char*      pStr;
+         PSDDNODE    pNode = NULL;
+         ULONG       ul;
+         const char* pStr;
 
          /* Find free connection handle */
          for ( ul = 0; ul < s_ulConnectionCount; ul++ )

@@ -630,7 +630,7 @@ HB_FUNC( TIP_FILEMIMETYPE )
    if ( HB_IS_STRING( pFile ) )
    {
       /* decode the extension */
-      char *fname = hb_itemGetCPtr( pFile );
+      const char *fname = hb_itemGetCPtr( pFile );
       int iPos = strlen( fname )-1;
 
       while ( iPos >= 0 && fname[iPos] != '.' )
@@ -718,10 +718,10 @@ HB_FUNC( PSTRCOMPI )
 
    if( pString && pStart && pSubstr )
    {
-      char * pcBase = hb_itemGetCPtr( pString ) ;
-      char * pcSub  = hb_itemGetCPtr( pSubstr ) ;
-      ULONG uSublen = hb_itemGetCLen( pSubstr ) ;
-      ULONG uStart  = hb_itemGetNL( pStart ) ;
+      const char * pcBase = hb_itemGetCPtr( pString );
+      const char * pcSub  = hb_itemGetCPtr( pSubstr );
+      ULONG uSublen = hb_itemGetCLen( pSubstr );
+      ULONG uStart  = hb_itemGetNL( pStart );
 
       hb_retl( hb_strnicmp( pcBase + uStart - 1, pcSub, uSublen ) == 0 );
    }

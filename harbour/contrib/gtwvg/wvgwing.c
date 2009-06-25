@@ -282,7 +282,7 @@ static BYTE * PackedDibGetBitsPtr( BITMAPINFO * pPackedDib )
                                       PackedDibGetColorTableSize( pPackedDib );
 }
 #endif
-static HBITMAP hPrepareBitmap( char * szBitmapX, UINT uiBitmap,
+static HBITMAP hPrepareBitmap( const char * szBitmapX, UINT uiBitmap,
                                int iExpWidth, int iExpHeight,
                                BOOL bMap3Dcolors,
                                HWND hCtrl,
@@ -461,7 +461,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCEID )
 {
    HBITMAP hBitmap;
 
-   hBitmap = hPrepareBitmap( ( char * ) NULL, hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
+   hBitmap = hPrepareBitmap( NULL, hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
                              ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 2 );
 
    hb_retptr( ( void * ) hBitmap );

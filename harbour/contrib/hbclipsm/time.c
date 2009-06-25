@@ -98,7 +98,7 @@ HB_FUNC( TIMEDIFF )
 */
 HB_FUNC( TIMEISVALID )
 {
-   char * pszTime = hb_parc( 1 );
+   const char * pszTime = hb_parc( 1 );
    BOOL bRet = FALSE;
 
    if( pszTime )

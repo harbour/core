@@ -1441,7 +1441,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
    USHORT uiItems, uiCount, uiLen, uiDec;
    DBFIELDINFO dbFieldInfo;
    PHB_ITEM pFieldDesc;
-   char *szFieldType;
+   const char *szFieldType;
    int iData, iNameLen;
 
    HB_TRACE(HB_TR_DEBUG, ("adsCreateFields(%p, %p)", pArea, pStruct));
@@ -3579,7 +3579,7 @@ static HB_ERRCODE adsOrderListAdd( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
       /* 1001 and 7008 are standard ADS Open Errors that will usually be sharing issues */
       USHORT uiOsCOde = u32RetVal == 1001 || u32RetVal == 7008 ? 32 : 0;
       commonError( pArea, EG_OPEN, ( USHORT ) u32RetVal, uiOsCOde,
-                   ( char * ) hb_itemGetCPtr( pOrderInfo->atomBagName ),
+                   hb_itemGetCPtr( pOrderInfo->atomBagName ),
                    EF_CANDEFAULT, NULL );
       return HB_FAILURE;
    }
@@ -4372,7 +4372,7 @@ static HB_ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
       UNSIGNED16 bValidExpr = FALSE;
       UNSIGNED16 usResolve = ADS_RESOLVE_DYNAMIC ;  /*ADS_RESOLVE_IMMEDIATE ;get this from a SETting*/
       UNSIGNED32 u32RetVal = AE_INVALID_EXPRESSION;
-      char * pucFilter = hb_itemGetCPtr( pFilterInfo->abFilterText );
+      const char * pucFilter = hb_itemGetCPtr( pFilterInfo->abFilterText );
 
       AdsIsExprValid( pArea->hTable, ( UNSIGNED8 * ) pucFilter, &bValidExpr );
 
@@ -4600,7 +4600,9 @@ static HB_ERRCODE adsPutValueFile( ADSAREAP pArea, USHORT uiIndex, BYTE * szFile
 /* TODO: Use AdsDeleteFile() */
 static HB_ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex, ULONG ulConnect )
 {
-   char szFileName[ HB_PATH_MAX ], * szFile, * szExt;
+   char szFileName[ HB_PATH_MAX ];
+   const char * szFile;
+   const char * szExt;
    PHB_ITEM pFileExt = NULL;
    PHB_FNAME pFileName;
    BOOL fTable = FALSE, fResult = FALSE;
@@ -4686,7 +4688,8 @@ static HB_ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIn
 */
 static HB_ERRCODE adsExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex, ULONG ulConnect )
 {
-   char szFileName[ HB_PATH_MAX ], * szFile;
+   char szFileName[ HB_PATH_MAX ];
+   const char * szFile;
    PHB_ITEM pFileExt = NULL;
    PHB_FNAME pFileName;
    BOOL fTable = FALSE;

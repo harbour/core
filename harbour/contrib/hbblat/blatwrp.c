@@ -60,32 +60,17 @@
 
 HB_EXTERN_BEGIN
 
-extern int cSend( char * szCmd );
+extern int cSend( const char * szCmd );
 
 HB_EXTERN_END
 
 /* ---------------------------------------------------------------------------*/
 
-HB_FUNC( HB_BLATSEND ) // void BlatSend( char *szCmd )
+HB_FUNC( HB_BLATSEND )
 {
-   if ( hb_pcount() == 1 &&
-        hb_parinfo( 1 ) & HB_IT_STRING
-      )
-   {
-      char *szCmd;
-      int  iRet;
-
-      /* Retrieve command */
-      szCmd = hb_parcx( 1 );
-
-      /* Send command to blat */
-      iRet = cSend( szCmd );
-
-      /* Return result */
-      hb_retni( iRet );
-   }
+   if( HB_ISCHAR( 1 ) )
+      hb_retni( cSend( hb_parc( 1 ) ) );
    else
-      /* Parameter error */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 

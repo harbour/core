@@ -418,8 +418,8 @@ HB_FUNC( ADSSETEXACT )
 
 HB_FUNC( ADSBLOB2FILE )
 {
-   char * szFileName = hb_parcx( 1 );
-   char * szFieldName = hb_parcx( 2 );
+   const char * szFileName = hb_parcx( 1 );
+   const char * szFieldName = hb_parcx( 2 );
 
    if( strlen( szFileName ) &&
        strlen( szFieldName ) )
@@ -439,8 +439,8 @@ HB_FUNC( ADSBLOB2FILE )
 
 HB_FUNC( ADSFILE2BLOB )
 {
-   char * szFileName = hb_parcx( 1 );
-   char * szFieldName = hb_parcx( 2 );
+   const char * szFileName = hb_parcx( 1 );
+   const char * szFieldName = hb_parcx( 2 );
 
    if( strlen( szFileName ) &&
        strlen( szFieldName ) )
@@ -979,7 +979,7 @@ HB_FUNC( ADSGETFILTER )
 
 HB_FUNC( ADSENABLEENCRYPTION )
 {
-   char * pucPassword = hb_parcx( 1 );
+   const char * pucPassword = hb_parcx( 1 );
 
    if( strlen( pucPassword ) )
    {
@@ -1831,7 +1831,7 @@ HB_FUNC( ADSDDGETDATABASEPROPERTY )
 
          if( AdsDDGetDatabaseProperty( hConnect,
                                        ulProperty,
-                                       sBuffer,
+                                       ( VOID * ) sBuffer,
                                        &ulLength ) != AE_SUCCESS )
          {
             /* TODO: Better error handling. */
@@ -1859,7 +1859,7 @@ HB_FUNC( ADSDDGETDATABASEPROPERTY )
 
          AdsDDGetDatabaseProperty( hConnect,
                                    ulProperty,
-                                   &ulBuffer,
+                                   ( VOID * ) &ulBuffer,
                                    &ulLength );
          hb_retl( ulBuffer != 0 );
          break;
@@ -1874,7 +1874,7 @@ HB_FUNC( ADSDDGETDATABASEPROPERTY )
 
          AdsDDGetDatabaseProperty( hConnect,
                                    ulProperty,
-                                   &ulBuffer,
+                                   ( VOID * ) &ulBuffer,
                                    &ulLength );
          hb_retni( ulBuffer );
          break;
@@ -1903,7 +1903,7 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
       {
          ulRetVal = AdsDDSetDatabaseProperty( hConnect,
                                               ulProperty,
-                                              HB_IS_STRING( pParam ) ? hb_itemGetCPtr( pParam ) : NULL,
+                                              HB_IS_STRING( pParam ) ? ( VOID * ) hb_itemGetCPtr( pParam ) : NULL,
                                               ( UNSIGNED16 ) hb_itemGetCLen( pParam ) + 1 );
          break;
       }
@@ -1917,7 +1917,7 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
       {
          ulRetVal = AdsDDSetDatabaseProperty( hConnect,
                                               ulProperty,
-                                              hb_itemGetCPtr( pParam ),
+                                              ( VOID * ) hb_itemGetCPtr( pParam ),
                                               ( UNSIGNED16 ) hb_itemGetCLen( pParam ) + 1 );
          break;
       }
@@ -1939,7 +1939,7 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
          ulBuffer = ( UNSIGNED16 ) hb_itemGetL( pParam );
          ulRetVal = AdsDDSetDatabaseProperty( hConnect,
                                               ulProperty,
-                                              &ulBuffer,
+                                              ( VOID * ) &ulBuffer,
                                               sizeof( ulBuffer ) );
          break;
       }
@@ -1956,7 +1956,7 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
             ulBuffer = ( UNSIGNED16 ) hb_itemGetNI( pParam );
             ulRetVal = AdsDDSetDatabaseProperty( hConnect,
                                                  ulProperty,
-                                                 &ulBuffer,
+                                                 ( VOID * ) &ulBuffer,
                                                  sizeof( ulBuffer ) );
          }
          else
@@ -2175,8 +2175,8 @@ HB_FUNC( ADSDELETEFILE )
 HB_FUNC( ADSSTMTSETTABLEPASSWORD )
 {
 #if ADS_LIB_VERSION >= 600
-   char * pucTableName = hb_parcx( 1 );
-   char * pucPassword = hb_parcx( 2 );
+   const char * pucTableName = hb_parcx( 1 );
+   const char * pucPassword = hb_parcx( 2 );
 
    if( strlen( pucTableName ) &&
        strlen( pucPassword ) )

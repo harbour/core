@@ -86,11 +86,11 @@ HB_FUNC( FBCREATEDB )
       ISC_STATUS status[ 20 ];
       char create_db[ MAX_BUFFER ];
 
-      char *         db_name = hb_parcx( 1 );
-      char *         user    = hb_parcx( 2 );
-      char *         pass    = hb_parcx( 3 );
+      const char *   db_name = hb_parcx( 1 );
+      const char *   user    = hb_parcx( 2 );
+      const char *   pass    = hb_parcx( 3 );
       int            page    = hb_parni( 4 );
-      char *         charset = hb_parcx( 5 );
+      const char *   charset = hb_parcx( 5 );
       unsigned short dialect = ( unsigned short ) hb_parni( 6 );
 
       hb_snprintf( create_db, sizeof( create_db ),
@@ -110,9 +110,9 @@ HB_FUNC( FBCONNECT )
 {
    ISC_STATUS    status[ MAX_FIELDS ];
    isc_db_handle db = NULL;
-   char *        db_connect = hb_parcx( 1 );
-   char *        user = hb_parcx( 2 );
-   char *        passwd = hb_parcx( 3 );
+   const char *  db_connect = hb_parcx( 1 );
+   const char *  user = hb_parcx( 2 );
+   const char *  passwd = hb_parcx( 3 );
    char          dpb[ 128 ];
    short         i = 0;
    int           len;
@@ -202,7 +202,7 @@ HB_FUNC( FBEXECUTE )
 {
    isc_db_handle   db = ( isc_db_handle ) hb_parptr( 1 );
    isc_tr_handle   trans = NULL;
-   char          * exec_str = hb_parcx( 2 );
+   const char *    exec_str = hb_parcx( 2 );
    ISC_STATUS      status[ 20 ];
    ISC_STATUS      status_rollback[ 20 ];
    unsigned short  dialect = ( unsigned short ) hb_parni( 3 );

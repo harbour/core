@@ -596,12 +596,12 @@ typedef struct _tag_HB_GT_COLDEF
 
 POINT       HB_EXPORT   hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row );
 #if ! defined( HB_OS_WIN_CE )
-IPicture    HB_EXPORT * hb_wvt_gtLoadPicture( char * image );
+IPicture    HB_EXPORT * hb_wvt_gtLoadPicture( const char * image );
 IPicture    HB_EXPORT * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection );
 BOOL        HB_EXPORT   hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture );
 BOOL        HB_EXPORT   hb_wvt_gtDestroyPicture( IPicture * iPicture );
 #endif
-BOOL        HB_EXPORT   hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char * image );
+BOOL        HB_EXPORT   hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * image );
 void        HB_EXPORT   hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib );
 void        HB_EXPORT   hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib );
 

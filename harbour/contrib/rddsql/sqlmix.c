@@ -1914,7 +1914,7 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, USHORT uiIndex, LPDBORDERI
             }
             if ( hb_itemGetCLen( pOrderInfo->itmNewVal ) > 0 )
             {
-               char*   pForExpr = hb_itemGetCPtr( pOrderInfo->itmNewVal );
+               const char* pForExpr = hb_itemGetCPtr( pOrderInfo->itmNewVal );
 
                if ( SELF_COMPILE( (AREAP) pArea, (BYTE*) pForExpr ) == HB_SUCCESS )
                {

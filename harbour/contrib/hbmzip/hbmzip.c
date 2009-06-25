@@ -1499,8 +1499,8 @@ static int hb_zipDeleteFile( const char* szZipFile, const char* szFileMask )
 /*  HB_ZipDeleteFile( cZipFile, cFileMask ) --> nError */
 HB_FUNC( HB_ZIPDELETEFILE )
 {
-   char * szZipFile  = hb_parc( 1 );
-   char * szFileMask = hb_parc( 2 );
+   const char * szZipFile  = hb_parc( 1 );
+   const char * szFileMask = hb_parc( 2 );
 
    if( szZipFile && szFileMask )
       hb_retni( hb_zipDeleteFile( szZipFile, szFileMask ) );

@@ -189,7 +189,7 @@ IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection )
 
 /*--------------------------------------------------------------------*/
 
-IPicture * hb_wvt_gtLoadPicture( char * cImage )
+IPicture * hb_wvt_gtLoadPicture( const char * cImage )
 {
    IStream  *iStream;
    LPVOID   iPicture = NULL;
@@ -584,7 +584,7 @@ BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
 
 /*----------------------------------------------------------------------*/
 
-BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char * image )
+BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * image )
 {
 #if ! defined( HB_OS_WIN_CE )
   HGLOBAL  hGlobal;
