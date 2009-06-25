@@ -135,7 +135,8 @@ HB_FUNC( HB_COMPILEBUF )
 HB_FUNC( HB_COMPILEFROMBUF )
 {
    int iResult, argc;
-   char ** argv, * szSource;
+   char ** argv;
+   const char * szSource;
    BYTE * pBuffer;
    ULONG ulLen;
 

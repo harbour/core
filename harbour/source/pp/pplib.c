@@ -153,7 +153,7 @@ HB_FUNC( __PP_INIT )
 
    if( pState )
    {
-      char * szPath = hb_parc( 1 ), * szStdCh = hb_parc( 2 );
+      const char * szPath = hb_parc( 1 ), * szStdCh = hb_parc( 2 );
       PHB_ITEM ppItem;
 
       pStatePtr = ( PHB_PP_STATE * ) hb_gcAlloc( sizeof( PHB_PP_STATE ),
@@ -216,7 +216,7 @@ HB_FUNC( __PP_ADDRULE )
 
    if( pState )
    {
-      char * szText = hb_parc( 2 );
+      const char * szText = hb_parc( 2 );
       ULONG ulLen = hb_parclen( 2 );
 
       if( szText )

@@ -65,14 +65,14 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
                only. For a peace of mind, avoid using spaces, quotes
                in the name. You can leave it empty, in this case the
                results will be created under the current directory tree.
-             - With mingw, sh.exe (part of msys) mustn't be in the PATH.
+             - With mingw, sh.exe (part of MSYS) mustn't be in the PATH.
 
-   Windows with MinGW + msys
+   Windows with MinGW + MSYS
    -------------------------
-   (for plain MinGW *without* msys, which is the recommended way: see above)
+   (for plain MinGW *without* MSYS, which is the recommended way: see above)
 
-      Make sure to have msys and MinGW properly configured.
-      msys should be put in PATH *before* MinGW.
+      Make sure to have MSYS and MinGW properly configured.
+      MSYS should be put in PATH *before* MinGW.
 
       > set HB_INSTALL_PREFIX=<DIR>
       > sh make_gnu.sh install
@@ -149,7 +149,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_QT=C:\Qt\4.5.1\include
    HB_INC_SQLITE3=C:\sqlite3 (defaults to locally hosted version on win/os2)
 
-   NOTES: - For MinGW + msys and Cygwin you have to use forward slashes
+   NOTES: - For MinGW + MSYS and Cygwin you have to use forward slashes
             and also Cygwin drive notation for Cygwin.
           - Spaces in directory names aren't currently supported.
             (You can use short name alias on Windows platform, though)
@@ -348,7 +348,7 @@ EXAMPLES
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
 
-      --- MinGW GCC (make sure msys (sh.exe) isn't in the PATH)
+      --- MinGW GCC (make sure MSYS (sh.exe) isn't in the PATH)
       set PATH=C:\mingw\bin;%PATH%
       rem
       set HB_COMPILER=mingw
@@ -356,7 +356,7 @@ EXAMPLES
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
 
-      --- MinGW GCC + msys
+      --- MinGW GCC + MSYS
       set PATH=C:\msys\1.0.11\bin;%PATH%
       set PATH=C:\mingw\bin;%PATH%
       rem
@@ -477,7 +477,7 @@ EXAMPLES
 
       --8<--
       rem ; Add these *before* above sample scripts to configure 3rd party dependencies.
-      rem   For 'MinGW + msys' and Cygwin you'll have to use forward slashes and
+      rem   For 'MinGW + MSYS' and Cygwin you'll have to use forward slashes and
       rem   also Cygwin drive notation for Cygwin.
       set HB_INC_ADS=C:\ads\acesdk
       set HB_INC_ALLEGRO=C:\allegro\include
@@ -697,7 +697,7 @@ QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
           - You can access hbmk2 using absolute or relative paths, and
             it will work equally well:
                'C:\hb20\bin\hbmk2 hello.prg'
-          - GNU Make, msys, or any other extra tool is *not* needed
+          - GNU Make, MSYS, or any other extra tool is *not* needed
             to build a Harbour application with above methods.
 
 
