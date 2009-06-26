@@ -71,7 +71,7 @@ PROCEDURE BuildADialog()
 
    /* Create Application Window */
    oDlg := GuiStdDialog( 'Harbour - Xbase++ - QT Dialog [ Press "Q" to Exit ]' )
-   oDlg:close := {|| MsgBox( 'You can also close me by Pressing "Q"' ), .f. }
+   oDlg:close := {|| MsgBox( 'You can also close me by Pressing "Q"' ), .T. }
 
    SetAppWindow( oDlg )
 
@@ -675,7 +675,7 @@ FUNCTION Build_TreeView( oWnd )
       WorkAreaInfo( oTree, i )
    NEXT
 
-   RETURN
+   RETURN nil
 
    ** Build the tree structure for a work area
 

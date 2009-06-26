@@ -30,7 +30,7 @@ if not "%OS%" == "Windows_NT" goto END
 setlocal
 
 rem ; Dir setup
-set HB_INSTALL_BASE=%~dp0_hbinst
+set HB_INSTALL_BASE=%~dp0_pk
 set HB_INSTALL_PREFIX=%HB_INSTALL_BASE%\_w
 set HB_BIN_INSTALL=
 set HB_LIB_INSTALL=
