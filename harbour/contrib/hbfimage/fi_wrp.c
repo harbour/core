@@ -364,13 +364,13 @@ HB_FUNC( FI_LOADFROMMEM )
       int flags;
 
       /* Retrieve parameters */
-      fif      = (FREE_IMAGE_FORMAT) hb_parni( 1 );
+      fif      = ( FREE_IMAGE_FORMAT ) hb_parni( 1 );
       szImage  = ( const BYTE * ) hb_parcx( 2 );
       flags    = hb_parni( 3 );
 
       /* run function */
-      stream   = FreeImage_OpenMemory( szImage, hb_parclen(2) );
-      dib = FreeImage_LoadFromMemory(fif, stream, flags);
+      stream   = FreeImage_OpenMemory( ( BYTE * ) szImage, hb_parclen( 2 ) );
+      dib = FreeImage_LoadFromMemory( fif, stream, flags );
       FreeImage_CloseMemory( stream );
 
       /* return value */
@@ -884,7 +884,7 @@ HB_FUNC( FI_GETFILETYPEFROMMEM )
 
       /* Retrieve parameters */
       szImage = ( const BYTE * ) hb_parcx( 1 );
-      stream  = FreeImage_OpenMemory( szImage, hb_parclen(1) );
+      stream  = FreeImage_OpenMemory( ( BYTE * ) szImage, hb_parclen( 1 ) );
       size    = ( hb_parinfo( 2 ) & HB_IT_NUMERIC ? hb_parni( 1 ) : 0 );
 
       /* run function & return value */
@@ -921,7 +921,7 @@ HB_FUNC( FI_GETIMAGETYPE )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retni( FreeImage_GetImageType(dib) );
+      hb_retni( FreeImage_GetImageType( dib ) );
 
    }
    else
@@ -970,7 +970,7 @@ HB_FUNC( FI_GETBITS )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_GetBits(dib) );
+      hb_retptr( FreeImage_GetBits( dib ) );
    }
    else
    {
@@ -1042,7 +1042,7 @@ HB_FUNC( FI_GETCOLORSUSED )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retnl( FreeImage_GetColorsUsed(dib) );
+      hb_retnl( FreeImage_GetColorsUsed( dib ) );
 
    }
    else
@@ -1071,8 +1071,8 @@ HB_FUNC( FI_GETBPP )
       /* Retrieve parameters */
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
-      /* run function & return value*/
-      hb_retnl( FreeImage_GetBPP(dib) );
+      /* run function & return value */
+      hb_retnl( FreeImage_GetBPP( dib ) );
 
    }
    else
@@ -1102,7 +1102,7 @@ HB_FUNC( FI_GETWIDTH )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retnl( FreeImage_GetWidth(dib) );
+      hb_retnl( FreeImage_GetWidth( dib ) );
 
    }
    else
@@ -1132,7 +1132,7 @@ HB_FUNC( FI_GETHEIGHT )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retnl( FreeImage_GetHeight(dib) );
+      hb_retnl( FreeImage_GetHeight( dib ) );
 
    }
    else
@@ -1162,7 +1162,7 @@ HB_FUNC( FI_GETLINE )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retnl( FreeImage_GetLine(dib) );
+      hb_retnl( FreeImage_GetLine( dib ) );
 
    }
    else
@@ -1192,7 +1192,7 @@ HB_FUNC( FI_GETPITCH )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retnl( FreeImage_GetPitch(dib) );
+      hb_retnl( FreeImage_GetPitch( dib ) );
 
    }
    else
@@ -1222,7 +1222,7 @@ HB_FUNC( FI_GETDIBSIZE )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retnl( FreeImage_GetDIBSize(dib) );
+      hb_retnl( FreeImage_GetDIBSize( dib ) );
 
    }
    else
@@ -1252,7 +1252,7 @@ HB_FUNC( FI_GETPALETTE )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_GetPalette(dib) );
+      hb_retptr( FreeImage_GetPalette( dib ) );
    }
    else
    {
@@ -1281,7 +1281,7 @@ HB_FUNC( FI_GETDOTSPERMETERX )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retnl( FreeImage_GetDotsPerMeterX(dib) );
+      hb_retnl( FreeImage_GetDotsPerMeterX( dib ) );
 
    }
    else
@@ -1311,7 +1311,7 @@ HB_FUNC( FI_GETDOTSPERMETERY )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retnl( FreeImage_GetDotsPerMeterY(dib) );
+      hb_retnl( FreeImage_GetDotsPerMeterY( dib ) );
 
    }
    else
@@ -1410,7 +1410,7 @@ HB_FUNC( FI_GETINFOHEADER )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      bmpinfoheader = FreeImage_GetInfoHeader(dib);
+      bmpinfoheader = FreeImage_GetInfoHeader( dib );
 
       /*hb_retclenAdoptRaw( (char *) bmpinfoheader, sizeof( BITMAPINFOHEADER ) );*/
       hb_retptr( bmpinfoheader );
@@ -1444,7 +1444,7 @@ HB_FUNC( FI_GETINFO )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      bmpinfo = FreeImage_GetInfo(dib);
+      bmpinfo = FreeImage_GetInfo( dib );
 
       hb_retptr( bmpinfo );
    }
@@ -1475,7 +1475,7 @@ HB_FUNC( FI_GETCOLORTYPE )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retni( FreeImage_GetColorType(dib) );
+      hb_retni( FreeImage_GetColorType( dib ) );
 
    }
    else
@@ -1505,7 +1505,7 @@ HB_FUNC( FI_GETREDMASK )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retni( FreeImage_GetRedMask(dib) );
+      hb_retni( FreeImage_GetRedMask( dib ) );
 
    }
    else
@@ -1535,7 +1535,7 @@ HB_FUNC( FI_GETGREENMASK )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retni( FreeImage_GetGreenMask(dib) );
+      hb_retni( FreeImage_GetGreenMask( dib ) );
 
    }
    else
@@ -1565,7 +1565,7 @@ HB_FUNC( FI_GETBLUEMASK )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retni( FreeImage_GetBlueMask(dib) );
+      hb_retni( FreeImage_GetBlueMask( dib ) );
 
    }
    else
@@ -1595,7 +1595,7 @@ HB_FUNC( FI_GETTRANSPARENCYCOUNT )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retni( FreeImage_GetTransparencyCount(dib) );
+      hb_retni( FreeImage_GetTransparencyCount( dib ) );
 
    }
    else
@@ -1625,7 +1625,7 @@ HB_FUNC( FI_GETTRANSPARENCYTABLE )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_GetTransparencyTable(dib) );
+      hb_retptr( FreeImage_GetTransparencyTable( dib ) );
    }
    else
    {
@@ -1723,7 +1723,7 @@ HB_FUNC( FI_ISTRANSPARENT )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retl( FreeImage_IsTransparent(dib) );
+      hb_retl( FreeImage_IsTransparent( dib ) );
 
    }
    else
@@ -1753,7 +1753,7 @@ HB_FUNC( FI_HASBACKGROUNDCOLOR )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retl( FreeImage_HasBackgroundColor(dib) );
+      hb_retl( FreeImage_HasBackgroundColor( dib ) );
 
    }
    else
@@ -1863,7 +1863,7 @@ HB_FUNC( FI_GETICCPROFILE )
       dib     = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_GetICCProfile(dib) );
+      hb_retptr( FreeImage_GetICCProfile( dib ) );
    }
    else
    {
@@ -1930,7 +1930,7 @@ HB_FUNC( FI_DESTROYICCPROFILE )
       dib     = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      FreeImage_DestroyICCProfile(dib);
+      FreeImage_DestroyICCProfile( dib );
 
    }
    else
@@ -2005,7 +2005,7 @@ HB_FUNC( FI_CONVERTTO4BITS )
       dib    = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_ConvertTo4Bits(dib) );
+      hb_retptr( FreeImage_ConvertTo4Bits( dib ) );
    }
    else
    {
@@ -2035,7 +2035,7 @@ HB_FUNC( FI_CONVERTTO8BITS )
       dib    = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_ConvertTo8Bits(dib) );
+      hb_retptr( FreeImage_ConvertTo8Bits( dib ) );
    }
    else
    {
@@ -2065,7 +2065,7 @@ HB_FUNC( FI_CONVERTTOGREYSCALE )
       dib    = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_ConvertToGreyscale(dib) );
+      hb_retptr( FreeImage_ConvertToGreyscale( dib ) );
    }
    else
    {
@@ -2095,7 +2095,7 @@ HB_FUNC( FI_CONVERTTO16BITS555 )
       dib    = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_ConvertTo16Bits555(dib) );
+      hb_retptr( FreeImage_ConvertTo16Bits555( dib ) );
    }
    else
    {
@@ -2125,7 +2125,7 @@ HB_FUNC( FI_CONVERTTO16BITS565 )
       dib    = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_ConvertTo16Bits565(dib) );
+      hb_retptr( FreeImage_ConvertTo16Bits565( dib ) );
    }
    else
    {
@@ -2155,7 +2155,7 @@ HB_FUNC( FI_CONVERTTO24BITS )
       dib    = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_ConvertTo24Bits(dib) );
+      hb_retptr( FreeImage_ConvertTo24Bits( dib ) );
    }
    else
    {
@@ -2185,7 +2185,7 @@ HB_FUNC( FI_CONVERTTO32BITS )
       dib    = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_ConvertTo32Bits(dib) );
+      hb_retptr( FreeImage_ConvertTo32Bits( dib ) );
    }
    else
    {
@@ -2256,7 +2256,7 @@ HB_FUNC( FI_DITHER )
       algorithm = ( FREE_IMAGE_DITHER ) hb_parni( 2 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_Dither(dib, algorithm) );
+      hb_retptr( FreeImage_Dither( dib, algorithm ) );
    }
    else
    {
@@ -2291,7 +2291,7 @@ HB_FUNC( FI_CONVERTTORGBF )
       dib    = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_ConvertToRGBF(dib) );
+      hb_retptr( FreeImage_ConvertToRGBF( dib ) );
    }
    else
    {
@@ -2323,7 +2323,7 @@ HB_FUNC( FI_CONVERTTOSTANDARDTYPE )
       scale_linear = ( hb_parinfo( 2 ) & HB_IT_LOGICAL ) ? hb_parl( 2 ) : TRUE;
 
       /* run function & return value */
-      hb_retptr( FreeImage_ConvertToStandardType(dib, scale_linear) );
+      hb_retptr( FreeImage_ConvertToStandardType( dib, scale_linear ) );
    }
    else
    {
@@ -2358,7 +2358,7 @@ HB_FUNC( FI_CONVERTTOTYPE )
       scale_linear = ( hb_parinfo( 3 ) & HB_IT_LOGICAL ) ? hb_parl( 3 ) : TRUE;
 
       /* run function & return value */
-      hb_retptr( FreeImage_ConvertToType(dib, dst_type, scale_linear) );
+      hb_retptr( FreeImage_ConvertToType( dib, dst_type, scale_linear ) );
    }
    else
    {
@@ -2455,7 +2455,7 @@ HB_FUNC( FI_ROTATECLASSIC )
       angle = hb_parnd( 2 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_RotateClassic(dib, angle) );
+      hb_retptr( FreeImage_RotateClassic( dib, angle ) );
    }
    else
    {
@@ -2498,7 +2498,7 @@ HB_FUNC( FI_ROTATEEX )
       use_mask = hb_parl( 7 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_RotateEx(dib, angle, x_shift, y_shift, x_origin, y_origin, use_mask) );
+      hb_retptr( FreeImage_RotateEx( dib, angle, x_shift, y_shift, x_origin, y_origin, use_mask ) );
    }
    else
    {
@@ -2529,7 +2529,7 @@ HB_FUNC( FI_FLIPHORIZONTAL )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retl( FreeImage_FlipHorizontal(dib) );
+      hb_retl( FreeImage_FlipHorizontal( dib ) );
 
    }
    else
@@ -2559,7 +2559,7 @@ HB_FUNC( FI_FLIPVERTICAL )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retl( FreeImage_FlipVertical(dib) );
+      hb_retl( FreeImage_FlipVertical( dib ) );
 
    }
    else
@@ -2605,7 +2605,7 @@ HB_FUNC( FI_RESCALE )
       filter     = ( FREE_IMAGE_FILTER ) hb_parni( 4 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_Rescale(dib, dst_width, dst_height, filter) );
+      hb_retptr( FreeImage_Rescale( dib, dst_width, dst_height, filter ) );
    }
    else
    {
@@ -2646,7 +2646,7 @@ HB_FUNC( FI_ADJUSTGAMMA )
       gamma = hb_parnd( 2 );
 
       /* run function & return value */
-      hb_retl( FreeImage_AdjustGamma(dib, gamma) );
+      hb_retl( FreeImage_AdjustGamma( dib, gamma ) );
 
    }
    else
@@ -2680,7 +2680,7 @@ HB_FUNC( FI_ADJUSTBRIGHTNESS )
       percentage = hb_parnd( 2 );
 
       /* run function & return value */
-      hb_retl( FreeImage_AdjustBrightness(dib, percentage) );
+      hb_retl( FreeImage_AdjustBrightness( dib, percentage ) );
 
    }
    else
@@ -2714,7 +2714,7 @@ HB_FUNC( FI_ADJUSTCONTRAST )
       percentage = hb_parnd( 2 );
 
       /* run function & return value */
-      hb_retl( FreeImage_AdjustContrast(dib, percentage) );
+      hb_retl( FreeImage_AdjustContrast( dib, percentage ) );
 
    }
    else
@@ -2745,7 +2745,7 @@ HB_FUNC( FI_INVERT )
       dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function & return value */
-      hb_retl( FreeImage_Invert(dib) );
+      hb_retl( FreeImage_Invert( dib ) );
 
    }
    else
@@ -2787,7 +2787,7 @@ HB_FUNC( FI_GETCHANNEL )
       channel = ( FREE_IMAGE_COLOR_CHANNEL ) hb_parni( 2 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_GetChannel(dib, channel) );
+      hb_retptr( FreeImage_GetChannel( dib, channel ) );
    }
    else
    {
@@ -2834,7 +2834,7 @@ HB_FUNC( FI_COPY )
       bottom = hb_parni( 5 );
 
       /* run function & return value */
-      hb_retptr( FreeImage_Copy(dib, left, top, right, bottom) );
+      hb_retptr( FreeImage_Copy( dib, left, top, right, bottom ) );
    }
    else
    {
@@ -2875,7 +2875,7 @@ HB_FUNC( FI_PASTE )
       alpha = hb_parni( 5 );
 
       /* run function & return value */
-      hb_retl( FreeImage_Paste(dst, src, left, top, alpha) );
+      hb_retl( FreeImage_Paste( dst, src, left, top, alpha ) );
 
    }
    else

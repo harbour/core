@@ -2715,7 +2715,7 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       }
 
       /* Write string */
-      err = gdImageStringFTEx(im, &aRect[0], fg, fontname, ptsize, angle, x, y, string, ( !( flags == 0 ) ? &extra : 0 ));
+      err = gdImageStringFTEx(im, &aRect[0], fg, ( char * ) fontname, ptsize, angle, x, y, ( char * ) string, ( !( flags == 0 ) ? &extra : 0 ));
       if( !( err ) )
       {
          /* Save in array the correct text rectangle dimensions */
@@ -2806,7 +2806,7 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
       fgcolor = hb_parni( 11 );
 
       /* Write string */
-      err = gdImageStringFTCircle(im, cx, cy, radius, textRadius, fillPortion, font, points, top, bottom, fgcolor);
+      err = gdImageStringFTCircle(im, cx, cy, radius, textRadius, fillPortion, ( char * ) font, points, ( char * ) top, ( char * ) bottom, fgcolor);
       hb_retc( err );
 
    }
