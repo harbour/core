@@ -81,7 +81,7 @@ ADSHANDLE hb_ads_hConnect = 0;
 
 BOOL hb_ads_bOEM = FALSE;
 
-char * hb_adsOemToAnsi( char * pcString, ULONG ulLen )
+char * hb_adsOemToAnsi( const char * pcString, ULONG ulLen )
 {
    if( hb_ads_bOEM )
    {
@@ -90,10 +90,10 @@ char * hb_adsOemToAnsi( char * pcString, ULONG ulLen )
       pszDst[ ulLen ] = '\0';
       return pszDst;
    }
-   return pcString;
+   return ( char * ) pcString;
 }
 
-char * hb_adsAnsiToOem( char * pcString, ULONG ulLen )
+char * hb_adsAnsiToOem( const char * pcString, ULONG ulLen )
 {
    if( hb_ads_bOEM )
    {
@@ -102,7 +102,7 @@ char * hb_adsAnsiToOem( char * pcString, ULONG ulLen )
       pszDst[ ulLen ] = '\0';
       return pszDst;
    }
-   return pcString;
+   return ( char * ) pcString;
 }
 
 void hb_adsOemAnsiFree( char * pcString )
@@ -421,8 +421,7 @@ HB_FUNC( ADSBLOB2FILE )
    const char * szFileName = hb_parcx( 1 );
    const char * szFieldName = hb_parcx( 2 );
 
-   if( strlen( szFileName ) &&
-       strlen( szFieldName ) )
+   if( *szFileName && *szFieldName )
    {
       ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
@@ -442,8 +441,7 @@ HB_FUNC( ADSFILE2BLOB )
    const char * szFileName = hb_parcx( 1 );
    const char * szFieldName = hb_parcx( 2 );
 
-   if( strlen( szFileName ) &&
-       strlen( szFieldName ) )
+   if( *szFileName && *szFieldName )
    {
       ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
@@ -981,7 +979,7 @@ HB_FUNC( ADSENABLEENCRYPTION )
 {
    const char * pucPassword = hb_parcx( 1 );
 
-   if( strlen( pucPassword ) )
+   if( *pucPassword )
    {
       ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
@@ -1223,7 +1221,7 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
             DBOPENINFO pInfo;
 
             memset( &pInfo, 0, sizeof( DBOPENINFO ) );
-            pInfo.abName = ( BYTE * ) "";
+            pInfo.abName = "";
             pInfo.fReadonly = TRUE;
             pArea->hTable = hCursor;
             SELF_OPEN( ( AREAP ) pArea, &pInfo );
@@ -1297,7 +1295,7 @@ HB_FUNC( ADSEXECUTESQL )
             DBOPENINFO pInfo;
 
             memset( &pInfo, 0, sizeof( DBOPENINFO ) );
-            pInfo.abName = ( BYTE * ) "";
+            pInfo.abName = "";
             pInfo.fReadonly = TRUE;
             pArea->hTable = hCursor;
             SELF_OPEN( ( AREAP ) pArea, &pInfo );
@@ -2178,8 +2176,7 @@ HB_FUNC( ADSSTMTSETTABLEPASSWORD )
    const char * pucTableName = hb_parcx( 1 );
    const char * pucPassword = hb_parcx( 2 );
 
-   if( strlen( pucTableName ) &&
-       strlen( pucPassword ) )
+   if( *pucTableName && *pucPassword )
    {
       ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 

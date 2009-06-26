@@ -188,7 +188,7 @@ HB_FUNC( HB_ISREGEX )
 
 HB_FUNC( HB_ATX )
 {
-   char * pszString;
+   const char * pszString;
    ULONG ulLen, ulStart, ulEnd;
    PHB_REGEX pRegEx;
    PHB_ITEM pString;
@@ -250,7 +250,7 @@ static BOOL hb_regex( int iRequest )
    int i, iMatches, iMaxMatch;
    BOOL fResult = FALSE;
    PHB_REGEX pRegEx;
-   char * pszString;
+   const char * pszString;
    ULONG ulLen;
 
    pString = hb_param( 2, HB_IT_STRING );

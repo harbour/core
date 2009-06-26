@@ -116,7 +116,7 @@ HB_FUNC( TABEXPAND )
       size_t sRetLen;
       size_t sTabWidth = 0;
       char cFill, cTab, cCR;
-      char *pcNewLine;
+      const char *pcNewLine;
       size_t sNewLineLen;
       int iIgnore141;
       size_t sIndex, sLineIndex;
@@ -317,7 +317,7 @@ HB_FUNC( TABPACK )
       size_t sRetLen;
       size_t sTabWidth = 0;
       char cFill, cTab, cCR;
-      char *pcNewLine;
+      const char *pcNewLine;
       size_t sNewLineLen;
       int iIgnore141;
       size_t sIndex, sTabIndex, sFillCount;

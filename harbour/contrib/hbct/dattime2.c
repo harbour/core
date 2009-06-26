@@ -141,49 +141,22 @@ static int ct_doy( LONG lDate )
  */
 HB_FUNC( CTODOW )
 {
-   if( HB_ISCHAR( 1 ) )
+   ULONG ulLen = hb_parclen( 1 );
+   int iDow = 0;
+
+   if( ulLen )
    {
-      char *szParam = hb_parc( 1 ), *szDow;
-      int iDow, iEqual;
+      const char *szParam = hb_parc( 1 );
 
-      hb_strupr( szParam );
-
-      for( iDow = 0; iDow < 7; iDow++ )
+      for( iDow = 7; iDow > 0; iDow-- )
       {
-         szDow = hb_strdup( ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + iDow ) );
-         hb_strupr( szDow );
-
-         if( hb_setGetL( HB_SET_EXACT ) )
-         {
-            iEqual = ( strlen( szDow ) == strlen( szParam ) )
-               && !memcmp( szDow, szParam, strlen( szParam ) );
-         }
-         else
-         {
-            iEqual = !memcmp( szDow, szParam, strlen( szParam ) );
-         }
-
-         hb_xfree( szDow );
-         if( iEqual )
-         {
+         const char * szDow = hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + iDow - 1 );
+         if( hb_strnicmp( szDow, szParam, ulLen ) == 0 )
             break;
-         }
       }
-
-      if( iDow == 7 )
-      {
-         hb_retni( 0 );
-      }
-      else
-      {
-         hb_retnl( iDow + 1 );
-      }
-
    }
-   else
-   {
-      hb_retni( 0 );
-   }
+
+   hb_retnl( iDow );
 }
 
 
@@ -216,46 +189,21 @@ HB_FUNC( CTODOW )
  */
 HB_FUNC( CTOMONTH )
 {
-   if( HB_ISCHAR( 1 ) )
+   ULONG ulLen = hb_parclen( 1 );
+   int iMonth = 0;
+
+   if( ulLen )
    {
-      char *szParam = hb_parc( 1 ), *szMonth;
-      int iMonth, iEqual;
-
-      hb_strupr( szParam );
-
-      for( iMonth = 1; iMonth <= 12; iMonth++ )
+      const char *szParam = hb_parc( 1 );
+      for( iMonth = 12; iMonth > 0; iMonth-- )
       {
-         szMonth = hb_strdup( ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 ) );
-         hb_strupr( szMonth );
-
-         if( hb_setGetL( HB_SET_EXACT ) )
-         {
-            iEqual = ( strlen( szMonth ) == strlen( szParam ) )
-               && !memcmp( szMonth, szParam, strlen( szParam ) );
-         }
-         else
-         {
-            iEqual = !memcmp( szMonth, szParam, strlen( szParam ) );
-         }
-
-         hb_xfree( szMonth );
-         if( iEqual )
-         {
+         const char * szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
+         if( hb_strnicmp( szMonth, szParam, ulLen ) == 0 )
             break;
-         }
       }
-
-      if( iMonth > 12 )
-      {
-         iMonth = 0;
-      }
-      hb_retnl( iMonth );
-
    }
-   else
-   {
-      hb_retni( 0 );
-   }
+
+   hb_retnl( iMonth );
 }
 
 

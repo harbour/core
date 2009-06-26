@@ -131,7 +131,7 @@ PHB_REGEX hb_regexGet( PHB_ITEM pRegExItm, int iFlags )
       else if( HB_IS_STRING( pRegExItm ) )
       {
          ULONG ulLen = hb_itemGetCLen( pRegExItm );
-         char * szRegEx = hb_itemGetCPtr( pRegExItm );
+         const char * szRegEx = hb_itemGetCPtr( pRegExItm );
          if( ulLen > 0 )
             pRegEx = hb_regexCompile( szRegEx, ulLen, iFlags );
       }

@@ -61,7 +61,7 @@
 
 static BOOL hb_sxSemName( char * szFileName )
 {
-   char * szName = hb_parc( 1 );
+   const char * szName = hb_parc( 1 );
    BOOL fResult = FALSE;
 
    if( szName && szName[0] )
@@ -97,14 +97,14 @@ static BOOL hb_sxSemName( char * szFileName )
    return fResult;
 }
 
-static HB_FHANDLE hb_sxSemOpen( BYTE * szFileName, BOOL * pfNewFile )
+static HB_FHANDLE hb_sxSemOpen( char * szFileName, BOOL * pfNewFile )
 {
    HB_FHANDLE hFile;
    int i = 0;
 
    do
    {
-      hFile = hb_fsExtOpen( szFileName, ( BYTE * ) ".sem",
+      hFile = hb_fsExtOpen( szFileName, ".sem",
                             FO_READWRITE | FO_EXCLUSIVE | FXO_DEFAULTS |
                             FXO_SHARELOCK | FXO_COPYNAME, NULL, NULL );
       if( hFile != FS_ERROR )
@@ -112,7 +112,7 @@ static HB_FHANDLE hb_sxSemOpen( BYTE * szFileName, BOOL * pfNewFile )
 
       if( pfNewFile )
       {
-         hFile = hb_fsExtOpen( szFileName, ( BYTE * ) ".sem", FXO_UNIQUE |
+         hFile = hb_fsExtOpen( szFileName, ".sem", FXO_UNIQUE |
                                FO_READWRITE | FO_EXCLUSIVE | FXO_DEFAULTS |
                                FXO_SHARELOCK | FXO_COPYNAME, NULL, NULL );
          if( hFile != FS_ERROR )
@@ -138,11 +138,12 @@ static HB_FHANDLE hb_sxSemOpen( BYTE * szFileName, BOOL * pfNewFile )
 
 HB_FUNC( SX_MAKESEM )
 {
-   BYTE szFileName[HB_PATH_MAX], buffer[2];
+   char szFileName[HB_PATH_MAX];
+   BYTE buffer[2];
    int iUsers = -1;
    BOOL fError = FALSE, fNewFile = FALSE;
 
-   if( hb_sxSemName( ( char * ) szFileName ) )
+   if( hb_sxSemName( szFileName ) )
    {
       HB_FHANDLE hFile = hb_sxSemOpen( szFileName, &fNewFile );
       if( hFile != FS_ERROR )
@@ -175,10 +176,11 @@ HB_FUNC( SX_MAKESEM )
 
 HB_FUNC( SX_KILLSEM )
 {
-   BYTE szFileName[HB_PATH_MAX], buffer[2];
+   char szFileName[HB_PATH_MAX];
+   BYTE buffer[2];
    int iUsers = -1;
 
-   if( hb_sxSemName( ( char * ) szFileName ) )
+   if( hb_sxSemName( szFileName ) )
    {
       HB_FHANDLE hFile = hb_sxSemOpen( szFileName, NULL );
       if( hFile != FS_ERROR )
@@ -201,10 +203,10 @@ HB_FUNC( SX_KILLSEM )
 
 HB_FUNC( SX_ISSEM )
 {
-   BYTE szFileName[HB_PATH_MAX];
+   char szFileName[HB_PATH_MAX];
    HB_FHANDLE hFile = FS_ERROR;
 
-   if( hb_sxSemName( ( char * ) szFileName ) )
+   if( hb_sxSemName( szFileName ) )
    {
       hFile = hb_sxSemOpen( szFileName, NULL );
       if( hFile != FS_ERROR )

@@ -86,5 +86,5 @@ End
 
 HB_FUNC(FT_MKDIR)
 {
-   hb_retl( HB_ISCHAR( 1 ) && hb_fsMkDir( ( BYTE * ) hb_parc(1) ) );
+   hb_retl( HB_ISCHAR( 1 ) && hb_fsMkDir( hb_parc(1) ) );
 }

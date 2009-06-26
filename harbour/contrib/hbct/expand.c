@@ -59,7 +59,7 @@ HB_FUNC( EXPAND )
 
    if( ulLen > 0 )
    {
-      char * szText = hb_parc( 1 );
+      const char * szText = hb_parc( 1 );
       if( ulLen == 1 )
          hb_retclen( szText, 1 );
       else

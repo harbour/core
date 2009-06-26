@@ -53,57 +53,55 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-BOOL hb_fsFile( BYTE * pszFilename )
+BOOL hb_fsFile( const char * pszFilename )
 {
    PHB_FFIND ffind;
-   BOOL fFree;
+   char * pszFree;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsFile(%s)", ( char * ) pszFilename));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsFile(%s)", pszFilename));
 
-   pszFilename = hb_fsNameConv( pszFilename, &fFree );
+   pszFilename = hb_fsNameConv( pszFilename, &pszFree );
 
-   if( ( ffind = hb_fsFindFirst( ( char * ) pszFilename, HB_FA_ALL ) ) != NULL )
+   if( ( ffind = hb_fsFindFirst( pszFilename, HB_FA_ALL ) ) != NULL )
    {
       hb_fsFindClose( ffind );
-      if( fFree )
-         hb_xfree( pszFilename );
+      if( pszFree )
+         hb_xfree( pszFree );
       return TRUE;
    }
 
-   if( fFree )
-      hb_xfree( pszFilename );
+   if( pszFree )
+      hb_xfree( pszFree );
 
    return FALSE;
 }
 
-BOOL hb_fsIsDirectory( BYTE * pszFilename )
+BOOL hb_fsIsDirectory( const char * pszFilename )
 {
-   BOOL bResult = FALSE, fFree;
+   BOOL bResult = FALSE;
    PHB_FFIND ffind;
+   char * pszFree = NULL;
    int iLen;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDirectory(%s)", ( char * ) pszFilename));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDirectory(%s)", pszFilename));
 
-   pszFilename = hb_fsNameConv( pszFilename, &fFree );
+   pszFilename = hb_fsNameConv( pszFilename, &pszFree );
 
-   iLen = strlen( ( char * ) pszFilename );
+   iLen = strlen( pszFilename );
    while( iLen && strchr( HB_OS_PATH_DELIM_CHR_LIST, pszFilename[ iLen - 1 ] ) )
       --iLen;
 
    if( pszFilename[ iLen ] )
    {
-      if( fFree )
-         pszFilename[ iLen ] = '\0';
+      if( pszFree )
+         pszFree[ iLen ] = '\0';
       else
-      {
-         pszFilename = ( BYTE * ) hb_strndup( ( char * ) pszFilename, iLen );
-         fFree = TRUE;
-      }
+         pszFilename = pszFree = hb_strndup( pszFilename, iLen );
    }
 
    if( iLen && iLen <= ( HB_PATH_MAX - 1 ) )
    {
-      if( ( ffind = hb_fsFindFirst( ( char * ) pszFilename, HB_FA_DIRECTORY ) ) != NULL )
+      if( ( ffind = hb_fsFindFirst( pszFilename, HB_FA_DIRECTORY ) ) != NULL )
       {
          if( ( ffind->attr & HB_FA_DIRECTORY ) == HB_FA_DIRECTORY )
             bResult = TRUE;
@@ -111,8 +109,8 @@ BOOL hb_fsIsDirectory( BYTE * pszFilename )
       }
    }
 
-   if( fFree )
-      hb_xfree( pszFilename );
+   if( pszFree )
+      hb_xfree( pszFree );
 
    return bResult;
 }

@@ -286,7 +286,7 @@ int matherr( struct exception *err )
          break;
    }
 
-   pExc->funcname = ( char * ) err->name;    /* (char *) Avoid warning in DJGPP */
+   pExc->funcname = err->name;
    pExc->arg1 = err->arg1;
    pExc->arg2 = err->arg2;
    pExc->retval = err->retval;

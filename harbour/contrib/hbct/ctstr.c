@@ -75,8 +75,8 @@ int ct_str_exit( void )
 /* -------------------------- */
 /* search for exact substring */
 /* -------------------------- */
-char *ct_at_exact_forward( char *pcString, size_t sStrLen,
-                           char *pcMatch, size_t sMatchLen, size_t * psMatchStrLen )
+const char *ct_at_exact_forward( const char *pcString, size_t sStrLen,
+                                 const char *pcMatch, size_t sMatchLen, size_t * psMatchStrLen )
 {
 
    size_t sPos;
@@ -105,12 +105,12 @@ char *ct_at_exact_forward( char *pcString, size_t sStrLen,
 /* ------------------------------------------------ */
 /* search for exact substring in backward direction */
 /* ------------------------------------------------ */
-char *ct_at_exact_backward( char *pcString, size_t sStrLen,
-                            char *pcMatch, size_t sMatchLen, size_t * psMatchStrLen )
+const char *ct_at_exact_backward( const char *pcString, size_t sStrLen,
+                                  const char *pcMatch, size_t sMatchLen, size_t * psMatchStrLen )
 {
 
    size_t sIndex;
-   char *pcRet;
+   const char *pcRet;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_exact_backward (\"%s\", %u, \"%s\", %u, %p)",
                             pcString, sStrLen, pcMatch, sMatchLen, psMatchStrLen ) );
@@ -139,13 +139,13 @@ char *ct_at_exact_backward( char *pcString, size_t sStrLen,
 /* ----------------------------------- */
 /* search for substring using wildcard */
 /* ----------------------------------- */
-char *ct_at_wildcard_forward( char *pcString, size_t sStrLen,
-                              char *pcMatch, size_t sMatchLen,
-                              char cWildCard, size_t * psMatchStrLen )
+const char *ct_at_wildcard_forward( const char *pcString, size_t sStrLen,
+                                    const char *pcMatch, size_t sMatchLen,
+                                    char cWildCard, size_t * psMatchStrLen )
 {
 
    size_t sIndex;
-   char *pcRet, *pcStop;
+   const char *pcRet, *pcStop;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_wildcard_forward (\"%s\", %u, \"%s\", %u, \'%c\', %p)",
                             pcString, sStrLen, pcMatch, sMatchLen, cWildCard, psMatchStrLen ) );
@@ -178,13 +178,13 @@ char *ct_at_wildcard_forward( char *pcString, size_t sStrLen,
 /* --------------------------------------------------------- */
 /* search for substring using wildcard in backward direction */
 /* --------------------------------------------------------- */
-char *ct_at_wildcard_backward( char *pcString, size_t sStrLen,
-                               char *pcMatch, size_t sMatchLen,
-                               char cWildCard, size_t * psMatchStrLen )
+const char *ct_at_wildcard_backward( const char *pcString, size_t sStrLen,
+                                     const char *pcMatch, size_t sMatchLen,
+                                     char cWildCard, size_t * psMatchStrLen )
 {
 
    size_t sIndex;
-   char *pcRet;
+   const char *pcRet;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_wildcard_backward (\"%s\", %u, \"%s\", %u, \'%c\', %p)",
                             pcString, sStrLen, pcMatch, sMatchLen, cWildCard, psMatchStrLen ) );
@@ -217,11 +217,11 @@ char *ct_at_wildcard_backward( char *pcString, size_t sStrLen,
 /* ------------------------------- */
 /* search for character from a set */
 /* ------------------------------- */
-char *ct_at_charset_forward( char *pcString, size_t sStrLen,
-                             char *pcCharSet, size_t sCharSetLen, size_t * psMatchedCharPos )
+const char *ct_at_charset_forward( const char *pcString, size_t sStrLen,
+                                   const char *pcCharSet, size_t sCharSetLen, size_t * psMatchedCharPos )
 {
 
-   char *pcRet, *pcSet, *pcStop1, *pcStop2;
+   const char *pcRet, *pcSet, *pcStop1, *pcStop2;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_charset_forward (\"%s\", %u, \"%s\", %u, %p)",
                             pcString, sStrLen, pcCharSet, sCharSetLen, psMatchedCharPos ) );
@@ -251,11 +251,11 @@ char *ct_at_charset_forward( char *pcString, size_t sStrLen,
 /* ----------------------------------------------------- */
 /* search for character from a set in backward direction */
 /* ----------------------------------------------------- */
-char *ct_at_charset_backward( char *pcString, size_t sStrLen,
-                              char *pcCharSet, size_t sCharSetLen, size_t * psMatchedCharPos )
+const char *ct_at_charset_backward( const char *pcString, size_t sStrLen,
+                                    const char *pcCharSet, size_t sCharSetLen, size_t * psMatchedCharPos )
 {
 
-   char *pcRet, *pcSet, *pcStop;
+   const char *pcRet, *pcSet, *pcStop;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_charset_backward (\"%s\", %u, \"%s\", %u, %p)",
                             pcString, sStrLen, pcCharSet, sCharSetLen, psMatchedCharPos ) );
@@ -601,7 +601,7 @@ HB_FUNC( SETATLIKE )
       }
       else
       {
-         char *pcNewChar = hb_parc( 2 );
+         const char *pcNewChar = hb_parc( 2 );
 
          if( hb_parclen( 2 ) > 0 )
             ct_setatlikechar( *pcNewChar );

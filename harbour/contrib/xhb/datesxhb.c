@@ -58,7 +58,7 @@
 
 /* NOTE: szTime must be 9 chars large. */
 
-static ULONG hb_TimeStrToSec( char * pszTime )
+static ULONG hb_TimeStrToSec( const char * pszTime )
 {
    ULONG ulLen;
    ULONG ulTime = 0;

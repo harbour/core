@@ -81,7 +81,7 @@ HB_FUNC( HB_FUSE )
      else
          open_flags = 0;
 
-      handles[area]  = hb_fsOpen( ( BYTE * ) hb_parc( 1 ), ( SHORT ) open_flags );
+      handles[area]  = hb_fsOpen( hb_parc( 1 ), ( SHORT ) open_flags );
       offset[area]   = 0;
       recno[area]    = 1;
       b              = ( char * ) hb_xgrab( b_size );

@@ -61,7 +61,7 @@ HB_FUNC( VAL )
 
    if( pText )
    {
-      char * szText = hb_itemGetCPtr( pText );
+      const char * szText = hb_itemGetCPtr( pText );
       int iWidth, iDec, iLen = ( int ) hb_itemGetCLen( pText );
       BOOL fDbl;
       HB_LONG lValue;

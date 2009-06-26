@@ -2028,6 +2028,26 @@ PHB_ITEM hb_itemUnShare( PHB_ITEM pItem )
       return pItem;
 }
 
+BOOL hb_itemGetWriteCL( PHB_ITEM pItem, char ** pszValue, ULONG * pulLen )
+{
+   HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemGetWriteCL(%p,%p,%p)", pItem, pszValue, pulLen));
+
+   if( pItem )
+   {
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_STRING( pItem ) )
+      {
+         hb_itemUnShareString( pItem );
+         *pulLen = pItem->item.asString.length;
+         *pszValue = pItem->item.asString.value;
+         return TRUE;
+      }
+   }
+   return FALSE;
+}
+
 /* Internal API, not standard Clipper */
 /* clone the given item */
 PHB_ITEM hb_itemClone( PHB_ITEM pItem )

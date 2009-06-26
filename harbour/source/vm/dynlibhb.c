@@ -81,11 +81,11 @@ HB_FUNC( HB_LIBLOAD )
    if( hb_parclen( 1 ) > 0 )
    {
       int argc = hb_pcount() - 1, i;
-      char **argv = NULL;
+      const char ** argv = NULL;
 
       if( argc > 0 )
       {
-         argv = ( char** ) hb_xgrab( sizeof( char* ) * argc );
+         argv = ( const char** ) hb_xgrab( sizeof( char* ) * argc );
          for( i = 0; i < argc; ++i )
             argv[i] = hb_parcx( i + 2 );
       }

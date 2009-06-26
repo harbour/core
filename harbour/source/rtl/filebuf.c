@@ -303,8 +303,8 @@ static BOOL hb_fileUnlock( PHB_FILE pFile, BOOL * pfLockFS,
  * public API functions
  */
 
-PHB_FILE hb_fileExtOpen( BYTE * pFilename, BYTE * pDefExt,
-                         USHORT uiExFlags, BYTE * pPaths,
+PHB_FILE hb_fileExtOpen( const char * pFilename, const char * pDefExt,
+                         USHORT uiExFlags, const char * pPaths,
                          PHB_ITEM pError )
 {
    PHB_FILE pFile = NULL;
@@ -314,7 +314,7 @@ PHB_FILE hb_fileExtOpen( BYTE * pFilename, BYTE * pDefExt,
 #endif
    BOOL fShared, fReadonly;
    HB_FHANDLE hFile;
-   BYTE * pszFile;
+   char * pszFile;
 
    fShared = ( uiExFlags & ( FO_DENYREAD | FO_DENYWRITE | FO_EXCLUSIVE ) ) == 0;
    fReadonly = ( uiExFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) ) == FO_READ;
@@ -492,8 +492,8 @@ HB_FHANDLE hb_fileHandle( PHB_FILE pFile )
    return pFile ? pFile->hFile : FS_ERROR;
 }
 
-PHB_FILE hb_fileCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix,
-                            ULONG ulAttr, BYTE * pszName )
+PHB_FILE hb_fileCreateTemp( const char * pszDir, const char * pszPrefix,
+                            ULONG ulAttr, char * pszName )
 {
    PHB_FILE pFile = NULL;
    HB_FHANDLE hFile;
@@ -505,10 +505,10 @@ PHB_FILE hb_fileCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix,
    return pFile;
 }
 
-PHB_FILE hb_fileCreateTempEx( BYTE * pszName,
-                              const BYTE * pszDir,
-                              const BYTE * pszPrefix,
-                              const BYTE * pszExt,
+PHB_FILE hb_fileCreateTempEx( char * pszName,
+                              const char * pszDir,
+                              const char * pszPrefix,
+                              const char * pszExt,
                               ULONG ulAttr )
 {
    PHB_FILE pFile = NULL;

@@ -589,54 +589,45 @@ static const char * hb_i18n_setcodepage( PHB_I18N_TRANS pI18N,
             for( ul = 1; ul <= ulLen; ++ul )
             {
                PHB_ITEM pContext = hb_hashGetValueAt( pI18N->context_table, ul );
-               PHB_ITEM pResult;
-               ULONG ulCount = hb_hashLen( pContext ), u;
+               ULONG ulCount = hb_hashLen( pContext ), ulLen, u;
+               char * szValue;
 
                for( u = 1; u <= ulCount; ++u )
                {
                   if( fBase )
                   {
-                     pResult = hb_hashGetKeyAt( pContext, u );
-                     if( HB_IS_STRING( pResult ) )
+                     if( hb_itemGetWriteCL( hb_hashGetKeyAt( pContext, u ),
+                                            &szValue, &ulLen ) )
                      {
-                        pResult = hb_itemUnShareString( pResult );
-                        hb_cdpnTranslate( hb_itemGetCPtr( pResult ), cdpage, cdp,
-                                          hb_itemGetCLen( pResult ) );
+                        hb_cdpnTranslate( szValue, cdpage, cdp, ulLen );
                      }
                   }
                   else
                   {
-                     pResult = hb_hashGetValueAt( pContext, u );
+                     PHB_ITEM pResult = hb_hashGetValueAt( pContext, u );
                      if( HB_IS_STRING( pResult ) )
                      {
-                        pResult = hb_itemUnShareString( pResult );
-                        hb_cdpnTranslate( hb_itemGetCPtr( pResult ), cdpage, cdp,
-                                          hb_itemGetCLen( pResult ) );
+                        if( hb_itemGetWriteCL( pResult, &szValue, &ulLen ) )
+                           hb_cdpnTranslate( szValue, cdpage, cdp, ulLen );
                      }
                      else if( HB_IS_ARRAY( pResult ) )
                      {
                         ULONG ulTrans = hb_arrayLen( pResult ), u2;
                         for( u2 = 1; u2 <= ulTrans; ++u2 )
                         {
-                           PHB_ITEM pValue = hb_arrayGetItemPtr( pResult, u2 );
-                           if( HB_IS_STRING( pValue ) )
-                           {
-                              pValue = hb_itemUnShareString( pValue );
-                              hb_cdpnTranslate( hb_itemGetCPtr( pValue ), cdpage, cdp,
-                                                hb_itemGetCLen( pValue ) );
-                           }
+                           if( hb_itemGetWriteCL( hb_arrayGetItemPtr( pResult, u2 ),
+                                                  &szValue, &ulLen ) )
+                              hb_cdpnTranslate( szValue, cdpage, cdp, ulLen );
                         }
                      }
                   }
                }
                if( fBase )
                {
-                  pResult = hb_hashGetKeyAt( pI18N->context_table, ul );
-                  if( HB_IS_STRING( pResult ) )
+                  if( hb_itemGetWriteCL( hb_hashGetKeyAt( pI18N->context_table, u ),
+                                         &szValue, &ulLen ) )
                   {
-                     pResult = hb_itemUnShareString( pResult );
-                     hb_cdpnTranslate( hb_itemGetCPtr( pResult ), cdpage, cdp,
-                                       hb_itemGetCLen( pResult ) );
+                     hb_cdpnTranslate( szValue, cdpage, cdp, ulLen );
                   }
                   hb_hashSetFlags( pContext, HB_HASH_RESORT );
                }
@@ -743,9 +734,12 @@ PHB_ITEM hb_i18n_gettext( PHB_ITEM pMsgID, PHB_ITEM pContext )
             PHB_CODEPAGE cdp = hb_vmCDP();
             if( cdp && cdp != cdpage )
             {
-               pMsgID = hb_itemUnShareString( pMsgID );
-               hb_cdpnTranslate( hb_itemGetCPtr( pMsgID ), cdpage, cdp,
-                                 hb_itemGetCLen( pMsgID ) );
+               char * szValue;
+               ULONG ulLen;
+               if( hb_itemGetWriteCL( pMsgID, &szValue, &ulLen ) )
+               {
+                  hb_cdpnTranslate( szValue, cdpage, cdp, ulLen );
+               }
             }
          }
       }
@@ -824,9 +818,12 @@ PHB_ITEM hb_i18n_ngettext( PHB_ITEM pNum, PHB_ITEM pMsgID, PHB_ITEM pContext )
             PHB_CODEPAGE cdp = hb_vmCDP();
             if( cdp && cdp != cdpage )
             {
-               pMsgID = hb_itemUnShareString( pMsgID );
-               hb_cdpnTranslate( hb_itemGetCPtr( pMsgID ), cdpage, cdp,
-                                 hb_itemGetCLen( pMsgID ) );
+               char * szValue;
+               ULONG ulLen;
+               if( hb_itemGetWriteCL( pMsgID, &szValue, &ulLen ) )
+               {
+                  hb_cdpnTranslate( szValue, cdpage, cdp, ulLen );
+               }
             }
          }
       }

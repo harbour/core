@@ -55,15 +55,15 @@
 
 #define HB_FSCOPY_BUFFERSIZE    16384
 
-BOOL hb_fsCopy( const BYTE * pSource, const BYTE * pDest )
+BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 {
    BOOL bRetVal = TRUE;
    HB_FHANDLE fhndSource;
    HB_FHANDLE fhndDest;
 
-   if( ( fhndSource = hb_fsOpen( ( BYTE * ) pSource, FO_READ | FO_DENYNONE ) ) != FS_ERROR )
+   if( ( fhndSource = hb_fsOpen( pszSource, FO_READ | FO_DENYNONE ) ) != FS_ERROR )
    {
-      if( ( fhndDest = hb_fsCreate( ( BYTE * ) pDest, FC_NORMAL ) ) != FS_ERROR )
+      if( ( fhndDest = hb_fsCreate( pszDest, FC_NORMAL ) ) != FS_ERROR )
       {
          USHORT nBytesRead;
          BYTE * pbyBuffer = ( BYTE * ) hb_xgrab( HB_FSCOPY_BUFFERSIZE );
@@ -95,11 +95,11 @@ BOOL hb_fsCopy( const BYTE * pSource, const BYTE * pDest )
 HB_FUNC( HB_FCOPY )
 {
    USHORT uiError = 2;
+   const char * pszSource = hb_parc( 1 ), * pszDest = hb_parc( 2 );
 
-   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
+   if( pszSource && pszDest )
    {
-      hb_retni( hb_fsCopy( ( BYTE * ) hb_parc( 1 ),
-                           ( BYTE * ) hb_parc( 2 ) ) ? 0 : F_ERROR );
+      hb_retni( hb_fsCopy( pszSource, pszDest ) ? 0 : F_ERROR );
       uiError = hb_fsError();
    }
    else

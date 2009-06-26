@@ -71,10 +71,11 @@ static void do_justify( int iSwitch )
    if( HB_ISCHAR( 1 ) )
    {
 
-      char *pcString = hb_parc( 1 );
+      const char *pcString = hb_parc( 1 );
       size_t sStrLen = hb_parclen( 1 );
       char cJustChar;
-      char *pc, *pcRet;
+      const char *pc;
+      char *pcRet, *pcw;
       size_t sJustOffset;
 
       if( sStrLen == 0 )
@@ -106,9 +107,9 @@ static void do_justify( int iSwitch )
                pc++;
             }
             hb_xmemcpy( pcRet, pcString + sJustOffset, sStrLen - sJustOffset );
-            for( pc = pcRet + sStrLen - sJustOffset; pc < pcRet + sStrLen; pc++ )
+            for( pcw = pcRet + sStrLen - sJustOffset; pc < pcRet + sStrLen; pc++ )
             {
-               *pc = cJustChar;
+               *pcw = cJustChar;
             }
             break;
 
@@ -120,9 +121,9 @@ static void do_justify( int iSwitch )
                sJustOffset++;
                pc--;
             }
-            for( pc = pcRet; pc < pcRet + sJustOffset; pc++ )
+            for( pcw = pcRet; pc < pcRet + sJustOffset; pc++ )
             {
-               *pc = cJustChar;
+               *pcw = cJustChar;
             }
             hb_xmemcpy( pcRet + sJustOffset, pcString, sStrLen - sJustOffset );
             break;

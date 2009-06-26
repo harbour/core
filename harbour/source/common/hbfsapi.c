@@ -290,14 +290,14 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 BOOL hb_fsNameExists( const char * pszFileName )
 {
    BOOL fExist;
-   BOOL fFree;
+   char * pszFree = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsNameExists(%p)", pszFileName));
 
    if( pszFileName == NULL )
       return FALSE;
 
-   pszFileName = ( char * ) hb_fsNameConv( ( BYTE * ) pszFileName, &fFree );
+   pszFileName = hb_fsNameConv( pszFileName, &pszFree );
 
 #if defined( HB_OS_DOS )
    {
@@ -332,8 +332,8 @@ BOOL hb_fsNameExists( const char * pszFileName )
    }
 #endif
 
-   if( fFree )
-      hb_xfree( ( void * ) pszFileName );
+   if( pszFree )
+      hb_xfree( pszFree );
 
    return fExist;
 }
@@ -341,14 +341,14 @@ BOOL hb_fsNameExists( const char * pszFileName )
 BOOL hb_fsFileExists( const char * pszFileName )
 {
    BOOL fExist;
-   BOOL fFree;
+   char * pszFree = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFileExists(%p)", pszFileName));
 
    if( pszFileName == NULL )
       return FALSE;
 
-   pszFileName = ( char * ) hb_fsNameConv( ( BYTE * ) pszFileName, &fFree );
+   pszFileName = hb_fsNameConv( pszFileName, &pszFree );
 
 #if defined( HB_OS_DOS )
    {
@@ -392,8 +392,8 @@ BOOL hb_fsFileExists( const char * pszFileName )
    }
 #endif
 
-   if( fFree )
-      hb_xfree( ( void * ) pszFileName );
+   if( pszFree )
+      hb_xfree( ( void * ) pszFree );
 
    return fExist;
 }
@@ -401,14 +401,14 @@ BOOL hb_fsFileExists( const char * pszFileName )
 BOOL hb_fsDirExists( const char * pszDirName )
 {
    BOOL fExist;
-   BOOL fFree;
+   char * pszFree = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsDirExists(%p)", pszDirName));
 
    if( pszDirName == NULL )
       return FALSE;
 
-   pszDirName = ( char * ) hb_fsNameConv( ( BYTE * ) pszDirName, &fFree );
+   pszDirName = hb_fsNameConv( pszDirName, &pszFree );
 
 #if defined( HB_OS_DOS )
    {
@@ -451,8 +451,8 @@ BOOL hb_fsDirExists( const char * pszDirName )
    }
 #endif
 
-   if( fFree )
-      hb_xfree( ( void * ) pszDirName );
+   if( pszFree )
+      hb_xfree( ( void * ) pszFree );
 
    return fExist;
 }

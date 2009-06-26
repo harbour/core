@@ -59,7 +59,7 @@
 typedef struct
 {
    char * raw;
-   char * buffer;
+   const char * buffer;
    ULONG  ulLen;
    BOOL   bFreeReq;
 } STRPAR;

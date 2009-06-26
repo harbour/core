@@ -170,6 +170,7 @@ extern HB_EXPORT PHB_ITEM     hb_itemUnRefWrite( PHB_ITEM pItem, PHB_ITEM pSourc
 extern HB_EXPORT PHB_ITEM     hb_itemUnShare   ( PHB_ITEM pItem ); /* un-share given string item */
 extern HB_EXPORT PHB_ITEM     hb_itemUnShareString( PHB_ITEM pItem ); /* un-share given string item - the pItem have to be valid unrefed string item */
 extern HB_EXPORT PHB_ITEM     hb_itemReSizeString( PHB_ITEM pItem, ULONG ulSize ); /* Resize string buffer of given string item - the pItem have to be valid unrefed string item */
+extern HB_EXPORT BOOL         hb_itemGetWriteCL( PHB_ITEM pItem, char ** pszValue, ULONG * pulLen );
 extern HB_EXPORT PHB_ITEM     hb_itemClone     ( PHB_ITEM pItem ); /* clone the given item */
 extern HB_EXPORT char *       hb_itemStr       ( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert a number to a string */
 extern HB_EXPORT char *       hb_itemString    ( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq );  /* Convert any scalar to a string */

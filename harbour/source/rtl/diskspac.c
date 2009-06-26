@@ -189,13 +189,13 @@ HB_FUNC( DISKSPACE )
    }
 #elif defined(HB_OS_UNIX)
    {
-      char * szName = hb_parc( 1 );
-      BOOL fFree = FALSE;
+      const char * szName = hb_parc( 1 );
+      char * pszFree = NULL;
 
       if( !szName )
-         szName = ( char * ) "/";
+         szName = "/";
       else
-         szName = ( char * ) hb_fsNameConv( ( BYTE * ) szName, &fFree );
+         szName = hb_fsNameConv( szName, &pszFree );
 
       {
 #if defined(__WATCOMC__) || defined(__CEGCC__)
@@ -221,8 +221,8 @@ HB_FUNC( DISKSPACE )
 #endif
       }
 
-      if( fFree )
-         hb_xfree( szName );
+      if( pszFree )
+         hb_xfree( pszFree );
    }
 #else
    bError = FALSE;

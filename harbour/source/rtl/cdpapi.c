@@ -1205,8 +1205,8 @@ HB_FUNC( HB_SETCODEPAGE )
 HB_FUNC( HB_TRANSLATE )
 {
    ULONG ulLen = hb_parclen( 1 );
-   char *szIdIn = hb_parc( 2 );
-   char *szIdOut = hb_parc( 3 );
+   const char *szIdIn = hb_parc( 2 );
+   const char *szIdOut = hb_parc( 3 );
 
    if( ulLen && ( szIdIn || szIdOut ) )
    {
@@ -1248,7 +1248,8 @@ HB_FUNC( HB_CDPLIST )
 HB_FUNC( HB_STRTOUTF8 )
 {
    ULONG ulLen = hb_parclen( 1 ), ulDest = 0;
-   char *szString, *szDest = NULL;
+   const char *szString;
+   char *szDest = NULL;
 
    if( ulLen )
    {
@@ -1286,7 +1287,7 @@ HB_FUNC( HB_UTF8CHR )
 
 HB_FUNC( HB_UTF8TOSTR )
 {
-   char *szString = hb_parc( 1 );
+   const char *szString = hb_parc( 1 );
 
    if( szString )
    {
@@ -1317,7 +1318,7 @@ HB_FUNC( HB_UTF8TOSTR )
 
 HB_FUNC( HB_UTF8SUBSTR )
 {
-   char *szString = hb_parc( 1 );
+   const char *szString = hb_parc( 1 );
    int iPCount = hb_pcount();
 
    if( szString && ( iPCount < 2 || ( HB_ISNUM( 2 ) && ( iPCount < 3 || HB_ISNUM( 3 ) ) ) ) )
@@ -1350,7 +1351,7 @@ HB_FUNC( HB_UTF8SUBSTR )
 
 HB_FUNC( HB_UTF8LEFT )
 {
-   char *szString = hb_parc( 1 );
+   const char *szString = hb_parc( 1 );
 
    if( szString && HB_ISNUM( 2 ) )
    {
@@ -1373,7 +1374,7 @@ HB_FUNC( HB_UTF8LEFT )
 
 HB_FUNC( HB_UTF8RIGHT )
 {
-   char *szString = hb_parc( 1 );
+   const char *szString = hb_parc( 1 );
 
    if( szString && HB_ISNUM( 2 ) )
    {
@@ -1401,7 +1402,7 @@ HB_FUNC( HB_UTF8RIGHT )
 
 HB_FUNC( HB_UTF8PEEK )
 {
-   char *szString = hb_parc( 1 );
+   const char *szString = hb_parc( 1 );
 
    if( szString && HB_ISNUM( 2 ) )
    {
@@ -1423,7 +1424,7 @@ HB_FUNC( HB_UTF8POKE )
 
    if( pText && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
-      char *szString = hb_itemGetCPtr( pText );
+      const char *szString = hb_itemGetCPtr( pText );
       ULONG ulLen = hb_parclen( 1 ), ulPos;
 
       ulPos = utf8pos( ( BYTE * ) szString, ulLen, hb_parnl( 2 ) );
@@ -1465,7 +1466,7 @@ HB_FUNC( HB_UTF8POKE )
 
 HB_FUNC( HB_UTF8STUFF )
 {
-   char *szString = hb_parc( 1 );
+   const char *szString = hb_parc( 1 );
 
    if( szString && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISCHAR( 4 ) )
    {
@@ -1516,7 +1517,7 @@ HB_FUNC( HB_UTF8STUFF )
 
 HB_FUNC( HB_UTF8LEN )
 {
-   char *szString = hb_parc( 1 );
+   const char *szString = hb_parc( 1 );
 
    if( szString )
       hb_retnint( hb_cdpUTF8StringLength( ( BYTE * ) szString, hb_parclen( 1 ) ) );

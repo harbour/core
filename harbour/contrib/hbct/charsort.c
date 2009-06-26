@@ -184,7 +184,7 @@ HB_FUNC( CHARSORT )
    if( HB_ISCHAR( 1 ) )
    {
       /* get parameters */
-      char *pcString = hb_parc( 1 );
+      const char *pcString = hb_parc( 1 );
       char *pcRet;
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
       size_t sElementLen, sIgnore, sSortLen;

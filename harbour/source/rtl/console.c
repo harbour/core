@@ -187,11 +187,11 @@ void hb_conRelease( void )
    hb_fsSetDevMode( s_hFilenoStderr, FD_TEXT );
 }
 
-char * hb_conNewLine( void )
+const char * hb_conNewLine( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conNewLine()"));
 
-   return ( char * ) s_szCrLf;
+   return s_szCrLf;
 }
 
 HB_FUNC( HB_OSNEWLINE )
@@ -627,7 +627,7 @@ HB_FUNC( HB_DISPOUTATBOX )
 {
    SHORT nRow = ( SHORT ) hb_parni( 1 );
    SHORT nCol = ( SHORT ) hb_parni( 2 );
-   char * pszString = hb_parcx( 3 );
+   const char * pszString = hb_parcx( 3 );
    ULONG nStringLen = hb_parclen( 3 );
    int iColor;
 

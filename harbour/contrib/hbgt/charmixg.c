@@ -21,7 +21,8 @@
 
 HB_FUNC( GT_CHARMIX )
 {
-  char *s1, *s2, *s3;
+  const char *s1, *s2;
+  char *s3;
   int l1, l2, i, pos3;
 
   if (ISCHAR(1) && HB_ISCHAR(2)) {

@@ -70,7 +70,7 @@
 HB_FUNC( HB_DISKSPACE )
 {
    char szPathBuf[ 4 ];
-   char * szPath = hb_parc( 1 );
+   const char * szPath = hb_parc( 1 );
    USHORT uiType = HB_ISNUM( 2 ) ? ( USHORT ) hb_parni( 2 ) : HB_DISK_AVAIL;
    double dSpace = 0.0;
 
@@ -335,9 +335,9 @@ HB_FUNC( HB_DISKSPACE )
 #else
       struct statvfs sf;
 #endif
-      BOOL fFree = FALSE;
+      char * pszFree;
 
-      szPath = ( char * ) hb_fsNameConv( ( BYTE * ) szPath, &fFree );
+      szPath = hb_fsNameConv( szPath, &pszFree );
 
 #if defined(HB_OS_DARWIN)
       if( statfs( szPath, &sf ) == 0 )
@@ -369,8 +369,8 @@ HB_FUNC( HB_DISKSPACE )
       else
          hb_fsSetIOError( FALSE, 0 );
 
-      if( fFree )
-         hb_xfree( szPath );
+      if( pszFree )
+         hb_xfree( pszFree );
    }
 #else
    {

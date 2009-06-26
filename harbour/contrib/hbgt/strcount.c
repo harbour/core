@@ -21,7 +21,7 @@
 
 HB_FUNC( GT_STRCOUNT )
 {
-  char *s1, *s2;
+  const char *s1, *s2;
   int count, p1, p2, l1, l2;
   int match;
 

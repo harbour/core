@@ -65,9 +65,9 @@
 /* helper function for the *one functions */
 static void do_charone( int iSwitch )
 {
-   char *pcString;
+   const char *pcString;
    size_t sStrLen;
-   char *pcDeleteSet;
+   const char *pcDeleteSet;
    size_t sDeleteSetLen;
 
    /* param check */
@@ -93,7 +93,7 @@ static void do_charone( int iSwitch )
          case DO_CHARONE_CHARONE:
             if( sStrLen > 1 )
             {
-               char *pcSub;
+               const char *pcSub;
                char *pcRet;
                size_t sRetStrLen = 0;
                char cCurrent = *pcString;
@@ -128,7 +128,7 @@ static void do_charone( int iSwitch )
          case DO_CHARONE_WORDONE:
             if( sStrLen > 3 && sDeleteSetLen >= 2 )
             {
-               char *pcSub;
+               const char *pcSub;
                char *pcRet;
                size_t sRetStrLen = 0;
                char cCurrent1 = pcString[0];
@@ -150,8 +150,8 @@ static void do_charone( int iSwitch )
                   }
                   else if( pcDeleteSet != NULL )
                   {
-                     char *pc = NULL;
-                     char *pStart = pcDeleteSet;
+                     const char *pc = NULL;
+                     const char *pStart = pcDeleteSet;
                      size_t sLen = sDeleteSetLen;
 
                      while( sLen >= 2 &&

@@ -72,7 +72,7 @@ char * hb_sxDtoP( char * pDate, LONG lJulian )
    return pDate;
 }
 
-LONG hb_sxPtoD( char * pDate )
+LONG hb_sxPtoD( const char * pDate )
 {
    int iYear, iMonth, iDay;
    LONG lPDate;

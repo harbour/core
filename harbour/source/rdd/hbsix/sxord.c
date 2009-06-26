@@ -682,7 +682,7 @@ HB_FUNC( SX_TAGUNIQUE )
 HB_FUNC( SX_WILDSEEK )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   char * szPattern = hb_parc( 1 );
+   const char * szPattern = hb_parc( 1 );
    BOOL fCont = HB_ISLOG( 2 ) && hb_parl( 2 );
    BOOL fFound = FALSE;
    int iOrder = 0;
@@ -709,7 +709,7 @@ HB_FUNC( SX_WILDSEEK )
                errCode = SELF_ORDINFO( pArea, DBOI_KEYVAL, &Info );
                if( errCode == HB_SUCCESS )
                {
-                  char * szKey = hb_itemGetCPtr( Info.itmResult );
+                  const char * szKey = hb_itemGetCPtr( Info.itmResult );
                   fFound = hb_strMatchWild( szKey, szPattern );
                }
             }

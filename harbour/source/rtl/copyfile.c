@@ -72,7 +72,7 @@ static BOOL hb_copyfile( const char * szSource, const char * szDest )
 
    do
    {
-      fhndSource = hb_fsExtOpen( ( BYTE * ) szSource, NULL,
+      fhndSource = hb_fsExtOpen( szSource, NULL,
                                  FO_READ | FXO_DEFAULTS | FXO_SHARELOCK,
                                  NULL, pError );
       if( fhndSource == FS_ERROR )
@@ -90,7 +90,7 @@ static BOOL hb_copyfile( const char * szSource, const char * szDest )
 
       do
       {
-         fhndDest = hb_fsExtOpen( ( BYTE * ) szDest, NULL,
+         fhndDest = hb_fsExtOpen( szDest, NULL,
                                   FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE |
                                   FXO_DEFAULTS | FXO_SHARELOCK,
                                   NULL, pError );

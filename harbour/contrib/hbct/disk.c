@@ -87,38 +87,35 @@
 
 HB_FUNC( DIRMAKE )
 {
-   BYTE *pFileName = ( BYTE * ) hb_parcx( 1 );
+   const char *pFileName = hb_parcx( 1 );
 
    if( hb_fsMkDir( pFileName ) )
-   {
       hb_retni( 0 );
-   }
    else
-   {
       hb_retni( -hb_fsOsError() );
-   }
 }
 
 HB_FUNC( DIRNAME )
 {
-   BYTE *pbyBuffer = ( BYTE * ) hb_xgrab( HB_PATH_MAX );
-   unsigned char *pszDrive = ( unsigned char * ) hb_parc( 1 );
+   char *pbyBuffer = ( char * ) hb_xgrab( HB_PATH_MAX );
+   const char *pszDrive = hb_parc( 1 );
    USHORT uiDrive = 0;
 
    if( pszDrive )
    {
+      UCHAR uc = ( UCHAR ) *pszDrive;
       /* some network drivers (f.e. NETX from Novel Netware) allow
        * to create drives after 'Z' letter.
        */
-      if( *pszDrive >= 'A' && *pszDrive < 'A' + 32 )
-         uiDrive = *pszDrive - ( 'A' - 1 );
-      else if( *pszDrive >= 'a' && *pszDrive < 'a' + 32 )
-         uiDrive = *pszDrive - ( 'a' - 1 );
+      if( uc >= 'A' && uc < 'A' + 32 )
+         uiDrive = uc - ( 'A' - 1 );
+      else if( uc >= 'a' && uc < 'a' + 32 )
+         uiDrive = uc - ( 'a' - 1 );
    }
    pbyBuffer[0] = HB_OS_PATH_DELIM_CHR;
    hb_fsCurDirBuff( uiDrive, pbyBuffer + 1, HB_PATH_MAX - 1 );
 
-   hb_retc_buffer( ( char * ) pbyBuffer );
+   hb_retc_buffer( pbyBuffer );
 }
 
 
@@ -130,7 +127,7 @@ HB_FUNC( DRIVETYPE )
    LPTSTR lpDrive;
    int iType;
 
-   hb_strncpy( pszDrive, ( char * ) hb_parcx( 1 ), ulSize );
+   hb_strncpy( pszDrive, hb_parcx( 1 ), ulSize );
 
    if( strstr( pszDrive, ":" ) == NULL )
       hb_strncat( pszDrive, ":", ulSize );
@@ -216,17 +213,17 @@ HB_FUNC( VOLUME )
    if( !ct_getsafety() )
    {
       PHB_FNAME fname;
-      BYTE *sDiskName;
+      const char *sDiskName;
       char *sRoot = NULL;
       char *sVolName = NULL;
       char sRootBuf[4], sVolNameBuf[12];
-      BOOL fFree;
+      char * pszFree;
 
-      if( HB_ISCHAR( 1 ) && hb_parclen( 1 ) > 0 )
+      if( hb_parclen( 1 ) > 0 )
       {
-         sDiskName = hb_fsNameConv( ( BYTE * ) hb_parc( 1 ), &fFree );
+         sDiskName = hb_fsNameConv( hb_parc( 1 ), &pszFree );
 
-         if( ( fname = hb_fsFNameSplit( ( char * ) sDiskName ) ) != NULL )
+         if( ( fname = hb_fsFNameSplit( sDiskName ) ) != NULL )
          {
             if( fname->szPath )
             {
@@ -243,11 +240,11 @@ HB_FUNC( VOLUME )
          }
          else
          {
-            hb_strncpy( sVolNameBuf, ( char * ) sDiskName, sizeof( sVolNameBuf ) - 1 );
+            hb_strncpy( sVolNameBuf, sDiskName, sizeof( sVolNameBuf ) - 1 );
             sVolName = sVolNameBuf;
          }
-         if( fFree )
-            hb_xfree( sDiskName );
+         if( pszFree )
+            hb_xfree( pszFree );
       }
 #if defined(HB_OS_WIN) && ! defined(HB_OS_WIN_CE)
       {
@@ -275,7 +272,7 @@ HB_FUNC( GETVOLINFO )
 {
 #if defined(HB_OS_WIN) && ! defined(HB_OS_WIN_CE)
    int iretval;
-   char *sDrive = hb_parcx( 1 ), *sVolName;
+   const char *sDrive = hb_parcx( 1 );
    TCHAR lpVolName[256];
    LPTSTR lpDrive;
 
@@ -286,7 +283,7 @@ HB_FUNC( GETVOLINFO )
 
    if( iretval != 0 )
    {
-      sVolName = HB_TCHAR_CONVFROM( lpVolName );
+      char * sVolName = HB_TCHAR_CONVFROM( lpVolName );
       hb_retc( sVolName );
       HB_TCHAR_FREE( sVolName );
    }
@@ -312,7 +309,7 @@ HB_FUNC( VOLSERIAL )
 {
 #if defined(HB_OS_WIN) && ! defined(HB_OS_WIN_CE)
    int retval;
-   char *sDrive = hb_parcx( 1 );
+   const char *sDrive = hb_parcx( 1 );
    LPTSTR lpDrive;
    DWORD dSerial;
 
@@ -337,7 +334,7 @@ HB_FUNC( VOLSERIAL )
 
 HB_FUNC( TRUENAME )
 {
-   char * szFile = hb_parc( 1 );
+   const char * szFile = hb_parc( 1 );
 
    if( szFile )
    {

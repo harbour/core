@@ -64,7 +64,7 @@ static void hb_memoread( BOOL bHandleEOF )
 
    if( pFileName )
    {
-      HB_FHANDLE fhnd = hb_fsOpen( ( BYTE * ) hb_itemGetCPtr( pFileName ), FO_READ | FO_SHARED | FO_PRIVATE );
+      HB_FHANDLE fhnd = hb_fsOpen( hb_itemGetCPtr( pFileName ), FO_READ | FO_SHARED | FO_PRIVATE );
 
       if( fhnd != FS_ERROR )
       {
@@ -128,7 +128,7 @@ static BOOL hb_memowrit( BOOL bHandleEOF )
 
    if( pFileName && pString )
    {
-      HB_FHANDLE fhnd = hb_fsCreate( ( BYTE * ) hb_itemGetCPtr( pFileName ), FC_NORMAL );
+      HB_FHANDLE fhnd = hb_fsCreate( hb_itemGetCPtr( pFileName ), FC_NORMAL );
 
       if( fhnd != FS_ERROR )
       {

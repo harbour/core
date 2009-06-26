@@ -567,7 +567,7 @@ static LPHSXINFO hb_hsxGetPointer( int iHandle )
    return pHSX;
 }
 
-static int hb_hsxCompile( char * szExpr, PHB_ITEM * pExpr )
+static int hb_hsxCompile( const char * szExpr, PHB_ITEM * pExpr )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
@@ -1384,10 +1384,11 @@ static int hb_hsxDestroy( int iHandle )
    return iRetVal;
 }
 
-static int hb_hsxCreate( char * szFile, int iBufSize, int iKeySize,
+static int hb_hsxCreate( const char * szFile, int iBufSize, int iKeySize,
                          BOOL fIgnoreCase, int iFilter, PHB_ITEM pExpr )
 {
-   char szFileName[ HB_PATH_MAX ], * szExpr = NULL;
+   char szFileName[ HB_PATH_MAX ];
+   const char * szExpr = NULL;
    PHB_ITEM pKeyExpr = NULL;
    ULONG ulBufSize;
    USHORT uiRecordSize;
@@ -1430,7 +1431,7 @@ static int hb_hsxCreate( char * szFile, int iBufSize, int iKeySize,
          pKeyExpr = hb_itemNew( pExpr );
    }
 
-   pFile = hb_fileExtOpen( ( BYTE * ) szFileName, ( BYTE * ) HSX_FILEEXT,
+   pFile = hb_fileExtOpen( szFileName, HSX_FILEEXT,
                            FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
                            FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
                            NULL, NULL );
@@ -1473,7 +1474,7 @@ static int hb_hsxCreate( char * szFile, int iBufSize, int iKeySize,
    return pHSX->iHandle;
 }
 
-static int hb_hsxOpen( char * szFile, int iBufSize, int iMode )
+static int hb_hsxOpen( const char * szFile, int iBufSize, int iMode )
 {
    char szFileName[ HB_PATH_MAX ];
    BOOL fShared, fReadonly;
@@ -1506,7 +1507,7 @@ static int hb_hsxOpen( char * szFile, int iBufSize, int iMode )
    uiFlags = ( fReadonly ? FO_READ : FO_READWRITE ) |
              ( fShared ? FO_DENYNONE : FO_EXCLUSIVE );
 
-   pFile = hb_fileExtOpen( ( BYTE * ) szFileName, ( BYTE * ) HSX_FILEEXT,
+   pFile = hb_fileExtOpen( szFileName, HSX_FILEEXT,
                            uiFlags | FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
                            NULL, NULL );
 
@@ -1547,8 +1548,8 @@ static int hb_hsxOpen( char * szFile, int iBufSize, int iMode )
    return pHSX->iHandle;
 }
 
-static int hb_hsxIndex( char * szFile, PHB_ITEM pExpr, int iKeySize, int iMode,
-                        int iBufSize, BOOL fIgnoreCase, int iFilter )
+static int hb_hsxIndex( const char * szFile, PHB_ITEM pExpr, int iKeySize,
+                        int iMode, int iBufSize, BOOL fIgnoreCase, int iFilter )
 {
    int iRetVal = HSX_SUCCESS, iHandle;
    ULONG ulRecNo = 0, ulRecCount = 0, ulNewRec, ulRec;

@@ -288,7 +288,7 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
    {
       pFieldInfo.uiTypeExtended = 0;
       pFieldDesc = hb_arrayGetItemPtr( pStruct, uiCount + 1 );
-      pFieldInfo.atomName = ( BYTE * ) hb_arrayGetCPtr( pFieldDesc, DBS_NAME );
+      pFieldInfo.atomName = hb_arrayGetCPtr( pFieldDesc, DBS_NAME );
       iData = hb_arrayGetNI( pFieldDesc, DBS_LEN );
       if( iData < 0 )
          iData = 0;
@@ -1800,9 +1800,8 @@ static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnecti
          break;
       case RDDI_MEMOEXT:
       {
-         char * szResult = hb_setGetMFileExt();
-         if( szResult )
-            szResult = hb_strdup( szResult );
+         const char * szExt = hb_setGetMFileExt();
+         char * szResult = szExt ? hb_strdup( szExt ) : NULL;
          if( hb_itemType( pItem ) & HB_IT_STRING )
          {
             hb_setSetItem( HB_SET_MFILEEXT, pItem );

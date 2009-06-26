@@ -100,19 +100,19 @@ static void do_token1( int iSwitch )
 
    if( iParamCheck )
    {
-      char *pcString = hb_parc( 1 );
+      const char *pcString = hb_parc( 1 );
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
-      char *pcSeparatorStr;
+      const char *pcSeparatorStr;
       size_t sSeparatorStrLen;
       ULONG ulTokenCounter = 0;
       ULONG ulSkip;
-      char *pcSubStr;
+      const char *pcSubStr;
       char *pcRet = NULL;
       size_t sSubStrLen;
       size_t sRetStrLen = 0;
       ULONG ulToken = 0;
       ULONG ulSkipCnt;
-      char *pc;
+      const char *pc;
 
       /* separator string */
       sSeparatorStrLen = hb_parclen( 2 );
@@ -282,7 +282,7 @@ static void do_token1( int iSwitch )
          {
             if( ulSkip == 0xFFFFFFFFUL )
             {
-               char *t;
+               const char *t;
                BOOL bLast = TRUE;
 
                for( t = pc + 1; t < pcString + sStrLen; t++ )

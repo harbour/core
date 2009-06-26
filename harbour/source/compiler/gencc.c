@@ -70,7 +70,7 @@ typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
                                  fprintf( cargo->yyc, "\t#error: \"" s "\"\n" ); \
                               } while( 0 )
 
-void hb_compGenCString( FILE * yyc, BYTE * pText, ULONG ulLen )
+void hb_compGenCString( FILE * yyc, const BYTE * pText, ULONG ulLen )
 {
    ULONG ulPos;
 
@@ -1727,7 +1727,7 @@ static HB_GENC_FUNC( hb_p_switch )
    {
       fprintf( cargo->yyc, "\t{\n\t\tPHB_ITEM pSwitch;\n\t\tHB_TYPE type;\n" );
       if( fStr )
-         fprintf( cargo->yyc, "\t\tchar * pszText;\n\t\tULONG ulLen;\n" );
+         fprintf( cargo->yyc, "\t\tconst char * pszText;\n\t\tULONG ulLen;\n" );
       if( fNum )
          fprintf( cargo->yyc, "\t\tlong lVal;\n" );
       fprintf( cargo->yyc, "\t\tif( hb_xvmSwitchGet( &pSwitch ) ) break;\n"

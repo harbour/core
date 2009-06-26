@@ -147,7 +147,7 @@
 
 /* ------------------------------- */
 
-static BYTE s_byDirBuffer[ HB_PATH_MAX ];
+static char s_szDirBuffer[ HB_PATH_MAX ];
 static HB_IOERRORS s_IOErrors;
 
 /* ------------------------------- */
@@ -229,10 +229,10 @@ static void hb_stack_free( PHB_STACK pStack )
    hb_xfree( pStack->pItems );
    pStack->pItems = pStack->pPos = pStack->pBase = NULL;
 #if defined( HB_MT_VM )
-   if( pStack->byDirBuffer )
+   if( pStack->pDirBuffer )
    {
-      hb_xfree( pStack->byDirBuffer );
-      pStack->byDirBuffer = NULL;
+      hb_xfree( pStack->pDirBuffer );
+      pStack->pDirBuffer = NULL;
    }
    if( pStack->iDynH )
    {
@@ -832,18 +832,18 @@ char * hb_stackDateBuffer( void )
    return hb_stack.szDate;
 }
 
-BYTE * hb_stackDirBuffer( void )
+char * hb_stackDirBuffer( void )
 {
 #if defined( HB_MT_VM )
    if( hb_stack_ready() )
    {
       HB_STACK_TLS_PRELOAD
-      if( !hb_stack.byDirBuffer )
-         hb_stack.byDirBuffer = ( BYTE * ) hb_xgrab( HB_PATH_MAX );
-      return hb_stack.byDirBuffer;
+      if( !hb_stack.pDirBuffer )
+         hb_stack.pDirBuffer = ( char * ) hb_xgrab( HB_PATH_MAX );
+      return hb_stack.pDirBuffer;
    }
 #endif
-   return s_byDirBuffer;
+   return s_szDirBuffer;
 }
 
 PHB_IOERRORS hb_stackIOErrors( void )

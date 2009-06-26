@@ -59,8 +59,8 @@ HB_FUNC( MAXLINE )
 
    if( HB_ISCHAR( 1 ) )
    {
-      char *pcString = hb_parc( 1 );
-      char *pBuffer;
+      const char *pcString = hb_parc( 1 );
+      const char *pBuffer;
       LONG lStrLen = hb_parclen( 1 );
 
       while( lStrLen > 0 )

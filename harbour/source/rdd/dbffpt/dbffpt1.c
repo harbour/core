@@ -3426,7 +3426,7 @@ static HB_ERRCODE hb_fptGetVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pI
    return uiError;
 }
 
-static HB_ERRCODE hb_fptGetVarFile( FPTAREAP pArea, ULONG ulBlock, BYTE * szFile, USHORT uiMode )
+static HB_ERRCODE hb_fptGetVarFile( FPTAREAP pArea, ULONG ulBlock, const char * szFile, USHORT uiMode )
 {
    USHORT uiError;
    HB_FHANDLE hFile;
@@ -3465,7 +3465,7 @@ static HB_ERRCODE hb_fptGetVarFile( FPTAREAP pArea, ULONG ulBlock, BYTE * szFile
    return HB_SUCCESS;
 }
 
-static ULONG hb_fptPutVarFile( FPTAREAP pArea, ULONG ulBlock, BYTE * szFile )
+static ULONG hb_fptPutVarFile( FPTAREAP pArea, ULONG ulBlock, const char * szFile )
 {
    USHORT uiError;
    HB_FHANDLE hFile;
@@ -3855,7 +3855,7 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
 
    if( pCreateInfo )
    {
-      BYTE szFileName[ HB_PATH_MAX ];
+      char szFileName[ HB_PATH_MAX ];
       PHB_FNAME pFileName;
       PHB_ITEM pError = NULL, pItem = NULL;
       BOOL bRetry;
@@ -4034,7 +4034,7 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
  * BLOB2FILE - retrieve memo contents into file
  * ( DBENTRYP_SVPB )  hb_fptGetValueFile
  */
-static HB_ERRCODE hb_fptGetValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode )
+static HB_ERRCODE hb_fptGetValueFile( FPTAREAP pArea, USHORT uiIndex, const char * szFile, USHORT uiMode )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fptGetValueFile(%p, %hu, %s, %hu)", pArea, uiIndex, szFile, uiMode));
 
@@ -4091,7 +4091,7 @@ static HB_ERRCODE hb_fptGetValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szF
  */
 static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
-   BYTE szFileName[ HB_PATH_MAX ];
+   char szFileName[ HB_PATH_MAX ];
    PHB_FNAME pFileName;
    PHB_ITEM pError;
    USHORT uiFlags;
@@ -4224,7 +4224,7 @@ static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
  * FILE2BLOB - store file contents in MEMO
  * ( DBENTRYP_SVPB )   hb_fptPutValueFile
  */
-static HB_ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode )
+static HB_ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, const char * szFile, USHORT uiMode )
 {
    LPFIELD pField;
 
@@ -4483,7 +4483,7 @@ static HB_ERRCODE hb_fptDoPack( FPTAREAP pArea, USHORT uiBlockSize,
       return HB_FAILURE;
    else if( pArea->fHasMemo && pArea->pMemoFile && pArea->pDataFile )
    {
-      BYTE szFile[ HB_PATH_MAX ];
+      char szFile[ HB_PATH_MAX ];
       ULONG ulRecNo, ulRecords;
       LONG lStep = lEvalStep;
 
@@ -4576,7 +4576,7 @@ static HB_ERRCODE hb_fptDoPack( FPTAREAP pArea, USHORT uiBlockSize,
                }
             }
             hb_fileClose( pArea->pMemoTmpFile );
-            hb_fsDelete( ( BYTE * ) szFile );
+            hb_fsDelete( szFile );
             pArea->pMemoTmpFile = NULL;
          }
       }
@@ -4627,7 +4627,7 @@ static HB_ERRCODE hb_fptPack( FPTAREAP pArea )
    if( !pArea->fReadonly && !pArea->fShared &&
        pArea->fHasMemo && pArea->pMemoFile && pArea->pDataFile )
    {
-      BYTE szFile[ HB_PATH_MAX ];
+      char szFile[ HB_PATH_MAX ];
 
       if( SELF_GOCOLD( ( AREAP ) pArea ) != HB_SUCCESS )
          return HB_FAILURE;
@@ -4677,7 +4677,7 @@ static HB_ERRCODE hb_fptPack( FPTAREAP pArea )
             }
          }
          hb_fileClose( pArea->pMemoTmpFile );
-         hb_fsDelete( ( BYTE * ) szFile );
+         hb_fsDelete( szFile );
          pArea->pMemoTmpFile = NULL;
          return errCode;
       }
@@ -4708,16 +4708,15 @@ static HB_ERRCODE hb_fptInfo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          else
          {
             LPDBFDATA pData = DBFAREA_DATA( pArea );
-            char * szMFileExt;
+            const char * szExt;
             if( pData->szMemoExt[ 0 ] )
                hb_itemPutC( pItem, pData->szMemoExt );
             else if( pArea->bMemoType == DB_MEMO_FPT &&
-                     ( szMFileExt = hb_setGetMFileExt() ) != NULL &&
-                     *szMFileExt )
-               hb_itemPutC( pItem, szMFileExt );
+                     ( szExt = hb_setGetMFileExt() ) != NULL && *szExt )
+               hb_itemPutC( pItem, szExt );
             else
             {
-               const char * szExt = hb_memoDefaultFileExt( pArea->bMemoType, pArea->rddID );
+               szExt = hb_memoDefaultFileExt( pArea->bMemoType, pArea->rddID );
                if( !szExt )
                   szExt = hb_memoDefaultFileExt( pData->bMemoType, pArea->rddID );
                hb_itemPutC( pItem, szExt );
@@ -4778,7 +4777,7 @@ static HB_ERRCODE hb_fptInfo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( HB_IS_ARRAY( pItem ) )
          {
             ULONG ulBlock = hb_arrayGetNL( pItem, 1 );
-            BYTE * szFile = ( BYTE * ) hb_arrayGetCPtr( pItem, 2 );
+            const char * szFile = hb_arrayGetCPtr( pItem, 2 );
 
             if( ulBlock && szFile && *szFile )
                errCode = hb_fptGetVarFile( pArea, ulBlock, szFile,
@@ -4818,7 +4817,7 @@ static HB_ERRCODE hb_fptInfo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( HB_IS_ARRAY( pItem ) )
             hb_itemPutNInt( pItem, hb_fptPutVarFile( pArea,
                                              hb_arrayGetNL( pItem, 1 ),
-                                  ( BYTE * ) hb_arrayGetCPtr( pItem, 2 ) ) );
+                                             hb_arrayGetCPtr( pItem, 2 ) ) );
          else
             hb_itemPutNI( pItem, 0 );
          break;
@@ -5015,26 +5014,23 @@ static HB_ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect
    {
       case RDDI_MEMOEXT:
       {
-         char * szNew = hb_itemGetCPtr( pItem ), *szMFileExt;
+         const char * szExt = hb_itemGetCPtr( pItem );
+         char * szNewVal;
 
-         if( szNew && szNew[0] == '.' && szNew[1] )
-            szNew = hb_strdup( szNew );
-         else
-            szNew = NULL;
+         szNewVal = szExt[0] == '.' && szExt[1] ? hb_strdup( szExt ) : NULL;
 
          if( pData->szMemoExt[ 0 ] )
             hb_itemPutC( pItem, pData->szMemoExt );
          else if( pData->bMemoType == DB_MEMO_FPT && pRDD->rddID != s_uiRddIdBLOB &&
-                  ( szMFileExt = hb_setGetMFileExt() ) != NULL &&
-                  *szMFileExt )
-            hb_itemPutC( pItem, szMFileExt );
+                  ( szExt = hb_setGetMFileExt() ) != NULL && *szExt )
+            hb_itemPutC( pItem, szExt );
          else
             hb_itemPutC( pItem, hb_memoDefaultFileExt( pData->bMemoType, pRDD->rddID ) );
 
-         if( szNew )
+         if( szNewVal )
          {
-            hb_strncpy( pData->szMemoExt, szNew, sizeof( pData->szMemoExt ) - 1 );
-            hb_xfree( szNew );
+            hb_strncpy( pData->szMemoExt, szNewVal, sizeof( pData->szMemoExt ) - 1 );
+            hb_xfree( szNewVal );
          }
          break;
       }

@@ -216,7 +216,7 @@ static void    hb_vmLocalName( USHORT uiLocal, char * szLocalName ); /* locals a
 static void    hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName ); /* statics vars information for the debugger */
 static void    hb_vmModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
 
-static void    hb_vmDebugEntry( int nMode, int nLine, char *szName, int nIndex, PHB_ITEM pFrame );
+static void    hb_vmDebugEntry( int nMode, int nLine, const char *szName, int nIndex, PHB_ITEM pFrame );
 static void    hb_vmDebuggerExit( BOOL fRemove );      /* shuts down the debugger */
 static void    hb_vmDebuggerShowLine( USHORT uiLine ); /* makes the debugger shows a specific source code line */
 static void    hb_vmDebuggerEndProc( void );     /* notifies the debugger for an endproc */
@@ -6011,7 +6011,7 @@ void hb_vmFunction( USHORT uiParams )
 
 
 #ifndef HB_NO_DEBUG
-static void hb_vmDebugEntry( int nMode, int nLine, char *szName, int nIndex, PHB_ITEM pFrame )
+static void hb_vmDebugEntry( int nMode, int nLine, const char *szName, int nIndex, PHB_ITEM pFrame )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -6080,7 +6080,7 @@ static void hb_vmDebugEntry( int nMode, int nLine, char *szName, int nIndex, PHB
    }
 }
 
-static void hb_vmDummyDebugEntry( int nMode, int nLine, char *szName, int nIndex, PHB_ITEM pFrame )
+static void hb_vmDummyDebugEntry( int nMode, int nLine, const char *szName, int nIndex, PHB_ITEM pFrame )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDummyDebugEntry"));
 
@@ -7234,7 +7234,7 @@ void hb_vmUnlockModuleSymbols( void )
 #endif
 }
 
-char * hb_vmFindModuleSymbolName( PHB_SYMB pSym )
+const char * hb_vmFindModuleSymbolName( PHB_SYMB pSym )
 {
    if( pSym )
    {
@@ -7479,7 +7479,7 @@ void hb_vmBeginSymbolGroup( void * hDynLib, BOOL fClone )
    s_fCloneSym = fClone;
 }
 
-void hb_vmInitSymbolGroup( void * hNewDynLib, int argc, char * argv[] )
+void hb_vmInitSymbolGroup( void * hNewDynLib, int argc, const char * argv[] )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmInitSymbolGroup(%p,%d,%p)", hNewDynLib, argc, argv));
 

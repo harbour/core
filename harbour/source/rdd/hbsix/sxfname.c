@@ -57,18 +57,19 @@
 
 HB_FUNC( SX_FNAMEPARSER )
 {
-   char * szFileName = hb_parc( 1 );
+   const char * szFileName = hb_parc( 1 );
 
    if( szFileName )
    {
       char szPathBuf[ HB_PATH_MAX ];
       PHB_FNAME pFileName;
       ULONG ulLen;
-      BOOL fFree;
+      char * pszFree;
 
-      szFileName = ( char * ) hb_fsNameConv( ( BYTE * ) szFileName, &fFree );
-
+      szFileName = hb_fsNameConv( szFileName, &pszFree );
       pFileName = hb_fsFNameSplit( szFileName );
+      if( pszFree )
+         hb_xfree( pszFree );
 
       if( ! HB_ISLOG( 2 ) || ! hb_parl( 2 ) )
          pFileName->szPath = NULL;
@@ -93,11 +94,7 @@ HB_FUNC( SX_FNAMEPARSER )
          }
       }
 
-      if( fFree )
-         hb_retc_buffer( hb_fsFNameMerge( szFileName, pFileName ) );
-      else
-         hb_retc( hb_fsFNameMerge( szPathBuf, pFileName ) );
-
+      hb_retc( hb_fsFNameMerge( szPathBuf, pFileName ) );
       hb_xfree( pFileName );
    }
    else

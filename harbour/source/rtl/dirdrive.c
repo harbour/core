@@ -60,7 +60,7 @@
 HB_FUNC( DIRCHANGE )
 {
    if( HB_ISCHAR( 1 ) )
-      hb_retni( hb_fsChDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : hb_fsError() );
+      hb_retni( hb_fsChDir( hb_parc( 1 ) ) ? 0 : hb_fsError() );
    else
       hb_retni( F_ERROR );
 }
@@ -71,7 +71,7 @@ HB_FUNC( DIRCHANGE )
 HB_FUNC( MAKEDIR )
 {
    if( HB_ISCHAR( 1 ) )
-      hb_retni( hb_fsMkDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : hb_fsError() );
+      hb_retni( hb_fsMkDir( hb_parc( 1 ) ) ? 0 : hb_fsError() );
    else
       hb_retni( F_ERROR );
 }
@@ -79,7 +79,7 @@ HB_FUNC( MAKEDIR )
 HB_FUNC( DIRREMOVE )
 {
    if( HB_ISCHAR( 1 ) )
-      hb_retni( hb_fsRmDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : hb_fsError() );
+      hb_retni( hb_fsRmDir( hb_parc( 1 ) ) ? 0 : hb_fsError() );
    else
       hb_retni( F_ERROR );
 }
@@ -91,7 +91,7 @@ HB_FUNC( DIRREMOVE )
 HB_FUNC( ISDISK )
 {
    BOOL fResult = FALSE;
-   char * szDrive = hb_parc( 1 );
+   const char * szDrive = hb_parc( 1 );
 
    if( szDrive )
    {
@@ -106,7 +106,7 @@ HB_FUNC( ISDISK )
 HB_FUNC( DISKCHANGE )
 {
    BOOL fResult = FALSE;
-   char * szDrive = hb_parc( 1 );
+   const char * szDrive = hb_parc( 1 );
 
    if( szDrive )
    {

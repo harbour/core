@@ -137,7 +137,7 @@ HB_FUNC( WAITPERIOD )
    hb_retl( d < s_dTimeCounter );
 }
 
-static BOOL _hb_timeValid( char * szTime, ULONG ulLen, int * piDecode )
+static BOOL _hb_timeValid( const char * szTime, ULONG ulLen, int * piDecode )
 {
    BOOL fValid = FALSE;
 

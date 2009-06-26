@@ -736,7 +736,7 @@ PHB_ITEM hb_errPutArgsArray( PHB_ITEM pError, PHB_ITEM pArgs )
    return pError;
 }
 
-char * hb_errGetDescription( PHB_ITEM pError )
+const char * hb_errGetDescription( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetDescription(%p)", pError));
 
@@ -752,7 +752,7 @@ PHB_ITEM hb_errPutDescription( PHB_ITEM pError, const char * szDescription )
    return pError;
 }
 
-char * hb_errGetFileName( PHB_ITEM pError )
+const char * hb_errGetFileName( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetFileName(%p)", pError));
 
@@ -784,7 +784,7 @@ PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode )
    return pError;
 }
 
-char * hb_errGetOperation( PHB_ITEM pError )
+const char * hb_errGetOperation( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetOperation(%p)", pError));
 
@@ -855,7 +855,7 @@ PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
    return pError;
 }
 
-char * hb_errGetSubSystem( PHB_ITEM pError )
+const char * hb_errGetSubSystem( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetSubSytem(%p)", pError));
 

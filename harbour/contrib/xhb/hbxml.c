@@ -433,7 +433,7 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
 
 static MXML_STATUS mxml_attribute_write( MXML_OUTPUT *out, PHBXML_ATTRIBUTE pAttr, int style )
 {
-   char *name = hb_itemGetCPtr( pAttr->pName );
+   const char *name = hb_itemGetCPtr( pAttr->pName );
 
    mxml_output_string_len( out, name, hb_itemGetCLen( pAttr->pName ) );
    mxml_output_char( out, '=' );
@@ -2300,7 +2300,8 @@ HB_FUNC( HBXML_DATAREAD )
    int iStyle = hb_parni(3);
    PHB_ITEM pRoot;
    MXML_REFIL refil;
-   char buffer[512];
+   char buffer[512], * buf;
+   ULONG ulLen;
 
    if( pDoc == NULL || pParam == NULL ||
        ( !HB_IS_STRING( pParam ) && !HB_IS_NUMERIC( pParam ) ) )
@@ -2309,11 +2310,9 @@ HB_FUNC( HBXML_DATAREAD )
       return;
    }
 
-
-   if( HB_IS_STRING( pParam ) )
+   if( hb_itemGetWriteCL( pParam, &buf, &ulLen ) )
    {
-      ULONG ulLen = hb_itemGetCLen( pParam );
-      mxml_refil_setup( &refil, NULL, hb_itemGetCPtr( pParam ), ulLen, ulLen );
+      mxml_refil_setup( &refil, NULL, buf, ulLen, ulLen );
    }
    else /* can only be an integer, that is, a file handle */
    {

@@ -100,7 +100,7 @@ HB_FUNC( ASCIISUM )
    if( HB_ISCHAR( 1 ) )
    {
       size_t sStrSize = hb_parclen( 1 );
-      char *pcString = hb_parc( 1 );
+      const char *pcString = hb_parc( 1 );
       size_t sPos;
       ULONG ulResult = 0;
 

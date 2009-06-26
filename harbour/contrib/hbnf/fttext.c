@@ -304,7 +304,7 @@ HB_FUNC( FT_FUSE )
 
    if ( HB_ISCHAR(1) )
    {
-      handles[area] = hb_fsOpen( ( BYTE * ) hb_parc(1), ( USHORT ) attr ) ;
+      handles[area] = hb_fsOpen( hb_parc(1), ( USHORT ) attr ) ;
       if( handles[area] <= 0 )
          error[area] = hb_fsError();
       offset[area] = 0 ;
@@ -1976,7 +1976,7 @@ static int _writeLine( BYTE * theData, ULONG iDataLen )
 
 static BOOL _writeeol( HB_FHANDLE fhnd )
 {
-   char * crlf = hb_conNewLine();
+   const char * crlf = hb_conNewLine();
    ULONG len = strlen( crlf );
 
    return hb_fsWriteLarge( fhnd, ( BYTE * ) crlf, len ) == ( ULONG ) len;

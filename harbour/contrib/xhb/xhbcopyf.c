@@ -63,14 +63,14 @@
 
 #define BUFFER_SIZE 8192
 
-static BOOL hb_copyfile( char * szSource, char * szDest, PHB_ITEM pBlock )
+static BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM pBlock )
 {
    BOOL bRetVal = FALSE;
    HB_FHANDLE fhndSource;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_copyfile(%s, %s)", szSource, szDest));
 
-   while( ( fhndSource = hb_spOpen( ( BYTE * ) szSource, FO_READ | FO_SHARED | FO_PRIVATE ) ) == FS_ERROR )
+   while( ( fhndSource = hb_spOpen( szSource, FO_READ | FO_SHARED | FO_PRIVATE ) ) == FS_ERROR )
    {
       USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
 
@@ -82,7 +82,7 @@ static BOOL hb_copyfile( char * szSource, char * szDest, PHB_ITEM pBlock )
    {
       HB_FHANDLE fhndDest;
 
-      while( ( fhndDest = hb_spCreate( ( BYTE * ) szDest, FC_NORMAL ) ) == FS_ERROR )
+      while( ( fhndDest = hb_spCreate( szDest, FC_NORMAL ) ) == FS_ERROR )
       {
          USHORT uiAction = hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
 

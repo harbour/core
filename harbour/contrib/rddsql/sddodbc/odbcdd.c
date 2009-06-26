@@ -293,9 +293,9 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          return HB_FAILURE;
       }
 
-      pFieldInfo.atomName = ( BYTE* ) cName;
-      pFieldInfo.atomName[ MAX_FIELD_NAME ] = '\0';
-      hb_strUpper( (char *) pFieldInfo.atomName, MAX_FIELD_NAME + 1 );
+      cName[ MAX_FIELD_NAME ] = '\0';
+      hb_strUpper( ( char * ) cName, MAX_FIELD_NAME + 1 );
+      pFieldInfo.atomName = ( char * ) cName;
 
       pFieldInfo.uiLen = ( USHORT ) uiSize;
       pFieldInfo.uiDec = iDec;

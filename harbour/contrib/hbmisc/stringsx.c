@@ -6,7 +6,7 @@
 
 /* TODO: search this file for TODO and find 'em! */
 
-static const char *hb_strtoken(char *szText,
+static const char *hb_strtoken(const char *szText,
                                long lText,
                                long lIndex,
                                char cDelimiter,
@@ -76,7 +76,7 @@ HB_FUNC( STRTOKEN )
 /* debug function to dump the ASCII values of an entire string */
 HB_FUNC( STRDUMP )
 {
-  char *szText = hb_parc(1);
+  const char *szText = hb_parc(1);
   long i, lLength = hb_parclen(1);
   for( i = 0; i < lLength; i++ )
     printf("%d ", szText[i]);
@@ -87,7 +87,7 @@ HB_FUNC( ROT13 )
 {
   if( HB_ISCHAR(1) )
     {
-      char *szText = hb_parc( 1 );
+      const char *szText = hb_parc( 1 );
       ULONG i, lLen = hb_parclen( 1 );
       char *szResult = (char*)hb_xgrab(lLen + 1);
 

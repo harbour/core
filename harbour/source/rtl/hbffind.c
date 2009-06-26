@@ -727,13 +727,13 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       /* Convert from OS codepage */
       {
-         BOOL fFree;
-         char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) ffind->szName, &fFree );
+         char * pszFree;
+         const char * pszResult = hb_osDecode( ffind->szName, &pszFree );
 
-         if( fFree )
+         if( pszFree )
          {
-            hb_strncpy( ffind->szName, pbyResult, sizeof( ffind->szName ) - 1 );
-            hb_xfree( pbyResult );
+            hb_strncpy( ffind->szName, pszResult, sizeof( ffind->szName ) - 1 );
+            hb_xfree( pszFree );
          }
       }
 

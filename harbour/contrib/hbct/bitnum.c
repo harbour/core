@@ -58,7 +58,7 @@
 
 static BOOL __numParam( int iParam, HB_LONG * plNum )
 {
-   char *szHex = hb_parc( iParam );
+   const char *szHex = hb_parc( iParam );
 
    if( szHex )
    {

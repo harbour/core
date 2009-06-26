@@ -81,7 +81,7 @@ HB_FUNC( CHR )
 /* converts a character value to an ASCII code */
 HB_FUNC( ASC )
 {
-   char * szValue = hb_parc( 1 );
+   const char * szValue = hb_parc( 1 );
 
    if( szValue )
       hb_retni( ( UCHAR ) szValue[ 0 ] );

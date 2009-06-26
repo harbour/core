@@ -142,9 +142,9 @@ static BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDeli
          if( szResult )
          {
             ULONG ulLen = strlen( szResult );
-            char * szTrimmed = hb_strLTrim( szResult, &ulLen );
+            const char * szTrimmed = hb_strLTrim( szResult, &ulLen );
 
-            hb_fsWriteLarge( handle, ( BYTE * ) szTrimmed, strlen( szTrimmed ) );
+            hb_fsWriteLarge( handle, ( const BYTE * ) szTrimmed, strlen( szTrimmed ) );
             hb_xfree( szResult );
          }
          break;
@@ -255,7 +255,7 @@ HB_FUNC( DBF2TEXT )
 
             for( uiItter = 1; uiItter <= uiFieldCopy; uiItter++ )
             {
-               char * szFieldName = hb_arrayGetCPtr( pFields, uiItter );
+               const char * szFieldName = hb_arrayGetCPtr( pFields, uiItter );
                if( szFieldName )
                {
                   int iPos = hb_rddFieldIndex( pArea, szFieldName );

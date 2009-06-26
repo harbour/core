@@ -69,8 +69,8 @@ static BOOL hb_compRegisterFunc( HB_COMP_DECL, const char * szFunName, HB_SYMBOL
 
 /* ************************************************************************* */
 
-int hb_compMain( int argc, char * const argv[], BYTE ** pBufPtr, ULONG * pulSize,
-                 const char * szSource )
+int hb_compMain( int argc, const char * const argv[],
+                 BYTE ** pBufPtr, ULONG * pulSize, const char * szSource )
 {
    HB_COMP_DECL;
    int iStatus = EXIT_SUCCESS;

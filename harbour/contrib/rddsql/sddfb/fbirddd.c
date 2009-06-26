@@ -219,7 +219,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    PHB_ITEM         pItemEof, pItem;
    DBFIELDINFO      pFieldInfo;
    BOOL             bError;
-   BYTE*            pBuffer;
+   char*            pBuffer;
    USHORT           uiFields, uiCount;
    int              iType;
 
@@ -273,16 +273,15 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 
    pItemEof = hb_itemArrayNew( uiFields );
 
-   pBuffer = ( BYTE * ) hb_xgrab( 256 );
+   pBuffer = ( char * ) hb_xgrab( 256 );
 
    bError = FALSE;
    for ( uiCount = 0, pVar = pSqlda->sqlvar; uiCount < uiFields; uiCount++, pVar++  )
    {
       memcpy( pBuffer, pVar->sqlname, pVar->sqlname_length );
-      pBuffer[ pVar->sqlname_length ] = '\0';
+      pBuffer[ HB_MIN( pVar->sqlname_length, MAX_FIELD_NAME ) ] = '\0';
+      hb_strUpper( pBuffer, MAX_FIELD_NAME + 1 );
       pFieldInfo.atomName = pBuffer;
-      pFieldInfo.atomName[ MAX_FIELD_NAME ] = '\0';
-      hb_strUpper( ( char* ) pFieldInfo.atomName, MAX_FIELD_NAME + 1 );
 
       pFieldInfo.uiDec = 0;
 

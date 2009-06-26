@@ -94,7 +94,7 @@ HB_FUNC( TRANSFORM )
    if( pPic && hb_itemGetCLen( pPic ) > 0 )
    {
       char szPicDate[ 11 ];
-      char * szPic = hb_itemGetCPtr( pPic );
+      const char * szPic = hb_itemGetCPtr( pPic );
       ULONG  ulPicLen = hb_itemGetCLen( pPic );
       USHORT uiPicFlags; /* Function flags */
 
@@ -197,7 +197,7 @@ HB_FUNC( TRANSFORM )
 
       if( HB_IS_STRING( pValue ) )
       {
-         char * szExp = hb_itemGetCPtr( pValue );
+         const char * szExp = hb_itemGetCPtr( pValue );
          ULONG  ulExpLen = hb_itemGetCLen( pValue );
          ULONG  ulExpPos = 0;
          BOOL bAnyPic = FALSE;
@@ -654,9 +654,9 @@ HB_FUNC( TRANSFORM )
 
       else if( HB_IS_DATE( pValue ) )
       {
-         char szDate[ 9 ];
-         char * szDateFormat;
+         const char * szDateFormat;
          char szNewFormat[ 11 ];
+         char szDate[ 9 ];
          UINT nFor;
 
          szResult = ( char * ) hb_xgrab( 13 );
@@ -755,7 +755,7 @@ HB_FUNC( TRANSFORM )
 
       else if( HB_IS_TIMESTAMP( pValue ) )
       {
-         char * szDateFormat = NULL, * szTimeFormat = NULL;
+         const char * szDateFormat = NULL, * szTimeFormat = NULL;
          char szNewFormat[ 11 ];
          long lDate, lTime;
          UINT nFor;

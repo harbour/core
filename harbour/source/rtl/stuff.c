@@ -57,7 +57,7 @@ HB_FUNC( STUFF )
 {
    if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISCHAR( 4 ) )
    {
-      char * szText = hb_parc( 1 );
+      const char * szText = hb_parc( 1 );
       ULONG ulText = hb_parclen( 1 );
       ULONG ulPos = hb_parnl( 2 );
       ULONG ulDel = hb_parnl( 3 );

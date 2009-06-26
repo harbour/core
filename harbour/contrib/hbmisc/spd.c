@@ -58,7 +58,8 @@
 static void STAItm( PHB_ITEM pItmPar )
 {
    ULONG i, ulItmPar = hb_itemGetCLen( pItmPar );
-   char *cRes, *c, *cItmPar = hb_itemGetCPtr( pItmPar );
+   const char *cItmPar = hb_itemGetCPtr( pItmPar ), *c;
+   char *cRes;
 
    for( i = 3, c = cItmPar; *c; c++ ){
       if( *c == '\'' ) i++;   /* Count ' Tokens */
@@ -180,7 +181,8 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 HB_FUNC( SQL_SPRINTF )
 {
    ULONG ulItmFrm;
-   char *cRes, *cItmFrm;
+   const char *cItmFrm;
+   char *cRes;
    int argc = hb_pcount() - 1;
    PHB_ITEM pItmFrm = hb_param( 1, HB_IT_STRING );
 
@@ -194,7 +196,8 @@ HB_FUNC( SQL_SPRINTF )
       hb_retclen_buffer( cRes, ulItmFrm );
    }else{
       PHB_ITEM pItmPar, pItmCpy;
-      char *cIntMod, *cBuffer, *cParFrm, *c;
+      char *cIntMod, *cBuffer, *cParFrm;
+      const char *c;
       int p, arg, iCOut, IsType, IsIndW, IsIndP, iIndWidth, iIndPrec, iErrorPar = 0;
       ULONG s, f, i, ulWidth, ulParPos = 0, ulResPos = 0, ulMaxBuf = DK_INCBUF, ulMaxRes = DK_INCRES;
       static char cToken[] = "stcdiouxXaAeEfgGpnSC";
@@ -419,7 +422,8 @@ HB_FUNC( SQL_SPRINTF )
                if( iCOut == 's' ) hb_itemRelease( pItmPar );
 
             }else if( iCOut == 's' ){
-               char *cTrimStr, *cStr = hb_itemStr( pItmPar, NULL, NULL );
+               char *cStr = hb_itemStr( pItmPar, NULL, NULL );
+               const char *cTrimStr;
 
                if( cStr ){
                   f = strlen( cStr ); cTrimStr = hb_strLTrim( cStr, &f );

@@ -82,7 +82,8 @@ ULONG hb_destBuflen( ULONG srclen )
 
 HB_FUNC( HB_COMPRESS )
 {
-   char *cDest, *cSource;
+   const char *cSource;
+   char *cDest;
    ULONG ulSrclen, ulDstlen, ulBufLen;
    PHB_ITEM pSource, pDest =NULL, pDestLen = NULL;
    int nCompFactor, iFirst;
@@ -127,12 +128,7 @@ HB_FUNC( HB_COMPRESS )
       ulBufLen = 0;
       if( pDest && pDestLen && ulDstlen > 0 )
       {
-         pDest = hb_itemUnShare( pDest );
-         if( HB_IS_STRING( pDest ) )
-         {
-            cDest = hb_itemGetCPtr( pDest );
-            ulBufLen = hb_itemGetCLen( pDest );
-         }
+         hb_itemGetWriteCL( pDest, &cDest, &ulBufLen );
       }
       if( cDest == NULL || ulBufLen < ulDstlen )
       {
@@ -183,7 +179,8 @@ HB_FUNC( HB_COMPRESS )
 
 HB_FUNC( HB_UNCOMPRESS )
 {
-   char *cDest, *cSource;
+   const char *cSource;
+   char *cDest;
    ULONG ulSrclen, ulDstlen, ulBufLen;
    PHB_ITEM pSource, pDest;
    int cerr;
@@ -215,12 +212,7 @@ HB_FUNC( HB_UNCOMPRESS )
       ulBufLen = 0;
       if( pDest )
       {
-         pDest = hb_itemUnShare( pDest );
-         if( HB_IS_STRING( pDest ) )
-         {
-            cDest = hb_itemGetCPtr( pDest );
-            ulBufLen = hb_itemGetCLen( pDest );
-         }
+         hb_itemGetWriteCL( pDest, &cDest, &ulBufLen );
       }
       if( cDest == NULL || ulBufLen < ulDstlen )
       {

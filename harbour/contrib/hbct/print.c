@@ -184,7 +184,7 @@ HB_FUNC( PRINTSEND )
    }
    else if( HB_ISCHAR( 1 ) )
    {
-      char *string = hb_parcx( 1 );
+      const char *string = hb_parcx( 1 );
       int i, len = hb_parclen( 1 );
 
       r.h.ah = 0;
@@ -201,9 +201,9 @@ HB_FUNC( PRINTSEND )
 
 #elif defined( HB_OS_WIN_32 )
 
-   char * szPort = "lpt1";
-   char * szChr = " ";
-   char * szStr = NULL;
+   char szChr[ 2 ] = { ' ', '\0' };
+   char szPort[ 5 ] = { 'l', 'p', 't', '1', '\0' };
+   const char * szStr = NULL;
    USHORT usLen = 0, usRet = 0;
 
    if( HB_ISNUM( 1 ) )
@@ -223,10 +223,10 @@ HB_FUNC( PRINTSEND )
 
    if( usLen )
    {
-      HB_FHANDLE hFile = hb_fsOpen( ( BYTE * ) szPort, FO_WRITE );
+      HB_FHANDLE hFile = hb_fsOpen( szPort, FO_WRITE );
       if( hFile != FS_ERROR )
       {
-         usRet = hb_fsWrite( hFile, ( BYTE * ) szStr, usLen );
+         usRet = hb_fsWrite( hFile, ( const BYTE * ) szStr, usLen );
          hb_fsClose( hFile );
       }
    }

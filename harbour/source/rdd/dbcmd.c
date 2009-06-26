@@ -334,7 +334,7 @@ HB_FUNC( DBCOMMITALL )
  */
 HB_FUNC( DBCREATE )
 {
-   char * szFileName, * szAlias, * szDriver, * szCpId;
+   const char * szFileName, * szAlias, * szDriver, * szCpId;
    USHORT uiSize, uiLen;
    PHB_ITEM pStruct, pFieldDesc, pDelim;
    BOOL fKeepOpen, fCurrArea;
@@ -403,7 +403,7 @@ HB_FUNC( DBCREATE )
  */
 HB_FUNC( HB_DBCREATETEMP )
 {
-   char * szAlias, * szDriver, * szCpId;
+   const char * szAlias, * szDriver, * szCpId;
    USHORT uiSize, uiLen;
    PHB_ITEM pStruct, pFieldDesc;
    ULONG ulConnection;
@@ -461,7 +461,7 @@ HB_FUNC( HB_DBCREATETEMP )
 /* __dbopensdf( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, cCodePage, nConnection ) */
 HB_FUNC( __DBOPENSDF )
 {
-   char * szFileName, * szAlias, * szDriver, * szCpId;
+   const char * szFileName, * szAlias, * szDriver, * szCpId;
    USHORT uiSize, uiLen;
    PHB_ITEM pStruct, pFieldDesc, pDelim;
    BOOL fKeepOpen, fCurrArea;
@@ -757,7 +757,7 @@ HB_FUNC( DBSEEK )
 
 HB_FUNC( DBSELECTAREA )
 {
-   char * szAlias = hb_parc( 1 );
+   const char * szAlias = hb_parc( 1 );
 
    if( szAlias )
    {
@@ -1191,14 +1191,14 @@ HB_FUNC( ORDCONDSET )
 
       lpdbOrdCondInfo = ( LPDBORDERCONDINFO ) hb_xgrab( sizeof( DBORDERCONDINFO ) );
       lpdbOrdCondInfo->abFor = hb_parclen( 1 ) > 0 ?
-                               ( BYTE * ) hb_strdup( hb_parc( 1 ) ) : NULL;
+                               hb_strdup( hb_parc( 1 ) ) : NULL;
       pItem = hb_param( 2, HB_IT_BLOCK );
       lpdbOrdCondInfo->itmCobFor = pItem ? hb_itemNew( pItem ) : NULL;
 
       lpdbOrdCondInfo->fAll = ! HB_ISLOG( 3 ) || hb_parl( 3 );
 
       lpdbOrdCondInfo->abWhile = hb_parclen( 17 ) > 0 ?
-                                 ( BYTE * ) hb_strdup( hb_parc( 17 ) ) : NULL;
+                                 hb_strdup( hb_parc( 17 ) ) : NULL;
       pItem = hb_param( 4, HB_IT_BLOCK );
       lpdbOrdCondInfo->itmCobWhile = pItem ? hb_itemNew( pItem ) : NULL;
 
@@ -1265,8 +1265,8 @@ HB_FUNC( ORDCREATE )
       DBCONSTRAINTINFO dbConstrInfo;
 
       dbOrderInfo.lpdbOrdCondInfo = pArea->lpdbOrdCondInfo;
-      dbOrderInfo.abBagName = ( BYTE * ) hb_parcx( 1 );
-      dbOrderInfo.atomBagName = ( BYTE * ) hb_parcx( 2 );
+      dbOrderInfo.abBagName = hb_parcx( 1 );
+      dbOrderInfo.atomBagName = hb_parcx( 2 );
       dbOrderInfo.itmOrder = NULL;
       dbOrderInfo.fUnique = HB_ISLOG( 5 ) ? ( BOOL ) hb_parl( 5 ) : hb_setGetUnique();
       dbOrderInfo.abExpr = hb_param( 3, HB_IT_STRING );
@@ -1279,8 +1279,8 @@ HB_FUNC( ORDCREATE )
       }
       dbOrderInfo.itmCobExpr = hb_param( 4, HB_IT_BLOCK );
 
-      dbConstrInfo.abConstrName = ( BYTE * ) hb_parc( 6 );
-      dbConstrInfo.abTargetName = ( BYTE * ) hb_parc( 7 );
+      dbConstrInfo.abConstrName = hb_parc( 6 );
+      dbConstrInfo.abTargetName = hb_parc( 7 );
       dbConstrInfo.itmRelationKey = hb_param( 8, HB_IT_ARRAY );
       if( dbConstrInfo.abConstrName && dbConstrInfo.abTargetName && dbConstrInfo.itmRelationKey )
       {
@@ -1640,7 +1640,7 @@ HB_FUNC( SELECT )
    }
    else
    {
-      char * szAlias = hb_parc( 1 );
+      const char * szAlias = hb_parc( 1 );
       int iArea = 0;
 
       if( szAlias )

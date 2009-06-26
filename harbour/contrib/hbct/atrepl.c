@@ -125,9 +125,9 @@ HB_FUNC( ATREPL )
 {
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      char *pcStringToMatch = hb_parc( 1 );
+      const char *pcStringToMatch = hb_parc( 1 );
       size_t sStrToMatchLen = ( size_t ) hb_parclen( 1 );
-      char *pcString = hb_parc( 2 );
+      const char *pcString = hb_parc( 2 );
       size_t sStrLen = ( size_t ) hb_parclen( 2 );
       int iMultiPass = ct_getatmupa();
       int iAtLike = ct_getatlike();
@@ -211,13 +211,13 @@ HB_FUNC( ATREPL )
             switch ( iAtLike )
             {
                case CT_SETATLIKE_EXACT:
-                  pc = ct_at_exact_forward( pcRetSubStr, sRetSubStrLen, pcStringToMatch,
-                                            sStrToMatchLen, &sMatchStrLen );
+                  pc = ( char * ) ct_at_exact_forward( pcRetSubStr, sRetSubStrLen, pcStringToMatch,
+                                                       sStrToMatchLen, &sMatchStrLen );
                   break;
 
                case CT_SETATLIKE_WILDCARD:
-                  pc = ct_at_wildcard_forward( pcRetSubStr, sRetSubStrLen, pcStringToMatch,
-                                               sStrToMatchLen, cAtLike, &sMatchStrLen );
+                  pc = ( char * ) ct_at_wildcard_forward( pcRetSubStr, sRetSubStrLen, pcStringToMatch,
+                                                          sStrToMatchLen, cAtLike, &sMatchStrLen );
                   break;
 
                default:
@@ -226,8 +226,7 @@ HB_FUNC( ATREPL )
 
             if( pc == NULL )
             {
-               hb_retclen( pcRetStr, sRetStrLen );
-               hb_xfree( pcRetStr );
+               hb_retclen_buffer( pcRetStr, sRetStrLen );
                return;
             }
 
@@ -281,14 +280,14 @@ HB_FUNC( ATREPL )
          switch ( iAtLike )
          {
             case CT_SETATLIKE_EXACT:
-               pc = ct_at_exact_backward( pcRetStr + sIgnore, sRetStrLen - sIgnore,
-                                          pcStringToMatch, sStrToMatchLen, &sMatchStrLen );
+               pc = ( char * ) ct_at_exact_backward( pcRetStr + sIgnore, sRetStrLen - sIgnore,
+                                                     pcStringToMatch, sStrToMatchLen, &sMatchStrLen );
                break;
 
             case CT_SETATLIKE_WILDCARD:
-               pc = ct_at_wildcard_backward( pcRetStr + sIgnore, sRetStrLen - sIgnore,
-                                             pcStringToMatch, sStrToMatchLen,
-                                             cAtLike, &sMatchStrLen );
+               pc = ( char * ) ct_at_wildcard_backward( pcRetStr + sIgnore, sRetStrLen - sIgnore,
+                                                        pcStringToMatch, sStrToMatchLen,
+                                                        cAtLike, &sMatchStrLen );
                break;
 
             default:

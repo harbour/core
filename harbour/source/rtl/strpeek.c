@@ -80,12 +80,13 @@ HB_FUNC( STRPOKE )
 
    if( pText && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
-      ULONG ulPos = hb_parnl( 2 );
+      ULONG ulPos = hb_parnl( 2 ), ulLen;
+      char * pszText;
 
-      if( ulPos > 0 && ulPos <= hb_itemGetCLen( pText ) )
+      if( ulPos > 0 && hb_itemGetWriteCL( pText, &pszText, &ulLen ) &&
+          ulPos <= ulLen )
       {
-         pText = hb_itemUnShareString( pText );
-         hb_itemGetCPtr( pText )[ ulPos - 1 ] = (char) ( hb_parni( 3 ) & 0xff );
+         pszText[ ulPos - 1 ] = ( char ) ( hb_parni( 3 ) & 0xff );
       }
       hb_itemReturn( pText );
    }

@@ -60,17 +60,16 @@
 
 HB_FUNC( __RUN )
 {
-   if( HB_ISCHAR( 1 ) && hb_gtSuspend() == 0 )
+   const char * pszCommand = hb_parc( 1 );
+
+   if( pszCommand && hb_gtSuspend() == 0 )
    {
-      char * pszCommand = hb_itemGetC( hb_param( 1, HB_IT_STRING ) );
-      BOOL fFree;
-      char * pszResult = ( char * ) hb_osEncode( ( BYTE * ) pszCommand, &fFree );
+      char * pszFree;
 
-      if( system( pszResult ) != 0 ) {}
+      if( system( hb_osEncode( pszCommand, &pszFree ) ) != 0 ) {}
 
-      hb_itemFreeC( pszCommand );
-      if( fFree )
-         hb_xfree( pszResult );
+      if( pszFree )
+         hb_xfree( pszFree );
 
       if( hb_gtResume() != 0 )
       {

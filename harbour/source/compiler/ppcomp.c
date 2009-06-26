@@ -273,7 +273,7 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
 }
 
 
-void hb_compInitPP( HB_COMP_DECL, int argc, char * const argv[] )
+void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[] )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_compInitPP()" ) );
 

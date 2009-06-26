@@ -71,7 +71,7 @@ HB_FUNC( HB_DBDETACH )
    }
    else if( HB_IS_STRING( pAlias ) )
    {
-      char * szAlias = hb_itemGetCPtr( pAlias );
+      const char * szAlias = hb_itemGetCPtr( pAlias );
       hb_rddGetAliasNumber( szAlias, &iArea );
       if( iArea > 0 )
          pArea = ( AREAP ) hb_rddGetWorkAreaPointer( iArea );
@@ -100,7 +100,7 @@ HB_FUNC( HB_DBDETACH )
  */
 HB_FUNC( HB_DBREQUEST )
 {
-   char * szAlias;
+   const char * szAlias;
    PHB_ITEM pCargo;
    BOOL fNewArea, fWait;
    AREAP pArea;

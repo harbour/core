@@ -96,7 +96,7 @@
 
 HB_FUNC( ISALNUM )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    if( szString != NULL )
       hb_retl( HB_ISALNUM( ( BYTE ) * szString ) );
@@ -111,7 +111,7 @@ HB_FUNC( ISALNUM )
 
 HB_FUNC( ISSPACE )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    if( szString != NULL )
       hb_retl( HB_ISSPACE( ( BYTE ) * szString ) );
@@ -125,7 +125,7 @@ HB_FUNC( ISSPACE )
 
 HB_FUNC( ISXDIGIT )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    hb_retl( szString && HB_ISXDIGIT( ( BYTE ) * szString ) );
 }
@@ -136,7 +136,7 @@ HB_FUNC( ISXDIGIT )
 
 HB_FUNC( ISCNTRL )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    hb_retl( szString && iscntrl( ( BYTE ) * szString ) );
 }
@@ -147,7 +147,7 @@ HB_FUNC( ISCNTRL )
 
 HB_FUNC( ISGRAPH )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    hb_retl( szString && isgraph( ( BYTE ) * szString ) );
 }
@@ -159,7 +159,7 @@ HB_FUNC( ISGRAPH )
 
 HB_FUNC( ISPRINT )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    hb_retl( szString && isprint( ( BYTE ) * szString ) ) ;
 }
@@ -171,7 +171,7 @@ HB_FUNC( ISPRINT )
 
 HB_FUNC( ISPUNCT )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    hb_retl( szString && ispunct( ( BYTE ) * szString ) );
 }
@@ -182,7 +182,7 @@ HB_FUNC( ISPUNCT )
 
 HB_FUNC( ISASCII )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    hb_retl( szString && isascii( ( BYTE ) * szString ) );
 }

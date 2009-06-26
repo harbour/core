@@ -381,7 +381,7 @@ static int hb_selectWriteExceptSocket( HB_SOCKET_STRUCT * Socket )
 #endif
 
 /*** Utilty to access host DNS */
-static struct hostent * hb_getHosts( char * name, HB_SOCKET_STRUCT * Socket )
+static struct hostent * hb_getHosts( const char * name, HB_SOCKET_STRUCT * Socket )
 {
    struct hostent * Host = NULL;
 
@@ -944,6 +944,7 @@ static void s_inetRecvInternal( int iMode )
    HB_SOCKET_STRUCT * Socket = HB_PARSOCKET( 1 );
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
    char *buffer;
+   ULONG ulLen;
    int iLen, iMaxLen, iReceived;
    int iTimeElapsed;
 
@@ -958,11 +959,15 @@ static void s_inetRecvInternal( int iMode )
       return;
    }
 
-   pBuffer = hb_itemUnShare( pBuffer );
-   buffer = hb_itemGetCPtr( pBuffer );
-   iLen = hb_itemGetCLen( pBuffer );
+   if( hb_itemGetWriteCL( pBuffer, &buffer, &ulLen ) )
+      iLen = ( int ) ulLen;
+   else
+   {
+      iLen = 0;
+      buffer = NULL;
+   }
 
-   if( HB_ISNIL( 3 ) )
+   if( !HB_ISNUM( 3 ) )
    {
       iMaxLen = iLen;
    }
@@ -1205,7 +1210,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
 
    char cChar = '\0';
    char * Buffer;
-   char ** Proto;
+   const char ** Proto;
    int iAllocated, iBufferSize, iMax;
    int iLen;
    int iPos = 0;
@@ -1241,7 +1246,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
             return;
          }
 
-         Proto = ( char ** ) hb_xgrab( sizeof( char * ) * iprotos );
+         Proto = ( const char ** ) hb_xgrab( sizeof( char * ) * iprotos );
          iprotosize = ( int * ) hb_xgrab( sizeof( int ) * iprotos );
 
          for( i = 0; i < iprotos; i++ )
@@ -1252,7 +1257,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
       }
       else
       {
-         Proto           = ( char ** ) hb_xgrab( sizeof( char * ) );
+         Proto           = ( const char ** ) hb_xgrab( sizeof( char * ) );
          iprotosize      = ( int * ) hb_xgrab( sizeof( int ) );
          Proto[ 0 ]      = hb_itemGetCPtr( pProto );
          iprotosize[ 0 ] = hb_itemGetCLen( pProto );
@@ -1261,7 +1266,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
    }
    else
    {
-      Proto           = ( char ** ) hb_xgrab( sizeof( char * ) );
+      Proto           = ( const char ** ) hb_xgrab( sizeof( char * ) );
       iprotosize      = ( int * ) hb_xgrab( sizeof( int ) );
       Proto[ 0 ]      = ( char * ) "\r\n";
       iprotos         = 1;
@@ -1451,7 +1456,7 @@ static void s_inetSendInternal( int iMode )
 {
    HB_SOCKET_STRUCT * Socket = HB_PARSOCKET( 1 );
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
-   char * Buffer;
+   const char * Buffer;
    int iLen, iSent, iSend;
 
    if( Socket == NULL || pBuffer == NULL )
@@ -1528,7 +1533,7 @@ HB_FUNC( HB_INETSENDALL )
 
 HB_FUNC( HB_INETGETHOSTS )
 {
-   char * szHost = hb_parc( 1 );
+   const char * szHost = hb_parc( 1 );
    struct hostent * Host;
    char ** cHosts;
    int iCount = 0;
@@ -1570,7 +1575,7 @@ HB_FUNC( HB_INETGETHOSTS )
 
 HB_FUNC( HB_INETGETALIAS )
 {
-   char * szHost = hb_parc( 1 );
+   const char * szHost = hb_parc( 1 );
    struct hostent * Host;
    char ** cHosts;
    int iCount = 0;
@@ -1618,7 +1623,7 @@ HB_FUNC( HB_INETSERVER )
 {
    HB_SOCKET_STRUCT * Socket = HB_PARSOCKET( 2 );
    PHB_ITEM pSocket = NULL;
-   char * szAddress;
+   const char * szAddress;
    int iPort;
    int iOpt = 1;
    int iListen;
@@ -1777,7 +1782,7 @@ HB_FUNC( HB_INETACCEPT )
 
 HB_FUNC( HB_INETCONNECT )
 {
-   char * szHost = hb_parc( 1 );
+   const char * szHost = hb_parc( 1 );
    HB_SOCKET_STRUCT * Socket = HB_PARSOCKET( 3 );
    PHB_ITEM pSocket = NULL;
    struct hostent * Host;
@@ -1839,7 +1844,7 @@ HB_FUNC( HB_INETCONNECT )
 
 HB_FUNC( HB_INETCONNECTIP )
 {
-   char * szHost = hb_parc( 1 );
+   const char * szHost = hb_parc( 1 );
    HB_SOCKET_STRUCT * Socket = HB_PARSOCKET( 3 );
    PHB_ITEM pSocket = NULL;
    int iPort = hb_parni( 2 );
@@ -1902,7 +1907,7 @@ HB_FUNC( HB_INETDGRAMBIND )
    PHB_ITEM pSocket = NULL;
    int iPort = hb_parni( 1 );
    int iOpt = 1;
-   char * szAddress;
+   const char * szAddress;
 
    /* Parameter error checking */
    if( iPort == 0 || ( hb_pcount() > 3 && ! HB_ISCHAR( 4 ) ) )
@@ -2030,11 +2035,11 @@ HB_FUNC( HB_INETDGRAM )
 HB_FUNC( HB_INETDGRAMSEND )
 {
    HB_SOCKET_STRUCT * Socket = HB_PARSOCKET( 1 );
-   char * szAddress = hb_parc( 2 );
+   const char * szAddress = hb_parc( 2 );
    int iPort = hb_parni( 3 );
    PHB_ITEM pBuffer = hb_param( 4, HB_IT_STRING );
    int iLen;
-   char * szBuffer;
+   const char * szBuffer;
 
    if( Socket == NULL ||
        szAddress == NULL || iPort == 0 || pBuffer == NULL )
@@ -2097,6 +2102,7 @@ HB_FUNC( HB_INETDGRAMRECV )
    int iTimeElapsed = 0;
    int iLen, iMaxLen;
    char * Buffer;
+   ULONG ulLen;
    BOOL fRepeat;
    socklen_t iDtLen = ( socklen_t ) sizeof( struct sockaddr );
 
@@ -2112,10 +2118,24 @@ HB_FUNC( HB_INETDGRAMRECV )
       return;
    }
 
-   pBuffer = hb_itemUnShare( pBuffer );
-   Buffer = hb_itemGetCPtr( pBuffer );
+   if( hb_itemGetWriteCL( pBuffer, &Buffer, &ulLen ) )
+      iLen = ( int ) ulLen;
+   else
+   {
+      iLen = 0;
+      Buffer = NULL;
+   }
 
-   iMaxLen = HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( int ) hb_itemGetCLen( pBuffer );
+   if( !HB_ISNUM( 3 ) )
+   {
+      iMaxLen = iLen;
+   }
+   else
+   {
+      iMaxLen = hb_parni( 3 );
+      if( iLen < iMaxLen )
+         iMaxLen = iLen;
+   }
 
    hb_vmUnlock();
 

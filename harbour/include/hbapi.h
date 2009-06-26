@@ -775,7 +775,7 @@ extern HB_EXPORT BOOL         hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_I
 extern HB_EXPORT BOOL         hb_arrayGetItemRef( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* create a reference to an array element */
 /* hb_arrayGetItemPtr() is dangerous, be sure that base ARRAY value will not be changed (f.e. resized) */
 extern HB_EXPORT PHB_ITEM     hb_arrayGetItemPtr( PHB_ITEM pArray, ULONG ulIndex ); /* returns pointer to specified element of the array */
-extern HB_EXPORT ULONG        hb_arrayCopyC( PHB_ITEM pArray, ULONG ulIndex, char * szBuffer, ULONG ulLen ); /* copy a string into an array item */
+extern HB_EXPORT ULONG        hb_arrayCopyC( PHB_ITEM pArray, ULONG ulIndex, char * szBuffer, ULONG ulLen ); /* copy a string from an array item */
 extern HB_EXPORT char *       hb_arrayGetC( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string contained on an array element */
 extern HB_EXPORT const char * hb_arrayGetCPtr( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string pointer on an array element */
 extern HB_EXPORT ULONG        hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
@@ -936,7 +936,7 @@ extern HB_EXPORT char *    hb_strncpyLower( char * pDest, const char * pSource, 
 extern HB_EXPORT char *    hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen ); /* copy an existing string buffer to another buffer, as upper case */
 extern HB_EXPORT char *    hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen );
 extern HB_EXPORT double    hb_strVal( const char * szText, ULONG ulLen ); /* return the numeric value of a character string representation of a number */
-extern HB_EXPORT char *    hb_strLTrim( const char * szText, ULONG * ulLen ); /* return a pointer to the first non-white space character */
+extern HB_EXPORT const char * hb_strLTrim( const char * szText, ULONG * ulLen ); /* return a pointer to the first non-white space character */
 extern HB_EXPORT ULONG     hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace ); /* return length of a string, ignoring trailing white space (or true spaces) */
 extern HB_EXPORT double    hb_strVal( const char * szText, ULONG ulLen );
 extern HB_EXPORT HB_LONG   hb_strValInt( const char * szText, int * iOverflow );
@@ -1039,14 +1039,14 @@ extern PHB_ITEM   hb_memvarGetItem( PHB_SYMB pMemvarSymb );
 #endif /* _HB_API_INTERNAL_ */
 
 /* console I/O subsystem */
-extern void     hb_conInit( void ); /* initialize the console API system */
-extern void     hb_conRelease( void ); /* release the console API system */
-extern HB_EXPORT char *   hb_conNewLine( void ); /* retrieve a pointer to a static buffer containing new-line characters */
-extern HB_EXPORT void     hb_conOutStd( const char * pStr, ULONG ulLen ); /* output an string to STDOUT */
-extern HB_EXPORT void     hb_conOutErr( const char * pStr, ULONG ulLen ); /* output an string to STDERR */
-extern HB_EXPORT void     hb_conOutAlt( const char * pStr, ULONG ulLen ); /* output an string to the screen and/or printer and/or alternate */
-extern HB_EXPORT USHORT   hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor ); /* retrieve and optionally set cursor shape */
-extern HB_EXPORT char *   hb_conSetColor( const char * szColor ); /* retrieve and optionally set console color */
+extern void hb_conInit( void );     /* initialize the console API system */
+extern void hb_conRelease( void );  /* release the console API system */
+extern HB_EXPORT const char * hb_conNewLine( void ); /* retrieve a pointer to a static buffer containing new-line characters */
+extern HB_EXPORT void         hb_conOutStd( const char * pStr, ULONG ulLen ); /* output an string to STDOUT */
+extern HB_EXPORT void         hb_conOutErr( const char * pStr, ULONG ulLen ); /* output an string to STDERR */
+extern HB_EXPORT void         hb_conOutAlt( const char * pStr, ULONG ulLen ); /* output an string to the screen and/or printer and/or alternate */
+extern HB_EXPORT USHORT       hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor ); /* retrieve and optionally set cursor shape */
+extern HB_EXPORT const char * hb_conSetColor( const char * szColor ); /* retrieve and optionally set console color */
 
 /* compiler and macro compiler */
 extern const char * hb_compReservedName( const char * szName ); /* determines if a string contains a reserve word */
@@ -1120,8 +1120,8 @@ extern HB_EXPORT BOOL   hb_iswince( void ); /* return .T. if OS is Windows CE or
 extern HB_EXPORT BOOL   hb_printerIsReady( const char * pszPrinterName );
 
 /* OS/Harbour codepage conversion */
-extern HB_EXPORT BYTE * hb_osEncode( BYTE * szFileName, BOOL * pfFree ); /* Convert a string sent to a system call, from Harbour codepage. */
-extern HB_EXPORT BYTE * hb_osDecode( BYTE * szFileName, BOOL * pfFree ); /* Convert a string received from a system call, to Harbour codepage. */
+extern HB_EXPORT const char * hb_osEncode( const char * szFileName, char ** pszFree ); /* Convert a string sent to a system call, from Harbour codepage. */
+extern HB_EXPORT const char * hb_osDecode( const char * szFileName, char ** pszFree ); /* Convert a string received from a system call, to Harbour codepage. */
 
 /* environment variables access */
 extern BOOL   hb_getenv_buffer( const char * szName, char * szBuffer, int nSize );

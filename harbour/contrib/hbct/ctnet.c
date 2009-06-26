@@ -144,7 +144,7 @@ BOOL WINAPI WNetErrorHandler( DWORD dwErrorCode, LPSTR lpszFunction )
    return TRUE;
 }
 
-static BOOL hb_IsNetShared( LPSTR szLocalDevice )
+static BOOL hb_IsNetShared( const char *szLocalDevice )
 {
    TCHAR lpRemoteDevice[80];
    LPTSTR lpLocalDevice;
@@ -176,7 +176,7 @@ HB_FUNC( NETCANCEL )
 
 HB_FUNC( NETPRINTER )
 {
-   char * cPrn = hb_setGetCPtr( HB_SET_PRINTFILE );   /* query default local printer port. */
+   const char * cPrn = hb_setGetCPtr( HB_SET_PRINTFILE );   /* query default local printer port. */
 
    if( !cPrn || !*cPrn || hb_stricmp( cPrn, "PRN" ) == 0 )
       cPrn = "LPT1";

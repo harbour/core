@@ -371,7 +371,7 @@ void hb_md5file( HB_FHANDLE hFile, BYTE * ucDigest )
 
 HB_FUNC( HB_MD5 )
 {
-   char * pszStr = hb_parc( 1 );
+   const char * pszStr = hb_parc( 1 );
 
    if( pszStr )
    {
@@ -389,11 +389,11 @@ HB_FUNC( HB_MD5 )
 
 HB_FUNC( HB_MD5FILE )
 {
-   char * pszFile = hb_parc( 1 );
+   const char * pszFile = hb_parc( 1 );
 
    if( pszFile )
    {
-      HB_FHANDLE hFile = hb_fsOpen( ( BYTE * ) pszFile, FO_READ );
+      HB_FHANDLE hFile = hb_fsOpen( pszFile, FO_READ );
 
       if( hFile != FS_ERROR )
       {

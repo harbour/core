@@ -209,7 +209,7 @@ static HB_ERRCODE pgsqlDisconnect( SQLDDCONNECTION* pConnection )
 
 static HB_ERRCODE pgsqlExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 {
-   char*       szQuery;
+   const char* szQuery;
    int         iTuples;
    PGresult*   pResult;
 
@@ -247,7 +247,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    PHB_ITEM        pItemEof, pItem;
    USHORT          uiFields, uiCount;
    BOOL            bError;
-   BYTE*           pBuffer;
+   char*           pBuffer;
    DBFIELDINFO     pFieldInfo;
 
 
@@ -272,15 +272,15 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 
    pItemEof = hb_itemArrayNew( uiFields );
 
-   pBuffer = ( BYTE* ) hb_xgrab( 256 );
+   pBuffer = ( char* ) hb_xgrab( 256 );
 
    bError = FALSE;
    for ( uiCount = 0; uiCount < uiFields; uiCount++  )
    {
-      hb_strncpy( ( char* ) pBuffer, PQfname( pResult, (int) uiCount ), 256 - 1 );
-      pFieldInfo.atomName = ( BYTE* ) pBuffer;
-      pFieldInfo.atomName[ MAX_FIELD_NAME ] = '\0';
-      hb_strUpper( ( char* ) pFieldInfo.atomName, MAX_FIELD_NAME + 1 );
+      hb_strncpy( pBuffer, PQfname( pResult, (int) uiCount ), 256 - 1 );
+      hb_strUpper( pBuffer, MAX_FIELD_NAME + 1 );
+      pBuffer[ MAX_FIELD_NAME ] = '\0';
+      pFieldInfo.atomName = pBuffer;
 
       pFieldInfo.uiDec = 0;
 

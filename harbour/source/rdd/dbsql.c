@@ -236,9 +236,9 @@ static BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
 /* Export DBF content to a SQL script file */
 static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
                         PHB_ITEM pWhile, PHB_ITEM pFor,
-                        const char * szDelim, char * szSep, const char * szEsc,
-                        const char * szTable, HB_FHANDLE hFile,
-                        BOOL fInsert, BOOL fRecno )
+                        const char * szDelim, const char * szSep,
+                        const char * szEsc, const char * szTable,
+                        HB_FHANDLE hFile, BOOL fInsert, BOOL fRecno )
 {
    PHB_FILEBUF pFileBuf;
    ULONG ulRecords = 0;
@@ -347,22 +347,22 @@ HB_FUNC( __DBSQL )
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
    {
-      BOOL fExport      = hb_parl( 1 );
-      char * szFileName = hb_parc( 2 );
-      char * szTable    = hb_parc( 3 );
-      PHB_ITEM pFields  = hb_param( 4, HB_IT_ARRAY );
-      PHB_ITEM pFor     = hb_param( 5, HB_IT_BLOCK );
-      PHB_ITEM pWhile   = hb_param( 6, HB_IT_BLOCK );
-      PHB_ITEM pNext    = hb_param( 7, HB_IT_NUMERIC );
-      PHB_ITEM pRecord  = HB_ISNIL( 8 ) ? NULL : hb_param( 8, HB_IT_ANY );
-      BOOL fRest        = pWhile != NULL || ( HB_ISLOG( 9 ) && hb_parl( 9 ) );
-      BOOL fAppend      = HB_ISLOG( 10 ) && hb_parl( 10 );
-      BOOL fInsert      = HB_ISLOG( 11 ) && hb_parl( 11 );
-      BOOL fRecno       = HB_ISLOG( 12 ) && hb_parl( 12 );
-      char * szSep      = hb_parcx( 13 );
-      char * szDelim    = hb_parcx( 14 );
-      char * szEsc      = hb_parcx( 15 );
-      HB_LONG llNext    = HB_LONG_MAX;
+      BOOL fExport            = hb_parl( 1 );
+      const char * szFileName = hb_parc( 2 );
+      const char * szTable    = hb_parc( 3 );
+      PHB_ITEM pFields        = hb_param( 4, HB_IT_ARRAY );
+      PHB_ITEM pFor           = hb_param( 5, HB_IT_BLOCK );
+      PHB_ITEM pWhile         = hb_param( 6, HB_IT_BLOCK );
+      PHB_ITEM pNext          = hb_param( 7, HB_IT_NUMERIC );
+      PHB_ITEM pRecord        = HB_ISNIL( 8 ) ? NULL : hb_param( 8, HB_IT_ANY );
+      BOOL fRest              = pWhile != NULL || ( HB_ISLOG( 9 ) && hb_parl( 9 ) );
+      BOOL fAppend            = HB_ISLOG( 10 ) && hb_parl( 10 );
+      BOOL fInsert            = HB_ISLOG( 11 ) && hb_parl( 11 );
+      BOOL fRecno             = HB_ISLOG( 12 ) && hb_parl( 12 );
+      const char * szSep      = hb_parcx( 13 );
+      const char * szDelim    = hb_parcx( 14 );
+      const char * szEsc      = hb_parcx( 15 );
+      HB_LONG llNext          = HB_LONG_MAX;
       HB_FHANDLE hFile;
       HB_ERRCODE errCode;
 
@@ -376,7 +376,7 @@ HB_FUNC( __DBSQL )
          /* Try to create Dat file */
          do
          {
-            hFile = hb_fsExtOpen( ( BYTE * ) szFileName, NULL,
+            hFile = hb_fsExtOpen( szFileName, NULL,
                                   ( fAppend ? 0 : FXO_TRUNCATE ) |
                                   FO_READWRITE | FO_EXCLUSIVE |
                                   FXO_DEFAULTS | FXO_SHARELOCK,

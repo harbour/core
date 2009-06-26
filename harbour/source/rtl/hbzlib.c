@@ -128,7 +128,7 @@ HB_FUNC( HB_ZUNCOMPRESSLEN )
  */
 HB_FUNC( HB_ZCOMPRESS )
 {
-   char * szData = hb_parc( 1 );
+   const char * szData = hb_parc( 1 );
    if( szData )
    {
       ULONG ulLen = hb_parclen( 1 );
@@ -142,9 +142,8 @@ HB_FUNC( HB_ZCOMPRESS )
 
          if( pBuffer )
          {
-            pBuffer = hb_itemUnShareString( pBuffer );
-            ulDstLen = hb_itemGetCLen( pBuffer );
-            pDest = hb_itemGetCPtr( pBuffer );
+            if( !hb_itemGetWriteCL( pBuffer, &pDest, &ulDstLen ) )
+               pDest = NULL;
          }
          else
          {
@@ -192,7 +191,7 @@ HB_FUNC( HB_ZCOMPRESS )
 HB_FUNC( HB_ZUNCOMPRESS )
 {
    PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
-   char * szData = hb_parc( 1 );
+   const char * szData = hb_parc( 1 );
 
    if( szData )
    {
@@ -206,9 +205,8 @@ HB_FUNC( HB_ZUNCOMPRESS )
 
          if( pBuffer )
          {
-            pBuffer = hb_itemUnShareString( pBuffer );
-            ulDstLen = hb_itemGetCLen( pBuffer );
-            pDest = hb_itemGetCPtr( pBuffer );
+            if( !hb_itemGetWriteCL( pBuffer, &pDest, &ulDstLen ) )
+               pDest = NULL;
          }
          else
          {

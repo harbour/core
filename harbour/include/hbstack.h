@@ -183,7 +183,7 @@ typedef struct
    int        iDynH;          /* number of dynamic symbol handles */
    void *     pStackLst;      /* this stack entry in stack linked list */
    HB_IOERRORS IOErrors;      /* MT safe buffer for IO errors */
-   BYTE *     byDirBuffer;    /* MT safe buffer for hb_fsCurDir() results */
+   char *     pDirBuffer;     /* MT safe buffer for hb_fsCurDir() results */
    void *     allocator;      /* memory manager global struct pointer */
 #endif
 } HB_STACK, * PHB_STACK;
@@ -300,7 +300,7 @@ extern void *     hb_stackGetTSD( PHB_TSD pTSD );
 extern void *     hb_stackTestTSD( PHB_TSD pTSD );
 extern void       hb_stackReleaseTSD( PHB_TSD pTSD );
 
-extern BYTE *     hb_stackDirBuffer( void );
+extern char *     hb_stackDirBuffer( void );
 extern PHB_IOERRORS hb_stackIOErrors( void );
 extern void *     hb_stackGetGT( void );
 extern void       hb_stackSetGT( void * );

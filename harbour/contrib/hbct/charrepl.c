@@ -133,10 +133,10 @@ HB_FUNC( CHARREPL )
        ( sReplaceLen = ( size_t ) hb_parclen( 3 ) ) > 0 )
    {
       /* get parameters */
-      char *pcSearch = hb_parc( 1 );
-      char *pcString = hb_parc( 2 );
+      const char *pcSearch = hb_parc( 1 );
+      const char *pcString = hb_parc( 2 );
       size_t sStrLen = ( size_t ) hb_parclen( 2 );
-      char *pcReplace = hb_parc( 3 );
+      const char *pcReplace = hb_parc( 3 );
       int iMode;
       char *pcRet;
       size_t sIndex;
@@ -170,7 +170,7 @@ HB_FUNC( CHARREPL )
       for( sIndex = 0; sIndex < sSearchLen; sIndex++ )
       {
          size_t sMatchStrLen;
-         char *pc;
+         const char *pc;
          size_t sReplIndex = sIndex;
 
          if( sReplIndex > sReplaceLen - 1 )
@@ -195,12 +195,12 @@ HB_FUNC( CHARREPL )
          else
          {
             /* multiple replacements: searching & replacing in pcRet */
-            pc = pcRet;
-            while( ( pc = ct_at_exact_forward( pc, sStrLen - ( pc - pcRet ),
-                                               pcSearch + sIndex, 1,
-                                               &sMatchStrLen ) ) != NULL )
+            char * pcw = pcRet;
+            while( ( pcw = ( char * ) ct_at_exact_forward( pcw, sStrLen - ( pcw - pcRet ),
+                                                           pcSearch + sIndex, 1,
+                                                           &sMatchStrLen ) ) != NULL )
             {
-               *pc++ = *( pcReplace + sReplIndex );
+               *pcw++ = *( pcReplace + sReplIndex );
             }
          }
       }

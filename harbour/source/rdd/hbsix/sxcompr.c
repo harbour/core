@@ -617,17 +617,17 @@ HB_FUNC( SX_FCOMPRESS )
 {
    BOOL fRet = FALSE;
    HB_FHANDLE hInput, hOutput;
-   char * szSource = hb_parc( 1 ), * szDestin = hb_parc( 2 );
+   const char * szSource = hb_parc( 1 ), * szDestin = hb_parc( 2 );
    BYTE buf[ 4 ];
    ULONG ulSize;
 
    if( szSource && *szSource && szDestin && *szDestin )
    {
-      hInput = hb_fsExtOpen( ( BYTE * ) szSource, NULL, FO_READ | FO_DENYNONE |
-                              FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
+      hInput = hb_fsExtOpen( szSource, NULL, FO_READ | FO_DENYNONE |
+                             FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
       if( hInput != FS_ERROR )
       {
-         hOutput = hb_fsExtOpen( ( BYTE * ) szDestin, NULL, FO_READWRITE |
+         hOutput = hb_fsExtOpen( szDestin, NULL, FO_READWRITE |
                                  FO_EXCLUSIVE | FXO_TRUNCATE |
                                  FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
          if( hOutput != FS_ERROR )
@@ -654,15 +654,15 @@ HB_FUNC( SX_FDECOMPRESS )
 {
    BOOL fRet = FALSE;
    HB_FHANDLE hInput, hOutput;
-   char * szSource = hb_parc( 1 ), * szDestin = hb_parc( 2 );
+   const char * szSource = hb_parc( 1 ), * szDestin = hb_parc( 2 );
 
    if( szSource && *szSource && szDestin && *szDestin )
    {
-      hInput = hb_fsExtOpen( ( BYTE * ) szSource, NULL, FO_READ | FO_DENYNONE |
-                              FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
+      hInput = hb_fsExtOpen( szSource, NULL, FO_READ | FO_DENYNONE |
+                             FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
       if( hInput != FS_ERROR )
       {
-         hOutput = hb_fsExtOpen( ( BYTE * ) szDestin, NULL, FO_READWRITE |
+         hOutput = hb_fsExtOpen( szDestin, NULL, FO_READWRITE |
                                  FO_EXCLUSIVE | FXO_TRUNCATE |
                                  FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
          if( hOutput != FS_ERROR )

@@ -21,7 +21,7 @@
 
 HB_FUNC( GT_CHRCOUNT )
 {
-  char *s1, *s2;
+  const char *s1, *s2;
   int count, pos2, len;
 
   if (ISCHAR(1) && HB_ISCHAR(2)) {

@@ -478,26 +478,26 @@ HB_FUNC( HB_UNZIPFILEOPEN )
 HB_FUNC( HB_UNZIPFILEREAD )
 {
    PHB_ITEM  pBuffer = hb_param( 2, HB_IT_STRING );
+   char *    buffer;
+   ULONG     ulSize;
 
-   if( pBuffer && HB_ISBYREF( 2 ) )
+   if( pBuffer && HB_ISBYREF( 2 ) &&
+       hb_itemGetWriteCL( pBuffer, &buffer, &ulSize ) )
    {
       unzFile hUnzip = hb_unzipfileParam( 1 );
 
       if( hUnzip )
       {
-         ULONG     ulRead;
-         ULONG     ulSize = hb_parclen( 2 );
          int       iResult;
 
          if( HB_ISNUM( 3 ) )
          {
-            ulRead = (ULONG) hb_parnl( 3 );
+            ULONG ulRead = (ULONG) hb_parnl( 3 );
             if( ulRead < ulSize )
                ulSize = ulRead;
          }
 
-         pBuffer = hb_itemUnShareString( pBuffer );
-         iResult = unzReadCurrentFile( hUnzip, hb_itemGetCPtr( pBuffer ), ulSize );
+         iResult = unzReadCurrentFile( hUnzip, buffer, ulSize );
          hb_retnl( iResult );
       }
    }
@@ -868,7 +868,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
    }
    else
    {
-      hFile = hb_fsOpen( ( BYTE * ) szFileName, FO_READ );
+      hFile = hb_fsOpen( szFileName, FO_READ );
 
       if( hFile != FS_ERROR )
       {
@@ -1058,7 +1058,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
       if( ( cSep == '\\' || cSep == '/' ) && ulPos < ulLen - 1 )
       {
          szName[ ulPos ] = '\0';
-         hb_fsMkDir( (BYTE*) szName );
+         hb_fsMkDir( szName );
          szName[ ulPos ] = cSep;
       }
       ulPos++;
@@ -1066,12 +1066,12 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
 
    if( ufi.external_fa & 0x40000000 ) /* DIRECTORY */
    {
-      hb_fsMkDir( (BYTE*) szName );
+      hb_fsMkDir( szName );
       iResult = UNZ_OK;
    }
    else
    {
-      hFile = hb_fsCreate( (BYTE*) szName, FC_NORMAL );
+      hFile = hb_fsCreate( szName, FC_NORMAL );
 
       if( hFile != FS_ERROR )
       {
@@ -1079,7 +1079,8 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
 
          while( ( iResult = unzReadCurrentFile( hUnzip, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
          {
-            hb_fsWriteLarge( hFile, (BYTE*) pString, (ULONG) iResult );
+            hb_fsWriteLarge( hFile, ( const BYTE* 
+            ) pString, (ULONG) iResult );
          }
          hb_xfree( pString );
 
@@ -1324,7 +1325,7 @@ static int hb_zipDeleteFile( const char* szZipFile, const char* szFileMask )
       return UNZ_ERRNO;
 
    pFileName = hb_fsFNameSplit( szZipFile );
-   hFile = hb_fsCreateTemp( ( BYTE * ) pFileName->szPath, NULL, FC_NORMAL, ( BYTE * ) szTempFile );
+   hFile = hb_fsCreateTemp( pFileName->szPath, NULL, FC_NORMAL, szTempFile );
    hZip = NULL;
    if( hFile != FS_ERROR )
    {
@@ -1482,14 +1483,14 @@ static int hb_zipDeleteFile( const char* szZipFile, const char* szFileMask )
       hb_xfree( pszGlobalComment );
 
    if( iResult != UNZ_OK )
-      hb_fsDelete( ( BYTE * ) szTempFile );
+      hb_fsDelete( szTempFile );
    else
    {
-      hb_fsDelete( ( BYTE * ) szZipFile );
+      hb_fsDelete( szZipFile );
 
       if( iFilesLeft == 0 )
-         hb_fsDelete( ( BYTE * ) szTempFile );
-      else if( !hb_fsRename( ( BYTE * ) szTempFile, ( BYTE * ) szZipFile ) )
+         hb_fsDelete( szTempFile );
+      else if( !hb_fsRename( szTempFile, szZipFile ) )
          iResult = UNZ_ERRNO;
    }
 

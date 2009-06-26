@@ -2563,7 +2563,7 @@ static const char * hb_gt_crs_Version( PHB_GT pGT, int iType )
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_OutStd( PHB_GT pGT, BYTE * pbyStr, ULONG ulLen )
+static void hb_gt_crs_OutStd( PHB_GT pGT, const BYTE * pbyStr, ULONG ulLen )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_OutStd(%p,%s,%lu)", pGT, pbyStr, ulLen ) );
 
@@ -2580,7 +2580,7 @@ static void hb_gt_crs_OutStd( PHB_GT pGT, BYTE * pbyStr, ULONG ulLen )
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_OutErr( PHB_GT pGT, BYTE * pbyStr, ULONG ulLen )
+static void hb_gt_crs_OutErr( PHB_GT pGT, const BYTE * pbyStr, ULONG ulLen )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_OutErr(%p,%s,%lu)", pGT, pbyStr, ulLen ) );
    if( s_ioBase )

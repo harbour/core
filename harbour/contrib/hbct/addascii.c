@@ -129,7 +129,7 @@ HB_FUNC( ADDASCII )
 
    if( HB_ISCHAR( 1 ) )
    {
-      char *pcSource = hb_parc( 1 );
+      const char *pcSource = hb_parc( 1 );
       size_t sLen = hb_parclen( 1 );
       char *pcResult;
       size_t sPos;

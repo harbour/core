@@ -21,7 +21,7 @@
 
 HB_FUNC( GT_STRDIFF )
 {
-  char *s1, *s2;
+  const char *s1, *s2;
   int pos, len;
 
   if (ISCHAR(1) && HB_ISCHAR(2)) {

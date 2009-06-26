@@ -54,13 +54,13 @@
 
 FILE * hb_fopen( const char *path, const char *mode )
 {
-   BOOL fFree;
-   char * pszFile = ( char * ) hb_fsNameConv( ( BYTE * ) path, &fFree );
+   char * pszFree = NULL;
+   FILE * file;
 
-   FILE * file = fopen( pszFile, mode );
-
-   if( fFree )
-      hb_xfree( pszFile );
+   path = hb_fsNameConv( path, &pszFree );
+   file = fopen( path, mode );
+   if( pszFree )
+      hb_xfree( pszFree );
 
    return file;
 }

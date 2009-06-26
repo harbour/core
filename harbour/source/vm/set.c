@@ -220,7 +220,7 @@ static BOOL is_devicename( const char * szFileName )
       else
       {
          ULONG ulAttr = 0;
-         if( hb_fsGetAttr( ( BYTE * ) szFileName, &ulAttr ) )
+         if( hb_fsGetAttr( szFileName, &ulAttr ) )
          {
             if( ulAttr & ( HB_FA_CHRDEVICE | HB_FA_BLKDEVICE | HB_FA_FIFO | HB_FA_SOCKET ) )
                return TRUE;
@@ -324,7 +324,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
    while( handle == FS_ERROR )
    {
       if( bPipe )
-         handle = hb_fsPOpen( ( BYTE * ) szFileName + 1, ( BYTE * ) "w" );
+         handle = hb_fsPOpen( szFileName + 1, "w" );
       else
       {
          BOOL bCreate = FALSE;
@@ -334,7 +334,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
             if( hb_fsFileExists( szFileName ) )
             {  /* If the file already exists, open it (in read-write mode, in
                   case of non-Unix and text modes). */
-               handle = hb_fsOpen( ( BYTE * ) szFileName, FO_READWRITE | FO_DENYWRITE );
+               handle = hb_fsOpen( szFileName, FO_READWRITE | FO_DENYWRITE );
                if( handle != FS_ERROR )
                {  /* Position to EOF */
                   /* Special binary vs. text file handling - even for UN*X, now
@@ -364,7 +364,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
             bCreate = TRUE; /* Always create a new file for overwrite mode. */
 
          if( bCreate )
-            handle = hb_fsCreate( ( BYTE * ) szFileName, FC_NORMAL );
+            handle = hb_fsCreate( szFileName, FC_NORMAL );
       }
 
       if( handle == FS_ERROR )
@@ -2026,7 +2026,7 @@ BOOL    hb_setGetL( HB_set_enum set_specifier )
    return FALSE;
 }
 
-char *  hb_setGetCPtr( HB_set_enum set_specifier )
+const char * hb_setGetCPtr( HB_set_enum set_specifier )
 {
    HB_STACK_TLS_PRELOAD
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
@@ -2273,7 +2273,7 @@ BOOL    hb_setGetAlternate( void )
    return hb_stackSetStruct()->HB_SET_ALTERNATE;
 }
 
-char *  hb_setGetAltFile( void )
+const char *  hb_setGetAltFile( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_ALTFILE;
@@ -2327,13 +2327,13 @@ BOOL    hb_setGetConsole( void )
    return hb_stackSetStruct()->HB_SET_CONSOLE;
 }
 
-char * hb_setGetDateFormat( void )
+const char * hb_setGetDateFormat( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DATEFORMAT;
 }
 
-char * hb_setGetTimeFormat( void )
+const char * hb_setGetTimeFormat( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_TIMEFORMAT;
@@ -2351,7 +2351,7 @@ int     hb_setGetDecimals( void )
    return hb_stackSetStruct()->HB_SET_DECIMALS;
 }
 
-char *  hb_setGetDefault( void )
+const char *  hb_setGetDefault( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DEFAULT;
@@ -2363,7 +2363,7 @@ BOOL    hb_setGetDeleted( void )
    return hb_stackSetStruct()->HB_SET_DELETED;
 }
 
-char *  hb_setGetDelimChars( void )
+const char *  hb_setGetDelimChars( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DELIMCHARS;
@@ -2375,7 +2375,7 @@ BOOL    hb_setGetDelimiters( void )
    return hb_stackSetStruct()->HB_SET_DELIMITERS;
 }
 
-char *  hb_setGetDevice( void )
+const char *  hb_setGetDevice( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DEVICE;
@@ -2429,7 +2429,7 @@ BOOL    hb_setGetExtra( void )
    return hb_stackSetStruct()->HB_SET_EXTRA;
 }
 
-char *  hb_setGetExtraFile( void )
+const char *  hb_setGetExtraFile( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_EXTRAFILE;
@@ -2459,7 +2459,7 @@ BOOL    hb_setGetIntensity( void )
    return hb_stackSetStruct()->HB_SET_INTENSITY;
 }
 
-char *  hb_setGetPath( void )
+const char *  hb_setGetPath( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_PATH;
@@ -2489,7 +2489,7 @@ int     hb_setGetMessage( void )
    return hb_stackSetStruct()->HB_SET_MESSAGE;
 }
 
-char *  hb_setGetMFileExt( void )
+const char *  hb_setGetMFileExt( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_MFILEEXT;
@@ -2507,7 +2507,7 @@ BOOL    hb_setGetPrinter( void )
    return hb_stackSetStruct()->HB_SET_PRINTER;
 }
 
-char *  hb_setGetPrintFile( void )
+const char *  hb_setGetPrintFile( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_PRINTFILE;
@@ -2603,7 +2603,7 @@ BOOL    hb_setGetDefExtension( void )
    return hb_stackSetStruct()->HB_SET_DEFEXTENSIONS;
 }
 
-char *  hb_setGetEOL( void )
+const char * hb_setGetEOL( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_EOL;
@@ -2615,39 +2615,48 @@ BOOL    hb_setGetTrimFileName( void )
    return hb_stackSetStruct()->HB_SET_TRIMFILENAME;
 }
 
-char *  hb_setGetHBOUTLOG( void )
+const char * hb_setGetHBOUTLOG( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_HBOUTLOG;
 }
 
-char *  hb_setGetHBOUTLOGINFO( void )
+const char * hb_setGetHBOUTLOGINFO( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_HBOUTLOGINFO;
 }
 
-char *  hb_setGetOSCODEPAGE( void )
+const char * hb_setGetOSCODEPAGE( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_OSCODEPAGE;
 }
 
-UCHAR * hb_osEncode( UCHAR * szFileName, BOOL * pfFree )
+const char * hb_osEncode( const char * szName, char ** pszFree )
 {
    HB_STACK_TLS_PRELOAD
-   *pfFree = FALSE;
 
 #if defined( HB_MT_VM )
-   if( hb_stackId() )
+   if( !hb_stackId() )
+   {
+      if( pszFree )
+         *pszFree = NULL;
+   }
+   else
 #endif
    {
-      BOOL bCPConv = hb_setGetOSCODEPAGE() && hb_setGetOSCODEPAGE()[ 0 ];
+      const char * pszCP = hb_setGetOSCODEPAGE();
 
-      if( bCPConv )
+      if( pszCP && *pszCP )
       {
-         UCHAR * p = szFileName;
          UCHAR * pCPTrans = hb_stackSetStruct()->hb_set_oscptransto;
+         char * p;
+
+         if( pszFree )
+            szName = *pszFree = p = hb_strdup( szName );
+         else
+            p = ( char * ) szName;
 
          while( *p )
          {
@@ -2655,26 +2664,37 @@ UCHAR * hb_osEncode( UCHAR * szFileName, BOOL * pfFree )
             p++;
          }
       }
+      else if( pszFree )
+         *pszFree = NULL;
    }
 
-   return szFileName;
+   return szName;
 }
 
-UCHAR * hb_osDecode( UCHAR * szFileName, BOOL * pfFree )
+const char * hb_osDecode( const char * szName, char ** pszFree )
 {
    HB_STACK_TLS_PRELOAD
-   *pfFree = FALSE;
 
 #if defined( HB_MT_VM )
-   if( hb_stackId() )
+   if( !hb_stackId() )
+   {
+      if( pszFree )
+         *pszFree = NULL;
+   }
+   else
 #endif
    {
-      BOOL bCPConv = hb_setGetOSCODEPAGE() && hb_setGetOSCODEPAGE()[ 0 ];
+      const char * pszCP = hb_setGetOSCODEPAGE();
 
-      if( bCPConv )
+      if( pszCP && *pszCP )
       {
-         UCHAR * p = szFileName;
          UCHAR * pCPTrans = hb_stackSetStruct()->hb_set_oscptransfrom;
+         char * p;
+
+         if( pszFree )
+            szName = *pszFree = p = hb_strdup( szName );
+         else
+            p = ( char * ) szName;
 
          while( *p )
          {
@@ -2682,9 +2702,11 @@ UCHAR * hb_osDecode( UCHAR * szFileName, BOOL * pfFree )
             p++;
          }
       }
+      else if( pszFree )
+         *pszFree = NULL;
    }
 
-   return szFileName;
+   return szName;
 }
 
 HB_FHANDLE hb_setGetPrinterHandle( int iType )

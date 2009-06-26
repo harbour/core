@@ -1024,7 +1024,7 @@ static int hb_ctw_GetFormatCords( PHB_GTCTW pCTW, int iWindow, BOOL fRelative, i
    return -1;
 }
 
-static int hb_ctw_AddWindowBox( PHB_GTCTW pCTW, int iWindow, UCHAR * szBox, int iColor )
+static int hb_ctw_AddWindowBox( PHB_GTCTW pCTW, int iWindow, const BYTE * szBox, int iColor )
 {
    int iMaxRow, iMaxCol;
 
@@ -1310,13 +1310,13 @@ static int hb_ctw_gt_MaxRow( PHB_GT pGT )
  */
 #define WRITECON_BUFFER_SIZE 512
 
-static void hb_ctw_gt_WriteCon( PHB_GT pGT, UCHAR * pText, ULONG ulLength )
+static void hb_ctw_gt_WriteCon( PHB_GT pGT, const BYTE * pText, ULONG ulLength )
 {
    int iLen = 0;
    BOOL bDisp = FALSE;
    BOOL bBell = FALSE;
    int iRow, iCol, iMaxRow, iMaxCol;
-   UCHAR szString[ WRITECON_BUFFER_SIZE ];
+   BYTE szString[ WRITECON_BUFFER_SIZE ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_WriteCon(%p,%p,%lu)", pGT, pText, ulLength));
 
@@ -1344,7 +1344,7 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, UCHAR * pText, ULONG ulLength )
 
    while( ulLength-- )
    {
-      UCHAR ch = *pText++;
+      BYTE ch = *pText++;
 
       switch( ch )
       {
@@ -1913,7 +1913,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          ULONG ulWidth = 0, ulCurrWidth = 0, ul = 0, ul2, ulMaxWidth, ulLast;
          int iKey, iDspCount, iLines = 0, iTop, iLeft, iBottom, iRight,
              iMnuCol, iPos, iClr, iWnd, iPrevWnd, i;
-         char * szMessage = hb_itemGetCPtr( pMessage );
+         const char * szMessage = hb_itemGetCPtr( pMessage );
          ULONG ulLen = hb_itemGetCLen( pMessage );
 
          ulMaxWidth = iCols - 4;
@@ -1960,7 +1960,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
 
          iPrevWnd = hb_ctw_CurrentWindow( pCTW );
          iWnd = hb_ctw_CreateWindow( pCTW, iTop, iLeft, iBottom, iRight, TRUE, iClrNorm, TRUE );
-         hb_ctw_AddWindowBox( pCTW, iWnd, ( UCHAR * ) _B_SINGLE, iClrNorm );
+         hb_ctw_AddWindowBox( pCTW, iWnd, ( const BYTE * ) _B_SINGLE, iClrNorm );
          HB_GTSELF_SETCURSORSTYLE( pGT, SC_NONE );
          ulLast = 0;
          i = 0;
@@ -1974,7 +1974,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                   if( ul2 > ulWidth )
                      ul2 = ulWidth;
                   HB_GTSELF_PUTTEXT( pGT, i, ( ( ulWidth - ul2 + 1 ) >> 1 ) + 1, ( BYTE ) iClrNorm,
-                                     ( UCHAR * ) szMessage + ulLast, ul2 );
+                                     ( const BYTE * ) szMessage + ulLast, ul2 );
                }
                ulLast = ul + 1;
                if( ++i >= iLines )
@@ -1987,7 +1987,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             if( ul2 > ulWidth )
                ul2 = ulWidth;
             HB_GTSELF_PUTTEXT( pGT, i, ( ( ulWidth - ul2 + 1 ) >> 1 ) + 1, ( BYTE ) iClrNorm,
-                               ( UCHAR * ) szMessage + ulLast, ul2 );
+                               ( const BYTE * ) szMessage + ulLast, ul2 );
          }
 
          iPos = 1;
@@ -2000,7 +2000,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                iClr = i == iPos ? iClrHigh : iClrNorm;
                ulLen = hb_arrayGetCLen( pOptions, i );
                HB_GTSELF_PUTTEXT( pGT, iLines + 1, iMnuCol, ( BYTE ) iClr,
-                                  ( UCHAR * ) hb_arrayGetCPtr( pOptions, i ), ulLen );
+                                  ( const BYTE * ) hb_arrayGetCPtr( pOptions, i ), ulLen );
                iMnuCol += ulLen + 3;
             }
             while( HB_GTSELF_DISPCOUNT( pGT ) )
@@ -2054,7 +2054,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                int iUp = hb_charUpper( iKey );
                for( i = 1; i <= iOptions; ++i )
                {
-                  char *szValue = hb_arrayGetCPtr( pOptions, i );
+                  const char *szValue = hb_arrayGetCPtr( pOptions, i );
                   if( szValue && iUp == hb_charUpper( *szValue ) )
                   {
                      iRet = i;
@@ -2410,7 +2410,7 @@ int  hb_ctwCenterWindow( int iWindow, BOOL fCenter )
    return iResult;
 }
 
-int  hb_ctwAddWindowBox( int iWindow, UCHAR * szBox, int iColor )
+int  hb_ctwAddWindowBox( int iWindow, const BYTE * szBox, int iColor )
 {
    int iResult = -1;
    PHB_GTCTW pCTW = hb_ctw_base();

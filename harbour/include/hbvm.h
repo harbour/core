@@ -95,20 +95,20 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, USHORT u
       ULONG    ulID;                /* module unique identifier */
    } HB_SYMBOLS, * PHB_SYMBOLS;     /* structure to keep track of all modules symbol tables */
 
-   extern PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, BOOL fDynLib, BOOL fClone );
-   extern BOOL        hb_vmLockModuleSymbols( void );
-   extern void        hb_vmUnlockModuleSymbols( void );
-   extern void        hb_vmFreeSymbols( PHB_SYMBOLS pSymbols );
-   extern void        hb_vmBeginSymbolGroup( void * hDynLib, BOOL fClone );
-   extern void        hb_vmInitSymbolGroup( void * hNewDynLib, int argc, char * argv[] );
-   extern void        hb_vmExitSymbolGroup( void * hDynLib );
-   extern char *      hb_vmFindModuleSymbolName( PHB_SYMB pSym );
-   extern BOOL        hb_vmFindModuleSymbols( PHB_SYMB pSym, PHB_SYMB * pSymbols, USHORT * puiSymbols );
-   extern PHB_SYMB    hb_vmGetRealFuncSym( PHB_SYMB pSym );
-   extern void        hb_vmSetFunction( PHB_SYMB pOldSym, PHB_SYMB pNewSym );
+   extern PHB_SYMBOLS   hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, BOOL fDynLib, BOOL fClone );
+   extern BOOL          hb_vmLockModuleSymbols( void );
+   extern void          hb_vmUnlockModuleSymbols( void );
+   extern void          hb_vmFreeSymbols( PHB_SYMBOLS pSymbols );
+   extern void          hb_vmBeginSymbolGroup( void * hDynLib, BOOL fClone );
+   extern void          hb_vmInitSymbolGroup( void * hNewDynLib, int argc, const char * argv[] );
+   extern void          hb_vmExitSymbolGroup( void * hDynLib );
+   extern const char *  hb_vmFindModuleSymbolName( PHB_SYMB pSym );
+   extern BOOL          hb_vmFindModuleSymbols( PHB_SYMB pSym, PHB_SYMB * pSymbols, USHORT * puiSymbols );
+   extern PHB_SYMB      hb_vmGetRealFuncSym( PHB_SYMB pSym );
+   extern void          hb_vmSetFunction( PHB_SYMB pOldSym, PHB_SYMB pNewSym );
 
-   extern void        hb_vmEnumRelease( PHB_ITEM pBase, PHB_ITEM pValue );
-   extern BOOL        hb_vmMsgReference( PHB_ITEM pObject, PHB_DYNS pMessage, PHB_DYNS pAccMsg ); /* create extended message reference */
+   extern void          hb_vmEnumRelease( PHB_ITEM pBase, PHB_ITEM pValue );
+   extern BOOL          hb_vmMsgReference( PHB_ITEM pObject, PHB_DYNS pMessage, PHB_DYNS pAccMsg ); /* create extended message reference */
 #endif
 
 extern void hb_vmSetExceptionHandler( void );

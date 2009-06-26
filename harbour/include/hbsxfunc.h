@@ -63,7 +63,7 @@
 HB_EXTERN_BEGIN
 
 char * hb_sxDtoP( char * pDate, LONG lJulian );
-LONG hb_sxPtoD( char * pDate );
+LONG hb_sxPtoD( const char * pDate );
 
 void hb_sxEnCrypt( BYTE * pSrc, BYTE * pDst, BYTE * pKeyVal, ULONG ulLen );
 void hb_sxDeCrypt( BYTE * pSrc, BYTE * pDst, BYTE * pKeyVal, ULONG ulLen );

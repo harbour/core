@@ -105,7 +105,7 @@ static void hb_gt_cgi_termOut( PHB_GTCGI pGTCGI, const BYTE * pStr, ULONG ulLen 
 
 static void hb_gt_cgi_newLine( PHB_GTCGI pGTCGI )
 {
-   hb_gt_cgi_termOut( pGTCGI, ( BYTE * ) pGTCGI->szCrLf, pGTCGI->ulCrLf );
+   hb_gt_cgi_termOut( pGTCGI, ( const BYTE * ) pGTCGI->szCrLf, pGTCGI->ulCrLf );
 }
 
 static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
@@ -254,7 +254,7 @@ static BOOL hb_gt_cgi_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
 
 #ifdef HB_GT_CGI_RAWOUTPUT
 
-static void hb_gt_cgi_WriteCon( PHB_GT pGT, BYTE * pText, ULONG ulLength )
+static void hb_gt_cgi_WriteCon( PHB_GT pGT, const BYTE * pText, ULONG ulLength )
 {
    BYTE * buffer = NULL;
    PHB_GTCGI pGTCGI = HB_GTCGI_GET( pGT );
@@ -300,7 +300,7 @@ static void hb_gt_cgi_WriteCon( PHB_GT pGT, BYTE * pText, ULONG ulLength )
       hb_xfree( buffer );
 }
 
-static void hb_gt_cgi_WriteAt( PHB_GT pGT, int iRow, int iCol, BYTE * pText, ULONG ulLength )
+static void hb_gt_cgi_WriteAt( PHB_GT pGT, int iRow, int iCol, const BYTE * pText, ULONG ulLength )
 {
    int iLineFeed = 0, iSpace = 0;
    PHB_GTCGI pGTCGI = HB_GTCGI_GET( pGT );

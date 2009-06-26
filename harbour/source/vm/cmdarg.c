@@ -204,7 +204,7 @@ void hb_cmdargUpdate( void )
                    pFName->szPath[ 1 ] == HB_OS_PATH_DELIM_CHR )
                   pFName->szPath += 2;
                s_szAppName[ 0 ] = HB_OS_PATH_DELIM_CHR;
-               hb_fsCurDirBuff( 0, ( BYTE * ) ( s_szAppName + 1 ), HB_PATH_MAX - 1 );
+               hb_fsCurDirBuff( 0, s_szAppName + 1, HB_PATH_MAX - 1 );
                if( s_szAppName[ 1 ] != 0 )
                {
                   hb_strncat( s_szAppName, HB_OS_PATH_DELIM_CHR_STRING, HB_PATH_MAX - 1 );
@@ -402,17 +402,7 @@ HB_FUNC( HB_ARGSTRING )
       if( pszValue )
       {
          /* Convert from OS codepage */
-         BOOL fFree;
-         char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) pszValue, &fFree );
-
-         if( fFree )
-         {
-            hb_retc_buffer( pbyResult );
-            hb_xfree( pszValue );
-         }
-         else
-            hb_retc_buffer( pszValue );
-
+         hb_retc_buffer( ( char * ) hb_osDecode( pszValue, NULL ) );
          return;
       }
    }
@@ -464,12 +454,7 @@ HB_FUNC( HB_CMDLINE )
       *--ptr = '\0';
 
       /* Convert from OS codepage */
-      {
-         BOOL fFree;
-         hb_retc_buffer( ( char * ) hb_osDecode( ( BYTE * ) pszBuffer, &fFree ) );
-         if( fFree )
-            hb_xfree( pszBuffer );
-      }
+      hb_retc_buffer( ( char * ) hb_osDecode( pszBuffer, NULL ) );
    }
    else
       hb_retc_null();

@@ -198,7 +198,7 @@ static void do_charop( int iSwitch )
          {
             if( HB_ISCHAR( 2 ) )
             {
-               char *pucString2 = hb_parc( 2 );
+               const char *pucString2 = hb_parc( 2 );
                size_t sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )
@@ -224,7 +224,7 @@ static void do_charop( int iSwitch )
          {
             if( HB_ISCHAR( 2 ) )
             {
-               char *pucString2 = hb_parc( 2 );
+               const char *pucString2 = hb_parc( 2 );
                size_t sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )
@@ -250,7 +250,7 @@ static void do_charop( int iSwitch )
          {
             if( HB_ISCHAR( 2 ) )
             {
-               char *pucString2 = hb_parc( 2 );
+               const char *pucString2 = hb_parc( 2 );
                size_t sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )
@@ -275,7 +275,7 @@ static void do_charop( int iSwitch )
          {
             if( HB_ISCHAR( 2 ) )
             {
-               char *pucString2 = hb_parc( 2 );
+               const char *pucString2 = hb_parc( 2 );
                size_t sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )
@@ -300,7 +300,7 @@ static void do_charop( int iSwitch )
          {
             if( HB_ISCHAR( 2 ) )
             {
-               char *pucString2 = hb_parc( 2 );
+               const char *pucString2 = hb_parc( 2 );
                size_t sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )

@@ -680,7 +680,7 @@ static void hb_gt_dos_mouse_SaveState( PHB_GT pGT, BYTE * pBuffer )
    }
 }
 
-static void hb_gt_dos_mouse_RestoreState( PHB_GT pGT, BYTE * pBuffer )
+static void hb_gt_dos_mouse_RestoreState( PHB_GT pGT, const BYTE * pBuffer )
 {
    if( s_fMousePresent )
    {

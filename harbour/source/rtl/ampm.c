@@ -61,7 +61,7 @@ HB_FUNC( AMPM )
 
    if( ulTimeLen )
    {
-      char * pszTime = hb_parc( 1 );
+      const char * pszTime = hb_parc( 1 );
       memcpy( pszResult, pszTime, ulTimeLen );
       uiHour = ( USHORT ) hb_strVal( pszTime, ulTimeLen );
    }

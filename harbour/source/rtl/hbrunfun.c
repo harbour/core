@@ -57,23 +57,20 @@
 
 HB_FUNC( HB_RUN )
 {
-   PHB_ITEM pCommand = hb_param( 1, HB_IT_STRING );
+   const char * pszCommand = hb_parc( 1 );
 
-   if( pCommand )
+   if( pszCommand )
    {
       int iResult = -1;
 
       if( hb_gtSuspend() == HB_SUCCESS )
       {
-         char * pszCommand = hb_itemGetC( pCommand );
-         BOOL fFree;
-         char * pszResult = ( char * ) hb_osEncode( ( BYTE * ) pszCommand, &fFree );
+         char * pszFree;
 
-         iResult = system( pszResult );
+         iResult = system( hb_osEncode( pszCommand, &pszFree ) );
 
-         hb_itemFreeC( pszCommand );
-         if( fFree )
-            hb_xfree( pszResult );
+         if( pszFree )
+            hb_xfree( pszFree );
 
          hb_gtResume();
       }

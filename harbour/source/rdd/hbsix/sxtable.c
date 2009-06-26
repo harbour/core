@@ -480,11 +480,11 @@ HB_FUNC( _SXOPENINIT )
             pInfo->fReadonly = hb_parl( 2 );
          if( HB_ISCHAR( 4 ) )
          {
-            char * szAlias = hb_parc( 1 );
+            const char * szAlias = hb_parc( 1 );
             if( szAlias && szAlias[ 0 ] )
-               pInfo->atomAlias = ( BYTE * ) hb_dynsymName( hb_dynsymGet( szAlias ) );
+               pInfo->atomAlias = hb_dynsymName( hb_dynsymGet( szAlias ) );
             else
-               pInfo->atomAlias = ( BYTE * ) "";
+               pInfo->atomAlias = "";
          }
       }
    }

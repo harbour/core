@@ -21,7 +21,8 @@
 
 HB_FUNC( GT_STREXPAND )
 {
-  char *in, *out;
+  const char *in;
+  char *out;
   int  nIns = 1;
   const char *insert = " ";
   int  len;

@@ -62,8 +62,8 @@ HB_FUNC( RAT )
 
       if( lPos >= 0 )
       {
-         char * pszSub = hb_parc( 1 );
-         char * pszText = hb_parc( 2 );
+         const char * pszSub = hb_parc( 1 );
+         const char * pszText = hb_parc( 2 );
          BOOL bFound = FALSE;
 
          while( lPos >= 0 && !bFound )
@@ -93,8 +93,8 @@ HB_FUNC( HB_RAT )
 
       if( lPos >= 0 )
       {
-         char * pszSub = hb_parc( 1 );
-         char * pszText = hb_parc( 2 );
+         const char * pszSub = hb_parc( 1 );
+         const char * pszText = hb_parc( 2 );
          BOOL bFound = FALSE;
          long lStart;
 

@@ -82,7 +82,7 @@ static gzFile hb_gzParam( int iParam )
  */
 HB_FUNC( HB_GZOPEN )
 {
-   char * cFile = hb_parc( 1 ), * cMode = hb_parc( 2 );
+   const char * cFile = hb_parc( 1 ), * cMode = hb_parc( 2 );
    if( cFile && cMode )
    {
       gzFile gz = gzopen( cFile, cMode );
@@ -103,7 +103,7 @@ HB_FUNC( HB_GZOPEN )
  */
 HB_FUNC( HB_GZDOPEN )
 {
-   char * cMode = hb_parc( 2 );
+   const char * cMode = hb_parc( 2 );
    if( HB_ISNUM( 1 ) && cMode )
    {
       gzFile gz = gzdopen( hb_parni( 1 ), cMode );
@@ -157,15 +157,21 @@ HB_FUNC( HB_GZSETPARAMS )
 HB_FUNC( HB_GZREAD )
 {
    PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
+   char * szBuffer;
+   ULONG ulLen;
 
-   if( pBuffer )
+   if( pBuffer && hb_itemGetWriteCL( pBuffer, &szBuffer, &ulLen ) )
    {
       gzFile gz = hb_gzParam( 1 );
       if( gz )
       {
-         pBuffer = hb_itemUnShareString( pBuffer );
-         hb_retni( gzread( gz, hb_itemGetCPtr( pBuffer ), HB_ISNUM( 3 ) ?
-                     ( ULONG ) hb_parnl( 3 ) : hb_itemGetCLen( pBuffer ) ) );
+         if( HB_ISNUM( 3 ) )
+         {
+            ULONG ulLim = ( ULONG ) hb_parnl( 3 );
+            if( ulLim < ulLen )
+               ulLen = ulLim;
+         }
+         hb_retni( gzread( gz, szBuffer, ulLen ) );
       }
    }
    else
@@ -177,7 +183,7 @@ HB_FUNC( HB_GZREAD )
  */
 HB_FUNC( HB_GZWRITE )
 {
-   char * szData = hb_parc( 2 );
+   const char * szData = hb_parc( 2 );
    if( szData )
    {
       gzFile gz = hb_gzParam( 1 );
@@ -220,7 +226,7 @@ HB_FUNC( HB_GZGETS )
  */
 HB_FUNC( HB_GZPUTS )
 {
-   char * szData = hb_parc( 2 );
+   const char * szData = hb_parc( 2 );
    if( szData )
    {
       gzFile gz = hb_gzParam( 1 );

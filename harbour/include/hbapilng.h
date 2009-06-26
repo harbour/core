@@ -82,21 +82,21 @@ extern HB_EXPORT void      hb_vmSetLang( PHB_LANG pLang );
 
 /* Supported language list management */
 
-extern HB_EXPORT BOOL      hb_langRegister         ( PHB_LANG lang );
-extern HB_EXPORT BOOL      hb_langDeRegister       ( const char * pszID );
-extern HB_EXPORT PHB_LANG  hb_langFind             ( const char * pszID );
+extern HB_EXPORT BOOL      hb_langRegister      ( PHB_LANG lang );
+extern HB_EXPORT BOOL      hb_langDeRegister    ( const char * pszID );
+extern HB_EXPORT PHB_LANG  hb_langFind          ( const char * pszID );
 
 /* Default language selection and data query */
 
-extern HB_EXPORT PHB_LANG  hb_langSelect           ( PHB_LANG lang );
-extern HB_EXPORT char *    hb_langSelectID         ( const char * pszID );
-extern HB_EXPORT char *    hb_langDGetItem         ( int iIndex );
-extern HB_EXPORT char *    hb_langID               ( void );
-extern HB_EXPORT char *    hb_langName             ( void );
+extern HB_EXPORT PHB_LANG     hb_langSelect     ( PHB_LANG lang );
+extern HB_EXPORT const char * hb_langSelectID   ( const char * pszID );
+extern HB_EXPORT const char * hb_langDGetItem   ( int iIndex );
+extern HB_EXPORT const char * hb_langID         ( void );
+extern HB_EXPORT char *       hb_langName       ( void );
 
 /* Compatibility interface */
 
-extern HB_EXPORT char *    hb_langDGetErrorDesc    ( ULONG ulIndex );
+extern HB_EXPORT const char * hb_langDGetErrorDesc    ( ULONG ulIndex );
 
 HB_EXTERN_END
 

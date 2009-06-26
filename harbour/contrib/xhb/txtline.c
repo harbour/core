@@ -56,7 +56,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-void hb_readLine( char * szText, ULONG ulTextLen, ULONG uiLineLen, USHORT uiTabLen, BOOL bWrap, char ** Term, int * iTermSizes, USHORT uiTerms, BOOL * bFound, BOOL * bEOF, LONG * lEnd, ULONG * ulEndOffset )
+void hb_readLine( const char * szText, ULONG ulTextLen, ULONG uiLineLen, USHORT uiTabLen, BOOL bWrap, char ** Term, int * iTermSizes, USHORT uiTerms, BOOL * bFound, BOOL * bEOF, LONG * lEnd, ULONG * ulEndOffset )
 {
    USHORT uiPosTerm, uiPosition;
    ULONG ulPos, ulCurrCol, ulLastBlk;
@@ -174,7 +174,7 @@ void hb_readLine( char * szText, ULONG ulTextLen, ULONG uiLineLen, USHORT uiTabL
    }
 }
 
-LONG hb_tabexpand(char * szString, char * szRet, LONG lEnd, USHORT uiTabLen )
+LONG hb_tabexpand(const char * szString, char * szRet, LONG lEnd, USHORT uiTabLen )
 {
    LONG lPos, lSpAdded = 0;
 
@@ -199,7 +199,7 @@ LONG hb_tabexpand(char * szString, char * szRet, LONG lEnd, USHORT uiTabLen )
 
 HB_FUNC( HB_TABEXPAND )
 {
-   char * szText   = hb_parcx( 1 );
+   const char * szText = hb_parcx( 1 );
    LONG lStrLen    = hb_parclen( 1 );
    USHORT uiTabLen = (USHORT) hb_parni( 2 );
    USHORT uiTabCount = 0;
@@ -233,7 +233,7 @@ HB_FUNC( HB_TABEXPAND )
 HB_FUNC( HB_READLINE )
 {
    PHB_ITEM pTerm1;
-   char * szText  = hb_parcx( 1 );
+   const char * szText  = hb_parcx( 1 );
    char ** Term;
    int * iTermSizes;
    USHORT uiTabLen, uiTerms;

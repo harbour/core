@@ -83,5 +83,5 @@ End
 
 HB_FUNC( FT_CHDIR)
 {
-   hb_retl( HB_ISCHAR( 1 ) && hb_fsChDir( ( BYTE * ) hb_parc(1) ) );
+   hb_retl( HB_ISCHAR( 1 ) && hb_fsChDir( hb_parc( 1 ) ) );
 }

@@ -19,7 +19,7 @@
 
 HB_FUNC( GT_ASCIISUM )
 {
-   char *str;
+   const char *str;
    int  len, i;
    long ascSum = 0;
 

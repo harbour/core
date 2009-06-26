@@ -114,7 +114,7 @@ BOOL hb_charIsUpper( int iChar )
 
 HB_FUNC( ISALPHA )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    if( szString )
    {
@@ -141,7 +141,7 @@ HB_FUNC( ISALPHA )
 
 HB_FUNC( ISDIGIT )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    hb_retl( szString && HB_ISDIGIT( ( unsigned char ) *szString ) );
 }
@@ -150,7 +150,7 @@ HB_FUNC( ISDIGIT )
 
 HB_FUNC( ISUPPER )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    if( szString )
    {
@@ -176,7 +176,7 @@ HB_FUNC( ISUPPER )
 
 HB_FUNC( ISLOWER )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    if( szString )
    {

@@ -56,11 +56,11 @@
 
 typedef struct
 {
-   char *   szEOL;
-   ULONG    ulLen;
+   const char *   szEOL;
+   ULONG          ulLen;
 } HB_EOL_INFO, * PHB_EOL_INFO;
 
-static int hb_mlEol( char * pszString, ULONG ulLen,
+static int hb_mlEol( const char * pszString, ULONG ulLen,
                      PHB_EOL_INFO pEOLs, int iEOLs )
 {
    int i;
@@ -73,7 +73,7 @@ static int hb_mlEol( char * pszString, ULONG ulLen,
    return -1;
 }
 
-static ULONG hb_mlGetLine( char * pszString, ULONG ulLen, ULONG ulOffset,
+static ULONG hb_mlGetLine( const char * pszString, ULONG ulLen, ULONG ulOffset,
                            ULONG ulLineLength, ULONG ulTabSize, ULONG ulMaxPos,
                            BOOL fWordWrap, PHB_EOL_INFO pEOLs, int iEOLs,
                            ULONG * pulLen, ULONG * pulEOL )
@@ -215,11 +215,12 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
    return pEOLs;
 }
 
-static char * hb_mlGetParams( int iParAdd, ULONG * pulLen, ULONG * pulLineLength,
-                              ULONG * pulTabSize, BOOL * pfWordWrap,
-                              PHB_EOL_INFO * pEOLs, int * piEOLs )
+static const char * hb_mlGetParams( int iParAdd, ULONG * pulLen, 
+                                    ULONG * pulLineLength,
+                                    ULONG * pulTabSize, BOOL * pfWordWrap,
+                                    PHB_EOL_INFO * pEOLs, int * piEOLs )
 {
-   char * pszString = hb_parc( 1 );
+   const char * pszString = hb_parc( 1 );
    if( pszString )
    {
       if( HB_ISNUM( 2 ) )
@@ -252,8 +253,9 @@ HB_FUNC( MEMOLINE )
    BOOL   fWordWrap;
    PHB_EOL_INFO pEOLs;
    int    iEOLs;
-   char * pszString = hb_mlGetParams( 1, &ulLen, &ulLineLength,
-                                      &ulTabSize, &fWordWrap, &pEOLs, &iEOLs );
+   const char * pszString = hb_mlGetParams( 1, &ulLen, &ulLineLength,
+                                            &ulTabSize, &fWordWrap,
+                                            &pEOLs, &iEOLs );
    char * szLine;
    ULONG  ulLine   = hb_parnl( 3 );
    ULONG  ulOffset = 0;
@@ -313,8 +315,9 @@ HB_FUNC( MLCOUNT )
    BOOL   fWordWrap;
    PHB_EOL_INFO pEOLs;
    int    iEOLs;
-   char * pszString = hb_mlGetParams( 0, &ulLen, &ulLineLength,
-                                      &ulTabSize, &fWordWrap, &pEOLs, &iEOLs );
+   const char * pszString = hb_mlGetParams( 0, &ulLen, &ulLineLength,
+                                            &ulTabSize, &fWordWrap,
+                                            &pEOLs, &iEOLs );
    ULONG  ulLines  = 0;
    ULONG  ulOffset = 0;
    ULONG  ulCols   = 0;
@@ -339,8 +342,9 @@ HB_FUNC( MLPOS )
    BOOL   fWordWrap;
    PHB_EOL_INFO pEOLs;
    int    iEOLs;
-   char * pszString = hb_mlGetParams( 1, &ulLen, &ulLineLength,
-                                      &ulTabSize, &fWordWrap, &pEOLs, &iEOLs );
+   const char * pszString = hb_mlGetParams( 1, &ulLen, &ulLineLength,
+                                            &ulTabSize, &fWordWrap,
+                                            &pEOLs, &iEOLs );
    ULONG  ulLine   = hb_parnl( 3 );
    ULONG  ulOffset = 0;
    ULONG  ulCols   = 0;
@@ -366,8 +370,9 @@ HB_FUNC( MLCTOPOS )
    BOOL   fWordWrap;
    PHB_EOL_INFO pEOLs;
    int    iEOLs;
-   char * pszString = hb_mlGetParams( 2, &ulLen, &ulLineLength,
-                                      &ulTabSize, &fWordWrap, &pEOLs, &iEOLs );
+   const char * pszString = hb_mlGetParams( 2, &ulLen, &ulLineLength,
+                                            &ulTabSize, &fWordWrap,
+                                            &pEOLs, &iEOLs );
    ULONG  ulLine   = hb_parnl( 3 );
    ULONG  ulCol    = hb_parnl( 4 );
    ULONG  ulOffset = 0;
@@ -398,8 +403,9 @@ HB_FUNC( MPOSTOLC )
    BOOL   fWordWrap;
    PHB_EOL_INFO pEOLs;
    int    iEOLs;
-   char * pszString = hb_mlGetParams( 1, &ulLen, &ulLineLength,
-                                      &ulTabSize, &fWordWrap, &pEOLs, &iEOLs );
+   const char * pszString = hb_mlGetParams( 1, &ulLen, &ulLineLength,
+                                            &ulTabSize, &fWordWrap,
+                                            &pEOLs, &iEOLs );
    ULONG  ulPos    = hb_parnl( 3 );
    ULONG  ulOffset = 0;
    ULONG  ulLine   = 0;

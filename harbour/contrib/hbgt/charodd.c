@@ -21,7 +21,8 @@
 
 HB_FUNC( GT_CHARODD )
 {
-  char *s1, *s2;
+  const char *s1;
+  char *s2;
   int len, i;
 
   if (ISCHAR(1)) {

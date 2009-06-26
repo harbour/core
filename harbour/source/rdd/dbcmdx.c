@@ -78,7 +78,7 @@ HB_FUNC( ORDWILDSEEK )
 
    if( pArea )
    {
-      char * szPattern = hb_parc( 1 );
+      const char * szPattern = hb_parc( 1 );
 
       if( szPattern )
       {
@@ -91,7 +91,7 @@ HB_FUNC( ORDWILDSEEK )
 
          if( !fCont )
          {
-            char * szKey;
+            const char * szKey;
 
             if( fBack )
                errCode = SELF_GOBOTTOM( pArea );

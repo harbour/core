@@ -65,7 +65,8 @@ HB_FUNC( COMPLEMENT )
 
          if( ulLen > 0 )
          {
-            char *szBuffer = ( char * ) hb_xgrab( ulLen + 1 ), *szSrc = hb_itemGetCPtr( pItem );
+            const char *szSrc = hb_itemGetCPtr( pItem );
+            char *szBuffer = ( char * ) hb_xgrab( ulLen + 1 );
 
             for( ulPos = 0; ulPos < ulLen; ulPos++ )
                szBuffer[ulPos] = ~szSrc[ulPos];

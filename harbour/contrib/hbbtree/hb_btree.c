@@ -302,7 +302,7 @@ typedef int ( * BTreeCmpFunc )( const char * l, const char * r, size_t n );
 
 struct hb_BTree
 {
-  BYTE          * szFileName;
+  char          * szFileName;
   HB_FHANDLE      hFile;
   ULONG           ulRootPage;
   ULONG           ulFreePage;
@@ -708,12 +708,12 @@ static void HeaderWrite( struct hb_BTree * pBTree )
   hb_fsSeek( pBTree->hFile, 0, SEEK_SET );
 
   if ( hb_fsWrite( pBTree->hFile, HEADER_ID, sizeof( HEADER_ID ) ) +
-       hb_fsWrite( pBTree->hFile, ( BYTE * )&pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) ) + /* 4 bytes */
-       hb_fsWrite( pBTree->hFile, ( BYTE * )&pBTree->usPageSize, sizeof( pBTree->usPageSize ) ) + /* 2 bytes */
-       hb_fsWrite( pBTree->hFile, ( BYTE * )&pBTree->usKeySize , sizeof( pBTree->usKeySize  ) ) + /* 4 bytes */
-       hb_fsWrite( pBTree->hFile, ( BYTE * )&pBTree->ulRootPage, sizeof( pBTree->ulRootPage ) ) + /* 4 bytes */
-       hb_fsWrite( pBTree->hFile, ( BYTE * )&pBTree->ulFlags   , sizeof( pBTree->ulFlags    ) ) + /* 4 bytes */
-       hb_fsWrite( pBTree->hFile, ( BYTE * )&pBTree->ulKeyCount, sizeof( pBTree->ulKeyCount ) ) + /* 4 bytes */
+       hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) ) + /* 4 bytes */
+       hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->usPageSize, sizeof( pBTree->usPageSize ) ) + /* 2 bytes */
+       hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->usKeySize , sizeof( pBTree->usKeySize  ) ) + /* 4 bytes */
+       hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->ulRootPage, sizeof( pBTree->ulRootPage ) ) + /* 4 bytes */
+       hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->ulFlags   , sizeof( pBTree->ulFlags    ) ) + /* 4 bytes */
+       hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->ulKeyCount, sizeof( pBTree->ulKeyCount ) ) + /* 4 bytes */
        0 != sizeof( HEADER_ID ) +
             sizeof( pBTree->ulFreePage ) +
             sizeof( pBTree->usPageSize ) +
@@ -790,7 +790,7 @@ static void Prune( struct hb_BTree * pBTree, ULONG ulNode )
   else
   {
     hb_fsSeek( pBTree->hFile, ulNode, SEEK_SET );
-    if ( hb_fsWrite( pBTree->hFile, ( BYTE * )&pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) ) != sizeof( pBTree->ulFreePage ) )
+    if ( hb_fsWrite( pBTree->hFile, ( const BYTE * )&pBTree->ulFreePage, sizeof( pBTree->ulFreePage ) ) != sizeof( pBTree->ulFreePage ) )
     {
       hb_RaiseError( HB_BTree_WriteError_EC, "write error", "Prune*", 0 );
     }
@@ -1111,7 +1111,7 @@ static BOOL PushDown( struct hb_BTree * pBTree, hb_KeyData_T *newkey, ULONG ulNo
   }
 }
 
-BOOL hb_BTreeInsert( struct hb_BTree * pBTree, BYTE * szKey, PHB_ITEM pData )
+BOOL hb_BTreeInsert( struct hb_BTree * pBTree, const char * szKey, PHB_ITEM pData )
 {
   hb_KeyData_T *xkey = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
   ULONG xbranch;
@@ -1420,7 +1420,7 @@ static BOOL RecDelete( struct hb_BTree * pBTree, hb_KeyData_T *target, ULONG ulN
  }
 #endif
 
-BOOL hb_BTreeDelete( struct hb_BTree * pBTree, BYTE *target, LONG lData )
+BOOL hb_BTreeDelete( struct hb_BTree * pBTree, const char *target, LONG lData )
 {
   ULONG ulNode;
   int iPosition;
@@ -1522,7 +1522,7 @@ LONG hb_BTreeSkip( struct hb_BTree * pBTree, LONG records )
   return results;
 }
 
-BOOL hb_BTreeSeek( struct hb_BTree * pBTree, BYTE *szKey, LONG lData, BOOL bSoftSeek )
+BOOL hb_BTreeSeek( struct hb_BTree * pBTree, const char *szKey, LONG lData, BOOL bSoftSeek )
 {
   BOOL results = FALSE;
   int iPosition;
@@ -1558,7 +1558,7 @@ static int hb_BTstrncmp( const char *s1, const char *s2, size_t n )
 }
 
 /* allocate hb_BTree structure */
-struct hb_BTree * hb_BTreeNew( BYTE * FileName, USHORT usPageSize, USHORT usKeySize, ULONG ulFlags, USHORT usBuffers )
+struct hb_BTree * hb_BTreeNew( const char * FileName, USHORT usPageSize, USHORT usKeySize, ULONG ulFlags, USHORT usBuffers )
 {
   struct hb_BTree *pBTree = ( struct hb_BTree * )BufferAlloc( sizeof( struct hb_BTree ) );
   int iMaximumKeys, size;
@@ -1621,7 +1621,7 @@ struct hb_BTree * hb_BTreeNew( BYTE * FileName, USHORT usPageSize, USHORT usKeyS
       }
     }
 
-    pBTree->szFileName = ( BYTE * ) hb_strdup( ( char * ) FileName );
+    pBTree->szFileName = hb_strdup( FileName );
   }
 
   pBTree->ulFreePage = NULLPAGE;
@@ -1674,7 +1674,7 @@ struct hb_BTree * hb_BTreeNew( BYTE * FileName, USHORT usPageSize, USHORT usKeyS
 }
 
 /* open an existing structure */
-struct hb_BTree *hb_BTreeOpen( BYTE *FileName, ULONG ulFlags, USHORT usBuffers )
+struct hb_BTree *hb_BTreeOpen( const char *FileName, ULONG ulFlags, USHORT usBuffers )
 {
   struct hb_BTree *pBTree = ( struct hb_BTree * )BufferAlloc( sizeof( struct hb_BTree ) );
   int iMaximumKeys;
@@ -1682,7 +1682,7 @@ struct hb_BTree *hb_BTreeOpen( BYTE *FileName, ULONG ulFlags, USHORT usBuffers )
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
 
-  pBTree->szFileName = ( BYTE * ) hb_strdup( ( char * ) FileName );
+  pBTree->szFileName = hb_strdup( FileName );
   pBTree->hFile      = hb_fsOpen( pBTree->szFileName, FO_READWRITE );
   if ( pBTree->hFile == -1 )
   {
@@ -1750,9 +1750,9 @@ void hb_BTreeClose( struct hb_BTree * pBTree )
   BufferRelease( pBTree );
 }
 
-const BYTE * hb_BTreeKey( struct hb_BTree * pBTree )
+const char * hb_BTreeKey( struct hb_BTree * pBTree )
 {
-  return ( const BYTE * )pBTree->pThisKeyData->szKey;
+  return ( const char * )pBTree->pThisKeyData->szKey;
 }
 
 LONG hb_BTreeData( struct hb_BTree * pBTree )
@@ -1807,7 +1807,7 @@ HB_FUNC( HB_BTREEOPEN  )  /* hb_BTreeOpen( CHAR cFileName, ULONG ulFlags [ , int
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( HB_ISCHAR( 1 ) )
-    hb_retni( BTree_SetTreeIndex( hb_BTreeOpen( ( BYTE * ) hb_parc( 1 ), hb_parnl( 2 ), hb_parni( 3 ) ) ) );
+    hb_retni( BTree_SetTreeIndex( hb_BTreeOpen( hb_parc( 1 ), hb_parnl( 2 ), hb_parni( 3 ) ) ) );
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
@@ -1821,7 +1821,7 @@ HB_FUNC( HB_BTREENEW )  /* hb_BTreeNew( CHAR cFileName, int nPageSize, int nKeyS
   if ( ( ( hb_parnl( 4 ) & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY || HB_ISCHAR( 1 ) ) &&
        HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
   {
-    hb_retni( BTree_SetTreeIndex( hb_BTreeNew( ( BYTE * ) hb_parc( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parnl( 4 ), hb_parni( 5 ) ) ) );
+    hb_retni( BTree_SetTreeIndex( hb_BTreeNew( hb_parc( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parnl( 4 ), hb_parni( 5 ) ) ) );
   }
   else
   {
@@ -1844,7 +1844,7 @@ HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, LONG l
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) && ( hb_pcount() == 2 || GETFLAG( pBTree, IsInMemory ) || HB_ISNUM( 3 ) ) )
-    hb_retl( hb_BTreeInsert( BTree_GetTreeIndex( "hb_btreeinsert" ), ( BYTE * ) hb_parc( 2 ), hb_paramError( 3 ) ) );
+    hb_retl( hb_BTreeInsert( BTree_GetTreeIndex( "hb_btreeinsert" ), hb_parc( 2 ), hb_paramError( 3 ) ) );
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
@@ -1856,7 +1856,7 @@ HB_FUNC( HB_BTREEDELETE )  /* hb_BTreeDelete( hb_BTree_Handle, CHAR cKey, LONG l
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) && ( hb_pcount() == 2 || HB_ISNUM( 3 ) ) )
-    hb_retl( hb_BTreeDelete( BTree_GetTreeIndex( "hb_btreedelete" ), ( BYTE * ) hb_parc( 2 ), hb_parnl( 3 ) ) );
+    hb_retl( hb_BTreeDelete( BTree_GetTreeIndex( "hb_btreedelete" ), hb_parc( 2 ), hb_parnl( 3 ) ) );
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
@@ -1916,7 +1916,7 @@ HB_FUNC( HB_BTREESEEK )  /* hb_BTreeSeek( hb_BTree_Handle, CHAR cKey, LONG lData
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( HB_ISNUM( 1 ) && HB_ISCHAR( 2 ) )
-    hb_retl( hb_BTreeSeek( BTree_GetTreeIndex( "hb_btreeseek" ), ( BYTE * ) hb_parc( 2 ), hb_parnl( 3 ), hb_parl( 4 ) ) );
+    hb_retl( hb_BTreeSeek( BTree_GetTreeIndex( "hb_btreeseek" ), hb_parc( 2 ), hb_parnl( 3 ), hb_parl( 4 ) ) );
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );

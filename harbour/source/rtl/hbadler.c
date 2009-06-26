@@ -87,7 +87,7 @@ ULONG hb_adler32( ULONG adler, const BYTE *buf, ULONG len )
 
 HB_FUNC( HB_ADLER32 )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    if( szString )
       hb_retnint( hb_adler32( ( ULONG ) hb_parnl( 2 ), ( BYTE * ) szString, hb_parclen( 1 ) ) );

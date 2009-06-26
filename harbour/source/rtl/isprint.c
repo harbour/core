@@ -110,7 +110,7 @@ BOOL hb_printerIsReady( const char * pszPrinterName )
       if( pszPrinterName == NULL )
          pszPrinterName = "LPT1";
 
-      fhnd = hb_fsOpen( ( BYTE * ) pszPrinterName, FO_WRITE | FO_SHARED | FO_PRIVATE );
+      fhnd = hb_fsOpen( pszPrinterName, FO_WRITE | FO_SHARED | FO_PRIVATE );
       bIsPrinter = ( fhnd != FS_ERROR );
       hb_fsClose( fhnd );
    }

@@ -1981,8 +1981,7 @@ static void hb_nsxIndexFree( LPNSXINDEX pIndex )
       hb_fileClose( pIndex->pFile );
       if( pIndex->fDelete )
       {
-         hb_fsDelete( ( BYTE * ) ( pIndex->RealName ?
-                                   pIndex->RealName : pIndex->IndexName ) );
+         hb_fsDelete( pIndex->RealName ? pIndex->RealName : pIndex->IndexName );
       }
    }
    if( pIndex->IndexName )
@@ -4575,7 +4574,8 @@ static BOOL hb_nsxOrdSkipEval( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pEval )
 static BOOL hb_nsxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm )
 {
    NSXAREAP pArea = pTag->pIndex->pArea;
-   char *szPattern, *szFree = NULL;
+   const char *szPattern;
+   char *szFree = NULL;
    BOOL fFound = FALSE;
    int iFixed = 0;
 
@@ -4594,7 +4594,7 @@ static BOOL hb_nsxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
    if( pArea->cdPage != hb_vmCDP() )
    {
       szPattern = szFree = hb_strdup( szPattern );
-      hb_cdpTranslate( szPattern, hb_vmCDP(), pArea->cdPage );
+      hb_cdpTranslate( szFree, hb_vmCDP(), pArea->cdPage );
    }
 #endif
    while( iFixed < pTag->KeyLength && szPattern[ iFixed ] &&
@@ -4691,7 +4691,7 @@ static BOOL hb_nsxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
       pArea->fEof = FALSE;
 
    if( szFree )
-      hb_xfree( szPattern );
+      hb_xfree( szFree );
 
    return fFound;
 }
@@ -5201,13 +5201,13 @@ static void hb_nsxSortWritePage( LPNSXSORTINFO pSort )
 
    if( pSort->hTempFile == FS_ERROR )
    {
-      BYTE szName[ HB_PATH_MAX ];
+      char szName[ HB_PATH_MAX ];
       pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
       if( pSort->hTempFile == FS_ERROR )
          hb_nsxErrorRT( pSort->pTag->pIndex->pArea, EG_CREATE, EDBF_CREATE_TEMP,
-                        ( const char * ) szName, 0, 0, NULL );
+                        szName, 0, 0, NULL );
       else
-         pSort->szTempFileName = hb_strdup( ( const char * ) szName );
+         pSort->szTempFileName = hb_strdup( szName );
    }
 
    pSort->pSwapPage[ pSort->ulCurPage ].ulKeys = pSort->ulKeys;
@@ -5475,7 +5475,7 @@ static void hb_nsxSortFree( LPNSXSORTINFO pSort, BOOL fFull )
    }
    if( pSort->szTempFileName )
    {
-      hb_fsDelete( ( BYTE * )  pSort->szTempFileName );
+      hb_fsDelete( pSort->szTempFileName );
       hb_xfree( pSort->szTempFileName );
       pSort->szTempFileName = NULL;
    }
@@ -6554,7 +6554,7 @@ static HB_ERRCODE hb_nsxOpen( NSXAREAP pArea, LPDBOPENINFO pOpenInfo )
       char szFileName[ HB_PATH_MAX ];
 
       hb_nsxCreateFName( pArea, NULL, NULL, szFileName, NULL );
-      if( hb_spFileExists( ( BYTE * ) szFileName, NULL ) ||
+      if( hb_spFileExists( szFileName, NULL ) ||
           DBFAREA_DATA( pArea )->fStrictStruct )
       {
          DBORDERINFO pOrderInfo;
@@ -6799,12 +6799,12 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       {
          if( fTemporary )
          {
-            pFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, ( BYTE * ) szSpFile );
+            pFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, szSpFile );
             fNewFile = TRUE;
          }
          else
          {
-            pFile = hb_fileExtOpen( ( BYTE * ) szFileName, NULL, uiFlags |
+            pFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
                                     ( fNewFile ? FXO_TRUNCATE : FXO_APPEND ) |
                                     FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
                                     NULL, pError );
@@ -7765,7 +7765,7 @@ static HB_ERRCODE hb_nsxOrderListAdd( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
       do
       {
          fRetry = FALSE;
-         pFile = hb_fileExtOpen( ( BYTE * ) szFileName, NULL, uiFlags |
+         pFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
                                  FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
                                  NULL, pError );
          if( !pFile )
@@ -7974,18 +7974,15 @@ static HB_ERRCODE hb_nsxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect
       case RDDI_ORDEREXT:
       case RDDI_ORDSTRUCTEXT:
       {
-         char * szNew = hb_itemGetCPtr( pItem );
+         const char * szNew = hb_itemGetCPtr( pItem );
+         char * szNewVal;
 
-         if( szNew[0] == '.' && szNew[1] )
-            szNew = hb_strdup( szNew );
-         else
-            szNew = NULL;
-
+         szNewVal = szNew[0] == '.' && szNew[1] ? hb_strdup( szNew ) : NULL;
          hb_itemPutC( pItem, pData->szIndexExt[ 0 ] ? pData->szIndexExt : NSX_INDEXEXT );
-         if( szNew )
+         if( szNewVal )
          {
-            hb_strncpy( pData->szIndexExt, szNew, HB_MAX_FILE_EXT );
-            hb_xfree( szNew );
+            hb_strncpy( pData->szIndexExt, szNewVal, HB_MAX_FILE_EXT );
+            hb_xfree( szNewVal );
          }
          break;
       }

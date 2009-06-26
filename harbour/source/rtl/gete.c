@@ -91,23 +91,14 @@ HB_FUNC( GETENV )
 
          /* NOTE: Convert the envvar name to uppercase. This is required for
                   DOS and OS/2 systems. [vszakats] */
-
-         #if defined(HB_OS_DOS) || defined(HB_OS_OS2)
-            hb_strupr( pszName );
-         #endif
-
+#if defined(HB_OS_DOS) || defined(HB_OS_OS2)
+         hb_strupr( pszName );
+#endif
          szValue = hb_getenv( pszName );
          if( szValue && szValue[ 0 ] != '\0' )
          {
-            {
-               /* Convert from OS codepage */
-               BOOL fFree;
-               char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) szValue, &fFree );
-
-               hb_retc_buffer( pbyResult );
-               if( fFree )
-                  hb_xfree( szValue );
-            }
+            /* Convert from OS codepage */
+            hb_retc_buffer( ( char * ) hb_osDecode( szValue, NULL ) );
          }
          else
          {
@@ -169,26 +160,15 @@ HB_FUNC( HB_GETENV )
 
          /* NOTE: Convert the envvar name to uppercase. This is required for
                   DOS and OS/2 systems. [vszakats] */
-
-         #if defined(HB_OS_DOS) || defined(HB_OS_OS2)
-            hb_strupr( pszName );
-         #endif
-
+#if defined(HB_OS_DOS) || defined(HB_OS_OS2)
+         hb_strupr( pszName );
+#endif
          szValue = hb_getenv( pszName );
          if( szValue && szValue[ 0 ] != '\0' )
          {
             if( ! HB_ISLOG( 3 ) || hb_parl( 3 ) )
-            {
-               /* Convert from OS codepage */
-               BOOL fFree;
-               char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) szValue, &fFree );
-
-               hb_retc_buffer( pbyResult );
-               if( fFree )
-                  hb_xfree( szValue );
-            }
-            else
-               hb_retc_buffer( szValue );
+               szValue = ( char * ) hb_osDecode( szValue, NULL );
+            hb_retc_buffer( szValue );
          }
          else
          {
@@ -208,27 +188,27 @@ HB_FUNC( HB_GETENV )
 
 HB_FUNC( HB_SETENV )
 {
-   char * pszName = hb_parc( 1 );
+   const char * pszName = hb_parc( 1 );
    BOOL fResult = FALSE;
 
    if( pszName )
    {
-      char * pszValue = hb_parc( 2 );
-      BOOL fFreeName = FALSE, fFreeVal = FALSE;
+      const char * pszValue = hb_parc( 2 );
+      char * pszFreeName = NULL, * pszFreeVal = NULL;
 
       if( ( ! HB_ISLOG( 3 ) || hb_parl( 3 ) ) )
       {
-         pszName = ( char * ) hb_osEncode( ( BYTE * ) pszName, &fFreeName );
+         pszName = hb_osEncode( pszName, &pszFreeName );
          if( pszValue )
-            pszValue = ( char * ) hb_osEncode( ( BYTE * ) pszValue, &fFreeVal );
+            pszValue = hb_osEncode( pszValue, &pszFreeVal );
       }
 
       fResult = hb_setenv( pszName, pszValue );
 
-      if( fFreeName )
-         hb_xfree( pszName );
-      if( fFreeVal )
-         hb_xfree( pszValue );
+      if( pszFreeName )
+         hb_xfree( pszFreeName );
+      if( pszFreeVal )
+         hb_xfree( pszFreeVal );
    }
 
    hb_retl( fResult );

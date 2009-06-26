@@ -95,10 +95,10 @@ typedef struct _HB_CURL
    struct curl_slist *    pPREQUOTE;
    struct curl_slist *    pTELNETOPTIONS;
 
-   BYTE *     ul_name;
+   char *     ul_name;
    HB_FHANDLE ul_handle;
 
-   BYTE *     dl_name;
+   char *     dl_name;
    HB_FHANDLE dl_handle;
 
    BYTE * ul_ptr;
@@ -302,7 +302,7 @@ size_t hb_curl_write_file_callback( void * buffer, size_t size, size_t nmemb, vo
             return ( size_t ) -1;
       }
 
-      return hb_fsWriteLarge( hb_curl->dl_handle, ( BYTE * ) buffer, size * nmemb );
+      return hb_fsWriteLarge( hb_curl->dl_handle, ( const BYTE * ) buffer, size * nmemb );
    }
 
    return ( size_t ) -1;
@@ -1378,7 +1378,7 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                if( HB_ISCHAR( 3 ) )
                {
-                  hb_curl->ul_name = ( BYTE * ) hb_strdup( hb_parc( 3 ) );
+                  hb_curl->ul_name = hb_strdup( hb_parc( 3 ) );
                   hb_curl->ul_handle = FS_ERROR;
 
                   curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, hb_curl_read_file_callback );
@@ -1398,7 +1398,7 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                if( HB_ISCHAR( 3 ) )
                {
-                  hb_curl->dl_name = ( BYTE * ) hb_strdup( hb_parc( 3 ) );
+                  hb_curl->dl_name = hb_strdup( hb_parc( 3 ) );
                   hb_curl->dl_handle = FS_ERROR;
 
                   curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, hb_curl_write_file_callback );

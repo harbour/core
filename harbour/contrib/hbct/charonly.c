@@ -72,14 +72,14 @@ static void do_charonly( int iSwitch )
    /* param check */
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      char *pcString = hb_parc( 2 );
+      const char *pcString = hb_parc( 2 );
       size_t sStrLen = ( size_t ) hb_parclen( 2 );
-      char *pcOnlySet = hb_parc( 1 );
+      const char *pcOnlySet = hb_parc( 1 );
       size_t sOnlySetLen = ( size_t ) hb_parclen( 1 );
       char *pcRet;
       size_t sRetStrLen = 0;
       int iShift, iBool;
-      char *pcSub, *pc;
+      const char *pcSub, *pc;
 
       /* check for zero-length strings  */
       switch ( iSwitch )

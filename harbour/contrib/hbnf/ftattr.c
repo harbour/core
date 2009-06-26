@@ -392,7 +392,7 @@ HB_FUNC( FT_RESTATT )
       USHORT uiMaxCol = hb_gtMaxCol();
       USHORT uiBottom = HB_ISNUM( 3 ) ? ( USHORT ) hb_parni( 3 ) : hb_gtMaxRow();
       USHORT uiRight  = HB_ISNUM( 4 ) ? ( USHORT ) hb_parni( 4 ) : hb_gtMaxCol();
-      char * pAttrib  = hb_parc( 5 );
+      const char * pAttrib  = hb_parc( 5 );
 
       if( uiBottom > uiMaxRow )
          uiBottom = uiMaxRow;

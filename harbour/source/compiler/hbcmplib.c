@@ -54,12 +54,12 @@
 #include "hbcomp.h"
 
 static void hb_compGenArgList( int iFirst, int iLast,
-                               int * pArgC, char *** pArgV )
+                               int * pArgC, const char *** pArgV )
 {
    PHB_ITEM pParam;
    ULONG ul, ulLen;
    int argc = 1, i;
-   char ** argv;
+   const char ** argv;
 
    for( i = iFirst; i <= iLast; ++i )
    {
@@ -81,7 +81,7 @@ static void hb_compGenArgList( int iFirst, int iLast,
       }
    }
 
-   argv = ( char ** ) hb_xgrab( sizeof( char * ) * ( argc + 1 ) );
+   argv = ( const char ** ) hb_xgrab( sizeof( char * ) * ( argc + 1 ) );
    argc = 0;
    for( i = iFirst; i <= iLast; ++i )
    {
@@ -110,7 +110,7 @@ static void hb_compGenArgList( int iFirst, int iLast,
 HB_FUNC( HB_COMPILE )
 {
    int argc;
-   char ** argv;
+   const char ** argv;
 
    hb_compGenArgList( 1, hb_pcount(), &argc, &argv );
 
@@ -121,7 +121,7 @@ HB_FUNC( HB_COMPILE )
 HB_FUNC( HB_COMPILEBUF )
 {
    int iResult, argc;
-   char ** argv;
+   const char ** argv;
    BYTE * pBuffer;
    ULONG ulLen;
 
@@ -135,7 +135,7 @@ HB_FUNC( HB_COMPILEBUF )
 HB_FUNC( HB_COMPILEFROMBUF )
 {
    int iResult, argc;
-   char ** argv;
+   const char ** argv;
    const char * szSource;
    BYTE * pBuffer;
    ULONG ulLen;

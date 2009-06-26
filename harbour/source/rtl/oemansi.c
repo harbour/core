@@ -68,7 +68,7 @@ HB_FUNC( HB_ANSITOOEM )
       DWORD ulLen = hb_itemGetCLen( pString );
       char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
 
-      CharToOemBuffA( ( LPCSTR ) hb_itemGetCPtr( pString ), ( LPSTR ) pszDst, ulLen );
+      CharToOemBuffA( hb_itemGetCPtr( pString ), pszDst, ulLen );
 
       hb_retclen_buffer( pszDst, ulLen );
    }
@@ -89,7 +89,7 @@ HB_FUNC( HB_OEMTOANSI )
       DWORD ulLen = hb_itemGetCLen( pString );
       char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
 
-      OemToCharBuffA( ( LPCSTR ) hb_itemGetCPtr( pString ), ( LPSTR ) pszDst, ulLen );
+      OemToCharBuffA( hb_itemGetCPtr( pString ), pszDst, ulLen );
 
       hb_retclen_buffer( pszDst, ulLen );
    }

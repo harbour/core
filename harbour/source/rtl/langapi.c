@@ -302,9 +302,9 @@ PHB_LANG hb_langSelect( PHB_LANG lang )
    return langOld;
 }
 
-char * hb_langSelectID( const char * pszID )
+const char * hb_langSelectID( const char * pszID )
 {
-   char * pszIDOld = hb_langID();
+   const char * pszIDOld = hb_langID();
 
    HB_TRACE(HB_TR_DEBUG, ("hb_langSelectID(%s)", pszID));
 
@@ -313,7 +313,7 @@ char * hb_langSelectID( const char * pszID )
    return pszIDOld;
 }
 
-char * hb_langDGetItem( int iIndex )
+const char * hb_langDGetItem( int iIndex )
 {
    PHB_LANG lang;
 
@@ -321,12 +321,12 @@ char * hb_langDGetItem( int iIndex )
 
    lang = hb_vmLang();
    if( lang && iIndex >= 0 && iIndex < HB_LANG_ITEM_MAX_ )
-      return ( char * ) lang->pItemList[ iIndex ];
+      return ( const char * ) lang->pItemList[ iIndex ];
    else
       return NULL;
 }
 
-char * hb_langID( void )
+const char * hb_langID( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_langID()"));
 
@@ -345,9 +345,9 @@ char * hb_langName( void )
    {
       pszName = ( char * ) hb_xgrab( 128 );
       hb_snprintf( pszName, 128, "Harbour Language: %s %s (%s)",
-         ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID ),
-         ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAME ),
-         ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAMENAT ) );
+         ( const char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID ),
+         ( const char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAME ),
+         ( const char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAMENAT ) );
    }
    else
       pszName = hb_strdup( "Harbour Language: (not installed)" );
@@ -357,18 +357,18 @@ char * hb_langName( void )
 
 /* Compatibility interface */
 
-char * hb_langDGetErrorDesc( ULONG ulIndex )
+const char * hb_langDGetErrorDesc( ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_langDGetErrorDesc(%lu)", ulIndex));
 
-   return ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulIndex );
+   return hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulIndex );
 }
 
 /* Harbour interface */
 
 HB_FUNC( HB_LANGSELECT )
 {
-   char * szNewLang;
+   const char * szNewLang;
 
    hb_retc( hb_langID() );
 

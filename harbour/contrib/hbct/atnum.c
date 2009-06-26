@@ -67,16 +67,16 @@ static void do_atnum( int iSwitch )
 {
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      char *pcStringToMatch = hb_parc( 1 );
+      const char *pcStringToMatch = hb_parc( 1 );
       size_t sStrToMatchLen = ( size_t ) hb_parclen( 1 );
-      char *pcString = hb_parc( 2 );
+      const char *pcString = hb_parc( 2 );
       size_t sStrLen = ( size_t ) hb_parclen( 2 );
       int iMultiPass = ct_getatmupa();
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
       size_t sIgnore, sMatchStrLen = 0;
       ULONG ulCounter;
-      char *pc = NULL;
+      const char *pc = NULL;
 
       /* eventually ignore some characters */
       if( HB_ISNUM( 4 ) )
@@ -140,7 +140,7 @@ static void do_atnum( int iSwitch )
       if( HB_ISNUM( 3 ) && ( ulCounter = hb_parnl( 3 ) ) != 0 )
       {
          /* find the <ulCounter>th match */
-         char *pcSubStr;
+         const char *pcSubStr;
          size_t sSubStrLen;
          ULONG ulMatchCounter = 0;
 

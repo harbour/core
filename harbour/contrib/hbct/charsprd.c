@@ -68,7 +68,8 @@ HB_FUNC( CHARSPREAD )
          hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
       else
       {
-         char * szText = hb_parc( 1 ), * szDest, cDelim = ' ';
+         const char * szText = hb_parc( 1 );
+         char * szDest, cDelim = ' ';
          int iTokens = 0, iRepl, iRest, iFirst, i;
          ULONG ul, ulDst, ulRest;
 

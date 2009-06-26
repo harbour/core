@@ -56,7 +56,7 @@
 
 /* trims from the left, and returns a new pointer to szText */
 /* also returns the new length in lLen */
-char * hb_strLTrim( const char * szText, ULONG * ulLen )
+const char * hb_strLTrim( const char * szText, ULONG * ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strLTrim(%s, %p)", szText, ulLen));
 
@@ -66,7 +66,7 @@ char * hb_strLTrim( const char * szText, ULONG * ulLen )
       ( *ulLen )--;
    }
 
-   return ( char * ) szText;
+   return szText;
 }
 
 /* return length of szText ignoring trailing white space (or true spaces) */
@@ -97,7 +97,7 @@ HB_FUNC( LTRIM )
    if( pText )
    {
       ULONG ulLen, ulSrc;
-      char * szText;
+      const char * szText;
 
       ulLen = ulSrc = hb_itemGetCLen( pText );
       szText = hb_strLTrim( hb_itemGetCPtr( pText ), &ulLen );
@@ -122,7 +122,7 @@ HB_FUNC( RTRIM )
    if( pText )
    {
       ULONG ulLen, ulSrc;
-      char * szText = hb_itemGetCPtr( pText );
+      const char * szText = hb_itemGetCPtr( pText );
 
       ulSrc = hb_itemGetCLen( pText );
       ulLen = hb_strRTrimLen( szText, ulSrc, FALSE );
@@ -154,7 +154,7 @@ HB_FUNC( ALLTRIM )
    if( pText )
    {
       ULONG ulLen, ulSrc;
-      char * szText = hb_itemGetCPtr( pText );
+      const char * szText = hb_itemGetCPtr( pText );
 
       ulSrc = hb_itemGetCLen( pText );
       ulLen = hb_strRTrimLen( szText, ulSrc, FALSE );

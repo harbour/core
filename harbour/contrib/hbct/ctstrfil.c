@@ -105,7 +105,7 @@ HB_FUNC( CSETSAFETY )
    }
 }
 
-static LONG ct_StrFile( BYTE * pFileName, BYTE * pcStr, ULONG ulLen, BOOL bOverwrite, LONG lOffset,
+static LONG ct_StrFile( const char * pFileName, const BYTE * pcStr, ULONG ulLen, BOOL bOverwrite, LONG lOffset,
                         BOOL bTrunc )
 {
    HB_FHANDLE hFile;
@@ -147,7 +147,7 @@ HB_FUNC( STRFILE )
 {
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      hb_retnl( ct_StrFile( ( BYTE * ) hb_parc( 2 ), ( BYTE * ) hb_parc( 1 ),
+      hb_retnl( ct_StrFile( hb_parc( 2 ), ( const BYTE * ) hb_parc( 1 ),
                             hb_parclen( 1 ), HB_ISLOG( 3 ) && hb_parl( 3 ),
                             hb_parnl( 4 ), HB_ISLOG( 5 ) && hb_parl( 5 ) ) );
    }
@@ -161,7 +161,7 @@ HB_FUNC( FILESTR )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      HB_FHANDLE hFile = hb_fsOpen( ( BYTE * ) hb_parc( 1 ), FO_READ );
+      HB_FHANDLE hFile = hb_fsOpen( hb_parc( 1 ), FO_READ );
 
       if( hFile != FS_ERROR )
       {
@@ -218,7 +218,7 @@ HB_FUNC( SCREENFILE )
 
       hb_gtSave( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pBuffer );
 
-      hb_retnl( ct_StrFile( ( BYTE * ) hb_parc( 1 ), ( BYTE * ) pBuffer,
+      hb_retnl( ct_StrFile( hb_parc( 1 ), ( const BYTE * ) pBuffer,
                             ulSize, HB_ISLOG( 2 ) && hb_parl( 2 ), hb_parnl( 3 ),
                             HB_ISLOG( 4 ) && hb_parl( 4 ) ) );
       hb_xfree( pBuffer );
@@ -233,7 +233,7 @@ HB_FUNC( FILESCREEN )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      HB_FHANDLE hFile = hb_fsOpen( ( BYTE * ) hb_parc( 1 ), FO_READ );
+      HB_FHANDLE hFile = hb_fsOpen( hb_parc( 1 ), FO_READ );
 
       if( hFile != FS_ERROR )
       {

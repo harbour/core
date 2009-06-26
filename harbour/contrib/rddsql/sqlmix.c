@@ -1774,7 +1774,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
       }
       else if ( pArea->lpdbOrdCondInfo->abFor )
       {
-         if ( SELF_COMPILE( (AREAP) pArea, pArea->lpdbOrdCondInfo->abFor ) == HB_FAILURE )
+         if ( SELF_COMPILE( (AREAP) pArea, ( BYTE * ) pArea->lpdbOrdCondInfo->abFor ) == HB_FAILURE )
          {
             hb_vmDestroyBlockOrMacro( pKeyItem );
             SELF_GOTO( (AREAP) pArea, ulRecNo );
@@ -1791,7 +1791,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
       }
       else if ( pArea->lpdbOrdCondInfo->abWhile )
       {
-         if ( SELF_COMPILE( (AREAP) pArea, pArea->lpdbOrdCondInfo->abWhile ) == HB_FAILURE )
+         if ( SELF_COMPILE( (AREAP) pArea, ( BYTE * ) pArea->lpdbOrdCondInfo->abWhile ) == HB_FAILURE )
          {
             hb_vmDestroyBlockOrMacro( pKeyItem );
             if ( pForItem )

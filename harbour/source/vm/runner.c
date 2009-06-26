@@ -573,7 +573,7 @@ static PHRB_BODY hb_hrbLoadFromFile( const char * szHrb, USHORT usMode )
 
    do
    {
-      hFile = hb_fsOpen( ( BYTE * ) szFileName, FO_READ );
+      hFile = hb_fsOpen( szFileName, FO_READ );
    }
    while( hFile == FS_ERROR &&
           hb_errRT_BASE_Ext1( EG_OPEN, 6102, NULL, szFileName, hb_fsError(),

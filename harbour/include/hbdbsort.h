@@ -66,7 +66,7 @@ HB_EXTERN_BEGIN
 typedef struct _DBQUICKSORT
 {
    HB_FHANDLE hFile;
-   BYTE szTempName[ HB_PATH_MAX ];
+   char szTempName[ HB_PATH_MAX ];
    BYTE * pBuffer;
    BYTE * pSwapBufferA;
    BYTE * pSwapBufferB;

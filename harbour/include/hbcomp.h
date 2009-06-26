@@ -82,7 +82,7 @@ extern void hb_compPCodeTrace( PFUNCTION, const HB_PCODE_FUNC_PTR *, void * );
 extern void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info );
 extern PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL );
 
-extern void hb_compInitPP( HB_COMP_DECL, int argc, char * const argv[] );
+extern void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[] );
 extern void hb_compCompileEnd( HB_COMP_DECL );
 
 extern int  hb_compparse( HB_COMP_DECL );
@@ -220,7 +220,7 @@ extern void hb_compGenPCode1( BYTE, HB_COMP_DECL ); /* generates 1 byte of pcode
 extern void hb_compGenPCode2( BYTE, BYTE, HB_COMP_DECL ); /* generates 2 bytes of pcode + flag for optional StrongType(). */
 extern void hb_compGenPCode3( BYTE, BYTE, BYTE, HB_COMP_DECL ); /* generates 3 bytes of pcode + flag for optional StrongType() */
 extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, HB_COMP_DECL ); /* generates 4 bytes of pcode + flag for optional StrongType() */
-extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_COMP_DECL ); /* copy bytes to a pcode buffer + flag for optional StrongType() */
+extern void hb_compGenPCodeN( const BYTE * pBuffer, ULONG ulSize, HB_COMP_DECL ); /* copy bytes to a pcode buffer + flag for optional StrongType() */
 
 extern ULONG hb_compSequenceBegin( HB_COMP_DECL );
 extern ULONG hb_compSequenceEnd( HB_COMP_DECL );
@@ -269,7 +269,7 @@ extern BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PFUNCTION );
 #define HB_GEN_FUNC3( func, p1,p2,p3 )    hb_compGen##func( p1, p2, p3, HB_COMP_PARAM )
 #define HB_GEN_FUNC4( func, p1,p2,p3,p4 ) hb_compGen##func( p1, p2, p3, p4, HB_COMP_PARAM )
 
-extern int  hb_compMain( int argc, char * const argv[], BYTE ** pBufPtr, ULONG * pulSize, const char * szSource );
+extern int  hb_compMain( int argc, const char * const argv[], BYTE ** pBufPtr, ULONG * pulSize, const char * szSource );
 extern void hb_compOutStd( HB_COMP_DECL, const char * szMessage );
 extern void hb_compOutErr( HB_COMP_DECL, const char * szMessage );
 
@@ -306,9 +306,9 @@ extern void hb_compCodeBlockRewind( HB_COMP_DECL );      /* restart of fake code
 extern ULONG hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR pEval );
 extern ULONG hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2, HB_CARGO2_FUNC_PTR pEval );
 
-extern void hb_compChkCompilerSwitch( HB_COMP_DECL, int, char * const Args[] );
+extern void hb_compChkCompilerSwitch( HB_COMP_DECL, int, const char * const args[] );
 extern void hb_compChkPaths( HB_COMP_DECL );
-extern void hb_compChkDefines( HB_COMP_DECL, int iArg, char * const Args[] );
+extern void hb_compChkDefines( HB_COMP_DECL, int iArg, const char * const args[] );
 
 extern void hb_compPrintUsage( HB_COMP_DECL, const char * );
 extern void hb_compPrintCredits( HB_COMP_DECL );
@@ -340,7 +340,7 @@ extern void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME );       /* generates platfo
 extern void hb_compGenBufPortObj( HB_COMP_DECL, BYTE ** pBufPtr, ULONG * pulSize ); /* generates the portable objects to memory buffer */
 
 extern void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc );
-extern void hb_compGenCString( FILE * yyc, BYTE * pText, ULONG ulLen );
+extern void hb_compGenCString( FILE * yyc, const BYTE * pText, ULONG ulLen );
 
 /* hbident.c */
 extern const char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType ); /* create the reusable identifier */

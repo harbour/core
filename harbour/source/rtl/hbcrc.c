@@ -230,7 +230,7 @@ HB_ULONG hb_crcct( HB_ULONG crc, const BYTE * buf, ULONG len, HB_ULONG poly )
 
 HB_FUNC( HB_CRC32 )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    if( szString )
       hb_retnint( hb_crc32( ( ULONG ) hb_parnl( 2 ), ( BYTE * ) szString, hb_parclen( 1 ) ) );
@@ -240,7 +240,7 @@ HB_FUNC( HB_CRC32 )
 
 HB_FUNC( HB_CRC16 )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    if( szString )
       hb_retnint( hb_crc16( ( ULONG ) hb_parnl( 2 ), ( BYTE * ) szString, hb_parclen( 1 ) ) );
@@ -250,7 +250,7 @@ HB_FUNC( HB_CRC16 )
 
 HB_FUNC( HB_CRC )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    if( szString )
    {
@@ -265,7 +265,7 @@ HB_FUNC( HB_CRC )
 
 HB_FUNC( HB_CRCCT )
 {
-   char * szString = hb_parc( 1 );
+   const char * szString = hb_parc( 1 );
 
    if( szString )
    {

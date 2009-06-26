@@ -657,7 +657,7 @@ static BOOL hb_gt_def_Resume( PHB_GT pGT )
    return HB_GTSELF_POSTEXT( pGT );
 }
 
-static void hb_gt_def_OutStd( PHB_GT pGT, BYTE * pbyStr, ULONG ulLen )
+static void hb_gt_def_OutStd( PHB_GT pGT, const BYTE * pbyStr, ULONG ulLen )
 {
    if( ulLen )
    {
@@ -682,7 +682,7 @@ static void hb_gt_def_OutStd( PHB_GT pGT, BYTE * pbyStr, ULONG ulLen )
    }
 }
 
-static void hb_gt_def_OutErr( PHB_GT pGT, BYTE * pbyStr, ULONG ulLen )
+static void hb_gt_def_OutErr( PHB_GT pGT, const BYTE * pbyStr, ULONG ulLen )
 {
    if( ulLen )
    {
@@ -763,7 +763,7 @@ static BOOL hb_gt_def_PutChar( PHB_GT pGT, int iRow, int iCol,
    return FALSE;
 }
 
-static void hb_gt_def_PutText( PHB_GT pGT, int iRow, int iCol, BYTE bColor, BYTE * pText, ULONG ulLen )
+static void hb_gt_def_PutText( PHB_GT pGT, int iRow, int iCol, BYTE bColor, const BYTE * pText, ULONG ulLen )
 {
    while( ulLen-- )
    {
@@ -792,7 +792,7 @@ static void hb_gt_def_Replicate( PHB_GT pGT, int iRow, int iCol, BYTE bColor,
    }
 }
 
-static void hb_gt_def_WriteAt( PHB_GT pGT, int iRow, int iCol, BYTE * pText, ULONG ulLength )
+static void hb_gt_def_WriteAt( PHB_GT pGT, int iRow, int iCol, const BYTE * pText, ULONG ulLength )
 {
    int iMaxCol = HB_GTSELF_MAXCOL( pGT );
 
@@ -804,7 +804,7 @@ static void hb_gt_def_WriteAt( PHB_GT pGT, int iRow, int iCol, BYTE * pText, ULO
    HB_GTSELF_SETPOS( pGT, iRow, iCol + ( int ) ulLength );
 }
 
-static void hb_gt_def_Write( PHB_GT pGT, BYTE * pText, ULONG ulLength )
+static void hb_gt_def_Write( PHB_GT pGT, const BYTE * pText, ULONG ulLength )
 {
    int iRow, iCol;
 
@@ -814,7 +814,7 @@ static void hb_gt_def_Write( PHB_GT pGT, BYTE * pText, ULONG ulLength )
 
 #define WRITECON_BUFFER_SIZE 512
 
-static void hb_gt_def_WriteCon( PHB_GT pGT, BYTE * pText, ULONG ulLength )
+static void hb_gt_def_WriteCon( PHB_GT pGT, const BYTE * pText, ULONG ulLength )
 {
    int iLen = 0;
    BOOL bDisp = FALSE;
@@ -1001,7 +1001,7 @@ static void hb_gt_def_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
 }
 
 static void hb_gt_def_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                            BYTE * pBuffer )
+                            const BYTE * pBuffer )
 {
    while( iTop <= iBottom )
    {
@@ -1269,7 +1269,7 @@ static void hb_gt_def_ScrollUp( PHB_GT pGT, int iRows, BYTE bColor, BYTE bChar )
 }
 
 static void hb_gt_def_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                           BYTE * pbyFrame, BYTE bColor )
+                           const BYTE * pbyFrame, BYTE bColor )
 {
    int iMaxRow, iMaxCol, iRows, iCols, iFirst, i;
 
@@ -1352,17 +1352,17 @@ static void hb_gt_def_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
 }
 
 static void hb_gt_def_BoxS( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                            BYTE * pbyFrame, BYTE bColor )
+                            const BYTE * pbyFrame, BYTE bColor )
 {
    HB_GTSELF_BOX( pGT, iTop, iLeft, iBottom, iRight,
-                  pbyFrame ? pbyFrame : ( BYTE * ) _B_SINGLE, bColor );
+                  pbyFrame ? pbyFrame : ( const BYTE * ) _B_SINGLE, bColor );
 }
 
 static void hb_gt_def_BoxD( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                            BYTE * pbyFrame, BYTE bColor )
+                            const BYTE * pbyFrame, BYTE bColor )
 {
    HB_GTSELF_BOX( pGT, iTop, iLeft, iBottom, iRight,
-                  pbyFrame ? pbyFrame : ( BYTE * ) _B_DOUBLE, bColor );
+                  pbyFrame ? pbyFrame : ( const BYTE * ) _B_DOUBLE, bColor );
 }
 
 static void hb_gt_def_HorizLine( PHB_GT pGT, int iRow, int iLeft, int iRight,
@@ -1535,7 +1535,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             {
                HB_GTSELF_REST( pGT, 0, 0, hb_arrayGetNI( pInfo->pNewVal, 5 ),
                                hb_arrayGetNI( pInfo->pNewVal, 6 ),
-                               ( BYTE * ) hb_arrayGetCPtr( pInfo->pNewVal, 7 ) );
+                               ( const BYTE * ) hb_arrayGetCPtr( pInfo->pNewVal, 7 ) );
             }
             HB_GTSELF_SETPOS( pGT, hb_arrayGetNI( pInfo->pNewVal, 1 ),
                                    hb_arrayGetNI( pInfo->pNewVal, 2 ) );
@@ -1773,7 +1773,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             HB_GTSELF_SAVE( pGT, iTop, iLeft, iBottom, iRight, pBuffer );
          }
          HB_GTSELF_BOXS( pGT, iTop, iLeft, iBottom, iRight, NULL, iClrNorm );
-         HB_GTSELF_BOXS( pGT, iTop + 1, iLeft + 1, iBottom - 1, iRight - 1, ( BYTE * ) "         ", iClrNorm );
+         HB_GTSELF_BOXS( pGT, iTop + 1, iLeft + 1, iBottom - 1, iRight - 1, ( const BYTE * ) "         ", iClrNorm );
          ulLast = 0;
          i = iTop + 1;
          for( ul = 0; ul < ulDst; ++ul )
@@ -1786,7 +1786,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                   if( ulLen > ulWidth )
                      ulLen = ulWidth;
                   HB_GTSELF_PUTTEXT( pGT, i, iLeft + ( ( ulWidth - ulLen + 1 ) >> 1 ) + 2,
-                                     iClrNorm, ( BYTE * ) szMsgDsp + ulLast, ulLen );
+                                     iClrNorm, ( const BYTE * ) szMsgDsp + ulLast, ulLen );
                }
                ulLast = ul + 1;
                if( ++i >= iBottom - 1 )
@@ -1799,7 +1799,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             if( ulLen > ulWidth )
                ulLen = ulWidth;
             HB_GTSELF_PUTTEXT( pGT, i, iLeft + ( ( ulWidth - ulLen + 1 ) >> 1 ) + 2,
-                               iClrNorm, ( BYTE * ) szMsgDsp + ulLast, ulLen );
+                               iClrNorm, ( const BYTE * ) szMsgDsp + ulLast, ulLen );
          }
 
          iPos = 1;
@@ -1811,10 +1811,10 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             {
                iClr = i == iPos ? iClrHigh : iClrNorm;
                ulLen = hb_arrayGetCLen( pOptions, i );
-               HB_GTSELF_PUTTEXT( pGT, iBottom - 1, iMnuCol, iClr, ( BYTE * ) " ", 1 );
+               HB_GTSELF_PUTTEXT( pGT, iBottom - 1, iMnuCol, iClr, ( const BYTE * ) " ", 1 );
                HB_GTSELF_PUTTEXT( pGT, iBottom - 1, iMnuCol + 1, iClr,
-                                  ( BYTE * ) hb_arrayGetCPtr( pOptions, i ), ulLen );
-               HB_GTSELF_PUTTEXT( pGT, iBottom - 1, iMnuCol + 1 + ulLen, iClr, ( BYTE * ) " ", 1 );
+                                  ( const BYTE * ) hb_arrayGetCPtr( pOptions, i ), ulLen );
+               HB_GTSELF_PUTTEXT( pGT, iBottom - 1, iMnuCol + 1 + ulLen, iClr, ( const BYTE * ) " ", 1 );
                iMnuCol += ulLen + 4;
             }
             while( HB_GTSELF_DISPCOUNT( pGT ) )
@@ -1899,22 +1899,22 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             if( szMessage[ ul ] == '\n' )
             {
                if( ul > ulStart )
-                  HB_GTSELF_WRITECON( pGT, ( BYTE * ) szMessage + ulStart, ul - ulStart );
-               HB_GTSELF_WRITECON( pGT, ( BYTE * ) szEol, strlen( szEol ) );
+                  HB_GTSELF_WRITECON( pGT, ( const BYTE * ) szMessage + ulStart, ul - ulStart );
+               HB_GTSELF_WRITECON( pGT, ( const BYTE * ) szEol, strlen( szEol ) );
                ulStart = ul + 1;
             }
          }
          if( ul > ulStart )
-            HB_GTSELF_WRITECON( pGT, ( BYTE * ) szMessage + ulStart, ul - ulStart );
-         HB_GTSELF_WRITECON( pGT, ( BYTE * ) " (", 2 );
+            HB_GTSELF_WRITECON( pGT, ( const BYTE * ) szMessage + ulStart, ul - ulStart );
+         HB_GTSELF_WRITECON( pGT, ( const BYTE * ) " (", 2 );
          for( i = 1; i <= iOptions; ++i )
          {
             if( i > 1 )
-               HB_GTSELF_WRITECON( pGT, ( BYTE * ) ", ", 2 );
-            HB_GTSELF_WRITECON( pGT, ( BYTE * ) hb_arrayGetCPtr( pOptions, i ),
+               HB_GTSELF_WRITECON( pGT, ( const BYTE * ) ", ", 2 );
+            HB_GTSELF_WRITECON( pGT, ( const BYTE * ) hb_arrayGetCPtr( pOptions, i ),
                                 hb_arrayGetCLen( pOptions, i ) );
          }
-         HB_GTSELF_WRITECON( pGT, ( BYTE * ) ") ", 2 );
+         HB_GTSELF_WRITECON( pGT, ( const BYTE * ) ") ", 2 );
          while( iRet == 0 )
          {
             iKey = fKeyBoard ? HB_GTSELF_INKEYGET( pGT, TRUE, dDelay, INKEY_ALL ) : 0;
@@ -1941,7 +1941,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             char szVal[2];
             szVal[ 0 ] = ( char ) iKey;
             szVal[ 1 ] = '\0';
-            HB_GTSELF_WRITECON( pGT, ( BYTE * ) szVal, 1 );
+            HB_GTSELF_WRITECON( pGT, ( const BYTE * ) szVal, 1 );
          }
       }
    }
@@ -2703,7 +2703,7 @@ static void hb_gt_def_mouseSaveState( PHB_GT pGT, BYTE * pBuffer )
    pStore->iRight    = iRight;
 }
 
-static void hb_gt_def_mouseRestoreState( PHB_GT pGT, BYTE * pBuffer )
+static void hb_gt_def_mouseRestoreState( PHB_GT pGT, const BYTE * pBuffer )
 {
    _HB_MOUSE_STORAGE * pStore = ( _HB_MOUSE_STORAGE * ) pBuffer;
 

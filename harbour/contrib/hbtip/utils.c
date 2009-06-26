@@ -643,7 +643,7 @@ HB_FUNC( TIP_FILEMIMETYPE )
          ext_type = s_findExtMimeType( fname + iPos + 1 );
       }
 
-      fileIn = hb_fsOpen( ( BYTE * ) fname, FO_READ );
+      fileIn = hb_fsOpen( fname, FO_READ );
       if ( hb_fsError() == 0 )
       {
          magic_type = s_findFileMimeType( fileIn );

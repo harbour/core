@@ -234,7 +234,7 @@ void hb_mouseSaveState( BYTE * pBuffer )
    }
 }
 
-void hb_mouseRestoreState( BYTE * pBuffer )
+void hb_mouseRestoreState( const BYTE * pBuffer )
 {
    PHB_GT pGT;
 

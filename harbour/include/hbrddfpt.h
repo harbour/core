@@ -338,9 +338,9 @@ static HB_ERRCODE hb_fptPackRec( FPTAREAP pArea, ULONG ulRecNo, BOOL *pfWritten 
 #define hb_fptUnLock                               NULL
 #define hb_fptCloseMemFile                         NULL
 static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo );
-static HB_ERRCODE hb_fptGetValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode );
+static HB_ERRCODE hb_fptGetValueFile( FPTAREAP pArea, USHORT uiIndex, const char * szFile, USHORT uiMode );
 static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo );
-static HB_ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode );
+static HB_ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, const char * szFile, USHORT uiMode );
 #define hb_fptReadDBHeader                         NULL
 #define hb_fptWriteDBHeader                        NULL
 #define hb_fptInit                                 NULL

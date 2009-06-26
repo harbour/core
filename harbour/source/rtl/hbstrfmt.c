@@ -76,7 +76,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
 {
    BUFFERTYPE  buffer;
    PHB_ITEM    pItem;
-   char        *pFmt, *pFmtEnd, *pFmtSave;
+   const char  *pFmt, *pFmtEnd, *pFmtSave;
    int         i, iParam, iParamNo, iWidth, iDec;
    ULONG       ulSize;
    BOOL        fLeftAlign, fForceSign, fPadZero, fSpaceSign, fSign;
@@ -432,7 +432,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
 
          case 's':
          {
-            char * pStr = hb_itemGetCPtr( pItem );
+            const char * pStr = hb_itemGetCPtr( pItem );
 
             ulSize = hb_itemGetCLen( pItem );
             if( iDec >= 0 )

@@ -90,7 +90,7 @@ HB_FUNC( P_INITPORTSPEED )
    struct termios options;
    int port = hb_parnl( 1 );
    int baud = B300;
-   char * ptr = hb_parcx( 4 );
+   const char * ptr = hb_parcx( 4 );
    int rc;
 
    tcgetattr( port, &options );

@@ -89,16 +89,16 @@ HB_FUNC( CHARRELA )
 {
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISCHAR( 3 ) && HB_ISCHAR( 4 ) )
    {
-      char *pcStringToMatch1 = hb_parc( 1 );
+      const char *pcStringToMatch1 = hb_parc( 1 );
       size_t sStrToMatchLen1 = hb_parclen( 1 );
-      char *pcString1 = hb_parc( 2 );
+      const char *pcString1 = hb_parc( 2 );
       size_t sStrLen1 = hb_parclen( 2 );
-      char *pcStringToMatch2 = hb_parc( 3 );
+      const char *pcStringToMatch2 = hb_parc( 3 );
       size_t sStrToMatchLen2 = hb_parclen( 3 );
-      char *pcString2 = hb_parc( 4 );
+      const char *pcString2 = hb_parc( 4 );
       size_t sStrLen2 = hb_parclen( 4 );
 
-      char *pc1, *pc2;
+      const char *pc1, *pc2;
       size_t sOffset1, sOffset2;
       size_t sMatchStrLen;
 
@@ -204,18 +204,18 @@ HB_FUNC( CHARRELREP )
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISCHAR( 3 ) &&
        HB_ISCHAR( 4 ) && HB_ISCHAR( 5 ) )
    {
-      char *pcStringToMatch1 = hb_parc( 1 );
+      const char *pcStringToMatch1 = hb_parc( 1 );
       size_t sStrToMatchLen1 = hb_parclen( 1 );
-      char *pcString1 = hb_parc( 2 );
+      const char *pcString1 = hb_parc( 2 );
       size_t sStrLen1 = hb_parclen( 2 );
-      char *pcStringToMatch2 = hb_parc( 3 );
+      const char *pcStringToMatch2 = hb_parc( 3 );
       size_t sStrToMatchLen2 = hb_parclen( 3 );
-      char *pcString2 = hb_parc( 4 );
+      const char *pcString2 = hb_parc( 4 );
       size_t sStrLen2 = hb_parclen( 4 );
-      char *pcReplace = hb_parc( 5 );
+      const char *pcReplace = hb_parc( 5 );
       size_t sReplaceLen = hb_parclen( 5 );
       char *pcRet;
-      char *pc1, *pc2;
+      const char *pc1, *pc2;
       size_t sOffset1, sOffset2;
       size_t sMatchStrLen;
 

@@ -102,9 +102,9 @@ HB_FUNC( ATADJUST )
 {
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISNUM( 3 ) )
    {
-      char *pcStringToMatch = hb_parc( 1 );
+      const char *pcStringToMatch = hb_parc( 1 );
       size_t sStrToMatchLen = ( size_t ) hb_parclen( 1 );
-      char *pcString = hb_parc( 2 );
+      const char *pcString = hb_parc( 2 );
       size_t sStrLen = ( size_t ) hb_parclen( 2 );
       size_t sAdjustPosition = hb_parnl( 3 );
 
@@ -113,10 +113,11 @@ HB_FUNC( ATADJUST )
       char cAtLike = ct_getatlikechar();
       size_t sIgnore, sMatchStrLen = 0;
       ULONG ulCounter;
-      char *pc = NULL;
+      const char *pc = NULL;
 
       char cFillChar;
-      char *pcRetStr, *pcCheckFill;
+      const char *pcCheckFill;
+      char *pcRetStr;
       size_t sRetStrLen;
 
       /* eventually ignore some characters */
@@ -163,7 +164,7 @@ HB_FUNC( ATADJUST )
       if( HB_ISNUM( 4 ) && ( ulCounter = hb_parnl( 4 ) ) != 0 )
       {
          /* find the <ulCounter>th match */
-         char *pcSubStr;
+         const char *pcSubStr;
          size_t sSubStrLen;
          ULONG ulMatchCounter = 0;
 

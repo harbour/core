@@ -54,7 +54,7 @@
 #include "hbapigt.h"
 #include "hbset.h"
 
-char * hb_conSetColor( const char * szColor )
+const char * hb_conSetColor( const char * szColor )
 {
    char * szOldColor;
 
@@ -63,7 +63,7 @@ char * hb_conSetColor( const char * szColor )
    szOldColor = hb_setGetColor();
    hb_gtGetColorStr( szOldColor );
 
-   if( szColor != ( char * ) NULL )
+   if( szColor != NULL )
       hb_gtSetColorStr( szColor );
 
    return szOldColor;

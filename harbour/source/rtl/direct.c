@@ -105,10 +105,10 @@
 
 HB_FUNC( DIRECTORY )
 {
-   char *    szDirSpec = hb_parc( 1 );
-   char *    szAttributes = hb_parc( 2 );
-   BOOL      fFree = FALSE;
-   ULONG     ulMask;
+   const char *   szDirSpec = hb_parc( 1 );
+   const char *   szAttributes = hb_parc( 2 );
+   char *         pszFree = NULL;
+   ULONG          ulMask;
 
    PHB_ITEM  pDir = hb_itemArrayNew( 0 );
    PHB_FFIND ffind;
@@ -138,7 +138,7 @@ HB_FUNC( DIRECTORY )
 
    if( szDirSpec && *szDirSpec )
    {
-      szDirSpec = ( char * ) hb_fsNameConv( ( BYTE * ) szDirSpec, &fFree );
+      szDirSpec = hb_fsNameConv( szDirSpec, &pszFree );
       if( ulMask != HB_FA_LABEL )
       {
          if( *szDirSpec )
@@ -154,32 +154,24 @@ HB_FUNC( DIRECTORY )
             if( szDirSpec[ iLen ] == HB_OS_PATH_DELIM_CHR )
 #endif
             {
-               if( fFree )
+               if( pszFree )
                {
-                  char * szTemp = hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
-                  hb_xfree( szDirSpec );
-                  szDirSpec = szTemp;
+                  char * pszTemp = hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
+                  hb_xfree( pszFree );
+                  szDirSpec = pszFree = pszTemp;
                }
                else
                {
-                  szDirSpec = hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
-                  fFree = TRUE;
+                  szDirSpec = pszFree = hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
                }
             }
          }
          else
-         {
-            if( fFree )
-            {
-               hb_xfree( szDirSpec );
-               fFree = FALSE;
-            }
-            szDirSpec = ( char * ) HB_OS_ALLFILE_MASK;
-         }
+            szDirSpec = HB_OS_ALLFILE_MASK;
       }
    }
    else
-      szDirSpec = ( char * ) HB_OS_ALLFILE_MASK;
+      szDirSpec = HB_OS_ALLFILE_MASK;
 
    /* Get the file list */
 
@@ -208,8 +200,8 @@ HB_FUNC( DIRECTORY )
       hb_fsFindClose( ffind );
    }
 
-   if( fFree )
-      hb_xfree( szDirSpec );
+   if( pszFree )
+      hb_xfree( pszFree );
 
    hb_itemReturnRelease( pDir );
 }

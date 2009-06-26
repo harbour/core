@@ -455,7 +455,7 @@ HB_FUNC( DBFILEGET )
    {
       USHORT uiFields, uiIndex;
       PHB_ITEM pMode;
-      char * szField = hb_parc( 1 );
+      const char * szField = hb_parc( 1 );
 
       if( szField )
          uiIndex = hb_rddFieldIndex( pArea, szField );
@@ -487,7 +487,7 @@ HB_FUNC( DBFILEPUT )
    if( pArea )
    {
       USHORT uiFields, uiIndex;
-      char * szField = hb_parc( 1 );
+      const char * szField = hb_parc( 1 );
 
       if( szField )
          uiIndex = hb_rddFieldIndex( pArea, szField );

@@ -94,7 +94,7 @@ HB_FUNC( POSCHAR )
    {
       if( ( hb_parclen( 2 ) > 0 ) || HB_ISNUM( 2 ) )
       {
-         char *pcString = hb_parc( 1 );
+         const char *pcString = hb_parc( 1 );
          size_t sStrLen = hb_parclen( 1 );
          char *pcRet;
          char cReplace;
@@ -203,7 +203,7 @@ HB_FUNC( POSDEL )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      char *pcString = hb_parc( 1 );
+      const char *pcString = hb_parc( 1 );
       size_t sStrLen = hb_parclen( 1 );
       size_t sStartPos, sDelLen;
       char *pcRet;
@@ -297,9 +297,9 @@ HB_FUNC( POSINS )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      char *pcString = hb_parc( 1 );
+      const char *pcString = hb_parc( 1 );
       size_t sStrLen = hb_parclen( 1 );
-      char *pcInsert;
+      const char *pcInsert;
       size_t sInsLen;
 
       if( ( sInsLen = hb_parclen( 2 ) ) > 0 )
@@ -410,9 +410,9 @@ HB_FUNC( POSREPL )
 
    if( HB_ISCHAR( 1 ) )
    {
-      char *pcString = hb_parc( 1 );
+      const char *pcString = hb_parc( 1 );
       size_t sStrLen = hb_parclen( 1 );
-      char *pcReplace;
+      const char *pcReplace;
       size_t sReplLen;
 
       if( ( sReplLen = hb_parclen( 2 ) ) > 0 )

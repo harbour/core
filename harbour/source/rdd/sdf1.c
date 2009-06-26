@@ -70,7 +70,7 @@ static const USHORT s_uiNumLength[ 9 ] = { 0, 4, 6, 8, 11, 13, 16, 18, 20 };
 
 static void hb_sdfInitArea( SDFAREAP pArea, char * szFileName )
 {
-   char * szEol;
+   const char * szEol;
 
    /* Allocate only after succesfully open file */
    pArea->szFileName = hb_strdup( szFileName );
@@ -498,7 +498,7 @@ static HB_ERRCODE hb_sdfPutValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                     hb_itemGetCPtr( pItem ), uiSize );
 #ifndef HB_CDP_SUPPORT_OFF
-            hb_cdpnTranslate( (char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_vmCDP(), pArea->cdPage, uiSize );
+            hb_cdpnTranslate( ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_vmCDP(), pArea->cdPage, uiSize );
 #endif
             memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + uiSize,
                     ' ', pField->uiLen - uiSize );
@@ -706,7 +706,7 @@ static HB_ERRCODE hb_sdfFlush( SDFAREAP pArea )
 
    if( pArea->fFlush )
    {
-      hb_fileWriteAt( pArea->pFile, ( BYTE * ) "\032", 1, pArea->ulFileSize );
+      hb_fileWriteAt( pArea->pFile, ( const BYTE * ) "\032", 1, pArea->ulFileSize );
       if( hb_setGetHardCommit() )
       {
          hb_fileCommit( pArea->pFile );
@@ -987,7 +987,7 @@ static HB_ERRCODE hb_sdfCreate( SDFAREAP pArea, LPDBOPENINFO pCreateInfo )
    PHB_FNAME pFileName;
    PHB_ITEM pError = NULL;
    BOOL fRetry;
-   BYTE szFileName[ HB_PATH_MAX ];
+   char szFileName[ HB_PATH_MAX ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_sdfCreate(%p,%p)", pArea, pCreateInfo));
 
@@ -996,7 +996,7 @@ static HB_ERRCODE hb_sdfCreate( SDFAREAP pArea, LPDBOPENINFO pCreateInfo )
 #ifndef HB_CDP_SUPPORT_OFF
    if( pCreateInfo->cdpId )
    {
-      pArea->cdPage = hb_cdpFind( (char *) pCreateInfo->cdpId );
+      pArea->cdPage = hb_cdpFind( pCreateInfo->cdpId );
       if( !pArea->cdPage )
          pArea->cdPage = hb_vmCDP();
    }
@@ -1004,18 +1004,18 @@ static HB_ERRCODE hb_sdfCreate( SDFAREAP pArea, LPDBOPENINFO pCreateInfo )
       pArea->cdPage = hb_vmCDP();
 #endif
 
-   pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
+   pFileName = hb_fsFNameSplit( pCreateInfo->abName );
    if( hb_setGetDefExtension() && ! pFileName->szExtension )
    {
       PHB_ITEM pItem = hb_itemPutC( NULL, NULL );
       SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem );
       pFileName->szExtension = hb_itemGetCPtr( pItem );
-      hb_fsFNameMerge( ( char * ) szFileName, pFileName );
+      hb_fsFNameMerge( szFileName, pFileName );
       hb_itemRelease( pItem );
    }
    else
    {
-      hb_strncpy( ( char * ) szFileName, ( char * ) pCreateInfo->abName, sizeof( szFileName ) - 1 );
+      hb_strncpy( szFileName, pCreateInfo->abName, sizeof( szFileName ) - 1 );
    }
    hb_xfree( pFileName );
 
@@ -1035,7 +1035,7 @@ static HB_ERRCODE hb_sdfCreate( SDFAREAP pArea, LPDBOPENINFO pCreateInfo )
             hb_errPutSubCode( pError, EDBF_CREATE_DBF );
             hb_errPutOsCode( pError, hb_fsError() );
             hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CREATE ) );
-            hb_errPutFileName( pError, ( char * ) szFileName );
+            hb_errPutFileName( pError, szFileName );
             hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
          }
          fRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
@@ -1058,7 +1058,7 @@ static HB_ERRCODE hb_sdfCreate( SDFAREAP pArea, LPDBOPENINFO pCreateInfo )
       return errCode;
    }
 
-   hb_sdfInitArea( pArea, ( char * ) szFileName );
+   hb_sdfInitArea( pArea, szFileName );
 
    /* Position cursor at the first record */
    return SELF_GOTOP( ( AREAP ) pArea );
@@ -1074,7 +1074,7 @@ static HB_ERRCODE hb_sdfOpen( SDFAREAP pArea, LPDBOPENINFO pOpenInfo )
    HB_ERRCODE errCode;
    USHORT uiFlags;
    BOOL fRetry;
-   BYTE szFileName[ HB_PATH_MAX ];
+   char szFileName[ HB_PATH_MAX ];
    char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_sdfOpen(%p,%p)", pArea, pOpenInfo));
@@ -1084,7 +1084,7 @@ static HB_ERRCODE hb_sdfOpen( SDFAREAP pArea, LPDBOPENINFO pOpenInfo )
 #ifndef HB_CDP_SUPPORT_OFF
    if( pOpenInfo->cdpId )
    {
-      pArea->cdPage = hb_cdpFind( (char *) pOpenInfo->cdpId );
+      pArea->cdPage = hb_cdpFind( pOpenInfo->cdpId );
       if( !pArea->cdPage )
          pArea->cdPage = hb_vmCDP();
    }
@@ -1095,26 +1095,26 @@ static HB_ERRCODE hb_sdfOpen( SDFAREAP pArea, LPDBOPENINFO pOpenInfo )
    uiFlags = ( pArea->fReadonly ? FO_READ : FO_READWRITE ) |
              ( pArea->fShared ? FO_DENYNONE : FO_EXCLUSIVE );
 
-   pFileName = hb_fsFNameSplit( ( char * ) pOpenInfo->abName );
+   pFileName = hb_fsFNameSplit( pOpenInfo->abName );
    /* Add default file name extension if necessary */
    if( hb_setGetDefExtension() && ! pFileName->szExtension )
    {
       PHB_ITEM pFileExt = hb_itemPutC( NULL, NULL );
       SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pFileExt );
       pFileName->szExtension = hb_itemGetCPtr( pFileExt );
-      hb_fsFNameMerge( ( char * ) szFileName, pFileName );
+      hb_fsFNameMerge( szFileName, pFileName );
       hb_itemRelease( pFileExt );
    }
    else
    {
-      hb_strncpy( ( char * ) szFileName, ( char * ) pOpenInfo->abName, sizeof( szFileName ) - 1 );
+      hb_strncpy( szFileName, pOpenInfo->abName, sizeof( szFileName ) - 1 );
    }
 
    /* Create default alias if necessary */
    if( !pOpenInfo->atomAlias && pFileName->szName )
    {
       hb_strncpyUpperTrim( szAlias, pFileName->szName, sizeof( szAlias ) - 1 );
-      pOpenInfo->atomAlias = ( BYTE * ) szAlias;
+      pOpenInfo->atomAlias = szAlias;
    }
    hb_xfree( pFileName );
 
@@ -1133,7 +1133,7 @@ static HB_ERRCODE hb_sdfOpen( SDFAREAP pArea, LPDBOPENINFO pOpenInfo )
             hb_errPutSubCode( pError, EDBF_OPEN_DBF );
             hb_errPutOsCode( pError, hb_fsError() );
             hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_OPEN ) );
-            hb_errPutFileName( pError, ( char * ) szFileName );
+            hb_errPutFileName( pError, szFileName );
             hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
          }
          fRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
@@ -1156,7 +1156,7 @@ static HB_ERRCODE hb_sdfOpen( SDFAREAP pArea, LPDBOPENINFO pOpenInfo )
       return HB_FAILURE;
    }
 
-   hb_sdfInitArea( pArea, ( char * ) szFileName );
+   hb_sdfInitArea( pArea, szFileName );
 
    /* Position cursor at the first record */
    return SELF_GOTOP( ( AREAP ) pArea );

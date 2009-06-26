@@ -312,7 +312,7 @@ static const char * adsIndexExt( int iFileType )
    return ".ntx";
 }
 
-static ADSHANDLE hb_adsFindBag( ADSAREAP pArea, char * szBagName )
+static ADSHANDLE hb_adsFindBag( ADSAREAP pArea, const char * szBagName )
 {
    /* This method seems to be most easy one though I'm doubt
       it's really the best one */
@@ -1456,7 +1456,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
       dbFieldInfo.uiTypeExtended = 0;
       dbFieldInfo.uiFlags = 0;
       pFieldDesc = hb_arrayGetItemPtr( pStruct, uiCount + 1 );
-      dbFieldInfo.atomName = ( BYTE * ) hb_arrayGetCPtr( pFieldDesc, 1 );
+      dbFieldInfo.atomName = hb_arrayGetCPtr( pFieldDesc, 1 );
       iData = hb_arrayGetNI( pFieldDesc, 3 );
       if( iData < 0 )
          iData = 0;
@@ -2841,8 +2841,8 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
       pArea->maxFieldLen = 24;
 
    uRetVal = AdsCreateTable( hConnection,
-                             pCreateInfo->abName,
-                             pCreateInfo->atomAlias,
+                             ( UNSIGNED8* ) pCreateInfo->abName,
+                             ( UNSIGNED8* ) pCreateInfo->atomAlias,
                              ( UNSIGNED16 ) pArea->iFileType,
                              ( UNSIGNED16 ) hb_ads_iCharType,
                              ( UNSIGNED16 ) hb_ads_iLockType,
@@ -3150,8 +3150,8 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       do
       {
          u32RetVal = AdsOpenTable( hConnection,
-                        pOpenInfo->abName,
-                        pOpenInfo->atomAlias,
+                        ( UNSIGNED8* ) pOpenInfo->abName,
+                        ( UNSIGNED8* ) pOpenInfo->atomAlias,
                         ( fDictionary ? ADS_DEFAULT : ( UNSIGNED16 ) pArea->iFileType),
                         ( UNSIGNED16 ) hb_ads_iCharType,
                         ( UNSIGNED16 ) hb_ads_iLockType,
@@ -3184,9 +3184,9 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    {
       UNSIGNED16 uiAliasLen = HB_RDD_MAX_ALIAS_LEN;
       if( AdsGetTableAlias( hTable, ( UNSIGNED8 * ) szAlias, &uiAliasLen ) == AE_SUCCESS )
-         pOpenInfo->atomAlias = ( BYTE * ) szAlias;
+         pOpenInfo->atomAlias = szAlias;
       else
-         pOpenInfo->atomAlias = ( BYTE * ) "";
+         pOpenInfo->atomAlias = "";
    }
 
    pArea->szDataFileName = hb_strdup( ( char * ) ( pOpenInfo->abName ) );
@@ -3207,9 +3207,8 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    {
       usBufLen = ADS_MAX_FIELD_NAME;
       AdsGetFieldName( pArea->hTable, uiCount, szName, &usBufLen );
-      dbFieldInfo.atomName = szName;
-
-      * ( dbFieldInfo.atomName + usBufLen ) = '\0';
+      szName[ usBufLen ] = '\0';
+      dbFieldInfo.atomName = ( char * ) szName;
       AdsGetFieldType( pArea->hTable, szName, &usType );
       AdsGetFieldLength( pArea->hTable, szName, &u32Length );
       dbFieldInfo.uiLen = ( USHORT ) u32Length;
@@ -3804,8 +3803,10 @@ static HB_ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
       u32Options |= ADS_UNIQUE;
 
 #if ADS_LIB_VERSION >= 610
-   u32RetVal = AdsCreateIndex61( hTableOrIndex, pOrderInfo->abBagName,
-           pOrderInfo->atomBagName, ( UNSIGNED8 * ) hb_itemGetCPtr( pExprItem ),
+   u32RetVal = AdsCreateIndex61( hTableOrIndex,
+           ( UNSIGNED8 * ) pOrderInfo->abBagName,
+           ( UNSIGNED8 * ) pOrderInfo->atomBagName,
+           ( UNSIGNED8 * ) hb_itemGetCPtr( pExprItem ),
            ( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->abFor ) ?
            ( UNSIGNED8 * ) pArea->lpdbOrdCondInfo->abFor : ( UNSIGNED8 * ) "",
            pucWhile, u32Options, ADS_DEFAULT, &hIndex);
@@ -4528,7 +4529,7 @@ static HB_ERRCODE adsUnLock( ADSAREAP pArea, PHB_ITEM pRecNo )
 #define  adsCloseMemFile          NULL
 #define  adsCreateMemFile         NULL
 
-static HB_ERRCODE adsGetValueFile( ADSAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode )
+static HB_ERRCODE adsGetValueFile( ADSAREAP pArea, USHORT uiIndex, const char * szFile, USHORT uiMode )
 {
    UNSIGNED32 u32RetVal;
 
@@ -4558,7 +4559,7 @@ static HB_ERRCODE adsGetValueFile( ADSAREAP pArea, USHORT uiIndex, BYTE * szFile
 
 #define  adsOpenMemFile           NULL
 
-static HB_ERRCODE adsPutValueFile( ADSAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode )
+static HB_ERRCODE adsPutValueFile( ADSAREAP pArea, USHORT uiIndex, const char * szFile, USHORT uiMode )
 {
    UNSIGNED32 u32RetVal;
 
@@ -4632,9 +4633,9 @@ static HB_ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIn
    hb_xfree( pFileName );
 
    /* Use hb_spFile first to locate table which can be in differ path */
-   if( hb_spFile( ( BYTE * ) szFileName, ( BYTE * ) szFileName ) )
+   if( hb_spFile( szFileName, szFileName ) )
    {
-      fResult = hb_fsDelete( ( BYTE * ) szFileName );
+      fResult = hb_fsDelete( szFileName );
       if( fResult && fTable )
       {
          /*
@@ -4653,7 +4654,7 @@ static HB_ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIn
             {
                pFileName->szExtension = szExt;
                hb_fsFNameMerge( szFileName, pFileName );
-               hb_fsDelete( ( BYTE * ) szFileName );
+               hb_fsDelete( szFileName );
             }
          }
          /*
@@ -4668,7 +4669,7 @@ static HB_ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIn
             {
                pFileName->szExtension = szExt;
                hb_fsFNameMerge( szFileName, pFileName );
-               hb_fsDelete( ( BYTE * ) szFileName );
+               hb_fsDelete( szFileName );
             }
          }
          hb_xfree( pFileName );
@@ -4719,7 +4720,7 @@ static HB_ERRCODE adsExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItem
    if( pFileExt )
       hb_itemRelease( pFileExt );
 
-   return hb_spFile( ( BYTE * ) szFileName, NULL ) ? HB_SUCCESS : HB_FAILURE;
+   return hb_spFile( szFileName, NULL ) ? HB_SUCCESS : HB_FAILURE;
 }
 
 #define  adsInit                  NULL

@@ -56,7 +56,7 @@
 HB_FUNC( __DEFPATH )
 {
    char buffer[ HB_PATH_MAX - 1 + 2 ];
-   char * szDefault;
+   const char * szDefault;
    int size = 0;
 
    szDefault = hb_setGetDefault();

@@ -56,7 +56,7 @@
 
 HB_FUNC( HB_HEXTONUM )
 {
-   char * szHex = hb_parc( 1 );
+   const char * szHex = hb_parc( 1 );
 
    if( szHex )
    {
@@ -173,7 +173,7 @@ HB_FUNC( HB_STRTOHEX )
 
 HB_FUNC( HB_HEXTOSTR )
 {
-   char * szStr = hb_parc( 1 );
+   const char * szStr = hb_parc( 1 );
    ULONG ulStr;
 
    if( !szStr )
@@ -186,14 +186,15 @@ HB_FUNC( HB_HEXTOSTR )
    if( ulStr > 1 )
    {
       ULONG ulDest, ul;
+      const char * szPtr;
       char * szDest;
 
-      szDest = szStr;
+      szPtr = szStr;
       ul = ulStr;
       ulDest = 0;
       do
       {
-         char c = *szDest++;
+         char c = *szPtr++;
          if( ( c >= '0' && c <= '9' ) ||
              ( c >= 'A' && c <= 'F' ) ||
              ( c >= 'a' && c <= 'f' ) )

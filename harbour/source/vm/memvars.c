@@ -1484,7 +1484,7 @@ HB_FUNC( __MVSAVE )
       /* Create .mem file */
       do
       {
-         fhnd = hb_fsExtOpen( ( BYTE * ) szFileName, NULL,
+         fhnd = hb_fsExtOpen( szFileName, NULL,
                               FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE |
                               FXO_DEFAULTS | FXO_SHARELOCK,
                               NULL, pError );
@@ -1568,7 +1568,7 @@ HB_FUNC( __MVRESTORE )
       /* Open .mem file */
       do
       {
-         fhnd = hb_fsExtOpen( ( BYTE * ) szFileName, NULL,
+         fhnd = hb_fsExtOpen( szFileName, NULL,
                               FO_READ | FXO_DEFAULTS | FXO_SHARELOCK,
                               NULL, pError );
          if( fhnd == FS_ERROR )

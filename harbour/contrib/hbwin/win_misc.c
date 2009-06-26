@@ -165,13 +165,13 @@ HB_FUNC( WIN_GETCOMMANDLINEPARAM )
 
    {
       /* Convert from OS codepage */
-      BOOL fFree;
-      char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) buffer + pos, &fFree );
+      char * pszFree;
+      const char * pszResult = hb_osDecode( buffer + pos, &pszFree );
 
-      if( fFree )
-         hb_retc_buffer( pbyResult );
+      if( pszFree )
+         hb_retc_buffer( pszFree );
       else
-         hb_retc( pbyResult );
+         hb_retc( pszResult );
    }
 
    HB_TCHAR_FREE( buffer );

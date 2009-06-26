@@ -331,8 +331,10 @@ HB_FUNC( XHB_INDEX )
                   hb_itemPutCL( pSelf, &cValue, 1 );
                else
                {
-                  hb_itemUnShareString( pSelf );
-                  hb_itemGetCPtr( pSelf )[ ulIndex - 1 ] = cValue;
+                  char * pszText;
+                  if( hb_itemGetWriteCL( pSelf, &pszText, &ulLen ) &&
+                      ulIndex < ulLen )
+                     pszText[ ulIndex - 1 ] = cValue;
                }
             }
             else

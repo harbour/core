@@ -99,8 +99,9 @@ static int _ftIsAlpha( char c )
 
 HB_FUNC( FT_PROPER )
 {
-  int  iLen   =  hb_parclen(1);
-  char *cStr, *cDst = NULL;
+  int iLen = hb_parclen(1);
+  const char *cStr;
+  char *cDst = NULL;
   int i, fCap = TRUE; /*, iPos = 0; */
 
   hb_storc( NULL, 1 );
@@ -111,12 +112,11 @@ HB_FUNC( FT_PROPER )
         if( !cDst ) {
             cDst = (char *) hb_xgrab(iLen + 1);
             memcpy(cDst, cStr, iLen + 1);
-            cStr = cDst;
         }
         if( fCap != 0 )
-           cStr[i] = _ftToUpper( cStr[i] );
+           cDst[i] = _ftToUpper( cDst[i] );
         else
-           cStr[i] = _ftToLower( cStr[i] );
+           cDst[i] = _ftToLower( cDst[i] );
         }
      fCap = ( cStr[i] == ' ' || cStr[i] == '-' || cStr[i] == 0x27 );
   }
@@ -125,7 +125,7 @@ HB_FUNC( FT_PROPER )
   if( cDst ) {
      for( i = 0; i < iLen - 2; i++ )
         if( cStr[i] == 'M' && cStr[i+1] == 'c' ) {
-           cStr[i+2] = _ftToUpper( cStr[i+2] );
+           cDst[i+2] = _ftToUpper( cDst[i+2] );
         }
   }
   /* // If "Mc" was found, Cap next letter if Alpha

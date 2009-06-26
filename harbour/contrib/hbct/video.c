@@ -145,7 +145,7 @@ HB_FUNC( CHARPIX )
 
 HB_FUNC( VGAPALETTE )
 {
-   char *color_string;
+   const char *color_string;
    char red, green, blue;
    char attr = 0;
 
@@ -161,7 +161,7 @@ HB_FUNC( VGAPALETTE )
    }
    else if( HB_ISCHAR( 1 ) )
    {
-      char *s;
+      const char *s;
 
       color_string = hb_parcx( 1 );
       for( s = color_string; *s; s++ )
@@ -339,7 +339,7 @@ HB_FUNC( VIDEOTYPE )
 
 HB_FUNC( SETFONT )
 {
-   char *font = hb_parcx( 1 );
+   const char *font = hb_parcx( 1 );
    int len = hb_parclen( 1 );
    int area = hb_parni( 2 );
    int offset = 0;

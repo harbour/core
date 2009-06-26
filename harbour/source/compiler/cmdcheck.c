@@ -652,7 +652,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
    }
 }
 
-void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, char * const Args[] )
+void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[] )
 {
    /* If iArg is passed check the command line options */
    if( iArg )
@@ -1089,7 +1089,7 @@ static void hb_compChkDefineSwitch( HB_COMP_DECL, const char *pszSwitch )
    }
 }
 
-void hb_compChkDefines( HB_COMP_DECL, int iArg, char * const Args[] )
+void hb_compChkDefines( HB_COMP_DECL, int iArg, const char * const Args[] )
 {
    /* Check the environment variables */
    {

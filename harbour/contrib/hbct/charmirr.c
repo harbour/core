@@ -112,9 +112,9 @@ HB_FUNC( CHARMIRR )
    if( HB_ISCHAR( 1 ) )
    {
 
-      char *pcString = hb_parc( 1 );
+      const char *pcString = hb_parc( 1 ), *pc1;
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
-      char *pcRet, *pc1, *pc2;
+      char *pcRet, *pc2;
       int iDontMirrorSpaces;
 
       if( HB_ISLOG( 2 ) )

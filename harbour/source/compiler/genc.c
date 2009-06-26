@@ -522,7 +522,7 @@ static void hb_compGenCFunc( FILE * yyc, const char *cDecor, const char *szName,
    }
 }
 
-static void hb_compGenCByteStr( FILE * yyc, BYTE * pText, ULONG ulLen )
+static void hb_compGenCByteStr( FILE * yyc, const BYTE * pText, ULONG ulLen )
 {
    ULONG ulPos;
    for( ulPos = 0; ulPos < ulLen; ulPos++ )

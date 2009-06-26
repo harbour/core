@@ -56,7 +56,7 @@ HB_FUNC( HB_COLORINDEX )
 {
    if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
-      char * pszColor = hb_parc( 1 );
+      const char * pszColor = hb_parc( 1 );
       ULONG ulColorPos;
       ULONG ulColorLen;
       USHORT uiColorIndex = ( USHORT ) hb_parni( 2 );

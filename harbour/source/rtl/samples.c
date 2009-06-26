@@ -76,7 +76,7 @@ static char * hb_SecToTimeStr( char * pszTime, ULONG ulTime )
    return pszTime;
 }
 
-static ULONG hb_TimeStrToSec( char * pszTime )
+static ULONG hb_TimeStrToSec( const char * pszTime )
 {
    ULONG ulLen;
    ULONG ulTime = 0;

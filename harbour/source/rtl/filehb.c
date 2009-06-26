@@ -66,7 +66,7 @@
 
 HB_FUNC( FILE )
 {
-   BYTE * szFile = ( BYTE * ) hb_parc( 1 );
+   const char * szFile = hb_parc( 1 );
 
    hb_retl( szFile ? hb_spFile( szFile, NULL ) : FALSE );
 }

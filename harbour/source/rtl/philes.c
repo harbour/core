@@ -61,9 +61,10 @@
 
 HB_FUNC( FOPEN )
 {
-   if( HB_ISCHAR( 1 ) )
+   const char * szFile = hb_parc( 1 );
+   if( szFile )
    {
-      hb_retnint( ( HB_NHANDLE ) hb_fsOpen( ( BYTE * ) hb_parc( 1 ),
+      hb_retnint( ( HB_NHANDLE ) hb_fsOpen( szFile,
                   HB_ISNUM( 2 ) ? ( USHORT ) hb_parni( 2 ) : FO_READ | FO_COMPAT ) );
       hb_fsSetFError( hb_fsError() );
    }
@@ -77,9 +78,10 @@ HB_FUNC( FOPEN )
 
 HB_FUNC( FCREATE )
 {
-   if( HB_ISCHAR( 1 ) )
+   const char * szFile = hb_parc( 1 );
+   if( szFile )
    {
-      hb_retnint( ( HB_NHANDLE ) hb_fsCreate( ( BYTE * ) hb_parc( 1 ),
+      hb_retnint( ( HB_NHANDLE ) hb_fsCreate( szFile,
                   HB_ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL ) );
       hb_fsSetFError( hb_fsError() );
    }
@@ -92,9 +94,10 @@ HB_FUNC( FCREATE )
 
 HB_FUNC( HB_FCREATE )
 {
-   if( HB_ISCHAR( 1 ) )
+   const char * szFile = hb_parc( 1 );
+   if( szFile )
    {
-      hb_retnint( ( HB_NHANDLE ) hb_fsCreateEx( ( BYTE * ) hb_parc( 1 ),
+      hb_retnint( ( HB_NHANDLE ) hb_fsCreateEx( szFile,
                   HB_ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL,
                   HB_ISNUM( 3 ) ? ( USHORT ) hb_parni( 3 ) : FO_COMPAT ) );
       hb_fsSetFError( hb_fsError() );
@@ -110,7 +113,8 @@ HB_FUNC( FREAD )
 {
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
    USHORT uiError = 0;
-   ULONG ulRead = 0;
+   ULONG ulRead = 0, ulSize;
+   char * buffer;
 
    if( HB_ISNUM( 1 ) && pBuffer && HB_ISBYREF( 2 ) && HB_ISNUM( 3 ) )
    {
@@ -121,18 +125,11 @@ HB_FUNC( FREAD )
                will be one more than the length of the passed buffer, because
                the terminating zero could be used if needed. [vszakats] */
 
-      if( ulRead <= hb_parcsiz( 2 ) )
+      if( ulRead <= hb_parcsiz( 2 ) &&
+          hb_itemGetWriteCL( pBuffer, &buffer, &ulSize ) )
       {
-         /* NOTE: Warning, the read buffer will be directly modified,
-                  this is normal here ! [vszakats] */
-
-         /* Unshare the item to avoid GPF on static buffers and changing
-            other items which shares this buffer. [druzus] */
-         pBuffer = hb_itemUnShareString( pBuffer );
-
          ulRead = hb_fsReadLarge( hb_numToHandle( hb_parnint( 1 ) ),
-                                  ( BYTE * ) hb_itemGetCPtr( pBuffer ),
-                                  ulRead );
+                                  ( BYTE * ) buffer, ulRead );
          uiError = hb_fsError();
       }
       else
@@ -159,8 +156,7 @@ HB_FUNC( FWRITE )
       }
 
       hb_retnl( hb_fsWriteLarge( hb_numToHandle( hb_parnint( 1 ) ),
-                                 ( BYTE * ) hb_parc( 2 ),
-                                 nLen ) );
+                                 ( const BYTE * ) hb_parc( 2 ), nLen ) );
       uiError = hb_fsError();
    }
    else
@@ -190,10 +186,11 @@ HB_FUNC( FCLOSE )
 HB_FUNC( FERASE )
 {
    USHORT uiError = 3;
+   const char * szFile = hb_parc( 1 );
 
-   if( HB_ISCHAR( 1 ) )
+   if( szFile )
    {
-      hb_retni( hb_fsDelete( ( BYTE * ) hb_parc( 1 ) ) ? 0 : F_ERROR );
+      hb_retni( hb_fsDelete( szFile ) ? 0 : F_ERROR );
       uiError = hb_fsError();
    }
    else
@@ -204,11 +201,12 @@ HB_FUNC( FERASE )
 HB_FUNC( FRENAME )
 {
    USHORT uiError = 2;
+   const char * szFileOld = hb_parc( 1 ),
+              * szFileNew = hb_parc( 1 );
 
-   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
+   if( szFileOld && szFileNew )
    {
-      hb_retni( hb_fsRename( ( BYTE * ) hb_parc( 1 ),
-                             ( BYTE * ) hb_parc( 2 ) ) ? 0 : F_ERROR );
+      hb_retni( hb_fsRename( szFileOld, szFileNew ) ? 0 : F_ERROR );
       uiError = hb_fsError();
    }
    else
@@ -269,9 +267,9 @@ HB_FUNC( FREADSTR )
 
 HB_FUNC( CURDIR )
 {
-   BYTE byBuffer[ HB_PATH_MAX ];
+   char szBuffer[ HB_PATH_MAX ];
    USHORT uiDrive = 0;
-   char * szDrive;
+   const char * szDrive;
 
    szDrive = hb_parc( 1 );
    if( szDrive )
@@ -281,9 +279,9 @@ HB_FUNC( CURDIR )
       else if( *szDrive >= 'a' && *szDrive <= 'z' )
          uiDrive = *szDrive - ( 'a' - 1 );
    }
-   hb_fsCurDirBuff( uiDrive, byBuffer, sizeof( byBuffer ) );
+   hb_fsCurDirBuff( uiDrive, szBuffer, sizeof( szBuffer ) );
 
-   hb_retc( ( char * ) byBuffer );
+   hb_retc( szBuffer );
 }
 
 HB_FUNC( HB_PROGNAME )
@@ -293,13 +291,14 @@ HB_FUNC( HB_PROGNAME )
    if( szBaseName )
    {
       /* Convert from OS codepage */
-      BOOL fFree;
-      char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) szBaseName, &fFree );
+      char * pszFree;
 
-      if( fFree )
-         hb_retc_buffer( pbyResult );
+      szBaseName = hb_osDecode( szBaseName, &pszFree );
+
+      if( pszFree )
+         hb_retc_buffer( pszFree );
       else
-         hb_retc( pbyResult );
+         hb_retc( szBaseName );
    }
    else
       hb_retc( NULL );
@@ -307,11 +306,11 @@ HB_FUNC( HB_PROGNAME )
 
 HB_FUNC( HB_DIRBASE )
 {
-   BYTE byBuffer[ HB_PATH_MAX ];
+   char szBuffer[ HB_PATH_MAX ];
 
-   hb_fsBaseDirBuff( byBuffer );
+   hb_fsBaseDirBuff( szBuffer );
 
-   hb_retc( ( char * ) byBuffer );
+   hb_retc( szBuffer );
 }
 
 HB_FUNC( HB_FEOF )
@@ -379,14 +378,14 @@ HB_FUNC( HB_FGETATTR )
 {
    ULONG nAttr;
 
-   hb_retl( hb_fsGetAttr( ( UCHAR * ) hb_parcx( 1 ), &nAttr ) );
+   hb_retl( hb_fsGetAttr( hb_parcx( 1 ), &nAttr ) );
 
    hb_stornl( nAttr, 2 );
 }
 
 HB_FUNC( HB_FSETATTR )
 {
-   hb_retl( hb_fsSetAttr( ( UCHAR * ) hb_parcx( 1 ), hb_parnl( 2 ) ) );
+   hb_retl( hb_fsSetAttr( hb_parcx( 1 ), hb_parnl( 2 ) ) );
 }
 
 HB_FUNC( HB_FSETDATETIME )
@@ -407,14 +406,14 @@ HB_FUNC( HB_FSETDATETIME )
       }
    }
 
-   hb_retl( hb_fsSetFileTime( ( UCHAR * ) hb_parcx( 1 ), lDate, lTime ) );
+   hb_retl( hb_fsSetFileTime( hb_parcx( 1 ), lDate, lTime ) );
 }
 
 HB_FUNC( HB_FGETDATETIME )
 {
    LONG lJulian, lMillisec;
 
-   if( hb_fsGetFileTime( ( UCHAR * ) hb_parcx( 1 ), &lJulian, &lMillisec ) )
+   if( hb_fsGetFileTime( hb_parcx( 1 ), &lJulian, &lMillisec ) )
    {
       if( HB_ISBYREF( 3 ) )
       {

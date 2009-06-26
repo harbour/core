@@ -676,8 +676,8 @@ static LPKEYINFO hb_ntxEvalKey( LPKEYINFO pKey, LPTAGINFO pTag )
 /*
  * compare two values using Tag conditions (len & type)
  */
-static int hb_ntxValCompare( LPTAGINFO pTag, char* val1, int len1,
-                             char* val2, int len2, BOOL fExact )
+static int hb_ntxValCompare( LPTAGINFO pTag, const char* val1, int len1,
+                             const char* val2, int len2, BOOL fExact )
 {
    int iLimit, iResult = 0;
 
@@ -1423,10 +1423,10 @@ static ULONG hb_ntxPageGetFree( LPTAGINFO pTag )
  * create the new tag structure
  */
 static LPTAGINFO hb_ntxTagNew( LPNTXINDEX pIndex,
-                               char * szTagName, BOOL fTagName,
-                               char *szKeyExpr, PHB_ITEM pKeyExpr,
+                               const char * szTagName, BOOL fTagName,
+                               const char *szKeyExpr, PHB_ITEM pKeyExpr,
                                BYTE bKeyType, USHORT uiKeyLen, USHORT uiKeyDec,
-                               char *szForExpr, PHB_ITEM pForExpr,
+                               const char *szForExpr, PHB_ITEM pForExpr,
                                BOOL fAscendKey, BOOL fUnique, BOOL fCustom,
                                BOOL fSortRec )
 {
@@ -1820,8 +1820,7 @@ static void hb_ntxIndexFree( LPNTXINDEX pIndex )
       hb_fileClose( pIndex->DiskFile );
       if( pIndex->fDelete )
       {
-         hb_fsDelete( ( BYTE * ) ( pIndex->RealName ?
-                                   pIndex->RealName : pIndex->IndexName ) );
+         hb_fsDelete( pIndex->RealName ? pIndex->RealName : pIndex->IndexName );
       }
    }
    if( pIndex->IndexName )
@@ -3534,7 +3533,7 @@ static HB_ERRCODE hb_ntxTagSpaceFree( LPTAGINFO pTag )
 /*
  * create index file name
  */
-static void hb_ntxCreateFName( NTXAREAP pArea, char * szBagName, BOOL * fProd,
+static void hb_ntxCreateFName( NTXAREAP pArea, const char * szBagName, BOOL * fProd,
                                char * szFileName, char * szTagName )
 {
    PHB_FNAME pFileName;
@@ -3598,7 +3597,7 @@ static void hb_ntxCreateFName( NTXAREAP pArea, char * szBagName, BOOL * fProd,
 /*
  * find order bag by its name
  */
-static LPNTXINDEX hb_ntxFindBag( NTXAREAP pArea, char * szBagName )
+static LPNTXINDEX hb_ntxFindBag( NTXAREAP pArea, const char * szBagName )
 {
    LPNTXINDEX pIndex;
    PHB_FNAME pSeek, pName;
@@ -3631,7 +3630,7 @@ static LPNTXINDEX hb_ntxFindBag( NTXAREAP pArea, char * szBagName )
 /*
  * Find tag by name in index bag
  */
-static int hb_ntxFindTagByName( LPNTXINDEX pIndex, char * szTag )
+static int hb_ntxFindTagByName( LPNTXINDEX pIndex, const char * szTag )
 {
    int i;
 
@@ -3689,7 +3688,7 @@ static LPTAGINFO hb_ntxFindTag( NTXAREAP pArea, PHB_ITEM pTagItem,
    {
       if( hb_itemType( pTagItem ) & HB_IT_STRING )
       {
-         char * szTag = hb_itemGetCPtr( pTagItem );
+         const char * szTag = hb_itemGetCPtr( pTagItem );
          int iTag;
 
          if( fBag )
@@ -4216,7 +4215,8 @@ static BOOL hb_ntxOrdSkipEval( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pEval )
 static BOOL hb_ntxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm )
 {
    NTXAREAP pArea = pTag->Owner->Owner;
-   char *szPattern, *szFree = NULL;
+   const char * szPattern;
+   char * szFree = NULL;
    BOOL fFound = FALSE;
    int iFixed = 0;
 
@@ -4235,7 +4235,7 @@ static BOOL hb_ntxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
    if( pArea->cdPage != hb_vmCDP() )
    {
       szPattern = szFree = hb_strdup( szPattern );
-      hb_cdpTranslate( szPattern, hb_vmCDP(), pArea->cdPage );
+      hb_cdpTranslate( szFree, hb_vmCDP(), pArea->cdPage );
    }
 #endif
    while( iFixed < pTag->KeyLength && szPattern[ iFixed ] &&
@@ -4331,7 +4331,7 @@ static BOOL hb_ntxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
       pArea->fEof = FALSE;
 
    if( szFree )
-      hb_xfree( szPattern );
+      hb_xfree( szFree );
 
    return fFound;
 }
@@ -4790,13 +4790,13 @@ static void hb_ntxSortWritePage( LPNTXSORTINFO pSort )
 
    if( pSort->hTempFile == FS_ERROR )
    {
-      BYTE szName[ HB_PATH_MAX ];
+      char szName[ HB_PATH_MAX ];
       pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
       if( pSort->hTempFile == FS_ERROR )
          hb_ntxErrorRT( pSort->pTag->Owner->Owner, EG_CREATE, EDBF_CREATE_TEMP,
-                        ( const char * ) szName, 0, 0, NULL );
+                        szName, 0, 0, NULL );
       else
-         pSort->szTempFileName = hb_strdup( ( const char * ) szName );
+         pSort->szTempFileName = hb_strdup( szName );
    }
 
    pSort->pSwapPage[ pSort->ulCurPage ].ulKeys = pSort->ulKeys;
@@ -4955,7 +4955,7 @@ static BOOL hb_ntxSortKeyGet( LPNTXSORTINFO pSort, BYTE ** pKeyVal, ULONG *pulRe
    return FALSE;
 }
 
-static void hb_ntxSortKeyAdd( LPNTXSORTINFO pSort, ULONG ulRec, char * pKeyVal, int iKeyLen )
+static void hb_ntxSortKeyAdd( LPNTXSORTINFO pSort, ULONG ulRec, const char * pKeyVal, int iKeyLen )
 {
    int iLen = pSort->keyLen;
    BYTE *pDst;
@@ -5074,7 +5074,7 @@ static void hb_ntxSortFree( LPNTXSORTINFO pSort, BOOL fFull )
    }
    if( pSort->szTempFileName )
    {
-      hb_fsDelete( ( BYTE * )  pSort->szTempFileName );
+      hb_fsDelete( pSort->szTempFileName );
       hb_xfree( pSort->szTempFileName );
       pSort->szTempFileName = NULL;
    }
@@ -6079,7 +6079,7 @@ static HB_ERRCODE ntxOpen( NTXAREAP pArea, LPDBOPENINFO pOpenInfo )
       char szFileName[ HB_PATH_MAX ];
 
       hb_ntxCreateFName( pArea, NULL, NULL, szFileName, NULL );
-      if( hb_spFileExists( ( BYTE * ) szFileName, NULL ) ||
+      if( hb_spFileExists( szFileName, NULL ) ||
           DBFAREA_DATA( pArea )->fStrictStruct )
       {
          DBORDERINFO pOrderInfo;
@@ -6135,7 +6135,8 @@ static HB_ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    PHB_ITEM pResult, pKeyExp, pForExp = NULL;
    int iLen, iDec, iTag, i;
    char szFileName[ HB_PATH_MAX ], szSpFile[ HB_PATH_MAX ],
-        szTagName[ NTX_MAX_TAGNAME + 1 ], * szKey, * szFor = NULL;
+        szTagName[ NTX_MAX_TAGNAME + 1 ];
+   const char * szKey, * szFor = NULL;
    LPNTXINDEX pIndex, * pIndexPtr;
    LPTAGINFO pTag = NULL;
    LPDBFDATA pData;
@@ -6355,12 +6356,12 @@ static HB_ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
       {
          if( fTemporary )
          {
-            pFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, ( BYTE * ) szSpFile );
+            pFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, szSpFile );
             fOld = FALSE;
          }
          else
          {
-            pFile = hb_fileExtOpen( ( BYTE * ) szFileName, NULL, uiFlags |
+            pFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
                                     ( fOld ? FXO_APPEND : FXO_TRUNCATE ) |
                                     FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
                                     NULL, pError );
@@ -6779,7 +6780,7 @@ static HB_ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
             hb_itemPutC( pInfo->itmResult, pTag->ForExpr ? pTag->ForExpr : NULL );
             if( hb_itemType( pInfo->itmNewVal ) & HB_IT_STRING )
             {
-               char * szForExpr = hb_itemGetCPtr( pInfo->itmNewVal );
+               const char * szForExpr = hb_itemGetCPtr( pInfo->itmNewVal );
                if( pTag->ForExpr ?
                    strncmp( pTag->ForExpr, szForExpr, NTX_MAX_EXP ) != 0 :
                    *szForExpr )
@@ -7351,7 +7352,7 @@ static HB_ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
       do
       {
          fRetry = FALSE;
-         pFile = hb_fileExtOpen( ( BYTE * ) szFileName, NULL, uiFlags |
+         pFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
                                  FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
                                  NULL, pError );
          if( !pFile )
@@ -7575,18 +7576,15 @@ static HB_ERRCODE ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
       case RDDI_ORDEREXT:
       case RDDI_ORDSTRUCTEXT:
       {
-         char * szNew = hb_itemGetCPtr( pItem );
+         const char * szNew = hb_itemGetC( pItem );
+         char * szNewVal;
 
-         if( szNew[0] == '.' && szNew[1] )
-            szNew = hb_strdup( szNew );
-         else
-            szNew = NULL;
-
+         szNewVal = szNew[0] == '.' && szNew[1] ? hb_strdup( szNew ) : NULL;
          hb_itemPutC( pItem, pData->szIndexExt[ 0 ] ? pData->szIndexExt : NTX_INDEXEXT );
-         if( szNew )
+         if( szNewVal )
          {
-            hb_strncpy( pData->szIndexExt, szNew, sizeof( pData->szIndexExt ) - 1 );
-            hb_xfree( szNew );
+            hb_strncpy( pData->szIndexExt, szNewVal, sizeof( pData->szIndexExt ) - 1 );
+            hb_xfree( szNewVal );
          }
          break;
       }

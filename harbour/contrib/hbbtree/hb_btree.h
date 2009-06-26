@@ -59,16 +59,16 @@ HB_EXTERN_BEGIN
 
 struct hb_BTree;
 
-struct hb_BTree * hb_BTreeNew( BYTE *FileName, USHORT usPageSize, USHORT usKeySize, ULONG ulFlags, USHORT usBuffers );
-struct hb_BTree * hb_BTreeOpen( BYTE *FileName, ULONG lFlags, USHORT usBuffers );
+struct hb_BTree * hb_BTreeNew( const char *FileName, USHORT usPageSize, USHORT usKeySize, ULONG ulFlags, USHORT usBuffers );
+struct hb_BTree * hb_BTreeOpen( const char *FileName, ULONG lFlags, USHORT usBuffers );
 void hb_BTreeClose( struct hb_BTree * pBTree );
-BOOL hb_BTreeInsert( struct hb_BTree * pBTree, BYTE * szKey, PHB_ITEM pData );
-BOOL hb_BTreeDelete( struct hb_BTree * pBTree, BYTE * szKey, LONG lData );
+BOOL hb_BTreeInsert( struct hb_BTree * pBTree, const char * szKey, PHB_ITEM pData );
+BOOL hb_BTreeDelete( struct hb_BTree * pBTree, const char * szKey, LONG lData );
 void hb_BTreeGoTop( struct hb_BTree * pBTree );
 void hb_BTreeGoBottom( struct hb_BTree * pBTree );
-BOOL hb_BTreeSeek( struct hb_BTree * pBTree, BYTE * szKey, LONG lData, BOOL bSoftSeek );
+BOOL hb_BTreeSeek( struct hb_BTree * pBTree, const char * szKey, LONG lData, BOOL bSoftSeek );
 LONG hb_BTreeSkip( struct hb_BTree * pBTree, LONG nRecords );
-const BYTE * hb_BTreeKey( struct hb_BTree * pBTree );
+const char * hb_BTreeKey( struct hb_BTree * pBTree );
 LONG hb_BTreeData( struct hb_BTree * pBTree );
 PHB_ITEM hb_BTreeDataItem( struct hb_BTree * pBTree );
 

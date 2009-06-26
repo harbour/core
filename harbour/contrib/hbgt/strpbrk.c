@@ -21,8 +21,8 @@
 
 HB_FUNC( GT_STRPBRK )
 {
-  char *string;
-  char *cset;
+  const char *string;
+  const char *cset;
   int l1, l2;
   int p1, p2;
 

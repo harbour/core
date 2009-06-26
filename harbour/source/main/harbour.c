@@ -349,9 +349,9 @@ void hb_conOutErr( const char * pStr, ULONG ulLen )
    fprintf( stderr, "%.*s", ( int ) ulLen, pStr );
 }
 
-char * hb_conNewLine( void )
+const char * hb_conNewLine( void )
 {
-   return ( char * ) "\n";
+   return "\n";
 }
 
 static int  s_iFileCase = HB_SET_CASE_MIXED;
@@ -359,7 +359,7 @@ static int  s_iDirCase  = HB_SET_CASE_MIXED;
 static BOOL s_fFnTrim   = FALSE;
 static char s_cDirSep   = HB_OS_PATH_DELIM_CHR;
 
-BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
+const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
 {
    if( s_fFnTrim || s_cDirSep != HB_OS_PATH_DELIM_CHR ||
        s_iFileCase != HB_SET_CASE_MIXED || s_iDirCase != HB_SET_CASE_MIXED )
@@ -367,17 +367,15 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
       PHB_FNAME pFileName;
       ULONG ulLen;
 
-      if( pfFree )
+      if( pszFree )
       {
-         BYTE * szNew = ( BYTE * ) hb_xgrab( HB_PATH_MAX );
-         hb_strncpy( ( char * ) szNew, ( char * ) szFileName, HB_PATH_MAX - 1 );
-         szFileName = szNew;
-         *pfFree = TRUE;
+         szFileName = *pszFree = hb_strncpy( ( char * ) hb_xgrab( HB_PATH_MAX ),
+                                             szFileName, HB_PATH_MAX - 1 );
       }
 
       if( s_cDirSep != HB_OS_PATH_DELIM_CHR )
       {
-         BYTE *p = szFileName;
+         char *p = ( char * ) szFileName;
          while( *p )
          {
             if( *p == s_cDirSep )
@@ -386,7 +384,7 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
          }
       }
 
-      pFileName = hb_fsFNameSplit( ( char * ) szFileName );
+      pFileName = hb_fsFNameSplit( szFileName );
 
       /* strip trailing and leading spaces */
       if( s_fFnTrim )
@@ -445,8 +443,8 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
       hb_fsFNameMerge( ( char * ) szFileName, pFileName );
       hb_xfree( pFileName );
    }
-   else if( pfFree )
-      *pfFree = FALSE;
+   else if( pszFree )
+      *pszFree = NULL;
 
    return szFileName;
 }
@@ -636,7 +634,7 @@ int main( int argc, char * argv[] )
 
    hb_compChkFileSwitches( argc, argv );
 
-   iResult = hb_compMain( argc, argv, NULL, NULL, NULL );
+   iResult = hb_compMain( argc, ( const char * const* ) argv, NULL, NULL, NULL );
    hb_xexit();
 
    return iResult;

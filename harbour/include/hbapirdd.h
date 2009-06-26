@@ -172,12 +172,12 @@ struct _RDDNODE;
 
 typedef struct
 {
-   BYTE *   atomName;         /* FIELD (symbol) name */
-   HB_TYPE  uiType;           /* FIELD type */
-   USHORT   uiTypeExtended;   /* FIELD type extended */
-   USHORT   uiLen;            /* Overall FIELD length */
-   USHORT   uiDec;            /* Decimal places of numeric FIELD */
-   USHORT   uiFlags;          /* FIELD flags */
+   const char *   atomName;         /* FIELD (symbol) name */
+   HB_TYPE        uiType;           /* FIELD type */
+   USHORT         uiTypeExtended;   /* FIELD type extended */
+   USHORT         uiLen;            /* Overall FIELD length */
+   USHORT         uiDec;            /* Decimal places of numeric FIELD */
+   USHORT         uiFlags;          /* FIELD flags */
 } DBFIELDINFO;
 
 typedef DBFIELDINFO * LPDBFIELDINFO;
@@ -192,14 +192,14 @@ typedef DBFIELDINFO * LPDBFIELDINFO;
 
 typedef struct
 {
-   USHORT uiArea;          /* Work Area number of the data store */
-   BYTE * abName;          /* The qualified name of the data store */
-   BYTE * atomAlias;       /* The logical name of the data store */
-   BOOL   fShared;         /* Share mode of the data store */
-   BOOL   fReadonly;       /* Readonly mode of the data store */
-   BYTE * cdpId;           /* Id of a codepage */
-   ULONG  ulConnection;    /* connection handler for RDDs which support it */
-   void * lpdbHeader;      /* Pointer to a header of the data store */
+   USHORT         uiArea;           /* Work Area number of the data store */
+   const char *   abName;           /* The qualified name of the data store */
+   const char *   atomAlias;        /* The logical name of the data store */
+   BOOL           fShared;          /* Share mode of the data store */
+   BOOL           fReadonly;        /* Readonly mode of the data store */
+   const char *   cdpId;            /* Id of a codepage */
+   ULONG          ulConnection;     /* connection handler for RDDs which support it */
+   void *         lpdbHeader;       /* Pointer to a header of the data store */
 } DBOPENINFO;
 
 typedef DBOPENINFO * LPDBOPENINFO;
@@ -214,29 +214,29 @@ typedef DBOPENINFO * LPDBOPENINFO;
 
 typedef struct _DBORDERCONDINFO
 {
-   BOOL     fActive;
-   BYTE *   abFor;
-   BYTE *   abWhile;
-   PHB_ITEM itmCobFor;
-   PHB_ITEM itmCobWhile;
-   PHB_ITEM itmCobEval;
-   LONG     lStep;
-   PHB_ITEM itmStartRecID;
-   LONG     lNextCount;
-   PHB_ITEM itmRecID;
-   BOOL     fRest;
-   BOOL     fDescending;
-   BOOL     fScoped;
-   BOOL     fAll;
-   BOOL     fAdditive;
-   BOOL     fUseCurrent;
-   BOOL     fCustom;
-   BOOL     fNoOptimize;
-   BOOL     fCompound;
-   BOOL     fUseFilter;
-   BOOL     fTemporary;
-   BOOL     fExclusive;
-   void *   lpvCargo;
+   BOOL           fActive;
+   char *         abFor;
+   char *         abWhile;
+   PHB_ITEM       itmCobFor;
+   PHB_ITEM       itmCobWhile;
+   PHB_ITEM       itmCobEval;
+   LONG           lStep;
+   PHB_ITEM       itmStartRecID;
+   LONG           lNextCount;
+   PHB_ITEM       itmRecID;
+   BOOL           fRest;
+   BOOL           fDescending;
+   BOOL           fScoped;
+   BOOL           fAll;
+   BOOL           fAdditive;
+   BOOL           fUseCurrent;
+   BOOL           fCustom;
+   BOOL           fNoOptimize;
+   BOOL           fCompound;
+   BOOL           fUseFilter;
+   BOOL           fTemporary;
+   BOOL           fExclusive;
+   void *         lpvCargo;
 } DBORDERCONDINFO;
 
 typedef DBORDERCONDINFO * LPDBORDERCONDINFO;
@@ -245,10 +245,10 @@ typedef DBORDERCONDINFO * LPDBORDERCONDINFO;
 
 typedef struct
 {
-   BYTE *             abConstrName;       /* Name of relational integrity constraint */
-   BYTE *             abTargetName;       /* Name of target relation table */
-   PHB_ITEM           itmRelationKey;     /* Array of columns in source table to match target primary key */
-   BOOL               fEnabled;           /* Is constraint enabled ? */
+   const char *   abConstrName;     /* Name of relational integrity constraint */
+   const char *   abTargetName;     /* Name of target relation table */
+   PHB_ITEM       itmRelationKey;   /* Array of columns in source table to match target primary key */
+   BOOL           fEnabled;         /* Is constraint enabled ? */
 } DBCONSTRAINTINFO;
 
 typedef DBCONSTRAINTINFO * LPDBCONSTRAINTINFO;
@@ -263,8 +263,8 @@ typedef DBCONSTRAINTINFO * LPDBCONSTRAINTINFO;
 typedef struct
 {
    LPDBORDERCONDINFO  lpdbOrdCondInfo;    /* Conditional information */
-   BYTE *             abBagName;          /* Name of the Order bag */
-   BYTE *             atomBagName;        /* Name of the Order */
+   const char *       abBagName;          /* Name of the Order bag */
+   const char*        atomBagName;        /* Name of the Order */
    PHB_ITEM           itmOrder;
    BOOL               fUnique;            /* Flag to determine if all keys are unique */
    PHB_ITEM           itmCobExpr;         /* Code block containing the KEY expression */
@@ -617,7 +617,7 @@ typedef USHORT ( * DBENTRYP_S    )( AREAP area, USHORT param );
 typedef USHORT ( * DBENTRYP_LP   )( AREAP area, LONG * param );
 typedef USHORT ( * DBENTRYP_ULP  )( AREAP area, ULONG * param );
 typedef USHORT ( * DBENTRYP_SVP  )( AREAP area, USHORT index, void * param );
-typedef USHORT ( * DBENTRYP_SVPB )( AREAP area, USHORT index, void * param, USHORT p3 );
+typedef USHORT ( * DBENTRYP_SVPB )( AREAP area, USHORT index, const char * param, USHORT p3 );
 typedef USHORT ( * DBENTRYP_VSP  )( AREAP area, USHORT action, ULONG lRecord );
 typedef USHORT ( * DBENTRYP_SVL  )( AREAP area, USHORT index, ULONG * param );
 typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p3 );
@@ -1221,7 +1221,7 @@ extern HB_EXPORT HB_ERRCODE   hb_rddCloseAllParentRelations( AREAP pArea );
 extern HB_EXPORT HB_ERRCODE   hb_rddEvalWA( PHB_ITEM pBlock );
 
 extern HB_EXPORT HB_ERRCODE   hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo );
-extern HB_EXPORT AREAP        hb_rddRequestArea( char * szAlias, PHB_ITEM pCargo,
+extern HB_EXPORT AREAP        hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
                                                  BOOL fNewArea, BOOL fWait );
 
 #if 0

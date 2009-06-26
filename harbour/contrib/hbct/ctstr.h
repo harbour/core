@@ -61,24 +61,24 @@ HB_EXTERN_BEGIN
 extern int ct_str_init( void );
 extern int ct_str_exit( void );
 
-extern char *ct_at_exact_forward( char *pcString, size_t sStrLen,
-                                  char *pcMatch, size_t sMatchLen,
-                                  size_t *psMatchStrLen );
-extern char *ct_at_exact_backward( char *pcString, size_t sStrLen,
-                                   char *pcMatch, size_t sMatchLen,
-                                   size_t *psMatchStrLen );
-extern char *ct_at_wildcard_forward( char *pcString, size_t sStrLen,
-                                     char *pcMatch, size_t sMatchLen,
-                                     char cWildCard, size_t *psMatchStrLen );
-extern char *ct_at_wildcard_backward( char *pcString, size_t sStrLen,
-                                      char *pcMatch, size_t sMatchLen,
-                                      char cWildCard, size_t *psMatchStrLen );
-extern char *ct_at_charset_forward( char *pcString, size_t sStrLen,
-                                    char *pcCharSet, size_t sCharSetLen,
-                                    size_t *psMatchedCharPos );
-extern char *ct_at_charset_backward( char *pcString, size_t sStrLen,
-                                     char *pcCharSet, size_t sCharSetLen,
-                                     size_t *psMatchedCharPos );
+extern const char *ct_at_exact_forward( const char *pcString, size_t sStrLen,
+                                        const char *pcMatch, size_t sMatchLen,
+                                        size_t *psMatchStrLen );
+extern const char *ct_at_exact_backward( const char *pcString, size_t sStrLen,
+                                         const char *pcMatch, size_t sMatchLen,
+                                         size_t *psMatchStrLen );
+extern const char *ct_at_wildcard_forward( const char *pcString, size_t sStrLen,
+                                           const char *pcMatch, size_t sMatchLen,
+                                           char cWildCard, size_t *psMatchStrLen );
+extern const char *ct_at_wildcard_backward( const char *pcString, size_t sStrLen,
+                                            const char *pcMatch, size_t sMatchLen,
+                                            char cWildCard, size_t *psMatchStrLen );
+extern const char *ct_at_charset_forward( const char *pcString, size_t sStrLen,
+                                          const char *pcCharSet, size_t sCharSetLen,
+                                          size_t *psMatchedCharPos );
+extern const char *ct_at_charset_backward( const char *pcString, size_t sStrLen,
+                                           const char *pcCharSet, size_t sCharSetLen,
+                                           size_t *psMatchedCharPos );
 
 extern void ct_setref( int iNewSwitch );
 extern int  ct_getref( void );

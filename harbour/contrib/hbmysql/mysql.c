@@ -320,7 +320,7 @@ HB_FUNC( MYSQL_ESCAPE_STRING )
 static char * filetoBuff( const char * fname, int * size )
 {
    char * buffer = NULL;
-   HB_FHANDLE handle = hb_fsOpen( ( BYTE * ) fname, FO_READWRITE );
+   HB_FHANDLE handle = hb_fsOpen( fname, FO_READWRITE );
 
    if( handle != FS_ERROR )
    {

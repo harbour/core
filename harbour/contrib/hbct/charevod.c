@@ -67,7 +67,7 @@ static void do_charevod( int iSwitch )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      char *pcString = hb_parc( 1 );
+      const char *pcString = hb_parc( 1 );
       size_t sLen = hb_parclen( 1 );
       char *pcResult;
       size_t sPos, sResultPos;

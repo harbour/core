@@ -21,7 +21,7 @@
 
 HB_FUNC( GT_ASCPOS )
 {
-  char *s;
+  const char *s;
   ULONG p;
 
   if (ISCHAR(1) && HB_ISNUM(2)) {

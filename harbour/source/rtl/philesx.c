@@ -61,7 +61,8 @@
 HB_FUNC( CURDRIVE )
 {
 #if defined(HB_OS_HAS_DRIVE_LETTER)
-   char szCurDrive[ 1 ], * szDrive;
+   char szCurDrive[ 1 ];
+   const char * szDrive;
 
    szCurDrive[ 0 ] = ( ( char ) hb_fsCurDrv() ) + 'A';
    hb_retclen( szCurDrive, 1 );

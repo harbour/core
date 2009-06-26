@@ -74,12 +74,12 @@ static void do_charswap( int iSwitch )
    /* param check */
    if( HB_ISCHAR( 1 ) )
    {
-      char *pcString = hb_parc( 1 );
+      const char *pcString = hb_parc( 1 );
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
       char *pcRet;
       size_t sRetIndex = 0;
       int iShift, iMod;
-      char *pcSub;
+      const char *pcSub;
 
       if( sStrLen == 0 )
       {
