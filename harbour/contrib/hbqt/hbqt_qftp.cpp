@@ -221,7 +221,9 @@ HB_FUNC( QT_QFTP_RAWCOMMAND )
  */
 HB_FUNC( QT_QFTP_READ )
 {
+/* TOFIX:
    hb_retnint( hbqt_par_QFtp( 1 )->read( hbqt_par_char( 2 ), hb_parnint( 3 ) ) );
+*/
 }
 
 /*
@@ -292,4 +294,3 @@ HB_FUNC( QT_QFTP_ABORT )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-
