@@ -264,7 +264,7 @@ static void * LoadImageFromFile( const char *szFile, int *sz )
    void * iptr;
    HB_FHANDLE fhandle;
 
-   if( ( fhandle = hb_fsOpen( ( BYTE * ) szFile, FO_READ ) ) != FS_ERROR )
+   if( ( fhandle = hb_fsOpen( szFile, FO_READ ) ) != FS_ERROR )
    {
       /* get lenght */
       *sz = hb_fsSeek( fhandle, 0, FS_END );
@@ -307,7 +307,7 @@ static void SaveImageToFile( const char *szFile, void *iptr, int sz )
 {
    HB_FHANDLE fhandle;
 
-   if( ( fhandle = hb_fsCreate( ( BYTE * ) szFile, FC_NORMAL ) ) != FS_ERROR )
+   if( ( fhandle = hb_fsCreate( szFile, FC_NORMAL ) ) != FS_ERROR )
    {
       /* Write Image */
       SaveImageToHandle( fhandle, ( BYTE *) iptr, (ULONG) sz );
@@ -3942,7 +3942,7 @@ static void AddImageToFile( const char *szFile, void *iptr, int sz )
 {
    HB_FHANDLE fhandle;
 
-   if( ( fhandle = hb_fsOpen( ( BYTE * ) szFile, FO_READWRITE ) ) != FS_ERROR )
+   if( ( fhandle = hb_fsOpen( szFile, FO_READWRITE ) ) != FS_ERROR )
    {
       /* move to end of file */
       hb_fsSeek(fhandle, 0, FS_END);
