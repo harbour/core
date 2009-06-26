@@ -7,10 +7,10 @@ ROOT = ../
 ifeq ($(HB_CONTRIBLIBS),)
 
 # standalone contribs
-#	hbbmcdx \
 
 DIRS=\
 	gtwvg \
+	hbbmcdx \
 	hbbtree \
 	hbclipsm \
 	hbcrypt \

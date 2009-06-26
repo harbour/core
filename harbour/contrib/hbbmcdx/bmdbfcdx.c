@@ -531,7 +531,7 @@ static LPCDXKEY hb_cdxKeyPut( LPCDXKEY pKey, BYTE * pbVal, USHORT uiLen, ULONG u
 /*
  * store string0 value in index key
  */
-static LPCDXKEY hb_cdxKeyPutC( LPCDXKEY pKey, char * szText, USHORT uiRealLen, ULONG ulRec  )
+static LPCDXKEY hb_cdxKeyPutC( LPCDXKEY pKey, const char * szText, USHORT uiRealLen, ULONG ulRec  )
 {
    USHORT uiLen;
 
@@ -3777,7 +3777,7 @@ static void hb_cdxTagFree( LPCDXTAG pTag )
  * TagHdr = offset of index page where a tag header is stored
  *            if CDX_DUMMYNODE then allocate space ofor a new tag header
  */
-static LPCDXTAG hb_cdxTagNew( LPCDXINDEX pIndex, char *szTagName, ULONG TagHdr )
+static LPCDXTAG hb_cdxTagNew( LPCDXINDEX pIndex, const char *szTagName, ULONG TagHdr )
 {
    LPCDXTAG pTag;
    char szName[ CDX_MAXTAGNAMELEN + 1 ];
@@ -4661,10 +4661,10 @@ static void hb_cdxReorderTagList( LPCDXTAG * TagListPtr )
  * create new order header, store it and then make an order
  */
 static LPCDXTAG hb_cdxIndexCreateTag( BOOL fStruct, LPCDXINDEX pIndex,
-                                      char * szTagName,
-                                      char * KeyExp, PHB_ITEM pKeyItem,
+                                      const char * szTagName,
+                                      const char * KeyExp, PHB_ITEM pKeyItem,
                                       BYTE bType, USHORT uiLen,
-                                      char * ForExp, PHB_ITEM pForItem,
+                                      const char * ForExp, PHB_ITEM pForItem,
                                       BOOL fAscnd, BOOL fUniq, BOOL fNoCase,
                                       BOOL fCustom, BOOL fReindex )
 {
@@ -4742,7 +4742,7 @@ static void hb_cdxIndexFreePages( LPCDXPAGE pPage )
 /*
  * remove Tag from Bag
  */
-static void hb_cdxIndexDelTag( LPCDXINDEX pIndex, char * szTagName )
+static void hb_cdxIndexDelTag( LPCDXINDEX pIndex, const char * szTagName )
 {
    LPCDXTAG *pTagPtr = &pIndex->TagList;
 
@@ -4781,10 +4781,10 @@ static void hb_cdxIndexDelTag( LPCDXINDEX pIndex, char * szTagName )
 /*
  * add tag to order bag
  */
-static LPCDXTAG hb_cdxIndexAddTag( LPCDXINDEX pIndex, char * szTagName,
-                                   char * szKeyExp, PHB_ITEM pKeyItem,
+static LPCDXTAG hb_cdxIndexAddTag( LPCDXINDEX pIndex, const char * szTagName,
+                                   const char * szKeyExp, PHB_ITEM pKeyItem,
                                    BYTE bType, USHORT uiLen,
-                                   char * szForExp, PHB_ITEM pForItem,
+                                   const char * szForExp, PHB_ITEM pForItem,
                                    BOOL fAscend, BOOL fUnique, BOOL fNoCase,
                                    BOOL fCustom, BOOL fReindex )
 {
@@ -4906,8 +4906,7 @@ static void hb_cdxIndexFree( LPCDXINDEX pIndex )
       hb_fileClose( pIndex->pFile );
       if( pIndex->fDelete )
       {
-         hb_fsDelete( ( BYTE * ) ( pIndex->szRealName ?
-                                   pIndex->szRealName : pIndex->szFileName ) );
+         hb_fsDelete( pIndex->szRealName ? pIndex->szRealName : pIndex->szFileName );
       }
    }
 
@@ -4982,7 +4981,8 @@ static BOOL hb_cdxIndexLoad( LPCDXINDEX pIndex, char * szBaseName )
 /*
  * create index file name
  */
-static void hb_cdxCreateFName( CDXAREAP pArea, char * szBagName, BOOL * fProd,
+static void hb_cdxCreateFName( CDXAREAP pArea, const char * szBagName,
+                               BOOL * fProd,
                                char * szFileName, char * szBaseName )
 {
    PHB_FNAME pFileName;
@@ -5098,7 +5098,7 @@ static void hb_cdxOrdListClear( CDXAREAP pArea, BOOL fAll, LPCDXINDEX pKeepInd )
 /*
  * find order bag by its name
  */
-static LPCDXINDEX hb_cdxFindBag( CDXAREAP pArea, char * szBagName )
+static LPCDXINDEX hb_cdxFindBag( CDXAREAP pArea, const char * szBagName )
 {
    LPCDXINDEX pIndex;
    PHB_FNAME pFileName;
@@ -5543,7 +5543,8 @@ static BOOL hb_cdxDBOISkipWild( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
                                 PHB_ITEM pWildItm )
 {
    BOOL fFound = FALSE, fFirst = TRUE;
-   char *szPattern, *szFree = NULL;
+   const char *szPattern;
+   char *szFree = NULL;
    int iFixed = 0, iStop;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxDBOISkipWild(%p, %p, %i, %p)", pArea, pTag, fForward, pWildItm));
@@ -5564,7 +5565,7 @@ static BOOL hb_cdxDBOISkipWild( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
    if( pArea->cdPage != hb_vmCDP() )
    {
       szPattern = szFree = hb_strdup( szPattern );
-      hb_cdpTranslate( szPattern, hb_vmCDP(), pArea->cdPage );
+      hb_cdpTranslate( szFree, hb_vmCDP(), pArea->cdPage );
    }
 #endif
    while( iFixed < pTag->uiLen && szPattern[ iFixed ] &&
@@ -7755,7 +7756,7 @@ static HB_ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
 
       pArea->fHasTags = FALSE;
       hb_cdxCreateFName( pArea, NULL, NULL, szFileName, NULL );
-      if( hb_spFileExists( ( BYTE * ) szFileName, NULL ) ||
+      if( hb_spFileExists( szFileName, NULL ) ||
           DBFAREA_DATA( pArea )->fStrictStruct )
       {
          DBORDERINFO pOrderInfo;
@@ -7895,7 +7896,7 @@ static HB_ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
              ( pArea->fShared ? FO_DENYNONE : FO_EXCLUSIVE );
    do
    {
-      pFile = hb_fileExtOpen( ( BYTE * ) szFileName, NULL, uiFlags |
+      pFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
                               FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
                               NULL, pError );
       if( !pFile )
@@ -8322,12 +8323,12 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       {
          if( fTemporary )
          {
-            pFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, ( BYTE * ) szTempFile );
+            pFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, szTempFile );
             fNewFile = TRUE;
          }
          else
          {
-            pFile = hb_fileExtOpen( ( BYTE * ) szFileName, NULL, FO_READWRITE |
+            pFile = hb_fileExtOpen( szFileName, NULL, FO_READWRITE |
                                     ( fShared ? FO_DENYNONE : FO_EXCLUSIVE ) |
                                     ( fNewFile ? FXO_TRUNCATE : FXO_APPEND ) |
                                     FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
@@ -8620,8 +8621,8 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO
       case DBOI_ORDERCOUNT:
       {
          LPCDXINDEX pIndex;
-         char *pszBag = hb_itemGetCLen( pInfo->atomBagName ) > 0 ?
-                           hb_itemGetCPtr( pInfo->atomBagName ) : NULL;
+         const char *pszBag = hb_itemGetCLen( pInfo->atomBagName ) > 0 ?
+                              hb_itemGetCPtr( pInfo->atomBagName ) : NULL;
          pIndex = pszBag ? hb_cdxFindBag( pArea, pszBag ) : pArea->lpIndexes;
          while( pIndex )
          {
@@ -8745,7 +8746,7 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO
             }
             if( hb_itemGetCLen( pInfo->itmNewVal ) > 0 )
             {
-               char * pForExpr = hb_itemGetCPtr( pInfo->itmNewVal );
+               const char * pForExpr = hb_itemGetCPtr( pInfo->itmNewVal );
 
                if( SELF_COMPILE( ( AREAP ) pArea, ( BYTE *) pForExpr ) == HB_SUCCESS )
                {
@@ -9431,18 +9432,19 @@ static HB_ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect
       case RDDI_ORDEREXT:
       case RDDI_ORDSTRUCTEXT:
       {
-         char * szNew = hb_itemGetCPtr( pItem );
+         const char * szNew = hb_itemGetCPtr( pItem );
+         char * szNewVal;
 
          if( szNew[0] == '.' && szNew[1] )
-            szNew = hb_strdup( szNew );
+            szNewVal = hb_strdup( szNew );
          else
-            szNew = NULL;
+            szNewVal = NULL;
 
          hb_itemPutC( pItem, pData->szIndexExt[ 0 ] ? pData->szIndexExt : CDX_INDEXEXT );
-         if( szNew )
+         if( szNewVal )
          {
-            hb_strncpy( pData->szIndexExt, szNew, sizeof( pData->szIndexExt ) - 1 );
-            hb_xfree( szNew );
+            hb_strncpy( pData->szIndexExt, szNewVal, sizeof( pData->szIndexExt ) - 1 );
+            hb_xfree( szNewVal );
          }
          break;
       }
@@ -9682,7 +9684,7 @@ static void hb_cdxSortWritePage( LPCDXSORTINFO pSort )
 
    if( pSort->hTempFile == FS_ERROR )
    {
-      BYTE szName[ HB_PATH_MAX ];
+      char szName[ HB_PATH_MAX ];
       pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
       if( pSort->hTempFile == FS_ERROR )
       {
@@ -9983,7 +9985,7 @@ static void hb_cdxSortFree( LPCDXSORTINFO pSort )
    }
    if( pSort->szTempFileName )
    {
-      hb_fsDelete( (BYTE *)  ( pSort->szTempFileName ) );
+      hb_fsDelete( pSort->szTempFileName );
       hb_xfree( pSort->szTempFileName );
    }
    if( pSort->pKeyPool )

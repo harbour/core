@@ -563,9 +563,9 @@ typedef CDXAREA * LPCDXAREA;
 #endif
 
 /* m Bitmap, b Size, r RecNo */
-#define BM_SetBit(m,b,r) ((r)<=(b))?((m)[((r)-1)>>5] = (m)[((r)-1)>>5] | (1<<(((r)-1)%32))):0
-#define BM_ClrBit(m,b,r) ((r)<=(b))?((m)[((r)-1)>>5] = (m)[((r)-1)>>5] & ~(1<<(((r)-1)%32))):0
-#define BM_GetBit(m,b,r) (((r)<=(b))?(((m)[((r)-1)>>5] & (1<<(((r)-1)%32)))):0)
+#define BM_SetBit(m,b,r) do { if((r)<=(b)) (m)[((r)-1)>>5] = (m)[((r)-1)>>5] | (1<<(((r)-1)%32)); } while(0)
+#define BM_ClrBit(m,b,r) do { if((r)<=(b)) (m)[((r)-1)>>5] = (m)[((r)-1)>>5] & ~(1<<(((r)-1)%32)); } while(0)
+#define BM_GetBit(m,b,r) ( ((r)<=(b)) ? (m)[((r)-1)>>5] & (1<<(((r)-1)%32)) : 0 )
 
 typedef struct _BM_FILTER_ {
     PHB_ITEM itmCobExpr;       /* Block representation of the FILTER expression */
