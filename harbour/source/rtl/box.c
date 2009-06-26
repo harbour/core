@@ -80,7 +80,7 @@ HB_FUNC( DISPBOX )
                      hb_itemGetNI( pLeft),
                      hb_itemGetNI( pBottom ),
                      hb_itemGetNI( pRight ),
-                     ( BYTE * ) ( *pszBox ? pszBox : "         " ),
+                     ( const BYTE * ) ( *pszBox ? pszBox : "         " ),
                      iColor );
       }
       else
@@ -135,7 +135,7 @@ HB_FUNC( HB_DISPBOX )
                     ( SHORT ) hb_itemGetNI( pLeft),
                     ( SHORT ) hb_itemGetNI( pBottom ),
                     ( SHORT ) hb_itemGetNI( pRight ),
-                    ( BYTE * ) ( *pszBox ? pszBox : "         " ),
+                    ( const BYTE * ) ( *pszBox ? pszBox : "         " ),
                     iColor );
    }
 }

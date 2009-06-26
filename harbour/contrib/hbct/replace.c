@@ -94,10 +94,10 @@ static void do_replace( int iSwitch )
       if( HB_ISNUM( 2 ) )
          cReplace = ( char ) ( hb_parnl( 2 ) % 256 );
       else
-         cReplace = *( ( char * ) hb_parc( 2 ) );
+         cReplace = *( ( const char * ) hb_parc( 2 ) );
 
       if( hb_parclen( 3 ) > 0 )
-         cSearch = *( ( char * ) hb_parc( 3 ) );
+         cSearch = *( ( const char * ) hb_parc( 3 ) );
       else if( HB_ISNUM( 3 ) )
          cSearch = ( char ) ( hb_parnl( 3 ) % 256 );
       else

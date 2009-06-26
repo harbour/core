@@ -208,7 +208,7 @@ void hb_conOutStd( const char * pStr, ULONG ulLen )
       ulLen = strlen( pStr );
 
    if( ulLen > 0 )
-      hb_gtOutStd( ( BYTE * ) pStr, ulLen );
+      hb_gtOutStd( ( const BYTE * ) pStr, ulLen );
 }
 
 /* Output an item to STDERR */
@@ -220,7 +220,7 @@ void hb_conOutErr( const char * pStr, ULONG ulLen )
       ulLen = strlen( pStr );
 
    if( ulLen > 0 )
-      hb_gtOutErr( ( BYTE * ) pStr, ulLen );
+      hb_gtOutErr( ( const BYTE * ) pStr, ulLen );
 }
 
 /* Output an item to the screen and/or printer and/or alternate */
@@ -231,24 +231,24 @@ void hb_conOutAlt( const char * pStr, ULONG ulLen )
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutAlt(%s, %lu)", pStr, ulLen));
 
    if( hb_setGetConsole() )
-      hb_gtWriteCon( ( BYTE * ) pStr, ulLen );
+      hb_gtWriteCon( ( const BYTE * ) pStr, ulLen );
 
    if( hb_setGetAlternate() && ( hFile = hb_setGetAltHan() ) != FS_ERROR )
    {
       /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
-      hb_fsWriteLarge( hFile, ( BYTE * ) pStr, ulLen );
+      hb_fsWriteLarge( hFile, ( const BYTE * ) pStr, ulLen );
    }
 
    if( ( hFile = hb_setGetExtraHan() ) != FS_ERROR )
    {
       /* Print to extra file if valid alternate file */
-      hb_fsWriteLarge( hFile, ( BYTE * ) pStr, ulLen );
+      hb_fsWriteLarge( hFile, ( const BYTE * ) pStr, ulLen );
    }
 
    if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_CON ) ) != FS_ERROR )
    {
       /* Print to printer if SET PRINTER ON and valid printer file */
-      hb_fsWriteLarge( hFile, ( BYTE * ) pStr, ulLen );
+      hb_fsWriteLarge( hFile, ( const BYTE * ) pStr, ulLen );
       hb_prnPos()->col += ( USHORT ) ulLen;
    }
 }
@@ -263,12 +263,12 @@ static void hb_conOutDev( const char * pStr, ULONG ulLen )
    if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_DEV ) ) != FS_ERROR )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
-      hb_fsWriteLarge( hFile, ( BYTE * ) pStr, ulLen );
+      hb_fsWriteLarge( hFile, ( const BYTE * ) pStr, ulLen );
       hb_prnPos()->col += ( USHORT ) ulLen;
    }
    else
       /* Otherwise, display to console */
-      hb_gtWrite( ( BYTE * ) pStr, ulLen );
+      hb_gtWrite( ( const BYTE * ) pStr, ulLen );
 }
 
 static char * hb_itemStringCon( PHB_ITEM pItem, ULONG * pulLen, BOOL * pfFreeReq )
@@ -539,7 +539,7 @@ HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected b
 
       pszString = hb_itemStringCon( hb_param( 1, HB_IT_ANY ), &ulLen, &bFreeReq );
 
-      hb_gtWrite( ( BYTE * ) pszString, ulLen );
+      hb_gtWrite( ( const BYTE * ) pszString, ulLen );
 
       if( bFreeReq )
          hb_xfree( pszString );
@@ -550,7 +550,7 @@ HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected b
    {
       pszString = hb_itemStringCon( hb_param( 1, HB_IT_ANY ), &ulLen, &bFreeReq );
 
-      hb_gtWrite( ( BYTE * ) pszString, ulLen );
+      hb_gtWrite( ( const BYTE * ) pszString, ulLen );
 
       if( bFreeReq )
          hb_xfree( pszString );
@@ -576,7 +576,7 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
 
       pszString = hb_itemStringCon( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
 
-      hb_gtWriteAt( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), ( BYTE * ) pszString, ulLen );
+      hb_gtWriteAt( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), ( const BYTE * ) pszString, ulLen );
 
       if( bFreeReq )
          hb_xfree( pszString );
@@ -587,7 +587,7 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
    {
       pszString = hb_itemStringCon( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
 
-      hb_gtWriteAt( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), ( BYTE * ) pszString, ulLen );
+      hb_gtWriteAt( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), ( const BYTE * ) pszString, ulLen );
 
       if( bFreeReq )
          hb_xfree( pszString );
@@ -614,7 +614,7 @@ HB_FUNC( HB_DISPOUTAT )
       else
          iColor = -1;
 
-      hb_gtPutText( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), ( BYTE * ) pszString, ulLen, iColor );
+      hb_gtPutText( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), ( const BYTE * ) pszString, ulLen, iColor );
 
       if( bFreeReq )
          hb_xfree( pszString );

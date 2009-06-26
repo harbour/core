@@ -52,9 +52,9 @@ int      hb_sqlite2_iDataCols = 0; /* fields */
 HB_FUNC( SQLITE_INFO )
 {
    hb_reta( 3 );
-   hb_storc( ( char * ) SQLITE_VERSION      , -1, 1 );
-   hb_storc( ( char * ) sqlite_libversion() , -1, 2 );
-   hb_storc( ( char * ) sqlite_libencoding(), -1, 3 );
+   hb_storc( SQLITE_VERSION      , -1, 1 );
+   hb_storc( sqlite_libversion() , -1, 2 );
+   hb_storc( sqlite_libencoding(), -1, 3 );
 }
 
 /* Open a database file (in SQLite format) and set a public structure */

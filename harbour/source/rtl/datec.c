@@ -56,18 +56,18 @@
 #include "hbapilng.h"
 #include "hbdate.h"
 
-char * hb_dateCMonth( int iMonth )
+const char * hb_dateCMonth( int iMonth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateCMonth(%d)", iMonth));
 
-   return ( iMonth >= 1 && iMonth <= 12 ) ? ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 ) : ( char * ) "";
+   return ( iMonth >= 1 && iMonth <= 12 ) ? hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 ) : "";
 }
 
-char * hb_dateCDOW( int iDay )
+const char * hb_dateCDOW( int iDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateCDOW(%d)", iDay));
 
-   return ( iDay >= 1 && iDay <= 7 ) ? ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + iDay - 1 ) : ( char * ) "";
+   return ( iDay >= 1 && iDay <= 7 ) ? hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + iDay - 1 ) : "";
 }
 
 HB_FUNC( CMONTH )

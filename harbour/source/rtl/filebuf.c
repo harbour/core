@@ -353,7 +353,7 @@ PHB_FILE hb_fileExtOpen( const char * pFilename, const char * pDefExt,
 
       if( pError )
       {
-         hb_errPutFileName( pError, ( char * ) pszFile );
+         hb_errPutFileName( pError, pszFile );
          if( !fResult )
          {
             hb_errPutOsCode( pError, hb_fsError() );

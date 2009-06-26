@@ -78,10 +78,10 @@ extern HB_EXPORT int    hb_dateDOW( int iYear, int iMonth, int iDay );
 extern HB_EXPORT int    hb_dateJulianDOW( LONG lJulian );
 
 /* RTL functions */
-extern HB_EXPORT char * hb_dateCMonth( int iMonth );
-extern HB_EXPORT char * hb_dateCDOW( int iDay );
-extern HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat );
-extern HB_EXPORT long   hb_dateUnformat( const char * szDate, const char * szDateFormat );
+extern HB_EXPORT const char * hb_dateCMonth( int iMonth );
+extern HB_EXPORT const char * hb_dateCDOW( int iDay );
+extern HB_EXPORT char *       hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat );
+extern HB_EXPORT long         hb_dateUnformat( const char * szDate, const char * szDateFormat );
 
 /* functions to operate on time values */
 

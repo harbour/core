@@ -345,9 +345,9 @@ char * hb_langName( void )
    {
       pszName = ( char * ) hb_xgrab( 128 );
       hb_snprintf( pszName, 128, "Harbour Language: %s %s (%s)",
-         ( const char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID ),
-         ( const char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAME ),
-         ( const char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAMENAT ) );
+         hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID ),
+         hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAME ),
+         hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAMENAT ) );
    }
    else
       pszName = hb_strdup( "Harbour Language: (not installed)" );

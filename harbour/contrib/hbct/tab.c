@@ -136,7 +136,7 @@ HB_FUNC( TABEXPAND )
 
       if( HB_ISCHAR( 4 ) && hb_parclen( 4 ) > 0 )
       {
-         pcNewLine = ( char * ) hb_parc( 4 );
+         pcNewLine = hb_parc( 4 );
          sNewLineLen = hb_parclen( 4 );
       }
       else
@@ -336,7 +336,7 @@ HB_FUNC( TABPACK )
 
       sNewLineLen = hb_parclen( 4 );
       if( sNewLineLen > 0 )
-         pcNewLine = ( char * ) hb_parc( 4 );
+         pcNewLine = hb_parc( 4 );
       else
       {
          pcNewLine = hb_conNewLine();

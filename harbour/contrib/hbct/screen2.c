@@ -62,7 +62,7 @@ HB_FUNC( SAYDOWN )
 
    if( ulLen )
    {
-      UCHAR * szText = ( UCHAR * ) hb_parc( 1 );
+      const UCHAR * szText = ( const UCHAR * ) hb_parc( 1 );
       SHORT sRow, sCol;
       int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
@@ -106,7 +106,7 @@ HB_FUNC( SAYSPREAD )
 
    if( ulLen )
    {
-      UCHAR * szText = ( UCHAR * ) hb_parc( 1 );
+      const UCHAR * szText = ( const UCHAR * ) hb_parc( 1 );
       ULONG ulPos, ul;
       SHORT sRow, sCol;
       int iRow, iCol, iMaxRow, iMaxCol;
@@ -160,7 +160,7 @@ HB_FUNC( SAYMOVEIN )
 
    if( ulLen )
    {
-      UCHAR * szText = ( UCHAR * ) hb_parc( 1 );
+      const UCHAR * szText = ( const UCHAR * ) hb_parc( 1 );
       ULONG ulChars, ul;
       SHORT sRow, sCol;
       int iRow, iCol, iMaxRow, iMaxCol;
@@ -363,7 +363,7 @@ HB_FUNC( STRSCREEN )
 
    if( ulLen )
    {
-      UCHAR * szText = ( UCHAR * ) hb_parc( 1 );
+      const UCHAR * szText = ( const UCHAR * ) hb_parc( 1 );
       SHORT sRow, sCol, sMaxRow, sMaxCol, sC;
 
       hb_gtGetPos( &sRow, &sCol );
@@ -442,5 +442,5 @@ HB_FUNC( _HB_CTDSPTIME )
    if( szTime[0] == '0' )
       szTime[0] = ' ';
 
-   hb_gtPutText( sRow, sCol, ( BYTE * ) szTime, iLen, iColor );
+   hb_gtPutText( sRow, sCol, ( const BYTE * ) szTime, iLen, iColor );
 }

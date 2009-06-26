@@ -204,7 +204,7 @@ HB_FUNC( HB_KEYPUT )
          }
          else if( type & HB_IT_STRING )
          {
-            hb_inkeySetText( ( const char * ) hb_arrayGetCPtr( pArray, ulIndex ), hb_arrayGetCLen( pArray, ulIndex ) );
+            hb_inkeySetText( hb_arrayGetCPtr( pArray, ulIndex ), hb_arrayGetCLen( pArray, ulIndex ) );
          }
       }
    }
@@ -236,7 +236,7 @@ HB_FUNC( HB_KEYINS )
          }
          else if( type & HB_IT_STRING )
          {
-            hb_inkeySetText( ( const char * ) hb_arrayGetCPtr( pArray, ulIndex ), hb_arrayGetCLen( pArray, ulIndex ) );
+            hb_inkeySetText( hb_arrayGetCPtr( pArray, ulIndex ), hb_arrayGetCLen( pArray, ulIndex ) );
          }
       }
    }

@@ -123,7 +123,7 @@ static void do_remove( int iSwitch )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
                                   sulErrorSubcodes[iSwitch],
-                                  NULL, ( char * ) HB_ERR_FUNCNAME, 0,
+                                  NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 

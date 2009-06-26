@@ -140,7 +140,7 @@ HB_FUNC( AMONTHS )
 
    for( i = 0; i < 12; i++ )
    {
-      PHB_ITEM pString = hb_itemPutC( NULL, ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + i ) );
+      PHB_ITEM pString = hb_itemPutC( NULL, hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + i ) );
       hb_itemArrayPut( pReturn, i+1, pString );
       hb_itemRelease( pString );
    }
@@ -155,7 +155,7 @@ HB_FUNC( ADAYS )
 
    for( i = 0; i < 7; i++ )
    {
-      PHB_ITEM pString = hb_itemPutC( NULL, ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + i ) );
+      PHB_ITEM pString = hb_itemPutC( NULL, hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + i ) );
       hb_itemArrayPut( pReturn, i + 1, pString );
       hb_itemRelease( pString );
    }

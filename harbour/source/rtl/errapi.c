@@ -948,7 +948,7 @@ PHB_ITEM hb_errRT_New(
    hb_errPutSubSystem( pError, szSubSystem ? szSubSystem : HB_ERR_SS_BASE );
    hb_errPutGenCode( pError, ( USHORT ) ulGenCode );
    hb_errPutSubCode( pError, ( USHORT ) ulSubCode );
-   hb_errPutDescription( pError, szDescription ? szDescription : ( const char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulGenCode ) );
+   hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulGenCode ) );
    hb_errPutOperation( pError, szOperation ? szOperation : "" );
    hb_errPutOsCode( pError, uiOsCode );
    hb_errPutFlags( pError, uiFlags );
@@ -972,7 +972,7 @@ PHB_ITEM hb_errRT_New_Subst(
    hb_errPutSubSystem( pError, szSubSystem ? szSubSystem : HB_ERR_SS_BASE );
    hb_errPutGenCode( pError, ( USHORT ) ulGenCode );
    hb_errPutSubCode( pError, ( USHORT ) ulSubCode );
-   hb_errPutDescription( pError, szDescription ? szDescription : ( const char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulGenCode ) );
+   hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulGenCode ) );
    hb_errPutOperation( pError, szOperation ? szOperation : "" );
    hb_errPutOsCode( pError, uiOsCode );
    hb_errPutFlags( pError, ( USHORT ) ( uiFlags | EF_CANSUBSTITUTE ) );

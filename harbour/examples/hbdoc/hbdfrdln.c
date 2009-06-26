@@ -214,7 +214,7 @@ HB_FUNC( HB_FREADLINE )
          pTerm1          = hb_param( 3, HB_IT_STRING );
          Term            = ( char ** ) hb_xgrab( sizeof( char * ) );
          iTermSizes      = ( int * ) hb_xgrab( sizeof( int ) );
-         Term[ 0 ]       = ( char * ) hb_itemGetCPtr( pTerm1 );
+         Term[ 0 ]       = hb_itemGetCPtr( pTerm1 );
          iTermSizes[ 0 ] = hb_itemGetCLen( pTerm1 );
          iTerms          = 1;
       }

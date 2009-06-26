@@ -120,6 +120,6 @@ HB_FUNC( RESTSCREEN )
       hb_getScreenRange( &uiTop, &uiBottom, fNoCheck, TRUE );
       hb_getScreenRange( &uiLeft, &uiRight, fNoCheck, FALSE );
 
-      hb_gtRest( uiTop, uiLeft, uiBottom, uiRight, ( void * ) hb_parc( 5 ) );
+      hb_gtRest( uiTop, uiLeft, uiBottom, uiRight, ( const void * ) hb_parc( 5 ) );
    }
 }

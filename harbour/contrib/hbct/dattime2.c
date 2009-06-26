@@ -257,7 +257,7 @@ HB_FUNC( DMY )
 
    if( iMonth >= 1 && iMonth <= 12 )
    {
-      char *szMonth = ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
+      const char *szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
       int iMonLen = strlen( szMonth );
       int iLen = 0, iBufLen = iMonLen + 10;
       char *szMDY = ( char * ) hb_xgrab( iBufLen );
@@ -351,7 +351,7 @@ HB_FUNC( MDY )
 
    if( iMonth >= 1 && iMonth <= 12 )
    {
-      char *szMonth = ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
+      const char *szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
       int iLen = strlen( szMonth );
       int iBufLen = iLen + 9;
       char *szMDY = ( char * ) hb_xgrab( iBufLen );

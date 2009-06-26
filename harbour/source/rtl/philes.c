@@ -242,15 +242,15 @@ HB_FUNC( FREADSTR )
       if( ulToRead > 0 )
       {
          HB_FHANDLE fhnd = ( HB_FHANDLE ) hb_parni( 1 );
-         BYTE * buffer = ( BYTE * ) hb_xgrab( ulToRead + 1 );
+         char * buffer = ( char * ) hb_xgrab( ulToRead + 1 );
          ULONG ulRead;
 
-         ulRead = hb_fsReadLarge( fhnd, buffer, ulToRead );
+         ulRead = hb_fsReadLarge( fhnd, ( BYTE * ) buffer, ulToRead );
          uiError = hb_fsError();
          buffer[ ulRead ] = '\0';
 
          /* NOTE: Clipper will not return zero chars from this functions. */
-         hb_retc_buffer( ( char * ) buffer );
+         hb_retc_buffer( buffer );
       }
       else
          hb_retc( NULL );
