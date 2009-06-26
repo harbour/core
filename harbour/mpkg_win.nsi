@@ -7,6 +7,11 @@
 ;
 ; Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
 ; See COPYING for licensing terms.
+;
+; NOTE: Do not try to use this script directly. It won't work.
+;
+;       See INSTALL how to create installation packages for
+;       Windows/DOS platforms.
 ; ---------------------------------------------------------------
 
 ; TODO: tests/examples

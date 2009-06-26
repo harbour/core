@@ -179,7 +179,7 @@ HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, ULONG ulNewSize 
 }
 
 /* add a new value into th ehash table */
-BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, void * pKey, void * pValue )
+BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, const void * pKey, const void * pValue )
 {
    ULONG ulKey;
    HB_HASH_ITEM_PTR pItem;
