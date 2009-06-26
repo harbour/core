@@ -34,11 +34,11 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    if "%HB_DOC_INSTALL%" == "" set HB_DOC_INSTALL=%HB_INSTALL_PREFIX%\doc
 
    rem Create install dirs
-   if not exist %HB_BIN_INSTALL%\*.*       md %HB_BIN_INSTALL%
-   if not exist %HB_LIB_INSTALL%\*.*       md %HB_LIB_INSTALL%
-   if not exist %HB_INC_INSTALL%\*.*       md %HB_INC_INSTALL%
-   if not exist %HB_DOC_INSTALL%\*.*       md %HB_DOC_INSTALL%
-   if not exist %HB_DOC_INSTALL%\en-EN\*.* md %HB_DOC_INSTALL%\en-EN
+   if not exist "%HB_BIN_INSTALL%\*.*"       md "%HB_BIN_INSTALL%"
+   if not exist "%HB_LIB_INSTALL%\*.*"       md "%HB_LIB_INSTALL%"
+   if not exist "%HB_INC_INSTALL%\*.*"       md "%HB_INC_INSTALL%"
+   if not exist "%HB_DOC_INSTALL%\*.*"       md "%HB_DOC_INSTALL%"
+   if not exist "%HB_DOC_INSTALL%\en-EN\*.*" md "%HB_DOC_INSTALL%\en-EN"
 
    goto MAKE
 
@@ -48,6 +48,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    if not "%OS%" == "Windows_NT" goto HELP
 
    rem Order is significant
+   call :COMP_DET_ONE cygstart.exe                cygwin   win
    call :COMP_DET_ONE gcc.exe                     mingw    win
    call :COMP_DET_ONE wpp386.exe                  watcom   win
    call :COMP_DET_ONE ml64.exe                    msvc64   win
@@ -56,7 +57,6 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    call :COMP_DET_ONE bcc32.exe                   bcc      win
    call :COMP_DET_ONE porc64.exe                  pocc64   win
    call :COMP_DET_ONE pocc.exe                    pocc     win
-   call :COMP_DET_ONE cygstart.exe                cygwin   win
    call :COMP_DET_ONE xcc.exe                     xcc      win
    call :COMP_DET_ONE x86_64-w64-mingw32-gcc.exe  mingw64  win x86_64-w64-mingw32-
    call :COMP_DET_ONE arm-wince-mingw32ce-gcc.exe mingwarm wce arm-wince-mingw32ce-
@@ -64,9 +64,9 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
    if "%HB_COMPILER%" == "" ( echo HB_COMPILER couldn't be automatically determined. && goto HELP )
 
-   echo Autodetected HB_COMPILER: %HB_COMPILER%
-   echo Autodetected HB_ARCHITECTURE: %HB_ARCHITECTURE%
-   if not "%HB_CCPREFIX%" == "" echo Autodetected HB_CCPREFIX: %HB_CCPREFIX%
+   echo Harbour HB_COMPILER autodetected: '%HB_COMPILER%'
+   echo Harbour HB_ARCHITECTURE autodetected: '%HB_ARCHITECTURE%'
+   if not "%HB_CCPREFIX%" == "" echo Harbour HB_CCPREFIX autodetected: '%HB_CCPREFIX%'
 
    goto CONTINUE_MAKE
 
@@ -86,12 +86,12 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
 :BAD_ARCH
 
-   echo Error: HB_ARCHITECTURE is not set.
+   echo Harbour: Error: HB_ARCHITECTURE not set.
    goto HELP
 
 :BAD_COMP
 
-   echo Error: HB_COMPILER is not set.
+   echo Harbour: Error: HB_COMPILER not set.
    goto HELP
 
 :MAKE
@@ -100,6 +100,20 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    set _HB_CLIPPER_OLD=%CLIPPER%
    set HARBOUR=
    set CLIPPER=
+
+   rem ---------------------------------------------------------------
+   rem Setup output log
+
+   set _HB_BUILD_LOG=
+   set HB_BUILD_LOGFILE=
+   if  not "%HB_BUILD_LOG%" == ""    if "%OS%" == "Windows_NT" set _HB_BUILD_LOG=%HB_BUILD_LOG%
+:  if      "%HB_BUILD_LOG%" == ""    if "%OS%" == "Windows_NT" set _HB_BUILD_LOG=log-%HB_ARCHITECTURE%-%HB_COMPILER%.txt
+   if     "%_HB_BUILD_LOG%" == "yes" if "%OS%" == "Windows_NT" set _HB_BUILD_LOG=log-%HB_ARCHITECTURE%-%HB_COMPILER%.txt
+   if     "%_HB_BUILD_LOG%" == "no"  if "%OS%" == "Windows_NT" set _HB_BUILD_LOG=
+   if not "%_HB_BUILD_LOG%" == ""    if "%OS%" == "Windows_NT" set HB_BUILD_LOGFILE=%_HB_BUILD_LOG%
+   if not "%_HB_BUILD_LOG%" == ""    if "%OS%" == "Windows_NT" echo Harbour build output to: '%_HB_BUILD_LOG%'
+   if not "%_HB_BUILD_LOG%" == ""    if "%OS%" == "Windows_NT" if exist "%_HB_BUILD_LOG%" del "%_HB_BUILD_LOG%"
+   if not "%_HB_BUILD_LOG%" == ""    if "%OS%" == "Windows_NT" set _HB_BUILD_LOG=^>^> %_HB_BUILD_LOG% 2^>^&1
 
    rem ---------------------------------------------------------------
    rem Detect name of GNU Make
@@ -150,7 +164,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    if "%HB_COMPILER%" == "mingw"    goto DO_GCC
    if "%HB_COMPILER%" == "mingw64"  goto DO_GCC
    if "%HB_COMPILER%" == "mingwarm" goto DO_GCC
-   if "%HB_COMPILER%" == "cygwin"   goto DO_GCC
+   if "%HB_COMPILER%" == "cygwin"   goto DO_GCC_CYG
 
    set _HB_CONTRIBLIBS=%HB_CONTRIBLIBS%
    set _HB_CONTRIB_ADDONS=%HB_CONTRIB_ADDONS%
@@ -161,8 +175,9 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    set HB_CONTRIB_ADDONS=
    set HB_EXTERNALLIBS=no
    set HB_EXTERNAL_ADDONS=
-   %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-   if errorlevel 1 echo GNU Make returned: %ERRORLEVEL%
+   %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9 %_HB_BUILD_LOG%
+   if errorlevel 1 echo Harbour GNU Make returned: %ERRORLEVEL%
+   if errorlevel 1 goto MAKE_DONE
    set HB_DYNLIB=no
    set HB_CONTRIBLIBS=%_HB_CONTRIBLIBS%
    set HB_CONTRIB_ADDONS=%_HB_CONTRIB_ADDONS%
@@ -172,21 +187,36 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    set _HB_CONTRIB_ADDONS=
    set _HB_EXTERNALLIBS=
    set _HB_EXTERNAL_ADDONS=
-   %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-   if errorlevel 1 echo GNU Make returned: %ERRORLEVEL%
+   %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9 %_HB_BUILD_LOG%
+   if errorlevel 1 echo Harbour GNU Make returned: %ERRORLEVEL%
    goto MAKE_DONE
 
 :DO_GCC
 
    set HB_DYNLIB=no
-   %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-   if errorlevel 1 echo GNU Make returned: %ERRORLEVEL%
+   %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9 %_HB_BUILD_LOG%
+   if errorlevel 1 echo Harbour GNU Make returned: %ERRORLEVEL%
+   goto MAKE_DONE
+
+:DO_GCC_CYG
+
+   set HB_DYNLIB=no
+   sh make_gnu.sh clean install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+   if errorlevel 1 echo Harbour GNU Make returned: %ERRORLEVEL%
    goto MAKE_DONE
 
 :SKIP_WINDLL
 
-   %_HB_MAKE% %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-   if errorlevel 1 echo GNU Make returned: %ERRORLEVEL%
+   if "%HB_COMPILER%" == "cygwin" goto SKIP_WINDLL_CYG
+
+   %_HB_MAKE% %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9 %_HB_BUILD_LOG%
+   if errorlevel 1 echo Harbour GNU Make returned: %ERRORLEVEL%
+   goto MAKE_DONE
+
+:SKIP_WINDLL_CYG
+
+   sh make_gnu.sh %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9 %_HB_BUILD_LOG%
+   if errorlevel 1 echo Harbour GNU Make returned: %ERRORLEVEL%
    goto MAKE_DONE
 
 :MAKE_DONE
@@ -194,6 +224,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    set _HB_MAKE=
    set HARBOUR=%_HB_HARBOUR_OLD%
    set CLIPPER=%_HB_CLIPPER_OLD%
+   set _HB_BUILD_LOG=
    set _HB_HARBOUR_OLD=
    set _HB_CLIPPER_OLD=
    goto END

@@ -1630,7 +1630,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             char * szTitle = NULL;
             if( hb_gt_wvt_GetWindowTitle( pWVT->hWnd, &szTitle ) )
-               pInfo->pResult = hb_itemPutCPtr2( pInfo->pResult, szTitle );
+               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, szTitle );
             else
                pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
@@ -1776,12 +1776,13 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          GetClientRect( pWVT->hWnd, &rc );
 
          if( !pInfo->pResult )
-         {
             pInfo->pResult = hb_itemNew( NULL );
-         }
+
          hb_arrayNew( pInfo->pResult, 2 );
          hb_arraySetNI( pInfo->pResult, 2, rc.bottom - rc.top );
          hb_arraySetNI( pInfo->pResult, 1, rc.right - rc.left );
+
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) && hb_arrayLen( pInfo->pNewVal ) == 2 )
          {
             int iX, iY;
             iY = hb_arrayGetNI( pInfo->pNewVal,2 );

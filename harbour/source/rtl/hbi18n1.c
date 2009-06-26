@@ -218,7 +218,7 @@ static PHB_ITEM hb_i18n_pluralexp_compile( PHB_ITEM pExp )
       memcpy( &szMacro[ 4 ], hb_itemGetCPtr( pExp ), ulLen );
       szMacro[ 4 + ulLen ] = '}';
       szMacro[ 5 + ulLen ] = '\0';
-      pMacro = hb_itemPutCPtr( NULL, szMacro, ulLen );
+      pMacro = hb_itemPutCLPtr( NULL, szMacro, ulLen );
       szType = hb_macroGetType( pMacro );
       if( *szType == 'B' )
       {

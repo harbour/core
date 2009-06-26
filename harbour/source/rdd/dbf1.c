@@ -2728,7 +2728,7 @@ static HB_ERRCODE hb_dbfClose( DBFAREAP pArea )
          SELF_WRITEDBHEADER( ( AREAP ) pArea );
 
       /* It's not Clipper compatible but it reduces the problem with
-         byggy Windows network setting */
+         buggy Windows network setting */
       if( hb_setGetHardCommit() )
          SELF_FLUSH( ( AREAP ) pArea );
    }
@@ -5630,7 +5630,7 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect
          }
 
          if( fFree && szTrigger )
-            hb_itemPutCPtr2( pItem, szTrigger );
+            hb_itemPutCPtr( pItem, szTrigger );
          else
             hb_itemPutC( pItem, szTrigger );
 
@@ -5652,7 +5652,7 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect
          }
          else if( pData->szPendingTrigger )
          {
-            hb_itemPutCPtr2( pItem, pData->szPendingTrigger );
+            hb_itemPutCPtr( pItem, pData->szPendingTrigger );
             pData->szPendingTrigger = NULL;
          }
          else
@@ -5672,7 +5672,7 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect
          }
 
          if( fFree && szPasswd )
-            hb_itemPutCPtr2( pItem, szPasswd );
+            hb_itemPutCPtr( pItem, szPasswd );
          else
             hb_itemPutC( pItem, szPasswd );
 
@@ -5694,7 +5694,7 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect
          }
          else if( pData->szPendingPasswd )
          {
-            hb_itemPutCPtr2( pItem, pData->szPendingPasswd );
+            hb_itemPutCPtr( pItem, pData->szPendingPasswd );
             pData->szPendingPasswd = NULL;
          }
          else

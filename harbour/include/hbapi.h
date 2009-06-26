@@ -697,7 +697,7 @@ extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns
 #define hb_reta( ulLen )                     hb_arrayNew( hb_stackReturnItem(), ulLen )
 #define hb_retc( szText )                    hb_itemPutC( hb_stackReturnItem(), szText )
 #define hb_retc_null()                       hb_itemPutC( hb_stackReturnItem(), NULL )
-#define hb_retc_buffer( szText )             hb_itemPutCPtr2( hb_stackReturnItem(), szText )
+#define hb_retc_buffer( szText )             hb_itemPutCPtr( hb_stackReturnItem(), szText )
 #define hb_retc_const( szText )              hb_itemPutCConst( hb_stackReturnItem(), szText )
 #define hb_retclen( szText, ulLen )          hb_itemPutCL( hb_stackReturnItem(), szText, ulLen )
 #define hb_retclen_buffer( szText, ulLen )   hb_itemPutCLPtr( hb_stackReturnItem(), szText, ulLen )

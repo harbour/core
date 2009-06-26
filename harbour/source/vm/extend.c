@@ -1262,7 +1262,7 @@ void hb_retc_buffer( char * szText )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_retc_buffer(%s)", szText));
 
-   hb_itemPutCPtr2( hb_stackReturnItem(), szText );
+   hb_itemPutCPtr( hb_stackReturnItem(), szText );
 }
 
 #undef hb_retc_const

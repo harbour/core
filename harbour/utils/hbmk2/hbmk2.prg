@@ -978,7 +978,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    CASE hbmk[ _HBMK_cARCH ] == "win"
       /* Order is significant.
          watcom also keeps a cl.exe in its binary dir. */
-      aCOMPDET := { { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" ) }, "mingw"   },;
+      aCOMPDET := { { {|| FindInPath( "cygstart" ) }, "cygwin" },;
+                    { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" ) }, "mingw"   },;
                     { {|| iif( ! Empty( GetEnv( "WATCOM" ) ),;
                                FindInPath( "wpp386"   ),;
                                NIL )               }, "watcom" },;
@@ -991,7 +992,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                     { {|| FindInPath( "pocc"     ) }, "pocc"   },;
                     { {|| iif( ( tmp1 := FindInPath( "icl" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ), tmp1, NIL ) }, "iccia64" },;
                     { {|| FindInPath( "icl"      ) }, "icc"    },;
-                    { {|| FindInPath( "cygstart" ) }, "cygwin" },;
                     { {|| FindInPath( "xcc"      ) }, "xcc"    },;
                     { {|| FindInPath( "x86_64-w64-mingw32-gcc" ) }, "mingw64", "x86_64-w64-mingw32-" } }
       aCOMPSUP := { "mingw", "msvc", "bcc", "watcom", "icc", "pocc", "xcc", "cygwin",;

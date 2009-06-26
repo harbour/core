@@ -1023,7 +1023,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_WINTITLE:
          if( pWVT->qWnd )
          {
-            pInfo->pResult = hb_itemPutCPtr2( pInfo->pResult, pWVT->qWnd->windowTitle().toLatin1().data() );
+            pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, pWVT->qWnd->windowTitle().toLatin1().data() );
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
                pWVT->qWnd->setWindowTitle( hb_itemGetCPtr( pInfo->pNewVal ) );
          }
@@ -1100,21 +1100,24 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          int iX, iY;
 
          if( !pInfo->pResult )
-         {
             pInfo->pResult = hb_itemNew( NULL );
-         }
+
          hb_arrayNew( pInfo->pResult, 2 );
          hb_arraySetNI( pInfo->pResult, 2, pWVT->PTEXTSIZE.y() * pWVT->ROWS );
          hb_arraySetNI( pInfo->pResult, 1, pWVT->PTEXTSIZE.x() * pWVT->COLS );
-         iY = hb_arrayGetNI( pInfo->pNewVal,2 );
-         iX = hb_arrayGetNI( pInfo->pNewVal,1 );
 
-         if( iY  > 0 )
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) && hb_arrayLen( pInfo->pNewVal ) == 2 )
          {
-            bool bOldCentre = pWVT->CenterWindow;
-            pWVT->CenterWindow = pWVT->bMaximized ? TRUE : FALSE;
-            HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iY / pWVT->PTEXTSIZE.y() ), ( USHORT ) ( iX / pWVT->PTEXTSIZE.x() ) );
-            pWVT->CenterWindow = bOldCentre;
+            iY = hb_arrayGetNI( pInfo->pNewVal,2 );
+            iX = hb_arrayGetNI( pInfo->pNewVal,1 );
+
+            if( iY  > 0 )
+            {
+               bool bOldCentre = pWVT->CenterWindow;
+               pWVT->CenterWindow = pWVT->bMaximized ? TRUE : FALSE;
+               HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iY / pWVT->PTEXTSIZE.y() ), ( USHORT ) ( iX / pWVT->PTEXTSIZE.x() ) );
+               pWVT->CenterWindow = bOldCentre;
+            }
          }
          break;
 
@@ -2765,5 +2768,3 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 }
 #endif
 /*----------------------------------------------------------------------*/
-
-

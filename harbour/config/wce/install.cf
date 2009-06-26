@@ -15,7 +15,7 @@ INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
 ifeq ($(CMD_EXE),yes)
 # cmd.exe no command line size limit
 INSTALL_RULE = \
-	-$(COMSPEC) /c for %f in ($(INSTALL_LIST)) do copy %f $(subst /,\,$(INSTALL_DIR))
+	-$(COMSPEC) /c for %%f in ($(INSTALL_LIST)) do copy "%%f" "$(subst /,\,$(INSTALL_DIR))"
 else
 # We have to use script to overcome the DOS limit of max 128 characters
 # NOTE: The empty line directly before 'endef' HAVE TO exist!

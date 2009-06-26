@@ -294,7 +294,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
       case VT_BSTR:
       {
          char* szString = WideToAnsi( pVariant->n1.n2.n3.bstrVal );
-         hb_itemPutCPtr2( pItem, szString );
+         hb_itemPutCPtr( pItem, szString );
          break;
       }
 
@@ -602,11 +602,11 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
    if( lOleError == S_OK )
    {
       if( variant.n1.n2.vt == VT_UNKNOWN )
-         lOleError = HB_VTBL( variant.n1.n2.n3.punkVal )->QueryInterface( 
+         lOleError = HB_VTBL( variant.n1.n2.n3.punkVal )->QueryInterface(
                             HB_THIS_( variant.n1.n2.n3.punkVal )
                             HB_ID_REF( IID_IEnumVARIANT ), ( void** ) ( void * ) &pEnum );
       else if( variant.n1.n2.vt == VT_DISPATCH )
-         lOleError = HB_VTBL( variant.n1.n2.n3.pdispVal )->QueryInterface( 
+         lOleError = HB_VTBL( variant.n1.n2.n3.pdispVal )->QueryInterface(
                             HB_THIS_( variant.n1.n2.n3.pdispVal )
                             HB_ID_REF( IID_IEnumVARIANT ), ( void** ) ( void * ) &pEnum );
       else
@@ -689,7 +689,7 @@ HB_FUNC( WIN_OLEERRORTEXT )
       case DISP_E_TYPEMISMATCH:     hb_retc_const( "DISP_E_TYPEMISMATCH" );      break;
       case DISP_E_UNKNOWNINTERFACE: hb_retc_const( "DISP_E_UNKNOWNINTERFACE" );  break;
       case DISP_E_PARAMNOTOPTIONAL: hb_retc_const( "DISP_E_PARAMNOTOPTIONAL" );  break;
-      default:                      
+      default:
       {
          char   buf[ 16 ];
 
@@ -762,7 +762,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
    /* Try property get and invoke */
 
    pMemberArray = szMethodWide;
-   lOleError = HB_VTBL( pDisp )->GetIDsOfNames( HB_THIS_( pDisp ) HB_ID_REF( IID_NULL ), 
+   lOleError = HB_VTBL( pDisp )->GetIDsOfNames( HB_THIS_( pDisp ) HB_ID_REF( IID_NULL ),
                                                 &pMemberArray, 1, LOCALE_USER_DEFAULT, &dispid );
    hb_xfree( szMethodWide );
 

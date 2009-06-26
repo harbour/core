@@ -81,16 +81,16 @@ Section "Main components" hb_main
   File /nonfatal "$%HB_INSTALL_PREFIX%\ChangeLog*"
 
   SetOutPath $INSTDIR\bin
-  File "$%HB_BIN_INSTALL%\*.*"
+  File "$%HB_INSTALL_PREFIX%\bin\*.*"
 
   SetOutPath $INSTDIR\lib
-  File "$%HB_LIB_INSTALL%\*.*"
+  File /r "$%HB_INSTALL_PREFIX%\lib\*.*"
 
   SetOutPath $INSTDIR\include
-  File "$%HB_INC_INSTALL%\*.*"
+  File "$%HB_INSTALL_PREFIX%\include\*.*"
 
   SetOutPath $INSTDIR\doc
-  File /r "$%HB_DOC_INSTALL%\*.*"
+  File /r "$%HB_INSTALL_PREFIX%\doc\*.*"
 
   ; Write the installation path into the registry
 ; WriteRegStr HKLM "Software\Harbour" "Install_Dir" "$INSTDIR"

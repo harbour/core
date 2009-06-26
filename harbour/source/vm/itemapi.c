@@ -63,6 +63,7 @@
  *    hb_itemGetDL()
  *    hb_itemGetNI()
  *    hb_itemGetCPtr()
+ *    hb_itemGetCLPtr()
  *    hb_itemGetCLen()
  *    hb_itemGetNLen()
  *    hb_itemPutCConst()
@@ -347,11 +348,11 @@ PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, ULONG ulLen )
    return pItem;
 }
 
-PHB_ITEM hb_itemPutCPtr2( PHB_ITEM pItem, char * szText )
+PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText )
 {
    ULONG ulLen;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCPtr2(%p, %s)", pItem, szText));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCPtr(%p, %s)", pItem, szText));
 
    if( pItem )
    {
@@ -385,11 +386,6 @@ PHB_ITEM hb_itemPutCPtr2( PHB_ITEM pItem, char * szText )
    }
 
    return pItem;
-}
-
-PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
-{
-   return hb_itemPutCLPtr( pItem, szText, ulLen );
 }
 
 PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )

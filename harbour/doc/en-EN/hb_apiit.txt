@@ -947,7 +947,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      hb_itemPutCPtr2()
+ *      hb_itemPutCPtr()
  *  $CATEGORY$
  *      Item API
  *  $ONELINER$
@@ -956,7 +956,7 @@
  *      C Prototype
  *
  *      #include <hbapiitm.h>
- *      hb_itemPutCPtr2( PHB_ITEM pItem, char * szText ) --> ( PHB_ITEM )pResult
+ *      hb_itemPutCPtr( PHB_ITEM pItem, char * szText ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
  *
@@ -2074,4 +2074,3 @@
  *
  *  $END$
  */
-

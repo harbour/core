@@ -110,8 +110,7 @@ extern HB_EXPORT PHB_ITEM     hb_itemPutC      ( PHB_ITEM pItem, const char * sz
 extern HB_EXPORT PHB_ITEM     hb_itemPutCL     ( PHB_ITEM pItem, const char * szText, ULONG ulLen );
 extern HB_EXPORT PHB_ITEM     hb_itemPutCConst ( PHB_ITEM pItem, const char * szText );
 extern HB_EXPORT PHB_ITEM     hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, ULONG ulLen );
-extern HB_EXPORT PHB_ITEM     hb_itemPutCPtr2  ( PHB_ITEM pItem, char * szText );
-extern HB_EXPORT PHB_ITEM     hb_itemPutCPtr   ( PHB_ITEM pItem, char * szText, ULONG ulLen );
+extern HB_EXPORT PHB_ITEM     hb_itemPutCPtr   ( PHB_ITEM pItem, char * szText );
 extern HB_EXPORT PHB_ITEM     hb_itemPutCLPtr  ( PHB_ITEM pItem, char * szText, ULONG ulLen );
 extern HB_EXPORT void         hb_itemSetCMemo  ( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM     hb_itemPutD      ( PHB_ITEM pItem, int iYear, int iMonth, int iDay );

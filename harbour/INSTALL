@@ -51,7 +51,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       3.) GNU Make is included in the source package. No configuration
           is needed.
 
-      > set HB_COMPILER=<mingw|msvc|watcom|bcc|pocc|...>
+      > set HB_COMPILER=<mingw|msvc|watcom|bcc|pocc|cygwin|...>
       > set HB_INSTALL_PREFIX=<DIR>
       > make_gnu.bat install
 
@@ -67,24 +67,11 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
                results will be created under the current directory tree.
              - With mingw, sh.exe (part of MSYS) mustn't be in the PATH.
 
-   Windows with MinGW + MSYS
-   -------------------------
-   (for plain MinGW *without* MSYS, which is the recommended way: see above)
+   Windows with MinGW + MSYS or Cygwin
+   -----------------------------------
 
-      Make sure to have MSYS and MinGW properly configured.
-      MSYS should be put in PATH *before* MinGW.
-
-      > set HB_INSTALL_PREFIX=<DIR>
-      > sh make_gnu.sh install
-
-      To test it, go to <DIR>/bin directory and type:
-      > hbmk2 ../tests/hello.prg
-      > hello
-      You should see 'Hello world!' on screen.
-
-   Windows with Cygwin
-   -------------------
-      Make sure to have Cygwin properly configured.
+      This is an *alternative build method* using bash script directly.
+      For the primary and recommended method: see above
 
       > set HB_INSTALL_PREFIX=<DIR>
       > sh make_gnu.sh install
@@ -94,7 +81,9 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       > hello
       You should see 'Hello world!' on screen.
 
-      NOTE: <DIR> should use Cygwin drive notation: /cygdrive/c for C:
+      NOTES: - With mingw, MSYS must be in PATH *before* MinGW.
+             - With cygwin, <DIR> should use Cygwin drive
+               notation: /cygdrive/c for C:
 
    DOS
    ---
@@ -269,7 +258,12 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_REBUILD_PARSER=yes     To rebuild the language parsers. Typically
                                you only need this if your are Harbour core
                                developer modifying the parser.
-                               This requires GNU Bison 1.28 or upper.
+                               This requires GNU Bison 1.28 or upper in PATH.
+   - HB_BUILD_LOG=[yes|no|<f>] Send stdout and stderr build outputs to <f>
+                               file. Leave it as it is if set to 'no' or left
+                               empty. 'yes' will output to an automatically
+                               formed filename, which you can retrieve from
+                               HB_BUILD_LOGFILE envvar.
 
    Cross building
    --------------
@@ -357,8 +351,7 @@ EXAMPLES
       ---
 
       --- MinGW GCC + MSYS
-      set PATH=C:\msys\1.0.11\bin;%PATH%
-      set PATH=C:\mingw\bin;%PATH%
+      set PATH=C:\msys\1.0.11\bin;C:\mingw\bin;%PATH%
       rem
       set HB_COMPILER=mingw
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
@@ -377,8 +370,8 @@ EXAMPLES
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
 
-      --- MinGW GCC for WinCE/ARM (requires native x86 Harbour binaries)
-      set PATH=C:\mingwce\opt\mingw32ce\bin;%PATH%
+      --- MinGW GCC for WinCE/ARM (requires native x86 Harbour binaries + Cygwin)
+      set PATH=C:\mingwce\opt\mingw32ce\bin;C:\cygwin\bin;%PATH%
       rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin
       set HB_PPGEN_PATH=%HB_BIN_COMPILE%
@@ -386,6 +379,14 @@ EXAMPLES
       set HB_ARCHITECTURE=wce
       set HB_COMPILER=mingwarm
       set HB_CCPREFIX=arm-wince-mingw32ce-
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- Cygwin GCC
+      set PATH=C:\cygwin\bin
+      rem
+      set HB_COMPILER=cygwin
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -517,7 +518,7 @@ EXAMPLES
       rem ; To create installation packages (.exe + .zip),
       rem   replace last line (calling make_gnu.bat) with these two:
       set HB_DIR_NSIS=%ProgramFiles%\NSIS\
-      call mpkg_win.bat > log-%HB_COMPILER%.txt 2>&1
+      call mpkg_win.bat
       -->8--
 
    DOS
@@ -558,8 +559,8 @@ EXAMPLES
       --8<--
       rem ; To create installation packages (.zip),
       rem   replace last line (calling make_gnu.bat) with this one:
-      rem   (this will only work when using Windows host)
-      call mpkg_dos.bat > log-%HB_COMPILER%.txt 2>&1
+      rem   (this will only work when using Windows NT or upper host)
+      call mpkg_dos.bat
       -->8--
 
    OS/2

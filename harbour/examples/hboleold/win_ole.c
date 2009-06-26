@@ -718,12 +718,12 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
                case VT_BYREF | VT_BSTR:
                  SysFreeString( *pVariant->n1.n2.n3.pbstrVal );
                  sString = hb_oleWideToAnsi( *( pVariant->n1.n2.n3.pbstrVal ) );
-                 hb_itemPutCPtr2( pItem, sString );
+                 hb_itemPutCPtr( pItem, sString );
                  break;
 
                case VT_BSTR:
                  sString = hb_oleWideToAnsi( pVariant->n1.n2.n3.bstrVal );
-                 hb_itemPutCPtr2( pItem, sString );
+                 hb_itemPutCPtr( pItem, sString );
                  break;
 
                case VT_BYREF | VT_BOOL:
@@ -1033,7 +1033,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
             sString = hb_oleWideToAnsi( pVariant->n1.n2.n3.bstrVal );
 
          if( sString )
-            hb_itemPutCPtr2( pItem, sString );
+            hb_itemPutCPtr( pItem, sString );
          else
             hb_itemPutC( pItem, NULL );
 

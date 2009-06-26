@@ -2301,7 +2301,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             char * szTitle = NULL;
             if( hb_gt_wvt_GetWindowTitle( pWVT->hWnd, &szTitle ) )
-               pInfo->pResult = hb_itemPutCPtr2( pInfo->pResult, szTitle );
+               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, szTitle );
             else
                pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )

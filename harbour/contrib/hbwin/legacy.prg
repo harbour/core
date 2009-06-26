@@ -110,7 +110,7 @@ METHOD New( xOle, cClass ) CLASS TOLEAUTO
       ENDIF
    ELSEIF ISCHARACTER( xOle )
       hOle := __OleCreateObject( xOle )
-      IF Empty( hOle )
+      IF ! Empty( hOle )
          ::__hObj := hOle
          ::cClassName := xOle
       ELSE

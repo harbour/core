@@ -1514,6 +1514,13 @@ HB_FUNC( __MVSAVE )
          buffer[ 0 ] = '\x1A';
          hb_fsWrite( fhnd, buffer, 1 );
 
+         /* NOTE: Here, we're not CA-Cl*pper compatible by default settings.
+                  [vszakats] */
+#ifndef HB_C52_STRICT
+         if( hb_setGetHardCommit() )
+            hb_fsCommit( fhnd );
+#endif
+
          hb_fsClose( fhnd );
       }
 
