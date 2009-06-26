@@ -443,7 +443,7 @@ void hb_xexit_thread( void )
 #endif
 }
 
-void hb_xsetfilename( char * szValue )
+void hb_xsetfilename( const char * szValue )
 {
 #ifdef HB_FM_STATISTICS
    hb_strncpy( s_szFileName, szValue, sizeof( s_szFileName ) - 1 );
@@ -452,7 +452,7 @@ void hb_xsetfilename( char * szValue )
 #endif
 }
 
-void hb_xsetinfo( char * szValue )
+void hb_xsetinfo( const char * szValue )
 {
 #ifdef HB_FM_STATISTICS
    hb_strncpy( s_szInfo, szValue, sizeof( s_szInfo ) - 1 );

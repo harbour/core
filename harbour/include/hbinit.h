@@ -57,8 +57,7 @@
 
 HB_EXTERN_BEGIN
 
-extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* old module symbols initialization */
-extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, USHORT uiPcodeVer ); /* module symbols initialization with extended information */
+extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, USHORT uiPcodeVer ); /* module symbols initialization with extended information */
 
 #if defined(_MSC_VER) && \
     !defined(__LCC__) && !defined(__POCC__) && !defined(__XCC__)
@@ -103,7 +102,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSym
       static PHB_SYMB symbols = symbols_table; \
       void func( void ) \
       { \
-         symbols = hb_vmProcessSymbolsEx( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
+         symbols = hb_vmProcessSymbols( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
       }
 
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \
@@ -127,7 +126,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSym
       static PHB_SYMB symbols = symbols_table; \
       static void __attribute__ ((constructor)) func( void ) \
       { \
-         symbols = hb_vmProcessSymbolsEx( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
+         symbols = hb_vmProcessSymbols( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
       }
 
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \
@@ -155,7 +154,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSym
       static PHB_SYMB symbols = symbols_table; \
       static int func( void ) \
       { \
-         symbols = hb_vmProcessSymbolsEx( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
+         symbols = hb_vmProcessSymbols( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
          return 0; \
       }
 
@@ -182,7 +181,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSym
 
    #define HB_INIT_SYMBOLS_EX_END( func, module, id, vpcode ) \
       }; \
-      static PHB_SYMB symbols = hb_vmProcessSymbolsEx( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
+      static PHB_SYMB symbols = hb_vmProcessSymbols( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
 
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \
       static int func( void ) \
@@ -217,7 +216,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSym
       static PHB_SYMB symbols = symbols_table; \
       static void func( void ) \
       { \
-         symbols = hb_vmProcessSymbolsEx( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
+         symbols = hb_vmProcessSymbols( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
       }
 
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \

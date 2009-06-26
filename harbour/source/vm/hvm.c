@@ -7785,11 +7785,11 @@ static void hb_vmVerifyPCodeVersion( const char * szModuleName, USHORT uiPCodeVe
 /*
  * module symbols initialization with extended information
  */
-PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiModuleSymbols,
-                                          const char * szModuleName, ULONG ulID,
-                                          USHORT uiPCodeVer )
+PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiModuleSymbols,
+                              const char * szModuleName, ULONG ulID,
+                              USHORT uiPCodeVer )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessSymbolsEx(%p,%hu,%s,%lu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPCodeVer));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessSymbols(%p,%hu,%s,%lu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPCodeVer));
 
    hb_vmVerifyPCodeVersion( szModuleName, uiPCodeVer );
    return hb_vmRegisterSymbols( pSymbols, uiModuleSymbols, szModuleName, ulID,
@@ -7804,28 +7804,6 @@ PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, USHORT uiModuleSymbols,
 
    hb_vmVerifyPCodeVersion( szModuleName, uiPCodeVer );
    return hb_vmRegisterSymbols( pSymbols, uiModuleSymbols, szModuleName, ulID,
-                                TRUE, TRUE )->pModuleSymbols;
-}
-
-/*
- * old module symbols initialization - do not use it.
- */
-PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessSymbols(%p,%hu)", pSymbols, uiSymbols));
-
-   return hb_vmRegisterSymbols( pSymbols, uiSymbols, "", 0L,
-                                s_fCloneSym, s_fCloneSym )->pModuleSymbols;
-}
-
-/*
- * old function - do not use it.
- */
-PHB_SYMB hb_vmProcessDllSymbols( PHB_SYMB pSymbols, USHORT uiModuleSymbols )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessDllSymbols(%p,%hu)", pSymbols, uiModuleSymbols));
-
-   return hb_vmRegisterSymbols( pSymbols, uiModuleSymbols, "", 0L,
                                 TRUE, TRUE )->pModuleSymbols;
 }
 

@@ -878,7 +878,7 @@ void hb_macroTextValue( HB_ITEM_PTR pItem )
    }
 }
 
-char * hb_macroGetType( HB_ITEM_PTR pItem )
+const char * hb_macroGetType( HB_ITEM_PTR pItem )
 {
    HB_STACK_TLS_PRELOAD
    const char * szType;
@@ -981,7 +981,7 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
    else
       szType = "U";
 
-   return ( char * ) szType;
+   return szType;
 }
 
 /*

@@ -74,8 +74,7 @@ extern HB_EXPORT void     hb_vmAtQuit( HB_INIT_FUNC pFunc, void * cargo );
 
 /* Harbour virtual machine functions */
 extern HB_EXPORT void     hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols ) HB_FLATTEN_ATTR;  /* invokes the virtual machine */
-extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* old module symbols initialization */
-extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, USHORT uiPcodeVer ); /* module symbols initialization with extended information */
+extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, USHORT uiPcodeVer ); /* module symbols initialization with extended information */
 extern HB_EXPORT PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, USHORT uiPcodeVer ); /* module symbols initialization with extended information */
 
 

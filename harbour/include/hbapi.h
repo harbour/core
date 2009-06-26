@@ -492,8 +492,8 @@ extern HB_EXPORT void   hb_xfree( void * pMem );                    /* frees mem
 extern HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize ) HB_ALLOC_SIZE_ATTR( 2 ); /* reallocates memory */
 extern HB_EXPORT ULONG  hb_xsize( void * pMem );                    /* returns the size of an allocated memory block */
 extern HB_EXPORT ULONG  hb_xquery( USHORT uiMode );                 /* Query different types of memory information */
-extern HB_EXPORT void   hb_xsetfilename( char * szValue );
-extern HB_EXPORT void   hb_xsetinfo( char * szValue );
+extern HB_EXPORT void   hb_xsetfilename( const char * szValue );
+extern HB_EXPORT void   hb_xsetinfo( const char * szValue );
 #ifdef _HB_API_INTERNAL_
 extern void hb_xinit_thread( void );
 extern void hb_xexit_thread( void );
@@ -1023,7 +1023,7 @@ extern void       hb_memvarUpdatePrivatesBase( void ); /* Update PRIVATE base of
 extern void       hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
 extern char *     hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen );
 extern void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue );
-extern int        hb_memvarScope( char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
+extern int        hb_memvarScope( const char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
 extern PHB_ITEM   hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
 extern PHB_ITEM   hb_memvarGetValueBySym( PHB_DYNS pDynSym );
 extern PHB_ITEM   hb_memvarSaveInArray( int iScope, BOOL fCopy ); /* create array with visible memvar references or copies respecting given memvars scope */
@@ -1075,7 +1075,7 @@ extern char * hb_macroTextSymbol( const char *szString, ULONG ulLength, BOOL *pf
 extern char * hb_macroExpandString( const char *szString, ULONG ulLength, BOOL *pfNewString ); /* expands valid '&' operator */
 extern void   hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags ); /* compiles and evaluates an aliased macro expression */
 extern void   hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags ); /* compiles and evaluates an aliased macro expression */
-extern char * hb_macroGetType( HB_ITEM_PTR pItem ); /* determine the type of an expression */
+extern const char * hb_macroGetType( HB_ITEM_PTR pItem ); /* determine the type of an expression */
 
 /* idle states */
 extern void   hb_releaseCPU( void );

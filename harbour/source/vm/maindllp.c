@@ -148,7 +148,7 @@ HB_EXPORT BOOL WINAPI HB_DLL_ENTRY_POINT( HINSTANCE hInstance, DWORD fdwReason, 
 }
 
 /* module symbols initialization with extended information */
-PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, USHORT uiPcodeVer )
+PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, USHORT uiPcodeVer )
 {
    static FARPROC s_pProcessSymbols = NULL;
 
@@ -179,27 +179,6 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
     *    may we issue an error ? */
 }
 
-
-/* module symbols initialization - old function do not use it */
-PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
-{
-   /* notice hb_vmProcessDllSymbols() must be used, and not
-    * hb_vmProcessSymbols(), as some special symbols pointers
-    * adjustments are required
-    */
-   static FARPROC s_pProcessSymbols = NULL;
-
-   if( !s_pProcessSymbols )
-      s_pProcessSymbols = hb_getProcAddress( HBTEXT( "_hb_vmProcessDllSymbols" ) );
-
-   if( s_pProcessSymbols )
-      return ( ( VM_PROCESS_DLL_SYMBOLS ) s_pProcessSymbols )( pSymbols,
-                                                               uiSymbols );
-   /* else
-    *    may we issue an error ? */
-
-   return pSymbols;
-}
 
 /* extend API implementation for pcode DLLs */
 

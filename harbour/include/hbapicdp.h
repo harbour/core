@@ -305,8 +305,8 @@ extern HB_EXPORT PHB_CODEPAGE  hb_vmCDP( void );
 extern HB_EXPORT void          hb_vmSetCDP( PHB_CODEPAGE pCDP );
 
 extern HB_EXPORT BOOL          hb_cdpRegister( PHB_CODEPAGE );
-extern HB_EXPORT char *        hb_cdpSelectID( const char * );
-extern HB_EXPORT char *        hb_cdpID( void );
+extern HB_EXPORT const char *  hb_cdpSelectID( const char * );
+extern HB_EXPORT const char *  hb_cdpID( void );
 extern HB_EXPORT PHB_CODEPAGE  hb_cdpSelect( PHB_CODEPAGE );
 extern HB_EXPORT PHB_CODEPAGE  hb_cdpFind( const char * );
 extern HB_EXPORT void          hb_cdpTranslate( char *, PHB_CODEPAGE, PHB_CODEPAGE );

@@ -798,7 +798,7 @@ static int hb_memvarScopeGet( PHB_DYNS pDynVar )
 
 /* This function checks the scope of passed variable name
  */
-int hb_memvarScope( char * szVarName, ULONG ulLength )
+int hb_memvarScope( const char * szVarName, ULONG ulLength )
 {
    PHB_DYNS pDynVar;
 

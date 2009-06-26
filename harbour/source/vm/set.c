@@ -409,8 +409,8 @@ static void hb_set_OSCODEPAGE( PHB_SET_STRUCT pSet )
 #ifndef HB_CDP_SUPPORT_OFF
 
    {
-      char * pszHostCDP = hb_cdpID();
-      char * pszFileCDP = pSet->HB_SET_OSCODEPAGE;
+      const char * pszHostCDP = hb_cdpID();
+      const char * pszFileCDP = pSet->HB_SET_OSCODEPAGE;
 
       if( pszFileCDP && pszFileCDP[ 0 ] && pszHostCDP )
       {

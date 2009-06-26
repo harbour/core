@@ -469,7 +469,7 @@ PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE cdpage )
    return cdpOld;
 }
 
-char * hb_cdpID( void )
+const char * hb_cdpID( void )
 {
    PHB_CODEPAGE cdp;
 
@@ -477,12 +477,12 @@ char * hb_cdpID( void )
 
    cdp = hb_vmCDP();
 
-   return cdp ? ( char * ) cdp->id : NULL;
+   return cdp ? cdp->id : NULL;
 }
 
-char * hb_cdpSelectID( const char *pszID )
+const char * hb_cdpSelectID( const char *pszID )
 {
-   char *pszIDOld;
+   const char *pszIDOld;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_cdpSelectID(%s)", pszID ) );
 
@@ -502,12 +502,12 @@ void hb_cdpTranslate( char *psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
          {
             char * ptr;
 
-            ptr = strchr( ( char * ) cdpIn->CharsUpper, *psz );
+            ptr = strchr( cdpIn->CharsUpper, *psz );
             if( ptr )
                *psz = cdpOut->CharsUpper[ ptr - cdpIn->CharsUpper ];
             else
             {
-               ptr = strchr( ( char * ) cdpIn->CharsLower, *psz );
+               ptr = strchr( cdpIn->CharsLower, *psz );
                if( ptr )
                   *psz = cdpOut->CharsLower[ ptr - cdpIn->CharsLower ];
             }
@@ -544,12 +544,12 @@ void hb_cdpnTranslate( char *psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, ULONG
          {
             char * ptr;
 
-            ptr = strchr( ( char * ) cdpIn->CharsUpper, *psz );
+            ptr = strchr( cdpIn->CharsUpper, *psz );
             if( ptr )
                *psz = cdpOut->CharsUpper[ ptr - cdpIn->CharsUpper ];
             else
             {
-               ptr = strchr( ( char * ) cdpIn->CharsLower, *psz );
+               ptr = strchr( cdpIn->CharsLower, *psz );
                if( ptr )
                   *psz = cdpOut->CharsLower[ ptr - cdpIn->CharsLower ];
             }
