@@ -610,7 +610,7 @@ void * hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam )
 /* NOTE: Caller should not modify the buffer returned by this function.
          [vszakats] */
 
-char * hb_parvc( int iParam, ... )
+const char * hb_parvc( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -635,14 +635,14 @@ char * hb_parvc( int iParam, ... )
          va_end( va );
 
          pItem = hb_arrayGetItemPtr( pItem, ulArrayIndex );
-         return pItem && HB_IS_STRING( pItem ) ? ( char * ) hb_itemGetCPtr( pItem ) : NULL;
+         return pItem && HB_IS_STRING( pItem ) ? hb_itemGetCPtr( pItem ) : NULL;
       }
    }
 
-   return ( char * ) NULL;
+   return NULL;
 }
 
-char * hb_parvcx( int iParam, ... )
+const char * hb_parvcx( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -666,11 +666,11 @@ char * hb_parvcx( int iParam, ... )
          ulArrayIndex = va_arg( va, ULONG );
          va_end( va );
 
-         return ( char * ) hb_arrayGetCPtr( pItem, ulArrayIndex );
+         return hb_arrayGetCPtr( pItem, ulArrayIndex );
       }
    }
 
-   return ( char * ) "";
+   return "";
 }
 
 ULONG  hb_parvclen( int iParam, ... )

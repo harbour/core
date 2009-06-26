@@ -606,7 +606,7 @@ void        HB_EXPORT   hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT 
 void        HB_EXPORT   hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib );
 
 LPWORD      HB_EXPORT   lpwAlign( LPWORD lpIn );
-int         HB_EXPORT   nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn );
+int         HB_EXPORT   nCopyAnsiToWideChar( LPWORD lpWCStr, LPCSTR lpAnsiIn );
 BOOL        HB_EXPORT CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 BOOL        HB_EXPORT CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 

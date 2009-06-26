@@ -182,7 +182,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
 /* extend API implementation for pcode DLLs */
 
-char * hb_parvc( int iParam, ... )
+const char * hb_parvc( int iParam, ... )
 {
    FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), HBTEXT( "_hb_extIsArray" ) );
    FARPROC pParC = GetProcAddress( GetModuleHandle( NULL ), HBTEXT( "_hb_parvc" ) );

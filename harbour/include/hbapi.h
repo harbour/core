@@ -629,8 +629,8 @@ extern HB_EXPORT void *       hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam
 extern HB_EXPORT LONGLONG     hb_parnll( int iParam ); /* retrieve a numeric parameter as a long long */
 #endif
 
-extern HB_EXPORT char *       hb_parvc( int iParam, ... ); /* retrieve a string parameter */
-extern HB_EXPORT char *       hb_parvcx( int iParam, ... ); /* retrieve a string parameter */
+extern HB_EXPORT const char * hb_parvc( int iParam, ... ); /* retrieve a string parameter */
+extern HB_EXPORT const char * hb_parvcx( int iParam, ... ); /* retrieve a string parameter */
 extern HB_EXPORT ULONG        hb_parvclen( int iParam, ... ); /* retrieve a string parameter length */
 extern HB_EXPORT ULONG        hb_parvcsiz( int iParam, ... ); /* retrieve a by-reference string parameter length, including terminator */
 extern HB_EXPORT char *       hb_parvds( int iParam, ... ); /* retrieve a date as a string yyyymmdd */

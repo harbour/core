@@ -1184,7 +1184,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
    if ( hb_parinfa( 1,11 ) == HB_IT_STRING )
    {
-      nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parvc( 1,11 ) ) ;
+      nchar = nCopyAnsiToWideChar( p, (LPCSTR) hb_parvc( 1,11 ) ) ;
       p += nchar   ;
    }
    else
@@ -1199,7 +1199,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
      *p++ = (short) hb_parvni(1,13) ;
      *p++ = (short) hb_parvni(1,14) ;
 
-     nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parvc( 1,15 ) ) ;
+     nchar = nCopyAnsiToWideChar( p, (LPCSTR) hb_parvc( 1,15 ) ) ;
      p += nchar ;
    } ;
 
@@ -1226,7 +1226,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
       if ( hb_parinfa( 10,i ) == HB_IT_STRING )
       {
-         nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parvc( 10,i ) ) ; /* class */
+         nchar = nCopyAnsiToWideChar( p, (LPCSTR) hb_parvc( 10,i ) ) ; /* class */
          p += nchar ;
          }
       else
@@ -1237,7 +1237,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
       if ( hb_parinfa( 11,i ) == HB_IT_STRING )
          {
-         nchar = nCopyAnsiToWideChar( p, (LPSTR) hb_parvc( 11,i ) ) ;  /*  text  */
+         nchar = nCopyAnsiToWideChar( p, (LPCSTR) hb_parvc( 11,i ) ) ;  /*  text  */
          p += nchar ;
          }
       else
@@ -1273,7 +1273,7 @@ LPWORD lpwAlign( LPWORD lpIn )
 
 /*----------------------------------------------------------------------*/
 
-int nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn )
+int nCopyAnsiToWideChar( LPWORD lpWCStr, LPCSTR lpAnsiIn )
 {
    int nChar = 0;
 
