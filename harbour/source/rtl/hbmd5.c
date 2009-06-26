@@ -79,14 +79,14 @@ PRG functions:
 
 C functions:
 
-   void hb_md5( BYTE * data, ULONG datalen, BYTE * digest )
+   void hb_md5( const char * data, ULONG datalen, char * digest )
       Parameters:
          data     - input byte stream
          datalen  - input stream length
          digest   - raw (unformatted) MD5 digest buffer
                     (at least 16 bytes long)
 
-   void hb_md5file( HB_FHANDLE hFile, BYTE * digest )
+   void hb_md5file( HB_FHANDLE hFile, char * digest )
       Parameters:
          hFile    - file handle
          digest   - raw (unformatted) MD5 digest buffer
@@ -250,31 +250,31 @@ static void hb_md5accinit( UINT32 accum[] )
    accum[ 3 ] = 0x10325476;
 }
 
-static void hb_md5val( UINT32 accum[], BYTE * md5val )
+static void hb_md5val( UINT32 accum[], char * md5val )
 {
    int i, n;
 
    for( i = 0; i < 4; i++ )
    {
       for( n = 0; n < 4; n++ )
-         *md5val++ = ( BYTE ) ( ( accum[ i ] >> ( n << 3 ) ) & 0xFF );
+         *md5val++ = ( char ) ( ( accum[ i ] >> ( n << 3 ) ) & 0xFF );
    }
 }
 
-static void hb_md5digest( BYTE * md5val, char * digest )
+static void hb_md5digest( const char * md5val, char * digest )
 {
    int i, b;
 
    for( i = 0; i < 16; i++ )
    {
-      b = ( md5val[ i ] >> 4 ) & 0x0F;
+      b = ( ( UCHAR ) md5val[ i ] >> 4 ) & 0x0F;
       *digest++ = ( char ) ( b + ( b > 9 ? 'a' - 10 : '0' ) );
-      b = md5val[ i ] & 0x0F;
+      b = ( UCHAR ) md5val[ i ] & 0x0F;
       *digest++ = ( char ) ( b + ( b > 9 ? 'a' - 10 : '0' ) );
    }
 }
 
-void hb_md5( BYTE * ucData, ULONG ulLen, BYTE * ucDigest )
+void hb_md5( const char * ucData, ULONG ulLen, char * ucDigest )
 {
    UCHAR buf[ 128 ];
    MD5_BUF md5;
@@ -316,16 +316,17 @@ void hb_md5( BYTE * ucData, ULONG ulLen, BYTE * ucDigest )
    hb_md5val( md5.accum, ucDigest );
 }
 
-void hb_md5file( HB_FHANDLE hFile, BYTE * ucDigest )
+void hb_md5file( HB_FHANDLE hFile, char * ucDigest )
 {
    MD5_BUF md5;
    ULONG n;
    int i;
    HB_FOFFSET flen = 0;
-   UCHAR buf[ 128 ], * readbuf = ( UCHAR * ) hb_xgrab( MAX_FBUF );
+   UCHAR buf[ 128 ];
+   BYTE * readbuf = ( BYTE * ) hb_xgrab( MAX_FBUF );
 
    hb_md5accinit( md5.accum );
-   n = hb_fsReadLarge( hFile, ( BYTE * ) readbuf, MAX_FBUF );
+   n = hb_fsReadLarge( hFile, readbuf, MAX_FBUF );
    flen += n;
    while( n == MAX_FBUF )
    {
@@ -334,7 +335,7 @@ void hb_md5file( HB_FHANDLE hFile, BYTE * ucDigest )
          memcpy( md5.buf, readbuf + ( i << 6 ), 64 );
          hb_md5go( &md5 );
       }
-      n = hb_fsReadLarge( hFile, ( BYTE * ) readbuf, MAX_FBUF );
+      n = hb_fsReadLarge( hFile, readbuf, MAX_FBUF );
       flen += n;
    }
    hb_fsClose( hFile );
@@ -376,10 +377,10 @@ HB_FUNC( HB_MD5 )
    if( pszStr )
    {
       ULONG ulLen = hb_parclen( 1 );
-      BYTE dststr[ 16 ];
+      char dststr[ 16 ];
       char digest[ 33 ];
 
-      hb_md5( ( BYTE * ) pszStr, ulLen, dststr );
+      hb_md5( pszStr, ulLen, dststr );
       hb_md5digest( dststr, digest );
       hb_retclen( digest, 32 );
    }
@@ -397,7 +398,7 @@ HB_FUNC( HB_MD5FILE )
 
       if( hFile != FS_ERROR )
       {
-         BYTE dststr[ 16 ];
+         char dststr[ 16 ];
          char digest[ 33 ];
 
          hb_md5file( hFile, dststr );

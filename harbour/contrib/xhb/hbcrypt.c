@@ -328,9 +328,9 @@ void nxs_xorcyclic(
    ULONG crc1l, crc2l, crc3l;
 
    /* Build the cyclic key seed */
-   crc1 = keylen >= 2 ? hb_adler32( 0, ( BYTE * ) key + 0, keylen - 2 ) : 1;
-   crc2 = keylen >= 4 ? hb_adler32( 0, ( BYTE * ) key + 2, keylen - 4 ) : 1;
-   crc3 = keylen >= 2 ? hb_adler32( 0, ( BYTE * ) key + 1, keylen - 2 ) : 1;
+   crc1 = keylen >= 2 ? hb_adler32( 0, ( const char * ) key + 0, keylen - 2 ) : 1;
+   crc2 = keylen >= 4 ? hb_adler32( 0, ( const char * ) key + 2, keylen - 4 ) : 1;
+   crc3 = keylen >= 2 ? hb_adler32( 0, ( const char * ) key + 1, keylen - 2 ) : 1;
 
    crc1l = crc1 = nxs_cyclic_sequence( crc1 );
    crc2l = crc2 = nxs_cyclic_sequence( crc2 );

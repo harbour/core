@@ -502,12 +502,14 @@ void hb_cdpTranslate( char *psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
          {
             char * ptr;
 
-            ptr = strchr( cdpIn->CharsUpper, *psz );
+            /* ( char * ) casting for MSVC */
+            ptr = strchr( ( char * ) cdpIn->CharsUpper, *psz );
             if( ptr )
                *psz = cdpOut->CharsUpper[ ptr - cdpIn->CharsUpper ];
             else
             {
-               ptr = strchr( cdpIn->CharsLower, *psz );
+               /* ( char * ) casting for MSVC */
+               ptr = strchr( ( char * ) cdpIn->CharsLower, *psz );
                if( ptr )
                   *psz = cdpOut->CharsLower[ ptr - cdpIn->CharsLower ];
             }
@@ -544,12 +546,14 @@ void hb_cdpnTranslate( char *psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, ULONG
          {
             char * ptr;
 
-            ptr = strchr( cdpIn->CharsUpper, *psz );
+            /* ( char * ) casting for MSVC */
+            ptr = strchr( ( char * ) cdpIn->CharsUpper, *psz );
             if( ptr )
                *psz = cdpOut->CharsUpper[ ptr - cdpIn->CharsUpper ];
             else
             {
-               ptr = strchr( cdpIn->CharsLower, *psz );
+               /* ( char * ) casting for MSVC */
+               ptr = strchr( ( char * ) cdpIn->CharsLower, *psz );
                if( ptr )
                   *psz = cdpOut->CharsLower[ ptr - cdpIn->CharsLower ];
             }
@@ -1520,7 +1524,7 @@ HB_FUNC( HB_UTF8LEN )
    const char *szString = hb_parc( 1 );
 
    if( szString )
-      hb_retnint( hb_cdpUTF8StringLength( ( BYTE * ) szString, hb_parclen( 1 ) ) );
+      hb_retnint( hb_cdpUTF8StringLength( ( const BYTE * ) szString, hb_parclen( 1 ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

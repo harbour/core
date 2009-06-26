@@ -223,8 +223,8 @@ typedef struct
    void     (* MouseSetBounds) ( HB_GT_PTR, int, int, int, int );
    void     (* MouseGetBounds) ( HB_GT_PTR, int *, int *, int *, int * );
    int      (* MouseStorageSize) ( HB_GT_PTR );
-   void     (* MouseSaveState) ( HB_GT_PTR, BYTE * );
-   void     (* MouseRestoreState) ( HB_GT_PTR, const BYTE * );
+   void     (* MouseSaveState) ( HB_GT_PTR, char * );
+   void     (* MouseRestoreState) ( HB_GT_PTR, const char * );
    int      (* MouseGetDoubleClickSpeed) ( HB_GT_PTR );
    void     (* MouseSetDoubleClickSpeed) ( HB_GT_PTR, int );
    int      (* MouseCountButton) ( HB_GT_PTR );

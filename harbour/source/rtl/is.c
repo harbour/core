@@ -66,9 +66,10 @@ BOOL hb_charIsAlpha( int iChar )
    else
    {
       PHB_CODEPAGE cdp = hb_vmCDP();
+      /* ( char * ) casting for MSVC */
       if( cdp && cdp->nChars && iChar &&
-          ( strchr( cdp->CharsUpper, iChar ) ||
-            strchr( cdp->CharsLower, iChar ) ) )
+          ( strchr( ( char * ) cdp->CharsUpper, iChar ) ||
+            strchr( ( char * ) cdp->CharsLower, iChar ) ) )
          return TRUE;
    }
 #endif
@@ -84,8 +85,9 @@ BOOL hb_charIsLower( int iChar )
    else
    {
       PHB_CODEPAGE cdp = hb_vmCDP();
+      /* ( char * ) casting for MSVC */
       if( cdp && cdp->nChars && iChar &&
-          strchr( cdp->CharsUpper, iChar ) )
+          strchr( ( char * ) cdp->CharsUpper, iChar ) )
          return TRUE;
    }
 #endif
@@ -101,8 +103,9 @@ BOOL hb_charIsUpper( int iChar )
    else
    {
       PHB_CODEPAGE cdp = hb_vmCDP();
+      /* ( char * ) casting for MSVC */
       if( cdp && cdp->nChars && iChar &&
-          strchr( cdp->CharsLower, iChar ) )
+          strchr( ( char * ) cdp->CharsLower, iChar ) )
          return TRUE;
    }
 #endif
@@ -124,9 +127,10 @@ HB_FUNC( ISALPHA )
       {
 #ifndef HB_CDP_SUPPORT_OFF
          PHB_CODEPAGE cdp = hb_vmCDP();
+         /* ( char * ) casting for MSVC */
          if( cdp && cdp->nChars && szString[ 0 ] &&
-             ( strchr( cdp->CharsUpper, *szString ) ||
-               strchr( cdp->CharsLower, *szString ) ) )
+             ( strchr( ( char * ) cdp->CharsUpper, *szString ) ||
+               strchr( ( char * ) cdp->CharsLower, *szString ) ) )
             hb_retl( TRUE );
          else
 #endif
@@ -160,8 +164,9 @@ HB_FUNC( ISUPPER )
       {
 #ifndef HB_CDP_SUPPORT_OFF
          PHB_CODEPAGE cdp = hb_vmCDP();
+         /* ( char * ) casting for MSVC */
          if( cdp && cdp->nChars && szString[ 0 ] &&
-             strchr( cdp->CharsUpper, *szString ) )
+             strchr( ( char * ) cdp->CharsUpper, *szString ) )
             hb_retl( TRUE );
          else
 #endif
@@ -186,8 +191,9 @@ HB_FUNC( ISLOWER )
       {
 #ifndef HB_CDP_SUPPORT_OFF
          PHB_CODEPAGE cdp = hb_vmCDP();
+         /* ( char * ) casting for MSVC */
          if( cdp && cdp->nChars && szString[ 0 ] &&
-             strchr( cdp->CharsLower, *szString ) )
+             strchr( ( char * ) cdp->CharsLower, *szString ) )
             hb_retl( TRUE );
          else
 #endif

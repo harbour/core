@@ -327,7 +327,7 @@ typedef struct _HSXINFO
    BOOL       fHdrChanged;      /* new records, header file has to be updated */
    BOOL       fWrLocked;        /* the index is locked for writing */
 
-   BYTE *     pSearchVal;       /* current search value for HS_NEXT */
+   char *     pSearchVal;       /* current search value for HS_NEXT */
    ULONG      ulSearch;         /* the length of search value */
    BYTE *     pSearchKey;       /* current search key val for HS_NEXT */
    ULONG      ulCurrRec;        /* current record for HS_NEXT */
@@ -388,7 +388,7 @@ static HB_CRITICAL_NEW( s_hsxMtx );
 #endif
 
 /* the conversion table for ASCII alpha pairs */
-static const BYTE hb_hsxHashArray[] = {
+static const UCHAR hb_hsxHashArray[] = {
 /*        A   B   C   D   E   F   G   H   I   J   K   L   M   N   O   P   Q   R   S   T   U   W   V   X   Y   Z */
 /* A */   7,102,222,185, 19, 48,167,  4,173,  4, 79,251,194,250,  7,187,  7,251,209,249, 41,101, 39, 29, 71, 40,
 /* B */ 156,  3,  7,  7,149,  7,  7,  7,172,  7,  7,100,  7,  7,148,  7,  7,107, 38,  7,126,  7,  7,  7,  7,  7,
@@ -428,8 +428,8 @@ static int hb_hsxHashVal( int c1, int c2, int iKeyBits,
       PHB_CODEPAGE cdp;
       if( iFilter == 3 && ( cdp = hb_vmCDP() )->nChars )
       {
-         c1 = ( BYTE ) cdp->s_upper[ c1 ];
-         c2 = ( BYTE ) cdp->s_upper[ c2 ];
+         c1 = ( UCHAR ) cdp->s_upper[ c1 ];
+         c2 = ( UCHAR ) cdp->s_upper[ c2 ];
       }
       else
 #endif
@@ -463,7 +463,7 @@ static int hb_hsxHashVal( int c1, int c2, int iKeyBits,
    return iBitNum;
 }
 
-static void hb_hsxHashStr( BYTE * pStr, ULONG ulLen, BYTE * pKey, int iKeySize,
+static void hb_hsxHashStr( const char * pStr, ULONG ulLen, BYTE * pKey, int iKeySize,
                            BOOL fNoCase, int iFilter, BOOL fUseHash )
 {
    int c1, c2, iBitNum, iKeyBits = iKeySize << 3;
@@ -472,18 +472,18 @@ static void hb_hsxHashStr( BYTE * pStr, ULONG ulLen, BYTE * pKey, int iKeySize,
 #if 0
 /* This code keeps the strict CFTS behavior which stops string
    manipulating at first chr(0) character */
-   if( pStr && ulLen-- && ( c1 = *pStr++ ) != 0 )
+   if( pStr && ulLen-- && ( c1 = ( UCHAR ) *pStr++ ) != 0 )
    {
-      while( ulLen-- && ( c2 = *pStr++ ) != 0 )
+      while( ulLen-- && ( c2 = ( UCHAR ) *pStr++ ) != 0 )
       {
 #else
    /* This version can work well with embedded 0 characters */
    if( pStr && ulLen-- )
    {
-      c1 = *pStr++;
+      c1 = ( UCHAR ) *pStr++;
       while( ulLen-- )
       {
-         c2 = *pStr++;
+         c2 = ( UCHAR ) *pStr++;
 #endif
          iBitNum = hb_hsxHashVal( c1, c2, iKeyBits, fNoCase, iFilter, fUseHash );
          if( iBitNum-- )
@@ -495,11 +495,11 @@ static void hb_hsxHashStr( BYTE * pStr, ULONG ulLen, BYTE * pKey, int iKeySize,
    }
 }
 
-static int hb_hsxStrCmp( BYTE * pSub, ULONG ulSub, BYTE * pStr, ULONG ulLen,
+static int hb_hsxStrCmp( const char * pSub, ULONG ulSub, const char * pStr, ULONG ulLen,
                          BOOL fNoCase, int iFilter )
 {
    BOOL fResult = FALSE;
-   BYTE c1, c2;
+   UCHAR c1, c2;
    ULONG ul;
 
    if( ulSub == 0 )
@@ -510,16 +510,16 @@ static int hb_hsxStrCmp( BYTE * pSub, ULONG ulSub, BYTE * pStr, ULONG ulLen,
       fResult = TRUE;
       for( ul = 0; fResult && ul < ulSub; ul++ )
       {
-         c1 = pSub[ ul ];
-         c2 = pStr[ ul ];
+         c1 = ( UCHAR ) pSub[ ul ];
+         c2 = ( UCHAR ) pStr[ ul ];
          if( fNoCase )
          {
 #ifndef HB_CDP_SUPPORT_OFF
             PHB_CODEPAGE cdp;
             if( iFilter == 3 && ( cdp = hb_vmCDP() )->nChars )
             {
-               c1 = ( BYTE ) cdp->s_upper[ c1 ];
-               c2 = ( BYTE ) cdp->s_upper[ c2 ];
+               c1 = ( UCHAR ) cdp->s_upper[ c1 ];
+               c2 = ( UCHAR ) cdp->s_upper[ c2 ];
             }
             else
 #endif
@@ -593,7 +593,7 @@ static int hb_hsxEval( int iHandle, PHB_ITEM pExpr, BYTE *pKey, BOOL *fDeleted )
 {
    LPHSXINFO pHSX = hb_hsxGetPointer( iHandle );
    int iResult = HSX_SUCCESS;
-   BYTE * pStr;
+   const char * pStr;
    ULONG ulLen;
 
    if( ! pHSX )
@@ -607,7 +607,7 @@ static int hb_hsxEval( int iHandle, PHB_ITEM pExpr, BYTE *pKey, BOOL *fDeleted )
 
    if( hb_itemType( pExpr ) & HB_IT_STRING )
    {
-      pStr = ( BYTE * ) hb_itemGetCPtr( pExpr );
+      pStr = hb_itemGetCPtr( pExpr );
       ulLen = hb_itemGetCLen( pExpr );
       if( fDeleted )
          *fDeleted = FALSE;
@@ -626,7 +626,7 @@ static int hb_hsxEval( int iHandle, PHB_ITEM pExpr, BYTE *pKey, BOOL *fDeleted )
             iArea = 0;
       }
       pItem = hb_vmEvalBlockOrMacro( pExpr );
-      pStr = ( BYTE * ) hb_itemGetCPtr( pItem );
+      pStr = hb_itemGetCPtr( pItem );
       ulLen = hb_itemGetCLen( pItem );
       if( fDeleted )
       {
@@ -1143,7 +1143,7 @@ static int hb_hsxAdd( int iHandle, ULONG *pulRecNo, PHB_ITEM pExpr, BOOL fDelete
    return iRetVal;
 }
 
-static int hb_hsxSeekSet( int iHandle, BYTE * pStr, ULONG ulLen )
+static int hb_hsxSeekSet( int iHandle, const char * pStr, ULONG ulLen )
 {
    LPHSXINFO pHSX = hb_hsxGetPointer( iHandle );
    int iRetVal;
@@ -1160,7 +1160,7 @@ static int hb_hsxSeekSet( int iHandle, BYTE * pStr, ULONG ulLen )
       {
          if( pHSX->pSearchVal )
             hb_xfree( pHSX->pSearchVal );
-         pHSX->pSearchVal = ( BYTE * ) hb_xgrab( ulLen + 1 );
+         pHSX->pSearchVal = ( char * ) hb_xgrab( ulLen + 1 );
          memcpy( pHSX->pSearchVal, pStr, ulLen );
          pHSX->pSearchVal[ ulLen ] = '\0';
          pHSX->ulSearch = ulLen;
@@ -1267,8 +1267,8 @@ static void hb_hsxExpDestroy( PHB_ITEM pItem )
    hb_itemRelease( pItem );
 }
 
-static int hb_hsxVerify( int iHandle, BYTE * szText, ULONG ulLen,
-                         BYTE * szSub, ULONG ulSub, int iType )
+static int hb_hsxVerify( int iHandle, const char * szText, ULONG ulLen,
+                         const char * szSub, ULONG ulSub, int iType )
 {
    LPHSXINFO pHSX = hb_hsxGetPointer( iHandle );
    int iResult;
@@ -1604,7 +1604,7 @@ static int hb_hsxIndex( const char * szFile, PHB_ITEM pExpr, int iKeySize,
    return hb_hsxOpen( szFile, iBufSize, iMode );
 }
 
-static int hb_hsxFilter( int iHandle, BYTE * pSeek, ULONG ulSeek,
+static int hb_hsxFilter( int iHandle, const char * pSeek, ULONG ulSeek,
                          PHB_ITEM pVerify, int iVerifyType )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -1661,7 +1661,7 @@ static int hb_hsxFilter( int iHandle, BYTE * pSeek, ULONG ulSeek,
          if( errCode == HB_FAILURE )
             break;
          fValid = hb_hsxVerify( iHandle,
-                                ( BYTE * ) hb_itemGetCPtr( pArea->valResult ),
+                                hb_itemGetCPtr( pArea->valResult ),
                                 hb_itemGetCLen( pArea->valResult ),
                                 pSeek, ulSeek, iVerifyType ) == HSX_SUCCESS;
       }
@@ -1824,7 +1824,7 @@ HB_FUNC( HS_KEYCOUNT )
    Sets up parameters for a subsequent hs_Next() call */
 HB_FUNC( HS_SET )
 {
-   BYTE * pStr = ( BYTE * ) hb_parc( 2 );
+   const char * pStr = hb_parc( 2 );
    int iRetVal = HSX_BADPARMS;
 
    if( pStr && hb_param( 1, HB_IT_NUMERIC ) )
@@ -1836,7 +1836,8 @@ HB_FUNC( HS_SET )
    Sets a WA RM filter using a HiPer-SEEK index */
 HB_FUNC( HS_FILTER )
 {
-   BYTE * szText = ( BYTE * ) hb_parc( 2 ), * pBuff = NULL;
+   const char * szText = hb_parc( 2 );
+   char * pBuff = NULL;
    ULONG ulLen = hb_parclen( 2 ), ulRecords = 0, ull, ul;
    int iHandle = -1, iResult = HSX_BADPARMS;
    BOOL fNew = FALSE, fToken = TRUE;
@@ -1867,7 +1868,7 @@ HB_FUNC( HS_FILTER )
             ulLen = pHSX->ulSearch;
             if( ulLen && pHSX->pSearchVal )
             {
-               pBuff = ( BYTE * ) hb_xgrab( ulLen + 1 );
+               pBuff = ( char * ) hb_xgrab( ulLen + 1 );
                memcpy( pBuff, pHSX->pSearchVal, ulLen );
                pBuff[ ulLen ] = '\0';
                szText = pBuff;
@@ -1962,7 +1963,7 @@ HB_FUNC( HS_VERIFY )
    {
       int iHandle = hb_parni( 1 );
       PHB_ITEM pExpr = hb_param( 2, HB_IT_BLOCK );
-      BYTE * szText = NULL;
+      const char * szText = NULL;
       ULONG ulLen = 0;
       LPHSXINFO pHSX;
 
@@ -1982,18 +1983,18 @@ HB_FUNC( HS_VERIFY )
       }
       if( pExpr )
       {
-         szText = ( BYTE * ) hb_itemGetCPtr( pExpr );
+         szText = hb_itemGetCPtr( pExpr );
          ulLen = hb_itemGetCLen( pExpr );
       }
 
       hb_retni( hb_hsxVerify( hb_parni( 1 ), szText, ulLen,
-                              ( BYTE * ) hb_parc( 3 ), hb_parclen( 3 ),
+                              hb_parc( 3 ), hb_parclen( 3 ),
                               hb_parni( 4 ) ) );
    }
    else
    {
       PHB_ITEM pExpr = hb_param( 1, HB_IT_BLOCK );
-      BYTE * szSub = ( BYTE * ) hb_parc( 2 ), * szText = NULL;
+      const char * szSub = hb_parc( 2 ), * szText = NULL;
       ULONG ulSub = hb_parclen( 2 ), ulLen = 0;
       BOOL fIgnoreCase = hb_parl( 3 );
 
@@ -2003,7 +2004,7 @@ HB_FUNC( HS_VERIFY )
 
          if( pExpr )
          {
-            szText = ( BYTE * ) hb_itemGetCPtr( pExpr );
+            szText = hb_itemGetCPtr( pExpr );
             ulLen = hb_itemGetCLen( pExpr );
          }
       }

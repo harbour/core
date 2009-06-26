@@ -598,7 +598,7 @@ static BOOL hb_dbfWriteRecord( DBFAREAP pArea )
  */
 static BOOL hb_dbfPasswordSet( DBFAREAP pArea, PHB_ITEM pPasswd, BOOL fRaw )
 {
-   BYTE byBuffer[ 8 ];
+   char pKeyBuffer[ 8 ];
    ULONG ulLen;
    BOOL fKeySet = FALSE, fSet;
 
@@ -614,16 +614,16 @@ static BOOL hb_dbfPasswordSet( DBFAREAP pArea, PHB_ITEM pPasswd, BOOL fRaw )
       {
          if( ulLen < 8 )
          {
-            memcpy( byBuffer, hb_itemGetCPtr( pPasswd ), ulLen );
-            memset( byBuffer + ulLen, '\0', 8 - ulLen );
+            memcpy( pKeyBuffer, hb_itemGetCPtr( pPasswd ), ulLen );
+            memset( pKeyBuffer + ulLen, '\0', 8 - ulLen );
          }
          else
-            memcpy( byBuffer, hb_itemGetCPtr( pPasswd ), 8 );
+            memcpy( pKeyBuffer, hb_itemGetCPtr( pPasswd ), 8 );
       }
    }
 
    if( pArea->pCryptKey )
-      hb_itemPutCL( pPasswd, ( char * ) pArea->pCryptKey, 8 );
+      hb_itemPutCL( pPasswd, pArea->pCryptKey, 8 );
    else
       hb_itemClear( pPasswd );
 
@@ -648,13 +648,13 @@ static BOOL hb_dbfPasswordSet( DBFAREAP pArea, PHB_ITEM pPasswd, BOOL fRaw )
          /* at this moment only one encryption method is used,
             I'll add other later, [druzus] */
          pArea->bCryptType = DB_CRYPT_SIX;
-         pArea->pCryptKey = ( BYTE * ) hb_xgrab( 8 );
+         pArea->pCryptKey = ( char * ) hb_xgrab( 8 );
 
          /* SIX encode the key with its own value before use */
          if( !fRaw )
-            hb_sxEnCrypt( byBuffer, pArea->pCryptKey, byBuffer, 8 );
+            hb_sxEnCrypt( pKeyBuffer, pArea->pCryptKey, pKeyBuffer, 8 );
          else
-            memcpy( pArea->pCryptKey, byBuffer, 8 );
+            memcpy( pArea->pCryptKey, pKeyBuffer, 8 );
          fKeySet = TRUE;
       }
    }
@@ -678,7 +678,7 @@ static void hb_dbfTableCrypt( DBFAREAP pArea, PHB_ITEM pPasswd, BOOL fEncrypt )
       if( SELF_RECCOUNT( ( AREAP ) pArea, &ulRecords ) == HB_SUCCESS )
       {
          HB_ERRCODE errCode = HB_SUCCESS;
-         BYTE * pOldCryptKey, * pNewCryptKey;
+         char * pOldCryptKey, * pNewCryptKey;
 
          pOldCryptKey = pArea->pCryptKey;
          pArea->pCryptKey = NULL;
@@ -1856,7 +1856,8 @@ static HB_ERRCODE hb_dbfGetRec( DBFAREAP pArea, BYTE ** pBuffer )
          pArea->pRecord[ 0 ] = pArea->pRecord[ 0 ] == 'D' ? '*' : ' ';
          if( pArea->pCryptKey && pArea->bCryptType == DB_CRYPT_SIX )
          {
-            hb_sxDeCrypt( pArea->pRecord + 1, pArea->pRecord + 1,
+            hb_sxDeCrypt( ( const char * ) pArea->pRecord + 1,
+                          ( char * ) pArea->pRecord + 1,
                           pArea->pCryptKey, pArea->uiRecordLen - 1 );
          }
       }
@@ -2257,8 +2258,9 @@ static HB_ERRCODE hb_dbfPutRec( DBFAREAP pArea, BYTE * pBuffer )
          {
             pRecord = ( BYTE * ) hb_xgrab( pArea->uiRecordLen );
             pRecord[ 0 ] = pArea->fDeleted ? 'D' : 'E';
-            hb_sxEnCrypt( pArea->pRecord + 1, pRecord + 1, pArea->pCryptKey,
-                          pArea->uiRecordLen - 1 );
+            hb_sxEnCrypt( ( const char * ) pArea->pRecord + 1,
+                          ( char * ) pRecord + 1, 
+                          pArea->pCryptKey, pArea->uiRecordLen - 1 );
          }
       }
 

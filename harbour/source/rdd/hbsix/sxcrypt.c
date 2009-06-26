@@ -60,7 +60,7 @@
 #define rnd_mul1  0x0de6d
 #define rnd_mul2  0x0278d
 
-static UINT32 hb_sxInitSeed( BYTE * pKeyVal, UINT16 * puiKey )
+static UINT32 hb_sxInitSeed( const char * pKeyVal, UINT16 * puiKey )
 {
    UINT32 ulSeed = 0;
    int i;
@@ -75,7 +75,7 @@ static UINT32 hb_sxInitSeed( BYTE * pKeyVal, UINT16 * puiKey )
    return ( ulSeed << 16 ) + ( ulSeed >> 16 );
 }
 
-static UINT32 hb_sxNextSeed( UINT32 ulSeed, BYTE * pKeyVal, UINT16 * puiKey )
+static UINT32 hb_sxNextSeed( UINT32 ulSeed, const char * pKeyVal, UINT16 * puiKey )
 {
    UINT32 ulTemp1, ulTemp2;
    UINT16 uiSeedLo, uiSeedHi;
@@ -92,48 +92,48 @@ static UINT32 hb_sxNextSeed( UINT32 ulSeed, BYTE * pKeyVal, UINT16 * puiKey )
    return ulSeed;
 }
 
-void hb_sxEnCrypt( BYTE * pSrc, BYTE * pDst, BYTE * pKeyVal, ULONG ulLen )
+void hb_sxEnCrypt( const char * pSrc, char * pDst, const char * pKeyVal, ULONG ulLen )
 {
    UINT32 ulSeed;
    UINT16 uiKey;
-   BYTE uChar, uShft;
+   UCHAR ucChar, ucShft;
    ULONG ul;
    int i;
 
    ulSeed = hb_sxInitSeed( pKeyVal, &uiKey );
    for( ul = 0, i = 0; ul < ulLen; ul++ )
    {
-      uChar = pSrc[ul];
-      uShft = uiKey & 0x07;
-      pDst[ul] = ( uChar >> uShft ) + ( uChar << ( 8 - uShft ) ) +
-                 ( uiKey & 0xFF );
+      ucChar = ( UCHAR ) pSrc[ul];
+      ucShft = ( UCHAR ) ( uiKey & 0x07 );
+      pDst[ul] = ( ( ucChar >> ucShft ) + ( ucChar << ( 8 - ucShft ) ) +
+                   ( uiKey & 0xFF ) );
       ulSeed = hb_sxNextSeed( ulSeed, &pKeyVal[i], &uiKey );
       if( ++i == 7 )
          i = 0;
    }
 }
 
-void hb_sxDeCrypt( BYTE * pSrc, BYTE * pDst, BYTE * pKeyVal, ULONG ulLen )
+void hb_sxDeCrypt( const char * pSrc, char * pDst, const char * pKeyVal, ULONG ulLen )
 {
    UINT32 ulSeed;
    UINT16 uiKey;
-   BYTE uChar, uShft;
+   UCHAR ucChar, ucShft;
    ULONG ul;
    int i;
 
    ulSeed = hb_sxInitSeed( pKeyVal, &uiKey );
    for( ul = 0, i = 0; ul < ulLen; ul++ )
    {
-      uChar = pSrc[ul] - ( uiKey & 0xFF );
-      uShft = uiKey & 0x07;
-      pDst[ul] = ( uChar << uShft ) + ( uChar >> ( 8 - uShft ) );
+      ucChar = ( UCHAR ) pSrc[ul] - ( uiKey & 0xFF );
+      ucShft = ( UCHAR ) ( uiKey & 0x07 );
+      pDst[ul] = ( ( ucChar << ucShft ) + ( ucChar >> ( 8 - ucShft ) ) );
       ulSeed = hb_sxNextSeed( ulSeed, &pKeyVal[i], &uiKey );
       if( ++i == 7 )
          i = 0;
    }
 }
 
-static BOOL _hb_sxGetKey( PHB_ITEM pKeyItem, BYTE * pKeyVal )
+static BOOL _hb_sxGetKey( PHB_ITEM pKeyItem, char * pKeyVal )
 {
    BOOL fResult = FALSE;
    PHB_ITEM pItem = NULL;
@@ -168,15 +168,15 @@ HB_FUNC( SX_ENCRYPT )
 {
    if( hb_pcount() > 0 )
    {
-      BYTE keyBuf[ 8 ];
+      char keyBuf[ 8 ];
       ULONG ulLen = hb_parclen( 1 );
 
       if( ulLen > 0 && _hb_sxGetKey( hb_param( 2, HB_IT_ANY ), keyBuf ) )
       {
-         BYTE * pDst = ( BYTE * ) hb_xgrab( ulLen + 1 );
-         hb_sxEnCrypt( ( BYTE * ) hb_parc( 1 ), pDst, keyBuf, ulLen );
+         char * pDst = ( char * ) hb_xgrab( ulLen + 1 );
+         hb_sxEnCrypt( hb_parc( 1 ), pDst, keyBuf, ulLen );
          pDst[ ulLen ] = 0;
-         hb_retclen_buffer( ( char * ) pDst, ulLen );
+         hb_retclen_buffer( pDst, ulLen );
       }
       else
       {
@@ -189,15 +189,15 @@ HB_FUNC( SX_DECRYPT )
 {
    if( hb_pcount() > 0 )
    {
-      BYTE keyBuf[ 8 ];
+      char keyBuf[ 8 ];
       ULONG ulLen = hb_parclen( 1 );
 
       if( ulLen > 0 && _hb_sxGetKey( hb_param( 2, HB_IT_ANY ), keyBuf ) )
       {
-         BYTE * pDst = ( BYTE * ) hb_xgrab( ulLen + 1 );
-         hb_sxDeCrypt( ( BYTE * ) hb_parc( 1 ), pDst, keyBuf, ulLen );
+         char * pDst = ( char * ) hb_xgrab( ulLen + 1 );
+         hb_sxDeCrypt( hb_parc( 1 ), pDst, keyBuf, ulLen );
          pDst[ ulLen ] = 0;
-         hb_retclen_buffer( ( char * ) pDst, ulLen );
+         hb_retclen_buffer( pDst, ulLen );
       }
       else
       {

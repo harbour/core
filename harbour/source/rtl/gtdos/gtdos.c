@@ -643,7 +643,7 @@ static int hb_gt_dos_mouse_StorageSize( PHB_GT pGT )
    return iSize;
 }
 
-static void hb_gt_dos_mouse_SaveState( PHB_GT pGT, BYTE * pBuffer )
+static void hb_gt_dos_mouse_SaveState( PHB_GT pGT, char * pBuffer )
 {
    if( s_fMousePresent )
    {
@@ -680,7 +680,7 @@ static void hb_gt_dos_mouse_SaveState( PHB_GT pGT, BYTE * pBuffer )
    }
 }
 
-static void hb_gt_dos_mouse_RestoreState( PHB_GT pGT, const BYTE * pBuffer )
+static void hb_gt_dos_mouse_RestoreState( PHB_GT pGT, const char * pBuffer )
 {
    if( s_fMousePresent )
    {

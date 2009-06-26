@@ -372,7 +372,7 @@ static PHB_ITEM hb_i18n_serialize( PHB_I18N_TRANS pI18N )
       char * pI18Nbuffer;
       PHB_ITEM pKey, pValue;
 
-      ulCRC = hb_crc32( 0, ( const BYTE * ) pBuffer, ulSize );
+      ulCRC = hb_crc32( 0, pBuffer, ulSize );
       pI18Nbuffer = ( char * ) memset( hb_xgrab( ulSize + HB_I18N_HEADER_SIZE + 1 ),
                                        0, HB_I18N_HEADER_SIZE );
       memcpy( pI18Nbuffer + HB_I18N_HEADER_SIZE, pBuffer, ulSize );
@@ -404,8 +404,7 @@ static BOOL hb_i18n_headercheck( const char * pBuffer, ULONG ulLen )
           ( ulLen == 0 ||
             ( HB_GET_LE_UINT32( &pBuffer[ HB_I18N_SIZE_OFFSET ] ) == ulLen &&
               HB_GET_LE_UINT32( &pBuffer[ HB_I18N_CRC_OFFSET ] ) ==
-               hb_crc32( 0, ( const BYTE * ) pBuffer + HB_I18N_HEADER_SIZE,
-                         ulLen ) ) );
+               hb_crc32( 0, pBuffer + HB_I18N_HEADER_SIZE, ulLen ) ) );
 }
 
 static PHB_I18N_TRANS hb_i18n_deserialize( PHB_ITEM pItem )

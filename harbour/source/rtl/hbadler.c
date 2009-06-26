@@ -59,7 +59,7 @@
 #define BASE 65521   /* largest prime smaller than 65536 */
 #define NMAX 5552    /* largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
 
-ULONG hb_adler32( ULONG adler, const BYTE *buf, ULONG len )
+ULONG hb_adler32( ULONG adler, const char *buf, ULONG len )
 {
    ULONG s1 = adler & 0xffff;
    ULONG s2 = ( adler >> 16 ) & 0xffff;
@@ -90,7 +90,7 @@ HB_FUNC( HB_ADLER32 )
    const char * szString = hb_parc( 1 );
 
    if( szString )
-      hb_retnint( hb_adler32( ( ULONG ) hb_parnl( 2 ), ( BYTE * ) szString, hb_parclen( 1 ) ) );
+      hb_retnint( hb_adler32( ( ULONG ) hb_parnl( 2 ), szString, hb_parclen( 1 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

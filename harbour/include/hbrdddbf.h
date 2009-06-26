@@ -246,7 +246,7 @@ typedef struct _DBFAREA
    LPDBRELINFO lpdbPendingRel;      /* Pointer to parent rel struct */
    ULONG *  pLocksPos;              /* List of records locked */
    ULONG    ulNumLocksPos;          /* Number of records locked */
-   BYTE *   pCryptKey;              /* Pointer to encryption key */
+   char *   pCryptKey;              /* Pointer to encryption key */
    PHB_DYNS pTriggerSym;            /* DynSym pointer to trigger function */
 } DBFAREA;
 

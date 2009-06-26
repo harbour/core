@@ -141,10 +141,10 @@ HB_FUNC( MSAVESTATE )
 
    if( iLen > 0 )
    {
-      BYTE * pBuffer = ( BYTE * ) hb_xgrab( iLen + 1 );
+      char * pBuffer = ( char * ) hb_xgrab( iLen + 1 );
 
       hb_mouseSaveState( pBuffer );
-      hb_retclen_buffer( ( char * ) pBuffer, iLen );
+      hb_retclen_buffer( pBuffer, iLen );
    }
    else
       hb_retc( NULL );
@@ -154,7 +154,7 @@ HB_FUNC( MRESTSTATE )
 {
    if( HB_ISCHAR( 1 ) && hb_parclen( 1 ) == ( ULONG ) hb_mouseStorageSize() )
    {
-      hb_mouseRestoreState( ( const BYTE * ) hb_parc( 1 ) );
+      hb_mouseRestoreState( hb_parc( 1 ) );
    }
 }
 
