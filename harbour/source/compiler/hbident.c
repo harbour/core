@@ -33,14 +33,14 @@
 
 #define HB_IDENT_TABLE_SIZE    509UL
 
-/* create a new identifier or return the existing one 
+/* create a new identifier or return the existing one
 */
 const char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType )
 {
    const char * szIdent;
 
-   szIdent = ( char * ) hb_hashTableFind( HB_COMP_PARAM->pIdentifiers,
-                                          ( void * ) szName );
+   szIdent = ( const char * ) hb_hashTableFind( HB_COMP_PARAM->pIdentifiers,
+                                                ( const void * ) szName );
    if( !szIdent )
    {
       /*
@@ -53,7 +53,7 @@ const char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType 
          szIdent = szName;
 
       hb_hashTableAdd( HB_COMP_PARAM->pIdentifiers,
-                       ( void * ) szIdent, ( void * ) szIdent );
+                       ( const void * ) szIdent, ( const void * ) szIdent );
    }
    else if( iType == HB_IDENT_FREE )
       hb_xfree( ( void * ) szName );
@@ -79,7 +79,7 @@ static HB_HASH_FUNC( hb_comp_IdentKey )    /* ULONG func (void *Value, void *Car
 /* deletes an identifier */
 static HB_HASH_FUNC( hb_comp_IdentDel )
 {
-   hb_xfree( Value );
+   hb_xfree( ( void * ) Value );
    HB_SYMBOL_UNUSED( HashPtr );
    HB_SYMBOL_UNUSED( Cargo );
    return 1;

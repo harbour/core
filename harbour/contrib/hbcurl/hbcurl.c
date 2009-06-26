@@ -126,10 +126,10 @@ typedef struct _HB_CURL
 #define HB_CURL_HASH_TABLE_SIZE    509UL
 
 /* returns a hash key */
-static HB_HASH_FUNC( hb_curl_HashKey )    /* ULONG func( void * Value, void * Cargo ) */
+static HB_HASH_FUNC( hb_curl_HashKey )    /* ULONG func( const void * Value, const void * Cargo ) */
 {
    ULONG ulSum = 0;
-   char * szName = ( char * ) Value;
+   const char * szName = ( const char * ) Value;
 
    while( *szName )
       ulSum += *szName++;
@@ -153,7 +153,7 @@ static HB_HASH_FUNC( hb_curl_HashDel )
 static HB_HASH_FUNC( hb_curl_HashCmp )
 {
    HB_SYMBOL_UNUSED( HashPtr );
-   return strcmp( ( char * ) Value, ( char * ) Cargo );
+   return strcmp( ( const char * ) Value, ( const char * ) Cargo );
 }
 
 static const char * hb_curl_StrHashNew( PHB_CURL hb_curl, const char * szValue )
@@ -164,11 +164,11 @@ static const char * hb_curl_StrHashNew( PHB_CURL hb_curl, const char * szValue )
       hb_curl->pHash = hb_hashTableCreate( HB_CURL_HASH_TABLE_SIZE,
                            hb_curl_HashKey, hb_curl_HashDel, hb_curl_HashCmp );
 
-   szHash = ( char * ) hb_hashTableFind( hb_curl->pHash, ( void * ) szValue );
+   szHash = ( char * ) hb_hashTableFind( hb_curl->pHash, ( const void * ) szValue );
    if( ! szHash )
    {
       szHash = hb_strdup( szValue );
-      hb_hashTableAdd( hb_curl->pHash, ( void * ) szHash, ( void * ) szHash );
+      hb_hashTableAdd( hb_curl->pHash, ( void * ) szHash, ( const void * ) szHash );
    }
    return szHash;
 }
