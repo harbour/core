@@ -4,6 +4,12 @@
 
 @echo off
 
+rem ---------------------------------------------------------------
+rem Harbour Project build script (for OS/2)
+rem
+rem Please read INSTALL for further information.
+rem ---------------------------------------------------------------
+
 rem Minimal initialization of environment variables for OS2 GCC build
 rem for further information about see make_gnu.bat
 

@@ -5,10 +5,10 @@
 @echo off
 
 rem ---------------------------------------------------------------
-rem Installer creator for Harbour Project
-rem
 rem Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
 rem See COPYING for licensing terms.
+rem
+rem Harbour Project installer creator script (for Windows/DOS)
 rem
 rem This script requires:
 rem    - Windows NT or upper
@@ -21,6 +21,8 @@ rem      (only for Windows builds)
 rem    - Info-ZIP zip.exe in PATH
 rem         https://sourceforge.net/project/showfiles.php?group_id=118012
 rem    - C compiler configured (see INSTALL doc)
+rem
+rem Please read INSTALL for further information.
 rem ---------------------------------------------------------------
 
 if not "%OS%" == "Windows_NT" echo This Harbour build script requires Windows NT or upper.

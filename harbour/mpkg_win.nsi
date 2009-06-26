@@ -3,19 +3,14 @@
 ;
 
 ; ---------------------------------------------------------------
-; NSIS installer script for Harbour Project
-;
 ; Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
 ; See COPYING for licensing terms.
 ;
-; NOTE: Do not try to use this script directly. It won't work.
+; Harbour Project Nullsoft installer script (for Windows/DOS)
+; [ Do not try to use this script directly. It won't work. ]
 ;
-;       See INSTALL how to create installation packages for
-;       Windows/DOS platforms.
+; Please read INSTALL for further information.
 ; ---------------------------------------------------------------
-
-; TODO: tests/examples
-; TODO: option: install .dlls to system paths
 
   SetCompressor /solid lzma
 

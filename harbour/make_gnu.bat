@@ -8,10 +8,9 @@ rem ---------------------------------------------------------------
 rem Copyright 1999-2009 Viktor Szakats (harbour.01 syenar.hu)
 rem See COPYING for licensing terms.
 rem
-rem Initialize environment for GNU Make system to build Harbour
+rem Harbour Project build script (for Windows/DOS)
 rem
-rem For further information about the GNU Make system please
-rem check doc/gmake.txt
+rem Please read INSTALL for further information.
 rem ---------------------------------------------------------------
 
 rem Setup defaults
@@ -129,13 +128,18 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    set _HB_MAKE=make.exe
 
    if not "%HB_ARCHITECTURE%" == "dos" goto _FM_WIN
+   if "%OS%" == "Windows_NT" goto _DOS_NT
    if not exist config\djg-make.exe goto SKIP_WINDLL
    set _HB_MAKE=config\djg-make.exe
-   goto _FM_DONE
+   goto SKIP_WINDLL
+   :_DOS_NT
+   if not exist "%~dp0config\djg-make.exe" goto SKIP_WINDLL
+   set _HB_MAKE="%~dp0config\djg-make.exe"
+   goto SKIP_WINDLL
 
    :_FM_WIN
-   if not exist config\mingw32-make.exe goto _FM_NOLOCAL
-   set _HB_MAKE=config\mingw32-make.exe
+   if not exist "%~dp0config\mingw32-make.exe" goto _FM_NOLOCAL
+   set _HB_MAKE="%~dp0config\mingw32-make.exe"
    goto _FM_DONE
    :_FM_NOLOCAL
    if not "%OS%" == "Windows_NT" goto _FM_DONE
@@ -161,7 +165,6 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    rem It will automatically build Harbour in two passes, one for
    rem the .dlls and a final pass for the regular version.
 
-   if     "%HB_ARCHITECTURE%" == "dos" goto SKIP_WINDLL
    if not "%HB_BUILD_DLL%" == "yes" goto SKIP_WINDLL
 
    if "%HB_COMPILER%%HB_CCPREFIX%" == "mingw64"  set HB_CCPREFIX=x86_64-pc-mingw32-

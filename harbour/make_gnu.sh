@@ -5,14 +5,12 @@
 #
 
 # ---------------------------------------------------------------
-# Template to initialize the environment before starting
-# the GNU make system for Harbour
-#
-# For further information about the GNU make system please
-# check doc/gmake.txt
-#
 # Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
 # See COPYING for licensing terms.
+#
+# Harbour Project build script (for *nix systems)
+#
+# Please read INSTALL for further information.
 # ---------------------------------------------------------------
 
 # ---------------------------------------------------------------
@@ -234,4 +232,3 @@ else
        find . -type d -name "$HB_ARCHITECTURE" | xargs rmdir 2> /dev/null
     fi
 fi
-
