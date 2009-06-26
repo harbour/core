@@ -378,14 +378,20 @@ HB_FUNC( HB_MD5 )
    {
       ULONG ulLen = hb_parclen( 1 );
       char dststr[ 16 ];
-      char digest[ 33 ];
 
       hb_md5( pszStr, ulLen, dststr );
-      hb_md5digest( dststr, digest );
-      hb_retclen( digest, 32 );
+
+      if( ! ISLOG( 2 ) || hb_parl( 2 ) )
+      {
+         char digest[ 32 + 1 ];
+         hb_md5digest( dststr, digest );
+         hb_retclen( digest, HB_SIZEOFARRAY( digest ) - 1 );
+      }
+      else
+         hb_retclen( dststr, HB_SIZEOFARRAY( dststr ) );
    }
    else
-      hb_retc( NULL ); /* return empty string on wrong call */
+      hb_retc_null(); /* return empty string on wrong call */
 }
 
 HB_FUNC( HB_MD5FILE )
@@ -399,13 +405,19 @@ HB_FUNC( HB_MD5FILE )
       if( hFile != FS_ERROR )
       {
          char dststr[ 16 ];
-         char digest[ 33 ];
 
          hb_md5file( hFile, dststr );
-         hb_md5digest( dststr, digest );
-         hb_retclen( digest, 32 );
+
+         if( ! ISLOG( 2 ) || hb_parl( 2 ) )
+         {
+            char digest[ 32 + 1 ];
+            hb_md5digest( dststr, digest );
+            hb_retclen( digest, HB_SIZEOFARRAY( digest ) - 1 );
+         }
+         else
+            hb_retclen( dststr, HB_SIZEOFARRAY( dststr ) );
          return;
       }
    }
-   hb_retc( NULL ); /* return empty string on wrong call */
+   hb_retc_null(); /* return empty string on wrong call */
 }

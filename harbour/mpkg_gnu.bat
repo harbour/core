@@ -20,8 +20,7 @@ rem         or HB_DIR_NSIS envvar set to its dir with an ending backslash.
 rem      (only for Windows builds)
 rem    - Info-ZIP zip.exe in PATH
 rem         https://sourceforge.net/project/showfiles.php?group_id=118012
-rem    - HB_COMPILER envvar configured (see INSTALL doc)
-rem    - C compiler and GNU Make configured (see INSTALL doc)
+rem    - C compiler configured (see INSTALL doc)
 rem ---------------------------------------------------------------
 
 if not "%OS%" == "Windows_NT" echo This Harbour build script requires Windows NT or upper.
