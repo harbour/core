@@ -316,16 +316,16 @@ extern HB_EXPORT int           hb_cdpicmp( const char *, ULONG, const char *, UL
 extern HB_EXPORT int           hb_cdpchrcmp( char, char, PHB_CODEPAGE );
 extern HB_EXPORT void          hb_cdpReleaseAll( void );
 
-extern HB_EXPORT USHORT        hb_cdpGetU16( PHB_CODEPAGE, BOOL, BYTE );
+extern HB_EXPORT USHORT        hb_cdpGetU16( PHB_CODEPAGE, BOOL, UCHAR );
 extern HB_EXPORT UCHAR         hb_cdpGetChar( PHB_CODEPAGE, BOOL, USHORT );
-extern HB_EXPORT BOOL          hb_cdpGetFromUTF8( PHB_CODEPAGE, BOOL, BYTE, int *, USHORT * );
-extern HB_EXPORT ULONG         hb_cdpStrnToUTF8( PHB_CODEPAGE, BOOL, const BYTE *, ULONG, BYTE * );
-extern HB_EXPORT ULONG         hb_cdpStrnToU16( PHB_CODEPAGE, BOOL, const BYTE *, ULONG, BYTE * );
-extern HB_EXPORT ULONG         hb_cdpStringInUTF8Length( PHB_CODEPAGE, BOOL, const BYTE *, ULONG );
-extern HB_EXPORT ULONG         hb_cdpUTF8ToStrn( PHB_CODEPAGE, BOOL, const BYTE *, ULONG, BYTE *, ULONG );
-extern HB_EXPORT ULONG         hb_cdpUTF8StringLength( const BYTE *, ULONG );
-extern HB_EXPORT BYTE *        hb_cdpUTF8StringSubstr( const BYTE *, ULONG, ULONG, ULONG, ULONG * );
-extern HB_EXPORT ULONG         hb_cdpUTF8StringPeek( const BYTE *, ULONG, ULONG );
+extern HB_EXPORT BOOL          hb_cdpGetFromUTF8( PHB_CODEPAGE, BOOL, UCHAR, int *, USHORT * );
+extern HB_EXPORT ULONG         hb_cdpStrnToUTF8( PHB_CODEPAGE, BOOL, const char *, ULONG, char * );
+extern HB_EXPORT ULONG         hb_cdpStrnToU16( PHB_CODEPAGE, BOOL, const char *, ULONG, char * );
+extern HB_EXPORT ULONG         hb_cdpStringInUTF8Length( PHB_CODEPAGE, BOOL, const char *, ULONG );
+extern HB_EXPORT ULONG         hb_cdpUTF8ToStrn( PHB_CODEPAGE, BOOL, const char *, ULONG, char *, ULONG );
+extern HB_EXPORT ULONG         hb_cdpUTF8StringLength( const char *, ULONG );
+extern HB_EXPORT char *        hb_cdpUTF8StringSubstr( const char *, ULONG, ULONG, ULONG, ULONG * );
+extern HB_EXPORT ULONG         hb_cdpUTF8StringPeek( const char *, ULONG, ULONG );
 
 HB_EXTERN_END
 
