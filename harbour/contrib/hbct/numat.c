@@ -87,9 +87,9 @@ HB_FUNC( NUMAT )
 {
    if( ( HB_ISCHAR( 1 ) ) && ( HB_ISCHAR( 2 ) ) )
    {
-      char *pcStringToMatch = ( char * ) hb_parc( 1 );
+      const char *pcStringToMatch = hb_parc( 1 );
       size_t sStrToMatchLen = ( size_t ) hb_parclen( 1 );
-      char *pcString = ( char * ) hb_parc( 2 );
+      const char *pcString = hb_parc( 2 );
       size_t sStrLen = ( size_t ) hb_parclen( 2 );
       int iMultiPass = ct_getatmupa();
       int iAtLike = ct_getatlike();

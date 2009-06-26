@@ -168,7 +168,7 @@ HB_FUNC( DBF2TEXT )
    const char * cSep = hb_parc( 6 );
    int nCount        = hb_parni( 7 );
 #ifndef HB_CDP_SUPPORT_OFF
-   PHB_CODEPAGE cdp  = hb_cdpFind( ( char * ) hb_parcx( 8 ) );
+   PHB_CODEPAGE cdp  = hb_cdpFind( hb_parcx( 8 ) );
 #endif
 
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();

@@ -92,8 +92,8 @@ HB_FUNC( STRSWAP )
        ( sStrLen2 = ( size_t ) hb_parclen( 2 ) ) > 0 )
    {
       /* get parameters */
-      char *pcString1 = ( char * ) hb_parc( 1 );
-      char *pcString2 = ( char * ) hb_parc( 2 );
+      const char *pcString1 = hb_parc( 1 );
+      const char *pcString2 = hb_parc( 2 );
       char *pcRet1 = NULL, *pcRet2 = NULL;
       int iChange1, iChange2;
       size_t sIndex, sCmpLen;

@@ -130,7 +130,7 @@ HB_FUNC( WINSETWINDOWTEXT )
    LPTSTR lpszText = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
 
    hb_retl( SetWindowText( ( HWND ) hb_parptr( 1 ), lpszText ) );
-   
+
    HB_TCHAR_FREE( lpszText );
 }
 
@@ -150,8 +150,8 @@ HB_FUNC( WINGETTEXT )
 
 HB_FUNC( MSGINFO )
 {
-   LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) ),
-          lpStr2 = HB_TCHAR_CONVTO( HB_ISCHAR( 2 ) ? hb_parc( 3 ) : ( char * ) "Information" );
+   LPCTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) ),
+           lpStr2 = HB_TCHAR_CONVTO( HB_ISCHAR( 2 ) ? hb_parc( 3 ) : "Information" );
 
    hb_retni( MessageBox( GetActiveWindow(), lpStr1, lpStr2, MB_OK | MB_ICONINFORMATION ) );
 
@@ -247,7 +247,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
          return DefWindowProc( ( HWND ) hWnd, message, wParam, lParam );
    }
 
-   return hb_parnl( -1, 1 );
+   return hb_parvnl( -1, 1 );
 }
 
 HB_FUNC( POSTQUITMESSAGE )

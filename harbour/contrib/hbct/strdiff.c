@@ -142,7 +142,7 @@ HB_FUNC( STRDIFF )
    if( HB_ISCHAR( 1 ) || HB_ISCHAR( 2 ) )
    {
       /* get parameters */
-      char *pcStr1, *pcStr2;
+      const char *pcStr1, *pcStr2;
       size_t sStrLen1, sStrLen2;
       int iReplace, iDelete, iInsert;
       int iAtLike = ct_getatlike();
@@ -152,23 +152,23 @@ HB_FUNC( STRDIFF )
 
       if( HB_ISCHAR( 1 ) )
       {
-         pcStr1 = ( char * ) hb_parc( 1 );
+         pcStr1 = hb_parc( 1 );
          sStrLen1 = ( size_t ) hb_parclen( 1 );
       }
       else
       {
-         pcStr1 = ( char * ) "";
+         pcStr1 = "";
          sStrLen1 = 0;
       }
 
       if( HB_ISCHAR( 2 ) )
       {
-         pcStr2 = ( char * ) hb_parc( 2 );
+         pcStr2 = hb_parc( 2 );
          sStrLen2 = ( size_t ) hb_parclen( 2 );
       }
       else
       {
-         pcStr2 = ( char * ) "";
+         pcStr2 = "";
          sStrLen2 = 0;
       }
 

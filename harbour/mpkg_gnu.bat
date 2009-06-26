@@ -30,8 +30,8 @@ if not "%OS%" == "Windows_NT" goto END
 setlocal
 
 rem ; Dir setup
-set HB_INSTALL_BASE=%~dp0_hb_inst
-set HB_INSTALL_PREFIX=%HB_INSTALL_BASE%\_pending
+set HB_INSTALL_BASE=%~dp0_hbinst
+set HB_INSTALL_PREFIX=%HB_INSTALL_BASE%\_w
 set HB_BIN_INSTALL=
 set HB_LIB_INSTALL=
 set HB_INC_INSTALL=
@@ -54,12 +54,12 @@ if errorlevel 1 echo Harbour build returned: %ERRORLEVEL%
 rem if errorlevel 1 goto MK_ERROR
 
 rem ; Final name setup
-if     "%HB_ARCHITECTURE" == "dos" set HB_VERSION=2b2
-if     "%HB_ARCHITECTURE" == "dos" set HB_PKGNAME=hb%HB_VERSION%%HB_COMPILER:~0,2%
-if     "%HB_ARCHITECTURE" == "dos" set HB_DIRNAME=%HB_PKGNAME%
-if not "%HB_ARCHITECTURE" == "dos" set HB_VERSION=2.0.0beta2
-if not "%HB_ARCHITECTURE" == "dos" set HB_PKGNAME=harbour-%HB_VERSION%-%HB_ARCHITECTURE%-%HB_COMPILER%
-if not "%HB_ARCHITECTURE" == "dos" set HB_DIRNAME=harbour-%HB_ARCHITECTURE%-%HB_COMPILER%
+if     "%HB_ARCHITECTURE%" == "dos" set HB_VERSION=2b2
+if     "%HB_ARCHITECTURE%" == "dos" set HB_PKGNAME=hb%HB_VERSION%%HB_COMPILER:~0,2%
+if     "%HB_ARCHITECTURE%" == "dos" set HB_DIRNAME=%HB_PKGNAME%
+if not "%HB_ARCHITECTURE%" == "dos" set HB_VERSION=2.0.0beta2
+if not "%HB_ARCHITECTURE%" == "dos" set HB_PKGNAME=harbour-%HB_VERSION%-%HB_ARCHITECTURE%-%HB_COMPILER%
+if not "%HB_ARCHITECTURE%" == "dos" set HB_DIRNAME=harbour-%HB_ARCHITECTURE%-%HB_COMPILER%
 
 rem ; Rename temp dir to final name
 if exist "%HB_INSTALL_BASE%\%HB_DIRNAME%" rmdir /q /s "%HB_INSTALL_BASE%\%HB_DIRNAME%"
@@ -87,8 +87,8 @@ zip -q -9 -X -r -o "%~dp0%HB_PKGNAME%.zip" . -i "%HB_DIRNAME%\*"
 popd
 
 rem ; Build installer package
-if not "%HB_ARCHITECTURE" == "dos" echo Harbour .exe install package creation: '%HB_PKGNAME%.exe'
-if not "%HB_ARCHITECTURE" == "dos" "%HB_DIR_NSIS%makensis.exe" /V2 "%~dp0mpkg_win.nsi"
+if not "%HB_ARCHITECTURE%" == "dos" echo Harbour .exe install package creation: '%HB_PKGNAME%.exe'
+if not "%HB_ARCHITECTURE%" == "dos" "%HB_DIR_NSIS%makensis.exe" /V2 "%~dp0mpkg_win.nsi"
 
 :MK_ERROR
 

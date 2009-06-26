@@ -110,7 +110,7 @@ HB_FUNC( TABEXPAND )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      char *pcString = ( char * ) hb_parc( 1 );
+      const char *pcString = hb_parc( 1 );
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
       char *pcRet;
       size_t sRetLen;
@@ -311,7 +311,7 @@ HB_FUNC( TABPACK )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      char *pcString = ( char * ) hb_parc( 1 );
+      const char *pcString = hb_parc( 1 );
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
       char *pcRet;
       size_t sRetLen;

@@ -73,9 +73,10 @@ static void do_remove( int iSwitch )
    /* param check */
    if( HB_ISCHAR( 1 ) )
    {
-      char *pcString = ( char * ) hb_parc( 1 );
+      const char *pcString = hb_parc( 1 );
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
-      char *pcRet, *pc;
+      const char *pcRet;
+      const char *pc;
       size_t sRetLen;
       char cSearch;
 

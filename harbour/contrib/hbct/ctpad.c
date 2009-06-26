@@ -63,7 +63,7 @@ static void do_pad( int iSwitch )
 {
    if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
-      char *pcString = ( char * ) hb_parc( 1 );
+      const char *pcString = hb_parc( 1 );
       size_t sStrLen = ( size_t ) hb_parclen( 1 );
       char *pcRet, *pc;
       LONG lRetLen;
