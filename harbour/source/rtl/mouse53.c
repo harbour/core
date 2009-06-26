@@ -154,7 +154,7 @@ HB_FUNC( MRESTSTATE )
 {
    if( HB_ISCHAR( 1 ) && hb_parclen( 1 ) == ( ULONG ) hb_mouseStorageSize() )
    {
-      hb_mouseRestoreState( ( BYTE * ) hb_parc( 1 ) );
+      hb_mouseRestoreState( ( const BYTE * ) hb_parc( 1 ) );
    }
 }
 

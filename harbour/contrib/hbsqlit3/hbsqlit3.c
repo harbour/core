@@ -547,7 +547,7 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
    #ifdef SQLITE3_LIB
    {
       BOOL  fFree;
-      BYTE  *pszDirName = hb_fsNameConv( ( BYTE * ) hb_parcx(1), &fFree );
+      BYTE  *pszDirName = hb_fsNameConv( hb_parcx(1), &fFree );
 
       if( hb_fsIsDirectory(pszDirName) )
       {
@@ -956,7 +956,7 @@ HB_FUNC( SQLITE3_BIND_BLOB )
 
    if( pStmt )
    {
-      hb_retni( sqlite3_bind_blob(pStmt, hb_parni(2), ( const char * ) hb_parcx(3), hb_parcsiz(3) - 1, SQLITE_TRANSIENT) );
+      hb_retni( sqlite3_bind_blob(pStmt, hb_parni(2), hb_parcx(3), hb_parcsiz(3) - 1, SQLITE_TRANSIENT) );
    }
    else
    {
@@ -1027,7 +1027,7 @@ HB_FUNC( SQLITE3_BIND_TEXT )
 
    if( pStmt )
    {
-      hb_retni( sqlite3_bind_text(pStmt, hb_parni(2), ( const char * ) hb_parc(3), hb_parclen(3), SQLITE_TRANSIENT) );
+      hb_retni( sqlite3_bind_text(pStmt, hb_parni(2), hb_parc(3), hb_parclen(3), SQLITE_TRANSIENT) );
    }
    else
    {
@@ -1467,9 +1467,9 @@ HB_FUNC( SQLITE3_TABLE_COLUMN_METADATA )
          sqlite3_table_column_metadata
             (
                pHbSqlite3->db,
-               ( const char * ) hb_parc(2) /* zDbName */,
-               ( const char * ) hb_parc(3) /* zTableName */,
-               ( const char * ) hb_parc(4) /* zColumnName */,
+               hb_parc(2) /* zDbName */,
+               hb_parc(3) /* zTableName */,
+               hb_parc(4) /* zColumnName */,
                &pzDataType /* pzDataDtype */,
                &pzCollSeq /* pzCollSeq */,
                &iNotNull,
@@ -1572,9 +1572,9 @@ HB_FUNC( SQLITE3_BLOB_OPEN )
          sqlite3_blob_open
             (
                pHbSqlite3->db,
-               ( const char * ) hb_parc(2) /* zDb */,
-               ( const char * ) hb_parc(3) /* zTable */,
-               ( const char * ) hb_parc(4) /* zColumn */,
+               hb_parc(2) /* zDb */,
+               hb_parc(3) /* zTable */,
+               hb_parc(4) /* zColumn */,
                (sqlite3_int64) hb_parnint(5) /* iRow */,
                hb_parni(6) /* flags */,
                &ppBlob

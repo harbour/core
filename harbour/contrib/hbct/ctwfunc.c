@@ -207,12 +207,13 @@ HB_FUNC( WBOX )
             "олнннлоо",       /* 14 WB_FULL_HALF */
             "лллллллл"  };    /* 15 WB_FULL */
 
-   BYTE * szBox, szBoxBuf[ 10 ];
+   const BYTE * szBox;
+   BYTE szBoxBuf[ 10 ];
    int iColor;
 
    if( HB_ISCHAR( 1 ) )
    {
-      szBox = ( BYTE * ) hb_parc( 1 );
+      szBox = ( const BYTE * ) hb_parc( 1 );
    }
    else
    {
@@ -336,7 +337,7 @@ HB_FUNC( CTWLASTKEY )
    hb_retni( hb_ctwLastKey() );
 }
 
-/* NOTE: These two functions are emulating the MaxRow()/MaxCol() core functions 
+/* NOTE: These two functions are emulating the MaxRow()/MaxCol() core functions
          "overloaded" by the CT3 library. */
 
 HB_FUNC( HBCT_MAXROW ) /* Return the maximum screen/window row number (zero origin) */

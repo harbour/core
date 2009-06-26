@@ -71,7 +71,7 @@
 #endif
 
 static BOOL hb_fsFileStats(
-                           BYTE *pszFileName,
+                           const char *pszFileName,
                            BYTE *pszAttr,
                            HB_FOFFSET *llSize,
                            LONG *lcDate,
@@ -85,7 +85,7 @@ static BOOL hb_fsFileStats(
 
    struct stat statbuf;
 
-   if( stat( ( char * ) pszFileName, &statbuf ) == 0 )
+   if( stat( pszFileName, &statbuf ) == 0 )
    {
       // determine if we can read/write/execute the file
       USHORT usAttr, ushbAttr = 0;
@@ -265,7 +265,8 @@ static BOOL hb_fsFileStats(
 
 HB_FUNC( FILESTATS )
 {
-   BYTE szAttr[21], *szFile = ( BYTE * ) hb_parc( 1 );
+   BYTE szAttr[ 21 ];
+   const char * szFile = hb_parc( 1 );
    HB_FOFFSET lSize = 0;
    LONG lcDate = 0, lcTime = 0, lmDate = 0, lmTime = 0;
 

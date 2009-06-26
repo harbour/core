@@ -2628,10 +2628,10 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       gdImagePtr im;
       gdFTStringExtra extra;
       int fg;
-      char *fontname;
+      const char *fontname;
       double ptsize, angle;
       int x, y, i;
-      char *string;
+      const char *string;
       PHB_ITEM pRect;
       int aRect[8];
       char *err;
@@ -2768,10 +2768,10 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
       gdImagePtr im;
       int cx, cy;
       double radius, textRadius, fillPortion, points;
-      char *top;
+      const char *top;
       const char *bottom;
       int fgcolor;
-      char *font;
+      const char *font;
       char *err;
 
       /* Retrieve image pointer */

@@ -191,7 +191,7 @@ static int _findbol( BYTE * buf, int buf_len );
 static int _ins_buff( int bytes );
 static int _del_buff( int bytes );
 static long _ft_skip( long recs );
-static int _writeLine( BYTE * theData, ULONG iDataLen );
+static int _writeLine( const BYTE * theData, ULONG iDataLen );
 static BOOL _writeeol( HB_FHANDLE fhnd );
 
 /* arrays used by the text workareas */
@@ -1330,7 +1330,7 @@ HB_FUNC( FT_FAPPEND )
 
 HB_FUNC( FT_FWRITEL )
 {
-   BYTE *   theData  = ( BYTE * ) hb_parc( 1 );
+   const BYTE * theData  = ( const BYTE * ) hb_parc( 1 );
    int      iDataLen = hb_parclen( 1 );
    int      lInsert  = ( HB_ISLOG( 2 ) ? hb_parl( 2 ) : 0 );
    int      err;
@@ -1720,16 +1720,16 @@ static int _findbol( BYTE * buf, int buf_len )
       {
          p--;
          tmp--;
-      
+
          if( tmp == 0 )
             return buf_len;
       }
-      
+
       if( b == FT_CHR_LF )
       {
          p--;
          tmp--;
-      
+
          if( tmp == 0 )
             return buf_len;
 
@@ -1737,12 +1737,12 @@ static int _findbol( BYTE * buf, int buf_len )
          {
             p--;
             tmp--;
-         
+
             if( tmp == 0 )
                return buf_len;
          }
       }
-      
+
       for( ; tmp > 0; tmp--, p-- )
       {
          if( *p == FT_CHR_LF && *( p - 1 ) == FT_CHR_CR )
@@ -1956,7 +1956,7 @@ static int _del_buff( int iLen )
 
 /*--------------------------------------------------------------------------*/
 /* writes a line of data to the file, including the terminating CRLF */
-static int _writeLine( BYTE * theData, ULONG iDataLen )
+static int _writeLine( const BYTE * theData, ULONG iDataLen )
 {
    int   err   = 0;
 

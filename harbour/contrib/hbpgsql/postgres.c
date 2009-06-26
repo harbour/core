@@ -564,11 +564,9 @@ HB_FUNC( PQESCAPESTRING )
 
 HB_FUNC( PQESCAPEBYTEA ) /* deprecated */
 {
-   unsigned const char * from = ( BYTE * ) hb_parc( 1 );
    size_t from_length = hb_parclen( 1 );
    size_t to_length = from_length * 5 + 1;
-
-   unsigned char * to = PQescapeBytea( from, from_length, &to_length );
+   unsigned char * to = PQescapeBytea( ( const unsigned char * ) hb_parcx( 1 ), from_length, &to_length );
    hb_retc( ( char * ) to ); /* TOFIX: ? hb_retc( ( char * ) to, to_length ); */
    PQfreemem( to );
 }
@@ -577,7 +575,7 @@ HB_FUNC( PQESCAPEBYTEA ) /* deprecated */
 HB_FUNC( PQUNESCAPEBYTEA )
 {
    size_t to_length;
-   unsigned char * from = PQunescapeBytea( ( BYTE * ) hb_parcx( 1 ), &to_length );
+   unsigned char * from = PQunescapeBytea( ( const unsigned char * ) hb_parcx( 1 ), &to_length );
    hb_retclen( ( char * ) from, to_length );
    PQfreemem( from );
 }

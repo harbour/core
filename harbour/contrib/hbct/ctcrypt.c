@@ -58,10 +58,10 @@ HB_FUNC( CRYPT )
 
    if( ulCryptLen >= 2 )
    {
-      BYTE *pbyCrypt = ( BYTE * ) hb_parc( 2 );
+      const BYTE *pbyCrypt = ( const BYTE * ) hb_parc( 2 );
       ULONG ulCryptPos = 0;
 
-      BYTE *pbyString = ( BYTE * ) hb_parc( 1 );
+      const BYTE *pbyString = ( const BYTE * ) hb_parc( 1 );
       ULONG ulStringLen = hb_parclen( 1 );
       ULONG ulStringPos;
 
