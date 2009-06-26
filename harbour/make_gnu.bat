@@ -22,8 +22,13 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
 :CONTINUE_MAKE
 
+   if "%HB_COMPILER%" == "djgpp"    set HB_ARCHITECTURE=dos
+   if "%HB_COMPILER%" == "msvcarm"  set HB_ARCHITECTURE=wce
+   if "%HB_COMPILER%" == "mingwarm" set HB_ARCHITECTURE=wce
+   if "%HB_COMPILER%" == "poccarm"  set HB_ARCHITECTURE=wce
+
    if "%HB_ARCHITECTURE%" == "" goto BAD_ARCH
-   if "%HB_COMPILER%" == "" goto BAD_COMP
+   if "%HB_COMPILER%"     == "" goto BAD_COMP
 
    if "%HB_INSTALL_PREFIX%" == "" if "%OS%" == "Windows_NT" set HB_INSTALL_PREFIX=%~dp0
 
