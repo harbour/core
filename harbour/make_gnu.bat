@@ -161,6 +161,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    rem It will automatically build Harbour in two passes, one for
    rem the .dlls and a final pass for the regular version.
 
+   if     "%HB_ARCHITECTURE%" == "dos" goto SKIP_WINDLL
    if not "%HB_BUILD_DLL%" == "yes" goto SKIP_WINDLL
 
    if "%HB_COMPILER%%HB_CCPREFIX%" == "mingw64"  set HB_CCPREFIX=x86_64-pc-mingw32-

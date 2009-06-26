@@ -518,7 +518,7 @@ EXAMPLES
       rem ; To create installation packages (.exe + .zip),
       rem   replace last line (calling make_gnu.bat) with these two:
       set HB_DIR_NSIS=%ProgramFiles%\NSIS\
-      call mpkg_win.bat
+      call mpkg_gnu.bat
       -->8--
 
    DOS
@@ -560,7 +560,7 @@ EXAMPLES
       rem ; To create installation packages (.zip),
       rem   replace last line (calling make_gnu.bat) with this one:
       rem   (this will only work when using Windows NT or upper host)
-      call mpkg_dos.bat
+      call mpkg_gnu.bat
       -->8--
 
    OS/2
