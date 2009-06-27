@@ -72,13 +72,6 @@ if exist "%HB_INSTALL_PREFIX%\bin\*.tds" del "%HB_INSTALL_PREFIX%\bin\*.tds"
 if exist "%HB_INSTALL_PREFIX%\bin\*.lib" del "%HB_INSTALL_PREFIX%\bin\*.lib"
 if exist "%HB_INSTALL_PREFIX%\bin\*.exp" del "%HB_INSTALL_PREFIX%\bin\*.exp"
 
-rem ; Post-build installation
-copy /Y ChangeLog* "%HB_INSTALL_PREFIX%\" > nul
-copy /Y COPYING    "%HB_INSTALL_PREFIX%\" > nul
-copy /Y ERRATA     "%HB_INSTALL_PREFIX%\" > nul
-copy /Y INSTALL    "%HB_INSTALL_PREFIX%\" > nul
-copy /Y TODO       "%HB_INSTALL_PREFIX%\" > nul
-
 rem ; Build .zip package
 echo Harbour .zip install package creation: '%HB_PKGNAME%.zip'
 if exist "%HB_PKGNAME%.zip" del "%HB_PKGNAME%.zip"
