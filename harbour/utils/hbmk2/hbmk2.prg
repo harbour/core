@@ -252,24 +252,31 @@ REQUEST hbmk_KEYW
 #define _HBMK_lUNICODE          48
 #define _HBMK_nCONF             49
 
-#define _HBMK_aPO               50
-#define _HBMK_cHBL              51
-#define _HBMK_cHBLDir           52
-#define _HBMK_aLNG              53
-#define _HBMK_cPO               54
+#define _HBMK_cFIRST            50
+#define _HBMK_aPRG              51
+#define _HBMK_aC                52
+#define _HBMK_aRESSRC           53
+#define _HBMK_aRESCMP           54
+#define _HBMK_aOBJUSER          55
 
-#define _HBMK_lDEBUGTIME        55
-#define _HBMK_lDEBUGINC         56
-#define _HBMK_lDEBUGSTUB        57
-#define _HBMK_lDEBUGI18N        58
+#define _HBMK_aPO               56
+#define _HBMK_cHBL              57
+#define _HBMK_cHBLDir           58
+#define _HBMK_aLNG              59
+#define _HBMK_cPO               60
 
-#define _HBMK_cCCPATH           59
-#define _HBMK_cCCPREFIX         60
-#define _HBMK_cCCPOSTFIX        61
+#define _HBMK_lDEBUGTIME        61
+#define _HBMK_lDEBUGINC         62
+#define _HBMK_lDEBUGSTUB        63
+#define _HBMK_lDEBUGI18N        64
 
-#define _HBMK_lUTF8             62
+#define _HBMK_cCCPATH           65
+#define _HBMK_cCCPREFIX         66
+#define _HBMK_cCCPOSTFIX        67
 
-#define _HBMK_MAX_              62
+#define _HBMK_lUTF8             68
+
+#define _HBMK_MAX_              68
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -495,15 +502,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL l_cHB_DYN_INSTALL
    LOCAL l_cHB_INC_INSTALL
 
-   LOCAL l_aPRG
    LOCAL l_aPRG_TODO
    LOCAL l_aPRG_DONE
-   LOCAL l_aC
    LOCAL l_aC_TODO
    LOCAL l_aC_DONE
-   LOCAL l_aRESSRC
    LOCAL l_aRESSRC_TODO
-   LOCAL l_aRESCMP
    LOCAL l_aLIBSHARED
    LOCAL l_aLIBSHAREDPOST := {}
    LOCAL l_aLIB
@@ -518,10 +521,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL l_aOPTRUN
    LOCAL l_cPROGDIR
    LOCAL l_cPROGNAME
-   LOCAL l_cFIRST
    LOCAL l_aOBJ
    LOCAL l_aOBJA
-   LOCAL l_aOBJUSER
    LOCAL l_aCLEAN
    LOCAL l_lHB_PCRE := .T.
    LOCAL l_lHB_ZLIB := .T.
@@ -1302,8 +1303,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
    /* Process command line */
 
-   l_aPRG := {}
-   l_aC := {}
+   hbmk[ _HBMK_aPRG ] := {}
+   hbmk[ _HBMK_aC ] := {}
    hbmk[ _HBMK_aOPTPRG ] := {}
    hbmk[ _HBMK_aOPTC ] := {}
    hbmk[ _HBMK_aOPTRES ] := {}
@@ -1311,17 +1312,17 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    hbmk[ _HBMK_aOPTA ] := {}
    hbmk[ _HBMK_aOPTD ] := {}
    l_aOPTRUN := {}
-   l_aRESSRC := {}
-   l_aRESCMP := {}
+   hbmk[ _HBMK_aRESSRC ] := {}
+   hbmk[ _HBMK_aRESCMP ] := {}
    hbmk[ _HBMK_aINCTRYPATH ] := {}
    hbmk[ _HBMK_aLIBUSER ] := {}
    hbmk[ _HBMK_aLIBUSERGT ] := {}
    hbmk[ _HBMK_aLIBDYNHAS ] := {}
-   l_aOBJUSER := {}
+   hbmk[ _HBMK_aOBJUSER ] := {}
    l_aOBJA := {}
    l_cPROGDIR := NIL
    l_cPROGNAME := NIL
-   l_cFIRST := NIL
+   hbmk[ _HBMK_cFIRST ] := NIL
    hbmk[ _HBMK_aPO ] := {}
    hbmk[ _HBMK_cHBL ] := NIL
    hbmk[ _HBMK_cHBLDir ] := ""
@@ -1349,9 +1350,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cParam := FN_ExtSet( cParam, ".hbm" )
          ENDIF
          IF !( Lower( FN_ExtGet( cParam ) ) == ".hbm" ) .AND. lAcceptLDClipper
-            rtlnk_process( hbmk, MemoRead( cParam ), @l_cPROGNAME, @l_aOBJUSER, @hbmk[ _HBMK_aLIBUSER ] )
-            IF ! Empty( l_aOBJUSER )
-               DEFAULT l_cFIRST TO l_aOBJUSER[ 1 ]
+            rtlnk_process( hbmk, MemoRead( cParam ), @l_cPROGNAME, @hbmk[ _HBMK_aOBJUSER ], @hbmk[ _HBMK_aLIBUSER ] )
+            IF ! Empty( hbmk[ _HBMK_aOBJUSER ] )
+               DEFAULT hbmk[ _HBMK_cFIRST ] TO hbmk[ _HBMK_aOBJUSER ][ 1 ]
             ENDIF
          ELSE
             HBM_Load( hbmk, aParams, cParam, 1 ) /* Load parameters from script file */
@@ -1739,18 +1740,18 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          DO CASE
          CASE lAcceptLDFlag
-            AAddNotEmpty( hbmk[ _HBMK_aOPTL ]   , ArchCompFilter( hbmk, PathSepToTarget( hbmk, cParam, 2 ) ) )
+            AAddNotEmpty( hbmk[ _HBMK_aOPTL ], ArchCompFilter( hbmk, PathSepToTarget( hbmk, cParam, 2 ) ) )
          CASE lAcceptCFlag
             IF SubStr( cParamL, 2 ) == "c"
                lStopAfterCComp := .T.
             ELSE
-               AAddNotEmpty( hbmk[ _HBMK_aOPTC ]   , ArchCompFilter( hbmk, PathSepToTarget( hbmk, cParam, 2 ) ) )
+               AAddNotEmpty( hbmk[ _HBMK_aOPTC ], ArchCompFilter( hbmk, PathSepToTarget( hbmk, cParam, 2 ) ) )
             ENDIF
          OTHERWISE
             IF SubStr( cParamL, 2 ) == "gh"
                lStopAfterHarbour := .T.
             ENDIF
-            AAddNotEmpty( hbmk[ _HBMK_aOPTPRG ] , PathSepToTarget( hbmk, cParam, 2 ) )
+            AAddNotEmpty( hbmk[ _HBMK_aOPTPRG ], PathSepToTarget( hbmk, cParam, 2 ) )
          ENDCASE
 
       CASE FN_ExtGet( cParamL ) == ".lib" .OR. ;
@@ -1787,8 +1788,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cParam := ArchCompFilter( hbmk, cParam )
          IF ! Empty( cParam )
             FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
-               AAdd( l_aPRG    , PathSepToTarget( hbmk, cParam ) )
-               DEFAULT l_cFIRST TO PathSepToSelf( cParam )
+               AAdd( hbmk[ _HBMK_aPRG ], PathSepToTarget( hbmk, cParam ) )
+               DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cParam )
             NEXT
          ENDIF
 
@@ -1797,7 +1798,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cParam := ArchCompFilter( hbmk, cParam )
          IF ! Empty( cParam )
             FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
-               AAdd( l_aRESSRC , PathSepToTarget( hbmk, cParam ) )
+               AAdd( hbmk[ _HBMK_aRESSRC ], PathSepToTarget( hbmk, cParam ) )
             NEXT
          ENDIF
 
@@ -1810,11 +1811,11 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   will need to be converted to coff format with windres (just
                   like plain .rc files) before feeding them to gcc. */
                FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
-                  AAdd( l_aRESSRC , PathSepToTarget( hbmk, cParam ) )
+                  AAdd( hbmk[ _HBMK_aRESSRC ], PathSepToTarget( hbmk, cParam ) )
                NEXT
             ELSE
                FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
-                  AAdd( l_aRESCMP , PathSepToTarget( hbmk, cParam ) )
+                  AAdd( hbmk[ _HBMK_aRESCMP ], PathSepToTarget( hbmk, cParam ) )
                NEXT
             ENDIF
          ENDIF
@@ -1822,7 +1823,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       CASE FN_ExtGet( cParamL ) == ".a"
 
          cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
-         AAdd( l_aOBJA   , PathSepToTarget( hbmk, cParam ) )
+         AAdd( l_aOBJA, PathSepToTarget( hbmk, cParam ) )
 
       CASE FN_ExtGet( cParamL ) == ".o" .OR. ;
            FN_ExtGet( cParamL ) == ".obj"
@@ -1830,8 +1831,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cParam := ArchCompFilter( hbmk, cParam )
          IF ! Empty( cParam )
             FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
-               AAdd( l_aOBJUSER, PathSepToTarget( hbmk, cParam ) )
-               DEFAULT l_cFIRST TO PathSepToSelf( cParam )
+               AAdd( hbmk[ _HBMK_aOBJUSER ], PathSepToTarget( hbmk, cParam ) )
+               DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cParam )
             NEXT
          ENDIF
 
@@ -1841,8 +1842,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cParam := ArchCompFilter( hbmk, cParam )
          IF ! Empty( cParam )
             FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
-               AAdd( l_aC      , PathSepToTarget( hbmk, cParam ) )
-               DEFAULT l_cFIRST TO PathSepToSelf( cParam )
+               AAdd( hbmk[ _HBMK_aC ], PathSepToTarget( hbmk, cParam ) )
+               DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cParam )
             NEXT
          ENDIF
 
@@ -1863,8 +1864,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cParam := ArchCompFilter( hbmk, cParam )
          IF ! Empty( cParam )
             cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
-            AAdd( l_aPRG    , PathSepToTarget( hbmk, cParam ) )
-            DEFAULT l_cFIRST TO PathSepToSelf( cParam )
+            AAdd( hbmk[ _HBMK_aPRG ], PathSepToTarget( hbmk, cParam ) )
+            DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cParam )
          ENDIF
 
       ENDCASE
@@ -1881,7 +1882,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    ENDIF
 
    /* Start doing the make process. */
-   IF ! lStopAfterInit .AND. ( Len( l_aPRG ) + Len( l_aC ) + Len( l_aOBJUSER ) + Len( l_aOBJA ) ) == 0
+   IF ! lStopAfterInit .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) == 0
       hbmk_OutErr( hbmk, I_( "Error: No source files were specified." ) )
       IF hbmk[ _HBMK_lBEEP ]
          DoBeep( hbmk, .F. )
@@ -1894,7 +1895,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       /* If -o with full name wasn't specified, let's
          make it the first source file specified. */
-      DEFAULT l_cPROGNAME TO FN_NameGet( l_cFIRST )
+      DEFAULT l_cPROGNAME TO FN_NameGet( hbmk[ _HBMK_cFIRST ] )
 
       /* Combine output dir with output name. */
       IF ! Empty( l_cPROGDIR )
@@ -2108,7 +2109,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          ENDIF
          IF lStopAfterCComp
-            IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( l_aPRG ) + Len( l_aC ) ) == 1
+            IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) ) == 1
                IF hbmk[ _HBMK_cARCH ] == "darwin"
                   AAdd( hbmk[ _HBMK_aOPTC ], "-o {OO}" )
                ELSE
@@ -2265,7 +2266,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
          ENDIF
          IF lStopAfterCComp
-            IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( l_aPRG ) + Len( l_aC ) ) == 1
+            IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) ) == 1
                AAdd( hbmk[ _HBMK_aOPTC ], "-o{OO}" )
             ENDIF
          ELSE
@@ -2288,7 +2289,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
-         IF hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm" .AND. Len( l_aRESSRC ) > 0
+         IF hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm" .AND. Len( hbmk[ _HBMK_aRESSRC ] ) > 0
             cBin_Res := hbmk[ _HBMK_cCCPREFIX ] + "windres" + cCCEXT_mingw
             cResExt := ".reso"
             cOpt_Res := "{FR} {IR} -O coff -o {OS}"
@@ -2340,7 +2341,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          /* OS/2 needs a space between -o and file name following it */
          IF lStopAfterCComp
-            IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( l_aPRG ) + Len( l_aC ) ) == 1
+            IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) ) == 1
                AAdd( hbmk[ _HBMK_aOPTC ], "-o {OO}" )
             ENDIF
          ELSE
@@ -2390,7 +2391,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
          ENDIF
          IF lStopAfterCComp
-            IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( l_aPRG ) + Len( l_aC ) ) == 1
+            IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) ) == 1
                AAdd( hbmk[ _HBMK_aOPTC ], "-o{OO}" )
             ENDIF
          ELSE
@@ -2428,7 +2429,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cOpt_CompC += " {LC}"
          ENDIF
          IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
-            IF ( Len( l_aPRG ) + Len( l_aC ) ) == 1
+            IF ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) ) == 1
                AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OO}" )
             ELSE
                AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OD}" )
@@ -2482,7 +2483,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cOpt_CompC += " {LC}"
          ENDIF
          IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
-            IF ( Len( l_aPRG ) + Len( l_aC ) ) == 1
+            IF ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) ) == 1
                AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OO}" )
             ELSE
                AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OD}" )
@@ -2523,7 +2524,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTL ], "FILE " + FN_ExtSet( l_cHB_LIB_INSTALL + hb_osPathSeparator() + iif( hbmk[ _HBMK_lGUI ], "hbmainwin", "hbmainstd" ), cLibExt ) )
          ENDIF
 
-         IF Len( l_aRESSRC ) > 0
+         IF Len( hbmk[ _HBMK_aRESSRC ] ) > 0
             cBin_Res := "wrc"
             cResExt := ".res"
             cOpt_Res := "-r {FR} -zm {IR} -fo={OS}"
@@ -2560,7 +2561,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cOpt_CompC += " {LC}"
          ENDIF
          IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
-            IF ( Len( l_aPRG ) + Len( l_aC ) ) == 1
+            IF ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) ) == 1
                AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OO}" )
             ELSE
                AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OD}" )
@@ -2613,7 +2614,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cOpt_CompC += " {LC}"
          ENDIF
          IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
-            IF ( Len( l_aPRG ) + Len( l_aC ) ) == 1
+            IF ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) ) == 1
                AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OO}" )
             ELSE
                AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OD}" )
@@ -2687,7 +2688,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          ELSE
             IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
-               IF ( Len( l_aPRG ) + Len( l_aC ) ) == 1
+               IF ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) ) == 1
                   AAdd( hbmk[ _HBMK_aOPTC ], "-o{OO}" )
                ELSE
                   AAdd( hbmk[ _HBMK_aOPTC ], "-n{OD}" )
@@ -2816,7 +2817,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          ELSE
             IF lStopAfterCComp .AND. ! lCreateLib .AND. ! lCreateDyn
-               IF ( Len( l_aPRG ) + Len( l_aC ) ) == 1
+               IF ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) ) == 1
                   AAdd( hbmk[ _HBMK_aOPTC ], "-Fo{OO}" )
                ELSE
                   AAdd( hbmk[ _HBMK_aOPTC ], "-Fo{OD}" )
@@ -3056,7 +3057,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
          l_aC_TODO := {}
          l_aC_DONE := {}
-         FOR EACH tmp IN l_aC
+         FOR EACH tmp IN hbmk[ _HBMK_aC ]
             IF hbmk[ _HBMK_lDEBUGINC ]
                hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: C %1$s %2$s", tmp, FN_DirExtSet( tmp, cWorkDir, cObjExt ) ) )
             ENDIF
@@ -3070,7 +3071,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          NEXT
       ELSE
-         l_aC_TODO := AClone( l_aC )
+         l_aC_TODO := AClone( hbmk[ _HBMK_aC ] )
          l_aC_DONE := {}
       ENDIF
 
@@ -3090,7 +3091,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
          l_aPRG_TODO := {}
-         FOR EACH tmp IN l_aPRG
+         FOR EACH tmp IN hbmk[ _HBMK_aPRG ]
             IF hbmk[ _HBMK_lDEBUGINC ]
                hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: PRG %1$s %2$s",;
                   FN_ExtSet( tmp, ".prg" ),;
@@ -3104,10 +3105,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          NEXT
       ELSE
-         l_aPRG_TODO := l_aPRG
+         l_aPRG_TODO := hbmk[ _HBMK_aPRG ]
       ENDIF
    ELSE
-      l_aPRG_TODO := l_aPRG
+      l_aPRG_TODO := hbmk[ _HBMK_aPRG ]
    ENDIF
 
    /* Harbour compilation */
@@ -3224,7 +3225,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          /* Do entry function detection on platform required and supported */
          IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ! lStopAfterCComp .AND. l_cMAIN == NIL
-            tmp := iif( Lower( FN_ExtGet( l_cFIRST ) ) == ".prg" .OR. Empty( FN_ExtGet( l_cFIRST ) ), FN_ExtSet( l_cFIRST, ".c" ), l_cFIRST )
+            tmp := iif( Lower( FN_ExtGet( hbmk[ _HBMK_cFIRST ] ) ) == ".prg" .OR. Empty( FN_ExtGet( hbmk[ _HBMK_cFIRST ] ) ), FN_ExtSet( hbmk[ _HBMK_cFIRST ], ".c" ), hbmk[ _HBMK_cFIRST ] )
             IF ! Empty( tmp := getFirstFunc( hbmk, tmp ) )
                l_cMAIN := tmp
             ENDIF
@@ -3351,14 +3352,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ELSE
                hbmk_OutErr( hbmk, I_( "Warning: Stub helper .c program couldn't be created." ) )
                IF ! hbmk[ _HBMK_lINC ]
-                  AEval( ListDirExt( l_aPRG, cWorkDir, ".c" ), {|tmp| FErase( tmp ) } )
+                  AEval( ListDirExt( hbmk[ _HBMK_aPRG ], cWorkDir, ".c" ), {|tmp| FErase( tmp ) } )
                ENDIF
                IF hbmk[ _HBMK_lBEEP ]
                   DoBeep( hbmk, .F. )
                ENDIF
                RETURN 5
             ENDIF
-            AAdd( l_aC, l_cCSTUB )
+            AAdd( hbmk[ _HBMK_aC ], l_cCSTUB )
             AAdd( l_aC_TODO, l_cCSTUB )
          ENDIF
 
@@ -3380,7 +3381,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       ELSE
          l_aLIBHB := {}
          l_aLIBSHARED := {}
-         l_aPRG := {}
+         hbmk[ _HBMK_aPRG ] := {}
       ENDIF
 
       /* Merge lib lists. */
@@ -3392,12 +3393,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          l_aLIB := ArrayJoin( ListCookLib( hbmk, l_aLIBSHARED ), l_aLIB )
       ENDIF
       /* Dress obj names. */
-      l_aOBJ := ListDirExt( ArrayJoin( l_aPRG, l_aC ), cWorkDir, cObjExt )
-      l_aOBJUSER := ListCook( l_aOBJUSER, cObjExt )
+      l_aOBJ := ListDirExt( ArrayJoin( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_aC ] ), cWorkDir, cObjExt )
+      hbmk[ _HBMK_aOBJUSER ] := ListCook( hbmk[ _HBMK_aOBJUSER ], cObjExt )
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
          l_aRESSRC_TODO := {}
-         FOR EACH tmp IN l_aRESSRC
+         FOR EACH tmp IN hbmk[ _HBMK_aRESSRC ]
             IF hbmk[ _HBMK_lDEBUGINC ]
                hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: RESSRC %1$s %2$s", tmp, FN_DirExtSet( tmp, cWorkDir, cResExt ) ) )
             ENDIF
@@ -3409,13 +3410,13 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          NEXT
       ELSE
-         l_aRESSRC_TODO := l_aRESSRC
+         l_aRESSRC_TODO := hbmk[ _HBMK_aRESSRC ]
       ENDIF
 
       IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
          IF hbmk[ _HBMK_lREBUILDPO ]
-            IF ! Empty( hbmk[ _HBMK_cPO ] ) .AND. ! Empty( l_aPRG )
-               RebuildPO( hbmk, ListDirExt( l_aPRG, cWorkDir, ".pot" ) )
+            IF ! Empty( hbmk[ _HBMK_cPO ] ) .AND. ! Empty( hbmk[ _HBMK_aPRG ] )
+               RebuildPO( hbmk, ListDirExt( hbmk[ _HBMK_aPRG ], cWorkDir, ".pot" ) )
             ENDIF
          ELSE
             IF ! Empty( hbmk[ _HBMK_cPO ] ) .AND. Len( l_aPRG_TODO ) > 0
@@ -3526,7 +3527,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
             l_aPRG_TODO := {}
             l_aPRG_DONE := {}
-            FOR EACH tmp IN l_aPRG
+            FOR EACH tmp IN hbmk[ _HBMK_aPRG ]
                IF hbmk[ _HBMK_lDEBUGINC ]
                   hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CPRG %1$s %2$s",;
                      FN_DirExtSet( tmp, cWorkDir, ".c" ),;
@@ -3541,12 +3542,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                ENDIF
             NEXT
          ELSE
-            l_aPRG_TODO := l_aPRG
+            l_aPRG_TODO := hbmk[ _HBMK_aPRG ]
             l_aPRG_DONE := {}
          ENDIF
       ENDIF
 
-      IF nErrorLevel == 0 .AND. ( Len( l_aPRG_TODO ) + Len( l_aC_TODO ) + iif( Empty( cBin_Link ), Len( l_aOBJUSER ) + Len( l_aOBJA ), 0 ) ) > 0 .AND. ! l_lCLEAN
+      IF nErrorLevel == 0 .AND. ( Len( l_aPRG_TODO ) + Len( l_aC_TODO ) + iif( Empty( cBin_Link ), Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ), 0 ) ) > 0 .AND. ! l_lCLEAN
 
          IF ! Empty( cBin_CompC )
 
@@ -3563,9 +3564,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                                                          GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{FL}"  , iif( l_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                          GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{LR}"  , ArrayToList( ArrayJoin( ListDirExt( l_aRESSRC, cWorkDir, cResExt ), l_aRESCMP ),, nOpt_Esc ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{LO}"  , ArrayToList( ArrayAJoin( { l_aOBJUSER, ListCook( l_aPRG_DONE, cObjExt ), ListCook( l_aC_DONE, cObjExt ) } ),, nOpt_Esc, cObjPrefix ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( l_aRESSRC, "", cResExt ), l_aRESCMP ),, nOpt_Esc, cResPrefix ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LR}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], cWorkDir, cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LO}"  , ArrayToList( ArrayAJoin( { hbmk[ _HBMK_aOBJUSER ], ListCook( l_aPRG_DONE, cObjExt ), ListCook( l_aC_DONE, cObjExt ) } ),, nOpt_Esc, cObjPrefix ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], "", cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, cResPrefix ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LA}"  , ArrayToList( l_aOBJA,, nOpt_Esc ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, cLibPrefix ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OD}"  , FN_Escape( PathSepToTarget( hbmk, FN_DirGet( l_cPROGNAME ) ), nOpt_Esc ) )
@@ -3690,7 +3691,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
                lTargetUpToDate := .T.
                IF lTargetUpToDate
-                  FOR EACH tmp IN ArrayAJoin( { l_aOBJ, l_aOBJUSER, l_aOBJA, l_aRESSRC, l_aRESCMP } )
+                  FOR EACH tmp IN ArrayAJoin( { l_aOBJ, hbmk[ _HBMK_aOBJUSER ], l_aOBJA, hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_aRESCMP ] } )
                      IF hbmk[ _HBMK_lDEBUGINC ]
                         hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: EXEDEP %1$s", tmp ) )
                      ENDIF
@@ -3718,7 +3719,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
       ENDIF
 
-      IF nErrorLevel == 0 .AND. ( Len( l_aOBJ ) + Len( l_aOBJUSER ) + Len( l_aOBJA ) ) > 0 .AND. ! l_lCLEAN
+      IF nErrorLevel == 0 .AND. ( Len( l_aOBJ ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) > 0 .AND. ! l_lCLEAN
 
          IF lTargetUpToDate
             hbmk_OutStd( hbmk, hb_StrFormat( I_( "Target up to date: %1$s" ), l_cPROGNAME ) )
@@ -3749,8 +3750,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                /* Order is significant */
                cOpt_Link := StrTran( cOpt_Link, "{FL}"  , iif( l_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                           GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, l_aOBJUSER ),, nOpt_Esc, cObjPrefix ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( l_aRESSRC, cWorkDir, cResExt ), l_aRESCMP ),, nOpt_Esc, cResPrefix ) )
+               cOpt_Link := StrTran( cOpt_Link, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, cObjPrefix ) )
+               cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], cWorkDir, cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, cResPrefix ) )
                cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( l_aOBJA,, nOpt_Esc ) )
                cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, cLibPrefix ) )
                cOpt_Link := StrTran( cOpt_Link, "{OE}"  , FN_Escape( PathSepToTarget( hbmk, l_cPROGNAME ), nOpt_Esc ) )
@@ -3809,7 +3810,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
                /* Order is significant */
                cOpt_Lib := StrTran( cOpt_Lib, "{FA}"  , GetEnv( "HB_USER_AFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTA ] ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, l_aOBJUSER ),, nOpt_Esc, cLibObjPrefix ) )
+               cOpt_Lib := StrTran( cOpt_Lib, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, cLibObjPrefix ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, cLibPrefix ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{OL}"  , FN_Escape( PathSepToTarget( hbmk, l_cPROGNAME ), nOpt_Esc ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, cLibPathPrefix ) )
@@ -3866,8 +3867,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
                /* Order is significant */
                cOpt_Dyn := StrTran( cOpt_Dyn, "{FD}"  , GetEnv( "HB_USER_DFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTD ] ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, l_aOBJUSER ),, nOpt_Esc, cDynObjPrefix ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( l_aRESSRC, cWorkDir, cResExt ), l_aRESCMP ),, nOpt_Esc, cResPrefix ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, cDynObjPrefix ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], cWorkDir, cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, cResPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, cLibPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OD}"  , FN_Escape( PathSepToTarget( hbmk, l_cPROGNAME ), nOpt_Esc ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OM}"  , FN_Escape( PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, ".map" ) ), nOpt_Esc ) )
@@ -3924,12 +3925,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          FErase( FN_DirExtSet( l_cCSTUB, cWorkDir, cObjExt ) )
       ENDIF
       IF ! hbmk[ _HBMK_lINC ] .OR. l_lCLEAN
-         AEval( ListDirExt( l_aPRG, cWorkDir, ".c" ), {|tmp| FErase( tmp ) } )
+         AEval( ListDirExt( hbmk[ _HBMK_aPRG ], cWorkDir, ".c" ), {|tmp| FErase( tmp ) } )
       ENDIF
       IF ! lStopAfterCComp .OR. lCreateLib .OR. lCreateDyn
          IF ! hbmk[ _HBMK_lINC ] .OR. l_lCLEAN
             IF ! Empty( cResExt )
-               AEval( ListDirExt( l_aRESSRC, cWorkDir, cResExt ), {|tmp| FErase( tmp ) } )
+               AEval( ListDirExt( hbmk[ _HBMK_aRESSRC ], cWorkDir, cResExt ), {|tmp| FErase( tmp ) } )
             ENDIF
             AEval( l_aOBJ, {|tmp| FErase( tmp ) } )
          ENDIF
@@ -5032,11 +5033,41 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel  )
             EXIT
          ENDIF
 
-      CASE Lower( Left( cLine, Len( "pos="         ) ) ) == "pos="           ; cLine := SubStr( cLine, Len( "pos="          ) + 1 )
+      CASE Lower( Left( cLine, Len( "sources="     ) ) ) == "sources="       ; cLine := SubStr( cLine, Len( "sources="      ) + 1 )
+
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathSepToTarget( hbmk, PathProc( StrStripQuote( cItem ), FN_DirGet( cFileName ) ) )
-            IF AScan( hbmk[ _HBMK_aPO ], {|tmp| tmp == cItem } ) == 0
-               AAddNotEmpty( hbmk[ _HBMK_aPO ], cItem )
+            cItem := PathNormalize( PathSepToSelf( PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) ) ) )
+            IF ! Empty( cItem )
+               DO CASE
+               CASE FN_ExtGet( cItem ) == ".o" .OR. ;
+                    FN_ExtGet( cItem ) == ".obj"
+                  AAddNew( hbmk[ _HBMK_aOBJUSER ], PathSepToTarget( hbmk, cItem ) )
+               CASE FN_ExtGet( cItem ) == ".c" .OR. ;
+                    FN_ExtGet( cItem ) == ".cpp" /* .cc, .cxx, .cx */
+                  AAddNew( hbmk[ _HBMK_aC ], PathSepToTarget( hbmk, cItem ) )
+               CASE FN_ExtGet( cItem ) == ".po" .OR. ;
+                    FN_ExtGet( cItem ) == ".pot"
+                  AAddNew( hbmk[ _HBMK_aPO ], PathSepToTarget( hbmk, cItem ) )
+               CASE FN_ExtGet( cItem ) == ".rc"
+                  FOR EACH tmp IN FN_Expand( cItem )
+                     AAddNew( hbmk[ _HBMK_aRESSRC ], PathSepToTarget( hbmk, tmp ) )
+                  NEXT
+               CASE FN_ExtGet( cItem ) == ".res"
+                  IF hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"
+                     /* For MinGW family add .res files as source input, as they
+                        will need to be converted to coff format with windres (just
+                        like plain .rc files) before feeding them to gcc. */
+                     FOR EACH tmp IN FN_Expand( cItem )
+                        AAddNew( hbmk[ _HBMK_aRESSRC ], PathSepToTarget( hbmk, tmp ) )
+                     NEXT
+                  ELSE
+                     FOR EACH tmp IN FN_Expand( cItem )
+                        AAddNew( hbmk[ _HBMK_aRESCMP ], PathSepToTarget( hbmk, tmp ) )
+                     NEXT
+                  ENDIF
+               OTHERWISE /* .prg */
+                  AAddNew( hbmk[ _HBMK_aPRG ], PathSepToTarget( hbmk, cItem ) )
+               ENDCASE
             ENDIF
          NEXT
 
@@ -5469,6 +5500,11 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
 
    RETURN cItem
 
+#define hb_CurDrive() CurDrive()
+
+STATIC FUNCTION hb_pwd()
+   RETURN DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_osPathSeparator() + CurDir() )
+
 STATIC FUNCTION MacroProc( hbmk, cString, cFileName, lLateMode )
    LOCAL nStart
    LOCAL nEnd
@@ -5487,48 +5523,51 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, lLateMode )
 
       cMacro := Upper( SubStr( cString, nStart + 2, nEnd - nStart - 2 ) )
 
-      DO CASE
-      CASE cMacro == "HB_ROOT"
-         cMacro := PathSepToSelf( DirAddPathSep( hb_DirBase() ) )
-      CASE cMacro == "HB_DIR"
-         cMacro := PathSepToSelf( FN_DirGet( cFileName ) )
-      CASE cMacro == "HB_NAME"
-         cMacro := PathSepToSelf( FN_NameGet( cFileName ) )
-      CASE cMacro == "HB_ARCH" .OR. ;
-           cMacro == "HB_ARCHITECTURE"
-         cMacro := hbmk[ _HBMK_cARCH ]
-      CASE cMacro == "HB_COMP" .OR. ;
-           cMacro == "HB_COMPILER"
-         cMacro := hbmk[ _HBMK_cCOMP ]
-      CASE cMacro == "HB_CPU"
-         cMacro := hbmk_CPU( hbmk )
-      CASE cMacro == "HB_WORK"
-         cMacro := _WORKDIR_BASE_
-      CASE cMacro == "HB_MAJOR"
-         cMacro := hb_ntos( hb_Version( HB_VERSION_MAJOR ) )
-      CASE cMacro == "HB_MINOR"
-         cMacro := hb_ntos( hb_Version( HB_VERSION_MINOR ) )
-      CASE cMacro == "HB_RELEASE"
-         cMacro := hb_ntos( hb_Version( HB_VERSION_RELEASE ) )
-      CASE cMacro == "HB_STATUS"
-         cMacro := hb_Version( HB_VERSION_STATUS )
-      CASE cMacro == "HB_REVISION"
-         cMacro := hb_ntos( hb_Version( HB_VERSION_REVISION ) )
-      CASE cMacro == "HB_BIN"
-         cMacro := hbmk[ _HBMK_cHB_BIN_INSTALL ]
-      CASE cMacro == "HB_LIB"
-         cMacro := hbmk[ _HBMK_cHB_LIB_INSTALL ]
-      CASE cMacro == "HB_DYN"
-         cMacro := hbmk[ _HBMK_cHB_DYN_INSTALL ]
-      CASE cMacro == "HB_INC"
-         cMacro := hbmk[ _HBMK_cHB_INC_INSTALL ]
-      CASE ! Empty( GetEnv( cMacro ) )
-         cMacro := GetEnv( cMacro )
+      SWITCH cMacro
+      CASE "HB_ROOT"
+         cMacro := PathSepToSelf( DirAddPathSep( hb_DirBase() ) ) ; EXIT
+      CASE "HB_DIR"
+         cMacro := PathSepToSelf( FN_DirGet( cFileName ) ) ; EXIT
+      CASE "HB_NAME"
+         cMacro := PathSepToSelf( FN_NameGet( cFileName ) ) ; EXIT
+      CASE "HB_CURDIR"
+         cMacro := hb_pwd() ; EXIT
+      CASE "HB_ARCH"
+      CASE "HB_ARCHITECTURE"
+         cMacro := hbmk[ _HBMK_cARCH ] ; EXIT
+      CASE "HB_COMP"
+      CASE "HB_COMPILER"
+         cMacro := hbmk[ _HBMK_cCOMP ] ; EXIT
+      CASE "HB_CPU"
+         cMacro := hbmk_CPU( hbmk ) ; EXIT
+      CASE "HB_WORK"
+         cMacro := _WORKDIR_BASE_ ; EXIT
+      CASE "HB_MAJOR"
+         cMacro := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) ; EXIT
+      CASE "HB_MINOR"
+         cMacro := hb_ntos( hb_Version( HB_VERSION_MINOR ) ) ; EXIT
+      CASE "HB_RELEASE"
+         cMacro := hb_ntos( hb_Version( HB_VERSION_RELEASE ) ) ; EXIT
+      CASE "HB_STATUS"
+         cMacro := hb_Version( HB_VERSION_STATUS ) ; EXIT
+      CASE "HB_REVISION"
+         cMacro := hb_ntos( hb_Version( HB_VERSION_REVISION ) ) ; EXIT
+      CASE "HB_BIN"
+         cMacro := hbmk[ _HBMK_cHB_BIN_INSTALL ] ; EXIT
+      CASE "HB_LIB"
+         cMacro := hbmk[ _HBMK_cHB_LIB_INSTALL ] ; EXIT
+      CASE "HB_DYN"
+         cMacro := hbmk[ _HBMK_cHB_DYN_INSTALL ] ; EXIT
+      CASE "HB_INC"
+         cMacro := hbmk[ _HBMK_cHB_INC_INSTALL ] ; EXIT
+      CASE "HB_FIRST"
+         cMacro := FN_NameGet( hbmk[ _HBMK_cFIRST ] ) ; EXIT
       OTHERWISE
-         /* NOTE: Macro not found, completely ignore it
-                  (for now without warning) [vszakats] */
-         cMacro := ""
-      ENDCASE
+         /* NOTE: If macro not found, try to interpret as
+                  envvar. If it doesn't exist, empty string
+                  will be returned (without warning) [vszakats] */
+         cMacro := GetEnv( cMacro )
+      ENDSWITCH
 
       cString := Left( cString, nStart - 1 ) + cMacro + SubStr( cString, nEnd + 1 )
    ENDDO
@@ -6585,7 +6624,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       hb_StrFormat( I_( "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbc." ), _HBMK_CFG_NAME ),;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
       I_( ".hbc config files in current dir are automatically processed." ),;
-      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
+      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
       I_( "Defaults and feature support vary by architecture/compiler." ) }

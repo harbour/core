@@ -460,13 +460,13 @@ BOOL hb_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
    return fResult;
 }
 
-ULONG hb_fileReadAt( PHB_FILE pFile, BYTE * buffer, ULONG ulSize,
+ULONG hb_fileReadAt( PHB_FILE pFile, void * buffer, ULONG ulSize,
                      HB_FOFFSET llOffset )
 {
    return hb_fsReadAt( pFile->hFile, buffer, ulSize, llOffset );
 }
 
-ULONG hb_fileWriteAt( PHB_FILE pFile, const BYTE * buffer, ULONG ulSize,
+ULONG hb_fileWriteAt( PHB_FILE pFile, const void * buffer, ULONG ulSize,
                       HB_FOFFSET llOffset )
 {
    return hb_fsWriteAt( pFile->hFile, buffer, ulSize, llOffset );

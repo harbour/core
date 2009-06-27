@@ -1372,7 +1372,7 @@ BOOL hb_fsSetAttr( const char * pszFileName, ULONG ulAttr )
    return fResult;
 }
 
-USHORT hb_fsRead( HB_FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
+USHORT hb_fsRead( HB_FHANDLE hFileHandle, void * pBuff, USHORT uiCount )
 {
    USHORT uiRead;
 
@@ -1412,7 +1412,7 @@ USHORT hb_fsRead( HB_FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
    return uiRead;
 }
 
-USHORT hb_fsWrite( HB_FHANDLE hFileHandle, const BYTE * pBuff, USHORT uiCount )
+USHORT hb_fsWrite( HB_FHANDLE hFileHandle, const void * pBuff, USHORT uiCount )
 {
    USHORT uiWritten;
 
@@ -1472,7 +1472,7 @@ USHORT hb_fsWrite( HB_FHANDLE hFileHandle, const BYTE * pBuff, USHORT uiCount )
    return uiWritten;
 }
 
-ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
+ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount )
 {
    ULONG ulRead;
 
@@ -1501,7 +1501,7 @@ ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
       ULONG ulLeftToRead = ulCount;
       USHORT uiToRead;
       USHORT uiRead;
-      BYTE * pPtr = pBuff;
+      BYTE * pPtr = ( BYTE * ) pBuff;
 
       ulRead = 0;
 
@@ -1552,7 +1552,7 @@ ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
    return ulRead;
 }
 
-ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULONG ulCount )
+ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount )
 {
    ULONG ulWritten;
 
@@ -1590,7 +1590,7 @@ ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULONG ulCount
             ULONG ulLeftToWrite = ulCount;
             USHORT uiToWrite;
             USHORT uiWritten;
-            const BYTE * pPtr = pBuff;
+            const BYTE * pPtr = ( const BYTE * ) pBuff;
 
             ulWritten = 0;
 
@@ -1654,7 +1654,7 @@ ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULONG ulCount
    return ulWritten;
 }
 
-ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount, HB_FOFFSET llOffset )
+ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount, HB_FOFFSET llOffset )
 {
    ULONG ulRead;
 
@@ -1713,7 +1713,7 @@ ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount, HB_FOFFS
    return ulRead;
 }
 
-ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULONG ulCount, HB_FOFFSET llOffset )
+ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount, HB_FOFFSET llOffset )
 {
    ULONG ulWritten;
 
