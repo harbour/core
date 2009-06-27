@@ -99,15 +99,15 @@ static void hb_memoread( BOOL bHandleEOF )
             hb_retclen_buffer( ( char * ) pbyBuffer, ulSize );
          }
          else
-            hb_retc( NULL );
+            hb_retc_null();
 
          hb_fsClose( fhnd );
       }
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 HB_FUNC( HB_MEMOREAD )

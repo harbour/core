@@ -112,7 +112,7 @@ HB_FUNC( STRZERO )
             hb_retc_buffer( szResult );
          }
          else
-            hb_retc( NULL );
+            hb_retc_null();
       }
       else
 #ifdef HB_C52_STRICT

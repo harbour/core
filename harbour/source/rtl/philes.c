@@ -253,10 +253,10 @@ HB_FUNC( FREADSTR )
          hb_retc_buffer( buffer );
       }
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
    hb_fsSetFError( uiError );
 }
 
@@ -301,7 +301,7 @@ HB_FUNC( HB_PROGNAME )
          hb_retc( szBaseName );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 HB_FUNC( HB_DIRBASE )

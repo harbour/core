@@ -174,6 +174,6 @@ HB_FUNC( ALLTRIM )
       hb_errRT_BASE_SubstR( EG_ARG, 2022, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #endif
 #else
-      hb_retc( NULL );
+      hb_retc_null();
 #endif
 }

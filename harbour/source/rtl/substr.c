@@ -107,10 +107,10 @@ HB_FUNC( SUBSTR )
                hb_retclen( hb_itemGetCPtr( pText ) + lPos, lLen );
          }
          else
-            hb_retc( NULL );
+            hb_retc_null();
       }
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

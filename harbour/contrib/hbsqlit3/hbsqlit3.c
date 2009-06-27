@@ -794,7 +794,7 @@ HB_FUNC( SQLITE3_SQL )
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError(1) );
    }
 #else
-   hb_retc( NULL );
+   hb_retc_null();
 #endif
 }
 

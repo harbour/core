@@ -761,7 +761,7 @@ HB_FUNC( ADSGETTABLEALIAS )
                             &pusLen ) == AE_SUCCESS )
          hb_retclen( ( char * ) pucAlias, pusLen );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
@@ -796,7 +796,7 @@ HB_FUNC( ADSGETAOF )
          hb_adsOemAnsiFree( szRet );
       }
       else
-         hb_retc( NULL );
+         hb_retc_null();
 
       if( pucFilter2 )
          hb_xfree( pucFilter2 );
@@ -965,14 +965,14 @@ HB_FUNC( ADSGETFILTER )
       else
       {
          HB_TRACE(HB_TR_DEBUG, ("adsGetFilter() error %lu", ( ULONG ) ulRetVal));
-         hb_retc( NULL );
+         hb_retc_null();
       }
 
       if( pucFilter2 )
          hb_xfree( pucFilter2 );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 HB_FUNC( ADSENABLEENCRYPTION )

@@ -407,7 +407,7 @@ HB_FUNC( HB_ARGSTRING )
       }
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 /* Returns the number of command line arguments passed to the application, this

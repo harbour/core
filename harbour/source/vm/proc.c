@@ -142,7 +142,7 @@ HB_FUNC( PROCFILE )
    }
    hb_retc( hb_vmFindModuleSymbolName( hb_vmGetRealFuncSym( pSym ) ) );
 #else
-   hb_retc( NULL );
+   hb_retc_null();
 #endif
 }
 

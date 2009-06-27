@@ -389,7 +389,7 @@ HB_FUNC( WIN_GETPRINTERFONTNAME )
       hb_retc( ( char * ) cFont );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 HB_FUNC( WIN_BITMAPSOK )
@@ -497,7 +497,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
    }
    else
    {
-      hb_retc( NULL );
+      hb_retc_null();
 
       if( pbmfh != NULL )
          hb_xfree( pbmfh );

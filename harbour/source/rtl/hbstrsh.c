@@ -74,5 +74,5 @@ HB_FUNC( HB_STRSHRINK )
          hb_itemReturn( pText );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }

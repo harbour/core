@@ -82,7 +82,7 @@ HB_FUNC( STRTRAN )
          if( !ulStart )
          {
             /* Clipper seems to work this way */
-            hb_retc( NULL );
+            hb_retc_null();
          }
          else if( ulStart > 0 )
          {

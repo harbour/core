@@ -259,7 +259,7 @@ HB_FUNC( HB_TOKENGET )
       hb_retclen( szLine, ulLen );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 /* like HB_TOKENGET() but returns next token starting from passed position
@@ -289,7 +289,7 @@ HB_FUNC( HB_TOKENPTR )
    else
    {
       hb_stornl( 0, 2 );
-      hb_retc( NULL );
+      hb_retc_null();
    }
 }
 

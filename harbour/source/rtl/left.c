@@ -64,7 +64,7 @@ HB_FUNC( LEFT )
    {
       long lLen = hb_parnl( 2 );
       if( lLen <= 0 )
-         hb_retc( NULL );
+         hb_retc_null();
       else
       {
          ULONG ulText = hb_itemGetCLen( pText );

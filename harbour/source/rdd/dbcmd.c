@@ -187,7 +187,7 @@ HB_FUNC( ALIAS )
          return;
       }
    }
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 HB_FUNC( DBEVAL )
@@ -260,7 +260,7 @@ HB_FUNC( DBF )
          return;
       }
    }
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 HB_FUNC( BOF )
@@ -543,7 +543,7 @@ HB_FUNC( DBFILTER )
       hb_itemReturnRelease( pFilter );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 HB_FUNC( DBGOBOTTOM )
@@ -974,7 +974,7 @@ HB_FUNC( FIELDNAME )
       hb_errRT_DBCMD( EG_ARG, EDBCMD_FIELDNAME_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
        */
    }
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 HB_FUNC( FIELDPOS )
@@ -1737,7 +1737,7 @@ HB_FUNC( DBRELATION )  /* (<nRelation>) --> cLinkExp */
       hb_itemReturnRelease( pRelExpr );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 HB_FUNC( DBRSELECT )  /* (<nRelation>) --> nWorkArea */
@@ -2214,7 +2214,7 @@ HB_FUNC( HB_FIELDTYPE )
       }
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 HB_FUNC( HB_WAEVAL )

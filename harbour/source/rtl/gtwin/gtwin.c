@@ -418,6 +418,13 @@ static int hb_gt_win_getKbdState( void )
    if( GetKeyState( VK_CAPITAL ) & 0x01 ) iKbdState |= HB_GTI_KBD_CAPSLOCK;
    if( GetKeyState( VK_INSERT  ) & 0x01 ) iKbdState |= HB_GTI_KBD_INSERT;
 
+   if( GetKeyState( VK_LSHIFT   ) & 0x80 ) iKbdState |= HB_GTI_KBD_LSHIFT;
+   if( GetKeyState( VK_RSHIFT   ) & 0x80 ) iKbdState |= HB_GTI_KBD_RSHIFT;
+   if( GetKeyState( VK_LCONTROL ) & 0x80 ) iKbdState |= HB_GTI_KBD_LCTRL;
+   if( GetKeyState( VK_RCONTROL ) & 0x80 ) iKbdState |= HB_GTI_KBD_RCTRL;
+   if( GetKeyState( VK_LMENU    ) & 0x80 ) iKbdState |= HB_GTI_KBD_LALT;
+   if( GetKeyState( VK_RMENU    ) & 0x80 ) iKbdState |= HB_GTI_KBD_RALT;
+
    return iKbdState;
 }
 

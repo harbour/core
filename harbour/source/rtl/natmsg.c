@@ -113,7 +113,7 @@ HB_FUNC( __NATMSG )
    else if( HB_ISNUM( 1 ) )
       hb_retc( hb_nationGetMsg( hb_parni( 1 ) ) );
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 HB_FUNC( __NATSORTVER )

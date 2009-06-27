@@ -86,7 +86,7 @@ HB_FUNC( SX_SLIMFAST )
       hb_retclen_buffer( szDst, ulDst );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 HB_FUNC( SX_WILDMATCH )

@@ -268,5 +268,5 @@ HB_FUNC( __PP_PROCESS )
       }
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }

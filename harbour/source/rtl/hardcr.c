@@ -83,5 +83,5 @@ HB_FUNC( HARDCR )
       hb_retclen_buffer( hb_strHardCR( pszBuffer, ulStringLen ), ulStringLen );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }

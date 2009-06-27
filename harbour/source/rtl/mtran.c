@@ -102,6 +102,6 @@ HB_FUNC( MEMOTRAN )
       hb_retclen_buffer( pszResult, ulResultLen );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 

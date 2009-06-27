@@ -81,7 +81,7 @@ HB_FUNC( STR )
       if( szResult )
          hb_retc_buffer( szResult );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

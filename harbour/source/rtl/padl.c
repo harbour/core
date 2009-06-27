@@ -97,9 +97,9 @@ HB_FUNC( PADL )
             }
          }
          else
-            hb_retc( NULL );
+            hb_retc_null();
       }
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }

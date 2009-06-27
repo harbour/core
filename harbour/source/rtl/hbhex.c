@@ -168,7 +168,7 @@ HB_FUNC( HB_STRTOHEX )
       hb_retclen_buffer( szDest, ulDest );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 HB_FUNC( HB_HEXTOSTR )
@@ -235,5 +235,5 @@ HB_FUNC( HB_HEXTOSTR )
       }
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }

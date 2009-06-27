@@ -85,7 +85,7 @@ HB_FUNC( REPLICATE )
             hb_errRT_BASE_SubstR( EG_STROVERFLOW, 1234, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       }
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1106, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

@@ -90,8 +90,8 @@ HB_FUNC( HB_COLORINDEX )
          hb_retclen( pszColor + ulColorPos, ulColorLen );
       }
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }

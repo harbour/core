@@ -177,7 +177,7 @@ HB_FUNC( SX_TABLENAME )
       hb_itemReturnRelease( pList );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 static void hb_sxRollBackChild( AREAP pArea, PHB_ITEM pItem )

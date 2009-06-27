@@ -1190,7 +1190,7 @@ static void s_inetRecvPattern( const char * szPattern )
             hb_itemPutNI( pResult, -2 );
 
          hb_xfree( ( void * ) Buffer );
-         hb_retc( NULL );
+         hb_retc_null();
       }
    }
 }
@@ -1231,7 +1231,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
    {
       if( pResult )
          hb_itemPutNI( pResult, -1 );
-      hb_retc( NULL );
+      hb_retc_null();
       return;
    }
 
@@ -1377,7 +1377,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
       }
 
       hb_xfree( ( void * ) Buffer );
-      hb_retc( NULL );
+      hb_retc_null();
    }
    else
    {
@@ -1398,7 +1398,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
             hb_itemPutNI( pResult, -2 );
 
          hb_xfree( ( void * ) Buffer );
-         hb_retc( NULL );
+         hb_retc_null();
       }
    }
 

@@ -158,7 +158,7 @@ HB_FUNC( HB_LIBERROR )
 #if defined(HB_OS_LINUX) && !defined(__WATCOMC__)
    hb_retc( dlerror() );
 #else
-   hb_retc( NULL );
+   hb_retc_null();
 #endif
 }
 

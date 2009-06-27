@@ -147,7 +147,7 @@ HB_FUNC( MSAVESTATE )
       hb_retclen_buffer( pBuffer, iLen );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 HB_FUNC( MRESTSTATE )

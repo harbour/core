@@ -128,18 +128,18 @@ void hb_rddShutDown( void ) {}
 HB_FUNC( RDDSYS ) {}
 
 
-HB_FUNC( RDDNAME ) { hb_retc( NULL ); }
+HB_FUNC( RDDNAME ) { hb_retc_null(); }
 
 HB_FUNC( RDDLIST ) { hb_reta( 0 ); }
 
 
-HB_FUNC( FIELDGET ) { hb_retc( NULL ); }
+HB_FUNC( FIELDGET ) { hb_retc_null(); }
 
-HB_FUNC( FIELDPUT ) { hb_retc( NULL ); }
+HB_FUNC( FIELDPUT ) { hb_retc_null(); }
 
 HB_FUNC( FIELDPOS ) { hb_retni( 0 ); }
 
-HB_FUNC( FIELDNAME ) { hb_retc( NULL ); }
+HB_FUNC( FIELDNAME ) { hb_retc_null(); }
 
 
 HB_FUNC( DBCREATE ) {}
@@ -176,17 +176,17 @@ HB_FUNC( DBRLOCK ) { hb_retl( FALSE ); }
 
 HB_FUNC( DBUNLOCK ) { hb_retl( FALSE ); }
 
-HB_FUNC( DBRELATION ) { hb_retc( NULL ); }
+HB_FUNC( DBRELATION ) { hb_retc_null(); }
 
 HB_FUNC( DBRSELECT ) { hb_retni( 0 ); }
 
-HB_FUNC( DBFILTER ) { hb_retc( NULL ); }
+HB_FUNC( DBFILTER ) { hb_retc_null(); }
 
 HB_FUNC( DBEVAL ) {}
 
 HB_FUNC( SELECT ) { hb_retni( 0 ); }
 
-HB_FUNC( ALIAS ) { hb_retc( NULL ); }
+HB_FUNC( ALIAS ) { hb_retc_null(); }
 
 HB_FUNC( USED ) { hb_retl( FALSE ); }
 
@@ -223,10 +223,10 @@ HB_FUNC( LUPDATE ) { hb_retds( NULL ); }
 
 HB_FUNC( INDEXORD ) { hb_parni( 1 ); }
 
-HB_FUNC( INDEXKEY ) { hb_retc( NULL ); }
+HB_FUNC( INDEXKEY ) { hb_retc_null(); }
 
-HB_FUNC( ORDNAME ) { hb_retc( NULL ); }
+HB_FUNC( ORDNAME ) { hb_retc_null(); }
 
-HB_FUNC( ORDKEY ) { hb_retc( NULL ); }
+HB_FUNC( ORDKEY ) { hb_retc_null(); }
 
-HB_FUNC( ORDFOR ) { hb_retc( NULL ); }
+HB_FUNC( ORDFOR ) { hb_retc_null(); }

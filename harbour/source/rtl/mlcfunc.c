@@ -263,7 +263,7 @@ HB_FUNC( MEMOLINE )
 
    if( !pszString )
    {
-      hb_retc( NULL );
+      hb_retc_null();
       return;
    }
 
@@ -305,7 +305,7 @@ HB_FUNC( MEMOLINE )
       hb_retclen_buffer( szLine, ulLineLength );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
    hb_xfree( pEOLs );
 }
 

@@ -98,5 +98,5 @@ HB_FUNC( SX_FNAMEPARSER )
       hb_xfree( pFileName );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }

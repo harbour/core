@@ -83,7 +83,7 @@ HB_FUNC( DESCEND )
             hb_retclen_buffer( szBuffer, ulLen );
          }
          else
-            hb_retc( NULL );
+            hb_retc_null();
       }
       else if( HB_IS_DATE( pItem ) )
          hb_retnl( 5231808 - hb_itemGetDL( pItem ) );

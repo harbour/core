@@ -165,6 +165,13 @@
 #define HB_GTI_KBD_ACCENT3      16384
 #define HB_GTI_KBD_ACCENT4      32768
 
+#define HB_GTI_KBD_LSHIFT       65536      
+#define HB_GTI_KBD_RSHIFT       131072
+#define HB_GTI_KBD_LCTRL        262144
+#define HB_GTI_KBD_RCTRL        524288
+#define HB_GTI_KBD_LALT         1048576
+#define HB_GTI_KBD_RALT         2097572
+                                
 /* Harbour GT callback events - WORK IN PROGRESS */
 #define HB_GTE_ACTIVATE         1
 #define HB_GTE_SETFOCUS         2

@@ -395,7 +395,7 @@ HB_FUNC( SX_I_INDEXNAME )
       return;
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 HB_FUNC( SX_I_TAGNAME )
@@ -412,7 +412,7 @@ HB_FUNC( SX_I_TAGNAME )
       return;
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 HB_FUNC( SX_INDEXCOUNT )
@@ -447,7 +447,7 @@ HB_FUNC( SX_INDEXNAME )
          hb_itemReturnRelease( Info.itmResult );
       }
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }
 

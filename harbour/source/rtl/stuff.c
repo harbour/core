@@ -86,9 +86,9 @@ HB_FUNC( STUFF )
          hb_retclen_buffer( szResult, ulTotalLen );
       }
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 

@@ -176,7 +176,7 @@ HB_FUNC( HB_ZCOMPRESS )
       }
       else
       {
-         hb_retc( NULL );
+         hb_retc_null();
          hb_storni( Z_OK, 3 );
       }
    }
@@ -236,7 +236,7 @@ HB_FUNC( HB_ZUNCOMPRESS )
       }
       else
       {
-         hb_retc( NULL );
+         hb_retc_null();
          hb_storni( Z_OK, 3 );
       }
    }

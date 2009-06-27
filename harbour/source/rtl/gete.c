@@ -105,16 +105,16 @@ HB_FUNC( GETENV )
             if( szValue )
                hb_xfree( szValue );
 
-            hb_retc( NULL );
+            hb_retc_null();
          }
       }
       else
-         hb_retc( NULL );
+         hb_retc_null();
 
       hb_itemFreeC( pszName );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 /* NOTE: Undocumented Clipper function. [vszakats] */
@@ -178,12 +178,12 @@ HB_FUNC( HB_GETENV )
          }
       }
       else
-         hb_retc( NULL );
+         hb_retc_null();
 
       hb_itemFreeC( pszName );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 HB_FUNC( HB_SETENV )

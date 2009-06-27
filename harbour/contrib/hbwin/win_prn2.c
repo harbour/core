@@ -235,7 +235,7 @@ HB_FUNC( GETDEFAULTPRINTER )
    if( hb_GetDefaultPrinter( szDefaultPrinter, &pdwBufferSize ) )
       hb_retclen( szDefaultPrinter, pdwBufferSize - 1 );
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 static DWORD IsPrinterError( HANDLE hPrinter )
