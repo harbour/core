@@ -38,6 +38,10 @@ CPP_SOURCES=\
 	hbqt_qdirmodel.cpp \
 	hbqt_qdockwidget.cpp \
 	hbqt_qdoublespinbox.cpp \
+	hbqt_qdropevent.cpp \
+	hbqt_qdragmoveevent.cpp \
+	hbqt_qdragenterevent.cpp \
+	hbqt_qdragleaveevent.cpp \
 	hbqt_qerrormessage.cpp \
 	hbqt_qevent.cpp \
 	hbqt_qeventloop.cpp \
@@ -86,6 +90,7 @@ CPP_SOURCES=\
 	hbqt_qmessagebox.cpp \
 	hbqt_qmodelindex.cpp \
 	hbqt_qmouseevent.cpp \
+	hbqt_qmoveevent.cpp \
 	hbqt_qobject.cpp \
 	hbqt_qpaintdevice.cpp \
 	hbqt_qpagesetupdialog.cpp \
@@ -103,10 +108,11 @@ CPP_SOURCES=\
 	hbqt_qprogressdialog.cpp \
 	hbqt_qpushbutton.cpp \
 	hbqt_qradialgradient.cpp \
+	hbqt_qradiobutton.cpp \
 	hbqt_qrect.cpp \
 	hbqt_qrectf.cpp \
-	hbqt_qradiobutton.cpp \
 	hbqt_qregion.cpp \
+	hbqt_qresizeevent.cpp \
 	hbqt_qresource.cpp \
 	hbqt_qscrollarea.cpp \
 	hbqt_qscrollbar.cpp \
@@ -196,10 +202,11 @@ CPP_SOURCES=\
 	hbqt_qvariant.cpp \
 	hbqt_qvboxlayout.cpp \
 	hbqt_qwebpage.cpp \
+	hbqt_qwebview.cpp \
+	hbqt_qwheelevent.cpp \
 	hbqt_qwidget.cpp \
 	hbqt_qwidgetaction.cpp \
 	hbqt_qwidgetitem.cpp \
-	hbqt_qwebview.cpp \
 	hbqt_qwindowsstyle.cpp \
 	hbqt_qwindowsxpstyle.cpp \
 	hbqt_qwizard.cpp \
@@ -252,6 +259,10 @@ PRG_SOURCES=\
 	TQDirModel.prg \
 	TQDockWidget.prg \
 	TQDoubleSpinBox.prg \
+	TQDropEvent.prg \
+	TQDragMoveEvent.prg \
+	TQDragEnterEvent.prg \
+	TQDragLeaveEvent.prg \
 	TQErrorMessage.prg \
 	TQEvent.prg \
 	TQEventLoop.prg \
@@ -300,6 +311,7 @@ PRG_SOURCES=\
 	TQMessageBox.prg \
 	TQModelIndex.prg \
 	TQMouseEvent.prg \
+	TQMoveEvent.prg \
 	TQObject.prg \
 	TQPaintDevice.prg \
 	TQPageSetupDialog.prg \
@@ -317,10 +329,11 @@ PRG_SOURCES=\
 	TQProgressDialog.prg \
 	TQPushButton.prg \
 	TQRadialGradient.prg \
+	TQRadioButton.prg \
 	TQRect.prg \
 	TQRectF.prg \
-	TQRadioButton.prg \
 	TQRegion.prg \
+	TQResizeEvent.prg \
 	TQResource.prg \
 	TQScrollArea.prg \
 	TQScrollBar.prg \
@@ -410,10 +423,11 @@ PRG_SOURCES=\
 	TQVariant.prg \
 	TQVBoxLayout.prg \
 	TQWebPage.prg \
+	TQWebView.prg \
+	TQWheelEvent.prg \
 	TQWidget.prg \
 	TQWidgetAction.prg \
 	TQWidgetItem.prg \
-	TQWebView.prg \
 	TQWindowsStyle.prg \
 	TQWindowsXPStyle.prg \
 	TQWizard.prg \

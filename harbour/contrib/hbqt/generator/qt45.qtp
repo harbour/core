@@ -45,6 +45,10 @@ QDir.qth
 QDirModel.qth
 QDockWidget.qth
 QDoubleSpinBox.qth
+QDropEvent.qth
+QDragMoveEvent.qth
+QDragEnterEvent.qth
+QDragLeaveEvent.qth
 QErrorMessage.qth
 QEvent.qth
 QEventLoop.qth
@@ -93,6 +97,7 @@ QMenuBar.qth
 QMessageBox.qth
 QModelIndex.qth
 QMouseEvent.qth
+QMoveEvent.qth
 QObject.qth
 QPaintDevice.qth
 QPageSetupDialog.qth
@@ -110,10 +115,11 @@ QProgressBar.qth
 QProgressDialog.qth
 QPushButton.qth
 QRadialGradient.qth
+QRadioButton.qth
 QRect.qth
 QRectF.qth
-QRadioButton.qth
 QRegion.qth
+QResizeEvent.qth
 QResource.qth
 QScrollArea.qth
 QScrollBar.qth
@@ -209,10 +215,11 @@ QUrl.qth
 QVariant.qth
 QVBoxLayout.qth
 QWebPage.qth
+QWebView.qth
+QWheelEvent.qth
 QWidget.qth
 QWidgetAction.qth
 QWidgetItem.qth
-QWebView.qth
 QWindowsStyle.qth
 QWindowsXPStyle.qth
 QWizard.qth

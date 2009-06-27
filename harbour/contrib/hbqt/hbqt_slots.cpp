@@ -894,7 +894,7 @@ bool Events::eventFilter( QObject * obj, QEvent * event )
       else
          event->ignore();
    }
-   return true;
+   return ret; //true;
 }
 
 HB_FUNC( QT_QEVENTFILTER )
