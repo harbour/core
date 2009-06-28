@@ -3981,6 +3981,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cOpt_CprsMin := "-1"
             cOpt_CprsMax := "-9"
 
+         #else
+
+            HB_SYMBOL_UNUSED( cBin_Cprs )
+            HB_SYMBOL_UNUSED( cOpt_CprsMin )
+            HB_SYMBOL_UNUSED( cOpt_CprsMax )
+
          #endif
 
          IF hbmk[ _HBMK_nCOMPR ] != _COMPR_OFF .AND. ! lCreateLib .AND. ! Empty( cBin_Cprs )
