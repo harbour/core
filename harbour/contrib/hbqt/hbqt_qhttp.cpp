@@ -85,8 +85,8 @@ HB_FUNC( QT_QHTTP_READ )
    iRead = hbqt_par_QHttp( 1 )->read( iData, hb_parnint( 3 ) );
 
    hb_retnint( iRead );
-   hb_storclen( iData, iRead, 2 );
-   hb_xfree( iData );
+   if( ! hb_storclen_buffer( iData, iRead, 2 ) )
+      hb_xfree( iData );
 }
 
 /*
