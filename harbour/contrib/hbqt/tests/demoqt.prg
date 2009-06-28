@@ -722,17 +722,3 @@ STATIC FUNCTION Dummies()
 
 /*----------------------------------------------------------------------*/
 
-#PRAGMA BEGINDUMP
-
-#include <windows.h>
-#include "hbapi.h"
-
-HB_FUNC( UIDEBUG )
-{
-   OutputDebugString( hb_parc( 1 ) );
-}
-
-#PRAGMA ENDDUMP
-
-/*----------------------------------------------------------------------*/
-
