@@ -3983,9 +3983,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          #else
 
-            HB_SYMBOL_UNUSED( cBin_Cprs )
-            HB_SYMBOL_UNUSED( cOpt_CprsMin )
-            HB_SYMBOL_UNUSED( cOpt_CprsMax )
+            cBin_Cprs := NIL
+            cOpt_CprsMin := ""
+            cOpt_CprsMax := ""
 
          #endif
 
