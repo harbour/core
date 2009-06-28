@@ -85,11 +85,10 @@
 
 INIT PROCEDURE Qt_Start()
    qt_qapplication()
-   /*qt_qapplication_setstyle( QT_PTROF( QWindowsXPStyle():new() ) )*/
    RETURN
 
 EXIT PROCEDURE Qt_End()
-   qt_qapplication_exec()
+   qt_qapplication_quit()
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -338,7 +337,7 @@ STATIC FUNCTION Build_TreeView( oWnd )
 
    oTV := QTreeView():new( QT_PTROF( oWnd ) )
    oTV:setMouseTracking( .t. )
-   //Qt_Connect_Signal( QT_PTROF( oTV ), QT_EVE_HOVERED, {|o,i| uiDebug( "oTV:hovered" ) } )
+   //Qt_Connect_Signal( QT_PTROF( oTV ), QT_EVE_HOVERED, {|o,i| hb_outDebug( "oTV:hovered" ) } )
    oDirModel := QDirModel():new( QT_PTROF( oTV ) )
    oTV:setModel( QT_PTROF( oDirModel ) )
    oTV:move( 5, 7 )
@@ -354,7 +353,7 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
 
    oListBox := QListView():New( QT_PTROF( oWnd ) )
    oListBox:setMouseTracking( .t. )
-   //Qt_Connect_Signal( QT_PTROF( oListBox ), QT_EVE_HOVERED, {|o,i| uiDebug( "oListBox:hovered" ) } )
+   //Qt_Connect_Signal( QT_PTROF( oListBox ), QT_EVE_HOVERED, {|o,i| hb_outDebug( "oListBox:hovered" ) } )
 
    oStrList := QStringList():new( QT_PTROF( oListBox ) )
 
@@ -409,7 +408,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    oComboBox:addItem( "First"  )
    oComboBox:addItem( "Second" )
    oComboBox:addItem( "Third"  )
-   //Qt_Connect_Signal( QT_PTROF( oComboBox ), QT_EVE_HIGHLIGHTED_I        , {|o,i| uiDebug( oComboBox:itemText( i ) ) } )
+   //Qt_Connect_Signal( QT_PTROF( oComboBox ), QT_EVE_HIGHLIGHTED_I        , {|o,i| hb_outDebug( oComboBox:itemText( i ) ) } )
    Qt_Connect_Signal( QT_PTROF( oComboBox ), QT_EVE_CURRENTINDEXCHANGED_I, {|o,i| MsgInfo( oComboBox:itemText( i ) ) } )
    oComboBox:move( 5, 60 )
    oComboBox:resize( 345, 30 )
