@@ -74,6 +74,21 @@ HB_FUNC( QT_QFTP )
 {
    hb_retptr( new QFtp( hbqt_par_QObject( 1 ) ) );
 }
+
+/*
+ * qint64 read ( char * data, qint64 maxlen )
+ */
+HB_FUNC( QT_QFTP_READ )
+{
+   char * iData = ( char * ) hb_xgrab( hb_parnint( 3 ) );
+   qint64 iRead;
+
+   iRead = hbqt_par_QFtp( 1 )->read( iData, hb_parnint( 3 ) );
+
+   hb_retnint( iRead );
+   hb_storclen( iData, iRead, 2 );
+   hb_xfree( iData );
+}
 </CODE>
 
 <ENUMS>
@@ -103,7 +118,9 @@ int mkdir ( const QString & dir )
 int put ( QIODevice * dev, const QString & file, TransferType type = Binary )
 int put ( const QByteArray & data, const QString & file, TransferType type = Binary )
 int rawCommand ( const QString & command )
-qint64 read ( char * data, qint64 maxlen )
+#           Never uncomment it : See above 
+// qint64 read ( char * data, qint64 maxlen )
+#
 QByteArray readAll ()
 int remove ( const QString & file )
 int rename ( const QString & oldname, const QString & newname )

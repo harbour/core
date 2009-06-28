@@ -76,6 +76,21 @@ HB_FUNC( QT_QHTTP )
 {
    hb_retptr( new QHttp( hbqt_par_QObject( 1 ) ) );
 }
+
+/*
+ * qint64 read ( char * data, qint64 maxlen )
+ */
+HB_FUNC( QT_QHTTP_READ )
+{
+   char * iData = ( char * ) hb_xgrab( hb_parnint( 3 ) );
+   qint64 iRead;
+
+   iRead = hbqt_par_QHttp( 1 )->read( iData, hb_parnint( 3 ) );
+
+   hb_retnint( iRead );
+   hb_storclen( iData, iRead, 2 );
+   hb_xfree( iData );
+}
 </CODE>
 
 <ENUMS>
@@ -100,7 +115,11 @@ int head ( const QString & path )
 QHttpResponseHeader lastResponse () const
 int post ( const QString & path, QIODevice * data, QIODevice * to = 0 )
 int post ( const QString & path, const QByteArray & data, QIODevice * to = 0 )
-qint64 read ( char * data, qint64 maxlen )
+#
+#           NEVER UNCOMMENT IT
+// qint64 read ( char * data, qint64 maxlen )
+#
+#
 QByteArray readAll ()
 int request ( const QHttpRequestHeader & header, QIODevice * data = 0, QIODevice * to = 0 )
 int request ( const QHttpRequestHeader & header, const QByteArray & data, QIODevice * to = 0 )

@@ -81,7 +81,6 @@ CREATE CLASS QFtp INHERIT QObject
    METHOD  put( pDev, cFile, nType )           INLINE  Qt_QFtp_put( ::pPtr, pDev, cFile, nType )
    METHOD  put_1( pData, cFile, nType )        INLINE  Qt_QFtp_put_1( ::pPtr, pData, cFile, nType )
    METHOD  rawCommand( cCommand )              INLINE  Qt_QFtp_rawCommand( ::pPtr, cCommand )
-   METHOD  read( pData, nMaxlen )              INLINE  Qt_QFtp_read( ::pPtr, pData, nMaxlen )
    METHOD  readAll()                           INLINE  Qt_QFtp_readAll( ::pPtr )
    METHOD  remove( cFile )                     INLINE  Qt_QFtp_remove( ::pPtr, cFile )
    METHOD  rename( cOldname, cNewname )        INLINE  Qt_QFtp_rename( ::pPtr, cOldname, cNewname )

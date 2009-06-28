@@ -73,6 +73,21 @@ HB_FUNC( QT_QFTP )
 }
 
 /*
+ * qint64 read ( char * data, qint64 maxlen )
+ */
+HB_FUNC( QT_QFTP_READ )
+{
+   char * iData = ( char * ) hb_xgrab( hb_parnint( 3 ) );
+   qint64 iRead;
+
+   iRead = hbqt_par_QFtp( 1 )->read( iData, hb_parnint( 3 ) );
+
+   hb_retnint( iRead );
+   hb_storclen( iData, iRead, 2 );
+   hb_xfree( iData );
+}
+
+/*
  * qint64 bytesAvailable () const
  */
 HB_FUNC( QT_QFTP_BYTESAVAILABLE )
@@ -214,14 +229,6 @@ HB_FUNC( QT_QFTP_PUT_1 )
 HB_FUNC( QT_QFTP_RAWCOMMAND )
 {
    hb_retni( hbqt_par_QFtp( 1 )->rawCommand( hbqt_par_QString( 2 ) ) );
-}
-
-/*
- * qint64 read ( char * data, qint64 maxlen )
- */
-HB_FUNC( QT_QFTP_READ )
-{
-   hb_retnint( hbqt_par_QFtp( 1 )->read( hbqt_par_char( 2 ), hb_parnint( 3 ) ) );
 }
 
 /*

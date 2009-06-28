@@ -335,7 +335,7 @@
 #define hbqt_par_QString( n )                ( ( QString ) hb_parcx( n ) )
 #define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )
 #define hbqt_par_Bool( n )                   ( hb_parl( n ) )
-#define hbqt_par_char( n )                   ( ( char * ) hb_parcx( n ) )
+#define hbqt_par_char( n )                   ( hb_parcx( n ) )
 
 #define hbqt_ret_QWidget( p )                ( hb_retptr( ( QWidget* ) p ) )
 #define hbqt_ret_QAbstractItemDelegate( p )  ( hb_retptr( ( QAbstractItemDelegate* ) p ) )

@@ -78,7 +78,6 @@ CREATE CLASS QHttp INHERIT QObject
    METHOD  lastResponse()                      INLINE  Qt_QHttp_lastResponse( ::pPtr )
    METHOD  post( cPath, pData, pTo )           INLINE  Qt_QHttp_post( ::pPtr, cPath, pData, pTo )
    METHOD  post_1( cPath, pData, pTo )         INLINE  Qt_QHttp_post_1( ::pPtr, cPath, pData, pTo )
-   METHOD  read( pData, nMaxlen )              INLINE  Qt_QHttp_read( ::pPtr, pData, nMaxlen )
    METHOD  readAll()                           INLINE  Qt_QHttp_readAll( ::pPtr )
    METHOD  request( pHeader, pData, pTo )      INLINE  Qt_QHttp_request( ::pPtr, pHeader, pData, pTo )
    METHOD  request_1( pHeader, pData, pTo )    INLINE  Qt_QHttp_request_1( ::pPtr, pHeader, pData, pTo )
