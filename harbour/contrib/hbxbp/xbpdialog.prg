@@ -137,6 +137,8 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::drawingArea := XbpDrawingArea():new( self, , {0,0}, ::aSize, , .t. ):create()
    ::oWidget:setCentralWidget( QT_PTROF( ::drawingArea:oWidget ) )
 
+   //::setQtProperty()
+
    ::setPosAndSize()
    IF ::visible
       ::show()
@@ -287,6 +289,8 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    ::oWidget := QWidget():new()
    ::oWidget:setMouseTracking( .T. )
    ::oWidget:setFocusPolicy( 2 )
+
+   //::setQtProperty()  /* Using it for one-to-one style sheet management */
 
    ::oParent:addChild( SELF )
 

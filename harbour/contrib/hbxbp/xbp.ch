@@ -106,11 +106,86 @@
 
 #define XBPLISTBOX_MM_SINGLE                      1
 
-/* Generic Pres Parameters */
 #define XBP_PP_FGCLR                              2
 #define XBP_PP_BGCLR                              4
+#define XBP_PP_HILITE_FGCLR                       6
+#define XBP_PP_HILITE_BGCLR                       8
+#define XBP_PP_DISABLED_FGCLR                     10
+#define XBP_PP_DISABLED_BGCLR                     12
+#define XBP_PP_BORDER_CLR                         14
 #define XBP_PP_COMPOUNDNAME                       15
 #define XBP_PP_FONT                               16
+#define XBP_PP_ACTIVE_CLR                         19
+#define XBP_PP_INACTIVE_CLR                       21
+#define XBP_PP_ACTIVETEXT_FGCLR                   23
+#define XBP_PP_ACTIVETEXT_BGCLR                   25
+#define XBP_PP_INACTIVETEXT_FGCLR                 27
+#define XBP_PP_INACTIVETEXT_BGCLR                 29
+#define XBP_PP_CAPTION                            50
+#define XBP_PP_ALIGNMENT                          52
+#define XBP_PP_ORIGIN                             300
+
+#define XBP_PP_MENU_FGCLR                         32
+#define XBP_PP_MENU_BGCLR                         34
+#define XBP_PP_MENU_HILITE_FGCLR                  36
+#define XBP_PP_MENU_HILITE_BGCLR                  38
+#define XBP_PP_MENU_DISABLED_FGCLR                40
+#define XBP_PP_MENU_DISABLED_BGCLR                42
+
+
+#define XBPSYSCLR_BUTTONTEXT                      ( -58 )
+#define XBPSYSCLR_INFOBACKGROUND                  ( -57 )
+#define XBPSYSCLR_INFOTEXT                        ( -56 )
+#define XBPSYSCLR_3DHIGHLIGHT                     ( -55 )
+#define XBPSYSCLR_3DLIGHT                         ( -54 )
+#define XBPSYSCLR_3DFACE                          ( -53 )
+#define XBPSYSCLR_3DSHADOW                        ( -52 )
+#define XBPSYSCLR_3DDARKSHADOW                    ( -51 )
+#define XBPSYSCLR_SHADOWHILITEBGND                ( -50 )
+#define XBPSYSCLR_SHADOWHILITEFGND                ( -49 )
+#define XBPSYSCLR_SHADOWTEXT                      ( -48 )
+#define XBPSYSCLR_ENTRYFIELD                      ( -47 )
+#define XBPSYSCLR_MENUDISABLEDTEXT                ( -46 )
+#define XBPSYSCLR_MENUHILITE                      ( -45 )
+#define XBPSYSCLR_MENUHILITEBGND                  ( -44 )
+#define XBPSYSCLR_PAGEBACKGROUND                  ( -43 )
+#define XBPSYSCLR_FIELDBACKGROUND                 ( -42 )
+#define XBPSYSCLR_BUTTONLIGHT                     ( -41 )
+#define XBPSYSCLR_BUTTONMIDDLE                    ( -40 )
+#define XBPSYSCLR_BUTTONDARK                      ( -39 )
+#define XBPSYSCLR_BUTTONDEFAULT                   ( -38 )
+#define XBPSYSCLR_TITLEBOTTOM                     ( -37 )
+#define XBPSYSCLR_SHADOW                          ( -36 )
+#define XBPSYSCLR_ICONTEXT                        ( -35 )
+#define XBPSYSCLR_DIALOGBACKGROUND                ( -34 )
+#define XBPSYSCLR_HILITEFOREGROUND                ( -33 )
+#define XBPSYSCLR_HILITEBACKGROUND                ( -32 )
+#define XBPSYSCLR_INACTIVETITLETEXTBGND           ( -31 )
+#define XBPSYSCLR_ACTIVETITLETEXTBGND             ( -30 )
+#define XBPSYSCLR_INACTIVETITLETEXT               ( -29 )
+#define XBPSYSCLR_ACTIVETITLETEXT                 ( -28 )
+#define XBPSYSCLR_OUTPUTTEXT                      ( -27 )
+#define XBPSYSCLR_WINDOWSTATICTEXT                ( -26 )
+#define XBPSYSCLR_SCROLLBAR                       ( -25 )
+#define XBPSYSCLR_BACKGROUND                      ( -24 )
+#define XBPSYSCLR_ACTIVETITLE                     ( -23 )
+#define XBPSYSCLR_INACTIVETITLE                   ( -22 )
+#define XBPSYSCLR_MENU                            ( -21 )
+#define XBPSYSCLR_WINDOW                          ( -20 )
+#define XBPSYSCLR_WINDOWFRAME                     ( -19 )
+#define XBPSYSCLR_MENUTEXT                        ( -18 )
+#define XBPSYSCLR_WINDOWTEXT                      ( -17 )
+#define XBPSYSCLR_TITLETEXT                       ( -16 )
+#define XBPSYSCLR_ACTIVEBORDER                    ( -15 )
+#define XBPSYSCLR_INACTIVEBORDER                  ( -14 )
+#define XBPSYSCLR_APPWORKSPACE                    ( -13 )
+#define XBPSYSCLR_HELPBACKGROUND                  ( -12 )
+#define XBPSYSCLR_HELPTEXT                        ( -11 )
+#define XBPSYSCLR_HELPHILITE                      ( -10 )
+
+#define XBPSYSCLR_TRANSPARENT                     ( -255 )
+
+
 
 #define XBPSLE_LEFT                               1
 #define XBPSLE_RIGHT                              2

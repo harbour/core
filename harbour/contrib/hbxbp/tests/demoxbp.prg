@@ -67,7 +67,7 @@ PROCEDURE Main()
 /*----------------------------------------------------------------------*/
 
 PROCEDURE BuildADialog()
-   LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, aTabs
+   LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, aTabs, oDa
    LOCAL nThread := ThreadID()
    LOCAL cThread := hb_ntos( nThread )
 
@@ -77,6 +77,9 @@ PROCEDURE BuildADialog()
    oDlg:close := {|| MsgBox( "You can also close me by pressing [ESC]" ), .T. }
    oDlg:killDisplayFocus := {|| hb_OutDebug( "Loosing Display Focus" ) }
    SetAppWindow( oDlg )
+   oDlg:show()
+
+   oDa := oDlg:drawingArea
 
    /* Obtain desktop dimensions */
    aSize := AppDesktop():currentSize()
@@ -85,11 +88,12 @@ PROCEDURE BuildADialog()
                   ( aSize[ 2 ] - oDlg:currentSize()[ 2 ] ) / 2 } )
 
    /* Callback to report the mouse moves */
-   // oDlg:drawingArea:motion := {|| hb_outDebug( "MouseMove: "+cThread ) }
+   // oDa:motion := {|| hb_outDebug( "MouseMove: "+cThread ) }
 
    /* Make background color of :drawingArea different */
-   //oDlg:drawingArea:setColorBG( GraMakeRGBColor( { 134,128,164 } ) )
-   //oDlg:drawingArea:setColorFG( GraMakeRGBColor( { 40,120,100 } ) )
+   oDa:setColorBG( GraMakeRGBColor( { 134,128,200 } ) )
+   oDa:setFontCompoundName( "10.Tohama italics" )
+   oDa:setColorFG( GraMakeRGBColor( { 255,255,255 } ) )
 
    /* Install menu system */
    Build_MenuBar()
@@ -98,7 +102,7 @@ PROCEDURE BuildADialog()
    Build_StatusBar( oDlg )
 
    /* Install Toolbar */
-   Build_ToolBar( oDlg:drawingArea )
+   Build_ToolBar( oDa )
 
    /* Install Tab Pages */
    aTabs := Build_TabPages( oDlg )
@@ -116,10 +120,10 @@ PROCEDURE BuildADialog()
    Build_ListBox( aTabs[ 1 ] )
 
    /* Install Push Buttons */
-   Build_PushButton( oDlg:drawingArea )
+   Build_PushButton( oDa )
 
    /* Install Single Line Edits */
-   Build_SLEs( oDlg:drawingArea )
+   Build_SLEs( oDa )
 
    /* Install Multi-Line Edit */
    Build_MLE( aTabs[ 2 ] )
@@ -131,7 +135,7 @@ PROCEDURE BuildADialog()
    Build_SpinButtons( aTabs[ 3 ] )
 
    /* Install Combo Box */
-   Build_ComboBox( oDlg:drawingArea )
+   Build_ComboBox( oDa )
 
    /* Install TreeView */
    Build_TreeView( aTabs[ 4 ] )
@@ -166,6 +170,7 @@ PROCEDURE AppSys()
 FUNCTION Hb_OutDebug();RETURN nil
 FUNCTION Hb_Symbol_Unused();RETURN nil
 FUNCTION Hb_NtoS( n );RETURN ltrim( str( n ) )
+FUNCTION Hb_ThreadStart();RETURN nil
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -230,6 +235,8 @@ STATIC FUNCTION Build_MenuBar()
    oSubMenu:setColorBG( GraMakeRGBColor( { 134,128,250 } ) )
    oSubMenu:setColorFG( GraMakeRGBColor( { 255,  1,  1 } ) )
 
+
+   #ifdef __HARBOUR__
    #if 0
       oSubMenu := XbpMenu():new( oMenuBar ):create()
       oSubMenu:title := "~Dialogs"
@@ -241,6 +248,7 @@ STATIC FUNCTION Build_MenuBar()
       #endif
 
       oMenuBar:addItem( { oSubMenu, NIL } )
+   #endif
    #endif
 
    Return nil
@@ -426,9 +434,6 @@ FUNCTION Build_TabPages( oDlg )
    oTab1:caption   := "ListView"
    oTab1:create()
    oTab1:TabActivate := {|| oTab2:minimize(), oTab3:minimize(), oTab4:minimize(), oTab1:maximize() }
-   #if 0
-   oTab1:setColorBG( GraMakeRGBColor( {198,198,198} ) )
-   #endif
 
    // Second tab page is minimized
    oTab2 := XbpTabPage():new( oDlg:drawingArea, , { 510, 20 }, { 360, nHeight } )
@@ -456,6 +461,8 @@ FUNCTION Build_TabPages( oDlg )
    oTab4:TabActivate := ;
        {|x,y,oTab| x := y, oTab1:minimize(), oTab2:minimize(), oTab3:minimize(), oTab4:maximize() }
 
+   oTab4:setColorBG( GraMakeRGBColor( {198,198,198} ) )
+
    RETURN { oTab1, oTab2, oTab3, oTab4 }
 
 /*----------------------------------------------------------------------*/
@@ -478,7 +485,7 @@ FUNCTION Build_ListBox( oWnd )
    oListBox:ItemSelected := {|mp1, mp2, obj| mp1:=oListBox:getData(), ;
                               mp2:=oListBox:getItem( mp1 ), MsgBox( "itemSelected: "+mp2 ) }
 
-   #if 0
+   #if 1
    oListBox:setColorBG( GraMakeRGBColor( {227,12,110} ) )
    oListBox:setColorBG( GraMakeRGBColor( { 27,12, 45} ) )
    #endif
@@ -510,14 +517,14 @@ FUNCTION Build_ScrollBar( oWnd )
 
    oXbpH := XbpScrollbar():new()
    oXbpH:type  := XBPSCROLL_HORIZONTAL
-   oXbpH:range := { 1, 100 }
-   oXbpH:create( oWnd, , { 10,nHeight-50 }, { nWidth-40,nFat } )
+   oXbpH:range := { 1, 100 }           //50
+   oXbpH:create( oWnd, , { 10,nHeight-30 }, { nWidth-40,nFat } )
    oXbpH:scroll := {|| oXbpV:setData( oXbpH:getData() ) }
 
    oXbpV := XbpScrollbar():new()
    oXbpV:type  := XBPSCROLL_VERTICAL
    oXbpV:range := { 1, 100 }
-   oXbpV:create( oWnd, , { nWidth-30,10 }, { nFat,nHeight-60 } )
+   oXbpV:create( oWnd, , { nWidth-30,10 }, { nFat,nHeight-40 } )
    oXbpV:scroll := {|| oXbpH:setData( oXbpV:getData() ) }
 
    RETURN nil
@@ -538,6 +545,8 @@ FUNCTION Build_SLEs( oWnd )
    //oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData(), Qt_QDebug( "Var A =" + cVarA ) }
    //oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData() }
 
+   oXbp:setColorBG( GraMakeRGBColor( { 170,170,170 } ) )
+
    oXbp              := XbpSLE():new()
    oXbp:autoTab      := .T.
    oXbp:bufferLength := 20
@@ -548,6 +557,8 @@ FUNCTION Build_SLEs( oWnd )
    // Assign the value of the edit buffer to a LOCAL variable
    // when the input focus is lost
    oXbp:killInputFocus := { |x,y,oSLE| oSLE:getData(), MsgBox( "Var B =" + cVarB ) }
+
+   oXbp:setColorBG( GraMakeRGBColor( { 190,190,190 } ) )
 
    RETURN nil
 
@@ -567,6 +578,10 @@ FUNCTION Build_MLE( oWnd )
    // Copy text from LOCAL variable into edit buffer
    // via :dataLink
    oMLE:setData()
+
+   oMLE:setColorBG( GraMakeRGBColor( { 190,190,0 } ) )
+   oMLE:setColorFG( GraMakeRGBColor( { 0,0,0 } ) )
+   oMLE:setFontCompoundName( "14.Courier New bold normal" )
 
    RETURN nil
 

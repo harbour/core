@@ -77,8 +77,16 @@
 
 CLASS XbpWindow  INHERIT  XbpPartHandler
 
+   CLASSDATA nProperty                            INIT  0
+   DATA     qtProperty                            INIT  ""
+   /* Called in the initializer - Unique in the application */
+   METHOD   getProperty()                         INLINE  "PROP" + hb_ntos( ++::nProperty )
+   /* After object is physically created, set unique property to 1 */
+   METHOD   setQtProperty()                       INLINE  ::oWidget:setProperty( ::qtProperty, 1 )
+
    DATA     cargo                                 INIT  ""
    DATA     styleSheet                            INIT  ""
+   METHOD   setStyleSheet()
 
    /*  CONFIGURATION */
    DATA     animate                               INIT  .F.
@@ -290,6 +298,8 @@ METHOD XbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::visible     := lVisible
 
    ::XbpPartHandler:init( oParent, oOwner )
+
+   ::qtProperty  := ::getProperty()
 
    RETURN Self
 
@@ -722,6 +732,15 @@ METHOD XbpWindow:lockUpdate()
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpWindow:setStyleSheet( cNewSheet )
+   LOCAL cSheet := ::oWidget:styleSheet()
+
+   ::oWidget:setStyleSheet( cSheet + " " + cNewSheet )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpWindow:setColorBG( nRGB )
    #if 0
    LOCAL cClass  := __ObjGetClsName( self )
@@ -745,7 +764,7 @@ METHOD XbpWindow:setColorBG( nRGB )
 
    LOCAL oColor := QColor():new( nRGB )
 
-   ::oWidget:setStyleSheet( "background-color: "+ oColor:name +";" )
+   ::setStyleSheet( "background-color: "+ oColor:name +";" )
 
    RETURN Self
 
@@ -775,9 +794,45 @@ METHOD XbpWindow:setColorFG( nRGB )
 
    LOCAL oColor := QColor():new( nRGB )
 
-   ::oWidget:setStyleSheet( "color: "+ oColor:name +";" )
+   ::setStyleSheet( "color: "+ oColor:name +";" )
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:setFontCompoundName( xFont )
+   LOCAL cOldFont, s, n, nPoint, cFont, cAttr, cFace
+   LOCAL aAttr := { "normal","italic","bold" }
+
+   cOldFont := ::fnt_COMMPOUNDNAME
+
+   IF hb_isNumeric( cFont )
+
+   ELSE
+      IF !empty( xFont )
+         cFont := xFont
+         s := lower( cFont )
+         n := ascan( aAttr, {|e| at( e, cFont ) > 0 } )
+         IF n > 0
+            cAttr := aAttr[ n ]
+            n := at( cAttr, s )
+            cFont := substr( cFont,1,n-1 )
+         ELSE
+            cAttr := "normal"
+         ENDIF
+         IF ( n := at( ".", cFont ) ) > 0
+            nPoint := val( substr( cFont,1,n-1 ) )
+            cFont  := substr( cFont,n+1 )
+         ELSE
+            nPoint := 0
+         ENDIF
+         cFace := alltrim( cFont )
+
+         ::setStyleSheet( 'font-family: "'+ cFace +'"; font-style: '+ cAttr +'; font-size: '+ hb_ntos( nPoint )+'pt;' )
+      ENDIF
+   ENDIF
+
+   RETURN cOldFont
 
 /*----------------------------------------------------------------------*/
 
@@ -899,46 +954,6 @@ METHOD XbpWindow:winDevice()
 METHOD XbpWindow:setFont()
 
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:setFontCompoundName( xFont )
-   LOCAL cOldFont, s, n, nPoint, cFont, cAttr, cFace
-   LOCAL aAttr := { "normal","italic","bold" }
-
-   cOldFont := ::fnt_COMMPOUNDNAME
-
-   IF hb_isNumeric( cFont )
-
-   ELSE
-      IF !empty( xFont )
-         cFont := xFont
-         s := lower( cFont )
-         n := ascan( aAttr, {|e| at( e, cFont ) > 0 } )
-         IF n > 0
-            cAttr := aAttr[ n ]
-            n := at( cAttr, s )
-            cFont := substr( cFont,1,n-1 )
-         ELSE
-            cAttr := "normal"
-         ENDIF
-
-         IF ( n := at( ".", cFont ) ) > 0
-            nPoint := val( substr( cFont,1,n-1 ) )
-            cFont  := substr( cFont,n+1 )
-         ELSE
-            nPoint := 0
-         ENDIF
-
-         cFace := alltrim( cFont )
-
-         HB_SYMBOL_UNUSED( cFace )
-         HB_SYMBOL_UNUSED( cAttr )
-         HB_SYMBOL_UNUSED( nPoint )
-      ENDIF
-   ENDIF
-
-   RETURN cOldFont
 
 /*----------------------------------------------------------------------*/
 
