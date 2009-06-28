@@ -151,6 +151,12 @@
 #define XBPCOMBO_DROPDOWN                         2
 #define XBPCOMBO_DROPDOWNLIST                     3
 
+#define XBP_MK_LBUTTON                            1
+#define XBP_MK_RBUTTON                            2
+#define XBP_MK_SHIFT                              4
+#define XBP_MK_CONTROL                            8
+#define XBP_MK_MBUTTON                            16
+
 #define _XBP_CH
 #endif
 

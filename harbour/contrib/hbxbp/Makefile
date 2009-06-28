@@ -38,6 +38,7 @@ endif
 
 ifeq ($(HB_WITH_QT),yes)
 
+
 PRG_SOURCES=\
 	xbpgeneric.prg \
 	xbpdialog.prg \
@@ -60,6 +61,7 @@ PRG_SOURCES=\
 	xbpcombobox.prg \
 	xbptreeview.prg \
 	xbpstyle.prg \
+	xbpappevent.prg \
 
 PRG_HEADERS=\
 	xbp.ch \

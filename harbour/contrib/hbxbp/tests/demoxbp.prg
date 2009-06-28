@@ -68,11 +68,14 @@ PROCEDURE Main()
 
 PROCEDURE BuildADialog()
    LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, aTabs
+   LOCAL nThread := ThreadID()
+   LOCAL cThread := hb_ntos( nThread )
 
    /* Create Application Window */
-   oDlg := GuiStdDialog( 'Harbour - Xbase++ - QT Dialog [ Press "Q" to Exit ]' )
-   oDlg:close := {|| MsgBox( 'You can also close me by Pressing "Q"' ), .T. }
+   oDlg := GuiStdDialog( "Harbour - Xbase++ - QT Dialog  [ "+ hb_ntos( nThread )+" ]" )
 
+   oDlg:close := {|| MsgBox( "You can also close me by pressing [ESC]" ), .T. }
+   oDlg:killDisplayFocus := {|| hb_OutDebug( "Loosing Display Focus" ) }
    SetAppWindow( oDlg )
 
    /* Obtain desktop dimensions */
@@ -80,6 +83,9 @@ PROCEDURE BuildADialog()
    /* Place on the center of desktop */
    oDlg:setPos( { ( aSize[ 1 ] - oDlg:currentSize()[ 1 ] ) / 2, ;
                   ( aSize[ 2 ] - oDlg:currentSize()[ 2 ] ) / 2 } )
+
+   /* Callback to report the mouse moves */
+   // oDlg:drawingArea:motion := {|| hb_outDebug( "MouseMove: "+cThread ) }
 
    /* Make background color of :drawingArea different */
    //oDlg:drawingArea:setColorBG( GraMakeRGBColor( { 134,128,164 } ) )
@@ -133,11 +139,11 @@ PROCEDURE BuildADialog()
    /* Present the dialog on the screen */
    oDlg:Show()
 
-   /* Enter Xbase++ Event Loop - still with limited functionality but working */
+   /* Enter Xbase++ Event Loop - working */
    DO WHILE .t.
       nEvent := AppEvent( @mp1, @mp2, @oXbp )
-      IF nEvent == xbeP_Close .or. ( nEvent == xbeP_Keyboard .and. ( mp1 == 81 .or. mp1 == 113 ) )
-hb_outDebug( "WOW" )
+      IF ( nEvent == xbeP_Close ) .OR. ( nEvent == xbeP_Keyboard .and. mp1 == xbeK_ESC )
+hb_outDebug( "      WOW      " )
          EXIT
       ENDIF
       oXbp:handleEvent( nEvent, mp1, mp2 )
@@ -145,7 +151,8 @@ hb_outDebug( "WOW" )
 
    /* Very important - destroy resources */
    oDlg:destroy()
-hb_outDebug( "WOWXXXXXXXXXX" )
+
+hb_outDebug( "------WOW------" )
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -154,11 +161,13 @@ PROCEDURE AppSys()
    RETURN
 
 /*----------------------------------------------------------------------*/
+
 #ifdef __XPP__
 FUNCTION Hb_OutDebug();RETURN nil
 FUNCTION Hb_Symbol_Unused();RETURN nil
 FUNCTION Hb_NtoS( n );RETURN ltrim( str( n ) )
 #endif
+
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION GuiStdDialog( cTitle )
@@ -221,15 +230,17 @@ STATIC FUNCTION Build_MenuBar()
    oSubMenu:setColorBG( GraMakeRGBColor( { 134,128,250 } ) )
    oSubMenu:setColorFG( GraMakeRGBColor( { 255,  1,  1 } ) )
 
-   #if 1
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Dialogs"
    #if 0
-   oSubMenu:addItem( { "~One More Instance"+chr(K_TAB)+"Ctrl+M", ;
-                                 {|| hb_threadStart( {|| BuildADialog() } ) } } )
-   #endif
-   oSubMenu:addItem( { "~One More Instance"+chr(K_TAB)+"Ctrl+M", {|| BuildADialog() } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
+      oSubMenu := XbpMenu():new( oMenuBar ):create()
+      oSubMenu:title := "~Dialogs"
+      #if 1             /*  T H R E D E D   D I A L O G */
+         oSubMenu:addItem( { "~One More Instance"+ chr( K_TAB ) +"Ctrl+M", ;
+                                    {|| hb_threadStart( {|| BuildADialog() } ) } } )
+      #else
+         oSubMenu:addItem( { "~One More Instance"+ chr( K_TAB )+ "Ctrl+M", {|| BuildADialog() } } )
+      #endif
+
+      oMenuBar:addItem( { oSubMenu, NIL } )
    #endif
 
    Return nil
@@ -283,11 +294,11 @@ FUNCTION Build_ToolBar( oDA )
 
    /* Harbour does not support resource IDs so giving bitmap files */
    #ifdef __HARBOUR__
-   oTBar:addItem( "Button #1", "new.png"  )
-   oTBar:addItem( "Button #2", "open.png" )
+      oTBar:addItem( "Button #1", "new.png"  )
+      oTBar:addItem( "Button #2", "open.png" )
    #else
-   oTBar:addItem( "Button #1" )//, 100 )
-   oTBar:addItem( "Button #2" )//, 101 )
+      oTBar:addItem( "Button #1" )//, 100 )
+      oTBar:addItem( "Button #2" )//, 101 )
    #endif
 
    oTBar:transparentColor := GRA_CLR_INVALID
@@ -465,7 +476,7 @@ FUNCTION Build_ListBox( oWnd )
 
    // Code block for list box selection:
    oListBox:ItemSelected := {|mp1, mp2, obj| mp1:=oListBox:getData(), ;
-                              mp2:=oListBox:getItem(mp1), MsgBox( "itemSelected:"+mp2 ) }
+                              mp2:=oListBox:getItem( mp1 ), MsgBox( "itemSelected: "+mp2 ) }
 
    #if 0
    oListBox:setColorBG( GraMakeRGBColor( {227,12,110} ) )
@@ -544,7 +555,7 @@ FUNCTION Build_SLEs( oWnd )
 
 FUNCTION Build_MLE( oWnd )
    LOCAL oMLE
-   LOCAL cText := 'This is Xbase++ compatible implementation of XbpMLE()'
+   LOCAL cText := "This is Xbase++ compatible implementation of XbpMLE()"
 
    // Create MLE, specify position using :create() and
    // assign data code block accessing LOCAL variable
@@ -625,7 +636,7 @@ STATIC FUNCTION Build_ComboBox( oWnd )
    LOCAL cDay  := "< Monday >"
    LOCAL aDays := { "Monday" , "Tuesday"  , "Wednesday", "Thursday", ;
                     "Friday" , "Saturday" , "Sunday" }
-   LOCAL aPNG  := { 'copy','cut','new','open','paste','save','new' }
+   LOCAL aPNG  := { "copy", "cut", "new", "open", "paste", "save", "new" }
 
    // Create combo box with drop down list box
    oCombo      := XbpCombobox():new()
@@ -640,20 +651,20 @@ STATIC FUNCTION Build_ComboBox( oWnd )
    // Code block for selection:
    //  - assign to LOCAL variable using :getData()
    //  - display LOCAL variable using DispoutAt()
-   bAction := {|mp1, mp2, obj| obj:XbpSLE:getData(), hb_outDebug( 'Highlighted: '+cDay ) }
+   bAction := {|mp1, mp2, obj| obj:XbpSLE:getData(), hb_outDebug( "Highlighted: "+cDay ) }
 
    // Assign code block for selection with Up and Down keys
    oCombo:ItemMarked := bAction
 
    // Assign code block for selection by left mouse click in list box
-   oCombo:ItemSelected := {|mp1, mp2, obj| obj:XbpSLE:getData(), hb_outDebug( 'Selected: '+cDay ) }
+   oCombo:ItemSelected := {|mp1, mp2, obj| obj:XbpSLE:getData(), hb_outDebug( "Selected: "+cDay ) }
 
    // Copy data from array to combo box, then discard array
    FOR i := 1 TO 7
       oCombo:addItem( aDays[ i ] )
       #ifdef __HARBOUR__
       /*  the command below is not Xbase++ compatible - will be documented while extended */
-      oCombo:setIcon( i, aPNG[ i ]+'.png' )
+      oCombo:setIcon( i, aPNG[ i ]+".png" )
       #endif
    NEXT
 
@@ -683,7 +694,7 @@ PROCEDURE WorkAreaInfo( oTree, iIndex )
    LOCAL oArea, oStatus, oStruct
 
    // First level in the tree starts with oTree:rootItem
-   oArea := oTree:rootItem:addItem( 'Alias '+hb_ntos( iIndex ) )
+   oArea := oTree:rootItem:addItem( "Alias "+hb_ntos( iIndex ) )
 
    // Second level in the tree begins with a XbpTreeViewItem
    // Create XbpTreeViewItem explicitly (1st possibility)
@@ -693,7 +704,7 @@ PROCEDURE WorkAreaInfo( oTree, iIndex )
 
    oArea:addItem( oStatus )
    #ifdef __HARBOUR__
-   oArea:setImage( 'copy.png' )
+   oArea:setImage( "copy.png" )
    #endif
 
    // Create XbpTreeViewItem implicitly (2nd possibility)
@@ -721,9 +732,9 @@ PROCEDURE WAStatus( oItem, iIndex )
 PROCEDURE WAStruct( oItem, iIndex )
    LOCAL aStr := {}
 
-   aadd( aStr, { 'Name__'+hb_ntos( iIndex ), 'C', 20, 0 } )
-   aadd( aStr, { 'Birth' , 'D',  8, 0 } )
-   aadd( aStr, { 'Salary', 'N', 10, 2 } )
+   aadd( aStr, { "Name__"+hb_ntos( iIndex ), 'C', 20, 0 } )
+   aadd( aStr, { "Birth" , 'D',  8, 0 } )
+   aadd( aStr, { "Salary", 'N', 10, 2 } )
 
    AEval( aStr, ;
      {|a,i,oSub| oSub := oItem:addItem( "FIELD_NAME = " + a[1] ), FieldStruct( oSub, a ) } )
@@ -741,3 +752,4 @@ PROCEDURE FieldStruct( oItem, aField )
    RETURN
 
 /*----------------------------------------------------------------------*/
+

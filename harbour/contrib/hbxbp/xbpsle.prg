@@ -173,6 +173,7 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpSLE:exeBlock( nMsg, p1, p2 )
+   LOCAL lRet := .F.
 
 //hb_OutDebug( 'XbpSLE: '+hb_ntos( nMsg ) )
    HB_SYMBOL_UNUSED( p1 )
@@ -204,6 +205,7 @@ METHOD XbpSLE:exeBlock( nMsg, p1, p2 )
    CASE nMsg == 7    // QEvent_FocusIn
       IF hb_isBlock( ::sl_setInputFocus )
          eval( ::sl_setInputFocus, NIL, NIL, Self )
+         RETURN .T.
       ENDIF
 
    CASE nMsg == 8    // QEvent_FocusOut
@@ -213,7 +215,7 @@ METHOD XbpSLE:exeBlock( nMsg, p1, p2 )
 
    ENDCASE
 
-   RETURN .t.
+   RETURN ( lRet )
 
 /*----------------------------------------------------------------------*/
 

@@ -197,7 +197,7 @@ METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
    HB_SYMBOL_UNUSED( p1 )
    HB_SYMBOL_UNUSED( p2 )
 
-   hb_outDebug( hb_ntos( nMsg ) )
+hb_outDebug( hb_ntos( nMsg ) )
 
    IF hb_isPointer( p1 )
       IF ( n := ascan( ::aItems, {|o| o:oWidget:pPtr == p1 } ) ) > 0

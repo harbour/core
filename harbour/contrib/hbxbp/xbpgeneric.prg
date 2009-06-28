@@ -74,14 +74,23 @@
 
 #define EVENT_BUFFER    200
 
-THREAD STATIC ts_events
+/*----------------------------------------------------------------------*/
+
+STATIC ts_mutex
+STATIC oApp
+STATIC aEventLoop := {}
+
+STATIC ts_events
+//THREAD STATIC ts_events
+
 THREAD STATIC nEventIn  := 0
 THREAD STATIC nEventOut := 0
-THREAD STATIC ts_mutex
+THREAD STATIC oDummy
 
-STATIC oDummy
-STATIC oApp
-STATIC sEventFilter
+THREAD STATIC oAppWindow
+
+THREAD STATIC sEventFilter
+THREAD STATIC oEventLoop
 
 /*----------------------------------------------------------------------*/
 
@@ -101,23 +110,42 @@ EXIT PROCEDURE Qt_End()
 FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
 
    //hb_mutexLock( ts_mutex )
+
    IF ++nEventIn > EVENT_BUFFER
       nEventIn := 1
    ENDIF
 
-   ts_events[ nEventIn ] := { nEvent, mp1, mp2, oXbp }
+   ts_events[ nEventIn ] := { nEvent, mp1, mp2, oXbp, ThreadID() }
 
    //hb_mutexUnLock( ts_mutex )
+
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION AppEvent( mp1, mp2, oXbp )
-   LOCAL nEvent
+   LOCAL nEvent, n
 
+   //hb_idleSleep( 0.1 )            /*  May be we need QT based mechanism */
 
-   oApp:processEvents()
-   //SetAppWindow():oEventLoop:processEvents()
+   #if 0
+      //hb_mutexLock( ts_mutex )
+      oApp:processEvents()
+      //hb_mutexUnLock( ts_mutex )
+   #else
+      /* Event Loop - Can be one per Application */
+
+      //oAppWindow:oEventLoop:processEvents()
+      //hb_mutexLock( ts_mutex )
+
+      IF( n := ascan( aEventLoop, {|e_| e_[ 2 ] == threadID() } ) ) > 0
+         //hb_outDebug( "<<<<<<<<<<<< "+hb_ntos( threadID() ) )
+         aEventLoop[ n,1 ]:processEvents()
+         //hb_outDebug( ">>>>>>>>>>>>.... "+hb_ntos( threadID() ) )
+      ENDIF
+
+      //hb_mutexUnLock( ts_mutex )
+   #endif
 
    //hb_mutexLock( ts_mutex )
 
@@ -125,12 +153,14 @@ FUNCTION AppEvent( mp1, mp2, oXbp )
       nEventOut := 1
    ENDIF
 
-   IF empty( ts_events[ nEventOut ] )
+   IF empty( ts_events[ nEventOut ] ) .OR. ts_events[ nEventOut,5 ] <> ThreadID()
+      //nEventOut--                           /* Stay back and ensure that no event is missed */
       nEvent := 0
       mp1    := NIL
       mp2    := NIL
       oXbp   := oDummy
    ELSE
+      //hb_outDebug( str( threadID() )+'  '+ str( ts_events[ nEventOut,5 ] ) )
       nEvent := ts_events[ nEventOut,1 ]
       mp1    := ts_events[ nEventOut,2 ]
       mp2    := ts_events[ nEventOut,3 ]
@@ -146,7 +176,7 @@ FUNCTION AppEvent( mp1, mp2, oXbp )
 FUNCTION SetAppWindow( oXbp )
    LOCAL oldAppWindow
 
-   THREAD STATIC oAppWindow
+   //hb_outDebug( str( threadId() )+'  0' )
 
    IF empty( ts_mutex )
       ts_mutex := hb_mutexCreate()
@@ -163,6 +193,8 @@ FUNCTION SetAppWindow( oXbp )
    IF hb_isObject( oXbp )
       oAppWindow := oXbp
    ENDIF
+
+   //hb_outDebug( str( threadId() )+'  1' )
 
    RETURN oldAppWindow
 
@@ -200,16 +232,17 @@ FUNCTION AppDesktop()
 FUNCTION MsgBox( cMsg, cTitle )
    LOCAL oMB
 
-   DEFAULT cTitle TO ""
+   DEFAULT cTitle TO "  "
 
    oMB := QMessageBox():new()
-   oMB:setInformativeText( cMsg )
+   oMB:setInformativeText( "<b>"+ cMsg +"</b>" )
    oMB:setIcon( QMessageBox_Information )
-   oMB:setModal( .t. )
-   IF !empty( cTitle )
-      oMB:setWindowTitle( cTitle )
-   ENDIF
-   oMB:show()
+   oMB:setParent( SetAppWindow():pWidget )
+   //oMB:setWindowModality( Qt_WindowModal )
+   oMB:setWindowFlags( Qt_Dialog )
+   oMB:setWindowTitle( cTitle )
+   SetAppWindow():oWidget:setFocus()
+   oMB:exec()
 
    RETURN nil
 
@@ -270,6 +303,35 @@ FUNCTION SetEventFilter()
    ENDIF
 
    RETURN sEventFilter
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION AddEventLoop( oEventLoop )
+
+   hb_mutexLock( ts_mutex )
+
+   aadd( aEventLoop, { oEventLoop, threadID() } )
+
+   hb_mutexUnLock( ts_mutex )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION RemoveEventLoop( oEventLoop )
+   LOCAL n
+
+   n := ascan( aEventLoop, {|o_| o_[ 1 ] == oEventLoop } )
+   IF n > 0
+      hb_mutexLock( ts_mutex )
+
+      aEventLoop[ n,1 ] := NIL
+      aEventLoop[ n,2 ] := 0
+
+      hb_mutexUnLock( ts_mutex )
+   ENDIF
+
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 

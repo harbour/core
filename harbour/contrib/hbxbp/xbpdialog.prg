@@ -89,6 +89,7 @@ CLASS XbpDialog FROM XbpWindow
    METHOD   create()
    METHOD   configure()
    METHOD   destroy()
+   METHOD   close()                               INLINE NIL
 
    METHOD   showModal()                           INLINE NIL
    METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, ::oWidget:setWindowTitle( cTitle )
@@ -100,8 +101,8 @@ CLASS XbpDialog FROM XbpWindow
    METHOD   calcClientRect()                      INLINE { 0, 0, ::oWidget:width(), ::oWidget:height() }
    METHOD   calcFrameRect()                       INLINE { ::oWidget:x(), ::oWidget:y(), ;
                                                            ::oWidget:x()+::oWidget:width(), ::oWidget:y()+::oWidget:height() }
-
    METHOD   exeBlock()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -121,13 +122,10 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   #if 1
+   ::cargo := ThreadID()                               /* To Be Removed */
+
    ::oWidget := QMainWindow():new()
    ::oWidget:setAttribute( Qt_WA_DeleteOnClose )
-   #else
-   ::oWidget := QMainWindow()
-   ::oWidget:pPtr := Qt_MyMainWindow()
-   #endif
 
    IF !empty( ::title )
       ::oWidget:setWindowTitle( ::title )
@@ -144,57 +142,52 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
-   SetAppWindow( self )
+   SetAppWindow( Self )
 
-   QT_QObject_InstallEventFilter( ::pWidget, SetEventFilter() )
-   ::connectEvent( ::pWidget, QEvent_Close, {|o,e| ::exeBlock( QEvent_Close, e, o ) } )
-   //
-   QT_QObject_InstallEventFilter( ::drawingArea:pWidget, SetEventFilter() )
-   ::connectEvent( ::drawingArea:pWidget, QEvent_KeyPress , {|o,e| ::exeBlock( QEvent_KeyPress , e, o ) } )
-   ::connectEvent( ::drawingArea:pWidget, QEvent_MouseMove, {|o,e| ::exeBlock( QEvent_MouseMove, e, o ) } )
-   ::connectEvent( ::drawingArea:pWidget, QEvent_FocusIn  , {|o,e| ::exeBlock( QEvent_FocusIn  , e, o ) } )
+   /* Install Event Loop per Dialog Basis */
+   /*               Limitng               */
+   ::oEventLoop := QEventLoop():new( ::pWidget )
+   AddEventLoop( ::oEventLoop )
+
+   /* Instal Event Filter */
+   ::oWidget:installEventFilter( SetEventFilter() )
+
+   ::connectEvent( ::pWidget, QEvent_Close           , {|o,e| ::exeBlock( QEvent_Close           , e, o ) } )
+   ::connectEvent( ::pWidget, QEvent_WindowActivate  , {|o,e| ::exeBlock( QEvent_WindowActivate  , e, o ) } )
+   ::connectEvent( ::pWidget, QEvent_WindowDeactivate, {|o,e| ::exeBlock( QEvent_WindowDeactivate, e, o ) } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpDialog:exeBlock( nEvent, p1, p2 )
-   LOCAL oEvent
-   LOCAL lRet := .f.
+METHOD XbpDialog:exeBlock( nEvent, pEvent )
+   LOCAL lRet := .F.
 
-   HB_SYMBOL_UNUSED( p2 )
-
-//hb_outDebug( str( nEvent ) )
+   HB_SYMBOL_UNUSED( pEvent )
 
    DO CASE
-   CASE nEvent == QEvent_MouseMove
-      oEvent := QMouseEvent()
-      oEvent:pPtr := p1
-      //SetAppEvent( xbeM_Motion, { oEvent:x(), oEvent:y() }, oEvent:button(), self )
+   CASE nEvent == QEvent_WindowActivate
+      SetAppWindow( Self )                                /*  TO REVIEW */
+      SetAppEvent( xbeP_SetDisplayFocus, NIL, NIL, Self )
+      lRet := .T.
 
-   CASE nEvent == QEvent_KeyPress
-      oEvent := QKeyEvent()
-      oEvent:pPtr := p1
-      SetAppEvent( xbeP_Keyboard, oEvent:key, oEvent:text, self )
+   CASE nEvent == QEvent_WindowDeactivate
+      SetAppEvent( xbeP_KillDisplayFocus, NIL, NIL, Self )
+      lRet := .T.
 
    CASE nEvent == QEvent_Close
       IF hb_isBlock( ::sl_close )
-         lRet := eval( ::sl_close, NIL, NIL, self )
+         lRet := eval( ::sl_close, NIL, NIL, Self )
          IF lRet
-            SetAppEvent( xbeP_Close, NIL, NIL, self )
+            SetAppEvent( xbeP_Close, NIL, NIL, Self )
          ENDIF
       ELSE
-         SetAppEvent( xbeP_Close, NIL, NIL, self )
-      ENDIF
-
-   CASE nEvent == QEvent_FocusIn
-      IF hb_isBlock( ::sl_setInputFocus )
-         eval( ::sl_setInputFocus, NIL, NIL, self )
+         SetAppEvent( xbeP_Close, NIL, NIL, Self )
       ENDIF
 
    ENDCASE
 
-   RETURN lRet
+   RETURN ( lRet )
 
 /*----------------------------------------------------------------------*/
 
@@ -208,22 +201,8 @@ METHOD XbpDialog:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
 METHOD XbpDialog:destroy()
 
-   #if 0
-   IF hb_isObject( ::oMenu )
-      ::oMenu:destroy()
-   ENDIF
-
-   IF len( ::aConnections ) > 0
-      aeval( ::aConnections, {|e_| Qt_DisConnect_Signal( e_[ 1 ], e_[ 2 ] ) } )
-      ::aConnections := {}
-   ENDIF
-
-   IF Len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| o:destroy() } )
-   ENDIF
-
-   ::oWidget:close()
-   #endif
+   ::oEventLoop:exit( 0 )
+   RemoveEventLoop( ::oEventLoop )
 
    ::xbpWindow:destroy()
 
@@ -234,21 +213,15 @@ METHOD XbpDialog:destroy()
 METHOD XbpDialog:setFrameState( nState )
    LOCAL lSuccess := .f.
 
-   HB_SYMBOL_UNUSED( nState )
-   #if 0
    DO CASE
 
    CASE nState == XBPDLG_FRAMESTAT_MINIMIZED
-      RETURN ( ::sendMessage( QWM_SYSCOMMAND, QSC_MINIMIZE, 0 ) <> 0 )
 
    CASE nState == XBPDLG_FRAMESTAT_MAXIMIZED
-      RETURN ( ::sendMessage( QWM_SYSCOMMAND, QSC_MAXIMIZE, 0 ) <> 0 )
 
    CASE nState == XBPDLG_FRAMESTAT_NORMALIZED
-      RETURN ( ::sendMessage( QWM_SYSCOMMAND, QSC_RESTORE, 0 ) <> 0 )
 
    ENDCASE
-   #endif
 
    RETURN lSuccess
 
@@ -291,8 +264,7 @@ CLASS XbpDrawingArea  INHERIT  XbpWindow
 
    METHOD   new()
    METHOD   create()
-   METHOD   handleEvent()
-   //METHOD   Destroy()                             INLINE ::xbpWindow:destroy()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -310,29 +282,17 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    HB_SYMBOL_UNUSED( lVisible )
 
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, .t. )
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, .T. )
+
+   ::oWidget := QWidget():new()
+   ::oWidget:setMouseTracking( .T. )
+   ::oWidget:setFocusPolicy( 2 )
 
    ::oParent:addChild( SELF )
 
-   #if 1
-   ::oWidget := QWidget():new()// ::pParent )
-   ::oWidget:setMouseTracking( .t. )
-   ::oWidget:setFocusPolicy( 2 )
-   #else
-   ::oWidget := QWidget()
-   ::oWidget:pPtr := QT_MyDrawingArea()
-   #endif
+   /* Connects All Event Handlers */
+   ::connectWindowEvents()
 
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpDrawingArea:handleEvent( nEvent, mp1, mp2  )
-
-   HB_SYMBOL_UNUSED( nEvent )
-   HB_SYMBOL_UNUSED( mp1 )
-   HB_SYMBOL_UNUSED( mp2 )
-
-   RETURN ( 1 )
 
 /*----------------------------------------------------------------------*/
