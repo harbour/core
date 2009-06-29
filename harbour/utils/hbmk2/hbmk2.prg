@@ -173,10 +173,11 @@ REQUEST hbmk_KEYW
 
 #define _MACRO_NORM_PREFIX      "$"
 #define _MACRO_LATE_PREFIX      "%"
+#define _MACRO_PREFIX_ALL       ( _MACRO_NORM_PREFIX + _MACRO_LATE_PREFIX )
 #define _MACRO_OPEN             "{"
 #define _MACRO_CLOSE            "}"
 
-#define _LNG_MARKER             "${lng}"
+#define _LNG_MARKER             ( _MACRO_LATE_PREFIX + _MACRO_OPEN + "hb_lng" + _MACRO_CLOSE )
 
 #define _HBMK_CFG_NAME          "hbmk.cfg"
 #define _HBMK_AUTOHBM_NAME      "hbmk.hbm"
@@ -5457,7 +5458,7 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
                     "hbmk_KEYW( hbmk, Lower( '%1' ) ) )"
 
    IF ( nStart := At( _MACRO_OPEN, cItem ) ) > 0 .AND. ;
-      !( SubStr( cItem, nStart - 1, 1 ) $ ( _MACRO_NORM_PREFIX + _MACRO_LATE_PREFIX ) ) .AND. ;
+      !( SubStr( cItem, nStart - 1, 1 ) $ _MACRO_PREFIX_ALL ) .AND. ;
       ( nEnd := hb_At( _MACRO_CLOSE, cItem, nStart ) ) > 0
 
       /* Separate filter from the rest of the item */
@@ -6469,9 +6470,9 @@ STATIC PROCEDURE SetUILang( hbmk )
    IF hbmk[ _HBMK_cUILNG ] == "en-EN"
       hb_i18n_set( NIL )
    ELSE
-      tmp := "${hb_root}hbmk2.${lng}.hbl"
+      tmp := "${hb_root}hbmk2.${hb_lng}.hbl"
       tmp := StrTran( tmp, "${hb_root}", PathSepToSelf( DirAddPathSep( hb_DirBase() ) ) )
-      tmp := StrTran( tmp, "${lng}", StrTran( hbmk[ _HBMK_cUILNG ], "-", "_" ) )
+      tmp := StrTran( tmp, "${hb_lng}", StrTran( hbmk[ _HBMK_cUILNG ], "-", "_" ) )
       hb_i18n_set( iif( hb_i18n_check( tmp := hb_MemoRead( tmp ) ), hb_i18n_restoretable( tmp ), NIL ) )
    ENDIF
 
@@ -6584,8 +6585,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-clean"            , I_( "clean (in incremental build mode)" ) },;
       { "-workdir=<dir>"    , hb_StrFormat( I_( "working directory for incremental build mode\n(default: %1$s/arch/comp)" ), _WORKDIR_BASE_ ) },;
       NIL,;
-      { "-hbl[=<output>]"   , I_( "output .hbl filename. ${lng} macro is accepted in filename" ) },;
-      { "-lng=<languages>"  , I_( "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ) },;
+      { "-hbl[=<output>]"   , hb_StrFormat( I_( "output .hbl filename. %1$s macro is accepted in filename" ), _LNG_MARKER ) },;
+      { "-lng=<languages>"  , hb_StrFormat( I_( "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en-EN,hu-HU,de" ), _LNG_MARKER ) },;
       { "-po=<output>"      , I_( "create/update .po file from source. Merge it with previous .po file of the same name" ) },;
       { "-[no]minipo"       , I_( "don't (or do) add Harbour version number and source file reference to .po (default: add them)" ) },;
       { "-rebuildpo"        , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;

@@ -179,8 +179,8 @@ msgstr "Hiba: Harbour könyvtárakat nem sikerült meghatározni."
 
 #: hbmk2.prg:5758 hbmk2.prg:6471
 #, c-format
-msgid "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\\n-lng=en-EN,hu-HU,de"
-msgstr "nyelvek listája, amelyek a .pot/.po és .hbl/.po állományokban levõ ${lng} makrókba kerülnek behelyettesítésre. Vesszõvel elválasztott lista:\\n-lng=en-EN,hu-HU,de"
+msgid "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\\n-lng=en-EN,hu-HU,de"
+msgstr "nyelvek listája, amelyek a .pot/.po és .hbl/.po állományokban levõ %1$s makrókba kerülnek behelyettesítésre. Vesszõvel elválasztott lista:\\n-lng=en-EN,hu-HU,de"
 
 #: hbmk2.prg:2737 hbmk2.prg:3108
 #, c-format
@@ -434,8 +434,8 @@ msgstr "kapcsoló továbbítása (statikus függvénykönyvtár) szerkesztõnek"
 
 #: hbmk2.prg:5758 hbmk2.prg:6471
 #, c-format
-msgid "output .hbl filename. ${lng} macro is accepted in filename"
-msgstr "kimeneti .hbl fájlnév. ${lng} makró használható a fájlnévben"
+msgid "output .hbl filename. %1$s macro is accepted in filename"
+msgstr "kimeneti .hbl fájlnév. %1$s makró használható a fájlnévben"
 
 #: hbmk2.prg:5187 hbmk2.prg:5870
 #, c-format
@@ -946,4 +946,3 @@ msgstr ""
 #, c-format
 msgid "Warning: Cannot create directory for target install %1$s."
 msgstr ""
-

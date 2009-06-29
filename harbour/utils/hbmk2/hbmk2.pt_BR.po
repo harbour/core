@@ -469,12 +469,12 @@ msgstr ""
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "  -hbl[=<output>]    output .hbl filename. ${lng} macro is accepted in filename"
+msgid "  -hbl[=<output>]    output .hbl filename. %1$s macro is accepted in filename"
 msgstr ""
 
 #: hbmk2.prg:5294
 #, c-format
-msgid "  -lng=<languages>   list of languages to be replaced in ${lng} macros in .pot"
+msgid "  -lng=<languages>   list of languages to be replaced in %1$s macros in .pot"
 msgstr ""
 
 #: hbmk2.prg:5294
@@ -984,7 +984,7 @@ msgstr ""
 
 #: hbmk2.prg:5758 hbmk2.prg:6471
 #, c-format
-msgid "list of languages to be replaced in ${lng} macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\\n-lng=en-EN,hu-HU,de"
+msgid "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\\n-lng=en-EN,hu-HU,de"
 msgstr ""
 
 #: hbmk2.prg:3532 hbmk2.prg:3961
@@ -1224,7 +1224,7 @@ msgstr ""
 
 #: hbmk2.prg:5758 hbmk2.prg:6471
 #, c-format
-msgid "output .hbl filename. ${lng} macro is accepted in filename"
+msgid "output .hbl filename. %1$s macro is accepted in filename"
 msgstr ""
 
 #: hbmk2.prg:5187 hbmk2.prg:5870
@@ -1711,4 +1711,3 @@ msgstr ""
 #, c-format
 msgid "Warning: Cannot create directory for target install %1$s."
 msgstr ""
-
