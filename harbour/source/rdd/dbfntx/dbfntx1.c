@@ -7576,7 +7576,7 @@ static HB_ERRCODE ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
       case RDDI_ORDEREXT:
       case RDDI_ORDSTRUCTEXT:
       {
-         const char * szNew = hb_itemGetC( pItem );
+         const char * szNew = hb_itemGetCPtr( pItem );
          char * szNewVal;
 
          szNewVal = szNew[0] == '.' && szNew[1] ? hb_strdup( szNew ) : NULL;
