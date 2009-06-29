@@ -3984,6 +3984,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          #else
 
             cBin_Cprs := NIL
+            cOpt_Cprs := ""
             cOpt_CprsMin := ""
             cOpt_CprsMax := ""
 

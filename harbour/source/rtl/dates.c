@@ -365,7 +365,7 @@ long hb_dateUnformat( const char * szDate, const char * szDateFormat )
 {
    long lDate;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateFormat(%s, %p, %s)", szDate, szFormattedDate, szDateFormat));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateFormat(%s, %s)", szDate, szDateFormat));
 
    hb_dateUnformatRaw( szDate, szDateFormat, &lDate );
 

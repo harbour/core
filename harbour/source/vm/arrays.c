@@ -714,7 +714,7 @@ BOOL hb_arraySetTD( PHB_ITEM pArray, ULONG ulIndex, double dTimeStamp )
 
 BOOL hb_arraySetTDT( PHB_ITEM pArray, ULONG ulIndex, LONG lJulian, LONG lMilliSec )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetTDT(%p, %lu, %lf)", pArray, ulIndex, lJulian, lMilliSec));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetTDT(%p, %lu, %lu, %lu)", pArray, ulIndex, lJulian, lMilliSec));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
