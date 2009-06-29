@@ -100,7 +100,7 @@ CLASS XbpCheckBox  INHERIT  XbpWindow, XbpDataRef
 
 METHOD XbpCheckBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
@@ -108,7 +108,7 @@ METHOD XbpCheckBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD XbpCheckBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QCheckBox():New( QT_PTROF( ::oParent:oWidget ) )
    ::Connect( ::pWidget, "stateChanged(int)", {|o,i| ::exeBlock( i,o ) } )

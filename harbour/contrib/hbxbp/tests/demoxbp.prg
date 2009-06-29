@@ -70,12 +70,13 @@ PROCEDURE BuildADialog()
    LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, aTabs, oDa
    LOCAL nThread := ThreadID()
    LOCAL cThread := hb_ntos( nThread )
+   LOCAL aPP
 
    /* Create Application Window */
    oDlg := GuiStdDialog( "Harbour - Xbase++ - QT Dialog  [ "+ hb_ntos( nThread )+" ]" )
 
    oDlg:close := {|| MsgBox( "You can also close me by pressing [ESC]" ), .T. }
-   oDlg:killDisplayFocus := {|| hb_OutDebug( "Loosing Display Focus" ) }
+   // oDlg:killDisplayFocus := {|| hb_OutDebug( "Loosing Display Focus" ) }
    SetAppWindow( oDlg )
    oDlg:show()
 
@@ -99,7 +100,7 @@ PROCEDURE BuildADialog()
    Build_MenuBar()
 
    /* Install Statusbar */
-   Build_StatusBar( oDlg )
+   Build_StatusBar( oDa )
 
    /* Install Toolbar */
    Build_ToolBar( oDa )
@@ -140,6 +141,9 @@ PROCEDURE BuildADialog()
    /* Install TreeView */
    Build_TreeView( aTabs[ 4 ] )
 
+//aPP := aTabs[4]:setPresParam()
+//hb_outDebug( valtype( aPP ) +' '+ str( len( aPP ) ) )
+
    /* Present the dialog on the screen */
    oDlg:Show()
 
@@ -167,7 +171,7 @@ PROCEDURE AppSys()
 /*----------------------------------------------------------------------*/
 
 #ifdef __XPP__
-FUNCTION Hb_OutDebug();RETURN nil
+FUNCTION Hb_OutDebug( cStr );RETURN nil
 FUNCTION Hb_Symbol_Unused();RETURN nil
 FUNCTION Hb_NtoS( n );RETURN ltrim( str( n ) )
 FUNCTION Hb_ThreadStart();RETURN nil
@@ -234,7 +238,6 @@ STATIC FUNCTION Build_MenuBar()
    /* Menu colors are being honored in Harbour only */
    oSubMenu:setColorBG( GraMakeRGBColor( { 134,128,250 } ) )
    oSubMenu:setColorFG( GraMakeRGBColor( { 255,  1,  1 } ) )
-
 
    #ifdef __HARBOUR__
    #if 0
@@ -360,7 +363,6 @@ FUNCTION Build_CheckBox( oWnd )
       {| mp1, mp2, oChk| MsgBox( "Checkbox B", ;
             IIf( oChk:getData(), "selected", ;
                                  "not selected" ) ) }
-
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -435,6 +437,8 @@ FUNCTION Build_TabPages( oDlg )
    oTab1:create()
    oTab1:TabActivate := {|| oTab2:minimize(), oTab3:minimize(), oTab4:minimize(), oTab1:maximize() }
 
+   oTab1:setPointer( , XBPSTATIC_SYSICON_WAIT, XBPWINDOW_POINTERTYPE_SYSPOINTER )
+
    // Second tab page is minimized
    oTab2 := XbpTabPage():new( oDlg:drawingArea, , { 510, 20 }, { 360, nHeight } )
    oTab2:caption    := "XbpMLE"
@@ -484,11 +488,10 @@ FUNCTION Build_ListBox( oWnd )
    // Code block for list box selection:
    oListBox:ItemSelected := {|mp1, mp2, obj| mp1:=oListBox:getData(), ;
                               mp2:=oListBox:getItem( mp1 ), MsgBox( "itemSelected: "+mp2 ) }
-
-   #if 1
-   oListBox:setColorBG( GraMakeRGBColor( {227,12,110} ) )
+   oListBox:setColorFG( GraMakeRGBColor( {227,12,110} ) )
    oListBox:setColorBG( GraMakeRGBColor( { 27,12, 45} ) )
-   #endif
+
+   oListBox:setPointer( , XBPSTATIC_SYSICON_MOVE, XBPWINDOW_POINTERTYPE_SYSPOINTER )
 
    RETURN nil
 
@@ -503,6 +506,8 @@ FUNCTION Build_StatusBar( oWnd )
    oPanel := oSBar:getItem( 1 )
    oPanel:caption  := "Harbour-QT-Xbase++ is Ready"
    oPanel:autosize := XBPSTATUSBAR_AUTOSIZE_SPRING
+
+   oSBar:setPointer( , XBPSTATIC_SYSICON_SIZEWE, XBPWINDOW_POINTERTYPE_SYSPOINTER )
 
    RETURN nil
 
@@ -767,4 +772,22 @@ PROCEDURE FieldStruct( oItem, aField )
    RETURN
 
 /*----------------------------------------------------------------------*/
+
+STATIC FUNCTION PP_Debug( oXbp )
+   LOCAL aPP := oXbp:setPresParam()
+   LOCAL s := ''
+
+   aeval( aPP, {|e_| s += ( hb_ntos( e_[ 1 ] ) +' '+ valtype( e_[ 2 ] ) +' '+ ;
+        IF( valtype( e_[ 2 ] )=='N', hb_ntos( e_[ 2 ] ), ' ' ) + ';  '+ chr( 13 )+chr( 10 ) ) } )
+
+   #ifdef __XPP__
+   MsgBox( s )
+   #else
+   hb_outDebug( s )
+   #endif
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
 

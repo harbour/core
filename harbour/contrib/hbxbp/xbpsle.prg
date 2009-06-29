@@ -121,7 +121,7 @@ CLASS XbpSLE INHERIT XbpWindow, XbpDataRef
 
 METHOD XbpSLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 

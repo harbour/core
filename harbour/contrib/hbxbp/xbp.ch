@@ -185,7 +185,9 @@
 
 #define XBPSYSCLR_TRANSPARENT                     ( -255 )
 
-
+#define XBP_DISP_MODELESS                         1
+#define XBP_DISP_APPMODAL                         2
+#define XBP_DISP_SYSMODAL                         3
 
 #define XBPSLE_LEFT                               1
 #define XBPSLE_RIGHT                              2
@@ -232,7 +234,35 @@
 #define XBP_MK_CONTROL                            8
 #define XBP_MK_MBUTTON                            16
 
+#define XBPWINDOW_POINTERTYPE_POINTER             1
+#define XBPWINDOW_POINTERTYPE_SYSPOINTER          2
+#define XBPWINDOW_POINTERTYPE_ICON                3
+
+#define XBPSTATIC_SYSICON_DEFAULT                 0
+#define XBPSTATIC_SYSICON_ARROW                   1
+#define XBPSTATIC_SYSICON_TEXT                    2
+#define XBPSTATIC_SYSICON_WAIT                    3
+#define XBPSTATIC_SYSICON_SIZE                    4
+#define XBPSTATIC_SYSICON_MOVE                    5
+#define XBPSTATIC_SYSICON_SIZENWSE                6
+#define XBPSTATIC_SYSICON_SIZENESW                7
+#define XBPSTATIC_SYSICON_SIZEWE                  8
+#define XBPSTATIC_SYSICON_SIZENS                  9
+#define XBPSTATIC_SYSICON_APPICON                 10
+#define XBPSTATIC_SYSICON_ICONINFORMATION         11
+#define XBPSTATIC_SYSICON_ICONQUESTION            12
+#define XBPSTATIC_SYSICON_ICONERROR               13
+#define XBPSTATIC_SYSICON_ICONWARNING             14
+#define XBPSTATIC_SYSICON_ILLEGAL                 18
+#define XBPSTATIC_SYSICON_FILE                    19
+#define XBPSTATIC_SYSICON_FOLDER                  20
+#define XBPSTATIC_SYSICON_MULTFILE                21
+#define XBPSTATIC_SYSICON_PROGRAM                 22
+#define XBPSTATIC_SYSICON_DISPLAY_PTRS            22
+#define XBPSTATIC_SYSICON_PENFIRST                23
+#define XBPSTATIC_SYSICON_PENLAST                 39
+
+/*----------------------------------------------------------------------*/
 #define _XBP_CH
 #endif
 
-/*----------------------------------------------------------------------*/

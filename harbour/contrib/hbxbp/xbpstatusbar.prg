@@ -103,18 +103,31 @@ CLASS XbpStatusBar  INHERIT  XbpWindow
 
 METHOD XbpStatusBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   LOCAL oPar
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oWidget := QStatusBar():new( ::pParent )
-   ::oParent:oWidget:setStatusBar( ::pWidget )
+   IF upper( ::oParent:className ) == "XBPDIALOG"
+      oPar := ::oParent
+   ELSEIF upper( ::oParent:className ) == "XBPDRAWINGAREA"
+      oPar := ::oParent:oParent
+   ELSE
+      RETURN Self
+   ENDIF
+
+   ::oWidget := QToolBar():new( QT_PTROF( oPar:oWidget ) )
+   oPar:oWidget:addToolBar_1( ::pWidget )
+
+   ::oWidget := QStatusBar():new( QT_PTROF( oPar:oWidget ) )
+   oPar:oWidget:setStatusBar( ::pWidget )
+
    ::oWidget:setSizeGripEnabled( ::sizeGrip )
 
    IF ::visible

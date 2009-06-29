@@ -686,6 +686,8 @@ METHOD xbpMenu:new( oParent, aPresParams, lVisible )
    ::aPresParams := aPresParams
    ::visible     := lVisible
 
+   ::xbpWindow:new( ::oParent, , , , ::aPresParams, ::visible )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -699,6 +701,8 @@ METHOD xbpMenu:create( oParent, aPresParams, lVisible )
    ::oParent     := oParent
    ::aPresParams := aPresParams
    ::visible     := lVisible
+
+   ::xbpWindow:create( ::oParent, , , , ::aPresParams, ::visible )
 
    ::oWidget := QMenu():new( ::pParent )
    ::oParent:oWidget:addMenu( ::pWidget )

@@ -103,11 +103,6 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    DATA     helpLink
    DATA     tooltipText                           INIT  ""
 
-   DATA     clr_FG
-   DATA     clr_BG
-   DATA     fnt_COMMPOUNDNAME
-   DATA     fnt_hFont
-
    /*  CALLBACK SLOTS */
    DATA     sl_enter
    DATA     sl_leave
@@ -277,6 +272,8 @@ EXPORTED:
 
    METHOD   setStyle()                            INLINE NIL
 
+   DATA     lTrack                                INIT  .f.
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -306,6 +303,7 @@ METHOD XbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   LOCAL aPP, i, cClass := __objGetClsName( Self )
 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
@@ -322,6 +320,34 @@ METHOD XbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::visible     := lVisible
 
    ::XbpPartHandler:create( oParent, oOwner )
+
+   aPP := Xbp_PresParam()
+   FOR i := 1 TO len( ::aPresParams )
+      Xbp_SetPresParam( aPP, ::aPresParams[ i,1 ], ::aPresParams[ i,2 ] )
+   NEXT
+   ::aPresParams := aPP
+
+   DO CASE
+   CASE cClass $ 'XBPDIALOG,XBPDRAWINGAREA'
+      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_DIALOGBACKGROUND )
+      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_DISABLED_BGCLR, XBPSYSCLR_DIALOGBACKGROUND )
+   CASE cClass $ 'XBPPUSHBUTTON'
+      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_FGCLR         , XBPSYSCLR_BUTTONTEXT       )
+      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_BUTTONMIDDLE     )
+      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_DISABLED_BGCLR, XBPSYSCLR_BUTTONMIDDLE     )
+   CASE cClass $ 'XBPTABPAGE'
+      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_BUTTONMIDDLE     )
+      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_DISABLED_BGCLR, XBPSYSCLR_BUTTONMIDDLE     )
+   CASE cClass $ 'XBPLISTBOX'
+      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_ENTRYFIELD       )
+   CASE cClass $ 'XBPSCROLLBAR'
+      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_SCROLLBAR        )
+   CASE cClass $ 'XBPSLE,XBPMLE'
+      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_ENTRYFIELD       )
+      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_DISABLED_BGCLR, XBPSYSCLR_3DFACE           )
+   CASE cClass $ 'XBPSPINBUTTON,XBPCOMBOBOX,XBPTREEVIEW'
+      Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_ENTRYFIELD       )
+   ENDCASE
 
    RETURN Self
 
@@ -432,14 +458,18 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
       ENDCASE
       EXIT
    CASE QEvent_Enter                         // :enter()
-      oEvent      := QMouseEvent()
-      oEvent:pPtr := pEvent
-      SetAppEvent( xbeM_Enter, { oEvent:x(), oEvent:y() }, NIL, self )
+      IF ( ::lTrack )
+         oEvent      := QMouseEvent()
+         oEvent:pPtr := pEvent
+         SetAppEvent( xbeM_Enter, { oEvent:x(), oEvent:y() }, NIL, self )
+      ENDIF
       EXIT
    CASE QEvent_Leave                         // :leave()
-      oEvent      := QMouseEvent()
-      oEvent:pPtr := pEvent
-      SetAppEvent( xbeM_Leave, { oEvent:x(), oEvent:y() }, NIL, self )
+      IF ( ::lTrack )
+         oEvent      := QMouseEvent()
+         oEvent:pPtr := pEvent
+         SetAppEvent( xbeM_Leave, { oEvent:x(), oEvent:y() }, NIL, self )
+      ENDIF
       EXIT
    CASE QEvent_Wheel                         // :wheel()
       oEvent      := QWheelEvent()
@@ -651,7 +681,7 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
 METHOD XbpWindow:destroy()
 
-hb_outDebug( "Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
+//hb_outDebug( "Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
 
    IF Len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
@@ -671,15 +701,25 @@ hb_outDebug( "Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',s
 
    ::oWidget:close()
 
-hb_outDebug( "          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
+//hb_outDebug( "          Destroy: "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ) )
 
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:captureMouse()
+METHOD XbpWindow:captureMouse( lCapture )
+   LOCAL lSuccess := .f.
 
-   RETURN Self
+   IF hb_isLogical( lCapture )
+      IF lCapture
+         ::oWidget:grabMouse()
+      ELSE
+         ::oWidget:releaseMouse()
+      ENDIF
+      lSuccess := .t.           /* QT cannot determine if it succeeded */
+   ENDIF
+
+   RETURN lSuccess
 
 /*----------------------------------------------------------------------*/
 
@@ -688,7 +728,7 @@ METHOD XbpWindow:disable()
    ::oWidget:setDisabled( .t. )
    ::is_enabled := ::oWidget:isEnabled()
 
-   RETURN .f.
+   RETURN ( ! ::is_enabled )
 
 /*----------------------------------------------------------------------*/
 
@@ -697,7 +737,7 @@ METHOD XbpWindow:enable()
    ::oWidget:setEnabled( .t. )
    ::is_enabled := ::oWidget:isEnabled()
 
-   RETURN .f.
+   RETURN ( ::is_enabled )
 
 /*----------------------------------------------------------------------*/
 
@@ -705,16 +745,17 @@ METHOD XbpWindow:hide()
 
    IF hb_isObject( ::oWidget )
       ::oWidget:hide()
-      ::is_hidden := .t.
    ENDIF
+   ::is_hidden := ::oWidget:isHidden()
 
-   RETURN Self
+   RETURN ::is_hidden
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:invalidateRect( aRect )
 
    HB_SYMBOL_UNUSED( aRect )
+   // TODO:
 
    RETURN self
 
@@ -722,11 +763,15 @@ METHOD XbpWindow:invalidateRect( aRect )
 
 METHOD XbpWindow:lockPS()
 
+   // TODO:
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:lockUpdate()
+
+   // TODO:
 
    RETURN Self
 
@@ -742,35 +787,35 @@ METHOD XbpWindow:setStyleSheet( cNewSheet )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setColorBG( nRGB )
-   #if 0
-   LOCAL cClass  := __ObjGetClsName( self )
+   //LOCAL cClass  := __ObjGetClsName( self )
+   LOCAL oColor := QColor():new( nRGB )
+   LOCAL oldRGB
 
    IF hb_isNumeric( nRGB )
-      IF empty( ::oPalette )
-         ::oPalette := QPalette()
-         ::oPalette:pPtr := ::oWidget:palette()
-      ENDIF
-
-      DO CASE
-      CASE cClass $ 'XBPPUSHBUTTON,XBPMENUBAR,XBPMENU,XBPTOOLBAR,XBPTABPAGE,XBPLISTBOX'
-         ::oPalette:setColor( QPalette_Button    , QT_PTROF( QColor():new( nRGB ) ) )
-      OTHERWISE
-         ::oPalette:setColor( QPalette_Background, QT_PTROF( QColor():new( nRGB ) ) )
-      ENDCASE
-
-      ::oWidget:setPalette( QT_PTROF( ::oPalette ) )
+      oldRGB := Xbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR, nRGB )
+      ::setStyleSheet( "background-color: "+ oColor:name +";" )
+   ELSE
+      oldRGB := Xbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR )
    ENDIF
-   #endif
 
-   LOCAL oColor := QColor():new( nRGB )
-
-   ::setStyleSheet( "background-color: "+ oColor:name +";" )
-
-   RETURN Self
+   RETURN oldRGB
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setColorFG( nRGB )
+   //LOCAL cClass  := __ObjGetClsName( self )
+   LOCAL oColor := QColor():new( nRGB )
+   LOCAL oldRGB
+
+   IF hb_isNumeric( nRGB )
+      oldRGB := Xbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR, nRGB )
+      ::setStyleSheet( "color: "+ oColor:name +";" )
+   ELSE
+      oldRGB := Xbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR )
+   ENDIF
+
+   RETURN oldRGB
+
    #if 0
    LOCAL cClass  := __ObjGetClsName( self )
 
@@ -790,13 +835,12 @@ METHOD XbpWindow:setColorFG( nRGB )
 
       ::oWidget:setPalette( QT_PTROF( ::oPalette ) )
    ENDIF
-   #endif
 
    LOCAL oColor := QColor():new( nRGB )
-
+   Xbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR, nRGB )
    ::setStyleSheet( "color: "+ oColor:name +";" )
-
    RETURN Self
+   #endif
 
 /*----------------------------------------------------------------------*/
 
@@ -804,7 +848,7 @@ METHOD XbpWindow:setFontCompoundName( xFont )
    LOCAL cOldFont, s, n, nPoint, cFont, cAttr, cFace
    LOCAL aAttr := { "normal","italic","bold" }
 
-   cOldFont := ::fnt_COMMPOUNDNAME
+   cOldFont := Xbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME )
 
    IF hb_isNumeric( cFont )
 
@@ -828,6 +872,8 @@ METHOD XbpWindow:setFontCompoundName( xFont )
          ENDIF
          cFace := alltrim( cFont )
 
+         Xbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME, xFont )
+
          ::setStyleSheet( 'font-family: "'+ cFace +'"; font-style: '+ cAttr +'; font-size: '+ hb_ntos( nPoint )+'pt;' )
       ENDIF
    ENDIF
@@ -836,21 +882,107 @@ METHOD XbpWindow:setFontCompoundName( xFont )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:setModalState()
+METHOD XbpWindow:setModalState( nState )
+
+   DO CASE
+   CASE nState == XBP_DISP_MODELESS
+      ::oWidget:setWindowModality( Qt_NonModal )
+   CASE nState == XBP_DISP_APPMODAL
+      ::oWidget:setWindowModality( Qt_ApplicationModal )
+   CASE nState == XBP_DISP_SYSMODAL
+      // TODO:
+   ENDCASE
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:setPointer()
+STATIC FUNCTION Xbp_SetCursor( oXbp, nShape )
+   LOCAL oCursor := QCursor():new()
 
+   oCursor:setShape( nShape )
+   oXbp:oWidget:setCursor( oCursor:pPtr )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:setPointer( cDllName, nResID, nType )
+
+   HB_SYMBOL_UNUSED( cDllName )
+
+   DEFAULT nType TO XBPWINDOW_POINTERTYPE_POINTER
+
+   DO CASE
+   CASE nType == XBPWINDOW_POINTERTYPE_POINTER
+      // TODO:
+
+   CASE nType == XBPWINDOW_POINTERTYPE_SYSPOINTER
+      DO CASE
+      CASE nResID == XBPSTATIC_SYSICON_DEFAULT   // Default mouse pointer
+      CASE nResID == XBPSTATIC_SYSICON_ARROW     // Normal arrow
+         Xbp_SetCursor( Self, Qt_ArrowCursor )
+      CASE nResID == XBPSTATIC_SYSICON_WAIT      // Hour glass or clock
+         Xbp_SetCursor( Self, Qt_WaitCursor )
+      CASE nResID == XBPSTATIC_SYSICON_MOVE      // Move the window
+         Xbp_SetCursor( Self, Qt_OpenHandCursor )
+      CASE nResID == XBPSTATIC_SYSICON_SIZE      // Change size (all directions)
+         Xbp_SetCursor( Self, Qt_SizeAllCursor )
+      CASE nResID == XBPSTATIC_SYSICON_SIZENWSE  // Change size (North west-South east)
+         Xbp_SetCursor( Self, Qt_SizeFDiagCursor )
+      CASE nResID == XBPSTATIC_SYSICON_SIZENESW  // Change size (North east-South west)
+         Xbp_SetCursor( Self, Qt_SizeBDiagCursor )
+      CASE nResID == XBPSTATIC_SYSICON_SIZEWE    // Change size (West-East)
+         Xbp_SetCursor( Self, Qt_SizeHorCursor )
+      CASE nResID == XBPSTATIC_SYSICON_SIZENS    // Change size (North-South)
+         Xbp_SetCursor( Self, Qt_SizeVerCursor )
+
+      /* Possible Harbour-QT extensions */
+
+      CASE nResID == Qt_UpArrowCursor
+         Xbp_SetCursor( Self, Qt_UpArrowCursor )
+      CASE nResID == Qt_CrossCursor
+         Xbp_SetCursor( Self, Qt_CrossCursor )
+      CASE nResID == Qt_IBeamCursor
+         Xbp_SetCursor( Self, Qt_IBeamCursor )
+      CASE nResID == Qt_BlankCursor
+         Xbp_SetCursor( Self, Qt_BlankCursor )
+      CASE nResID == Qt_SplitVCursor
+         Xbp_SetCursor( Self, Qt_SplitVCursor )
+      CASE nResID == Qt_SplitHCursor
+         Xbp_SetCursor( Self, Qt_SplitHCursor )
+      CASE nResID == Qt_PointingHandCursor
+         Xbp_SetCursor( Self, Qt_PointingHandCursor )
+      CASE nResID == Qt_ForbiddenCursor
+         Xbp_SetCursor( Self, Qt_ForbiddenCursor )
+      CASE nResID == Qt_ClosedHandCursor
+         Xbp_SetCursor( Self, Qt_ClosedHandCursor )
+      CASE nResID == Qt_WhatsThisCursor
+         Xbp_SetCursor( Self, Qt_WhatsThisCursor )
+      CASE nResID == Qt_BusyCursor
+         Xbp_SetCursor( Self, Qt_BusyCursor )
+      CASE nResID == Qt_BitmapCursor
+         Xbp_SetCursor( Self, Qt_BitmapCursor )
+
+      ENDCASE
+
+   CASE nType == XBPWINDOW_POINTERTYPE_ICON
+      // TODO:
+
+   ENDCASE
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:setTrackPointer()
+METHOD XbpWindow:setTrackPointer( lTrack )
+   LOCAL lRet := .f.
 
-   RETURN Self
+   IF hb_isLogical( lTrack )
+      ::lTrack := lTrack
+      lRet := .T.
+   ENDIF
+
+   RETURN ( lRet )
 
 /*----------------------------------------------------------------------*/
 
@@ -898,7 +1030,7 @@ METHOD XbpWindow:setSize( aSize, lPaint )
 
 METHOD XbpWindow:isDerivedFrom( cClassORoObject )
    LOCAL lTrue := .f.
-   LOCAL cCls := __ObjGetClsName( self )
+   LOCAL cCls := __ObjGetClsName( Self )
 
    /* Compares without Xbp or Wvg prefixes  */
 
@@ -929,11 +1061,15 @@ METHOD XbpWindow:show()
 
 METHOD XbpWindow:toBack()
 
+   // TODO:
+
    RETURN self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:toFront()
+
+   // TODO:
 
    RETURN self
 
@@ -941,11 +1077,15 @@ METHOD XbpWindow:toFront()
 
 METHOD XbpWindow:unlockPS()
 
+   // TODO:
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:winDevice()
+
+   // TODO:
 
    RETURN Self
 
@@ -953,13 +1093,26 @@ METHOD XbpWindow:winDevice()
 
 METHOD XbpWindow:setFont()
 
+   // TODO:
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:setPresParam()
+METHOD XbpWindow:setPresParam( aPPNew )
+   LOCAL i, aPP
 
-   RETURN Self
+   aPP := aclone( ::aPresParams )
+
+   IF hb_isArray( aPPNew )
+      FOR i := 1 TO len( aPPNew )
+         Xbp_SetPresParam( ::aPresParams, aPPNew[ i,1 ], aPPNew[ i,2 ] )
+      NEXT
+   ENDIF
+
+   // Build Style Sheet
+
+   RETURN aPP
 
 /*----------------------------------------------------------------------*/
 
@@ -982,14 +1135,25 @@ METHOD XbpWindow:getHWND()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:getModalState()
+   LOCAL nState
 
-   RETURN Self
+   nState := ::oWidget:windowModality()
+
+   IF hb_bitAnd( nState, Qt_NonModal ) == Qt_NonModal
+      RETURN ( XBP_DISP_MODELESS )
+   ELSEIF hb_bitAnd( nState, Qt_ApplicationModal ) == Qt_ApplicationModal
+      RETURN ( XBP_DISP_APPMODAL )
+   ELSE
+      // TODO:  XBP_DISP_SYSMODAL
+   ENDIF
+
+   RETURN -1
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:hasInputFocus()
 
-   RETURN Self
+   RETURN ::oWidget:hasFocus()
 
 /*----------------------------------------------------------------------*/
  *                           Callback Methods
@@ -1524,3 +1688,59 @@ METHOD xbpWindow:setStyle()
    RETURN self
 #endif
 /*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Xbp_PresParam()
+   LOCAL aPP := {}
+
+   aadd( aPP, { XBP_PP_FGCLR              , NIL } )
+   aadd( aPP, { XBP_PP_BGCLR              , NIL } )
+   aadd( aPP, { XBP_PP_HILITE_FGCLR       , NIL } )
+   aadd( aPP, { XBP_PP_HILITE_BGCLR       , NIL } )
+   aadd( aPP, { XBP_PP_DISABLED_FGCLR     , NIL } )
+   aadd( aPP, { XBP_PP_DISABLED_BGCLR     , NIL } )
+   aadd( aPP, { XBP_PP_BORDER_CLR         , NIL } )
+   aadd( aPP, { XBP_PP_COMPOUNDNAME       , NIL } )
+   aadd( aPP, { XBP_PP_FONT               , NIL } )
+   aadd( aPP, { XBP_PP_ACTIVE_CLR         , NIL } )
+   aadd( aPP, { XBP_PP_INACTIVE_CLR       , NIL } )
+   aadd( aPP, { XBP_PP_ACTIVETEXT_FGCLR   , NIL } )
+   aadd( aPP, { XBP_PP_ACTIVETEXT_BGCLR   , NIL } )
+   aadd( aPP, { XBP_PP_INACTIVETEXT_FGCLR , NIL } )
+   aadd( aPP, { XBP_PP_INACTIVETEXT_BGCLR , NIL } )
+   aadd( aPP, { XBP_PP_CAPTION            , NIL } )
+   aadd( aPP, { XBP_PP_ALIGNMENT          , NIL } )
+   aadd( aPP, { XBP_PP_ORIGIN             , NIL } )
+
+   RETURN aPP
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Xbp_SetPresParamIfNil( aPP, nParam, xValue )
+   LOCAL n
+
+   IF xValue != NIL
+      IF ( n := ascan( aPP, {|e_| e_[ 1 ] == nParam } ) ) > 0
+         IF aPP[ n,2 ] == NIL
+            aPP[ n,2 ] := xValue
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Xbp_SetPresParam( aPP, nParam, xValue )
+   LOCAL oldValue, n
+
+   IF ( n := ascan( aPP, {|e_| e_[ 1 ] == nParam } ) ) > 0
+      oldValue := aPP[ n,2 ]
+      IF xValue != NIL
+         aPP[ n,2 ] := xValue
+      ENDIF
+   ENDIF
+
+   RETURN oldValue
+
+/*----------------------------------------------------------------------*/
+

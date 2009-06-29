@@ -100,7 +100,7 @@ CLASS Xbp3State  INHERIT  XbpWindow, XbpDataRef
 
 METHOD Xbp3State:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 

@@ -213,16 +213,26 @@ METHOD XbpDialog:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpDialog:setFrameState( nState )
-   LOCAL lSuccess := .f.
+   LOCAL lSuccess := .T.
+   LOCAL nCurState := ::getFrameState()
 
    DO CASE
-
    CASE nState == XBPDLG_FRAMESTAT_MINIMIZED
-
+      IF nCurState != XBPDLG_FRAMESTAT_MINIMIZED
+         ::oWidget:setWindowState( Qt_WindowMinimized )
+      ENDIF
    CASE nState == XBPDLG_FRAMESTAT_MAXIMIZED
-
+      IF nCurState == XBPDLG_FRAMESTAT_MINIMIZED
+         ::oWidget:show()
+         ::oWidget:setWindowState( Qt_WindowMaximized )
+      ELSEIF nCurState == XBPDLG_FRAMESTAT_NORMALIZED
+         ::oWidget:setWindowState( Qt_WindowMaximized )
+      ENDIF
    CASE nState == XBPDLG_FRAMESTAT_NORMALIZED
-
+      IF nCurState != XBPDLG_FRAMESTAT_MINIMIZED
+         ::oWidget:show()
+      ENDIF
+      ::oWidget:setWindowState( Qt_WindowNoState )
    ENDCASE
 
    RETURN lSuccess
@@ -230,15 +240,13 @@ METHOD XbpDialog:setFrameState( nState )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpDialog:getFrameState()
+   LOCAL nState := ::oWidget:windowState()
 
-   #if 0
-   IF Qtc_IsIconic( ::hWnd )
+   IF ( hb_bitAnd( nState, Qt_WindowMinimized ) == Qt_WindowMinimized )
       RETURN XBPDLG_FRAMESTAT_MINIMIZED
-   ENDIF
-   IF Qtc_IsZoomed( ::hWnd )
+   ELSEIF ( hb_bitAnd( nState, Qt_WindowMaximized ) == Qt_WindowMaximized )
       RETURN XBPDLG_FRAMESTAT_MAXIMIZED
    ENDIF
-   #endif
 
    RETURN XBPDLG_FRAMESTAT_NORMALIZED
 

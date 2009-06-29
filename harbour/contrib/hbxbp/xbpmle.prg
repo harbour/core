@@ -132,7 +132,7 @@ CLASS XbpMLE INHERIT XbpWindow, XbpDataRef
 
 METHOD XbpMLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 

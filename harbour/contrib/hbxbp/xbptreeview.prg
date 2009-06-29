@@ -132,7 +132,7 @@ CLASS XbpTreeView  INHERIT  XbpWindow, XbpDataRef
 
 METHOD XbpTreeView:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::xbpWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
