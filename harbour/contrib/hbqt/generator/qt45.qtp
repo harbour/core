@@ -35,6 +35,7 @@ QCommandLinkButton.qth
 QCommonStyle.qth
 QConicalGradient.qth
 QCoreApplication.qth
+QCursor.qth
 QDateEdit.qth
 QDateTime.qth
 QDateTimeEdit.qth

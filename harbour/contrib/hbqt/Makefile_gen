@@ -210,6 +210,7 @@ CPP_SOURCES=\
 	hbqt_qwindowsstyle.cpp \
 	hbqt_qwindowsxpstyle.cpp \
 	hbqt_qwizard.cpp \
+	hbqt_qcursor.cpp \
 	hbqt_base.cpp \
 	hbqt_utils.cpp \
 	hbqt_slots.cpp \
@@ -426,6 +427,7 @@ PRG_SOURCES=\
 	TQWebView.prg \
 	TQWheelEvent.prg \
 	TQWidget.prg \
+	TQCursor.prg \
 	TQWidgetAction.prg \
 	TQWidgetItem.prg \
 	TQWindowsStyle.prg \
