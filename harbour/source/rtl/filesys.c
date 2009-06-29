@@ -3160,10 +3160,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       PHB_FNAME pFileName;
       ULONG ulLen;
 
-      if( pszCP )
-         szFileName = hb_osEncode( szFileName, pszFree );
-
-      if( pszFree && *pszFree == NULL )
+      if( pszFree )
       {
          szFileName = *pszFree = hb_strncpy( ( char * ) hb_xgrab( HB_PATH_MAX ),
                                              szFileName, HB_PATH_MAX - 1 );
@@ -3224,6 +3221,13 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
             hb_strLower( ( char * ) pFileName->szPath, strlen( pFileName->szPath ) );
          else if( iDirCase == HB_SET_CASE_UPPER )
             hb_strUpper( ( char * ) pFileName->szPath, strlen( pFileName->szPath ) );
+      }
+
+      if( pszCP )
+      {
+         szFileName = hb_osEncode( szFileName, NULL );
+         if( pszFree )
+            *pszFree = ( char * ) szFileName;
       }
 
       hb_fsFNameMerge( ( char * ) szFileName, pFileName );

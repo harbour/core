@@ -799,7 +799,7 @@ char * hb_strncpy( char * pDest, const char * pSource, ULONG ulLen )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strncpy(%p, %s, %lu)", pDest, pSource, ulLen));
 
-   pDest[ ulLen ] ='\0';
+   pDest[ ulLen ] = '\0';
 
    while( ulLen && ( *pDest++ = *pSource++ ) != '\0' )
       ulLen--;
@@ -821,7 +821,7 @@ char * hb_strncat( char * pDest, const char * pSource, ULONG ulLen )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strncpy(%p, %s, %lu)", pDest, pSource, ulLen));
 
-   pDest[ ulLen ] ='\0';
+   pDest[ ulLen ] = '\0';
 
    while( ulLen && *pDest )
    {
@@ -854,7 +854,7 @@ char * hb_strncpyLower( char * pDest, const char * pSource, ULONG ulLen )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strncpyLower(%p, %s, %lu)", pDest, pSource, ulLen));
 
-   pDest[ ulLen ] ='\0';
+   pDest[ ulLen ] = '\0';
 
    while( ulLen && ( *pDest++ = ( char ) HB_TOLOWER( ( UCHAR ) *pSource ) ) != '\0' )
    {
@@ -881,7 +881,7 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpper(%p, %s, %lu)", pDest, pSource, ulLen));
 
-   pDest[ ulLen ] ='\0';
+   pDest[ ulLen ] = '\0';
 
    while( ulLen && ( *pDest++ = ( char ) HB_TOUPPER( ( UCHAR ) *pSource ) ) != '\0' )
    {
@@ -951,7 +951,7 @@ char * hb_strncpyTrim( char * pDest, const char * pSource, ULONG ulLen )
    while( ulSLen && pSource[ ulSLen - 1 ] == ' ' )
       ulSLen--;
 
-   pDest[ ulLen ] ='\0';
+   pDest[ ulLen ] = '\0';
 
    while( ulLen && ulSLen && ( *pDest++ = *pSource++ ) != '\0' )
    {
