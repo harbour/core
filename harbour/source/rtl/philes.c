@@ -202,7 +202,7 @@ HB_FUNC( FRENAME )
 {
    USHORT uiError = 2;
    const char * szFileOld = hb_parc( 1 ),
-              * szFileNew = hb_parc( 1 );
+              * szFileNew = hb_parc( 2 );
 
    if( szFileOld && szFileNew )
    {
