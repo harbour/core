@@ -317,7 +317,6 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          case MYSQL_TYPE_STRING:
          case MYSQL_TYPE_VAR_STRING:
          case MYSQL_TYPE_ENUM:
-         case MYSQL_TYPE_DATETIME:
            pFieldInfo.uiType = HB_FT_STRING;
            break;
 
@@ -332,10 +331,18 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
            pFieldInfo.uiType = HB_FT_MEMO;
            break;
 
-/*
          case MYSQL_TYPE_TIMESTAMP:
-         case MYSQL_TYPE_TIME:
          case MYSQL_TYPE_DATETIME:
+           pFieldInfo.uiType = HB_FT_TIMESTAMP;
+           pFieldInfo.uiLen = 8;
+           break;
+
+         case MYSQL_TYPE_TIME:
+           pFieldInfo.uiType = HB_FT_TIME;
+           pFieldInfo.uiLen = 4;
+           break;
+
+/*
          case MYSQL_TYPE_YEAR:
          case MYSQL_TYPE_NEWDATE:
          case MYSQL_TYPE_ENUM:
@@ -384,6 +391,11 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 
             case HB_FT_DATE:
                pItem = hb_itemPutDS( NULL, NULL );
+               break;
+
+            case HB_FT_TIMESTAMP:
+            case HB_FT_TIME:
+               pItem = hb_itemPutTDT( NULL, 0, 0 );
                break;
 
             default:
@@ -509,7 +521,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pI
 #if 0
          char*  pStr;
 
-         /* Do NOT trim strings */
+         /* Expand strings to field length */
          pStr = (char*) hb_xgrab( pField->uiLen + 1 );
          if ( pValue )
             memcpy( pStr, pValue, ulLen );
@@ -520,7 +532,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pI
          pStr[ pField->uiLen ] = '\0';
          hb_itemPutCRaw( pItem, pStr, pField->uiLen );
 #else
-         /* Trim strings */
+         /* Do not expand strings */
          if ( pValue )
             hb_itemPutCL( pItem, pValue, ulLen );
          else
@@ -579,6 +591,54 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pI
          szDate[ 7 ] = pValue[ 9 ];
          szDate[ 8 ] = '\0';
          hb_itemPutDS( pItem, szDate );
+         break;
+      }
+
+      case HB_FT_TIMESTAMP:
+      {
+         char  szTimeStamp[ 15 ];
+
+         szTimeStamp[ 0 ] = pValue[ 0 ];
+         szTimeStamp[ 1 ] = pValue[ 1 ];
+         szTimeStamp[ 2 ] = pValue[ 2 ];
+         szTimeStamp[ 3 ] = pValue[ 3 ];
+         szTimeStamp[ 4 ] = pValue[ 5 ];
+         szTimeStamp[ 5 ] = pValue[ 6 ];
+         szTimeStamp[ 6 ] = pValue[ 8 ];
+         szTimeStamp[ 7 ] = pValue[ 9 ];
+
+         szTimeStamp[  8 ] = pValue[ 11 ];
+         szTimeStamp[  9 ] = pValue[ 12 ];
+         szTimeStamp[ 10 ] = pValue[ 14 ];
+         szTimeStamp[ 11 ] = pValue[ 15 ];
+         szTimeStamp[ 12 ] = pValue[ 17 ];
+         szTimeStamp[ 13 ] = pValue[ 18 ];
+         szTimeStamp[ 14 ] = '\0';
+         hb_itemPutTS( pItem, szTimeStamp );
+         break;
+      }
+
+      case HB_FT_TIME:
+      {
+         char  szTimeStamp[ 15 ];
+
+         szTimeStamp[ 0 ] = '0';
+         szTimeStamp[ 1 ] = '0';
+         szTimeStamp[ 2 ] = '0';
+         szTimeStamp[ 3 ] = '0';
+         szTimeStamp[ 4 ] = '0';
+         szTimeStamp[ 5 ] = '0';
+         szTimeStamp[ 6 ] = '0';
+         szTimeStamp[ 7 ] = '0';
+
+         szTimeStamp[  8 ] = pValue[ 0 ];
+         szTimeStamp[  9 ] = pValue[ 1 ];
+         szTimeStamp[ 10 ] = pValue[ 3 ];
+         szTimeStamp[ 11 ] = pValue[ 4 ];
+         szTimeStamp[ 12 ] = pValue[ 6 ];
+         szTimeStamp[ 13 ] = pValue[ 7 ];
+         szTimeStamp[ 14 ] = '\0';
+         hb_itemPutTS( pItem, szTimeStamp );
          break;
       }
 
