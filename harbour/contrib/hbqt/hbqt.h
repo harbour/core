@@ -331,6 +331,7 @@
 #define hbqt_par_QDragEnterEvent( n )        ( ( QDragEnterEvent* ) hb_parptr( n ) )
 #define hbqt_par_QDragLeaveEvent( n )        ( ( QDragLeaveEvent* ) hb_parptr( n ) )
 #define hbqt_par_QMouseEvent( n )            ( ( QMouseEvent* ) hb_parptr( n ) )
+#define hbqt_par_QSystemTrayIcon( n )        ( ( QSystemTrayIcon* ) hb_parptr( n ) )
 
 #define hbqt_par_QString( n )                ( ( QString ) hb_parcx( n ) )
 #define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )

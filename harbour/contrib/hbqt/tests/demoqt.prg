@@ -132,6 +132,7 @@ PROCEDURE Main()
 
    oWnd:Show()
 
+   qt_qapplication_exec()
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -254,6 +255,12 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oAct:setText( "&Wizard" )
    oAct:setToolTip( "Generic Wizard Dialog" )
    Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard", w, l ) } )
+   oTB:addAction( QT_PTROF( oAct ) )
+
+   oAct := QAction():new( QT_PTROF( oWnd ) )
+   oAct:setText( "&SystemTray" )
+   oAct:setToolTip( "Show in System Tray!" )
+   Qt_Connect_Signal( QT_PTROF( oAct ), QT_EVE_TRIGGERED_B, {|w,l| ShowInSystemTray( oWnd, w, l ) } )
    oTB:addAction( QT_PTROF( oAct ) )
 
    /* Add this toolbar with main window */
@@ -716,6 +723,27 @@ STATIC FUNCTION Dummies()
    oSome := QWindowsStyle():new()
    oSome := QWindowsXPStyle():new()
    oSome := QWizard():new()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION ShowInSystemTray( oWnd )
+   LOCAL oSys
+   LOCAL oMenu
+
+   oMenu := QMenu():new( QT_PTROF( oWnd ) )
+   oMenu:setTitle( "&File" )
+   Qt_Connect_Signal( oMenu:addAction_1( "new.png" , "&Show"  ), QT_EVE_TRIGGERED_B, {|w,l| oWnd:show() } )
+   oMenu:addSeparator()
+   Qt_Connect_Signal( oMenu:addAction_1( "save.png", "&Hide" ), QT_EVE_TRIGGERED_B, {|w,l| oWnd:hide() } )
+
+   oSys := QSystemTrayIcon():new( QT_PTROF( oWnd ) )
+   oSys:setIcon( 'new.png' )
+   oSys:setContextMenu( QT_PTROF( oMenu ) )
+   oSys:showMessage( "Harbour-QT", "This is Harbour-QT System Tray" )
+   oSys:show()
+   oWnd:hide()
 
    RETURN nil
 

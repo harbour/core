@@ -172,6 +172,7 @@ QStyleOptionToolButton.qth
 QStyleOptionViewItem.qth
 QStylePainter.qth
 
+QSystemTrayIcon.qth
 QTabBar.qth
 QTableView.qth
 QTableWidget.qth

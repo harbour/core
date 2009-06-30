@@ -160,6 +160,7 @@ CPP_SOURCES=\
 	hbqt_qstyleoptiontoolbutton.cpp \
 	hbqt_qstyleoptionviewitem.cpp \
 	hbqt_qstylepainter.cpp \
+	hbqt_qsystemtrayicon.cpp \
 	hbqt_qtabbar.cpp \
 	hbqt_qtableview.cpp \
 	hbqt_qtablewidget.cpp \
@@ -382,6 +383,7 @@ PRG_SOURCES=\
 	TQStyleOptionToolButton.prg \
 	TQStyleOptionViewItem.prg \
 	TQStylePainter.prg \
+	TQSystemTrayIcon.prg \
 	TQTabBar.prg \
 	TQTableView.prg \
 	TQTableWidget.prg \
