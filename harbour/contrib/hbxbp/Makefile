@@ -62,6 +62,7 @@ PRG_SOURCES=\
 	xbptreeview.prg \
 	xbpstyle.prg \
 	xbpappevent.prg \
+	xbpstatic.prg \
 
 PRG_HEADERS=\
 	xbp.ch \

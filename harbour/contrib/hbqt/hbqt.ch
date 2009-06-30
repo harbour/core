@@ -1416,6 +1416,26 @@
 #define Qt_WResizeNoErase                         0                   // No longer needed.
 #define Qt_WMacNoSheet                            0                   // No longer needed.
 
+
+// Frame Shadow
+#define QFrame_Plain                              0x0010   // the frame and contents appear level with the surroundings; draws using the palette QPalette::WindowText color (without any 3D effect)
+#define QFrame_Raised                             0x0020   // the frame and contents appear raised; draws a 3D raised line using the light and dark colors of the current color group
+#define QFrame_Sunken                             0x0030   // the frame and contents appear sunken; draws a 3D sunken line using the light and dark colors of the current color group
+// Frame Shape
+#define QFrame_NoFrame                            0        // QFrame draws nothing
+#define QFrame_Box                                0x0001   // QFrame draws a box around its contents
+#define QFrame_Panel                              0x0002   // QFrame draws a panel to make the contents appear raised or sunken
+#define QFrame_StyledPanel                        0x0006   // draws a rectangular panel with a look that depends on the current GUI style. It can be raised or sunken.
+#define QFrame_HLine                              0x0004   // QFrame draws a horizontal line that frames nothing (useful as separator)
+#define QFrame_VLine                              0x0005   // QFrame draws a vertical line that frames nothing (useful as separator)
+#define QFrame_WinPanel                           0x0003   // draws a rectangular panel that can be
+               // raised or sunken like those in Windows 95. Specifying this shape sets the
+               // line width to 2 pixels. WinPanel is provided for compatibility. For GUI style
+               // independence we recommend using StyledPanel instead.
+// Frame Style Mask
+#define QFrame_Shadow_Mask                        0x00f0   // The Shadow part of frameStyle()
+#define QFrame_Shape_Mask                         0x000f   // The Shape part of frameStyle()
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH

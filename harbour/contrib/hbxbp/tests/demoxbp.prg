@@ -140,8 +140,8 @@ PROCEDURE BuildADialog()
    /* Install TreeView */
    Build_TreeView( aTabs[ 4 ] )
 
-//aPP := aTabs[4]:setPresParam()
-//hb_outDebug( valtype( aPP ) +' '+ str( len( aPP ) ) )
+   /* Build Statics */
+   Build_Statics( oDA )
 
    /* Present the dialog on the screen */
    oDlg:Show()
@@ -175,6 +175,23 @@ FUNCTION Hb_Symbol_Unused();RETURN nil
 FUNCTION Hb_NtoS( n );RETURN ltrim( str( n ) )
 FUNCTION Hb_ThreadStart();RETURN nil
 #endif
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION PP_Debug( oXbp )
+   LOCAL aPP := oXbp:setPresParam()
+   LOCAL s := ''
+
+   aeval( aPP, {|e_| s += ( hb_ntos( e_[ 1 ] ) +' '+ valtype( e_[ 2 ] ) +' '+ ;
+        IF( valtype( e_[ 2 ] )=='N', hb_ntos( e_[ 2 ] ), ' ' ) + ';  '+ chr( 13 )+chr( 10 ) ) } )
+
+   #ifdef __XPP__
+   MsgBox( s )
+   #else
+   hb_outDebug( s )
+   #endif
+
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
@@ -772,21 +789,49 @@ PROCEDURE FieldStruct( oItem, aField )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION PP_Debug( oXbp )
-   LOCAL aPP := oXbp:setPresParam()
-   LOCAL s := ''
+FUNCTION Build_Statics( oWnd )
+   LOCAL oGrp,oLbl, oLin, oBox
 
-   aeval( aPP, {|e_| s += ( hb_ntos( e_[ 1 ] ) +' '+ valtype( e_[ 2 ] ) +' '+ ;
-        IF( valtype( e_[ 2 ] )=='N', hb_ntos( e_[ 2 ] ), ' ' ) + ';  '+ chr( 13 )+chr( 10 ) ) } )
+   oGrp := XbpStatic():new( oWnd, , {250,10}, {240,200} )
+   oGrp:type := XBPSTATIC_TYPE_GROUPBOX
+   oGrp:caption := " Harbour-QT-Statics "
+   oGrp:create()
+   oGrp:setColorFG( GraMakeRGBColor( { 0,255,255 } ) )
 
-   #ifdef __XPP__
-   MsgBox( s )
-   #else
-   hb_outDebug( s )
-   #endif
+   oLbl := XbpStatic():new( oGrp, , {10,20}, {220,30} )
+   oLbl:type    := XBPSTATIC_TYPE_TEXT
+   oLbl:options := XBPSTATIC_TEXT_CENTER + XBPSTATIC_TEXT_VCENTER
+   oLbl:caption := "Harbour-QT"
+   oLbl:create()
+   oLbl:setFontCompoundName( "18.Courier normal" )
+
+   oLbl:setColorFG( GraMakeRGBColor( { 255,0,0 } ) )
+
+   oLin := XbpStatic():new( oGrp, , {50,60}, {180,10} )
+   oLin:type := XBPSTATIC_TYPE_RAISEDLINE
+   oLin:create()
+
+   oLin := XbpStatic():new( oGrp, , {50,80}, {180,10} )
+   oLin:type := XBPSTATIC_TYPE_RECESSEDLINE
+   oLin:create()
+
+   oLin := XbpStatic():new( oGrp, , {10,60}, {10,100} )
+   oLin:type := XBPSTATIC_TYPE_RAISEDLINE
+   oLin:create()
+
+   oLin := XbpStatic():new( oGrp, , {25,60}, {10,100} )
+   oLin:type := XBPSTATIC_TYPE_RECESSEDLINE
+   oLin:create()
+
+   oBox := XbpStatic():new( oGrp, , {50,110}, {50,50} )
+   oBox:type := XBPSTATIC_TYPE_RAISEDBOX
+   oBox:create()
+
+   oBox := XbpStatic():new( oGrp, , {120,110}, {50,50} )
+   oBox:type := XBPSTATIC_TYPE_RECESSEDBOX
+   oBox:create()
 
    RETURN nil
 
 /*----------------------------------------------------------------------*/
-
 

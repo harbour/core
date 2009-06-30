@@ -28,6 +28,7 @@ CPP_SOURCES=\
 	hbqt_qcommonstyle.cpp \
 	hbqt_qconicalgradient.cpp \
 	hbqt_qcoreapplication.cpp \
+	hbqt_qcursor.cpp \
 	hbqt_qdateedit.cpp \
 	hbqt_qdatetime.cpp \
 	hbqt_qdatetimeedit.cpp \
@@ -210,7 +211,6 @@ CPP_SOURCES=\
 	hbqt_qwindowsstyle.cpp \
 	hbqt_qwindowsxpstyle.cpp \
 	hbqt_qwizard.cpp \
-	hbqt_qcursor.cpp \
 	hbqt_base.cpp \
 	hbqt_utils.cpp \
 	hbqt_slots.cpp \
@@ -250,6 +250,7 @@ PRG_SOURCES=\
 	TQCommonStyle.prg \
 	TQConicalGradient.prg \
 	TQCoreApplication.prg \
+	TQCursor.prg \
 	TQDateEdit.prg \
 	TQDateTime.prg \
 	TQDateTimeEdit.prg \
@@ -427,7 +428,6 @@ PRG_SOURCES=\
 	TQWebView.prg \
 	TQWheelEvent.prg \
 	TQWidget.prg \
-	TQCursor.prg \
 	TQWidgetAction.prg \
 	TQWidgetItem.prg \
 	TQWindowsStyle.prg \

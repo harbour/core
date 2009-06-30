@@ -144,7 +144,7 @@
 #define XBPSYSCLR_SHADOWHILITEBGND                ( -50 )
 #define XBPSYSCLR_SHADOWHILITEFGND                ( -49 )
 #define XBPSYSCLR_SHADOWTEXT                      ( -48 )
-#define XBPSYSCLR_ENTRYFIELD                      ( -47 )
+#define XBPSYSCLR_ENTRYFIELD                      ( -47 )     // QPalette_Base
 #define XBPSYSCLR_MENUDISABLEDTEXT                ( -46 )
 #define XBPSYSCLR_MENUHILITE                      ( -45 )
 #define XBPSYSCLR_MENUHILITEBGND                  ( -44 )
@@ -171,16 +171,16 @@
 #define XBPSYSCLR_ACTIVETITLE                     ( -23 )
 #define XBPSYSCLR_INACTIVETITLE                   ( -22 )
 #define XBPSYSCLR_MENU                            ( -21 )
-#define XBPSYSCLR_WINDOW                          ( -20 )
+#define XBPSYSCLR_WINDOW                          ( -20 )    // QPalette_Window
 #define XBPSYSCLR_WINDOWFRAME                     ( -19 )
 #define XBPSYSCLR_MENUTEXT                        ( -18 )
-#define XBPSYSCLR_WINDOWTEXT                      ( -17 )
+#define XBPSYSCLR_WINDOWTEXT                      ( -17 )    // QPalette_WindowText
 #define XBPSYSCLR_TITLETEXT                       ( -16 )
 #define XBPSYSCLR_ACTIVEBORDER                    ( -15 )
 #define XBPSYSCLR_INACTIVEBORDER                  ( -14 )
 #define XBPSYSCLR_APPWORKSPACE                    ( -13 )
-#define XBPSYSCLR_HELPBACKGROUND                  ( -12 )
-#define XBPSYSCLR_HELPTEXT                        ( -11 )
+#define XBPSYSCLR_HELPBACKGROUND                  ( -12 )    // QPalette_ToolTipBase
+#define XBPSYSCLR_HELPTEXT                        ( -11 )    // QPalette_ToolTipText
 #define XBPSYSCLR_HELPHILITE                      ( -10 )
 
 #define XBPSYSCLR_TRANSPARENT                     ( -255 )
@@ -248,6 +248,7 @@
 #define XBPSTATIC_SYSICON_SIZENESW                7
 #define XBPSTATIC_SYSICON_SIZEWE                  8
 #define XBPSTATIC_SYSICON_SIZENS                  9
+
 #define XBPSTATIC_SYSICON_APPICON                 10
 #define XBPSTATIC_SYSICON_ICONINFORMATION         11
 #define XBPSTATIC_SYSICON_ICONQUESTION            12

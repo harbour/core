@@ -235,10 +235,9 @@ FUNCTION MsgBox( cMsg, cTitle )
    DEFAULT cTitle TO "  "
 
    oMB := QMessageBox():new()
-   oMB:setInformativeText( "<b>"+ cMsg +"</b>" )
+   oMB:setText( "<b>"+ cMsg +"</b>" )
    oMB:setIcon( QMessageBox_Information )
    oMB:setParent( SetAppWindow():pWidget )
-   //oMB:setWindowModality( Qt_WindowModal )
    oMB:setWindowFlags( Qt_Dialog )
    oMB:setWindowTitle( cTitle )
    SetAppWindow():oWidget:setFocus()

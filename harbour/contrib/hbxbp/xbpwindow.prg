@@ -786,14 +786,22 @@ METHOD XbpWindow:setStyleSheet( cNewSheet )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:setColorBG( nRGB )
-   //LOCAL cClass  := __ObjGetClsName( self )
+STATIC FUNCTION Xbp_RgbToName( nRgb )
    LOCAL oColor := QColor():new( nRGB )
-   LOCAL oldRGB
+   LOCAL cName := oColor:name
+
+   RETURN '#'+substr( cName,6 ) + substr( cName,4,2 ) + substr( cName,2,2 )
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:setColorBG( nRGB )
+   LOCAL oldRGB, cName
+
+   cName := Xbp_RgbToName( nRGB )
 
    IF hb_isNumeric( nRGB )
       oldRGB := Xbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR, nRGB )
-      ::setStyleSheet( "background-color: "+ oColor:name +";" )
+      ::setStyleSheet( "background-color: "+ cName +";" )
    ELSE
       oldRGB := Xbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR )
    ENDIF
@@ -803,13 +811,13 @@ METHOD XbpWindow:setColorBG( nRGB )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setColorFG( nRGB )
-   //LOCAL cClass  := __ObjGetClsName( self )
-   LOCAL oColor := QColor():new( nRGB )
-   LOCAL oldRGB
+   LOCAL oldRGB, cName
+
+   cName := Xbp_RgbToName( nRGB )
 
    IF hb_isNumeric( nRGB )
       oldRGB := Xbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR, nRGB )
-      ::setStyleSheet( "color: "+ oColor:name +";" )
+      ::setStyleSheet( "color: "+ cName +";" )
    ELSE
       oldRGB := Xbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR )
    ENDIF

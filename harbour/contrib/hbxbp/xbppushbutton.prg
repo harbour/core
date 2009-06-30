@@ -106,7 +106,7 @@ CLASS XbpPushButton  INHERIT  XbpWindow
 
 METHOD XbpPushButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::xbpWindow:INIT( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
@@ -117,11 +117,10 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QPushButton():new( QT_PTROF( ::oParent:oWidget ) )
-   ::oWidget:move( aPos[ 1 ],aPos[ 2 ] )
-   ::oWidget:resize( aSize[ 1 ],aSize[ 2 ] )
 
    ::Connect( QT_PTROF( ::oWidget ), "clicked()", {|| ::exeBlock() } )
 
+   ::setPosAndSize()
    IF ::visible
       ::oWidget:show()
    ENDIF
