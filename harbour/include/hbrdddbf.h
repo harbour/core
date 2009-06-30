@@ -268,7 +268,7 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
 static HB_ERRCODE hb_dbfGetVarLen( DBFAREAP pArea, USHORT uiIndex, ULONG * pLength );
 static HB_ERRCODE hb_dbfGoCold( DBFAREAP pArea );
 static HB_ERRCODE hb_dbfGoHot( DBFAREAP pArea );
-static HB_ERRCODE hb_dbfPutRec( DBFAREAP pArea, BYTE * pBuffer );
+static HB_ERRCODE hb_dbfPutRec( DBFAREAP pArea, const BYTE * pBuffer );
 static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
 static HB_ERRCODE hb_dbfRecall( DBFAREAP pArea );
 static HB_ERRCODE hb_dbfRecCount( DBFAREAP pArea, ULONG * pRecCount );
