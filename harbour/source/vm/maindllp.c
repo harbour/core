@@ -156,7 +156,7 @@ PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols, const char * 
       s_pProcessSymbols = hb_getProcAddress( HBTEXT( "_hb_vmProcessDynLibSymbols" ) );
 
    if( s_pProcessSymbols )
-      return ( ( VM_PROCESS_SYMBOLS_EX ) s_pProcessSymbols )
+      return ( ( VM_PROCESS_SYMBOLS ) s_pProcessSymbols )
                   ( pSymbols, uiSymbols, szModuleName, ulID, uiPcodeVer );
    /* else
     *    may we issue an error ? */
@@ -173,7 +173,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
       s_pExecute = hb_getProcAddress( HBTEXT( "_hb_vmExecute" ) );
 
    if( s_pExecute )
-      ( ( VM_DLL_EXECUTE ) s_pExecute )( pCode, pSymbols );
+      ( ( VM_EXECUTE ) s_pExecute )( pCode, pSymbols );
 
    /* else
     *    may we issue an error ? */

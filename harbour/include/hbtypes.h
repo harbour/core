@@ -62,13 +62,11 @@
 
 HB_EXTERN_BEGIN
 
-typedef PHB_SYMB ( * VM_PROCESS_DLL_SYMBOLS ) ( PHB_SYMB pModuleSymbols,
-                                                USHORT uiModuleSymbols );
-typedef PHB_SYMB ( * VM_PROCESS_SYMBOLS_EX )
+typedef PHB_SYMB ( * VM_PROCESS_SYMBOLS )
                         ( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols,
                           const char * szModuleName, ULONG ulID, USHORT uiPcodeVer );
 
-typedef void ( * VM_DLL_EXECUTE ) ( const BYTE * pCode, PHB_SYMB pSymbols );
+typedef void ( * VM_EXECUTE ) ( const BYTE * pCode, PHB_SYMB pSymbols );
 
 typedef BOOL     ( * EXT_IS_ARRAY ) ( int iParam );
 typedef char *   ( * EXT_PARC1 )  ( int iParam );
