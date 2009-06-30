@@ -115,9 +115,9 @@ static ULONG hb_delimEncodeBuffer( DELIMAREAP pArea )
 
    pBuffer = pArea->pBuffer;
    ulSize = 0;
-   for( uiField = 0; uiField < pArea->uiFieldCount; ++uiField )
+   for( uiField = 0; uiField < pArea->area.uiFieldCount; ++uiField )
    {
-      pField = pArea->lpFields + uiField;
+      pField = pArea->area.lpFields + uiField;
       pFieldBuf = pArea->pRecord + pArea->pFieldOffset[ uiField ];
       if( ulSize )
          pBuffer[ ulSize++ ] = pArea->cSeparator;
@@ -261,9 +261,9 @@ static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
    /* clear the record buffer */
    hb_delimClearRecordBuffer( pArea );
 
-   for( uiField = 0; uiField < pArea->uiFieldCount; ++uiField )
+   for( uiField = 0; uiField < pArea->area.uiFieldCount; ++uiField )
    {
-      pField = pArea->lpFields + uiField;
+      pField = pArea->area.lpFields + uiField;
       uiType = pField->uiType;
       if( uiType == HB_FT_STRING || uiType == HB_FT_LOGICAL ||
           uiType == HB_FT_DATE || uiType == HB_FT_LONG )
@@ -327,12 +327,13 @@ static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
 
                fDbl = hb_strnToNum( (const char *) buffer, uiSize, &lVal, &dVal );
                if( fDbl )
-                  pArea->valResult = hb_itemPutNDLen( pArea->valResult, dVal,
+                  pArea->area.valResult = hb_itemPutNDLen( pArea->area.valResult, dVal,
                                     uiLen - pField->uiDec - 1, pField->uiDec );
                else
-                  pArea->valResult = hb_itemPutNIntLen( pArea->valResult,
-                                                        lVal, uiLen );
-               hb_itemStrBuf( ( char * ) buffer, pArea->valResult, uiLen, pField->uiDec );
+                  pArea->area.valResult = hb_itemPutNIntLen( pArea->area.valResult,
+                                                             lVal, uiLen );
+               hb_itemStrBuf( ( char * ) buffer, pArea->area.valResult, uiLen,
+                              pField->uiDec );
                /* TODO: RT error on width range */
                memcpy( pFieldBuf, buffer, uiLen );
             }
@@ -356,12 +357,12 @@ static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
        pArea->ulRecordOffset == ( HB_FOFFSET ) ( pArea->ulBufferStart +
                                                  pArea->ulBufferIndex ) )
    {
-      pArea->fEof = TRUE;
+      pArea->area.fEof = TRUE;
       pArea->fPositioned = FALSE;
    }
    else
    {
-      pArea->fEof = FALSE;
+      pArea->area.fEof = FALSE;
       pArea->fPositioned = TRUE;
    }
 
@@ -376,7 +377,7 @@ static HB_ERRCODE hb_delimNextRecord( DELIMAREAP pArea )
    {
       if( pArea->ulNextOffset == ( HB_FOFFSET ) -1 )
       {
-         pArea->fEof = TRUE;
+         pArea->area.fEof = TRUE;
          pArea->fPositioned = FALSE;
          hb_delimClearRecordBuffer( pArea );
       }
@@ -404,8 +405,8 @@ static HB_ERRCODE hb_delimGoTop( DELIMAREAP pArea )
    if( SELF_GOCOLD( ( AREAP ) pArea ) != HB_SUCCESS )
       return HB_FAILURE;
 
-   pArea->fTop = TRUE;
-   pArea->fBottom = FALSE;
+   pArea->area.fTop = TRUE;
+   pArea->area.fBottom = FALSE;
 
    pArea->ulRecordOffset = 0;
    pArea->ulRecNo = 1;
@@ -515,7 +516,7 @@ static HB_ERRCODE hb_delimAppend( DELIMAREAP pArea, BOOL fUnLockAll )
 
    pArea->ulRecordOffset = pArea->ulFileSize;
    pArea->ulRecNo = ++pArea->ulRecCount;
-   pArea->fEof = FALSE;
+   pArea->area.fEof = FALSE;
    pArea->fPositioned = TRUE;
    hb_delimClearRecordBuffer( pArea );
 
@@ -532,7 +533,7 @@ static HB_ERRCODE hb_delimDeleteRec( DELIMAREAP pArea )
    if( pArea->fRecordChanged )
    {
       pArea->ulRecCount--;
-      pArea->fEof = TRUE;
+      pArea->area.fEof = TRUE;
       pArea->fPositioned = pArea->fRecordChanged = FALSE;
       hb_delimClearRecordBuffer( pArea );
    }
@@ -550,17 +551,17 @@ static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
    HB_TRACE(HB_TR_DEBUG, ("hb_delimGetValue(%p, %hu, %p)", pArea, uiIndex, pItem));
 
    --uiIndex;
-   pField = pArea->lpFields + uiIndex;
+   pField = pArea->area.lpFields + uiIndex;
    switch( pField->uiType )
    {
       case HB_FT_STRING:
 #ifndef HB_CDP_SUPPORT_OFF
-         if( pArea->cdPage != hb_vmCDP() )
+         if( pArea->area.cdPage != hb_vmCDP() )
          {
             char * pVal = ( char * ) hb_xgrab( pField->uiLen + 1 );
             memcpy( pVal, pArea->pRecord + pArea->pFieldOffset[ uiIndex ], pField->uiLen );
             pVal[ pField->uiLen ] = '\0';
-            hb_cdpnTranslate( pVal, pArea->cdPage, hb_vmCDP(), pField->uiLen );
+            hb_cdpnTranslate( pVal, pArea->area.cdPage, hb_vmCDP(), pField->uiLen );
             hb_itemPutCLPtr( pItem, pVal, pField->uiLen );
          }
          else
@@ -662,7 +663,7 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
 
    uiError = HB_SUCCESS;
    --uiIndex;
-   pField = pArea->lpFields + uiIndex;
+   pField = pArea->area.lpFields + uiIndex;
    if( pField->uiType != HB_FT_MEMO && pField->uiType != HB_FT_NONE )
    {
       if( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) )
@@ -675,7 +676,7 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM p
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                     hb_itemGetCPtr( pItem ), uiSize );
 #ifndef HB_CDP_SUPPORT_OFF
-            hb_cdpnTranslate( ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_vmCDP(), pArea->cdPage, uiSize );
+            hb_cdpnTranslate( ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_vmCDP(), pArea->area.cdPage, uiSize );
 #endif
             memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + uiSize,
                     ' ', pField->uiLen - uiSize );
@@ -792,9 +793,9 @@ static HB_ERRCODE hb_delimTrans( DELIMAREAP pArea, LPDBTRANSINFO pTransInfo )
 
    if( pTransInfo->uiFlags & DBTF_MATCH )
    {
-      if( !pArea->fTransRec || pArea->cdPage != pTransInfo->lpaDest->cdPage )
+      if( !pArea->fTransRec || pArea->area.cdPage != pTransInfo->lpaDest->cdPage )
          pTransInfo->uiFlags &= ~DBTF_PUTREC;
-      else if( pArea->rddID == pTransInfo->lpaDest->rddID )
+      else if( pArea->area.rddID == pTransInfo->lpaDest->rddID )
          pTransInfo->uiFlags |= DBTF_PUTREC;
       else
       {
@@ -1009,7 +1010,7 @@ static HB_ERRCODE hb_delimInfo( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
          if( iSub == 1 )
             hb_snprintf( szBuf, sizeof( szBuf ), "%d.%d (%s)", 0, 1, "DELIM" );
          else if( iSub == 2 )
-            hb_snprintf( szBuf, sizeof( szBuf ), "%d.%d (%s:%d)", 0, 1, "DELIM", pArea->rddID );
+            hb_snprintf( szBuf, sizeof( szBuf ), "%d.%d (%s:%d)", 0, 1, "DELIM", pArea->area.rddID );
          else
             hb_snprintf( szBuf, sizeof( szBuf ), "%d.%d", 0, 1 );
          hb_itemPutC( pItem, szBuf );
@@ -1134,7 +1135,7 @@ static HB_ERRCODE hb_delimAddField( DELIMAREAP pArea, LPDBFIELDINFO pFieldInfo )
    }
 
    /* Update field offset */
-   pArea->pFieldOffset[ pArea->uiFieldCount ] = pArea->uiRecordLen;
+   pArea->pFieldOffset[ pArea->area.uiFieldCount ] = pArea->uiRecordLen;
    pArea->uiRecordLen += pFieldInfo->uiLen;
    pArea->ulBufferSize += pFieldInfo->uiLen + uiDelim + 1;
 
@@ -1261,12 +1262,12 @@ static HB_ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
 #ifndef HB_CDP_SUPPORT_OFF
    if( pCreateInfo->cdpId )
    {
-      pArea->cdPage = hb_cdpFind( pCreateInfo->cdpId );
-      if( !pArea->cdPage )
-         pArea->cdPage = hb_vmCDP();
+      pArea->area.cdPage = hb_cdpFind( pCreateInfo->cdpId );
+      if( !pArea->area.cdPage )
+         pArea->area.cdPage = hb_vmCDP();
    }
    else
-      pArea->cdPage = hb_vmCDP();
+      pArea->area.cdPage = hb_vmCDP();
 #endif
 
    pFileName = hb_fsFNameSplit( pCreateInfo->abName );
@@ -1349,12 +1350,12 @@ static HB_ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
 #ifndef HB_CDP_SUPPORT_OFF
    if( pOpenInfo->cdpId )
    {
-      pArea->cdPage = hb_cdpFind( pOpenInfo->cdpId );
-      if( !pArea->cdPage )
-         pArea->cdPage = hb_vmCDP();
+      pArea->area.cdPage = hb_cdpFind( pOpenInfo->cdpId );
+      if( !pArea->area.cdPage )
+         pArea->area.cdPage = hb_vmCDP();
    }
    else
-      pArea->cdPage = hb_vmCDP();
+      pArea->area.cdPage = hb_vmCDP();
 #endif
 
    uiFlags = ( pArea->fReadonly ? FO_READ : FO_READWRITE ) |
@@ -1490,10 +1491,10 @@ static const RDDFUNCS delimTable = { NULL /* hb_delimBof */,
                                    ( DBENTRYP_S ) hb_delimSetFieldExtent,
                                      NULL /* hb_delimAlias */,
                                    ( DBENTRYP_V ) hb_delimClose,
-                                   ( DBENTRYP_VP ) hb_delimCreate,
+                                   ( DBENTRYP_VO ) hb_delimCreate,
                                    ( DBENTRYP_SI ) hb_delimInfo,
                                    ( DBENTRYP_V ) hb_delimNewArea,
-                                   ( DBENTRYP_VP ) hb_delimOpen,
+                                   ( DBENTRYP_VO ) hb_delimOpen,
                                      NULL /* hb_delimRelease */,
                                    ( DBENTRYP_SP ) hb_delimStructSize,
                                      NULL /* hb_delimSysName */,

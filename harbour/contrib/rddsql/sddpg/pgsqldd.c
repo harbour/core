@@ -489,7 +489,7 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pI
 
    bError = FALSE;
    uiIndex--;
-   pField = pArea->lpFields + uiIndex;
+   pField = pArea->area.lpFields + uiIndex;
 
    if ( PQgetisnull( (PGresult *) pArea->pResult, pArea->ulRecNo - 1, uiIndex ) )
       return HB_SUCCESS;

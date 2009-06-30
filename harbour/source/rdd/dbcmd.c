@@ -181,7 +181,7 @@ HB_FUNC( ALIAS )
    {
       char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
 
-      if( SELF_ALIAS( pArea, ( BYTE * ) szAlias ) == HB_SUCCESS )
+      if( SELF_ALIAS( pArea, szAlias ) == HB_SUCCESS )
       {
          hb_retc( szAlias );
          return;
@@ -254,7 +254,7 @@ HB_FUNC( DBF )
    {
       char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
 
-      if( SELF_ALIAS( pArea, ( BYTE * ) szAlias ) == HB_SUCCESS )
+      if( SELF_ALIAS( pArea, szAlias ) == HB_SUCCESS )
       {
          hb_retc( szAlias );
          return;
@@ -1270,8 +1270,8 @@ HB_FUNC( ORDCREATE )
       dbOrderInfo.itmOrder = NULL;
       dbOrderInfo.fUnique = HB_ISLOG( 5 ) ? ( BOOL ) hb_parl( 5 ) : hb_setGetUnique();
       dbOrderInfo.abExpr = hb_param( 3, HB_IT_STRING );
-      if( ( ( dbOrderInfo.abBagName == NULL || strlen( ( char * ) dbOrderInfo.abBagName ) == 0 ) &&
-            ( dbOrderInfo.atomBagName == NULL || strlen( ( char * ) dbOrderInfo.atomBagName ) == 0 ) ) ||
+      if( ( ( dbOrderInfo.abBagName == NULL || dbOrderInfo.abBagName[ 0 ] == 0 ) &&
+            ( dbOrderInfo.atomBagName == NULL || dbOrderInfo.atomBagName[ 0 ] == 0 ) ) ||
           !dbOrderInfo.abExpr )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
@@ -1548,10 +1548,10 @@ HB_FUNC( RDDNAME )
 
    if( pArea )
    {
-      char pBuffer[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
-      pBuffer[ 0 ] = '\0';
-      SELF_SYSNAME( pArea, ( BYTE * ) pBuffer );
-      hb_retc( pBuffer );
+      char szRddName[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
+
+      SELF_SYSNAME( pArea, szRddName );
+      hb_retc( szRddName );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );

@@ -1171,9 +1171,9 @@ HB_FUNC( ADSCREATESQLSTATEMENT )
 
                hb_strncpy( szAlias, HB_ISCHAR( 1 ) ? hb_parc( 1 ) : "ADSSQL",
                            sizeof( szAlias ) - 1 );
-               pArea->atomAlias = hb_rddAllocWorkAreaAlias( szAlias,
-                                                            pArea->uiArea );
-               if( pArea->atomAlias )
+               pArea->area.atomAlias = hb_rddAllocWorkAreaAlias( szAlias,
+                                                                 pArea->area.uiArea );
+               if( pArea->area.atomAlias )
                {
                   pArea->hTable = 0;
                   pArea->hOrdCurrent = 0;

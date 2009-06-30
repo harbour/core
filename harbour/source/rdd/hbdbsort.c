@@ -120,7 +120,7 @@ static BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, ULONG ulRecNo1, ULONG ul
       bAscending = ( ( pQuickSort->pSortInfo->lpdbsItem[ uiCount ].uiFlags & SF_ASCEND ) == SF_ASCEND );
 
       uiField = pQuickSort->pSortInfo->lpdbsItem[ uiCount ].uiField - 1;
-      pField = pArea->lpFields + uiField;
+      pField = pArea->area.lpFields + uiField;
       if( pField->uiType == HB_IT_MEMO )
          continue;
       if( pField->uiType == HB_IT_LOGICAL )
@@ -243,7 +243,7 @@ void hb_dbQSortComplete( LPDBQUICKSORT pQuickSort )
 #ifndef HB_CDP_SUPPORT_OFF
          if( pArea->cdPage != hb_vmCDP() )
          {
-            hb_dbfTranslateRec( (DBFAREAP) pArea, (BYTE *) pQuickSort->pSwapBufferA, hb_vmCDP(), pArea->cdPage );
+            hb_dbfTranslateRec( ( DBFAREAP ) pArea, ( BYTE * ) pQuickSort->pSwapBufferA, hb_vmCDP(), pArea->cdPage );
          }
 #endif
 

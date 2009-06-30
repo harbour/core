@@ -883,7 +883,7 @@ static HB_ERRCODE hb_usrStructSize( AREAP pArea, USHORT * puiSize )
    return errCode;
 }
 
-static HB_ERRCODE hb_usrSysName( AREAP pArea, BYTE * szSysName )
+static HB_ERRCODE hb_usrSysName( AREAP pArea, char * szSysName )
 {
    LONG lOffset;
 
@@ -1213,7 +1213,7 @@ static HB_ERRCODE hb_usrFieldDisplay( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrFieldName( AREAP pArea, USHORT uiIndex, void * szName )
+static HB_ERRCODE hb_usrFieldName( AREAP pArea, USHORT uiIndex, char * szName )
 {
    LONG lOffset;
 
@@ -1342,7 +1342,7 @@ static HB_ERRCODE hb_usrGoHot( AREAP pArea )
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrPutRec( AREAP pArea, BYTE * pBuffer )
+static HB_ERRCODE hb_usrPutRec( AREAP pArea, const BYTE * pBuffer )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_usrPutRec(%p,%p)", pArea, pBuffer));
 
@@ -1350,7 +1350,7 @@ static HB_ERRCODE hb_usrPutRec( AREAP pArea, BYTE * pBuffer )
       return SUPER_PUTREC( pArea, pBuffer );
 
    hb_vmPushInteger( pArea->uiArea );
-   hb_vmPushPointer( pBuffer );
+   hb_vmPushPointer( ( void * ) pBuffer );
    hb_vmDo( 2 );
 
    return hb_usrReturn();
@@ -1567,7 +1567,7 @@ static HB_ERRCODE hb_usrSetFieldExtent( AREAP pArea, USHORT uiFieldExtent )
  * WorkArea/Database management
  */
 
-static HB_ERRCODE hb_usrAlias( AREAP pArea, BYTE * szAlias )
+static HB_ERRCODE hb_usrAlias( AREAP pArea, char * szAlias )
 {
    LONG lOffset;
 
@@ -1888,19 +1888,18 @@ static HB_ERRCODE hb_usrForceRel( AREAP pArea )
    return hb_usrReturn();
 }
 
-static HB_ERRCODE hb_usrRelArea( AREAP pArea, USHORT uiRelNo, void * pRelArea )
+static HB_ERRCODE hb_usrRelArea( AREAP pArea, USHORT uiRelNo, USHORT * puiRelArea )
 {
    LONG lOffset;
-   USHORT * puiRelArea = ( USHORT * ) pRelArea;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_usrRelArea(%p,%hu,%p)", pArea, uiRelNo, pRelArea));
+   HB_TRACE(HB_TR_DEBUG, ("hb_usrRelArea(%p,%hu,%p)", pArea, uiRelNo, puiRelArea));
 
    lOffset = hb_stackTopOffset() - hb_stackBaseOffset();
    hb_vmPushInteger( 0 );
    if( !hb_usrPushMethod( SELF_USRNODE( pArea )->pMethods, UR_RELAREA ) )
    {
       hb_stackPop();
-      return SUPER_RELAREA( pArea, uiRelNo, pRelArea );
+      return SUPER_RELAREA( pArea, uiRelNo, puiRelArea );
    }
 
    hb_vmPushInteger( pArea->uiArea );
@@ -2298,7 +2297,7 @@ static HB_ERRCODE hb_usrLocate( AREAP pArea, BOOL fContinue )
  * Miscellaneous
  */
 
-static HB_ERRCODE hb_usrCompile( AREAP pArea, BYTE * szExpr )
+static HB_ERRCODE hb_usrCompile( AREAP pArea, const char * szExpr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_usrCompile(%p,%p)", pArea, szExpr));
 
@@ -2306,7 +2305,7 @@ static HB_ERRCODE hb_usrCompile( AREAP pArea, BYTE * szExpr )
       return SUPER_COMPILE( pArea, szExpr );
 
    hb_vmPushInteger( pArea->uiArea );
-   hb_vmPushString( ( char * ) szExpr, strlen( ( char * ) szExpr ) );
+   hb_vmPushString( szExpr, strlen( szExpr ) );
    hb_vmDo( 2 );
 
    return hb_usrReturn();
@@ -2602,7 +2601,7 @@ static const RDDFUNCS usrFuncTable =
    /* ( DBENTRYP_SP )   */ hb_usrFieldCount,  /* FieldCount     */
    /* ( DBENTRYP_VF )   */ hb_usrFieldDisplay,/* FieldDisplay   */
    /* ( DBENTRYP_SSI )  */ hb_usrFieldInfo,   /* FieldInfo      */
-   /* ( DBENTRYP_SVP )  */ hb_usrFieldName,   /* FieldName      */
+   /* ( DBENTRYP_SCP )  */ hb_usrFieldName,   /* FieldName      */
    /* ( DBENTRYP_V )    */ hb_usrFlush,       /* Flush          */
    /* ( DBENTRYP_PP )   */ hb_usrGetRec,      /* GetRec         */
    /* ( DBENTRYP_SI )   */ hb_usrGetValue,    /* GetValue       */
@@ -2619,15 +2618,15 @@ static const RDDFUNCS usrFuncTable =
    /* ( DBENTRYP_S )    */ hb_usrSetFieldExtent, /* SetFieldExtent */
 
    /* WorkArea/Database management */
-   /* ( DBENTRYP_P )    */ hb_usrAlias,       /* Alias       */
+   /* ( DBENTRYP_CP )   */ hb_usrAlias,       /* Alias       */
    /* ( DBENTRYP_V )    */ hb_usrClose,       /* Close       */
-   /* ( DBENTRYP_VP )   */ hb_usrCreate,      /* Create      */
+   /* ( DBENTRYP_VO )   */ hb_usrCreate,      /* Create      */
    /* ( DBENTRYP_SI )   */ hb_usrInfo,        /* Info        */
    /* ( DBENTRYP_V )    */ NULL, /* RDD */    /* NewArea     */
-   /* ( DBENTRYP_VP )   */ hb_usrOpen,        /* Open        */
+   /* ( DBENTRYP_VO )   */ hb_usrOpen,        /* Open        */
    /* ( DBENTRYP_V )    */ NULL, /* RDD */    /* Release     */
    /* ( DBENTRYP_SP )   */ NULL, /* RDD */    /* StructSize  */
-   /* ( DBENTRYP_P )    */ NULL, /* RDD */    /* SysName     */
+   /* ( DBENTRYP_CP )   */ NULL, /* RDD */    /* SysName     */
    /* ( DBENTRYP_VEI )  */ hb_usrEval,        /* Eval        */
    /* ( DBENTRYP_V )    */ hb_usrPack,        /* Pack        */
    /* ( DBENTRYP_LSP )  */ hb_usrPackRec,     /* PackRec     */
@@ -2643,7 +2642,7 @@ static const RDDFUNCS usrFuncTable =
    /* ( DBENTRYP_V )    */ hb_usrSyncChildren,/* SyncChildren  */
    /* ( DBENTRYP_V )    */ hb_usrClearRel,    /* ClearRel      */
    /* ( DBENTRYP_V )    */ hb_usrForceRel,    /* ForceRel      */
-   /* ( DBENTRYP_SVP )  */ hb_usrRelArea,     /* RelArea       */
+   /* ( DBENTRYP_SCS )  */ hb_usrRelArea,     /* RelArea       */
    /* ( DBENTRYP_VR )   */ hb_usrRelEval,     /* RelEval       */
    /* ( DBENTRYP_SI )   */ hb_usrRelText,     /* RelText       */
    /* ( DBENTRYP_VR )   */ hb_usrSetRel,      /* SetRel        */
@@ -2673,7 +2672,7 @@ static const RDDFUNCS usrFuncTable =
    /* ( DBENTRYP_B )    */ hb_usrLocate,      /* Locate       */
 
    /* Miscellaneous */
-   /* ( DBENTRYP_P )    */ hb_usrCompile,     /* Compile    */
+   /* ( DBENTRYP_CC )   */ hb_usrCompile,     /* Compile    */
    /* ( DBENTRYP_I )    */ hb_usrError,       /* Error      */
    /* ( DBENTRYP_I )    */ hb_usrEvalBlock,   /* EvalBlock  */
 
@@ -2684,10 +2683,10 @@ static const RDDFUNCS usrFuncTable =
 
    /* Memofile functions */
    /* ( DBENTRYP_V )    */ hb_usrCloseMemFile,  /* CloseMemFile   */
-   /* ( DBENTRYP_VP )   */ hb_usrCreateMemFile, /* CreateMemFile  */
-   /* ( DBENTRYP_SVPB ) */ hb_usrGetValueFile,  /* GetValueFile   */
-   /* ( DBENTRYP_VP )   */ hb_usrOpenMemFile,   /* OpenMemFile    */
-   /* ( DBENTRYP_SVPB ) */ hb_usrPutValueFile,  /* PutValueFile   */
+   /* ( DBENTRYP_VO )   */ hb_usrCreateMemFile, /* CreateMemFile  */
+   /* ( DBENTRYP_SCCS ) */ hb_usrGetValueFile,  /* GetValueFile   */
+   /* ( DBENTRYP_VO )   */ hb_usrOpenMemFile,   /* OpenMemFile    */
+   /* ( DBENTRYP_SCCS ) */ hb_usrPutValueFile,  /* PutValueFile   */
 
    /* Database file header handling */
    /* ( DBENTRYP_V )    */ hb_usrReadDBHeader,  /* ReadDBHeader   */
@@ -2728,7 +2727,7 @@ static const RDDFUNCS rddFuncTable =
    /* ( DBENTRYP_SP )   */ NULL,              /* FieldCount     */
    /* ( DBENTRYP_VF )   */ NULL,              /* FieldDisplay   */
    /* ( DBENTRYP_SSI )  */ NULL,              /* FieldInfo      */
-   /* ( DBENTRYP_SVP )  */ NULL,              /* FieldName      */
+   /* ( DBENTRYP_SCP )  */ NULL,              /* FieldName      */
    /* ( DBENTRYP_V )    */ NULL,              /* Flush          */
    /* ( DBENTRYP_PP )   */ NULL,              /* GetRec         */
    /* ( DBENTRYP_SI )   */ NULL,              /* GetValue       */
@@ -2745,15 +2744,15 @@ static const RDDFUNCS rddFuncTable =
    /* ( DBENTRYP_S )    */ NULL,              /* SetFieldExtent */
 
    /* WorkArea/Database management */
-   /* ( DBENTRYP_P )    */ NULL,              /* Alias       */
+   /* ( DBENTRYP_CP )   */ NULL,              /* Alias       */
    /* ( DBENTRYP_V )    */ NULL,              /* Close       */
-   /* ( DBENTRYP_VP )   */ NULL,              /* Create      */
+   /* ( DBENTRYP_VO )   */ NULL,              /* Create      */
    /* ( DBENTRYP_SI )   */ NULL,              /* Info        */
    /* ( DBENTRYP_V )    */ hb_usrNewArea,     /* NewArea     */
-   /* ( DBENTRYP_VP )   */ NULL,              /* Open        */
+   /* ( DBENTRYP_VO )   */ NULL,              /* Open        */
    /* ( DBENTRYP_V )    */ hb_usrRelease,     /* Release     */
    /* ( DBENTRYP_SP )   */ hb_usrStructSize,  /* StructSize  */
-   /* ( DBENTRYP_P )    */ hb_usrSysName,     /* SysName     */
+   /* ( DBENTRYP_CP )   */ hb_usrSysName,     /* SysName     */
    /* ( DBENTRYP_VEI )  */ NULL,              /* Eval        */
    /* ( DBENTRYP_V )    */ NULL,              /* Pack        */
    /* ( DBENTRYP_LSP )  */ NULL,              /* PackRec     */
@@ -2769,7 +2768,7 @@ static const RDDFUNCS rddFuncTable =
    /* ( DBENTRYP_V )    */ NULL,              /* SyncChildren  */
    /* ( DBENTRYP_V )    */ NULL,              /* ClearRel      */
    /* ( DBENTRYP_V )    */ NULL,              /* ForceRel      */
-   /* ( DBENTRYP_SVP )  */ NULL,              /* RelArea       */
+   /* ( DBENTRYP_SCS )  */ NULL,              /* RelArea       */
    /* ( DBENTRYP_VR )   */ NULL,              /* RelEval       */
    /* ( DBENTRYP_SI )   */ NULL,              /* RelText       */
    /* ( DBENTRYP_VR )   */ NULL,              /* SetRel        */
@@ -2799,7 +2798,7 @@ static const RDDFUNCS rddFuncTable =
    /* ( DBENTRYP_B )    */ NULL,              /* Locate       */
 
    /* Miscellaneous */
-   /* ( DBENTRYP_P )    */ NULL,              /* Compile    */
+   /* ( DBENTRYP_CC )   */ NULL,              /* Compile    */
    /* ( DBENTRYP_I )    */ NULL,              /* Error      */
    /* ( DBENTRYP_I )    */ NULL,              /* EvalBlock  */
 
@@ -2810,10 +2809,10 @@ static const RDDFUNCS rddFuncTable =
 
    /* Memofile functions */
    /* ( DBENTRYP_V )    */ NULL,              /* CloseMemFile   */
-   /* ( DBENTRYP_VP )   */ NULL,              /* CreateMemFile  */
-   /* ( DBENTRYP_SVPB ) */ NULL,              /* GetValueFile   */
-   /* ( DBENTRYP_VP )   */ NULL,              /* OpenMemFile    */
-   /* ( DBENTRYP_SVPB ) */ NULL,              /* PutValueFile   */
+   /* ( DBENTRYP_VO )   */ NULL,              /* CreateMemFile  */
+   /* ( DBENTRYP_SCCS ) */ NULL,              /* GetValueFile   */
+   /* ( DBENTRYP_VO )   */ NULL,              /* OpenMemFile    */
+   /* ( DBENTRYP_SCCS ) */ NULL,              /* PutValueFile   */
 
    /* Database file header handling */
    /* ( DBENTRYP_V )    */ NULL,              /* ReadDBHeader   */
@@ -3348,11 +3347,11 @@ HB_FUNC_UR_SUPER( PUTREC )
    {
       if( HB_ISPOINTER( 2 ) )
       {
-         hb_retni( SUPER_PUTREC( pArea, ( BYTE * ) hb_parptr( 2 ) ) );
+         hb_retni( SUPER_PUTREC( pArea, ( const BYTE * ) hb_parptr( 2 ) ) );
       }
       else if( HB_ISCHAR( 2 ) )
       {
-         hb_retni( SUPER_PUTREC( pArea, ( BYTE * ) hb_parc( 2 ) ) );
+         hb_retni( SUPER_PUTREC( pArea, ( const BYTE * ) hb_parc( 2 ) ) );
       }
       else
       {
@@ -3480,7 +3479,7 @@ HB_FUNC_UR_SUPER( ALIAS )
    {
       char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
 
-      hb_retni( SUPER_ALIAS( pArea, ( BYTE * ) szAlias ) );
+      hb_retni( SUPER_ALIAS( pArea, szAlias ) );
       hb_storc( szAlias, 2 );
    }
 }
@@ -4065,7 +4064,7 @@ HB_FUNC_UR_SUPER( COMPILE )
    {
       if( HB_ISCHAR( 2 ) )
       {
-         hb_retni( SUPER_COMPILE( pArea, ( BYTE * ) hb_parc( 2 ) ) );
+         hb_retni( SUPER_COMPILE( pArea, hb_parc( 2 ) ) );
       }
       else
       {

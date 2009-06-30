@@ -476,13 +476,13 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
          break;
       }
 
-      pArray = hb_itemArrayNew( pArea->uiFieldCount );
-      for ( ui = 1; ui <= pArea->uiFieldCount; ui++ )
+      pArray = hb_itemArrayNew( pArea->area.uiFieldCount );
+      for ( ui = 1; ui <= pArea->area.uiFieldCount; ui++ )
       {
          iLen = SQL_NULL_DATA;
          pItem = NULL;
          res = 0;
-         pField = pArea->lpFields + ui - 1;
+         pField = pArea->area.lpFields + ui - 1;
          switch( pField->uiType )
          {
             case HB_FT_STRING:

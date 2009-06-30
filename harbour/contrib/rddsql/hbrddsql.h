@@ -90,29 +90,7 @@
 
 typedef struct _SQLBASEAREA
 {
-   struct _RDDFUNCS * lprfsHost; /* Virtual method table for this workarea */
-   USHORT uiArea;                /* The number assigned to this workarea */
-   void * atomAlias;             /* Pointer to the alias symbol for this workarea */
-   USHORT uiFieldExtent;         /* Total number of fields allocated */
-   USHORT uiFieldCount;          /* Total number of fields used */
-   LPFIELD lpFields;             /* Pointer to an array of fields */
-   void * lpFieldExtents;        /* Void ptr for additional field properties */
-   PHB_ITEM valResult;           /* All purpose result holder */
-   BOOL fTop;                    /* TRUE if "top" */
-   BOOL fBottom;                 /* TRUE if "bottom" */
-   BOOL fBof;                    /* TRUE if "bof" */
-   BOOL fEof;                    /* TRUE if "eof" */
-   BOOL fFound;                  /* TRUE if "found" */
-   DBSCOPEINFO dbsi;             /* Info regarding last LOCATE */
-   DBFILTERINFO dbfi;            /* Filter in effect */
-   LPDBORDERCONDINFO lpdbOrdCondInfo;
-   LPDBRELINFO lpdbRelations;    /* Parent/Child relationships used */
-   USHORT uiParents;             /* Number of parents for this area */
-   USHORT heap;
-   USHORT heapSize;
-   USHORT rddID;
-   USHORT uiMaxFieldNameLength;
-   PHB_CODEPAGE cdPage;          /* Area's codepage pointer */
+   AREA area;
 
    /*
     *  SQLBASE additions to the workarea structure
@@ -234,66 +212,10 @@ typedef struct _MIXTAG
 
 typedef struct _SQLMIXAREA
 {
-   struct _RDDFUNCS * lprfsHost; /* Virtual method table for this workarea */
-   USHORT uiArea;                /* The number assigned to this workarea */
-   void * atomAlias;             /* Pointer to the alias symbol for this workarea */
-   USHORT uiFieldExtent;         /* Total number of fields allocated */
-   USHORT uiFieldCount;          /* Total number of fields used */
-   LPFIELD lpFields;             /* Pointer to an array of fields */
-   void * lpFieldExtents;        /* Void ptr for additional field properties */
-   PHB_ITEM valResult;           /* All purpose result holder */
-   BOOL fTop;                    /* TRUE if "top" */
-   BOOL fBottom;                 /* TRUE if "bottom" */
-   BOOL fBof;                    /* TRUE if "bof" */
-   BOOL fEof;                    /* TRUE if "eof" */
-   BOOL fFound;                  /* TRUE if "found" */
-   DBSCOPEINFO dbsi;             /* Info regarding last LOCATE */
-   DBFILTERINFO dbfi;            /* Filter in effect */
-   LPDBORDERCONDINFO lpdbOrdCondInfo;
-   LPDBRELINFO lpdbRelations;    /* Parent/Child relationships used */
-   USHORT uiParents;             /* Number of parents for this area */
-   USHORT heap;
-   USHORT heapSize;
-   USHORT rddID;
-   USHORT uiMaxFieldNameLength;
-   PHB_CODEPAGE cdPage;          /* Area's codepage pointer */
+   SQLBASEAREA sqlarea;
 
    /*
-    *  SQLBASE additions to the workarea structure
-    */
-
-   LPDBRELINFO                lpdbPendingRel;
-
-   ULONG                      ulConnection;
-   struct _SQLDDCONNECTION*   pConnection;
-   struct _SDDNODE*           pSDD;
-
-   char*                      szQuery;       /* SQL query */
-
-   ULONG                      ulRecNo;       /* Current record number */
-   ULONG                      ulRecCount;    /* Total records */
-   ULONG                      ulRecMax;      /* Size of pRow, pRowFlags buffer */
-
-   void**                     pRow;          /* array of native pointers or cached PHB_ITEM */
-   BYTE*                      pRowFlags;
-
-   void*                      pRecord;
-   BYTE                       bRecordFlags;
-
-   void*                      pResult;          /* SQL result */
-   void*                      pStmt;            /* SQL statement */
-   void*                      pTrans;           /* SQL transaction */
-
-   void*                      pNatRecord;
-   void*                      pNatLength;
-
-   BOOL                       fFetched;
-   BOOL                       fPositioned;
-   BOOL                       fAppend;
-   BOOL                       fRecordChanged;
-
-   /*
-    *  SQLMIX additions to the workarea structure
+    *  SQLMIX additions to the sqlbase workarea structure
     */
 
    PMIXTAG      pTagList;

@@ -253,7 +253,7 @@ USHORT hb_rddFieldExpIndex( AREAP pArea, const char * szField )
       int i, j, l;
 
       n = 0;
-      if( SELF_ALIAS( pArea, ( BYTE * ) szAlias ) == HB_SUCCESS )
+      if( SELF_ALIAS( pArea, szAlias ) == HB_SUCCESS )
          l = strlen( szAlias );
       else
          l = 0;

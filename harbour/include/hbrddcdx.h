@@ -112,13 +112,13 @@ HB_EXTERN_BEGIN
 
 #define CURKEY_RAWPOS(pTag)   ( ((pTag)->curKeyState & CDX_CURKEY_RAWPOS) != 0 && \
                                  (pTag)->rawKeyRec == (pTag)->CurKey->rec )
-#define CURKEY_SETRAWPOS(pTag) { (pTag)->curKeyState |= CDX_CURKEY_RAWPOS; \
-                                 (pTag)->rawKeyRec = (pTag)->CurKey->rec; }
+#define CURKEY_SETRAWPOS(pTag) do { (pTag)->curKeyState |= CDX_CURKEY_RAWPOS; \
+                                    (pTag)->rawKeyRec = (pTag)->CurKey->rec; } while(0)
 
 #define CURKEY_LOGPOS(pTag)   ( ((pTag)->curKeyState & CDX_CURKEY_LOGPOS) != 0 && \
-                                 (pTag)->logKeyRec == (pTag)->pIndex->pArea->ulRecNo )
-#define CURKEY_SETLOGPOS(pTag) { (pTag)->curKeyState |= CDX_CURKEY_LOGPOS; \
-                                 (pTag)->logKeyRec = (pTag)->pIndex->pArea->ulRecNo; }
+                                 (pTag)->logKeyRec == (pTag)->pIndex->pArea->dbfarea.ulRecNo )
+#define CURKEY_SETLOGPOS(pTag) do { (pTag)->curKeyState |= CDX_CURKEY_LOGPOS; \
+                                    (pTag)->logKeyRec = (pTag)->pIndex->pArea->dbfarea.ulRecNo; } while(0)
 
 /*
 #define CURKEY_UNDEF(pTag)    (((pTag)->curKeyState & CDX_CURKEY_UNDEF) != 0)
@@ -132,7 +132,7 @@ HB_EXTERN_BEGIN
 #define HB_CDXMAXKEY( x )     ((USHORT) ((x) > CDX_MAXKEY ? CDX_MAXKEY : (x)))
 #define HB_CDXBITMASK( x )    ((LONG) ((1L<<(x))-1))
 
-/* #define FAST_GOCOLD( A )      (((CDXAREAP) (A))->fRecordChanged || ((CDXAREAP) (A))->fCdxAppend ? (SELF_GOCOLD((A))) : HB_SUCCESS) */
+/* #define FAST_GOCOLD( A )      ((A)->dbfarea.fRecordChanged || (A)->fCdxAppend ? (SELF_GOCOLD((AREAP)(A))) : HB_SUCCESS) */
 #define FAST_GOCOLD( A )      SELF_GOCOLD(A)
 
 
@@ -451,88 +451,7 @@ typedef CDXSORTINFO * LPCDXSORTINFO;
 
 typedef struct _CDXAREA
 {
-   struct _RDDFUNCS * lprfsHost; /* Virtual method table for this workarea */
-   USHORT uiArea;                /* The number assigned to this workarea */
-   void * atomAlias;             /* Pointer to the alias symbol for this workarea */
-   USHORT uiFieldExtent;         /* Total number of fields allocated */
-   USHORT uiFieldCount;          /* Total number of fields used */
-   LPFIELD lpFields;             /* Pointer to an array of fields */
-   void * lpFieldExtents;        /* Void ptr for additional field properties */
-   PHB_ITEM valResult;           /* All purpose result holder */
-   BOOL fTop;                    /* TRUE if "top" */
-   BOOL fBottom;                 /* TRUE if "bottom" */
-   BOOL fBof;                    /* TRUE if "bof" */
-   BOOL fEof;                    /* TRUE if "eof" */
-   BOOL fFound;                  /* TRUE if "found" */
-   DBSCOPEINFO dbsi;             /* Info regarding last LOCATE */
-   DBFILTERINFO dbfi;            /* Filter in effect */
-   LPDBORDERCONDINFO lpdbOrdCondInfo;
-   LPDBRELINFO lpdbRelations;    /* Parent/Child relationships used */
-   USHORT uiParents;             /* Number of parents for this area */
-   USHORT heap;
-   USHORT heapSize;
-   USHORT rddID;
-   USHORT uiMaxFieldNameLength;
-   PHB_CODEPAGE cdPage;          /* Area's codepage pointer */
-
-   /*
-   *  DBFS's additions to the workarea structure
-   *
-   *  Warning: The above section MUST match WORKAREA exactly!  Any
-   *  additions to the structure MUST be added below, as in this
-   *  example.
-   */
-
-   PHB_FILE pDataFile;              /* Data file handle */
-   PHB_FILE pMemoFile;              /* Memo file handle */
-   PHB_FILE pMemoTmpFile;           /* Memo temporary file handle */
-   char *   szDataFileName;         /* Name of data file */
-   char *   szMemoFileName;         /* Name of memo file */
-   USHORT   uiHeaderLen;            /* Size of header */
-   USHORT   uiRecordLen;            /* Size of record */
-   USHORT   uiMemoBlockSize;        /* Size of memo block */
-   USHORT   uiNewBlockSize;         /* Size of new memo block */
-   USHORT   uiMemoVersion;          /* MEMO file version */
-   USHORT   uiDirtyRead;            /* Index dirty read bit filed */
-   USHORT   uiNullOffset;           /* Offset to _NullFlags filed */
-   USHORT   uiNullCount;            /* Number of null flags */
-   BYTE     bTableType;             /* DBF type */
-   BYTE     bMemoType;              /* MEMO type used in DBF memo fields */
-   BYTE     bLockType;              /* Type of locking shemes */
-   BYTE     bCryptType;             /* Type of used encryption */
-   DBFHEADER dbfHeader;             /* DBF header buffer */
-   USHORT * pFieldOffset;           /* Pointer to field offset array */
-   PHB_DBFFIELDBITS pFieldBits;     /* Pointer to extended DBF field info array */
-   BYTE *   pRecord;                /* Buffer of record data */
-   ULONG    ulRecCount;             /* Total records */
-   ULONG    ulRecNo;                /* Current record */
-   BOOL     fAutoInc;               /* WorkArea with auto increment fields */
-   BOOL     fHasMemo;               /* WorkArea with Memo fields */
-   BOOL     fHasTags;               /* WorkArea with MDX or CDX index */
-   BOOL     fModStamp;              /* WorkArea with modification autoupdate fields */
-   BOOL     fDataFlush;             /* data was written to DBF and not commited */
-   BOOL     fMemoFlush;             /* data was written to MEMO and not commited */
-   BOOL     fShared;                /* Shared file */
-   BOOL     fReadonly;              /* Read only file */
-   BOOL     fTemporary;             /* Temporary file */
-   BOOL     fValidBuffer;           /* State of buffer */
-   BOOL     fPositioned;            /* Positioned record */
-   BOOL     fRecordChanged;         /* Record changed */
-   BOOL     fAppend;                /* TRUE if new record is added */
-   BOOL     fDeleted;               /* TRUE if record is deleted */
-   BOOL     fEncrypted;             /* TRUE if record is encrypted */
-   BOOL     fTableEncrypted;        /* TRUE if table is encrypted */
-   BOOL     fUpdateHeader;          /* Update header of file */
-   BOOL     fFLocked;               /* TRUE if file is locked */
-   BOOL     fHeaderLocked;          /* TRUE if DBF header is locked */
-   BOOL     fPackMemo;              /* Pack memo file in pack operation */
-   BOOL     fTrigger;               /* Execute trigger function */
-   LPDBOPENINFO lpdbOpenInfo;       /* Pointer to current dbOpenInfo structure in OPEN/CREATE methods */
-   LPDBRELINFO lpdbPendingRel;      /* Pointer to parent rel struct */
-   ULONG *  pLocksPos;              /* List of records locked */
-   ULONG    ulNumLocksPos;          /* Number of records locked */
-   char *   pCryptKey;              /* Pointer to encryption key */
-   PHB_DYNS pTriggerSym;            /* DynSym pointer to trigger function */
+   DBFAREA dbfarea;
 
    /*
    *  CDX's additions to the workarea structure

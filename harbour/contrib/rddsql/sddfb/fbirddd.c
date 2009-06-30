@@ -477,8 +477,8 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
 
       if ( lErr == 0 )
       {
-         pArray = hb_itemArrayNew( pArea->uiFieldCount );
-         for ( ui = 1; ui <= pArea->uiFieldCount; ui++ )
+         pArray = hb_itemArrayNew( pArea->area.uiFieldCount );
+         for ( ui = 1; ui <= pArea->area.uiFieldCount; ui++ )
          {
             pVar = (XSQLVAR *) pArea->pResult;
             pVar += ( ui - 1 );

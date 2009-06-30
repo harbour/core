@@ -112,13 +112,13 @@ static HB_ERRCODE hb_sdfReadRecord( SDFAREAP pArea )
 
    if( uiRead == 0 )
    {
-      pArea->fEof = TRUE;
+      pArea->area.fEof = TRUE;
       pArea->fPositioned = FALSE;
       hb_sdfClearRecordBuffer( pArea );
    }
    else
    {
-      pArea->fEof = FALSE;
+      pArea->area.fEof = FALSE;
       pArea->fPositioned = TRUE;
       uiEolPos = ( USHORT ) hb_strAt( pArea->szEol, pArea->uiEolLen,
                                       ( char * ) pArea->pRecord, uiRead );
@@ -206,7 +206,7 @@ static HB_ERRCODE hb_sdfNextRecord( SDFAREAP pArea )
 
    if( pArea->ulNextOffset == ( HB_FOFFSET ) -1 )
    {
-      pArea->fEof = TRUE;
+      pArea->area.fEof = TRUE;
       pArea->fPositioned = FALSE;
       hb_sdfClearRecordBuffer( pArea );
       return HB_SUCCESS;
@@ -230,8 +230,8 @@ static HB_ERRCODE hb_sdfGoTop( SDFAREAP pArea )
    if( SELF_GOCOLD( ( AREAP ) pArea ) != HB_SUCCESS )
       return HB_FAILURE;
 
-   pArea->fTop = TRUE;
-   pArea->fBottom = FALSE;
+   pArea->area.fTop = TRUE;
+   pArea->area.fBottom = FALSE;
 
    pArea->ulRecordOffset = 0;
    pArea->ulRecNo = 1;
@@ -339,7 +339,7 @@ static HB_ERRCODE hb_sdfAppend( SDFAREAP pArea, BOOL fUnLockAll )
 
    pArea->ulRecordOffset = pArea->ulFileSize;
    pArea->ulRecNo = ++pArea->ulRecCount;
-   pArea->fEof = FALSE;
+   pArea->area.fEof = FALSE;
    pArea->fPositioned = TRUE;
    hb_sdfClearRecordBuffer( pArea );
 
@@ -356,7 +356,7 @@ static HB_ERRCODE hb_sdfDeleteRec( SDFAREAP pArea )
    if( pArea->fRecordChanged )
    {
       pArea->ulRecCount--;
-      pArea->fEof = TRUE;
+      pArea->area.fEof = TRUE;
       pArea->fPositioned = pArea->fRecordChanged = FALSE;
       hb_sdfClearRecordBuffer( pArea );
    }
@@ -374,17 +374,17 @@ static HB_ERRCODE hb_sdfGetValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
    HB_TRACE(HB_TR_DEBUG, ("hb_sdfGetValue(%p, %hu, %p)", pArea, uiIndex, pItem));
 
    --uiIndex;
-   pField = pArea->lpFields + uiIndex;
+   pField = pArea->area.lpFields + uiIndex;
    switch( pField->uiType )
    {
       case HB_FT_STRING:
 #ifndef HB_CDP_SUPPORT_OFF
-         if( pArea->cdPage != hb_vmCDP() )
+         if( pArea->area.cdPage != hb_vmCDP() )
          {
             char * pVal = ( char * ) hb_xgrab( pField->uiLen + 1 );
             memcpy( pVal, pArea->pRecord + pArea->pFieldOffset[ uiIndex ], pField->uiLen );
             pVal[ pField->uiLen ] = '\0';
-            hb_cdpnTranslate( pVal, pArea->cdPage, hb_vmCDP(), pField->uiLen );
+            hb_cdpnTranslate( pVal, pArea->area.cdPage, hb_vmCDP(), pField->uiLen );
             hb_itemPutCLPtr( pItem, pVal, pField->uiLen );
          }
          else
@@ -485,7 +485,7 @@ static HB_ERRCODE hb_sdfPutValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
 
    uiError = HB_SUCCESS;
    --uiIndex;
-   pField = pArea->lpFields + uiIndex;
+   pField = pArea->area.lpFields + uiIndex;
    if( pField->uiType != HB_FT_MEMO && pField->uiType != HB_FT_NONE )
    {
       if( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) )
@@ -498,7 +498,7 @@ static HB_ERRCODE hb_sdfPutValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                     hb_itemGetCPtr( pItem ), uiSize );
 #ifndef HB_CDP_SUPPORT_OFF
-            hb_cdpnTranslate( ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_vmCDP(), pArea->cdPage, uiSize );
+            hb_cdpnTranslate( ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_vmCDP(), pArea->area.cdPage, uiSize );
 #endif
             memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + uiSize,
                     ' ', pField->uiLen - uiSize );
@@ -615,9 +615,9 @@ static HB_ERRCODE hb_sdfTrans( SDFAREAP pArea, LPDBTRANSINFO pTransInfo )
 
    if( pTransInfo->uiFlags & DBTF_MATCH )
    {
-      if( !pArea->fTransRec || pArea->cdPage != pTransInfo->lpaDest->cdPage )
+      if( !pArea->fTransRec || pArea->area.cdPage != pTransInfo->lpaDest->cdPage )
          pTransInfo->uiFlags &= ~DBTF_PUTREC;
-      else if( pArea->rddID == pTransInfo->lpaDest->rddID )
+      else if( pArea->area.rddID == pTransInfo->lpaDest->rddID )
          pTransInfo->uiFlags |= DBTF_PUTREC;
       else
       {
@@ -763,7 +763,7 @@ static HB_ERRCODE hb_sdfInfo( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( iSub == 1 )
             hb_snprintf( szBuf, sizeof( szBuf ), "%d.%d (%s)", 0, 1, "SDF" );
          else if( iSub == 2 )
-            hb_snprintf( szBuf, sizeof( szBuf ), "%d.%d (%s:%d)", 0, 1, "SDF", pArea->rddID );
+            hb_snprintf( szBuf, sizeof( szBuf ), "%d.%d (%s:%d)", 0, 1, "SDF", pArea->area.rddID );
          else
             hb_snprintf( szBuf, sizeof( szBuf ), "%d.%d", 0, 1 );
          hb_itemPutC( pItem, szBuf );
@@ -882,7 +882,7 @@ static HB_ERRCODE hb_sdfAddField( SDFAREAP pArea, LPDBFIELDINFO pFieldInfo )
    }
 
    /* Update field offset */
-   pArea->pFieldOffset[ pArea->uiFieldCount ] = pArea->uiRecordLen;
+   pArea->pFieldOffset[ pArea->area.uiFieldCount ] = pArea->uiRecordLen;
    pArea->uiRecordLen += pFieldInfo->uiLen;
 
    return SUPER_ADDFIELD( ( AREAP ) pArea, pFieldInfo );
@@ -996,12 +996,12 @@ static HB_ERRCODE hb_sdfCreate( SDFAREAP pArea, LPDBOPENINFO pCreateInfo )
 #ifndef HB_CDP_SUPPORT_OFF
    if( pCreateInfo->cdpId )
    {
-      pArea->cdPage = hb_cdpFind( pCreateInfo->cdpId );
-      if( !pArea->cdPage )
-         pArea->cdPage = hb_vmCDP();
+      pArea->area.cdPage = hb_cdpFind( pCreateInfo->cdpId );
+      if( !pArea->area.cdPage )
+         pArea->area.cdPage = hb_vmCDP();
    }
    else
-      pArea->cdPage = hb_vmCDP();
+      pArea->area.cdPage = hb_vmCDP();
 #endif
 
    pFileName = hb_fsFNameSplit( pCreateInfo->abName );
@@ -1084,12 +1084,12 @@ static HB_ERRCODE hb_sdfOpen( SDFAREAP pArea, LPDBOPENINFO pOpenInfo )
 #ifndef HB_CDP_SUPPORT_OFF
    if( pOpenInfo->cdpId )
    {
-      pArea->cdPage = hb_cdpFind( pOpenInfo->cdpId );
-      if( !pArea->cdPage )
-         pArea->cdPage = hb_vmCDP();
+      pArea->area.cdPage = hb_cdpFind( pOpenInfo->cdpId );
+      if( !pArea->area.cdPage )
+         pArea->area.cdPage = hb_vmCDP();
    }
    else
-      pArea->cdPage = hb_vmCDP();
+      pArea->area.cdPage = hb_vmCDP();
 #endif
 
    uiFlags = ( pArea->fReadonly ? FO_READ : FO_READWRITE ) |
@@ -1225,10 +1225,10 @@ static const RDDFUNCS sdfTable = { NULL /* hb_sdfBof */,
                                    ( DBENTRYP_S ) hb_sdfSetFieldExtent,
                                    NULL /* hb_sdfAlias */,
                                    ( DBENTRYP_V ) hb_sdfClose,
-                                   ( DBENTRYP_VP ) hb_sdfCreate,
+                                   ( DBENTRYP_VO ) hb_sdfCreate,
                                    ( DBENTRYP_SI ) hb_sdfInfo,
                                    ( DBENTRYP_V ) hb_sdfNewArea,
-                                   ( DBENTRYP_VP ) hb_sdfOpen,
+                                   ( DBENTRYP_VO ) hb_sdfOpen,
                                    NULL /* hb_sdfRelease */,
                                    ( DBENTRYP_SP ) hb_sdfStructSize,
                                    NULL /* hb_sdfSysName */,

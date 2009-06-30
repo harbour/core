@@ -574,7 +574,7 @@ static int hb_hsxCompile( const char * szExpr, PHB_ITEM * pExpr )
    *pExpr = NULL;
    if( pArea )
    {
-      if( SELF_COMPILE( pArea, ( BYTE * ) szExpr ) == HB_FAILURE )
+      if( SELF_COMPILE( pArea, szExpr ) == HB_FAILURE )
          return HSX_BADPARMS;
       *pExpr = pArea->valResult;
       pArea->valResult = NULL;

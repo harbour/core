@@ -490,7 +490,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pI
 
    bError = FALSE;
    uiIndex--;
-   pField = pArea->lpFields + uiIndex;
+   pField = pArea->area.lpFields + uiIndex;
 
    pValue = ( (MYSQL_ROW) ( pArea->pNatRecord ) ) [ uiIndex ];
    ulLen = ( (unsigned long*) ( pArea->pNatLength ) ) [ uiIndex ];
