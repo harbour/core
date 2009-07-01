@@ -104,6 +104,10 @@ static HB_CRITICAL_NEW( s_wvtMtx );
 #define HB_WVT_LOCK     hb_threadEnterCriticalSection( &s_wvtMtx );
 #define HB_WVT_UNLOCK   hb_threadLeaveCriticalSection( &s_wvtMtx );
 
+#define _WVT_WS_DEF      ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME )
+#define _WVT_WS_NORESIZE ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_BORDER )
+#define _WVT_WS_MAXED    ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_THICKFRAME )
+
 static PHB_GTWVT  s_wvtWindows[ WVT_MAX_WINDOWS ];
 static int        s_wvtCount = 0;
 
@@ -740,9 +744,9 @@ static void hb_gt_wvt_Maximize( PHB_GTWVT pWVT )
 
       /* Disable "maximize" button */
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-      SetWindowLong( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
+      SetWindowLong( pWVT->hWnd, GWL_STYLE, _WVT_WS_MAXED );
 #else
-      SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
+      SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, _WVT_WS_MAXED );
 #endif
       SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                                          SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
@@ -1689,9 +1693,9 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             /* Enable "maximize" button */
 
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-            SetWindowLong( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME );
+            SetWindowLong( pWVT->hWnd, GWL_STYLE, _WVT_WS_DEF );
 #else
-            SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME );
+            SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, _WVT_WS_DEF );
 #endif
 
             SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
@@ -1805,11 +1809,7 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, BOOL bResizable )
    hWnd = CreateWindow(
                s_szClassName,                               /* classname */
                szAppName,                                   /* window name */
-               bResizable ?                                 /* style */
-                  ( WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|
-                    WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX ) :
-                  ( WS_BORDER|WS_OVERLAPPED|WS_CAPTION|
-                    WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX ),
+               bResizable ? _WVT_WS_DEF : _WVT_WS_NORESIZE, /* style */
                0,                                           /* x */
                0,                                           /* y */
                CW_USEDEFAULT,                               /* width */
@@ -2548,19 +2548,9 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                if( pWVT->hWnd )
                {
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-                  LONG style;
+                  SetWindowLong( pWVT->hWnd, GWL_STYLE, pWVT->bResizable ? _WVT_WS_DEF : _WVT_WS_NORESIZE );
 #else
-                  LONG_PTR style;
-#endif
-                  if( pWVT->bResizable )
-                     style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME;
-                  else
-                     style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
-
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-                  SetWindowLong( pWVT->hWnd, GWL_STYLE, style );
-#else
-                  SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
+                  SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, pWVT->bResizable ? _WVT_WS_DEF : _WVT_WS_NORESIZE );
 #endif
                   SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                                 SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );

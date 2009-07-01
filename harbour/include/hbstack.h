@@ -164,7 +164,7 @@ typedef struct
    USHORT     uiQuitState;    /* HVM is quiting */
    HB_STACK_STATE state;      /* first (default) stack state frame */
    HB_STACKRDD rdd;           /* RDD related data */
-   char       szDate[ 9 ];    /* last returned date from _pards() yyyymmdd format */
+   char       szDate[ 9 ];    /* last returned date from hb_pards() YYYYMMDD format */
    void *     pCDP;           /* current codepage module */
    void *     pLang;          /* current language module */
    void *     pI18N;          /* current I18N module */

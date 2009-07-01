@@ -613,8 +613,8 @@ extern HB_EXPORT const char * hb_parc( int iParam ); /* retrieve a string parame
 extern HB_EXPORT const char * hb_parcx( int iParam ); /* retrieve a string parameter */
 extern HB_EXPORT ULONG        hb_parclen( int iParam ); /* retrieve a string parameter length */
 extern HB_EXPORT ULONG        hb_parcsiz( int iParam ); /* retrieve a by-reference string parameter length, including terminator */
-extern HB_EXPORT char *       hb_pards( int iParam ); /* retrieve a date as a string yyyymmdd */
-extern HB_EXPORT char *       hb_pardsbuff( char * szDate, int iParam ); /* retrieve a date as a string yyyymmdd */
+extern HB_EXPORT char *       hb_pards( int iParam ); /* retrieve a date as a string YYYYMMDD */
+extern HB_EXPORT char *       hb_pardsbuff( char * szDate, int iParam ); /* retrieve a date as a string YYYYMMDD */
 extern HB_EXPORT LONG         hb_pardl( int iParam ); /* retrieve a date as a LONG NUMBER  */
 extern HB_EXPORT double       hb_partd( int iParam ); /* retrieve a timestamp as a double number */
 extern HB_EXPORT BOOL         hb_partdt( LONG * plJulian, LONG * plMilliSec , int iParam ); /* retrieve a timestamp as two long numbers */
@@ -633,8 +633,8 @@ extern HB_EXPORT const char * hb_parvc( int iParam, ... ); /* retrieve a string 
 extern HB_EXPORT const char * hb_parvcx( int iParam, ... ); /* retrieve a string parameter */
 extern HB_EXPORT ULONG        hb_parvclen( int iParam, ... ); /* retrieve a string parameter length */
 extern HB_EXPORT ULONG        hb_parvcsiz( int iParam, ... ); /* retrieve a by-reference string parameter length, including terminator */
-extern HB_EXPORT char *       hb_parvds( int iParam, ... ); /* retrieve a date as a string yyyymmdd */
-extern HB_EXPORT char *       hb_parvdsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string yyyymmdd */
+extern HB_EXPORT char *       hb_parvds( int iParam, ... ); /* retrieve a date as a string YYYYMMDD */
+extern HB_EXPORT char *       hb_parvdsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string YYYYMMDD */
 extern HB_EXPORT LONG         hb_parvdl( int iParam, ... ); /* retrieve a date as a LONG NUMBER  */
 extern HB_EXPORT double       hb_parvtd( int iParam, ... ); /* retrieve a timestamp as a double number */
 extern HB_EXPORT BOOL         hb_parvtdt( LONG * plJulian, LONG * plMilliSec , int iParam, ... ); /* retrieve a timestamp as two long numbers */
@@ -657,7 +657,7 @@ extern HB_EXPORT void   hb_retc_buffer( char * szText ); /* sames as above, but 
 extern HB_EXPORT void   hb_retc_const( const char * szText ); /* returns a string as a pcode based string */
 extern HB_EXPORT void   hb_retclen( const char * szText, ULONG ulLen ); /* returns a string with a specific length */
 extern HB_EXPORT void   hb_retclen_buffer( char * szText, ULONG ulLen ); /* sames as above, but accepts an allocated buffer */
-extern HB_EXPORT void   hb_retds( const char * szDate );  /* returns a date, must use yyyymmdd format */
+extern HB_EXPORT void   hb_retds( const char * szDate );  /* returns a date, must use YYYYMMDD format */
 extern HB_EXPORT void   hb_retd( int iYear, int iMonth, int iDay ); /* returns a date */
 extern HB_EXPORT void   hb_retdl( long lJulian );   /* returns a long value as a julian date */
 extern HB_EXPORT void   hb_rettd( double dTimeStamp );   /* returns a double value as a timestamp */
@@ -727,7 +727,7 @@ extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns
 extern HB_EXPORT int    hb_storc( const char * szText, int iParam ); /* stores a szString on a variable by reference */
 extern HB_EXPORT int    hb_storclen( const char * szText, ULONG ulLength, int iParam ); /* stores a fixed length string on a variable by reference */
 extern HB_EXPORT int    hb_storclen_buffer( char * szText, ULONG ulLength, int iParam ); /* stores a fixed length string buffer on a variable by reference */
-extern HB_EXPORT int    hb_stords( const char * szDate, int iParam );   /* szDate must have yyyymmdd format */
+extern HB_EXPORT int    hb_stords( const char * szDate, int iParam );   /* szDate must have YYYYMMDD format */
 extern HB_EXPORT int    hb_stordl( long lJulian, int iParam ); /* lJulian must be a date in Julian format */
 extern HB_EXPORT int    hb_stortd( double dTimeStamp, int iParam ); /* stores a double value as timestamp on a variable by reference */
 extern HB_EXPORT int    hb_stortdt( LONG lJulian, LONG lMilliSec, int iParam ); /* stores two long values as timestamp on a variable by reference */
@@ -745,7 +745,7 @@ extern HB_EXPORT int    hb_stornll( LONGLONG lValue, int iParam ); /* stores a l
 extern HB_EXPORT int    hb_storvc( const char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
 extern HB_EXPORT int    hb_storvclen( const char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
 extern HB_EXPORT int    hb_storvclen_buffer( char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string buffer on a variable by reference */
-extern HB_EXPORT int    hb_storvds( const char * szDate, int iParam, ... );   /* szDate must have yyyymmdd format */
+extern HB_EXPORT int    hb_storvds( const char * szDate, int iParam, ... );   /* szDate must have YYYYMMDD format */
 extern HB_EXPORT int    hb_storvdl( long lJulian, int iParam, ... ); /* lJulian must be a date in Julian format */
 extern HB_EXPORT int    hb_storvtd( double dTimeStamp, int iParam, ... ); /* stores a double value as timestamp on a variable by reference */
 extern HB_EXPORT int    hb_storvtdt( LONG lJulian, LONG lMilliSec, int iParam, ... ); /* stores two long values as timestamp on a variable by reference */
