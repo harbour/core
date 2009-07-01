@@ -67,6 +67,8 @@
 #include <QLineEdit>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
+#include <QWebFrame>
+#include <QNetworkRequest>
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -157,6 +159,33 @@ public slots:
    void itemExpanded( QTreeWidgetItem * item );
    void itemPressed( QTreeWidgetItem * item, int column );
    void itemSelectionChanged();
+   /* QWebPage */
+   void contentsChanged();
+   void databaseQuotaExceeded( QWebFrame * frame, QString databaseName );
+   void downloadRequested( const QNetworkRequest & request );
+   void frameCreated( QWebFrame * frame );
+   void geometryChangeRequested( const QRect & geom );
+   void linkClicked( const QUrl & url );
+   void linkHovered( const QString & link, const QString & title, const QString & textContent );
+   void loadFinished( bool ok );
+   void loadProgress( int progress );
+   void loadStarted();
+   void menuBarVisibilityChangeRequested( bool visible );
+   void microFocusChanged();
+   void printRequested( QWebFrame * frame );
+   void repaintRequested( const QRect & dirtyRect );
+   void restoreFrameStateRequested( QWebFrame * frame );
+   void saveFrameStateRequested( QWebFrame * frame, QWebHistoryItem * item );
+   void scrollRequested( int dx, int dy, const QRect & rectToScroll );
+   void statusBarMessage( const QString & text );
+   void statusBarVisibilityChangeRequested( bool visible );
+   void toolBarVisibilityChangeRequested( bool visible );
+   void unsupportedContent( QNetworkReply * reply );
+   void windowCloseRequested();
+   /* QWebView */
+   void iconChanged();
+   void titleChanged( const QString & title );
+   void urlChanged( const QUrl & url );
 };
 
 class Events: public QObject

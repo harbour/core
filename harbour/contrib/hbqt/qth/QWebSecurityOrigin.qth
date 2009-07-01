@@ -70,7 +70,7 @@ New      =
  */
 HB_FUNC( QT_QWEBSECURITYORIGIN )
 {
-   hb_retptr( ( QWebSecurityOrigin* ) new QWebSecurityOrigin() );
+   hb_retptr( ( QWebSecurityOrigin* ) new QWebSecurityOrigin( *hbqt_par_QWebSecurityOrigin( 1 ) ) );
 }
 </CODE>
 

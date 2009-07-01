@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'hbqt_slots.h'
 **
-** Created: Wed Jun 24 22:45:58 2009
+** Created: Wed Jul 1 01:16:08 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -137,7 +137,7 @@ static const uint qt_meta_data_Slots[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-      40,   12, // methods
+      65,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -183,6 +183,31 @@ static const uint qt_meta_data_Slots[] = {
      927,  816,    6,    6, 0x0a,
      958,  700,    6,    6, 0x0a,
      992,    6,    6,    6, 0x0a,
+    1015,    6,    6,    6, 0x0a,
+    1052, 1033,    6,    6, 0x0a,
+    1102, 1094,    6,    6, 0x0a,
+    1143, 1137,    6,    6, 0x0a,
+    1173, 1168,    6,    6, 0x0a,
+    1208, 1204,    6,    6, 0x0a,
+    1249, 1226,    6,    6, 0x0a,
+    1289, 1286,    6,    6, 0x0a,
+    1317, 1308,    6,    6, 0x0a,
+    1335,    6,    6,    6, 0x0a,
+    1357, 1349,    6,    6, 0x0a,
+    1396,    6,    6,    6, 0x0a,
+    1416, 1137,    6,    6, 0x0a,
+    1453, 1443,    6,    6, 0x0a,
+    1477, 1137,    6,    6, 0x0a,
+    1527, 1516,    6,    6, 0x0a,
+    1599, 1580,    6,    6, 0x0a,
+    1630,  583,    6,    6, 0x0a,
+    1656, 1349,    6,    6, 0x0a,
+    1697, 1349,    6,    6, 0x0a,
+    1742, 1736,    6,    6, 0x0a,
+    1777,    6,    6,    6, 0x0a,
+    1800,    6,    6,    6, 0x0a,
+    1820, 1814,    6,    6, 0x0a,
+    1842, 1204,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -215,7 +240,30 @@ static const char qt_meta_stringdata_Slots[] = {
     "itemEntered(QTreeWidgetItem*,int)\0"
     "itemExpanded(QTreeWidgetItem*)\0"
     "itemPressed(QTreeWidgetItem*,int)\0"
-    "itemSelectionChanged()\0"
+    "itemSelectionChanged()\0contentsChanged()\0"
+    "frame,databaseName\0"
+    "databaseQuotaExceeded(QWebFrame*,QString)\0"
+    "request\0downloadRequested(QNetworkRequest)\0"
+    "frame\0frameCreated(QWebFrame*)\0geom\0"
+    "geometryChangeRequested(QRect)\0url\0"
+    "linkClicked(QUrl)\0link,title,textContent\0"
+    "linkHovered(QString,QString,QString)\0"
+    "ok\0loadFinished(bool)\0progress\0"
+    "loadProgress(int)\0loadStarted()\0visible\0"
+    "menuBarVisibilityChangeRequested(bool)\0"
+    "microFocusChanged()\0printRequested(QWebFrame*)\0"
+    "dirtyRect\0repaintRequested(QRect)\0"
+    "restoreFrameStateRequested(QWebFrame*)\0"
+    "frame,item\0"
+    "saveFrameStateRequested(QWebFrame*,QWebHistoryItem*)\0"
+    "dx,dy,rectToScroll\0scrollRequested(int,int,QRect)\0"
+    "statusBarMessage(QString)\0"
+    "statusBarVisibilityChangeRequested(bool)\0"
+    "toolBarVisibilityChangeRequested(bool)\0"
+    "reply\0unsupportedContent(QNetworkReply*)\0"
+    "windowCloseRequested()\0iconChanged()\0"
+    "title\0titleChanged(QString)\0"
+    "urlChanged(QUrl)\0"
 };
 
 const QMetaObject Slots::staticMetaObject = {
@@ -283,9 +331,34 @@ int Slots::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 37: itemExpanded((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1]))); break;
         case 38: itemPressed((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 39: itemSelectionChanged(); break;
+        case 40: contentsChanged(); break;
+        case 41: databaseQuotaExceeded((*reinterpret_cast< QWebFrame*(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 42: downloadRequested((*reinterpret_cast< const QNetworkRequest(*)>(_a[1]))); break;
+        case 43: frameCreated((*reinterpret_cast< QWebFrame*(*)>(_a[1]))); break;
+        case 44: geometryChangeRequested((*reinterpret_cast< const QRect(*)>(_a[1]))); break;
+        case 45: linkClicked((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
+        case 46: linkHovered((*reinterpret_cast< const QString(*)>(_a[1])),(*reinterpret_cast< const QString(*)>(_a[2])),(*reinterpret_cast< const QString(*)>(_a[3]))); break;
+        case 47: loadFinished((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 48: loadProgress((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 49: loadStarted(); break;
+        case 50: menuBarVisibilityChangeRequested((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 51: microFocusChanged(); break;
+        case 52: printRequested((*reinterpret_cast< QWebFrame*(*)>(_a[1]))); break;
+        case 53: repaintRequested((*reinterpret_cast< const QRect(*)>(_a[1]))); break;
+        case 54: restoreFrameStateRequested((*reinterpret_cast< QWebFrame*(*)>(_a[1]))); break;
+        case 55: saveFrameStateRequested((*reinterpret_cast< QWebFrame*(*)>(_a[1])),(*reinterpret_cast< QWebHistoryItem*(*)>(_a[2]))); break;
+        case 56: scrollRequested((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< const QRect(*)>(_a[3]))); break;
+        case 57: statusBarMessage((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 58: statusBarVisibilityChangeRequested((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 59: toolBarVisibilityChangeRequested((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 60: unsupportedContent((*reinterpret_cast< QNetworkReply*(*)>(_a[1]))); break;
+        case 61: windowCloseRequested(); break;
+        case 62: iconChanged(); break;
+        case 63: titleChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 64: urlChanged((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 40;
+        _id -= 65;
     }
     return _id;
 }

@@ -70,7 +70,7 @@ New      =
  */
 HB_FUNC( QT_QWEBHISTORYINTERFACE )
 {
-   hb_retptr( ( QWebHistoryInterface* ) new QWebHistoryInterface() );
+   //hb_retptr( ( QWebHistoryInterface* ) new QWebHistoryInterface( hbqt_par_QObject( 1 ) ) );
 }
 </CODE>
 

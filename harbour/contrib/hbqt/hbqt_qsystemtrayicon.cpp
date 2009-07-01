@@ -70,7 +70,7 @@
  */
 HB_FUNC( QT_QSYSTEMTRAYICON )
 {
-   hb_retptr( ( QSystemTrayIcon* ) new QSystemTrayIcon( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( ( QSystemTrayIcon* ) new QSystemTrayIcon( hbqt_par_QObject( 1 ) ) );
 }
 
 /*

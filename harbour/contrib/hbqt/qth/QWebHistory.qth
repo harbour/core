@@ -61,7 +61,7 @@ New      =
 </CLASS>
 
 <CODE>
-#include <QtWebKit/QtWebHistory>
+#include <QtWebKit/QWebHistory>
 
 
 /*

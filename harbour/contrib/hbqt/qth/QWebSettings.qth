@@ -62,6 +62,7 @@ New      =
 
 <CODE>
 #include <QtWebKit/QWebSettings>
+#include <QtCore/QUrl>
 
 
 /*

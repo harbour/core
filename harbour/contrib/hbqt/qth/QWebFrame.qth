@@ -62,7 +62,7 @@ New      =
 
 <CODE>
 #include <QtWebKit/QWebFrame>
-
+#include <QtWebKit/QWebSecurityOrigin>
 
 /*
  * 
@@ -86,7 +86,7 @@ QRect geometry () const
 QWebHitTestResult hitTestContent ( const QPoint & pos ) const
 QIcon icon () const
 void load ( const QUrl & url )
-void load ( const QWebNetworkRequest & req )
+// void load ( const QWebNetworkRequest & req )
 QMultiMap<QString, QString> metaData () const
 QWebPage * page () const
 QWebFrame * parentFrame () const

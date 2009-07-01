@@ -203,7 +203,15 @@ CPP_SOURCES=\
 	hbqt_qurl.cpp \
 	hbqt_qvariant.cpp \
 	hbqt_qvboxlayout.cpp \
+	hbqt_qwebframe.cpp \
+	hbqt_qwebhistory.cpp \
+	hbqt_qwebhistoryinterface.cpp \
+	hbqt_qwebhistoryitem.cpp \
+	hbqt_qwebhittestresult.cpp \
 	hbqt_qwebpage.cpp \
+	hbqt_qwebpluginfactory.cpp \
+	hbqt_qwebsecurityorigin.cpp \
+	hbqt_qwebsettings.cpp \
 	hbqt_qwebview.cpp \
 	hbqt_qwheelevent.cpp \
 	hbqt_qwidget.cpp \
@@ -426,7 +434,15 @@ PRG_SOURCES=\
 	TQUrl.prg \
 	TQVariant.prg \
 	TQVBoxLayout.prg \
+	TQWebFrame.prg \
+	TQWebHistory.prg \
+	TQWebHistoryInterface.prg \
+	TQWebHistoryItem.prg \
+	TQWebHitTestResult.prg \
 	TQWebPage.prg \
+	TQWebPluginFactory.prg \
+	TQWebSecurityOrigin.prg \
+	TQWebSettings.prg \
 	TQWebView.prg \
 	TQWheelEvent.prg \
 	TQWidget.prg \

@@ -70,17 +70,18 @@ New      =
  */
 HB_FUNC( QT_QWEBPLUGINFACTORY )
 {
-   hb_retptr( ( QWebPluginFactory* ) new QWebPluginFactory() );
+   //hb_retptr( ( QWebPluginFactory* ) new QWebPluginFactory() );
 }
 </CODE>
 
 <ENUMS>
+class ExtensionOption
 enum Extension { }
 </ENUMS>
 
 <PROTOS>
 virtual QObject * create ( const QString & mimeType, const QUrl & url, const QStringList & argumentNames, const QStringList & argumentValues ) const = 0
-virtual bool extension ( Extension extension, const ExtensionOption * option = 0, ExtensionReturn * output = 0 )
+// virtual bool extension ( Extension extension, const ExtensionOption * option = 0, ExtensionReturn * output = 0 )
 virtual QList<Plugin> plugins () const = 0
 virtual void refreshPlugins ()
 virtual bool supportsExtension ( Extension extension ) const

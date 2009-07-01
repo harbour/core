@@ -333,6 +333,17 @@
 #define hbqt_par_QMouseEvent( n )            ( ( QMouseEvent* ) hb_parptr( n ) )
 #define hbqt_par_QSystemTrayIcon( n )        ( ( QSystemTrayIcon* ) hb_parptr( n ) )
 
+#define hbqt_par_QWebFrame( n )              ( ( QWebFrame* ) hb_parptr( n ) )
+#define hbqt_par_QWebNetworkRequest( n )     ( ( QWebNetworkRequest* ) hb_parptr( n ) )
+#define hbqt_par_QWebHistory( n )            ( ( QWebHistory* ) hb_parptr( n ) )
+#define hbqt_par_QWebHistoryInterface( n )   ( ( QWebHistoryInterface* ) hb_parptr( n ) )
+#define hbqt_par_QWebHistoryItem( n )        ( ( QWebHistoryItem* ) hb_parptr( n ) )
+#define hbqt_par_QWebHitTestResult( n )      ( ( QWebHitTestResult* ) hb_parptr( n ) )
+#define hbqt_par_QWebSecurityOrigin( n )     ( ( QWebSecurityOrigin* ) hb_parptr( n ) )
+#define hbqt_par_QWebSettings( n )           ( ( QWebSettings* ) hb_parptr( n ) )
+#define hbqt_par_ExtensionOption( n )        ( ( ExtensionOption* ) hb_parptr( n ) )
+
+
 #define hbqt_par_QString( n )                ( ( QString ) hb_parcx( n ) )
 #define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )
 #define hbqt_par_Bool( n )                   ( hb_parl( n ) )

@@ -71,6 +71,17 @@
 #include <QEvent>
 
 /*----------------------------------------------------------------------*/
+#if 0                                      /* Just for Quick References */
+
+static void SlotsExec( QWidget* widget, char* event )
+static void SlotsExecAction( QAction* widget, char* event )
+static void SlotsExecInt( QWidget* widget, char* event, int iValue )
+static void SlotsExecIntInt( QWidget* widget, char* event, int iValue1, int iValue2 )
+static void SlotsExecString( QWidget* widget, char* event, const QString & string )
+static void SlotsExecModel( QWidget* widget, char* event, const QModelIndex & index )
+static void SlotsExecMouseEvent( QWidget* widget, char* event, QMouseEvent* mevent )
+
+#endif
 
 static Slots  *s_s = NULL;
 static Events *s_e = NULL;
@@ -94,6 +105,22 @@ static void SlotsExec( QWidget* widget, char* event )
          PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
          hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 1, pWidget );
          hb_itemRelease( pWidget );
+      }
+   }
+}
+
+static void SlotsExecBool( QWidget* widget, char* event, bool bBool )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, widget );
+         PHB_ITEM pBool = hb_itemPutL( NULL, bBool );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 2, pWidget, pBool );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pBool );
       }
    }
 }
@@ -146,6 +173,26 @@ static void SlotsExecIntInt( QWidget* widget, char* event, int iValue1, int iVal
    }
 }
 
+static void SlotsExecIntIntRect( QWidget* widget, char* event, int iValue1, int iValue2, const QRect & rect )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+         PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
+         PHB_ITEM pValue2 = hb_itemPutNI( NULL, iValue2 );
+         PHB_ITEM pValue3 = hb_itemPutPtr( NULL, new QRect( rect ) );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 4, pWidget, pValue1, pValue2, pValue3 );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pValue1 );
+         hb_itemRelease( pValue2 );
+         hb_itemRelease( pValue3 );
+      }
+   }
+}
+
 static void SlotsExecString( QWidget* widget, char* event, const QString & string )
 {
    if( widget )
@@ -158,6 +205,44 @@ static void SlotsExecString( QWidget* widget, char* event, const QString & strin
          hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 2, pWidget, pString );
          hb_itemRelease( pWidget );
          hb_itemRelease( pString );
+      }
+   }
+}
+#if 0
+static void SlotsExecString2( QWidget* widget, char* event, const QString & s1, const QString & s2 )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+         PHB_ITEM pS1 = hb_itemPutC( NULL, s1.toLatin1().data() );
+         PHB_ITEM pS2 = hb_itemPutC( NULL, s2.toLatin1().data() );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 3, pWidget, pS1, pS2 );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pS1 );
+         hb_itemRelease( pS2 );
+      }
+   }
+}
+#endif
+static void SlotsExecString3( QWidget* widget, char* event, const QString & s1, const QString & s2, const QString & s3 )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+         PHB_ITEM pS1 = hb_itemPutC( NULL, s1.toLatin1().data() );
+         PHB_ITEM pS2 = hb_itemPutC( NULL, s2.toLatin1().data() );
+         PHB_ITEM pS3 = hb_itemPutC( NULL, s3.toLatin1().data() );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 4, pWidget, pS1, pS2, pS3 );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pS1 );
+         hb_itemRelease( pS2 );
+         hb_itemRelease( pS3 );
       }
    }
 }
@@ -178,6 +263,124 @@ static void SlotsExecModel( QWidget* widget, char* event, const QModelIndex & in
    }
 }
 
+static void SlotsExecRect( QWidget* widget, char* event, const QRect & rect )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, new QRect( rect ) );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 2, pWidget, p1 );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( p1 );
+      }
+   }
+}
+
+static void SlotsExecUrl( QWidget* widget, char* event, const QUrl & url )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, new QUrl( url ) );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 2, pWidget, p1 );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( p1 );
+      }
+   }
+}
+
+static void SlotsExecNetworkRequest( QWidget* widget, char* event, const QNetworkRequest & request )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, ( QNetworkRequest* ) new QNetworkRequest( request ) );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 2, pWidget, p1 );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( p1 );
+      }
+   }
+}
+
+static void SlotsExecPointerString( QWidget* widget, char* event, void * p1, QString s1 )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, widget );
+         PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
+         PHB_ITEM pS1 = hb_itemPutC( NULL, s1.toLatin1().data() );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 3, pWidget, pP1, pS1 );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pP1 );
+         hb_itemRelease( pS1 );
+      }
+   }
+}
+
+static void SlotsExecPointer( QWidget* widget, char* event, void * p1 )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, widget );
+         PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 2, pWidget, pP1 );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pP1 );
+      }
+   }
+}
+
+static void SlotsExecPointerInt( QWidget* widget, char* event, void * p1, int iInt )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, widget );
+         PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
+         PHB_ITEM pI1 = hb_itemPutNI( NULL, iInt );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 3, pWidget, pP1, pI1 );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pP1 );
+         hb_itemRelease( pI1 );
+      }
+   }
+}
+
+static void SlotsExecPointerPointer( QWidget* widget, char* event, void * p1, void * p2 )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, widget );
+         PHB_ITEM pP1 = hb_itemPutPtr( NULL, p1 );
+         PHB_ITEM pP2 = hb_itemPutPtr( NULL, p2 );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 3, pP1, pP2 );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( pP1 );
+         hb_itemRelease( pP2 );
+      }
+   }
+}
+
 static void SlotsExecMouseEvent( QWidget* widget, char* event, QMouseEvent* mevent )
 {
    if( widget )
@@ -193,24 +396,6 @@ static void SlotsExecMouseEvent( QWidget* widget, char* event, QMouseEvent* meve
       }
    }
 }
-
-#if 0
-static void SlotsExecFocusEvent( QWidget* widget, char* event, QFocusEvent* mevent )
-{
-   if( widget )
-   {
-      int i = widget->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
-      {
-         PHB_ITEM pWidget  = hb_itemPutPtr( NULL, ( QWidget * ) widget );
-         PHB_ITEM pEvent   = hb_itemPutPtr( NULL, mevent );
-         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 2, pWidget, pEvent );
-         hb_itemRelease( pWidget );
-         hb_itemRelease( pEvent );
-      }
-   }
-}
-#endif
 
 void Slots::keyPressEvent( QKeyEvent * event )
 {
@@ -406,89 +591,179 @@ void Slots::textEdited( const QString & text )
 void Slots::currentItemChanged( QTreeWidgetItem * current, QTreeWidgetItem * previous )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   if( widget )
-   {
-      int i = widget->property( "currentItemChanged(QTWItem)" ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
-      {
-         PHB_ITEM pWidget = hb_itemPutPtr( NULL, widget );
-         PHB_ITEM pItemC  = hb_itemPutPtr( NULL, current );
-         PHB_ITEM pItemP  = hb_itemPutPtr( NULL, previous );
-         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 3, pWidget, pItemC, pItemP );
-         hb_itemRelease( pWidget );
-         hb_itemRelease( pItemC );
-         hb_itemRelease( pItemP );
-      }
-   }
-}
-static void SlotsExecTreeWidgetItemInt( QWidget * widget, char* event, QTreeWidgetItem * item, int column )
-{
-   if( widget )
-   {
-      int i = widget->property( event ).toInt();
-      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
-      {
-         PHB_ITEM pWidget = hb_itemPutPtr( NULL, widget );
-         PHB_ITEM pItem   = hb_itemPutPtr( NULL, item );
-         if( column != -1001 )
-         {
-            PHB_ITEM pColumn = hb_itemPutNI( NULL, column );
-            hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 3, pWidget, pItem, pColumn );
-            hb_itemRelease( pColumn );
-         }
-         else
-         {
-            hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 2, pWidget, pItem );
-         }
-         hb_itemRelease( pWidget );
-         hb_itemRelease( pItem );
-      }
-   }
+   SlotsExecPointerPointer( widget, ( char* ) "currentItemChanged(QTWItem)", current, previous );
 }
 void Slots::itemActivated( QTreeWidgetItem * item, int column )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemActivated(QTWItem)", item, column );
+   SlotsExecPointerInt( widget, ( char* ) "itemActivated(QTWItem)", item, column );
 }
 void Slots::itemChanged( QTreeWidgetItem * item, int column )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemChanged(QTWItem)", item, column );
+   SlotsExecPointerInt( widget, ( char* ) "itemChanged(QTWItem)", item, column );
 }
 void Slots::itemClicked( QTreeWidgetItem * item, int column )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemClicked(QTWItem)", item, column );
+   SlotsExecPointerInt( widget, ( char* ) "itemClicked(QTWItem)", item, column );
 }
 void Slots::itemDoubleClicked( QTreeWidgetItem * item, int column )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemDoubleClicked(QTWItem)", item, column );
+   SlotsExecPointerInt( widget, ( char* ) "itemDoubleClicked(QTWItem)", item, column );
 }
 void Slots::itemEntered( QTreeWidgetItem * item, int column )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemEntered(QTWItem)", item, column );
+   SlotsExecPointerInt( widget, ( char* ) "itemEntered(QTWItem)", item, column );
 }
 void Slots::itemPressed( QTreeWidgetItem * item, int column )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemPressed(QTWItem)", item, column );
+   SlotsExecPointerInt( widget, ( char* ) "itemPressed(QTWItem)", item, column );
 }
 void Slots::itemExpanded( QTreeWidgetItem * item )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemExpanded(QTWItem)", item, -1001 );
+   SlotsExecPointer( widget, ( char* ) "itemExpanded(QTWItem)", item );
 }
 void Slots::itemCollapsed( QTreeWidgetItem * item )
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
-   SlotsExecTreeWidgetItemInt( widget, ( char* ) "itemCollapsed(QTWItem)", item, -1001 );
+   SlotsExecPointer( widget, ( char* ) "itemCollapsed(QTWItem)", item );
 }
 void Slots::itemSelectionChanged()
 {
    QWidget *widget = qobject_cast<QWidget *>( sender() );
    SlotsExec( widget, ( char* ) "itemSelectionChanged()" );
+}
+/* QWebPage */
+void Slots::contentsChanged()
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExec( object, ( char* ) "contentsChanged()" );
+}
+void Slots::databaseQuotaExceeded( QWebFrame * frame, QString databaseName )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecPointerString( object, ( char* ) "databaseQuotaExceeded(QWebFrame,QString)", frame, databaseName );
+}
+void Slots::downloadRequested( const QNetworkRequest & request )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecNetworkRequest( object, ( char* ) "downloadRequested(QNetworkRequest)", request );
+}
+void Slots::frameCreated( QWebFrame * frame )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecPointer( object, ( char* ) "frameCreated(QWebFrame)", frame );
+}
+void Slots::geometryChangeRequested( const QRect & geom )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecRect( object, ( char* ) "geometryChangeRequested(QRect)", geom );
+}
+void Slots::linkClicked( const QUrl & url )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecUrl( object, ( char* ) "linkClicked(QUrl)", url );
+}
+void Slots::linkHovered( const QString & link, const QString & title, const QString & textContent )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecString3( object, ( char* ) "linkHovered(QString,QString,QString)", link, title, textContent );
+}
+void Slots::loadFinished( bool ok )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecBool( object, ( char* ) "loadFinished(bool)", ok );
+}
+void Slots::loadProgress( int progress )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecInt( object, ( char* ) "loadProgress(int)", progress );
+}
+void Slots::loadStarted()
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExec( object, ( char* ) "loadStarted()" );
+}
+void Slots::menuBarVisibilityChangeRequested( bool visible )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecBool( object, ( char* ) "menuBarVisibilityChangeRequested(bool)", visible );
+}
+void Slots::microFocusChanged()
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExec( object, ( char* ) "microFocusChanged()" );
+}
+void Slots::printRequested( QWebFrame * frame )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecPointer( object, ( char* ) "printRequested(QWebFrame)", frame );
+}
+void Slots::repaintRequested( const QRect & dirtyRect )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecRect( object, ( char* ) "repaintRequested(QRect)", dirtyRect );
+}
+void Slots::restoreFrameStateRequested( QWebFrame * frame )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecPointer( object, ( char* ) "restoreFrameStateRequested(QWebFrame)", frame );
+}
+void Slots::saveFrameStateRequested( QWebFrame * frame, QWebHistoryItem * item )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecPointerPointer( object, ( char* ) "saveFrameStateRequested(QWebFrame,QWebHistoryItem)", frame, item );
+}
+void Slots::scrollRequested( int dx, int dy, const QRect & rectToScroll )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecIntIntRect( object, ( char* ) "scrollRequested(int,int,QRect)", dx, dy, rectToScroll );
+}
+void Slots::statusBarMessage( const QString & text )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecString( object, ( char* ) "statusBarMessage(QString)", text );
+}
+void Slots::statusBarVisibilityChangeRequested( bool visible )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecBool( object, ( char* ) "statusBarVisibilityChangeRequested(bool)", visible );
+}
+void Slots::toolBarVisibilityChangeRequested( bool visible )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecBool( object, ( char* ) "toolBarVisibilityChangeRequested(bool)", visible );
+}
+void Slots::unsupportedContent( QNetworkReply * reply )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecPointer( object, ( char* ) "unsupportedContent(QNetworkReply)", reply );
+}
+void Slots::windowCloseRequested()
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExec( object, ( char* ) "windowCloseRequested()" );
+}
+/* QWebView */
+void Slots::iconChanged()
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExec( object, ( char* ) "iconChanged()" );
+}
+void Slots::titleChanged( const QString & title )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecString( object, ( char* ) "titleChanged(QString)", title );
+}
+void Slots::urlChanged( const QUrl & url )
+{
+   QWidget *object = qobject_cast<QWidget *>( sender() );
+   SlotsExecUrl( object, ( char* ) "urlChanged(QUrl)", url );
 }
 
 
@@ -706,8 +981,163 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = widget->connect( widget,  SIGNAL( itemSelectionChanged() ),
                              s_s, SLOT( itemSelectionChanged() ), Qt::AutoConnection );
    }
+   /* QWebView */
+   if( signal == ( QString ) "iconChanged()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( iconChanged() ),
+                             s_s, SLOT( iconChanged() ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "titleChanged(QString)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( titleChanged( const QString & ) ),
+                             s_s, SLOT( titleChanged( const QString & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "urlChanged(QUrl)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( urlChanged( const QUrl & ) ),
+                             s_s, SLOT( urlChanged( const QUrl & ) ), Qt::AutoConnection );
+   }
 
+#if 0
+"iconChanged()"
+"titleChanged(QString)"
+"urlChanged(QUrl)"
 
+"contentsChanged()"
+"databaseQuotaExceeded(QWebFrame,QString)"
+"downloadRequested(QNetworkRequest)"
+"frameCreated(QWebFrame)"
+"geometryChangeRequested(QRect)"
+"linkClicked(QUrl)"
+"linkHovered(QString,QString,QString)"
+"loadFinished(bool)"
+"loadProgress(int)"
+"loadStarted()"
+"menuBarVisibilityChangeRequested(bool)"
+"microFocusChanged()"
+"printRequested(QWebFrame)"
+"repaintRequested(QRect)"
+"restoreFrameStateRequested(QWebFrame)"
+"saveFrameStateRequested(QWebFrame,QWebHistoryItem)"
+"scrollRequested(int,int,QRect)"
+"statusBarMessage(QString)"
+"statusBarVisibilityChangeRequested(bool)"
+"toolBarVisibilityChangeRequested(bool)"
+"unsupportedContent(QNetworkReply)"
+"windowCloseRequested()"
+
+#endif
+   /*  QWebPage */
+   if( signal == ( QString ) "contentsChanged()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( contentsChanged() ),
+                             s_s, SLOT( contentsChanged() ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "databaseQuotaExceeded(QWebFrame,QString)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( databaseQuotaExceeded( QWebFrame, QString ) ),
+                             s_s, SLOT( databaseQuotaExceeded( QWebFrame, QString ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "downloadRequested(QNetworkRequest)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( downloadRequested( const QNetworkRequest & ) ),
+                             s_s, SLOT( downloadRequested( const QNetworkRequest & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "frameCreated(QWebFrame)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( frameCreated( QWebFrame * ) ),
+                             s_s, SLOT( frameCreated( QWebFrame * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "geometryChangeRequested(QRect)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( geometryChangeRequested( const QRect & ) ),
+                             s_s, SLOT( geometryChangeRequested( const QRect & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "linkClicked(QUrl)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( linkClicked( const QUrl & ) ),
+                             s_s, SLOT( linkClicked( const QUrl & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "linkHovered(QString,QString,QString)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( linkHovered( const QString &, const QString &, const QString & ) ),
+                             s_s, SLOT( linkHovered( const QString &, const QString &, const QString & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "loadFinished(bool)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( loadFinished( bool ) ),
+                             s_s, SLOT( loadFinished( bool ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "loadProgress(int)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( loadProgress( int ) ),
+                             s_s, SLOT( loadProgress( int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "loadStarted()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( loadStarted() ),
+                             s_s, SLOT( loadStarted() ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "menuBarVisibilityChangeRequested(bool)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( menuBarVisibilityChangeRequested( bool ) ),
+                             s_s, SLOT( menuBarVisibilityChangeRequested( bool ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "microFocusChanged()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( microFocusChanged() ),
+                             s_s, SLOT( microFocusChanged() ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "printRequested(QWebFrame)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( printRequested( QWebFrame * ) ),
+                             s_s, SLOT( printRequested( QWebFrame * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "repaintRequested(QRect)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( repaintRequested( const QRect & ) ),
+                             s_s, SLOT( repaintRequested( const QRect & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "restoreFrameStateRequested(QWebFrame)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( restoreFrameStateRequested( QWebFrame * ) ),
+                             s_s, SLOT( restoreFrameStateRequested( QWebFrame * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "saveFrameStateRequested(QWebFrame,QWebHistoryItem)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( saveFrameStateRequested( QWebFrame *, QWebHistoryItem * ) ),
+                             s_s, SLOT( saveFrameStateRequested( QWebFrame *, QWebHistoryItem * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "scrollRequested(int,int,QRect)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( scrollRequested( int dx, int dy, const QRect & ) ),
+                             s_s, SLOT( scrollRequested( int dx, int dy, const QRect & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "statusBarMessage(QString)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( statusBarMessage( const QString & ) ),
+                             s_s, SLOT( statusBarMessage( const QString & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "statusBarVisibilityChangeRequested(bool)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( statusBarVisibilityChangeRequested( bool ) ),
+                             s_s, SLOT( statusBarVisibilityChangeRequested( bool ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "toolBarVisibilityChangeRequested(bool)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( toolBarVisibilityChangeRequested( bool ) ),
+                             s_s, SLOT( toolBarVisibilityChangeRequested( bool ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "unsupportedContent(QNetworkReply)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( unsupportedContent( QNetworkReply * ) ),
+                             s_s, SLOT( unsupportedContent( QNetworkReply * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "windowCloseRequested()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( windowCloseRequested() ),
+                             s_s, SLOT( windowCloseRequested() ), Qt::AutoConnection );
+   }
 
 
    hb_retl( ret );
@@ -976,3 +1406,4 @@ HB_FUNC( QT_QDEBUG )
 /*----------------------------------------------------------------------*/
 
 #endif
+

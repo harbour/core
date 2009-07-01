@@ -70,7 +70,7 @@ New      =
  */
 HB_FUNC( QT_QWEBHISTORYITEM )
 {
-   hb_retptr( ( QWebHistoryItem* ) new QWebHistoryItem() );
+   hb_retptr( ( QWebHistoryItem* ) new QWebHistoryItem( *hbqt_par_QWebHistoryItem( 1 ) ) );
 }
 </CODE>
 
