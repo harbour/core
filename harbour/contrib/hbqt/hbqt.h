@@ -56,6 +56,9 @@
 #ifndef __HBQT_H
 #define __HBQT_H
 
+#include <qglobal.h>
+#include <QtGui/QWidget>
+
 #if QT_VERSION >= 0x040500
 
 #define hbqt_par_QTranslator( n )            ( ( QTranslator* ) hb_parptr( n ) )
