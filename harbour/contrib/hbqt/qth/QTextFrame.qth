@@ -62,7 +62,6 @@ New      = pDocument
 
 <CODE>
 #include <QtGui/QTextFrame>
-#include <QtGui/QTextDocument>
 #include <QtGui/QTextCursor>
 
 

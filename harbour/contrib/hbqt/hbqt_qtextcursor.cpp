@@ -62,8 +62,6 @@
 
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextDocumentFragment>
-#include <QtGui/QTextDocument>
-#include <QtGui/QTextBlock>
 
 
 /*
@@ -573,4 +571,3 @@ HB_FUNC( QT_QTEXTCURSOR_VISUALNAVIGATION )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-

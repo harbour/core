@@ -61,7 +61,7 @@
 
 
 #include <QtGui/QTextBlockGroup>
-#include <QtGui/QTextDocument>
+
 
 /*
  * QTextBlockGroup ( QTextDocument * document )

@@ -61,8 +61,7 @@
 
 
 #include <QtGui/QTextDocumentWriter>
-#include <QtGui/QTextDocumentFragment>
-#include <QtGui/QTextDocument>
+
 
 /*
  * QTextDocumentWriter ()
