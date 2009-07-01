@@ -25,7 +25,6 @@ DIRS=\
 	hbtpathy \
 	hbvpdf \
 	hbwin \
-	hbxbp \
 	hbziparc \
 	rddado \
 	xhb \
@@ -46,6 +45,10 @@ DIRS +=\
 	hbssl \
 	rddads \
 	rddsql \
+
+# contribs dependent on above
+DIRS +=\
+	hbxbp \
 
 else
 

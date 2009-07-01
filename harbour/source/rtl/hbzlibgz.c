@@ -333,17 +333,17 @@ HB_FUNC( HB_GZEOF )
       hb_retl( gzeof( gz ) != 0 );
 }
 
-#if ZLIB_VERNUM >= 0x1230
 /*
  * HB_GZDIRECT( <pGZipStream> ) => <lResult>
  */
 HB_FUNC( HB_GZDIRECT )
 {
+#if ZLIB_VERNUM >= 0x1230
    gzFile gz = hb_gzParam( 1 );
    if( gz )
       hb_retl( gzdirect( gz ) != 0 );
-}
 #endif
+}
 
 /*
  * HB_GZERROR( <pGZipStream>, [ <@nError> ] ) => <cError>

@@ -3388,10 +3388,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       /* Merge lib lists. */
       l_aLIBRAW := ArrayAJoin( { hbmk[ _HBMK_aLIBUSER ], l_aLIBHB, l_aLIB3RD, l_aLIBSYS } )
       /* Dress lib names. */
-      l_aLIB := ListCookLib( hbmk, l_aLIBRAW, cLibExt )
+      l_aLIB := ListCookLib( hbmk, l_aLIBRAW, NIL, cLibExt )
       IF hbmk[ _HBMK_lSHARED ] .AND. ! Empty( l_aLIBSHARED )
          l_aLIBRAW := ArrayJoin( l_aLIBSHARED, l_aLIBRAW )
-         l_aLIB := ArrayJoin( ListCookLib( hbmk, l_aLIBSHARED ), l_aLIB )
+         l_aLIB := ArrayJoin( ListCookLib( hbmk, l_aLIBSHARED, NIL ), l_aLIB )
       ENDIF
       /* Dress obj names. */
       l_aOBJ := ListDirExt( ArrayJoin( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_aC ] ), cWorkDir, cObjExt )
@@ -4552,7 +4552,7 @@ STATIC FUNCTION ListDirExt( arraySrc, cDirNew, cExtNew )
    RETURN array
 
 /* Forms the list of libs as to appear on the command line */
-STATIC FUNCTION ListCookLib( hbmk, arraySrc, cExtNew )
+STATIC FUNCTION ListCookLib( hbmk, arraySrc, cPrefix, cExtNew )
    LOCAL array := AClone( arraySrc )
    LOCAL cDir
    LOCAL cLibName
@@ -4567,6 +4567,9 @@ STATIC FUNCTION ListCookLib( hbmk, arraySrc, cExtNew )
                cLibName := SubStr( cLibName, 4 )
             ENDIF
 #endif
+            IF cPrefix != NIL
+               cLibName := cPrefix + cLibName
+            ENDIF
             IF cExtNew != NIL
                cLibName := FN_ExtSet( cLibName, cExtNew )
             ENDIF

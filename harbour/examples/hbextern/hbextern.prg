@@ -346,7 +346,7 @@ PROCEDURE MAIN( ... )
                   FWrite( nOutput, EOL )
                NEXT
             ENDIF
-            FWrite( nOutput, Stuff( ao[ capt_Desc ], 3, 0, "End of") + EOL + EOL )
+            FWrite( nOutput, Stuff( ao[ capt_Desc ], 4, 0, "End of ") + EOL + EOL )
          ENDIF
       NEXT
 
