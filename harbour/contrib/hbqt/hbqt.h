@@ -58,13 +58,7 @@
 
 #include <qglobal.h>
 
-#include <QtGui/QTextDocumentFragment>
-#include <QtGui/QTextDocument>
-#include <QtGui/QTextBlock>
-#include <QtGui/QTextCursor>
-
 #if QT_VERSION >= 0x040500
-
 
 #define hbqt_par_QTranslator( n )            ( ( QTranslator* ) hb_parptr( n ) )
 #define hbqt_par_QWidgetItem( n )            ( ( QWidgetItem* ) hb_parptr( n ) )
