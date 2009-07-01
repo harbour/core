@@ -298,7 +298,7 @@ ULONG  hb_parcsiz( int iParam )
 /* NOTE: Using hb_stackDateBuffer() a temporary date buffer guaranties
          good behavior when multithreading. */
 
-char  * hb_pards( int iParam )
+const char * hb_pards( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -747,7 +747,7 @@ ULONG  hb_parvcsiz( int iParam, ... )
 /* NOTE: Using hb_stackDateBuffer() a temporary date buffer guaranties
          good behavior when multithreading. */
 
-char  * hb_parvds( int iParam, ... )
+const char * hb_parvds( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 

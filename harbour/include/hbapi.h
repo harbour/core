@@ -613,7 +613,7 @@ extern HB_EXPORT const char * hb_parc( int iParam ); /* retrieve a string parame
 extern HB_EXPORT const char * hb_parcx( int iParam ); /* retrieve a string parameter */
 extern HB_EXPORT ULONG        hb_parclen( int iParam ); /* retrieve a string parameter length */
 extern HB_EXPORT ULONG        hb_parcsiz( int iParam ); /* retrieve a by-reference string parameter length, including terminator */
-extern HB_EXPORT char *       hb_pards( int iParam ); /* retrieve a date as a string YYYYMMDD */
+extern HB_EXPORT const char * hb_pards( int iParam ); /* retrieve a date as a string YYYYMMDD */
 extern HB_EXPORT char *       hb_pardsbuff( char * szDate, int iParam ); /* retrieve a date as a string YYYYMMDD */
 extern HB_EXPORT LONG         hb_pardl( int iParam ); /* retrieve a date as a LONG NUMBER  */
 extern HB_EXPORT double       hb_partd( int iParam ); /* retrieve a timestamp as a double number */
@@ -633,7 +633,7 @@ extern HB_EXPORT const char * hb_parvc( int iParam, ... ); /* retrieve a string 
 extern HB_EXPORT const char * hb_parvcx( int iParam, ... ); /* retrieve a string parameter */
 extern HB_EXPORT ULONG        hb_parvclen( int iParam, ... ); /* retrieve a string parameter length */
 extern HB_EXPORT ULONG        hb_parvcsiz( int iParam, ... ); /* retrieve a by-reference string parameter length, including terminator */
-extern HB_EXPORT char *       hb_parvds( int iParam, ... ); /* retrieve a date as a string YYYYMMDD */
+extern HB_EXPORT const char * hb_parvds( int iParam, ... ); /* retrieve a date as a string YYYYMMDD */
 extern HB_EXPORT char *       hb_parvdsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string YYYYMMDD */
 extern HB_EXPORT LONG         hb_parvdl( int iParam, ... ); /* retrieve a date as a LONG NUMBER  */
 extern HB_EXPORT double       hb_parvtd( int iParam, ... ); /* retrieve a timestamp as a double number */
