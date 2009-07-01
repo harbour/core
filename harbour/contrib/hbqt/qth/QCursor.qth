@@ -55,12 +55,13 @@
 ;
 
 <CLASS>
-Inherits = 
+Inherits =
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 <CODE>
+#include <qpixmap.h>
 #include <QtGui/QCursor>
 
 
@@ -105,6 +106,3 @@ void setPos ( const QPoint & p )
 
 <VARIABLES>
 </VARIABLES>
-
-
-

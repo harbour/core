@@ -69,6 +69,7 @@
  */
 
 
+#include <QStringList>
 #include <QtCore/QCoreApplication>
 
 
@@ -405,4 +406,3 @@ HB_FUNC( QT_QCOREAPPLICATION_QUIT )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-

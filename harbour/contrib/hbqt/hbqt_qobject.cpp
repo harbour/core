@@ -72,6 +72,7 @@
  */
 
 
+#include <QWidget>
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 
@@ -328,4 +329,3 @@ HB_FUNC( QT_QOBJECT_DELETELATER )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-

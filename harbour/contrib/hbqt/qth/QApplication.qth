@@ -55,7 +55,7 @@
 ;
 <CLASS>
 Inherit  = QCoreApplication
-New      = 
+New      =
 </CLASS>
 
 
@@ -70,6 +70,10 @@ New      =
 #include "hbdate.h"
 #include "hbapierr.h"
 
+#include <qfont.h>
+#include <qfontmetrics.h>
+#include <qimage.h>
+#include <qpalette.h>
 #include <QtGui/QApplication>
 #include <QtCore/QLocale>
 #include <QtGui/QIcon>
@@ -192,7 +196,7 @@ enum Type { Tty, GuiClient, GuiServer }
 virtual void commitData ( QSessionManager & manager )
 QInputContext * inputContext () const
 bool isSessionRestored () const
-# 
+#
 # not-found
 // virtual bool macEventFilter ( EventHandlerCallRef, EventRef )
 // virtual bool qwsEventFilter ( QWSEvent * )

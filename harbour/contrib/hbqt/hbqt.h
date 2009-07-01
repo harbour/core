@@ -337,7 +337,6 @@
 #define hbqt_par_QWebSettings( n )           ( ( QWebSettings* ) hb_parptr( n ) )
 #define hbqt_par_ExtensionOption( n )        ( ( ExtensionOption* ) hb_parptr( n ) )
 
-
 #define hbqt_par_QString( n )                ( ( QString ) hb_parcx( n ) )
 #define hbqt_par_QRgb( n )                   ( hb_parnint( n ) )
 #define hbqt_par_Bool( n )                   ( hb_parl( n ) )
@@ -347,24 +346,6 @@
 #define hbqt_ret_QAbstractItemDelegate( p )  ( hb_retptr( ( QAbstractItemDelegate* ) p ) )
 #define hbqt_ret_QAbstractItemModel( p )     ( hb_retptr( ( QAbstractItemModel* ) p ) )
 #define hbqt_ret_QPrinter( p )               ( hb_retptr( ( QPrinter* ) p ) )
-
-#include <QtGui/QWidget>
-
-void    hbqt_ret_QRect( QRect );
-void    hbqt_ret_QSize( QSize );
-void    hbqt_ret_QPoint( QPoint );
-
-QRect   hbqt_const_QRect( int );
-QSize   hbqt_const_QSize( int );
-QPoint  hbqt_const_QPoint( int );
-
-void    hbqt_ret_QRectF( QRectF );
-void    hbqt_ret_QSizeF( QSizeF );
-void    hbqt_ret_QPointF( QPointF );
-
-QRectF  hbqt_const_QRectF( int );
-QSizeF  hbqt_const_QSizeF( int );
-QPointF hbqt_const_QPointF( int );
 
 #endif
 

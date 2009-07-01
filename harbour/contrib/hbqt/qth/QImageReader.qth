@@ -55,12 +55,13 @@
 ;
 
 <CLASS>
-Inherits = 
+Inherits =
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 <CODE>
+#include <QColor>
 #include <QtGui/QImageReader>
 
 
@@ -128,7 +129,3 @@ QList<QByteArray> supportedImageFormats ()
 
 <SIGNALS>
 </SIGNALS>
-
-
-
-

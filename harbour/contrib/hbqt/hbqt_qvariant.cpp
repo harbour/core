@@ -71,6 +71,9 @@
  */
 
 
+#include <QLine>
+#include <QRect>
+#include <QStringList>
 #include <QtCore/QVariant>
 #include <QtCore/QBitArray>
 #include <QtCore/QTime>
@@ -434,4 +437,3 @@ HB_FUNC( QT_QVARIANT_TYPETONAME )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-

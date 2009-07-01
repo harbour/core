@@ -60,6 +60,7 @@ Calls    = QT_Qbject
 </CLASS>
 
 <CODE>
+#include <QWidget>
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 

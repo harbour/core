@@ -57,10 +57,12 @@
 <CLASS>
 Inherits = QObject
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 <CODE>
+#include <QSize>
+#include <QStringList>
 #include <QtCore/QAbstractItemModel>
 
 
@@ -138,6 +140,3 @@ void rowsRemoved ( const QModelIndex & parent, int start, int end )
 
 <VARIABLES>
 </VARIABLES>
-
-
-

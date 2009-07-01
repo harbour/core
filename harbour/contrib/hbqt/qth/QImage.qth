@@ -55,12 +55,13 @@
 ;
 
 <CLASS>
-Inherits = 
+Inherits =
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 <CODE>
+#include <QStringList>
 #include <QtGui/QImage>
 
 
@@ -161,7 +162,3 @@ int width () const
 
 <SIGNALS>
 </SIGNALS>
-
-
-
-

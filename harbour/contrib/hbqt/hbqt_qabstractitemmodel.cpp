@@ -70,6 +70,8 @@
  */
 
 
+#include <QSize>
+#include <QStringList>
 #include <QtCore/QAbstractItemModel>
 
 
@@ -350,4 +352,3 @@ HB_FUNC( QT_QABSTRACTITEMMODEL_SUBMIT )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-

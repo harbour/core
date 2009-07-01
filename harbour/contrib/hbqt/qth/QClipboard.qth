@@ -57,10 +57,11 @@
 <CLASS>
 Inherits = QObject
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 <CODE>
+#include <qpalette.h>
 #include <QtGui/QClipboard>
 #include <QtGui/QApplication>
 
@@ -107,7 +108,3 @@ void dataChanged ()
 void findBufferChanged ()
 void selectionChanged ()
 </SIGNALS>
-
-
-
-

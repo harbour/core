@@ -58,6 +58,7 @@ New=
 </CLASS>
 
 <CODE>
+#include <QStringList>
 #include <QtGui/QFont>
 
 /*
@@ -172,4 +173,3 @@ QString substitute ( const QString & familyName )
 QStringList substitutes ( const QString & familyName )
 QStringList substitutions ()
 </PROTOS>
-

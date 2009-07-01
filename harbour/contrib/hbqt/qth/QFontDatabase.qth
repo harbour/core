@@ -55,12 +55,13 @@
 ;
 
 <CLASS>
-Inherits = 
+Inherits =
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 <CODE>
+#include <QStringList>
 #include <QtGui/QFontDatabase>
 
 
@@ -115,6 +116,3 @@ QString writingSystemSample ( WritingSystem writingSystem )
 
 <VARIABLES>
 </VARIABLES>
-
-
-

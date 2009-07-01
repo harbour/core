@@ -56,10 +56,13 @@
 
 <CLASS>
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 <CODE>
+#include <QLine>
+#include <QRect>
+#include <QStringList>
 #include <QtCore/QVariant>
 #include <QtCore/QBitArray>
 #include <QtCore/QTime>
@@ -178,7 +181,3 @@ const char * typeToName ( Type typ )
 
 <SIGNALS>
 </SIGNALS>
-
-
-
-

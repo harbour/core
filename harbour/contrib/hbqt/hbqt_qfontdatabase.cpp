@@ -73,6 +73,7 @@
  */
 
 
+#include <QStringList>
 #include <QtGui/QFontDatabase>
 
 
@@ -248,4 +249,3 @@ HB_FUNC( QT_QFONTDATABASE_WRITINGSYSTEMSAMPLE )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-

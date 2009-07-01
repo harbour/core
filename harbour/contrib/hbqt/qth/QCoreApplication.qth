@@ -57,11 +57,12 @@
 <CLASS>
 Inherits = QObject
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 
 <CODE>
+#include <QStringList>
 #include <QtCore/QCoreApplication>
 
 

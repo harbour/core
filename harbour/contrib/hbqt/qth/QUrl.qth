@@ -60,6 +60,7 @@ New      = pParent
 </CLASS>
 
 <CODE>
+#include <QStringList>
 #include <QtCore/QUrl>
 
 
@@ -171,6 +172,3 @@ void setIdnWhitelist ( const QStringList & list )
 QByteArray toAce ( const QString & domain )
 QByteArray toPercentEncoding ( const QString & input, const QByteArray & exclude = QByteArray(), const QByteArray & include = QByteArray() )
 </PROTOS>
-
-
-

@@ -70,6 +70,10 @@
 #include "hbdate.h"
 #include "hbapierr.h"
 
+#include <qfont.h>
+#include <qfontmetrics.h>
+#include <qimage.h>
+#include <qpalette.h>
 #include <QtGui/QApplication>
 #include <QtCore/QLocale>
 #include <QtGui/QIcon>
@@ -810,4 +814,3 @@ HB_FUNC( QT_QAPPLICATION_SETSTYLESHEET )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-
