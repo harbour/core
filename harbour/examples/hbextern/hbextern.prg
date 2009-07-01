@@ -78,11 +78,18 @@ REQUEST HB_GT_CGI_DEFAULT
 #endif
 
 // List of known files which does not contain any real public function.
-STATIC s_aSkipFiles := { "profiler.prg" }
-STATIC s_aSkipDirs := { "tests", "example", "examples", "sample", "samples", ".svn", "%HB_ARCHITECTURE%", "codepage" }
-STATIC s_aSkipNames  := { "MAIN" }   // Init with names you want to skip
+STATIC s_aSkipFiles := { "profiler.prg", "msg_tpl.c" }
+STATIC s_aSkipDirs := { "tests", "example", "examples", "sample", "samples", ".svn", "%HB_ARCHITECTURE%" }
+STATIC s_aSkipNames  := { "MAIN" }   // Init with method names you want to skip
+STATIC s_aDirsProcessed := {}
 STATIC s_aMethodAsProcedure := {}
 STATIC s_aConditions := {}
+
+#define capt_Desc 1
+#define capt_Cond 2
+#define capt_Repository 3
+#define Capture( desc, cond ) { desc, cond, {} }
+STATIC s_aOutput // initialized within MAIN()
 
 #define sw_BaseDir                  1
 #define sw_Target                   2
@@ -97,29 +104,35 @@ STATIC s_aConditions := {}
 #define sw_ConditionalDepth        11
 #define sw_MimicHBExtern           12
 #define sw_ExcludeParams           13
-#define sw_SwitchesN               13
+#define sw_ExcludeContrib          14
+#define sw_SwitchesN               14
 
 STATIC s_aSwitches[ sw_SwitchesN ]
+
+#xcommand DEFAULT <p> TO <v> => IF <p> == NIL ; <p> := <v> ; ENDIF
 
 PROCEDURE MAIN( ... )
    LOCAL aArgs := hb_AParams()
    LOCAL aDirs, i, nOutput, arg, cArgName
+   LOCAL ao, ar
+   LOCAL cDescription
 
    SET DATE FORMAT TO "yyyy-mm-dd"
 
    s_aSwitches[ sw_BaseDir ] := BASE_DIR
    s_aSwitches[ sw_Target ] := "hbextern.ch_"
    s_aSwitches[ sw_Verbose ] := 2
-   s_aSwitches[ sw_Recursive ] := .F.
+   s_aSwitches[ sw_Recursive ] := .T.
    s_aSwitches[ sw_Case ] := 1
    s_aSwitches[ sw_ExcludeDuplicates ] := .T.
    s_aSwitches[ sw_ExcludeEmptyFiles ] := .F.
-   s_aSwitches[ sw_ExcludeClasses ] := .T.
+   s_aSwitches[ sw_ExcludeClasses ] := .F.
    s_aSwitches[ sw_ExcludeClassMethods ] := .T.
-   s_aSwitches[ sw_ExcludeConditionals ] := .T.
+   s_aSwitches[ sw_ExcludeConditionals ] := .F.
    s_aSwitches[ sw_ConditionalDepth ] := 0
    s_aSwitches[ sw_MimicHBExtern ] := .T.
    s_aSwitches[ sw_ExcludeParams ] := .T.
+   s_aSwitches[ sw_ExcludeContrib ] := .T.
 
    FOR EACH arg IN aArgs
       IF .NOT. Empty(arg)
@@ -181,7 +194,7 @@ PROCEDURE MAIN( ... )
 
    FOR i := 1 to Len(s_aSkipDirs)
       IF SubStr( s_aSkipDirs[i], 1, 1 ) == "%"
-         s_aSkipDirs[i] := GetEnv( SubStr( s_aSkipDirs[i], 2, Len( s_aSkipDirs[i] ) - 1 ) )
+         s_aSkipDirs[i] := GetEnv( SubStr( s_aSkipDirs[i], 2, Len( s_aSkipDirs[i] ) - 2 ) )
       ENDIF
    NEXT
 
@@ -198,17 +211,55 @@ PROCEDURE MAIN( ... )
       s_aSwitches[ sw_ExcludeClassMethods ] := .T.
    ENDIF
 
+#define ca51            "/* CA-Cl*pper compatible standard functions */"
+#define ca51int         "/* CA-Cl*pper compatible internal functions */"
+#define ca52und         "/* CA-Cl*pper 5.2 compatible undocumented functions */"
+#define ca53            "/* CA-Cl*pper 5.3 compatible functions */"
+#define ca53X52         "/* CA-Cl*pper 5.3 compatible, CA-Cl*pper 5.2 undocumented, functions */"
+#define harb            "/* Harbour extensions */"
+#define harbXcp         "/* Harbour extensions, codepage support */"
+#define harbXns         "/* Harbour extensions violating extension namespace rules." + EOL + "   See reasons in source. */"
+#define dbgr            "/* The debugger interface */"
+#define rdd             "/* RDD related symbols */"
+#define rddSx           "/* RDD SX related symbols */"
+#define hiper           "/* HiPer-SEEK compatible functions */"
+#define cfts            "/* CFTS compatible functions */"
+#define i18n            "/* i18n */"
+#define cpsp            "/* Codepage support */"
+#define langsp          "/* lang support */"
+#define scalar          "/* Scalar objects */"
+#define xbasepp         "/* Xbase++ compatible functions */"
+#define dosunkn         "/* DOS (?) */"
+#define flagshp         "/* FlagShip extension */"
+
+   // store all entries that match the codeblock but build a sub-array of entries per conditionals
+   s_aOutput := { ;
+      Capture( ca51   , {|a,b,c,f| a,b,c,f, .T. } ), ;
+      Capture( ca51int, {|a,b,c,f| a,b,f, SubStr(c, 1, Len( "__") ) == "__" } ), ;
+      Capture( harb   , {|a,b,c,f| a,b,f, SubStr(c, 1, Len( "HB_") ) == "HB_" } ), ;
+      Capture( dbgr   , {|a,b,c,f| a,b,f, SubStr(c, 1, Len( "__DBG") ) == "__DBG" } ), ;
+      Capture( rdd    , {|a,b,c,f| a,b,c, AT( PATH_SEPARATOR + "rdd" + PATH_SEPARATOR, f) > 0 } ), ;
+      Capture( rddSx  , {|a,b,c,f| a,b, (SubStr(c, 1, 2) == "SX" .OR. SubStr(c, 1, 3) == "_SX" .OR. .F.) .AND. AT( PATH_SEPARATOR + "rdd" + PATH_SEPARATOR, f) > 0 } ), ;
+      Capture( hiper  , {|a,b,c,f| a,b,f, SubStr(c, 1, Len( "HS_") ) == "HS_" } ), ;
+      Capture( cfts   , {|a,b,c,f| a,b,f, SubStr(c, 1, Len( "CFTS") ) == "CFTS" } ), ;
+      Capture( i18n   , {|a,b,c,f| a,b,f, SubStr(c, 1, Len( "HB_I18N") ) == "HB_I18N" } ), ;
+      Capture( cpsp   , {|a,b,c,f| a,b,f, SubStr(c, 1, Len( "HB_CODEPAGE_") ) == "HB_CODEPAGE_" } ), ;
+      Capture( langsp , {|a,b,c,f| a,b,f, SubStr(c, 1, Len( "HB_LANG_") ) == "HB_LANG_" } ), ;
+   }
+
    IF s_aSwitches[ sw_Recursive ]
 
       aDirs :={ ;
          s_aSwitches[ sw_BaseDir ] + "source", ;
-         s_aSwitches[ sw_BaseDir ] + "contrib", ;
+         IIf( s_aSwitches[ sw_ExcludeContrib ], NIL, s_aSwitches[ sw_BaseDir ] + "contrib" ), ;
       }
 
    ELSE
 
       aDirs :={ ;
+         s_aSwitches[ sw_BaseDir ] + "source" + PATH_SEPARATOR + "codepage", ;
          s_aSwitches[ sw_BaseDir ] + "source" + PATH_SEPARATOR + "debug", ;
+         s_aSwitches[ sw_BaseDir ] + "source" + PATH_SEPARATOR + "lang", ;
          s_aSwitches[ sw_BaseDir ] + "source" + PATH_SEPARATOR + "pp", ;
          s_aSwitches[ sw_BaseDir ] + "source" + PATH_SEPARATOR + "rdd", ;
          s_aSwitches[ sw_BaseDir ] + "source" + PATH_SEPARATOR + "rdd" + PATH_SEPARATOR + "dbfcdx", ;
@@ -231,6 +282,8 @@ PROCEDURE MAIN( ... )
 
    nOutput := FCreate( s_aSwitches[ sw_Target ] )
    IF nOutput > 0
+      CopyExistingTargetTo( nOutput )
+
       FWrite( nOutput, "// NOTE: Machine generated on: " + DTOC( DATE() ) + EOL + ;
                        "//       This output should be edited by hand after extraction." + EOL + EOL )
       FWrite( nOutput, ;
@@ -249,18 +302,57 @@ PROCEDURE MAIN( ... )
          "*/" + EOL + ;
          EOL ;
       )
+#undef YesOrNo
+
+      FWrite( nOutput, ;
+         "#ifndef HB_EXTERN_CH_" + EOL + ;
+         "#define HB_EXTERN_CH_" + EOL + ;
+         EOL ;
+      )
+
       FOR i := 1 TO LEN( aDirs )
          IF .NOT. Empty(aDirs[i])
             ProcessDir( nOutput, aDirs[i] )
          ENDIF
       NEXT
-      FWrite( nOutput, EOL + "// " + Replicate( "-", 60 ) + EOL + EOL )
 
       IF Len(s_aMethodAsProcedure) > 0
          FWrite( nOutput, "/*" + EOL + "Class methods defined as 'procedure':" + EOL )
          AEval(s_aMethodAsProcedure, {|ac| FWrite( nOutput, "  " + ac[1] + " " + ac[2] + EOL ) } )
          FWrite( nOutput, "*/" + EOL + EOL )
       ENDIF
+
+      FOR EACH ao IN s_aOutput
+         IF ao != NIL
+            FWrite( nOutput, ao[ capt_Desc ] + EOL )
+            IF LEn( ao[ capt_Repository ] ) == 0
+               FWrite( nOutput, "/* empty */" + EOL )
+            ELSE
+               FWrite( nOutput, EOL )
+               FOR EACH ar in ao[ capt_Repository ]
+                  IF ar[ capt_Cond ] != NIL .AND. Len( ar[ capt_Cond ] ) > 0 ; FWrite( nOutput, ar[ capt_Cond ] + EOL ); ENDIF
+
+                  ASort( ar[ capt_Repository ] )
+                  AEval( ar[ capt_Repository ], {|a| FWrite( nOutput, "EXTERNAL " + a + EOL ) } )
+
+                  IF ar[ capt_Cond ] != NIL .AND. Len( ar[ capt_Cond ] ) > 0
+                     cDescription := ""
+                     DO WHILE Len( ar[ capt_Cond ] ) > 0
+                        cDescription := "#endif /* " + Parse( @ar[ capt_Cond ], EOL ) + " */" + EOL + cDescription
+                     ENDDO
+                     FWrite( nOutput, cDescription )
+                  ENDIF
+
+                  FWrite( nOutput, EOL )
+               NEXT
+            ENDIF
+            FWrite( nOutput, Stuff( ao[ capt_Desc ], 3, 0, "End of") + EOL + EOL )
+         ENDIF
+      NEXT
+
+      FWrite( nOutput, ;
+         "#endif /* HB_EXTERN_CH_ */" + EOL ;
+      )
 
       FClose( nOutput )
    ENDIF
@@ -270,6 +362,8 @@ PROCEDURE MAIN( ... )
    RETURN
 
 STATIC PROCEDURE ShowHelp()
+#define OnOrOff(b) IIf( b, "excluded", "included" )
+
    LOCAL aHelp := { ;
       "Syntax: ", ;
       "  hbextern [options]", ;
@@ -278,9 +372,9 @@ STATIC PROCEDURE ShowHelp()
       "  -target=<filename> // target file, default is hbextern.ch_", ;
       "  -recurse=[yes|no] // perform recursively, default is no", ;
       "  -skipdirs=<filename> // configuration file of folders to bypass, default:", ;
-      {|| AEval( s_aSkipDirs, {|c| OutStd( IIf( Empty(c), "", "    " + c ) + hb_osNewLine() ) } ) }, ;
+      {|| AEval( s_aSkipDirs, {|c| OutStd( IIf( Empty(c), "", "    " + c ) + EOL ) } ) }, ;
       "  -skipfiles=<filename> // configuration file of files to bypass, default:", ;
-      {|| AEval( s_aSkipFiles, {|c| OutStd( IIf( Empty(c), "", "    " + c ) + hb_osNewLine() ) } ) }, ;
+      {|| AEval( s_aSkipFiles, {|c| OutStd( IIf( Empty(c), "", "    " + c ) + EOL ) } ) }, ;
       "  -verbose=[silent|minimum|maximum] // verbose operation, default is maximum", ;
       "  -silent // synonym for verbose=silent", ;
       "  -case=[upper|lower|unchanged] // output case, default is upper", ;
@@ -288,29 +382,35 @@ STATIC PROCEDURE ShowHelp()
       "  -exclude=<switch> // sets <switch> off", ;
       "switches:", ;
       "  all // all switches are set", ;
-      "  duplicates // default is on", ;
-      "  empty-files // default is off", ;
-      "  classes // default is off", ;
-      "  class-methods // default is off", ;
-      "  conditionals // default is off", ;
-      "  params // default is off", ;
+      "  duplicates // default is " + OnOrOff( s_aSwitches[ sw_ExcludeDuplicates ] ), ;
+      "  empty-files // default is " + OnOrOff( s_aSwitches[ sw_ExcludeEmptyFiles ] ), ;
+      "  classes // default is " + OnOrOff( s_aSwitches[ sw_ExcludeClasses ] ), ;
+      "  class-methods // default is " + OnOrOff( s_aSwitches[ sw_ExcludeClassMethods ] ), ;
+      "  conditionals // default is " + OnOrOff( s_aSwitches[ sw_ExcludeConditionals ] ), ;
+      "  params // default is " + OnOrOff( s_aSwitches[ sw_ExcludeParams ] ), ;
 /*       "  ", */ ;
    }
+#undef OnOrOff
 
    // using hbmk2 style
-   AEval( aHelp, {|x| IIf( ValType( x ) == "B", Eval( x ), OutStd( IIf( Empty(x), "", x ) + hb_osNewLine() ) ) } )
+   AEval( aHelp, {|x| IIf( ValType( x ) == "B", Eval( x ), OutStd( IIf( Empty(x), "", x ) + EOL ) ) } )
 
    RETURN
 
 STATIC PROCEDURE ProcessDir( nOutput, cDir )
    LOCAL i, nLen, aFiles
 
+   // check for and prevent re-processing a folder
+   IF HB_AScan( s_aDirsProcessed, Lower( cDir ) ) > 0
+      RETURN
+   ENDIF
+   AAdd( s_aDirsProcessed, Lower( cDir ) )
+
    IF s_aSwitches[ sw_Verbose ] > 0 ; ? cDir ; ENDIF
 
-   IF .NOT. s_aSwitches[ sw_ExcludeEmptyFiles ]
-      FWrite( nOutput, EOL + "// " + Replicate( "-", 60 ) + EOL )
-      FWrite( nOutput, "// Files from: " + cDir + EOL + EOL )
-   ENDIF
+   //~ IF .NOT. s_aSwitches[ sw_ExcludeEmptyFiles ]
+      //~ FWrite( nOutput, "// Files from: " + cDir + EOL + EOL )
+   //~ ENDIF
 
    cDir += PATH_SEPARATOR
 
@@ -318,12 +418,12 @@ STATIC PROCEDURE ProcessDir( nOutput, cDir )
    IF ( nLen := LEN( aFiles ) ) > 0
       // Sort C files before PRG files before folders; this mimics HBExtern
       ASort( aFiles,,, {|x,y| ;
-            IIf( x[ F_ATTR ] == "D", Chr(255), SubStr( x[ F_NAME ], At( ".", x[ F_NAME ] ) ) ) + x[ F_NAME ] < IIf( y[ F_ATTR ] == "D", Chr(255), SubStr( y[ F_NAME ], At( ".", y[ F_NAME ] ) )  ) + y[ F_NAME ] ;
+            IIf( x[ F_ATTR ] == "D", Chr(255), SubStr( x[ F_NAME ], 1 + HB_RAt( ".", x[ F_NAME ] ) ) ) + x[ F_NAME ] < IIf( y[ F_ATTR ] == "D", Chr(255), SubStr( y[ F_NAME ], 1 + HB_RAt( ".", y[ F_NAME ] ) ) ) + y[ F_NAME ] ;
          } )
       FOR i := 1 TO nLen
          IF aFiles[ i ][F_ATTR ] == "D"
             IF s_aSwitches[ sw_Recursive ] .AND. ;
-               AScan( s_aSkipDirs, {|d| Lower(d) == Lower( aFiles[ i ][ F_NAME ] ) } ) == 0
+               HB_AScan( s_aSkipDirs, {|d| Lower(d) == Lower( aFiles[ i ][ F_NAME ] ) } ) == 0
                ProcessDir( nOutput, cDir + aFiles[ i ][ F_NAME ] )
             ENDIF
          ELSEIF Upper( SubStr( aFiles[ i ][ F_NAME ], -4 ) ) == ".PRG"
@@ -340,8 +440,7 @@ STATIC FUNCTION FileToArray( cFile )
    LOCAL nH
    LOCAL aResult := {}
 
-   nH := FOpen( cFile )
-   IF nH > 0
+   IF ( nH := FOpen( cFile ) ) > 0
       FileEval( nH, 255, {|c| AAdd( aResult, c ) } )
       FClose( nH )
    ELSE
@@ -356,7 +455,7 @@ STATIC PROCEDURE ProcessFile( nOutput, cFile, lPRG )
    LOCAL cHeader
 
    // Skip known files which does not contain any real public function
-   IF AScan( s_aSkipFiles, {|c| lower(c) $ lower( cFile ) } ) > 0
+   IF HB_AScan( s_aSkipFiles, {|c| lower(c) $ lower( cFile ) } ) > 0
       RETURN
    ENDIF
 
@@ -365,7 +464,7 @@ STATIC PROCEDURE ProcessFile( nOutput, cFile, lPRG )
    cHeader := "//" + EOL + "// symbols from file: " + cFile + EOL + "//" + EOL
 
    IF .NOT. s_aSwitches[ sw_ExcludeEmptyFiles ]
-      FWrite( nOutput, cHeader )
+      //~ FWrite( nOutput, cHeader )
       bOutputHeader := .F.
    ELSE
       bOutputHeader := .T.
@@ -375,7 +474,7 @@ STATIC PROCEDURE ProcessFile( nOutput, cFile, lPRG )
    IF nH > 0
       FileEval( nH, 255, {|c| ProcessLine( nOutput, cFile, c, lPRG, @bOutputHeader, @cHeader ) } )
       FClose( nH )
-      FWrite( nOutput, Replicate( "#endif" + EOL, s_aSwitches[ sw_ConditionalDepth ] ) )
+      //~ FWrite( nOutput, Replicate( "#endif" + EOL, s_aSwitches[ sw_ConditionalDepth ] ) )
       s_aSwitches[ sw_ConditionalDepth ] := 0
    ELSE
       IF s_aSwitches[ sw_Verbose ] > 0 ; ? "Could not process [" + cFile + "], error " + hb_ntos(nH) ; ENDIF
@@ -450,44 +549,56 @@ STATIC s_cMethodType, s_lVisible, s_FullLine := ""
    cLine := s_FullLine + cLine
    s_FullLine := ""
 
-   IF lPRG                                // PRG source file (FUNC, PROC, CLASS)
-
-      IF .NOT. s_aSwitches[ sw_ExcludeConditionals ] .AND. SubStr( cLine, 1, 1 ) == "#"
-         IF SubStr( cLine, 1, 2 ) == "# "
-            cLine := "#" + LTrim( SubStr( cLine, 2 ) )
-         ENDIF
-
-         IF .F.
-/*
-         ELSEIF Lower( SubStr( cLine, 1, Len( "#include" ) ) ) == "#include"
-         ELSEIF Lower( SubStr( cLine, 1, Len( "#define" ) ) ) == "#define"
-         ELSEIF Lower( SubStr( cLine, 1, Len( "#undef" ) ) ) == "#undef"
-         ELSEIF Lower( SubStr( cLine, 1, Len( "#pragma " ) ) ) == "#pragma "
-         ELSEIF Lower( SubStr( cLine, 1, Len( "#command" ) ) ) == "#command"
-         ELSEIF Lower( SubStr( cLine, 1, Len( "#xcommand" ) ) ) == "#xcommand"
-         ELSEIF Lower( SubStr( cLine, 1, Len( "#translate" ) ) ) == "#translate"
-         ELSEIF Lower( SubStr( cLine, 1, Len( "#xtrans" ) ) ) == "#xtrans"
-         ELSEIF Lower( SubStr( cLine, 1, Len( "#error " ) ) ) == "#error "
-*/
-         ELSEIF Lower( SubStr( cLine, 1, Len( "#if" ) ) ) == "#if"
-            AAdd( s_aConditions, cLine )
-         ELSEIF Lower( SubStr( cLine, 1, Len( "#elif" ) ) ) == "#elif"
-            s_aConditions[ Len( s_aConditions ) ] := cLine
-         ELSEIF Lower( SubStr( cLine, 1, Len( "#else" ) ) ) == "#else"
-            IF s_aSwitches[ sw_ConditionalDepth ] > 0
-               FWrite( nOutput, "#else" + EOL )
-            ENDIF
-            s_aConditions[ Len( s_aConditions ) ] := cLine
-         ELSEIF Lower( SubStr( cLine, 1, Len( "#endif" ) ) ) == "#endif"
-            IF s_aSwitches[ sw_ConditionalDepth ] > 0
-               FWrite( nOutput, "#endif" + EOL )
-               s_aSwitches[ sw_ConditionalDepth ]--
-            ENDIF
-            ASize( s_aConditions, Len( s_aConditions ) - 1 )
-      //~ ELSE
-         //~ ? cLine
-         ENDIF
+   IF .NOT. s_aSwitches[ sw_ExcludeConditionals ] .AND. SubStr( cLine, 1, 1 ) == "#"
+      IF SubStr( cLine, 1, 2 ) == "# "
+         cLine := "#" + LTrim( SubStr( cLine, 2 ) )
       ENDIF
+
+      IF .F.
+/*
+      ELSEIF Lower( SubStr( cLine, 1, Len( "#include" ) ) ) == "#include"
+      ELSEIF Lower( SubStr( cLine, 1, Len( "#define" ) ) ) == "#define"
+      ELSEIF Lower( SubStr( cLine, 1, Len( "#undef" ) ) ) == "#undef"
+      ELSEIF Lower( SubStr( cLine, 1, Len( "#pragma " ) ) ) == "#pragma "
+      ELSEIF Lower( SubStr( cLine, 1, Len( "#command" ) ) ) == "#command"
+      ELSEIF Lower( SubStr( cLine, 1, Len( "#xcommand" ) ) ) == "#xcommand"
+      ELSEIF Lower( SubStr( cLine, 1, Len( "#translate" ) ) ) == "#translate"
+      ELSEIF Lower( SubStr( cLine, 1, Len( "#xtrans" ) ) ) == "#xtrans"
+      ELSEIF Lower( SubStr( cLine, 1, Len( "#error " ) ) ) == "#error "
+*/
+      ELSEIF Lower( SubStr( cLine, 1, Len( "#if" ) ) ) == "#if"
+         AAdd( s_aConditions, cLine )
+      ELSEIF Lower( SubStr( cLine, 1, Len( "#elif" ) ) ) == "#elif"
+         s_aConditions[ Len( s_aConditions ) ] := cLine
+      ELSEIF Lower( SubStr( cLine, 1, Len( "#else" ) ) ) == "#else"
+         IF s_aSwitches[ sw_ConditionalDepth ] > 0
+            //~ FWrite( nOutput, "#else" + EOL )
+
+            //~ s_aConditions[ Len( s_aConditions ) ] := cLine
+            DO CASE
+            CASE SubStr( ATail( s_aConditions ), 1, Len( "#if " ) ) == "#if "
+               s_aConditions[ Len( s_aConditions ) ]  := "#if !(" + SubStr( ATail( s_aConditions ), Len( "#if " ) + 1 ) + ")"
+            CASE SubStr( ATail( s_aConditions ), 1, Len( "#ifdef " ) ) == "#ifdef "
+               s_aConditions[ Len( s_aConditions ) ]  := "#ifndef " + SubStr( ATail( s_aConditions ), Len( "#ifdef " ) + 1 )
+            CASE SubStr( ATail( s_aConditions ), 1, Len( "#ifndef " ) ) == "#ifndef "
+               s_aConditions[ Len( s_aConditions ) ]  := "#ifdef " + SubStr( ATail( s_aConditions ), Len( "#ifndef " ) + 1 )
+            OTHERWISE
+   // TODO: print a more useful error message
+   ? "Error:", cLine, ATail(s_aConditions)
+            ENDCASE
+         ENDIF
+      ELSEIF Lower( SubStr( cLine, 1, Len( "#endif" ) ) ) == "#endif"
+         IF s_aSwitches[ sw_ConditionalDepth ] > 0
+            //~ FWrite( nOutput, "#endif" + EOL )
+            s_aSwitches[ sw_ConditionalDepth ]--
+         ENDIF
+         ASize( s_aConditions, Len( s_aConditions ) - 1 )
+   //~ ELSE
+      //~ ? cLine
+      ENDIF
+   ENDIF
+
+   IF lPRG                                // PRG source file (FUNC, PROC, CLASS)
 
       IF Upper( SubStr( cLine, 1, Len( "FUNC " ) ) ) == "FUNC " .OR. ;
          Upper( SubStr( cLine, 1, Len( "PROC " ) ) ) == "PROC " .OR. ;
@@ -510,9 +621,17 @@ STATIC s_cMethodType, s_lVisible, s_FullLine := ""
             s_lVisible := .T. // TODO: what is the default visibility of methods
          OTHERWISE
             s_cMethodType = Upper( SubStr( cLine, 1, 4 ) )
-         END
+         ENDCASE
 
          aUnits := Split(RemoveComments(cLine), " ")
+
+         IF s_cMethodType == "CLASS"
+            // TOFIX: dependant upon there being no double spaces in the source line
+            IF Len(aUnits) > 1 .AND. Upper( aUnits[ Len( aUnits ) - 1 ] ) == "FUNCTION"
+               cLine := s_cMethodType + " " + aUnits[ Len( aUnits ) ]
+            ENDIF
+         ENDIF
+
          IF Upper( SubStr( cLine, 1, Len( "PROC" ) ) ) == "PROC" .AND. Len(aUnits) > 1 .AND. Upper( aUnits[ Len( aUnits ) - 1 ] ) == "CLASS"
             AAdd(s_aMethodAsProcedure, { cFile, cLine } )
          ELSEIF ( nPos := AT( " ", cLine ) ) > 4
@@ -524,7 +643,7 @@ STATIC s_cMethodType, s_lVisible, s_FullLine := ""
                    EXIT
                 ENDIF
             NEXT
-            WriteSymbol( nOutput, SubStr( cLine, 1, nPos ), s_cMethodType + " " + RemoveComments( SubStr( cLine, nPos + 1 ) ), @bOutputHeader, @cHeader )
+            WriteSymbol( nOutput, cFile, SubStr( cLine, 1, nPos ), s_cMethodType + " " + RemoveComments( SubStr( cLine, nPos + 1 ) ), @bOutputHeader, @cHeader )
          ENDIF
       ELSEIF s_cMethodType == "CLASS"
          cLine := RemoveComments(cLine)
@@ -542,7 +661,7 @@ STATIC s_cMethodType, s_lVisible, s_FullLine := ""
                cLine := Parse( @cLine, " INIT " )
                cLine := Parse( @cLine, " INLINE " )
                cLine := Trim( cLine )
-               WriteSymbol( nOutput, "   " + cLine, ""/*s_cMethodType*/, @bOutputHeader, @cHeader ) // SubStr( cLine, 1, nPos ), s_cMethodType )
+               WriteSymbol( nOutput, cFile, "   " + cLine, ""/*s_cMethodType*/, @bOutputHeader, @cHeader ) // SubStr( cLine, 1, nPos ), s_cMethodType )
             ENDIF
          ELSEIF Upper( SubStr( cLine, 1, Len( "ENDCLASS" ) ) ) == "ENDCLASS"
             s_cMethodType := ""
@@ -556,10 +675,22 @@ STATIC s_cMethodType, s_lVisible, s_FullLine := ""
    ELSE                                   // C source file (HB_FUNC)
 #ENDIF
 
-      IF SubStr( cLine, 1, 8 ) == "HB_FUNC("
-         cLine := SubStr( cLine, 9 )
+      IF ;
+         SubStr( cLine, 1, Len( "HB_FUNC(" ) ) == "HB_FUNC(" .OR. ;
+         SubStr( cLine, 1, Len( "HB_CODEPAGE_INIT(" ) ) == "HB_CODEPAGE_INIT(" .OR. ;
+         SubStr( cLine, 1, Len( "HB_LANG_ANNOUNCE(" ) ) == "HB_LANG_ANNOUNCE(" .OR. ;
+         .F.
+
+         DO CASE
+         CASE SubStr( cLine, 1, Len( "HB_FUNC(" ) ) == "HB_FUNC(" ; s_cMethodType := ""
+         CASE SubStr( cLine, 1, Len( "HB_CODEPAGE_INIT(" ) ) == "HB_CODEPAGE_INIT(" ; s_cMethodType := "HB_CODEPAGE_"
+         CASE SubStr( cLine, 1, Len( "HB_LANG_ANNOUNCE(" ) ) == "HB_LANG_ANNOUNCE(" ; s_cMethodType := "HB_LANG_"
+         OTHERWISE
+         END
+
+         Parse( @cLine, "(" )
          IF ( nPos := AT( ")", cLine ) ) > 0
-            WriteSymbol( nOutput, AllTrim( SubStr( cLine, 1, nPos - 1 ) ), "C function", @bOutputHeader, @cHeader )
+            WriteSymbol( nOutput, cFile, s_cMethodType + AllTrim( SubStr( cLine, 1, nPos - 1 ) ), "C function", @bOutputHeader, @cHeader )
          ENDIF
       ENDIF
 
@@ -575,10 +706,42 @@ STATIC PROCEDURE FileEval( nHandle, nMaxLine, bBlock )
    FSeek( nHandle, 0 )
 
    DO WHILE FReadLn( nHandle, @cBuffer, nMaxLine )
-      Eval( bBlock, cBuffer )
+      IF SubStr( LTrim( cBuffer ), 1, 2 ) == "/*"
+         FSeek( nHandle, -( Len( cBuffer ) - 2 ), FS_RELATIVE )
+         IF .NOT. FReadUntil( nHandle, "*/" )
+            EXIT
+         ENDIF
+      ELSE
+         Eval( bBlock, cBuffer )
+      ENDIF
    ENDDO
 
    RETURN
+
+STATIC FUNCTION FReadUntil( nHandle, cMatch, cResult )
+   LOCAL cBuffer, nSavePos, nIdxMatch, nNumRead
+
+   DEFAULT cResult TO ""
+
+   DO WHILE nNumRead != 0
+      nSavePos := FSeek( nHandle, 0, FS_RELATIVE )
+      cBuffer := Space( 255 )
+      IF ( nNumRead := FRead( nHandle, @cBuffer, Len( cBuffer ) ) ) == 0
+         RETURN .F.
+      ENDIF
+      cBuffer := SubStr( cBuffer, 1, nNumRead )
+
+      IF ( nIdxMatch := At( cMatch, cBuffer ) ) > 0
+         cResult += SubStr( cBuffer, 1, nIdxMatch + Len( cMatch ) - 1 )
+         FSeek( nHandle, nSavePos + nIdxMatch + Len( cMatch ) - 1, FS_SET )
+         RETURN nNumRead != 0
+      ELSE
+         cResult += SubStr( cBuffer, 1, nNumRead - Len( cMatch ) )
+         FSeek( nHandle, -Len( cMatch ), FS_RELATIVE )
+      ENDIF
+   ENDDO
+
+   RETURN nNumRead != 0
 
 STATIC FUNCTION FReadLn( nHandle, cBuffer, nMaxLine )
 STATIC s_aEOL := { chr(13) + chr(10), chr(10), chr(13) }
@@ -601,24 +764,31 @@ STATIC s_aEOL := { chr(13) + chr(10), chr(10), chr(13) }
    NEXT
 
    IF nEol == 0
-     cBuffer := cLine
+      cBuffer := cLine
    ELSE
-     cBuffer := SubStr( cLine, 1, nEol - 1 )
-     FSeek( nHandle, nSavePos + nEol + nLenEol, FS_SET )
+      cBuffer := SubStr( cLine, 1, nEol - 1 )
+      FSeek( nHandle, nSavePos + nEol + nLenEol, FS_SET )
    ENDIF
 
    RETURN nNumRead != 0
 
-STATIC PROCEDURE WriteSymbol( nOutput, cLine, cMethodType, bOutputHeader, cHeader )
+STATIC PROCEDURE WriteSymbol( nOutput, cFile, cLine, cMethodType, bOutputHeader, cHeader )
+   LOCAL idxOutput, idxRepository
+   LOCAL cConditions
+
+   DEFAULT nOutput TO 0
+   DEFAULT cHeader TO ""
+
    IF Len( cLine ) > 0
       IF s_aSwitches[ sw_Case ] == 1
          cLine := Upper( cLine )
       ELSEIF s_aSwitches[ sw_Case ] == 2
          cLine := Lower( cLine )
       ENDIF
-      IF AScan( s_aSkipNames , {|c| Upper(c) == Upper(cLine) } ) == 0
+
+      IF HB_AScan( s_aSkipNames , {|c| Upper(c) == Upper(cLine) } ) == 0
          IF bOutputHeader
-            FWrite( nOutput, cHeader )
+            //~ FWrite( nOutput, cHeader )
             bOutputHeader := .F.
          ENDIF
 
@@ -626,10 +796,8 @@ STATIC PROCEDURE WriteSymbol( nOutput, cLine, cMethodType, bOutputHeader, cHeade
             AAdd( s_aSkipNames, cLine )
          ENDIF
 
-         IF cMethodType <> "C function"
-            IF s_aSwitches[ sw_ConditionalDepth ] == 0
-               AEval( s_aConditions, {|c| s_aSwitches[ sw_ConditionalDepth ]++, FWrite( nOutput, c + EOL ) } )
-            ENDIF
+         IF s_aSwitches[ sw_ConditionalDepth ] == 0
+            AEval( s_aConditions, {|/* c */| s_aSwitches[ sw_ConditionalDepth ]++/* , FWrite( nOutput, c + EOL ) */ } )
          ENDIF
 
          IF s_aSwitches[ sw_MimicHBExtern ].OR. Empty(cMethodType) .OR. s_aSwitches[ sw_ExcludeClassMethods ]
@@ -638,8 +806,38 @@ STATIC PROCEDURE WriteSymbol( nOutput, cLine, cMethodType, bOutputHeader, cHeade
             cMethodType = " // " + cMethodType
          ENDIF
 
-         FWrite( nOutput, "EXTERNAL " + cLine + cMethodType + EOL )
+         cConditions := ""
+         AEval( s_aConditions, {|c| cConditions += c + EOL } )
+         IF Len( cConditions ) > Len( EOL ) ; cConditions := SubStr( cConditions, 1, Len( cConditions ) - Len( EOL ) ) ; ENDIF
+
+         // the first entry has a hard-coded TRUE value so one will always be found
+         idxOutput := HB_RAScan( s_aOutput, {|ao| ;
+                         ao != NIL .AND. ;
+                         Eval( ao[ capt_Cond ], ao, cConditions, cLine, cFile ) ;
+                      } )
+         idxRepository := HB_AScan( s_aOutput[ idxOutput ][ capt_Repository ], {|ar| ;
+                           ar[ capt_Cond ] == cConditions ;
+                          } )
+         IF idxRepository == 0
+            AAdd( s_aOutput[ idxOutput ][ capt_Repository ], Capture( NIL, cConditions ) )
+            idxRepository := Len( s_aOutput[ idxOutput ][ capt_Repository ] )
+         ENDIF
+         AAdd( s_aOutput[ idxOutput ][ capt_Repository ][ idxRepository ][ capt_Repository ], cLine /* + cHeader */ )
+
+         //~ FWrite( nOutput, "EXTERNAL " + cLine + cMethodType + EOL )
       ENDIF
    ENDIF
 
    RETURN
+
+STATIC PROCEDURE CopyExistingTargetTo( nOutput )
+   LOCAL nInput
+   LOCAL cBuffer1, cBuffer2
+
+   IF ( nInput := FOpen( s_aSwitches[ sw_BaseDir ] + PATH_SEPARATOR + "include" + PATH_SEPARATOR + "hbextern.ch" ) ) > 0
+      // assume there are two comment blocks seperated by a blank line (svn header and copyright)
+      IF FReadUntil( nInput, "*/", @cBuffer1 ) .AND. FReadUntil( nInput, "*/", @cBuffer2 )
+         FWrite( nOutput, cBuffer1 + cBuffer2 + EOL + EOL )
+      ENDIF
+      FClose( nInput )
+   ENDIF

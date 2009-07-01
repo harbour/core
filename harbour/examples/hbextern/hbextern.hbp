@@ -2,6 +2,10 @@
 # $Id$
 #
 
+-q0
+-w2
+-es2
+
 -nulrdd
 
 hbextern.prg
