@@ -1400,10 +1400,9 @@ HB_FUNC( QT_DISCONNECT_EVENT )
 
 HB_FUNC( QT_QDEBUG )
 {
-   qDebug( hb_parcx( 1 ) );
+   qDebug( "%s", hb_parcx( 1 ) );
 }
 
 /*----------------------------------------------------------------------*/
 
 #endif
-

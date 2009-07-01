@@ -9,7 +9,7 @@ Ubuntu/Debian distro
 --------------------
 
 Packages needed to cleanly build Harbour:
-(Tested with Ubuntu 7.04 and 8.04)
+(Tested with Ubuntu 7.04, 8.04, 9.04)
 
 For GTCRS terminal lib:
 sudo apt-get install libncurses-dev
@@ -50,22 +50,25 @@ sudo apt-get install libmysqlclient15-dev
 For contrib/hbpgsql lib:
 sudo apt-get install libpq-dev
 
-For contrib/hbgf/hbgfgtk lib:
+For contrib/hbqt lib:
+sudo apt-get install libqt4-dev
+
+For examples/hbgf/hbgfgtk lib:
 sudo apt-get install libgtk2.0-dev
 sudo apt-get install libglib2.0-dev
 
 For contrib/rddads lib:
-Download and install 'Advantage Client Engine API for Linux' package 
+Download and install 'Advantage Client Engine API for Linux' package
 (f.e. aceapi-9.00.0.0.tar.gz)
 
 For contrib/hbhpdf lib:
-Download and './configure', 'make install' libharu 
+Download and './configure', 'make install' libharu
 from http://libharu.org/
 
 openSUSE distro
 ---------------
 
-You'll need these packages to compile certain contribs and optional 
+You'll need these packages to compile certain contribs and optional
 Harbour modules:
 - xorg-x11-devel
 - postgresql-devel
@@ -77,11 +80,11 @@ Harbour modules:
 - libmysqlclient-devel
 
 For contrib/rddads lib:
-Download and install 'Advantage Client Engine API for Linux' package 
+Download and install 'Advantage Client Engine API for Linux' package
 (f.e. aceapi-9.00.0.0.tar.gz)
 
 For contrib/libharu:
-- Download and './configure', 'make install' libharu 
+- Download and './configure', 'make install' libharu
   from http://libharu.org/
 - libpng-devel
 - zlib-devel
@@ -92,7 +95,7 @@ Notes by Scott Johnson <scomps at purplewire.org>
 
 Ok, I finally got something to run.  The code I compiled was standard
 Clipper 5.2 code pulled directly from a dos/win box and was working
-properly there.  
+properly there.
 
 I'm compiling under Debian Sarge which for their own reasons are using
 the Alpha Build 44.0.  It was installed with the standard apt-get
@@ -144,9 +147,9 @@ right after -lrdd, but I don't know if that's important or not. Maybe
 somebody can correct me there.
 
 After I saved it, I went back and issued the same bld.sh command as I
-did above, and lo!  It just worked.  
+did above, and lo!  It just worked.
 
-./inv 
+./inv
 
 As a side note, gtstd is probably not going to be very helpful for you
 in linux if you have any SAY/GET's as screen positioning (especially if
@@ -159,4 +162,4 @@ things that make people cringe.  It's a start though and maybe some
 folks can clean it up a bit and add/remove things that are important.
 At least this worked on my particular Debian system.   Your mileage may
 vary and other distributions will probably have their own setups and
-issues.  
+issues.
