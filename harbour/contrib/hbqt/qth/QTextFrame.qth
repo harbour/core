@@ -62,6 +62,7 @@ New      = pDocument
 
 <CODE>
 #include <QtGui/QTextFrame>
+#include <QtGui/QTextCursor>
 
 
 /*
@@ -95,7 +96,3 @@ void setFrameFormat ( const QTextFrameFormat & format )
 
 <SIGNALS>
 </SIGNALS>
-
-
-
-

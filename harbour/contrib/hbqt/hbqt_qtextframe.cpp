@@ -70,6 +70,7 @@
 
 
 #include <QtGui/QTextFrame>
+#include <QtGui/QTextCursor>
 
 
 /*
@@ -141,4 +142,3 @@ HB_FUNC( QT_QTEXTFRAME_SETFRAMEFORMAT )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-

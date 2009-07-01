@@ -55,13 +55,14 @@
 ;
 
 <CLASS>
-Inherits = 
+Inherits =
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 <CODE>
 #include <QtGui/QTextCursor>
+#include <QtGui/QTextDocumentFragment>
 
 
 /*
@@ -155,7 +156,3 @@ bool visualNavigation () const
 
 <SIGNALS>
 </SIGNALS>
-
-
-
-

@@ -57,11 +57,13 @@
 <CLASS>
 Inherits = QObject
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 <CODE>
 #include <QtGui/QTextDocument>
+#include <QtGui/QTextBlock>
+#include <QtGui/QTextCursor>
 
 
 /*
@@ -169,7 +171,3 @@ void redoAvailable ( bool available )
 void undoAvailable ( bool available )
 void undoCommandAdded ()
 </SIGNALS>
-
-
-
-

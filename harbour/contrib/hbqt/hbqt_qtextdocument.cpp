@@ -70,6 +70,8 @@
 
 
 #include <QtGui/QTextDocument>
+#include <QtGui/QTextBlock>
+#include <QtGui/QTextCursor>
 
 
 /*
@@ -614,4 +616,3 @@ HB_FUNC( QT_QTEXTDOCUMENT_UNDO_1 )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-

@@ -55,12 +55,14 @@
 ;
 
 <CLASS>
-Inherits = 
+Inherits =
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 <CODE>
+#include <qvariant.h>
+
 #include <QtWebKit/QWebHistoryItem>
 
 
@@ -93,7 +95,3 @@ QVariant userData () const
 
 <SIGNALS>
 </SIGNALS>
-
-
-
-
