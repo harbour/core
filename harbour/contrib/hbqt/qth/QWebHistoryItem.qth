@@ -64,6 +64,7 @@ New      =
 #include <qvariant.h>
 
 #include <QtWebKit/QWebHistoryItem>
+#include <QtCore/QVariant>
 
 
 /*

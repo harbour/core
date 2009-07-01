@@ -70,9 +70,9 @@
 
 
 #include <QtGui/QTextDocument>
+#include <QtGui/QTextDocumentFragment>
 #include <QtGui/QTextBlock>
 #include <QtGui/QTextCursor>
-
 
 /*
  * QTextDocument ( QObject * parent = 0 )
@@ -616,3 +616,4 @@ HB_FUNC( QT_QTEXTDOCUMENT_UNDO_1 )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
+

@@ -56,8 +56,6 @@
 #ifndef __HBQT_H
 #define __HBQT_H
 
-#include <qglobal.h>
-
 #if QT_VERSION >= 0x040500
 
 #define hbqt_par_QTranslator( n )            ( ( QTranslator* ) hb_parptr( n ) )
@@ -348,24 +346,8 @@
 #define hbqt_ret_QAbstractItemModel( p )     ( hb_retptr( ( QAbstractItemModel* ) p ) )
 #define hbqt_ret_QPrinter( p )               ( hb_retptr( ( QPrinter* ) p ) )
 
-#include <QtGui/QWidget>
-
-void    hbqt_ret_QRect( QRect );
-void    hbqt_ret_QSize( QSize );
-void    hbqt_ret_QPoint( QPoint );
-
-QRect   hbqt_const_QRect( int );
-QSize   hbqt_const_QSize( int );
-QPoint  hbqt_const_QPoint( int );
-
-void    hbqt_ret_QRectF( QRectF );
-void    hbqt_ret_QSizeF( QSizeF );
-void    hbqt_ret_QPointF( QPointF );
-
-QRectF  hbqt_const_QRectF( int );
-QSizeF  hbqt_const_QSizeF( int );
-QPointF hbqt_const_QPointF( int );
-
 #endif
 
 #endif /* __HBQT_H */
+
+

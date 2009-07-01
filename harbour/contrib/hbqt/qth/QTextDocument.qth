@@ -62,9 +62,9 @@ New      =
 
 <CODE>
 #include <QtGui/QTextDocument>
+#include <QtGui/QTextDocumentFragment>
 #include <QtGui/QTextBlock>
 #include <QtGui/QTextCursor>
-
 
 /*
  * QTextDocument ( QObject * parent = 0 )
