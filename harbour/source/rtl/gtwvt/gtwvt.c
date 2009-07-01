@@ -104,9 +104,9 @@ static HB_CRITICAL_NEW( s_wvtMtx );
 #define HB_WVT_LOCK     hb_threadEnterCriticalSection( &s_wvtMtx );
 #define HB_WVT_UNLOCK   hb_threadLeaveCriticalSection( &s_wvtMtx );
 
-#define _WVT_WS_DEF      ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME )
-#define _WVT_WS_NORESIZE ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_BORDER )
-#define _WVT_WS_MAXED    ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_THICKFRAME )
+#define _WVT_WS_DEF       ( WS_OVERLAPPEDWINDOW )
+#define _WVT_WS_NORESIZE  ( WS_OVERLAPPEDWINDOW & ~( WS_THICKFRAME ) )
+#define _WVT_WS_MAXED     ( WS_OVERLAPPEDWINDOW & ~( WS_MAXIMIZEBOX ) )
 
 static PHB_GTWVT  s_wvtWindows[ WVT_MAX_WINDOWS ];
 static int        s_wvtCount = 0;
