@@ -383,7 +383,7 @@ ULONG hb_parvcsiz( int iParam, ... )/* retrieve a by-reference string parameter 
    return 0;
 }
 
-char * hb_parvds( int iParam, ... ) /* retrieve a date as a string yyyymmdd */
+const char * hb_parvds( int iParam, ... ) /* retrieve a date as a string yyyymmdd */
 {
    FARPROC pParDs = GetProcAddress( GetModuleHandle( NULL ), HBTEXT( "_hb_parvds" ) );
    FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), HBTEXT( "_hb_extIsArray" ) );
