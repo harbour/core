@@ -36,18 +36,22 @@ DIRSEP = $(subst /,\,\)
 
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 
+ifneq ($(ComSpec),)
+   COMSPEC := $(ComSpec)
+endif
+
 ifeq ($(COMSPEC),) #location of command.com
-	ifeq ($(OS),Windows_NT)
-		COMSPEC := cmd.exe
-	else
-		COMSPEC := command.com
-	endif
+   ifeq ($(OS),Windows_NT)
+      COMSPEC := cmd.exe
+   else
+      COMSPEC := command.com
+   endif
 endif
 
 ifeq ($(findstring cmd.exe,$(COMSPEC)),cmd.exe)
-  CMD_EXE := yes
+   CMD_EXE := yes
 else
-  CMD_EXE := no
+   CMD_EXE := no
 endif
 
 RM = del

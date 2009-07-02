@@ -5,11 +5,15 @@
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
+ifneq ($(ComSpec),)
+   COMSPEC := $(ComSpec)
+endif
+
 CMDPREF:=
 ifeq ($(SHLVL),)
-ifneq ($(COMSPEC),)
-CMDPREF:=$(COMSPEC) /C
-endif
+   ifneq ($(COMSPEC),)
+      CMDPREF := $(COMSPEC) /C
+   endif
 endif
 
 ifneq ($(LIBNAME),)
