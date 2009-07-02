@@ -689,6 +689,7 @@ typedef unsigned long HB_COUNTER;
 /* TODO: Remove dependence on old types */
 
 /* Harbour overloaded types: */
+typedef int                 hbBool;
 typedef char                hbChar;           /* TOFIX */
 typedef SCHAR               hbSChar;
 typedef UCHAR               hbUChar;
@@ -717,8 +718,8 @@ typedef signed char         hbI8;
 typedef unsigned char       hbU8;
 
 /* Types which depends on internal HVM/compilation settings: */
-/* NOTE: hbMaxVMInt - maximal integer which can be storred in HVM item
-                      (HB_IT_LONG). It's current HB_LONG, usually will be
+/* NOTE: hbMaxVMInt - maximal integer which can be stored in HVM item
+                      (HB_IT_LONG). It's currently HB_LONG, usually will be
                       the same as hbIntMax unless for some reasons it will
                       not be reduced, f.e. compiler may support 128bit
                       integers as hbIntMax but we may don't use it for
