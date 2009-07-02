@@ -106,10 +106,12 @@ METHOD XbpStatic:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   LOCAL lThick := hb_bitAnd( ::options, XBPSTATIC_FRAMETHICK ) == XBPSTATIC_FRAMETHICK
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    DO CASE
+   // OK
    CASE ::type == XBPSTATIC_TYPE_TEXT
       ::oWidget := QLabel():new( ::pParent )
 
@@ -134,44 +136,68 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       IF ( hb_bitAnd( ::options, XBPSTATIC_TEXT_WORDBREAK ) == XBPSTATIC_TEXT_WORDBREAK )
          ::oWidget:setWordWrap( .T. )
       ENDIF
-
+   // OK
    CASE ::type == XBPSTATIC_TYPE_GROUPBOX
       ::oWidget := QGroupBox():new( ::pParent )
 
-   CASE ::type == XBPSTATIC_TYPE_FGNDFRAME     // rectangle in foreground color, not filled
-      ::oWidget := QFrame():new( ::pParent )
-
-   CASE ::type == XBPSTATIC_TYPE_BGNDFRAME
-      ::oWidget := QFrame():new( ::pParent )
-
-   CASE ::type == XBPSTATIC_TYPE_HALFTONEFRAME
-      ::oWidget := QFrame():new( ::pParent )
-
-   CASE ::type == XBPSTATIC_TYPE_FGNDRECT
-      ::oWidget := QFrame():new( ::pParent )
-
-   CASE ::type == XBPSTATIC_TYPE_BGNDRECT
-      ::oWidget := QFrame():new( ::pParent )
-
-   CASE ::type == XBPSTATIC_TYPE_RAISEDRECT
-      ::oWidget := QFrame():new( ::pParent )
-      ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Raised )
-
-   CASE ::type == XBPSTATIC_TYPE_RECESSEDRECT
-      ::oWidget := QFrame():new( ::pParent )
-      ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Sunken )
-
-   CASE ::type == XBPSTATIC_TYPE_HALFTONERECT
-      ::oWidget := QFrame():new( ::pParent )
-
+   // OK
    CASE ::type == XBPSTATIC_TYPE_RAISEDBOX
       ::oWidget := QFrame():new( ::pParent )
       ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Raised )
-
+      ::setColorBG( GraMakeRGBColor( { 198, 198, 198 } ) )
+      IF lThick
+         ::oWidget:setLineWidth( 2 )
+      ENDIF
+   // OK
    CASE ::type == XBPSTATIC_TYPE_RECESSEDBOX
       ::oWidget := QFrame():new( ::pParent )
       ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Sunken )
-
+      ::setColorBG( GraMakeRGBColor( { 198, 198, 198 } ) )
+      IF lThick
+         ::oWidget:setLineWidth( 2 )
+      ENDIF
+   // OK
+   CASE ::type == XBPSTATIC_TYPE_RAISEDRECT
+      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Raised )
+      IF lThick
+         ::oWidget:setLineWidth( 2 )
+      ENDIF
+   // OK
+   CASE ::type == XBPSTATIC_TYPE_RECESSEDRECT
+      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Sunken )
+      IF lThick
+         ::oWidget:setLineWidth( 2 )
+      ENDIF
+   // OK
+   CASE ::type == XBPSTATIC_TYPE_FGNDFRAME     // rectangle in foreground color, not filled
+      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Plain )
+      ::setColorFG( GraMakeRGBColor( { 0, 0, 0 } ) )
+   // OK
+   CASE ::type == XBPSTATIC_TYPE_BGNDFRAME
+      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget:setFrameStyle( QFrame_Box + QFrame_Plain )
+      ::setColorFG( GraMakeRGBColor( { 127, 127, 127 } ) )
+   // OK
+   CASE ::type == XBPSTATIC_TYPE_FGNDRECT
+      ::oWidget := QFrame():new( ::pParent )
+      ::setColorBG( GraMakeRGBColor( { 0, 0, 0 } ) )
+   // OK
+   CASE ::type == XBPSTATIC_TYPE_BGNDRECT
+      ::oWidget := QFrame():new( ::pParent )
+      ::setColorBG( GraMakeRGBColor( { 127, 127, 127 } ) )
+   // OK
+   CASE ::type == XBPSTATIC_TYPE_HALFTONERECT
+      ::oWidget := QFrame():new( ::pParent )
+      ::setColorBG( GraMakeRGBColor( { 255, 255, 255 } ) )
+   // OK
+   CASE ::type == XBPSTATIC_TYPE_HALFTONEFRAME
+      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget:setFrameStyle( QFrame_Box + QFrame_Plain )
+      ::setColorFG( GraMakeRGBColor( { 255, 255, 255 } ) )
+   // OK
    CASE ::type == XBPSTATIC_TYPE_RAISEDLINE
       ::oWidget := QFrame():new( ::pParent )
       IF ::aPos[ 1 ] + ::aSize[ 1 ] >= ::aPos[ 2 ] + ::aSize[ 2 ]
@@ -179,7 +205,7 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ELSE
          ::oWidget:setFrameStyle( QFrame_VLine + QFrame_Raised )
       ENDIF
-
+   // OK
    CASE ::type == XBPSTATIC_TYPE_RECESSEDLINE
       ::oWidget := QFrame():new( ::pParent )
       IF ::aPos[ 1 ] + ::aSize[ 1 ] >= ::aPos[ 2 ] + ::aSize[ 2 ]
@@ -199,27 +225,6 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
 
    ENDCASE
-
-   #if 0
-   /* Options */
-   IF ( ascan( { XBPSTATIC_TYPE_FGNDFRAME, XBPSTATIC_TYPE_BGNDFRAME, XBPSTATIC_TYPE_HALFTONEFRAME }, ::type ) > 0 )
-      IF     ( hb_bitAnd( ::options, XBPSTATIC_FRAMETHIN ) == XBPSTATIC_FRAMETHIN )
-         ::style += WS_BORDER
-
-      ELSEIF ( hb_bitAnd( ::options, XBPSTATIC_FRAMETHICK ) == XBPSTATIC_FRAMETHICK )
-         ::style += WS_DLGFRAME
-
-      ENDIF
-   ENDIF
-
-   IF ::type == XBPSTATIC_TYPE_TEXT
-      IF ::options == XBPSTATIC_FRAMETHIN
-         ::style += WS_BORDER
-      ELSEIF ::options == XBPSTATIC_FRAMETHICK
-         ::style += WS_DLGFRAME
-      ENDIF
-   ENDIF
-   #endif
 
 
    ::setPosAndSize()

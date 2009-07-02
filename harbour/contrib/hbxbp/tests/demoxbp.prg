@@ -340,17 +340,18 @@ FUNCTION Build_PushButton( oDA )
 
     oXbp := XbpPushButton():new( oDA )
     oXbp:caption := "A"
-    oXbp:create( , , {30,370}, {100,40} )
+    oXbp:create( , , {30,370}, {90,40} )
     oXbp:activate:= {|| MsgBox( "Pushbutton A" ) }
     /* Harbour supports presentation colors */
-    oXbp:setColorBG( GraMakeRGBColor( {133,240,90} ) )
+    //oXbp:setColorBG( GraMakeRGBColor( {133,240,90} ) )
+    oXbp:setColorBG( GraMakeRGBColor( {0,0,255} ) )
 
     oXbp := XbpPushButton():new( oDA )
     oXbp:caption := "new.png"
-    oXbp:create( , , {140,370}, {100,40} )
+    oXbp:create( , , {140,370}, {90,40} )
     oXbp:activate:= {|| MsgBox( "Pushbutton B" ) }
     /* Harbour supports presentation colors */
-    oXbp:setColorBG( GraMakeRGBColor( {0,255,255} ) )
+    oXbp:setColorBG( GraMakeRGBColor( {255,255,0} ) )
 
     RETURN nil
 
@@ -441,7 +442,7 @@ FUNCTION Build_RadioButton( oStatic )
 
 FUNCTION Build_TabPages( oDlg )
    LOCAL oTab1, oTab2, oTab3, oTab4
-   LOCAL nHeight := 380
+   LOCAL nHeight := 390
 
    // First tab page is maximized
 
@@ -792,11 +793,12 @@ PROCEDURE FieldStruct( oItem, aField )
 FUNCTION Build_Statics( oWnd )
    LOCAL oGrp,oLbl, oLin, oBox
 
-   oGrp := XbpStatic():new( oWnd, , {250,10}, {240,200} )
+   oGrp := XbpStatic():new( oWnd, , {250,10}, {240,400} )
    oGrp:type := XBPSTATIC_TYPE_GROUPBOX
    oGrp:caption := " Harbour-QT-Statics "
    oGrp:create()
-   oGrp:setColorFG( GraMakeRGBColor( { 0,255,255 } ) )
+   oGrp:setColorFG( GraMakeRGBColor( {   0,255,255 } ) )
+   oGrp:setColorBG( GraMakeRGBColor( { 134,128,220 } ) )
 
    oLbl := XbpStatic():new( oGrp, , {10,20}, {220,30} )
    oLbl:type    := XBPSTATIC_TYPE_TEXT
@@ -807,31 +809,78 @@ FUNCTION Build_Statics( oWnd )
 
    oLbl:setColorFG( GraMakeRGBColor( { 255,0,0 } ) )
 
+   // OK
    oLin := XbpStatic():new( oGrp, , {50,60}, {180,10} )
    oLin:type := XBPSTATIC_TYPE_RAISEDLINE
    oLin:create()
-
+   // OK
    oLin := XbpStatic():new( oGrp, , {50,80}, {180,10} )
    oLin:type := XBPSTATIC_TYPE_RECESSEDLINE
    oLin:create()
-
+   // OK
    oLin := XbpStatic():new( oGrp, , {10,60}, {10,100} )
    oLin:type := XBPSTATIC_TYPE_RAISEDLINE
    oLin:create()
-
+   // OK
    oLin := XbpStatic():new( oGrp, , {25,60}, {10,100} )
    oLin:type := XBPSTATIC_TYPE_RECESSEDLINE
    oLin:create()
-
+   // OK
    oBox := XbpStatic():new( oGrp, , {50,110}, {50,50} )
    oBox:type := XBPSTATIC_TYPE_RAISEDBOX
+   oBox:options := XBPSTATIC_FRAMETHICK
    oBox:create()
-
+   // OK
    oBox := XbpStatic():new( oGrp, , {120,110}, {50,50} )
    oBox:type := XBPSTATIC_TYPE_RECESSEDBOX
+   oBox:options := XBPSTATIC_FRAMETHICK
+   oBox:create()
+   // OK
+   oBox := XbpStatic():new( oGrp, , {50,170}, {50,50} )
+   oBox:type := XBPSTATIC_TYPE_RAISEDRECT
+   oBox:options := XBPSTATIC_FRAMETHICK
+   oBox:create()
+   // OK
+   oBox := XbpStatic():new( oGrp, , {120,170}, {50,50} )
+   oBox:type := XBPSTATIC_TYPE_RECESSEDRECT
+   oBox:options := XBPSTATIC_FRAMETHICK
+   oBox:create()
+   // OK
+   oBox := XbpStatic():new( oGrp, , {50,230}, {50,50} )
+   oBox:type := XBPSTATIC_TYPE_FGNDFRAME
+   oBox:options := XBPSTATIC_FRAMETHICK
+   oBox:create()
+   // OK
+   oBox := XbpStatic():new( oGrp, , {120,230}, {50,50} )
+   oBox:type := XBPSTATIC_TYPE_BGNDFRAME
+   oBox:options := XBPSTATIC_FRAMETHICK
+   oBox:create()
+   // OK
+   oBox := XbpStatic():new( oGrp, , {50,290}, {50,50} )
+   oBox:type := XBPSTATIC_TYPE_FGNDRECT
+   oBox:options := XBPSTATIC_FRAMETHICK
+   oBox:create()
+   // OK
+   oBox := XbpStatic():new( oGrp, , {120,290}, {50,50} )
+   oBox:type := XBPSTATIC_TYPE_BGNDRECT
+   oBox:options := XBPSTATIC_FRAMETHICK
+   oBox:create()
+   // OK
+   oBox := XbpStatic():new( oGrp, , {50,350}, {50,40} )
+   oBox:type := XBPSTATIC_TYPE_HALFTONERECT
+   oBox:options := XBPSTATIC_FRAMETHICK
+   oBox:create()
+   // OK
+   oBox := XbpStatic():new( oGrp, , {120,350}, {50,40} )
+   oBox:type := XBPSTATIC_TYPE_HALFTONEFRAME
+   oBox:options := XBPSTATIC_FRAMETHICK
+   oBox:create()
+
+   oBox := XbpStatic():new( oGrp, , {180,350}, {40,40} )
+   oBox:type := XBPSTATIC_TYPE_SYSICON
+   oBox:caption := XBPSTATIC_SYSICON_ICONQUESTION
    oBox:create()
 
    RETURN nil
 
 /*----------------------------------------------------------------------*/
-
