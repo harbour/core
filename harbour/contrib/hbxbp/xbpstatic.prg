@@ -80,7 +80,7 @@ CLASS XbpStatic  INHERIT  XbpWindow
    DATA     caption                               INIT ""
    DATA     clipParent                            INIT .T.
    DATA     clipSiblings                          INIT .F.
-   DATA     options                               INIT -1
+   DATA     options                               INIT 0
    DATA     type                                  INIT -1
 
    DATA     hBitmap
@@ -205,6 +205,9 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ELSE
          ::oWidget:setFrameStyle( QFrame_VLine + QFrame_Raised )
       ENDIF
+      IF lThick
+         ::oWidget:setMidLineWidth( 1 )
+      ENDIF
    // OK
    CASE ::type == XBPSTATIC_TYPE_RECESSEDLINE
       ::oWidget := QFrame():new( ::pParent )
@@ -213,16 +216,18 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ELSE
          ::oWidget:setFrameStyle( QFrame_VLine + QFrame_Sunken )
       ENDIF
+      IF lThick
+         ::oWidget:setMidLineWidth( 1 )
+      ENDIF
 
    CASE ::type == XBPSTATIC_TYPE_ICON
+      ::oWidget := QFrame():new( ::pParent )
 
    CASE ::type == XBPSTATIC_TYPE_SYSICON
+      ::oWidget := QFrame():new( ::pParent )
 
    CASE ::type == XBPSTATIC_TYPE_BITMAP
-      IF     ::options == XBPSTATIC_BITMAP_TILED
-      ELSEIF ::options == XBPSTATIC_BITMAP_SCALED
-      ELSE
-      ENDIF
+      ::oWidget := QFrame():new( ::pParent )
 
    ENDCASE
 
@@ -281,6 +286,11 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
          ::oWidget:setText( ::caption )
 
       CASE ::type == XBPSTATIC_TYPE_BITMAP
+         IF ::options == XBPSTATIC_BITMAP_SCALED
+            ::oWidget:setStyleSheet( 'background: url('+ ::caption +') center no-repeat;' )
+         ELSE
+            ::oWidget:setStyleSheet( 'background: url('+ ::caption +'); repeat-xy;' )
+         ENDIF
       ENDCASE
    ENDIF
 

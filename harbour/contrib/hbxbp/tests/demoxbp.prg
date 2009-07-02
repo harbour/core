@@ -506,7 +506,7 @@ FUNCTION Build_ListBox( oWnd )
    oListBox:ItemSelected := {|mp1, mp2, obj| mp1:=oListBox:getData(), ;
                               mp2:=oListBox:getItem( mp1 ), MsgBox( "itemSelected: "+mp2 ) }
    oListBox:setColorFG( GraMakeRGBColor( {227,12,110} ) )
-   oListBox:setColorBG( GraMakeRGBColor( { 27,12, 45} ) )
+   oListBox:setColorBG( GraMakeRGBColor( {50,45,170} ) )
 
    oListBox:setPointer( , XBPSTATIC_SYSICON_MOVE, XBPWINDOW_POINTERTYPE_SYSPOINTER )
 
@@ -558,7 +558,7 @@ FUNCTION Build_SLEs( oWnd )
    LOCAL cVarA := "Test A", cVarB := "Test B"
 
    // Create second SLE, specify position using :new()
-   oXbp              := XbpSLE():new( oWnd, , {30,150}, {100,30} )
+   oXbp              := XbpSLE():new( oWnd, , {30,320}, {90,30} )
    oXbp:tabStop      := .T.
    oXbp:bufferLength := 15
    oXbp:dataLink     := {|x| IIf( x==NIL, cVarA, cVarA := x ) }
@@ -574,7 +574,7 @@ FUNCTION Build_SLEs( oWnd )
    oXbp:bufferLength := 20
    // Data code block containing assignment to LOCAL variable
    oXbp:dataLink     := {|x| IIf( x==NIL, cVarB, cVarB := x ) }
-   oXbp:create( oWnd, , {30,200}, {100,30} )
+   oXbp:create( oWnd, , {140,320}, {90,30} )
    oXbp:setData()
    // Assign the value of the edit buffer to a LOCAL variable
    // when the input focus is lost
@@ -792,6 +792,9 @@ PROCEDURE FieldStruct( oItem, aField )
 
 FUNCTION Build_Statics( oWnd )
    LOCAL oGrp,oLbl, oLin, oBox
+   LOCAL nC1 := 10, nC2 := 45, nC3 := 110, nC4 := 175
+   LOCAL nW := 50, nH := 50, nG := 10
+   LOCAL nT := 60
 
    oGrp := XbpStatic():new( oWnd, , {250,10}, {240,400} )
    oGrp:type := XBPSTATIC_TYPE_GROUPBOX
@@ -806,81 +809,119 @@ FUNCTION Build_Statics( oWnd )
    oLbl:caption := "Harbour-QT"
    oLbl:create()
    oLbl:setFontCompoundName( "18.Courier normal" )
-
    oLbl:setColorFG( GraMakeRGBColor( { 255,0,0 } ) )
 
    // OK
-   oLin := XbpStatic():new( oGrp, , {50,60}, {180,10} )
+   oLin := XbpStatic():new( oGrp, , {nC2,nT}, {180,10} )
    oLin:type := XBPSTATIC_TYPE_RAISEDLINE
    oLin:create()
    // OK
-   oLin := XbpStatic():new( oGrp, , {50,80}, {180,10} )
+   oLin := XbpStatic():new( oGrp, , {nC2,nT+15}, {180,10} )
    oLin:type := XBPSTATIC_TYPE_RECESSEDLINE
+   oLin:options := XBPSTATIC_FRAMETHICK
    oLin:create()
+
+   nT := 100
    // OK
-   oLin := XbpStatic():new( oGrp, , {10,60}, {10,100} )
+   oLin := XbpStatic():new( oGrp, , {nC1,nT}, {10,170} )
    oLin:type := XBPSTATIC_TYPE_RAISEDLINE
+   oLin:options := XBPSTATIC_FRAMETHICK
    oLin:create()
    // OK
-   oLin := XbpStatic():new( oGrp, , {25,60}, {10,100} )
+   oLin := XbpStatic():new( oGrp, , {nC1+15,nT}, {10,170} )
    oLin:type := XBPSTATIC_TYPE_RECESSEDLINE
    oLin:create()
+
    // OK
-   oBox := XbpStatic():new( oGrp, , {50,110}, {50,50} )
+   oBox := XbpStatic():new( oGrp, , {nC2,nT}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_RAISEDBOX
-   oBox:options := XBPSTATIC_FRAMETHICK
    oBox:create()
    // OK
-   oBox := XbpStatic():new( oGrp, , {120,110}, {50,50} )
+   oBox := XbpStatic():new( oGrp, , {nC3,nT}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_RECESSEDBOX
-   oBox:options := XBPSTATIC_FRAMETHICK
    oBox:create()
    // OK
-   oBox := XbpStatic():new( oGrp, , {50,170}, {50,50} )
+   oBox := XbpStatic():new( oGrp, , {nC2,nT+nH+nG}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_RAISEDRECT
    oBox:options := XBPSTATIC_FRAMETHICK
    oBox:create()
    // OK
-   oBox := XbpStatic():new( oGrp, , {120,170}, {50,50} )
+   oBox := XbpStatic():new( oGrp, , {nC3,nT+nH+nG}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_RECESSEDRECT
    oBox:options := XBPSTATIC_FRAMETHICK
    oBox:create()
    // OK
-   oBox := XbpStatic():new( oGrp, , {50,230}, {50,50} )
+   oBox := XbpStatic():new( oGrp, , {nC2,nT+(nH+nG)*2}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_FGNDFRAME
    oBox:options := XBPSTATIC_FRAMETHICK
    oBox:create()
    // OK
-   oBox := XbpStatic():new( oGrp, , {120,230}, {50,50} )
+   oBox := XbpStatic():new( oGrp, , {nC3,nT+(nH+nG)*2}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_BGNDFRAME
    oBox:options := XBPSTATIC_FRAMETHICK
    oBox:create()
    // OK
-   oBox := XbpStatic():new( oGrp, , {50,290}, {50,50} )
+   oBox := XbpStatic():new( oGrp, , {nC2,nT+(nH+nG)*3}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_FGNDRECT
    oBox:options := XBPSTATIC_FRAMETHICK
    oBox:create()
    // OK
-   oBox := XbpStatic():new( oGrp, , {120,290}, {50,50} )
+   oBox := XbpStatic():new( oGrp, , {nC3,nT+(nH+nG)*3}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_BGNDRECT
    oBox:options := XBPSTATIC_FRAMETHICK
    oBox:create()
    // OK
-   oBox := XbpStatic():new( oGrp, , {50,350}, {50,40} )
+   oBox := XbpStatic():new( oGrp, , {nC2,nT+(nH+nG)*4}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_HALFTONERECT
    oBox:options := XBPSTATIC_FRAMETHICK
    oBox:create()
    // OK
-   oBox := XbpStatic():new( oGrp, , {120,350}, {50,40} )
+   oBox := XbpStatic():new( oGrp, , {nC3,nT+(nH+nG)*4}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_HALFTONEFRAME
    oBox:options := XBPSTATIC_FRAMETHICK
    oBox:create()
-   #if 0
-   oBox := XbpStatic():new( oGrp, , {180,350}, {40,40} )
-   oBox:type := XBPSTATIC_TYPE_SYSICON
-   oBox:caption := XBPSTATIC_SYSICON_ICONQUESTION
+
+   #ifdef __HARBOUR__
+   oBox := XbpStatic():new( oGrp, , {nC4,nT}, {nW,nH+nH+nG} )
+   oBox:type := XBPSTATIC_TYPE_BITMAP
+   oBox:options := XBPSTATIC_BITMAP_SCALED
+   oBox:caption := 'paste.png'
    oBox:create()
+   oBox:setColorBG( GraMakeRGBColor( { 0,100,100 } ) )
+
+   oBox := XbpStatic():new( oGrp, , {nC4,nT+(nH+nG)*2}, {nW,nH+nH+nG} )
+   oBox:type := XBPSTATIC_TYPE_BITMAP
+   oBox:options := XBPSTATIC_BITMAP_TILED
+   oBox:caption := 'cut.png'
+   oBox:create()
+   oBox:setColorBG( GraMakeRGBColor( { 100,0,100 } ) )
    #endif
+
+   #define CRLF chr(13)+chr(10)
+
+   oLbl := XbpStatic():new( oWnd, , {30,60}, {200,240} )
+   oLbl:type    := XBPSTATIC_TYPE_TEXT
+   oLbl:options := XBPSTATIC_TEXT_CENTER + XBPSTATIC_TEXT_VCENTER + XBPSTATIC_TEXT_WORDBREAK
+   oLbl:caption := "The GroupBox at the right demonstrates many static controls" + CRLF + ;
+                   "  " + CRLF +;
+                   "XBPSTATIC_TYPE_TEXT"   + CRLF + ;
+                   "XBPSTATIC_TYPE_*LINE"  + CRLF + ;
+                   "XBPSTATIC_TYPE_*BOX"   + CRLF + ;
+                   "XBPSTATIC_TYPE_*RECT"  + CRLF + ;
+                   "XBPSTATIC_TYPE_*FRAME" + CRLF + ;
+                   "XBPSTATIC_TYPE_BITMAP" + CRLF + ;
+                   "  " + CRLF +;
+                   "BITMAP"+ CRLF +;
+                   "though, is not exactly Xbase++ compatible in the sense " +;
+                   "that it is not pulled from a resource" + CRLF + ;
+                   "( to be addressed later )"
+
+   oLbl:create()
+   oLbl:setFontCompoundName( "8.Times normal" )
+   oLbl:setColorBG( GraMakeRGBColor( { 100,0,150 } ) )
+   oLbl:setColorFG( GraMakeRGBColor( { 255,255,0 } ) )
+   oLbl:setPointer( , XBPSTATIC_SYSICON_SIZE, XBPWINDOW_POINTERTYPE_SYSPOINTER )
+
    RETURN nil
 
 /*----------------------------------------------------------------------*/
