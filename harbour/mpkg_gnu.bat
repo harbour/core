@@ -12,14 +12,15 @@ rem Harbour Project installer creator script (for Windows/DOS)
 rem
 rem This script requires:
 rem    - Windows NT or upper
+rem    - Info-ZIP zip.exe in PATH
+rem         or HB_DIR_ZIP envvar set to its dir with an ending backslash.
+rem         https://sourceforge.net/project/showfiles.php?group_id=118012
 rem    - NullSoft Installer installed (NSIS)
 rem         https://sourceforge.net/project/showfiles.php?group_id=22049&package_id=15374
 rem      (only for Windows builds)
 rem    - makensis.exe (part of NSIS) in PATH
 rem         or HB_DIR_NSIS envvar set to its dir with an ending backslash.
 rem      (only for Windows builds)
-rem    - Info-ZIP zip.exe in PATH
-rem         https://sourceforge.net/project/showfiles.php?group_id=118012
 rem    - C compiler configured (see INSTALL doc)
 rem
 rem Please read INSTALL for further information.
@@ -77,7 +78,7 @@ echo Harbour .zip install package creation: '%HB_PKGNAME%.zip'
 if exist "%HB_PKGNAME%.zip" del "%HB_PKGNAME%.zip"
 pushd
 cd "%HB_INSTALL_BASE%"
-zip -q -9 -X -r -o "%~dp0%HB_PKGNAME%.zip" . -i "%HB_DIRNAME%\*"
+"%HB_DIR_ZIP%zip.exe" -q -9 -X -r -o "%~dp0%HB_PKGNAME%.zip" . -i "%HB_DIRNAME%\*"
 popd
 
 rem ; Build installer package
