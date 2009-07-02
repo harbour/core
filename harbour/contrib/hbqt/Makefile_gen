@@ -226,13 +226,6 @@ CPP_SOURCES=\
 	moc_slots.cpp \
 
 
-C_HEADERS=\
-	hbqt.h \
-	hbqt_slots.h \
-
-#PRG_HEADERS=\
-#   hbqt.ch \
-#   hbqtextern.ch \
 
 PRG_SOURCES=\
 	TQAbstractButton.prg \
