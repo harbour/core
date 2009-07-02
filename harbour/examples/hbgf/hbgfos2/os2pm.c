@@ -88,15 +88,15 @@ MRESULT EXPENTRY WndProc( HWND hWnd, ULONG Msg, MPARAM mp1, MPARAM mp2 )
          hb_vmPushState();
          hb_vmPushDynSym( s_pDynSym );
          hb_vmPushNil();
-         hb_vmPushLong( ( LONG ) hWnd );
-         hb_vmPushLong( ( LONG ) Msg );
-         hb_vmPushLong( ( LONG ) mp1 );
-         hb_vmPushLong( ( LONG ) mp2 );
+         hb_vmPushLong( ( long ) hWnd );
+         hb_vmPushLong( ( long ) Msg );
+         hb_vmPushLong( ( long ) mp1 );
+         hb_vmPushLong( ( long ) mp2 );
          hb_vmDo( 4 );
          if( hb_arrayGetType( hb_param( -1, HB_IT_ANY ), 1 ) == HB_IT_NIL )
-            mResult = (MRESULT) WinDefWindowProc( hWnd, Msg, mp1, mp2 );
+            mResult = ( MRESULT ) WinDefWindowProc( hWnd, Msg, mp1, mp2 );
          else
-            mResult = (MRESULT) hb_parnl( -1, 1 );
+            mResult = ( MRESULT ) hb_parnl( -1, 1 );
          hb_vmPopState();
 
          return mResult;

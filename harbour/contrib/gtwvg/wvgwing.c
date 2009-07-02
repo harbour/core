@@ -1174,10 +1174,10 @@ LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPA
          hb_vmPushSymbol( &hb_symEval );
          hb_vmPush( pBlock );
       }
-      hb_vmPushLong( ( HB_PTRDIFF ) hwnd );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) hwnd );
       hb_vmPushInteger( msg );
-      hb_vmPushLong( ( HB_PTRDIFF ) wParam );
-      hb_vmPushLong( ( HB_PTRDIFF ) lParam );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) wParam );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) lParam );
       hb_vmDo( 4 );
       lRet = ( long ) hb_parnint( -1 );
       return lRet;

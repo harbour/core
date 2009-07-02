@@ -92,10 +92,10 @@ typedef FHANDLE * FHANDLEP;
 #define _fsLock                 hb_fsLock
 #define _fsMkDir                hb_fsMkDir
 #define _fsOpen                 hb_fsOpen
-#define _fsRead( a, b, c )      hb_fsRead( a, ( BYTE * ) ( b ), c )
+#define _fsRead                 hb_fsRead
 #define _fsRmDir                hb_fsRmDir
 #define _fsRename               hb_fsRename
 #define _fsSeek                 hb_fsSeek
-#define _fsWrite( a, b, c )     hb_fsWrite( a, ( BYTE * ) ( b ), c )
+#define _fsWrite                hb_fsWrite
 
 #endif /* _FILESYS_API */
