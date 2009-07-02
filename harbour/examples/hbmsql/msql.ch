@@ -60,7 +60,7 @@
 #define MSQL_TEXT_TYPE        6
 #define MSQL_DATE_TYPE        7
 
-/* NOTE: UINT is used to map clipper logical values to mSQL tables, so 0 == .F., 1 == .T. */
+/* NOTE: integer is used to map clipper logical values to mSQL tables, so 0 == .F., 1 == .T. */
 #define MSQL_UINT_TYPE        8
 #define MSQL_MONEY_TYPE       9
 #define MSQL_TIME_TYPE        10

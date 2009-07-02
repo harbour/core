@@ -127,7 +127,7 @@ HB_FUNC( TIP_TIMESTAMP )
       hb_snprintf( szRet, 64, "%s, %d %s %d %02u:%02u:%02u %+03d%02d",
             days[ hb_dateDOW( iYear, iMonth, iDay ) - 1 ], iDay,
             months[ iMonth -1], iYear,
-            (UINT)( ulHour / 3600 ), (UINT)( (ulHour % 3600) / 60 ), (UINT)( ulHour % 60 ),
+            (unsigned int)( ulHour / 3600 ), (unsigned int)( (ulHour % 3600) / 60 ), (unsigned int)( ulHour % 60 ),
             (int)( tzInfo.Bias / 60 ),
             (int)( tzInfo.Bias % 60 > 0 ? - tzInfo.Bias % 60 : tzInfo.Bias % 60 ) );
    }
