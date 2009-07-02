@@ -511,6 +511,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL l_aLIBSHARED
    LOCAL l_aLIBSHAREDPOST := {}
    LOCAL l_aLIB
+   LOCAL l_aLIBA
    LOCAL l_aLIBRAW
    LOCAL l_aLIBVM
    LOCAL l_aLIBHB
@@ -1988,6 +1989,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          {LO}     list of object files
          {LA}     list of object archive (.a) files
          {LL}     list of lib files
+         {LB}     list of lib files with paths
          {FC}     flags for C compiler (user + automatic)
          {FL}     flags for linker (user + automatic)
          {OW}     working dir (when in -inc mode)
@@ -2077,9 +2079,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF ! lStopAfterCComp
             IF hbmk[ _HBMK_cARCH ] == "linux" .OR. ;
                hbmk[ _HBMK_cARCH ] == "bsd"
-               AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} -Wl,--end-group" )
+               AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
             ELSE
-               AAdd( hbmk[ _HBMK_aOPTL ], "{LL}" )
+               AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
                aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, l_aLIBVM } )
             ENDIF
          ENDIF
@@ -2257,9 +2259,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          IF ! lStopAfterCComp
             IF hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"
-               AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} -Wl,--end-group" )
+               AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
             ELSE
-               AAdd( hbmk[ _HBMK_aOPTL ], "{LL}" )
+               AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
                aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, l_aLIBVM } )
             ENDIF
          ENDIF
@@ -2332,7 +2334,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_lSHARED ]
             AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_BIN_INSTALL )
          ENDIF
-         AAdd( hbmk[ _HBMK_aOPTL ], "{LL}" )
+         AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
          aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, l_aLIBVM } )
          IF ! hbmk[ _HBMK_lSHARED ]
             l_aLIBSYS := ArrayJoin( l_aLIBSYS, { "socket" } )
@@ -2377,9 +2379,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cBin_Lib := "ar.exe"
          cOpt_Lib := "{FA} rcs {OL} {LO}{SCRIPT}"
          IF hbmk[ _HBMK_cCOMP ] == "djgpp"
-            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} -Wl,--end-group" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
          ELSE
-            AAdd( hbmk[ _HBMK_aOPTL ], "{LL}" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
             aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, l_aLIBVM } )
          ENDIF
          IF hbmk[ _HBMK_lMAP ]
@@ -2437,7 +2439,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          ENDIF
          cBin_Link := "wlink.exe"
-         cOpt_Link := "SYS causeway {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
+         cOpt_Link := "SYS causeway {FL} NAME {OE} {LO} {DL} {LL} {LB}{SCRIPT}"
          cBin_Lib := "wlib.exe"
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
@@ -2491,7 +2493,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          ENDIF
          cBin_Link := "wlink.exe"
-         cOpt_Link := "{FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
+         cOpt_Link := "{FL} NAME {OE} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
          cBin_Lib := "wlib.exe"
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
@@ -2569,7 +2571,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          ENDIF
          cBin_Link := "wlink.exe"
-         cOpt_Link := "{FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
+         cOpt_Link := "{FL} NAME {OE} {LO} {DL} {LL} {LB}{SCRIPT}"
          cBin_Lib := "wlib.exe"
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
@@ -2622,7 +2624,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          ENDIF
          cBin_Link := "wlink"
-         cOpt_Link := "SYS LINUX {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
+         cOpt_Link := "SYS LINUX {FL} NAME {OE} {LO} {DL} {LL} {LB}{SCRIPT}"
          cBin_Lib := "wlib"
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
@@ -2672,8 +2674,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cResExt := ".res"
          cBin_Link := "ilink32.exe"
          cBin_Dyn := cBin_Link
-         cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
-         cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
+         cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
+         cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
          cLibPathPrefix := ""
          cLibPathSep := ";"
          IF hbmk[ _HBMK_lGUI ]
@@ -2759,7 +2761,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          nCmd_Esc := _ESC_DBLQUOTE
          cOpt_Lib := "/nologo {FA} /out:{OL} {LO}"
-         cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
+         cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LB} {LS}"
          cOpt_CompC := "-nologo -c -Gs"
          IF hbmk[ _HBMK_lOPTIM ]
             IF hbmk[ _HBMK_cCOMP ] == "msvcarm"
@@ -2778,7 +2780,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          cOpt_CompC += " {FC} {LC}"
          cOptIncMask := "-I{DI}"
-         cOpt_Link := "/nologo /out:{OE} {LO} {DL} {FL} {LL} {LS}"
+         cOpt_Link := "/nologo /out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
          IF hbmk[ _HBMK_lMAP ]
@@ -2898,7 +2900,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cWorkDir := "."
          ENDIF
          cOptIncMask := "/I{DI}"
-         cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
+         cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LB} {LS}"
          DO CASE
          CASE hbmk[ _HBMK_cCOMP ] == "pocc"
             IF hbmk[ _HBMK_lOPTIM ]
@@ -2920,7 +2922,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_lMT ]
             AAdd( hbmk[ _HBMK_aOPTC ], "/MT" )
          ENDIF
-         cOpt_Link := "/out:{OE} {LO} {DL} {FL} {LL} {LS}"
+         cOpt_Link := "/out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
          IF hbmk[ _HBMK_lSHARED ]
@@ -3388,10 +3390,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       /* Merge lib lists. */
       l_aLIBRAW := ArrayAJoin( { hbmk[ _HBMK_aLIBUSER ], l_aLIBHB, l_aLIB3RD, l_aLIBSYS } )
       /* Dress lib names. */
-      l_aLIB := ListCookLib( hbmk, l_aLIBRAW, NIL, cLibExt )
+      l_aLIB := {}
+      l_aLIBA := {}
+      ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBRAW, NIL, cLibExt )
       IF hbmk[ _HBMK_lSHARED ] .AND. ! Empty( l_aLIBSHARED )
          l_aLIBRAW := ArrayJoin( l_aLIBSHARED, l_aLIBRAW )
-         l_aLIB := ArrayJoin( ListCookLib( hbmk, l_aLIBSHARED, NIL ), l_aLIB )
+         ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBSHARED, NIL )
       ENDIF
       /* Dress obj names. */
       l_aOBJ := ListDirExt( ArrayJoin( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_aC ] ), cWorkDir, cObjExt )
@@ -3570,6 +3574,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cOpt_CompC := StrTran( cOpt_CompC, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], "", cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, cResPrefix ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LA}"  , ArrayToList( l_aOBJA,, nOpt_Esc ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, cLibPrefix ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OD}"  , FN_Escape( PathSepToTarget( hbmk, FN_DirGet( l_cPROGNAME ) ), nOpt_Esc ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OE}"  , FN_Escape( PathSepToTarget( hbmk, l_cPROGNAME ), nOpt_Esc ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OM}"  , FN_Escape( PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, ".map" ) ), nOpt_Esc ) )
@@ -3755,6 +3760,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], cWorkDir, cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, cResPrefix ) )
                cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( l_aOBJA,, nOpt_Esc ) )
                cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, cLibPrefix ) )
+               cOpt_Link := StrTran( cOpt_Link, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc ) )
                cOpt_Link := StrTran( cOpt_Link, "{OE}"  , FN_Escape( PathSepToTarget( hbmk, l_cPROGNAME ), nOpt_Esc ) )
                cOpt_Link := StrTran( cOpt_Link, "{OM}"  , FN_Escape( PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, ".map" ) ), nOpt_Esc ) )
                cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, cLibPathPrefix ) )
@@ -3813,6 +3819,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                cOpt_Lib := StrTran( cOpt_Lib, "{FA}"  , GetEnv( "HB_USER_AFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTA ] ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, cLibObjPrefix ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, cLibPrefix ) )
+               cOpt_Lib := StrTran( cOpt_Lib, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{OL}"  , FN_Escape( PathSepToTarget( hbmk, l_cPROGNAME ), nOpt_Esc ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, cLibPathPrefix ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{DB}"  , l_cHB_BIN_INSTALL )
@@ -3871,6 +3878,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, cDynObjPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], cWorkDir, cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, cResPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, cLibPrefix ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OD}"  , FN_Escape( PathSepToTarget( hbmk, l_cPROGNAME ), nOpt_Esc ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OM}"  , FN_Escape( PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, ".map" ) ), nOpt_Esc ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, cLibPathPrefix ) )
@@ -4552,35 +4560,41 @@ STATIC FUNCTION ListDirExt( arraySrc, cDirNew, cExtNew )
    RETURN array
 
 /* Forms the list of libs as to appear on the command line */
-STATIC FUNCTION ListCookLib( hbmk, arraySrc, cPrefix, cExtNew )
-   LOCAL array := AClone( arraySrc )
+STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
    LOCAL cDir
    LOCAL cLibName
+   LOCAL cLibNameCooked
 
    IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|djgpp|cygwin"
       FOR EACH cLibName IN array
          hb_FNameSplit( cLibName, @cDir )
          IF Empty( cDir )
+            cLibNameCooked := cLibName
 #if 0
             /* Don't attempt to strip this as it can be valid for libs which have double lib prefixes (f.e. libpng) */
-            IF Left( cLibName, 3 ) == "lib"
-               cLibName := SubStr( cLibName, 4 )
+            IF Left( cLibNameCooked, 3 ) == "lib"
+               cLibNameCooked := SubStr( cLibNameCooked, 4 )
             ENDIF
 #endif
             IF cPrefix != NIL
-               cLibName := cPrefix + cLibName
+               cLibNameCooked := cPrefix + cLibNameCooked
             ENDIF
             IF cExtNew != NIL
-               cLibName := FN_ExtSet( cLibName, cExtNew )
+               cLibNameCooked := FN_ExtSet( cLibNameCooked, cExtNew )
             ENDIF
+            AAdd( aLIB, cLibNameCooked )
+         ELSE
+            AAdd( aLIBA, cLibName )
          ENDIF
       NEXT
    ELSE
-      IF cExtNew != NIL
-         FOR EACH cLibName IN array
-            cLibName := FN_ExtSet( cLibName, cExtNew )
-         NEXT
-      ENDIF
+      FOR EACH cLibName IN array
+         IF cExtNew != NIL
+            AAdd( aLIB, FN_ExtSet( cLibName, cExtNew ) )
+         ELSE
+            AAdd( aLIB, cLibName )
+         ENDIF
+      NEXT
    ENDIF
 
    RETURN array
