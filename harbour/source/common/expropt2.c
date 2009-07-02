@@ -451,7 +451,7 @@ static void hb_compExprReduceTimeStampPut( HB_EXPR_PTR pExpr, LONG lJulian, LONG
 
 static void hb_compExprReduceTimeStampAdd( HB_EXPR_PTR pExpr, HB_EXPR_PTR pTimeStamp, double dValue )
 {
-   LONG lJulian, lMilliSec;
+   long lJulian, lMilliSec;
 
    hb_timeStampUnpackDT( dValue, &lJulian, &lMilliSec );
 

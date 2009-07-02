@@ -94,15 +94,16 @@ static gint ButtonPressCallback( GtkWidget *Widget, GdkEventButton *Event, gpoin
     PHB_ITEM ReturnArray = hb_itemArrayNew( HGF_EVENTDATA_MAXLEN );
     PHB_ITEM ArrayItem = hb_itemNew( NULL );
 
-    if( !Form ) Form = Widget;
+    if( !Form )
+       Form = Widget;
 
-    hb_itemPutND( ArrayItem, ( double )Event->y );
+    hb_itemPutND( ArrayItem, ( double ) Event->y );
     hb_itemArrayPut( ReturnArray, 1, ArrayItem );
 
-    hb_itemPutND( ArrayItem, ( double )Event->x );
+    hb_itemPutND( ArrayItem, ( double ) Event->x );
     hb_itemArrayPut( ReturnArray, 2, ArrayItem );
 
-    hb_itemPutNL( ArrayItem, ( LONG )Event->state & 0xFF );
+    hb_itemPutNL( ArrayItem, ( long ) Event->state & 0xFF );
     hb_itemArrayPut( ReturnArray, 3, ArrayItem );
 
     switch ( ButtonNO )
@@ -135,7 +136,7 @@ HB_FUNC( HB_GTKWINDOWCREATE )
     /* for the future enhancements */
     gint YSize=400, XSize=500;
 
-    gint WinID = ( gint )hb_parni( 1 );
+    gint WinID = ( gint ) hb_parni( 1 );
 
     MainWin = gtk_window_new( GTK_WINDOW_TOPLEVEL );
     gtk_window_set_default_size( GTK_WINDOW( MainWin ), XSize, YSize );

@@ -3026,7 +3026,7 @@ static void hb_vmNegate( void )
    }
 }
 
-static void hb_vmTimeStampPut( HB_ITEM_PTR pItem, LONG lJulian, LONG lMilliSec )
+static void hb_vmTimeStampPut( HB_ITEM_PTR pItem, long lJulian, long lMilliSec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmTimeStampPut(%p,%ld,%ld)", pItem, lJulian, lMilliSec));
 
@@ -3073,7 +3073,7 @@ static void hb_vmTimeStampPut( HB_ITEM_PTR pItem, LONG lJulian, LONG lMilliSec )
 
 static void hb_vmTimeStampAdd( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem, double dValue )
 {
-   LONG lJulian, lMilliSec;
+   long lJulian, lMilliSec;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmTimeStampAdd(%p,%p,%lf)", pResult, pItem, dValue));
 
