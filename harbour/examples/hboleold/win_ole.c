@@ -797,11 +797,11 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
                  break;
 
                case VT_BYREF | VT_I4:
-                 hb_itemPutNL( pItem, ( LONG ) *pVariant->n1.n2.n3.plVal );
+                 hb_itemPutNL( pItem, ( long ) *pVariant->n1.n2.n3.plVal );
                  break;
 
                case VT_I4:
-                 hb_itemPutNL( pItem, ( LONG ) pVariant->n1.n2.n3.lVal );
+                 hb_itemPutNL( pItem, ( long ) pVariant->n1.n2.n3.lVal );
                  break;
 
   #ifndef HB_LONG_LONG_OFF
@@ -990,7 +990,7 @@ static PHB_ITEM SafeArrayToArray( SAFEARRAY * parray, UINT iDim, long * rgIndice
    /* Wrap our array with VTArrayWrapper() class ( aArray := VTArrayWrapper( vt, aArray) ) */
    if( HB_IS_ARRAY( pArray ) && vt != VT_VARIANT )
    {
-      PHB_ITEM pVT = hb_itemPutNL( hb_itemNew( NULL ), ( LONG ) vt );
+      PHB_ITEM pVT = hb_itemPutNL( hb_itemNew( NULL ), ( long ) vt );
 
       hb_vmPushDynSym( s_pSym_VTArrayWrapper );
       hb_vmPushNil();
@@ -1076,7 +1076,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
          {
             if( pUnk )
             {
-               PHB_ITEM pVT = hb_itemPutNL( hb_itemNew( NULL ), ( LONG ) pVariant->n1.n2.vt );
+               PHB_ITEM pVT = hb_itemPutNL( hb_itemNew( NULL ), ( long ) pVariant->n1.n2.vt );
                PHB_ITEM pUnknown = hb_itemPutPtr( hb_itemNew( NULL ), ( void * ) pUnk );
 
                hb_vmPushDynSym( s_pSym_VTWrapper );
@@ -1152,14 +1152,14 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
       case VT_UI4 | VT_BYREF:
       case VT_INT | VT_BYREF:
       case VT_UINT | VT_BYREF:
-         hb_itemPutNL( pItem, ( LONG ) *pVariant->n1.n2.n3.plVal );
+         hb_itemPutNL( pItem, ( long ) *pVariant->n1.n2.n3.plVal );
          break;
 
       case VT_I4:     /* Long (4 bytes) */
       case VT_UI4:
       case VT_INT:
       case VT_UINT:
-         hb_itemPutNL( pItem, ( LONG ) pVariant->n1.n2.n3.lVal );
+         hb_itemPutNL( pItem, ( long ) pVariant->n1.n2.n3.lVal );
          break;
 
       case VT_R4 | VT_BYREF:     /* Single */
@@ -1645,7 +1645,7 @@ static void OleThrowError( void )
 
    /*HB_TRACE(HB_TR_INFO, ("Desc: '%s'\n", sDescription));*/
 
-   pReturn = hb_errRT_SubstParams( hb_parcx( -1 ), EG_OLEEXCEPTION, (ULONG) s_nOleError, sDescription, hb_itemGetSymbol( hb_stackBaseItem() )->szName );
+   pReturn = hb_errRT_SubstParams( hb_parcx( -1 ), EG_OLEEXCEPTION, ( ULONG ) s_nOleError, sDescription, hb_itemGetSymbol( hb_stackBaseItem() )->szName );
 
    if( fFree )
    {

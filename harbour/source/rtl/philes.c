@@ -390,7 +390,7 @@ HB_FUNC( HB_FSETATTR )
 
 HB_FUNC( HB_FSETDATETIME )
 {
-   LONG lDate = -1, lTime = -1;
+   long lDate = -1, lTime = -1;
 
    if( HB_ISTIMESTAMP( 2 ) )
       hb_partdt( &lDate, &lTime, 2 );
@@ -411,7 +411,7 @@ HB_FUNC( HB_FSETDATETIME )
 
 HB_FUNC( HB_FGETDATETIME )
 {
-   LONG lJulian, lMillisec;
+   long lJulian, lMillisec;
 
    if( hb_fsGetFileTime( hb_parcx( 1 ), &lJulian, &lMillisec ) )
    {

@@ -91,7 +91,7 @@ extern HB_EXPORT char *       hb_itemGetDS     ( PHB_ITEM pItem, char * szDate )
 extern HB_EXPORT char *       hb_itemGetTS     ( PHB_ITEM pItem, char * szDateTime );
 extern HB_EXPORT long         hb_itemGetDL     ( PHB_ITEM pItem );
 extern HB_EXPORT double       hb_itemGetTD     ( PHB_ITEM pItem );
-extern HB_EXPORT BOOL         hb_itemGetTDT    ( PHB_ITEM pItem, LONG * plJulian, LONG * plMilliSec );
+extern HB_EXPORT BOOL         hb_itemGetTDT    ( PHB_ITEM pItem, long * plJulian, long * plMilliSec );
 extern HB_EXPORT BOOL         hb_itemGetL      ( PHB_ITEM pItem );
 extern HB_EXPORT double       hb_itemGetND     ( PHB_ITEM pItem );
 extern HB_EXPORT double       hb_itemGetNDDec  ( PHB_ITEM pItem, int * piDec );
@@ -118,7 +118,7 @@ extern HB_EXPORT PHB_ITEM     hb_itemPutDS     ( PHB_ITEM pItem, const char * sz
 extern HB_EXPORT PHB_ITEM     hb_itemPutTS     ( PHB_ITEM pItem, const char * szDateTime );
 extern HB_EXPORT PHB_ITEM     hb_itemPutDL     ( PHB_ITEM pItem, long lJulian );
 extern HB_EXPORT PHB_ITEM     hb_itemPutTD     ( PHB_ITEM pItem, double dTimeStamp );
-extern HB_EXPORT PHB_ITEM     hb_itemPutTDT    ( PHB_ITEM pItem, LONG lJulian, LONG lMilliSec );
+extern HB_EXPORT PHB_ITEM     hb_itemPutTDT    ( PHB_ITEM pItem, long lJulian, long lMilliSec );
 extern HB_EXPORT PHB_ITEM     hb_itemPutL      ( PHB_ITEM pItem, BOOL bValue );
 extern HB_EXPORT PHB_ITEM     hb_itemPutND     ( PHB_ITEM pItem, double dNumber );
 extern HB_EXPORT PHB_ITEM     hb_itemPutNI     ( PHB_ITEM pItem, int iNumber );

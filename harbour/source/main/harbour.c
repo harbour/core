@@ -90,10 +90,10 @@ typedef struct _HB_MEMINFO
 #endif
 
 static PHB_MEMINFO s_pMemBlocks = NULL;
-static LONG s_ulMemoryBlocks = 0;      /* memory blocks used */
-static LONG s_ulMemoryMaxBlocks = 0;   /* maximum number of used memory blocks */
-static LONG s_ulMemoryMaxConsumed = 0; /* memory size consumed */
-static LONG s_ulMemoryConsumed = 0;    /* memory max size consumed */
+static long s_ulMemoryBlocks = 0;      /* memory blocks used */
+static long s_ulMemoryMaxBlocks = 0;   /* maximum number of used memory blocks */
+static long s_ulMemoryMaxConsumed = 0; /* memory size consumed */
+static long s_ulMemoryConsumed = 0;    /* memory max size consumed */
 
 #endif /* HB_FM_STATISTICS */
 

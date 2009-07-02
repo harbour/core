@@ -383,7 +383,7 @@ long hb_dateUnformat( const char * szDate, const char * szDateFormat )
  *    16 for "hh:mm:ss:ffff pp"
  * always safe buffer size is 17 (+1 for 0)
  */
-char * hb_timeFormat( char * szBuffer, const char * szTimeFormat, LONG lMilliSec )
+char * hb_timeFormat( char * szBuffer, const char * szTimeFormat, long lMilliSec )
 {
    char * szTimeBuffer;
    int iHour, iMinutes, iSeconds, iMSec, iPM, i12;
@@ -509,7 +509,7 @@ char * hb_timeFormat( char * szBuffer, const char * szTimeFormat, LONG lMilliSec
  */
 char * hb_timeStampFormat( char * szBuffer,
                            const char * szDateFormat, const char * szTimeFormat,
-                           LONG lJulian, LONG lMilliSec )
+                           long lJulian, long lMilliSec )
 {
    char szDate[ 9 ], * szTimeBuffer;
 
@@ -524,7 +524,7 @@ char * hb_timeStampFormat( char * szBuffer,
    return szBuffer;
 }
 
-LONG hb_timeUnformat( const char * szTime, const char * szTimeFormat )
+long hb_timeUnformat( const char * szTime, const char * szTimeFormat )
 {
    int iHour, iMinutes, iSeconds, iMSec, iPM;
    int size, i, count, prec, * pValue;
@@ -629,7 +629,7 @@ LONG hb_timeUnformat( const char * szTime, const char * szTimeFormat )
 
 void hb_timeStampUnformat( const char * szDateTime,
                            const char * szDateFormat, const char * szTimeFormat,
-                           LONG * plJulian, LONG * plMilliSec )
+                           long * plJulian, long * plMilliSec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_timeStampUnformat(%s, %s, %s, %p, %p)", szDateTime, szDateFormat, szTimeFormat, plJulian, plMilliSec));
 

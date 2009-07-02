@@ -192,7 +192,7 @@
 
    #if !defined( INVALID_SET_FILE_POINTER ) && \
        ( defined(__DMC__) || defined( _MSC_VER ) || defined( __LCC__ ) )
-      #define INVALID_SET_FILE_POINTER ((DWORD)-1)
+      #define INVALID_SET_FILE_POINTER ( ( DWORD ) -1 )
    #endif
    #if !defined( INVALID_FILE_ATTRIBUTES )
       #define INVALID_FILE_ATTRIBUTES     ( ( DWORD ) -1 )
@@ -921,7 +921,7 @@ BOOL hb_fsSetDevMode( HB_FHANDLE hFileHandle, USHORT uiDevMode )
 #endif
 }
 
-BOOL hb_fsGetFileTime( const char * pszFileName, LONG * plJulian, LONG * plMillisec )
+BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMillisec )
 {
    BOOL fResult;
 
@@ -1088,7 +1088,7 @@ BOOL hb_fsGetAttr( const char * pszFileName, ULONG * pulAttr )
    return fResult;
 }
 
-BOOL hb_fsSetFileTime( const char * pszFileName, LONG lJulian, LONG lMillisec )
+BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec )
 {
    BOOL fResult;
    int iYear, iMonth, iDay;
@@ -1491,7 +1491,7 @@ ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount )
    {
       hb_vmUnlock();
       ulRead = read( hFileHandle, pBuff, ulCount );
-      hb_fsSetIOError( ulRead != (ULONG) -1, 0 );
+      hb_fsSetIOError( ulRead != ( ULONG ) -1, 0 );
       if( ulRead == ( ULONG ) -1 )
          ulRead = 0;
       hb_vmLock();
@@ -1670,7 +1670,7 @@ ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount, HB_FOFFS
       #else
          ulRead = pread( hFileHandle, pBuff, ulCount, llOffset );
       #endif
-      hb_fsSetIOError( ulRead != (ULONG) -1, 0 );
+      hb_fsSetIOError( ulRead != ( ULONG ) -1, 0 );
       if( ulRead == ( ULONG ) -1 )
          ulRead = 0;
       hb_vmLock();
@@ -1729,7 +1729,7 @@ ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount, H
       #else
          ulWritten = pwrite( hFileHandle, pBuff, ulCount, llOffset );
       #endif
-      hb_fsSetIOError( ulWritten != (ULONG) -1, 0 );
+      hb_fsSetIOError( ulWritten != ( ULONG ) -1, 0 );
       if( ulWritten == ( ULONG ) -1 )
          ulWritten = 0;
       hb_vmLock();
@@ -2217,7 +2217,7 @@ BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
       hb_vmLock();
    }
 #else
-   bResult = hb_fsLock( hFileHandle, (ULONG) ulStart, (ULONG) ulLength, uiMode );
+   bResult = hb_fsLock( hFileHandle, ( ULONG ) ulStart, ( ULONG ) ulLength, uiMode );
 #endif
 
    return bResult;
@@ -2265,35 +2265,35 @@ ULONG hb_fsSeek( HB_FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
       /* This DOS hack creates 2GB file size limit, Druzus */
       if( lOffset < 0 && Flags == SEEK_SET )
       {
-         ulPos = (ULONG) INVALID_SET_FILE_POINTER;
+         ulPos = ( ULONG ) INVALID_SET_FILE_POINTER;
          hb_fsSetError( 25 ); /* 'Seek Error' */
       }
       else
       {
-         ulPos = (DWORD) SetFilePointer( DosToWinHandle( hFileHandle ), lOffset, NULL, ( DWORD ) Flags );
-         hb_fsSetIOError( (DWORD) ulPos != INVALID_SET_FILE_POINTER, 0 );
+         ulPos = ( DWORD ) SetFilePointer( DosToWinHandle( hFileHandle ), lOffset, NULL, ( DWORD ) Flags );
+         hb_fsSetIOError( ( DWORD ) ulPos != INVALID_SET_FILE_POINTER, 0 );
       }
 
-      if( (DWORD) ulPos == INVALID_SET_FILE_POINTER )
+      if( ( DWORD ) ulPos == INVALID_SET_FILE_POINTER )
       {
-         ulPos = (DWORD) SetFilePointer( DosToWinHandle( hFileHandle ), 0, NULL, SEEK_CUR );
+         ulPos = ( DWORD ) SetFilePointer( DosToWinHandle( hFileHandle ), 0, NULL, SEEK_CUR );
       }
    #else
       /* This DOS hack creates 2GB file size limit, Druzus */
       if( lOffset < 0 && Flags == SEEK_SET )
       {
-         ulPos = (ULONG) -1;
+         ulPos = ( ULONG ) -1;
          hb_fsSetError( 25 ); /* 'Seek Error' */
       }
       else
       {
          ulPos = lseek( hFileHandle, lOffset, Flags );
-         hb_fsSetIOError( ulPos != (ULONG) -1, 0 );
+         hb_fsSetIOError( ulPos != ( ULONG ) -1, 0 );
       }
-      if( ulPos == (ULONG) -1 )
+      if( ulPos == ( ULONG ) -1 )
       {
          ulPos = lseek( hFileHandle, 0L, SEEK_CUR );
-         if( ulPos == (ULONG) -1 )
+         if( ulPos == ( ULONG ) -1 )
          {
             ulPos = 0;
          }
@@ -2331,7 +2331,7 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT u
       else
       {
          ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
-                                       ulOffsetLow, (PLONG) &ulOffsetHigh,
+                                       ulOffsetLow, ( PLONG ) &ulOffsetHigh,
                                        ( DWORD ) Flags );
          llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
          hb_fsSetIOError( llPos != ( HB_FOFFSET ) INVALID_SET_FILE_POINTER, 0 );
@@ -2341,7 +2341,7 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT u
       {
          ulOffsetHigh = 0;
          ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
-                                       0, (PLONG) &ulOffsetHigh, SEEK_CUR );
+                                       0, ( PLONG ) &ulOffsetHigh, SEEK_CUR );
          llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
       }
       hb_vmLock();
@@ -2359,7 +2359,7 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT u
       else
       {
          llPos = lseek64( hFileHandle, llOffset, Flags );
-         hb_fsSetIOError( llPos != (HB_FOFFSET) -1, 0 );
+         hb_fsSetIOError( llPos != ( HB_FOFFSET ) -1, 0 );
       }
 
       if( llPos == (HB_FOFFSET) -1 )
@@ -2369,7 +2369,7 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT u
       hb_vmLock();
    }
 #else
-   llPos = (HB_FOFFSET) hb_fsSeek( hFileHandle, (LONG) llOffset, uiFlags );
+   llPos = (HB_FOFFSET) hb_fsSeek( hFileHandle, ( LONG ) llOffset, uiFlags );
 #endif
 
    return llPos;

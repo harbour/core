@@ -1502,7 +1502,7 @@ static HB_ERRCODE hb_fptReadRawSMTItem( FPTAREAP pArea, PHB_ITEM pItem, HB_FOFFS
          if( hb_fileReadAt( pArea->pMemoFile, buffer, 4, *pfOffset ) != 4 )
             return EDBF_READ;
          *pfOffset += 4;
-         hb_itemPutDL( pItem, ( LONG ) HB_GET_LE_UINT32( buffer ) );
+         hb_itemPutDL( pItem, ( long ) HB_GET_LE_UINT32( buffer ) );
          break;
 
       case SMT_IT_LOGICAL:
@@ -1612,7 +1612,7 @@ static HB_ERRCODE hb_fptReadSMTItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * b
                errCode = EDBF_CORRUPT;
                break;
             }
-            hb_itemPutDL( pItem, ( LONG ) HB_GET_LE_UINT32( *pbMemoBuf ) );
+            hb_itemPutDL( pItem, ( long ) HB_GET_LE_UINT32( *pbMemoBuf ) );
             *pbMemoBuf += 4;
             break;
 
@@ -1811,7 +1811,7 @@ static HB_ERRCODE hb_fptReadSixItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * b
       switch ( usType )
       {
          case FPTIT_SIX_LNUM:
-            hb_itemPutNL( pItem, ( LONG ) HB_GET_LE_UINT32( &(*pbMemoBuf)[6] ) );
+            hb_itemPutNL( pItem, ( long ) HB_GET_LE_UINT32( &(*pbMemoBuf)[6] ) );
             break;
 
          case FPTIT_SIX_DNUM:
@@ -1821,7 +1821,7 @@ static HB_ERRCODE hb_fptReadSixItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * b
             break;
 
          case FPTIT_SIX_LDATE:
-            hb_itemPutDL( pItem, ( LONG ) HB_GET_LE_UINT32( &(*pbMemoBuf)[6] ) );
+            hb_itemPutDL( pItem, ( long ) HB_GET_LE_UINT32( &(*pbMemoBuf)[6] ) );
             break;
 
          case FPTIT_SIX_LOG:
@@ -2088,7 +2088,7 @@ static HB_ERRCODE hb_fptReadFlexItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * 
       case FPTIT_FLEXAR_DATEX:
          if( bBufEnd - (*pbMemoBuf) >= 4 )
          {
-            hb_itemPutDL( pItem, ( LONG ) HB_GET_LE_UINT32( *pbMemoBuf ) );
+            hb_itemPutDL( pItem, ( long ) HB_GET_LE_UINT32( *pbMemoBuf ) );
             *pbMemoBuf += 4;
          }
          else
@@ -2267,7 +2267,7 @@ static HB_ERRCODE hb_fptReadFlexItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * 
       case FPTIT_FLEXAR_LONG:
          if( bBufEnd - (*pbMemoBuf) >= 4 )
          {
-            hb_itemPutNL( pItem, ( LONG ) HB_GET_LE_UINT32( *pbMemoBuf ) );
+            hb_itemPutNL( pItem, ( long ) HB_GET_LE_UINT32( *pbMemoBuf ) );
             *pbMemoBuf += 4;
          }
          else
@@ -2771,22 +2771,22 @@ static HB_ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
                hb_itemPutL( pItem, FALSE );
                break;
             case FPTIT_FLEX_LDATE:
-               hb_itemPutDL( pItem, (LONG) HB_GET_LE_UINT32( pBuffer ) );
+               hb_itemPutDL( pItem, ( long ) HB_GET_LE_UINT32( pBuffer ) );
                break;
             case FPTIT_FLEX_CHAR:
-               hb_itemPutNI( pItem, (signed char) pBuffer[0] );
+               hb_itemPutNI( pItem, ( signed char ) pBuffer[0] );
                break;
             case FPTIT_FLEX_UCHAR:
-               hb_itemPutNI( pItem, (BYTE) pBuffer[0] );
+               hb_itemPutNI( pItem, ( BYTE ) pBuffer[0] );
                break;
             case FPTIT_FLEX_SHORT:
-               hb_itemPutNI( pItem, (SHORT) HB_GET_LE_UINT16( pBuffer ) );
+               hb_itemPutNI( pItem, ( SHORT ) HB_GET_LE_UINT16( pBuffer ) );
                break;
             case FPTIT_FLEX_USHORT:
                hb_itemPutNInt( pItem, HB_GET_LE_UINT16( pBuffer ) );
                break;
             case FPTIT_FLEX_LONG:
-               hb_itemPutNL( pItem, (LONG) HB_GET_LE_UINT32( pBuffer ) );
+               hb_itemPutNL( pItem, ( long ) HB_GET_LE_UINT32( pBuffer ) );
                break;
             case FPTIT_FLEX_ULONG:
                hb_itemPutNInt( pItem, HB_GET_LE_UINT32( pBuffer ) );
@@ -2801,7 +2801,7 @@ static HB_ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
                break;
             case FPTIT_TEXT:
 #ifndef HB_CDP_SUPPORT_OFF
-               hb_cdpnTranslate( ( char *) pBuffer, pArea->area.cdPage, hb_vmCDP(), ulSize );
+               hb_cdpnTranslate( ( char * ) pBuffer, pArea->area.cdPage, hb_vmCDP(), ulSize );
 #endif
                pBuffer[ ulSize ] = '\0';
                hb_itemPutCLPtr( pItem, ( char * ) pBuffer, ulSize );

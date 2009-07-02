@@ -769,7 +769,7 @@ static PHB_ITEM hb_cdxKeyGetItem( LPCDXKEY pKey, PHB_ITEM pItem, LPCDXTAG pTag, 
             break;
          case 'D':
             HB_ORD2DBL( pKey->val, &d );
-            pItem = hb_itemPutDL( pItem, ( LONG ) d );
+            pItem = hb_itemPutDL( pItem, ( long ) d );
             break;
          case 'T':
             HB_ORD2DBL( pKey->val, &d );

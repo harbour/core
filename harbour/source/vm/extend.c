@@ -342,7 +342,7 @@ char * hb_pardsbuff( char * szDate, int iParam )
 
 /* retrieve a date as long integer - number of days from Julian's day */
 
-LONG  hb_pardl( int iParam )
+long hb_pardl( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -383,7 +383,7 @@ double hb_partd( int iParam )
    return 0;
 }
 
-BOOL hb_partdt( LONG * plJulian, LONG * plMilliSec , int iParam )
+BOOL hb_partdt( long * plJulian, long * plMilliSec , int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -813,7 +813,7 @@ char  * hb_parvdsbuff( char * szDate, int iParam, ... )
 
 /* retrieve a date as long integer - number of days from Julian's day */
 
-LONG  hb_parvdl( int iParam, ... )
+long hb_parvdl( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -876,7 +876,7 @@ double hb_parvtd( int iParam, ... )
    return 0;
 }
 
-BOOL hb_parvtdt( LONG * plJulian, LONG * plMilliSec , int iParam, ... )
+BOOL hb_parvtdt( long * plJulian, long * plMilliSec , int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1338,7 +1338,7 @@ void hb_rettd( double dTimeStamp )
 }
 
 #undef hb_rettdt
-void hb_rettdt( LONG lJulian, LONG lMilliSec )
+void hb_rettdt( long lJulian, long lMilliSec )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1644,7 +1644,7 @@ int hb_stortd( double dTimeStamp, int iParam )
    return 0;
 }
 
-int hb_stortdt( LONG lJulian, LONG lMilliSec, int iParam )
+int hb_stortdt( long lJulian, long lMilliSec, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -2075,7 +2075,7 @@ int hb_storvtd( double dTimeStamp, int iParam, ... )
    return 0;
 }
 
-int hb_storvtdt( LONG lJulian, LONG lMilliSec, int iParam, ... )
+int hb_storvtdt( long lJulian, long lMilliSec, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 

@@ -56,7 +56,7 @@
 HB_FUNC( EMPTY )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
-   LONG lDate, lTime;
+   long lDate, lTime;
    PHB_SYMB pSym;
 
    switch( hb_itemType( pItem ) )
@@ -117,4 +117,3 @@ HB_FUNC( EMPTY )
          break;
    }
 }
-

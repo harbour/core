@@ -3029,7 +3029,7 @@ void hb_compGenPushLong( HB_LONG lNumber, HB_COMP_DECL )
    }
 }
 
-void hb_compGenPushDate( LONG lDate, HB_COMP_DECL )
+void hb_compGenPushDate( long lDate, HB_COMP_DECL )
 {
    BYTE pBuffer[ 5 ];
 
@@ -3038,7 +3038,7 @@ void hb_compGenPushDate( LONG lDate, HB_COMP_DECL )
    hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), HB_COMP_PARAM );
 }
 
-void hb_compGenPushTimeStamp( LONG lDate, LONG lTime, HB_COMP_DECL )
+void hb_compGenPushTimeStamp( long lDate, long lTime, HB_COMP_DECL )
 {
    BYTE pBuffer[ 9 ];
 

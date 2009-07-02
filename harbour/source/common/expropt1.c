@@ -337,7 +337,7 @@ HB_EXPR_PTR hb_compExprNewLong( HB_LONG lValue, HB_COMP_DECL )
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprNewDate( LONG lDate, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewDate( long lDate, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -345,14 +345,14 @@ HB_EXPR_PTR hb_compExprNewDate( LONG lDate, HB_COMP_DECL )
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_DATE );
 
-   pExpr->value.asDate.lDate = ( LONG ) lDate;
+   pExpr->value.asDate.lDate = lDate;
    pExpr->value.asDate.lTime = 0;
    pExpr->ValType = HB_EV_DATE;
 
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprNewTimeStamp( LONG lDate, LONG lTime, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewTimeStamp( long lDate, long lTime, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -661,7 +661,7 @@ HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR pAlias, HB_EXPR_PTR pExpList,
    pExpr->value.asAlias.pAlias    = pAlias;
    pExpr->value.asAlias.pExpList  = pExpList;
    pExpr->value.asAlias.pVar      = NULL;
-   
+
    if( pAlias->ExprType == HB_ET_MACRO )
    {
       /* Is it a special case &variable->( expressionList ) */
@@ -1421,7 +1421,7 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_COMP_DECL )
    HB_EXPR_PTR pIIF;
    HB_EXPR_PTR pSet;
 
-   /* create {|var|  expression 
+   /* create {|var|  expression
     * NOTE: this is not a valid variable name so there will be no collisions
    */
    /* create var==NIL */

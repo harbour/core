@@ -239,7 +239,7 @@ static HB_LONG hb_dbfGetNextValue( DBFAREAP pArea, USHORT uiField )
 
 static void hb_dbfUpdateStampFields( DBFAREAP pArea )
 {
-   LONG lJulian = 0, lMilliSec = 0;
+   long lJulian = 0, lMilliSec = 0;
    HB_LONG nRowVer = 0;
    LPFIELD pField;
    USHORT uiCount;
@@ -2260,7 +2260,7 @@ static HB_ERRCODE hb_dbfPutRec( DBFAREAP pArea, const BYTE * pBuffer )
             pRecord = ( BYTE * ) hb_xgrab( pArea->uiRecordLen );
             pRecord[ 0 ] = pArea->fDeleted ? 'D' : 'E';
             hb_sxEnCrypt( ( const char * ) pArea->pRecord + 1,
-                          ( char * ) pRecord + 1, 
+                          ( char * ) pRecord + 1,
                           pArea->pCryptKey, pArea->uiRecordLen - 1 );
          }
       }

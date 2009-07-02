@@ -743,7 +743,7 @@ static PHB_ITEM hb_nsxKeyGetItem( PHB_ITEM pItem, LPKEYINFO pKey,
             break;
          case 'D':
             HB_ORD2DBL( pKey->val, &d );
-            pItem = hb_itemPutDL( pItem, ( LONG ) d );
+            pItem = hb_itemPutDL( pItem, ( long ) d );
             break;
          case 'T':
             HB_ORD2DBL( pKey->val, &d );

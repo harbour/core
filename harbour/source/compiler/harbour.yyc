@@ -4909,7 +4909,7 @@ yyreduce:
 
   case 141:
 #line 576 "harbour.y"
-    { (yyval.asExpr) = hb_compExprNewDate( ( LONG ) (yyvsp[(1) - (1)].valLong).lNumber, HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprNewDate( ( long ) (yyvsp[(1) - (1)].valLong).lNumber, HB_COMP_PARAM ); ;}
     break;
 
   case 142:
@@ -8123,4 +8123,3 @@ void yyerror( HB_COMP_DECL, const char * s )
    else
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, HB_COMP_PARAM->pLex->lasttok );
 }
-

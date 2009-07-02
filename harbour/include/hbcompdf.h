@@ -271,8 +271,8 @@ typedef struct HB_EXPR_
       } asNum;
       struct
       {
-         LONG  lDate;            /* julian date */
-         LONG  lTime;            /* time in milliseconds */
+         long  lDate;            /* julian date */
+         long  lTime;            /* time in milliseconds */
       } asDate;
       struct
       {

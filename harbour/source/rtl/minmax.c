@@ -95,8 +95,8 @@ HB_FUNC( MAX )
       }
       else if( HB_IS_DATE( p1 ) && HB_IS_DATE( p2 ) )
       {
-         LONG l1 = hb_itemGetDL( p1 );
-         LONG l2 = hb_itemGetDL( p2 );
+         long l1 = hb_itemGetDL( p1 );
+         long l2 = hb_itemGetDL( p2 );
 
          hb_retdl( l1 >= l2 ? l1 : l2 );
          return;
@@ -156,8 +156,8 @@ HB_FUNC( MIN )
       }
       else if( HB_IS_DATE( p1 ) && HB_IS_DATE( p2 ) )
       {
-         LONG l1 = hb_itemGetDL( p1 );
-         LONG l2 = hb_itemGetDL( p2 );
+         long l1 = hb_itemGetDL( p1 );
+         long l2 = hb_itemGetDL( p2 );
 
          hb_retdl( l1 <= l2 ? l1 : l2 );
          return;

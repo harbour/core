@@ -100,7 +100,7 @@
 
 HB_FUNC( BOM )
 {
-   LONG lDate;
+   long lDate;
    int iYear, iMonth, iDay;
 
    if( HB_ISNIL( 1 ) )
@@ -155,7 +155,7 @@ HB_FUNC( BOM )
 
 HB_FUNC( EOM )
 {
-   LONG lDate;
+   long lDate;
    int iYear, iMonth, iDay;
 
    if( HB_ISNIL( 1 ) )
@@ -216,7 +216,7 @@ HB_FUNC( EOM )
 
 HB_FUNC( BOQ )
 {
-   LONG lDate;
+   long lDate;
    int iYear, iMonth, iDay;
 
    if( HB_ISNIL( 1 ) )
@@ -273,7 +273,7 @@ HB_FUNC( BOQ )
 
 HB_FUNC( EOQ )
 {
-   LONG lDate;
+   long lDate;
    int iYear, iMonth, iDay;
 
    if( HB_ISNIL( 1 ) )
@@ -335,7 +335,7 @@ HB_FUNC( EOQ )
 
 HB_FUNC( BOY )
 {
-   LONG lDate;
+   long lDate;
    int iYear, iMonth, iDay;
 
    if( HB_ISNIL( 1 ) )
@@ -390,7 +390,7 @@ HB_FUNC( BOY )
 
 HB_FUNC( EOY )
 {
-   LONG lDate;
+   long lDate;
    int iYear, iMonth, iDay;
 
    if( HB_ISNIL( 1 ) )
@@ -430,7 +430,7 @@ static int hb_wom( int iYear, int iMonth, int iDay )
 
 HB_FUNC( WOM )
 {
-   LONG lDate;
+   long lDate;
    int iYear, iMonth, iDay;
 
    if( HB_ISNIL( 1 ) )

@@ -5325,7 +5325,7 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
    char szResult[ 65 ];
    char * pSrc, * pDst, * szPlatform;
    int iYear, iMonth, iDay, i;
-   LONG lDate, lTime;
+   long lDate, lTime;
 
    /* __PLATFORM__* */
    pSrc = szPlatform = hb_verPlatform();

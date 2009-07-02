@@ -228,7 +228,7 @@ HB_FUNC( SETFDATI )
    if( szFile && *szFile )
    {
       PHB_ITEM pDate, pTime;
-      LONG lJulian, lMillisec;
+      long lJulian, lMillisec;
 
       if( HB_ISTIMESTAMP( 1 ) )
          hb_partdt( &lJulian, &lMillisec, 1 );

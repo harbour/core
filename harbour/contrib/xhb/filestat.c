@@ -74,10 +74,10 @@ static BOOL hb_fsFileStats(
                            const char *pszFileName,
                            BYTE *pszAttr,
                            HB_FOFFSET *llSize,
-                           LONG *lcDate,
-                           LONG *lcTime,
-                           LONG *lmDate,
-                           LONG *lmTime )
+                           long *lcDate,
+                           long *lcTime,
+                           long *lmDate,
+                           long *lmTime )
 {
    BOOL fResult = FALSE;
 
@@ -268,7 +268,7 @@ HB_FUNC( FILESTATS )
    BYTE szAttr[ 21 ];
    const char * szFile = hb_parc( 1 );
    HB_FOFFSET lSize = 0;
-   LONG lcDate = 0, lcTime = 0, lmDate = 0, lmTime = 0;
+   long lcDate = 0, lcTime = 0, lmDate = 0, lmTime = 0;
 
    /* Parameter checking */
    if( !szFile || !*szFile )

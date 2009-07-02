@@ -106,7 +106,7 @@ typedef struct
 }
 HB_LEX_KEY, * PHB_LEX_KEY;
 
-static const HB_LEX_KEY s_keytable[] = 
+static const HB_LEX_KEY s_keytable[] =
 {
    { "ALWAYS",      4,  6, ALWAYS         },
    { "ANNOUNCE",    4,  8, ANNOUNCE       },
@@ -174,7 +174,7 @@ static const HB_LEX_KEY s_keytable[] =
 #define _AS_VARIANT     9
 
 static const int s_asTypes[] =
-{ 
+{
    0,
    AS_ARRAY,
    AS_BLOCK,
@@ -188,7 +188,7 @@ static const int s_asTypes[] =
 };
 
 static const int s_asArrayTypes[] =
-{ 
+{
    0,
    AS_ARRAY_ARRAY,
    AS_BLOCK_ARRAY,
@@ -201,7 +201,7 @@ static const int s_asArrayTypes[] =
    AS_ARRAY
 };
 
-static const HB_LEX_KEY s_typetable[] = 
+static const HB_LEX_KEY s_typetable[] =
 {
    { "ANYTYPE",     4,  7, _AS_VARIANT    },
    { "ARRAY",       4,  5, _AS_ARRAY      },
@@ -289,7 +289,7 @@ static const char * hb_comp_tokenString( YYSTYPE *yylval_ptr, HB_COMP_DECL, PHB_
 }
 
 #if defined( HB_COMPAT_FOXPRO ) || 1
-static BOOL hb_comp_timeDecode( PHB_PP_TOKEN pTime, LONG * plTime )
+static BOOL hb_comp_timeDecode( PHB_PP_TOKEN pTime, long * plTime )
 {
    HB_LONG lHour, lMinute, lMilliSec;
    double dNumber;
@@ -386,7 +386,7 @@ static int hb_comp_dayTimeDecode( PHB_COMP_LEX pLex, PHB_PP_TOKEN pToken,
    /* Now support for dates constatns: {^YYYY/MM/DD} or {^YYYY-MM-DD} */
    PHB_PP_TOKEN pYear, pMonth, pDay;
    HB_LONG lYear, lMonth, lDay;
-   LONG lDate = 0, lTime = 0;
+   long lDate = 0, lTime = 0;
    double dNumber;
    int iDec, iWidth, iType = 0;
 
@@ -588,7 +588,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
          {
             if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_PIPE )
             {
-               yylval_ptr->asCodeblock.string = hb_strdup( 
+               yylval_ptr->asCodeblock.string = hb_strdup(
                   hb_pp_tokenBlockString( pLex->pPP, pToken,
                                           &yylval_ptr->asCodeblock.flags,
                                           &yylval_ptr->asCodeblock.length ) );
@@ -964,7 +964,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                break;
 
             case FIELD:
-               if( pToken->pNext && 
+               if( pToken->pNext &&
                    ( ( pLex->iState == LOOKUP &&
                        HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD ) ||
                      HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_ALIAS ) )

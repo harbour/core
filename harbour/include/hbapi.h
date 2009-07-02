@@ -615,9 +615,9 @@ extern HB_EXPORT ULONG        hb_parclen( int iParam ); /* retrieve a string par
 extern HB_EXPORT ULONG        hb_parcsiz( int iParam ); /* retrieve a by-reference string parameter length, including terminator */
 extern HB_EXPORT const char * hb_pards( int iParam ); /* retrieve a date as a string YYYYMMDD */
 extern HB_EXPORT char *       hb_pardsbuff( char * szDate, int iParam ); /* retrieve a date as a string YYYYMMDD */
-extern HB_EXPORT LONG         hb_pardl( int iParam ); /* retrieve a date as a LONG NUMBER  */
+extern HB_EXPORT long         hb_pardl( int iParam ); /* retrieve a date as a long integer */
 extern HB_EXPORT double       hb_partd( int iParam ); /* retrieve a timestamp as a double number */
-extern HB_EXPORT BOOL         hb_partdt( LONG * plJulian, LONG * plMilliSec , int iParam ); /* retrieve a timestamp as two long numbers */
+extern HB_EXPORT BOOL         hb_partdt( long * plJulian, long * plMilliSec , int iParam ); /* retrieve a timestamp as two long numbers */
 extern HB_EXPORT int          hb_parl( int iParam ); /* retrieve a logical parameter as an int */
 extern HB_EXPORT double       hb_parnd( int iParam ); /* retrieve a numeric parameter as a double */
 extern HB_EXPORT int          hb_parni( int iParam ); /* retrieve a numeric parameter as a integer */
@@ -635,9 +635,9 @@ extern HB_EXPORT ULONG        hb_parvclen( int iParam, ... ); /* retrieve a stri
 extern HB_EXPORT ULONG        hb_parvcsiz( int iParam, ... ); /* retrieve a by-reference string parameter length, including terminator */
 extern HB_EXPORT const char * hb_parvds( int iParam, ... ); /* retrieve a date as a string YYYYMMDD */
 extern HB_EXPORT char *       hb_parvdsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string YYYYMMDD */
-extern HB_EXPORT LONG         hb_parvdl( int iParam, ... ); /* retrieve a date as a LONG NUMBER  */
+extern HB_EXPORT long         hb_parvdl( int iParam, ... ); /* retrieve a date as a long integer */
 extern HB_EXPORT double       hb_parvtd( int iParam, ... ); /* retrieve a timestamp as a double number */
-extern HB_EXPORT BOOL         hb_parvtdt( LONG * plJulian, LONG * plMilliSec , int iParam, ... ); /* retrieve a timestamp as two long numbers */
+extern HB_EXPORT BOOL         hb_parvtdt( long * plJulian, long * plMilliSec , int iParam, ... ); /* retrieve a timestamp as two long numbers */
 extern HB_EXPORT int          hb_parvl( int iParam, ... ); /* retrieve a logical parameter as an int */
 extern HB_EXPORT double       hb_parvnd( int iParam, ... ); /* retrieve a numeric parameter as a double */
 extern HB_EXPORT int          hb_parvni( int iParam, ... ); /* retrieve a numeric parameter as a integer */
@@ -661,7 +661,7 @@ extern HB_EXPORT void   hb_retds( const char * szDate );  /* returns a date, mus
 extern HB_EXPORT void   hb_retd( int iYear, int iMonth, int iDay ); /* returns a date */
 extern HB_EXPORT void   hb_retdl( long lJulian );   /* returns a long value as a julian date */
 extern HB_EXPORT void   hb_rettd( double dTimeStamp );   /* returns a double value as a timestamp */
-extern HB_EXPORT void   hb_rettdt( LONG lJulian, LONG lMilliSec );   /* returns two long values as a timestamp */
+extern HB_EXPORT void   hb_rettdt( long lJulian, long lMilliSec );   /* returns two long values as a timestamp */
 extern HB_EXPORT void   hb_retl( int iTrueFalse );  /* returns a logical integer */
 extern HB_EXPORT void   hb_retnd( double dNumber ); /* returns a double */
 extern HB_EXPORT void   hb_retni( int iNumber );    /* returns a integer number */
@@ -730,7 +730,7 @@ extern HB_EXPORT int    hb_storclen_buffer( char * szText, ULONG ulLength, int i
 extern HB_EXPORT int    hb_stords( const char * szDate, int iParam );   /* szDate must have YYYYMMDD format */
 extern HB_EXPORT int    hb_stordl( long lJulian, int iParam ); /* lJulian must be a date in Julian format */
 extern HB_EXPORT int    hb_stortd( double dTimeStamp, int iParam ); /* stores a double value as timestamp on a variable by reference */
-extern HB_EXPORT int    hb_stortdt( LONG lJulian, LONG lMilliSec, int iParam ); /* stores two long values as timestamp on a variable by reference */
+extern HB_EXPORT int    hb_stortdt( long lJulian, long lMilliSec, int iParam ); /* stores two long values as timestamp on a variable by reference */
 extern HB_EXPORT int    hb_storl( int iLogical, int iParam ); /* stores a logical integer on a variable by reference */
 extern HB_EXPORT int    hb_storni( int iValue, int iParam ); /* stores an integer on a variable by reference */
 extern HB_EXPORT int    hb_stornl( long lValue, int iParam ); /* stores a long on a variable by reference */
@@ -748,7 +748,7 @@ extern HB_EXPORT int    hb_storvclen_buffer( char * szText, ULONG ulLength, int 
 extern HB_EXPORT int    hb_storvds( const char * szDate, int iParam, ... );   /* szDate must have YYYYMMDD format */
 extern HB_EXPORT int    hb_storvdl( long lJulian, int iParam, ... ); /* lJulian must be a date in Julian format */
 extern HB_EXPORT int    hb_storvtd( double dTimeStamp, int iParam, ... ); /* stores a double value as timestamp on a variable by reference */
-extern HB_EXPORT int    hb_storvtdt( LONG lJulian, LONG lMilliSec, int iParam, ... ); /* stores two long values as timestamp on a variable by reference */
+extern HB_EXPORT int    hb_storvtdt( long lJulian, long lMilliSec, int iParam, ... ); /* stores two long values as timestamp on a variable by reference */
 extern HB_EXPORT int    hb_storvl( int iLogical, int iParam, ... ); /* stores a logical integer on a variable by reference */
 extern HB_EXPORT int    hb_storvni( int iValue, int iParam, ... ); /* stores an integer on a variable by reference */
 extern HB_EXPORT int    hb_storvnl( long lValue, int iParam, ... ); /* stores a long on a variable by reference */
@@ -790,17 +790,17 @@ extern HB_EXPORT double       hb_arrayGetND( PHB_ITEM pArray, ULONG ulIndex ); /
 extern HB_EXPORT char *       hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate ); /* retrieves the date value contained in an array element */
 extern HB_EXPORT long         hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the date value contained in an array element, as a long integer */
 extern HB_EXPORT double       hb_arrayGetTD( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the timestamp value contained in an array element, as a double value */
-extern HB_EXPORT BOOL         hb_arrayGetTDT( PHB_ITEM pArray, ULONG ulIndex, LONG * plJulian, LONG * plMilliSec ); /* retrieves the timestamp value contained in an array element, as two long values */
+extern HB_EXPORT BOOL         hb_arrayGetTDT( PHB_ITEM pArray, ULONG ulIndex, long * plJulian, long * plMilliSec ); /* retrieves the timestamp value contained in an array element, as two long values */
 extern HB_EXPORT HB_TYPE      hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the type of an array item */
 extern HB_EXPORT BOOL         hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element */
 extern HB_EXPORT BOOL         hb_arraySetForward( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element by forwarding it's value */
 extern HB_EXPORT BOOL         hb_arraySetDS( PHB_ITEM pArray, ULONG ulIndex, const char * szDate );
-extern HB_EXPORT BOOL         hb_arraySetDL( PHB_ITEM pArray, ULONG ulIndex, LONG lDate );
+extern HB_EXPORT BOOL         hb_arraySetDL( PHB_ITEM pArray, ULONG ulIndex, long lDate );
 extern HB_EXPORT BOOL         hb_arraySetTD( PHB_ITEM pArray, ULONG ulIndex, double dTimeStamp );
-extern HB_EXPORT BOOL         hb_arraySetTDT( PHB_ITEM pArray, ULONG ulIndex, LONG lJulian, LONG lMilliSec );
+extern HB_EXPORT BOOL         hb_arraySetTDT( PHB_ITEM pArray, ULONG ulIndex, long lJulian, long lMilliSec );
 extern HB_EXPORT BOOL         hb_arraySetL( PHB_ITEM pArray, ULONG ulIndex, BOOL fValue );
 extern HB_EXPORT BOOL         hb_arraySetNI( PHB_ITEM pArray, ULONG ulIndex, int iNumber );
-extern HB_EXPORT BOOL         hb_arraySetNL( PHB_ITEM pArray, ULONG ulIndex, LONG lNumber );
+extern HB_EXPORT BOOL         hb_arraySetNL( PHB_ITEM pArray, ULONG ulIndex, long lNumber );
 #ifndef HB_LONG_LONG_OFF
 extern HB_EXPORT BOOL         hb_arraySetNLL( PHB_ITEM pArray, ULONG ulIndex, LONGLONG llNumber );
 #endif

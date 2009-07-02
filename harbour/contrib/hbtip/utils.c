@@ -93,7 +93,7 @@ HB_FUNC( TIP_TIMESTAMP )
 #ifdef HB_OS_WIN
 
    TIME_ZONE_INFORMATION tzInfo;
-   LONG lDate;
+   long lDate;
    int iYear, iMonth, iDay;
    const char *days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
    const char *months[] = {

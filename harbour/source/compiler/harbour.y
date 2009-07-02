@@ -573,7 +573,7 @@ NumValue   : NUM_DOUBLE       { $$ = hb_compExprNewDouble( $1.dNumber, $1.bWidth
            | NUM_LONG         { $$ = hb_compExprNewLong( $1.lNumber, HB_COMP_PARAM ); }
            ;
 
-DateValue  : NUM_DATE         { $$ = hb_compExprNewDate( ( LONG ) $1.lNumber, HB_COMP_PARAM ); }
+DateValue  : NUM_DATE         { $$ = hb_compExprNewDate( ( long ) $1.lNumber, HB_COMP_PARAM ); }
            ;
 
 TimeStampValue : TIMESTAMP    { $$ = hb_compExprNewTimeStamp( $1.date, $1.time, HB_COMP_PARAM ); }

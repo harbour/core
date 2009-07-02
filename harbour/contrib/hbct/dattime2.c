@@ -101,10 +101,10 @@ static int ct_daystomonth( int iMonth, BOOL bLeap )
             ( ( bLeap && iMonth > 2 ) ? 1 : 0 ) );
 }
 
-static int ct_doy( LONG lDate )
+static int ct_doy( long lDate )
 {
    int iYear, iMonth, iDay;
-   LONG lFirst;
+   long lFirst;
 
    hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
    lFirst = hb_dateEncode( iYear, 1, 1 );
@@ -500,7 +500,7 @@ HB_FUNC( ADDMONTH )
  */
 HB_FUNC( DOY )
 {
-   LONG lDate;
+   long lDate;
 
    if( HB_ISDATETIME( 1 ) )
    {
@@ -843,7 +843,7 @@ HB_FUNC( NTOCMONTH )
 HB_FUNC( WEEK )
 {
    int iYear, iMonth, iDay, iWeek;
-   LONG lDate;
+   long lDate;
    BOOL bSWN = ( HB_ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
 
    if( HB_ISDATETIME( 1 ) )
@@ -872,7 +872,7 @@ HB_FUNC( WEEK )
    }
    else
    {
-      LONG lDate2;
+      long lDate2;
 
       if( hb_setGetCPtr( HB_SET_DATEFORMAT ) && ( hb_setGetCPtr( HB_SET_DATEFORMAT )[0] == 'd' ||
                                                   hb_setGetCPtr( HB_SET_DATEFORMAT )[0] == 'D' ) )

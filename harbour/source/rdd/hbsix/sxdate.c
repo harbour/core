@@ -57,10 +57,10 @@
 
 #include "hbsxfunc.h"
 
-char * hb_sxDtoP( char * pDate, LONG lJulian )
+char * hb_sxDtoP( char * pDate, long lJulian )
 {
    int iYear, iMonth, iDay;
-   LONG lPDate;
+   long lPDate;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_sxDtoP(%p, %ld)", pDate, lJulian));
 
@@ -72,10 +72,10 @@ char * hb_sxDtoP( char * pDate, LONG lJulian )
    return pDate;
 }
 
-LONG hb_sxPtoD( const char * pDate )
+long hb_sxPtoD( const char * pDate )
 {
    int iYear, iMonth, iDay;
-   LONG lPDate;
+   long lPDate;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_sxPtoD(%p)", pDate));
 

@@ -554,7 +554,7 @@ double hb_itemGetTD( PHB_ITEM pItem )
       return 0;
 }
 
-BOOL hb_itemGetTDT( PHB_ITEM pItem, LONG * plJulian, LONG * plMilliSec )
+BOOL hb_itemGetTDT( PHB_ITEM pItem, long * plJulian, long * plMilliSec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetTDT(%p,%p,%p)", pItem, plJulian, plMilliSec));
 
@@ -635,28 +635,28 @@ int hb_itemGetNI( PHB_ITEM pItem )
    return 0;
 }
 
-LONG hb_itemGetNL( PHB_ITEM pItem )
+long hb_itemGetNL( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetNL(%p)", pItem));
 
    if( pItem )
    {
       if( HB_IS_LONG( pItem ) )
-         return ( LONG ) pItem->item.asLong.value;
+         return ( long ) pItem->item.asLong.value;
 
       else if( HB_IS_INTEGER( pItem ) )
-         return ( LONG ) pItem->item.asInteger.value;
+         return ( long ) pItem->item.asInteger.value;
 
       else if( HB_IS_DOUBLE( pItem ) )
 #ifdef __GNUC__
-         return ( LONG ) ( ULONG ) pItem->item.asDouble.value;
+         return ( long ) ( ULONG ) pItem->item.asDouble.value;
 #else
-         return ( LONG ) pItem->item.asDouble.value;
+         return ( long ) pItem->item.asDouble.value;
 #endif
 
       /* DATETIME TODO: remove it */
       else if( HB_IS_DATETIME( pItem ) )
-         return ( LONG ) pItem->item.asDateTime.julian;
+         return ( long ) pItem->item.asDateTime.julian;
    }
 
    return 0;
@@ -859,7 +859,7 @@ PHB_ITEM hb_itemPutTS( PHB_ITEM pItem, const char * szDateTime )
 
 PHB_ITEM hb_itemPutTD( PHB_ITEM pItem, double dTimeStamp )
 {
-   LONG lJulian, lMilliSec;
+   long lJulian, lMilliSec;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutTD(%p, %lf)", pItem, dTimeStamp));
 
@@ -879,7 +879,7 @@ PHB_ITEM hb_itemPutTD( PHB_ITEM pItem, double dTimeStamp )
    return pItem;
 }
 
-PHB_ITEM hb_itemPutTDT( PHB_ITEM pItem, LONG lJulian, LONG lMilliSec )
+PHB_ITEM hb_itemPutTDT( PHB_ITEM pItem, long lJulian, long lMilliSec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutTDT(%p, %ld, %ld)", pItem, lJulian, lMilliSec));
 
@@ -957,7 +957,7 @@ PHB_ITEM hb_itemPutNI( PHB_ITEM pItem, int iNumber )
    return pItem;
 }
 
-PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, LONG lNumber )
+PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNL(%p, %ld)", pItem, lNumber));
 
@@ -971,11 +971,11 @@ PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, LONG lNumber )
 
 #if HB_INT_MAX >= LONG_MAX
    pItem->type = HB_IT_INTEGER;
-   pItem->item.asInteger.value = (int) lNumber;
+   pItem->item.asInteger.value = ( int ) lNumber;
    pItem->item.asInteger.length = HB_INT_LENGTH( lNumber );
 #else
    pItem->type = HB_IT_LONG;
-   pItem->item.asLong.value = (HB_LONG) lNumber;
+   pItem->item.asLong.value = ( HB_LONG ) lNumber;
    pItem->item.asLong.length = HB_LONG_LENGTH( lNumber );
 #endif
 
@@ -997,7 +997,7 @@ PHB_ITEM hb_itemPutNLL( PHB_ITEM pItem, LONGLONG llNumber )
 
 #if HB_LONG_MAX >= LONGLONG_MAX
    pItem->type = HB_IT_LONG;
-   pItem->item.asLong.value = (HB_LONG) llNumber;
+   pItem->item.asLong.value = ( HB_LONG ) llNumber;
    pItem->item.asLong.length = HB_LONG_LENGTH( llNumber );
 #else
    pItem->type = HB_IT_DOUBLE;
@@ -1195,7 +1195,7 @@ PHB_ITEM hb_itemPutNILen( PHB_ITEM pItem, int iNumber, int iWidth )
    return pItem;
 }
 
-PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, LONG lNumber, int iWidth )
+PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNLLen(%p, %ld, %d)", pItem, lNumber, iWidth));
 
@@ -1219,7 +1219,7 @@ PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, LONG lNumber, int iWidth )
       iWidth = HB_LONG_LENGTH( lNumber );
 
    pItem->type = HB_IT_LONG;
-   pItem->item.asLong.value = (HB_LONG) lNumber;
+   pItem->item.asLong.value = ( HB_LONG ) lNumber;
    pItem->item.asLong.length = iWidth;
 #endif
 

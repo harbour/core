@@ -208,8 +208,8 @@ extern void hb_compGenPushMemvarRef( const char * szVarName, HB_COMP_DECL );    
 extern void hb_compGenPushInteger( int iNumber, HB_COMP_DECL );                           /* Pushes a integer number on the virtual machine stack */
 extern void hb_compGenPushLogical( int iTrueFalse, HB_COMP_DECL );                        /* pushes a logical value on the virtual machine stack */
 extern void hb_compGenPushLong( HB_LONG lNumber, HB_COMP_DECL );                          /* Pushes a long number on the virtual machine stack */
-extern void hb_compGenPushDate( LONG lDate, HB_COMP_DECL );                          /* Pushes a date constant on the virtual machine stack */
-extern void hb_compGenPushTimeStamp( LONG lDate, LONG lTime, HB_COMP_DECL );              /* Pushes a timestamp constant on the virtual machine stack */
+extern void hb_compGenPushDate( long lDate, HB_COMP_DECL );                          /* Pushes a date constant on the virtual machine stack */
+extern void hb_compGenPushTimeStamp( long lDate, long lTime, HB_COMP_DECL );              /* Pushes a timestamp constant on the virtual machine stack */
 extern void hb_compGenPushNil( HB_COMP_DECL );                                            /* Pushes nil on the virtual machine stack */
 extern void hb_compGenPushString( const char * szText, ULONG ulLen, HB_COMP_DECL );       /* Pushes a string on the virtual machine stack */
 extern void hb_compGenPushSymbol( const char * szSymbolName, BOOL bFunction, HB_COMP_DECL ); /* Pushes a symbol on to the Virtual machine stack */

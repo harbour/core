@@ -517,7 +517,7 @@ double hb_arrayGetTD( PHB_ITEM pArray, ULONG ulIndex )
       return 0;
 }
 
-BOOL hb_arrayGetTDT( PHB_ITEM pArray, ULONG ulIndex, LONG * plJulian, LONG * plMilliSec )
+BOOL hb_arrayGetTDT( PHB_ITEM pArray, ULONG ulIndex, long * plJulian, long * plMilliSec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetTDT(%p, %lu, %p, %p)", pArray, ulIndex, plJulian, plMilliSec));
 
@@ -686,7 +686,7 @@ BOOL hb_arraySetDS( PHB_ITEM pArray, ULONG ulIndex, const char * szDate )
       return FALSE;
 }
 
-BOOL hb_arraySetDL( PHB_ITEM pArray, ULONG ulIndex, LONG lDate )
+BOOL hb_arraySetDL( PHB_ITEM pArray, ULONG ulIndex, long lDate )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arraySetDL(%p, %lu, %ld)", pArray, ulIndex, lDate));
 
@@ -712,7 +712,7 @@ BOOL hb_arraySetTD( PHB_ITEM pArray, ULONG ulIndex, double dTimeStamp )
       return FALSE;
 }
 
-BOOL hb_arraySetTDT( PHB_ITEM pArray, ULONG ulIndex, LONG lJulian, LONG lMilliSec )
+BOOL hb_arraySetTDT( PHB_ITEM pArray, ULONG ulIndex, long lJulian, long lMilliSec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arraySetTDT(%p, %lu, %lu, %lu)", pArray, ulIndex, lJulian, lMilliSec));
 
@@ -751,7 +751,7 @@ BOOL hb_arraySetNI( PHB_ITEM pArray, ULONG ulIndex, int iNumber )
       return FALSE;
 }
 
-BOOL hb_arraySetNL( PHB_ITEM pArray, ULONG ulIndex, LONG lNumber )
+BOOL hb_arraySetNL( PHB_ITEM pArray, ULONG ulIndex, long lNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNL(%p, %lu, %lu)", pArray, ulIndex, lNumber));
 
