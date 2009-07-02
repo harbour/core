@@ -875,12 +875,12 @@ FUNCTION Build_Statics( oWnd )
    oBox:type := XBPSTATIC_TYPE_HALFTONEFRAME
    oBox:options := XBPSTATIC_FRAMETHICK
    oBox:create()
-
+   #if 0
    oBox := XbpStatic():new( oGrp, , {180,350}, {40,40} )
    oBox:type := XBPSTATIC_TYPE_SYSICON
    oBox:caption := XBPSTATIC_SYSICON_ICONQUESTION
    oBox:create()
-
+   #endif
    RETURN nil
 
 /*----------------------------------------------------------------------*/
