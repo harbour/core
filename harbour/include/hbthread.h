@@ -56,8 +56,13 @@
 #include "hbapi.h"
 #include "hbset.h"
 
-#if ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || \
-    defined( HB_OS_DARWIN ) || defined( HB_OS_SUNOS )
+#if defined( HB_TASK_THREAD )
+   /* Harbour tasks explicitly requested */
+#elif ( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) ) || \
+      defined( HB_OS_DOS )
+#  define HB_TASK_THREAD
+#elif defined( HB_OS_LINUX ) || defined( HB_OS_DARWIN ) || \
+      defined( HB_OS_SUNOS ) || defined( HB_OS_HPUX )
 #  include <pthread.h>
 #  define HB_PTHREAD_API
 #elif defined( HB_OS_WIN )
@@ -71,7 +76,48 @@
 
 HB_EXTERN_BEGIN
 
-#if defined( HB_PTHREAD_API )
+#if defined( HB_TASK_THREAD )
+
+#  include "hbtask.h"
+
+   typedef HB_LONG            HB_THREAD_NO;
+   typedef void *             HB_THREAD_ID;
+   typedef void *             HB_CRITICAL_T;
+   typedef void *             HB_COND_T;
+   typedef void *             HB_THREAD_HANDLE;
+   typedef HB_CRITICAL_T      HB_RAWCRITICAL_T;
+   typedef HB_COND_T          HB_RAWCOND_T;
+
+#  define HB_COND_OS_SUPPORT
+#  undef  HB_COND_HARBOUR_SUPPORT
+#  undef  HB_COND_NEED_INIT
+#  undef  HB_CRITICAL_NEED_INIT
+
+
+#  define HB_THREAD_STARTFUNC( func )     void * func( void * Cargo )
+#  define HB_THREAD_END                   return NULL;
+#  define HB_THREAD_RAWEND                return NULL;
+
+#  define HB_THREAD_INFINITE_WAIT   HB_TASK_INFINITE_WAIT
+
+#  define HB_THREAD_SELF()          hb_taskSelf()
+#  define HB_THREAD_SHEDULER()      hb_taskSheduler()
+
+#  define HB_CRITICAL_NEW( name )   HB_CRITICAL_T name = NULL
+#  define HB_CRITICAL_INIT(v)       do { (v) = NULL; } while( 0 )
+#  define HB_CRITICAL_DESTROY(v)    hb_taskDestroyMutex( &(v) )
+#  define HB_CRITICAL_LOCK(v)       hb_taskLock( &(v), HB_TASK_INFINITE_WAIT )
+#  define HB_CRITICAL_UNLOCK(v)     hb_taskUnlock( &(v) )
+
+#  define HB_COND_NEW( name )       HB_COND_T name = NULL
+#  define HB_COND_INIT(v)           do { (v) = NULL; } while( 0 )
+#  define HB_COND_DESTROY(v)        hb_taskDestroyCond( &(v) )
+#  define HB_COND_SIGNAL(v)         hb_taskSignal( &(v) )
+#  define HB_COND_SIGNALN(v,n)      hb_taskBroadcast( &(v) )
+#  define HB_COND_WAIT(c,m)         hb_taskWait( (c), (m), HB_TASK_INFINITE_WAIT )
+#  define HB_COND_TIMEDWAIT(c,m,n)  hb_taskWait( (c), (m), (n) )
+
+#elif defined( HB_PTHREAD_API )
 
    typedef HB_LONG         HB_THREAD_NO;
    typedef pthread_t       HB_THREAD_ID;
@@ -96,6 +142,7 @@ HB_EXTERN_BEGIN
 #  define HB_COND_SIGNALN(v,n)      pthread_cond_broadcast( &(v) )
 
 #  define HB_COND_OS_SUPPORT        /* OS support for conditional variables */
+#  undef  HB_COND_HARBOUR_SUPPORT
 
 #  if defined( PTHREAD_MUTEX_INITIALIZER ) && !defined( HB_CRITICAL_NEED_INIT )
       typedef pthread_mutex_t          HB_CRITICAL_T;
@@ -154,7 +201,7 @@ HB_EXTERN_BEGIN
 
    /* In OS2 thread ID is continuous integer number so we can use it directly
     * anyhow I'd prefer to not make such strict binding to OS values because
-    * it make cause troubles when code will be ported to other platforms.
+    * it may cause troubles when code will be ported to other platforms.
     */
    /* typedef TID                HB_THREAD_NO; */
    typedef HB_LONG            HB_THREAD_NO;
@@ -272,6 +319,10 @@ HB_EXTERN_BEGIN
 #  define HB_THREAD_EQUAL( x, y )   ( (x) == (y) )
 #endif
 
+#ifndef HB_THREAD_SHEDULER
+#  define HB_THREAD_SHEDULER()
+#endif
+
 #ifndef HB_THREAD_INFINITE_WAIT
 #  define HB_THREAD_INFINITE_WAIT   ( ( ULONG ) -1 )
 #endif
@@ -308,6 +359,8 @@ extern void hb_threadExit( void );
 
 extern PHB_THREADSTATE hb_threadStateNew( void );
 
+extern void hb_threadReleaseCPU( void );
+
 /* atomic oprtations */
 void        hb_atomic_set( volatile HB_COUNTER * pCounter, HB_COUNTER value );
 HB_COUNTER  hb_atomic_get( volatile HB_COUNTER * pCounter );
@@ -343,7 +396,7 @@ extern void hb_threadMutexUnlockAll( void );
 extern void hb_threadMutexSyncSignal( PHB_ITEM pItemMtx );
 extern BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, ULONG ulMilliSec, PHB_ITEM pItemSync );
 
-#if defined( HB_NO_TLS )
+#if defined( HB_NO_TLS ) || defined( HB_TASK_THREAD )
 #  undef HB_USE_TLS
 #elif !defined( HB_USE_TLS )
    /* enable native compiler TLS support be default for this compilers
@@ -372,7 +425,12 @@ extern BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, ULONG ulMilliSec, PHB_ITE
 #endif
 
 #ifndef HB_USE_TLS
-#  if defined( HB_PTHREAD_API )
+#  if defined( HB_TASK_THREAD )
+#     define HB_TLS_KEY       void *
+#     define hb_tls_init(k)   HB_SYMBOL_UNUSED( k )
+#     define hb_tls_set(k,v)  hb_taskSetData( ( void * ) (v) )
+#     define hb_tls_get(k)    hb_taskGetData()
+#  elif defined( HB_PTHREAD_API )
 #     define HB_TLS_KEY       pthread_key_t
 #     define hb_tls_init(k)   pthread_key_create( &k, NULL )
 #     define hb_tls_set(k,v)  pthread_setspecific( k, ( void * ) (v) )

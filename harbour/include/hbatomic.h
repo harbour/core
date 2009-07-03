@@ -151,7 +151,9 @@ HB_EXTERN_BEGIN
             #ifdef HB_SPINLOCK_SLEEP
                if( !hb_spinlock_trylock( l ) )
                   return;
-               #if defined( HB_OS_WIN )
+               #if defined( HB_TASK_THREAD )
+                  hb_taskYield();
+               #elif defined( HB_OS_WIN )
                   Sleep( 0 );
                #elif defined( HB_OS_OS2 )
                   DosSleep( 0 );
@@ -193,7 +195,9 @@ HB_EXTERN_BEGIN
             #ifdef HB_SPINLOCK_SLEEP
                if( !__sync_lock_test_and_set( l, 1 ) )
                   return;
-               #if defined( HB_OS_WIN )
+               #if defined( HB_TASK_THREAD )
+                  hb_taskYield();
+               #elif defined( HB_OS_WIN )
                   Sleep( 0 );
                #elif defined( HB_OS_OS2 )
                   DosSleep( 0 );

@@ -534,7 +534,7 @@ static BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, ULONG * pulCRC, BOOL 
 
       do
       {
-         ulRead = ( ULONG ) hb_fsReadLarge( hFile, ( BYTE * ) pString, HB_Z_IOBUF_SIZE );
+         ulRead = ( ULONG ) hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE );
          if( ulRead > 0 )
          {
             ulCRC = crc32( ulCRC, pString, ulRead );
@@ -789,7 +789,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
 #else
       ULONG attr;
 
-      if( hb_fsGetAttr( ( BYTE * ) szFileName, &attr ) )
+      if( hb_fsGetAttr( szFileName, &attr ) )
 #endif
       {
          ulExtAttr = attr & ( HB_FA_READONLY | HB_FA_HIDDEN | HB_FA_SYSTEM |
@@ -838,7 +838,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
    {
       ULONG attr;
 
-      if( !hb_fsGetAttr( ( BYTE * ) szFileName, &attr ) )
+      if( !hb_fsGetAttr( szFileName, &attr ) )
          ulExtAttr = 0x81B60020;  /* FILE_ATTRIBUTE_ARCHIVE | rw-rw-rw- */
    }
 #endif
@@ -905,7 +905,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
          if( iResult == 0 )
          {
             pString = ( char* ) hb_xgrab( HB_Z_IOBUF_SIZE );
-            while( ( ulLen = hb_fsReadLarge( hFile, (BYTE*) pString, HB_Z_IOBUF_SIZE ) ) > 0 )
+            while( ( ulLen = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
             {
                zipWriteInFileInZip( hZip, pString, ulLen );
             }
@@ -991,7 +991,7 @@ static int hb_zipStoreFileHandle( zipFile hZip, HB_FHANDLE hFile, const char * s
    {
       char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
       hb_fsSeek( hFile, 0, FS_SET );
-      while( ( ulLen = hb_fsReadLarge( hFile, ( BYTE * ) pString, HB_Z_IOBUF_SIZE ) ) > 0 )
+      while( ( ulLen = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
          zipWriteInFileInZip( hZip, pString, ulLen );
       hb_xfree( pString );
 
@@ -1075,12 +1075,11 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
 
       if( hFile != FS_ERROR )
       {
-         pString = (char*) hb_xgrab( HB_Z_IOBUF_SIZE );
+         pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
 
          while( ( iResult = unzReadCurrentFile( hUnzip, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
          {
-            hb_fsWriteLarge( hFile, ( const BYTE* 
-            ) pString, (ULONG) iResult );
+            hb_fsWriteLarge( hFile, pString, (ULONG) iResult );
          }
          hb_xfree( pString );
 
@@ -1167,7 +1166,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
 #  if defined(__RSX32__) || defined(__GNUC__)
       _chmod( szName, 1, ufi.external_fa & 0xFF );
 #  else
-      hb_fsSetAttr( ( BYTE * ) szName, ufi.external_fa & 0xFF );
+      hb_fsSetAttr( szName, ufi.external_fa & 0xFF );
 #  endif
 
 #elif defined( HB_OS_OS2 )
@@ -1209,7 +1208,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
    }
 #else
    {
-      hb_fsSetAttr( ( BYTE * ) szName, ufi.external_fa );
+      hb_fsSetAttr( szName, ufi.external_fa );
    }
 #endif
 
@@ -1253,7 +1252,7 @@ static int hb_unzipExtractCurrentFileToHandle( unzFile hUnzip, HB_FHANDLE hFile,
          char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
 
          while( ( iResult = unzReadCurrentFile( hUnzip, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
-            hb_fsWriteLarge( hFile, ( BYTE * ) pString, ( ULONG ) iResult );
+            hb_fsWriteLarge( hFile, pString, ( ULONG ) iResult );
 
          hb_xfree( pString );
 

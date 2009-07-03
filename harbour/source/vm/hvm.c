@@ -90,7 +90,7 @@
 #include "hbdebug.ch"
 #if defined( HB_MT_VM )
 #  include "hbthread.h"
-#endif
+#endif /* HB_MT_VM */
 #include "hbmemory.ch"
 
 #ifndef HB_NO_PROFILER
@@ -234,10 +234,12 @@ static PHB_ITEM s_pSymbolsMtx = NULL;
 static HB_CRITICAL_NEW( s_atInitMtx );
 #  define HB_ATINIT_LOCK      hb_threadEnterCriticalSection( &s_atInitMtx );
 #  define HB_ATINIT_UNLOCK    hb_threadLeaveCriticalSection( &s_atInitMtx );
+#  define HB_TASK_SHEDULER    HB_THREAD_SHEDULER();
 #else
 #  define HB_ATINIT_LOCK
 #  define HB_ATINIT_UNLOCK
-#endif
+#  define HB_TASK_SHEDULER
+#endif /* HB_MT_VM */
 
 #ifndef HB_NO_PROFILER
 static ULONG hb_ulOpcodesCalls[ HB_P_LAST_PCODE ];/* array to profile opcodes calls */
@@ -468,6 +470,8 @@ void hb_vmUnlock( void )
          HB_VM_UNLOCK
       }
    }
+
+   HB_TASK_SHEDULER
 }
 
 /* lock VM blocking GC and other exclusive single task code execution */
@@ -857,7 +861,7 @@ void hb_vmThreadQuitRequest( void * Cargo )
    HB_VM_UNLOCK
 }
 
-#endif
+#endif /* HB_MT_VM */
 
 void hb_vmSetFunction( PHB_SYMB pOldSym, PHB_SYMB pNewSym )
 {
@@ -910,7 +914,7 @@ void hb_vmInit( BOOL bStartMainProc )
    s_pSymbolsMtx = hb_threadMutexCreate( FALSE );
 #else
    hb_stackInit();                        /* initialize HVM stack */
-#endif
+#endif /* HB_MT_VM */
    /* Set the language and codepage to the default */
    /* This trick is needed to stringify the macro value */
    hb_langSelectID( HB_MACRO2STRING( HB_LANG_DEFAULT ) );
@@ -1145,7 +1149,7 @@ int hb_vmQuit( void )
 #else
    hb_setRelease( hb_stackSetStruct() );  /* releases Sets */
    hb_stackFree();
-#endif
+#endif /* HB_MT_VM */
 
    /* release all known garbage */
    if( hb_xquery( HB_MEM_USEDMAX ) == 0 ) /* check if fmstat is ON */
@@ -5655,6 +5659,8 @@ void hb_vmProc( USHORT uiParams )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmProc(%hu)", uiParams));
 
+   HB_TASK_SHEDULER
+
 #ifndef HB_NO_PROFILER
    if( bProfiler )
       ulClock = ( ULONG ) clock();
@@ -5712,6 +5718,8 @@ void hb_vmDo( USHORT uiParams )
 #endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDo(%hu)", uiParams));
+
+   HB_TASK_SHEDULER
 
 #ifndef HB_NO_PROFILER
    if( bProfiler )
@@ -5797,6 +5805,8 @@ void hb_vmSend( USHORT uiParams )
    ULONG ulClock = 0;
    BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
 #endif
+
+   HB_TASK_SHEDULER
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSend(%hu)", uiParams));
 
@@ -6373,7 +6383,7 @@ static void hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode )
    HB_SYMBOL_UNUSED( uiCount );
    HB_SYMBOL_UNUSED( pCode );
 }
-#endif
+#endif /* HB_MT_VM */
 
 /* ------------------------------- */
 /* Push                            */
@@ -7210,7 +7220,7 @@ BOOL hb_vmLockModuleSymbols( void )
    return !s_pSymbolsMtx || hb_threadMutexLock( s_pSymbolsMtx );
 #else
    return TRUE;
-#endif
+#endif /* HB_MT_VM */
 }
 
 void hb_vmUnlockModuleSymbols( void )
@@ -7218,7 +7228,7 @@ void hb_vmUnlockModuleSymbols( void )
 #if defined( HB_MT_VM )
    if( s_pSymbolsMtx )
       hb_threadMutexUnlock( s_pSymbolsMtx );
-#endif
+#endif /* HB_MT_VM */
 }
 
 const char * hb_vmFindModuleSymbolName( PHB_SYMB pSym )
@@ -8260,7 +8270,7 @@ void hb_vmRequestQuit( void )
     */
 #if !defined( HB_MT_VM )
    hb_vmDoExitFunctions(); /* process defined EXIT functions */
-#endif
+#endif /* HB_MT_VM */
    hb_stackSetActionRequest( HB_QUIT_REQUESTED );
 }
 
@@ -8453,7 +8463,7 @@ void hb_vmSetI18N( void * pI18N )
 #  define HB_XVM_RETURN \
       return ( hb_stackGetActionRequest() & \
                ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0;
-#endif
+#endif /* HB_MT_VM */
 
 void hb_xvmExitProc( void )
 {
@@ -8530,7 +8540,7 @@ BOOL hb_xvmSeqEnd( void )
 #if defined( HB_MT_VM )
    if( hb_vmThreadRequest )
       hb_vmRequestTest();
-#endif
+#endif /* HB_MT_VM */
    if( hb_stackGetActionRequest() & ( HB_ENDPROC_REQUESTED | HB_QUIT_REQUESTED ) )
       return TRUE;
    else if( hb_stackGetActionRequest() & HB_BREAK_REQUESTED )
@@ -8545,7 +8555,7 @@ BOOL hb_xvmSeqEndTest( void )
 #if defined( HB_MT_VM )
    if( hb_vmThreadRequest )
       hb_vmRequestTest();
-#endif
+#endif /* HB_MT_VM */
    if( ( hb_stackGetActionRequest() &
        ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0 )
       return TRUE;
@@ -8590,7 +8600,7 @@ BOOL hb_xvmSeqRecover( void )
 #if defined( HB_MT_VM )
    if( hb_vmThreadRequest )
       hb_vmRequestTest();
-#endif
+#endif /* HB_MT_VM */
    if( hb_stackGetActionRequest() & ( HB_ENDPROC_REQUESTED | HB_QUIT_REQUESTED ) )
       return TRUE;
    else if( hb_stackGetActionRequest() & HB_BREAK_REQUESTED )
@@ -11268,7 +11278,7 @@ void hb_vmIsStackRef( void )
    }
 #else
    hb_stackIsStackRef( hb_stackId(), NULL );
-#endif
+#endif /* HB_MT_VM */
 }
 
 /* ------------------------------------------------------------------------ */

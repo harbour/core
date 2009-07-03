@@ -1079,7 +1079,6 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 
 ULONG hb_xquery( USHORT uiMode )
 {
-   HB_STACK_TLS_PRELOAD
    ULONG ulResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xquery(%hu)", uiMode));
@@ -1088,196 +1087,202 @@ ULONG hb_xquery( USHORT uiMode )
 
    switch( uiMode )
    {
-   case HB_MEM_CHAR:       /*               (Free Variable Space [KB]) */
-      #if defined(HB_OS_WIN)
-      {
-         MEMORYSTATUS memorystatus;
-         GlobalMemoryStatus( &memorystatus );
-         ulResult = memorystatus.dwAvailPhys / 1024;
-      }
-      #elif defined(HB_OS_OS2)
-      {
-         ULONG ulSysInfo = 0;
+      case HB_MEM_CHAR:       /*               (Free Variable Space [KB]) */
+#if defined(HB_OS_WIN)
+         {
+            MEMORYSTATUS memorystatus;
+            GlobalMemoryStatus( &memorystatus );
+            ulResult = memorystatus.dwAvailPhys / 1024;
+         }
+#elif defined(HB_OS_OS2)
+         {
+            ULONG ulSysInfo = 0;
 
-         if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
-            ulResult = 0;
-         else
-            ulResult = ulSysInfo / 1024;
-      }
-      #else
+            if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
+               ulResult = 0;
+            else
+               ulResult = ulSysInfo / 1024;
+         }
+#else
          ulResult = 9999;
-      #endif
-      break;
+#endif
+         break;
 
-   case HB_MEM_BLOCK:      /*               (Largest String [KB]) */
-      #if defined(HB_OS_WIN)
-      {
-         MEMORYSTATUS memorystatus;
-         GlobalMemoryStatus( &memorystatus );
-         ulResult = HB_MIN( memorystatus.dwAvailPhys, ULONG_MAX ) / 1024;
-      }
-      #elif defined(HB_OS_OS2)
-      {
-         ULONG ulSysInfo = 0;
+      case HB_MEM_BLOCK:      /*               (Largest String [KB]) */
+#if defined(HB_OS_WIN)
+         {
+            MEMORYSTATUS memorystatus;
+            GlobalMemoryStatus( &memorystatus );
+            ulResult = HB_MIN( memorystatus.dwAvailPhys, ULONG_MAX ) / 1024;
+         }
+#elif defined(HB_OS_OS2)
+         {
+            ULONG ulSysInfo = 0;
 
-         if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
-            ulResult = 0;
-         else
-            ulResult = HB_MIN( ulSysInfo, ULONG_MAX ) / 1024;
-      }
-      #else
+            if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
+               ulResult = 0;
+            else
+               ulResult = HB_MIN( ulSysInfo, ULONG_MAX ) / 1024;
+         }
+#else
          ulResult = 9999;
-      #endif
-      break;
+#endif
+         break;
 
-   case HB_MEM_RUN:        /*               (RUN Memory [KB]) */
-      #if defined(HB_OS_WIN)
-      {
-         MEMORYSTATUS memorystatus;
-         GlobalMemoryStatus( &memorystatus );
-         ulResult = memorystatus.dwAvailPhys / 1024;
-      }
-      #elif defined(HB_OS_OS2)
-      {
-         ULONG ulSysInfo = 0;
+      case HB_MEM_RUN:        /*               (RUN Memory [KB]) */
+#if defined(HB_OS_WIN)
+         {
+            MEMORYSTATUS memorystatus;
+            GlobalMemoryStatus( &memorystatus );
+            ulResult = memorystatus.dwAvailPhys / 1024;
+         }
+#elif defined(HB_OS_OS2)
+         {
+            ULONG ulSysInfo = 0;
 
-         if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
-            ulResult = 0;
-         else
-            ulResult = ulSysInfo / 1024;
-      }
-      #else
+            if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
+               ulResult = 0;
+            else
+               ulResult = ulSysInfo / 1024;
+         }
+#else
          ulResult = 9999;
-      #endif
-      break;
+#endif
+         break;
 
-   case HB_MEM_VM:         /* UNDOCUMENTED! (Virtual Memory [KB]) */
-      #if defined(HB_OS_WIN)
-      {
-         MEMORYSTATUS memorystatus;
-         GlobalMemoryStatus( &memorystatus );
-         ulResult = memorystatus.dwAvailVirtual / 1024;
-      }
-      #elif defined(HB_OS_OS2)
-      {
-         ULONG ulSysInfo = 0;
+      case HB_MEM_VM:         /* UNDOCUMENTED! (Virtual Memory [KB]) */
+#if defined(HB_OS_WIN)
+         {
+            MEMORYSTATUS memorystatus;
+            GlobalMemoryStatus( &memorystatus );
+            ulResult = memorystatus.dwAvailVirtual / 1024;
+         }
+#elif defined(HB_OS_OS2)
+         {
+            ULONG ulSysInfo = 0;
 
-         if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
-            ulResult = 0;
-         else
-            ulResult = ulSysInfo / 1024;
-      }
-      #else
+            if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
+               ulResult = 0;
+            else
+               ulResult = ulSysInfo / 1024;
+         }
+#else
          ulResult = 9999;
-      #endif
-      break;
+#endif
+         break;
 
-   case HB_MEM_EMS:        /* UNDOCUMENTED! (Free Expanded Memory [KB]) (?) */
-      #if defined(HB_OS_WIN) || defined(HB_OS_OS2)
+      case HB_MEM_EMS:        /* UNDOCUMENTED! (Free Expanded Memory [KB]) (?) */
+#if defined(HB_OS_WIN) || defined(HB_OS_OS2)
          ulResult = 0;
-      #else
+#else
          ulResult = 9999;
-      #endif
-      break;
+#endif
+         break;
 
-   case HB_MEM_FM:         /* UNDOCUMENTED! (Fixed Memory/Heap [KB]) (?) */
-      #if defined(HB_OS_WIN)
-      {
-         MEMORYSTATUS memorystatus;
-         GlobalMemoryStatus( &memorystatus );
-         ulResult = memorystatus.dwTotalPhys / 1024;
-      }
-      #elif defined(HB_OS_OS2)
-      {
-         ULONG ulSysInfo = 0;
+      case HB_MEM_FM:         /* UNDOCUMENTED! (Fixed Memory/Heap [KB]) (?) */
+#if defined(HB_OS_WIN)
+         {
+            MEMORYSTATUS memorystatus;
+            GlobalMemoryStatus( &memorystatus );
+            ulResult = memorystatus.dwTotalPhys / 1024;
+         }
+#elif defined(HB_OS_OS2)
+         {
+            ULONG ulSysInfo = 0;
 
-         if( DosQuerySysInfo( QSV_MAXPRMEM, QSV_MAXPRMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
-            ulResult = 0;
-         else
-            ulResult = ulSysInfo / 1024;
-      }
-      #else
+            if( DosQuerySysInfo( QSV_MAXPRMEM, QSV_MAXPRMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
+               ulResult = 0;
+            else
+               ulResult = ulSysInfo / 1024;
+         }
+#else
          ulResult = 9999;
-      #endif
-      break;
+#endif
+         break;
 
-   case HB_MEM_FMSEGS:     /* UNDOCUMENTED! (Segments in Fixed Memory/Heap) (?) */
-      #if defined(HB_OS_WIN) || defined(HB_OS_OS2)
+      case HB_MEM_FMSEGS:     /* UNDOCUMENTED! (Segments in Fixed Memory/Heap) (?) */
+#if defined(HB_OS_WIN) || defined(HB_OS_OS2)
          ulResult = 1;
-      #else
+#else
          ulResult = 9999;
-      #endif
-      break;
+#endif
+         break;
 
-   case HB_MEM_SWAP:       /* UNDOCUMENTED! (Free Swap Memory [KB]) */
-      #if defined(HB_OS_WIN)
-      {
-         MEMORYSTATUS memorystatus;
-         GlobalMemoryStatus( &memorystatus );
-         ulResult = memorystatus.dwAvailPageFile / 1024;
-      }
-      #elif defined(HB_OS_OS2)
-      {
-         /* NOTE: There is no way to know how much a swap file can grow on an
-                  OS/2 system. I think we should return free space on DASD
-                  media which contains swap file [maurilio.longo] */
+      case HB_MEM_SWAP:       /* UNDOCUMENTED! (Free Swap Memory [KB]) */
+#if defined(HB_OS_WIN)
+         {
+            MEMORYSTATUS memorystatus;
+            GlobalMemoryStatus( &memorystatus );
+            ulResult = memorystatus.dwAvailPageFile / 1024;
+         }
+#elif defined(HB_OS_OS2)
+         {
+            /* NOTE: There is no way to know how much a swap file can grow on an
+                     OS/2 system. I think we should return free space on DASD
+                     media which contains swap file [maurilio.longo] */
+            ulResult = 9999;
+         }
+#else
          ulResult = 9999;
-      }
-      #else
-         ulResult = 9999;
-      #endif
-      break;
+#endif
+         break;
 
-   case HB_MEM_CONV:       /* UNDOCUMENTED! (Free Conventional [KB]) */
-      #if defined(HB_OS_WIN) || defined(HB_OS_OS2)
+      case HB_MEM_CONV:       /* UNDOCUMENTED! (Free Conventional [KB]) */
+#if defined(HB_OS_WIN) || defined(HB_OS_OS2)
          ulResult = 0;
-      #else
+#else
          ulResult = 9999;
-      #endif
-      break;
-
-   case HB_MEM_EMSUSED:    /* UNDOCUMENTED! (Used Expanded Memory [KB]) (?) */
-      ulResult = 0;
-      break;
-
-   case HB_MEM_USED:       /* Harbour extension (Memory used [bytes]) */
-#ifdef HB_FM_STATISTICS
-      ulResult = s_lMemoryConsumed;
-#else
-      ulResult = 0;
 #endif
-      break;
+         break;
 
-   case HB_MEM_BLOCKS:     /* Harbour extension (Memory blocks used) */
+      case HB_MEM_EMSUSED:    /* UNDOCUMENTED! (Used Expanded Memory [KB]) (?) */
+         ulResult = 0;
+         break;
+
+      case HB_MEM_USED:       /* Harbour extension (Memory used [bytes]) */
 #ifdef HB_FM_STATISTICS
-      ulResult = s_lMemoryBlocks;
+         ulResult = s_lMemoryConsumed;
 #else
-      ulResult = 0;
+         ulResult = 0;
 #endif
-      break;
+         break;
 
-   case HB_MEM_USEDMAX:    /* Harbour extension (Maximum memory used [bytes]) */
+      case HB_MEM_BLOCKS:     /* Harbour extension (Memory blocks used) */
 #ifdef HB_FM_STATISTICS
-      ulResult = s_lMemoryMaxConsumed;
+         ulResult = s_lMemoryBlocks;
 #else
-      ulResult = 0;
+         ulResult = 0;
 #endif
-      break;
+         break;
 
-   case HB_MEM_STACKITEMS: /* Harbour extension (Total items allocated for the stack) */
-      ulResult = hb_stackTotalItems();
-      break;
+      case HB_MEM_USEDMAX:    /* Harbour extension (Maximum memory used [bytes]) */
+#ifdef HB_FM_STATISTICS
+         ulResult = s_lMemoryMaxConsumed;
+#else
+         ulResult = 0;
+#endif
+         break;
 
-   case HB_MEM_STACK:      /* Harbour extension (Total memory size used by the stack [bytes]) */
-      ulResult = hb_stackTotalItems() * sizeof( HB_ITEM );
-      break;
-
-   case HB_MEM_STACK_TOP : /* Harbour extension (Total items currently on the stack) */
-      ulResult = hb_stackTopOffset( );
-      break;
-
-   default:
-      ulResult = 0;
+      case HB_MEM_STACKITEMS: /* Harbour extension (Total items allocated for the stack) */
+      {
+         HB_STACK_TLS_PRELOAD
+         ulResult = hb_stackTotalItems();
+         break;
+      }
+      case HB_MEM_STACK:      /* Harbour extension (Total memory size used by the stack [bytes]) */
+      {
+         HB_STACK_TLS_PRELOAD
+         ulResult = hb_stackTotalItems() * sizeof( HB_ITEM );
+         break;
+      }
+      case HB_MEM_STACK_TOP : /* Harbour extension (Total items currently on the stack) */
+      {
+         HB_STACK_TLS_PRELOAD
+         ulResult = hb_stackTopOffset( );
+         break;
+      }
+      default:
+         ulResult = 0;
    }
 
    return ulResult;

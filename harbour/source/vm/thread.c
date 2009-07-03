@@ -101,6 +101,12 @@
 #  include <sys/time.h>
 #endif
 
+#if defined( HB_OS_UNIX )
+#  include <sys/time.h>
+#  include <sys/times.h>
+#  include <unistd.h>
+#endif
+
 
 static volatile BOOL s_fThreadInit = FALSE;
 static PHB_ITEM s_pOnceMutex = NULL;
@@ -196,6 +202,9 @@ void hb_threadInit( void )
 #  if defined( HB_COND_NEED_INIT )
       HB_COND_INIT( s_thread_cond );
 #  endif
+#if defined( HB_TASK_THREAD )
+      hb_taskInit();
+#  endif
 #endif
       s_fThreadInit = TRUE;
    }
@@ -208,6 +217,92 @@ void hb_threadExit( void )
       hb_itemRelease( s_pOnceMutex );
       s_pOnceMutex = NULL;
    }
+#if defined( HB_TASK_THREAD ) && defined( HB_MT_VM )
+   hb_taskExit();
+#endif
+}
+
+void hb_threadReleaseCPU( void )
+{
+   /*
+    * The following code is modified:
+    *       hb_releaseCPU()
+    * originally created by:
+    *       Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+    * and then updated by few Harbour developers
+    */
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_threadReleaseCPU()"));
+
+   hb_vmUnlock();
+
+   /* TODO: Add code to release time slices on all platforms */
+
+#if defined( HB_TASK_THREAD ) && defined( HB_MT_VM )
+
+   hb_taskSleep( 20 );
+
+#elif defined(HB_OS_WIN) || defined(__CYGWIN__)
+
+   /* Forfeit the remainder of the current time slice. */
+   Sleep( 20 );
+
+#elif defined(HB_OS_OS2)
+
+   /* 23/nov/2000 - maurilio.longo@libero.it
+      Minimum time slice under OS/2 is 32 milliseconds, passed 1 will be rounded to 32 and
+      will give a chance to threads of lower priority to get executed.
+      Passing 0 causes current thread to give up its time slice only if there are threads of
+      equal priority waiting to be dispatched. Note: certain versions of OS/2 kernel have a
+      bug which causes DosSleep(0) not to work as expected.  */
+   DosSleep( 1 ); /* Duration is in milliseconds */
+
+#elif defined(HB_OS_DOS)
+
+   /* NOTE: there is a bug under NT 4 and 2000 -  if the app is running
+      in protected mode, time slices will _not_ be released - you must switch
+      to real mode first, execute the following, and switch back.
+
+      It just occurred to me that this is actually by design.  Since MS doesn't
+      want you to do this from a console app, their solution was to not allow
+      the call to work in protected mode - screw the rest of the planet <g>.
+
+      returns zero on failure. (means not supported)
+   */
+   {
+      union REGS regs;
+
+      regs.h.ah = 2;
+      regs.HB_XREGS.ax = 0x1680;
+
+      HB_DOS_INT86( 0x2F, &regs, &regs );
+   }
+#elif defined(HB_OS_UNIX)
+   {
+      struct timeval tv;
+      tv.tv_sec = 0;
+      tv.tv_usec = 1000;
+      select( 0, NULL, NULL, NULL, &tv );
+   }
+
+   /* the code below is simpler but seems that some Linux kernels
+    * (f.e. from  Centos 5.1) have problems with nanosleep()
+    * so it was replaced by above code
+    */
+
+   /*
+   {
+      static const struct timespec nanosecs = { 0, 1000000 };
+      nanosleep( &nanosecs, NULL );
+   }
+   */
+#else
+
+   /* Do nothing */
+
+#endif
+
+   hb_vmLock();
 }
 
 #if defined( HB_MT_VM ) && defined( HB_COND_HARBOUR_SUPPORT )
@@ -462,6 +557,11 @@ BOOL hb_threadCondSignal( HB_COND_T * cond )
    HB_SYMBOL_UNUSED( cond );
    return FALSE;
 
+#elif defined( HB_TASK_THREAD )
+
+   HB_COND_SIGNAL( *cond );
+   return TRUE;
+
 #elif defined( HB_PTHREAD_API )
 
 #  if defined( HB_COND_NEED_INIT )
@@ -498,6 +598,11 @@ BOOL hb_threadCondBroadcast( HB_COND_T * cond )
 
    HB_SYMBOL_UNUSED( cond );
    return FALSE;
+
+#elif defined( HB_TASK_THREAD )
+
+   HB_COND_SIGNALN( *cond, 0 );
+   return TRUE;
 
 #elif defined( HB_PTHREAD_API )
 
@@ -536,6 +641,10 @@ BOOL hb_threadCondWait( HB_COND_T * cond, HB_CRITICAL_T * mutex )
    HB_SYMBOL_UNUSED( cond );
    HB_SYMBOL_UNUSED( mutex );
    return FALSE;
+
+#elif defined( HB_TASK_THREAD )
+
+   return HB_COND_WAIT( cond, mutex ) != 0;
 
 #elif defined( HB_PTHREAD_API )
 
@@ -591,6 +700,14 @@ BOOL hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, ULONG ulMi
    HB_SYMBOL_UNUSED( mutex );
    HB_SYMBOL_UNUSED( ulMilliSec );
    return FALSE;
+
+#elif defined( HB_TASK_THREAD )
+
+   return HB_COND_TIMEDWAIT( cond, mutex, ulMilliSec ) != 0;
+
+#elif defined( HB_TASK_THREAD )
+
+   return HB_COND_WAIT( cond, mutex ) != 0;
 
 #elif defined( HB_PTHREAD_API )
    struct timespec ts;
@@ -649,6 +766,9 @@ HB_THREAD_HANDLE hb_threadCreate( HB_THREAD_ID * th_id, PHB_THREAD_STARTFUNC sta
    HB_SYMBOL_UNUSED( Cargo );
    *th_id = ( HB_THREAD_ID ) 0;
    th_h = ( HB_THREAD_HANDLE ) 0;
+#elif defined( HB_TASK_THREAD )
+   *th_id = hb_taskCreate( start_func, Cargo, 0 );
+   th_h = *th_id;
 #elif defined( HB_PTHREAD_API )
    if( pthread_create( th_id, NULL, start_func, Cargo ) != 0 )
       *th_id = ( HB_THREAD_ID ) 0;
@@ -674,6 +794,8 @@ BOOL hb_threadJoin( HB_THREAD_HANDLE th_h )
 #if !defined( HB_MT_VM )
    HB_SYMBOL_UNUSED( th_h );
    return FALSE;
+#elif defined( HB_TASK_THREAD )
+   return hb_taskJoin( th_h, HB_TASK_INFINITE_WAIT, NULL ) != 0;
 #elif defined( HB_PTHREAD_API )
    return pthread_join( th_h, NULL ) == 0;
 #elif defined( HB_OS_WIN )
@@ -701,6 +823,9 @@ BOOL hb_threadDetach( HB_THREAD_HANDLE th_h )
 #if !defined( HB_MT_VM )
    HB_SYMBOL_UNUSED( th_h );
    return FALSE;
+#elif defined( HB_TASK_THREAD )
+   hb_taskDetach( th_h );
+   return TRUE;
 #elif defined( HB_PTHREAD_API )
    return pthread_detach( th_h ) == 0;
 #elif defined( HB_OS_WIN )
@@ -1109,7 +1234,11 @@ static int hb_threadWait( PHB_THREADSTATE * pThreads, int iThreads,
          fExit = pthread_cond_wait( &s_thread_cond, &s_thread_mtx ) != 0;
       hb_vmLock();
 #else
-#  if defined( HB_COND_HARBOUR_SUPPORT )
+#  if defined( HB_TASK_THREAD )
+      hb_vmUnlock();
+      fExit = hb_taskWait( &s_thread_cond, &s_thread_mtx, ulMilliSec );
+      hb_vmLock();
+#  elif defined( HB_COND_HARBOUR_SUPPORT )
       hb_vmUnlock();
       fExit = !_hb_thread_cond_wait( &s_thread_cond, &s_thread_mtx, ulMilliSec );
       hb_vmLock();
@@ -1452,6 +1581,8 @@ static void hb_mutexListLock( PHB_MTXLST pList )
          pMutex->lockers++;
 #if defined( HB_PTHREAD_API )
          pthread_cond_wait( &pMutex->cond_l, &pMutex->mutex );
+#elif defined( HB_TASK_THREAD )
+         hb_taskWait( &pMutex->cond_l, &pMutex->mutex, HB_TASK_INFINITE_WAIT );
 #elif defined( HB_COND_HARBOUR_SUPPORT )
          _hb_thread_cond_wait( &pMutex->cond_l, &pMutex->mutex, HB_THREAD_INFINITE_WAIT );
 #else
@@ -1633,6 +1764,8 @@ BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, ULONG ulMilliSec,
                pMutex->waiters++;
 #  if defined( HB_PTHREAD_API )
                pthread_cond_wait( &pMutex->cond_w, &pMutex->mutex );
+#  elif defined( HB_TASK_THREAD )
+               hb_taskWait( &pMutex->cond_w, &pMutex->mutex, HB_TASK_INFINITE_WAIT );
 #  elif defined( HB_COND_HARBOUR_SUPPORT )
                _hb_thread_cond_wait( &pMutex->cond_w, &pMutex->mutex, HB_THREAD_INFINITE_WAIT );
 #  else
@@ -1663,7 +1796,9 @@ BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, ULONG ulMilliSec,
                 *       one thread so we should use while loop to check if wait
                 *       condition is true.
                 */
-#     if defined( HB_COND_HARBOUR_SUPPORT )
+#     if defined( HB_TASK_THREAD )
+               hb_taskWait( &pMutex->cond_w, &pMutex->mutex, ulMilliSec );
+#     elif defined( HB_COND_HARBOUR_SUPPORT )
                _hb_thread_cond_wait( &pMutex->cond_w, &pMutex->mutex, ulMilliSec );
 #     else
                HB_CRITICAL_UNLOCK( pMutex->mutex );
@@ -1695,6 +1830,8 @@ BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, ULONG ulMilliSec,
             {
 #  if defined( HB_PTHREAD_API )
                pthread_cond_wait( &pSyncMutex->cond_l, &pSyncMutex->mutex );
+#  elif defined( HB_TASK_THREAD )
+               hb_taskWait( &pSyncMutex->cond_l, &pSyncMutex->mutex, HB_TASK_INFINITE_WAIT );
 #  elif defined( HB_COND_HARBOUR_SUPPORT )
                _hb_thread_cond_wait( &pSyncMutex->cond_l, &pSyncMutex->mutex, HB_THREAD_INFINITE_WAIT );
 #  else
@@ -1776,6 +1913,8 @@ BOOL hb_threadMutexLock( PHB_ITEM pItem )
             pMutex->lockers++;
 #  if defined( HB_PTHREAD_API )
             pthread_cond_wait( &pMutex->cond_l, &pMutex->mutex );
+#  elif defined( HB_TASK_THREAD )
+            hb_taskWait( &pMutex->cond_l, &pMutex->mutex, HB_TASK_INFINITE_WAIT );
 #  elif defined( HB_COND_HARBOUR_SUPPORT )
             _hb_thread_cond_wait( &pMutex->cond_l, &pMutex->mutex, HB_THREAD_INFINITE_WAIT );
 #  else
@@ -1844,7 +1983,11 @@ BOOL hb_threadMutexTimedLock( PHB_ITEM pItem, ULONG ulMilliSec )
              *       one thread so we should use while loop to check if wait
              *       condition is true.
              */
-#     if defined( HB_COND_HARBOUR_SUPPORT )
+#     if defined( HB_TASK_THREAD )
+            pMutex->lockers++;
+            hb_taskWait( &pMutex->cond_l, &pMutex->mutex, ulMilliSec );
+            pMutex->lockers--;
+#     elif defined( HB_COND_HARBOUR_SUPPORT )
             pMutex->lockers++;
             _hb_thread_cond_wait( &pMutex->cond_l, &pMutex->mutex, ulMilliSec );
             pMutex->lockers--;
@@ -2030,6 +2173,8 @@ PHB_ITEM hb_threadMutexSubscribe( PHB_ITEM pItem, BOOL fClear )
          pMutex->waiters++;
 #  if defined( HB_PTHREAD_API )
          pthread_cond_wait( &pMutex->cond_w, &pMutex->mutex );
+#  elif defined( HB_TASK_THREAD )
+         hb_taskWait( &pMutex->cond_w, &pMutex->mutex, HB_TASK_INFINITE_WAIT );
 #  elif defined( HB_COND_HARBOUR_SUPPORT )
          _hb_thread_cond_wait( &pMutex->cond_w, &pMutex->mutex, HB_THREAD_INFINITE_WAIT );
 #  else
@@ -2058,6 +2203,8 @@ PHB_ITEM hb_threadMutexSubscribe( PHB_ITEM pItem, BOOL fClear )
             {
 #  if defined( HB_PTHREAD_API )
                pthread_cond_wait( &pMutex->cond_l, &pMutex->mutex );
+#  elif defined( HB_TASK_THREAD )
+               hb_taskWait( &pMutex->cond_l, &pMutex->mutex, HB_TASK_INFINITE_WAIT );
 #  elif defined( HB_COND_HARBOUR_SUPPORT )
                _hb_thread_cond_wait( &pMutex->cond_l, &pMutex->mutex, HB_THREAD_INFINITE_WAIT );
 #  else
@@ -2150,7 +2297,9 @@ PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, ULONG ulMilliSec, BOOL fC
              *       one thread so we should use while loop to check if wait
              *       condition is true.
              */
-#     if defined( HB_COND_HARBOUR_SUPPORT )
+#     if defined( HB_TASK_THREAD )
+            hb_taskWait( &pMutex->cond_w, &pMutex->mutex, ulMilliSec );
+#     elif defined( HB_COND_HARBOUR_SUPPORT )
             _hb_thread_cond_wait( &pMutex->cond_w, &pMutex->mutex, ulMilliSec );
 #     else
             HB_CRITICAL_UNLOCK( pMutex->mutex );
@@ -2180,6 +2329,8 @@ PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, ULONG ulMilliSec, BOOL fC
             {
 #  if defined( HB_PTHREAD_API )
                pthread_cond_wait( &pMutex->cond_l, &pMutex->mutex );
+#  elif defined( HB_TASK_THREAD )
+               hb_taskWait( &pMutex->cond_l, &pMutex->mutex, HB_TASK_INFINITE_WAIT );
 #  elif defined( HB_COND_HARBOUR_SUPPORT )
                _hb_thread_cond_wait( &pMutex->cond_l, &pMutex->mutex, HB_THREAD_INFINITE_WAIT );
 #  else
@@ -2350,3 +2501,7 @@ HB_FUNC( HB_MTVM )
    hb_retl( FALSE );
 #endif
 }
+
+#if defined( HB_TASK_THREAD ) && defined( HB_MT_VM )
+#  include "task.c"
+#endif

@@ -106,10 +106,18 @@ PRG_SOURCES=\
 LIBNAME=hbvm
 
 HB_USER_CFLAGS:=$(subst -DHB_MT_VM,,$(HB_USER_CFLAGS))
-ifneq ($(HB_ARCHITECTURE),dos)
+
+ifneq ($(HB_MT),yes)
+ifeq ($(HB_ARCHITECTURE),dos)
+ifneq ($(HB_COMPILER),djgpp)
+ifneq ($(HB_COMPILER),watcom)
+	HB_MT = no
+endif
+endif
+endif
+endif
 ifneq ($(HB_MT),no)
 	DIRS+= vmmt
-endif
 endif
 
 include $(TOP)$(ROOT)config/lib.cf
