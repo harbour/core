@@ -4,7 +4,7 @@
 
 ifeq ($(PM),) # Only traverse directories if not compiling a specific module
 
-ifeq ($(SHLVL),) # COMMAND.COM
+ifeq ($(SHLVL),) # NT Shell
 
 ifeq ($(DIRS),) # Empty directory list
 DIR_RULE =\
@@ -13,7 +13,7 @@ else
 DIR_LIST = $(subst /,\,$(DIRS))
 DIR_MAKE = $(subst /,\,$(MK))
 DIR_RULE =\
-	$(COMSPEC) /C FOR %d IN ($(DIR_LIST)) DO $(DIR_MAKE) -C %d $@
+	$(COMSPEC) /c for %d in ($(DIR_LIST)) do $(DIR_MAKE) -C %d $@
 endif
 
 else  # bash
@@ -25,6 +25,6 @@ DIR_RULE =\
 	  fi \
 	done
 
-endif # ! Windows     
+endif # ! Windows
 
 endif # ! compiling a specific program module

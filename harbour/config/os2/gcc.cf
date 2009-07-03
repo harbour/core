@@ -4,7 +4,7 @@
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
-ifeq ($(HB_BUILD_CPP),yes)
+ifeq ($(HB_BUILD_MODE),cpp)
    HB_CMP = g++
 else
    HB_CMP = gcc

@@ -93,70 +93,13 @@ endif
 SYSLIBS = -luser32 -lgdi32
 SYSLIBS += -lwinspool -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lmpr -lws2_32 -lmapi32
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
-# It causes that every echo command will be separated by LF
-define lib_object
-echo. ADDMOD $(file) >> __lib__.tmp
-
-endef
-
-# We have to use script to overcome the DOS limit of max 128 characters
-# in commmand line
-define create_library
-echo. CREATE $(LIB_DIR)/$@ > __lib__.tmp
-$(foreach file, $(^F), $(lib_object))
-echo. SAVE >> __lib__.tmp
-echo. END >> __lib__.tmp
-$(AR) $(ARFLAGS) -M < __lib__.tmp
-endef
-
-# NOTE: The empty line below HAVE TO exist!
-define link_file
-echo. $(file) >> __link__.tmp
-
-endef
-
-define search_dir
-echo. SEARCH_DIR($(file)) >> __link__.tmp
-
-endef
-
-ifneq ($(strip $(LDLIBS)),)
-define libs_list
-echo. GROUP( >> __link__.tmp
-$(foreach file, $(LDLIBS), $(link_file))
-echo. ) >> __link__.tmp
-endef
-else
-libs_list=
-endif
-
-define link_exe_file
-echo. INPUT( >> __link__.tmp
-$(foreach file, $(^F), $(link_file))
-echo. ) >> __link__.tmp
-$(libs_list)
-$(foreach file, $(subst -L,,$(LINKPATHS)), $(search_dir))
-echo. GROUP( >> __link__.tmp
-$(foreach file, $(SYSLIBS), $(link_file))
-echo. ) >> __link__.tmp
--$(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LD_OUT)$@ __link__.tmp
-endef
-
 AR = $(HB_CCPREFIX)ar
 ARFLAGS = $(HB_USER_AFLAGS)
 
 RANLIB = $(HB_CCPREFIX)ranlib
 
-ifeq ($(SHLVL),) # COMMAND.COM - length of command line is limited
-ifneq ($(OS),Windows_NT)
-AR_RULE = $(create_library)
-LD_RULE = $(link_exe_file)
-endif
-endif
-
 ifeq ($(AR_RULE),)
-ifeq ($(SHLVL),) # COMMAND.COM
+ifeq ($(SHLVL),) # NT Shell
 LIB_DIR_DOS_ = $(subst /,\,$(LIB_DIR))\$@
 else
 LIB_DIR_DOS_ = $(LIB_DIR)/$@
