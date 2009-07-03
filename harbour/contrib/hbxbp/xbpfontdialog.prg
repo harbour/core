@@ -317,8 +317,9 @@ METHOD XbpFontDialog:destroy()
  * Only callable from ::activateOK and ::activateApply
  */
 METHOD XbpFontDialog:GetXbpFont( aFont )
-   LOCAL oXbpFont
+   LOCAL oXbpFont := 0
 
+   HB_SYMBOL_UNUSED( aFont )
    #if 0
    DEFAULT aFont TO Wvg_ChooseFont_GetLogFont( ::hWnd )
 

@@ -58,6 +58,14 @@
 
 /*----------------------------------------------------------------------*/
 
+#define TAB_1   1
+#define TAB_2   2
+#define TAB_3   3
+#define TAB_4   4
+#define TAB_5   5
+
+/*----------------------------------------------------------------------*/
+
 PROCEDURE Main()
 
    BuildADialog()
@@ -105,7 +113,7 @@ PROCEDURE BuildADialog()
    Build_ToolBar( oDa )
 
    /* Install Tab Pages */
-   aTabs := Build_TabPages( oDlg )
+   aTabs := Build_TabPages( oDa )
 
    /* Install checkboxes */
    Build_CheckBox( aTabs[ 3 ] )
@@ -117,7 +125,7 @@ PROCEDURE BuildADialog()
    Build_RadioButton( aTabs[ 3 ] )
 
    /* Install ListBox */
-   Build_ListBox( aTabs[ 1 ] )
+   Build_ListBox( aTabs[ 5 ] )
 
    /* Install Push Buttons */
    Build_PushButton( oDa )
@@ -129,7 +137,7 @@ PROCEDURE BuildADialog()
    Build_MLE( aTabs[ 2 ] )
 
    /* Install ScrollBar */
-   Build_ScrollBar( aTabs[ 1 ] )
+   Build_ScrollBar( aTabs[ 5 ] )
 
    /* Install Spin Buttons */
    Build_SpinButtons( aTabs[ 3 ] )
@@ -142,6 +150,9 @@ PROCEDURE BuildADialog()
 
    /* Build Statics */
    Build_Statics( oDA )
+
+   /* Build HTML Viewer */
+   Build_HTMLViewer( aTabs[ 1 ] )
 
    /* Present the dialog on the screen */
    oDlg:Show()
@@ -321,15 +332,16 @@ FUNCTION Build_ToolBar( oDA )
 
    /* Harbour does not support resource IDs so giving bitmap files */
    #ifdef __HARBOUR__
-      oTBar:addItem( "Button #1", "new.png"  )
-      oTBar:addItem( "Button #2", "open.png" )
+      oTBar:addItem( "Save", "new.png"  )
+      oTBar:addItem( "Open", "open.png" )
    #else
       oTBar:addItem( "Button #1" )//, 100 )
       oTBar:addItem( "Button #2" )//, 101 )
    #endif
 
    oTBar:transparentColor := GRA_CLR_INVALID
-   oTBar:buttonClick := {|oButton| MsgBox( "Button [" + oButton:caption + "] clicked!" ) }
+   oTBar:buttonClick := {|oButton| IF( oButton:caption == "Open", Build_FileDialog( oDA,"open" ), ;
+                                                                  Build_FileDialog( oDA,"save" ) ) }
 
    RETURN nil
 
@@ -440,51 +452,55 @@ FUNCTION Build_RadioButton( oStatic )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION Build_TabPages( oDlg )
-   LOCAL oTab1, oTab2, oTab3, oTab4
+FUNCTION Build_TabPages( oWnd )
    LOCAL nHeight := 390
+   LOCAL aTabs   := { NIL,NIL,NIL,NIL,NIL }
 
-   // First tab page is maximized
+   aTabs[ TAB_1 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight } )
+   aTabs[ TAB_1 ]:caption    := "Web"
+   aTabs[ TAB_1 ]:preOffset  := 20
+   aTabs[ TAB_1 ]:postOffset := 60
+   aTabs[ TAB_1 ]:minimized  := .F.
+   aTabs[ TAB_1 ]:create()
+   aTabs[ TAB_1 ]:TabActivate := SetMaximized( aTabs, 1 )
 
-   oTab1 := XbpTabPage():new( oDlg:drawingArea, , { 510, 20 }, { 360, nHeight } )
+   aTabs[ TAB_2 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight } )
+   aTabs[ TAB_2 ]:caption    := "MLE"
+   aTabs[ TAB_2 ]:preOffset  := 20
+   aTabs[ TAB_2 ]:postOffset := 60
+   aTabs[ TAB_2 ]:create()
+   aTabs[ TAB_2 ]:TabActivate := SetMaximized( aTabs, 1 )
+
+   aTabs[ TAB_3 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight } )
+   aTabs[ TAB_3 ]:caption    := "Buttons"
+   aTabs[ TAB_3 ]:preOffset  := 40
+   aTabs[ TAB_3 ]:postOffset := 40
+   aTabs[ TAB_3 ]:create()
+   aTabs[ TAB_3 ]:TabActivate := SetMaximized( aTabs, 3 )
+
+   aTabs[ TAB_4 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight } )
+   aTabs[ TAB_4 ]:caption    := "Tree"
+   aTabs[ TAB_4 ]:preOffset  := 60
+   aTabs[ TAB_4 ]:postOffset := 20
+   aTabs[ TAB_4 ]:create()
+   aTabs[ TAB_4 ]:TabActivate := SetMaximized( aTabs, 4 )
+   aTabs[ TAB_4 ]:setColorBG( GraMakeRGBColor( {198,198,198} ) )
+
+   aTabs[ TAB_5 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight } )
+   aTabs[ TAB_5 ]:minimized := .F.
+   aTabs[ TAB_5 ]:caption   := "Lists"
+   aTabs[ TAB_5 ]:create()
+   aTabs[ TAB_5 ]:TabActivate := SetMaximized( aTabs, 5 )
+   aTabs[ TAB_5 ]:setPointer( , XBPSTATIC_SYSICON_SIZENESW, XBPWINDOW_POINTERTYPE_SYSPOINTER )
    /* comment our following line to position tabs at the bottom */
-   //oTab1:type := XBPTABPAGE_TAB_BOTTOM
-   oTab1:minimized := .F.
-   oTab1:caption   := "ListView"
-   oTab1:create()
-   oTab1:TabActivate := {|| oTab2:minimize(), oTab3:minimize(), oTab4:minimize(), oTab1:maximize() }
+   /* aTabs[ TAB_5 ]:type := XBPTABPAGE_TAB_BOTTOM */
 
-   oTab1:setPointer( , XBPSTATIC_SYSICON_SIZENESW, XBPWINDOW_POINTERTYPE_SYSPOINTER )
+   RETURN aTabs
 
-   // Second tab page is minimized
-   oTab2 := XbpTabPage():new( oDlg:drawingArea, , { 510, 20 }, { 360, nHeight } )
-   oTab2:caption    := "XbpMLE"
-   oTab2:preOffset  := 20
-   oTab2:postOffset := 60
-   oTab2:create()
-   oTab2:TabActivate := {|| oTab1:minimize(), oTab3:minimize(), oTab4:minimize(), oTab2:maximize() }
+/*----------------------------------------------------------------------*/
 
-   // Third tab page is minimized
-   oTab3 := XbpTabPage():new( oDlg:drawingArea, , { 510, 20 }, { 360, nHeight } )
-   oTab3:caption    := "CheckBoxes"
-   oTab3:preOffset  := 40
-   oTab3:postOffset := 40
-   oTab3:create()
-   oTab3:TabActivate := ;
-       {|x,y,oTab| x := y, oTab1:minimize(), oTab2:minimize(), oTab4:minimize(), oTab3:maximize() }
-
-   // Third tab page is minimized
-   oTab4 := XbpTabPage():new( oDlg:drawingArea, , { 510, 20 }, { 360, nHeight } )
-   oTab4:caption    := "TreeView"
-   oTab4:preOffset  := 60
-   oTab4:postOffset := 20
-   oTab4:create()
-   oTab4:TabActivate := ;
-       {|x,y,oTab| x := y, oTab1:minimize(), oTab2:minimize(), oTab3:minimize(), oTab4:maximize() }
-
-   oTab4:setColorBG( GraMakeRGBColor( {198,198,198} ) )
-
-   RETURN { oTab1, oTab2, oTab3, oTab4 }
+STATIC FUNCTION SetMaximized( aTabs, nMax )
+   RETURN {|| aeval( aTabs, {|o,i| IF( i == nMax, o:maximize(), o:minimize() ) } ) }
 
 /*----------------------------------------------------------------------*/
 
@@ -925,3 +941,44 @@ FUNCTION Build_Statics( oWnd )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION Build_HTMLViewer( oWnd )
+   LOCAL oHtm, sz_:= oWnd:currentSize()
+
+   oHtm := XbpHTMLViewer():new( oWnd, , {10,10}, {sz_[1]-25,sz_[2]-30-15} )
+   oHtm:create()
+   oHtm:navigate( "http://www.harbour-project.org" )
+   oHtm:titleChange    := {|e| hb_outDebug( e ) }
+   oHtm:progressChange := {|nProg,nMax| hb_outDebug( "Downloaded: "+str( nProg*100/nMax,10,0 ) ) }
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_FileDialog( oWnd, cMode )
+   LOCAL oDlg, cFile, aFiles
+
+   oDlg := XbpFileDialog():new():create( oWnd, , { 10,10 } )
+   IF cMode == "open"
+      oDlg:title       := "Open Index or Database"
+      oDlg:center      := .t.
+      oDlg:fileFilters := { { 'Index Files', '*.ntx' }, { 'Database Files', '*.dbf' } }
+      oDlg:setColorBG( GraMakeRGBColor( { 170,170,170 } ) )
+      aFiles := oDlg:open( "c:\temp", , .t. )
+      IF !empty( aFiles )
+         aeval( aFiles, {|e| hb_outDebug( e ) } )
+      ENDIF
+   ELSE
+      oDlg:title       := "Save this Database"
+      oDlg:fileFilters := { { 'Database Files', '*.dbf' } }
+      cFile := oDlg:saveAs( "c:\temp\myfile.dbf" )
+      IF !empty( cFile )
+         hb_outDebug( cFile )
+      ENDIF
+   ENDIF
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+

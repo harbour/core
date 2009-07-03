@@ -100,6 +100,9 @@
 #define QFileDialog_Detail                               0   // Displays an icon, a name, and details for each item in the directory.
 #define QFileDialog_List                                 1   // Displays only an icon and a name for each item in the directory.
 
+#define QDialog_Accepted                                 1
+#define QDialog_Rejected                                 0
+
 
 /*----------------------------------------------------------------------*/
 
@@ -131,6 +134,7 @@ CLASS XbpFileDialog INHERIT XbpWindow
 
    METHOD   open()
    METHOD   saveAs()
+   METHOD   extractFileNames()
 
    ENDCLASS
 
@@ -170,7 +174,9 @@ STATIC FUNCTION Xbp_ArrayToFileFilter( aFilter )
 
 METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFiles )
    LOCAL cFiles := NIL
-   LOCAL i, oList
+   LOCAL i, oList, nResult
+
+   HB_SYMBOL_UNUSED( lCreateNewFiles )
 
    DEFAULT lAllowMultiple TO .F.
 
@@ -179,6 +185,10 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
    ENDIF
 
    ::oWidget:setAcceptMode( QFileDialog_AcceptOpen )
+
+   IF lAllowMultiple
+      ::oWidget:setFileMode( QFileDialog_ExistingFiles )
+   ENDIF
 
    IF !empty( ::defExtension )
       ::oWidget:setDefaultSuffix( ::defExtension )
@@ -210,12 +220,17 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
       ::oWidget:setOption( QFileDialog_ReadOnly, .T. )
    ENDIF
 
-   RETURN NIL
+   IF !( lCenter )
+      ::setPos()
+   ENDIF
+   nResult := ::oWidget:exec()
+
+   RETURN IF( nResult == QDialog_Accepted, ::extractFileNames( lAllowMultiple ), NIL )
 
 /*----------------------------------------------------------------------*/
 
-
 METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
+   LOCAL nResult
 
    DEFAULT lFileList TO .T.
 
@@ -224,8 +239,6 @@ METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
    ENDIF
 
    ::oWidget:setAcceptMode( QFileDialog_AcceptSave )
-
-   //::oWidget:setFileMode( IF(
 
    IF !empty( ::defExtension )
       ::oWidget:setDefaultSuffix( ::defExtension )
@@ -239,10 +252,35 @@ METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
       ::oWidget:setDirectory( cDefaultFile )
    ENDIF
 
-   RETURN NIL
+//   oStyle := QApplication():style()
+//   ::oWidget:setStyle( oStyle )
+
+   IF !( lCenter )
+      ::setPos()
+   ENDIF
+   nResult := ::oWidget:exec()
+
+   RETURN IF( nResult == QDialog_Accepted, ::extractFileNames(), NIL )
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpFileDialog:extractFileNames( lAllowMultiple )
+   LOCAL oFiles, i, f_:= {}
 
+   DEFAULT lAllowMultiple TO .F.
+
+   oFiles := QStringList()
+   oFiles:pPtr := ::oWidget:selectedFiles()
+   FOR i := 1 TO oFiles:size()
+      aadd( f_, oFiles:at( i-1 ) )
+   NEXT
+
+   IF !( lAllowMultiple )
+      f_:= f_[ 1 ]
+   ENDIF
+
+   RETURN f_
+
+/*----------------------------------------------------------------------*/
 
 

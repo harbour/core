@@ -63,6 +63,10 @@ PRG_SOURCES=\
 	xbpstyle.prg \
 	xbpappevent.prg \
 	xbpstatic.prg \
+	xbphtmlviewer.prg \
+	xbpfiledialog.prg \
+	xbpfontdialog.prg \
+
 
 PRG_HEADERS=\
 	xbp.ch \

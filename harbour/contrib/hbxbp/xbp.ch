@@ -133,57 +133,57 @@
 #define XBP_PP_MENU_DISABLED_BGCLR                42
 
 
-#define XBPSYSCLR_BUTTONTEXT                      ( -58 )
-#define XBPSYSCLR_INFOBACKGROUND                  ( -57 )
-#define XBPSYSCLR_INFOTEXT                        ( -56 )
-#define XBPSYSCLR_3DHIGHLIGHT                     ( -55 )
-#define XBPSYSCLR_3DLIGHT                         ( -54 )
-#define XBPSYSCLR_3DFACE                          ( -53 )
-#define XBPSYSCLR_3DSHADOW                        ( -52 )
-#define XBPSYSCLR_3DDARKSHADOW                    ( -51 )
-#define XBPSYSCLR_SHADOWHILITEBGND                ( -50 )
-#define XBPSYSCLR_SHADOWHILITEFGND                ( -49 )
-#define XBPSYSCLR_SHADOWTEXT                      ( -48 )
+#define XBPSYSCLR_BUTTONTEXT                      ( -58 )     //
+#define XBPSYSCLR_INFOBACKGROUND                  ( -57 )     //
+#define XBPSYSCLR_INFOTEXT                        ( -56 )     //
+#define XBPSYSCLR_3DHIGHLIGHT                     ( -55 )     // QPalette::Light
+#define XBPSYSCLR_3DLIGHT                         ( -54 )     // QPalette::MidLight
+#define XBPSYSCLR_3DFACE                          ( -53 )     // QPalette::Button
+#define XBPSYSCLR_3DSHADOW                        ( -52 )     // QPalette::Mid
+#define XBPSYSCLR_3DDARKSHADOW                    ( -51 )     // QPalette::Shadow
+#define XBPSYSCLR_SHADOWHILITEBGND                ( -50 )     //
+#define XBPSYSCLR_SHADOWHILITEFGND                ( -49 )     //
+#define XBPSYSCLR_SHADOWTEXT                      ( -48 )     //
 #define XBPSYSCLR_ENTRYFIELD                      ( -47 )     // QPalette_Base
-#define XBPSYSCLR_MENUDISABLEDTEXT                ( -46 )
-#define XBPSYSCLR_MENUHILITE                      ( -45 )
-#define XBPSYSCLR_MENUHILITEBGND                  ( -44 )
-#define XBPSYSCLR_PAGEBACKGROUND                  ( -43 )
-#define XBPSYSCLR_FIELDBACKGROUND                 ( -42 )
-#define XBPSYSCLR_BUTTONLIGHT                     ( -41 )
-#define XBPSYSCLR_BUTTONMIDDLE                    ( -40 )
-#define XBPSYSCLR_BUTTONDARK                      ( -39 )
-#define XBPSYSCLR_BUTTONDEFAULT                   ( -38 )
-#define XBPSYSCLR_TITLEBOTTOM                     ( -37 )
-#define XBPSYSCLR_SHADOW                          ( -36 )
-#define XBPSYSCLR_ICONTEXT                        ( -35 )
-#define XBPSYSCLR_DIALOGBACKGROUND                ( -34 )
-#define XBPSYSCLR_HILITEFOREGROUND                ( -33 )
-#define XBPSYSCLR_HILITEBACKGROUND                ( -32 )
-#define XBPSYSCLR_INACTIVETITLETEXTBGND           ( -31 )
-#define XBPSYSCLR_ACTIVETITLETEXTBGND             ( -30 )
-#define XBPSYSCLR_INACTIVETITLETEXT               ( -29 )
-#define XBPSYSCLR_ACTIVETITLETEXT                 ( -28 )
-#define XBPSYSCLR_OUTPUTTEXT                      ( -27 )
-#define XBPSYSCLR_WINDOWSTATICTEXT                ( -26 )
-#define XBPSYSCLR_SCROLLBAR                       ( -25 )
-#define XBPSYSCLR_BACKGROUND                      ( -24 )
-#define XBPSYSCLR_ACTIVETITLE                     ( -23 )
-#define XBPSYSCLR_INACTIVETITLE                   ( -22 )
-#define XBPSYSCLR_MENU                            ( -21 )
-#define XBPSYSCLR_WINDOW                          ( -20 )    // QPalette_Window
-#define XBPSYSCLR_WINDOWFRAME                     ( -19 )
-#define XBPSYSCLR_MENUTEXT                        ( -18 )
-#define XBPSYSCLR_WINDOWTEXT                      ( -17 )    // QPalette_WindowText
-#define XBPSYSCLR_TITLETEXT                       ( -16 )
-#define XBPSYSCLR_ACTIVEBORDER                    ( -15 )
-#define XBPSYSCLR_INACTIVEBORDER                  ( -14 )
-#define XBPSYSCLR_APPWORKSPACE                    ( -13 )
-#define XBPSYSCLR_HELPBACKGROUND                  ( -12 )    // QPalette_ToolTipBase
-#define XBPSYSCLR_HELPTEXT                        ( -11 )    // QPalette_ToolTipText
-#define XBPSYSCLR_HELPHILITE                      ( -10 )
+#define XBPSYSCLR_MENUDISABLEDTEXT                ( -46 )     //
+#define XBPSYSCLR_MENUHILITE                      ( -45 )     //
+#define XBPSYSCLR_MENUHILITEBGND                  ( -44 )     //
+#define XBPSYSCLR_PAGEBACKGROUND                  ( -43 )     // QPalette_Base
+#define XBPSYSCLR_FIELDBACKGROUND                 ( -42 )     // QPalette_Base
+#define XBPSYSCLR_BUTTONLIGHT                     ( -41 )     // QPalette::Light
+#define XBPSYSCLR_BUTTONMIDDLE                    ( -40 )     // QPalette::MidLight
+#define XBPSYSCLR_BUTTONDARK                      ( -39 )     // QPalette::Mid
+#define XBPSYSCLR_BUTTONDEFAULT                   ( -38 )     // QPalette::Button
+#define XBPSYSCLR_TITLEBOTTOM                     ( -37 )     //
+#define XBPSYSCLR_SHADOW                          ( -36 )     // QPalette::Shadow
+#define XBPSYSCLR_ICONTEXT                        ( -35 )     //
+#define XBPSYSCLR_DIALOGBACKGROUND                ( -34 )     // QPalette::Button
+#define XBPSYSCLR_HILITEFOREGROUND                ( -33 )     // QPalette::HighlightedText
+#define XBPSYSCLR_HILITEBACKGROUND                ( -32 )     // QPalette::Highlight
+#define XBPSYSCLR_INACTIVETITLETEXTBGND           ( -31 )     //
+#define XBPSYSCLR_ACTIVETITLETEXTBGND             ( -30 )     //
+#define XBPSYSCLR_INACTIVETITLETEXT               ( -29 )     //
+#define XBPSYSCLR_ACTIVETITLETEXT                 ( -28 )     //
+#define XBPSYSCLR_OUTPUTTEXT                      ( -27 )     //
+#define XBPSYSCLR_WINDOWSTATICTEXT                ( -26 )     //
+#define XBPSYSCLR_SCROLLBAR                       ( -25 )     //
+#define XBPSYSCLR_BACKGROUND                      ( -24 )     // QPalette::Window
+#define XBPSYSCLR_ACTIVETITLE                     ( -23 )     //
+#define XBPSYSCLR_INACTIVETITLE                   ( -22 )     //
+#define XBPSYSCLR_MENU                            ( -21 )     //
+#define XBPSYSCLR_WINDOW                          ( -20 )     // QPalette_Window
+#define XBPSYSCLR_WINDOWFRAME                     ( -19 )     //
+#define XBPSYSCLR_MENUTEXT                        ( -18 )     //
+#define XBPSYSCLR_WINDOWTEXT                      ( -17 )     // QPalette_WindowText
+#define XBPSYSCLR_TITLETEXT                       ( -16 )     //
+#define XBPSYSCLR_ACTIVEBORDER                    ( -15 )     //
+#define XBPSYSCLR_INACTIVEBORDER                  ( -14 )     //
+#define XBPSYSCLR_APPWORKSPACE                    ( -13 )     //
+#define XBPSYSCLR_HELPBACKGROUND                  ( -12 )     // QPalette_ToolTipBase
+#define XBPSYSCLR_HELPTEXT                        ( -11 )     // QPalette_ToolTipText
+#define XBPSYSCLR_HELPHILITE                      ( -10 )     // QPalette::Highlight
 
-#define XBPSYSCLR_TRANSPARENT                     ( -255 )
+#define XBPSYSCLR_TRANSPARENT                     ( -255 )    // Qt_transparent
 
 #define XBP_DISP_MODELESS                         1
 #define XBP_DISP_APPMODAL                         2
