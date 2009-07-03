@@ -79,7 +79,7 @@ PRG functions:
 
 C functions:
 
-   void hb_md5( const char * data, ULONG datalen, char * digest )
+   void hb_md5( void char * data, ULONG datalen, char * digest )
       Parameters:
          data     - input byte stream
          datalen  - input stream length
@@ -274,8 +274,9 @@ static void hb_md5digest( const char * md5val, char * digest )
    }
 }
 
-void hb_md5( const char * ucData, ULONG ulLen, char * ucDigest )
+void hb_md5( const void * data, ULONG ulLen, char * digest )
 {
+   const unsigned char * ucdata = ( const unsigned char * ) data;
    UCHAR buf[ 128 ];
    MD5_BUF md5;
    int i, n;
@@ -285,15 +286,15 @@ void hb_md5( const char * ucData, ULONG ulLen, char * ucDigest )
    /* count full 512bit blocks in data*/
    n = ulLen >> 6;
    /* process full blocks */
-   for( i = 0; i < n; i++, ucData += 64 )
+   for( i = 0; i < n; i++, ucdata += 64 )
    {
-      memcpy( md5.buf, ucData, 64 );
+      memcpy( md5.buf, ucdata, 64 );
       hb_md5go( &md5 );
    }
    /* prepare additional block(s) */
    n = ulLen & 63;
    if( n )
-      memcpy( buf, ucData, n );
+      memcpy( buf, ucdata, n );
    memcpy( buf + n, pad, 64 );
    /* count bits length */
    i = 56;
@@ -313,10 +314,10 @@ void hb_md5( const char * ucData, ULONG ulLen, char * ucDigest )
    memcpy( md5.buf, buf + i - 64, 64 );
    hb_md5go( &md5 );
    /* write digest */
-   hb_md5val( md5.accum, ucDigest );
+   hb_md5val( md5.accum, digest );
 }
 
-void hb_md5file( HB_FHANDLE hFile, char * ucDigest )
+void hb_md5file( HB_FHANDLE hFile, char * digest )
 {
    MD5_BUF md5;
    ULONG n;
@@ -366,7 +367,7 @@ void hb_md5file( HB_FHANDLE hFile, char * ucDigest )
    }
    memcpy( md5.buf, buf + i - 64, 64 );
    hb_md5go( &md5 );
-   hb_md5val( md5.accum, ucDigest );
+   hb_md5val( md5.accum, digest );
    hb_xfree( readbuf );
 }
 

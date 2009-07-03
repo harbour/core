@@ -54,12 +54,12 @@
 
 HB_EXTERN_BEGIN
 
-extern HB_EXPORT ULONG hb_adler32( ULONG adler, const char *buf, ULONG len );
-extern HB_EXPORT ULONG hb_crc16( ULONG crc, const char *buf, ULONG len );
-extern HB_EXPORT ULONG hb_crc32( ULONG crc, const char *buf, ULONG len );
-extern HB_EXPORT HB_ULONG hb_crc( HB_ULONG crc, const char * buf, ULONG len, HB_ULONG poly );
-extern HB_EXPORT HB_ULONG hb_crcct( HB_ULONG crc, const char * buf, ULONG len, HB_ULONG poly );
-extern HB_EXPORT void hb_md5( const char * ucData, ULONG ulLen, char * ucDigest );
-extern HB_EXPORT void hb_md5file( HB_FHANDLE hFile, char * ucDigest );
+extern HB_EXPORT ULONG hb_adler32( ULONG adler, const void *buf, ULONG len );
+extern HB_EXPORT ULONG hb_crc16( ULONG crc, const void *buf, ULONG len );
+extern HB_EXPORT ULONG hb_crc32( ULONG crc, const void *buf, ULONG len );
+extern HB_EXPORT HB_ULONG hb_crc( HB_ULONG crc, const void * buf, ULONG len, HB_ULONG poly );
+extern HB_EXPORT HB_ULONG hb_crcct( HB_ULONG crc, const void * buf, ULONG len, HB_ULONG poly );
+extern HB_EXPORT void hb_md5( const void * data, ULONG datalen, char * digest );
+extern HB_EXPORT void hb_md5file( HB_FHANDLE hFile, char * digest );
 
 HB_EXTERN_END

@@ -149,34 +149,37 @@ static const ULONG crc16_tab[] =
 };
 
 
-ULONG hb_crc32( ULONG crc, const char *buf, ULONG len )
+ULONG hb_crc32( ULONG crc, const void *buf, ULONG len )
 {
    crc ^= 0xffffffffL;
    if( buf && len )
    {
+      const unsigned char * ucbuf = ( const unsigned char * ) buf;
       do
-         crc = crc32_tab[ ( crc ^ ( UCHAR ) *buf++ ) & 0xFF ] ^ ( crc >> 8 );
+         crc = crc32_tab[ ( crc ^ *ucbuf++ ) & 0xFF ] ^ ( crc >> 8 );
       while( --len );
    }
    return crc ^ 0xffffffffL;
 }
 
-ULONG hb_crc16( ULONG crc, const char *buf, ULONG len )
+ULONG hb_crc16( ULONG crc, const void *buf, ULONG len )
 {
    crc ^= 0xffff;
    if( buf && len )
    {
+      const unsigned char * ucbuf = ( const unsigned char * ) buf;
       do
-         crc = crc16_tab[ ( crc ^ ( UCHAR ) *buf++ ) & 0xFF ] ^ ( crc >> 8 );
+         crc = crc16_tab[ ( crc ^ *ucbuf++ ) & 0xFF ] ^ ( crc >> 8 );
       while( --len );
    }
    return crc ^ 0xffff;
 }
 
-HB_ULONG hb_crc( HB_ULONG crc, const char * buf, ULONG len, HB_ULONG poly )
+HB_ULONG hb_crc( HB_ULONG crc, const void * buf, ULONG len, HB_ULONG poly )
 {
    if( buf && len )
    {
+      const unsigned char * ucbuf = ( const unsigned char * ) buf;
       HB_ULONG mask = 1, revp = 0;
 
       while( poly > 1 )
@@ -190,7 +193,7 @@ HB_ULONG hb_crc( HB_ULONG crc, const char * buf, ULONG len, HB_ULONG poly )
       crc ^= --mask;
       do
       {
-         HB_ULONG b = ( crc ^ ( UCHAR ) *buf++ ) & 0xFF;
+         HB_ULONG b = ( crc ^ *ucbuf++ ) & 0xFF;
          int i = 8;
          do
             b = b & 1 ? revp ^ ( b >> 1 ) : b >> 1;
@@ -203,10 +206,11 @@ HB_ULONG hb_crc( HB_ULONG crc, const char * buf, ULONG len, HB_ULONG poly )
    return crc;
 }
 
-HB_ULONG hb_crcct( HB_ULONG crc, const char * buf, ULONG len, HB_ULONG poly )
+HB_ULONG hb_crcct( HB_ULONG crc, const void * buf, ULONG len, HB_ULONG poly )
 {
    if( buf && len )
    {
+      const unsigned char * ucbuf = ( const unsigned char * ) buf;
       HB_ULONG mask, revp = poly;
       int bits = 0;
 
@@ -217,7 +221,7 @@ HB_ULONG hb_crcct( HB_ULONG crc, const char * buf, ULONG len, HB_ULONG poly )
       do
       {
          int i = 8;
-         crc ^= ( HB_ULONG ) ( ( UCHAR ) *buf++ ) << bits;
+         crc ^= ( HB_ULONG ) ( *ucbuf++ ) << bits;
          do
             crc = crc & mask ? poly ^ ( crc << 1 ) : crc << 1;
          while( --i );

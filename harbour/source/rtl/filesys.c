@@ -1695,7 +1695,7 @@ ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount, HB_FOFFS
                ulOffsetHigh = ( ULONG ) ( llOffset >> 32 );
          ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                        ulOffsetLow, ( PLONG ) &ulOffsetHigh,
-                                       ( DWORD ) Flags );
+                                       SEEK_SET );
          llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
          if( llPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
             hb_fsSetIOError( FALSE, 0 );
@@ -1714,7 +1714,7 @@ ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount, HB_FOFFS
          llPos = lseek64( hFileHandle, llOffset, SEEK_SET );
 #        elif defined(HB_OS_OS2)
          ULONG ulPos;
-         if( DosSetFilePtr( hFileHandle, lOffset, Flags, &ulPos ) == 0 )
+         if( DosSetFilePtr( hFileHandle, lOffset, SEEK_SET, &ulPos ) == 0 )
             llPos = ( HB_FOFFSET ) ulPos;
          else
             llPos = ( HB_FOFFSET ) -1;
@@ -1789,7 +1789,7 @@ ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount, H
                ulOffsetHigh = ( ULONG ) ( llOffset >> 32 );
          ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                        ulOffsetLow, ( PLONG ) &ulOffsetHigh,
-                                       ( DWORD ) Flags );
+                                       SEEK_SET );
          llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
          if( llPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
             hb_fsSetIOError( FALSE, 0 );
@@ -1808,7 +1808,7 @@ ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount, H
          llPos = lseek64( hFileHandle, llOffset, SEEK_SET );
 #        elif defined(HB_OS_OS2)
          ULONG ulPos;
-         if( DosSetFilePtr( hFileHandle, lOffset, Flags, &ulPos ) == 0 )
+         if( DosSetFilePtr( hFileHandle, lOffset, SEEK_SET, &ulPos ) == 0 )
             llPos = ( HB_FOFFSET ) ulPos;
          else
             llPos = ( HB_FOFFSET ) -1;
