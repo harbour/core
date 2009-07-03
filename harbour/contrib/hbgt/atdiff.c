@@ -24,7 +24,7 @@ HB_FUNC( GT_ATDIFF )
   const char *s1, *s2;
   int pos, len;
 
-  if (ISCHAR(1) && HB_ISCHAR(2)) {
+  if (HB_ISCHAR(1) && HB_ISCHAR(2)) {
     s1  = hb_parc(1);
     s2  = hb_parc(2);
     len = hb_parclen(2);

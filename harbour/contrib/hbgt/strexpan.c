@@ -28,14 +28,14 @@ HB_FUNC( GT_STREXPAND )
   int  len;
   int  i, j, p;
 
-  if (ISCHAR(1) && (ISNUM(2) || hb_pcount() < 2) && (ISCHAR(3) || hb_pcount() < 3)) {
+  if (HB_ISCHAR(1) && (HB_ISNUM(2) || hb_pcount() < 2) && (HB_ISCHAR(3) || hb_pcount() < 3)) {
     in  = hb_parc(1);
     len = hb_parclen(1);
 
-    if (ISNUM(2))
+    if (HB_ISNUM(2))
       nIns = hb_parni(2);
 
-    if (ISCHAR(3))
+    if (HB_ISCHAR(3))
       insert = hb_parc(3);
 
     out = (char *)hb_xgrab(len * (nIns + 1));    /* alloc us some memory */
@@ -57,4 +57,3 @@ HB_FUNC( GT_STREXPAND )
     hb_retc((char *) NULL);              /* parameter mismatch - error NullStr */
   }
 }
-

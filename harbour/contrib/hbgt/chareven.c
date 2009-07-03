@@ -25,7 +25,7 @@ HB_FUNC( GT_CHAREVEN )
   char *s2;
   int len, i;
 
-  if (ISCHAR(1)) {
+  if (HB_ISCHAR(1)) {
     s1  = hb_parc(1);
     len = hb_parclen(1);
 

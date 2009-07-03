@@ -25,7 +25,7 @@ HB_FUNC( GT_CHARMIX )
   char *s3;
   int l1, l2, i, pos3;
 
-  if (ISCHAR(1) && HB_ISCHAR(2)) {
+  if (HB_ISCHAR(1) && HB_ISCHAR(2)) {
     s1  = hb_parc(1);
     s2  = hb_parc(2);
     l1  = hb_parclen(1);

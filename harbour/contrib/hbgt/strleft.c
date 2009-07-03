@@ -26,7 +26,7 @@ HB_FUNC( GT_STRLEFT )
   int l1, l2;
   int p1, p2;
 
-  if (ISCHAR(1) && HB_ISCHAR(2)) {
+  if (HB_ISCHAR(1) && HB_ISCHAR(2)) {
     string = hb_parc(1);
     cset   = hb_parc(2);
     l1     = hb_parclen(1);
@@ -45,4 +45,3 @@ HB_FUNC( GT_STRLEFT )
     hb_retni(-1);               /* parameter mismatch - error NullStr */
   }
 }
-
