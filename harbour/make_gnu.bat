@@ -138,6 +138,10 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    goto SKIP_WINDLL
 
    :_FM_WIN
+
+   if not "%OS%" == "Windows_NT" echo Windows NT or upper is required to build Harbour for '%HB_ARCHITECTURE%' platform.
+   if not "%OS%" == "Windows_NT" goto MAKE_DONE
+
    if not exist "%~dp0config\mingw32-make.exe" goto _FM_NOLOCAL
    set _HB_MAKE="%~dp0config\mingw32-make.exe"
    goto _FM_DONE

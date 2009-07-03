@@ -884,7 +884,7 @@ static HB_ERRCODE hb_delimFlush( DELIMAREAP pArea )
 
    if( pArea->fFlush )
    {
-      hb_fileWriteAt( pArea->pFile, ( const BYTE * ) "\032", 1, pArea->ulFileSize );
+      hb_fileWriteAt( pArea->pFile, "\032", 1, pArea->ulFileSize );
       if( hb_setGetHardCommit() )
       {
          hb_fileCommit( pArea->pFile );

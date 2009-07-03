@@ -206,7 +206,7 @@ static HB_LONG hb_dbfGetRowVer( DBFAREAP pArea, USHORT uiField, HB_LONG * pValue
    {
       *pValue = HB_GET_LE_UINT64( dbField.bReserved2 ) + 1;
       HB_PUT_LE_UINT64( dbField.bReserved2, *pValue );
-      hb_fileWriteAt( pArea->pDataFile, ( const BYTE * ) &dbField, sizeof( dbField ),
+      hb_fileWriteAt( pArea->pDataFile, &dbField, sizeof( dbField ),
                       sizeof( DBFHEADER ) + uiField * sizeof( DBFFIELD ) );
    }
 
@@ -230,7 +230,7 @@ static HB_LONG hb_dbfGetNextValue( DBFAREAP pArea, USHORT uiField )
    {
       nValue = HB_GET_LE_UINT32( dbField.bCounter );
       HB_PUT_LE_UINT32( dbField.bCounter, nValue + dbField.bStep );
-      hb_fileWriteAt( pArea->pDataFile, ( const BYTE * ) &dbField, sizeof( dbField ),
+      hb_fileWriteAt( pArea->pDataFile, &dbField, sizeof( dbField ),
                       sizeof( DBFHEADER ) + uiField * sizeof( DBFFIELD ) );
    }
 
@@ -5333,14 +5333,14 @@ static HB_ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea )
       HB_FOFFSET llOffset = ( HB_FOFFSET ) pArea->uiHeaderLen +
                             ( HB_FOFFSET ) pArea->uiRecordLen *
                             ( HB_FOFFSET ) pArea->ulRecCount;
-      hb_fileWriteAt( pArea->pDataFile, ( const BYTE * ) "\032", 1, llOffset );
+      hb_fileWriteAt( pArea->pDataFile, "\032", 1, llOffset );
       hb_fileTruncAt( pArea->pDataFile, llOffset + 1 );
    }
 
    HB_PUT_LE_UINT32( pArea->dbfHeader.ulRecCount,  pArea->ulRecCount );
    HB_PUT_LE_UINT16( pArea->dbfHeader.uiHeaderLen, pArea->uiHeaderLen );
    HB_PUT_LE_UINT16( pArea->dbfHeader.uiRecordLen, pArea->uiRecordLen );
-   if( hb_fileWriteAt( pArea->pDataFile, ( const BYTE * ) &pArea->dbfHeader,
+   if( hb_fileWriteAt( pArea->pDataFile, &pArea->dbfHeader,
                        sizeof( DBFHEADER ), 0 ) == sizeof( DBFHEADER ) )
    {
       errCode = HB_SUCCESS;
