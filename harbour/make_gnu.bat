@@ -59,7 +59,6 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    call :COMP_DET_ONE icl.exe                     icc      win
    call :COMP_DET_ONE cl.exe                      msvc     win
    call :COMP_DET_ONE bcc32.exe                   bcc      win
-   call :COMP_DET_ONE porc64.exe                  pocc64   win
    call :COMP_DET_ONE pocc.exe                    pocc     win
    call :COMP_DET_ONE xcc.exe                     xcc      win
    call :COMP_DET_ONE x86_64-w64-mingw32-gcc.exe  mingw64  win x86_64-w64-mingw32-

@@ -105,7 +105,7 @@ static void debugInit( void )
    if( iFifoResult == 0 || iFifoResult == EEXIST )
    {
       if( strlen( pFileName->szName ) > 20 )
-         ( ( char * ) pFileName->szName )[ 20 ] = 0;
+         pFileName->szName[ 20 ] = '\0';
 
       hb_snprintf( szDebugTitle, sizeof( szDebugTitle ), "%s - Debug", pFileName->szName );
 
