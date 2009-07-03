@@ -240,47 +240,48 @@ REQUEST hbmk_KEYW
 #define _HBMK_aOPTL             32
 #define _HBMK_aOPTA             33
 #define _HBMK_aOPTD             34
-#define _HBMK_lSHARED           35
-#define _HBMK_lSTATICFULL       36
-#define _HBMK_lSHAREDDIST       37
-#define _HBMK_lNULRDD           38
-#define _HBMK_lMAP              39
-#define _HBMK_lBEEP             40
-#define _HBMK_lSTRIP            41
-#define _HBMK_lOPTIM            42
-#define _HBMK_nCOMPR            43
-#define _HBMK_lRUN              44
-#define _HBMK_lINC              45
-#define _HBMK_lREBUILDPO        46
-#define _HBMK_lMINIPO           47
-#define _HBMK_lUNICODE          48
-#define _HBMK_nCONF             49
+#define _HBMK_lCPP              35
+#define _HBMK_lSHARED           36
+#define _HBMK_lSTATICFULL       37
+#define _HBMK_lSHAREDDIST       38
+#define _HBMK_lNULRDD           39
+#define _HBMK_lMAP              40
+#define _HBMK_lBEEP             41
+#define _HBMK_lSTRIP            42
+#define _HBMK_lOPTIM            43
+#define _HBMK_nCOMPR            44
+#define _HBMK_lRUN              45
+#define _HBMK_lINC              46
+#define _HBMK_lREBUILDPO        47
+#define _HBMK_lMINIPO           48
+#define _HBMK_lUNICODE          49
+#define _HBMK_nCONF             50
 
-#define _HBMK_cFIRST            50
-#define _HBMK_aPRG              51
-#define _HBMK_aC                52
-#define _HBMK_aRESSRC           53
-#define _HBMK_aRESCMP           54
-#define _HBMK_aOBJUSER          55
+#define _HBMK_cFIRST            51
+#define _HBMK_aPRG              52
+#define _HBMK_aC                53
+#define _HBMK_aRESSRC           54
+#define _HBMK_aRESCMP           55
+#define _HBMK_aOBJUSER          56
 
-#define _HBMK_aPO               56
-#define _HBMK_cHBL              57
-#define _HBMK_cHBLDir           58
-#define _HBMK_aLNG              59
-#define _HBMK_cPO               60
+#define _HBMK_aPO               57
+#define _HBMK_cHBL              58
+#define _HBMK_cHBLDir           59
+#define _HBMK_aLNG              60
+#define _HBMK_cPO               61
 
-#define _HBMK_lDEBUGTIME        61
-#define _HBMK_lDEBUGINC         62
-#define _HBMK_lDEBUGSTUB        63
-#define _HBMK_lDEBUGI18N        64
+#define _HBMK_lDEBUGTIME        62
+#define _HBMK_lDEBUGINC         63
+#define _HBMK_lDEBUGSTUB        64
+#define _HBMK_lDEBUGI18N        65
 
-#define _HBMK_cCCPATH           65
-#define _HBMK_cCCPREFIX         66
-#define _HBMK_cCCPOSTFIX        67
+#define _HBMK_cCCPATH           66
+#define _HBMK_cCCPREFIX         67
+#define _HBMK_cCCPOSTFIX        68
 
-#define _HBMK_lUTF8             68
+#define _HBMK_lUTF8             69
 
-#define _HBMK_MAX_              68
+#define _HBMK_MAX_              69
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -562,7 +563,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    LOCAL l_cHBPOSTFIX := ""
    LOCAL l_lNOHBLIB := .F.
 
-   LOCAL l_lCPP := NIL
    LOCAL l_lBLDFLGP := .F.
    LOCAL l_lBLDFLGC := .F.
    LOCAL l_lBLDFLGL := .F.
@@ -666,6 +666,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    hbmk[ _HBMK_lInfo ] := .F.
    hbmk[ _HBMK_lUTF8 ] := .F.
 
+   hbmk[ _HBMK_lCPP ] := NIL
    hbmk[ _HBMK_lGUI ] := .F.
    hbmk[ _HBMK_lMT ] := .F.
    hbmk[ _HBMK_lDEBUG ] := .F.
@@ -1492,6 +1493,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
            CASE SubStr( cParamL, 8 ) == "max" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MAX
            OTHERWISE                          ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF
            ENDCASE
+
       CASE cParamL == "-compr-" .OR. ;
            cParamL == "-nocompr"         ; hbmk[ _HBMK_nCOMPR ]     := _COMPR_OFF
 
@@ -1503,19 +1505,21 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
            CASE SubStr( cParamL, 7 ) == "full" ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL
            OTHERWISE                           ; hbmk[ _HBMK_nHEAD ] := _HEAD_PARTIAL
            ENDCASE
+
       CASE cParamL == "-head-" .OR. ;
            cParamL == "-nohead"          ; hbmk[ _HBMK_nHEAD ]      := _HEAD_OFF
 
-      CASE cParamL == "-cpp" .OR. ;
-           Left( cParamL, 5 ) == "-cpp="
+      CASE Left( cParamL, 5 ) == "-cpp="
 
            DO CASE
-           CASE SubStr( cParamL, 6 ) == "def" ; l_lCPP := NIL
-           CASE SubStr( cParamL, 6 ) == "off" ; l_lCPP := .F.
-           OTHERWISE                          ; l_lCPP := .T.
+           CASE SubStr( cParamL, 6 ) == "def" ; hbmk[ _HBMK_lCPP ] := NIL
+           CASE SubStr( cParamL, 6 ) == "yes" ; hbmk[ _HBMK_lCPP ] := .T.
+           CASE SubStr( cParamL, 6 ) == "no"  ; hbmk[ _HBMK_lCPP ] := .F.
            ENDCASE
+
+      CASE cParamL == "-cpp"             ; hbmk[ _HBMK_lCPP ]       := .T.
       CASE cParamL == "-cpp-" .OR. ;
-           cParamL == "-nocpp"           ; l_lCPP       := .F.
+           cParamL == "-nocpp"           ; hbmk[ _HBMK_lCPP ]       := .F.
 
       CASE cParamL == "-run"             ; hbmk[ _HBMK_lRUN ]       := .T.
       CASE cParamL == "-run-" .OR. ;
@@ -2045,8 +2049,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
       ENDIF
 
-      IF hbmk[ _HBMK_cCOMP ] == "watcom" .AND. l_lCPP == NIL
-         l_lCPP := .T.
+      IF hbmk[ _HBMK_cCOMP ] == "watcom" .AND. hbmk[ _HBMK_lCPP ] == NIL
+         hbmk[ _HBMK_lCPP ] := .T.
       ENDIF
 
       DO CASE
@@ -2078,10 +2082,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cOpt_Lib := "{FA} rcs {OL} {LO}"
          ENDIF
          IF hbmk[ _HBMK_cCOMP ] == "icc"
-            cBin_CompC := iif( l_lCPP != NIL .AND. l_lCPP, "icpc", "icc" )
+            cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "icpc", "icc" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_GNU_SOURCE" )
          ELSE
-            cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( l_lCPP != NIL .AND. l_lCPP, "g++", "gcc" ) + hbmk[ _HBMK_cCCPOSTFIX ]
+            cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "g++", "gcc" ) + hbmk[ _HBMK_cCCPOSTFIX ]
          ENDIF
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
@@ -2237,7 +2241,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( l_lCPP != NIL .AND. l_lCPP, "g++", "gcc" ) + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT_mingw
+         cBin_CompC := hbmk[ _HBMK_cCCPREFIX ] + iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "g++", "gcc" ) + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT_mingw
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -2337,7 +2341,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompC := iif( l_lCPP != NIL .AND. l_lCPP, "g++.exe", "gcc.exe" )
+         cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "g++.exe", "gcc.exe" )
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -2387,7 +2391,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompC := iif( l_lCPP != NIL .AND. l_lCPP, "gpp.exe", "gcc.exe" )
+         cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], "gpp.exe", "gcc.exe" )
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -2436,7 +2440,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cObjExt := ".obj"
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
-         IF l_lCPP != NIL .AND. l_lCPP
+         IF hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ]
             cBin_CompC := "wpp386.exe"
          ELSE
             cBin_CompC := "wcc386.exe"
@@ -2445,7 +2449,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -5r -fp5"
             cOpt_CompC += " -onaehtr -s -ei -zp4 -zt0"
-            IF l_lCPP != NIL .AND. l_lCPP
+            IF hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ]
                cOpt_CompC += " -oi+"
             ELSE
                cOpt_CompC += " -oi"
@@ -2488,7 +2492,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cObjExt := ".obj"
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
-         IF l_lCPP != NIL .AND. l_lCPP
+         IF hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ]
             cBin_CompC := "wpp386.exe"
          ELSE
             cBin_CompC := "wcc386.exe"
@@ -2497,7 +2501,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -6s -fp6"
             cOpt_CompC += " -onaehtr -s -ei -zp4 -zt0"
-            IF l_lCPP != NIL .AND. l_lCPP
+            IF hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ]
                cOpt_CompC += " -oi+"
             ELSE
                cOpt_CompC += " -oi"
@@ -2568,7 +2572,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cObjExt := ".obj"
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
-         IF l_lCPP != NIL .AND. l_lCPP
+         IF hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ]
             cBin_CompC := "wpp386.exe"
          ELSE
             cBin_CompC := "wcc386.exe"
@@ -2577,7 +2581,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -5s -fp5"
             cOpt_CompC += " -onaehtr -s -ei -zp4 -zt0"
-            IF l_lCPP != NIL .AND. l_lCPP
+            IF hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ]
                cOpt_CompC += " -oi+"
             ELSE
                cOpt_CompC += " -oi"
@@ -2621,7 +2625,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cObjExt := ".o"
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
-         IF l_lCPP != NIL .AND. l_lCPP
+         IF hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ]
             cBin_CompC := "wpp386"
          ELSE
             cBin_CompC := "wcc386"
@@ -2630,7 +2634,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -6s -fp6"
             cOpt_CompC += " -onaehtr -s -ei -zp4 -zt0"
-            IF l_lCPP != NIL .AND. l_lCPP
+            IF hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ]
                cOpt_CompC += " -oi+"
             ELSE
                cOpt_CompC += " -oi"
@@ -2678,7 +2682,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          IF hbmk[ _HBMK_lGUI ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-tW" )
          ENDIF
-         IF l_lCPP != NIL .AND. l_lCPP
+         IF hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-P" )
          ENDIF
          nCmd_Esc := _ESC_DBLQUOTE
@@ -2760,8 +2764,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ELSE
             AAdd( hbmk[ _HBMK_aOPTL ], "/subsystem:console" )
          ENDIF
-         IF l_lCPP != NIL
-            IF l_lCPP
+         IF hbmk[ _HBMK_lCPP ] != NIL
+            IF hbmk[ _HBMK_lCPP ]
                AAdd( hbmk[ _HBMK_aOPTC ], "-TP" )
             ELSE
                AAdd( hbmk[ _HBMK_aOPTC ], "-TC" )
@@ -5341,6 +5345,13 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel  )
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lSTRIP ] := .F.
          ENDCASE
 
+      CASE Lower( Left( cLine, Len( "cpp="          ) ) ) == "cpp="          ; cLine := SubStr( cLine, Len( "cpp="          ) + 1 )
+         DO CASE
+         CASE ValueIsT( cLine )       ; hbmk[ _HBMK_lCPP ] := .T.
+         CASE ValueIsF( cLine )       ; hbmk[ _HBMK_lCPP ] := .F.
+         CASE Lower( cLine ) == "def" ; hbmk[ _HBMK_lCPP ] := NIL
+         ENDCASE
+
       CASE Lower( Left( cLine, Len( "compr="        ) ) ) == "compr="        ; cLine := SubStr( cLine, Len( "compr="        ) + 1 )
          DO CASE
          CASE ValueIsT( cLine )       ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF
@@ -6686,7 +6697,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       hb_StrFormat( I_( "%1$s option file in hbmk directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk directory. The file format is the same as .hbc." ), _HBMK_CFG_NAME ),;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
       I_( ".hbc config files in current dir are automatically processed." ),;
-      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
+      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], cpp=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;
