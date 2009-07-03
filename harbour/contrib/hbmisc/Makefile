@@ -14,6 +14,7 @@ C_SOURCES=\
 	stringsx.c \
 
 PRG_SOURCES=\
+	fcomma.prg \
 	fileread.prg \
 	nconvert.prg \
 	numtxthu.prg \

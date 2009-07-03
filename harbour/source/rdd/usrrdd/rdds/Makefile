@@ -14,9 +14,6 @@ PRG_SOURCES=\
 	smtcdx.prg \
 	vfpcdx.prg \
 
-#	fcomma.prg \
-
-
 LIBNAME=hbuddall
 
 include $(TOP)$(ROOT)config/lib.cf
