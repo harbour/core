@@ -3153,7 +3153,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
 
             IF ! hbmk[ _HBMK_lDONTEXEC ]
-               IF hb_mtvm()
+               IF hb_mtvm() .AND. Len( aTODO:__enumBase() ) > 1
                   AAdd( aThreads, { hb_threadStart( @hb_compile(), "harbour", aCommand ), aCommand } )
                ELSE
                   IF ( tmp := hb_compile( "harbour", aCommand ) ) != 0
@@ -3171,7 +3171,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          NEXT
 
-         IF hb_mtvm()
+         IF hb_mtvm() .AND. Len( aThreads ) > 1
             FOR EACH thread IN aThreads
                hb_threadJoin( thread[ 1 ], @tmp )
                IF tmp != 0
@@ -3586,7 +3586,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
                aThreads := {}
                FOR EACH aTODO IN ArraySplit( ArrayJoin( ListDirExt( l_aPRG_TODO, cWorkDir, ".c" ), l_aC_TODO ), l_nJOBS )
-                  IF hb_mtvm()
+                  IF hb_mtvm() .AND. Len( aTODO:__enumBase() ) > 1
                      AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, nOpt_Esc, aTODO:__enumIndex(), Len( aTODO:__enumBase() ) ) )
                   ELSE
                      IF ! CompileCLoop( hbmk, aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, nOpt_Esc )
@@ -3595,7 +3595,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   ENDIF
                NEXT
 
-               IF hb_mtvm()
+               IF hb_mtvm() .AND. Len( aThreads ) > 1
                   FOR EACH thread IN aThreads
                      hb_threadJoin( thread, @tmp )
                      IF ! tmp
@@ -3642,7 +3642,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   ENDIF
 
                   IF ! hbmk[ _HBMK_lDONTEXEC ]
-                     IF hb_mtvm()
+                     IF hb_mtvm() .AND. Len( aTODO:__enumBase() ) > 1
                         AAdd( aThreads, { hb_threadStart( @hbmk_run(), cCommand ), cCommand } )
                      ELSE
                         IF ( tmp := hbmk_run( cCommand ) ) != 0
@@ -3660,7 +3660,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   ENDIF
                NEXT
 
-               IF hb_mtvm()
+               IF hb_mtvm() .AND. Len( aThreads ) > 1
                   FOR EACH thread IN aThreads
                      hb_threadJoin( thread[ 1 ], @tmp )
                      IF tmp != 0

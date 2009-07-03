@@ -20,11 +20,15 @@ echo arch=%HB_ARCHITECTURE%>> %HB_BIN_INSTALL%\hbmk.cfg
 echo comp=%HB_COMPILER%>> %HB_BIN_INSTALL%\hbmk.cfg
 
 rem ; Post-build installation
-if not "%HB_INSTALL_PREFIX%" == "" copy /Y ChangeLog* "%HB_INSTALL_PREFIX%\" > nul
-if not "%HB_INSTALL_PREFIX%" == "" copy /Y COPYING    "%HB_INSTALL_PREFIX%\" > nul
-if not "%HB_INSTALL_PREFIX%" == "" copy /Y ERRATA     "%HB_INSTALL_PREFIX%\" > nul
-if not "%HB_INSTALL_PREFIX%" == "" copy /Y INSTALL    "%HB_INSTALL_PREFIX%\" > nul
-if not "%HB_INSTALL_PREFIX%" == "" copy /Y TODO       "%HB_INSTALL_PREFIX%\" > nul
+set _HB_COPYCMD=%COPYCMD%
+set COPYCMD=/Y
+if not "%HB_INSTALL_PREFIX%" == "" copy ChangeLog* "%HB_INSTALL_PREFIX%\" > nul
+if not "%HB_INSTALL_PREFIX%" == "" copy COPYING    "%HB_INSTALL_PREFIX%\" > nul
+if not "%HB_INSTALL_PREFIX%" == "" copy ERRATA     "%HB_INSTALL_PREFIX%\" > nul
+if not "%HB_INSTALL_PREFIX%" == "" copy INSTALL    "%HB_INSTALL_PREFIX%\" > nul
+if not "%HB_INSTALL_PREFIX%" == "" copy TODO       "%HB_INSTALL_PREFIX%\" > nul
+set COPYCMD=%_HB_COPYCMD%
+set _HB_COPYCMD=
 
 goto INST_%HB_ARCHITECTURE%
 
