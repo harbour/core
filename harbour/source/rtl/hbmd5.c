@@ -79,7 +79,7 @@ PRG functions:
 
 C functions:
 
-   void hb_md5( void char * data, ULONG datalen, char * digest )
+   void hb_md5( const void * data, ULONG datalen, char * digest )
       Parameters:
          data     - input byte stream
          datalen  - input stream length
