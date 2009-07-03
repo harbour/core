@@ -76,10 +76,10 @@ ifeq ($(findstring rtl,$(LIBS)),rtl)
 LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
 endif
 
-LDFLAGS = $(LINKPATHS)
+LDFLAGS = /nologo $(LINKPATHS)
 
 AR = lib.exe
 ARFLAGS = $(HB_USER_AFLAGS)
-AR_RULE = $(AR) $(ARFLAGS) /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
+AR_RULE = $(AR) $(ARFLAGS) /nologo /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
 include $(TOP)$(ROOT)config/rules.cf
