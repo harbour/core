@@ -1501,7 +1501,7 @@ ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, ULONG ulCount )
       ULONG ulLeftToRead = ulCount;
       USHORT uiToRead;
       USHORT uiRead;
-      BYTE * pPtr = ( BYTE * ) pBuff;
+      void * pPtr = pBuff;
 
       ulRead = 0;
 
@@ -1590,7 +1590,7 @@ ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, ULONG ulCount
             ULONG ulLeftToWrite = ulCount;
             USHORT uiToWrite;
             USHORT uiWritten;
-            const BYTE * pPtr = ( const BYTE * ) pBuff;
+            const void * pPtr = pBuff;
 
             ulWritten = 0;
 

@@ -109,10 +109,10 @@ static BOOL hb_copyfile( const char * szSource, const char * szDest )
          struct stat struFileInfo;
          int iSuccess = fstat( fhndSource, &struFileInfo );
 #endif
-         BYTE * buffer;
+         void * buffer;
          USHORT usRead;
 
-         buffer = ( BYTE * ) hb_xgrab( BUFFER_SIZE );
+         buffer = hb_xgrab( BUFFER_SIZE );
 
          bRetVal = TRUE;
 

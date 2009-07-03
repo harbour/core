@@ -249,8 +249,8 @@ static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
       fhandle = 0; /* 0 = std input */
 
    /* Read file */
-   iptr = ( BYTE * ) hb_xgrab( sz );
-   hb_fsReadLarge( fhandle, iptr, (ULONG) sz );
+   iptr = hb_xgrab( sz );
+   hb_fsReadLarge( fhandle, iptr, ( ULONG ) sz );
    /*   TraceLog( NULL, "Error dim %i, read %i", sz, iRead ); */
 
    return iptr;
@@ -272,8 +272,8 @@ static void * LoadImageFromFile( const char *szFile, int *sz )
       hb_fsSeek( fhandle, 0, FS_SET );
 
       /* Read file */
-      iptr = ( BYTE * ) hb_xgrab( *sz );
-      hb_fsReadLarge( fhandle, iptr, (ULONG) *sz );
+      iptr = hb_xgrab( *sz );
+      hb_fsReadLarge( fhandle, iptr, ( ULONG ) *sz );
       /*   TraceLog( NULL, "Error dim %i, read %i", sz, iRead ); */
 
       /* Close file */
@@ -298,7 +298,7 @@ static void SaveImageToHandle( HB_FHANDLE fhandle, const void * iptr, int sz )
       fhandle = 1; /* 1 = std output */
 
    /* Write Image */
-   hb_fsWriteLarge( fhandle, iptr, (ULONG) sz );
+   hb_fsWriteLarge( fhandle, iptr, ( ULONG ) sz );
 }
 
 /* ---------------------------------------------------------------------------*/
@@ -310,7 +310,7 @@ static void SaveImageToFile( const char *szFile, const void * iptr, int sz )
    if( ( fhandle = hb_fsCreate( szFile, FC_NORMAL ) ) != FS_ERROR )
    {
       /* Write Image */
-      SaveImageToHandle( fhandle, iptr, (ULONG) sz );
+      SaveImageToHandle( fhandle, iptr, ( ULONG ) sz );
 
       /* Close file */
       hb_fsClose( fhandle );
@@ -385,19 +385,19 @@ static void GDImageCreateFrom( int nType )
       switch ( nType )
       {
          case IMAGE_JPEG :
-              im = gdImageCreateFromJpegPtr( sz, ( BYTE *) iptr );
+              im = gdImageCreateFromJpegPtr( sz, iptr );
               break;
          case IMAGE_GIF  :
-              im = gdImageCreateFromGifPtr( sz, ( BYTE *) iptr );
+              im = gdImageCreateFromGifPtr( sz, iptr );
               break;
          case IMAGE_PNG  :
-              im = gdImageCreateFromPngPtr( sz, ( BYTE *) iptr );
+              im = gdImageCreateFromPngPtr( sz, iptr );
               break;
          case IMAGE_WBMP :
-              im = gdImageCreateFromWBMPPtr( sz, ( BYTE *) iptr );
+              im = gdImageCreateFromWBMPPtr( sz, iptr );
               break;
          case IMAGE_GD   :
-              im = gdImageCreateFromGdPtr( sz, ( BYTE *) iptr );
+              im = gdImageCreateFromGdPtr( sz, iptr );
               break;
       }
 
@@ -535,7 +535,7 @@ static void GDImageSaveTo( int nType )
       else
       {
          /* Return as string */
-         hb_retclen( (const char *) iptr, (ULONG) sz );
+         hb_retclen( ( const char * ) iptr, ( ULONG ) sz );
       }
 
       /* Free memory */
@@ -3382,7 +3382,7 @@ HB_FUNC( GDTRUECOLORALPHA ) /* int gdTrueColorAlpha(int red, int green, int blue
       a = hb_parni( 4 );
 
       /* Allocate color */
-      color = gdTrueColorAlpha(r, g, b, a);
+      color = gdTrueColorAlpha( r, g, b, a );
 
       /* return color */
       hb_retni( color );
@@ -3443,7 +3443,7 @@ HB_FUNC( GDIMAGECOPY ) /* void gdImageCopy(gdImagePtr dst, gdImagePtr src, int d
       h = hb_parni( 8 );
 
       /* Perform copy */
-      gdImageCopy(dst, src, dstX, dstY, srcX, srcY, w, h);
+      gdImageCopy( dst, src, dstX, dstY, srcX, srcY, w, h );
    }
    else
    {
@@ -3506,7 +3506,7 @@ HB_FUNC( GDIMAGECOPYRESIZED ) /* void gdImageCopyResized(gdImagePtr dst, gdImage
       srcH = hb_parni( 10 );
 
       /* Perform copy */
-      gdImageCopyResized(dst, src, dstX, dstY, srcX, srcY, dstW, dstH, srcW, srcH);
+      gdImageCopyResized( dst, src, dstX, dstY, srcX, srcY, dstW, dstH, srcW, srcH );
    }
    else
    {
@@ -3570,7 +3570,7 @@ HB_FUNC( GDIMAGECOPYRESAMPLED ) /* void gdImageCopyResampled(gdImagePtr dst, gdI
       srcH = hb_parni( 10 );
 
       /* Perform copy */
-      gdImageCopyResampled(dst, src, dstX, dstY, srcX, srcY, dstW, dstH, srcW, srcH);
+      gdImageCopyResampled( dst, src, dstX, dstY, srcX, srcY, dstW, dstH, srcW, srcH );
    }
    else
    {
@@ -3630,7 +3630,7 @@ HB_FUNC( GDIMAGECOPYROTATED ) /* void gdImageCopyRotated(gdImagePtr dst, gdImage
       angle = hb_parni( 9 );
 
       /* Perform rotation */
-      gdImageCopyRotated(dst, src, dstX, dstY, srcX, srcY, srcW, srcH, angle);
+      gdImageCopyRotated( dst, src, dstX, dstY, srcX, srcY, srcW, srcH, angle );
    }
    else
    {
@@ -3689,7 +3689,7 @@ HB_FUNC( GDIMAGECOPYMERGE ) /* void gdImageCopyMerge(gdImagePtr dst, gdImagePtr 
       pct = hb_parni( 9 );
 
       /* Perform copy */
-      gdImageCopyMerge(dst, src, dstX, dstY, srcX, srcY, w, h, pct);
+      gdImageCopyMerge( dst, src, dstX, dstY, srcX, srcY, w, h, pct );
    }
    else
    {
@@ -3748,7 +3748,7 @@ HB_FUNC( GDIMAGECOPYMERGEGRAY ) /* void gdImageCopyMergeGray(gdImagePtr dst, gdI
       pct = hb_parni( 9 );
 
       /* Perform copy */
-      gdImageCopyMergeGray(dst, src, dstX, dstY, srcX, srcY, w, h, pct);
+      gdImageCopyMergeGray( dst, src, dstX, dstY, srcX, srcY, w, h, pct );
    }
    else
    {
@@ -3815,7 +3815,7 @@ HB_FUNC( GDIMAGESQUARETOCIRCLE ) /* void gdImageSquareToCircle(gdImagePtr im, in
       radius = hb_parni( 2 );
 
       /* TODO */
-      gdImageSquareToCircle(im, radius);
+      gdImageSquareToCircle( im, radius );
 
    }
    else
@@ -3850,7 +3850,6 @@ HB_FUNC( GDIMAGESHARPEN ) /* void gdImageSharpen(gdImagePtr im, int pct) */
 
       /* Sharpens the specified image */
       gdImageSharpen(im, pct);
-
    }
    else
    {
@@ -3945,10 +3944,10 @@ static void AddImageToFile( const char *szFile, const void * iptr, int sz )
    if( ( fhandle = hb_fsOpen( szFile, FO_READWRITE ) ) != FS_ERROR )
    {
       /* move to end of file */
-      hb_fsSeek(fhandle, 0, FS_END);
+      hb_fsSeek( fhandle, 0, FS_END );
 
       /* Write Image */
-      SaveImageToHandle( fhandle, iptr, (ULONG) sz );
+      SaveImageToHandle( fhandle, iptr, ( ULONG ) sz );
 
       /* Close file */
       hb_fsClose( fhandle );
@@ -3998,9 +3997,7 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
          fhandle = ( hb_parinfo( 2 ) & HB_IT_NUMERIC ) ? hb_parnl( 2 ) : 1; /* 1 = std output */
 
          SaveImageToHandle( fhandle, iptr, size );
-
       }
-
    }
    else
    {

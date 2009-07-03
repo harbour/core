@@ -855,11 +855,11 @@ HB_FUNC( PQFREECANCEL )
 
 HB_FUNC( PQESCAPEBYTEACONN )
 {
-   unsigned const char * from = ( BYTE * ) hb_parc( 2 );
+   const char * from = hb_parc( 2 );
    size_t from_length = hb_parclen( 2 );
    size_t to_length = from_length * 5 + 1;
 
-   unsigned char * to = PQescapeByteaConn( PGconn_par( 1 ), from, from_length, &to_length );
+   unsigned char * to = PQescapeByteaConn( PGconn_par( 1 ), ( unsigned const char * ) from, from_length, &to_length );
    hb_retc( ( char * ) to );
    PQfreemem( to );
 }

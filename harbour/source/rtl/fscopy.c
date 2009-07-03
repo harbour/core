@@ -66,7 +66,7 @@ BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
       if( ( fhndDest = hb_fsCreate( pszDest, FC_NORMAL ) ) != FS_ERROR )
       {
          USHORT nBytesRead;
-         BYTE * pbyBuffer = ( BYTE * ) hb_xgrab( HB_FSCOPY_BUFFERSIZE );
+         void * pbyBuffer = hb_xgrab( HB_FSCOPY_BUFFERSIZE );
 
          while( ( nBytesRead = hb_fsRead( fhndSource, pbyBuffer, HB_FSCOPY_BUFFERSIZE ) ) > 0 )
          {

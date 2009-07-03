@@ -1409,7 +1409,7 @@ static int hb_zipDeleteFile( const char* szZipFile, const char* szFileMask )
 
          if( ufi.compressed_size )
          {
-            BYTE * buffer = ( BYTE * ) hb_xgrab( HB_Z_IOBUF_SIZE );
+            void * buffer = hb_xgrab( HB_Z_IOBUF_SIZE );
             uLong ulLeft = ufi.compressed_size;
 
             while( ulLeft > 0 )

@@ -72,7 +72,7 @@ static void hb_memoread( BOOL bHandleEOF )
 
          if( ulSize != 0 )
          {
-            BYTE * pbyBuffer;
+            void * pbyBuffer;
 
             /* Don't read the file terminating EOF character */
 
@@ -91,7 +91,7 @@ static void hb_memoread( BOOL bHandleEOF )
             HB_SYMBOL_UNUSED( bHandleEOF );
 #endif
 
-            pbyBuffer = ( BYTE * ) hb_xgrab( ulSize + sizeof( char ) );
+            pbyBuffer = hb_xgrab( ulSize + sizeof( char ) );
 
             hb_fsSeek( fhnd, 0, FS_SET );
             hb_fsReadLarge( fhnd, pbyBuffer, ulSize );
