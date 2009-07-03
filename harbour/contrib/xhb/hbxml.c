@@ -1967,7 +1967,7 @@ static void mxml_output_func_to_handle( MXML_OUTPUT *out, const char *s, int len
    HB_FHANDLE fh = out->u.hFile;
    int olen;
 
-   olen = hb_fsWriteLarge( fh, (BYTE *) s, len );
+   olen = hb_fsWriteLarge( fh, s, len );
 
    if ( olen < len )
    {
@@ -2122,7 +2122,7 @@ static void mxml_refill_from_handle_func( MXML_REFIL *ref )
    HB_FHANDLE fh = ( HB_FHANDLE ) ref->u.hFile;
    int len;
 
-   len = hb_fsReadLarge( fh, (BYTE *) ref->buffer, ref->bufsize );
+   len = hb_fsReadLarge( fh, ref->buffer, ref->bufsize );
 
    if ( len == -1 )
    {

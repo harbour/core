@@ -134,7 +134,7 @@ static BOOL hb_memowrit( BOOL bHandleEOF )
       {
          ULONG ulSize = hb_itemGetCLen( pString );
 
-         bRetVal = ( hb_fsWriteLarge( fhnd, ( const BYTE * ) hb_itemGetCPtr( pString ), ulSize ) == ulSize );
+         bRetVal = ( hb_fsWriteLarge( fhnd, hb_itemGetCPtr( pString ), ulSize ) == ulSize );
 
          /* NOTE: CA-Cl*pper will add the EOF even if the write failed. [vszakats] */
          /* NOTE: CA-Cl*pper will not return .F. when the EOF could not be written. [vszakats] */

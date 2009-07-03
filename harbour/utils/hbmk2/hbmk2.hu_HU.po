@@ -339,7 +339,7 @@ msgstr "visszatér a Harbour dinamikus függvénykönyvtárak könyvtárával"
 
 #: hbmk2.prg:5758 hbmk2.prg:6471
 #, c-format
-msgid "start n compilation threads (MT platforms/builds only)"
+msgid "start n compilation threads (multiprocess platforms only)"
 msgstr "n szálon futtassa a fordítókat (csak támogatott platformokon)"
 
 #: hbmk2.prg:5758 hbmk2.prg:6471

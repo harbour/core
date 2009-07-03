@@ -128,8 +128,7 @@ HB_FUNC( FREAD )
       if( ulRead <= hb_parcsiz( 2 ) &&
           hb_itemGetWriteCL( pBuffer, &buffer, &ulSize ) )
       {
-         ulRead = hb_fsReadLarge( hb_numToHandle( hb_parnint( 1 ) ),
-                                  ( BYTE * ) buffer, ulRead );
+         ulRead = hb_fsReadLarge( hb_numToHandle( hb_parnint( 1 ) ), buffer, ulRead );
          uiError = hb_fsError();
       }
       else
@@ -155,8 +154,7 @@ HB_FUNC( FWRITE )
             nLen = nWrite;
       }
 
-      hb_retnl( hb_fsWriteLarge( hb_numToHandle( hb_parnint( 1 ) ),
-                                 ( const BYTE * ) hb_parc( 2 ), nLen ) );
+      hb_retnl( hb_fsWriteLarge( hb_numToHandle( hb_parnint( 1 ) ), hb_parc( 2 ), nLen ) );
       uiError = hb_fsError();
    }
    else
@@ -245,7 +243,7 @@ HB_FUNC( FREADSTR )
          char * buffer = ( char * ) hb_xgrab( ulToRead + 1 );
          ULONG ulRead;
 
-         ulRead = hb_fsReadLarge( fhnd, ( BYTE * ) buffer, ulToRead );
+         ulRead = hb_fsReadLarge( fhnd, buffer, ulToRead );
          uiError = hb_fsError();
          buffer[ ulRead ] = '\0';
 

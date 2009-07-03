@@ -692,7 +692,7 @@ static void hb_gt_trm_termFlush( PHB_GTTRM pTerm )
 {
    if( pTerm->iOutBufIndex > 0 )
    {
-      hb_fsWriteLarge( pTerm->hFileno, ( const BYTE * ) pTerm->pOutBuf, pTerm->iOutBufIndex );
+      hb_fsWriteLarge( pTerm->hFileno, pTerm->pOutBuf, pTerm->iOutBufIndex );
       pTerm->iOutBufIndex = 0;
    }
 }
@@ -2120,7 +2120,7 @@ static void hb_gt_trm_SetPalette( PHB_GTTRM pTerm, int iIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_SetPalette(%p,%d)", pTerm, iIndex));
 
-   if( pTerm->terminal_type == TERM_LINUX || 
+   if( pTerm->terminal_type == TERM_LINUX ||
        ( pTerm->terminal_ext & TERM_PUTTY ) )
    {
       hb_gt_trm_LinuxSetPalette( pTerm, iIndex );
@@ -2131,7 +2131,7 @@ static void hb_gt_trm_ResetPalette( PHB_GTTRM pTerm )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_ResetPalette(%p)", pTerm));
 
-   if( pTerm->terminal_type == TERM_LINUX || 
+   if( pTerm->terminal_type == TERM_LINUX ||
        ( pTerm->terminal_ext & TERM_PUTTY ) )
    {
       hb_gt_trm_LinuxResetPalette( pTerm );
@@ -2580,7 +2580,7 @@ static void init_keys( PHB_GTTRM pTerm )
 
 #if 0
       /* key added for gnome-terminal and teraterm */
-      { EXKEY_ENTER |KEY_CTRLMASK, "\033[7;5~" }, 
+      { EXKEY_ENTER |KEY_CTRLMASK, "\033[7;5~" },
       { EXKEY_TAB   |KEY_CTRLMASK, "\033[8;5~" },
 
       { EXKEY_UP    |KEY_CTRLMASK|KEY_ALTMASK, "\033[6A" },

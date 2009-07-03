@@ -258,7 +258,7 @@ size_t hb_curl_read_file_callback( void * buffer, size_t size, size_t nmemb, voi
             return ( size_t ) -1;
       }
 
-      ret = ( size_t ) hb_fsReadLarge( hb_curl->ul_handle, ( BYTE * ) buffer, size * nmemb );
+      ret = ( size_t ) hb_fsReadLarge( hb_curl->ul_handle, buffer, size * nmemb );
 
       return hb_fsError() ? CURL_READFUNC_ABORT : ret;
    }
@@ -302,7 +302,7 @@ size_t hb_curl_write_file_callback( void * buffer, size_t size, size_t nmemb, vo
             return ( size_t ) -1;
       }
 
-      return hb_fsWriteLarge( hb_curl->dl_handle, ( const BYTE * ) buffer, size * nmemb );
+      return hb_fsWriteLarge( hb_curl->dl_handle, buffer, size * nmemb );
    }
 
    return ( size_t ) -1;

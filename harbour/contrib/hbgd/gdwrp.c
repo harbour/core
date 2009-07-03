@@ -250,7 +250,7 @@ static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
 
    /* Read file */
    iptr = ( BYTE * ) hb_xgrab( sz );
-   hb_fsReadLarge( fhandle, ( BYTE *) iptr, (ULONG) sz );
+   hb_fsReadLarge( fhandle, iptr, (ULONG) sz );
    /*   TraceLog( NULL, "Error dim %i, read %i", sz, iRead ); */
 
    return iptr;
@@ -273,7 +273,7 @@ static void * LoadImageFromFile( const char *szFile, int *sz )
 
       /* Read file */
       iptr = ( BYTE * ) hb_xgrab( *sz );
-      hb_fsReadLarge( fhandle, ( BYTE *) iptr, (ULONG) *sz );
+      hb_fsReadLarge( fhandle, iptr, (ULONG) *sz );
       /*   TraceLog( NULL, "Error dim %i, read %i", sz, iRead ); */
 
       /* Close file */
@@ -292,25 +292,25 @@ static void * LoadImageFromFile( const char *szFile, int *sz )
 
 /* ---------------------------------------------------------------------------*/
 
-static void SaveImageToHandle( HB_FHANDLE fhandle, void *iptr, int sz )
+static void SaveImageToHandle( HB_FHANDLE fhandle, const void * iptr, int sz )
 {
    if( ! fhandle )
       fhandle = 1; /* 1 = std output */
 
    /* Write Image */
-   hb_fsWriteLarge( fhandle, ( BYTE *) iptr, (ULONG) sz );
+   hb_fsWriteLarge( fhandle, iptr, (ULONG) sz );
 }
 
 /* ---------------------------------------------------------------------------*/
 
-static void SaveImageToFile( const char *szFile, void *iptr, int sz )
+static void SaveImageToFile( const char *szFile, const void * iptr, int sz )
 {
    HB_FHANDLE fhandle;
 
    if( ( fhandle = hb_fsCreate( szFile, FC_NORMAL ) ) != FS_ERROR )
    {
       /* Write Image */
-      SaveImageToHandle( fhandle, ( BYTE *) iptr, (ULONG) sz );
+      SaveImageToHandle( fhandle, iptr, (ULONG) sz );
 
       /* Close file */
       hb_fsClose( fhandle );
@@ -420,7 +420,7 @@ static void GDImageSaveTo( int nType )
    {
       gdImagePtr im;
       int sz = 0;
-      void *iptr = NULL;
+      void * iptr = NULL;
       HB_FHANDLE fhandle;
       int level = 0, fg = 0;
 
@@ -3938,7 +3938,7 @@ HB_FUNC( GDIMAGEINTERLACE ) /* void gdImageInterlace(gdImagePtr im, int interlac
 
 #if HB_GD_VERS( 2, 0, 33 )
 
-static void AddImageToFile( const char *szFile, void *iptr, int sz )
+static void AddImageToFile( const char *szFile, const void * iptr, int sz )
 {
    HB_FHANDLE fhandle;
 
@@ -3948,7 +3948,7 @@ static void AddImageToFile( const char *szFile, void *iptr, int sz )
       hb_fsSeek(fhandle, 0, FS_END);
 
       /* Write Image */
-      SaveImageToHandle( fhandle, ( BYTE *) iptr, (ULONG) sz );
+      SaveImageToHandle( fhandle, iptr, (ULONG) sz );
 
       /* Close file */
       hb_fsClose( fhandle );

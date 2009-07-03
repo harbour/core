@@ -171,7 +171,7 @@ static long getblock(long offset)
         /* read in the file and set the buffer bottom variable equal */
         /*  to the number of bytes actually read in.                 */
 
-    buffbot = hb_fsReadLarge( infile, ( BYTE * ) buffer, buffsize );
+    buffbot = hb_fsReadLarge( infile, buffer, buffsize );
 
         /* if a full buffer's worth was not read in, make it full.   */
 
@@ -182,7 +182,7 @@ static long getblock(long offset)
         else
             hb_fsSeek( infile, (long) buffsize, FS_SET );
 
-        buffbot = hb_fsReadLarge( infile, ( BYTE * ) buffer, buffsize );
+        buffbot = hb_fsReadLarge( infile, buffer, buffsize );
     }
 
         /* return the actual file position */

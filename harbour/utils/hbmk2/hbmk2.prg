@@ -1877,9 +1877,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       hbmk[ _HBMK_lSHARED ] := .F.
    ENDIF
 
-   /* Force MT mode off in 1.0.x compatibility and dos mode. */
+   /* Force MT mode off in 1.0.x and xhb/dos compatibility modes. */
    IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10 .OR. ;
-      hbmk[ _HBMK_cARCH ] == "dos"
+      ( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB .AND. hbmk[ _HBMK_cARCH ] == "dos" )
       hbmk[ _HBMK_lMT ] := .F.
    ENDIF
 
@@ -6595,7 +6595,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-aflag=<f>"        , I_( "pass flag to linker (static library)" ) },;
       { "-dflag=<f>"        , I_( "pass flag to linker (dynamic library)" ) },;
       { "-runflag=<f>"      , I_( "pass flag to output executable when -run option is used" ) },;
-      { "-jobs=<n>"         , I_( "start n compilation threads (MT platforms/builds only)" ) },;
+      { "-jobs=<n>"         , I_( "start n compilation threads (multiprocess platforms only)" ) },;
       { "-inc"              , I_( "enable incremental build mode" ) },;
       { "-[no]head[=<m>]"   , I_( "control source header parsing (in incremental build mode)\n<m> can be: full, partial (default), off" ) },;
       { "-rebuild"          , I_( "rebuild all (in incremental build mode)" ) },;

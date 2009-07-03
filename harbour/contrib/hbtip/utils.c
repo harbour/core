@@ -600,7 +600,7 @@ static const char *s_findFileMimeType( HB_FHANDLE fileIn )
 
    ulPos = hb_fsSeek( fileIn, 0, SEEK_CUR );
    hb_fsSeek( fileIn, 0, SEEK_SET );
-   iLen = hb_fsRead( fileIn, ( BYTE * ) buf, 512 );
+   iLen = hb_fsRead( fileIn, buf, sizeof( buf ) );
 
    if ( iLen > 0 )
    {

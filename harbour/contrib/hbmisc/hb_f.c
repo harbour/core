@@ -123,7 +123,7 @@ static long hb_hbfskip( int recs )
    if ( recs > 0 ) {
       for (y = 0; y < recs; y++ ) {
          hb_fsSeek( handles[area], offset[area], FS_SET );
-         read_len = hb_fsRead( handles[area], ( BYTE * ) b, b_size );
+         read_len = hb_fsRead( handles[area], b, b_size );
          for (x = 0; x < read_len; x++ ) {
             if ( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
                  ((*(b + x) == 10) && (*(b + x + 1) == 13)) ) {
@@ -157,7 +157,7 @@ static long hb_hbfskip( int recs )
          }
 
          hb_fsSeek( handles[area], read_pos, FS_SET );
-         read_len = hb_fsRead( handles[area], ( BYTE * ) b, ( USHORT )read_len );
+         read_len = hb_fsRead( handles[area], b, ( USHORT )read_len );
 
          for (x = read_len - 4; x >= 0; x-- ) {
             if ( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
@@ -190,7 +190,7 @@ HB_FUNC( HB_FREADLN )
    long read;
 
    hb_fsSeek( handles[area], offset[area], FS_SET );
-   read = hb_fsRead( handles[area], ( BYTE * ) b, b_size );
+   read = hb_fsRead( handles[area], b, b_size );
 
    for ( x = 0; x < b_size; x++ ) {
       if ( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
@@ -250,7 +250,7 @@ HB_FUNC( HB_FGOBOTTOM )
       last = offset[area];
       do {
          hb_fsSeek( handles[area], offset[area], FS_SET );
-         len = hb_fsRead(  handles[area], ( BYTE * ) c, c_size );
+         len = hb_fsRead(  handles[area], c, c_size );
          for ( x = 0; x < len; x++ ) {
             if ( ((*(c + x) == 13) && (*(c + x + 1) == 10)) ||
                  ((*(c + x) == 10) && (*(c + x + 1) == 13)) ||
@@ -336,7 +336,7 @@ HB_FUNC( HB_FREADANDSKIP )
    BOOL bInField = 0, bHasCRLF = FALSE;
 
    hb_fsSeek( handles[area], offset[area], FS_SET );
-   read = hb_fsRead( handles[area], ( BYTE * ) b, b_size );
+   read = hb_fsRead( handles[area], b, b_size );
 
    while (  x < read )
    {

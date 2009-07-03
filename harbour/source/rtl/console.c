@@ -236,19 +236,19 @@ void hb_conOutAlt( const char * pStr, ULONG ulLen )
    if( hb_setGetAlternate() && ( hFile = hb_setGetAltHan() ) != FS_ERROR )
    {
       /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
-      hb_fsWriteLarge( hFile, ( const BYTE * ) pStr, ulLen );
+      hb_fsWriteLarge( hFile, pStr, ulLen );
    }
 
    if( ( hFile = hb_setGetExtraHan() ) != FS_ERROR )
    {
       /* Print to extra file if valid alternate file */
-      hb_fsWriteLarge( hFile, ( const BYTE * ) pStr, ulLen );
+      hb_fsWriteLarge( hFile, pStr, ulLen );
    }
 
    if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_CON ) ) != FS_ERROR )
    {
       /* Print to printer if SET PRINTER ON and valid printer file */
-      hb_fsWriteLarge( hFile, ( const BYTE * ) pStr, ulLen );
+      hb_fsWriteLarge( hFile, pStr, ulLen );
       hb_prnPos()->col += ( USHORT ) ulLen;
    }
 }
@@ -263,7 +263,7 @@ static void hb_conOutDev( const char * pStr, ULONG ulLen )
    if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_DEV ) ) != FS_ERROR )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
-      hb_fsWriteLarge( hFile, ( const BYTE * ) pStr, ulLen );
+      hb_fsWriteLarge( hFile, pStr, ulLen );
       hb_prnPos()->col += ( USHORT ) ulLen;
    }
    else

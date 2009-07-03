@@ -120,10 +120,10 @@ static void hb_destroyFBuffer( PHB_FILEBUF pFileBuf )
 
 static PHB_FILEBUF hb_createFBuffer( HB_FHANDLE hFile, ULONG ulSize )
 {
-   PHB_FILEBUF pFileBuf = ( PHB_FILEBUF )hb_xgrab( sizeof( HB_FILEBUF ) );
+   PHB_FILEBUF pFileBuf = ( PHB_FILEBUF ) hb_xgrab( sizeof( HB_FILEBUF ) );
 
    pFileBuf->hFile = hFile;
-   pFileBuf->pBuf = ( BYTE * )hb_xgrab( ulSize );
+   pFileBuf->pBuf = ( BYTE * ) hb_xgrab( ulSize );
    pFileBuf->ulSize = ulSize;
    pFileBuf->ulPos = 0;
    return pFileBuf;
@@ -337,7 +337,7 @@ static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
    hb_itemRelease( pTmp );
 
    /* Writing EOF */
-   /* hb_fsWrite( hFile, ( BYTE * ) "\x1A", 1 ); */
+   /* hb_fsWrite( hFile, "\x1A", 1 ); */
 
    return ulRecords;
 }

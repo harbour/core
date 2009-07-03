@@ -191,7 +191,7 @@ static void close_handle( PHB_SET_STRUCT pSet, HB_set_enum set_specifier )
    if( *handle_ptr != FS_ERROR )
    {
       if( set_specifier != HB_SET_PRINTFILE && pSet->HB_SET_EOF )
-         hb_fsWrite( *handle_ptr, ( BYTE * ) "\x1A", 1 );
+         hb_fsWrite( *handle_ptr, "\x1A", 1 );
       hb_fsClose( *handle_ptr );
       *handle_ptr = FS_ERROR;
    }
@@ -349,7 +349,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
                         now that theres an HB_SET_EOF flag). */
                      char cEOF = '\0';
                      hb_fsSeek( handle, -1, FS_END ); /* Position to last char. */
-                     hb_fsRead( handle, ( BYTE * ) &cEOF, 1 );   /* Read the last char. */
+                     hb_fsRead( handle, &cEOF, 1 );   /* Read the last char. */
                      if( cEOF == '\x1A' )             /* If it's an EOF, */
                      {
                         hb_fsSeek( handle, -1, FS_END ); /* Then write over it. */

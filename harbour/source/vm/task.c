@@ -438,7 +438,7 @@ static void hb_taskFinalize( PHB_TASKINFO pTask )
       }
 #ifdef HB_TASK_DEBUG
       if( pTask->joiners )
-         hb_errInternal( HB_EI_ERRUNRECOV, "TaskDone: dummy joiners", NULL, NULL );
+         hb_errInternal( HB_EI_ERRUNRECOV, "TaskFinalize: dummy joiners", NULL, NULL );
 #endif
    }
 
@@ -462,7 +462,7 @@ static void hb_taskFinalize( PHB_TASKINFO pTask )
       }
 #ifdef HB_TASK_DEBUG
       if( pTask->locking )
-         hb_errInternal( HB_EI_ERRUNRECOV, "TaskDone: dummy lock", NULL, NULL );
+         hb_errInternal( HB_EI_ERRUNRECOV, "TaskFinalize: dummy lock", NULL, NULL );
 #endif
    }
 
@@ -484,7 +484,7 @@ static void hb_taskFinalize( PHB_TASKINFO pTask )
       }
 #ifdef HB_TASK_DEBUG
       if( pTask->waiting )
-         hb_errInternal( HB_EI_ERRUNRECOV, "TaskDone: dummy cond", NULL, NULL );
+         hb_errInternal( HB_EI_ERRUNRECOV, "TaskFinalize: dummy cond", NULL, NULL );
 #endif
    }
 
@@ -511,7 +511,7 @@ static void hb_taskFinalize( PHB_TASKINFO pTask )
 
 #ifdef HB_TASK_DEBUG
       if( pTask->locked )
-         hb_errInternal( HB_EI_ERRUNRECOV, "TaskDone: dummy lock", NULL, NULL );
+         hb_errInternal( HB_EI_ERRUNRECOV, "TaskFinalize: dummy lock", NULL, NULL );
 #endif
    }
 

@@ -237,7 +237,7 @@ static BOOL hb_fsFileStats(
 
    /* Generic algorithm based on findfirst */
    {
-      PHB_FFIND findinfo = hb_fsFindFirst( ( char * ) pszFileName, HB_FA_ALL );
+      PHB_FFIND findinfo = hb_fsFindFirst( pszFileName, HB_FA_ALL );
 
       if( findinfo )
       {

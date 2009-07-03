@@ -226,7 +226,7 @@ HB_FUNC( PRINTSEND )
       HB_FHANDLE hFile = hb_fsOpen( szPort, FO_WRITE );
       if( hFile != FS_ERROR )
       {
-         usRet = hb_fsWrite( hFile, ( const BYTE * ) szStr, usLen );
+         usRet = hb_fsWrite( hFile, szStr, usLen );
          hb_fsClose( hFile );
       }
    }

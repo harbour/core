@@ -78,9 +78,7 @@ HB_FUNC( SETFCREATE )
    hb_retni( ct_getfcreate() );
 
    if( HB_ISNUM( 1 ) )
-   {
       ct_setfcreate( hb_parni( 1 ) );
-   }
 }
 
 void ct_setsafety( BOOL bSafety )
@@ -100,12 +98,10 @@ HB_FUNC( CSETSAFETY )
    hb_retni( ct_getsafety() );
 
    if( HB_ISLOG( 1 ) )
-   {
       ct_setsafety( hb_parnl( 1 ) );
-   }
 }
 
-static LONG ct_StrFile( const char * pFileName, const BYTE * pcStr, ULONG ulLen, BOOL bOverwrite, LONG lOffset,
+static LONG ct_StrFile( const char * pFileName, const char * pcStr, ULONG ulLen, BOOL bOverwrite, LONG lOffset,
                         BOOL bTrunc )
 {
    HB_FHANDLE hFile;
@@ -119,13 +115,9 @@ static LONG ct_StrFile( const char * pFileName, const BYTE * pcStr, ULONG ulLen,
       bOpen = TRUE;
    }
    else if( !bFile || !ct_getsafety() )
-   {
       hFile = hb_fsCreate( pFileName, ct_getfcreate() );
-   }
    else
-   {
       hFile = FS_ERROR;
-   }
 
    if( hFile != FS_ERROR )
    {
@@ -147,14 +139,12 @@ HB_FUNC( STRFILE )
 {
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      hb_retnl( ct_StrFile( hb_parc( 2 ), ( const BYTE * ) hb_parc( 1 ),
+      hb_retnl( ct_StrFile( hb_parc( 2 ), hb_parc( 1 ),
                             hb_parclen( 1 ), HB_ISLOG( 3 ) && hb_parl( 3 ),
                             hb_parnl( 4 ), HB_ISLOG( 5 ) && hb_parl( 5 ) ) );
    }
    else
-   {
       hb_retni( 0 );
-   }
 }
 
 HB_FUNC( FILESTR )
@@ -182,7 +172,7 @@ HB_FUNC( FILESTR )
          pcResult = ( char * ) hb_xgrab( lLength + 1 );
          if( lLength > 0 )
          {
-            lLength = hb_fsReadLarge( hFile, ( BYTE * ) pcResult, ( ULONG ) lLength );
+            lLength = hb_fsReadLarge( hFile, pcResult, ( ULONG ) lLength );
          }
 
          if( bCtrlZ )
@@ -196,14 +186,10 @@ HB_FUNC( FILESTR )
          hb_retclen_buffer( pcResult, lLength );
       }
       else
-      {
          hb_retc( NULL );
-      }
    }
    else
-   {
       hb_retc( NULL );
-   }
 }
 
 HB_FUNC( SCREENFILE )
@@ -218,15 +204,13 @@ HB_FUNC( SCREENFILE )
 
       hb_gtSave( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pBuffer );
 
-      hb_retnl( ct_StrFile( hb_parc( 1 ), ( const BYTE * ) pBuffer,
+      hb_retnl( ct_StrFile( hb_parc( 1 ), pBuffer,
                             ulSize, HB_ISLOG( 2 ) && hb_parl( 2 ), hb_parnl( 3 ),
                             HB_ISLOG( 4 ) && hb_parl( 4 ) ) );
       hb_xfree( pBuffer );
    }
    else
-   {
       hb_retni( 0 );
-   }
 }
 
 HB_FUNC( FILESCREEN )
@@ -237,19 +221,17 @@ HB_FUNC( FILESCREEN )
 
       if( hFile != FS_ERROR )
       {
-         char *pBuffer;
+         char * pBuffer;
          ULONG ulSize;
          LONG lLength;
 
          if( HB_ISNUM( 2 ) )
-         {
             hb_fsSeek( hFile, hb_parnl( 2 ), FS_SET );
-         }
 
          hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &ulSize );
          pBuffer = ( char * ) hb_xgrab( ulSize );
 
-         lLength = hb_fsReadLarge( hFile, ( BYTE * ) pBuffer, ulSize );
+         lLength = hb_fsReadLarge( hFile, pBuffer, ulSize );
          hb_gtRest( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pBuffer );
 
          hb_xfree( pBuffer );
@@ -258,12 +240,8 @@ HB_FUNC( FILESCREEN )
          hb_retnl( lLength );
       }
       else
-      {
          hb_retni( 0 );
-      }
    }
    else
-   {
       hb_retni( 0 );
-   }
 }

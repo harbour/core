@@ -109,7 +109,7 @@ static BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDeli
          szString = hb_xstrcpy( NULL, cDelim, szStrEsc, cDelim, NULL );
 
          /* FWrite( handle, szString ) */
-         hb_fsWriteLarge( handle, ( BYTE * ) szString, strlen( szString ) );
+         hb_fsWriteLarge( handle, szString, strlen( szString ) );
 
          /* Orphaned, get rif off it */
          hb_xfree( szStrEsc );
@@ -122,14 +122,14 @@ static BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDeli
          char * szDate = ( char * ) hb_xgrab( 9 );
 
          hb_itemGetDS( pValue, szDate );
-         hb_fsWriteLarge( handle, (BYTE*) szDate, strlen( szDate ) );
+         hb_fsWriteLarge( handle, szDate, strlen( szDate ) );
          hb_xfree( szDate );
          break;
       }
       /* an "L" field */
       case HB_IT_LOGICAL:
       {
-         hb_fsWriteLarge( handle, (BYTE*) ( hb_itemGetL( pValue )  ? "T" : "F" ), 1 );
+         hb_fsWriteLarge( handle, ( hb_itemGetL( pValue ) ? "T" : "F" ), 1 );
          break;
       }
       /* an "N" field */
@@ -144,7 +144,7 @@ static BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDeli
             ULONG ulLen = strlen( szResult );
             const char * szTrimmed = hb_strLTrim( szResult, &ulLen );
 
-            hb_fsWriteLarge( handle, ( const BYTE * ) szTrimmed, strlen( szTrimmed ) );
+            hb_fsWriteLarge( handle, szTrimmed, strlen( szTrimmed ) );
             hb_xfree( szResult );
          }
          break;
@@ -236,7 +236,7 @@ HB_FUNC( DBF2TEXT )
             for( ui = 1; ui <= uiFields; ui ++ )
             {
                if( bWriteSep )
-                  hb_fsWriteLarge( handle, ( const BYTE * ) cSep, iSepLen );
+                  hb_fsWriteLarge( handle, cSep, iSepLen );
 
                SELF_GETVALUE( pArea, ui, pTmp );
 #ifndef HB_CDP_SUPPORT_OFF
@@ -263,7 +263,7 @@ HB_FUNC( DBF2TEXT )
                   if( iPos )
                   {
                      if( bWriteSep )
-                        hb_fsWriteLarge( handle, ( const BYTE * ) cSep, iSepLen );
+                        hb_fsWriteLarge( handle, cSep, iSepLen );
 
                      SELF_GETVALUE( pArea, ( USHORT ) iPos, pTmp );
 #ifndef HB_CDP_SUPPORT_OFF
@@ -276,7 +276,7 @@ HB_FUNC( DBF2TEXT )
                }
             }
          }
-         hb_fsWriteLarge( handle, (BYTE*) "\r\n", 2 );
+         hb_fsWriteLarge( handle, "\r\n", 2 );
          bWriteSep = FALSE;
       }
 
@@ -288,6 +288,6 @@ HB_FUNC( DBF2TEXT )
    }
 
    /* Writing EOF */
-   hb_fsWriteLarge( handle, ( BYTE * ) "\x1A", 1 );
+   hb_fsWriteLarge( handle, "\x1A", 1 );
    hb_itemRelease( pTmp );
 }

@@ -547,7 +547,7 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
    #ifdef SQLITE3_LIB
    {
       BOOL  fFree;
-      BYTE  *pszDirName = hb_fsNameConv( hb_parcx(1), &fFree );
+      char  *pszDirName = hb_fsNameConv( hb_parcx(1), &fFree );
 
       if( hb_fsIsDirectory(pszDirName) )
       {
@@ -1797,17 +1797,17 @@ HB_FUNC( SQLITE3_FILE_TO_BUFF )
 
    if( handle != FS_ERROR )
    {
-      BYTE  *buffer;
+      char *buffer;
       ULONG iSize;
 
       iSize = ( int ) hb_fsSeek( handle, 0, FS_END );
       iSize -= ( int ) hb_fsSeek( handle, 0, FS_SET );
-      buffer = ( BYTE * ) hb_xgrab( iSize + 1 );
+      buffer = ( char * ) hb_xgrab( iSize + 1 );
       iSize = hb_fsReadLarge( handle, buffer, iSize );
       buffer[iSize] = '\0';
       hb_fsClose( handle );
 
-      hb_retclen_buffer( ( char * ) buffer, iSize );
+      hb_retclen_buffer( buffer, iSize );
    }
    else
    {
@@ -1822,7 +1822,7 @@ HB_FUNC( SQLITE3_BUFF_TO_FILE )
 
    if( handle != FS_ERROR && iSize > 0 )
    {
-      hb_retni( hb_fsWriteLarge(handle, ( BYTE * ) hb_parcx(2), iSize) == iSize ? 0 : -1 );
+      hb_retni( hb_fsWriteLarge(handle, hb_parcx(2), iSize) == iSize ? 0 : -1 );
       hb_fsClose( handle );
    }
    else

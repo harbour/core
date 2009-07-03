@@ -313,7 +313,7 @@
 #  define HB_ARCH_16BIT
 #endif
 
-#if USHRT_MAX == 0xffff
+#if USHRT_MAX == 0xFFFF
    typedef signed short int    hbI16;
    typedef unsigned short int  hbU16;
    #define hbI16Min            SHRT_MIN
@@ -691,8 +691,8 @@ typedef unsigned long HB_COUNTER;
 /* Harbour overloaded types: */
 typedef int                 hbBool;
 typedef char                hbChar;           /* TOFIX */
-typedef SCHAR               hbSChar;
-typedef UCHAR               hbUChar;
+typedef signed char         hbSChar;
+typedef unsigned char       hbUChar;
 typedef short               hbShort;
 typedef unsigned short      hbUShort;
 typedef int                 hbInt;

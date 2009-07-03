@@ -3332,7 +3332,7 @@ static HB_ERRCODE hb_fptGetVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pI
 #endif
                if( hFile != FS_ERROR )
                {
-                  if( hb_fsWrite( hFile, ( BYTE * ) pString, uiType ) != uiType )
+                  if( hb_fsWrite( hFile, pString, uiType ) != uiType )
                      uiError = EDBF_WRITE;
                   hb_xfree( pString );
                }
@@ -3917,13 +3917,13 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
       if( ! pArea->fTemporary )
       {
          /* create file name */
-         pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
+         pFileName = hb_fsFNameSplit( pCreateInfo->abName );
          if( ! pFileName->szExtension )
          {
             pItem = hb_itemPutC( pItem, NULL );
             SELF_INFO( ( AREAP ) pArea, DBI_MEMOEXT, pItem );
             pFileName->szExtension = hb_itemGetCPtr( pItem );
-            hb_fsFNameMerge( ( char * ) szFileName, pFileName );
+            hb_fsFNameMerge( szFileName, pFileName );
          }
          else
          {
@@ -4114,13 +4114,13 @@ static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
    }
 
    /* create file name */
-   pFileName = hb_fsFNameSplit( ( char * ) pOpenInfo->abName );
+   pFileName = hb_fsFNameSplit( pOpenInfo->abName );
    if( ! pFileName->szExtension )
    {
       PHB_ITEM pItem = hb_itemPutC( NULL, NULL );
       SELF_INFO( ( AREAP ) pArea, DBI_MEMOEXT, pItem );
       pFileName->szExtension = hb_itemGetCPtr( pItem );
-      hb_fsFNameMerge( ( char * ) szFileName, pFileName );
+      hb_fsFNameMerge( szFileName, pFileName );
       hb_itemRelease( pItem );
    }
    else
@@ -4701,7 +4701,7 @@ static HB_ERRCODE hb_fptInfo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          {
             PHB_FNAME pFileName;
 
-            pFileName = hb_fsFNameSplit( ( char * ) pArea->szMemoFileName );
+            pFileName = hb_fsFNameSplit( pArea->szMemoFileName );
             hb_itemPutC( pItem, pFileName->szExtension );
             hb_xfree( pFileName );
          }

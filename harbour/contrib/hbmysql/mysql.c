@@ -327,7 +327,7 @@ static char * filetoBuff( const char * fname, int * size )
       *size = ( int ) hb_fsSeek( handle, 0, FS_END );
       hb_fsSeek( handle, 0, FS_SET );
       buffer = ( char * ) hb_xgrab( *size + 1 );
-      *size = hb_fsReadLarge( handle, ( BYTE * ) buffer, *size );
+      *size = hb_fsReadLarge( handle, buffer, *size );
       buffer[ *size ] = '\0';
       hb_fsClose( handle );
    }

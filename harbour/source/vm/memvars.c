@@ -1399,9 +1399,9 @@ static HB_DYNS_FUNC( hb_memvarSave )
             buffer[ 11 ] = 'C' + 128;
             HB_PUT_LE_UINT16( &buffer[ 16 ], ulLen );
             hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
-            hb_fsWriteLarge( fhnd, ( BYTE * ) hb_itemGetCPtr( pMemvar ), ulLen - iOverFlow );
+            hb_fsWriteLarge( fhnd, hb_itemGetCPtr( pMemvar ), ulLen - iOverFlow );
             if( iOverFlow )
-               hb_fsWrite( fhnd, ( const BYTE * ) "\0", 1 );
+               hb_fsWrite( fhnd, "\0", 1 );
          }
          else if( HB_IS_NUMERIC( pMemvar ) )
          {

@@ -186,12 +186,12 @@
 #define VALLOC_FLAG   0
 
 /* routines internal to this module */
-static int _findeol( BYTE * buf, int buf_len );
-static int _findbol( BYTE * buf, int buf_len );
+static int _findeol( char * buf, int buf_len );
+static int _findbol( char * buf, int buf_len );
 static int _ins_buff( int bytes );
 static int _del_buff( int bytes );
 static long _ft_skip( long recs );
-static int _writeLine( const BYTE * theData, ULONG iDataLen );
+static int _writeLine( const char * theData, ULONG iDataLen );
 static BOOL _writeeol( HB_FHANDLE fhnd );
 
 /* arrays used by the text workareas */
@@ -716,10 +716,10 @@ static long _ft_skip( long iRecs )
 
    int          iByteCount;
    int          iBytesRead, iBytesRemaining;
-   BYTE *       cPtr;
+   char *       cPtr;
    long         iSkipped = 0;
 
-   BYTE *       cBuff    = ( BYTE * ) hb_xgrab( BUFFSIZE );
+   char *       cBuff    = ( char * ) hb_xgrab( BUFFSIZE );
    long         fpOffset = offset[area];
 
    isBof[area] = FALSE;
@@ -956,7 +956,7 @@ HB_FUNC( FT_FREADLN )
 
    int        iByteCount;
    int        iBytesRead;
-   BYTE *     cPtr = ( BYTE * ) hb_xgrab( BUFFSIZE );
+   char *     cPtr = ( char * ) hb_xgrab( BUFFSIZE );
 
    hb_fsSeek( handles[area], offset[area], FS_SET );
    iBytesRead = (int) hb_fsReadLarge( handles[area], cPtr, BUFFSIZE );
@@ -1028,7 +1028,7 @@ HB_FUNC( FT_FDELETE )
    long   destPtr    ;
    long   cur_rec  = recno[area];
    long   cur_off  = offset[area];
-   BYTE * Buff     = ( BYTE * ) hb_xgrab( BUFFSIZE );
+   char * Buff     = ( char * ) hb_xgrab( BUFFSIZE );
 
    /* save address to current record ( first record to be deleted ) */
    destPtr = offset[area] ;
@@ -1212,7 +1212,7 @@ HB_FUNC( FT_FAPPEND )
    int   iRead;
    int   iByteCount;
 
-   BYTE  * buff = ( BYTE * ) hb_xgrab( BUFFSIZE );
+   char  * buff = ( char * ) hb_xgrab( BUFFSIZE );
 
    error[area] = 0;
 
@@ -1228,7 +1228,7 @@ HB_FUNC( FT_FAPPEND )
 /* determine if CRLF pair exists, if not, add one */
 
    /* get count of chars in this line */
-   iByteCount = _findeol( ( BYTE * ) buff, iRead );
+   iByteCount = _findeol( buff, iRead );
    if( iByteCount == 0 )
       hb_fsSeek( handles[area], 0, FS_END );
    else
@@ -1330,14 +1330,14 @@ HB_FUNC( FT_FAPPEND )
 
 HB_FUNC( FT_FWRITEL )
 {
-   const BYTE * theData  = ( const BYTE * ) hb_parc( 1 );
+   const char * theData  = hb_parc( 1 );
    int      iDataLen = hb_parclen( 1 );
    int      lInsert  = ( HB_ISLOG( 2 ) ? hb_parl( 2 ) : 0 );
    int      err;
    int      iLineLen = 0;
    int      iRead, iEOL;
 
-   BYTE *   buffer;
+   char *   buffer;
 
 
    /* position file pointer to insertion point */
@@ -1357,13 +1357,13 @@ HB_FUNC( FT_FWRITEL )
    else
    {
       /* overwrite mode, determine how many bytes over/under */
-      buffer = ( BYTE * ) hb_xgrab( BUFFSIZE );
+      buffer = ( char * ) hb_xgrab( BUFFSIZE );
 
       /* find length of current line, loop if longer than buffer */
       do
       {
          iRead = hb_fsRead( handles[area], buffer, BUFFSIZE );
-         iEOL  = _findeol( ( BYTE * ) buffer, iRead );
+         iEOL  = _findeol( buffer, iRead );
          if( iEOL == 0 )
          {
             iLineLen += iRead;
@@ -1648,7 +1648,7 @@ HB_FUNC( FT_FGOTO )
                   line is longer than buffer end)
 
 ------------------------------------------------------------------------*/
-static int _findeol( BYTE * buf, int buf_len )
+static int _findeol( char * buf, int buf_len )
 {
    int tmp;
 
@@ -1707,14 +1707,14 @@ _feoldone:
                    the preceding CRLF pair (beginning of line).
 
 ------------------------------------------------------------------------*/
-static int _findbol( BYTE * buf, int buf_len )
+static int _findbol( char * buf, int buf_len )
 {
    int tmp = buf_len - 1;
 
    if( tmp != 0 )
    {
-      BYTE * p = buf - 1;
-      BYTE b = *p;
+      char * p = buf - 1;
+      char b = *p;
 
       if( b == FT_CHR_EOF )
       {
@@ -1806,9 +1806,9 @@ _fbolerr:
 static int _ins_buff( int iLen )
 {
 
-   BYTE *   ReadBuff    = ( BYTE * ) hb_xgrab( BUFFSIZE );
-   BYTE *   WriteBuff   = ( BYTE * ) hb_xgrab( BUFFSIZE );
-   BYTE *   SaveBuff;
+   char *   ReadBuff    = ( char * ) hb_xgrab( BUFFSIZE );
+   char *   WriteBuff   = ( char * ) hb_xgrab( BUFFSIZE );
+   char *   SaveBuff;
    long     fpRead, fpWrite;
    int      WriteLen, ReadLen;
    int      SaveLen;
@@ -1900,7 +1900,7 @@ static int _ins_buff( int iLen )
 /* deletes xxx bytes from the current file, beginning at the current record */
 static int _del_buff( int iLen )
 {
-   BYTE *   WriteBuff   = ( BYTE * ) hb_xgrab( BUFFSIZE );
+   char *   WriteBuff   = ( char * ) hb_xgrab( BUFFSIZE );
    long     fpRead, fpWrite;
    int      WriteLen;
    int      SaveLen;
@@ -1956,7 +1956,7 @@ static int _del_buff( int iLen )
 
 /*--------------------------------------------------------------------------*/
 /* writes a line of data to the file, including the terminating CRLF */
-static int _writeLine( const BYTE * theData, ULONG iDataLen )
+static int _writeLine( const char * theData, ULONG iDataLen )
 {
    int   err   = 0;
 
@@ -1979,7 +1979,7 @@ static BOOL _writeeol( HB_FHANDLE fhnd )
    const char * crlf = hb_conNewLine();
    ULONG len = strlen( crlf );
 
-   return hb_fsWriteLarge( fhnd, ( BYTE * ) crlf, len ) == ( ULONG ) len;
+   return hb_fsWriteLarge( fhnd, crlf, len ) == ( ULONG ) len;
 }
 
 /*  fttext.c  eof */
