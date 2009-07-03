@@ -128,5 +128,5 @@ HB_FUNC( CRYPT )
       hb_retclen_buffer( ( char * ) pbyResult, ulStringLen );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }

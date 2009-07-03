@@ -322,6 +322,6 @@ HB_FUNC( CHARRELREP )
       else if( iNoRet )
          hb_ret();
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }

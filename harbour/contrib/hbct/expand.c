@@ -103,5 +103,5 @@ HB_FUNC( EXPAND )
       }
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }

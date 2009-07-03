@@ -234,6 +234,6 @@ HB_FUNC( WORDREPL )
       else if( HB_ISCHAR( 2 ) )
          hb_retclen( hb_parc( 2 ), hb_parclen( 2 ) );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }

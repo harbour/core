@@ -90,7 +90,7 @@ HB_FUNC( SETCLEARA )
    if( iColor >= 0 )
       hb_gtSetClearColor( iColor & 0xff );
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 HB_FUNC( SETCLEARB )
@@ -106,7 +106,7 @@ HB_FUNC( SETCLEARB )
 
    hb_gtSetClearChar( iNew & 0xff );
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 HB_FUNC( GETCLEARB )

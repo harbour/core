@@ -1531,7 +1531,7 @@ HB_FUNC( WVT__GETOPENFILENAME )
    }
    else
    {
-      hb_retc( NULL );
+      hb_retc_null();
    }
    hb_xfree( lpFileName );
    HB_PARTFREE( lpstrTitle );
@@ -1577,7 +1577,7 @@ HB_FUNC( WVT__GETSAVEFILENAME )
    }
    else
    {
-      hb_retc( NULL );
+      hb_retc_null();
    }
 
    HB_PARTFREE( lpstrTitle );

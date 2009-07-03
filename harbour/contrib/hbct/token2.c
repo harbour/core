@@ -598,7 +598,7 @@ HB_FUNC( TOKENNEXT )
                          NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                          HB_ERR_ARGS_BASEPARAMS );
             }
-            hb_retc( NULL );
+            hb_retc_null();
             return;
          }
          sTokenEnvironment = ( TOKEN_ENVIRONMENT ) hb_xgrab( sStrLen3 );
@@ -617,7 +617,7 @@ HB_FUNC( TOKENNEXT )
                          NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                          HB_ERR_ARGS_BASEPARAMS );
             }
-            hb_retc( NULL );
+            hb_retc_null();
             return;
          }
          sTokenEnvironment = s_sTokenEnvironment;
@@ -650,7 +650,7 @@ HB_FUNC( TOKENNEXT )
             hb_storclen( ( char * ) sTokenEnvironment, sTokEnvGetSize( sTokenEnvironment ), 3 );
             hb_xfree( ( char * ) sTokenEnvironment );
          }
-         hb_retc( NULL );
+         hb_retc_null();
          return;
       }
 
@@ -683,7 +683,7 @@ HB_FUNC( TOKENNEXT )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }
 
@@ -1025,7 +1025,7 @@ HB_FUNC( SAVETOKEN )
    if( s_sTokenEnvironment != NULL )
       hb_retclen( ( char * ) s_sTokenEnvironment, sTokEnvGetSize( s_sTokenEnvironment ) );
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 
@@ -1088,7 +1088,7 @@ HB_FUNC( RESTTOKEN )
                             NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                             HB_ERR_ARGS_BASEPARAMS );
                }
-               hb_retc( NULL );
+               hb_retc_null();
                return;
             }
             hb_xmemcpy( sTokenEnvironment, env, sStrLen );
@@ -1102,7 +1102,7 @@ HB_FUNC( RESTTOKEN )
       if( s_sTokenEnvironment != NULL )
          hb_retclen( ( char * ) s_sTokenEnvironment, sTokEnvGetSize( s_sTokenEnvironment ) );
       else
-         hb_retc( NULL );
+         hb_retc_null();
 
       sTokSet( sTokenEnvironment );
    }
@@ -1120,6 +1120,6 @@ HB_FUNC( RESTTOKEN )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }

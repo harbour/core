@@ -131,7 +131,7 @@ HB_FUNC( SETPREC )
          ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_SETPREC, NULL,
                    HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
    }
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 

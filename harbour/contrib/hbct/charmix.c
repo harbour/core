@@ -127,7 +127,7 @@ HB_FUNC( CHARMIX )
             ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARMIX, NULL, HB_ERR_FUNCNAME, 0,
                       EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
-         hb_retc( NULL );
+         hb_retc_null();
          return;
       }
 
@@ -182,6 +182,6 @@ HB_FUNC( CHARMIX )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }

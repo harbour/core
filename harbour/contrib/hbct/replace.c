@@ -87,7 +87,7 @@ static void do_replace( int iSwitch )
          if( iNoRet )
             hb_ret();
          else
-            hb_retc( NULL );
+            hb_retc_null();
          return;
       }
 
@@ -155,7 +155,7 @@ static void do_replace( int iSwitch )
       else if( iNoRet )
          hb_ret();
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }
 

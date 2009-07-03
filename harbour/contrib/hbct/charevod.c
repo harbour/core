@@ -84,7 +84,7 @@ static void do_charevod( int iSwitch )
                       NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                       HB_ERR_ARGS_BASEPARAMS );
          }
-         hb_retc( NULL );
+         hb_retc_null();
          return;
       }
 
@@ -100,7 +100,7 @@ static void do_charevod( int iSwitch )
          pcResult[sResultPos++] = pcString[sPos];
 
       if( sResultPos == 0 )
-         hb_retc( NULL );
+         hb_retc_null();
       else
          hb_retclen( pcResult, sResultPos );
 
@@ -123,7 +123,7 @@ static void do_charevod( int iSwitch )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }
 

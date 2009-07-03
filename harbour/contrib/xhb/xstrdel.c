@@ -88,5 +88,5 @@ HB_FUNC( STRDEL )
          hb_retc( szText );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }

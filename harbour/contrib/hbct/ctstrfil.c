@@ -186,10 +186,10 @@ HB_FUNC( FILESTR )
          hb_retclen_buffer( pcResult, lLength );
       }
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 HB_FUNC( SCREENFILE )

@@ -189,7 +189,7 @@ HB_FUNC( SCREENMIX )
       }
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 
@@ -262,7 +262,7 @@ HB_FUNC( SAYSCREEN )
       }
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 static BOOL hb_ctGetWinCord( int * piTop, int * piLeft,
@@ -344,7 +344,7 @@ HB_FUNC( CLEARWIN )
       hb_gtScrollEx( iTop, iLeft, iBottom, iRight, bColor, bChar, 0, 0 );
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 
@@ -402,7 +402,7 @@ HB_FUNC( INVERTWIN )
       hb_gtEndWrite();
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 
@@ -497,7 +497,7 @@ HB_FUNC( UNTEXTWIN )
       hb_gtEndWrite();
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 /*  $DOC$
@@ -575,7 +575,7 @@ HB_FUNC( CHARWIN )
       hb_gtEndWrite();
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 
@@ -654,7 +654,7 @@ HB_FUNC( COLORWIN )
       hb_gtEndWrite();
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 
@@ -715,7 +715,7 @@ HB_FUNC( SCREENTEXT )
       hb_retclen_buffer( pBuffer, ulSize );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 /*  $DOC$
@@ -782,5 +782,5 @@ HB_FUNC( COLORREPL )
    }
    hb_gtEndWrite();
 
-   hb_retc( NULL );
+   hb_retc_null();
 }

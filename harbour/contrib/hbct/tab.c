@@ -259,7 +259,7 @@ HB_FUNC( TABEXPAND )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }
 
@@ -361,7 +361,7 @@ HB_FUNC( TABPACK )
 
       if( sStrLen == 0 )
       {
-         hb_retc( NULL );
+         hb_retc_null();
          return;
       }
       /* estimate maximum return length by assuming that there's
@@ -494,6 +494,6 @@ HB_FUNC( TABPACK )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }

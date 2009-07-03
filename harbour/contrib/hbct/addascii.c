@@ -217,6 +217,6 @@ HB_FUNC( ADDASCII )
       else if( iNoRet )
          hb_retl( 0 );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }

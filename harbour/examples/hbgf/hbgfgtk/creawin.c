@@ -224,7 +224,7 @@ HB_FUNC( HB_GTKWINDOWGETTEXT )
         hb_retc( ( char * )Win->title );
     }
     else
-        hb_retc( NULL );
+        hb_retc_null();
 }
 
 /* ********************************************************************* */

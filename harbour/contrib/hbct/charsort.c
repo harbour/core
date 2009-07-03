@@ -237,7 +237,7 @@ HB_FUNC( CHARSORT )
          if( iNoRet )
             hb_retl( 0 );
          else
-            hb_retc( NULL );
+            hb_retc_null();
          return;
       }
 
@@ -278,6 +278,6 @@ HB_FUNC( CHARSORT )
       else if( iNoRet )
          hb_retl( 0 );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }

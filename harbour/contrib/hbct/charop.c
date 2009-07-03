@@ -100,7 +100,7 @@ static void do_charop( int iSwitch )
          }
          else
          {
-            hb_retc( NULL );
+            hb_retc_null();
          }
          return;
       }

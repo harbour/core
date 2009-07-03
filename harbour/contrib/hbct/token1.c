@@ -156,7 +156,7 @@ static void do_token1( int iSwitch )
             if( iNoRef )
                hb_retl( 0 );
             else
-               hb_retc( NULL );
+               hb_retc_null();
             return;
          }
          sRetStrLen = sStrLen;
@@ -205,7 +205,7 @@ static void do_token1( int iSwitch )
                {
                   char cRet;
 
-                  hb_retc( NULL );
+                  hb_retc_null();
                   if( HB_ISBYREF( 5 ) )
                   {
                      cRet = ( char ) siPreSeparator;
@@ -311,7 +311,7 @@ static void do_token1( int iSwitch )
                 ( ulToken == ulTokenCounter ) )
                hb_retclen( pcSubStr, pc - pcSubStr );
             else
-               hb_retc( NULL );
+               hb_retc_null();
 
             if( HB_ISBYREF( 5 ) )
             {
@@ -384,7 +384,7 @@ static void do_token1( int iSwitch )
             if( pSubst != NULL )
                hb_itemReturnRelease( pSubst );
             else if( !iNoRef )
-               hb_retc( NULL );
+               hb_retc_null();
             else
                hb_retl( 0 );
             break;
@@ -407,7 +407,7 @@ static void do_token1( int iSwitch )
             if( pSubst != NULL )
                hb_itemReturnRelease( pSubst );
             else if( !iNoRef )
-               hb_retc( NULL );
+               hb_retc_null();
             else
                hb_retl( 0 );
             break;
@@ -801,7 +801,7 @@ HB_FUNC( TOKENSEP )
          hb_retclen( &cRet, 1 );
       }
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
    else
    {
@@ -812,6 +812,6 @@ HB_FUNC( TOKENSEP )
          hb_retclen( &cRet, 1 );
       }
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }

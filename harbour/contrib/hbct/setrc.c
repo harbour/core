@@ -65,5 +65,5 @@ HB_FUNC( SETRC )
       hb_gtSetPos( fRow ? ( SHORT ) hb_parni( 1 ) : sRow, fCol ? ( SHORT ) hb_parni( 2 ) : sCol );
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }

@@ -98,7 +98,7 @@ static void do_atnum( int iSwitch )
                   ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_AFTERATNUM, NULL,
                             HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
                }
-               hb_retc( NULL );
+               hb_retc_null();
                break;
             }
             case DO_ATNUM_BEFORATNUM:
@@ -111,7 +111,7 @@ static void do_atnum( int iSwitch )
                   ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_BEFORATNUM, NULL,
                             HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
                }
-               hb_retc( NULL );
+               hb_retc_null();
                break;
             }
             case DO_ATNUM_ATNUM:
@@ -175,7 +175,7 @@ static void do_atnum( int iSwitch )
                   case DO_ATNUM_BEFORATNUM:
                      /* AFTERATNUM */
                      /* BEFORATNUM */
-                     hb_retc( NULL );
+                     hb_retc_null();
                      break;
 
                   case DO_ATNUM_ATNUM:
@@ -222,7 +222,7 @@ static void do_atnum( int iSwitch )
                case DO_ATNUM_BEFORATNUM:
                   /* AFTERATNUM */
                   /* BEFORATNUM */
-                  hb_retc( NULL );
+                  hb_retc_null();
                   break;
 
                case DO_ATNUM_ATNUM:
@@ -239,7 +239,7 @@ static void do_atnum( int iSwitch )
          case DO_ATNUM_AFTERATNUM:
             /* AFTERATNUM */
             if( pc + sMatchStrLen >= pcString + sStrLen )
-               hb_retc( NULL );
+               hb_retc_null();
             else
                hb_retclen( pc + sMatchStrLen, sStrLen - ( pc + sMatchStrLen - pcString ) );
             break;
@@ -284,7 +284,7 @@ static void do_atnum( int iSwitch )
             if( pSubst != NULL )
                hb_itemReturnRelease( pSubst );
             else
-               hb_retc( NULL );
+               hb_retc_null();
             break;
          }
          case DO_ATNUM_ATNUM:

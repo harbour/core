@@ -81,5 +81,5 @@ HB_FUNC( RESTCURSOR )
    hb_gtSetCursor( ( USHORT ) ( ( lCursor >> 16 ) & 0xff ) );
 #endif
 
-   hb_retc( NULL );
+   hb_retc_null();
 }

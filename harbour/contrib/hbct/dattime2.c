@@ -302,7 +302,7 @@ HB_FUNC( DMY )
    }
    else
    {
-      hb_retc( NULL );
+      hb_retc_null();
    }
 }
 
@@ -386,7 +386,7 @@ HB_FUNC( MDY )
    }
    else
    {
-      hb_retc( NULL );
+      hb_retc_null();
    }
 }
 

@@ -189,7 +189,7 @@ HB_FUNC( SQL_SPRINTF )
    if( !pItmFrm || (cItmFrm = hb_itemGetCPtr( pItmFrm )) == NULL ){
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
    }else if( (ulItmFrm = hb_itemGetCLen( pItmFrm )) == 0 ){
-      hb_retc( NULL );
+      hb_retc_null();
    }else if( !argc ){
       cRes = (char *)hb_xgrab( ulItmFrm + sizeof(char) );
       memcpy( cRes, cItmFrm, ulItmFrm + sizeof(char) );

@@ -86,7 +86,7 @@ static void do_charswap( int iSwitch )
          if( iNoRet )
             hb_ret();
          else
-            hb_retc( NULL );
+            hb_retc_null();
          return;
       }
 
@@ -181,7 +181,7 @@ static void do_charswap( int iSwitch )
       else if( iNoRet )
          hb_retl( 0 );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }
 

@@ -59,7 +59,7 @@ HB_FUNC( CHARSPREAD )
    ULONG ulLen = hb_parclen( 1 );
 
    if( ulLen == 0 )
-      hb_retc( NULL );
+      hb_retc_null();
    else
    {
       long lSize = hb_parnl( 2 );

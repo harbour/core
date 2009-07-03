@@ -117,6 +117,6 @@ HB_FUNC( XHB_ALLTRIM )
       hb_errRT_BASE_SubstR( EG_ARG, 2022, NULL, "ALLTRIM", HB_ERR_ARGS_BASEPARAMS );
 #endif
 #else
-      hb_retc( NULL );
+      hb_retc_null();
 #endif
 }

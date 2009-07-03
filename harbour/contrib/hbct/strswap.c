@@ -143,7 +143,7 @@ HB_FUNC( STRSWAP )
          hb_xfree( pcRet2 );
       }
 
-      hb_retc( NULL );
+      hb_retc_null();
    }
    else  /* ( sStrLen1 = ( size_t ) hb_parclen( 1 ) ) > 0 &&
             ( sStrLen2 = ( size_t ) hb_parclen( 2 ) ) > 0 */
@@ -161,6 +161,6 @@ HB_FUNC( STRSWAP )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }

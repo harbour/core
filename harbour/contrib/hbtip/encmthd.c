@@ -77,7 +77,7 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
 
    if( ! nLen )
    {
-      hb_retc( NULL );
+      hb_retc_null();
       return;
    }
 
@@ -203,7 +203,7 @@ HB_FUNC( TIPENCODERBASE64_DECODE )
 
    if( ! nLen )
    {
-      hb_retc( NULL );
+      hb_retc_null();
       return;
    }
 
@@ -301,7 +301,7 @@ HB_FUNC( TIPENCODERQP_ENCODE )
 
    if( ! nLen )
    {
-      hb_retc( NULL );
+      hb_retc_null();
       return;
    }
 
@@ -374,7 +374,7 @@ HB_FUNC( TIPENCODERQP_DECODE )
 
    if( ! nLen )
    {
-      hb_retc( NULL );
+      hb_retc_null();
       return;
    }
 
@@ -456,7 +456,7 @@ HB_FUNC( TIPENCODERURL_ENCODE )
 
    if( ! nLen )
    {
-      hb_retc( NULL );
+      hb_retc_null();
       return;
    }
 
@@ -517,7 +517,7 @@ HB_FUNC( TIPENCODERURL_DECODE )
 
    if( ! nLen )
    {
-      hb_retc( NULL );
+      hb_retc_null();
       return;
    }
 

@@ -209,7 +209,7 @@ HB_FUNC( FT_SAVEATT )
       hb_retclen_buffer( pAttrib, ulSize );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 /*

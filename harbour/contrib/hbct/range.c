@@ -154,7 +154,7 @@ HB_FUNC( RANGEREM )
       else if( HB_ISCHAR( 3 ) )
          hb_retclen( hb_parc( 3 ), hb_parclen( 3 ) );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }
 
@@ -284,6 +284,6 @@ HB_FUNC( RANGEREPL )
       else if( HB_ISCHAR( 3 ) )
          hb_retclen( hb_parc( 3 ), hb_parclen( 3 ) );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }

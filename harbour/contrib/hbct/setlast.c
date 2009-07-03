@@ -56,5 +56,5 @@
 HB_FUNC( SETLASTKEY )
 {
     hb_inkeySetLast( hb_parni( 1 ) );
-    hb_retc( NULL );
+    hb_retc_null();
 }

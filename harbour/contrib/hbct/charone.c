@@ -200,7 +200,7 @@ static void do_charone( int iSwitch )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }
 

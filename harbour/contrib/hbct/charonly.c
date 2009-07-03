@@ -88,7 +88,7 @@ static void do_charonly( int iSwitch )
          case DO_CHARONLY_WORDONLY:
             if( ( sStrLen == 0 ) || ( sOnlySetLen == 0 ) )
             {
-               hb_retc( NULL );
+               hb_retc_null();
                return;
             }
             break;
@@ -97,7 +97,7 @@ static void do_charonly( int iSwitch )
          case DO_CHARONLY_WORDREM:
             if( sStrLen == 0 )
             {
-               hb_retc( NULL );
+               hb_retc_null();
                return;
             }
             if( sOnlySetLen == 0 )
@@ -171,7 +171,7 @@ static void do_charonly( int iSwitch )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }
 

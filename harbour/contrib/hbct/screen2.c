@@ -97,7 +97,7 @@ HB_FUNC( SAYDOWN )
       }
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 HB_FUNC( SAYSPREAD )
@@ -151,7 +151,7 @@ HB_FUNC( SAYSPREAD )
       }
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 HB_FUNC( SAYMOVEIN )
@@ -222,7 +222,7 @@ HB_FUNC( SAYMOVEIN )
       }
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 HB_FUNC( CLEARSLOW )
@@ -351,7 +351,7 @@ HB_FUNC( SCREENSTR )
       hb_retclen_buffer( pBuffer, ulSize );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 HB_FUNC( STRSCREEN )
@@ -394,7 +394,7 @@ HB_FUNC( STRSCREEN )
       }
    }
 
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 /*

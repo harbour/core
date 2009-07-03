@@ -65,5 +65,5 @@ HB_FUNC( FT_N2COLOR )
       hb_retc( szColorString );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }

@@ -110,7 +110,7 @@ static void do_remove( int iSwitch )
       }
 
       if( sRetLen == 0 )
-         hb_retc( NULL );
+         hb_retc_null();
       else
          hb_retclen( pcRet, sRetLen );
    }
@@ -130,7 +130,7 @@ static void do_remove( int iSwitch )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }
 

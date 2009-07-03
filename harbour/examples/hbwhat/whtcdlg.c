@@ -226,7 +226,7 @@ HB_FUNC( VWN__GETOPENFILENAME )
    }
    else
    {
-      hb_retc( NULL );
+      hb_retc_null();
    }
 }
 
@@ -260,7 +260,7 @@ HB_FUNC( VWN__GETSAVEFILENAME )
      }
     else
      {
-      hb_retc( NULL );
+      hb_retc_null();
    }
 }
 
@@ -293,7 +293,7 @@ HB_FUNC( VWN_SHBROWSEFORFOLDER )
    }
    else
    {
-     hb_retc( NULL );
+     hb_retc_null();
    }
 
    hb_xfree( lpBuffer);

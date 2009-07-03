@@ -83,7 +83,7 @@ static void do_pad( int iSwitch )
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                       HB_ERR_ARGS_BASEPARAMS );
          }
-         hb_retc( NULL );
+         hb_retc_null();
          return;
       }
       sRetLen = ( size_t ) lRetLen;
@@ -140,7 +140,7 @@ static void do_pad( int iSwitch )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }
 

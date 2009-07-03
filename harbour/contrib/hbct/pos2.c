@@ -166,7 +166,7 @@ HB_FUNC( POSCHAR )
       else if( iNoRet )
          hb_ret();
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }
 
@@ -224,7 +224,7 @@ HB_FUNC( POSDEL )
 
       if( sStrLen <= sDelLen )
       {
-         hb_retc( NULL );
+         hb_retc_null();
          return;
       }
 
@@ -260,7 +260,7 @@ HB_FUNC( POSDEL )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }
 
@@ -369,7 +369,7 @@ HB_FUNC( POSINS )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }
 
@@ -532,6 +532,6 @@ HB_FUNC( POSREPL )
       else if( iNoRet )
          hb_ret();
       else
-         hb_retc( NULL );
+         hb_retc_null();
    }
 }

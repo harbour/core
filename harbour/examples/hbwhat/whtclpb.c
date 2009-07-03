@@ -190,7 +190,7 @@ HB_FUNC( VWN_GETCLIPBOARDDATA )
             GlobalUnlock( hMem );
          }
          else
-            hb_retc( NULL );
+            hb_retc_null();
          break;
 
       case CF_BITMAP:
@@ -271,7 +271,7 @@ HB_FUNC( VWN_SETCLIPBOARDDATA )
             GlobalUnlock( hMem );
          }
          else
-            hb_retc( NULL );
+            hb_retc_null();
          break;
 
       case CF_BITMAP:

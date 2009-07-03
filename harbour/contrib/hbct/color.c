@@ -207,7 +207,7 @@ HB_FUNC( NTOCOLOR )
       hb_retc( szColorString );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 
@@ -242,7 +242,7 @@ HB_FUNC( NTOCOLOR )
 HB_FUNC( ENHANCED )
 {
    hb_gtColorSelect( HB_CLR_ENHANCED );
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 
@@ -277,7 +277,7 @@ HB_FUNC( ENHANCED )
 HB_FUNC( STANDARD )
 {
    hb_gtColorSelect( HB_CLR_STANDARD );
-   hb_retc( NULL );
+   hb_retc_null();
 }
 
 
@@ -312,5 +312,5 @@ HB_FUNC( STANDARD )
 HB_FUNC( UNSELECTED )
 {
    hb_gtColorSelect( HB_CLR_UNSELECTED );
-   hb_retc( NULL );
+   hb_retc_null();
 }
