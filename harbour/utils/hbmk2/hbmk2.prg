@@ -177,6 +177,9 @@ REQUEST hbmk_KEYW
 #define _MACRO_OPEN             "{"
 #define _MACRO_CLOSE            "}"
 
+#define _CMDSUBST_OPEN          "`"
+#define _CMDSUBST_CLOSE         _CMDSUBST_OPEN
+
 #define _LNG_MARKER             ( _MACRO_LATE_PREFIX + _MACRO_OPEN + "hb_lng" + _MACRO_CLOSE )
 
 #define _HBMK_CFG_NAME          "hbmk.cfg"
@@ -3613,7 +3616,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   IF hb_mtvm() .AND. Len( aTODO:__enumBase() ) > 1
                      AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, nOpt_Esc, aTODO:__enumIndex(), Len( aTODO:__enumBase() ) ) )
                   ELSE
-                     IF ! CompileCLoop( hbmk, aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, nOpt_Esc )
+                     IF ! CompileCLoop( hbmk, aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, nOpt_Esc, 0, 0 )
                         nErrorLevel := 6
                      ENDIF
                   ENDIF
@@ -5570,9 +5573,9 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, lLateMode )
    ENDIF
 
    DO WHILE ( nStart := At( cStart, cString ) ) > 0 .AND. ;
-            ( nEnd := hb_At( _MACRO_CLOSE, cString, nStart + 1 ) ) > 0
+            ( nEnd := hb_At( _MACRO_CLOSE, cString, nStart + Len( cStart ) ) ) > 0
 
-      cMacro := Upper( SubStr( cString, nStart + Len( cStart ), nEnd - nStart - ( ( Len( cStart ) + Len( _MACRO_CLOSE ) - 1 ) ) ) )
+      cMacro := Upper( SubStr( cString, nStart + Len( cStart ), nEnd - nStart - Len( cStart ) ) )
 
       SWITCH cMacro
       CASE "HB_ROOT"
@@ -5620,15 +5623,15 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, lLateMode )
          cMacro := GetEnv( cMacro )
       ENDSWITCH
 
-      cString := Left( cString, nStart - 1 ) + cMacro + SubStr( cString, nEnd + 1 )
+      cString := Left( cString, nStart - 1 ) + cMacro + SubStr( cString, nEnd + Len( _MACRO_CLOSE ) )
    ENDDO
 
-   DO WHILE ( nStart := At( "`", cString ) ) > 0 .AND. ;
-            ( nEnd := hb_At( "`", cString, nStart + 1 ) ) > 0
-      cMacro := SubStr( cString, nStart + Len( "`" ), nEnd - nStart - ( Len( "`" ) + Len( "`" ) - 1 ) )
+   DO WHILE ( nStart := At( _CMDSUBST_OPEN, cString ) ) > 0 .AND. ;
+            ( nEnd := hb_At( _CMDSUBST_CLOSE, cString, nStart + Len( _CMDSUBST_OPEN ) ) ) > 0
+      cMacro := SubStr( cString, nStart + Len( _CMDSUBST_OPEN ), nEnd - nStart - Len( _CMDSUBST_OPEN ) )
       cStdOut := ""
       hbmk_run( cMacro, @cStdOut )
-      cString := Left( cString, nStart - 1 ) + cStdOut + SubStr( cString, nEnd + 1 )
+      cString := Left( cString, nStart - 1 ) + cStdOut + SubStr( cString, nEnd + Len( _CMDSUBST_CLOSE ) )
    ENDDO
 
    RETURN cString
@@ -6686,7 +6689,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<arch>|<comp>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allpocc|allgcc|allmingw|unix}, {allmsvc}, {x86|x86_64|ia64|arm}, {debug|nodebug|gui|std|mt|st|xhb}" ),;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
-      I_( "Options accepting macros are also accepting embedded commanded enclosed inside `` chars: `wx-config --libs`." ),;
+      I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;
       I_( "Defaults and feature support vary by architecture/compiler." ) }
 
    DEFAULT lLong TO .F.
