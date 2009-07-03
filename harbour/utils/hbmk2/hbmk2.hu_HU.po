@@ -559,8 +559,8 @@ msgstr "visszatér a Harbour fejléc könyvtárral"
 
 #: hbmk2.prg:5769
 #, c-format
-msgid "Certain .hbc lines (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}"
-msgstr "Számos .hbc opcióban és parancssori megfelelõikben (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) használhatók makrók: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}"
+msgid "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
+msgstr "Számos .hbc opcióban és parancssori megfelelõikben (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) használhatók makrók: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
 
 #: hbmk2.prg:5758 hbmk2.prg:6471
 #, c-format
@@ -704,8 +704,8 @@ msgstr "Alapbeállítások feldolgozása: %1$s"
 
 #: hbmk2.prg:5769
 #, c-format
-msgid ".hbc options (they should come in separate lines): libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], pos=[.po files], incpaths=[paths], inctrypaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<text>\\nLines starting with '#' char are ignored"
-msgstr ".hbc opciók (külön sorokba írandók): libs=[<libnevek>], gt=[gtnév], prgflags=[Harbour opciók], cflags=[C fordító opciók], resflags=[erõforrás fordító kapcsolók], ldflags=[szerkesztõ kapcsolók], libpaths=[útvonalak], pos=[.po fájlok], incpaths=[útvonalak], inctrypaths=[útvonalak], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], compr=[yes|no|def|min|max], head=[off|partial|full], echo=<szöveg>\\n'#' karakterrel kezdõdõ sorokat figyelmen kívül hagyja"
+msgid ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], cpp=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full], skip=[yes|no], echo=<text>\\nLines starting with '#' char are ignored"
+msgstr ".hbc opciók (külön sorokba írandók): libs=[<libnevek>], hbcs=[<.hbc nevek>], gt=[gtnév], prgflags=[Harbour opciók], cflags=[C fordító opciók], resflags=[erõforrás fordító kapcsolók], ldflags=[szerkesztõ kapcsolók], libpaths=[útvonalak], sources=[forrás fájlok], incpaths=[útvonalak], inctrypaths=[útvonalak], instpaths=[útvonalak], gui|mt|shared|nulrdd|debug|opt|map|strip|run|inc=[yes|no], cpp=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full], skip=[yes|no], echo=<szöveg>\\n'#' karakterrel kezdõdõ sorokat figyelmen kívül hagyja"
 
 #: hbmk2.prg:5264 hbmk2.prg:5947
 #, c-format

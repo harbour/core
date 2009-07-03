@@ -1641,14 +1641,14 @@ HB_FUNC( SQLITE3_BLOB_READ )
    if( pBlob )
    {
       int   iLen = hb_parni( 2 );
-      void  *buffer;
+      BYTE  *buffer;
 
       if( iLen == 0 )
       {
          iLen = sqlite3_blob_bytes( pBlob );
       }
 
-      buffer = hb_xgrab( iLen + 1 );
+      buffer = ( BYTE * ) hb_xgrab( iLen + 1 );
 
       /*hb_xmemset( buffer, 0, iLen );*/
 
