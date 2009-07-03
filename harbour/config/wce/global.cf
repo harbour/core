@@ -26,7 +26,7 @@ ifeq ($(HB_DYNLIB),yes)
    HB_CDYNLIB=-DHB_DYNLIB
 endif
 
-ifeq ($(SHLVL),) # COMMAND.COM
+ifeq ($(SHLVL),) # NT Shell
 
 # There is a conflict with the use of '\' and '/' characters
 # The MAKE requires '/' in filenames (ARCH_DIR) however some compilers
@@ -34,7 +34,6 @@ ifeq ($(SHLVL),) # COMMAND.COM
 ARCH_DIR = $(subst \,/,$(HB_ARCH))
 ARCH_DOS = $(subst /,\,$(HB_ARCH))
 LIB_DIR_DOS = $(subst /,\,$(LIB_DIR))
-LIB_PATH_DOS = $(subst /,\,$(LIB_PATH))
 LIB_ARCH_DOS = $(subst /,\,$(LIB_ARCH))
 DIRSEP = $(subst /,\,\)
 
@@ -42,56 +41,25 @@ MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 
 ifneq ($(ComSpec),)
    COMSPEC := $(ComSpec)
-endif
-
-ifeq ($(COMSPEC),) #location of command.com
-   ifeq ($(OS),Windows_NT)
+else
+   ifeq ($(COMSPEC),)
       COMSPEC := cmd.exe
-   else
-      COMSPEC := command.com
    endif
 endif
 
-ifeq ($(findstring cmd.exe,$(COMSPEC)),cmd.exe)
-   CMD_EXE := yes
-else
-   CMD_EXE := no
-endif
-
-RM = del
-RD = rmdir
-MD = md
-CP = $(COMSPEC) /C copy
-MV = move
-
-ifeq ($(CMD_EXE),yes)
-
 RM = del /q /f
 RD = rmdir /q /s
+MD = mkdir
+CP = $(COMSPEC) /c copy
+MV = move
 
 dirbase::
-	-@$(COMSPEC) /c \
-	for %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\. $(MD) %d
-	$(if $(LIB_PATH_DOS),-@$(COMSPEC) /c \
-	for %d in ($(LIB_PATH_DOS) $(LIB_DIR_DOS)) do if not exist %d\. $(MD) %d,)
+	-@$(COMSPEC) /c @if not exist $(ARCH_DOS)\. $(MD) $(ARCH_DOS)
+	$(if $(LIB_DIR_DOS),-@$(COMSPEC) /c @if not exist $(LIB_DIR_DOS)\. $(MD) $(LIB_DIR_DOS),)
 
 clean::
-	-@$(COMSPEC) /c \
-	if exist $(ARCH_DOS) $(RD) $(ARCH_DOS)
-	$(if $(LIB_ARCH_DOS),-@$(COMSPEC) /c if exist $(LIB_ARCH_DOS) $(RM) $(LIB_ARCH_DOS),)
-
-else # command.com
-
-dirbase::
-	-@for %%d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %%d\nul $(MD) %%d
-	$(if $(LIB_PATH_DOS),-@for %%d in ($(LIB_PATH_DOS) $(LIB_DIR_DOS)) do if not exist %%d\nul $(MD) %%d,)
-
-clean::
-	-@for %%f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %%f
-	-@for %%d in ($(ARCH_DOS) $(HB_ARCHITECTURE)) do if exist %%d\nul $(RD) %%d
-	$(if $(LIB_ARCH_DOS),-@if exist $(LIB_ARCH_DOS) $(RM) $(LIB_ARCH_DOS),)
-
-endif
+	-@$(COMSPEC) /c @if exist $(ARCH_DOS) $(RD) $(ARCH_DOS)
+	$(if $(LIB_ARCH_DOS),-@$(COMSPEC) /c @if exist $(LIB_ARCH_DOS) $(RM) $(LIB_ARCH_DOS),)
 
 else  # bash
 
