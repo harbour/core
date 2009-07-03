@@ -251,10 +251,10 @@ static void hb_mixKeyFree( PMIXKEY pKey )
 
 #if 0
 /* This function is unused */
-static int hb_mixKeyCompareValue( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, UINT uiLen )
+static int hb_mixKeyCompareValue( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, unsigned int uiLen )
 {
    BYTE*  pSortTable = pTag->pSortTable;
-   UINT   ui, uiSize;
+   unsigned int  ui, uiSize;
    int    i;
 
    if ( ! pKey1->notnul || ! pKey2->notnul )
@@ -291,10 +291,10 @@ static int hb_mixKeyCompareValue( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, UI
 #endif
 
 
-static int hb_mixKeyCompare( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, UINT uiLen )
+static int hb_mixKeyCompare( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, unsigned int uiLen )
 {
    BYTE*  pSortTable = pTag->pSortTable;
-   UINT   ui, uiSize;
+   unsigned int  ui, uiSize;
    int    i;
 
 
@@ -366,7 +366,7 @@ static int hb_mixKeyCompare( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, UINT ui
 /* This function is used for debugging purposes. Uncomment it, if you need it.
 static void hb_mixTagPrintNode( PMIXTAG pTag, PMIXNODE pNode, int iLevel )
 {
-   UINT     i;
+   unsigned int  i;
 
    if ( !pNode )
       return;
@@ -413,10 +413,10 @@ static PMIXNODE hb_mixTagCreateNode( PMIXTAG pTag, BOOL fLeaf )
 }
 
 
-static UINT hb_mixTagNodeParentIndex( PMIXNODE pNode )
+static unsigned int hb_mixTagNodeParentIndex( PMIXNODE pNode )
 {
    PMIXNODE  pParent = pNode->Parent;
-   UINT      ui;
+   unsigned int  ui;
 
    /* Find position in the parent node */
    ui = pParent->KeyCount;
@@ -425,15 +425,15 @@ static UINT hb_mixTagNodeParentIndex( PMIXNODE pNode )
          return ui;
    } while ( ui-- );
 
-   return (UINT) -1;
+   return ( unsigned int ) -1;
 }
 
 
-static int hb_mixTagFindKey( PMIXTAG pTag, PMIXKEY pKey, UINT uiLen, PMIXNODE* ppNode, UINT* puiPos, BOOL fValidKey )
+static int hb_mixTagFindKey( PMIXTAG pTag, PMIXKEY pKey, unsigned int uiLen, PMIXNODE* ppNode, unsigned int* puiPos, BOOL fValidKey )
 {
-   PMIXNODE   pNode;
-   UINT       ui;
-   int        i;
+   PMIXNODE      pNode;
+   unsigned int  ui;
+   int           i;
 
    pNode = pTag->Root;
 
@@ -488,7 +488,7 @@ static int hb_mixTagFindKey( PMIXTAG pTag, PMIXKEY pKey, UINT uiLen, PMIXNODE* p
 }
 
 
-static void hb_mixTagSetCurrent( PMIXTAG pTag, PMIXNODE pNode, UINT uiPos )
+static void hb_mixTagSetCurrent( PMIXTAG pTag, PMIXNODE pNode, unsigned int uiPos )
 {
    if ( uiPos < pNode->KeyCount )
    {
@@ -520,9 +520,9 @@ static BOOL hb_mixTagRefreshKey( PMIXTAG pTag )
    }
    else if ( pTag->fEof || pTag->CurKey->rec != pArea->sqlarea.ulRecNo )
    {
-      PMIXKEY    pKey;
-      PMIXNODE   pNode;
-      UINT       ui;
+      PMIXKEY       pKey;
+      PMIXNODE      pNode;
+      unsigned int  ui;
 
       pKey = hb_mixKeyEval( NULL, pTag );
 
@@ -537,7 +537,7 @@ static BOOL hb_mixTagRefreshKey( PMIXTAG pTag )
 }
 
 
-static void hb_mixTagAddKeyNode( PMIXTAG pTag, PMIXNODE pNode, UINT uiPos, PMIXKEY pKey, PMIXNODE pChildLeft, PMIXNODE pChildRight )
+static void hb_mixTagAddKeyNode( PMIXTAG pTag, PMIXNODE pNode, unsigned int uiPos, PMIXKEY pKey, PMIXNODE pChildLeft, PMIXNODE pChildRight )
 {
    MIX_COPY_KEYS_INTERNAL( pTag, pNode, uiPos + 1, uiPos, pNode->KeyCount - uiPos );
    if ( ! pNode->Leaf )
@@ -553,10 +553,10 @@ static void hb_mixTagAddKeyNode( PMIXTAG pTag, PMIXNODE pNode, UINT uiPos, PMIXK
 }
 
 
-static void hb_mixTagAddKeyPos( PMIXTAG pTag, PMIXNODE pNode, UINT uiPos, PMIXKEY pKey, PMIXNODE pChildLeft, PMIXNODE pChildRight )
+static void hb_mixTagAddKeyPos( PMIXTAG pTag, PMIXNODE pNode, unsigned int uiPos, PMIXKEY pKey, PMIXNODE pChildLeft, PMIXNODE pChildRight )
 {
-   PMIXNODE   pNewNode;
-   UINT       j, k;
+   PMIXNODE      pNewNode;
+   unsigned int  j, k;
 
    if ( pNode->KeyCount < MIX_NODE_ORDER )
    {
@@ -664,9 +664,9 @@ static void hb_mixTagAddKeyPos( PMIXTAG pTag, PMIXNODE pNode, UINT uiPos, PMIXKE
 
 static BOOL hb_mixTagAddKey( PMIXTAG pTag, PMIXKEY pKey )
 {
-   PMIXNODE   pNode;
-   UINT       ui;
-   int        i;
+   PMIXNODE      pNode;
+   unsigned int  ui;
+   int           i;
 
    i = hb_mixTagFindKey( pTag, pKey, pTag->uiKeyLen, &pNode, &ui, FALSE );
 
@@ -679,7 +679,7 @@ static BOOL hb_mixTagAddKey( PMIXTAG pTag, PMIXKEY pKey )
 }
 
 
-static void hb_mixTagDelKeyNode( PMIXTAG pTag, PMIXNODE pNode, UINT uiPos )
+static void hb_mixTagDelKeyNode( PMIXTAG pTag, PMIXNODE pNode, unsigned int uiPos )
 {
    MIX_COPY_KEYS_INTERNAL( pTag, pNode, uiPos, uiPos + 1, pNode->KeyCount - uiPos - 1 );
    if ( ! pNode->Leaf )
@@ -692,8 +692,8 @@ static void hb_mixTagDelKeyNode( PMIXTAG pTag, PMIXNODE pNode, UINT uiPos )
 
 static void hb_mixTagNodeAdjust( PMIXTAG pTag, PMIXNODE pNode )
 {
-   UINT       i, j;
-   PMIXNODE   pParent, pSibling;
+   unsigned int  i, j;
+   PMIXNODE      pParent, pSibling;
 
 
    while ( 1 )
@@ -802,7 +802,7 @@ static void hb_mixTagNodeAdjust( PMIXTAG pTag, PMIXNODE pNode )
 }
 
 
-static void hb_mixTagDelKeyPos( PMIXTAG pTag, PMIXNODE pNode, UINT uiPos )
+static void hb_mixTagDelKeyPos( PMIXTAG pTag, PMIXNODE pNode, unsigned int uiPos )
 {
    if ( pNode->Leaf )
    {
@@ -827,9 +827,9 @@ static void hb_mixTagDelKeyPos( PMIXTAG pTag, PMIXNODE pNode, UINT uiPos )
 
 static BOOL hb_mixTagDelKey( PMIXTAG pTag, PMIXKEY pKey )
 {
-   PMIXNODE   pNode;
-   UINT       ui;
-   int        i;
+   PMIXNODE      pNode;
+   unsigned int  ui;
+   int           i;
 
    i = hb_mixTagFindKey( pTag, pKey, pTag->uiKeyLen, &pNode, &ui, FALSE );
 
@@ -876,7 +876,7 @@ static BYTE* hb_mixBuildSortTable( PHB_CODEPAGE pCodepage )
 }
 
 
-static PMIXTAG hb_mixTagCreate( const char* szTagName, PHB_ITEM pKeyExpr, PHB_ITEM pKeyItem, PHB_ITEM pForItem, PHB_ITEM pWhileItem, BYTE bType, UINT uiKeyLen, SQLMIXAREAP pArea )
+static PMIXTAG hb_mixTagCreate( const char* szTagName, PHB_ITEM pKeyExpr, PHB_ITEM pKeyItem, PHB_ITEM pForItem, PHB_ITEM pWhileItem, BYTE bType, unsigned int uiKeyLen, SQLMIXAREAP pArea )
 {
    PMIXTAG            pTag;
    PMIXKEY            pKey = NULL;
@@ -1013,7 +1013,7 @@ static void hb_mixTagDestroyNode( PMIXNODE pNode )
 {
    if ( ! pNode->Leaf )
    {
-      UINT    ui;
+      unsigned int  ui;
 
       for ( ui = 0; ui <= pNode->KeyCount; ui++ )
           hb_mixTagDestroyNode( pNode->Child[ ui ] );
@@ -1094,8 +1094,8 @@ static void hb_mixTagGoBottom( PMIXTAG pTag )
 
 static void hb_mixTagSkip( PMIXTAG pTag, LONG lSkip )
 {
-   PMIXNODE     pNode, pNode2;
-   UINT         uiPos, uiPos2;
+   PMIXNODE      pNode, pNode2;
+   unsigned int  uiPos, uiPos2;
 
    pNode = pTag->CurNode;
    uiPos = pTag->CurPos;
@@ -1261,8 +1261,8 @@ static PMIXTAG hb_mixFindTag( SQLMIXAREAP pArea, PHB_ITEM pOrder )
 
 static ULONG hb_mixTagNodeKeyCount( PMIXNODE pNode )
 {
-   ULONG     ulKeyCount;
-   UINT      ui;
+   ULONG         ulKeyCount;
+   unsigned int  ui;
 
    ulKeyCount = pNode->KeyCount;
    if ( ! pNode->Leaf )
@@ -1305,9 +1305,9 @@ static ULONG hb_mixDBOIKeyCount( PMIXTAG pTag, BOOL fFilter )
 
    if ( fFilter && pTag->pArea->sqlarea.area.dbfi.fFilter )
    {
-      PMIXNODE    pNode = pTag->CurNode;
-      UINT        uiPos = pTag->CurPos;
-      ULONG       ulRecNo = pTag->pArea->sqlarea.ulRecNo;
+      PMIXNODE      pNode = pTag->CurNode;
+      unsigned int  uiPos = pTag->CurPos;
+      ULONG         ulRecNo = pTag->pArea->sqlarea.ulRecNo;
 
       ulKeyCount = 0;
 
@@ -1341,8 +1341,8 @@ static ULONG hb_mixDBOIKeyNo( PMIXTAG pTag, BOOL fFilter )
       ulKeyCount = 0;
    else
    {
-      PMIXNODE   pNode = pTag->CurNode;
-      UINT       ui, uiPos = pTag->CurPos;
+      PMIXNODE      pNode = pTag->CurNode;
+      unsigned int  ui, uiPos = pTag->CurPos;
 
       ulKeyCount = 1;
 
@@ -1438,7 +1438,7 @@ static HB_ERRCODE sqlmixSeek( SQLMIXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pItem,
       BOOL      fEOF;
       PMIXTAG   pTag = pArea->pTag;
       PMIXNODE  pNode;
-      UINT      uiKeyLen, ui;
+      unsigned int  uiKeyLen, ui;
 
       if ( pArea->sqlarea.lpdbPendingRel && pArea->sqlarea.lpdbPendingRel->isScoped )
          SELF_FORCEREL( ( AREAP ) pArea );
@@ -1451,7 +1451,7 @@ static HB_ERRCODE sqlmixSeek( SQLMIXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pItem,
       uiKeyLen = pTag->uiKeyLen;
       if ( pTag->bType == 'C' )
       {
-         uiKeyLen = (UINT) hb_itemGetCLen( pItem );
+         uiKeyLen = ( unsigned int ) hb_itemGetCLen( pItem );
          if ( uiKeyLen > pTag->uiKeyLen )
             uiKeyLen = pTag->uiKeyLen;
       }

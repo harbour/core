@@ -164,8 +164,8 @@ typedef struct _MIXKEY
 
 typedef struct _MIXNODE
 {
-   UINT                  Leaf;
-   UINT                  KeyCount;
+   unsigned int          Leaf;
+   unsigned int          KeyCount;
    struct _MIXNODE*      Parent;
    struct _MIXNODE*      Child[ MIX_NODE_ORDER + 1 ];
 } MIXNODE, *PMIXNODE;
@@ -173,8 +173,8 @@ typedef struct _MIXNODE
 
 typedef struct _MIXNODELEAF
 {
-   UINT                  Leaf;
-   UINT                  KeyCount;
+   unsigned int          Leaf;
+   unsigned int          KeyCount;
    struct _MIXNODE*      Parent;
 } MIXNODELEAF, *PMIXNODELEAF;
 
@@ -190,8 +190,8 @@ typedef struct _MIXTAG
    PHB_ITEM             pForItem;
 
    BYTE                 bType;
-   UINT                 uiKeyLen;            /* Length of key */
-   UINT                 uiTotalLen;          /* Total length of key structure */
+   unsigned int         uiKeyLen;            /* Length of key */
+   unsigned int         uiTotalLen;          /* Total length of key structure */
 
    BOOL                 fEof;
    BOOL                 fBof;
@@ -201,7 +201,7 @@ typedef struct _MIXTAG
 
    PMIXKEY              CurKey;
    PMIXNODE             CurNode;
-   UINT                 CurPos;
+   unsigned int         CurPos;
 
    PMIXKEY              HotKey;
    BOOL                 HotFor;
