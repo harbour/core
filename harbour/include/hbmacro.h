@@ -78,6 +78,7 @@ HB_EXTERN_BEGIN
 #define HB_MACRO_GEN_TYPE     8   /* check the type of expression (from TYPE() function) */
 #define HB_MACRO_GEN_PARE     16  /* generate parentesized list */
 #define HB_MACRO_GEN_LIST     32  /* generate push operation for every comma separated expressions */
+#define HB_MACRO_GEN_REFER    64  /* generate PUSH pcodes for reference to given expression */
 #define HB_MACRO_DEALLOCATE   128 /* macro structure is allocated on the heap */
 
 /* values returned from compilation process

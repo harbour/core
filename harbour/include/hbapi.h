@@ -1066,6 +1066,7 @@ typedef void * HB_MACRO_PTR;
 #endif
 extern void   hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags ); /* retrieve results of a macro expansion */
 extern void   hb_macroSetValue( HB_ITEM_PTR pItem, BYTE flags ); /* assign a value to a macro-expression item */
+extern void   hb_macroPushReference( HB_ITEM_PTR pItem ); /* push reference to given expression */
 extern void   hb_macroTextValue( HB_ITEM_PTR pItem ); /* macro text substitution */
 extern void   hb_macroPushSymbol( HB_ITEM_PTR pItem ); /* handle a macro function calls, e.g. var := &macro() */
 extern void   hb_macroRun( HB_MACRO_PTR pMacro ); /* executes pcode compiled by macro compiler */

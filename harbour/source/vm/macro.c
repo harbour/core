@@ -535,6 +535,44 @@ void hb_macroSetValue( HB_ITEM_PTR pItem, BYTE flags )
    }
 }
 
+/* NOTE:
+ *   This will be called when macro variable or macro expression is
+ *   passed by reference or used in optimized left side of the <op>=
+ *   expression or as argument of ++ or -- operation
+ */
+void hb_macroPushReference( HB_ITEM_PTR pItem )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroPushReference(%p)", pItem));
+
+   if( hb_macroCheckParam( pItem ) )
+   {
+      HB_MACRO struMacro;
+      int iStatus;
+
+      struMacro.mode       = HB_MODE_MACRO;
+      struMacro.supported  = HB_SM_SHORTCUTS | HB_SM_HARBOUR | HB_SM_ARRSTR;
+      struMacro.Flags      = HB_MACRO_GEN_PUSH | HB_MACRO_GEN_REFER;
+      struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
+      struMacro.status     = HB_MACRO_CONT;
+      struMacro.string     = pItem->item.asString.value;
+      struMacro.length     = pItem->item.asString.length;
+
+      iStatus = hb_macroParse( &struMacro );
+
+      if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
+      {
+         hb_stackPop();    /* remove compiled string */
+         hb_macroRun( &struMacro );
+      }
+      else
+         hb_macroSyntaxError( &struMacro );
+
+      hb_macroDelete( &struMacro );
+   }
+}
+
 /*
  * Compile and run:
  *    &alias->var or

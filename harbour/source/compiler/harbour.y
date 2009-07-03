@@ -951,49 +951,28 @@ ExprUnary   : NOT Expression                 { $$ = hb_compExprNewNot( $2, HB_CO
             | '+' Expression  %prec UNARY    { $$ = $2; }
             ;
 
-ExprAssign  : NumValue        INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | NilValue        INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | DateValue       INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | TimeStampValue  INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | LiteralValue    INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | CodeBlock       INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | Logical         INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | SelfValue       INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | Array           INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | ArrayAt         INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | Hash            INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | AliasVar        INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | AliasExpr       INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | MacroVar        INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | MacroExpr       INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | Variable        INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | VariableAt      INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | PareExpList     INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | IfInline        INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | FunCall         INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | ObjectData      INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | ObjectMethod    INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+ExprEqual   : LeftExpression '=' Expression %prec INASSIGN { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             ;
 
-ExprEqual   : LeftExpression '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+ExprAssign  : LeftExpression INASSIGN Expression { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             ;
 
-ExprPlusEq  : LeftExpression PLUSEQ  Expression { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+ExprPlusEq  : LeftExpression PLUSEQ   Expression { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
-ExprMinusEq : LeftExpression MINUSEQ Expression { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+ExprMinusEq : LeftExpression MINUSEQ  Expression { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
-ExprMultEq  : LeftExpression MULTEQ  Expression { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+ExprMultEq  : LeftExpression MULTEQ   Expression { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
-ExprDivEq   : LeftExpression DIVEQ   Expression { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+ExprDivEq   : LeftExpression DIVEQ    Expression { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
-ExprModEq   : LeftExpression MODEQ   Expression { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+ExprModEq   : LeftExpression MODEQ    Expression { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
-ExprExpEq   : LeftExpression EXPEQ   Expression { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+ExprExpEq   : LeftExpression EXPEQ    Expression { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
 ExprOperEq  : ExprPlusEq

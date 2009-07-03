@@ -273,7 +273,7 @@ static HB_OPT_FUNC( hb_p_true )
          if( ! hb_compHasJump( pFunc, lPCodePos + 1 ) )
          {
             int iCount = 1;
-   
+
             switch( pFunc->pCode[ lPCodePos + 1 ] )
             {
                case HB_P_JUMPTRUENEAR:
@@ -321,7 +321,7 @@ static HB_OPT_FUNC( hb_p_duplicate )
             BYTE * pAddr = &pFunc->pCode[ lPCodePos + 2 ];
             LONG lOffset = HB_PCODE_MKINT24( pAddr ), lLastOffset = 0;
             ULONG ulNewPos = lPCodePos + 1 + lOffset;
-            BOOL fNot = FALSE, fRepeat = TRUE;
+            BOOL fNot = FALSE, fOK = TRUE, fRepeat = TRUE;
 
             do
             {
@@ -341,6 +341,7 @@ static HB_OPT_FUNC( hb_p_duplicate )
                   ulNewPos++;
                   lOffset++;
                   fNot = !fNot;
+                  fOK = !fOK;
                }
                else if( pFunc->pCode[ ulNewPos ] == HB_P_DUPLICATE &&
                         ( pFunc->pCode[ ulNewPos + 1 ] == HB_P_JUMPTRUEFAR ||
@@ -355,9 +356,13 @@ static HB_OPT_FUNC( hb_p_duplicate )
                   fRepeat = lJump > 0;
                }
                else
+               {
                   fRepeat = FALSE;
+                  if( pFunc->pCode[ ulNewPos ] == HB_P_POP )
+                     fOK = TRUE;
+               }
 
-               if( !fNot )
+               if( fOK )
                   lLastOffset = lOffset;
             }
             while( fRepeat );

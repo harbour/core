@@ -836,6 +836,13 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
                break;
             }
          }
+         else if( pExp->ExprType == HB_ET_VARIABLE )
+         {
+            pExp->ExprType = HB_ET_VARREF;
+            HB_EXPR_USE( pExp, HB_EA_PUSH_PCODE );
+            pExp->ExprType = HB_ET_VARIABLE;
+            break;
+         }
          else if( pExp->ExprType == HB_ET_ALIASVAR )
          {
             if( pExp->value.asAlias.pVar->ExprType == HB_ET_VARIABLE &&

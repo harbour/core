@@ -2498,20 +2498,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_MACROPUSHREF:
             {
                PHB_ITEM pMacro = hb_stackItemFromTop( -1 );
-               PHB_SYMB pSym;
-               /* compile into a symbol name (used in function calls) */
-               hb_macroPushSymbol( pMacro );
-               /* NOTE: pMacro string is replaced with a symbol.
-                * Symbol is created if it doesn't exist.
-                */
-               if( hb_stackGetActionRequest() == 0 )
-               {
-                  pSym = pMacro->item.asSymbol.value;
-                  /* NOTE: pMacro item of symbol type is replaced with
-                   *  the reference
-                   */
-                  hb_memvarGetRefer( pMacro, pSym );
-               }
+               hb_macroPushReference( pMacro );
                pCode++;
             }
             break;
@@ -10924,9 +10911,7 @@ BOOL hb_xvmMacroPushRef( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPushRef()"));
 
    pMacro = hb_stackItemFromTop( -1 );
-   hb_macroPushSymbol( pMacro );
-   if( hb_stackGetActionRequest() == 0 )
-      hb_memvarGetRefer( pMacro, pMacro->item.asSymbol.value );
+   hb_macroPushReference( pMacro );
 
    HB_XVM_RETURN
 }
