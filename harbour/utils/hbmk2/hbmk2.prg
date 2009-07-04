@@ -3867,8 +3867,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   ENDIF
                   tmp += FN_NameGet( l_cPROGNAME ) + ".app" + hb_osPathSeparator() + "Contents"
                   IF DirBuild( tmp + hb_osPathSeparator() + "MacOS" )
-                     FErase( tmp + hb_osPathSeparator() + "MacOS" + hb_osPathSeparator() + FN_NameGet( l_cPROGNAME ) )
-                     FRename( l_cPROGNAME, tmp + hb_osPathSeparator() + "MacOS" + hb_osPathSeparator() + FN_NameGet( l_cPROGNAME ) )
+                     hb_FCopy( l_cPROGNAME, tmp + hb_osPathSeparator() + "MacOS" + hb_osPathSeparator() + FN_NameGet( l_cPROGNAME ) )
                      IF ! hb_FileExists( tmp + hb_osPathSeparator() + "Info.plist" )
                         hb_MemoWrit( tmp + hb_osPathSeparator() + "Info.plist", MacOSXFiles( hbmk, 1, FN_NameGet( l_cPROGNAME ) ) )
                      ENDIF
