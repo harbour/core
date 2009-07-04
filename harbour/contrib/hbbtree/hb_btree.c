@@ -640,7 +640,7 @@ static LONG StackSkip( struct hb_BTree * pBTree, BTreeStack **pStack, LONG recor
       if ( STACKPOSITION( pStack ) > 0 )
         ulNode = BranchGet( pBTree, STACKNODE( pStack ), --STACKPOSITION( pStack ) );
       else
-        ulNode = (ULONG) NULL;
+        ulNode = NULLPAGE;
       if ( !BTREENODEISNULL( pBTree, ulNode ) )
       {
         StackPush( pStack, ulNode, CountGet( pBTree, ulNode ) );

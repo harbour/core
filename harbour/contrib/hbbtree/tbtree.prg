@@ -45,7 +45,7 @@ CLASS TBTree STATIC
 
   EXPORTED:
     METHOD New( cFileName, nPageSize, nKeySize, nFlags, nBuffers )
-    METHOD Close() INLINE hb_BTreeClose( ::nHandle )
+    METHOD Close() INLINE hb_BTreeClose( ::nHandle ) , ::nHandle := 0
     METHOD Insert( cKey, lData ) INLINE hb_BTreeInsert( ::nHandle, cKey, lData )
     METHOD Delete( cKey, lData ) INLINE hb_BTreeDelete( ::nHandle, cKey, lData )
     METHOD Key() INLINE hb_BTreeKey( ::nHandle )
