@@ -419,8 +419,21 @@ PROCEDURE Main( ... )
 STATIC FUNCTION hbmk_run( hbmk, cCmd, cStdOut )
 #if defined( __PLATFORM__DOS )
    LOCAL nResult
+   LOCAL hFile
+   LOCAL cFileName
    IF PCount() >= 2
-      cStdOut := commandResult( hbmk, cCmd, @nResult )
+      hFile := hb_FTempCreateEx( @cFileName )
+      IF hFile != F_ERROR
+         FClose( hFile )
+         cCmd += ">" + cFileName
+         nResult := hb_run( cCmd )
+         cStdOut := hb_MemoRead( cFileName )
+         FErase( cFileName )
+      ELSE
+         nResult := -1
+         cStdOut := ""
+         hbmk_OutErr( hbmk, I_( "Error: Cannot create temporary file." ) )
+      ENDIF
       RETURN nResult
    ENDIF
    RETURN hb_run( cCmd )
@@ -447,11 +460,13 @@ STATIC FUNCTION hbmk_run( hbmk, cCmd, cStdOut )
       ENDIF
    ELSE
       result := -1
+      IF PCount() >= 2
+         cStdOut := ""
+      ENDIF
    ENDIF
    RETURN result
 
 STATIC FUNCTION hbmk_ReadHnd( hFile )
-
    LOCAL cBuffer := Space( 4096 )
    LOCAL cString := ""
    LOCAL nLen
@@ -5710,7 +5725,8 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
             ENDIF
          NEXT
       ELSEIF ! Empty( cExecNM := FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "nm" ) )
-         cFuncList := commandResult( hbmk, cExecNM + " " + cFile + " -g -n --defined-only -C" )
+         cFuncList := ""
+         hbmk_run( hbmk, cExecNM + " " + cFile + " -g -n --defined-only -C", @cFuncList )
          IF ( n := At( " T HB_FUN_", cFuncList ) ) != 0
             n += 10
             DO WHILE ( c := SubStr( cFuncList, n++, 1 ) ) == "_" .OR. ;
@@ -5727,24 +5743,6 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
    ENDIF
 
    RETURN cFuncName
-
-STATIC FUNCTION commandResult( hbmk, cCommand, nResult )
-   LOCAL hFile, cFileName, cResult
-
-   hFile := hb_FTempCreateEx( @cFileName )
-
-   IF hFile != F_ERROR
-      FClose( hFile )
-      cCommand += ">" + cFileName
-      nResult := hb_run( cCommand )
-      cResult := hb_MemoRead( cFileName )
-      FErase( cFileName )
-   ELSE
-      nResult := -1
-      hbmk_OutErr( hbmk, I_( "Error: Cannot create temporary file." ) )
-   ENDIF
-
-   RETURN cResult
 
 STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
    LOCAL aUnd
