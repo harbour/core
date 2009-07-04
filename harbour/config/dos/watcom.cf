@@ -18,7 +18,7 @@ LIB_PREF =
 LIB_EXT = .lib
 
 ifeq ($(SHLVL),)
-   ECHO=echo.
+   ECHO=@echo.
    DSEP=$(subst /,\,\)
 else
    ECHO=echo
