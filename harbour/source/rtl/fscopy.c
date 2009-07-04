@@ -53,6 +53,11 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
+#if defined( HB_OS_UNIX_COMPATIBLE )
+   #include <sys/stat.h>
+   #include <unistd.h>
+#endif
+
 #define HB_FSCOPY_BUFFERSIZE    16384
 
 BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
@@ -65,6 +70,10 @@ BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
    {
       if( ( fhndDest = hb_fsCreate( pszDest, FC_NORMAL ) ) != FS_ERROR )
       {
+#if defined( HB_OS_UNIX_COMPATIBLE )
+         struct stat struFileInfo;
+         int iSuccess = fstat( fhndSource, &struFileInfo );
+#endif
          USHORT nBytesRead;
          void * pbyBuffer = hb_xgrab( HB_FSCOPY_BUFFERSIZE );
 
@@ -78,6 +87,11 @@ BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
          }
 
          hb_xfree( pbyBuffer );
+
+#if defined( HB_OS_UNIX_COMPATIBLE )
+         if( iSuccess == 0 )
+            fchmod( fhndDest, struFileInfo.st_mode );
+#endif
 
          hb_fsClose( fhndDest );
       }

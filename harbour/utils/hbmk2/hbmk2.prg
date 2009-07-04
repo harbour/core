@@ -3859,6 +3859,25 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   FErase( cScriptFile )
                ENDIF
 
+               IF nErrorLevel == 0 .AND. hbmk[ _HBMK_lGUI ] .AND. hbmk[ _HBMK_cARCH ] == "darwin"
+                  /* Build app bundle for OS X GUI apps. (experimental) */
+                  tmp := FN_DirGet( l_cPROGNAME )
+                  IF ! Empty( tmp )
+                     tmp += hb_osPathSeparator()
+                  ENDIF
+                  tmp += FN_NameGet( l_cPROGNAME ) + ".app" + hb_osPathSeparator() + "Contents"
+                  IF DirBuild( tmp + hb_osPathSeparator() + "MacOS" )
+                     FErase( tmp + hb_osPathSeparator() + "MacOS" + hb_osPathSeparator() + FN_NameGet( l_cPROGNAME ) )
+                     FRename( l_cPROGNAME, tmp + hb_osPathSeparator() + "MacOS" + hb_osPathSeparator() + FN_NameGet( l_cPROGNAME ) )
+                     IF ! hb_FileExists( tmp + hb_osPathSeparator() + "Info.plist" )
+                        hb_MemoWrit( tmp + hb_osPathSeparator() + "Info.plist", MacOSXFiles( hbmk, 1, FN_NameGet( l_cPROGNAME ) ) )
+                     ENDIF
+                     IF ! hb_FileExists( tmp + hb_osPathSeparator() + "PkgInfo" )
+                        hb_MemoWrit( tmp + hb_osPathSeparator() + "PkgInfo", MacOSXFiles( hbmk, 2, FN_NameGet( l_cPROGNAME ) ) )
+                     ENDIF
+                  ENDIF
+               ENDIF
+
             CASE lStopAfterCComp .AND. lCreateLib .AND. ! Empty( cBin_Lib )
 
                IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ]
@@ -4123,20 +4142,25 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    IF ! lStopAfterHarbour .AND. ! lStopAfterCComp .AND. ;
       ! lCreateLib .AND. ! lCreateDyn .AND. ;
       nErrorLevel == 0 .AND. ! l_lCLEAN .AND. hbmk[ _HBMK_lRUN ]
+      cCommand := l_cPROGNAME
       #if defined( __PLATFORM__UNIX )
          IF Empty( FN_DirGet( l_cPROGNAME ) )
-            l_cPROGNAME := "." + hb_osPathSeparator() + l_cPROGNAME
+            cCommand := "." + hb_osPathSeparator() + l_cPROGNAME
          ENDIF
       #endif
-      cCommand := PathSepToTarget( hbmk, l_cPROGNAME )
+      cCommand := PathSepToTarget( hbmk, cCommand )
       #if defined( __PLATFORM__WINDOWS )
-      IF hbmk[ _HBMK_lGUI ]
-         IF hb_osIsWinNT()
-            cCommand := 'start "" "' + cCommand + '"'
-         ELSE
-            cCommand := 'start ' + cCommand
+         IF hbmk[ _HBMK_lGUI ]
+            IF hb_osIsWinNT()
+               cCommand := 'start "" ' + FN_Escape( cCommand, _ESC_DBLQUOTE )
+            ELSE
+               cCommand := "start " + cCommand
+            ENDIF
          ENDIF
-      ENDIF
+      #elif defined( __PLATFORM__DARWIN )
+         IF hbmk[ _HBMK_lGUI ]
+            cCommand := "open " + FN_Escape( cCommand + ".app", _ESC_NIX )
+         ENDIF
       #endif
       cCommand := AllTrim( cCommand + " " + ArrayToList( l_aOPTRUN ) )
       IF hbmk[ _HBMK_lTRACE ]
@@ -6522,6 +6546,62 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
    ENDIF
 
    RETURN .F.
+
+STATIC FUNCTION MacOSXFiles( hbmk, nType, cPROGNAME )
+   LOCAL cString
+
+   HB_SYMBOL_UNUSED( hbmk )
+
+   SWITCH nType
+   CASE 1
+
+      #pragma __cstream|cString:=%s
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="0.9">
+<dict>
+%TAB%<key>CFBundleInfoDictionaryVersion</key>
+%TAB%<string>6.0</string>
+%TAB%<key>CFBundleIdentifier</key>
+%TAB%<string>%__APPID__%</string>
+%TAB%<key>CFBundleDevelopmentRegion</key>
+%TAB%<string>English</string>
+%TAB%<key>CFBundleExecutable</key>
+%TAB%<string>%__APPNAME__%</string>
+%TAB%<key>CFBundleIconFile</key>
+%TAB%<string>%__APPICON__%</string>
+%TAB%<key>CFBundleName</key>
+%TAB%<string>%__APPNAME__%</string>
+%TAB%<key>CFBundlePackageType</key>
+%TAB%<string>%__APPTYPE__%</string>
+%TAB%<key>CFBundleSignature</key>
+%TAB%<string>%__APPSIGN__%</string>
+%TAB%<key>CFBundleGetInfoString</key>
+%TAB%<string>%__APPNAME__% version %__APPVERSION__%, %__APPCOPYRIGHT__%</string>
+%TAB%<key>CFBundleLongVersionString</key>
+%TAB%<string>%__APPVERSION__%, %__APPCOPYRIGHT__%</string>
+%TAB%<key>NSHumanReadableCopyright</key>
+%TAB%<string>%__APPCOPYRIGHT__%</string>
+%TAB%<key>LSRequiresCarbon</key>
+%TAB%<true/>
+%TAB%<key>CSResourcesFileMapped</key>
+%TAB%<true/>
+</dict>
+</plist>
+      ENDTEXT
+      EXIT
+   CASE 2
+      cString := "%__APPTYPE__%%__APPSIGN__%"
+      EXIT
+   ENDSWITCH
+
+   cString := StrTran( cString, "%TAB%", Chr( 9 ) )
+
+   cString := StrTran( cString, "%__APPNAME__%", cPROGNAME )
+   cString := StrTran( cString, "%__APPTYPE__%", "APPL" )
+   cString := StrTran( cString, "%__APPSIGN__%", PadR( cPROGNAME, 4, "?" ) )
+
+   RETURN cString
 
 STATIC PROCEDURE GetUILangCDP( /* @ */ cLNG, /* @ */ cCDP )
 
