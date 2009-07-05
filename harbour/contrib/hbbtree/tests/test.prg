@@ -42,11 +42,14 @@ Procedure Main()
   local c
   local attr
 
-  hb_FGetAttr( "test_1.out", @attr )
-  if attr == 1 + 32
-    hb_FSetAttr( "test_1.out", 32 )
-    ferase( "test_1.out" )
-  endif
+  // _2 is from ttest.prg; _3 is from ctest.c
+  FOR EACH c IN { "test_1.out", "test_1a.out", "test_1b.out", "test_2.out", "test_3.out" }
+    hb_FGetAttr( c, @attr )
+    if attr == 1 + 32
+      hb_FSetAttr( c, 32 )
+    endif
+    ferase( c )
+  NEXT
 
   ? "Harbour API test: in-memory"
   n := hb_btreenew( , 2048, 90, HB_BTREE_READONLY + HB_BTREE_INMEMORY )
