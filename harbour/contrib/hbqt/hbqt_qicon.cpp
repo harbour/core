@@ -83,7 +83,14 @@
  */
 HB_FUNC( QT_QICON )
 {
-   hb_retptr( ( QIcon* ) new QIcon() );
+   if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      hb_retptr( ( QIcon* ) new QIcon( hbqt_par_QString( 1 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QIcon* ) new QIcon() );
+   }
 }
 
 /*

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'hbqt_slots.h'
 **
-** Created: Wed Jul 1 01:16:08 2009
+** Created: Fri Jul 3 16:24:08 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -137,7 +137,7 @@ static const uint qt_meta_data_Slots[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-      65,   12, // methods
+      75,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -208,6 +208,16 @@ static const uint qt_meta_data_Slots[] = {
     1800,    6,    6,    6, 0x0a,
     1820, 1814,    6,    6, 0x0a,
     1842, 1204,    6,    6, 0x0a,
+    1864, 1859,    6,    6, 0x0a,
+    1890, 1859,    6,    6, 0x0a,
+    1910,    6,    6,    6, 0x0a,
+    1928, 1921,    6,    6, 0x0a,
+    1942,    6,    6,    6, 0x0a,
+    1958, 1953,    6,    6, 0x0a,
+    1992, 1982,    6,    6, 0x0a,
+    2023, 2018,    6,    6, 0x0a,
+    2054, 2045,    6,    6, 0x0a,
+    2088, 2081,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -263,7 +273,14 @@ static const char qt_meta_stringdata_Slots[] = {
     "reply\0unsupportedContent(QNetworkReply*)\0"
     "windowCloseRequested()\0iconChanged()\0"
     "title\0titleChanged(QString)\0"
-    "urlChanged(QUrl)\0"
+    "urlChanged(QUrl)\0font\0currentFontChanged(QFont)\0"
+    "fontSelected(QFont)\0accepted()\0result\0"
+    "finished(int)\0rejected()\0path\0"
+    "currentChanged(QString)\0directory\0"
+    "directoryEntered(QString)\0file\0"
+    "fileSelected(QString)\0selected\0"
+    "filesSelected(QStringList)\0filter\0"
+    "filterSelected(QString)\0"
 };
 
 const QMetaObject Slots::staticMetaObject = {
@@ -356,9 +373,19 @@ int Slots::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 62: iconChanged(); break;
         case 63: titleChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 64: urlChanged((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
+        case 65: currentFontChanged((*reinterpret_cast< const QFont(*)>(_a[1]))); break;
+        case 66: fontSelected((*reinterpret_cast< const QFont(*)>(_a[1]))); break;
+        case 67: accepted(); break;
+        case 68: finished((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 69: rejected(); break;
+        case 70: currentChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 71: directoryEntered((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 72: fileSelected((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 73: filesSelected((*reinterpret_cast< const QStringList(*)>(_a[1]))); break;
+        case 74: filterSelected((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 65;
+        _id -= 75;
     }
     return _id;
 }

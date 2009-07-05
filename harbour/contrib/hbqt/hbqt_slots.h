@@ -186,6 +186,17 @@ public slots:
    void iconChanged();
    void titleChanged( const QString & title );
    void urlChanged( const QUrl & url );
+   /* QDialog - QFontDialog QFileDialog */
+   void currentFontChanged( const QFont & font );
+   void fontSelected( const QFont & font );
+   void accepted();
+   void finished( int result );
+   void rejected();
+   void currentChanged( const QString & path );
+   void directoryEntered( const QString & directory );
+   void fileSelected( const QString & file );
+   void filesSelected( const QStringList & selected );
+   void filterSelected( const QString & filter );
 };
 
 class Events: public QObject
@@ -205,5 +216,3 @@ protected:
 
 /*----------------------------------------------------------------------*/
 #endif
-
-

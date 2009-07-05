@@ -75,7 +75,18 @@ New      =
  */
 HB_FUNC( QT_QPIXMAP )
 {
-   hb_retptr( ( QPixmap* ) new QPixmap() );
+   if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
+   {
+      hb_retptr( ( QPixmap* ) new QPixmap( hbqt_par_QString( 1 ), ( const char * ) 0, Qt::AutoColor ) );
+   }
+   else if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QPixmap* ) new QPixmap( *hbqt_par_QPixmap( 1 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QPixmap* ) new QPixmap() );
+   }
 }
 </CODE>
 
@@ -124,8 +135,12 @@ QBitmap mask () const
 QRect rect () const
 bool save ( const QString & fileName, const char * format = 0, int quality = -1 ) const
 bool save ( QIODevice * device, const char * format = 0, int quality = -1 ) const
-QPixmap scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+
+#   Swapped 
 QPixmap scaled ( int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+QPixmap scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+#   
+
 QPixmap scaledToHeight ( int height, Qt::TransformationMode mode = Qt::FastTransformation ) const
 QPixmap scaledToWidth ( int width, Qt::TransformationMode mode = Qt::FastTransformation ) const
 void setAlphaChannel ( const QPixmap & alphaChannel )

@@ -74,7 +74,18 @@
  */
 HB_FUNC( QT_QPIXMAP )
 {
-   hb_retptr( ( QPixmap* ) new QPixmap() );
+   if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
+   {
+      hb_retptr( ( QPixmap* ) new QPixmap( hbqt_par_QString( 1 ), ( const char * ) 0, Qt::AutoColor ) );
+   }
+   else if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QPixmap* ) new QPixmap( *hbqt_par_QPixmap( 1 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QPixmap* ) new QPixmap() );
+   }
 }
 
 /*
@@ -262,19 +273,19 @@ HB_FUNC( QT_QPIXMAP_SAVE_1 )
 }
 
 /*
- * QPixmap scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+ * QPixmap scaled ( int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
  */
 HB_FUNC( QT_QPIXMAP_SCALED )
 {
-   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->scaled( *hbqt_par_QSize( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::AspectRatioMode ) hb_parni( 3 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 4 ) ? ( Qt::TransformationMode ) hb_parni( 4 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ) );
+   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->scaled( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::AspectRatioMode ) hb_parni( 4 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 5 ) ? ( Qt::TransformationMode ) hb_parni( 5 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ) );
 }
 
 /*
- * QPixmap scaled ( int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+ * QPixmap scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
  */
 HB_FUNC( QT_QPIXMAP_SCALED_1 )
 {
-   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->scaled( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::AspectRatioMode ) hb_parni( 4 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 5 ) ? ( Qt::TransformationMode ) hb_parni( 5 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ) );
+   hb_retptr( new QPixmap( hbqt_par_QPixmap( 1 )->scaled( *hbqt_par_QSize( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::AspectRatioMode ) hb_parni( 3 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 4 ) ? ( Qt::TransformationMode ) hb_parni( 4 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ) );
 }
 
 /*

@@ -295,6 +295,38 @@ static void SlotsExecUrl( QWidget* widget, char* event, const QUrl & url )
    }
 }
 
+static void SlotsExecFont( QWidget* widget, char* event, const QFont & font )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, new QFont( font ) );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 2, pWidget, p1 );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( p1 );
+      }
+   }
+}
+
+static void SlotsExecStringList( QWidget* widget, char* event, const QStringList & stringList )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, new QStringList( stringList ) );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 2, pWidget, p1 );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( p1 );
+      }
+   }
+}
+
 static void SlotsExecNetworkRequest( QWidget* widget, char* event, const QNetworkRequest & request )
 {
    if( widget )
@@ -765,7 +797,57 @@ void Slots::urlChanged( const QUrl & url )
    QWidget *object = qobject_cast<QWidget *>( sender() );
    SlotsExecUrl( object, ( char* ) "urlChanged(QUrl)", url );
 }
-
+/* QDialog (s)*/
+void Slots::currentFontChanged( const QFont & font )
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExecFont( oWidget, ( char* ) "currentFontChanged(QFont)", font );
+}
+void Slots::fontSelected( const QFont & font )
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExecFont( oWidget, ( char* ) "fontSelected(QFont)", font );
+}
+void Slots::accepted()
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExec( oWidget, ( char* ) "accepted()" );
+}
+void Slots::finished( int result )
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExecInt( oWidget, ( char* ) "finished(int)", result );
+}
+void Slots::rejected()
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExec( oWidget, ( char* ) "rejected()" );
+}
+void Slots::currentChanged( const QString & path )
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExecString( oWidget, ( char* ) "currentChanged(QString)", path );
+}
+void Slots::directoryEntered( const QString & directory )
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExecString( oWidget, ( char* ) "directoryEntered(QString)", directory );
+}
+void Slots::fileSelected( const QString & file )
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExecString( oWidget, ( char* ) "fileSelected(QString)", file );
+}
+void Slots::filesSelected( const QStringList & selected )
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExecStringList( oWidget, ( char* ) "filesSelected(QStringList)", selected );
+}
+void Slots::filterSelected( const QString & filter )
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExecString( oWidget, ( char* ) "filterSelected(QString)", filter );
+}
 
 
 /*
@@ -997,36 +1079,6 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = widget->connect( widget,  SIGNAL( urlChanged( const QUrl & ) ),
                              s_s, SLOT( urlChanged( const QUrl & ) ), Qt::AutoConnection );
    }
-
-#if 0
-"iconChanged()"
-"titleChanged(QString)"
-"urlChanged(QUrl)"
-
-"contentsChanged()"
-"databaseQuotaExceeded(QWebFrame,QString)"
-"downloadRequested(QNetworkRequest)"
-"frameCreated(QWebFrame)"
-"geometryChangeRequested(QRect)"
-"linkClicked(QUrl)"
-"linkHovered(QString,QString,QString)"
-"loadFinished(bool)"
-"loadProgress(int)"
-"loadStarted()"
-"menuBarVisibilityChangeRequested(bool)"
-"microFocusChanged()"
-"printRequested(QWebFrame)"
-"repaintRequested(QRect)"
-"restoreFrameStateRequested(QWebFrame)"
-"saveFrameStateRequested(QWebFrame,QWebHistoryItem)"
-"scrollRequested(int,int,QRect)"
-"statusBarMessage(QString)"
-"statusBarVisibilityChangeRequested(bool)"
-"toolBarVisibilityChangeRequested(bool)"
-"unsupportedContent(QNetworkReply)"
-"windowCloseRequested()"
-
-#endif
    /*  QWebPage */
    if( signal == ( QString ) "contentsChanged()" )
    {
@@ -1137,6 +1189,57 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    {
       ret = widget->connect( widget,  SIGNAL( windowCloseRequested() ),
                              s_s, SLOT( windowCloseRequested() ), Qt::AutoConnection );
+   }
+   /* QDialog (s) QFontDialog, QFileDialog */
+   if( signal == ( QString ) "currentFontChanged(QFont)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( currentFontChanged( const QFont & ) ),
+                             s_s, SLOT( currentFontChanged( const QFont & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "fontSelected(QFont)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( fontSelected( const QFont & ) ),
+                             s_s, SLOT( fontSelected( const QFont & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "accepted()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( accepted() ),
+                             s_s, SLOT( accepted() ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "finished(int)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( finished( int ) ),
+                             s_s, SLOT( finished( int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "rejected()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( rejected() ),
+                             s_s, SLOT( rejected() ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "currentChanged(QString)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( currentChanged( const QString & ) ),
+                             s_s, SLOT( currentChanged( const QString & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "directoryEntered(QString)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( directoryEntered( const QString & ) ),
+                             s_s, SLOT( directoryEntered( const QString & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "fileSelected(QString)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( fileSelected( const QString & ) ),
+                             s_s, SLOT( fileSelected( const QString & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "filesSelected(QStringList)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( filesSelected( const QStringList & ) ),
+                             s_s, SLOT( filesSelected( const QStringList & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "filterSelected(QString)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( filterSelected( const QString & ) ),
+                             s_s, SLOT( filterSelected( const QString & ) ), Qt::AutoConnection );
    }
 
 

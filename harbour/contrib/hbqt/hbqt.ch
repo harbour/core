@@ -1531,6 +1531,90 @@
 #define QWebPage_WebBrowserWindow                 0    // The window is a regular web browser window.
 #define QWebPage_WebModalDialog                   1    // The window acts as modal dialog.
 
+
+#define QStyle_SP_TitleBarMinButton               1    // Minimize button on title bars (e.g., in QWorkspace).
+#define QStyle_SP_TitleBarMenuButton              0    // Menu button on a title bar.
+#define QStyle_SP_TitleBarMaxButton               2    // Maximize button on title bars.
+#define QStyle_SP_TitleBarCloseButton             3    // Close button on title bars.
+#define QStyle_SP_TitleBarNormalButton            4    // Normal (restore) button on title bars.
+#define QStyle_SP_TitleBarShadeButton             5    // Shade button on title bars.
+#define QStyle_SP_TitleBarUnshadeButton           6    // Unshade button on title bars.
+#define QStyle_SP_TitleBarContextHelpButton       7    // The Context help button on title bars.
+#define QStyle_SP_MessageBoxInformation           9    // The "information" icon.
+#define QStyle_SP_MessageBoxWarning               10   // The "warning" icon.
+#define QStyle_SP_MessageBoxCritical              11   // The "critical" icon.
+#define QStyle_SP_MessageBoxQuestion              12   // The "question" icon.
+#define QStyle_SP_DesktopIcon                     13   // The "desktop" icon.
+#define QStyle_SP_TrashIcon                       14   // The "trash" icon.
+#define QStyle_SP_ComputerIcon                    15   // The "My computer" icon.
+#define QStyle_SP_DriveFDIcon                     16   // The floppy icon.
+#define QStyle_SP_DriveHDIcon                     17   // The harddrive icon.
+#define QStyle_SP_DriveCDIcon                     18   // The CD icon.
+#define QStyle_SP_DriveDVDIcon                    19   // The DVD icon.
+#define QStyle_SP_DriveNetIcon                    20   // The network icon.
+#define QStyle_SP_DirHomeIcon                     55   // The home directory icon.
+#define QStyle_SP_DirOpenIcon                     21   // The open directory icon.
+#define QStyle_SP_DirClosedIcon                   22   // The closed directory icon.
+#define QStyle_SP_DirIcon                         37   // The directory icon.
+#define QStyle_SP_DirLinkIcon                     23   // The link to directory icon.
+#define QStyle_SP_FileIcon                        24   // The file icon.
+#define QStyle_SP_FileLinkIcon                    25   // The link to file icon.
+#define QStyle_SP_FileDialogStart                 28   // The "start" icon in a file dialog.
+#define QStyle_SP_FileDialogEnd                   29   // The "end" icon in a file dialog.
+#define QStyle_SP_FileDialogToParent              30   // The "parent directory" icon in a file dialog.
+#define QStyle_SP_FileDialogNewFolder             31   // The "create new folder" icon in a file dialog.
+#define QStyle_SP_FileDialogDetailedView          32   // The detailed view icon in a file dialog.
+#define QStyle_SP_FileDialogInfoView              33   // The file info icon in a file dialog.
+#define QStyle_SP_FileDialogContentsView          34   // The contents view icon in a file dialog.
+#define QStyle_SP_FileDialogListView              35   // The list view icon in a file dialog.
+#define QStyle_SP_FileDialogBack                  36   // The back arrow in a file dialog.
+#define QStyle_SP_DockWidgetCloseButton           8    // Close button on dock windows (see also QDockWidget).
+#define QStyle_SP_ToolBarHorizontalExtensionButton  26 // Extension button for horizontal toolbars.
+#define QStyle_SP_ToolBarVerticalExtensionButton  27   // Extension button for vertical toolbars.
+#define QStyle_SP_DialogOkButton                  38   // Icon for a standard OK button in a QDialogButtonBox.
+#define QStyle_SP_DialogCancelButton              39   // Icon for a standard Cancel button in a QDialogButtonBox.
+#define QStyle_SP_DialogHelpButton                40   // Icon for a standard Help button in a QDialogButtonBox.
+#define QStyle_SP_DialogOpenButton                41   // Icon for a standard Open button in a QDialogButtonBox.
+#define QStyle_SP_DialogSaveButton                42   // Icon for a standard Save button in a QDialogButtonBox.
+#define QStyle_SP_DialogCloseButton               43   // Icon for a standard Close button in a QDialogButtonBox.
+#define QStyle_SP_DialogApplyButton               44   // Icon for a standard Apply button in a QDialogButtonBox.
+#define QStyle_SP_DialogResetButton               45   // Icon for a standard Reset button in a QDialogButtonBox.
+#define QStyle_SP_DialogDiscardButton             46   // Icon for a standard Discard button in a QDialogButtonBox.
+#define QStyle_SP_DialogYesButton                 47   // Icon for a standard Yes button in a QDialogButtonBox.
+#define QStyle_SP_DialogNoButton                  48   // Icon for a standard No button in a QDialogButtonBox.
+#define QStyle_SP_ArrowUp                         49   // Icon arrow pointing up.
+#define QStyle_SP_ArrowDown                       50   // Icon arrow pointing down.
+#define QStyle_SP_ArrowLeft                       51   // Icon arrow pointing left.
+#define QStyle_SP_ArrowRight                      52   // Icon arrow pointing right.
+#define QStyle_SP_ArrowBack                       53   // Equivalent to SP_ArrowLeft when the current layout direction is Qt::LeftToRight, otherwise SP_ArrowRight.
+#define QStyle_SP_ArrowForward                    54   // Equivalent to SP_ArrowRight when the current layout direction is Qt::LeftToRight, otherwise SP_ArrowLeft.
+#define QStyle_SP_CommandLink                     56   // Icon used to indicate a Vista style command link glyph.
+#define QStyle_SP_VistaShield                     57   // Icon used to indicate UAC prompts on Windows Vista. This will return a null pixmap or icon on all other platforms.
+#define QStyle_SP_BrowserReload                   58   // Icon indicating that the current page should be reloaded.
+#define QStyle_SP_BrowserStop                     59   // Icon indicating that the page loading should stop.
+#define QStyle_SP_MediaPlay                       60   // Icon indicating that media should begin playback.
+#define QStyle_SP_MediaStop                       61   // Icon indicating that media should stop playback.
+#define QStyle_SP_MediaPause                      62   // Icon indicating that media should pause playback.
+#define QStyle_SP_MediaSkipForward                63   // Icon indicating that media should skip forward.
+#define QStyle_SP_MediaSkipBackward               64   // Icon indicating that media should skip backward.
+#define QStyle_SP_MediaSeekForward                65   // Icon indicating that media should seek forward.
+#define QStyle_SP_MediaSeekBackward               66   // Icon indicating that media should seek backward.
+#define QStyle_SP_MediaVolume                     67   // Icon indicating a volume control.
+#define QStyle_SP_MediaVolumeMuted                68   // Icon indicating a muted volume control.
+#define QStyle_SP_CustomBase                      0xf0000000   // Base value for custom standard pixmaps; custom values must be greater than this value.
+
+
+#define QIcon_Normal                              0    // Display the pixmap when the user is not interacting with the icon, but the functionality represented by the icon is available.
+#define QIcon_Disabled                            1    // Display the pixmap when the functionality represented by the icon is not available.
+#define QIcon_Active                              2    // Display the pixmap when the functionality represented by the icon is available and the user is interacting with the icon, for example, moving the mouse over it or clicking it.
+#define QIcon_Selected                            3    // Display the pixmap when the item represented by the icon is selected.
+
+//enum #define QIcon_State
+//This enum describes the state for which a pixmap is intended to be used. The state can be:
+//
+#define QIcon_On                                  0    // Display the pixmap when the widget is in an "on" state
+#define QIcon_Off                                 1    // Display the pixmap when the widget is in an "off" state
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH
