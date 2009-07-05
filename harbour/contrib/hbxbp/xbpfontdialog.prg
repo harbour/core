@@ -102,8 +102,8 @@ CLASS XbpFontDialog INHERIT XbpWindow
 
 
    DATA     outLine                               INIT   .T.
-   DATA     previewBGClr                          INIT   RGB( 255,255,255 )
-   DATA     previewFGClr                          INIT   RGB( 0,0,0 )
+   DATA     previewBGClr                          INIT   GraMakeRGBColor( {255,255,255} )
+   DATA     previewFGClr                          INIT   GraMakeRGBColor( {0,0,0} )
    DATA     previewString                         INIT   " "
    DATA     printerPS                             INIT   NIL
    DATA     screenPS                              INIT   NIL
@@ -120,6 +120,7 @@ CLASS XbpFontDialog INHERIT XbpWindow
    METHOD   create()
    METHOD   destroy()
    METHOD   display( nMode )
+   METHOD   exeBlock()
 
    DATA     sl_activateApply
    ACCESS   activateApply                         INLINE ::sl_activateApply
@@ -193,15 +194,60 @@ METHOD XbpFontDialog:create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
 
    ::xbpWindow:create( oParent, oOwner )
 
-   ::oWidget := QFontDialog():new( ::pParent )
+   ::oWidget := QFontDialog():new()
 
-   ::oOptions := QFontOptions()
-   ::oOptions:pPtr := ::oWidget:options()
+   ::connect( ::pwidget, "accepted()"               , {|o,p| ::exeBlock( 1, p, o ) } )
+   ::connect( ::pwidget, "finished(int)"            , {|o,p| ::exeBlock( 2, p, o ) } )
+   ::connect( ::pwidget, "rejected()"               , {|o,p| ::exeBlock( 3, p, o ) } )
+   ::connect( ::pwidget, "currentFontChanged(QFont)", {|o,p| ::exeBlock( 4, p, o ) } )
+   ::connect( ::pwidget, "fontSelected(QFont)"      , {|o,p| ::exeBlock( 5, p, o ) } )
 
-
+   IF ::aPos[ 1 ] + ::aPos[ 2 ] != 0
+      ::setPos()
+   ENDIF
+   ::oParent:addChild( Self )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD XbpFontDialog:exeBlock( nEvent, p1 )
+   LOCAL nRet := XBP_ALLOW
+
+   HB_SYMBOL_UNUSED( p1 )
+
+   DO CASE
+   CASE nEvent == 3
+      IF hb_isBlock( ::sl_quit )
+         nRet := eval( ::sl_quit, 0, 0, Self )
+      ENDIF
+      IF nRet == XBP_REJECT
+         ::oWidget:reject()
+      ELSE
+         ::oWidget:accept()
+      ENDIF
+   ENDCASE
+
+   RETURN nRet
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpFontDialog:display( nMode )
+   LOCAL aInfo := nMode
+   LOCAL nResult
+
+   //::setPosAndSize()
+
+   IF nMode == 0                                   // Parent and modal
+      nResult := ::oWidget:exec()
+      nMode   := nResult
+   ELSE                                            // Non-modal
+      ::oWidget:show()
+   ENDIF
+
+   RETURN ::GetXbpFont( aInfo )
+
+/*----------------------------------------------------------------------*/
+
 #if 0
 METHOD XbpFontDialog:wndProc( hWnd, nMessage, nwParam, nlParam )
    LOCAL aRect, nL, nH
@@ -280,30 +326,6 @@ METHOD XbpFontDialog:wndProc( hWnd, nMessage, nwParam, nlParam )
 
    RETURN 0
 #endif
-/*----------------------------------------------------------------------*/
-
-METHOD XbpFontDialog:display( nMode )
-   LOCAL aInfo := nMode
-
-   #if 0
-
-   IF nMode == 0
-      hWnd := ::oParent:hWnd
-   ELSE
-      hWnd := Win_GetDesktopWindow()
-   ENDIF
-
-   ::ok := .f.
-   aInfo := Wvg_ChooseFont( hWnd, ::nWndProc, ::familyName, ;
-                            ::nominalPointSize, ::viewScreenFonts, ::viewPrinterFonts )
-
-   IF !( ::ok )
-      RETURN NIL
-   ENDIF
-
-   RETURN ::GetXbpFont( aInfo )
-   #endif
-   RETURN ::GetXbpFont( aInfo )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpFontDialog:destroy()
@@ -450,7 +472,7 @@ METHOD XbpFont:list()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpFont:createFont()
-   LOCAL aFont
+   LOCAL aFont := {}
 
    IF ::hFont <> NIL
       // Win_DeleteObject( ::hFont )
@@ -458,7 +480,7 @@ METHOD XbpFont:createFont()
    ENDIF
 
    IF ::oPS <> NIL
-      ::height := xbp_PointSizeToHeight( ::oPS:hdc, ::nominalPointSize )
+      //::height := xbp_PointSizeToHeight( ::oPS:hdc, ::nominalPointSize )
    ENDIF
 
    ::aFontInfo := array( 15 )
@@ -478,7 +500,7 @@ METHOD XbpFont:createFont()
    ::aFontInfo[ 13 ] := 0 //DEFAULT_QUALITY
    ::aFontInfo[ 14 ] := NIL
 
-   aFont := Xbp_FontCreate( ::aFontInfo )
+   //aFont := Xbp_FontCreate( ::aFontInfo )
 
    IF empty( aFont[ 1 ] )
       RETURN nil

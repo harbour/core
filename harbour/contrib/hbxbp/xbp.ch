@@ -263,6 +263,23 @@
 #define XBPSTATIC_SYSICON_PENFIRST                23
 #define XBPSTATIC_SYSICON_PENLAST                 39
 
+
+#define XBP_REJECT                                0
+#define XBP_ALLOW                                 1
+
+#define XBPBMP_FORMAT_WIN2X                       256
+#define XBPBMP_FORMAT_WIN3X                       512
+#define XBPBMP_FORMAT_OS21X                       XBPBMP_FORMAT_WIN2X
+#define XBPBMP_FORMAT_OS22X                       1024
+#define XBPBMP_FORMAT_GIF                         4096
+#define XBPBMP_FORMAT_JPG                         8192
+#define XBPBMP_FORMAT_PNG                         16384
+
+#define XBPBMP_FORMAT_DEFAULT                     XBPBMP_FORMAT_WIN3X
+
+#define XBPBMP_DEF_COMPRESSION                    -1
+
+
 /*----------------------------------------------------------------------*/
 #define _XBP_CH
 #endif

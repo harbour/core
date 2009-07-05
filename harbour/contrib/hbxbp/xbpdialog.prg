@@ -298,7 +298,7 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    ::oWidget:setMouseTracking( .T. )
    ::oWidget:setFocusPolicy( 2 )
 
-   //::setQtProperty()  /* Using it for one-to-one style sheet management */
+   ::setQtProperty()  /* Using it for one-to-one style sheet management */
 
    ::oParent:addChild( SELF )
 

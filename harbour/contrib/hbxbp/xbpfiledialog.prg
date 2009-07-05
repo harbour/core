@@ -131,10 +131,12 @@ CLASS XbpFileDialog INHERIT XbpWindow
    METHOD   create()
    METHOD   configure()                           VIRTUAL
    METHOD   destroy()
+   METHOD   exeBlock()
 
    METHOD   open()
    METHOD   saveAs()
    METHOD   extractFileNames()
+   METHOD   setStyle()
 
    ENDCLASS
 
@@ -153,8 +155,43 @@ METHOD XbpFileDialog:create( oParent, oOwner, aPos )
    ::xbpWindow:create( oParent, oOwner, aPos )
 
    ::oWidget := QFileDialog():new( ::pParent )
+   //::oWidget:setStyle( AppDesktop():style() )
+   ::setStyle()
+   //::setColorBG( GraMakeRGBColor( { 255,255,255 } ) )
+   //::setColorFG( GraMakeRGBColor( { 0,0,0 } ) )
 
+   ::connect( ::pWidget, "accepted()"                , {|o,p| ::exeBlock( 1, p, o ) } )
+   ::connect( ::pWidget, "finished(int)"             , {|o,p| ::exeBlock( 2, p, o ) } )
+   ::connect( ::pWidget, "rejected()"                , {|o,p| ::exeBlock( 3, p, o ) } )
+   ::connect( ::pWidget, "currentChanged(QString)"   , {|o,p| ::exeBlock( 4, p, o ) } )
+   ::connect( ::pWidget, "directoryEntered(QString)" , {|o,p| ::exeBlock( 5, p, o ) } )
+   ::connect( ::pWidget, "fileSelected(QString)"     , {|o,p| ::exeBlock( 6, p, o ) } )
+   ::connect( ::pWidget, "filesSelected(QStringList)", {|o,p| ::exeBlock( 7, p, o ) } )
+   ::connect( ::pWidget, "filterSelected(QString)"   , {|o,p| ::exeBlock( 8, p, o ) } )
+
+   ::oParent:addChild( Self )
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpFileDialog:exeBlock( nEvent, p1 )
+   LOCAL nRet := XBP_ALLOW
+
+   HB_SYMBOL_UNUSED( p1 )
+
+   DO CASE
+   CASE nEvent == 3
+      IF hb_isBlock( ::sl_quit )
+         nRet := eval( ::sl_quit, 0, 0, Self )
+      ENDIF
+      IF nRet == XBP_REJECT
+         ::oWidget:reject()
+      ELSE
+         ::oWidget:accept()
+      ENDIF
+   ENDCASE
+
+   RETURN nRet
 
 /*----------------------------------------------------------------------*/
 
@@ -223,6 +260,7 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
    IF !( lCenter )
       ::setPos()
    ENDIF
+
    nResult := ::oWidget:exec()
 
    RETURN IF( nResult == QDialog_Accepted, ::extractFileNames( lAllowMultiple ), NIL )
@@ -254,6 +292,7 @@ METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
 
 //   oStyle := QApplication():style()
 //   ::oWidget:setStyle( oStyle )
+   ::setStyle()
 
    IF !( lCenter )
       ::setPos()
@@ -283,4 +322,22 @@ METHOD XbpFileDialog:extractFileNames( lAllowMultiple )
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpFileDialog:setStyle()
+   LOCAL s := "", txt_:={}
+
+   aadd( txt_, 'QDialog   { background-color: rgb(198,198,198); }' )
+   aadd( txt_, 'QDialog   { color: rgb(0,0,0); }' )
+   aadd( txt_, 'QLineEdit { background-color: rgb(255,255,255); }' )
+   aadd( txt_, 'QAbstractScrollArea { background-color: rgb(240,240,240); }' )
+   aadd( txt_, 'QLabel    { background-color: rgb(198,198,198); }' )
+
+   aeval( txt_, {|e| s += e + chr( 13 )+chr( 10 ) } )
+
+   ::oWidget:setStyleSheet( "" )
+   //::oWidget:setStyleSheet( s )
+   //::setColorBG( GraMakeRGBColor( { 100,100,100 } ) )
+
+   RETURN self
+
+/*----------------------------------------------------------------------*/
 

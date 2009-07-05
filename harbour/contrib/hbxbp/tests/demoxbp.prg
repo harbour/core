@@ -56,6 +56,10 @@
 #include "inkey.ch"
 #include "gra.ch"
 
+#ifdef __XPP__
+#pragma library("XppUi2")
+#endif
+
 /*----------------------------------------------------------------------*/
 
 #define TAB_1   1
@@ -78,7 +82,7 @@ PROCEDURE BuildADialog()
    LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, aTabs, oDa
    LOCAL nThread := ThreadID()
    LOCAL cThread := hb_ntos( nThread )
-   LOCAL aPP
+   LOCAL aPP, oHtm
 
    /* Create Application Window */
    oDlg := GuiStdDialog( "Harbour - Xbase++ - QT Dialog  [ "+ hb_ntos( nThread )+" ]" )
@@ -104,7 +108,7 @@ PROCEDURE BuildADialog()
    oDa:setColorFG( GraMakeRGBColor( { 255,255,255 } ) )
 
    /* Install menu system */
-   Build_MenuBar()
+   Build_MenuBar( oDlg )
 
    /* Install Statusbar */
    Build_StatusBar( oDa )
@@ -116,16 +120,16 @@ PROCEDURE BuildADialog()
    aTabs := Build_TabPages( oDa )
 
    /* Install checkboxes */
-   Build_CheckBox( aTabs[ 3 ] )
+   Build_CheckBox( aTabs[ TAB_3 ] )
 
    /* Install 3state checkboxes */
-   Build_3State( aTabs[ 3 ] )
+   Build_3State( aTabs[ TAB_3 ] )
 
    /* Install Radio Buttons */
-   Build_RadioButton( aTabs[ 3 ] )
+   Build_RadioButton( aTabs[ TAB_3 ] )
 
    /* Install ListBox */
-   Build_ListBox( aTabs[ 5 ] )
+   Build_ListBox( aTabs[ TAB_5 ] )
 
    /* Install Push Buttons */
    Build_PushButton( oDa )
@@ -140,19 +144,19 @@ PROCEDURE BuildADialog()
    Build_ScrollBar( aTabs[ 5 ] )
 
    /* Install Spin Buttons */
-   Build_SpinButtons( aTabs[ 3 ] )
+   Build_SpinButtons( aTabs[ TAB_3 ] )
 
    /* Install Combo Box */
    Build_ComboBox( oDa )
 
    /* Install TreeView */
-   Build_TreeView( aTabs[ 4 ] )
+   Build_TreeView( aTabs[ TAB_4 ] )
 
    /* Build Statics */
    Build_Statics( oDA )
 
    /* Build HTML Viewer */
-   Build_HTMLViewer( aTabs[ 1 ] )
+   oHtm := Build_HTMLViewer( aTabs[ TAB_1 ] )
 
    /* Present the dialog on the screen */
    oDlg:Show()
@@ -163,6 +167,9 @@ PROCEDURE BuildADialog()
       IF ( nEvent == xbeP_Close ) .OR. ( nEvent == xbeP_Keyboard .and. mp1 == xbeK_ESC )
 hb_outDebug( "      WOW      " )
          EXIT
+      ELSEIF nEvent == xbeP_Keyboard .and. mp1 == xbeK_F1
+         oHtm:setHTML( '<html><h1>Direct HTML Injection</h1><p><font color="#ab00ff" size="16">'+;
+                       'This HTML content</font> is pushed dynamically with<br><br>:setHTML()</br></br>.</html>' )
       ENDIF
       oXbp:handleEvent( nEvent, mp1, mp2 )
    ENDDO
@@ -227,7 +234,7 @@ STATIC FUNCTION GuiStdDialog( cTitle )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Build_MenuBar()
+STATIC FUNCTION Build_MenuBar( oDlg )
    LOCAL oMenuBar, oSubMenu
 
    //oMenuBar := XbpMenuBar():new( oDlg ):create()
@@ -276,10 +283,14 @@ STATIC FUNCTION Build_MenuBar()
       #else
          oSubMenu:addItem( { "~One More Instance"+ chr( K_TAB )+ "Ctrl+M", {|| BuildADialog() } } )
       #endif
+   #endif
+   #endif
+   oMenuBar:addItem( { oSubMenu, NIL } )
 
-      oMenuBar:addItem( { oSubMenu, NIL } )
-   #endif
-   #endif
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Miscellaneous"
+   oSubMenu:addItem( { "Convert Images - XbpBitmap()", {|| Build_Bitmap( oDlg ) } } )
+   oMenuBar:addItem( { oSubMenu, NIL } )
 
    Return nil
 
@@ -332,16 +343,33 @@ FUNCTION Build_ToolBar( oDA )
 
    /* Harbour does not support resource IDs so giving bitmap files */
    #ifdef __HARBOUR__
-      oTBar:addItem( "Save", "new.png"  )
-      oTBar:addItem( "Open", "open.png" )
+      oTBar:addItem( "Save"       , "new.png" , , , , , "1" )
+      oTBar:addItem( "Open"       , "open.png", , , , , "2" )
+      oTBar:addItem( "Font Dialog", "copy.png", , , , , "3" )
+
    #else
-      oTBar:addItem( "Button #1" )//, 100 )
-      oTBar:addItem( "Button #2" )//, 101 )
+      oTBar:addItem( "Save"        )//, 100 )
+      oTBar:addItem( "Open"        )//, 101 )
+      oTBar:addItem( "Font Dialog" )
    #endif
 
    oTBar:transparentColor := GRA_CLR_INVALID
-   oTBar:buttonClick := {|oButton| IF( oButton:caption == "Open", Build_FileDialog( oDA,"open" ), ;
-                                                                  Build_FileDialog( oDA,"save" ) ) }
+   oTBar:buttonClick := {|oButton| ExeToolbar( oButton, oDa ) }
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION ExeToolbar( oButton, oDa )
+
+   DO CASE
+   CASE oButton:caption == "Save"
+      Build_FileDialog( oDA,"save" )
+   CASE oButton:caption == "Open"
+      Build_FileDialog( oDA,"open" )
+   CASE oButton:caption == "Font Dialog"
+      Build_FontDialog( oDa )
+   ENDCASE
 
    RETURN nil
 
@@ -913,21 +941,39 @@ FUNCTION Build_Statics( oWnd )
    oBox:setColorBG( GraMakeRGBColor( { 100,0,100 } ) )
    #endif
 
+
+   #if 0  /* Does not work - despite best efforts :-((( */
+   oBox := XbpStatic():new( oGrp, , {nC4,nT+(nH+nG)*4}, {nW,nH} )
+   oBox:type := XBPSTATIC_TYPE_SYSICON
+   oBox:caption := XBPSTATIC_SYSICON_ICONINFORMATION
+   oBox:create()
+   #endif
+
+   #if 1
+   #ifdef __HARBOUR__ /* Differes from Xbase++ by Disk File | Resource Name, ID */
+   oBox := XbpStatic():new( oGrp, , {nC4,nT+(nH+nG)*4}, {nW,nH} )
+   oBox:type := XBPSTATIC_TYPE_ICON
+   oBox:caption := "vr.png"
+   oBox:create()
+   oBox:setColorBG( GraMakeRGBColor( { 255,255,0 } ) )
+   #endif
+   #endif
+
    #define CRLF chr(13)+chr(10)
 
    oLbl := XbpStatic():new( oWnd, , {30,60}, {200,240} )
    oLbl:type    := XBPSTATIC_TYPE_TEXT
    oLbl:options := XBPSTATIC_TEXT_CENTER + XBPSTATIC_TEXT_VCENTER + XBPSTATIC_TEXT_WORDBREAK
    oLbl:caption := "The GroupBox at the right demonstrates many static controls" + CRLF + ;
-                   "  " + CRLF +;
+                   "  "                    + CRLF + ;
                    "XBPSTATIC_TYPE_TEXT"   + CRLF + ;
                    "XBPSTATIC_TYPE_*LINE"  + CRLF + ;
                    "XBPSTATIC_TYPE_*BOX"   + CRLF + ;
                    "XBPSTATIC_TYPE_*RECT"  + CRLF + ;
                    "XBPSTATIC_TYPE_*FRAME" + CRLF + ;
                    "XBPSTATIC_TYPE_BITMAP" + CRLF + ;
-                   "  " + CRLF +;
-                   "BITMAP"+ CRLF +;
+                   "  "                    + CRLF + ;
+                   "BITMAP"                + CRLF + ;
                    "though, is not exactly Xbase++ compatible in the sense " +;
                    "that it is not pulled from a resource" + CRLF + ;
                    "( to be addressed later )"
@@ -943,15 +989,25 @@ FUNCTION Build_Statics( oWnd )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_HTMLViewer( oWnd )
-   LOCAL oHtm, sz_:= oWnd:currentSize()
+   LOCAL oFrm, oHtm, sz_:= oWnd:currentSize()
 
-   oHtm := XbpHTMLViewer():new( oWnd, , {10,10}, {sz_[1]-25,sz_[2]-30-15} )
+   oFrm := XbpStatic():new( oWnd, , {5,5}, {sz_[1]-5-10,sz_[2]-30-7} )
+   oFrm:type := XBPSTATIC_TYPE_RECESSEDBOX
+   oFrm:options := XBPSTATIC_FRAMETHICK
+   oFrm:create()
+   #ifdef __HARBOUR__
+   //oFrm:setStyleSheet( "border: 2px solid yellow;" )
+   #endif
+
+   sz_:= oFrm:currentSize()
+   // oHtm := XbpHTMLViewer():new( oWnd, , {10,10}, {sz_[1]-25,sz_[2]-30-15} )
+   oHtm := XbpHTMLViewer():new( oFrm, , {10,10}, {sz_[1]-10-10,sz_[2]-10-10} )
    oHtm:create()
    oHtm:navigate( "http://www.harbour-project.org" )
    oHtm:titleChange    := {|e| hb_outDebug( e ) }
-   oHtm:progressChange := {|nProg,nMax| hb_outDebug( "Downloaded: "+str( nProg*100/nMax,10,0 ) ) }
+   // oHtm:progressChange := {|nProg,nMax| hb_outDebug( "Downloaded: "+str( nProg*100/nMax,10,0 ) ) }
 
-   RETURN nil
+   RETURN oHtm
 
 /*----------------------------------------------------------------------*/
 
@@ -962,15 +1018,16 @@ FUNCTION Build_FileDialog( oWnd, cMode )
    IF cMode == "open"
       oDlg:title       := "Open Index or Database"
       oDlg:center      := .t.
-      oDlg:fileFilters := { { 'Index Files', '*.ntx' }, { 'Database Files', '*.dbf' } }
-      oDlg:setColorBG( GraMakeRGBColor( { 170,170,170 } ) )
+      oDlg:fileFilters := { { "Index Files", "*.ntx" }, { "Database Files", "*.dbf" } }
+      //oDlg:setColorBG( GraMakeRGBColor( { 170,170,170 } ) )
       aFiles := oDlg:open( "c:\temp", , .t. )
       IF !empty( aFiles )
          aeval( aFiles, {|e| hb_outDebug( e ) } )
       ENDIF
    ELSE
       oDlg:title       := "Save this Database"
-      oDlg:fileFilters := { { 'Database Files', '*.dbf' } }
+      oDlg:fileFilters := { { "Database Files", "*.dbf" } }
+      oDlg:quit        := {|| MsgBox( "Quitting the Dialog" ), 1 }
       cFile := oDlg:saveAs( "c:\temp\myfile.dbf" )
       IF !empty( cFile )
          hb_outDebug( cFile )
@@ -980,5 +1037,75 @@ FUNCTION Build_FileDialog( oWnd, cMode )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION Build_FontDialog( oWnd )
+   LOCAL oDlg
+
+   oDlg := XbpFontDialog():new( oWnd, , , , { 20,20 } )
+   oDlg:create()
+   oDlg:display( 0 )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_Bitmap( oWnd )
+   LOCAL oBmp, aFltr, cFile, cExt, nFrmt, oDlg
+   LOCAL cExtns := { "PNG","GIF","JPG","JPEG","BMP","TIFF" }
+   LOCAL nFrmts := { XBPBMP_FORMAT_PNG, XBPBMP_FORMAT_GIF, XBPBMP_FORMAT_JPG, ;
+                     XBPBMP_FORMAT_JPG, XBPBMP_FORMAT_WIN3X }
+
+   aFltr := {}
+   aadd( aFltr, { "Windows Bitmap             ", "*.BMP"  } )
+   aadd( aFltr, { "Graphic Interchange Format ", "*.GIF"  } )
+   aadd( aFltr, { "Joint Photographic Experts ", "*.JPG; *.JPEG" } )
+   aadd( aFltr, { "Portable Network Graphics  ", "*.PNG"  } )
+   aadd( aFltr, { "Portable Pixmap            ", "*.PPM"  } )
+   aadd( aFltr, { "Tagged Image File Format   ", "*.TIFF" } )
+   aadd( aFltr, { "X11 Bitmap                 ", "*.XBM"  } )
+   aadd( aFltr, { "X11 Pixmap                 ", "*.XPM"  } )
+   aeval( aFltr, {|e_,i| aFltr[ i,1 ] := trim( e_[ 1 ] ) } )
+
+   oDlg := XbpFileDialog():new( oWnd, , {10,10} )
+   oDlg:title := "Select an image to be converted"
+   oDlg:fileFilters := aFltr
+   oDlg:create()
+
+   cFile := oDlg:open( "c:\", , .f. )
+
+   IF !empty( cFile )
+      oBmp := XbpBitmap():new():create()
+      IF oBmp:loadFile( cFile )
+         MsgBox( "x = "+hb_ntos( oBmp:xSize ) +" y = "+hb_ntos( oBmp:ySize )+" b = "+hb_ntos( oBmp:bits ) )
+
+         aFltr := {}
+         aadd( aFltr, { "Windows Bitmap             ", "*.BMP"  } )
+         aadd( aFltr, { "Joint Photographic Experts ", "*.JPG; *.JPEG"  } )
+         aadd( aFltr, { "Portable Network Graphics  ", "*.PNG"  } )
+         aadd( aFltr, { "Portable Pixmap            ", "*.PPM"  } )
+         aadd( aFltr, { "Tagged Image File Format   ", "*.TIFF" } )
+         aadd( aFltr, { "X11 Bitmap                 ", "*.XBM"  } )
+         aadd( aFltr, { "X11 Pixmap                 ", "*.XPM"  } )
+
+         oDlg:title := "Specify how to save it !"
+         oDlg:fileFilters := aFltr
+         cFile := oDlg:saveAs()
+
+         IF !empty( cFile )
+            cExt := upper( substr( cFile, at( ".", cFile )+1 ) )
+            IF !empty( cExt )
+               nFrmt := nFrmts[ ascan( cExtns, cExt ) ]
+
+               oBmp:saveFile( cFile, nFrmt )
+            ENDIF
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+
 
 

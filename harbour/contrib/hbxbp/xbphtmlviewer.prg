@@ -157,11 +157,6 @@ METHOD XbpHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    ::oWidget := QWebView():new( ::pParent )
 
-   ::setPosAndSize()
-   IF ::visible
-      ::show()
-   ENDIF
-
    ::Connect( QT_PTROF( ::oWidget ), "iconChanged()"            , {|o,p| ::exeBlock( 1,p,o ) } )
    ::Connect( QT_PTROF( ::oWidget ), "linkClicked(QUrl)"        , {|o,p| ::exeBlock( 2,p,o ) } )
    ::Connect( QT_PTROF( ::oWidget ), "loadFinished(bool)"       , {|o,p| ::exeBlock( 3,p,o ) } )
@@ -175,13 +170,17 @@ METHOD XbpHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ::mapEvent( evNavigateComplete, {| cURL | ::xNavigateComplete( cURL ) } )
    #endif
 
+   ::setPosAndSize()
+   IF ::visible
+      ::show()
+   ENDIF
+   ::oParent:addChild( SELF )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpHTMLViewer:exeBlock( nEvent, p1 )
 
-//hb_outDebug( str( nEvent ) )
    DO CASE
    CASE nEvent == 1
       IF hb_isBlock( ::sl_beforeNavigate )
@@ -193,7 +192,6 @@ METHOD XbpHTMLViewer:exeBlock( nEvent, p1 )
          eval( ::sl_documentComplete, /*cURI*/, p1, Self )
       ENDIF
    CASE nEvent == 4
-//hb_outDebug( str( p1 ) )
       IF hb_isBlock( ::sl_progressChange )
          eval( ::sl_progressChange, p1, 100, Self )
       ENDIF
@@ -204,7 +202,7 @@ METHOD XbpHTMLViewer:exeBlock( nEvent, p1 )
       ENDIF
    CASE nEvent == 7
    CASE nEvent == 8
-      ::cSelectedText := ::oWidget:SelectedText()
+      ::cSelectedText := ::oWidget:selectedText()
 hb_outDebug( ::cSelectedText )
    CASE nEvent == 9
       IF hb_isBlock( ::sl_statusTextChange )
@@ -226,5 +224,44 @@ METHOD XbpHTMLViewer:navigate( cURL )
 
    RETURN .t.
 
+/*----------------------------------------------------------------------*/
+#if 0                                        /* Some reference material */
+
+// QWebView
+"iconChanged()"
+"linkClicked(QUrl)"
+"loadFinished(bool)"
+"loadProgress(int)"
+"loadStarted()"
+"titleChanged(QString)"
+"urlChanged(QUrl)"
+"selectionChanged()"
+"statusBarMessage(QString)"
+
+// QWebPage
+"contentsChanged()"
+"databaseQuotaExceeded(QWebFrame,QString)"
+"downloadRequested(QNetworkRequest)"
+"frameCreated(QWebFrame)"
+"geometryChangeRequested(QRect)"
+"linkClicked(QUrl)"
+"linkHovered(QString,QString,QString)"
+"loadFinished(bool)"
+"loadProgress(int)"
+"loadStarted()"
+"menuBarVisibilityChangeRequested(bool)"
+"microFocusChanged()"
+"printRequested(QWebFrame)"
+"repaintRequested(QRect)"
+"restoreFrameStateRequested(QWebFrame)"
+"saveFrameStateRequested(QWebFrame,QWebHistoryItem)"
+"scrollRequested(int,int,QRect)"
+"statusBarMessage(QString)"
+"statusBarVisibilityChangeRequested(bool)"
+"toolBarVisibilityChangeRequested(bool)"
+"unsupportedContent(QNetworkReply)"
+"windowCloseRequested()"
+
+#endif
 /*----------------------------------------------------------------------*/
 

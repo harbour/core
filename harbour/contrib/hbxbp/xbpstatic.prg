@@ -221,24 +221,25 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
 
    CASE ::type == XBPSTATIC_TYPE_ICON
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QLabel():new( ::pParent )
 
    CASE ::type == XBPSTATIC_TYPE_SYSICON
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QLabel():new( ::pParent )
 
    CASE ::type == XBPSTATIC_TYPE_BITMAP
       ::oWidget := QFrame():new( ::pParent )
 
+   OTHERWISE
+      ::oWidget := QFrame():new( ::pParent )
+
    ENDCASE
 
+   ::setCaption( ::caption )
 
    ::setPosAndSize()
    IF ::visible
       ::show()
    ENDIF
-
-   ::setCaption( ::caption )
-
    ::oParent:addChild( SELF )
    RETURN Self
 
@@ -271,6 +272,7 @@ METHOD XbpStatic:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpStatic:setCaption( xCaption, cDll )
+   LOCAL oStyle, pPixmap, oIcon, oSize//, oPixmap
 
    HB_SYMBOL_UNUSED( cDll )
 
@@ -291,6 +293,35 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
          ELSE
             ::oWidget:setStyleSheet( 'background: url('+ ::caption +'); repeat-xy;' )
          ENDIF
+
+      CASE ::type == XBPSTATIC_TYPE_ICON
+         ::oWidget:setPixmap( QPixmap():new( ::caption ):scaled( ::aSize[ 1 ], ::aSize[ 2 ] ) )
+
+      CASE ::type == XBPSTATIC_TYPE_SYSICON
+         oIcon       := QIcon()
+         oStyle      := QStyle()
+         oStyle:pPtr := QApplication():style()
+
+         DO CASE
+         CASE ::caption == XBPSTATIC_SYSICON_ICONINFORMATION
+            oIcon:pPtr := oStyle:standardIcon( QStyle_SP_MessageBoxInformation, 0, 0 )
+hb_outDebug( "2 "+ valtype( oIcon:pPtr ) )
+            //pPixmap := oIcon:pixmap( ::aSize[ 1 ], ::aSize[ 2 ] )
+               oSize := QSize():new()
+               oSize:setWidth( 16 )
+               oSize:setHeight( 16 )
+               pPixmap := oIcon:pixmap( QT_PTROF( oSize ), QIcon_Normal, QIcon_On )
+hb_outDebug( "5" )
+         CASE ::caption == XBPSTATIC_SYSICON_ICONQUESTION
+            pPixmap := oStyle:standardPixmap( QStyle_SP_MessageBoxQuestion )
+         CASE ::caption == XBPSTATIC_SYSICON_ICONERROR
+            pPixmap := oStyle:standardPixmap( QStyle_SP_MessageBoxCritical )
+         CASE ::caption == XBPSTATIC_SYSICON_ICONWARNING
+            pPixmap := oStyle:standardPixmap( QStyle_SP_MessageBoxWarning )
+         ENDCASE
+
+         ::oWidget:setPixmap( pPixmap )
+hb_outDebug( "6" )
       ENDCASE
    ENDIF
 

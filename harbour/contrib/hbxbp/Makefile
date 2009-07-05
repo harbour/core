@@ -66,6 +66,7 @@ PRG_SOURCES=\
 	xbphtmlviewer.prg \
 	xbpfiledialog.prg \
 	xbpfontdialog.prg \
+	xbpbitmap.prg \
 
 
 PRG_HEADERS=\

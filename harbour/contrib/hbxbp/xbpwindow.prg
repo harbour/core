@@ -82,7 +82,7 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    /* Called in the initializer - Unique in the application */
    METHOD   getProperty()                         INLINE  "PROP" + hb_ntos( ++::nProperty )
    /* After object is physically created, set unique property to 1 */
-   METHOD   setQtProperty()                       INLINE  ::oWidget:setProperty( ::qtProperty, 1 )
+   METHOD   setQtProperty()
 
    DATA     cargo                                 INIT  ""
    DATA     styleSheet                            INIT  ""
@@ -348,6 +348,19 @@ METHOD XbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    CASE cClass $ 'XBPSPINBUTTON,XBPCOMBOBOX,XBPTREEVIEW'
       Xbp_SetPresParamIfNil( ::aPresParams, XBP_PP_BGCLR         , XBPSYSCLR_ENTRYFIELD       )
    ENDCASE
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpWindow:setQtProperty( cProperty )
+   LOCAL oVariant := QVariant():new()
+
+   DEFAULT cProperty TO "YES"
+
+   oVariant:setValue( cProperty )
+
+   ::oWidget:setProperty( ::qtProperty, QT_PTROF( oVariant ) )
 
    RETURN Self
 
@@ -795,13 +808,20 @@ STATIC FUNCTION Xbp_RgbToName( nRgb )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:setColorBG( nRGB )
-   LOCAL oldRGB, cName
+   LOCAL oldRGB, cName, cQTName
 
-   cName := Xbp_RgbToName( nRGB )
+   cName  := Xbp_RgbToName( nRGB )
 
    IF hb_isNumeric( nRGB )
-      oldRGB := Xbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR, nRGB )
-      ::setStyleSheet( "background-color: "+ cName +";" )
+      oldRGB  := Xbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR, nRGB )
+      cQTName := Xbp_XbpToQTName( __ObjGetClsName( self ) )
+
+      IF empty( cQTName )
+         ::setStyleSheet( "background-color: "+ cName +";" )
+      ELSE
+         ::setStyleSheet( "background-color: "+ cName +";" )
+//         ::setStyleSheet( cQTName +'['+ ::qtProperty +'="YES"] '+ "{ background-color: "+ cName +" ; }" )
+      ENDIF
    ELSE
       oldRGB := Xbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR )
    ENDIF

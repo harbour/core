@@ -132,21 +132,22 @@ METHOD XbpStyle:create()
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION xbpToQT( cXbpPart )
+FUNCTION Xbp_XbpToQTName( cXbpPart )
    LOCAL aQt := {}
    LOCAL n, cQTWidget
 
    cXbpPart := upper( cXbpPart )
 
-   aadd( aQt, { 'XBPDIALOG'      , 'QWidget' } )
-   aadd( aQt, { 'XBPPUSHBUTTON'  , ' ' } )
-   aadd( aQt, { 'XBPCHECKBOX'    , ' ' } )
-   aadd( aQt, { 'XBPTREEVIEW'    , ' ' } )
+   aadd( aQt, { 'XBPDIALOG'      , 'QMainWindow' } )
+   aadd( aQt, { 'XBPDRAWINGAREA' , 'QWidget'     } )
+   aadd( aQt, { 'XBPPUSHBUTTON'  , 'QPushButton' } )
+   aadd( aQt, { 'XBPCHECKBOX'    , 'QCheckBox'   } )
+   aadd( aQt, { 'XBPTREEVIEW'    , 'QTreeWidget' } )
    aadd( aQt, { 'XBPTREEVIEWITEM', ' ' } )
-   aadd( aQt, { 'XBPRADIOBUTTON' , ' ' } )
-   aadd( aQt, { 'XBPSCROLLBAR'   , ' ' } )
-   aadd( aQt, { 'XBPSTATUSBAR'   , ' ' } )
-   aadd( aQt, { 'XBPTABPAGE'     , ' ' } )
+   aadd( aQt, { 'XBPRADIOBUTTON' , 'QRadioButton'} )
+   aadd( aQt, { 'XBPSCROLLBAR'   , 'QScrollBar'  } )
+   aadd( aQt, { 'XBPSTATUSBAR'   , 'QStatusBar'  } )
+   aadd( aQt, { 'XBPTABPAGE'     , 'QTabWidget'  } )
    aadd( aQt, { 'XBPSTATIC'      , ' ' } )
 
    IF ( n := ascan( aQt, {|e_| e_[ 1 ] == cXbpPart } ) ) > 0
