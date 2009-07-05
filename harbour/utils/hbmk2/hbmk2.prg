@@ -5560,11 +5560,11 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
 
    IF ( nStart := At( _MACRO_OPEN, cItem ) ) > 0 .AND. ;
       !( SubStr( cItem, nStart - 1, 1 ) $ _MACRO_PREFIX_ALL ) .AND. ;
-      ( nEnd := hb_At( _MACRO_CLOSE, cItem, nStart ) ) > 0
+      ( nEnd := hb_At( _MACRO_CLOSE, cItem, nStart + Len( _MACRO_OPEN ) ) ) > 0
 
       /* Separate filter from the rest of the item */
-      cFilterSrc := SubStr( cItem, nStart + 1, nEnd - nStart - 1 )
-      cItem := Left( cItem, nStart - 1 ) + SubStr( cItem, nEnd + 1 )
+      cFilterSrc := SubStr( cItem, nStart + Len( _MACRO_OPEN ), nEnd - nStart - Len( _MACRO_OPEN ) )
+      cItem := Left( cItem, nStart - 1 ) + SubStr( cItem, nEnd + Len( _MACRO_CLOSE ) )
 
       IF ! Empty( cFilterSrc )
 
@@ -5644,10 +5644,10 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, lLateMode )
       CASE "HB_CURDIR"
          cMacro := hb_pwd() ; EXIT
       CASE "HB_ARCH"
-      CASE "HB_ARCHITECTURE"
+      CASE "HB_ARCHITECTURE" /* Compatibility */
          cMacro := hbmk[ _HBMK_cARCH ] ; EXIT
       CASE "HB_COMP"
-      CASE "HB_COMPILER"
+      CASE "HB_COMPILER" /* Compatibility */
          cMacro := hbmk[ _HBMK_cCOMP ] ; EXIT
       CASE "HB_CPU"
          cMacro := hbmk_CPU( hbmk ) ; EXIT

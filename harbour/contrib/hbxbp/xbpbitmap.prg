@@ -186,12 +186,11 @@ METHOD XbpBitmap:presSpace( oPS )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBitmap:saveFile( cImageFileName, nFormat, nCompression )
-   LOCAL lSuccess := .f.
+   LOCAL lSuccess
 
    DEFAULT nCompression TO XBPBMP_DEF_COMPRESSION
 
    DO CASE
-
    CASE nFormat == XBPBMP_FORMAT_GIF
       lSuccess := ::oWidget:save( cImageFileName, "GIF", nCompression )  /* QT Does not support writing to GIF */
    CASE nFormat == XBPBMP_FORMAT_JPG
@@ -235,4 +234,3 @@ METHOD XbpBitmap:setIPicture( oPicture )
    RETURN lSuccess
 
 /*----------------------------------------------------------------------*/
-

@@ -1051,19 +1051,19 @@ FUNCTION Build_FontDialog( oWnd )
 
 FUNCTION Build_Bitmap( oWnd )
    LOCAL oBmp, aFltr, cFile, cExt, nFrmt, oDlg
-   LOCAL cExtns := { "PNG","GIF","JPG","JPEG","BMP","TIFF" }
+   LOCAL cExtns := { "png","gif","jpg","jpeg","bmp","tiff" }
    LOCAL nFrmts := { XBPBMP_FORMAT_PNG, XBPBMP_FORMAT_GIF, XBPBMP_FORMAT_JPG, ;
                      XBPBMP_FORMAT_JPG, XBPBMP_FORMAT_WIN3X }
 
    aFltr := {}
-   aadd( aFltr, { "Windows Bitmap             ", "*.BMP"  } )
-   aadd( aFltr, { "Graphic Interchange Format ", "*.GIF"  } )
-   aadd( aFltr, { "Joint Photographic Experts ", "*.JPG; *.JPEG" } )
-   aadd( aFltr, { "Portable Network Graphics  ", "*.PNG"  } )
-   aadd( aFltr, { "Portable Pixmap            ", "*.PPM"  } )
-   aadd( aFltr, { "Tagged Image File Format   ", "*.TIFF" } )
-   aadd( aFltr, { "X11 Bitmap                 ", "*.XBM"  } )
-   aadd( aFltr, { "X11 Pixmap                 ", "*.XPM"  } )
+   aadd( aFltr, { "Windows Bitmap             ", "*.bmp"  } )
+   aadd( aFltr, { "Graphic Interchange Format ", "*.gif"  } )
+   aadd( aFltr, { "Joint Photographic Experts ", "*.jpg; *.jpeg" } )
+   aadd( aFltr, { "Portable Network Graphics  ", "*.png"  } )
+   aadd( aFltr, { "Portable Pixmap            ", "*.ppm"  } )
+   aadd( aFltr, { "Tagged Image File Format   ", "*.tiff" } )
+   aadd( aFltr, { "X11 Bitmap                 ", "*.xbm"  } )
+   aadd( aFltr, { "X11 Pixmap                 ", "*.xpm"  } )
    aeval( aFltr, {|e_,i| aFltr[ i,1 ] := trim( e_[ 1 ] ) } )
 
    oDlg := XbpFileDialog():new( oWnd, , {10,10} )
@@ -1071,7 +1071,7 @@ FUNCTION Build_Bitmap( oWnd )
    oDlg:fileFilters := aFltr
    oDlg:create()
 
-   cFile := oDlg:open( "c:\", , .f. )
+   cFile := oDlg:open( hb_DirBase(), , .f. )
 
    IF !empty( cFile )
       oBmp := XbpBitmap():new():create()
@@ -1079,13 +1079,13 @@ FUNCTION Build_Bitmap( oWnd )
          MsgBox( "x = "+hb_ntos( oBmp:xSize ) +" y = "+hb_ntos( oBmp:ySize )+" b = "+hb_ntos( oBmp:bits ) )
 
          aFltr := {}
-         aadd( aFltr, { "Windows Bitmap             ", "*.BMP"  } )
-         aadd( aFltr, { "Joint Photographic Experts ", "*.JPG; *.JPEG"  } )
-         aadd( aFltr, { "Portable Network Graphics  ", "*.PNG"  } )
-         aadd( aFltr, { "Portable Pixmap            ", "*.PPM"  } )
-         aadd( aFltr, { "Tagged Image File Format   ", "*.TIFF" } )
-         aadd( aFltr, { "X11 Bitmap                 ", "*.XBM"  } )
-         aadd( aFltr, { "X11 Pixmap                 ", "*.XPM"  } )
+         aadd( aFltr, { "Windows Bitmap             ", "*.bmp"  } )
+         aadd( aFltr, { "Joint Photographic Experts ", "*.jpg; *.jpeg"  } )
+         aadd( aFltr, { "Portable Network Graphics  ", "*.png"  } )
+         aadd( aFltr, { "Portable Pixmap            ", "*.ppm"  } )
+         aadd( aFltr, { "Tagged Image File Format   ", "*.tiff" } )
+         aadd( aFltr, { "X11 Bitmap                 ", "*.xbm"  } )
+         aadd( aFltr, { "X11 Pixmap                 ", "*.xpm"  } )
 
          oDlg:title := "Specify how to save it !"
          oDlg:fileFilters := aFltr
@@ -1105,7 +1105,3 @@ FUNCTION Build_Bitmap( oWnd )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
-
-
-
-
