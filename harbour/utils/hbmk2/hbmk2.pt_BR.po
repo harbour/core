@@ -202,8 +202,8 @@ msgstr "Linha de comando do Harbour:"
 
 #: hbmk2.prg:3387
 #, c-format
-msgid "Warning: Stub helper .c program couldn't be created."
-msgstr "Atená∆o: M¢dulo auxiliar .c n∆o pìde ser criado."
+msgid "Error: Stub helper .c program couldn't be created."
+msgstr "Erro: M¢dulo auxiliar .c n∆o pìde ser criado."
 
 #: hbmk2.prg:3481
 #, c-format
@@ -1006,4 +1006,3 @@ msgstr ""
 #, c-format
 msgid "wdo=EN"
 msgstr "wdo=EN"
-

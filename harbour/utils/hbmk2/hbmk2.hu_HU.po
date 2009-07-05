@@ -724,8 +724,8 @@ msgstr "  hbmk [kapcsolók] [<parancsállomány[s]>] <forrás[.prg|.c|.obj|.o|.rc|.r
 
 #: hbmk2.prg:2937 hbmk2.prg:3341
 #, c-format
-msgid "Warning: Stub helper .c program couldn't be created."
-msgstr "Figyelem: .c segédállományt nem sikerült létrehozni."
+msgid "Error: Stub helper .c program couldn't be created."
+msgstr "Hiba: .c segédállományt nem sikerült létrehozni."
 
 #: hbmk2.prg:5688 hbmk2.prg:6391
 #, c-format
