@@ -196,8 +196,8 @@ METHOD AUTH( cUser, cPass ) CLASS tIPClientSMTP
 
    cUser := StrTran( cUser, "&at;", "@" )
 
-   cEncodedUser := AllTrim( HB_BASE64( cUser, Len( cUser ) ) )
-   cEncodedPAss := AllTrim( HB_BASE64( cPass, Len( cPass ) ) )
+   cEncodedUser := AllTrim( HB_BASE64( cUser ) )
+   cEncodedPAss := AllTrim( HB_BASE64( cPass ) )
 
    ::InetSendall( ::SocketCon, "AUTH LOGIN" + ::ccrlf )
 

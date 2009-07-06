@@ -1690,7 +1690,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       CASE Left( cParamL, Len( "-icon=" ) ) == "-icon="
 
-         cParam := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-icon=" ) + 1 ) ), aParam[ _PAR_cFileName ] )
+         cParam := PathNormalize( PathProc( PathSepToSelf( MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-icon=" ) + 1 ) ), aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] ) )
          IF ! Empty( cParam )
             AAdd( hbmk[ _HBMK_aICON ], cParam )
          ENDIF

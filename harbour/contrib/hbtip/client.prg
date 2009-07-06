@@ -119,14 +119,11 @@ CLASS tIPClient
 
    DATA Cargo
 
-   /* Data For proxy connection */
+   /* Data for proxy connection */
    DATA cProxyHost
-   DATA nProxyPort
+   DATA nProxyPort INIT 0
    DATA cProxyUser
    DATA cProxyPassword
-   METHOD SetProxy()
-   METHOD Openproxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWord, nTimeOut, cUserAgent )
-   METHOD ReadHTTPProxyResponse()
 
    METHOD New( oUrl, lTrace, oCredentials )
    METHOD Open()
@@ -138,7 +135,10 @@ CLASS tIPClient
    METHOD WriteFromFile( cFile )
    METHOD Reset()
    METHOD Close()
-/*   METHOD Data( cData ) */                   // commented: calls undeclared METHOD :getOk
+
+/* METHOD Data( cData ) */                   // commented: calls undeclared METHOD :getOk
+
+   METHOD SetProxy( cProxyHost, nProxyPort, cProxyUser, cProxyPassword )
 
    METHOD lastErrorCode() INLINE ::nLastError
    METHOD lastErrorMessage(SocketCon) INLINE ::INetErrorDesc(SocketCon)
@@ -147,7 +147,11 @@ CLASS tIPClient
    METHOD InetSndBufSize( SocketCon, nSizeBuff )
 
    PROTECTED:
+
    DATA nLastError INIT 0
+
+   METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWord, nTimeOut, cUserAgent )
+   METHOD ReadHTTPProxyResponse()
 
    /* Methods to log data if needed */
    METHOD InetRecv( SocketCon, cStr1, len)
@@ -212,7 +216,7 @@ RETURN self
 METHOD Open( cUrl ) CLASS tIPClient
 
    LOCAL nPort
-   Local cResp
+   LOCAL cResp
 
    IF ISCHARACTER( cUrl )
       ::oUrl := tUrl():New( cUrl )
@@ -229,7 +233,7 @@ METHOD Open( cUrl ) CLASS tIPClient
    HB_InetTimeout( ::SocketCon, ::nConnTimeout )
    IF ! Empty( ::cProxyHost )
       cResp := ""
-      IF ! ::openProxy( ::oUrl:cServer, nPort, ::cProxyHost, ::nProxyPort, @cResp, ::cProxyUser, ::cProxyPassword, ::nConnTimeout, "" )
+      IF ! ::OpenProxy( ::oUrl:cServer, nPort, ::cProxyHost, ::nProxyPort, @cResp, ::cProxyUser, ::cProxyPassword, ::nConnTimeout, "Mozilla/3.0 compatible" )
          RETURN .F.
       ENDIF
    ELSE
@@ -243,6 +247,73 @@ METHOD Open( cUrl ) CLASS tIPClient
 RETURN .T.
 
 
+METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWord, nTimeOut, cUserAgent ) CLASS tIPClient
+   LOCAL cRequest := ""
+   LOCAL tmp
+   LOCAL lRet := .T.
+
+   LOCAL nResponseCode
+   LOCAL sResponseCode, nFirstSpace
+
+   ::InetConnect( cProxy, nProxyPort, ::SocketCon )
+
+   IF ( tmp := ::InetErrorCode( ::SocketCon ) ) == 0
+      cRequest += "CONNECT " + cServer + ":" + hb_ntos( nPort ) + " HTTP/1.0" + Chr( 13 ) + Chr( 10 )
+      IF ! Empty( cUserAgent )
+         cRequest += "User-agent: " + cUserAgent + Chr( 13 ) + Chr( 10 )
+      ENDIF
+      IF ! Empty( cUserName )
+         cRequest += "Proxy-authorization: Basic " + hb_base64( cUserName + ":" + cPassWord ) + Chr( 13 ) + Chr( 10 )
+      ENDIF
+      cRequest += Chr( 13 ) + Chr( 10 )
+      ::InetSendAll( ::SocketCon, cRequest )
+      cResp := ""
+      IF ::ReadHTTPProxyResponse( nTimeOut, @cResp )
+         nFirstSpace := At( " ", cResp )
+         IF nFirstSpace != 0
+            sResponseCode := Right( cResp, Len( cResp ) - nFirstSpace )
+            nResponseCode := Val( sResponseCode )
+            IF nResponseCode != 200
+              ::close()
+               lRet := .F.
+            ENDIF
+         ENDIF
+      ELSE
+         ::close()
+         lRet := .F.
+      ENDIF
+   ELSE
+      cResp := hb_ntos( tmp )
+      lRet := .F.
+   ENDIF
+   RETURN lRet
+
+METHOD ReadHTTPProxyResponse( dwTimeout, sResponse ) CLASS tIPClient
+
+   LOCAL bMoreDataToRead := .T.
+   LOCAL nLength, nData
+   LOCAL szResponse
+
+   HB_SYMBOL_UNUSED( dwTimeout )
+
+   DO WHILE bMoreDataToRead
+
+      szResponse := Space( 1 )
+      nData := hb_inetRecv( ::SocketCon, @szResponse, Len( szResponse ) )
+      IF nData == 0
+         RETURN .F.
+      ENDIF
+      sResponse += szResponse
+
+      nLength := Len( sResponse )
+      IF nLength >= 4
+         bMoreDataToRead := !( ( SubStr( sResponse, nLength - 3, 1 ) == Chr( 13 ) ) .AND. ( SubStr( sResponse, nLength - 2, 1 ) == Chr( 10 ) ) .AND. ;
+                               ( SubStr( sResponse, nLength - 1, 1 ) == Chr( 13 ) ) .AND. ( SubStr( sResponse, nLength, 1 ) == Chr( 10 ) ) )
+      ENDIF
+   ENDDO
+
+   RETURN .T.
+
 
 METHOD Close() CLASS tIPClient
 
@@ -252,11 +323,11 @@ METHOD Close() CLASS tIPClient
 
       nRet := HB_InetClose( ::SocketCon )
 
-      ::SocketCon:=nil
+      ::SocketCon := NIL
       ::isOpen := .F.
    ENDIF
 
-RETURN(nRet)
+RETURN nRet
 
 
 
@@ -449,7 +520,7 @@ METHOD Write( cData, nLen, bCommit ) CLASS tIPClient
       nLen := Len( cData )
    ENDIF
 
-   ::nLastWrite := ::InetSendall( ::SocketCon,  cData , nLen )
+   ::nLastWrite := ::InetSendall( ::SocketCon, cData, nLen )
 
    IF ! Empty( bCommit ) .AND. bCommit
       ::Commit()
@@ -623,81 +694,9 @@ METHOD Log( ... ) CLASS tIPClient
 
 RETURN Self
 
-
 METHOD SetProxy( cProxyHost, nProxyPort, cProxyUser, cProxyPassword ) CLASS tIPClient
    ::cProxyHost     := cProxyHost
    ::nProxyPort     := nProxyPort
    ::cProxyUser     := cProxyUser
    ::cProxyPassword := cProxyPassword
    RETURN Self
-
-METHOD Openproxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWord, nTimeOut, cUserAgent ) CLASS tIPClient
-   LOCAL cLine
-   LOCAL cRequest := ""
-   LOCAL cEncoded
-   LOCAL cPass
-   LOCAL lRet := .T.
-
-   LOCAL nResponseCode
-   LOCAL sResponseCode, nFirstSpace
-
-   ::InetConnect( cProxy, nProxyPort, ::SocketCon )
-
-   IF ::InetErrorCode( ::SocketCon ) == 0
-      cLine := "CONNECT " + cServer + ":" + hb_ntos( nPort ) + " HTTP/1" + Chr( 13 ) + Chr( 10 )
-      cRequest += cLine
-      IF ! Empty( cUserName )
-         cPass := cUserName + ":" + cPassWord
-         cEncoded := hb_base64( cPass, Len( cPass ) )
-         cLine := "Proxy-authorization: Basic " + cEncoded + Chr( 13 ) + Chr( 10 )
-         cRequest += cLine
-      ENDIF
-      IF ! Empty( cUserAgent )
-         cLine := "User-Agent: " + cUserAgent + Chr( 13 ) + Chr( 10 )
-         cRequest += cLine
-      ENDIF
-      cRequest += Chr( 13 ) + Chr( 10 )
-      ::InetSendAll( ::SocketCon, cRequest )
-      cResp := ""
-      IF ::ReadHTTPProxyResponse( nTimeOut, @cResp )
-         nFirstSpace := At( " ", cResp )
-         IF nFirstSpace != 0
-            sResponseCode := Right( cResp, Len( cResp ) - nFirstSpace )
-            nResponseCode := Val( sResponseCode )
-            IF nResponseCode != 200
-              ::close()
-               lRet := .F.
-            ENDIF
-         ENDIF
-      ELSE
-         ::close()
-         lRet := .F.
-      ENDIF
-   ENDIF
-   RETURN lRet
-
-METHOD ReadHTTPProxyResponse( dwTimeout, sResponse ) CLASS tIPClient
-
-   LOCAL bMoreDataToRead := .T.
-   LOCAL nLength, nData
-   LOCAL szResponse
-
-   HB_SYMBOL_UNUSED( dwTimeout )
-
-   DO WHILE bMoreDataToRead
-
-      szResponse := Space( 1 )
-      nData := hb_inetRecv( ::SocketCon, @szResponse, Len( szResponse ) )
-      IF nData == 0
-         RETURN .F.
-      ENDIF
-      sResponse += szResponse
-
-      nLength := Len( sResponse )
-      IF nLength >= 4
-         bMoreDataToRead := !( ( SubStr( sResponse, nLength - 3, 1 ) == Chr( 13 ) ) .AND. ( SubStr( sResponse, nLength - 2, 1 ) == Chr( 10 ) ) .AND. ;
-                               ( SubStr( sResponse, nLength - 1, 1 ) == Chr( 13 ) ) .AND. ( SubStr( sResponse, nLength, 1 ) == Chr( 10 ) ) )
-      ENDIF
-   ENDDO
-
-   RETURN .T.
