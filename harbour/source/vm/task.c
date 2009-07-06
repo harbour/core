@@ -53,7 +53,6 @@
 
 
 #define HB_TASK_DEBUG
-/* HB_TASK_DEBUG */
 
 #define HB_OS_WIN_USED
 
@@ -83,46 +82,6 @@
 #else
 #  include <setjmp.h>
 #endif
-
-
-/* TODO: remove it */
-#ifdef _TASK_TEST_
-#  define hb_xgrab( x )       malloc( x )
-#  define hb_xfree( x )       free( x )
-#  define hb_errInternal( n, msg, x, y )  \
-               do { printf("%s\n", msg ); fflush(stdout); exit(1); } while(0)
-#endif
-/*
-extern void    hb_taskInit( void );
-extern void    hb_taskExit( void );
-extern void *  hb_taskCreate( void * ( * ) ( void * ), void *, long );
-extern void    hb_taskDestroy( void * );
-extern void    hb_taskYield( void );
-extern void    hb_taskSheduler( void );
-extern void    hb_taskSuspend( void );
-extern void    hb_taskResume( void * );
-extern void    hb_taskSleep( unsigned long );
-extern void *  hb_taskMain( void );
-extern void *  hb_taskSelf( void );
-extern int     hb_taskID( void * );
-extern void    hb_taskSetData( void * );
-extern void *  hb_taskGetData( void );
-extern void    hb_taskSaveData( void *, void * );
-extern void *  hb_taskRestoreData( void * );
-extern void *  hb_taskResult( void * );
-extern int     hb_taskJoin( void *, unsigned long, void ** );
-extern void    hb_taskDetach( void * );
-extern void    hb_taskQuit( void * );
-extern int     hb_taskLock( void **, unsigned long );
-extern void    hb_taskUnlock( void ** );
-extern void    hb_taskSignal( void ** cond );
-extern void    hb_taskBroadcast( void ** cond );
-extern int     hb_taskWait( void ** cond, void ** mutex, unsigned long ulMilliSec );
-extern void    hb_taskDestroyMutex( void ** );
-extern void    hb_taskDestroyCond( void ** );
-
-#define HB_TASK_INFINITE_WAIT       ( ( unsigned long ) -1 )
-*/
 
 
 #define HB_TASK_STACK_MIN           16384
@@ -1185,85 +1144,3 @@ void hb_taskDestroyCond( void ** pCondPtr )
       hb_errInternal( HB_EI_ERRUNRECOV, "TaskDestroyCond: not a cond", NULL, NULL );
    }
 }
-
-#ifdef _TASK_TEST_
-
-static void * task1( void * cargo )
-{
-   int i;
-
-   hb_taskSetData( cargo );
-
-   for( i = 1; i < 4; ++i )
-   {
-      printf( "task one [%s] %d  [%s]\n", ( char * ) cargo, i, ( char * ) hb_taskGetData() );
-      hb_taskYield();
-   }
-   printf( "task one [%s] [%s] end\n", ( char * ) cargo, ( char * ) hb_taskGetData() );
-   return ( void * ) ">>task ONE result<<";
-}
-
-static void * task2( void * cargo )
-{
-   int i;
-
-   hb_taskSetData( cargo );
-
-   for( i = 1; i < 5; ++i )
-   {
-      printf( "task two [%s] %d  [%s]\n", ( char * ) cargo, i, ( char * ) hb_taskGetData() );
-      hb_taskYield();
-   }
-   printf( "task two [%s] [%s] end\n", ( char * ) cargo, ( char * ) hb_taskGetData() );
-   return ( void * ) ">>task TWO result<<";
-}
-
-int main( void )
-{
-   void * pTask1, * pTask2, * pTask3, * pTask4;
-   char * result;
-   int n;
-
-   printf( "initialize...\n" ); fflush( stdout );
-   hb_taskInit();
-
-   printf( "create task 1\n" ); fflush( stdout );
-   pTask1 = hb_taskCreate( task1, ( void * ) "1-st", 0 );
-   printf( "create task 2\n" ); fflush( stdout );
-   pTask2 = hb_taskCreate( task1, ( void * ) "2-nd", 0 );
-   printf( "create task 3\n" ); fflush( stdout );
-   pTask3 = hb_taskCreate( task2, ( void * ) "3-rd", 0 );
-   printf( "create task 4\n" ); fflush( stdout );
-   pTask4 = hb_taskCreate( task2, ( void * ) "4-th", 0 );
-
-   printf( "join task 2\n" ); fflush( stdout );
-   result = NULL;
-   n = hb_taskJoin( pTask2, 5000, ( void ** ) &result );
-   printf( "\t-> %d [%s]\n", n, result ); fflush( stdout );
-   printf( "join task 1\n" ); fflush( stdout );
-   result = NULL;
-   n = hb_taskJoin( pTask1, 5000, ( void ** ) &result );
-   printf( "\t-> %d [%s]\n", n, result ); fflush( stdout );
-   printf( "join task 3\n" ); fflush( stdout );
-   result = NULL;
-   n = hb_taskJoin( pTask3, 5000, ( void ** ) &result );
-   printf( "\t-> %d [%s]\n", n, result ); fflush( stdout );
-   printf( "join task 4\n" ); fflush( stdout );
-   result = NULL;
-   n = hb_taskJoin( pTask4, 5000, ( void ** ) &result );
-   printf( "\t-> %d [%s]\n", n, result ); fflush( stdout );
-
-/*
-   hb_taskDestroy( pTask1 );
-   hb_taskDestroy( pTask2 );
-   hb_taskDestroy( pTask3 );
-   hb_taskDestroy( pTask4 );
-*/
-
-   printf( "exiting...\n" ); fflush( stdout );
-   hb_taskExit();
-   printf( "[DONE]\n" ); fflush( stdout );
-
-   return 0;
-}
-#endif
