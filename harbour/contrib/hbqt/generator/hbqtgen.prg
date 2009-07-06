@@ -51,6 +51,7 @@
  */
 /*----------------------------------------------------------------------*/
 
+#include "common.ch"
 #include "fileio.ch"
 
 #define _EOL   chr( 10 )
@@ -272,7 +273,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    LOCAL cQth, cFileCpp
    LOCAL s, n, nFuncs, nCnvrtd
    LOCAL b_, txt_, enum_, code_, func_, dummy_, cpp_, cmntd_, doc_, varbls_
-   LOCAL class_, cls_, protos_, slots_, enums_
+   LOCAL class_, cls_, protos_, slots_, enums_, docum_
 
    hb_fNameSplit( cProFile, @cPath, @cWidget, @cExt )
 
@@ -310,6 +311,9 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
          ENDIF
       NEXT
    ENDIF
+
+   /* Pull out Doc Section */
+   docum_  := PullOutSection( @cQth, 'DOC'   )
 
    /* Pull out Code Section */
    code_   := PullOutSection( @cQth, 'CODE'   )
@@ -465,7 +469,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 
       /* Build Document File */
       IF !empty( doc_ )
-         BuildDocument( cWidget, doc_, cPathDoc )
+         BuildDocument( cWidget, doc_, cPathDoc, docum_ )
       ENDIF
 
       /* Build Class PRG Source */
@@ -1181,36 +1185,6 @@ STATIC FUNCTION HBRawVersion()
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION BuildDocument( cWidget, doc_, cPathDoc )
-   LOCAL cFile := cPathDoc + s_PathSep + cWidget +'.txt'
-   LOCAL dcc_:={}
-
-   BuildHeader( @dcc_ )
-
-   aadd( dcc_, '/* '  )
-   aadd( dcc_, ' *      HBQtGen v1.0 - Harbour Callable Wrappers Generator for QT v4.5      ' )
-   aadd( dcc_, ' * '  )
-   aadd( dcc_, ' * Please do not modify this document as it is subject to change in future. ' )
-   aadd( dcc_, ' * '  )
-   aadd( dcc_, ' *                   Pritpal Bedi <pritpal@vouchcac.com>                    ' )
-   aadd( dcc_, ' * '  )
-   aadd( dcc_, ' *                          '+dtoc( date() ) + ' - ' + time()                 )
-   aadd( dcc_, ' * '  )
-   aadd( dcc_, ' */ ' )
-   aadd( dcc_, '   '  )
-   aadd( dcc_, '   '  )
-
-   aeval( doc_, {|e| aadd( dcc_, e ) } )
-
-   aadd( dcc_, ' '    )
-   aadd( dcc_, "/*----------------------------------------------------------------------*/"   )
-   aadd( dcc_, ' '    )
-   aadd( dcc_, ' '    )
-
-   RETURN CreateTarget( cFile, dcc_ )
-
-/*----------------------------------------------------------------------*/
-
 STATIC FUNCTION CreateTarget( cFile, txt_ )
    LOCAL hHandle := fcreate( cFile )
 
@@ -1230,7 +1204,7 @@ STATIC FUNCTION CreateTarget( cFile, txt_ )
 
 STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
    LOCAL cFile := cPathOut + s_PathSep + 'T'+cWidget +'.prg'
-   LOCAL s, n, cM, ss, cCall, sm
+   LOCAL s, n, cM, ss, cCall, sm, cClassType
    LOCAL nLen := len( cWidget )
    LOCAL txt_  :={}
 
@@ -1280,21 +1254,77 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
    aadd( txt_, '/*----------------------------------------------------------------------*/'   )
    aadd( txt_, ''                                                                             )
 
-   #if 0
-   n  := ascan( cls_, {|e_| lower( e_[ 1 ] ) == 'new' } )
-   #endif
-   cM := 'New( pParent )'
+   n  := ascan( cls_, {|e_| lower( e_[ 1 ] ) == 'type' } )
+   IF n > 0
+      cClassType := upper( cls_[ n,2 ] )
+   ELSE
+      cClassType := ""
+   ENDIF
 
-   aadd( txt_, 'METHOD '+ cM + ' CLASS '+ cWidget )
-   aadd( txt_, '' )
-   aadd( txt_, '   ::pParent := pParent' )
-   aadd( txt_, '' )
-   aadd( txt_, '   ::pPtr := Qt_'+ cWidget +'( pParent )' )
-   aadd( txt_, '' )
-   aadd( txt_, '   RETURN Self' )
-   aadd( txt_, '' )
-   aadd( txt_, '/*----------------------------------------------------------------------*/'   )
-   aadd( txt_, ''                                                                             )
+   DO CASE
+   CASE cClassType == "PLAINOBJECT"
+      cM := 'New( ... )'
+
+      aadd( txt_, 'METHOD '+ cM + ' CLASS '+ cWidget )
+      aadd( txt_, '   LOCAL aP, nParams' )
+      aadd( txt_, '' )
+      aadd( txt_, '   aP := hb_aParams()' )
+      aadd( txt_, '   nParams := len( aP )' )
+      aadd( txt_, '' )
+      aadd( txt_, '   DO CASE' )
+      aadd( txt_, '   CASE nParams == 0' )
+      aadd( txt_, '      ::pPtr := Qt_'+ cWidget +'()' )
+      aadd( txt_, '   ' )
+      aadd( txt_, '   CASE nParams == 1' )
+      aadd( txt_, '      ::pPtr := Qt_'+ cWidget +'( aP[ 1 ] )' )
+      aadd( txt_, '   ' )
+      aadd( txt_, '   CASE nParams == 2' )
+      aadd( txt_, '      ::pPtr := Qt_'+ cWidget +'( aP[ 1 ], aP[ 2 ] )' )
+      aadd( txt_, '   ' )
+      aadd( txt_, '   CASE nParams == 3' )
+      aadd( txt_, '      ::pPtr := Qt_'+ cWidget +'( aP[ 1 ], aP[ 2 ], aP[ 3 ] )' )
+      aadd( txt_, '   ' )
+      aadd( txt_, '   CASE nParams == 4' )
+      aadd( txt_, '      ::pPtr := Qt_'+ cWidget +'( aP[ 1 ], aP[ 2 ], aP[ 3 ], aP[ 4 ] )' )
+      aadd( txt_, '   ' )
+      aadd( txt_, '   CASE nParams == 5' )
+      aadd( txt_, '      ::pPtr := Qt_'+ cWidget +'( aP[ 1 ], aP[ 2 ], aP[ 3 ], aP[ 4 ], aP[ 5 ] )' )
+      aadd( txt_, '   ' )
+      aadd( txt_, '   CASE nParams == 6' )
+      aadd( txt_, '      ::pPtr := Qt_'+ cWidget +'( aP[ 1 ], aP[ 2 ], aP[ 3 ], aP[ 4 ], aP[ 5 ], aP[ 6 ] )' )
+      aadd( txt_, '   ' )
+      aadd( txt_, '   CASE nParams == 7' )
+      aadd( txt_, '      ::pPtr := Qt_'+ cWidget +'( aP[ 1 ], aP[ 2 ], aP[ 3 ], aP[ 4 ], aP[ 5 ], aP[ 6 ], aP[ 7 ] )' )
+      aadd( txt_, '   ' )
+      aadd( txt_, '   CASE nParams == 8' )
+      aadd( txt_, '      ::pPtr := Qt_'+ cWidget +'( aP[ 1 ], aP[ 2 ], aP[ 3 ], aP[ 4 ], aP[ 5 ], aP[ 6 ], aP[ 7 ], aP[ 8 ] )' )
+      aadd( txt_, '   ' )
+      aadd( txt_, '   CASE nParams == 9' )
+      aadd( txt_, '      ::pPtr := Qt_'+ cWidget +'( aP[ 1 ], aP[ 2 ], aP[ 3 ], aP[ 4 ], aP[ 5 ], aP[ 6 ], aP[ 7 ], aP[ 8 ], aP[ 9 ] )' )
+      aadd( txt_, '   ' )
+      aadd( txt_, '   CASE nParams ==10' )
+      aadd( txt_, '      ::pPtr := Qt_'+ cWidget +'( aP[ 1 ], aP[ 2 ], aP[ 3 ], aP[ 4 ], aP[ 5 ], aP[ 6 ], aP[ 7 ], aP[ 8 ], aP[ 9 ], aP[10 ] )' )
+      aadd( txt_, '   ' )
+      aadd( txt_, '   ENDCASE' )
+      aadd( txt_, '' )
+      aadd( txt_, '   RETURN Self' )
+      aadd( txt_, '' )
+      aadd( txt_, '/*----------------------------------------------------------------------*/'   )
+      aadd( txt_, ''                                                                             )
+   OTHERWISE
+      cM := 'New( pParent )'
+
+      aadd( txt_, 'METHOD '+ cM + ' CLASS '+ cWidget )
+      aadd( txt_, '' )
+      aadd( txt_, '   ::pParent := pParent' )
+      aadd( txt_, '' )
+      aadd( txt_, '   ::pPtr := Qt_'+ cWidget +'( pParent )' )
+      aadd( txt_, '' )
+      aadd( txt_, '   RETURN Self' )
+      aadd( txt_, '' )
+      aadd( txt_, '/*----------------------------------------------------------------------*/'   )
+      aadd( txt_, ''                                                                             )
+   ENDCASE
 
    RETURN CreateTarget( cFile, txt_ )
 
@@ -1322,13 +1352,6 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    aadd( txt_, chr( 9 ) + 'moc_slots.cpp \' )
    aadd( txt_, "                                                        " )
    aadd( txt_, "                                                        " )
-// aadd( txt_, "C_HEADERS=\                                             " )
-// aadd( txt_, "+chr( 9 )+"hbqt.h \                                     " )
-// aadd( txt_, "+chr( 9 )+"hbqt_slots.h \                               " )
-// aadd( txt_, "                                                        " )
-// aadd( txt_, "PRG_HEADERS=\                                           " )
-// aadd( txt_, "+chr( 9 )+"hbqt.ch \                                    " )
-// aadd( txt_, "+chr( 9 )+"hbqtextern.ch \                              " )
    aadd( txt_, "                                                        " )
    IF !empty( prg_ )
       aadd( txt_, "PRG_SOURCES=\                                        " )
@@ -1342,3 +1365,283 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    RETURN CreateTarget( cFile, txt_ )
 
 /*----------------------------------------------------------------------*/
+
+STATIC FUNCTION BuildDocument( cWidget, doc_, cPathDoc, docum_ )
+   LOCAL i, n, n1, nLen, nLen1, pWidget, cText, oWidget, cRet
+   LOCAL cFile := cPathDoc + s_PathSep + cWidget +'.txt'
+   LOCAL txt_:={}
+   LOCAL aHM_:= {}, aHF_:={}
+
+   // BuildHeader( @txt_ )  /* Not Required - It Is Not a Source File */
+
+   aadd( txt_, '/* '  )
+   aadd( txt_, ' *      HBQtGen v1.0 - Harbour Callable Wrappers Generator for QT v4.5      ' )
+   aadd( txt_, ' * '  )
+   aadd( txt_, ' * Please do not modify this document as it is subject to change in future. ' )
+   aadd( txt_, ' * '  )
+   aadd( txt_, ' *                   Pritpal Bedi <pritpal@vouchcac.com>                    ' )
+   aadd( txt_, ' * '  )
+   aadd( txt_, ' *                          '+dtoc( date() ) + ' - ' + time()                 )
+   aadd( txt_, ' * '  )
+   aadd( txt_, ' */ ' )
+   aadd( txt_, '   '  )
+   aadd( txt_, '   '  )
+   aadd( txt_, '   '  )
+
+   aadd( txt_, 'CLASS DOCUMENTATION' )
+   aadd( txt_, '===================' )
+   aadd( txt_, ' '    )
+   //
+   IF !empty( docum_ )
+      aadd( txt_, '   /* Class CONSTRUCTOR Parameters - Apply as per below - STRICTLY.        ' )
+      aadd( txt_, '    *                                                                      ' )
+      aadd( txt_, '    * NOTE:  ' )
+      aadd( txt_, '    *    Parameters MUST be passed with real values and in exact same sequence. ' )
+      aadd( txt_, '    *    QSomeObject():new( p1, , , p4 ) -> GPF                            ' )
+      aadd( txt_, '    */                                                                     ' )
+
+      aeval( docum_, {|e| aadd( txt_, '   '+e ) } )
+      aadd( txt_, '   '  )
+      aadd( txt_, '   '  )
+   ENDIF
+   //
+   nLen    := len( cWidget )
+   n       := at( cWidget, doc_[ 1 ] )
+   pWidget := 'p'+cWidget
+   oWidget := 'o'+substr( cWidget, 2 )
+
+   FOR i := 1 TO len( doc_ )
+      IF !empty( doc_[ i ] )
+         cText := substr( doc_[ i ], n+nLen+1 )
+         cText := strtran( cText, pWidget+', ', '' )
+         cText := strtran( cText, pWidget, '' )
+         cText := strtran( cText, '(  )', '()' )
+
+         n1    := at( '->', cText )
+         cRet  := alltrim( substr( cText, n1+2 ) )
+         cText := substr( cText, 1, n1-1 )
+         nLen1 := len( cText )
+         nLen1 := max( 80, nLen1 )
+         IF !empty( cRet )
+            aadd( txt_, '   '+ oWidget +':'+ pad( cText,nLen1 ) +' -> '+ cRet )
+            aadd( aHM_, { oWidget +' : '+ cText, cRet } )
+         ENDIF
+      ENDIF
+   NEXT
+
+   aadd( txt_, ' '    )
+   aadd( txt_, ' '    )
+   aadd( txt_, ' '    )
+   aadd( txt_, 'FUNCTIONS DOCUMENTATION' )
+   aadd( txt_, '=======================' )
+   aadd( txt_, ' '    )
+
+   FOR i := 1 TO len( doc_ )
+      IF !empty( doc_[ i ] )
+         cText := doc_[ i ]
+
+         n1    := at( '->', cText )
+         cRet  := alltrim( substr( cText, n1+2 ) )
+         cText := trim( substr( cText, 1, n1-1 ) )
+         nLen1 := len( cText )
+         nLen1 := max( 80, nLen1 )
+
+         aadd( txt_, '   '+ pad( cText, nLen1 ) +' -> '+ cRet )
+         aadd( aHF_, { cText, cRet } )
+      ENDIF
+   NEXT
+   //aeval( doc_, {|e| aadd( txt_, '   '+e ) } )
+
+   aadd( txt_, ' '    )
+   aadd( txt_, "/*----------------------------------------------------------------------*/"   )
+   aadd( txt_, ' '    )
+   aadd( txt_, ' '    )
+
+   CreateTarget( cFile, txt_ )
+
+   Build_HTML( cWidget, aHM_, aHF_, cPathDoc, docum_ )
+
+   RETURN .t.
+
+/*----------------------------------------------------------------------*/
+
+#define  CRLF   chr( 13 )+chr( 10 )
+#define  QT_VER  "4.5"
+#define  QT_WEB  "http://doc.trolltech.com/"
+
+FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
+   LOCAL cFile := cPathOut + s_PathSep + 'html' + s_PathSep + cWidget + '.htm'
+   LOCAL i, j, s, nCounter := 0, cPara
+   LOCAL nCols, aHTML
+   LOCAL setColorBG, setColorText, setColorTable
+   LOCAL aColumns, cCell, uColData
+
+   HB_SYMBOL_UNUSED( aHM_ )
+
+   setColorText  := '#000000'
+   SetColorBG    := '#FFFFFF'
+   SetColorTable := '#D0D0D0'
+   aColumns      := { { 1,'Function', 'C', 100 },;
+                      { 2,'Returns' , 'C',  20 } }
+
+   //cTitle := 'harbour/contrib/hbqt/'+ cWidget
+
+   aHTML  := {}
+   nCols  := len( aColumns )
+
+   aadd( aHtml, "<HTML>" )
+   Build_HtmlHeader( @aHTML, .F. )
+
+   s := '<BODY BGCOLOR="'+ SetColorBG +'" TEXT="' + SetColorText +'"' + '>'
+   aadd( aHtml, s )
+
+   Build_HtmlTable( @aHTML, , SetColorTable )
+   aadd( aHtml, '<TBODY>' )
+
+   /*       Class Documentation */
+   s := "<TR><TD colspan="+hb_ntos( nCols )+" align=CENTER bgcolor=#ffff80><B>"+ "CLASS METHODS" +"</B></TD></TR>"
+   aadd( aHtml, s )
+   s := "<TR><TD colspan="+hb_ntos( nCols )+" align=CENTER bgcolor=#ffff80><B>"+ "Source: /harbour/contrib/hbqt/T"+ cWidget +".prg" +"</B></TD></TR>"
+   aadd( aHtml, s )
+   s := QT_WEB+QT_VER+"/"+ lower( cWidget )+".htm"
+   s := "<TR><TD colspan="+hb_ntos( nCols )+' align=CENTER bgcolor=#ffff80><B><a href="'+s+'">'+ s +"</a></B></TD></TR>"
+   aadd( aHtml, s )
+   //
+   IF !empty( docum_ )
+      s := "<TR>"
+
+      cPara := 'pr'+ hb_ntos( ++nCounter )
+
+      s += '<TD  class="only" >'
+      s += '<PRE id="'+cPara+'">'
+      s += CRLF
+
+      for i := 1 to len( docum_ )
+         s += docum_[ i ] + CRLF
+      next
+      s += '</PRE>'
+
+      aadd( aHtml, s + "</TR>" )
+   ENDIF
+   //
+   FOR j := 1 TO len( aHM_ )
+      s := "<TR>"
+
+      FOR i := 1 TO nCols
+         uColData := aHM_[ j, i ]
+         if Empty( uColData )
+            cCell := "&nbsp"
+         else
+            cCell := uColData
+         endif
+         s += '<TD>' + cCell
+      next
+
+      aadd( aHtml, s + "</TR>" )
+   NEXT
+
+   /* Function Documentation */
+   s := "<TR><TD colspan="+hb_ntos( nCols )+" align=CENTER bgcolor=#ffff80><B>"+ "FUNCTIONS" +"</B></TD></TR>"
+   aadd( aHtml, s )
+   s := "<TR><TD colspan="+hb_ntos( nCols )+" align=CENTER bgcolor=#ffff80><B>"+ "Source: /harbour/contrib/hbqt/hbqt_"+ lower( cWidget ) +".cpp" +"</B></TD></TR>"
+   aadd( aHtml, s )
+   FOR j := 1 TO len( aHF_ )
+      s := "<TR>"
+
+      FOR i := 1 TO nCols
+         uColData := aHF_[ j, i ]
+         if Empty( uColData )
+            cCell := "&nbsp"
+         else
+            cCell := uColData
+         endif
+         s += '<TD>' + cCell
+      next
+
+      aadd( aHtml, s + "</TR>" )
+   NEXT
+
+   aadd( aHtml, "</TABLE>"  )
+   aadd( aHtml, "</CENTER>" )
+   aadd( aHtml, "</BODY>"   )
+   aadd( aHtml, "</HTML>"   )
+
+   Return CreateTarget( cFile, aHTML )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_HtmlTable( aHTML, cTitle, SetColorTable )
+   Local s
+   LOCAL nBorder       := 1
+   LOCAL nCellSpacing  := 0
+   LOCAL nCellPadding  := 4
+   LOCAL nCols         := 2
+
+   aadd( aHtml, '<CENTER>' )
+
+   s := '<TABLE ' +;
+        'BGCOLOR="'    + SetColorTable + '" ' +;
+        'BORDER='      + hb_ntos( nBorder )+' ' +;
+        'FRAME=ALL '   +;
+        'CellPadding=' + hb_ntos( nCellPadding )+' ' +;
+        'CellSpacing=' + hb_ntos( nCellSpacing )+' ' +;
+        'COLS='        + hb_ntos( nCols )+' ' +;
+        'WIDTH=90% '   +;
+        '>'
+   aadd( aHtml, s )
+
+   if !Empty( cTitle )
+      aadd( aHtml, '<CAPTION ALIGN=top><B>' + cTitle + '</B></CAPTION>' )
+   endif
+
+   Return NIL
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_HtmlHeader( aHTML, lPreDisplayNone )
+
+   DEFAULT lPreDisplayNone TO .T.
+
+   aadd( aHtml, '<head>                                                             ' )
+   aadd( aHtml, '  <meta name="Author" CONTENT=Pritpal Bedi [pritpal@vouchcac.com]">' )
+   aadd( aHtml, '  <meta http-equiv="content-style-type" content="text/css" >       ' )
+   aadd( aHtml, '  <meta http-equiv="content-script-type" content="text/javascript">' )
+   aadd( aHtml, '                                                                   ' )
+   aadd( aHtml, '  <style type="text/css">                                          ' )
+   aadd( aHtml, '    th                                                             ' )
+   aadd( aHtml, '    {                                                              ' )
+   aadd( aHtml, '      colspan          : 1;                                        ' )
+   aadd( aHtml, '      text-align       : center;                                   ' )
+   aadd( aHtml, '      vertical-align   : baseline;                                 ' )
+   aadd( aHtml, '      horizontal-align : left;                                     ' )
+   aadd( aHtml, '    }                                                              ' )
+   aadd( aHtml, '    td                                                             ' )
+   aadd( aHtml, '    {                                                              ' )
+   aadd( aHtml, '      vertical-align   : top;                                      ' )
+   aadd( aHtml, '      horizontal-align : left;                                     ' )
+   aadd( aHtml, '    }                                                              ' )
+   aadd( aHtml, '    td.only                                                        ' )
+   aadd( aHtml, '    {                                                              ' )
+   aadd( aHtml, '      cursor      : hand;                                          ' )
+   aadd( aHtml, '      vertical-align   : top;                                      ' )
+   aadd( aHtml, '      horizontal-align : left;                                     ' )
+   aadd( aHtml, '    }                                                              ' )
+   aadd( aHtml, '    pre                                                            ' )
+   aadd( aHtml, '    {                                                              ' )
+if lPreDisplayNone
+   aadd( aHtml, '      display          : none;                                     ' )
+endif
+   aadd( aHtml, '      font-family      : Courier New;                              ' )
+   aadd( aHtml, '      font-size        : .7em;                                     ' )
+   aadd( aHtml, '      color            : black;                                    ' )
+   aadd( aHtml, '      cursor           : text;                                     ' )
+   aadd( aHtml, '    }                                                              ' )
+   aadd( aHtml, '  </style>                                                         ' )
+   aadd( aHtml, '                                                                   ' )
+   aadd( aHtml, '</head>                                                            ' )
+
+   RETURN Nil
+
+/*----------------------------------------------------------------------*/
+
+
