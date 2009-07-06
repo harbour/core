@@ -2077,6 +2077,7 @@ static void hb_gt_trm_AnsiExit( PHB_GTTRM pTerm )
    pTerm->SetAttributes( pTerm, 0x07 & pTerm->iAttrMask );
    pTerm->SetCursorStyle( pTerm, SC_NORMAL );
    pTerm->SetTermMode( pTerm, 1 );
+   hb_gt_trm_termOut( pTerm, "\x1B[m", 3 );
 }
 
 /* ************************************************************************* */
