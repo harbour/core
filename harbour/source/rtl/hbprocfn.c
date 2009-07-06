@@ -122,8 +122,8 @@ HB_FUNC( HB_PROCESSCLOSE )
                   [ <lDetach> ] ) -> <nResult> */
 HB_FUNC( HB_PROCESSRUN )
 {
-   const char *szName = hb_parc( 1 );
-   const char *szStdIn = hb_parc( 2 );
+   const char * szName = hb_parc( 1 );
+   const char * szStdIn = hb_parc( 2 );
    PHB_ITEM pStdOut = hb_param( 3, HB_IT_BYREF );
    PHB_ITEM pStdErr = hb_param( 4, HB_IT_BYREF );
    BOOL fDetach = hb_parl( 5 );
@@ -149,14 +149,20 @@ HB_FUNC( HB_PROCESSRUN )
                                  fDetach );
 
       if( pStdOutBuf )
-         hb_storclen_buffer( pStdOutBuf, ulStdOut, 3 );
+      {
+         if( ! hb_storclen_buffer( pStdOutBuf, ulStdOut, 3 ) )
+            hb_xfree( pStdOutBuf );
+      }
       else if( pStdOut )
-         hb_storclen( "", 0, 3 );
+         hb_storc( NULL, 3 );
 
       if( pStdErrBuf )
-         hb_storclen_buffer( pStdErrBuf, ulStdErr, 4 );
+      {
+         if( ! hb_storclen_buffer( pStdErrBuf, ulStdErr, 4 ) )
+            hb_xfree( pStdErrBuf );
+      }
       else if( pStdErr )
-         hb_storclen( "", 0, 4 );
+         hb_storc( NULL, 4 );
 
       hb_retni( iResult );
    }

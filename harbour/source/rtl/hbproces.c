@@ -906,7 +906,7 @@ BOOL hb_fsProcessClose( HB_FHANDLE hProcess, BOOL fGentle )
 
 #define HB_STD_BUFFER_SIZE    4096
 
-int hb_fsProcessRun( const char *pszFilename,
+int hb_fsProcessRun( const char * pszFilename,
                      const char * pStdInBuf, ULONG ulStdInLen,
                      char ** pStdOutPtr, ULONG * pulStdOut,
                      char ** pStdErrPtr, ULONG * pulStdErr,

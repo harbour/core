@@ -417,14 +417,6 @@ PROCEDURE Main( ... )
 
 #endif
 
-STATIC FUNCTION hbmk_run( hbmk, cCmd, cStdOut )
-
-   HB_SYMBOL_UNUSED( hbmk )
-   IF PCount() >= 3
-      RETURN hb_processRun( cCmd,, @cStdOut )
-   ENDIF
-   RETURN hb_processRun( cCmd )
-
 STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
 
    /* TODO: Use HB_CCPREFIX instead of PATH modification, where possible. */
@@ -3222,7 +3214,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             OutStd( cCommand + hb_osNewLine() )
          ENDIF
 
-         IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( hbmk, cCommand ) ) != 0
+         IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
             hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler. %1$s" ), hb_ntos( tmp ) ) )
             IF ! hbmk[ _HBMK_lQuiet ]
                OutErr( cCommand + hb_osNewLine() )
@@ -3428,7 +3420,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          NEXT
       ELSE
-         l_aRESSRC_TODO := hbmk[ _HBMK_aRESSRC ]
+         l_aRESSRC_TODO := AClone( hbmk[ _HBMK_aRESSRC ] )
       ENDIF
 
       IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
@@ -3511,7 +3503,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   OutStd( cCommand + hb_osNewLine() )
                ENDIF
 
-               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp1 := hbmk_run( hbmk, cCommand ) ) != 0
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp1 := hb_processRun( cCommand ) ) != 0
                   hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running resource compiler. %1$s" ), hb_ntos( tmp1 ) ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + hb_osNewLine() )
@@ -3550,7 +3542,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                ENDIF
             ENDIF
 
-            IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( hbmk, cCommand ) ) != 0
+            IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running resource compiler. %1$s" ), hb_ntos( tmp ) ) )
                IF ! hbmk[ _HBMK_lQuiet ]
                   OutErr( cCommand + hb_osNewLine() )
@@ -3680,9 +3672,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
                   IF ! hbmk[ _HBMK_lDONTEXEC ]
                      IF hb_mtvm() .AND. Len( aTODO:__enumBase() ) > 1
-                        AAdd( aThreads, { hb_threadStart( @hbmk_run(), hbmk, cCommand ), cCommand } )
+                        AAdd( aThreads, { hb_threadStart( @hb_processRun(), cCommand ), cCommand } )
                      ELSE
-                        IF ( tmp := hbmk_run( hbmk, cCommand ) ) != 0
+                        IF ( tmp := hb_processRun( cCommand ) ) != 0
                            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C compiler. %1$s" ), hb_ntos( tmp ) ) )
                            IF ! hbmk[ _HBMK_lQuiet ]
                               OutErr( cCommand + hb_osNewLine() )
@@ -3830,7 +3822,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   ENDIF
                ENDIF
 
-               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( hbmk, cCommand ) ) != 0
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
                   hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running linker. %1$s" ), hb_ntos( tmp ) ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + hb_osNewLine() )
@@ -3913,7 +3905,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   ENDIF
                ENDIF
 
-               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( hbmk, cCommand ) ) != 0
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
                   hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running lib command. %1$s" ), hb_ntos( tmp ) ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + hb_osNewLine() )
@@ -3973,7 +3965,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   ENDIF
                ENDIF
 
-               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( hbmk, cCommand ) ) != 0
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
                   hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running dynamic lib link command. %1$s" ), hb_ntos( tmp ) ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + hb_osNewLine() )
@@ -4031,7 +4023,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                OutStd( cCommand + hb_osNewLine() )
             ENDIF
 
-            IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( hbmk, cCommand ) ) != 0
+            IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Running post processor command. %1$s:" ), hb_ntos( tmp ) ) )
                IF ! hbmk[ _HBMK_lQuiet ]
                   OutErr( cCommand + hb_osNewLine() )
@@ -4095,7 +4087,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                OutStd( cCommand + hb_osNewLine() )
             ENDIF
 
-            IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_run( hbmk, cCommand ) ) != 0
+            IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Running compression command. %1$s:" ), hb_ntos( tmp ) ) )
                IF ! hbmk[ _HBMK_lQuiet ]
                   OutErr( cCommand + hb_osNewLine() )
@@ -4207,7 +4199,7 @@ STATIC FUNCTION CompileCLoop( hbmk, aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cOb
          OutStd( cCommand + hb_osNewLine() )
       ENDIF
 
-      IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp1 := hbmk_run( hbmk, cCommand ) ) != 0
+      IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp1 := hb_processRun( cCommand ) ) != 0
          IF nJobs > 1
             hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C compiler job #%1$s. %2$s" ), hb_ntos( nJob ), hb_ntos( tmp1 ) ) )
          ELSE
@@ -5681,7 +5673,9 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, lLateMode )
             ( nEnd := hb_At( _CMDSUBST_CLOSE, cString, nStart + Len( _CMDSUBST_OPEN ) ) ) > 0
       cMacro := SubStr( cString, nStart + Len( _CMDSUBST_OPEN ), nEnd - nStart - Len( _CMDSUBST_OPEN ) )
       cStdOut := ""
-      hbmk_run( hbmk, cMacro, @cStdOut )
+      IF ! Empty( cMacro )
+         hb_processRun( cMacro,, @cStdOut )
+      ENDIF
       cString := Left( cString, nStart - 1 ) + cStdOut + SubStr( cString, nEnd + Len( _CMDSUBST_CLOSE ) )
    ENDDO
 
@@ -5743,7 +5737,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
          NEXT
       ELSEIF ! Empty( cExecNM := FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "nm" ) )
          cFuncList := ""
-         hbmk_run( hbmk, cExecNM + " " + cFile + " -g -n --defined-only -C", @cFuncList )
+         hb_processRun( cExecNM + " " + cFile + " -g -n --defined-only -C",, @cFuncList )
          IF ( n := At( " T HB_FUN_", cFuncList ) ) != 0
             n += 10
             DO WHILE ( c := SubStr( cFuncList, n++, 1 ) ) == "_" .OR. ;
