@@ -418,66 +418,12 @@ PROCEDURE Main( ... )
 #endif
 
 STATIC FUNCTION hbmk_run( hbmk, cCmd, cStdOut )
-#if defined( __PLATFORM__DOS )
-   LOCAL nResult
-   LOCAL hFile
-   LOCAL cFileName
-   IF PCount() >= 2
-      hFile := hb_FTempCreateEx( @cFileName )
-      IF hFile != F_ERROR
-         FClose( hFile )
-         cCmd += ">" + cFileName
-         nResult := hb_run( cCmd )
-         cStdOut := hb_MemoRead( cFileName )
-         FErase( cFileName )
-      ELSE
-         nResult := -1
-         cStdOut := ""
-         hbmk_OutErr( hbmk, I_( "Error: Cannot create temporary file." ) )
-      ENDIF
-      RETURN nResult
-   ENDIF
-   RETURN hb_run( cCmd )
-#else
-   LOCAL hStdOut
-   LOCAL h
-   LOCAL result
 
    HB_SYMBOL_UNUSED( hbmk )
-
-   IF PCount() >= 2
-      h := hb_ProcessOpen( cCmd,, @hStdOut )
-   ELSE
-      h := hb_ProcessOpen( cCmd )
+   IF PCount() >= 3
+      RETURN hb_processRun( cCmd,, @cStdOut )
    ENDIF
-   IF h != F_ERROR
-      IF PCount() >= 2
-         cStdOut := hbmk_ReadHnd( hStdOut )
-      ENDIF
-      result := hb_ProcessValue( h )
-      hb_ProcessClose( h, .T. )
-      IF PCount() >= 2
-         FClose( hStdOut )
-      ENDIF
-   ELSE
-      result := -1
-      IF PCount() >= 2
-         cStdOut := ""
-      ENDIF
-   ENDIF
-   RETURN result
-
-STATIC FUNCTION hbmk_ReadHnd( hFile )
-   LOCAL cBuffer := Space( 4096 )
-   LOCAL cString := ""
-   LOCAL nLen
-
-   DO WHILE ( nLen := FRead( hFile, @cBuffer, Len( cBuffer ) ) ) > 0
-      cString += Left( cBuffer, nLen )
-   ENDDO
-
-   RETURN cString
-#endif
+   RETURN hb_processRun( cCmd )
 
 STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
 
