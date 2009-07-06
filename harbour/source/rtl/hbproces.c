@@ -75,9 +75,18 @@
 #  if defined( HB_OS_OS2 )
 #    include <sys/wait.h>
 #  endif
+#elif defined( HB_OS_DOS )
+#  include <process.h>
+#  include <fcntl.h>
+#  if defined( __DJGPP__ )
+#     include <sys/stat.h>
+#     include <unistd.h>
+#  else
+#     include <io.h>
+#  endif
 #endif
 
-#if defined( HB_OS_OS2 ) || defined( HB_OS_UNIX ) || \
+#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) || defined( HB_OS_UNIX ) || \
     ( defined( HB_OS_WIN ) && !defined( HB_IO_WIN ) )
 
 /* convert command to argument list using standard bourne shell encoding:
@@ -180,6 +189,165 @@ static void hb_freeArgs( char ** argv )
    hb_xfree( argv );
 }
 
+#endif
+
+#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) /* || defined( HB_OS_WIN_CE ) */
+static int hb_fsProcessExec( const char *pszFilename,
+                             HB_FHANDLE hStdin, HB_FHANDLE hStdout,
+                             HB_FHANDLE hStderr )
+{
+   int iResult = FS_ERROR;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessExec(%s, %p, %p, %p, %d, %p)", pszFilename, ( void * ) ( HB_PTRDIFF ) hStdin, ( void * ) ( HB_PTRDIFF ) hStdout, ( void * ) ( HB_PTRDIFF ) hStderr));
+
+#if defined( HB_IO_WIN )
+
+   PROCESS_INFORMATION pi;
+   STARTUPINFO si;
+   DWORD dwFlags = 0;
+#if defined(UNICODE)
+   LPWSTR lpCommand = hb_mbtowc( pszFilename );
+#else
+   char * lpCommand = hb_strdup( pszFilename );
+#endif
+   BOOL fError;
+
+   memset( &pi, 0, sizeof( pi ) );
+   memset( &si, 0, sizeof( si ) );
+   si.cb = sizeof( si );
+   si.hStdInput  = hStdin == FS_ERROR  ? GetStdHandle( STD_INPUT_HANDLE ) : hStdin;
+   si.hStdOutput = hStdout == FS_ERROR ? GetStdHandle( STD_OUTPUT_HANDLE ) : hStdout;
+   si.hStdError  = hStderr == FS_ERROR ? GetStdHandle( STD_ERROR_HANDLE ) : hStderr;
+#ifdef STARTF_USESTDHANDLES
+   si.dwFlags = STARTF_USESTDHANDLES;
+#endif
+   hb_vmUnlock();
+   fError = ! CreateProcess( NULL,           /* lpAppName */
+                             lpCommand,
+                             NULL,           /* lpProcessAttr */
+                             NULL,           /* lpThreadAttr */
+                             TRUE,           /* bInheritHandles */
+                             dwFlags,        /* dwCreationFlags */
+                             NULL,           /* lpEnvironment */
+                             NULL,           /* lpCurrentDirectory */
+                             &si,
+                             &pi );
+   hb_fsSetIOError( !fError, 0 );
+   if( !fError )
+   {
+      CloseHandle( pi.hThread );
+      if( WaitForSingleObject( pi.hProcess, INFINITE ) == WAIT_OBJECT_0 )
+      {
+         DWORD dwResult = 0;
+         fError = !GetExitCodeProcess( pi.hProcess, &dwResult );
+         iResult = !fError ? ( int ) dwResult : -2;
+      }
+      hb_fsSetIOError( !fError, 0 );
+      CloseHandle( pi.hProcess );
+   }
+   hb_vmLock();
+   hb_xfree( lpCommand );
+
+#elif defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 ) || \
+      defined( HB_OS_UNIX )
+
+   int iStdIn, iStdOut, iStdErr;
+   char ** argv;
+
+   argv = hb_buildArgs( pszFilename );
+
+   hb_vmUnlock();
+
+   iStdIn = iStdOut = iStdErr = FS_ERROR;
+
+   if( hStdin != FS_ERROR )
+   {
+      iStdIn  = dup( 0 );
+      dup2( hStdin,  0 );
+   }
+   if( hStdout != FS_ERROR )
+   {
+      iStdOut = dup( 1 );
+      dup2( hStdout, 1 );
+   }
+   if( hStderr != FS_ERROR )
+   {
+      iStdErr = dup( 2 );
+      dup2( hStderr, 2 );
+   }
+#if defined( HB_OS_UNIX )
+   {
+      pid_t pid = fork();
+      if( pid == 0 )
+      {
+         /* close all non std* handles */
+         {
+            int iMaxFD, i;
+            iMaxFD = sysconf( _SC_OPEN_MAX );
+            if( iMaxFD < 3 )
+               iMaxFD = 1024;
+            for( i = 3; i < iMaxFD; ++i )
+               close( i );
+         }
+         /* reset extended process attributes */
+         setuid( getuid() );
+         setgid( getgid() );
+
+         /* execute command */
+         execvp( argv[ 0 ], argv );
+         exit(1);
+      }
+      else if( pid != -1 )
+      {
+         int iStatus;
+         iResult = waitpid( pid, &iStatus, 0 );
+#ifdef ERESTARTSYS
+         if( iResult < 0 && errno != ERESTARTSYS )
+#else
+         if( iResult < 0 )
+#endif
+            iResult = -2;
+         else if( iResult == 0 )
+            iResult = -1;
+         else
+            iResult = WIFEXITED( iStatus ) ? WEXITSTATUS( iStatus ) : 0;
+      }
+   }
+#elif defined( _MSC_VER ) || defined( __LCC__ ) || \
+    defined( __XCC__ ) || defined( __POCC__ )
+   iResult = _spawnvp( _P_WAIT, argv[ 0 ], argv );
+#elif defined( __MINGW32__ )
+   iResult = spawnvp( P_WAIT, argv[ 0 ], ( const char * const * ) argv );
+#else
+   iResult = spawnvp( P_WAIT, argv[ 0 ], ( char * const * ) argv );
+#endif
+   hb_fsSetIOError( iResult >= 0, 0 );
+
+   if( iStdIn != FS_ERROR )
+      dup2( iStdIn,  0 );
+   if( iStdOut != FS_ERROR )
+      dup2( iStdOut, 1 );
+   if( iStdErr != FS_ERROR )
+      dup2( iStdErr, 2 );
+
+   hb_vmLock();
+   hb_freeArgs( argv );
+
+#else
+{
+   int TODO; /* TODO: for given platform */
+
+   HB_SYMBOL_UNUSED( pszFilename );
+   HB_SYMBOL_UNUSED( hStdin );
+   HB_SYMBOL_UNUSED( hStdout );
+   HB_SYMBOL_UNUSED( hStderr );
+
+   hb_fsSetError( ( USHORT ) FS_ERROR );
+}
+#endif
+
+   return iResult;
+}
 #endif
 
 HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
@@ -628,7 +796,7 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, BOOL fWait )
       iRetStatus = waitpid( pid, &iStatus, fWait ? 0 : WNOHANG );
       hb_fsSetIOError( iRetStatus >= 0, 0 );
 #ifdef ERESTARTSYS
-      if( iRetStatus < 0 && errno != ERESTARTSYS)
+      if( iRetStatus < 0 && errno != ERESTARTSYS )
 #else
       if( iRetStatus < 0 )
 #endif
@@ -734,6 +902,345 @@ BOOL hb_fsProcessClose( HB_FHANDLE hProcess, BOOL fGentle )
 }
 #endif
    return fResult;
+}
+
+#define HB_STD_BUFFER_SIZE    4096
+
+int hb_fsProcessRun( const char *pszFilename,
+                     const char * pStdInBuf, ULONG ulStdInLen,
+                     char ** pStdOutPtr, ULONG * pulStdOut,
+                     char ** pStdErrPtr, ULONG * pulStdErr,
+                     BOOL fDetach )
+{
+   HB_FHANDLE hStdin, hStdout, hStderr, *phStdin, *phStdout, *phStderr;
+   char * pOutBuf, *pErrBuf;
+   ULONG ulOutSize, ulErrSize, ulOutBuf, ulErrBuf;
+   int iResult;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessRun(%s, %p, %lu, %p, %p, %p, %p, %d)", pStdInBuf, ulStdInLen, pStdOutPtr, pulStdOut, pStdErrPtr, pulStdErr, fDetach));
+
+   ulOutBuf = ulErrBuf = ulOutSize = ulErrSize = 0;
+   pOutBuf = pErrBuf = NULL;
+   hStdin = hStdout = hStderr = FS_ERROR;
+   phStdin = pStdInBuf ? &hStdin : NULL;
+   phStdout = pStdOutPtr && pulStdOut ? &hStdout : NULL;
+   phStderr = pStdErrPtr && pulStdErr ? &hStderr : NULL;
+
+#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) /* || defined( HB_OS_WIN_CE ) */
+{
+
+#if defined( HB_OS_UNIX )
+#  define _HB_NULLHANDLE()    open( "/dev/null", O_RDWR )
+#else
+#  define _HB_NULLHANDLE()    open( "NUL:", O_RDWR )
+#endif
+   char sTmpIn[ HB_PATH_MAX ];
+   char sTmpOut[ HB_PATH_MAX ];
+   char sTmpErr[ HB_PATH_MAX ];
+
+   sTmpIn[ 0 ] = sTmpOut[ 0 ] = sTmpErr[ 0 ] = '\0';
+   if( pStdInBuf )
+   {
+      hStdin = hb_fsCreateTempEx( sTmpIn, NULL, NULL, NULL, FC_NORMAL );
+      if( ulStdInLen )
+      {
+         hb_fsWriteLarge( hStdin, pStdInBuf, ulStdInLen );
+         hb_fsSeek( hStdin, 0, FS_SET );
+      }
+   }
+   else if( fDetach )
+      hStdin = _HB_NULLHANDLE();
+
+   if( pStdOutPtr && pulStdOut )
+      hStdout = hb_fsCreateTempEx( sTmpOut, NULL, NULL, NULL, FC_NORMAL );
+   else if( fDetach )
+      hStdout = _HB_NULLHANDLE();
+
+   if( pStdErrPtr && pulStdErr )
+      hStderr = hb_fsCreateTempEx( sTmpErr, NULL, NULL, NULL, FC_NORMAL );
+   else if( fDetach )
+      hStderr = _HB_NULLHANDLE();
+
+   iResult = hb_fsProcessExec( pszFilename, hStdin, hStdout, hStderr );
+
+   if( hStdin != FS_ERROR )
+   {
+      hb_fsClose( hStdin );
+      if( sTmpIn[ 0 ] )
+         hb_fsDelete( sTmpIn );
+   }
+   if( hStdout != FS_ERROR )
+   {
+      if( pStdOutPtr && pulStdOut )
+      {
+         ulOutBuf = hb_fsSeek( hStdout, 0, FS_END );
+         if( ulOutBuf )
+         {
+            pOutBuf = ( char * ) hb_xgrab( ulOutBuf + 1 );
+            hb_fsSeek( hStdout, 0, FS_SET );
+            ulOutBuf = hb_fsReadLarge( hStdout, pOutBuf, ulOutBuf );
+         }
+      }
+      hb_fsClose( hStdout );
+      if( sTmpOut[ 0 ] )
+         hb_fsDelete( sTmpOut );
+   }
+   if( hStderr != FS_ERROR )
+   {
+      if( pStdErrPtr && pulStdErr )
+      {
+         ulErrBuf = hb_fsSeek( hStderr, 0, FS_END );
+         if( ulErrBuf )
+         {
+            pErrBuf = ( char * ) hb_xgrab( ulErrBuf + 1 );
+            hb_fsSeek( hStderr, 0, FS_SET );
+            ulErrBuf = hb_fsReadLarge( hStderr, pErrBuf, ulErrBuf );
+         }
+      }
+      hb_fsClose( hStderr );
+      if( sTmpErr[ 0 ] )
+         hb_fsDelete( sTmpErr );
+   }
+}
+
+#else
+{
+   HB_FHANDLE hProcess;
+
+   iResult = -1;
+   hProcess = hb_fsProcessOpen( pszFilename, phStdin, phStdout, phStderr,
+                                fDetach, NULL );
+   if( hProcess != FS_ERROR )
+   {
+#if defined( HB_IO_WIN )
+
+      DWORD dwResult, dwCount;
+      HANDLE lpHandles[ 4 ];
+      ULONG ul;
+
+      if( ulStdInLen == 0 && hStdin != FS_ERROR )
+      {
+         hb_fsClose( hStdin );
+         hStdin = FS_ERROR;
+      }
+
+      for( ;; )
+      {
+         dwCount = 0;
+         if( ulStdInLen && hStdin != FS_ERROR )
+            lpHandles[ dwCount++ ] = ( HANDLE ) hb_fsGetOsHandle( hStdin );
+         if( hStdout != FS_ERROR )
+            lpHandles[ dwCount++ ] = ( HANDLE ) hb_fsGetOsHandle( hStdout );
+         if( hStderr != FS_ERROR )
+            lpHandles[ dwCount++ ] = ( HANDLE ) hb_fsGetOsHandle( hStderr );
+
+         lpHandles[ dwCount++ ] = ( HANDLE ) hb_fsGetOsHandle( hProcess );
+
+         dwResult = WaitForMultipleObjects( dwCount, lpHandles, FALSE, INFINITE );
+
+         if( /* dwResult >= WAIT_OBJECT_0 && */ dwResult < WAIT_OBJECT_0 + dwCount )
+         {
+            if( ulStdInLen && hStdin != FS_ERROR &&
+                lpHandles[ dwResult ] == ( HANDLE ) hb_fsGetOsHandle( hStdin ) )
+            {
+               ul = hb_fsWriteLarge( hStdin, pStdInBuf, ulStdInLen );
+               pStdInBuf += ul;
+               ulStdInLen -= ul;
+               if( ulStdInLen == 0 )
+               {
+                  hb_fsClose( hStdin );
+                  hStdin = FS_ERROR;
+               }
+            }
+            else if( hStdout != FS_ERROR &&
+                     lpHandles[ dwResult ] == ( HANDLE ) hb_fsGetOsHandle( hStdout ) )
+            {
+               if( ulOutBuf == ulOutSize )
+               {
+                  ulOutSize += HB_STD_BUFFER_SIZE;
+                  pOutBuf = ( char * ) hb_xrealloc( pOutBuf, ulOutSize + 1 );
+               }
+               ul = hb_fsReadLarge( hStdout, pOutBuf + ulOutBuf, ulOutSize - ulOutBuf );
+               if( ul == 0 )
+               {
+                  hb_fsClose( hStdout );
+                  hStdout = FS_ERROR;
+               }
+               else
+                  ulOutBuf += ul;
+            }
+            else if( hStderr != FS_ERROR && lpHandles[ dwResult ] == ( HANDLE ) hb_fsGetOsHandle( hStderr ) )
+            {
+               if( ulErrBuf == ulErrSize )
+               {
+                  ulErrSize += HB_STD_BUFFER_SIZE;
+                  pErrBuf = ( char * ) hb_xrealloc( pErrBuf, ulErrSize + 1 );
+               }
+               ul = hb_fsReadLarge( hStderr, pErrBuf + ulErrBuf, ulErrSize - ulErrBuf );
+               if( ul == 0 )
+               {
+                  hb_fsClose( hStderr );
+                  hStderr = FS_ERROR;
+               }
+               else
+                  ulErrBuf += ul;
+            }
+            else if( lpHandles[ dwResult ] == ( HANDLE ) hb_fsGetOsHandle( hProcess ) )
+            {
+               if( GetExitCodeProcess( ( HANDLE ) hb_fsGetOsHandle( hProcess ), &dwResult ) )
+                  iResult = ( int ) dwResult;
+               else
+                  iResult = -2;
+               break;
+            }
+         }
+         else
+            break;
+      }
+
+      if( hStdin != FS_ERROR )
+         hb_fsClose( hStdin );
+      if( hStdout != FS_ERROR )
+         hb_fsClose( hStdout );
+      if( hStderr != FS_ERROR )
+         hb_fsClose( hStderr );
+
+#elif defined( HB_OS_UNIX )
+
+      fd_set rfds, wfds, *prfds, *pwfds;
+      HB_FHANDLE fdMax;
+      ULONG ul;
+      int n;
+
+      if( ulStdInLen == 0 && hStdin != FS_ERROR )
+      {
+         hb_fsClose( hStdin );
+         hStdin = FS_ERROR;
+      }
+
+      for( ;; )
+      {
+         fdMax = 0;
+         prfds = pwfds = NULL;
+         if( hStdout != FS_ERROR || hStderr != FS_ERROR )
+         {
+            FD_ZERO( &rfds );
+            if( hStdout != FS_ERROR )
+            {
+               FD_SET( hStdout, &rfds );
+               if( hStdout > fdMax )
+                  fdMax = hStdout;
+            }
+            if( hStderr != FS_ERROR )
+            {
+               FD_SET( hStderr, &rfds );
+               if( hStderr > fdMax )
+                  fdMax = hStderr;
+            }
+            prfds = &rfds;
+         }
+         if( ulStdInLen && hStdin != FS_ERROR )
+         {
+            FD_ZERO( &wfds );
+            FD_SET( hStdin, &wfds );
+            if( hStdin > fdMax )
+               fdMax = hStdin;
+            pwfds = &wfds;
+         }
+         if( prfds == NULL && pwfds == NULL )
+            break;
+
+         hb_vmUnlock();
+         n = select( fdMax + 1, prfds, pwfds, NULL, NULL );
+         if( n > 0 )
+         {
+            if( ulStdInLen && hStdin != FS_ERROR && FD_ISSET( hStdin, &wfds ) )
+            {
+               ul = hb_fsWriteLarge( hStdin, pStdInBuf, ulStdInLen );
+               pStdInBuf += ul;
+               ulStdInLen -= ul;
+               if( ulStdInLen == 0 )
+               {
+                  hb_fsClose( hStdin );
+                  hStdin = FS_ERROR;
+               }
+            }
+
+            if( hStdout != FS_ERROR && FD_ISSET( hStdout, &rfds ) )
+            {
+               if( ulOutBuf == ulOutSize )
+               {
+                  ulOutSize += HB_STD_BUFFER_SIZE;
+                  pOutBuf = ( char * ) hb_xrealloc( pOutBuf, ulOutSize + 1 );
+               }
+               ul = hb_fsReadLarge( hStdout, pOutBuf + ulOutBuf, ulOutSize - ulOutBuf );
+               if( ul == 0 )
+               {
+                  /* zero bytes read after positive select()
+                   * - writing process closed the pipe
+                   */
+                  hb_fsClose( hStdout );
+                  hStdout = FS_ERROR;
+               }
+               else
+                  ulOutBuf += ul;
+            }
+
+            if( hStderr != FS_ERROR && FD_ISSET( hStderr, &rfds ) )
+            {
+               if( ulErrBuf == ulErrSize )
+               {
+                  ulErrSize += HB_STD_BUFFER_SIZE;
+                  pErrBuf = ( char * ) hb_xrealloc( pErrBuf, ulErrSize + 1 );
+               }
+               ul = hb_fsReadLarge( hStderr, pErrBuf + ulErrBuf, ulErrSize - ulErrBuf );
+               if( ul == 0 )
+               {
+                  /* zero bytes read after positive select()
+                   * - writing process closed the pipe
+                   */
+                  hb_fsClose( hStderr );
+                  hStderr = FS_ERROR;
+               }
+               else
+                  ulErrBuf += ul;
+            }
+         }
+         hb_vmLock();
+      }
+
+      if( hStdin != FS_ERROR )
+         hb_fsClose( hStdin );
+      if( hStdout != FS_ERROR )
+         hb_fsClose( hStdout );
+      if( hStderr != FS_ERROR )
+         hb_fsClose( hStderr );
+
+      iResult = hb_fsProcessValue( hProcess, TRUE );
+
+#else
+
+      int TODO;
+
+      HB_SYMBOL_UNUSED( ulStdInLen );
+
+#endif
+   }
+}
+#endif
+
+   if( phStdout )
+   {
+      *pStdOutPtr = pOutBuf;
+      *pulStdOut = ulOutBuf;
+   }
+   if( phStderr )
+   {
+      *pStdErrPtr = pErrBuf;
+      *pulStdErr = ulErrBuf;
+   }
+
+   return iResult;
 }
 
 /* temporary hack for still missing sysconf() in Watcom 1.8 */

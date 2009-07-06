@@ -117,3 +117,49 @@ HB_FUNC( HB_PROCESSCLOSE )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+/* hb_processRun( <cCommand>, [ <cStdIn> ], [ @<cStdOut> ], [ @<cStdErr> ], ;
+                  [ <lDetach> ] ) -> <nResult> */
+HB_FUNC( HB_PROCESSRUN )
+{
+   const char *szName = hb_parc( 1 );
+   const char *szStdIn = hb_parc( 2 );
+   PHB_ITEM pStdOut = hb_param( 3, HB_IT_BYREF );
+   PHB_ITEM pStdErr = hb_param( 4, HB_IT_BYREF );
+   BOOL fDetach = hb_parl( 5 );
+
+   if( szName &&
+       ( szStdIn || HB_ISNIL( 2 ) ) &&
+       ( pStdOut || HB_ISNIL( 3 ) ) &&
+       ( pStdErr || HB_ISNIL( 4 ) ) &&
+       ( HB_ISLOG( 5 ) || HB_ISNIL( 5 ) ) )
+   {
+      ULONG ulStdOut, ulStdErr;
+      char * pStdOutBuf, * pStdErrBuf;
+      char ** pStdOutPtr, ** pStdErrPtr;
+      int iResult;
+
+      ulStdOut = ulStdErr = 0;
+      pStdOutBuf = pStdErrBuf = NULL;
+      pStdOutPtr = pStdOut ? &pStdOutBuf : NULL;
+      pStdErrPtr = pStdErr ? &pStdErrBuf : NULL;
+
+      iResult = hb_fsProcessRun( szName, szStdIn, hb_parclen( 2 ),
+                                 pStdOutPtr, &ulStdOut, pStdErrPtr, &ulStdErr,
+                                 fDetach );
+
+      if( pStdOutBuf )
+         hb_storclen_buffer( pStdOutBuf, ulStdOut, 3 );
+      else if( pStdOut )
+         hb_storclen( "", 0, 3 );
+
+      if( pStdErrBuf )
+         hb_storclen_buffer( pStdErrBuf, ulStdErr, 4 );
+      else if( pStdErr )
+         hb_storclen( "", 0, 4 );
+
+      hb_retni( iResult );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
