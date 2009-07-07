@@ -55,9 +55,14 @@
 ;
 
 <CLASS>
-Type     = Core
-New      = nWidth, nHeight
+Type     = PlainObject
+New      = 
 </CLASS>
+
+<DOC>
+oSize := QSize():new()
+oSize := QSize():new( nWidth, nHeight )
+</DOC>
 
 <CODE>
 #include <QtCore/QSize>
@@ -66,12 +71,17 @@ New      = nWidth, nHeight
 /*
  * QSize ()
  * QSize ( int width, int height )
- * QSize boundedTo ( const QSize & otherSize ) const
- * QSize expandedTo ( const QSize & otherSize ) const
  */
 HB_FUNC( QT_QSIZE )
 {
-   hb_retptr( ( QSize* ) new QSize( hb_parni( 1 ), hb_parni( 2 ) ) );
+   if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QSize* ) new QSize( hb_parni( 1 ), hb_parni( 2 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QSize* ) new QSize() );
+   }
 }
 </CODE>
 
@@ -91,6 +101,8 @@ void setHeight ( int height )
 void setWidth ( int width )
 void transpose ()
 int width () const
+QSize boundedTo ( const QSize & otherSize ) const
+QSize expandedTo ( const QSize & otherSize ) const
 </PROTOS>
 
 <SLOTS>

@@ -74,24 +74,17 @@
  */
 HB_FUNC( QT_QPALETTE )
 {
-   if( hb_pcount() >= 2 )
+   if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
-      hb_retptr( ( QPalette* ) new QPalette() );
+      hb_retptr( ( QPalette* ) new QPalette( ( Qt::GlobalColor ) hb_parni( 1 ) ) );
    }
-   else if( hb_pcount() == 1 )
+   else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      if( HB_ISPOINTER( 1 ) )
-      {
-         hb_retptr( ( QPalette* ) new QPalette( *hbqt_par_QColor( 1 ) ) );
-      }
-      else if( HB_ISNUM( 1 ) )
-      {
-         hb_retptr( ( QPalette* ) new QPalette( ( Qt::GlobalColor ) hb_parni( 1 ) ) );
-      }
-      else
-      {
-         hb_retptr( ( QPalette* ) new QPalette() );
-      }
+      hb_retptr( ( QPalette* ) new QPalette( *hbqt_par_QPalette( 1 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      hb_retptr( ( QPalette* ) new QPalette( *hbqt_par_QColor( 1 ), *hbqt_par_QColor( 2 ) ) );
    }
    else
    {

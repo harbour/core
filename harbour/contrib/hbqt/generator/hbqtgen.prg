@@ -1484,13 +1484,11 @@ FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
    aColumns      := { { 1,'Function', 'C', 100 },;
                       { 2,'Returns' , 'C',  20 } }
 
-   //cTitle := 'harbour/contrib/hbqt/' + cWidget
-
    aHTML  := {}
    nCols  := len( aColumns )
 
    aadd( aHtml, "<HTML>" )
-   Build_HtmlHeader( @aHTML, .F. )
+   Build_HtmlHeader( @aHTML )
 
    s := '<BODY BGCOLOR="' + SetColorBG + '" TEXT="' + SetColorText + '"' + '>'
    aadd( aHtml, s )
@@ -1499,12 +1497,12 @@ FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
    aadd( aHtml, '<TBODY>' )
 
    /*       Class Documentation */
-   s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "CLASS METHODS" + "</B></TD></TR>"
+   s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "CLASS REFERENCE" + "</B></TD></TR>"
    aadd( aHtml, s )
    s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "Source: /harbour/contrib/hbqt/T" + cWidget + ".prg" + "</B></TD></TR>"
    aadd( aHtml, s )
    s := QT_WEB + QT_VER + "/" + lower( cWidget ) + ".htm"
-   s := "<TR><TD colspan=" + hb_ntos( nCols ) + ' align=CENTER bgcolor=#ffff80><B><a href="' + s + '">' + s + "</a></B></TD></TR>"
+   s := "<TR><TD colspan=" + hb_ntos( nCols ) + ' align=CENTER bgcolor=#CFBFA1><B><a href="' + s + '">' + s + "</a></B></TD></TR>"
    aadd( aHtml, s )
    //
    IF !empty( docum_ )
@@ -1515,7 +1513,9 @@ FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
       s += '<TD  class="only" >'
       s += '<PRE id="' + cPara + '">'
       s += CRLF
-
+      s += CRLF
+      s += "IMPORTANT:  Call the constructor with exact number of parameter. "+ CRLF
+      s += "            No defaults, otherwise application will GPF" + CRLF
       for i := 1 to len( docum_ )
          s += docum_[ i ] + CRLF
       next
@@ -1541,9 +1541,9 @@ FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
    NEXT
 
    /* Function Documentation */
-   s := "<TR><TD colspan="+hb_ntos( nCols )+" align=CENTER bgcolor=#ffff80><B>"+ "FUNCTIONS" +"</B></TD></TR>"
+   s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "FUNCTIONS REFERENCE" + "</B></TD></TR>"
    aadd( aHtml, s )
-   s := "<TR><TD colspan="+hb_ntos( nCols )+" align=CENTER bgcolor=#ffff80><B>"+ "Source: /harbour/contrib/hbqt/hbqt_"+ lower( cWidget ) +".cpp" +"</B></TD></TR>"
+   s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "Source: /harbour/contrib/hbqt/" + cWidget + ".cpp" + "</B></TD></TR>"
    aadd( aHtml, s )
    FOR j := 1 TO len( aHF_ )
       s := "<TR>"
@@ -1598,9 +1598,7 @@ FUNCTION Build_HtmlTable( aHTML, cTitle, SetColorTable )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION Build_HtmlHeader( aHTML, lPreDisplayNone )
-
-   DEFAULT lPreDisplayNone TO .T.
+FUNCTION Build_HtmlHeader( aHTML )
 
    aadd( aHtml, '<head>                                                             ' )
    aadd( aHtml, '  <meta name="Author" CONTENT=Pritpal Bedi [pritpal@vouchcac.com]">' )
@@ -1628,9 +1626,6 @@ FUNCTION Build_HtmlHeader( aHTML, lPreDisplayNone )
    aadd( aHtml, '    }                                                              ' )
    aadd( aHtml, '    pre                                                            ' )
    aadd( aHtml, '    {                                                              ' )
-if lPreDisplayNone
-   aadd( aHtml, '      display          : none;                                     ' )
-endif
    aadd( aHtml, '      font-family      : Courier New;                              ' )
    aadd( aHtml, '      font-size        : .7em;                                     ' )
    aadd( aHtml, '      color            : black;                                    ' )

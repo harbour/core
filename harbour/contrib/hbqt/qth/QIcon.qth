@@ -55,9 +55,15 @@
 ;
 
 <CLASS>
-Type     = Core
+Type     = PlainObject
 New      = 
 </CLASS>
+
+<DOC>
+oIcon := QIcon():new()
+oIcon := QIcon():new( cFileName )
+oIcon := QIcon():new( pQPixmap )
+</DOC>
 
 <CODE>
 #include <QtGui/QIcon>
@@ -77,6 +83,10 @@ HB_FUNC( QT_QICON )
    if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
       hb_retptr( ( QIcon* ) new QIcon( hbqt_par_QString( 1 ) ) );
+   }
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QIcon* ) new QIcon( *hbqt_par_QPixmap( 1 ) ) );
    }
    else
    {

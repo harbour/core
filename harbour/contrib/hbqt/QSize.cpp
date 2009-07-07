@@ -66,12 +66,17 @@
 /*
  * QSize ()
  * QSize ( int width, int height )
- * QSize boundedTo ( const QSize & otherSize ) const
- * QSize expandedTo ( const QSize & otherSize ) const
  */
 HB_FUNC( QT_QSIZE )
 {
-   hb_retptr( ( QSize* ) new QSize( hb_parni( 1 ), hb_parni( 2 ) ) );
+   if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QSize* ) new QSize( hb_parni( 1 ), hb_parni( 2 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QSize* ) new QSize() );
+   }
 }
 
 /*
@@ -168,6 +173,22 @@ HB_FUNC( QT_QSIZE_TRANSPOSE )
 HB_FUNC( QT_QSIZE_WIDTH )
 {
    hb_retni( hbqt_par_QSize( 1 )->width() );
+}
+
+/*
+ * QSize boundedTo ( const QSize & otherSize ) const
+ */
+HB_FUNC( QT_QSIZE_BOUNDEDTO )
+{
+   hb_retptr( new QSize( hbqt_par_QSize( 1 )->boundedTo( *hbqt_par_QSize( 2 ) ) ) );
+}
+
+/*
+ * QSize expandedTo ( const QSize & otherSize ) const
+ */
+HB_FUNC( QT_QSIZE_EXPANDEDTO )
+{
+   hb_retptr( new QSize( hbqt_par_QSize( 1 )->expandedTo( *hbqt_par_QSize( 2 ) ) ) );
 }
 
 

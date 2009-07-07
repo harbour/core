@@ -76,7 +76,46 @@
  */
 HB_FUNC( QT_QCURSOR )
 {
-   hb_retptr( ( QCursor* ) new QCursor() );
+   if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
+   {
+      hb_retptr( ( QCursor* ) new QCursor( ( Qt::CursorShape ) hb_parni( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QCursor* ) new QCursor( *hbqt_par_QPixmap( 1 ), -1, -1 ) );
+
+      #if 0    /* TODO */
+      QString objName = hbqt_par_QObject( 1 )->objectName();
+
+      if( objName == ( QString ) "QPixmap" )
+      {
+         hb_retptr( ( QCursor* ) new QCursor( *hbqt_par_QPixmap( 1 ), -1, -1 ) );
+      }
+      else if( objName == ( QString ) "QCursor" )
+      {
+         hb_retptr( ( QCursor* ) new QCursor( *hbqt_par_QCursor( 1 ) ) );
+      }
+      else
+      {
+         hb_retptr( ( QCursor* ) new QCursor() );
+      }
+      #endif
+   }
+   else if( hb_pcount() >= 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      hb_retptr( ( QCursor* ) new QCursor( *hbqt_par_QBitmap( 1 ), *hbqt_par_QBitmap( 2 ),
+                                           HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1,
+                                           HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) );
+   }
+   else if( hb_pcount() >= 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QCursor* ) new QCursor( *hbqt_par_QPixmap( 1 ), hb_parni( 2 ),
+                                           HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) );
+   }
+   else
+   {
+      hb_retptr( ( QCursor* ) new QCursor() );
+   }
 }
 
 /*

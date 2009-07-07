@@ -78,7 +78,63 @@
  */
 HB_FUNC( QT_QBRUSH )
 {
-   hb_retptr( ( QBrush* ) new QBrush() );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QPixmap( 1 ) ) );
+
+      #if 0       /* ToDO */
+      QString objName = hbqt_par_QObject( 1 )->objectName();
+
+      if( objName == ( QString ) "QPixmap" )
+      {
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QPixmap( 1 ) ) );
+      }
+      else if( objName == ( QString ) "QImage" )
+      {
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QImage( 1 ) ) );
+      }
+      else if( objName == ( QString ) "QBrush" )
+      {
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QBrush( 1 ) ) );
+      }
+      else if( objName == ( QString ) "QGradient" )
+      {
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QGradient( 1 ) ) );
+      }
+      else if( objName == ( QString ) "QColor" )
+      {
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QColor( 1 ), Qt::SolidPattern ) );
+      }
+      else
+      {
+         hb_retptr( ( QBrush* ) new QBrush() );
+      }
+      #endif
+   }
+   else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
+   {
+      hb_retptr( ( QBrush* ) new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), Qt::SolidPattern ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QBrush* ) new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QColor( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QColor( 1 ), *hbqt_par_QPixmap( 2 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      hb_retptr( ( QBrush* ) new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), *hbqt_par_QPixmap( 2 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QBrush* ) new QBrush() );
+   }
 }
 
 /*

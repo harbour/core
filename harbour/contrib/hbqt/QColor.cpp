@@ -66,30 +66,38 @@
 QColor ()
 QColor ( int r, int g, int b, int a = 255 )
 QColor ( QRgb color )
+QColor ( Qt::GlobalColor color )
 QColor ( const QString & name )
 QColor ( const char * name )
 QColor ( const QColor & color )
-QColor ( Qt::GlobalColor color )
  */
 HB_FUNC( QT_QCOLOR )
 {
-   if( hb_pcount() == 1 )
+   if( hb_pcount() >= 1 )
    {
-      if( HB_ISNUM( 1 ) && hb_parni( 1 ) < 25 )
+      if( hb_pcount() == 1 && HB_ISNUM( 1 ) && hb_parni( 1 ) < 25 )
       {
          hb_retptr( ( QColor* ) new QColor( ( Qt::GlobalColor ) hb_parni( 1 ) ) );
       }
-      else if( HB_ISNUM( 1 ) )
+      else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
       {
          hb_retptr( ( QColor* ) new QColor( ( QRgb ) hb_parni( 1 ) ) );
       }
-      else if( HB_ISPOINTER( 1 ) )
+      else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+      {
+         hb_retptr( ( QColor* ) new QColor( hbqt_par_QString( 1 ) ) );
+      }
+      else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
       {
          hb_retptr( ( QColor* ) new QColor( *hbqt_par_QColor( 1 ) ) );
       }
-      else if( HB_ISCHAR( 1 ) )
+      else if( hb_pcount() == 3 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
       {
-         hb_retptr( ( QColor* ) new QColor( hbqt_par_QString( 1 ) ) );
+         hb_retptr( ( QColor* ) new QColor( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), ( int ) 255 ) );
+      }
+      else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
+      {
+         hb_retptr( ( QColor* ) new QColor( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) );
       }
       else
       {
