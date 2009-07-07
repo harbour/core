@@ -53,11 +53,11 @@
 
 #include "hbclass.ch"
 
-CLASS TIPEncoderBase64 FROM TIPEncoder
+CREATE CLASS TIPEncoderBase64 FROM TIPEncoder
    // Set this to .T. to enable RFC 2068 (HTTP/1.1) exception to
    // RFC 2045 (MIME) base64 format. This exception consists in
    // not applying CRLF after each 76 output bytes.
-   DATA bHttpExcept
+   VAR bHttpExcept
 
    METHOD New()      Constructor
    METHOD Encode( cData )

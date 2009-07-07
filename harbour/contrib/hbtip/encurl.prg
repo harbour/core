@@ -54,8 +54,8 @@
 #include "hbclass.ch"
 
 
-CLASS TIPEncoderUrl FROM TIPEncoder
-   METHOD New()   Constructor
+CREATE CLASS TIPEncoderUrl FROM TIPEncoder
+   METHOD New()   CONSTRUCTOR
    METHOD Encode()
    METHOD Decode()
 ENDCLASS

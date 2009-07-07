@@ -64,16 +64,16 @@
 *                                                 cFname cExt
 */
 
-CLASS tURL
-   DATA cAddress
-   DATA cProto
-   DATA cServer
-   DATA cPath
-   DATA cQuery
-   DATA cFile
-   DATA nPort
-   DATA cUserid
-   DATA cPassword
+CREATE CLASS tURL
+   VAR cAddress
+   VAR cProto
+   VAR cServer
+   VAR cPath
+   VAR cQuery
+   VAR cFile
+   VAR nPort
+   VAR cUserid
+   VAR cPassword
 
    METHOD New( cUrl )
    METHOD SetAddress( cUrl )
@@ -107,7 +107,7 @@ METHOD SetAddress( cUrl ) CLASS tURL
    ::cFile := ""
    ::nPort := -1
 
-   IF Empty( cUrl ) .or. Len( cUrl ) == 0
+   IF Empty( cUrl ) .OR. Len( cUrl ) == 0
       RETURN .T.
    ENDIF
 
@@ -149,7 +149,7 @@ METHOD BuildAddress() CLASS tURL
       ::cProto := Lower( ::cProto )
    ENDIF
 
-   IF ! Empty( ::cProto ) .and. ! Empty( ::cServer )
+   IF ! Empty( ::cProto ) .AND. ! Empty( ::cServer )
       cRet := ::cProto + "://"
    ENDIF
 
@@ -168,7 +168,7 @@ METHOD BuildAddress() CLASS tURL
       ENDIF
    ENDIF
 
-   IF Len( ::cPath ) == 0 .or. !( Right( ::cPath, 1 ) == "/" )
+   IF Len( ::cPath ) == 0 .OR. !( Right( ::cPath, 1 ) == "/" )
       ::cPath += "/"
    ENDIF
 
@@ -188,7 +188,7 @@ RETURN cRet
 METHOD BuildQuery( ) CLASS tURL
    LOCAL cLine
 
-   IF Len( ::cPath ) == 0 .or. !( Right( ::cPath, 1 ) == "/" )
+   IF Len( ::cPath ) == 0 .OR. !( Right( ::cPath, 1 ) == "/" )
       ::cPath += "/"
    ENDIF
 

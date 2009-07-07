@@ -70,12 +70,12 @@
 
 FUNCTION TIP_GENERATESID( cCRCKey )
 
-   local cSID, nSIDCRC, cSIDCRC, n, cTemp
-   local nLenSID     := SID_LENGTH
-   local cBaseKeys   := BASE_KEY_STRING
-   local nLenKeys    := Len( cBaseKeys )
-   local cRet
-   local nRand, nKey := 0
+   LOCAL cSID, nSIDCRC, cSIDCRC, n, cTemp
+   LOCAL nLenSID     := SID_LENGTH
+   LOCAL cBaseKeys   := BASE_KEY_STRING
+   LOCAL nLenKeys    := Len( cBaseKeys )
+   LOCAL cRet
+   LOCAL nRand, nKey := 0
 
    DEFAULT cCRCKey  TO CRC_KEY_STRING
 
@@ -102,10 +102,10 @@ FUNCTION TIP_GENERATESID( cCRCKey )
 
 FUNCTION TIP_CHECKSID( cSID, cCRCKey )
 
-   local nSIDCRC, cSIDCRC, n, cTemp
-   local nLenSID     := SID_LENGTH
-   local cBaseKeys   := BASE_KEY_STRING
-   local nRand, nKey := 0
+   LOCAL nSIDCRC, cSIDCRC, n, cTemp
+   LOCAL nLenSID     := SID_LENGTH
+   LOCAL cBaseKeys   := BASE_KEY_STRING
+   LOCAL nRand, nKey := 0
 
    DEFAULT cCRCKey  TO CRC_KEY_STRING
 
@@ -133,18 +133,18 @@ FUNCTION TIP_DATETOGMT( dDate, cTime )
    LOCAL nDay, nMonth, nYear, nDoW
    LOCAL aDays   := { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }
    LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
-  
+
    DEFAULT dDate TO DATE()
    DEFAULT cTime TO TIME()
-  
+
    nDay   := Day( dDate )
    nMonth := Month( dDate )
    nYear  := Year( dDate)
    nDoW   := Dow( dDate )
-  
+
    cStr := aDays[ nDow ] + ", " + StrZero( nDay, 2 ) + "-" + aMonths[ nMonth ] + "-" + ;
            Right( StrZero( nYear, 4 ), 2 ) + " " + cTime + " GMT"
-  
+
    Set( _SET_DATEFORMAT, cOldDateFormat )
 
    RETURN cStr

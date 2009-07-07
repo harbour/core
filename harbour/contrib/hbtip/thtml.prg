@@ -107,16 +107,16 @@ STATIC  slInit      := .F.          // initilization flag for HTML data
 /*
  * Class for handling an entire HTML document
  */
-CLASS THtmlDocument MODULE FRIENDLY
+CREATE CLASS THtmlDocument MODULE FRIENDLY
    HIDDEN:
-   DATA oIterator
-   DATA nodes
+   VAR oIterator
+   VAR nodes
 
    EXPORTED:
-   DATA root    READONLY
-   DATA head    READONLY
-   DATA body    READONLY
-   DATA changed INIT .T.
+   VAR root    READONLY
+   VAR head    READONLY
+   VAR body    READONLY
+   VAR changed INIT .T.
 
    METHOD new( cHtmlString )
    METHOD readFile( cFileName )
@@ -147,7 +147,7 @@ METHOD new( cHtmlString ) CLASS THtmlDocument
    IF ! ISCHARACTER( cHtmlString )
       ::root := THtmlNode():new( cEmptyHtmlDoc )
    ELSE
-      IF .NOT. "<html" $ Lower( Left( cHtmlString, 4096 ) )
+      IF ! "<html" $ Lower( Left( cHtmlString, 4096 ) )
          ::root := THtmlNode():new( cEmptyHtmlDoc )
          nMode := 1
       ELSE
@@ -316,7 +316,7 @@ RETURN ::oIterator:Find( cName, cAttrib, cValue, cData )
  *
  * (Adopted from TXMLIterator -> source\rtl\txml.prg)
  */
-CLASS THtmlIterator MODULE FRIENDLY
+CREATE CLASS THtmlIterator MODULE FRIENDLY
    METHOD New( oNodeTop )           CONSTRUCTOR
    METHOD Next()
    METHOD Rewind()
@@ -327,15 +327,15 @@ CLASS THtmlIterator MODULE FRIENDLY
    METHOD Clone()
 
 HIDDEN:
-   DATA cName
-   DATA cAttribute
-   DATA cValue
-   DATA cData
-   DATA oNode
-   DATA oTop
-   DATA aNodes
-   DATA nCurrent
-   DATA nLast
+   VAR cName
+   VAR cAttribute
+   VAR cValue
+   VAR cData
+   VAR oNode
+   VAR oTop
+   VAR aNodes
+   VAR nCurrent
+   VAR nLast
    METHOD MatchCriteria()
 ENDCLASS
 
@@ -404,7 +404,7 @@ RETURN ::Next()
 METHOD Next() CLASS THtmlIterator
    LOCAL oFound, lExit := .F.
 
-   DO WHILE .NOT. lExit
+   DO WHILE ! lExit
       BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
          oFound := ::aNodes[ ++::nCurrent ]
          IF ::MatchCriteria( oFound )
@@ -441,11 +441,11 @@ RETURN Self
 METHOD MatchCriteria( oFound ) CLASS THtmlIteratorScan
    LOCAL xData
 
-   IF ::cName != NIL .and. !( Lower(::cName) == Lower(oFound:htmlTagName) )
+   IF ::cName != NIL .AND. !( Lower(::cName) == Lower(oFound:htmlTagName) )
       RETURN .F.
    ENDIF
 
-   IF ::cAttribute != NIL .and. .not. hb_HHasKey( oFound:getAttributes(), ::cAttribute )
+   IF ::cAttribute != NIL .AND. ! hb_HHasKey( oFound:getAttributes(), ::cAttribute )
       RETURN .F.
    ENDIF
 
@@ -485,23 +485,23 @@ RETURN Self
 METHOD MatchCriteria( oFound ) CLASS THtmlIteratorRegex
    LOCAL xData
 
-   IF ::cName != NIL .and. .not. hb_regexLike( Lower(oFound:htmlTagName), Lower(::cName) )
+   IF ::cName != NIL .AND. ! hb_regexLike( Lower(oFound:htmlTagName), Lower(::cName) )
       RETURN .F.
    ENDIF
 
-   IF ::cAttribute != NIL .and. ;
+   IF ::cAttribute != NIL .AND. ;
          hb_hScan( oFound:getAttributes(), {|cKey| hb_regexLike( lower(::cAttribute), cKey ) } ) == 0
       RETURN .F.
    ENDIF
 
-   IF ::cValue != NIL .and.;
+   IF ::cValue != NIL .AND.;
       hb_hScan( oFound:getAttributes(), {|xKey, cValue| HB_SYMBOL_UNUSED(xKey), hb_regexLike( ::cValue, cValue ) } ) == 0
       RETURN .F.
    ENDIF
 
    IF ::cData != NIL
       xData := oFound:getText(" ")
-      IF Empty(xData) .OR. .NOT. hb_regexHas( Alltrim(::cData), Alltrim(xData) )
+      IF Empty(xData) .OR. ! hb_regexHas( Alltrim(::cData), Alltrim(xData) )
          RETURN .F.
       ENDIF
    ENDIF
@@ -511,12 +511,12 @@ RETURN .T.
  * Class representing a HTML node tree.
  * It parses a HTML formatted string
  */
-CLASS THtmlNode MODULE FRIENDLY
+CREATE CLASS THtmlNode MODULE FRIENDLY
    HIDDEN:
-   DATA root
-   DATA _document
-   DATA parent
-   DATA htmlContent
+   VAR root
+   VAR _document
+   VAR parent
+   VAR htmlContent
 
    METHOD parseHtml
    METHOD parseHtmlFixed
@@ -528,10 +528,10 @@ CLASS THtmlNode MODULE FRIENDLY
 
    EXPORTED:
 
-   DATA htmlTagName     READONLY
-   DATA htmlEndTagName  READONLY
-   DATA htmlTagType     READONLY
-   DATA htmlAttributes  READONLY
+   VAR htmlTagName     READONLY
+   VAR htmlEndTagName  READONLY
+   VAR htmlTagType     READONLY
+   VAR htmlAttributes  READONLY
 
    METHOD new( oParent, cTagName, cAttrib, cContent )
 
@@ -597,7 +597,7 @@ ENDCLASS
 
 
 METHOD new( oParent, cTagName, cAttrib, cContent ) CLASS THtmlNode
-   IF .NOT. slInit
+   IF ! slInit
       THtmlInit(.T.)
    ENDIF
 
@@ -685,7 +685,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
    LOCAL oThisTag, oNextTag, oLastTag
    LOCAL cTagName, cAttr, nStart, nEnd, nPos, cText
 
-   IF .NOT. "<" $ parser:p_Str
+   IF ! "<" $ parser:p_Str
       // Plain text
       ::addNode( THtmlNode():new( self, "_text_", , parser:p_Str ) )
       RETURN self
@@ -701,7 +701,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
       cText    := LTrim( SubStr( parser:p_str, nLastPos+1, nStart-nLastPos-1 ) )
       cTagName := CutStr( " ", @cAttr )
 
-      IF .NOT. cText == ""
+      IF !( cText == "" )
          IF Left( cText, 2 ) == "</"
             // ending tag of previous node
             cText := Lower( Alltrim( SubStr( CutStr( ">", @cText ), 3 ) ) )
@@ -774,7 +774,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
                // the next tag is the same like this tag
                // ( e.g. <p>|<tr>|<td>|<li>)
                lRewind := .T.
-            CASE ( Lower( cTagName ) == Lower( oThisTag:parent:htmlTagName ) ) .AND. .NOT. oThisTag:isType( CM_LIST )
+            CASE ( Lower( cTagName ) == Lower( oThisTag:parent:htmlTagName ) ) .AND. ! oThisTag:isType( CM_LIST )
                // the next tag is the same like the parent tag
                // ( e.g. this is <td> and the next tag is <tr> )
                lRewind := .T.
@@ -792,7 +792,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
             ENDIF
          ENDIF
 
-         IF .NOT. lRewind
+         IF ! lRewind
             IF cAttr == ""
                // tag has no attributes
                oNextTag := THtmlNode():new( oThisTag, cTagName )
@@ -803,7 +803,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
 
             oThisTag:addNode( oNextTag )
 
-            IF .NOT. oThisTag:isOptional() .AND. Lower( oThisTag:htmlTagName ) == Lower( ctagName )
+            IF ! oThisTag:isOptional() .AND. Lower( oThisTag:htmlTagName ) == Lower( ctagName )
                 oThisTag:htmlEndTagName := "/" + oThisTag:htmlTagName
             ENDIF
 
@@ -811,7 +811,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
                // do not spoil formatting of Html text
                oNextTag:parseHtmlFixed( parser )
 
-            ELSEIF .NOT. oNextTag:isEmpty()
+            ELSEIF ! oNextTag:isEmpty()
                // parse into node list of new tag
                oThisTag := oNextTag
 
@@ -855,7 +855,7 @@ METHOD parseHtmlFixed( parser ) CLASS THtmlNode
       P_SEEK( parser, "]]>" )
    ENDIF
 
-   IF .NOT. P_PEEK( parser, "/" + ::htmlTagName )
+   IF ! P_PEEK( parser, "/" + ::htmlTagName )
       // seek  <  /endtag>
       P_SEEKI( parser, "/" + ::htmlTagName )
    ENDIF
@@ -874,7 +874,7 @@ RETURN self
 
 // adds a new CHILD node to the current one
 METHOD addNode( oTHtmlNode ) CLASS THtmlNode
-   IF oTHtmlNode:parent != NIL .AND. .NOT. oTHtmlNode:parent == self
+   IF oTHtmlNode:parent != NIL .AND. ! oTHtmlNode:parent == self
       oTHtmlNode:delete()
    ENDIF
 
@@ -896,7 +896,7 @@ METHOD insertBefore( oTHtmlNode ) CLASS THtmlNode
       RETURN ::error( "Cannot insert before root node", ::className(), ":insertBefore()", EG_ARG, HB_AParams() )
    ENDIF
 
-   IF oTHtmlNode:parent != NIL .AND. .NOT. oTHtmlNode:parent == self
+   IF oTHtmlNode:parent != NIL .AND. ! oTHtmlNode:parent == self
       oTHtmlNode:delete()
    ENDIF
 
@@ -917,7 +917,7 @@ RETURN oTHtmlNode
 METHOD insertAfter( oTHtmlNode ) CLASS THtmlNode
    LOCAL nPos
 
-   IF oTHtmlNode:parent != NIL .AND. .NOT. oTHtmlNode:parent == self
+   IF oTHtmlNode:parent != NIL .AND. ! oTHtmlNode:parent == self
       oTHtmlNode:delete()
    ENDIF
 
@@ -997,7 +997,7 @@ METHOD nextNode() CLASS THtmlNode
    ENDIF
 
    /* NOTE: != changed to !( == ) */
-   IF !( ::htmlTagName == "_text_" ) .AND. .NOT. Empty( ::htmlContent )
+   IF !( ::htmlTagName == "_text_" ) .AND. ! Empty( ::htmlContent )
       RETURN ::htmlContent[1]
    ENDIF
 
@@ -1040,16 +1040,16 @@ METHOD toString( nIndent ) CLASS THtmlNode
 
    cIndent := IIf( ::keepFormatting(), "", Space( Max(0,nIndent) ) )
 
-   IF .NOT. ::htmlTagName == "_root_"
+   IF ! ::htmlTagName == "_root_"
       // all nodes but the root node have a HTML tag
-      IF .NOT. ::isInline() .OR. ::htmlTagName == "!--"
+      IF ! ::isInline() .OR. ::htmlTagName == "!--"
          cHtml += cIndent
       ELSEIF ::keepFormatting()
          cHtml += Chr(13)+Chr(10)
       ENDIF
       cHtml += "<" + ::htmlTagName + ::attrToString()
 
-      IF .NOT. ::htmlEndTagName == "/"
+      IF ! ::htmlEndTagName == "/"
          cHtml += ">"
       ENDIF
    ENDIF
@@ -1060,14 +1060,14 @@ METHOD toString( nIndent ) CLASS THtmlNode
        imax := Len( ::htmlContent )
        FOR i:=1 TO imax
           oNode := ::htmlContent[i]
-          IF .NOT. oNode:isInline() .OR. oNode:htmlTagName == "!--"
+          IF ! oNode:isInline() .OR. oNode:htmlTagName == "!--"
              cHtml += chr(13)+Chr(10)
           ENDIF
           cHtml += oNode:toString( nIndent+1 )
        NEXT
 #else
       FOR EACH oNode IN ::htmlContent
-          IF .NOT. oNode:isInline() .OR. oNode:htmlTagName == "!--"
+          IF ! oNode:isInline() .OR. oNode:htmlTagName == "!--"
              cHtml += chr(13)+Chr(10)
           ENDIF
          cHtml += oNode:toString( nIndent+1 )
@@ -1154,7 +1154,7 @@ STATIC FUNCTION __CollectTags( oTHtmlNode, stack, oEndNode )
    LOCAL i, imax
    S_PUSH( stack, oTHtmlNode )
 
-   IF oTHtmlNode:isNode() .AND. .NOT. oTHtmlNode == oEndNode
+   IF oTHtmlNode:isNode() .AND. ! oTHtmlNode == oEndNode
       imax := Len( oTHtmlNode:htmlContent )
       FOR i := 1 TO imax
          __CollectTags( oTHtmlNode:htmlContent[i], stack, oEndNode )
@@ -1170,7 +1170,7 @@ STATIC FUNCTION __CollectTags( oTHtmlNode, stack, oEndNode )
    LOCAL oSubNode
    S_PUSH( stack, oTHtmlNode )
 
-   IF oTHtmlNode:isNode() .AND. .NOT. oTHtmlNode == oEndNode
+   IF oTHtmlNode:isNode() .AND. ! oTHtmlNode == oEndNode
       FOR EACH oSubNode IN oTHtmlNode:htmlContent
          __CollectTags( oSubNode, stack, oEndNode )
       NEXT
@@ -1274,7 +1274,7 @@ STATIC FUNCTION __ParseAttr( parser )
 
    hb_HSetCaseMatch( hHash, .F. )
 
-   DO WHILE .NOT. ( cChr := P_NEXT( parser ) ) == ""
+   DO WHILE ! ( cChr := P_NEXT( parser ) ) == ""
 
       SWITCH cChr
       CASE "="
@@ -1289,7 +1289,7 @@ STATIC FUNCTION __ParseAttr( parser )
 
       CASE " "
          IF nMode == 1
-            IF .NOT. aAttr[1] == ""
+            IF !( aAttr[1] == "" )
                 hHash[ aAttr[1] ] := aAttr[2]
                 aAttr[1] := ""
                 aAttr[2] := ""
@@ -1354,7 +1354,7 @@ STATIC FUNCTION __ParseAttr( parser )
       ENDSWITCH
    ENDDO
 
-   IF .NOT. aAttr[1] == ""
+   IF !( aAttr[1] == "" )
       hHash[ aAttr[1] ] := aAttr[2]
    ENDIF
 
@@ -1454,7 +1454,7 @@ METHOD noAttribute( cName, aValue ) CLASS THtmlNode
 
       IF oNode == NIL
          oNode := THtmlNode():new( self, cName )
-         IF .NOT. oNode:isOptional() .AND. .NOT. oNode:isEmpty()
+         IF ! oNode:isOptional() .AND. ! oNode:isEmpty()
             oNode:htmlEndTagName := "/" + cName
          ENDIF
          ::addNode( oNode )
@@ -1546,9 +1546,9 @@ METHOD pushNode( cTagName ) CLASS THtmlNode
       RETURN ::error( "Cannot add HTML tag to: <" + ::htmlTagName + ">", ::className(), "+", EG_ARG, {cName} )
    ENDIF
 
-   IF .NOT. hb_HHasKey( shTagTypes, cName )
+   IF ! hb_HHasKey( shTagTypes, cName )
       IF Left( cName, 1 ) == "/" .AND. hb_HHasKey( shTagTypes, SubStr(cName,2) )
-         IF .NOT. Lower( SubStr(cName,2) ) == Lower( ::htmlTagName )
+         IF ! Lower( SubStr(cName,2) ) == Lower( ::htmlTagName )
             RETURN ::error( "Not a valid closing HTML tag for: <" + ::htmlTagName + ">", ::className(), "-", EG_ARG, {cName} )
          ENDIF
          RETURN self:parent
@@ -1561,7 +1561,7 @@ METHOD pushNode( cTagName ) CLASS THtmlNode
    ENDIF
 
    oNode := THtmlNode():new( self, cName, cAttr )
-   IF .NOT. oNode:isOptional() .AND. .NOT. oNode:isEmpty()
+   IF ! oNode:isOptional() .AND. ! oNode:isEmpty()
       oNode:htmlEndTagName := "/" + cName
    ENDIF
    ::addNode( oNode )
@@ -1577,7 +1577,7 @@ METHOD popNode( cName ) CLASS THtmlNode
       cName := SubStr( cName, 2 )
    ENDIF
 
-   IF .NOT. Lower( cName ) == Lower( ::htmlTagName )
+   IF !( Lower( cName ) == Lower( ::htmlTagName ) )
       RETURN ::error( "Invalid closing HTML tag for: <" + ::htmlTagName + ">", ::className(), "-", EG_ARG, {cName} )
    ENDIF
 RETURN self:parent
@@ -1599,12 +1599,12 @@ RETURN cLeftPart
 
 
 FUNCTION THtmlInit( lInit )
-   IF ISLOGICAL( lInit ) .AND. .NOT. lInit
+   IF ISLOGICAL( lInit ) .AND. ! lInit
       saHtmlAttr         := NIL
       shTagTypes         := NIL
       saHtmlAnsiEntities := NIL
-      RETURN .NOT. (slInit := .F. )
-   ELSEIF .NOT. slInit
+      RETURN ! ( slInit := .F. )
+   ELSEIF ! slInit
       saHtmlAttr := Array( HTML_ATTR_COUNT )
       _Init_Html_AnsiCharacterEntities()
       _Init_Html_Attributes()
@@ -4373,7 +4373,7 @@ FUNCTION AnsiToHtml( cAnsiText )
       nEnd  := parser:p_pos
       cText := SubStr( parser:p_str, nStart, nEnd-nStart )
 
-      DO WHILE .NOT. ( (cChr := P_NEXT(parser)) $ "; " )  .AND. .NOT. parser:p_pos == 0
+      DO WHILE ! ( (cChr := P_NEXT(parser)) $ "; " )  .AND. parser:p_pos != 0
       ENDDO
 
       SWITCH cChr

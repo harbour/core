@@ -83,10 +83,10 @@ FUNCTION TIp_GetEncoder( cModel )
    CASE cModel == "quoted-printable"
       oEncoder := TIPEncoderQP():New()
 
-   CASE cModel == "url" .or. cModel == "urlencoded"
+   CASE cModel == "url" .OR. cModel == "urlencoded"
       oEncoder := TIPEncoderURL():New()
 
-   CASE cModel == "7bit" .or. cModel == "8bit"
+   CASE cModel == "7bit" .OR. cModel == "8bit"
       oEncoder := TIPEncoder():New( cModel )
       oEncoder:cName := cModel
 
@@ -99,8 +99,8 @@ RETURN oEncoder
 
 
 
-CLASS TIPEncoder
-   DATA cName
+CREATE CLASS TIPEncoder
+   VAR cName
 
    METHOD New( cModel )
    METHOD Encode( cData )

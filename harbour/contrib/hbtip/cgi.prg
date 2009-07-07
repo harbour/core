@@ -111,13 +111,13 @@ ENDCLASS
 
 METHOD New() CLASS TIpCgi
 
-   local aTemp
-   local aVar
-   local lPost
-   local nCount
-   local nLen
-   local nRead
-   local cTemp
+   LOCAL aTemp
+   LOCAL aVar
+   LOCAL lPost
+   LOCAL nCount
+   LOCAL nLen
+   LOCAL nRead
+   LOCAL cTemp
 
    ::bSavedErrHandler := ErrorBlock( { |e| ::ErrHandler( e ) } )
 
@@ -128,7 +128,7 @@ METHOD New() CLASS TIpCgi
    if lPost
       nLen := val( getenv( "CONTENT_LENGTH" ) )
       cTemp := space( nLen )
-      if ( ( nRead := fread( CGI_IN, @cTemp, nLen, 0 ) ) != nLen )
+      if ( ( nRead := FRead( CGI_IN, @cTemp, nLen, 0 ) ) != nLen )
          ::ErrHandler( "post error read " + str( nRead ) + " instead of " + str( nLen ) )
       else
          ::HTTP_RAW_POST_DATA := cTemp
@@ -199,16 +199,16 @@ METHOD Print( cString ) CLASS TIpCgi
 
 METHOD Flush() CLASS TIpCgi
 
-   local nLen
-   local cStream
-   local lRet
+   LOCAL nLen
+   LOCAL cStream
+   LOCAL lRet
 
-   local nH
-   local cFile
-   local nFileSize
+   LOCAL nH
+   LOCAL cFile
+   LOCAL nFileSize
 
-   local cSID := ::cSID
-   local cSession
+   LOCAL cSID := ::cSID
+   LOCAL cSession
 
    hb_hEval( ::hCookies, { |k,v| ::cCgiHeader += "Set-Cookie: " + k + "=" + v + ";" + _CRLF } )
 
@@ -225,7 +225,7 @@ METHOD Flush() CLASS TIpCgi
       if ( nH := FCreate( ::cDumpSavePath + "dump.html", FC_NORMAL ) ) != -1
          Fwrite( nH, ::cHtmlPage, len( ::cHtmlPage ) )
       endif
-      fclose( nH )
+      FClose( nH )
    endif
 
    ::cCgiHeader := ""
@@ -240,10 +240,10 @@ METHOD Flush() CLASS TIpCgi
      nFileSize := len( cSession )
 
      if ( nH := FCreate( cFile, FC_NORMAL ) ) != -1
-        if ( fwrite( nH, @cSession,  nFileSize ) ) != nFileSize
+        if ( FWrite( nH, @cSession,  nFileSize ) ) != nFileSize
            ::Print( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
         endif
-        fclose( nH )
+        FClose( nH )
      else
         ::Print( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
      endif
@@ -254,9 +254,9 @@ METHOD Flush() CLASS TIpCgi
 
 METHOD DestroySession( cID ) CLASS TIpCgi
 
-   local cFile
-   local cSID := ::cSID
-   local lRet
+   LOCAL cFile
+   LOCAL cSID := ::cSID
+   LOCAL lRet
 
    if !empty( cID )
       cSID := cID
@@ -283,7 +283,7 @@ RETURN lRet
 
 METHOD ErrHandler( xError ) CLASS TIpCgi
 
-   local nCalls
+   LOCAL nCalls
 
    ::Print( '<table border="1">' )
 
@@ -294,7 +294,7 @@ METHOD ErrHandler( xError ) CLASS TIpCgi
       ::Print( '<tr><td>OPERATION:</td><td>' + xError:Operation + '</td></tr>' )
       ::Print( '<tr><td>OS ERROR:</td><td>' + alltrim( str( xError:OsCode ) ) + ' IN ' + xError:SubSystem + '/' + alltrim( str( xError:SubCode ) ) + '</td></tr>' )
       ::Print( '<tr><td>FILENAME:</td><td>' + right( xError:FileName, 40 ) + '</td></tr>' )
-   elseif ISCHARACTER( xError )
+   ELSEIF ISCHARACTER( xError )
       ::Print( '<tr><td>ERROR MESSAGE:</td><td>' + xError + '</td></tr>' )
    endif
 
@@ -308,7 +308,7 @@ METHOD ErrHandler( xError ) CLASS TIpCgi
 
    ::Flush()
 
-   RETURN nil
+   RETURN NIL
 
 METHOD StartHtml( hOptions ) CLASS TIpCgi
 
@@ -360,40 +360,40 @@ METHOD EndFrameSet( hOptions ) CLASS TIpCgi
 
 METHOD SaveHtmlPage( cFile ) CLASS TIpCgi
 
-   local nFile
-   local lSuccess
-   local nLen
-   local cStream
+   LOCAL nFile
+   LOCAL lSuccess
+   LOCAL nLen
+   LOCAL cStream
 
    cStream := ::cHtmlPage + _CRLF
 
    nLen := len( cStream )
 
-   nFile := fcreate( cFile )
+   nFile := FCreate( cFile )
 
    if nFile != 0
-      lSuccess := ( fwrite( nFile, cStream, nLen ) == nLen )
-      fclose( nFile )
+      lSuccess := ( FWrite( nFile, cStream, nLen ) == nLen )
+      FClose( nFile )
    else
-      lSuccess := .f.
+      lSuccess := .F.
    endif
 
    RETURN lSuccess
 
 METHOD StartSession( cSID ) CLASS TIpCgi
 
-   local nH
-   local cFile
-   local nFileSize
-   local cBuffer
+   LOCAL nH
+   LOCAL cFile
+   LOCAL nFileSize
+   LOCAL cBuffer
 
    if empty( cSID )
 
       if ( nH := hb_HPos( ::hGets, "SESSIONID" ) ) != 0
          cSID := hb_HValueAt( ::hGets, nH )
-      elseif ( nH := hb_HPos( ::hPosts, "SESSIONID" ) ) != 0
+      ELSEIF ( nH := hb_HPos( ::hPosts, "SESSIONID" ) ) != 0
          cSID := hb_HValueAt( ::hPosts, nH )
-      elseif ( nH := hb_HPos( ::hCookies, "SESSIONID" ) ) != 0
+      ELSEIF ( nH := hb_HPos( ::hCookies, "SESSIONID" ) ) != 0
          cSID := hb_HValueAt( ::hCookies, nH )
       endif
 
@@ -419,7 +419,7 @@ METHOD StartSession( cSID ) CLASS TIpCgi
             else
                ::SessionDecode( cBuffer )
             endif
-            fclose( nH )
+            FClose( nH )
          endif
       else
          ::ErrHandler( "ERROR: On opening session file : " + cFile + ", file not exist." )
@@ -448,11 +448,11 @@ METHOD SessionDecode( cData ) CLASS TIpCgi
 
 STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
 
-   local cVal := ""
+   LOCAL cVal := ""
 
    DEFAULT cDefault TO ""
 
-   if !empty( xVal ) .and. !empty( cKey )
+   if !empty( xVal ) .AND. !empty( cKey )
       if hb_hHasKey( xVal, cKey )
          cVal := hb_hGet( xVal, cKey )
          hb_hDel( xVal, cKey )
@@ -467,61 +467,61 @@ STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
       cVal := "<" + cKey + ">" + cVal + "</" + cKey + ">"
    endif
 
-   return cVal
+   RETURN cVal
 
 STATIC FUNCTION HtmlAllTag( hTags, cSep )
 
-   local cVal := ""
+   LOCAL cVal := ""
 
    DEFAULT cSep TO " "
 
    hb_hEval( hTags, { |k| cVal += HtmlTag( hTags, k ) + cSep } )
 
-   return cVal
+   RETURN cVal
 
 STATIC FUNCTION HtmlOption( xVal, cKey, cPre, cPost, lScan )
 
-   local cVal := ""
+   LOCAL cVal := ""
 
    if !empty( xVal )
       if empty( cKey )
          cVal := xVal
-      elseif hb_hHasKey( xVal, cKey )
+      ELSEIF hb_hHasKey( xVal, cKey )
          cVal := hb_hGet( xVal, cKey )
          if empty( lScan )
             hb_hDel( xVal, cKey )
          endif
          cVal := cKey + '="' + cVal + '"'
-         if cPre != nil
+         if cPre != NIL
             cVal := cPre + cVal
          endif
-         if cPost != nil
+         if cPost != NIL
             cVal := cVal + cPost
          endif
       endif
    endif
 
-   return cVal
+   RETURN cVal
 
 STATIC FUNCTION HtmlAllOption( hOptions, cSep )
 
-   local cVal := ""
+   LOCAL cVal := ""
 
    DEFAULT cSep TO " "
 
    if !empty( hOptions )
-      hb_hEval( hOptions, { |k| cVal += HtmlOption( hOptions, k,,, .t. ) + cSep } )
+      hb_hEval( hOptions, { |k| cVal += HtmlOption( hOptions, k,,, .T. ) + cSep } )
    endif
 
-   return cVal
+   RETURN cVal
 
 STATIC FUNCTION HtmlValue( xVal, cKey, cDefault )
 
-   local cVal := ""
+   LOCAL cVal := ""
 
    DEFAULT cDefault TO ""
 
-   if !empty( xVal ) .and. !empty( cKey )
+   if !empty( xVal ) .AND. !empty( cKey )
       if hb_hHasKey( xVal, cKey )
          cVal := hb_hGet( xVal, cKey )
          hb_hDel( xVal, cKey )
@@ -532,11 +532,11 @@ STATIC FUNCTION HtmlValue( xVal, cKey, cDefault )
       cVal := cDefault
    endif
 
-   return cVal
+   RETURN cVal
 
 STATIC FUNCTION HtmlAllValue( hValues, cSep )
 
-   local cVal := ""
+   LOCAL cVal := ""
 
    DEFAULT cSep TO " "
 
@@ -544,13 +544,13 @@ STATIC FUNCTION HtmlAllValue( hValues, cSep )
       hb_hEval( hValues, { |k| cVal += HtmlValue( hValues, k ) + cSep } )
    endif
 
-   return cVal
+   RETURN cVal
 
 STATIC FUNCTION HtmlScript( xVal, cKey )
 
-   local cVal := ""
-   local nPos
-   local cTmp
+   LOCAL cVal := ""
+   LOCAL nPos
+   LOCAL cTmp
 
    DEFAULT cKey TO "script"
 
@@ -585,13 +585,13 @@ STATIC FUNCTION HtmlScript( xVal, cKey )
       endif
    endif
 
-   return cVal
+   RETURN cVal
 
 STATIC FUNCTION HtmlStyle( xVal, cKey )
 
-   local cVal := ""
-   local nPos
-   local cTmp
+   LOCAL cVal := ""
+   LOCAL nPos
+   LOCAL cTmp
 
    DEFAULT cKey TO "style"
 
@@ -626,4 +626,4 @@ STATIC FUNCTION HtmlStyle( xVal, cKey )
       endif
    endif
 
-   return cVal
+   RETURN cVal

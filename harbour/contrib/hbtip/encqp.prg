@@ -54,8 +54,8 @@
 #include "hbclass.ch"
 
 
-CLASS TIPEncoderQP FROM TIPEncoder
-   METHOD New()      Constructor
+CREATE CLASS TIPEncoderQP FROM TIPEncoder
+   METHOD New()      CONSTRUCTOR
    METHOD Encode( cData )
    METHOD Decode( cData )
 ENDCLASS

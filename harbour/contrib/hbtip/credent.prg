@@ -58,8 +58,8 @@
 * A way to give basic credentials
 */
 
-CLASS tIPCredentials
-   DATA cMethod
-   DATA cUserid
-   DATA cPassword
+CREATE CLASS tIPCredentials
+   VAR cMethod
+   VAR cUserid
+   VAR cPassword
 ENDCLASS

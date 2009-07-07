@@ -223,7 +223,7 @@ METHOD Write( cData, nLen, bCommit ) CLASS tIPClientSMTP
    LOCAL cRecpt
 
    IF ! ::bInitialized
-      //IF Empty( ::oUrl:cUserid ) .or. Empty( ::oUrl:cFile )
+      //IF Empty( ::oUrl:cUserid ) .OR. Empty( ::oUrl:cFile )
       IF Empty( ::oUrl:cFile )  // GD user id not needed if we did not auth
          RETURN -1
       ENDIF
