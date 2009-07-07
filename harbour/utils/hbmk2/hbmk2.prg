@@ -2441,7 +2441,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             ENDIF
          ENDIF
          cBin_Link := "wlink.exe"
-         cOpt_Link := "SYS causeway {FL} NAME {OE} {LO} {DL} {LL} {LB}{SCRIPT}"
+         cOpt_Link := "SYS dos4g op stub=wstubq.exe {FL} NAME {OE} {LO} {DL} {LL} {LB}{SCRIPT}"
          cBin_Lib := "wlib.exe"
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt

@@ -138,4 +138,7 @@ AR = wlib
 ARFLAGS = -p=64 -c -n $(HB_USER_AFLAGS)
 AR_RULE = $(create_library)
 
+# disable DOS/4GW Banner
+export DOS4G=quiet
+
 include $(TOP)$(ROOT)config/rules.cf

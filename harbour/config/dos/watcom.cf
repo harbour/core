@@ -98,8 +98,13 @@ $(foreach lib, $(GTLIBS), $(link_lib))
 endef
 
 LD = wlink
-# other SYS values: dos4g (default), pmodew (commercial)
+# different SYS values: dos4g (default), pmodew (commercial), causeway
+ifeq ($(LIBNAME),hbpp)
+# we force causeway here as workaround for reduced command line size in dos4g
 LDFLAGS = SYS causeway
+else
+LDFLAGS = SYS dos4g op stub=wstubq.exe
+endif
 ifeq ($(HB_BUILD_DEBUG),yes)
 LDFLAGS := debug all $(LDFLAGS)
 endif
@@ -147,6 +152,9 @@ endef
 AR = wlib
 ARFLAGS = -p=64 -c -n $(HB_USER_AFLAGS)
 AR_RULE = $(create_library)
+
+# disable DOS/4GW Banner
+export DOS4G=quiet
 
 include $(TOP)$(ROOT)config/rules.cf
 
