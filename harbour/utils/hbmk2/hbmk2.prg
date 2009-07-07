@@ -2606,7 +2606,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          cOpt_CompC := ""
          IF hbmk[ _HBMK_lOPTIM ]
-            cOpt_CompC += " -6s -fp6"
+            cOpt_CompC += " -6r -fp6"
             cOpt_CompC += " -onaehtr -s -ei -zp4 -zt0"
             IF hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ]
                cOpt_CompC += " -oi+"

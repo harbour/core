@@ -50,6 +50,8 @@ CPPFLAGS += -oi+
 else
 CPPFLAGS += -oi
 endif
+else
+CPPFLAGS += -3r
 endif
 
 

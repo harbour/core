@@ -63,6 +63,7 @@
 
 #if defined( HB_OS_UNIX )
 #  include <unistd.h>
+#  include <sys/time.h>
 #  include <sys/types.h>
 #  include <sys/wait.h>
 #  include <sys/stat.h>
