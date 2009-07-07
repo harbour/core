@@ -143,7 +143,7 @@ static HB_HASH_FUNC( hb_curl_HashKey )    /* ULONG func( const void * Value, con
 /* deletes a string */
 static HB_HASH_FUNC( hb_curl_HashDel )
 {
-   hb_xfree( Value );
+   hb_xfree( ( void * ) Value );
    HB_SYMBOL_UNUSED( HashPtr );
    HB_SYMBOL_UNUSED( Cargo );
    return 1;
