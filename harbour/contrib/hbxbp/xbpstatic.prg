@@ -272,7 +272,7 @@ METHOD XbpStatic:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpStatic:setCaption( xCaption, cDll )
-   LOCAL oStyle, pPixmap, oIcon, oSize//, oPixmap
+   LOCAL oStyle, pPixmap, oIcon, oPixmap
 
    HB_SYMBOL_UNUSED( cDll )
 
@@ -298,30 +298,38 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
          ::oWidget:setPixmap( QPixmap():new( ::caption ):scaled( ::aSize[ 1 ], ::aSize[ 2 ] ) )
 
       CASE ::type == XBPSTATIC_TYPE_SYSICON
+         oPixmap     := QPixmap()
          oIcon       := QIcon()
          oStyle      := QStyle()
          oStyle:pPtr := QApplication():style()
 
          DO CASE
          CASE ::caption == XBPSTATIC_SYSICON_ICONINFORMATION
-            oIcon:pPtr := oStyle:standardIcon( QStyle_SP_MessageBoxInformation, 0, 0 )
-hb_outDebug( "2 "+ valtype( oIcon:pPtr ) )
-            //pPixmap := oIcon:pixmap( ::aSize[ 1 ], ::aSize[ 2 ] )
-            oSize := QSize():new()
-            oSize:setWidth( 16 )
-            oSize:setHeight( 16 )
-            pPixmap := oIcon:pixmap( QT_PTROF( oSize ), QIcon_Normal, QIcon_On )
-hb_outDebug( "5" )
+            oIcon:pPtr := oStyle:standardIcon( QStyle_SP_MessageBoxInformation )
+
          CASE ::caption == XBPSTATIC_SYSICON_ICONQUESTION
-            pPixmap := oStyle:standardPixmap( QStyle_SP_MessageBoxQuestion )
+            oIcon:pPtr := oStyle:standardIcon( QStyle_SP_MessageBoxQuestion )
+
          CASE ::caption == XBPSTATIC_SYSICON_ICONERROR
-            pPixmap := oStyle:standardPixmap( QStyle_SP_MessageBoxCritical )
+            oIcon:pPtr := oStyle:standardIcon( QStyle_SP_MessageBoxCritical )
+
          CASE ::caption == XBPSTATIC_SYSICON_ICONWARNING
-            pPixmap := oStyle:standardPixmap( QStyle_SP_MessageBoxWarning )
+            oIcon:pPtr := oStyle:standardIcon( QStyle_SP_MessageBoxWarning )
+
+         OTHERWISE
+            /* It is a Harbour Extension - you have 60+ icons to display
+             * Check hbqt.ch : #define QStyle_SP_* constants
+             */
+            oIcon:pPtr := oStyle:standardIcon( ::caption )
+
          ENDCASE
 
+         /* Harbour can also implement if icon be displayed scaled or proportionate
+          */
+         oPixmap:pPtr := oIcon:pixmap_1( ::aSize[ 1 ], ::aSize[ 2 ] )
+         pPixmap      := oPixmap:scaled( ::aSize[ 1 ], ::aSize[ 2 ] )
+
          ::oWidget:setPixmap( pPixmap )
-hb_outDebug( "6" )
       ENDCASE
    ENDIF
 

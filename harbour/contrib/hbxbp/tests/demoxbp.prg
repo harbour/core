@@ -945,7 +945,7 @@ FUNCTION Build_Statics( oWnd )
    oBox:create()
    oBox:setColorBG( GraMakeRGBColor( { 0,100,100 } ) )
 
-   oBox := XbpStatic():new( oGrp, , {nC4,nT+(nH+nG)*2}, {nW,nH+nH+nG} )
+   oBox := XbpStatic():new( oGrp, , {nC4,nT+(nH+nG)*2}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_BITMAP
    oBox:options := XBPSTATIC_BITMAP_TILED
    oBox:caption := 'cut.png'
@@ -954,22 +954,18 @@ FUNCTION Build_Statics( oWnd )
    #endif
 
 
-   #if 0  /* Does not work - despite best efforts :-((( */
-   oBox := XbpStatic():new( oGrp, , {nC4,nT+(nH+nG)*4}, {nW,nH} )
-   oBox:type := XBPSTATIC_TYPE_SYSICON
-   oBox:caption := XBPSTATIC_SYSICON_ICONINFORMATION
-   oBox:create()
-   #endif
-
-   #if 1
    #ifdef __HARBOUR__ /* Differes from Xbase++ by Disk File | Resource Name, ID */
-   oBox := XbpStatic():new( oGrp, , {nC4,nT+(nH+nG)*4}, {nW,nH} )
+   oBox := XbpStatic():new( oGrp, , {nC4,nT+(nH+nG)*3}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_ICON
    oBox:caption := "vr.png"
    oBox:create()
-   oBox:setColorBG( GraMakeRGBColor( { 255,255,0 } ) )
+   oBox:setColorBG( GraMakeRGBColor( { 255,255,187 } ) )
    #endif
-   #endif
+
+   oBox := XbpStatic():new( oGrp, , {nC4,nT+(nH+nG)*4}, {nW,nH} )
+   oBox:type := XBPSTATIC_TYPE_SYSICON
+   oBox:caption := XBPSTATIC_SYSICON_ICONINFORMATION //XBPSTATIC_SYSICON_ICONQUESTION //
+   oBox:create()
 
    #define CRLF chr(13)+chr(10)
 
