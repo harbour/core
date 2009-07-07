@@ -240,17 +240,14 @@ METHOD Open( cUrl ) CLASS tIPClient
    RETURN .T.
 
 METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWord, nTimeOut, cUserAgent ) CLASS tIPClient
-   LOCAL cRequest := ""
+   LOCAL cRequest
+   LOCAL lRet := .F.
    LOCAL tmp
-   LOCAL lRet := .T.
-
-   LOCAL nResponseCode
-   LOCAL sResponseCode, nFirstSpace
 
    ::InetConnect( cProxy, nProxyPort, ::SocketCon )
 
    IF ( tmp := ::InetErrorCode( ::SocketCon ) ) == 0
-      cRequest += "CONNECT " + cServer + ":" + hb_ntos( nPort ) + " HTTP/1.1" + Chr( 13 ) + Chr( 10 )
+      cRequest := "CONNECT " + cServer + ":" + hb_ntos( nPort ) + " HTTP/1.1" + Chr( 13 ) + Chr( 10 )
       IF ! Empty( cUserAgent )
          cRequest += "User-agent: " + cUserAgent + Chr( 13 ) + Chr( 10 )
       ENDIF
@@ -261,18 +258,13 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWor
       ::InetSendAll( ::SocketCon, cRequest )
       cResp := ""
       IF ::ReadHTTPProxyResponse( nTimeOut, @cResp )
-         nFirstSpace := At( " ", cResp )
-         IF nFirstSpace != 0
-            sResponseCode := Right( cResp, Len( cResp ) - nFirstSpace )
-            nResponseCode := Val( sResponseCode )
-            IF nResponseCode != 200
-              ::close()
-               lRet := .F.
-            ENDIF
+         tmp := At( " ", cResp )
+         IF tmp > 0 .AND. Val( SubStr( cResp, tmp + 1 ) ) == 200
+            lRet := .T.
          ENDIF
-      ELSE
+      ENDIF
+      IF ! lRet
          ::close()
-         lRet := .F.
       ENDIF
    ELSE
       cResp := hb_ntos( tmp )
