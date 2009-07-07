@@ -71,7 +71,8 @@
 #xtrans  :p_len                =>   \[P_LEN]
 #xtrans  :p_end                =>   \[P_END]
 
-#xtrans  P_SEEK( <a>, <c> )    =>   (<a>:p_end:=<a>:p_pos, <a>:p_pos:=AtI(<c>,<a>:p_str,<a>:p_end+1))
+#xtrans  P_SEEK( <a>, <c> )    =>   (<a>:p_end:=<a>:p_pos, <a>:p_pos:=hb_At(<c>,<a>:p_str,<a>:p_end+1))
+#xtrans  P_SEEKI( <a>, <c> )   =>   (<a>:p_end:=<a>:p_pos, <a>:p_pos:=tip_AtI(<c>,<a>:p_str,<a>:p_end+1))
 #xtrans  P_PEEK( <a>, <c> )    =>   (<a>:p_end:=<a>:p_pos,PStrCompi( <a>:p_str, <a>:p_pos, <c> ))
 #xtrans  P_NEXT( <a> )         =>   (<a>:p_end:=<a>:p_pos, substr(<a>:p_str,++<a>:p_pos,1))
 #xtrans  P_PREV( <a> )         =>   (<a>:p_end:=<a>:p_pos, substr(<a>:p_str,--<a>:p_pos,1))
@@ -856,7 +857,7 @@ METHOD parseHtmlFixed( parser ) CLASS THtmlNode
 
    IF .NOT. P_PEEK( parser, "/" + ::htmlTagName )
       // seek  <  /endtag>
-      P_SEEK( parser, "/" + ::htmlTagName )
+      P_SEEKI( parser, "/" + ::htmlTagName )
    ENDIF
 
    // back to "<"
@@ -1104,7 +1105,7 @@ METHOD attrToString() CLASS THtmlNode
    ELSE
       // attributes are parsed into a Hash
       BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
-         aAttr := HB_Exec( ::htmlTagType[1] )
+         aAttr := ::htmlTagType[1]:exec()
       RECOVER
          // Tag has no attributes
          aAttr := {}
@@ -1326,7 +1327,7 @@ STATIC FUNCTION __ParseAttr( parser )
             parser:p_end := parser:p_pos
             parser:p_pos --
          ELSE
-            P_SEEK( parser, cChr )
+            P_SEEKI( parser, cChr )
             nEnd := parser:p_pos
 
             IF nEnd > 0
@@ -1373,7 +1374,7 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
    ENDIF
 
    BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
-      aAttr := HB_Exec( ::htmlTagType[1] )
+      aAttr := ::htmlTagType[1]:exec()
    RECOVER
       // Tag has no attributes
       aAttr := {}
@@ -1641,7 +1642,7 @@ FUNCTION THtmlIsValid( cTagName, cAttrName )
    BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
       aValue := shTagTypes[ cTagName ]
       IF cAttrName != NIL
-         aValue := HB_Exec( aValue[1] )
+         aValue := aValue[1]:exec()
          lRet   := ( Ascan( aValue, {|a| Lower(a[1]) == Lower( cAttrName ) } ) > 0 )
       ENDIF
    RECOVER

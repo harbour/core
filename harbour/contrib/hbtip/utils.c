@@ -65,7 +65,6 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
-#include "hbvm.h"
 #include "hbdate.h"
 
 #ifdef HB_OS_WIN
@@ -763,7 +762,7 @@ static ULONG hb_strAtI( const char * szSub, ULONG ulSubLen, const char * szText,
 }
 
 /* Case insensitive At() function */
-HB_FUNC( ATI )
+HB_FUNC( TIP_ATI )
 {
    PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
@@ -807,57 +806,34 @@ HB_FUNC( ATI )
    }
 }
 
-HB_FUNC( HB_EXEC )
-{
-   if( HB_ISSYMBOL( 1 ) )
-   {
-      BOOL fSend = FALSE;
-      int iParams = hb_pcount() - 1;
-
-      if( iParams >= 1 )
-      {
-         fSend = iParams > 1 && ! HB_IS_NIL( hb_param( 2, HB_IT_ANY ) );
-         iParams--;
-      }
-      else
-         hb_vmPushNil();
-      if( fSend )
-         hb_vmSend( ( USHORT ) iParams );
-      else
-         hb_vmDo( ( USHORT ) iParams );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
 HB_FUNC( TIP_HTMLSPECIALCHARS )
 {
-   const char *cData = hb_parc(1);
-   int nLen = hb_parclen(1);
-   char *cRet;
+   const char *cData = hb_parc( 1 );
+   int nLen = hb_parclen( 1 );
+   char * cRet;
    int nPos = 0, nPosRet = 0;
    BYTE cElem;
 
-   if ( ! cData )
+   if( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1, hb_paramError(1) );
       return;
    }
 
-   if ( ! nLen )
+   if( ! nLen )
    {
       hb_retc_null();
       return;
    }
 
    /* Giving maximum final length possible */
-   cRet = (char *) hb_xgrab( nLen * 6 +1);
+   cRet = ( char * ) hb_xgrab( nLen * 6 + 1 );
 
-   while ( nPos < nLen )
+   while( nPos < nLen )
    {
-      cElem = ( BYTE )cData[ nPos ];
+      cElem = ( BYTE ) cData[ nPos ];
 
-      if ( cElem == '&' )
+      if( cElem == '&' )
       {
          cRet[ nPosRet++ ] = '&';
          cRet[ nPosRet++ ] = 'a';
@@ -865,21 +841,21 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          cRet[ nPosRet++ ] = 'p';
          cRet[ nPosRet++ ] = ';';
       }
-      else if ( cElem == '<' )
+      else if( cElem == '<' )
       {
          cRet[ nPosRet++ ] = '&';
          cRet[ nPosRet++ ] = 'l';
          cRet[ nPosRet++ ] = 't';
          cRet[ nPosRet++ ] = ';';
       }
-      else if ( cElem == '>' )
+      else if( cElem == '>' )
       {
          cRet[ nPosRet++ ] = '&';
          cRet[ nPosRet++ ] = 'g';
          cRet[ nPosRet++ ] = 't';
          cRet[ nPosRet++ ] = ';';
       }
-      else if ( cElem == '"' )
+      else if( cElem == '"' )
       {
          cRet[ nPosRet++ ] = '&';
          cRet[ nPosRet++ ] = 'q';
@@ -888,7 +864,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          cRet[ nPosRet++ ] = 't';
          cRet[ nPosRet++ ] = ';';
       }
-      else if ( cElem == '\'' )
+      else if( cElem == '\'' )
       {
          cRet[ nPosRet++ ] = '&';
          cRet[ nPosRet++ ] = '#';
@@ -897,7 +873,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          cRet[ nPosRet++ ] = '9';
          cRet[ nPosRet++ ] = ';';
       }
-      else if ( cElem == '\r' )
+      else if( cElem == '\r' )
       {
          cRet[ nPosRet++ ] = '&';
          cRet[ nPosRet++ ] = '#';
@@ -906,7 +882,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          cRet[ nPosRet++ ] = '3';
          cRet[ nPosRet++ ] = ';';
       }
-      else if ( cElem == '\n' )
+      else if( cElem == '\n' )
       {
          cRet[ nPosRet++ ] = '&';
          cRet[ nPosRet++ ] = '#';
@@ -915,7 +891,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          cRet[ nPosRet++ ] = '0';
          cRet[ nPosRet++ ] = ';';
       }
-      else if ( cElem >= ' ' )
+      else if( cElem >= ' ' )
       {
          cRet[ nPosRet ] = cElem;
          nPosRet++;
