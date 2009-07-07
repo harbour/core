@@ -105,7 +105,7 @@ PROCEDURE BuildADialog()
    /* Make background color of :drawingArea different */
    oDa:setColorBG( GraMakeRGBColor( { 134,128,200 } ) )
    oDa:setFontCompoundName( "10.Tohama italics" )
-   oDa:setColorFG( GraMakeRGBColor( { 255,255,255 } ) )
+   //oDa:setColorFG( GraMakeRGBColor( { 255,255,255 } ) )
 
    /* Install menu system */
    Build_MenuBar( oDlg )
@@ -157,6 +157,9 @@ PROCEDURE BuildADialog()
 
    /* Build HTML Viewer */
    oHtm := Build_HTMLViewer( aTabs[ TAB_1 ] )
+
+   /* Gather Font INformation */
+   Build_Font( oDlg )
 
    /* Present the dialog on the screen */
    oDlg:Show()
@@ -494,21 +497,21 @@ FUNCTION Build_TabPages( oWnd )
 
    aTabs[ TAB_2 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight } )
    aTabs[ TAB_2 ]:caption    := "MLE"
-   aTabs[ TAB_2 ]:preOffset  := 20
+   aTabs[ TAB_2 ]:preOffset  := 40
    aTabs[ TAB_2 ]:postOffset := 60
    aTabs[ TAB_2 ]:create()
    aTabs[ TAB_2 ]:TabActivate := SetMaximized( aTabs, 1 )
 
    aTabs[ TAB_3 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight } )
    aTabs[ TAB_3 ]:caption    := "Buttons"
-   aTabs[ TAB_3 ]:preOffset  := 40
+   aTabs[ TAB_3 ]:preOffset  := 60
    aTabs[ TAB_3 ]:postOffset := 40
    aTabs[ TAB_3 ]:create()
    aTabs[ TAB_3 ]:TabActivate := SetMaximized( aTabs, 3 )
 
    aTabs[ TAB_4 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight } )
    aTabs[ TAB_4 ]:caption    := "Tree"
-   aTabs[ TAB_4 ]:preOffset  := 60
+   aTabs[ TAB_4 ]:preOffset  := 80
    aTabs[ TAB_4 ]:postOffset := 20
    aTabs[ TAB_4 ]:create()
    aTabs[ TAB_4 ]:TabActivate := SetMaximized( aTabs, 4 )
@@ -517,6 +520,8 @@ FUNCTION Build_TabPages( oWnd )
    aTabs[ TAB_5 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight } )
    aTabs[ TAB_5 ]:minimized := .F.
    aTabs[ TAB_5 ]:caption   := "Lists"
+   aTabs[ TAB_4 ]:preOffset  := 100
+   aTabs[ TAB_4 ]:postOffset := 20
    aTabs[ TAB_5 ]:create()
    aTabs[ TAB_5 ]:TabActivate := SetMaximized( aTabs, 5 )
    aTabs[ TAB_5 ]:setPointer( , XBPSTATIC_SYSICON_SIZENESW, XBPWINDOW_POINTERTYPE_SYSPOINTER )
@@ -568,7 +573,11 @@ FUNCTION Build_StatusBar( oWnd )
    oPanel:caption  := "Harbour-QT-Xbase++ is Ready"
    oPanel:autosize := XBPSTATUSBAR_AUTOSIZE_SPRING
 
+   #ifdef __XPP__
    oSBar:setPointer( , XBPSTATIC_SYSICON_SIZEWE, XBPWINDOW_POINTERTYPE_SYSPOINTER )
+   #else
+   oSBar:setPointer( , 'vr.png', XBPWINDOW_POINTERTYPE_ICON )
+   #endif
 
    RETURN nil
 
@@ -846,6 +855,9 @@ FUNCTION Build_Statics( oWnd )
    oGrp:create()
    oGrp:setColorFG( GraMakeRGBColor( {   0,255,255 } ) )
    oGrp:setColorBG( GraMakeRGBColor( { 134,128,220 } ) )
+   #ifdef __HARBOUR__
+   oGrp:setPointer( , 'abs3.png', XBPWINDOW_POINTERTYPE_ICON )
+   #endif
 
    oLbl := XbpStatic():new( oGrp, , {10,20}, {220,30} )
    oLbl:type    := XBPSTATIC_TYPE_TEXT
@@ -1105,3 +1117,18 @@ FUNCTION Build_Bitmap( oWnd )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION Build_Font( oWnd )
+   LOCAL oFont
+
+   oFont := XbpFont():new()
+
+   oFont:nominalPointSize := 16
+   oFont:create( "Times New Roman" )
+
+hb_outDebug( IF( oFont:bold(), "BOLD", "NORMAL" ) )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+

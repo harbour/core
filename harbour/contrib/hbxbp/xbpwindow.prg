@@ -925,17 +925,7 @@ METHOD XbpWindow:setModalState( nState )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Xbp_SetCursor( oXbp, nShape )
-   LOCAL oCursor := QCursor():new()
-
-   oCursor:setShape( nShape )
-   oXbp:oWidget:setCursor( oCursor:pPtr )
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:setPointer( cDllName, nResID, nType )
+METHOD XbpWindow:setPointer( cDllName, xResID, nType )
 
    HB_SYMBOL_UNUSED( cDllName )
 
@@ -947,57 +937,85 @@ METHOD XbpWindow:setPointer( cDllName, nResID, nType )
 
    CASE nType == XBPWINDOW_POINTERTYPE_SYSPOINTER
       DO CASE
-      CASE nResID == XBPSTATIC_SYSICON_DEFAULT   // Default mouse pointer
-      CASE nResID == XBPSTATIC_SYSICON_ARROW     // Normal arrow
-         Xbp_SetCursor( Self, Qt_ArrowCursor )
-      CASE nResID == XBPSTATIC_SYSICON_WAIT      // Hour glass or clock
-         Xbp_SetCursor( Self, Qt_WaitCursor )
-      CASE nResID == XBPSTATIC_SYSICON_MOVE      // Move the window
-         Xbp_SetCursor( Self, Qt_OpenHandCursor )
-      CASE nResID == XBPSTATIC_SYSICON_SIZE      // Change size (all directions)
-         Xbp_SetCursor( Self, Qt_SizeAllCursor )
-      CASE nResID == XBPSTATIC_SYSICON_SIZENWSE  // Change size (North west-South east)
-         Xbp_SetCursor( Self, Qt_SizeFDiagCursor )
-      CASE nResID == XBPSTATIC_SYSICON_SIZENESW  // Change size (North east-South west)
-         Xbp_SetCursor( Self, Qt_SizeBDiagCursor )
-      CASE nResID == XBPSTATIC_SYSICON_SIZEWE    // Change size (West-East)
-         Xbp_SetCursor( Self, Qt_SizeHorCursor )
-      CASE nResID == XBPSTATIC_SYSICON_SIZENS    // Change size (North-South)
-         Xbp_SetCursor( Self, Qt_SizeVerCursor )
+      CASE xResID == XBPSTATIC_SYSICON_DEFAULT   // Default mouse pointer
+      CASE xResID == XBPSTATIC_SYSICON_ARROW     // Normal arrow
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_ArrowCursor ) ) )
 
-      /* Possible Harbour-QT extensions */
+      CASE xResID == XBPSTATIC_SYSICON_WAIT      // Hour glass or clock
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_WaitCursor ) ) )
 
-      CASE nResID == Qt_UpArrowCursor
-         Xbp_SetCursor( Self, Qt_UpArrowCursor )
-      CASE nResID == Qt_CrossCursor
-         Xbp_SetCursor( Self, Qt_CrossCursor )
-      CASE nResID == Qt_IBeamCursor
-         Xbp_SetCursor( Self, Qt_IBeamCursor )
-      CASE nResID == Qt_BlankCursor
-         Xbp_SetCursor( Self, Qt_BlankCursor )
-      CASE nResID == Qt_SplitVCursor
-         Xbp_SetCursor( Self, Qt_SplitVCursor )
-      CASE nResID == Qt_SplitHCursor
-         Xbp_SetCursor( Self, Qt_SplitHCursor )
-      CASE nResID == Qt_PointingHandCursor
-         Xbp_SetCursor( Self, Qt_PointingHandCursor )
-      CASE nResID == Qt_ForbiddenCursor
-         Xbp_SetCursor( Self, Qt_ForbiddenCursor )
-      CASE nResID == Qt_ClosedHandCursor
-         Xbp_SetCursor( Self, Qt_ClosedHandCursor )
-      CASE nResID == Qt_WhatsThisCursor
-         Xbp_SetCursor( Self, Qt_WhatsThisCursor )
-      CASE nResID == Qt_BusyCursor
-         Xbp_SetCursor( Self, Qt_BusyCursor )
-      CASE nResID == Qt_BitmapCursor
-         Xbp_SetCursor( Self, Qt_BitmapCursor )
+      CASE xResID == XBPSTATIC_SYSICON_MOVE      // Move the window
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_OpenHandCursor ) ) )
+
+      CASE xResID == XBPSTATIC_SYSICON_SIZE      // Change size (all directions)
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_SizeAllCursor ) ) )
+
+      CASE xResID == XBPSTATIC_SYSICON_SIZENWSE  // Change size (North west-South east)
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_SizeFDiagCursor ) ) )
+
+      CASE xResID == XBPSTATIC_SYSICON_SIZENESW  // Change size (North east-South west)
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_SizeBDiagCursor ) ) )
+
+      CASE xResID == XBPSTATIC_SYSICON_SIZEWE    // Change size (West-East)
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_SizeHorCursor ) ) )
+
+      CASE xResID == XBPSTATIC_SYSICON_SIZENS    // Change size (North-South)
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_SizeVerCursor ) ) )
+
+      /* Possible Harbour-QT extensions - #deines yet to be finalized */
+
+      CASE xResID == Qt_UpArrowCursor
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_UpArrowCursor ) ) )
+
+      CASE xResID == Qt_CrossCursor
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_CrossCursor ) ) )
+
+      CASE xResID == Qt_IBeamCursor
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_IBeamCursor ) ) )
+
+      CASE xResID == Qt_BlankCursor
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_BlankCursor ) ) )
+
+      CASE xResID == Qt_SplitVCursor
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_SplitVCursor ) ) )
+
+      CASE xResID == Qt_SplitHCursor
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_SplitHCursor ) ) )
+
+      CASE xResID == Qt_PointingHandCursor
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_PointingHandCursor ) ) )
+
+      CASE xResID == Qt_ForbiddenCursor
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_ForbiddenCursor ) ) )
+
+      CASE xResID == Qt_ClosedHandCursor
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_ClosedHandCursor ) ) )
+
+      CASE xResID == Qt_WhatsThisCursor
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_WhatsThisCursor ) ) )
+
+      CASE xResID == Qt_BusyCursor
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_BusyCursor ) ) )
+
+      CASE xResID == Qt_BitmapCursor
+         ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_BitmapCursor ) ) )
 
       ENDCASE
 
    CASE nType == XBPWINDOW_POINTERTYPE_ICON
-      // TODO:
+      IF valtype( xResID ) == "C"   // Harbour compatibility
+         IF file( xResID )
+            #if 0  /* The original image size - but in practice pointer should be proper sized */
+            ::oWidget:setCursor( QT_PTROF( QCursor():new( QT_PTROF( QPixmap():new( xResID ) ) ) ) )
+            #else
+            ::oWidget:setCursor( QT_PTROF( QCursor():new( QPixmap():new( xResID ):scaled( 24,24 ) ) ) )
+            #endif
+            //::oWidget:setCursor( QT_PTROF( QCursor():new( QT_PTROF( QIcon():new( xResID ) ) ) ) )
+         ENDIF
+      ENDIF
 
    ENDCASE
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

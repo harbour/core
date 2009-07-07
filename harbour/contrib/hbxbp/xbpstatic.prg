@@ -289,7 +289,7 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
 
       CASE ::type == XBPSTATIC_TYPE_BITMAP
          IF ::options == XBPSTATIC_BITMAP_SCALED
-            ::oWidget:setStyleSheet( 'background: url('+ ::caption +') center no-repeat;' )
+            ::oWidget:setStyleSheet( 'border-image: url('+ ::caption +');' )
          ELSE
             ::oWidget:setStyleSheet( 'background: url('+ ::caption +'); repeat-xy;' )
          ENDIF
@@ -307,10 +307,10 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
             oIcon:pPtr := oStyle:standardIcon( QStyle_SP_MessageBoxInformation, 0, 0 )
 hb_outDebug( "2 "+ valtype( oIcon:pPtr ) )
             //pPixmap := oIcon:pixmap( ::aSize[ 1 ], ::aSize[ 2 ] )
-               oSize := QSize():new()
-               oSize:setWidth( 16 )
-               oSize:setHeight( 16 )
-               pPixmap := oIcon:pixmap( QT_PTROF( oSize ), QIcon_Normal, QIcon_On )
+            oSize := QSize():new()
+            oSize:setWidth( 16 )
+            oSize:setHeight( 16 )
+            pPixmap := oIcon:pixmap( QT_PTROF( oSize ), QIcon_Normal, QIcon_On )
 hb_outDebug( "5" )
          CASE ::caption == XBPSTATIC_SYSICON_ICONQUESTION
             pPixmap := oStyle:standardPixmap( QStyle_SP_MessageBoxQuestion )
