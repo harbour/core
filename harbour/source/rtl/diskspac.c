@@ -199,10 +199,7 @@ HB_FUNC( DISKSPACE )
 
       {
 #if defined(__WATCOMC__) || defined(__CEGCC__)
-         struct stat st;
-         bError = stat( szName, &st) != 0;
-         if( !bError )
-            dSpace = ( double ) st.st_blocks * ( double ) st.st_blksize;
+         int iTODO;
 #else
 #if defined( HB_OS_DARWIN )
          struct statfs st;
