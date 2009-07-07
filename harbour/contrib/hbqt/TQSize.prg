@@ -83,46 +83,8 @@ CREATE CLASS QSize
 /*----------------------------------------------------------------------*/
 
 METHOD New( ... ) CLASS QSize
-   LOCAL aP, nParams
 
-   aP := hb_aParams()
-   nParams := len( aP )
-
-   DO CASE
-   CASE nParams == 0
-      ::pPtr := Qt_QSize()
-
-   CASE nParams == 1
-      ::pPtr := Qt_QSize( aP[ 1 ] )
-
-   CASE nParams == 2
-      ::pPtr := Qt_QSize( aP[ 1 ], aP[ 2 ] )
-
-   CASE nParams == 3
-      ::pPtr := Qt_QSize( aP[ 1 ], aP[ 2 ], aP[ 3 ] )
-
-   CASE nParams == 4
-      ::pPtr := Qt_QSize( aP[ 1 ], aP[ 2 ], aP[ 3 ], aP[ 4 ] )
-
-   CASE nParams == 5
-      ::pPtr := Qt_QSize( aP[ 1 ], aP[ 2 ], aP[ 3 ], aP[ 4 ], aP[ 5 ] )
-
-   CASE nParams == 6
-      ::pPtr := Qt_QSize( aP[ 1 ], aP[ 2 ], aP[ 3 ], aP[ 4 ], aP[ 5 ], aP[ 6 ] )
-
-   CASE nParams == 7
-      ::pPtr := Qt_QSize( aP[ 1 ], aP[ 2 ], aP[ 3 ], aP[ 4 ], aP[ 5 ], aP[ 6 ], aP[ 7 ] )
-
-   CASE nParams == 8
-      ::pPtr := Qt_QSize( aP[ 1 ], aP[ 2 ], aP[ 3 ], aP[ 4 ], aP[ 5 ], aP[ 6 ], aP[ 7 ], aP[ 8 ] )
-
-   CASE nParams == 9
-      ::pPtr := Qt_QSize( aP[ 1 ], aP[ 2 ], aP[ 3 ], aP[ 4 ], aP[ 5 ], aP[ 6 ], aP[ 7 ], aP[ 8 ], aP[ 9 ] )
-
-   CASE nParams ==10
-      ::pPtr := Qt_QSize( aP[ 1 ], aP[ 2 ], aP[ 3 ], aP[ 4 ], aP[ 5 ], aP[ 6 ], aP[ 7 ], aP[ 8 ], aP[ 9 ], aP[10 ] )
-
-   ENDCASE
+   ::pPtr := Qt_QSize( ... )
 
    RETURN Self
 
