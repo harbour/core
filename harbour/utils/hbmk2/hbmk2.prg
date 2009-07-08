@@ -6512,7 +6512,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
       ( cKeyword == "allwin"   .AND. hbmk[ _HBMK_cARCH ] $ "win|wce"                                             ) .OR. ;
       ( cKeyword == "allgcc"   .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp"             ) .OR. ;
       ( cKeyword == "allmingw" .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"                              ) .OR. ;
-      ( cKeyword == "allmsvc"  .AND. hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcarm"                                 ) .OR. ;
+      ( cKeyword == "allmsvc"  .AND. hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcia64|msvcarm"                        ) .OR. ;
       ( cKeyword == "allpocc"  .AND. hbmk[ _HBMK_cCOMP ] $ "pocc|pocc64|poccarm"                                 ) .OR. ;
       ( cKeyword == "allicc"   .AND. hbmk[ _HBMK_cCOMP ] $ "icc|iccia64"                                         )
       RETURN .T.
