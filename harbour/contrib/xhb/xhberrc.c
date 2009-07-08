@@ -1,5 +1,5 @@
 /*
- * $Id: errorsys.prg,v 1.60 2009/02/23 21:00:20 ronpinkas Exp $
+ * $Id$
  */
 
 /*

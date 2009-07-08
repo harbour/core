@@ -1,5 +1,5 @@
 /*
- * $Id: hbver.ch,v 1.1 2005/03/09 05:38:01 andijahja Exp $
+ * $Id$
  */
 
 /*
