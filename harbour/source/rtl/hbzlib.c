@@ -94,7 +94,7 @@ static ULONG hb_zlibUncompressedSize( const char * szSrc, ULONG ulLen )
 HB_FUNC( HB_ZLIBVERSION )
 {
    if( hb_parni( 1 ) == 1 )
-      hb_retc( ZLIB_VERSION );
+      hb_retc_const( ZLIB_VERSION );
    else
       hb_retc( zlibVersion() );
 }

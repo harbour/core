@@ -74,7 +74,7 @@ HB_FUNC( HB_VERSION )
    case HB_VERSION_MAJOR:          hb_retni( HB_VER_MAJOR ); break;
    case HB_VERSION_MINOR:          hb_retni( HB_VER_MINOR ); break;
    case HB_VERSION_RELEASE:        hb_retni( HB_VER_RELEASE ); break;
-   case HB_VERSION_STATUS:         hb_retc( HB_VER_STATUS ); break;
+   case HB_VERSION_STATUS:         hb_retc_const( HB_VER_STATUS ); break;
    case HB_VERSION_REVISION:       hb_retni( hb_verSvnID() ); break;
    case HB_VERSION_CHANGELOG_LAST: hb_retc_const( hb_verSvnLastEntry() ); break;
    case HB_VERSION_CHANGELOG_ID:   hb_retc_const( hb_verSvnChangeLogID() ); break;

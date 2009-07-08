@@ -600,7 +600,7 @@ HB_FUNC( SET )
             pSet->HB_SET_CANCEL = set_logical( pArg2, pSet->HB_SET_CANCEL );
          break;
       case HB_SET_COLOR:
-         hb_retc( hb_conSetColor( args >= 2 && HB_IS_STRING( pArg2 ) ? hb_itemGetCPtr( pArg2 ) : ( char * ) NULL ) );
+         hb_retc( hb_conSetColor( args >= 2 && HB_IS_STRING( pArg2 ) ? hb_itemGetCPtr( pArg2 ) : NULL ) );
          break;
       case HB_SET_CONFIRM:
          hb_retl( pSet->HB_SET_CONFIRM );

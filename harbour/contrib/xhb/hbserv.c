@@ -948,7 +948,7 @@ HB_FUNC( HB_SIGNALDESC )
          case SEGV_MAPERR: hb_retc_const( "Segmentation fault: address not mapped to object"); return;
          case SEGV_ACCERR: hb_retc_const( "Segmentation fault: invalid permissions for mapped object"); return;
          #endif
-         default: hb_retc("Segmentation fault"); return;
+         default: hb_retc_const("Segmentation fault"); return;
       }
 
       case SIGILL: switch( iSubSig )
