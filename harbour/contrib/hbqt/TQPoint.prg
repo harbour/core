@@ -76,11 +76,9 @@ CREATE CLASS QPoint
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QPoint
+METHOD New( ... ) CLASS QPoint
 
-   ::pParent := pParent
-
-   ::pPtr := Qt_QPoint( pParent )
+   ::pPtr := Qt_QPoint( ... )
 
    RETURN Self
 

@@ -70,7 +70,22 @@
  */
 HB_FUNC( QT_QLINEARGRADIENT )
 {
-   hb_retptr( ( QLinearGradient* ) new QLinearGradient() );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QLinearGradient* ) new QLinearGradient( *hbqt_par_QLinearGradient( 1 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      hb_retptr( ( QLinearGradient* ) new QLinearGradient( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) );
+   }
+   else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
+   {
+      hb_retptr( ( QLinearGradient* ) new QLinearGradient( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QLinearGradient* ) new QLinearGradient() );
+   }
 }
 
 /*

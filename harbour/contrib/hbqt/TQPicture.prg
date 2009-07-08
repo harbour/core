@@ -79,11 +79,9 @@ CREATE CLASS QPicture INHERIT QPaintDevice
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QPicture
+METHOD New( ... ) CLASS QPicture
 
-   ::pParent := pParent
-
-   ::pPtr := Qt_QPicture( pParent )
+   ::pPtr := Qt_QPicture( ... )
 
    RETURN Self
 

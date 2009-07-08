@@ -70,8 +70,18 @@
  */
 HB_FUNC( QT_QPOINTF )
 {
-   hb_retptr( ( QPointF* ) new QPointF( ( qreal ) hb_parnd( 1 ),
-                                        ( qreal ) hb_parnd( 2 ) ) );
+   if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QPointF* ) new QPointF( ( qreal ) hb_parnd( 1 ), ( qreal ) hb_parnd( 2 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QPointF* ) new QPointF( *hbqt_par_QPoint( 1 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QPointF* ) new QPointF() );
+   }
 }
 
 /*

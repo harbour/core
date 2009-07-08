@@ -86,11 +86,9 @@ CREATE CLASS QRegion
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QRegion
+METHOD New( ... ) CLASS QRegion
 
-   ::pParent := pParent
-
-   ::pPtr := Qt_QRegion( pParent )
+   ::pPtr := Qt_QRegion( ... )
 
    RETURN Self
 

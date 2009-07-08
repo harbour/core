@@ -91,7 +91,38 @@
  */
 HB_FUNC( QT_QIMAGE )
 {
-   hb_retptr( ( QImage* ) new QImage() );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QImage* ) new QImage( *hbqt_par_QImage( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      hb_retptr( ( QImage* ) new QImage( hbqt_par_QString( 1 ), ( const char * ) 0 ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
+   {
+      hb_retptr( ( QImage* ) new QImage( hbqt_par_QString( 1 ), ( const char * ) hb_parcx( 2 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QImage* ) new QImage( *hbqt_par_QSize( 1 ), ( QImage::Format ) hb_parni( 2 ) ) );
+   }
+   else if( hb_pcount() == 3 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
+   {
+      hb_retptr( ( QImage* ) new QImage( hb_parni( 1 ), hb_parni( 2 ), ( QImage::Format ) hb_parni( 3 ) ) );
+   }
+   else if( hb_pcount() == 4 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
+   {
+      hb_retptr( ( QImage* ) new QImage( ( const uchar * ) hb_parc( 1 ), hb_parni( 2 ), hb_parni( 3 ), ( QImage::Format ) hb_parni( 4 ) ) );
+   }
+   else if( hb_pcount() == 5 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) && HB_ISNUM( 5 ) )
+   {
+      hb_retptr( ( QImage* ) new QImage( ( const uchar * ) hb_parc( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( QImage::Format ) hb_parni( 5 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QImage* ) new QImage() );
+   }
 }
 
 /*

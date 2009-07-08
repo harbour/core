@@ -108,11 +108,9 @@ CREATE CLASS QPixmap INHERIT QPaintDevice
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QPixmap
+METHOD New( ... ) CLASS QPixmap
 
-   ::pParent := pParent
-
-   ::pPtr := Qt_QPixmap( pParent )
+   ::pPtr := Qt_QPixmap( ... )
 
    RETURN Self
 

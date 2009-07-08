@@ -73,7 +73,41 @@
  */
 HB_FUNC( QT_QBITMAP )
 {
-   hb_retptr( ( QBitmap* ) new QBitmap() );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QBitmap* ) new QBitmap( *hbqt_par_QBitmap( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      hb_retptr( ( QBitmap* ) new QBitmap( hbqt_par_QString( 1 ), ( const char * ) 0 ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
+   {
+      hb_retptr( ( QBitmap* ) new QBitmap( hbqt_par_QString( 1 ), hb_parc( 2 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QBitmap* ) new QBitmap( hb_parni( 1 ), hb_parni( 2 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      if(      ( QString ) "QPixmap" == hbqt_par_QString( 1 ) )
+      {
+         hb_retptr( ( QBitmap* ) new QBitmap( *hbqt_par_QPixmap( 1 ) ) );
+      }
+      else if( ( QString ) "QSize"   == hbqt_par_QString( 1 ) )
+      {
+         hb_retptr( ( QBitmap* ) new QBitmap( *hbqt_par_QSize( 1 ) ) );
+      }
+      else
+      {
+         hb_retptr( ( QBitmap* ) new QBitmap() );
+      }
+   }
+   else
+   {
+      hb_retptr( ( QBitmap* ) new QBitmap() );
+   }
 }
 
 /*

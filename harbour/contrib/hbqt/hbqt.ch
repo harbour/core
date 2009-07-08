@@ -1615,6 +1615,115 @@
 #define QIcon_On                                  0    // Display the pixmap when the widget is in an "on" state
 #define QIcon_Off                                 1    // Display the pixmap when the widget is in an "off" state
 
+#define QFont_MixedCase                           0   // This is the normal text rendering option where no capitalization change is applied.
+#define QFont_AllUppercase                        1   // This alters the text to be rendered in all uppercase type.
+#define QFont_AllLowercase                        2   // This alters the text to be rendered in all lowercase type.
+#define QFont_SmallCaps                           3   // This alters the text to be rendered in small-caps type.
+#define QFont_Capitalize                          4   // This alters the text to be rendered with the first character of each word as an uppercase character.
+
+// enum #define QFont_SpacingType
+//
+#define QFont_PercentageSpacing                   0   // A value of 100 will keep the spacing unchanged; a value of 200 will enlarge the spacing after a character by the width of the character itself.
+#define QFont_AbsoluteSpacing                     1   // A positive value increases the letter spacing by the corresponding pixels; a negative value decreases the spacing.
+
+// enum #define QFont_Stretch
+// Predefined stretch values that follow the CSS naming convention. The higher the value, the more stretched the text is.
+//
+#define QFont_UltraCondensed                      50
+#define QFont_ExtraCondensed                      62
+#define QFont_Condensed                           75
+#define QFont_SemiCondensed                       87
+#define QFont_Unstretched                         100
+#define QFont_SemiExpanded                        112
+#define QFont_Expanded                            125
+#define QFont_ExtraExpanded                       150
+#define QFont_UltraExpanded                       200
+
+// enum #define QFont_Style
+// This enum describes the different styles of glyphs that are used to display text.
+//
+#define QFont_StyleNormal                         0   // Normal glyphs used in unstyled text.
+#define QFont_StyleItalic                         1   // Italic glyphs that are specifically designed for the purpose of representing italicized text.
+#define QFont_StyleOblique                        2   // Glyphs with an italic appearance that are typically based on the unstyled glyphs, but are not fine-tuned for the purpose of representing italicized text.
+
+// enum #define QFont_StyleHint
+// Style hints are used by the font matching algorithm to find an appropriate default family if a selected font family is not available.
+//
+#define QFont_AnyStyle                            ?                  // leaves the font matching algorithm to choose the family. This is the default.
+#define QFont_SansSerif                           QFont_Helvetica    // the font matcher prefer sans serif fonts.
+#define QFont_Helvetica                           0                  // is a synonym for SansSerif.
+#define QFont_Serif                               QFont_Times        // the font matcher prefers serif fonts.
+#define QFont_Times                               ?                  // is a synonym for Serif.
+#define QFont_TypeWriter                          QFont_Courier      // the font matcher prefers fixed pitch fonts.
+#define QFont_Courier                             ?                  // a synonym for TypeWriter.
+#define QFont_OldEnglish                          ?                  // the font matcher prefers decorative fonts.
+#define QFont_Decorative                          QFont_OldEnglish   // is a synonym for OldEnglish.
+#define QFont_System                              ?                  // the font matcher prefers system fonts.
+
+// enum #define QFont_StyleStrategy
+// The style strategy tells the font matching algorithm what type of fonts should be used to find an appropriate default family.
+//
+#define QFont_PreferDefault                       0x0001   // the default style strategy. It does not prefer any type of font.
+#define QFont_PreferBitmap                        0x0002   // prefers bitmap fonts (as opposed to outline fonts).
+#define QFont_PreferDevice                        0x0004   // prefers device fonts.
+#define QFont_PreferOutline                       0x0008   // prefers outline fonts (as opposed to bitmap fonts).
+#define QFont_ForceOutline                        0x0010   // forces the use of outline fonts.
+#define QFont_NoAntialias                         0x0100   // don't antialias the fonts.
+#define QFont_PreferAntialias                     0x0080   // antialias if possible.
+#define QFont_OpenGLCompatible                    0x0200   // forces the use of OpenGL compatible fonts.
+#define QFont_NoFontMerging                       0x8000   // If a font does not contain a character requested to draw then Qt automatically chooses a similar looking for that contains the character. This flag disables this feature.
+
+// Any of these may be OR-ed with one of these flags:
+//
+#define QFont_PreferMatch                         0x0020   // prefer an exact match. The font matcher will try to use the exact font size that has been specified.
+#define QFont_PreferQuality                       0x0040   // prefer the best quality font. The font matcher will use the nearest standard point size that the font supports.
+
+#define QFont_Light                               25
+#define QFont_Normal                              50
+#define QFont_DemiBold                            63
+#define QFont_Bold                                75
+#define QFont_Black                               87
+
+
+#define QFileDialog_AcceptOpen                           0
+#define QFileDialog_AcceptSave                           1
+
+// enum #define QFileDialog_DialogLabel
+//
+#define QFileDialog_LookIn                               0
+#define QFileDialog_FileName                             1
+#define QFileDialog_FileType                             2
+#define QFileDialog_Accept                               3
+#define QFileDialog_Reject                               4
+
+// enum #define QFileDialog_FileMode
+// This enum is used to indicate what the user may select in the file dialog;
+// i.e. what the dialog will return if the user clicks OK.
+//
+#define QFileDialog_AnyFile                              0   // The name of a file, whether it exists or not.
+#define QFileDialog_ExistingFile                         1   // The name of a single existing file.
+#define QFileDialog_Directory                            2   // The name of a directory. Both files and directories are displayed.
+#define QFileDialog_ExistingFiles                        3   // The names of zero or more existing files.
+
+// The Options type is a typedef for QFlags<Option>. It stores an OR combination of Option values.
+//
+#define QFileDialog_ShowDirsOnly                         0x00000001   // Only show directories in the file dialog. By default both files and directories are shown. (Valid only in the Directory file mode.)
+#define QFileDialog_DontResolveSymlinks                  0x00000002   // Don't resolve symlinks in the file dialog. By default symlinks are resolved.
+#define QFileDialog_DontConfirmOverwrite                 0x00000004   // Don't ask for confirmation if an existing file is selected. By default confirmation is requested.
+#define QFileDialog_DontUseNativeDialog                  0x00000010   // Don't use the native file dialog. By default on Mac OS X and Windows, the native file dialog is used.
+#define QFileDialog_ReadOnly                             0x00000020   // Indicates that the model is readonly.
+#define QFileDialog_HideNameFilterDetails                0x00000040   // Indicates if the is hidden or not.
+
+//enum QFileDialog::ViewMode
+//This enum describes the view mode of the file dialog; i.e. what information about each file will be displayed.
+//
+#define QFileDialog_Detail                               0   // Displays an icon, a name, and details for each item in the directory.
+#define QFileDialog_List                                 1   // Displays only an icon and a name for each item in the directory.
+
+#define QDialog_Accepted                                 1
+#define QDialog_Rejected                                 0
+
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH

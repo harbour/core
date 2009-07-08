@@ -71,7 +71,22 @@
  */
 HB_FUNC( QT_QRECT )
 {
-   hb_retptr( ( QRect* ) new QRect( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QRect* ) new QRect( *hbqt_par_QRect( 1 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      hb_retptr( ( QRect* ) new QRect( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) );
+   }
+   else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
+   {
+      hb_retptr( ( QRect* ) new QRect( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QRect* ) new QRect() );
+   }
 }
 
 /*

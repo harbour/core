@@ -55,9 +55,14 @@
 ;
 
 <CLASS>
-Type     = Core
-New      = nWidth, nHeight
+Type     = PlainObject
+New      = 
 </CLASS>
+
+<DOC>
+oSizeF := QSizeF():new()
+oSizeF := QSizeF():new( nWidth, nHeight )
+</DOC>
 
 <CODE>
 #include <QtCore/QSizeF>
@@ -67,19 +72,26 @@ New      = nWidth, nHeight
  * QSizeF ()
  * QSizeF ( const QSize & size )
  * QSizeF ( qreal width, qreal height )
- * QSizeF boundedTo ( const QSizeF & otherSize ) const
- * QSizeF expandedTo ( const QSizeF & otherSize ) const
  */
 HB_FUNC( QT_QSIZEF )
 {
-   hb_retptr( ( QSizeF* ) new QSizeF( hb_parnd( 1 ), hb_parnd( 2 ) ) );
-}
+   if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QSizeF* ) new QSizeF( hb_parnd( 1 ), hb_parnd( 2 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QSizeF* ) new QSizeF() );
+   }
+   }
 </CODE>
 
 <ENUMS>
 </ENUMS>
 
 <PROTOS>
+QSizeF boundedTo ( const QSizeF & otherSize ) const
+QSizeF expandedTo ( const QSizeF & otherSize ) const
 qreal height () const
 bool isEmpty () const
 bool isNull () const

@@ -55,9 +55,21 @@
 ;
 
 <CLASS>
-Type     = Core
-New      = nLeft, nTop, nRight, nBottom
+Type     = PlainObject
+New      = 
 </CLASS>
+
+<DOC>
+oRect := QRect():new()
+oRect := QRect():new( pQRect_other )
+oRect := QRect():new( pQPoint_topLeft, pQPoint_bottomRight )
+oRect := QRect():new( nX, nY, nWidth, nHeight )
+
+/* TODO:
+ *
+ * oRect := QRect():new( pQPoint_topLeft, pQSize_size )
+ */
+</DOC>
 
 <CODE>
 #include <QtCore/QRect>
@@ -71,7 +83,22 @@ New      = nLeft, nTop, nRight, nBottom
  */
 HB_FUNC( QT_QRECT )
 {
-   hb_retptr( ( QRect* ) new QRect( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QRect* ) new QRect( *hbqt_par_QRect( 1 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      hb_retptr( ( QRect* ) new QRect( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) );
+   }
+   else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
+   {
+      hb_retptr( ( QRect* ) new QRect( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QRect* ) new QRect() );
+   }
 }
 </CODE>
 

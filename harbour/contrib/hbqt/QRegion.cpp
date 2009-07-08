@@ -82,9 +82,44 @@
  */
 HB_FUNC( QT_QREGION )
 {
-   hb_retptr( ( QRegion* ) new QRegion( hb_parni( 1 ), hb_parni( 2 ),
-                                        hb_parni( 3 ), hb_parni( 4 ),
-      ( QRegion::RegionType ) ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : QRegion::Rectangle ) ) );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QRegion* ) new QRegion( *hbqt_par_QRegion( 1 ) ) );
+   }
+   else if( hb_pcount() >= 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
+   {
+      hb_retptr( ( QRegion* ) new QRegion( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ),
+                                           HB_ISNUM( 5 ) ? ( QRegion::RegionType ) hb_parni( 5 ) : QRegion::Rectangle ) );
+   }
+   else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      if(      ( QString ) "QPolygon" == hbqt_par_QString( 1 ) )
+      {
+         hb_retptr( ( QRegion* ) new QRegion( *hbqt_par_QPolygon( 2 ),
+                                              HB_ISNUM( 3 ) ? ( Qt::FillRule ) hb_parni( 3 ) : Qt::OddEvenFill ) );
+      }
+      else if( ( QString ) "QBitmap"  == hbqt_par_QString( 1 ) )
+      {
+         hb_retptr( ( QRegion* ) new QRegion( *hbqt_par_QBitmap( 2 ) ) );
+      }
+      else if( ( QString ) "QRect"    == hbqt_par_QString( 1 ) )
+      {
+         hb_retptr( ( QRegion* ) new QRegion( *hbqt_par_QRect( 2 ),
+                                               HB_ISNUM( 3 ) ? ( QRegion::RegionType ) hb_parni( 3 ) : QRegion::Rectangle ) );
+      }
+      else
+      {
+         hb_retptr( ( QRegion* ) new QRegion() );
+      }
+   }
+   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QRegion* ) new QRegion( *hbqt_par_QRect( 1 ), ( QRegion::RegionType ) hb_parni( 2 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QRegion* ) new QRegion() );
+   }
 }
 
 /*

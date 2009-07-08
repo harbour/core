@@ -63,6 +63,8 @@ CREATE CLASS QSizeF
 
    METHOD  New()
 
+   METHOD  boundedTo( pOtherSize )             INLINE  Qt_QSizeF_boundedTo( ::pPtr, pOtherSize )
+   METHOD  expandedTo( pOtherSize )            INLINE  Qt_QSizeF_expandedTo( ::pPtr, pOtherSize )
    METHOD  height()                            INLINE  Qt_QSizeF_height( ::pPtr )
    METHOD  isEmpty()                           INLINE  Qt_QSizeF_isEmpty( ::pPtr )
    METHOD  isNull()                            INLINE  Qt_QSizeF_isNull( ::pPtr )
@@ -81,11 +83,9 @@ CREATE CLASS QSizeF
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QSizeF
+METHOD New( ... ) CLASS QSizeF
 
-   ::pParent := pParent
-
-   ::pPtr := Qt_QSizeF( pParent )
+   ::pPtr := Qt_QSizeF( ... )
 
    RETURN Self
 

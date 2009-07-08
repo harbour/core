@@ -70,7 +70,18 @@
  */
 HB_FUNC( QT_QPICTURE )
 {
-   hb_retptr( ( QPicture* ) new QPicture() );
+   if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
+   {
+      hb_retptr( ( QPicture* ) new QPicture( hb_parni( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QPicture* ) new QPicture( *hbqt_par_QPicture( 1 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QPicture* ) new QPicture() );
+   }
 }
 
 /*

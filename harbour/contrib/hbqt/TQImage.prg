@@ -128,11 +128,9 @@ CREATE CLASS QImage
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QImage
+METHOD New( ... ) CLASS QImage
 
-   ::pParent := pParent
-
-   ::pPtr := Qt_QImage( pParent )
+   ::pPtr := Qt_QImage( ... )
 
    RETURN Self
 

@@ -127,11 +127,9 @@ CREATE CLASS QRect
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QRect
+METHOD New( ... ) CLASS QRect
 
-   ::pParent := pParent
-
-   ::pPtr := Qt_QRect( pParent )
+   ::pPtr := Qt_QRect( ... )
 
    RETURN Self
 

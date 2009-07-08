@@ -67,12 +67,33 @@
  * QSizeF ()
  * QSizeF ( const QSize & size )
  * QSizeF ( qreal width, qreal height )
- * QSizeF boundedTo ( const QSizeF & otherSize ) const
- * QSizeF expandedTo ( const QSizeF & otherSize ) const
  */
 HB_FUNC( QT_QSIZEF )
 {
-   hb_retptr( ( QSizeF* ) new QSizeF( hb_parnd( 1 ), hb_parnd( 2 ) ) );
+   if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QSizeF* ) new QSizeF( hb_parnd( 1 ), hb_parnd( 2 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QSizeF* ) new QSizeF() );
+   }
+   }
+
+/*
+ * QSizeF boundedTo ( const QSizeF & otherSize ) const
+ */
+HB_FUNC( QT_QSIZEF_BOUNDEDTO )
+{
+   hb_retptr( new QSizeF( hbqt_par_QSizeF( 1 )->boundedTo( *hbqt_par_QSizeF( 2 ) ) ) );
+}
+
+/*
+ * QSizeF expandedTo ( const QSizeF & otherSize ) const
+ */
+HB_FUNC( QT_QSIZEF_EXPANDEDTO )
+{
+   hb_retptr( new QSizeF( hbqt_par_QSizeF( 1 )->expandedTo( *hbqt_par_QSizeF( 2 ) ) ) );
 }
 
 /*

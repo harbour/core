@@ -74,13 +74,17 @@
  */
 HB_FUNC( QT_QPIXMAP )
 {
-   if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
+   if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
       hb_retptr( ( QPixmap* ) new QPixmap( hbqt_par_QString( 1 ), ( const char * ) 0, Qt::AutoColor ) );
    }
-   else if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
+   else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
       hb_retptr( ( QPixmap* ) new QPixmap( *hbqt_par_QPixmap( 1 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QPixmap* ) new QPixmap( hb_parni( 1 ), hb_parni( 2 ) ) );
    }
    else
    {

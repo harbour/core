@@ -72,11 +72,9 @@ CREATE CLASS QBitmap INHERIT QPixmap
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QBitmap
+METHOD New( ... ) CLASS QBitmap
 
-   ::pParent := pParent
-
-   ::pPtr := Qt_QBitmap( pParent )
+   ::pPtr := Qt_QBitmap( ... )
 
    RETURN Self
 

@@ -85,11 +85,9 @@ CREATE CLASS QLine
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QLine
+METHOD New( ... ) CLASS QLine
 
-   ::pParent := pParent
-
-   ::pPtr := Qt_QLine( pParent )
+   ::pPtr := Qt_QLine( ... )
 
    RETURN Self
 

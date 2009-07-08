@@ -76,11 +76,9 @@ CREATE CLASS QRadialGradient INHERIT QGradient
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QRadialGradient
+METHOD New( ... ) CLASS QRadialGradient
 
-   ::pParent := pParent
-
-   ::pPtr := Qt_QRadialGradient( pParent )
+   ::pPtr := Qt_QRadialGradient( ... )
 
    RETURN Self
 

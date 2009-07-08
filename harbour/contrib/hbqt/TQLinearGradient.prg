@@ -74,11 +74,9 @@ CREATE CLASS QLinearGradient INHERIT QGradient
 
 /*----------------------------------------------------------------------*/
 
-METHOD New( pParent ) CLASS QLinearGradient
+METHOD New( ... ) CLASS QLinearGradient
 
-   ::pParent := pParent
-
-   ::pPtr := Qt_QLinearGradient( pParent )
+   ::pPtr := Qt_QLinearGradient( ... )
 
    RETURN Self
 
