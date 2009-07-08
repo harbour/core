@@ -111,7 +111,7 @@ HB_FUNC( __NATMSG )
       /* TODO: Replace this with Language API call. */
       hb_retc_const( "Invalid argument" );
    else if( HB_ISNUM( 1 ) )
-      hb_retc( hb_nationGetMsg( hb_parni( 1 ) ) );
+      hb_retc_const( hb_nationGetMsg( hb_parni( 1 ) ) );
    else
       hb_retc_null();
 }

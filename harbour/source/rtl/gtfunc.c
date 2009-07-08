@@ -114,7 +114,7 @@ HB_FUNC( HB_GTINFO )
 
 HB_FUNC( HB_GTVERSION )
 {
-   hb_retc( hb_gtVersion( hb_parni( 1 ) ) );
+   hb_retc_const( hb_gtVersion( hb_parni( 1 ) ) );
 }
 
 HB_FUNC( HB_GTALERT )

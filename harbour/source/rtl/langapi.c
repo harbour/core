@@ -384,10 +384,10 @@ HB_FUNC( HB_LANGNAME )
 
 HB_FUNC( HB_LANGERRMSG )
 {
-   hb_retc( hb_langDGetErrorDesc( hb_parnl( 1 ) ) );
+   hb_retc_const( hb_langDGetErrorDesc( hb_parnl( 1 ) ) );
 }
 
 HB_FUNC( HB_LANGMESSAGE )
 {
-   hb_retc( hb_langDGetItem( hb_parnl( 1 ) ) );
+   hb_retc_const( hb_langDGetItem( hb_parnl( 1 ) ) );
 }

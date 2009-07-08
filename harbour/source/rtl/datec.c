@@ -85,7 +85,7 @@ HB_FUNC( CMONTH )
       int iYear, iMonth, iDay;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
-      hb_retc( hb_dateCMonth( iMonth ) );
+      hb_retc_const( hb_dateCMonth( iMonth ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1116, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -104,7 +104,7 @@ HB_FUNC( CDOW )
          int iYear, iMonth, iDay;
 
          hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
-         hb_retc( hb_dateCDOW( hb_dateDOW( iYear, iMonth, iDay ) ) );
+         hb_retc_const( hb_dateCDOW( hb_dateDOW( iYear, iMonth, iDay ) ) );
       }
       else
          hb_retc_null();
