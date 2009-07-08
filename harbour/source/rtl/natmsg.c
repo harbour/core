@@ -109,7 +109,7 @@ HB_FUNC( __NATMSG )
 {
    if( hb_pcount() == 0 )
       /* TODO: Replace this with Language API call. */
-      hb_retc( "Invalid argument" );
+      hb_retc_const( "Invalid argument" );
    else if( HB_ISNUM( 1 ) )
       hb_retc( hb_nationGetMsg( hb_parni( 1 ) ) );
    else
@@ -121,7 +121,7 @@ HB_FUNC( __NATSORTVER )
    /* NOTE: CA-Cl*pper 5.2e Intl. will return: "NATSORT v1.2i x14 19/Mar/93" */
    /* NOTE: CA-Cl*pper 5.3  Intl. will return: "NATSORT v1.3i x19 06/Mar/95" */
 
-   hb_retc( "NATSORT (Harbour)" );
+   hb_retc_const( "NATSORT (Harbour)" );
 }
 
 HB_FUNC( __NATMSGVER )
@@ -129,5 +129,5 @@ HB_FUNC( __NATMSGVER )
    /* NOTE: CA-Cl*pper 5.2e Intl. will return: "NATMSGS v1.2i x14 19/Mar/93" */
    /* NOTE: CA-Cl*pper 5.3  Intl. will return: "NATMSGS v1.3i x19 06/Mar/95" */
 
-   hb_retc( "NATMSGS (Harbour)" );
+   hb_retc_const( "NATMSGS (Harbour)" );
 }

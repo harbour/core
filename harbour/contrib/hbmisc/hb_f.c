@@ -88,13 +88,13 @@ HB_FUNC( HB_FUSE )
       c              = ( char * ) hb_xgrab( c_size );
       lastbyte[area] = hb_fsSeek( handles[ area ], 0L, FS_END );
       isEof[area] = ( lastbyte[ area ] == 0 );
-      hb_retni( handles[ area ] );
+      hb_retnint( handles[ area ] );
    }
    else {
       hb_fsClose( handles[area] );
       hb_xfree( b );
       hb_xfree( c );
-      hb_retni( 1 );
+      hb_retnint( 1 );
       recno[area]    = 0L;
       offset[area]   = 0L;
       handles[area]  = 0;
@@ -181,7 +181,7 @@ static long hb_hbfskip( int recs )
 
 HB_FUNC( HB_FSKIP )
 {
-   hb_hbfskip( HB_ISNUM( 1 ) ? hb_parni(1) : 1 );
+   hb_hbfskip( HB_ISNUM( 1 ) ? hb_parni( 1 ) : 1 );
 }
 
 HB_FUNC( HB_FREADLN )
@@ -213,7 +213,7 @@ HB_FUNC( HB_FGOTO )
    long target;
    long last;
 
-   target = hb_parnl(1);
+   target = hb_parnl( 1 );
 
    if ( recno[area] > target ) {
       while ( recno[area] != target )   {
@@ -299,19 +299,19 @@ HB_FUNC( HB_FSELECT )
 {
    hb_retni( area + 1 );
 
-   if ( HB_ISNUM(1) )
-      area = hb_parni(1) - 1;
+   if( HB_ISNUM( 1 ) )
+      area = hb_parni( 1 ) - 1;
 }
 
 HB_FUNC( HB_FINFO )                     /* used for debugging */
 {
    hb_reta( 6 );
-   hb_storvni( area+1,         -1, 1);
-   hb_storvni( last_rec[area], -1, 2);
-   hb_storvni( recno[area],    -1, 3);
-   hb_storvni( offset[area],   -1, 4);
-   hb_storvni( lastbyte[area], -1, 5);
-   hb_storvl ( isEof[area],    -1, 6);
+   hb_storvni( area+1,         -1, 1 );
+   hb_storvni( last_rec[area], -1, 2 );
+   hb_storvni( recno[area],    -1, 3 );
+   hb_storvni( offset[area],   -1, 4 );
+   hb_storvni( lastbyte[area], -1, 5 );
+   hb_storvl(  isEof[area],    -1, 6 );
 }
 
 HB_FUNC( HB_FREADANDSKIP )

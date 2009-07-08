@@ -693,10 +693,10 @@ HB_FUNC( HB_INETSTATUSDESC )
 
    switch( Socket->status )
    {
-      case 0: hb_retc( "Connection not opened" ); return;
-      case 1: hb_retc( "Connection alive" ); return;
-      case 2: hb_retc( "Last operation error" ); return;
-      case 3: hb_retc( "Last operation timeout" ); return;
+      case 0: hb_retc_const( "Connection not opened" ); return;
+      case 1: hb_retc_const( "Connection alive" ); return;
+      case 2: hb_retc_const( "Last operation error" ); return;
+      case 3: hb_retc_const( "Last operation timeout" ); return;
    }
 }
 */
@@ -2194,7 +2194,7 @@ HB_FUNC( HB_INETDGRAMRECV )
 
 HB_FUNC( HB_INETCRLF )
 {
-   hb_retc( "\r\n" );
+   hb_retc_const( "\r\n" );
 }
 
 HB_FUNC( HB_INETISSOCKET )

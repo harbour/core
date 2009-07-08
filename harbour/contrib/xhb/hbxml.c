@@ -2383,10 +2383,7 @@ HB_FUNC( HBXML_NODE_TO_STRING )
       hb_retclen_buffer( buffer, iLen );
    }
    else
-   {
       mxml_sgs_destroy( sgs );
-      hb_ret();
-   }
 }
 
 /**
@@ -2397,9 +2394,9 @@ HB_FUNC( HBXML_NODE_TO_STRING )
 
 HB_FUNC( HBXML_NODE_WRITE )
 {
-   PHB_ITEM pNode = hb_param(1, HB_IT_OBJECT );
+   PHB_ITEM pNode = hb_param( 1, HB_IT_OBJECT );
    PHB_ITEM pHandle = hb_param( 2, HB_IT_NUMERIC );
-   PHB_ITEM pStyle = hb_param(3, HB_IT_NUMERIC );
+   PHB_ITEM pStyle = hb_param( 3, HB_IT_NUMERIC );
    MXML_OUTPUT out;
    int iStyle, iRet;
 
@@ -2409,13 +2406,13 @@ HB_FUNC( HBXML_NODE_WRITE )
       return;
    }
 
-   if ( pStyle == NULL )
+   if( pStyle == NULL )
       iStyle = 0;
    else
       iStyle = hb_itemGetNI( pStyle );
 
    mxml_output_setup( &out, mxml_output_func_to_handle , 0 );
-   out.u.hFile = ( HB_FHANDLE ) hb_itemGetNL( pHandle );
+   out.u.hFile = ( HB_FHANDLE ) hb_itemGetNInt( pHandle );
 
    iRet = mxml_node_write( &out, pNode, iStyle );
    hb_retni( iRet );

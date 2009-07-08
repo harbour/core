@@ -381,7 +381,7 @@ HB_FUNC( HB_TSTOSTR )
          if( lTime == 0 )
          {
             if( lDate == 0 )
-               hb_retc( "00:00" );
+               hb_retc_const( "00:00" );
             else
             {
                szBuffer[ 10 ] = '\0';

@@ -61,20 +61,20 @@
  *
  */
 
+#define HB_OS_WIN_USED
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
 #include "hbdate.h"
 
-#ifdef HB_OS_WIN
-   #include <windows.h>
+#if defined( HB_OS_WIN )
+   #ifndef TIME_ZONE_ID_INVALID
+      #define TIME_ZONE_ID_INVALID ( DWORD ) 0xFFFFFFFF
+   #endif
 #else
    #include <time.h>
-#endif
-
-#ifndef TIME_ZONE_ID_INVALID
-   #define TIME_ZONE_ID_INVALID ( DWORD ) 0xFFFFFFFF
 #endif
 
 /************************************************************
@@ -86,95 +86,93 @@ HB_FUNC( TIP_TIMESTAMP )
    PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
    ULONG ulHour = hb_parnl( 2 );
    int nLen;
-   char *szRet = ( char * ) hb_xgrab( 64 );
+   char * szRet = ( char * ) hb_xgrab( 64 );
 
 /* sadly, many strftime windows implementations are broken */
-#ifdef HB_OS_WIN
+#if defined( HB_OS_WIN )
 
    TIME_ZONE_INFORMATION tzInfo;
-   long lDate;
-   int iYear, iMonth, iDay;
-   const char *days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-   const char *months[] = {
-         "Jan", "Feb", "Mar",
-         "Apr", "May", "Jun",
-         "Jul", "Aug", "Sep",
-         "Oct", "Nov", "Dec" };
-   SYSTEMTIME st;
+   static const char * s_days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+   static const char * s_months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 
    if( GetTimeZoneInformation( &tzInfo ) == TIME_ZONE_ID_INVALID )
       tzInfo.Bias = 0;
    else
       tzInfo.Bias -= tzInfo.Bias;
 
-   if( !pDate )
+   if( ! pDate )
    {
+      SYSTEMTIME st;
+
       GetLocalTime( &st );
 
       hb_snprintf( szRet, 64, "%s, %u %s %u %02u:%02u:%02u %+03d%02d",
-            days[ st.wDayOfWeek ], st.wDay, months[ st.wMonth -1],
+            s_days[ st.wDayOfWeek ], st.wDay, s_months[ st.wMonth - 1 ],
             st.wYear,
             st.wHour, st.wMinute, st.wSecond,
-            (int)( tzInfo.Bias / 60 ),
-            (int)( tzInfo.Bias % 60 > 0 ? - tzInfo.Bias % 60 : tzInfo.Bias % 60 ) );
+            ( int ) ( tzInfo.Bias / 60 ),
+            ( int ) ( tzInfo.Bias % 60 > 0 ? - tzInfo.Bias % 60 : tzInfo.Bias % 60 ) );
    }
    else
    {
-      lDate = hb_itemGetDL( pDate );
+      long lDate = hb_itemGetDL( pDate );
+      int iYear, iMonth, iDay;
+
       hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
 
       hb_snprintf( szRet, 64, "%s, %d %s %d %02u:%02u:%02u %+03d%02d",
-            days[ hb_dateDOW( iYear, iMonth, iDay ) - 1 ], iDay,
-            months[ iMonth -1], iYear,
-            (unsigned int)( ulHour / 3600 ), (unsigned int)( (ulHour % 3600) / 60 ), (unsigned int)( ulHour % 60 ),
-            (int)( tzInfo.Bias / 60 ),
-            (int)( tzInfo.Bias % 60 > 0 ? - tzInfo.Bias % 60 : tzInfo.Bias % 60 ) );
+            s_days[ hb_dateDOW( iYear, iMonth, iDay ) - 1 ], iDay,
+            s_months[ iMonth - 1 ], iYear,
+            ( unsigned int )( ulHour / 3600 ), ( unsigned int )( ( ulHour % 3600 ) / 60 ), ( unsigned int ) ( ulHour % 60 ),
+            ( int ) ( tzInfo.Bias / 60 ),
+            ( int ) ( tzInfo.Bias % 60 > 0 ? - tzInfo.Bias % 60 : tzInfo.Bias % 60 ) );
    }
 
    nLen = strlen( szRet );
 
 #else
 
-   char szDate[ 9 ];
    struct tm tmTime;
    time_t current;
 
    /* init time structure anyway */
    time( &current );
 #if defined( HB_HAS_LOCALTIME_R )
-   localtime_r( &current , &tmTime );
+   localtime_r( &current, &tmTime );
 #else
    tmTime = *localtime( &current );
 #endif
 
-   if ( pDate )
+   if( pDate )
    {
+      char szDate[ 9 ];
+
       hb_itemGetDS( pDate, szDate );
 
       tmTime.tm_year = (
-         (szDate[0] - '0') * 1000 +
-         (szDate[1] - '0') * 100 +
-         (szDate[2] - '0') * 10 +
-         (szDate[3] - '0') ) -1900;
+         ( szDate[ 0 ] - '0' ) * 1000 +
+         ( szDate[ 1 ] - '0' ) * 100 +
+         ( szDate[ 2 ] - '0' ) * 10 +
+         ( szDate[ 3 ] - '0' ) ) -1900;
 
       tmTime.tm_mon = (
-         (szDate[4] - '0') * 10 +
-         (szDate[5] - '0') ) -1;
+         ( szDate[ 4 ] - '0' ) * 10 +
+         ( szDate[ 5 ] - '0' ) ) - 1;
 
       tmTime.tm_mday =
-         (szDate[6] - '0') * 10 +
-         (szDate[7] - '0');
+         ( szDate[ 6 ] - '0' ) * 10 +
+         ( szDate[ 7 ] - '0' );
 
       tmTime.tm_hour = ulHour / 3600;
-      tmTime.tm_min = (ulHour % 3600) / 60;
-      tmTime.tm_sec = (ulHour % 60);
+      tmTime.tm_min = ( ulHour % 3600 ) / 60;
+      tmTime.tm_sec = ( ulHour % 60 );
    }
 
    nLen = strftime( szRet, 64, "%a, %d %b %Y %H:%M:%S %z", &tmTime );
 
 #endif
 
-   if ( nLen < 64 )
+   if( nLen < 64 )
       szRet = ( char * ) hb_xrealloc( szRet, nLen + 1 );
 
    hb_retclen_buffer( szRet, nLen );
@@ -184,18 +182,12 @@ HB_FUNC( TIP_TIMESTAMP )
 
 typedef struct tag_mime
 {
-   /* Position in stream from which the match begins */
-   int pos;
-   /* String to match */
-   const char *pattern;
-   /* Mimetype if complete */
-   const char *mime_type;
-   /* following entry to determine a mimetype, relative to current position (or 0) */
-   int next;
-   /* alternative entry to determine a mimetype, relative to current position (or 0) */
-   int alternate;
-   /* flags for confrontation */
-   short unsigned int flags;
+   int pos;                   /* Position in stream from which the match begins */
+   const char * pattern;      /* String to match */
+   const char * mime_type;    /* Mimetype if complete */
+   int next;                  /* following entry to determine a mimetype, relative to current position (or 0) */
+   int alternate;             /* alternative entry to determine a mimetype, relative to current position (or 0) */
+   short unsigned int flags;  /* flags for confrontation */
 } MIME_ENTRY;
 
 #define MIME_FLAG_TRIMSPACES    0x0001
@@ -332,17 +324,14 @@ static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
 
 typedef struct tag_mime_ext
 {
-   /* Extension to match */
-   const char *pattern;
-   /* Mimetype if complete */
-   const char *mime_type;
-   /* flags for confrontation */
-   short unsigned int flags;
+   const char * pattern;      /* Extension to match */
+   const char * mime_type;    /* Mimetype if complete */
+   short unsigned int flags;  /* flags for confrontation */
 } EXT_MIME_ENTRY;
 
 #define EXT_MIME_TABLE_SIZE 19
 
-static EXT_MIME_ENTRY s_extMimeTable[EXT_MIME_TABLE_SIZE] =
+static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
 {
    /* Dos/win executable */
    /*  0*/ { "EXE", "application/x-dosexec", MIME_FLAG_CASEINSENS },
@@ -387,161 +376,126 @@ static EXT_MIME_ENTRY s_extMimeTable[EXT_MIME_TABLE_SIZE] =
 
 };
 
-
-static const char *s_findExtMimeType( const char *cExt )
+static const char * s_findExtMimeType( const char * cExt )
 {
    int iCount;
 
-   for ( iCount = 0; iCount < EXT_MIME_TABLE_SIZE; iCount ++ )
+   for( iCount = 0; iCount < EXT_MIME_TABLE_SIZE; iCount++ )
    {
-      if ( s_extMimeTable[iCount].flags == MIME_FLAG_CASEINSENS )
+      if( s_extMimeTable[ iCount ].flags == MIME_FLAG_CASEINSENS )
       {
-         if ( hb_stricmp( cExt, s_extMimeTable[iCount].pattern ) == 0)
-         {
-            return s_extMimeTable[iCount].mime_type;
-         }
+         if( hb_stricmp( cExt, s_extMimeTable[ iCount ].pattern ) == 0 )
+            return s_extMimeTable[ iCount ].mime_type;
       }
       else
       {
-         if ( strcmp( cExt, s_extMimeTable[iCount].pattern ) == 0)
-         {
-            return s_extMimeTable[iCount].mime_type;
-         }
+         if( strcmp( cExt, s_extMimeTable[ iCount ].pattern ) == 0 )
+            return s_extMimeTable[ iCount ].mime_type;
       }
    }
 
    return NULL;
 }
 
-
-
-static const char *s_findMimeStringInTree( const char *cData, int iLen, int iElem )
+static const char * s_findMimeStringInTree( const char * cData, int iLen, int iElem )
 {
-   MIME_ENTRY *elem = s_mimeTable + iElem;
+   MIME_ENTRY * elem = s_mimeTable + iElem;
    int iPos = elem->pos;
-   int iDataLen = strlen(  elem->pattern );
+   int iDataLen = strlen( elem->pattern );
 
    /* allow \0 to be used for matches */
-   if ( iDataLen == 0 )
-   {
+   if( iDataLen == 0 )
       iDataLen = 1;
-   }
 
    /* trim spaces if required */
-   while ( iPos < iLen &&
-      ( (( elem->flags & MIME_FLAG_TRIMSPACES ) == MIME_FLAG_TRIMSPACES && (
-         cData[iPos] == ' ' || cData[iPos] == '\r' || cData[iPos] == '\n') ) ||
-         (( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMSPACES && cData[iPos] == '\t') ) )
+   while( iPos < iLen &&
+      ( ( ( elem->flags & MIME_FLAG_TRIMSPACES ) == MIME_FLAG_TRIMSPACES && (
+         cData[ iPos ] == ' ' || cData[ iPos ] == '\r' || cData[ iPos ] == '\n' ) ) ||
+         ( ( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMSPACES && cData[ iPos ] == '\t' ) ) )
    {
       iPos ++;
    }
 
-   if ( (iPos < iLen) && (iLen - iPos >= iDataLen) )
+   if( ( iPos < iLen ) && ( iLen - iPos >= iDataLen ) )
    {
-      if ( (elem->flags & MIME_FLAG_CASEINSENS) == MIME_FLAG_CASEINSENS )
+      if( ( elem->flags & MIME_FLAG_CASEINSENS ) == MIME_FLAG_CASEINSENS )
       {
-         if ( (*elem->pattern == 0 && cData[iPos] == 0) || hb_strnicmp( cData + iPos, elem->pattern, iDataLen ) == 0)
+         if( ( *elem->pattern == 0 && cData[ iPos ] == 0 ) || hb_strnicmp( cData + iPos, elem->pattern, iDataLen ) == 0 )
          {
             /* is this the begin of a match tree? */
-            if ( elem->next != 0 )
-            {
+            if( elem->next != 0 )
                return s_findMimeStringInTree( cData, iLen, iElem + elem->next );
-            }
             else
-            {
                return elem->mime_type;
-            }
          }
       }
       else
       {
-         if ( (*elem->pattern == 0 && cData[iPos] == 0) || strncmp( cData + iPos, elem->pattern, iDataLen ) == 0)
+         if( ( *elem->pattern == 0 && cData[ iPos ] == 0) || strncmp( cData + iPos, elem->pattern, iDataLen ) == 0 )
          {
-            if ( elem->next != 0 )
-            {
+            if( elem->next != 0 )
                return s_findMimeStringInTree( cData, iLen, iElem + elem->next );
-            }
             else
-            {
                return elem->mime_type;
-            }
          }
       }
    }
 
    /* match failed! */
-   if ( elem->alternate != 0 )
-   {
+   if( elem->alternate != 0 )
       return s_findMimeStringInTree( cData, iLen, iElem + elem->alternate );
-   }
 
-   /* total giveup */
-   return NULL;
+   return NULL;  /* total giveup */
 }
 
-
-static const char *s_findStringMimeType( const char *cData, int iLen )
+static const char * s_findStringMimeType( const char * cData, int iLen )
 {
    int iCount;
    BOOL bFormFeed;
 
-   for ( iCount = 0; iCount < MIME_TABLE_SIZE; iCount ++ )
+   for( iCount = 0; iCount < MIME_TABLE_SIZE; iCount++ )
    {
-      MIME_ENTRY *elem = s_mimeTable + iCount;
+      MIME_ENTRY * elem = s_mimeTable + iCount;
       int iPos = elem->pos;
-      int iDataLen = strlen(  elem->pattern );
+      int iDataLen = strlen( elem->pattern );
 
-      if ( (elem->flags & MIME_FLAG_CONTINUE) == MIME_FLAG_CONTINUE )
-      {
+      if( ( elem->flags & MIME_FLAG_CONTINUE ) == MIME_FLAG_CONTINUE )
          continue;
-      }
 
       /* trim spaces if required */
-      while ( iPos < iLen &&
-         ( (( elem->flags & MIME_FLAG_TRIMSPACES ) == MIME_FLAG_TRIMSPACES && (
-             cData[iPos] == ' ' || cData[iPos] == '\r' || cData[iPos] == '\n') ) ||
-           (( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMSPACES && cData[iPos] == '\t') ) )
+      while( iPos < iLen &&
+         ( ( ( elem->flags & MIME_FLAG_TRIMSPACES ) == MIME_FLAG_TRIMSPACES && (
+             cData[ iPos ] == ' ' || cData[ iPos ] == '\r' || cData[ iPos ] == '\n' ) ) ||
+           ( ( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMSPACES && cData[ iPos ] == '\t' ) ) )
       {
          iPos ++;
       }
 
-      if ( iPos >= iLen )
-      {
+      if( iPos >= iLen )
          continue;
-      }
 
-      if ( iLen - iPos < iDataLen )
-      {
+      if( iLen - iPos < iDataLen )
          continue;
-      }
 
-      if ( (elem->flags & MIME_FLAG_CASEINSENS) == MIME_FLAG_CASEINSENS )
+      if( ( elem->flags & MIME_FLAG_CASEINSENS ) == MIME_FLAG_CASEINSENS )
       {
-         if ( (*elem->pattern == 0 && cData[iPos] == 0) || hb_strnicmp( cData + iPos, elem->pattern, iDataLen ) == 0)
+         if( ( *elem->pattern == 0 && cData[ iPos ] == 0 ) || hb_strnicmp( cData + iPos, elem->pattern, iDataLen ) == 0 )
          {
             /* is this the begin of a match tree? */
-            if ( elem->next != 0 )
-            {
+            if( elem->next != 0 )
                return s_findMimeStringInTree( cData, iLen, iCount + elem->next );
-            }
             else
-            {
                return elem->mime_type;
-            }
          }
       }
       else
       {
-         if ( (*elem->pattern == 0 && cData[iPos] == 0) || strncmp( cData + iPos, elem->pattern, iDataLen ) == 0)
+         if( ( *elem->pattern == 0 && cData[ iPos ] == 0 ) || strncmp( cData + iPos, elem->pattern, iDataLen ) == 0 )
          {
-            if ( elem->next != 0 )
-            {
+            if( elem->next != 0 )
                return s_findMimeStringInTree( cData, iLen, iCount + elem->next );
-            }
             else
-            {
                return elem->mime_type;
-            }
          }
       }
    }
@@ -549,39 +503,34 @@ static const char *s_findStringMimeType( const char *cData, int iLen )
    /* Failure; let's see if it's a text/plain. */
    bFormFeed = FALSE;
    iCount = 0;
-   while ( iCount < iLen )
+   while( iCount < iLen )
    {
       /* form feed? */
-      if ( cData[ iCount ] == '\x0C' )
-      {
+      if( cData[ iCount ] == '\x0C' )
          bFormFeed = TRUE;
-      }
+
       /* esc sequence? */
-      else if ( cData[iCount] == '\x1B' )
+      else if( cData[ iCount ] == '\x1B' )
       {
          bFormFeed = TRUE;
-         iCount ++;
-         if ( cData[iCount] <= 27 )
-         {
+         iCount++;
+         if( cData[ iCount ] <= 27 )
+            iCount++;
+
+         if( cData[ iCount ] <= 27 )
             iCount ++;
-         }
-         if ( cData[iCount] <= 27 )
-         {
-            iCount ++;
-         }
       }
-      else if (
-         (cData[iCount] < 27 && cData[iCount] != '\t' && cData[iCount] != '\n' && cData[iCount] == '\r') ||
-            cData[iCount] == '\xFF')
+      else if(
+         ( cData[ iCount ] < 27 && cData[ iCount ] != '\t' && cData[ iCount ] != '\n' && cData[ iCount ] == '\r' ) ||
+           cData[ iCount ] == '\xFF' )
       {
-         /* not an ASCII file, we surrender */
-         return NULL;
+         return NULL; /* not an ASCII file, we surrender */
       }
 
       iCount++;
    }
 
-   if ( bFormFeed )
+   if( bFormFeed )
    {
       /* we have escape sequences, seems a PRN/terminal file */
       return "application/remote-printing";
@@ -590,10 +539,9 @@ static const char *s_findStringMimeType( const char *cData, int iLen )
    return "text/plain";
 }
 
-
-static const char *s_findFileMimeType( HB_FHANDLE fileIn )
+static const char * s_findFileMimeType( HB_FHANDLE fileIn )
 {
-   char buf[512];
+   char buf[ 512 ];
    int iLen;
    ULONG ulPos;
 
@@ -601,7 +549,7 @@ static const char *s_findFileMimeType( HB_FHANDLE fileIn )
    hb_fsSeek( fileIn, 0, SEEK_SET );
    iLen = hb_fsRead( fileIn, buf, sizeof( buf ) );
 
-   if ( iLen > 0 )
+   if( iLen > 0 )
    {
       hb_fsSeek( fileIn, ulPos, SEEK_SET );
       return s_findStringMimeType( buf, iLen );
@@ -610,100 +558,67 @@ static const char *s_findFileMimeType( HB_FHANDLE fileIn )
    return NULL;
 }
 
-
-
 HB_FUNC( TIP_FILEMIMETYPE )
 {
    PHB_ITEM pFile = hb_param( 1, HB_IT_STRING | HB_IT_NUMERIC );
-   const char *ext_type = NULL;
-   const char *magic_type = NULL;
-   HB_FHANDLE fileIn;
 
-
-   if ( pFile == NULL )
+   if( pFile )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
-      return;
-   }
+      HB_FHANDLE fileIn;
+      const char * ext_type = NULL;
+      const char * magic_type = NULL;
 
-   if ( HB_IS_STRING( pFile ) )
-   {
-      /* decode the extension */
-      const char *fname = hb_itemGetCPtr( pFile );
-      int iPos = strlen( fname )-1;
-
-      while ( iPos >= 0 && fname[iPos] != '.' )
+      if( HB_IS_STRING( pFile ) )
       {
-         iPos--;
-      }
+         /* decode the extension */
+         const char * fname = hb_itemGetCPtr( pFile );
+         int iPos = strlen( fname ) - 1;
 
-      if ( iPos > 0 )
-      {
-         ext_type = s_findExtMimeType( fname + iPos + 1 );
-      }
+         while( iPos >= 0 && fname[ iPos ] != '.' )
+            iPos--;
 
-      fileIn = hb_fsOpen( fname, FO_READ );
-      if ( hb_fsError() == 0 )
-      {
-         magic_type = s_findFileMimeType( fileIn );
-      }
-      hb_fsClose( fileIn );
-   }
-   else
-   {
-      fileIn = ( HB_FHANDLE ) hb_itemGetNL( pFile );
-      magic_type = s_findFileMimeType( fileIn );
-   }
+         if( iPos > 0 )
+            ext_type = s_findExtMimeType( fname + iPos + 1 );
 
-   if ( magic_type == NULL )
-   {
-      if ( ext_type != NULL )
-      {
-         hb_retc( ext_type );
+         fileIn = hb_fsOpen( fname, FO_READ );
+
+         if( hb_fsError() == 0 )
+            magic_type = s_findFileMimeType( fileIn );
+
+         hb_fsClose( fileIn );
       }
       else
       {
-         hb_retc( "unknown" ); /* it's a valid MIME type */
+         fileIn = ( HB_FHANDLE ) hb_itemGetNInt( pFile );
+         magic_type = s_findFileMimeType( fileIn );
       }
+
+      if( magic_type )
+         hb_retc_const( magic_type );
+      else
+         hb_retc_const( ext_type ? ext_type : "unknown" ); /* "unkown" is a valid MIME type */
    }
    else
-   {
-      hb_retc( magic_type );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
-
 
 HB_FUNC( TIP_MIMETYPE )
 {
    PHB_ITEM pData = hb_param( 1, HB_IT_STRING );
-   const char *magic_type;
-   const char *cData;
-   ULONG ulLen;
 
-   if ( pData == NULL )
+   if( pData )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
-      return;
-   }
+      const char * magic_type = s_findStringMimeType( hb_itemGetCPtr( pData ), hb_itemGetCLen( pData ) );
 
-   ulLen = hb_itemGetCLen( pData );
-   cData = hb_itemGetCPtr( pData );
-
-   magic_type = s_findStringMimeType( cData, ulLen );
-
-   if ( magic_type == NULL )
-   {
-      hb_retc( "unknown" );
+      hb_retc_const( magic_type ? magic_type : "unknown" );
    }
    else
-   {
-      hb_retc( magic_type );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
  Case insensitive string comparison to optimize this expression:
- IF Lower( <cSubStr> ) == Lower( SubStr( <cString>, <nStart>, Len(<cSubStr>) ) )
+ IF Lower( <cSubStr> ) == Lower( SubStr( <cString>, <nStart>, Len( <cSubStr> ) ) )
   <cString> must be provided as a pointer to the character string containing a substring
   <nStart> is the numeric position to start comparison in <cString>
   <cSubStr> is the character string to compare with characters in <cString>, beginning at <nStart>
@@ -740,7 +655,7 @@ static ULONG hb_strAtI( const char * szSub, ULONG ulSubLen, const char * szText,
 
       while( ulPos < ulLen && ulSubPos < ulSubLen )
       {
-         if( HB_TOLOWER( (BYTE) szText[ ulPos ] ) == HB_TOLOWER( (BYTE) szSub[ ulSubPos ] ) )
+         if( HB_TOLOWER( ( BYTE ) szText[ ulPos ] ) == HB_TOLOWER( ( BYTE ) szSub[ ulSubPos ] ) )
          {
             ulSubPos++;
             ulPos++;
@@ -766,11 +681,11 @@ HB_FUNC( TIP_ATI )
 {
    PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
-   PHB_ITEM pStart = hb_param( 3, HB_IT_NUMERIC );
-   PHB_ITEM pEnd = hb_param( 4, HB_IT_NUMERIC );
 
    if( pText && pSub )
    {
+      PHB_ITEM pStart = hb_param( 3, HB_IT_NUMERIC );
+      PHB_ITEM pEnd = hb_param( 4, HB_IT_NUMERIC );
       LONG lLen = hb_itemGetCLen( pText );
       LONG lStart = pStart ? hb_itemGetNL( pStart ) : 1;
       LONG lEnd = pEnd ? hb_itemGetNL( pEnd ) : lLen;
@@ -801,104 +716,100 @@ HB_FUNC( TIP_ATI )
       }
    }
    else
-   {
       hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-   }
 }
 
 HB_FUNC( TIP_HTMLSPECIALCHARS )
 {
-   const char *cData = hb_parc( 1 );
-   int nLen = hb_parclen( 1 );
-   char * cRet;
-   int nPos = 0, nPosRet = 0;
-   BYTE cElem;
+   const char * cData = hb_parc( 1 );
 
-   if( ! cData )
+   if( cData )
    {
+      int nLen = hb_parclen( 1 );
+
+      if( nLen )
+      {
+         /* Giving maximum final length possible */
+         char * cRet = ( char * ) hb_xgrab( nLen * 6 + 1 );
+         int nPos = 0, nPosRet = 0;
+         BYTE cElem;
+
+         while( nPos < nLen )
+         {
+            cElem = ( BYTE ) cData[ nPos ];
+
+            if( cElem == '&' )
+            {
+               cRet[ nPosRet++ ] = '&';
+               cRet[ nPosRet++ ] = 'a';
+               cRet[ nPosRet++ ] = 'm';
+               cRet[ nPosRet++ ] = 'p';
+               cRet[ nPosRet++ ] = ';';
+            }
+            else if( cElem == '<' )
+            {
+               cRet[ nPosRet++ ] = '&';
+               cRet[ nPosRet++ ] = 'l';
+               cRet[ nPosRet++ ] = 't';
+               cRet[ nPosRet++ ] = ';';
+            }
+            else if( cElem == '>' )
+            {
+               cRet[ nPosRet++ ] = '&';
+               cRet[ nPosRet++ ] = 'g';
+               cRet[ nPosRet++ ] = 't';
+               cRet[ nPosRet++ ] = ';';
+            }
+            else if( cElem == '"' )
+            {
+               cRet[ nPosRet++ ] = '&';
+               cRet[ nPosRet++ ] = 'q';
+               cRet[ nPosRet++ ] = 'u';
+               cRet[ nPosRet++ ] = 'o';
+               cRet[ nPosRet++ ] = 't';
+               cRet[ nPosRet++ ] = ';';
+            }
+            else if( cElem == '\'' )
+            {
+               cRet[ nPosRet++ ] = '&';
+               cRet[ nPosRet++ ] = '#';
+               cRet[ nPosRet++ ] = '0';
+               cRet[ nPosRet++ ] = '3';
+               cRet[ nPosRet++ ] = '9';
+               cRet[ nPosRet++ ] = ';';
+            }
+            else if( cElem == '\r' )
+            {
+               cRet[ nPosRet++ ] = '&';
+               cRet[ nPosRet++ ] = '#';
+               cRet[ nPosRet++ ] = '0';
+               cRet[ nPosRet++ ] = '1';
+               cRet[ nPosRet++ ] = '3';
+               cRet[ nPosRet++ ] = ';';
+            }
+            else if( cElem == '\n' )
+            {
+               cRet[ nPosRet++ ] = '&';
+               cRet[ nPosRet++ ] = '#';
+               cRet[ nPosRet++ ] = '0';
+               cRet[ nPosRet++ ] = '1';
+               cRet[ nPosRet++ ] = '0';
+               cRet[ nPosRet++ ] = ';';
+            }
+            else if( cElem >= ' ' )
+            {
+               cRet[ nPosRet ] = cElem;
+               nPosRet++;
+            }
+
+            nPos++;
+         }
+
+         hb_retclen_buffer( cRet, nPosRet );
+      }
+      else
+         hb_retc_null();
+   }
+   else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1, hb_paramError(1) );
-      return;
-   }
-
-   if( ! nLen )
-   {
-      hb_retc_null();
-      return;
-   }
-
-   /* Giving maximum final length possible */
-   cRet = ( char * ) hb_xgrab( nLen * 6 + 1 );
-
-   while( nPos < nLen )
-   {
-      cElem = ( BYTE ) cData[ nPos ];
-
-      if( cElem == '&' )
-      {
-         cRet[ nPosRet++ ] = '&';
-         cRet[ nPosRet++ ] = 'a';
-         cRet[ nPosRet++ ] = 'm';
-         cRet[ nPosRet++ ] = 'p';
-         cRet[ nPosRet++ ] = ';';
-      }
-      else if( cElem == '<' )
-      {
-         cRet[ nPosRet++ ] = '&';
-         cRet[ nPosRet++ ] = 'l';
-         cRet[ nPosRet++ ] = 't';
-         cRet[ nPosRet++ ] = ';';
-      }
-      else if( cElem == '>' )
-      {
-         cRet[ nPosRet++ ] = '&';
-         cRet[ nPosRet++ ] = 'g';
-         cRet[ nPosRet++ ] = 't';
-         cRet[ nPosRet++ ] = ';';
-      }
-      else if( cElem == '"' )
-      {
-         cRet[ nPosRet++ ] = '&';
-         cRet[ nPosRet++ ] = 'q';
-         cRet[ nPosRet++ ] = 'u';
-         cRet[ nPosRet++ ] = 'o';
-         cRet[ nPosRet++ ] = 't';
-         cRet[ nPosRet++ ] = ';';
-      }
-      else if( cElem == '\'' )
-      {
-         cRet[ nPosRet++ ] = '&';
-         cRet[ nPosRet++ ] = '#';
-         cRet[ nPosRet++ ] = '0';
-         cRet[ nPosRet++ ] = '3';
-         cRet[ nPosRet++ ] = '9';
-         cRet[ nPosRet++ ] = ';';
-      }
-      else if( cElem == '\r' )
-      {
-         cRet[ nPosRet++ ] = '&';
-         cRet[ nPosRet++ ] = '#';
-         cRet[ nPosRet++ ] = '0';
-         cRet[ nPosRet++ ] = '1';
-         cRet[ nPosRet++ ] = '3';
-         cRet[ nPosRet++ ] = ';';
-      }
-      else if( cElem == '\n' )
-      {
-         cRet[ nPosRet++ ] = '&';
-         cRet[ nPosRet++ ] = '#';
-         cRet[ nPosRet++ ] = '0';
-         cRet[ nPosRet++ ] = '1';
-         cRet[ nPosRet++ ] = '0';
-         cRet[ nPosRet++ ] = ';';
-      }
-      else if( cElem >= ' ' )
-      {
-         cRet[ nPosRet ] = cElem;
-         nPosRet++;
-      }
-
-      nPos++;
-   }
-
-   hb_retclen_buffer( cRet, nPosRet );
 }

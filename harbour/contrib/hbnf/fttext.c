@@ -310,14 +310,14 @@ HB_FUNC( FT_FUSE )
       offset[area] = 0 ;
       recno[area] = 1;
       lastbyte[area] = hb_fsSeek( handles[area], 0L, FS_END );
-      hb_retni( handles[area] );
+      hb_retnint( handles[area] );
    }
    else
    {
       if ( handles[area] != 0 )
       {
          hb_fsClose( handles[area] );
-         hb_retni(0);
+         hb_retnint( 0 );
          recno[area]    = 0L;
          offset[area]   = 0L;
          handles[area]  = 0;

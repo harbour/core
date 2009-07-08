@@ -312,7 +312,7 @@ char * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, const char ** Te
 HB_FUNC( HB_FREADLINE )
 {
    PHB_ITEM pTerm1;
-   HB_FHANDLE hFileHandle  = ( HB_FHANDLE ) hb_parnl( 1 );
+   HB_FHANDLE hFileHandle  = ( HB_FHANDLE ) hb_parnint( 1 );
    const char ** Term;
    char * pBuffer;
    int * iTermSizes;

@@ -114,5 +114,5 @@ HB_FUNC( HB_NTOCOLOR )
       hb_retc( szColorString );
    }
    else
-      hb_retc( "N/N" );
+      hb_retc_const( "N/N" );
 }

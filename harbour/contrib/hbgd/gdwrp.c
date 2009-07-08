@@ -562,9 +562,9 @@ HB_FUNC( GDVERSION )
    hb_snprintf( szVer, sizeof( szVer ), "GD Version %s", GD_VERSION_STRING );
    hb_retc( szVer );
 #elif HB_GD_VERS( 2, 0, 33 )
-   hb_retc( "GD Version 2.0.33" );
+   hb_retc_const( "GD Version 2.0.33" );
 #else
-   hb_retc( "GD Version 2.0.28" );
+   hb_retc_const( "GD Version 2.0.28" );
 #endif
 }
 
