@@ -1155,7 +1155,7 @@ METHOD picture( cPicture ) CLASS GET
 
       ::lPicComplex := .F.
       IF ! Empty( ::cPicMask )
-         FOR EACH cChar IN ::cPicMask
+         FOR EACH cChar IN Upper( ::cPicMask )
             IF !( cChar $ "!ANX9#" )
                ::lPicComplex := .T.
                EXIT
@@ -1268,7 +1268,7 @@ METHOD unTransform() CLASS GET
             IF "R" $ ::cPicFunc
                xValue := ""
                FOR nFor := 1 TO Len( ::cPicMask )
-                  IF SubStr( ::cPicMask, nFor, 1 ) $ "ANX9#!LY"
+                  IF Upper( SubStr( ::cPicMask, nFor, 1 ) ) $ "ANX9#!LY"
                      xValue += SubStr( cBuffer, nFor, 1 )
                   ENDIF
                NEXT
@@ -1363,9 +1363,9 @@ METHOD unTransform() CLASS GET
          CASE "L"
 
             cBuffer := Upper( cBuffer )
-               xValue := "T" $ cBuffer .OR. ;
-                         "Y" $ cBuffer .OR. ;
-                         hb_LangMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) $ cBuffer
+            xValue := "T" $ cBuffer .OR. ;
+                      "Y" $ cBuffer .OR. ;
+                      hb_LangMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) $ cBuffer
             EXIT
 
          CASE "D"
@@ -1711,11 +1711,11 @@ METHOD IsEditable( nPos ) CLASS GET
 
    IF ::cType != NIL
       SWITCH ::cType
-      CASE "C" ; RETURN cChar $ "!ANX9#LY"
+      CASE "C" ; RETURN Upper( cChar ) $ "!ANX9#LY"
       CASE "N" ; RETURN cChar $ "9#$*"
       CASE "D"
       CASE "T" ; RETURN cChar == "9"
-      CASE "L" ; RETURN cChar $ "LY#" /* CA-Cl*pper 5.2 undocumented: # allow T,F,Y,N for Logical [ckedem] */
+      CASE "L" ; RETURN Upper( cChar ) $ "LY#" /* CA-Cl*pper 5.2 undocumented: # allow T,F,Y,N for Logical [ckedem] */
       ENDSWITCH
    ENDIF
 
@@ -1773,7 +1773,7 @@ METHOD Input( cChar ) CLASS GET
    ENDIF
 
    IF ! Empty( ::cPicMask )
-      cPic  := SubStr( ::cPicMask, ::nPos, 1 )
+      cPic  := Upper( SubStr( ::cPicMask, ::nPos, 1 ) )
 
 //    cChar := Transform( cChar, cPic )
 // Above line eliminated because some get picture template symbols for
