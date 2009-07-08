@@ -667,6 +667,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
       pMem = malloc( HB_ALLOC_SIZE( ulSize ) );
       if( pMem )
       {
+         HB_ATOM_SET( HB_COUNTER_PTR( HB_MEM_PTR( pMem ) ), 1 );
          if( ulSize > ulMemSize )
          {
             memcpy( pMem, pMemBlock, HB_ALLOC_SIZE( ulMemSize ) );
@@ -715,6 +716,8 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
       if( ulSize == 0 )
          hb_errInternal( HB_EI_XREALLOCNULLSIZE, NULL, NULL, NULL );
       pMem = malloc( HB_ALLOC_SIZE( ulSize ) );
+      if( pMem )
+         HB_ATOM_SET( HB_COUNTER_PTR( HB_MEM_PTR( pMem ) ), 1 );
    }
    else if( ulSize == 0 )
    {
