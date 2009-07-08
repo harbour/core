@@ -8018,6 +8018,22 @@ static HB_ERRCODE hb_nsxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect
    return HB_SUCCESS;
 }
 
+static HB_ERRCODE hb_nsxInit( LPRDDNODE pRDD )
+{
+   HB_ERRCODE errCode;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_nsxInit(%p)", pRDD));
+
+   errCode = SUPER_INIT( pRDD );
+   if( errCode == HB_SUCCESS )
+   {
+      PHB_ITEM pItem = hb_itemPutNI( NULL, DB_MEMO_SMT );
+      SELF_RDDINFO( pRDD, RDDI_MEMOTYPE, 0, pItem );
+      hb_itemRelease( pItem );
+   }
+   return errCode;
+}
+
 static const RDDFUNCS nsxTable = {
                              NULL,
                              NULL,
@@ -8112,11 +8128,11 @@ static const RDDFUNCS nsxTable = {
                              NULL,
                              NULL,
                              NULL,
+                             hb_nsxInit,
                              NULL,
                              NULL,
                              NULL,
-                             NULL,
-                             ( DBENTRYP_RSLV ) hb_nsxRddInfo,
+                             hb_nsxRddInfo,
                              NULL
                            };
 
@@ -8172,20 +8188,9 @@ static void hb_dbfnsxRddInit( void * cargo )
 
    if( hb_rddRegister( "DBF",    RDT_FULL ) <= 1 )
    {
-      USHORT usResult;
-
       hb_rddRegister( "DBFFPT", RDT_FULL );
-      usResult = hb_rddRegister( "DBFNSX", RDT_FULL );
-      if( usResult <= 1 )
-      {
-         if( usResult == 0 )
-         {
-            PHB_ITEM pItem = hb_itemPutNI( NULL, DB_MEMO_SMT );
-            SELF_RDDINFO( hb_rddGetNode( s_uiRddId ), RDDI_MEMOTYPE, 0, pItem );
-            hb_itemRelease( pItem );
-         }
+      if( hb_rddRegister( "DBFNSX", RDT_FULL ) <= 1 )
          return;
-      }
    }
 
    hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );

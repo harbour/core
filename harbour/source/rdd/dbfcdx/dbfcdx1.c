@@ -9791,9 +9791,7 @@ static void hb_dbfcdxRddInit( void * cargo )
    {
       hb_rddRegister( "DBFFPT", RDT_FULL );
       if( hb_rddRegister( "SIXCDX", RDT_FULL ) <= 1 )
-      {
          return;
-      }
    }
 
    hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
@@ -9855,9 +9853,7 @@ static void hb_dbfcdxRddInit( void * cargo )
    {
       hb_rddRegister( "DBFFPT", RDT_FULL );
       if( hb_rddRegister( "DBFCDX", RDT_FULL ) <= 1 )
-      {
          return;
-      }
    }
 
    hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );

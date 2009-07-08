@@ -5530,7 +5530,10 @@ static HB_ERRCODE hb_dbfInit( LPRDDNODE pRDD )
    HB_TSD_INIT( pTSD, sizeof( DBFDATA ), hb_dbfInitTSD, hb_dbfDestroyTSD );
    pRDD->lpvCargo = ( void * ) pTSD;
 
-   return HB_SUCCESS;
+   if( ISSUPER_INIT( pRDD ) )
+      return SUPER_INIT( pRDD );
+   else
+      return HB_SUCCESS;
 }
 
 static HB_ERRCODE hb_dbfExit( LPRDDNODE pRDD )
@@ -5545,7 +5548,10 @@ static HB_ERRCODE hb_dbfExit( LPRDDNODE pRDD )
    }
    s_uiRddId = ( USHORT ) -1;
 
-   return HB_SUCCESS;
+   if( ISSUPER_EXIT( pRDD ) )
+      return SUPER_EXIT( pRDD );
+   else
+      return HB_SUCCESS;
 }
 
 static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )

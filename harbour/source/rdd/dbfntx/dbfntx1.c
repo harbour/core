@@ -7555,11 +7555,15 @@ static HB_ERRCODE ntxInit( LPRDDNODE pRDD )
    HB_TRACE(HB_TR_DEBUG, ("ntxInit(%p)", pRDD));
 
    errCode = SUPER_INIT( pRDD );
-#if !defined( HB_NTX_NOMULTITAG )
    if( errCode == HB_SUCCESS )
+   {
+      PHB_ITEM pItem = hb_itemPutNI( NULL, DB_MEMO_DBT );
+      SELF_RDDINFO( pRDD, RDDI_MEMOTYPE, 0, pItem );
+      hb_itemRelease( pItem );
+#if !defined( HB_NTX_NOMULTITAG )
       DBFNODE_DATA( pRDD )->fMultiTag = TRUE;
 #endif
-
+   }
    return errCode;
 }
 
@@ -7746,7 +7750,7 @@ static const RDDFUNCS ntxTable = {
                              ntxExit,
                              ntxDrop,
                              ntxExists,
-                             ( DBENTRYP_RSLV ) ntxRddInfo,
+                             ntxRddInfo,
                              ntxWhoCares
                            };
 
@@ -7804,20 +7808,9 @@ static void hb_dbfntxRddInit( void * cargo )
 
    if( hb_rddRegister( "DBF",    RDT_FULL ) <= 1 )
    {
-      USHORT usResult;
-
       hb_rddRegister( "DBFFPT", RDT_FULL );
-      usResult = hb_rddRegister( "DBFNTX", RDT_FULL );
-      if( usResult <= 1 )
-      {
-         if( usResult == 0 )
-         {
-            PHB_ITEM pItem = hb_itemPutNI( NULL, DB_MEMO_DBT );
-            SELF_RDDINFO( hb_rddGetNode( s_uiRddId ), RDDI_MEMOTYPE, 0, pItem );
-            hb_itemRelease( pItem );
-         }
+      if( hb_rddRegister( "DBFNTX", RDT_FULL ) <= 1 )
          return;
-      }
    }
 
    hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
