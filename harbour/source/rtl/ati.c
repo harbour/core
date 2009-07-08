@@ -4,9 +4,10 @@
 
 /*
  * Harbour Project source code:
- * Legacy hbtip functions
+ * HB_ATI() function
  *
- * Copyright 2009 {list of individual authors and e-mail addresses}
+ * Copyright 1999-2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,11 +47,75 @@
  *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
  *
  */
 
-FUNCTION ATI( ... )
-   RETURN TIP_ATI( ... )
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
 
-FUNCTION HB_EXEC( sSym, ... )
-   RETURN iif( hb_PValue( 2 ) == NIL, sSym:exec( ... ), hb_execMsg( sSym, ... ) )
+static ULONG hb_strAtI( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_strAt(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
+
+   if( ulSubLen > 0 && ulLen >= ulSubLen )
+   {
+      ULONG ulPos = 0;
+      ULONG ulSubPos = 0;
+
+      while( ulPos < ulLen && ulSubPos < ulSubLen )
+      {
+         if( hb_charLower( szText[ ulPos ] ) == hb_charLower( szSub[ ulSubPos ] ) )
+         {
+            ulSubPos++;
+            ulPos++;
+         }
+         else if( ulSubPos )
+         {
+            /* Go back to the first character after the first match,
+               or else tests like "22345" $ "012223456789" will fail. */
+            ulPos -= ( ulSubPos - 1 );
+            ulSubPos = 0;
+         }
+         else
+            ulPos++;
+      }
+
+      return ( ulSubPos < ulSubLen ) ? 0 : ( ulPos - ulSubLen + 1 );
+   }
+   else
+      return 0;
+}
+
+HB_FUNC( HB_ATI )
+{
+   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
+
+   if( pText && pSub )
+   {
+      ULONG ulTextLength = hb_itemGetCLen( pText );
+      ULONG ulStart = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : 1;
+      ULONG ulEnd = HB_ISNUM( 4 ) ? ( ULONG ) hb_parnl( 4 ) : ulTextLength;
+      ULONG ulPos;
+
+      if( ulStart > ulTextLength || ulEnd < ulStart )
+         hb_retnl( 0 );
+      else
+      {
+         if( ulEnd > ulTextLength )
+            ulEnd = ulTextLength;
+
+         ulPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                            hb_itemGetCPtr( pText ) + ulStart - 1, ulEnd - ulStart + 1 );
+
+         if( ulPos > 0 )
+            ulPos += ( ulStart - 1 );
+
+         hb_retnl( ulPos );
+      }
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}

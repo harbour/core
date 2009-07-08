@@ -55,6 +55,8 @@
 #include "hbapiitm.h"
 #include "hbapigt.h"
 #include "hbapicls.h"
+#include "hbapierr.h"
+#include "hbvm.h"
 
 #if 0
 
@@ -217,6 +219,29 @@ HB_FUNC( __SENDRAWMSG )
 {
    hb_dbg_objSendMessage( 0, hb_param( 1, HB_IT_ANY ),
                           hb_param( 2, HB_IT_ANY ), 3 );
+}
+
+HB_FUNC( HB_EXEC )
+{
+   if( HB_ISSYMBOL( 1 ) )
+   {
+      BOOL fSend = FALSE;
+      int iParams = hb_pcount() - 1;
+
+      if( iParams >= 1 )
+      {
+         fSend = iParams > 1 && ! HB_IS_NIL( hb_param( 2, HB_IT_ANY ) );
+         iParams--;
+      }
+      else
+         hb_vmPushNil();
+      if( fSend )
+         hb_vmSend( ( USHORT ) iParams );
+      else
+         hb_vmDo( ( USHORT ) iParams );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Hash utem functions */

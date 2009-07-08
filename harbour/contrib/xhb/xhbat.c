@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ATSKIPSTRINGS() function
+ * ATSKIPSTRINGS(), ATI() functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
@@ -165,4 +165,80 @@ HB_FUNC( ATSKIPSTRINGS ) /* cFind, cWhere, nStart */
    }
 
    hb_retnl( 0 );
+}
+
+/* Case insensitive hb_strAt() function */
+static ULONG hb_strAtI( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_strAtI(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
+
+   if( ulSubLen > 0 && ulLen >= ulSubLen )
+   {
+      ULONG ulPos = 0;
+      ULONG ulSubPos = 0;
+
+      while( ulPos < ulLen && ulSubPos < ulSubLen )
+      {
+         if( HB_TOLOWER( ( BYTE ) szText[ ulPos ] ) == HB_TOLOWER( ( BYTE ) szSub[ ulSubPos ] ) )
+         {
+            ulSubPos++;
+            ulPos++;
+         }
+         else if( ulSubPos )
+         {
+            /* Go back to the first character after the first match,
+               or else tests like "22345" $ "012223456789" will fail. */
+            ulPos -= ( ulSubPos - 1 );
+            ulSubPos = 0;
+         }
+         else
+            ulPos++;
+      }
+      return ( ulSubPos < ulSubLen ) ? 0 : ( ulPos - ulSubLen + 1 );
+   }
+   else
+      return 0;
+}
+
+/* Case insensitive At() function */
+HB_FUNC( ATI )
+{
+   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
+
+   if( pText && pSub )
+   {
+      PHB_ITEM pStart = hb_param( 3, HB_IT_NUMERIC );
+      PHB_ITEM pEnd = hb_param( 4, HB_IT_NUMERIC );
+      LONG lLen = hb_itemGetCLen( pText );
+      LONG lStart = pStart ? hb_itemGetNL( pStart ) : 1;
+      LONG lEnd = pEnd ? hb_itemGetNL( pEnd ) : lLen;
+      ULONG ulPos;
+
+      if( lStart < 0 )
+      {
+         lStart += lLen;
+         if( lStart < 0 )
+            lStart = 0;
+      }
+      else if( lStart )
+         lStart--;
+
+      if( lEnd < 0 )
+         lEnd += lLen + 1;
+      if( lEnd > lLen )
+         lEnd = lLen;
+
+      /* Stop searching if starting past beyond end. */
+      if( lStart >= lEnd )
+         hb_retnl( 0 );
+      else
+      {
+         ulPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                            hb_itemGetCPtr( pText ) + lStart, lEnd - lStart );
+         hb_retnl( ulPos ? ulPos + lStart : 0 );
+      }
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

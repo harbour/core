@@ -25,7 +25,6 @@ PRG_SOURCES= \
 	ftpcln.prg \
 	smtpcln.prg	\
 	httpcln.prg \
-	legacy.prg \
 	mail.prg \
 	cgi.prg \
 	thtml.prg \

@@ -13,6 +13,7 @@ C_SOURCES=\
 	accept.c \
 	ampm.c \
 	at.c \
+	ati.c \
 	binnum.c \
 	binnumx.c \
 	box.c \
