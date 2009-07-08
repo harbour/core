@@ -93,6 +93,7 @@ HB_EXTERN_BEGIN
 #define HB_IT_ENUM      ( ( HB_TYPE ) 0x10000 )
 #define HB_IT_EXTREF    ( ( HB_TYPE ) 0x20000 )
 #define HB_IT_DEFAULT   ( ( HB_TYPE ) 0x40000 )
+#define HB_IT_RECOVER   ( ( HB_TYPE ) 0x80000 )
 #define HB_IT_OBJECT    HB_IT_ARRAY
 #define HB_IT_NUMERIC   ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE ) )
 #define HB_IT_NUMINT    ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG ) )

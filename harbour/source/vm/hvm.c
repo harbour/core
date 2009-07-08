@@ -1794,7 +1794,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              */
             pItem = hb_stackAllocItem();
             /* mark type as NIL - it's not real item */
-            pItem->type = HB_IT_NIL;
+            pItem->type = HB_IT_RECOVER;
             /* store the address of RECOVER or END opcode */
             pItem->item.asRecover.recover = pCode + HB_PCODE_MKINT24( &pCode[ 1 ] );
             /* store current RECOVER base */
@@ -1817,6 +1817,10 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          }
 
          case HB_P_ALWAYSBEGIN:
+#if defined( _HB_RECOVER_DEBUG )
+            if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+               hb_errInternal( HB_EI_ERRUNRECOV, "HB_P_ALWAYSBEGIN", NULL, NULL );
+#endif
             /* change the recover address to ALWAYSEND opcode */
             hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.recover =
                pCode + HB_PCODE_MKINT24( &pCode[ 1 ] );
@@ -1834,6 +1838,10 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          {
             USHORT uiPrevAction, uiCurrAction;
 
+#if defined( _HB_RECOVER_DEBUG )
+            if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+               hb_errInternal( HB_EI_ERRUNRECOV, "HB_P_ALWAYSEND", NULL, NULL );
+#endif
             uiPrevAction = hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.flags;
             uiCurrAction = hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.request;
 
@@ -1885,7 +1893,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              */
             pItem = hb_stackAllocItem();
             /* mark type as NIL - it's not real item */
-            pItem->type = HB_IT_NIL;
+            pItem->type = HB_IT_RECOVER;
             /* store the address of RECOVER or END opcode */
             pItem->item.asRecover.recover = pCode + HB_PCODE_MKINT24( &pCode[ 1 ] );
             /* store current RECOVER base */
@@ -1913,7 +1921,10 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              * This is executed either at the end of sequence or as the
              * response to the break statement if there is no RECOVER clause
              */
-
+#if defined( _HB_RECOVER_DEBUG )
+            if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+               hb_errInternal( HB_EI_ERRUNRECOV, "HB_P_SEQEND", NULL, NULL );
+#endif
             /*
              * 2) Restore previous recovery state
              */
@@ -1936,7 +1947,10 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             /*
              * Execute the RECOVER code
              */
-
+#if defined( _HB_RECOVER_DEBUG )
+            if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+               hb_errInternal( HB_EI_ERRUNRECOV, "HB_P_SEQRECOVER", NULL, NULL );
+#endif
             /*
              * 2) Restore previous recovery state
              */
@@ -2795,6 +2809,10 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                do
                {
                   hb_stackRemove( hb_stackGetRecoverBase() );
+#if defined( _HB_RECOVER_DEBUG )
+                  if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+                     hb_errInternal( HB_EI_ERRUNRECOV, "ENDPROC", NULL, NULL );
+#endif
                   if( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.flags & HB_SEQ_DOALWAYS )
                      break;
                   /* Restore previous recovery state */
@@ -2806,6 +2824,10 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                /* ALWAYS found? */
                if( bCanRecover )
                {
+#if defined( _HB_RECOVER_DEBUG )
+                  if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+                     hb_errInternal( HB_EI_ERRUNRECOV, "ENDPROC ALWAYS", NULL, NULL );
+#endif
                   /* reload the address of ALWAYS code */
                   pCode = hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.recover;
                   /* store and reset action */
@@ -2832,6 +2854,10 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                /*
                 * reload the address of recovery code
                 */
+#if defined( _HB_RECOVER_DEBUG )
+               if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+                  hb_errInternal( HB_EI_ERRUNRECOV, "BREAK", NULL, NULL );
+#endif
                pCode = hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.recover;
                /*
                 * leave the SEQUENCE envelope on the stack - it will
@@ -2852,6 +2878,10 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                do
                {
                   hb_stackRemove( hb_stackGetRecoverBase() );
+#if defined( _HB_RECOVER_DEBUG )
+                  if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+                     hb_errInternal( HB_EI_ERRUNRECOV, "QUIT", NULL, NULL );
+#endif
                   if( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.flags & HB_SEQ_DOALWAYS )
                      break;
                   /* Restore previous recovery state */
@@ -2864,6 +2894,10 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                /* ALWAYS found? */
                if( bCanRecover )
                {
+#if defined( _HB_RECOVER_DEBUG )
+                  if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+                     hb_errInternal( HB_EI_ERRUNRECOV, "QUIT ALWAYS", NULL, NULL );
+#endif
                   /* reload the address of ALWAYS code */
                   pCode = hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.recover;
                   /* store and reset action */
@@ -8294,12 +8328,20 @@ void hb_vmRequestBreak( PHB_ITEM pItem )
    while( ulRecoverBase && ( hb_stackItem( ulRecoverBase +
                HB_RECOVER_STATE )->item.asRecover.flags & HB_SEQ_DOALWAYS ) )
    {
+#if defined( _HB_RECOVER_DEBUG )
+      if( hb_stackItem( ulRecoverBase + HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+         hb_errInternal( HB_EI_ERRUNRECOV, "hb_vmRequestBreak", NULL, NULL );
+#endif
       ulRecoverBase = hb_stackItem( ulRecoverBase +
                                     HB_RECOVER_STATE )->item.asRecover.base;
    }
 
    if( ulRecoverBase )
    {
+#if defined( _HB_RECOVER_DEBUG )
+      if( hb_stackItem( ulRecoverBase + HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+         hb_errInternal( HB_EI_ERRUNRECOV, "hb_vmRequestBreak2", NULL, NULL );
+#endif
       if( pItem )
          hb_itemCopy( hb_stackItem( ulRecoverBase + HB_RECOVER_VALUE ), pItem );
 
@@ -8502,7 +8544,7 @@ void hb_xvmSeqBegin( void )
    /* 2) recovery state */
    pItem = hb_stackAllocItem();
    /* mark type as NIL - it's not real item */
-   pItem->type = HB_IT_NIL;
+   pItem->type = HB_IT_RECOVER;
    /* address of RECOVER or END opcode - not used in C code */
    pItem->item.asRecover.recover = NULL;
    /* store current RECOVER base */
@@ -8524,7 +8566,10 @@ BOOL hb_xvmSeqEnd( void )
     * remove all items placed on the stack after BEGIN code
     */
    hb_stackRemove( hb_stackGetRecoverBase() );
-
+#if defined( _HB_RECOVER_DEBUG )
+   if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+      hb_errInternal( HB_EI_ERRUNRECOV, "hb_xvmSeqEnd", NULL, NULL );
+#endif
    /*
     * Remove the SEQUENCE envelope
     * This is executed either at the end of sequence or as the
@@ -8532,7 +8577,7 @@ BOOL hb_xvmSeqEnd( void )
     */
 
    /* 2) Restore previous recovery base address */
-   hb_stackSetRecoverBase( hb_stackItemFromTop( -1 )->item.asRecover.base );
+   hb_stackSetRecoverBase( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.base );
    hb_stackDec();
    /* 1) Discard the value returned by BREAK statement */
    hb_stackPop();
@@ -8564,7 +8609,10 @@ BOOL hb_xvmSeqEndTest( void )
     * remove all items placed on the stack after BEGIN code
     */
    hb_stackRemove( hb_stackGetRecoverBase() );
-
+#if defined( _HB_RECOVER_DEBUG )
+   if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+      hb_errInternal( HB_EI_ERRUNRECOV, "hb_xvmSeqEndTest", NULL, NULL );
+#endif
    /*
     * Remove the SEQUENCE envelope
     * This is executed either at the end of sequence or as the
@@ -8572,7 +8620,7 @@ BOOL hb_xvmSeqEndTest( void )
     */
 
    /* 2) Restore previous recovery base address */
-   hb_stackSetRecoverBase( hb_stackItemFromTop( -1 )->item.asRecover.base );
+   hb_stackSetRecoverBase( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.base );
    hb_stackDec();
    /* 1) Discard the value returned by BREAK statement */
    hb_stackPop();
@@ -8591,9 +8639,12 @@ BOOL hb_xvmSeqRecover( void )
     * remove all items placed on the stack after BEGIN code
     */
    hb_stackRemove( hb_stackGetRecoverBase() );
-
+#if defined( _HB_RECOVER_DEBUG )
+   if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+      hb_errInternal( HB_EI_ERRUNRECOV, "hb_xvmSeqRecover", NULL, NULL );
+#endif
    /* 2) Restore previous recovery base address */
-   hb_stackSetRecoverBase( hb_stackItemFromTop( -1 )->item.asRecover.base );
+   hb_stackSetRecoverBase( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.base );
    hb_stackDec();
    /* 1) Leave the value returned from BREAK */
 
@@ -8621,7 +8672,7 @@ void hb_xvmSeqAlways( void )
    /* 2) recovery state */
    pItem = hb_stackAllocItem();
    /* mark type as NIL - it's not real item */
-   pItem->type = HB_IT_NIL;
+   pItem->type = HB_IT_RECOVER;
    /* address of RECOVER or END opcode - not used in C code */
    pItem->item.asRecover.recover = NULL;
    /* store current RECOVER base */
@@ -8644,6 +8695,10 @@ BOOL hb_xvmAlwaysBegin( void )
 
    /* remove all items placed on the stack after BEGIN code */
    hb_stackRemove( hb_stackGetRecoverBase() );
+#if defined( _HB_RECOVER_DEBUG )
+   if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+      hb_errInternal( HB_EI_ERRUNRECOV, "hb_xvmAlwaysBegin", NULL, NULL );
+#endif
    /* store and reset action */
    hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.request = hb_stackGetActionRequest();
    hb_stackSetActionRequest( 0 );
@@ -8663,6 +8718,11 @@ BOOL hb_xvmAlwaysEnd( void )
 
    /* remove all items placed on the stack after ALWAYSBEGIN code */
    hb_stackRemove( hb_stackGetRecoverBase() );
+
+#if defined( _HB_RECOVER_DEBUG )
+   if( hb_stackItemFromTop( HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+      hb_errInternal( HB_EI_ERRUNRECOV, "hb_xvmAlwaysEnd", NULL, NULL );
+#endif
    /* restore previous recovery base address */
    hb_stackSetRecoverBase( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.base );
    uiCurrAction = hb_stackGetActionRequest();

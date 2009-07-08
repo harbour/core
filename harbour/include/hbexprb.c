@@ -2573,10 +2573,13 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
          }
          else
          {
+            /* executed from macro compiler */
             HB_GEN_FUNC2( PCode2, HB_P_SWAP, 1 );
             HB_GEN_FUNC2( PCode2, HB_P_SWAP, 1 );
          }
          HB_GEN_FUNC2( PCode2, HB_P_SENDSHORT, 1 );
+         if( !pSelf->value.asMessage.pParms )
+            HB_GEN_FUNC1( PCode1, HB_P_POP );
          break;
 
       case HB_EA_PUSH_POP:
