@@ -93,7 +93,9 @@ HB_EXTERN_BEGIN
    #define matherr _matherr
    #define exception _exception
 #elif defined(__DJGPP__)
-   #define HB_MATH_HANDLER
+   #ifndef __cplusplus
+      #define HB_MATH_HANDLER
+   #endif
 #elif defined( HB_OS_WIN_CE ) && defined( __POCC__ )
    /* NOTE: Workaround for Pellec C 5.00 not having an 'inf' (HUGE_VAL) 
             in '-Tarm-coff' mode. [vszakats] */
