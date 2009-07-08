@@ -256,33 +256,34 @@ REQUEST hbmk_KEYW
 #define _HBMK_lMINIPO           48
 #define _HBMK_lUNICODE          49
 #define _HBMK_nCONF             50
+#define _HBMK_lIGNOREERROR      51
 
-#define _HBMK_cFIRST            51
-#define _HBMK_aPRG              52
-#define _HBMK_aC                53
-#define _HBMK_aRESSRC           54
-#define _HBMK_aRESCMP           55
-#define _HBMK_aOBJUSER          56
-#define _HBMK_aICON             57
+#define _HBMK_cFIRST            52
+#define _HBMK_aPRG              53
+#define _HBMK_aC                54
+#define _HBMK_aRESSRC           55
+#define _HBMK_aRESCMP           56
+#define _HBMK_aOBJUSER          57
+#define _HBMK_aICON             58
 
-#define _HBMK_aPO               58
-#define _HBMK_cHBL              59
-#define _HBMK_cHBLDir           60
-#define _HBMK_aLNG              61
-#define _HBMK_cPO               62
+#define _HBMK_aPO               59
+#define _HBMK_cHBL              60
+#define _HBMK_cHBLDir           61
+#define _HBMK_aLNG              62
+#define _HBMK_cPO               63
 
-#define _HBMK_lDEBUGTIME        63
-#define _HBMK_lDEBUGINC         64
-#define _HBMK_lDEBUGSTUB        65
-#define _HBMK_lDEBUGI18N        66
+#define _HBMK_lDEBUGTIME        64
+#define _HBMK_lDEBUGINC         65
+#define _HBMK_lDEBUGSTUB        66
+#define _HBMK_lDEBUGI18N        67
 
-#define _HBMK_cCCPATH           67
-#define _HBMK_cCCPREFIX         68
-#define _HBMK_cCCPOSTFIX        69
+#define _HBMK_cCCPATH           68
+#define _HBMK_cCCPREFIX         69
+#define _HBMK_cCCPOSTFIX        70
 
-#define _HBMK_lUTF8             70
+#define _HBMK_lUTF8             71
 
-#define _HBMK_MAX_              70
+#define _HBMK_MAX_              71
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -650,6 +651,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    hbmk[ _HBMK_lREBUILDPO ] := .F.
    hbmk[ _HBMK_lMINIPO ] := .F.
    hbmk[ _HBMK_nCONF ] := _CONF_RELEASE
+   hbmk[ _HBMK_lIGNOREERROR ] := .F.
 
    hbmk[ _HBMK_lDEBUGTIME ] := .F.
    hbmk[ _HBMK_lDEBUGINC ] := .F.
@@ -1419,36 +1421,39 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          l_lBLDFLGP := "p" $ cParam
          l_lBLDFLGC := "c" $ cParam
          l_lBLDFLGL := "l" $ cParam
-      CASE cParamL == "-debug"           ; hbmk[ _HBMK_lDEBUG ]     := .T.
+      CASE cParamL == "-debug"           ; hbmk[ _HBMK_lDEBUG ]      := .T.
       CASE cParamL == "-debug-" .OR. ;
-           cParamL == "-nodebug"         ; hbmk[ _HBMK_lDEBUG ]     := .F.
-      CASE cParamL == "-optim"           ; hbmk[ _HBMK_lOPTIM ]     := .T.
+           cParamL == "-nodebug"         ; hbmk[ _HBMK_lDEBUG ]      := .F.
+      CASE cParamL == "-optim"           ; hbmk[ _HBMK_lOPTIM ]      := .T.
       CASE cParamL == "-optim-" .OR. ;
-           cParamL == "-noopt"           ; hbmk[ _HBMK_lOPTIM ]     := .F.
-      CASE cParamL == "-debugtime"       ; hbmk[ _HBMK_lDEBUGTIME ] := .T.
-      CASE cParamL == "-debuginc"        ; hbmk[ _HBMK_lDEBUGINC ]  := .T.
-      CASE cParamL == "-debugstub"       ; hbmk[ _HBMK_lDEBUGSTUB ] := .T.
-      CASE cParamL == "-debugi18n"       ; hbmk[ _HBMK_lDEBUGI18N ] := .T.
-      CASE cParamL == "-nulrdd"          ; hbmk[ _HBMK_lNULRDD ]    := .T.
-      CASE cParamL == "-nulrdd-"         ; hbmk[ _HBMK_lNULRDD ]    := .F.
-      CASE cParamL == "-map"             ; hbmk[ _HBMK_lMAP ]       := .T.
+           cParamL == "-noopt"           ; hbmk[ _HBMK_lOPTIM ]      := .F.
+      CASE cParamL == "-debugtime"       ; hbmk[ _HBMK_lDEBUGTIME ]  := .T.
+      CASE cParamL == "-debuginc"        ; hbmk[ _HBMK_lDEBUGINC ]   := .T.
+      CASE cParamL == "-debugstub"       ; hbmk[ _HBMK_lDEBUGSTUB ]  := .T.
+      CASE cParamL == "-debugi18n"       ; hbmk[ _HBMK_lDEBUGI18N ]  := .T.
+      CASE cParamL == "-nulrdd"          ; hbmk[ _HBMK_lNULRDD ]     := .T.
+      CASE cParamL == "-nulrdd-"         ; hbmk[ _HBMK_lNULRDD ]     := .F.
+      CASE cParamL == "-map"             ; hbmk[ _HBMK_lMAP ]        := .T.
       CASE cParamL == "-map-" .OR. ;
-           cParamL == "-nomap"           ; hbmk[ _HBMK_lMAP ]       := .F.
-      CASE cParamL == "-beep"            ; hbmk[ _HBMK_lBEEP ]      := .T.
+           cParamL == "-nomap"           ; hbmk[ _HBMK_lMAP ]        := .F.
+      CASE cParamL == "-beep"            ; hbmk[ _HBMK_lBEEP ]       := .T.
       CASE cParamL == "-beep-" .OR. ;
-           cParamL == "-nobeep"          ; hbmk[ _HBMK_lBEEP ]      := .F.
-      CASE cParamL == "-rebuild"         ; hbmk[ _HBMK_lINC ]       := .T. ; hbmk[ _HBMK_lREBUILD ] := .T.
-      CASE cParamL == "-rebuildpo"       ; hbmk[ _HBMK_lREBUILDPO ] := .T.
-      CASE cParamL == "-minipo"          ; hbmk[ _HBMK_lMINIPO ]    := .T.
+           cParamL == "-nobeep"          ; hbmk[ _HBMK_lBEEP ]       := .F.
+      CASE cParamL == "-rebuild"         ; hbmk[ _HBMK_lINC ]        := .T. ; hbmk[ _HBMK_lREBUILD ] := .T.
+      CASE cParamL == "-rebuildpo"       ; hbmk[ _HBMK_lREBUILDPO ]  := .T.
+      CASE cParamL == "-minipo"          ; hbmk[ _HBMK_lMINIPO ]     := .T.
       CASE cParamL == "-minipo-" .OR. ;
-           cParamL == "-nominipo"        ; hbmk[ _HBMK_lMINIPO ]    := .F.
-      CASE cParamL == "-clean"           ; hbmk[ _HBMK_lINC ]       := .T. ; l_lCLEAN := .T.
-      CASE cParamL == "-inc"             ; hbmk[ _HBMK_lINC ]       := .T.
+           cParamL == "-nominipo"        ; hbmk[ _HBMK_lMINIPO ]     := .F.
+      CASE cParamL == "-clean"           ; hbmk[ _HBMK_lINC ]        := .T. ; l_lCLEAN := .T.
+      CASE cParamL == "-inc"             ; hbmk[ _HBMK_lINC ]        := .T.
       CASE cParamL == "-inc-" .OR. ;
-           cParamL == "-noinc"           ; hbmk[ _HBMK_lINC ]       := .F.
-      CASE cParamL == "-strip"           ; hbmk[ _HBMK_lSTRIP ]     := .T.
+           cParamL == "-noinc"           ; hbmk[ _HBMK_lINC ]        := .F.
+      CASE cParamL == "-ignore"          ; hbmk[ _HBMK_lIGNOREERROR] := .T.
+      CASE cParamL == "-ignore-" .OR. ;
+           cParamL == "-noignore"        ; hbmk[ _HBMK_lIGNOREERROR] := .F.
+      CASE cParamL == "-strip"           ; hbmk[ _HBMK_lSTRIP ]      := .T.
       CASE cParamL == "-strip-" .OR. ;
-           cParamL == "-nostrip"         ; hbmk[ _HBMK_lSTRIP ]     := .F.
+           cParamL == "-nostrip"         ; hbmk[ _HBMK_lSTRIP ]      := .F.
       CASE cParamL == "-compr" .OR. ;
            Left( cParamL, 7 ) == "-compr="
 
@@ -3167,10 +3172,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                         OutErr( FN_Escape( DirAddPathSep( PathSepToSelf( l_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt, nCmd_Esc ) +;
                                 " " + ArrayToList( aCommand ) + hb_osNewLine() )
                      ENDIF
-                     IF hbmk[ _HBMK_lBEEP ]
-                        DoBeep( hbmk, .F. )
+                     IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                        IF hbmk[ _HBMK_lBEEP ]
+                           DoBeep( hbmk, .F. )
+                        ENDIF
+                        RETURN 6
                      ENDIF
-                     RETURN 6
                   ENDIF
                ENDIF
             ENDIF
@@ -3188,10 +3195,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( ArrayToList( thread[ 2 ] ) + hb_osNewLine() )
                   ENDIF
-                  IF hbmk[ _HBMK_lBEEP ]
-                     DoBeep( hbmk, .F. )
+                  IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                     IF hbmk[ _HBMK_lBEEP ]
+                        DoBeep( hbmk, .F. )
+                     ENDIF
+                     RETURN 6
                   ENDIF
-                  RETURN 6
                ENDIF
             NEXT
          ENDIF
@@ -3219,10 +3228,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             IF ! hbmk[ _HBMK_lQuiet ]
                OutErr( cCommand + hb_osNewLine() )
             ENDIF
-            IF hbmk[ _HBMK_lBEEP ]
-               DoBeep( hbmk, .F. )
+            IF ! hbmk[ _HBMK_lIGNOREERROR ]
+               IF hbmk[ _HBMK_lBEEP ]
+                  DoBeep( hbmk, .F. )
+               ENDIF
+               RETURN 6
             ENDIF
-            RETURN 6
          ENDIF
       ENDIF
    ENDIF
@@ -3508,8 +3519,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + hb_osNewLine() )
                   ENDIF
-                  nErrorLevel := 6
-                  EXIT
+                  IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                     nErrorLevel := 6
+                     EXIT
+                  ENDIF
                ENDIF
             NEXT
          ELSE
@@ -3547,7 +3560,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                IF ! hbmk[ _HBMK_lQuiet ]
                   OutErr( cCommand + hb_osNewLine() )
                ENDIF
-               nErrorLevel := 8
+               IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                  nErrorLevel := 6
+               ENDIF
             ENDIF
 
             IF ! Empty( cScriptFile )
@@ -3619,7 +3634,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                      AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, nOpt_Esc, aTODO:__enumIndex(), Len( aTODO:__enumBase() ) ) )
                   ELSE
                      IF ! CompileCLoop( hbmk, aTODO, cBin_CompC, cOpt_CompC, cWorkDir, cObjExt, nOpt_Esc, 0, 0 )
-                        nErrorLevel := 6
+                        IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                           nErrorLevel := 6
+                           EXIT
+                        ENDIF
                      ENDIF
                   ENDIF
                NEXT
@@ -3628,7 +3646,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   FOR EACH thread IN aThreads
                      hb_threadJoin( thread, @tmp )
                      IF ! tmp
-                        nErrorLevel := 6
+                        IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                           nErrorLevel := 6
+                        ENDIF
                      ENDIF
                   NEXT
                ENDIF
@@ -3679,7 +3699,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                            IF ! hbmk[ _HBMK_lQuiet ]
                               OutErr( cCommand + hb_osNewLine() )
                            ENDIF
-                           nErrorLevel := 6
+                           IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                              nErrorLevel := 6
+                              EXIT
+                           ENDIF
                         ENDIF
                      ENDIF
                   ENDIF
@@ -3701,7 +3724,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                         IF ! hbmk[ _HBMK_lQuiet ]
                            OutErr( thread[ 2 ] + hb_osNewLine() )
                         ENDIF
-                        nErrorLevel := 6
+                        IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                           nErrorLevel := 6
+                        ENDIF
                      ENDIF
                   NEXT
                ENDIF
@@ -3827,7 +3852,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + hb_osNewLine() )
                   ENDIF
-                  nErrorLevel := 7
+                  IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                     nErrorLevel := 7
+                  ENDIF
                ENDIF
 
                IF ! Empty( cScriptFile )
@@ -3910,7 +3937,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + hb_osNewLine() )
                   ENDIF
-                  nErrorLevel := 7
+                  IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                     nErrorLevel := 7
+                  ENDIF
                ENDIF
 
                IF ! Empty( cScriptFile )
@@ -3970,7 +3999,9 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + hb_osNewLine() )
                   ENDIF
-                  nErrorLevel := 7
+                  IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                     nErrorLevel := 7
+                  ENDIF
                ENDIF
 
                IF ! Empty( cScriptFile )
@@ -6700,6 +6731,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]strip"        , I_( "strip (no strip) binaries" ) },;
       { "-[no]trace"        , I_( "show commands executed" ) },;
       { "-[no]beep"         , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) },;
+      { "-[no]ignore"       , I_( "ignore errors when running compiler tools (default: off)" ) },;
       { "-traceonly"        , I_( "show commands to be executed, but don't execute them" ) },;
       { "-[no]compr[=lev]"  , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) },;
       { "-[no]run"          , I_( "run/don't run output executable" ) },;
