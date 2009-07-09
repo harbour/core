@@ -252,7 +252,7 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWor
          cRequest += "User-agent: " + cUserAgent + Chr( 13 ) + Chr( 10 )
       ENDIF
       IF ! Empty( cUserName )
-         cRequest += "Proxy-authorization: Basic " + hb_base64( cUserName + ":" + cPassWord ) + Chr( 13 ) + Chr( 10 )
+         cRequest += "Proxy-authorization: Basic " + hb_base64Encode( cUserName + ":" + cPassWord ) + Chr( 13 ) + Chr( 10 )
       ENDIF
       cRequest += Chr( 13 ) + Chr( 10 )
       ::InetSendAll( ::SocketCon, cRequest )

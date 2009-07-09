@@ -3,7 +3,7 @@
  */
 
 FUNCTION vpdf_FontsDat()
-   RETURN StrB64Decode( ;
+   RETURN hb_base64Decode( ;
       "+gD6APoA+gBNAU0BTQGFAZgBKwKkASsC9AH0AfQB9AH0AfQB9AH0AUED6ANBA0EDCgNBAwoDCgNN" +;
       "AU0BTQFNAU0BTQFNAU0BTQFNAU0BTQH0AfQB9AH0ATQCOgKjAjoC+gD6APoA+gBNAU0BTQFNAfoA" +;
       "+gD6APoAFgEWARYBFgH0AfQB9AH0AfQB9AH0AfQB9AH0AfQB9AH0AfQB9AH0AfQB9AH0AfQB9AH0" +;
@@ -99,74 +99,3 @@ FUNCTION vpdf_FontsDat()
       "WAJYAlgCWAJYAlgCWAJYAlgCWAJYAlgCWAJYAlgCWAJYAlgCWAJYAlgCWAJYAlgCWAJYAlgCWAJY" +;
       "AlgCWAJYAlgCWAJYAlgCWAJYAlgCWAJYAlgCWAJYAlgCWAJYAlgCWAJYAlgCWAJYAlgCWAJYAlgC" +;
       "WAJYAlgCWAJYAlgCWAJYAlgC" )
-
-// ; Decodes a base-64 encoded string. (RFC1521)
-// ; Based on VB code from: 1999-2004 Antonin Foller, http://www.motobit.com, http://motobit.cz
-// ; Converted to Clipper and optimized by Viktor Szakats (harbour.01 syenar.hu).
-
-STATIC FUNCTION StrB64Decode( cString )
-   LOCAL cResult
-
-   LOCAL nLen
-   LOCAL nGroupPos
-   LOCAL nGroup
-   LOCAL nCharPos
-   LOCAL nDataLen
-   LOCAL nData
-  
-   // ; remove white spaces, If any
-   cString := StrTran( cString, Chr( 10 ), "" )
-   cString := StrTran( cString, Chr( 13 ), "" )
-   cString := StrTran( cString, Chr( 9 ), "" )
-   cString := StrTran( cString, " ", "" )
-   
-   // ; The source must consists from groups with Len of 4 chars
-   IF ( nLen := Len( cString ) ) % 4 != 0 
-      RETURN "" // ; Bad Base64 string.
-   ENDIF
-
-   /*
-   IF nLen > Int( MAXSTRINGLENGTH / 1.34 ) // ; Base64 is 1/3rd larger than source text.
-      RETURN "" // ; Not enough memory to decode.
-   ENDIF
-   */
-
-   cResult := ""
-   
-   // ; Now decode each group:
-   FOR nGroupPos := 1 TO nLen STEP 4
-     
-      // ; Each data group encodes up To 3 actual bytes.
-      nDataLen := 3
-      nGroup := 0
-     
-      FOR nCharPos := 0 TO 3
-        
-         // ; Convert each character into 6 bits of data, And add it To
-         // ; an integer For temporary storage.  If a character is a '=', there
-         // ; is one fewer data byte.  (There can only be a maximum of 2 '=' In
-         // ; the whole string.)
-        
-         nData := At( SubStr( cString, nGroupPos + nCharPos, 1 ), "=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" ) - 2
-
-         DO CASE
-         CASE nData >= 0
-            // ; Do nothing (for speed)
-         CASE nData == -1
-            nData := 0
-            nDataLen--
-         CASE nData == -2
-            RETURN "" // ; Bad character In Base64 string.
-         ENDCASE
-        
-         nGroup := 64 * nGroup + nData
-      NEXT
-
-      // ; Convert the 24 bits to 3 characters
-      // ; and add nDataLen characters To out string
-      cResult += Left( Chr( nGroup / 65536 ) +;          // ; bitwise AND 255, which is done by Chr() automatically
-                       Chr( nGroup /   256 ) +;          // ; bitwise AND 255, which is done by Chr() automatically
-                       Chr( nGroup         ), nDataLen ) // ; bitwise AND 255, which is done by Chr() automatically
-   NEXT
-  
-   RETURN cResult

@@ -59,6 +59,11 @@
 
 #include <winuser.h>
 
+HB_FUNC( WAPI_GETDESKTOPWINDOW )
+{
+   hb_retptr( GetDesktopWindow() );
+}
+
 HB_FUNC( WAPI_MESSAGEBOX )
 {
    LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );

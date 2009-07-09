@@ -9,7 +9,6 @@ LIBNAME=hbtip
 ifneq ($(HB_ARCHITECTURE),dos)
 
 C_SOURCES = \
-	base64x.c \
 	encmthd.c \
 	utils.c \
 

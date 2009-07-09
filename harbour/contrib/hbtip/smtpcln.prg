@@ -177,9 +177,9 @@ METHOD Auth( cUser, cPass ) CLASS tIPClientSMTP
    ::InetSendall( ::SocketCon, "AUTH LOGIN" + ::cCRLF )
 
    IF ::GetOk()
-      ::InetSendall( ::SocketCon, hb_BASE64( StrTran( cUser, "&at;", "@" ) ) + ::cCRLF  )
+      ::InetSendall( ::SocketCon, hb_base64Encode( StrTran( cUser, "&at;", "@" ) ) + ::cCRLF  )
       IF ::GetOk()
-         ::InetSendall( ::SocketCon, hb_BASE64( cPass ) + ::cCRLF )
+         ::InetSendall( ::SocketCon, hb_base64Encode( cPass ) + ::cCRLF )
       ENDIF
    ENDIF
 
@@ -187,7 +187,7 @@ METHOD Auth( cUser, cPass ) CLASS tIPClientSMTP
 
 METHOD AuthPlain( cUser, cPass ) CLASS tIPClientSMTP
 
-   ::InetSendall( ::SocketCon, "AUTH PLAIN" + hb_BASE64( Chr( 0 ) + cUser + Chr( 0 ) + cPass ) + ::cCRLF )
+   ::InetSendall( ::SocketCon, "AUTH PLAIN" + hb_base64Encode( Chr( 0 ) + cUser + Chr( 0 ) + cPass ) + ::cCRLF )
 
    RETURN ::isAuth := ::GetOk()
 
