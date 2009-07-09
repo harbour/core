@@ -94,16 +94,16 @@ HB_FUNC( DISPBOX )
          }
 
          if( hb_parni( 5 ) == 2 )
-            hb_gtBoxD( ( SHORT ) hb_itemGetNI( pTop ),
-                       ( SHORT ) hb_itemGetNI( pLeft),
-                       ( SHORT ) hb_itemGetNI( pBottom ),
-                       ( SHORT ) hb_itemGetNI( pRight ) );
+            hb_gtBoxD( hb_itemGetNI( pTop ),
+                       hb_itemGetNI( pLeft),
+                       hb_itemGetNI( pBottom ),
+                       hb_itemGetNI( pRight ) );
 
          else
-            hb_gtBoxS( ( SHORT ) hb_itemGetNI( pTop ),
-                       ( SHORT ) hb_itemGetNI( pLeft),
-                       ( SHORT ) hb_itemGetNI( pBottom ),
-                       ( SHORT ) hb_itemGetNI( pRight ) );
+            hb_gtBoxS( hb_itemGetNI( pTop ),
+                       hb_itemGetNI( pLeft),
+                       hb_itemGetNI( pBottom ),
+                       hb_itemGetNI( pRight ) );
 
          if( pszColor )
             hb_gtSetColorStr( szOldColor );
@@ -131,10 +131,10 @@ HB_FUNC( HB_DISPBOX )
       else
          iColor = -1;
 
-      hb_gtDrawBox( ( SHORT ) hb_itemGetNI( pTop ),
-                    ( SHORT ) hb_itemGetNI( pLeft),
-                    ( SHORT ) hb_itemGetNI( pBottom ),
-                    ( SHORT ) hb_itemGetNI( pRight ),
+      hb_gtDrawBox( hb_itemGetNI( pTop ),
+                    hb_itemGetNI( pLeft),
+                    hb_itemGetNI( pBottom ),
+                    hb_itemGetNI( pRight ),
                     *pszBox ? pszBox : "         ",
                     iColor );
    }

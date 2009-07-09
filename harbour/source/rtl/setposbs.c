@@ -60,8 +60,8 @@
 
 HB_FUNC( SETPOSBS ) /* Move the screen position to the right by one column */
 {
-   SHORT iRow;
-   SHORT iCol;
+   int iRow;
+   int iCol;
 
    /* NOTE: CA-Cl*pper does no checks about reaching the border or anything.
             [vszakats] */

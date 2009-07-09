@@ -165,17 +165,17 @@ int hb_gtReadKey( int iEventMask )
    return iKey;
 }
 
-HB_ERRCODE hb_gtBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, const char * szFrame )
+HB_ERRCODE hb_gtBox( int iTop, int iLeft, int iBottom, int iRight, const char * szFrame )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtBox(%hd, %hd, %hd, %hd, %p)", Top, Left, Bottom, Right, szFrame));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtBox(%d, %d, %d, %d, %p)", iTop, iLeft, iBottom, iRight, szFrame));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_BOX( pGT, Top, Left, Bottom, Right, szFrame, HB_GTSELF_GETCOLOR( pGT ) );
-      HB_GTSELF_SETPOS( pGT, Top + 1, Left + 1 );
+      HB_GTSELF_BOX( pGT, iTop, iLeft, iBottom, iRight, szFrame, HB_GTSELF_GETCOLOR( pGT ) );
+      HB_GTSELF_SETPOS( pGT, iTop + 1, iLeft + 1 );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
@@ -183,17 +183,17 @@ HB_ERRCODE hb_gtBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, const cha
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtBoxD( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right )
+HB_ERRCODE hb_gtBoxD( int iTop, int iLeft, int iBottom, int iRight )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtBoxD(%hd, %hd, %hd, %hd)", Top, Left, Bottom, Right));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtBoxD(%d, %d, %d, %d)", iTop, iLeft, iBottom, iRight));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_BOXD( pGT, Top, Left, Bottom, Right, _B_DOUBLE, HB_GTSELF_GETCOLOR( pGT ) );
-      HB_GTSELF_SETPOS( pGT, Top + 1, Left + 1 );
+      HB_GTSELF_BOXD( pGT, iTop, iLeft, iBottom, iRight, _B_DOUBLE, HB_GTSELF_GETCOLOR( pGT ) );
+      HB_GTSELF_SETPOS( pGT, iTop + 1, iLeft + 1 );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
@@ -201,17 +201,17 @@ HB_ERRCODE hb_gtBoxD( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtBoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right )
+HB_ERRCODE hb_gtBoxS( int iTop, int iLeft, int iBottom, int iRight )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtBoxS(%hd, %hd, %hd, %hd)", Top, Left, Bottom, Right));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtBoxS(%d, %d, %d, %d)", iTop, iLeft, iBottom, iRight));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_BOXD( pGT, Top, Left, Bottom, Right, _B_SINGLE, HB_GTSELF_GETCOLOR( pGT ) );
-      HB_GTSELF_SETPOS( pGT, Top + 1, Left + 1 );
+      HB_GTSELF_BOXD( pGT, iTop, iLeft, iBottom, iRight, _B_SINGLE, HB_GTSELF_GETCOLOR( pGT ) );
+      HB_GTSELF_SETPOS( pGT, iTop + 1, iLeft + 1 );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
@@ -219,11 +219,11 @@ HB_ERRCODE hb_gtBoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtDrawBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, const char * szFrame, int iColor )
+HB_ERRCODE hb_gtDrawBox( int iTop, int iLeft, int iBottom, int iRight, const char * szFrame, int iColor )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtDrawBox(%hd, %hd, %hd, %hd, %p, %d)", Top, Left, Bottom, Right, szFrame, iColor));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtDrawBox(%d, %d, %d, %d, %p, %d)", iTop, iLeft, iBottom, iRight, szFrame, iColor));
 
    pGT = hb_gt_Base();
    if( pGT )
@@ -231,7 +231,7 @@ HB_ERRCODE hb_gtDrawBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, const
       if( iColor == -1 )
          iColor = HB_GTSELF_GETCOLOR( pGT );
 
-      HB_GTSELF_BOX( pGT, Top, Left, Bottom, Right, szFrame, iColor );
+      HB_GTSELF_BOX( pGT, iTop, iLeft, iBottom, iRight, szFrame, iColor );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
@@ -444,7 +444,7 @@ HB_ERRCODE hb_gtSetCursor( USHORT uiCursorStyle )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtGetPos( SHORT * piRow, SHORT * piCol )
+HB_ERRCODE hb_gtGetPos( int * piRow, int * piCol )
 {
    PHB_GT pGT;
 
@@ -456,8 +456,8 @@ HB_ERRCODE hb_gtGetPos( SHORT * piRow, SHORT * piCol )
       int iRow, iCol;
 
       HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
-      *piRow = ( SHORT ) iRow;
-      *piCol = ( SHORT ) iCol;
+      *piRow = iRow;
+      *piCol = iCol;
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
    }
@@ -468,11 +468,11 @@ HB_ERRCODE hb_gtGetPos( SHORT * piRow, SHORT * piCol )
 /* NOTE: Should be exactly the same as hb_gtSetPosContext(), but without the
          additional third parameter. */
 
-HB_ERRCODE hb_gtSetPos( SHORT iRow, SHORT iCol )
+HB_ERRCODE hb_gtSetPos( int iRow, int iCol )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetPos(%hd, %hd)", iRow, iCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetPos(%d, %d)", iRow, iCol));
 
    pGT = hb_gt_Base();
    if( pGT )
@@ -831,9 +831,9 @@ HB_ERRCODE hb_gtWriteCon( const char * szStr, ULONG ulLength )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols )
+HB_ERRCODE hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, int iRows, int iCols )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtScroll(%hu, %hu, %hu, %hu, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, iRows, iCols));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtScroll(%hu, %hu, %hu, %hu, %d, %d)", uiTop, uiLeft, uiBottom, uiRight, iRows, iCols));
 
    if( uiTop <= uiBottom && uiLeft <= uiRight )
    {

@@ -62,16 +62,16 @@ HB_FUNC( SAYDOWN )
 
    if( ulLen )
    {
-      const UCHAR * szText = ( const UCHAR * ) hb_parc( 1 );
-      SHORT sRow, sCol;
+      const char * szText = hb_parc( 1 );
+      int sRow, sCol;
       int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
 
       lDelay = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : 4;
 
       hb_gtGetPos( &sRow, &sCol );
-      iRow = HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( int ) sRow;
-      iCol = HB_ISNUM( 4 ) ? hb_parni( 4 ) : ( int ) sCol;
+      iRow = HB_ISNUM( 3 ) ? hb_parni( 3 ) : sRow;
+      iCol = HB_ISNUM( 4 ) ? hb_parni( 4 ) : sCol;
       iMaxRow = hb_gtMaxRow();
       iMaxCol = hb_gtMaxCol();
 
@@ -106,9 +106,9 @@ HB_FUNC( SAYSPREAD )
 
    if( ulLen )
    {
-      const UCHAR * szText = ( const UCHAR * ) hb_parc( 1 );
+      const char * szText = hb_parc( 1 );
       ULONG ulPos, ul;
-      SHORT sRow, sCol;
+      int sRow, sCol;
       int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
 
@@ -117,7 +117,7 @@ HB_FUNC( SAYSPREAD )
       iMaxRow = hb_gtMaxRow();
       iMaxCol = hb_gtMaxCol();
       hb_gtGetPos( &sRow, &sCol );
-      iRow = HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( int ) sRow;
+      iRow = HB_ISNUM( 3 ) ? hb_parni( 3 ) : sRow;
       iCol = HB_ISNUM( 4 ) ? hb_parni( 4 ) : ( iMaxCol >> 1 );
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
@@ -160,9 +160,9 @@ HB_FUNC( SAYMOVEIN )
 
    if( ulLen )
    {
-      const UCHAR * szText = ( const UCHAR * ) hb_parc( 1 );
+      const char * szText = hb_parc( 1 );
       ULONG ulChars, ul;
-      SHORT sRow, sCol;
+      int sRow, sCol;
       int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
       BOOL fBack;
@@ -311,19 +311,19 @@ HB_FUNC( CLEARSLOW )
 
 HB_FUNC( SCREENSTR )
 {
-   SHORT sRow, sCol, sMaxRow, sMaxCol, sC;
+   int sRow, sCol, sMaxRow, sMaxCol, sC;
    char * pBuffer, * szText;
    ULONG ulSize, ulCount = ULONG_MAX;
 
    hb_gtGetPos( &sRow, &sCol );
    if( HB_ISNUM( 1 ) )
-      sRow = ( SHORT ) hb_parni( 1 );
+      sRow = hb_parni( 1 );
    if( HB_ISNUM( 2 ) )
-      sCol = ( SHORT ) hb_parni( 2 );
+      sCol = hb_parni( 2 );
    if( HB_ISNUM( 3 ) )
       ulCount = hb_parnl( 3 );
-   sMaxRow = ( SHORT ) hb_gtMaxRow();
-   sMaxCol = ( SHORT ) hb_gtMaxCol();
+   sMaxRow = hb_gtMaxRow();
+   sMaxCol = hb_gtMaxCol();
 
    if( sRow >= 0 && sRow <= sMaxRow && sCol >= 0 && sCol <= sMaxCol && ulCount )
    {
@@ -363,16 +363,16 @@ HB_FUNC( STRSCREEN )
 
    if( ulLen )
    {
-      const UCHAR * szText = ( const UCHAR * ) hb_parc( 1 );
-      SHORT sRow, sCol, sMaxRow, sMaxCol, sC;
+      const char * szText = hb_parc( 1 );
+      int sRow, sCol, sMaxRow, sMaxCol, sC;
 
       hb_gtGetPos( &sRow, &sCol );
       if( HB_ISNUM( 2 ) )
-         sRow = ( SHORT ) hb_parni( 2 );
+         sRow = hb_parni( 2 );
       if( HB_ISNUM( 3 ) )
-         sCol = ( SHORT ) hb_parni( 3 );
-      sMaxRow = ( SHORT ) hb_gtMaxRow();
-      sMaxCol = ( SHORT ) hb_gtMaxCol();
+         sCol = hb_parni( 3 );
+      sMaxRow = hb_gtMaxRow();
+      sMaxCol = hb_gtMaxCol();
 
       if( sRow >= 0 && sRow <= sMaxRow && sCol >= 0 && sCol <= sMaxCol )
       {
@@ -402,12 +402,12 @@ HB_FUNC( STRSCREEN )
  */
 HB_FUNC( _HB_CTDSPTIME )
 {
-   SHORT sRow, sCol;
+   int sRow, sCol;
    int iColor, iLen;
    char szTime[ 10 ];
 
-   sRow = ( SHORT ) hb_parni( 1 );
-   sCol = ( SHORT ) hb_parni( 2 );
+   sRow = hb_parni( 1 );
+   sCol = hb_parni( 2 );
    if( HB_ISNUM( 4 ) )
       iColor = hb_parni( 4 );
    else if( HB_ISCHAR( 4 ) )

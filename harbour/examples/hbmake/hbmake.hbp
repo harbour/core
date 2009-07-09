@@ -7,5 +7,8 @@
 hbmake.prg
 hbmakec.c
 
+-lhbclipsm
+-lxhb
+
 # Copy to Harbour binary directory for convenience
 -instpath=${HB_BIN}/

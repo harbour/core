@@ -69,8 +69,8 @@
 
 typedef struct
 {
-   SHORT    row;
-   SHORT    col;
+   int      row;
+   int      col;
    void *   buffer;
 } HB_SCRDATA, * PHB_SCRDATA;
 

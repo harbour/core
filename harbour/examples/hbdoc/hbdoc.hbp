@@ -13,4 +13,5 @@ genos2.prg
 genpdf1.prg
 genrtf.prg
 gentrf.prg
-hbdfrdln.c
+
+-lxhb

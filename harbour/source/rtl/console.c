@@ -403,11 +403,11 @@ HB_FUNC( PCOL ) /* Returns the current printer row position */
    hb_retni( ( int ) hb_prnPos()->col );
 }
 
-static void hb_conDevPos( SHORT iRow, SHORT iCol )
+static void hb_conDevPos( int iRow, int iCol )
 {
    HB_FHANDLE hFile;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_conDevPos(%hd, %hd)", iRow, iCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conDevPos(%d, %d)", iRow, iCol));
 
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */
@@ -480,7 +480,7 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
 HB_FUNC( DEVPOS ) /* Sets the screen and/or printer position */
 {
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
-      hb_conDevPos( ( SHORT ) hb_parni( 1 ), ( SHORT ) hb_parni( 2 ) );
+      hb_conDevPos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
 HB_FUNC( SETPRC ) /* Sets the current printer row and column positions */

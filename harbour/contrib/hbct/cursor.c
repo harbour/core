@@ -57,16 +57,16 @@
 
 HB_FUNC( SAVECURSOR )
 {
-   SHORT sRow, sCol;
+   int iRow, iCol;
    USHORT usCursor;
 
-   hb_gtGetPos( &sRow, &sCol );
+   hb_gtGetPos( &iRow, &iCol );
    hb_gtGetCursor( &usCursor );
 
 #ifdef HB_C52_STRICT
    usCursor = ( usCursor != 0 );
 #endif
-   hb_retnl( ( long ) sCol | ( sRow << 8 ) | ( usCursor << 16 ) );
+   hb_retnl( ( long ) iCol | ( iRow << 8 ) | ( usCursor << 16 ) );
 }
 
 
@@ -74,7 +74,7 @@ HB_FUNC( RESTCURSOR )
 {
    long lCursor = hb_parnl( 1 );
 
-   hb_gtSetPos( ( SHORT ) ( ( lCursor >> 8 ) & 0xff ), ( SHORT ) ( lCursor & 0xff ) );
+   hb_gtSetPos( ( int ) ( ( lCursor >> 8 ) & 0xff ), ( int ) ( lCursor & 0xff ) );
 #ifdef HB_C52_STRICT
    hb_gtSetCursor( ( USHORT ) ( ( lCursor >> 16 ) & 0x01 ) );
 #else

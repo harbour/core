@@ -105,8 +105,8 @@ HB_FUNC( SCROLL )
                 ( USHORT ) iLeft,
                 ( USHORT ) iBottom,
                 ( USHORT ) iRight,
-                ( SHORT ) hb_parni( 5 ), /* Defaults to zero on bad type */
-                ( SHORT ) hb_parni( 6 ) ); /* Defaults to zero on bad type */
+                hb_parni( 5 ), /* Defaults to zero on bad type */
+                hb_parni( 6 ) ); /* Defaults to zero on bad type */
 }
 
 HB_FUNC( HB_SCROLL )
@@ -167,7 +167,7 @@ HB_FUNC( HB_SCROLL )
    if( HB_ISNUM( 8 ) )
       iChar = hb_parni( 8 );
    else if( HB_ISCHAR( 8 ) )
-      iChar = ( UCHAR ) hb_parc( 8 )[0];
+      iChar = ( int ) hb_parc( 8 )[0];
    else
       iChar = -1;
 

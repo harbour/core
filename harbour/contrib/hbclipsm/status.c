@@ -67,8 +67,8 @@ HB_FUNC( STATUSNEW )
 {
    PHB_ITEM pReturn = hb_itemArrayNew( ST_LEN );   /* Create array */
 
-   hb_arraySetNL( pReturn, ST_ROW, hb_parni( ST_ROW ) );
-   hb_arraySetNL( pReturn, ST_COL, hb_parni( ST_COL ) );
+   hb_arraySetNI( pReturn, ST_ROW, hb_parni( ST_ROW ) );
+   hb_arraySetNI( pReturn, ST_COL, hb_parni( ST_COL ) );
    hb_arraySetC( pReturn, ST_COLOR, HB_ISCHAR( ST_COLOR ) ? hb_parc( ST_COLOR ) : "W+/N" );
    hb_arraySetNL( pReturn, ST_CURRENT, 1 );
 
@@ -93,8 +93,8 @@ HB_FUNC( STATUSUPDATE )
 
       hb_gtGetColorStr( ( char * ) szOldColor );
       hb_gtSetColorStr( hb_arrayGetCPtr( pArray, ST_COLOR ) );
-      hb_gtWriteAt( ( USHORT ) hb_arrayGetNL( pArray, ST_ROW ),
-                    ( USHORT ) hb_arrayGetNL( pArray, ST_COL ),
+      hb_gtWriteAt( hb_arrayGetNI( pArray, ST_ROW ),
+                    hb_arrayGetNI( pArray, ST_COL ),
                     szDisplay + lCurrent - 1, 1 );
 
       hb_gtSetColorStr( ( char * ) szOldColor );

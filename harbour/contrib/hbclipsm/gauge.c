@@ -70,11 +70,11 @@
 
 static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
 {
-   SHORT iCenter = ( SHORT ) ( ( ( hb_arrayGetNI( pArray, B_RIGHT ) - hb_arrayGetNI( pArray, B_LEFT ) ) / 2 ) + 1 );
-   SHORT iRatio = ( SHORT ) ( hb_arrayGetNI( pArray, B_RIGHT ) - hb_arrayGetNI( pArray, B_LEFT ) - 1 );
-   SHORT iRow;
-   SHORT iCols;
-   SHORT iMax;
+   int iCenter = ( ( hb_arrayGetNI( pArray, B_RIGHT ) - hb_arrayGetNI( pArray, B_LEFT ) ) / 2 ) + 1;
+   int iRatio = hb_arrayGetNI( pArray, B_RIGHT ) - hb_arrayGetNI( pArray, B_LEFT ) - 1;
+   int iRow;
+   int iCols;
+   int iMax;
    char szOldColor[ HB_CLRSTR_LEN ];
    const char * szStr = "        ";
    char szPct[ 5 ];
@@ -83,27 +83,27 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
    hb_gtSetColorStr( hb_arrayGetCPtr( pArray, B_BARCOLOR ) );
 
    fPercent = ( fPercent < 0 ? 0 : ( fPercent > 1 ? 1 : fPercent ) );
-   iCols    = ( SHORT ) ( fPercent * iRatio );
+   iCols    = ( int ) ( fPercent * iRatio );
 
    if( hb_arrayGetL( pArray, B_DISPLAYNUM ) )
    {
       hb_snprintf( szPct, sizeof( szPct ), "%3.0f%%", fPercent * 100 );
-      hb_gtWriteAt( ( SHORT ) hb_arrayGetNI( pArray, B_TOP ),
+      hb_gtWriteAt( hb_arrayGetNI( pArray, B_TOP ),
                     iCenter + 2,
                     szPct, 4 );
    }
 
-   hb_gtBox( ( SHORT ) hb_arrayGetNI( pArray, B_TOP ) + 1,
-             ( SHORT ) hb_arrayGetNI( pArray, B_LEFT ) + 1,
-             ( SHORT ) hb_arrayGetNI( pArray, B_BOTTOM ) - 1,
-             ( SHORT ) hb_arrayGetNI( pArray, B_RIGHT ) - 1,
+   hb_gtBox( hb_arrayGetNI( pArray, B_TOP ) + 1,
+             hb_arrayGetNI( pArray, B_LEFT ) + 1,
+             hb_arrayGetNI( pArray, B_BOTTOM ) - 1,
+             hb_arrayGetNI( pArray, B_RIGHT ) - 1,
              szStr );
 
-   iMax = ( SHORT ) ( hb_arrayGetNI( pArray, B_BOTTOM ) - hb_arrayGetNI( pArray, B_TOP ) - 1 );
+   iMax = ( int ) ( hb_arrayGetNI( pArray, B_BOTTOM ) - hb_arrayGetNI( pArray, B_TOP ) - 1 );
    for( iRow = 1; iRow <= iMax; iRow++ )
    {
-      hb_gtRepChar( ( SHORT ) ( hb_arrayGetNI( pArray, B_TOP ) + iRow ),
-                    ( SHORT ) ( hb_arrayGetNI( pArray, B_LEFT ) + 1 ),
+      hb_gtRepChar( hb_arrayGetNI( pArray, B_TOP ) + iRow,
+                    hb_arrayGetNI( pArray, B_LEFT ) + 1,
                     * hb_arrayGetCPtr( pArray, B_BARCHAR ),
                     iCols );
    }
@@ -150,27 +150,27 @@ HB_FUNC( GAUGEDISPLAY )
 
    if( pArray )
    {
-      SHORT iCenter = ( SHORT ) ( ( ( hb_arrayGetNI( pArray, B_RIGHT ) - hb_arrayGetNI( pArray, B_LEFT ) ) / 2 ) + 1 );
+      int iCenter = ( ( hb_arrayGetNI( pArray, B_RIGHT ) - hb_arrayGetNI( pArray, B_LEFT ) ) / 2 ) + 1;
       char szOldColor[ HB_CLRSTR_LEN ];
       const char * szStr = "        ";
 
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_arrayGetCPtr( pArray, B_BACKCOLOR ) );
 
-      hb_gtBox( ( SHORT) hb_arrayGetNI( pArray, B_TOP ),
-                ( SHORT) hb_arrayGetNI( pArray, B_LEFT ),
-                ( SHORT) hb_arrayGetNI( pArray, B_BOTTOM ),
-                ( SHORT) hb_arrayGetNI( pArray, B_RIGHT ),
+      hb_gtBox( hb_arrayGetNI( pArray, B_TOP ),
+                hb_arrayGetNI( pArray, B_LEFT ),
+                hb_arrayGetNI( pArray, B_BOTTOM ),
+                hb_arrayGetNI( pArray, B_RIGHT ),
                 szStr );
 
-      hb_gtBox( ( SHORT ) hb_arrayGetNI( pArray, B_TOP ),
-                ( SHORT ) hb_arrayGetNI( pArray, B_LEFT ),
-                ( SHORT ) hb_arrayGetNI( pArray, B_BOTTOM ),
-                ( SHORT ) hb_arrayGetNI( pArray, B_RIGHT ),
+      hb_gtBox( hb_arrayGetNI( pArray, B_TOP ),
+                hb_arrayGetNI( pArray, B_LEFT ),
+                hb_arrayGetNI( pArray, B_BOTTOM ),
+                hb_arrayGetNI( pArray, B_RIGHT ),
                 B_BOXLINES );
 
       if( hb_arrayGetL( pArray, B_DISPLAYNUM ) )
-         hb_gtWriteAt( ( SHORT ) hb_arrayGetNI( pArray, B_TOP ),
+         hb_gtWriteAt( hb_arrayGetNI( pArray, B_TOP ),
                        iCenter,
                        "[      ]", 8 );
 
