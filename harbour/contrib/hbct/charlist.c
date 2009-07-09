@@ -3,11 +3,11 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   CT3 string functions
  *     - CHARLIST()
  *     - CHARSLIST()  (NEW)
- *     - CHARNOLIST()  
+ *     - CHARNOLIST()
  *     - CHARHIST()  (NEW)
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
@@ -317,7 +317,7 @@ HB_FUNC( CHARNOLIST )
  *                        Default: "" (empty string)
  *  $RETURNS$
  *      <aCharacterCount> an array with 256 elements where the nth element
- *                        contains the count of character #(n-1) in cString 
+ *                        contains the count of character #(n-1) in cString
  *  $DESCRIPTION$
  *      The CHARHIST() function generates a character histogram of those
  *      characters that are contained in <cString>. This histogram is stored

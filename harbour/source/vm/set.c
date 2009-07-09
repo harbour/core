@@ -201,7 +201,7 @@ static BOOL is_devicename( const char * szFileName )
 {
    if( szFileName && *szFileName )
    {
-#if defined(HB_OS_OS2) || defined(HB_OS_WIN) || defined(HB_OS_DOS)
+#if defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) || defined( HB_OS_DOS )
       int iLen = ( int ) strlen( szFileName );
       if( ( iLen == 3 &&
             ( hb_stricmp( szFileName, "PRN" ) == 0 ||
@@ -214,7 +214,7 @@ static BOOL is_devicename( const char * szFileName )
       {
          return TRUE;
       }
-#elif defined(HB_OS_UNIX)
+#elif defined( HB_OS_UNIX )
       if( strncmp( szFileName, "/dev/", 5 ) == 0 )
          return TRUE;
       else
@@ -272,7 +272,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
    if( file_name && file_name[ 0 ] != '\0' )
    {
       /* Create full filename */
-#if defined(HB_OS_UNIX_COMPATIBLE)
+#if defined( HB_OS_UNIX_COMPATIBLE )
       bPipe = file_name[ 0 ] == '|';
       if( bPipe )
       {
@@ -287,7 +287,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
 
          if( is_devicename( file_name ) )
          {
-#if defined(HB_OS_OS2) || defined(HB_OS_WIN) || defined(HB_OS_DOS)
+#if defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) || defined( HB_OS_DOS )
             hb_strupr( ( char * ) pFilename->szName );
 #endif
          }
@@ -529,11 +529,11 @@ HB_FUNC( SETCANCEL )
 /* return default printer device */
 static char * hb_set_PRINTFILE_default( void )
 {
-#if defined(HB_OS_UNIX)
+#if defined( HB_OS_UNIX )
    return hb_strdup( "|lpr" );
-#elif defined(HB_OS_DOS)
+#elif defined( HB_OS_DOS )
    return hb_strdup( "PRN" );
-#elif defined(HB_OS_WIN) || defined(HB_OS_OS2)
+#elif defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
    return hb_strdup( "LPT1" );
 #else
    return hb_strdup( "PRN" ); /* TOFIX */
@@ -1082,7 +1082,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->HB_SET_DELIMCHARS = hb_strdup( "::" );
    pSet->HB_SET_DELIMITERS = FALSE;
    pSet->HB_SET_DEVICE = hb_strdup( "SCREEN" );
-#if defined(HB_OS_UNIX_COMPATIBLE)
+#if defined( HB_OS_UNIX_COMPATIBLE )
    pSet->HB_SET_EOF = FALSE;
 #else
    pSet->HB_SET_EOF = TRUE;

@@ -57,11 +57,11 @@
 #include "common.ch"
 #include "setcurs.ch"
 
-/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but 
+/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
 
-/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*() 
-         functions to generate screen output. Harbour uses Disp*() 
+/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*()
+         functions to generate screen output. Harbour uses Disp*()
          functions only. [vszakats] */
 
 #ifdef HB_COMPAT_C53
@@ -293,7 +293,7 @@ METHOD colorSpec( cColorSpec ) CLASS PUSHBUTTON
    RETURN ::cColorSpec
 
 METHOD fBlock( bFBlock ) CLASS PUSHBUTTON
-   
+
    IF PCount() > 0
       ::bFBlock := iif( bFBlock == NIL, NIL, __eInstVar53( Self, "FBLOCK", bFBlock, "B", 1001 ) )
    ENDIF
@@ -320,7 +320,7 @@ METHOD row( nRow ) CLASS PUSHBUTTON
    RETURN ::nRow
 
 METHOD sBlock( bSBlock ) CLASS PUSHBUTTON
-   
+
    IF PCount() > 0
       ::bSBlock := iif( bSBlock == NIL, NIL, __eInstVar53( Self, "SBLOCK", bSBlock, "B", 1001 ) )
    ENDIF

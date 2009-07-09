@@ -206,14 +206,13 @@ HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_ES )
    hb_langRegister( &s_lang );
 HB_CALL_ON_STARTUP_END( hb_lang_Init_ES )
 
-#if defined( HB_PRAGMA_STARTUP )                                         
-   #pragma startup hb_lang_Init_ES                                     
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup hb_lang_Init_ES
 #elif defined( HB_MSC_STARTUP )
    #if defined( HB_OS_WIN_64 )
       #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif                                          
+   #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_lang_Init_ES = hb_lang_Init_ES;    
+   static HB_$INITSYM hb_vm_auto_hb_lang_Init_ES = hb_lang_Init_ES;
    #pragma data_seg()
-#endif                                                                 
-
+#endif

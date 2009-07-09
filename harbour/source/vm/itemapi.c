@@ -98,10 +98,10 @@
 #include "hbmath.h"
 #include "hbapicdp.h"
 
-#if defined(HB_OS_SUNOS)
+#if defined( HB_OS_SUNOS )
 #  include <ieeefp.h>
-#elif defined(_MSC_VER) || defined(__BORLANDC__) || \
-      defined(__WATCOMC__) || defined(__IBMCPP__)
+#elif defined( _MSC_VER ) || defined( __BORLANDC__ ) || \
+      defined( __WATCOMC__ ) || defined( __IBMCPP__ )
 #  include <float.h>  /* for _finite() and _isnan() */
 #endif
 
@@ -2259,13 +2259,13 @@ BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int iDec )
 /* TODO: look if finite()/_finite() or isinf()/_isinf and isnan()/_isnan
    does exist for your compiler and add this to the check below */
 
-#if defined(__RSXNT__) || defined(__EMX__) || \
-    defined(__XCC__) || defined(__POCC__) || \
-    defined(__MINGW32__) || defined(HB_OS_HPUX)
+#if defined( __RSXNT__ ) || defined( __EMX__ ) || \
+    defined( __XCC__ ) || defined( __POCC__ ) || \
+    defined( __MINGW32__ ) || defined( HB_OS_HPUX )
 #  define HB_FINITE_DBL(d)    ( isfinite(d)!=0 )
-#elif defined(__WATCOMC__) || defined(__BORLANDC__) || defined(_MSC_VER)
+#elif defined( __WATCOMC__ ) || defined( __BORLANDC__ ) || defined( _MSC_VER )
 #  define HB_FINITE_DBL(d)    ( _finite(d)!=0 )
-#elif defined(__GNUC__) || defined(__DJGPP__) || defined(__LCC__)
+#elif defined( __GNUC__ ) || defined( __DJGPP__ ) || defined( __LCC__ )
 #  define HB_FINITE_DBL(d)    ( finite(d)!=0 )
 #else
       int iTODO;

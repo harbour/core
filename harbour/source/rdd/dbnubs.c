@@ -118,7 +118,7 @@ HB_FUNC( __DBRECALL )
    HB_FUNC_EXEC( DBRECALL );
 }
 
-/* NOTE: Clipper does exactly that, __dbCommit() will call dbCommitAll() 
+/* NOTE: Clipper does exactly that, __dbCommit() will call dbCommitAll()
          This may be a bug. */
 
 HB_FUNC( __DBCOMMIT )
@@ -202,4 +202,3 @@ HB_FUNC( __DBSELECT )
 }
 
 #endif
-

@@ -57,11 +57,11 @@
 #include "common.ch"
 #include "setcurs.ch"
 
-/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but 
+/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
 
-/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*() 
-         functions to generate screen output. Harbour uses Disp*() 
+/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*()
+         functions to generate screen output. Harbour uses Disp*()
          functions only. [vszakats] */
 
 #ifdef HB_COMPAT_C53
@@ -171,9 +171,9 @@ METHOD hitTest( nMRow, nMCol ) CLASS CHECKBOX
       nMCol < ::nCol + 3
       RETURN HTCLIENT
    ENDIF
-   
+
    nLenCaption := Len( ::cCaption )
-   
+
    IF ( nPosAccel := At( "&", ::cCaption ) ) > 0 .AND. ;
       nPosAccel < nLenCaption
       nLenCaption--
@@ -282,7 +282,7 @@ METHOD colorSpec( cColorSpec ) CLASS CHECKBOX
    RETURN ::cColorSpec
 
 METHOD fBlock( bFBlock ) CLASS CHECKBOX
-   
+
    IF PCount() > 0
       ::bFBlock := iif( bFBlock == NIL, NIL, __eInstVar53( Self, "FBLOCK", bFBlock, "B", 1001 ) )
    ENDIF
@@ -309,7 +309,7 @@ METHOD row( nRow ) CLASS CHECKBOX
    RETURN ::nRow
 
 METHOD sBlock( bSBlock ) CLASS CHECKBOX
-   
+
    IF PCount() > 0
       ::bSBlock := iif( bSBlock == NIL, NIL, __eInstVar53( Self, "SBLOCK", bSBlock, "B", 1001 ) )
    ENDIF
@@ -353,7 +353,7 @@ METHOD New( nRow, nCol, cCaption ) CLASS CHECKBOX
 
 FUNCTION _CHECKBOX_( lState, cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, aBitmaps )
    LOCAL o := HBCheckBox():New( Row(), Col(), cCaption )
-   
+
    o:select( lState )
    o:caption   := cCaption
    o:message   := cMessage

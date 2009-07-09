@@ -56,11 +56,11 @@
 #include "color.ch"
 #include "common.ch"
 
-/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but 
+/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
 
-/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*() 
-         functions to generate screen output. Harbour uses Disp*() 
+/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*()
+         functions to generate screen output. Harbour uses Disp*()
          functions only. [vszakats] */
 
 #ifdef HB_COMPAT_C53
@@ -390,7 +390,7 @@ METHOD CalcThumbPos() CLASS SCROLLBAR
 
    RETURN .T.
 
-/* New definitions for better coding. These are screen codepage dependent, 
+/* New definitions for better coding. These are screen codepage dependent,
    but can be changed with the setStyle method. */
 #define SB_UPARROW      Chr( 24 )
 #define SB_DNARROW      Chr( 25 )

@@ -65,7 +65,7 @@
 #include "hbapiitm.h"
 #include "hbapifs.h"
 
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
    /* NOTE: To satisfy MySQL headers. */
    #include <winsock2.h>
 #endif

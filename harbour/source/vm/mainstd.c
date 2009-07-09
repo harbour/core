@@ -54,9 +54,9 @@
 #include "hbvm.h"
 
 HB_EXTERN_BEGIN
-#if defined(__MINGW32__)
+#if defined( __MINGW32__ )
 int _CRT_glob = 0;
-#elif defined(__DJGPP__)
+#elif defined( __DJGPP__ )
 
 #include <crt0.h>
 
@@ -75,7 +75,7 @@ int main( int argc, char * argv[] )
 {
    HB_TRACE(HB_TR_DEBUG, ("main(%d, %p)", argc, argv));
 
-#if defined(__DJGPP__)
+#if defined( __DJGPP__ )
    __system_flags =
          __system_redirect |
          __system_allow_long_cmds |
@@ -89,7 +89,7 @@ int main( int argc, char * argv[] )
    return hb_vmQuit();
 }
 
-#if defined(__WATCOMC__) && ( defined(HB_OS_LINUX) || defined(HB_OS_OS2) || defined(HB_OS_WIN) )
+#if defined( __WATCOMC__ ) && ( defined( HB_OS_LINUX ) || defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) )
 void hb_forceLinkMainStd( void ) {}
 #endif
 

@@ -270,16 +270,16 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
       if( HB_COMP_PARAM->pOutPath->szPath )
          pOut->szPath = HB_COMP_PARAM->pOutPath->szPath;
 
-#if defined(__BORLANDC__) || defined(_MSC_VER) || defined(__WATCOMC__)
+#if defined( __BORLANDC__ ) || defined( _MSC_VER ) || defined( __WATCOMC__ )
       pOut->szExtension = ".obj";
 #else
       pOut->szExtension = ".o";  /* Don't know if we can hardcode it for Un*x */
 #endif
       hb_fsFNameMerge( pszTemp, pOut );
 
-#if defined(_MSC_VER)
+#if defined( _MSC_VER )
       hb_strncat( szOutPath, "-Fo", sizeof( szOutPath ) - 1 );
-#elif defined(__WATCOMC__)
+#elif defined( __WATCOMC__ )
       hb_strncat( szOutPath, "-fo=", sizeof( szOutPath ) - 1 );
 #else
       hb_strncat( szOutPath, "-o", sizeof( szOutPath ) - 1 );

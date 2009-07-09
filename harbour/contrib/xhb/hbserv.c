@@ -66,10 +66,10 @@
 /* These targets can't compile this module */
 #if !defined( HB_OS_DOS ) && \
     !defined( HB_OS_DARWIN_5 ) && \
-    ! ( defined(HB_OS_WIN_CE) && defined(__POCC__) ) && \
+    ! ( defined( HB_OS_WIN_CE ) && defined( __POCC__ ) ) && \
     !defined( HB_OS_WIN_64 )
 
-#if defined( HB_OS_UNIX ) || defined (HB_OS_OS2_GCC)
+#if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
 #include <sys/types.h>
 #include <unistd.h>
 #include <signal.h>
@@ -127,7 +127,7 @@ static int s_translateSignal( UINT sig, UINT subsig );
 * signals, both from kernel or from users.
 *****************************************************************************/
 
-#if defined(HB_OS_UNIX) || defined (HB_OS_OS2_GCC)
+#if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
 
 /* TODO: Register the old signal action to allow graceful fallback
          static struct sigaction sa_oldAction[ SIGUSR2 + 1 ]; */
@@ -264,7 +264,7 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
 /* 2003 - <maurilio.longo@libero.it>
    to fix as soon as thread support is ready on OS/2
 */
-#if defined(HB_THREAD_SUPPORT) && ! defined(HB_OS_OS2)
+#if defined( HB_THREAD_SUPPORT ) && ! defined( HB_OS_OS2 )
 static void * s_signalListener( void * my_stack )
 {
    static BOOL bFirst = TRUE;
@@ -581,10 +581,10 @@ BOOL WINAPI s_ConsoleHandlerRoutine( DWORD dwCtrlType )
 static void s_serviceSetHBSig( void )
 {
 
-#if defined( HB_OS_UNIX ) || defined(HB_OS_OS2_GCC)
+#if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
    struct sigaction act;
 
-   #if defined(HB_THREAD_SUPPORT) && ! defined(HB_OS_OS2)
+   #if defined( HB_THREAD_SUPPORT ) && ! defined( HB_OS_OS2 )
       sigset_t blockall;
       /* set signal mask */
       sigemptyset( &blockall );
@@ -938,13 +938,13 @@ HB_FUNC( HB_SIGNALDESC )
    int iSubSig = hb_parni( 2 );
 
    /* UNIX MESSGES */
-   #if defined (HB_OS_UNIX) || defined(HB_OS_OS2_GCC)
+   #if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
 
    switch( iSig )
    {
       case SIGSEGV: switch( iSubSig )
       {
-         #if ! defined(HB_OS_BSD) && ! defined(HB_OS_OS2_GCC) && ! defined( __WATCOMC__ )
+         #if ! defined( HB_OS_BSD ) && ! defined( HB_OS_OS2_GCC ) && ! defined( __WATCOMC__ )
          case SEGV_MAPERR: hb_retc_const( "Segmentation fault: address not mapped to object"); return;
          case SEGV_ACCERR: hb_retc_const( "Segmentation fault: invalid permissions for mapped object"); return;
          #endif
@@ -953,7 +953,7 @@ HB_FUNC( HB_SIGNALDESC )
 
       case SIGILL: switch( iSubSig )
       {
-         #if ! defined(HB_OS_BSD) && ! defined(HB_OS_OS2_GCC) && ! defined( __WATCOMC__ )
+         #if ! defined( HB_OS_BSD ) && ! defined( HB_OS_OS2_GCC ) && ! defined( __WATCOMC__ )
          case ILL_ILLOPC: hb_retc_const( "Illegal operation: illegal opcode"); return;
          case ILL_ILLOPN: hb_retc_const( "Illegal operation: illegal operand"); return;
          case ILL_ILLADR: hb_retc_const( "Illegal operation: illegal addressing mode"); return;
@@ -968,7 +968,7 @@ HB_FUNC( HB_SIGNALDESC )
 
       case SIGFPE: switch( iSubSig )
       {
-         #if ! defined(HB_OS_OS2_GCC) && ! defined( __WATCOMC__ )
+         #if ! defined( HB_OS_OS2_GCC ) && ! defined( __WATCOMC__ )
          #if ! defined( HB_OS_DARWIN )
          case FPE_INTDIV: hb_retc_const( "Floating point: integer divide by zero"); return;
          case FPE_INTOVF: hb_retc_const( "Floating point: integer overflow"); return;

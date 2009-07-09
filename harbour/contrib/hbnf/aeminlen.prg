@@ -135,4 +135,3 @@ FUNCTION FT_AEminlen( aArray, nDimension, nStart, nCount )
    NEXT
 
    RETURN ( nMinlen )
-

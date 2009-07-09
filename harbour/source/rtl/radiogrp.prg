@@ -57,11 +57,11 @@
 #include "common.ch"
 #include "setcurs.ch"
 
-/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but 
+/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
 
-/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*() 
-         functions to generate screen output. Harbour uses Disp*() 
+/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*()
+         functions to generate screen output. Harbour uses Disp*()
          functions only. [vszakats] */
 
 #ifdef HB_COMPAT_C53
@@ -454,7 +454,7 @@ METHOD setColor( cColorSpec ) CLASS RADIOGROUP
    RETURN Self
 
 METHOD setStyle( cStyle ) CLASS RADIOGROUP
-   
+
    LOCAL nPos
    LOCAL nLen := ::nItemCount
    LOCAL aItems := ::aItems
@@ -546,7 +546,7 @@ METHOD colorSpec( cColorSpec ) CLASS RADIOGROUP
    RETURN ::cColorSpec
 
 METHOD fBlock( bFBlock ) CLASS RADIOGROUP
-   
+
    IF PCount() > 0
       ::bFBlock := iif( bFBlock == NIL, NIL, __eInstVar53( Self, "FBLOCK", bFBlock, "B", 1001 ) )
    ENDIF
@@ -591,7 +591,7 @@ METHOD right( nRight ) CLASS RADIOGROUP
 
    RETURN ::nRight
 
-METHOD textValue() CLASS RADIOGROUP 
+METHOD textValue() CLASS RADIOGROUP
    RETURN ::cTextValue
 
 METHOD top( nTop ) CLASS RADIOGROUP

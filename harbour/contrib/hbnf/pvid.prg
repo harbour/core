@@ -128,5 +128,3 @@ if nNewSize >= 0
 endif
 
 return len( aVideo )
-
-

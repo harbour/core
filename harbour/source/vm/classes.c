@@ -5119,7 +5119,7 @@ HB_FUNC( __CLS_PAR00 )
  * It will be removed in the future so please do not use it.
  * Use hb_objHasMessage() instead.
  */
-#if defined(__cplusplus)
+#if defined( __cplusplus )
    extern "C" BOOL hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage );
 #endif
 BOOL hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )

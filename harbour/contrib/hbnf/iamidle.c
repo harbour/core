@@ -50,7 +50,7 @@
  *
 */
 
-/* 
+/*
 * File......: adapter.asm
 * Author....: Ted Means
 * CIS ID....: 73067,3332
@@ -96,7 +96,7 @@
 *     * Here's another way to do it:
 *
 *     FT_OnIdle( {|| FT_IAmIdle()} )
-* 
+*
 *     Inkey( 0 )              // Automatically reports idleness until key
 *                             // is pressed!
 *  $SEEALSO$

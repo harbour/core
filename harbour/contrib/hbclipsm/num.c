@@ -66,7 +66,7 @@ HB_FUNC( DTOR )
    hb_retndlen( ( hb_parnd( 1 ) / 180 ) * PI, 10, 9 );
 }
 
-/* NumAsLog10( <nNumber> ) --> nLog10 
+/* NumAsLog10( <nNumber> ) --> nLog10
    Convert a positive number to log base 10
 */
 HB_FUNC( NUMASLOG10 )

@@ -133,4 +133,3 @@ FUNCTION FT_AMEDIAN( aArray, nStart, nEnd )
    ENDIF
 
    RETURN ( nMedian )
-

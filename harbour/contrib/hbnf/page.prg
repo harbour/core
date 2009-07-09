@@ -111,5 +111,3 @@ FUNCTION FT_GETVPG()
 
   RETURN ( HIGHBYTE( aRegs[ BX ] ) ) */
  Return _ft_getvpg()
-
-

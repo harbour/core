@@ -216,4 +216,3 @@ HB_CALL_ON_STARTUP_END( hb_lang_Init_PLWIN )
    static HB_$INITSYM hb_vm_auto_hb_lang_Init_PLWIN = hb_lang_Init_PLWIN;
    #pragma data_seg()
 #endif
-

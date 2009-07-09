@@ -415,7 +415,7 @@ METHOD gather CLASS HBProfile
    ::gatherFunctions()
 
    // Gather method calls
-   ::gatherMethods()   
+   ::gatherMethods()
 
    __setProfiler( lProfile )
 
@@ -519,7 +519,7 @@ METHOD gather CLASS HBProfileLowLevel
    // Gather functions and methods.
    ::super:gather()
 
-   // Also gather opcodes.   
+   // Also gather opcodes.
    ::gatherOPCodes()
 
    __setProfiler( lProfile )

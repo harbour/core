@@ -62,13 +62,13 @@
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
                                        is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character 
+#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
                                        has the same weight as appropriate
                                        unaccented. */
 #define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
                                        sort after their unaccented counterparts
-                                       only if the unaccented versions of all 
-                                       characters being compared are the same 
+                                       only if the unaccented versions of all
+                                       characters being compared are the same
                                        ( interleaving ) */
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
@@ -82,10 +82,10 @@
    same excepting the characters case, of course.
  */
 
-/* NOTE: Ž/„ has been added to make it fully compatible with sixhu852.obj for 
+/* NOTE: Ž/„ has been added to make it fully compatible with sixhu852.obj for
          S*ccessWare SIx Driver.
-         Moreover the extra chars had to be replicated in the alternative 
-         codepages (WIN, ISO) too, to keep the Harbour codepage translation 
+         Moreover the extra chars had to be replicated in the alternative
+         codepages (WIN, ISO) too, to keep the Harbour codepage translation
          work. [vszakats] */
 
 static HB_CODEPAGE s_codepage = { "HUWINS",

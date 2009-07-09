@@ -54,7 +54,7 @@
 #include "hbapigt.h"
 
 /*
- * Normally it gives exactly the same result in all standard GT drivers 
+ * Normally it gives exactly the same result in all standard GT drivers
  * as MaxRow()/MaxCol(). The difference can appear in some extended
  * GT drivers which have additional functionality, f.e. CTW GT which
  * is upper level GT and add CTIII Window support. When it's activated

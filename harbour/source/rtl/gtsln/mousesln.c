@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Mouse subsystem for gtsln 
+ * Mouse subsystem for gtsln
  *
  * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
@@ -88,17 +88,17 @@ static BOOL GetGpmEvent( Gpm_Event *Evt )
       struct timeval tv = { 0, 0 };
       fd_set ReadFD;
 
-      FD_ZERO( &ReadFD ); 
+      FD_ZERO( &ReadFD );
       FD_SET( gpm_fd, &ReadFD );
 
       if( select( gpm_fd+1, &ReadFD, NULL, NULL, &tv ) > 0 )
-         if( FD_ISSET( gpm_fd, &ReadFD ) ) 
+         if( FD_ISSET( gpm_fd, &ReadFD ) )
             return Gpm_GetEvent( Evt ) > 0;
    }
 
    return FALSE;
 }
-#endif    
+#endif
 
 /* *********************************************************************** */
 
@@ -119,7 +119,7 @@ static BOOL GetXtermEvent( int *Btn, int *Col, int *Row )
          }
       }
    }
-    
+
    return FALSE;
 }
 
@@ -361,7 +361,7 @@ void hb_gt_sln_mouse_Init( void )
 #endif
       Conn.eventMask = GPM_MOVE | GPM_UP | GPM_DOWN | GPM_DRAG | GPM_DOUBLE;
       /* give me move events but handle them anyway */
-      Conn.defaultMask= GPM_MOVE | GPM_HARD; 
+      Conn.defaultMask= GPM_MOVE | GPM_HARD;
       /* only pure mouse events, no Ctrl,Alt,Shft events */
       Conn.minMod = 0;    Conn.maxMod = 0;
       gpm_zerobased = 1;  gpm_visiblepointer = 1;
@@ -381,7 +381,7 @@ void hb_gt_sln_mouse_Init( void )
          /*
           * In recent GPM versions it produce unpleasure noice on the screen
           * so I covered it with this macro, [druzus]
-          */         
+          */
 #ifdef HB_GPM_USE_XTRA
          s_iMouseButtons = Gpm_GetSnapshot( NULL );
 #else

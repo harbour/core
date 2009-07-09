@@ -332,4 +332,3 @@ FUNCTION FT_DATECNFG( cFYStart ,nDow )
   ENDIF
 
 RETURN ACLONE( aDatePar )
-

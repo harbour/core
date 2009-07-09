@@ -91,4 +91,3 @@ function ft_d2e( nDec, nPrecision )
 
   sScn := ltrim( str( nDec, nPrecision + 3, nPrecision ) )
   return( sScn + 'E' + alltrim( str( nExp, 5, 0 ) ) )
-

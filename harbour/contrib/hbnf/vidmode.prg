@@ -127,5 +127,4 @@ FUNCTION FT_GETMODE()
 
   RETURN ( LOWBYTE( aRegs[ AX ] ) )
 */
- RETURN _ft_getmode()  
-
+ RETURN _ft_getmode()

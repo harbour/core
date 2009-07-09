@@ -109,7 +109,7 @@
 
 /*----------------------------------------------------------------------*/
 
-#if defined(__BORLANDC__) && !defined(HB_ARCH_64BIT)
+#if defined( __BORLANDC__ ) && !defined( HB_ARCH_64BIT )
     #undef MAKELONG
     #define MAKELONG(a,b) ((LONG)(((WORD)((DWORD_PTR)(a) & 0xffff)) | \
                           (((DWORD)((WORD)((DWORD_PTR)(b) & 0xffff))) << 16)))
@@ -1013,7 +1013,7 @@ HB_FUNC( WVG_HEIGHTTOPOINTSIZE )
 HB_FUNC( WVG_SETCURRENTBRUSH )
 {
 #if ! defined( HB_OS_WIN_CE )
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
+#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
    SetClassLong( wvg_parhwnd( 1 ), GCL_HBRBACKGROUND, ( DWORD ) hb_parnint( 2 ) );
 #else
    SetClassLongPtr( wvg_parhwnd( 1 ), GCLP_HBRBACKGROUND, ( LONG_PTR ) hb_parnint( 2 ) );
@@ -1195,7 +1195,7 @@ HB_FUNC( WVG_SETWINDOWPROCBLOCK )
 
    SetProp( hWnd, TEXT( "BLOCKCALLBACK" ), pBlock );
 
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
+#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
    oldProc = ( WNDPROC ) SetWindowLong( hWnd, GWL_WNDPROC, ( long ) ControlWindowProcedure );
 #else
    oldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( HB_PTRDIFF ) ControlWindowProcedure );

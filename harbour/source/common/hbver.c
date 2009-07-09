@@ -79,7 +79,7 @@
 #include "hbapi.h"
 #include "hbmemory.ch"
 
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
 
    #ifndef VER_PLATFORM_WIN32_WINDOWS
       #define VER_PLATFORM_WIN32_WINDOWS 1
@@ -88,7 +88,7 @@
       #define VER_PLATFORM_WIN32_CE 3
    #endif
 
-#elif defined(HB_OS_UNIX) && !defined(__CEGCC__)
+#elif defined( HB_OS_UNIX ) && !defined( __CEGCC__ )
 
    #include <sys/utsname.h>
 
@@ -170,7 +170,7 @@ char * hb_verPlatform( void )
 
    pszPlatform = ( char * ) hb_xgrab( PLATFORM_BUF_SIZE + 1 );
 
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
 
    {
       union REGS regs;
@@ -229,7 +229,7 @@ char * hb_verPlatform( void )
       }
    }
 
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
 
    {
       unsigned long aulQSV[ QSV_MAX ] = { 0 };
@@ -254,7 +254,7 @@ char * hb_verPlatform( void )
          hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "OS/2" );
    }
 
-#elif defined(HB_OS_WIN)
+#elif defined( HB_OS_WIN )
 
    {
       OSVERSIONINFOA osVer;
@@ -271,7 +271,7 @@ char * hb_verPlatform( void )
 
          if( hntdll )
          {
-#if defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN_CE )
             if( GetProcAddress( hntdll, TEXT( "wine_get_version" ) ) )
 #else
             if( GetProcAddress( hntdll, "wine_get_version" ) )
@@ -296,7 +296,7 @@ char * hb_verPlatform( void )
 
                if( osVer.dwMajorVersion == 6 )
                {
-#if !defined(HB_OS_WIN_CE) && !defined(__DMC__) && (!defined(_MSC_VER) || _MSC_VER >= 1400)
+#if !defined( HB_OS_WIN_CE ) && !defined( __DMC__ ) && ( !defined( _MSC_VER ) || _MSC_VER >= 1400 )
                   OSVERSIONINFOEXA osVerEx;
 
                   osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );
@@ -371,11 +371,11 @@ char * hb_verPlatform( void )
          hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows" );
    }
 
-#elif defined(__CEGCC__)
+#elif defined( __CEGCC__ )
    {
       hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows CE" );
    }
-#elif defined(HB_OS_UNIX)
+#elif defined( HB_OS_UNIX )
 
    {
       struct utsname un;
@@ -397,7 +397,7 @@ char * hb_verPlatform( void )
 
 BOOL hb_iswinnt( void )
 {
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
    static BOOL s_fWinNT = FALSE;
    static BOOL s_fInited = FALSE;
 
@@ -417,7 +417,7 @@ BOOL hb_iswinnt( void )
 
 BOOL hb_iswince( void )
 {
-#if defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN_CE )
    return TRUE;
 #else
    return FALSE;
@@ -442,9 +442,9 @@ char * hb_verCompiler( void )
    pszCompiler = ( char * ) hb_xgrab( COMPILER_BUF_SIZE );
    szSub[ 0 ] = '\0';
 
-#if defined(__IBMC__) || defined(__IBMCPP__)
+#if defined( __IBMC__ ) || defined( __IBMCPP__ )
 
-   #if defined(__IBMC__)
+   #if defined( __IBMC__ )
       iVerMajor = __IBMC__;
    #else
       iVerMajor = __IBMCPP__;
@@ -459,39 +459,39 @@ char * hb_verCompiler( void )
    iVerMinor = iVerMajor % 100;
    iVerPatch = 0;
 
-#elif defined(__POCC__)
+#elif defined( __POCC__ )
 
    pszName = "Pelles ISO C Compiler";
    iVerMajor = __POCC__ / 100;
    iVerMinor = __POCC__ % 100;
    iVerPatch = 0;
 
-#elif defined(__XCC__)
+#elif defined( __XCC__ )
 
    pszName = "Pelles ISO C Compiler (XCC)";
    iVerMajor = __XCC__ / 100;
    iVerMinor = __XCC__ % 100;
    iVerPatch = 0;
 
-#elif defined(__LCC__)
+#elif defined( __LCC__ )
 
    pszName = "Logiciels/Informatique lcc-win32";
    iVerMajor = 0 /* __LCC__ / 100 */;
    iVerMinor = 0 /* __LCC__ % 100 */;
    iVerPatch = 0;
 
-#elif defined(__DMC__)
+#elif defined( __DMC__ )
 
    pszName = __DMC_VERSION_STRING__;
    iVerMajor = 0;
    iVerMinor = 0;
    iVerPatch = 0;
 
-#elif defined(__ICL)
+#elif defined( __ICL )
 
    pszName = "Intel(R) C";
 
-   #if defined(__cplusplus)
+   #if defined( __cplusplus )
       hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
    #endif
 
@@ -499,11 +499,11 @@ char * hb_verCompiler( void )
    iVerMinor = __ICL % 100;
    iVerPatch = 0;
 
-#elif defined(__ICC)
+#elif defined( __ICC )
 
    pszName = "Intel(R) (ICC) C";
 
-   #if defined(__cplusplus)
+   #if defined( __cplusplus )
       hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
    #endif
 
@@ -511,7 +511,7 @@ char * hb_verCompiler( void )
    iVerMinor = __ICC % 100;
    iVerPatch = 0;
 
-#elif defined(_MSC_VER)
+#elif defined( _MSC_VER )
 
    #if (_MSC_VER >= 800)
       pszName = "Microsoft Visual C";
@@ -519,20 +519,20 @@ char * hb_verCompiler( void )
       pszName = "Microsoft C";
    #endif
 
-   #if defined(__cplusplus)
+   #if defined( __cplusplus )
       hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
    #endif
 
    iVerMajor = _MSC_VER / 100;
    iVerMinor = _MSC_VER % 100;
 
-   #if defined(_MSC_FULL_VER)
+   #if defined( _MSC_FULL_VER )
       iVerPatch = _MSC_FULL_VER - ( _MSC_VER * 10000 );
    #else
       iVerPatch = 0;
    #endif
 
-#elif defined(__BORLANDC__)
+#elif defined( __BORLANDC__ )
 
    #if (__BORLANDC__ >= 1424) /* Version 5.9 */
       pszName = "CodeGear C++";
@@ -553,21 +553,21 @@ char * hb_verCompiler( void )
       iVerPatch = 0;
    #endif
 
-#elif defined(__TURBOC__)
+#elif defined( __TURBOC__ )
 
    pszName = "Borland Turbo C";
    iVerMajor = __TURBOC__ >> 8;
    iVerMinor = __TURBOC__ & 0xFF;
    iVerPatch = 0;
 
-#elif defined(__MPW__)
+#elif defined( __MPW__ )
 
    pszName = "MPW C";
    iVerMajor = __MPW__ / 100;
    iVerMinor = __MPW__ % 100;
    iVerPatch = 0;
 
-#elif defined(__WATCOMC__)
+#elif defined( __WATCOMC__ )
 
    #if __WATCOMC__ < 1200
       pszName = "Watcom C";
@@ -575,7 +575,7 @@ char * hb_verCompiler( void )
       pszName = "Open Watcom C";
    #endif
 
-   #if defined(__cplusplus)
+   #if defined( __cplusplus )
       hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
    #endif
 
@@ -588,31 +588,31 @@ char * hb_verCompiler( void )
       iVerPatch = 0;
    #endif
 
-#elif defined(__GNUC__)
+#elif defined( __GNUC__ )
 
-   #if defined(__DJGPP__)
+   #if defined( __DJGPP__ )
       pszName = "Delorie GNU C";
-   #elif defined(__CYGWIN__)
+   #elif defined( __CYGWIN__ )
       pszName = "Cygwin GNU C";
-   #elif defined(__MINGW32__)
+   #elif defined( __MINGW32__ )
       pszName = "MinGW GNU C";
-   #elif defined(__RSX32__)
+   #elif defined( __RSX32__ )
       pszName = "EMX/RSXNT/DOS GNU C";
-   #elif defined(__RSXNT__)
+   #elif defined( __RSXNT__ )
       pszName = "EMX/RSXNT/Win32 GNU C";
-   #elif defined(__EMX__)
+   #elif defined( __EMX__ )
       pszName = "EMX GNU C";
    #else
       pszName = "GNU C";
    #endif
 
-   #if defined(__cplusplus)
+   #if defined( __cplusplus )
       hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
    #endif
 
    iVerMajor = __GNUC__;
    iVerMinor = __GNUC_MINOR__;
-   #if defined(__GNUC_PATCHLEVEL__)
+   #if defined( __GNUC_PATCHLEVEL__ )
       iVerPatch = __GNUC_PATCHLEVEL__;
    #else
       iVerPatch = 0;
@@ -636,7 +636,7 @@ char * hb_verCompiler( void )
    else
       hb_strncpy( pszCompiler, "(unknown)", COMPILER_BUF_SIZE - 1 );
 
-#if defined(__DJGPP__)
+#if defined( __DJGPP__ )
    hb_snprintf( szSub, sizeof( szSub ), " (DJGPP %i.%02i)", ( int ) __DJGPP__, ( int ) __DJGPP_MINOR__ );
    hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE - 1 );
 #endif

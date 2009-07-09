@@ -115,7 +115,7 @@
                                           <.lshared.>,  ;
                                           <(cPathDBF)>, ;
                                           <.lnew.>,     ;
-                                          <.lrdonly.> ) 
+                                          <.lrdonly.> )
 
 
 // --> new order object

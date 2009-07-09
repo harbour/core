@@ -210,7 +210,7 @@ static void hb_LZSSxExit( PHB_LZSSX_COMPR pCompr )
    hb_xfree( pCompr );
 }
 
-static PHB_LZSSX_COMPR hb_LZSSxInit( 
+static PHB_LZSSX_COMPR hb_LZSSxInit(
                         HB_FHANDLE hInput, BYTE * pSrcBuf, ULONG ulSrcBuf,
                         HB_FHANDLE hOutput, BYTE * pDstBuf, ULONG ulDstBuf )
 {

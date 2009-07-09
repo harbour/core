@@ -88,7 +88,7 @@
 #include "hbset.h"
 #include "hbapierr.h"
 
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
 
 #   include <windows.h>
 #   include <winnetwk.h>
@@ -167,7 +167,7 @@ HB_FUNC( NETCANCEL )
    dwResult = WNetCancelConnection( lpDevice, TRUE ); /* FALSE = fail if exist open files or print jobs. */
 
    HB_TCHAR_FREE( lpDevice );
-   /* TRUE = force cancel connection even if exist                                                                                                          
+   /* TRUE = force cancel connection even if exist
     *        open files or print jobs.
     */
    hb_retl( dwResult == NO_ERROR );

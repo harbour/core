@@ -1,4 +1,4 @@
-/* 
+/*
  * $Id$
  */
 
@@ -131,7 +131,7 @@ int main( int argc, char * argv [] )
          if( strcmp( argv[ i ], "-P" ) == 0 ) c_plus_plus = 1;
          if( strcmp( argv[ i ], "-P+" ) == 0 ) c_plus_plus = 1;
          if( strcmp( argv[ i ], "-P-" ) == 0 ) c_plus_plus = 0;
-      }      
+      }
       /* Rename source to backup. */
       hb_strncpy( backup, argv[ 1 ], sizeof( backup ) - 1 );
       len = strlen( backup );
@@ -327,7 +327,7 @@ int main( int argc, char * argv [] )
                         if( ferror( replace ) )
                         {
                            rc = 16;
-                           printf( "\nError %d (DOS error %02xd) writing to %s (after renaming to %s).", 
+                           printf( "\nError %d (DOS error %02xd) writing to %s (after renaming to %s).",
                                      errno, _doserrno, argv[ 1 ], backup );
                         }
                      }

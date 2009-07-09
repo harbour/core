@@ -86,4 +86,3 @@ FUNCTION FT_BITCLR(cInbyte, nBitpos)
   ENDIF
 
 RETURN cByte
-

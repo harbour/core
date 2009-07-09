@@ -84,7 +84,7 @@
 #  endif
 #endif
 
-#if defined(HB_OS_WIN) && !defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
 #  include <tlhelp32.h>
    /* BCC and MinGW doesn't seem to #define this */
 #  ifndef TH32CS_SNAPMODULE32
@@ -96,7 +96,7 @@
    static BYTE * s_signal_stack[ SIGSTKSZ ];
 #endif
 
-#if defined(HB_OS_WIN) && !defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
 
 LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
 {
@@ -105,7 +105,7 @@ LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo 
 
    errmsg[ 0 ] = '\0';
 
-#if defined(HB_OS_WIN_64) && (defined(_M_X64) || defined(__MINGW64__))
+#if defined( HB_OS_WIN_64 ) && ( defined( _M_X64 ) || defined( __MINGW64__ ) )
    {
       PCONTEXT pCtx = pExceptionInfo->ContextRecord;
 
@@ -134,7 +134,7 @@ LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo 
                See: - StackWalk64()
                     - http://www.codeproject.com/KB/threads/StackWalker.aspx?fid=202364 */
    }
-#elif defined(HB_OS_WIN_64) && defined(_M_IA64)
+#elif defined( HB_OS_WIN_64 ) && defined( _M_IA64 )
    {
       /* TODO: Itanium
                See: winnt.h for PCONTEXT structure. */
@@ -280,7 +280,7 @@ LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo 
    return hb_cmdargCheck( "BATCH" ) ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH;
 }
 
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
 
 static EXCEPTIONREGISTRATIONRECORD s_regRec; /* Exception Registration Record */
 
@@ -358,12 +358,12 @@ static void hb_signalExceptionHandler( int sig, siginfo_t * si, void * ucp )
 
 void hb_vmSetExceptionHandler( void )
 {
-#if defined(HB_OS_WIN) && !defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
    {
       LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_winExceptionHandler );
       HB_SYMBOL_UNUSED( ef );
    }
-#elif defined(HB_OS_OS2) /* Add OS2TermHandler to this thread's chain of exception handlers */
+#elif defined( HB_OS_OS2 ) /* Add OS2TermHandler to this thread's chain of exception handlers */
    {
       APIRET rc;                             /* Return code                   */
 
@@ -401,7 +401,7 @@ void hb_vmSetExceptionHandler( void )
 
 void hb_vmUnsetExceptionHandler( void )
 {
-#if defined(HB_OS_OS2) /* Add OS2TermHandler to this thread's chain of exception handlers */
+#if defined( HB_OS_OS2 ) /* Add OS2TermHandler to this thread's chain of exception handlers */
    {
       APIRET rc;                             /* Return code                   */
 

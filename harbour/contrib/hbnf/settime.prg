@@ -99,4 +99,3 @@ function FT_SETTIME( cTime )
   aRegs[ DX ] = SECS( cTime ) * ( 2 ^ 8 )
 
 return( FT_INT86( DOS, aRegs ) )
-

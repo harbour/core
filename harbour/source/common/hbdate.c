@@ -83,7 +83,7 @@
 #  include <sys/time.h>
 #elif !defined( HB_OS_WIN )
 #  include <sys/timeb.h>
-#  if defined(_MSC_VER)
+#  if defined( _MSC_VER )
 #     define timeb _timeb
 #     define ftime _ftime
 #  endif
@@ -106,7 +106,7 @@ void hb_timeStampGetLocal( int * piYear, int * piMonth, int * piDay,
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_timeStampGetLocal(%p,%p,%p,%p,%p,%p,%p)", piYear, piMonth, piDay, piHour, piMinutes, piSeconds, piMSec));
 
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
    {
       SYSTEMTIME st;
 
@@ -159,7 +159,7 @@ HB_ULONG hb_dateMilliSeconds( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateMilliSeconds()"));
 
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
    {
       SYSTEMTIME st;
       GetSystemTime( &st );

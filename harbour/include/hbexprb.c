@@ -444,7 +444,7 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
          break;
       case HB_EA_PUSH_PCODE:
       {
-#if defined(HB_MACRO_SUPPORT)
+#if defined( HB_MACRO_SUPPORT )
          HB_EXPR_PCODE1( hb_compExprCodeblockPush, pSelf );
 #else
          if( pSelf->value.asCodeblock.flags & HB_BLOCK_EXT )
@@ -1356,19 +1356,10 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
             {
                if( HB_IS_VALID_INDEX( lIndex, pExpr->ulLength ) )
                {
-#if defined( HB_COMPAT_X HB )
-                  char * pszValue = ( char * ) hb_xgrab( 2 );
-                  pszValue[ 0 ] = pExpr->value.asString.string[ lIndex - 1 ];
-                  pszValue[ 1 ] = '\0';
-
-                  HB_COMP_EXPR_DELETE( pSelf );
-                  pSelf = hb_compExprNewString( pszValue, 1, TRUE, HB_COMP_PARAM );
-#else
                   UCHAR ucValue = ( UCHAR ) pExpr->value.asString.string[ lIndex - 1 ];
 
                   HB_COMP_EXPR_DELETE( pSelf );
                   pSelf = hb_compExprNewLong( ucValue, HB_COMP_PARAM );
-#endif
                }
                else
                   hb_compErrorBound( HB_COMP_PARAM, pIdx );
@@ -4407,7 +4398,7 @@ static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, BOOL bLateEval, HB_COMP
 
 /* This generates a push pcode for early evaluation of a macro
 */
-#if !defined(HB_MACRO_SUPPORT)
+#if !defined( HB_MACRO_SUPPORT )
 static void hb_compExprCodeblockExtPush( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
    hb_compGenPCodeN( ( BYTE * ) pSelf->value.asCodeblock.string,

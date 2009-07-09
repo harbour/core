@@ -63,19 +63,19 @@
 #endif
 
 /* we're assuming target has termios - should be better done */
-#include <termios.h> 
+#include <termios.h>
 
 /* *********************************************************************** */
 
 /* keyboard states - these should be taken
    from system includes, not be hard coded */
-#if defined(__linux__)
+#if defined( __linux__ )
    #define SHIFT_PRESSED        1
    #define ALTR_PRESSED         2
    #define CONTROL_PRESSED      4
    #define ALTL_PRESSED         8
    #define ALT_PRESSED ALTL_PRESSED
-#elif defined(M_UNIX)         /* SCO */
+#elif defined( M_UNIX )         /* SCO */
    #define SHIFT_PRESSED        1
    #define ALTR_PRESSED         8
    #define CONTROL_PRESSED      2
@@ -93,7 +93,7 @@
 
 #define MOUSE_ALL_EVENTS_MASK \
    ( INKEY_MOVE | INKEY_LDOWN | INKEY_LUP | INKEY_RDOWN | INKEY_RUP )
-    
+
 /* extra keysyms definitions */
 #define SL_KEY_NUM_5      SL_KEY_B2       /* this is checked explicitly */
 #define SL_KEY_MAX        ( ( unsigned int ) 0x2000 )
@@ -138,14 +138,14 @@ static int hb_sln_try_get_Kbd_State( void );
 static void hb_sln_Init_TermType()
 {
    char * Env;
-    
+
    /* an uncertain way to check if we run under linux console */
    Env = hb_getenv( "TERM" );
    if( Env )
    {
       hb_sln_UnderLinuxConsole = *Env && ( strncmp( Env, "linux", 5 ) == 0 );
       hb_xfree( ( void * ) Env );
-   } 
+   }
    /* an uncertain way to check if we run under xterm */
    Env = hb_getenv( "TERM" );
    if( Env )
@@ -163,7 +163,7 @@ static void hb_sln_Init_KeyTranslations()
    char ch, keyname[ SLANG_MAX_KEYMAP_KEY_SEQ + 1 ];
    int  keynum, i;
    char * keyseq;
- 
+
    /* for defining ^[<Key> sequences - this simulates Alt+Keys */
    char AltChars[][ 2 ] =
    {
@@ -171,11 +171,11 @@ static void hb_sln_Init_KeyTranslations()
       { 'A',   'Z' },
       { 'a',   'z' }
    };
- 
+
    /* on Unix systems ESC is a special key so let
       assume ESC is a doble pressed ESC key    */
    SLkp_define_keysym( ( char * ) "^[^[", SL_KEY_ESC );
- 
+
    /* try to define Shft-Fn and Ctrl-Fn keys.
       Because we assume terminal has only 10 Fkeys
       so F11-F30 is generated with Shift & Ctrl.
@@ -183,7 +183,7 @@ static void hb_sln_Init_KeyTranslations()
    keynum = 11;
    keyname[ 0 ] = 'F';
    keyname[ 2 ] = 0;
- 
+
    /* Shft & Ctrl FKeys definition takes place in two
       phases : from '1' to '9' and from 'A' to 'K' */
    for( i = 1; i <= 2; i++ )
@@ -197,14 +197,14 @@ static void hb_sln_Init_KeyTranslations()
          keynum++;
       }
    }
- 
+
    /* We assume Esc key is a Meta key which is treated as an Alt key.
       Also pressing Alt+Key on linux console and linux xterm gives the
       same key sequences as with Meta key so we are happy */
- 
+
    keyname[ 0 ] = 033;
    keyname[ 2 ] = 0;
- 
+
    /* Alt+Letter & Alt+digit definition takes place in three phases :
       from '0' to '9', from 'A' to 'Z' and from 'a' to 'z' */
    for( i = 0; i < 3; i++ )
@@ -213,14 +213,14 @@ static void hb_sln_Init_KeyTranslations()
       {
          /* fprintf( stderr, "%d %c\n", i, ch ); */
          keyname[ 1 ] = ch;
-   
+
          /* QUESTION: why Slang reports error for defining Alt+O ???.
                       Have I any hidden error in key definitiions ??? */
          if( ch != 'O' )
             SLkp_define_keysym( keyname, SL_KEY_ALT( ch ) );
       }
    }
- 
+
    /* mouse events under xterm */
    if( hb_sln_UnderXterm )
    {
@@ -231,7 +231,7 @@ static void hb_sln_Init_KeyTranslations()
          SLkp_define_keysym( keyseq, SL_KEY_MOU );
       }
    }
-   
+
    /* five on numeric console */
    /* SLkp_define_keysym( "^[[G", SL_KEY_NUM_5 ); */
 }
@@ -268,7 +268,7 @@ int hb_sln_Init_Terminal( int phase )
       }
       if( p )
          hb_xfree( ( void * ) p );
- 
+
       /* number of keys dealing with a Dead key */
       hb_sln_convKDeadKeys[ 0 ] = 0;
    }
@@ -460,19 +460,19 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
 
 static int hb_sln_try_get_Kbd_State( void )
 {
-#if defined(__linux__)
+#if defined( __linux__ )
    unsigned char modifiers = 6;
 
    if( ioctl( 0, TIOCLINUX, &modifiers ) < 0 )
       return 0;
- 
+
    return ( int ) modifiers;
- 
-#elif defined(M_UNIX)
- 
+
+#elif defined( M_UNIX )
+
    int modifiers = 0;
    int IOcommand = 0;
- 
+
    if( ioctl( 0, TCGETSC, &IOcommand ) >= 0 )
    {
       /* if keyboard is not in SCANCODE mode */
@@ -485,7 +485,7 @@ static int hb_sln_try_get_Kbd_State( void )
             /* if SCANCODE mode is set corectly try get KBD state */
             if( ioctl( 0, KDGKBSTATE, &modifiers ) < 0 )
                modifiers = 0;
-    
+
             /* turn a keyboard to a normal mode ( translation mode ) */
             IOcommand = KB_XSCANCODE;
             ( void ) ioctl( 0, TCSETSC, &IOcommand )

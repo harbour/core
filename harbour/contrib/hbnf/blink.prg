@@ -80,4 +80,3 @@ FUNCTION FT_BLINK( cMsg, nRow, nCol )
   SETCOLOR( cSavColor )                  // It's a wrap, restore colors & exit.
 
 RETURN NIL
-

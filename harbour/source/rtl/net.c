@@ -65,7 +65,7 @@
 
 #include "hbapi.h"
 
-#if defined(HB_OS_OS2) && defined(__GNUC__)
+#if defined( HB_OS_OS2 ) && defined( __GNUC__ )
 
    #include "hb_io.h"
 
@@ -75,23 +75,23 @@
    #include <pwd.h>
    #include <sys/types.h>
 
-   #if defined(__EMX__) && __GNUC__ * 1000 + __GNUC_MINOR__ < 3002
+   #if defined( __EMX__ ) && __GNUC__ * 1000 + __GNUC_MINOR__ < 3002
       #include <emx/syscalls.h>
       #define gethostname __gethostname
    #endif
 
    #define MAXGETHOSTNAME 256      /* should be enough for a host name */
 
-#elif defined(HB_OS_DOS)
+#elif defined( HB_OS_DOS )
 
-   #if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
+   #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
       #include "hb_io.h"
       #include <sys/param.h>
    #endif
 
-#elif defined(HB_OS_UNIX)
+#elif defined( HB_OS_UNIX )
 
-   #if !defined(__WATCOMC__)
+   #if !defined( __WATCOMC__ )
       #include <pwd.h>
       #include <sys/types.h>
    #endif
@@ -109,9 +109,9 @@
 
 char * hb_netname( void )
 {
-#if defined(HB_OS_UNIX) || ( defined(HB_OS_OS2) && defined(__GNUC__) )
+#if defined( HB_OS_UNIX ) || ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
 
-#  if defined(__WATCOMC__)
+#  if defined( __WATCOMC__ )
       return hb_getenv( "HOSTNAME" );
 #  else
       char * pszValue = ( char * ) hb_xgrab( MAXGETHOSTNAME + 1 );
@@ -120,9 +120,9 @@ char * hb_netname( void )
       return pszValue;
 #  endif
 
-#elif defined(HB_OS_DOS)
+#elif defined( HB_OS_DOS )
 
-#  if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
+#  if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
       char * pszValue = ( char * ) hb_xgrab( MAXGETHOSTNAME + 1 );
       pszValue[ 0 ] = '\0';
       gethostname( pszValue, MAXGETHOSTNAME );
@@ -146,7 +146,7 @@ char * hb_netname( void )
       return regs.h.ch == 0 ? hb_strdup( "" ) : pszValue;
 #  endif
 
-#elif defined(HB_OS_WIN)
+#elif defined( HB_OS_WIN )
 
    DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
    char * pszValue = ( char * ) hb_xgrab( ulLen );
@@ -166,16 +166,16 @@ char * hb_netname( void )
 
 char * hb_username( void )
 {
-#if defined(HB_OS_UNIX) || ( defined(HB_OS_OS2) && defined(__GNUC__) )
+#if defined( HB_OS_UNIX ) || ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
 
-#  if defined(__WATCOMC__)
+#  if defined( __WATCOMC__ )
       return hb_getenv( "USER" );
 #  else
       struct passwd * pwd = getpwuid( getuid() );
       return pwd ? hb_strdup( pwd->pw_name ) : hb_getenv( "USER" );
 #  endif
 
-#elif defined(HB_OS_WIN)
+#elif defined( HB_OS_WIN )
 
    DWORD ulLen = 256;
    char * pszValue = ( char * ) hb_xgrab( ulLen );

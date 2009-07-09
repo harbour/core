@@ -215,7 +215,7 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
    return pEOLs;
 }
 
-static const char * hb_mlGetParams( int iParAdd, ULONG * pulLen, 
+static const char * hb_mlGetParams( int iParAdd, ULONG * pulLen,
                                     ULONG * pulLineLength,
                                     ULONG * pulTabSize, BOOL * pfWordWrap,
                                     PHB_EOL_INFO * pEOLs, int * piEOLs )

@@ -81,4 +81,3 @@ FUNCTION FT_NWLSTAT()
   endif
 
   RETURN nStation
-

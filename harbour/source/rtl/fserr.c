@@ -56,18 +56,18 @@
 #include "hbapifs.h"
 #include "hbstack.h"
 #include "hb_io.h"
-#if !(defined(HB_IO_WIN) || defined(HB_OS_WIN))
+#if !( defined( HB_IO_WIN ) || defined( HB_OS_WIN ) )
 #  include <errno.h>
 #endif
 
 
 /* Try to translate C errno into DOS error code */
-#if !defined(HB_IO_WIN)
+#if !defined( HB_IO_WIN )
 static int hb_errnoToDosError( int ErrCode )
 {
    int iResult;
 
-#if defined(__BORLANDC__)
+#if defined( __BORLANDC__ )
    /* These C compilers use DOS error codes in errno */
    iResult = ErrCode;
 #else
@@ -144,7 +144,7 @@ static int hb_errnoToDosError( int ErrCode )
 }
 #endif
 
-#if defined(HB_IO_WIN) || defined(HB_OS_WIN)
+#if defined( HB_IO_WIN ) || defined( HB_OS_WIN )
 static int hb_WinToDosError( ULONG ulError )
 {
    int iResult;
@@ -235,10 +235,10 @@ void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
    }
    else
    {
-#if defined(HB_IO_WIN) || defined(HB_OS_WIN)
+#if defined( HB_IO_WIN ) || defined( HB_OS_WIN )
       uiOsErrorLast = ( USHORT ) GetLastError();
       uiErrorLast = ( USHORT ) hb_WinToDosError( uiOsErrorLast );
-#elif defined(_MSC_VER) || defined(__DMC__)
+#elif defined( _MSC_VER ) || defined( __DMC__ )
       #ifdef __XCC__
          extern unsigned long _doserrno;
          extern void __cdecl _dosmaperr( unsigned long oserrno );

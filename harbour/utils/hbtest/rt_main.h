@@ -57,13 +57,13 @@
 /* NOTE: Do not use names longer than 10 chars for .prg callable functions.
          This is to keep things simple. [vszakats] */
 
-#if defined(__HARBOUR__)
+#if defined( __HARBOUR__ )
 
    #include "hbundoc.api"
 
    #define RT_FUNDEF( funcname )            HB_FUNC( funcname )
 
-#elif defined(__XPP__)
+#elif defined( __XPP__ )
 
    #define RT_FUNDEF( funcname )            XPPRET XPPENTRY funcname ( XppParamList paramList )
 

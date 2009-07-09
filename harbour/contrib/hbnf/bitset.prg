@@ -88,4 +88,3 @@ FUNCTION FT_BITSET(cInByte, nBitpos)
   ENDIF
 
 RETURN cByte
-

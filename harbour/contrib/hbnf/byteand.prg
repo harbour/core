@@ -81,4 +81,3 @@ FUNCTION FT_BYTEAND(cByte1, cByte2)
   ENDIF
 
 RETURN cNewByte
-

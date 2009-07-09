@@ -60,7 +60,7 @@
 #include "hbvm.h"
 #include "hbapiitm.h"
 
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
 
 HB_EXPORT BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved );
 

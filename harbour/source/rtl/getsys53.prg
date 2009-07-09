@@ -70,7 +70,7 @@ PROCEDURE GUIReader( oGet, oGetlist, oMenu, aMsg )
    IF !ISOBJECT( oGetList )
       oGetList := __GetListActive()
    ENDIF
- 
+
    IF oGetList != NIL
       oGetlist:GUIReader( oGet, oMenu, aMsg )
    ENDIF
@@ -121,7 +121,7 @@ PROCEDURE TBApplyKey( oGet, oTB, oGetList, nKey, aMsg )
       oGetList:TBApplyKey( oGet, oTB, nKey, aMsg )
    ENDIF
 
-   RETURN 
+   RETURN
 
 FUNCTION Accelerator( oGetList, nKey, aMsg )
 

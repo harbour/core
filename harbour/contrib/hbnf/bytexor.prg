@@ -84,4 +84,3 @@ FUNCTION FT_BYTEXOR(cByte1, cByte2)
   ENDIF
 
 RETURN cNewByte
-

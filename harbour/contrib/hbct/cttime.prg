@@ -68,7 +68,7 @@ elseif ISCHARACTER( cTime )
             isdigit( substr( cTime, i + 1, 1 ) ) .and. ;
             ( i == nLen - 1 .or. substr( cTime, i + 2, 1 ) == ":" ) .and. ;
             ( n := val( substr( cTime, i, 2 ) ) ) < aLim[ nInd ]
-            nSec += n * aMod[ nInd ] 
+            nSec += n * aMod[ nInd ]
          else
             nSec := 0
             exit

@@ -52,7 +52,7 @@
 */
 
 #include "hbapi.h"
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
 #include "dos.h"
 #endif
 
@@ -60,7 +60,7 @@ HB_FUNC( _FT_GETVPG )
 {
    int iPage;
 
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
    {
       union REGS registers;
       registers.h.ah = 0x0F;
@@ -78,7 +78,7 @@ HB_FUNC( _FT_GETVPG )
 
 HB_FUNC( _V_SETVPG )
 {
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
    {
       int iPage;
       union REGS registers;

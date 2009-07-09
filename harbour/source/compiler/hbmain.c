@@ -48,8 +48,8 @@
 /*
  * Avoid tracing in preprocessor/compiler.
  */
-#if ! defined(HB_TRACE_UTILS)
-   #if defined(HB_TRACE_LEVEL)
+#if ! defined( HB_TRACE_UTILS )
+   #if defined( HB_TRACE_LEVEL )
       #undef HB_TRACE_LEVEL
    #endif
 #endif

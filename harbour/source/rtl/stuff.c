@@ -91,4 +91,3 @@ HB_FUNC( STUFF )
    else
       hb_retc_null();
 }
-

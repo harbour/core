@@ -94,7 +94,7 @@
 #  include <wincon.h>
 #endif
 
-#if defined( _MSC_VER ) || defined(__WATCOMC__)
+#if defined( _MSC_VER ) || defined( __WATCOMC__ )
 #  include <conio.h>
 #endif
 
@@ -109,11 +109,11 @@ static BOOL b_MouseEnable = TRUE;
 
 /* *********************************************************************** */
 
-#if defined(__IBMCPP__)
+#if defined( __IBMCPP__ )
    #undef WORD                            /* 2 bytes unsigned */
    typedef unsigned short int WORD;
 #else
-   #if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
+   #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
       #undef WORD                            /* 2 bytes unsigned */
       typedef USHORT WORD;
 
@@ -122,11 +122,11 @@ static BOOL b_MouseEnable = TRUE;
    #endif
 #endif
 
-#if ! defined(__GNUC__) && defined(__CYGWIN__)
+#if ! defined( __GNUC__ ) && defined( __CYGWIN__ )
    typedef WORD far * LPWORD;
 #endif
 
-#if defined(__RSXNT__)
+#if defined( __RSXNT__ )
    #ifndef FROM_LEFT_1ST_BUTTON_PRESSED
       #define FROM_LEFT_1ST_BUTTON_PRESSED    0x0001
    #endif

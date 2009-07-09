@@ -80,23 +80,23 @@
  *     FT_DATECNFG() FT_ACCTWEEK() FT_ACCTQTR() FT_ACCTYEAR()
  *  $END$
 */
- 
+
 FUNCTION FT_ACCTMONTH(dGivenDate,nMonthNum)
   LOCAL nYTemp, nMTemp, lIsMonth, aRetVal
- 
+
   IF ! ( VALTYPE(dGivenDate) $ 'ND' )
     dGivenDate := DATE()
   ELSEIF VALTYPE(dGivenDate) == 'N'
     nMonthNum := dGivenDate
     dGivenDate := DATE()
   ENDIF
- 
+
   aRetVal := FT_MONTH(dGivenDate)
   nYTemp := VAL(SUBSTR(aRetVal[1],1,4))
   nMTemp := VAL(SUBSTR(aRetVal[1],5,2))
   aRetVal[2] := FT_ACCTADJ(aRetVal[2])
   aRetVal[3] := FT_ACCTADJ(aRetVal[3], .T. )
- 
+
   IF dGivenDate < aRetVal[2]
     dGivenDate := FT_MADD(dGivenDate, -1)
     aRetVal    := FT_MONTH(dGivenDate)
@@ -107,9 +107,9 @@ FUNCTION FT_ACCTMONTH(dGivenDate,nMonthNum)
     ENDIF
     aRetVal[2] := FT_ACCTADJ(aRetVal[2])
     aRetVal[3] := FT_ACCTADJ(aRetVal[3], .T. )
- 
+
   ELSEIF dGivenDate > aRetVal[3]
- 
+
     dGivenDate := FT_MADD(dGivenDate, 1)
     aRetVal    := FT_MONTH(dGivenDate)
     nMTemp     += 1
@@ -119,9 +119,9 @@ FUNCTION FT_ACCTMONTH(dGivenDate,nMonthNum)
     ENDIF
     aRetVal[2] := FT_ACCTADJ(aRetVal[2])
     aRetVal[3] := FT_ACCTADJ(aRetVal[3], .T. )
- 
+
   ENDIF
- 
+
   lIsMonth := ( VALTYPE(nMonthNum) == 'N' )
   IF lIsMonth
     IF nMonthNum < 1 .OR. nMonthNum > 12
@@ -133,7 +133,7 @@ FUNCTION FT_ACCTMONTH(dGivenDate,nMonthNum)
     aRetVal[2] := FT_ACCTADJ(aRetVal[2])
     aRetVal[3] := FT_ACCTADJ(aRetVal[3], .T. )
   ENDIF
- 
+
   aRetVal[1] := STR(nYTemp,4) + PADL(LTRIM(STR(nMTemp,2)), 2, '0')
- 
+
 RETURN aRetVal

@@ -109,7 +109,7 @@
 
 /*----------------------------------------------------------------------*/
 
-#if defined(__BORLANDC__) && !defined(HB_ARCH_64BIT)
+#if defined( __BORLANDC__ ) && !defined( HB_ARCH_64BIT )
     #undef MAKELONG
     #define MAKELONG(a,b) ((LONG)(((WORD)((DWORD_PTR)(a) & 0xffff)) | \
                           (((DWORD)((WORD)((DWORD_PTR)(b) & 0xffff))) << 16)))
@@ -916,7 +916,7 @@ HB_FUNC( WVG_SETWNDPROC )
    WNDPROC wndProc = ( WNDPROC ) ( HB_PTRDIFF ) hb_parnint( 2 );
    WNDPROC oldProc;
 
-#if ( defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
+#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
    oldProc = ( WNDPROC ) SetWindowLong( hWnd, GWL_WNDPROC, ( long ) wndProc );
 #else
    oldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( HB_PTRDIFF ) wndProc );

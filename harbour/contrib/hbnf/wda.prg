@@ -81,5 +81,3 @@ FUNCTION ft_addWkDy( dStart, nDys )
             (nDys+nDc-2)  % 5 + 7 * int( (nDys+nDc-2)  / 5 ) + 2  - nDc   ;
                 )                                                                   ;
             )
-
-

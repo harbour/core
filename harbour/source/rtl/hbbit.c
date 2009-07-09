@@ -54,9 +54,9 @@
 #include "hbapierr.h"
 
 /* NOTE: IMPORTANT:
-         hb_bit*() Harbour level function names and logic are embedded 
-         in the compiler optimization engine, so in any case these 
-         function have to be changed, updated or extended, don't forget 
+         hb_bit*() Harbour level function names and logic are embedded
+         in the compiler optimization engine, so in any case these
+         function have to be changed, updated or extended, don't forget
          to update the references in the compiler as well.
          [vszakats] */
 

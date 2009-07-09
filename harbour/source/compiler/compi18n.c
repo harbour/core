@@ -121,7 +121,7 @@ static PHB_I18NSTRING hb_compI18nAddSingle( HB_COMP_DECL, const char* szText, co
       if( pI18n->pString )
       {
          pI18n->uiAllocated += 32;
-         pI18n->pString = ( PHB_I18NSTRING ) hb_xrealloc( pI18n->pString, sizeof( HB_I18NSTRING ) 
+         pI18n->pString = ( PHB_I18NSTRING ) hb_xrealloc( pI18n->pString, sizeof( HB_I18NSTRING )
                                                                           * pI18n->uiAllocated );
       }
       else
@@ -284,7 +284,7 @@ BOOL hb_compI18nSave( HB_COMP_DECL, BOOL fFinal )
    char             szFileName[ HB_PATH_MAX ];
    char*            szText;
    UINT             uiIndex, uiLine;
-   FILE*            file; 
+   FILE*            file;
 
    pI18n = HB_COMP_PARAM->pI18n;
    if( !pI18n )

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * 
+ *
  *
  * www - http://www.harbour-project.org
  *

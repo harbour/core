@@ -56,7 +56,7 @@
 #include "hbwapi.h"
 #include <commctrl.h>
 
-#if defined(__BORLANDC__) && !defined(HB_ARCH_64BIT)
+#if defined( __BORLANDC__ ) && !defined( HB_ARCH_64BIT )
     #undef MAKELONG
     #define MAKELONG(a,b) ((LONG)(((WORD)((DWORD_PTR)(a) & 0xffff)) | \
                           (((DWORD)((WORD)((DWORD_PTR)(b) & 0xffff))) << 16)))
@@ -659,7 +659,7 @@ HB_FUNC( WAPI_TABCTRL_SETPADDING )
 
 HB_FUNC( WAPI_TABCTRL_GETTOOLTIPS )
 {
-#if ! defined(HB_OS_WIN_CE)
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_GetToolTips( wapi_par_HWND( 1 ) ) );
 #else
    wapi_ret_NINT( -1 );
@@ -671,7 +671,7 @@ HB_FUNC( WAPI_TABCTRL_GETTOOLTIPS )
 
 HB_FUNC( WAPI_TABCTRL_SETTOOLTIPS )
 {
-#if ! defined(HB_OS_WIN_CE)
+#if ! defined( HB_OS_WIN_CE )
    TabCtrl_SetToolTips( wapi_par_HWND( 1 ), wapi_par_HWND( 2 ) );
 #endif
 }
@@ -742,7 +742,7 @@ HB_FUNC( WAPI_TABCTRL_GETEXTENDEDSTYLE )
 
 HB_FUNC( WAPI_TABCTRL_SETUNICODEFORMAT )
 {
-#if ! defined(HB_OS_WIN_CE)
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_L( TabCtrl_SetUnicodeFormat( wapi_par_HWND( 1 ), wapi_par_BOOL( 2 ) ) );
 #else
    wapi_ret_L( FALSE );
@@ -754,7 +754,7 @@ HB_FUNC( WAPI_TABCTRL_SETUNICODEFORMAT )
 
 HB_FUNC( WAPI_TABCTRL_GETUNICODEFORMAT )
 {
-#if ! defined(HB_OS_WIN_CE)
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_L( TabCtrl_GetUnicodeFormat( wapi_par_HWND( 1 ) ) );
 #else
    wapi_ret_L( FALSE );

@@ -70,7 +70,7 @@
 #include "hbapifs.h"
 #include "ctstrfil.h"
 
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
 
 #   include <windows.h>
 #   include <winbase.h>
@@ -78,7 +78,7 @@
 
 #   define HB_OS_WIN_USED
 
-#elif defined(HB_OS_DOS)
+#elif defined( HB_OS_DOS )
 
 #   include <dos.h>
 
@@ -121,7 +121,7 @@ HB_FUNC( DIRNAME )
 
 HB_FUNC( DRIVETYPE )
 {
-#if defined(HB_OS_WIN) && ! defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    ULONG ulSize = hb_parclen( 1 ) + 2;  /* allow space for '\0' & ":\" */
    char *pszDrive = ( char * ) hb_xgrab( ulSize + 1 );
    LPTSTR lpDrive;
@@ -246,7 +246,7 @@ HB_FUNC( VOLUME )
          if( pszFree )
             hb_xfree( pszFree );
       }
-#if defined(HB_OS_WIN) && ! defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
       {
          LPTSTR lpRoot, lpVolName;
          lpRoot = sRoot ? HB_TCHAR_CONVTO( sRoot ) : NULL;
@@ -270,7 +270,7 @@ HB_FUNC( VOLUME )
  */
 HB_FUNC( GETVOLINFO )
 {
-#if defined(HB_OS_WIN) && ! defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    int iretval;
    const char *sDrive = hb_parcx( 1 );
    TCHAR lpVolName[256];
@@ -307,7 +307,7 @@ HB_FUNC( GETVOLINFO )
 
 HB_FUNC( VOLSERIAL )
 {
-#if defined(HB_OS_WIN) && ! defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    int retval;
    const char *sDrive = hb_parcx( 1 );
    LPTSTR lpDrive;
@@ -338,7 +338,7 @@ HB_FUNC( TRUENAME )
 
    if( szFile )
    {
-#if defined(HB_OS_WIN) && ! defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
       char *szBuffRet;
       TCHAR buffer[MAX_PATH + 1] = { 0 };
       LPTSTR lpFile;

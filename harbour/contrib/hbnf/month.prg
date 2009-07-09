@@ -113,4 +113,3 @@ LOCAL lIsMonth, nTemp, aRetVal
   aRetVal[3] := FT_MADD( aRetVal[2], 1 ) - 1
 
 RETURN aRetVal
-

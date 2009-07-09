@@ -2097,7 +2097,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             hb_itemPutNLLen( pItem, ( LONG ) lVal, 11 );
          break;
       }
-#if ADS_LIB_VERSION >= 700 && !defined(HB_LONG_LONG_OFF)
+#if ADS_LIB_VERSION >= 700 && !defined( HB_LONG_LONG_OFF )
       case HB_FT_AUTOINC:
       {
          SIGNED64 qVal = 0;

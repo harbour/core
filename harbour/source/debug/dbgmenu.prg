@@ -129,21 +129,21 @@ FUNCTION __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
          MENUITEM " pri~Vate " IDENT "PRIVATE" ;
             ACTION oDebugger:Private() ;
             CHECKED oDebugger:lShowPrivates
-            
+
          MENUITEM " ~Static" IDENT "STATIC" ;
             ACTION oDebugger:Static() ;
             CHECKED oDebugger:lShowStatics
-           
+
          MENUITEM " ~Local" IDENT "LOCAL" ;
             ACTION oDebugger:Local() ;
             CHECKED oDebugger:lShowLocals
-            
+
          MENUITEM " ~Global" IDENT "GLOBAL" ;
             ACTION oDebugger:Global() ;
             CHECKED oDebugger:lShowGlobals
 
          SEPARATOR
-         
+
          MENUITEM " ~All" IDENT "ALL" ;
             ACTION oDebugger:All() ;
             CHECKED oDebugger:lAll

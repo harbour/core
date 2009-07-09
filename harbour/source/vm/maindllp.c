@@ -67,7 +67,7 @@
 #elif defined( __BORLANDC__ )
    #define HB_DLL_NAME2   TEXT( "harbour-20-bcc.dll" )
    #define HB_DLL_NAMEMT2 TEXT( "harbourmt-20-bcc.dll" )
-#elif (defined( _MSC_VER ) && defined( _M_X64 )) || defined(__MINGW64__)
+#elif ( defined( _MSC_VER ) && defined( _M_X64 ) ) || defined( __MINGW64__ )
    #define HB_DLL_NAME2   TEXT( "harbour-20-x64.dll" )
    #define HB_DLL_NAMEMT2 TEXT( "harbourmt-20-x64.dll" )
 #elif defined( _MSC_VER ) && defined( _M_IA64 )
@@ -84,10 +84,10 @@
    #define HBTEXT( x ) x
 #endif
 
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
 HB_EXTERN_BEGIN
 
-#if defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN_CE )
 static FARPROC hb_getProcAddress( LPCTSTR szProcName )
 #else
 static FARPROC hb_getProcAddress( LPCSTR szProcName )

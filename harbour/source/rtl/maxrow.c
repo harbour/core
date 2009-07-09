@@ -53,15 +53,15 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-/* NOTE: This is a hack to emulate the overloaded MaxRow()/MaxCol() 
-         functions provided by CT3 library for CA-Cl*pper. 
-         Application code is encouraged to rather use the 
-         hbct_MaxRow(.T.)/hbct_MaxCol(.T.) functions provided by 
-         Harbour CT library, or hb_ScrMaxRow()/hb_ScrMaxCol() 
-         provided by Harbour RTL, since this extension may 
-         collide in the future with extensions of other overloaded 
-         versions (like the one of FlagShip), and it's currently 
-         (2008 May) the only known non-standard extension slipped 
+/* NOTE: This is a hack to emulate the overloaded MaxRow()/MaxCol()
+         functions provided by CT3 library for CA-Cl*pper.
+         Application code is encouraged to rather use the
+         hbct_MaxRow(.T.)/hbct_MaxCol(.T.) functions provided by
+         Harbour CT library, or hb_ScrMaxRow()/hb_ScrMaxCol()
+         provided by Harbour RTL, since this extension may
+         collide in the future with extensions of other overloaded
+         versions (like the one of FlagShip), and it's currently
+         (2008 May) the only known non-standard extension slipped
          into Harbour core. [vszakats] */
 #define HB_COMPAT_CT3
 

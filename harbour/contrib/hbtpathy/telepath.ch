@@ -111,7 +111,7 @@
 #define TXS_WEND           9               // Waiting for end of file
 #define TXS_EFILE          10              // End of file
 #define TXS_END            11              // End of transfer
-                           
+
 #define TP_32MAGIC         558161692
 
 //  Handshaking flags for tp_hshk()

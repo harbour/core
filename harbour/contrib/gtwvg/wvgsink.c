@@ -63,7 +63,7 @@
 
 /*----------------------------------------------------------------------*/
 
-#if defined(__BORLANDC__) && !defined(HB_ARCH_64BIT)
+#if defined( __BORLANDC__ ) && !defined( HB_ARCH_64BIT )
     #undef MAKELONG
     #define MAKELONG(a,b) ((LONG)(((WORD)((DWORD_PTR)(a) & 0xffff)) | \
                           (((DWORD)((WORD)((DWORD_PTR)(b) & 0xffff))) << 16)))

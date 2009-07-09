@@ -70,10 +70,10 @@ static sbInitialized := .F.
  *  $RETURNS$
  *      lInitialized     .T. if the function has been correctly initialized
  *  $DESCRIPTION$
- *      The CTINIT() function initializes the CT3 library. 
+ *      The CTINIT() function initializes the CT3 library.
  *      Identical code is declared as INIT FUNCTION, thus should be executed
- *      automatically at the beginning of the application, but it is a good 
- *      idea to call it once again explicitly somewhere at the beginning of 
+ *      automatically at the beginning of the application, but it is a good
+ *      idea to call it once again explicitly somewhere at the beginning of
  *      your program to check the initialization.
  *  $EXAMPLES$
  *  $TESTS$
@@ -120,10 +120,10 @@ return sbInitialized
  *  $RETURNS$
  *      nil
  *  $DESCRIPTION$
- *      The CTEXIT() function uninitializes the CT3 library. 
- *      Identical code is declared as EXIT FUNCTION, thus should be executed 
- *      automatically at the end of the application, but it is a good idea 
- *      to call it explicitly somewhere at the end of your program to make 
+ *      The CTEXIT() function uninitializes the CT3 library.
+ *      Identical code is declared as EXIT FUNCTION, thus should be executed
+ *      automatically at the end of the application, but it is a good idea
+ *      to call it explicitly somewhere at the end of your program to make
  *      sure that the deinitialization takes place.
  *  $EXAMPLES$
  *  $TESTS$

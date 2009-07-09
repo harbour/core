@@ -81,7 +81,7 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
    /* NOTE: In DJGPP (4.2.3) hb_snprintf() will be preprocessed to sprintf(), which
             makes ulMaxBuf unused, and this in turn causes a warning, so we're
             manually suppressing it. [vszakats] */
-   #if defined(__DJGPP__)
+   #if defined( __DJGPP__ )
       HB_SYMBOL_UNUSED( ulMaxBuf );
    #endif
 

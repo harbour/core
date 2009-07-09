@@ -63,7 +63,7 @@
 #include "hbapi.h"
 #include "hbdate.h"
 
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
 
 void hb_mbtowccpy( wchar_t *dstW, const char *srcA, ULONG ulLen )
 {
@@ -128,7 +128,7 @@ void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen )
    WideCharToMultiByte( CP_ACP, 0, srcW, ulLen, dstA, ulLen, NULL, NULL );
 }
 
-#if defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN_CE )
 
 int remove( const char *filename )
 {
@@ -721,7 +721,7 @@ HLOCAL WINAPI LocalHandle( LPCVOID p )
 
 #endif /* !_MSC_VER || __POCC__ || __XCC__ */
 
-#if defined(__MINGW32CE__)
+#if defined( __MINGW32CE__ )
 int WINAPI MulDiv( int nNumber, int nNumerator, int nDenominator )
 {
    if( nDenominator )
@@ -775,7 +775,7 @@ BOOL WINAPI FloodFill( HDC h, int x, int y, COLORREF c )
  * functions which were overloaded but are not longer necessary
  */
 #if 0
-#if defined(__MINGW32CE__)
+#if defined( __MINGW32CE__ )
 
 int access( const char *filename, int mode )
 {

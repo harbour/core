@@ -65,8 +65,8 @@ HB_FUNC( FSETDEVMOD )
       hb_fsSetDevMode( hb_numToHandle( hb_parnint( 1 ) ), ( USHORT ) hb_parni( 2 ) );
       hb_fsSetFError( hb_fsError() );
    }
-   /* NOTE: INCOMPATIBILITY! C53 will return the device flags 
-            before applying the new setting, Harbour will 
+   /* NOTE: INCOMPATIBILITY! C53 will return the device flags
+            before applying the new setting, Harbour will
             always return 0. [vszakats] */
    hb_retni( 0 );
 }

@@ -53,16 +53,16 @@
 #ifndef HB__IO_H_
 #define HB__IO_H_
 
-#if defined(HB_OS_UNIX_COMPATIBLE) || \
-    ( defined(__GNUC__) && ! defined(__MINGW32__) )
+#if defined( HB_OS_UNIX_COMPATIBLE ) || \
+    ( defined( __GNUC__ ) && ! defined( __MINGW32__ ) )
    #include <unistd.h>
-   #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(__EMX__)
+   #if defined( __DJGPP__ ) || defined( __CYGWIN__ ) || defined( __EMX__ )
       #include <io.h>
    #endif
-#elif !defined(HB_OS_WIN_CE)
+#elif !defined( HB_OS_WIN_CE )
    #include <io.h>
 #endif
-#if defined(HB_OS_DOS) && !defined(__RSX32__)
+#if defined( HB_OS_DOS ) && !defined( __RSX32__ )
    #include <dos.h>
 #endif
 

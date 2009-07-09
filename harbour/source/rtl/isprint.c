@@ -57,7 +57,7 @@ BOOL hb_printerIsReady( const char * pszPrinterName )
 {
    BOOL bIsPrinter;
 
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
 
    /* NOTE: DOS specific solution, using BIOS interrupt */
 
@@ -95,7 +95,7 @@ BOOL hb_printerIsReady( const char * pszPrinterName )
          bIsPrinter = FALSE;
    }
 
-#elif defined(HB_OS_WIN)
+#elif defined( HB_OS_WIN )
 
    /* NOTE: Platform independent method, at least it will compile and run
             on any platform, but the result may not be the expected one,

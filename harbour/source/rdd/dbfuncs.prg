@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * DataBase Function Mapped to 10 Characters length 
+ * DataBase Function Mapped to 10 Characters length
  *
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -97,8 +97,8 @@ FUNCTION __dbCopySt( cFileName, aFieldList )
 FUNCTION __dbCopyXS( cFileName )
    RETURN __dbCopyXStruct( cFileName )
 
-/* ; NOTE: The created table will be kept open if lOpenMode parameter 
-           is of logical type. If .T. it will be opened in a new workarea, 
+/* ; NOTE: The created table will be kept open if lOpenMode parameter
+           is of logical type. If .T. it will be opened in a new workarea,
            if .F. it will be opened in the current one. */
 /* ; NOTE: Has an identical parameter list with dbCreate() */
 

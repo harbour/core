@@ -96,7 +96,7 @@ HB_FUNC( HB_DISKSPACE )
       szPath = szPathBuf;
    }
 
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
    {
       USHORT uiDrive = szPath[ 1 ] != HB_OS_DRIVE_DELIM_CHR ? 0 :
                        ( szPath[ 0 ] >= 'A' && szPath[ 0 ] <= 'Z' ?
@@ -148,10 +148,10 @@ HB_FUNC( HB_DISKSPACE )
          break;
       }
    }
-#elif defined(HB_OS_WIN)
+#elif defined( HB_OS_WIN )
    {
-#if defined(_MSC_VER) || defined(__LCC__) || \
-    ( defined(__GNUC__) && !defined(__RSXNT__) )
+#if defined( _MSC_VER ) || defined( __LCC__ ) || \
+    ( defined( __GNUC__ ) && !defined( __RSXNT__ ) )
 
 #  define HB_GET_LARGE_UINT( v )  ( ( double ) (v).LowPart + \
                                     ( double ) (v).HighPart * \
@@ -175,7 +175,7 @@ HB_FUNC( HB_DISKSPACE )
          UINT uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
          BOOL fResult;
 
-#if defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN_CE )
          LPTSTR lpPath = HB_TCHAR_CONVTO( szPath );
 
          fResult = GetDiskFreeSpaceEx( lpPath,
@@ -283,7 +283,7 @@ HB_FUNC( HB_DISKSPACE )
          break;
       }
    }
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
    {
       struct _FSALLOCATE fsa;
       USHORT rc;
@@ -328,9 +328,9 @@ HB_FUNC( HB_DISKSPACE )
       else
          hb_fsSetIOError( FALSE, 0 );
    }
-#elif defined(HB_OS_UNIX) && !( defined(__WATCOMC__) || defined(__CEGCC__) )
+#elif defined( HB_OS_UNIX ) && !( defined( __WATCOMC__ ) || defined( __CEGCC__ ) )
    {
-#if defined(HB_OS_DARWIN)
+#if defined( HB_OS_DARWIN )
       struct statfs sf;
 #else
       struct statvfs sf;
@@ -339,7 +339,7 @@ HB_FUNC( HB_DISKSPACE )
 
       szPath = hb_fsNameConv( szPath, &pszFree );
 
-#if defined(HB_OS_DARWIN)
+#if defined( HB_OS_DARWIN )
       if( statfs( szPath, &sf ) == 0 )
 #else
       if( statvfs( szPath, &sf ) == 0 )

@@ -80,20 +80,20 @@
  *     FT_DATECNFG() FT_ACCTMONTH() FT_ACCTQTR() FT_ACCTYEAR()
  *  $END$
 */
- 
+
 FUNCTION FT_ACCTWEEK(dGivenDate,nWeekNum)
- 
+
   LOCAL nTemp, lIsWeek, aRetVal
- 
+
   IF ! VALTYPE(dGivenDate) $ 'ND'
      dGivenDate := DATE()
   ELSEIF VALTYPE(dGivenDate) == 'N'
      nWeekNum := dGivenDate
      dGivenDate := DATE()
   ENDIF
- 
+
   aRetVal := FT_ACCTYEAR(dGivenDate)
- 
+
   lIsWeek := ( VALTYPE(nWeekNum) == 'N' )
   IF lIsWeek
      nTemp      := INT( (aRetVal[3] - aRetVal[2]) / 7 ) + 1
@@ -102,12 +102,11 @@ FUNCTION FT_ACCTWEEK(dGivenDate,nWeekNum)
      ENDIF
      dGivenDate := aRetVal[2] + (nWeekNum - 1) * 7
   ENDIF
- 
+
   aRetVal[1] += PADL(LTRIM(STR(INT( (dGivenDate - ;
                 aRetVal[2]) / 7 ) + 1, 2)), 2, '0')
   dGivenDate += ( 6 - FT_DAYTOBOW(dGivenDate) )  // end of week
   aRetVal[2] := dGivenDate - 6
   aRetVal[3] := dGivenDate
- 
-RETURN aRetVal
 
+RETURN aRetVal

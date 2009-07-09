@@ -411,7 +411,7 @@ PROCEDURE Main_MISC()
 
 #ifdef __HARBOUR__
    #ifndef HB_C52_UNDOC
-      /* NOTE: Use the identical internal versions if Harbour 
+      /* NOTE: Use the identical internal versions if Harbour
                was compiled without C5.x undocumented features.
                [vszakats] */
       #xtranslate NationMsg([<x,...>])  => __NatMsg(<x>)

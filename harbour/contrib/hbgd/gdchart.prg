@@ -932,4 +932,3 @@ STATIC FUNCTION HGetValue( hHash, cKey )
      xVal := IIF( ( nPos := HB_HPos( hHash, cKey )) == 0, NIL, HB_HValueAt( hHash, nPos) )
   ENDIF
 RETURN xVal
-

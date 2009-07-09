@@ -94,7 +94,7 @@ HB_FUNC( PRINTSTAT )
    USHORT uiPort = HB_ISNUM( 1 ) ? ( USHORT ) hb_parni( 1 ) : 1;
    int Status = 0;
 
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
 
    /* NOTE: DOS specific solution, using BIOS interrupt */
 
@@ -145,7 +145,7 @@ HB_FUNC( PRINTREADY )
    USHORT uiPort = HB_ISNUM( 1 ) ? ( USHORT ) hb_parni( 1 ) : 1;
    int Status = 0;
 
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
 
    /* NOTE: DOS specific solution, using BIOS interrupt */
 

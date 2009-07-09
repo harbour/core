@@ -52,7 +52,7 @@
 
 #include "dbstruct.ch"
 
-/* NOTE: Compared to CA-Cl*pper, Harbour has three extra parameters 
+/* NOTE: Compared to CA-Cl*pper, Harbour has three extra parameters
          (cRDD, nConnection, cCodePage). */
 
 FUNCTION __dbJoin( cAlias, cFile, aFields, bFor, cRDD, nConnection, cCodePage )
@@ -69,13 +69,13 @@ FUNCTION __dbJoin( cAlias, cFile, aFields, bFor, cRDD, nConnection, cCodePage )
    IF Empty( aStruct := __FieldTwo( cAlias, aFields ) )
       RETURN .F.
    ENDIF
-   
+
    BEGIN SEQUENCE
 
       dbCreate( cFile, aStruct, cRDD, .T., "", NIL, cCodePage, nConnection )
       nResult := Select()
       aJoinList := __JoinList( nMaster, nDetail, nResult, aStruct )
-   
+
       dbSelectArea( nMaster )
       dbGoTop()
       DO WHILE !Eof()
@@ -100,7 +100,7 @@ FUNCTION __dbJoin( cAlias, cFile, aFields, bFor, cRDD, nConnection, cCodePage )
    RECOVER USING oError
       lError := .T.
    END SEQUENCE
-   
+
    IF nResult != NIL
       dbSelectArea( nResult )
       dbCloseArea()
@@ -158,7 +158,7 @@ STATIC FUNCTION __JoinList( nMaster, nDetail, nResult, aStruct )
 
 STATIC PROCEDURE __doJoinList( aList )
    LOCAL aJoin
-   
+
    IF Len( aList ) > 0
 
       ( aList[ 1 ][ 1 ] )->( dbAppend() )

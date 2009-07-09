@@ -111,9 +111,9 @@
 #define CT_ERROR_GETREAD_RANGEL    8900 /* get & read functions */
 #define CT_ERROR_GETREAD_RANGEH    9099
 
-/*             
- * function error sub codes 
- * 
+/*
+ * function error sub codes
+ *
  * The sub code simply defines the function that throws the error.
  * The last digit stands for the type of the return value of the function:
  *
@@ -160,7 +160,7 @@
 #define CT_ERROR_WSETMOVE        1404
 #define CT_ERROR_WSETSHADOW      1412
 #define CT_ERROR_WSTEP           1422
-                                    
+
 /* extended driver */
 #define CT_ERROR_CGA40           1614
 #define CT_ERROR_CGA80           1624
@@ -228,7 +228,7 @@
 #define CT_ERROR_COM_FLUSH       2524
 #define CT_ERROR_COM_GETIO       2532
 #define CT_ERROR_COM_GETIRQ      2542
-#define CT_ERROR_COM_HARD        2554     
+#define CT_ERROR_COM_HARD        2554
 #define CT_ERROR_COM_INIT        2564
 #define CT_ERROR_COM_KEY         2574
 #define CT_ERROR_COM_LSR         2582
@@ -247,13 +247,13 @@
 #define CT_ERROR_COM_SFLUSH      2714
 #define CT_ERROR_COM_SKEY        2724
 #define CT_ERROR_COM_SMODE       2732
-#define CT_ERROR_COM_SOFT        2744     
+#define CT_ERROR_COM_SOFT        2744
 #define CT_ERROR_COM_SOFT_R      2754
 #define CT_ERROR_COM_SOFT_S      2764
-#define CT_ERROR_XMOBLOCK        2771     
-#define CT_ERROR_XMOCHECK        2782     
-#define CT_ERROR_ZEROINSERT      2791     
-#define CT_ERROR_ZEROREMOVE      2801     
+#define CT_ERROR_XMOBLOCK        2771
+#define CT_ERROR_XMOCHECK        2782
+#define CT_ERROR_ZEROINSERT      2791
+#define CT_ERROR_ZEROREMOVE      2801
 
 /* string functions */
 #define CT_ERROR_ADDASCII        3111
@@ -353,7 +353,7 @@
 #define CT_ERROR_WORDREPL        4051
 #define CT_ERROR_WORDSWAP        4061
 #define CT_ERROR_WORDTOCHAR      4071
-                                 
+
 /* number and bit manipulation */
 #define CT_ERROR_BITTOC          4511
 #define CT_ERROR_CELSIUS         4523
@@ -389,7 +389,7 @@
 #define CT_ERROR_NUMORX          4822
 #define CT_ERROR_NUMROLX         4832
 #define CT_ERROR_NUMXORX         4842
-                                    
+
 /* video functions */
 #define CT_ERROR_CHARPIX         5012
 #define CT_ERROR_CHARWIN         5021
@@ -451,7 +451,7 @@
 #define CT_ERROR_VIDEOINIT       5589
 #define CT_ERROR_VIDEOSETUP      5592
 #define CT_ERROR_VIDEOTYPE       5602
-                                   
+
 /* disc functions */
 #define CT_ERROR_DELETEFILE      5712
 #define CT_ERROR_DIRCHANGE       5722
@@ -503,12 +503,12 @@
 #define CT_ERROR_TRUENAME        6181
 #define CT_ERROR_VOLSERIAL       6192
 #define CT_ERROR_VOLUME          6204
-                                   
+
 /* printer functions */
-#define CT_ERROR_NUMPRINTER      6412                
-#define CT_ERROR_PRINTFILE       6424                
-#define CT_ERROR_PRINTINIT       6432                
-#define CT_ERROR_PRINTREADY      6444                
+#define CT_ERROR_NUMPRINTER      6412
+#define CT_ERROR_PRINTFILE       6424
+#define CT_ERROR_PRINTINIT       6432
+#define CT_ERROR_PRINTREADY      6444
 #define CT_ERROR_PRINTSCR        6451
 #define CT_ERROR_PRINTSCRX       6464
 #define CT_ERROR_PRINTSEND       6472
@@ -604,7 +604,7 @@
 #define CT_ERROR_LASTKPROC       7720
 #define CT_ERROR_NUMFKEY         7730
 #define CT_ERROR_SETLASTKEY      7740
-                                    
+
 /* system info functions */
 #define CT_ERROR_BIOSDATE        7810    /* TODO: change last digit */
 #define CT_ERROR_BOOTCOLD        7820
@@ -630,7 +630,7 @@
 #define CT_ERROR_PCTYPE          8020
 #define CT_ERROR_SSETBREAK       8030
 #define CT_ERROR_SSETVERIFY      8040
-                                    
+
 /* 3.3 misc. functions */
 #define CT_ERROR_ALLOFREE        8110  /* TODO: change last digit */
 #define CT_ERROR_BLANK           8120
@@ -654,7 +654,7 @@
 #define CT_ERROR_STACKFREE       8300
 #define CT_ERROR_TOOLVER         8310
 #define CT_ERROR_XTOC            8320
-                                   
+
 /* math functions */
 #define CT_ERROR_ACOS            8413
 #define CT_ERROR_ASIN            8423
@@ -682,7 +682,7 @@
 #define CT_ERROR_SINH            8653
 #define CT_ERROR_COSH            8663
 #define CT_ERROR_TANH            8673
-                                   
+
 /* peek and poke functions */
 #define CT_ERROR_INBYTE          8810  /* TODO: change last digit */
 #define CT_ERROR_INWORD          8820

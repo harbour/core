@@ -214,6 +214,6 @@ HB_CALL_ON_STARTUP_END( hb_lang_Init_ZHGB )
       #pragma section( HB_MSC_START_SEGMENT, long, read )
    #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_lang_Init_ZHGB = hb_lang_Init_ZHGB;    
+   static HB_$INITSYM hb_vm_auto_hb_lang_Init_ZHGB = hb_lang_Init_ZHGB;
    #pragma data_seg()
 #endif

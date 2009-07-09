@@ -171,7 +171,7 @@ RETURN nNum
 STATIC FUNCTION B10TOBN( nNum, nBase )
 LOCAL nInt
 IF nNum > 0
-   
+
    nInt := INT( nNum / nBase)
    RETURN iif(nInt==0, "", B10TOBN( nInt, @nBase )) +;
           SUBSTR( WORLD, ( nNum % nBase ) + 1, 1 )
@@ -219,13 +219,13 @@ FUNCTION BITTOC( nInteger, cBitPattern, lMode )
   cBinary := NTOC( nInteger, 2, 16 )
 
   FOR nI := 1 TO 16
-     
+
      IF SUBSTR( cBinary, -nI, 1 ) == '1'
 
         cString := SUBSTR( cBitPattern, -nI, 1 ) + cString
 
      ELSEIF lMode
-           
+
         cString := ' ' + cString
 
      ENDIF

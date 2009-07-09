@@ -95,4 +95,3 @@ FUNCTION FT_YEAR(dGivenDate)
   SET(_SET_DATEFORMAT, cDateFormat)
 
 RETURN aRetVal
-

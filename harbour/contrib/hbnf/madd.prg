@@ -103,4 +103,3 @@ FUNCTION FT_MADD( dGivenDate, nAddMonths, lMakeEOM)
   ENDIF
 
 RETURN dTemp
-

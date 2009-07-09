@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * National Collation Support Module ( Turkish -- DOS )
  *
- * Copyright 2006 Bicahi Esgici <esgici@yahoo.com> 
+ * Copyright 2006 Bicahi Esgici <esgici@yahoo.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,13 +62,13 @@
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
                                        is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character 
+#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
                                        has the same weight as appropriate
                                        unaccented. */
 #define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
                                        sort after their unaccented counterparts
-                                       only if the unaccented versions of all 
-                                       characters being compared are the same 
+                                       only if the unaccented versions of all
+                                       characters being compared are the same
                                        ( interleaving ) */
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
@@ -84,8 +84,8 @@
 
 static HB_CODEPAGE s_codepage = { "TR857",
     HB_CPID_857,HB_UNITB_857,NUMBER_OF_CHARACTERS,
-    "A∂BCÄDE“FG¶HIò◊JKLMNO‚ôPRSûTUÍöVYZ", 
-    "aÉbcádeàfgßhçiåjklmnoìîprsütuñÅvyz", 
+    "A∂BCÄDE“FG¶HIò◊JKLMNO‚ôPRSûTUÍöVYZ",
+    "aÉbcádeàfgßhçiåjklmnoìîprsütuñÅvyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 HB_CODEPAGE_INIT( TR857 )

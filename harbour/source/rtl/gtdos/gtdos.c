@@ -107,29 +107,29 @@
  * add other compilers for which calling real mode
  * interrupts with memory pointer is implemented.
  */
-#if defined(__DJGPP__)
+#if defined( __DJGPP__ )
    #define HB_MOUSE_SAVE
 #endif
 
-#if defined(__DJGPP__)
+#if defined( __DJGPP__ )
    #include <pc.h>
    #include <sys/exceptn.h>
    #include <sys/farptr.h>
    #include <dpmi.h>
-#elif defined(_MSC_VER) || defined(__WATCOMC__)
+#elif defined( _MSC_VER ) || defined( __WATCOMC__ )
    #include <signal.h>
 #endif
 
 /* For screen support */
-#if defined(__POWERC) || (defined(__TURBOC__) && !defined(__BORLANDC__)) || (defined(__ZTC__) && !defined(__SC__))
+#if defined( __POWERC ) || ( defined( __TURBOC__ ) && !defined( __BORLANDC__ ) ) || ( defined( __ZTC__ ) && !defined( __SC__ ) )
    #define FAR far
-#elif defined(HB_OS_DOS) && !defined(__DJGPP__) && !defined(__RSX32__) && !defined(__WATCOMC__)
+#elif defined( HB_OS_DOS ) && !defined( __DJGPP__ ) && !defined( __RSX32__ ) && !defined( __WATCOMC__ )
    #define FAR _far
 #else
    #define FAR
 #endif
 
-#if !defined(__DJGPP__)
+#if !defined( __DJGPP__ )
    #ifndef MK_FP
       #define MK_FP( seg, off ) \
          ((void FAR *)(((unsigned long)(seg) << 16)|(unsigned)(off)))
@@ -137,10 +137,10 @@
    static unsigned char FAR * s_pScreenAddres;
 #endif
 
-#if defined(__WATCOMC__) && defined(__386__)
+#if defined( __WATCOMC__ ) && defined( __386__ )
    #define HB_PEEK_BYTE(s,o)     ( *( ( UCHAR * ) ( ( (s) << 4 ) | (o) ) ) )
    #define HB_POKE_BYTE(s,o,b)   *( ( UCHAR * ) ( ( (s) << 4 ) | (o) ) ) = (b)
-#elif defined(__DJGPP__)
+#elif defined( __DJGPP__ )
    #define HB_PEEK_BYTE(s,o)     _farpeekb( (s), (o) )
    #define HB_POKE_BYTE(s,o,b)   _farpokeb( (s), (o), (b) )
 #else
@@ -166,7 +166,7 @@ static BYTE s_charTransRev[ 256 ];
 static BYTE s_charTrans[ 256 ];
 static BYTE s_keyTrans[ 256 ];
 
-#if defined(__RSX32__)
+#if defined( __RSX32__ )
 static int kbhit( void )
 {
    union REGS regs;
@@ -178,8 +178,8 @@ static int kbhit( void )
 }
 #endif
 
-#if !defined(__DJGPP__) && !defined(__RSX32__)
-#if defined(__WATCOMC__) || defined(_MSC_VER)
+#if !defined( __DJGPP__ ) && !defined( __RSX32__ )
+#if defined( __WATCOMC__ ) || defined( _MSC_VER )
 static void hb_gt_dos_CtrlBreak_Handler( int iSignal )
 {
    /* Ctrl-Break was pressed */
@@ -202,9 +202,9 @@ static void hb_gt_dos_CtrlBrkRestore( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_CtrlBrkRestore()"));
 
-#if defined(__WATCOMC__)
+#if defined( __WATCOMC__ )
    signal( SIGBREAK, SIG_DFL );
-#elif defined(_MSC_VER)
+#elif defined( _MSC_VER )
    signal( SIGINT, SIG_DFL );
 #else
    setcbrk( s_iOldCtrlBreak );
@@ -216,9 +216,9 @@ static int hb_gt_dos_GetScreenMode( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_GetScreenMode()"));
 
-#if defined(__WATCOMC__) && defined(__386__)
+#if defined( __WATCOMC__ ) && defined( __386__ )
    return ( int ) *( ( unsigned char * ) 0x0449 );
-#elif defined(__DJGPP__)
+#elif defined( __DJGPP__ )
    return ( int ) _farpeekb( 0x0040, 0x0049 );
 #else
    return ( int ) *( ( unsigned char FAR * ) MK_FP( 0x0040, 0x0049 ) );
@@ -229,10 +229,10 @@ static void hb_gt_dos_GetScreenSize( int * piRows, int * piCols )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_GetScreenSize(%p, %p)", piRows, piCols));
 
-#if defined(__WATCOMC__) && defined(__386__)
+#if defined( __WATCOMC__ ) && defined( __386__ )
    *piRows = ( int ) *( ( unsigned char * ) 0x0484 ) + 1;
    *piCols = ( int ) *( ( unsigned char * ) 0x044A );
-#elif defined(__DJGPP__)
+#elif defined( __DJGPP__ )
    *piRows = ( int ) _farpeekb( 0x0040, 0x0084 ) + 1;
    *piCols = ( int ) _farpeekb( 0x0040, 0x004A );
 #else
@@ -241,14 +241,14 @@ static void hb_gt_dos_GetScreenSize( int * piRows, int * piCols )
 #endif
 }
 
-#if !defined(__DJGPP__)
+#if !defined( __DJGPP__ )
 static char FAR * hb_gt_dos_ScreenAddress( PHB_GT pGT )
 {
    char FAR * ptr;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_ScreenAddress(%p)", pGT));
 
-   #if defined(__WATCOMC__) && defined(__386__)
+   #if defined( __WATCOMC__ ) && defined( __386__ )
       if( HB_GTSELF_ISCOLOR( pGT ) )
          ptr = ( char * ) ( 0xB800 << 4 );
       else
@@ -275,7 +275,7 @@ static void hb_gt_dos_GetScreenContents( PHB_GT pGT )
 {
    int iRow, iCol;
    BYTE bAttr, bChar;
-#if !defined(__DJGPP__)
+#if !defined( __DJGPP__ )
    BYTE * pScreenPtr = s_pScreenAddres;
 #endif
 
@@ -285,12 +285,12 @@ static void hb_gt_dos_GetScreenContents( PHB_GT pGT )
    {
       for( iCol = 0; iCol < s_iCols; ++iCol )
       {
-#if defined(__DJGPP__TEXT)
+#if defined( __DJGPP__TEXT )
          short ch_attr;
          gettext( iCol + 1, iRow + 1, iCol + 1, iRow + 1, &ch_attr );
          bChar = ch_attr & 0xFF;
          bAttr = ch_attr >> 8;
-#elif defined(__DJGPP__)
+#elif defined( __DJGPP__ )
          int iChar, iAttr;
          ScreenGetChar( &iChar, &iAttr, iCol, iRow );
          bAttr = iAttr;
@@ -779,23 +779,23 @@ static void hb_gt_dos_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    /* Set the Ctrl+Break handler [vszakats] */
 
-#if defined(__DJGPP__)
+#if defined( __DJGPP__ )
 
    gppconio_init();
    __djgpp_hwint_flags |= 2;     /* Count Ctrl+Break instead of killing program */
    __djgpp_set_ctrl_c( 0 );      /* Disable Ctrl+C */
    __djgpp_set_sigquit_key( 0 ); /* Disable Ctrl+\ */
 
-#elif defined(__RSX32__)
+#elif defined( __RSX32__ )
 
    /* TODO */
 
-#elif defined(__WATCOMC__)
+#elif defined( __WATCOMC__ )
 
    signal( SIGBREAK, hb_gt_dos_CtrlBreak_Handler );
    atexit( hb_gt_dos_CtrlBrkRestore );
 
-#elif defined(_MSC_VER)
+#elif defined( _MSC_VER )
 
    signal( SIGINT, hb_gt_dos_CtrlBreak_Handler );
    atexit( hb_gt_dos_CtrlBrkRestore );
@@ -814,7 +814,7 @@ static void hb_gt_dos_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_GTSELF_SETKEYCP( pGT, NULL, NULL );
 
    s_iScreenMode = hb_gt_dos_GetScreenMode();
-#if !defined(__DJGPP__)
+#if !defined( __DJGPP__ )
    s_pScreenAddres = hb_gt_dos_ScreenAddress( pGT );
 #endif
    hb_gt_dos_GetScreenSize( &s_iRows, &s_iCols );
@@ -841,7 +841,7 @@ static int hb_gt_dos_ReadKey( PHB_GT pGT, int iEventMask )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_ReadKey(%p,%d)", pGT, iEventMask));
 
-#if defined(__DJGPP__)
+#if defined( __DJGPP__ )
    /* Check to see if Ctrl+Break has been detected */
    if( __djgpp_cbrk_count )
    {
@@ -860,7 +860,7 @@ static int hb_gt_dos_ReadKey( PHB_GT pGT, int iEventMask )
    else if( kbhit() )
    {
       /* A key code is available in the BIOS keyboard buffer, so read it */
-#if defined(__DJGPP__)
+#if defined( __DJGPP__ )
       if( iEventMask & INKEY_RAW ) ch = getxkey();
       else ch = getkey();
       if( ch == 256 )
@@ -914,9 +914,9 @@ static BOOL hb_gt_dos_GetBlink( PHB_GT pGT )
 
    HB_SYMBOL_UNUSED( pGT );
 
-#if defined(__WATCOMC__) && defined(__386__)
+#if defined( __WATCOMC__ ) && defined( __386__ )
    return ( *( ( char * ) 0x0465 ) & 0x10 ) != 0;
-#elif defined(__DJGPP__)
+#elif defined( __DJGPP__ )
    return ( _farpeekb( 0x0040, 0x0065 ) & 0x10 ) != 0;
 #else
    return ( *( ( char FAR * ) MK_FP( 0x0040, 0x0065 ) ) &0x10 ) != 0;
@@ -946,18 +946,18 @@ static void hb_gt_dos_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
    dFrequency = HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 );
 
-#if defined(__BORLANDC__) || defined(__WATCOMC__)
+#if defined( __BORLANDC__ ) || defined( __WATCOMC__ )
    sound( ( unsigned ) dFrequency );
-#elif defined(__DJGPP__)
+#elif defined( __DJGPP__ )
    sound( ( int ) dFrequency );
 #endif
 
    /* convert Clipper (DOS) timer tick units to seconds ( x / 18.2 ) */
    hb_idleSleep( dDuration / 18.2 );
 
-#if defined(__BORLANDC__) || defined(__WATCOMC__)
+#if defined( __BORLANDC__ ) || defined( __WATCOMC__ )
    nosound();
-#elif defined(__DJGPP__)
+#elif defined( __DJGPP__ )
    sound( 0 );
 #endif
 }
@@ -977,15 +977,15 @@ static const char * hb_gt_dos_Version( PHB_GT pGT, int iType )
 /* some definitions */
 #define INT_VIDEO    0x10
 
-#if defined(__DJGPP__)
+#if defined( __DJGPP__ )
    #define POKE_BYTE( s, o, b ) /* Do nothing */
    #define outport outportw     /* Use correct function name */
-#elif defined(__RSX32__)
+#elif defined( __RSX32__ )
    #define inportb( p ) 0       /* Return 0 */
    #define outport( p, w )      /* Do nothing */
    #define outportb( p, b )     /* Do nothing */
    #define POKE_BYTE( s, o, b )  (*((BYTE FAR *)MK_FP((s),(o)) )=(BYTE)(b))
-#elif defined(__WATCOMC__)
+#elif defined( __WATCOMC__ )
    #define outportb outp        /* Use correct function name */
    #define outport outpw        /* Use correct function name */
    #define inport inpw          /* Use correct function name */
@@ -1194,7 +1194,7 @@ static BOOL hb_gt_dos_SetMode( PHB_GT pGT, int iRows, int iCols )
       hb_gt_dos_GetScreenSize( &s_iRows, &s_iCols );
    }
    s_iScreenMode = hb_gt_dos_GetScreenMode();
-#if !defined(__DJGPP__)
+#if !defined( __DJGPP__ )
    s_pScreenAddres = hb_gt_dos_ScreenAddress( pGT );
 #endif
    hb_gt_dos_GetCursorPosition( &s_iCurRow, &s_iCurCol );
@@ -1224,7 +1224,7 @@ static BOOL hb_gt_dos_Resume( PHB_GT pGT )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_Resume(%p)", pGT));
 
    s_iScreenMode = hb_gt_dos_GetScreenMode();
-#if !defined(__DJGPP__)
+#if !defined( __DJGPP__ )
    s_pScreenAddres = hb_gt_dos_ScreenAddress( pGT );
 #endif
    hb_gt_dos_GetScreenSize( &s_iRows, &s_iCols );
@@ -1322,7 +1322,7 @@ static BOOL hb_gt_dos_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 
 static void hb_gt_dos_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-#if !defined(__DJGPP__)
+#if !defined( __DJGPP__ )
    USHORT FAR *pScreenPtr = (USHORT FAR *) hb_gt_dos_ScreenPtr( iRow, iCol );
 #endif
    BYTE bColor, bAttr;
@@ -1336,12 +1336,12 @@ static void hb_gt_dos_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
          break;
 
-#if defined(__DJGPP__TEXT)
+#if defined( __DJGPP__TEXT )
       {
          short ch_attr = ( ( short ) bColor << 8 ) | s_charTrans[ usChar & 0xff ];
          puttext( iCol + iLen + 1, iRow + 1, iCol + iLen  + 1, iRow + 1, &ch_attr );
       }
-#elif defined(__DJGPP__)
+#elif defined( __DJGPP__ )
       ScreenPutChar( s_charTrans[ usChar & 0xff ], bColor, iCol + iLen, iRow );
 #else
       *pScreenPtr++ = ( bColor << 8 ) + s_charTrans[ usChar & 0xff ];

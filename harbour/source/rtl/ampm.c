@@ -96,4 +96,3 @@ HB_FUNC( AMPM )
 
    hb_retclen_buffer( pszResult, ulTimeLen + 3 );
 }
-

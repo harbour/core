@@ -68,21 +68,21 @@
 
 /* ------------------------------------------------------------- */
 
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
 
-   #if defined(__DJGPP__) || defined(__RSX32__)
+   #if defined( __DJGPP__ ) || defined( __RSX32__ )
       #include <sys/param.h>
    #endif
-   #if defined(__DJGPP__) || defined(__RSX32__) || defined(__BORLANDC__)
+   #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __BORLANDC__ )
       #include <sys/stat.h>
    #endif
    #include <dos.h>
-#if !defined(__WATCOMC__)
+#if !defined( __WATCOMC__ )
    #include <dir.h>
 #endif
    #include <time.h>
 
-#if defined(__WATCOMC__)
+#if defined( __WATCOMC__ )
    typedef struct
    {
       struct find_t    entry;
@@ -105,7 +105,7 @@
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 #endif
 
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
 
    #include <sys/types.h>
    #include <sys/stat.h>
@@ -120,7 +120,7 @@
       ULONG           findCount;
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 
-#elif defined(HB_OS_WIN)
+#elif defined( HB_OS_WIN )
 
    typedef struct
    {
@@ -135,7 +135,7 @@
         ( ( info->dwAttr & info->pFindFileData.dwFileAttributes & ( FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM ) ) != 0 ) \
       )
 
-#elif defined(HB_OS_UNIX)
+#elif defined( HB_OS_UNIX )
 
    #include <sys/types.h>
    #include <sys/stat.h>
@@ -178,7 +178,7 @@ ULONG hb_fsAttrFromRaw( ULONG raw_attr )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrFromRaw(%lu)", raw_attr));
 
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
 
    ulAttr = 0;
    if( raw_attr & FA_ARCH )   ulAttr |= HB_FA_ARCHIVE;
@@ -188,7 +188,7 @@ ULONG hb_fsAttrFromRaw( ULONG raw_attr )
    if( raw_attr & FA_LABEL )  ulAttr |= HB_FA_LABEL;
    if( raw_attr & FA_SYSTEM ) ulAttr |= HB_FA_SYSTEM;
 
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
 
    ulAttr = 0;
    if( raw_attr & FILE_ARCHIVED )  ulAttr |= HB_FA_ARCHIVE;
@@ -197,7 +197,7 @@ ULONG hb_fsAttrFromRaw( ULONG raw_attr )
    if( raw_attr & FILE_READONLY )  ulAttr |= HB_FA_READONLY;
    if( raw_attr & FILE_SYSTEM )    ulAttr |= HB_FA_SYSTEM;
 
-#elif defined(HB_OS_WIN)
+#elif defined( HB_OS_WIN )
 
    ulAttr = 0;
    if( raw_attr & FILE_ATTRIBUTE_ARCHIVE )   ulAttr |= HB_FA_ARCHIVE;
@@ -221,7 +221,7 @@ ULONG hb_fsAttrFromRaw( ULONG raw_attr )
    if( raw_attr & 0x00002000 )                   ulAttr |= HB_FA_NOTINDEXED;
    if( raw_attr & 0x00008000 )                   ulAttr |= HB_FA_VOLCOMP;
 
-#elif defined(HB_OS_UNIX)
+#elif defined( HB_OS_UNIX )
 
    ulAttr = ( ( raw_attr & S_IXOTH ) ? HB_FA_XOTH : 0 ) |
             ( ( raw_attr & S_IWOTH ) ? HB_FA_WOTH : 0 ) |
@@ -260,7 +260,7 @@ ULONG hb_fsAttrToRaw( ULONG ulAttr )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrToRaw(%lu)", ulAttr));
 
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
 
    raw_attr = 0;
    if( ulAttr & HB_FA_ARCHIVE )   raw_attr |= FA_ARCH;
@@ -270,7 +270,7 @@ ULONG hb_fsAttrToRaw( ULONG ulAttr )
    if( ulAttr & HB_FA_LABEL )     raw_attr |= FA_LABEL;
    if( ulAttr & HB_FA_SYSTEM )    raw_attr |= FA_SYSTEM;
 
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
 
    raw_attr = 0;
    if( ulAttr & HB_FA_ARCHIVE )   raw_attr |= FILE_ARCHIVED;
@@ -279,7 +279,7 @@ ULONG hb_fsAttrToRaw( ULONG ulAttr )
    if( ulAttr & HB_FA_READONLY )  raw_attr |= FILE_READONLY;
    if( ulAttr & HB_FA_SYSTEM )    raw_attr |= FILE_SYSTEM;
 
-#elif defined(HB_OS_WIN)
+#elif defined( HB_OS_WIN )
 
    raw_attr = 0;
 
@@ -302,7 +302,7 @@ ULONG hb_fsAttrToRaw( ULONG ulAttr )
    if( ulAttr & HB_FA_NOTINDEXED ) raw_attr |= 0x00002000; /* FILE_ATTRIBUTE_NOT_CONTENT_INDEXED not defined in some older winnt.h */
    if( ulAttr & HB_FA_VOLCOMP )    raw_attr |= 0x00008000;
 
-#elif defined(HB_OS_UNIX)
+#elif defined( HB_OS_UNIX )
 
    raw_attr = HB_FA_POSIX_ATTR( ulAttr );
 
@@ -405,7 +405,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
    hb_vmUnlock();
 
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
 
    {
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
@@ -419,7 +419,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
          /* tzset(); */
 
-#if defined(__WATCOMC__)
+#if defined( __WATCOMC__ )
          bFound = ( _dos_findfirst( ffind->pszFileMask, ( USHORT ) hb_fsAttrToRaw( ffind->attrmask ), &info->entry ) == 0 );
 #else
          bFound = ( findfirst( ffind->pszFileMask, &info->entry, ( USHORT ) hb_fsAttrToRaw( ffind->attrmask ) ) == 0 );
@@ -427,7 +427,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       }
       else
       {
-#if defined(__WATCOMC__)
+#if defined( __WATCOMC__ )
          bFound = ( _dos_findnext( &info->entry ) == 0 );
 #else
          bFound = ( findnext( &info->entry ) == 0 );
@@ -465,7 +465,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       hb_fsSetIOError( bFound, 0 );
    }
 
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
 
    {
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
@@ -515,7 +515,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       hb_fsSetIOError( bFound, 0 );
    }
 
-#elif defined(HB_OS_WIN)
+#elif defined( HB_OS_WIN )
 
    {
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
@@ -567,7 +567,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                ffind->size = 0;
             else
             {
-#if defined(__XCC__) || (defined(__POCC__) && __POCC__ >= 500)
+#if defined( __XCC__ ) || ( defined( __POCC__ ) && __POCC__ >= 500 )
                /* NOTE: PellesC 5.00.1 will go into an infinite loop if we don't
                         split this into two operations. [vszakats] */
                ffind->size  = ( HB_FOFFSET ) info->pFindFileData.nFileSizeLow;
@@ -603,7 +603,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       hb_fsSetIOError( bFound, 0 );
    }
 
-#elif defined(HB_OS_UNIX)
+#elif defined( HB_OS_UNIX )
 
    {
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
@@ -811,15 +811,15 @@ void hb_fsFindClose( PHB_FFIND ffind )
 
          hb_vmUnlock();
 
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
 
-         #if defined(__DJGPP__) || defined(__BORLANDC__)
+         #if defined( __DJGPP__ ) || defined( __BORLANDC__ )
          {
             HB_SYMBOL_UNUSED( info );
          }
          #else
          {
-#if defined(__WATCOMC__)
+#if defined( __WATCOMC__ )
             _dos_findclose( &info->entry );
 #else
             findclose( &info->entry );
@@ -827,20 +827,20 @@ void hb_fsFindClose( PHB_FFIND ffind )
          }
          #endif
 
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
 
          {
             DosFindClose( info->hFindFile );
          }
 
-#elif defined(HB_OS_WIN)
+#elif defined( HB_OS_WIN )
 
          if( info->hFindFile != INVALID_HANDLE_VALUE )
          {
             FindClose( info->hFindFile );
          }
 
-#elif defined(HB_OS_UNIX)
+#elif defined( HB_OS_UNIX )
 
          if( info->dir )
          {

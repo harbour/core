@@ -70,7 +70,7 @@
    #include <time.h>
    #include <utime.h>
 #elif defined( HB_OS_DOS )
-   #if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
+   #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
       #include "hb_io.h"
       #include <sys/param.h>
       #if defined( HB_OS_DOS )
@@ -781,7 +781,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
    }
 #elif defined( HB_OS_DOS )
    {
-#  if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
+#  if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
       int attr;
 
       attr = _chmod( szFileName, 0, 0 );
@@ -1163,7 +1163,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
    }
 #elif defined( HB_OS_DOS )
 
-#  if defined(__RSX32__) || defined(__GNUC__)
+#  if defined( __RSX32__ ) || defined( __GNUC__ )
       _chmod( szName, 1, ufi.external_fa & 0xFF );
 #  else
       hb_fsSetAttr( szName, ufi.external_fa & 0xFF );

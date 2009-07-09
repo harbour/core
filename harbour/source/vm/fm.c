@@ -1091,13 +1091,13 @@ ULONG hb_xquery( USHORT uiMode )
    switch( uiMode )
    {
       case HB_MEM_CHAR:       /*               (Free Variable Space [KB]) */
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
             ulResult = memorystatus.dwAvailPhys / 1024;
          }
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
          {
             ULONG ulSysInfo = 0;
 
@@ -1112,13 +1112,13 @@ ULONG hb_xquery( USHORT uiMode )
          break;
 
       case HB_MEM_BLOCK:      /*               (Largest String [KB]) */
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
             ulResult = HB_MIN( memorystatus.dwAvailPhys, ULONG_MAX ) / 1024;
          }
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
          {
             ULONG ulSysInfo = 0;
 
@@ -1133,13 +1133,13 @@ ULONG hb_xquery( USHORT uiMode )
          break;
 
       case HB_MEM_RUN:        /*               (RUN Memory [KB]) */
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
             ulResult = memorystatus.dwAvailPhys / 1024;
          }
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
          {
             ULONG ulSysInfo = 0;
 
@@ -1154,13 +1154,13 @@ ULONG hb_xquery( USHORT uiMode )
          break;
 
       case HB_MEM_VM:         /* UNDOCUMENTED! (Virtual Memory [KB]) */
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
             ulResult = memorystatus.dwAvailVirtual / 1024;
          }
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
          {
             ULONG ulSysInfo = 0;
 
@@ -1175,7 +1175,7 @@ ULONG hb_xquery( USHORT uiMode )
          break;
 
       case HB_MEM_EMS:        /* UNDOCUMENTED! (Free Expanded Memory [KB]) (?) */
-#if defined(HB_OS_WIN) || defined(HB_OS_OS2)
+#if defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
          ulResult = 0;
 #else
          ulResult = 9999;
@@ -1183,13 +1183,13 @@ ULONG hb_xquery( USHORT uiMode )
          break;
 
       case HB_MEM_FM:         /* UNDOCUMENTED! (Fixed Memory/Heap [KB]) (?) */
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
             ulResult = memorystatus.dwTotalPhys / 1024;
          }
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
          {
             ULONG ulSysInfo = 0;
 
@@ -1204,7 +1204,7 @@ ULONG hb_xquery( USHORT uiMode )
          break;
 
       case HB_MEM_FMSEGS:     /* UNDOCUMENTED! (Segments in Fixed Memory/Heap) (?) */
-#if defined(HB_OS_WIN) || defined(HB_OS_OS2)
+#if defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
          ulResult = 1;
 #else
          ulResult = 9999;
@@ -1212,13 +1212,13 @@ ULONG hb_xquery( USHORT uiMode )
          break;
 
       case HB_MEM_SWAP:       /* UNDOCUMENTED! (Free Swap Memory [KB]) */
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
             ulResult = memorystatus.dwAvailPageFile / 1024;
          }
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
          {
             /* NOTE: There is no way to know how much a swap file can grow on an
                      OS/2 system. I think we should return free space on DASD
@@ -1231,7 +1231,7 @@ ULONG hb_xquery( USHORT uiMode )
          break;
 
       case HB_MEM_CONV:       /* UNDOCUMENTED! (Free Conventional [KB]) */
-#if defined(HB_OS_WIN) || defined(HB_OS_OS2)
+#if defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
          ulResult = 0;
 #else
          ulResult = 9999;

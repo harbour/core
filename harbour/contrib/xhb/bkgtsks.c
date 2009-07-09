@@ -68,8 +68,8 @@
 #include "hbdate.h"
 #include "error.ch"
 
-#if defined(HB_OS_UNIX)
-#if defined(HB_OS_DARWIN)
+#if defined( HB_OS_UNIX )
+#if defined( HB_OS_DARWIN )
    #include <unistd.h>    /* We need usleep() in Darwin */
 #else
    #include <time.h>

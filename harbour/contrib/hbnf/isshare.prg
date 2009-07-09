@@ -91,4 +91,3 @@ FUNCTION ft_isshare()
 RETURN lowbyte( aRegs[AX] )
   */
 RETURN   _ft_isshare()
-

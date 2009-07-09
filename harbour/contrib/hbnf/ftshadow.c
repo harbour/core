@@ -63,9 +63,9 @@ HB_FUNC( FT_SHADOW )
 
 HB_FUNC( FT_SETATTR )
 {
-   hb_gtSetAttribute( ( SHORT ) hb_parni( 1 ), 
+   hb_gtSetAttribute( ( SHORT ) hb_parni( 1 ),
                       ( SHORT ) hb_parni( 2 ),
-                      ( SHORT ) hb_parni( 3 ), 
-                      ( SHORT ) hb_parni( 4 ), 
+                      ( SHORT ) hb_parni( 3 ),
+                      ( SHORT ) hb_parni( 4 ),
                       ( BYTE ) hb_parni( 5 ) );
 }

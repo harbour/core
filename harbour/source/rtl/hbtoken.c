@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * 
+ *
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -99,7 +99,7 @@ static const char * hb_tokenGet( const char * szLine, ULONG ulLen,
 {
    ULONG ul, ulStart;
    char cQuote = 0;
-   
+
    for( ul = ulStart = 0; ul < ulLen; ++ul )
    {
       if( cQuote )

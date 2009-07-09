@@ -125,6 +125,3 @@ FUNCTION FT_NWUID( nConn )
 
   FT_INT86( DOS, aRegs )
   RETURN alltrim( strtran( substr( aRegs[ ES ], 9, 48 ), chr(0) )  )
-
-
-

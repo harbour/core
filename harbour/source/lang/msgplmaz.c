@@ -216,4 +216,3 @@ HB_CALL_ON_STARTUP_END( hb_lang_Init_PLMAZ )
    static HB_$INITSYM hb_vm_auto_hb_lang_Init_PLMAZ = hb_lang_Init_PLMAZ;
    #pragma data_seg()
 #endif
-

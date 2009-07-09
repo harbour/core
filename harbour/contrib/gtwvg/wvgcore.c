@@ -1066,7 +1066,7 @@ HB_FUNC( WVT_DRAWBOXGET )
    yz = hb_wvt_gtGetXYFromColRow( ( USHORT ) ( hb_parni( 2 ) + hb_parni( 3 ) ), ( USHORT ) hb_parni( 1 ) + 1 );
 
    hb_wvt_DrawBoxGet( _s->hdc, xy.y, xy.x, yz.y, yz.x );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       hb_wvt_DrawBoxGet( _s->hGuiDC, xy.y, xy.x, yz.y, yz.x );
@@ -1088,7 +1088,7 @@ HB_FUNC( WVT_DRAWBOXRAISED )
    int iRight  = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parvni( 5,4 );
 
    hb_wvt_DrawBoxRaised( _s->hdc, iTop-1, iLeft-1, iBottom+1, iRight+1 );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       hb_wvt_DrawBoxRaised( _s->hGuiDC, iTop-1, iLeft-1, iBottom+1, iRight+1 );
@@ -1110,7 +1110,7 @@ HB_FUNC( WVT_DRAWBOXRECESSED )
    int iRight  = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parvni( 5,4 );
 
    hb_wvt_DrawBoxRecessed( _s->hdc, iTop-1, iLeft-1, iBottom+1, iRight+1 );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       hb_wvt_DrawBoxRecessed( _s->hGuiDC, iTop-1, iLeft-1, iBottom+1, iRight+1 );
@@ -1132,7 +1132,7 @@ HB_FUNC( WVT_DRAWBOXGROUP )
    int iRight  = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parvni( 5,4 );
 
    hb_wvt_DrawBoxGroup( _s->hdc, iTop, iLeft, iBottom, iRight );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       hb_wvt_DrawBoxGroup( _s->hGuiDC, iTop, iLeft, iBottom, iRight );
@@ -1154,7 +1154,7 @@ HB_FUNC( WVT_DRAWBOXGROUPRAISED )
    int iRight  = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parvni( 5,4 );
 
    hb_wvt_DrawBoxGroupRaised( _s->hdc, iTop, iLeft, iBottom, iRight );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       hb_wvt_DrawBoxGroupRaised( _s->hGuiDC, iTop, iLeft, iBottom, iRight );
@@ -1189,7 +1189,7 @@ HB_FUNC( WVT_DRAWIMAGE )
    else
    {
       hb_wvt_DrawImage( _s->hdc, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, hb_parcx( 5 ) ) ;
-      #if defined(__SETGUI__)
+      #if defined( __SETGUI__ )
       if ( _s->bGui )
       {
          hb_wvt_DrawImage( _s->hGuiDC, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, hb_parcx( 5 ) ) ;
@@ -1253,7 +1253,7 @@ HB_FUNC( WVT_DRAWLABEL )
       ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
 
       SelectObject( _s->hdc, hOldFont );
-      #if defined(__SETGUI__)
+      #if defined( __SETGUI__ )
       if ( _s->bGui )
       {
          SetBkColor( _s->hGuiDC, bgClr );
@@ -1309,7 +1309,7 @@ HB_FUNC( WVT_DRAWOUTLINE )
    }
 
    hb_wvt_DrawOutline( _s->hdc, iTop, iLeft, iBottom, iRight );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       if ( hPen )
@@ -1424,7 +1424,7 @@ HB_FUNC( WVT_DRAWLINE )
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x, y+1, NULL );
             LineTo( _s->hdc, iRight, y+1 );
-            #if defined(__SETGUI__)
+            #if defined( __SETGUI__ )
             if ( _s->bGui )
             {
                SelectObject( _s->hGuiDC, _s->pGUI->penWhite );
@@ -1444,7 +1444,7 @@ HB_FUNC( WVT_DRAWLINE )
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x+1, y, NULL );
             LineTo( _s->hdc, x+1, iBottom );
-            #if defined(__SETGUI__)
+            #if defined( __SETGUI__ )
             if ( _s->bGui )
             {
                SelectObject( _s->hGuiDC, _s->pGUI->penWhite );
@@ -1469,7 +1469,7 @@ HB_FUNC( WVT_DRAWLINE )
             SelectObject( _s->hdc, _s->pGUI->penWhite );
             MoveToEx( _s->hdc, x, y+1, NULL );
             LineTo( _s->hdc, iRight, y+1 );
-            #if defined(__SETGUI__)
+            #if defined( __SETGUI__ )
             if ( _s->bGui )
             {
                SelectObject( _s->hGuiDC, hPen );
@@ -1489,7 +1489,7 @@ HB_FUNC( WVT_DRAWLINE )
             SelectObject( _s->hdc, _s->pGUI->penWhite );
             MoveToEx( _s->hdc, x+1, y, NULL );
             LineTo( _s->hdc, x+1, iBottom );
-            #if defined(__SETGUI__)
+            #if defined( __SETGUI__ )
             if ( _s->bGui )
             {
                SelectObject( _s->hGuiDC, hPen );
@@ -1511,7 +1511,7 @@ HB_FUNC( WVT_DRAWLINE )
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x, y, NULL );
             LineTo( _s->hdc, iRight, y );
-            #if defined(__SETGUI__)
+            #if defined( __SETGUI__ )
             if ( _s->bGui )
             {
                SelectObject( _s->hGuiDC, hPen );
@@ -1525,7 +1525,7 @@ HB_FUNC( WVT_DRAWLINE )
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x, y, NULL );
             LineTo( _s->hdc, x, iBottom );
-            #if defined(__SETGUI__)
+            #if defined( __SETGUI__ )
             if ( _s->bGui )
             {
                SelectObject( _s->hGuiDC, hPen );
@@ -1565,7 +1565,7 @@ HB_FUNC( WVT_DRAWELLIPSE )
    SelectObject( _s->hdc, _s->currentPen   );
 
    hb_retl( Ellipse( _s->hdc, iLeft, iTop, iRight, iBottom ) );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       hb_retl( Ellipse( _s->hGuiDC, iLeft, iTop, iRight, iBottom ) );
@@ -1590,7 +1590,7 @@ HB_FUNC( WVT_DRAWRECTANGLE )
    SelectObject( _s->hdc, _s->currentPen );
 
    hb_retl( Rectangle( _s->hdc, iLeft, iTop, iRight, iBottom ) );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       hb_retl( Rectangle( _s->hGuiDC, iLeft, iTop, iRight, iBottom ) );
@@ -1619,7 +1619,7 @@ HB_FUNC( WVT_DRAWROUNDRECT )
    SelectObject( _s->hdc, _s->currentPen   );
 
    hb_retl( RoundRect( _s->hdc, iLeft, iTop, iRight, iBottom, iWd, iHt ) );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       hb_retl( RoundRect( _s->hGuiDC, iLeft, iTop, iRight, iBottom, iWd, iHt ) );
@@ -1647,7 +1647,7 @@ HB_FUNC( WVT_DRAWFOCUSRECT )
    rc.bottom = iBottom;
 
    hb_retl( DrawFocusRect( _s->hdc, &rc ) );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       hb_retl( DrawFocusRect( _s->hGuiDC, &rc ) );
@@ -1680,7 +1680,7 @@ HB_FUNC( WVT_DRAWCOLORRECT )
       rc.bottom = iBottom;
 
       hb_retl( FillRect( _s->hdc, &rc, hBrush ) );
-      #if defined(__SETGUI__)
+      #if defined( __SETGUI__ )
       if ( _s->bGui )
       {
          hb_retl( FillRect( _s->hGuiDC, &rc, hBrush ) );
@@ -1720,7 +1720,7 @@ HB_FUNC( WVT_DRAWGRIDHORZ )
 
       iAtRow++;
    }
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       iAtRow = hb_parni( 1 );
@@ -1775,7 +1775,7 @@ HB_FUNC( WVT_DRAWGRIDVERT )
       MoveToEx( _s->hdc, x, iTop, NULL );
       LineTo( _s->hdc, x, iBottom );
    }
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       SelectObject( _s->hGuiDC, _s->currentPen );
@@ -1837,7 +1837,7 @@ HB_FUNC( WVT_DRAWBUTTON )
    rc.bottom  = iBottom + 1;
 
    FillRect( _s->hdc, &rc, hBrush );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       FillRect( _s->hGuiDC, &rc, hBrush );
@@ -2085,7 +2085,7 @@ HB_FUNC( WVT_DRAWLABELEX )
       SelectObject( _s->hdc, _s->pGUI->hUserFonts[ iSlot ] );
 
       ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
-      #if defined(__SETGUI__)
+      #if defined( __SETGUI__ )
       if ( _s->bGui )
       {
          SetBkColor( _s->hGuiDC, bgClr );
@@ -2198,7 +2198,7 @@ HB_FUNC( WVT_DRAWLINEEX )
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x, y+1, NULL );
             LineTo( _s->hdc, iRight, y+1 );
-            #if defined(__SETGUI__)
+            #if defined( __SETGUI__ )
             if ( _s->bGui )
             {
                SelectObject( _s->hGuiDC, _s->pGUI->penWhite );
@@ -2218,7 +2218,7 @@ HB_FUNC( WVT_DRAWLINEEX )
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x+1, y, NULL );
             LineTo( _s->hdc, x+1, iBottom );
-            #if defined(__SETGUI__)
+            #if defined( __SETGUI__ )
             if ( _s->bGui )
             {
                SelectObject( _s->hGuiDC, _s->pGUI->penWhite );
@@ -2243,7 +2243,7 @@ HB_FUNC( WVT_DRAWLINEEX )
             SelectObject( _s->hdc, _s->pGUI->penWhite );
             MoveToEx( _s->hdc, x, y+1, NULL );
             LineTo( _s->hdc, iRight, y+1 );
-            #if defined(__SETGUI__)
+            #if defined( __SETGUI__ )
             if ( _s->bGui )
             {
                SelectObject( _s->hGuiDC, hPen );
@@ -2263,7 +2263,7 @@ HB_FUNC( WVT_DRAWLINEEX )
             SelectObject( _s->hdc, _s->pGUI->penWhite );
             MoveToEx( _s->hdc, x+1, y, NULL );
             LineTo( _s->hdc, x+1, iBottom );
-            #if defined(__SETGUI__)
+            #if defined( __SETGUI__ )
             if ( _s->bGui )
             {
                SelectObject( _s->hGuiDC, hPen );
@@ -2285,7 +2285,7 @@ HB_FUNC( WVT_DRAWLINEEX )
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x, y, NULL );
             LineTo( _s->hdc, iRight, y );
-            #if defined(__SETGUI__)
+            #if defined( __SETGUI__ )
             if ( _s->bGui )
             {
                SelectObject( _s->hGuiDC, hPen );
@@ -2299,7 +2299,7 @@ HB_FUNC( WVT_DRAWLINEEX )
             SelectObject( _s->hdc, hPen );
             MoveToEx( _s->hdc, x, y, NULL );
             LineTo( _s->hdc, x, iBottom );
-            #if defined(__SETGUI__)
+            #if defined( __SETGUI__ )
             if ( _s->bGui )
             {
                SelectObject( _s->hGuiDC, hPen );
@@ -2344,7 +2344,7 @@ HB_FUNC( WVT_DRAWOUTLINEEX )
    }
 
    hb_wvt_DrawOutline( _s->hdc, iTop, iLeft, iBottom, iRight );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       hb_wvt_DrawOutline( _s->hGuiDC, iTop, iLeft, iBottom, iRight );
@@ -2432,7 +2432,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    uiOptions    = ETO_CLIPPED | ETO_OPAQUE ;
 
    ExtTextOut( _s->hdc, x, y, uiOptions, &rect, text, lstrlen( text ), NULL );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       SetTextColor( _s->hGuiDC, fgClr );
@@ -2466,7 +2466,7 @@ HB_FUNC( WVT_DRAWTOOLBUTTONSTATE )
       case 0:     /* Flat */
       {
          hb_wvt_DrawToolButtonFlat( _s->hdc, iTop, iLeft, iBottom, iRight );
-         #if defined(__SETGUI__)
+         #if defined( __SETGUI__ )
          if ( _s->bGui )
          {
             hb_wvt_DrawToolButtonFlat( _s->hGuiDC, iTop, iLeft, iBottom, iRight );
@@ -2478,7 +2478,7 @@ HB_FUNC( WVT_DRAWTOOLBUTTONSTATE )
       case 1:     /* Raised */
       {
          hb_wvt_DrawToolButtonUp( _s->hdc, iTop, iLeft, iBottom, iRight );
-         #if defined(__SETGUI__)
+         #if defined( __SETGUI__ )
          if ( _s->bGui )
          {
             hb_wvt_DrawToolButtonUp( _s->hGuiDC, iTop, iLeft, iBottom, iRight );
@@ -2490,7 +2490,7 @@ HB_FUNC( WVT_DRAWTOOLBUTTONSTATE )
       case 2:     /* Recessed */
       {
          hb_wvt_DrawToolButtonDown( _s->hdc, iTop, iLeft, iBottom, iRight );
-         #if defined(__SETGUI__)
+         #if defined( __SETGUI__ )
          if ( _s->bGui )
          {
             hb_wvt_DrawToolButtonDown( _s->hGuiDC, iTop, iLeft, iBottom, iRight );
@@ -2528,7 +2528,7 @@ HB_FUNC( WVT_DRAWSCROLLBUTTON )
    if ( bDepressed )
    {
       hb_wvt_DrawBoxRecessed( _s->hdc, iTop+1, iLeft+1, iBottom-2, iRight-2 );
-      #if defined(__SETGUI__)
+      #if defined( __SETGUI__ )
       if ( _s->bGui )
       {
          hb_wvt_DrawBoxRecessed( _s->hGuiDC, iTop+1, iLeft+1, iBottom-2, iRight-2 );
@@ -2538,7 +2538,7 @@ HB_FUNC( WVT_DRAWSCROLLBUTTON )
    else
    {
       hb_wvt_DrawBoxRaised( _s->hdc, iTop+1, iLeft+1, iBottom-2, iRight-2 );
-      #if defined(__SETGUI__)
+      #if defined( __SETGUI__ )
       if ( _s->bGui )
       {
          hb_wvt_DrawBoxRaised( _s->hGuiDC, iTop+1, iLeft+1, iBottom-2, iRight-2 );
@@ -2603,7 +2603,7 @@ HB_FUNC( WVT_DRAWSCROLLBUTTON )
 
    SelectObject( _s->hdc, _s->pGUI->solidBrush );
    Polygon( _s->hdc, Point, 3 );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       SelectObject( _s->hGuiDC, _s->pGUI->solidBrush );
@@ -2633,7 +2633,7 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBVERT )
    SelectObject( _s->hdc, _s->pGUI->diagonalBrush );
    SelectObject( _s->hdc, _s->pGUI->penNull );
    Rectangle( _s->hdc, iLeft, iTop, iRight+1, iBottom+1 );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       SetBkMode( _s->hGuiDC, OPAQUE );
@@ -2652,7 +2652,7 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBVERT )
    SelectObject( _s->hdc, _s->pGUI->whiteBrush );
    SelectObject( _s->hdc, _s->pGUI->penGray );
    Rectangle( _s->hdc, iTabLft, iTabTop, iTabRgt+1, iTabBtm );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       SelectObject( _s->hGuiDC, _s->pGUI->whiteBrush );
@@ -2661,7 +2661,7 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBVERT )
    }
    #endif
    hb_wvt_DrawBoxRaised( _s->hdc, iTabTop+1, iTabLft+1, iTabBtm-2, iTabRgt-2 );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       hb_wvt_DrawBoxRaised( _s->hGuiDC, iTabTop+1, iTabLft+1, iTabBtm-2, iTabRgt-2 );
@@ -2692,7 +2692,7 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBHORZ )
    SelectObject( _s->hdc, _s->pGUI->diagonalBrush );
    SelectObject( _s->hdc, _s->pGUI->penNull );
    Rectangle( _s->hdc, iLeft, iTop, iRight+1, iBottom+1 );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       SetBkMode( _s->hGuiDC, OPAQUE );
@@ -2706,7 +2706,7 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBHORZ )
    SelectObject( _s->hdc, _s->pGUI->whiteBrush );
    SelectObject( _s->hdc, _s->pGUI->penGray );
    Rectangle( _s->hdc, iThumbLeft, iTop, iThumbRight, iBottom );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       SelectObject( _s->hGuiDC, _s->pGUI->whiteBrush );
@@ -2715,7 +2715,7 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBHORZ )
    }
    #endif
    hb_wvt_DrawBoxRaised( _s->hdc, iTop+1, iThumbLeft+1, iBottom-2, iThumbRight-2 );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       hb_wvt_DrawBoxRaised( _s->hGuiDC, iTop+1, iThumbLeft+1, iBottom-2, iThumbRight-2 );
@@ -2764,7 +2764,7 @@ HB_FUNC( WVT_DRAWSHADEDRECT )
       gRect.LowerRight= 1;
 
       bGF = ( BOOL ) _s->pGUI->pfnGF( _s->hdc, vert, 2, &gRect, 1, iMode );
-      #if defined(__SETGUI__)
+      #if defined( __SETGUI__ )
       if ( _s->bGui )
       {
          bGF = ( BOOL ) _s->pGUI->pfnGF( _s->hGuiDC, vert, 2, &gRect, 1, iMode );
@@ -2825,7 +2825,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
    SelectObject( _s->hdc, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 12 ) );
 
    DrawText( _s->hdc, text, lstrlen( text ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
-   #if defined(__SETGUI__)
+   #if defined( __SETGUI__ )
    if ( _s->bGui )
    {
       SetTextAlign( _s->hGuiDC, TA_TOP | TA_LEFT | TA_NOUPDATECP );
@@ -2907,7 +2907,7 @@ HB_FUNC( WVT_DRAWPROGRESSBAR )
    if ( bImage )
    {
       hb_wvt_DrawImage( _s->hdc, rc.left, rc.top, rc.right-rc.left+1, rc.bottom-rc.top+1, hb_parc( 9 ) );
-      #if defined(__SETGUI__)
+      #if defined( __SETGUI__ )
       if ( _s->bGui )
       {
          hb_wvt_DrawImage( _s->hGuiDC, rc.left, rc.top, rc.right-rc.left+1, rc.bottom-rc.top+1, hb_parc( 9 ) );
@@ -2930,7 +2930,7 @@ HB_FUNC( WVT_DRAWPROGRESSBAR )
       rc.right++;
 
       FillRect( _s->hdc, &rc, hBrush );
-      #if defined(__SETGUI__)
+      #if defined( __SETGUI__ )
       if ( _s->bGui )
       {
          FillRect( _s->hGuiDC, &rc, hBrush );

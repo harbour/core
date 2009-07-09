@@ -158,4 +158,3 @@ USHORT hb_gtSetBorder( HB_GT_RGB * color )
 
    return 1;
 }
-

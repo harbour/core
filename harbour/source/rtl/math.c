@@ -55,7 +55,7 @@
  *
  */
 
-#if defined(__DJGPP__)
+#if defined( __DJGPP__ )
 #   include <libm/math.h>
 _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
 #else
@@ -69,10 +69,10 @@ _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
 #include "hbstack.h"
 #include "hbmath.h"
 
-#if defined(HB_MATH_ERRNO)
+#if defined( HB_MATH_ERRNO )
 #   include <errno.h>
 #endif
-#if defined(HB_OS_SUNOS)
+#if defined( HB_OS_SUNOS )
 #   include <ieeefp.h>
 #endif
 
@@ -82,7 +82,7 @@ typedef struct
    PHB_ITEM             block;
    HB_MATH_HANDLERPROC  handler;
    HB_MATH_HANDLERPROC  prevHandler;
-#if defined(HB_MATH_HANDLER)
+#if defined( HB_MATH_HANDLER )
    HB_MATH_EXCEPTION    exception;
 #endif
 } HB_MATHERRDATA, * PHB_MATHERRDATA;
@@ -176,7 +176,7 @@ static void hb_mathErrDataInit( void * Cargo )
 
    pMathErr->handler = hb_matherr;
 
-#if defined(HB_MATH_HANDLER)
+#if defined( HB_MATH_HANDLER )
    pMathErr->exception.type = HB_MATH_ERR_NONE;
    pMathErr->exception.funcname = "";
    pMathErr->exception.error = "";
@@ -216,7 +216,7 @@ void hb_mathResetError( HB_MATH_EXCEPTION * phb_exc )
 
    HB_SYMBOL_UNUSED( phb_exc );
 
-#if defined(HB_MATH_HANDLER)
+#if defined( HB_MATH_HANDLER )
    {
       PHB_MATHERRDATA pMathErr = hb_mathErrData();
       pMathErr->exception.type = HB_MATH_ERR_NONE;
@@ -229,13 +229,13 @@ void hb_mathResetError( HB_MATH_EXCEPTION * phb_exc )
       pMathErr->exception.retvaldec = -1;     /* use standard SET DECIMALS */
       pMathErr->exception.handled = 1;
    }
-#elif defined(HB_MATH_ERRNO)
+#elif defined( HB_MATH_ERRNO )
    errno = 0;
 #endif
 }
 
 /* route C math lib errors to Harbour error handling */
-#if defined(HB_MATH_HANDLER)
+#if defined( HB_MATH_HANDLER )
 
 int matherr( struct exception *err )
 {
@@ -310,7 +310,7 @@ int matherr( struct exception *err )
 BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
                       double arg1, double arg2, double dResult )
 {
-#if defined(HB_MATH_ERRNO)
+#if defined( HB_MATH_ERRNO )
 
    int errCode;
 
@@ -322,7 +322,7 @@ BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
          return FALSE;
       case EDOM:
       case ERANGE:
-#   if defined(EOVERFLOW)
+#   if defined( EOVERFLOW )
       case EOVERFLOW:
 #   endif
          errCode = errno;
@@ -331,9 +331,9 @@ BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
       default:
          if( isnan( dResult ) )
             errCode = EDOM;
-#   if defined(HB_OS_SUNOS)
+#   if defined( HB_OS_SUNOS )
          else if( !finite( dResult ) )
-#   elif defined(HB_OS_OS2)
+#   elif defined( HB_OS_OS2 )
          else if( !isfinite( dResult ) )
 #   else
          else if( isinf( dResult ) )
@@ -355,7 +355,7 @@ BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
          phb_exc->type = HB_MATH_ERR_SING;
          phb_exc->error = "Calculation results in singularity";
          break;
-#   if defined(EOVERFLOW)
+#   if defined( EOVERFLOW )
       case EOVERFLOW:
          phb_exc->type = HB_MATH_ERR_OVERFLOW;
          phb_exc->error = "Calculation result too large to represent";
@@ -389,7 +389,7 @@ BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
    HB_SYMBOL_UNUSED( arg2 );
    HB_SYMBOL_UNUSED( szFunc );
 
-#  if defined(HB_MATH_HANDLER)
+#  if defined( HB_MATH_HANDLER )
 
    memcpy( phb_exc, &hb_mathErrData()->exception, sizeof( HB_MATH_EXCEPTION ) );
    return phb_exc->type != HB_MATH_ERR_NONE;

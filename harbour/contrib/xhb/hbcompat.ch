@@ -57,10 +57,10 @@
 
 #ifdef __XHARBOUR__
 
-   #if defined(__PLATFORM__Windows) .AND. !defined(__PLATFORM__WINDOWS)
+   #if defined( __PLATFORM__Windows ) .AND. !defined( __PLATFORM__WINDOWS )
       #define __PLATFORM__WINDOWS
    #endif
-   #if defined(__PLATFORM__Linux) .AND. !defined(__PLATFORM__LINUX)
+   #if defined( __PLATFORM__Linux ) .AND. !defined( __PLATFORM__LINUX )
       #define __PLATFORM__LINUX
    #endif
 
@@ -223,10 +223,10 @@
 
 #else
 
-   #if defined(__PLATFORM__WINDOWS) .AND. !defined(__PLATFORM__Windows)
+   #if defined( __PLATFORM__WINDOWS ) .AND. !defined( __PLATFORM__Windows )
       #define __PLATFORM__Windows
    #endif
-   #if defined(__PLATFORM__LINUX) .AND. !defined(__PLATFORM__Linux)
+   #if defined( __PLATFORM__LINUX ) .AND. !defined( __PLATFORM__Linux )
       #define __PLATFORM__Linux
    #endif
 

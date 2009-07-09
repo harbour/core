@@ -57,4 +57,4 @@ LOCAL oAx := WIN_OleAuto()
    IF bHandler != NIL
       oAx:__hSink := __AxRegisterHandler( oAx:__hObj, bHandler )
    ENDIF
-RETURN oAx 
+RETURN oAx

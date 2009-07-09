@@ -51,7 +51,7 @@
  *
  */
 
-#ifndef HB_LOGDEF_CH 
+#ifndef HB_LOGDEF_CH
 #define HB_LOGDEF_CH
 
 #define HB_LOG_DEFAULT    -1
@@ -63,4 +63,3 @@
 #define HB_LOG_DEBUG       5
 
 #endif /* HB_LOGDEF_CH */
-

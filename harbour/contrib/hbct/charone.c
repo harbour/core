@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   CT3 string functions
  *     - CHARONE()
  *     - WORDONE()
@@ -225,7 +225,7 @@ static void do_charone( int iSwitch )
  *      The CHARONE() function reduces multiple occurences of characters in
  *      <cString> to a single one. It is important to note that the multiple
  *      occurences must occur directly one behind the other. This behaviour is
- *      is in contrast to the CHARLIST() function. 
+ *      is in contrast to the CHARLIST() function.
  *  $EXAMPLES$
  *      ? CHARONE("122333a123")      // "123a123"
  *      ? CHARONE("A  B  CCCD")      // "A B CD"

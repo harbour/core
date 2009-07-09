@@ -1,7 +1,7 @@
 /*
  * $Id$
  */
- 
+
 /*
  * Harbour Project source code:
  *   CT3 Date & Time functions:
@@ -291,7 +291,7 @@ HB_FUNC( SETTIME )
    iTime[0] = iTime[1] = iTime[2] = iTime[3] = 0;
    if( _hb_timeValid( hb_parc( 1 ), hb_parclen( 1 ), iTime ) )
    {
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
       SYSTEMTIME st;
       GetLocalTime( &st );
       st.wHour         = ( WORD ) iTime[0];
@@ -377,7 +377,7 @@ HB_FUNC( SETDATE )
       hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
       if( iYear >= 1970 )
       {
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
          SYSTEMTIME st;
          GetLocalTime( &st );
          st.wYear      = ( WORD ) iYear;

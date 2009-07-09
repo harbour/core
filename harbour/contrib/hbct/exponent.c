@@ -79,7 +79,7 @@
  *
  *      MANTISSA(<nFloatingPointNumber>)* 2^EXPONENT(<nFloatingPointNumber>) =
  *      <nFloatingPointNumber>
- *      
+ *
  *      TODO: add documentation
  *  $EXAMPLES$
  *  $TESTS$
@@ -175,7 +175,7 @@ HB_FUNC( MANTISSA )
  *
  *      2^EXPONENT(<nFloatingPointNumber>) * MANTISSA(<nFloatingPointNumber>) =
  *      <nFloatingPointNumber>
- *      
+ *
  *      TODO: add documentation
  *  $EXAMPLES$
  *  $TESTS$

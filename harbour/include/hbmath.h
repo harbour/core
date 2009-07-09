@@ -56,7 +56,7 @@
 
 #include "hbapi.h"
 
-#if defined(__DJGPP__)
+#if defined( __DJGPP__ )
 #include <libm/math.h>
 #else
 #include <math.h>
@@ -64,13 +64,13 @@
 
 HB_EXTERN_BEGIN
 
-#if defined(__WATCOMC__)
+#if defined( __WATCOMC__ )
    #define HB_MATH_HANDLER
-   #if (__WATCOMC__ > 1000) /* && defined(__cplusplus) */
+   #if ( __WATCOMC__ > 1000 ) /* && defined( __cplusplus ) */
       #define exception _exception
    #endif
-#elif defined(__BORLANDC__)
-   #if (__BORLANDC__ == 1328) && defined(__cplusplus)
+#elif defined( __BORLANDC__ )
+   #if ( __BORLANDC__ == 1328 ) && defined( __cplusplus )
       /* NOTE: There seem to be a bug in Borland C++ 5.3 C++ mode which prevents
                the redefinition of matherr, because nor "_exception" neither
                "exception" will work. [vszakats] */
@@ -78,32 +78,32 @@ HB_EXTERN_BEGIN
       #define HB_MATH_HANDLER
       #define matherr _matherr
       /* NOTE: This is needed for Borland C++ 5.5 in C++/STDC mode. [vszakats] */
-      #if (__BORLANDC__ >= 1360)
+      #if ( __BORLANDC__ >= 1360 )
          #define exception _exception
       #endif
    #endif
-#elif defined(__MINGW32CE__)
+#elif defined( __MINGW32CE__ )
    #define HB_MATH_HANDLER
    #define matherr _matherr
    #define exception _exception
 /* it seems that MinGW has some problem with MATH HANDLER
    use HB_MATH_ERRNO instead */
-#elif defined(__MINGW32__) && 0
+#elif defined( __MINGW32__ ) && 0
    #define HB_MATH_HANDLER
    #define matherr _matherr
    #define exception _exception
-#elif defined(__DJGPP__)
-   #ifndef __cplusplus
+#elif defined( __DJGPP__ )
+   #if !defined( __cplusplus )
       #define HB_MATH_HANDLER
    #endif
 #elif defined( HB_OS_WIN_CE ) && defined( __POCC__ )
-   /* NOTE: Workaround for Pellec C 5.00 not having an 'inf' (HUGE_VAL) 
+   /* NOTE: Workaround for Pellec C 5.00 not having an 'inf' (HUGE_VAL)
             in '-Tarm-coff' mode. [vszakats] */
    #undef HUGE_VAL
    #define HUGE_VAL   ( 1.0 / ( 1.0, 0.0 ) )
 #endif
 
-#if !defined(HB_MATH_HANDLER) && defined(__GNUC__) /* && defined(HB_OS_UNIX) */
+#if !defined( HB_MATH_HANDLER ) && defined( __GNUC__ ) /* && defined( HB_OS_UNIX ) */
    #define HB_MATH_ERRNO
 #endif
 

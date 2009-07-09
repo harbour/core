@@ -160,7 +160,7 @@ PROCEDURE __dbgShowWorkAreas()
    /* Show dialog */
 
    oDlg:ShowModal()
-   
+
    dbSelectArea( nOldArea )
 
    RETURN

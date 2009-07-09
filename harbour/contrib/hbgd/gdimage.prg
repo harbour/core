@@ -697,4 +697,3 @@ METHOD CloneDataFrom( oSrc )
    ::cMime       := oSrc:cMime
 
 RETURN Self
-

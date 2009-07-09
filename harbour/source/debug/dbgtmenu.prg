@@ -278,10 +278,10 @@ METHOD GetItemOrdByCoors( nRow, nCol ) CLASS HBDbMenu
    RETURN 0
 
 METHOD GetItemByIdent( uIdent ) CLASS HBDbMenu
-  
+
    LOCAL n
    LOCAL oItem
-  
+
    FOR n := 1 TO Len( ::aItems )
       IF ISOBJECT( ::aItems[ n ]:bAction )
          oItem := ::aItems[ n ]:bAction:GetItemByIdent( uIdent )

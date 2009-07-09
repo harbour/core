@@ -137,16 +137,16 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
          cBlock := FieldName( nPos )
          cHeading := cBlock
       ENDIF
-      
-      /* Simplified logic compared to CA-Cl*pper. In the latter there 
-         is logic to detect several typical cBlock types (memvar, 
-         aliased field, field) and using MemvarBlock()/FieldWBlock()/FieldBlock() 
-         calls to create codeblocks for them if possible. In Harbour, 
-         simple macro compilation will result in faster code for all 
-         situations. As Maurilio Longo has pointed, there is no point in 
-         creating codeblocks which are able to _assign_ values, as dbEdit() 
+
+      /* Simplified logic compared to CA-Cl*pper. In the latter there
+         is logic to detect several typical cBlock types (memvar,
+         aliased field, field) and using MemvarBlock()/FieldWBlock()/FieldBlock()
+         calls to create codeblocks for them if possible. In Harbour,
+         simple macro compilation will result in faster code for all
+         situations. As Maurilio Longo has pointed, there is no point in
+         creating codeblocks which are able to _assign_ values, as dbEdit()
          is a read-only function. [vszakats] */
-      
+
       bBlock := iif( Type( cBlock ) == "M", {|| "  <Memo>  " }, hb_macroBlock( cBlock ) )
 
       /* ; */
@@ -305,8 +305,8 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
 
    nPrevRecNo := RecNo()
 
-   /* NOTE: CA-Cl*pper won't check the type of the return value here, 
-            and will crash if it's a non-NIL, non-numeric type. We're 
+   /* NOTE: CA-Cl*pper won't check the type of the return value here,
+            and will crash if it's a non-NIL, non-numeric type. We're
             replicating this behavior. */
    nAction := iif( ISBLOCK( xUserFunc ), ;
                                  Eval( xUserFunc, nMode, oBrowse:colPos ), ;
@@ -345,13 +345,13 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
          IF EOF()
             dbGoBottom()
          ENDIF
-         
+
          nPrevRecNo := RecNo()
          oBrowse:refreshAll():forceStable()
          DO WHILE nPrevRecNo != RecNo()
             oBrowse:Up():forceStable()
          ENDDO
-         
+
          lFlag := .F.
 
       ENDIF

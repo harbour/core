@@ -60,4 +60,3 @@ FUNCTION FT_FDAY(dDateToChk)
    ENDIF
 
    RETURN dDateToChk - (DAY(dDateToChk)-1)
-

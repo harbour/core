@@ -70,7 +70,7 @@
 #endif
 
 #if defined( __XCC__ ) || defined( __POCC__ ) || defined( __LCC__ ) || \
-    defined( __MINGW32__ ) || defined(__DMC__) || \
+    defined( __MINGW32__ ) || defined( __DMC__ ) || \
     ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 ) || \
     ( defined( __WATCOMC__ ) && __WATCOMC__ >= 1270 ) || \
     ( defined( __GNUC__ ) && \
@@ -157,11 +157,11 @@
 
    #include <dos.h>
 
-   #if defined(__WATCOMC__) && defined(__386__) && !defined(__WINDOWS_386__)
+   #if defined( __WATCOMC__ ) && defined( __386__ ) && !defined( __WINDOWS_386__ )
       #define HB_DOS_INT86 int386
       #define HB_DOS_INT86X int386x
       #define HB_XREGS w
-   #elif defined(__RSX32__)
+   #elif defined( __RSX32__ )
       #define HB_DOS_INT86 _int86
       #define HB_DOS_INT86X _int86x
       #define HB_XREGS x
@@ -246,16 +246,16 @@
 
 #ifndef HB_LONG_LONG_OFF
 
-   #if ! defined(HB_DONT_DEFINE_BASIC_TYPES) && ! defined(_WINNT_H)
-      #if !defined(LONGLONG)
-         #if defined(__GNUC__)
+   #if ! defined( HB_DONT_DEFINE_BASIC_TYPES ) && ! defined( _WINNT_H )
+      #if !defined( LONGLONG )
+         #if defined( __GNUC__ )
             typedef signed long long LONGLONG;
          #else
             typedef __int64 LONGLONG;
          #endif
       #endif
-      #if !defined(ULONGLONG)
-         #if defined(__GNUC__)
+      #if !defined( ULONGLONG )
+         #if defined( __GNUC__ )
             typedef unsigned long long ULONGLONG;
          #else
             typedef unsigned __int64 ULONGLONG;
@@ -263,34 +263,34 @@
       #endif
    #endif
 
-   #if !defined(ULONGLONG_MAX)
-      #if defined(_UI64_MAX)
+   #if !defined( ULONGLONG_MAX )
+      #if defined( _UI64_MAX )
          #define ULONGLONG_MAX      _UI64_MAX
-      #elif defined(ULLONG_MAX)
+      #elif defined( ULLONG_MAX )
          #define ULONGLONG_MAX      ULLONG_MAX
-      #elif defined(ULONG_LONG_MAX)
+      #elif defined( ULONG_LONG_MAX )
          #define ULONGLONG_MAX      ULONG_LONG_MAX
       #else
          #define ULONGLONG_MAX      18446744073709551615ULL
       #endif
    #endif
-   #if !defined(LONGLONG_MAX)
-      #if defined(_I64_MAX)
+   #if !defined( LONGLONG_MAX )
+      #if defined( _I64_MAX )
          #define LONGLONG_MAX       _I64_MAX
-      #elif defined(LLONG_MAX)
+      #elif defined( LLONG_MAX )
          #define LONGLONG_MAX       LLONG_MAX
-      #elif defined(LONG_LONG_MAX)
+      #elif defined( LONG_LONG_MAX )
          #define LONGLONG_MAX       LONG_LONG_MAX
       #else
          #define LONGLONG_MAX       9223372036854775807LL
       #endif
    #endif
-   #if !defined(LONGLONG_MIN)
-      #if defined(_I64_MIN)
+   #if !defined( LONGLONG_MIN )
+      #if defined( _I64_MIN )
          #define LONGLONG_MIN       _I64_MIN
-      #elif defined(LLONG_MIN)
+      #elif defined( LLONG_MIN )
          #define LONGLONG_MIN       LLONG_MIN
-      #elif defined(LONG_LONG_MIN)
+      #elif defined( LONG_LONG_MIN )
          #define LONGLONG_MIN       LONG_LONG_MIN
       #else
          #define LONGLONG_MIN       (-LONGLONG_MAX - 1LL)
@@ -1495,19 +1495,19 @@ typedef long                hbVMIntMax;       /* TOFIX */
  * starting procedure (due to unknown order of static data initialization)
  */
 #define HB_START_PROCEDURE "MAIN"
-#if defined(__WATCOMC__) || defined(__DMC__) || \
-    ( defined(__GNUC__) && !defined(__DJGPP__) && !defined(HB_OS_OS2_GCC) )
+#if defined( __WATCOMC__ ) || defined( __DMC__ ) || \
+    ( defined( __GNUC__ ) && !defined( __DJGPP__ ) && !defined( HB_OS_OS2_GCC ) )
    #define HB_START_PROC_STRICT
 #endif
 
-#if defined(__WATCOMC__) || defined(__DMC__) || \
-    defined(_MSC_VER) || defined(__POCC__)
+#if defined( __WATCOMC__ ) || defined( __DMC__ ) || \
+    defined( _MSC_VER ) || defined( __POCC__ )
    #define HB_DLL_ENTRY_POINT    DllMain
 #else
    #define HB_DLL_ENTRY_POINT    DllEntryPoint
 #endif
 
-#if defined(HB_FUNC_CALLCONV)
+#if defined( HB_FUNC_CALLCONV )
    #define HARBOUR void HB_FUNC_CALLCONV
 #else
    #define HARBOUR void

@@ -182,4 +182,3 @@
            DATA __FNAME(<x>)     [AS <astype>] EXPORTED  [INIT <d>]
 
 #xtranslate __FNAME(<x>) => F<x>
-

@@ -104,7 +104,7 @@ optimized.
 
 #if defined( __BORLANDC__ ) || defined( __WATCOMC__ ) || defined( _MSC_VER )
 #  include <float.h>
-#elif defined(__DJGPP__)
+#elif defined( __DJGPP__ )
    /* _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_; */
 #elif defined( HB_OS_SUNOS )
 #  include <ieeefp.h>    /* for finite() */
@@ -179,7 +179,7 @@ optimized.
 #endif
 
 
-#if defined( __GNUC__ ) && ( defined( _ISOC99_SOURCE ) || defined(__MINGW32__) )
+#if defined( __GNUC__ ) && ( defined( _ISOC99_SOURCE ) || defined( __MINGW32__ ) )
 
    /* use C99 macros */
 #  define HB_NUMTYPE( v, d )  do { \
@@ -221,9 +221,9 @@ optimized.
 #elif 0 /* TODO: add other C compilers here (check their version number) */
 #else
 
-#  if defined(__RSXNT__) || defined(__EMX__) || \
-      defined(__XCC__) || defined(__POCC__) || \
-      defined(__MINGW32__) || defined(HB_OS_HPUX)
+#  if defined( __RSXNT__ ) || defined( __EMX__ ) || \
+      defined( __XCC__ ) || defined( __POCC__ ) || \
+      defined( __MINGW32__ ) || defined( HB_OS_HPUX )
 #     define hb_isfinite( d )       isfinite( d )
 #  elif !defined( __NO_LONGDOUBLE__ ) && defined( __BORLANDC__ )
 #     define hb_isfinite( d )       _finitel( d )
@@ -231,7 +231,7 @@ optimized.
 #     define hb_isfinite( d )       _finite( ( double ) d )
 #  elif defined( __BORLANDC__ ) || defined( __WATCOMC__ )
 #     define hb_isfinite( d )       _finite( d )
-#  elif defined(__GNUC__) || defined(__DJGPP__) || defined(__LCC__)
+#  elif defined( __GNUC__ ) || defined( __DJGPP__ ) || defined( __LCC__ )
 #     define hb_isfinite( d )       finite( d )
 #  else
 #     define hb_isfinite( d )       FALSE

@@ -217,4 +217,3 @@ HB_CALL_ON_STARTUP_END( hb_lang_Init_RUWIN )
    static HB_$INITSYM hb_vm_auto_hb_lang_Init_RUWIN = hb_lang_Init_RUWIN;
    #pragma data_seg()
 #endif
-

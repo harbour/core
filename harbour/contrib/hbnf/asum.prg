@@ -88,4 +88,3 @@ FUNCTION FT_ASUM(aArray, nStartIndex, nEndIndex)
          nStartIndex, nEndIndex - nStartIndex + 1)
 
    RETURN (nSumTotal)                   // FT_ASum
-

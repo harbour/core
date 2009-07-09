@@ -74,7 +74,7 @@ static HB_GT_FUNCS   SuperTable;
 
 static BOOL s_fInit;
 static BOOL s_fMakeInit;
-static BOOL s_fGtError; 
+static BOOL s_fGtError;
 
 /* font definition */
 static ssfFont s_ssfDefaultFont;
@@ -353,7 +353,7 @@ static BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, BOOL
 
    if( iRows > 11 && iCols > 23 && iRows < 129 && iCols < 257 )
    {
-#if defined(AL_GFX_XWINDOWS)
+#if defined( AL_GFX_XWINDOWS )
       HB_TRACE(HB_TR_DEBUG, ("trying X DGA2 mode"));
       iRet = al_set_gfx_mode( AL_GFX_XDGA2, iWidth, iHeight, 0, 0 );
       if( iRet != 0 )
@@ -367,14 +367,14 @@ static BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, BOOL
          iRet = al_set_gfx_mode( AL_GFX_XWINDOWS, iWidth, iHeight, 0, 0 );
       }
 #endif
-#if defined (ALLEGRO_UNIX) || defined(ALLEGRO_LINUX) || defined(ALLEGRO_DOS)
+#if defined( ALLEGRO_UNIX ) || defined( ALLEGRO_LINUX ) || defined( ALLEGRO_DOS )
       if( iRet != 0 )
       {
          HB_TRACE(HB_TR_DEBUG, ("trying VBE/AF mode"));
          iRet = al_set_gfx_mode( AL_GFX_VBEAF, iWidth, iHeight, 0, 0 );
       }
 #endif
-#if (defined(ALLEGRO_UNIX) || defined(ALLEGRO_LINUX)) && defined(AL_GFX_FBCON)
+#if ( defined( ALLEGRO_UNIX ) || defined( ALLEGRO_LINUX ) ) && defined( AL_GFX_FBCON )
       if( iRet != 0 )
       {
          HB_TRACE(HB_TR_DEBUG, ("trying fb console mode"));

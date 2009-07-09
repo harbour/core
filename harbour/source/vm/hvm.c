@@ -11504,12 +11504,12 @@ HB_LANG_REQUEST( HB_LANG_DEFAULT )
 
 #undef HB_FORCE_LINK_MAIN
 
-#if !defined(HB_DYNLIB) && defined(HB_OS_WIN) && \
-    ( defined(__DMC__) || defined(__WATCOMC__) || defined(__MINGW32__) )
+#if !defined( HB_DYNLIB ) && defined( HB_OS_WIN ) && \
+    ( defined( __DMC__ ) || defined( __WATCOMC__ ) || defined( __MINGW32__ ) )
 
 #  define HB_FORCE_LINK_MAIN  hb_forceLinkMainWin
 
-#elif defined(__WATCOMC__) && ( defined(HB_OS_LINUX) || defined(HB_OS_OS2) || defined(HB_OS_WIN) )
+#elif defined( __WATCOMC__ ) && ( defined( HB_OS_LINUX ) || defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) )
 
 #  define HB_FORCE_LINK_MAIN  hb_forceLinkMainStd
 

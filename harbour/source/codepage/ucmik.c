@@ -5,7 +5,7 @@
 /*
  * xHarbour Project source code:
  * Bulgarian MIK <--> Unicode conversion table
- * 
+ *
  * Copyright 2005 Phil Krylov <phil a t newstar.rinet.ru>
  * www - http://www.xharbour.org
  *

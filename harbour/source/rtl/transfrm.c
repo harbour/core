@@ -143,7 +143,7 @@ HB_FUNC( TRANSFORM )
                case ')':
                   uiPicFlags |= PF_PARNEGWOS;
                   break;
-#if defined(HB_COMPAT_XPP) || defined(HB_COMPAT_FOXPRO)
+#if defined( HB_COMPAT_XPP ) || defined( HB_COMPAT_FOXPRO )
                case 'L':
                case '0':
                   uiPicFlags |= PF_PADL;  /* FoxPro/XPP extension */
@@ -281,7 +281,7 @@ HB_FUNC( TRANSFORM )
                else
                {
 /* NOTE: This is a FoxPro compatible [jarabal] */
-#if defined(HB_COMPAT_FOXPRO)
+#if defined( HB_COMPAT_FOXPRO )
                   ulPicLen = 0;
                   break;
 #else

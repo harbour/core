@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * 
+ *
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -72,7 +72,7 @@
 #else
 #  define HB_PCRE_REGEX
 #  define PCRE_STATIC
-#  if defined(__XCC__) || defined(__LCC__)
+#  if defined( __XCC__ ) || defined( __LCC__ )
 #     include "source\hbpcre\pcre.h"
 #  else
 #     include "../source/hbpcre/pcre.h"

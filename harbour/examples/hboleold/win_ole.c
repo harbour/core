@@ -88,11 +88,11 @@
    WINOLEAUTAPI VarR8FromDec(DECIMAL *pdecIn, DOUBLE *pdblOut);
 #endif
 
-#if ( defined(__DMC__) || defined(__MINGW32__) || ( defined(__WATCOMC__) && !defined(__FORCE_LONG_LONG__) ) )
+#if ( defined( __DMC__ ) || defined( __MINGW32__ ) || ( defined( __WATCOMC__ ) && !defined( __FORCE_LONG_LONG__ ) ) )
    #define HB_LONG_LONG_OFF
 #endif
 
-#if defined( __cplusplus ) && ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || ( defined(__WATCOMC__) && ( __WATCOMC__ >= 1280 ) ) )
+#if defined( __cplusplus ) && ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || ( defined( __WATCOMC__ ) && ( __WATCOMC__ >= 1280 ) ) )
 #  define HB_ID_REF( type, id )     id
 #else
 #  define HB_ID_REF( type, id )     ( ( type ) &id )

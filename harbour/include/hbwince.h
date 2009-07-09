@@ -53,16 +53,16 @@
 #ifndef HB_WINCE_H_
 #define HB_WINCE_H_
 
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
 
 HB_EXTERN_BEGIN
 
-#if defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN_CE )
 #  undef  HB_OS_HAS_DRIVE_LETTER
 
-/* defined(__CEGCC__) || defined(__MINGW32CE__) */
+/* defined( __CEGCC__ ) || defined( __MINGW32CE__ ) */
 
-#if defined(__MINGW32CE__) && 0
+#if defined( __MINGW32CE__ ) && 0
 typedef long clock_t;
 extern clock_t clock( void );
 #endif
@@ -189,7 +189,7 @@ extern void hb_mbtowccpy( wchar_t *dstW, const char *srcA, unsigned long ulLen )
 extern void hb_mbtowcset( wchar_t *dstW, const char *srcA, unsigned long ulLen );
 extern void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen );
 
-#if defined(UNICODE)
+#if defined( UNICODE )
 
    #define HB_TCHAR_CPTO(d,s,l)        hb_mbtowccpy(d,s,l)
    #define HB_TCHAR_GETFROM(d,s,l)     hb_wctombget(d,s,l)

@@ -96,9 +96,9 @@ HB_FUNC( HB_CMDARGARGV )
 
 HB_FUNC( HB_VMMODE )
 {
-#if   defined(HB_NO_PROFILER) && defined(HB_NO_TRACE) && !defined(HB_GUI)
+#if   defined( HB_NO_PROFILER ) && defined( HB_NO_TRACE ) && !defined( HB_GUI )
    hb_retni( 2 ); /* optimized for console applications */
-#elif defined(HB_NO_PROFILER) && defined(HB_NO_TRACE) &&  defined(HB_GUI)
+#elif defined( HB_NO_PROFILER ) && defined( HB_NO_TRACE ) &&  defined( HB_GUI )
    hb_retni( 1 ); /* optimized for gui applications */
 #else
    hb_retni( 0 ); /* no optimization */

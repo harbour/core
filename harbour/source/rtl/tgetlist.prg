@@ -925,7 +925,7 @@ METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg ) CLASS HBGetList
 
    // Check for SET KEY first
    IF ( bKeyBlock := SetKey( nKey ) ) != NIL
-      IF ::GetDoSetKey( bKeyBlock, oGet ) 
+      IF ::GetDoSetKey( bKeyBlock, oGet )
          RETURN Self
       ENDIF
    ENDIF

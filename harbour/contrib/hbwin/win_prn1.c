@@ -75,7 +75,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#if defined(HB_OS_WIN) && !defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
 
 #include <winspool.h>
 

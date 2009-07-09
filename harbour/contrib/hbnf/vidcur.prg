@@ -138,4 +138,3 @@ FUNCTION FT_GETVCUR( nPage )
   FT_INT86( VIDEO, aRegs )
 
 RETURN ( { HIGHBYTE( aRegs[CX] ), LOWBYTE( aRegs[CX] ), HIGHBYTE( aRegs[DX] ), LOWBYTE( aRegs[DX] ) } )
-

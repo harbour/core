@@ -1756,7 +1756,7 @@ static int gt_resize( InOutBase * ioBase )
    if ( gt_getsize( ioBase, &rows, &cols ) >= 0 )
    {
 /*
-#if defined(NCURSES_VERSION)
+#if defined( NCURSES_VERSION )
    wresize( ioBase->stdscr, rows, cols );
 #endif
 */
@@ -1764,7 +1764,7 @@ static int gt_resize( InOutBase * ioBase )
       gt_refresh( ioBase );
       ret = 0;
 /*
-#if defined(NCURSES_VERSION)
+#if defined( NCURSES_VERSION )
         if ( resize_term( rows, cols ) == OK ) {
        ret = 0;
             gt_refresh( ioBase );
@@ -3024,7 +3024,7 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
 
 /* *********************************************************************** */
 
-#if defined(HB_GT_CRS_BCEHACK) && defined(NCURSES_VERSION) && !defined(HB_NCURSES_194)
+#if defined( HB_GT_CRS_BCEHACK ) && defined( NCURSES_VERSION ) && !defined( HB_NCURSES_194 )
 #include <term.h>
 static void curs_wrkaround( void )
 {

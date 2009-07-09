@@ -80,10 +80,10 @@
  *     FT_DATECNFG() FT_ACCTWEEK() FT_ACCTMONTH() FT_ACCTYEAR()
  *  $END$
 */
- 
+
 FUNCTION FT_ACCTQTR(dGivenDate,nQtrNum)
   LOCAL nYTemp, nQTemp, lIsQtr, aRetVal
- 
+
   IF ! ( VALTYPE(dGivenDate) $ 'ND' )
     dGivenDate := DATE()
   ELSEIF VALTYPE(dGivenDate) == 'N'
@@ -95,7 +95,7 @@ FUNCTION FT_ACCTQTR(dGivenDate,nQtrNum)
   nQTemp     := VAL(SUBSTR(aRetVal[1],5,2))
   aRetVal[2] := FT_ACCTADJ(aRetVal[2])
   aRetVal[3] := FT_ACCTADJ(aRetVal[3], .T. )
- 
+
   IF dGivenDate < aRetVal[2]
     dGivenDate := FT_MADD(dGivenDate, -1)
     aRetVal    := FT_QTR(dGivenDate)
@@ -106,9 +106,9 @@ FUNCTION FT_ACCTQTR(dGivenDate,nQtrNum)
     ENDIF
     aRetVal[2] := FT_ACCTADJ(aRetVal[2])
     aRetVal[3] := FT_ACCTADJ(aRetVal[3], .T. )
- 
+
   ELSEIF dGivenDate > aRetVal[3]
- 
+
     dGivenDate := FT_MADD(dGivenDate,1)
     aRetVal    := FT_QTR(dGivenDate)
     nQTemp     += 1
@@ -118,9 +118,9 @@ FUNCTION FT_ACCTQTR(dGivenDate,nQtrNum)
     ENDIF
     aRetVal[2] := FT_ACCTADJ(aRetVal[2])
     aRetVal[3] := FT_ACCTADJ(aRetVal[3], .T. )
- 
+
   ENDIF
- 
+
   lIsQtr     := ( VALTYPE(nQtrNum) == 'N' )
   IF lIsQtr
     IF nQtrNum < 1 .OR. nQtrNum > 4
@@ -132,9 +132,7 @@ FUNCTION FT_ACCTQTR(dGivenDate,nQtrNum)
     aRetVal[2] := FT_ACCTADJ(aRetVal[2])
     aRetVal[3] := FT_ACCTADJ(aRetVal[3], .T. )
   ENDIF
- 
+
   aRetVal[1] := STR(nYTemp,4) + PADL(LTRIM(STR(nQTemp,2)), 2, '0')
- 
+
 RETURN aRetVal
-
-

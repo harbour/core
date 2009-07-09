@@ -216,4 +216,3 @@ HB_CALL_ON_STARTUP_END( hb_lang_Init_GL )
    static HB_$INITSYM hb_vm_auto_hb_lang_Init_GL = hb_lang_Init_GL;
    #pragma data_seg()
 #endif
-

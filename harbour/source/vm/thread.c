@@ -242,12 +242,12 @@ void hb_threadReleaseCPU( void )
 
    hb_taskSleep( 20 );
 
-#elif defined(HB_OS_WIN) || defined(__CYGWIN__)
+#elif defined( HB_OS_WIN ) || defined( __CYGWIN__ )
 
    /* Forfeit the remainder of the current time slice. */
    Sleep( 20 );
 
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
 
    /* 23/nov/2000 - maurilio.longo@libero.it
       Minimum time slice under OS/2 is 32 milliseconds, passed 1 will be rounded to 32 and
@@ -257,7 +257,7 @@ void hb_threadReleaseCPU( void )
       bug which causes DosSleep(0) not to work as expected.  */
    DosSleep( 1 ); /* Duration is in milliseconds */
 
-#elif defined(HB_OS_DOS)
+#elif defined( HB_OS_DOS )
 
    /* NOTE: there is a bug under NT 4 and 2000 -  if the app is running
       in protected mode, time slices will _not_ be released - you must switch
@@ -277,7 +277,7 @@ void hb_threadReleaseCPU( void )
 
       HB_DOS_INT86( 0x2F, &regs, &regs );
    }
-#elif defined(HB_OS_UNIX)
+#elif defined( HB_OS_UNIX )
    {
       struct timeval tv;
       tv.tv_sec = 0;

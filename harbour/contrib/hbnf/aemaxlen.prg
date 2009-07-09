@@ -134,4 +134,3 @@ FUNCTION FT_AEmaxlen( aArray, nDimension, nStart, nCount )
    NEXT
 
    RETURN ( nMaxlen )
-

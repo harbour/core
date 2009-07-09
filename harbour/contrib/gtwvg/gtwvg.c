@@ -833,7 +833,7 @@ static BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
             pWVT->PTEXTSIZE.x = tm.tmAveCharWidth;
             pWVT->PTEXTSIZE.y = tm.tmHeight;
 
-#if defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN_CE )
             pWVT->FixedFont = FALSE;
 #else
             pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
@@ -925,7 +925,7 @@ static void hb_gt_wvt_Maximize( PHB_GTWVT pWVT )
 
    /* Disable "maximize" button */
    {
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
+#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
       DWORD style = GetWindowLong( pWVT->hWnd, GWL_STYLE );
       SetWindowLong( pWVT->hWnd, GWL_STYLE, style &~ WS_MAXIMIZEBOX );
 #else
@@ -987,7 +987,7 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
                     tm.tmAveCharWidth; /* For fixed FONT should == tm.tmMaxCharWidth */
    pWVT->PTEXTSIZE.y = tm.tmHeight;    /* but seems to be a problem on Win9X so */
                                        /* assume proportional fonts always for Win9X */
-#if defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN_CE )
    pWVT->FixedFont = FALSE;
 #else
    pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
@@ -1293,7 +1293,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                 rect.right  != pWVT->sRectOld.right  ||
                 rect.bottom != pWVT->sRectOld.bottom )
             {
-#if !defined(HB_OS_WIN_CE)  /* WinCE does not support InvertRgn */
+#if !defined( HB_OS_WIN_CE )  /* WinCE does not support InvertRgn */
                /* Concept forwarded by Andy Wos - thanks. */
                HRGN rgn1 = CreateRectRgn( pWVT->sRectOld.left, pWVT->sRectOld.top, pWVT->sRectOld.right, pWVT->sRectOld.bottom );
                HRGN rgn2 = CreateRectRgn( rect.left, rect.top, rect.right, rect.bottom );
@@ -2084,7 +2084,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
             /* Enable "maximize" button */
             {
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
+#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
                SetWindowLong( pWVT->hWnd, GWL_STYLE, GetWindowLong( pWVT->hWnd, GWL_STYLE ) | WS_MAXIMIZEBOX  );
 #else
                SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, GetWindowLong( pWVT->hWnd, GWL_STYLE ) | WS_MAXIMIZEBOX );
@@ -2100,7 +2100,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_gt_wvt_FitSizeRows( pWVT );
          return 0;
 
-#if ! defined(HB_OS_WIN_CE)
+#if ! defined( HB_OS_WIN_CE )
       case WM_NCLBUTTONDBLCLK:
          if( !pWVT->bMaximized )
          {
@@ -2555,7 +2555,7 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 
          if( pSetLayeredWindowAttributes )
          {
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
+#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
             SetWindowLong( pWVT->hWnd, GWL_EXSTYLE, GetWindowLong( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
 #else
             SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
@@ -3276,7 +3276,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pWVT->bResizable = bNewValue;
                if( pWVT->hWnd )
                {
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
+#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
                   LONG style = GetWindowLong( pWVT->hWnd, GWL_STYLE );
 #else
                   LONG_PTR style = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
@@ -3285,7 +3285,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      style = style | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME;
                   else
                      style = ( style & ~( WS_MAXIMIZEBOX | WS_THICKFRAME ) ) | WS_BORDER;
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
+#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
                   SetWindowLong( pWVT->hWnd, GWL_STYLE, style );
 #else
                   SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
@@ -3314,7 +3314,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   pWVT->pszSelectCopy = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
                   pWVT->bSelectCopy = TRUE;
 
-#if !defined(HB_OS_WIN_CE)  /* WinCE does not support ModifyMenu */
+#if !defined( HB_OS_WIN_CE )  /* WinCE does not support ModifyMenu */
                   if( hSysMenu )
                   {
                      LPTSTR buffer;

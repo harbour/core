@@ -83,7 +83,7 @@ METHOD New( hHash, cVarName, lEditable ) CLASS HBDbHash
    ::hashName := cVarName
    ::TheHash := hHash
    ::lEditable := lEditable
-   
+
    ::addWindows( ::TheHash )
 
    RETURN Self
@@ -155,7 +155,7 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
                            ::aWindows[ ::nCurWindow ],::hashName, hHash ) }
 
    SetCursor( SC_NONE )
-   
+
    ::aWindows[ ::nCurWindow ]:ShowModal()
 
    RETURN Self
@@ -298,5 +298,5 @@ STATIC FUNCTION HashKeyString( hHash, nAt )
    CASE cType == "D" ; RETURN '"' + DToC( xVal ) + '"'
    CASE cType == "N" ; RETURN hb_NToS( xVal )
    ENDCASE
-  
+
    RETURN AllTrim( __dbgCStr( xVal ) )

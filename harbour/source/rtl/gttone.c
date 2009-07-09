@@ -67,10 +67,10 @@
 #if defined( HB_OS_WIN )
 
 #if defined( HB_ARCH_32BIT ) && !defined( _M_ARM ) && \
-    ( defined(__BORLANDC__) || defined(_MSC_VER) || \
-      defined(__WATCOMC__) || defined(__MINGW32__) )
+    ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
+      defined( __WATCOMC__ ) || defined( __MINGW32__ ) )
 
-#if defined(_MSC_VER) || defined(__WATCOMC__)
+#if defined( _MSC_VER ) || defined( __WATCOMC__ )
    #include <conio.h>
 #endif
 
@@ -80,7 +80,7 @@ static int hb_Inp9x( USHORT usPort )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_Inp9x(%hu)", usPort));
 
-   #if defined( __BORLANDC__ ) || defined(__DMC__)
+   #if defined( __BORLANDC__ ) || defined( __DMC__ )
 
       _DX = usPort;
       __emit__(0xEC);         /* ASM  IN AL, DX */
@@ -118,7 +118,7 @@ static int hb_Outp9x( USHORT usPort, USHORT usVal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_Outp9x(%hu, %hu)", usPort, usVal));
 
-   #if defined( __BORLANDC__ ) || defined(__DMC__)
+   #if defined( __BORLANDC__ ) || defined( __DMC__ )
 
       _DX = usPort;
       _AL = usVal;
@@ -256,7 +256,7 @@ void hb_gt_winapi_tone( double dFrequency, double dDuration )
    {
       #if defined( HB_ARCH_32BIT ) && !defined( _M_ARM ) && \
            ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
-             defined( __WATCOMC__ )  || defined(__MINGW32__) )
+             defined( __WATCOMC__ )  || defined( __MINGW32__ ) )
          hb_gt_w9xTone( dFrequency, dDuration );
       #else
          hb_gt_wNtTone( dFrequency, dDuration );

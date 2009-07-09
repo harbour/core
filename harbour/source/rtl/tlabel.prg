@@ -138,7 +138,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       err:subSystem := "FRMLBL"
       Eval(ErrorBlock(), err)
    ELSE
-      /* NOTE: CA-Cl*pper does an RTrim() on the filename here, 
+      /* NOTE: CA-Cl*pper does an RTrim() on the filename here,
                but in Harbour we're using _SET_TRIMFILENAME. [vszakats] */
       IF Set( _SET_DEFEXTENSIONS )
          hb_FNameSplit( cLBLName, NIL, NIL, @cExt )

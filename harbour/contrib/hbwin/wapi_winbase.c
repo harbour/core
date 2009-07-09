@@ -90,7 +90,7 @@ HB_FUNC( WAPI_GETCURRENTTHREAD )
 
 HB_FUNC( WAPI_SETPROCESSWORKINGSETSIZE )
 {
-#if ! defined(HB_OS_WIN_CE)
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_L( SetProcessWorkingSetSize(
       wapi_par_HANDLE( 1 ) /* hProcess */,
       ( SIZE_T ) hb_parnint( 2 ) /* dwMinimumWorkingSetSize */,
@@ -127,7 +127,7 @@ HB_FUNC( WAPI_FREELIBRARY )
 
 HB_FUNC( WAPI_GETPROCADDRESS )
 {
-#if defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN_CE )
    hb_retptr( NULL );
 #else
    hb_retptr( ( void * ) GetProcAddress( ( HMODULE ) hb_parptr( 1 ), HB_ISCHAR( 2 ) ? ( LPCSTR ) hb_parc( 2 ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );

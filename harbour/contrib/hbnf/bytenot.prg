@@ -80,4 +80,3 @@ FUNCTION FT_BYTENOT(cByte)
   ENDIF
 
 RETURN cNewByte
-

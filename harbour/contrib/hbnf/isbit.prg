@@ -85,4 +85,3 @@ FUNCTION FT_ISBIT(cInbyte,nBitPos)
   ENDIF
 
 RETURN lBitStat
-

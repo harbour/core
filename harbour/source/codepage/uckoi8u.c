@@ -4,7 +4,7 @@
 
 /*
  * xHarbour Project source code:
- * 
+ *
  *
  * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://www.xharbour.org

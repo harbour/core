@@ -135,7 +135,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS HBDbWindow
    RETURN Self
 
 METHOD Clear() CLASS HBDbWindow
- 
+
    SetColor( ::cColor )
    Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1 )
 

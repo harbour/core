@@ -178,7 +178,7 @@
 #include "hbapifs.h"
 
 /* MSC compiler switch */
-#if defined(_MSC_VER)
+#if defined( _MSC_VER )
 #pragma warning( disable : 4035 )
 #pragma warning( disable : 4704 )
 #endif

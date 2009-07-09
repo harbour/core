@@ -69,7 +69,7 @@
          [; <ParamN> := iif(<ParamN> == NIL,<DefN>,<ParamN>)]
 
 
-         
+
 FUNCTION FT_AAVG(aArray, nStartIndex, nEndIndex)
 
    DEFAULT nStartIndex TO 1, ;

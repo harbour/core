@@ -1813,4 +1813,3 @@ STATIC FUNCTION Xbp_SetPresParam( aPP, nParam, xValue )
    RETURN oldValue
 
 /*----------------------------------------------------------------------*/
-

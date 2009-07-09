@@ -65,4 +65,3 @@
 
 FUNCTION FT_BYTENEG(cByte)
 RETURN   iif(valtype(cByte) != "C", NIL, chr((256 - asc(cByte)) % 256))
-

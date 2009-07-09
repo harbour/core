@@ -64,7 +64,7 @@
 #include "hbstack.h"
 #include "hbvm.h"
 
-#if defined(HB_OS_LINUX) && !defined(__WATCOMC__)
+#if defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
 #  include <dlfcn.h>
 #endif
 
@@ -144,7 +144,7 @@ HB_FUNC( HB_LIBFREE )
          fResult = FreeLibrary( ( HMODULE ) hDynLib );
 #elif defined( HB_OS_OS2 )
          fResult = DosFreeModule( ( HMODULE ) hDynLib ) == NO_ERROR;
-#elif defined( HB_OS_LINUX ) && !defined (__WATCOMC__ )
+#elif defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
          fResult = dlclose( hDynLib ) == 0;
 #endif
       }
@@ -155,7 +155,7 @@ HB_FUNC( HB_LIBFREE )
 
 HB_FUNC( HB_LIBERROR )
 {
-#if defined(HB_OS_LINUX) && !defined(__WATCOMC__)
+#if defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
    hb_retc( dlerror() );
 #else
    hb_retc_null();

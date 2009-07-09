@@ -138,7 +138,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
    FSeek( nHandle, 0 )  // go top
 
    /* Here we try to read a line at a time but I think we could just
-      display the whole buffer since it said: 
+      display the whole buffer since it said:
       "without any headings or formating" */
 
    nHasRead := 0

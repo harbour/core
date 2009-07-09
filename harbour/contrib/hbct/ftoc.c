@@ -67,7 +67,7 @@
  *
  *  $RETURNS$
  *      FTOC() return a string with the size of DOUBLE.
- *      ATTENTION: different implementations or platforms of Harbour, they 
+ *      ATTENTION: different implementations or platforms of Harbour, they
  *      could produce different format in the string returned by FTOC().
  *
  *  $DESCRIPTION$
@@ -112,7 +112,7 @@ HB_FUNC( FTOC )
  *  $ARGUMENTS$
  *      <cFloatingPointNumber> Designate a string that contains a Harbour
  *      number in flotaing point format.
- *      ATTENTION: different implementations or platforms of Harbour, they 
+ *      ATTENTION: different implementations or platforms of Harbour, they
  *      could produce different format in the string returned by FTOC().
  *
  *  $RETURNS$

@@ -56,7 +56,7 @@
 #include "hbdefs.h"
 
 /* Maximum symbol name length handled by Harbour compiler and runtime.
-   For strict CA-Cl*pper compatibility a value of 10 would have 
+   For strict CA-Cl*pper compatibility a value of 10 would have
    to be used, but Harbour won't properly compile using this setting. */
 #define HB_SYMBOL_NAME_LEN   63
 
@@ -71,7 +71,7 @@ struct _HB_SYMB;
 #  define HB_OBJ_CLASS( p )      ( ( p )->item.asArray.value->uiClass )
 #  define HB_ARRAY_OBJ( p )      ( ( p )->item.asArray.value->uiClass != 0 )
 
-#  if defined(__GNUC__)
+#  if defined( __GNUC__ )
 #     define HB_ITEM_NIL         { HB_IT_NIL, {} }
 #  else
 #     define HB_ITEM_NIL         { HB_IT_NIL, NULL }

@@ -1381,7 +1381,7 @@ void hb_macroGenPopAliasedVar( const char * szVarName,
             /* TODO: memvars created inside TYPE() function should have PUBLIC scope */
             hb_macroMemvarGenPCode( HB_P_MPOPMEMVAR, szVarName, HB_COMP_PARAM );
          }
-         else if( iLen >= 4 && iLen <= 6 && 
+         else if( iLen >= 4 && iLen <= 6 &&
                   ( strncmp( szAlias, "FIELD", iLen ) == 0 ||
                     strncmp( szAlias, "_FIELD", iLen ) == 0 ) )
          {  /* FIELD-> */
@@ -1476,7 +1476,7 @@ void hb_macroGenPushAliasedVar( const char * szVarName,
          {  /* M-> or MEMV-> or MEMVA-> or MEMVAR-> variable */
             hb_macroMemvarGenPCode( HB_P_MPUSHMEMVAR, szVarName, HB_COMP_PARAM );
          }
-         else if( iLen >= 4 && iLen <= 6 && 
+         else if( iLen >= 4 && iLen <= 6 &&
                   ( strncmp( szAlias, "FIELD", iLen ) == 0 ||
                     strncmp( szAlias, "_FIELD", iLen ) == 0 ) )
          {  /* FIELD-> */
@@ -1566,7 +1566,7 @@ void hb_macroGenPushString( const char * szText, ULONG ulStrLen, HB_COMP_DECL )
    {
       if( ulStrLen <= USHRT_MAX )
          hb_macroGenPCode3( HB_P_MPUSHSTR, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_COMP_PARAM );
-      else 
+      else
          hb_macroGenPCode4( HB_P_MPUSHSTRLARGE, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_ULBYTE( ulStrLen ), HB_COMP_PARAM );
       hb_macroGenPCodeN( ( BYTE * ) szText, ulStrLen, HB_COMP_PARAM );
    }

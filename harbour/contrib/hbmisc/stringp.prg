@@ -170,6 +170,3 @@ function Debug( xItem )
    QOut( ToChar( xItem, ", ", .T. ) )
 
 return xItem
-
-
-

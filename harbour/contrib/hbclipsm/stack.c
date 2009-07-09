@@ -64,7 +64,7 @@ HB_FUNC( STACKNEW )
 */
 HB_FUNC( STACKPUSH )
 {
-   hb_arrayAdd( hb_param( 1, HB_IT_ARRAY ), 
+   hb_arrayAdd( hb_param( 1, HB_IT_ARRAY ),
                 hb_param( 2, HB_IT_ANY ) );
 }
 

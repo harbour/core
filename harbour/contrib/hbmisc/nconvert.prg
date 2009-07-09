@@ -143,7 +143,7 @@ FUNCTION OctalToDec(cString)
          (8**(nLen-nX))
    NEXT nX
    RETURN(nNumber)
-                        
+
 FUNCTION HexaToDec(cString)
    local nNumber:=0,nX
    local cNewString:=AllTrim(cString)
@@ -153,5 +153,3 @@ FUNCTION HexaToDec(cString)
          (16**(nLen-nX))
    NEXT nX
    RETURN nNumber
-
-

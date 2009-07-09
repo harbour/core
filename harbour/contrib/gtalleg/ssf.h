@@ -62,26 +62,26 @@
 #ifndef _SSF_H_
 #define _SSF_H_
 
-#if defined(__BORLANDC__)
+#if defined( __BORLANDC__ )
    #define ALLEGRO_NO_ASM
    #define ALLEGRO_BCC32
-#elif defined(_MSC_VER)
-   #if defined(_WIN64)
+#elif defined( _MSC_VER )
+   #if defined( _WIN64 )
       #define ALLEGRO_NO_ASM
    #endif
    #define ALLEGRO_MSVC
-#elif defined(__MINGW32__) || defined(__CYGWIN__)
+#elif defined( __MINGW32__ ) || defined( __CYGWIN__ )
    #define ALLEGRO_MINGW32
-   #if defined(__CYGWIN__)
+   #if defined( __CYGWIN__ )
       #define SCAN_DEPEND
    #endif
-#elif defined(__DMC__)
+#elif defined( __DMC__ )
    #define ALLEGRO_DMC
-#elif defined(__DJGPP__)
+#elif defined( __DJGPP__ )
    #define ALLEGRO_DJGPP
-#elif defined(__WATCOMC__)
+#elif defined( __WATCOMC__ )
    #define ALLEGRO_WATCOM
-#elif defined(HB_OS_DARWIN)
+#elif defined( HB_OS_DARWIN )
    #define ALLEGRO_MACOSX
 #endif
 

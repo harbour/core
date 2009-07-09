@@ -32,7 +32,7 @@ static s_lMinit:=.F.
         nCol := VAL(nCol)
      ENDIF
 
-     if  !FT_MINIT() 
+     if  !FT_MINIT()
         @ maxrow(), 0 say "Mouse driver is not installed!"
 
         return ""
@@ -592,7 +592,7 @@ aReg[AX]:=27
 
 FT_INT86( 51, aReg )        // execute mouse interrupt
 
-*/                           
+*/
 // Set the return values
 
 nHoriz := _mget_horispeed()
@@ -1281,7 +1281,7 @@ local aReg:={}
    nButPrs := aReg[1] // store updated press count
    nX := aReg[2]      // x-coordinate at last press
    nY := aReg[3]      // y-coordinate at last press
-   
+
 _m_MBUTPRS(nButton)
 RETURN aReg[4]                 // return button status
 
@@ -1407,7 +1407,7 @@ FUNCTION FT_MDEFCRS( nCurType, nScrMask, nCurMask )   // define text cursor type
    aReg[DX] := nCurMask   // load cursor mask value
    FT_INT86( 51, aReg )  // execute mouse interrupt
    */
-_m_mdefcrs(nCurType, nScrMask, nCurMask ) 
+_m_mdefcrs(nCurType, nScrMask, nCurMask )
 RETURN NIL              // no function output
 
 
@@ -1467,6 +1467,5 @@ local iButton
    nX := INT(aReg[1]/8)        // store new x-coordinate
    nY := INT(aReg[2]/8)        // store new y-coordinate
    iButton:= aReg[3]                 // return button status
-   
-RETURN iButton
 
+RETURN iButton

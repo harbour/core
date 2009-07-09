@@ -67,7 +67,7 @@
 #if defined( HB_OS_UNIX )
 #  include <unistd.h>
 #  include <sys/types.h>
-#  if defined(__WATCOMC__) || defined(__CEGCC__)
+#  if defined( __WATCOMC__ ) || defined( __CEGCC__ )
 #     include <sys/stat.h>
 #  elif defined( HB_OS_DARWIN )
 #     include <sys/param.h>
@@ -82,7 +82,7 @@ HB_FUNC( DISKSPACE )
    double dSpace = 0.0;
    BOOL bError;
 
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
    {
       USHORT uiDrive = HB_ISNUM( 1 ) ? hb_parni( 1 ) : 0;
       union REGS regs;
@@ -97,10 +97,10 @@ HB_FUNC( DISKSPACE )
                   ( double ) regs.HB_XREGS.ax *
                   ( double ) regs.HB_XREGS.cx;
    }
-#elif defined(HB_OS_WIN)
+#elif defined( HB_OS_WIN )
    {
-#if defined(_MSC_VER) || defined(__LCC__) || \
-    ( defined(__GNUC__) && !defined(__RSXNT__) )
+#if defined( _MSC_VER ) || defined( __LCC__ ) || \
+    ( defined( __GNUC__ ) && !defined( __RSXNT__ ) )
 
 #  define HB_GET_LARGE_UINT( v )  ( ( double ) (v).LowPart + \
                                     ( double ) (v).HighPart * \
@@ -122,7 +122,7 @@ HB_FUNC( DISKSPACE )
       USHORT uiDrive = uiParam == 0 ? hb_fsCurDrv() + 1 : uiParam;
       UINT uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
 
-#if defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN_CE )
       TCHAR lpPath[ 4 ];
 
       lpPath[ 0 ] = ( TCHAR ) uiDrive + 'A' - 1;
@@ -175,7 +175,7 @@ HB_FUNC( DISKSPACE )
 #endif
       SetErrorMode( uiErrMode );
    }
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
    {
       USHORT uiDrive = HB_ISNUM( 1 ) ? hb_parni( 1 ) : 0;
       struct _FSALLOCATE fsa;
@@ -187,7 +187,7 @@ HB_FUNC( DISKSPACE )
                   ( double ) fsa.cSectorUnit *
                   ( double ) fsa.cbSector;
    }
-#elif defined(HB_OS_UNIX)
+#elif defined( HB_OS_UNIX )
    {
       const char * szName = hb_parc( 1 );
       char * pszFree = NULL;
@@ -198,7 +198,7 @@ HB_FUNC( DISKSPACE )
          szName = hb_fsNameConv( szName, &pszFree );
 
       {
-#if defined(__WATCOMC__) || defined(__CEGCC__)
+#if defined( __WATCOMC__ ) || defined( __CEGCC__ )
          int iTODO;
 #else
 #if defined( HB_OS_DARWIN )

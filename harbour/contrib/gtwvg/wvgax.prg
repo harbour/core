@@ -404,4 +404,3 @@ METHOD onError( oError ) CLASS AutomationObject
    RETURN xValue
 #endif
 /*----------------------------------------------------------------------*/
-

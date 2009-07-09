@@ -296,7 +296,7 @@ FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
       hb_HEval( hIni[ "MAIN" ], ;
                { |cKey, xVal| FWrite( hFile, hb_CStr( cKey ) + " = " + ;
                                              hb_CStr( xVal ) + cNewLine ) } )
-           
+
    ELSE
       /* When automain is off, just write all the toplevel variables. */
       hb_HEval( hIni, { |cKey, xVal| iif( ! hb_isHash( xVal ),;

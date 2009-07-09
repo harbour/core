@@ -71,4 +71,3 @@
 #ifndef __HARBOUR__
    #define HB_C52_STRICT
 #endif
-

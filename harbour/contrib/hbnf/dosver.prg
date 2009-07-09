@@ -84,4 +84,3 @@ FUNCTION FT_DOSVER()
 */
 cResult:= _get_dosver()
 RETURN ( cResult )
-

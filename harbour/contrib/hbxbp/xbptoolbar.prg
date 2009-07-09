@@ -435,4 +435,3 @@ METHOD XbpToolbarButton:new( cCaption, nStyle, cKey )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

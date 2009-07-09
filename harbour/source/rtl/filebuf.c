@@ -63,7 +63,7 @@ typedef struct _HB_FILE * PHB_FILE;
 #include "hbthread.h"
 #include "hbvm.h"
 
-#if !defined(HB_OS_WIN_CE)
+#if !defined( HB_OS_WIN_CE )
 #  include <sys/types.h>
 #  include <sys/stat.h>
 #endif

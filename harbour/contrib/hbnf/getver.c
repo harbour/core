@@ -53,7 +53,7 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
 #include "dos.h"
 #endif
 #include "string.h"
@@ -61,7 +61,7 @@
 
 HB_FUNC( _GET_DOSVER )
 {
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
    {
       char * pszPlatform;
       union REGS regs;
@@ -80,7 +80,7 @@ HB_FUNC( _GET_DOSVER )
 HB_FUNC( _FT_ISSHARE )
 {
    int iShare;
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
    {
       union REGS regs;
       regs.HB_XREGS.ax = 0x1000;
@@ -100,7 +100,7 @@ HB_FUNC( _FT_ISSHARE )
 HB_FUNC( _FT_NWKSTAT )
 {
    int iConnect;
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
    {
       union REGS regs;
       regs.HB_XREGS.ax = 0xDC;
@@ -117,7 +117,7 @@ HB_FUNC( _FT_NWKSTAT )
 
 HB_FUNC( _FT_SETMODE )
 {
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
    {
       union REGS regs;
       regs.h.ah = 0;
@@ -130,7 +130,7 @@ HB_FUNC( _FT_SETMODE )
 HB_FUNC( _FT_GETMODE )
 {
    int iMode;
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
    {
       union REGS regs;
       regs.h.ah = 0x0F;
@@ -151,7 +151,7 @@ HB_FUNC( _FT_TEMPFIL )
    int iflags;
    const char * cPath;
 
-#if defined(HB_OS_DOS) && !defined(HB_OS_DOS_32)
+#if defined( HB_OS_DOS ) && !defined( HB_OS_DOS_32 )
    {
       int iMode = hb_parni( 2 );
       union REGS regs;

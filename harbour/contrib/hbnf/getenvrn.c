@@ -94,7 +94,7 @@
 #define HB_OS_WIN_USED
 #include "hbapi.h"
 
-#if defined(HB_OS_UNIX_COMPATIBLE)
+#if defined( HB_OS_UNIX_COMPATIBLE )
 #   include <unistd.h>
 #   if defined( HB_OS_DARWIN )
 #      include <crt_externs.h>
@@ -102,10 +102,10 @@
 #   elif !defined( __WATCOMC__ )
 extern char **environ;
 #   endif
-#elif defined(HB_OS_DOS)
+#elif defined( HB_OS_DOS )
 #   define environ _environ
 extern char **_environ;
-#elif defined(HB_OS_WIN)
+#elif defined( HB_OS_WIN )
 #   include <windows.h>
 #endif
 
@@ -116,7 +116,7 @@ extern char **_environ;
 
 HB_FUNC( FT_GETE )
 {
-#if defined(HB_OS_DOS) || defined(HB_OS_UNIX_COMPATIBLE)
+#if defined( HB_OS_DOS ) || defined( HB_OS_UNIX_COMPATIBLE )
    {
       char *buffer = NULL;
       int x;
@@ -171,7 +171,7 @@ HB_FUNC( FT_GETE )
       /* return number of strings found */
       hb_retni( x );
    }
-#elif defined(HB_OS_WIN) && ! ( defined(HB_OS_WIN_CE) && defined(__POCC__) )
+#elif defined( HB_OS_WIN ) && ! ( defined( HB_OS_WIN_CE ) && defined( __POCC__ ) )
    {
       char *buffer = NULL;
       LPTCH lpEnviron = GetEnvironmentStrings();

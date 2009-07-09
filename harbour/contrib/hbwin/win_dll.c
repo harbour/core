@@ -64,7 +64,7 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 
-#if !defined( HB_NO_ASM ) && defined( HB_OS_WIN ) && !defined(__CYGWIN__)
+#if !defined( HB_NO_ASM ) && defined( HB_OS_WIN ) && !defined( __CYGWIN__ )
 
 #ifdef __XHARBOUR__
 
@@ -241,7 +241,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
    /* Call the specified function with the given parameters. Build a
       proper stack and take care of correct return value processing. */
    RESULT  Res = { 0 };
-#if defined(HB_OS_WIN_CE) || defined(HB_OS_WIN_64)
+#if defined( HB_OS_WIN_CE ) || defined( HB_OS_WIN_64 )
    HB_SYMBOL_UNUSED( iFlags );
    HB_SYMBOL_UNUSED( lpFunction );
    HB_SYMBOL_UNUSED( nArgs );
@@ -254,7 +254,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
    BYTE *  pArg;
 
    #if defined( __MINGW32__ )
-   #elif defined( __BORLANDC__ ) || defined(__DMC__)
+   #elif defined( __BORLANDC__ ) || defined( __DMC__ )
    #else
       DWORD * pESP;
    #endif
@@ -264,7 +264,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
       asm volatile( "\tmovl %%esp, %0\n"
                     "\tsubl $0x100, %%esp\n"
                     : "=r" (pStack) );
-   #elif defined( __BORLANDC__ ) || defined(__DMC__)
+   #elif defined( __BORLANDC__ ) || defined( __DMC__ )
       pStack = ( DWORD * ) _ESP;
       _ESP -= 0x100;
    #else
@@ -350,7 +350,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
          ( ( int * ) pRet )[ 0 ] = dwEAX;
          ( ( int * ) pRet )[ 1 ] = dwEDX;
       }
-   #elif defined( __BORLANDC__ ) || defined(__DMC__)
+   #elif defined( __BORLANDC__ ) || defined( __DMC__ )
       _ESP += ( 0x100 - dwStSize );
       _EDX =  ( DWORD ) &lpFunction;
       __emit__( 0xFF, 0x12 ); /* call [edx]; */
@@ -705,7 +705,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
 
 /* ------------------------------------------------------------------ */
 
-#if !defined(HB_OS_WIN_CE)
+#if !defined( HB_OS_WIN_CE )
 static HB_GARBAGE_FUNC( _DLLUnload )
 {
    PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) Cargo;
@@ -730,7 +730,7 @@ static HB_GARBAGE_FUNC( _DLLUnload )
 
 static LPVOID hb_getprocaddress( HMODULE hDLL, int iProc )
 {
-#if defined(HB_OS_WIN_CE)
+#if defined( HB_OS_WIN_CE )
    HB_SYMBOL_UNUSED( hDLL );
    HB_SYMBOL_UNUSED( iProc );
    return NULL;
@@ -810,7 +810,7 @@ HB_FUNC( DLLCALL )
 
 HB_FUNC( DLLPREPARECALL )
 {
-#if ! defined(HB_OS_WIN_CE)
+#if ! defined( HB_OS_WIN_CE )
    PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) hb_gcAlloc( sizeof( XPP_DLLEXEC ), _DLLUnload );
    char * pszErrorText;
 

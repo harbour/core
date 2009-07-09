@@ -74,4 +74,3 @@ FUNCTION FT_SYSMEM()
   FT_INT86( MEMSIZE, aRegs )
 
 RETURN ( aRegs[ AX ] )
-

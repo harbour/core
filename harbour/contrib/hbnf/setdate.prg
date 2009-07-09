@@ -98,4 +98,3 @@ function FT_SETDATE( dDate )
   aregs[ DX ] = ( month( dDate ) * ( 2 ^ 8 ) )  + day( dDate )
 
 return( FT_INT86( DOS, aRegs ) )
-

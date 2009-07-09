@@ -52,12 +52,12 @@
 
 #include "hbsetup.h"
 
-#if defined(HB_OS_WIN) && \
-    !( defined(__RSXNT__) || defined(__CYGWIN__) || defined(HB_OS_WIN_CE) )
+#if defined( HB_OS_WIN ) && \
+    !( defined( __RSXNT__ ) || defined( __CYGWIN__ ) || defined( HB_OS_WIN_CE ) )
 
 #include <windows.h>
 
-#if defined(__LCC__)
+#if defined( __LCC__ )
 #   include <winspool.h>
 #endif
 

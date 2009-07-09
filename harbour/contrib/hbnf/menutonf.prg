@@ -590,5 +590,3 @@ set( _SET_CURSOR, nCursor )
 eval( bGetSet, nActive )
 
 return nActive
-
-

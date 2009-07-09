@@ -104,7 +104,7 @@ BOOL EnableScrollBar( HWND hWnd, UINT wSBflags, UINT wArrows );
 */
 HB_FUNC( WAPI_ENABLESCROLLBAR )
 {
-#if ! defined(HB_OS_WIN_CE)
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_L( EnableScrollBar( wapi_par_HWND( 1 ),
                                 wapi_par_UINT( 2 ),
                                 wapi_par_UINT( 3 ) ) );
@@ -167,7 +167,7 @@ int GetScrollPos( HWND hWnd, int nBar );
 */
 HB_FUNC( WAPI_GETSCROLLPOS )
 {
-#if ! defined(HB_OS_WIN_CE)
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_NI( GetScrollPos( wapi_par_HWND( 1 ),
                               wapi_par_INT( 2 ) ) );
 #else
@@ -180,7 +180,7 @@ BOOL GetScrollRange( HWND hWnd, int nBar, LPINT lpMinPos, LPINT lpMaxPos );
 */
 HB_FUNC( WAPI_GETSCROLLRANGE )
 {
-#if ! defined(HB_OS_WIN_CE)
+#if ! defined( HB_OS_WIN_CE )
    {
       int minPos, maxPos;
 
@@ -271,7 +271,7 @@ BOOL ShowScrollBar( HWND hWnd, int wBar, BOOL bShow );
 */
 HB_FUNC( WAPI_SHOWSCROLLBAR )
 {
-#if ! defined(HB_OS_WIN_CE)
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_L( ShowScrollBar( wapi_par_HWND( 1 ),
                               wapi_par_INT( 2 ),
                               wapi_par_BOOL( 3 ) ) );

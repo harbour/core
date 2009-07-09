@@ -148,7 +148,7 @@ void hb_verBuildInfo( void )
 #if ! defined( HB_NO_PROFILER )
    hb_conOutErr( "(profiler) ", 0 );
 #endif
-#if defined(__cplusplus)
+#if defined( __cplusplus )
    hb_conOutErr( "(C++ mode) ", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );

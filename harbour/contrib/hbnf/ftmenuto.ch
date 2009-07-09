@@ -71,4 +71,3 @@
 
 #xcommand MENU TO <v> [<l : COLD>] => ;
    <v> := FT_MenuTo( {|_1| iif( _1 == NIL, <v>, <v> := _1 ) }, #<v>, <.l.> )
-

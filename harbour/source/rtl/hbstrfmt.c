@@ -252,7 +252,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
 
             /* If decimals is set, zero padding flag is ignored */
             if( iDec >= 0 )  fPadZero = 0;
-               
+
             if( fLeftAlign )
             {
                /* Zero padding is ignored on left Align */
@@ -266,7 +266,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
 
                for( i = iSize; i < iDec; i++ )
                   bufadd( &buffer, "0", 1 );
-               
+
                bufadd( &buffer, pStr2, ( ULONG ) iSize );
                if( iDec > iSize )
                   iSize = iDec;
@@ -303,10 +303,10 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
                      bufadd( &buffer, "+", 1 );
                   else if( fSpaceSign )
                      bufadd( &buffer, " ", 1 );
-    
+
                   for( i = iSize; i < iDec; i++ )
                      bufadd( &buffer, "0", 1 );
-                  
+
                   bufadd( &buffer, pStr2, ( ULONG ) iSize );
                }
             }

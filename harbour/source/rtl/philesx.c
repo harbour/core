@@ -60,7 +60,7 @@
 
 HB_FUNC( CURDRIVE )
 {
-#if defined(HB_OS_HAS_DRIVE_LETTER)
+#if defined( HB_OS_HAS_DRIVE_LETTER )
    char szCurDrive[ 1 ];
    const char * szDrive;
 

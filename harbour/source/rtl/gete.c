@@ -91,7 +91,7 @@ HB_FUNC( GETENV )
 
          /* NOTE: Convert the envvar name to uppercase. This is required for
                   DOS and OS/2 systems. [vszakats] */
-#if defined(HB_OS_DOS) || defined(HB_OS_OS2)
+#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
          hb_strupr( pszName );
 #endif
          szValue = hb_getenv( pszName );
@@ -160,7 +160,7 @@ HB_FUNC( HB_GETENV )
 
          /* NOTE: Convert the envvar name to uppercase. This is required for
                   DOS and OS/2 systems. [vszakats] */
-#if defined(HB_OS_DOS) || defined(HB_OS_OS2)
+#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
          hb_strupr( pszName );
 #endif
          szValue = hb_getenv( pszName );

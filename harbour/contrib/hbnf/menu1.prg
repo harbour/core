@@ -353,7 +353,7 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
 
    // this is the routine that calculates the position of each item
    // on the menu bar.
-   
+
    aBarCol[1] := 0
    nTtlUsed := LEN( aBar[1] ) + 1
    AEVAL( aBar, ;

@@ -2,7 +2,7 @@
  * $Id$
  */
 
-/* 
+/*
 * File......: kspeed.asm
 * Author....: James R. Zack
 * CIS ID....: 75410,1567
@@ -145,13 +145,13 @@ _NanFor    ENDS
 /* This is the New one Rewriten in C*/
 
 #include "hbapi.h"
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
 #include "dos.h"
 #endif
 
 HB_FUNC( FT_SETRATE )
 {
-#if defined(HB_OS_DOS)
+#if defined( HB_OS_DOS )
    {
       union REGS registers;
       int tempo = 0, nrepete = 0;

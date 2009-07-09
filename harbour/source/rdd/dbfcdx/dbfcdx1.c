@@ -7594,7 +7594,7 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
          break;
       case 'C':
          uiLen = ( USHORT ) hb_itemGetCLen( pResult );
-#if !(defined(HB_COMPAT_C53) && defined(HB_C52_STRICT))
+#if !( defined( HB_COMPAT_C53 ) && defined( HB_C52_STRICT ) )
          if( uiLen > CDX_MAXKEY )
             uiLen = CDX_MAXKEY;
 #endif
@@ -7613,7 +7613,7 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       hb_cdxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, 0, NULL );
       return HB_FAILURE;
    }
-#if defined(HB_COMPAT_C53) && defined(HB_C52_STRICT)
+#if defined( HB_COMPAT_C53 ) && defined( HB_C52_STRICT )
    else if( bType == 'C' && uiLen > CDX_MAXKEY )
    {
       if( hb_cdxErrorRT( pArea, EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, EF_CANDEFAULT, NULL ) == E_DEFAULT )

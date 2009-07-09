@@ -55,7 +55,7 @@
 #include "button.ch"
 #include "common.ch"
 
-/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but 
+/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
 
 #ifdef HB_COMPAT_C53

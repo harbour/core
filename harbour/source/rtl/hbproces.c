@@ -206,7 +206,7 @@ static int hb_fsProcessExec( const char *pszFilename,
    PROCESS_INFORMATION pi;
    STARTUPINFO si;
    DWORD dwFlags = 0;
-#if defined(UNICODE)
+#if defined( UNICODE )
    LPWSTR lpCommand = hb_mbtowc( pszFilename );
 #else
    char * lpCommand = hb_strdup( pszFilename );
@@ -401,7 +401,7 @@ HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
       PROCESS_INFORMATION pi;
       STARTUPINFO si;
       DWORD dwFlags = 0;
-#if defined(UNICODE)
+#if defined( UNICODE )
       LPWSTR lpCommand = hb_mbtowc( pszFilename );
 #else
       char * lpCommand = hb_strdup( pszFilename );

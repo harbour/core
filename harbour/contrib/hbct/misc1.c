@@ -67,7 +67,7 @@
  *      type: NUMBER, CHARACTER, DATE, LOGICAL.
  *
  *  $RETURNS$
- *      XTOC() return a string with the representation of data type of 
+ *      XTOC() return a string with the representation of data type of
  *      expValue.
  *
  *  $DESCRIPTION$

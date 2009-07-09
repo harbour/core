@@ -55,10 +55,10 @@
 #include "error.ch"
 
 /* NOTE: Compared to CA-Cl*pper, Harbour:
-         - will accept character expressions for xKey, xFor and xWhile. 
+         - will accept character expressions for xKey, xFor and xWhile.
          - has three extra parameters (cRDD, nConnection, cCodePage).
          - will default to active index key for xKey parameter.
-         - won't crash with "No exported method: EVAL" if xKey is not 
+         - won't crash with "No exported method: EVAL" if xKey is not
            block and table is not indexed. */
 
 FUNCTION __dbTotal( cFile, xKey, aFields,;

@@ -60,7 +60,7 @@
 #define GD_CH
 
 
-#if ( defined(HB_OS_WIN) || defined(__WIN32__) )
+#if ( defined( HB_OS_WIN ) || defined( __WIN32__ ) )
   #define GD_VERS  2033
 #else
   #define GD_VERS  2028

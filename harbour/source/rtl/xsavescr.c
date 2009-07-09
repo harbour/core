@@ -98,7 +98,7 @@ HB_FUNC( __XSAVESCREEN )
 }
 
 /* NOTE: There's no check about the screen size on restore, so this will
-         fail if the user has changed the screen resolution between calling 
+         fail if the user has changed the screen resolution between calling
          save and restore.
          [vszakats] */
 

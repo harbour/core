@@ -132,4 +132,3 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
    NEXT
 
    RETURN nDirLen
-

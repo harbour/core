@@ -104,4 +104,3 @@ HB_FUNC( MEMOTRAN )
    else
       hb_retc_null();
 }
-

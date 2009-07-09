@@ -69,7 +69,7 @@ char * hb_getenv( const char * szName )
 {
    char * pszBuffer = NULL;
 
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
 
    {
       DWORD size = GetEnvironmentVariableA( szName, NULL, 0 );
@@ -81,7 +81,7 @@ char * hb_getenv( const char * szName )
       }
    }
 
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
 
    {
       PSZ EnvValue = ( PSZ ) "";
@@ -109,11 +109,11 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 {
    BOOL bRetVal;
 
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
 
    bRetVal = GetEnvironmentVariableA( szName, szBuffer, nSize ) != 0;
 
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
    {
       PSZ EnvValue = ( PSZ ) "";
 
@@ -152,7 +152,7 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
  */
 BOOL hb_setenv( const char * szName, const char * szValue )
 {
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
 
    return SetEnvironmentVariableA( szName, szValue ) != 0;
 

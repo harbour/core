@@ -59,18 +59,18 @@ HB_EXTERN_BEGIN
 
 extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, USHORT uiPcodeVer ); /* module symbols initialization with extended information */
 
-#if defined(_MSC_VER) && \
-    !defined(__LCC__) && !defined(__POCC__) && !defined(__XCC__)
+#if defined( _MSC_VER ) && \
+    !defined( __LCC__ ) && !defined( __POCC__ ) && !defined( __XCC__ )
 
-   #if !defined(__cplusplus)
+   #if !defined( __cplusplus )
 
       /* we do not have better startup initialization method for pure
        * C mode in MSC
        */
       #define HB_MSC_STARTUP
 
-   #elif !defined(HB_STRICT_ANSI_C) && !defined(HB_STATIC_STARTUP) && \
-         !defined(HB_PRAGMA_STARTUP) && !defined(HB_MSC_STARTUP)
+   #elif !defined( HB_STRICT_ANSI_C ) && !defined( HB_STATIC_STARTUP ) && \
+         !defined( HB_PRAGMA_STARTUP ) && !defined( HB_MSC_STARTUP )
 
       /* Sat 07 Maj 2005 02:46:38 CEST
        * This is only necessary when you want to create binary libs using
@@ -92,7 +92,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
 
 #define HB_INIT_SYMBOLS_END( func ) HB_INIT_SYMBOLS_EX_END( func, __FILE__, 0L, 0x0000 )
 
-#if defined(HB_STRICT_ANSI_C)
+#if defined( HB_STRICT_ANSI_C )
 
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
       static HB_SYMB symbols_table[] = {
@@ -112,9 +112,9 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
    #define HB_CALL_ON_STARTUP_END( func ) \
       }
 
-#elif defined(__GNUC__)
+#elif defined( __GNUC__ )
 
-   #if defined(HB_PRAGMA_STARTUP) || defined(HB_MSC_STARTUP)
+   #if defined( HB_PRAGMA_STARTUP ) || defined( HB_MSC_STARTUP )
       #error Wrong macros set for startup code - clean your make/env settings.
    #endif
 
@@ -136,7 +136,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
    #define HB_CALL_ON_STARTUP_END( func ) \
       }
 
-#elif defined(HB_MSC_STARTUP)
+#elif defined( HB_MSC_STARTUP )
 
    typedef int (* HB_$INITSYM)( void );
 
@@ -170,9 +170,9 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
        output of a generated prg for example
    */
 
-#elif defined(HB_STATIC_STARTUP) || defined(__cplusplus)
+#elif defined( HB_STATIC_STARTUP ) || defined( __cplusplus )
 
-   #if defined(HB_PRAGMA_STARTUP) || defined(HB_MSC_STARTUP)
+   #if defined( HB_PRAGMA_STARTUP ) || defined( HB_MSC_STARTUP )
       #error Wrong macros set for startup code - clean your make/env settings.
    #endif
 
@@ -197,14 +197,14 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
       } \
       static int static_int_##func = func();
 
-#elif defined(HB_PRAGMA_STARTUP) || \
-      defined(__BORLANDC__) || defined(__LCC__) || defined(__POCC__) || defined(__XCC__)
+#elif defined( HB_PRAGMA_STARTUP ) || \
+      defined( __BORLANDC__ ) || defined( __LCC__ ) || defined( __POCC__ ) || defined( __XCC__ )
 
-   #if defined(HB_MSC_STARTUP)
+   #if defined( HB_MSC_STARTUP )
       #error Wrong macros set for startup code - clean your make/env settings.
    #endif
 
-   #if !defined(HB_PRAGMA_STARTUP)
+   #if !defined( HB_PRAGMA_STARTUP )
       #define HB_PRAGMA_STARTUP
    #endif
 

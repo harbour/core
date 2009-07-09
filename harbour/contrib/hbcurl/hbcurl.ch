@@ -109,7 +109,7 @@
 #define HB_CURLOPT_FTPLISTONLY                HB_CURLOPT_DIRLISTONLY
 #define HB_CURLOPT_APPEND                     50  /* Append instead of overwrite on upload! */
 #define HB_CURLOPT_FTPAPPEND                  HB_CURLOPT_APPEND
-#define HB_CURLOPT_NETRC                      51  
+#define HB_CURLOPT_NETRC                      51
 #define HB_CURLOPT_FOLLOWLOCATION             52  /* use Location: Luke! */
 #define HB_CURLOPT_TRANSFERTEXT               53  /* transfer data in text/ASCII format */
 #define HB_CURLOPT_PUT                        54  /* HTTP PUT */
@@ -322,16 +322,16 @@
 #define HB_CURL_CURLSSH_AUTH_DEFAULT          HB_CURLSSH_AUTH_ANY
 
 /* curl_easy_pause() parameters. They can be combined with hb_BitOr(). */
-#define HB_CURLPAUSE_RECV                     1            
+#define HB_CURLPAUSE_RECV                     1
 #define HB_CURLPAUSE_RECV_CONT                0
-#define HB_CURLPAUSE_SEND                     4             
+#define HB_CURLPAUSE_SEND                     4
 #define HB_CURLPAUSE_SEND_CONT                0
 #define HB_CURLPAUSE_ALL                      hb_BitOr( HB_CURLPAUSE_RECV, HB_CURLPAUSE_SEND )
 #define HB_CURLPAUSE_CONT                     hb_BitOr( HB_CURLPAUSE_RECV_CONT, HB_CURLPAUSE_SEND_CONT )
 
 /* curl_global_init() parameters. */
-#define HB_CURL_GLOBAL_SSL                    1           
-#define HB_CURL_GLOBAL_WIN32                  2           
+#define HB_CURL_GLOBAL_SSL                    1
+#define HB_CURL_GLOBAL_WIN32                  2
 #define HB_CURL_GLOBAL_ALL                    hb_BitOr( HB_CURL_GLOBAL_SSL, HB_CURL_GLOBAL_WIN32 )
 #define HB_CURL_GLOBAL_NOTHING                0
 #define HB_CURL_GLOBAL_DEFAULT                HB_CURL_GLOBAL_ALL

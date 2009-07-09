@@ -65,7 +65,7 @@
    #include <sys/types.h>
    #include <sys/stat.h>
 #elif defined( HB_OS_WIN )
-   #if ( defined(__BORLANDC__) || defined(_MSC_VER) || defined(__LCC__) || defined( __DMC__ )) && ! defined( INVALID_FILE_ATTRIBUTES )
+   #if ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || defined( __LCC__ ) || defined( __DMC__ ) ) && ! defined( INVALID_FILE_ATTRIBUTES )
       #define INVALID_FILE_ATTRIBUTES ((DWORD)(-1))
    #endif
 #endif

@@ -949,7 +949,7 @@ void hb_compOptimizePCode( HB_COMP_DECL, PFUNCTION pFunc )
 #define OPT_LOCAL_FLAG_POPSELF     16
 #define OPT_LOCAL_FLAG_CHANGE      32
 
-typedef struct 
+typedef struct
 {
   SHORT    isNumber;
   BYTE     bFlags;
@@ -959,7 +959,7 @@ typedef struct
 static BOOL hb_compIsJump( BYTE bPCode )
 {
    return ( bPCode >= HB_P_JUMPNEAR && bPCode <= HB_P_JUMPTRUEFAR ) || /* All jumps */
-            bPCode == HB_P_SEQBEGIN || bPCode == HB_P_SEQEND || 
+            bPCode == HB_P_SEQBEGIN || bPCode == HB_P_SEQEND ||
             bPCode == HB_P_SEQALWAYS || bPCode == HB_P_ALWAYSBEGIN;
 }
 
@@ -975,8 +975,8 @@ static BOOL hb_compIsUncondJump( BYTE bPCode )
 /*
 static SHORT hb_compIsLocalOp( BYTE bCode )
 {
-   return bCode == HB_P_POPLOCAL || 
-          bCode == HB_P_POPLOCALNEAR || 
+   return bCode == HB_P_POPLOCAL ||
+          bCode == HB_P_POPLOCALNEAR ||
           bCode == HB_P_PUSHLOCAL ||
           bCode == HB_P_PUSHLOCALNEAR ||
           bCode == HB_P_PUSHLOCALREF ||
@@ -1041,7 +1041,7 @@ static LONG hb_compJumpGetOffset( BYTE * pCode )
 
 static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 {
-   ULONG   ulPos = 0, ulLastPos = 0; 
+   ULONG   ulPos = 0, ulLastPos = 0;
    SHORT   isVar = 0;
    BOOL    fWasJump = 0;
 
@@ -1052,8 +1052,8 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 
       switch( pFunc->pCode[ ulPos ] )
       {
-         case HB_P_POPLOCALNEAR: 
-         case HB_P_PUSHLOCALNEAR: 
+         case HB_P_POPLOCALNEAR:
+         case HB_P_PUSHLOCALNEAR:
          case HB_P_LOCALNEARADDINT:
             isVar = ( signed char ) pFunc->pCode[ ulPos + 1 ];
             break;
@@ -1072,16 +1072,16 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 
       switch( pFunc->pCode[ ulPos ] )
       {
-         case HB_P_POPLOCALNEAR: 
+         case HB_P_POPLOCALNEAR:
          case HB_P_POPLOCAL:
             if( isVar > 0 )
             {
                if( ulPos > 0 && pFunc->pCode[ ulLastPos ] == HB_P_PUSHSELF &&
                    ! hb_compHasJump( pFunc, ulPos ) && ! fWasJump )
                {
-                  /* For real POPSELF support we need to do backward tree 
-                     tracing. This is not implemented, but using fWasJump 
-                     we can easy optimize Self := QSelf() at the beginning 
+                  /* For real POPSELF support we need to do backward tree
+                     tracing. This is not implemented, but using fWasJump
+                     we can easy optimize Self := QSelf() at the beginning
                      of functions. [Mindaugas]
                    */
                   pLocals[ isVar - 1 ].bFlags |= OPT_LOCAL_FLAG_POPSELF;
@@ -1091,7 +1091,7 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
             }
             break;
 
-         case HB_P_PUSHLOCALNEAR: 
+         case HB_P_PUSHLOCALNEAR:
          case HB_P_PUSHLOCAL:
             if( isVar > 0 )
                pLocals[ isVar - 1 ].bFlags |= OPT_LOCAL_FLAG_PUSH;
@@ -1166,7 +1166,7 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
             break;
 
          case HB_P_PUSHBLOCK:
-         case HB_P_PUSHBLOCKLARGE: 
+         case HB_P_PUSHBLOCKLARGE:
          {
             BYTE *  pCode = &pFunc->pCode[ ulPos + 5 ];
             USHORT  usVarCount, usVar;
@@ -1179,14 +1179,14 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
             {
                pCode += 2;
                usVar = HB_PCODE_MKUSHORT( pCode );
-               if( usVar > 0 ) 
+               if( usVar > 0 )
                  pLocals[ usVar - 1 ].bFlags |= OPT_LOCAL_FLAG_BLOCK;
             }
             break;
          }
 
          /* local name is not a big usage...
-         case HB_P_LOCALNAME: 
+         case HB_P_LOCALNAME:
          */
       }
       ulLastPos = ulPos;
@@ -1203,7 +1203,7 @@ static void hb_compPCodeEnumSelfifyLocal( PFUNCTION pFunc, SHORT isLocal )
    {
       switch( pFunc->pCode[ ulPos ] )
       {
-         case HB_P_PUSHLOCALNEAR: 
+         case HB_P_PUSHLOCALNEAR:
             if( isLocal == ( signed char ) pFunc->pCode[ ulPos + 1 ] )
             {
                pFunc->pCode[ ulPos ] = HB_P_PUSHSELF;
@@ -1256,8 +1256,8 @@ static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, ULONG ulPos, BYTE *
 
       pMap[ ulPos ] = 1;
 
-      if( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL || 
-          pFunc->pCode[ ulPos ] == HB_P_POPLOCALNEAR || 
+      if( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL ||
+          pFunc->pCode[ ulPos ] == HB_P_POPLOCALNEAR ||
           pFunc->pCode[ ulPos ] == HB_P_PUSHLOCAL ||
           pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALNEAR ||
           pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF ||
@@ -1268,9 +1268,9 @@ static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, ULONG ulPos, BYTE *
           pFunc->pCode[ ulPos ] == HB_P_LOCALNEARADDINT )
 
       {
-         if( hb_compLocalGetNumber( pFunc->pCode + ulPos ) == isLocal ) 
+         if( hb_compLocalGetNumber( pFunc->pCode + ulPos ) == isLocal )
          {
-            if( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL || 
+            if( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL ||
                 pFunc->pCode[ ulPos ] == HB_P_POPLOCALNEAR )
                return 0;
             else
@@ -1278,9 +1278,9 @@ static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, ULONG ulPos, BYTE *
          }
       }
 
-      /* The following part of the function is standard for all recursive pcode 
-         tracing, except recursive function calls are hardcoded. We can implement 
-         universal recursive tracer by putting all parameters into "cargo" 
+      /* The following part of the function is standard for all recursive pcode
+         tracing, except recursive function calls are hardcoded. We can implement
+         universal recursive tracer by putting all parameters into "cargo"
          structure. [Mindaugas] */
 
       if( hb_compIsJump( pFunc->pCode[ ulPos ] ) )
@@ -1335,7 +1335,7 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
       BOOL  fCheck;
 
       /* skip pop NIL (var := NIL), to allow force garbage collection */
-      fCheck = ( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL || 
+      fCheck = ( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL ||
                  pFunc->pCode[ ulPos ] == HB_P_POPLOCALNEAR ) &&
                  ! ( ulPos > 0 && pFunc->pCode[ ulLastPos ] == HB_P_PUSHNIL );
 
@@ -1404,24 +1404,24 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
          for( is = 1; is < isLocal; is++ )
             pVar = pVar->pNext;
 
-         assert( pLocals[ isLocal - 1 ].bFlags != 0 ); 
+         assert( pLocals[ isLocal - 1 ].bFlags != 0 );
 
          /* Skip detachables, referenced, optimizable self */
-         if( ( pLocals[ isLocal - 1 ].bFlags & ( OPT_LOCAL_FLAG_BLOCK | OPT_LOCAL_FLAG_PUSHREF ) ) == 0 && 
-             pLocals[ isLocal - 1 ].bFlags != OPT_LOCAL_FLAG_POPSELF && 
+         if( ( pLocals[ isLocal - 1 ].bFlags & ( OPT_LOCAL_FLAG_BLOCK | OPT_LOCAL_FLAG_PUSHREF ) ) == 0 &&
+             pLocals[ isLocal - 1 ].bFlags != OPT_LOCAL_FLAG_POPSELF &&
              pLocals[ isLocal - 1 ].bFlags != ( OPT_LOCAL_FLAG_PUSH | OPT_LOCAL_FLAG_POPSELF ) )
          {
             memset( pMap, 0, pFunc->lPCodePos );
             pMap[ ulPos ] = 1;
 
-            if( ! hb_compPCodeTraceAssignedUnused( pFunc, ulPos + hb_compPCodeSize( pFunc, ulPos ), 
+            if( ! hb_compPCodeTraceAssignedUnused( pFunc, ulPos + hb_compPCodeSize( pFunc, ulPos ),
                                                    pMap, isLocal ) )
             {
                char    szFun[ 256 ];
 
-               /* TOFIX: We calculate line number by simple tracking last HB_P_LINE, 
-                  but it can work bad, if line number optimizator is clever enough. 
-                  To obtain real line number we need one more tree scan or other 
+               /* TOFIX: We calculate line number by simple tracking last HB_P_LINE,
+                  but it can work bad, if line number optimizator is clever enough.
+                  To obtain real line number we need one more tree scan or other
                   algorithm. [Mindaugas] */
 
                hb_snprintf( szFun, sizeof( szFun ), "%s(%i)", pFunc->szName, usLine );
@@ -1448,8 +1448,8 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
    {
       switch( pFunc->pCode[ ulPos ] )
       {
-         case HB_P_POPLOCALNEAR: 
-         case HB_P_PUSHLOCALNEAR: 
+         case HB_P_POPLOCALNEAR:
+         case HB_P_PUSHLOCALNEAR:
          case HB_P_LOCALNEARADDINT:
          {
             BYTE *  pVar = &pFunc->pCode[ ulPos + 1 ];
@@ -1500,7 +1500,7 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
          }
 
          case HB_P_PUSHBLOCK:
-         case HB_P_PUSHBLOCKLARGE: 
+         case HB_P_PUSHBLOCKLARGE:
          {
             BYTE *  pVar = &pFunc->pCode[ ulPos + 5 ];
             USHORT  usVarCount, isVar;
@@ -1541,7 +1541,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    BOOL            fBool;
 
    /* Many (perhaps ALL) functions of pcode trace optimization dependes on pcodes.
-      Please, check these functions if new pcode is added, or existing changed. 
+      Please, check these functions if new pcode is added, or existing changed.
       Special attention should be paid, if new pcode introduces branching, codeblocks,
       or are related to parameters, local variables. [Mindaugas] */
 
@@ -1594,7 +1594,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
        * [druzus]
        */
 #if 0
-      assert( ( ! ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags == 0 ) || 
+      assert( ( ! ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags == 0 ) ||
               (   ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags != 0 ) );
 #endif
 
@@ -1619,8 +1619,8 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
 
       for( usIndex = pFunc->wParamCount; usIndex < usLocalCount; usIndex++ )
       {
-         if( pLocals[ usIndex ].bFlags == ( OPT_LOCAL_FLAG_PUSH | OPT_LOCAL_FLAG_POPSELF ) || 
-             pLocals[ usIndex ].bFlags == OPT_LOCAL_FLAG_POPSELF ) 
+         if( pLocals[ usIndex ].bFlags == ( OPT_LOCAL_FLAG_PUSH | OPT_LOCAL_FLAG_POPSELF ) ||
+             pLocals[ usIndex ].bFlags == OPT_LOCAL_FLAG_POPSELF )
          {
             /* printf( "Info: %s(%d) selfifying variable '%s'\n", pFunc->szName, pVar->iDeclLine, pVar->szName ); */
             hb_compPCodeEnumSelfifyLocal( pFunc, usIndex + 1 );

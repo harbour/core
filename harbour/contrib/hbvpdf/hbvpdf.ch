@@ -226,4 +226,3 @@
 #define pdf_WHITESMOKE           "F5F5F5"
 #define pdf_YELLOW               "FFFF00"
 #define pdf_YELLOWGREEN          "9ACD32"
-

@@ -64,7 +64,7 @@
 #include <unistd.h>  /* We need for mkstemp() on BSD */
 #endif
 
-#if !defined(HB_OS_WIN)
+#if !defined( HB_OS_WIN )
 static BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir )
 {
    BOOL fOK = FALSE;
@@ -88,7 +88,7 @@ static BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir )
       }
    }
 
-#  if defined(__DJGPP__)
+#  if defined( __DJGPP__ )
    if( fOK )
    {
       /* convert '/' to '\' */
@@ -118,7 +118,7 @@ static HB_FHANDLE hb_fsCreateTempLow( const char * pszDir, const char * pszPrefi
       }
       else
       {
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
          if( ! GetTempPathA( ( DWORD ) ( HB_PATH_MAX - 1 ), pszName ) )
          {
             pszName[ 0 ] = '.';
@@ -159,7 +159,7 @@ static HB_FHANDLE hb_fsCreateTempLow( const char * pszDir, const char * pszPrefi
       if( iLen > ( HB_PATH_MAX - 1 ) - 6 )
          return FS_ERROR;
 
-#if !defined(__WATCOMC__) && ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) )
+#if !defined( __WATCOMC__ ) && ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) )
       if( hb_setGetFileCase() != HB_SET_CASE_LOWER &&
           hb_setGetFileCase() != HB_SET_CASE_UPPER &&
           hb_setGetDirCase() != HB_SET_CASE_LOWER &&
@@ -209,7 +209,7 @@ static BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char * p
 
    hb_vmUnlock();
 
-#if defined(HB_IO_WIN)
+#if defined( HB_IO_WIN )
    {
       char szTempDir[ HB_PATH_MAX ];
 
@@ -240,7 +240,7 @@ static BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char * p
    pszBuffer[ 0 ] = '\0';
    fResult = ( tmpnam( pszBuffer ) != NULL );
 
-#  if defined(__DJGPP__)
+#  if defined( __DJGPP__ )
    {
       /* convert '/' to '\' */
       char * pszDelim;

@@ -64,7 +64,7 @@ PROCEDURE AltD( nAction )
 
       /* do not activate the debugger imediatelly because the module
          where ALTD() was called can have no debugger info - stop
-         on first LINE with debugged info 
+         on first LINE with debugged info
       */
       __dbgINVOKEDEBUG( Set( _SET_DEBUG ) )
 

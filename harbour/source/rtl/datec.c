@@ -56,7 +56,7 @@
 #include "hbapilng.h"
 #include "hbdate.h"
 
-#if defined(__CODEGUARD__)
+#if defined( __CODEGUARD__ )
    static const char s_nullStr[ 4 ] = { 0 };
 #else
 #  define s_nullStr     ""

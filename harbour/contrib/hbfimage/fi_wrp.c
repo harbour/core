@@ -57,7 +57,7 @@
 #include "hbapierr.h"
 #include "hbvm.h"
 
-#if defined(HB_OS_WIN) && !defined(_WINDOWS_) && ( defined(__GNUC__) || defined(__POCC__) || defined(__XCC__) ) || defined(__WATCOMC__)
+#if defined( HB_OS_WIN ) && !defined( _WINDOWS_ ) && ( defined( __GNUC__ ) || defined( __POCC__ ) || defined( __XCC__ ) ) || defined( __WATCOMC__ )
    #define _WINDOWS_
 #endif
 

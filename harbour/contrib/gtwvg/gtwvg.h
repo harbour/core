@@ -154,15 +154,15 @@ HB_EXTERN_BEGIN
 #define WVT_DLGMD_MAX               50
 /*----------------------------------------------------------------------*/
 
-#if defined(__DMC__)
+#if defined( __DMC__ )
    #if (_WIN32_IE >= 0x0300)
-      #if !defined(ICC_BAR_CLASSES)
+      #if !defined( ICC_BAR_CLASSES )
          #define ICC_BAR_CLASSES    0x00000004
       #endif
-      #if !defined(COLOR16)
+      #if !defined( COLOR16 )
          typedef USHORT COLOR16;
       #endif
-      #if !defined(TRIVERTEX)
+      #if !defined( TRIVERTEX )
          typedef struct _TRIVERTEX {
             LONG    x;
             LONG    y;
@@ -178,7 +178,7 @@ HB_EXTERN_BEGIN
              DWORD dwICC;              /* flags indicating which classes to be initialized */
          } INITCOMMONCONTROLSEX, *LPINITCOMMONCONTROLSEX;
       #endif
-      #if !defined(InitCommonControlsEx)
+      #if !defined( InitCommonControlsEx )
          WINCOMMCTRLAPI BOOL WINAPI InitCommonControlsEx(LPINITCOMMONCONTROLSEX);
       #endif
    #endif
@@ -212,13 +212,13 @@ HB_EXTERN_BEGIN
 
 #endif
 
-#if defined( __cplusplus ) && ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || ( defined(__WATCOMC__) && ( __WATCOMC__ >= 1280 ) ) )
+#if defined( __cplusplus ) && ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || ( defined( __WATCOMC__ ) && ( __WATCOMC__ >= 1280 ) ) )
 #  define HB_ID_REF( type, id )     id
 #else
 #  define HB_ID_REF( type, id )     ( ( type ) &id )
 #endif
 
-#if defined(__BORLANDC__)
+#if defined( __BORLANDC__ )
 #if __BORLANDC__ == 0x0550
 #ifdef __cplusplus
 extern "C" { STDAPI OleLoadPicture(LPSTREAM,LONG,BOOL,REFIID,PVOID*); }

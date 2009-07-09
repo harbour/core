@@ -1005,4 +1005,3 @@ FUNCTION FT_MDEFCRS( nCurType, nScrMask, nCurMask )   // define text cursor type
 RETURN NIL              // no function output
 
 */
-

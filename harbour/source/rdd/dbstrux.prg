@@ -99,7 +99,7 @@ FUNCTION __dbCopyXStruct( cFileName )
 
    RETURN .T.
 
-/* NOTE: Compared to CA-Cl*pper, Harbour has two extra parameters 
+/* NOTE: Compared to CA-Cl*pper, Harbour has two extra parameters
          (cCodePage, nConnection). */
 
 FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConnection )
@@ -140,7 +140,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
             dbSelectArea( nOldArea )
          ENDIF
 
-         /* Type detection is more in sync with dbCreate() logic in Harbour, as lowercase "C" 
+         /* Type detection is more in sync with dbCreate() logic in Harbour, as lowercase "C"
             and padded/continued strings ("C ", "C...") are also accepted. */
 
          AEval( aStruct, {| aField | iif( Upper( Left( aField[ DBS_TYPE ], 1 ) ) == "C" .AND. aField[ DBS_DEC ] != 0,;

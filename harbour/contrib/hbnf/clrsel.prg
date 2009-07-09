@@ -350,7 +350,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
 LOCAL nB, nT, nL, nR
 LOCAL nX
 LOCAL aClrs   := {}
-LOCAL cClr 
+LOCAL cClr
 LOCAL nChoice := 1
 LOCAL aPrompt
 LOCAL nLen    := 0
@@ -559,7 +559,7 @@ STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
 // cClr is the current colour being modified
 // Return -> selected colour combination
 
-LOCAL nR  
+LOCAL nR
 LOCAL nC     := 1
 LOCAL lFound := .F.
 LOCAL nKey
@@ -788,4 +788,3 @@ DO WHILE lIdentical .AND. n <= LEN(aArr1)
 ENDDO
 
 RETURN lIdentical
-
