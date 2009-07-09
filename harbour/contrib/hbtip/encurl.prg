@@ -7,7 +7,6 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -53,13 +52,12 @@
 
 #include "hbclass.ch"
 
-
 CREATE CLASS TIPEncoderUrl FROM TIPEncoder
-   METHOD New()   CONSTRUCTOR
-   METHOD Encode()
-   METHOD Decode()
+   METHOD New() CONSTRUCTOR
+   METHOD Encode( cData )
+   METHOD Decode( cData )
 ENDCLASS
 
 METHOD New() CLASS TIPEncoderURL
    ::cName := "urlencoded"
-RETURN Self
+   RETURN Self

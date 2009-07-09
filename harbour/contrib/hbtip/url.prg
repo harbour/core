@@ -7,7 +7,6 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -79,20 +78,20 @@ CREATE CLASS tURL
    METHOD SetAddress( cUrl )
    METHOD BuildAddress()
    METHOD BuildQuery( )
-   METHOD AddGetForm( cPostData )
+   METHOD AddGetForm( xPostData )
 
-HIDDEN:
-   CLASSDATA   cREuri   INIT HB_RegexComp("(?:(.*)://)?([^?/]*)(/[^?]*)?\??(.*)")
-   CLASSDATA   cREServ  INIT HB_RegexComp("(?:([^:@]*):?([^@:]*)@|)([^:]+):?(.*)")
-   CLASSDATA   cREFile  INIT HB_RegexComp("^((?:/.*/)|/)*(.*)$")
+   HIDDEN:
+
+   CLASSDATA cREuri   INIT hb_regexComp("(?:(.*)://)?([^?/]*)(/[^?]*)?\??(.*)")
+   CLASSDATA cREServ  INIT hb_regexComp("(?:([^:@]*):?([^@:]*)@|)([^:]+):?(.*)")
+   CLASSDATA cREFile  INIT hb_regexComp("^((?:/.*/)|/)*(.*)$")
 
 ENDCLASS
 
 
 METHOD New( cUrl ) CLASS tURL
    ::SetAddress( cUrl )
-RETURN Self
-
+   RETURN Self
 
 METHOD SetAddress( cUrl ) CLASS tURL
    LOCAL aMatch, cServer, cPath
@@ -107,39 +106,39 @@ METHOD SetAddress( cUrl ) CLASS tURL
    ::cFile := ""
    ::nPort := -1
 
-   IF Empty( cUrl ) .OR. Len( cUrl ) == 0
+   IF Empty( cUrl )
       RETURN .T.
    ENDIF
 
    // TOPLEVEL url parsing
-   aMatch:= HB_Regex( ::cREuri, cUrl )
+   aMatch := hb_regex( ::cREuri, cUrl )
 
    // May fail
    IF Empty( aMatch )
       RETURN .F.
    ENDIF
 
-   ::cProto := Lower( aMatch[2] )
-   cServer := aMatch[3]
-   cPath := aMatch[4]
-   ::cQuery := aMatch[5]
+   ::cProto := Lower( aMatch[ 2 ] )
+   cServer := aMatch[ 3 ]
+   cPath := aMatch[ 4 ]
+   ::cQuery := aMatch[ 5 ]
 
    // server parsing (can't fail)
-   aMatch := HB_Regex( ::cREServ, cServer )
-   ::cUserId := aMatch[2]
-   ::cPassword := aMatch[3]
-   ::cServer := aMatch[4]
-   ::nPort := Val(aMatch[5])
+   aMatch := hb_regex( ::cREServ, cServer )
+   ::cUserId := aMatch[ 2 ]
+   ::cPassword := aMatch[ 3 ]
+   ::cServer := aMatch[ 4 ]
+   ::nPort := Val( aMatch[ 5 ] )
    IF ::nPort < 1
       ::nPort := -1
    ENDIF
 
-   // Parse path and file (can't fail )
-   aMatch := HB_Regex( ::cREFile, cPath )
-   ::cPath := aMatch[2]
-   ::cFile := aMatch[3]
+   // Parse path and file (can't fail)
+   aMatch := hb_regex( ::cREFile, cPath )
+   ::cPath := aMatch[ 2 ]
+   ::cFile := aMatch[ 3 ]
 
-RETURN .T.
+   RETURN .T.
 
 
 METHOD BuildAddress() CLASS tURL
@@ -156,7 +155,7 @@ METHOD BuildAddress() CLASS tURL
    IF ! Empty( ::cUserid )
       cRet += ::cUserid
       IF ! Empty( ::cPassword )
-         cRet+= ":" + ::cPassword
+         cRet += ":" + ::cPassword
       ENDIF
       cRet += "@"
    ENDIF
@@ -164,7 +163,7 @@ METHOD BuildAddress() CLASS tURL
    IF ! Empty( ::cServer )
       cRet += ::cServer
       IF ::nPort > 0
-         cRet += ":" + AllTrim( Str( ::nPort ) )
+         cRet += ":" + hb_ntos( ::nPort )
       ENDIF
    ENDIF
 
@@ -183,9 +182,9 @@ METHOD BuildAddress() CLASS tURL
       ::cAddress := cRet
    ENDIF
 
-RETURN cRet
+   RETURN cRet
 
-METHOD BuildQuery( ) CLASS tURL
+METHOD BuildQuery() CLASS tURL
    LOCAL cLine
 
    IF Len( ::cPath ) == 0 .OR. !( Right( ::cPath, 1 ) == "/" )
@@ -197,49 +196,38 @@ METHOD BuildQuery( ) CLASS tURL
       cLine += "?" + ::cQuery
    ENDIF
 
-RETURN cLine
+   RETURN cLine
 
-METHOD AddGetForm( cPostData )
-   LOCAL cData:="", nI, cTmp,y, cRet
+METHOD AddGetForm( xPostData )
+   LOCAL cData := ""
+   LOCAL nI
+   LOCAL y
+   LOCAL cRet
 
-   IF HB_IsHash( cPostData )
-      FOR nI := 1 TO Len( cPostData )
-         cTmp := hb_HKeyAt( cPostData, nI )
-         cTmp := hb_cStr( cTmp )
-         cTmp := AllTrim( cTmp )
-         cTmp := TipEncoderUrl_Encode( cTmp )
-         cData += cTmp +"="
-         cTmp := hb_HValueAt( cPostData, nI )
-         cTmp := hb_cStr( cTmp )
-         cTmp := AllTrim( cTmp )
-         cTmp := TipEncoderUrl_Encode( cTmp )
-         cData += cTmp + "&"
-      NEXT
-      cData := Left( cData, Len( cData ) - 1 )
-   ELSEIF HB_IsArray( cPostData )
-      y := Len(cPostData)
+   IF hb_isHash( xPostData )
+      y := Len( xPostData )
       FOR nI := 1 TO y
-         cTmp := cPostData[ nI ,1]
-         cTmp := hb_cStr( cTmp )
-         cTmp := AllTrim( cTmp )
-         cTmp := TipEncoderUrl_Encode( cTmp )
-         cData += cTmp +"="
-         cTmp := cPostData[ nI,2]
-         cTmp := hb_cStr( cTmp )
-         cTmp := AllTrim( cTmp )
-         cTmp := TipEncoderUrl_Encode( cTmp )
-         cData += cTmp
+         cData += TipEncoderUrl_Encode( AllTrim( hb_cStr( hb_HKeyAt( xPostData, nI ) ) ) ) + "="
+         cData += TipEncoderUrl_Encode( AllTrim( hb_cStr( hb_HValueAt( xPostData, nI ) ) ) )
          IF nI != y
             cData += "&"
          ENDIF
       NEXT
-
-   ELSEIF HB_IsString( cPostData )
-      cData := cPostData
+   ELSEIF hb_isArray( xPostData )
+      y := Len( xPostData )
+      FOR nI := 1 TO y
+         cData += TipEncoderUrl_Encode( AllTrim( hb_cStr( xPostData[ nI, 1 ] ) ) ) + "="
+         cData += TipEncoderUrl_Encode( AllTrim( hb_cStr( xPostData[ nI, 2 ] ) ) )
+         IF nI != y
+            cData += "&"
+         ENDIF
+      NEXT
+   ELSEIF hb_isString( xPostData )
+      cData := xPostData
    ENDIF
 
-   IF !empty(cData)
-      cRet := ::cQuery += iif(empty(::cQuery),"","&") + cData
+   IF ! Empty( cData )
+      cRet := ::cQuery += iif( Empty( ::cQuery ), "", "&" ) + cData
    ENDIF
 
-RETURN cRet
+   RETURN cRet

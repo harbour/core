@@ -4,11 +4,9 @@
 
 /*
  * xHarbour Project source code:
- * HB_SendMail()
- * ( This version of HB_SendMail() started from Luiz's original work on SendMail() )
+ * hb_SendMail() (This version of hb_SendMail() started from Luiz's original work on SendMail())
  *
  * Copyright 2007 Luiz Rafael Culik Guimaraes & Patrick Mast
- *
  * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -54,9 +52,9 @@
 
 #include "common.ch"
 
-#translate ( <exp1> LIKE <exp2> )   => ( HB_REGEXLIKE( (<exp2>), (<exp1>) ) )
+#translate ( <exp1> LIKE <exp2> )   => ( hb_regexLike( (<exp2>), (<exp1>) ) )
 
-FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aFiles, cUser, cPass, cPopServer, nPriority, lRead, lTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo )
+FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aFiles, cUser, cPass, cPopServer, nPriority, lRead, lTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo )
    /*
    cServer    -> Required. IP or domain name of the mail server
    nPort      -> Optional. Port used my email server
@@ -132,10 +130,10 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
    cUser := StrTran( cUser, "@", "&at;" )
 
-   IF !( (".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists(cBody) )
+   IF !( ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody ) )
 
-      IF !( Right( cBody, 2 ) == HB_OSNewLine() )
-         cBody += HB_OsNewLine()
+      IF !( Right( cBody, 2 ) == hb_osNewLine() )
+         cBody += hb_osNewLine()
       ENDIF
 
    ENDIF
@@ -145,7 +143,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       IF Len( aTo ) > 1
          FOR EACH cTo IN aTo
             IF cTo:__enumIndex() != 1
-               IF !Empty( cTo )
+               IF ! Empty( cTo )
                   cTmp += cTo + ","
                ENDIF
             ENDIF
@@ -165,35 +163,35 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    IF ISARRAY( aCC )
       IF Len( aCC ) > 0
          FOR EACH cTmp IN aCC
-            IF !Empty( cTmp )
+            IF ! Empty( cTmp )
                cCC += cTmp + ","
             ENDIF
          NEXT
          cCC := SubStr( cCC, 1, Len( cCC ) - 1 )
       ENDIF
-   ELSEIF ISCHARACTER(aCC)
+   ELSEIF ISCHARACTER( aCC )
       cCC := AllTrim( aCC )
    ENDIF
 
 
    // BCC (Blind Carbon Copy)
-   IF ISARRAY(aBCC)
-      IF Len(aBCC) > 0
+   IF ISARRAY( aBCC )
+      IF Len( aBCC ) > 0
          FOR EACH cTmp IN aBCC
-            IF !Empty( cTmp )
+            IF ! Empty( cTmp )
                cBCC += cTmp + ","
             ENDIF
          NEXT
          cBCC := SubStr( cBCC, 1, Len( cBCC ) - 1 )
       ENDIF
-   ELSEIF ISCHARACTER(aBCC)
+   ELSEIF ISCHARACTER( aBCC )
       cBCC := AllTrim( aBCC )
    ENDIF
 
    IF cPopServer != NIL .AND. lPopAuth
       BEGIN SEQUENCE
          oUrl1 := tUrl():New( "pop://" + cUser + ":" + cPass + "@" + cPopServer + "/" )
-         oUrl1:cUserid := Strtran( cUser, "&at;", "@" )
+         oUrl1:cUserid := StrTran( cUser, "&at;", "@" )
          opop:= tIPClientPOP():New( oUrl1, lTrace )
          IF oPop:Open()
             oPop:Close()
@@ -204,7 +202,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
    ENDIF
 
-   IF !lReturn
+   IF ! lReturn
       RETURN .F.
    ENDIF
 
@@ -214,18 +212,18 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       lReturn := .F.
    END SEQUENCE
 
-   IF !lReturn
+   IF ! lReturn
       RETURN .F.
    ENDIF
 
    oUrl:nPort   := nPort
-   oUrl:cUserid := Strtran( cUser, "&at;", "@" )
+   oUrl:cUserid := StrTran( cUser, "&at;", "@" )
 
    oMail   := tipMail():new()
    oAttach := tipMail():new()
    oAttach:SetEncoder( "7-bit" )
 
-   IF (".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists(cBody)
+   IF ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody )
       cMimeText := "text/html ; charset=ISO-8859-1"
       oAttach:hHeaders[ "Content-Type" ] := cMimeText
       cBodyTemp := cBody
@@ -237,34 +235,34 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
    oAttach:SetBody( cBody )
    oMail:Attach( oAttach )
-   oUrl:cFile := cTo + iif( Empty(cCC), "", "," + cCC ) + iif( Empty(cBCC), "", "," + cBCC)
+   oUrl:cFile := cTo + iif( Empty( cCC ), "", "," + cCC ) + iif( Empty( cBCC ), "", "," + cBCC )
 
    oMail:hHeaders[ "Date" ] := tip_Timestamp()
    oMail:hHeaders[ "From" ] := cFrom
 
-   IF !Empty(cCC)
+   IF ! Empty( cCC )
       oMail:hHeaders[ "Cc" ] := cCC
    ENDIF
-   IF !Empty(cBCC)
+   IF ! Empty( cBCC )
       oMail:hHeaders[ "Bcc" ] := cBCC
    ENDIF
-   IF !Empty(cReplyTo)
+   IF ! Empty( cReplyTo )
       oMail:hHeaders[ "Reply-To" ] := cReplyTo
    ENDIF
 
    BEGIN SEQUENCE
-      oInmail := tIPClientSMTP():New( oUrl, lTrace)
+      oInmail := tIPClientSMTP():New( oUrl, lTrace )
    RECOVER
       lReturn := .F.
    END SEQUENCE
 
-   IF !lReturn
+   IF ! lReturn
       RETURN .F.
    ENDIF
 
-   oInmail:nConnTimeout:= nTimeOut
+   oInmail:nConnTimeout := nTimeOut
 
-   IF !lNoAuth
+   IF ! lNoAuth
 
       IF oInMail:OpenSecure()
 
@@ -280,14 +278,14 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
          ENDDO
 
          IF lAuthLogin
-            IF !oInMail:Auth( cUser, cPass )
+            IF ! oInMail:Auth( cUser, cPass )
                lConnect := .F.
             ELSE
                lConnectPlain  := .T.
             ENDIF
          ENDIF
 
-         IF lAuthPlain .AND. !lConnect
+         IF lAuthPlain .AND. ! lConnect
             IF !oInMail:AuthPlain( cUser, cPass )
                lConnect := .F.
             ENDIF
@@ -304,22 +302,21 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       lConnect := .F.
    ENDIF
 
-   IF !lConnect
+   IF ! lConnect
 
-      if !lNoAuth
+      IF ! lNoAuth
          oInMail:Close()
-      endif
+      ENDIF
 
       BEGIN SEQUENCE
-         oInmail := tIPClientsmtp():New( oUrl, lTrace)
+         oInmail := tIPClientsmtp():New( oUrl, lTrace )
       RECOVER
          lReturn := .F.
       END SEQUENCE
 
-      oInmail:nConnTimeout:=nTimeOut
+      oInmail:nConnTimeout := nTimeOut
 
-
-      IF !oInMail:Open()
+      IF ! oInMail:Open()
          oInmail:Close()
          RETURN .F.
       ENDIF
@@ -334,17 +331,18 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    ENDIF
 
    oInMail:oUrl:cUserid := cFrom
+
    oMail:hHeaders[ "To" ]      := cTo
    oMail:hHeaders[ "Subject" ] := cSubject
 
-   FOR EACH aThisFile IN AFiles
+   FOR EACH aThisFile IN aFiles
 
       IF ISCHARACTER( aThisFile )
          cFile := aThisFile
-         cData := Memoread( cFile ) + chr( 13 ) + chr( 10 )
+         cData := Memoread( cFile ) + Chr( 13 ) + Chr( 10 )
       ELSEIF ISARRAY( aThisFile ) .AND. Len( aThisFile ) >= 2
          cFile := aThisFile[ 1 ]
-         cData := aThisFile[ 2 ] + chr( 13 ) + chr( 10 )
+         cData := aThisFile[ 2 ] + Chr( 13 ) + Chr( 10 )
       ELSE
          lReturn := .F.
          EXIT
@@ -352,7 +350,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
       oAttach := TipMail():New()
 
-      HB_FNameSplit( cFile,, @cFname, @cFext )
+      hb_FNameSplit( cFile,, @cFname, @cFext )
       cFile := Lower( cFile )
 
       IF ( cFile LIKE ".+\.(vbd|asn|asz|asd|pqi|tsp|exe|sml|ofml)" ) .OR. ;
@@ -386,10 +384,10 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
          oAttach:SetEncoder( "7-bit" )
       ENDIF
 
-      cMimeText := HB_SetMimeType( cFile, cFname, cFext )
+      cMimeText := hb_SetMimeType( cFile, cFname, cFext )
       // Some EMAIL readers use Content-Type to check for filename
 
-      IF ".html" $ lower( cFext) .OR. ".htm" $ lower( cFext )
+      IF ".html" $ Lower( cFext ) .OR. ".htm" $ Lower( cFext )
          cMimeText += "; charset=ISO-8859-1"
       ENDIF
 
@@ -413,198 +411,198 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    oInMail:Commit()
    oInMail:Close()
 
-RETURN lReturn
-
+   RETURN lReturn
 
 //-------------------------------------------------------------//
 
 
-FUNCTION HB_SetMimeType( cFile, cFname, cFext )
+FUNCTION hb_SetMimeType( cFile, cFname, cFext )
 
    cFile := Lower( cFile )
 
-   IF     ( cFile LIKE ".+\.vbd" ); RETURN "application/activexdocument="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(asn|asz|asd)" ); RETURN "application/astound="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.pqi" ); RETURN "application/cprplayer=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.tsp" ); RETURN "application/dsptype="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.exe" ); RETURN "application/exe="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(sml|ofml)" ); RETURN "application/fml="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.pfr" ); RETURN "application/font-tdpfr=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.frl" ); RETURN "application/freeloader=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.spl" ); RETURN "application/futuresplash =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.gz" ); RETURN "application/gzip =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.stk" ); RETURN "application/hstu =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.ips" ); RETURN "application/ips="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.ptlk" ); RETURN "application/listenup =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.hqx" ); RETURN "application/mac-binhex40 =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.mbd" ); RETURN "application/mbedlet="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.mfp" ); RETURN "application/mirage=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(pot|pps|ppt|ppz)" ); RETURN "application/mspowerpoint =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.doc" ); RETURN "application/msword=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.n2p" ); RETURN "application/n2p="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(bin|class|lha|lzh|lzx|dbf)" ); RETURN "application/octet-stream =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.oda" ); RETURN "application/oda="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.axs" ); RETURN "application/olescript=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.zpa" ); RETURN "application/pcphoto="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.pdf" ); RETURN "application/pdf="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(ai|eps|ps)" ); RETURN "application/postscript=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.shw" ); RETURN "application/presentations=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.qrt" ); RETURN "application/quest=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.rtc" ); RETURN "application/rtc="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.rtf" ); RETURN "application/rtf="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.smp" ); RETURN "application/studiom="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.dst" ); RETURN "application/tajima=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.talk" ); RETURN "application/talker=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.tbk" ); RETURN "application/toolbook =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.vmd" ); RETURN "application/vocaltec-media-desc="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.vmf" ); RETURN "application/vocaltec-media-file="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.wri" ); RETURN "application/write=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.wid" ); RETURN "application/x-DemoShield =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.rrf" ); RETURN "application/x-InstallFromTheWeb="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.wis" ); RETURN "application/x-InstallShield="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.ins" ); RETURN "application/x-NET-Install=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.tmv" ); RETURN "application/x-Parable-Thing="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.arj" ); RETURN "application/x-arj=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.asp" ); RETURN "application/x-asap=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.aab" ); RETURN "application/x-authorware-bin =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(aam|aas)" ); RETURN "application/x-authorware-map =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.bcpio" ); RETURN "application/x-bcpio="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.vcd" ); RETURN "application/x-cdlink =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.chat" ); RETURN "application/x-chat=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.cnc" ); RETURN "application/x-cnc=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(coda|page)" ); RETURN "application/x-coda=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.z" ); RETURN "application/x-compress=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.con" ); RETURN "application/x-connector="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.cpio" ); RETURN "application/x-cpio=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.pqf" ); RETURN "application/x-cprplayer="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.csh" ); RETURN "application/x-csh=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(cu|csm)" ); RETURN "application/x-cu-seeme=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(dcr|dir|dxr|swa)" ); RETURN "application/x-director=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.dvi" ); RETURN "application/x-dvi=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.evy" ); RETURN "application/x-envoy="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.ebk" ); RETURN "application/x-expandedbook=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.gtar" ); RETURN "application/x-gtar=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.hdf" ); RETURN "application/x-hdf=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.map" ); RETURN "application/x-httpd-imap =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.phtml" ); RETURN "application/x-httpd-php="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.php3" ); RETURN "application/x-httpd-php3 =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.ica" ); RETURN "application/x-ica=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.ipx" ); RETURN "application/x-ipix=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.ips" ); RETURN "application/x-ipscript=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.js" ); RETURN "application/x-javascript =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.latex" ); RETURN "application/x-latex="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.bin" ); RETURN "application/x-macbinary="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.mif" ); RETURN "application/x-mif=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(mpl|mpire)" ); RETURN "application/x-mpire="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.adr" ); RETURN "application/x-msaddr =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.wlt" ); RETURN "application/x-mswallet=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(nc|cdf)" ); RETURN "application/x-netcdf =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.npx" ); RETURN "application/x-netfpx =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.nsc" ); RETURN "application/x-nschat =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.pgp" ); RETURN "application/x-pgp-plugin =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.css" ); RETURN "application/x-pointplus="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.sh" ); RETURN "application/x-sh =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.shar" ); RETURN "application/x-shar=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.swf" ); RETURN "application/x-shockwave-flash=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.spr" ); RETURN "application/x-sprite =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.sprite" ); RETURN "application/x-sprite =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.sit" ); RETURN "application/x-stuffit=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.sca" ); RETURN "application/x-supercard="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.sv4cpio" ); RETURN "application/x-sv4cpio=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.sv4crc" ); RETURN "application/x-sv4crc =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.tar" ); RETURN "application/x-tar=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.tcl" ); RETURN "application/x-tcl=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.tex" ); RETURN "application/x-tex=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(texinfo|texi)" ); RETURN "application/x-texinfo=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.tlk" ); RETURN "application/x-tlk=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(t|tr|roff)" ); RETURN "application/x-troff="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.man" ); RETURN "application/x-troff-man="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.me" ); RETURN "application/x-troff-me=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.ms" ); RETURN "application/x-troff-ms=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.alt" ); RETURN "application/x-up-alert=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.che" ); RETURN "application/x-up-cacheop =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.ustar" ); RETURN "application/x-ustar="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.src" ); RETURN "application/x-wais-source=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.xls" ); RETURN "application/xls="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.xlt" ); RETURN "application/xlt="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.zip" ); RETURN "application/zip="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(au|snd)" ); RETURN "audio/basic="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.es" ); RETURN "audio/echospeech =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(gsm|gsd)" ); RETURN "audio/gsm=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.rmf" ); RETURN "audio/rmf=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.tsi" ); RETURN "audio/tsplayer=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.vox" ); RETURN "audio/voxware=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.wtx" ); RETURN "audio/wtx=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(aif|aiff|aifc)" ); RETURN "audio/x-aiff =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(cht|dus)" ); RETURN "audio/x-dspeech="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(mid|midi)" ); RETURN "audio/x-midi =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.mp3" ); RETURN "audio/x-mpeg =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.mp2" ); RETURN "audio/x-mpeg =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.m3u" ); RETURN "audio/x-mpegurl="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(ram|ra)" ); RETURN "audio/x-pn-realaudio =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.rpm" ); RETURN "audio/x-pn-realaudio-plugin="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.stream" ); RETURN "audio/x-qt-stream=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.rmf" ); RETURN "audio/x-rmf="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(vqf|vql)" ); RETURN "audio/x-twinvq=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.vqe" ); RETURN "audio/x-twinvq-plugin=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.wav" ); RETURN "audio/x-wav="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.wtx" ); RETURN "audio/x-wtx="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.mol" ); RETURN "chemical/x-mdl-molfile=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.pdb" ); RETURN "chemical/x-pdb=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.dwf" ); RETURN "drawing/x-dwf=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.ivr" ); RETURN "i-world/i-vrml=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.cod" ); RETURN "image/cis-cod=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.cpi" ); RETURN "image/cpi=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.fif" ); RETURN "image/fif=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.gif" ); RETURN "image/gif=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.ief" ); RETURN "image/ief=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(jpeg|jpg|jpe)" ); RETURN "image/jpeg=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.rip" ); RETURN "image/rip=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.svh" ); RETURN "image/svh=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(tiff|tif)" ); RETURN "image/tiff=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.mcf" ); RETURN "image/vasa=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(svf|dwg|dxf)" ); RETURN "image/vnd=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.wi" ); RETURN "image/wavelet=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.ras" ); RETURN "image/x-cmu-raster=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.etf" ); RETURN "image/x-etf="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.fpx" ); RETURN "image/x-fpx="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(fh5|fh4|fhc)" ); RETURN "image/x-freehand =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.dsf" ); RETURN "image/x-mgx-dsf="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.pnm" ); RETURN "image/x-portable-anymap="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.pbm" ); RETURN "image/x-portable-bitmap="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.pgm" ); RETURN "image/x-portable-graymap =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.ppm" ); RETURN "image/x-portable-pixmap="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.rgb" ); RETURN "image/x-rgb="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.xbm" ); RETURN "image/x-xbitmap="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.xpm" ); RETURN "image/x-xpixmap="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.xwd" ); RETURN "image/x-xwindowdump="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.dig" ); RETURN "multipart/mixed="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.push" ); RETURN "multipart/x-mixed-replace=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(wan|waf)" ); RETURN "plugin/wanimate="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.ccs" ); RETURN "text/ccs =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(htm|html)" ); RETURN "text/html=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.pgr" ); RETURN "text/parsnegar-document="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.txt" ); RETURN "text/plain=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.rtx" ); RETURN "text/richtext=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.tsv" ); RETURN "text/tab-separated-values=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.hdml" ); RETURN "text/x-hdml="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.etx" ); RETURN "text/x-setext=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(talk|spc)" ); RETURN "text/x-speech=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.afl" ); RETURN "video/animaflex="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(mpeg|mpg|mpe)" ); RETURN "video/mpeg=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(qt|mov)" ); RETURN "video/quicktime="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(viv|vivo)" ); RETURN "video/vnd.vivo=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(asf|asx)" ); RETURN "video/x-ms-asf=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.avi" ); RETURN "video/x-msvideo="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.movie" ); RETURN "video/x-sgi-movie=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(vgm|vgx|xdr)" ); RETURN "video/x-videogram=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.vgp" ); RETURN "video/x-videogram-plugin =" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.vts" ); RETURN "workbook/formulaone="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.vtts" ); RETURN "workbook/formulaone="+cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(3dmf|3dm|qd3d|qd3)" ); RETURN "x-world/x-3dmf=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.svr" ); RETURN "x-world/x-svr=" + cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.(wrl|wrz)" ); RETURN "x-world/x-vrml=" +cFname + cFext
-   ELSEIF ( cFile LIKE ".+\.vrt" ); RETURN "x-world/x-vrt=" + cFname + cFext
-   ENDIF
+   DO CASE
+   CASE ( cFile LIKE ".+\.vbd" ); RETURN "application/activexdocument="+cFname + cFext
+   CASE ( cFile LIKE ".+\.(asn|asz|asd)" ); RETURN "application/astound="+cFname + cFext
+   CASE ( cFile LIKE ".+\.pqi" ); RETURN "application/cprplayer=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.tsp" ); RETURN "application/dsptype="+cFname + cFext
+   CASE ( cFile LIKE ".+\.exe" ); RETURN "application/exe="+cFname + cFext
+   CASE ( cFile LIKE ".+\.(sml|ofml)" ); RETURN "application/fml="+cFname + cFext
+   CASE ( cFile LIKE ".+\.pfr" ); RETURN "application/font-tdpfr=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.frl" ); RETURN "application/freeloader=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.spl" ); RETURN "application/futuresplash =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.gz" ); RETURN "application/gzip =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.stk" ); RETURN "application/hstu =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.ips" ); RETURN "application/ips="+cFname + cFext
+   CASE ( cFile LIKE ".+\.ptlk" ); RETURN "application/listenup =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.hqx" ); RETURN "application/mac-binhex40 =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.mbd" ); RETURN "application/mbedlet="+cFname + cFext
+   CASE ( cFile LIKE ".+\.mfp" ); RETURN "application/mirage=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.(pot|pps|ppt|ppz)" ); RETURN "application/mspowerpoint =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.doc" ); RETURN "application/msword=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.n2p" ); RETURN "application/n2p="+cFname + cFext
+   CASE ( cFile LIKE ".+\.(bin|class|lha|lzh|lzx|dbf)" ); RETURN "application/octet-stream =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.oda" ); RETURN "application/oda="+cFname + cFext
+   CASE ( cFile LIKE ".+\.axs" ); RETURN "application/olescript=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.zpa" ); RETURN "application/pcphoto="+cFname + cFext
+   CASE ( cFile LIKE ".+\.pdf" ); RETURN "application/pdf="+cFname + cFext
+   CASE ( cFile LIKE ".+\.(ai|eps|ps)" ); RETURN "application/postscript=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.shw" ); RETURN "application/presentations=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.qrt" ); RETURN "application/quest=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.rtc" ); RETURN "application/rtc="+cFname + cFext
+   CASE ( cFile LIKE ".+\.rtf" ); RETURN "application/rtf="+cFname + cFext
+   CASE ( cFile LIKE ".+\.smp" ); RETURN "application/studiom="+cFname + cFext
+   CASE ( cFile LIKE ".+\.dst" ); RETURN "application/tajima=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.talk" ); RETURN "application/talker=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.tbk" ); RETURN "application/toolbook =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.vmd" ); RETURN "application/vocaltec-media-desc="+cFname + cFext
+   CASE ( cFile LIKE ".+\.vmf" ); RETURN "application/vocaltec-media-file="+cFname + cFext
+   CASE ( cFile LIKE ".+\.wri" ); RETURN "application/write=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.wid" ); RETURN "application/x-DemoShield =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.rrf" ); RETURN "application/x-InstallFromTheWeb="+cFname + cFext
+   CASE ( cFile LIKE ".+\.wis" ); RETURN "application/x-InstallShield="+cFname + cFext
+   CASE ( cFile LIKE ".+\.ins" ); RETURN "application/x-NET-Install=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.tmv" ); RETURN "application/x-Parable-Thing="+cFname + cFext
+   CASE ( cFile LIKE ".+\.arj" ); RETURN "application/x-arj=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.asp" ); RETURN "application/x-asap=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.aab" ); RETURN "application/x-authorware-bin =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(aam|aas)" ); RETURN "application/x-authorware-map =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.bcpio" ); RETURN "application/x-bcpio="+cFname + cFext
+   CASE ( cFile LIKE ".+\.vcd" ); RETURN "application/x-cdlink =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.chat" ); RETURN "application/x-chat=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.cnc" ); RETURN "application/x-cnc=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(coda|page)" ); RETURN "application/x-coda=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.z" ); RETURN "application/x-compress=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.con" ); RETURN "application/x-connector="+cFname + cFext
+   CASE ( cFile LIKE ".+\.cpio" ); RETURN "application/x-cpio=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.pqf" ); RETURN "application/x-cprplayer="+cFname + cFext
+   CASE ( cFile LIKE ".+\.csh" ); RETURN "application/x-csh=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(cu|csm)" ); RETURN "application/x-cu-seeme=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.(dcr|dir|dxr|swa)" ); RETURN "application/x-director=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.dvi" ); RETURN "application/x-dvi=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.evy" ); RETURN "application/x-envoy="+cFname + cFext
+   CASE ( cFile LIKE ".+\.ebk" ); RETURN "application/x-expandedbook=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.gtar" ); RETURN "application/x-gtar=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.hdf" ); RETURN "application/x-hdf=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.map" ); RETURN "application/x-httpd-imap =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.phtml" ); RETURN "application/x-httpd-php="+cFname + cFext
+   CASE ( cFile LIKE ".+\.php3" ); RETURN "application/x-httpd-php3 =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.ica" ); RETURN "application/x-ica=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.ipx" ); RETURN "application/x-ipix=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.ips" ); RETURN "application/x-ipscript=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.js" ); RETURN "application/x-javascript =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.latex" ); RETURN "application/x-latex="+cFname + cFext
+   CASE ( cFile LIKE ".+\.bin" ); RETURN "application/x-macbinary="+cFname + cFext
+   CASE ( cFile LIKE ".+\.mif" ); RETURN "application/x-mif=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(mpl|mpire)" ); RETURN "application/x-mpire="+cFname + cFext
+   CASE ( cFile LIKE ".+\.adr" ); RETURN "application/x-msaddr =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.wlt" ); RETURN "application/x-mswallet=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.(nc|cdf)" ); RETURN "application/x-netcdf =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.npx" ); RETURN "application/x-netfpx =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.nsc" ); RETURN "application/x-nschat =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.pgp" ); RETURN "application/x-pgp-plugin =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.css" ); RETURN "application/x-pointplus="+cFname + cFext
+   CASE ( cFile LIKE ".+\.sh" ); RETURN "application/x-sh =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.shar" ); RETURN "application/x-shar=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.swf" ); RETURN "application/x-shockwave-flash=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.spr" ); RETURN "application/x-sprite =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.sprite" ); RETURN "application/x-sprite =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.sit" ); RETURN "application/x-stuffit=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.sca" ); RETURN "application/x-supercard="+cFname + cFext
+   CASE ( cFile LIKE ".+\.sv4cpio" ); RETURN "application/x-sv4cpio=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.sv4crc" ); RETURN "application/x-sv4crc =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.tar" ); RETURN "application/x-tar=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.tcl" ); RETURN "application/x-tcl=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.tex" ); RETURN "application/x-tex=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(texinfo|texi)" ); RETURN "application/x-texinfo=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.tlk" ); RETURN "application/x-tlk=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(t|tr|roff)" ); RETURN "application/x-troff="+cFname + cFext
+   CASE ( cFile LIKE ".+\.man" ); RETURN "application/x-troff-man="+cFname + cFext
+   CASE ( cFile LIKE ".+\.me" ); RETURN "application/x-troff-me=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.ms" ); RETURN "application/x-troff-ms=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.alt" ); RETURN "application/x-up-alert=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.che" ); RETURN "application/x-up-cacheop =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.ustar" ); RETURN "application/x-ustar="+cFname + cFext
+   CASE ( cFile LIKE ".+\.src" ); RETURN "application/x-wais-source=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.xls" ); RETURN "application/xls="+cFname + cFext
+   CASE ( cFile LIKE ".+\.xlt" ); RETURN "application/xlt="+cFname + cFext
+   CASE ( cFile LIKE ".+\.zip" ); RETURN "application/zip="+cFname + cFext
+   CASE ( cFile LIKE ".+\.(au|snd)" ); RETURN "audio/basic="+cFname + cFext
+   CASE ( cFile LIKE ".+\.es" ); RETURN "audio/echospeech =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(gsm|gsd)" ); RETURN "audio/gsm=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.rmf" ); RETURN "audio/rmf=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.tsi" ); RETURN "audio/tsplayer=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.vox" ); RETURN "audio/voxware=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.wtx" ); RETURN "audio/wtx=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(aif|aiff|aifc)" ); RETURN "audio/x-aiff =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(cht|dus)" ); RETURN "audio/x-dspeech="+cFname + cFext
+   CASE ( cFile LIKE ".+\.(mid|midi)" ); RETURN "audio/x-midi =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.mp3" ); RETURN "audio/x-mpeg =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.mp2" ); RETURN "audio/x-mpeg =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.m3u" ); RETURN "audio/x-mpegurl="+cFname + cFext
+   CASE ( cFile LIKE ".+\.(ram|ra)" ); RETURN "audio/x-pn-realaudio =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.rpm" ); RETURN "audio/x-pn-realaudio-plugin="+cFname + cFext
+   CASE ( cFile LIKE ".+\.stream" ); RETURN "audio/x-qt-stream=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.rmf" ); RETURN "audio/x-rmf="+cFname + cFext
+   CASE ( cFile LIKE ".+\.(vqf|vql)" ); RETURN "audio/x-twinvq=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.vqe" ); RETURN "audio/x-twinvq-plugin=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.wav" ); RETURN "audio/x-wav="+cFname + cFext
+   CASE ( cFile LIKE ".+\.wtx" ); RETURN "audio/x-wtx="+cFname + cFext
+   CASE ( cFile LIKE ".+\.mol" ); RETURN "chemical/x-mdl-molfile=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.pdb" ); RETURN "chemical/x-pdb=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.dwf" ); RETURN "drawing/x-dwf=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.ivr" ); RETURN "i-world/i-vrml=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.cod" ); RETURN "image/cis-cod=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.cpi" ); RETURN "image/cpi=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.fif" ); RETURN "image/fif=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.gif" ); RETURN "image/gif=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.ief" ); RETURN "image/ief=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(jpeg|jpg|jpe)" ); RETURN "image/jpeg=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.rip" ); RETURN "image/rip=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.svh" ); RETURN "image/svh=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(tiff|tif)" ); RETURN "image/tiff=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.mcf" ); RETURN "image/vasa=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.(svf|dwg|dxf)" ); RETURN "image/vnd=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.wi" ); RETURN "image/wavelet=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.ras" ); RETURN "image/x-cmu-raster=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.etf" ); RETURN "image/x-etf="+cFname + cFext
+   CASE ( cFile LIKE ".+\.fpx" ); RETURN "image/x-fpx="+cFname + cFext
+   CASE ( cFile LIKE ".+\.(fh5|fh4|fhc)" ); RETURN "image/x-freehand =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.dsf" ); RETURN "image/x-mgx-dsf="+cFname + cFext
+   CASE ( cFile LIKE ".+\.pnm" ); RETURN "image/x-portable-anymap="+cFname + cFext
+   CASE ( cFile LIKE ".+\.pbm" ); RETURN "image/x-portable-bitmap="+cFname + cFext
+   CASE ( cFile LIKE ".+\.pgm" ); RETURN "image/x-portable-graymap =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.ppm" ); RETURN "image/x-portable-pixmap="+cFname + cFext
+   CASE ( cFile LIKE ".+\.rgb" ); RETURN "image/x-rgb="+cFname + cFext
+   CASE ( cFile LIKE ".+\.xbm" ); RETURN "image/x-xbitmap="+cFname + cFext
+   CASE ( cFile LIKE ".+\.xpm" ); RETURN "image/x-xpixmap="+cFname + cFext
+   CASE ( cFile LIKE ".+\.xwd" ); RETURN "image/x-xwindowdump="+cFname + cFext
+   CASE ( cFile LIKE ".+\.dig" ); RETURN "multipart/mixed="+cFname + cFext
+   CASE ( cFile LIKE ".+\.push" ); RETURN "multipart/x-mixed-replace=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(wan|waf)" ); RETURN "plugin/wanimate="+cFname + cFext
+   CASE ( cFile LIKE ".+\.ccs" ); RETURN "text/ccs =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(htm|html)" ); RETURN "text/html=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.pgr" ); RETURN "text/parsnegar-document="+cFname + cFext
+   CASE ( cFile LIKE ".+\.txt" ); RETURN "text/plain=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.rtx" ); RETURN "text/richtext=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.tsv" ); RETURN "text/tab-separated-values=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.hdml" ); RETURN "text/x-hdml="+cFname + cFext
+   CASE ( cFile LIKE ".+\.etx" ); RETURN "text/x-setext=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(talk|spc)" ); RETURN "text/x-speech=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.afl" ); RETURN "video/animaflex="+cFname + cFext
+   CASE ( cFile LIKE ".+\.(mpeg|mpg|mpe)" ); RETURN "video/mpeg=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.(qt|mov)" ); RETURN "video/quicktime="+cFname + cFext
+   CASE ( cFile LIKE ".+\.(viv|vivo)" ); RETURN "video/vnd.vivo=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.(asf|asx)" ); RETURN "video/x-ms-asf=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.avi" ); RETURN "video/x-msvideo="+cFname + cFext
+   CASE ( cFile LIKE ".+\.movie" ); RETURN "video/x-sgi-movie=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(vgm|vgx|xdr)" ); RETURN "video/x-videogram=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.vgp" ); RETURN "video/x-videogram-plugin =" + cFname + cFext
+   CASE ( cFile LIKE ".+\.vts" ); RETURN "workbook/formulaone="+cFname + cFext
+   CASE ( cFile LIKE ".+\.vtts" ); RETURN "workbook/formulaone="+cFname + cFext
+   CASE ( cFile LIKE ".+\.(3dmf|3dm|qd3d|qd3)" ); RETURN "x-world/x-3dmf=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.svr" ); RETURN "x-world/x-svr=" + cFname + cFext
+   CASE ( cFile LIKE ".+\.(wrl|wrz)" ); RETURN "x-world/x-vrml=" +cFname + cFext
+   CASE ( cFile LIKE ".+\.vrt" ); RETURN "x-world/x-vrt=" + cFname + cFext
+   ENDCASE
 
-RETURN "text/plain;filename=" + cFname + cFext
+   RETURN "text/plain;filename=" + cFname + cFext

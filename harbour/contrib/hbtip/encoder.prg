@@ -7,7 +7,6 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,10 +61,11 @@
 
 
 #include "hbclass.ch"
-#include "fileio.ch"
-#include "tip.ch"
-#include "common.ch"
 
+#include "common.ch"
+#include "fileio.ch"
+
+#include "tip.ch"
 
 FUNCTION TIp_GetEncoder( cModel )
    LOCAL oEncoder
@@ -95,9 +95,7 @@ FUNCTION TIp_GetEncoder( cModel )
 
    ENDCASE
 
-RETURN oEncoder
-
-
+   RETURN oEncoder
 
 CREATE CLASS TIPEncoder
    VAR cName
@@ -107,17 +105,15 @@ CREATE CLASS TIPEncoder
    METHOD Decode( cData )
 ENDCLASS
 
-
-METHOD New( cModel ) class TIPEncoder
+METHOD New( cModel ) CLASS TIPEncoder
    IF ! ISCHARACTER( cModel )
       cModel := "as-is"
    ENDIF
    ::cName := cModel
-RETURN self
+   RETURN Self
 
+METHOD Encode( cData ) CLASS TIPEncoder
+   RETURN cData
 
-METHOD Encode( cData ) class TIPEncoder
-RETURN cData
-
-METHOD Decode( cData ) class TIPEncoder
-RETURN cData
+METHOD Decode( cData ) CLASS TIPEncoder
+   RETURN cData

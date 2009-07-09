@@ -14,6 +14,7 @@ C_SOURCES=\
 	ampm.c \
 	at.c \
 	ati.c \
+	base64c.c \
 	binnum.c \
 	binnumx.c \
 	box.c \
@@ -184,6 +185,7 @@ PRG_SOURCES=\
 	adir.prg \
 	alert.prg \
 	altd.prg \
+	base64.prg \
 	browdb.prg \
 	browdbx.prg \
 	browse.prg \

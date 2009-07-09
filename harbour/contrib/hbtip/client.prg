@@ -378,7 +378,7 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS tIPClient
    nSent := 0
 
    IF !Empty( ::exGauge )
-      HB_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
+      hb_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
    ENDIF
 
    ::nRead   := 0
@@ -407,7 +407,7 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS tIPClient
 
       nSent += Len( cData )
       IF ! Empty( ::exGauge )
-         HB_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
+         hb_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
       ENDIF
 
    ENDDO
@@ -441,7 +441,7 @@ METHOD WriteFromFile( cFile ) CLASS tIPClient
    // allow initialization of the gauge
    nSent := 0
    IF ! Empty( ::exGauge )
-      HB_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
+      hb_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
    ENDIF
 
    ::nStatus := 1
@@ -454,7 +454,7 @@ METHOD WriteFromFile( cFile ) CLASS tIPClient
       ENDIF
       nSent += nLen
       IF ! Empty( ::exGauge )
-         HB_ExecFromArray( ::exGauge, {nSent, nSize, Self} )
+         hb_ExecFromArray( ::exGauge, {nSent, nSize, Self} )
       ENDIF
       nLen := FRead( nFin, @cData, nBufSize )
    ENDDO

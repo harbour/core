@@ -7,7 +7,6 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -61,6 +60,7 @@
 */
 
 #include "hbclass.ch"
+
 #include "common.ch"
 
 CREATE CLASS TipMail
@@ -106,7 +106,9 @@ CREATE CLASS TipMail
    METHOD attachFile( cFileName )
    METHOD detachFile( cPath )
    METHOD getFileName()
-HIDDEN:
+
+   HIDDEN:
+
    VAR cBody
    VAR lBodyEncoded init .F.
    VAR oEncoder
@@ -118,7 +120,7 @@ ENDCLASS
 METHOD New( cBody, oEncoder ) CLASS TipMail
 
    // Set header fileds to non-sensitive
-   ::hHeaders := hb_HSetCaseMatch( {=>}, .F. )
+   ::hHeaders := hb_HSetCaseMatch( { => }, .F. )
    ::aAttachments := {}
 
    IF Valtype( oEncoder ) $ "CO"
@@ -132,22 +134,19 @@ METHOD New( cBody, oEncoder ) CLASS TipMail
       ELSE
          ::cBody := cBody
       ENDIF
-      ::hHeaders[ "Content-Length" ] := Ltrim( Str( Len( ::cBody ) ) )
+      ::hHeaders[ "Content-Length" ] := hb_ntos( Len( ::cBody ) )
    ENDIF
 
-RETURN Self
-
+   RETURN Self
 
 METHOD SetEncoder( cEnc ) CLASS TipMail
-   if HB_IsString( cEnc )
+   if hb_isString( cEnc )
       ::oEncoder := TIp_GetEncoder( cEnc )
    ELSE
       ::oEncoder := cEnc
    ENDIF
    ::hHeaders[ "Content-transfer-encoding" ] := ::oEncoder:cName
-RETURN .T.
-
-
+   RETURN .T.
 
 METHOD SetBody( cBody ) CLASS TipMail
    IF ::oEncoder != NIL
@@ -156,9 +155,8 @@ METHOD SetBody( cBody ) CLASS TipMail
    ELSE
       ::cBody := cBody
    ENDIF
-   //::hHeaders[ "Content-Length" ] := Ltrim( Str( Len( cBody ) ) )  //GD -not needed
-RETURN .T.
-
+   //::hHeaders[ "Content-Length" ] := hb_ntos( Len( cBody ) )  //GD -not needed
+   RETURN .T.
 
 METHOD GetBody() CLASS TipMail
    IF ::cBody == NIL
@@ -166,8 +164,7 @@ METHOD GetBody() CLASS TipMail
    ELSEIF ::oEncoder != NIL
       RETURN ::oEncoder:Decode( ::cBody )
    ENDIF
-RETURN ::cBody
-
+   RETURN ::cBody
 
 METHOD GetFieldPart( cPart ) CLASS TipMail
    LOCAL nPos, cEnc
@@ -179,12 +176,11 @@ METHOD GetFieldPart( cPart ) CLASS TipMail
       cEnc := hb_HValueAt( ::hHeaders, nPos )
       nPos := At( ";", cEnc )
       IF nPos != 0
-         cEnc := Substr( cEnc, 1, nPos - 1)
+         cEnc := SubStr( cEnc, 1, nPos - 1)
       ENDIF
    ENDIF
 
-RETURN cEnc
-
+   RETURN cEnc
 
 METHOD GetFieldOption( cPart, cOption ) CLASS TipMail
    LOCAL nPos, aMatch
@@ -196,15 +192,15 @@ METHOD GetFieldOption( cPart, cOption ) CLASS TipMail
    ELSE
       cEnc := hb_HValueAt( ::hHeaders, nPos )
       // Case insensitive check
-      aMatch := HB_Regex( ";\s*" + cOption +"\s*=\s*([^;]*)", cEnc, .F. )
+      aMatch := hb_regex( ";\s*" + cOption + "\s*=\s*([^;]*)", cEnc, .F. )
       IF aMatch != NIL
-         cEnc := aMatch[2]
+         cEnc := aMatch[ 2 ]
       ELSE
          RETURN ""
       ENDIF
    ENDIF
-RETURN cEnc
 
+   RETURN cEnc
 
 METHOD SetFieldPart( cPart, cValue ) CLASS TipMail
    LOCAL nPos, cEnc
@@ -218,12 +214,11 @@ METHOD SetFieldPart( cPart, cValue ) CLASS TipMail
       IF nPos == 0
          ::hHeaders[ cPart ] := cValue
       ELSE
-         ::hHeaders[ cPart ] := cValue + Substr( cEnc, nPos )
+         ::hHeaders[ cPart ] := cValue + SubStr( cEnc, nPos )
       ENDIF
    ENDIF
 
-RETURN .T.
-
+   RETURN .T.
 
 METHOD SetFieldOption( cPart, cOption, cValue ) CLASS TipMail
    LOCAL nPos, aMatch
@@ -234,45 +229,40 @@ METHOD SetFieldOption( cPart, cOption, cValue ) CLASS TipMail
       Return .F.
    ELSE
       cEnc := hb_HValueAt( ::hHeaders, nPos )
-      aMatch := HB_Regex( "(.*?;\s*)" + cOption +"\s*=[^;]*(.*)?", cEnc, .F. )
+      aMatch := hb_regex( "(.*?;\s*)" + cOption + "\s*=[^;]*(.*)?", cEnc, .F. )
       IF Empty( aMatch )
          ::hHeaders[ cPart ] := cEnc += "; "+ cOption + '="' + cValue + '"'
       ELSE
-         ::hHeaders[ cPart ] := aMatch[2] + cOption + '="' +;
-                cValue + '"' + aMatch[3]
+         ::hHeaders[ cPart ] := aMatch[ 2 ] + cOption + '="' +;
+                                cValue + '"' + aMatch[ 3 ]
       ENDIF
    ENDIF
 
-RETURN .T.
-
+   RETURN .T.
 
 METHOD Attach( oSubPart ) CLASS TipMail
 
-   IF HB_IsObject( oSubPart ) .AND. oSubPart:ClassName == "TIPMAIL"
+   IF hb_isObject( oSubPart ) .AND. oSubPart:ClassName == "TIPMAIL"
       // reset wrong content-type
-      IF At( "multipart/", Lower( ::GetFieldPart("Content-Type")) ) == 0
+      IF At( "multipart/", Lower( ::GetFieldPart( "Content-Type" ) ) ) == 0
          ::hHeaders[ "Content-Type" ] := "multipart/mixed"
       ENDIF
 
       AAdd( ::aAttachments, oSubPart )
       RETURN .T.
-   ELSE
-      Alert( "TipMail:Attach() must be called with another TipMail object" )
    ENDIF
 
-RETURN .F.
-
+   RETURN .F.
 
 METHOD NextAttachment() CLASS TipMail
 
    IF ::nAttachPos > Len( ::aAttachments )
       RETURN NIL
    ELSE
-      ::nAttachPos ++
+      ::nAttachPos++
    ENDIF
 
-RETURN ::aAttachments[ ::nAttachPos - 1 ]
-
+   RETURN ::aAttachments[ ::nAttachPos - 1 ]
 
 METHOD GetAttachment() CLASS TipMail
 
@@ -280,20 +270,20 @@ METHOD GetAttachment() CLASS TipMail
       RETURN NIL
    ENDIF
 
-RETURN ::aAttachments[ ::nAttachPos ]
-
+   RETURN ::aAttachments[ ::nAttachPos ]
 
 METHOD ToString() CLASS TipMail
    LOCAL cBoundary, cElem, i
    LOCAL cRet := ""
+
    // this is a multipart message; we need a boundary
-    IF Len( ::aAttachments ) > 0
-      ::hHeaders[ "Mime-Version" ] :="1.0"
-    endif
+   IF Len( ::aAttachments ) > 0
+     ::hHeaders[ "Mime-Version" ] := "1.0"
+   ENDIF
 
    IF Len( ::aAttachments ) > 0
       //Reset failing content type
-      IF At( "multipart/", Lower( ::GetFieldPart("Content-Type")) ) == 0
+      IF At( "multipart/", Lower( ::GetFieldPart( "Content-Type" ) ) ) == 0
          ::hHeaders[ "Content-Type" ] := "multipart/mixed"
       ENDIF
 
@@ -336,7 +326,7 @@ METHOD ToString() CLASS TipMail
    ENDIF
 
    FOR i := 1 TO Len( ::hHeaders )
-      cElem := Lower(hb_HKeyAt( ::hHeaders, i ))
+      cElem := Lower( hb_HKeyAt( ::hHeaders, i ) )
       IF !( cElem == "return-path" ) .AND.;
          !( cElem == "delivered-to" ) .AND.;
          !( cElem == "date" ) .AND.;
@@ -354,31 +344,29 @@ METHOD ToString() CLASS TipMail
 
    //Body
    IF ! Empty( ::cBody )
-      IF empty(::aAttachments)
-         //cRet += ::cBody +iif(lAttachment,"", e"\r\n")
-         cRet += ::cBody + iif(::lBodyEncoded,"", e"\r\n")
-      else
+      IF Empty( ::aAttachments )
+         //cRet += ::cBody + iif( lAttachment, "", e"\r\n" )
+         cRet += ::cBody + iif( ::lBodyEncoded, "", e"\r\n" )
+      ELSE
          //GD - if there are attachements the body of the message has to be treated as an attachment.
          cRet += "--" + cBoundary + e"\r\n"
-         cRet+= "Content-Type: text/plain; charset=ISO-8859-1; format=flowed"+ e"\r\n"
-         cRet+= "Content-Transfer-Encoding: 7bit"+ e"\r\n"
-         cRet+= "Content-Disposition: inline"+ e"\r\n"+ e"\r\n"
-         cRet += ::cBody+ e"\r\n"
+         cRet += "Content-Type: text/plain; charset=ISO-8859-1; format=flowed" + e"\r\n"
+         cRet += "Content-Transfer-Encoding: 7bit" + e"\r\n"
+         cRet += "Content-Disposition: inline" + e"\r\n"+ e"\r\n"
+         cRet += ::cBody + e"\r\n"
       ENDIF
-
    ENDIF
 
    IF ! Empty( ::aAttachments )
-      //Eventually go with mime multipart
-      FOR i := 1 TO Len(::aAttachments )
+      // Eventually go with mime multipart
+      FOR i := 1 TO Len( ::aAttachments )
          cRet += "--" + cBoundary + e"\r\n"
-         cRet += ::aAttachments[i]:ToString()
+         cRet += ::aAttachments[ i ]:ToString()
       NEXT
       cRet += "--" + cBoundary + "--" + e"\r\n"
    ENDIF
 
-RETURN cRet
-
+   RETURN cRet
 
 METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
    LOCAL oSubSection, cSubBoundary
@@ -390,7 +378,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
    ENDIF
 
    IF Len( ::hHeaders ) > 0
-      ::hHeaders := hb_HSetCaseMatch( {=>} , .F. )
+      ::hHeaders := hb_HSetCaseMatch( { => }, .F. )
    ENDIF
 
    IF Len( ::aReceived ) > 0
@@ -398,27 +386,24 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
    ENDIF
 
    // Part 1: parsing header
-   IF nPos == NIL
-      nPos := 1
-   ENDIF
+   DEFAULT nPos TO 1
 
    nLinePos := hb_At( e"\r\n", cMail, nPos )
    DO WHILE nLinePos > nPos
       // going on with last field?
-      IF (SubStr( cMail, nPos, 1 ) == " " .OR. SubStr( cMail, nPos, 1 ) == e"\t" );
+      IF ( SubStr( cMail, nPos, 1 ) == " " .OR. SubStr( cMail, nPos, 1 ) == e"\t" );
                .AND. cLastField != NIL
-         cValue := Ltrim(Substr( cMail, nPos, nLinePos - nPos ))
-         IF Lower(cLastField) == "received"
-            ::aReceived[Len(::aReceived)] += " " + cValue
+         cValue := LTrim( SubStr( cMail, nPos, nLinePos - nPos ) )
+         IF Lower( cLastField ) == "received"
+            ::aReceived[ Len( ::aReceived ) ] += " " + cValue
          ELSE
             ::hHeaders[ cLastField ] += " " +cValue
          ENDIF
-
       ELSE
          nSplitPos := hb_At( ":", cMail, nPos )
-         cLastField := Substr( cMail, nPos, nSplitPos - nPos)
-         cValue := Ltrim(Substr( cMail, nSplitPos +1, nLinePos - nSplitPos -1))
-         IF Lower(cLastField) == "received"
+         cLastField := SubStr( cMail, nPos, nSplitPos - nPos )
+         cValue := LTrim( SubStr( cMail, nSplitPos + 1, nLinePos - nSplitPos - 1 ) )
+         IF Lower( cLastField ) == "received"
             AAdd( ::aReceived, cValue )
          ELSE
             ::hHeaders[ cLastField ] := cValue
@@ -443,11 +428,11 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
    ENDIF
 
    // se if we have subparts:
-   IF At( "multipart/", Lower( ::GetFieldPart("Content-Type")) ) > 0
+   IF At( "multipart/", Lower( ::GetFieldPart( "Content-Type" ) ) ) > 0
       cSubBoundary := ::GetFieldOption( "Content-Type", "Boundary" )
-      //strip " on boundary
+      // strip " on boundary
       IF Left( cSubBoundary, 1 ) == '"'
-         cSubBoundary := Substr( cSubBoundary, 2, Len( cSubBoundary ) - 2)
+         cSubBoundary := SubStr( cSubBoundary, 2, Len( cSubBoundary ) - 2 )
       ENDIF
    ENDIF
 
@@ -463,23 +448,23 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
          LOOP
       ENDIF
 
-      //have we met the boundary?
-      IF cBoundary != NIL .AND. hb_At( "--"+cBoundary, cMail, nPos ) == nPos
+      // have we met the boundary?
+      IF cBoundary != NIL .AND. hb_At( "--" + cBoundary, cMail, nPos ) == nPos
          EXIT
       ENDIF
 
-      //Have we met a section?
+      // Have we met a section?
       IF cSubBoundary != NIL .AND.;
             hb_At( "--" + cSubBoundary, cMail, nPos ) == nPos
 
-         //is it the last subsection?
-         IF hb_At( "--", cMail, nPos + Len(cSubBoundary)+2, nLinePos) > 0
+         // is it the last subsection?
+         IF hb_At( "--", cMail, nPos + Len( cSubBoundary ) + 2, nLinePos ) > 0
             EXIT
          ENDIF
 
          // set our body
          IF nBodyPos > 0
-            ::cBody := Substr( cMail, nBodyPos, nPos - nBodyPos )
+            ::cBody := SubStr( cMail, nBodyPos, nPos - nBodyPos )
             nBodyPos := 0
          ENDIF
 
@@ -497,12 +482,12 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
          // enter in this part of the loop again.
 
       ELSE
-         //nPos := nLinePos + 2
+         // nPos := nLinePos + 2
          /* 04/05/2004 - <maurilio.longo@libero.it>
             Instead of testing every single line of mail until we find next boundary, if there is a boundary we
             jump to it immediatly, this saves thousands of EOL test and makes splitting of a string fast
          */
-         nPos := iif( ! Empty(cSubBoundary), hb_At("--" + cSubBoundary, cMail, nPos ), iif( ! Empty(cBoundary), hb_At("--" + cBoundary, cMail, nPos ), nLinePos + 2 ))
+         nPos := iif( ! Empty( cSubBoundary ), hb_At("--" + cSubBoundary, cMail, nPos ), iif( ! Empty( cBoundary ), hb_At( "--" + cBoundary, cMail, nPos ), nLinePos + 2 ) )
       ENDIF
 
       nLinePos := hb_At( e"\r\n", cMail, nPos )
@@ -510,27 +495,23 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
 
    // set our body if needed
    IF nBodyPos > 0
-      ::cBody := Substr( cMail, nBodyPos, nPos - nBodyPos )
+      ::cBody := SubStr( cMail, nBodyPos, nPos - nBodyPos )
    ENDIF
 
-
-RETURN nPos
-
+  RETURN nPos
 
 METHOD MakeBoundary() CLASS TipMail
-   LOCAL cBound := "=_0" + Space(17)
+   LOCAL cBound := "=_0" + Space( 17 )
    LOCAL i
 
    FOR i := 4 TO 20
-      cBound := Stuff( cBound, i, 1, Chr( HB_Random(0, 25 ) + Asc("A") ) )
+      cBound := Stuff( cBound, i, 1, Chr( hb_Random( 0, 25 ) + Asc( "A" ) ) )
    NEXT
 
-   cBound += "_TIP_" + StrTran(Dtoc( Date() ),"/","") +;
-       "_" + StrTran(Time(), ":", "" )
+   cBound += "_TIP_" + DToS( Date() ) +;
+       "_" + StrTran(Time(), ":" )
 
-RETURN cBound
-
-
+   RETURN cBound
 
 METHOD setHeader( cSubject, cFrom, cTo, cCC, cBCC ) CLASS TipMail
    LOCAL aTo, aCC, aBCC, i, imax
@@ -569,14 +550,14 @@ METHOD setHeader( cSubject, cFrom, cTo, cCC, cBCC ) CLASS TipMail
       RETURN .F.
    ENDIF
 
-   IF ! ::setFieldPart( "From"   , cFrom    )
+   IF ! ::setFieldPart( "From", cFrom )
       RETURN .F.
    ENDIF
 
-   cTo  := aTO[1]
+   cTo := aTO[ 1 ]
    imax := Len( aTO )
-   FOR i:=2 TO imax
-      cTo += "," + HB_InetCrlf() + Chr(9) + aTo[i]
+   FOR i := 2 TO imax
+      cTo += "," + hb_inetCrlf() + Chr( 9 ) + aTo[ i ]
    NEXT
 
    IF ! ::setFieldPart( "To", cTo )
@@ -584,10 +565,10 @@ METHOD setHeader( cSubject, cFrom, cTo, cCC, cBCC ) CLASS TipMail
    ENDIF
 
    IF aCC != NIL
-      cCC  := aCC[1]
+      cCC := aCC[ 1 ]
       imax := Len( aCC )
-      FOR i:=2 TO imax
-        cCC += "," + HB_InetCrlf() + Chr(9) + aCC[i]
+      FOR i := 2 TO imax
+         cCC += "," + hb_inetCrlf() + Chr( 9 ) + aCC[ i ]
       NEXT
 
       IF ! ::setFieldPart( "Cc", cCC )
@@ -596,10 +577,10 @@ METHOD setHeader( cSubject, cFrom, cTo, cCC, cBCC ) CLASS TipMail
    ENDIF
 
    IF aBCC != NIL
-      cBCC  := aBCC[1]
+      cBCC := aBCC[ 1 ]
       imax := Len( aBCC )
-      FOR i:=2 TO imax
-        cBCC += "," + HB_InetCrlf() + Chr(9) + aBCC[i]
+      FOR i := 2 TO imax
+         cBCC += "," + hb_inetCrlf() + Chr( 9 ) + aBCC[ i ]
       NEXT
 
       IF ! ::setFieldPart( "Bcc", cBCC )
@@ -607,13 +588,12 @@ METHOD setHeader( cSubject, cFrom, cTo, cCC, cBCC ) CLASS TipMail
       ENDIF
    ENDIF
 
-RETURN .T.
-
+   RETURN .T.
 
 METHOD attachFile( cFileName ) CLASS TipMail
-   LOCAL cContent := MemoRead( cFileName )
-   LOCAL cMimeType:= TIP_FileMimetype( cFileName )
-   LOCAL cDelim   := HB_OsPathSeparator()
+   LOCAL cContent := hb_MemoRead( cFileName )
+   LOCAL cMimeType := TIP_FileMimetype( cFileName )
+   LOCAL cDelim := hb_osPathSeparator()
 
    LOCAL oAttach
 
@@ -622,21 +602,20 @@ METHOD attachFile( cFileName ) CLASS TipMail
    ENDIF
 
    oAttach   := TIPMail():new( cContent, "base64" )
-   cFileName := SubStr( cFileName, Rat( cFileName, cDelim ) + 1 )
+   cFileName := SubStr( cFileName, RAt( cFileName, cDelim ) + 1 )
 
-   oAttach:setFieldPart  ( "Content-Type", cMimeType )
+   oAttach:setFieldPart( "Content-Type", cMimeType )
    oAttach:setFieldOption( "Content-Type", "name", cFileName )
 
-   oAttach:setFieldPart  ( "Content-Disposition", "attachment" )
+   oAttach:setFieldPart( "Content-Disposition", "attachment" )
    oAttach:setFieldOption( "Content-Disposition", "filename", cFileName )
 
-RETURN ::attach( oAttach )
-
+   RETURN ::attach( oAttach )
 
 METHOD detachFile( cPath ) CLASS TipMail
-   LOCAL cContent  := ::getBody()
+   LOCAL cContent := ::getBody()
    LOCAL cFileName := ::getFileName()
-   LOCAL cDelim    := HB_OsPathSeparator()
+   LOCAL cDelim := hb_osPathSeparator()
    LOCAL nFileHandle
 
    IF Empty( cFileName )
@@ -644,7 +623,7 @@ METHOD detachFile( cPath ) CLASS TipMail
    ENDIF
 
    IF ISCHARACTER( cPath )
-      cFileName := StrTran( cPath + cDelim + cFileName, cDelim+cDelim, cDelim )
+      cFileName := StrTran( cPath + cDelim + cFileName, cDelim + cDelim, cDelim )
    ENDIF
 
    nFileHandle := FCreate( cFileName )
@@ -653,27 +632,22 @@ METHOD detachFile( cPath ) CLASS TipMail
    ENDIF
 
    FWrite( nFileHandle, cContent )
-
    FClose( nFileHandle )
-RETURN FError() == 0
 
+   RETURN FError() == 0
 
 METHOD getFileName() CLASS TipMail
-RETURN StrTran( ::getFieldOption( "Content-Type", "name" ), '"', "" )
-
+   RETURN StrTran( ::getFieldOption( "Content-Type", "name" ), '"' )
 
 METHOD isMultiPart CLASS TipMail
-RETURN "multipart/" $ Lower( ::GetFieldPart("Content-Type") )
-
+   RETURN "multipart/" $ Lower( ::GetFieldPart("Content-Type") )
 
 METHOD getMultiParts( aParts ) CLASS TipMail
    LOCAL oSubPart, lReset := .F.
 
    ::resetAttachment()
 
-   IF aParts == NIL
-      aParts := {}
-   ENDIF
+   DEFAULT aParts TO {}
 
    DO WHILE ( oSubPart := ::nextAttachment() ) != NIL
       lReset := .T.
@@ -686,4 +660,5 @@ METHOD getMultiParts( aParts ) CLASS TipMail
    IF lReset
       ::resetAttachment()
    ENDIF
-RETURN aParts
+
+   RETURN aParts

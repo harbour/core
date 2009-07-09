@@ -12,7 +12,6 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- *
  * www - http://www.harbour-project.org
  *
  *    CGI Session Manager Class
@@ -62,30 +61,32 @@
  */
 
 #include "hbclass.ch"
-#include "tip.ch"
+
 #include "common.ch"
 #include "fileio.ch"
 
+#include "tip.ch"
+
 #define CGI_IN  0
 #define CGI_OUT 1
-#define _CRLF chr(13)+chr(10)
+#define _CRLF Chr( 13 ) + Chr( 10 )
 #define _BR "<br />"
 
-CLASS TIpCgi
+CREATE CLASS TIpCgi
 
-   DATA HTTP_RAW_POST_DATA
+   VAR HTTP_RAW_POST_DATA
 
-   DATA cCgiHeader
-   DATA cHtmlPage
-   DATA hGets        INIT {=>}
-   DATA hPosts       INIT {=>}
-   DATA hCookies     INIT {=>}
-   DATA hSession     INIT {=>}
-   DATA bSavedErrHandler
-   DATA cSessionSavePath
-   DATA cSID
-   DATA cDumpSavePath
-   DATA lDumpHtml    INIT FALSE
+   VAR cCgiHeader
+   VAR cHtmlPage
+   VAR hGets        INIT { => }
+   VAR hPosts       INIT { => }
+   VAR hCookies     INIT { => }
+   VAR hSession     INIT { => }
+   VAR bSavedErrHandler
+   VAR cSessionSavePath
+   VAR cSID
+   VAR cDumpSavePath
+   VAR lDumpHtml    INIT .F.
 
    METHOD New()
    METHOD Header( hOptions )
@@ -124,64 +125,64 @@ METHOD New() CLASS TIpCgi
    ::cCgiHeader := ""
    ::cHtmlPage := ""
 
-   lPost := ( "POST" $ Upper( getenv( "REQUEST_METHOD" ) ) )
-   if lPost
-      nLen := val( getenv( "CONTENT_LENGTH" ) )
-      cTemp := space( nLen )
-      if ( ( nRead := FRead( CGI_IN, @cTemp, nLen, 0 ) ) != nLen )
-         ::ErrHandler( "post error read " + str( nRead ) + " instead of " + str( nLen ) )
-      else
+   lPost := ( "POST" $ Upper( GetEnv( "REQUEST_METHOD" ) ) )
+   IF lPost
+      nLen := Val( GetEnv( "CONTENT_LENGTH" ) )
+      cTemp := Space( nLen )
+      IF ( ( nRead := FRead( CGI_IN, @cTemp, nLen, 0 ) ) != nLen )
+         ::ErrHandler( "post error read " + Str( nRead ) + " instead of " + Str( nLen ) )
+      ELSE
          ::HTTP_RAW_POST_DATA := cTemp
-         aTemp := HB_ATOKENS( cTemp, "&" )
+         aTemp := hb_ATokens( cTemp, "&" )
          nLen := Len( aTemp )
-         if nLen > 0
-            for nCount := 1 TO nLen
-               aVar := HB_ATOKENS( aTemp[ nCount ], "=" )
-               if Len( aVar ) == 2
-                  ::hPosts[ alltrim( TipEncoderUrl_Decode( aVar[ 1 ] ) ) ] := TipEncoderUrl_Decode( aVar[ 2 ] )
-               endif
-            next
-         endif
-      endif
-   else
-      cTemp := getenv( "QUERY_STRING" )
-      if !empty( cTemp )
-         aTemp := HB_ATOKENS( cTemp, "&" )
+         IF nLen > 0
+            FOR nCount := 1 TO nLen
+               aVar := hb_ATokens( aTemp[ nCount ], "=" )
+               IF Len( aVar ) == 2
+                  ::hPosts[ AllTrim( TipEncoderUrl_Decode( aVar[ 1 ] ) ) ] := TipEncoderUrl_Decode( aVar[ 2 ] )
+               ENDIF
+            NEXT
+         ENDIF
+      ENDIF
+   ELSE
+      cTemp := GetEnv( "QUERY_STRING" )
+      IF ! Empty( cTemp )
+         aTemp := hb_ATokens( cTemp, "&" )
          nLen := Len( aTemp )
-         if nLen > 0
-            for nCount := 1 TO nLen
-               aVar := HB_ATOKENS( aTemp[ nCount ], "=" )
-               if Len( aVar ) == 2
-                  ::hGets[ alltrim( TipEncoderUrl_Decode( aVar[ 1 ] ) ) ] := TipEncoderUrl_Decode( aVar[ 2 ] )
-               endif
-            next
-         endif
-      endif
-   endif
+         IF nLen > 0
+            FOR nCount := 1 TO nLen
+               aVar := hb_ATokens( aTemp[ nCount ], "=" )
+               IF Len( aVar ) == 2
+                  ::hGets[ AllTrim( TipEncoderUrl_Decode( aVar[ 1 ] ) ) ] := TipEncoderUrl_Decode( aVar[ 2 ] )
+               ENDIF
+            NEXT
+         ENDIF
+      ENDIF
+   ENDIF
 
-   cTemp := getenv( "HTTP_COOKIE" )
-   if !empty( cTemp )
-      aTemp := HB_ATOKENS( cTemp, ";" )
+   cTemp := GetEnv( "HTTP_COOKIE" )
+   IF ! Empty( cTemp )
+      aTemp := hb_ATokens( cTemp, ";" )
       nLen := Len( aTemp )
-      if nLen > 0
-         for nCount := 1 TO nLen
-            aVar := HB_ATOKENS( aTemp[ nCount ], "=" )
-            if Len( aVar ) == 2
-               ::hCookies[ alltrim( TipEncoderUrl_Decode( aVar[ 1 ] ) ) ] := TipEncoderUrl_Decode( aVar[ 2 ] )
-            endif
-         next
-      endif
-   endif
+      IF nLen > 0
+         FOR nCount := 1 TO nLen
+            aVar := hb_ATokens( aTemp[ nCount ], "=" )
+            IF Len( aVar ) == 2
+               ::hCookies[ AllTrim( TipEncoderUrl_Decode( aVar[ 1 ] ) ) ] := TipEncoderUrl_Decode( aVar[ 2 ] )
+            ENDIF
+         NEXT
+      ENDIF
+   ENDIF
 
    RETURN Self
 
 METHOD Header( cValue ) CLASS TIpCgi
 
-   if empty( cValue )
+   IF Empty( cValue )
       ::cCgiHeader += "Content-Type: text/html" + _CRLF
-   else
+   ELSE
       ::cCgiHeader += cValue + _CRLF
-   endif
+   ENDIF
 
    RETURN Self
 
@@ -210,45 +211,45 @@ METHOD Flush() CLASS TIpCgi
    LOCAL cSID := ::cSID
    LOCAL cSession
 
-   hb_hEval( ::hCookies, { |k,v| ::cCgiHeader += "Set-Cookie: " + k + "=" + v + ";" + _CRLF } )
+   hb_HEval( ::hCookies, { | k, v | ::cCgiHeader += "Set-Cookie: " + k + "=" + v + ";" + _CRLF } )
 
    cStream := ::cCgiHeader + _CRLF + ::cHtmlPage + _CRLF
 
-   nLen := len( cStream )
+   nLen := Len( cStream )
 
    lRet := ( Fwrite( CGI_OUT, cStream, nLen ) == nLen )
 
-   if ::lDumpHtml
-      if empty( ::cDumpSavePath )
+   IF ::lDumpHtml
+      IF Empty( ::cDumpSavePath )
+         /* TOFIX: *nix specific default. [vszakats] */
          ::cDumpSavePath := "/tmp/"
-      endif
-      if ( nH := FCreate( ::cDumpSavePath + "dump.html", FC_NORMAL ) ) != -1
-         Fwrite( nH, ::cHtmlPage, len( ::cHtmlPage ) )
-      endif
+      ENDIF
+      IF ( nH := FCreate( ::cDumpSavePath + "dump.html", FC_NORMAL ) ) != F_ERROR
+         FWrite( nH, ::cHtmlPage )
+      ENDIF
       FClose( nH )
-   endif
+   ENDIF
 
    ::cCgiHeader := ""
    ::cHtmlPage := ""
 
-   if !empty( cSID )
+   IF ! Empty( cSID )
 
-     cFile := ::cSessionSavePath + "SESSIONID_" + cSID
+      cFile := ::cSessionSavePath + "SESSIONID_" + cSID
 
-     cSession := ::SessionEncode()
+      cSession := ::SessionEncode()
 
-     nFileSize := len( cSession )
+      nFileSize := Len( cSession )
 
-     if ( nH := FCreate( cFile, FC_NORMAL ) ) != -1
-        if ( FWrite( nH, @cSession,  nFileSize ) ) != nFileSize
-           ::Print( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
-        endif
-        FClose( nH )
-     else
-        ::Print( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
-     endif
-
-   endif
+      IF ( nH := FCreate( cFile, FC_NORMAL ) ) != F_ERROR
+         IF ( FWrite( nH, @cSession, nFileSize ) ) != nFileSize
+            ::Print( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+         ENDIF
+         FClose( nH )
+      ELSE
+         ::Print( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+      ENDIF
+   ENDIF
 
    RETURN lRet
 
@@ -258,28 +259,28 @@ METHOD DestroySession( cID ) CLASS TIpCgi
    LOCAL cSID := ::cSID
    LOCAL lRet
 
-   if !empty( cID )
+   IF ! Empty( cID )
       cSID := cID
-   endif
+   ENDIF
 
-   if !empty( cSID )
+   IF ! Empty( cSID )
 
-      ::hSession := {=>}
+      ::hSession := { => }
 
       cFile := ::cSessionSavePath + "SESSIONID_" + cSID
 
-      if !( lRet := ( FErase( cFile ) == 0 ) )
+      IF !( lRet := ( FErase( cFile ) == 0 ) )
          ::Print( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
-      else
-        ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + TIP_DateToGMT( DATE() - 1 )
-        ::CreateSID()
-        cSID := ::cSID
-        ::hCookies[ "SESSIONID" ] := cSID
-      endif
+      ELSE
+         ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + TIP_DateToGMT( Date() - 1 )
+         ::CreateSID()
+         cSID := ::cSID
+         ::hCookies[ "SESSIONID" ] := cSID
+      ENDIF
 
-   endif
+   ENDIF
 
-RETURN lRet
+   RETURN lRet
 
 METHOD ErrHandler( xError ) CLASS TIpCgi
 
@@ -287,22 +288,22 @@ METHOD ErrHandler( xError ) CLASS TIpCgi
 
    ::Print( '<table border="1">' )
 
-   ::Print( '<tr><td>SCRIPT NAME:</td><td>' + getenv( 'SCRIPT_NAME' ) + '</td></tr>' )
+   ::Print( '<tr><td>SCRIPT NAME:</td><td>' + GetEnv( "SCRIPT_NAME" ) + '</td></tr>' )
 
-   if ISOBJECT( xError )
+   IF ISOBJECT( xError )
       ::Print( '<tr><td>CRITICAL ERROR:</td><td>' + xError:Description + '</td></tr>' )
       ::Print( '<tr><td>OPERATION:</td><td>' + xError:Operation + '</td></tr>' )
-      ::Print( '<tr><td>OS ERROR:</td><td>' + alltrim( str( xError:OsCode ) ) + ' IN ' + xError:SubSystem + '/' + alltrim( str( xError:SubCode ) ) + '</td></tr>' )
+      ::Print( '<tr><td>OS ERROR:</td><td>' + hb_ntos( xError:OsCode ) + ' IN ' + xError:SubSystem + '/' + hb_ntos( xError:SubCode ) + '</td></tr>' )
       ::Print( '<tr><td>FILENAME:</td><td>' + right( xError:FileName, 40 ) + '</td></tr>' )
    ELSEIF ISCHARACTER( xError )
       ::Print( '<tr><td>ERROR MESSAGE:</td><td>' + xError + '</td></tr>' )
-   endif
+   ENDIF
 
-   for nCalls := 2 to 6
-      if !empty( procname( nCalls ) )
-         ::Print( '<tr><td>PROC/LINE:</td><td>' + procname( nCalls ) + "/" + alltrim( str( procline( nCalls ) ) ) + '</td></tr>' )
-      endif
-   next
+   FOR nCalls := 2 to 6
+      IF ! Empty( procname( nCalls ) )
+         ::Print( '<tr><td>PROC/LINE:</td><td>' + ProcName( nCalls ) + "/" + hb_ntos( ProcLine( nCalls ) ) + '</td></tr>' )
+      ENDIF
+   NEXT
 
    ::Print( '</table>' )
 
@@ -367,16 +368,16 @@ METHOD SaveHtmlPage( cFile ) CLASS TIpCgi
 
    cStream := ::cHtmlPage + _CRLF
 
-   nLen := len( cStream )
+   nLen := Len( cStream )
 
    nFile := FCreate( cFile )
 
-   if nFile != 0
+   IF nFile != F_ERROR
       lSuccess := ( FWrite( nFile, cStream, nLen ) == nLen )
       FClose( nFile )
-   else
+   ELSE
       lSuccess := .F.
-   endif
+   ENDIF
 
    RETURN lSuccess
 
@@ -387,50 +388,51 @@ METHOD StartSession( cSID ) CLASS TIpCgi
    LOCAL nFileSize
    LOCAL cBuffer
 
-   if empty( cSID )
+   IF Empty( cSID )
 
-      if ( nH := hb_HPos( ::hGets, "SESSIONID" ) ) != 0
+      IF ( nH := hb_HPos( ::hGets, "SESSIONID" ) ) != 0
          cSID := hb_HValueAt( ::hGets, nH )
       ELSEIF ( nH := hb_HPos( ::hPosts, "SESSIONID" ) ) != 0
          cSID := hb_HValueAt( ::hPosts, nH )
       ELSEIF ( nH := hb_HPos( ::hCookies, "SESSIONID" ) ) != 0
          cSID := hb_HValueAt( ::hCookies, nH )
-      endif
+      ENDIF
 
-   endif
+   ENDIF
 
-   if empty( ::cSessionSavePath )
+   IF Empty( ::cSessionSavePath )
+      /* TOFIX: *nix specific default. [vszakats] */
       ::cSessionSavePath := "/tmp/"
-   endif
+   ENDIF
 
-   if !empty( cSID )
+   IF ! Empty( cSID )
 
       ::cSID := cSID
 
       cFile := ::cSessionSavePath + "SESSIONID_" + cSID
 
-      if hb_FileExists( cFile )
-         if ( nH := FOpen( cFile, FO_READ ) ) != -1
+      IF hb_FileExists( cFile )
+         IF ( nH := FOpen( cFile, FO_READ ) ) != F_ERROR
             nFileSize := FSeek( nH, 0, FS_END )
             FSeek( nH, 0, FS_SET )
             cBuffer := Space( nFileSize )
-            if ( FRead( nH, @cBuffer,  nFileSize ) ) != nFileSize
+            IF ( FRead( nH, @cBuffer,  nFileSize ) ) != nFileSize
                ::ErrHandler( "ERROR: On reading session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
-            else
+            ELSE
                ::SessionDecode( cBuffer )
-            endif
+            ENDIF
             FClose( nH )
-         endif
-      else
+         ENDIF
+      ELSE
          ::ErrHandler( "ERROR: On opening session file : " + cFile + ", file not exist." )
-      endif
+      ENDIF
 
-   else
+   ELSE
 
       ::CreateSID()
       ::hSession := {=>}
 
-   endif
+   ENDIF
 
    ::hCookies[ "SESSIONID" ] := ::cSID
 
@@ -438,13 +440,13 @@ METHOD StartSession( cSID ) CLASS TIpCgi
 
 METHOD SessionEncode() CLASS TIpCgi
 
-   RETURN HB_Serialize( ::hSession )
+   RETURN hb_Serialize( ::hSession )
 
 METHOD SessionDecode( cData ) CLASS TIpCgi
 
-   ::hSession := HB_Deserialize( cData )
+   ::hSession := hb_Deserialize( cData )
 
-   RETURN Valtype( ::hSession ) == "H"
+   RETURN hb_isHash( ::hSession )
 
 STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
 
@@ -452,20 +454,20 @@ STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
 
    DEFAULT cDefault TO ""
 
-   if !empty( xVal ) .AND. !empty( cKey )
-      if hb_hHasKey( xVal, cKey )
-         cVal := hb_hGet( xVal, cKey )
-         hb_hDel( xVal, cKey )
-      endif
-   endif
+   IF ! Empty( xVal ) .AND. ! Empty( cKey )
+      IF hb_HHasKey( xVal, cKey )
+         cVal := hb_HGet( xVal, cKey )
+         hb_HDel( xVal, cKey )
+      ENDIF
+   ENDIF
 
-   if cVal == ""
+   IF cVal == ""
       cVal := cDefault
-   endif
+   ENDIF
 
-   if !( cVal == "" )
+   IF !( cVal == "" )
       cVal := "<" + cKey + ">" + cVal + "</" + cKey + ">"
-   endif
+   ENDIF
 
    RETURN cVal
 
@@ -475,7 +477,7 @@ STATIC FUNCTION HtmlAllTag( hTags, cSep )
 
    DEFAULT cSep TO " "
 
-   hb_hEval( hTags, { |k| cVal += HtmlTag( hTags, k ) + cSep } )
+   hb_HEval( hTags, { |k| cVal += HtmlTag( hTags, k ) + cSep } )
 
    RETURN cVal
 
@@ -483,23 +485,23 @@ STATIC FUNCTION HtmlOption( xVal, cKey, cPre, cPost, lScan )
 
    LOCAL cVal := ""
 
-   if !empty( xVal )
-      if empty( cKey )
+   IF ! Empty( xVal )
+      IF Empty( cKey )
          cVal := xVal
-      ELSEIF hb_hHasKey( xVal, cKey )
-         cVal := hb_hGet( xVal, cKey )
-         if empty( lScan )
-            hb_hDel( xVal, cKey )
-         endif
+      ELSEIF hb_HHasKey( xVal, cKey )
+         cVal := hb_HGet( xVal, cKey )
+         IF Empty( lScan )
+            hb_HDel( xVal, cKey )
+         ENDIF
          cVal := cKey + '="' + cVal + '"'
-         if cPre != NIL
+         IF cPre != NIL
             cVal := cPre + cVal
-         endif
-         if cPost != NIL
+         ENDIF
+         IF cPost != NIL
             cVal := cVal + cPost
-         endif
-      endif
-   endif
+         ENDIF
+      ENDIF
+   ENDIF
 
    RETURN cVal
 
@@ -507,11 +509,11 @@ STATIC FUNCTION HtmlAllOption( hOptions, cSep )
 
    LOCAL cVal := ""
 
-   DEFAULT cSep TO " "
+   IF ! Empty( hOptions )
+      DEFAULT cSep TO " "
 
-   if !empty( hOptions )
-      hb_hEval( hOptions, { |k| cVal += HtmlOption( hOptions, k,,, .T. ) + cSep } )
-   endif
+      hb_HEval( hOptions, { |k| cVal += HtmlOption( hOptions, k,,, .T. ) + cSep } )
+   ENDIF
 
    RETURN cVal
 
@@ -521,16 +523,16 @@ STATIC FUNCTION HtmlValue( xVal, cKey, cDefault )
 
    DEFAULT cDefault TO ""
 
-   if !empty( xVal ) .AND. !empty( cKey )
-      if hb_hHasKey( xVal, cKey )
-         cVal := hb_hGet( xVal, cKey )
-         hb_hDel( xVal, cKey )
-      endif
-   endif
+   IF ! Empty( xVal ) .AND. ! Empty( cKey )
+      IF hb_HHasKey( xVal, cKey )
+         cVal := hb_HGet( xVal, cKey )
+         hb_HDel( xVal, cKey )
+      ENDIF
+   ENDIF
 
-   if cVal == ""
+   IF cVal == ""
       cVal := cDefault
-   endif
+   ENDIF
 
    RETURN cVal
 
@@ -538,11 +540,11 @@ STATIC FUNCTION HtmlAllValue( hValues, cSep )
 
    LOCAL cVal := ""
 
-   DEFAULT cSep TO " "
+   IF ! Empty( hValues )
+      DEFAULT cSep TO " "
 
-   if !empty( hValues )
-      hb_hEval( hValues, { |k| cVal += HtmlValue( hValues, k ) + cSep } )
-   endif
+      hb_HEval( hValues, { |k| cVal += HtmlValue( hValues, k ) + cSep } )
+   ENDIF
 
    RETURN cVal
 
@@ -554,36 +556,36 @@ STATIC FUNCTION HtmlScript( xVal, cKey )
 
    DEFAULT cKey TO "script"
 
-   if !empty( xVal )
-      if ( nPos := hb_HPos( xVal, cKey ) ) != 0
+   IF ! Empty( xVal )
+      IF ( nPos := hb_HPos( xVal, cKey ) ) != 0
          cVal := hb_HValueAt( xVal, nPos )
-         if valtype( cVal ) == "H"
-            if ( nPos := hb_HPos( cVal, "src" ) ) != 0
+         IF hb_isHash( cVal )
+            IF ( nPos := hb_HPos( cVal, "src" ) ) != 0
                cVal := hb_HValueAt( cVal, nPos )
-               if ISCHARACTER( cVal )
+               IF ISCHARACTER( cVal )
                   cVal := { cVal }
-               endif
-               if ISARRAY( cVal )
+               ENDIF
+               IF ISARRAY( cVal )
                   cTmp := ""
-                  ascan( cVal, { |cFile| cTmp += '<script src="' + cFile + '" type="text/javascript">' + _CRLF } )
+                  ascan( cVal, { | cFile | cTmp += '<script src="' + cFile + '" type="text/javascript">' + _CRLF } )
                   cVal := cTmp
-               endif
-            endif
-            if ( nPos := hb_HPos( cVal, "var" ) ) != 0
+               ENDIF
+            ENDIF
+            IF ( nPos := hb_HPos( cVal, "var" ) ) != 0
                cVal := hb_HValueAt( cVal, nPos )
-               if ISCHARACTER( cVal )
+               IF ISCHARACTER( cVal )
                   cVal := { cVal }
-               endif
-               if ISARRAY( cVal )
+               ENDIF
+               IF ISARRAY( cVal )
                   cTmp := ""
-                  ascan( cVal, { |cVar| cTmp += cVar } )
+                  ascan( cVal, { | cVar | cTmp += cVar } )
                   cVal := '<script type="text/javascript">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</script>' + _CRLF
-               endif
-            endif
-         endif
-         hb_hDel( xVal, cKey )
-      endif
-   endif
+               ENDIF
+            ENDIF
+         ENDIF
+         hb_HDel( xVal, cKey )
+      ENDIF
+   ENDIF
 
    RETURN cVal
 
@@ -595,35 +597,35 @@ STATIC FUNCTION HtmlStyle( xVal, cKey )
 
    DEFAULT cKey TO "style"
 
-   if !empty( xVal )
-      if ( nPos := hb_HPos( xVal, cKey ) ) != 0
+   IF ! Empty( xVal )
+      IF ( nPos := hb_HPos( xVal, cKey ) ) != 0
          cVal := hb_HValueAt( xVal, nPos )
-         if valtype( cVal ) == "H"
-            if ( nPos := hb_HPos( cVal, "src" ) ) != 0
+         IF hb_isHash( cVal )
+            IF ( nPos := hb_HPos( cVal, "src" ) ) != 0
                cVal := hb_HValueAt( cVal, nPos )
-               if ISCHARACTER( cVal )
+               IF ISCHARACTER( cVal )
                   cVal := { cVal }
-               endif
-               if ISARRAY( cVal )
+               ENDIF
+               IF ISARRAY( cVal )
                   cTmp := ""
-                  ascan( cVal, { |cFile| cTmp += '<link rel="StyleSheet" href="' + cFile + '" type="text/css" />' + _CRLF } )
+                  AScan( cVal, { | cFile | cTmp += '<link rel="StyleSheet" href="' + cFile + '" type="text/css" />' + _CRLF } )
                   cVal := cTmp
-               endif
-            endif
-            if ( nPos := hb_HPos( cVal, "var" ) ) != 0
+               ENDIF
+            ENDIF
+            IF ( nPos := hb_HPos( cVal, "var" ) ) != 0
                cVal := hb_HValueAt( cVal, nPos )
-               if ISCHARACTER( cVal )
+               IF ISCHARACTER( cVal )
                   cVal := { cVal }
-               endif
-               if ISARRAY( cVal )
+               ENDIF
+               IF ISARRAY( cVal )
                   cTmp := ""
                   ascan( cVal, { |cVar| cTmp += cVar } )
                   cVal := '<style type="text/css">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</style>' + _CRLF
-               endif
-            endif
-         endif
-         hb_hDel( xVal, cKey )
-      endif
-   endif
+               ENDIF
+            ENDIF
+         ENDIF
+         hb_HDel( xVal, cKey )
+      ENDIF
+   ENDIF
 
    RETURN cVal
