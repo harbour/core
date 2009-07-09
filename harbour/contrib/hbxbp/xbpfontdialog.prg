@@ -77,6 +77,8 @@
 CLASS XbpFontDialog INHERIT XbpWindow
 
    /* Appearance */
+   DATA     modalState                            INIT   0
+
    DATA     title                                 INIT   ""
    DATA     buttonApply                           INIT   .F.
    DATA     buttonCancel                          INIT   .T.
@@ -143,9 +145,8 @@ CLASS XbpFontDialog INHERIT XbpWindow
    DATA     aPos                                  INIT   { 0, 0 }
    DATA     ok                                    INIT   .f.
 
-   METHOD   GetXbpFont()                          PROTECTED
-
-   DATA     oOptions
+   DATA     oFont
+   METHOD   xbpFontObject
 
    ENDCLASS
 
@@ -196,15 +197,16 @@ METHOD XbpFontDialog:create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
 
    ::oWidget := QFontDialog():new()
 
+   if !empty( ::title )
+      ::oWidget:setWindowTitle( ::title )
+   ENDIF
+
    ::connect( ::pwidget, "accepted()"               , {|o,p| ::exeBlock( 1, p, o ) } )
    ::connect( ::pwidget, "finished(int)"            , {|o,p| ::exeBlock( 2, p, o ) } )
    ::connect( ::pwidget, "rejected()"               , {|o,p| ::exeBlock( 3, p, o ) } )
    ::connect( ::pwidget, "currentFontChanged(QFont)", {|o,p| ::exeBlock( 4, p, o ) } )
    ::connect( ::pwidget, "fontSelected(QFont)"      , {|o,p| ::exeBlock( 5, p, o ) } )
 
-   IF ::aPos[ 1 ] + ::aPos[ 2 ] != 0
-      ::setPos()
-   ENDIF
    ::oParent:addChild( Self )
    RETURN Self
 
@@ -216,6 +218,11 @@ METHOD XbpFontDialog:exeBlock( nEvent, p1 )
    HB_SYMBOL_UNUSED( p1 )
 
    DO CASE
+   CASE nEvent == 1
+      IF hb_isBlock( ::sl_activateOk )
+         eval( ::sl_activateOk, ::XbpFontObject(), NIL, Self )
+      ENDIF
+
    CASE nEvent == 3
       IF hb_isBlock( ::sl_quit )
          nRet := eval( ::sl_quit, 0, 0, Self )
@@ -232,100 +239,33 @@ METHOD XbpFontDialog:exeBlock( nEvent, p1 )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpFontDialog:display( nMode )
-   LOCAL aInfo := nMode
    LOCAL nResult
 
-   //::setPosAndSize()
+   DEFAULT nMode TO 0
 
-   IF nMode == 0                                   // Parent and modal
+   ::modalState := nMode
+
+   /* Before Display Initialize the Variables
+    */
+   ::oFont := QFont():new()
+
+   ::oFont:setFamily( ::familyName )
+   ::oFont:setPointSize( ::nominalPointSize )
+
+   ::oWidget:setCurrentFont( QT_PTROF( ::oFont ) )
+
+   IF ::aPos[ 1 ] + ::aPos[ 2 ] != 0
+      ::setPos()
+   ENDIF
+
+   IF nMode == 0                                   // Parent and Modal
       nResult := ::oWidget:exec()
-      nMode   := nResult
    ELSE                                            // Non-modal
       ::oWidget:show()
    ENDIF
 
-   RETURN ::GetXbpFont( aInfo )
+   RETURN nResult
 
-/*----------------------------------------------------------------------*/
-
-#if 0
-METHOD XbpFontDialog:wndProc( hWnd, nMessage, nwParam, nlParam )
-   LOCAL aRect, nL, nH
-
-   HB_SYMBOL_UNUSED( nlParam )
-
-   DO CASE
-
-   CASE nMessage == WM_INITDIALOG
-      ::hWnd := hWnd
-
-      IF !empty( ::title )
-         Win_setWindowText( ::hWnd, ::title )
-      ENDIF
-      IF !( ::buttonCancel )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,IDCANCEL ), .f. )
-      ENDIF
-      IF !( ::buttonApply )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,1026 ), .f. )
-      ENDIF
-      IF !( ::buttonHelp )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,1038 ), .f. )
-      ENDIF
-      IF !( ::strikeOut )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,1040 ), .f. )
-      ENDIF
-      IF !( ::underscore )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,1041 ), .f. )
-      ENDIF
-      IF !( ::name )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,1136 ), .f. )
-      ENDIF
-      IF !( ::style )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,1137 ), .f. )
-      ENDIF
-      IF !( ::size )
-         Win_EnableWindow( Win_GetDlgItem( ::hWnd,1138 ), .f. )
-      ENDIF
-
-      IF ::aPos[ 1 ] > 0 .OR. ::aPos[ 2 ] > 0
-         aRect := Win_GetWindowRect( ::hWnd )
-         Win_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[3]-aRect[1], aRect[4]-aRect[2], .f. )
-      ENDIF
-
-      RETURN 1
-
-   CASE nMessage == WM_COMMAND
-      nL := Win_LoWord( nwParam )
-      nH := Win_HiWord( nwParam )
-
-      HB_SYMBOL_UNUSED( nH )
-
-      DO CASE
-
-      CASE nL == IDOK
-         ::ok := .t.
-         IF hb_isBlock( ::sl_activateOk )
-            eval( ::sl_activateOk, ::GetxbpFont(), NIL, Self )
-         ENDIF
-
-      CASE nL == IDCANCEL
-         IF hb_isBlock( ::sl_activateCancel )
-            eval( ::sl_activateCancel, NIL, NIL, Self )
-         ENDIF
-
-      CASE nL == 1026
-         IF hb_isBlock( ::sl_activateApply )
-            eval( ::sl_activateApply, ::GetxbpFont(), NIL, Self )
-         ENDIF
-
-      CASE nL == 1038  /* Help */
-
-      ENDCASE
-
-   ENDCASE
-
-   RETURN 0
-#endif
 /*----------------------------------------------------------------------*/
 
 METHOD XbpFontDialog:destroy()
@@ -335,32 +275,29 @@ METHOD XbpFontDialog:destroy()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-/*
- * Only callable from ::activateOK and ::activateApply
- */
-METHOD XbpFontDialog:GetXbpFont( aFont )
-   LOCAL oXbpFont := 0
 
-   HB_SYMBOL_UNUSED( aFont )
-   #if 0
-   DEFAULT aFont TO Wvg_ChooseFont_GetLogFont( ::hWnd )
+METHOD XbpFontDialog:XbpFontObject()
+   LOCAL oXbp
 
-   oWvgFont := XbpFont():new()
+   ::oFont := QFont()
+   ::oFont:pPtr := ::oWidget:currentFont()
 
-   oWvgFont:familyName       := aFont[ 1 ]
-   oWvgFont:height           := aFont[ 2 ]
-   oWvgFont:nominalPointSize := Wvg_HeightToPointSize( /* hdc */, oWvgFont:height )
-   oWvgFont:width            := aFont[ 3 ]
-   oWvgFont:bold             := aFont[ 4 ] > 400
-   oWvgFont:italic           := aFont[ 5 ]
-   oWvgFont:underscore       := aFont[ 6 ]
-   oWvgFont:strikeOut        := aFont[ 7 ]
-   oWvgFont:codePage         := aFont[ 8 ]
-   oWvgFont:setCompoundName( trim( aFont[ 1 ] +" "+ IF( oWvgFont:bold, "Bold ", "" ) + ;
-                                                    IF( oWvgFont:italic, "Italic", "" ) ) )
-   oWvgFont:create()
-   #endif
-   RETURN oXbpFont
+   oXbp := XbpFont():new()
+
+   oXbp:bold             := ::oFont:bold()
+   oXbp:italic           := ::oFont:italic()
+   oXbp:underscore       := ::oFont:underline()
+   oXbp:fixed            := ::oFont:fixedPitch()
+
+   oXbp:familyName       := ::oFont:family()
+   oXbp:nominalPointSize := ::oFont:pointSize()
+   oXbp:weightClass      := ::oFont:weight()
+
+   oXbp:setCompoundName( hb_ntos( oXbp:nominalPointSize ) + "." + oXbp:familyName )
+
+   oXbp:create()
+
+   RETURN oXbp
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -372,15 +309,19 @@ METHOD XbpFontDialog:GetXbpFont( aFont )
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
+
 CLASS XbpFont
+
+   DATA     oWidget
 
    DATA     hFont
    DATA     oPS
    DATA     hdc
+   DATA     oFontInfo
 
    DATA     familyName                            INIT   ""
    DATA     height                                INIT   0
-   DATA     nominalPointSize                      INIT   0
+   DATA     nominalPointSize                      INIT   -1
 
    DATA     width                                 INIT   0
    DATA     widthClass                            INIT   .F.
@@ -396,7 +337,7 @@ CLASS XbpFont
    DATA     fixed                                 INIT   .F.
    DATA     antiAliased                           INIT   .F.
 
-   DATA     compoundName                          INIT   ""
+   DATA     compoundName                          INIT   ""               READONLY
    METHOD   setCompoundName( cName )              INLINE ::compoundName := cName
 
    DATA     generic                               INIT   .T.
@@ -433,24 +374,79 @@ METHOD XbpFont:new( oPS )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpFont:create( cFontName )
+   LOCAL n, cFont, nPtSize
 
-   DEFAULT cFontName TO ::familyName
+   IF !empty( cFontName )
+      IF ( n := at( '.', cFontName ) ) > 0
+         cFont   := '"' + substr( cFontName, n + 1 ) + '"'
+         nPtSize := val( substr( cFontName, 1, n - 1 ) )
+      ENDIF
+   ENDIF
+   IF empty( cFont )
+      cFont   := ::familyName
+      nPtSize := ::nominalPointSize
+   ENDIF
 
-   ::familyName := cFontName
+   IF empty( nPtSize )
+      nPtSize := 12
+   ENDIF
 
-   ::createFont()
+   ::oWidget := QFont():new( cFont, nPtSize )
 
+   ::oWidget:setBold( ::bold )
+   ::oWidget:setItalic( ::italic )
+   ::oWidget:setUnderline( ::underscore )
+   ::oWidget:setStrikeOut( ::strikeout )
+   ::oWidget:setFixedPitch( ::fixed )
+   ::oWidget:setKerning( ::kerning )
+
+
+   #if 0
+   ::oWidget:setStretch( factor )
+   //
+   ::oWidget:setCapitalization( caps )
+   ::oWidget:setFamily( family )
+   ::oWidget:setLetterSpacing( type, spacing )
+   ::oWidget:setOverline( enable )
+   ::oWidget:setPixelSize( pixelSize )
+   ::oWidget:setPointSize( pointSize )
+   ::oWidget:setPointSizeF( pointSize )
+   ::oWidget:setRawMode( enable )
+   ::oWidget:setRawName( name )
+   ::oWidget:setStyle( style )
+   ::oWidget:setStyleHint( StyleHint hint, StyleStrategy strategy = PreferDefault )
+   ::oWidget:setStyleStrategy( StyleStrategy )
+   ::oWidget:setWeight( weight )
+   ::oWidget:setWordSpacing( spacing )
+   #endif
+
+   /* Initializes the font structures internally */
+   //::oWidget:initialize()
+
+   /* Call the final step - beyond that any changes to properties above will have NO effect */
+   ::oFontInfo := QFontInfo():new( QT_PTROF( ::oWidget ) )
+
+   /* Reassign actual properties */
+   ::bold        := ::oFontInfo:bold()
+   ::italic      := ::oFontInfo:italic()
+   ::fixed       := ::oFontInfo:fixedPitch()
+   ::familyName  := ::oFontInfo:family()
+   ::height      := ::oFontInfo:pointSize()
+   ::weightClass := ::oFontInfo:weight()
+
+   #if 0
+   bool    exactMatch () const
+   int     pixelSize () const
+   qreal   pointSizeF () const
+   bool    rawMode () const
+   QFont::Style style () const
+   QFont::StyleHint styleHint () const
+   #endif
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpFont:configure( cFontName )
-
-   DEFAULT cFontName TO ::familyName
-
-   ::familyName := cFontName
-
-   ::createFont()
+METHOD XbpFont:configure()
 
    RETURN Self
 
@@ -458,9 +454,7 @@ METHOD XbpFont:configure( cFontName )
 
 METHOD XbpFont:destroy()
 
-   ::xbpWindow:destroy()
-
-   RETURN Self
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -488,7 +482,7 @@ METHOD XbpFont:createFont()
    ::aFontInfo[  1 ] := ::familyName
    ::aFontInfo[  2 ] := ::height
    ::aFontInfo[  3 ] := ::width
-   ::aFontInfo[  4 ] := IF( ::bold, 0, 0 )
+   ::aFontInfo[  4 ] := IF( ::bold, 75, -1 )
    ::aFontInfo[  5 ] := ::italic
    ::aFontInfo[  6 ] := ::underscore
    ::aFontInfo[  7 ] := ::strikeout

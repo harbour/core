@@ -79,11 +79,10 @@ CLASS XbpBitmap
 
    ACCESS   bits                                  INLINE  ::oWidget:depth()
    DATA     bufferOffset                          INIT    0
-   DATA     planes                                INIT    0
+   ACCESS   planes                                INLINE  0
    DATA     transparentColor                      INIT    GRA_CLR_INVALID
    ACCESS   xSize                                 INLINE  ::oWidget:width()
    ACCESS   ySize                                 INLINE  ::oWidget:height()
-
 
    DATA     oWidget
    DATA     oPS
@@ -154,7 +153,6 @@ METHOD XbpBitmap:load( cDLLName, cID )
 METHOD XbpBitmap:loadFile( cImageFileName )
    LOCAL lSuccess
 
-   HB_SYMBOL_UNUSED( cImageFileName )
    // BMP, GIF, JPEG, PNG
 
    ::cImageFileName := cImageFileName

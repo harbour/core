@@ -872,9 +872,31 @@ METHOD XbpWindow:setColorFG( nRGB )
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpWindow:setFont( oFont )
+   LOCAL cAttr := ""
+
+   // TODO:
+   //::oWidget:setFont( QT_PTROF( oFont:oWidget ) ) /* Works but need to be refined */
+
+   IF oFont:bold .and. oFont:italic
+      cAttr := "bolditalic"
+   ELSEIF oFont:bold
+      cAttr := "bold"
+   ELSEIF oFont:italic
+      cAttr := "italic"
+   ENDIF
+
+   ::setFontCompoundName( oFont:compoundName + " " + cAttr )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpWindow:setFontCompoundName( xFont )
-   LOCAL cOldFont, s, n, nPoint, cFont, cAttr, cFace
-   LOCAL aAttr := { "normal","italic","bold" }
+   LOCAL cOldFont, s, n, nPoint, cFont, cFace, cCSS
+   LOCAL aAttr   := { "bolditalic", "italic", "bold" }
+   LOCAL cAttr   := "normal"
+   LOCAL cWeight := "normal"
 
    cOldFont := Xbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME )
 
@@ -887,10 +909,8 @@ METHOD XbpWindow:setFontCompoundName( xFont )
          n := ascan( aAttr, {|e| at( e, cFont ) > 0 } )
          IF n > 0
             cAttr := aAttr[ n ]
-            n := at( cAttr, s )
-            cFont := substr( cFont,1,n-1 )
-         ELSE
-            cAttr := "normal"
+            n     := at( cAttr, s )
+            cFont := substr( cFont, 1, n-1 )
          ENDIF
          IF ( n := at( ".", cFont ) ) > 0
             nPoint := val( substr( cFont,1,n-1 ) )
@@ -902,7 +922,18 @@ METHOD XbpWindow:setFontCompoundName( xFont )
 
          Xbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME, xFont )
 
-         ::setStyleSheet( 'font-family: "'+ cFace +'"; font-style: '+ cAttr +'; font-size: '+ hb_ntos( nPoint )+'pt;' )
+         IF cAttr == "bolditalic"
+            cAttr   := "italic"
+            cWeight := "bold"
+         ENDIF
+         IF cAttr == "bold"
+            cAttr := "normal"
+            cWeight := "bold"
+         ENDIF
+
+         cCSS := 'font-family: "'+ cFace + '"; font-style: ' + cAttr + '; font-size: ' + ;
+                                    hb_ntos( nPoint ) + 'pt; font-weight: ' + cWeight + ';'
+         ::setStyleSheet( cCSS )
       ENDIF
    ENDIF
 
@@ -938,6 +969,7 @@ METHOD XbpWindow:setPointer( cDllName, xResID, nType )
    CASE nType == XBPWINDOW_POINTERTYPE_SYSPOINTER
       DO CASE
       CASE xResID == XBPSTATIC_SYSICON_DEFAULT   // Default mouse pointer
+
       CASE xResID == XBPSTATIC_SYSICON_ARROW     // Normal arrow
          ::oWidget:setCursor( QT_PTROF( QCursor():new( Qt_ArrowCursor ) ) )
 
@@ -1006,11 +1038,11 @@ METHOD XbpWindow:setPointer( cDllName, xResID, nType )
       IF valtype( xResID ) == "C"   // Harbour compatibility
          IF file( xResID )
             #if 0  /* The original image size - but in practice pointer should be proper sized */
-            ::oWidget:setCursor( QT_PTROF( QCursor():new( QT_PTROF( QPixmap():new( xResID ) ) ) ) )
+            ::oWidget:setCursor( QT_PTROF( QCursor():new( "QPixmap", QT_PTROF( QPixmap():new( xResID ) ) ) ) )
             #else
-            ::oWidget:setCursor( QT_PTROF( QCursor():new( QPixmap():new( xResID ):scaled( 24,24 ) ) ) )
+hb_OutDebug( "sssssssssssss" )
+            ::oWidget:setCursor( QT_PTROF( QCursor():new( "QPixmap", QPixmap():new( xResID ):scaled( 24,24 ) ) ) )
             #endif
-            //::oWidget:setCursor( QT_PTROF( QCursor():new( QT_PTROF( QIcon():new( xResID ) ) ) ) )
          ENDIF
       ENDIF
 
@@ -1130,14 +1162,6 @@ METHOD XbpWindow:unlockPS()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:winDevice()
-
-   // TODO:
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:setFont()
 
    // TODO:
 

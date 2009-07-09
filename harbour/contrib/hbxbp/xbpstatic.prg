@@ -227,7 +227,8 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::oWidget := QLabel():new( ::pParent )
 
    CASE ::type == XBPSTATIC_TYPE_BITMAP
-      ::oWidget := QFrame():new( ::pParent )
+      //::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QLabel():new( ::pParent )
 
    OTHERWISE
       ::oWidget := QFrame():new( ::pParent )
@@ -288,10 +289,18 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
          ::oWidget:setText( ::caption )
 
       CASE ::type == XBPSTATIC_TYPE_BITMAP
-         IF ::options == XBPSTATIC_BITMAP_SCALED
-            ::oWidget:setStyleSheet( 'border-image: url('+ ::caption +');' )
-         ELSE
-            ::oWidget:setStyleSheet( 'background: url('+ ::caption +'); repeat-xy;' )
+         IF hb_isObject( ::caption )                 /* XbpBitmap() */
+            IF ::options == XBPSTATIC_BITMAP_SCALED
+               ::oWidget:setScaledContents( .t. )
+            ENDIF
+            ::oWidget:setPixmap( QPixmap():fromImage( QT_PTROF( ::caption:oWidget ) ) )
+
+         ELSEIF hb_isChar( ::caption )               /* $HARBOUR$ */
+            IF ::options == XBPSTATIC_BITMAP_SCALED
+               ::oWidget:setStyleSheet( 'border-image: url('+ ::caption +');' )
+            ELSE
+               ::oWidget:setStyleSheet( 'background: url('+ ::caption +'); repeat-xy;' )
+            ENDIF
          ENDIF
 
       CASE ::type == XBPSTATIC_TYPE_ICON

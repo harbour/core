@@ -65,47 +65,6 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#define QFileDialog_AcceptOpen                           0
-#define QFileDialog_AcceptSave                           1
-
-// enum #define QFileDialog_DialogLabel
-//
-#define QFileDialog_LookIn                               0
-#define QFileDialog_FileName                             1
-#define QFileDialog_FileType                             2
-#define QFileDialog_Accept                               3
-#define QFileDialog_Reject                               4
-
-// enum #define QFileDialog_FileMode
-// This enum is used to indicate what the user may select in the file dialog;
-// i.e. what the dialog will return if the user clicks OK.
-//
-#define QFileDialog_AnyFile                              0   // The name of a file, whether it exists or not.
-#define QFileDialog_ExistingFile                         1   // The name of a single existing file.
-#define QFileDialog_Directory                            2   // The name of a directory. Both files and directories are displayed.
-#define QFileDialog_ExistingFiles                        3   // The names of zero or more existing files.
-
-// The Options type is a typedef for QFlags<Option>. It stores an OR combination of Option values.
-//
-#define QFileDialog_ShowDirsOnly                         0x00000001   // Only show directories in the file dialog. By default both files and directories are shown. (Valid only in the Directory file mode.)
-#define QFileDialog_DontResolveSymlinks                  0x00000002   // Don't resolve symlinks in the file dialog. By default symlinks are resolved.
-#define QFileDialog_DontConfirmOverwrite                 0x00000004   // Don't ask for confirmation if an existing file is selected. By default confirmation is requested.
-#define QFileDialog_DontUseNativeDialog                  0x00000010   // Don't use the native file dialog. By default on Mac OS X and Windows, the native file dialog is used.
-#define QFileDialog_ReadOnly                             0x00000020   // Indicates that the model is readonly.
-#define QFileDialog_HideNameFilterDetails                0x00000040   // Indicates if the is hidden or not.
-
-//enum QFileDialog::ViewMode
-//This enum describes the view mode of the file dialog; i.e. what information about each file will be displayed.
-//
-#define QFileDialog_Detail                               0   // Displays an icon, a name, and details for each item in the directory.
-#define QFileDialog_List                                 1   // Displays only an icon and a name for each item in the directory.
-
-#define QDialog_Accepted                                 1
-#define QDialog_Rejected                                 0
-
-
-/*----------------------------------------------------------------------*/
-
 #include "hbclass.ch"
 #include "common.ch"
 

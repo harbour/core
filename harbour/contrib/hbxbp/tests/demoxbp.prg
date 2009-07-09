@@ -68,6 +68,8 @@
 #define TAB_4   4
 #define TAB_5   5
 
+STATIC oMLE         /* Change Font elsewhere */
+
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
@@ -138,7 +140,7 @@ PROCEDURE BuildADialog()
    Build_SLEs( oDa )
 
    /* Install Multi-Line Edit */
-   Build_MLE( aTabs[ 2 ] )
+   oMLE := Build_MLE( aTabs[ 2 ] )
 
    /* Install ScrollBar */
    Build_ScrollBar( aTabs[ 5 ] )
@@ -158,8 +160,7 @@ PROCEDURE BuildADialog()
    /* Build HTML Viewer */
    oHtm := Build_HTMLViewer( aTabs[ TAB_1 ] )
 
-   /* Gather Font INformation */
-   Build_Font( oDlg )
+
 
    /* Present the dialog on the screen */
    oDlg:Show()
@@ -191,10 +192,11 @@ PROCEDURE AppSys()
 /*----------------------------------------------------------------------*/
 
 #ifdef __XPP__
-FUNCTION Hb_OutDebug( cStr );RETURN nil
-FUNCTION Hb_Symbol_Unused();RETURN nil
-FUNCTION Hb_NtoS( n );RETURN ltrim( str( n ) )
-FUNCTION Hb_ThreadStart();RETURN nil
+FUNCTION Hb_OutDebug( cStr ) ; RETURN nil
+FUNCTION Hb_Symbol_Unused()  ; RETURN nil
+FUNCTION Hb_NtoS( n )        ; RETURN ltrim( str( n ) )
+FUNCTION Hb_ThreadStart()    ; RETURN nil
+FUNCTION hb_DirBase()        ; RETURN CurDir()
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -640,7 +642,6 @@ FUNCTION Build_SLEs( oWnd )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_MLE( oWnd )
-   LOCAL oMLE
    LOCAL cText := "This is Xbase++ compatible implementation of XbpMLE()"
 
    // Create MLE, specify position using :create() and
@@ -656,9 +657,9 @@ FUNCTION Build_MLE( oWnd )
 
    oMLE:setColorBG( GraMakeRGBColor( { 190,190,0 } ) )
    oMLE:setColorFG( GraMakeRGBColor( { 0,0,0 } ) )
-   oMLE:setFontCompoundName( "14.Courier New bold normal" )
+   oMLE:setFontCompoundName( "14.Courier bold" )
 
-   RETURN nil
+   RETURN oMLE
 
 /*----------------------------------------------------------------------*/
 
@@ -844,7 +845,7 @@ PROCEDURE FieldStruct( oItem, aField )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_Statics( oWnd )
-   LOCAL oGrp,oLbl, oLin, oBox
+   LOCAL oGrp,oLbl, oLin, oBox, oBmp, oBmp1
    LOCAL nC1 := 10, nC2 := 45, nC3 := 110, nC4 := 175
    LOCAL nW := 50, nH := 50, nG := 10
    LOCAL nT := 60
@@ -937,21 +938,27 @@ FUNCTION Build_Statics( oWnd )
    oBox:options := XBPSTATIC_FRAMETHICK
    oBox:create()
 
-   #ifdef __HARBOUR__
    oBox := XbpStatic():new( oGrp, , {nC4,nT}, {nW,nH+nH+nG} )
    oBox:type := XBPSTATIC_TYPE_BITMAP
    oBox:options := XBPSTATIC_BITMAP_SCALED
-   oBox:caption := 'paste.png'
+   oBmp := XbpBitmap():new():create()
+   oBmp:loadFile( 'paste.png' )
+   oBox:caption := oBmp
    oBox:create()
    oBox:setColorBG( GraMakeRGBColor( { 0,100,100 } ) )
 
    oBox := XbpStatic():new( oGrp, , {nC4,nT+(nH+nG)*2}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_BITMAP
    oBox:options := XBPSTATIC_BITMAP_TILED
+   #ifdef __HARBOUR__
    oBox:caption := 'cut.png'
+   #else
+   oBmp1 := XbpBitmap():new():create()
+   oBmp1:loadFile( 'paste.png' )
+   oBox:caption := oBmp1
+   #endif
    oBox:create()
    oBox:setColorBG( GraMakeRGBColor( { 100,0,100 } ) )
-   #endif
 
 
    #ifdef __HARBOUR__ /* Differes from Xbase++ by Disk File | Resource Name, ID */
@@ -1046,17 +1053,6 @@ FUNCTION Build_FileDialog( oWnd, cMode )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION Build_FontDialog( oWnd )
-   LOCAL oDlg
-
-   oDlg := XbpFontDialog():new( oWnd, , , , { 20,20 } )
-   oDlg:create()
-   oDlg:display( 0 )
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
 FUNCTION Build_Bitmap( oWnd )
    LOCAL oBmp, aFltr, cFile, cExt, nFrmt, oDlg
    LOCAL cExtns := { "png","gif","jpg","jpeg","bmp","tiff" }
@@ -1114,15 +1110,22 @@ FUNCTION Build_Bitmap( oWnd )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION Build_Font( oWnd )
-   LOCAL oFont
+FUNCTION Build_FontDialog( oWnd )
+   LOCAL oDlg
 
-   oFont := XbpFont():new()
+   oDlg := XbpFontDialog():new( oWnd, , , , { 20,20 } )
+   oDlg:activateOk := {|oFont| DisplayFontInfo( oFont ) }
+   oDlg:create()
 
-   oFont:nominalPointSize := 16
-   oFont:create( "Times New Roman" )
+   oDlg:display( 0 )
 
-hb_outDebug( IF( oFont:bold(), "BOLD", "NORMAL" ) )
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION DisplayFontInfo( oFont )
+
+   oMLE:setFont( oFont )
 
    RETURN nil
 
