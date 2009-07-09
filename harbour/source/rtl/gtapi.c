@@ -614,7 +614,7 @@ HB_ERRCODE hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRig
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_SAVE( pGT, uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) pScrBuff );
+      HB_GTSELF_SAVE( pGT, uiTop, uiLeft, uiBottom, uiRight, pScrBuff );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
    }
@@ -630,7 +630,7 @@ HB_ERRCODE hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRig
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_REST( pGT, uiTop, uiLeft, uiBottom, uiRight, ( const BYTE * ) pScrBuff );
+      HB_GTSELF_REST( pGT, uiTop, uiLeft, uiBottom, uiRight, pScrBuff );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;

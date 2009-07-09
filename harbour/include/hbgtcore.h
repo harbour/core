@@ -158,8 +158,8 @@ typedef struct
    BOOL     (* GetChar) ( HB_GT_PTR, int, int, BYTE *, BYTE *, USHORT * );
    BOOL     (* PutChar) ( HB_GT_PTR, int, int, BYTE, BYTE, USHORT );
    long     (* RectSize) ( HB_GT_PTR, int, int, int, int );
-   void     (* Save) ( HB_GT_PTR, int, int, int, int, BYTE * );
-   void     (* Rest) ( HB_GT_PTR, int, int, int, int, const BYTE * );
+   void     (* Save) ( HB_GT_PTR, int, int, int, int, void * );
+   void     (* Rest) ( HB_GT_PTR, int, int, int, int, const void * );
    void     (* PutText) ( HB_GT_PTR, int, int, BYTE, const char *, ULONG );
    void     (* Replicate) ( HB_GT_PTR, int, int, BYTE, BYTE, USHORT, ULONG );
    void     (* WriteAt) ( HB_GT_PTR, int, int, const char *, ULONG );

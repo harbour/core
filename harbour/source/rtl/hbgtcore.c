@@ -965,13 +965,14 @@ static long hb_gt_def_RectSize( PHB_GT pGT, int iTop, int iLeft, int iBottom, in
 }
 
 static void hb_gt_def_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                            BYTE * pBuffer )
+                            void * pBuffer )
 {
    while( iTop <= iBottom )
    {
       BYTE bColor, bAttr;
       USHORT usChar;
       int iCol;
+      BYTE * pbyBuffer = ( BYTE * ) pBuffer;
 
       for( iCol = iLeft; iCol <= iRight; ++iCol )
       {
@@ -983,15 +984,15 @@ static void hb_gt_def_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
          }
          if( pGT->fVgaCell )
          {
-            *pBuffer++ = ( BYTE ) usChar;
-            *pBuffer++ = bColor;
+            *pbyBuffer++ = ( BYTE ) usChar;
+            *pbyBuffer++ = bColor;
          }
          else
          {
-            HB_PUT_LE_UINT16( pBuffer, usChar );
-            pBuffer += 2;
-            *pBuffer++ = bColor;
-            *pBuffer++ = bAttr;
+            HB_PUT_LE_UINT16( pbyBuffer, usChar );
+            pbyBuffer += 2;
+            *pbyBuffer++ = bColor;
+            *pbyBuffer++ = bAttr;
          }
       }
       ++iTop;
@@ -999,28 +1000,29 @@ static void hb_gt_def_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
 }
 
 static void hb_gt_def_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                            const BYTE * pBuffer )
+                            const void * pBuffer )
 {
    while( iTop <= iBottom )
    {
       BYTE bColor, bAttr;
       USHORT usChar;
       int iCol;
+      BYTE * pbyBuffer = ( BYTE * ) pBuffer;
 
       for( iCol = iLeft; iCol <= iRight; ++iCol )
       {
          if( pGT->fVgaCell )
          {
-            usChar = *pBuffer++;
-            bColor = *pBuffer++;
+            usChar = *pbyBuffer++;
+            bColor = *pbyBuffer++;
             bAttr  = 0;
          }
          else
          {
-            usChar = HB_GET_LE_UINT16( pBuffer );
-            pBuffer += 2;
-            bColor = *pBuffer++;
-            bAttr  = *pBuffer++;
+            usChar = HB_GET_LE_UINT16( pbyBuffer );
+            pbyBuffer += 2;
+            bColor = *pbyBuffer++;
+            bAttr  = *pbyBuffer++;
          }
          HB_GTSELF_PUTCHAR( pGT, iTop, iCol, bColor, bAttr, usChar );
       }
@@ -1109,14 +1111,14 @@ static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
 
    if( iLength > 0 && iTop <= iBottom )
    {
-      BYTE * pBuffer = NULL;
+      void * pBuffer = NULL;
 
       if( ( iRows || iCols ) && iColSize >= 0 && ( iBottom - iTop >= iRows ) )
       {
          ULONG ulSize = HB_GTSELF_RECTSIZE( pGT, iTop, iColOld, iTop, iColOld + iColSize );
 
          if( ulSize )
-            pBuffer = ( BYTE * ) hb_xgrab( ulSize );
+            pBuffer = hb_xgrab( ulSize );
       }
 
       while( iTop <= iBottom )
@@ -1287,7 +1289,7 @@ static void hb_gt_def_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
 
    if( iTop <= iMaxRow && iLeft <= iMaxCol && iBottom >= 0 && iRight >= 0 )
    {
-      BYTE szBox[ 10 ];
+      char szBox[ 10 ];
       BYTE bPadCh = HB_GTSELF_GETCLEARCHAR( pGT );
 
       if( szFrame )
@@ -1519,7 +1521,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          ulSize = HB_GTSELF_RECTSIZE( pGT, 0, 0, iRow, iCol );
          if( ulSize )
          {
-            BYTE * pBuffer = ( BYTE * ) hb_xgrab( ulSize + 1 );
+            void * pBuffer = hb_xgrab( ulSize + 1 );
             HB_GTSELF_SAVE( pGT, 0, 0, iRow, iCol, pBuffer );
             hb_arraySetCPtr( pInfo->pResult, 7, ( char * ) pBuffer, ulSize );
          }
@@ -1533,7 +1535,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             {
                HB_GTSELF_REST( pGT, 0, 0, hb_arrayGetNI( pInfo->pNewVal, 5 ),
                                hb_arrayGetNI( pInfo->pNewVal, 6 ),
-                               ( const BYTE * ) hb_arrayGetCPtr( pInfo->pNewVal, 7 ) );
+                               hb_arrayGetCPtr( pInfo->pNewVal, 7 ) );
             }
             HB_GTSELF_SETPOS( pGT, hb_arrayGetNI( pInfo->pNewVal, 1 ),
                                    hb_arrayGetNI( pInfo->pNewVal, 2 ) );
@@ -1627,7 +1629,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
       BOOL fScreen = FALSE, fKeyBoard = FALSE;
       int iKey = 0, i, iDspCount, iStyle, iRows, iCols,
           iRow, iCol, iTop, iLeft, iBottom, iRight, iMnuCol, iPos, iClr;
-      BYTE * pBuffer = NULL;
+      void * pBuffer = NULL;
       HB_GT_INFO gtInfo;
 
       memset( &gtInfo, 0, sizeof( gtInfo ) );
@@ -1767,7 +1769,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          ulLen = HB_GTSELF_RECTSIZE( pGT, iTop, iLeft, iBottom, iRight );
          if( ulLen )
          {
-            pBuffer = ( BYTE * ) hb_xgrab( ulLen );
+            pBuffer = hb_xgrab( ulLen );
             HB_GTSELF_SAVE( pGT, iTop, iLeft, iBottom, iRight, pBuffer );
          }
          HB_GTSELF_BOXS( pGT, iTop, iLeft, iBottom, iRight, NULL, iClrNorm );
@@ -1983,7 +1985,7 @@ static BOOL hb_gt_def_Resize( PHB_GT pGT, int iRows, int iCols )
    {
       if( pGT->iHeight != iRows || pGT->iWidth != iCols )
       {
-         BYTE * pBuffer = NULL;
+         void * pBuffer = NULL;
          ULONG ulLen = ( ULONG ) iRows * iCols, ulIndex;
          ULONG ulSize;
          int i;
@@ -1991,7 +1993,7 @@ static BOOL hb_gt_def_Resize( PHB_GT pGT, int iRows, int iCols )
          ulSize = HB_GTSELF_RECTSIZE( pGT, 0, 0, iRows - 1, iCols - 1 );
          if( ulSize )
          {
-            pBuffer = ( BYTE * ) hb_xgrab( ulSize );
+            pBuffer = hb_xgrab( ulSize );
             HB_GTSELF_SAVE( pGT, 0, 0, iRows - 1, iCols - 1, pBuffer );
          }
 
