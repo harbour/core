@@ -93,7 +93,7 @@ static HB_GT_FUNCS   SuperTable;
 #define HB_GTSUPER   (&SuperTable)
 #define HB_GTID_PTR  (&s_GtId)
 
-static const BYTE   s_szBell[] = { HB_CHAR_BEL, 0 };
+static const char   s_szBell[] = { HB_CHAR_BEL, 0 };
 static const int    s_AnsiColors[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
 
 static HB_FHANDLE   s_hFilenoStdin;
@@ -102,8 +102,8 @@ static HB_FHANDLE   s_hFilenoStderr;
 static int          s_iRow;
 static int          s_iCol;
 static int          s_iLineBufSize = 0;
-static BYTE *       s_sLineBuf;
-static BYTE *       s_szCrLf;
+static char *       s_sLineBuf;
+static const char * s_szCrLf;
 static ULONG        s_ulCrLf;
 static int          s_iCurrentSGR, s_iFgColor, s_iBgColor, s_iBold, s_iBlink, s_iAM;
 static int          s_iCursorStyle;
@@ -117,7 +117,7 @@ static BYTE         s_keyTransTbl[ 256 ];
 
 static int          s_iOutBufSize = 0;
 static int          s_iOutBufIndex = 0;
-static BYTE *       s_sOutBuf;
+static char *       s_sOutBuf;
 
 #if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
 
@@ -181,7 +181,7 @@ static void hb_gt_pca_termFlush( void )
    }
 }
 
-static void hb_gt_pca_termOut( const BYTE * pStr, int iLen )
+static void hb_gt_pca_termOut( const char * szStr, int iLen )
 {
    if( s_iOutBufSize )
    {
@@ -193,8 +193,8 @@ static void hb_gt_pca_termOut( const BYTE * pStr, int iLen )
          i = s_iOutBufSize - s_iOutBufIndex;
          if( i > iLen )
             i = iLen;
-         memcpy( s_sOutBuf + s_iOutBufIndex, pStr, i );
-         pStr += i;
+         memcpy( s_sOutBuf + s_iOutBufIndex, szStr, i );
+         szStr += i;
          s_iOutBufIndex += i;
          iLen -= i;
       }
@@ -213,9 +213,9 @@ static void hb_gt_pca_AnsiSetAutoMargin( int iAM )
        */
 #if 0
       if( iAM != 0 )
-         hb_gt_pca_termOut( ( BYTE * ) "\x1B[=7h", 5 );
+         hb_gt_pca_termOut( "\x1B[=7h", 5 );
       else
-         hb_gt_pca_termOut( ( BYTE * ) "\x1B[=7l", 5 );
+         hb_gt_pca_termOut( "\x1B[=7l", 5 );
 #endif
       s_iAM = iAM;
    }
@@ -233,7 +233,7 @@ static void hb_gt_pca_AnsiGetCurPos( int * iRow, int * iCol )
       int i, j, n, d, y, x;
       HB_ULONG end_timer, time;
 
-      hb_gt_pca_termOut( ( BYTE * ) "\x1B[6n", 4 );
+      hb_gt_pca_termOut( "\x1B[6n", 4 );
       hb_gt_pca_termFlush();
 
       n = j = x = y = 0;
@@ -326,9 +326,9 @@ static void hb_gt_pca_AnsiSetCursorPos( int iRow, int iCol )
 
    if( s_iRow != iRow || s_iCol != iCol )
    {
-      char buff[16];
+      char buff[ 16 ];
       hb_snprintf( buff, sizeof( buff ), "\x1B[%d;%dH", iRow + 1, iCol + 1 );
-      hb_gt_pca_termOut( ( BYTE * ) buff, strlen( buff ) );
+      hb_gt_pca_termOut( buff, strlen( buff ) );
       s_iRow = iRow;
       s_iCol = iCol;
    }
@@ -340,8 +340,8 @@ static void hb_gt_pca_AnsiSetCursorStyle( int iStyle )
 
    if( s_iCursorStyle != iStyle )
    {
-      hb_gt_pca_termOut( ( BYTE * ) ( iStyle == SC_NONE ? "\x1B[?25l" :
-                                                          "\x1B[?25h" ), 6 );
+      hb_gt_pca_termOut( ( iStyle == SC_NONE ? "\x1B[?25l" :
+                                               "\x1B[?25h" ), 6 );
       s_iCursorStyle = iStyle;
    }
 }
@@ -353,7 +353,7 @@ static void hb_gt_pca_AnsiSetAttributes( int iAttr )
    if( s_iCurrentSGR != iAttr )
    {
       int i, bg, fg, bold, blink;
-      BYTE buff[16];
+      char buff[ 16 ];
 
       i = 2;
       buff[ 0 ] = 0x1b;
@@ -379,10 +379,10 @@ static void hb_gt_pca_AnsiSetAttributes( int iAttr )
             buff[ i++ ] = ';';
          }
          buff[ i++ ] = '3';
-         buff[ i++ ] = '0' + ( BYTE ) fg;
+         buff[ i++ ] = '0' + ( char ) fg;
          buff[ i++ ] = ';';
          buff[ i++ ] = '4';
-         buff[ i++ ] = '0' + ( BYTE ) bg;
+         buff[ i++ ] = '0' + ( char ) bg;
          buff[ i++ ] = 'm';
          s_iBold    = bold;
          s_iBlink   = blink;
@@ -410,14 +410,14 @@ static void hb_gt_pca_AnsiSetAttributes( int iAttr )
          if( s_iFgColor != fg )
          {
             buff[ i++ ] = '3';
-            buff[ i++ ] = '0' + ( BYTE ) fg;
+            buff[ i++ ] = '0' + ( char ) fg;
             buff[ i++ ] = ';';
             s_iFgColor = fg;
          }
          if( s_iBgColor != bg )
          {
             buff[ i++ ] = '4';
-            buff[ i++ ] = '0' + ( BYTE ) bg;
+            buff[ i++ ] = '0' + ( char ) bg;
             buff[ i++ ] = ';';
             s_iBgColor = bg;
          }
@@ -436,14 +436,14 @@ static void hb_gt_pca_AnsiInit( void )
    s_iCurrentSGR = s_iRow = s_iCol = s_iCursorStyle = s_iAM = -1;
 }
 
-static void hb_gt_pca_AnsiPutStr( int iRow, int iCol, BYTE bAttr, BYTE *pStr, int iLen )
+static void hb_gt_pca_AnsiPutStr( int iRow, int iCol, BYTE bAttr, char * szStr, int iLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_AnsiPutStr(%d,%d,%hu,%p,%d)", iRow, iCol, bAttr, pStr, iLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_AnsiPutStr(%d,%d,%hu,%p,%d)", iRow, iCol, bAttr, szStr, iLen));
 
    hb_gt_pca_AnsiSetAttributes( bAttr );
    hb_gt_pca_AnsiSetCursorPos( iRow, iCol );
    hb_gt_pca_AnsiSetAutoMargin( 0 );
-   hb_gt_pca_termOut( pStr, iLen );
+   hb_gt_pca_termOut( szStr, iLen );
    s_iCol += iLen;
 }
 
@@ -480,8 +480,8 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_fDispTrans = FALSE;
    hb_gt_pca_setKeyTrans( NULL, NULL );
 
-   s_szCrLf = (BYTE *) hb_conNewLine();
-   s_ulCrLf = strlen( (char *) s_szCrLf );
+   s_szCrLf = hb_conNewLine();
+   s_ulCrLf = strlen( s_szCrLf );
 
    hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );
 
@@ -546,7 +546,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    {
       s_iOutBufIndex = 0;
       s_iOutBufSize = 16384;
-      s_sOutBuf = ( BYTE * ) hb_xgrab( s_iOutBufSize );
+      s_sOutBuf = ( char * ) hb_xgrab( s_iOutBufSize );
    }
 
    HB_GTSELF_RESIZE( pGT, iRows, iCols );
@@ -866,7 +866,7 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       }
       if( usChar < 32 || usChar == 127 )
          usChar = '.';
-      s_sLineBuf[ iLen++ ] = ( BYTE ) usChar;
+      s_sLineBuf[ iLen++ ] = ( char ) usChar;
    }
    if( iLen )
    {
@@ -888,12 +888,12 @@ static void hb_gt_pca_Refresh( PHB_GT pGT )
 
    if( s_iLineBufSize == 0 )
    {
-      s_sLineBuf = ( BYTE * ) hb_xgrab( iWidth );
+      s_sLineBuf = ( char * ) hb_xgrab( iWidth );
       s_iLineBufSize = iWidth;
    }
    else if( s_iLineBufSize != iWidth )
    {
-      s_sLineBuf = ( BYTE * ) hb_xrealloc( s_sLineBuf, iWidth );
+      s_sLineBuf = ( char * ) hb_xrealloc( s_sLineBuf, iWidth );
       s_iLineBufSize = iWidth;
    }
 

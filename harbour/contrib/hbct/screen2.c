@@ -249,11 +249,11 @@ HB_FUNC( CLEARSLOW )
 
    if( iTop >= 0 && iLeft >= 0 && iTop <= iBottom && iLeft <= iRight )
    {
-      BYTE pbFrame[2], bColor = ( BYTE ) hb_gtGetCurrColor();
+      char pszFrame[2], bColor = ( BYTE ) hb_gtGetCurrColor();
       double dX, dY, dXX, dYY;
 
-      pbFrame[0] = ucChar;
-      pbFrame[1] = '\0';
+      pszFrame[0] = ( char ) ucChar;
+      pszFrame[1] = '\0';
 
       dX = iRight - iLeft + 1;
       dY = iBottom - iTop + 1;
@@ -272,7 +272,7 @@ HB_FUNC( CLEARSLOW )
       hb_gtBeginWrite();
       for( ;; )
       {
-         hb_gtBoxEx( iTop, iLeft, iBottom, iRight, pbFrame, bColor );
+         hb_gtBoxEx( iTop, iLeft, iBottom, iRight, pszFrame, bColor );
          if( lDelay )
          {
             hb_gtEndWrite();
@@ -442,5 +442,5 @@ HB_FUNC( _HB_CTDSPTIME )
    if( szTime[0] == '0' )
       szTime[0] = ' ';
 
-   hb_gtPutText( sRow, sCol, ( const BYTE * ) szTime, iLen, iColor );
+   hb_gtPutText( sRow, sCol, szTime, iLen, iColor );
 }

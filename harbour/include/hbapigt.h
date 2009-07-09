@@ -171,10 +171,10 @@ extern HB_EXPORT HB_ERRCODE hb_gtInit( HB_FHANDLE hFilenoStdin, HB_FHANDLE hFile
 extern HB_EXPORT HB_ERRCODE hb_gtExit( void );
 extern HB_EXPORT HB_ERRCODE hb_gtLock( void );
 extern HB_EXPORT HB_ERRCODE hb_gtUnlock( void );
-extern HB_EXPORT HB_ERRCODE hb_gtBox( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight, const BYTE * pbyFrame );
+extern HB_EXPORT HB_ERRCODE hb_gtBox( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight, const char * szFrame );
 extern HB_EXPORT HB_ERRCODE hb_gtBoxD( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight );
 extern HB_EXPORT HB_ERRCODE hb_gtBoxS( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight );
-extern HB_EXPORT HB_ERRCODE hb_gtDrawBox( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight, const BYTE * pbyFrame, int iColor );
+extern HB_EXPORT HB_ERRCODE hb_gtDrawBox( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight, const char * szFrame, int iColor );
 extern HB_EXPORT HB_ERRCODE hb_gtColorSelect( USHORT uiColorIndex );
 extern HB_EXPORT int        hb_gtColorToN( const char * szColorString );
 extern HB_EXPORT HB_ERRCODE hb_gtColorsToString( int * pColors, int iColorCount, char * pszColorString, int iBufSize );
@@ -195,7 +195,7 @@ extern HB_EXPORT HB_ERRCODE hb_gtSuspend( void ); /* prepare the reminal for she
 extern HB_EXPORT HB_ERRCODE hb_gtResume( void ); /* resume the terminal after the shell output */
 extern HB_EXPORT int        hb_gtReadKey( int iEventMask );
 extern HB_EXPORT HB_ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, ULONG * puiBuffSize );
-extern HB_EXPORT HB_ERRCODE hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount );
+extern HB_EXPORT HB_ERRCODE hb_gtRepChar( USHORT uiRow, USHORT uiCol, USHORT usChar, USHORT uiCount );
 extern HB_EXPORT HB_ERRCODE hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * pScrBuff );
 extern HB_EXPORT HB_ERRCODE hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, const void * pScrBuff );
 extern HB_EXPORT HB_ERRCODE hb_gtGetChar( USHORT uiRow, USHORT uiCol, BYTE * pbColor, BYTE * pbAttr, USHORT * pusChar );
@@ -213,13 +213,13 @@ extern HB_EXPORT HB_ERRCODE hb_gtSetMode( USHORT uiRows, USHORT uiCols );
 extern HB_EXPORT HB_ERRCODE hb_gtSetPos( SHORT iRow, SHORT iCol );
 extern HB_EXPORT HB_ERRCODE hb_gtSetSnowFlag( BOOL bNoSnow );
 extern HB_EXPORT HB_ERRCODE hb_gtTone( double dFrequency, double dDuration );
-extern HB_EXPORT HB_ERRCODE hb_gtWrite( const BYTE * pbyStr, ULONG ulLen );
-extern HB_EXPORT HB_ERRCODE hb_gtWriteAt( USHORT uiRow, USHORT uiCol, const BYTE * pbyStr, ULONG ulLen );
-extern HB_EXPORT HB_ERRCODE hb_gtWriteCon( const BYTE * pbyStr, ULONG ulLen );
-extern HB_EXPORT HB_ERRCODE hb_gtPutText( USHORT uiRow, USHORT uiCol, const BYTE * pStr, ULONG ulLength, int iColor );
+extern HB_EXPORT HB_ERRCODE hb_gtWrite( const char * szStr, ULONG ulLen );
+extern HB_EXPORT HB_ERRCODE hb_gtWriteAt( USHORT uiRow, USHORT uiCol, const char * szStr, ULONG ulLen );
+extern HB_EXPORT HB_ERRCODE hb_gtWriteCon( const char * szStr, ULONG ulLen );
+extern HB_EXPORT HB_ERRCODE hb_gtPutText( USHORT uiRow, USHORT uiCol, const char * szStr, ULONG ulLength, int iColor );
 extern HB_EXPORT const char * hb_gtVersion( int iType );
-extern HB_EXPORT HB_ERRCODE hb_gtOutStd( const BYTE * pbyStr, ULONG ulLen );
-extern HB_EXPORT HB_ERRCODE hb_gtOutErr( const BYTE * pbyStr, ULONG ulLen );
+extern HB_EXPORT HB_ERRCODE hb_gtOutStd( const char * szStr, ULONG ulLen );
+extern HB_EXPORT HB_ERRCODE hb_gtOutErr( const char * szStr, ULONG ulLen );
 extern HB_EXPORT HB_ERRCODE hb_gtSetDispCP( const char * pszTermCDP, const char * pszHostCDP, BOOL fBox );
 extern HB_EXPORT HB_ERRCODE hb_gtSetKeyCP( const char * pszTermCDP, const char * pszHostCDP );
 extern HB_EXPORT HB_ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo );
@@ -235,7 +235,7 @@ extern HB_EXPORT HB_ERRCODE hb_gtPutScrChar( int iRow, int iCol, BYTE bColor, BY
 extern HB_EXPORT HB_ERRCODE hb_gtFlush( void );
 extern HB_EXPORT HB_ERRCODE hb_gtGetPosEx( int * piRow, int * piCol );
 extern HB_EXPORT HB_ERRCODE hb_gtScrollEx( int iTop, int iLeft, int iBottom, int iRight, int iColor, int iChar, int iRows, int iCols );
-extern HB_EXPORT HB_ERRCODE hb_gtBoxEx( int iTop, int iLeft, int iBottom, int iRight, const BYTE * pbyFrame, int iColor );
+extern HB_EXPORT HB_ERRCODE hb_gtBoxEx( int iTop, int iLeft, int iBottom, int iRight, const char * szFrame, int iColor );
 extern HB_EXPORT int        hb_gtGfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor );
 extern HB_EXPORT HB_ERRCODE hb_gtGfxText( int iTop, int iLeft, const char * szText, int iColor, int iSize, int iWidth );
 

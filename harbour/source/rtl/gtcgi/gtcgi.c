@@ -90,7 +90,7 @@ typedef struct _HB_GTCGI
    int            iCol;
    int            iLastCol;
    int            iLineBufSize;
-   BYTE *         sLineBuf;
+   char *         sLineBuf;
    char *         szCrLf;
    ULONG          ulCrLf;
    BOOL           fDispTrans;
@@ -98,14 +98,14 @@ typedef struct _HB_GTCGI
    PHB_CODEPAGE   cdpHost;
 } HB_GTCGI, * PHB_GTCGI;
 
-static void hb_gt_cgi_termOut( PHB_GTCGI pGTCGI, const BYTE * pStr, ULONG ulLen )
+static void hb_gt_cgi_termOut( PHB_GTCGI pGTCGI, const char * szStr, ULONG ulLen )
 {
-   hb_fsWriteLarge( pGTCGI->hStdout, pStr, ulLen );
+   hb_fsWriteLarge( pGTCGI->hStdout, szStr, ulLen );
 }
 
 static void hb_gt_cgi_newLine( PHB_GTCGI pGTCGI )
 {
-   hb_gt_cgi_termOut( pGTCGI, ( const BYTE * ) pGTCGI->szCrLf, pGTCGI->ulCrLf );
+   hb_gt_cgi_termOut( pGTCGI, pGTCGI->szCrLf, pGTCGI->ulCrLf );
 }
 
 static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
@@ -176,7 +176,7 @@ static BOOL hb_gt_cgi_IsColor( PHB_GT pGT )
 
 static void hb_gt_cgi_Bell( PHB_GT pGT )
 {
-   static const BYTE s_szBell[] = { HB_CHAR_BEL, 0 };
+   static const char s_szBell[] = { HB_CHAR_BEL, 0 };
    PHB_GTCGI pGTCGI;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_cgi_Bell(%p)", pGT));
@@ -254,25 +254,25 @@ static BOOL hb_gt_cgi_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
 
 #ifdef HB_GT_CGI_RAWOUTPUT
 
-static void hb_gt_cgi_WriteCon( PHB_GT pGT, const BYTE * pText, ULONG ulLength )
+static void hb_gt_cgi_WriteCon( PHB_GT pGT, const char * szText, ULONG ulLength )
 {
-   BYTE * buffer = NULL;
+   char * buffer = NULL;
    PHB_GTCGI pGTCGI = HB_GTCGI_GET( pGT );
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( pGTCGI->fDispTrans )
    {
-      buffer = ( BYTE * ) hb_xgrab( ulLength );
-      memcpy( buffer, pText, ulLength );
-      hb_cdpnTranslate( ( char * ) buffer, pGTCGI->cdpHost, pGTCGI->cdpTerm, ulLength );
-      pText = buffer;
+      buffer = ( char * ) hb_xgrab( ulLength );
+      memcpy( buffer, szText, ulLength );
+      hb_cdpnTranslate( buffer, pGTCGI->cdpHost, pGTCGI->cdpTerm, ulLength );
+      szText = buffer;
    }
 #endif
 
-   hb_gt_cgi_termOut( pGTCGI, pText, ulLength );
+   hb_gt_cgi_termOut( pGTCGI, szText, ulLength );
    while( ulLength-- )
    {
-      switch( *pText++ )
+      switch( *szText++ )
       {
          case HB_CHAR_BEL:
             break;
@@ -300,7 +300,7 @@ static void hb_gt_cgi_WriteCon( PHB_GT pGT, const BYTE * pText, ULONG ulLength )
       hb_xfree( buffer );
 }
 
-static void hb_gt_cgi_WriteAt( PHB_GT pGT, int iRow, int iCol, const BYTE * pText, ULONG ulLength )
+static void hb_gt_cgi_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * szText, ULONG ulLength )
 {
    int iLineFeed = 0, iSpace = 0;
    PHB_GTCGI pGTCGI = HB_GTCGI_GET( pGT );
@@ -321,7 +321,7 @@ static void hb_gt_cgi_WriteAt( PHB_GT pGT, int iRow, int iCol, const BYTE * pTex
 
    if( iSpace > 0 )
    {
-      BYTE * buffer = ( BYTE * ) hb_xgrab( iSpace );
+      char * buffer = ( char * ) hb_xgrab( iSpace );
       memset( buffer, ' ', iSpace );
       hb_gt_cgi_termOut( pGTCGI, buffer, iSpace );
       hb_xfree( buffer );
@@ -331,7 +331,7 @@ static void hb_gt_cgi_WriteAt( PHB_GT pGT, int iRow, int iCol, const BYTE * pTex
    pGTCGI->iRow = iRow;
    pGTCGI->iCol = iCol;
 
-   hb_gt_cgi_WriteCon( pGT, pText, ulLength );
+   hb_gt_cgi_WriteCon( pGT, szText, ulLength );
 }
 
 #else /* HB_GT_CGI_RAWOUTPUT */
@@ -385,7 +385,7 @@ static void hb_gt_cgi_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
          if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
             break;
-         pGTCGI->sLineBuf[ iLen++ ] = ( BYTE ) usChar;
+         pGTCGI->sLineBuf[ iLen++ ] = ( char ) usChar;
          ++iCol;
       }
       if( iLen )
@@ -413,12 +413,12 @@ static void hb_gt_cgi_Refresh( PHB_GT pGT )
    HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
    if( pGTCGI->iLineBufSize == 0 )
    {
-      pGTCGI->sLineBuf = ( BYTE * ) hb_xgrab( iWidth );
+      pGTCGI->sLineBuf = ( char * ) hb_xgrab( iWidth );
       pGTCGI->iLineBufSize = iWidth;
    }
    else if( pGTCGI->iLineBufSize < iWidth )
    {
-      pGTCGI->sLineBuf = ( BYTE * ) hb_xrealloc( pGTCGI->sLineBuf, iWidth );
+      pGTCGI->sLineBuf = ( char * ) hb_xrealloc( pGTCGI->sLineBuf, iWidth );
       pGTCGI->iLineBufSize = iWidth;
    }
    HB_GTSUPER_REFRESH( pGT );

@@ -227,7 +227,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       cMimeText := "text/html ; charset=ISO-8859-1"
       oAttach:hHeaders[ "Content-Type" ] := cMimeText
       cBodyTemp := cBody
-      cBody     := MemoRead( cBodyTemp ) + chr( 13 ) + chr( 10 )
+      cBody     := MemoRead( cBodyTemp ) + Chr( 13 ) + Chr( 10 )
 
    ELSE
       oMail:hHeaders[ "Content-Type" ] := "text/plain; charset=iso8851"

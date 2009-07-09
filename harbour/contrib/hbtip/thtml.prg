@@ -1052,14 +1052,14 @@ METHOD toString( nIndent ) CLASS THtmlNode
        FOR i := 1 TO imax
           oNode := ::htmlContent[ i ]
           IF ! oNode:isInline() .OR. oNode:htmlTagName == "!--"
-             cHtml += chr( 13 ) + Chr( 10 )
+             cHtml += Chr( 13 ) + Chr( 10 )
           ENDIF
           cHtml += oNode:toString( nIndent + 1 )
        NEXT
 #else
       FOR EACH oNode IN ::htmlContent
           IF ! oNode:isInline() .OR. oNode:htmlTagName == "!--"
-             cHtml += chr( 13 ) + Chr( 10 )
+             cHtml += Xhr( 13 ) + Chr( 10 )
           ENDIF
          cHtml += oNode:toString( nIndent + 1 )
       NEXT

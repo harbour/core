@@ -87,7 +87,7 @@ static HB_GT_FUNCS   SuperTable;
 
 #define HB_GTSTD_GET(p) ( ( PHB_GTSTD ) HB_GTLOCAL( p ) )
 
-static const BYTE s_szBell[] = { HB_CHAR_BEL, 0 };
+static const char s_szBell[] = { HB_CHAR_BEL, 0 };
 
 typedef struct _HB_GTSTD
 {
@@ -103,7 +103,7 @@ typedef struct _HB_GTSTD
    int            iLastCol;
 
    int            iLineBufSize;
-   BYTE *         sLineBuf;
+   char *         sLineBuf;
    BOOL           fFullRedraw;
    char *         szCrLf;
    ULONG          ulCrLf;
@@ -189,14 +189,14 @@ static void hb_gt_std_setKeyTrans( PHB_GTSTD pGTSTD, char * pSrcChars, char * pD
    }
 }
 
-static void hb_gt_std_termOut( PHB_GTSTD pGTSTD, const BYTE * pStr, ULONG ulLen )
+static void hb_gt_std_termOut( PHB_GTSTD pGTSTD, const char * szStr, ULONG ulLen )
 {
-   hb_fsWriteLarge( pGTSTD->hStdout, pStr, ulLen );
+   hb_fsWriteLarge( pGTSTD->hStdout, szStr, ulLen );
 }
 
 static void hb_gt_std_newLine( PHB_GTSTD pGTSTD )
 {
-   hb_gt_std_termOut( pGTSTD, ( BYTE * ) pGTSTD->szCrLf, pGTSTD->ulCrLf );
+   hb_gt_std_termOut( pGTSTD, pGTSTD->szCrLf, pGTSTD->ulCrLf );
 }
 
 
@@ -609,7 +609,7 @@ static void hb_gt_std_DispLine( PHB_GT pGT, int iRow )
          break;
       if( usChar < 32 || usChar == 127 )
          usChar = '.';
-      pGTSTD->sLineBuf[ iCol ] = ( BYTE ) usChar;
+      pGTSTD->sLineBuf[ iCol ] = ( char ) usChar;
       if( usChar != ' ' )
          iMin = iCol + 1;
    }
@@ -708,7 +708,7 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
             break;
          if( usChar < 32 || usChar == 127 )
             usChar = '.';
-         pGTSTD->sLineBuf[ iLen ] = ( BYTE ) usChar;
+         pGTSTD->sLineBuf[ iLen ] = ( char ) usChar;
          ++iCol;
       }
 
@@ -738,12 +738,12 @@ static void hb_gt_std_Refresh( PHB_GT pGT )
    pGTSTD = HB_GTSTD_GET( pGT );
    if( pGTSTD->iLineBufSize == 0 )
    {
-      pGTSTD->sLineBuf = ( BYTE * ) hb_xgrab( iWidth );
+      pGTSTD->sLineBuf = ( char * ) hb_xgrab( iWidth );
       pGTSTD->iLineBufSize = iWidth;
    }
    else if( pGTSTD->iLineBufSize != iWidth )
    {
-      pGTSTD->sLineBuf = ( BYTE * ) hb_xrealloc( pGTSTD->sLineBuf, iWidth );
+      pGTSTD->sLineBuf = ( char * ) hb_xrealloc( pGTSTD->sLineBuf, iWidth );
       pGTSTD->iLineBufSize = iWidth;
    }
    pGTSTD->fFullRedraw = FALSE;

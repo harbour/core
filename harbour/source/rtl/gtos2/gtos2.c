@@ -136,7 +136,7 @@ static int  s_iCursorStyle;
 
 /* buffer for single screen line */
 static int     s_iLineBufSize = 0;
-static BYTE *  s_sLineBuf;
+static char *  s_sLineBuf;
 
 /* Code page ID of active codepage at the time harbour program was start */
 static USHORT s_usOldCodePage;
@@ -491,7 +491,7 @@ static void hb_gt_os2_SetCursorStyle( int iStyle )
 static void hb_gt_os2_GetScreenContents( PHB_GT pGT )
 {
    int iRow, iCol;
-   BYTE * pBufPtr;
+   char * pBufPtr;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetScreenContents(%p)", pGT));
 
@@ -719,7 +719,7 @@ static BOOL hb_gt_os2_Resize( PHB_GT pGT, int iRows, int iCols )
          if( s_iLineBufSize != 0 )
             DosFreeMem( ( PVOID ) s_sLineBuf );
          if( iRows )
-            s_sLineBuf = ( BYTE * ) hb_gt_os2_allocMem( iRows );
+            s_sLineBuf = ( char * ) hb_gt_os2_allocMem( iRows );
          s_iLineBufSize = iRows;
       }
       return TRUE;
@@ -786,7 +786,7 @@ static BOOL hb_gt_os2_Resume( PHB_GT pGT )
 
 static void hb_gt_os2_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-   BYTE *pBufPtr = s_sLineBuf, bColor, bAttr;
+   char * pBufPtr = s_sLineBuf, bColor, bAttr;
    USHORT usChar;
    int iLen = 0;
 
@@ -797,7 +797,7 @@ static void hb_gt_os2_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
          break;
 
-      *pBufPtr++ = ( BYTE ) usChar;
+      *pBufPtr++ = ( char ) usChar;
       *pBufPtr++ = bColor;
       ++iLen;
    }

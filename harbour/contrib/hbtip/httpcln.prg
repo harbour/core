@@ -4,7 +4,7 @@
 
 /*
  * xHarbour Project source code:
- * TIP Class oriented Internet protocol library
+ * TIP Class oriented Internet protocol library (HTTP)
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  * www - http://www.harbour-project.org
@@ -56,10 +56,6 @@
 #include "fileio.ch"
 
 #include "tip.ch"
-
-/**
-* Inet service manager: http
-*/
 
 CREATE CLASS tIPClientHTTP FROM tIPClient
 
@@ -124,7 +120,6 @@ METHOD Get( cQuery ) CLASS tIPClientHTTP
 
    RETURN .F.
 
-
 METHOD Post( xPostData, cQuery ) CLASS tIPClientHTTP
    LOCAL cData, nI, cTmp, y
 
@@ -170,7 +165,7 @@ METHOD Post( xPostData, cQuery ) CLASS tIPClientHTTP
    ENDIF
 
    ::InetSendall( ::SocketCon, "Content-Length: " + ;
-         hb_NToS( Len( cData ) ) + ::cCRLF )
+         hb_ntos( Len( cData ) ) + ::cCRLF )
 
    // End of header
    ::InetSendall( ::SocketCon, ::cCRLF )

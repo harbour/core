@@ -207,13 +207,13 @@ HB_FUNC( WBOX )
             "олнннлоо",       /* 14 WB_FULL_HALF */
             "лллллллл"  };    /* 15 WB_FULL */
 
-   const BYTE * szBox;
-   BYTE szBoxBuf[ 10 ];
+   const char * szBox;
+   char szBoxBuf[ 10 ];
    int iColor;
 
    if( HB_ISCHAR( 1 ) )
    {
-      szBox = ( const BYTE * ) hb_parc( 1 );
+      szBox = hb_parc( 1 );
    }
    else
    {

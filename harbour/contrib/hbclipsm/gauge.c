@@ -90,21 +90,21 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
       hb_snprintf( szPct, sizeof( szPct ), "%3.0f%%", fPercent * 100 );
       hb_gtWriteAt( ( SHORT ) hb_arrayGetNI( pArray, B_TOP ),
                     iCenter + 2,
-                    ( const BYTE * ) szPct, 4 );
+                    szPct, 4 );
    }
 
    hb_gtBox( ( SHORT ) hb_arrayGetNI( pArray, B_TOP ) + 1,
              ( SHORT ) hb_arrayGetNI( pArray, B_LEFT ) + 1,
              ( SHORT ) hb_arrayGetNI( pArray, B_BOTTOM ) - 1,
              ( SHORT ) hb_arrayGetNI( pArray, B_RIGHT ) - 1,
-             ( const BYTE * ) szStr );
+             szStr );
 
    iMax = ( SHORT ) ( hb_arrayGetNI( pArray, B_BOTTOM ) - hb_arrayGetNI( pArray, B_TOP ) - 1 );
    for( iRow = 1; iRow <= iMax; iRow++ )
    {
       hb_gtRepChar( ( SHORT ) ( hb_arrayGetNI( pArray, B_TOP ) + iRow ),
                     ( SHORT ) ( hb_arrayGetNI( pArray, B_LEFT ) + 1 ),
-                    ( BYTE ) * hb_arrayGetCPtr( pArray, B_BARCHAR ),
+                    * hb_arrayGetCPtr( pArray, B_BARCHAR ),
                     iCols );
    }
 
@@ -161,18 +161,18 @@ HB_FUNC( GAUGEDISPLAY )
                 ( SHORT) hb_arrayGetNI( pArray, B_LEFT ),
                 ( SHORT) hb_arrayGetNI( pArray, B_BOTTOM ),
                 ( SHORT) hb_arrayGetNI( pArray, B_RIGHT ),
-                ( const BYTE * ) szStr );
+                szStr );
 
       hb_gtBox( ( SHORT ) hb_arrayGetNI( pArray, B_TOP ),
                 ( SHORT ) hb_arrayGetNI( pArray, B_LEFT ),
                 ( SHORT ) hb_arrayGetNI( pArray, B_BOTTOM ),
                 ( SHORT ) hb_arrayGetNI( pArray, B_RIGHT ),
-                ( const BYTE * ) B_BOXLINES );
+                B_BOXLINES );
 
       if( hb_arrayGetL( pArray, B_DISPLAYNUM ) )
          hb_gtWriteAt( ( SHORT ) hb_arrayGetNI( pArray, B_TOP ),
                        iCenter,
-                       ( const BYTE * ) "[      ]", 8 );
+                       "[      ]", 8 );
 
       hb_gtSetColorStr( szOldColor );
 
