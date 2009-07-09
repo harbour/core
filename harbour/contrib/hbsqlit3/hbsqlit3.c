@@ -1641,21 +1641,21 @@ HB_FUNC( SQLITE3_BLOB_READ )
    if( pBlob )
    {
       int   iLen = hb_parni( 2 );
-      BYTE  *buffer;
+      char  *buffer;
 
       if( iLen == 0 )
       {
          iLen = sqlite3_blob_bytes( pBlob );
       }
 
-      buffer = ( BYTE * ) hb_xgrab( iLen + 1 );
+      buffer = ( char * ) hb_xgrab( iLen + 1 );
 
       /*hb_xmemset( buffer, 0, iLen );*/
 
-      if( SQLITE_OK == sqlite3_blob_read(pBlob, buffer, iLen, hb_parni(3)) )
+      if( SQLITE_OK == sqlite3_blob_read(pBlob, ( void * ) buffer, iLen, hb_parni(3)) )
       {
          buffer[iLen] = '\0';
-         hb_retclen_buffer( ( char * ) buffer, iLen );
+         hb_retclen_buffer( buffer, iLen );
       }
       else
       {

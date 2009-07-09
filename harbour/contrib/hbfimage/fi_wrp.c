@@ -360,12 +360,12 @@ HB_FUNC( FI_LOADFROMMEM )
       FIBITMAP *dib;
       FREE_IMAGE_FORMAT fif;
       FIMEMORY *stream;
-      const BYTE *szImage;
+      const char *szImage;
       int flags;
 
       /* Retrieve parameters */
       fif      = ( FREE_IMAGE_FORMAT ) hb_parni( 1 );
-      szImage  = ( const BYTE * ) hb_parcx( 2 );
+      szImage  = hb_parcx( 2 );
       flags    = hb_parni( 3 );
 
       /* run function */
@@ -878,12 +878,12 @@ HB_FUNC( FI_GETFILETYPEFROMMEM )
        hb_parinfo( 1 ) & HB_IT_STRING
      )
    {
-      const BYTE * szImage;
+      const char * szImage;
       FIMEMORY *stream;
       int size;
 
       /* Retrieve parameters */
-      szImage = ( const BYTE * ) hb_parcx( 1 );
+      szImage = hb_parcx( 1 );
       stream  = FreeImage_OpenMemory( ( BYTE * ) szImage, hb_parclen( 1 ) );
       size    = ( hb_parinfo( 2 ) & HB_IT_NUMERIC ? hb_parni( 1 ) : 0 );
 

@@ -352,7 +352,7 @@ HB_FUNC( QOUT )
 
    if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_CON ) ) != FS_ERROR )
    {
-      BYTE buf[ 256 ];
+      char buf[ 256 ];
       PHB_PRNPOS pPrnPos = hb_prnPos();
 
       pPrnPos->row++;
@@ -385,8 +385,8 @@ HB_FUNC( __EJECT ) /* Ejects the current page from the printer */
 
    if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_ANY ) ) != FS_ERROR )
    {
-      static const BYTE s_byEop[ 4 ] = { 0x0C, 0x0D, 0x00, 0x00 }; /* Buffer is 4 bytes to make CodeGuard happy */
-      hb_fsWrite( hFile, s_byEop, 2 );
+      static const char s_szEop[ 4 ] = { 0x0C, 0x0D, 0x00, 0x00 }; /* Buffer is 4 bytes to make CodeGuard happy */
+      hb_fsWrite( hFile, s_szEop, 2 );
    }
 
    pPrnPos = hb_prnPos();
@@ -420,7 +420,7 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
 
       if( pPrnPos->row != uiPRow || pPrnPos->col != uiPCol )
       {
-         BYTE buf[ 256 ];
+         char buf[ 256 ];
          int iPtr = 0;
 
          if( pPrnPos->row != uiPRow )

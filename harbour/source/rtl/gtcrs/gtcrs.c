@@ -1248,7 +1248,7 @@ static void mouse_init( InOutBase * ioBase )
          /*
           * In recent GPM versions it produce unpleasure noice on the screen
           * so I covered it with this macro, [druzus]
-          */         
+          */
 #ifdef HB_GPM_USE_XTRA
          ioBase->mButtons = Gpm_GetSnapshot( NULL );
 #else
@@ -1522,8 +1522,8 @@ static void init_keys(InOutBase *ioBase)
       addKeyMap( ioBase, EXKEY_TAB   |KEY_CTRLMASK|KEY_ALTMASK, "\033[Z" );
 
       /* key added for gnome-terminal and teraterm */
-      
-      addKeyMap( ioBase, EXKEY_ENTER |KEY_CTRLMASK, "\033[7;5~" ); 
+
+      addKeyMap( ioBase, EXKEY_ENTER |KEY_CTRLMASK, "\033[7;5~" );
       addKeyMap( ioBase, EXKEY_DEL   |KEY_CTRLMASK, "\033[3;5~" );
       addKeyMap( ioBase, EXKEY_TAB   |KEY_CTRLMASK, "\033[8;5~" );
 
@@ -1539,11 +1539,11 @@ static void init_keys(InOutBase *ioBase)
       addKeyMap( ioBase, EXKEY_DEL   |KEY_CTRLMASK|KEY_ALTMASK, "\033[3;6~" );
       addKeyMap( ioBase, EXKEY_PGUP  |KEY_CTRLMASK|KEY_ALTMASK, "\033[5;6~" );
       addKeyMap( ioBase, EXKEY_PGDN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6;6~" );
-      
+
       addKeyMap( ioBase, EXKEY_BS    |KEY_CTRLMASK|KEY_ALTMASK, "\033[W" );
 
       /* end of added */
-      
+
    } else if( ioBase->terminal_type == TERM_LINUX ) {
 
       addKeyMap( ioBase, EXKEY_F1 , "\033[[A"  );        /* kf1  */
@@ -2563,35 +2563,35 @@ static const char * hb_gt_crs_Version( PHB_GT pGT, int iType )
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_OutStd( PHB_GT pGT, const BYTE * pbyStr, ULONG ulLen )
+static void hb_gt_crs_OutStd( PHB_GT pGT, const char * szStr, ULONG ulLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_OutStd(%p,%s,%lu)", pGT, pbyStr, ulLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_OutStd(%p,%s,%lu)", pGT, szStr, ulLen ) );
 
    if( s_ioBase )
    {
       if( s_ioBase->stdoutfd == -1 )
-         HB_GTSELF_WRITECON( pGT, pbyStr, ulLen );
+         HB_GTSELF_WRITECON( pGT, szStr, ulLen );
       else
-         gt_outstd( s_ioBase, pbyStr, ulLen );
+         gt_outstd( s_ioBase, ( const unsigned char * ) szStr, ulLen );
    }
    else
-      HB_GTSUPER_OUTSTD( pGT, pbyStr, ulLen );
+      HB_GTSUPER_OUTSTD( pGT, szStr, ulLen );
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_OutErr( PHB_GT pGT, const BYTE * pbyStr, ULONG ulLen )
+static void hb_gt_crs_OutErr( PHB_GT pGT, const char * szStr, ULONG ulLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_OutErr(%p,%s,%lu)", pGT, pbyStr, ulLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_OutErr(%p,%s,%lu)", pGT, szStr, ulLen ) );
    if( s_ioBase )
    {
       if( s_ioBase->stderrfd == -1 )
-         HB_GTSELF_WRITECON( pGT, pbyStr, ulLen );
+         HB_GTSELF_WRITECON( pGT, szStr, ulLen );
       else
-         gt_outerr( s_ioBase, ( char * ) pbyStr, ulLen );
+         gt_outerr( s_ioBase, ( const unsigned char * ) szStr, ulLen );
    }
    else
-      HB_GTSUPER_OUTERR( pGT, pbyStr, ulLen );
+      HB_GTSUPER_OUTERR( pGT, szStr, ulLen );
 }
 
 /* *********************************************************************** */
