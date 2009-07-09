@@ -708,6 +708,7 @@ HB_EXPR_PTR hb_macroExprGenPop( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroExprGenPop(%i)", pExpr->ExprType));
 
+   pExpr = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
    HB_EXPR_USE( pExpr, HB_EA_LVALUE );
    return HB_EXPR_USE( pExpr, HB_EA_POP_PCODE );
 }

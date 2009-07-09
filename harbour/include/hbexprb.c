@@ -802,6 +802,17 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
    {
       case HB_EA_REDUCE:
          pSelf->value.asReference = HB_EXPR_USE( pSelf->value.asReference, HB_EA_REDUCE );
+         if( pSelf->value.asReference->ExprType == HB_ET_IIF )
+         {
+            HB_EXPR_PTR pCond, pIIF, pFalse;
+            pIIF = pSelf->value.asReference;
+            pCond = pIIF->value.asList.pExprList;
+            pFalse = hb_compExprNewRef( pCond->pNext->pNext, HB_COMP_PARAM );
+            pCond->pNext = hb_compExprNewRef( pCond->pNext, HB_COMP_PARAM );
+            pCond->pNext->pNext = pFalse;
+            memcpy( pSelf, pIIF, sizeof( HB_EXPR ) );
+            HB_COMP_EXPR_CLEAR( pIIF );
+         }
          break;
       case HB_EA_ARRAY_AT:
          HB_COMP_ERROR_TYPE( pSelf );
@@ -851,6 +862,12 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
                HB_GEN_FUNC1( PushMemvarRef, pExp->value.asAlias.pVar->value.asSymbol );
                break;
             }
+         }
+         else if( pExp->ExprType == HB_ET_VARREF ||
+                  pExp->ExprType == HB_ET_REFERENCE )
+         {
+            HB_EXPR_USE( pExp, HB_EA_PUSH_PCODE );
+            break;
          }
 
          hb_compErrorRefer( HB_COMP_PARAM, NULL, hb_compExprDescription( pExp ) );

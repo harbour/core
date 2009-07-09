@@ -6929,10 +6929,11 @@ static void hb_vmPushLocal( int iLocal )
 static void hb_vmPushLocalByRef( int iLocal )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ITEM_PTR pTop = hb_stackAllocItem();
+   HB_ITEM_PTR pTop;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushLocalByRef(%d)", iLocal));
 
+   pTop = hb_stackAllocItem();
    /* we store its stack offset instead of a pointer to support a dynamic stack */
    if( iLocal >= 0 )
    {
@@ -6977,11 +6978,18 @@ static void hb_vmPushStaticByRef( USHORT uiStatic )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushStaticByRef(%hu)", uiStatic));
 
    pTop = hb_stackAllocItem();
+   pBase = ( PHB_ITEM ) hb_stackGetStaticsBase();
+
+   if( HB_IS_BYREF( pBase->item.asArray.value->pItems + uiStatic - 1 ) &&
+       !HB_IS_ENUM( pBase->item.asArray.value->pItems + uiStatic - 1 ) )
+   {
+      hb_itemCopy( pTop, pBase->item.asArray.value->pItems + uiStatic - 1 );
+      return;
+   }
    pTop->type = HB_IT_BYREF;
    /* we store the offset instead of a pointer to support a dynamic stack */
    pTop->item.asRefer.value = uiStatic - 1;
    pTop->item.asRefer.offset = 0;    /* 0 for static variables */
-   pBase = ( PHB_ITEM ) hb_stackGetStaticsBase();
    pTop->item.asRefer.BasePtr.array = pBase->item.asArray.value;
    hb_gcRefInc( pBase->item.asArray.value );
 }
@@ -8054,11 +8062,21 @@ static PHB_ITEM hb_vmMsgRefRead( PHB_ITEM pRefer )
       HB_STACK_TLS_PRELOAD
 
       hb_stackPushReturn();
-      if( !pMsgRef->access )
-         pMsgRef->access = hb_dynsymGetCase( pMsgRef->assign->pSymbol->szName + 1 );
-      hb_vmPushDynSym( pMsgRef->access );
-      hb_vmPush( &pMsgRef->object );
-      hb_vmSend( 0 );
+      if( ( pMsgRef->value.type & HB_IT_DEFAULT ) == 0 )
+      {
+         hb_vmPushDynSym( pMsgRef->assign );
+         hb_vmPush( &pMsgRef->object );
+         hb_vmPush( &pMsgRef->value );
+         hb_vmSend( 1 );
+      }
+      else
+      {
+         if( !pMsgRef->access )
+            pMsgRef->access = hb_dynsymGetCase( pMsgRef->assign->pSymbol->szName + 1 );
+         hb_vmPushDynSym( pMsgRef->access );
+         hb_vmPush( &pMsgRef->object );
+         hb_vmSend( 0 );
+      }
       hb_itemMove( &pMsgRef->value, hb_stackReturnItem() );
       pMsgRef->value.type |= HB_IT_DEFAULT;
       hb_stackPopReturn();
@@ -8088,28 +8106,46 @@ static PHB_ITEM hb_vmMsgRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
 
 static void hb_vmMsgRefCopy( PHB_ITEM pDest )
 {
-   hb_xRefInc( pDest->item.asExtRef.value );
+   PHB_MSGREF pMsgRef = ( PHB_MSGREF ) pDest->item.asExtRef.value;
+
+   hb_xRefInc( pMsgRef );
+
+   if( ( pMsgRef->value.type & HB_IT_DEFAULT ) == 0 )
+   {
+      if( hb_vmRequestReenter() )
+      {
+         hb_vmPushDynSym( pMsgRef->assign );
+         hb_vmPush( &pMsgRef->object );
+         hb_vmPush( &pMsgRef->value );
+         hb_vmSend( 1 );
+         hb_vmRequestRestore();
+         pMsgRef->value.type |= HB_IT_DEFAULT;
+      }
+   }
 }
 
 static void hb_vmMsgRefClear( void * value )
 {
+   PHB_MSGREF pMsgRef = ( PHB_MSGREF ) value;
+
+   /* value were change by C code without calling RefWrite(),
+    *  f.e. hb_stor*() function
+    */
+   if( ( pMsgRef->value.type & HB_IT_DEFAULT ) == 0 )
+   {
+      if( hb_vmRequestReenter() )
+      {
+         hb_vmPushDynSym( pMsgRef->assign );
+         hb_vmPush( &pMsgRef->object );
+         hb_vmPush( &pMsgRef->value );
+         hb_vmSend( 1 );
+         hb_vmRequestRestore();
+         pMsgRef->value.type |= HB_IT_DEFAULT;
+      }
+   }
+
    if( hb_xRefDec( value ) )
    {
-      PHB_MSGREF pMsgRef = ( PHB_MSGREF ) value;
-      /* value were change by C code without calling RefWrite(),
-       *  f.e. hb_stor*() function
-       */
-      if( ( pMsgRef->value.type & HB_IT_DEFAULT ) == 0 )
-      {
-         if( hb_vmRequestReenter() )
-         {
-            hb_vmPushDynSym( pMsgRef->assign );
-            hb_vmPush( &pMsgRef->object );
-            hb_vmPush( &pMsgRef->value );
-            hb_vmSend( 1 );
-            hb_vmRequestRestore();
-         }
-      }
       if( HB_IS_COMPLEX( &pMsgRef->value ) )
          hb_itemClear( &pMsgRef->value );
       if( HB_IS_COMPLEX( &pMsgRef->object ) )
@@ -8183,12 +8219,17 @@ static PHB_ITEM hb_vmMsgIdxRefRead( PHB_ITEM pRefer )
    if( hb_vmRequestQuery() == 0 )
    {
       HB_STACK_TLS_PRELOAD
+      PHB_ITEM pObject = HB_IS_BYREF( &pMsgIdxRef->object ) ?
+                         hb_itemUnRef( &pMsgIdxRef->object ) :
+                         &pMsgIdxRef->object;
 
       hb_stackPushReturn();
-      hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, &pMsgIdxRef->value,
-                          HB_IS_BYREF( &pMsgIdxRef->object ) ?
-                          hb_itemUnRef( &pMsgIdxRef->object ) :
-                          &pMsgIdxRef->object, &pMsgIdxRef->index, NULL );
+      if( ( pMsgIdxRef->value.type & HB_IT_DEFAULT ) == 0 )
+         hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pObject, pObject,
+                             &pMsgIdxRef->index, &pMsgIdxRef->value );
+      else
+         hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, &pMsgIdxRef->value, pObject,
+                             &pMsgIdxRef->index, NULL );
       hb_stackPopReturn();
       pMsgIdxRef->value.type |= HB_IT_DEFAULT;
    }
@@ -8217,29 +8258,49 @@ static PHB_ITEM hb_vmMsgIdxRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
 
 static void hb_vmMsgIdxRefCopy( PHB_ITEM pDest )
 {
-   hb_xRefInc( pDest->item.asExtRef.value );
+   PHB_MSGIDXREF pMsgIdxRef = ( PHB_MSGIDXREF ) pDest->item.asExtRef.value;
+
+   hb_xRefInc( pMsgIdxRef );
+
+   /* value were change by C code without calling RefWrite(),
+    *  f.e. hb_stor*() function
+    */
+   if( ( pMsgIdxRef->value.type & HB_IT_DEFAULT ) == 0 )
+   {
+      if( hb_vmRequestReenter() )
+      {
+         PHB_ITEM pObject = HB_IS_BYREF( &pMsgIdxRef->object ) ?
+                            hb_itemUnRef( &pMsgIdxRef->object ) :
+                            &pMsgIdxRef->object;
+         hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pObject, pObject,
+                             &pMsgIdxRef->index, &pMsgIdxRef->value );
+         hb_vmRequestRestore();
+      }
+   }
 }
 
 static void hb_vmMsgIdxRefClear( void * value )
 {
+   PHB_MSGIDXREF pMsgIdxRef = ( PHB_MSGIDXREF ) value;
+
+   /* value were change by C code without calling RefWrite(),
+    *  f.e. hb_stor*() function
+    */
+   if( ( pMsgIdxRef->value.type & HB_IT_DEFAULT ) == 0 )
+   {
+      if( hb_vmRequestReenter() )
+      {
+         PHB_ITEM pObject = HB_IS_BYREF( &pMsgIdxRef->object ) ?
+                            hb_itemUnRef( &pMsgIdxRef->object ) :
+                            &pMsgIdxRef->object;
+         hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pObject, pObject,
+                             &pMsgIdxRef->index, &pMsgIdxRef->value );
+         hb_vmRequestRestore();
+      }
+   }
+
    if( hb_xRefDec( value ) )
    {
-      PHB_MSGIDXREF pMsgIdxRef = ( PHB_MSGIDXREF ) value;
-      /* value were change by C code without calling RefWrite(),
-       *  f.e. hb_stor*() function
-       */
-      if( ( pMsgIdxRef->value.type & HB_IT_DEFAULT ) == 0 )
-      {
-         if( hb_vmRequestReenter() )
-         {
-            PHB_ITEM pObject = HB_IS_BYREF( &pMsgIdxRef->object ) ?
-                               hb_itemUnRef( &pMsgIdxRef->object ) :
-                               &pMsgIdxRef->object;
-            hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pObject, pObject,
-                                &pMsgIdxRef->index, &pMsgIdxRef->value );
-            hb_vmRequestRestore();
-         }
-      }
       if( HB_IS_COMPLEX( &pMsgIdxRef->value ) )
          hb_itemClear( &pMsgIdxRef->value );
       if( HB_IS_COMPLEX( &pMsgIdxRef->object ) )
