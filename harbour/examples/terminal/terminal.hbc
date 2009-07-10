@@ -2,7 +2,6 @@
 # $Id$
 #
 
-incpaths=../../contrib/gtwvg
-{win}libs=gtwvg hbwin
+{win}libs=hbwin
+libs=hbct
 mt=yes
-gui=yes

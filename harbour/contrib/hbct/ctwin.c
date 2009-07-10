@@ -1416,8 +1416,8 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, ULONG ulLength )
          {
             HB_GTSELF_SCROLL( pGT, 0, 0, iMaxRow, iMaxCol,
                               HB_GTSELF_GETCOLOR( pGT ),
-                              HB_GTSELF_GETCLEARCHAR( pGT ),
-                          iRow - iMaxRow, 0 );
+                              ( USHORT ) HB_GTSELF_GETCLEARCHAR( pGT ),
+                              iRow - iMaxRow, 0 );
             iRow = iMaxRow;
             iCol = 0;
          }

@@ -154,14 +154,6 @@ Function Main( cAddress, cPort, cAppln, cParams, cDirectory )
 
 //----------------------------------------------------------------------//
 
-FUNCTION HB_GTSys()
-
-   REQUEST HB_GT_WVG_DEFAULT
-
-   RETURN nil
-
-//----------------------------------------------------------------------//
-
 STATIC FUNCTION ResolveParams( cAddress, cPort, cAppln, cParams, cDirectory )
    Local i, n, cLine, cVal, nLines, cTxt, cPath, cFile
    Local lFile := .f.
@@ -281,14 +273,20 @@ Function TrmServeServer( Socket, cAddress, cServerInfo )
    Hb_INetSend( Socket, "ARCONNECTED" + CR_LF )
    Hb_INetClose( Socket )
 
-   Wvt_SetTimer( TIMER_RECEIVE,   10 )
-   Wvt_SetTimer( TIMER_SEND   ,    1 )
-   Wvt_SetTimer( TIMER_CLOCK  , 5000 )
-   Wvt_SetTimer( TIMER_PING   , 3000 )
+// Wvt_SetTimer( TIMER_RECEIVE,   10 )
+// Wvt_SetTimer( TIMER_SEND   ,    1 )
+// Wvt_SetTimer( TIMER_CLOCK  , 5000 )
+// Wvt_SetTimer( TIMER_PING   , 3000 )
+
+   hb_threadStart( @Thread_Receive(), 0.01 )
+   hb_threadStart( @Thread_Send()   , 1 / 1000 )
+   hb_threadStart( @Thread_Ping()   , 3 )
+   hb_threadStart( @Thread_Clock()  , 5 )
 
    nSeconds := Seconds()
    do while .t.
-      Wvt_ProcessMessages()
+//    Wvt_ProcessMessages()
+      hb_idleSleep()
 
       nError := Hb_INetErrorCode( commSocket )
       if ascan( { -2, WSAECONNABORTED, 10054 }, nError ) > 0
@@ -296,10 +294,10 @@ Function TrmServeServer( Socket, cAddress, cServerInfo )
       endif
    enddo
 
-   Wvt_KillTimer( TIMER_RECEIVE )
-   Wvt_KillTimer( TIMER_SEND    )
-   Wvt_KillTimer( TIMER_CLOCK   )
-   Wvt_KillTimer( TIMER_PING    )
+// Wvt_KillTimer( TIMER_RECEIVE )
+// Wvt_KillTimer( TIMER_SEND    )
+// Wvt_KillTimer( TIMER_CLOCK   )
+// Wvt_KillTimer( TIMER_PING    )
 
    Return nil
 
@@ -339,7 +337,7 @@ Function TrmReceiveServer()
                   cEvn1 := substr( a_[ 2 ], b_[ 5 ]+1 )
                   cEvn  := hb_zuncompress( cEvn1, n )
 
-                  PUTSCREENATTRIB( b_[ 1 ], b_[ 2 ], b_[ 3 ], b_[ 4 ], cOdd, cEvn )
+                  RestScreen( b_[ 1 ], b_[ 2 ], b_[ 3 ], b_[ 4 ], CharMix( cOdd, cEvn ) )
 
                case cCommand == "CRS"
                   a_:= hb_aTokens( @cData, ";" )
@@ -398,6 +396,42 @@ Function WVT_TIMER( wParam )
    end
 
    Return 0
+
+STATIC PROCEDURE Thread_Receive( nWait )
+
+   DO WHILE .T.
+      TrmReceiveServer()
+      hb_idleSleep( nWait )
+   ENDDO
+
+   RETURN
+
+STATIC PROCEDURE Thread_Send( nWait )
+
+   DO WHILE .T.
+      inkey()
+      hb_idleSleep( nWait )
+   ENDDO
+
+   RETURN
+
+STATIC PROCEDURE Thread_Ping( nWait )
+
+   DO WHILE .T.
+      Keyboard( 1021 )
+      hb_idleSleep( nWait )
+   ENDDO
+
+   RETURN
+
+STATIC PROCEDURE Thread_Clock( nWait )
+
+   DO WHILE .T.
+      DispClock()
+      hb_idleSleep( nWait )
+   ENDDO
+
+   RETURN
 
 //----------------------------------------------------------------------//
 
@@ -574,6 +608,7 @@ Static Function uiXtos( xVar )
 //----------------------------------------------------------------------//
 
 Static Function TrmInitFont()
+   #define __JUSTGT__
    #ifdef __JUSTGT__
       /* set OEM font encoding for non unicode modes */
       hb_gtInfo( HB_GTI_CODEPAGE, 255 )

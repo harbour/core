@@ -128,14 +128,6 @@ FUNCTION Main( cServerInfo )
 
 //----------------------------------------------------------------------//
 
-FUNCTION HB_GTSys()
-
-   REQUEST HB_GT_WVG_DEFAULT
-
-   RETURN NIL
-
-//----------------------------------------------------------------------//
-
 FUNCTION App_DispClock()
 
    RETURN nil

@@ -62,8 +62,9 @@
 //----------------------------------------------------------------------//
 
 #include "common.ch"
-#include "wvtwin.ch"
 #include "terminal.ch"
+
+//#include "wvtwin.ch"
 
 //----------------------------------------------------------------------//
 
@@ -86,16 +87,17 @@
 
 //----------------------------------------------------------------------//
 
-STATIC srvrSocket
-STATIC commSocket
-STATIC lSendingClient := .f.
+STATIC s_srvrSocket
+STATIC s_commSocket
+STATIC s_lSendingClient := .F.
+STATIC s_mutexSend := hb_mutexCreate()
 
 Function RmtSvrInitialize( cServerInfo, nTimeoutClient, nTimeRefresh )
    Local lExit    := .t.
    Local nTimeOut := 50   // PICK FROM EXTERNASL SOURCE
 
-   srvrSocket := NIL
-   commSocket := NIL
+   s_srvrSocket := NIL
+   s_commSocket := NIL
 
    DEFAULT nTimeoutClient TO 60     // 60 SECONDS
    DEFAULT nTimeRefresh   TO .5     // 0.5 SECONDS
@@ -103,33 +105,37 @@ Function RmtSvrInitialize( cServerInfo, nTimeoutClient, nTimeRefresh )
    nTimeRefresh := 0.1
 
    if !empty( cServerInfo )
-      if RmtSvrInitAsServer( cServerInfo, @srvrSocket, nTimeOutClient*1000 )
+      if RmtSvrInitAsServer( cServerInfo, @s_srvrSocket, nTimeOutClient*1000 )
 
-         if RmtSvrAcceptClient( srvrSocket, @commSocket )
+         if RmtSvrAcceptClient( s_srvrSocket, @s_commSocket )
             // Very Important Factor   20-50   No more
             //
-            Hb_INetTimeout( commSocket, 10 )
+            Hb_INetTimeout( s_commSocket, 10 )
 
             lExit := .f.
 
             RmtSvrRunning( .t. )
 
-            Wvt_SetTimer( TIMER_RECEIVE, 50   )  // 50 ok   1/20 of a second
-            Wvt_SetTimer( TIMER_SEND   , nTimeRefresh*1000 )
-            Wvt_SetTimer( TIMER_PING   , 3000 )
+            hb_threadStart( @Thread_Receive(), 0.05 )
+            hb_threadStart( @Thread_Send()   , nTimeRefresh )
+            hb_threadStart( @Thread_Ping()   , 3 )
+
+//          Wvt_SetTimer( TIMER_RECEIVE, 50   )  // 50 ok   1/20 of a second
+//          Wvt_SetTimer( TIMER_SEND   , nTimeRefresh*1000 )
+//          Wvt_SetTimer( TIMER_PING   , 3000 )
          endif
       endif
    endif
 
    if lExit
-      if srvrSocket != NIL
-         if Hb_INetErrorCode( srvrSocket ) == 0
-            Hb_InetClose( srvrSocket )
+      if s_srvrSocket != NIL
+         if Hb_INetErrorCode( s_srvrSocket ) == 0
+            Hb_InetClose( s_srvrSocket )
          endif
       endif
-      if commSocket != NIL
-         if Hb_INetErrorCode( commSocket ) == 0
-            Hb_InetClose( commSocket )
+      if s_commSocket != NIL
+         if Hb_INetErrorCode( s_commSocket ) == 0
+            Hb_InetClose( s_commSocket )
          endif
       endif
 
@@ -206,8 +212,8 @@ Function RmtSvrSendClient( nMode, xData )
    n++
 
    if RmtSvrRunning()
-      if !( lSendingClient )
-         lSendingClient := .t.
+      if !( s_lSendingClient )
+         s_lSendingClient := .t.
 
          do case
          case nMode == SND_SCREEN
@@ -274,10 +280,10 @@ Function RmtSvrSendClient( nMode, xData )
          if len( cData ) > 0
             cData        += ENDBLOCK
             nBytesToSend := len( cData )
-            nBytesSent   := hb_INetSendAll( commSocket, cData, nBytesToSend )
+            nBytesSent   := hb_INetSendAll( s_commSocket, cData, nBytesToSend )
 
             if nBytesSent <> nBytesToSend
-               nError := hb_INetErrorCode( commSocket )
+               nError := hb_INetErrorCode( s_commSocket )
 TrmDebug( n,'E','VouchServer - SvrSendClient : ', nError, nBytesSent, nBytesToSend )
 
                do case
@@ -292,7 +298,7 @@ TrmDebug( n,'Q','VouchServer - SvrSendClient : ', nError, nBytesSent, nBytesToSe
             endif
          endif
 
-         lSendingClient := .f.
+         s_lSendingClient := .f.
       endif
    endif
 
@@ -306,20 +312,20 @@ Static Function RmtSvrReceiveClient()
    static lInProcess := .f.
 
    if !lInProcess
-      if hb_INetDataReady( commSocket ) > 0
+      if hb_INetDataReady( s_commSocket ) > 0
          lInProcess := .t.
 
-         cKey := hb_INetRecvLine( commSocket, @nBytes )
+         cKey := hb_INetRecvLine( s_commSocket, @nBytes )
 
          if nBytes > 0
-            Wvt_Keyboard( val( cKey ) )
+            hb_KeyPut( cKey )
 
          elseif nBytes == 1
 
          else
-            nError := hb_INetErrorCode( commSocket )
+            nError := hb_INetErrorCode( s_commSocket )
             if ascan( { -2, WSAECONNABORTED, WSAECONNRESET }, nError ) > 0
-TrmDebug( 'VouchAsServer - Quitting : Error =', hb_INetErrorCode( commSocket ), 'nBytes =', nBytes )
+TrmDebug( 'VouchAsServer - Quitting : Error =', hb_INetErrorCode( s_commSocket ), 'nBytes =', nBytes )
                DbCloseAll()
                Quit
             endif
@@ -347,14 +353,45 @@ Function Wvt_Timer( wParam )
       exit
 
    case TIMER_PING
-      if !( lSendingClient )
-         hb_INetSendAll( commSocket, ENDBLOCK )
+      if !( s_lSendingClient )
+         hb_INetSendAll( s_commSocket, ENDBLOCK )
       endif
       exit
 
    end
 
    Return ( 0 )
+
+STATIC PROCEDURE Thread_Receive( nWait )
+
+   DO WHILE .T.
+      RmtSvrReceiveClient()
+      hb_idleSleep( nWait )
+   ENDDO
+
+   RETURN
+
+STATIC PROCEDURE Thread_Send( nWait )
+
+   DO WHILE .T.
+      hb_mutexLock( s_mutexSend )
+      RmtSvrSendClient( 1, NIL )
+      hb_mutexUnlock( s_mutexSend )
+      hb_idleSleep( nWait )
+   ENDDO
+
+   RETURN
+
+STATIC PROCEDURE Thread_Ping( nWait )
+
+   DO WHILE .T.
+      hb_mutexLock( s_mutexSend )
+      hb_INetSendAll( s_commSocket, ENDBLOCK )
+      hb_mutexUnlock( s_mutexSend )
+      hb_idleSleep( nWait )
+   ENDDO
+
+   RETURN
 
 //----------------------------------------------------------------------//
 
@@ -443,7 +480,9 @@ Function TrmDebug( p1,p2,p3,p4,p5,p6,p7,p8,p9,p10 )
       cDebug += '   ' + TrmXtoS( p10 )
    endif
 
+#if defined( __PLATFORM__WINDOWS )
    wapi_OutputDebugString( cDebug )
+#endif
 
    Return nil
 
@@ -479,3 +518,9 @@ Function TrmDummy()
    Return nil
 
 //----------------------------------------------------------------------//
+
+STATIC PROCEDURE GETSCREENATTRIB( nT, nL, nB, nR, cOdd, cEvn )
+   LOCAL s := SaveScreen( nT, nL, nB, nR )
+   cOdd := CharOdd( s )
+   cEvn := CharEven( s )
+   RETURN

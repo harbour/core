@@ -287,7 +287,12 @@ PROCEDURE ServeClient( Socket )
 
 Function SvrExecuteApp( cAppln, cParams, cDirectory )
 
+#if defined( __PLATFORM__WINDOWS )
    RETURN wapi_ShellExecute( NIL, "open", cAppln, cParams, cDirectory )
+#else
+   HB_SYMBOL_UNUSED( cDirectory )
+   RETURN hb_run( cAppln + " " + cParams )
+#endif
 
 //----------------------------------------------------------------------//
 //
@@ -416,7 +421,9 @@ Function uiDebug( p1,p2,p3,p4,p5,p6,p7,p8,p9,p10 )
       cDebug += '   ' + uiXtos( p10 )
    endif
 
+#if defined( __PLATFORM__WINDOWS )
    wapi_OutputDebugString( cDebug )
+#endif
 
    Return nil
 
@@ -445,9 +452,3 @@ Function uiXtos( xVar )
    endcase
 
    Return cVar
-
-//----------------------------------------------------------------------//
-
-Function HB_GTSYS()
-   REQUEST HB_GT_WVG_DEFAULT
-   Return nil
