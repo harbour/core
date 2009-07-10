@@ -96,65 +96,65 @@ void hb_gtWPos( HB_GT_WND * wnd, HB_GT_RECT * rect )
    HB_SYMBOL_UNUSED( rect );
 }
 
-BOOL hb_gtWVis( HB_GT_WND * wnd, USHORT uiStatus )
+BOOL hb_gtWVis( HB_GT_WND * wnd, int iStatus ) /* USHORT in CA-Cl*pper [vszakats] */
 {
    /* TODO: */
 
    HB_SYMBOL_UNUSED( wnd );
-   HB_SYMBOL_UNUSED( uiStatus );
+   HB_SYMBOL_UNUSED( iStatus );
 
    return FALSE;
 }
 
-USHORT hb_gtSLR( HB_GT_SLR * pSLR ) /* System Level Request */
+HB_ERRCODE hb_gtSLR( HB_GT_SLR * pSLR ) /* System Level Request */
 {
    /* Do nothing in Harbour, since the low-level GT API is
       implemented with a different method than in CA-Cl*pper. */
 
    HB_SYMBOL_UNUSED( pSLR );
 
-   return 1;
+   return HB_FAILURE;
 }
 
-USHORT hb_gtModalRead( void * dummy )
+HB_ERRCODE hb_gtModalRead( void * dummy )
 {
    /* TODO: */
 
    HB_SYMBOL_UNUSED( dummy );
 
-   return 1;
+   return HB_FAILURE;
 }
 
-USHORT hb_gtFlushCursor( void )
+HB_ERRCODE hb_gtFlushCursor( void )
 {
    /* TODO: */
 
-   return 1;
+   return HB_FAILURE;
 }
 
-USHORT hb_gtSetColor( HB_GT_RGB * color )
-{
-   /* TODO: */
-
-   HB_SYMBOL_UNUSED( color );
-
-   return 1;
-}
-
-USHORT hb_gtGetColor( HB_GT_RGB * color )
+HB_ERRCODE hb_gtSetColor( HB_GT_RGB * color )
 {
    /* TODO: */
 
    HB_SYMBOL_UNUSED( color );
 
-   return 1;
+   return HB_FAILURE;
 }
 
-USHORT hb_gtSetBorder( HB_GT_RGB * color )
+HB_ERRCODE hb_gtGetColor( HB_GT_RGB * color )
 {
    /* TODO: */
 
    HB_SYMBOL_UNUSED( color );
 
-   return 1;
+   return HB_FAILURE;
+}
+
+HB_ERRCODE hb_gtSetBorder( HB_GT_RGB * color )
+{
+   /* TODO: */
+
+   HB_SYMBOL_UNUSED( color );
+
+   return HB_FAILURE;
 }

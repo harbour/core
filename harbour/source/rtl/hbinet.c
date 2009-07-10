@@ -1663,10 +1663,10 @@ HB_FUNC( HB_INETSERVER )
    /* Reusable socket; under unix, do not wait it is unused */
    setsockopt( Socket->com, SOL_SOCKET, SO_REUSEADDR, ( const char * ) &iOpt, sizeof( iOpt ) );
 
-   iPort  = htons( hb_parni( 1 ) );
+   iPort  = htons( ( hbU16 ) hb_parni( 1 ) );
 
    Socket->remote.sin_family = AF_INET;
-   Socket->remote.sin_port = iPort;
+   Socket->remote.sin_port = ( hbU16 ) iPort;
 
    szAddress = hb_parc( 2 );
    Socket->remote.sin_addr.s_addr = szAddress ? inet_addr( szAddress ) : INADDR_ANY;
@@ -1825,10 +1825,10 @@ HB_FUNC( HB_INETCONNECT )
       }
       else
       {
-         iPort = htons( hb_parni( 2 ) );
+         iPort = htons( ( hbU16 ) hb_parni( 2 ) );
 
          Socket->remote.sin_family = AF_INET;
-         Socket->remote.sin_port= iPort;
+         Socket->remote.sin_port = ( hbU16 ) iPort;
          Socket->remote.sin_addr.s_addr = ( * ( UINT * ) Host->h_addr_list[ 0 ] );
 
          hb_socketConnect( Socket );
@@ -1882,10 +1882,10 @@ HB_FUNC( HB_INETCONNECTIP )
    }
    else
    {
-      iPort = htons( iPort );
+      iPort = htons( ( hbU16 ) iPort );
 
       Socket->remote.sin_family = AF_INET;
-      Socket->remote.sin_port = iPort;
+      Socket->remote.sin_port = ( hbU16 ) iPort;
       Socket->remote.sin_addr.s_addr = inet_addr( szHost );
 
       hb_socketConnect( Socket );
@@ -1943,10 +1943,10 @@ HB_FUNC( HB_INETDGRAMBIND )
    }
 
    /* Binding here */
-   iPort = htons( iPort );
+   iPort = htons( ( hbU16 ) iPort );
 
    Socket->remote.sin_family = AF_INET;
-   Socket->remote.sin_port = iPort;
+   Socket->remote.sin_port = ( hbU16 ) iPort;
 
    szAddress = hb_parc( 2 );
    Socket->remote.sin_addr.s_addr = szAddress ? inet_addr( szAddress ) : INADDR_ANY;
@@ -2055,7 +2055,7 @@ HB_FUNC( HB_INETDGRAMSEND )
    }
 
    Socket->remote.sin_family = AF_INET;
-   Socket->remote.sin_port = htons( iPort );
+   Socket->remote.sin_port = htons( ( hbU16 ) iPort );
    Socket->remote.sin_addr.s_addr = inet_addr( szAddress );
    szBuffer = hb_itemGetCPtr( pBuffer );
 
