@@ -173,38 +173,42 @@ End
 
 HB_FUNC( FT_SAVEATT )
 {
-   USHORT uiTop    = ( USHORT ) hb_parni( 1 ); /* Defaults to zero on bad type */
-   USHORT uiLeft   = ( USHORT ) hb_parni( 2 ); /* Defaults to zero on bad type */
-   USHORT uiMaxRow = hb_gtMaxRow();
-   USHORT uiMaxCol = hb_gtMaxCol();
-   USHORT uiBottom = HB_ISNUM( 3 ) ? ( USHORT ) hb_parni( 3 ) : uiMaxRow;
-   USHORT uiRight  = HB_ISNUM( 4 ) ? ( USHORT ) hb_parni( 4 ) : uiMaxRow;
+   int iTop    = hb_parni( 1 ); /* Defaults to zero on bad type */
+   int iLeft   = hb_parni( 2 ); /* Defaults to zero on bad type */
+   int iMaxRow = hb_gtMaxRow();
+   int iMaxCol = hb_gtMaxCol();
+   int iBottom = HB_ISNUM( 3 ) ? hb_parni( 3 ) : iMaxRow;
+   int iRight  = HB_ISNUM( 4 ) ? hb_parni( 4 ) : iMaxRow;
 
    ULONG  ulSize;
    char * pBuffer;
    char * pAttrib;
 
-   if( uiBottom > uiMaxRow )
-      uiBottom = uiMaxRow;
-   if( uiRight > uiMaxCol )
-      uiRight = uiMaxCol;
+   if( iTop < 0 )
+      iTop = 0;
+   if( iLeft < 0 )
+      iLeft = 0;
+   if( iBottom > iMaxRow )
+      iBottom = iMaxRow;
+   if( iRight > iMaxCol )
+      iRight = iMaxCol;
 
-   if( uiTop <= uiBottom && uiLeft <= uiRight )
+   if( iTop <= iBottom && iLeft <= iRight )
    {
-      ulSize = ( uiBottom - uiTop + 1 ) * ( uiRight - uiLeft + 1 );
+      ulSize = ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
       pBuffer = pAttrib = ( char * ) hb_xgrab( ulSize + 1 );
-      while( uiTop <= uiBottom )
+      while( iTop <= iBottom )
       {
-         USHORT uiCol = uiLeft;
-         while( uiCol <= uiRight )
+         int iCol = iLeft;
+         while( iCol <= iRight )
          {
             BYTE bColor, bAttr;
             USHORT usChar;
-            hb_gtGetChar( uiTop, uiCol, &bColor, &bAttr, &usChar );
+            hb_gtGetChar( iTop, iCol, &bColor, &bAttr, &usChar );
             *pBuffer++ = ( char ) bColor;
-            ++uiCol;
+            ++iCol;
          }
-         ++uiTop;
+         ++iTop;
       }
       hb_retclen_buffer( pAttrib, ulSize );
    }
@@ -386,35 +390,39 @@ HB_FUNC( FT_RESTATT )
    ULONG ulLen = hb_parclen( 5 );
    if( ulLen )
    {
-      USHORT uiTop    = ( USHORT ) hb_parni( 1 ); /* Defaults to zero on bad type */
-      USHORT uiLeft   = ( USHORT ) hb_parni( 2 ); /* Defaults to zero on bad type */
-      USHORT uiMaxRow = hb_gtMaxRow();
-      USHORT uiMaxCol = hb_gtMaxCol();
-      USHORT uiBottom = HB_ISNUM( 3 ) ? ( USHORT ) hb_parni( 3 ) : hb_gtMaxRow();
-      USHORT uiRight  = HB_ISNUM( 4 ) ? ( USHORT ) hb_parni( 4 ) : hb_gtMaxCol();
+      int iTop    = hb_parni( 1 ); /* Defaults to zero on bad type */
+      int iLeft   = hb_parni( 2 ); /* Defaults to zero on bad type */
+      int iMaxRow = hb_gtMaxRow();
+      int iMaxCol = hb_gtMaxCol();
+      int iBottom = HB_ISNUM( 3 ) ? hb_parni( 3 ) : iMaxRow;
+      int iRight  = HB_ISNUM( 4 ) ? hb_parni( 4 ) : iMaxCol;
       const char * pAttrib  = hb_parc( 5 );
 
-      if( uiBottom > uiMaxRow )
-         uiBottom = uiMaxRow;
-      if( uiRight > uiMaxCol )
-         uiRight = uiMaxCol;
+      if( iTop < 0 )
+         iTop = 0;
+      if( iLeft < 0 )
+         iLeft = 0;
+      if( iBottom > iMaxRow )
+         iBottom = iMaxRow;
+      if( iRight > iMaxCol )
+         iRight = iMaxCol;
 
-      if( uiTop <= uiBottom && uiLeft <= uiRight )
+      if( iTop <= iBottom && iLeft <= iRight )
       {
-         while( ulLen && uiTop <= uiBottom)
+         while( ulLen && iTop <= iBottom)
          {
-            USHORT uiCol = uiLeft;
-            while( ulLen && uiCol <= uiRight )
+            int iCol = iLeft;
+            while( ulLen && iCol <= iRight )
             {
                BYTE bColor, bAttr;
                USHORT usChar;
-               hb_gtGetChar( uiTop, uiCol, &bColor, &bAttr, &usChar );
+               hb_gtGetChar( iTop, iCol, &bColor, &bAttr, &usChar );
                bColor = *pAttrib++;
-               hb_gtPutChar( uiTop, uiCol, bColor, bAttr, usChar );
-               ++uiCol;
+               hb_gtPutChar( iTop, iCol, bColor, bAttr, usChar );
+               ++iCol;
                --ulLen;
             }
-            ++uiTop;
+            ++iTop;
          }
       }
    }

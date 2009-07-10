@@ -453,11 +453,7 @@ HB_ERRCODE hb_gtGetPos( int * piRow, int * piCol )
    pGT = hb_gt_Base();
    if( pGT )
    {
-      int iRow, iCol;
-
-      HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
-      *piRow = iRow;
-      *piCol = iCol;
+      HB_GTSELF_GETPOS( pGT, piRow, piCol );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
    }
@@ -589,17 +585,17 @@ BOOL hb_gtIsColor( void )
    return fColor;
 }
 
-HB_ERRCODE hb_gtRepChar( int iRow, int iCol, USHORT usChar, USHORT uiCount )
+HB_ERRCODE hb_gtRepChar( int iRow, int iCol, USHORT usChar, ULONG ulCount )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtRepChar(%d, %d, %hu, %hu)", iRow, iCol, usChar, uiCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtRepChar(%d, %d, %hu, %lu)", iRow, iCol, usChar, ulCount));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
       HB_GTSELF_REPLICATE( pGT, iRow, iCol, HB_GTSELF_GETCOLOR( pGT ), 0,
-                           usChar, uiCount );
+                           usChar, ulCount );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
@@ -760,8 +756,7 @@ HB_ERRCODE hb_gtSetMode( int iRows, int iCols )
 }
 
 HB_ERRCODE hb_gtPutText( int iRow, int iCol,
-                         const char * szStr, ULONG ulLength,
-                         int iColor )
+                         const char * szStr, ULONG ulLength, int iColor )
 {
    PHB_GT pGT;
 
@@ -835,19 +830,17 @@ HB_ERRCODE hb_gtWriteCon( const char * szStr, ULONG ulLength )
 
 HB_ERRCODE hb_gtScroll( int iTop, int iLeft, int iBottom, int iRight, int iRows, int iCols )
 {
+   PHB_GT pGT;
    HB_TRACE(HB_TR_DEBUG, ("hb_gtScroll(%d, %d, %d, %d, %d, %d)", iTop, iLeft, iBottom, iRight, iRows, iCols));
 
-   if( iTop <= iBottom && iLeft <= iRight )
+   pGT = hb_gt_Base();
+   if( pGT )
    {
-      PHB_GT pGT = hb_gt_Base();
-      if( pGT )
-      {
-         HB_GTSELF_SCROLL( pGT, iTop, iLeft, iBottom, iRight,
-                           HB_GTSELF_GETCOLOR( pGT ), ' ', iRows, iCols );
-         HB_GTSELF_FLUSH( pGT );
-         hb_gt_BaseFree( pGT );
-         return HB_SUCCESS;
-      }
+      HB_GTSELF_SCROLL( pGT, iTop, iLeft, iBottom, iRight,
+                        HB_GTSELF_GETCOLOR( pGT ), ' ', iRows, iCols );
+      HB_GTSELF_FLUSH( pGT );
+      hb_gt_BaseFree( pGT );
+      return HB_SUCCESS;
    }
    return HB_FAILURE;
 }
@@ -1241,7 +1234,7 @@ HB_ERRCODE hb_gtGetPosEx( int * piRow, int * piCol )
 
 HB_ERRCODE hb_gtScrollEx( int iTop, int iLeft, int iBottom, int iRight, int iColor, int iChar, int iRows, int iCols )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtScrollEx(%d, %d, %d, %d, %d, %hd, %d, %d)", iTop, iLeft, iBottom, iRight, iColor, iChar, iRows, iCols));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtScrollEx(%d, %d, %d, %d, %d, %d, %d, %d)", iTop, iLeft, iBottom, iRight, iColor, iChar, iRows, iCols));
 
    if( iTop <= iBottom && iLeft <= iRight )
    {

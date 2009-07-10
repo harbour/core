@@ -643,7 +643,7 @@ static int hb_gt_dos_mouse_StorageSize( PHB_GT pGT )
    return iSize;
 }
 
-static void hb_gt_dos_mouse_SaveState( PHB_GT pGT, char * pBuffer )
+static void hb_gt_dos_mouse_SaveState( PHB_GT pGT, void * pBuffer )
 {
    if( s_fMousePresent )
    {
@@ -676,11 +676,11 @@ static void hb_gt_dos_mouse_SaveState( PHB_GT pGT, char * pBuffer )
       sregs.es = FP_SEG( pBuffer );
       HB_DOS_INT86X( 0x33, &regs, &regs, &sregs );
 #endif
-      pBuffer[ s_iMouseStorageSize ] = HB_GTSELF_MOUSEGETCURSOR( pGT ) ? 1 : 0;
+      ( ( BYTE * ) pBuffer )[ s_iMouseStorageSize ] = HB_GTSELF_MOUSEGETCURSOR( pGT ) ? 1 : 0;
    }
 }
 
-static void hb_gt_dos_mouse_RestoreState( PHB_GT pGT, const char * pBuffer )
+static void hb_gt_dos_mouse_RestoreState( PHB_GT pGT, const void * pBuffer )
 {
    if( s_fMousePresent )
    {
@@ -695,7 +695,7 @@ static void hb_gt_dos_mouse_RestoreState( PHB_GT pGT, const char * pBuffer )
        * because the real mouse cursor state will be also recovered
        * by status restoring
        */
-      HB_GTSELF_MOUSESETCURSOR( pGT, pBuffer[ s_iMouseStorageSize ] );
+      HB_GTSELF_MOUSESETCURSOR( pGT, ( ( BYTE * ) pBuffer )[ s_iMouseStorageSize ] );
 
 #if defined( __DJGPP__ )
 {

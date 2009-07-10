@@ -967,12 +967,13 @@ static long hb_gt_def_RectSize( PHB_GT pGT, int iTop, int iLeft, int iBottom, in
 static void hb_gt_def_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
                             void * pBuffer )
 {
+   BYTE * pbyBuffer = ( BYTE * ) pBuffer;
+
    while( iTop <= iBottom )
    {
       BYTE bColor, bAttr;
       USHORT usChar;
       int iCol;
-      BYTE * pbyBuffer = ( BYTE * ) pBuffer;
 
       for( iCol = iLeft; iCol <= iRight; ++iCol )
       {
@@ -1002,12 +1003,13 @@ static void hb_gt_def_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
 static void hb_gt_def_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
                             const void * pBuffer )
 {
+   const BYTE * pbyBuffer = ( const BYTE * ) pBuffer;
+
    while( iTop <= iBottom )
    {
       BYTE bColor, bAttr;
       USHORT usChar;
       int iCol;
-      BYTE * pbyBuffer = ( BYTE * ) pBuffer;
 
       for( iCol = iLeft; iCol <= iRight; ++iCol )
       {
@@ -2705,7 +2707,7 @@ static void hb_gt_def_mouseSaveState( PHB_GT pGT, void * pBuffer )
 
 static void hb_gt_def_mouseRestoreState( PHB_GT pGT, const void * pBuffer )
 {
-   _HB_MOUSE_STORAGE * pStore = ( _HB_MOUSE_STORAGE * ) pBuffer;
+   const _HB_MOUSE_STORAGE * pStore = ( const _HB_MOUSE_STORAGE * ) pBuffer;
 
    HB_GTSELF_MOUSESETBOUNDS( pGT, pStore->iTop, pStore->iLeft, pStore->iBottom, pStore->iRight );
    HB_GTSELF_MOUSESETPOS( pGT, pStore->iRow, pStore->iCol );

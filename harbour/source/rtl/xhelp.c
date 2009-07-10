@@ -65,18 +65,18 @@ HB_FUNC( __XHELP )
    {
       /* NOTE: push the existing params after the dyn symbol. [awhite] */
 
-      USHORT uiPCount = ( USHORT ) hb_pcount();
-      USHORT uiParam;
+      int iPCount = hb_pcount();
+      int iParam;
 
       hb_vmPushDynSym( s_pDynSym );
       hb_vmPushNil();
       /* CA-Cl*pper respects references so hb_stackItemFromBase() is
        * used instead of hb_param() [druzus]
        */
-      for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_stackItemFromBase( uiParam ) );
+      for( iParam = 1; iParam <= iPCount; iParam++ )
+         hb_vmPush( hb_stackItemFromBase( iParam ) );
 
-      hb_vmProc( uiPCount );
+      hb_vmProc( iPCount );
       /* NOTE: Leave the return value as it is. */
    }
 }

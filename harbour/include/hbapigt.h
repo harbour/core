@@ -194,8 +194,8 @@ extern HB_EXPORT HB_ERRCODE hb_gtPreExt( void );
 extern HB_EXPORT HB_ERRCODE hb_gtSuspend( void ); /* prepare the reminal for shell output */
 extern HB_EXPORT HB_ERRCODE hb_gtResume( void ); /* resume the terminal after the shell output */
 extern HB_EXPORT int        hb_gtReadKey( int iEventMask );
-extern HB_EXPORT HB_ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, ULONG * puiBuffSize );
-extern HB_EXPORT HB_ERRCODE hb_gtRepChar( int iRow, int iCol, USHORT usChar, USHORT uiCount );
+extern HB_EXPORT HB_ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, ULONG * pulBuffSize );
+extern HB_EXPORT HB_ERRCODE hb_gtRepChar( int iRow, int iCol, USHORT usChar, ULONG ulCount );
 extern HB_EXPORT HB_ERRCODE hb_gtSave( int iTop, int iLeft, int iBottom, int iRight, void * pScrBuff );
 extern HB_EXPORT HB_ERRCODE hb_gtRest( int iTop, int iLeft, int iBottom, int iRight, const void * pScrBuff );
 extern HB_EXPORT HB_ERRCODE hb_gtGetChar( int iRow, int iCol, BYTE * pbColor, BYTE * pbAttr, USHORT * pusChar );
@@ -204,7 +204,7 @@ extern HB_EXPORT HB_ERRCODE hb_gtBeginWrite( void );
 extern HB_EXPORT HB_ERRCODE hb_gtEndWrite( void );
 extern HB_EXPORT HB_ERRCODE hb_gtScrDim( int * piHeight, int * piWidth );
 extern HB_EXPORT HB_ERRCODE hb_gtScroll( int iTop, int iLeft, int iBottom, int iRight, int iRows, int iCols );
-extern HB_EXPORT HB_ERRCODE hb_gtScrollUp( int uiRows );
+extern HB_EXPORT HB_ERRCODE hb_gtScrollUp( int iRows );
 extern HB_EXPORT HB_ERRCODE hb_gtSetAttribute( int iTop, int iLeft, int iBottom, int iRight, BYTE byAttr );
 extern HB_EXPORT HB_ERRCODE hb_gtSetBlink( BOOL bBlink );
 extern HB_EXPORT HB_ERRCODE hb_gtSetColorStr( const char * pszColorString );

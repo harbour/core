@@ -3408,7 +3408,7 @@ static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char *szData, ULONG ulS
       else
       {
          const char * cMsg = "Cannot set primary selection\r\n";
-         HB_GTSELF_OUTERR( wnd->pGT, ( BYTE * ) cMsg, strlen( cMsg ) );
+         HB_GTSELF_OUTERR( wnd->pGT, cMsg, strlen( cMsg ) );
       }
    }
 

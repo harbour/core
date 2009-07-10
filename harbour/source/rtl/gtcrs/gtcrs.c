@@ -1374,7 +1374,7 @@ static void gt_ttyrestore( InOutBase * ioBase )
       tcsetattr( ioBase->base_infd, TCSANOW, &ioBase->saved_TIO );
 }
 
-static void gt_outstr( InOutBase * ioBase, int fd, const unsigned char *str,
+static void gt_outstr( InOutBase * ioBase, int fd, const char *str,
                        int len )
 {
    unsigned char *buf, c;
@@ -1398,14 +1398,14 @@ static void gt_outstr( InOutBase * ioBase, int fd, const unsigned char *str,
       write( fd, str, len );
 }
 
-static void gt_outstd( InOutBase * ioBase, unsigned const char *str, int len )
+static void gt_outstd( InOutBase * ioBase, const char *str, int len )
 {
    gt_outstr( ioBase, ioBase->stdoutfd, str, len );
 }
 
 static void gt_outerr( InOutBase * ioBase, const char *str, int len )
 {
-   gt_outstr( ioBase, ioBase->stderrfd, ( unsigned char * ) str, len );
+   gt_outstr( ioBase, ioBase->stderrfd, str, len );
 }
 
 static char *tiGetS( const char *capname )
@@ -2572,7 +2572,7 @@ static void hb_gt_crs_OutStd( PHB_GT pGT, const char * szStr, ULONG ulLen )
       if( s_ioBase->stdoutfd == -1 )
          HB_GTSELF_WRITECON( pGT, szStr, ulLen );
       else
-         gt_outstd( s_ioBase, ( const unsigned char * ) szStr, ulLen );
+         gt_outstd( s_ioBase, szStr, ulLen );
    }
    else
       HB_GTSUPER_OUTSTD( pGT, szStr, ulLen );
@@ -2588,7 +2588,7 @@ static void hb_gt_crs_OutErr( PHB_GT pGT, const char * szStr, ULONG ulLen )
       if( s_ioBase->stderrfd == -1 )
          HB_GTSELF_WRITECON( pGT, szStr, ulLen );
       else
-         gt_outerr( s_ioBase, ( const unsigned char * ) szStr, ulLen );
+         gt_outerr( s_ioBase, szStr, ulLen );
    }
    else
       HB_GTSUPER_OUTERR( pGT, szStr, ulLen );

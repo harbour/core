@@ -286,61 +286,58 @@ static char * hb_itemStringCon( PHB_ITEM pItem, ULONG * pulLen, BOOL * pfFreeReq
 
 HB_FUNC( OUTSTD ) /* writes a list of values to the standard output device */
 {
-   USHORT uiPCount = ( USHORT ) hb_pcount();
-   USHORT uiParam;
+   int iPCount = hb_pcount(), iParam;
    char * pszString;
    ULONG ulLen;
    BOOL fFree;
 
-   for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
+   for( iParam = 1; iParam <= iPCount; iParam++ )
    {
-      pszString = hb_itemString( hb_param( uiParam, HB_IT_ANY ), &ulLen, &fFree );
+      if( iParam > 1 )
+         hb_conOutAlt( " ", 1 );
+      pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &ulLen, &fFree );
       if( ulLen )
          hb_conOutStd( pszString, ulLen );
       if( fFree )
          hb_xfree( pszString );
-      if( uiParam < uiPCount )
-         hb_conOutStd( " ", 1 );
    }
 }
 
 HB_FUNC( OUTERR ) /* writes a list of values to the standard error device */
 {
-   USHORT uiPCount = ( USHORT ) hb_pcount();
-   USHORT uiParam;
+   int iPCount = hb_pcount(), iParam;
    char * pszString;
    ULONG ulLen;
    BOOL fFree;
 
-   for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
+   for( iParam = 1; iParam <= iPCount; iParam++ )
    {
-      pszString = hb_itemString( hb_param( uiParam, HB_IT_ANY ), &ulLen, &fFree );
+      if( iParam > 1 )
+         hb_conOutAlt( " ", 1 );
+      pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &ulLen, &fFree );
       if( ulLen )
          hb_conOutErr( pszString, ulLen );
       if( fFree )
          hb_xfree( pszString );
-      if( uiParam < uiPCount )
-         hb_conOutErr( " ", 1 );
    }
 }
 
 HB_FUNC( QQOUT ) /* writes a list of values to the current device (screen or printer) and is affected by SET ALTERNATE */
 {
-   USHORT uiPCount = ( USHORT ) hb_pcount();
-   USHORT uiParam;
+   int iPCount = hb_pcount(), iParam;
    char * pszString;
    ULONG ulLen;
    BOOL fFree;
 
-   for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
+   for( iParam = 1; iParam <= iPCount; iParam++ )
    {
-      pszString = hb_itemString( hb_param( uiParam, HB_IT_ANY ), &ulLen, &fFree );
+      if( iParam > 1 )
+         hb_conOutAlt( " ", 1 );
+      pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &ulLen, &fFree );
       if( ulLen )
          hb_conOutAlt( pszString, ulLen );
       if( fFree )
          hb_xfree( pszString );
-      if( uiParam < uiPCount )
-         hb_conOutAlt( " ", 1 );
    }
 }
 
@@ -468,7 +465,7 @@ static void hb_conDevPos( int iRow, int iCol )
          }
 
          if( iPtr )
-            hb_fsWrite( hFile, buf, ( SHORT ) iPtr );
+            hb_fsWrite( hFile, buf, ( USHORT ) iPtr );
       }
    }
    else
@@ -625,8 +622,8 @@ HB_FUNC( HB_DISPOUTAT )
    so we can use it to draw graphical elements. */
 HB_FUNC( HB_DISPOUTATBOX )
 {
-   int nRow = hb_parni( 1 );
-   int nCol = hb_parni( 2 );
+   int iRow = hb_parni( 1 );
+   int iCol = hb_parni( 2 );
    const char * pszString = hb_parcx( 3 );
    ULONG nStringLen = hb_parclen( 3 );
    int iColor;
@@ -639,7 +636,7 @@ HB_FUNC( HB_DISPOUTATBOX )
       iColor = hb_gtGetCurrColor();
 
    while( nStringLen-- )
-      hb_gtPutChar( nRow, nCol++, ( BYTE ) iColor, HB_GT_ATTR_BOX, ( USHORT ) *pszString++ );
+      hb_gtPutChar( iRow, iCol++, ( BYTE ) iColor, HB_GT_ATTR_BOX, ( unsigned char ) *pszString++ );
 }
 
 HB_FUNC( HB_GETSTDIN ) /* Return handle for STDIN */

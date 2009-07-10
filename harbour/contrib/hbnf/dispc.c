@@ -357,7 +357,7 @@ static void disp_update(int offset)
         line   += 1;
         offset += 2;
     }
-    hb_gtRest( ( SHORT ) sline, ( SHORT ) scol, ( SHORT ) eline, ( SHORT ) ecol, vseg );
+    hb_gtRest( sline, scol, eline, ecol, vseg );
 }
 
 
@@ -557,7 +557,7 @@ HB_FUNC( _FT_DFINIT )
     hb_gtRectSize( sline, scol, eline, ecol, &ulSize );
     vseg = (char * ) hb_xalloc( ulSize );
     if (vseg != NULL)
-       hb_gtSave( ( SHORT ) sline, ( SHORT ) scol, ( SHORT ) eline, ( SHORT ) ecol, vseg );
+       hb_gtSave( sline, scol, eline, ecol, vseg );
 
     maxlin   = hb_parni(12);
     buffsize = hb_parni(13);                  /* yes - load value */
@@ -643,7 +643,7 @@ HB_FUNC( _FT_DFINIT )
         for (i = 1; i < j; i++)
             linedown();
 
-        hb_gtRest( ( SHORT ) sline, ( SHORT ) scol, ( SHORT ) eline, ( SHORT ) ecol, vseg );
+        hb_gtRest( sline, scol, eline, ecol, vseg );
 
     }
 
@@ -740,7 +740,7 @@ HB_FUNC( FT_DISPFILE )
         for (i = 0; i < height; i++)
             chattr(0, i, width, norm);
 
-        hb_gtRest( ( SHORT ) sline, ( SHORT ) scol, ( SHORT ) eline, ( SHORT ) ecol, vseg );
+        hb_gtRest( sline, scol, eline, ecol, vseg );
 
             /* main processing loop -- terminated by user key press */
 
@@ -749,16 +749,16 @@ HB_FUNC( FT_DISPFILE )
             if ( refresh == YES )           /* redraw window contents? */
                 disp_update(wintop);
 
-                hb_gtRest( ( SHORT ) sline, ( SHORT ) scol, ( SHORT ) eline, ( SHORT ) ecol, vseg );
+                hb_gtRest( sline, scol, eline, ecol, vseg );
 
                 /* if not browse, highlight the current line */
 
             if ( brows == NO )
                 chattr(0, winrow - sline, width, hlight);
 
-            hb_gtRest( ( SHORT ) sline, ( SHORT ) scol, ( SHORT ) eline, ( SHORT ) ecol, vseg );
+            hb_gtRest( sline, scol, eline, ecol, vseg );
 
-            hb_gtSetPos( ( SHORT ) winrow, ( SHORT ) scol );
+            hb_gtSetPos( winrow, scol );
 
             ch = keyin();                   /* get user key press */
 
@@ -767,7 +767,7 @@ HB_FUNC( FT_DISPFILE )
             if ( brows == NO )
                 chattr(0, winrow - sline, width, norm);
 
-            hb_gtRest( ( SHORT ) sline, ( SHORT ) scol, ( SHORT ) eline, ( SHORT ) ecol, vseg );
+            hb_gtRest( sline, scol, eline, ecol, vseg );
 
                 /* figure out what the user wants to do */
 

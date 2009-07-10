@@ -150,7 +150,7 @@ HB_FUNC( MSAVESTATE )
 
 HB_FUNC( MRESTSTATE )
 {
-   if( HB_ISCHAR( 1 ) && hb_parclen( 1 ) == ( ULONG ) hb_mouseStorageSize() )
+   if( hb_parclen( 1 ) == ( ULONG ) hb_mouseStorageSize() )
       hb_mouseRestoreState( hb_parc( 1 ) );
 }
 
