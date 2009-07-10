@@ -5,7 +5,6 @@
 # To build hbmake, type: 'hbmk2 hbmake.hbp'
 
 hbmake.prg
-hbmakec.c
 
 -lhbclipsm
 -lxhb

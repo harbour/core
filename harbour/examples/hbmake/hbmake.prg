@@ -6026,5 +6026,14 @@ FUNCTION CmdLineParam( cFile, cCmdParams )
 
    RETURN xReturn
 
+STATIC FUNCTION GETUSERLANG()
+
+   SWITCH Upper( Left( hb_UserLang(), 2 ) )
+   CASE "PT" ; RETURN 1
+   CASE "ES" ; RETURN 3
+   ENDSWITCH
+
+   RETURN 2 /* EN */
+
 STATIC FUNCTION HBRawVersion()
    RETURN StrTran( Version(), "Harbour ", "" )

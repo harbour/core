@@ -344,12 +344,12 @@ char * hb_verPlatform( void )
                break;
          }
 
-         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu.%04d",
+         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu.%04u",
                    pszName,
                    pszWine,
-                   ( ULONG ) osVer.dwMajorVersion,
-                   ( ULONG ) osVer.dwMinorVersion,
-                   ( USHORT ) LOWORD( osVer.dwBuildNumber ) );
+                   osVer.dwMajorVersion,
+                   osVer.dwMinorVersion,
+                   LOWORD( osVer.dwBuildNumber ) );
 
          /* Add service pack/other info */
 

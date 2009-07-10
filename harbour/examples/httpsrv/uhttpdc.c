@@ -77,11 +77,11 @@ BOOL win_SysRefresh( int iMsec )
    /* Begin the operation and continue until it is complete
       or until the user clicks the mouse or presses a key. */
 
-   while( MsgWaitForMultipleObjects( 1, &hDummyEvent, FALSE, ( iMsec == 0 ? INFINITE : ( ULONG ) iMsec ), QS_ALLINPUT | QS_ALLPOSTMESSAGE) == WAIT_OBJECT_0 + 1 )
+   while( MsgWaitForMultipleObjects( 1, &hDummyEvent, FALSE, ( iMsec == 0 ? INFINITE : ( ULONG ) iMsec ), QS_ALLINPUT | QS_ALLPOSTMESSAGE ) == WAIT_OBJECT_0 + 1 )
    {
       MSG msg;
 
-      while( PeekMessage( &msg, NULL,  0, 0, PM_REMOVE ) )
+      while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
       {
          switch( msg.message )
          {
@@ -145,7 +145,7 @@ HB_FUNC( HB_UTCOFFSET )
    char * szRet = ( char * ) hb_xgrab( 6 );
    int nLen;
 
-#if defined(HB_OS_WIN)
+#if defined( HB_OS_WIN )
    {
       TIME_ZONE_INFORMATION tzInfo;
 
