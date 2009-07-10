@@ -295,7 +295,7 @@ PHB_ITEM hb_itemDoC( const char * szFunc, ULONG ulPCount, ... )
                   hb_vmPush( va_arg( va, PHB_ITEM ) );
                va_end( va );
             }
-            hb_vmProc( ( unsigned short ) ulPCount );
+            hb_vmProc( ( USHORT ) ulPCount );
             pResult = hb_itemNew( hb_stackReturnItem() );
             hb_vmRequestRestore();
          }
@@ -419,14 +419,14 @@ HB_FUNC( HB_EXECFROMARRAY )
    PHB_ITEM pArray = NULL;
    PHB_ITEM pItem;
    ULONG ulParamOffset = 0;
-   USHORT usPCount = hb_pcount();
+   int iPCount = hb_pcount();
 
    /* decode parameters */
-   if( usPCount )
+   if( iPCount )
    {
-      PHB_ITEM pParam  = hb_param( 1, HB_IT_ANY );
+      PHB_ITEM pParam = hb_param( 1, HB_IT_ANY );
 
-      if( usPCount == 1 )
+      if( iPCount == 1 )
       {
          if( HB_IS_ARRAY( pParam ) && !HB_IS_OBJECT( pParam ) )
          {
@@ -447,13 +447,13 @@ HB_FUNC( HB_EXECFROMARRAY )
          else
             pFunc = pParam;
       }
-      else if( HB_IS_OBJECT( pParam ) && usPCount <= 3 )
+      else if( HB_IS_OBJECT( pParam ) && iPCount <= 3 )
       {
          pSelf = pParam;
          pFunc = hb_param( 2, HB_IT_ANY );
          pArray = hb_param( 3, HB_IT_ANY );
       }
-      else if( usPCount == 2 )
+      else if( iPCount == 2 )
       {
          pFunc = pParam;
          pArray = hb_param( 2, HB_IT_ANY );
@@ -475,7 +475,7 @@ HB_FUNC( HB_EXECFROMARRAY )
 
    if( pExecSym )
    {
-      usPCount = 0;
+      iPCount = 0;
       hb_vmPushSymbol( pExecSym );
       if( pSelf )
          hb_vmPush( pSelf );
@@ -485,18 +485,18 @@ HB_FUNC( HB_EXECFROMARRAY )
       if( pArray )
       {
          pItem = hb_arrayGetItemPtr( pArray, ++ulParamOffset );
-         while( pItem && usPCount < 255 )
+         while( pItem && iPCount < 255 )
          {
             hb_vmPush( pItem );
-            ++usPCount;
+            ++iPCount;
             pItem = hb_arrayGetItemPtr( pArray, ++ulParamOffset );
          }
       }
 
       if( pSelf )
-         hb_vmSend( usPCount );
+         hb_vmSend( ( USHORT ) iPCount );
       else
-         hb_vmProc( usPCount );
+         hb_vmProc( ( USHORT ) iPCount );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -508,7 +508,7 @@ BOOL hb_execFromArray( PHB_ITEM pParam )
    PHB_ITEM pArray = NULL;
    PHB_ITEM pSelf = NULL;
    ULONG ulParamOffset = 0;
-   USHORT usPCount = 0;
+   int iPCount = 0;
 
    if( pParam && HB_IS_ARRAY( pParam ) && !HB_IS_OBJECT( pParam ) )
    {
@@ -547,18 +547,18 @@ BOOL hb_execFromArray( PHB_ITEM pParam )
          if( pArray )
          {
             pParam = hb_arrayGetItemPtr( pArray, ++ulParamOffset );
-            while( pParam && usPCount < 255 )
+            while( pParam && iPCount < 255 )
             {
                hb_vmPush( pParam );
-               ++usPCount;
+               ++iPCount;
                pParam = hb_arrayGetItemPtr( pArray, ++ulParamOffset );
             }
          }
 
          if( pSelf )
-            hb_vmSend( usPCount );
+            hb_vmSend( ( USHORT ) iPCount );
          else
-            hb_vmProc( usPCount );
+            hb_vmProc( ( USHORT ) iPCount );
 
          return TRUE;
       }

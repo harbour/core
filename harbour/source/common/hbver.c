@@ -513,7 +513,7 @@ char * hb_verCompiler( void )
 
 #elif defined( _MSC_VER )
 
-   #if (_MSC_VER >= 800)
+   #if ( _MSC_VER >= 800 )
       pszName = "Microsoft Visual C";
    #else
       pszName = "Microsoft C";
@@ -534,16 +534,16 @@ char * hb_verCompiler( void )
 
 #elif defined( __BORLANDC__ )
 
-   #if (__BORLANDC__ >= 1424) /* Version 5.9 */
+   #if ( __BORLANDC__ >= 1424 ) /* Version 5.9 */
       pszName = "CodeGear C++";
    #else
       pszName = "Borland C++";
    #endif
-   #if (__BORLANDC__ == 1040) /* Version 3.1 */
+   #if ( __BORLANDC__ == 1040 ) /* Version 3.1 */
       iVerMajor = 3;
       iVerMinor = 1;
       iVerPatch = 0;
-   #elif (__BORLANDC__ >= 1280) /* Version 5.x */
+   #elif ( __BORLANDC__ >= 1280 ) /* Version 5.x */
       iVerMajor = __BORLANDC__ >> 8;
       iVerMinor = ( __BORLANDC__ & 0xFF ) >> 4;
       iVerPatch = __BORLANDC__ & 0xF;

@@ -174,19 +174,17 @@ HB_FUNC( HB_LIBDO )
 
       if( pDynSym )
       {
-         USHORT uiPCount = hb_pcount();
-         USHORT uiParam;
+         int iPCount = hb_pcount();
+         int iParam;
 
          hb_vmPushSymbol( pDynSym->pSymbol );
          hb_vmPushNil();
 
          /* same logic here as from HB_FUNC( EVAL ) */
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         {
-            hb_vmPush( hb_stackItemFromBase( uiParam ) );
-         }
+         for( iParam = 2; iParam <= iPCount; iParam++ )
+            hb_vmPush( hb_stackItemFromBase( iParam ) );
 
-         hb_vmProc( ( USHORT ) ( uiPCount - 1 ) );
+         hb_vmProc( ( USHORT ) ( iPCount - 1 ) );
       }
    }
 }
