@@ -303,11 +303,11 @@ HB_FUNC( WVT_SETTOOLTIP )
    {
       LPTSTR text = HB_TCHAR_CONVTO( hb_parcx( 5 ) );
 
-      xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );
+      xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
       iTop    = xy.y;
       iLeft   = xy.x;
 
-      xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 4 )+1, ( USHORT ) hb_parni( 3 )+1 );
+      xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 4 )+1, hb_parni( 3 )+1 );
       iBottom = xy.y - 1;
       iRight  = xy.x - 1;
 
@@ -496,7 +496,7 @@ HB_FUNC( WVT_SETMOUSEPOS )
 
    POINT xy = { 0,0 };
 
-   xy = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );
+   xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
 
    if ( ClientToScreen( _s->hWnd, &xy ) )
    {
@@ -633,7 +633,7 @@ HB_FUNC( WVT_GETXYFROMROWCOL )
    PHB_ITEM info = hb_itemArrayNew( 2 );
    POINT    xy = { 0,0 };
 
-   xy = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );
+   xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
 
    hb_arraySetNL( info, 1, xy.x );
    hb_arraySetNL( info, 2, xy.y );
@@ -825,10 +825,10 @@ HB_FUNC( WVT_INVALIDATERECT )
    RECT  rc = { 0,0,0,0 };
    POINT xy = { 0,0 };
 
-   xy           = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );
+   xy           = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
    rc.top       = xy.y;
    rc.left      = xy.x;
-   xy           = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 4 )+1, ( USHORT ) hb_parni( 3 )+1 );
+   xy           = hb_wvt_gtGetXYFromColRow( hb_parni( 4 )+1, hb_parni( 3 )+1 );
    rc.bottom    = xy.y - 1;
    rc.right     = xy.x - 1;
 
@@ -851,7 +851,7 @@ HB_FUNC( WVT_CLIENTTOSCREEN )
    PHB_ITEM info = hb_itemArrayNew( 2 );
    POINT    xy = { 0,0 };
 
-   xy = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );
+   xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
 
    ClientToScreen( _s->hWnd, &xy );
 

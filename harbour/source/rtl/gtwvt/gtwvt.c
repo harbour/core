@@ -1801,7 +1801,7 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
    SelectObject( hdc, hOldFont ); /* Put old font back */
    ReleaseDC( hWnd, hdc );
 
-   width     = ( int ) ( iWidth < 0 ? -iWidth : tm.tmAveCharWidth * cols );  /* Total pixel width this setting would take */
+   width     = ( int ) ( ( iWidth < 0 ? -iWidth : tm.tmAveCharWidth ) * cols );  /* Total pixel width this setting would take */
    height    = ( int ) ( tm.tmHeight * rows ); /* Total pixel height this setting would take */
 
    return ( width <= maxWidth ) && ( height <= maxHeight );

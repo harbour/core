@@ -341,8 +341,8 @@ typedef struct
    HINSTANCE hInstance;                     /* parent window instance */
    int       iCmdShow;
 
-   USHORT   ROWS;                           /* number of displayable rows in window */
-   USHORT   COLS;                           /* number of displayable columns in window */
+   int      ROWS;                           /* number of displayable rows in window */
+   int      COLS;                           /* number of displayable columns in window */
 
    COLORREF COLORS[ 16 ];                   /* colors */
 
@@ -594,7 +594,7 @@ typedef struct _tag_HB_GT_COLDEF
    #define SWP_NOREDRAW         0
 #endif
 
-POINT       HB_EXPORT   hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row );
+POINT       HB_EXPORT   hb_wvt_gtGetXYFromColRow( int col, int row );
 #if ! defined( HB_OS_WIN_CE )
 IPicture    HB_EXPORT * hb_wvt_gtLoadPicture( const char * image );
 IPicture    HB_EXPORT * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection );
@@ -602,8 +602,8 @@ BOOL        HB_EXPORT   hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, 
 BOOL        HB_EXPORT   hb_wvt_gtDestroyPicture( IPicture * iPicture );
 #endif
 BOOL        HB_EXPORT   hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * image );
-void        HB_EXPORT   hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib );
-void        HB_EXPORT   hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib );
+void        HB_EXPORT   hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, BYTE * sBuffer, BYTE * sAttrib );
+void        HB_EXPORT   hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, BYTE * sBuffer, BYTE * sAttrib );
 
 LPWORD      HB_EXPORT   lpwAlign( LPWORD lpIn );
 int         HB_EXPORT   nCopyAnsiToWideChar( LPWORD lpWCStr, LPCSTR lpAnsiIn );

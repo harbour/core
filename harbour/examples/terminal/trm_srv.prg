@@ -287,7 +287,7 @@ PROCEDURE ServeClient( Socket )
 
 Function SvrExecuteApp( cAppln, cParams, cDirectory )
 
-   Return ShellExecute( cAppln, cParams, cDirectory )
+   RETURN wapi_ShellExecute( NIL, "open", cAppln, cParams, cDirectory )
 
 //----------------------------------------------------------------------//
 //
@@ -416,7 +416,7 @@ Function uiDebug( p1,p2,p3,p4,p5,p6,p7,p8,p9,p10 )
       cDebug += '   ' + uiXtos( p10 )
    endif
 
-   OutputDebugString( cDebug )
+   wapi_OutputDebugString( cDebug )
 
    Return nil
 

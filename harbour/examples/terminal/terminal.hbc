@@ -3,6 +3,6 @@
 #
 
 incpaths=../../contrib/gtwvg
-{win}libs=gtwvg
+{win}libs=gtwvg hbwin
 mt=yes
 gui=yes

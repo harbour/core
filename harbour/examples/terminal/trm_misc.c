@@ -49,30 +49,9 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 
 #include "gtwvg.h"
-
-#include <shellapi.h>
-
-HB_FUNC( SHELLEXECUTE )
-{
-   ShellExecute( NULL,
-                "OPEN",
-                 hb_parc( 1 ),
-                 hb_parc( 2 ),
-                 hb_parc( 3 ),
-                 SW_SHOWNORMAL );
-}
-
-HB_FUNC( OUTPUTDEBUGSTRING )
-{
-   LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 1 ) );
-   OutputDebugString( text );
-   HB_TCHAR_FREE( text );
-}
 
 HB_FUNC( GETSCREENATTRIB )
 {
@@ -80,13 +59,13 @@ HB_FUNC( GETSCREENATTRIB )
    void * pBuffer;
    void * qBuffer;
 
-   hb_gtRectSize( hb_parnl( 1 ),hb_parnl( 2 ),hb_parnl( 3 ),hb_parnl( 4 ),&uiSize );
-   pBuffer = hb_xgrab( (uiSize/2)+1 );
-   qBuffer = hb_xgrab( (uiSize/2)+1 );
+   hb_gtRectSize( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), &uiSize );
+   pBuffer = hb_xgrab( ( uiSize / 2 ) + 1 );
+   qBuffer = hb_xgrab( ( uiSize / 2 ) + 1 );
 
-   hb_wvt_GetStringAttrib( hb_parnl( 1 ),hb_parnl( 2 ),hb_parnl( 3 ),hb_parnl( 4 ), pBuffer, qBuffer );
-   hb_storclen( pBuffer, (uiSize/2), 5 );
-   hb_storclen( qBuffer, (uiSize/2), 6 );
+   hb_wvt_GetStringAttrib( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), pBuffer, qBuffer );
+   hb_storclen( pBuffer, ( uiSize / 2 ), 5 );
+   hb_storclen( qBuffer, ( uiSize / 2 ), 6 );
 
    hb_xfree( pBuffer );
    hb_xfree( qBuffer );
@@ -94,8 +73,8 @@ HB_FUNC( GETSCREENATTRIB )
 
 HB_FUNC( PUTSCREENATTRIB )
 {
-   hb_wvt_PutStringAttrib( hb_parnl( 1 ), hb_parnl( 2 ),
-                           hb_parnl( 3 ), hb_parnl( 4 ),
-                           ( BYTE* ) hb_parc( 5 ),
-                           ( BYTE* ) hb_parc( 6 ) );
+   hb_wvt_PutStringAttrib( hb_parni( 1 ), hb_parni( 2 ),
+                           hb_parni( 3 ), hb_parni( 4 ),
+                           ( BYTE * ) hb_parc( 5 ),
+                           ( BYTE * ) hb_parc( 6 ) );
 }

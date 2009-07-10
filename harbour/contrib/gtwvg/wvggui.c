@@ -2114,7 +2114,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
                      pWVT->pfnLayered( pWVT->hWnd,
                                        RGB( 255,255,255 ),
-                                       hb_itemGetNI( pInfo->pNewVal2 ),
+                                       ( BYTE ) hb_itemGetNI( pInfo->pNewVal2 ),
                                        /*LWA_COLORKEY|*/ LWA_ALPHA );
                   }
 #endif

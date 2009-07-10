@@ -503,7 +503,7 @@ static HFONT hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, i
       return ( HFONT ) GetStockObject( OEM_FIXED_FONT /* SYSTEM_FIXED_FONT */ );
 }
 
-static POINT hb_gt_wvt_GetXYFromColRow( PHB_GTWVT pWVT, USHORT col, USHORT row )
+static POINT hb_gt_wvt_GetXYFromColRow( PHB_GTWVT pWVT, int col, int row )
 {
    POINT xy;
 
@@ -575,7 +575,7 @@ static void hb_gt_wvt_UpdateCaret( PHB_GTWVT pWVT )
       if( pWVT->CaretExist )
       {
          POINT xy;
-         xy = hb_gt_wvt_GetXYFromColRow( pWVT, ( SHORT ) iCol, ( SHORT ) iRow );
+         xy = hb_gt_wvt_GetXYFromColRow( pWVT, iCol, iRow );
          SetCaretPos( xy.x, pWVT->CaretSize < 0 ?
                       xy.y : xy.y + pWVT->PTEXTSIZE.y - pWVT->CaretSize );
          ShowCaret( pWVT->hWnd );
@@ -704,7 +704,7 @@ static BOOL hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
                                                    &&
                             ( ci.bottom - ci.top ) == ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) )
    {
-      return( FALSE );
+      return FALSE;
    }
    GetWindowRect( pWVT->hWnd, &wi );
 
@@ -728,11 +728,11 @@ static BOOL hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
    {
       BOOL bOldCentre = pWVT->CentreWindow;
       pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
-      HB_GTSELF_SETMODE( pWVT->pGT, ( USHORT ) ( maxHeight / pWVT->PTEXTSIZE.y ), ( USHORT ) ( maxWidth / pWVT->PTEXTSIZE.x ) );
+      HB_GTSELF_SETMODE( pWVT->pGT, ( maxHeight / pWVT->PTEXTSIZE.y ), ( maxWidth / pWVT->PTEXTSIZE.x ) );
       pWVT->CentreWindow = bOldCentre;
-      return( TRUE );
+      return TRUE;
    }
-   return( FALSE );
+   return FALSE;
 }
 
 static BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
@@ -751,7 +751,7 @@ static BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
                                                    &&
                             ( ci.bottom - ci.top ) == ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) )
    {
-      return( FALSE );
+      return FALSE;
    }
    GetWindowRect( pWVT->hWnd, &wi );
 
@@ -843,8 +843,8 @@ static BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
             for( n = 0; n < pWVT->COLS; n++ )
                pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
 
-            width  = ( ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + borderWidth;
-            height = ( ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderHeight;
+            width  = ( ( int ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + borderWidth;
+            height = ( ( int ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderHeight;
 
             if( pWVT->bMaximized )
             {
@@ -862,8 +862,8 @@ static BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
          }
          else
          {
-            width  = ( ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + borderWidth;
-            height = ( ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderHeight;
+            width  = ( ( int ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + borderWidth;
+            height = ( ( int ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderHeight;
 
             SetWindowPos( pWVT->hWnd, NULL, 0, 0, width, height, SWP_NOZORDER | SWP_NOMOVE );
          }
@@ -871,7 +871,7 @@ static BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
          HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
       }
    }
-   return( TRUE );
+   return TRUE;
 }
 
 static BOOL hb_gt_wvt_FitSizeRows( PHB_GTWVT pWVT )
@@ -906,16 +906,14 @@ static BOOL hb_gt_wvt_FitSizeRows( PHB_GTWVT pWVT )
          hb_wvt_gtSaveGuiState( pWVT );
       }
       else
-      {
          InvalidateRect( pWVT->hWnd, NULL, FALSE );
       }
-   }
    else
    {
       pWVT->bResizing = FALSE;
       InvalidateRect( pWVT->hWnd, NULL, FALSE );
    }
-   return( bSizeChanged );
+   return bSizeChanged;
 }
 
 static void hb_gt_wvt_Maximize( PHB_GTWVT pWVT )
@@ -941,7 +939,7 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 {
    HDC        hdc;
    HFONT      hFont, hOldFont;
-   USHORT     height, width;
+   int        height, width;
    RECT       wi, ci;
    TEXTMETRIC tm;
    RECT       rcWorkArea;
@@ -1004,11 +1002,11 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
    GetWindowRect( pWVT->hWnd, &wi );
    GetClientRect( pWVT->hWnd, &ci );
 
-   height = ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
-   width  = ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
+   height = ( int ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
+   width  = ( int ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
 
-   width  += ( USHORT ) ( wi.right - wi.left - ci.right );
-   height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
+   width  += ( int ) ( wi.right - wi.left - ci.right );
+   height += ( int ) ( wi.bottom - wi.top - ci.bottom );
 
    /* Center the window within the CLIENT area on the screen
       but only if pWVT->CentreWindow == TRUE */
@@ -1027,11 +1025,11 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
       GetWindowRect( pWVT->hWnd, &wi );
       GetClientRect( pWVT->hWnd, &ci );
 
-      height = ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
-      width  = ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
+      height = ( int ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
+      width  = ( int ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
 
-      width  += ( USHORT ) ( wi.right - wi.left - ci.right );
-      height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
+      width  += ( int ) ( wi.right - wi.left - ci.right );
+      height += ( int ) ( wi.bottom - wi.top - ci.bottom );
 
       /* Center the window within the CLIENT area on the screen
          but only if pWVT->CentreWindow == TRUE */
@@ -1081,8 +1079,8 @@ static BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRow, int iCol )
 {
    if( HB_GTSELF_RESIZE( pWVT->pGT, iRow, iCol ) )
    {
-      pWVT->ROWS = ( USHORT ) iRow;
-      pWVT->COLS = ( USHORT ) iCol;
+      pWVT->ROWS = iRow;
+      pWVT->COLS = iCol;
       return TRUE;
    }
 
@@ -1102,7 +1100,7 @@ static BOOL hb_gt_wvt_InitWindow( PHB_GTWVT pWVT, int iRow, int iCol )
  * get the row and column from xy pixel client coordinates
  * This works because we are using the FIXED system font
  */
-static POINT hb_gt_wvt_GetColRowFromXY( PHB_GTWVT pWVT, USHORT x, USHORT y )
+static POINT hb_gt_wvt_GetColRowFromXY( PHB_GTWVT pWVT, LONG x, LONG y )
 {
    POINT colrow;
 
@@ -1128,8 +1126,8 @@ static RECT hb_gt_wvt_GetColRowFromXYRect( PHB_GTWVT pWVT, RECT xy )
 
 static void hb_gt_wvt_SetMousePos( PHB_GTWVT pWVT, int iRow, int iCol )
 {
-   pWVT->MousePos.y = ( SHORT ) iRow;
-   pWVT->MousePos.x = ( SHORT ) iCol;
+   pWVT->MousePos.y = iRow;
+   pWVT->MousePos.x = iCol;
 }
 
 static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
@@ -1146,7 +1144,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
    xy.x = LOWORD( lParam );
    xy.y = HIWORD( lParam );
 
-   colrow = hb_gt_wvt_GetColRowFromXY( pWVT, ( USHORT ) xy.x, ( USHORT ) xy.y );
+   colrow = hb_gt_wvt_GetColRowFromXY( pWVT, xy.x, xy.y );
    hb_gt_wvt_SetMousePos( pWVT, colrow.y, colrow.x );
 
    switch( message )
@@ -1714,15 +1712,15 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
  * hb_gt_wvt_TextOut converts col and row to x and y ( pixels ) and calls
  * the Windows function TextOut with the expected coordinates
  */
-static BOOL hb_gt_wvt_TextOut( PHB_GTWVT pWVT, HDC hdc, USHORT col, USHORT row, BYTE attr, LPCTSTR lpString, USHORT cbString )
+static BOOL hb_gt_wvt_TextOut( PHB_GTWVT pWVT, HDC hdc, int col, int row, int iColor, LPCTSTR lpString, USHORT cbString )
 {
    POINT xy;
    RECT  rClip;
 
    /* set foreground color */
-   SetTextColor( hdc, pWVT->COLORS[ attr & 0x0F ] );
+   SetTextColor( hdc, pWVT->COLORS[ iColor & 0x0F ] );
    /* set background color */
-   SetBkColor( hdc, pWVT->COLORS[ ( attr >> 4 ) & 0x0F ] );
+   SetBkColor( hdc, pWVT->COLORS[ ( iColor >> 4 ) & 0x0F ] );
 
    SetTextAlign( hdc, TA_LEFT );
 
@@ -1813,7 +1811,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          }
          else if( iColor != iOldColor )
          {
-            hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, iOldColor, text, ( USHORT ) len );
+            hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, text, ( USHORT ) len );
             iOldColor = iColor;
             startCol = iCol;
             len = 0;
@@ -1832,7 +1830,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          }
          else if( iColor != iOldColor || hFont != hOldFont )
          {
-            hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, iOldColor, text, ( USHORT ) len );
+            hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, text, ( USHORT ) len );
             if( hFont != hOldFont )
             {
                SelectObject( hdc, hFont );
@@ -1847,7 +1845,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          iCol++;
       }
       if( len > 0 )
-         hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, iOldColor, text, ( USHORT ) len );
+         hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, text, ( USHORT ) len );
    }
 
    /* Transfer on screen from bitmap */
@@ -1904,7 +1902,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_arraySetNInt( pEvParams, 3, ( HB_LONG ) ( HB_PTRDIFF ) lParam );
 
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_HSCROLL, pEvParams );
-         return( 0 );
+         return 0;
       }
       case WM_VSCROLL:
       {
@@ -1917,14 +1915,14 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_arraySetNInt( pEvParams, 3, ( HB_LONG ) ( HB_PTRDIFF ) lParam );
 
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_VSCROLL, pEvParams );
-         return( 0 );
+         return 0;
       }
       case WM_CREATE:
       {
          if( pWVT->pPP->iWndType == HB_WNDTYPE_CRT )
             return hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
          else
-            return( 0 );
+            return 0;
       }
       case WM_PAINT:
       {
@@ -2256,13 +2254,9 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          iResult = hb_gt_wvt_FireEvent( pWVT, HB_GTE_CTLCOLOR, pEvParams );
 
          if( iResult == 0 )
-         {
             break;
-         }
          else
-         {
-            return( iResult );
-         }
+            return iResult;
       }
    }
 
@@ -2305,14 +2299,14 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
 {
    HDC        hdc;
    HFONT      hOldFont;
-   USHORT     width, height, maxWidth, maxHeight;
+   int        width, height, maxWidth, maxHeight;
    TEXTMETRIC tm;
    RECT       rcWorkArea;
 
    SystemParametersInfo( SPI_GETWORKAREA,0, &rcWorkArea, 0 );
 
-   maxWidth  = ( USHORT ) ( rcWorkArea.right - rcWorkArea.left );
-   maxHeight = ( USHORT ) ( rcWorkArea.bottom - rcWorkArea.top );
+   maxWidth  = ( int ) ( rcWorkArea.right - rcWorkArea.left );
+   maxHeight = ( int ) ( rcWorkArea.bottom - rcWorkArea.top );
 
    hdc       = GetDC( hWnd );
    hOldFont  = ( HFONT ) SelectObject( hdc, hFont );
@@ -2320,8 +2314,8 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
    SelectObject( hdc, hOldFont ); /* Put old font back */
    ReleaseDC( hWnd, hdc );
 
-   width     = ( USHORT ) ( ( iWidth < 0 ? -iWidth : tm.tmAveCharWidth ) * cols );  /* Total pixel width this setting would take */
-   height    = ( USHORT ) ( tm.tmHeight * rows ); /* Total pixel height this setting would take */
+   width     = ( int ) ( ( iWidth < 0 ? -iWidth : tm.tmAveCharWidth ) * cols );  /* Total pixel width this setting would take */
+   height    = ( int ) ( tm.tmHeight * rows ); /* Total pixel height this setting would take */
 
    return ( width <= maxWidth ) && ( height <= maxHeight );
 }
@@ -2384,10 +2378,10 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
    if( pWVT->pPP->bConfigured )
    {
       PHB_GT pGTp = NULL;
+
       if( pWVT->pPP->pParentGT )
-      {
          pGTp = hb_gt_ItemBase( pWVT->pPP->pParentGT );
-      }
+
       if( pGTp )
       {
          PHB_GTWVT pWVTp = HB_GTWVT_GET( pGTp );
@@ -2420,8 +2414,8 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
                GetClientRect( hWndParent, &rc );
                if( pWVT->pPP->bRowCols )
                {
-                  pWVT->ROWS = ( USHORT ) pWVT->pPP->width;
-                  pWVT->COLS = ( USHORT ) pWVT->pPP->height;
+                  pWVT->ROWS = pWVT->pPP->width;
+                  pWVT->COLS = pWVT->pPP->height;
 
                   pt.x = ( rc.right-rc.left + 1 - ( pWVTp->PTEXTSIZE.x * pWVT->COLS ) ) / 2;
                   pt.y = ( rc.bottom-rc.top + 1 - ( pWVTp->PTEXTSIZE.y * pWVT->ROWS ) ) / 2;
@@ -2436,8 +2430,8 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
             {
                if( pWVT->pPP->bRowCols )
                {
-                  pWVT->ROWS = ( USHORT ) pWVT->pPP->width;
-                  pWVT->COLS = ( USHORT ) pWVT->pPP->height;
+                  pWVT->ROWS = pWVT->pPP->width;
+                  pWVT->COLS = pWVT->pPP->height;
 
                   pt.x = ( pWVTp->PTEXTSIZE.x * pWVT->pPP->y );
                   pt.y = ( pWVTp->PTEXTSIZE.y * pWVT->pPP->x );
@@ -2495,8 +2489,8 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
          pt.x = ( pWVT->PTEXTSIZE.x * pWVT->pPP->y );
          pt.y = ( pWVT->PTEXTSIZE.y * pWVT->pPP->x );
 
-         pWVT->ROWS = ( USHORT ) pWVT->pPP->width;
-         pWVT->COLS = ( USHORT ) pWVT->pPP->height;
+         pWVT->ROWS = pWVT->pPP->width;
+         pWVT->COLS = pWVT->pPP->height;
       }
       else
       {
@@ -2954,7 +2948,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iVal / pWVT->PTEXTSIZE.y ), pWVT->COLS );
+            HB_GTSELF_SETMODE( pGT, ( iVal / pWVT->PTEXTSIZE.y ), pWVT->COLS );
          }
          break;
 
@@ -2963,7 +2957,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            HB_GTSELF_SETMODE( pGT, pWVT->ROWS, ( USHORT ) ( iVal / pWVT->PTEXTSIZE.x ) );
+            HB_GTSELF_SETMODE( pGT, pWVT->ROWS, ( iVal / pWVT->PTEXTSIZE.x ) );
          }
          break;
 
@@ -3246,7 +3240,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             {
                BOOL bOldCentre = pWVT->CentreWindow;
                pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
-               HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iY / pWVT->PTEXTSIZE.y ), ( USHORT ) ( iX / pWVT->PTEXTSIZE.x ) );
+               HB_GTSELF_SETMODE( pGT, ( iY / pWVT->PTEXTSIZE.y ), ( iX / pWVT->PTEXTSIZE.x ) );
                pWVT->CentreWindow = bOldCentre;
             }
          }
