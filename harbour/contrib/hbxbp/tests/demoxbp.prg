@@ -57,7 +57,7 @@
 #include "gra.ch"
 
 #ifdef __XPP__
-#pragma library("XppUi2")
+   #pragma library("XppUi2")
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -67,6 +67,8 @@
 #define TAB_3   3
 #define TAB_4   4
 #define TAB_5   5
+
+#define CRLF    chr( 13 )+chr( 10 )
 
 STATIC oMLE         /* Change Font elsewhere */
 
@@ -201,12 +203,64 @@ FUNCTION hb_DirBase()        ; RETURN CurDir()
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION uiXtoS( xVar )
+   LOCAL cType
+
+   cType := valtype( xVar )
+   DO CASE
+   CASE cType == "N"
+      RETURN str( xVar )
+   CASE cType == "D"
+      RETURN dtoc( xVar )
+   CASE cType == "L"
+      RETURN IF( xVar, "Yes", "No" )
+   CASE cType == "M"
+      RETURN xVar
+   CASE cType == "C"
+      RETURN xVar
+   CASE cType == "A"
+      RETURN "A:"+hb_ntos( len( xVar ) )
+   CASE cType == "O"
+      RETURN "<OBJECT>"
+   OTHERWISE
+      RETURN "<"+cType+">"
+   ENDCASE
+
+   RETURN xVar
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION uiDebug( p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 )
+   LOCAL s
+
+   s := ' ' + uiXtoS( p1 ) + CRLF
+   s += ' ' + uiXtoS( p2 ) + CRLF
+   s += ' ' + uiXtoS( p3 ) + CRLF
+   s += ' ' + uiXtoS( p4 ) + CRLF
+   s += ' ' + uiXtoS( p5 ) + CRLF
+   s += ' ' + uiXtoS( p6 ) + CRLF
+   s += ' ' + uiXtoS( p7 ) + CRLF
+   s += ' ' + uiXtoS( p8 ) + CRLF
+   s += ' ' + uiXtoS( p9 ) + CRLF
+   s += ' ' + uiXtoS( p10 )
+
+   #ifdef __XPP__
+   MsgBox( s )
+   #else
+   //MsgBox( s )
+   hb_outDebug( s )
+   #endif
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
 STATIC FUNCTION PP_Debug( oXbp )
    LOCAL aPP := oXbp:setPresParam()
    LOCAL s := ''
 
    aeval( aPP, {|e_| s += ( hb_ntos( e_[ 1 ] ) +' '+ valtype( e_[ 2 ] ) +' '+ ;
-        IF( valtype( e_[ 2 ] )=='N', hb_ntos( e_[ 2 ] ), ' ' ) + ';  '+ chr( 13 )+chr( 10 ) ) } )
+        IF( valtype( e_[ 2 ] )=='N', hb_ntos( e_[ 2 ] ), ' ' ) + ';  '+ CRLF ) } )
 
    #ifdef __XPP__
    MsgBox( s )
@@ -351,11 +405,13 @@ FUNCTION Build_ToolBar( oDA )
       oTBar:addItem( "Save"       , "new.png" , , , , , "1" )
       oTBar:addItem( "Open"       , "open.png", , , , , "2" )
       oTBar:addItem( "Font Dialog", "copy.png", , , , , "3" )
+      oTBar:addItem( "Print Dialog", "print.png", , , , , "4" )
 
    #else
       oTBar:addItem( "Save"        )//, 100 )
       oTBar:addItem( "Open"        )//, 101 )
       oTBar:addItem( "Font Dialog" )
+      oTBar:addItem( "Print Dialog" )
    #endif
 
    oTBar:transparentColor := GRA_CLR_INVALID
@@ -374,6 +430,8 @@ STATIC FUNCTION ExeToolbar( oButton, oDa )
       Build_FileDialog( oDA,"open" )
    CASE oButton:caption == "Font Dialog"
       Build_FontDialog( oDa )
+   CASE oButton:caption == "Print Dialog"
+      Build_PrintDialog( oDa )
    ENDCASE
 
    RETURN nil
@@ -974,8 +1032,6 @@ FUNCTION Build_Statics( oWnd )
    oBox:caption := XBPSTATIC_SYSICON_ICONINFORMATION //XBPSTATIC_SYSICON_ICONQUESTION //
    oBox:create()
 
-   #define CRLF chr(13)+chr(10)
-
    oLbl := XbpStatic():new( oWnd, , {30,60}, {200,240} )
    oLbl:type    := XBPSTATIC_TYPE_TEXT
    oLbl:options := XBPSTATIC_TEXT_CENTER + XBPSTATIC_TEXT_VCENTER + XBPSTATIC_TEXT_WORDBREAK
@@ -1126,6 +1182,34 @@ FUNCTION Build_FontDialog( oWnd )
 FUNCTION DisplayFontInfo( oFont )
 
    oMLE:setFont( oFont )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_PrintDialog( oWnd )
+   LOCAL oDlg, oPrn
+
+   oDlg := XbpPrintDialog():new( oWnd ):create()
+   oDlg:enablePrintToFile := .t.
+   #if 1
+   ODlg:pageRange := { 1,3 }
+   oDlg:printRange := XBPPDLG_PRINT_PAGERANGE
+   #endif
+   #if 0
+   oDlg:enableMark := .t.
+   oDlg:printRange := XBPPDLG_PRINT_MARK
+   #endif
+
+   IF valtype( oPrn := oDlg:display() ) == "O"
+
+      uiDebug( oPrn:devName           , ;
+               oPrn:setOrientation()  , ;
+               oPrn:setFormSize()     , ;
+               oPrn:setResolution()[1], ;
+               oPrn:setNumCopies()    , ;
+               oPrn:setPaperBin()       )
+   ENDIF
 
    RETURN nil
 

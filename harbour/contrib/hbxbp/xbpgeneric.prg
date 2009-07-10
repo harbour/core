@@ -264,33 +264,6 @@ FUNCTION GraMakeRGBColor( aRGB )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION Xbp_XtoS( xVar )
-   LOCAL cType
-
-   cType := valtype( xVar )
-   DO CASE
-   CASE cType == "N"
-      RETURN str( xVar )
-   CASE cType == "D"
-      RETURN dtoc( xVar )
-   CASE cType == "L"
-      RETURN IF( xVar, "Yes", "No" )
-   CASE cType == "M"
-      RETURN xVar
-   CASE cType == "C"
-      RETURN xVar
-   CASE cType == "A"
-      RETURN "A:"+hb_ntos( len( xVar ) )
-   CASE cType == "O"
-      RETURN "<OBJECT>"
-   OTHERWISE
-      RETURN "<"+cType+">"
-   ENDCASE
-
-   RETURN xVar
-
-/*----------------------------------------------------------------------*/
-
 FUNCTION SetEventFilter()
    LOCAL pEventFilter
 
@@ -331,5 +304,45 @@ FUNCTION RemoveEventLoop( oEventLoop )
    ENDIF
 
    RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+#define CRLF   chr( 13 )+chr( 10 )
+
+FUNCTION Xbp_Debug( ... )
+   LOCAL s  := CRLF
+   LOCAL aP := hb_aParams()
+
+   aeval( aP, {|e| s += Xbp_XtoS( e ) + CRLF } )
+   hb_outDebug( s )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION Xbp_XtoS( xVar )
+   LOCAL cType
+
+   cType := valtype( xVar )
+   DO CASE
+   CASE cType == "N"
+      RETURN str( xVar )
+   CASE cType == "D"
+      RETURN dtoc( xVar )
+   CASE cType == "L"
+      RETURN IF( xVar, "Yes", "No" )
+   CASE cType == "M"
+      RETURN xVar
+   CASE cType == "C"
+      RETURN xVar
+   CASE cType == "A"
+      RETURN "A:"+hb_ntos( len( xVar ) )
+   CASE cType == "O"
+      RETURN "<OBJECT>"
+   OTHERWISE
+      RETURN "<"+cType+">"
+   ENDCASE
+
+   RETURN xVar
 
 /*----------------------------------------------------------------------*/

@@ -280,6 +280,14 @@
 #define XBPBMP_DEF_COMPRESSION                    -1
 
 
+#define  XBPPDLG_PRINT_MARK                       1
+#define  XBPPDLG_PRINT_ALLPAGES                   2
+#define  XBPPDLG_PRINT_PAGERANGE                  3
+
+#define  XBPPDLG_MODE_DRIVER                      1
+#define  XBPPDLG_MODE_APPLICATION                 2
+
+
 /*----------------------------------------------------------------------*/
 #define _XBP_CH
 #endif

@@ -67,6 +67,9 @@ PRG_SOURCES=\
 	xbpfiledialog.prg \
 	xbpfontdialog.prg \
 	xbpbitmap.prg \
+	xbppresspace.prg \
+	xbpprinter.prg \
+	xbpprintdialog.prg \
 
 
 PRG_HEADERS=\

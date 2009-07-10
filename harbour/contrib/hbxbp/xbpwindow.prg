@@ -1040,7 +1040,6 @@ METHOD XbpWindow:setPointer( cDllName, xResID, nType )
             #if 0  /* The original image size - but in practice pointer should be proper sized */
             ::oWidget:setCursor( QT_PTROF( QCursor():new( "QPixmap", QT_PTROF( QPixmap():new( xResID ) ) ) ) )
             #else
-hb_OutDebug( "sssssssssssss" )
             ::oWidget:setCursor( QT_PTROF( QCursor():new( "QPixmap", QPixmap():new( xResID ):scaled( 24,24 ) ) ) )
             #endif
          ENDIF
