@@ -94,10 +94,10 @@ static void hb_gt_def_BaseInit( PHB_GT_BASE pGT )
    pGT->fStdOutCon   = FALSE;
    pGT->fStdErrCon   = FALSE;
    pGT->iCursorShape = SC_NORMAL;
-   pGT->uiDispCount  = 0;
-   pGT->uiExtCount   = 0;
-   pGT->uiClearChar  = ' ';
-   pGT->uiClearColor = 0x07;
+   pGT->iDispCount   = 0;
+   pGT->iExtCount    = 0;
+   pGT->usClearChar  = ' ';
+   pGT->iClearColor  = 0x07;
    pGT->iHeight      = 24;
    pGT->iWidth       = 80;
    pGT->hStdIn       = HB_STDIN_HANDLE;
@@ -307,22 +307,22 @@ static void hb_gt_def_GetColorData( PHB_GT pGT, int ** pColorsPtr, int * piColor
 
 static int  hb_gt_def_GetClearColor( PHB_GT pGT )
 {
-   return pGT->uiClearColor;
+   return pGT->iClearColor;
 }
 
 static void hb_gt_def_SetClearColor( PHB_GT pGT, int iColor )
 {
-   pGT->uiClearColor = ( USHORT ) ( iColor & 0xff );
+   pGT->iClearColor = ( iColor & 0xFF );
 }
 
-static int  hb_gt_def_GetClearChar( PHB_GT pGT )
+static USHORT hb_gt_def_GetClearChar( PHB_GT pGT )
 {
-   return pGT->uiClearChar;
+   return pGT->usClearChar;
 }
 
-static void hb_gt_def_SetClearChar( PHB_GT pGT, int iChar )
+static void hb_gt_def_SetClearChar( PHB_GT pGT, USHORT usChar )
 {
-   pGT->uiClearChar = ( USHORT ) iChar;
+   pGT->usClearChar = usChar;
 }
 
 /* helper internal function */
@@ -617,33 +617,33 @@ static void hb_gt_def_SetSnowFlag( PHB_GT pGT, BOOL fNoSnow )
 
 static void hb_gt_def_DispBegin( PHB_GT pGT )
 {
-   pGT->uiDispCount++;
+   pGT->iDispCount++;
 }
 
 static void hb_gt_def_DispEnd( PHB_GT pGT )
 {
-   if( pGT->uiDispCount > 0 )
-      pGT->uiDispCount--;
+   if( pGT->iDispCount > 0 )
+      pGT->iDispCount--;
 }
 
 static int hb_gt_def_DispCount( PHB_GT pGT )
 {
-   return pGT->uiDispCount;
+   return pGT->iDispCount;
 }
 
 static BOOL hb_gt_def_PreExt( PHB_GT pGT )
 {
-   if( pGT->uiExtCount == 0 )
+   if( pGT->iExtCount == 0 )
       HB_GTSELF_REFRESH( pGT );
-   pGT->uiExtCount++;
+   pGT->iExtCount++;
 
    return TRUE;
 }
 
 static BOOL hb_gt_def_PostExt( PHB_GT pGT )
 {
-   if( pGT->uiExtCount )
-      pGT->uiExtCount--;
+   if( pGT->iExtCount )
+      pGT->iExtCount--;
 
    return TRUE;
 }
@@ -1291,12 +1291,13 @@ static void hb_gt_def_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
       iLeft = iRight;
       iRight = i;
    }
-   iMaxRow = HB_GTSELF_MAXROW( pGT ), iMaxCol = HB_GTSELF_MAXCOL( pGT );
+   iMaxRow = HB_GTSELF_MAXROW( pGT );
+   iMaxCol = HB_GTSELF_MAXCOL( pGT );
 
    if( iTop <= iMaxRow && iLeft <= iMaxCol && iBottom >= 0 && iRight >= 0 )
    {
       char szBox[ 10 ];
-      char cPadCh = HB_GTSELF_GETCLEARCHAR( pGT );
+      char cPadCh = ( char ) HB_GTSELF_GETCLEARCHAR( pGT );
 
       if( szFrame )
       {

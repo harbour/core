@@ -116,7 +116,7 @@ typedef struct
    void     (* Exit) ( HB_GT_PTR );
    void *   (* New) ( HB_GT_PTR );
    void     (* Free) ( HB_GT_PTR );
-   BOOL     (* Resize ) ( HB_GT_PTR, int, int );
+   BOOL     (* Resize) ( HB_GT_PTR, int, int );
    BOOL     (* SetMode) ( HB_GT_PTR, int, int );
    void     (* GetSize) ( HB_GT_PTR, int *, int * );
    void     (* SemiCold) ( HB_GT_PTR );
@@ -145,8 +145,8 @@ typedef struct
    void     (* GetColorData) ( HB_GT_PTR, int **, int *, int * );
    int      (* GetClearColor) ( HB_GT_PTR );
    void     (* SetClearColor) ( HB_GT_PTR, int );
-   int      (* GetClearChar) ( HB_GT_PTR );
-   void     (* SetClearChar) ( HB_GT_PTR, int );
+   USHORT   (* GetClearChar) ( HB_GT_PTR );
+   void     (* SetClearChar) ( HB_GT_PTR, USHORT );
    int      (* GetCursorStyle) ( HB_GT_PTR );
    void     (* SetCursorStyle) ( HB_GT_PTR, int );
    void     (* GetScrCursor) ( HB_GT_PTR, int *, int *, int * );
@@ -295,10 +295,10 @@ typedef struct _HB_GT_BASE
    BOOL           fStdOutCon;
    BOOL           fStdErrCon;
    int            iCursorShape;
-   USHORT         uiDispCount;
-   USHORT         uiExtCount;
-   USHORT         uiClearChar;
-   USHORT         uiClearColor;
+   int            iDispCount;
+   int            iExtCount;
+   USHORT         usClearChar;
+   int            iClearColor;
    HB_FHANDLE     hStdIn;
    HB_FHANDLE     hStdOut;
    HB_FHANDLE     hStdErr;

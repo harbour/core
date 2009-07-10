@@ -227,9 +227,9 @@ extern HB_EXPORT int        hb_gtAlert( PHB_ITEM pMessage, PHB_ITEM pOptions, in
 extern HB_EXPORT int        hb_gtSetFlag( int iType, int iNewValue );
 extern HB_EXPORT int        hb_gtGetCurrColor( void );
 extern HB_EXPORT int        hb_gtGetClearColor( void );
-extern HB_EXPORT HB_ERRCODE hb_gtSetClearColor( int );
-extern HB_EXPORT int        hb_gtGetClearChar( void );
-extern HB_EXPORT HB_ERRCODE hb_gtSetClearChar( int );
+extern HB_EXPORT HB_ERRCODE hb_gtSetClearColor( int iColor );
+extern HB_EXPORT USHORT     hb_gtGetClearChar( void );
+extern HB_EXPORT HB_ERRCODE hb_gtSetClearChar( USHORT usChar );
 extern HB_EXPORT HB_ERRCODE hb_gtGetScrChar( int iRow, int iCol, int * piColor, BYTE * pbAttr, USHORT * pusChar );
 extern HB_EXPORT HB_ERRCODE hb_gtPutScrChar( int iRow, int iCol, int iColor, BYTE bAttr, USHORT usChar );
 extern HB_EXPORT HB_ERRCODE hb_gtFlush( void );

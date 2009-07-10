@@ -95,16 +95,16 @@ HB_FUNC( SETCLEARA )
 
 HB_FUNC( SETCLEARB )
 {
-   int iNew;
+   USHORT usNew;
 
    if( HB_ISNUM( 1 ) )
-      iNew = hb_parni( 1 );
+      usNew = ( USHORT ) hb_parni( 1 );
    else if( HB_ISCHAR( 1 ) )
-      iNew = ( UCHAR ) hb_parc( 1 )[0];
+      usNew = ( USHORT ) hb_parc( 1 )[0];
    else
-      iNew = 255;
+      usNew = 255;
 
-   hb_gtSetClearChar( iNew );
+   hb_gtSetClearChar( usNew );
 
    hb_retc_null();
 }

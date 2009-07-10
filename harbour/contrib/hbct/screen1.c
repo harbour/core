@@ -312,7 +312,7 @@ static int hb_ctGetClearChar( int iParam )
    else if( HB_ISCHAR( iParam ) )
       iChar = ( UCHAR ) hb_parc( iParam )[0];
    else
-      iChar = hb_gtGetClearChar();
+      iChar = ( int ) hb_gtGetClearChar();
 
    return iChar;
 }

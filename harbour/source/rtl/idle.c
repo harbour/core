@@ -61,7 +61,6 @@
  *
  */
 
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbset.h"
@@ -142,9 +141,7 @@ void hb_idleReset( void )
    PHB_IDLEDATA pIdleData = ( PHB_IDLEDATA ) hb_stackGetTSD( &s_idleData );
 
    if( pIdleData->iIdleTask == pIdleData->iIdleMaxTask && !hb_setGetIdleRepeat() )
-   {
       pIdleData->iIdleTask = 0;
-   }
 
    pIdleData->fCollectGarbage = TRUE;
 }
@@ -192,14 +189,12 @@ HB_FUNC( HB_IDLEADD )
       PHB_IDLEDATA pIdleData = ( PHB_IDLEDATA ) hb_stackGetTSD( &s_idleData );
 
       ++pIdleData->iIdleMaxTask;
-      if( !pIdleData->pIdleTasks )
-      {
+
+      if( ! pIdleData->pIdleTasks )
          pIdleData->pIdleTasks = ( HB_ITEM_PTR * ) hb_xgrab( sizeof( HB_ITEM_PTR ) );
-      }
       else
-      {
          pIdleData->pIdleTasks = ( HB_ITEM_PTR * ) hb_xrealloc( pIdleData->pIdleTasks, sizeof( HB_ITEM_PTR ) * pIdleData->iIdleMaxTask );
-      }
+
       /* store a copy of passed codeblock
       */
       pIdleData->pIdleTasks[ pIdleData->iIdleMaxTask - 1 ] = hb_itemNew( pBlock );
@@ -218,13 +213,12 @@ HB_FUNC( HB_IDLEDEL )
 
    if( pID && pIdleData && pIdleData->pIdleTasks )
    {
-      SHORT iTask;
-      HB_ITEM_PTR pItem;
+      int iTask = 0;
 
-      iTask = 0;
       while( iTask < pIdleData->iIdleMaxTask )
       {
-         pItem = pIdleData->pIdleTasks[ iTask ];
+         HB_ITEM_PTR pItem = pIdleData->pIdleTasks[ iTask ];
+
          if( pID == hb_codeblockId( pItem ) )
          {
              hb_itemClear( hb_itemReturn( pItem ) ); /* return a codeblock */

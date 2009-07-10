@@ -670,7 +670,7 @@ static int hb_ctw_CreateWindow( PHB_GTCTW pCTW, int iTop, int iLeft, int iBottom
    bAttr  = 0;
    if( iColor < 0 )
       iColor = HB_GTSELF_GETCOLOR( pCTW->pGT );
-   usChar = ( USHORT ) HB_GTSELF_GETCLEARCHAR( pCTW->pGT );
+   usChar = HB_GTSELF_GETCLEARCHAR( pCTW->pGT );
 
    lIndex = 0;
    for( iRow = pWnd->iFirstRow; iRow < pWnd->iFirstRow + pWnd->iHeight; ++iRow )
@@ -679,7 +679,7 @@ static int hb_ctw_CreateWindow( PHB_GTCTW pCTW, int iTop, int iLeft, int iBottom
       {
          if( !fClear && !HB_GTSELF_GETSCRCHAR( pCTW->pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
          {
-            usChar = ( USHORT ) HB_GTSELF_GETCLEARCHAR( pCTW->pGT );
+            usChar = HB_GTSELF_GETCLEARCHAR( pCTW->pGT );
             iColor = HB_GTSELF_GETCOLOR( pCTW->pGT );
             bAttr  = 0;
          }
@@ -1416,7 +1416,7 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, ULONG ulLength )
          {
             HB_GTSELF_SCROLL( pGT, 0, 0, iMaxRow, iMaxCol,
                               HB_GTSELF_GETCOLOR( pGT ),
-                              ( USHORT ) HB_GTSELF_GETCLEARCHAR( pGT ),
+                              HB_GTSELF_GETCLEARCHAR( pGT ),
                               iRow - iMaxRow, 0 );
             iRow = iMaxRow;
             iCol = 0;
