@@ -62,9 +62,12 @@
 //----------------------------------------------------------------------//
 
 #include "common.ch"
-#include "terminal.ch"
 
 //#include "wvtwin.ch"
+
+#define WSABASEERR              10000
+#define WSAECONNABORTED         (WSABASEERR+53)
+#define WSAECONNRESET           (WSABASEERR+54)
 
 //----------------------------------------------------------------------//
 
@@ -94,7 +97,6 @@ STATIC s_mutexSend := hb_mutexCreate()
 
 Function RmtSvrInitialize( cServerInfo, nTimeoutClient, nTimeRefresh )
    Local lExit    := .t.
-   Local nTimeOut := 50   // PICK FROM EXTERNASL SOURCE
 
    s_srvrSocket := NIL
    s_commSocket := NIL
@@ -173,7 +175,7 @@ TrmDebug( "SERVER: Connection Failed" )
 //
 Static Function RmtSvrAcceptClient( Socket, pClientSocket )
    Local lRet := .t.
-   Local i := 0
+// Local i := 0
 
    Do While .t.
       pClientSocket := Hb_InetAccept( Socket )
@@ -184,7 +186,7 @@ Static Function RmtSvrAcceptClient( Socket, pClientSocket )
 
       exit
 
-TrmDebug( "SvrConnectClient()", i++, "TRY..." )
+//TrmDebug( "SvrConnectClient()", i++, "TRY..." )
    enddo
 
    if lRet
@@ -198,7 +200,7 @@ TrmDebug( "CLIENT: Connection TimedOut!" )
 //----------------------------------------------------------------------//
 
 Function RmtSvrSendClient( nMode, xData )
-   Local cScr, cCurs, nError, nBytesSent, nBytesToSend, t_, cOdd, cEvn, cOdd0, cEvn0
+   Local cCurs, nError, nBytesSent, nBytesToSend, t_, cOdd, cEvn, cOdd0, cEvn0
    Local lSendCurs   := .f.
    Local lSendScrn   := .f.
    Local cData       := ""
@@ -488,29 +490,20 @@ Function TrmDebug( p1,p2,p3,p4,p5,p6,p7,p8,p9,p10 )
 
 //----------------------------------------------------------------------//
 
-Function TrmXtoS( xVar )
-   Local cVar := ''
-   Local cType := valtype( xVar )
+FUNCTION TrmXtoS( xVar )
 
-   do case
-   case cType == 'C'
-      cVar := xVar
+   SWITCH ValType( xVar )
+   CASE "C"
+      RETURN xVar
+   CASE "N"
+      RETURN Str( xVar )
+   CASE "D"
+      RETURN DToC( xVar )
+   CASE "L"
+      RETURN iif( xVar, "T", "F" )
+   ENDSWITCH
 
-   case cType == 'N'
-      cVar := str( xVar )
-
-   case cType == 'D'
-      cVar := dtoc( xVar )
-
-   case cType == 'L'
-      cVar := if( xVar, 'T','F' )
-
-   otherwise
-      cVar := 'NIL'
-
-   endcase
-
-   Return cVar
+   RETURN "NIL"
 
 //----------------------------------------------------------------------//
 

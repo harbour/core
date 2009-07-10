@@ -102,7 +102,7 @@ static nTrace            := 0
 static aDat              := { {"",""} }
 
 Function Main( cAddress, cPort, cAppln, cParams, cDirectory )
-   LOCAL Socket, n, cText, cResponse, nThread, hMutex, hMutex1
+   LOCAL Socket, n, cText, cResponse
 
    ResolveParams( @cAddress, @cPort, @cAppln, @cParams, @cDirectory )
 
@@ -156,8 +156,8 @@ Function Main( cAddress, cPort, cAppln, cParams, cDirectory )
 
 STATIC FUNCTION ResolveParams( cAddress, cPort, cAppln, cParams, cDirectory )
    Local i, n, cLine, cVal, nLines, cTxt, cPath, cFile
-   Local lFile := .f.
    Local dat_  := {}
+   LOCAL lFile
 
    if PCount() == 1
       cFile    := cAddress
@@ -180,7 +180,6 @@ STATIC FUNCTION ResolveParams( cAddress, cPort, cAppln, cParams, cDirectory )
 
    if empty( cAddress ) .and. lFile
       alert( "File found: "+cFile )
-      lFile := .t.
       cTxt   := memoread( cFile )
       nLines := mlCount( cTxt,254,3,.f. )
       for i  := 1 to nLines
@@ -243,7 +242,7 @@ STATIC FUNCTION ResolveParams( cAddress, cPort, cAppln, cParams, cDirectory )
 //----------------------------------------------------------------------//
 
 Function TrmServeServer( Socket, cAddress, cServerInfo )
-   Local nPort, hDlg, a_, nError
+   Local nPort, a_, nError
    Local nSeconds := Seconds()
 
    a_:= hb_aTokens( cServerInfo, ";" )
@@ -283,7 +282,6 @@ Function TrmServeServer( Socket, cAddress, cServerInfo )
    hb_threadStart( @Thread_Ping()   , 3 )
    hb_threadStart( @Thread_Clock()  , 5 )
 
-   nSeconds := Seconds()
    do while .t.
 //    Wvt_ProcessMessages()
       hb_idleSleep()
@@ -304,7 +302,7 @@ Function TrmServeServer( Socket, cAddress, cServerInfo )
 //----------------------------------------------------------------------//
 
 Function TrmReceiveServer()
-   Local a_, b_, cBuffer, nBytes, cCommand, cData, nError, cOdd, cEvn, n, cMix
+   Local a_, b_, cBuffer, nBytes, cCommand, cData, cOdd, cEvn, n
    LOCAL cOdd1, cEvn1
 
    if !( lReceiving ) .and. ( commSocket != NIL )
@@ -581,29 +579,20 @@ Static Function Str2A( cStr, cDel )
 
 //----------------------------------------------------------------------//
 
-Static Function uiXtos( xVar )
-   Local cVar := ""
-   Local cType := valtype( xVar )
+FUNCTION uiXtos( xVar )
 
-   do case
-   case cType == "C"
-      cVar := xVar
+   SWITCH ValType( xVar )
+   CASE "C"
+      RETURN xVar
+   CASE "N"
+      RETURN Str( xVar )
+   CASE "D"
+      RETURN DToC( xVar )
+   CASE "L"
+      RETURN iif( xVar, "Yes", "No " )
+   ENDSWITCH
 
-   case cType == "N"
-      cVar := str( xVar )
-
-   case cType == "D"
-      cVar := dtoc( xVar )
-
-   case cType == "L"
-      cVar := if( xVar, "Yes","No " )
-
-   otherwise
-      cVar := "NIL"
-
-   endcase
-
-   Return cVar
+   RETURN "NIL"
 
 //----------------------------------------------------------------------//
 
@@ -764,9 +753,9 @@ Static Function PlayMusic( cTheme )
 
 Static Function GetForm( cForm )
    Local cReply := ""
-   Local i, scr , n,s
-   Local aFields := {}
-   Local a_:={}
+   Local i, scr
+   Local aFields
+   Local a_
    Local frm_:={}
    Local getlist := {}
 

@@ -2,6 +2,8 @@
 # $Id$
 #
 
+-q0 -w3 -es2 -kmo -l
+
 -nulrdd
 hbformat.prg
 hbformac.c

@@ -76,11 +76,8 @@ Static nMaxCol
 //----------------------------------------------------------------------//
 
 Function Main( cPort )
-   LOCAL GetList
    LOCAL socket
-   LOCAL Key, nKey
-   LOCAL cCommand
-   LOCAL hView, hAccept
+   LOCAL nKey
 
    nMaxCol := maxcol()+1
 
@@ -88,7 +85,6 @@ Function Main( cPort )
       cPort := "8085"
    ENDIF
 
-   GetList       := {}
    g_nUserCount  := 0
    g_nTotalCount := 0
 
@@ -106,8 +102,8 @@ Function Main( cPort )
 
    DispOutAt( 3, 0, padc( "Waiting for connections on port " + cPort, nMaxCol ), "W+/N" )
 
-   hView   := hb_ThreadStart( @ViewUpdate()    , Socket )
-   hAccept := hb_ThreadStart( @AcceptIncoming(), Socket )
+   hb_ThreadStart( @ViewUpdate()    , Socket )
+   hb_ThreadStart( @AcceptIncoming(), Socket )
 
    DO WHILE .T.
       nKey := inkey(0)
@@ -161,14 +157,10 @@ PROCEDURE AcceptIncoming( Socket )
 //                      Service incoming connection
 //
 PROCEDURE ServeClient( Socket )
-   LOCAL cRequest, cReply, cReq, cCmdLine, cLine, lExit, aFields
-   LOCAL oXmlDoc, oXmlForm, oXmlName, cFields, cData, oXmlData, oXmlNode
-   LOCAL aProcessInfo := array( 4 )
-   LOCAL cPostData    := ""
+   LOCAL cRequest, cReply, cReq, cCmdLine, lExit
    LOCAL nLength      := 0
-   LOCAL nContLen     := 0
-   Local nn           := 0
-   Local a_           := {}
+   LOCAL nn           := 0
+   LOCAL a_
 
    static nServerPort := 45000
 
@@ -429,26 +421,17 @@ Function uiDebug( p1,p2,p3,p4,p5,p6,p7,p8,p9,p10 )
 
 //----------------------------------------------------------------------//
 
-Function uiXtos( xVar )
-   Local cVar := ''
-   Local cType := valtype( xVar )
+FUNCTION uiXtos( xVar )
 
-   do case
-   case cType == 'C'
-      cVar := xVar
+   SWITCH ValType( xVar )
+   CASE "C"
+      RETURN xVar
+   CASE "N"
+      RETURN Str( xVar )
+   CASE "D"
+      RETURN DToC( xVar )
+   CASE "L"
+      RETURN iif( xVar, "Yes", "No " )
+   ENDSWITCH
 
-   case cType == 'N'
-      cVar := str( xVar )
-
-   case cType == 'D'
-      cVar := dtoc( xVar )
-
-   case cType == 'L'
-      cVar := if( xVar, 'Yes','No ' )
-
-   otherwise
-      cVar := 'NIL'
-
-   endcase
-
-   Return cVar
+   RETURN "NIL"
