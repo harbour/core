@@ -76,7 +76,7 @@ HB_FUNC( __XHELP )
       for( iParam = 1; iParam <= iPCount; iParam++ )
          hb_vmPush( hb_stackItemFromBase( iParam ) );
 
-      hb_vmProc( iPCount );
+      hb_vmProc( ( USHORT ) iPCount );
       /* NOTE: Leave the return value as it is. */
    }
 }
