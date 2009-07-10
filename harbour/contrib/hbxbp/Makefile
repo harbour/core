@@ -74,6 +74,7 @@ PRG_SOURCES=\
 
 PRG_HEADERS=\
 	xbp.ch \
+	xbpdev.ch \
 	appevent.ch \
 	gra.ch \
 
