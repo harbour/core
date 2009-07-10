@@ -1542,7 +1542,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    int         iRow, iCol, startCol, len;
    BYTE        bColor, bAttr, bOldColor = 0;
 #if ! defined( UNICODE )
-   BYTE        bOldAttr = 0;
+   HFONT       hFont, hOldFont = NULL;
 #endif
    USHORT      usChar;
    TCHAR       text[ WVT_MAX_ROWS ];
@@ -1576,19 +1576,23 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          }
 #else
          usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
+         hFont = ( bAttr & HB_GT_ATTR_BOX ) ? pWVT->hFontBox : pWVT->hFont;
          if( len == 0 )
          {
-            SelectObject( hdc, ( bAttr & HB_GT_ATTR_BOX ) ? pWVT->hFontBox : pWVT->hFont );
-            bOldAttr = bAttr;
+            if( hFont != hOldFont )
+            {
+               SelectObject( hdc, hFont );
+               hOldFont = hFont;
+            }
             bOldColor = bColor;
          }
-         else if( bColor != bOldColor || bAttr != bOldAttr )
+         else if( bColor != bOldColor || hFont != hOldFont )
          {
             hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, bOldColor, text, ( USHORT ) len );
-            if( bAttr != bOldAttr )
+            if( hFont != hOldFont )
             {
-               SelectObject( hdc, ( bAttr & HB_GT_ATTR_BOX ) ? pWVT->hFontBox : pWVT->hFont );
-               bOldAttr = bAttr;
+               SelectObject( hdc, hFont );
+               hOldFont = hFont;
             }
             bOldColor = bColor;
             startCol = iCol;
