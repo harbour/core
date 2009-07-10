@@ -153,15 +153,14 @@ static BOOL    s_bSpecialKeyHandling;
 static BOOL    s_bAltKeyHandling;
 static DWORD   s_dwAltGrBits;        /* JC: used to verify ALT+GR on different platforms */
 static BOOL    s_bBreak;            /* Used to signal Ctrl+Break to hb_inkeyPoll() */
-static USHORT  s_uiDispCount;
-static USHORT  s_usCursorStyle;
-static USHORT  s_usOldCurStyle;
-static SHORT   s_sCurRow;
-static SHORT   s_sCurCol;
-static USHORT  s_usUpdtTop;
-static USHORT  s_usUpdtBottom;
-static USHORT  s_usUpdtLeft;
-static USHORT  s_usUpdtRight;
+static int     s_iCursorStyle;
+static int     s_iOldCurStyle;
+static int     s_iCurRow;
+static int     s_iCurCol;
+static int     s_iUpdtTop;
+static int     s_iUpdtBottom;
+static int     s_iUpdtLeft;
+static int     s_iUpdtRight;
 static CHAR_INFO * s_pCharInfoScreen = NULL;
 static ULONG   s_ulScreenBuffSize = 0;
 
@@ -434,8 +433,8 @@ static void hb_gt_win_xSetCursorPos( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_xSetCursorPos()"));
 
-   s_csbi.dwCursorPosition.Y = s_sCurRow;
-   s_csbi.dwCursorPosition.X = s_sCurCol;
+   s_csbi.dwCursorPosition.Y = ( SHORT ) s_iCurRow;
+   s_csbi.dwCursorPosition.X = ( SHORT ) s_iCurCol;
    SetConsoleCursorPosition( s_HOutput, s_csbi.dwCursorPosition );
 }
 
@@ -447,7 +446,7 @@ static void hb_gt_win_xSetCursorStyle( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_xSetCursorStyle()"));
 
-   switch( s_usCursorStyle )
+   switch( s_iCursorStyle )
    {
       case SC_NONE:
          cci.bVisible = FALSE;
@@ -477,7 +476,7 @@ static void hb_gt_win_xSetCursorStyle( void )
          cci.dwSize = 13;
          break;
    }
-   s_usOldCurStyle = s_usCursorStyle;
+   s_iOldCurStyle = s_iCursorStyle;
    SetConsoleCursorInfo( s_HOutput, &cci );
 }
 
@@ -489,23 +488,23 @@ static void hb_gt_win_xScreenUpdate( void )
 
    if( s_pCharInfoScreen )
    {
-      if( s_uiDispCount == 0 && s_usUpdtTop <= s_usUpdtBottom )
+      if( s_iUpdtTop <= s_iUpdtBottom )
       {
          COORD coDest, coSize;
          SMALL_RECT srWin;
 
-         coSize.Y = _GetScreenHeight();
-         coSize.X = _GetScreenWidth();
-         coDest.Y = s_usUpdtTop;
-         coDest.X = s_usUpdtLeft;
-         srWin.Top    = ( SHORT ) s_usUpdtTop;
-         srWin.Left   = ( SHORT ) s_usUpdtLeft;
-         srWin.Bottom = ( SHORT ) s_usUpdtBottom;
-         srWin.Right  = ( SHORT ) s_usUpdtRight;
+         coSize.Y     = _GetScreenHeight();
+         coSize.X     = _GetScreenWidth();
+         coDest.Y     = ( SHORT ) s_iUpdtTop;
+         coDest.X     = ( SHORT ) s_iUpdtLeft;
+         srWin.Top    = ( SHORT ) s_iUpdtTop;
+         srWin.Left   = ( SHORT ) s_iUpdtLeft;
+         srWin.Bottom = ( SHORT ) s_iUpdtBottom;
+         srWin.Right  = ( SHORT ) s_iUpdtRight;
 
-         s_usUpdtTop = _GetScreenHeight();
-         s_usUpdtLeft = _GetScreenWidth();
-         s_usUpdtBottom = s_usUpdtRight = 0;
+         s_iUpdtTop = _GetScreenHeight();
+         s_iUpdtLeft = _GetScreenWidth();
+         s_iUpdtBottom = s_iUpdtRight = 0;
 
          WriteConsoleOutput( s_HOutput,         /* output handle */
                              s_pCharInfoScreen, /* data to write */
@@ -514,31 +513,31 @@ static void hb_gt_win_xScreenUpdate( void )
                              &srWin );          /* screen buffer rect to write data to */
       }
 
-      if( s_usOldCurStyle != s_usCursorStyle &&
-          ( s_uiDispCount == 0 || s_usCursorStyle == SC_NONE ) )
+      if( s_iOldCurStyle != s_iCursorStyle &&
+          s_iCursorStyle == SC_NONE )
          hb_gt_win_xSetCursorStyle();
 
-      if( s_usCursorStyle != SC_NONE && s_uiDispCount == 0 &&
-          ( s_csbi.dwCursorPosition.Y != s_sCurRow ||
-            s_csbi.dwCursorPosition.X != s_sCurCol ) )
+      if( s_iCursorStyle != SC_NONE &&
+          ( s_csbi.dwCursorPosition.Y != s_iCurRow ||
+            s_csbi.dwCursorPosition.X != s_iCurCol ) )
          hb_gt_win_xSetCursorPos();
    }
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_win_xUpdtSet( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight )
+static void hb_gt_win_xUpdtSet( int iTop, int iLeft, int iBottom, int iRight )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_xUpdtSet(%hu, %hu, %hu, %hu)", usTop, usLeft, usBottom, usRight));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_xUpdtSet(%d, %d, %d, %d)", iTop, iLeft, iBottom, iRight));
 
-   if( usTop < s_usUpdtTop )
-      s_usUpdtTop = usTop;
-   if( usLeft < s_usUpdtLeft )
-      s_usUpdtLeft = usLeft;
-   if( usBottom > s_usUpdtBottom )
-      s_usUpdtBottom = HB_MIN( usBottom, ( USHORT ) _GetScreenHeight() - 1 );
-   if( usRight > s_usUpdtRight )
-      s_usUpdtRight = HB_MIN( usRight, ( USHORT ) _GetScreenWidth() - 1 );
+   if( iTop < s_iUpdtTop )
+      s_iUpdtTop = iTop;
+   if( iLeft < s_iUpdtLeft )
+      s_iUpdtLeft = iLeft;
+   if( iBottom > s_iUpdtBottom )
+      s_iUpdtBottom = HB_MIN( iBottom, ( int ) _GetScreenHeight() - 1 );
+   if( iRight > s_iUpdtRight )
+      s_iUpdtRight = HB_MIN( iRight, ( int ) _GetScreenWidth() - 1 );
 }
 
 /* *********************************************************************** */
@@ -618,11 +617,11 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
          s_pCharInfoScreen = ( CHAR_INFO * ) hb_xgrab( s_ulScreenBuffSize );
       }
 
-      s_sCurRow = s_csbi.dwCursorPosition.Y;
-      s_sCurCol = s_csbi.dwCursorPosition.X;
-      s_usUpdtTop  = s_csbi.dwSize.Y;
-      s_usUpdtLeft = s_csbi.dwSize.X;
-      s_usUpdtBottom = s_usUpdtRight = 0;
+      s_iCurRow = s_csbi.dwCursorPosition.Y;
+      s_iCurCol = s_csbi.dwCursorPosition.X;
+      s_iUpdtTop = s_csbi.dwSize.Y;
+      s_iUpdtLeft = s_csbi.dwSize.X;
+      s_iUpdtBottom = s_iUpdtRight = 0;
 
       /*
        * Unfortunatelly Windows refuse to read to big area :-(
@@ -654,7 +653,7 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
       {
          hb_gt_win_xGetScreenContents( pGT, &srWin );
       }
-      HB_GTSELF_SETPOS( pGT, s_sCurRow, s_sCurCol );
+      HB_GTSELF_SETPOS( pGT, s_iCurRow, s_iCurCol );
    }
    else if( s_pCharInfoScreen )
    {
@@ -688,8 +687,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_bBreak = FALSE;
    s_cNumRead = 0;
    s_cNumIndex = 0;
-   s_uiDispCount = 0;
-   s_usOldCurStyle = s_usCursorStyle = SC_NORMAL;
+   s_iOldCurStyle = s_iCursorStyle = SC_NORMAL;
    s_bSpecialKeyHandling = FALSE;
    s_bAltKeyHandling = TRUE;
 
@@ -768,8 +766,8 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    memcpy( &s_origCsbi, &s_csbi, sizeof( s_csbi ) );
 
    s_csbi.srWindow.Top = s_csbi.srWindow.Left = 0;
-   s_csbi.srWindow.Right = HB_MIN( s_csbi.srWindow.Right, _GetScreenWidth()-1 );
-   s_csbi.srWindow.Bottom = HB_MIN( s_csbi.srWindow.Bottom, _GetScreenHeight()-1 );
+   s_csbi.srWindow.Right = HB_MIN( s_csbi.srWindow.Right, _GetScreenWidth() - 1 );
+   s_csbi.srWindow.Bottom = HB_MIN( s_csbi.srWindow.Bottom, _GetScreenHeight() - 1 );
 
    SetConsoleWindowInfo( s_HOutput, TRUE,  &s_csbi.srWindow );
    SetConsoleScreenBufferSize( s_HOutput, s_csbi.dwSize );
@@ -1769,12 +1767,12 @@ static void hb_gt_win_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
          if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &bColor, &bAttr, &usChar ) )
             break;
-         s_pCharInfoScreen[i].Char.AsciiChar = ( CHAR ) s_charTrans[ usChar & 0xFF ];
-         s_pCharInfoScreen[i].Attributes = ( WORD ) ( bColor & 0xFF );
+         s_pCharInfoScreen[ i ].Char.AsciiChar = ( CHAR ) s_charTrans[ usChar & 0xFF ];
+         s_pCharInfoScreen[ i ].Attributes = ( WORD ) ( bColor & 0xFF );
          ++i;
       }
 
-      hb_gt_win_xUpdtSet( ( USHORT ) iRow, ( USHORT ) iFirst, ( USHORT ) iRow, ( USHORT ) iCol - 1 );
+      hb_gt_win_xUpdtSet( iRow, iFirst, iRow, iCol - 1 );
    }
 }
 
@@ -1792,18 +1790,18 @@ static void hb_gt_win_Refresh( PHB_GT pGT )
 
       HB_GTSELF_GETSCRCURSOR( pGT, &iRow, &iCol, &iStyle );
 
-      s_sCurRow = ( SHORT ) iRow;
-      s_sCurCol = ( SHORT ) iCol;
+      s_iCurRow = iRow;
+      s_iCurCol = iCol;
 
       if( iRow < 0 || iCol < 0 ||
           iRow >= ( int ) _GetScreenHeight() ||
           iCol >= ( int ) _GetScreenWidth() )
       {
-         s_usCursorStyle = SC_NONE;
+         s_iCursorStyle = SC_NONE;
       }
       else
       {
-         s_usCursorStyle = ( USHORT ) iStyle;
+         s_iCursorStyle = iStyle;
       }
 
       hb_gt_win_xScreenUpdate();

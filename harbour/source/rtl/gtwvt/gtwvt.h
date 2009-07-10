@@ -119,8 +119,8 @@ typedef struct
    HINSTANCE hInstance;                   /* parent window instance */
    int       iCmdShow;
 
-   USHORT   ROWS;                         /* number of displayable rows in window */
-   USHORT   COLS;                         /* number of displayable columns in window */
+   int      ROWS;                         /* number of displayable rows in window */
+   int      COLS;                         /* number of displayable columns in window */
 
    COLORREF COLORS[ 16 ];                 /* colors */
 

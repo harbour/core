@@ -57,10 +57,10 @@
 
 HB_FUNC( SCROLLFIXED )
 {
-   hb_gtScroll( ( USHORT ) hb_parni( 1 ),
-                ( USHORT ) hb_parni( 2 ),
-                ( USHORT ) hb_parni( 3 ),
-                ( USHORT ) hb_parni( 4 ),
-                ( SHORT ) hb_parni( 5 ),   /* Defaults to zero on bad type */
-                ( SHORT ) hb_parni( 6 ) ); /* Defaults to zero on bad type */
+   hb_gtScroll( hb_parni( 1 ),
+                hb_parni( 2 ),
+                hb_parni( 3 ),
+                hb_parni( 4 ),
+                hb_parni( 5 ),   /* Defaults to zero on bad type */
+                hb_parni( 6 ) ); /* Defaults to zero on bad type */
 }
