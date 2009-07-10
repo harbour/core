@@ -726,9 +726,6 @@ typedef unsigned char       hbU8;
                       HB_IT_LONG due to performance reduction. */
 typedef long                hbVMIntMax;       /* TOFIX */
 
-/* To replace error codes. */
-#define HB_RESULT           hbUShort
-
 #define HB_MAX( a, b )          ( ( ( a ) > ( b ) ) ? ( a ) : ( b ) )
 #define HB_MIN( a, b )          ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
 

@@ -224,12 +224,12 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
       hb_errInternal( HB_EI_XFREENULL, "hb_xfree called with a NULL pointer", NULL, NULL );
 }
 
-ULONG hb_xquery( USHORT uiMode )
+ULONG hb_xquery( int iMode )
 {
    ULONG ulResult = 0;
 
 #ifdef HB_FM_STATISTICS
-   switch( uiMode )
+   switch( iMode )
    {
       case HB_MEM_USED:
          ulResult = s_ulMemoryConsumed;
@@ -240,7 +240,7 @@ ULONG hb_xquery( USHORT uiMode )
          break;
    }
 #else
-   HB_SYMBOL_UNUSED( uiMode );
+   HB_SYMBOL_UNUSED( iMode );
 #endif
    return ulResult;
 }
