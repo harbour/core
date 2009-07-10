@@ -863,16 +863,16 @@ HB_ERRCODE hb_gtScrollUp( int iRows )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtDrawShadow( int iTop, int iLeft, int iBottom, int iRight, BYTE byAttr )
+HB_ERRCODE hb_gtDrawShadow( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtDrawShadow(%d, %d, %d, %d, %d)", iTop, iLeft, iBottom, iRight, (int) byAttr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtDrawShadow(%d, %d, %d, %d, %d)", iTop, iLeft, iBottom, iRight, ( int ) bColor));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_DRAWSHADOW( pGT, iTop, iLeft, iBottom, iRight, byAttr );
+      HB_GTSELF_DRAWSHADOW( pGT, iTop, iLeft, iBottom, iRight, bColor );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
@@ -912,16 +912,16 @@ const char * hb_gtVersion( int iType )
    return szVersion;
 }
 
-HB_ERRCODE hb_gtSetAttribute( int iTop, int iLeft, int iBottom, int iRight, BYTE byAttr )
+HB_ERRCODE hb_gtSetAttribute( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetAttribute(%d, %d, %d, %d, %d)", iTop, iLeft, iBottom, iRight, ( int ) byAttr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetAttribute(%d, %d, %d, %d, %d)", iTop, iLeft, iBottom, iRight, ( int ) bColor));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_SETATTRIBUTE( pGT, iTop, iLeft, iBottom, iRight, byAttr );
+      HB_GTSELF_SETATTRIBUTE( pGT, iTop, iLeft, iBottom, iRight, bColor );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;

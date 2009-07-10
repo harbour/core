@@ -181,7 +181,7 @@ extern HB_EXPORT HB_ERRCODE hb_gtColorsToString( int * pColors, int iColorCount,
 extern HB_EXPORT HB_ERRCODE hb_gtDispBegin( void );
 extern HB_EXPORT int        hb_gtDispCount( void );
 extern HB_EXPORT HB_ERRCODE hb_gtDispEnd( void );
-extern HB_EXPORT HB_ERRCODE hb_gtDrawShadow( int iTop, int iLeft, int iBottom, int iRight, BYTE byAttr );
+extern HB_EXPORT HB_ERRCODE hb_gtDrawShadow( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor );
 extern HB_EXPORT HB_ERRCODE hb_gtGetBlink( BOOL * pbBlink );
 extern HB_EXPORT HB_ERRCODE hb_gtGetColorStr( char * pszColorString );
 extern HB_EXPORT HB_ERRCODE hb_gtGetCursor( int * piCursorShape );
@@ -205,7 +205,7 @@ extern HB_EXPORT HB_ERRCODE hb_gtEndWrite( void );
 extern HB_EXPORT HB_ERRCODE hb_gtScrDim( int * piHeight, int * piWidth );
 extern HB_EXPORT HB_ERRCODE hb_gtScroll( int iTop, int iLeft, int iBottom, int iRight, int iRows, int iCols );
 extern HB_EXPORT HB_ERRCODE hb_gtScrollUp( int iRows );
-extern HB_EXPORT HB_ERRCODE hb_gtSetAttribute( int iTop, int iLeft, int iBottom, int iRight, BYTE byAttr );
+extern HB_EXPORT HB_ERRCODE hb_gtSetAttribute( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor );
 extern HB_EXPORT HB_ERRCODE hb_gtSetBlink( BOOL bBlink );
 extern HB_EXPORT HB_ERRCODE hb_gtSetColorStr( const char * pszColorString );
 extern HB_EXPORT HB_ERRCODE hb_gtSetCursor( int iCursorShape );
