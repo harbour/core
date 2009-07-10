@@ -120,13 +120,13 @@ HB_FUNC( GAUGENEW )
 {
    PHB_ITEM pReturn = hb_itemArrayNew( B_LEN );   /* Create array */
 
-   hb_arraySetNL( pReturn, B_TOP, hb_parni( B_TOP ) );
-   hb_arraySetNL( pReturn, B_LEFT, hb_parni( B_LEFT ) );
-   hb_arraySetNL( pReturn, B_BOTTOM,
+   hb_arraySetNI( pReturn, B_TOP, hb_parni( B_TOP ) );
+   hb_arraySetNI( pReturn, B_LEFT, hb_parni( B_LEFT ) );
+   hb_arraySetNI( pReturn, B_BOTTOM,
               HB_ISNUM( B_BOTTOM ) ?
                ( hb_parni( B_BOTTOM ) < hb_parni( B_TOP ) + 2 ?
                    hb_parni( B_TOP ) + 2 : hb_parni( B_BOTTOM ) ) : 0 );
-   hb_arraySetNL( pReturn, B_RIGHT,
+   hb_arraySetNI( pReturn, B_RIGHT,
               HB_ISNUM( B_RIGHT ) ?
                ( hb_parni( B_RIGHT ) < hb_parni( B_LEFT ) + 4 ?
                   hb_parni( B_LEFT ) + 4 : hb_parni( B_RIGHT ) ) : 0 );
@@ -137,7 +137,7 @@ HB_FUNC( GAUGENEW )
                  HB_ISNUM( B_LEFT ) &&
                  ( hb_parni( B_RIGHT ) < hb_parni( B_LEFT ) + 9 ) ) );
    hb_arraySetC( pReturn, B_BARCHAR, HB_ISCHAR( B_BARCHAR ) ? hb_parc( B_BARCHAR ) : "\xdb" );
-   hb_arraySetNL( pReturn, B_PERCENT, 0 );
+   hb_arraySetND( pReturn, B_PERCENT, 0.0 );
 
    hb_itemReturnRelease( pReturn );
 }
@@ -190,8 +190,7 @@ HB_FUNC( GAUGEUPDATE )
 
    if( pArray )
    {
-      hb_gaugeUpdate( pArray, HB_ISNUM( 2 ) ? ( float ) hb_parnd( 2 ) : 0 );
-
+      hb_gaugeUpdate( pArray, ( float ) hb_parnd( 2 ) );
       hb_itemReturn( pArray );
    }
 }
