@@ -105,8 +105,8 @@ static HB_FHANDLE s_hFilenoStderr = ( HB_FHANDLE ) HB_STDERR_HANDLE;
 
 typedef struct
 {
-   USHORT   row;
-   USHORT   col;
+   int      row;
+   int      col;
 } HB_PRNPOS, * PHB_PRNPOS;
 
 static HB_TSD_NEW( s_prnPos, sizeof( HB_PRNPOS ), NULL, NULL );
@@ -249,7 +249,7 @@ void hb_conOutAlt( const char * szStr, ULONG ulLen )
    {
       /* Print to printer if SET PRINTER ON and valid printer file */
       hb_fsWriteLarge( hFile, szStr, ulLen );
-      hb_prnPos()->col += ( USHORT ) ulLen;
+      hb_prnPos()->col += ( int ) ulLen;
    }
 }
 
@@ -264,7 +264,7 @@ static void hb_conOutDev( const char * szStr, ULONG ulLen )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
       hb_fsWriteLarge( hFile, szStr, ulLen );
-      hb_prnPos()->col += ( USHORT ) ulLen;
+      hb_prnPos()->col += ( int ) ulLen;
    }
    else
       /* Otherwise, display to console */
@@ -353,7 +353,7 @@ HB_FUNC( QOUT )
       PHB_PRNPOS pPrnPos = hb_prnPos();
 
       pPrnPos->row++;
-      pPrnPos->col = ( USHORT ) hb_setGetMargin();
+      pPrnPos->col = hb_setGetMargin();
 
       if( pPrnPos->col )
       {
@@ -361,13 +361,13 @@ HB_FUNC( QOUT )
          {
             char * pBuf = ( char * ) hb_xgrab( pPrnPos->col );
             memset( pBuf, ' ', pPrnPos->col );
-            hb_fsWrite( hFile, pBuf, pPrnPos->col );
+            hb_fsWrite( hFile, pBuf, ( USHORT ) pPrnPos->col );
             hb_xfree( pBuf );
          }
          else
          {
             memset( buf, ' ', pPrnPos->col );
-            hb_fsWrite( hFile, buf, pPrnPos->col );
+            hb_fsWrite( hFile, buf, ( USHORT ) pPrnPos->col );
          }
       }
    }
@@ -411,18 +411,18 @@ static void hb_conDevPos( int iRow, int iCol )
 
    if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_DEV ) ) != FS_ERROR )
    {
-      USHORT uiPRow = ( USHORT ) iRow;
-      USHORT uiPCol = ( USHORT ) iCol + ( USHORT ) hb_setGetMargin();
+      int iPRow = iRow;
+      int iPCol = iCol + hb_setGetMargin();
       PHB_PRNPOS pPrnPos = hb_prnPos();
 
-      if( pPrnPos->row != uiPRow || pPrnPos->col != uiPCol )
+      if( pPrnPos->row != iPRow || pPrnPos->col != iPCol )
       {
          char buf[ 256 ];
          int iPtr = 0;
 
-         if( pPrnPos->row != uiPRow )
+         if( pPrnPos->row != iPRow )
          {
-            if( ++pPrnPos->row > uiPRow )
+            if( ++pPrnPos->row > iPRow )
             {
                memcpy( &buf[ iPtr ], "\x0C\x0D\x00\x00", 2 );  /* Source buffer is 4 bytes to make CodeGuard happy */
                iPtr += 2;
@@ -434,7 +434,7 @@ static void hb_conDevPos( int iRow, int iCol )
                iPtr += s_iCrLfLen;
             }
 
-            while( pPrnPos->row < uiPRow )
+            while( pPrnPos->row < iPRow )
             {
                if( iPtr + s_iCrLfLen > ( int ) sizeof( buf ) )
                {
@@ -447,13 +447,13 @@ static void hb_conDevPos( int iRow, int iCol )
             }
             pPrnPos->col = 0;
          }
-         else if( pPrnPos->col > uiPCol )
+         else if( pPrnPos->col > iPCol )
          {
             buf[ iPtr++ ] = '\x0D';
             pPrnPos->col = 0;
          }
 
-         while( pPrnPos->col < uiPCol )
+         while( pPrnPos->col < iPCol )
          {
             if( iPtr == ( int ) sizeof( buf ) )
             {
@@ -485,8 +485,8 @@ HB_FUNC( SETPRC ) /* Sets the current printer row and column positions */
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
       PHB_PRNPOS pPrnPos = hb_prnPos();
-      pPrnPos->row = ( USHORT ) hb_parni( 1 );
-      pPrnPos->col = ( USHORT ) hb_parni( 2 );
+      pPrnPos->row = hb_parni( 1 );
+      pPrnPos->col = hb_parni( 2 );
    }
 }
 
