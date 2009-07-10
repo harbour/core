@@ -1226,10 +1226,11 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                {
                   for( icol = left; icol <= right; icol++ )
                   {
-                     BYTE bColor, bAttr;
+                     int iColor;
+                     BYTE bAttr;
                      USHORT usChar;
 
-                     if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
+                     if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &iColor, &bAttr, &usChar ) )
                         break;
 
                      sBuffer[ j++ ] = ( char ) usChar;
@@ -1738,9 +1739,10 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    HDC         hdc;
    RECT        rcRect;
    int         iRow, iCol, startCol, len;
-   BYTE        bColor, bAttr, bOldColor = 0;
+   int         iColor, iOldColor = 0;
+   BYTE        bAttr;
 #if ! defined( UNICODE )
-   BYTE        bOldAttr = 0;
+   HFONT       hFont, hOldFont = NULL;
 #endif
    USHORT      usChar;
    TCHAR       text[ WVT_MAX_ROWS ];
@@ -1799,48 +1801,53 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 
       while( iCol <= rcRect.right )
       {
-         if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
+         if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
             break;
 
-      #if defined( UNICODE )
+         iColor &= 0xff;
+#if defined( UNICODE )
          usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, TRUE, ( BYTE ) usChar );
          if( len == 0 )
          {
-            bOldColor = bColor;
+            iOldColor = iColor;
          }
-         else if( bColor != bOldColor )
+         else if( iColor != iOldColor )
          {
-            hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
-            bOldColor = bColor;
+            hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, iOldColor, text, ( USHORT ) len );
+            iOldColor = iColor;
             startCol = iCol;
             len = 0;
          }
-      #else
+#else
          usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
+         hFont = ( bAttr & HB_GT_ATTR_BOX ) ? pWVT->hFontBox : pWVT->hFont;
          if( len == 0 )
          {
-            SelectObject( hdc, ( bAttr & HB_GT_ATTR_BOX ) ? pWVT->hFontBox : pWVT->hFont );
-            bOldAttr = bAttr;
-            bOldColor = bColor;
-         }
-         else if( bColor != bOldColor || bAttr != bOldAttr )
-         {
-            hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
-            if( bAttr != bOldAttr )
+            if( hFont != hOldFont )
             {
-               SelectObject( hdc, ( bAttr & HB_GT_ATTR_BOX ) ? pWVT->hFontBox : pWVT->hFont );
-               bOldAttr = bAttr;
+               SelectObject( hdc, hFont );
+               hOldFont = hFont;
             }
-            bOldColor = bColor;
+            iOldColor = iColor;
+         }
+         else if( iColor != iOldColor || hFont != hOldFont )
+         {
+            hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, iOldColor, text, ( USHORT ) len );
+            if( hFont != hOldFont )
+            {
+               SelectObject( hdc, hFont );
+               hOldFont = hFont;
+            }
+            iOldColor = iColor;
             startCol = iCol;
             len = 0;
          }
-      #endif
+#endif
          text[ len++ ] = ( TCHAR ) usChar;
          iCol++;
       }
       if( len > 0 )
-         hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
+         hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, iOldColor, text, ( USHORT ) len );
    }
 
    /* Transfer on screen from bitmap */
@@ -2710,9 +2717,9 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 /* ********************************************************************** */
 
 static BOOL hb_gt_wvt_PutChar( PHB_GT pGT, int iRow, int iCol,
-                               BYTE bColor, BYTE bAttr, USHORT usChar )
+                               int iColor, BYTE bAttr, USHORT usChar )
 {
-   if( HB_GTSUPER_PUTCHAR( pGT, iRow, iCol, bColor, bAttr, usChar ) )
+   if( HB_GTSUPER_PUTCHAR( pGT, iRow, iCol, iColor, bAttr, usChar ) )
    {
       HB_GTSELF_TOUCHCELL( pGT, iRow, iCol );
       return TRUE;

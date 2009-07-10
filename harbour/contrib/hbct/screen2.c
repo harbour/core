@@ -78,7 +78,7 @@ HB_FUNC( SAYDOWN )
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
-         BYTE bColor = ( BYTE ) hb_gtGetCurrColor();
+         int iColor = hb_gtGetCurrColor();
 
          if( ulLen > ( ULONG ) ( iMaxRow - iRow + 1 ) )
             ulLen = ( ULONG ) ( iMaxRow - iRow + 1 );
@@ -86,7 +86,7 @@ HB_FUNC( SAYDOWN )
          hb_gtBeginWrite();
          while( ulLen-- )
          {
-            hb_gtPutChar( iRow++, iCol, bColor, 0, ( UCHAR ) *szText++ );
+            hb_gtPutChar( iRow++, iCol, iColor, 0, ( UCHAR ) *szText++ );
             if( lDelay )
             {
                hb_gtEndWrite();
@@ -387,7 +387,7 @@ HB_FUNC( STRSCREEN )
             do
             {
                USHORT usChar = ( UCHAR ) *szText++;
-               int iColor = *szText++;
+               int iColor = ( UCHAR ) *szText++;
                hb_gtPutChar( iRow, iC, iColor, 0, usChar );
                ulLen -= 2;
             }

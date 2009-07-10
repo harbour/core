@@ -2539,7 +2539,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
    BYTE oldColor = 0, color, attr;
    USHORT usCh16, usChBuf[XWC_MAX_COLS];
    ULONG ulCurr = 0xFFFFFFFFL;
-   int i;
+   int i, iColor;
 
 #ifdef XWC_DEBUG
    printf( "Repaint(%d,%d,%d,%d)[%dx%d]\r\n", rowStart, colStart, rowStop, colStop, wnd->fontHeight, wnd->fontWidth );fflush(stdout);
@@ -2561,14 +2561,17 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
        */
       while( icol <= colStop )
       {
-         if( ! HB_GTSELF_GETSCRCHAR( wnd->pGT, irow, icol, &color, &attr, &usCh16 ) )
+         if( ! HB_GTSELF_GETSCRCHAR( wnd->pGT, irow, icol, &iColor, &attr, &usCh16 ) )
          {
             color = 0x07;
             attr = 0;
             usCh16 = ' ';
          }
          else
+         {
             usCh16 &= 0xFF;
+            color &= ( BYTE ) iColor;
+         }
          ulCurr = hb_gt_xwc_HashCurrChar( attr, color, usCh16 );
          if( wnd->charTrans[ usCh16 ].inverse )
          {
@@ -2830,7 +2833,8 @@ static void hb_gt_xwc_UpdateCursor( PXWND_DEF wnd )
          }
          if( size )
          {
-            BYTE color, attr;
+            int color;
+            BYTE attr;
             USHORT usChar;
 
             HB_GTSELF_GETSCRCHAR( wnd->pGT, wnd->row, wnd->col, &color, &attr, &usChar );

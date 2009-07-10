@@ -357,7 +357,7 @@ HB_FUNC( QOUT )
 
       if( pPrnPos->col )
       {
-         if( pPrnPos->col > sizeof( buf ) )
+         if( pPrnPos->col > ( int ) sizeof( buf ) )
          {
             char * pBuf = ( char * ) hb_xgrab( pPrnPos->col );
             memset( pBuf, ' ', pPrnPos->col );

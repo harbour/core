@@ -3227,9 +3227,9 @@ static BOOL hb_gt_trm_Resume( PHB_GT pGT )
 }
 
 static void hb_gt_trm_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                              int iColor, BYTE bChar, int iRows, int iCols )
+                              int iColor, USHORT usChar, int iRows, int iCols )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", pGT, iTop, iLeft, iBottom, iRight, iColor, bChar, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", pGT, iTop, iLeft, iBottom, iRight, iColor, usChar, iRows, iCols ) );
 
    /* Provide some basic scroll support for full screen */
    if( iCols == 0 && iRows > 0 && iTop == 0 && iLeft == 0 )
@@ -3242,7 +3242,7 @@ static void hb_gt_trm_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
           pTerm->iRow == iHeight - 1 )
       {
          /* scroll up the internal screen buffer */
-         HB_GTSELF_SCROLLUP( pGT, iRows, iColor, bChar );
+         HB_GTSELF_SCROLLUP( pGT, iRows, iColor, usChar );
          /* set default color for terminals which use it to erase
           * scrolled area */
          pTerm->SetAttributes( pTerm, iColor & pTerm->iAttrMask );
@@ -3255,7 +3255,7 @@ static void hb_gt_trm_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
       }
    }
 
-   HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, iColor, bChar, iRows, iCols );
+   HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, iColor, usChar, iRows, iCols );
 }
 
 static BOOL hb_gt_trm_SetMode( PHB_GT pGT, int iRows, int iCols )

@@ -199,11 +199,11 @@ static const char * hb_gt_cgi_Version( PHB_GT pGT, int iType )
 }
 
 static void hb_gt_cgi_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                              int iColor, BYTE bChar, int iRows, int iCols )
+                              int iColor, USHORT usChar, int iRows, int iCols )
 {
    int iHeight, iWidth;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", pGT, iTop, iLeft, iBottom, iRight, iColor, bChar, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", pGT, iTop, iLeft, iBottom, iRight, iColor, usChar, iRows, iCols ) );
 
    /* Provide some basic scroll support for full screen */
    HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
@@ -214,7 +214,7 @@ static void hb_gt_cgi_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
       PHB_GTCGI pGTCGI = HB_GTCGI_GET( pGT );
 
       /* scroll up the internal screen buffer */
-      HB_GTSELF_SCROLLUP( pGT, iRows, iColor, bChar );
+      HB_GTSELF_SCROLLUP( pGT, iRows, iColor, usChar );
       /* update our internal row position */
       pGTCGI->iRow -= iRows;
       if( pGTCGI->iRow < 0 )
@@ -222,7 +222,7 @@ static void hb_gt_cgi_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
       pGTCGI->iLastCol = pGTCGI->iCol = 0;
    }
    else
-      HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, iColor, bChar, iRows, iCols );
+      HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, iColor, usChar, iRows, iCols );
 }
 
 static BOOL hb_gt_cgi_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )

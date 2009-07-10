@@ -322,7 +322,7 @@ static int  hb_gt_def_GetClearChar( PHB_GT pGT )
 
 static void hb_gt_def_SetClearChar( PHB_GT pGT, int iChar )
 {
-   pGT->uiClearChar = iChar;
+   pGT->uiClearChar = ( USHORT ) iChar;
 }
 
 /* helper internal function */
@@ -1093,7 +1093,7 @@ static void hb_gt_def_DrawShadow( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
 }
 
 static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                              int iColor, BYTE bChar, int iRows, int iCols )
+                              int iColor, USHORT usChar, int iRows, int iCols )
 {
    int iColOld, iColNew, iColSize, iColClear, iClrs, iLength;
 
@@ -1142,10 +1142,10 @@ static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
             HB_GTSELF_SAVE( pGT, iRowPos + iRows, iColOld, iRowPos + iRows, iColOld + iColSize, pBuffer );
             HB_GTSELF_REST( pGT, iRowPos, iColNew, iRowPos, iColNew + iColSize, pBuffer );
             if( iClrs )
-               HB_GTSELF_REPLICATE( pGT, iRowPos, iColClear, iColor, 0, bChar, iClrs );
+               HB_GTSELF_REPLICATE( pGT, iRowPos, iColClear, iColor, 0, usChar, iClrs );
          }
          else
-            HB_GTSELF_REPLICATE( pGT, iRowPos, iLeft, iColor, 0, bChar, iLength );
+            HB_GTSELF_REPLICATE( pGT, iRowPos, iLeft, iColor, 0, usChar, iLength );
       }
 
       if( pBuffer )
@@ -1154,7 +1154,7 @@ static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
 }
 
 static void hb_gt_def_ScrollArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                                  int iColor, BYTE bChar, int iRows, int iCols )
+                                  int iColor, USHORT usChar, int iRows, int iCols )
 {
    if( iRows || iCols )
    {
@@ -1228,16 +1228,16 @@ static void hb_gt_def_ScrollArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
                   }
                }
                if( iClrs )
-                  HB_GTSELF_REPLICATE( pGT, iRowPos, iColClear, iColor, 0, bChar, iClrs );
+                  HB_GTSELF_REPLICATE( pGT, iRowPos, iColClear, iColor, 0, usChar, iClrs );
             }
             else
-               HB_GTSELF_REPLICATE( pGT, iRowPos, iLeft, iColor, 0, bChar, iLength );
+               HB_GTSELF_REPLICATE( pGT, iRowPos, iLeft, iColor, 0, usChar, iLength );
          }
       }
    }
 }
 
-static void hb_gt_def_ScrollUp( PHB_GT pGT, int iRows, int iColor, BYTE bChar )
+static void hb_gt_def_ScrollUp( PHB_GT pGT, int iRows, int iColor, USHORT usChar )
 {
    if( iRows > 0 )
    {
@@ -1263,7 +1263,7 @@ static void hb_gt_def_ScrollUp( PHB_GT pGT, int iRows, int iColor, BYTE bChar )
       {
          for( j = 0; j < iWidth; ++j )
          {
-            pGT->screenBuffer[ lIndex ].c.usChar = bChar;
+            pGT->screenBuffer[ lIndex ].c.usChar = usChar;
             pGT->screenBuffer[ lIndex ].c.bColor = ( BYTE ) iColor;
             pGT->screenBuffer[ lIndex ].c.bAttr  = bAttr;
             ++lIndex;
@@ -1296,18 +1296,18 @@ static void hb_gt_def_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
    if( iTop <= iMaxRow && iLeft <= iMaxCol && iBottom >= 0 && iRight >= 0 )
    {
       char szBox[ 10 ];
-      BYTE bPadCh = HB_GTSELF_GETCLEARCHAR( pGT );
+      char cPadCh = HB_GTSELF_GETCLEARCHAR( pGT );
 
       if( szFrame )
       {
          for( i = 0; *szFrame && i < 9; ++i )
-            bPadCh = szBox[ i ] = *szFrame++;
+            cPadCh = szBox[ i ] = *szFrame++;
       }
       else
          i = 0;
 
       while( i < 8 )
-         szBox[ i++ ] = bPadCh;
+         szBox[ i++ ] = cPadCh;
       szBox[ i ] = '\0';
 
       if( iTop == iBottom )
@@ -1372,7 +1372,7 @@ static void hb_gt_def_BoxD( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
 }
 
 static void hb_gt_def_HorizLine( PHB_GT pGT, int iRow, int iLeft, int iRight,
-                                 BYTE bChar, int iColor )
+                                 USHORT usChar, int iColor )
 {
    int iLength, iCol;
 
@@ -1387,11 +1387,11 @@ static void hb_gt_def_HorizLine( PHB_GT pGT, int iRow, int iLeft, int iRight,
       iCol = iRight;
    }
 
-   HB_GTSELF_REPLICATE( pGT, iRow, iCol, iColor, HB_GT_ATTR_BOX, bChar, iLength );
+   HB_GTSELF_REPLICATE( pGT, iRow, iCol, iColor, HB_GT_ATTR_BOX, usChar, iLength );
 }
 
 static void hb_gt_def_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom,
-                                BYTE bChar, int iColor )
+                                USHORT usChar, int iColor )
 {
    int iLength, iRow;
 
@@ -1414,7 +1414,7 @@ static void hb_gt_def_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom,
 
    while( --iLength >= 0 )
    {
-      if( !HB_GTSELF_PUTCHAR( pGT, iRow, iCol, iColor, HB_GT_ATTR_BOX, bChar ) )
+      if( !HB_GTSELF_PUTCHAR( pGT, iRow, iCol, iColor, HB_GT_ATTR_BOX, usChar ) )
          break;
       ++iRow;
    }

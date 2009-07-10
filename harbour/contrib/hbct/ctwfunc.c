@@ -88,7 +88,7 @@ HB_FUNC( SETCLEARA )
    int iColor = hb_ctColorParam( 1, -1 );
 
    if( iColor >= 0 )
-      hb_gtSetClearColor( iColor & 0xff );
+      hb_gtSetClearColor( iColor );
 
    hb_retc_null();
 }
@@ -100,11 +100,11 @@ HB_FUNC( SETCLEARB )
    if( HB_ISNUM( 1 ) )
       iNew = hb_parni( 1 );
    else if( HB_ISCHAR( 1 ) )
-      iNew = hb_parc( 1 )[0];
+      iNew = ( UCHAR ) hb_parc( 1 )[0];
    else
       iNew = 255;
 
-   hb_gtSetClearChar( iNew & 0xff );
+   hb_gtSetClearChar( iNew );
 
    hb_retc_null();
 }

@@ -1103,7 +1103,8 @@ static void hb_gt_alleg_gfx_Text( PHB_GT pGT, int iTop, int iLeft, const char * 
 
 static void hb_gt_alleg_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-   BYTE bColor, bAttr;
+   int iColor;
+   BYTE bAttr;
    USHORT usChar;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_alleg_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
@@ -1121,23 +1122,23 @@ static void hb_gt_alleg_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
       while( iSize-- )
       {
-         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &bColor, &bAttr, &usChar ) )
+         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &iColor, &bAttr, &usChar ) )
             break;
-         al_draw_rect_fill( s_bmp,  iPosX, iPosY, iPosX + s_byFontWidth - 1, iPosY + s_byFontSize - 1, s_pClr[bColor >> 4] );
-         ssfDrawChar( s_bmp, &s_ssfDefaultFont, ( BYTE ) usChar, iPosX, iPosY, s_pClr[bColor & 0x0F] );
+         al_draw_rect_fill( s_bmp,  iPosX, iPosY, iPosX + s_byFontWidth - 1, iPosY + s_byFontSize - 1, s_pClr[( iColor >> 4 ) & 0x0F] );
+         ssfDrawChar( s_bmp, &s_ssfDefaultFont, ( BYTE ) usChar, iPosX, iPosY, s_pClr[iColor & 0x0F] );
          iPosX += s_byFontWidth;
       }
    }
    else if( !s_fMakeInit )
    {
-      BYTE bDefColor = HB_GTSELF_GETCOLOR( pGT );
+      int iDefColor = HB_GTSELF_GETCOLOR( pGT );
 
       while( iSize-- )
       {
-         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &bColor, &bAttr, &usChar ) )
+         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &iColor, &bAttr, &usChar ) )
             break;
 
-         if( bColor != bDefColor || usChar != ' ' )
+         if( iColor != iDefColor || usChar != ' ' )
          {
             s_fMakeInit = TRUE;
             break;

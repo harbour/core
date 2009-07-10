@@ -1563,6 +1563,10 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
             break;
 
+         /* as long as GTWVT uses only 16 colors we can ignore other bits
+          * and not divide output when it does not change anythings
+          */
+         iColor &= 0xff;
 #if defined( UNICODE )
          usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, TRUE, ( BYTE ) usChar );
          if( len == 0 )

@@ -176,7 +176,7 @@ HB_FUNC( SCREENMIX )
          i = iCol;
          do
          {
-            if( hb_gtPutChar( iRow, i++, szAttr[ ul ], 0, ( UCHAR ) *szText++ ) != HB_SUCCESS )
+            if( hb_gtPutChar( iRow, i++, ( UCHAR ) szAttr[ ul ], 0, ( UCHAR ) *szText++ ) != HB_SUCCESS )
             {
                if( ++iRow > hb_gtMaxRow() )
                   break;
@@ -341,13 +341,12 @@ HB_FUNC( CLEARWIN )
 
    if( hb_ctGetWinCord( &iTop, &iLeft, &iBottom, &iRight ) )
    {
-      int iColor;
-      BYTE bChar;
+      int iColor, iChar;
 
       iColor = hb_ctGetClearColor( 5 );
-      bChar = ( BYTE ) hb_ctGetClearChar( 6 );
+      iChar = hb_ctGetClearChar( 6 );
 
-      hb_gtScrollEx( iTop, iLeft, iBottom, iRight, iColor, bChar, 0, 0 );
+      hb_gtScrollEx( iTop, iLeft, iBottom, iRight, iColor, iChar, 0, 0 );
    }
 
    hb_retc_null();
@@ -464,25 +463,25 @@ HB_FUNC( INVERTWIN )
 HB_FUNC( UNTEXTWIN )
 {
    int iTop, iLeft, iBottom, iRight;
-   UCHAR ucRepl, ucInit, ucEnd;
+   USHORT usRepl, usInit, usEnd;
 
    if( hb_ctGetWinCord( &iTop, &iLeft, &iBottom, &iRight ) )
    {
-      ucRepl = ( UCHAR ) hb_ctGetClearChar( 5 );
+      usRepl = ( USHORT ) hb_ctGetClearChar( 5 );
 
       if( HB_ISNUM( 6 ) )
-         ucInit = ( UCHAR ) hb_parni( 6 );
+         usInit = ( USHORT ) hb_parni( 6 );
       else if( hb_parclen( 6 ) > 0 )
-         ucInit = ( UCHAR ) hb_parc( 6 )[0];
+         usInit = ( UCHAR ) hb_parc( 6 )[0];
       else
-         ucInit = 176;
+         usInit = 176;
 
       if( HB_ISNUM( 7 ) )
-         ucEnd = ( UCHAR ) hb_parni( 7 );
+         usEnd = ( USHORT ) hb_parni( 7 );
       else if( hb_parclen( 7 ) > 0 )
-         ucEnd = ( UCHAR ) hb_parc( 7 )[0];
+         usEnd = ( UCHAR ) hb_parc( 7 )[0];
       else
-         ucEnd = 223;
+         usEnd = 223;
 
       hb_gtBeginWrite();
       while( iTop <= iBottom )
@@ -495,9 +494,9 @@ HB_FUNC( UNTEXTWIN )
             USHORT usChar;
 
             hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
-            if( ucInit <= ucEnd ? ( usChar < ucInit || usChar > ucEnd ) :
-                                  ( usChar > ucEnd && usChar < ucInit ) )
-               hb_gtPutChar( iTop, iCol, iColor, bAttr, ucRepl );
+            if( usInit <= usEnd ? ( usChar < usInit || usChar > usEnd ) :
+                                  ( usChar > usEnd && usChar < usInit ) )
+               hb_gtPutChar( iTop, iCol, iColor, bAttr, usRepl );
             ++iCol;
          }
          ++iTop;
@@ -552,15 +551,15 @@ HB_FUNC( CHARWIN )
 
    if( hb_ctGetWinCord( &iTop, &iLeft, &iBottom, &iRight ) )
    {
-      UCHAR ucNewChar, ucOldChar = 0;
+      USHORT usNewChar, usOldChar = 0;
       BOOL fAll = FALSE;
 
-      ucNewChar = ( UCHAR ) hb_ctGetClearChar( 5 );
+      usNewChar = ( USHORT ) hb_ctGetClearChar( 5 );
 
       if( HB_ISNUM( 6 ) )
-         ucOldChar = ( UCHAR ) hb_parni( 6 );
+         usOldChar = ( USHORT ) hb_parni( 6 );
       else if( hb_parclen( 6 ) > 0 )
-         ucOldChar = ( UCHAR ) hb_parc( 6 )[0];
+         usOldChar = ( UCHAR ) hb_parc( 6 )[0];
       else
          fAll = TRUE;
 
@@ -575,8 +574,8 @@ HB_FUNC( CHARWIN )
             USHORT usChar;
 
             hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
-            if( fAll || usChar == ucOldChar )
-               hb_gtPutChar( iTop, iCol, iColor, bAttr, ucNewChar );
+            if( fAll || usChar == usOldChar )
+               hb_gtPutChar( iTop, iCol, iColor, bAttr, usNewChar );
             ++iCol;
          }
          ++iTop;
@@ -634,13 +633,13 @@ HB_FUNC( COLORWIN )
 
    if( hb_ctGetWinCord( &iTop, &iLeft, &iBottom, &iRight ) )
    {
-      UCHAR ucNewColor, ucOldColor = 0;
+      int iNewColor, iOldColor = 0;
       BOOL fAll = FALSE;
 
-      ucNewColor = ( UCHAR ) hb_ctGetClearColor( 5 );
+      iNewColor = hb_ctGetClearColor( 5 );
 
       if( HB_ISNUM( 6 ) || HB_ISCHAR( 6 ) )
-         ucOldColor = ( UCHAR ) hb_ctGetClearColor( 6 );
+         iOldColor = hb_ctGetClearColor( 6 );
       else
          fAll = TRUE;
 
@@ -655,8 +654,8 @@ HB_FUNC( COLORWIN )
             USHORT usChar;
 
             hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
-            if( fAll || iColor == ucOldColor )
-               hb_gtPutChar( iTop, iCol, ucNewColor, bAttr, usChar );
+            if( fAll || iColor == iOldColor )
+               hb_gtPutChar( iTop, iCol, iNewColor, bAttr, usChar );
             ++iCol;
          }
          ++iTop;
@@ -765,13 +764,13 @@ HB_FUNC( COLORREPL )
    int iMaxRow = hb_gtMaxRow();
    int iMaxCol = hb_gtMaxCol();
    int iRow = 0, iCol;
-   UCHAR ucNewColor, ucOldColor = 0;
+   int iNewColor, iOldColor = 0;
    BOOL fAll = FALSE;
 
-   ucNewColor = ( UCHAR ) hb_ctGetClearColor( 1 );
+   iNewColor = hb_ctGetClearColor( 1 );
 
    if( HB_ISNUM( 2 ) || HB_ISCHAR( 2 ) )
-      ucOldColor = ( UCHAR ) hb_ctGetClearColor( 2 );
+      iOldColor = hb_ctGetClearColor( 2 );
    else
       fAll = TRUE;
 
@@ -786,8 +785,8 @@ HB_FUNC( COLORREPL )
          USHORT usChar;
 
          hb_gtGetChar( iRow, iCol, &iColor, &bAttr, &usChar );
-         if( fAll || iColor == ucOldColor )
-            hb_gtPutChar( iRow, iCol, ucNewColor, bAttr, usChar );
+         if( fAll || iColor == iOldColor )
+            hb_gtPutChar( iRow, iCol, iNewColor, bAttr, usChar );
          ++iCol;
       }
       ++iRow;

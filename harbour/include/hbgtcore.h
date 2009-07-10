@@ -122,7 +122,7 @@ typedef struct
    void     (* SemiCold) ( HB_GT_PTR );
    void     (* ColdArea) ( HB_GT_PTR, int, int, int, int );
    void     (* ExposeArea) ( HB_GT_PTR, int, int, int, int );
-   void     (* ScrollArea) ( HB_GT_PTR, int, int, int, int, int, BYTE, int, int );
+   void     (* ScrollArea) ( HB_GT_PTR, int, int, int, int, int, USHORT, int, int );
    void     (* TouchLine) ( HB_GT_PTR, int );
    void     (* TouchCell) ( HB_GT_PTR, int, int );
    void     (* Redraw) ( HB_GT_PTR, int, int, int );
@@ -167,13 +167,13 @@ typedef struct
    void     (* WriteCon) ( HB_GT_PTR, const char *, ULONG );
    void     (* SetAttribute) ( HB_GT_PTR, int, int, int, int, int );
    void     (* DrawShadow) ( HB_GT_PTR, int, int, int, int, int );
-   void     (* Scroll) ( HB_GT_PTR, int, int, int, int, int, BYTE, int, int );
-   void     (* ScrollUp) ( HB_GT_PTR, int, int, BYTE );
+   void     (* Scroll) ( HB_GT_PTR, int, int, int, int, int, USHORT, int, int );
+   void     (* ScrollUp) ( HB_GT_PTR, int, int, USHORT );
    void     (* Box) ( HB_GT_PTR, int, int, int, int, const char *, int );
    void     (* BoxD) ( HB_GT_PTR, int, int, int, int, const char *, int );
    void     (* BoxS) ( HB_GT_PTR, int, int, int, int, const char *, int );
-   void     (* HorizLine) ( HB_GT_PTR, int, int, int, BYTE, int );
-   void     (* VertLine) ( HB_GT_PTR, int, int, int, BYTE, int );
+   void     (* HorizLine) ( HB_GT_PTR, int, int, int, USHORT, int );
+   void     (* VertLine) ( HB_GT_PTR, int, int, int, USHORT, int );
    BOOL     (* GetBlink) ( HB_GT_PTR );
    void     (* SetBlink) ( HB_GT_PTR, BOOL );
    void     (* SetSnowFlag) ( HB_GT_PTR, BOOL );
