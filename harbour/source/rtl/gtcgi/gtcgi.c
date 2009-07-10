@@ -199,11 +199,11 @@ static const char * hb_gt_cgi_Version( PHB_GT pGT, int iType )
 }
 
 static void hb_gt_cgi_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                              BYTE bColor, BYTE bChar, int iRows, int iCols )
+                              int iColor, BYTE bChar, int iRows, int iCols )
 {
    int iHeight, iWidth;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", pGT, iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", pGT, iTop, iLeft, iBottom, iRight, iColor, bChar, iRows, iCols ) );
 
    /* Provide some basic scroll support for full screen */
    HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
@@ -214,7 +214,7 @@ static void hb_gt_cgi_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
       PHB_GTCGI pGTCGI = HB_GTCGI_GET( pGT );
 
       /* scroll up the internal screen buffer */
-      HB_GTSELF_SCROLLUP( pGT, iRows, bColor, bChar );
+      HB_GTSELF_SCROLLUP( pGT, iRows, iColor, bChar );
       /* update our internal row position */
       pGTCGI->iRow -= iRows;
       if( pGTCGI->iRow < 0 )
@@ -222,7 +222,7 @@ static void hb_gt_cgi_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
       pGTCGI->iLastCol = pGTCGI->iCol = 0;
    }
    else
-      HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols );
+      HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, iColor, bChar, iRows, iCols );
 }
 
 static BOOL hb_gt_cgi_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )
@@ -338,7 +338,8 @@ static void hb_gt_cgi_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * szTe
 
 static void hb_gt_cgi_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-   BYTE bColor, bAttr;
+   int iColor;
+   BYTE bAttr;
    USHORT usChar;
    int iLineFeed, iHeight, iWidth, iLen;
    PHB_GTCGI pGTCGI;
@@ -368,7 +369,7 @@ static void hb_gt_cgi_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    }
 
    while( iSize > 0 && iCol + iSize > pGTCGI->iLastCol &&
-          HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iSize - 1, &bColor, &bAttr, &usChar ) )
+          HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iSize - 1, &iColor, &bAttr, &usChar ) )
    {
       if( usChar != ' ' )
          break;
@@ -383,7 +384,7 @@ static void hb_gt_cgi_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
       while( iLen < iSize )
       {
-         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
+         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
             break;
          pGTCGI->sLineBuf[ iLen++ ] = ( char ) usChar;
          ++iCol;

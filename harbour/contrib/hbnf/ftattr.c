@@ -202,10 +202,11 @@ HB_FUNC( FT_SAVEATT )
          int iCol = iLeft;
          while( iCol <= iRight )
          {
-            BYTE bColor, bAttr;
+            int iColor;
+            BYTE bAttr;
             USHORT usChar;
-            hb_gtGetChar( iTop, iCol, &bColor, &bAttr, &usChar );
-            *pBuffer++ = ( char ) bColor;
+            hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
+            *pBuffer++ = ( char ) iColor;
             ++iCol;
          }
          ++iTop;
@@ -414,11 +415,12 @@ HB_FUNC( FT_RESTATT )
             int iCol = iLeft;
             while( ulLen && iCol <= iRight )
             {
-               BYTE bColor, bAttr;
+               int iColor;
+               BYTE bAttr;
                USHORT usChar;
-               hb_gtGetChar( iTop, iCol, &bColor, &bAttr, &usChar );
-               bColor = *pAttrib++;
-               hb_gtPutChar( iTop, iCol, bColor, bAttr, usChar );
+               hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
+               iColor = *pAttrib++;
+               hb_gtPutChar( iTop, iCol, iColor, bAttr, usChar );
                ++iCol;
                --ulLen;
             }

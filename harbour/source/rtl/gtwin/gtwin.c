@@ -1758,17 +1758,18 @@ static void hb_gt_win_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    if( iSize > 0 && s_pCharInfoScreen &&
        iRow < ( int ) _GetScreenHeight() && iCol < ( int ) _GetScreenWidth() )
    {
-      BYTE bColor, bAttr;
+      int iColor;
+      BYTE bAttr;
       USHORT usChar;
       int iFirst = iCol;
       int i = ( iRow * _GetScreenWidth() + iCol );
 
       while( iSize-- > 0 )
       {
-         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &bColor, &bAttr, &usChar ) )
+         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &iColor, &bAttr, &usChar ) )
             break;
          s_pCharInfoScreen[ i ].Char.AsciiChar = ( CHAR ) s_charTrans[ usChar & 0xFF ];
-         s_pCharInfoScreen[ i ].Attributes = ( WORD ) ( bColor & 0xFF );
+         s_pCharInfoScreen[ i ].Attributes = ( WORD ) ( iColor & 0xFF );
          ++i;
       }
 

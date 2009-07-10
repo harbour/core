@@ -1026,15 +1026,16 @@ static void hb_gt_sln_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    if( s_fActive )
    {
       SLsmg_Char_Type SLchar;
-      BYTE bColor, bAttr;
+      int iColor;
+      BYTE bAttr;
       USHORT usChar;
 
       while( iSize-- > 0 )
       {
-         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
+         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
             break;
          SLsmg_gotorc( iRow, iCol );
-         HB_SLN_BUILD_CHAR( SLchar, usChar & 0xff, bColor, bAttr );
+         HB_SLN_BUILD_CHAR( SLchar, usChar & 0xFF, iColor, bAttr );
          SLsmg_write_raw( &SLchar, 1 );
          ++iCol;
       }

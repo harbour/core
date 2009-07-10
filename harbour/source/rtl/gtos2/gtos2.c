@@ -786,7 +786,9 @@ static BOOL hb_gt_os2_Resume( PHB_GT pGT )
 
 static void hb_gt_os2_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-   char * pBufPtr = s_sLineBuf, bColor, bAttr;
+   char * pBufPtr = s_sLineBuf;
+   int iColor;
+   char bAttr;
    USHORT usChar;
    int iLen = 0;
 
@@ -794,11 +796,11 @@ static void hb_gt_os2_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
    while( iLen < iSize )
    {
-      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
+      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &iColor, &bAttr, &usChar ) )
          break;
 
       *pBufPtr++ = ( char ) usChar;
-      *pBufPtr++ = bColor;
+      *pBufPtr++ = ( char ) iColor;
       ++iLen;
    }
 

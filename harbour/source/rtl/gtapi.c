@@ -636,34 +636,34 @@ HB_ERRCODE hb_gtRest( int iTop, int iLeft, int iBottom, int iRight, const void *
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtGetChar( int iRow, int iCol, BYTE * pbColor, BYTE * pbAttr, USHORT * pusChar )
+HB_ERRCODE hb_gtGetChar( int iRow, int iCol, int * piColor, BYTE * pbAttr, USHORT * pusChar )
 {
    HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtGetChar(%d, %d, %p, %p, %p)", iRow, iCol, pbColor, pbAttr, pusChar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtGetChar(%d, %d, %p, %p, %p)", iRow, iCol, piColor, pbAttr, pusChar));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      if( HB_GTSELF_GETCHAR( pGT, iRow, iCol, pbColor, pbAttr, pusChar ) )
+      if( HB_GTSELF_GETCHAR( pGT, iRow, iCol, piColor, pbAttr, pusChar ) )
          errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
 }
 
-HB_ERRCODE hb_gtPutChar( int iRow, int iCol, BYTE bColor, BYTE bAttr, USHORT usChar )
+HB_ERRCODE hb_gtPutChar( int iRow, int iCol, int iColor, BYTE bAttr, USHORT usChar )
 {
    HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutChar(%d, %d, %hu, %hu, %hu)", iRow, iCol, bColor, bAttr, usChar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutChar(%d, %d, %d, %hu, %hu)", iRow, iCol, iColor, bAttr, usChar));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      if( HB_GTSELF_PUTCHAR( pGT, iRow, iCol, bColor, bAttr, usChar ) )
+      if( HB_GTSELF_PUTCHAR( pGT, iRow, iCol, iColor, bAttr, usChar ) )
          errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
@@ -863,16 +863,16 @@ HB_ERRCODE hb_gtScrollUp( int iRows )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtDrawShadow( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor )
+HB_ERRCODE hb_gtDrawShadow( int iTop, int iLeft, int iBottom, int iRight, int iColor )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtDrawShadow(%d, %d, %d, %d, %d)", iTop, iLeft, iBottom, iRight, ( int ) bColor));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtDrawShadow(%d, %d, %d, %d, %d)", iTop, iLeft, iBottom, iRight, iColor));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_DRAWSHADOW( pGT, iTop, iLeft, iBottom, iRight, bColor );
+      HB_GTSELF_DRAWSHADOW( pGT, iTop, iLeft, iBottom, iRight, iColor );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
@@ -912,16 +912,16 @@ const char * hb_gtVersion( int iType )
    return szVersion;
 }
 
-HB_ERRCODE hb_gtSetAttribute( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor )
+HB_ERRCODE hb_gtSetAttribute( int iTop, int iLeft, int iBottom, int iRight, int iColor )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetAttribute(%d, %d, %d, %d, %d)", iTop, iLeft, iBottom, iRight, ( int ) bColor));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetAttribute(%d, %d, %d, %d, %d)", iTop, iLeft, iBottom, iRight, iColor));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_SETATTRIBUTE( pGT, iTop, iLeft, iBottom, iRight, bColor );
+      HB_GTSELF_SETATTRIBUTE( pGT, iTop, iLeft, iBottom, iRight, iColor );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
@@ -1165,34 +1165,34 @@ HB_ERRCODE hb_gtSetClearChar( int iChar )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtGetScrChar( int iRow, int iCol, BYTE * pbColor, BYTE * pbAttr, USHORT * pusChar )
+HB_ERRCODE hb_gtGetScrChar( int iRow, int iCol, int * piColor, BYTE * pbAttr, USHORT * pusChar )
 {
    HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtScrGetChar(%d, %d, %p, %p, %p)", iRow, iCol, pbColor, pbAttr, pusChar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtScrGetChar(%d, %d, %p, %p, %p)", iRow, iCol, piColor, pbAttr, pusChar));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      if( HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, pbColor, pbAttr, pusChar ) )
+      if( HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, piColor, pbAttr, pusChar ) )
          errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
 }
 
-HB_ERRCODE hb_gtPutScrChar( int iRow, int iCol, BYTE bColor, BYTE bAttr, USHORT usChar )
+HB_ERRCODE hb_gtPutScrChar( int iRow, int iCol, int iColor, BYTE bAttr, USHORT usChar )
 {
    HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutScrChar(%d, %d, %d, %d, %hu)", iRow, iCol, bColor, bAttr, usChar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutScrChar(%d, %d, %d, %d, %hu)", iRow, iCol, iColor, ( int ) bAttr, usChar));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      if( HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, bColor, bAttr, usChar ) )
+      if( HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, iColor, bAttr, usChar ) )
          errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }

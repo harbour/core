@@ -4280,15 +4280,16 @@ static void hb_gt_xwc_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 #if 0
       else if( !wnd->fData )
       {
-         BYTE bDefColor = HB_GTSELF_GETCOLOR( pGT );
-         BYTE bColor, bAttr;
+         int iDefColor = HB_GTSELF_GETCOLOR( pGT );
+         int iColor;
+         BYTE bAttr;
          USHORT usChar;
 
          while( iSize-- )
          {
-            if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &bColor, &bAttr, &usChar ) )
+            if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &iColor, &bAttr, &usChar ) )
                break;
-            if( bColor != bDefColor || usChar != ' ' )
+            if( iColor != iDefColor || usChar != ' ' )
             {
                wnd->fData = TRUE;
                break;

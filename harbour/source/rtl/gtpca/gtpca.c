@@ -436,11 +436,11 @@ static void hb_gt_pca_AnsiInit( void )
    s_iCurrentSGR = s_iRow = s_iCol = s_iCursorStyle = s_iAM = -1;
 }
 
-static void hb_gt_pca_AnsiPutStr( int iRow, int iCol, BYTE bAttr, char * szStr, int iLen )
+static void hb_gt_pca_AnsiPutStr( int iRow, int iCol, int iColor, char * szStr, int iLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_AnsiPutStr(%d,%d,%hu,%p,%d)", iRow, iCol, bAttr, szStr, iLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_AnsiPutStr(%d,%d,%d,%p,%d)", iRow, iCol, iColor, szStr, iLen));
 
-   hb_gt_pca_AnsiSetAttributes( bAttr );
+   hb_gt_pca_AnsiSetAttributes( ( BYTE ) iColor );
    hb_gt_pca_AnsiSetCursorPos( iRow, iCol );
    hb_gt_pca_AnsiSetAutoMargin( 0 );
    hb_gt_pca_termOut( szStr, iLen );
@@ -840,29 +840,30 @@ static BOOL hb_gt_pca_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 
 static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-   BYTE bColor, bAttr;
+   int iColor;
+   BYTE bAttr;
    USHORT usChar;
-   int iLen = 0, iColor = 0;
+   int iLen = 0, iColor2 = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
    while( iSize-- )
    {
-      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
+      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &iColor, &bAttr, &usChar ) )
          break;
 
       if( iLen == 0 )
-         iColor = bColor;
-      else if( iColor != bColor )
+         iColor2 = iColor;
+      else if( iColor2 != iColor )
       {
 #ifndef HB_CDP_SUPPORT_OFF
          if( s_fDispTrans )
             hb_cdpnTranslate( ( char * ) s_sLineBuf, s_cdpHost, s_cdpTerm, iLen );
 #endif
-         hb_gt_pca_AnsiPutStr( iRow, iCol, ( BYTE ) iColor, s_sLineBuf, iLen );
+         hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, s_sLineBuf, iLen );
          iCol += iLen;
          iLen = 0;
-         iColor = bColor;
+         iColor2 = iColor;
       }
       if( usChar < 32 || usChar == 127 )
          usChar = '.';
@@ -874,7 +875,7 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       if( s_fDispTrans )
          hb_cdpnTranslate( ( char * ) s_sLineBuf, s_cdpHost, s_cdpTerm, iLen );
 #endif
-      hb_gt_pca_AnsiPutStr( iRow, iCol, ( BYTE ) iColor, s_sLineBuf, iLen );
+      hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, s_sLineBuf, iLen );
    }
 }
 

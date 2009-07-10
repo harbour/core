@@ -3227,9 +3227,9 @@ static BOOL hb_gt_trm_Resume( PHB_GT pGT )
 }
 
 static void hb_gt_trm_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                              BYTE bColor, BYTE bChar, int iRows, int iCols )
+                              int iColor, BYTE bChar, int iRows, int iCols )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", pGT, iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", pGT, iTop, iLeft, iBottom, iRight, iColor, bChar, iRows, iCols ) );
 
    /* Provide some basic scroll support for full screen */
    if( iCols == 0 && iRows > 0 && iTop == 0 && iLeft == 0 )
@@ -3242,10 +3242,10 @@ static void hb_gt_trm_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
           pTerm->iRow == iHeight - 1 )
       {
          /* scroll up the internal screen buffer */
-         HB_GTSELF_SCROLLUP( pGT, iRows, bColor, bChar );
+         HB_GTSELF_SCROLLUP( pGT, iRows, iColor, bChar );
          /* set default color for terminals which use it to erase
           * scrolled area */
-         pTerm->SetAttributes( pTerm, bColor & pTerm->iAttrMask );
+         pTerm->SetAttributes( pTerm, iColor & pTerm->iAttrMask );
          /* update our internal row position */
          do
             hb_gt_trm_termOut( pTerm, "\n\r", 2 );
@@ -3255,7 +3255,7 @@ static void hb_gt_trm_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
       }
    }
 
-   HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols );
+   HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, iColor, bChar, iRows, iCols );
 }
 
 static BOOL hb_gt_trm_SetMode( PHB_GT pGT, int iRows, int iCols )
@@ -3402,9 +3402,10 @@ static BOOL hb_gt_trm_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    PHB_GTTRM pTerm;
-   BYTE bColor, bAttr;
+   int iColor;
+   BYTE bAttr;
    USHORT usChar;
-   int iLen = 0, iAttribute = 0, iColor;
+   int iLen = 0, iAttribute = 0, iColor2;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
@@ -3413,33 +3414,33 @@ static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    pTerm->SetCursorStyle( pTerm, SC_NONE );
    while( iSize-- )
    {
-      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
+      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &iColor, &bAttr, &usChar ) )
          break;
 
       usChar &= 0xff;
       if( bAttr & HB_GT_ATTR_BOX )
       {
-         iColor = bColor | ( pTerm->boxattr[ usChar ] & ~HB_GTTRM_ATTR_CHAR );
+         iColor2 = iColor | ( pTerm->boxattr[ usChar ] & ~HB_GTTRM_ATTR_CHAR );
          if( !pTerm->fUTF8 )
             usChar = pTerm->boxattr[ usChar ] & HB_GTTRM_ATTR_CHAR;
          else
-            iColor |= HB_GTTRM_ATTR_BOX;
+            iColor2 |= HB_GTTRM_ATTR_BOX;
       }
       else
       {
-         iColor = bColor | ( pTerm->chrattr[ usChar ] & ~HB_GTTRM_ATTR_CHAR );
+         iColor2 = iColor | ( pTerm->chrattr[ usChar ] & ~HB_GTTRM_ATTR_CHAR );
          if( !pTerm->fUTF8 )
             usChar = pTerm->chrattr[ usChar ] & HB_GTTRM_ATTR_CHAR;
       }
 
       if( iLen == 0 )
-         iAttribute = iColor;
-      else if( iColor != iAttribute )
+         iAttribute = iColor2;
+      else if( iColor2 != iAttribute )
       {
          hb_gt_trm_PutStr( pTerm, iRow, iCol, iAttribute, pTerm->pLineBuf, iLen );
          iCol += iLen;
          iLen = 0;
-         iAttribute = iColor;
+         iAttribute = iColor2;
       }
       pTerm->pLineBuf[ iLen++ ] = ( char ) usChar;
    }

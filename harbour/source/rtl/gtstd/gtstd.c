@@ -503,11 +503,11 @@ static BOOL hb_gt_std_Resume( PHB_GT pGT )
 }
 
 static void hb_gt_std_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
-                              BYTE bColor, BYTE bChar, int iRows, int iCols )
+                              int iColor, BYTE bChar, int iRows, int iCols )
 {
    int iHeight, iWidth;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", pGT, iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", pGT, iTop, iLeft, iBottom, iRight, iColor, bChar, iRows, iCols ) );
 
    /* Provide some basic scroll support for full screen */
    HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
@@ -517,7 +517,7 @@ static void hb_gt_std_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
    {
       PHB_GTSTD pGTSTD;
       /* scroll up the internal screen buffer */
-      HB_GTSELF_SCROLLUP( pGT, iRows, bColor, bChar );
+      HB_GTSELF_SCROLLUP( pGT, iRows, iColor, bChar );
       /* update our internal row position */
       pGTSTD = HB_GTSTD_GET( pGT );
       pGTSTD->iRow -= iRows;
@@ -525,7 +525,7 @@ static void hb_gt_std_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
          pGTSTD->iRow = 0;
    }
    else
-      HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols );
+      HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, iColor, bChar, iRows, iCols );
 }
 
 static BOOL hb_gt_std_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )
@@ -598,14 +598,15 @@ static BOOL hb_gt_std_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 
 static void hb_gt_std_DispLine( PHB_GT pGT, int iRow )
 {
-   BYTE bColor, bAttr;
+   int iColor;
+   BYTE bAttr;
    USHORT usChar;
    int iCol, iMin = 0;
    PHB_GTSTD pGTSTD = HB_GTSTD_GET( pGT );
 
    for( iCol = 0; iCol < pGTSTD->iLineBufSize; ++iCol )
    {
-      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
+      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
          break;
       if( usChar < 32 || usChar == 127 )
          usChar = '.';
@@ -622,7 +623,8 @@ static void hb_gt_std_DispLine( PHB_GT pGT, int iRow )
 
 static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-   BYTE bColor, bAttr;
+   int iColor;
+   BYTE bAttr;
    USHORT usChar;
    int iLineFeed, iBackSpace, iLen, iMin;
    PHB_GTSTD pGTSTD;
@@ -662,7 +664,7 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    iMin = iLineFeed > 0 || pGTSTD->iLastCol <= iCol ? 0 : pGTSTD->iLastCol - iCol;
 
    while( iSize > iMin &&
-          HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iSize - 1, &bColor, &bAttr, &usChar ) )
+          HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iSize - 1, &iColor, &bAttr, &usChar ) )
    {
       if( usChar != ' ' )
          break;
@@ -704,7 +706,7 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
       for( iLen = 0; iLen < iSize; ++iLen )
       {
-         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
+         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
             break;
          if( usChar < 32 || usChar == 127 )
             usChar = '.';

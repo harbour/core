@@ -1325,7 +1325,8 @@ static void hb_gt_dos_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 #if !defined( __DJGPP__ )
    USHORT FAR *pScreenPtr = (USHORT FAR *) hb_gt_dos_ScreenPtr( iRow, iCol );
 #endif
-   BYTE bColor, bAttr;
+   int iColor;
+   BYTE bAttr;
    USHORT usChar;
    int iLen = 0;
 
@@ -1333,18 +1334,18 @@ static void hb_gt_dos_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
    while( iLen < iSize )
    {
-      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
+      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &iColor, &bAttr, &usChar ) )
          break;
 
 #if defined( __DJGPP__TEXT )
       {
-         short ch_attr = ( ( short ) bColor << 8 ) | s_charTrans[ usChar & 0xff ];
+         short ch_attr = ( ( short ) iColor << 8 ) | s_charTrans[ usChar & 0xff ];
          puttext( iCol + iLen + 1, iRow + 1, iCol + iLen  + 1, iRow + 1, &ch_attr );
       }
 #elif defined( __DJGPP__ )
-      ScreenPutChar( s_charTrans[ usChar & 0xff ], bColor, iCol + iLen, iRow );
+      ScreenPutChar( s_charTrans[ usChar & 0xff ], iColor, iCol + iLen, iRow );
 #else
-      *pScreenPtr++ = ( bColor << 8 ) + s_charTrans[ usChar & 0xff ];
+      *pScreenPtr++ = ( iColor << 8 ) + s_charTrans[ usChar & 0xff ];
 #endif
       iLen++;
    }

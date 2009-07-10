@@ -2923,16 +2923,17 @@ static void hb_gt_crs_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
    if( s_ioBase )
    {
-      BYTE bColor, bAttr;
+      int iColor;
+      BYTE bAttr;
       USHORT usChar;
       chtype ch;
 
       wmove( s_ioBase->stdscr, iRow, iCol );
       while( iSize-- > 0 )
       {
-         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &bColor, &bAttr, &usChar ) )
+         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &iColor, &bAttr, &usChar ) )
             break;
-         ch = ( s_ioBase->attr_map[ bColor ] & s_ioBase->attr_mask ) |
+         ch = ( s_ioBase->attr_map[ iColor ] & s_ioBase->attr_mask ) |
               ( bAttr & HB_GT_ATTR_BOX ? s_ioBase->box_chmap[ usChar & 0xff ] :
                                          s_ioBase->std_chmap[ usChar & 0xff ] );
          waddch( s_ioBase->stdscr, ch );

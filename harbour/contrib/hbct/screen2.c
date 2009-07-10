@@ -125,7 +125,7 @@ HB_FUNC( SAYSPREAD )
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
-         BYTE bColor = hb_gtGetCurrColor();
+         int iColor = hb_gtGetCurrColor();
 
          ulPos = ulLen >> 1;
          ulLen = ulLen & 1;
@@ -139,7 +139,7 @@ HB_FUNC( SAYSPREAD )
          do
          {
             for( ul = 0; ul < ulLen && iCol + ( int ) ul <= iMaxCol; ++ul )
-               hb_gtPutChar( iRow, iCol + ( int ) ul, bColor, 0, ( UCHAR ) szText[ulPos + ul] );
+               hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( UCHAR ) szText[ulPos + ul] );
             ulLen += 2;
             if( lDelay )
             {
@@ -181,7 +181,7 @@ HB_FUNC( SAYMOVEIN )
          iCol = hb_parni( 4 );
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
-         BYTE bColor = hb_gtGetCurrColor();
+         int iColor = hb_gtGetCurrColor();
 
          iNewCol = iCol + ( int ) ulLen;
          if( fBack )
@@ -198,14 +198,14 @@ HB_FUNC( SAYMOVEIN )
                if( iCol <= iMaxCol )
                {
                   for( ul = 0; ul < ulChars; ++ul )
-                     hb_gtPutChar( iRow, iCol + ( int ) ul, bColor, 0, ( UCHAR ) szText[ul] );
+                     hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( UCHAR ) szText[ul] );
                }
                --iCol;
             }
             else
             {
                for( ul = 0; ul < ulChars; ++ul )
-                  hb_gtPutChar( iRow, iCol + ( int ) ul, bColor, 0, ( UCHAR ) szText[ul] );
+                  hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( UCHAR ) szText[ul] );
                --szText;
             }
             if( ( int ) ulChars + iCol <= iMaxCol )
@@ -251,7 +251,8 @@ HB_FUNC( CLEARSLOW )
 
    if( iTop >= 0 && iLeft >= 0 && iTop <= iBottom && iLeft <= iRight )
    {
-      char pszFrame[2], bColor = ( BYTE ) hb_gtGetCurrColor();
+      char pszFrame[ 2 ];
+      int iColor = hb_gtGetCurrColor();
       double dX, dY, dXX, dYY;
 
       pszFrame[0] = ( char ) ucChar;
@@ -274,7 +275,7 @@ HB_FUNC( CLEARSLOW )
       hb_gtBeginWrite();
       for( ;; )
       {
-         hb_gtBoxEx( iTop, iLeft, iBottom, iRight, pszFrame, bColor );
+         hb_gtBoxEx( iTop, iLeft, iBottom, iRight, pszFrame, iColor );
          if( lDelay )
          {
             hb_gtEndWrite();
@@ -340,11 +341,12 @@ HB_FUNC( SCREENSTR )
          iC = iCol;
          do
          {
-            BYTE bColor, bAttr;
+            int iColor;
+            BYTE bAttr;
             USHORT usChar;
-            hb_gtGetChar( iRow, iC, &bColor, &bAttr, &usChar );
+            hb_gtGetChar( iRow, iC, &iColor, &bAttr, &usChar );
             *szText++ = ( char ) usChar;
-            *szText++ = ( char ) bColor;
+            *szText++ = ( char ) iColor;
          }
          while( --ulCount && ++iC <= iMaxCol );
       }
@@ -385,8 +387,8 @@ HB_FUNC( STRSCREEN )
             do
             {
                USHORT usChar = ( UCHAR ) *szText++;
-               BYTE bColor = *szText++;
-               hb_gtPutChar( iRow, iC, bColor, 0, usChar );
+               int iColor = *szText++;
+               hb_gtPutChar( iRow, iC, iColor, 0, usChar );
                ulLen -= 2;
             }
             while( ulLen && ++iC <= iMaxCol );
@@ -437,8 +439,8 @@ HB_FUNC( _HB_CTDSPTIME )
          iHour -= 12;
       else if( iHour == 0 )
          iHour = 12;
-      szTime[0] = ( iHour / 10 ) + '0';
-      szTime[1] = ( iHour % 10 ) + '0';
+      szTime[0] = ( char ) ( iHour / 10 ) + '0';
+      szTime[1] = ( char ) ( iHour % 10 ) + '0';
    }
 
    if( szTime[0] == '0' )
