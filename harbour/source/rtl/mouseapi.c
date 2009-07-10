@@ -220,7 +220,7 @@ int hb_mouseStorageSize( void )
    return iSize;
 }
 
-void hb_mouseSaveState( char * pBuffer )
+void hb_mouseSaveState( void * pBuffer )
 {
    PHB_GT pGT;
 
@@ -234,7 +234,7 @@ void hb_mouseSaveState( char * pBuffer )
    }
 }
 
-void hb_mouseRestoreState( const char * pBuffer )
+void hb_mouseRestoreState( const void * pBuffer )
 {
    PHB_GT pGT;
 

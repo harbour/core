@@ -576,7 +576,7 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
 
       pszString = hb_itemStringCon( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
 
-      hb_gtWriteAt( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), pszString, ulLen );
+      hb_gtWriteAt( hb_parni( 1 ), hb_parni( 2 ), pszString, ulLen );
 
       if( bFreeReq )
          hb_xfree( pszString );
@@ -587,7 +587,7 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
    {
       pszString = hb_itemStringCon( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
 
-      hb_gtWriteAt( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), pszString, ulLen );
+      hb_gtWriteAt( hb_parni( 1 ), hb_parni( 2 ), pszString, ulLen );
 
       if( bFreeReq )
          hb_xfree( pszString );
@@ -614,7 +614,7 @@ HB_FUNC( HB_DISPOUTAT )
       else
          iColor = -1;
 
-      hb_gtPutText( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), pszString, ulLen, iColor );
+      hb_gtPutText( hb_parni( 1 ), hb_parni( 2 ), pszString, ulLen, iColor );
 
       if( bFreeReq )
          hb_xfree( pszString );
@@ -625,8 +625,8 @@ HB_FUNC( HB_DISPOUTAT )
    so we can use it to draw graphical elements. */
 HB_FUNC( HB_DISPOUTATBOX )
 {
-   SHORT nRow = ( SHORT ) hb_parni( 1 );
-   SHORT nCol = ( SHORT ) hb_parni( 2 );
+   int nRow = hb_parni( 1 );
+   int nCol = hb_parni( 2 );
    const char * pszString = hb_parcx( 3 );
    ULONG nStringLen = hb_parclen( 3 );
    int iColor;

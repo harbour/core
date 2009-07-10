@@ -77,13 +77,13 @@ HB_FUNC( NOSNOW )
 
 HB_FUNC( SETMODE )
 {
-   USHORT uiRows, uiCols;
+   int iRows, iCols;
 
-   hb_gtScrDim( &uiRows, &uiCols );
+   hb_gtScrDim( &iRows, &iCols );
    if( HB_ISNUM( 1 ) )
-      uiRows = ( USHORT ) hb_parni( 1 );
+      iRows = hb_parni( 1 );
    if( HB_ISNUM( 2 ) )
-      uiCols = ( USHORT ) hb_parni( 2 );
+      iCols = hb_parni( 2 );
 
-   hb_retl( hb_gtSetMode( uiRows, uiCols ) == HB_SUCCESS );
+   hb_retl( hb_gtSetMode( iRows, iCols ) == HB_SUCCESS );
 }

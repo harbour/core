@@ -81,9 +81,9 @@ HB_FUNC( MAXROW ) /* Return the maximum screen/window row number (zero origin) *
 
    if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
    {
-      USHORT uiRows, uiCols;
-      hb_gtScrDim( &uiRows, &uiCols );
-      hb_retni( uiRows - 1 );
+      int iRows, iCols;
+      hb_gtScrDim( &iRows, &iCols );
+      hb_retni( iRows - 1 );
    }
    else
 #endif
@@ -96,9 +96,9 @@ HB_FUNC( MAXCOL ) /* Return the maximum screen/window column number (zero origin
    /* See notes about MaxRow(.T.) above */
    if( HB_ISLOG( 1 ) && hb_parl( 1 ) )
    {
-      USHORT uiRows, uiCols;
-      hb_gtScrDim( &uiRows, &uiCols );
-      hb_retni( uiCols - 1 );
+      int iRows, iCols;
+      hb_gtScrDim( &iRows, &iCols );
+      hb_retni( iCols - 1 );
    }
    else
 #endif

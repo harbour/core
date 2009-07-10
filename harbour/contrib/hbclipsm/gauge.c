@@ -105,7 +105,7 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
       hb_gtRepChar( hb_arrayGetNI( pArray, B_TOP ) + iRow,
                     hb_arrayGetNI( pArray, B_LEFT ) + 1,
                     * hb_arrayGetCPtr( pArray, B_BARCHAR ),
-                    iCols );
+                    ( USHORT ) iCols );
    }
 
    hb_gtSetColorStr( szOldColor );

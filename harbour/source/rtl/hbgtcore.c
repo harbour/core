@@ -2686,7 +2686,7 @@ static int  hb_gt_def_mouseStorageSize( PHB_GT pGT )
    return sizeof( _HB_MOUSE_STORAGE );
 }
 
-static void hb_gt_def_mouseSaveState( PHB_GT pGT, char * pBuffer )
+static void hb_gt_def_mouseSaveState( PHB_GT pGT, void * pBuffer )
 {
    _HB_MOUSE_STORAGE * pStore = ( _HB_MOUSE_STORAGE * ) pBuffer;
    int iRow, iCol, iTop, iLeft, iBottom, iRight;
@@ -2703,7 +2703,7 @@ static void hb_gt_def_mouseSaveState( PHB_GT pGT, char * pBuffer )
    pStore->iRight    = iRight;
 }
 
-static void hb_gt_def_mouseRestoreState( PHB_GT pGT, const char * pBuffer )
+static void hb_gt_def_mouseRestoreState( PHB_GT pGT, const void * pBuffer )
 {
    _HB_MOUSE_STORAGE * pStore = ( _HB_MOUSE_STORAGE * ) pBuffer;
 

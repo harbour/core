@@ -1046,7 +1046,7 @@ extern HB_EXPORT const char * hb_conNewLine( void ); /* retrieve a pointer to a 
 extern HB_EXPORT void         hb_conOutStd( const char * pStr, ULONG ulLen ); /* output an string to STDOUT */
 extern HB_EXPORT void         hb_conOutErr( const char * pStr, ULONG ulLen ); /* output an string to STDERR */
 extern HB_EXPORT void         hb_conOutAlt( const char * pStr, ULONG ulLen ); /* output an string to the screen and/or printer and/or alternate */
-extern HB_EXPORT USHORT       hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor ); /* retrieve and optionally set cursor shape */
+extern HB_EXPORT int          hb_conSetCursor( BOOL bSetCursor, int iNewCursor ); /* retrieve and optionally set cursor shape */
 extern HB_EXPORT const char * hb_conSetColor( const char * szColor ); /* retrieve and optionally set console color */
 
 /* compiler and macro compiler */

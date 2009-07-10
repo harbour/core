@@ -101,10 +101,10 @@ HB_FUNC( SCROLL )
    else
       iRight = iMaxCol;
 
-   hb_gtScroll( ( USHORT ) iTop,
-                ( USHORT ) iLeft,
-                ( USHORT ) iBottom,
-                ( USHORT ) iRight,
+   hb_gtScroll( iTop,
+                iLeft,
+                iBottom,
+                iRight,
                 hb_parni( 5 ), /* Defaults to zero on bad type */
                 hb_parni( 6 ) ); /* Defaults to zero on bad type */
 }

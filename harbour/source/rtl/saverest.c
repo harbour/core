@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-static void hb_getScreenRange( USHORT * pusMin, USHORT * pusMax,
+static void hb_getScreenRange( int * piMin, int * piMax,
                                BOOL fNoCheck, BOOL fVertical )
 {
    int iFrom, iTo, iMax;
@@ -66,7 +66,7 @@ static void hb_getScreenRange( USHORT * pusMin, USHORT * pusMax,
    }
    else
    {
-      iMax = hb_gtMaxCol();
+      iMax  = hb_gtMaxCol();
       iFrom = hb_parni( 2 );
       iTo   = HB_ISNUM( 4 ) ? hb_parni( 4 ) : iMax;
    }
@@ -83,30 +83,30 @@ static void hb_getScreenRange( USHORT * pusMin, USHORT * pusMax,
 
    if( iFrom > iTo )
    {
-      *pusMin = ( USHORT ) iTo;
-      *pusMax = ( USHORT ) iFrom;
+      *piMin = iTo;
+      *piMax = iFrom;
    }
    else
    {
-      *pusMin = ( USHORT ) iFrom;
-      *pusMax = ( USHORT ) iTo;
+      *piMin = iFrom;
+      *piMax = iTo;
    }
 }
 
 HB_FUNC( SAVESCREEN )
 {
-   USHORT uiTop, uiLeft, uiBottom, uiRight;
-   ULONG  ulSize;
+   int iTop, iLeft, iBottom, iRight;
+   ULONG ulSize;
    void * pBuffer;
    BOOL fNoCheck = FALSE;
 
-   hb_getScreenRange( &uiTop, &uiBottom, fNoCheck, TRUE );
-   hb_getScreenRange( &uiLeft, &uiRight, fNoCheck, FALSE );
+   hb_getScreenRange( &iTop, &iBottom, fNoCheck, TRUE );
+   hb_getScreenRange( &iLeft, &iRight, fNoCheck, FALSE );
 
-   hb_gtRectSize( uiTop, uiLeft, uiBottom, uiRight, &ulSize );
+   hb_gtRectSize( iTop, iLeft, iBottom, iRight, &ulSize );
    pBuffer = hb_xgrab( ulSize + 1 );
 
-   hb_gtSave( uiTop, uiLeft, uiBottom, uiRight, pBuffer );
+   hb_gtSave( iTop, iLeft, iBottom, iRight, pBuffer );
    hb_retclen_buffer( ( char * ) pBuffer, ulSize );
 }
 
@@ -114,12 +114,12 @@ HB_FUNC( RESTSCREEN )
 {
    if( HB_ISCHAR( 5 ) )
    {
-      USHORT uiTop, uiLeft, uiBottom, uiRight;
+      int iTop, iLeft, iBottom, iRight;
       BOOL fNoCheck = FALSE;
 
-      hb_getScreenRange( &uiTop, &uiBottom, fNoCheck, TRUE );
-      hb_getScreenRange( &uiLeft, &uiRight, fNoCheck, FALSE );
+      hb_getScreenRange( &iTop, &iBottom, fNoCheck, TRUE );
+      hb_getScreenRange( &iLeft, &iRight, fNoCheck, FALSE );
 
-      hb_gtRest( uiTop, uiLeft, uiBottom, uiRight, ( const void * ) hb_parc( 5 ) );
+      hb_gtRest( iTop, iLeft, iBottom, iRight, ( const void * ) hb_parc( 5 ) );
    }
 }

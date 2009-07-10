@@ -130,9 +130,7 @@ HB_FUNC( MDBLCLK )
    hb_retni( hb_mouseGetDoubleClickSpeed() );
 
    if( HB_ISNUM( 1 ) )
-   {
       hb_mouseSetDoubleClickSpeed( hb_parni( 1 ) );
-   }
 }
 
 HB_FUNC( MSAVESTATE )
@@ -141,10 +139,10 @@ HB_FUNC( MSAVESTATE )
 
    if( iLen > 0 )
    {
-      char * pBuffer = ( char * ) hb_xgrab( iLen + 1 );
+      void * pBuffer = hb_xgrab( iLen + 1 );
 
       hb_mouseSaveState( pBuffer );
-      hb_retclen_buffer( pBuffer, iLen );
+      hb_retclen_buffer( ( char * ) pBuffer, iLen );
    }
    else
       hb_retc_null();
@@ -153,9 +151,7 @@ HB_FUNC( MSAVESTATE )
 HB_FUNC( MRESTSTATE )
 {
    if( HB_ISCHAR( 1 ) && hb_parclen( 1 ) == ( ULONG ) hb_mouseStorageSize() )
-   {
       hb_mouseRestoreState( hb_parc( 1 ) );
-   }
 }
 
 HB_FUNC( MSETBOUNDS )

@@ -65,14 +65,14 @@
 
 HB_FUNC( HB_SCRMAXROW ) /* Return the maximum screen row number (zero origin) */
 {
-   USHORT uiRows, uiCols;
-   hb_gtScrDim( &uiRows, &uiCols );
-   hb_retni( uiRows - 1 );
+   int iRows, iCols;
+   hb_gtScrDim( &iRows, &iCols );
+   hb_retni( iRows - 1 );
 }
 
 HB_FUNC( HB_SCRMAXCOL ) /* Return the maximum screen column number (zero origin) */
 {
-   USHORT uiRows, uiCols;
-   hb_gtScrDim( &uiRows, &uiCols );
-   hb_retni( uiCols - 1 );
+   int iRows, iCols;
+   hb_gtScrDim( &iRows, &iCols );
+   hb_retni( iCols - 1 );
 }
