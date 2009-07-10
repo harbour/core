@@ -385,13 +385,13 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 {
    BOOL bFound;
 
-   USHORT nYear = 0;
-   USHORT nMonth = 0;
-   USHORT nDay = 0;
+   int iYear = 0;
+   int iMonth = 0;
+   int iDay = 0;
 
-   USHORT nHour = 0;
-   USHORT nMin = 0;
-   USHORT nSec = 0;
+   int iHour = 0;
+   int iMin = 0;
+   int iSec = 0;
 
    ULONG raw_attr = 0;
 
@@ -453,13 +453,13 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             ftime = sStat.st_mtime;
             ft = localtime( &ftime );
 
-            nYear  = ft->tm_year + 1900;
-            nMonth = ft->tm_mon + 1;
-            nDay   = ft->tm_mday;
+            iYear  = ft->tm_year + 1900;
+            iMonth = ft->tm_mon + 1;
+            iDay   = ft->tm_mday;
 
-            nHour  = ft->tm_hour;
-            nMin   = ft->tm_min;
-            nSec   = ft->tm_sec;
+            iHour  = ft->tm_hour;
+            iMin   = ft->tm_min;
+            iSec   = ft->tm_sec;
          }
       }
       hb_fsSetIOError( bFound, 0 );
@@ -503,13 +503,13 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          ffind->size = info->entry.cbFile;
          raw_attr = info->entry.attrFile;
 
-         nYear  = info->entry.fdateLastWrite.year + 1980;
-         nMonth = info->entry.fdateLastWrite.month;
-         nDay   = info->entry.fdateLastWrite.day;
+         iYear  = info->entry.fdateLastWrite.year + 1980;
+         iMonth = info->entry.fdateLastWrite.month;
+         iDay   = info->entry.fdateLastWrite.day;
 
-         nHour  = info->entry.ftimeLastWrite.hours;
-         nMin   = info->entry.ftimeLastWrite.minutes;
-         nSec   = info->entry.ftimeLastWrite.twosecs;
+         iHour  = info->entry.ftimeLastWrite.hours;
+         iMin   = info->entry.ftimeLastWrite.minutes;
+         iSec   = info->entry.ftimeLastWrite.twosecs;
       }
 
       hb_fsSetIOError( bFound, 0 );
@@ -590,12 +590,12 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                if( FileTimeToLocalFileTime( &info->pFindFileData.ftLastWriteTime, &ft ) &&
                    FileTimeToSystemTime( &ft, &time ) )
                {
-                  nYear  = time.wYear;
-                  nMonth = time.wMonth;
-                  nDay   = time.wDay;
-                  nHour  = time.wHour;
-                  nMin   = time.wMinute;
-                  nSec   = time.wSecond;
+                  iYear  = time.wYear;
+                  iMonth = time.wMonth;
+                  iDay   = time.wDay;
+                  iHour  = time.wHour;
+                  iMin   = time.wMinute;
+                  iSec   = time.wSecond;
                }
             }
          }
@@ -681,13 +681,13 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                lt = *localtime( &ftime );
 #  endif
 
-               nYear  = lt.tm_year + 1900;
-               nMonth = lt.tm_mon + 1;
-               nDay   = lt.tm_mday;
+               iYear  = lt.tm_year + 1900;
+               iMonth = lt.tm_mon + 1;
+               iDay   = lt.tm_mday;
 
-               nHour  = lt.tm_hour;
-               nMin   = lt.tm_min;
-               nSec   = lt.tm_sec;
+               iHour  = lt.tm_hour;
+               iMin   = lt.tm_min;
+               iSec   = lt.tm_sec;
             }
             else
                bFound = FALSE;
@@ -703,12 +703,12 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       /* HB_SYMBOL_UNUSED( ffind ); */
 
-      HB_SYMBOL_UNUSED( nYear );
-      HB_SYMBOL_UNUSED( nMonth );
-      HB_SYMBOL_UNUSED( nDay );
-      HB_SYMBOL_UNUSED( nHour );
-      HB_SYMBOL_UNUSED( nMin );
-      HB_SYMBOL_UNUSED( nSec );
+      HB_SYMBOL_UNUSED( iYear );
+      HB_SYMBOL_UNUSED( iMonth );
+      HB_SYMBOL_UNUSED( iDay );
+      HB_SYMBOL_UNUSED( iHour );
+      HB_SYMBOL_UNUSED( iMin );
+      HB_SYMBOL_UNUSED( iSec );
       HB_SYMBOL_UNUSED( raw_attr );
 
       bFound = FALSE;
@@ -739,11 +739,11 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       ffind->attr = hb_fsAttrFromRaw( raw_attr );
 
-      ffind->lDate = hb_dateEncode( nYear, nMonth, nDay );
-      hb_dateStrPut( ffind->szDate, nYear, nMonth, nDay );
+      ffind->lDate = hb_dateEncode( iYear, iMonth, iDay );
+      hb_dateStrPut( ffind->szDate, iYear, iMonth, iDay );
       ffind->szDate[ 8 ] = '\0';
 
-      hb_snprintf( ffind->szTime, sizeof( ffind->szTime ), "%02d:%02d:%02d", nHour, nMin, nSec );
+      hb_snprintf( ffind->szTime, sizeof( ffind->szTime ), "%02d:%02d:%02d", iHour, iMin, iSec );
    }
    hb_vmLock();
 

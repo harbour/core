@@ -261,9 +261,9 @@ static BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char * p
 
 HB_FHANDLE hb_fsCreateTemp( const char * pszDir, const char * pszPrefix, ULONG ulAttr, char * pszName )
 {
-   USHORT nAttemptLeft = 999;
+   int iAttemptLeft = 999;
 
-   while( --nAttemptLeft )
+   while( --iAttemptLeft )
    {
       if( hb_fsTempName( pszName, pszDir, pszPrefix ) )
       {

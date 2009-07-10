@@ -1080,15 +1080,15 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 
 #endif
 
-ULONG hb_xquery( USHORT uiMode )
+ULONG hb_xquery( int iMode )
 {
    ULONG ulResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xquery(%hu)", uiMode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xquery(%d)", iMode));
 
    /* TODO: Return the correct values instead of 9999 [vszakats] */
 
-   switch( uiMode )
+   switch( iMode )
    {
       case HB_MEM_CHAR:       /*               (Free Variable Space [KB]) */
 #if defined( HB_OS_WIN )

@@ -56,17 +56,17 @@ HB_FUNC( AMPM )
 {
    ULONG  ulTimeLen = hb_parclen( 1 );
    char * pszResult = ( char * ) hb_xgrab( HB_MAX( ulTimeLen, 2 ) + 3 + 1 );
-   USHORT uiHour = 0;
+   int    iHour = 0;
    BOOL   bAM;
 
    if( ulTimeLen )
    {
       const char * pszTime = hb_parc( 1 );
       memcpy( pszResult, pszTime, ulTimeLen );
-      uiHour = ( USHORT ) hb_strVal( pszTime, ulTimeLen );
+      iHour = ( int ) hb_strVal( pszTime, ulTimeLen );
    }
 
-   if( uiHour == 0 || uiHour == 24 )
+   if( iHour == 0 || iHour == 24 )
    {
       if( ulTimeLen < 2 )
          ulTimeLen = 2;
@@ -75,14 +75,14 @@ HB_FUNC( AMPM )
       pszResult[ 1 ] = '2';
       bAM = TRUE;
    }
-   else if( uiHour > 12 )
+   else if( iHour > 12 )
    {
       if( ulTimeLen < 2 )
          ulTimeLen = 2;
 
-      uiHour -= 12;
-      pszResult[ 0 ] = ( char ) ( uiHour / 10 ) + '0';
-      pszResult[ 1 ] = ( char ) ( uiHour % 10 ) + '0';
+      iHour -= 12;
+      pszResult[ 0 ] = ( char ) ( iHour / 10 ) + '0';
+      pszResult[ 1 ] = ( char ) ( iHour % 10 ) + '0';
 
       if( pszResult[ 0 ] == '0' )
          pszResult[ 0 ] = ' ';
@@ -90,7 +90,7 @@ HB_FUNC( AMPM )
       bAM = FALSE;
    }
    else
-      bAM = ( uiHour != 12 );
+      bAM = ( iHour != 12 );
 
    memcpy( pszResult + ulTimeLen, bAM ? " am" : " pm", 4 );
 

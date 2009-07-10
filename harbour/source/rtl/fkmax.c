@@ -68,13 +68,13 @@ HB_FUNC( FKLABEL )
 
    if( pPar1 )
    {
-      USHORT uiFKey = ( USHORT ) hb_itemGetNI( pPar1 );
+      int iFKey = hb_itemGetNI( pPar1 );
 
-      if( uiFKey > 0 && uiFKey <= 40 )
+      if( iFKey > 0 && iFKey <= 40 )
       {
          char szName[ 4 ];
 
-         hb_snprintf( szName, sizeof( szName ), "F%i", uiFKey );
+         hb_snprintf( szName, sizeof( szName ), "F%d", iFKey );
          hb_retc( szName );
          return;
       }

@@ -492,7 +492,7 @@ extern HB_EXPORT void * hb_xgrab( ULONG ulSize ) HB_MALLOC_ATTR HB_ALLOC_SIZE_AT
 extern HB_EXPORT void   hb_xfree( void * pMem );                    /* frees memory */
 extern HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize ) HB_ALLOC_SIZE_ATTR( 2 ); /* reallocates memory */
 extern HB_EXPORT ULONG  hb_xsize( void * pMem );                    /* returns the size of an allocated memory block */
-extern HB_EXPORT ULONG  hb_xquery( USHORT uiMode );                 /* Query different types of memory information */
+extern HB_EXPORT ULONG  hb_xquery( int iMode );                     /* Query different types of memory information */
 extern HB_EXPORT void   hb_xsetfilename( const char * szValue );
 extern HB_EXPORT void   hb_xsetinfo( const char * szValue );
 #ifdef _HB_API_INTERNAL_

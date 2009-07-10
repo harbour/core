@@ -62,7 +62,7 @@ BOOL hb_printerIsReady( const char * pszPrinterName )
    /* NOTE: DOS specific solution, using BIOS interrupt */
 
    {
-      USHORT uiPort;
+      int iPort;
 
       if( pszPrinterName == NULL )
          pszPrinterName = "LPT1";
@@ -80,12 +80,12 @@ BOOL hb_printerIsReady( const char * pszPrinterName )
       }
       else if( strlen( pszPrinterName ) >= 4 &&
                hb_strnicmp( pszPrinterName, "LPT", 3 ) == 0 &&
-               ( uiPort = atoi( pszPrinterName + 3 ) ) > 0 )
+               ( iPort = atoi( pszPrinterName + 3 ) ) > 0 )
       {
          union REGS regs;
 
          regs.h.ah = 2;
-         regs.HB_XREGS.dx = uiPort - 1;
+         regs.HB_XREGS.dx = iPort - 1;
 
          HB_DOS_INT86( 0x17, &regs, &regs );
 

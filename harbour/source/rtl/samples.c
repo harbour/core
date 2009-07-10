@@ -56,21 +56,21 @@
 
 static char * hb_SecToTimeStr( char * pszTime, ULONG ulTime )
 {
-   USHORT uiValue;
+   int iValue;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_SecToTimeStr(%s, %lu)", pszTime, ulTime));
 
-   uiValue = ( USHORT ) ( ( ulTime / 3600 ) % 24 );
-   pszTime[ 0 ] = ( char ) ( uiValue / 10 ) + '0';
-   pszTime[ 1 ] = ( char ) ( uiValue % 10 ) + '0';
+   iValue = ( int ) ( ( ulTime / 3600 ) % 24 );
+   pszTime[ 0 ] = ( char ) ( iValue / 10 ) + '0';
+   pszTime[ 1 ] = ( char ) ( iValue % 10 ) + '0';
    pszTime[ 2 ] = ':';
-   uiValue = ( USHORT ) ( ( ulTime / 60 ) % 60 );
-   pszTime[ 3 ] = ( char ) ( uiValue / 10 ) + '0';
-   pszTime[ 4 ] = ( char ) ( uiValue % 10 ) + '0';
+   iValue = ( int ) ( ( ulTime / 60 ) % 60 );
+   pszTime[ 3 ] = ( char ) ( iValue / 10 ) + '0';
+   pszTime[ 4 ] = ( char ) ( iValue % 10 ) + '0';
    pszTime[ 5 ] = ':';
-   uiValue = ( USHORT ) ( ulTime % 60 );
-   pszTime[ 6 ] = ( char ) ( uiValue / 10 ) + '0';
-   pszTime[ 7 ] = ( char ) ( uiValue % 10 ) + '0';
+   iValue = ( int ) ( ulTime % 60 );
+   pszTime[ 6 ] = ( char ) ( iValue / 10 ) + '0';
+   pszTime[ 7 ] = ( char ) ( iValue % 10 ) + '0';
    pszTime[ 8 ] = '\0';
 
    return pszTime;

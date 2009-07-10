@@ -59,17 +59,17 @@ HB_FUNC( HB_COLORINDEX )
       const char * pszColor = hb_parc( 1 );
       ULONG ulColorPos;
       ULONG ulColorLen;
-      USHORT uiColorIndex = ( USHORT ) hb_parni( 2 );
+      int iColorIndex = hb_parni( 2 );
 
       /* Skip the given number of commas */
-      for( ulColorPos = 0; pszColor[ ulColorPos ] != '\0' && uiColorIndex > 0; ulColorPos++ )
+      for( ulColorPos = 0; pszColor[ ulColorPos ] != '\0' && iColorIndex > 0; ulColorPos++ )
       {
          if( pszColor[ ulColorPos ] == ',' )
-            uiColorIndex--;
+            iColorIndex--;
       }
 
       /* if found, continue */
-      if( uiColorIndex == 0 )
+      if( iColorIndex == 0 )
       {
          /* Skip the spaces after the comma */
          while( pszColor[ ulColorPos ] == ' ' )

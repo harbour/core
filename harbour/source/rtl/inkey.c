@@ -98,7 +98,7 @@ static HB_TSD_NEW( s_inkeyBlock, sizeof( HB_INKEYBLOCK ), NULL, hb_inkeyBlockRel
 HB_FUNC( INKEY )
 {
    PHB_INKEYBLOCK pInkeyBlock = ( PHB_INKEYBLOCK ) hb_stackTestTSD( &s_inkeyBlock );
-   USHORT uiPCount = ( USHORT ) hb_pcount();
+   int iPCount = hb_pcount();
    PHB_ITEM pKey = NULL;
    int iKey;
 
@@ -107,7 +107,7 @@ HB_FUNC( INKEY )
 
    do
    {
-      iKey = hb_inkey( uiPCount == 1 || ( uiPCount > 1 && HB_ISNUM( 1 ) ),
+      iKey = hb_inkey( iPCount == 1 || ( iPCount > 1 && HB_ISNUM( 1 ) ),
                        hb_parnd( 1 ),
                        HB_ISNUM( 2 ) ? hb_parni( 2 ) : hb_setGetEventMask() );
 
