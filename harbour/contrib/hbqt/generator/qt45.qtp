@@ -111,6 +111,8 @@ QPixmap.qth
 QPoint.qth
 QPointF.qth
 QPrintDialog.qth
+QPrintEngine.qth
+QPrinter.qth
 QPrintPreviewDialog.qth
 QProgressBar.qth
 QProgressDialog.qth

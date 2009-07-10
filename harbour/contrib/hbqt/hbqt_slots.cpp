@@ -848,6 +848,12 @@ void Slots::filterSelected( const QString & filter )
    QWidget *oWidget = qobject_cast<QWidget *>( sender() );
    SlotsExecString( oWidget, ( char* ) "filterSelected(QString)", filter );
 }
+/* QPrintDialog */
+void Slots::accepted( QPrinter * printer )
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExecPointer( oWidget, ( char* ) "accepted(QPrinter)", printer );
+}
 
 
 /*
@@ -1240,6 +1246,11 @@ HB_FUNC( QT_CONNECT_SIGNAL )
    {
       ret = widget->connect( widget,  SIGNAL( filterSelected( const QString & ) ),
                              s_s, SLOT( filterSelected( const QString & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "accepted(QPrinter)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( accepted( QPrinter * ) ),
+                             s_s, SLOT( accepted( QPrinter * ) ), Qt::AutoConnection );
    }
 
 

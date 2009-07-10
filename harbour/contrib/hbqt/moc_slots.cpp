@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'hbqt_slots.h'
 **
-** Created: Fri Jul 3 16:24:08 2009
+** Created: Thu Jul 9 23:53:51 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -137,7 +137,7 @@ static const uint qt_meta_data_Slots[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-      75,   12, // methods
+      76,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -218,6 +218,7 @@ static const uint qt_meta_data_Slots[] = {
     2023, 2018,    6,    6, 0x0a,
     2054, 2045,    6,    6, 0x0a,
     2088, 2081,    6,    6, 0x0a,
+    2120, 2112,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -280,7 +281,8 @@ static const char qt_meta_stringdata_Slots[] = {
     "directoryEntered(QString)\0file\0"
     "fileSelected(QString)\0selected\0"
     "filesSelected(QStringList)\0filter\0"
-    "filterSelected(QString)\0"
+    "filterSelected(QString)\0printer\0"
+    "accepted(QPrinter*)\0"
 };
 
 const QMetaObject Slots::staticMetaObject = {
@@ -383,9 +385,10 @@ int Slots::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 72: fileSelected((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 73: filesSelected((*reinterpret_cast< const QStringList(*)>(_a[1]))); break;
         case 74: filterSelected((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 75: accepted((*reinterpret_cast< QPrinter*(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 75;
+        _id -= 76;
     }
     return _id;
 }

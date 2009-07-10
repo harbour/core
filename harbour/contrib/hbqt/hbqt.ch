@@ -1685,44 +1685,232 @@
 #define QFont_Black                               87
 
 
-#define QFileDialog_AcceptOpen                           0
-#define QFileDialog_AcceptSave                           1
+#define QFileDialog_AcceptOpen                    0
+#define QFileDialog_AcceptSave                    1
 
 // enum #define QFileDialog_DialogLabel
 //
-#define QFileDialog_LookIn                               0
-#define QFileDialog_FileName                             1
-#define QFileDialog_FileType                             2
-#define QFileDialog_Accept                               3
-#define QFileDialog_Reject                               4
+#define QFileDialog_LookIn                        0
+#define QFileDialog_FileName                      1
+#define QFileDialog_FileType                      2
+#define QFileDialog_Accept                        3
+#define QFileDialog_Reject                        4
 
 // enum #define QFileDialog_FileMode
 // This enum is used to indicate what the user may select in the file dialog;
 // i.e. what the dialog will return if the user clicks OK.
 //
-#define QFileDialog_AnyFile                              0   // The name of a file, whether it exists or not.
-#define QFileDialog_ExistingFile                         1   // The name of a single existing file.
-#define QFileDialog_Directory                            2   // The name of a directory. Both files and directories are displayed.
-#define QFileDialog_ExistingFiles                        3   // The names of zero or more existing files.
+#define QFileDialog_AnyFile                       0   // The name of a file, whether it exists or not.
+#define QFileDialog_ExistingFile                  1   // The name of a single existing file.
+#define QFileDialog_Directory                     2   // The name of a directory. Both files and directories are displayed.
+#define QFileDialog_ExistingFiles                 3   // The names of zero or more existing files.
 
 // The Options type is a typedef for QFlags<Option>. It stores an OR combination of Option values.
 //
-#define QFileDialog_ShowDirsOnly                         0x00000001   // Only show directories in the file dialog. By default both files and directories are shown. (Valid only in the Directory file mode.)
-#define QFileDialog_DontResolveSymlinks                  0x00000002   // Don't resolve symlinks in the file dialog. By default symlinks are resolved.
-#define QFileDialog_DontConfirmOverwrite                 0x00000004   // Don't ask for confirmation if an existing file is selected. By default confirmation is requested.
-#define QFileDialog_DontUseNativeDialog                  0x00000010   // Don't use the native file dialog. By default on Mac OS X and Windows, the native file dialog is used.
-#define QFileDialog_ReadOnly                             0x00000020   // Indicates that the model is readonly.
-#define QFileDialog_HideNameFilterDetails                0x00000040   // Indicates if the is hidden or not.
+#define QFileDialog_ShowDirsOnly                  0x00000001   // Only show directories in the file dialog. By default both files and directories are shown. (Valid only in the Directory file mode.)
+#define QFileDialog_DontResolveSymlinks           0x00000002   // Don't resolve symlinks in the file dialog. By default symlinks are resolved.
+#define QFileDialog_DontConfirmOverwrite          0x00000004   // Don't ask for confirmation if an existing file is selected. By default confirmation is requested.
+#define QFileDialog_DontUseNativeDialog           0x00000010   // Don't use the native file dialog. By default on Mac OS X and Windows, the native file dialog is used.
+#define QFileDialog_ReadOnly                      0x00000020   // Indicates that the model is readonly.
+#define QFileDialog_HideNameFilterDetails         0x00000040   // Indicates if the is hidden or not.
 
 //enum QFileDialog::ViewMode
 //This enum describes the view mode of the file dialog; i.e. what information about each file will be displayed.
 //
-#define QFileDialog_Detail                               0   // Displays an icon, a name, and details for each item in the directory.
-#define QFileDialog_List                                 1   // Displays only an icon and a name for each item in the directory.
+#define QFileDialog_Detail                        0   // Displays an icon, a name, and details for each item in the directory.
+#define QFileDialog_List                          1   // Displays only an icon and a name for each item in the directory.
 
-#define QDialog_Accepted                                 1
-#define QDialog_Rejected                                 0
+#define QDialog_Accepted                          1
+#define QDialog_Rejected                          0
 
+
+// enum QAbstractPrintDialog::PrintDialogOption
+// flags QAbstractPrintDialog::PrintDialogOptions
+// Used to specify which parts of the print dialog should be visible.
+// The PrintDialogOptions type is a typedef for QFlags<PrintDialogOption>.
+// It stores an OR combination of PrintDialogOption values.
+//
+#define QAbstractPrintDialog_None                 0x0000   // None of the options are enabled.
+#define QAbstractPrintDialog_PrintToFile          0x0001   // The print to file option is enabled.
+#define QAbstractPrintDialog_PrintSelection       0x0002   // The print selection option is enabled.
+#define QAbstractPrintDialog_PrintPageRange       0x0004   // The page range selection option is enabled.
+#define QAbstractPrintDialog_PrintCollateCopies   0x0010
+
+// enum QAbstractPrintDialog::PrintRange
+// Used to specify the print range selection option.
+//
+#define QAbstractPrintDialog_AllPages             0   // All pages should be printed.
+#define QAbstractPrintDialog_Selection            1   // Only the selection should be printed.
+#define QAbstractPrintDialog_PageRange            2   // The specified page range should be printed.
+
+// enum QPrinter::ColorMode
+// This enum type is used to indicate whether QPrinter should print in color or not.
+//
+#define QPrinter_Color                            1   // print in color if available, otherwise in grayscale.
+#define QPrinter_GrayScale                        0   // print in grayscale, even on color printers.
+
+// enum QPrinter::DuplexMode
+// This enum is used to indicate whether printing will occur on one or both sides of each sheet of paper (simplex or duplex printing).
+//
+#define QPrinter_DuplexNone                       0   // Single sided (simplex) printing only.
+#define QPrinter_DuplexAuto                       1   // The printer's default setting is used to determine whether duplex printing is used.
+#define QPrinter_DuplexLongSide                   2   // Both sides of each sheet of paper are used for printing. The paper is turned over its longest edge before the second side is printed
+#define QPrinter_DuplexShortSide                  3   // Both sides of each sheet of paper are used for printing. The paper is turned over its shortest edge before the second side is printed
+
+// enum QPrinter::Orientation
+// This enum type (not to be confused with Orientation) is used to specify each page's orientation.
+//
+#define QPrinter_Portrait                         0   // the page's height is greater than its width.
+#define QPrinter_Landscape                        1   // the page's width is greater than its height.
+// This type interacts with QPrinter::PaperSize and QPrinter::setFullPage()
+// to determine the final size of the page available to the application.
+
+// enum QPrinter::OutputFormat
+// The OutputFormat enum is used to describe the format QPrinter should use for printing.
+//
+#define QPrinter_NativeFormat                     0   // QPrinter will print output using a method defined by the platform it is running on. This mode is the default when printing directly to a printer.
+#define QPrinter_PdfFormat                        1   // QPrinter will generate its output as a searchable PDF file. This mode is the default when printing to a file.
+#define QPrinter_PostScriptFormat                 2   // QPrinter will generate its output as in the PostScript format. (This feature was introduced in Qt 4.2.)
+
+// enum QPrinter::PageOrder
+// This enum type is used by QPrinter to tell the application program how to print.
+//
+#define QPrinter_FirstPageFirst                   0   // the lowest-numbered page should be printed first.
+#define QPrinter_LastPageFirst                    1   // the highest-numbered page should be printed first.
+
+// enum QPrinter::PaperSize
+// This enum type specifies what paper size QPrinter should use.
+// QPrinter does not check that the paper size is available; it just uses this information,
+// together with QPrinter::Orientation and QPrinter::setFullPage(), to determine the printable area.
+//
+// The defined sizes (with setFullPage(true)) are:
+//
+#define QPrinter_A0                               5    // 841  x 1189 mm
+#define QPrinter_A1                               6    // 594  x 841  mm
+#define QPrinter_A2                               7    // 420  x 594  mm
+#define QPrinter_A3                               8    // 297  x 420  mm
+#define QPrinter_A4                               0    // 210  x 297  mm, 8.26 x 11.69 inches
+#define QPrinter_A5                               9    // 148  x 210  mm
+#define QPrinter_A6                               10   // 105  x 148  mm
+#define QPrinter_A7                               11   // 74   x 105  mm
+#define QPrinter_A8                               12   // 52   x 74   mm
+#define QPrinter_A9                               13   // 37   x 52   mm
+#define QPrinter_B0                               14   // 1030 x 1456 mm
+#define QPrinter_B1                               15   // 728  x 1030 mm
+#define QPrinter_B2                               17   // 515  x 728  mm
+#define QPrinter_B3                               18   // 364  x 515  mm
+#define QPrinter_B4                               19   // 257  x 364  mm
+#define QPrinter_B5                               1    // 182  x 257  mm, 7.17 x 10.13 inches
+#define QPrinter_B6                               20   // 128  x 182  mm
+#define QPrinter_B7                               21   // 91   x 128  mm
+#define QPrinter_B8                               22   // 64   x 91   mm
+#define QPrinter_B9                               23   // 45   x 64   mm
+#define QPrinter_B10                              16   // 32   x 45   mm
+#define QPrinter_C5E                              24   // 163  x 229  mm
+#define QPrinter_Comm10E                          25   // 105  x 241  mm, U.S. Common 10 Envelope
+#define QPrinter_DLE                              26   // 110  x 220  mm
+#define QPrinter_Executive                        4    // 191  x 254  mm, 7.5  x 10 inches
+#define QPrinter_Folio                            27   // 210  x 330  mm
+#define QPrinter_Ledger                           28   // 432  x 279  mm
+#define QPrinter_Legal                            3    // 216  x 356  mm, 8.5  x 14 inches
+#define QPrinter_Letter                           2    // 216  x 279  mm, 8.5  x 11 inches
+#define QPrinter_Tabloid                          29   // 279  x 432  mm
+#define QPrinter_Custom                           30   // Unknown, or a user defined size.
+// With setFullPage(false) (the default), the metrics will be a bit smaller; how much
+// depends on the printer in use.
+
+
+// enum QPrinter::PaperSource
+//
+// This enum type specifies what paper source QPrinter is to use. QPrinter does not check
+// that the paper source is available; it just uses this information to try and set the paper
+// source. Whether it will set the paper source depends on whether the printer has that
+// particular source.
+//
+// Warning: This is currently only implemented for Windows.
+//
+#define QPrinter_Auto                             6
+#define QPrinter_Cassette                         11
+#define QPrinter_Envelope                         4
+#define QPrinter_EnvelopeManual                   5
+#define QPrinter_FormSource                       12
+#define QPrinter_LargeCapacity                    10
+#define QPrinter_LargeFormat                      9
+#define QPrinter_Lower                            1
+#define QPrinter_MaxPageSource                    13
+#define QPrinter_Middle                           2
+#define QPrinter_Manual                           3
+#define QPrinter_OnlyOne                          0
+#define QPrinter_Tractor                          7
+#define QPrinter_SmallFormat                      8
+
+// enum QPrinter::PrintRange
+// Used to specify the print range selection option.
+//
+#define QPrinter_AllPages                         0   // All pages should be printed.
+#define QPrinter_Selection                        1   // Only the selection should be printed.
+#define QPrinter_PageRange                        2   // The specified page range should be printed.
+
+// enum #define QPrinter_PrinterMode
+// This enum describes the mode the printer should work in. It basically presets a certain
+// resolution and working mode.
+//
+#define QPrinter_ScreenResolution                 0   // Sets the resolution of the print device to the screen resolution. This has the big advantage that the results obtained when painting on the printer will match more or less exactly the visible output on the screen. It is the easiest to use, as font metrics on the screen and on the printer are the same. This is the default value. ScreenResolution will produce a lower quality output than HighResolution and should only be used for drafts.
+#define QPrinter_PrinterResolution                1   // This value is deprecated. Is is equivalent to ScreenResolution on Unix and HighResolution on Windows and Mac. Due do the difference between ScreenResolution and HighResolution, use of this value may lead to non-portable printer code.
+#define QPrinter_HighResolution                   2   // On Windows, sets the printer resolution to that defined for the printer in use. For PostScript printing, sets the resolution of the PostScript driver to 1200 dpi.
+// Note: When rendering text on a QPrinter device, it is important to realize that the size of
+// text, when specified in points, is independent of the resolution specified for the device itself.
+// Therefore, it may be useful to specify the font size in pixels when combining text with
+// graphics to ensure that their relative sizes are what you expect.
+
+// enum QPrinter::PrinterState
+//
+#define QPrinter_Idle                             0
+#define QPrinter_Active                           1
+#define QPrinter_Aborted                          2
+#define QPrinter_Error                            3
+
+// enum QPrinter::Unit
+// This enum type is used to specify the measurement unit for page and paper sizes.
+//
+#define QPrinter_Millimeter                       0
+#define QPrinter_Point                            1
+#define QPrinter_Inch                             2
+#define QPrinter_Pica                             3
+#define QPrinter_Didot                            4
+#define QPrinter_Cicero                           5
+#define QPrinter_DevicePixel                      6
+// Note the difference between Point and DevicePixel. The Point unit is defined
+// to be 1/72th of an inch, while the DevicePixel unit is resolution dependant and is
+// based on the actual pixels, or dots, on the printer.
+
+
+#define QPrintEngine_PPK_CollateCopies            0      // A boolean value indicating whether the printout should be collated or not.
+#define QPrintEngine_PPK_ColorMode                1      // Refers to QPrinter::ColorMode, either color or monochrome.
+#define QPrintEngine_PPK_Creator                  2      // A string describing the document's creator.
+#define QPrintEngine_PPK_Duplex                   21     // A boolean value indicating whether both sides of the printer paper should be used for the printout.
+#define QPrintEngine_PPK_DocumentName             3      // A string describing the document name in the spooler.
+#define QPrintEngine_PPK_FontEmbedding            19     // A boolean value indicating whether data for the document's fonts should be embedded in the data sent to the printer.
+#define QPrintEngine_PPK_FullPage                 4      // A boolean describing if the printer should be full page or not.
+#define QPrintEngine_PPK_NumberOfCopies           5      // An integer specifying the number of copies
+#define QPrintEngine_PPK_Orientation              6      // Specifies a QPrinter::Orientation value.
+#define QPrintEngine_PPK_OutputFileName           7      // The output file name as a string. An empty file name indicates that the printer should not print to a file.
+#define QPrintEngine_PPK_PageOrder                8      // Specifies a QPrinter::PageOrder value.
+#define QPrintEngine_PPK_PageRect                 9      // A QRect specifying the page rectangle
+#define QPrintEngine_PPK_PageSize                 10     // Obsolete. Use PPK_PaperSize instead.
+#define QPrintEngine_PPK_PaperRect                11     // A QRect specifying the paper rectangle.
+#define QPrintEngine_PPK_PaperSource              12     // Specifies a QPrinter::PaperSource value.
+#define QPrintEngine_PPK_PaperSources             22     // Specifies more than one QPrinter::PaperSource value.
+#define QPrintEngine_PPK_PaperSize                QPrintEngine_PPK_PageSize   // Specifies a QPrinter::PaperSize value.
+#define QPrintEngine_PPK_PrinterName              13     // A string specifying the name of the printer.
+#define QPrintEngine_PPK_PrinterProgram           14     // A string specifying the name of the printer program used for printing,
+#define QPrintEngine_PPK_Resolution               15     // An integer describing the dots per inch for this printer.
+#define QPrintEngine_PPK_SelectionOption          16
+#define QPrintEngine_PPK_SupportedResolutions     17     // A list of integer QVariants describing the set of supported resolutions that the printer has.
+#define QPrintEngine_PPK_SuppressSystemPrintStatus  20   // Suppress the built-in dialog for showing printing progress. As of 4.1 this only has effect on Mac OS X where, by default, a status dialog is shown.
+#define QPrintEngine_PPK_WindowsPageSize          18     // An integer specifying a DM_PAPER entry on Windows.
+#define QPrintEngine_PPK_CustomPaperSize          23     // A QSizeF specifying a custom paper size in the QPrinter::Point unit.
+#define QPrintEngine_PPK_PageMargins              24     // A QList<QVariant> containing the left, top, right and bottom margin values.
 
 /*----------------------------------------------------------------------*/
 

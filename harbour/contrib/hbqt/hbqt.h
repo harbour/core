@@ -326,6 +326,7 @@
 #define hbqt_par_QDragLeaveEvent( n )        ( ( QDragLeaveEvent* ) hb_parptr( n ) )
 #define hbqt_par_QMouseEvent( n )            ( ( QMouseEvent* ) hb_parptr( n ) )
 #define hbqt_par_QSystemTrayIcon( n )        ( ( QSystemTrayIcon* ) hb_parptr( n ) )
+#define hbqt_par_QPrintEngine( n )           ( ( QPrintEngine* ) hb_parptr( n ) )
 
 #define hbqt_par_QWebFrame( n )              ( ( QWebFrame* ) hb_parptr( n ) )
 #define hbqt_par_QWebNetworkRequest( n )     ( ( QWebNetworkRequest* ) hb_parptr( n ) )

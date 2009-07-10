@@ -108,6 +108,8 @@ CPP_SOURCES=\
 	QPoint.cpp \
 	QPointF.cpp \
 	QPrintDialog.cpp \
+	QPrintEngine.cpp \
+	QPrinter.cpp \
 	QPrintPreviewDialog.cpp \
 	QProgressBar.cpp \
 	QProgressDialog.cpp \
@@ -328,6 +330,8 @@ PRG_SOURCES=\
 	TQPoint.prg \
 	TQPointF.prg \
 	TQPrintDialog.prg \
+	TQPrintEngine.prg \
+	TQPrinter.prg \
 	TQPrintPreviewDialog.prg \
 	TQProgressBar.prg \
 	TQProgressDialog.prg \

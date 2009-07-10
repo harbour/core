@@ -197,6 +197,7 @@ public slots:
    void fileSelected( const QString & file );
    void filesSelected( const QStringList & selected );
    void filterSelected( const QString & filter );
+   void accepted( QPrinter * printer );
 };
 
 class Events: public QObject
