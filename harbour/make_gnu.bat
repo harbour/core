@@ -160,6 +160,8 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    set _HB_CHECK=
    set _HB_PATH=
 
+   if "%HB_ARCHITECTURE%" == "os2" goto SKIP_WINDLL
+
    rem ---------------------------------------------------------------
    rem Start the GNU Make system
 
