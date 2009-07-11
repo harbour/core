@@ -89,7 +89,7 @@ endif
 %.c : $(GRANDP)%.prg
 	$(HB_RULE)
 
-ifeq ($(SHLVL),) # COMMAND.COM
+ifeq ($(SHLVL),) # non-bash
 # Do nothing. the $(HB_ARCHITECTURE)/global.cf will handle clean up.
 else
 # Generic rule to clean up.

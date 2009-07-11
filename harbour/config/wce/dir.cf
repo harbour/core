@@ -4,7 +4,7 @@
 
 ifeq ($(PM),) # Only traverse directories if not compiling a specific module
 
-ifeq ($(SHLVL),) # NT Shell
+ifeq ($(SHLVL),) # non-bash
 
 ifeq ($(DIRS),) # Empty directory list
 DIR_RULE =\
@@ -25,6 +25,6 @@ DIR_RULE =\
 	  fi \
 	done
 
-endif # ! Windows
+endif # ! non-bash
 
 endif # ! compiling a specific program module

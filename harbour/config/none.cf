@@ -10,7 +10,7 @@ ifneq ($(ComSpec),)
 endif
 
 CMDPREF:=
-ifeq ($(SHLVL),)
+ifeq ($(SHLVL),) # non-bash
    ifneq ($(COMSPEC),)
       CMDPREF := $(COMSPEC) /C
    endif

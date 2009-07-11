@@ -90,7 +90,7 @@ ARFLAGS = $(HB_USER_AFLAGS)
 RANLIB = $(HB_CCPREFIX)ranlib
 
 ifeq ($(AR_RULE),)
-ifeq ($(SHLVL),) # NT Shell
+ifeq ($(SHLVL),) # non-bash
 LIB_DIR_DOS_ = $(subst /,\,$(LIB_DIR))\$@
 else
 LIB_DIR_DOS_ = $(LIB_DIR)/$@

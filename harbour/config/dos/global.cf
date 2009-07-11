@@ -19,7 +19,7 @@ HB_GT_LIST=\
 #HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
 HB_GT_LIBS := $(HB_GT_LIST)
 
-ifeq ($(SHLVL),) # COMMAND.COM
+ifeq ($(SHLVL),) # non-bash
 
 # There is a conflict with the use of '\' and '/' characters
 # The MAKE requires '/' in filenames (ARCH_DIR) however some compilers

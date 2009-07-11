@@ -8,7 +8,7 @@ INSTALL_RULE = @echo Done
 
 else
 
-ifeq ($(SHLVL),) # An OS/2 command shell
+ifeq ($(SHLVL),) # non-bash
 
 # We have to use script to overcome the max command size limit
 # NOTE: The empty line directly before 'endef' HAVE TO exist!

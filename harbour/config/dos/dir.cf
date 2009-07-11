@@ -10,7 +10,7 @@ DIR_RULE = @echo Done
 
 else
 
-ifeq ($(SHLVL),) # COMMAND.COM
+ifeq ($(SHLVL),) # non-bash
 
 # We have to use script to overcome the DOS limit of max 128 characters
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
@@ -33,7 +33,7 @@ DIR_RULE =\
 	  fi \
 	done
 
-endif # ! COMMAND.COM
+endif # ! non-bash
 
 endif # ! Empty directory list
 

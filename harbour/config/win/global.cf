@@ -22,7 +22,7 @@ ifeq ($(HB_DYNLIB),yes)
    HB_CDYNLIB=-DHB_DYNLIB
 endif
 
-ifeq ($(SHLVL),) # NT Shell
+ifeq ($(SHLVL),) # non-bash
 
 # There is a conflict with the use of '\' and '/' characters
 # The MAKE requires '/' in filenames (ARCH_DIR) however some compilers
