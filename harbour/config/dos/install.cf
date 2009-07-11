@@ -36,6 +36,7 @@ INSTALL_RULE =\
 	    then \
 	      echo "! Installing $$i on $(INSTALL_DIRSH)"; \
 	      $(CP) $$i $(INSTALL_DIRSH); \
+	      true; \
 	    else \
 	      echo "! Cannot install $$i, not found" 1>&2; \
 	    fi \
@@ -44,4 +45,4 @@ INSTALL_RULE =\
 
 endif
 
-endif
+endif # Empty install list

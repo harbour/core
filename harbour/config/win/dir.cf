@@ -7,14 +7,12 @@ ifeq ($(PM),) # Only traverse directories if not compiling a specific module
 ifeq ($(SHLVL),) # non-bash
 
 ifeq ($(DIRS),) # Empty directory list
-DIR_RULE =\
-	@echo Done
+DIR_RULE = @echo Done
 else
 DIR_LIST = $(subst /,\,$(DIRS))
 DIR_MAKE = $(subst /,\,$(MK))
-DIR_RULE =\
-	$(COMSPEC) /c for %d in ($(DIR_LIST)) do $(DIR_MAKE) -C %d $@
-endif
+DIR_RULE = $(COMSPEC) /c for %d in ($(DIR_LIST)) do $(DIR_MAKE) -C %d $@
+endif # ! Empty directory list
 
 else  # bash
 
