@@ -10,16 +10,27 @@ else
 
 ifeq ($(SHLVL),) # non-bash
 
+ifeq ($(OS2_SHELL),) # non-OS/2
+
+INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
+
+INSTALL_RULE = \
+	-$(COMSPEC) /c for %%f in ($(INSTALL_LIST)) do copy "%%f" "$(subst /,\,$(INSTALL_DIR))"
+
+else # OS/2
+
 # We have to use script to overcome the max command size limit
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every commands will be separated by LF
 define inst_file
-$(COMSPEC) /C $(CP) $(file) $(subst /,\,$(INSTALL_DIR)
+$(COMSPEC) /C $(CP) $(file) $(subst /,\,$(INSTALL_DIR))
 
 endef
 
 INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
 INSTALL_RULE = $(foreach file, $(INSTALL_LIST), $(inst_file))
+
+endif
 
 else  # bash
 

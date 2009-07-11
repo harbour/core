@@ -37,8 +37,8 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       $ ./hello
       You should see 'Hello world!' on screen.
 
-   Windows
-   -------
+   Windows/Windows CE
+   ------------------
       Platform specific prerequisites:
 
       1.) Windows NT or compatible system is required to build Harbour.
@@ -68,7 +68,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
              - With mingw, sh.exe (part of MSYS) mustn't be in the PATH.
 
    Windows with MinGW + MSYS or Cygwin
-   -----------------------------------
+   ----------------------------------------------
 
       This is an *alternative build method* using bash script directly.
       For the primary and recommended method: see above
@@ -87,6 +87,8 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
    DOS
    ---
+      You can use MS-DOS or Windows NT compatible hosts to create DOS builds.
+
       > set HB_ARCHITECTURE=dos
       > set HB_COMPILER=<[djgpp]|watcom>
       > set HB_INSTALL_PREFIX=<DIR>
@@ -94,6 +96,10 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
    OS/2
    ----
+      You can use OS/2, Windows NT compatible, or Linux hosts to create
+      OS/2 builds.
+      Some tricks are required when non-OS/2 host is used, see in examples.
+
       > set HB_COMPILER=<[gcc]|watcom>
       > set HB_INSTALL_PREFIX=<DIR>
       > make_gnu_os2.cmd install
@@ -580,6 +586,44 @@ EXAMPLES
       set HB_COMPILER=watcom
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu_os2.cmd %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- Open Watcom C++ on Windows NT (requires native Windows Harbour binaries)
+      SET WATCOM=C:\watcom
+      SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
+      SET BEGINLIBPATH=%WATCOM%\BINP\DLL
+      SET EDPATH=%WATCOM%\EDDAT
+      SET INCLUDE=%WATCOM%\H;%WATCOM%\H\OS2
+      rem
+      rem ; Native Windows Harbour binaries need to be installed on this path
+      set HB_BIN_COMPILE=C:\hb-watcom\bin
+      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
+      rem
+      set HB_ARCHITECTURE=os2
+      set HB_COMPILER=watcom
+      set HB_USER_PRGFLAGS=-D__PLATFORM__OS2 -undef:__PLATFORM__WINDOWS
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
+      --- Open Watcom C++ on Linux (requires native Linux Harbour binaries)
+      #!/bin/sh
+      if [ -z "${WATCOM}" ]; then
+         export WATCOM="/opt/lng/watcom"
+         export INCLUDE="${WATCOM}/h:${WATCOM}/h/os2"
+         export PATH="${WATCOM}/binl:$PATH"
+      fi
+      # ; eliminate libraries which scans for local host header files
+      export HB_XBUILD=yes
+      # ; Native Linux binaries need to be installed on this path
+      export HB_PPGEN_PATH="/tmp/cros-hb"
+      export HB_BIN_COMPILE="/tmp/cros-hb"
+      # ;
+      export HB_ARCHITECTURE=os2
+      export HB_COMPILER=watcom
+      export HB_USER_PRGFLAGS="${HB_USER_PRGFLAGS} -D__PLATFORM__OS2 -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
+      export HB_INSTALL_PREFIX="$(pwd)/hb-os2/watcom"
+      ./make_gnu.sh "$@"
       ---
 
 
