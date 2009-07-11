@@ -18,10 +18,10 @@ HB_GT_LIBS := $(HB_GT_LIST)
 ifeq ($(SHLVL),) # non-bash
 
 ARCH_DIR = $(HB_ARCH)
-OS2_ARCH_DIR = $(subst /,\,$(HB_ARCH))
-OS2_LIB_DIR  = $(subst /,\,$(LIB_DIR))
-OS2_LIB_PATH = $(subst /,\,$(LIB_PATH))
-OS2_LIB_ARCH = $(subst /,\,$(LIB_ARCH))
+DOS_ARCH_DIR = $(subst /,\,$(HB_ARCH))
+DOS_LIB_DIR  = $(subst /,\,$(LIB_DIR))
+DOS_LIB_PATH = $(subst /,\,$(LIB_PATH))
+DOS_LIB_ARCH = $(subst /,\,$(LIB_ARCH))
 DIRSEP = $(subst /,\,\)
 
 MK = $(subst /,\,$(subst \~,~,$(MAKE)))
@@ -41,12 +41,12 @@ ifeq ($(OS2_SHELL),) # non-OS/2
    MV = move
 
 dirbase::
-	-@$(COMSPEC) /c if not exist $(OS2_ARCH_DIR)\. $(MD) $(OS2_ARCH_DIR)
-	$(if $(OS2_LIB_DIR),-@$(COMSPEC) /c if not exist $(OS2_LIB_DIR)\. $(MD) $(OS2_LIB_DIR),)
+	-@$(COMSPEC) /c if not exist $(DOS_ARCH_DIR)\. $(MD) $(DOS_ARCH_DIR)
+	$(if $(DOS_LIB_DIR),-@$(COMSPEC) /c if not exist $(DOS_LIB_DIR)\. $(MD) $(DOS_LIB_DIR),)
 
 clean::
-	-@$(COMSPEC) /c if exist $(OS2_ARCH_DIR) $(RD) $(OS2_ARCH_DIR)
-	$(if $(OS2_LIB_ARCH),-@$(COMSPEC) /c if exist $(OS2_LIB_ARCH) $(RM) $(OS2_LIB_ARCH),)
+	-@$(COMSPEC) /c if exist $(DOS_ARCH_DIR) $(RD) $(DOS_ARCH_DIR)
+	$(if $(DOS_LIB_ARCH),-@$(COMSPEC) /c if exist $(DOS_LIB_ARCH) $(RM) $(DOS_LIB_ARCH),)
 
 else # OS/2
    RM = del /n
@@ -58,21 +58,21 @@ else # OS/2
 ifeq ($(LIB_PATH),)
 
 dirbase::
-	-for %d in ($(HB_ARCHITECTURE) $(OS2_ARCH_DIR)) do if not exist %d $(MD) %d
+	-for %d in ($(HB_ARCHITECTURE) $(DOS_ARCH_DIR)) do if not exist %d $(MD) %d
 
 clean::
-	-if exist $(OS2_ARCH_DIR)\*.* $(RM) $(OS2_ARCH_DIR)\*.*
-	-for %d in ($(OS2_ARCH_DIR) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
+	-if exist $(DOS_ARCH_DIR)\*.* $(RM) $(DOS_ARCH_DIR)\*.*
+	-for %d in ($(DOS_ARCH_DIR) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
 
 else
 
 dirbase::
-	-for %d in ($(HB_ARCHITECTURE) $(OS2_ARCH_DIR) $(OS2_LIB_PATH) $(OS2_LIB_DIR)) do if not exist %d $(MD) %d
+	-for %d in ($(HB_ARCHITECTURE) $(DOS_ARCH_DIR) $(DOS_LIB_PATH) $(DOS_LIB_DIR)) do if not exist %d $(MD) %d
 
 clean::
-	-if exist $(OS2_ARCH_DIR)\*.* $(RM) $(OS2_ARCH_DIR)\*.*
-	-for %d in ($(OS2_ARCH_DIR) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
-	-if exist $(OS2_LIB_ARCH) $(RM) $(OS2_LIB_ARCH)
+	-if exist $(DOS_ARCH_DIR)\*.* $(RM) $(DOS_ARCH_DIR)\*.*
+	-for %d in ($(DOS_ARCH_DIR) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
+	-if exist $(DOS_LIB_ARCH) $(RM) $(DOS_LIB_ARCH)
 
 endif
 
@@ -90,7 +90,7 @@ MV = mv -f
 MD = mkdir
 MDP = mkdir -p
 
-OS2_LIB_ARCH = $(LIB_ARCH)
+DOS_LIB_ARCH = $(LIB_ARCH)
 
 dirbase::
 	@[ -d $(ARCH_DIR) ] || $(MDP) $(ARCH_DIR)
