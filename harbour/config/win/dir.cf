@@ -14,7 +14,7 @@ ifeq ($(SHLVL),) # non-bash
 
 DIR_MAKE = $(subst /,\,$(MK))
 DIR_LIST = $(subst /,\,$(DIRS))
-DIR_RULE = $(COMSPEC) /c for %d in ($(DIR_LIST)) do $(DIR_MAKE) -C %d $@
+DIR_RULE = $(COMSPEC) /C for %d in ($(DIR_LIST)) do $(DIR_MAKE) -C %d $@
 
 else  # bash
 
