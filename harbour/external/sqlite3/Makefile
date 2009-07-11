@@ -8,9 +8,9 @@ HB_BUILD_MODE = c
 ifeq ($(HB_ARCHITECTURE),wce)
 HB_USER_CFLAGS += -D_WIN32_WCE
 endif
-ifeq ($(HB_COMPILER),djgpp)
-# DJGPP isn't correctly recognized by SQLite, so we're forcing
-# the next best available option. This will cause missing
+ifeq ($(HB_ARCHITECTURE),dos)
+# DJGPP and OpenWatcom in DOS aren't correctly recognized by SQLite,
+# so we're forcing the next best available option. This will cause missing
 # externals though. [vszakats]
 HB_USER_CFLAGS += -DSQLITE_OS_OTHER
 endif
