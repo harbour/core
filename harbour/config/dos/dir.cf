@@ -25,6 +25,7 @@ DIR_MAKE = $(subst /,\,$(MK))
 DIR_RULE = $(foreach file, $(DIR_LIST), $(dir_mk))
 
 else  # bash
+
 DIR_LIST = $(subst \,/,$(DIRS))
 DIR_RULE =\
 	@for d in $(DIR_LIST); do \
