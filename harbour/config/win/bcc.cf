@@ -91,28 +91,8 @@ LDFLAGS = $(LINKPATHS)
 # create library rules
 AR = tlib.exe
 ARFLAGS = /P64 $(HB_USER_AFLAGS)
-ifneq ($(SHLVL),) # shell
 
 AROBJS = $(foreach file, $(^F), -+$(file))
 AR_RULE = $(AR) $(ARFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(AROBJS)
-
-else
-
-#Note: The empty line below HAVE TO exist!
-define lib_object
-@echo -+$(subst /,\,$(file)) ^& >> __lib__.tmp
-
-endef
-
-define create_library
-@if exist __lib__.tmp del __lib__.tmp
-$(foreach file, $(^F), $(lib_object))
-@echo -+>> __lib__.tmp
-$(AR) $(subst /,\,$(LIB_DIR)/$@) $(ARFLAGS) @__lib__.tmp
-endef
-
-AR_RULE = $(create_library)
-
-endif
 
 include $(TOP)$(ROOT)config/rules.cf

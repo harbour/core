@@ -689,6 +689,10 @@ typedef unsigned long HB_COUNTER;
 /* TODO: Remove dependence on old types */
 
 /* Harbour overloaded types: */
+
+#define hbFALSE  0
+#define hbTRUE   (!0)
+
 typedef int                 hbBool;
 typedef char                hbChar;           /* TOFIX */
 typedef signed char         hbSChar;

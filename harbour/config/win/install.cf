@@ -8,7 +8,7 @@ INSTALL_RULE = @echo Done
 
 else
 
-ifeq ($(SHLVL),) # NT shell
+ifeq ($(SHLVL),) # NT Shell
 
 INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
 
