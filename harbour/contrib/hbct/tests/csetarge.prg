@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CSETARGERR() 
+ *   Test CT3 function CSETARGERR()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -65,125 +65,125 @@ local cRet, olderr
  qout ("Begin test of CSETARGERR()")
  qout ("")
 
- qout ("")                    
+ qout ("")
  qout ("Local error handler: ")
 
  olderr := errorblock ({|oerr|myerrhandler(oerr)})
 
  // standard behaviour on argument error
- qout ("")                    
+ qout ("")
  qout ("Standard behaviour")
  qout ("  Call to addascii (5789676,1,2,.T.):")
  cRet := addascii (5789676,1,2,.T.)
  qout ("  return value was", cRet)
- qout ("")                    
- qout ("  Call to charadd ('AA',.F.):")
- cRet := charadd ("AA",.F.)
- qout ("  return value was", cRet, "<Press any key>")
- qout ("")                    
- inkey (0)
-
- // CT_ARGERR_WHOCARES on argument error
- qout ("")                    
- qout ("CT_ARGERR_WHOCARES behaviour")
- CSETARGERR (CT_ARGERR_WHOCARES)
- qout ("  Call to addascii (5789676,1,2,.T.):")
- cRet := addascii (5789676,1,2,.T.)
- qout ("  return value was", cRet)
- qout ("")                    
- qout ("  Call to charadd ('AA',.F.):")
- cRet := charadd ("AA",.F.)
- qout ("  return value was", cRet, "<Press any key>")
- qout ("")                    
- inkey (0)
-
- // CT_ARGERR_WARNING on argument error
- qout ("")                    
- qout ("CT_ARGERR_WARNING behaviour")
- CSETARGERR (CT_ARGERR_WARNING)
- qout ("  Call to addascii (5789676,1,2,.T.):")
- cRet := addascii (5789676,1,2,.T.)
- qout ("  return value was", cRet)
- qout ("")                    
- qout ("  Call to charadd ('AA',.F.):")
- cRet := charadd ("AA",.F.)
- qout ("  return value was", cRet, "<Press any key>")
- qout ("")                    
- inkey (0)
-
- // CT_ARGERR_ERROR on argument error
- qout ("")                    
- qout ("CT_ARGERR_ERROR behaviour")
- CSETARGERR (CT_ARGERR_ERROR)
- qout ("  Call to addascii (5789676,1,2,.T.):")
- cRet := addascii (5789676,1,2,.T.)
- qout ("  return value was", cRet)
- qout ("")                    
- qout ("  Call to charadd ('AA',.F.):")
- cRet := charadd ("AA",.F.)
- qout ("  return value was", cRet, "<Press any key>")
- qout ("")                    
- inkey (0)
-
- // CT_ARGERR_CATASTROPHIC on argument error
- qout ("")                    
- qout ("CT_ARGERR_CATASTROPHIC behaviour")
- CSETARGERR (CT_ARGERR_CATASTROPHIC)
- qout ("  Call to addascii (5789676,1,2,.T.):")
- cRet := addascii (5789676,1,2,.T.)
- qout ("  return value was", cRet)
- qout ("")                    
+ qout ("")
  qout ("  Call to charadd ('AA',.F.):")
  cRet := charadd ("AA",.F.)
  qout ("  return value was", cRet, "<Press any key>")
  qout ("")
  inkey (0)
 
- qout ("")                    
+ // CT_ARGERR_WHOCARES on argument error
+ qout ("")
+ qout ("CT_ARGERR_WHOCARES behaviour")
+ CSETARGERR (CT_ARGERR_WHOCARES)
+ qout ("  Call to addascii (5789676,1,2,.T.):")
+ cRet := addascii (5789676,1,2,.T.)
+ qout ("  return value was", cRet)
+ qout ("")
+ qout ("  Call to charadd ('AA',.F.):")
+ cRet := charadd ("AA",.F.)
+ qout ("  return value was", cRet, "<Press any key>")
+ qout ("")
+ inkey (0)
+
+ // CT_ARGERR_WARNING on argument error
+ qout ("")
+ qout ("CT_ARGERR_WARNING behaviour")
+ CSETARGERR (CT_ARGERR_WARNING)
+ qout ("  Call to addascii (5789676,1,2,.T.):")
+ cRet := addascii (5789676,1,2,.T.)
+ qout ("  return value was", cRet)
+ qout ("")
+ qout ("  Call to charadd ('AA',.F.):")
+ cRet := charadd ("AA",.F.)
+ qout ("  return value was", cRet, "<Press any key>")
+ qout ("")
+ inkey (0)
+
+ // CT_ARGERR_ERROR on argument error
+ qout ("")
+ qout ("CT_ARGERR_ERROR behaviour")
+ CSETARGERR (CT_ARGERR_ERROR)
+ qout ("  Call to addascii (5789676,1,2,.T.):")
+ cRet := addascii (5789676,1,2,.T.)
+ qout ("  return value was", cRet)
+ qout ("")
+ qout ("  Call to charadd ('AA',.F.):")
+ cRet := charadd ("AA",.F.)
+ qout ("  return value was", cRet, "<Press any key>")
+ qout ("")
+ inkey (0)
+
+ // CT_ARGERR_CATASTROPHIC on argument error
+ qout ("")
+ qout ("CT_ARGERR_CATASTROPHIC behaviour")
+ CSETARGERR (CT_ARGERR_CATASTROPHIC)
+ qout ("  Call to addascii (5789676,1,2,.T.):")
+ cRet := addascii (5789676,1,2,.T.)
+ qout ("  return value was", cRet)
+ qout ("")
+ qout ("  Call to charadd ('AA',.F.):")
+ cRet := charadd ("AA",.F.)
+ qout ("  return value was", cRet, "<Press any key>")
+ qout ("")
+ inkey (0)
+
+ qout ("")
  qout ("Standard error handler: ")
  errorblock (olderr)
 
  // standard behaviour on argument error
- qout ("")                    
+ qout ("")
  qout ("Standard behaviour")
  qout ("  Call to charadd ('AA',.F.):")
  cRet := charadd ("AA",.F.)
  qout ("  return value was", cRet, "<Press any key>")
- qout ("")                    
+ qout ("")
  inkey (0)
 
  // CT_ARGERR_WHOCARES on argument error
- qout ("")                    
+ qout ("")
  qout ("CT_ARGERR_WHOCARES behaviour")
  CSETARGERR (CT_ARGERR_WHOCARES)
  qout ("  Call to charadd ('AA',.F.):")
  cRet := charadd ("AA",.F.)
  qout ("  return value was", cRet, "<Press any key>")
- qout ("")                    
+ qout ("")
  inkey (0)
 
  // CT_ARGERR_WARNING on argument error
- qout ("")                    
+ qout ("")
  qout ("CT_ARGERR_WARNING behaviour")
  CSETARGERR (CT_ARGERR_WARNING)
  qout ("  Call to charadd ('AA',.F.):")
  cRet := charadd ("AA",.F.)
  qout ("  return value was", cRet, "<Press any key>")
- qout ("")                    
+ qout ("")
  inkey (0)
 
  // CT_ARGERR_ERROR on argument error
- qout ("")                    
+ qout ("")
  qout ("CT_ARGERR_ERROR behaviour")
  CSETARGERR (CT_ARGERR_ERROR)
  qout ("  Call to charadd ('AA',.F.):")
  cRet := charadd ("AA",.F.)
  qout ("  return value was", cRet, "<Press any key>")
- qout ("")                    
+ qout ("")
  inkey (0)
 
  // CT_ARGERR_CATASTROPHIC on argument error
- qout ("")                    
+ qout ("")
  qout ("CT_ARGERR_CATASTROPHIC behaviour")
  CSETARGERR (CT_ARGERR_CATASTROPHIC)
  qout ("  Call to charadd ('AA',.F.):")
@@ -206,9 +206,9 @@ local ni, nDigit
   memvar Input
 
   qout ("    Error handler called:")
-  qout ("      err:severity.....:",oerr:severity) 
-  qout ("      err:subSystem....:",oerr:subSystem) 
-  qout ("      err:operation....:",oerr:operation) 
+  qout ("      err:severity.....:",oerr:severity)
+  qout ("      err:subSystem....:",oerr:subSystem)
+  qout ("      err:operation....:",oerr:operation)
   qout ("      len(err:args)....:",len(oerr:args))
   for ni := 1 to len (oerr:args)
     qout ("          err:args["+alltrim(str(ni))+"]..:",oerr:args[ni])
@@ -243,50 +243,50 @@ local ni, nDigit
       qout ("    Here it's a "+alltrim(str(nDigit))+", so I return a ")
       do case
         case nDigit == 0
-          qqout ("NIL.") 
+          qqout ("NIL.")
           Input := NIL
 
         case nDigit == 1
-          qqout ("String.") 
+          qqout ("String.")
           Input := ""
 
         case nDigit == 2
-          qqout ("Integer.") 
+          qqout ("Integer.")
           Input := 0
 
         case nDigit == 3
-          qqout ("Float.") 
+          qqout ("Float.")
           Input := 0.0
 
         case nDigit == 4
-          qqout ("Boolean.") 
+          qqout ("Boolean.")
           Input := .F.
 
         case nDigit == 5
-          qqout ("Date.") 
+          qqout ("Date.")
           Input := ctod ("")
 
         case nDigit == 6
-          qqout ("Block.") 
+          qqout ("Block.")
           Input := {||NIL}
 
         case nDigit == 7
-          qqout ("Array.") 
+          qqout ("Array.")
           Input := {}
 
         case nDigit == 8
-          qqout ("Object.") 
+          qqout ("Object.")
           Input := GetNew()
 
         case nDigit == 9
-          qqout ("<don't know, NIL would be best.") 
+          qqout ("<don't know, NIL would be best.")
           Input := NIL
 
       endcase
 
     endif
 
-    return (Input)
+    return Input
 
   endif
 
@@ -295,8 +295,4 @@ local ni, nDigit
     qout ("    is only informative.")
   endif
 
-return (.F.)
-
-
-       
-
+return .F.

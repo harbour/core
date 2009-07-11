@@ -108,7 +108,7 @@ FUNCTION Main()
 
 
          aLine := {}
-      
+
          FOR j := 1 TO oIni:ReadNumber( "Header", "DataFields", 0 )
 
             cField := oIni:ReadString( "Header", "DataField" + ltrim( str(j) ), "" )
@@ -159,4 +159,4 @@ FUNCTION Main()
 
    ENDIF
 
-   RETURN( NIL )
+   RETURN NIL

@@ -150,7 +150,7 @@ Function Main( cAddress, cPort, cAppln, cParams, cDirectory )
    Hb_InetClose( Socket )
    Hb_InetCleanup()
 
-   RETURN( 0 )
+   RETURN 0
 
 //----------------------------------------------------------------------//
 
@@ -367,7 +367,7 @@ Function TrmReceiveServer()
       lReceiving := .f.
    endif
 
-   Return ( 0 )
+   Return 0
 
 //----------------------------------------------------------------------//
 
@@ -441,7 +441,7 @@ Function Wvt_Key( nKey )
       lSending := .f.
    endif
 
-   Return ( 0 )
+   Return 0
 
 //----------------------------------------------------------------------//
 

@@ -76,7 +76,7 @@ FUNCTION Main()
       CLS
    NEXT
 
-   RETURN( NIL )
+   RETURN NIL
 
 Exit PROCEDURE ExitTest
    __PP_Free()

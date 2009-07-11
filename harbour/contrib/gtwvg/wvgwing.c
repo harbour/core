@@ -832,7 +832,7 @@ PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, BOOL bEmpty )
       HB_TCHAR_FREE( szFaceName );
    }
 
-   return( aFont );
+   return aFont;
 }
 
 /*----------------------------------------------------------------------*/

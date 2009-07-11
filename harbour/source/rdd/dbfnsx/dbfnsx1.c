@@ -3466,7 +3466,7 @@ static BOOL hb_nsxCurKeyRefresh( LPTAGINFO pTag )
          }
       }
       hb_nsxKeyFree( pKey );
-      return( pTag->CurKeyInfo->rec != 0 && pTag->CurKeyInfo->rec == pArea->dbfarea.ulRecNo );
+      return pTag->CurKeyInfo->rec != 0 && pTag->CurKeyInfo->rec == pArea->dbfarea.ulRecNo;
    }
    pTag->TagBOF = pTag->TagEOF = FALSE;
    return TRUE;

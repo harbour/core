@@ -58,7 +58,7 @@
 #ifdef FT_TEST
   FUNCTION MAIN( cHexNum )
      QOut( FT_HEX2DEC( cHexNum ) )
-     return ( nil )
+     RETURN NIL
 #endif
 
 FUNCTION FT_HEX2DEC( cHexNum )

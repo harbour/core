@@ -183,7 +183,7 @@
       ENDCASE
       RESTSCREEN(21, 0, 22, MaxCol(), cSaveScrn)
       @ nRow, nCol SAY ""
-   RETURN(.t.)
+   RETURN .t.
 #endif
 
 FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;

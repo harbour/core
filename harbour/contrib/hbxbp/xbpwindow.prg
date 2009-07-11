@@ -547,7 +547,7 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent, oXbp )
       EXIT
    END SWITCH
 
-   RETURN ( lRet )
+   RETURN lRet
 
 /*----------------------------------------------------------------------*/
 
@@ -741,7 +741,7 @@ METHOD XbpWindow:disable()
    ::oWidget:setDisabled( .t. )
    ::is_enabled := ::oWidget:isEnabled()
 
-   RETURN ( ! ::is_enabled )
+   RETURN ! ::is_enabled
 
 /*----------------------------------------------------------------------*/
 
@@ -750,7 +750,7 @@ METHOD XbpWindow:enable()
    ::oWidget:setEnabled( .t. )
    ::is_enabled := ::oWidget:isEnabled()
 
-   RETURN ( ::is_enabled )
+   RETURN ::is_enabled
 
 /*----------------------------------------------------------------------*/
 
@@ -1059,7 +1059,7 @@ METHOD XbpWindow:setTrackPointer( lTrack )
       lRet := .T.
    ENDIF
 
-   RETURN ( lRet )
+   RETURN lRet
 
 /*----------------------------------------------------------------------*/
 
@@ -1209,9 +1209,9 @@ METHOD XbpWindow:getModalState()
    nState := ::oWidget:windowModality()
 
    IF hb_bitAnd( nState, Qt_NonModal ) == Qt_NonModal
-      RETURN ( XBP_DISP_MODELESS )
+      RETURN XBP_DISP_MODELESS
    ELSEIF hb_bitAnd( nState, Qt_ApplicationModal ) == Qt_ApplicationModal
-      RETURN ( XBP_DISP_APPMODAL )
+      RETURN XBP_DISP_APPMODAL
    ELSE
       // TODO:  XBP_DISP_SYSMODAL
    ENDIF

@@ -369,7 +369,7 @@ METHOD Event() CLASS wvtDialog
       endif
    endif
 
-   RETURN ( nKey )
+   RETURN nKey
 
 /*----------------------------------------------------------------------*/
 
@@ -603,7 +603,7 @@ METHOD Inkey() CLASS wvtDialog
       endif
    endif
 
-   RETURN ( ::nKey )
+   RETURN ::nKey
 
 /*----------------------------------------------------------------------*/
 
@@ -3300,7 +3300,7 @@ METHOD Create( cCaption ) CLASS wvtMenu
    ENDIF
    ::Caption:= IIF( cCaption == NIL, "", cCaption )
 
-   RETURN(Self)
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -3317,7 +3317,7 @@ METHOD Destroy() CLASS wvtMenu
       ::hMenu:= 0
    ENDIF
 
-   RETURN( .T. )
+   RETURN .T.
 
 /*----------------------------------------------------------------------*/
 
@@ -3348,7 +3348,7 @@ METHOD AddItem(cCaption, bAction) CLASS wvtMenu
       lResult:= .T.
    ENDIF
 
-   RETURN( lResult )
+   RETURN lResult
 
 /*----------------------------------------------------------------------*/
 
@@ -3361,7 +3361,7 @@ METHOD DelAllItems() CLASS wvtMenu
       nItems--
    ENDDO
 
-   RETURN ( lResult )
+   RETURN lResult
 
 /*----------------------------------------------------------------------*/
 
@@ -3383,7 +3383,7 @@ METHOD DelItem( nItemNum ) CLASS wvtMenu
       ENDIF
    ENDIF
 
-   RETURN(lResult)
+   RETURN lResult
 
 /*----------------------------------------------------------------------*/
 
@@ -3394,7 +3394,7 @@ METHOD EnableItem( nItemNum ) CLASS wvtMenu
       nPrevious:= Wvt_EnableMenuItem( ::hMenu, nItemNum-1, MF_BYPOSITION + MF_ENABLED )
    ENDIF
 
-   RETURN ( nPrevious )
+   RETURN nPrevious
 
 /*----------------------------------------------------------------------*/
 
@@ -3405,13 +3405,13 @@ METHOD DisableItem( nItemNum ) CLASS wvtMenu
       nPrevious:= Wvt_EnableMenuItem( ::hMenu, nItemNum-1, MF_BYPOSITION + MF_GRAYED )
    ENDIF
 
-   RETURN ( nPrevious )
+   RETURN nPrevious
 
 /*----------------------------------------------------------------------*/
 
 METHOD NumItems() CLASS wvtMenu
 
-   RETURN ( LEN( ::aItems ) )
+   RETURN LEN( ::aItems )
 
 /*----------------------------------------------------------------------*/
 
@@ -3422,7 +3422,7 @@ METHOD GetItem( nItemNum ) CLASS wvtMenu
       aResult:= ::aItems[ nItemNum ]
    ENDIF
 
-   RETURN ( aResult )
+   RETURN aResult
 
 /*----------------------------------------------------------------------*/
 
@@ -3441,7 +3441,7 @@ METHOD FindMenuItemById( nId ) CLASS wvtMenu
       ENDDO
    ENDIF
 
-   RETURN ( aResult )
+   RETURN aResult
 
 /*----------------------------------------------------------------------*/
 
@@ -3449,7 +3449,7 @@ METHOD DrawMenuBar() CLASS wvtMenu
 
    Wvt_DrawMenuBar()
 
-   RETURN ( NIL )
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/

@@ -2427,7 +2427,7 @@ local i
 nDepth := iif(ISNUMBER(nDepth),nDepth,0)
 if hFile == NIL
    if (hFile := fCreate(cFile,FC_NORMAL)) == -1
-      return(nBytes)
+      return nBytes
    endif
 endif
 nDepth++
@@ -2441,7 +2441,7 @@ nDepth--
 if nDepth == 0
    fClose(hFile)
 endif
-return(nBytes)
+return nBytes
 
 static function WriteData(hFile,xData)
 local cData  := valtype(xData)
@@ -2458,7 +2458,7 @@ local cData  := valtype(xData)
    else
        cData += i2bin(0)   // NIL
    endif
-return( fWrite(hFile,cData,len(cData)) )
+return fWrite(hFile,cData,len(cData))
 
 static function File2Array(cFile,nLen,hFile)
 LOCAL cData,cType,nDataLen,nBytes
@@ -2466,12 +2466,12 @@ local nDepth := 0
 local aRay   := {}
 if hFile == NIL
      if (hFile:=fOpen(cFile,FO_READ)) == -1
-         return(aRay)
+         return aRay
      endif
      cData := space(3)
      fRead(hFile,@cData,3)
      if left(cData,1) != 'A'
-         return( aRay)
+         return aRay
      endif
      nLen := bin2i(right(cData,2))
 endif
@@ -2507,5 +2507,5 @@ enddo
 if cFile!=NIL
     fClose(hFile)
 endif
-return(aRay)
+return aRay
 // end of 3rd function written by Peter Kulek

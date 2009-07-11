@@ -78,4 +78,4 @@ function ft_rand1(nMax)
 
   nSeed := iif( nSeed == NIL, seconds(), nSeed )   // init_seed()
 
-  return( nMax * ( ( nSeed := mod( nSeed*b+1, m ) ) / m ) )
+  return nMax * ( ( nSeed := mod( nSeed*b+1, m ) ) / m )

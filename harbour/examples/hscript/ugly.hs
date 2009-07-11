@@ -16,4 +16,4 @@
 <%
 OutStd( a, a, a )
 %>
-</HTML><%RETURN( NIL )%>
+</HTML><%RETURN NIL%>

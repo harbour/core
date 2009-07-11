@@ -4,21 +4,21 @@
 
 /*
  *------------------------------------------------------------------------
- *                  HARBOUR INTERFACE for SQLITE  
+ *                  HARBOUR INTERFACE for SQLITE
  *------------------------------------------------------------------------
  *
  * Copyright 2003 Alejandro de Garate <alex_degarate@hotmail.com>
  *
  * License: General Public License (GNU)
- * 
+ *
  * Developed using:
- *     Harbour 0.42 or upper 
- *     Borland C++ BCC 5.5.1 
+ *     Harbour 0.42 or upper
+ *     Borland C++ BCC 5.5.1
  *
  * History:
  *
  * Ver 0.40 30 December 2003 Fixed an opening error not detected
- *             It seems is a problem with BCC compiler.  
+ *             It seems is a problem with BCC compiler.
  *             If "xxFile" database is not found, an empty file is
  *             created with the same name, given an incorrect signal
  *             to FILE() function. File is empty but exists (Oh man...)
@@ -82,7 +82,7 @@ PROCEDURE MAIN()
  SET KEY K_F1 TO HELP()
  SET KEY 22 TO INSERT
 
- 
+
  SETCOLOR("W+/BG,W+/N,N,N,N/W*")
  CLS
  @ 0,0 TO 24,79 DOUBLE
@@ -97,7 +97,7 @@ PROCEDURE MAIN()
 
 * cDBase := "example.db"   // sample database with a couple of tables
 * cDbase := ChooseDB()
- 
+
  IF EMPTY( cDbase )
     CLS
     ? "Harbour for SQLite"
@@ -167,17 +167,17 @@ DO WHILE nOption != 0
            ShowTables(.F.)
 
       CASE nOption == 4        // See ALL Columns (Fields)
-           cDTable := ShowTables(.T.) 
+           cDTable := ShowTables(.T.)
            DataBar( cDTable )  // status bar
            ShowFields( cDTable )
 
-      CASE nOption == 5        // See Table struct (Fields)       
-           cDTable := ShowTables(.T.) 
+      CASE nOption == 5        // See Table struct (Fields)
+           cDTable := ShowTables(.T.)
            DataBar( cDTable )  // status bar
            ShowCOLInfo( cDTable )
 
       CASE nOption == 6        // Show data
-           cDTable := ShowTables(.T.) 
+           cDTable := ShowTables(.T.)
            DataBar( cDTable )  // status bar
            ShowData( cDTable )
 
@@ -269,7 +269,7 @@ NEXT
   @  2,27 SAY " Table Structure Data " COLOR "GR+/BG"
   @  3, 4 SAY "      Table Name: " + aResult[ 1 ]        COLOR "W+/BG"
   @  4, 4 SAY "Number of fields: " + STR( aResult[2], 3) COLOR "W+/BG"
-  @  5, 4 SAY "Number of reccds: " 
+  @  5, 4 SAY "Number of reccds: "
   @  7, 2 SAY "Ì" + REPLIC( "Í", 74) + "¹"
   @  7,30 SAY " Field Data " COLOR "GR+/BG"
   @  8,03 SAY "    Name" + SPACE(21) + "Default Val." + SPACE(3) + "Type" +;
@@ -290,14 +290,14 @@ RETURN 0
 *----------------------------
  FUNCTION SQLITE_HB4SQLITE()
 *----------------------------
-* Shows specific info 
+* Shows specific info
 *---------------------------------------------------------------------------
   LOCAL aInfo [6], nWide := 60, dUpdate
   #define this_UPDATE  __DATE__   // constant from C compiler
 
   dUpdate := STOD( this_UPDATE )  // undocumented in Clipper
 
-  aInfo [1] := "       Version: " + HB_HB4SQLITE_VER 
+  aInfo [1] := "       Version: " + HB_HB4SQLITE_VER
   aInfo [2] := "   Last Update: " + DTOC( dUpdate )
   aInfo [3] := " Harbour Build: " + VERSION()
   aInfo [4] := "  C++ Compiler: " + HB_COMPILER()
@@ -351,7 +351,7 @@ aTables := SQLITE_QUERY( cStatment )  // query master table
 nlen := LEN( aTables )
 ADEL( aTables, 1)         // delete field title
 ASIZE( aTables, nLen-1 )  // resize array according delete
-RETURN( aTables )
+RETURN aTables
 
 
 *---------------------------------------------------------------------------
@@ -361,7 +361,7 @@ RETURN( aTables )
 *------------------------------
  FUNCTION CreatefromDBF( cSQL )
 *---------------------------------------------------------------------------
-*      *** UNDER DEVELOPMENT *** 
+*      *** UNDER DEVELOPMENT ***
 *---------------------------------------------------------------------------
 LOCAL aStruct, cData := "", cDBase, n, cFlist := ""
 LOCAL nFields
@@ -476,7 +476,7 @@ RETURN( IIF( nPos == 0, .F., aTypes[nPos][3] ))
 *---------------------------
  FUNCTION GetFldLen( cType )
 *---------------------------------------------------------------------------
-* Get a SQLite type and return A TENTATIVE length (till I can find the 
+* Get a SQLite type and return A TENTATIVE length (till I can find the
 * correct one)  (:{)
 * I have the intention of centralize all non explicit lengths to this
 * function.
@@ -664,7 +664,7 @@ LOCAL cQuery2 := SPACE(74)
 
  DO WHILE ! EMPTY( cQuery )
 
-    cQuery := GetQuery( cQuery1 )    
+    cQuery := GetQuery( cQuery1 )
 
     aResult := SQLITE_QUERY( RTRIM( cQuery ) + ";")
 
@@ -748,7 +748,7 @@ LOCAL GetList := {}
 
  DO WHILE ! EMPTY( cQuery )
 
-    @ 1,1 CLEAR TO 21,78    
+    @ 1,1 CLEAR TO 21,78
     DISPBOX( 9,1, 14, 78, B_DOUBLE + ' ', "W+/BG,W+/B" )
 
     SET CURSOR ON
@@ -888,7 +888,7 @@ RETURN( nOpt )
 
      @ 12,11 GET cDB  COLOR "N/W*"
      READ
-        
+
      IF ! EMPTY( cDB )
 
         IF ! REALFILE( RTRIM( cDB ) )
@@ -900,7 +900,7 @@ RETURN( nOpt )
               EXIT
            ELSE
               LOOP
-           ENDIF 
+           ENDIF
 
         ELSE
            * file exist
@@ -943,20 +943,20 @@ IF FILE( cFilename )
 *   ENDIF
 
    nLength := FSEEK( nHandle, nOfs, FS_END )
-   
+
    FSEEK( nHandle, nOfs, FS_SET )  // goto begining
-   
+
    IF nLength > 0
       cBuffer  := SPACE( 50 )
 
       * The following is needed because for an unknown reason some
-      * empty files or with a few bytes (not SQLite database) don't 
+      * empty files or with a few bytes (not SQLite database) don't
       * give any error ???!!
-      * So we read the SQLite Tag at the beginning of the database 
+      * So we read the SQLite Tag at the beginning of the database
       * (used to identify the database version).  In that way we are
       * sure now if it is really an SQLite database.
-      * 
-      * This behavior was found 
+      *
+      * This behavior was found
 
       IF FREAD( nHandle, @cBuffer, XSQLITE_TAG_LEN ) == XSQLITE_TAG_LEN
 
@@ -969,7 +969,7 @@ IF FILE( cFilename )
 
    ENDIF
 
-   FCLOSE( nHandle)    
+   FCLOSE( nHandle)
 
 ENDIF
 
@@ -989,7 +989,7 @@ PROCEDURE HELP
 RETURN
 
 
-*----------------------------- 
+*-----------------------------
  FUNCTION GetQuery( cDfltTxt )
 *---------------------------------------------------------------------------
 * Open a window an let you to type a query, and returns it as string
@@ -1019,7 +1019,7 @@ LOCAL nWide := 74         // length of edit line
 
 
  DO WHILE ! EMPTY( cQuery )
- 
+
     SET COLOR TO "N/W*,N/W*"
 *    cQuery := MEMOEDIT( cQuery, 11, 3, 13, 77, .T., "", nWide )
 
@@ -1030,7 +1030,7 @@ LOCAL nWide := 74         // length of edit line
 
     cQuery := cQuery1 + cQuery2 + cQuery3
 
-    cQuery := ALLTRIM( cQuery ) 
+    cQuery := ALLTRIM( cQuery )
 
     DO CASE
        CASE LASTKEY() == 27
@@ -1053,7 +1053,7 @@ LOCAL nWide := 74         // length of edit line
   SETPOS( nOldRow, nOldCol )
   SETCOLOR( cOldColor )
 
-RETURN( cQuery ) 
+RETURN( cQuery )
 
 
 *-----------------
@@ -1089,10 +1089,10 @@ SETCOLOR( cOldColor )
 RETURN 0
 
 
-*--------------------------------- 
+*---------------------------------
  FUNCTION PickSQLiteFile( cAtrib )
 *---------------------------------------------------------------------------
-* Pick a SQLite file  *** UNDER DEVELOPMENT *** 
+* Pick a SQLite file  *** UNDER DEVELOPMENT ***
 *---------------------------------------------------------------------------
  #include "directry.ch"
  LOCAL aFiles, aNames := {}, aShow := {}, cPick := ""
@@ -1113,7 +1113,7 @@ RETURN 0
  cOldColor  := SETCOLOR()
 
  DISPBOX( 9, 10, 13, 70, B_DOUBLE + ' ', "W+/BG,W+/B" )
- 
+
  @ 11,12 SAY "Searching for SQLite databases...on current directory"
 
  aFiles := DIRECTORY( cAtrib )
@@ -1133,16 +1133,16 @@ RETURN 0
                      TRANSF( aFiles[n][F_SIZE], "@E 999,999,999") )
         AADD( aNames, cFile )
      ENDIF
-    
+
  NEXT
 
  @ 9, 10 clear to 13, 70
- 
+
  IF LEN( aNames ) > 0
 
     DISPBOX( 6,8, 22, 50, B_DOUBLE + ' ', "W+/BG,W+/B" )
-    @ 6,20 SAY " Pick a database "    
-    @ 8,10 SAY " Name"+ SPACE(28) +"Size  " COLOR "N/W*"   
+    @ 6,20 SAY " Pick a database "
+    @ 8,10 SAY " Name"+ SPACE(28) +"Size  " COLOR "N/W*"
 
     nPick := ACHOICE( 10, 10, 20, 48, aShow )
  ELSE

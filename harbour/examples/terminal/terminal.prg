@@ -362,7 +362,7 @@ Function Wvt_Timer( wParam )
 
    end
 
-   Return ( 0 )
+   Return 0
 
 STATIC PROCEDURE Thread_Receive( nWait )
 

@@ -4582,7 +4582,7 @@ RETURN .T.
 *--------------------------
 FUNCTION CheckCompiler(cOS)
 *--------------------------
-RETURN ( ("Windows" $ cOS) .or. ("Linux" $ cOS) )
+RETURN ("Windows" $ cOS) .or. ("Linux" $ cOS)
 
 *------------------------------
 FUNCTION SetThisLibs(aTempLibs)

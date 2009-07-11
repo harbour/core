@@ -255,7 +255,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgStatic
       IF hb_isBlock( ::sl_resize )
          eval( ::sl_resize, NIL, NIL, self )
          aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
-         RETURN ( 0 )
+         RETURN 0
       ENDIF
 
    CASE nMessage == HB_GTE_CTLCOLOR
@@ -264,14 +264,14 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgStatic
       ENDIF
       IF hb_isNumeric( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
-         RETURN ( ::hBrushBG )
+         RETURN ::hBrushBG
       ELSE
          RETURN WVG_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
    ENDCASE
 
-   RETURN ( 1 )
+   RETURN 1
 
 /*----------------------------------------------------------------------*/
 

@@ -56,7 +56,7 @@
 #ifdef FT_TEST
   FUNCTION MAIN()
      FT_BLINK( "WAIT", 5, 10 )
-     return ( nil )
+     RETURN NIL
 #endif
 
 FUNCTION FT_BLINK( cMsg, nRow, nCol )

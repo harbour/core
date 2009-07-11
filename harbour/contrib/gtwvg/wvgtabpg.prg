@@ -166,7 +166,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
    CASE nMessage == HB_GTE_SETFOCUS
       IF hb_isBlock( ::sl_tabActivate )
 
-         RETURN( EVENT_HANDELLED )
+         RETURN EVENT_HANDELLED
       ENDIF
 
    CASE nMessage == HB_GTE_COMMAND
@@ -174,7 +174,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
 
    CASE nMessage == HB_GTE_RESIZED
       ::sendMessage( WM_SIZE, 0, 0 )
-      RETURN( EVENT_HANDELLED )
+      RETURN EVENT_HANDELLED
 
    CASE nMessage == HB_GTE_NOTIFY
       aHdr := Wvg_GetNMHdrInfo( aNM[ 2 ] )
@@ -189,7 +189,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
 
    ENDCASE
 
-   RETURN( EVENT_UNHANDELLED )
+   RETURN EVENT_UNHANDELLED
 
 /*----------------------------------------------------------------------*/
 

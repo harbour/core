@@ -229,7 +229,7 @@ METHOD xbpMenuBar:destroy()
 
    ::xbpWindow:destroy()
 
-   RETURN ( .T. )
+   RETURN .T.
 
 /*----------------------------------------------------------------------*/
 
@@ -242,7 +242,7 @@ METHOD xbpMenuBar:delAllItems()
       nItems--
    ENDDO
 
-   RETURN ( lResult )
+   RETURN lResult
 
 /*----------------------------------------------------------------------*/
 
@@ -483,7 +483,7 @@ METHOD xbpMenuBar:enableItem( nItemIndex )
       lSuccess := ::aMenuItems[ nItemIndex, 5 ]:isEnabled()
    ENDIF
 
-   RETURN ( lSuccess )
+   RETURN lSuccess
 
 /*----------------------------------------------------------------------*/
 
@@ -495,7 +495,7 @@ METHOD xbpMenuBar:disableItem( nItemIndex )
       lSuccess := !( ::aMenuItems[ nItemIndex, 5 ]:isEnabled() )
    ENDIF
 
-   RETURN ( lSuccess )
+   RETURN lSuccess
 
 /*----------------------------------------------------------------------*/
 

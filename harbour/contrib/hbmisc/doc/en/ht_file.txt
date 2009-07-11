@@ -19,9 +19,9 @@
  *      CHANGE THE CURRENT DIRECTORY
  *  $EXAMPLES$
  *      IF CD("OLA")
- *         RETURN(.T.)
+ *         RETURN .T.
  *      ELSE
- *         RETURN(.F.)
+ *         RETURN .F.
  *      ENDIF
  *  $FILES$
  *      Header is Fileio.ch
@@ -47,9 +47,9 @@
  *      CREATE A  DIRECTORY
  *  $EXAMPLES$
  *      IF MD("OLA")
- *        RETURN(.T.)
+ *        RETURN .T.
  *      ELSE
- *        RETURN(.F.)
+ *        RETURN .F.
  *      ENDIF
  *  $FILES$
  *      Header is Fileio.ch
@@ -75,9 +75,9 @@
  *     REMOVE A  DIRECTORY
  *  $EXAMPLES$
  *     IF RD("OLA")
- *       RETURN(.T.)
+ *       RETURN .T.
  *     ELSE
- *       RETURN(.F.)
+ *       RETURN .F.
  *     ENDIF
  *  $FILES$
  *      Header is Fileio.ch

@@ -95,7 +95,7 @@
         endif
       next
 
-  return ( nil )
+  RETURN NIL
 #endif
 
 FUNCTION FT_NWUID( nConn )

@@ -2397,7 +2397,7 @@ RETURN self
 //-------------------------\\
 
 static function FilePos( nHandle )
-return ( FSEEK( nHandle, 0, FS_RELATIVE ) )
+return FSEEK( nHandle, 0, FS_RELATIVE )
 
 //-------------------------\\
 /*
@@ -2433,7 +2433,7 @@ static function FileSize( cFile )
    nLength := fSeek( nHandle, 0, FS_END )
    fClose( nHandle )
 
-return ( nLength )
+return nLength
 
 //-------------------------\\
 
@@ -2509,7 +2509,7 @@ nDepth := iif( ISNUMBER( nDepth ), nDepth, 0 )
 //if hFile == NIL
 if !lOpen
    if ( hFile := fCreate( cFile,FC_NORMAL ) ) == -1
-      return ( nBytes )
+      return nBytes
    endif
 endif
 nDepth++
@@ -2525,7 +2525,7 @@ if !lOpen
    fClose(hFile)
 endif
 
-return( nBytes )
+return nBytes
 
 //-------------------------\\
 
@@ -2546,7 +2546,7 @@ local cData  := valtype(xData)
        cData += i2bin( 0 )   // NIL
    endif
 
-return( fWrite( hFile, cData, len( cData ) ) )
+return fWrite( hFile, cData, len( cData ) )
 
 //-------------------------\\
 
@@ -2558,13 +2558,13 @@ local lOpen  := ( hFile != nil )
 
 if hFile == NIL        // First Timer
    if ( hFile := fOpen( cFile,FO_READ ) ) == -1
-      return( aRay )
+      return aRay
    endif
    cData := space( 3 )
    fRead( hFile, @cData, 3 )
    if !( left( cData,1 ) == "A" )     //  If format of file != array
       fClose( hFile )            //////////
-      return( aRay )
+      return aRay
    endif
    nLen := bin2i( right( cData,2 ) )
 endif
@@ -2603,7 +2603,7 @@ if !lOpen
     fClose( hFile )
 endif
 
-return ( aRay )
+return aRay
 
 //-------------------------\\
 

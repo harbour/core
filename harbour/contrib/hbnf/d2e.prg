@@ -90,4 +90,4 @@ function ft_d2e( nDec, nPrecision )
   endif another kludge for stuff like '999999999'
 
   sScn := ltrim( str( nDec, nPrecision + 3, nPrecision ) )
-  return( sScn + 'E' + alltrim( str( nExp, 5, 0 ) ) )
+  return sScn + 'E' + alltrim( str( nExp, 5, 0 ) )

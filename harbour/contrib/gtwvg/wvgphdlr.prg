@@ -402,7 +402,7 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
    CASE nEvent == HB_GTE_NOTIFY
       nCtrlID := xParams[ 1 ]
       IF ( nIndex := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
-         RETURN ( ::aChildren[ nIndex ]:handleEvent( HB_GTE_NOTIFY, xParams ) )
+         RETURN ::aChildren[ nIndex ]:handleEvent( HB_GTE_NOTIFY, xParams )
       ENDIF
 
    CASE nEvent == HB_GTE_COMMAND

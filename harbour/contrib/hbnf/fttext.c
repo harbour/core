@@ -892,7 +892,7 @@ static long _ft_skip( long iRecs )
    }
 
    hb_xfree( ( void * ) cBuff );
-   return ( iSkipped );
+   return iSkipped;
 }
 
 

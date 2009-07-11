@@ -879,11 +879,11 @@ static BOOL hb_gt_wvt_mouse_ButtonState( PHB_GT pGT, int iButton )
    switch( iButton )
    {
    case 0:
-      return ( qApp->mouseButtons() & Qt::LeftButton );
+      return qApp->mouseButtons() & Qt::LeftButton;
    case 1:
-      return ( qApp->mouseButtons() & Qt::RightButton );
+      return qApp->mouseButtons() & Qt::RightButton;
    case 2:
-      return ( qApp->mouseButtons() & Qt::MidButton );
+      return qApp->mouseButtons() & Qt::MidButton;
    }
    return FALSE;
 }
@@ -1602,7 +1602,7 @@ bool DrawingArea::createCaret( int iWidth, int iHeight )
 {
    _crtWidth  = iWidth;
    _crtHeight = iHeight;
-   return( TRUE );
+   return TRUE;
 }
 void DrawingArea::hideCaret( void )
 {
@@ -1978,7 +1978,7 @@ bool DrawingArea::event( QEvent *event )
       PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
       pWVT->qWnd->setWindowSize();
    }
-   return( QWidget::event( event ) );
+   return QWidget::event( event );
 }
 
 static void hb_gt_wvt_QTranslateKey( PHB_GTWVT pWVT, Qt::KeyboardModifiers kbm, int key, int shiftkey, int altkey, int controlkey )

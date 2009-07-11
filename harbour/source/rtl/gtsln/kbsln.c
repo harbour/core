@@ -302,7 +302,7 @@ int hb_sln_Init_Terminal( int phase )
       hb_sln_SortKeyTranslationTable();
    }
 
-   return( ret );
+   return ret;
 }
 
 /* *********************************************************************** */
@@ -355,13 +355,13 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
       {
          /* standard acction, wait a 1 second for next char and if not then exit */
          if( 0 == SLang_input_pending( 10 ) )
-            return( 0 );
+            return 0;
       }
       else
       {
          /* wait hb_sln_escDelay milisec for next char and in not return ESC keycode */
          if( 0 == SLang_input_pending( - HB_MAX( hb_sln_escDelay, 0 ) ) )
-            return( 033 );
+            return 033;
       }
    }
 
@@ -376,28 +376,28 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
 
    /* unrecognized character */
    if( ch == SL_KEY_ERR )
-      return( 0 );
+      return 0;
 
    /* Dead key handling */
    if( InDeadState )
    {
       InDeadState = FALSE;
       if( (int) ch == hb_DeadKey ) /* double press Dead key */
-         return( ch );
+         return ch;
       if( ch < 256 )  /* is this needed ??? */
       {
          int i;
          for( i=0; i < ( int ) hb_sln_convKDeadKeys[ 0 ]; i++ )
             if( ( int ) hb_sln_convKDeadKeys[ 2 * i + 1 ] == (int) ch )
-               return( ( int ) hb_sln_convKDeadKeys[ 2 * i + 2 ] );
+               return ( int ) hb_sln_convKDeadKeys[ 2 * i + 2 ];
       }
-      return( 0 );
+      return 0;
    }
    else if( (int) ch == hb_DeadKey )
    {
       /* entering Dead key state */
       InDeadState = TRUE;
-      return( 0 );
+      return 0;
    }
 
    /* any special key ? */

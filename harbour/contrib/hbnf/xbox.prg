@@ -127,7 +127,7 @@
                      'of calculating the box size!',;
                      'Even though this line is way too long, and is in fact more than 80 characters long, if you care to check!')
 
-   return ( nil )
+   RETURN NIL
 #endif
 
 

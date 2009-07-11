@@ -81,4 +81,4 @@ FUNCTION  FT_SAVESETS()
    aOldSets[FT_SET_CENTURY] := FT_SETCENTURY()
    aOldSets[FT_SET_BLINK]   := SETBLINK()
 
-   RETURN (aOldSets)                    // FT_SaveSets
+   RETURN aOldSets                    // FT_SaveSets

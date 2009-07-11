@@ -109,7 +109,7 @@ function ft_ntow(nAmount)
   else
      sResult += grp_to_words(nTemp, "")
   endif
-  return( ltrim(sResult) )
+  return ltrim(sResult)
 
 
 static function grp_to_words(nGrp, sQual)
@@ -128,11 +128,11 @@ static function grp_to_words(nGrp, sQual)
      case nTemp < 10 .and. nTemp > 0
          sResult += ones[ int( nTemp) + 1 ]
   endcase
-  return(sResult + sQual)
+  return sResult + sQual
 
 
 static function sol10( nNumber )
   local sTemp
 
   sTemp := ltrim( str( int(nNumber), 0) )
-  return( len(sTemp) - 1 )
+  return len(sTemp) - 1

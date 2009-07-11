@@ -67,4 +67,4 @@ FUNCTION FT_SETCENTURY(lNewSetState)
    IF (IS_LOGICAL(lNewSetState))        // Did They Want it Set??
       SET CENTURY (lNewSetState)        // Yes, Set it
    ENDIF                                // IS_LOGICAL(lNewSetState)
-   RETURN (lOldSetState)                // FT_SetCentury
+   RETURN lOldSetState                  // FT_SetCentury

@@ -169,4 +169,4 @@ FUNCTION FT_XTOY(xValueToConvert, cTypeToConvertTo, lWantYesNo)
 
    ENDCASE
 
-   RETURN (xValueToConvert)             // XToY
+   RETURN xValueToConvert             // XToY

@@ -156,7 +156,7 @@ METHOD Xbp3State:handleEvent( nEvent, mp1, mp2 )
    HB_SYMBOL_UNUSED( mp1    )
    HB_SYMBOL_UNUSED( mp2    )
 
-   RETURN ( 0 )
+   RETURN 0
 
 /*----------------------------------------------------------------------*/
 

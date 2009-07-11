@@ -273,7 +273,7 @@ LRESULT CALLBACK GeneratedCode( formal params.... )
 {
   PCALLBACKDATA pCallback = [actual real address]
 
-  return ( __CallbackDispatcher( pCallback, formal params ) );
+  return __CallbackDispatcher( pCallback, formal params );
 }
 
  void and no void generate the same code, so, it does not matter

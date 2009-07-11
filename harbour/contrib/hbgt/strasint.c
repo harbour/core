@@ -27,5 +27,5 @@ int _GT_Internal_StringAsInt(char *String, int Start, int End)
            Decimal *= 0xA;
          }
      }
-   return(Value);
+   return Value;
 }

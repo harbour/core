@@ -157,7 +157,7 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
    ::hContainer := ::oParent:getHWND()
 
    IF ValType( ::hContainer ) + ValType( ::CLSID ) != "NC"
-      RETURN( NIL )
+      RETURN NIL
    ENDIF
 
    ::hWnd := NIL

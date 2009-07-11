@@ -142,7 +142,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgDrawingArea
          eval( ::sl_resize, NIL, NIL, self )
       ENDIF
       aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
-      RETURN ( 0 )
+      RETURN 0
 
    CASE nMessage == HB_GTE_CTLCOLOR
       hDC := aNM[ 1 ]
@@ -154,12 +154,12 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgDrawingArea
          WVG_SetBkMode( hDC, 1 )
 
          Wvg_FillRect( hDC, { 0,0,::currentSize()[1],::currentSize()[1]}, ::hBrushBG )
-         RETURN ( 0 )
+         RETURN 0
       ENDIF
 
    ENDCASE
 
-   RETURN ( 1 )
+   RETURN 1
 
 /*----------------------------------------------------------------------*/
 

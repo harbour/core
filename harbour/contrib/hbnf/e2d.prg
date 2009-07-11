@@ -69,4 +69,4 @@ function ft_e2d( sNumE )
                  len( sNumE ) - at( 'E', sNumE ) ;
                      )                           ;
               )
-  return( nMant * 10 ^ nExp )
+  return nMant * 10 ^ nExp

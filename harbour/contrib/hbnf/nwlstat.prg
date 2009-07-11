@@ -65,7 +65,7 @@
 #ifdef FT_TEST
   FUNCTION MAIN()
   QOut( "Logical station: " + str( FT_NWLSTAT() ) )
-  return ( nil )
+  RETURN NIL
 #endif
 
 FUNCTION FT_NWLSTAT()

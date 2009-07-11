@@ -341,7 +341,7 @@ hb_ToOutDebug( "event = %i",(int)dispid );
 
    /* We implement only a "default" interface */
    if( !IsEqualIID( riid, HB_ID_REF( IID_NULL ) ) )
-      return( ( HRESULT ) DISP_E_UNKNOWNINTERFACE );
+      return ( HRESULT ) DISP_E_UNKNOWNINTERFACE;
 
    HB_SYMBOL_UNUSED( lcid );
    HB_SYMBOL_UNUSED( wFlags );

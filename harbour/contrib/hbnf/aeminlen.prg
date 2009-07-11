@@ -134,4 +134,4 @@ FUNCTION FT_AEminlen( aArray, nDimension, nStart, nCount )
       ENDCASE
    NEXT
 
-   RETURN ( nMinlen )
+   RETURN nMinlen

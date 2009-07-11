@@ -136,7 +136,7 @@ FUNCTION FT_AT2( cSearch, cTarget, nOccurs, lCaseSens )
 
    NEXT
 
-   RETURN ( nPos2 )
+   RETURN nPos2
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -203,4 +203,4 @@ FUNCTION FT_RAT2( cSearch, cTarget, nOccurs, lCaseSens )
            EXIT
       ENDIF
    NEXT
-   RETURN ( nPos2 )
+   RETURN nPos2

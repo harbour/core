@@ -66,7 +66,7 @@
  *      FT_SETDATE( ctod( cDate ) )
  *      Qout( "Today is now: " + dtoc( date() ) )
  *
- *   RETURN ( nil )
+ *   RETURN NIL
  *
  *  $END$
  */
@@ -85,7 +85,7 @@
      FT_SETDATE( ctod( cDate ) )
      Qout( "Today is now: " + dtoc( date() ) )
 
-  return ( nil )
+  RETURN NIL
 #endif
 
 function FT_SETDATE( dDate )

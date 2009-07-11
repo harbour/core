@@ -1262,7 +1262,7 @@
  *          endif
  *          dbgoto(nrecord)
  *      endif
- *      return( xRetvalue)
+ *      return xRetvalue
  *  $TESTS$
  *      See examples
  *  $STATUS$

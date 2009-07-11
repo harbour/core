@@ -207,12 +207,12 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
    CASE nMessage == HB_GTE_CTLCOLOR
       IF hb_isNumeric( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
-         RETURN ( ::hBrushBG )
+         RETURN ::hBrushBG
       ENDIF
 
    CASE nMessage == HB_GTE_HSCROLL
       IF !hb_isBlock( ::sl_xbeSB_Scroll )
-         RETURN( EVENT_UNHANDELLED )
+         RETURN EVENT_UNHANDELLED
       ENDIF
 
       nScrMsg := aNM[ 1 ]
@@ -275,7 +275,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
 
       ::sl_editBuffer := nScrPos
       eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, self )
-      RETURN( EVENT_HANDELLED )
+      RETURN EVENT_HANDELLED
 
 
    CASE nMessage == HB_GTE_VSCROLL
@@ -288,7 +288,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       ENDIF
 
       IF !hb_isBlock( ::sl_xbeSB_Scroll )
-         RETURN( EVENT_UNHANDELLED )
+         RETURN EVENT_UNHANDELLED
       ENDIF
 
       DO CASE
@@ -344,7 +344,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
 
       ::sl_editBuffer := nScrPos
       eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, self )
-      RETURN( EVENT_HANDELLED )
+      RETURN EVENT_HANDELLED
 
    ENDCASE
 

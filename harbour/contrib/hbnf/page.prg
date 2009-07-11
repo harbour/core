@@ -69,7 +69,7 @@ FUNCTION FT_SETVPG( nPage )
   */
   _ft_setvpg(nPage)
 
-  RETURN( NIL )
+  RETURN NIL
 
 
 

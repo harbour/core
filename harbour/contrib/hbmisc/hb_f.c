@@ -176,7 +176,7 @@ static long hb_hbfskip( int recs )
       }
    }
 
-   return ( recno[area] );
+   return recno[area];
 }
 
 HB_FUNC( HB_FSKIP )

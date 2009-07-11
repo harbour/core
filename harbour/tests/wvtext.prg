@@ -104,7 +104,7 @@ STATIC FUNCTION MyNotifier( nEvent, ... )
    CASE nEvent == HB_GTE_CLOSE
       DispScreen()
       if Alert( "Close Application", {"Yes","No" } ) == 2
-         Return ( 1 )
+         Return 1
       endif
 
    ENDCASE

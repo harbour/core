@@ -116,7 +116,7 @@
    @6,0 say 'Day         :'+aRet[6]
    @7,0 say 'Julian Day  :'+str(aRet[7],3,0)
    @8,0 say 'Current Time:'+aRet[8]
-   return ( nil )
+   RETURN NIL
 #endif
 
 
@@ -226,10 +226,10 @@ FUNCTION FT_CALENDAR (nRow, nCol, cColor, lShadow, lShowHelp)
 
  STATIC FUNCTION JDOY (nYear, nMonth, nDay)
   LOCAL cString :='000031059090120151181212243273304334'
-  RETURN ( VALS(cString,(nMonth-1)*3+1,3) + nDay +;
-               IIF( nYear%4==0.AND.nMonth>2, 1, 0) )
+  RETURN VALS(cString,(nMonth-1)*3+1,3) + nDay +;
+             IIF( nYear%4==0.AND.nMonth>2, 1, 0)
 
  STATIC FUNCTION VALS (cString, nOffset, nChar)
- RETURN ( VAL(SUBSTR(cString,nOffset,nChar)) )
+ RETURN VAL(SUBSTR(cString,nOffset,nChar))
 
 * end of calendar.prg

@@ -81,7 +81,7 @@
                                              // bright white over green.
      FT_PENDING("Message two")   // Displays "Message two", after 5 sec.
      FT_PENDING("Message three") // Displays "Message three", after 5 sec.
-     return ( nil )
+     RETURN NIL
 #endif
 
 FUNCTION FT_PENDING (cMsg, nRow, nCol, nWait, cColor)

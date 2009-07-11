@@ -126,7 +126,7 @@
  *      n := 'a'
  *      n := seconds() + 2
  *      n := int( seconds() + 2 )
- *      Return( NIL )
+ *      Return NIL
  *  $TESTS$
  *      Ver ../tests/testwarn.prg por más ejemplos
  *  $STATUS$
@@ -178,7 +178,7 @@
  *      n := int( seconds() + 2 )
  *      y := n
  *      ? y
- *      Return( NIL )
+ *      Return NIL
  *  $TESTS$
  *      Ver ../tests/testwarn.prg por más ejemplos
  *  $STATUS$
@@ -193,5 +193,3 @@
  *      LOCAL,STATIC,FIELD,PRIVATE,PUBLIC
  *  $END$
  */
-
-

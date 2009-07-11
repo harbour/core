@@ -91,4 +91,4 @@ FUNCTION FT_GCD(nNumber1, nNumber2)
       nResult := nHold1                 // Maximum Number Should Be the Answer
 
    ENDIF                                // nNumber1 == 0 or nNumber2 == 0
-   RETURN (nResult)                     // FT_GCD
+   RETURN nResult                       // FT_GCD

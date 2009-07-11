@@ -138,7 +138,7 @@ function WvtPaintObjects()
       next
    endif
 
-   return ( 0 )
+   return 0
 
 /*----------------------------------------------------------------------*/
 
@@ -223,7 +223,7 @@ function PurgePaint( cID,lDummy )
       WvtSetPaint( {} )
    endif
 
-   return ( aPaint )
+   return aPaint
 
 /*----------------------------------------------------------------------*/
 
@@ -327,7 +327,7 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
       aAdd( aDlg[ 1 ], iif( ValType( cFaceName  ) == "C", cFaceName , "MS Sans Serif" ) )
    EndIf
 
-   Return( aDlg )
+   Return aDlg
 
 /*----------------------------------------------------------------------*/
 
@@ -495,7 +495,7 @@ FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, aFilter, nFlags, cIniDir, cDe
       cFile  := LEFT( cFile,n )
       aFiles := {}
       IF n == 0 /* no double chr(0) user must have pressed cancel */
-         RETURN( aFiles )
+         RETURN aFiles
       END
       x := AT( CHR( 0 ),cFile ) /* fist null */
       cPath := LEFT( cFile,x )
@@ -519,13 +519,13 @@ FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, aFilter, nFlags, cIniDir, cDe
          */
          aFiles := { STRTRAN( cPath, CHR( 0 ) ) }
       END
-      Return( aFiles )
+      Return aFiles
    else
       /* cRet := left( cRet, at( chr( 0 ), cRet ) -1 ) */
 
    end
 
-   Return ( cRet )
+   Return cRet
 
 /*----------------------------------------------------------------------*/
 /*
@@ -555,7 +555,7 @@ FUNCTION WVT_GetSaveFileName( hWnd, cFile, cTitle, aFilter, nFlags, cIniDir, cDe
    NEXT
    cFile := WVT__GetSaveFileName( hWnd, cFile, cTitle, c, nFlags, cIniDir, cDefExt, @nIndex )
 
-   Return ( cFile )
+   Return cFile
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/

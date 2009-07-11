@@ -36,7 +36,7 @@
      QOut("Disk size:   " + str( FT_DSKSIZE() ) )
      QOut("Free bytes:  " + str( FT_DSKFREE() ) )
 
-  return ( nil )
+  RETURN NIL
 #endif
 
 /*  $DOC$

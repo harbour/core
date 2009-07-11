@@ -132,4 +132,4 @@ FUNCTION FT_AMEDIAN( aArray, nStart, nEnd )
       nMedian := aTemparray[ INT( nTemplen / 2 ) + 1 ]
    ENDIF
 
-   RETURN ( nMedian )
+   RETURN nMedian

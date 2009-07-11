@@ -130,10 +130,9 @@
 static int min3( int a, int b, int c )
 {
    if( a < b )
-   {
-      return ( ( a < c ? a : c ) );
-   }
-   return ( ( b < c ? b : c ) );
+      return ( a < c ? a : c );
+
+   return ( b < c ? b : c );
 }
 
 HB_FUNC( STRDIFF )

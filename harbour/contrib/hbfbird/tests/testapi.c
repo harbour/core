@@ -31,7 +31,7 @@ int qclose( void );
 char *getdata(int pos);
 
 
-isc_db_handle       db = NULL;             
+isc_db_handle       db = NULL;
 int                 dialect = 1;
 XSQLDA  ISC_FAR *   sqlda;
 isc_stmt_handle     stmt = NULL;
@@ -42,32 +42,32 @@ int main ()
     char                dpb[48];
     int                 i = 0, len;
     long                status[20];
-    
+
     dpb[i++] = isc_dpb_version1;
-    
+
     dpb[i++] = isc_dpb_user_name;
     len = strlen(USER);
     dpb[i++] = (char) len;
     strncpy(&(dpb[i]), USER, len);
     i += len;
-    
+
     dpb[i++] = isc_dpb_password;
     len = strlen (PASSWORD);
     dpb[i++] = len;
     strncpy(&(dpb[i]), PASSWORD, len);
     i += len;
-    
+
     if (isc_attach_database(status, 0, DATABASE, &db, i, dpb))
         ERREXIT(status, 1);
 
     execute("DROP TABLE TESTE");
-    
+
     execute("CREATE TABLE TESTE (code smallint)");
 
     execute("INSERT INTO TESTE (code) VALUES (100)");
 
     query("SELECT * FROM TESTE");
-    while (fetch() == 0) 
+    while (fetch() == 0)
         printf("%s\n", getdata(0));
     qclose();
 
@@ -80,31 +80,31 @@ int main ()
 
 int execute( char *exec_str )
 {
-    isc_tr_handle    trans = NULL;          
-    long             status[20];            
+    isc_tr_handle    trans = NULL;
+    long             status[20];
 
     if (isc_start_transaction(status, &trans, 1, &db, 0, NULL))
         ERREXIT(status, 1);
-        
+
     if (isc_dsql_execute_immediate(status, &db, &trans, 0, exec_str, dialect, NULL))
         ERREXIT(status, 1);
-        
+
     if (isc_commit_transaction(status, &trans))
         ERREXIT(status, 1);
 
-    return 1;        
+    return 1;
 }
 
 int query( char *sel_str )
 {
     ISC_STATUS          status[20];
     XSQLVAR             *var;
-    
+
     int                 n, i, dtype;
-        
-    if ( isc_start_transaction ( status, &trans, 1, &db, 0, NULL ) ) 
-        ERREXIT(status, 1);   
-              
+
+    if ( isc_start_transaction ( status, &trans, 1, &db, 0, NULL ) )
+        ERREXIT(status, 1);
+
     /* Allocate an output SQLDA. Just to check number of columns */
     sqlda = ( XSQLDA * ) malloc( XSQLDA_LENGTH ( 1 ) );
     sqlda->sqln = 1;
@@ -117,11 +117,11 @@ int query( char *sel_str )
     /* Prepare the statement. */
     if (isc_dsql_prepare(status, &trans, &stmt, 0, sel_str, dialect, sqlda))
         ERREXIT(status, 1);
-    
+
     /* Describe sql contents */
     if (isc_dsql_describe(status, &stmt, dialect, sqlda))
         ERREXIT(status, 1);
-    
+
     /* Relocate necessary number of columns */
     if ( sqlda->sqld > sqlda->sqln ) {
         free( sqlda );
@@ -133,7 +133,7 @@ int query( char *sel_str )
         if (isc_dsql_describe(status, &stmt, dialect, sqlda))
             ERREXIT(status, 1);
     }
-    
+
     for ( i = 0, var = sqlda->sqlvar; i < sqlda->sqld; i++, var++ ) {
         dtype = ( var->sqltype & ~1 );
         switch ( dtype ) {
@@ -156,38 +156,38 @@ int query( char *sel_str )
             var->sqlind = ( short * ) malloc( sizeof ( short ) );
         }
     }
-        
+
     if ( !sqlda->sqld ) {
         /* Execute and commit non-select querys */
-        if ( isc_dsql_execute ( status, &trans, &stmt, dialect, NULL ) ) 
+        if ( isc_dsql_execute ( status, &trans, &stmt, dialect, NULL ) )
             ERREXIT(status, 1);
 
         if (isc_commit_transaction(status, &trans))
             ERREXIT(status, 1);
 
         trans = NULL;
-                            
-    } else { 
-        if ( isc_dsql_execute ( status, &trans, &stmt, dialect, sqlda ) ) 
+
+    } else {
+        if ( isc_dsql_execute ( status, &trans, &stmt, dialect, sqlda ) )
              ERREXIT(status, 1);
-    }                
-    
-    return 1;      
+    }
+
+    return 1;
 }
 
 int fetch( void )
 {
-   long fetch_stat;    
+   long fetch_stat;
    long status[20];
-   
+
    fetch_stat = isc_dsql_fetch(status, &stmt, dialect, sqlda);
 
    if (fetch_stat != 100L)
         ERREXIT(status, 1);
-    
+
     return fetch_stat;
-}    
-    
+}
+
 int qclose( void )
 {
    long status[20];
@@ -195,15 +195,15 @@ int qclose( void )
     if (isc_dsql_free_statement(status, &stmt, DSQL_drop))
         ERREXIT(status, 1);
 
-    if (trans) 
-        if (isc_commit_transaction(status, &trans)) 
+    if (trans)
+        if (isc_commit_transaction(status, &trans))
             ERREXIT(status, 1);
-        
+
     if ( sqlda )
-        free( sqlda );  
-    
+        free( sqlda );
+
     return 1;
-}    
+}
 
 char *getdata(int pos)
 {
@@ -212,12 +212,12 @@ char *getdata(int pos)
    char blob_s[20], date_s[25];
    short len;
    long status[20];
-    
+
    struct tm times;
    ISC_QUAD bid;
    XSQLVAR *var;
 
-   if ( ( pos + 1 ) > sqlda->sqln )              
+   if ( ( pos + 1 ) > sqlda->sqln )
        return "error";
 
    var = sqlda->sqlvar;
@@ -399,5 +399,5 @@ char *getdata(int pos)
       }
    }
 
-   return ( p );
+   return p;
 }

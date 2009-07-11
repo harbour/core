@@ -33,7 +33,7 @@
        FT_SLEEP(VAL(nSleep))
        ? "Time is now: " + time()
 
-  RETURN ( nil )
+  RETURN NIL
 
 #endif
 

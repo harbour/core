@@ -8,7 +8,7 @@ function main()
 
 local nOldMathErrMode
 local bOldMathErr
-  
+
   qout ("Testing math function: EXP(), LOG() and SQRT():")
   qout ("")
   qout ("  I) Test with correct arguments:")
@@ -71,7 +71,7 @@ function localmatherr (nType, cFuncname, cError, nArg1, nArg2, aInfo)
 local cStr := "!! Local handling of math error MATH/"
 
   cStr += alltrim(str(nType))+" in "+cFuncname+"("
-  
+
   if valtype(nArg1) == "N"
     cStr += alltrim(str(nArg1))
   endif
@@ -84,13 +84,12 @@ local cStr := "!! Local handling of math error MATH/"
   if aInfo[HB_MATHERRORBLOCK_HANDLED]
     qout ("!!                               --> already handled with return value: "+;
           alltrim(str(aInfo[HB_MATHERRORBLOCK_RETVAL])))
-    return (1)
+    return 1
   endif
 
   qout ("!!       setting return value to --> 5.0")
-  
+
   aInfo[HB_MATHERRORBLOCK_RETVAL] := 5.0
   aInfo[HB_MATHERRORBLOCK_HANDLED] := .T.
 
-return (1)
-   
+return 1

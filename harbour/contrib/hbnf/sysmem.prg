@@ -64,7 +64,7 @@
 #ifdef FT_TEST
   FUNCTION MAIN()
   QOut( "Conventional memory: " + str( FT_SYSMEM() ) + "K installed" )
-  return ( nil )
+  RETURN NIL
 #endif
 
 FUNCTION FT_SYSMEM()

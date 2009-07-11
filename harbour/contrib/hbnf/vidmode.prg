@@ -39,7 +39,7 @@
 
      FT_SETMODE( val( cMode ) )
      QOut( "Video mode is: " + str( FT_GETMODE() ) )
-     return ( nil )
+     RETURN NIL
 
 #endif
 
@@ -68,7 +68,7 @@
  *
  *          FT_SETMODE( VAL( cMode ) )
  *          QOUT( "Video mode is: " + STR( FT_GETMODE() ) )
- *          RETURN ( NIL )
+ *          RETURN NIL
  *  $SEEALSO$
  *     FT_ADAPTER()
  *  $END$
@@ -83,7 +83,7 @@ FUNCTION FT_SETMODE( nMode )
   FT_INT86( VIDEO, aRegs )
 */
 _ft_setmode(nMode)
-  RETURN( NIL )
+  RETURN NIL
 
 
 
@@ -111,7 +111,7 @@ _ft_setmode(nMode)
  *
  *          FT_SETMODE( val( cMode ) )
  *          QOut( "Video mode is: " + str( FT_GETMODE() ) )
- *          return ( nil )
+ *          RETURN NIL
  *
  *  $END$
  */
@@ -125,6 +125,6 @@ FUNCTION FT_GETMODE()
   aRegs[ AX ] := MAKEHI( GETMODE )
   FT_INT86( VIDEO, aRegs )
 
-  RETURN ( LOWBYTE( aRegs[ AX ] ) )
+  RETURN LOWBYTE( aRegs[ AX ] )
 */
  RETURN _ft_getmode()

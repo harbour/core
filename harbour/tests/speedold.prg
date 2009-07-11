@@ -555,7 +555,7 @@ return ""
 */
     }
     #endCinline
-    return ( nret )
+    return nret
 
     #ifndef FlagShip5
         FUNCTION cursesinit()

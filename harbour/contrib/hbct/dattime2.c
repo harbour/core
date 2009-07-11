@@ -79,17 +79,11 @@ static BOOL ct_isleap( int iYear )
 static int ct_daysinmonth( int iMonth, BOOL bLeap )
 {
    if( iMonth == 2 )
-   {
-      return ( bLeap ? 29 : 28 );
-   }
+      return bLeap ? 29 : 28;
    else if( iMonth == 4 || iMonth == 6 || iMonth == 9 || iMonth == 11 )
-   {
-      return ( 30 );
-   }
+      return 30;
    else
-   {
-      return ( 31 );
-   }
+      return 31;
 }
 
 static int ct_daystomonth( int iMonth, BOOL bLeap )

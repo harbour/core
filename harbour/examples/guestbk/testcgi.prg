@@ -55,7 +55,7 @@ FUNCTION ParseString( cString, cDelim, nRet )
 
    NEXT i
 
-   RETURN( aElem[ nRet ] )
+   RETURN aElem[ nRet ]
 
 FUNCTION Hex2Dec( cHex )
 
@@ -83,7 +83,7 @@ FUNCTION Hex2Dec( cHex )
    nRet := ascan( aHex, { |x| upper( x[1] ) == upper( right( cHex, 1 ) ) } )
    nRes += aHex[nRet, 2]
 
-   RETURN( nRes )
+   RETURN nRes
 
 /*-------------------------------------------------------------------------*/
 
@@ -125,7 +125,7 @@ FUNCTION THTML
 
    ENDIF
 
-   RETURN( oClass:Instance() )
+   RETURN oClass:Instance()
 
 STATIC FUNCTION New()
 
@@ -142,7 +142,7 @@ STATIC FUNCTION New()
    ::aReplaceTags := {}
    ::cHTMLFile    := ""
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION SetTitle( cTitle )
 
@@ -150,7 +150,7 @@ STATIC FUNCTION SetTitle( cTitle )
 
    ::cTitle := cTitle
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION AddLink( cLinkTo, cLinkName )
 
@@ -159,7 +159,7 @@ STATIC FUNCTION AddLink( cLinkTo, cLinkName )
    ::cBody := ::cBody + ;
       "<A HREF='" + cLinkTo + "'>" + cLinkName + "</A>"
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION AddHead( cDescr )
 
@@ -172,7 +172,7 @@ STATIC FUNCTION AddHead( cDescr )
    ::cBody := ::cBody + ;
       "<H1>" + cDescr + "</H1>"
 
-   RETURN( NIL )
+   RETURN NIL
 
 STATIC FUNCTION AddPara( cPara, cAlign )
 
@@ -183,7 +183,7 @@ STATIC FUNCTION AddPara( cPara, cAlign )
       cPara + hb_OSNewLine() + ;
       "</P>"
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION Generate()
 
@@ -251,7 +251,7 @@ STATIC FUNCTION Generate()
       ENDIF
    ENDIF
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION ShowResult()
 
@@ -262,7 +262,7 @@ STATIC FUNCTION ShowResult()
       "CONTENT-TYPE: TEXT/HTML"                      + hb_OSNewLine() + hb_OSNewLine() + ;
       ::cContent )
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION SaveToFile( cFile )
 
@@ -272,7 +272,7 @@ STATIC FUNCTION SaveToFile( cFile )
    fWrite( hFile, ::cContent )
    fClose( hFile )
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION ProcessCGI()
 
@@ -340,7 +340,7 @@ STATIC FUNCTION ProcessCGI()
 
    ENDIF
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION GetCGIParam( nParam )
 
@@ -350,10 +350,10 @@ STATIC FUNCTION GetCGIParam( nParam )
 
    IF nParam > 20 .OR. nParam < 1
       outerr( "Invalid CGI parameter" )
-      RETURN( NIL )
+      RETURN NIL
    ENDIF
 
-   RETURN( ::aCGIContents[nParam] )
+   RETURN ::aCGIContents[nParam]
 
 STATIC FUNCTION QueryFields( cQueryName )
 
@@ -370,7 +370,7 @@ STATIC FUNCTION QueryFields( cQueryName )
       cRet := ::aQueryFields[nRet, 2]
    ENDIF
 
-   RETURN( cRet )
+   RETURN cRet
 
 STATIC FUNCTION SetHTMLFile( cFile )
 
@@ -378,7 +378,7 @@ STATIC FUNCTION SetHTMLFile( cFile )
 
    ::cHTMLFile := cFile
 
-   RETURN( Self )
+   RETURN Self
 
 STATIC FUNCTION AddReplaceTag( cTag, cReplaceText )
 
@@ -386,4 +386,4 @@ STATIC FUNCTION AddReplaceTag( cTag, cReplaceText )
 
    aAdd( ::aReplaceTags, { cTag, cReplaceText } )
 
-   RETURN( Self )
+   RETURN Self

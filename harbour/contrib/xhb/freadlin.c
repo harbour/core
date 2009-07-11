@@ -131,7 +131,7 @@ char * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, const char ** Te
             /* Set handle pointer in the end of the line */
             hb_fsSeek( hFileHandle, (((lRead-((LONG)iPos)))*-1)+1, FS_RELATIVE );
 
-            return( pBuff );
+            return pBuff;
          }
       }
       else
@@ -157,7 +157,7 @@ char * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, const char ** Te
    }
    while( ( ! *bFound ) && lRead > 0 );
 
-   return( pBuff );
+   return pBuff;
 }
 
 /* PRG level fReadLine( <Handle>, <@buffer>, [<aTerminators | cTerminator>], [<nReadingBlock>] ) */

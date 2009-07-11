@@ -187,7 +187,7 @@ static long getblock(long offset)
 
         /* return the actual file position */
 
-    return( hb_fsSeek( infile, 0L, FS_RELATIVE ) - buffbot);
+    return hb_fsSeek( infile, 0L, FS_RELATIVE ) - buffbot;
 }
 
 

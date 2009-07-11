@@ -74,7 +74,7 @@ FUNCTION FT_NOOCCUR(cCheckFor, cCheckIn, lIgnoreCase)
    ENDIF                                // IS_NOT_LOGICAL(lIgnoreCase) or ;
                                         // lIgnoreCase
 
-   RETURN (iif(LEN(cCheckFor) == 0 .OR. LEN(cCheckIn) == 0, ;
-              0, ;
-              INT((LEN(cCheckIn) - LEN(STRTRAN(cCheckIn, cCheckFor))) / ;
-                   LEN(cCheckFor))))
+   RETURN iif(LEN(cCheckFor) == 0 .OR. LEN(cCheckIn) == 0, ;
+             0, ;
+             INT((LEN(cCheckIn) - LEN(STRTRAN(cCheckIn, cCheckFor))) / ;
+                  LEN(cCheckFor)))

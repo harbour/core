@@ -691,7 +691,7 @@ FUNCTION WvtWindowExpand( nUnits )
    RETURN .t.
 //-------------------------------------------------------------------//
 STATIC FUNCTION rgb( r,g,b )
-   RETURN ( r + ( g * 256 ) + ( b * 256 * 256 ) )
+   RETURN r + ( g * 256 ) + ( b * 256 * 256 )
 //-------------------------------------------------------------------//
 FUNCTION VouChoice( aChoices )
 
@@ -1502,7 +1502,7 @@ STATIC FUNCTION ActivateMenu( oMenu )
       ENDIF
    ENDIF
 
-   RETURN ( NIL )
+   RETURN NIL
 //-------------------------------------------------------------------//
 STATIC FUNCTION MyDialogOne( nMode )
    Local bBlock
@@ -2081,11 +2081,11 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
       if ( WVG_GetDlgItem( hDlg,ID_MLE ) == lParam )
          WVG_SetTextColor( wParam, RGB( 0,0,255 ) )
          WVG_SetBkColor( wParam, RGB( 255,255,200 ) )
-         return ( 1 )
+         return 1
       elseif ( WVG_GetDlgItem( hDlg,ID_EDT_TEXT ) == lParam )
          WVG_SetTextColor( wParam, RGB( 255,255,255 ) )
          WVG_SetBkColor( wParam, RGB( 10,200,45 ) )
-         Return ( 1 )
+         Return 1
       endif
 
       exit
@@ -2093,7 +2093,7 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
    case WM_CTLCOLORSTATIC
       if ( WVG_GetDlgItem( hDlg,ID_STA_TEXT ) == lParam )
          WVG_SetTextColor( wParam, RGB( 255,255,255 ) )
-         Return ( 1 )
+         Return 1
       endif
       exit
 
@@ -2161,7 +2161,7 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
 
    end
 
-   Return ( 0 )
+   Return 0
 
 //-------------------------------------------------------------------//
 
@@ -2259,7 +2259,7 @@ FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
 
    end
 
-   Return ( 0 )
+   Return 0
 //-------------------------------------------------------------------//
 FUNCTION DrawSlide( hDlg, nSlide )
    LOCAL hDC, aRect

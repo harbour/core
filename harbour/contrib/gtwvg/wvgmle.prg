@@ -229,7 +229,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgMLE
       ENDIF
       IF hb_isNumeric( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
-         RETURN ( ::hBrushBG )
+         RETURN ::hBrushBG
       ELSE
          RETURN WVG_GetCurrentBrush( aNM[ 1 ] )
       ENDIF

@@ -198,7 +198,7 @@ USHORT ssfDrawChar(AL_BITMAP *dst, ssfFont *sfont, char c, int x, int y, int col
       }
    }
 
-   return (sfont->fsize / 2);
+   return sfont->fsize / 2;
 }
 
 int ssfDrawText(AL_BITMAP *dst, ssfFont *sfont, const char *s, int x, int y, int color)

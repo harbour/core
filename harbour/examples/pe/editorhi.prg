@@ -58,7 +58,7 @@ STATIC lInsert    //current Insert state
 //03-06-93 07:52pm
 //
 // nTop, nLeft, nBottom, nRight - position on the screen
-// nLength - the line length 
+// nLength - the line length
 // cFrame - the frame to be drawed around the editor
 // cTitle - comment displayed in upper, left corner
 // cColor - colors used to draw the editor
@@ -66,7 +66,7 @@ STATIC lInsert    //current Insert state
 //         will not grow at current design
 // nEscape - the character code used as a marker of color highlighing
 // For example if its value is 126 '~' then the following text:
-// normal text ~2text in bold~1 back to normal text 
+// normal text ~2text in bold~1 back to normal text
 // will be displayed with 'text in bold' highlighted using the second
 // color specified by 'cColor' parameter
 //
@@ -95,7 +95,7 @@ LOCAL nEdit, oEdit
         ED_Config( nEdit, nTop, nLeft, nBottom, nRight, 0, 0 )
     ENDIF
 
-RETURN( oEdit )
+RETURN oEdit
 
 //---------------------------------------------------------
 //03-06-93 09:16pm
@@ -126,7 +126,7 @@ LOCAL _xCargo:=oEdit[E_CARGO]
         oEdit[E_CARGO] := xCargo
     ENDIF
 
-RETURN( _xCargo )
+RETURN _xCargo
 
 //---------------------------------------------------------
 //19-07-93 01:08am
@@ -138,12 +138,12 @@ LOCAL _cTitle:=oEdit[E_TITLE]
         oEdit[E_TITLE] := cTitle
     ENDIF
 
-RETURN( _cTitle )
+RETURN _cTitle
 
 //---------------------------------------------------------
 //04-06-93 02:18am
 //
-// Sets 
+// Sets
 // EDIT_EDIT - full edit mode
 // EDIT_VIEW - view only mode (no changes in text are allowed)
 //
@@ -154,7 +154,7 @@ LOCAL _lMode:=oEdit[E_MODE]
         oEdit[E_MODE] := lMode
     ENDIF
 
-RETURN( _lMode )
+RETURN _lMode
 
 //---------------------------------------------------------
 //28-05-92 09:31am
@@ -166,7 +166,7 @@ LOCAL _nSize:=nESize
         nESize := nSize
     ENDIF
 
-RETURN( _nSize )
+RETURN _nSize
 
 //---------------------------------------------------------
 //28-02-92 10:57pm
@@ -208,7 +208,7 @@ RETURN
 // Retrieves the text from editor
 // nUpper - specifies if text should be changed to uppercase, lowercase
 //    or unchanged
-// nCarret - specifies if soft carriage return (141/10) should be replaced by 
+// nCarret - specifies if soft carriage return (141/10) should be replaced by
 //    hard carriage returns (13/10)
 //
 EXPORT FUNCTION EditorGetText( oEdit, nUpper, nCarret )
@@ -220,7 +220,7 @@ EXPORT FUNCTION EditorGetText( oEdit, nUpper, nCarret )
         nCarret := EDIT_HARD
     ENDIF
 
-RETURN( ED_GetText( oEdit[E_EDIT], nUpper, nCarret ) )
+RETURN ED_GetText( oEdit[E_EDIT], nUpper, nCarret )
 
 //---------------------------------------------------------
 //04-03-92 02:35pm
@@ -229,7 +229,7 @@ RETURN( ED_GetText( oEdit[E_EDIT], nUpper, nCarret ) )
 //
 EXPORT FUNCTION EditorLCount( oEdit )
 
-RETURN( ED_LCount( oEdit[E_EDIT] ) )
+RETURN ED_LCount( oEdit[E_EDIT] )
 
 //---------------------------------------------------------
 //06-03-92 07:09pm
@@ -238,7 +238,7 @@ RETURN( ED_LCount( oEdit[E_EDIT] ) )
 //
 EXPORT FUNCTION EditorGetLine( oEdit, nLine )
 
-RETURN( ED_GetLine( oEdit[E_EDIT], nLine ) )
+RETURN ED_GetLine( oEdit[E_EDIT], nLine )
 
 //---------------------------------------------------------
 //06-03-92 07:10pm
@@ -254,17 +254,17 @@ RETURN( ED_GetLine( oEdit[E_EDIT], nLine ) )
 //
 EXPORT FUNCTION EditorNextLine( oEdit )
 
-RETURN( ED_GetNext(oEdit[E_EDIT]) )
+RETURN ED_GetNext(oEdit[E_EDIT])
 
 //---------------------------------------------------------
 //03-06-93 10:11pm
 //
-// Edit the specified file 
+// Edit the specified file
 //
 // xInput - the filename to edit or a handle to a file retrned by FOPEN
 // cOutput - the name of the file created in 'save' operation
 // nLineLen - the line length
-// nHelp - the index into help subsystem 
+// nHelp - the index into help subsystem
 // lPrint - specifies if edited file can be printed
 // lConv - it was used to convert some unprintable characters
 // nEscape - the code of color escape character
@@ -332,7 +332,7 @@ LOCAL nSize
 //    FT_IDLE()
     MEMORY(-1)
 
-RETURN( lSaved )
+RETURN lSaved
 
 //---------------------------------------------------------
 //06-07-93 06:05pm
@@ -348,8 +348,8 @@ RETURN( lSaved )
 //
 EXPORT FUNCTION EditorRead( oEditor, nHandle, nOffset, nLen, lConv )
 
-RETURN( ED_ReadText( oEditor[E_EDIT], nHandle, nOffset, nLen, ;
-                     IIF( lConv==NIL, .T., lConv ) ) )
+RETURN ED_ReadText( oEditor[E_EDIT], nHandle, nOffset, nLen, ;
+                     IIF( lConv==NIL, .T., lConv ) )
 
 //---------------------------------------------------------
 //03-06-93 08:31pm
@@ -394,14 +394,14 @@ LOCAL lSaveAllowed, lSaved:=.F.
     nState := oEdit[E_RIGHT] -8
 
     /* It uses static variable 'oEditor' to speed access to the editor
-       If this function is called recursively then we have to push 
+       If this function is called recursively then we have to push
        currently used editor on the stack
     */
     EditorPush( oEdit )
 
     /* The position of the editor can be changed (in a windowed environment)
-       then it sets current position of editor. 
-       It also sets the current editor as the working one. This means that 
+       then it sets current position of editor.
+       It also sets the current editor as the working one. This means that
        all next ED_* functions will used the editor handle specified
        by oEditor[E_EDIT] - it is tricky solution to speed access (we
        don't need to pass the editor handle with every ED_*() call
@@ -472,7 +472,7 @@ LOCAL lSaveAllowed, lSaved:=.F.
 //    FT_IDLE()
     MEMORY(-1)
 
-RETURN( lSaved )
+RETURN lSaved
 
 
 //
@@ -565,7 +565,7 @@ LOCAL lMoved:=.T.
 
     ENDCASE
 
-RETURN( lMoved )
+RETURN lMoved
 
 
 //---------------------------------------------------------
@@ -604,7 +604,7 @@ LOCAL nHandle, cFile, cNew
     ENDIF
 
     IF EMPTY(cFile)
-        RETURN( .F. )
+        RETURN .F.
     ENDIF
 /*
     WorkStart( 75 )
@@ -616,7 +616,7 @@ LOCAL nHandle, cFile, cNew
             FileError( cFile, -nHandle )
             WorkEnd()
 
-            RETURN( .F. )
+            RETURN .F.
         ENDIF
     ENDIF
 */
@@ -630,7 +630,7 @@ LOCAL nHandle, cFile, cNew
     ENDIF
 //    WorkEnd()
 
-RETURN( nHandle > 0 )
+RETURN nHandle > 0
 
 //---------------------------------------------------------
 //19-08-93 02:05am
@@ -671,7 +671,7 @@ LOCAL cBox, cClr, nBottom,nRight
         nRight  := right
     ENDIF
 
-RETURN( {top,left,nBottom,nRight, cBox, cClr} )
+RETURN {top,left,nBottom,nRight, cBox, cClr}
 
 
 //---------------------------------------------------------
@@ -690,4 +690,4 @@ LOCAL nLen:=FSEEK( nH, 0, FS_END )
 
   FSEEK( nH, nPos, FS_SET )
 
-RETURN( nLen )
+RETURN nLen

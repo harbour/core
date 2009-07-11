@@ -186,4 +186,4 @@ FUNCTION FT_ROUND(nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
       nResult := -nResult               // Yes, Make the Result Negative Also
    ENDIF                                // IS_NEGATIVE(nNumber)
 
-   RETURN (nResult)                     // FT_Round
+   RETURN nResult                       // FT_Round

@@ -161,4 +161,4 @@ FUNCTION FT_AADDITION( aList1, aList2, lTrimmer, lCaseSens )
 
    NEXT
 
-   RETURN ( aNewArray )
+   RETURN aNewArray

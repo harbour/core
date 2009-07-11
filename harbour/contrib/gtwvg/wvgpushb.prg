@@ -169,7 +169,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgPushButton
       ENDIF
       IF hb_isNumeric( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
-         RETURN ( ::hBrushBG )
+         RETURN ::hBrushBG
       ENDIF
 
    ENDCASE

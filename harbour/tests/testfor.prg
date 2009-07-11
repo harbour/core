@@ -2,22 +2,22 @@
 // $Id$
 //
 
-FUNCTION MAIN
+PRCOEDURE MAIN
 
    LOCAL i
 
    FOR i := 1 TO 10
 
-      qout( i )
+      QOut( i )
 
-      IF i = 4 .AND. .T.
-         __Accept("")
-         qout(i)
+      IF i == 4 .AND. .T.
+         __Accept( "" )
+         QOut( i )
          i := 9
-         qout(i)
-         __Accept("")
+         QOut( i )
+         __Accept( "" )
       ENDIF
 
    NEXT
 
-   RETURN( NIL )
+   RETURN

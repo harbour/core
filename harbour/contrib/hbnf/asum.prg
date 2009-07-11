@@ -87,4 +87,4 @@ FUNCTION FT_ASUM(aArray, nStartIndex, nEndIndex)
                            iif(IS_CHAR(xElement),LEN(xElement),0) }) }, ;
          nStartIndex, nEndIndex - nStartIndex + 1)
 
-   RETURN (nSumTotal)                   // FT_ASum
+   RETURN nSumTotal                   // FT_ASum

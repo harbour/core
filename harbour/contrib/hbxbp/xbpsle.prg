@@ -215,7 +215,7 @@ METHOD XbpSLE:exeBlock( nMsg, p1, p2 )
 
    ENDCASE
 
-   RETURN ( lRet )
+   RETURN lRet
 
 /*----------------------------------------------------------------------*/
 

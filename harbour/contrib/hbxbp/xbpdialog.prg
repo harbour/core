@@ -189,7 +189,7 @@ METHOD XbpDialog:exeBlock( nEvent, pEvent )
 
    ENDCASE
 
-   RETURN ( lRet )
+   RETURN lRet
 
 /*----------------------------------------------------------------------*/
 

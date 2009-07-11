@@ -321,7 +321,7 @@ static char ** hb_tokensplit ( char *string, BYTE delimiter, int iCharCount, int
 
    *iWord = word_count;
 
-   return (token_list);
+   return token_list;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -339,7 +339,7 @@ BOOL file_read ( FILE *stream, char *string, int *iCharCount )
       {
          *iCharCount = cnbr;
          string [cnbr] = '\0';
-         return ( ch == '\n' || cnbr );
+         return ch == '\n' || cnbr;
       }
       else
       {
@@ -353,7 +353,7 @@ BOOL file_read ( FILE *stream, char *string, int *iCharCount )
       {
          *iCharCount = cnbr;
          string [MAX_READ] = '\0';
-         return (TRUE);
+         return TRUE;
       }
    }
 }

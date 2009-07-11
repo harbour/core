@@ -280,7 +280,7 @@ FUNCTION FT_BRWSWHL(aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
 
    SEEK cKey
    IF .NOT. FOUND() .OR. LASTREC() == 0
-      RETURN(0)
+      RETURN 0
    ENDIF
 
    /* make new browse object */

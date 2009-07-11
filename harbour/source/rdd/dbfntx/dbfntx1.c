@@ -3253,7 +3253,7 @@ static BOOL hb_ntxCurKeyRefresh( LPTAGINFO pTag )
          }
       }
       hb_ntxKeyFree( pKey );
-      return( pTag->CurKeyInfo->Xtra != 0 && pTag->CurKeyInfo->Xtra == pArea->dbfarea.ulRecNo );
+      return pTag->CurKeyInfo->Xtra != 0 && pTag->CurKeyInfo->Xtra == pArea->dbfarea.ulRecNo;
    }
    pTag->TagBOF = pTag->TagEOF = FALSE;
    return TRUE;

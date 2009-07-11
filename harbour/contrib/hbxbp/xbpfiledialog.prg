@@ -164,7 +164,7 @@ METHOD XbpFileDialog:destroy()
 
 STATIC FUNCTION Xbp_ArrayToFileFilter( aFilter )
 
-   RETURN ( aFilter[ 1 ] + " ( "+ aFilter[ 2 ] + " )" )
+   RETURN aFilter[ 1 ] + " ( "+ aFilter[ 2 ] + " )"
 
 /*----------------------------------------------------------------------*/
 

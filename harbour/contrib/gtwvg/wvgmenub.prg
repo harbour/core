@@ -219,7 +219,7 @@ METHOD destroy() CLASS wvgMenuBar
       ::hMenu := 0
    ENDIF
 
-   RETURN( .T. )
+   RETURN .T.
 
 /*----------------------------------------------------------------------*/
 
@@ -232,7 +232,7 @@ METHOD delAllItems() CLASS wvgMenuBar
       nItems--
    ENDDO
 
-   RETURN ( lResult )
+   RETURN lResult
 
 /*----------------------------------------------------------------------*/
 
@@ -345,7 +345,7 @@ METHOD findMenuItemById( nId ) CLASS wvgMenuBar
       ENDDO
    ENDIF
 
-   RETURN ( aResult )
+   RETURN aResult
 
 /*----------------------------------------------------------------------*/
 
@@ -368,7 +368,7 @@ METHOD findMenuPosById( nId ) CLASS wvgMenuBar
       ENDDO
    ENDIF
 
-   RETURN ( nPos )
+   RETURN nPos
 
 /*----------------------------------------------------------------------*/
 
@@ -381,7 +381,7 @@ METHOD checkItem( nItemNum, lCheck ) CLASS wvgMenuBar
       nRet := WVG_CheckMenuItem( ::hMenu, nItemNum, MF_BYPOSITION + IF( lCheck, MF_CHECKED, MF_UNCHECKED ) )
    ENDIF
 
-   RETURN IF( nRet == -1, .F., .T. )
+   RETURN IIF( nRet == -1, .F., .T. )
 
 /*----------------------------------------------------------------------*/
 
@@ -392,7 +392,7 @@ METHOD enableItem( nItemNum ) CLASS wvgMenuBar
       lSuccess := WVG_EnableMenuItem( ::hMenu, nItemNum-1, MF_BYPOSITION + MF_ENABLED )
    ENDIF
 
-   RETURN ( lSuccess )
+   RETURN lSuccess
 
 /*----------------------------------------------------------------------*/
 
@@ -403,7 +403,7 @@ METHOD disableItem( nItemNum ) CLASS wvgMenuBar
       lSuccess := WVG_EnableMenuItem( ::hMenu, nItemNum-1, MF_BYPOSITION + MF_GRAYED )
    ENDIF
 
-   RETURN ( lSuccess )
+   RETURN lSuccess
 
 /*----------------------------------------------------------------------*/
 

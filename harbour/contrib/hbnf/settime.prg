@@ -64,7 +64,7 @@
  *      FT_SETTIME( cTime )
  *      Qout( "Time is now: " + time() )
  *
- *   RETURN ( nil )
+ *   RETURN NIL
  *
  *  $END$
  */
@@ -84,7 +84,7 @@
     QOut( "Setting time to: " + cTime  + "... " )
     FT_SETTIME( cTime )
     Qout( "Time is now: " + time() )
-  return ( nil )
+  RETURN NIL
 #endif
 
 function FT_SETTIME( cTime )

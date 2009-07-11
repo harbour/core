@@ -1175,7 +1175,7 @@ static BOOL hb_gt_dos_SetMode( PHB_GT pGT, int iRows, int iCols )
       if( iCols > 80 && bIsVesa )
       {
          /* In development process
-          * return( hb_gt_dos_Modevesa( nMode) );
+          * return hb_gt_dos_Modevesa( nMode);
           */
       }
    }

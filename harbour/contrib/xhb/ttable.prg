@@ -139,7 +139,7 @@ FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, ;
 
    RESTSCREEN( MAXROW(), 0, MAXROW(), MAXCOL() + 1, cOldScreen )
 
-RETURN ( slNetOk )
+RETURN slNetOk
 
 
 FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
@@ -159,7 +159,7 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
               ( .not. ( nType == 2 ) ) .and. ;
               ( .not. ( nType == 3 ) ) )
       ALERT( "Invalid Argument passed to NETLOCK()" )
-      RETURN ( lSuccess )
+      RETURN lSuccess
    ENDIF
 
    DEFAULT lReleaseLocks TO .F.
@@ -241,7 +241,7 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
          IF lContinue == .F.
             //EXIT
             RESTSCREEN( MAXROW(), 0, MAXROW(), MAXCOL() + 1, cSave )
-            RETURN ( lSuccess )
+            RETURN lSuccess
          ENDIF
 
       ENDIF
@@ -249,7 +249,7 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
 
    RESTSCREEN( MAXROW(), 0, MAXROW(), MAXCOL() + 1, cSave )
 
-RETURN ( lSuccess )
+RETURN lSuccess
 
 
 FUNCTION NetFunc( bBlock, nSeconds )
@@ -263,14 +263,14 @@ FUNCTION NetFunc( bBlock, nSeconds )
    DO WHILE ( lForever .or. ( nSeconds > 0 ) )
 
       IF EVAL( bBlock )
-         RETURN ( .T. )                 // NOTE
+         RETURN .T.                 // NOTE
       ENDIF
 
       INKEY( 1 )    // Wait 0.5 seconds
       nSeconds -= 0.5
    ENDDO
 
-RETURN ( .F. )      // Not locked
+RETURN .F.      // Not locked
 
 
 // { DBFName, Alias, { idx Names } }
@@ -329,7 +329,7 @@ FUNCTION NetDelete()
       slNetOK := .T.
       ALERT( " Failed to DELETE Record -> " + STR( RECNO() ) )
    ENDIF
-RETURN ( slNetOk )
+RETURN slNetOk
 
 
 FUNCTION NetReCall()
@@ -349,7 +349,7 @@ FUNCTION NetReCall()
       ALERT( " Failed to RECALL Record -> " + STR( RECNO() ) )
    ENDIF
 
-RETURN ( slNetOk )
+RETURN slNetOk
 
 
 FUNCTION NetRecLock( nSeconds )
@@ -362,7 +362,7 @@ FUNCTION NetRecLock( nSeconds )
       slNetOK := .T.
    ENDIF
 
-RETURN ( slNetOK )
+RETURN slNetOK
 
 
 FUNCTION NetFileLock( nSeconds )
@@ -374,7 +374,7 @@ FUNCTION NetFileLock( nSeconds )
       slNetOK := .T.
    ENDIF
 
-RETURN ( slNetOK )
+RETURN slNetOK
 
 
 FUNCTION NetAppend( nSeconds, lReleaseLocks )
@@ -392,7 +392,7 @@ FUNCTION NetAppend( nSeconds, lReleaseLocks )
 
    ORDSETFOCUS( nOrd )
 
-RETURN ( slNetOK )
+RETURN slNetOK
 
 
 PROCEDURE NetFlush()
@@ -419,7 +419,7 @@ RETURN n
 FUNCTION IsLocked( nRecId )
 DEFAULT nRecID TO recno()
 
-RETURN ( ASCAN( DBRLOCKLIST(), { | n | n == nRecID } ) > 0 )
+RETURN ASCAN( DBRLOCKLIST(), { | n | n == nRecID } ) > 0
 
 
 FUNCTION NetError()
@@ -432,7 +432,7 @@ FUNCTION SetNetDelay( nSecs )
    IF nSecs != NIL
       snNetDelay := nSecs
    ENDIF
-RETURN ( nTemp )
+RETURN nTemp
 
 
 FUNCTION SetNetMsgColor( cColor )
@@ -441,7 +441,7 @@ FUNCTION SetNetMsgColor( cColor )
    IF cColor != NIL
       scNetmsgColor := cColor
    ENDIF
-RETURN ( cTemp )
+RETURN cTemp
 
 
 /****
@@ -829,7 +829,7 @@ METHOD OPEN() CLASS HBTable
       IF NETERR()
          ALERT( _NET_USE_FAIL_MSG )
          lSuccess := .F.
-         RETURN ( lSuccess )
+         RETURN lSuccess
       ENDIF
    ENDIF
 
@@ -847,7 +847,7 @@ METHOD OPEN() CLASS HBTable
 
    ::dbMove( _DB_TOP )
 
-RETURN ( lSuccess )
+RETURN lSuccess
 
 
 METHOD PROCEDURE DBMove( nDirection ) CLASS HBTable
@@ -1048,7 +1048,7 @@ METHOD Write( lKeepBuffer ) CLASS HBTable
    ( ::Alias )->( ORDSETFOCUS( nOrd ) )
    SELECT( nSel )
 
-RETURN ( .T. )
+RETURN .T.
 
 
 METHOD BUFWrite( aBuffer ) CLASS HBTable
@@ -1077,7 +1077,7 @@ METHOD BUFWrite( aBuffer ) CLASS HBTable
    ( ::Alias )->( ORDSETFOCUS( nOrd ) )
    SELECT( nSel )
 
-RETURN ( .T. )
+RETURN .T.
 
 
 METHOD __oTDelete( lKeepBuffer )        // ::Delete()
@@ -1106,7 +1106,7 @@ METHOD __oTDelete( lKeepBuffer )        // ::Delete()
 
    SET( _SET_DELETED, lDeleted )
 
-RETURN ( lRet )
+RETURN lRet
 
 
 METHOD SetMonitor( l ) CLASS HBTable
@@ -1248,7 +1248,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
    ( ::Alias )->( DBGOTO( nRec ) )
    ::Read()
 
-RETURN ( lRet )
+RETURN lRet
 
 
 //
@@ -1432,9 +1432,9 @@ RETURN
 STATIC FUNCTION FixExt( cFileName )
 
    LOCAL nLeft := AT( ".", cFilename )
-RETURN ( LEFT( cFileName, IF( nLeft == 0, ;
-         LEN( cFilename ), ;
-         nLeft - 1 ) ) )
+RETURN LEFT( cFileName, IF( nLeft == 0, ;
+       LEN( cFilename ), ;
+       nLeft - 1 ) )
 
 
 METHOD CreateTable( cFile ) CLASS HBTable

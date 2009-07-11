@@ -67,8 +67,8 @@ STATIC aRgnStack:={}
 
 FUNCTION FT_SAVRGN(nTop, nLeft, nBottom, nRight)
 
-   RETURN (CHR(nTop) + CHR(nLeft) + CHR(nBottom) + CHR(nRight) + ;
-      SAVESCREEN(nTop, nLeft, nBottom, nRight))
+   RETURN CHR(nTop) + CHR(nLeft) + CHR(nBottom) + CHR(nRight) + ;
+      SAVESCREEN(nTop, nLeft, nBottom, nRight)
 
 
 /*  $DOC$

@@ -50,5 +50,5 @@ FUNCTION Start()
 </HTML>
 <%
 
-   RETURN( NIL )
+   RETURN NIL
 %>

@@ -277,9 +277,9 @@ int hb_gt_sln_mouse_Inkey( int iEventMask, BOOL fCheckNew )
    if( ( iEventMask & Mask ) && ( Evt.buttons & GpmBtn ) )        \
    {                                                              \
       if( Evt.type & GPM_SINGLE )                                 \
-         return( InkBtn );                                        \
+         return InkBtn;                                           \
       else if( Evt.type & GPM_DOUBLE || Evt.type & GPM_TRIPLE )   \
-         return( InkDbl );                                        \
+         return InkDbl;                                           \
    }
 
    else if( hb_sln_UnderLinuxConsole && fCheckNew )
@@ -293,7 +293,7 @@ int hb_gt_sln_mouse_Inkey( int iEventMask, BOOL fCheckNew )
          s_iMouseCol = Evt.x;
 
          if( ( Evt.type & GPM_MOVE ) && ( iEventMask & INKEY_MOVE ) )
-            return( K_MOUSEMOVE );
+            return K_MOUSEMOVE;
 
          else if( Evt.type & GPM_DOWN )
          {
@@ -307,11 +307,11 @@ int hb_gt_sln_mouse_Inkey( int iEventMask, BOOL fCheckNew )
          else if( Evt.type & GPM_UP )
          {
             if( ( iEventMask & INKEY_LUP ) && ( Evt.buttons & GPM_B_LEFT ) )
-               return( K_LBUTTONUP );
+               return K_LBUTTONUP;
             else if( ( iEventMask & INKEY_RUP ) && ( Evt.buttons & GPM_B_RIGHT ) )
-               return( K_RBUTTONUP );
+               return K_RBUTTONUP;
             else if( ( iEventMask & INKEY_MMIDDLE ) && ( Evt.buttons & GPM_B_MIDDLE ) )
-               return( K_MBUTTONUP );
+               return K_MBUTTONUP;
          }
       }
    }

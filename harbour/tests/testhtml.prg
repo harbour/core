@@ -39,7 +39,7 @@ FUNCTION Main()
 
    oHTML:ShowResult()
 
-   RETURN( NIL )
+   RETURN NIL
 
 /*---------------------------------------------------------------------------*/
 
@@ -69,7 +69,7 @@ FUNCTION THTML
       oClass:Create()
    ENDIF
 
-   RETURN( oClass:Instance() )
+   RETURN oClass:Instance()
 
 STATIC FUNCTION New()
 
@@ -112,7 +112,7 @@ STATIC FUNCTION AddHead( cDescr )
    ::cBody := ::cBody + ;
       "<H1>" + cDescr + "</H1>"
 
-   RETURN( NIL )
+   RETURN NIL
 
 STATIC FUNCTION AddPara( cPara, cAlign )
 

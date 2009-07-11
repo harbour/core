@@ -913,7 +913,7 @@ static BOOL hb_gt_sln_Resume( PHB_GT pGT )
       s_bSuspended = FALSE;
    }
 
-   return( !s_bSuspended );
+   return !s_bSuspended;
 }
 
 /* *********************************************************************** */

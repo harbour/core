@@ -1009,7 +1009,7 @@ static HB_GENC_FUNC( hb_p_localname )
    }
    fprintf( cargo->yyc, " 0,\n" );
 
-   return ( lPCodePos - ulStart + 1 );
+   return lPCodePos - ulStart + 1;
 }
 
 static HB_GENC_FUNC( hb_p_macropop )
@@ -1180,7 +1180,7 @@ static HB_GENC_FUNC( hb_p_modulename )
    }
    fprintf( cargo->yyc, " 0,\n" );
 
-   return ( lPCodePos - ulStart + 1 );
+   return lPCodePos - ulStart + 1;
 }
 
 static HB_GENC_FUNC( hb_p_modulus )
@@ -1486,7 +1486,7 @@ static HB_GENC_FUNC( hb_p_pushblock )
    if( cargo->ulEndBlockPos < ulStart )
       cargo->ulEndBlockPos = ulStart + HB_PCODE_MKUSHORT( &pFunc->pCode[ ulStart + 1 ] ) - 1;
 
-   return (lPCodePos - ulStart);
+   return lPCodePos - ulStart;
 }
 
 static HB_GENC_FUNC( hb_p_pushblocklarge )
@@ -1542,7 +1542,7 @@ static HB_GENC_FUNC( hb_p_pushblocklarge )
    if( cargo->ulEndBlockPos < ulStart )
       cargo->ulEndBlockPos = ulStart + HB_PCODE_MKUINT24( &pFunc->pCode[ ulStart + 1 ] ) - 1;
 
-   return (lPCodePos - ulStart);
+   return lPCodePos - ulStart;
 }
 
 static HB_GENC_FUNC( hb_p_pushdouble )
@@ -2030,7 +2030,7 @@ static HB_GENC_FUNC( hb_p_staticname )
    }
    fprintf( cargo->yyc, " 0,\n" );
 
-   return ( lPCodePos - ulStart + 1 );
+   return lPCodePos - ulStart + 1;
 }
 
 static HB_GENC_FUNC( hb_p_threadstatics )

@@ -73,5 +73,5 @@ FUNCTION FT_INVCLR(cDsrdColor)
    cForeground := ALLTRIM(LEFT(cDsrdColor,   AT("/", cDsrdColor) - 1))
    cBackground := ALLTRIM(SUBSTR(cDsrdColor, AT("/", cDsrdColor) + 1))
 
-   RETURN (STRTRAN(STRTRAN(cBackground, "+"), "*") + cModifiers + "/" + ;
-           STRTRAN(STRTRAN(cForeground, "+"), "*"))
+   RETURN STRTRAN(STRTRAN(cBackground, "+"), "*") + cModifiers + "/" + ;
+          STRTRAN(STRTRAN(cForeground, "+"), "*")

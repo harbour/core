@@ -69,7 +69,7 @@
 #ifdef FT_TEST
   FUNCTION MAIN()
   QOut( "Dos version: " + FT_DOSVER() )
-  return ( nil )
+  RETURN NIL
 #endif
 
 FUNCTION FT_DOSVER()

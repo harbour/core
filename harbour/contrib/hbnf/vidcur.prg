@@ -81,7 +81,7 @@ FUNCTION FT_SETVCUR( nPage, nRow, nCol )
 
   FT_INT86( VIDEO, aRegs )
 
-RETURN ( NIL )
+RETURN NIL
 
 
 

@@ -74,27 +74,27 @@
 
 static char _ftToLower( char c )
 {
-  return(c >= 'A' && c <= 'Z' ? c - 'A' + 'a' : c);
+  return c >= 'A' && c <= 'Z' ? c - 'A' + 'a' : c;
 }
 
 static char _ftToUpper( char c )
 {
-  return(c >= 'a' && c <= 'z' ? c - 'a' + 'A' : c);
+  return c >= 'a' && c <= 'z' ? c - 'a' + 'A' : c;
 }
 
 static int _ftIsUpper( char c )
 {
-  return(c >= 'A' && c <= 'Z');
+  return c >= 'A' && c <= 'Z';
 }
 
 static int _ftIsLower( char c )
 {
-  return(c >= 'a' && c <= 'z');
+  return c >= 'a' && c <= 'z';
 }
 
 static int _ftIsAlpha( char c )
 {
-  return( _ftIsUpper(c) || _ftIsLower(c));
+  return _ftIsUpper(c) || _ftIsLower(c);
 }
 
 HB_FUNC( FT_PROPER )

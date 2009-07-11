@@ -97,11 +97,11 @@ FUNCTION FT_FINDITH(cCheckFor,cCheckIn,nWhichOccurrence,lIgnoreCase)
    ENDIF                                // IS_NOT_LOGICAL(lIgnoreCase) or
                                         // lIgnoreCase
 
-   RETURN (iif(nWhichOccurrence == 1, ;
-              AT(cCheckFor, cCheckIn), ;
-              iif((nIthOccurrence := AT(cCheckFor, ;
-                                      STRTRAN(cCheckIn, cCheckFor, ;
-                                              NULL, 1, ;
-                                              nWhichOccurrence-1))) == 0, ;
-                 0, ;
-                 nIthOccurrence + ((nWhichOccurrence - 1) * LEN(cCheckFor)))))
+   RETURN iif(nWhichOccurrence == 1, ;
+             AT(cCheckFor, cCheckIn), ;
+             iif((nIthOccurrence := AT(cCheckFor, ;
+                                     STRTRAN(cCheckIn, cCheckFor, ;
+                                             NULL, 1, ;
+                                             nWhichOccurrence-1))) == 0, ;
+                0, ;
+                nIthOccurrence + ((nWhichOccurrence - 1) * LEN(cCheckFor))))
