@@ -60,9 +60,10 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 CPPFLAGS += -d2
 endif
 
-ifeq ($(SHLVL),) # NT Shell
 ifeq ($(CC),wcc386)
-CC_RULE = $(CC) $(subst /,\,$(CPPFLAGS)) $(subst /,\,$(CFLAGS)) $(HB_CDBG) $(subst /,\,$(HB_USER_CFLAGS)) $(HB_CDYNLIB) $(subst /,\,$(CC_IN)) $(subst /,\,$<) $(CC_OUT)$(<F:.c=$(OBJ_EXT))
+ifeq ($(subst linux,,$(OSTYPE)),$(OSTYPE))
+CPPFLAGS := $(subst /,\,$(CPPFLAGS))
+CC_RULE = $(CC) $(CPPFLAGS) $(subst /,\,$(CFLAGS)) $(HB_CDBG) $(subst /,\,$(HB_USER_CFLAGS)) $(HB_CDYNLIB) $(CC_IN)$(subst /,\,$<) $(CC_OUT)$(<F:.c=$(OBJ_EXT))
 endif
 endif
 

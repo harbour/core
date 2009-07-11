@@ -60,8 +60,19 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 CPPFLAGS += -d2
 endif
 
+ifeq ($(CC),wcc386)
+ifeq ($(subst linux,,$(OSTYPE)),$(OSTYPE))
+CPPFLAGS := $(subst /,\,$(CPPFLAGS))
+CC_RULE = $(CC) $(CPPFLAGS) $(subst /,\,$(CFLAGS)) $(HB_CDBG) $(subst /,\,$(HB_USER_CFLAGS)) $(HB_CDYNLIB) $(CC_IN)$(subst /,\,$<) $(CC_OUT)$(<F:.c=$(OBJ_EXT))
+endif
+endif
+
 # work arround to DOS command line size limit
+ifeq ($(CC),wcc386)
+export WCC386 := $(strip $(CPPFLAGS))
+else
 export WPP386 := $(strip $(CPPFLAGS))
+endif
 CPPFLAGS =
 
 # Note: The empty line directly before 'endef' HAVE TO exist!
