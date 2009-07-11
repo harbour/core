@@ -6,9 +6,9 @@ all : first
 
 HB_GT_LIST=\
 	gtcgi \
-	gtos2 \
 	gtpca \
 	gtstd \
+	gtos2 \
 
 # verify if GT drivers exist
 #HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
@@ -41,21 +41,21 @@ MD = md
 ifeq ($(LIB_PATH),)
 
 dirbase::
-	-FOR %d IN ($(HB_ARCHITECTURE) $(OS2_ARCH_DIR)) DO IF NOT EXIST %d $(MD) %d
+	-for %d in ($(HB_ARCHITECTURE) $(OS2_ARCH_DIR)) do if not exist %d $(MD) %d
 
 clean::
-	-IF EXIST $(OS2_ARCH_DIR)\*.* $(RM) $(OS2_ARCH_DIR)\*.*
-	-FOR %d IN ($(OS2_ARCH_DIR) $(HB_ARCHITECTURE)) DO IF EXIST %d $(RD) %d
+	-if exist $(OS2_ARCH_DIR)\*.* $(RM) $(OS2_ARCH_DIR)\*.*
+	-for %d in ($(OS2_ARCH_DIR) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
 
 else
 
 dirbase::
-	-FOR %d IN ($(HB_ARCHITECTURE) $(OS2_ARCH_DIR) $(OS2_LIB_PATH) $(OS2_LIB_DIR)) DO IF NOT EXIST %d $(MD) %d
+	-for %d in ($(HB_ARCHITECTURE) $(OS2_ARCH_DIR) $(OS2_LIB_PATH) $(OS2_LIB_DIR)) do if not exist %d $(MD) %d
 
 clean::
-	-IF EXIST $(OS2_ARCH_DIR)\*.* $(RM) $(OS2_ARCH_DIR)\*.*
-	-FOR %d IN ($(OS2_ARCH_DIR) $(HB_ARCHITECTURE)) DO IF EXIST %d $(RD) %d
-	-IF EXIST $(OS2_LIB_ARCH) $(RM) $(OS2_LIB_ARCH)
+	-if exist $(OS2_ARCH_DIR)\*.* $(RM) $(OS2_ARCH_DIR)\*.*
+	-for %d in ($(OS2_ARCH_DIR) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
+	-if exist $(OS2_LIB_ARCH) $(RM) $(OS2_LIB_ARCH)
 
 endif
 
