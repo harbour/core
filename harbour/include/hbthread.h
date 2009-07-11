@@ -235,6 +235,10 @@ HB_EXTERN_BEGIN
 
 #  define HB_THREAD_INFINITE_WAIT   SEM_INDEFINITE_WAIT
 
+#  ifndef SEM_INDEFINITE_WAIT
+#     define SEM_INDEFINITE_WAIT    ( ( ULONG ) -1 )
+#  endif
+
 #else
 
    typedef int HB_THREAD_NO;

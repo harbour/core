@@ -73,7 +73,7 @@
 #  include <io.h>
 #  include <process.h>
 #  include <fcntl.h>
-#  if defined( HB_OS_OS2 )
+#  if defined( HB_OS_OS2 ) && defined( __GNUC__ )
 #    include <sys/wait.h>
 #  endif
 #elif defined( HB_OS_DOS )
@@ -603,14 +603,7 @@ HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
 #elif defined( HB_OS_OS2 ) || defined( HB_OS_WIN )
 {
 
-#if defined( HB_OS_WIN )
-
-#  define pid_t               int
-#  define _hb_pipe( e, p )    do { \
-                                 (e) = _pipe( (p), 2048, _O_BINARY ) != 0; \
-                              } while( 0 )
-
-#elif defined( HB_OS_OS2 )
+#if defined( HB_OS_OS2 ) && defined( __GNUC__ )
 
 #  define _hb_pipe( e, p )    do { \
                                  (e) = pipe( (p) ) != 0; \
@@ -619,6 +612,12 @@ HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
                                     setmode( (p)[ 0 ], O_BINARY ); \
                                     setmode( (p)[ 1 ], O_BINARY ); \
                                  } \
+                              } while( 0 )
+#else
+
+#  define pid_t               int
+#  define _hb_pipe( e, p )    do { \
+                                 (e) = _pipe( (p), 2048, _O_BINARY ) != 0; \
                               } while( 0 )
 #endif
 

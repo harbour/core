@@ -72,7 +72,7 @@ HB_FUNC( P_INITPORTSPEED )
    LINECONTROL lctl;
    DCBINFO dcb;
    USHORT Baud = ( USHORT ) hb_parnl( 2 );
-   char * ptr = hb_parcx( 4 );
+   const char * ptr = hb_parcx( 4 );
 
    memset( &dcb, 0, sizeof( dcb ) );
    memset( &lctl, 0, sizeof( lctl ) );
@@ -151,7 +151,7 @@ HB_FUNC( P_READPORT )
 HB_FUNC( P_WRITEPORT )
 {
    ULONG nWritten = 0;
-   APIRET rc = DosWrite( ( HFILE ) hb_parnl( 1 ), hb_parcx( 2 ), hb_parclen( 2 ), &nWritten );
+   APIRET rc = DosWrite( ( HFILE ) hb_parnl( 1 ), ( void * ) hb_parcx( 2 ), hb_parclen( 2 ), &nWritten );
 
    hb_retnl( rc == NO_ERROR ? ( long ) nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
 }

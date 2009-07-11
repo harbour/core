@@ -4,16 +4,17 @@
 
 ifeq ($(PM),) # Only traverse directories if not compiling a specific module
 
+ifeq ($(DIRS),) # Empty directory list
+
+DIR_RULE = @echo Done
+
+else
+
 ifeq ($(SHLVL),) # An OS/2 command shell
 
-ifeq ($(DIRS),) # Empty directory list
-DIR_RULE =\
-	@echo Done
-else
 DIR_MAKE = $(subst /,\,$(MK))
 DIR_LIST = $(subst /,\,$(DIRS))
 DIR_RULE = $(COMSPEC) /C FOR %d IN ($(DIR_LIST)) DO $(DIR_MAKE) -C %d $@
-endif
 
 else  # bash
 
@@ -24,6 +25,8 @@ DIR_RULE =\
 		fi \
 	done
 
-endif # ! Windows
+endif # ! OS/2 command shell
+
+endif # ! Empty directory list
 
 endif # ! compiling a specific program module

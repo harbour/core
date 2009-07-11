@@ -76,6 +76,7 @@ endef
 define link_exe_file
 @echo $(LDFLAGS) NAME $@ > __link__.tmp
 $(foreach file, $(^F), $(link_file))
+$(foreach lib, $(HB_USER_LIBS), $(link_lib))
 $(foreach lib, $(LINKLIBS), $(link_lib))
 $(foreach lib, $(RDDLIBS), $(link_lib))
 $(foreach lib, $(GTLIBS), $(link_lib))
@@ -83,7 +84,7 @@ $(foreach lib, $(GTLIBS), $(link_lib))
 endef
 
 LD = wlink
-LDFLAGS =
+LDFLAGS = sys OS2V2
 ifeq ($(HB_BUILD_DEBUG),yes)
 LDFLAGS := debug all $(LDFLAGS)
 endif
