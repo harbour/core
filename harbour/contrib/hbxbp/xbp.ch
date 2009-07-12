@@ -21,6 +21,9 @@
 #define HBXBP_EVENT_HANDLED                       0
 #define HBXBP_EVENT_UNHANDLED                     1
 
+#define XBTOQT_FROM_XB                            1
+#define XBTOQT_FROM_QT                            2
+
 /*----------------------------------------------------------------------*/
 
 #define XBP_AUTOSIZE                              -1
@@ -286,6 +289,21 @@
 
 #define  XBPPDLG_MODE_DRIVER                      1
 #define  XBPPDLG_MODE_APPLICATION                 2
+
+#define XBP_SCROLLBAR_NONE                        0
+#define XBP_SCROLLBAR_HORIZ                       1
+#define XBP_SCROLLBAR_VERT                        2
+
+#define XBP_APPEARANCE_FLAT                       0
+#define XBP_APPEARANCE_3D                         1
+
+#define XBPRTF_ALIGN_LEFT                         0
+#define XBPRTF_ALIGN_RIGHT                        1
+#define XBPRTF_ALIGN_CENTER                       2
+
+#define XBPRTF_MATCH_WHOLEWORD                    2
+#define XBPRTF_MATCH_CASE                         4
+#define XBPRTF_MATCH_NOHILIGHT                    8
 
 
 /*----------------------------------------------------------------------*/

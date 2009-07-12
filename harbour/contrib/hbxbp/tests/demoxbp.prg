@@ -67,6 +67,7 @@
 #define TAB_3   3
 #define TAB_4   4
 #define TAB_5   5
+#define TAB_6   6
 
 #define CRLF    chr( 13 )+chr( 10 )
 
@@ -162,7 +163,8 @@ PROCEDURE BuildADialog()
    /* Build HTML Viewer */
    oHtm := Build_HTMLViewer( aTabs[ TAB_1 ] )
 
-
+   /* Build RTF */
+   Build_Rtf( aTabs[ TAB_6 ] )
 
    /* Present the dialog on the screen */
    oDlg:Show()
@@ -221,9 +223,9 @@ STATIC FUNCTION uiXtoS( xVar )
    CASE cType == "A"
       RETURN "A:"+hb_ntos( len( xVar ) )
    CASE cType == "O"
-      RETURN "<OBJECT>"
+      RETURN "[OBJECT]"
    OTHERWISE
-      RETURN "<"+cType+">"
+      RETURN "["+cType+"]"
    ENDCASE
 
    RETURN xVar
@@ -233,23 +235,18 @@ STATIC FUNCTION uiXtoS( xVar )
 FUNCTION uiDebug( p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 )
    LOCAL s
 
-   s := ' ' + uiXtoS( p1 ) + CRLF
-   s += ' ' + uiXtoS( p2 ) + CRLF
-   s += ' ' + uiXtoS( p3 ) + CRLF
-   s += ' ' + uiXtoS( p4 ) + CRLF
-   s += ' ' + uiXtoS( p5 ) + CRLF
-   s += ' ' + uiXtoS( p6 ) + CRLF
-   s += ' ' + uiXtoS( p7 ) + CRLF
-   s += ' ' + uiXtoS( p8 ) + CRLF
-   s += ' ' + uiXtoS( p9 ) + CRLF
-   s += ' ' + uiXtoS( p10 )
+   s := uiXtoS( p1 ) + CRLF
+   s += uiXtoS( p2 ) + CRLF
+   s += uiXtoS( p3 ) + CRLF
+   s += uiXtoS( p4 ) + CRLF
+   s += uiXtoS( p5 ) + CRLF
+   s += uiXtoS( p6 ) + CRLF
+   s += uiXtoS( p7 ) + CRLF
+   s += uiXtoS( p8 ) + CRLF
+   s += uiXtoS( p9 ) + CRLF
+   s += uiXtoS( p10 )
 
-   #ifdef __XPP__
    MsgBox( s )
-   #else
-   //MsgBox( s )
-   hb_outDebug( s )
-   #endif
 
    RETURN nil
 
@@ -262,11 +259,7 @@ STATIC FUNCTION PP_Debug( oXbp )
    aeval( aPP, {|e_| s += ( hb_ntos( e_[ 1 ] ) +' '+ valtype( e_[ 2 ] ) +' '+ ;
         IF( valtype( e_[ 2 ] )=='N', hb_ntos( e_[ 2 ] ), ' ' ) + ';  '+ CRLF ) } )
 
-   #ifdef __XPP__
    MsgBox( s )
-   #else
-   hb_outDebug( s )
-   #endif
 
    RETURN nil
 
@@ -545,55 +538,62 @@ FUNCTION Build_RadioButton( oStatic )
 
 FUNCTION Build_TabPages( oWnd )
    LOCAL nHeight := 390
-   LOCAL aTabs   := { NIL,NIL,NIL,NIL,NIL }
+   LOCAL aTabs   := { NIL,NIL,NIL,NIL,NIL,NIL }
 
-   aTabs[ TAB_1 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight } )
+   aTabs[ TAB_1 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
    aTabs[ TAB_1 ]:caption    := "Web"
-   aTabs[ TAB_1 ]:preOffset  := 20
-   aTabs[ TAB_1 ]:postOffset := 60
+//   aTabs[ TAB_1 ]:preOffset  := 10
+//   aTabs[ TAB_1 ]:postOffset := 300
    aTabs[ TAB_1 ]:minimized  := .F.
    aTabs[ TAB_1 ]:create()
    aTabs[ TAB_1 ]:TabActivate := SetMaximized( aTabs, 1 )
 
-   aTabs[ TAB_2 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight } )
+   aTabs[ TAB_2 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
    aTabs[ TAB_2 ]:caption    := "MLE"
-   aTabs[ TAB_2 ]:preOffset  := 40
-   aTabs[ TAB_2 ]:postOffset := 60
+   aTabs[ TAB_2 ]:preOffset  := 20
+   aTabs[ TAB_2 ]:postOffset := 120
    aTabs[ TAB_2 ]:create()
-   aTabs[ TAB_2 ]:TabActivate := SetMaximized( aTabs, 1 )
+   aTabs[ TAB_2 ]:TabActivate := SetMaximized( aTabs, 2 )
 
-   aTabs[ TAB_3 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight } )
+   aTabs[ TAB_3 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
    aTabs[ TAB_3 ]:caption    := "Buttons"
-   aTabs[ TAB_3 ]:preOffset  := 60
-   aTabs[ TAB_3 ]:postOffset := 40
+   aTabs[ TAB_3 ]:preOffset  := 40
+   aTabs[ TAB_3 ]:postOffset := 100
    aTabs[ TAB_3 ]:create()
    aTabs[ TAB_3 ]:TabActivate := SetMaximized( aTabs, 3 )
 
-   aTabs[ TAB_4 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight } )
+   aTabs[ TAB_4 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
    aTabs[ TAB_4 ]:caption    := "Tree"
-   aTabs[ TAB_4 ]:preOffset  := 80
-   aTabs[ TAB_4 ]:postOffset := 20
+   aTabs[ TAB_4 ]:preOffset  := 60
+   aTabs[ TAB_4 ]:postOffset := 80
    aTabs[ TAB_4 ]:create()
    aTabs[ TAB_4 ]:TabActivate := SetMaximized( aTabs, 4 )
    aTabs[ TAB_4 ]:setColorBG( GraMakeRGBColor( {198,198,198} ) )
 
-   aTabs[ TAB_5 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight } )
-   aTabs[ TAB_5 ]:minimized := .F.
-   aTabs[ TAB_5 ]:caption   := "Lists"
-   aTabs[ TAB_4 ]:preOffset  := 100
-   aTabs[ TAB_4 ]:postOffset := 20
+   aTabs[ TAB_5 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
+   aTabs[ TAB_5 ]:minimized  := .F.
+   aTabs[ TAB_5 ]:caption    := "Lists"
+   aTabs[ TAB_5 ]:preOffset  := 80
+   aTabs[ TAB_5 ]:postOffset := 60
    aTabs[ TAB_5 ]:create()
    aTabs[ TAB_5 ]:TabActivate := SetMaximized( aTabs, 5 )
    aTabs[ TAB_5 ]:setPointer( , XBPSTATIC_SYSICON_SIZENESW, XBPWINDOW_POINTERTYPE_SYSPOINTER )
    /* comment our following line to position tabs at the bottom */
    /* aTabs[ TAB_5 ]:type := XBPTABPAGE_TAB_BOTTOM */
 
+   aTabs[ TAB_6 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
+   aTabs[ TAB_6 ]:caption    := "Rtf"
+   aTabs[ TAB_6 ]:preOffset  := 100
+   aTabs[ TAB_6 ]:postOffset := 40
+   aTabs[ TAB_6 ]:create()
+   aTabs[ TAB_6 ]:TabActivate := SetMaximized( aTabs, 6 )
+
    RETURN aTabs
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION SetMaximized( aTabs, nMax )
-   RETURN {|| aeval( aTabs, {|o,i| IF( i == nMax, o:maximize(), o:minimize() ) } ) }
+   RETURN {|| aeval( aTabs, {|o,i| IF( i != nMax, o:minimize(), ) } ), aTabs[ nMax ]:maximize() }
 
 /*----------------------------------------------------------------------*/
 
@@ -1075,7 +1075,7 @@ FUNCTION Build_HTMLViewer( oWnd )
    oHtm := XbpHTMLViewer():new( oFrm, , {10,10}, {sz_[1]-10-10,sz_[2]-10-10} )
    oHtm:create()
    oHtm:navigate( "http://www.harbour-project.org" )
-   oHtm:titleChange    := {|e| hb_outDebug( e ) }
+   oHtm:titleChange := {|e| hb_outDebug( e ) }
    // oHtm:progressChange := {|nProg,nMax| hb_outDebug( "Downloaded: "+str( nProg*100/nMax,10,0 ) ) }
 
    RETURN oHtm
@@ -1208,10 +1208,68 @@ FUNCTION Build_PrintDialog( oWnd )
                oPrn:setFormSize()     , ;
                oPrn:setResolution()[1], ;
                oPrn:setNumCopies()    , ;
-               oPrn:setPaperBin()       )
+               oPrn:setPaperBin()     , ;
+               oPrn:setColorMode()    , ;
+               oPrn:setDuplexMode()   , ;
+               oPrn:setCollationMode()  ;
+             )
    ENDIF
 
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION Build_Rtf( oWnd )
+   LOCAL oRTF
+   LOCAL sz_:= oWnd:currentSize()
+
+   oRTF := XbpRtf():new( oWnd )
+   oRTF:create( , , { 10,10 }, { sz_[ 1 ]-23, sz_[ 2 ]-50 } )
+
+   oRTF:setColorBG( GraMakeRGBColor( {255,255,200} ) )
+   oRTF:setFontCompoundName( "12.Times" )
+
+   oRTF:change := {|| hb_outDebug( "change" ) }
+
+   // Assign text to the RTF object's text buffer
+   oRTF:text := "Text with varying " + Chr(10) +;
+                "text attributes. Made possible by the " + Chr(10) +;
+                "XbpRtf edit control." + Chr(10)
+
+   //
+   // Use the selection manipulation methods to
+   // assign different attributes to the text
+   //
+   // Set the selection using abolute character positions
+   oRTF:SelStart    := 5
+   oRTF:SelLength   := 30
+   oRTF:SelColor    := GRA_CLR_BLUE
+
+   // Set the selection by selecting a specific word
+   // in the text
+   oRTF:SelStart    := 0
+   oRTF:Find( "Made possible" )
+   oRTF:SelBold     := .T.
+
+   // Find a specific word and expand the selection
+   // to include another one
+   oRTF:SelLength   := 0
+   oRTF:Find( "XbpRtf" )
+   // oRTF:Span( ".",, .T. )                /* TODO */
+   oRTF:SelColor    := GRA_CLR_RED
+   oRTF:SelFontName := "Courier New"
+   oRTF:SelFontSize := 30
+   oRTF:SelBold     := .T.
+   oRTF:SelItalic   := .T.
+   // oRTF:SelStrikeThru := .T.             /* OK */
+   oRTF:SelUnderline := .T.
+   oRTF:selAlignment := 2 //XBPRTF_SELALIGN_RIGHT
+
+   // Reset the text cursor
+   //
+   oRTF:SelStart    := Len( oRTF:Text )
+
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/

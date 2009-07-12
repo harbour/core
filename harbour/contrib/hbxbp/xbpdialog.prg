@@ -208,6 +208,8 @@ METHOD XbpDialog:destroy()
 
    ::xbpWindow:destroy()
 
+   ::oWidget:destroy()
+
    RETURN nil
 
 /*----------------------------------------------------------------------*/

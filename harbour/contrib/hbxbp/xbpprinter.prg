@@ -119,6 +119,7 @@ CLASS XbpPrinter
    METHOD   setPaperBin( nBin )
    METHOD   setPrintFile( cFileName )
    METHOD   setResolution( aResolution )
+
    METHOD   setupDialog()
 
    METHOD   abort()
@@ -213,7 +214,7 @@ METHOD XbpPrinter:paperSize()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPrinter:printerStatus()
-   LOCAL nStatus := 0
+   LOCAL nStatus := ::oWidget:printerState()
    RETURN nStatus
 
 /*----------------------------------------------------------------------*/
@@ -389,7 +390,8 @@ METHOD XbpPrinter:setFormSize( nFormID )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPrinter:setNumCopies( nNumCopies )
-   LOCAL nOldNumCopies := ::oWidget:numCopies()
+   //LOCAL nOldNumCopies := ::oWidget:numCopies()
+   LOCAL nOldNumCopies := ::getEngineProperty( QPrintEngine_PPK_NumberOfCopies )
 
    IF hb_isNumeric( nNumCopies )
       ::oWidget:setNumCopies( nNumCopies )
@@ -530,27 +532,42 @@ METHOD XbpPrinter:getEngineProperty( nProperty )
 
    DO CASE
    CASE nProperty == QPrintEngine_PPK_CollateCopies
+      RETURN oVariant:toBool()
    CASE nProperty == QPrintEngine_PPK_ColorMode
+      RETURN oVariant:toInt()
    CASE nProperty == QPrintEngine_PPK_Creator
    CASE nProperty == QPrintEngine_PPK_Duplex
+      RETURN oVariant:toInt()
    CASE nProperty == QPrintEngine_PPK_DocumentName
+      RETURN oVariant:toString()
    CASE nProperty == QPrintEngine_PPK_FontEmbedding
    CASE nProperty == QPrintEngine_PPK_FullPage
+      RETURN oVariant:toBool()
    CASE nProperty == QPrintEngine_PPK_NumberOfCopies
+      RETURN oVariant:toInt()
    CASE nProperty == QPrintEngine_PPK_Orientation
+      RETURN oVariant:toInt()
    CASE nProperty == QPrintEngine_PPK_OutputFileName
+      RETURN oVariant:toString()
    CASE nProperty == QPrintEngine_PPK_PageOrder
+      RETURN oVariant:toInt()
    CASE nProperty == QPrintEngine_PPK_PageRect
    CASE nProperty == QPrintEngine_PPK_PageSize
+      RETURN oVariant:toInt()
    CASE nProperty == QPrintEngine_PPK_PaperRect
    CASE nProperty == QPrintEngine_PPK_PaperSource
+      RETURN oVariant:toInt()
    CASE nProperty == QPrintEngine_PPK_PaperSources
    CASE nProperty == QPrintEngine_PPK_PaperSize
+      RETURN oVariant:toInt()
    CASE nProperty == QPrintEngine_PPK_PrinterName
+      RETURN oVariant:toString()
    CASE nProperty == QPrintEngine_PPK_PrinterProgram
+      RETURN oVariant:toString()
    CASE nProperty == QPrintEngine_PPK_Resolution
       RETURN oVariant:toInt()
    CASE nProperty == QPrintEngine_PPK_SelectionOption
+      RETURN oVariant:toInt()
    CASE nProperty == QPrintEngine_PPK_SupportedResolutions
    CASE nProperty == QPrintEngine_PPK_SuppressSystemPrintStatus
    CASE nProperty == QPrintEngine_PPK_WindowsPageSize

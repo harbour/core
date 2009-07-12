@@ -68,6 +68,8 @@
 #include "common.ch"
 
 #include "xbp.ch"
+#include "gra.ch"
+
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -234,6 +236,10 @@ FUNCTION MsgBox( cMsg, cTitle )
 
    DEFAULT cTitle TO "  "
 
+   cMsg := strtran( cMsg, chr( 13 )+chr( 10 ), "<BR>" )
+   cMsg := strtran( cMsg, chr( 13 ), "<BR>" )
+   cMsg := strtran( cMsg, chr( 10 ), "<BR>" )
+
    oMB := QMessageBox():new()
    oMB:setText( "<b>"+ cMsg +"</b>" )
    oMB:setIcon( QMessageBox_Information )
@@ -310,10 +316,10 @@ FUNCTION RemoveEventLoop( oEventLoop )
 #define CRLF   chr( 13 )+chr( 10 )
 
 FUNCTION Xbp_Debug( ... )
-   LOCAL s  := CRLF
+   LOCAL s  := ""
    LOCAL aP := hb_aParams()
 
-   aeval( aP, {|e| s += Xbp_XtoS( e ) + CRLF } )
+   aeval( aP, {|e| s += Xbp_XtoS( e ) + ' ' } )
    hb_outDebug( s )
 
    RETURN nil
@@ -344,5 +350,51 @@ STATIC FUNCTION Xbp_XtoS( xVar )
    ENDCASE
 
    RETURN xVar
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION ConvertAFact( cMode, nFrom, xValue )
+   LOCAL n, a_:= {}
+
+   cMode := upper( cMode )
+
+   DO CASE
+   CASE cMode == "COLOR"
+      aadd( a_, { GRA_CLR_WHITE     , Qt_white         } )
+      aadd( a_, { GRA_CLR_BLACK     , Qt_black         } )
+      aadd( a_, { GRA_CLR_BLUE      , Qt_blue          } )
+      aadd( a_, { GRA_CLR_RED       , Qt_red           } )
+      aadd( a_, { GRA_CLR_PINK      , Qt_magenta       } )
+      aadd( a_, { GRA_CLR_GREEN     , Qt_darkGreen     } )
+      aadd( a_, { GRA_CLR_CYAN      , Qt_cyan          } )
+      aadd( a_, { GRA_CLR_YELLOW    , Qt_yellow        } )
+      aadd( a_, { GRA_CLR_DARKGRAY  , Qt_darkGray      } )
+      aadd( a_, { GRA_CLR_DARKBLUE  , Qt_darkBlue      } )
+      aadd( a_, { GRA_CLR_DARKRED   , Qt_darkRed       } )
+      aadd( a_, { GRA_CLR_DARKPINK  , Qt_darkMagenta   } )
+      aadd( a_, { GRA_CLR_DARKGREEN , Qt_darkGreen     } )
+      aadd( a_, { GRA_CLR_DARKCYAN  , Qt_darkCyan      } )
+      aadd( a_, { GRA_CLR_BROWN     , Qt_darkYellow    } )
+      aadd( a_, { GRA_CLR_PALEGRAY  , Qt_lightGray     } )
+
+   CASE cMode == "RTFVERTICALALIGN"
+      aadd( a_, {  0, QTextCharFormat_AlignNormal      } )
+      aadd( a_, {  1, QTextCharFormat_AlignSuperScript } )
+      aadd( a_, { -1, QTextCharFormat_AlignSubScript   } )
+
+   CASE cMode == "RTFSELALIGNMENT"
+      aadd( a_, { XBPRTF_ALIGN_LEFT  , Qt_AlignLeft    } )
+      aadd( a_, { XBPRTF_ALIGN_RIGHT , Qt_AlignRight   } )
+      aadd( a_, { XBPRTF_ALIGN_CENTER, Qt_AlignCenter  } )
+
+   CASE cMode == "SOMEOTHER"
+
+   ENDCASE
+
+   IF ( n := ascan( a_, {|e_| e_[ nFrom ] == xValue } ) ) > 0
+      RETURN a_[ n, IF( nFrom == 2, 1, 2 ) ]
+   ENDIF
+
+   RETURN xValue
 
 /*----------------------------------------------------------------------*/
