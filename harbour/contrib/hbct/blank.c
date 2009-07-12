@@ -6,9 +6,8 @@
  * Harbour Project source code:
  *   CT3 BLANK function
  *
- * Copyright 2003 Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
- *
- * www - http://www.harbour-project.org
+ * Copyright 2009 Pavel Tsarenko <tpe2@mail.ru>
+ * http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,43 +50,80 @@
  *
  */
 
+#include "hbapi.h"
+#include "hbapiitm.h"
 
-#include "common.ch"
+#include "ct.h"
 
-FUNCTION BLANK( xItem, xMode )
-   LOCAL cType := ValType( xItem )
-   LOCAL xRet
+HB_FUNC( BLANK )
+{
+   PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
+   BOOL bRef = HB_ISBYREF( 1 );
+   BOOL bRet = ! ct_getref();
 
-   SWITCH cType
-      CASE "D"
-         xRet := CTOD( "" )
-         EXIT
+   if( ! pItem )
+   {
+      if( bRet )
+         hb_retl( FALSE );
+   }
+   else if( HB_IS_DATE( pItem ) )
+   {
+      if( bRef )
+         hb_stordl( 0, 1 );
+      if( bRet )
+         hb_retdl( 0 );
+   }
+   else if( HB_IS_NUMBER( pItem ) )
+   {
+      if( bRef )
+         hb_stornl( 0, 1 );
+      if( bRet )
+         hb_retnl( 0 );
+   }
+   else if( HB_IS_STRING( pItem ) )
+   {
+      PHB_ITEM pMode = hb_param( 2, HB_IT_LOGICAL );
 
-      CASE "L"
-         xRet :=.F.
-         EXIT
+      if( pMode && hb_itemGetL( pMode ) )
+      {
+         ULONG lLen = hb_itemGetCLen( pItem );
+         char * szResult = ( char * ) hb_xgrab( lLen + 1 );
 
-      CASE "N"
-         xRet := 0
-         EXIT
-
-      CASE "C"
-      CASE "M"
-         xRet := xItem := IIF( ISLOGICAL( xMode ) .and. xMode, ;
-                               Space( Len( xItem ) ), "" )
-         EXIT
-
-      CASE "A"
-         xRet := {}
-         EXIT
-
-      CASE "H"
-         xRet := {=>}
-         EXIT
-
-      OTHERWISE
-         xRet:=.F.
-
-   ENDSWITCH
-
-RETURN xRet
+         hb_xmemset( szResult, ' ', lLen );
+         if( bRef )
+            hb_storclen( szResult, lLen, 1 );
+         if( bRet )
+            hb_retclen_buffer( szResult, lLen );
+         else
+            hb_xfree( szResult );
+      }
+      else
+      {
+         if( bRef )
+            hb_storc( NULL, 1 );
+         if( bRet )
+            hb_retc_null();
+      }
+   }
+   else if( HB_IS_ARRAY( pItem ) )
+   {
+      if( bRef )
+         hb_arraySize( pItem, 0 );
+      if( bRet )
+         hb_reta( 0 );
+   }
+   else if( HB_IS_LOGICAL( pItem ) )
+   {
+      if( bRef )
+         hb_storl( FALSE, 1 );
+      if( bRet )
+         hb_retl( FALSE );
+   }
+   else
+   {
+      if( bRet )
+         hb_retl( FALSE );
+   }
+   if( ! bRet )
+      hb_ret();
+}

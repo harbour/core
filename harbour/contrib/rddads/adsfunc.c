@@ -1205,16 +1205,11 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
 
    if( /* hb_ads_hConnect && */ pArea && pArea->hStatement && HB_ISCHAR( 1 ) )
    {
-      char * pucStmt = hb_adsOemToAnsi( hb_parc( 1 ), hb_parclen( 1 ) );
       ADSHANDLE hCursor = 0;
 
-      UNSIGNED32 ulRetVal = AdsExecuteSQLDirect( pArea->hStatement,
-                                                 ( UNSIGNED8 * ) pucStmt,
-                                                 &hCursor );
-
-      hb_adsOemAnsiFree( pucStmt );
-
-      if( ulRetVal == AE_SUCCESS )
+      if( AdsExecuteSQLDirect( pArea->hStatement,
+                               ( UNSIGNED8 * ) hb_parc( 1 ) /* pucStmt */,
+                               &hCursor ) == AE_SUCCESS )
       {
          if( hCursor )
          {
@@ -1254,14 +1249,8 @@ HB_FUNC( ADSPREPARESQL )
 
    if( /* hb_ads_hConnect && */ pArea && pArea->hStatement && HB_ISCHAR( 1 ) )
    {
-      char * pucStmt = hb_adsOemToAnsi( hb_parc( 1 ), hb_parclen( 1 ) );
-
-      UNSIGNED32 ulRetVal = AdsPrepareSQL( pArea->hStatement,
-                                           ( UNSIGNED8 * ) pucStmt );
-
-      hb_adsOemAnsiFree( pucStmt );
-
-      if( ulRetVal == AE_SUCCESS )
+      if( AdsPrepareSQL( pArea->hStatement,
+                         ( UNSIGNED8 * ) hb_parc( 1 ) /* pucStmt */ ) == AE_SUCCESS )
          hb_retl( TRUE );
       else
       {
@@ -1321,13 +1310,7 @@ HB_FUNC( ADSVERIFYSQL )
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea && pArea->hStatement && HB_ISCHAR( 1 ) )
-   {
-      char * pucStmt = hb_adsOemToAnsi( hb_parc( 1 ), hb_parclen( 1 ) );
-
-      hb_retl( AdsVerifySQL( pArea->hStatement, ( UNSIGNED8 * ) pucStmt ) == AE_SUCCESS );
-
-      hb_adsOemAnsiFree( pucStmt );
-   }
+      hb_retl( AdsVerifySQL( pArea->hStatement, ( UNSIGNED8 * ) hb_parc( 1 ) /* pucStmt */ ) == AE_SUCCESS );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
 #else

@@ -66,6 +66,10 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
                in the name. You can leave it empty, in this case the
                results will be created under the current directory tree.
              - With mingw, sh.exe (part of MSYS) mustn't be in the PATH.
+             - You can also use Linux hosts to create Windows builds.
+               See script: make_gnu_xmingw.sh
+             - You can also use Linux hosts to create Windows CE builds.
+               See script: make_gnu_xmingwce.sh
 
    Windows with MinGW + MSYS or Cygwin
    ----------------------------------------------
@@ -588,7 +592,7 @@ EXAMPLES
       call make_gnu_os2.cmd %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
 
-      --- Open Watcom C++ on Windows NT (requires native Windows Harbour binaries)
+      --- Open Watcom C++ on Windows NT host (requires native Windows Harbour binaries)
       SET WATCOM=C:\watcom
       SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
       SET BEGINLIBPATH=%WATCOM%\BINP\DLL
@@ -601,12 +605,12 @@ EXAMPLES
       rem
       set HB_ARCHITECTURE=os2
       set HB_COMPILER=watcom
-      set HB_USER_PRGFLAGS=-D__PLATFORM__OS2 -undef:__PLATFORM__WINDOWS
+      set HB_USER_PRGFLAGS=%HB_USER_PRGFLAGS% -D__PLATFORM__OS2 -undef:__PLATFORM__WINDOWS
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
 
-      --- Open Watcom C++ on Linux (requires native Linux Harbour binaries)
+      --- Open Watcom C++ on Linux host (requires native Linux Harbour binaries)
       #!/bin/sh
       if [ -z "${WATCOM}" ]; then
          export WATCOM="/opt/lng/watcom"

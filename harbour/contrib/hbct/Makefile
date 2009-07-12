@@ -14,6 +14,7 @@ C_SOURCES =\
 	atnum.c \
 	atrepl.c \
 	bitnum.c \
+	blank.c \
 	charevod.c \
 	charlist.c \
 	charmirr.c \
@@ -94,7 +95,6 @@ C_HEADERS = \
 	ctwin.h \
 
 PRG_SOURCES=\
-	blank.prg \
 	ct.prg \
 	ctdummy.prg \
 	ctmisc.prg \
