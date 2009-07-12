@@ -1220,11 +1220,44 @@ FUNCTION Build_PrintDialog( oWnd )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_Rtf( oWnd )
-   LOCAL oRTF
+   LOCAL oRTF, oBtn
    LOCAL sz_:= oWnd:currentSize()
 
+   oBtn := XbpPushButton():new( oWnd, , {10,sz_[2]-70}, {50,35} )
+   oBtn:caption := 'Image'
+   oBtn:create()
+   oBtn:activate := {|| RtfInsertImage( oRtf ) }
+
+   oBtn := XbpPushButton():new( oWnd, , {10+60,sz_[2]-70}, {50,35} )
+   oBtn:caption := 'Undo'
+   oBtn:create()
+   oBtn:activate := {|| oRtf:undo() }
+
+   oBtn := XbpPushButton():new( oWnd, , {10+120,sz_[2]-70}, {50,35} )
+   oBtn:caption := 'Redo'
+   oBtn:create()
+   #ifdef __HARBOUR__
+   oBtn:activate := {|| oRtf:redo() }
+   #endif
+
+   oBtn := XbpPushButton():new( oWnd, , {10+180,sz_[2]-70}, {50,35} )
+   oBtn:caption := 'ULine'
+   oBtn:create()
+   oBtn:activate := {|| oRtf:selUnderline := .t. }
+
+   oBtn := XbpPushButton():new( oWnd, , {10+240,sz_[2]-70}, {50,35} )
+   oBtn:caption := 'Bold'
+   oBtn:create()
+   oBtn:activate := {|| oRtf:selBold := .t. }
+
+   oBtn := XbpPushButton():new( oWnd, , {10+295,sz_[2]-70}, {45,35} )
+   oBtn:caption := 'Italic'
+   oBtn:create()
+   oBtn:activate := {|| oRtf:selItalic := .t. }
+
+
    oRTF := XbpRtf():new( oWnd )
-   oRTF:create( , , { 10,10 }, { sz_[ 1 ]-23, sz_[ 2 ]-50 } )
+   oRTF:create( , , { 10,10 }, { sz_[ 1 ]-23, sz_[ 2 ]-90 } )
 
    oRTF:setColorBG( GraMakeRGBColor( {255,255,200} ) )
    oRTF:setFontCompoundName( "12.Times" )
@@ -1268,8 +1301,19 @@ FUNCTION Build_Rtf( oWnd )
    // Reset the text cursor
    //
    oRTF:SelStart    := Len( oRTF:Text )
-
+   oRTF:insertImage( 'copy.png' )
 
    RETURN nil
 
 /*----------------------------------------------------------------------*/
+
+STATIC FUNCTION RtfInsertImage( oRtf )
+
+   // Proivide a selection dialog
+   oRtf:insertImage( "abs3.png" )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+

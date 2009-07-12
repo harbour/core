@@ -130,6 +130,13 @@ CLASS XbpRtf INHERIT XbpWindow
    METHOD   selTabs( nTab, nPos )
    METHOD   span( cCharacters, bForward, bExclude )
 
+   /*< Harbour Extensions >*/
+   METHOD   redo()
+   METHOD   insertText( cText )
+   METHOD   insertImage( cImageFile )
+
+   /*</Harbour Extensions >*/
+
    DATA     sl_xbeRTF_Change
    METHOD   change()                              SETGET
 
@@ -193,6 +200,8 @@ METHOD XbpRtf:exeBlock( nEvent, p1 )
    CASE nEvent == 1
    CASE nEvent == 2
    CASE nEvent == 3
+      ::oTextCursor:configure( ::oWidget:textCursor() )
+      ::oCurCursor := ::oTextCursor
    CASE nEvent == 4
    CASE nEvent == 5
    CASE nEvent == 6    /* Xbase++ Implements */
@@ -236,16 +245,25 @@ METHOD XbpRtf:saveFile( cFile )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpRtf:clear()
+
+   ::oWidget:clear()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpRtf:copy()
+
+   ::oWidget:copy()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpRtf:cut()
+
+   ::oWidget:cut()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -285,11 +303,17 @@ METHOD XbpRtf:getLineStart( nLine )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpRtf:undo()
+
+   ::oWidget:undo()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpRtf:paste()
+
+   ::oWidget:paste()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -298,6 +322,14 @@ METHOD XbpRtf:print( oXbpPrinter, lOnlySelection )
 
    HB_SYMBOL_UNUSED( oXbpPrinter )
    HB_SYMBOL_UNUSED( lOnlySelection )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpRtf:redo()
+
+   ::oWidget:redo()
 
    RETURN Self
 
@@ -626,5 +658,24 @@ METHOD XbpRtf:textRTF( ... )                                // ""
 
    ENDIF
    RETURN xRet
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpRtf:insertText( cText )
+
+   ::oWidget:insertPlainText( cText )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpRtf:insertImage( cImageFilename )
+
+   //::oTextCursor:configure( ::oWidget:textCursor() )
+   //::oCurCursor       := ::oTextCursor
+
+   ::oCurCursor:insertImage( cImageFilename )
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
