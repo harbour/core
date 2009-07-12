@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,11 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum ActivationReason { Unknown, Context, DoubleClick, Trigger, MiddleClick }
+ *  enum MessageIcon { NoIcon, Information, Warning, Critical }
+ */
+
 
 #include <QtGui/QSystemTrayIcon>
 
@@ -71,6 +77,14 @@
 HB_FUNC( QT_QSYSTEMTRAYICON )
 {
    hb_retptr( ( QSystemTrayIcon* ) new QSystemTrayIcon( hbqt_par_QObject( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QSYSTEMTRAYICON_DESTROY )
+{
+   hbqt_par_QSystemTrayIcon( 1 )->~QSystemTrayIcon();
 }
 
 /*

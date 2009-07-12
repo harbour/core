@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QTextCodec
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QTextCodec_destroy( ::pPtr )
 
    METHOD  canEncode( nCh )                    INLINE  Qt_QTextCodec_canEncode( ::pPtr, nCh )
    METHOD  canEncode_1( cS )                   INLINE  Qt_QTextCodec_canEncode_1( ::pPtr, cS )
@@ -93,6 +96,18 @@ METHOD New( pParent ) CLASS QTextCodec
    ::pParent := pParent
 
    ::pPtr := Qt_QTextCodec( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QTextCodec
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

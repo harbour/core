@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,14 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum Command { None, SetTransferMode, SetProxy, ConnectToHost, ..., RawCommand }
+ *  enum Error { NoError, HostNotFound, ConnectionRefused, NotConnected, UnknownError }
+ *  enum State { Unconnected, HostLookup, Connecting, Connected, LoggedIn, Closing }
+ *  enum TransferMode { Passive, Active }
+ *  enum TransferType { Binary, Ascii }
+ */
+
 
 #include <QtNetwork/QFtp>
 
@@ -85,6 +94,14 @@ HB_FUNC( QT_QFTP_READ )
    hb_retnint( iRead );
    if( ! hb_storclen_buffer( iData, iRead, 2 ) )
       hb_xfree( iData );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QFTP_DESTROY )
+{
+   hbqt_par_QFtp( 1 )->~QFtp();
 }
 
 /*

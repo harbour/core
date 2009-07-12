@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QLCDNumber INHERIT QFrame
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QLCDNumber_destroy( ::pPtr )
 
    METHOD  checkOverflow( nNum )               INLINE  Qt_QLCDNumber_checkOverflow( ::pPtr, nNum )
    METHOD  checkOverflow_1( nNum )             INLINE  Qt_QLCDNumber_checkOverflow_1( ::pPtr, nNum )
@@ -92,6 +95,18 @@ METHOD New( pParent ) CLASS QLCDNumber
    ::pParent := pParent
 
    ::pPtr := Qt_QLCDNumber( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QLCDNumber
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

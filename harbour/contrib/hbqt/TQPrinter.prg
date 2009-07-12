@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QPrinter INHERIT QPaintDevice
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QPrinter_destroy( ::pPtr )
 
    METHOD  abort()                             INLINE  Qt_QPrinter_abort( ::pPtr )
    METHOD  collateCopies()                     INLINE  Qt_QPrinter_collateCopies( ::pPtr )
@@ -130,6 +133,18 @@ METHOD New( pParent ) CLASS QPrinter
    ::pParent := pParent
 
    ::pPtr := Qt_QPrinter( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QPrinter
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

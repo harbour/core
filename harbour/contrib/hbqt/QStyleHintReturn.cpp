@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,12 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum HintReturnType { SH_Default, SH_Mask, SH_Variant }
+ *  enum StyleOptionType { Type }
+ *  enum StyleOptionVersion { Version }
+ */
+
 
 #include <QtGui/QStyleHintReturn>
 
@@ -67,6 +74,14 @@
  * QStyleHintReturn ( int version = QStyleOption::Version, int type = SH_Default )
  */
 HB_FUNC( QT_QSTYLEHINTRETURN )
+{
+
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QSTYLEHINTRETURN_DESTROY )
 {
 
 }

@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QListWidget INHERIT QListView
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QListWidget_destroy( ::pPtr )
 
    METHOD  addItem( cLabel )                   INLINE  Qt_QListWidget_addItem( ::pPtr, cLabel )
    METHOD  addItem_1( pItem )                  INLINE  Qt_QListWidget_addItem_1( ::pPtr, pItem )
@@ -103,6 +106,18 @@ METHOD New( pParent ) CLASS QListWidget
    ::pParent := pParent
 
    ::pPtr := Qt_QListWidget( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QListWidget
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,12 +61,22 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 20/21 [ 95.24% ] ]
+ *  enum ConversionFlag { DefaultConversion, ConvertInvalidToNull, IgnoreHeader }
+ *  flags ConversionFlags
+ */
+
+/*
+ *  Constructed[ 20/23 [ 86.96% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  virtual QList<QByteArray> aliases () const
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // QByteArray fromUnicode ( const QChar * input, int number, ConverterState * state = 0 ) const
+ *  // QString toUnicode ( const char * input, int size, ConverterState * state = 0 ) const
  */
 
 
@@ -79,6 +90,14 @@
 HB_FUNC( QT_QTEXTCODEC )
 {
    //hb_retptr( ( QTextCodec* ) new QTextCodec() );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QTEXTCODEC_DESTROY )
+{
+
 }
 
 /*

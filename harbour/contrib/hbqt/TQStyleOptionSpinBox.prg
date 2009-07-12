@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QStyleOptionSpinBox INHERIT QStyleOptionComplex
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QStyleOptionSpinBox_destroy( ::pPtr )
 
    METHOD  buttonSymbols()                     INLINE  Qt_QStyleOptionSpinBox_buttonSymbols( ::pPtr )
    METHOD  frame()                             INLINE  Qt_QStyleOptionSpinBox_frame( ::pPtr )
@@ -76,6 +79,18 @@ METHOD New( pParent ) CLASS QStyleOptionSpinBox
    ::pParent := pParent
 
    ::pPtr := Qt_QStyleOptionSpinBox( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QStyleOptionSpinBox
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

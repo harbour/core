@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QScrollArea INHERIT QAbstractScrollArea
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QScrollArea_destroy( ::pPtr )
 
    METHOD  alignment()                         INLINE  Qt_QScrollArea_alignment( ::pPtr )
    METHOD  ensureVisible( nX, nY, nXmargin, nYmargin )  INLINE  Qt_QScrollArea_ensureVisible( ::pPtr, nX, nY, nXmargin, nYmargin )
@@ -82,6 +85,18 @@ METHOD New( pParent ) CLASS QScrollArea
    ::pParent := pParent
 
    ::pPtr := Qt_QScrollArea( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QScrollArea
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

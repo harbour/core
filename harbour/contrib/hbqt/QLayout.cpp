@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,10 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum SizeConstraint { SetDefaultConstraint, SetFixedSize, SetMinimumSize, SetMaximumSize, SetMinAndMaxSize, SetNoConstraint }
+ */
+
 
 #include <QtGui/QLayout>
 
@@ -68,6 +73,14 @@
  * QLayout ()
  */
 HB_FUNC( QT_QLAYOUT )
+{
+
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QLAYOUT_DESTROY )
 {
 
 }

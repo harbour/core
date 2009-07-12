@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QToolBox INHERIT QFrame
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QToolBox_destroy( ::pPtr )
 
    METHOD  addItem( pWidget, cIconSet, cText )  INLINE  Qt_QToolBox_addItem( ::pPtr, pWidget, cIconSet, cText )
    METHOD  addItem_1( pW, cText )              INLINE  Qt_QToolBox_addItem_1( ::pPtr, pW, cText )
@@ -93,6 +96,18 @@ METHOD New( pParent ) CLASS QToolBox
    ::pParent := pParent
 
    ::pPtr := Qt_QToolBox( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QToolBox
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

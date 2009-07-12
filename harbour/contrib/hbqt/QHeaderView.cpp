@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,10 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum ResizeMode { Interactive, Fixed, Stretch, ResizeToContents, Custom }
+ */
+
 
 #include <QtGui/QHeaderView>
 
@@ -70,6 +75,14 @@
 HB_FUNC( QT_QHEADERVIEW )
 {
    hb_retptr( new QHeaderView( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QHEADERVIEW_DESTROY )
+{
+   hbqt_par_QHeaderView( 1 )->~QHeaderView();
 }
 
 /*

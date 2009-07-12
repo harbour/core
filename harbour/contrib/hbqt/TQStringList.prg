@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QStringList INHERIT QList
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QStringList_destroy( ::pPtr )
 
    METHOD  append( cValue )                    INLINE  Qt_QStringList_append( ::pPtr, cValue )
    METHOD  filter( cStr, nCs )                 INLINE  Qt_QStringList_filter( ::pPtr, cStr, nCs )
@@ -108,6 +111,18 @@ METHOD New( pParent ) CLASS QStringList
    ::pParent := pParent
 
    ::pPtr := Qt_QStringList( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QStringList
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

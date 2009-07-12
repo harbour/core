@@ -1912,6 +1912,72 @@
 #define QPrintEngine_PPK_CustomPaperSize          23     // A QSizeF specifying a custom paper size in the QPrinter::Point unit.
 #define QPrintEngine_PPK_PageMargins              24     // A QList<QVariant> containing the left, top, right and bottom margin values.
 
+
+// enum QTextCursor::MoveMode
+//
+#define QTextCursor_MoveAnchor                    0      // Moves the anchor to the same position as the cursor itself.
+#define QTextCursor_KeepAnchor                    1      // Keeps the anchor where it is.
+// If the anchor() is kept where it is and the position() is moved, the text in between will be selected.
+
+// enum QTextCursor::MoveOperation
+//
+#define QTextCursor_NoMove                        0      // Keep the cursor where it is
+#define QTextCursor_Start                         1      // Move to the start of the document.
+#define QTextCursor_StartOfLine                   3      // Move to the start of the current line.
+#define QTextCursor_StartOfBlock                  4      // Move to the start of the current block.
+#define QTextCursor_StartOfWord                   5      // Move to the start of the current word.
+#define QTextCursor_PreviousBlock                 6      // Move to the start of the previous block.
+#define QTextCursor_PreviousCharacter             7      // Move to the previous character.
+#define QTextCursor_PreviousWord                  8      // Move to the beginning of the previous word.
+#define QTextCursor_Up                            2      // Move up one line.
+#define QTextCursor_Left                          9      // Move left one character.
+#define QTextCursor_WordLeft                      10     // Move left one word.
+#define QTextCursor_End                           11     // Move to the end of the document.
+#define QTextCursor_EndOfLine                     13     // Move to the end of the current line.
+#define QTextCursor_EndOfWord                     14     // Move to the end of the current word.
+#define QTextCursor_EndOfBlock                    15     // Move to the end of the current block.
+#define QTextCursor_NextBlock                     16     // Move to the beginning of the next block.
+#define QTextCursor_NextCharacter                 17     // Move to the next character.
+#define QTextCursor_NextWord                      18     // Move to the next word.
+#define QTextCursor_Down                          12     // Move down one line.
+#define QTextCursor_Right                         19     // Move right one character.
+#define QTextCursor_WordRight                     20     // Move right one word.
+#define QTextCursor_NextCell                      21     // Move to the beginning of the next table cell inside the current table. If the current cell is the last cell in the row, the cursor will move to the first cell in the next row.
+#define QTextCursor_PreviousCell                  22     // Move to the beginning of the previous table cell inside the current table. If the current cell is the first cell in the row, the cursor will move to the last cell in the previous row.
+#define QTextCursor_NextRow                       23     // Move to the first new cell of the next row in the current table.
+#define QTextCursor_PreviousRow                   24     // Move to the last cell of the previous row in the current table.
+
+// enum QTextCursor::SelectionType
+// This enum describes the types of selection that can be applied with the select() function.
+//
+#define QTextCursor_Document                      3      // Selects the entire document.
+#define QTextCursor_BlockUnderCursor              2      // Selects the block of text under the cursor.
+#define QTextCursor_LineUnderCursor               1      // Selects the line of text under the cursor.
+#define QTextCursor_WordUnderCursor               0      // Selects the word under the cursor. If the cursor is not positioned within a string of selectable characters, no text is selected.
+
+
+// enum QTextCharFormat::UnderlineStyle
+// This enum describes the different ways drawing underlined text.
+//
+#define QTextCharFormat_NoUnderline               0      // Text is draw without any underlining decoration.
+#define QTextCharFormat_SingleUnderline           1      // A line is drawn using Qt::SolidLine.
+#define QTextCharFormat_DashUnderline             2      // Dashes are drawn using Qt::DashLine.
+#define QTextCharFormat_DotLine                   3      // Dots are drawn using Qt::DotLine;
+#define QTextCharFormat_DashDotLine               4      // Dashs and dots are drawn using Qt::DashDotLine.
+#define QTextCharFormat_DashDotDotLine            5      // Underlines draw drawn using Qt::DashDotDotLine.
+#define QTextCharFormat_WaveUnderline             6      // The text is underlined using a wave shaped line.
+#define QTextCharFormat_SpellCheckUnderline       7      // The underline is drawn depending on the QStyle::SH_SpellCeckUnderlineStyle style hint of the QApplication style. By default this is mapped to WaveUnderline, on Mac OS X it is mapped to DashDotLine.
+
+// enum QTextCharFormat::VerticalAlignment
+// This enum describes the ways that adjacent characters can be vertically aligned.
+//
+#define QTextCharFormat_AlignNormal               0      // Adjacent characters are positioned in the standard way for text in the writing system in use.
+#define QTextCharFormat_AlignSuperScript          1      // Characters are placed above the baseline for normal text.
+#define QTextCharFormat_AlignSubScript            2      // Characters are placed below the baseline for normal text.
+#define QTextCharFormat_AlignMiddle               3      // The center of the object is vertically aligned with the base line. Currently, this is only implemented for inline objects.
+#define QTextCharFormat_AlignBottom               5      // The bottom edge of the object is vertically aligned with the base line.
+#define QTextCharFormat_AlignTop                  4      // The top edge of the object is vertically aligned with the base line.
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH

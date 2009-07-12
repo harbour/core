@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,16 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum Extension { ChooseMultipleFilesExtension }
+ *  enum FindFlag { FindBackward, FindCaseSensitively, FindWrapsAroundDocument }
+ *  enum LinkDelegationPolicy { DontDelegateLinks, DelegateExternalLinks, DelegateAllLinks }
+ *  enum NavigationType { NavigationTypeLinkClicked, NavigationTypeFormSubmitted, NavigationTypeBackOrForward, NavigationTypeReload, NavigationTypeFormResubmitted, NavigationTypeOther }
+ *  enum WebAction { NoWebAction, OpenLink, OpenLinkInNewWindow, OpenFrameInNewWindow, ..., SelectAll }
+ *  enum WebWindowType { WebBrowserWindow, WebModalDialog }
+ *  flags FindFlags
+ */
+
 
 #include <QtWebKit/QWebPage>
 #include <QtCore/QVariant>
@@ -71,6 +82,14 @@
 HB_FUNC( QT_QWEBPAGE )
 {
    hb_retptr( new QWebPage( hbqt_par_QWidget( 2 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QWEBPAGE_DESTROY )
+{
+   hbqt_par_QWebPage( 1 )->~QWebPage();
 }
 
 /*

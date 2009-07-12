@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,6 +61,16 @@
 /*----------------------------------------------------------------------*/
 
 /*
+ *  flags EditTriggers
+ *  enum DragDropMode { NoDragDrop, DragOnly, DropOnly, DragDrop, InternalMove }
+ *  enum EditTrigger { NoEditTriggers, CurrentChanged, DoubleClicked, SelectedClicked, ..., AllEditTriggers }
+ *  enum ScrollHint { EnsureVisible, PositionAtTop, PositionAtBottom, PositionAtCenter }
+ *  enum ScrollMode { ScrollPerItem, ScrollPerPixel }
+ *  enum SelectionBehavior { SelectItems, SelectRows, SelectColumns }
+ *  enum SelectionMode { SingleSelection, ContiguousSelection, ExtendedSelection, MultiSelection, NoSelection }
+ */
+
+/*
  *  Constructed[ 62/63 [ 98.41% ] ]
  *
  *  *** Unconvered Prototypes ***
@@ -79,6 +90,14 @@
 HB_FUNC( QT_QABSTRACTITEMVIEW )
 {
 
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QABSTRACTITEMVIEW_DESTROY )
+{
+   hbqt_par_QAbstractItemView( 1 )->~QAbstractItemView();
 }
 
 /*

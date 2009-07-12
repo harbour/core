@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,6 +61,12 @@
 /*----------------------------------------------------------------------*/
 
 /*
+ *  enum PrintDialogOption { None, PrintToFile, PrintSelection, PrintPageRange, ..., PrintShowPageSize }
+ *  enum PrintRange { AllPages, Selection, PageRange }
+ *  flags PrintDialogOptions
+ */
+
+/*
  *  Constructed[ 10/11 [ 90.91% ] ]
  *
  *  *** Unconvered Prototypes ***
@@ -76,6 +83,14 @@
  * QAbstractPrintDialog ( QPrinter * printer, QWidget * parent = 0 )
  */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG )
+{
+
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QABSTRACTPRINTDIALOG_DESTROY )
 {
 
 }

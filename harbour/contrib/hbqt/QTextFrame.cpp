@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,12 +61,17 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 7/8 [ 87.50% ] ]
+ *  Constructed[ 7/10 [ 70.00% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  QList<QTextFrame *> childFrames () const
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  //iterator begin () const
+ *  //iterator end () const
  */
 
 
@@ -80,6 +86,14 @@
 HB_FUNC( QT_QTEXTFRAME )
 {
    hb_retptr( ( QTextFrame* ) new QTextFrame( hbqt_par_QTextDocument( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QTEXTFRAME_DESTROY )
+{
+   hbqt_par_QTextFrame( 1 )->~QTextFrame();
 }
 
 /*

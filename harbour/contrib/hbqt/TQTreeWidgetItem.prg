@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QTreeWidgetItem
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QTreeWidgetItem_destroy( ::pPtr )
 
    METHOD  addChild( pChild )                  INLINE  Qt_QTreeWidgetItem_addChild( ::pPtr, pChild )
    METHOD  background( nColumn )               INLINE  Qt_QTreeWidgetItem_background( ::pPtr, nColumn )
@@ -125,6 +128,18 @@ METHOD New( pParent ) CLASS QTreeWidgetItem
    ::pParent := pParent
 
    ::pPtr := Qt_QTreeWidgetItem( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QTreeWidgetItem
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

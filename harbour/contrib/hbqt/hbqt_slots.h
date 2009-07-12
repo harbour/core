@@ -60,6 +60,7 @@
 #include <QObject>
 #include <QMainWindow>
 #include <QList>
+#include <QTextCharFormat>
 #include <QModelIndex>
 #include <QEvent>
 #include <QKeyEvent>
@@ -198,6 +199,12 @@ public slots:
    void filesSelected( const QStringList & selected );
    void filterSelected( const QString & filter );
    void accepted( QPrinter * printer );
+   void copyAvailable( bool yes );
+   void currentCharFormatChanged( const QTextCharFormat & f );
+   void cursorPositionChanged();
+   void redoAvailable( bool available );
+   void textChanged();
+   void undoAvailable( bool available );
 };
 
 class Events: public QObject

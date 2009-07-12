@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -108,19 +109,19 @@ HB_FUNC( QT_QBRUSH )
 
       if(      objName == ( QString ) "QPixmap" )
       {
-         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QPixmap( 1 ) ) );
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QPixmap( 2 ) ) );
       }
       else if( objName == ( QString ) "QImage" )
       {
-         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QImage( 1 ) ) );
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QImage( 2 ) ) );
       }
       else if( objName == ( QString ) "QGradient" )
       {
-         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QGradient( 1 ) ) );
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QGradient( 2 ) ) );
       }
       else if( objName == ( QString ) "QColor" )
       {
-         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QColor( 1 ),
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QColor( 2 ),
                                             HB_ISNUM( 3 ) ? ( Qt::BrushStyle ) hb_parni( 3 ) : Qt::SolidPattern ) );
       }
       else
@@ -132,6 +133,14 @@ HB_FUNC( QT_QBRUSH )
    {
       hb_retptr( ( QBrush* ) new QBrush() );
    }
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QBRUSH_DESTROY )
+{
+   hbqt_par_QBrush( 1 )->~QBrush();
 }
 
 /*

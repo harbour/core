@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,7 +61,13 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 69/74 [ 93.24% ] ]
+ *  enum FormattingOption { None, RemoveScheme, RemovePassword, RemoveUserInfo, ..., StripTrailingSlash }
+ *  flags FormattingOptions
+ *  enum ParsingMode { TolerantMode, StrictMode }
+ */
+
+/*
+ *  Constructed[ 69/75 [ 92.00% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -70,6 +77,10 @@
  *  QList<QPair<QString, QString> > queryItems () const
  *  void setEncodedQueryItems ( const QList<QPair<QByteArray, QByteArray> > & query )
  *  void setQueryItems ( const QList<QPair<QString, QString> > & query )
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  //void setQueryDelimiters ( char valueDelimiter, char pairDelimiter )
  */
 
 
@@ -94,6 +105,14 @@ HB_FUNC( QT_QURL )
 HB_FUNC( QT_QURL_SETQUERYDELIMITERS )
 {
    hbqt_par_QUrl( 1 )->setQueryDelimiters( ( char ) hb_parni( 2 ), ( char ) hb_parni( 3 ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QURL_DESTROY )
+{
+   hbqt_par_QUrl( 1 )->~QUrl();
 }
 
 /*

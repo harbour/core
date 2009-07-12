@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -89,24 +90,20 @@ HB_FUNC( QT_QPEN )
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QPen* ) new QPen( *hbqt_par_QColor( 1 ) ) );
-
-      #if 0       /* TODO */
-      QString objName = hbqt_par_QObject( 1 )->objectName();
+      hb_retptr( ( QPen* ) new QPen( *hbqt_par_QPen( 1 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      QString objName = ( QString ) hbqt_par_QString( 1 );
 
       if( objName == ( QString ) "QColor" )
       {
-         hb_retptr( ( QPen* ) new QPen( *hbqt_par_QColor( 1 ) ) );
-      }
-      else if( objName == ( QString ) "QPen" )
-      {
-         hb_retptr( ( QPen* ) new QPen( *hbqt_par_QPen( 1 ) ) );
+         hb_retptr( ( QPen* ) new QPen( *hbqt_par_QColor( 2 ) ) );
       }
       else
       {
          hb_retptr( ( QPen* ) new QPen() );
       }
-      #endif
    }
    else if( hb_pcount() >= 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
    {
@@ -120,6 +117,14 @@ HB_FUNC( QT_QPEN )
    {
       hb_retptr( ( QPen* ) new QPen() );
    }
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QPEN_DESTROY )
+{
+   hbqt_par_QPen( 1 )->~QPen();
 }
 
 /*

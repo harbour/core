@@ -103,11 +103,11 @@ HB_FUNC( QT_QBITMAP )
    {
       if(      ( QString ) "QPixmap" == hbqt_par_QString( 1 ) )
       {
-         hb_retptr( ( QBitmap* ) new QBitmap( *hbqt_par_QPixmap( 1 ) ) );
+         hb_retptr( ( QBitmap* ) new QBitmap( *hbqt_par_QPixmap( 2 ) ) );
       }
       else if( ( QString ) "QSize"   == hbqt_par_QString( 1 ) )
       {
-         hb_retptr( ( QBitmap* ) new QBitmap( *hbqt_par_QSize( 1 ) ) );
+         hb_retptr( ( QBitmap* ) new QBitmap( *hbqt_par_QSize( 2 ) ) );
       }
       else
       {

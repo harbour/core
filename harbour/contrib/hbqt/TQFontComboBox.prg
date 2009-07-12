@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QFontComboBox INHERIT QComboBox
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QFontComboBox_destroy( ::pPtr )
 
    METHOD  currentFont()                       INLINE  Qt_QFontComboBox_currentFont( ::pPtr )
    METHOD  fontFilters()                       INLINE  Qt_QFontComboBox_fontFilters( ::pPtr )
@@ -79,6 +82,18 @@ METHOD New( pParent ) CLASS QFontComboBox
    ::pParent := pParent
 
    ::pPtr := Qt_QFontComboBox( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QFontComboBox
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

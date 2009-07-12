@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QTextFormat
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QTextFormat_destroy( ::pPtr )
 
    METHOD  background()                        INLINE  Qt_QTextFormat_background( ::pPtr )
    METHOD  boolProperty( nPropertyId )         INLINE  Qt_QTextFormat_boolProperty( ::pPtr, nPropertyId )
@@ -115,6 +118,18 @@ METHOD New( pParent ) CLASS QTextFormat
    ::pParent := pParent
 
    ::pPtr := Qt_QTextFormat( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QTextFormat
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

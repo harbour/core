@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QDirModel INHERIT QAbstractItemModel
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QDirModel_destroy( ::pPtr )
 
    METHOD  columnCount( pParent )              INLINE  Qt_QDirModel_columnCount( ::pPtr, pParent )
    METHOD  data( pIndex, nRole )               INLINE  Qt_QDirModel_data( ::pPtr, pIndex, nRole )
@@ -111,6 +114,18 @@ METHOD New( pParent ) CLASS QDirModel
    ::pParent := pParent
 
    ::pPtr := Qt_QDirModel( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QDirModel
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

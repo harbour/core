@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,11 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum ProcessEventsFlag { AllEvents, ExcludeUserInputEvents, ExcludeSocketNotifiers, WaitForMoreEvents, DeferredDeletion }
+ *  flags ProcessEventsFlags
+ */
+
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QEvent>
@@ -70,6 +76,14 @@
 HB_FUNC( QT_QEVENTLOOP )
 {
    hb_retptr( ( QEvent* ) new QEventLoop( hbqt_par_QObject( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QEVENTLOOP_DESTROY )
+{
+   hbqt_par_QEventLoop( 1 )->~QEventLoop();
 }
 
 /*

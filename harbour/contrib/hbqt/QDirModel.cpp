@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,10 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum Roles { FileIconRole, FilePathRole, FileNameRole }
+ */
+
 
 #include <QtGui/QDirModel>
 
@@ -71,6 +76,14 @@
 HB_FUNC( QT_QDIRMODEL )
 {
    hb_retptr( ( QDirModel* ) new QDirModel( hbqt_par_QObject( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QDIRMODEL_DESTROY )
+{
+   hbqt_par_QDirModel( 1 )->~QDirModel();
 }
 
 /*

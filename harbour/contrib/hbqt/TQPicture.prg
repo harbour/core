@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QPicture INHERIT QPaintDevice
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QPicture_destroy( ::pPtr )
 
    METHOD  boundingRect()                      INLINE  Qt_QPicture_boundingRect( ::pPtr )
    METHOD  data()                              INLINE  Qt_QPicture_data( ::pPtr )
@@ -82,6 +85,18 @@ CREATE CLASS QPicture INHERIT QPaintDevice
 METHOD New( ... ) CLASS QPicture
 
    ::pPtr := Qt_QPicture( ... )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QPicture
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

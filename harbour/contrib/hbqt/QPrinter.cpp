@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,13 +61,32 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 57/59 [ 96.61% ] ]
+ *  enum ColorMode { Color, GrayScale }
+ *  enum DuplexMode { DuplexNone, DuplexAuto, DuplexLongSide, DuplexShortSide }
+ *  enum Orientation { Portrait, Landscape }
+ *  enum OutputFormat { NativeFormat, PdfFormat, PostScriptFormat }
+ *  enum PageOrder { FirstPageFirst, LastPageFirst }
+ *  enum PaperSize { A0, A1, A2, A3, ..., Custom }
+ *  enum PaperSource { Auto, Cassette, Envelope, EnvelopeManual, ..., SmallFormat }
+ *  enum PrintRange { AllPages, Selection, PageRange }
+ *  enum PrinterMode { ScreenResolution, PrinterResolution, HighResolution }
+ *  enum PrinterState { Idle, Active, Aborted, Error }
+ *  enum Unit { Millimeter, Point, Inch, Pica, ..., DevicePixel }
+ */
+
+/*
+ *  Constructed[ 57/61 [ 93.44% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  QList<PaperSource> supportedPaperSources () const
  *  QList<int> supportedResolutions () const
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // QString printerSelectionOption () const
+ *  // void setPrinterSelectionOption ( const QString & option )
  */
 
 
@@ -80,7 +100,15 @@
  */
 HB_FUNC( QT_QPRINTER )
 {
-   hb_retptr( ( QPrinter* ) new QPrinter( QPrinter::PrinterResolution ) );
+   hb_retptr( ( QPrinter* ) new QPrinter() );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QPRINTER_DESTROY )
+{
+   hbqt_par_QPrinter( 1 )->~QPrinter();
 }
 
 /*

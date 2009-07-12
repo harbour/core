@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,12 +61,23 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 66/67 [ 98.51% ] ]
+ *  enum FindFlag { FindBackward, FindCaseSensitively, FindWholeWords }
+ *  flags FindFlags
+ *  enum MetaInformation { DocumentTitle, DocumentUrl }
+ *  enum ResourceType { HtmlResource, ImageResource, StyleSheetResource, UserResource }
+ */
+
+/*
+ *  Constructed[ 66/68 [ 97.06% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  QVector<QTextFormat> allFormats () const
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // QChar characterAt ( int pos ) const
  */
 
 
@@ -82,6 +94,14 @@
 HB_FUNC( QT_QTEXTDOCUMENT )
 {
    hb_retptr( ( QTextDocument* ) new QTextDocument( hbqt_par_QObject( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QTEXTDOCUMENT_DESTROY )
+{
+   hbqt_par_QTextDocument( 1 )->~QTextDocument();
 }
 
 /*

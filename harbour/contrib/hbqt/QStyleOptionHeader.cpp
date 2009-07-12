@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,14 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum SectionPosition { Beginning, Middle, End, OnlyOneSection }
+ *  enum SelectedPosition { NotAdjacent, NextIsSelected, PreviousIsSelected, NextAndPreviousAreSelected }
+ *  enum SortIndicator { None, SortUp, SortDown }
+ *  enum StyleOptionType { Type }
+ *  enum StyleOptionVersion { Version }
+ */
+
 
 #include <QtGui/QStyleOptionHeader>
 
@@ -70,6 +79,14 @@
 HB_FUNC( QT_QSTYLEOPTIONHEADER )
 {
    hb_retptr( ( QStyleOptionHeader* ) new QStyleOptionHeader() );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QSTYLEOPTIONHEADER_DESTROY )
+{
+
 }
 
 /*

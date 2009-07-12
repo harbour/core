@@ -123,19 +123,19 @@ HB_FUNC( QT_QBRUSH )
 
       if(      objName == ( QString ) "QPixmap" )
       {
-         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QPixmap( 1 ) ) );
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QPixmap( 2 ) ) );
       }
       else if( objName == ( QString ) "QImage" )
       {
-         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QImage( 1 ) ) );
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QImage( 2 ) ) );
       }
       else if( objName == ( QString ) "QGradient" )
       {
-         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QGradient( 1 ) ) );
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QGradient( 2 ) ) );
       }
       else if( objName == ( QString ) "QColor" )
       {
-         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QColor( 1 ), 
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QColor( 2 ), 
                                             HB_ISNUM( 3 ) ? ( Qt::BrushStyle ) hb_parni( 3 ) : Qt::SolidPattern ) );
       }
       else

@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,12 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum MoveMode { MoveAnchor, KeepAnchor }
+ *  enum MoveOperation { NoMove, Start, StartOfLine, StartOfBlock, ..., PreviousRow }
+ *  enum SelectionType { Document, BlockUnderCursor, LineUnderCursor, WordUnderCursor }
+ */
+
 
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextDocumentFragment>
@@ -74,7 +81,43 @@
  */
 HB_FUNC( QT_QTEXTCURSOR )
 {
-   hb_retptr( ( QTextCursor* ) new QTextCursor() );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QTextCursor* ) new QTextCursor( *hbqt_par_QTextCursor( 1 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      QString object = hbqt_par_QString( 1 );
+
+      if( object == ( QString ) "QTextDocument" )
+      {
+         hb_retptr( ( QTextCursor* ) new QTextCursor( hbqt_par_QTextDocument( 2 ) ) );
+      }
+      if( object == ( QString ) "QTextBlock" )
+      {
+         hb_retptr( ( QTextCursor* ) new QTextCursor( *hbqt_par_QTextBlock( 2 ) ) );
+      }
+      if( object == ( QString ) "QTextFrame" )
+      {
+         hb_retptr( ( QTextCursor* ) new QTextCursor( hbqt_par_QTextFrame( 2 ) ) );
+      }
+      else
+      {
+         hb_retptr( ( QTextCursor* ) new QTextCursor() );
+      }
+   }
+   else
+   {
+      hb_retptr( ( QTextCursor* ) new QTextCursor() );
+   }
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QTEXTCURSOR_DESTROY )
+{
+   hbqt_par_QTextCursor( 1 )->~QTextCursor();
 }
 
 /*

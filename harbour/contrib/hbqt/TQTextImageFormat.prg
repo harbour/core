@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QTextImageFormat INHERIT QTextCharFormat
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QTextImageFormat_destroy( ::pPtr )
 
    METHOD  height()                            INLINE  Qt_QTextImageFormat_height( ::pPtr )
    METHOD  isValid()                           INLINE  Qt_QTextImageFormat_isValid( ::pPtr )
@@ -80,6 +83,18 @@ METHOD New( pParent ) CLASS QTextImageFormat
    ::pParent := pParent
 
    ::pPtr := Qt_QTextImageFormat( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QTextImageFormat
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

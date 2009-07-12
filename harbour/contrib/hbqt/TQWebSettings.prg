@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QWebSettings
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QWebSettings_destroy( ::pPtr )
 
    METHOD  fontFamily( nWhich )                INLINE  Qt_QWebSettings_fontFamily( ::pPtr, nWhich )
    METHOD  fontSize( nType )                   INLINE  Qt_QWebSettings_fontSize( ::pPtr, nType )
@@ -98,6 +101,18 @@ METHOD New( pParent ) CLASS QWebSettings
    ::pParent := pParent
 
    ::pPtr := Qt_QWebSettings( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QWebSettings
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

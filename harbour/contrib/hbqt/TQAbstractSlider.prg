@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QAbstractSlider INHERIT QWidget
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QAbstractSlider_destroy( ::pPtr )
 
    METHOD  hasTracking()                       INLINE  Qt_QAbstractSlider_hasTracking( ::pPtr )
    METHOD  invertedAppearance()                INLINE  Qt_QAbstractSlider_invertedAppearance( ::pPtr )
@@ -97,6 +100,18 @@ METHOD New( pParent ) CLASS QAbstractSlider
    ::pParent := pParent
 
    ::pPtr := Qt_QAbstractSlider( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QAbstractSlider
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

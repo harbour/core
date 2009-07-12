@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -93,11 +94,11 @@ HB_FUNC( QT_QBITMAP )
    {
       if(      ( QString ) "QPixmap" == hbqt_par_QString( 1 ) )
       {
-         hb_retptr( ( QBitmap* ) new QBitmap( *hbqt_par_QPixmap( 1 ) ) );
+         hb_retptr( ( QBitmap* ) new QBitmap( *hbqt_par_QPixmap( 2 ) ) );
       }
       else if( ( QString ) "QSize"   == hbqt_par_QString( 1 ) )
       {
-         hb_retptr( ( QBitmap* ) new QBitmap( *hbqt_par_QSize( 1 ) ) );
+         hb_retptr( ( QBitmap* ) new QBitmap( *hbqt_par_QSize( 2 ) ) );
       }
       else
       {
@@ -108,6 +109,14 @@ HB_FUNC( QT_QBITMAP )
    {
       hb_retptr( ( QBitmap* ) new QBitmap() );
    }
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QBITMAP_DESTROY )
+{
+   hbqt_par_QBitmap( 1 )->~QBitmap();
 }
 
 /*

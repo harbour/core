@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QTextDocument INHERIT QObject
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QTextDocument_destroy( ::pPtr )
 
    METHOD  addResource( nType, pName, pResource )  INLINE  Qt_QTextDocument_addResource( ::pPtr, nType, pName, pResource )
    METHOD  adjustSize()                        INLINE  Qt_QTextDocument_adjustSize( ::pPtr )
@@ -139,6 +142,18 @@ METHOD New( pParent ) CLASS QTextDocument
    ::pParent := pParent
 
    ::pPtr := Qt_QTextDocument( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QTextDocument
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -85,6 +86,14 @@ HB_FUNC( QT_QTABLEWIDGET )
       hb_retptr( ( QTableWidget* ) new QTableWidget( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) );
    else
       hb_retptr( ( QTableWidget* ) new QTableWidget( hbqt_par_QWidget( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QTABLEWIDGET_DESTROY )
+{
+   hbqt_par_QTableWidget( 1 )->~QTableWidget();
 }
 
 /*

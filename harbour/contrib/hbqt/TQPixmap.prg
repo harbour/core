@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QPixmap INHERIT QPaintDevice
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QPixmap_destroy( ::pPtr )
 
    METHOD  alphaChannel()                      INLINE  Qt_QPixmap_alphaChannel( ::pPtr )
    METHOD  cacheKey()                          INLINE  Qt_QPixmap_cacheKey( ::pPtr )
@@ -111,6 +114,18 @@ CREATE CLASS QPixmap INHERIT QPaintDevice
 METHOD New( ... ) CLASS QPixmap
 
    ::pPtr := Qt_QPixmap( ... )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QPixmap
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

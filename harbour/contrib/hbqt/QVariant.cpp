@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,7 +61,11 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 36/39 [ 92.31% ] ]
+ *  enum Type { Invalid, BitArray, Bitmap, Bool, ..., UserType }
+ */
+
+/*
+ *  Constructed[ 36/42 [ 85.71% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -68,6 +73,12 @@
  *  QHash<QString, QVariant> toHash () const
  *  QList<QVariant> toList () const
  *  QMap<QString, QVariant> toMap () const
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  //QChar toChar () const
+ *  //const char * typeName () const
+ *  //T value () const
  */
 
 
@@ -123,6 +134,14 @@ QVariant ( const QRegExp & regExp )
 HB_FUNC( QT_QVARIANT )
 {
    hb_retptr( ( QVariant* ) new QVariant() );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QVARIANT_DESTROY )
+{
+   hbqt_par_QVariant( 1 )->~QVariant();
 }
 
 /*

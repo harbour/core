@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QIcon
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QIcon_destroy( ::pPtr )
 
    METHOD  actualSize( pSize, nMode, nState )  INLINE  Qt_QIcon_actualSize( ::pPtr, pSize, nMode, nState )
    METHOD  addFile( cFileName, pSize, nMode, nState )  INLINE  Qt_QIcon_addFile( ::pPtr, cFileName, pSize, nMode, nState )
@@ -81,6 +84,18 @@ CREATE CLASS QIcon
 METHOD New( ... ) CLASS QIcon
 
    ::pPtr := Qt_QIcon( ... )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QIcon
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

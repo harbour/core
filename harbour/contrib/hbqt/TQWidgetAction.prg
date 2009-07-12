@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QWidgetAction INHERIT QAction
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QWidgetAction_destroy( ::pPtr )
 
    METHOD  defaultWidget()                     INLINE  Qt_QWidgetAction_defaultWidget( ::pPtr )
    METHOD  releaseWidget( pWidget )            INLINE  Qt_QWidgetAction_releaseWidget( ::pPtr, pWidget )
@@ -77,6 +80,18 @@ METHOD New( pParent ) CLASS QWidgetAction
    ::pParent := pParent
 
    ::pPtr := Qt_QWidgetAction( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QWidgetAction
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

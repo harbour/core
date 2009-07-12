@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QPrintPreviewDialog INHERIT QDialog
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QPrintPreviewDialog_destroy( ::pPtr )
 
    METHOD  open( pReceiver, pMember )          INLINE  Qt_QPrintPreviewDialog_open( ::pPtr, pReceiver, pMember )
    METHOD  printer()                           INLINE  Qt_QPrintPreviewDialog_printer( ::pPtr )
@@ -75,6 +78,18 @@ METHOD New( pParent ) CLASS QPrintPreviewDialog
    ::pParent := pParent
 
    ::pPtr := Qt_QPrintPreviewDialog( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QPrintPreviewDialog
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

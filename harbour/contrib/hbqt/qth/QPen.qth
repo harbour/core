@@ -61,8 +61,9 @@ Type = PlainObject
 
 <DOC>
 oPen := QPen():new()
+oPen := QPen():new( pQPen_other )
 oPen := QPen():new( nQt_PenStyle )
-oPen := QPen():new( pQColor )
+oPen := QPen():new( "QColor", pQColor )
 oPen := QPen():new( pQBrush, nWidth, [ nQt_PenStyle = Qt_SolidLine ], ;
                                      [ nQt_CapStyle = Qt_SquareCap ], ;
                                      [ nQt_PenJointStyle = Qt_BevelJoin ] )
@@ -92,24 +93,20 @@ HB_FUNC( QT_QPEN )
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QPen* ) new QPen( *hbqt_par_QColor( 1 ) ) );
-
-      #if 0       /* TODO */
-      QString objName = hbqt_par_QObject( 1 )->objectName();
+      hb_retptr( ( QPen* ) new QPen( *hbqt_par_QPen( 1 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      QString objName = ( QString ) hbqt_par_QString( 1 );
 
       if( objName == ( QString ) "QColor" )
       {
-         hb_retptr( ( QPen* ) new QPen( *hbqt_par_QColor( 1 ) ) );
-      }
-      else if( objName == ( QString ) "QPen" )
-      {
-         hb_retptr( ( QPen* ) new QPen( *hbqt_par_QPen( 1 ) ) );
+         hb_retptr( ( QPen* ) new QPen( *hbqt_par_QColor( 2 ) ) );
       }
       else
       {
          hb_retptr( ( QPen* ) new QPen() );
       }
-      #endif
    }
    else if( hb_pcount() >= 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
    {

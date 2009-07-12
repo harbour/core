@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QCoreApplication INHERIT QObject
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QCoreApplication_destroy( ::pPtr )
 
    METHOD  notify( pReceiver, pEvent )         INLINE  Qt_QCoreApplication_notify( ::pPtr, pReceiver, pEvent )
    METHOD  addLibraryPath( cPath )             INLINE  Qt_QCoreApplication_addLibraryPath( ::pPtr, cPath )
@@ -113,6 +116,18 @@ METHOD New( pParent ) CLASS QCoreApplication
    ::pParent := pParent
 
    ::pPtr := Qt_QCoreApplication( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QCoreApplication
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

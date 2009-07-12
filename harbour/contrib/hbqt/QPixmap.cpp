@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,11 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum HBitmapFormat { NoAlpha, PremultipliedAlpha, Alpha }
+ *  enum ShareMode { ImplicitlyShared, ExplicitlyShared }
+ */
+
 
 #include <QtGui/QPixmap>
 #include <QtGui/QBitmap>
@@ -90,6 +96,14 @@ HB_FUNC( QT_QPIXMAP )
    {
       hb_retptr( ( QPixmap* ) new QPixmap() );
    }
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QPIXMAP_DESTROY )
+{
+   hbqt_par_QPixmap( 1 )->~QPixmap();
 }
 
 /*

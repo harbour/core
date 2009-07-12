@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,6 +61,11 @@
 /*----------------------------------------------------------------------*/
 
 /*
+ *  enum Mode { Normal, Disabled, Active, Selected }
+ *  enum State { Off, On }
+ */
+
+/*
  *  Constructed[ 10/11 [ 90.91% ] ]
  *
  *  *** Unconvered Prototypes ***
@@ -95,6 +101,14 @@ HB_FUNC( QT_QICON )
    {
       hb_retptr( ( QIcon* ) new QIcon() );
    }
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QICON_DESTROY )
+{
+   hbqt_par_QIcon( 1 )->~QIcon();
 }
 
 /*

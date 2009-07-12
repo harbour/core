@@ -295,6 +295,22 @@ static void SlotsExecUrl( QWidget* widget, char* event, const QUrl & url )
    }
 }
 
+static void SlotsExecTextCharFormat( QWidget* widget, char* event, const QTextCharFormat & f )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QWidget* ) widget );
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, new QTextCharFormat( f ) );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 2, pWidget, p1 );
+         hb_itemRelease( pWidget );
+         hb_itemRelease( p1 );
+      }
+   }
+}
+
 static void SlotsExecFont( QWidget* widget, char* event, const QFont & font )
 {
    if( widget )
@@ -854,8 +870,37 @@ void Slots::accepted( QPrinter * printer )
    QWidget *oWidget = qobject_cast<QWidget *>( sender() );
    SlotsExecPointer( oWidget, ( char* ) "accepted(QPrinter)", printer );
 }
-
-
+/* QTextEdit */
+void Slots::copyAvailable( bool yes )
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExecBool( oWidget, ( char* ) "copyAvailable(bool)", yes );
+}
+void Slots::currentCharFormatChanged( const QTextCharFormat & f )
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExecTextCharFormat( oWidget, ( char* ) "currentCharFormatChanged(QTextCharFormat)", f );
+}
+void Slots::cursorPositionChanged()
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExec( oWidget, ( char* ) "cursorPositionChanged()" );
+}
+void Slots::redoAvailable( bool available )
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExecBool( oWidget, ( char* ) "redoAvailable(bool)", available );
+}
+void Slots::textChanged()
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExec( oWidget, ( char* ) "textChanged()" );
+}
+void Slots::undoAvailable( bool available )
+{
+   QWidget *oWidget = qobject_cast<QWidget *>( sender() );
+   SlotsExecBool( oWidget, ( char* ) "undoAvailable(available)", available );
+}
 /*
  * harbour function to connect signals with slots
  */
@@ -1252,7 +1297,36 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = widget->connect( widget,  SIGNAL( accepted( QPrinter * ) ),
                              s_s, SLOT( accepted( QPrinter * ) ), Qt::AutoConnection );
    }
-
+   if( signal == ( QString ) "copyAvailable(bool)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( copyAvailable( bool ) ),
+                             s_s, SLOT( copyAvailable( bool ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "currentCharFormatChanged(QTextCharFormat)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( currentCharFormatChanged( const QTextCharFormat & ) ),
+                             s_s, SLOT( currentCharFormatChanged( const QTextCharFormat & ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "cursorPositionChanged()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( cursorPositionChanged() ),
+                             s_s, SLOT( cursorPositionChanged() ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "redoAvailable(bool)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( redoAvailable( bool ) ),
+                             s_s, SLOT( redoAvailable( bool ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "textChanged()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( textChanged() ),
+                             s_s, SLOT( textChanged() ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "undoAvailable(available)" )
+   {
+      ret = widget->connect( widget,  SIGNAL( undoAvailable( bool ) ),
+                             s_s, SLOT( undoAvailable( bool ) ), Qt::AutoConnection );
+   }
 
    hb_retl( ret );
 

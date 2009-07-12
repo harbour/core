@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,16 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum Capitalization { MixedCase, AllUppercase, AllLowercase, SmallCaps, Capitalize }
+ *  enum SpacingType { PercentageSpacing, AbsoluteSpacing }
+ *  enum Stretch { UltraCondensed, ExtraCondensed, Condensed, SemiCondensed, ..., UltraExpanded }
+ *  enum Style { StyleNormal, StyleItalic, StyleOblique }
+ *  enum StyleHint { AnyStyle, SansSerif, Helvetica, Serif, ..., System }
+ *  enum StyleStrategy { PreferDefault, PreferBitmap, PreferDevice, PreferOutline, ..., PreferQuality }
+ *  enum Weight { Light, Normal, DemiBold, Bold, Black }
+ */
+
 
 #include <QStringList>
 #include <QtGui/QFont>
@@ -99,6 +110,14 @@ HB_FUNC( QT_QFONT )
    {
       hb_retptr( ( QFont* ) new QFont() );
    }
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QFONT_DESTROY )
+{
+
 }
 
 /*

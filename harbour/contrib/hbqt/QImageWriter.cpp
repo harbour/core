@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,6 +61,10 @@
 /*----------------------------------------------------------------------*/
 
 /*
+ *  enum ImageWriterError { DeviceError, UnsupportedFormatError, UnknownError }
+ */
+
+/*
  *  Constructed[ 18/19 [ 94.74% ] ]
  *
  *  *** Unconvered Prototypes ***
@@ -81,6 +86,14 @@
 HB_FUNC( QT_QIMAGEWRITER )
 {
    hb_retptr( ( QImageWriter* ) new QImageWriter() );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QIMAGEWRITER_DESTROY )
+{
+   hbqt_par_QImageWriter( 1 )->~QImageWriter();
 }
 
 /*

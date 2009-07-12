@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,12 +61,21 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 40/41 [ 97.56% ] ]
+ *  enum Encoding { CodecForTr, UnicodeUTF8, DefaultCodec }
+ */
+
+/*
+ *  Constructed[ 40/43 [ 93.02% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  EventFilter setEventFilter ( EventFilter filter )
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // bool filterEvent ( void * message, long * result )
+ *  // virtual bool winEventFilter ( MSG * msg, long * result )
  */
 
 
@@ -80,6 +90,14 @@
 HB_FUNC( QT_QCOREAPPLICATION )
 {
 
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QCOREAPPLICATION_DESTROY )
+{
+   hbqt_par_QCoreApplication( 1 )->~QCoreApplication();
 }
 
 /*

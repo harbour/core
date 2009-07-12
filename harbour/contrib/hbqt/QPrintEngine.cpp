@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,10 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum PrintEnginePropertyKey { PPK_CollateCopies, PPK_ColorMode, PPK_Creator, PPK_Duplex, ..., PPK_CustomBase }
+ */
+
 
 #include <QtGui/QPrintEngine>
 
@@ -69,6 +74,14 @@
 HB_FUNC( QT_QPRINTENGINE )
 {
 
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QPRINTENGINE_DESTROY )
+{
+   hbqt_par_QPrintEngine( 1 )->~QPrintEngine();
 }
 
 /*

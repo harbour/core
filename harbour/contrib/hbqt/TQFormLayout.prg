@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,12 +63,14 @@ CREATE CLASS QFormLayout INHERIT QLayout
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QFormLayout_destroy( ::pPtr )
 
    METHOD  addRow( pLabel, pField )            INLINE  Qt_QFormLayout_addRow( ::pPtr, pLabel, pField )
    METHOD  addRow_1( pLabel, pField )          INLINE  Qt_QFormLayout_addRow_1( ::pPtr, pLabel, pField )
-   METHOD  addRow_2( cLabelText, pField )      INLINE  Qt_QFormLayout_addRow_2( ::pPtr, cLabelText, pField )
+   METHOD  addRow_2( pWidget )                 INLINE  Qt_QFormLayout_addRow_2( ::pPtr, pWidget )
    METHOD  addRow_3( cLabelText, pField )      INLINE  Qt_QFormLayout_addRow_3( ::pPtr, cLabelText, pField )
-   METHOD  addRow_4( pWidget )                 INLINE  Qt_QFormLayout_addRow_4( ::pPtr, pWidget )
+   METHOD  addRow_4( cLabelText, pField )      INLINE  Qt_QFormLayout_addRow_4( ::pPtr, cLabelText, pField )
    METHOD  addRow_5( pLayout )                 INLINE  Qt_QFormLayout_addRow_5( ::pPtr, pLayout )
    METHOD  fieldGrowthPolicy()                 INLINE  Qt_QFormLayout_fieldGrowthPolicy( ::pPtr )
    METHOD  formAlignment()                     INLINE  Qt_QFormLayout_formAlignment( ::pPtr )
@@ -77,9 +80,9 @@ CREATE CLASS QFormLayout INHERIT QLayout
    METHOD  horizontalSpacing()                 INLINE  Qt_QFormLayout_horizontalSpacing( ::pPtr )
    METHOD  insertRow( nRow, pLabel, pField )   INLINE  Qt_QFormLayout_insertRow( ::pPtr, nRow, pLabel, pField )
    METHOD  insertRow_1( nRow, pLabel, pField )  INLINE  Qt_QFormLayout_insertRow_1( ::pPtr, nRow, pLabel, pField )
-   METHOD  insertRow_2( nRow, cLabelText, pField )  INLINE  Qt_QFormLayout_insertRow_2( ::pPtr, nRow, cLabelText, pField )
+   METHOD  insertRow_2( nRow, pWidget )        INLINE  Qt_QFormLayout_insertRow_2( ::pPtr, nRow, pWidget )
    METHOD  insertRow_3( nRow, cLabelText, pField )  INLINE  Qt_QFormLayout_insertRow_3( ::pPtr, nRow, cLabelText, pField )
-   METHOD  insertRow_4( nRow, pWidget )        INLINE  Qt_QFormLayout_insertRow_4( ::pPtr, nRow, pWidget )
+   METHOD  insertRow_4( nRow, cLabelText, pField )  INLINE  Qt_QFormLayout_insertRow_4( ::pPtr, nRow, cLabelText, pField )
    METHOD  insertRow_5( nRow, pLayout )        INLINE  Qt_QFormLayout_insertRow_5( ::pPtr, nRow, pLayout )
    METHOD  itemAt( nRow, nRole )               INLINE  Qt_QFormLayout_itemAt( ::pPtr, nRow, nRole )
    METHOD  labelAlignment()                    INLINE  Qt_QFormLayout_labelAlignment( ::pPtr )
@@ -109,6 +112,18 @@ METHOD New( pParent ) CLASS QFormLayout
    ::pParent := pParent
 
    ::pPtr := Qt_QFormLayout( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QFormLayout
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

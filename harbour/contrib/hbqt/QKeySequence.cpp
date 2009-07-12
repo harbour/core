@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,6 +61,12 @@
 /*----------------------------------------------------------------------*/
 
 /*
+ *  enum SequenceFormat { NativeText, PortableText }
+ *  enum SequenceMatch { NoMatch, PartialMatch, ExactMatch }
+ *  enum StandardKey { AddTab, Back, Bold, Close, ..., ZoomOut }
+ */
+
+/*
  *  Constructed[ 6/7 [ 85.71% ] ]
  *
  *  *** Unconvered Prototypes ***
@@ -90,6 +97,14 @@ HB_FUNC( QT_QKEYSEQUENCE )
       hb_retptr( ( QKeySequence * ) new QKeySequence( hb_parni( 1 ) ) );
    else
       hb_retptr( ( QKeySequence * ) new QKeySequence() );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QKEYSEQUENCE_DESTROY )
+{
+   hbqt_par_QKeySequence( 1 )->~QKeySequence();
 }
 
 /*

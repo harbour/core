@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,12 +61,17 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 14/15 [ 93.33% ] ]
+ *  Constructed[ 14/17 [ 82.35% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  OSMenuRef macMenu ()
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // QAction * defaultAction () const
+ *  // void setDefaultAction ( QAction * act )
  */
 
 
@@ -79,6 +85,14 @@
 HB_FUNC( QT_QMENUBAR )
 {
    hb_retptr( ( QMenuBar* ) new QMenuBar( hbqt_par_QWidget( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QMENUBAR_DESTROY )
+{
+   hbqt_par_QMenuBar( 1 )->~QMenuBar();
 }
 
 /*

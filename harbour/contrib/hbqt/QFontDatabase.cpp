@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,6 +61,10 @@
 /*----------------------------------------------------------------------*/
 
 /*
+ *  enum WritingSystem { Any, Latin, Greek, Cyrillic, ..., Runic }
+ */
+
+/*
  *  Constructed[ 20/25 [ 80.00% ] ]
  *
  *  *** Unconvered Prototypes ***
@@ -83,6 +88,14 @@
 HB_FUNC( QT_QFONTDATABASE )
 {
    hb_retptr( ( QFontDatabase* ) new QFontDatabase() );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QFONTDATABASE_DESTROY )
+{
+
 }
 
 /*

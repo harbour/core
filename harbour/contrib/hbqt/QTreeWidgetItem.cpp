@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,6 +61,11 @@
 /*----------------------------------------------------------------------*/
 
 /*
+ *  enum ChildIndicatorPolicy { ShowIndicator, DontShowIndicator, DontShowIndicatorWhenChildless }
+ *  enum ItemType { Type, UserType }
+ */
+
+/*
  *  Constructed[ 52/55 [ 94.55% ] ]
  *
  *  *** Unconvered Prototypes ***
@@ -96,6 +102,14 @@ HB_FUNC( QT_QTREEWIDGETITEM )
    {
       hb_retptr( ( QTreeWidgetItem* ) new QTreeWidgetItem( hbqt_par_QTreeWidget( 1 ), hb_parni( 2 ) ) );
    }
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QTREEWIDGETITEM_DESTROY )
+{
+   hbqt_par_QTreeWidgetItem( 1 )->~QTreeWidgetItem();
 }
 
 /*

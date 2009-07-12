@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'hbqt_slots.h'
 **
-** Created: Thu Jul 9 23:53:51 2009
+** Created: Fri Jul 10 15:03:49 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -137,7 +137,7 @@ static const uint qt_meta_data_Slots[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-      76,   12, // methods
+      82,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -219,6 +219,12 @@ static const uint qt_meta_data_Slots[] = {
     2054, 2045,    6,    6, 0x0a,
     2088, 2081,    6,    6, 0x0a,
     2120, 2112,    6,    6, 0x0a,
+    2144, 2140,    6,    6, 0x0a,
+    2166, 2164,    6,    6, 0x0a,
+    2208,    6,    6,    6, 0x0a,
+    2242, 2232,    6,    6, 0x0a,
+    2262,    6,    6,    6, 0x0a,
+    2276, 2232,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -282,7 +288,11 @@ static const char qt_meta_stringdata_Slots[] = {
     "fileSelected(QString)\0selected\0"
     "filesSelected(QStringList)\0filter\0"
     "filterSelected(QString)\0printer\0"
-    "accepted(QPrinter*)\0"
+    "accepted(QPrinter*)\0yes\0copyAvailable(bool)\0"
+    "f\0currentCharFormatChanged(QTextCharFormat)\0"
+    "cursorPositionChanged()\0available\0"
+    "redoAvailable(bool)\0textChanged()\0"
+    "undoAvailable(bool)\0"
 };
 
 const QMetaObject Slots::staticMetaObject = {
@@ -386,9 +396,15 @@ int Slots::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 73: filesSelected((*reinterpret_cast< const QStringList(*)>(_a[1]))); break;
         case 74: filterSelected((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 75: accepted((*reinterpret_cast< QPrinter*(*)>(_a[1]))); break;
+        case 76: copyAvailable((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 77: currentCharFormatChanged((*reinterpret_cast< const QTextCharFormat(*)>(_a[1]))); break;
+        case 78: cursorPositionChanged(); break;
+        case 79: redoAvailable((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 80: textChanged(); break;
+        case 81: undoAvailable((*reinterpret_cast< bool(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 76;
+        _id -= 82;
     }
     return _id;
 }

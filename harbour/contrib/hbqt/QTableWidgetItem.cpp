@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,10 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum ItemType { Type, UserType }
+ */
+
 
 #include <QtGui/QTableWidgetItem>
 
@@ -85,6 +90,14 @@ HB_FUNC( QT_QTABLEWIDGETITEM )
    hb_retptr( ( QTableWidgetItem* ) new QTableWidgetItem( QIcon( hbqt_par_QString( 1 ) ),hbqt_par_QString( 2 ), hb_parni( 3 ) ) );
    hb_retptr( ( QTableWidgetItem* ) new QTableWidgetItem( hbqt_par_QTableWidgetItem( 1 ) ) );
    #endif
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QTABLEWIDGETITEM_DESTROY )
+{
+   hbqt_par_QTableWidgetItem( 1 )->~QTableWidgetItem();
 }
 
 /*

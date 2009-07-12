@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,12 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum Shadow { Plain, Raised, Sunken }
+ *  enum Shape { NoFrame, Box, Panel, StyledPanel, ..., WinPanel }
+ *  enum StyleMask { Shadow_Mask, Shape_Mask }
+ */
+
 
 #include <QtGui/QFrame>
 
@@ -70,6 +77,14 @@
 HB_FUNC( QT_QFRAME )
 {
    hb_retptr( new QFrame( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QFRAME_DESTROY )
+{
+   hbqt_par_QFrame( 1 )->~QFrame();
 }
 
 /*

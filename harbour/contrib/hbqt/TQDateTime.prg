@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QDateTime
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QDateTime_destroy( ::pPtr )
 
    METHOD  addDays( nNdays )                   INLINE  Qt_QDateTime_addDays( ::pPtr, nNdays )
    METHOD  addMSecs( nMsecs )                  INLINE  Qt_QDateTime_addMSecs( ::pPtr, nMsecs )
@@ -99,6 +102,18 @@ METHOD New( pParent ) CLASS QDateTime
    ::pParent := pParent
 
    ::pPtr := Qt_QDateTime( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QDateTime
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

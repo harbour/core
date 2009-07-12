@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QSizeF
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QSizeF_destroy( ::pPtr )
 
    METHOD  boundedTo( pOtherSize )             INLINE  Qt_QSizeF_boundedTo( ::pPtr, pOtherSize )
    METHOD  expandedTo( pOtherSize )            INLINE  Qt_QSizeF_expandedTo( ::pPtr, pOtherSize )
@@ -86,6 +89,18 @@ CREATE CLASS QSizeF
 METHOD New( ... ) CLASS QSizeF
 
    ::pPtr := Qt_QSizeF( ... )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QSizeF
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

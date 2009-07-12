@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,7 +61,13 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 214/217 [ 98.62% ] ]
+ *  enum RenderFlag { DrawWindowBackground, DrawChildren, IgnoreMask }
+ *  # From QPaintDevice : Parent Class
+ *  enum PaintDeviceMetric { PdmWidth, PdmHeight, PdmWidthMM, PdmHeightMM, ..., PdmPhysicalDpiY }
+ */
+
+/*
+ *  Constructed[ 214/229 [ 93.45% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -68,6 +75,21 @@
  *  QList<QAction *> actions () const
  *  void addActions ( QList<QAction *> actions )
  *  void insertActions ( QAction * before, QList<QAction *> actions )
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // WId effectiveWinId () const
+ *  // virtual HDC getDC () const
+ *  // bool hasEditFocus () const
+ *  // Qt::HANDLE macCGHandle () const
+ *  // Qt::HANDLE macQDHandle () const
+ *  // virtual void releaseDC ( HDC hdc ) const
+ *  //void render ( QPaintDevice * target, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
+ *  //void render ( QPainter * painter, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
+ *  // void setEditFocus ( bool enable )
+ *  //void setSizePolicy ( QSizePolicy )
+ *  //Qt::HANDLE x11PictureHandle () const
+ *  //QWidget * find ( WId id )
  */
 
 
@@ -79,10 +101,19 @@
 
 /*
  * QWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 )
+ * ~QWidget ()
  */
 HB_FUNC( QT_QWIDGET )
 {
    hb_retptr( new QWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QWIDGET_DESTROY )
+{
+   hbqt_par_QWidget( 1 )->~QWidget();
 }
 
 /*

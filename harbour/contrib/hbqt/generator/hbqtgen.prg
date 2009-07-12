@@ -356,6 +356,14 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       IF empty( s := alltrim( s ) )
          LOOP
       ENDIF
+
+      /* Check if proto is commented out */
+      IF left( s,2 ) == '//'
+         aadd( cmntd_, cOrg )
+         nFuncs++
+         LOOP
+      ENDIF
+
       /* Check if it is not ANSI C Comment */
       IF left( alltrim( cOrg ),1 ) $ '/*'
          LOOP
@@ -367,11 +375,6 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 
       nFuncs++
 
-      /* Check if proto is commented out */
-      IF left( s,2 ) == '//'
-         aadd( cmntd_, cOrg )
-         LOOP
-      ENDIF
       /* Lists - Later */
       IF '<' $ s
          aadd( dummy_, cOrg )
@@ -391,6 +394,12 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       IF empty( s := alltrim( s ) )
          LOOP
       ENDIF
+      /* Check if proto is commented out */
+      IF left( s,2 ) == '//'
+         aadd( cmntd_, cOrg )
+         nFuncs++
+         LOOP
+      ENDIF
       /* Check if it is not ANSI C Comment */
       IF left( alltrim( cOrg ),1 ) $ '/*'
          LOOP
@@ -402,11 +411,6 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 
       nFuncs++
 
-      /* Check if proto is commented out */
-      IF left( s,2 ) == '//'
-         aadd( cmntd_, cOrg )
-         LOOP
-      ENDIF
       /* Lists - Later */
       IF '<' $ s
          aadd( dummy_, cOrg )
@@ -427,7 +431,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       BuildHeader( @cpp_, 0 )
 
       /* Place ENUM definitions into the source */
-      #if 0
+      #if 1
       IF !empty( enums_ )
          aadd( cpp_, '/*' )
          aeval( enums_, {|e| iif( !empty( e ), aadd( cpp_, ' *  ' + e ), NIL ) } )
@@ -460,6 +464,20 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
          aeval( code_, {|e| aadd( cpp_, strtran( e, chr( 13 ), '' ) ) } )
          aadd( cpp_, "" )
       ENDIF
+
+      /* Generate Destructor */
+      aadd( cpp_, '/*'  )
+      aadd( cpp_, ' * DESTRUCTOR ' )
+      aadd( cpp_, ' */' )
+      aadd( cpp_, 'HB_FUNC( QT_' + upper( cWidget ) + '_DESTROY )' )
+      aadd( cpp_, '{ ' )
+      IF ( '~'+cWidget $ cQth )
+         aadd( cpp_, '   hbqt_par_' + cWidget + '( 1 )->~' + cWidget + '();' )
+      ELSE
+         aadd( cpp_, '   ' )
+      ENDIF
+      aadd( cpp_, '} ' )
+      aadd( cpp_, '  ' )
 
       /* Insert Functions */
       aeval( txt_, {|e| aadd( cpp_, strtran( e, chr( 13 ), '' ) ) } )
@@ -515,6 +533,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
    LOCAL cInt := 'int,qint16,quint16,QChar'
    LOCAL cIntLong := 'qint32,quint32,QRgb'
    LOCAL cIntLongLong := 'qint64,quint64,qlonglong,qulonglong'
+   LOCAL cFirstParamCast
 
    cParas := ''
    cDocs  := ''
@@ -626,6 +645,13 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
             nHBIdx := cPre:__enumIndex() + 1
             cHBIdx := hb_ntos( nHBIdx )
             cDocNM := THIS_PROPER( aA[ PRT_NAME ] )
+
+            IF empty( cFirstParamCast )
+               cFirstParamCast := aA[ PRT_CAST ]
+               IF '::' $ cFirstParamCast
+                  cFirstParamCast := substr( cFirstParamCast, at( '::', cFirstParamCast ) + 2 )
+               ENDIF
+            ENDIF
 
             DO CASE
             CASE aA[ PRT_CAST ] == 'T'
@@ -862,9 +888,21 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
       IF ( n := ascan( func_, {|e_| e_[ 1 ] == cFun } ) ) > 0
          func_[ n,2 ]++
          cHBFunc := cFun + '_' + hb_ntos( func_[ n, 2 ] )
+         #if 0        /* TODO: Refine to get duplicate name resolution - this mechanism has problems */
+         IF empty( cFirstParamCast )
+            cHBFunc := cFun + '_' + hb_ntos( func_[ n, 2 ] )
+         ELSE
+            IF cFirstParamCast == func_[ n,3 ]
+               cHBFunc := cFun + '_' + cFirstParamCast + "_" + hb_ntos( func_[ n, 2 ] )
+            ELSE
+               cHBFunc := cFun + '_' + cFirstParamCast
+            ENDIF
+         ENDIF
+         func_[ n,3 ] := cFirstParamCast
+         #endif
       ELSE
          cHBFunc := cFun
-         aadd( func_, { cFun, 0 } )
+         aadd( func_, { cFun, 0, "" } )
       ENDIF
 
       aadd( txt_, "/*" )
@@ -1066,8 +1104,9 @@ STATIC FUNCTION BuildHeader( txt_, nMode )
    aadd( txt_, " * Harbour Project source code:"                                               )
    aadd( txt_, " * QT wrapper main header"                                                     )
    aadd( txt_, " * "                                                                           )
-   aadd( txt_, " * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>"     )
    aadd( txt_, " * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>"                         )
+   aadd( txt_, " * "                                                                           )
+   aadd( txt_, " * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>"     )
    aadd( txt_, " * www - http://www.harbour-project.org"                                       )
    aadd( txt_, " * "                                                                           )
    aadd( txt_, " * This program is free software; you can redistribute it and/or modify"       )
@@ -1217,10 +1256,12 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
 
    aadd( txt_, s  )
    aadd( txt_, '' )
-   aadd( txt_, '   VAR     pParent'  )
-   aadd( txt_, '   VAR     pPtr'     )
+   aadd( txt_, '   VAR     pParent'     )
+   aadd( txt_, '   VAR     pPtr'        )
    aadd( txt_, '' )
-   aadd( txt_, '   METHOD  New()'    )
+   aadd( txt_, '   METHOD  New()'       )
+   aadd( txt_, '   METHOD  Configure( xObject )' )
+   aadd( txt_, '   METHOD  Destroy()                           INLINE  Qt_' + cWidget + '_destroy( ::pPtr )' )
    aadd( txt_, '' )
 
    /* Populate METHODS */
@@ -1285,6 +1326,19 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
       aadd( txt_, ''                                                                           )
 
    ENDCASE
+
+   aadd( txt_, 'METHOD Configure( xObject ) CLASS ' + cWidget )
+   aadd( txt_, '                                                                           ' )
+   aadd( txt_, '   IF hb_isObject( xObject )                                               ' )
+   aadd( txt_, '      ::pPtr := xObject:pPtr                                               ' )
+   aadd( txt_, '   ELSEIF hb_isPointer( xObject )                                          ' )
+   aadd( txt_, '      ::pPtr := xObject                                                    ' )
+   aadd( txt_, '   ENDIF                                                                   ' )
+   aadd( txt_, '                                                                           ' )
+   aadd( txt_, '   RETURN Self                                                             ' )
+   aadd( txt_, '                                                                           ' )
+   aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
+   aadd( txt_, '                                                                           ' )
 
    RETURN CreateTarget( cFile, txt_ )
 

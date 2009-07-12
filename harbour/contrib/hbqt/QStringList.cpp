@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,7 +61,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 35/39 [ 89.74% ] ]
+ *  Constructed[ 35/42 [ 83.33% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -69,6 +70,12 @@
  *  QSet<QString> toSet () const
  *  std::list<QString> toStdList () const
  *  QVector<QString> toVector () const
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // bool contains ( const QString & str, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
+ *  // QStringList & replaceInStrings ( const QString & before, const QString & after, Qt::CaseSensitivity cs = Qt::CaseSensitive )
+ *  // QStringList & replaceInStrings ( const QRegExp & rx, const QString & after )
  */
 
 
@@ -84,6 +91,14 @@
 HB_FUNC( QT_QSTRINGLIST )
 {
    hb_retptr( ( QStringList* ) new QStringList() );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QSTRINGLIST_DESTROY )
+{
+
 }
 
 /*

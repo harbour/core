@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QSizePolicy
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QSizePolicy_destroy( ::pPtr )
 
    METHOD  controlType()                       INLINE  Qt_QSizePolicy_controlType( ::pPtr )
    METHOD  expandingDirections()               INLINE  Qt_QSizePolicy_expandingDirections( ::pPtr )
@@ -87,6 +90,18 @@ METHOD New( pParent ) CLASS QSizePolicy
    ::pParent := pParent
 
    ::pPtr := Qt_QSizePolicy( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QSizePolicy
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

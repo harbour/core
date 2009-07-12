@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -72,6 +73,14 @@
 HB_FUNC( QT_QTEXTDOCUMENTWRITER )
 {
    hb_retptr( ( QTextDocumentWriter* ) new QTextDocumentWriter() );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QTEXTDOCUMENTWRITER_DESTROY )
+{
+   hbqt_par_QTextDocumentWriter( 1 )->~QTextDocumentWriter();
 }
 
 /*

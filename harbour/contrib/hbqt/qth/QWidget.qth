@@ -68,6 +68,7 @@ New      = pParent, nFlags
 
 /*
  * QWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 )
+ * ~QWidget ()
  */
 HB_FUNC( QT_QWIDGET )
 {
@@ -124,7 +125,7 @@ void grabMouse ()
 void grabMouse ( const QCursor & cursor )
 int grabShortcut ( const QKeySequence & key, Qt::ShortcutContext context = Qt::WindowShortcut )
 QGraphicsProxyWidget * graphicsProxyWidget () const
-//bool hasEditFocus () const
+// bool hasEditFocus () const
 bool hasFocus () const
 bool hasMouseTracking () const
 int height () const
@@ -149,8 +150,8 @@ bool isWindowModified () const
 QLayout * layout () const
 Qt::LayoutDirection layoutDirection () const
 QLocale locale () const
-//Qt::HANDLE macCGHandle () const
-//Qt::HANDLE macQDHandle () const
+// Qt::HANDLE macCGHandle () const
+// Qt::HANDLE macQDHandle () const
 QPoint mapFrom ( QWidget * parent, const QPoint & pos ) const
 QPoint mapFromGlobal ( const QPoint & pos ) const
 QPoint mapFromParent ( const QPoint & pos ) const
@@ -221,7 +222,7 @@ void setBaseSize ( int basew, int baseh )
 void setContentsMargins ( int left, int top, int right, int bottom )
 void setContextMenuPolicy ( Qt::ContextMenuPolicy policy )
 void setCursor ( const QCursor & )
-//void setEditFocus ( bool enable )
+// void setEditFocus ( bool enable )
 void setFixedHeight ( int h )
 void setFixedSize ( const QSize & s )
 void setFixedSize ( int w, int h )

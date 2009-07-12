@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QFileDialog INHERIT QDialog
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QFileDialog_destroy( ::pPtr )
 
    METHOD  acceptMode()                        INLINE  Qt_QFileDialog_acceptMode( ::pPtr )
    METHOD  confirmOverwrite()                  INLINE  Qt_QFileDialog_confirmOverwrite( ::pPtr )
@@ -118,6 +121,18 @@ METHOD New( pParent ) CLASS QFileDialog
    ::pParent := pParent
 
    ::pPtr := Qt_QFileDialog( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QFileDialog
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

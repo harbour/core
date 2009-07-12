@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,12 +61,20 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 18/19 [ 94.74% ] ]
+ *  enum RegionType { Rectangle, Ellipse }
+ */
+
+/*
+ *  Constructed[ 18/20 [ 90.00% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  QVector<QRect> rects () const
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // Handle handle () const
  */
 
 
@@ -120,6 +129,14 @@ HB_FUNC( QT_QREGION )
    {
       hb_retptr( ( QRegion* ) new QRegion() );
    }
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QREGION_DESTROY )
+{
+
 }
 
 /*

@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,7 +61,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 40/49 [ 81.63% ] ]
+ *  Constructed[ 40/55 [ 72.73% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -74,6 +75,15 @@
  *  QSet<T> toSet () const
  *  std::list<T> toStdList () const
  *  QVector<T> toVector () const
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  //const_iterator begin () const
+ *  //const_iterator constBegin () const
+ *  //const_iterator constEnd () const
+ *  //bool contains ( const T & value ) const
+ *  //iterator end ()
+ *  //const_iterator end () const
  */
 
 
@@ -89,6 +99,14 @@ HB_FUNC( QT_QLIST )
 {
    QList<void*>* list = NULL;
    hb_retptr( ( QList<void*>* ) list );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QLIST_DESTROY )
+{
+   hbqt_par_QList( 1 )->~QList();
 }
 
 /*

@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,6 +61,11 @@
 /*----------------------------------------------------------------------*/
 
 /*
+ *  enum DockOption { AnimatedDocks, AllowNestedDocks, AllowTabbedDocks, ForceTabbedDocks, VerticalTabs }
+ *  flags DockOptions
+ */
+
+/*
  *  Constructed[ 48/49 [ 97.96% ] ]
  *
  *  *** Unconvered Prototypes ***
@@ -79,6 +85,14 @@
 HB_FUNC( QT_QMAINWINDOW )
 {
    hb_retptr( ( QMainWindow* ) new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QMAINWINDOW_DESTROY )
+{
+   hbqt_par_QMainWindow( 1 )->~QMainWindow();
 }
 
 /*

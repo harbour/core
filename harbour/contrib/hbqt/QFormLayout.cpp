@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,12 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum FieldGrowthPolicy { FieldsStayAtSizeHint, ExpandingFieldsGrow, AllNonFixedFieldsGrow }
+ *  enum ItemRole { LabelRole, FieldRole, SpanningRole }
+ *  enum RowWrapPolicy { DontWrapRows, WrapLongRows, WrapAllRows }
+ */
+
 
 #include <QtGui/QFormLayout>
 
@@ -70,6 +77,14 @@
 HB_FUNC( QT_QFORMLAYOUT )
 {
    hb_retptr( ( QFormLayout * ) new QFormLayout( hbqt_par_QWidget( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QFORMLAYOUT_DESTROY )
+{
+   hbqt_par_QFormLayout( 1 )->~QFormLayout();
 }
 
 /*
@@ -89,9 +104,17 @@ HB_FUNC( QT_QFORMLAYOUT_ADDROW_1 )
 }
 
 /*
- * void addRow ( const QString & labelText, QWidget * field )
+ * void addRow ( QWidget * widget )
  */
 HB_FUNC( QT_QFORMLAYOUT_ADDROW_2 )
+{
+   hbqt_par_QFormLayout( 1 )->addRow( hbqt_par_QWidget( 2 ) );
+}
+
+/*
+ * void addRow ( const QString & labelText, QWidget * field )
+ */
+HB_FUNC( QT_QFORMLAYOUT_ADDROW_3 )
 {
    hbqt_par_QFormLayout( 1 )->addRow( hbqt_par_QString( 2 ), hbqt_par_QWidget( 3 ) );
 }
@@ -99,17 +122,9 @@ HB_FUNC( QT_QFORMLAYOUT_ADDROW_2 )
 /*
  * void addRow ( const QString & labelText, QLayout * field )
  */
-HB_FUNC( QT_QFORMLAYOUT_ADDROW_3 )
-{
-   hbqt_par_QFormLayout( 1 )->addRow( hbqt_par_QString( 2 ), hbqt_par_QLayout( 3 ) );
-}
-
-/*
- * void addRow ( QWidget * widget )
- */
 HB_FUNC( QT_QFORMLAYOUT_ADDROW_4 )
 {
-   hbqt_par_QFormLayout( 1 )->addRow( hbqt_par_QWidget( 2 ) );
+   hbqt_par_QFormLayout( 1 )->addRow( hbqt_par_QString( 2 ), hbqt_par_QLayout( 3 ) );
 }
 
 /*
@@ -203,9 +218,17 @@ HB_FUNC( QT_QFORMLAYOUT_INSERTROW_1 )
 }
 
 /*
- * void insertRow ( int row, const QString & labelText, QWidget * field )
+ * void insertRow ( int row, QWidget * widget )
  */
 HB_FUNC( QT_QFORMLAYOUT_INSERTROW_2 )
+{
+   hbqt_par_QFormLayout( 1 )->insertRow( hb_parni( 2 ), hbqt_par_QWidget( 3 ) );
+}
+
+/*
+ * void insertRow ( int row, const QString & labelText, QWidget * field )
+ */
+HB_FUNC( QT_QFORMLAYOUT_INSERTROW_3 )
 {
    hbqt_par_QFormLayout( 1 )->insertRow( hb_parni( 2 ), hbqt_par_QString( 3 ), hbqt_par_QWidget( 4 ) );
 }
@@ -213,17 +236,9 @@ HB_FUNC( QT_QFORMLAYOUT_INSERTROW_2 )
 /*
  * void insertRow ( int row, const QString & labelText, QLayout * field )
  */
-HB_FUNC( QT_QFORMLAYOUT_INSERTROW_3 )
-{
-   hbqt_par_QFormLayout( 1 )->insertRow( hb_parni( 2 ), hbqt_par_QString( 3 ), hbqt_par_QLayout( 4 ) );
-}
-
-/*
- * void insertRow ( int row, QWidget * widget )
- */
 HB_FUNC( QT_QFORMLAYOUT_INSERTROW_4 )
 {
-   hbqt_par_QFormLayout( 1 )->insertRow( hb_parni( 2 ), hbqt_par_QWidget( 3 ) );
+   hbqt_par_QFormLayout( 1 )->insertRow( hb_parni( 2 ), hbqt_par_QString( 3 ), hbqt_par_QLayout( 4 ) );
 }
 
 /*

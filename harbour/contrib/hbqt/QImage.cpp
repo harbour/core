@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,7 +61,12 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 60/63 [ 95.24% ] ]
+ *  enum Format { Format_Invalid, Format_Mono, Format_MonoLSB, Format_Indexed8, ..., Format_ARGB4444_Premultiplied }
+ *  enum InvertMode { InvertRgb, InvertRgba }
+ */
+
+/*
+ *  Constructed[ 60/64 [ 93.75% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -68,6 +74,10 @@
  *  QVector<QRgb> colorTable () const
  *  QImage convertToFormat ( Format format, const QVector<QRgb> & colorTable, Qt::ImageConversionFlags flags = Qt::AutoColor ) const
  *  void setColorTable ( const QVector<QRgb> colors )
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // bool loadFromData ( const uchar * data, int len, const char * format = 0 )
  */
 
 
@@ -123,6 +133,14 @@ HB_FUNC( QT_QIMAGE )
    {
       hb_retptr( ( QImage* ) new QImage() );
    }
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QIMAGE_DESTROY )
+{
+   hbqt_par_QImage( 1 )->~QImage();
 }
 
 /*

@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QStyledItemDelegate
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QStyledItemDelegate_destroy( ::pPtr )
 
    METHOD  createEditor( pParent, pOption, pIndex )  INLINE  Qt_QStyledItemDelegate_createEditor( ::pPtr, pParent, pOption, pIndex )
    METHOD  displayText( pValue, pLocale )      INLINE  Qt_QStyledItemDelegate_displayText( ::pPtr, pValue, pLocale )
@@ -82,6 +85,18 @@ METHOD New( pParent ) CLASS QStyledItemDelegate
    ::pParent := pParent
 
    ::pPtr := Qt_QStyledItemDelegate( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QStyledItemDelegate
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,13 +61,17 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 33/35 [ 94.29% ] ]
+ *  Constructed[ 33/36 [ 91.67% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  virtual QMap<int, QVariant> itemData ( const QModelIndex & index ) const
  *  virtual bool setItemData ( const QModelIndex & index, const QMap<int, QVariant> & roles )
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // virtual QModelIndexList match ( const QModelIndex & start, int role, const QVariant & value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const
  */
 
 
@@ -82,6 +87,14 @@
 HB_FUNC( QT_QABSTRACTITEMMODEL )
 {
    //hb_retptr( ( QAbstractItemModel* ) new QAbstractItemModel( hbqt_par_QObject( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QABSTRACTITEMMODEL_DESTROY )
+{
+   hbqt_par_QAbstractItemModel( 1 )->~QAbstractItemModel();
 }
 
 /*

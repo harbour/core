@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,13 +61,17 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 37/39 [ 94.87% ] ]
+ *  Constructed[ 37/40 [ 92.50% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  QList<QWebFrame *> childFrames () const
  *  QMultiMap<QString, QString> metaData () const
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // void load ( const QWebNetworkRequest & req )
  */
 
 
@@ -79,6 +84,14 @@
 HB_FUNC( QT_QWEBFRAME )
 {
    // hb_retptr( ( QWebFrame* ) new QWebFrame() );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QWEBFRAME_DESTROY )
+{
+
 }
 
 /*

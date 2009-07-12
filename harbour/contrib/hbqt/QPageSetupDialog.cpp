@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,11 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum PageSetupDialogOption { DontUseSheet }
+ *  flags PageSetupDialogOptions
+ */
+
 
 #include <QtGui/QPageSetupDialog>
 
@@ -73,6 +79,14 @@ HB_FUNC( QT_QPAGESETUPDIALOG )
       hb_retptr( ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 1 ) ) );
    else
       hb_retptr( ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QWidget( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QPAGESETUPDIALOG_DESTROY )
+{
+
 }
 
 /*

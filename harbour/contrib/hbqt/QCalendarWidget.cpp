@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,6 +61,12 @@
 /*----------------------------------------------------------------------*/
 
 /*
+ *  enum HorizontalHeaderFormat { SingleLetterDayNames, ShortDayNames, LongDayNames, NoHorizontalHeader }
+ *  enum SelectionMode { NoSelection, SingleSelection }
+ *  enum VerticalHeaderFormat { ISOWeekNumbers, NoVerticalHeader }
+ */
+
+/*
  *  Constructed[ 38/39 [ 97.44% ] ]
  *
  *  *** Unconvered Prototypes ***
@@ -79,6 +86,14 @@
 HB_FUNC( QT_QCALENDARWIDGET )
 {
    hb_retptr( ( QCalendarWidget* ) new QCalendarWidget( hbqt_par_QWidget( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QCALENDARWIDGET_DESTROY )
+{
+   hbqt_par_QCalendarWidget( 1 )->~QCalendarWidget();
 }
 
 /*

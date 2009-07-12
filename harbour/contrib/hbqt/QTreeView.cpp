@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,18 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  #      These enums are defined in QAbstractItemView class
+ *  #
+ *  enum DragDropMode { NoDragDrop, DragOnly, DropOnly, DragDrop, InternalMove }
+ *  enum EditTrigger { NoEditTriggers, CurrentChanged, DoubleClicked, SelectedClicked, ..., AllEditTriggers }
+ *  enum ScrollHint { EnsureVisible, PositionAtTop, PositionAtBottom, PositionAtCenter }
+ *  enum ScrollMode { ScrollPerItem, ScrollPerPixel }
+ *  enum SelectionBehavior { SelectItems, SelectRows, SelectColumns }
+ *  enum SelectionMode { SingleSelection, ContiguousSelection, ExtendedSelection, MultiSelection, NoSelection }
+ *  flags EditTriggers
+ */
+
 
 #include <QtGui/QTreeView>
 
@@ -70,6 +83,14 @@
 HB_FUNC( QT_QTREEVIEW )
 {
    hb_retptr( ( QTreeView* ) new QTreeView( hbqt_par_QWidget( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QTREEVIEW_DESTROY )
+{
+   hbqt_par_QTreeView( 1 )->~QTreeView();
 }
 
 /*

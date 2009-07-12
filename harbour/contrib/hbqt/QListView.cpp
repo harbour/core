@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,14 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum Flow { LeftToRight, TopToBottom }
+ *  enum LayoutMode { SinglePass, Batched }
+ *  enum Movement { Static, Free, Snap }
+ *  enum ResizeMode { Fixed, Adjust }
+ *  enum ViewMode { ListMode, IconMode }
+ */
+
 
 #include <QtGui/QListView>
 
@@ -70,6 +79,14 @@
 HB_FUNC( QT_QLISTVIEW )
 {
    hb_retptr( ( QListView * ) new QListView( hbqt_par_QWidget( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QLISTVIEW_DESTROY )
+{
+   hbqt_par_QListView( 1 )->~QListView();
 }
 
 /*

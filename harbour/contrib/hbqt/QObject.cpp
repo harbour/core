@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,7 +61,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 30/34 [ 88.24% ] ]
+ *  Constructed[ 30/35 [ 85.71% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -69,6 +70,10 @@
  *  QList<T> findChildren ( const QString & name = QString() ) const
  *  QList<T> findChildren ( const QRegExp & regExp ) const
  *  const QMetaObject staticMetaObject
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  //T findChild ( const QString & name = QString() ) const
  */
 
 
@@ -83,6 +88,14 @@
 HB_FUNC( QT_QOBJECT )
 {
    hb_retptr( ( QObject* ) new QObject( hbqt_par_QWidget( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QOBJECT_DESTROY )
+{
+   hbqt_par_QObject( 1 )->~QObject();
 }
 
 /*

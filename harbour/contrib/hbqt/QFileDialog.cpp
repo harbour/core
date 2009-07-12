@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,13 +61,29 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 45/47 [ 95.74% ] ]
+ *  enum AcceptMode { AcceptOpen, AcceptSave }
+ *  enum DialogLabel { LookIn, FileName, FileType, Accept, Reject }
+ *  enum FileMode { AnyFile, ExistingFile, Directory, ExistingFiles, DirectoryOnly }
+ *  enum Option { ShowDirsOnly, DontResolveSymlinks, DontConfirmOverwrite, DontUseNativeDialog, ..., DontUseSheet }
+ *  flags Options
+ *  enum ViewMode { Detail, List }
+ */
+
+/*
+ *  Constructed[ 45/51 [ 88.24% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  void setSidebarUrls ( const QList<QUrl> & urls )
  *  QList<QUrl> sidebarUrls () const
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // void open ( QObject * receiver, const char * member )
+ *  //QString getOpenFileName ( QWidget * parent = 0, const QString & caption = QString(), const QString & dir = QString(), const QString & filter = QString(), QString * selectedFilter = 0, Options options = 0 )
+ *  //QStringList getOpenFileNames ( QWidget * parent = 0, const QString & caption = QString(), const QString & dir = QString(), const QString & filter = QString(), QString * selectedFilter = 0, Options options = 0 )
+ *  //QString getSaveFileName ( QWidget * parent = 0, const QString & caption = QString(), const QString & dir = QString(), const QString & filter = QString(), QString * selectedFilter = 0, Options options = 0 )
  */
 
 
@@ -81,6 +98,14 @@
 HB_FUNC( QT_QFILEDIALOG )
 {
    hb_retptr( ( QFileDialog* ) new QFileDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QFILEDIALOG_DESTROY )
+{
+   hbqt_par_QFileDialog( 1 )->~QFileDialog();
 }
 
 /*

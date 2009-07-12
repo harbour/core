@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QFontDatabase
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QFontDatabase_destroy( ::pPtr )
 
    METHOD  bold( cFamily, cStyle )             INLINE  Qt_QFontDatabase_bold( ::pPtr, cFamily, cStyle )
    METHOD  families( nWritingSystem )          INLINE  Qt_QFontDatabase_families( ::pPtr, nWritingSystem )
@@ -93,6 +96,18 @@ METHOD New( pParent ) CLASS QFontDatabase
    ::pParent := pParent
 
    ::pPtr := Qt_QFontDatabase( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QFontDatabase
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

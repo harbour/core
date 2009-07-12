@@ -83,7 +83,7 @@ QFont currentFont () const
 #
 # Way too complex, to be shifted to CODE section
 #
-//void open ( QObject * receiver, const char * member )
+// void open ( QObject * receiver, const char * member )
 FontDialogOptions options () const
 QFont selectedFont () const
 void setCurrentFont ( const QFont & font )
@@ -93,7 +93,7 @@ bool testOption ( FontDialogOption option ) const
 
 QFont getFont ( bool * ok, const QFont & initial, QWidget * parent, const QString & title, FontDialogOptions options )
 QFont getFont ( bool * ok, const QFont & initial, QWidget * parent, const char * name )
-//QFont getFont ( bool * ok, QWidget * parent, const char * name )
+// QFont getFont ( bool * ok, QWidget * parent, const char * name )
 QFont getFont ( bool * ok, const QFont & initial, QWidget * parent, const QString & title )
 QFont getFont ( bool * ok, const QFont & initial, QWidget * parent = 0 )
 QFont getFont ( bool * ok, QWidget * parent = 0 )

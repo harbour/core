@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,6 +61,14 @@
 /*----------------------------------------------------------------------*/
 
 /*
+ *  enum FormatType { InvalidFormat, BlockFormat, CharFormat, ListFormat, ..., UserFormat }
+ *  enum ObjectTypes { NoObject, ImageObject, TableObject, TableCellObject, UserObject }
+ *  enum PageBreakFlag { PageBreak_Auto, PageBreak_AlwaysBefore, PageBreak_AlwaysAfter }
+ *  flags PageBreakFlags
+ *  enum Property { ObjectIndex, CssFloat, LayoutDirection, OutlinePen, ..., UserProperty }
+ */
+
+/*
  *  Constructed[ 42/45 [ 93.33% ] ]
  *
  *  *** Unconvered Prototypes ***
@@ -83,6 +92,14 @@
 HB_FUNC( QT_QTEXTFORMAT )
 {
    hb_retptr( ( QTextFormat* ) new QTextFormat() );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QTEXTFORMAT_DESTROY )
+{
+   hbqt_par_QTextFormat( 1 )->~QTextFormat();
 }
 
 /*

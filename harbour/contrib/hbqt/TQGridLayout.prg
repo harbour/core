@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QGridLayout INHERIT QLayout
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QGridLayout_destroy( ::pPtr )
 
    METHOD  addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )  INLINE  Qt_QGridLayout_addItem( ::pPtr, pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
    METHOD  addLayout( pLayout, nRow, nColumn, nAlignment )  INLINE  Qt_QGridLayout_addLayout( ::pPtr, pLayout, nRow, nColumn, nAlignment )
@@ -99,6 +102,18 @@ METHOD New( pParent ) CLASS QGridLayout
    ::pParent := pParent
 
    ::pPtr := Qt_QGridLayout( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QGridLayout
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,6 +61,14 @@
 /*----------------------------------------------------------------------*/
 
 /*
+ *  enum WizardButton { BackButton, NextButton, CommitButton, FinishButton, ..., Stretch }
+ *  enum WizardOption { IndependentPages, IgnoreSubTitles, ExtendedWatermarkPixmap, NoDefaultButton, ..., HaveCustomButton3 }
+ *  enum WizardPixmap { WatermarkPixmap, LogoPixmap, BannerPixmap, BackgroundPixmap }
+ *  enum WizardStyle { ClassicStyle, ModernStyle, MacStyle, AeroStyle }
+ *  flags WizardOptions
+ */
+
+/*
  *  Constructed[ 33/36 [ 91.67% ] ]
  *
  *  *** Unconvered Prototypes ***
@@ -82,6 +91,14 @@
 HB_FUNC( QT_QWIZARD )
 {
    hb_retptr( new QWizard( hbqt_par_QWidget( 2 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QWIZARD_DESTROY )
+{
+   hbqt_par_QWizard( 1 )->~QWizard();
 }
 
 /*

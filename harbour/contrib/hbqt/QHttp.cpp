@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,12 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum ConnectionMode { ConnectionModeHttp, ConnectionModeHttps }
+ *  enum Error { NoError, HostNotFound, ConnectionRefused, UnexpectedClose, ..., UnknownError }
+ *  enum State { Unconnected, HostLookup, Connecting, Sending, ..., Closing }
+ */
+
 
 #include <QtNetwork/QHttp>
 
@@ -87,6 +94,14 @@ HB_FUNC( QT_QHTTP_READ )
    hb_retnint( iRead );
    if( ! hb_storclen_buffer( iData, iRead, 2 ) )
       hb_xfree( iData );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QHTTP_DESTROY )
+{
+   hbqt_par_QHttp( 1 )->~QHttp();
 }
 
 /*

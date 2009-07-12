@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QSignalMapper INHERIT QObject
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QSignalMapper_destroy( ::pPtr )
 
    METHOD  mapping( nId )                      INLINE  Qt_QSignalMapper_mapping( ::pPtr, nId )
    METHOD  mapping_1( cId )                    INLINE  Qt_QSignalMapper_mapping_1( ::pPtr, cId )
@@ -84,6 +87,18 @@ METHOD New( pParent ) CLASS QSignalMapper
    ::pParent := pParent
 
    ::pPtr := Qt_QSignalMapper( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QSignalMapper
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

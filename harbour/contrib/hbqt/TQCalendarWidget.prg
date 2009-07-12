@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QCalendarWidget INHERIT QWidget
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QCalendarWidget_destroy( ::pPtr )
 
    METHOD  dateEditAcceptDelay()               INLINE  Qt_QCalendarWidget_dateEditAcceptDelay( ::pPtr )
    METHOD  dateTextFormat( pDate )             INLINE  Qt_QCalendarWidget_dateTextFormat( ::pPtr, pDate )
@@ -111,6 +114,18 @@ METHOD New( pParent ) CLASS QCalendarWidget
    ::pParent := pParent
 
    ::pPtr := Qt_QCalendarWidget( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QCalendarWidget
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,12 +61,21 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 3/4 [ 75.00% ] ]
+ *  class ExtensionOption
+ *  enum Extension { }
+ */
+
+/*
+ *  Constructed[ 3/5 [ 60.00% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  virtual QList<Plugin> plugins () const = 0
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // virtual bool extension ( Extension extension, const ExtensionOption * option = 0, ExtensionReturn * output = 0 )
  */
 
 
@@ -79,6 +89,14 @@
 HB_FUNC( QT_QWEBPLUGINFACTORY )
 {
    //hb_retptr( ( QWebPluginFactory* ) new QWebPluginFactory() );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QWEBPLUGINFACTORY_DESTROY )
+{
+   hbqt_par_QWebPluginFactory( 1 )->~QWebPluginFactory();
 }
 
 /*

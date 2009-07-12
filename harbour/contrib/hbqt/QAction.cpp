@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,6 +61,11 @@
 /*----------------------------------------------------------------------*/
 
 /*
+ *  enum ActionEvent { Trigger, Hover }
+ *  enum MenuRole { NoRole, TextHeuristicRole, ApplicationSpecificRole, AboutQtRole, ..., QuitRole }
+ */
+
+/*
  *  Constructed[ 48/52 [ 92.31% ] ]
  *
  *  *** Unconvered Prototypes ***
@@ -89,6 +95,14 @@ HB_FUNC( QT_QACTION )
       hb_retptr( new QAction( hbqt_par_QString( 1 ), hbqt_par_QObject( 2 ) ) );
    else if( HB_ISPOINTER( 3 ) )
       hb_retptr( new QAction( *hbqt_par_QIcon( 1 ), hbqt_par_QString( 2 ), hbqt_par_QObject( 3 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QACTION_DESTROY )
+{
+   hbqt_par_QAction( 1 )->~QAction();
 }
 
 /*

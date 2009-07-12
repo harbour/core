@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,10 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum ToolButtonPopupMode { DelayedPopup, MenuButtonPopup, InstantPopup }
+ */
+
 
 #include <QtGui/QToolButton>
 
@@ -70,6 +75,14 @@
 HB_FUNC( QT_QTOOLBUTTON )
 {
    hb_retptr( ( QToolButton* ) new QToolButton( hbqt_par_QWidget( 1 ) ) );
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QTOOLBUTTON_DESTROY )
+{
+   hbqt_par_QToolButton( 1 )->~QToolButton();
 }
 
 /*

@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,8 @@ CREATE CLASS QFocusFrame INHERIT QWidget
    VAR     pPtr
 
    METHOD  New()
+   METHOD  Configure( xObject )
+   METHOD  Destroy()                           INLINE  Qt_QFocusFrame_destroy( ::pPtr )
 
    METHOD  setWidget( pWidget )                INLINE  Qt_QFocusFrame_setWidget( ::pPtr, pWidget )
    METHOD  widget()                            INLINE  Qt_QFocusFrame_widget( ::pPtr )
@@ -75,6 +78,18 @@ METHOD New( pParent ) CLASS QFocusFrame
    ::pParent := pParent
 
    ::pPtr := Qt_QFocusFrame( pParent )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Configure( xObject ) CLASS QFocusFrame
+
+   IF hb_isObject( xObject )
+      ::pPtr := xObject:pPtr
+   ELSEIF hb_isPointer( xObject )
+      ::pPtr := xObject
+   ENDIF
 
    RETURN Self
 

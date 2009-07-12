@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,6 +60,14 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  flags NumberFlags
+ *  enum FieldAlignment { AlignLeft, AlignRight, AlignCenter, AlignAccountingStyle }
+ *  enum NumberFlag { ShowBase, ForcePoint, ForceSign, UppercaseBase, UppercaseDigits }
+ *  enum RealNumberNotation { ScientificNotation, FixedNotation, SmartNotation }
+ *  enum Status { Ok, ReadPastEnd, ReadCorruptData }
+ */
+
 
 #include <QtCore/QTextStream>
 
@@ -83,6 +92,14 @@ HB_FUNC( QT_QTEXTSTREAM )
 HB_FUNC( QT_QTEXTSTREAM_PADCHAR )
 {
 
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QTEXTSTREAM_DESTROY )
+{
+   hbqt_par_QTextStream( 1 )->~QTextStream();
 }
 
 /*

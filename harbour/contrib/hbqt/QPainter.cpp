@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,6 +61,12 @@
 /*----------------------------------------------------------------------*/
 
 /*
+ *  enum CompositionMode { CompositionMode_SourceOver, CompositionMode_DestinationOver, CompositionMode_Clear, CompositionMode_Source, ..., RasterOp_SourceAndNotDestination }
+ *  enum RenderHint { Antialiasing, TextAntialiasing, SmoothPixmapTransform, HighQualityAntialiasing, NonCosmeticDefaultPen }
+ *  enum RenderHints
+ */
+
+/*
  *  Constructed[ 182/188 [ 96.81% ] ]
  *
  *  *** Unconvered Prototypes ***
@@ -91,6 +98,14 @@ HB_FUNC( QT_QPAINTER )
   {
      hb_retptr( ( QPainter* ) new QPainter() );
   }
+}
+
+/*
+ * DESTRUCTOR
+ */
+HB_FUNC( QT_QPAINTER_DESTROY )
+{
+   hbqt_par_QPainter( 1 )->~QPainter();
 }
 
 /*
