@@ -353,9 +353,17 @@ HB_FUNC( QT_QTEXTCURSOR_INSERTHTML )
 }
 
 /*
- * void insertImage ( const QTextImageFormat & format )
+ * void insertImage ( const QString & name )
  */
 HB_FUNC( QT_QTEXTCURSOR_INSERTIMAGE )
+{
+   hbqt_par_QTextCursor( 1 )->insertImage( hbqt_par_QString( 2 ) );
+}
+
+/*
+ * void insertImage ( const QTextImageFormat & format )
+ */
+HB_FUNC( QT_QTEXTCURSOR_INSERTIMAGE_1 )
 {
    hbqt_par_QTextCursor( 1 )->insertImage( *hbqt_par_QTextImageFormat( 2 ) );
 }
@@ -363,17 +371,9 @@ HB_FUNC( QT_QTEXTCURSOR_INSERTIMAGE )
 /*
  * void insertImage ( const QTextImageFormat & format, QTextFrameFormat::Position alignment )
  */
-HB_FUNC( QT_QTEXTCURSOR_INSERTIMAGE_1 )
-{
-   hbqt_par_QTextCursor( 1 )->insertImage( *hbqt_par_QTextImageFormat( 2 ), ( QTextFrameFormat::Position ) hb_parni( 3 ) );
-}
-
-/*
- * void insertImage ( const QString & name )
- */
 HB_FUNC( QT_QTEXTCURSOR_INSERTIMAGE_2 )
 {
-   hbqt_par_QTextCursor( 1 )->insertImage( hbqt_par_QString( 2 ) );
+   hbqt_par_QTextCursor( 1 )->insertImage( *hbqt_par_QTextImageFormat( 2 ), ( QTextFrameFormat::Position ) hb_parni( 3 ) );
 }
 
 /*

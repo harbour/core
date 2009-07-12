@@ -120,9 +120,7 @@ CREATE CLASS QPrinter INHERIT QPaintDevice
    METHOD  setPrintRange( nRange )             INLINE  Qt_QPrinter_setPrintRange( ::pPtr, nRange )
    METHOD  setPrinterName( cName )             INLINE  Qt_QPrinter_setPrinterName( ::pPtr, cName )
    METHOD  setResolution( nDpi )               INLINE  Qt_QPrinter_setResolution( ::pPtr, nDpi )
-   METHOD  setWinPageSize( nPageSize )         INLINE  Qt_QPrinter_setWinPageSize( ::pPtr, nPageSize )
    METHOD  toPage()                            INLINE  Qt_QPrinter_toPage( ::pPtr )
-   METHOD  winPageSize()                       INLINE  Qt_QPrinter_winPageSize( ::pPtr )
 
    ENDCLASS
 

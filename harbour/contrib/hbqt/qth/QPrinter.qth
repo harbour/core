@@ -146,11 +146,11 @@ void setPrintRange ( PrintRange range )
 void setPrinterName ( const QString & name )
 // void setPrinterSelectionOption ( const QString & option )
 void setResolution ( int dpi )
-void setWinPageSize ( int pageSize )
+// void setWinPageSize ( int pageSize )
 QList<PaperSource> supportedPaperSources () const
 QList<int> supportedResolutions () const
 int toPage () const
-int winPageSize () const
+// int winPageSize () const
 </PROTOS>
 
 <SLOTS>

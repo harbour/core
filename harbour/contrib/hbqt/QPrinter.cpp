@@ -75,7 +75,7 @@
  */
 
 /*
- *  Constructed[ 57/61 [ 93.44% ] ]
+ *  Constructed[ 55/61 [ 90.16% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -87,6 +87,8 @@
  *
  *  // QString printerSelectionOption () const
  *  // void setPrinterSelectionOption ( const QString & option )
+ *  // void setWinPageSize ( int pageSize )
+ *  // int winPageSize () const
  */
 
 
@@ -554,27 +556,11 @@ HB_FUNC( QT_QPRINTER_SETRESOLUTION )
 }
 
 /*
- * void setWinPageSize ( int pageSize )
- */
-HB_FUNC( QT_QPRINTER_SETWINPAGESIZE )
-{
-   hbqt_par_QPrinter( 1 )->setWinPageSize( hb_parni( 2 ) );
-}
-
-/*
  * int toPage () const
  */
 HB_FUNC( QT_QPRINTER_TOPAGE )
 {
    hb_retni( hbqt_par_QPrinter( 1 )->toPage() );
-}
-
-/*
- * int winPageSize () const
- */
-HB_FUNC( QT_QPRINTER_WINPAGESIZE )
-{
-   hb_retni( hbqt_par_QPrinter( 1 )->winPageSize() );
 }
 
 
