@@ -161,6 +161,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    set _HB_PATH=
 
    if "%HB_ARCHITECTURE%" == "os2" goto SKIP_WINDLL
+   if "%HB_ARCHITECTURE%" == "linux" goto SKIP_WINDLL
 
    rem ---------------------------------------------------------------
    rem Start the GNU Make system
@@ -215,7 +216,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 :DO_GCC_CYG
 
    set HB_DYNLIB=no
-   sh make_gnu.sh clean install %HB_USER_MAKEFLAGS%
+   sh %~dp0make_gnu.sh clean install %HB_USER_MAKEFLAGS%
    if errorlevel 1 echo Harbour GNU Make returned: %ERRORLEVEL%
    goto MAKE_DONE
 
@@ -229,7 +230,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
 :SKIP_WINDLL_CYG
 
-   sh make_gnu.sh %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9 %_HB_BUILD_LOG%
+   sh %~dp0make_gnu.sh %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9 %_HB_BUILD_LOG%
    if errorlevel 1 echo Harbour GNU Make returned: %ERRORLEVEL%
    goto MAKE_DONE
 

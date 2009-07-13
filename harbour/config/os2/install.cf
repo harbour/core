@@ -35,9 +35,10 @@ endif
 else  # bash
 
 INSTALL_RULE =\
-	@if [ ! -d $(INSTALL_DIR) ]; \
+	@if [ -z $(INSTALL_DIR) ] || [ ! -d $(INSTALL_DIR) ]; \
 	then \
-	  echo "! Can't install, path not found: $(INSTALL_DIR)" 1>&2; \
+	  echo "! Can't install, path not found: '$(INSTALL_DIR)'" 1>&2; \
+	  false; \
 	else \
 	  for i in $(INSTALL_OBJS); \
 	  do \

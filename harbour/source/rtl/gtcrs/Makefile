@@ -4,32 +4,49 @@
 
 ROOT = ../../../
 
+LIBNAME=gtcrs
+
 C_SOURCES=\
 	gtcrs.c \
 
-LIBNAME=gtcrs
+ifeq ($(HB_INC_CURSES),)
+ifeq ($(HB_XBUILD),)
+ifeq ($(HB_NCURSES_194),yes)
+HB_INC_CURSES = /usr/include/ncur194
+else
+HB_INC_CURSES = /usr/include/ncurses /sw/include /sw/include/ncurses
+endif
+endif
+endif
+
+ifeq ($(HB_WITHOUT_GTCRS),yes)
+#HB_INC_CURSES =
+endif
+
+HB_INC_CURSES_OK += $(foreach d, $(HB_INC_CURSES), $(if $(wildcard $(d)/curses.h),$(d),))
+
+ifneq ($(strip $(HB_INC_CURSES_OK)),)
+
+HB_INC_GPM = /usr/include /usr/local/include
+HB_INC_GPM_OK += $(foreach d, $(HB_INC_GPM), $(if $(wildcard $(d)/gpm.h),$(d),))
+
+ifeq ($(HB_GT_CRS_BCEHACK),yes)
+  HB_USER_CFLAGS += -DHB_GT_CRS_BCEHACK
+endif
+ifneq ($(strip $(HB_INC_GPM_OK)),)
+  HB_USER_CFLAGS += -DHAVE_GPM_H
+ifeq ($(HB_GPM_NOICE_DISABLE),yes)
+  HB_USER_CFLAGS += -DHB_GPM_NOICE_DISABLE
+endif
+endif
+ifeq ($(HB_NCURSES_194),yes)
+  HB_USER_CFLAGS += -DHB_NCURSES_194
+endif
+
+HB_USER_CFLAGS += $(foreach d, $(HB_INC_CURSES_OK), -I$(d))
 
 include $(TOP)$(ROOT)config/lib.cf
 
-# a workaround of a problem with different include directories 
-# for slang curses files between different unix distributions
-ifeq ($(HB_NCURSES_FINK),yes)
-  CFLAGS += -I/sw/include -I/sw/include/ncurses
 else
-  ifeq ($(HB_NCURSES_194),yes)
-    CFLAGS += -I/usr/include/ncur194
-    CFLAGS += -DHB_NCURSES_194
-  else
-    CFLAGS += -I/usr/include/ncurses
-    ifeq ($(HB_GT_CRS_BCEHACK),yes)
-      CFLAGS += -DHB_GT_CRS_BCEHACK
-    endif
-  endif
-endif
-
-ifeq ($(HB_GPM_MOUSE),yes)
-  CFLAGS += -DHAVE_GPM_H
-ifeq ($(HB_GPM_NOICE_DISABLE),yes)
-  CFLAGS += -DHB_GPM_NOICE_DISABLE
-endif
+include $(TOP)$(ROOT)config/none.cf
 endif

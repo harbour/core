@@ -24,7 +24,7 @@ DOS_LIB_PATH = $(subst /,\,$(LIB_PATH))
 DOS_LIB_ARCH = $(subst /,\,$(LIB_ARCH))
 DIRSEP = $(subst /,\,\)
 
-MK = $(subst /,\,$(subst \~,~,$(MAKE)))
+MK := $(subst /,\,$(subst \~,~,$(MAKE)))
 
 ifeq ($(OS2_SHELL),) # non-OS/2
    ifneq ($(ComSpec),)
@@ -34,6 +34,7 @@ ifeq ($(OS2_SHELL),) # non-OS/2
          COMSPEC := cmd.exe
       endif
    endif
+
    RM = del /q /f
    RD = rmdir /q /s
    MD = mkdir
@@ -82,7 +83,6 @@ else  # bash
 
 ARCH_DIR = $(HB_ARCH)
 MK = $(MAKE)
-
 RM = rm -f
 RD = rm -f -r
 CP = cp -f

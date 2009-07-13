@@ -27,6 +27,72 @@ endif
 # verify if GT drivers exist
 HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
 
+ifeq ($(SHLVL),) # non-bash
+
+ARCH_DIR = $(HB_ARCH)
+DOS_ARCH_DIR = $(subst /,\,$(HB_ARCH))
+DOS_LIB_DIR  = $(subst /,\,$(LIB_DIR))
+DOS_LIB_PATH = $(subst /,\,$(LIB_PATH))
+DOS_LIB_ARCH = $(subst /,\,$(LIB_ARCH))
+DIRSEP = $(subst /,\,\)
+
+MK = $(subst /,\,$(subst \~,~,$(MAKE)))
+
+ifeq ($(OS2_SHELL),) # non-OS/2
+   ifneq ($(ComSpec),)
+      COMSPEC := $(ComSpec)
+   else
+      ifeq ($(COMSPEC),)
+         COMSPEC := cmd.exe
+      endif
+   endif
+
+   RM = del /q /f
+   RD = rmdir /q /s
+   MD = mkdir
+   CP = $(COMSPEC) /c copy
+   MV = move
+
+dirbase::
+	-@$(COMSPEC) /c if not exist $(DOS_ARCH_DIR)\. $(MD) $(DOS_ARCH_DIR)
+	$(if $(DOS_LIB_DIR),-@$(COMSPEC) /c if not exist $(DOS_LIB_DIR)\. $(MD) $(DOS_LIB_DIR),)
+
+clean::
+	-@$(COMSPEC) /c if exist $(DOS_ARCH_DIR) $(RD) $(DOS_ARCH_DIR)
+	$(if $(DOS_LIB_ARCH),-@$(COMSPEC) /c if exist $(DOS_LIB_ARCH) $(RM) $(DOS_LIB_ARCH),)
+
+else # OS/2
+   RM = del /n
+   RD = rmdir
+   MD = md
+   CP = copy
+   MV = move
+
+ifeq ($(LIB_PATH),)
+
+dirbase::
+	-for %d in ($(HB_ARCHITECTURE) $(DOS_ARCH_DIR)) do if not exist %d $(MD) %d
+
+clean::
+	-if exist $(DOS_ARCH_DIR)\*.* $(RM) $(DOS_ARCH_DIR)\*.*
+	-for %d in ($(DOS_ARCH_DIR) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
+
+else
+
+dirbase::
+	-for %d in ($(HB_ARCHITECTURE) $(DOS_ARCH_DIR) $(DOS_LIB_PATH) $(DOS_LIB_DIR)) do if not exist %d $(MD) %d
+
+clean::
+	-if exist $(DOS_ARCH_DIR)\*.* $(RM) $(DOS_ARCH_DIR)\*.*
+	-for %d in ($(DOS_ARCH_DIR) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
+	-if exist $(DOS_LIB_ARCH) $(RM) $(DOS_LIB_ARCH)
+
+endif
+
+endif
+
+else  # bash
+
 ARCH_DIR = $(HB_ARCH)
 MK = $(MAKE)
 RM = rm -f
@@ -43,3 +109,5 @@ dirbase::
 
 clean::
 	-$(RD) $(ARCH_DIR) $(LIB_ARCH)
+
+endif

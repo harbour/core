@@ -255,8 +255,19 @@ PRG_SOURCES=\
 
 LIBNAME=hbrtl
 
-# The list of all valid GT drivers is defined in config/<arch>/global.cf.
-DIRS=$(HB_GT_LIBS)
+DIRS=\
+	gtcgi \
+	gtcrs \
+	gtdos \
+	gtgui \
+	gtos2 \
+	gtpca \
+	gtsln \
+	gtstd \
+	gttrm \
+	gtwin \
+	gtwvt \
+	gtxwc \
 
 include $(TOP)$(ROOT)config/lib.cf
 include $(TOP)$(ROOT)config/dir.cf

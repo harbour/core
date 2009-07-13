@@ -630,6 +630,26 @@ EXAMPLES
       ./make_gnu.sh "$@"
       ---
 
+   Linux
+   -----
+
+      --- Open Watcom C++ on Windows NT host (requires native Windows Harbour binaries)
+      SET WATCOM=C:\watcom
+      SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
+      SET EDPATH=%WATCOM%\EDDAT
+      SET INCLUDE=%WATCOM%\LH
+      rem
+      rem ; Native Windows Harbour binaries need to be installed on this path
+      set HB_BIN_COMPILE=C:\hb-watcom\bin
+      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
+      rem
+      set HB_ARCHITECTURE=linux
+      set HB_COMPILER=watcom
+      set HB_USER_PRGFLAGS=%HB_USER_PRGFLAGS% -D__PLATFORM__LINUX -D__PLATFORM__UNIX -undef:__PLATFORM__WINDOWS
+      set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
+      call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
+      ---
+
 
 HOW TO GET THE HARBOUR SOURCES
 ==============================

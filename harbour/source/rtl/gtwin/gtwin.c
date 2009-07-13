@@ -583,8 +583,8 @@ static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
       i = iRow * _GetScreenWidth() + psrWin->Left;
       for( iCol = psrWin->Left; iCol <= psrWin->Right; ++iCol )
       {
-         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, ( BYTE ) s_pCharInfoScreen[i].Attributes, 0,
-                               s_charTransRev[ ( BYTE ) s_pCharInfoScreen[i].Char.AsciiChar ] );
+         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, ( BYTE ) s_pCharInfoScreen[ i ].Attributes, 0,
+                               s_charTransRev[ ( BYTE ) s_pCharInfoScreen[ i ].Char.AsciiChar ] );
          ++i;
       }
    }
@@ -617,8 +617,8 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
 
       s_iCurRow = s_csbi.dwCursorPosition.Y;
       s_iCurCol = s_csbi.dwCursorPosition.X;
-      s_iUpdtTop = s_csbi.dwSize.Y;
-      s_iUpdtLeft = s_csbi.dwSize.X;
+      s_iUpdtTop = _GetScreenHeight();
+      s_iUpdtLeft = _GetScreenWidth();
       s_iUpdtBottom = s_iUpdtRight = 0;
 
       /*
@@ -630,8 +630,8 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
 #if 0
       srWin.Top    = 0;
       srWin.Left   = 0;
-      srWin.Bottom = s_csbi.dwSize.Y - 1;
-      srWin.Right  = s_csbi.dwSize.X - 1;
+      srWin.Bottom = _GetScreenHeight() - 1;
+      srWin.Right  = _GetScreenWidth() - 1;
 #else
       srWin.Top    = s_csbi.srWindow.Top;
       srWin.Left   = s_csbi.srWindow.Left;
@@ -1228,7 +1228,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
             /* Save the keyboard state and ASCII,scan, key code */
             WORD wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
             WORD wChar = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
-            DWORD dwState= s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState;
+            DWORD dwState = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState;
 
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
 
@@ -1296,7 +1296,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                extKey = EXKEY_DOWN;
             else if( wChar == 45 )  /* VK_INSERT */
                extKey = EXKEY_INS;
-            else if( wChar == 46 && (!(ch==46)) )  /* VK_DELETE */
+            else if( wChar == 46 && ch != 46 )  /* VK_DELETE */
             {
                /* International keyboard under Win98 - when VirtualKey and Ascii
                   char are both 46, then it's keypad del key, but numlock is on,
@@ -1316,7 +1316,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
             else if( wChar == 109 ) /* VK_SUBTRACT */
                extKey = EXKEY_KPMINUS;
             else if( wChar == 111 ||   /* VK_DIVIDE */
-                    ( wChar == 191 && ( dwState & ENHANCED_KEY )))
+                    ( wChar == 191 && ( dwState & ENHANCED_KEY ) ) )
             {
                /* This should be for other than Win98 */
                extKey = EXKEY_KPDIVIDE;
