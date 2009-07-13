@@ -14,13 +14,13 @@ ifeq ($(HB_XBUILD),)
 ifeq ($(HB_NCURSES_194),yes)
 HB_INC_CURSES = /usr/include/ncur194
 else
-HB_INC_CURSES = /usr/include/ncurses /sw/include /sw/include/ncurses
+HB_INC_CURSES = /usr/include /usr/include/ncurses /usr/local/include /usr/local/include/ncurses /sw/include /sw/include/ncurses /opt/local/include /opt/local/include/ncurses
 endif
 endif
 endif
 
 ifeq ($(HB_WITHOUT_GTCRS),yes)
-#HB_INC_CURSES =
+HB_INC_CURSES =
 endif
 
 HB_INC_CURSES_OK += $(foreach d, $(HB_INC_CURSES), $(if $(wildcard $(d)/curses.h),$(d),))

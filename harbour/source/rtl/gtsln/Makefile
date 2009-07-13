@@ -17,7 +17,7 @@ ifeq ($(HB_LOCAL_SLN),yes)
 HB_INC_SLANG = /usr/local/include /usr/local/include/slang
 LDFLAGS := -L/usr/local/lib $(LDFLAGS)
 else
-HB_INC_SLANG = /usr/include/slang /usr/local/include /usr/local/include/slang /sw/include /opt/local/include
+HB_INC_SLANG = /usr/include /usr/include/slang /usr/local/include /usr/local/include/slang /sw/include /sw/include/slang /opt/local/include /opt/local/include/slang
 LDFLAGS := -L/usr/lib/slang -L/usr/local/lib -L/usr/local/lib/slang $(LDFLAGS)
 endif
 endif
