@@ -65,6 +65,7 @@ ifeq ($(HB_LIB_COMPILE),)
 HB_LIB_COMPILE :=
 endif
 
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 include $(TOP)$(ROOT)config/$(HB_ARCH).cf
 
 endif

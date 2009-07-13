@@ -10,8 +10,6 @@
 #    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlink.html
 # ---------------------------------------------------------------
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
-
 OBJ_EXT = .o
 EXE_EXT =
 LIB_PREF =

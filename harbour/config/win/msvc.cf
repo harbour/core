@@ -2,8 +2,6 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
-
 OBJ_EXT = .obj
 EXE_EXT = .exe
 LIB_PREF =

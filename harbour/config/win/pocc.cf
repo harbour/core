@@ -1,10 +1,9 @@
 #
 # $Id$
 #
+
 # The Harbour Project
 # GNU MAKE file for Pelles ISO C Compiler
-
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
 OBJ_EXT = .obj
 EXE_EXT = .exe
