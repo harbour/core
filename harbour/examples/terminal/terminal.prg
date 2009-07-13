@@ -320,7 +320,7 @@ Static Function RmtSvrReceiveClient()
          cKey := hb_INetRecvLine( s_commSocket, @nBytes )
 
          if nBytes > 0
-            hb_KeyPut( cKey )
+            hb_KeyPut( Val( cKey ) )
 
          elseif nBytes == 1
 

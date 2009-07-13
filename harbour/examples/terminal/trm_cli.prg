@@ -283,13 +283,18 @@ Function TrmServeServer( Socket, cAddress, cServerInfo )
    hb_threadStart( @Thread_Clock()  , 5 )
 
    do while .t.
-//    Wvt_ProcessMessages()
-      hb_idleSleep()
+      nKey := Inkey( 0, INKEY_ALL )
 
-      nError := Hb_INetErrorCode( commSocket )
-      if ascan( { -2, WSAECONNABORTED, 10054 }, nError ) > 0
-         Exit
-      endif
+      IF s_commSocket <> NIL .AND. ! Empty( nKey )
+         s_lSending := .T.
+         hb_inetSendAll( s_commSocket, hb_ntos( nKey ) + CR_LF )
+         s_lSending := .F.
+      ENDIF
+
+      nError := hb_inetErrorCode( s_commSocket )
+      IF AScan( { -2, WSAECONNABORTED, 10054 }, nError ) > 0
+         EXIT
+      ENDIF
    enddo
 
 // Wvt_KillTimer( TIMER_RECEIVE )
@@ -369,32 +374,6 @@ Function TrmReceiveServer()
 
    Return 0
 
-//----------------------------------------------------------------------//
-
-Function WVT_TIMER( wParam )
-
-   switch wParam
-
-   case TIMER_SEND
-      inkey()
-      exit
-
-   case TIMER_RECEIVE
-      TrmReceiveServer()
-      exit
-
-   case TIMER_PING
-      Keyboard( 1021 )
-      exit
-
-   case TIMER_CLOCK
-      DispClock()
-      exit
-
-   end
-
-   Return 0
-
 STATIC PROCEDURE Thread_Receive( nWait )
 
    DO WHILE .T.
@@ -430,18 +409,6 @@ STATIC PROCEDURE Thread_Clock( nWait )
    ENDDO
 
    RETURN
-
-//----------------------------------------------------------------------//
-
-Function Wvt_Key( nKey )
-
-   if commSocket <> NIL .and. !empty( nKey ) .and. ( nKey < 1000 )
-      lSending := .t.
-      Hb_INetSendAll( commSocket, ltrim( str( nKey ) ) + CR_LF )
-      lSending := .f.
-   endif
-
-   Return 0
 
 //----------------------------------------------------------------------//
 
