@@ -67,7 +67,7 @@ FUNCTION Main()
       ENDIF
 #if 0
 IF nKey != 0
-   hb_ToOutDebug( "nKey %i %s", nKey, chr( nKey ) )
+   hb_OutDebug( "nKey %i %s", nKey, chr( nKey ) )
 ENDIF
 #endif
       IF nn < 80
@@ -445,7 +445,8 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
 FUNCTION Qtc_Out( cMsg )
 
-   RETURN Qtc_OutputDebugString( cMsg )
+   //RETURN Qtc_OutputDebugString( cMsg )
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

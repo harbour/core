@@ -1453,7 +1453,8 @@ void DrawingArea::copyTextOnClipboard( void )
    {
       for( icol = left; icol <= right; icol++ )
       {
-         BYTE bColor, bAttr;
+         int bColor;
+         BYTE bAttr;
          USHORT usChar;
 
          if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
@@ -1512,7 +1513,8 @@ void DrawingArea::redrawBuffer( const QRect & rect )
 
    USHORT usChar;
    int    iCol, iRow, len, iTop, startCol;
-   BYTE   bColor, bAttr, bOldColor = 0, bOldAttr = 0;
+   int    bColor;
+   BYTE   bAttr, bOldColor = 0, bOldAttr = 0;
    char   text[ WVT_MAX_COLS ];
    QRect  rcRect = hb_gt_wvt_QGetColRowFromXYRect( pWVT, rect );
 
@@ -1634,7 +1636,8 @@ void DrawingArea::displayCell( int iRow, int iCol )
    painter.setFont( font );
 
    USHORT usChar;
-   BYTE   bAttr,  bColor = 0;
+   BYTE   bAttr;
+   int    bColor = 0;
 
    if( HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
    {
