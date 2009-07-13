@@ -51,15 +51,11 @@
  */
 
 #ifndef HB_WVT_H_
-
 #define HB_WVT_H_
 
 #define HB_GT_NAME  WVT
 
-
 #include <windows.h>
-/*#include <winuser.h>*/
-/*#include <commctrl.h>*/
 
 #include "hbset.h"
 #include "hbgtcore.h"

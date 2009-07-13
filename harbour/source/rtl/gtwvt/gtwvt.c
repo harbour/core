@@ -141,11 +141,8 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 
    if( ! RegisterClass( &wndclass ) )
    {
-      int iError = GetLastError();
-      if( iError != 1410 )
-      {
+      if( GetLastError() != 1410 )
          hb_errInternal( 10001, "Failed to register WVT window class", NULL, NULL );
-      }
    }
 }
 
@@ -516,9 +513,8 @@ static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
    {
       *iKey = pWVT->Keys[ pWVT->keyPointerOut ];
       if( ++pWVT->keyPointerOut >= WVT_CHAR_QUEUE_SIZE )
-      {
          pWVT->keyPointerOut = 0;
-      }
+
       return TRUE;
    }
 
@@ -531,16 +527,12 @@ static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int a
    int nVirtKey = GetKeyState( VK_MENU );
 
    if( nVirtKey & 0x8000 ) /* alt + key */
-   {
       hb_gt_wvt_AddCharToInputQueue( pWVT, altkey );
-   }
    else
    {
       nVirtKey = GetKeyState( VK_CONTROL );
       if( nVirtKey & 0x8000 ) /* control + key */
-      {
          hb_gt_wvt_AddCharToInputQueue( pWVT, controlkey );
-      }
       else
       {
          nVirtKey = GetKeyState( VK_SHIFT );
@@ -1288,9 +1280,7 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
                      pWVT->IgnoreWM_SYSCHAR = TRUE;
                   }
                   else
-                  {
                       DefWindowProc( pWVT->hWnd, message, wParam, lParam );  /* Let windows handle ScrollLock */
-                  }
                }
                else if( bCtrl && iScanCode == 53 && bShift )
                {
@@ -1727,7 +1717,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_SIZE:
          if( pWVT->bResizing )
          {
-            if( !pWVT->bAlreadySizing )
+            if( ! pWVT->bAlreadySizing )
             {
                pWVT->bAlreadySizing = TRUE;
 
@@ -1742,10 +1732,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
 #if ! defined( HB_OS_WIN_CE )
       case WM_NCLBUTTONDBLCLK:
-         if( !pWVT->bMaximized )
-         {
+         if( ! pWVT->bMaximized )
             hb_gt_wvt_Maximize( pWVT );
-         }
          return 0;
 #endif
 
@@ -1981,9 +1969,8 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
              * font settings will fit in the window
              */
             if( hb_gt_wvt_ValidWindowSize( pWVT->hWnd, iRow, iCol, hFont, pWVT->fontWidth ) )
-            {
                fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol );
-            }
+
             DeleteObject( hFont );
             HB_GTSELF_REFRESH( pGT );
          }
@@ -2159,18 +2146,13 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->fontWidth );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
-         {
-            /* store font status for next operation on fontsize */
-            pWVT->fontWidth = iVal;
-         }
+            pWVT->fontWidth = iVal;  /* store font status for next operation on fontsize */
          break;
 
       case HB_GTI_FONTNAME:
          pInfo->pResult = hb_itemPutC( pInfo->pResult, pWVT->fontFace );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) /* TODO */
-         {
             hb_strncpy( pWVT->fontFace, hb_itemGetCPtr( pInfo->pNewVal ), sizeof( pWVT->fontFace ) - 1 );
-         }
          break;
 
       case HB_GTI_FONTWEIGHT:
@@ -2258,18 +2240,14 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->PTEXTSIZE.y * pWVT->ROWS );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
-         {
             HB_GTSELF_SETMODE( pGT, ( iVal / pWVT->PTEXTSIZE.y ), pWVT->COLS );
-         }
          break;
 
       case HB_GTI_SCREENWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->PTEXTSIZE.x * pWVT->COLS );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
-         {
             HB_GTSELF_SETMODE( pGT, pWVT->ROWS, ( iVal / pWVT->PTEXTSIZE.x ) );
-         }
          break;
 
       case HB_GTI_DESKTOPWIDTH:
@@ -2326,7 +2304,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             iVal = hb_itemGetNI( pInfo->pNewVal );
             if( iVal != pWVT->CodePage )
             {
-               if( !pWVT->hWnd )
+               if( ! pWVT->hWnd )
                {
                   pWVT->CodePage = iVal;
                }
@@ -2663,10 +2641,8 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          else
          {
             int i;
-            if( !pInfo->pResult )
-            {
+            if( ! pInfo->pResult )
                pInfo->pResult = hb_itemNew( NULL );
-            }
             hb_arrayNew( pInfo->pResult, 16 );
             for( i = 0; i < 16; i++ )
                hb_arraySetNL( pInfo->pResult, i + 1, pWVT->COLORS[ i ] );
@@ -2688,9 +2664,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_RESIZEMODE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->ResizeMode );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-         {
             pWVT->ResizeMode = hb_itemGetNI( pInfo->pNewVal );
-         }
          break;
 
       case HB_GTI_SETPOS_XY:

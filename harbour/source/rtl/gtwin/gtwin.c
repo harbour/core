@@ -88,8 +88,6 @@
 #  include "hbapicdp.h"
 #endif
 
-#if !defined( HB_NO_WIN_CONSOLE )
-
 #if !defined( __LCC__ )
 #  include <wincon.h>
 #endif
@@ -189,18 +187,19 @@ static int           s_altisdown = 0;
 static int           s_altnum = 0;
 
 static int           s_mouseLast;  /* Last mouse button to be pressed                   */
-static int           hb_mouse_iCol;
-static int           hb_mouse_iRow;
+static int           s_mouse_iCol;
+static int           s_mouse_iRow;
 
 static OSVERSIONINFO s_osv;
 
-typedef struct _ClipKeyCode {
+typedef struct _CLIPKEYCODE
+{
     int key;
     int alt_key;
     int ctrl_key;
     int shift_key;
     int altgr_key;
-} ClipKeyCode;
+} CLIPKEYCODE;
 
 #define CLIP_STDKEY_COUNT      96
 #define CLIP_EXTKEY_COUNT      34
@@ -208,7 +207,7 @@ typedef struct _ClipKeyCode {
 /* Keypad keys */
 
 
-static const ClipKeyCode stdKeyTab[CLIP_STDKEY_COUNT] = {
+static const CLIPKEYCODE stdKeyTab[CLIP_STDKEY_COUNT] = {
     { 32,                  0,             0,         0,             0}, /* ' ' */
     { 33,                  0,             0,         0,             0}, /* '!' */
     { 34,                  0,             0,         0,             0}, /* '"' */
@@ -358,7 +357,7 @@ static const ClipKeyCode stdKeyTab[CLIP_STDKEY_COUNT] = {
 #define K_SH_ENTER          K_ENTER  /* Shift-Enter == Enter */
 #endif
 
-static const ClipKeyCode extKeyTab[CLIP_EXTKEY_COUNT] = {
+static const CLIPKEYCODE extKeyTab[CLIP_EXTKEY_COUNT] = {
    {K_F1,          K_ALT_F1,     K_CTRL_F1,   K_SH_F1,    K_ALT_F1}, /*  00 */
    {K_F2,          K_ALT_F2,     K_CTRL_F2,   K_SH_F2,    K_ALT_F2}, /*  01 */
    {K_F3,          K_ALT_F3,     K_CTRL_F3,   K_SH_F3,    K_ALT_F3}, /*  02 */
@@ -513,8 +512,7 @@ static void hb_gt_win_xScreenUpdate( void )
                              &srWin );          /* screen buffer rect to write data to */
       }
 
-      if( s_iOldCurStyle != s_iCursorStyle &&
-          s_iCursorStyle == SC_NONE )
+      if( s_iOldCurStyle != s_iCursorStyle )
          hb_gt_win_xSetCursorStyle();
 
       if( s_iCursorStyle != SC_NONE &&
@@ -671,13 +669,9 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_osv.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
    GetVersionEx( &s_osv );
    if( s_osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
-   {
       s_dwAltGrBits = RIGHT_ALT_PRESSED;
-   }
    else
-   {
       s_dwAltGrBits = LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED;
-   }
 
    /* stdin && stdout && stderr */
    s_hStdIn  = hFilenoStdin;
@@ -733,9 +727,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       }
 #endif
       if( s_HInput == INVALID_HANDLE_VALUE )
-      {
          hb_errInternal( 10001, "Can't allocate console", NULL, NULL );
-      }
    }
 
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
@@ -938,7 +930,7 @@ static int Handle_Alt_Key( int * paltisdown, int * paltnum, unsigned short wKey,
          on Keydown, it better be the alt or a numpad key,
          or bail out.
       */
-      switch(wKey)
+      switch( wKey )
       {
          case 0x38:
          case 0x47:
@@ -954,7 +946,7 @@ static int Handle_Alt_Key( int * paltisdown, int * paltnum, unsigned short wKey,
             break;
 
          default:
-            *paltisdown=0;
+            *paltisdown = 0;
             break;
       }
    }
@@ -964,7 +956,7 @@ static int Handle_Alt_Key( int * paltisdown, int * paltnum, unsigned short wKey,
 
       unsigned short nm = 10;
 
-      switch(wKey)
+      switch( wKey )
       {
          case 0x38:
             /* Alt key ... */
@@ -997,7 +989,7 @@ static int Handle_Alt_Key( int * paltisdown, int * paltnum, unsigned short wKey,
          case 0x47: --nm;
          case 0x48: --nm;
          case 0x49: --nm;
-            *paltnum = ((*paltnum * 10) & 0xff) + nm;
+            *paltnum = ( ( *paltnum * 10 ) & 0xff ) + nm;
             break;
 
          default:
@@ -1153,7 +1145,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 {
    int ch = 0,
        extKey = -1;
-   const ClipKeyCode *clipKey = NULL;
+   const CLIPKEYCODE * clipKey = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_ReadKey(%p,%d)", pGT, iEventMask));
 
@@ -1270,70 +1262,40 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
             }
 
             if( s_wRepeated == 0 )
-            {
                s_wRepeated = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wRepeatCount;
-            }
 
             if( s_wRepeated > 0 ) /* Might not be redundant */
-            {
                s_wRepeated--;
-            }
 #if 0
             printf( "\n\nhb_gt_ReadKey(): dwState is %ld, wChar is %d, wKey is %d, ch is %d", dwState, wChar, wKey, ch );
 #endif
 
             if( wChar == 8 )        /* VK_BACK */
-            {
                extKey = EXKEY_BS;
-            }
             else if( wChar == 9 )   /* VK_TAB */
-            {
                extKey = EXKEY_TAB;
-            }
             else if( wChar == 13 )  /* VK_RETURN */
-            {
                extKey = EXKEY_ENTER;
-            }
             else if( wChar == 27 )  /* VK_ESCAPE */
-            {
                extKey = EXKEY_ESC;
-            }
             else if( wChar == 33 )  /* VK_PRIOR */
-            {
                extKey = EXKEY_PGUP;
-            }
             else if( wChar == 34 )  /* VK_NEXT */
-            {
                extKey = EXKEY_PGDN;
-            }
             else if( wChar == 35 )  /* VK_END */
-            {
                extKey = EXKEY_END;
-            }
             else if( wChar == 36 )  /* VK_HOME */
-            {
                extKey = EXKEY_HOME;
-            }
             else if( wChar == 37 )  /* VK_LEFT */
-            {
                extKey = EXKEY_LEFT;
-            }
             else if( wChar == 38 )  /* VK_UP */
-            {
                extKey = EXKEY_UP;
-            }
             else if( wChar == 39 )  /* VK_RIGHT */
-            {
                extKey = EXKEY_RIGHT;
-            }
             else if( wChar == 40 )  /* VK_DOWN */
-            {
                extKey = EXKEY_DOWN;
-            }
             else if( wChar == 45 )  /* VK_INSERT */
-            {
                extKey = EXKEY_INS;
-            }
             else if( wChar == 46 && (!(ch==46)) )  /* VK_DELETE */
             {
                /* International keyboard under Win98 - when VirtualKey and Ascii
@@ -1348,17 +1310,11 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                ch = 47;
             }
             else if( wChar == 106 ) /* VK_MULTIPLY */
-            {
                extKey = EXKEY_KPASTERISK;
-            }
             else if( wChar == 107 ) /* VK_ADD */
-            {
                extKey = EXKEY_KPPLUS;
-            }
             else if( wChar == 109 ) /* VK_SUBTRACT */
-            {
                extKey = EXKEY_KPMINUS;
-            }
             else if( wChar == 111 ||   /* VK_DIVIDE */
                     ( wChar == 191 && ( dwState & ENHANCED_KEY )))
             {
@@ -1366,68 +1322,42 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                extKey = EXKEY_KPDIVIDE;
             }
             else if( wChar >= 112 && wChar <= 123 )   /* F1-F12 VK_F1-VK_F12 */
-            {
                extKey = wChar - 112;
-            }
             else if( ch >= K_SPACE && ch <= K_CTRL_BS )
-            {
                clipKey = &stdKeyTab[ ch - K_SPACE ];
-            }
             else if( ch > 0 && ch < K_SPACE && ( dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) ) )
-            {
                clipKey = &stdKeyTab[ ch + '@' ];
-            }
             else if( ch < 0 ) /* international keys */
-            {
                ch += 256;
-            }
 
             if( extKey > -1 )
-            {
                clipKey = &extKeyTab[ extKey ];
-            }
 
             if( clipKey )
             {
                if( ( dwState & SHIFT_PRESSED ) && ( dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) ) )
                {
                   if( clipKey->key == K_TAB )
-                  {
                      ch = K_CTRL_SH_TAB;
-                  }
                }
                else if( dwState & LEFT_ALT_PRESSED )
-               {
                   ch = clipKey->alt_key;
-               }
                else if( dwState & RIGHT_ALT_PRESSED )
-               {
                   ch = clipKey->altgr_key;
-               }
                else if( dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) )
-               {
                   ch = clipKey->ctrl_key;
-               }
                else if( dwState & SHIFT_PRESSED )
-               {
                   ch = clipKey->shift_key;
-               }
                else
-               {
                   ch = clipKey->key;
-               }
 
                if( ch == 0 )  /* for keys that are only on shift or AltGr */
-               {
                   ch = clipKey->key;
-               }
             }
 
             /* national codepage translation */
             if( ch > 0 && ch <= 255 )
-            {
                ch = s_keyTrans[ ch ];
-            }
          }
       }
       else if( b_MouseEnable &&
@@ -1435,8 +1365,8 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                iEventMask & ~( INKEY_KEYBOARD | INKEY_RAW ) )
       {
 
-         hb_mouse_iCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
-         hb_mouse_iRow = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
+         s_mouse_iCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
+         s_mouse_iRow = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
 
          if( iEventMask & INKEY_MOVE &&
              s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_MOVED )
@@ -1483,15 +1413,11 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 
       /* Set up to process the next input event (if any) */
       if( s_wRepeated == 0 )
-      {
          s_cNumIndex++;
-      }
    }
 #if 0
    if( ch )
-   {
       printf(" %ld:%ld",ch,extKey);
-   }
 #endif
 
    return ch;
@@ -1566,9 +1492,7 @@ static BOOL hb_gt_win_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
-   {
       pszHostCDP = hb_cdpID();
-   }
 
    if( pszTermCDP && pszHostCDP )
    {
@@ -1692,9 +1616,7 @@ static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                                 ulLen );
             }
             else
-            {
                pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-            }
          }
          break;
 
@@ -1718,8 +1640,8 @@ static void hb_gt_win_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
    HB_SYMBOL_UNUSED( pGT );
 
-   *piRow = hb_mouse_iRow;
-   *piCol = hb_mouse_iCol;
+   *piRow = s_mouse_iRow;
+   *piCol = s_mouse_iCol;
 }
 
 static BOOL hb_gt_win_mouse_ButtonState( PHB_GT pGT, int iButton )
@@ -1797,13 +1719,9 @@ static void hb_gt_win_Refresh( PHB_GT pGT )
       if( iRow < 0 || iCol < 0 ||
           iRow >= ( int ) _GetScreenHeight() ||
           iCol >= ( int ) _GetScreenWidth() )
-      {
          s_iCursorStyle = SC_NONE;
-      }
       else
-      {
          s_iCursorStyle = iStyle;
-      }
 
       hb_gt_win_xScreenUpdate();
    }
@@ -1862,5 +1780,3 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
    static HB_$INITSYM hb_vm_auto__hb_startup_gt_Init_ = _hb_startup_gt_Init_;
    #pragma data_seg()
 #endif
-
-#endif /* HB_NO_WIN_CONSOLE */
