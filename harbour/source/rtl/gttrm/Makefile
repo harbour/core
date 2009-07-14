@@ -40,9 +40,9 @@ endif
 endif
 
 ifneq ($(strip $(HB_INC_GPM_OK)),)
-  CFLAGS += -DHAVE_GPM_H
+  HB_USER_CFLAGS += -DHAVE_GPM_H
 ifeq ($(HB_GPM_NOICE_DISABLE),yes)
-  CFLAGS += -DHB_GPM_NOICE_DISABLE
+  HB_USER_CFLAGS += -DHB_GPM_NOICE_DISABLE
 endif
 endif
 

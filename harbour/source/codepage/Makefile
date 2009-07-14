@@ -5,99 +5,101 @@
 ROOT = ../../
 
 C_SOURCES=\
-	cpbg866.c  \
-	cpbgiso.c  \
-	cpbgmik.c  \
-	cpbgwin.c  \
-	cpcs852.c  \
-	cpcsiso.c  \
-	cpcskam.c  \
-	cpcswin.c  \
-	cpde850.c  \
-	cpdeiso.c  \
-	cpdewin.c  \
-	cpel737.c  \
-	cpelwin.c  \
-	cpes850.c  \
+	cpbg866.c \
+	cpbgiso.c \
+	cpbgmik.c \
+	cpbgwin.c \
+	cpcs852.c \
+	cpcsiso.c \
+	cpcskam.c \
+	cpcswin.c \
+	cpde850.c \
+	cpdeiso.c \
+	cpdewin.c \
+	cpel737.c \
+	cpelwin.c \
+	cpes850.c \
 	cpes850c.c \
-	cpesiso.c  \
+	cpesiso.c \
 	cpesisoc.c \
-	cpeswin.c  \
+	cpeswin.c \
 	cpeswinc.c \
 	cpeswinm.c \
-	cpfr850.c  \
-	cpfriso.c  \
-	cpfrwin.c  \
-	cphr437.c  \
-	cphr852.c  \
-	cphrwin.c  \
-	cphu852.c  \
+	cpfr850.c \
+	cpfriso.c \
+	cpfrwin.c \
+	cphr437.c \
+	cphr852.c \
+	cphrwin.c \
+	cphu852.c \
 	cphu852s.c \
-	cphuiso.c  \
+	cphuiso.c \
 	cphuisos.c \
-	cphuwin.c  \
+	cphuwin.c \
 	cphuwins.c \
-	cpit437.c  \
-	cpit850.c  \
-	cpitisb.c  \
-	cpitiso.c  \
-	cpitwin.c  \
-	cpltwin.c  \
-	cppl852.c  \
-	cppliso.c  \
-	cpplmaz.c  \
-	cpplwin.c  \
-	cppt850.c  \
-	cpptiso.c  \
-	cpro852.c  \
-	cproiso.c  \
-	cprowin.c  \
-	cpru866.c  \
-	cpruiso.c  \
-	cprukoi.c  \
-	cpruwin.c  \
-	cpsk852.c  \
-	cpskiso.c  \
-	cpskkam.c  \
-	cpskwin.c  \
-	cpsl437.c  \
-	cpsl852.c  \
-	cpsliso.c  \
-	cpslwin.c  \
-	cpsrwin.c  \
-	cpsv850.c  \
+	cpit437.c \
+	cpit850.c \
+	cpitisb.c \
+	cpitiso.c \
+	cpitwin.c \
+	cpltwin.c \
+	cppl852.c \
+	cppliso.c \
+	cpplmaz.c \
+	cpplwin.c \
+	cppt850.c \
+	cpptiso.c \
+	cpro852.c \
+	cproiso.c \
+	cprowin.c \
+	cpru866.c \
+	cpruiso.c \
+	cprukoi.c \
+	cpruwin.c \
+	cpsk852.c \
+	cpskiso.c \
+	cpskkam.c \
+	cpskwin.c \
+	cpsl437.c \
+	cpsl852.c \
+	cpsliso.c \
+	cpslwin.c \
+	cpsrwin.c \
+	cpsv850.c \
 	cpsvclip.c \
-	cpsviso.c  \
-	cpsvwin.c  \
-	cptr857.c  \
-	cptrwin.c  \
-	cpua866.c  \
-	cpuakoi.c  \
-	cpuawin.c  \
-	uc1250.c   \
-	uc1251.c   \
-	uc1252.c   \
-	uc1253.c   \
-	uc1254.c   \
-	uc1255.c   \
-	uc1256.c   \
-	uc1257.c   \
-	uc1258.c   \
-	uc737.c    \
-	uc775.c    \
-	uc850.c    \
-	uc852.c    \
-	uc855.c    \
-	uc857.c    \
-	uc860.c    \
-	uc861.c    \
-	uc862.c    \
-	uc863.c    \
-	uc864.c    \
-	uc865.c    \
-	uc866.c    \
-	uc869.c    \
-	uc874.c    \
+	cpsviso.c \
+	cpsvwin.c \
+	cptr857.c \
+	cptrwin.c \
+	cpua1125.c \
+	cpua866.c \
+	cpuakoi.c \
+	cpuawin.c \
+	uc1125.c \
+	uc1250.c \
+	uc1251.c \
+	uc1252.c \
+	uc1253.c \
+	uc1254.c \
+	uc1255.c \
+	uc1256.c \
+	uc1257.c \
+	uc1258.c \
+	uc737.c \
+	uc775.c \
+	uc850.c \
+	uc852.c \
+	uc855.c \
+	uc857.c \
+	uc860.c \
+	uc861.c \
+	uc862.c \
+	uc863.c \
+	uc864.c \
+	uc865.c \
+	uc866.c \
+	uc869.c \
+	uc874.c \
 	uc8859_1.c \
 	uc88591b.c \
 	uc8859_2.c \
@@ -114,27 +116,27 @@ C_SOURCES=\
 	uc885914.c \
 	uc885915.c \
 	uc885916.c \
-	uckam.c    \
-	uckoi8.c   \
-	uckoi8u.c  \
-	ucmaz.c    \
-	ucmik.c    \
-	uc037.c    \
-	uc1006.c   \
-	uc1026.c   \
-	uc424.c    \
-	uc500.c    \
-	uc856.c    \
-	uc875.c    \
-	ucascii.c  \
-	ucatari.c  \
-	ucmacce.c  \
+	uckam.c \
+	uckoi8.c \
+	uckoi8u.c \
+	ucmaz.c \
+	ucmik.c \
+	uc037.c \
+	uc1006.c \
+	uc1026.c \
+	uc424.c \
+	uc500.c \
+	uc856.c \
+	uc875.c \
+	ucascii.c \
+	ucatari.c \
+	ucmacce.c \
 	ucmaccyr.c \
 	ucmacgrk.c \
 	ucmacice.c \
 	ucmacrom.c \
 	ucmactrk.c \
-	ucnext.c   \
+	ucnext.c \
 
 LIBNAME=hbcpage
 

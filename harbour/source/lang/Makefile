@@ -11,21 +11,21 @@ C_SOURCES=\
 	msgbgiso.c \
 	msgbgmik.c \
 	msgbgwin.c \
-	msgca.c    \
+	msgca.c \
 	msgcs852.c \
 	msgcsiso.c \
 	msgcskam.c \
 	msgcswin.c \
-	msgde.c    \
+	msgde.c \
 	msgdewin.c \
-	msgel.c    \
+	msgel.c \
 	msgelwin.c \
-	msgeo.c    \
-	msges.c    \
+	msgeo.c \
+	msges.c \
 	msgeswin.c \
-	msgeu.c    \
-	msgfr.c    \
-	msggl.c    \
+	msgeu.c \
+	msgfr.c \
+	msggl.c \
 	msghe862.c \
 	msghewin.c \
 	msghr437.c \
@@ -36,19 +36,19 @@ C_SOURCES=\
 	msghucwi.c \
 	msghuiso.c \
 	msghuwin.c \
-	msgid.c    \
+	msgid.c \
 	msgis850.c \
-	msgit.c    \
-	msgko.c    \
+	msgit.c \
+	msgko.c \
 	msgltwin.c \
-	msgnl.c    \
+	msgnl.c \
 	msgpl852.c \
 	msgpliso.c \
 	msgplmaz.c \
 	msgplwin.c \
-	msgpt.c    \
+	msgpt.c \
 	msgptiso.c \
-	msgro.c    \
+	msgro.c \
 	msgru866.c \
 	msgrukoi.c \
 	msgruwin.c \
@@ -68,8 +68,8 @@ C_SOURCES=\
 	msgua866.c \
 	msguakoi.c \
 	msguawin.c \
-	msgzhb5.c  \
-	msgzhgb.c  \
+	msgzhb5.c \
+	msgzhgb.c \
 
 LIBNAME=hblang
 
