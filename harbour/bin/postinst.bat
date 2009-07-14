@@ -80,5 +80,9 @@ goto INST_%HB_ARCHITECTURE%
    rem DOS post install part
    goto END
 
+:INST_LINUX
+
+   goto END
+
 :INST_
 :END

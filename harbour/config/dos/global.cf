@@ -6,18 +6,11 @@ ifndef MK
 
 all : first
 
-HB_GT_LIST=\
+HB_GT_LIBS=\
 	gtcgi \
 	gtpca \
 	gtstd \
 	gtdos \
-
-#	gtcrs \
-#	gtsln \
-
-# verify if GT drivers exist
-#HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
-HB_GT_LIBS := $(HB_GT_LIST)
 
 ifeq ($(SHLVL),) # non-bash
 

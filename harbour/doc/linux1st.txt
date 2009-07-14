@@ -115,7 +115,6 @@ export HB_BIN_INSTALL=/usr/bin
 export HB_LIB_INSTALL=/usr/lib/harbour
 export HB_INC_INSTALL=/usr/include/harbour
 export HB_COMPILER=gcc
-export HB_GT_LIB=gtcrs
 
 Since we created the bld.sh from scratch, I dropped it in the /usr/bin
 directory where the rest of the harbour binaries exist.

@@ -271,7 +271,3 @@ DIRS=\
 
 include $(TOP)$(ROOT)config/lib.cf
 include $(TOP)$(ROOT)config/dir.cf
-
-ifneq ($(HB_GT_LIB),)
-CFLAGS += -DHB_GT_LIB=$(HB_GT_LIB:gt%=%)
-endif

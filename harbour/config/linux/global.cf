@@ -4,28 +4,11 @@
 
 all : first
 
-HB_GT_LIST=\
+HB_GT_LIBS=\
 	gtcgi \
 	gtpca \
 	gtstd \
 	gttrm \
-
-ifneq ($(HB_WITHOUT_GTCRS),yes)
-   HB_GT_LIST += gtcrs
-endif
-ifeq ($(HB_COMMERCE),yes)
-   HB_GPM_MOUSE = no
-else
-ifneq ($(HB_WITHOUT_GTSLN),yes)
-   HB_GT_LIST += gtsln
-endif
-endif
-ifneq ($(HB_WITHOUT_X11),yes)
-   HB_GT_LIST += gtxwc
-endif
-
-# verify if GT drivers exist
-HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
 
 ifeq ($(SHLVL),) # non-bash
 

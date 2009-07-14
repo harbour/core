@@ -4,16 +4,11 @@
 
 all : first
 
-HB_GT_LIST=\
+HB_GT_LIBS=\
 	gtcgi \
 	gtpca \
 	gtstd \
 	gtos2 \
-
-# verify if GT drivers exist
-#HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
-# temporary workaround for some possible problems with some GNU make versions
-HB_GT_LIBS := $(HB_GT_LIST)
 
 ifeq ($(SHLVL),) # non-bash
 

@@ -62,10 +62,7 @@ LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
 endif
 
 LDFLAGS = $(LINKPATHS) coredll.lib corelibc.lib winsock.lib ws2.lib
-
-ifeq ($(HB_GT_LIB),gtgui)
 LDFLAGS += /SUBSYSTEM:WINDOWS
-endif
 
 AR = polib.exe
 ARFLAGS = $(HB_USER_AFLAGS)

@@ -4,18 +4,12 @@
 
 all : first
 
-HB_GT_LIST=\
+HB_GT_LIBS=\
 	gtcgi \
 	gtpca \
 	gtstd \
 	gtwvt \
 	gtgui \
-
-#	gtcrs \
-#	gtsln \
-
-# verify if GT drivers exist
-HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
 
 # Favor size for CE builds.
 HB_GCMODE=0

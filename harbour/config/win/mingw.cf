@@ -58,9 +58,7 @@ endif
 # Add the standard C main() entry
 ifeq ($(HB_MAIN),std)
 ifeq ($(findstring vm,$(LIBS)),vm)
-ifneq ($(HB_GT_LIB),gtwvt)
 LDLIBS += -lhbmainstd
-endif
 endif
 endif
 
