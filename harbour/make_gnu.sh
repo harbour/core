@@ -62,6 +62,61 @@ then
     export HB_ARCHITECTURE=win
 fi
 
+if [ -z "$HB_GPM_MOUSE" ]; then
+    if [ "$HB_ARCHITECTURE" = "linux" ] && \
+       ( [ -f /usr/include/gpm.h ] || [ -f /usr/local/include/gpm.h ]); then
+        HB_GPM_MOUSE=yes
+    else
+        HB_GPM_MOUSE=no
+    fi
+    export HB_GPM_MOUSE
+fi
+
+if [ -z "${HB_WITHOUT_GTSLN}" ]; then
+    HB_WITHOUT_GTSLN=yes
+    case "$HB_ARCHITECTURE" in
+        linux|bsd|darwin|hpux|sunos)
+            for dir in /usr /usr/local /sw /opt/local
+            do
+                if [ -f ${dir}/include/slang.h ] || \
+                   [ -f ${dir}/include/slang/slang.h ]; then
+                    HB_WITHOUT_GTSLN=no
+                fi
+            done
+            ;;
+    esac
+    export HB_WITHOUT_GTSLN
+fi
+
+if [ -z "${HB_WITHOUT_GTCRS}" ]; then
+    HB_WITHOUT_GTCRS=yes
+    case "$HB_ARCHITECTURE" in
+        linux|bsd|darwin|hpux|sunos)
+            for dir in /usr /usr/local /sw /opt/local
+            do
+                if [ -f ${dir}/include/curses.h ] || \
+                   [ -f ${dir}/include/ncurses.h ] || \
+                   [ -f ${dir}/include/ncurses/ncurses.h ]; then
+                    HB_WITHOUT_GTCRS=no
+                fi
+            done
+            ;;
+    esac
+    export HB_WITHOUT_GTCRS
+fi
+
+if [ -z "$HB_COMMERCE" ]; then export HB_COMMERCE=no; fi
+
+if [ "$HB_COMMERCE" = yes ]
+then
+    export HB_GPM_MOUSE=no
+    export HB_WITHOUT_GTSLN=yes
+fi
+
+# export HB_USER_PRGFLAGS=
+# export HB_USER_CFLAGS=
+# export HB_USER_LDFLAGS=
+
 if [ "$HB_ARCHITECTURE" = "linux" ]
 then
     if [ "${HB_USER_CFLAGS}" == "${HB_USER_CFLAGS//-fPIC/}" ]
