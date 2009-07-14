@@ -27,13 +27,9 @@ INSTALL_RULE_LIBRARIES := $(INSTALL_RULE)
 HB_VERHEADER=$(TOP)$(ROOT)include/hbverbld.h
 
 ifeq ($(HB_CHANGELOG),)
-   ifeq ($(HB_ARCHITECTURE),dos)
-   ifeq ($(HB_COMPILER),watcom)
-   HB_CHANGELOG:=$(TOP)$(ROOT)change~1
+   ifneq ($(HB_ARCHITECTURE)/$(HB_COMPILER),dos/watcom)
+      HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange[Ll]og)
    endif
-   endif
-ifeq ($(HB_CHANGELOG),)
-   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)ChangeLog)
 ifeq ($(HB_CHANGELOG),)
    HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange[Ll]o)
 ifeq ($(HB_CHANGELOG),)
@@ -42,6 +38,8 @@ ifeq ($(HB_CHANGELOG),)
    HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange~?)
 ifeq ($(HB_CHANGELOG),)
    HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hang~??)
+ifeq ($(HB_CHANGELOG),)
+   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange[Ll]og)
 endif
 endif
 endif
