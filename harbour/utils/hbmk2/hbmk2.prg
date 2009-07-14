@@ -2169,6 +2169,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
          IF     "-fPIC"  $ cSelfFlagC ; AAddNew( hbmk[ _HBMK_aOPTC ], "-fPIC" )
          ELSEIF "-fpic"  $ cSelfFlagC ; AAddNew( hbmk[ _HBMK_aOPTC ], "-fpic" )
+         ELSEIF hbmk[ _HBMK_cARCH ] == "sunos|hpux"
+            AAddNew( hbmk[ _HBMK_aOPTC ], "-fPIC" )
          ENDIF
 
          DO CASE

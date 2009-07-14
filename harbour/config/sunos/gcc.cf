@@ -19,6 +19,7 @@ CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
 CFLAGS =
+LDFLAGS =
 
 ifneq ($(HB_BUILD_WARN),no)
 CFLAGS += -Wall -W
@@ -28,14 +29,11 @@ ifneq ($(HB_BUILD_OPTIM),no)
 CFLAGS += -O3
 endif
 
-# uncomment this if you want to force relocatable code for .so libs
-# it's necessary on some platforms but can reduce performance
-#CFLAGS += -fPIC
+CFLAGS += -fPIC
 
 ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -g
 endif
-
 
 LD = $(HB_CCACHE) $(HB_CMP)
 LD_OUT = -o
@@ -93,7 +91,7 @@ endif
 LINKLIBS += -lm -lrt
 LINKLIBS += -lsocket -lnsl -lresolv
 
-LDFLAGS = $(LINKPATHS)
+LDFLAGS += $(LINKPATHS)
 
 AR = ar
 ARFLAGS = $(HB_USER_AFLAGS)

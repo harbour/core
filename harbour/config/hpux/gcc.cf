@@ -29,9 +29,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
 CFLAGS += -O3
 endif
 
-# uncomment this if you want to force relocatable code for .sl libs
-# it's necessary on some platforms but can reduce performance
-#CFLAGS += -fPIC
+CFLAGS += -fPIC
 
 # uncomment this if you want to force creating 64bit binaries on IA64
 #CFLAGS += -mlp64
