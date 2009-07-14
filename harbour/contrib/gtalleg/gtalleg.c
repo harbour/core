@@ -53,8 +53,6 @@
 
 #define HB_GT_NAME      ALLEG
 
-#include "ssf.h"
-
 #include "hbgtcore.h"
 #include "hbinit.h"
 #include "hbvm.h"
@@ -62,6 +60,8 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
+
+#include "ssf.h"
 
 #include "inkey.ch"
 #include "hbgfxdef.ch"
