@@ -61,10 +61,6 @@ ifeq ($(HB_INC_COMPILE),)
 HB_INC_COMPILE := $(TOP)$(ROOT)include
 endif
 
-ifeq ($(HB_LIB_COMPILE),)
-HB_LIB_COMPILE :=
-endif
-
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 include $(TOP)$(ROOT)config/$(ARCH_COMP).cf
 

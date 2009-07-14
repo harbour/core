@@ -55,11 +55,7 @@ LINKPATHS += /nodefaultlib:"kernel32.lib" /align:4096 /opt:ref /opt:icf
 ifeq ($(HB_VISUALC_VER_PRE80),)
 LINKPATHS += /manifest:no
 endif
-ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += /libpath:$(LIB_DIR)
-else
-LINKPATHS += /libpath:$(HB_LIB_COMPILE)
-endif
 # Add all libraries specified in LIBS.
 LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 

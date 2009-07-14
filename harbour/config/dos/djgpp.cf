@@ -35,12 +35,8 @@ LD = $(HB_CMP)
 LD_OUT = -o
 LDLIBS = -lm
 
-# Add all libraries specified in LIBS.
-ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += -L$(LIB_DIR)
-else
-LINKPATHS += -L$(HB_LIB_COMPILE)
-endif
+
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
 # If LIBS specifies the rdd library, add all DB drivers.

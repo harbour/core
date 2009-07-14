@@ -54,9 +54,6 @@ endif
 
 
 CPPFLAGS += -i. -i$(TOP)$(ROOT)include
-ifneq ($(HB_LIB_COMPILE),)
-   CPPFLAGS += -i$(HB_INC_COMPILE)
-endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
 CPPFLAGS += -d2
@@ -72,27 +69,15 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 LDFLAGS := debug all $(LDFLAGS)
 endif
 
-ifeq ($(HB_LIB_COMPILE),)
-   LINKLIBS += $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))
-else
-   LINKLIBS += $(foreach lib, $(LIBS), $(HB_LIB_COMPILE)/$(lib))
-endif
+LINKLIBS += $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-   ifeq ($(HB_LIB_COMPILE),)
-      RDDLIBS = $(foreach drv, $(HB_DB_DRIVERS), $(LIB_DIR)/$(drv))
-   else
-      RDDLIBS = $(foreach drv, $(HB_DB_DRIVERS), $(HB_LIB_COMPILE)/$(drv))
-   endif
+   RDDLIBS = $(foreach drv, $(HB_DB_DRIVERS), $(LIB_DIR)/$(drv))
 endif
 
 ifeq ($(findstring rtl,$(LIBS)),rtl)
-   ifeq ($(HB_LIB_COMPILE),)
-      GTLIBS = $(foreach gt, $(HB_GT_LIBS), $(LIB_DIR)/$(gt))
-   else
-      GTLIBS = $(foreach gt, $(HB_GT_LIBS), $(HB_LIB_COMPILE)/$(gt))
-   endif
+   GTLIBS = $(foreach gt, $(HB_GT_LIBS), $(LIB_DIR)/$(gt))
 endif
 
 LDFILES = $(subst $(space),$(comma) ,$(^F))

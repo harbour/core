@@ -51,11 +51,7 @@ LD = link.exe
 LD_OUT = /out:
 
 # Add all libraries specified in LIBS.
-ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += /libpath:$(LIB_DIR)
-else
-LINKPATHS += /libpath:$(HB_LIB_COMPILE)
-endif
 LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 
 # If LIBS specifies the rdd library, add all DB drivers.

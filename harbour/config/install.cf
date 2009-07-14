@@ -2,9 +2,11 @@
 # $Id$
 #
 
+ifneq ($(HB_INSTALL_DEF),yes)
+
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/install.cf
 
-ifneq ($(HB_INSTALL_DEF),yes)
 install:: first
 	$(INSTALL_RULE)
+
 endif

@@ -42,11 +42,7 @@ LDFLAGS = -O2
 LD_OUT = -e
 
 # Add all libraries specified in LIBS.
-ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += -L$(LIB_DIR)
-else
-LINKPATHS += -L$(HB_LIB_COMPILE)
-endif
 LIBLIST += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 
 # If LIBS specifies the rdd library, add all DB drivers.
@@ -61,11 +57,7 @@ endif
 
 # It's probably not necessary in native Windows but I need it
 # for my Linux box because -L<path> seems to not work with WINE
-ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS += $(foreach lib, $(LIBLIST), $(LIB_DIR)/$(lib))
-else
-LINKLIBS += $(foreach lib, $(LIBLIST), $(HB_LIB_COMPILE)/$(lib))
-endif
 
 LDFLAGS = $(LINKPATHS)
 
