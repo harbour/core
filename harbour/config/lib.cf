@@ -6,9 +6,9 @@ ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
 #no slash at the end
-LIB_PATH := $(TOP)$(ROOT)lib/$(HB_ARCHITECTURE)
+LIB_ARCH_DIR := $(TOP)$(ROOT)lib/$(HB_ARCHITECTURE)
 #no slash at the end
-LIB_DIR := $(LIB_PATH)/$(HB_COMPILER)
+LIB_DIR := $(LIB_ARCH_DIR)/$(HB_COMPILER)
 
 include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/c.cf
@@ -16,21 +16,21 @@ include $(TOP)$(ROOT)config/prg.cf
 
 LIB_NAME := $(LIB_PREF)$(LIBNAME)$(LIB_EXT)
 
-LIB_ARCH := $(LIB_DIR)/$(LIB_NAME)
+LIB_FILE := $(LIB_DIR)/$(LIB_NAME)
 
 ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 
 first:: dirbase descend
 
 descend:: dirbase
-	+@$(MK) -C $(ARCH_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(LIB_NAME) $(HB_USER_MAKEFLAGS)
+	+@$(MK) -C $(ARCH_COMP_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(LIB_NAME) $(HB_USER_MAKEFLAGS)
 
 vpath $(LIB_NAME) $(LIB_DIR)
 $(LIB_NAME) : $(ALL_OBJS)
 	$(AR_RULE)
 
 
-INSTALL_FILES = $(LIB_ARCH)
+INSTALL_FILES = $(LIB_FILE)
 INSTALL_DIR = $(HB_LIB_INSTALL)
 
 include $(TOP)$(ROOT)config/install.cf

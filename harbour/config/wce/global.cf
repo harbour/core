@@ -23,12 +23,12 @@ endif
 ifeq ($(SHLVL),) # non-bash
 
 # There is a conflict with the use of '\' and '/' characters
-# The MAKE requires '/' in filenames (ARCH_DIR) however some compilers
-# and some DOS commands require '\' (HB_ARCH_OS)
-ARCH_DIR = $(subst \,/,$(HB_ARCH))
-HB_ARCH_OS = $(subst /,\,$(HB_ARCH))
+# The MAKE requires '/' in filenames (ARCH_COMP_DIR) however some compilers
+# and some DOS commands require '\' (ARCH_COMP_OS)
+ARCH_COMP_DIR = $(ARCH_COMP)
+ARCH_COMP_OS = $(subst /,\,$(ARCH_COMP))
 LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
-LIB_ARCH_OS = $(subst /,\,$(LIB_ARCH))
+LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
 DIRSEP = $(subst /,\,\)
 
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
@@ -48,16 +48,16 @@ CP = $(COMSPEC) /c copy
 MV = move
 
 dirbase::
-	-@$(COMSPEC) /c if not exist $(HB_ARCH_OS)\. $(MD) $(HB_ARCH_OS)
-	$(if $(LIB_DIR_OS),-@$(COMSPEC) /c if not exist $(LIB_DIR_OS)\. $(MD) $(LIB_DIR_OS),)
+	-@$(COMSPEC) /c if not exist $(ARCH_COMP_OS) $(MD) $(ARCH_COMP_OS)
+	$(if $(LIB_DIR_OS),-@$(COMSPEC) /c if not exist $(LIB_DIR_OS) $(MD) $(LIB_DIR_OS),)
 
 clean::
-	-@$(COMSPEC) /c if exist $(HB_ARCH_OS) $(RD) $(HB_ARCH_OS)
-	$(if $(LIB_ARCH_OS),-@$(COMSPEC) /c if exist $(LIB_ARCH_OS) $(RM) $(LIB_ARCH_OS),)
+	-@$(COMSPEC) /c if exist $(ARCH_COMP_OS) $(RD) $(ARCH_COMP_OS)
+	$(if $(LIB_FILE_OS),-@$(COMSPEC) /c if exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
 
 else  # bash
 
-ARCH_DIR = $(HB_ARCH)
+ARCH_COMP_DIR = $(ARCH_COMP)
 MK = $(MAKE)
 RM = rm -f
 RD = rm -f -r
@@ -67,10 +67,10 @@ MD = mkdir
 MDP = mkdir -p
 
 dirbase::
-	@[ -d $(ARCH_DIR) ] || $(MDP) $(ARCH_DIR)
+	@[ -d $(ARCH_COMP_DIR) ] || $(MDP) $(ARCH_COMP_DIR)
 	@[ -z $(LIB_DIR) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)
 
 clean::
-	-$(RD) $(ARCH_DIR) $(LIB_ARCH)
+	-$(RD) $(ARCH_COMP_DIR) $(LIB_FILE)
 
 endif

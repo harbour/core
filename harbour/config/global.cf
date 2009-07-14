@@ -23,7 +23,7 @@ all: ; @echo Error: GNU Make version $(MAKE_VERSION) found, $(need) or upper nee
 else
 
 GRANDP = ../../
-HB_ARCH := $(HB_ARCHITECTURE)/$(HB_COMPILER)
+ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 
 #names of valid RDD libraries
 HB_DB_DRIVERS=\
@@ -54,7 +54,7 @@ HB_DB_DIRS += $(HB_DB_DRVEXT)
 endif
 
 ifeq ($(HB_BIN_COMPILE),)
-HB_BIN_COMPILE := $(TOP)$(ROOT)source/main/$(HB_ARCH)
+HB_BIN_COMPILE := $(TOP)$(ROOT)source/main/$(ARCH_COMP)
 endif
 
 ifeq ($(HB_INC_COMPILE),)
@@ -66,6 +66,6 @@ HB_LIB_COMPILE :=
 endif
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
-include $(TOP)$(ROOT)config/$(HB_ARCH).cf
+include $(TOP)$(ROOT)config/$(ARCH_COMP).cf
 
 endif
