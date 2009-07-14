@@ -5941,7 +5941,10 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
          ENDIF
       OTHERWISE
          /* NOTE: Users will have to manually #define fitting macros for
-                  given platform + compiler settings. We could only guess. */
+                  given platform + compiler settings. We could only guess.
+                  Let's assume the most probable CPU platform (as of 2009). */
+         AAdd( aDef, "__LITTLE_ENDIAN__" )
+         AAdd( aDef, "__ARCH32BIT__" )
       ENDCASE
 
       /* Delete macros present in both lists */
