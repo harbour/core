@@ -10,7 +10,7 @@ include $(TOP)$(ROOT)config/global.cf
 # these make versions does not work correctly with
 # parallel execution rules below
 OLD_MAKE:=$(MAKE_VERSION:3.7%=YES)
-OLD_MAKE:=$(OLD_MAKE:3.80%=OLD)
+OLD_MAKE:=$(OLD_MAKE:3.80%=YES)
 
 ifeq ($(OLD_MAKE),YES)
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/dir.cf
