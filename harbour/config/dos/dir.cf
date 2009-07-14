@@ -16,19 +16,19 @@ ifeq ($(SHLVL),) # non-bash
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every commands will be separated by LF
 define dir_mk
-$(DIR_MAKE) -C $(file) $@
+$(MK_OS) -C $(file) $@
 
 endef
 
-DIR_LIST = $(subst /,\,$(DIRS))
-DIR_MAKE = $(subst /,\,$(MK))
-DIR_RULE = $(foreach file, $(DIR_LIST), $(dir_mk))
+DIRS_OS = $(subst /,\,$(DIRS))
+MK_OS = $(subst /,\,$(MK))
+DIR_RULE = $(foreach file, $(DIRS_OS), $(dir_mk))
 
 else  # bash
 
-DIR_LIST = $(subst \,/,$(DIRS))
+DIRS_OS = $(subst \,/,$(DIRS))
 DIR_RULE =\
-	@for d in $(DIR_LIST); do \
+	@for d in $(DIRS_OS); do \
 	  if [ -d $$d ]; then \
 	    $(MAKE) -C $$d $@; \
 	  fi \

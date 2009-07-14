@@ -12,9 +12,9 @@ else
 
 ifeq ($(SHLVL),) # non-bash
 
-DIR_MAKE = $(subst /,\,$(MK))
-DIR_LIST = $(subst /,\,$(DIRS))
-DIR_RULE = $(COMSPEC) /C for %d in ($(DIR_LIST)) do $(DIR_MAKE) -C %d $@
+MK_OS = $(subst /,\,$(MK))
+DIRS_OS = $(subst /,\,$(DIRS))
+DIR_RULE = $(COMSPEC) /C for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
 
 else  # bash
 
