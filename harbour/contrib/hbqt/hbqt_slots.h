@@ -7,6 +7,7 @@
  * QT wrapper main header
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ *
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://www.harbour-project.org
  *

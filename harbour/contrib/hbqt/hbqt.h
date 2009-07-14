@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -92,7 +93,6 @@
 #define hbqt_par_QCompleter( n )             ( ( QCompleter* ) hb_parptr( n ) )
 #define hbqt_par_QConicalGradient( n )       ( ( QConicalGradient* ) hb_parptr( n ) )
 #define hbqt_par_QContextMenuEvent( n )      ( ( QContextMenuEvent* ) hb_parptr( n ) )
-#define hbqt_par_QContextMenuEvent( n )      ( ( QContextMenuEvent* ) hb_parptr( n ) )
 #define hbqt_par_QCoreApplication( n )       ( ( QCoreApplication* ) hb_parptr( n ) )
 #define hbqt_par_QCursor( n )                ( ( QCursor* ) hb_parptr( n ) )
 #define hbqt_par_QDataStream( n )            ( ( QDataStream* ) hb_parptr( n ) )
@@ -134,7 +134,6 @@
 #define hbqt_par_QGroupBox( n )              ( ( QGroupBox* ) hb_parptr( n ) )
 #define hbqt_par_QHBoxLayout( n )            ( ( QHBoxLayout* ) hb_parptr( n ) )
 #define hbqt_par_QHeaderView( n )            ( ( QHeaderView* ) hb_parptr( n ) )
-#define hbqt_par_QHeaderView( n )            ( ( QHeaderView* ) hb_parptr( n ) )
 #define hbqt_par_QHttp( n )                  ( ( QHttp* ) hb_parptr( n ) )
 #define hbqt_par_QHttpRequestHeader( n )     ( ( QHttpRequestHeader* ) hb_parptr( n ) )
 #define hbqt_par_QIcon( n )                  ( ( QIcon* ) hb_parptr( n ) )
@@ -148,8 +147,6 @@
 #define hbqt_par_QItemEditorFactory( n )     ( ( QItemEditorFactory* ) hb_parptr( n ) )
 #define hbqt_par_QItemSelectionModel( n )    ( ( QItemSelectionModel* ) hb_parptr( n ) )
 #define hbqt_par_QKeyEvent( n )              ( ( QKeyEvent* ) hb_parptr( n ) )
-#define hbqt_par_QKeyEvent( n )              ( ( QKeyEvent* ) hb_parptr( n ) )
-#define hbqt_par_QKeySequence( n )           ( ( QKeySequence* ) hb_parptr( n ) )
 #define hbqt_par_QKeySequence( n )           ( ( QKeySequence* ) hb_parptr( n ) )
 #define hbqt_par_QLabel( n )                 ( ( QLabel* ) hb_parptr( n ) )
 #define hbqt_par_QLatin1Char( n )            ( ( QLatin1Char* ) hb_parptr( n ) )
@@ -177,7 +174,6 @@
 #define hbqt_par_QMouseEvent( n )            ( ( QMouseEvent* ) hb_parptr( n ) )
 #define hbqt_par_QMoveEvent( n )             ( ( QMoveEvent* ) hb_parptr( n ) )
 #define hbqt_par_QMovie( n )                 ( ( QMovie* ) hb_parptr( n ) )
-#define hbqt_par_QNetworkAccessManager( n )  ( ( QNetworkAccessManager* ) hb_parptr( n ) )
 #define hbqt_par_QNetworkAccessManager( n )  ( ( QNetworkAccessManager* ) hb_parptr( n ) )
 #define hbqt_par_QNetworkProxy( n )          ( ( QNetworkProxy* ) hb_parptr( n ) )
 #define hbqt_par_QNetworkRequest( n )        ( ( QNetworkRequest* ) hb_parptr( n ) )
@@ -275,7 +271,6 @@
 #define hbqt_par_QTextCursor( n )            ( ( QTextCursor* ) hb_parptr( n ) )
 #define hbqt_par_QTextCursor( n )            ( ( QTextCursor* ) hb_parptr( n ) )
 #define hbqt_par_QTextDecoder( n )           ( ( QTextDecoder* ) hb_parptr( n ) )
-#define hbqt_par_QTextDecument( n )          ( ( QTextDocument* ) hb_parptr( n ) )
 #define hbqt_par_QTextDocument( n )          ( ( QTextDocument* ) hb_parptr( n ) )
 #define hbqt_par_QTextDocumentFragment( n )  ( ( QTextDocumentFragment* ) hb_parptr( n ) )
 #define hbqt_par_QTextDocumentWriter( n )    ( ( QTextDocumentWriter* ) hb_parptr( n ) )
@@ -286,13 +281,10 @@
 #define hbqt_par_QTextFragment( n )          ( ( QTextFragment* ) hb_parptr( n ) )
 #define hbqt_par_QTextFrame( n )             ( ( QTextFrame* ) hb_parptr( n ) )
 #define hbqt_par_QTextFrameFormat( n )       ( ( QTextFrameFormat* ) hb_parptr( n ) )
-#define hbqt_par_QTextFrameFormat( n )       ( ( QTextFrameFormat* ) hb_parptr( n ) )
-#define hbqt_par_QTextImageFormat( n )       ( ( QTextImageFormat* ) hb_parptr( n ) )
 #define hbqt_par_QTextImageFormat( n )       ( ( QTextImageFormat* ) hb_parptr( n ) )
 #define hbqt_par_QTextInlineObject( n )      ( ( QTextInlineObject* ) hb_parptr( n ) )
 #define hbqt_par_QTextItem( n )              ( ( QTextItem* ) hb_parptr( n ) )
 #define hbqt_par_QTextLayout( n )            ( ( QTextLayout* ) hb_parptr( n ) )
-#define hbqt_par_QTextLength( n )            ( ( QTextLength* ) hb_parptr( n ) )
 #define hbqt_par_QTextLength( n )            ( ( QTextLength* ) hb_parptr( n ) )
 #define hbqt_par_QTextLine( n )              ( ( QTextLine* ) hb_parptr( n ) )
 #define hbqt_par_QTextListFormat( n )        ( ( QTextListFormat* ) hb_parptr( n ) )
@@ -325,7 +317,6 @@
 #define hbqt_par_QWebPage( n )               ( ( QWebPage* ) hb_parptr( n ) )
 #define hbqt_par_QWebPage( n )               ( ( QWebPage* ) hb_parptr( n ) )
 #define hbqt_par_QWebPluginFactory( n )      ( ( QWebPluginFactory* ) hb_parptr( n ) )
-#define hbqt_par_QWebPluginFactory( n )      ( ( QWebPluginFactory* ) hb_parptr( n ) )
 #define hbqt_par_QWebSecurityOrigin( n )     ( ( QWebSecurityOrigin* ) hb_parptr( n ) )
 #define hbqt_par_QWebSettings( n )           ( ( QWebSettings* ) hb_parptr( n ) )
 #define hbqt_par_QWebView( n )               ( ( QWebView* ) hb_parptr( n ) )
@@ -338,7 +329,6 @@
 #define hbqt_par_QWindowsXPStyle( n )        ( ( QWindowsXPStyle* ) hb_parptr( n ) )
 #define hbqt_par_QWizard( n )                ( ( QWizard* ) hb_parptr( n ) )
 #define hbqt_par_QWizardPage( n )            ( ( QWizardPage* ) hb_parptr( n ) )
-#define hbqt_par_QWSEvent( n )               ( ( QWSEvent* ) hb_parptr( n ) )
 #define hbqt_par_QWSEvent( n )               ( ( QWSEvent* ) hb_parptr( n ) )
 
 #define hbqt_par_QString( n )                ( ( QString ) hb_parcx( n ) )
