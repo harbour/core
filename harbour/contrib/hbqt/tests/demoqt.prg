@@ -726,7 +726,7 @@ STATIC FUNCTION Dummies()
 
    RETURN nil
 
-/*----------------------------------------------------------------------*/
+function UIDEBUG(); return nil
 
 FUNCTION ShowInSystemTray( oWnd )
    LOCAL oSys
