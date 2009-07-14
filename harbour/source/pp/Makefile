@@ -26,33 +26,12 @@ INSTALL_RULE_LIBRARIES := $(INSTALL_RULE)
 
 HB_VERHEADER=$(TOP)$(ROOT)include/hbverbld.h
 
-ifeq ($(HB_CHANGELOG),)
-   ifneq ($(HB_ARCHITECTURE)/$(HB_COMPILER),dos/watcom)
-      HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange[Ll]og)
-   endif
-ifeq ($(HB_CHANGELOG),)
-   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange[Ll]o)
-ifeq ($(HB_CHANGELOG),)
-   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange~1)
-ifeq ($(HB_CHANGELOG),)
-   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange~?)
-ifeq ($(HB_CHANGELOG),)
-   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hang~??)
-ifeq ($(HB_CHANGELOG),)
-   HB_CHANGELOG:=$(wildcard $(TOP)$(ROOT)[Cc]hange[Ll]og)
-endif
-endif
-endif
-endif
-endif
-endif
-
 ifneq ($(HB_PP_RULES),)
 pptable.c : $(HB_PP_RULES)
 	$(CP) $(subst /,$(DIRSEP),$<) $@
 else
 pptable.c : hbpp$(EXE_EXT)
-	$(HB_PPGEN_PATH)/hbpp$(EXE_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q -c$(HB_CHANGELOG) -v$(HB_VERHEADER)
+	$(HB_PPGEN_PATH)/hbpp$(EXE_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q -c -v$(HB_VERHEADER)
 endif
 
 ifneq ($(HB_BIN_INSTALL),)

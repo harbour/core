@@ -441,18 +441,44 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
    int iResult = 0;
    const char * pszFile;
    FILE * file_in;
+   int tmp;
+   BOOL bFound;
 
-   pszFile = pszFileName ? pszFileName : "../../../../ChangeLog";
+   const char * names[] = { NULL
+      , "../../../../ChangeLog"
+      , "../../../../CHANGES"
+#if defined( HB_OS_DOS )
+      , "../../../../ChangeLo"
+      , "../../../../Change~1"
+      , "../../../../Chang~01"
+#endif
+   };
 
-   if( !pszFileName )
+   names[ 0 ] = pszFileName;
+
+   pszFile = NULL;
+   bFound = FALSE;
+   for( tmp = 0; tmp < ( int ) HB_SIZEOFARRAY( names ) && ! bFound; ++tmp )
    {
-      while( *pszFile == '.' )
+      pszFile = names[ tmp ];
+
+      if( pszFile )
       {
-         if( hb_fsFileExists( pszFile ) )
-            break;
-         pszFile += 3;
+         while( *pszFile == '.' )
+         {
+            if( hb_fsFileExists( pszFile ) )
+            {
+               bFound = TRUE;
+               break;
+            }
+            pszFile += 3;
+         }
       }
    }
+
+   if( pszFile )
+      fprintf( stdout, "Using ChangeLog file: %s\n", pszFile );
+
    file_in = hb_fopen( pszFile, "r" );
    if( !file_in )
    {
