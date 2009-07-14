@@ -30,7 +30,7 @@ $(LIB_NAME) : $(ALL_OBJS)
 	$(AR_RULE)
 
 
-INSTALL_OBJS = $(LIB_ARCH)
+INSTALL_FILES = $(LIB_ARCH)
 INSTALL_DIR = $(HB_LIB_INSTALL)
 
 include $(TOP)$(ROOT)config/install.cf

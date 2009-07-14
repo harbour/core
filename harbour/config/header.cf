@@ -15,7 +15,7 @@ ifeq ($(HB_INC_INSTALL),)
 install::
 
 else
-INSTALL_OBJS = $(ALL_HEADERS)
+INSTALL_FILES = $(ALL_HEADERS)
 INSTALL_DIR = $(HB_INC_INSTALL)
 
 include $(TOP)$(ROOT)config/install.cf

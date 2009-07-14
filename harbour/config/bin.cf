@@ -39,7 +39,7 @@ $(EXE_NAME) : $(ALL_OBJS)
 	$(LD_RULE)
 
 
-INSTALL_OBJS = $(EXE_ARCH)
+INSTALL_FILES = $(EXE_ARCH)
 INSTALL_DIR = $(HB_BIN_INSTALL)
 
 include $(TOP)$(ROOT)config/install.cf

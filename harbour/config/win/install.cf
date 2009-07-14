@@ -2,7 +2,7 @@
 # $Id$
 #
 
-ifeq ($(INSTALL_OBJS),) # Empty install list
+ifeq ($(INSTALL_FILES),) # Empty install list
 
 INSTALL_RULE = @echo Done
 
@@ -10,10 +10,10 @@ else
 
 ifeq ($(SHLVL),) # non-bash
 
-INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
+INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
 
 INSTALL_RULE = \
-	-$(COMSPEC) /c for %%f in ($(INSTALL_LIST)) do copy "%%f" "$(subst /,\,$(INSTALL_DIR))"
+	-$(COMSPEC) /c for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(subst /,\,$(INSTALL_DIR))"
 
 else  # bash
 
@@ -23,7 +23,7 @@ INSTALL_RULE =\
 	  echo "! Can't install, path not found: '$(INSTALL_DIR)'" 1>&2; \
 	  false; \
 	else \
-	  for i in $(INSTALL_OBJS); \
+	  for i in $(INSTALL_FILES); \
 	  do \
 	    if [ -r $$i ]; \
 	    then \

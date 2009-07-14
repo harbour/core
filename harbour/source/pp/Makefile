@@ -35,7 +35,7 @@ pptable.c : hbpp$(EXE_EXT)
 endif
 
 ifneq ($(HB_BIN_INSTALL),)
-INSTALL_OBJS = $(ARCH_DIR)/hbpp$(EXE_EXT)
+INSTALL_FILES = $(ARCH_DIR)/hbpp$(EXE_EXT)
 INSTALL_DIR = $(HB_BIN_INSTALL)
 HB_INSTALL_DEF=yes
 include $(TOP)$(ROOT)config/install.cf

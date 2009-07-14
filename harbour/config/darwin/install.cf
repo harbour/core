@@ -7,7 +7,7 @@ INSTALL_RULE =\
 	then \
 	  echo "! Can't install, path not found: $(INSTALL_DIR)" 1>&2; \
 	else \
-	  for i in $(INSTALL_OBJS); \
+	  for i in $(INSTALL_FILES); \
 	  do \
 	    if [ -r $$i ]; \
 	    then \
@@ -20,6 +20,6 @@ INSTALL_RULE =\
 	  done; \
 	  if [ $(INSTALL_DIR) = $(HB_LIB_INSTALL) ]; \
 	  then \
-	    $(RANLIB) $(foreach file,$(notdir $(INSTALL_OBJS)),$(INSTALL_DIR)/$(file)); \
+	    $(RANLIB) $(foreach file,$(notdir $(INSTALL_FILES)),$(INSTALL_DIR)/$(file)); \
 	  fi \
 	fi

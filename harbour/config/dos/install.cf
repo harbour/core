@@ -2,7 +2,7 @@
 # $Id$
 #
 
-ifeq ($(INSTALL_OBJS),) # Empty install list
+ifeq ($(INSTALL_FILES),) # Empty install list
 
 INSTALL_RULE = @echo Done
 
@@ -18,24 +18,24 @@ $(COMSPEC) /Cxcopy /Y /I $(file) $(subst /,\,$(INSTALL_DIR))
 
 endef
 
-INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
-INSTALL_RULE = $(foreach file, $(INSTALL_LIST), $(inst_file))
+INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
+INSTALL_RULE = $(foreach file, $(INSTALL_FILES_OS), $(inst_file))
 
 else  # bash
 
-INSTALL_DIRSH = $(subst \,/,$(INSTALL_DIR))
-INSTALL_OBJSH = $(subst \,/,$(INSTALL_OBJS))
+INSTALL_DIR_OS = $(subst \,/,$(INSTALL_DIR))
+INSTALL_FILES_OS = $(subst \,/,$(INSTALL_FILES))
 INSTALL_RULE =\
-	@sh -c 'if [ ! -d $(INSTALL_DIRSH) ]; \
+	@sh -c 'if [ ! -d $(INSTALL_DIR_OS) ]; \
 	then \
-	  echo "! Cannot install, path not found: $(INSTALL_DIRSH)" 1>&2; \
+	  echo "! Cannot install, path not found: $(INSTALL_DIR_OS)" 1>&2; \
 	else \
-	  for i in $(INSTALL_OBJSH); \
+	  for i in $(INSTALL_FILES_OS); \
 	  do \
 	    if [ -r $$i ]; \
 	    then \
-	      echo "! Installing $$i on $(INSTALL_DIRSH)"; \
-	      $(CP) $$i $(INSTALL_DIRSH); \
+	      echo "! Installing $$i on $(INSTALL_DIR_OS)"; \
+	      $(CP) $$i $(INSTALL_DIR_OS); \
 	      true; \
 	    else \
 	      echo "! Cannot install $$i, not found" 1>&2; \
