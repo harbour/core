@@ -25,6 +25,9 @@ endif
 ifeq ($(HB_COMPILER),cygwin)
 HB_WITH_GTTRM=yes
 endif
+ifeq ($(HB_COMPILER),djgpp)
+HB_WITH_GTTRM=yes
+endif
 
 ifeq ($(HB_WITH_GTTRM),yes)
 

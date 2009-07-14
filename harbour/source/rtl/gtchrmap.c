@@ -57,7 +57,7 @@
 #include "hbgtcore.h"
 #include "hbapifs.h"
 
-#ifdef HB_OS_UNIX
+#if defined( HB_OS_UNIX ) || defined( HB_OS_DOS )
 
 #define MAX_CHAR_VAL    0xff
 #define HB_CHRMAP(a,c)  ( ( (a) << 16 ) | (c) )
@@ -474,4 +474,4 @@ int main(int argc, char **argv)
 }
 */
 
-#endif /* HB_OS_UNIX */
+#endif /* HB_OS_UNIX || HB_OS_DOS */

@@ -169,7 +169,7 @@ static int s_iActive_ioBase = -1;
 static void set_tmevt(unsigned char *cMBuf, mouseEvent *);
 static int getMouseKey(mouseEvent *);
 static void destroy_ioBase(InOutBase *ioBase);
-static void sig_handler(int signo);
+static void set_sig_handler( int iSig );
 
 static void curs_wrkaround( void );
 
@@ -376,24 +376,11 @@ static int getClipKey( int nKey )
    return nRet;
 }
 
-static void set_sig_handler( int iSig )
-{
-   /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
-#if defined( SA_NOCLDSTOP )
-   struct sigaction act;
-
-   sigaction( iSig, 0, &act );
-   act.sa_handler = sig_handler;
-   act.sa_flags = SA_RESTART | ( iSig == SIGCHLD ? SA_NOCLDSTOP : 0 );
-   sigaction( iSig, &act, 0 );
-#endif
-}
-
+#if defined( SA_NOCLDSTOP ) && defined( SA_RESTART ) && defined( SIGCHLD )
 #if 1
 static void sig_handler( int signo )
 {
-   int e = errno, stat;
-   pid_t pid;
+   int e = errno;
 
    if ( signo < MAX_SIGNO )
    {
@@ -404,8 +391,12 @@ static void sig_handler( int signo )
    switch ( signo )
    {
       case SIGCHLD:
+      {
+         int stat;
+         pid_t pid;
          while ( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 ) ;
          break;
+      }
       case SIGWINCH:
          s_WinSizeChangeFlag = TRUE;
          break;
@@ -447,16 +438,19 @@ static void set_signals( void )
 #else
 static void sig_handler( int signo )
 {
-   int e = errno, stat;
+   int e = errno;
    char *pszSig;
-   pid_t pid;
 
    switch ( signo )
    {
       case SIGCHLD:
+      {
+         int stat;
+         pid_t pid;
          pszSig = "SIGCHLD";
          while ( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 ) ;
          break;
+      }
       case SIGWINCH:
          pszSig = "SIGWINCH";
          break;
@@ -505,6 +499,27 @@ static void set_signals( void )
    }
 }
 #endif
+#else
+static void set_signals( void )
+{
+}
+#endif
+
+static void set_sig_handler( int iSig )
+{
+   /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
+#if defined( SA_NOCLDSTOP ) && defined( SA_RESTART ) && defined( SIGCHLD )
+   struct sigaction act;
+
+   sigaction( iSig, 0, &act );
+   act.sa_handler = sig_handler;
+   act.sa_flags = SA_RESTART | ( iSig == SIGCHLD ? SA_NOCLDSTOP : 0 );
+   sigaction( iSig, &act, 0 );
+#else
+   HB_SYMBOL_UNUSED( iSig );
+#endif
+}
+
 
 static int add_efds( InOutBase * ioBase, int fd, int mode,
                      int ( *eventFunc ) ( int, int, void * ), void *data )

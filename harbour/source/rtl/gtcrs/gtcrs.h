@@ -75,7 +75,7 @@
 #     define _XOPEN_SOURCE_EXTENDED
 #  endif
 #  include <curses.h>
-#  if defined( HB_OS_SUNOS )
+#  if defined( HB_OS_SUNOS ) || defined( __PDCURSES__ )
 #     include <term.h>
 #  endif
 #endif
