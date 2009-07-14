@@ -14,10 +14,11 @@ ifeq ($(SHLVL),) # non-bash
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every commands will be separated by LF
 define inst_file
-$(COMSPEC) /Cxcopy /Y /I $(file) $(subst /,\,$(INSTALL_DIR))
+$(COMSPEC) /Cxcopy /Y /I $(file) $(INSTALL_DIR_OS)
 
 endef
 
+INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
 INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
 INSTALL_RULE = $(foreach file, $(INSTALL_FILES_OS), $(inst_file))
 

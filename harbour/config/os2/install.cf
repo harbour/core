@@ -12,10 +12,11 @@ ifeq ($(SHLVL),) # non-bash
 
 ifeq ($(OS2_SHELL),) # non-OS/2
 
+INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
 INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
 
 INSTALL_RULE = \
-	-$(COMSPEC) /c for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(subst /,\,$(INSTALL_DIR))"
+	-$(COMSPEC) /c for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
 
 else # OS/2
 
