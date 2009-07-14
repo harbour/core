@@ -60,13 +60,15 @@ static HB_GT_FUNCS   SuperTable;
 #define HB_GTSUPER   (&SuperTable)
 #define HB_GTID_PTR  (&s_GtId)
 
+static volatile BOOL s_SignalTable[MAX_SIGNO];
+#if defined( SA_NOCLDSTOP ) && defined( SA_RESTART ) && defined( SIGCHLD )
+static volatile BOOL s_SignalFlag = FALSE;
 /* this variable should be global and checked in main VM loop */
 static volatile BOOL s_BreakFlag = FALSE;
 static volatile BOOL s_InetrruptFlag = FALSE;
+#endif
 static volatile BOOL s_WinSizeChangeFlag = FALSE;
 
-static volatile BOOL s_SignalFlag = FALSE;
-static volatile BOOL s_SignalTable[MAX_SIGNO];
 
 static int s_iStdIn, s_iStdOut, s_iStdErr;
 
@@ -1738,6 +1740,7 @@ static int gt_getsize( InOutBase * ioBase, int *rows, int *cols )
 
    *rows = *cols = 0;
 
+#if defined( TIOCGWINSZ )
    if ( isatty( ioBase->base_outfd ) )
    {
       struct winsize win;
@@ -1748,6 +1751,8 @@ static int gt_getsize( InOutBase * ioBase, int *rows, int *cols )
          *cols = win.ws_col;
       }
    }
+#endif
+
    if ( *rows <= 0 || *cols <= 0 )
    {
       char *env;
@@ -1809,6 +1814,7 @@ static int gt_setsize( InOutBase * ioBase, int rows, int cols )
          s_WinSizeChangeFlag = FALSE;
          ret = gt_resize( ioBase );
       }
+#if defined( TIOCGWINSZ )
       else if ( isatty( ioBase->base_outfd ) )
       {
          struct winsize win;
@@ -1821,6 +1827,7 @@ static int gt_setsize( InOutBase * ioBase, int rows, int cols )
          }
          ret = gt_resize( ioBase );
       }
+#endif
    }
 
    return ret;

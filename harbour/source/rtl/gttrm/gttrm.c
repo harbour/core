@@ -393,6 +393,8 @@ typedef struct _HB_GTTRM
 /* static variables use by signal handler */
 #if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    static volatile BOOL s_WinSizeChangeFlag = FALSE;
+#endif
+#if defined( HB_OS_UNIX_COMPATIBLE ) && defined( SA_NOCLDSTOP )
    static volatile BOOL s_fRestTTY = FALSE;
 #endif
 
@@ -661,7 +663,8 @@ static int hb_gt_trm_getSize( PHB_GTTRM pTerm, int * piRows, int * piCols )
 {
    *piRows = *piCols = 0;
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if ( defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ ) ) && \
+    defined( TIOCGWINSZ )
    if( pTerm->fOutTTY )
    {
       struct winsize win;
