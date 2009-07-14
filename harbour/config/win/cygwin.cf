@@ -35,7 +35,7 @@ endif
 LD = $(HB_CMP)
 LD_OUT = -o
 
-# Add all libraries specified in CONTRIBS and LIBS.
+# Add all libraries specified in LIBS.
 ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += -L$(LIB_DIR)
 else
@@ -46,7 +46,6 @@ endif
 # cyclic dependencies, but I think it is not really necessary if the
 # libraries are kept in proper order.
 # LINKLIBS += -Wl,-(
-LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(subst lib,,$(lib)))
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
 # This library is needed for CharToOemBuff() and OemToCharBuff() support.

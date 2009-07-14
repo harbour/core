@@ -41,13 +41,12 @@ LD = bcc32.exe
 LDFLAGS = -O2
 LD_OUT = -e
 
-# Add all libraries specified in CONTRIBS and LIBS.
+# Add all libraries specified in LIBS.
 ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += -L$(LIB_DIR)
 else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 endif
-LIBLIST = $(foreach lib, $(CONTRIBS), $(lib)$(LIB_EXT))
 LIBLIST += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 
 # If LIBS specifies the rdd library, add all DB drivers.

@@ -108,10 +108,8 @@ LDFLAGS := debug all $(LDFLAGS)
 endif
 
 ifeq ($(HB_LIB_COMPILE),)
-   LINKLIBS = $(foreach lib, $(CONTRIBS), $(LIB_DIR)/$(lib))
    LINKLIBS += $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))
 else
-   LINKLIBS = $(foreach lib, $(CONTRIBS), $(HB_LIB_COMPILE)/$(lib))
    LINKLIBS += $(foreach lib, $(LIBS), $(HB_LIB_COMPILE)/$(lib))
 endif
 

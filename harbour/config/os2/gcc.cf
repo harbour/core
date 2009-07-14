@@ -44,14 +44,13 @@ LDFLAGS +=$(TOP)$(ROOT)source/vm/$(ARCH_COMP)/mainpm.o
 endif
 endif
 
-# Add all libraries specified in CONTRIBS and LIBS.
+# Add all libraries specified in LIBS.
 ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += -L$(LIB_DIR)
 else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 endif
 #LINKLIBS += -Wl,-(
-LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(subst lib,,$(lib)))
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
 # If LIBS specifies the rdd library, add all DB drivers.

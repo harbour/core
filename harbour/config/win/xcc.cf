@@ -33,13 +33,12 @@ endif
 LD = xlink.exe
 LD_OUT = -OUT:
 
-# Add all libraries specified in CONTRIBS and LIBS.
+# Add all libraries specified in LIBS.
 ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += -LIBPATH:$(LIB_DIR)
 else
 LINKPATHS += -LIBPATH:$(HB_LIB_COMPILE)
 endif
-LINKLIBS += $(foreach lib, $(CONTRIBS), $(subst lib,,$(lib))$(LIB_EXT))
 LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 
 # If LIBS specifies the rdd library, add all DB drivers.

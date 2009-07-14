@@ -43,7 +43,7 @@ endif
 LD = $(HB_CCACHE) $(HB_CMP)
 LD_OUT = -o
 
-# Add all libraries specified in CONTRIBS and LIBS.
+# Add all libraries specified in LIBS.
 ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += -L$(LIB_DIR)
 else
@@ -54,7 +54,6 @@ endif
 # untill we don't clean them
 LINKLIBS += -Wl,--start-group
 
-LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(subst lib,,$(lib)))
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
 # If LIBS specifies the rdd library, add all DB drivers.
