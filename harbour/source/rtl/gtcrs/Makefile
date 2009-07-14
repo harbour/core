@@ -14,7 +14,7 @@ ifeq ($(HB_XBUILD),)
 ifeq ($(HB_NCURSES_194),yes)
 HB_INC_CURSES = /usr/include/ncur194
 else
-HB_INC_CURSES = /usr/include /usr/include/ncurses /usr/local/include /usr/local/include/ncurses /sw/include /sw/include/ncurses /opt/local/include /opt/local/include/ncurses
+HB_INC_CURSES = /usr/include /usr/local/include /sw/include /opt/local/include
 endif
 endif
 endif
