@@ -2631,6 +2631,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          #else
             /* NOTE: This extension is used when building Linux targets on non-Linux hosts. [vszakats] */
             cObjExt := ".obj"
+            /* NOTE: Hack to force no extension for binaries. Otherwise they become '.elf'. [vszakats] */
+            cBinExt := "."
          #endif
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
@@ -2680,7 +2682,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTL ], "OP MAP" )
          ENDIF
 
-      /* Misc */
       CASE hbmk[ _HBMK_cARCH ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "bcc"
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-y -v" )
@@ -4108,6 +4109,12 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             cOpt_Cprs := "{OB}"
             cOpt_CprsMin := "-1"
             cOpt_CprsMax := "-9"
+            IF hbmk[ _HBMK_cARCH ] == "linux"
+               /* To avoid error below when creating Linux targets on non-Linux hosts using watcom:
+                  upx: t.: CantPackException: invalid Phdr p_offset; try '--force-execve'
+                  [vszakats] */
+               cOpt_Cprs += " --force-execve"
+            ENDIF
 
          #else
 
