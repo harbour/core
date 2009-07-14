@@ -67,24 +67,6 @@ ifeq ($(findstring rtl,$(LIBS)),rtl)
 LDLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
 endif
 
-# HB_SCREEN_LIB: empty, or one of ncurses, slang
-# HB_SCREEN_LIB=ncurses
-# HB_SCREEN_LIB=slang
-
-ifneq ($(HB_SCREEN_LIB),)
-LDLIBS += -l$(HB_SCREEN_LIB)
-endif
-
-# Add the optional user path(s)
-ifneq ($(LNK_USR_PATH),)
-LINKPATHS += $(foreach path, $(LNK_USR_PATH), -L$(path))
-endif
-
-# Add the optional user libarary (or libraries)
-ifneq ($(LNK_USR_LIB),)
-LDLIBS += $(foreach lib, $(LNK_USR_LIB), -l$(lib))
-endif
-
 # This library is needed for CharToOemBuff() and OemToCharBuff() support.
 SYSLIBS = -luser32 -lgdi32
 SYSLIBS += -lwinspool -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lmpr -lws2_32 -lmapi32

@@ -55,9 +55,6 @@ else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 endif
 
-# Add all libraries specified in HB_USER_LIBS.
-LINKLIBS += $(foreach lib, $(HB_USER_LIBS), -l$(lib))
-
 LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(subst lib,,$(lib)))
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 

@@ -81,7 +81,6 @@ endef
 define link_exe_file
 @echo $(LDFLAGS) NAME $@ > __link__.tmp
 $(foreach file, $(^F), $(link_file))
-$(foreach lib, $(HB_USER_LIBS), $(link_lib))
 $(foreach lib, $(LINKLIBS), $(link_lib))
 $(foreach lib, $(RDDLIBS), $(link_lib))
 $(foreach lib, $(GTLIBS), $(link_lib))
