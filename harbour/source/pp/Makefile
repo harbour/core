@@ -29,7 +29,7 @@ HB_VERHEADER=$(TOP)$(ROOT)include/hbverbld.h
 ifeq ($(HB_CHANGELOG),)
    ifeq ($(HB_ARCHITECTURE),dos)
    ifeq ($(HB_COMPILER),watcom)
-   HB_CHANGELOG:=change~1
+   HB_CHANGELOG:=$(TOP)$(ROOT)change~1
    endif
    endif
 ifeq ($(HB_CHANGELOG),)
