@@ -27,8 +27,13 @@ HB_INC_CURSES_OK += $(foreach d, $(HB_INC_CURSES), $(if $(wildcard $(d)/curses.h
 
 ifneq ($(strip $(HB_INC_CURSES_OK)),)
 
+HB_INC_GPM_OK =
+ifneq ($(HB_GPM_MOUSE),no)
+ifneq ($(HB_COMMERCE),yes)
 HB_INC_GPM = /usr/include /usr/local/include
 HB_INC_GPM_OK += $(foreach d, $(HB_INC_GPM), $(if $(wildcard $(d)/gpm.h),$(d),))
+endif
+endif
 
 ifeq ($(HB_GT_CRS_BCEHACK),yes)
   HB_USER_CFLAGS += -DHB_GT_CRS_BCEHACK
