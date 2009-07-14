@@ -86,8 +86,8 @@ PROCEDURE Main()
 PROCEDURE BuildADialog()
    LOCAL oDlg, mp1, mp2, oXbp, nEvent, aSize, aTabs, oDa
    LOCAL nThread := ThreadID()
-   LOCAL cThread := hb_ntos( nThread )
-   LOCAL aPP, oHtm
+   //LOCAL cThread := hb_ntos( nThread )
+   LOCAL oHtm
 
    /* Create Application Window */
    oDlg := GuiStdDialog( "Harbour - Xbase++ - QT Dialog  [ "+ hb_ntos( nThread )+" ]" )
@@ -172,13 +172,15 @@ PROCEDURE BuildADialog()
    /* Enter Xbase++ Event Loop - working */
    DO WHILE .t.
       nEvent := AppEvent( @mp1, @mp2, @oXbp )
+
       IF ( nEvent == xbeP_Close ) .OR. ( nEvent == xbeP_Keyboard .and. mp1 == xbeK_ESC )
-hb_outDebug( "      WOW      " )
+hb_outdebug( "      WOW      " )
          EXIT
       ELSEIF nEvent == xbeP_Keyboard .and. mp1 == xbeK_F1
          oHtm:setHTML( '<html><h1>Direct HTML Injection</h1><p><font color="#ab00ff" size="16">'+;
                        'This HTML content</font> is pushed dynamically with<br><br>:setHTML()</br></br>.</html>' )
       ENDIF
+
       oXbp:handleEvent( nEvent, mp1, mp2 )
    ENDDO
 
@@ -326,7 +328,7 @@ STATIC FUNCTION Build_MenuBar( oDlg )
    oSubMenu:setColorFG( GraMakeRGBColor( { 255,  1,  1 } ) )
 
    #ifdef __HARBOUR__
-   #if 0
+   #if 1
       oSubMenu := XbpMenu():new( oMenuBar ):create()
       oSubMenu:title := "~Dialogs"
       #if 1             /*  T H R E D E D   D I A L O G */
@@ -903,7 +905,7 @@ PROCEDURE FieldStruct( oItem, aField )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_Statics( oWnd )
-   LOCAL oGrp,oLbl, oLin, oBox, oBmp, oBmp1
+   LOCAL oGrp,oLbl, oLin, oBox, oBmp
    LOCAL nC1 := 10, nC2 := 45, nC3 := 110, nC4 := 175
    LOCAL nW := 50, nH := 50, nG := 10
    LOCAL nT := 60
@@ -1115,23 +1117,7 @@ FUNCTION Build_Bitmap( oWnd )
    LOCAL nFrmts := { XBPBMP_FORMAT_PNG, XBPBMP_FORMAT_GIF, XBPBMP_FORMAT_JPG, ;
                      XBPBMP_FORMAT_JPG, XBPBMP_FORMAT_WIN3X }
 
-   aFltr := {}
-   aadd( aFltr, { "Windows Bitmap             ", "*.bmp"  } )
-   aadd( aFltr, { "Graphic Interchange Format ", "*.gif"  } )
-   aadd( aFltr, { "Joint Photographic Experts ", "*.jpg; *.jpeg" } )
-   aadd( aFltr, { "Portable Network Graphics  ", "*.png"  } )
-   aadd( aFltr, { "Portable Pixmap            ", "*.ppm"  } )
-   aadd( aFltr, { "Tagged Image File Format   ", "*.tiff" } )
-   aadd( aFltr, { "X11 Bitmap                 ", "*.xbm"  } )
-   aadd( aFltr, { "X11 Pixmap                 ", "*.xpm"  } )
-   aeval( aFltr, {|e_,i| aFltr[ i,1 ] := trim( e_[ 1 ] ) } )
-
-   oDlg := XbpFileDialog():new( oWnd, , {10,10} )
-   oDlg:title := "Select an image to be converted"
-   oDlg:fileFilters := aFltr
-   oDlg:create()
-
-   cFile := oDlg:open( hb_DirBase(), , .f. )
+   cFile := GetAnImageFile( oWnd, "Select an image to be converted" )
 
    IF !empty( cFile )
       oBmp := XbpBitmap():new():create()
@@ -1163,6 +1149,30 @@ FUNCTION Build_Bitmap( oWnd )
    ENDIF
 
    RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION GetAnImageFile( oWnd, cTitle )
+   LOCAL aFltr := {}
+
+   DEFAULT cTitle TO "Select an Image"
+
+   aadd( aFltr, { "Portable Network Graphics  ", "*.png"  } )
+   aadd( aFltr, { "Windows Bitmap             ", "*.bmp"  } )
+   aadd( aFltr, { "Graphic Interchange Format ", "*.gif"  } )
+   aadd( aFltr, { "Joint Photographic Experts ", "*.jpg; *.jpeg" } )
+   aadd( aFltr, { "Portable Pixmap            ", "*.ppm"  } )
+   aadd( aFltr, { "Tagged Image File Format   ", "*.tiff" } )
+   aadd( aFltr, { "X11 Bitmap                 ", "*.xbm"  } )
+   aadd( aFltr, { "X11 Pixmap                 ", "*.xpm"  } )
+   aeval( aFltr, {|e_,i| aFltr[ i,1 ] := trim( e_[ 1 ] ) } )
+
+   oDlg := XbpFileDialog():new( oWnd, , {10,10} )
+   oDlg:title := cTitle
+   oDlg:fileFilters := aFltr
+   oDlg:create()
+
+   RETURN oDlg:open( hb_DirBase(), , .f. )
 
 /*----------------------------------------------------------------------*/
 
@@ -1222,42 +1232,63 @@ FUNCTION Build_PrintDialog( oWnd )
 FUNCTION Build_Rtf( oWnd )
    LOCAL oRTF, oBtn
    LOCAL sz_:= oWnd:currentSize()
+   LOCAL nW := 50, nG := 8, nH := 20, nT := sz_[2]-55
 
-   oBtn := XbpPushButton():new( oWnd, , {10,sz_[2]-70}, {50,35} )
+   oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*0, nT}, {nW,nH} )
    oBtn:caption := 'Image'
    oBtn:create()
    oBtn:activate := {|| RtfInsertImage( oRtf ) }
 
-   oBtn := XbpPushButton():new( oWnd, , {10+60,sz_[2]-70}, {50,35} )
+   oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*1, nT}, {nW,nH} )
    oBtn:caption := 'Undo'
    oBtn:create()
    oBtn:activate := {|| oRtf:undo() }
 
-   oBtn := XbpPushButton():new( oWnd, , {10+120,sz_[2]-70}, {50,35} )
+   oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*2, nT}, {nW,nH} )
    oBtn:caption := 'Redo'
    oBtn:create()
    #ifdef __HARBOUR__
    oBtn:activate := {|| oRtf:redo() }
    #endif
 
-   oBtn := XbpPushButton():new( oWnd, , {10+180,sz_[2]-70}, {50,35} )
+   oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*3, nT}, {nW,nH} )
    oBtn:caption := 'ULine'
    oBtn:create()
    oBtn:activate := {|| oRtf:selUnderline := .t. }
 
-   oBtn := XbpPushButton():new( oWnd, , {10+240,sz_[2]-70}, {50,35} )
+   oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*4, nT}, {nW,nH} )
    oBtn:caption := 'Bold'
    oBtn:create()
    oBtn:activate := {|| oRtf:selBold := .t. }
 
-   oBtn := XbpPushButton():new( oWnd, , {10+295,sz_[2]-70}, {45,35} )
+   oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*5, nT}, {nW,nH} )
    oBtn:caption := 'Italic'
    oBtn:create()
    oBtn:activate := {|| oRtf:selItalic := .t. }
 
+   oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*0, nT-25}, {nW,nH} )
+   oBtn:caption := 'Load'
+   oBtn:create()
+   oBtn:activate := {|| RtfLoadDocument( oRtf ) }
 
+   oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*1, nT-25}, {nW,nH} )
+   oBtn:caption := 'Save'
+   oBtn:create()
+   oBtn:activate := {|| RtfSaveDocument( oRtf ) }
+
+   oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*2, nT-25}, {nW,nH} )
+   oBtn:caption := 'Font++'
+   oBtn:create()
+   oBtn:activate := {|x| x := oRTF:selFontSize, IF( x == 0, x := 11, ), oRTF:selFontSize := x+1 }
+
+   oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*3, nT-25}, {nW,nH} )
+   oBtn:caption := 'Font--'
+   oBtn:create()
+   oBtn:activate := {|x| x := oRTF:selFontSize, IF( x == 0, x := 11, ), oRTF:selFontSize := x-1 }
+
+   //------------------------//
    oRTF := XbpRtf():new( oWnd )
-   oRTF:create( , , { 10,10 }, { sz_[ 1 ]-23, sz_[ 2 ]-90 } )
+   oRTF:create( , , { 10,10 }, { sz_[ 1 ]-23, sz_[ 2 ]-100 } )
 
    oRTF:setColorBG( GraMakeRGBColor( {255,255,200} ) )
    oRTF:setFontCompoundName( "12.Times" )
@@ -1296,24 +1327,72 @@ FUNCTION Build_Rtf( oWnd )
    oRTF:SelItalic   := .T.
    // oRTF:SelStrikeThru := .T.             /* OK */
    oRTF:SelUnderline := .T.
-   oRTF:selAlignment := 2 //XBPRTF_SELALIGN_RIGHT
+   oRTF:selAlignment := XBPRTF_ALIGN_CENTER
 
    // Reset the text cursor
    //
    oRTF:SelStart    := Len( oRTF:Text )
-   oRTF:insertImage( 'copy.png' )
 
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION RtfInsertImage( oRtf )
+   #ifdef __HARBOUR__
+   LOCAL cFile
 
    // Proivide a selection dialog
-   oRtf:insertImage( "abs3.png" )
+   cFile := GetAnImageFile( oRtf, 'Select Image to be Inserted' )
+   IF empty( cFile )
+      oRtf:insertImage( "abs3.png" )
+   ELSE
+      oRtf:insertImage( cFile )
+   ENDIF
+   #endif
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION RtfLoadDocument( oRTF )
+   LOCAL oDlg, cFile, aFiltr := {}
+
+   aadd( aFiltr, { "All Files", "*.*"    } )
+   aadd( aFiltr, { "Text File", "*.txt"  } )
+   aadd( aFiltr, { "RTF File" , "*.htm; *.html"  } )
+
+   oDlg := XbpFileDialog():new():create( oRTF, , { 10,10 } )
+   oDlg:title       := "Open an RTF Document"
+   oDlg:center      := .t.
+   oDlg:fileFilters := aFiltr
+   oDlg:setColorBG( GraMakeRGBColor( { 255,255,200 } ) )
+
+   cFile := oDlg:open()
+   IF !empty( cFile )
+      oRTF:loadFile( cFile )
+   ENDIF
 
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION RtfSaveDocument( oRTF )
+   LOCAL oDlg, cFile, aFiltr := {}
+
+   aadd( aFiltr, { "RTF File" , "*.htm; *.html" } )
+   aadd( aFiltr, { "Text File", "*.txt"  } )
+
+   oDlg := XbpFileDialog():new():create( oRTF, , { 10,10 } )
+   oDlg:title       := "Open an RTF Document"
+   oDlg:center      := .t.
+   oDlg:fileFilters := aFiltr
+   oDlg:setColorBG( GraMakeRGBColor( { 255,200,200 } ) )
+
+   cFile := oDlg:saveAs()
+   IF !empty( cFile )
+      oRTF:saveFile( cFile )
+   ENDIF
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
 

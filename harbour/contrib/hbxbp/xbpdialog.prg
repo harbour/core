@@ -146,6 +146,9 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    SetAppWindow( Self )
 
+   /* Thread specific event buffer */
+   InitializeEventBuffer()
+
    /* Install Event Loop per Dialog Basis */
    /*               Limitng               */
    ::oEventLoop := QEventLoop():new( ::pWidget )

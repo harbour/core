@@ -208,6 +208,8 @@ METHOD XbpRtf:exeBlock( nEvent, p1 )
       ::changed := .t.                                  // .f. only at save
       ::change()
    CASE nEvent == 7    /* Xbase++ Implements */
+      ::oTextCursor:configure( ::oWidget:textCursor() )
+      ::oCurCursor := ::oTextCursor
       ::selChange()
    ENDCASE
 
@@ -230,7 +232,9 @@ METHOD XbpRtf:destroy()
 
 METHOD XbpRtf:loadFile( cFile )
 
-   HB_SYMBOL_UNUSED( cFile )
+   IF file( cFile )
+      ::oWidget:setText( memoread( cFile ) )
+   ENDIF
 
    RETURN Self
 
@@ -238,7 +242,11 @@ METHOD XbpRtf:loadFile( cFile )
 
 METHOD XbpRtf:saveFile( cFile )
 
-   HB_SYMBOL_UNUSED( cFile )
+   IF ( '.txt' $ lower( cFile ) )
+      memowrit( cFile, ::oWidget:toPlainText() )
+   ELSE
+      memowrit( cFile, ::oWidget:toHTML() )
+   ENDIF
 
    RETURN Self
 
@@ -277,8 +285,8 @@ METHOD XbpRtf:find( cSearchString, nStart, nEnd, nOptions )
 
    IF hb_isChar( cSearchString )
       ::oTextDocument:pPtr := ::oWidget:document()
-      ::oTextCursor:pPtr := ::oTextDocument:find_2( cSearchString )
-      ::oCurCursor := ::oTextCursor
+      ::oTextCursor:pPtr   := ::oTextDocument:find_2( cSearchString )
+      ::oCurCursor         := ::oTextCursor
    ENDIF
    RETURN nPos
 
@@ -483,10 +491,10 @@ METHOD XbpRtf:selFontSize( ... )                            // 0
    LOCAL xRet := 0
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) >= 1 .and. hb_isNumeric( aP[ 1 ] )
-      ::oTextCharFormat:pPtr := ::oCurCursor:charFormat()
-      IF ::oTextCharFormat:isValid()
-         xRet := ::oTextCharFormat:fontPointSize()
+   ::oTextCharFormat:pPtr := ::oCurCursor:charFormat()
+   IF ::oTextCharFormat:isValid()
+      xRet := ::oTextCharFormat:fontPointSize()
+      IF len( aP ) >= 1 .and. hb_isNumeric( aP[ 1 ] )
          ::oTextCharFormat:setFontPointSize( aP[ 1 ] )
          ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
       ENDIF

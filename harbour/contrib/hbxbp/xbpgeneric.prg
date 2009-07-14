@@ -80,10 +80,11 @@
 
 STATIC ts_mutex
 STATIC oApp
-STATIC aEventLoop := {}
 
-STATIC ts_events
-//THREAD STATIC ts_events
+THREAD STATIC aEventLoop := {}
+
+//STATIC ts_events
+THREAD STATIC ts_events
 
 THREAD STATIC nEventIn  := 0
 THREAD STATIC nEventOut := 0
@@ -97,9 +98,15 @@ THREAD STATIC oEventLoop
 /*----------------------------------------------------------------------*/
 
 INIT PROCEDURE Qt_Start()
+
+   ts_mutex  := hb_mutexCreate()
+   oDummy    := XbpObject():new()
+
    qt_qapplication()
    oApp := QApplication():new()
    RETURN
+
+/*----------------------------------------------------------------------*/
 
 EXIT PROCEDURE Qt_End()
    qt_qapplication_quit()
@@ -107,70 +114,66 @@ EXIT PROCEDURE Qt_End()
 
 /*----------------------------------------------------------------------*/
 /*
+ * Will be called from XbpDialog() | XbpCRT()
+ */
+FUNCTION InitializeEventBuffer()
+
+   IF empty( ts_events )
+      ts_events := array( EVENT_BUFFER )
+      aeval( ts_events, {|e,i| e := e, ts_events[ i ] := { 0, NIL, NIL, NIL, -9999 } } )
+   ENDIF
+//xbp_debug( len( ts_events ) )
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+/*
  *  Internal to the XbpParts , Must NOT be called from Application Code
  */
 FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
-
-   //hb_mutexLock( ts_mutex )
 
    IF ++nEventIn > EVENT_BUFFER
       nEventIn := 1
    ENDIF
 
-   ts_events[ nEventIn ] := { nEvent, mp1, mp2, oXbp, ThreadID() }
+//xbp_debug( "SetAppEvent ... ", threadID(), nEventIn )
 
-   //hb_mutexUnLock( ts_mutex )
+   ts_events[ nEventIn,1 ] := nEvent
+   ts_events[ nEventIn,2 ] := mp1
+   ts_events[ nEventIn,3 ] := mp2
+   ts_events[ nEventIn,4 ] := oXbp
+   ts_events[ nEventIn,5 ] := ThreadID()
 
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION AppEvent( mp1, mp2, oXbp )
-   LOCAL nEvent, n
+FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
+   LOCAL nEvent //, n
 
-   //hb_idleSleep( 0.1 )            /*  May be we need QT based mechanism */
-
-   #if 0
-      //hb_mutexLock( ts_mutex )
-      oApp:processEvents()
-      //hb_mutexUnLock( ts_mutex )
-   #else
-      /* Event Loop - Can be one per Application */
-
-      //oAppWindow:oEventLoop:processEvents()
-      //hb_mutexLock( ts_mutex )
-
-      IF( n := ascan( aEventLoop, {|e_| e_[ 2 ] == threadID() } ) ) > 0
-         //hb_outDebug( "<<<<<<<<<<<< "+hb_ntos( threadID() ) )
-         aEventLoop[ n,1 ]:processEvents()
-         //hb_outDebug( ">>>>>>>>>>>>.... "+hb_ntos( threadID() ) )
-      ENDIF
-
-      //hb_mutexUnLock( ts_mutex )
-   #endif
-
-   //hb_mutexLock( ts_mutex )
+   DEFAULT nTimeout TO 0
 
    IF ++nEventOut > EVENT_BUFFER
       nEventOut := 1
    ENDIF
+//xbp_debug( "            AppEvent ... ", threadID(), nEventOut )
+   DO WHILE .t.
+      aEventLoop[ 1,1 ]:processEvents_1( 0, 200 )
 
-   IF empty( ts_events[ nEventOut ] ) .OR. ts_events[ nEventOut,5 ] <> ThreadID()
-      //nEventOut--                           /* Stay back and ensure that no event is missed */
-      nEvent := 0
-      mp1    := NIL
-      mp2    := NIL
-      oXbp   := oDummy
-   ELSE
-      //hb_outDebug( str( threadID() )+'  '+ str( ts_events[ nEventOut,5 ] ) )
-      nEvent := ts_events[ nEventOut,1 ]
-      mp1    := ts_events[ nEventOut,2 ]
-      mp2    := ts_events[ nEventOut,3 ]
-      oXbp   := ts_events[ nEventOut,4 ]
-      ts_events[ nEventOut ] := NIL
-   ENDIF
+      IF ts_events[ nEventOut,5 ] == ThreadID()
+         nEvent := ts_events[ nEventOut,1 ]
+         mp1    := ts_events[ nEventOut,2 ]
+         mp2    := ts_events[ nEventOut,3 ]
+         oXbp   := ts_events[ nEventOut,4 ]
 
-   //hb_mutexUnLock( ts_mutex )
+         ts_events[ nEventOut,5 ] := -9999  /* an arbirary value never reached by ThreadID() */
+
+         EXIT
+      ENDIF
+
+      hb_idleSleep( 0.01 )                  /* Releases CPU cycles */
+   ENDDO
+//( "..........................", threadID() )
+
    RETURN nEvent
 
 /*----------------------------------------------------------------------*/
@@ -179,16 +182,6 @@ FUNCTION SetAppWindow( oXbp )
    LOCAL oldAppWindow
 
    //hb_outDebug( str( threadId() )+'  0' )
-
-   IF empty( ts_mutex )
-      ts_mutex := hb_mutexCreate()
-   ENDIF
-   IF empty( ts_events )
-      ts_events := array( EVENT_BUFFER )
-   ENDIF
-   IF empty( oDummy )
-      oDummy := XbpObject():new()
-   ENDIF
 
    oldAppWindow := oAppWindow
 
@@ -286,11 +279,11 @@ FUNCTION SetEventFilter()
 
 FUNCTION AddEventLoop( oEventLoop )
 
-   hb_mutexLock( ts_mutex )
+   //hb_mutexLock( ts_mutex )
 
    aadd( aEventLoop, { oEventLoop, threadID() } )
 
-   hb_mutexUnLock( ts_mutex )
+   //hb_mutexUnLock( ts_mutex )
 
    RETURN nil
 
