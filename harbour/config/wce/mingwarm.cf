@@ -89,11 +89,11 @@ RANLIB = $(HB_CCPREFIX)ranlib
 
 ifeq ($(AR_RULE),)
 ifeq ($(SHLVL),) # non-bash
-DOS_LIB_DIR_ = $(subst /,\,$(LIB_DIR))\$@
+LIB_DIR_OS_ = $(subst /,\,$(LIB_DIR))\$@
 else
-DOS_LIB_DIR_ = $(LIB_DIR)/$@
+LIB_DIR_OS_ = $(LIB_DIR)/$@
 endif
-AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(DOS_LIB_DIR_)
+AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(LIB_DIR_OS_)
 # our libs have a lot of cross referenced now and we have to group them
 # until we won't have cleaned them
 LINKLIBS = $(LINKPATHS) -Wl,--start-group $(LDLIBS) -Wl,--end-group $(SYSLIBS)

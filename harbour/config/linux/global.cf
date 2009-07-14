@@ -13,10 +13,10 @@ HB_GT_LIBS=\
 ifeq ($(SHLVL),) # non-bash
 
 ARCH_DIR = $(HB_ARCH)
-DOS_ARCH_DIR = $(subst /,\,$(HB_ARCH))
-DOS_LIB_DIR  = $(subst /,\,$(LIB_DIR))
-DOS_LIB_PATH = $(subst /,\,$(LIB_PATH))
-DOS_LIB_ARCH = $(subst /,\,$(LIB_ARCH))
+HB_ARCH_OS = $(subst /,\,$(HB_ARCH))
+LIB_DIR_OS  = $(subst /,\,$(LIB_DIR))
+LIB_PATH_OS = $(subst /,\,$(LIB_PATH))
+LIB_ARCH_OS = $(subst /,\,$(LIB_ARCH))
 DIRSEP = $(subst /,\,\)
 
 MK = $(subst /,\,$(subst \~,~,$(MAKE)))
@@ -37,12 +37,12 @@ ifeq ($(OS2_SHELL),) # non-OS/2
    MV = move
 
 dirbase::
-	-@$(COMSPEC) /c if not exist $(DOS_ARCH_DIR)\. $(MD) $(DOS_ARCH_DIR)
-	$(if $(DOS_LIB_DIR),-@$(COMSPEC) /c if not exist $(DOS_LIB_DIR)\. $(MD) $(DOS_LIB_DIR),)
+	-@$(COMSPEC) /c if not exist $(HB_ARCH_OS)\. $(MD) $(HB_ARCH_OS)
+	$(if $(LIB_DIR_OS),-@$(COMSPEC) /c if not exist $(LIB_DIR_OS)\. $(MD) $(LIB_DIR_OS),)
 
 clean::
-	-@$(COMSPEC) /c if exist $(DOS_ARCH_DIR) $(RD) $(DOS_ARCH_DIR)
-	$(if $(DOS_LIB_ARCH),-@$(COMSPEC) /c if exist $(DOS_LIB_ARCH) $(RM) $(DOS_LIB_ARCH),)
+	-@$(COMSPEC) /c if exist $(HB_ARCH_OS) $(RD) $(HB_ARCH_OS)
+	$(if $(LIB_ARCH_OS),-@$(COMSPEC) /c if exist $(LIB_ARCH_OS) $(RM) $(LIB_ARCH_OS),)
 
 else # OS/2
    RM = del /n
@@ -54,21 +54,21 @@ else # OS/2
 ifeq ($(LIB_PATH),)
 
 dirbase::
-	-for %d in ($(HB_ARCHITECTURE) $(DOS_ARCH_DIR)) do if not exist %d $(MD) %d
+	-for %d in ($(HB_ARCHITECTURE) $(HB_ARCH_OS)) do if not exist %d $(MD) %d
 
 clean::
-	-if exist $(DOS_ARCH_DIR)\*.* $(RM) $(DOS_ARCH_DIR)\*.*
-	-for %d in ($(DOS_ARCH_DIR) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
+	-if exist $(HB_ARCH_OS)\*.* $(RM) $(HB_ARCH_OS)\*.*
+	-for %d in ($(HB_ARCH_OS) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
 
 else
 
 dirbase::
-	-for %d in ($(HB_ARCHITECTURE) $(DOS_ARCH_DIR) $(DOS_LIB_PATH) $(DOS_LIB_DIR)) do if not exist %d $(MD) %d
+	-for %d in ($(HB_ARCHITECTURE) $(HB_ARCH_OS) $(LIB_PATH_OS) $(LIB_DIR_OS)) do if not exist %d $(MD) %d
 
 clean::
-	-if exist $(DOS_ARCH_DIR)\*.* $(RM) $(DOS_ARCH_DIR)\*.*
-	-for %d in ($(DOS_ARCH_DIR) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
-	-if exist $(DOS_LIB_ARCH) $(RM) $(DOS_LIB_ARCH)
+	-if exist $(HB_ARCH_OS)\*.* $(RM) $(HB_ARCH_OS)\*.*
+	-for %d in ($(HB_ARCH_OS) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
+	-if exist $(LIB_ARCH_OS) $(RM) $(LIB_ARCH_OS)
 
 endif
 

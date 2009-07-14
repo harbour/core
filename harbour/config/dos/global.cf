@@ -16,12 +16,12 @@ ifeq ($(SHLVL),) # non-bash
 
 # There is a conflict with the use of '\' and '/' characters
 # The MAKE requires '/' in filenames (ARCH_DIR) however some compilers
-# and some DOS commands require '\' (DOS_ARCH_DIR)
+# and some DOS commands require '\' (HB_ARCH_OS)
 ARCH_DIR = $(subst \,/,$(HB_ARCH))
-DOS_ARCH_DIR = $(subst /,\,$(HB_ARCH))
-DOS_LIB_DIR = $(subst /,\,$(LIB_DIR))
-LIB_PATH_DOS = $(subst /,\,$(LIB_PATH))
-DOS_LIB_ARCH = $(subst /,\,$(LIB_ARCH))
+HB_ARCH_OS = $(subst /,\,$(HB_ARCH))
+LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
+LIB_PATH_OS = $(subst /,\,$(LIB_PATH))
+LIB_ARCH_OS = $(subst /,\,$(LIB_ARCH))
 DIRSEP = $(subst /,\,\)
 
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
@@ -50,13 +50,13 @@ MD = md
 RANLIB = ranlib
 
 dirbase::
-	-@$(COMSPEC) /Cfor %d in ($(HB_ARCHITECTURE) $(DOS_ARCH_DIR)) do if not exist %d\nul $(MD) %d
-	$(if $(LIB_PATH_DOS),-@$(COMSPEC) /Cfor %d in ($(LIB_PATH_DOS) $(DOS_LIB_DIR)) do if not exist %d\nul $(MD) %d,)
+	-@$(COMSPEC) /Cfor %d in ($(HB_ARCHITECTURE) $(HB_ARCH_OS)) do if not exist %d\nul $(MD) %d
+	$(if $(LIB_PATH_OS),-@$(COMSPEC) /Cfor %d in ($(LIB_PATH_OS) $(LIB_DIR_OS)) do if not exist %d\nul $(MD) %d,)
 
 clean::
-	-@$(COMSPEC) /Cfor %f in ($(DOS_ARCH_DIR)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
-	-@$(COMSPEC) /Cfor %d in ($(DOS_ARCH_DIR) $(HB_ARCHITECTURE)) do if exist %d\nul $(RD) %d
-	$(if $(DOS_LIB_ARCH),-@$(COMSPEC) /Cif exist $(DOS_LIB_ARCH) $(RM) $(DOS_LIB_ARCH),)
+	-@$(COMSPEC) /Cfor %f in ($(HB_ARCH_OS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
+	-@$(COMSPEC) /Cfor %d in ($(HB_ARCH_OS) $(HB_ARCHITECTURE)) do if exist %d\nul $(RD) %d
+	$(if $(LIB_ARCH_OS),-@$(COMSPEC) /Cif exist $(LIB_ARCH_OS) $(RM) $(LIB_ARCH_OS),)
 
 else  # bash
 
