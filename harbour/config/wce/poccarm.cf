@@ -46,13 +46,13 @@ LD_OUT = -OUT:
 LINKPATHS += -LIBPATH:$(LIB_DIR)
 LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 
-# If LIBS specifies the rdd library, add all DB drivers.
-ifeq ($(findstring rdd,$(LIBS)),rdd)
+# If LIBS specifies the RDD library, add all DB drivers.
+ifeq ($(findstring hbrdd,$(LIBS)),hbrdd)
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(drv)$(LIB_EXT))
 endif
 
 # Add the specified GT driver library
-ifeq ($(findstring rtl,$(LIBS)),rtl)
+ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
 LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
 endif
 

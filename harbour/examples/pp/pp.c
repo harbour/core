@@ -485,53 +485,6 @@ void hb_compGenWarning( HB_COMP_DECL, const char* _szWarnings[], char cPrefix, i
     }
 }
 
-void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */
-{
-  void * pMem = malloc( ulSize );
-
-  HB_TRACE(HB_TR_DEBUG, ("hb_xgrab(%lu)", ulSize));
-
-  if( ! pMem )
-    hb_compGenError( NULL, hb_pp_szErrors, 'P', HB_PP_ERR_MEMALLOC, NULL, NULL );
-
-  return pMem;
-}
-
-void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
-{
-  void * pResult = realloc( pMem, ulSize );
-
-  HB_TRACE(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
-
-  if( ! pResult )
-    hb_compGenError( NULL, hb_pp_szErrors, 'P', HB_PP_ERR_MEMREALLOC, NULL, NULL );
-
-  return pResult;
-}
-
-void hb_xfree( void * pMem )            /* frees fixed memory */
-{
-  HB_TRACE(HB_TR_DEBUG, ("hb_xfree(%p)", pMem));
-
-  if( pMem )
-    free( pMem );
-  else
-    hb_compGenError( NULL, hb_pp_szErrors, 'P', HB_PP_ERR_MEMFREE, NULL, NULL );
-}
-
-char * hb_fsNameConv( char * szFileName, BOOL * pfFree )
-{
-   if( pfFree )
-      * pfFree = FALSE;
-
-   return szFileName;
-}
-
-int hb_setGetDirSeparator( void )
-{
-   return HB_OS_PATH_DELIM_CHR;
-}
-
 int hb_verSvnID( void )
 {
    return 0;

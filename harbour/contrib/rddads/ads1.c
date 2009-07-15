@@ -1020,10 +1020,6 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
    else
    {
       commonError( pArea, EG_DATATYPE, 1020, 0, NULL, 0, NULL );
-#if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
-      if( pszKeyFree )
-         hb_adsOemAnsiFree( ( char * ) pszKeyFree );
-#endif
       return HB_FAILURE;
    }
 

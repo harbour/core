@@ -49,13 +49,13 @@ LINKPATHS += -L$(LIB_DIR)
 #LINKLIBS += -Wl,-(
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
-# If LIBS specifies the rdd library, add all DB drivers.
-ifeq ($(findstring rdd,$(LIBS)),rdd)
+# If LIBS specifies the RDD library, add all DB drivers.
+ifeq ($(findstring hbrdd,$(LIBS)),hbrdd)
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
 endif
 
 # Add the specified GT driver library
-ifeq ($(findstring rtl,$(LIBS)),rtl)
+ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
 ifeq ($(C_MAIN),)
 ifeq ($(findstring os2pm,$(HB_GT_LIB)),os2pm)
 # Special handling for PM mode

@@ -15,6 +15,7 @@ LIBNAME=hbpp
 
 LIBS=\
 	hbcommon \
+	hbnulrtl \
 
 ifeq ($(HB_PPGEN_PATH),)
    HB_PPGEN_PATH=.

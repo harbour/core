@@ -45,8 +45,8 @@ LINKPATHS += -L$(LIB_DIR)
 
 LDLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
-# If LIBS specifies the rdd library, add all DB drivers.
-ifeq ($(findstring rdd,$(LIBS)),rdd)
+# If LIBS specifies the RDD library, add all DB drivers.
+ifeq ($(findstring hbrdd,$(LIBS)),hbrdd)
 LDLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
 endif
 
@@ -58,7 +58,7 @@ endif
 endif
 
 # Add the specified GT driver library
-ifeq ($(findstring rtl,$(LIBS)),rtl)
+ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
 LDLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
 endif
 

@@ -70,7 +70,6 @@ C_SOURCES=\
 	hbhex.c \
 	hbmd5.c \
 	hbntos.c \
-	hbffind.c \
 	hbfile.c \
 	hbgtcore.c \
 	hbi18n1.c \

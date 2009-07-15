@@ -82,6 +82,8 @@ extern void hb_compPCodeTrace( PFUNCTION, const HB_PCODE_FUNC_PTR *, void * );
 extern void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info );
 extern PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL );
 
+extern void hb_compChkFileSwitches( int argc, char * argv[] );
+
 extern void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[] );
 extern void hb_compCompileEnd( HB_COMP_DECL );
 

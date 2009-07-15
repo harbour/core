@@ -8,7 +8,8 @@ ifeq ($(HB_HOST_BUILD),yes)
 
 DIRS=\
 	common \
-	pp{common} \
+	nulrtl \
+	pp{common,nulrtl} \
 	compiler{pp} \
 	main{compiler} \
 
@@ -24,7 +25,8 @@ endif
 
 DIRS=\
 	common \
-	pp{common} \
+	nulrtl \
+	pp{common,nulrtl} \
 	compiler{pp} \
 	$(HB_COMP_DIR) \
 	rtl$(HB_COMP_REF) \

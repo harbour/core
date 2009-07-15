@@ -52,25 +52,9 @@
  *
  */
 
-#include "hbset.h"
+#include "hbapi.h"
 
-/*
- * library functions used by PP core code
- * necessary to create standalone binaries
- */
-void * hb_xgrab( ULONG ulSize ) { return malloc( ulSize ); }
-void * hb_xrealloc( void * pMem, ULONG ulSize ) { return realloc( pMem, ulSize ); }
-void hb_xfree( void * pMem ) { free( pMem ); }
-const char * hb_fsNameConv( const char * szFileName, char ** pszFree ) { if( pszFree ) * pszFree = NULL; return szFileName; }
-int hb_setGetDirSeparator( void ) { return HB_OS_PATH_DELIM_CHR; }
 int hb_verSvnID( void ) { return 0; }
-
-/* workaround for warning in some GCC versions which can lost
- * user casting during function autoinline optimization.
- */
-#define hb_xgrab     malloc
-#define hb_xfree     free
-#define hb_xrealloc  realloc
 
 #include "ppcore.c"
 
@@ -434,60 +418,86 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
    return iResult;
 }
 
+static char * hb_fsFileFind( const char * pszFileMask )
+{
+   PHB_FFIND ffind;
+   char * pszFree;
+
+   pszFileMask = hb_fsNameConv( pszFileMask, &pszFree );
+   if( ( ffind = hb_fsFindFirst( pszFileMask, HB_FA_ALL ) ) != NULL )
+   {
+      char pszFileName[ HB_PATH_MAX ];
+      PHB_FNAME pFileName = hb_fsFNameSplit( pszFileMask );
+      pFileName->szName = ffind->szName;
+      hb_fsFNameMerge( pszFileName, pFileName );
+      hb_fsFindClose( ffind );
+      if( pszFree )
+         hb_xfree( pszFree );
+      hb_xfree( pFileName );
+      return hb_strdup( pszFileName );
+   }
+   if( pszFree )
+      hb_xfree( pszFree );
+   return NULL;
+}
+
 static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
                                  int iQuiet, int * piSVNID,
                                  char ** pszChangeLogID, char ** pszLastEntry )
 {
+   char * pszFree = NULL;
    int iResult = 0;
-   const char * pszFile;
    FILE * file_in;
-   int tmp;
-   BOOL bFound;
 
-   const char * names[] = { NULL
-      , "../../../../ChangeLog"
-      , "../../../../CHANGES"
-#if defined( HB_OS_DOS )
-      , "../../../../ChangeLo"
-      , "../../../../Change~1"
-      , "../../../../Chang~01"
-#endif
-   };
-
-   names[ 0 ] = pszFileName;
-
-   pszFile = NULL;
-   bFound = FALSE;
-   for( tmp = 0; tmp < ( int ) HB_SIZEOFARRAY( names ) && ! bFound; ++tmp )
+   if( !pszFileName )
    {
-      pszFile = names[ tmp ];
+      static const char * s_szNames[] = {
+            "../../../../ChangeLog",
+            "../../../../CHANGES",
+#if defined( HB_OS_DOS )
+            "../../../../ChangeLo",
+            "../../../../Change~1",
+            "../../../../Change~?",
+            "../../../../Chang~??",
+#endif
+            NULL };
+      int i = 0;
 
-      if( pszFile )
+      pszFileName = s_szNames[ i++ ];
+      while( pszFileName )
       {
-         while( *pszFile == '.' )
+         if( hb_fsFileExists( pszFileName ) )
+            break;
+         if( strchr( pszFileName, '?' ) != NULL )
          {
-            if( hb_fsFileExists( pszFile ) )
+            pszFree = hb_fsFileFind( pszFileName );
+            if( pszFree )
             {
-               bFound = TRUE;
+               pszFileName = pszFree;
                break;
             }
-            pszFile += 3;
          }
+         /* disabled it was for old non GNU make system */
+#if 0
+         if( *pszFileName == '.' )
+            pszFileName += 3;
+         else
+#endif
+            pszFileName = s_szNames[ i++ ];
       }
+      if( !pszFileName )
+         pszFileName = s_szNames[ 0 ];
    }
 
-   if( pszFile )
-      fprintf( stdout, "Using ChangeLog file: %s\n", pszFile );
-
-   file_in = hb_fopen( pszFile, "r" );
+   file_in = hb_fopen( pszFileName, "r" );
    if( !file_in )
    {
          if( iQuiet < 2 )
          {
 #if !defined( HB_OS_WIN_CE )
-            perror( pszFile );
+            perror( pszFileName );
 #else
-            fprintf( stderr, "Cannot open the %s file.\n", pszFile );
+            fprintf( stderr, "Cannot open the %s file.\n", pszFileName );
 #endif
          }
          iResult = 1;
@@ -499,6 +509,9 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
       char szLog[ 128 ];
       char * szFrom, *szTo;
       int iLen;
+
+      if( iQuiet == 0 )
+         fprintf( stdout, "Reading ChangeLog file: %s\n", pszFileName );
 
       *szId = *szLog = '\0';
 
@@ -550,7 +563,7 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
       if( !*szLog )
       {
          if( iQuiet < 2 )
-            fprintf( stderr, "Cannot find valid $Id entry in the %s file.\n", pszFile );
+            fprintf( stderr, "Cannot find valid $Id entry in the %s file.\n", pszFileName );
          iResult = 1;
       }
       else
@@ -592,11 +605,14 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
          else
          {
             if( iQuiet < 2 )
-               fprintf( stderr, "Unrecognized Id entry in the %s file.\n", pszFile );
+               fprintf( stderr, "Unrecognized Id entry in the %s file.\n", pszFileName );
             iResult = 1;
          }
       }
    }
+
+   if( pszFree )
+      hb_xfree( pszFree );
 
    return iResult;
 }

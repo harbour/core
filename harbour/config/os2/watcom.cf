@@ -92,12 +92,12 @@ endif
 
 LINKLIBS += $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))
 
-# If LIBS specifies the rdd library, add all DB drivers.
-ifeq ($(findstring rdd,$(LIBS)),rdd)
+# If LIBS specifies the RDD library, add all DB drivers.
+ifeq ($(findstring hbrdd,$(LIBS)),hbrdd)
    RDDLIBS = $(foreach drv, $(HB_DB_DRIVERS), $(LIB_DIR)/$(drv))
 endif
 
-ifeq ($(findstring rtl,$(LIBS)),rtl)
+ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
    GTLIBS = $(foreach gt, $(HB_GT_LIBS), $(LIB_DIR)/$(gt))
 endif
 

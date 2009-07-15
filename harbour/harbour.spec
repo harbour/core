@@ -641,6 +641,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbzlib.a
 %{_libdir}/%{name}/libhbextern.a
 %{_libdir}/%{name}/libhbnulrdd.a
+%{_libdir}/%{name}/libhbnulrtl.a
 %{_libdir}/%{name}/libhbpp.a
 %{_libdir}/%{name}/libhbrdd.a
 %{_libdir}/%{name}/libhbhsx.a
