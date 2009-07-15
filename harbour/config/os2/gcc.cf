@@ -40,7 +40,7 @@ LD_OUT = -o$(subst x,x, )
 ifeq ($(C_MAIN),)
 ifeq ($(HB_GT_LIB),os2pm)
 # If building a PM program, override the main object.
-LDFLAGS +=$(TOP)$(ROOT)source/vm/$(ARCH_COMP)/mainpm.o
+LDFLAGS +=$(TOP)$(ROOT)source/vm/$(OBJ_DIR)/mainpm.o
 endif
 endif
 
