@@ -245,7 +245,7 @@ mk_hbtools()
     echo "">> ${hb_hbmkcfg}
     echo "libpaths=../contrib/%%{hb_name}">> ${hb_hbmkcfg}
     echo "libpaths=../contrib/rddsql/%%{hb_name}">> ${hb_hbmkcfg}
-    echo "libpaths=../addins/%%{hb_name}">> ${hb_hbmkcfg}
+    echo "libpaths=../addons/%%{hb_name}">> ${hb_hbmkcfg}
     echo "libpaths=../examples/%%{hb_name}">> ${hb_hbmkcfg}
     echo "">> ${hb_hbmkcfg}
     if [ -n "${hb_gt_ori}" ]; then

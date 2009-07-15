@@ -595,7 +595,6 @@ EXAMPLES
       rem
       set HB_ARCHITECTURE=os2
       set HB_COMPILER=watcom
-      set HB_USER_PRGFLAGS=%HB_USER_PRGFLAGS% -D__PLATFORM__OS2 -undef:__PLATFORM__WINDOWS
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---
@@ -614,7 +613,6 @@ EXAMPLES
       # ;
       export HB_ARCHITECTURE=os2
       export HB_COMPILER=watcom
-      export HB_USER_PRGFLAGS="${HB_USER_PRGFLAGS} -D__PLATFORM__OS2 -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
       export HB_INSTALL_PREFIX="$(pwd)/hb-os2/watcom"
       ./make_gnu.sh "$@"
       ---
@@ -633,7 +631,6 @@ EXAMPLES
       rem
       set HB_ARCHITECTURE=linux
       set HB_COMPILER=watcom
-      set HB_USER_PRGFLAGS=%HB_USER_PRGFLAGS% -D__PLATFORM__LINUX -D__PLATFORM__UNIX -undef:__PLATFORM__WINDOWS
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
       call make_gnu.bat %1 %2 > log-%HB_COMPILER%.txt 2>&1
       ---

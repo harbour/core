@@ -32,9 +32,9 @@ EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
 MK = $(subst \,/,$(subst \~,~,$(MAKE)))
 RM = del /q /f
 RD = rmdir /q /s
-MD = mkdir
 CP = $(COMSPEC) /c copy
 MV = move
+MD = mkdir
 
 dirbase::
 	-@$(COMSPEC) /c if not exist $(OBJ_DIR_OS) $(MD) $(OBJ_DIR_OS)

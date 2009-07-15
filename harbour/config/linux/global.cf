@@ -28,9 +28,9 @@ ifneq ($(HB_SHELL),os2)
    MK = $(subst /,\,$(subst \~,~,$(MAKE)))
    RM = del /q /f
    RD = rmdir /q /s
-   MD = mkdir
    CP = $(COMSPEC) /c copy
    MV = move
+   MD = mkdir
 
 dirbase::
 	-@$(COMSPEC) /c if not exist $(OBJ_DIR_OS) $(MD) $(OBJ_DIR_OS)
@@ -46,9 +46,9 @@ else # OS/2
    MK = $(subst /,\,$(subst \~,~,$(MAKE)))
    RM = del /n
    RD = rmdir
-   MD = md
    CP = copy
    MV = move
+   MD = md
 
 dirbase::
 	-for %d in ($(OBJ_BASE) $(OBJ_ARCH_DIR_OS) $(OBJ_DIR_OS)) do if not exist %d $(MD) %d

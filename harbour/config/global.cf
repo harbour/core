@@ -130,36 +130,95 @@ ifeq ($(HB_HOST_ARCH),)
    endif
 endif
 
-$(info Detected host platform: $(HB_HOST_ARCH))
+ifeq ($(HB_BUILD_VERBOSE),yes)
+   $(info Detected host platform: $(HB_HOST_ARCH))
+endif
 
+HB_HOST_CPU :=
 ifeq ($(HB_HOST_ARCH),win)
    ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
-      HB_HOST_ARCH := win_x86_64
+      HB_HOST_CPU := x86_64
+   else ifeq ($(PROCESSOR_ARCHITECTURE),IA64)
+      HB_HOST_CPU := ia64
    else
-      ifeq ($(PROCESSOR_ARCHITECTURE),IA64)
-         HB_HOST_ARCH := win_ia64
-      endif
+      HB_HOST_CPU := x86
    endif
 endif
 
-ifneq ($(HB_HOST_ARCH),$(HB_ARCHITECTURE))
-   ifeq ($(HB_BIN_COMPILE),)
-      # Not required in these combinations: [vszakats]
-      ifneq ($(HB_HOST_ARCH)-$(HB_ARCHITECTURE),win_x86_64-win)
-         ifneq ($(HB_HOST_ARCH)-$(HB_ARCHITECTURE),win-dos)
-            $(warning Warning: HB_BIN_COMPILE must be specified for cross-builds.)
-         endif
-      endif
+ifeq ($(HB_BUILD_VERBOSE),yes)
+   $(info Detected host CPU: $(HB_HOST_CPU))
+endif
+
+# TODO: Set this in <arch>/<comp>.cf
+HB_CPU :=
+ifeq ($(HB_ARCHITECTURE),win)
+   ifeq      ($(HB_COMPILER),msvc64)
+      HB_CPU := x86_64
+   else ifeq ($(HB_COMPILER),mingw64)
+      HB_CPU := x86_64
+   else ifeq ($(HB_COMPILER),pocc64)
+      HB_CPU := x86_64
+   else ifeq ($(HB_COMPILER),msvcia64)
+      HB_CPU := ia64
+   else ifeq ($(HB_COMPILER),iccia64)
+      HB_CPU := ia64
+   else
+      HB_CPU := x86
    endif
 endif
 
-ifneq ($(findstring $(HB_HOST_ARCH),win win_x86_64 win_ia64 wce dos os2),)
+ifeq ($(HB_BUILD_VERBOSE),yes)
+   $(info Detected target CPU: $(HB_CPU))
+endif
+
+ifneq ($(findstring $(HB_HOST_ARCH),win wce dos os2),)
    HB_HOST_BIN_EXT := .exe
 else
    HB_HOST_BIN_EXT :=
 endif
 
-$(info Detected host executable extension: $(HB_HOST_BIN_EXT))
+ifeq ($(HB_BUILD_VERBOSE),yes)
+   $(info Detected host executable extension: $(HB_HOST_BIN_EXT))
+endif
+
+ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
+   ifeq ($(HB_BIN_COMPILE),)
+      # Not required in these combinations: [vszakats]
+      ifneq ($(HB_HOST_ARCH)-$(HB_HOST_CPU)-$(HB_ARCHITECTURE)-$(HB_CPU),win-x86_64-win-x86)
+         ifneq ($(HB_HOST_ARCH)-$(HB_HOST_CPU)-$(HB_ARCHITECTURE)-$(HB_CPU),win-x86-dos-)
+            # Try to autosetup
+            HB_BIN_COMPILE := $(dir $(firstword $(wildcard $(TOP)$(ROOT)bin/$(HB_HOST_ARCH)/*/harbour$(HB_HOST_BIN_EXT))))
+            ifeq ($(HB_BIN_COMPILE),)
+               $(warning Warning: HB_BIN_COMPILE not specified. Couldn't find native build.)
+            else
+               $(info HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
+            endif
+         endif
+      endif
+   else
+      # Setup platform macros (undefine host, define target)
+      ifeq      ($(HB_HOST_ARCH),win)
+         HB_USER_PRGFLAGS += -undef:__PLATFORM__WINDOWS
+      else ifeq ($(HB_HOST_ARCH),dos)
+         HB_USER_PRGFLAGS += -undef:__PLATFORM__DOS
+      else ifeq ($(HB_HOST_ARCH),os2)
+         HB_USER_PRGFLAGS += -undef:__PLATFORM__OS2
+      else ifeq ($(HB_HOST_ARCH),linux)
+         HB_USER_PRGFLAGS += -undef:__PLATFORM__LINUX -undef:__PLATFORM__UNIX
+      endif
+      ifeq      ($(HB_ARCHITECTURE),win)
+         HB_USER_PRGFLAGS += -D__PLATFORM__WINDOWS
+      else ifeq ($(HB_ARCHITECTURE),wce)
+         HB_USER_PRGFLAGS += -D__PLATFORM__WINDOWS -D__PLATFORM__WINCE
+      else ifeq ($(HB_ARCHITECTURE),dos)
+         HB_USER_PRGFLAGS += -D__PLATFORM__DOS
+      else ifeq ($(HB_ARCHITECTURE),os2)
+         HB_USER_PRGFLAGS += -D__PLATFORM__OS2
+      else ifeq ($(HB_ARCHITECTURE),linux)
+         HB_USER_PRGFLAGS += -D__PLATFORM__LINUX -D__PLATFORM__UNIX
+      endif
+   endif
+endif
 
 # Names of valid RDD libraries
 HB_DB_DRIVERS=\
