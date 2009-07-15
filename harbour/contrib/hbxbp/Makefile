@@ -71,6 +71,7 @@ PRG_SOURCES=\
 	xbppresspace.prg \
 	xbpprinter.prg \
 	xbpprintdialog.prg \
+	xbpbrowse.prg \
 
 
 PRG_HEADERS=\

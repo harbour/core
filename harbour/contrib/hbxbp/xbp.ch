@@ -306,6 +306,121 @@
 #define XBPRTF_MATCH_NOHILIGHT                    8
 
 
+#define XBP_PP_CGRP_ROWWIDTH                      100
+#define XBP_PP_CGRP_ROWHEIGHT                     101
+#define XBP_PP_CGRP_CELLWIDTH                     102
+#define XBP_PP_CGRP_CELLHEIGHT                    103
+#define XBP_PP_CGRP_CELLALIGNMENT                 104
+#define XBP_PP_CGRP_HSEPARATOR                    105
+#define XBP_PP_CGRP_VSEPARATOR                    106
+#define XBP_PP_CGRP_FRAMELAYOUT                   107
+#define XBP_PP_CGRP_HILITEFRAMELAYOUT             108
+#define XBP_PP_CGRP_CELLFRAMELAYOUT               109
+
+#define XBPCOL_TYPE_ICON                          1
+#define XBPCOL_TYPE_BITMAP                        2
+#define XBPCOL_TYPE_SYSICON                       3
+#define XBPCOL_TYPE_TEXT                          4
+#define XBPCOL_TYPE_FILEICON                      5
+#define XBPCOL_TYPE_FILEMINIICON                  6
+#define XBPCOL_TYPE_MULTILINETEXT                 7
+
+#define XBPCOL_SEP_NONE                           XBPLINE_NONE
+#define XBPCOL_SEP_LINE                           XBPLINE_NORMAL
+#define XBPCOL_SEP_DASHED                         XBPLINE_DASHED
+#define XBPCOL_SEP_DOTTED                         XBPLINE_DOTTED
+
+#define XBPCOL_DA_FGCLR                           1
+#define XBPCOL_DA_BGCLR                           2
+#define XBPCOL_DA_HILITE_FGCLR                    3
+#define XBPCOL_DA_HILITE_BGCLR                    4
+#define XBPCOL_DA_COMPOUNDNAME                    5
+#define XBPCOL_DA_ROWWIDTH                        6
+#define XBPCOL_DA_ROWHEIGHT                       7
+#define XBPCOL_DA_CELLWIDTH                       8
+#define XBPCOL_DA_CELLHEIGHT                      9
+#define XBPCOL_DA_CELLALIGNMENT                   10
+#define XBPCOL_DA_ROWSEPARATOR                    11
+#define XBPCOL_DA_COLSEPARATOR                    12
+#define XBPCOL_DA_FRAMELAYOUT                     13
+#define XBPCOL_DA_CELLFRAMELAYOUT                 14
+#define XBPCOL_DA_HILITEFRAMELAYOUT               15
+#define XBPCOL_DA_CHARWIDTH                       16
+
+#define XBPCOL_DA_COUNT                           16
+
+#define XBPCOL_HFA_FGCLR                          1
+#define XBPCOL_HFA_BGCLR                          2
+#define XBPCOL_HFA_COMPOUNDNAME                   3
+#define XBPCOL_HFA_FRAMELAYOUT                    4
+#define XBPCOL_HFA_ALIGNMENT                      5
+#define XBPCOL_HFA_HEIGHT                         6
+#define XBPCOL_HFA_CAPTION                        7
+
+#define XBPCOL_HFA_COUNT                          7
+
+#define XBP_PP_COL_DA_BASE                        100
+#define XBP_PP_COL_DA_FGCLR                       ( XBP_PP_COL_DA_BASE + XBPCOL_DA_FGCLR             )
+#define XBP_PP_COL_DA_BGCLR                       ( XBP_PP_COL_DA_BASE + XBPCOL_DA_BGCLR             )
+#define XBP_PP_COL_DA_HILITE_FGCLR                ( XBP_PP_COL_DA_BASE + XBPCOL_DA_HILITE_FGCLR      )
+#define XBP_PP_COL_DA_HILITE_BGCLR                ( XBP_PP_COL_DA_BASE + XBPCOL_DA_HILITE_BGCLR      )
+#define XBP_PP_COL_DA_COMPOUNDNAME                ( XBP_PP_COL_DA_BASE + XBPCOL_DA_COMPOUNDNAME      )
+#define XBP_PP_COL_DA_ROWWIDTH                    ( XBP_PP_COL_DA_BASE + XBPCOL_DA_ROWWIDTH          )
+#define XBP_PP_COL_DA_ROWHEIGHT                   ( XBP_PP_COL_DA_BASE + XBPCOL_DA_ROWHEIGHT         )
+#define XBP_PP_COL_DA_CELLWIDTH                   ( XBP_PP_COL_DA_BASE + XBPCOL_DA_CELLWIDTH         )
+#define XBP_PP_COL_DA_CELLHEIGHT                  ( XBP_PP_COL_DA_BASE + XBPCOL_DA_CELLHEIGHT        )
+#define XBP_PP_COL_DA_CELLALIGNMENT               ( XBP_PP_COL_DA_BASE + XBPCOL_DA_CELLALIGNMENT     )
+#define XBP_PP_COL_DA_ROWSEPARATOR                ( XBP_PP_COL_DA_BASE + XBPCOL_DA_ROWSEPARATOR      )
+#define XBP_PP_COL_DA_COLSEPARATOR                ( XBP_PP_COL_DA_BASE + XBPCOL_DA_COLSEPARATOR      )
+#define XBP_PP_COL_DA_FRAMELAYOUT                 ( XBP_PP_COL_DA_BASE + XBPCOL_DA_FRAMELAYOUT       )
+#define XBP_PP_COL_DA_CELLFRAMELAYOUT             ( XBP_PP_COL_DA_BASE + XBPCOL_DA_CELLFRAMELAYOUT   )
+#define XBP_PP_COL_DA_HILITEFRAMELAYOUT           ( XBP_PP_COL_DA_BASE + XBPCOL_DA_HILITEFRAMELAYOUT )
+#define XBP_PP_COL_DA_CHARWIDTH                   ( XBP_PP_COL_DA_BASE + XBPCOL_DA_CHARWIDTH         )
+
+#define XBP_PP_COL_HA_BASE                        ( XBP_PP_COL_DA_BASE + XBPCOL_DA_COUNT             )
+#define XBP_PP_COL_HA_FGCLR                       ( XBP_PP_COL_HA_BASE + XBPCOL_HFA_FGCLR            )
+#define XBP_PP_COL_HA_BGCLR                       ( XBP_PP_COL_HA_BASE + XBPCOL_HFA_BGCLR            )
+#define XBP_PP_COL_HA_COMPOUNDNAME                ( XBP_PP_COL_HA_BASE + XBPCOL_HFA_COMPOUNDNAME     )
+#define XBP_PP_COL_HA_FRAMELAYOUT                 ( XBP_PP_COL_HA_BASE + XBPCOL_HFA_FRAMELAYOUT      )
+#define XBP_PP_COL_HA_ALIGNMENT                   ( XBP_PP_COL_HA_BASE + XBPCOL_HFA_ALIGNMENT        )
+#define XBP_PP_COL_HA_HEIGHT                      ( XBP_PP_COL_HA_BASE + XBPCOL_HFA_HEIGHT           )
+#define XBP_PP_COL_HA_CAPTION                     ( XBP_PP_COL_HA_BASE + XBPCOL_HFA_CAPTION          )
+
+#define XBP_PP_COL_FA_BASE                        ( XBP_PP_COL_HA_BASE + XBPCOL_HFA_COUNT            )
+#define XBP_PP_COL_FA_FGCLR                       ( XBP_PP_COL_FA_BASE + XBPCOL_HFA_FGCLR            )
+#define XBP_PP_COL_FA_BGCLR                       ( XBP_PP_COL_FA_BASE + XBPCOL_HFA_BGCLR            )
+#define XBP_PP_COL_FA_COMPOUNDNAME                ( XBP_PP_COL_FA_BASE + XBPCOL_HFA_COMPOUNDNAME     )
+#define XBP_PP_COL_FA_FRAMELAYOUT                 ( XBP_PP_COL_FA_BASE + XBPCOL_HFA_FRAMELAYOUT      )
+#define XBP_PP_COL_FA_ALIGNMENT                   ( XBP_PP_COL_FA_BASE + XBPCOL_HFA_ALIGNMENT        )
+#define XBP_PP_COL_FA_HEIGHT                      ( XBP_PP_COL_FA_BASE + XBPCOL_HFA_HEIGHT           )
+#define XBP_PP_COL_FA_CAPTION                     ( XBP_PP_COL_FA_BASE + XBPCOL_HFA_CAPTION          )
+
+#define XBPBRW_CURSOR_NONE                        1
+#define XBPBRW_CURSOR_CELL                        2
+#define XBPBRW_CURSOR_ROW                         3
+
+#define XBPBRW_Navigate_NextLine                  1
+#define XBPBRW_Navigate_PrevLine                  2
+#define XBPBRW_Navigate_NextPage                  3
+#define XBPBRW_Navigate_PrevPage                  4
+#define XBPBRW_Navigate_GoTop                     5
+#define XBPBRW_Navigate_GoBottom                  6
+#define XBPBRW_Navigate_Skip                      7    // MsgPar2 == <nSkip>
+#define XBPBRW_Navigate_NextCol                   8
+#define XBPBRW_Navigate_PrevCol                   9
+#define XBPBRW_Navigate_FirstCol                  10
+#define XBPBRW_Navigate_LastCol                   11
+#define XBPBRW_Navigate_GoPos                     12  // MsgPar2 == <nNewPercentPos>
+#define XBPBRW_Navigate_SkipCols                  13  // MsgPar2 == <nColsToSkip>
+#define XBPBRW_Navigate_GotoItem                  14  // MsgPar2 == <aRowCol>
+#define XBPBRW_Navigate_GotoRecord                15  // MsgPar2 == <nRecordId>
+
+#define XBPBRW_Pan_Left                           1
+#define XBPBRW_Pan_Right                          2
+#define XBPBRW_Pan_FirstCol                       3
+#define XBPBRW_Pan_LastCol                        4
+#define XBPBRW_Pan_Track                          5
+
 /*----------------------------------------------------------------------*/
 #define _XBP_CH
 #endif
