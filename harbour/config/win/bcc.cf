@@ -63,6 +63,8 @@ LDFLAGS = $(LINKPATHS)
 AR = tlib.exe
 ARFLAGS = /P64 $(HB_USER_AFLAGS)
 
+ifeq ($(SHLVL),) # non-bash
+
 # NOTE: The empty line below HAVE TO exist!
 define lib_object
 @echo -+$(subst /,\,$(file)) ^& >> __lib__.tmp
@@ -77,5 +79,12 @@ $(AR) $(ARFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" @__lib__.tmp
 endef
 
 AR_RULE = $(create_library)
+
+else # bash
+
+AROBJS = $(foreach file, $(^F), -+$(file))
+AR_RULE = $(AR) $(ARFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(AROBJS)
+
+endif
 
 include $(TOP)$(ROOT)config/rules.cf
