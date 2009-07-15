@@ -22,14 +22,11 @@ all: ; @echo Error: GNU Make version $(MAKE_VERSION) found, $(need) or upper nee
 
 else
 
-GRANDP = ../../
-# GRANDP = ../../../
-# OBJ_BASE := .gnu
+GRANDP = ../../../
+OBJ_BASE := obj
 ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)
-# OBJ_DIR := $(OBJ_BASE)/$(ARCH_COMP)
-OBJ_DIR := $(ARCH_COMP)
-# OBJ_ARCH_DIR := $(OBJ_BASE)/$(HB_ARCHITECTURE)
-OBJ_ARCH_DIR := $(HB_ARCHITECTURE)
+OBJ_DIR := $(OBJ_BASE)/$(ARCH_COMP)
+OBJ_ARCH_DIR := $(OBJ_BASE)/$(HB_ARCHITECTURE)
 
 # Directory separator default
 ifeq ($(DIRSEP),)

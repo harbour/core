@@ -79,7 +79,7 @@ REQUEST HB_GT_CGI_DEFAULT
 
 // List of known files which does not contain any real public function.
 STATIC s_aSkipFiles := { "profiler.prg", "msg_tpl.c" }
-STATIC s_aSkipDirs := { "tests", "examples", "sample", "samples", ".svn", "bsd", "darwin", "dos", "hpux", "linux", "os2", "sunos", "wce", "win" }
+STATIC s_aSkipDirs := { "tests", "examples", "sample", "samples", ".svn", "obj" }
 
 STATIC s_aSkipNames  := { "MAIN" }   // Init with method names you want to skip
 STATIC s_aDirsProcessed := {}
