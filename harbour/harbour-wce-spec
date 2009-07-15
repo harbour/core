@@ -96,10 +96,7 @@ export HB_HOST_BUILD=lib
 export HB_ARCHITECTURE=wce
 export HB_COMPILER=mingwarm
 
-mkdir -p source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}
-ln -s ../../linux/gcc/hbpp source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}/hbpp.exe
-mkdir -p source/main/${HB_ARCHITECTURE}/${HB_COMPILER}
-ln -s ../../linux/gcc/harbour source/main/${HB_ARCHITECTURE}/${HB_COMPILER}/harbour.exe
+export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
 
 export CC_HB_USER_CFLAGS=""
 export HB_USER_CFLAGS="$CC_HB_USER_CFLAGS"
@@ -128,6 +125,12 @@ make %{?_smp_mflags}
 
 # Install harbour itself.
 
+export HB_HOST_BUILD=lib
+export HB_ARCHITECTURE=wce
+export HB_COMPILER=mingwarm
+
+export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
+
 export CC_HB_USER_CFLAGS=""
 export HB_USER_CFLAGS="$CC_HB_USER_CFLAGS"
 export HB_USER_PRGFLAGS="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
@@ -138,9 +141,6 @@ export HB_CCPATH="%{hb_ccpath}:"
 export HB_CCPREFIX="%{hb_ccpref}"
 export PATH="$HB_CCPATH$PATH"
 
-export HB_HOST_BUILD=lib
-export HB_ARCHITECTURE=wce
-export HB_COMPILER=mingwarm
 export HB_XBUILD=wce
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
