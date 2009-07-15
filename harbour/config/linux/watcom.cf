@@ -83,9 +83,9 @@ endif
 LDFILES = $(subst $(space),$(comma) ,$(^F))
 LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS) $(RDDLIBS) $(GTLIBS)))
 ifeq ($(SHLVL),) # non-bash
-LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $@. FILE $(LDFILES)
+LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(EXE_DIR)/$@. FILE $(LDFILES)
 else
-LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $@ FILE $(LDFILES)
+LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(EXE_DIR)/$@ FILE $(LDFILES)
 endif
 ifneq ($(LDLIBS),)
    LD_RULE += LIB $(LDLIBS)

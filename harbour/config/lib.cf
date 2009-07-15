@@ -5,10 +5,10 @@
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
-#no slash at the end
+# no slash at the end
 LIB_ARCH_DIR := $(TOP)$(ROOT)lib/$(HB_ARCHITECTURE)
-#no slash at the end
-LIB_DIR := $(TOP)$(ROOT)lib/$(ARCH_COMP)
+# no slash at the end
+LIB_DIR := $(LIB_ARCH_DIR)/$(HB_COMPILER)
 
 include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/c.cf

@@ -17,16 +17,17 @@ LIBS=\
 	hbcommon \
 	hbnulrtl \
 
-ifeq ($(HB_PPGEN_PATH),)
-   HB_PPGEN_PATH=.
-endif
-
 include $(TOP)$(ROOT)config/lib.cf
+
+ifeq ($(HB_PPGEN_PATH),)
+   HB_PPGEN_PATH=$(EXE_DIR)
+endif
 
 INSTALL_RULE_LIBRARIES := $(INSTALL_RULE)
 
 HB_VERHEADER=$(TOP)$(ROOT)include/hbverbld.h
 
+vpath hbpp$(EXE_EXT) $(EXE_DIR)
 ifneq ($(HB_PP_RULES),)
 pptable.c : $(HB_PP_RULES)
 	$(CP) $(subst /,$(DIRSEP),$<) $@
@@ -36,7 +37,7 @@ pptable.c : hbpp$(EXE_EXT)
 endif
 
 ifneq ($(HB_BIN_INSTALL),)
-INSTALL_FILES = $(OBJ_DIR)/hbpp$(EXE_EXT)
+INSTALL_FILES = $(EXE_DIR)/hbpp$(EXE_EXT)
 INSTALL_DIR = $(HB_BIN_INSTALL)
 HB_INSTALL_DEF=yes
 include $(TOP)$(ROOT)config/install.cf
@@ -47,3 +48,4 @@ install::
 
 clean::
 	-$(RM) $(subst /,$(DIRSEP),$(HB_VERHEADER))
+	-$(RM) $(subst /,$(DIRSEP),$(EXE_DIR)/hbpp$(EXE_EXT))

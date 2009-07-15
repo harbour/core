@@ -54,7 +54,7 @@ HB_DB_DIRS += $(HB_DB_DRVEXT)
 endif
 
 ifeq ($(HB_BIN_COMPILE),)
-HB_BIN_COMPILE := $(TOP)$(ROOT)source/main/$(ARCH_COMP)
+HB_BIN_COMPILE := $(TOP)$(ROOT)bin/$(ARCH_COMP)
 endif
 
 ifeq ($(HB_INC_COMPILE),)

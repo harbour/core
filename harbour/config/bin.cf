@@ -5,10 +5,10 @@
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
-#no slash at the end
+# no slash at the end
 EXE_ARCH_DIR := $(TOP)$(ROOT)bin/$(HB_ARCHITECTURE)
-#no slash at the end
-EXE_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
+# no slash at the end
+EXE_DIR := $(EXE_ARCH_DIR)/$(HB_COMPILER)
 
 include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/c.cf
@@ -30,7 +30,7 @@ EXE_NAME = $(PRG_MAIN:.prg=$(EXE_EXT))
 endif
 endif
 
-EXE_FILE := $(OBJ_DIR)/$(EXE_NAME)
+EXE_FILE := $(EXE_DIR)/$(EXE_NAME)
 
 LIB_DIR := $(TOP)$(ROOT)lib/$(ARCH_COMP)
 
