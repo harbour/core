@@ -11,7 +11,7 @@ include $(TOP)$(ROOT)config/prg.cf
 first:: dirbase ^^^d^e^s^c^e^n^d^^^
 
 ^^^d^e^s^c^e^n^d^^^ :
-	@$(MK) -C $(ARCH_COMP_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(PRG_EXES)
+	@$(MK) -C $(OBJ_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(PRG_EXES)
 
 endif
 endif

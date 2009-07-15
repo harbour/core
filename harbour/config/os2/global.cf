@@ -12,8 +12,8 @@ HB_GT_LIBS=\
 
 ifeq ($(SHLVL),) # non-bash
 
-ARCH_COMP_DIR = $(ARCH_COMP)
-ARCH_COMP_OS = $(subst /,\,$(ARCH_COMP))
+OBJ_DIR = $(ARCH_COMP)
+OBJ_DIR_OS = $(subst /,\,$(ARCH_COMP))
 LIB_DIR_OS  = $(subst /,\,$(LIB_DIR))
 LIB_ARCH_DIR_OS = $(subst /,\,$(LIB_ARCH_DIR))
 LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
@@ -37,11 +37,11 @@ ifeq ($(OS2_SHELL),) # non-OS/2
    MV = move
 
 dirbase::
-	-@$(COMSPEC) /c if not exist $(ARCH_COMP_OS) $(MD) $(ARCH_COMP_OS)
+	-@$(COMSPEC) /c if not exist $(OBJ_DIR_OS) $(MD) $(OBJ_DIR_OS)
 	$(if $(LIB_DIR_OS),-@$(COMSPEC) /c if not exist $(LIB_DIR_OS) $(MD) $(LIB_DIR_OS),)
 
 clean::
-	-@$(COMSPEC) /c if exist $(ARCH_COMP_OS) $(RD) $(ARCH_COMP_OS)
+	-@$(COMSPEC) /c if exist $(OBJ_DIR_OS) $(RD) $(OBJ_DIR_OS)
 	$(if $(LIB_FILE_OS),-@$(COMSPEC) /c if exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
 
 else # OS/2
@@ -54,20 +54,20 @@ else # OS/2
 ifeq ($(LIB_ARCH_DIR),)
 
 dirbase::
-	-for %d in ($(HB_ARCHITECTURE) $(ARCH_COMP_OS)) do if not exist %d $(MD) %d
+	-for %d in ($(HB_ARCHITECTURE) $(OBJ_DIR_OS)) do if not exist %d $(MD) %d
 
 clean::
-	-if exist $(ARCH_COMP_OS)\*.* $(RM) $(ARCH_COMP_OS)\*.*
-	-for %d in ($(ARCH_COMP_OS) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
+	-if exist $(OBJ_DIR_OS)\*.* $(RM) $(OBJ_DIR_OS)\*.*
+	-for %d in ($(OBJ_DIR_OS) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
 
 else
 
 dirbase::
-	-for %d in ($(HB_ARCHITECTURE) $(ARCH_COMP_OS) $(LIB_ARCH_DIR_OS) $(LIB_DIR_OS)) do if not exist %d $(MD) %d
+	-for %d in ($(HB_ARCHITECTURE) $(OBJ_DIR_OS) $(LIB_ARCH_DIR_OS) $(LIB_DIR_OS)) do if not exist %d $(MD) %d
 
 clean::
-	-if exist $(ARCH_COMP_OS)\*.* $(RM) $(ARCH_COMP_OS)\*.*
-	-for %d in ($(ARCH_COMP_OS) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
+	-if exist $(OBJ_DIR_OS)\*.* $(RM) $(OBJ_DIR_OS)\*.*
+	-for %d in ($(OBJ_DIR_OS) $(HB_ARCHITECTURE)) do if exist %d $(RD) %d
 	-if exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS)
 
 endif
@@ -76,7 +76,7 @@ endif
 
 else  # bash
 
-ARCH_COMP_DIR = $(ARCH_COMP)
+OBJ_DIR = $(ARCH_COMP)
 MK = $(MAKE)
 RM = rm -f
 RD = rm -f -r
@@ -88,10 +88,10 @@ MDP = mkdir -p
 LIB_FILE_OS = $(LIB_FILE)
 
 dirbase::
-	@[ -d $(ARCH_COMP_DIR) ] || $(MDP) $(ARCH_COMP_DIR)
+	@[ -d $(OBJ_DIR) ] || $(MDP) $(OBJ_DIR)
 	@[ -z $(LIB_DIR) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)
 
 clean::
-	-$(RD) $(ARCH_COMP_DIR) $(LIB_FILE)
+	-$(RD) $(OBJ_DIR) $(LIB_FILE)
 
 endif

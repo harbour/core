@@ -10,7 +10,7 @@ HB_GT_LIBS=\
 	gtstd \
 	gttrm \
 
-ARCH_COMP_DIR = $(ARCH_COMP)
+OBJ_DIR = $(ARCH_COMP)
 MK = $(MAKE)
 RM = rm -f
 RD = rm -f -r
@@ -20,8 +20,8 @@ MD = mkdir
 MDP = mkdir -p
 
 dirbase::
-	@[ -d $(ARCH_COMP_DIR) ] || $(MDP) $(ARCH_COMP_DIR)
+	@[ -d $(OBJ_DIR) ] || $(MDP) $(OBJ_DIR)
 	@[ -z $(LIB_DIR) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)
 
 clean::
-	-$(RD) $(ARCH_COMP_DIR) $(LIB_FILE)
+	-$(RD) $(OBJ_DIR) $(LIB_FILE)

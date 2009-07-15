@@ -15,10 +15,10 @@ HB_GT_LIBS=\
 ifeq ($(SHLVL),) # non-bash
 
 # There is a conflict with the use of '\' and '/' characters
-# The MAKE requires '/' in filenames (ARCH_COMP_DIR) however some compilers
-# and some DOS commands require '\' (ARCH_COMP_OS)
-ARCH_COMP_DIR = $(ARCH_COMP)
-ARCH_COMP_OS = $(subst /,\,$(ARCH_COMP))
+# The MAKE requires '/' in filenames (OBJ_DIR) however some compilers
+# and some DOS commands require '\' (OBJ_DIR_OS)
+OBJ_DIR = $(ARCH_COMP)
+OBJ_DIR_OS = $(subst /,\,$(ARCH_COMP))
 LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
 LIB_ARCH_DIR_OS = $(subst /,\,$(LIB_ARCH_DIR))
 LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
@@ -50,17 +50,17 @@ MD = md
 RANLIB = ranlib
 
 dirbase::
-	-@$(COMSPEC) /Cfor %d in ($(HB_ARCHITECTURE) $(ARCH_COMP_OS)) do if not exist %d\nul $(MD) %d
+	-@$(COMSPEC) /Cfor %d in ($(HB_ARCHITECTURE) $(OBJ_DIR_OS)) do if not exist %d\nul $(MD) %d
 	$(if $(LIB_ARCH_DIR_OS),-@$(COMSPEC) /Cfor %d in ($(LIB_ARCH_DIR_OS) $(LIB_DIR_OS)) do if not exist %d\nul $(MD) %d,)
 
 clean::
-	-@$(COMSPEC) /Cfor %f in ($(ARCH_COMP_OS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
-	-@$(COMSPEC) /Cfor %d in ($(ARCH_COMP_OS) $(HB_ARCHITECTURE)) do if exist %d\nul $(RD) %d
+	-@$(COMSPEC) /Cfor %f in ($(OBJ_DIR_OS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
+	-@$(COMSPEC) /Cfor %d in ($(OBJ_DIR_OS) $(HB_ARCHITECTURE)) do if exist %d\nul $(RD) %d
 	$(if $(LIB_FILE_OS),-@$(COMSPEC) /Cif exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
 
 else  # bash
 
-ARCH_COMP_DIR = $(ARCH_COMP)
+OBJ_DIR = $(ARCH_COMP)
 MK = $(MAKE)
 
 RM = rm -f
@@ -74,11 +74,11 @@ MDP = mkdir -p
 RANLIB = ranlib
 
 dirbase::
-	@sh -c "[ -d $(ARCH_COMP_DIR) ] || $(MDP) $(ARCH_COMP_DIR)"
+	@sh -c "[ -d $(OBJ_DIR) ] || $(MDP) $(OBJ_DIR)"
 	@sh -c "[ -z $(LIB_DIR) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)"
 
 clean::
-	-$(RD) $(ARCH_COMP_DIR) $(LIB_FILE)
+	-$(RD) $(OBJ_DIR) $(LIB_FILE)
 
 endif
 endif

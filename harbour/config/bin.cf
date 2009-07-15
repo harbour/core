@@ -25,15 +25,15 @@ EXE_NAME = $(PRG_MAIN:.prg=$(EXE_EXT))
 endif
 endif
 
-EXE_FILE = $(ARCH_COMP_DIR)/$(EXE_NAME)
-LIB_DIR = $(TOP)$(ROOT)lib/$(ARCH_COMP_DIR)
+EXE_FILE = $(OBJ_DIR)/$(EXE_NAME)
+LIB_DIR = $(TOP)$(ROOT)lib/$(OBJ_DIR)
 
 ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 
 first:: dirbase descend
 
 descend:: dirbase
-	+@$(MK) -C $(ARCH_COMP_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(EXE_NAME) $(HB_USER_MAKEFLAGS)
+	+@$(MK) -C $(OBJ_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(EXE_NAME) $(HB_USER_MAKEFLAGS)
 
 $(EXE_NAME) : $(ALL_OBJS)
 	$(LD_RULE)
