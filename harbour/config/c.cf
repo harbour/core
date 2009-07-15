@@ -7,23 +7,23 @@ C_OBJS = $(C_SOURCES:.c=$(OBJ_EXT)) $(CPP_SOURCES:.cpp=$(OBJ_EXT))
 C_MAIN_OBJ = $(C_MAIN:.c=$(OBJ_EXT))
 
 ifdef YACC_SOURCE
-YACC_BASE = $(YACC_SOURCE:.y=)
-YACC_C = $(YACC_BASE)y.c
-YACC_H_TMP = $(YACC_C:.c=.h)
-YACC_H = y_tab.h
-YACC_OUTPUT = $(YACC_C:.c=.out)
-YACC_OBJ = $(YACC_C:.c=$(OBJ_EXT))
-YACC_HB_H := $(foreach h, $(YACC_HEADERS), $(HB_INC_COMPILE)/$(h))
-ifneq ($(YACC_DEPEND),)
-$(foreach f, $(YACC_DEPEND), $(f:.c=$(OBJ_EXT))) : $(YACC_C)
-endif
+   YACC_BASE = $(YACC_SOURCE:.y=)
+   YACC_C = $(YACC_BASE)y.c
+   YACC_H_TMP = $(YACC_C:.c=.h)
+   YACC_H = y_tab.h
+   YACC_OUTPUT = $(YACC_C:.c=.out)
+   YACC_OBJ = $(YACC_C:.c=$(OBJ_EXT))
+   YACC_HB_H := $(foreach h, $(YACC_HEADERS), $(HB_INC_COMPILE)/$(h))
+   ifneq ($(YACC_DEPEND),)
+      $(foreach f, $(YACC_DEPEND), $(f:.c=$(OBJ_EXT))) : $(YACC_C)
+   endif
 endif
 
 ifdef LEX_SOURCE
-LEX_BASE = $(LEX_SOURCE:.l=)
-LEX_C = $(LEX_BASE)l.c
-LEX_OBJ = $(LEX_C:.c=$(OBJ_EXT))
-LEX_HB_H := $(foreach h, $(LEX_HEADERS), $(HB_INC_COMPILE)/$(h))
+   LEX_BASE = $(LEX_SOURCE:.l=)
+   LEX_C = $(LEX_BASE)l.c
+   LEX_OBJ = $(LEX_C:.c=$(OBJ_EXT))
+   LEX_HB_H := $(foreach h, $(LEX_HEADERS), $(HB_INC_COMPILE)/$(h))
 endif
 
 ALL_C_OBJS = $(YACC_OBJ) $(LEX_OBJ) $(C_OBJS) $(C_MAIN_OBJ)

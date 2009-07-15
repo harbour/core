@@ -6,7 +6,8 @@ ifeq ($(PM),) # Only traverse directories if not compiling a specific module
 
 ifeq ($(DIRS),) # Empty directory list
 
-DIR_RULE = @echo Done
+DIR_RULE =\
+	@echo Done
 
 else
 
@@ -14,9 +15,11 @@ ifeq ($(SHLVL),) # non-bash
 
 MK_OS = $(subst /,\,$(MK))
 DIRS_OS = $(subst /,\,$(DIRS))
-DIR_RULE = $(COMSPEC) /C for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
 
-else  # bash
+DIR_RULE =\
+	$(COMSPEC) /C for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
+
+else # bash
 
 DIR_RULE =\
 	@for d in $(DIRS); do \

@@ -14,6 +14,8 @@ HB_GT_LIBS=\
 
 ifeq ($(SHLVL),) # non-bash
 
+DIRSEP = $(subst /,\,\)
+
 # There is a conflict with the use of '\' and '/' characters
 # The MAKE requires '/' in filenames (OBJ_DIR) however some compilers
 # and some DOS commands require '\' (OBJ_DIR_OS)
@@ -25,7 +27,6 @@ LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
 EXE_DIR_OS = $(subst /,\,$(EXE_DIR))
 EXE_ARCH_DIR_OS = $(subst /,\,$(EXE_ARCH_DIR))
 EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
-DIRSEP = $(subst /,\,\)
 
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 
@@ -60,7 +61,7 @@ clean::
 	$(if $(LIB_FILE_OS),-@$(COMSPEC) /Cif exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
 	$(if $(EXE_FILE_OS),-@$(COMSPEC) /Cif exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
 
-else  # bash
+else # bash
 
 MK = $(MAKE)
 RM = rm -f

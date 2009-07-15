@@ -40,6 +40,6 @@ LIBS=\
 	hbpp \
 	hbcommon \
 
-include $(TOP)$(ROOT)config/bin.cf
-
 HB_USER_PRGFLAGS += -l-
+
+include $(TOP)$(ROOT)config/bin.cf

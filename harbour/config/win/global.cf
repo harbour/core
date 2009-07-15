@@ -13,10 +13,12 @@ HB_GT_LIBS=\
 	gtwin \
 
 ifeq ($(HB_DYNLIB),yes)
-   HB_CDYNLIB=-DHB_DYNLIB
+   HB_CDYNLIB = -DHB_DYNLIB
 endif
 
 ifeq ($(SHLVL),) # non-bash
+
+DIRSEP = $(subst /,\,\)
 
 # There is a conflict with the use of '\' and '/' characters
 # The MAKE requires '/' in filenames (OBJ_DIR) however some compilers
@@ -26,7 +28,6 @@ LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
 LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
 EXE_DIR_OS = $(subst /,\,$(EXE_DIR))
 EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
-DIRSEP = $(subst /,\,\)
 
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 
@@ -54,7 +55,7 @@ clean::
 	$(if $(LIB_FILE_OS),-@$(COMSPEC) /c if exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
 	$(if $(EXE_FILE_OS),-@$(COMSPEC) /c if exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
 
-else  # bash
+else # bash
 
 MK = $(MAKE)
 RM = rm -f

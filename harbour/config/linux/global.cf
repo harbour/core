@@ -12,15 +12,16 @@ HB_GT_LIBS=\
 
 ifeq ($(SHLVL),) # non-bash
 
+DIRSEP = $(subst /,\,\)
+
 OBJ_DIR_OS = $(subst /,\,$(OBJ_DIR))
 OBJ_ARCH_DIR_OS = $(subst /,\,$(OBJ_ARCH_DIR))
-LIB_DIR_OS  = $(subst /,\,$(LIB_DIR))
+LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
 LIB_ARCH_DIR_OS = $(subst /,\,$(LIB_ARCH_DIR))
 LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
-EXE_DIR_OS  = $(subst /,\,$(EXE_DIR))
+EXE_DIR_OS = $(subst /,\,$(EXE_DIR))
 EXE_ARCH_DIR_OS = $(subst /,\,$(EXE_ARCH_DIR))
 EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
-DIRSEP = $(subst /,\,\)
 
 MK = $(subst /,\,$(subst \~,~,$(MAKE)))
 
@@ -69,7 +70,7 @@ clean::
 
 endif
 
-else  # bash
+else # bash
 
 MK = $(MAKE)
 RM = rm -f

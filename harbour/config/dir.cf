@@ -9,11 +9,11 @@ include $(TOP)$(ROOT)config/global.cf
 
 # these make versions does not work correctly with
 # parallel execution rules below
-OLD_MAKE:=$(MAKE_VERSION:3.7%=YES)
-OLD_MAKE:=$(OLD_MAKE:3.80%=YES)
+OLD_MAKE := $(MAKE_VERSION:3.7%=YES)
+OLD_MAKE := $(OLD_MAKE:3.80%=YES)
 
 ifeq ($(OLD_MAKE),YES)
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/dir.cf
+   include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/dir.cf
 endif
 
 ifeq ($(DIR_RULE),)
@@ -28,7 +28,7 @@ endef
 DIRS_PURE = $(filter-out {%},$(subst {, {,$(DIRS)))
 DIRS_DEP  = $(filter-out $(DIRS_PURE),$(DIRS))
 DIRS_MK   = $(foreach d, $(DIRS_PURE), $(if $(wildcard $(d)/Makefile),$(d),))
-DIR_RULE = $(foreach dir, $(DIRS_MK), $(dir_mk))
+DIR_RULE  = $(foreach dir, $(DIRS_MK), $(dir_mk))
 MULTI_DEPS = yes
 
 else

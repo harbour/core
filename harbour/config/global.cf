@@ -23,8 +23,8 @@ all: ; @echo Error: GNU Make version $(MAKE_VERSION) found, $(need) or upper nee
 else
 
 GRANDP = ../../../
-OBJ_BASE := obj
 ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)
+OBJ_BASE := obj
 OBJ_DIR := $(OBJ_BASE)/$(ARCH_COMP)
 OBJ_ARCH_DIR := $(OBJ_BASE)/$(HB_ARCHITECTURE)
 
@@ -81,6 +81,10 @@ else
       ifeq ($(OS),Windows_NT)
          ifneq ($(ComSpec),)
             COMSPEC := $(ComSpec)
+         else
+            ifeq ($(COMSPEC),)
+               COMSPEC := cmd.exe
+            endif
          endif
          HB_SHELL := nt
       else

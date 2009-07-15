@@ -36,7 +36,7 @@ INSTALL_RULE =\
 
 endif
 
-else  # bash
+else # bash
 
 INSTALL_RULE =\
 	@if [ -z $(INSTALL_DIR) ] || [ ! -d $(INSTALL_DIR) ]; \

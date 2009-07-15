@@ -25,7 +25,7 @@ INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
 INSTALL_RULE =\
 	$(foreach file, $(INSTALL_FILES_OS), $(inst_file))
 
-else  # bash
+else # bash
 
 INSTALL_DIR_OS = $(subst \,/,$(INSTALL_DIR))
 INSTALL_FILES_OS = $(subst \,/,$(INSTALL_FILES))

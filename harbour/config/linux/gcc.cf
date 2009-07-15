@@ -70,7 +70,7 @@ LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
 
 # screen driver libraries
 ifeq ($(HB_CRS_LIB),)
-HB_CRS_LIB=ncurses
+HB_CRS_LIB = ncurses
 endif
 ifneq ($(findstring gtcrs, $(HB_GT_LIBS)),)
 LINKLIBS += -l$(HB_CRS_LIB)

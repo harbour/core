@@ -6,7 +6,8 @@ ifeq ($(PM),) # Only traverse directories if not compiling a specific module
 
 ifeq ($(DIRS),) # Empty directory list
 
-DIR_RULE = @echo Done
+DIR_RULE =\
+	@echo Done
 
 else
 
@@ -22,9 +23,11 @@ endef
 
 DIRS_OS = $(subst /,\,$(DIRS))
 MK_OS = $(subst /,\,$(MK))
-DIR_RULE = $(foreach file, $(DIRS_OS), $(dir_mk))
 
-else  # bash
+DIR_RULE =\
+	$(foreach file, $(DIRS_OS), $(dir_mk))
+
+else # bash
 
 DIRS_OS = $(subst \,/,$(DIRS))
 DIR_RULE =\
