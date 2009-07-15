@@ -452,13 +452,13 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
    if( !pszFileName )
    {
       static const char * s_szNames[] = {
-            "../../../../ChangeLog",
-            "../../../../CHANGES",
+            "../../../../../ChangeLog",
+            "../../../../../CHANGES",
 #if defined( HB_OS_DOS )
-            "../../../../ChangeLo",
-            "../../../../Change~1",
-            "../../../../Change~?",
-            "../../../../Chang~??",
+            "../../../../../ChangeLo",
+            "../../../../../Change~1",
+            "../../../../../Change~?",
+            "../../../../../Chang~??",
 #endif
             NULL };
       int i = 0;

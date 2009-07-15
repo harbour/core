@@ -280,8 +280,6 @@ track of all files (read the FAQ if you don't know what SVN is).
 |
 +---lib                 - Run-Time libraries binaries for each platform. (*)
 |
-+---obj                 - Object files. (*)
-|
 +---source              - All source files reside underneath.
 |   |
 |   +---codepage        - National codepage collection.
