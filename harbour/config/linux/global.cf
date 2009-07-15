@@ -13,7 +13,7 @@ HB_GT_LIBS=\
 ifeq ($(SHLVL),) # non-bash
 
 OBJ_DIR = $(ARCH_COMP)
-OBJ_DIR_OS = $(subst /,\,$(ARCH_COMP))
+OBJ_DIR_OS = $(subst /,\,$(OBJ_DIR))
 LIB_DIR_OS  = $(subst /,\,$(LIB_DIR))
 LIB_ARCH_DIR_OS = $(subst /,\,$(LIB_ARCH_DIR))
 LIB_FILE_OS = $(subst /,\,$(LIB_FILE))

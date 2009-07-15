@@ -23,6 +23,7 @@ all: ; @echo Error: GNU Make version $(MAKE_VERSION) found, $(need) or upper nee
 else
 
 GRANDP = ../../
+OBJ_BASE :=
 ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 
 # Directory separator default
