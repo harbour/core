@@ -449,45 +449,56 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
    int iResult = 0;
    FILE * file_in;
 
-   if( !pszFileName )
+   char szToCheck[ HB_PATH_MAX ];
+   PHB_FNAME pFileName = hb_fsFNameSplit( pszFileName );
+
+   if( !pFileName->szName )
    {
       static const char * s_szNames[] = {
-            "../../../../../ChangeLog",
-            "../../../../../CHANGES",
+            "ChangeLog",
+            "CHANGES",
 #if defined( HB_OS_DOS )
-            "../../../../../ChangeLo",
-            "../../../../../Change~1",
-            "../../../../../Change~?",
-            "../../../../../Chang~??",
+            "ChangeLo",
+            "Change~1",
+            "Change~?",
+            "Chang~??",
 #endif
             NULL };
       int i = 0;
 
+      if( !pFileName->szPath )
+         pFileName->szPath = "../../../../..";
+
       pszFileName = s_szNames[ i++ ];
       while( pszFileName )
       {
-         if( hb_fsFileExists( pszFileName ) )
-            break;
-         if( strchr( pszFileName, '?' ) != NULL )
+         pFileName->szName = pszFileName;
+         hb_fsFNameMerge( szToCheck, pFileName );
+
+         if( hb_fsFileExists( szToCheck ) )
          {
-            pszFree = hb_fsFileFind( pszFileName );
+            pszFileName = szToCheck;
+            break;
+         }
+
+         if( strchr( szToCheck, '?' ) != NULL )
+         {
+            pszFree = hb_fsFileFind( szToCheck );
             if( pszFree )
             {
                pszFileName = pszFree;
                break;
             }
          }
-         /* disabled it was for old non GNU make system */
-#if 0
-         if( *pszFileName == '.' )
-            pszFileName += 3;
-         else
-#endif
-            pszFileName = s_szNames[ i++ ];
+
+         pszFileName = s_szNames[ i++ ];
       }
+
       if( !pszFileName )
          pszFileName = s_szNames[ 0 ];
    }
+
+   hb_xfree( pFileName );
 
    file_in = hb_fopen( pszFileName, "r" );
    if( !file_in )
