@@ -18,6 +18,8 @@ LIB_NAME := $(LIB_PREF)$(LIBNAME)$(LIB_EXT)
 
 LIB_FILE := $(LIB_DIR)/$(LIB_NAME)
 
+EXE_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
+
 ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 
 first:: dirbase descend
