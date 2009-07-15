@@ -278,18 +278,17 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    Cross building
    --------------
 
-   when using make_gnu_xmingwce.sh:
-      HB_COMP_PATH=<HARBOUR_NATIVE_BUILD_DIR>\bin\harbour.exe
-      HB_PPGEN_PATH=<HARBOUR_NATIVE_BUILD_DIR>\bin\hbpp.exe
-   with rest of compilers:
+   Point this envvar to the directory where native Harbour executables for
+   your host platform can be found:
       HB_BIN_COMPILE=<HARBOUR_NATIVE_BUILD_DIR>\bin
-      HB_PPGEN_PATH=<HARBOUR_NATIVE_BUILD_DIR>\bin
 
-   You need these when building for a platform different than host.
-   For this to work, you will need to point above environment variables
-   to a native Harbour build available on your system. You don't need
-   a full native build, harbour, hbpp and hbmk2 executables are
-   enough for the process to succeed.
+   You need these when building for a platform different than host
+   (f.e. to create Windows builds on Linux, to create a Windows x64
+   build on 32-bit Windows or to create Windows CE/ARM build on any
+   operating systems). For this to work, you will need to point
+   above environment variables to a native Harbour build available on
+   your system. You don't need a full native build, harbour, hbpp and
+   hbmk2 executables are enough for the process to succeed.
 
 
 EXAMPLES
@@ -303,8 +302,6 @@ EXAMPLES
                Don't use spaces in dirs.
              - '%1 %2' can be empty, 'clean', 'install' or 'clean install'
                depending on what you want to do.
-             - Cross build setup (HB_BIN_COMPILE, HB_COMP_PATH, HB_PPGEN_PATH)
-               is tentative.
 
       --- MSVC 2008 + SDK
       set WindowsSDKDir=%ProgramFiles%\Microsoft SDKs\Windows\v6.0A\
@@ -327,7 +324,6 @@ EXAMPLES
       call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_amd64
       rem
       set HB_BIN_COMPILE=C:\hb-msvc\bin
-      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
       rem
       set HB_COMPILER=msvc64
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
@@ -372,7 +368,6 @@ EXAMPLES
       set PATH=C:\mingw64\bin;%PATH%
       rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin
-      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
       rem
       set HB_COMPILER=mingw64
       set HB_CCPREFIX=x86_64-w64-mingw32-
@@ -384,7 +379,6 @@ EXAMPLES
       set PATH=C:\mingwce\opt\mingw32ce\bin;C:\cygwin\bin;%PATH%
       rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin
-      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
       rem
       set HB_ARCHITECTURE=wce
       set HB_COMPILER=mingwarm
@@ -424,7 +418,6 @@ EXAMPLES
       call "%ProgramFiles%\Intel\Compiler\C++\10.1.025\Itanium\Bin\iclvars.bat"
       rem
       set HB_BIN_COMPILE=C:\hb-icc\bin
-      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
       rem
       set HB_COMPILER=iccia64
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
@@ -455,7 +448,6 @@ EXAMPLES
       set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\Win64;%LIB%
       rem
       set HB_BIN_COMPILE=C:\hb-pocc\bin
-      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
       rem
       set HB_COMPILER=pocc64
       set HB_INSTALL_PREFIX=C:\hb-%HB_COMPILER%
@@ -468,7 +460,6 @@ EXAMPLES
       set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\WinCE;%LIB%
       rem
       set HB_BIN_COMPILE=C:\hb-pocc\bin
-      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
       rem
       set HB_ARCHITECTURE=wce
       set HB_COMPILER=poccarm
@@ -601,7 +592,6 @@ EXAMPLES
       rem
       rem ; Native Windows Harbour binaries need to be installed on this path
       set HB_BIN_COMPILE=C:\hb-watcom\bin
-      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
       rem
       set HB_ARCHITECTURE=os2
       set HB_COMPILER=watcom
@@ -620,7 +610,6 @@ EXAMPLES
       # ; eliminate libraries which scans for local host header files
       export HB_XBUILD=yes
       # ; Native Linux binaries need to be installed on this path
-      export HB_PPGEN_PATH="/tmp/cros-hb"
       export HB_BIN_COMPILE="/tmp/cros-hb"
       # ;
       export HB_ARCHITECTURE=os2
@@ -641,7 +630,6 @@ EXAMPLES
       rem
       rem ; Native Windows Harbour binaries need to be installed on this path
       set HB_BIN_COMPILE=C:\hb-watcom\bin
-      set HB_PPGEN_PATH=%HB_BIN_COMPILE%
       rem
       set HB_ARCHITECTURE=linux
       set HB_COMPILER=watcom

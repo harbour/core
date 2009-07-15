@@ -108,7 +108,7 @@ HB_FUNC( WAPI_IMAGELIST_COCREATEINSTANCE )
 /*
 BOOL ImageList_Copy( HIMAGELIST himlDst, int iDst, HIMAGELIST himlSrc, int iSrc, UINT uFlags );
 */
-#if (_WIN32_IE >= 0x0300)
+#if ( _WIN32_IE >= 0x0300 )
 HB_FUNC( WAPI_IMAGELIST_COPY )
 {
    wapi_ret_L( ImageList_Copy( wapi_par_HIMAGELIST( 1 ),
@@ -216,7 +216,7 @@ HB_FUNC( WAPI_IMAGELIST_DRAWINDIRECT )
 /*
 HIMAGELIST ImageList_Duplicate( HIMAGELIST himl );
 */
-#if (_WIN32_IE >= 0x0400)
+#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_IMAGELIST_DUPLICATE )
 {
    wapi_ret_HANDLE( ImageList_Duplicate( wapi_par_HIMAGELIST( 1 ) ) );
@@ -430,7 +430,7 @@ HB_FUNC( WAPI_IMAGELIST_SETICONSIZE )
 /*
 BOOL ImageList_SetImageCount( HIMAGELIST himl, UINT uNewCount );
 */
-#if (_WIN32_IE >= 0x0400)
+#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_IMAGELIST_SETIMAGECOUNT )
 {
    wapi_ret_L( ImageList_SetImageCount( wapi_par_HIMAGELIST( 1 ),
@@ -711,7 +711,7 @@ HB_FUNC( WAPI_TABCTRL_DESELECTALL )
 }
 /*----------------------------------------------------------------------*/
 
-#if (_WIN32_IE >= 0x0400)
+#if ( _WIN32_IE >= 0x0400 )
 
 /* TabCtrl_HighlightItem(hwnd, i, fHighlight) */
 /* (BOOL)SNDMSG((hwnd), TCM_HIGHLIGHTITEM, (WPARAM)(i), (LPARAM)MAKELONG (fHighlight, 0)) */
@@ -848,13 +848,17 @@ HB_FUNC( WAPI_TREEVIEW_EXPAND )
 */
 HB_FUNC( WAPI_TREEVIEW_GETBKCOLOR )
 {
+#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ )
    wapi_ret_COLORREF( TreeView_GetBkColor( wapi_par_HWND( 1 ) ) );
+#else
+   wapi_ret_COLORREF( 0 );
+#endif
 }
 /*----------------------------------------------------------------------*/
 /* IE 5.0
 ...UINT TreeView_GetCheckState( HWND hwndTV, HTREEITEM hItem );
 */
-#if (_WIN32_IE >= 0x0500)
+#if ( _WIN32_IE >= 0x0500 )
 HB_FUNC( WAPI_TREEVIEW_GETCHECKSTATE )
 {
    wapi_ret_UINT( TreeView_GetCheckState( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
@@ -930,10 +934,14 @@ HB_FUNC( WAPI_TREEVIEW_GETINDENT )
 /* IE 4.0
 ... COLORREF TreeView_GetInsertMarkColor( HWND hwndTV );
 */
-#if (_WIN32_IE >= 0x0400)
+#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_GETINSERTMARKCOLOR )
 {
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_COLORREF( TreeView_GetInsertMarkColor( wapi_par_HWND( 1 ) ) );
+#else
+   wapi_ret_COLORREF( 0 );
+#endif
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -942,28 +950,30 @@ HB_FUNC( WAPI_TREEVIEW_GETINSERTMARKCOLOR )
 */
 HB_FUNC( WAPI_TREEVIEW_GETISEARCHSTRING )
 {
-   //wapi_ret_( TreeView_GetISearchString( wapi_par_HWND( 1 ), LPTSTR ) );
+   /* wapi_ret_( TreeView_GetISearchString( wapi_par_HWND( 1 ), LPTSTR ) ); */
 }
 /*----------------------------------------------------------------------*/
 /*
 ...BOOL TreeView_GetItem( HWND hwndTV, LPTVITEM pitem );
-
 -- Version 4.71 or later --
-
-BOOL TreeView_GetItem(   HWND hwndTV,   LPTVITEMEX pitem   );
+...BOOL TreeView_GetItem( HWND hwndTV, LPTVITEMEX pitem );
 */
 HB_FUNC( WAPI_TREEVIEW_GETITEM )
 {
-   //wapi_ret_( TreeView_GetItem( wapi_par_HWND( 1 ), LPTVITEM ) );
+   /* wapi_ret_( TreeView_GetItem( wapi_par_HWND( 1 ), LPTVITEM ) ); */
 }
 /*----------------------------------------------------------------------*/
 /* IE 4.0
 ...int TreeView_GetItemHeight( HWND hwndTV );
 */
-#if (_WIN32_IE >= 0x0400)
+#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_GETITEMHEIGHT )
 {
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_NI( TreeView_GetItemHeight( wapi_par_HWND( 1 ) ) );
+#else
+   wapi_ret_NI( 0 );
+#endif
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -973,10 +983,10 @@ HB_FUNC( WAPI_TREEVIEW_GETITEMHEIGHT )
 */
 HB_FUNC( WAPI_TREEVIEW_GETITEMPARTRECT )
 {
-   RECT       *prc;
-   TVITEMPART *partid;
+   RECT       rc;
+   TVITEMPART partid;
 
-   wapi_ret_L( TreeView_GetItemPartRect( wapi_par_HWND( 1 ),, wapi_par_HANDLE( 2 ), &prc, &partid ) );
+   wapi_ret_L( TreeView_GetItemPartRect( wapi_par_HWND( 1 ),, wapi_par_HANDLE( 2 ), &rc, &partid ) );
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -985,34 +995,38 @@ HB_FUNC( WAPI_TREEVIEW_GETITEMPARTRECT )
 */
 HB_FUNC( WAPI_TREEVIEW_GETITEMRECT )
 {
-   LPRECT  prc;
-   wapi_ret_L( TreeView_GetItemRect( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), &prc, wapi_par_BOOL( 4 ) ) );
+   LPRECT prc = NULL;
+   wapi_ret_L( TreeView_GetItemRect( wapi_par_HWND( 1 ), ( HTREEITEM ) wapi_par_HANDLE( 2 ), prc, wapi_par_BOOL( 4 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* IE 5.0
 ...UINT TreeView_GetItemState( HWND hwndTV, HTREEITEM hItem, UINT stateMask );
 */
-#if (_WIN32_IE >= 0x0500)
+#if ( _WIN32_IE >= 0x0500 )
 HB_FUNC( WAPI_TREEVIEW_GETITEMSTATE )
 {
-   wapi_ret_UINT( TreeView_GetItemState( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_UINT( 3 ) ) );
+   wapi_ret_UINT( TreeView_GetItemState( wapi_par_HWND( 1 ), ( HTREEITEM ) wapi_par_HANDLE( 2 ), wapi_par_UINT( 3 ) ) );
 }
 #endif
 /*----------------------------------------------------------------------*/
 /* IE 4.0
 ...HTREEITEM TreeView_GetLastVisible( HWND hwndTV );
 */
-#if (_WIN32_IE >= 0x0400)
+#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_GETLASTVISIBLE )
 {
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_HANDLE( TreeView_GetLastVisible( wapi_par_HWND( 1 ) ) );
+#else
+   wapi_ret_HANDLE( NULL );
+#endif
 }
 #endif
 /*----------------------------------------------------------------------*/
 /*
 ...COLOREF TreeView_GetLineColor( HWND hwndTV );
 */
-#if (_WIN32_IE >= 0x0500)
+#if ( _WIN32_IE >= 0x0500 )
 HB_FUNC( WAPI_TREEVIEW_GETLINECOLOR )
 {
    wapi_ret_COLORREF( TreeView_GetLineColor( wapi_par_HWND( 1 ) ) );
@@ -1091,7 +1105,11 @@ HB_FUNC( WAPI_TREEVIEW_GETROOT )
 */
 HB_FUNC( WAPI_TREEVIEW_GETSCROLLTIME )
 {
+#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ )
    wapi_ret_UINT( TreeView_GetScrollTime( wapi_par_HWND( 1 ) ) );
+#else
+   wapi_ret_UINT( 0 );
+#endif
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1105,20 +1123,28 @@ HB_FUNC( WAPI_TREEVIEW_GETSELECTION )
 /*
 ...COLORREF TreeView_GetTextColor( HWND hwndTV );
 */
-#if (_WIN32_IE >= 0x0400)
+#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_GETTEXTCOLOR )
 {
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_COLORREF( TreeView_GetTextColor( wapi_par_HWND( 1 ) ) );
+#else
+   wapi_ret_COLORREF( 0 );
+#endif
 }
 #endif
 /*----------------------------------------------------------------------*/
 /*
 ...HWND TreeView_GetToolTips( HWND hwndTV );
 */
-#if (_WIN32_IE >= 0x0300)
+#if ( _WIN32_IE >= 0x0300 )
 HB_FUNC( WAPI_TREEVIEW_GETTOOLTIPS )
 {
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_HANDLE( TreeView_GetToolTips( wapi_par_HWND( 1 ) ) );
+#else
+   wapi_ret_HANDLE( NULL );
+#endif
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -1127,7 +1153,11 @@ HB_FUNC( WAPI_TREEVIEW_GETTOOLTIPS )
 */
 HB_FUNC( WAPI_TREEVIEW_GETUNICODEFORMAT )
 {
+#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ )
    wapi_ret_L( TreeView_GetUnicodeFormat( wapi_par_HWND( 1 ) ) );
+#else
+   wapi_ret_L( FALSE );
+#endif
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1219,20 +1249,24 @@ HB_FUNC( WAPI_TREEVIEW_SETAUTOSCROLLINFO )
 /*
 ...COLORREF TreeView_SetBkColor( HWND hwndTV, COLORREF clrBk );
 */
-#if (_WIN32_IE >= 0x0400)
+#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_SETBKCOLOR )
 {
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_COLORREF( TreeView_SetBkColor( wapi_par_HWND( 1 ), wapi_par_COLORREF( 2 ) ) );
+#else
+   wapi_ret_COLORREF( 0 );
+#endif
 }
 #endif
 /*----------------------------------------------------------------------*/
 /*
 ...UINT TreeView_SetCheckState( HWND hwndTV, HTREEITEM hItem, BOOL fCheck );
 */
-#if (_WIN32_IE >= 0x0500)
+#if ( _WIN32_IE >= 0x0500 )
 HB_FUNC( WAPI_TREEVIEW_SETCHECKSTATE )
 {
-   // wapi_ret_UINT( TreeView_SetCheckState( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_BOOL( 3 ) ) );
+   /* wapi_ret_UINT( TreeView_SetCheckState( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_BOOL( 3 ) ) ); */
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -1266,29 +1300,35 @@ HB_FUNC( WAPI_TREEVIEW_SETINDENT )
 ...BOOL TreeView_SetInsertMark( HWND hwndTV, HTREEITEM htiInsert, BOOL fAfter );
 
 */
-#if (_WIN32_IE >= 0x0400)
+#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_SETINSERTMARK )
 {
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_L( TreeView_SetInsertMark( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_BOOL( 3 ) ) );
+#else
+   wapi_ret_L( FALSE );
+#endif
 }
 #endif
 /*----------------------------------------------------------------------*/
 /*
 ...COLORREF TreeView_SetInsertMarkColor( HWND hwndTV, COLORREF clrInsertMark );
 */
-#if (_WIN32_IE >= 0x0400)
+#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_SETINSERTMARKCOLOR )
 {
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_COLORREF( TreeView_SetInsertMarkColor( wapi_par_HWND( 1 ), wapi_par_COLORREF( 2 ) ) );
+#else
+   wapi_ret_COLORREF( 0 );
+#endif
 }
 #endif
 /*----------------------------------------------------------------------*/
 /*
 ...BOOL TreeView_SetItem( HWND hwndTV, LPTVITEM pitem );
-
 - Version 4.71 or later -
-
-BOOL TreeView_SetItem(    HWND hwndTV,    LPTVITEMEX pitem );
+...BOOL TreeView_SetItem( HWND hwndTV, LPTVITEMEX pitem );
 */
 HB_FUNC( WAPI_TREEVIEW_SETITEM )
 {
@@ -1298,27 +1338,31 @@ HB_FUNC( WAPI_TREEVIEW_SETITEM )
 /*
 ...int TreeView_SetItemHeight( HWND hwndTV, SHORT cyItem );
 */
-#if (_WIN32_IE >= 0x0400)
+#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_SETITEMHEIGHT )
 {
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_NI( TreeView_SetItemHeight( wapi_par_HWND( 1 ), wapi_par_SHORT( 2 ) ) );
+#else
+   wapi_ret_NI( 0 );
+#endif
 }
 #endif
 /*----------------------------------------------------------------------*/
 /*
 ...UINT TreeView_SetItemState( HWND hwndTV, HTREEITEM hItem, UINT state, UINT stateMask );
 */
-#if (_WIN32_IE >= 0x0500)
+#if ( _WIN32_IE >= 0x0500 )
 HB_FUNC( WAPI_TREEVIEW_SETITEMSTATE )
 {
-   // wapi_ret_UINT( TreeView_SetItemState( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_UINT( 3 ), wapi_par_UINT( 4 ) ) );
+   /* wapi_ret_UINT( TreeView_SetItemState( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_UINT( 3 ), wapi_par_UINT( 4 ) ) ); */
 }
 #endif
 /*----------------------------------------------------------------------*/
 /*
 ...COLORREF TreeView_SetLineColor( HWND hwndTV, COLORREF clrLine );
 */
-#if (_WIN32_IE >= 0x0500)
+#if ( _WIN32_IE >= 0x0500 )
 HB_FUNC( WAPI_TREEVIEW_SETLINECOLOR )
 {
    wapi_ret_COLORREF( TreeView_SetLineColor( wapi_par_HWND( 1 ), wapi_par_COLORREF( 2 ) ) );
@@ -1330,26 +1374,38 @@ HB_FUNC( WAPI_TREEVIEW_SETLINECOLOR )
 */
 HB_FUNC( WAPI_TREEVIEW_SETSCROLLTIME )
 {
+#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ )
    wapi_ret_UINT( TreeView_SetScrollTime( wapi_par_HWND( 1 ), wapi_par_UINT( 2 ) ) );
+#else
+   wapi_ret_UINT( 0 );
+#endif
 }
 /*----------------------------------------------------------------------*/
 /*
 ...COLORREF TreeView_SetTextColor( HWND hwndTV, COLORREF clrText );
 */
-#if (_WIN32_IE >= 0x0400)
+#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_SETTEXTCOLOR )
 {
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_COLORREF( TreeView_SetTextColor( wapi_par_HWND( 1 ), wapi_par_COLORREF( 2 ) ) );
+#else
+   wapi_ret_COLORREF( 0 );
+#endif
 }
 #endif
 /*----------------------------------------------------------------------*/
 /*
 ...HWND TreeView_SetToolTips( HWND hwndTV, HWND hwndTooltip );
 */
-#if (_WIN32_IE >= 0x0300)
+#if ( _WIN32_IE >= 0x0300 )
 HB_FUNC( WAPI_TREEVIEW_SETTOOLTIPS )
 {
+#if ! defined( HB_OS_WIN_CE )
    wapi_ret_HANDLE( TreeView_SetToolTips( wapi_par_HWND( 1 ), wapi_par_HWND( 2 ) ) );
+#else
+   wapi_ret_HANDLE( NULL );
+#endif
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -1358,7 +1414,11 @@ HB_FUNC( WAPI_TREEVIEW_SETTOOLTIPS )
 */
 HB_FUNC( WAPI_TREEVIEW_SETUNICODEFORMAT )
 {
+#if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ )
    wapi_ret_L( TreeView_SetUnicodeFormat( wapi_par_HWND( 1 ), wapi_par_BOOL( 2 ) ) );
+#else
+   wapi_ret_L( FALSE );
+#endif
 }
 /*----------------------------------------------------------------------*/
 #if 0

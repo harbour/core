@@ -19,10 +19,6 @@ LIBS=\
 
 include $(TOP)$(ROOT)config/lib.cf
 
-ifeq ($(HB_PPGEN_PATH),)
-   HB_PPGEN_PATH=$(EXE_DIR)
-endif
-
 INSTALL_RULE_LIBRARIES := $(INSTALL_RULE)
 
 HB_VERHEADER=$(TOP)$(ROOT)include/hbverbld.h
@@ -33,7 +29,7 @@ pptable.c : $(HB_PP_RULES)
 	$(CP) $(subst /,$(DIRSEP),$<) $@
 else
 pptable.c : hbpp$(EXE_EXT)
-	$(HB_PPGEN_PATH)/hbpp$(EXE_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q -c -v$(HB_VERHEADER)
+	$(HB_BIN_COMPILE)/hbpp$(EXE_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q -c -v$(HB_VERHEADER)
 endif
 
 ifneq ($(HB_BIN_INSTALL),)
