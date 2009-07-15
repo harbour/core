@@ -25,7 +25,94 @@ else
 GRANDP = ../../
 ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 
-#names of valid RDD libraries
+# Directory separator default
+ifeq ($(DIRSEP),)
+   DIRSEP = /
+endif
+
+# Shell detection
+ifneq ($(SHLVL),)
+   HB_SHELL := bash
+else
+   ifneq ($(OS2_SHELL),)
+      HB_SHELL := os2
+   else
+      ifeq ($(OS),Windows_NT)
+         ifneq ($(ComSpec),)
+            COMSPEC := $(ComSpec)
+         endif
+         HB_SHELL := nt
+      else
+         # MS-DOS or Win9x
+         HB_SHELL := dos
+      endif
+   endif
+endif
+
+CMDPREF :=
+ifneq ($(HB_SHELL),bash)
+   ifneq ($(COMSPEC),)
+      CMDPREF := $(COMSPEC) /C
+   endif
+endif
+
+# trickery to avoid process_create failed message with @uname := ...
+@uname = $(shell uname -a)
+uname := $(uname)
+
+ifeq ($(uname),)
+   ifneq ($(OS2_SHELL),)
+      HB_HOST_ARCH := os2
+   else ifneq ($(windir),)
+      HB_HOST_ARCH := win
+   else ifneq ($(WINDIR),)
+      HB_HOST_ARCH := win
+   else
+      HB_HOST_ARCH := dos
+   endif
+else ifneq ($(findstring MINGW,$(uname)),)
+   HB_HOST_ARCH := win
+else ifneq ($(findstring CYGWIN,$(uname)),)
+   HB_HOST_ARCH := win
+else ifneq ($(findstring Darwin,$(uname)),)
+   HB_HOST_ARCH := darwin
+else ifneq ($(findstring OS/2,$(uname)),)
+   HB_HOST_ARCH := os2
+else ifneq ($(findstring Linux,$(uname)),)
+   HB_HOST_ARCH := linux
+else ifneq ($(findstring BSD,$(uname)),)
+   HB_HOST_ARCH := bsd
+else ifneq ($(findstring HP-UX,$(uname)),)
+   HB_HOST_ARCH := hpux
+else ifneq ($(findstring SunOS,$(uname)),)
+   HB_HOST_ARCH := sunos
+else
+   HB_HOST_ARCH := linux
+endif
+
+$(info Detected host platform: $(HB_HOST_ARCH))
+
+ifeq ($(HB_HOST_ARCH),win)
+   ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
+      HB_HOST_ARCH := win_amd64
+   endif
+endif
+
+ifneq ($(HB_HOST_ARCH),$(HB_ARCHITECTURE))
+   ifeq ($(HB_BIN_COMPILE),)
+      $(warning Warning: HB_BIN_COMPILE must be specified for cross-builds.)
+   endif
+endif
+
+ifneq ($(findstring $(HB_HOST_ARCH),win wce dos os2),)
+   HB_HOST_BIN_EXT := .exe
+else
+   HB_HOST_BIN_EXT :=
+endif
+
+$(info Detected host binary extension: $(HB_HOST_BIN_EXT))
+
+# Names of valid RDD libraries
 HB_DB_DRIVERS=\
 	rddntx \
 	rddnsx \
@@ -36,7 +123,7 @@ HB_DB_DRIVERS=\
 	hbusrrdd \
 	hbuddall \
 
-#names of valid RDD subdirectories
+# Names of valid RDD subdirectories
 HB_DB_DIRS=\
 	dbfntx \
 	dbfnsx \
@@ -47,18 +134,17 @@ HB_DB_DIRS=\
 	usrrdd \
 	usrrdd/rdds \
 
-
 ifneq ($(HB_DB_DRVEXT),)
-HB_DB_DRIVERS += $(HB_DB_DRVEXT)
-HB_DB_DIRS += $(HB_DB_DRVEXT)
+   HB_DB_DRIVERS += $(HB_DB_DRVEXT)
+   HB_DB_DIRS += $(HB_DB_DRVEXT)
 endif
 
 ifeq ($(HB_BIN_COMPILE),)
-HB_BIN_COMPILE := $(TOP)$(ROOT)bin/$(ARCH_COMP)
+   HB_BIN_COMPILE := $(TOP)$(ROOT)bin/$(ARCH_COMP)
 endif
 
 ifeq ($(HB_INC_COMPILE),)
-HB_INC_COMPILE := $(TOP)$(ROOT)include
+   HB_INC_COMPILE := $(TOP)$(ROOT)include
 endif
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf

@@ -5,16 +5,7 @@
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
-ifneq ($(ComSpec),)
-   COMSPEC := $(ComSpec)
-endif
-
-CMDPREF:=
-ifeq ($(SHLVL),) # non-bash
-   ifneq ($(COMSPEC),)
-      CMDPREF := $(COMSPEC) /C
-   endif
-endif
+include $(TOP)$(ROOT)config/global.cf
 
 ifneq ($(LIBNAME),)
    DIR_RULE := @$(CMDPREF)echo "The '$(LIBNAME)' library ignored."
@@ -23,7 +14,6 @@ else
 endif
 
 all : first
-
 
 first clean install::
 	$(DIR_RULE)

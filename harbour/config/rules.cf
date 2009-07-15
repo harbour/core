@@ -16,10 +16,6 @@ else
 HB_PDBG = -l
 endif
 
-ifeq ($(DIRSEP),)
-DIRSEP = /
-endif
-
 #
 # How to run Harbour.
 #

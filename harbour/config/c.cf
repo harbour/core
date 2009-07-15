@@ -34,9 +34,6 @@ ifeq ($(HB_REBUILD_PARSER),yes)
 $(YACC_C) : ../../$(YACC_SOURCE) $(YACC_HB_H)
 	$(YACC) $(YACC_FLAGS) -o$@ $<
 else
-ifeq ($(DIRSEP),)
-DIRSEP = /
-endif
 %y.c : ../../%.yyc
 	$(CP) $(subst /,$(DIRSEP),$<) $@
 	$(CP) $(subst /,$(DIRSEP),$(<:.yyc=.yyh)) $(@:.c=.h)
