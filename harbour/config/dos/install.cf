@@ -4,7 +4,7 @@
 
 ifeq ($(INSTALL_FILES),) # Empty install list
 
-install:: first
+INSTALL_RULE =\
 	@echo Done
 
 else
@@ -22,7 +22,7 @@ endef
 INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
 INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
 
-install:: first
+INSTALL_RULE =\
 	$(foreach file, $(INSTALL_FILES_OS), $(inst_file))
 
 else  # bash
@@ -30,7 +30,7 @@ else  # bash
 INSTALL_DIR_OS = $(subst \,/,$(INSTALL_DIR))
 INSTALL_FILES_OS = $(subst \,/,$(INSTALL_FILES))
 
-install:: first
+INSTALL_RULE =\
 	@sh -c 'if [ ! -d $(INSTALL_DIR_OS) ]; \
 	then \
 	  echo "! Cannot install, path not found: $(INSTALL_DIR_OS)" 1>&2; \

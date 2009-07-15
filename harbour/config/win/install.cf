@@ -4,7 +4,7 @@
 
 ifeq ($(INSTALL_FILES),) # Empty install list
 
-install:: first
+INSTALL_RULE =\
 	@echo Done
 
 else
@@ -14,12 +14,12 @@ ifeq ($(SHLVL),) # non-bash
 INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
 INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
 
-install:: first
+INSTALL_RULE =\
 	-$(COMSPEC) /c for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
 
 else  # bash
 
-install:: first
+INSTALL_RULE =\
 	@if [ -z $(INSTALL_DIR) ] || [ ! -d $(INSTALL_DIR) ]; \
 	then \
 	   echo "! Can't install, path not found: '$(INSTALL_DIR)'" 1>&2; \
