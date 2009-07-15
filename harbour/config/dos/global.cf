@@ -22,6 +22,9 @@ OBJ_DIR_OS = $(subst /,\,$(ARCH_COMP))
 LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
 LIB_ARCH_DIR_OS = $(subst /,\,$(LIB_ARCH_DIR))
 LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
+EXE_DIR_OS = $(subst /,\,$(EXE_DIR))
+EXE_ARCH_DIR_OS = $(subst /,\,$(EXE_ARCH_DIR))
+EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
 DIRSEP = $(subst /,\,\)
 
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
@@ -46,17 +49,16 @@ CP = $(COMSPEC) /Ccopy
 MV = move
 MD = md
 
-#this will be used only under DJGPP
-RANLIB = ranlib
-
 dirbase::
 	-@$(COMSPEC) /Cfor %d in ($(HB_ARCHITECTURE) $(OBJ_DIR_OS)) do if not exist %d\nul $(MD) %d
 	$(if $(LIB_ARCH_DIR_OS),-@$(COMSPEC) /Cfor %d in ($(LIB_ARCH_DIR_OS) $(LIB_DIR_OS)) do if not exist %d\nul $(MD) %d,)
+	$(if $(EXE_ARCH_DIR_OS),-@$(COMSPEC) /Cfor %d in ($(EXE_ARCH_DIR_OS) $(EXE_DIR_OS)) do if not exist %d\nul $(MD) %d,)
 
 clean::
 	-@$(COMSPEC) /Cfor %f in ($(OBJ_DIR_OS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
 	-@$(COMSPEC) /Cfor %d in ($(OBJ_DIR_OS) $(HB_ARCHITECTURE)) do if exist %d\nul $(RD) %d
 	$(if $(LIB_FILE_OS),-@$(COMSPEC) /Cif exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
+	$(if $(EXE_FILE_OS),-@$(COMSPEC) /Cif exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
 
 else  # bash
 
@@ -70,15 +72,13 @@ MV = mv -f
 MD = mkdir
 MDP = mkdir -p
 
-#this will be used only under MINGW
-RANLIB = ranlib
-
 dirbase::
 	@sh -c "[ -d $(OBJ_DIR) ] || $(MDP) $(OBJ_DIR)"
 	@sh -c "[ -z $(LIB_DIR) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)"
+	@sh -c "[ -z $(EXE_DIR) ] || [ -d $(EXE_DIR) ] || $(MDP) $(EXE_DIR)"
 
 clean::
-	-$(RD) $(OBJ_DIR) $(LIB_FILE)
+	-$(RD) $(OBJ_DIR) $(LIB_FILE) $(EXE_FILE)
 
 endif
 endif

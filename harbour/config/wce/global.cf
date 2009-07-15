@@ -29,6 +29,8 @@ OBJ_DIR = $(ARCH_COMP)
 OBJ_DIR_OS = $(subst /,\,$(ARCH_COMP))
 LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
 LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
+EXE_DIR_OS = $(subst /,\,$(EXE_DIR))
+EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
 DIRSEP = $(subst /,\,\)
 
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
@@ -50,10 +52,12 @@ MV = move
 dirbase::
 	-@$(COMSPEC) /c if not exist $(OBJ_DIR_OS) $(MD) $(OBJ_DIR_OS)
 	$(if $(LIB_DIR_OS),-@$(COMSPEC) /c if not exist $(LIB_DIR_OS) $(MD) $(LIB_DIR_OS),)
+	$(if $(EXE_DIR_OS),-@$(COMSPEC) /c if not exist $(EXE_DIR_OS) $(MD) $(EXE_DIR_OS),)
 
 clean::
 	-@$(COMSPEC) /c if exist $(OBJ_DIR_OS) $(RD) $(OBJ_DIR_OS)
 	$(if $(LIB_FILE_OS),-@$(COMSPEC) /c if exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
+	$(if $(EXE_FILE_OS),-@$(COMSPEC) /c if exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
 
 else  # bash
 
@@ -69,8 +73,9 @@ MDP = mkdir -p
 dirbase::
 	@[ -d $(OBJ_DIR) ] || $(MDP) $(OBJ_DIR)
 	@[ -z $(LIB_DIR) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)
+	@[ -z $(EXE_DIR) ] || [ -d $(EXE_DIR) ] || $(MDP) $(EXE_DIR)
 
 clean::
-	-$(RD) $(OBJ_DIR) $(LIB_FILE)
+	-$(RD) $(OBJ_DIR) $(LIB_FILE) $(EXE_FILE)
 
 endif
