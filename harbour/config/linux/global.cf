@@ -23,17 +23,8 @@ EXE_DIR_OS = $(subst /,\,$(EXE_DIR))
 EXE_ARCH_DIR_OS = $(subst /,\,$(EXE_ARCH_DIR))
 EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
 
-MK = $(subst /,\,$(subst \~,~,$(MAKE)))
-
 ifeq ($(OS2_SHELL),) # non-OS/2
-   ifneq ($(ComSpec),)
-      COMSPEC := $(ComSpec)
-   else
-      ifeq ($(COMSPEC),)
-         COMSPEC := cmd.exe
-      endif
-   endif
-
+   MK = $(subst /,\,$(subst \~,~,$(MAKE)))
    RM = del /q /f
    RD = rmdir /q /s
    MD = mkdir
@@ -51,6 +42,7 @@ clean::
 	$(if $(EXE_FILE_OS),-@$(COMSPEC) /c if exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
 
 else # OS/2
+   MK = $(subst /,\,$(subst \~,~,$(MAKE)))
    RM = del /n
    RD = rmdir
    MD = md
@@ -79,6 +71,7 @@ CP = cp -f
 MV = mv -f
 MD = mkdir
 MDP = mkdir -p
+
 RANLIB = ranlib
 
 dirbase::

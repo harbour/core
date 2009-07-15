@@ -29,16 +29,7 @@ LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
 EXE_DIR_OS = $(subst /,\,$(EXE_DIR))
 EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
 
-MK := $(subst \,/,$(subst \~,~,$(MAKE)))
-
-ifneq ($(ComSpec),)
-   COMSPEC := $(ComSpec)
-else
-   ifeq ($(COMSPEC),)
-      COMSPEC := cmd.exe
-   endif
-endif
-
+MK = $(subst \,/,$(subst \~,~,$(MAKE)))
 RM = del /q /f
 RD = rmdir /q /s
 MD = mkdir

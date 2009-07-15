@@ -28,22 +28,12 @@ EXE_DIR_OS = $(subst /,\,$(EXE_DIR))
 EXE_ARCH_DIR_OS = $(subst /,\,$(EXE_ARCH_DIR))
 EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
 
-MK := $(subst \,/,$(subst \~,~,$(MAKE)))
-
-ifeq ($(COMSPEC),) #location of command.com
-   COMSPEC := command.com
-else
-   ifneq ($(HB_COMPILER),watcom)
-      #Use standard dos path, which is already set up.
-   else
-      ifeq ($(HB_COMPILER),djgpp)
-         #Use standard dos path, which is already set up.
-      else
-         COMSPEC := $(subst \,/,$(COMSPEC))
-      endif
-   endif
+# QUESTION: Anyone knows why is this needed? [vszakats]
+ifeq ($(HB_COMPILER),watcom)
+   COMSPEC := $(subst \,/,$(COMSPEC))
 endif
 
+MK = $(subst \,/,$(subst \~,~,$(MAKE)))
 RM = del
 RD = rmdir
 CP = $(COMSPEC) /Ccopy

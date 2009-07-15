@@ -79,6 +79,7 @@ else
       HB_SHELL := os2
    else
       ifeq ($(OS),Windows_NT)
+         HB_SHELL := nt
          ifneq ($(ComSpec),)
             COMSPEC := $(ComSpec)
          else
@@ -86,10 +87,12 @@ else
                COMSPEC := cmd.exe
             endif
          endif
-         HB_SHELL := nt
       else
          # MS-DOS or Win9x
          HB_SHELL := dos
+         ifeq ($(COMSPEC),)
+            COMSPEC := command.com
+         endif
       endif
    endif
 endif
@@ -131,23 +134,32 @@ $(info Detected host platform: $(HB_HOST_ARCH))
 
 ifeq ($(HB_HOST_ARCH),win)
    ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
-      HB_HOST_ARCH := win_amd64
+      HB_HOST_ARCH := win_x86_64
+   else
+      ifeq ($(PROCESSOR_ARCHITECTURE),IA64)
+         HB_HOST_ARCH := win_ia64
+      endif
    endif
 endif
 
 ifneq ($(HB_HOST_ARCH),$(HB_ARCHITECTURE))
    ifeq ($(HB_BIN_COMPILE),)
-      $(warning Warning: HB_BIN_COMPILE must be specified for cross-builds.)
+      # Not required in these combinations: [vszakats]
+      ifneq ($(HB_HOST_ARCH)-$(HB_ARCHITECTURE),win_x86_64-win)
+         ifneq ($(HB_HOST_ARCH)-$(HB_ARCHITECTURE),win-dos)
+            $(warning Warning: HB_BIN_COMPILE must be specified for cross-builds.)
+         endif
+      endif
    endif
 endif
 
-ifneq ($(findstring $(HB_HOST_ARCH),win win_amd64 wce dos os2),)
+ifneq ($(findstring $(HB_HOST_ARCH),win win_x86_64 win_ia64 wce dos os2),)
    HB_HOST_BIN_EXT := .exe
 else
    HB_HOST_BIN_EXT :=
 endif
 
-$(info Detected host binary extension: $(HB_HOST_BIN_EXT))
+$(info Detected host executable extension: $(HB_HOST_BIN_EXT))
 
 # Names of valid RDD libraries
 HB_DB_DRIVERS=\
