@@ -1234,6 +1234,8 @@ FUNCTION Build_Rtf( oWnd )
    LOCAL sz_:= oWnd:currentSize()
    LOCAL nW := 50, nG := 8, nH := 20, nT := sz_[2]-55
 
+   //--------------------------------//
+
    oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*0, nT}, {nW,nH} )
    oBtn:caption := 'Image'
    oBtn:create()
@@ -1266,6 +1268,8 @@ FUNCTION Build_Rtf( oWnd )
    oBtn:create()
    oBtn:activate := {|| oRtf:selItalic := .t. }
 
+   //-----------------------------------//
+
    oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*0, nT-25}, {nW,nH} )
    oBtn:caption := 'Load'
    oBtn:create()
@@ -1286,9 +1290,28 @@ FUNCTION Build_Rtf( oWnd )
    oBtn:create()
    oBtn:activate := {|x| x := oRTF:selFontSize, IF( x == 0, x := 11, ), oRTF:selFontSize := x-1 }
 
-   //------------------------//
+   oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*4, nT-25}, {nW,nH} )
+   oBtn:caption := 'Print'
+   oBtn:create()
+   oBtn:activate := {|| oRTF:print( , .t. ) }
+
+   oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*5, nT-25}, {nW,nH} )
+   oBtn:caption := 'Replace'
+   oBtn:create()
+   oBtn:activate := {|x| x := oRTF:selText, oRTF:selText := "Harbour" }
+
+   //-----------------------------------//
+
+   oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*0, nT-50}, {nW,nH} )
+   oBtn:caption := 'Font'
+   oBtn:create()
+   oBtn:activate := {|| RtfApplyFont( oRtf ) }
+
+
+
+   //-----------------------------------//
    oRTF := XbpRtf():new( oWnd )
-   oRTF:create( , , { 10,10 }, { sz_[ 1 ]-23, sz_[ 2 ]-100 } )
+   oRTF:create( , , { 10,10 }, { sz_[ 1 ]-23, sz_[ 2 ]-125 } )
 
    oRTF:setColorBG( GraMakeRGBColor( {255,255,200} ) )
    oRTF:setFontCompoundName( "12.Times" )
@@ -1396,3 +1419,14 @@ STATIC FUNCTION RtfSaveDocument( oRTF )
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION RtfApplyFont( oRTF )
+   LOCAL oDlg
+
+   oDlg := XbpFontDialog():new( oRTF, , , , { 20,20 } )
+   oDlg:create()
+   oDlg:activateApply := {|oFont| oRTF:selFont := oFont }
+   oDlg:display( 0 )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/

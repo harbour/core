@@ -134,7 +134,7 @@ CLASS XbpRtf INHERIT XbpWindow
    METHOD   redo()
    METHOD   insertText( cText )
    METHOD   insertImage( cImageFile )
-
+   METHOD   selFont                               SETGET
    /*</Harbour Extensions >*/
 
    DATA     sl_xbeRTF_Change
@@ -328,9 +328,15 @@ METHOD XbpRtf:paste()
 
 METHOD XbpRtf:print( oXbpPrinter, lOnlySelection )
 
-   HB_SYMBOL_UNUSED( oXbpPrinter )
-   HB_SYMBOL_UNUSED( lOnlySelection )
+   IF !hb_isObject( oXbpPrinter )
+      oXbpPrinter := XbpPrinter():new():create()
+   ENDIF
 
+   IF hb_isLogical( lOnlySelection ) .and. lOnlySelection
+      ::oWidget:print( QT_PTROF( oXbpPrinter:oWidget ) )
+   ELSE
+      ::oWidget:print( QT_PTROF( oXbpPrinter:oWidget ) )
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -464,6 +470,22 @@ METHOD XbpRtf:selColor( ... )
          nColor := ConvertAFact( "COLOR", XBTOQT_FROM_XB, aP[ 1 ] )
          oBrush := QBrush():new( "QColor", QT_PTROF( QColor():new( nColor ) ) )
          ::oTextCharFormat:setForeground( QT_PTROF( oBrush ) )
+         ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
+      ENDIF
+   ENDIF
+   RETURN xRet
+
+/*----------------------------------------------------------------------*/
+//  This is Harour Extension
+//
+METHOD XbpRtf:selFont( ... )                            // ""
+   LOCAL xRet := NIL
+   LOCAL aP := hb_aParams()
+
+   IF len( aP ) >= 1 .and. hb_isObject( aP[ 1 ] )
+      ::oTextCharFormat:pPtr := ::oCurCursor:charFormat()
+      IF ::oTextCharFormat:isValid()
+         ::oTextCharFormat:setFont( QT_PTROF( aP[ 1 ]:oWidget ) )
          ::oCurCursor:setCharFormat( QT_PTROF( ::oTextCharFormat ) )
       ENDIF
    ENDIF
@@ -617,8 +639,12 @@ METHOD XbpRtf:selText( ... )                                // ""
    LOCAL xRet := ""
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) >= 1
-
+   IF( ::oCurCursor:hasSelection() )
+      xRet := ::oCurCursor:selectedText()
+   ENDIF
+   IF len( aP ) >= 1 .and. hb_isChar( aP[ 1 ] )
+      ::oCurCursor:removeSelectedText()
+      ::oCurCursor:insertText( aP[ 1 ] )
    ENDIF
    RETURN xRet
 

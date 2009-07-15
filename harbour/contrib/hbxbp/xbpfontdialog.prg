@@ -232,6 +232,11 @@ METHOD XbpFontDialog:exeBlock( nEvent, p1 )
       ELSE
          ::oWidget:accept()
       ENDIF
+
+   CASE nEvent == 4                            /* SIMULATE  sl_activateApply for timebeing */
+      IF hb_isBlock( ::sl_activateApply )
+         eval( ::sl_activateApply, ::XbpFontObject(), NIL, self )
+      ENDIF
    ENDCASE
 
    RETURN nRet
