@@ -1598,6 +1598,15 @@ static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             s_bAltKeyHandling = hb_itemGetL( pInfo->pNewVal );
          break;
 
+      case HB_GTI_MOUSESTATUS:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, b_MouseEnable );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+         {
+            b_MouseEnable = hb_itemGetL( pInfo->pNewVal );
+            SetConsoleMode( s_HInput, b_MouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
+         }
+         break;
+
       case HB_GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
