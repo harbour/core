@@ -6,5 +6,4 @@ pp.c hbppcomp.c hbppcore.c hbpptbl.c hbpragma.c
 -lhbcommon
 -lhbnulrtl
 -static
-# it does not work here
 -nohblib

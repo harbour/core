@@ -428,18 +428,17 @@ HB_ERRCODE hb_gtGetCursor( int * piCursorStyle )
 
 HB_ERRCODE hb_gtSetCursor( int iCursorStyle )
 {
+   PHB_GT pGT;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gtSetCursor(%d)", iCursorStyle));
 
-   if( iCursorStyle <= SC_SPECIAL2 )
+   pGT = hb_gt_Base();
+   if( pGT )
    {
-      PHB_GT pGT = hb_gt_Base();
-      if( pGT )
-      {
-         HB_GTSELF_SETCURSORSTYLE( pGT, iCursorStyle );
-         HB_GTSELF_FLUSH( pGT );
-         hb_gt_BaseFree( pGT );
-         return HB_SUCCESS;
-      }
+      HB_GTSELF_SETCURSORSTYLE( pGT, iCursorStyle );
+      HB_GTSELF_FLUSH( pGT );
+      hb_gt_BaseFree( pGT );
+      return HB_SUCCESS;
    }
    return HB_FAILURE;
 }

@@ -1652,7 +1652,7 @@ static BOOL hb_gt_win_mouse_ButtonState( PHB_GT pGT, int iButton )
 
    if( iButton == 0 )
       fReturn = ( GetKeyState( VK_LBUTTON ) & 0x8000 ) != 0;
-   else if( iButton== 1 )
+   else if( iButton == 1 )
       fReturn = ( GetKeyState( VK_RBUTTON ) & 0x8000 ) != 0;
    else if( iButton == 2 )
       fReturn = ( GetKeyState( VK_MBUTTON ) & 0x8000 ) != 0;

@@ -706,7 +706,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       CASE cParamL            == "-xhb"     ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_XHB
       CASE cParamL            == "-hb10"    ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB10
       CASE cParamL            == "-hbc"     ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_RAW_C ; lAcceptCFlag := .T.
-      CASE cParamL            == "-nohblib" ; l_lNOHBLIB := .T.
       CASE cParamL == "-help" .OR. ;
            cParamL == "--help"
 
@@ -853,21 +852,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          "dbfntxmt" ,;
          "dbfcdxmt" ,;
          "dbffptmt" }
-   ENDIF
-
-   IF l_lNOHBLIB
-      aLIB_BASE1 := {}
-      aLIB_BASE2 := {}
-      aLIB_BASE_GT := {}
-      aLIB_BASE_PCRE := {}
-      aLIB_BASE_ZLIB := {}
-      aLIB_BASE_DEBUG := {}
-      aLIB_BASE_CPLR := {}
-      aLIB_BASE_ST := {}
-      aLIB_BASE_MT := {}
-      aLIB_BASE_NULRDD := {}
-      aLIB_BASE_RDD_ST := {}
-      aLIB_BASE_RDD_MT := {}
    ENDIF
 
    /* Load architecture / compiler settings (compatibility) */
@@ -1415,7 +1399,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
            cParamL            == "-xhb" .OR. ;
            cParamL            == "-hb10" .OR. ;
            cParamL            == "-hbc" .OR. ;
-           cParamL            == "-nohblib" .OR. ;
            cParamL            == "-clipper" .OR. ;
            cParamL            == "-rtlink" .OR. ;
            cParamL            == "-blinker" .OR. ;
@@ -1439,6 +1422,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       CASE cParamL == "-fixshared"       ; hbmk[ _HBMK_lSHARED ]    := .T. ; hbmk[ _HBMK_lSTATICFULL ] := .F. ; hbmk[ _HBMK_lSHAREDDIST ] := .F.
       CASE cParamL == "-static"          ; hbmk[ _HBMK_lSHARED ]    := .F. ; hbmk[ _HBMK_lSTATICFULL ] := .F. ; hbmk[ _HBMK_lSHAREDDIST ] := NIL
       CASE cParamL == "-fullstatic"      ; hbmk[ _HBMK_lSHARED ]    := .F. ; hbmk[ _HBMK_lSTATICFULL ] := .T. ; hbmk[ _HBMK_lSHAREDDIST ] := NIL
+      CASE cParamL == "-nohblib"         ; l_lNOHBLIB := .T.
+      CASE cParamL == "-nohblib-"        ; l_lNOHBLIB := .F.
       CASE cParamL == "-bldf"            ; l_lBLDFLGP   := l_lBLDFLGC := l_lBLDFLGL := .T.
       CASE cParamL == "-bldf-"           ; l_lBLDFLGP   := l_lBLDFLGC := l_lBLDFLGL := .F.
       CASE Left( cParamL, 6 ) == "-bldf="
@@ -2038,6 +2023,18 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       /* Assemble library list */
 
       IF l_lNOHBLIB
+         aLIB_BASE1 := {}
+         aLIB_BASE2 := {}
+         aLIB_BASE_PCRE := {}
+         aLIB_BASE_ZLIB := {}
+         aLIB_BASE_DEBUG := {}
+         aLIB_BASE_CPLR := {}
+         aLIB_BASE_ST := {}
+         aLIB_BASE_MT := {}
+         aLIB_BASE_NULRDD := {}
+         aLIB_BASE_RDD_ST := {}
+         aLIB_BASE_RDD_MT := {}
+
          hbmk[ _HBMK_aLIBCOREGT ] := {}
       ENDIF
 
@@ -6774,6 +6771,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]trace"        , I_( "show commands executed" ) },;
       { "-[no]beep"         , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) },;
       { "-[no]ignore"       , I_( "ignore errors when running compiler tools (default: off)" ) },;
+      { "-nohblib[-]"       , I_( "do not use static core Harbour libraries when linking" ) },;
       { "-traceonly"        , I_( "show commands to be executed, but don't execute them" ) },;
       { "-[no]compr[=lev]"  , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) },;
       { "-[no]run"          , I_( "run/don't run output executable" ) },;
@@ -6820,7 +6818,6 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-hb10"             , I_( "enable Harbour 1.0.x compatibility mode (experimental)" ) },;
       { "-xhb"              , I_( "enable xhb mode (experimental)" ) },;
       { "-hbc"              , I_( "enable pure C mode (experimental)" ) },;
-      { "-nohblib"          , I_( "do not use static core Harbour libraries when linking" ) },;
       { "-rtlink"           , "" },;
       { "-blinker"          , "" },;
       { "-exospace"         , I_( "emulate Clipper compatible linker behavior\ncreate link/copy hbmk to rtlink/blinker/exospace for the same effect" ) },;
