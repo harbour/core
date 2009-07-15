@@ -12,7 +12,6 @@ HB_GT_LIBS=\
 
 MAKE = gmake
 
-OBJ_DIR = $(ARCH_COMP)
 MK = $(MAKE)
 RM = rm -f
 RD = rm -f -r

@@ -10,7 +10,6 @@ HB_GT_LIBS=\
 	gtstd \
 	gttrm \
 
-OBJ_DIR = $(ARCH_COMP)
 MK = $(MAKE)
 RM = rm -f
 RD = rm -f -r

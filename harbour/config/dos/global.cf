@@ -17,7 +17,6 @@ ifeq ($(SHLVL),) # non-bash
 # There is a conflict with the use of '\' and '/' characters
 # The MAKE requires '/' in filenames (OBJ_DIR) however some compilers
 # and some DOS commands require '\' (OBJ_DIR_OS)
-OBJ_DIR = $(ARCH_COMP)
 OBJ_DIR_OS = $(subst /,\,$(OBJ_DIR))
 LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
 LIB_ARCH_DIR_OS = $(subst /,\,$(LIB_ARCH_DIR))
@@ -62,9 +61,7 @@ clean::
 
 else  # bash
 
-OBJ_DIR = $(ARCH_COMP)
 MK = $(MAKE)
-
 RM = rm -f
 RD = rm -f -r
 CP = cp -f
