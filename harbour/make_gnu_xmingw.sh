@@ -22,12 +22,12 @@ export HB_COMPILER=mingw
 
 if [ "$OSTYPE" = "msdosdjgpp" ]; then
     HB_HOST_ARCH="dos"
-    HB_HOST_CC="djgpp"
+    HB_HOST_COMP="djgpp"
 else
     HB_HOST_ARCH="${UNAMEL}"
-    HB_HOST_CC="gcc"
+    HB_HOST_COMP="gcc"
     case "$HB_HOST_ARCH" in
-        *windows*|*mingw32*|msys*)  HB_HOST_ARCH="win"; HB_HOST_CC="mingw" ;;
+        *windows*|*mingw32*|msys*)  HB_HOST_ARCH="win"; HB_HOST_COMP="mingw" ;;
         *dos)    HB_HOST_ARCH="dos" ;;
         *bsd)    HB_HOST_ARCH="bsd" ;;
     esac
@@ -121,7 +121,7 @@ if [ -z "${HB_COMP_PATH}" ]; then
     if which harbour > /dev/null 2>&1; then
         HB_COMP_PATH=`which harbour 2> /dev/null`
     else
-        HB_COMP_PATH="$DIR/source/main/$HB_HOST_ARCH/$HB_HOST_CC/harbour"
+        HB_COMP_PATH="$DIR/source/main/$HB_HOST_ARCH/$HB_HOST_COMP/harbour"
     fi
 fi
 
@@ -135,14 +135,14 @@ fi
 if [ -z "${HB_PPGEN_PATH}" ]; then
     if which hbpp &> /dev/null; then
         HB_PPGEN_PATH=`which hbpp 2> /dev/null`
-    elif [ -x "${DIR}/source/pp/${HB_HOST_ARCH}/${HB_HOST_CC}/hbpp" ]; then
-        HB_PPGEN_PATH="${DIR}/source/pp/${HB_HOST_ARCH}/${HB_HOST_CC}/hbpp"
+    elif [ -x "${DIR}/source/pp/${HB_HOST_ARCH}/${HB_HOST_COMP}/hbpp" ]; then
+        HB_PPGEN_PATH="${DIR}/source/pp/${HB_HOST_ARCH}/${HB_HOST_COMP}/hbpp"
     else
         DIR=`dirname ${HB_COMP_PATH}`
         if [ -x "${DIR}/hbpp" ]; then
             HB_PPGEN_PATH="${DIR}/hbpp"
         else
-            HB_PPGEN_PATH="$DIR/source/pp/$HB_HOST_ARCH/$HB_HOST_CC/hbpp"
+            HB_PPGEN_PATH="$DIR/source/pp/$HB_HOST_ARCH/$HB_HOST_COMP/hbpp"
         fi
     fi
 fi
