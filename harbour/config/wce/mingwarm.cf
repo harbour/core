@@ -36,21 +36,21 @@ endif
 LD = $(HB_CCPREFIX)$(HB_CMP)
 LD_OUT = -o
 LINKPATHS =
-LDLIBS =
+LIBLIST =
 
 # Add all libraries specified in LIBS.
 LINKPATHS += -L$(LIB_DIR)
 
-LDLIBS += $(foreach lib, $(LIBS), -l$(lib))
+LIBLIST += $(foreach lib, $(LIBS), -l$(lib))
 
 # If LIBS specifies the RDD library, add all DB drivers.
 ifeq ($(findstring hbrdd,$(LIBS)),hbrdd)
-LDLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
+LIBLIST += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
 endif
 
 # Add the specified GT driver library
 ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
-LDLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
+LIBLIST += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
 endif
 
 SYSLIBS = -lwininet -lws2
@@ -68,7 +68,7 @@ ifeq ($(AR_RULE),)
 AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) && $(RANLIB) $(LIB_DIR)/$@ || $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@)
 # our libs have a lot of cross referenced now and we have to group them
 # until we won't have cleaned them
-LINKLIBS = $(LINKPATHS) -Wl,--start-group $(LDLIBS) -Wl,--end-group $(SYSLIBS)
+LINKLIBS = $(LINKPATHS) -Wl,--start-group $(LIBLIST) -Wl,--end-group $(SYSLIBS)
 endif
 
 include $(TOP)$(ROOT)config/rules.cf
