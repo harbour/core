@@ -4,7 +4,8 @@
 
 ifeq ($(INSTALL_FILES),) # Empty install list
 
-INSTALL_RULE = @echo Done
+install:: first
+	@echo Done
 
 else
 
@@ -15,7 +16,7 @@ ifeq ($(OS2_SHELL),) # non-OS/2
 INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
 INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
 
-INSTALL_RULE = \
+install:: first
 	-$(COMSPEC) /c for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
 
 else # OS/2
@@ -29,13 +30,15 @@ $(COMSPEC) /C $(CP) $(file) $(subst /,\,$(INSTALL_DIR))
 endef
 
 INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
-INSTALL_RULE = $(foreach file, $(INSTALL_FILES_OS), $(inst_file))
+
+install:: first
+	$(foreach file, $(INSTALL_FILES_OS), $(inst_file))
 
 endif
 
 else  # bash
 
-INSTALL_RULE =\
+install:: first
 	@if [ -z $(INSTALL_DIR) ] || [ ! -d $(INSTALL_DIR) ]; \
 	then \
 	  echo "! Can't install, path not found: '$(INSTALL_DIR)'" 1>&2; \

@@ -2,24 +2,24 @@
 # $Id$
 #
 
-INSTALL_RULE =\
+install:: first
 	@if [ ! -d $(INSTALL_DIR) ]; \
 	then \
-	  echo "! Can't install, path not found: $(INSTALL_DIR)" 1>&2; \
+	   echo "! Can't install, path not found: $(INSTALL_DIR)" 1>&2; \
 	else \
-	  for i in $(INSTALL_FILES); \
-	  do \
-	    if [ -r $$i ]; \
-	    then \
-	      echo "! Installing $$i on $(INSTALL_DIR)"; \
-	      $(CP) $$i $(INSTALL_DIR); \
-	      true; \
-	    else \
-	      echo "! Can't install $$i, not found" 1>&2; \
-	    fi \
-	  done; \
-	  if [ $(INSTALL_DIR) = $(HB_LIB_INSTALL) ]; \
-	  then \
-	    $(RANLIB) $(foreach file,$(notdir $(INSTALL_FILES)),$(INSTALL_DIR)/$(file)); \
-	  fi \
+	   for i in $(INSTALL_FILES); \
+	   do \
+	      if [ -r $$i ]; \
+	      then \
+	         echo "! Installing $$i on $(INSTALL_DIR)"; \
+	         $(CP) $$i $(INSTALL_DIR); \
+	         true; \
+	      else \
+	         echo "! Can't install $$i, not found" 1>&2; \
+	      fi \
+	   done; \
+	   if [ $(INSTALL_DIR) = $(HB_LIB_INSTALL) ]; \
+	   then \
+	      $(RANLIB) $(foreach file,$(notdir $(INSTALL_FILES)),$(INSTALL_DIR)/$(file)); \
+	   fi \
 	fi

@@ -6,7 +6,4 @@ ifneq ($(HB_INSTALL_DEF),yes)
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/install.cf
 
-install:: first
-	$(INSTALL_RULE)
-
 endif

@@ -4,7 +4,8 @@
 
 ifeq ($(INSTALL_FILES),) # Empty install list
 
-INSTALL_RULE = @echo Done
+install:: first
+	@echo Done
 
 else
 
@@ -13,28 +14,28 @@ ifeq ($(SHLVL),) # non-bash
 INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
 INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
 
-INSTALL_RULE = \
+install:: first
 	-$(COMSPEC) /c for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
 
 else  # bash
 
-INSTALL_RULE =\
+install:: first
 	@if [ -z $(INSTALL_DIR) ] || [ ! -d $(INSTALL_DIR) ]; \
 	then \
-	  echo "! Can't install, path not found: '$(INSTALL_DIR)'" 1>&2; \
-	  false; \
+	   echo "! Can't install, path not found: '$(INSTALL_DIR)'" 1>&2; \
+	   false; \
 	else \
-	  for i in $(INSTALL_FILES); \
-	  do \
-	    if [ -r $$i ]; \
-	    then \
-	      echo "! Installing $$i on $(INSTALL_DIR)"; \
-	      $(CP) $$i $(INSTALL_DIR); \
-	      true; \
-	    else \
-	      echo "! Can't install $$i, not found" 1>&2; \
-	    fi \
-	  done \
+	   for i in $(INSTALL_FILES); \
+	   do \
+	      if [ -r $$i ]; \
+	      then \
+	         echo "! Installing $$i on $(INSTALL_DIR)"; \
+	         $(CP) $$i $(INSTALL_DIR); \
+	         true; \
+	      else \
+	         echo "! Can't install $$i, not found" 1>&2; \
+	      fi \
+	   done \
 	fi
 
 endif
