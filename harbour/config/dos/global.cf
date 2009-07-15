@@ -12,7 +12,7 @@ HB_GT_LIBS=\
 	gtstd \
 	gtdos \
 
-ifeq ($(SHLVL),) # non-bash
+ifneq ($(HB_SHELL),bash)
 
 DIRSEP = $(subst /,\,\)
 

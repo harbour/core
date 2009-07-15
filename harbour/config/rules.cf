@@ -84,10 +84,10 @@ endif
 %.c : $(GRANDP)%.prg
 	$(HB_RULE)
 
-ifeq ($(SHLVL),) # non-bash
-# Do nothing. the $(HB_ARCHITECTURE)/global.cf will handle clean up.
-else
+ifeq ($(HB_SHELL),bash)
 # Generic rule to clean up.
 clean::
 	-$(RM) *.bak *.obj core *.core *~ *.o *.ppo *.err
+else
+# Do nothing. $(HB_ARCHITECTURE)/global.cf will handle clean up.
 endif

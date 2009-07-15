@@ -9,9 +9,9 @@ INSTALL_RULE =\
 
 else
 
-ifeq ($(SHLVL),) # non-bash
+ifneq ($(HB_SHELL),bash)
 
-ifeq ($(OS2_SHELL),) # non-OS/2
+ifneq ($(HB_SHELL),os2)
 
 INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
 INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
@@ -41,20 +41,20 @@ else # bash
 INSTALL_RULE =\
 	@if [ -z $(INSTALL_DIR) ] || [ ! -d $(INSTALL_DIR) ]; \
 	then \
-	  echo "! Can't install, path not found: '$(INSTALL_DIR)'" 1>&2; \
-	  false; \
+	   echo "! Can't install, path not found: '$(INSTALL_DIR)'" 1>&2; \
+	   false; \
 	else \
-	  for i in $(INSTALL_FILES); \
-	  do \
-	    if [ -r $$i ]; \
-	    then \
-	      echo "! Installing $$i on $(INSTALL_DIR)"; \
-	      $(CP) $$i $(INSTALL_DIR); \
-	      true; \
-	    else \
-	      echo "! Can't install $$i, not found" 1>&2; \
-	    fi \
-	  done \
+	   for i in $(INSTALL_FILES); \
+	   do \
+	      if [ -r $$i ]; \
+	      then \
+	         echo "! Installing $$i on $(INSTALL_DIR)"; \
+	         $(CP) $$i $(INSTALL_DIR); \
+	         true; \
+	      else \
+	         echo "! Can't install $$i, not found" 1>&2; \
+	      fi \
+	   done \
 	fi
 
 endif

@@ -10,7 +10,7 @@ HB_GT_LIBS=\
 	gtstd \
 	gttrm \
 
-ifeq ($(SHLVL),) # non-bash
+ifneq ($(HB_SHELL),bash)
 
 DIRSEP = $(subst /,\,\)
 
@@ -23,7 +23,8 @@ EXE_DIR_OS = $(subst /,\,$(EXE_DIR))
 EXE_ARCH_DIR_OS = $(subst /,\,$(EXE_ARCH_DIR))
 EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
 
-ifeq ($(OS2_SHELL),) # non-OS/2
+ifneq ($(HB_SHELL),os2)
+
    MK = $(subst /,\,$(subst \~,~,$(MAKE)))
    RM = del /q /f
    RD = rmdir /q /s

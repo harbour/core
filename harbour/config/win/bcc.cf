@@ -63,7 +63,7 @@ LDFLAGS = $(LINKPATHS)
 AR = tlib.exe
 ARFLAGS = /P64 $(HB_USER_AFLAGS)
 
-ifeq ($(SHLVL),) # non-bash
+ifneq ($(HB_SHELL),bash)
 
 # NOTE: The empty line below HAVE TO exist!
 define lib_object

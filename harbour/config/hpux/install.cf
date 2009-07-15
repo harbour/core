@@ -5,7 +5,8 @@
 INSTALL_RULE =\
 	@if [ ! -d $(INSTALL_DIR) ]; \
 	then \
-	   echo "! Can't install, path not found: $(INSTALL_DIR)" 1>&2; \
+	   echo "! Can't install, path not found: '$(INSTALL_DIR)'" 1>&2; \
+	   false; \
 	else \
 	   for i in $(INSTALL_FILES); \
 	   do \
@@ -13,6 +14,7 @@ INSTALL_RULE =\
 	      then \
 	         echo "! Installing $$i on $(INSTALL_DIR)"; \
 	         $(CP) $$i $(INSTALL_DIR); \
+	         true; \
 	      else \
 	         echo "! Can't install $$i, not found" 1>&2; \
 	      fi \

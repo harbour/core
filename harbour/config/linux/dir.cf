@@ -11,7 +11,7 @@ DIR_RULE =\
 
 else
 
-ifeq ($(SHLVL),) # non-bash
+ifneq ($(HB_SHELL),bash)
 
 MK_OS = $(subst /,\,$(MK))
 DIRS_OS = $(subst /,\,$(DIRS))

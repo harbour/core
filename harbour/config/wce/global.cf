@@ -20,7 +20,7 @@ ifeq ($(HB_DYNLIB),yes)
    HB_CDYNLIB = -DHB_DYNLIB
 endif
 
-ifeq ($(SHLVL),) # non-bash
+ifneq ($(HB_SHELL),bash)
 
 DIRSEP = $(subst /,\,\)
 

@@ -5,7 +5,8 @@
 INSTALL_RULE =\
 	@if [ ! -d $(INSTALL_DIR) ]; \
 	then \
-	   echo "! Can't install, path not found: $(INSTALL_DIR)" 1>&2; \
+	   echo "! Can't install, path not found: '$(INSTALL_DIR)'" 1>&2; \
+	   false; \
 	else \
 	   for i in $(INSTALL_FILES); \
 	   do \
