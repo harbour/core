@@ -104,7 +104,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 LDFLAGS := debug all $(LDFLAGS)
 endif
 
-LINKLIBS += $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))
+LINKLIBS = $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))
 
 # If LIBS specifies the RDD library, add all DB drivers.
 ifeq ($(findstring hbrdd,$(LIBS)),hbrdd)

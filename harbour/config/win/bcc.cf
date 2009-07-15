@@ -55,7 +55,7 @@ endif
 
 # It's probably not necessary in native Windows but I need it
 # for my Linux box because -L<path> seems to not work with WINE
-LINKLIBS += $(foreach lib, $(LIBLIST), $(LIB_DIR)/$(lib))
+LINKLIBS = $(foreach lib, $(LIBLIST), $(LIB_DIR)/$(lib))
 
 LDFLAGS = $(LINKPATHS)
 
