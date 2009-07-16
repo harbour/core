@@ -7,14 +7,19 @@ ifneq ($(HB_COMPILER),)
 
 include $(TOP)$(ROOT)config/global.cf
 
+ifeq ($(HB_HOST_ARCH),dos)
+#do not use rules for parallel processing in DOS
+JOB_SRV := NO
+else
 # these make versions does not work correctly with
 # parallel execution rules below
-OLD_MAKE := $(MAKE_VERSION:3.7%=YES)
-OLD_MAKE := $(OLD_MAKE:3.80%=YES)
+JOB_SRV := $(MAKE_VERSION:3.7%=NO)
+JOB_SRV := $(JOB_SRV:3.80%=NO)
+endif
 
-ifeq ($(OLD_MAKE),YES)
+ifeq ($(JOB_SRV),NO)
    ifeq ($(PM),) # Only traverse directories if not compiling a specific module
-      include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/dirsh.cf
+      include $(TOP)$(ROOT)config/dirsh.cf
    endif
 endif
 
