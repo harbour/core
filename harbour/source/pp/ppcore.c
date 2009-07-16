@@ -263,10 +263,10 @@ static void hb_pp_operatorsFree( PHB_PP_OPERATOR pOperators, int iOperators )
    hb_xfree( pOperators );
 }
 
-static PHB_PP_OPERATOR hb_pp_operatorFind( PHB_PP_STATE pState,
-                                           char * buffer, ULONG ulLen )
+static const HB_PP_OPERATOR * hb_pp_operatorFind( PHB_PP_STATE pState,
+                                                  char * buffer, ULONG ulLen )
 {
-   PHB_PP_OPERATOR pOperator = pState->pOperators;
+   const HB_PP_OPERATOR * pOperator = pState->pOperators;
    int i = pState->iOperators;
 
    while( --i >= 0 )
@@ -278,7 +278,7 @@ static PHB_PP_OPERATOR hb_pp_operatorFind( PHB_PP_STATE pState,
       ++pOperator;
    }
 
-   pOperator = ( PHB_PP_OPERATOR ) s_operators;
+   pOperator = s_operators;
    i = sizeof( s_operators ) / sizeof( HB_PP_OPERATOR );
 
    do
@@ -1428,7 +1428,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          }
          else
          {
-            PHB_PP_OPERATOR pOperator = hb_pp_operatorFind( pState, pBuffer, ulLen );
+            const HB_PP_OPERATOR * pOperator = hb_pp_operatorFind( pState, pBuffer, ulLen );
 
             if( pOperator )
             {

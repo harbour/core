@@ -18,6 +18,10 @@
  *
  */
 
+2009-07-16 15:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/hbzlib/trees.c
+    * cleaned casting
+
 2008-08-05 21:39 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/hbzlib/zconf.h
      + Setting ZLIB_DLL if HB_DYNLIB is defined.

@@ -104,7 +104,7 @@ typedef struct
    int            maxlen;     /* maximal length */
    int            type;       /* terminal symbol code */
 }
-HB_LEX_KEY, * PHB_LEX_KEY;
+HB_LEX_KEY;
 
 static const HB_LEX_KEY s_keytable[] =
 {
@@ -220,7 +220,7 @@ static int hb_comp_asType( PHB_PP_TOKEN pToken, BOOL fArray )
 {
    if( pToken && HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_KEYWORD )
    {
-      PHB_LEX_KEY pKey = ( PHB_LEX_KEY ) s_typetable;
+      const HB_LEX_KEY * pKey = s_typetable;
       int i = sizeof( s_typetable ) / sizeof( HB_LEX_KEY );
 
       hb_pp_tokenUpper( pToken );
@@ -238,7 +238,7 @@ static int hb_comp_asType( PHB_PP_TOKEN pToken, BOOL fArray )
 
 static int hb_comp_keywordType( PHB_PP_TOKEN pToken )
 {
-   PHB_LEX_KEY pKey = ( PHB_LEX_KEY ) s_keytable;
+   const HB_LEX_KEY * pKey = s_keytable;
    int i = sizeof( s_keytable ) / sizeof( HB_LEX_KEY );
 
    do
