@@ -36,7 +36,7 @@ dirbase::
 	@[ -z $(EXE_DIR) ] || [ -d $(EXE_DIR) ] || $(MDP) $(EXE_DIR)
 
 clean::
-	-$(RD) $(OBJ_DIR) $(LIB_FILE) $(EXE_FILE)
+	-$(RD) $(OBJ_DIR) $(LIB_FILE) $(EXE_FILE) $(basename $(EXE_FILE)).tds
 
 endif
 
@@ -58,6 +58,7 @@ clean::
 	-@$(CMDPREF)if exist $(OBJ_DIR_OS) $(RD) $(OBJ_DIR_OS)
 	$(if $(LIB_FILE_OS),-@$(CMDPREF)if exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
 	$(if $(EXE_FILE_OS),-@$(CMDPREF)if exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
+	$(if $(EXE_FILE_OS),-@$(CMDPREF)if exist $(basename $(EXE_FILE_OS)).tds $(MD) $(basename $(EXE_FILE_OS)).tds,)
 
 endif
 
@@ -84,6 +85,7 @@ clean::
 	-for %d in ($(OBJ_DIR_OS) $(OBJ_ARCH_DIR_OS) $(OBJ_BASE)) do if exist %d $(RD) %d
 	$(if $(LIB_FILE_OS),-if exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
 	$(if $(EXE_FILE_OS),-if exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
+	$(if $(EXE_FILE_OS),-if exist $(basename $(EXE_FILE_OS)).tds $(RM) $(basename $(EXE_FILE_OS)).tds,)
 
 endif
 
@@ -103,6 +105,6 @@ dirbase::
 	$(if $(EXE_DIR_OS),-@$(CMDPREF)if not exist $(EXE_DIR_OS)\nul $(MDP) $(EXE_DIR_OS),)
 
 clean::
-	-@$(RM) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(EXE_FILE_OS)
+	-@$(RM) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(EXE_FILE_OS) $(basename $(EXE_FILE_OS)).tds
 
 endif
