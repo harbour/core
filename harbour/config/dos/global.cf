@@ -6,68 +6,6 @@ ifndef MK
 
 all : first
 
-HB_GT_LIBS=\
-	gtcgi \
-	gtpca \
-	gtstd \
-	gtdos \
+HB_GT_LIBS += gtdos
 
-ifneq ($(HB_SHELL),bash)
-
-DIRSEP = $(subst /,\,\)
-
-# There is a conflict with the use of '\' and '/' characters
-# The MAKE requires '/' in filenames (OBJ_DIR) however some compilers
-# and some DOS commands require '\' (OBJ_DIR_OS)
-OBJ_DIR_OS = $(subst /,\,$(OBJ_DIR))
-OBJ_ARCH_DIR_OS = $(subst /,\,$(OBJ_ARCH_DIR))
-LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
-LIB_ARCH_DIR_OS = $(subst /,\,$(LIB_ARCH_DIR))
-LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
-EXE_DIR_OS = $(subst /,\,$(EXE_DIR))
-EXE_ARCH_DIR_OS = $(subst /,\,$(EXE_ARCH_DIR))
-EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
-
-# QUESTION: Anyone knows why is this needed? [vszakats]
-ifeq ($(HB_COMPILER),watcom)
-   COMSPEC := $(subst \,/,$(COMSPEC))
-endif
-
-MK = $(subst \,/,$(subst \~,~,$(MAKE)))
-RM = del
-RD = rmdir
-CP = $(COMSPEC) /Ccopy
-MV = move
-MD = md
-
-dirbase::
-	-@$(COMSPEC) /Cfor %d in ($(OBJ_BASE) $(OBJ_ARCH_DIR_OS) $(OBJ_DIR_OS)) do if not exist %d\nul $(MD) %d
-	$(if $(LIB_ARCH_DIR_OS),-@$(COMSPEC) /Cfor %d in ($(LIB_ARCH_DIR_OS) $(LIB_DIR_OS)) do if not exist %d\nul $(MD) %d,)
-	$(if $(EXE_ARCH_DIR_OS),-@$(COMSPEC) /Cfor %d in ($(EXE_ARCH_DIR_OS) $(EXE_DIR_OS)) do if not exist %d\nul $(MD) %d,)
-
-clean::
-	-@$(COMSPEC) /Cfor %f in ($(OBJ_DIR_OS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
-	-@$(COMSPEC) /Cfor %d in ($(OBJ_DIR_OS) $(OBJ_ARCH_DIR_OS) $(OBJ_BASE)) do if exist %d\nul $(RD) %d
-	$(if $(LIB_FILE_OS),-@$(COMSPEC) /Cif exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
-	$(if $(EXE_FILE_OS),-@$(COMSPEC) /Cif exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
-
-else # bash
-
-MK = $(MAKE)
-RM = rm -f
-RD = rm -f -r
-CP = cp -f
-MV = mv -f
-MD = mkdir
-MDP = mkdir -p
-
-dirbase::
-	@sh -c "[ -d $(OBJ_DIR) ] || $(MDP) $(OBJ_DIR)"
-	@sh -c "[ -z $(LIB_DIR) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)"
-	@sh -c "[ -z $(EXE_DIR) ] || [ -d $(EXE_DIR) ] || $(MDP) $(EXE_DIR)"
-
-clean::
-	-$(RD) $(OBJ_DIR) $(LIB_FILE) $(EXE_FILE)
-
-endif
 endif

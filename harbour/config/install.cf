@@ -2,7 +2,7 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/install.cf
+include $(TOP)$(ROOT)config/instsh.cf
 
 ifneq ($(HB_INSTALL_DEF),yes)
 install:: first

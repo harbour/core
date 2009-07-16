@@ -13,7 +13,9 @@ OLD_MAKE := $(MAKE_VERSION:3.7%=YES)
 OLD_MAKE := $(OLD_MAKE:3.80%=YES)
 
 ifeq ($(OLD_MAKE),YES)
-   include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/dir.cf
+   ifeq ($(PM),) # Only traverse directories if not compiling a specific module
+      include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/dirsh.cf
+   endif
 endif
 
 ifeq ($(DIR_RULE),)

@@ -93,7 +93,7 @@ endif
 # We have to use a script to overcome the AR limit of max 850 characters
 # in commmand line
 define create_library
-IF EXIST $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS)
+if exist $(subst /,$(DIRSEP),$(LIB_FILE)) $(RM) $(subst /,$(DIRSEP),$(LIB_FILE))
 echo CREATE $(LIB_DIR)/$@ > __lib__.tmp
 for %i in ( *$(OBJ_EXT) ) do @echo ADDMOD %i >> __lib__.tmp
 echo SAVE >> __lib__.tmp

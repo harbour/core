@@ -78,21 +78,22 @@ else
    ifneq ($(OS2_SHELL),)
       HB_SHELL := os2
    else
-      ifeq ($(OS),Windows_NT)
-         HB_SHELL := nt
-         ifneq ($(ComSpec),)
-            COMSPEC := $(ComSpec)
+      ifneq ($(ComSpec),)
+         COMSPEC := $(ComSpec)
+      endif
+      ifeq ($(COMSPEC),)
+         ifeq ($(OS),Windows_NT)
+            COMSPEC := cmd.exe
          else
-            ifeq ($(COMSPEC),)
-               COMSPEC := cmd.exe
-            endif
-         endif
-      else
-         # MS-DOS or Win9x
-         HB_SHELL := dos
-         ifeq ($(COMSPEC),)
             COMSPEC := command.com
          endif
+      endif
+      ifneq ($(findstring COMMAND,$(COMSPEC)),)
+         HB_SHELL := dos
+      else ifneq ($(findstring command,$(COMSPEC)),)
+         HB_SHELL := dos
+      else
+         HB_SHELL := nt
       endif
    endif
 endif
@@ -220,6 +221,12 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
    endif
 endif
 
+# Names of portable GT drivers
+HB_GT_LIBS=\
+	gtcgi \
+	gtpca \
+	gtstd \
+
 # Names of valid RDD libraries
 HB_DB_DRIVERS=\
 	rddntx \
@@ -256,6 +263,7 @@ ifeq ($(HB_INC_COMPILE),)
 endif
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
+include $(TOP)$(ROOT)config/globsh.cf
 include $(TOP)$(ROOT)config/$(ARCH_COMP).cf
 
 endif

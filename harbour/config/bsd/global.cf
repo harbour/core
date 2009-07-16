@@ -4,27 +4,7 @@
 
 all : first
 
-HB_GT_LIBS=\
-	gtcgi \
-	gtpca \
-	gtstd \
-	gttrm \
+HB_GT_LIBS += gttrm
 
 MAKE = gmake
-
-MK = $(MAKE)
-RM = rm -f
-RD = rm -f -r
-CP = cp -f
-MV = mv -f
-MD = mkdir
-MDP = mkdir -p
 RANLIB = ranlib
-
-dirbase::
-	@[ -d $(OBJ_DIR) ] || $(MDP) $(OBJ_DIR)
-	@[ -z $(LIB_DIR) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)
-	@[ -z $(EXE_DIR) ] || [ -d $(EXE_DIR) ] || $(MDP) $(EXE_DIR)
-
-clean::
-	-$(RD) $(OBJ_DIR) $(LIB_FILE) $(EXE_FILE)

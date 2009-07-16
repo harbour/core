@@ -1,0 +1,74 @@
+#
+# $Id$
+#
+
+ifeq ($(INSTALL_FILES),) # Empty install list
+
+INSTALL_RULE =\
+	@echo Done
+
+else
+
+ifeq ($(HB_SHELL),bash)
+
+INSTALL_RULE =\
+	@if [ -z $(INSTALL_DIR) ] || [ ! -d $(INSTALL_DIR) ]; \
+	then \
+	   echo "! Can't install, path not found: '$(INSTALL_DIR)'" 1>&2; \
+	   false; \
+	else \
+	   for i in $(INSTALL_FILES); \
+	   do \
+	      if [ -r $$i ]; \
+	      then \
+	         echo "! Installing $$i on $(INSTALL_DIR)"; \
+	         $(CP) $$i $(INSTALL_DIR); \
+	         true; \
+	      else \
+	         echo "! Can't install $$i, not found" 1>&2; \
+	      fi \
+	   done \
+	fi
+
+else ifeq ($(HB_SHELL),nt)
+
+INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
+INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
+
+INSTALL_RULE =\
+	-$(COMSPEC) /c for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
+
+else ifeq ($(HB_SHELL),os2)
+
+# We have to use script to overcome the max command size limit
+# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# It causes that every commands will be separated by LF
+define inst_file
+$(COMSPEC) /C $(CP) $(file) $(subst /,\,$(INSTALL_DIR))
+
+endef
+
+INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
+
+INSTALL_RULE =\
+	$(foreach file, $(INSTALL_FILES_OS), $(inst_file))
+
+else ifeq ($(HB_SHELL),dos)
+
+# We have to use script to overcome the DOS limit of max 128 characters
+# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# It causes that every commands will be separated by LF
+define inst_file
+$(COMSPEC) /Cxcopy /Y /I $(file) $(INSTALL_DIR_OS)
+
+endef
+
+INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
+INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
+
+INSTALL_RULE =\
+	$(foreach file, $(INSTALL_FILES_OS), $(inst_file))
+
+endif
+
+endif # Empty install list
