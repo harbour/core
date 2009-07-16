@@ -26,18 +26,18 @@ else
 ifeq ($(HB_SHELL),bash)
 
 INSTALL_RULE =\
-	$(MDP) $(INSTALL_DIR); \
-	if [ ! -d $(INSTALL_DIR) ]; \
+	$(MDP) $(subst \,/,$(INSTALL_DIR)); \
+	if [ ! -d $(subst \,/,$(INSTALL_DIR)) ]; \
 	then \
-	   echo "! Can't install, path not found: '$(INSTALL_DIR)'" 1>&2; \
+	   echo "! Can't install, path not found: '$(subst \,/,$(INSTALL_DIR))'" 1>&2; \
 	   false; \
 	else \
 	   for i in $(INSTALL_FILES); \
 	   do \
 	      if [ -r $$i ]; \
 	      then \
-	         echo "! Installing $$i on $(INSTALL_DIR)"; \
-	         $(CP) $$i $(INSTALL_DIR); \
+	         echo "! Installing $$i on $(subst \,/,$(INSTALL_DIR))"; \
+	         $(CP) $$i $(subst \,/,$(INSTALL_DIR)); \
 	         true; \
 	      else \
 	         echo "! Can't install $$i, not found" 1>&2; \
