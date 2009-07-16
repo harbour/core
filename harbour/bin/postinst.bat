@@ -22,17 +22,6 @@ echo libpaths=../contrib/rddsql/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 echo libpaths=../addons/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 echo libpaths=../examples/%%{hb_name}>> %HB_BIN_INSTALL%\hbmk.cfg
 
-rem ; Post-build installation
-set _HB_COPYCMD=%COPYCMD%
-set COPYCMD=/Y
-if not "%HB_INSTALL_PREFIX%" == "" copy ChangeLog* "%HB_INSTALL_PREFIX%\" > nul
-if not "%HB_INSTALL_PREFIX%" == "" copy COPYING    "%HB_INSTALL_PREFIX%\" > nul
-if not "%HB_INSTALL_PREFIX%" == "" copy ERRATA     "%HB_INSTALL_PREFIX%\" > nul
-if not "%HB_INSTALL_PREFIX%" == "" copy INSTALL    "%HB_INSTALL_PREFIX%\" > nul
-if not "%HB_INSTALL_PREFIX%" == "" copy TODO       "%HB_INSTALL_PREFIX%\" > nul
-set COPYCMD=%_HB_COPYCMD%
-set _HB_COPYCMD=
-
 goto INST_%HB_ARCHITECTURE%
 
 :INST_WIN
@@ -42,6 +31,13 @@ goto INST_%HB_ARCHITECTURE%
 
    if not "%OS%" == "Windows_NT" echo This Harbour build script requires Windows NT or upper.
    if not "%OS%" == "Windows_NT" goto END
+
+   rem ; Post-build installation
+   if not "%HB_INSTALL_PREFIX%" == "" copy ChangeLog* "%HB_INSTALL_PREFIX%\" > nul
+   if not "%HB_INSTALL_PREFIX%" == "" copy COPYING    "%HB_INSTALL_PREFIX%\" > nul
+   if not "%HB_INSTALL_PREFIX%" == "" copy ERRATA     "%HB_INSTALL_PREFIX%\" > nul
+   if not "%HB_INSTALL_PREFIX%" == "" copy INSTALL    "%HB_INSTALL_PREFIX%\" > nul
+   if not "%HB_INSTALL_PREFIX%" == "" copy TODO       "%HB_INSTALL_PREFIX%\" > nul
 
    if "%HB_COMPILER%" == "mingw"    set HB_DYNLIB=yes
    if "%HB_COMPILER%" == "mingw64"  set HB_DYNLIB=yes
@@ -76,6 +72,13 @@ goto INST_%HB_ARCHITECTURE%
    goto END
 
 :INST_DOS
+
+   rem ; Post-build installation
+   if not "%HB_INSTALL_PREFIX%" == "" copy CHANG*     %HB_INSTALL_PREFIX%\CHANGES > nul
+   if not "%HB_INSTALL_PREFIX%" == "" copy COPYING    %HB_INSTALL_PREFIX% > nul
+   if not "%HB_INSTALL_PREFIX%" == "" copy ERRATA     %HB_INSTALL_PREFIX% > nul
+   if not "%HB_INSTALL_PREFIX%" == "" copy INSTALL    %HB_INSTALL_PREFIX% > nul
+   if not "%HB_INSTALL_PREFIX%" == "" copy TODO       %HB_INSTALL_PREFIX% > nul
 
    rem DOS post install part
    goto END

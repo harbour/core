@@ -12,11 +12,11 @@ ifneq ($(HB_SHELL),bash)
 
 DIRSEP = $(subst /,\,\)
 
-OBJ_DIR_OS      = $(subst /,\,$(OBJ_DIR))
-LIB_DIR_OS      = $(subst /,\,$(LIB_DIR))
-LIB_FILE_OS     = $(subst /,\,$(LIB_FILE))
-EXE_DIR_OS      = $(subst /,\,$(EXE_DIR))
-EXE_FILE_OS     = $(subst /,\,$(EXE_FILE))
+OBJ_DIR_OS  = $(subst /,\,$(OBJ_DIR))
+LIB_DIR_OS  = $(subst /,\,$(LIB_DIR))
+LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
+EXE_DIR_OS  = $(subst /,\,$(EXE_DIR))
+EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
 
 endif
 
@@ -91,13 +91,15 @@ endif
 
 ifeq ($(HB_SHELL),dos)
 
+TOOL_DIR := $(subst /,\,$(TOP)$(ROOT)config/)
+
 MK = $(subst \,/,$(subst \~,~,$(MAKE)))
-RM = $(subst /,\,$(TOP)$(ROOT)config/dj-rm.exe) -f
-RD = $(subst /,\,$(TOP)$(ROOT)config/dj-rm.exe) -f -r
-CP = $(subst /,\,$(TOP)$(ROOT)config/dj-cp.exe) -f
+RM = $(TOOL_DIR)dj-rm.exe -f
+RD = $(TOOL_DIR)dj-rm.exe -f -r
+CP = $(TOOL_DIR)dj-cp.exe -f
 MV = move
-MD = $(subst /,\,$(TOP)$(ROOT)config/dj-mkdir.exe)
-MDP = $(subst /,\,$(TOP)$(ROOT)config/dj-mkdir.exe) -p
+MD = $(TOOL_DIR)dj-mkdir.exe
+MDP = $(TOOL_DIR)dj-mkdir.exe -p
 
 dirbase::
 	-@$(CMDPREF)if not exist $(OBJ_DIR_OS)\nul $(MDP) $(OBJ_DIR_OS)
