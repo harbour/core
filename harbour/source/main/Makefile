@@ -12,6 +12,6 @@ LIBS=\
 	hbcplr \
 	hbpp \
 	hbcommon \
-	hbnulrtl \
+	hbnortl \
 
 include $(TOP)$(ROOT)config/bin.cf

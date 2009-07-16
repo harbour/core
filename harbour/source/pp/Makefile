@@ -15,7 +15,7 @@ LIBNAME=hbpp
 
 LIBS=\
 	hbcommon \
-	hbnulrtl \
+	hbnortl \
 
 include $(TOP)$(ROOT)config/lib.cf
 

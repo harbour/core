@@ -5,10 +5,10 @@
 ROOT = ../../
 
 C_SOURCES=\
-	nulrtl.c \
+	nortl.c \
 
 PRG_SOURCES=\
 
-LIBNAME=hbnulrtl
+LIBNAME=hbnortl
 
 include $(TOP)$(ROOT)config/lib.cf
