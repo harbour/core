@@ -5,7 +5,7 @@
 #ifndef HB_CONFIG_H
 #define HB_CONFIG_H
 
-#if !defined(HB_DYNLIB)
+#if !defined( HB_DYNLIB )
    #define PCRE_STATIC
 #endif
 
