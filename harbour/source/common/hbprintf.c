@@ -100,7 +100,7 @@ optimized.
 #include "hbapi.h"
 #include "hbmath.h"
 
-#if defined( HB__USE_OWN_SNPRINTF )
+#if ! defined( HB_USE_CRTL_SNPRINTF )
 
 #if defined( __BORLANDC__ ) || defined( __WATCOMC__ ) || defined( _MSC_VER )
 #  include <float.h>
@@ -1223,7 +1223,7 @@ int hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap
    return ( int ) ( size - 1 );
 }
 
-#else /* ! defined( HB__USE_OWN_SNPRINTF ) */
+#else /* defined( HB_USE_CRTL_SNPRINTF ) */
 
 #undef _HB_SNPRINTF_ADD_EOS
 
@@ -1256,7 +1256,7 @@ int hb_vsnprintf( char * buffer, size_t nSize, const char * format, va_list argl
    return result;
 }
 
-#endif /* HB__USE_OWN_SNPRINTF */
+#endif /* HB_USE_CRTL_SNPRINTF */
 
 int hb_snprintf( char * buffer, size_t bufsize, const char * format, ... )
 {

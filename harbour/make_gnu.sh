@@ -20,17 +20,6 @@
 #    http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
 # ---------------------------------------------------------------
 
-test_param()
-{
-    local inst
-    inst=no
-    while [ $# != 0 ] && [ "$inst" != yes ]; do
-        [ "$1" = install ] && inst=yes
-        shift
-    done
-    [ "$inst" = yes ]
-}
-
 if [ -z "$HB_ARCHITECTURE" ]; then
     if [ "$OSTYPE" = "msdosdjgpp" ]; then
         hb_arch="dos"
@@ -127,11 +116,6 @@ if [ "$HB_ARCHITECTURE" = "win" ] || \
    [ "$HB_ARCHITECTURE" = "dos" ] || \
    [ "$HB_ARCHITECTURE" = "os2" ]; then
     if [ -z "$HB_DOC_INSTALL" ]; then export HB_DOC_INSTALL="$HB_INSTALL_PREFIX/doc"; fi
-fi
-
-if test_param "$@"; then
-    mkdir -p "$HB_BIN_INSTALL" "$HB_LIB_INSTALL" "$HB_INC_INSTALL"
-    [ -z "$HB_DOC_INSTALL" ] || mkdir -p "$HB_DOC_INSTALL" "$HB_DOC_INSTALL/en-EN"
 fi
 
 if [ -z "$HB_ARCHITECTURE" ]; then

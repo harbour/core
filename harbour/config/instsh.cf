@@ -17,7 +17,7 @@ else
 ifeq ($(HB_SHELL),bash)
 
 INSTALL_RULE =\
-	$(MDP) $(INSTALL_DIR) \
+	$(MDP) $(INSTALL_DIR); \
 	if [ ! -d $(INSTALL_DIR) ]; \
 	then \
 	   echo "! Can't install, path not found: '$(INSTALL_DIR)'" 1>&2; \

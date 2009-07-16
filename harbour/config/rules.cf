@@ -16,9 +16,7 @@ else
    HB_PDBG = -l
 endif
 
-#
-# How to run Harbour.
-#
+# How to run Harbour
 HB := $(HB_BIN_COMPILE)/harbour$(HB_HOST_BIN_EXT)
 
 ifeq ($(HB_GCMODE),)
@@ -27,21 +25,20 @@ endif
 HB_FLAGS := -i$(HB_INC_COMPILE) -q0 -w3 -es2 -kmo $(HB_PDBG)
 HB_RULE = $(HB) $? -n1 $(HB_FLAGS) -gc$(HB_GCMODE) $(HB_FLAGSEXTRA) $(HB_USER_PRGFLAGS)
 
+# Use default rules if architecture/compiler specific rule is not defined
+
 # The rule to compile a C source file.
 ifeq ($(CC_RULE),)
-   # Use default rule if architecture/compiler specific rule is not defined
    CC_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CDYNLIB) $(CC_IN) $< $(CC_OUT)$(<F:.c=$(OBJ_EXT))
 endif
 
 # The rule to compile a C++ source file.
 ifeq ($(CPP_RULE),)
-   # Use default rule if architecture/compiler specific rule is not defined
    CPP_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CDYNLIB) $(CC_IN) $< $(CC_OUT)$(<F:.cpp=$(OBJ_EXT))
 endif
 
 # The rule to link an executable.
 ifeq ($(LD_RULE),)
-   # Use default rule if architecture/compiler specific rule is not defined
    LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$(subst /,$(DIRSEP),$(EXE_DIR)/$@) $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LINKLIBS)
 endif
 

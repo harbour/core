@@ -37,13 +37,6 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
    if "%HB_DOC_INSTALL%" == "" set HB_DOC_INSTALL=%HB_INSTALL_PREFIX%\doc
 
-   rem Create install dirs
-   if not exist "%HB_BIN_INSTALL%\*.*"       md "%HB_BIN_INSTALL%"
-   if not exist "%HB_LIB_INSTALL%\*.*"       md "%HB_LIB_INSTALL%"
-   if not exist "%HB_INC_INSTALL%\*.*"       md "%HB_INC_INSTALL%"
-   if not exist "%HB_DOC_INSTALL%\*.*"       md "%HB_DOC_INSTALL%"
-   if not exist "%HB_DOC_INSTALL%\en-EN\*.*" md "%HB_DOC_INSTALL%\en-EN"
-
    goto MAKE
 
 :WIN_AUTODETECT
