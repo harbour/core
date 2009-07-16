@@ -8,11 +8,6 @@
 # Copyright 2003-2005 by Phil Krylov <phil a t newstar.rinet.ru>
 #
 
-cleanup()
-{
-    rm -fR "${HB_BIN_COMPILE}"
-}
-
 UNAME=`uname`
 UNAMEL=`echo "$UNAME"|tr A-Z a-z`
 UNAMEU=`echo "$UNAME"|tr a-z A-Z`
@@ -33,17 +28,12 @@ else
     esac
 fi
 
-CC_HB_USER_PRGFLAGS=""
 if [ "$HB_HOST_ARCH" != "win" ]; then
-    CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__$UNAMEU"
+    export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__$UNAMEU"
 fi
 
-[ -z "$HB_INSTALL_PREFIX" ] && \
+[ -n "$HB_INSTALL_PREFIX" ] || \
 export HB_INSTALL_PREFIX="/usr/local/mingw32-harbour"
-export CC_HB_USER_CFLAGS=""
-export HB_USER_CFLAGS="$CC_HB_USER_CFLAGS $HB_USER_CFLAGS"
-export CC_HB_USER_PRGFLAGS
-export HB_USER_PRGFLAGS="$CC_HB_USER_PRGFLAGS $HB_USER_PRGFLAGS"
 
 # try to detect MinGW cross-compiler location
 # using some default platform settings
@@ -102,63 +92,12 @@ if [ ! -x ${MINGW_PREFIX}/bin/${HB_CCPREFIX}gcc ] && \
     exit 1
 fi
 
-HB_CCPATH="$MINGW_PREFIX/bin:$MINGW_PREFIX/$TARGET/bin:"
-PATH="$HB_CCPATH$PATH"
-
-export PATH HB_CCPATH HB_CCPREFIX
-
+export HB_CCPATH="${MINGW_PREFIX}/bin:${MINGW_PREFIX}/${TARGET}/bin:"
+export PATH="${HB_CCPATH}${PATH}"
+export HB_CCPREFIX
 export HB_TOOLS_PREF="hbw"
 export HB_XBUILD="win"
 [ "${HB_HOST_BUILD}" = "all" ] || export HB_HOST_BUILD="lib"
-
-export HB_BIN_COMPILE="/tmp/hb-xmingw-$$"
-rm -fR "${HB_BIN_COMPILE}"
-trap cleanup EXIT >/dev/null 2>&1
-mkdir ${HB_BIN_COMPILE}
-
-DIR=`cd $(dirname $0);pwd`
-if [ -z "${HB_COMP_PATH}" ]; then
-    if which harbour > /dev/null 2>&1; then
-        HB_COMP_PATH=`which harbour 2> /dev/null`
-    else
-        HB_COMP_PATH="$DIR/source/main/$HB_HOST_ARCH/$HB_HOST_COMP/harbour"
-    fi
-fi
-
-if [ -x "${HB_COMP_PATH}" ]; then
-    ln -s "${HB_COMP_PATH}" ${HB_BIN_COMPILE}/harbour.exe
-else
-    echo "You must have a working 'harbour' executable for your platform on your PATH."
-    exit 1
-fi
-
-if [ -z "${HB_PPGEN_PATH}" ]; then
-    if which hbpp &> /dev/null; then
-        HB_PPGEN_PATH=`which hbpp 2> /dev/null`
-    elif [ -x "${DIR}/source/pp/${HB_HOST_ARCH}/${HB_HOST_COMP}/hbpp" ]; then
-        HB_PPGEN_PATH="${DIR}/source/pp/${HB_HOST_ARCH}/${HB_HOST_COMP}/hbpp"
-    else
-        DIR=`dirname ${HB_COMP_PATH}`
-        if [ -x "${DIR}/hbpp" ]; then
-            HB_PPGEN_PATH="${DIR}/hbpp"
-        else
-            HB_PPGEN_PATH="$DIR/source/pp/$HB_HOST_ARCH/$HB_HOST_COMP/hbpp"
-        fi
-    fi
-fi
-if [ -d "${HB_PPGEN_PATH}" ]; then
-    if [ -x "${HB_PPGEN_PATH}/hbpp" ]; then
-        HB_PPGEN_PATH="${HB_PPGEN_PATH}/hbpp"
-    fi
-fi
-if [ -x "${HB_PPGEN_PATH}" ] && [ -f "${HB_PPGEN_PATH}" ]; then
-    ln -s ${HB_PPGEN_PATH} ${HB_BIN_COMPILE}/hbpp.exe
-    HB_PPGEN_PATH="${HB_BIN_COMPILE}"
-else
-    echo "You must have a working 'hbpp' executable for your platform on your PATH."
-    exit 1
-fi
-export HB_PPGEN_PATH
 
 case "$1" in
     tgz|gnu)
@@ -170,7 +109,3 @@ case "$1" in
         . `dirname $0`/make_gnu.sh "$@"
         ;;
 esac
-
-stat="$?"
-cleanup
-exit "${stat}"

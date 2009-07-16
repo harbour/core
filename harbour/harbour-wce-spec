@@ -98,11 +98,7 @@ export HB_COMPILER=mingwarm
 
 export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
 
-export CC_HB_USER_CFLAGS=""
-export HB_USER_CFLAGS="$CC_HB_USER_CFLAGS"
-export HB_USER_PRGFLAGS="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
-export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS}"
-export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINCE ${HB_USER_PRGFLAGS}"
+export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINCE -D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
 
 export HB_CCPATH="%{hb_ccpath}:"
 export HB_CCPREFIX="%{hb_ccpref}"
@@ -131,11 +127,7 @@ export HB_COMPILER=mingwarm
 
 export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
 
-export CC_HB_USER_CFLAGS=""
-export HB_USER_CFLAGS="$CC_HB_USER_CFLAGS"
-export HB_USER_PRGFLAGS="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
-export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS}"
-export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINCE ${HB_USER_PRGFLAGS}"
+export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINCE -D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
 
 export HB_CCPATH="%{hb_ccpath}:"
 export HB_CCPREFIX="%{hb_ccpref}"

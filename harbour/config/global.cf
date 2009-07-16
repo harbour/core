@@ -206,12 +206,13 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
                $(warning Warning: HB_BIN_COMPILE not specified. Couldn't find native build.)
             else
                $(info HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
+               export HB_BIN_COMPILE
             endif
          endif
       endif
    endif
    ifneq ($(HB_HOST_FLAG_),done)
-      HB_HOST_FLAG_=done
+      export HB_HOST_FLAG_=done
       # Setup platform macros (undefine host, define target)
       ifeq      ($(HB_HOST_ARCH),win)
          HB_USER_PRGFLAGS += -undef:__PLATFORM__WINDOWS
@@ -278,7 +279,7 @@ ifeq ($(HB_INC_COMPILE),)
 endif
 
 # export some variables to eliminate repeated setting in recursive calls
-export HB_HOST_ARCH HB_BIN_COMPILE HB_HOST_FLAG_
+export HB_HOST_ARCH
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 include $(TOP)$(ROOT)config/globsh.cf
