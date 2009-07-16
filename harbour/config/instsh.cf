@@ -7,12 +7,18 @@ ifeq ($(INSTALL_FILES),) # Empty install list
 INSTALL_RULE =\
 	@echo Done
 
+else ifeq ($(INSTALL_DIR),) # Empty install dir
+
+INSTALL_RULE =\
+	@echo Done
+
 else
 
 ifeq ($(HB_SHELL),bash)
 
 INSTALL_RULE =\
-	@if [ -z $(INSTALL_DIR) ] || [ ! -d $(INSTALL_DIR) ]; \
+	$(MDP) $(INSTALL_DIR) \
+	if [ ! -d $(INSTALL_DIR) ]; \
 	then \
 	   echo "! Can't install, path not found: '$(INSTALL_DIR)'" 1>&2; \
 	   false; \
@@ -36,9 +42,16 @@ INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
 INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
 
 INSTALL_RULE =\
-	-$(CMDPREF)for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
+	-$(CMDPREF)if not exist "$(INSTALL_DIR_OS)" $(MD) "$(INSTALL_DIR_OS)" &\
+	for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
 
 else ifeq ($(HB_SHELL),os2)
+
+define inst_file_all
+if not exist $(INSTALL_DIR_OS) $(MD) $(INSTALL_DIR_OS)
+$(foreach file, $(INSTALL_FILES_OS), $(inst_file))
+
+endef
 
 # We have to use script to overcome the max command size limit
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
@@ -51,9 +64,15 @@ endef
 INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
 
 INSTALL_RULE =\
-	$(foreach file, $(INSTALL_FILES_OS), $(inst_file))
+	$(inst_file_all)
 
 else ifeq ($(HB_SHELL),dos)
+
+define inst_file_all
+if not exist $(INSTALL_DIR_OS)\nul $(MD) $(INSTALL_DIR_OS)
+$(foreach file, $(INSTALL_FILES_OS), $(inst_file))
+
+endef
 
 # We have to use script to overcome the DOS limit of max 128 characters
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
@@ -67,8 +86,8 @@ INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
 INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
 
 INSTALL_RULE =\
-	$(foreach file, $(INSTALL_FILES_OS), $(inst_file))
+	$(inst_file_all)
 
 endif
 
-endif # Empty install list
+endif # Empty install list/dir

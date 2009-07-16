@@ -4,7 +4,7 @@
 
 ROOT = ../../
 
-DOC_SUBDIR=/en-EN/
+DOC_SUBDIR=/en-EN
 
 DOC_FILES=\
 	array.txt \
