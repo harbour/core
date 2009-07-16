@@ -2,6 +2,13 @@
 # $Id$
 #
 
+ifneq ($(HB_SHELL),bash)
+
+MK_OS = $(subst /,\,$(MK))
+DIRS_OS = $(subst /,\,$(DIRS))
+
+endif
+
 ifeq ($(DIRS),) # Empty directory list
 
 DIR_RULE =\
@@ -20,16 +27,10 @@ DIR_RULE =\
 
 else ifeq ($(HB_SHELL),nt)
 
-MK_OS = $(subst /,\,$(MK))
-DIRS_OS = $(subst /,\,$(DIRS))
-
 DIR_RULE =\
 	$(CMDPREF)for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
 
 else ifeq ($(HB_SHELL),os2)
-
-MK_OS = $(subst /,\,$(MK))
-DIRS_OS = $(subst /,\,$(DIRS))
 
 DIR_RULE =\
 	$(CMDPREF)for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
@@ -43,9 +44,6 @@ define dir_mk
 $(MK_OS) -C $(file) $@
 
 endef
-
-DIRS_OS = $(subst /,\,$(DIRS))
-MK_OS = $(subst /,\,$(MK))
 
 DIR_RULE =\
 	$(foreach file, $(DIRS_OS), $(dir_mk))

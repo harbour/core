@@ -2,6 +2,13 @@
 # $Id$
 #
 
+ifneq ($(HB_SHELL),bash)
+
+INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
+INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
+
+endif
+
 ifeq ($(INSTALL_FILES),) # Empty install list
 
 INSTALL_RULE =\
@@ -38,9 +45,6 @@ INSTALL_RULE =\
 
 else ifeq ($(HB_SHELL),nt)
 
-INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
-INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
-
 INSTALL_RULE =\
 	-$(CMDPREF)if not exist "$(INSTALL_DIR_OS)" $(MD) "$(INSTALL_DIR_OS)" &\
 	for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
@@ -57,11 +61,9 @@ endef
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every commands will be separated by LF
 define inst_file
-$(CMDPREF)$(CP) $(file) $(subst /,\,$(INSTALL_DIR))
+$(CMDPREF)$(CP) $(file) $(INSTALL_DIR_OS)
 
 endef
-
-INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
 
 INSTALL_RULE =\
 	$(inst_file_all)
@@ -81,9 +83,6 @@ define inst_file
 $(CMDPREF)xcopy /Y /I $(file) $(INSTALL_DIR_OS)
 
 endef
-
-INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
-INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
 
 INSTALL_RULE =\
 	$(inst_file_all)

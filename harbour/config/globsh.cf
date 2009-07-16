@@ -2,6 +2,27 @@
 # $Id$
 #
 
+# ---------------------------------------------------------------
+# See batch docs here:
+#    http://www.computerhope.com/batch.htm
+#    http://www.robvanderwoude.com/batchcommands.php
+# ---------------------------------------------------------------
+
+ifneq ($(HB_SHELL),bash)
+
+DIRSEP = $(subst /,\,\)
+
+OBJ_DIR_OS      = $(subst /,\,$(OBJ_DIR))
+LIB_DIR_OS      = $(subst /,\,$(LIB_DIR))
+LIB_FILE_OS     = $(subst /,\,$(LIB_FILE))
+EXE_DIR_OS      = $(subst /,\,$(EXE_DIR))
+EXE_FILE_OS     = $(subst /,\,$(EXE_FILE))
+OBJ_ARCH_DIR_OS = $(subst /,\,$(OBJ_ARCH_DIR))
+LIB_ARCH_DIR_OS = $(subst /,\,$(LIB_ARCH_DIR))
+EXE_ARCH_DIR_OS = $(subst /,\,$(EXE_ARCH_DIR))
+
+endif
+
 ifeq ($(HB_SHELL),bash)
 
 MK = $(MAKE)
@@ -22,14 +43,6 @@ clean::
 
 else ifeq ($(HB_SHELL),nt)
 
-DIRSEP = $(subst /,\,\)
-
-OBJ_DIR_OS = $(subst /,\,$(OBJ_DIR))
-LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
-LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
-EXE_DIR_OS = $(subst /,\,$(EXE_DIR))
-EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
-
 MK = $(subst \,/,$(subst \~,~,$(MAKE)))
 RM = del /q /f
 RD = rmdir /q /s
@@ -49,23 +62,12 @@ clean::
 
 else ifeq ($(HB_SHELL),os2)
 
-DIRSEP = $(subst /,\,\)
-
-OBJ_DIR_OS = $(subst /,\,$(OBJ_DIR))
-OBJ_ARCH_DIR_OS = $(subst /,\,$(OBJ_ARCH_DIR))
-LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
-LIB_ARCH_DIR_OS = $(subst /,\,$(LIB_ARCH_DIR))
-LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
-EXE_DIR_OS = $(subst /,\,$(EXE_DIR))
-EXE_ARCH_DIR_OS = $(subst /,\,$(EXE_ARCH_DIR))
-EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
-
 MK = $(subst /,\,$(subst \~,~,$(MAKE)))
 RM = del /n
 RD = rmdir
 CP = copy
 MV = move
-MD = md
+MD = mkdir
 
 dirbase::
 	-for %d in ($(OBJ_BASE) $(OBJ_ARCH_DIR_OS) $(OBJ_DIR_OS)) do if not exist %d $(MD) %d
@@ -80,17 +82,6 @@ clean::
 
 else ifeq ($(HB_SHELL),dos)
 
-DIRSEP = $(subst /,\,\)
-
-OBJ_DIR_OS = $(subst /,\,$(OBJ_DIR))
-OBJ_ARCH_DIR_OS = $(subst /,\,$(OBJ_ARCH_DIR))
-LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
-LIB_ARCH_DIR_OS = $(subst /,\,$(LIB_ARCH_DIR))
-LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
-EXE_DIR_OS = $(subst /,\,$(EXE_DIR))
-EXE_ARCH_DIR_OS = $(subst /,\,$(EXE_ARCH_DIR))
-EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
-
 # QUESTION: Anyone knows why is this needed? [vszakats]
 ifeq ($(HB_COMPILER),watcom)
    COMSPEC := $(subst \,/,$(COMSPEC))
@@ -101,7 +92,7 @@ RM = del
 RD = rmdir
 CP = $(CMDPREF)copy
 MV = move
-MD = md
+MD = mkdir
 
 dirbase::
 	-@$(CMDPREF)for %d in ($(OBJ_BASE) $(OBJ_ARCH_DIR_OS) $(OBJ_DIR_OS)) do if not exist %d\nul $(MD) %d

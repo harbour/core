@@ -4202,6 +4202,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                cCommand := "start " + cCommand
             ENDIF
          ENDIF
+      #if defined( __PLATFORM__OS2 )
+         IF hbmk[ _HBMK_lGUI ]
+            cCommand := 'start "" ' + FN_Escape( cCommand, _ESC_DBLQUOTE )
+         ENDIF
       #elif defined( __PLATFORM__DARWIN )
          IF hbmk[ _HBMK_lGUI ]
             cCommand := "open " + FN_Escape( cCommand + ".app", _ESC_NIX )
