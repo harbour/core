@@ -81,7 +81,7 @@ endif
 %.c : $(GRANDP)%.prg
 	$(HB_RULE)
 
-ifeq ($(HB_SHELL),bash)
+ifeq ($(HB_SHELL),sh)
 # Generic rule to clean up.
 clean::
 	-$(RM) *.bak *.obj core *.core *~ *.o *.ppo *.err

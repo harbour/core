@@ -8,7 +8,7 @@
 #    http://www.robvanderwoude.com/batchcommands.php
 # ---------------------------------------------------------------
 
-ifneq ($(HB_SHELL),bash)
+ifneq ($(HB_SHELL),sh)
 
 DIRSEP = $(subst /,\,\)
 
@@ -18,7 +18,7 @@ EXE_DIR_OS = $(subst /,\,$(EXE_DIR))
 
 endif
 
-ifeq ($(HB_SHELL),bash)
+ifeq ($(HB_SHELL),sh)
 
 MK = $(MAKE)
 RM = rm -f

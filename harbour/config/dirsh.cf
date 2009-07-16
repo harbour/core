@@ -2,7 +2,7 @@
 # $Id$
 #
 
-ifneq ($(HB_SHELL),bash)
+ifneq ($(HB_SHELL),sh)
 
 MK_OS = $(subst /,\,$(MK))
 DIRS_OS = $(subst /,\,$(DIRS))
@@ -16,7 +16,7 @@ DIR_RULE =\
 
 else
 
-ifeq ($(HB_SHELL),bash)
+ifeq ($(HB_SHELL),sh)
 
 DIR_RULE =\
 	@for d in $(DIRS); do \

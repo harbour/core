@@ -82,7 +82,7 @@ endif
 
 LDFILES = $(subst $(space),$(comma) ,$(^F))
 LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS) $(RDDLIBS) $(GTLIBS)))
-ifneq ($(HB_SHELL),bash)
+ifneq ($(HB_SHELL),sh)
 LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(EXE_DIR)/$@. FILE $(LDFILES)
 else
 LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(EXE_DIR)/$@ FILE $(LDFILES)

@@ -2,7 +2,6 @@
 # $Id$
 #
 
-# The Harbour Project
 # GNU MAKE file for xHarbour.com POCC compiler
 
 OBJ_EXT = .obj

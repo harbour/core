@@ -2,7 +2,7 @@
 # $Id$
 #
 
-ifneq ($(HB_SHELL),bash)
+ifneq ($(HB_SHELL),sh)
 
 INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
 INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
@@ -23,7 +23,7 @@ INSTALL_RULE =\
 
 else
 
-ifeq ($(HB_SHELL),bash)
+ifeq ($(HB_SHELL),sh)
 
 INSTALL_RULE =\
 	$(MDP) $(subst \,/,$(INSTALL_DIR)); \

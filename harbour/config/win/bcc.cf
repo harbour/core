@@ -2,7 +2,6 @@
 # $Id$
 #
 
-# The Harbour Project
 # GNU MAKE file for Borland/CodeGear C/C++ 32-bit (4.x-)
 
 OBJ_EXT = .obj
@@ -63,7 +62,7 @@ LDFLAGS = $(LINKPATHS)
 AR = tlib.exe
 ARFLAGS = /P64 $(HB_USER_AFLAGS)
 
-ifneq ($(HB_SHELL),bash)
+ifneq ($(HB_SHELL),sh)
 
 # NOTE: The empty line below HAVE TO exist!
 define lib_object
@@ -80,7 +79,7 @@ endef
 
 AR_RULE = $(create_library)
 
-else # bash
+else # sh
 
 AROBJS = $(foreach file, $(^F), -+$(file))
 AR_RULE = $(AR) $(ARFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(AROBJS)
