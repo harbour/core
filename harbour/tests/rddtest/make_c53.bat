@@ -1,7 +1,8 @@
+@rem
+@rem $Id$
+@rem
+
 @echo off
-rem
-rem $Id$
-rem
 
 rem DBFCDX
 clipper rddmktst /m/n/w/es2/d_TEST_DESCEND_ /d_TEST_UNIQUE_ /d_TEST_SCOPE_ /d_TEST_CMPDIDX_
@@ -38,7 +39,6 @@ clipper adscl53 /m/n/w/es2
 if errorlevel 1 goto ERROR
 exospace fi adscl53 lib _dbfcdx, dbfcdx
 if errorlevel 1 goto ERROR
-
 
 :ERROR
 if exist *.obj del *.obj
