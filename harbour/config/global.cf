@@ -192,11 +192,13 @@ ifeq ($(HB_BUILD_VERBOSE),yes)
    $(info Detected host executable extension: $(HB_HOST_BIN_EXT))
 endif
 
+HB_CROSS_BUILD :=
 ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
    ifeq ($(HB_BIN_COMPILE),)
       # Not required in these combinations: [vszakats]
       ifneq ($(HB_HOST_ARCH)-$(HB_HOST_CPU)-$(HB_ARCHITECTURE)-$(HB_CPU),win-x86_64-win-x86)
          ifneq ($(HB_HOST_ARCH)-$(HB_HOST_CPU)-$(HB_ARCHITECTURE)-$(HB_CPU),win-x86-dos-)
+            HB_CROSS_BUILD := yes
             # Try to autosetup
             HB_BIN_COMPILE := $(dir $(firstword $(wildcard $(TOP)$(ROOT)bin/$(HB_HOST_ARCH)/*/harbour$(HB_HOST_BIN_EXT))))
             ifeq ($(HB_BIN_COMPILE),)
@@ -212,29 +214,32 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
             endif
          endif
       endif
+   else
+      HB_CROSS_BUILD := yes
    endif
-
-   # Setup platform macros (undefine host, define target)
    HB_FLAGSEXTRA :=
-   ifeq      ($(HB_HOST_ARCH),win)
-      HB_FLAGSEXTRA += -undef:__PLATFORM__WINDOWS
-   else ifeq ($(HB_HOST_ARCH),dos)
-      HB_FLAGSEXTRA += -undef:__PLATFORM__DOS
-   else ifeq ($(HB_HOST_ARCH),os2)
-      HB_FLAGSEXTRA += -undef:__PLATFORM__OS2
-   else ifeq ($(HB_HOST_ARCH),linux)
-      HB_FLAGSEXTRA += -undef:__PLATFORM__LINUX -undef:__PLATFORM__UNIX
-   endif
-   ifeq      ($(HB_ARCHITECTURE),win)
-      HB_FLAGSEXTRA += -D__PLATFORM__WINDOWS
-   else ifeq ($(HB_ARCHITECTURE),wce)
-      HB_FLAGSEXTRA += -D__PLATFORM__WINDOWS -D__PLATFORM__WINCE
-   else ifeq ($(HB_ARCHITECTURE),dos)
-      HB_FLAGSEXTRA += -D__PLATFORM__DOS
-   else ifeq ($(HB_ARCHITECTURE),os2)
-      HB_FLAGSEXTRA += -D__PLATFORM__OS2
-   else ifeq ($(HB_ARCHITECTURE),linux)
-      HB_FLAGSEXTRA += -D__PLATFORM__LINUX -D__PLATFORM__UNIX
+   ifeq ($(HB_CROSS_BUILD),yes)
+      # Setup platform macros (undefine host, define target)
+      ifeq      ($(HB_HOST_ARCH),win)
+         HB_FLAGSEXTRA += -undef:__PLATFORM__WINDOWS
+      else ifeq ($(HB_HOST_ARCH),dos)
+         HB_FLAGSEXTRA += -undef:__PLATFORM__DOS
+      else ifeq ($(HB_HOST_ARCH),os2)
+         HB_FLAGSEXTRA += -undef:__PLATFORM__OS2
+      else ifeq ($(HB_HOST_ARCH),linux)
+         HB_FLAGSEXTRA += -undef:__PLATFORM__LINUX -undef:__PLATFORM__UNIX
+      endif
+      ifeq      ($(HB_ARCHITECTURE),win)
+         HB_FLAGSEXTRA += -D__PLATFORM__WINDOWS
+      else ifeq ($(HB_ARCHITECTURE),wce)
+         HB_FLAGSEXTRA += -D__PLATFORM__WINDOWS -D__PLATFORM__WINCE
+      else ifeq ($(HB_ARCHITECTURE),dos)
+         HB_FLAGSEXTRA += -D__PLATFORM__DOS
+      else ifeq ($(HB_ARCHITECTURE),os2)
+         HB_FLAGSEXTRA += -D__PLATFORM__OS2
+      else ifeq ($(HB_ARCHITECTURE),linux)
+         HB_FLAGSEXTRA += -D__PLATFORM__LINUX -D__PLATFORM__UNIX
+      endif
    endif
 endif
 
