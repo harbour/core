@@ -4202,7 +4202,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
                cCommand := "start " + cCommand
             ENDIF
          ENDIF
-      #if defined( __PLATFORM__OS2 )
+      #elif defined( __PLATFORM__OS2 )
          IF hbmk[ _HBMK_lGUI ]
             cCommand := 'start "" ' + FN_Escape( cCommand, _ESC_DBLQUOTE )
          ENDIF
