@@ -201,12 +201,14 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
             HB_BIN_COMPILE := $(dir $(firstword $(wildcard $(TOP)$(ROOT)bin/$(HB_HOST_ARCH)/*/harbour$(HB_HOST_BIN_EXT))))
             ifeq ($(HB_BIN_COMPILE),)
                HB_BIN_COMPILE := $(dir $(firstword $(foreach dir,$(subst $(PTHSEP), ,$(PATH)),$(wildcard $(dir)/harbour$(HB_HOST_BIN_EXT)))))
+               ifeq ($(HB_BIN_COMPILE),)
+                  export HB_BIN_COMPILE
+               endif
             endif
             ifeq ($(HB_BIN_COMPILE),)
                $(warning Warning: HB_BIN_COMPILE not specified. Couldn't find native build.)
             else
                $(info HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
-               export HB_BIN_COMPILE
             endif
          endif
       endif
