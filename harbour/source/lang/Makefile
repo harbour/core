@@ -66,6 +66,7 @@ C_SOURCES=\
 	msgtrwin.c \
 	msgsrwin.c \
 	msgua866.c \
+	msguados.c \
 	msguakoi.c \
 	msguawin.c \
 	msgzhb5.c \

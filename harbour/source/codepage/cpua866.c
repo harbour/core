@@ -58,9 +58,9 @@
 #include "hbapicdp.h"
 
 static HB_CODEPAGE s_codepage = { "UA866",
-    HB_CPID_866,HB_UNITB_866,36,
-    "€‚ƒ„…πς†‡Iτ‰‹‘’“”•–—™›",
-    " ΅Ά£¤¥ρσ¦§¨iυ©ª«¬­®―ΰαβγδεζηθικλμνξο",
+    HB_CPID_866, HB_UNITB_866, 37,
+    "€‚ƒƒ„…πς†‡Iτ‰‹‘’“”•–—™›",
+    " ΅Ά££¤¥ρσ¦§¨iυ©ª«¬­®―ΰαβγδεζηθικλμνξο",
     0,0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
 
 HB_CODEPAGE_INIT( UA866 )

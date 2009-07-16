@@ -58,9 +58,9 @@
 #include "hbapicdp.h"
 
 static HB_CODEPAGE s_codepage = { "UAKOI8",
-    HB_CPID_KOI_8U, HB_UNITB_KOI_8U, 36,
-    "бвчздеіґцъй¶·клмнопртуфхжигюыэящшьас",
-    "БВЧЗДЕЈ¤ЦЪЙ¦§КЛМНОПРТУФХЖИГЮЫЭЯЩШЬАС",
+    HB_CPID_KOI_8U, HB_UNITB_KOI_8U, 37,
+    "бвчзЅдеіґцъй¶·клмнопртуфхжигюыэящшьас",
+    "БВЧЗ­ДЕЈ¤ЦЪЙ¦§КЛМНОПРТУФХЖИГЮЫЭЯЩШЬАС",
     0,0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
 
 HB_CODEPAGE_INIT( UAKOI8 )
