@@ -78,10 +78,8 @@ endif
 
 ifeq ($(HB_SHELL),dos)
 
-# NOTE: Usage of HB_INSTALL_PREFIX is just a hack which works in basic cases.
 define inst_file_all
-if not exist $(HB_INSTALL_PREFIX) $(MD) $(HB_INSTALL_PREFIX)
-if not exist $(INSTALL_DIR_OS)\nul $(MD) $(INSTALL_DIR_OS)
+$(MDP) $(INSTALL_DIR_OS)
 $(foreach file, $(INSTALL_FILES_OS), $(inst_file))
 
 endef

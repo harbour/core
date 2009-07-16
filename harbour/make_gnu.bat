@@ -121,12 +121,12 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
    if not "%HB_ARCHITECTURE%" == "dos" goto _FM_WIN
    if "%OS%" == "Windows_NT" goto _DOS_NT
-   if not exist config\djg-make.exe goto SKIP_WINDLL
-   set _HB_MAKE=config\djg-make.exe
+   if not exist config\dj-make.exe goto SKIP_WINDLL
+   set _HB_MAKE=config\dj-make.exe
    goto SKIP_WINDLL
    :_DOS_NT
-   if not exist "%~dp0config\djg-make.exe" goto SKIP_WINDLL
-   set _HB_MAKE="%~dp0config\djg-make.exe"
+   if not exist "%~dp0config\dj-make.exe" goto SKIP_WINDLL
+   set _HB_MAKE="%~dp0config\dj-make.exe"
    goto SKIP_WINDLL
 
    :_FM_WIN
