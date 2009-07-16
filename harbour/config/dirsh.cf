@@ -25,17 +25,23 @@ DIR_RULE =\
 	  fi \
 	done
 
-else ifeq ($(HB_SHELL),nt)
+endif
+
+ifeq ($(HB_SHELL),nt)
 
 DIR_RULE =\
 	$(CMDPREF)for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
 
-else ifeq ($(HB_SHELL),os2)
+endif
+
+ifeq ($(HB_SHELL),os2)
 
 DIR_RULE =\
 	$(CMDPREF)for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
 
-else ifeq ($(HB_SHELL),dos)
+endif
+
+ifeq ($(HB_SHELL),dos)
 
 # We have to use script to overcome the DOS limit of max 128 characters
 # NOTE: The empty line directly before 'endef' HAVE TO exist!

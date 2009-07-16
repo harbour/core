@@ -41,7 +41,9 @@ dirbase::
 clean::
 	-$(RD) $(OBJ_DIR) $(LIB_FILE) $(EXE_FILE)
 
-else ifeq ($(HB_SHELL),nt)
+endif
+
+ifeq ($(HB_SHELL),nt)
 
 MK = $(subst \,/,$(subst \~,~,$(MAKE)))
 RM = del /q /f
@@ -60,7 +62,9 @@ clean::
 	$(if $(LIB_FILE_OS),-@$(CMDPREF)if exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
 	$(if $(EXE_FILE_OS),-@$(CMDPREF)if exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
 
-else ifeq ($(HB_SHELL),os2)
+endif
+
+ifeq ($(HB_SHELL),os2)
 
 MK = $(subst /,\,$(subst \~,~,$(MAKE)))
 RM = del /n
@@ -80,7 +84,9 @@ clean::
 	$(if $(LIB_FILE_OS),-if exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
 	$(if $(EXE_FILE_OS),-if exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
 
-else ifeq ($(HB_SHELL),dos)
+endif
+
+ifeq ($(HB_SHELL),dos)
 
 # QUESTION: Anyone knows why is this needed? [vszakats]
 ifeq ($(HB_COMPILER),watcom)

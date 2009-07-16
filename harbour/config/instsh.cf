@@ -14,7 +14,9 @@ ifeq ($(INSTALL_FILES),) # Empty install list
 INSTALL_RULE =\
 	@echo Done
 
-else ifeq ($(INSTALL_DIR),) # Empty install dir
+else
+
+ifeq ($(INSTALL_DIR),) # Empty install dir
 
 INSTALL_RULE =\
 	@echo Done
@@ -43,13 +45,17 @@ INSTALL_RULE =\
 	   done \
 	fi
 
-else ifeq ($(HB_SHELL),nt)
+endif
+
+ifeq ($(HB_SHELL),nt)
 
 INSTALL_RULE =\
 	-$(CMDPREF)if not exist "$(INSTALL_DIR_OS)" $(MD) "$(INSTALL_DIR_OS)" &\
 	for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
 
-else ifeq ($(HB_SHELL),os2)
+endif
+
+ifeq ($(HB_SHELL),os2)
 
 define inst_file_all
 if not exist $(INSTALL_DIR_OS) $(MD) $(INSTALL_DIR_OS)
@@ -68,7 +74,9 @@ endef
 INSTALL_RULE =\
 	$(inst_file_all)
 
-else ifeq ($(HB_SHELL),dos)
+endif
+
+ifeq ($(HB_SHELL),dos)
 
 # NOTE: Usage of HB_INSTALL_PREFIX is just a hack which works in basic cases.
 define inst_file_all
@@ -91,4 +99,6 @@ INSTALL_RULE =\
 
 endif
 
-endif # Empty install list/dir
+endif # Empty install dir
+
+endif # Empty install list

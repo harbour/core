@@ -22,6 +22,9 @@ all: ; @echo Error: GNU Make version $(MAKE_VERSION) found, $(need) or upper nee
 
 else
 
+need := 3.81
+ok := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
+
 GRANDP = ../../../
 ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 OBJ_BASE := obj
@@ -32,36 +35,66 @@ define check_host
 
 ifneq ($(findstring MINGW,$(1)),)
    HB_HOST_ARCH := win
-else ifneq ($(findstring MSys,$(1)),)
-   HB_HOST_ARCH := win
-else ifneq ($(findstring Windows,$(1)),)
-   HB_HOST_ARCH := win
-else ifneq ($(findstring CYGWIN,$(1)),)
-   HB_HOST_ARCH := win
-else ifneq ($(findstring Darwin,$(1)),)
-   HB_HOST_ARCH := darwin
-else ifneq ($(findstring darwin,$(1)),)
-   HB_HOST_ARCH := darwin
-else ifneq ($(findstring Linux,$(1)),)
-   HB_HOST_ARCH := linux
-else ifneq ($(findstring linux,$(1)),)
-   HB_HOST_ARCH := linux
-else ifneq ($(findstring HP-UX,$(1)),)
-   HB_HOST_ARCH := hpux
-else ifneq ($(findstring hp-ux,$(1)),)
-   HB_HOST_ARCH := hpux
-else ifneq ($(findstring SunOS,$(1)),)
-   HB_HOST_ARCH := sunos
-else ifneq ($(findstring sunos,$(1)),)
-   HB_HOST_ARCH := sunos
-else ifneq ($(findstring BSD,$(1)),)
-   HB_HOST_ARCH := bsd
-else ifneq ($(findstring bsd,$(1)),)
-   HB_HOST_ARCH := bsd
-else ifneq ($(findstring OS/2,$(1)),)
-   HB_HOST_ARCH := os2
-else ifneq ($(findstring msdos,$(1)),)
-   HB_HOST_ARCH := dos
+else
+   ifneq ($(findstring MSys,$(1)),)
+      HB_HOST_ARCH := win
+   else
+      ifneq ($(findstring Windows,$(1)),)
+         HB_HOST_ARCH := win
+      else
+         ifneq ($(findstring CYGWIN,$(1)),)
+            HB_HOST_ARCH := win
+         else
+            ifneq ($(findstring Darwin,$(1)),)
+               HB_HOST_ARCH := darwin
+            else
+               ifneq ($(findstring darwin,$(1)),)
+                  HB_HOST_ARCH := darwin
+               else
+                  ifneq ($(findstring Linux,$(1)),)
+                     HB_HOST_ARCH := linux
+                  else
+                     ifneq ($(findstring linux,$(1)),)
+                        HB_HOST_ARCH := linux
+                     else
+                        ifneq ($(findstring HP-UX,$(1)),)
+                           HB_HOST_ARCH := hpux
+                        else
+                           ifneq ($(findstring hp-ux,$(1)),)
+                              HB_HOST_ARCH := hpux
+                           else
+                              ifneq ($(findstring SunOS,$(1)),)
+                                 HB_HOST_ARCH := sunos
+                              else
+                                 ifneq ($(findstring sunos,$(1)),)
+                                    HB_HOST_ARCH := sunos
+                                 else
+                                    ifneq ($(findstring BSD,$(1)),)
+                                       HB_HOST_ARCH := bsd
+                                    else
+                                       ifneq ($(findstring bsd,$(1)),)
+                                          HB_HOST_ARCH := bsd
+                                       else
+                                          ifneq ($(findstring OS/2,$(1)),)
+                                             HB_HOST_ARCH := os2
+                                          else
+                                             ifneq ($(findstring msdos,$(1)),)
+                                                HB_HOST_ARCH := dos
+                                             endif
+                                          endif
+                                       endif
+                                    endif
+                                 endif
+                              endif
+                           endif
+                        endif
+                     endif
+                  endif
+               endif
+            endif
+         endif
+      endif
+   endif
 endif
 
 endef
@@ -99,10 +132,12 @@ else
       endif
       ifneq ($(findstring COMMAND,$(COMSPEC)),)
          HB_SHELL := dos
-      else ifneq ($(findstring command,$(COMSPEC)),)
-         HB_SHELL := dos
       else
-         HB_SHELL := nt
+         ifneq ($(findstring command,$(COMSPEC)),)
+            HB_SHELL := dos
+         else
+            HB_SHELL := nt
+         endif
       endif
    endif
 endif
@@ -131,33 +166,42 @@ endif
 ifeq ($(HB_HOST_ARCH),)
    ifneq ($(OS2_SHELL),)
       HB_HOST_ARCH := os2
-   else ifneq ($(windir),)
-      HB_HOST_ARCH := win
-   else ifneq ($(WINDIR),)
-      HB_HOST_ARCH := win
    else
-      HB_HOST_ARCH := dos
+      ifneq ($(windir),)
+         HB_HOST_ARCH := win
+      else
+         ifneq ($(WINDIR),)
+            HB_HOST_ARCH := win
+         else
+            HB_HOST_ARCH := dos
+         endif
+      endif
    endif
 endif
 
-
 ifeq ($(HB_BUILD_VERBOSE),yes)
-   $(info Detected host platform: $(HB_HOST_ARCH))
+   ifeq ($(ok),)
+      $(info Detected host platform: $(HB_HOST_ARCH))
+   endif
 endif
 
 HB_HOST_CPU :=
 ifeq ($(HB_HOST_ARCH),win)
    ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
       HB_HOST_CPU := x86_64
-   else ifeq ($(PROCESSOR_ARCHITECTURE),IA64)
-      HB_HOST_CPU := ia64
    else
-      HB_HOST_CPU := x86
+      ifeq ($(PROCESSOR_ARCHITECTURE),IA64)
+         HB_HOST_CPU := ia64
+      else
+         HB_HOST_CPU := x86
+      endif
    endif
 endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
-   $(info Detected host CPU: $(HB_HOST_CPU))
+   ifeq ($(ok),)
+      $(info Detected host CPU: $(HB_HOST_CPU))
+   endif
 endif
 
 # TODO: Set this in <arch>/<comp>.cf
@@ -165,21 +209,31 @@ HB_CPU :=
 ifeq ($(HB_ARCHITECTURE),win)
    ifeq      ($(HB_COMPILER),msvc64)
       HB_CPU := x86_64
-   else ifeq ($(HB_COMPILER),mingw64)
-      HB_CPU := x86_64
-   else ifeq ($(HB_COMPILER),pocc64)
-      HB_CPU := x86_64
-   else ifeq ($(HB_COMPILER),msvcia64)
-      HB_CPU := ia64
-   else ifeq ($(HB_COMPILER),iccia64)
-      HB_CPU := ia64
    else
-      HB_CPU := x86
+      ifeq ($(HB_COMPILER),mingw64)
+         HB_CPU := x86_64
+      else
+         ifeq ($(HB_COMPILER),pocc64)
+            HB_CPU := x86_64
+         else
+            ifeq ($(HB_COMPILER),msvcia64)
+               HB_CPU := ia64
+            else
+               ifeq ($(HB_COMPILER),iccia64)
+                  HB_CPU := ia64
+               else
+                  HB_CPU := x86
+               endif
+            endif
+         endif
+      endif
    endif
 endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
-   $(info Detected target CPU: $(HB_CPU))
+   ifeq ($(ok),)
+      $(info Detected target CPU: $(HB_CPU))
+   endif
 endif
 
 ifneq ($(findstring $(HB_HOST_ARCH),win wce dos os2),)
@@ -189,7 +243,9 @@ else
 endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
-   $(info Detected host executable extension: $(HB_HOST_BIN_EXT))
+   ifeq ($(ok),)
+      $(info Detected host executable extension: $(HB_HOST_BIN_EXT))
+   endif
 endif
 
 HB_CROSS_BUILD :=
@@ -210,7 +266,9 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
             ifeq ($(HB_BIN_COMPILE),)
                $(warning Warning: HB_BIN_COMPILE not specified. Couldn't find native build.)
             else
-               $(info HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
+               ifeq ($(ok),)
+                  $(info HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
+               endif
             endif
          endif
       endif
@@ -220,25 +278,39 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
    HB_FLAGSEXTRA :=
    ifeq ($(HB_CROSS_BUILD),yes)
       # Setup platform macros (undefine host, define target)
-      ifeq      ($(HB_HOST_ARCH),win)
+      ifeq ($(HB_HOST_ARCH),win)
          HB_FLAGSEXTRA += -undef:__PLATFORM__WINDOWS
-      else ifeq ($(HB_HOST_ARCH),dos)
-         HB_FLAGSEXTRA += -undef:__PLATFORM__DOS
-      else ifeq ($(HB_HOST_ARCH),os2)
-         HB_FLAGSEXTRA += -undef:__PLATFORM__OS2
-      else ifeq ($(HB_HOST_ARCH),linux)
-         HB_FLAGSEXTRA += -undef:__PLATFORM__LINUX -undef:__PLATFORM__UNIX
+      else
+         ifeq ($(HB_HOST_ARCH),dos)
+            HB_FLAGSEXTRA += -undef:__PLATFORM__DOS
+         else
+            ifeq ($(HB_HOST_ARCH),os2)
+               HB_FLAGSEXTRA += -undef:__PLATFORM__OS2
+            else
+               ifeq ($(HB_HOST_ARCH),linux)
+                  HB_FLAGSEXTRA += -undef:__PLATFORM__LINUX -undef:__PLATFORM__UNIX
+               endif
+            endif
+         endif
       endif
-      ifeq      ($(HB_ARCHITECTURE),win)
+      ifeq ($(HB_ARCHITECTURE),win)
          HB_FLAGSEXTRA += -D__PLATFORM__WINDOWS
-      else ifeq ($(HB_ARCHITECTURE),wce)
-         HB_FLAGSEXTRA += -D__PLATFORM__WINDOWS -D__PLATFORM__WINCE
-      else ifeq ($(HB_ARCHITECTURE),dos)
-         HB_FLAGSEXTRA += -D__PLATFORM__DOS
-      else ifeq ($(HB_ARCHITECTURE),os2)
-         HB_FLAGSEXTRA += -D__PLATFORM__OS2
-      else ifeq ($(HB_ARCHITECTURE),linux)
-         HB_FLAGSEXTRA += -D__PLATFORM__LINUX -D__PLATFORM__UNIX
+      else
+         ifeq ($(HB_ARCHITECTURE),wce)
+            HB_FLAGSEXTRA += -D__PLATFORM__WINDOWS -D__PLATFORM__WINCE
+         else
+            ifeq ($(HB_ARCHITECTURE),dos)
+               HB_FLAGSEXTRA += -D__PLATFORM__DOS
+            else
+               ifeq ($(HB_ARCHITECTURE),os2)
+                  HB_FLAGSEXTRA += -D__PLATFORM__OS2
+               else
+                  ifeq ($(HB_ARCHITECTURE),linux)
+                     HB_FLAGSEXTRA += -D__PLATFORM__LINUX -D__PLATFORM__UNIX
+                  endif
+               endif
+            endif
+         endif
       endif
    endif
 endif
