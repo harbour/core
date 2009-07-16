@@ -61,7 +61,7 @@ endef
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every commands will be separated by LF
 define inst_file
-$(CMDPREF)$(CP) $(file) $(INSTALL_DIR_OS)
+$(CP) $(file) $(INSTALL_DIR_OS)
 
 endef
 
@@ -80,7 +80,7 @@ endef
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every commands will be separated by LF
 define inst_file
-$(CMDPREF)xcopy /Y /I $(file) $(INSTALL_DIR_OS)
+$(CP) $(file) $(INSTALL_DIR_OS)
 
 endef
 

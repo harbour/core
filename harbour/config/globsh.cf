@@ -65,7 +65,7 @@ else ifeq ($(HB_SHELL),os2)
 MK = $(subst /,\,$(subst \~,~,$(MAKE)))
 RM = del /n
 RD = rmdir
-CP = copy
+CP = $(CMDPREF)copy
 MV = move
 MD = mkdir
 
