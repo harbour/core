@@ -88,7 +88,7 @@ $(foreach lib, $(GTLIBS), $(link_lib))
 endef
 
 LD = wlink
-LDFLAGS =
+LDFLAGS = SYS NT
 ifeq ($(HB_BUILD_DEBUG),yes)
 LDFLAGS := debug all $(LDFLAGS)
 endif

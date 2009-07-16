@@ -40,18 +40,12 @@ else ifneq ($(findstring CYGWIN,$(1)),)
    HB_HOST_ARCH := win
 else ifneq ($(findstring Darwin,$(1)),)
    HB_HOST_ARCH := darwin
-else ifneq ($(findstring OS/2,$(1)),)
-   HB_HOST_ARCH := os2
 else ifneq ($(findstring darwin,$(1)),)
    HB_HOST_ARCH := darwin
 else ifneq ($(findstring Linux,$(1)),)
    HB_HOST_ARCH := linux
 else ifneq ($(findstring linux,$(1)),)
    HB_HOST_ARCH := linux
-else ifneq ($(findstring BSD,$(1)),)
-   HB_HOST_ARCH := bsd
-else ifneq ($(findstring bsd,$(1)),)
-   HB_HOST_ARCH := bsd
 else ifneq ($(findstring HP-UX,$(1)),)
    HB_HOST_ARCH := hpux
 else ifneq ($(findstring hp-ux,$(1)),)
@@ -60,6 +54,12 @@ else ifneq ($(findstring SunOS,$(1)),)
    HB_HOST_ARCH := sunos
 else ifneq ($(findstring sunos,$(1)),)
    HB_HOST_ARCH := sunos
+else ifneq ($(findstring BSD,$(1)),)
+   HB_HOST_ARCH := bsd
+else ifneq ($(findstring bsd,$(1)),)
+   HB_HOST_ARCH := bsd
+else ifneq ($(findstring OS/2,$(1)),)
+   HB_HOST_ARCH := os2
 else ifneq ($(findstring msdos,$(1)),)
    HB_HOST_ARCH := dos
 endif
@@ -69,6 +69,15 @@ endef
 # Directory separator default
 ifeq ($(DIRSEP),)
    DIRSEP = /
+endif
+ifeq ($(PTHSEP),)
+   # small hack, it's hard to detect what is real path separator because
+   # some shells in DOS/Windows translates DOS style paths to POSIX form
+   ifeq ($(subst ;,:,$(PATH)),$(PATH))
+      PTHSEP = :
+   else
+      PTHSEP = ;
+   endif
 endif
 
 # Shell detection
@@ -131,6 +140,7 @@ ifeq ($(HB_HOST_ARCH),)
    endif
 endif
 
+
 ifeq ($(HB_BUILD_VERBOSE),yes)
    $(info Detected host platform: $(HB_HOST_ARCH))
 endif
@@ -190,13 +200,18 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
             # Try to autosetup
             HB_BIN_COMPILE := $(dir $(firstword $(wildcard $(TOP)$(ROOT)bin/$(HB_HOST_ARCH)/*/harbour$(HB_HOST_BIN_EXT))))
             ifeq ($(HB_BIN_COMPILE),)
+               HB_BIN_COMPILE := $(dir $(firstword $(foreach dir,$(subst $(PTHSEP), ,$(PATH)),$(wildcard $(dir)/harbour$(HB_HOST_BIN_EXT)))))
+            endif
+            ifeq ($(HB_BIN_COMPILE),)
                $(warning Warning: HB_BIN_COMPILE not specified. Couldn't find native build.)
             else
                $(info HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
             endif
          endif
       endif
-   else
+   endif
+   ifneq ($(HB_HOST_FLAG_),done)
+      HB_HOST_FLAG_=done
       # Setup platform macros (undefine host, define target)
       ifeq      ($(HB_HOST_ARCH),win)
          HB_USER_PRGFLAGS += -undef:__PLATFORM__WINDOWS
@@ -261,6 +276,9 @@ endif
 ifeq ($(HB_INC_COMPILE),)
    HB_INC_COMPILE := $(TOP)$(ROOT)include
 endif
+
+# export some variables to eliminate repeated setting in recursive calls
+export HB_HOST_ARCH HB_BIN_COMPILE HB_HOST_FLAG_
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 include $(TOP)$(ROOT)config/globsh.cf
