@@ -24,7 +24,7 @@ MK_OS = $(subst /,\,$(MK))
 DIRS_OS = $(subst /,\,$(DIRS))
 
 DIR_RULE =\
-	$(COMSPEC) /C for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
+	$(CMDPREF)for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
 
 else ifeq ($(HB_SHELL),os2)
 
@@ -32,7 +32,7 @@ MK_OS = $(subst /,\,$(MK))
 DIRS_OS = $(subst /,\,$(DIRS))
 
 DIR_RULE =\
-	$(COMSPEC) /C for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
+	$(CMDPREF)for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
 
 else ifeq ($(HB_SHELL),dos)
 

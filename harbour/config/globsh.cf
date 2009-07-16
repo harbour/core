@@ -33,19 +33,19 @@ EXE_FILE_OS = $(subst /,\,$(EXE_FILE))
 MK = $(subst \,/,$(subst \~,~,$(MAKE)))
 RM = del /q /f
 RD = rmdir /q /s
-CP = $(COMSPEC) /c copy
+CP = $(CMDPREF)copy
 MV = move
 MD = mkdir
 
 dirbase::
-	-@$(COMSPEC) /c if not exist $(OBJ_DIR_OS) $(MD) $(OBJ_DIR_OS)
-	$(if $(LIB_DIR_OS),-@$(COMSPEC) /c if not exist $(LIB_DIR_OS) $(MD) $(LIB_DIR_OS),)
-	$(if $(EXE_DIR_OS),-@$(COMSPEC) /c if not exist $(EXE_DIR_OS) $(MD) $(EXE_DIR_OS),)
+	-@$(CMDPREF)if not exist $(OBJ_DIR_OS) $(MD) $(OBJ_DIR_OS)
+	$(if $(LIB_DIR_OS),-@$(CMDPREF)if not exist $(LIB_DIR_OS) $(MD) $(LIB_DIR_OS),)
+	$(if $(EXE_DIR_OS),-@$(CMDPREF)if not exist $(EXE_DIR_OS) $(MD) $(EXE_DIR_OS),)
 
 clean::
-	-@$(COMSPEC) /c if exist $(OBJ_DIR_OS) $(RD) $(OBJ_DIR_OS)
-	$(if $(LIB_FILE_OS),-@$(COMSPEC) /c if exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
-	$(if $(EXE_FILE_OS),-@$(COMSPEC) /c if exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
+	-@$(CMDPREF)if exist $(OBJ_DIR_OS) $(RD) $(OBJ_DIR_OS)
+	$(if $(LIB_FILE_OS),-@$(CMDPREF)if exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
+	$(if $(EXE_FILE_OS),-@$(CMDPREF)if exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
 
 else ifeq ($(HB_SHELL),os2)
 
@@ -99,19 +99,19 @@ endif
 MK = $(subst \,/,$(subst \~,~,$(MAKE)))
 RM = del
 RD = rmdir
-CP = $(COMSPEC) /Ccopy
+CP = $(CMDPREF)copy
 MV = move
 MD = md
 
 dirbase::
-	-@$(COMSPEC) /Cfor %d in ($(OBJ_BASE) $(OBJ_ARCH_DIR_OS) $(OBJ_DIR_OS)) do if not exist %d\nul $(MD) %d
-	$(if $(LIB_FILE_OS),-@$(COMSPEC) /Cfor %d in ($(LIB_ARCH_DIR_OS) $(LIB_DIR_OS)) do if not exist %d\nul $(MD) %d,)
-	$(if $(EXE_FILE_OS),-@$(COMSPEC) /Cfor %d in ($(EXE_ARCH_DIR_OS) $(EXE_DIR_OS)) do if not exist %d\nul $(MD) %d,)
+	-@$(CMDPREF)for %d in ($(OBJ_BASE) $(OBJ_ARCH_DIR_OS) $(OBJ_DIR_OS)) do if not exist %d\nul $(MD) %d
+	$(if $(LIB_FILE_OS),-@$(CMDPREF)for %d in ($(LIB_ARCH_DIR_OS) $(LIB_DIR_OS)) do if not exist %d\nul $(MD) %d,)
+	$(if $(EXE_FILE_OS),-@$(CMDPREF)for %d in ($(EXE_ARCH_DIR_OS) $(EXE_DIR_OS)) do if not exist %d\nul $(MD) %d,)
 
 clean::
-	-@$(COMSPEC) /Cfor %f in ($(OBJ_DIR_OS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
-	-@$(COMSPEC) /Cfor %d in ($(OBJ_DIR_OS) $(OBJ_ARCH_DIR_OS) $(OBJ_BASE)) do if exist %d\nul $(RD) %d
-	$(if $(LIB_FILE_OS),-@$(COMSPEC) /Cif exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
-	$(if $(EXE_FILE_OS),-@$(COMSPEC) /Cif exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
+	-@$(CMDPREF)for %f in ($(OBJ_DIR_OS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
+	-@$(CMDPREF)for %d in ($(OBJ_DIR_OS) $(OBJ_ARCH_DIR_OS) $(OBJ_BASE)) do if exist %d\nul $(RD) %d
+	$(if $(LIB_FILE_OS),-@$(CMDPREF)if exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
+	$(if $(EXE_FILE_OS),-@$(CMDPREF)if exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
 
 endif

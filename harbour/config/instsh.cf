@@ -36,7 +36,7 @@ INSTALL_DIR_OS = $(subst /,\,$(INSTALL_DIR))
 INSTALL_FILES_OS = $(subst /,\,$(INSTALL_FILES))
 
 INSTALL_RULE =\
-	-$(COMSPEC) /c for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
+	-$(CMDPREF)for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
 
 else ifeq ($(HB_SHELL),os2)
 
@@ -44,7 +44,7 @@ else ifeq ($(HB_SHELL),os2)
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every commands will be separated by LF
 define inst_file
-$(COMSPEC) /C $(CP) $(file) $(subst /,\,$(INSTALL_DIR))
+$(CMDPREF)$(CP) $(file) $(subst /,\,$(INSTALL_DIR))
 
 endef
 
@@ -59,7 +59,7 @@ else ifeq ($(HB_SHELL),dos)
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every commands will be separated by LF
 define inst_file
-$(COMSPEC) /Cxcopy /Y /I $(file) $(INSTALL_DIR_OS)
+$(CMDPREF)xcopy /Y /I $(file) $(INSTALL_DIR_OS)
 
 endef
 
