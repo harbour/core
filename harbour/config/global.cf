@@ -277,7 +277,9 @@ ifneq ($(HB_DB_DRVEXT),)
 endif
 
 ifeq ($(HB_BIN_COMPILE),)
-   HB_BIN_COMPILE := $(TOP)$(ROOT)bin/$(ARCH_COMP)
+   HB_HOST_BIN_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
+else
+   HB_HOST_BIN_DIR := $(HB_BIN_COMPILE)
 endif
 
 ifeq ($(HB_INC_COMPILE),)
