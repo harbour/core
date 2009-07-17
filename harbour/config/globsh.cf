@@ -92,11 +92,11 @@ ifeq ($(HB_SHELL),dos)
 TOOL_DIR := $(subst /,\,$(TOP)$(ROOT)config/)
 
 MK = $(subst \,/,$(subst \~,~,$(MAKE)))
-RM = $(TOOL_DIR)dj-rm.exe -f
-RD = $(TOOL_DIR)dj-rm.exe -f -r
-CP = $(TOOL_DIR)dj-cp.exe -f
-MD = $(TOOL_DIR)dj-mkdir.exe
-MDP = $(TOOL_DIR)dj-mkdir.exe -p
+RM = $(TOOL_DIR)dj-rm -f
+RD = $(TOOL_DIR)dj-rm -f -r
+CP = $(TOOL_DIR)dj-cp -f
+MD = $(TOOL_DIR)dj-mkdir
+MDP = $(TOOL_DIR)dj-mkdir -p
 
 dirbase::
 	-@$(CMDPREF)if not exist $(OBJ_DIR_OS)\nul $(MDP) $(OBJ_DIR_OS)

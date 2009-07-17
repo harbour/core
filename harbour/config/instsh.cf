@@ -50,7 +50,7 @@ endif
 ifeq ($(HB_SHELL),nt)
 
 INSTALL_RULE =\
-	-$(CMDPREF)if not exist "$(INSTALL_DIR_OS)" $(MD) "$(INSTALL_DIR_OS)" &\
+	-$(CMDPREF)if not exist "$(INSTALL_DIR_OS)" $(MDP) "$(INSTALL_DIR_OS)" &\
 	for %%f in ($(INSTALL_FILES_OS)) do copy "%%f" "$(INSTALL_DIR_OS)"
 
 endif
