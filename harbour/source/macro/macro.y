@@ -723,9 +723,12 @@ void yyerror( HB_MACRO_PTR pMacro, const char * s )
 
 /* ************************************************************************* */
 
+#define HB_MEXPR_PREALLOC 8
+
 typedef struct HB_MEXPR_
 {
-   HB_EXPR Expression;
+   int      count;
+   HB_EXPR  Expressions[ HB_MEXPR_PREALLOC ];
    struct HB_MEXPR_ *pPrev;
 }
 HB_MEXPR, * HB_MEXPR_PTR;
@@ -742,10 +745,16 @@ HB_MIDENT, * HB_MIDENT_PTR;
 */
 static HB_EXPR_PTR hb_macroExprAlloc( HB_COMP_DECL )
 {
-   HB_MEXPR_PTR pMExpr = ( HB_MEXPR_PTR ) hb_xgrab( sizeof( HB_MEXPR ) );
-   pMExpr->pPrev = ( HB_MEXPR_PTR ) HB_MACRO_DATA->pExprLst;
-   HB_MACRO_DATA->pExprLst = ( void * ) pMExpr;
-   return &pMExpr->Expression;
+   HB_MEXPR_PTR pMExpr = ( HB_MEXPR_PTR ) HB_MACRO_DATA->pExprLst;
+
+   if( !pMExpr || pMExpr->count >= HB_MEXPR_PREALLOC )
+   {
+      pMExpr = ( HB_MEXPR_PTR ) hb_xgrab( sizeof( HB_MEXPR ) );
+      pMExpr->pPrev = ( HB_MEXPR_PTR ) HB_MACRO_DATA->pExprLst;
+      pMExpr->count = 0;
+      HB_MACRO_DATA->pExprLst = ( void * ) pMExpr;
+   }
+   return &pMExpr->Expressions[ pMExpr->count++ ];
 }
 
 static void hb_macroIdentNew( HB_COMP_DECL, char * szIdent )
@@ -812,7 +821,8 @@ static void hb_macroLstFree( HB_MACRO_PTR pMacro )
       HB_MEXPR_PTR pMExpr = ( HB_MEXPR_PTR ) pMacro->pExprLst;
       do
       {
-         hb_macroExprDelete( pMacro, &pMExpr->Expression );
+         while( pMExpr->count )
+            hb_macroExprFree( pMacro, &pMExpr->Expressions[ --pMExpr->count ] );
          pMExpr = pMExpr->pPrev;
       }
       while( pMExpr );
