@@ -23,7 +23,9 @@ INSTALL_RULE_LIBRARIES := $(INSTALL_RULE)
 
 HB_VERHEADER=$(TOP)$(ROOT)include/hbverbld.h
 
+EXE_FILE := $(EXE_DIR)/hbpp$(EXE_EXT)
 vpath hbpp$(EXE_EXT) $(EXE_DIR)
+
 ifneq ($(HB_PP_RULES),)
 pptable.c : $(HB_PP_RULES)
 	$(CP) $(subst /,$(DIRSEP),$<) $@
@@ -43,6 +45,6 @@ install::
 	$(INSTALL_RULE_LIBRARIES)
 
 clean::
-	-$(RM) $(subst /,$(DIRSEP),$(HB_VERHEADER))
-	-$(RM) $(subst /,$(DIRSEP),$(EXE_DIR)/hbpp$(EXE_EXT))
-	-$(RM) $(subst /,$(DIRSEP),$(EXE_DIR)/hbpp.tds)
+	-@$(RM) $(subst /,$(DIRSEP),$(HB_VERHEADER))
+	-@$(RM) $(subst /,$(DIRSEP),$(EXE_DIR)/hbpp$(EXE_EXT))
+	-@$(RM) $(subst /,$(DIRSEP),$(EXE_DIR)/hbpp.tds)

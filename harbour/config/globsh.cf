@@ -8,11 +8,6 @@
 #    http://www.robvanderwoude.com/batchcommands.php
 # ---------------------------------------------------------------
 
-# NOTE: In dirbase rules, EXE_DIR is intentionally created even
-#       when a lib is built, so I'm checking for LIB_FILE presence
-#       instead of EXE_FILE, which would be normal. This is needed
-#       to support the hack inside source/pp/Makefile. [vszakats]
-
 ifneq ($(HB_SHELL),sh)
 
 DIRSEP = $(subst /,\,\)
@@ -37,25 +32,17 @@ MDP = mkdir -p
 dirbase::
 	@[ -d $(OBJ_DIR) ] || $(MDP) $(OBJ_DIR)
 	@[ -z $(LIB_FILE) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)
-	@[ -z $(LIB_FILE) ] || [ -d $(EXE_DIR) ] || $(MDP) $(EXE_DIR)
+	@[ -z $(EXE_FILE) ] || [ -d $(EXE_DIR) ] || $(MDP) $(EXE_DIR)
 
 clean::
 	-@$(RDP) $(OBJ_DIR) $(LIB_FILE) $(EXE_FILE); \
-	if [ ! -z $(LIB_FILE) ]; \
-	then \
+	if [ -n $(LIB_FILE) ]; then \
 	   $(RM) $(basename $(LIB_FILE)).bak; \
-	   if [ ! -f $(LIB_DIR)/* ]; \
-	   then \
-	      $(RDP) $(LIB_DIR); \
-	   fi \
+	   [ "`echo $(LIB_DIR)/*`" != "$(LIB_DIR)/*" ] || $(RDP) $(LIB_DIR); \
 	fi ; \
-	if [ ! -z $(EXE_FILE) ]; \
-	then \
+	if [ -n $(EXE_FILE) ]; then \
 	   $(RM) $(basename $(EXE_FILE)).tds; \
-	   if [ ! -f $(EXE_DIR)/* ]; \
-	   then \
-	      $(RDP) $(EXE_DIR); \
-	   fi \
+	   [ "`echo $(EXE_DIR)/*`" != "$(EXE_DIR)/*" ] || $(RDP) $(EXE_DIR); \
 	fi
 
 endif
@@ -72,7 +59,7 @@ MDP = mkdir
 dirbase::
 	-@$(CMDPREF)if not exist $(OBJ_DIR_OS) $(MDP) "$(OBJ_DIR_OS)"
 	$(if $(LIB_FILE),-@$(CMDPREF)if not exist "$(LIB_DIR_OS)" $(MDP) "$(LIB_DIR_OS)",)
-	$(if $(LIB_FILE),-@$(CMDPREF)if not exist "$(EXE_DIR_OS)" $(MDP) "$(EXE_DIR_OS)",)
+	$(if $(EXE_FILE),-@$(CMDPREF)if not exist "$(EXE_DIR_OS)" $(MDP) "$(EXE_DIR_OS)",)
 
 clean::
 	-@$(CMDPREF)if exist $(OBJ_DIR_OS) $(RDP) "$(OBJ_DIR_OS)"
@@ -100,7 +87,7 @@ EXE_ARCH_DIR_OS = $(subst /,\,$(EXE_ARCH_DIR))
 dirbase::
 	-for %d in ($(OBJ_BASE) $(OBJ_ARCH_DIR_OS) $(OBJ_DIR_OS)) do if not exist %d $(MD) %d
 	$(if $(LIB_FILE),-for %d in ($(LIB_ARCH_DIR_OS) $(LIB_DIR_OS)) do if not exist %d $(MD) %d,)
-	$(if $(LIB_FILE),-for %d in ($(EXE_ARCH_DIR_OS) $(EXE_DIR_OS)) do if not exist %d $(MD) %d,)
+	$(if $(EXE_FILE),-for %d in ($(EXE_ARCH_DIR_OS) $(EXE_DIR_OS)) do if not exist %d $(MD) %d,)
 
 clean::
 	-if exist $(OBJ_DIR_OS)\*.* $(RM) $(OBJ_DIR_OS)\*.*
@@ -126,7 +113,7 @@ MDP = $(TOOL_DIR)dj-mkdir -p
 dirbase::
 	-@$(CMDPREF)if not exist $(OBJ_DIR_OS)\nul $(MDP) $(OBJ_DIR_OS)
 	$(if $(LIB_FILE),-@$(CMDPREF)if not exist $(LIB_DIR_OS)\nul $(MDP) $(LIB_DIR_OS),)
-	$(if $(LIB_FILE),-@$(CMDPREF)if not exist $(EXE_DIR_OS)\nul $(MDP) $(EXE_DIR_OS),)
+	$(if $(EXE_FILE),-@$(CMDPREF)if not exist $(EXE_DIR_OS)\nul $(MDP) $(EXE_DIR_OS),)
 
 clean::
 	-@$(RDP) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(EXE_FILE_OS)
