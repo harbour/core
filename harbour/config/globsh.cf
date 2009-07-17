@@ -36,7 +36,7 @@ clean::
 	-@$(RDP) $(OBJ_DIR) $(LIB_FILE) $(EXE_FILE); \
 	if [ ! -z $(LIB_FILE) ]; \
 	then \
-	   $(RDP) $(basename $(LIB_FILE)).bak; \
+	   $(RM) $(basename $(LIB_FILE)).bak; \
 	   if [ ! -f $(LIB_DIR)/* ]; \
 	   then \
 	      $(RDP) $(LIB_DIR); \
@@ -44,7 +44,7 @@ clean::
 	fi ; \
 	if [ ! -z $(EXE_FILE) ]; \
 	then \
-	   $(RDP) $(basename $(EXE_FILE)).tds; \
+	   $(RM) $(basename $(EXE_FILE)).tds; \
 	   if [ ! -f $(EXE_DIR)/* ]; \
 	   then \
 	      $(RDP) $(EXE_DIR); \
