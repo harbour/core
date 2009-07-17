@@ -45,3 +45,4 @@ install::
 clean::
 	-$(RM) $(subst /,$(DIRSEP),$(HB_VERHEADER))
 	-$(RM) $(subst /,$(DIRSEP),$(EXE_DIR)/hbpp$(EXE_EXT))
+	-$(RM) $(subst /,$(DIRSEP),$(EXE_DIR)/hbpp.tds)
