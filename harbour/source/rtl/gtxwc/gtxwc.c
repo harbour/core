@@ -321,7 +321,7 @@ typedef struct tag_rect
    int left;
    int right;
    int bottom;
-} HB_RECT;
+} XWC_RECT;
 
 typedef struct tag_modifiers
 {
@@ -435,10 +435,10 @@ typedef struct tag_x_wnddef
    XWC_CharTrans charTrans[256];
 
    BOOL fInvalidChr;
-   HB_RECT rInvalidChr;
+   XWC_RECT rInvalidChr;
 
    BOOL fInvalidPts;
-   HB_RECT rInvalidPts;
+   XWC_RECT rInvalidPts;
 
    /* Keyboard buffer */
    int keyBuffPointer;
@@ -2570,7 +2570,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
          else
          {
             usCh16 &= 0xFF;
-            color &= ( BYTE ) iColor;
+            color = ( BYTE ) iColor;
          }
          ulCurr = hb_gt_xwc_HashCurrChar( attr, color, usCh16 );
          if( wnd->charTrans[ usCh16 ].inverse )
