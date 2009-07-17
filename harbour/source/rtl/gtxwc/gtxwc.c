@@ -321,7 +321,7 @@ typedef struct tag_rect
    int left;
    int right;
    int bottom;
-} RECT;
+} HB_RECT;
 
 typedef struct tag_modifiers
 {
@@ -435,10 +435,10 @@ typedef struct tag_x_wnddef
    XWC_CharTrans charTrans[256];
 
    BOOL fInvalidChr;
-   RECT rInvalidChr;
+   HB_RECT rInvalidChr;
 
    BOOL fInvalidPts;
-   RECT rInvalidPts;
+   HB_RECT rInvalidPts;
 
    /* Keyboard buffer */
    int keyBuffPointer;
