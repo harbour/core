@@ -33,7 +33,23 @@ dirbase::
 	@[ -z $(EXE_FILE) ] || [ -d $(EXE_DIR) ] || $(MDP) $(EXE_DIR)
 
 clean::
-	-$(RD) $(OBJ_DIR) $(LIB_DIR) $(EXE_DIR)
+	-@$(RD) $(OBJ_DIR) $(LIB_FILE) $(EXE_FILE); \
+	if [ ! -z $(LIB_FILE) ]; \
+	then \
+	   $(RD) $(basename $(LIB_FILE)).bak; \
+	   if [ ! -f $(LIB_DIR)/* ]; \
+	   then \
+	      $(RD) $(LIB_DIR); \
+	   fi \
+	fi ; \
+	if [ ! -z $(EXE_FILE) ]; \
+	then \
+	   $(RD) $(basename $(EXE_FILE)).tds; \
+	   if [ ! -f $(EXE_DIR)/* ]; \
+	   then \
+	      $(RD) $(EXE_DIR); \
+	   fi \
+	fi
 
 endif
 
