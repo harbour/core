@@ -24,8 +24,8 @@ LIBS=\
 	hbrtl \
 	hbvm \
 	hbmacro \
-	hbpp \
 	hbcplr \
+	hbpp \
 	hbcommon \
 
 ifeq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)

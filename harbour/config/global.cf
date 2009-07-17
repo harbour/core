@@ -162,7 +162,6 @@ ifeq ($(HB_HOST_ARCH),)
    endif
 endif
 
-
 ifeq ($(HB_HOST_ARCH),)
    ifneq ($(OS2_SHELL),)
       HB_HOST_ARCH := os2
@@ -196,6 +195,8 @@ ifeq ($(HB_HOST_ARCH),win)
          HB_HOST_CPU := x86
       endif
    endif
+else
+   # TODO: CPU detection for rest of systems.
 endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
@@ -207,7 +208,7 @@ endif
 # TODO: Set this in <arch>/<comp>.cf
 HB_CPU :=
 ifeq ($(HB_ARCHITECTURE),win)
-   ifeq      ($(HB_COMPILER),msvc64)
+   ifeq ($(HB_COMPILER),msvc64)
       HB_CPU := x86_64
    else
       ifeq ($(HB_COMPILER),mingw64)
@@ -313,6 +314,11 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
          endif
       endif
    endif
+endif
+
+# Exclude Harbour-wide features prohibiting commercial usage
+ifeq ($(HB_COMMERCE),yes)
+   HB_GPM_MOUSE := no
 endif
 
 # Names of portable GT drivers

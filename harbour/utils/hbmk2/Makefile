@@ -23,8 +23,8 @@ LIBS=\
 	hbrtl \
 	hbvmmt \
 	hbmacro \
-	hbcommon \
-	hbpp \
 	hbcplr \
+	hbpp \
+	hbcommon \
 
 include $(TOP)$(ROOT)config/bin.cf

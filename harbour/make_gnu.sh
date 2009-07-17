@@ -51,6 +51,16 @@ then
     export HB_ARCHITECTURE=win
 fi
 
+if [ -z "$HB_GPM_MOUSE" ]; then
+    if [ "$HB_ARCHITECTURE" = "linux" ] && \
+       ( [ -f /usr/include/gpm.h ] || [ -f /usr/local/include/gpm.h ]); then
+        HB_GPM_MOUSE=yes
+    else
+        HB_GPM_MOUSE=no
+    fi
+    export HB_GPM_MOUSE
+fi
+
 if [ "$HB_ARCHITECTURE" = "linux" ]
 then
     if [ "${HB_USER_CFLAGS}" == "${HB_USER_CFLAGS//-fPIC/}" ]
