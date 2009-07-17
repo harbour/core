@@ -69,8 +69,8 @@ dirbase::
 
 clean::
 	-@$(CMDPREF)if exist $(OBJ_DIR_OS) $(RDP) "$(OBJ_DIR_OS)"
-	$(if $(LIB_DIR_OS),-@$(CMDPREF)if exist "$(LIB_DIR_OS)" $(RDP) "$(LIB_DIR_OS)",)
-	$(if $(EXE_DIR_OS),-@$(CMDPREF)if exist "$(EXE_DIR_OS)" $(RDP) "$(EXE_DIR_OS)",)
+	$(if $(LIB_FILE),-@$(CMDPREF)if exist "$(LIB_DIR_OS)" $(RDP) "$(LIB_DIR_OS)",)
+	$(if $(EXE_FILE),-@$(CMDPREF)if exist "$(EXE_DIR_OS)" $(RDP) "$(EXE_DIR_OS)",)
 
 endif
 
