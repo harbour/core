@@ -2135,14 +2135,14 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
          IF lStopAfterCComp
             IF ! lCreateLib .AND. ! lCreateDyn .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) ) == 1
-               IF hbmk[ _HBMK_cARCH ] == "darwin"
+               IF hbmk[ _HBMK_cARCH ] $ "darwin|sunos"
                   AAdd( hbmk[ _HBMK_aOPTC ], "-o {OO}" )
                ELSE
                   AAdd( hbmk[ _HBMK_aOPTC ], "-o{OO}" )
                ENDIF
             ENDIF
          ELSE
-            IF hbmk[ _HBMK_cARCH ] == "darwin"
+            IF hbmk[ _HBMK_cARCH ] $ "darwin|sunos"
                AAdd( hbmk[ _HBMK_aOPTL ], "-o {OE}" )
             ELSE
                AAdd( hbmk[ _HBMK_aOPTL ], "-o{OE}" )

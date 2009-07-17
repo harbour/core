@@ -15,7 +15,10 @@ LIB_EXT = .a
 
 CC = $(HB_CCACHE) $(HB_CMP)
 CC_IN = -c
-CC_OUT = -o
+# NOTE: The ending space after -o is important, please preserve it.
+#       Now solved with '$(subst x,x, )' expression.
+CC_OUT = -o$(subst x,x, )
+
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
 CFLAGS =

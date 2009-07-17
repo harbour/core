@@ -157,12 +157,14 @@ else
     # ---------------------------------------------------------------
     # Start the GNU make system
 
-    if [ "$HB_ARCHITECTURE" = "bsd" ] || [ "$HB_ARCHITECTURE" = "hpux" ]
-    then
-       gmake $HB_USER_MAKEFLAGS $*
-    else
-       make $HB_USER_MAKEFLAGS $*
-    fi
+    case "$HB_ARCHITECTURE" in
+        bsd|hpux|sunos)
+            gmake $HB_USER_MAKEFLAGS $*
+            ;;
+        *)
+            make $HB_USER_MAKEFLAGS $*
+            ;;
+    esac
 
     if [ "$*" = "clean" ]; then
        find . -type d -name "$HB_ARCHITECTURE" | xargs rmdir 2> /dev/null
