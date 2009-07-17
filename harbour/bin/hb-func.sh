@@ -828,7 +828,7 @@ mk_hblibso()
     for l in ${hb_libs}
     do
         case $l in
-            hbdebug|profiler|hbcplr|hbfm|hbodbc|gtalleg|rddads) ;;
+            hbdebug|profiler|hbcplr|hbodbc|gtalleg|rddads) ;;
             *)
                 ls="lib${l}.a"
                 if [ -f lib${l}mt.a ]
