@@ -76,7 +76,7 @@ ifeq ($(HB_SHELL),os2)
 
 MK = $(subst /,\,$(subst \~,~,$(MAKE)))
 RM = del /n
-RDP = rmdir
+RD = rmdir
 CP = $(CMDPREF)copy
 MD = mkdir
 
@@ -85,17 +85,17 @@ LIB_ARCH_DIR_OS = $(subst /,\,$(LIB_ARCH_DIR))
 EXE_ARCH_DIR_OS = $(subst /,\,$(EXE_ARCH_DIR))
 
 dirbase::
-	-for %d in ($(OBJ_BASE) $(OBJ_ARCH_DIR_OS) $(OBJ_DIR_OS)) do if not exist %d $(MD) %d
-	$(if $(LIB_FILE),-for %d in ($(LIB_ARCH_DIR_OS) $(LIB_DIR_OS)) do if not exist %d $(MD) %d,)
-	$(if $(EXE_FILE),-for %d in ($(EXE_ARCH_DIR_OS) $(EXE_DIR_OS)) do if not exist %d $(MD) %d,)
+	@-for %d in ($(OBJ_BASE) $(OBJ_ARCH_DIR_OS) $(OBJ_DIR_OS)) do if not exist %d $(MD) %d
+	$(if $(LIB_FILE),@-for %d in ($(LIB_ARCH_DIR_OS) $(LIB_DIR_OS)) do if not exist %d $(MD) %d,)
+	$(if $(EXE_FILE),@-for %d in ($(EXE_ARCH_DIR_OS) $(EXE_DIR_OS)) do if not exist %d $(MD) %d,)
 
 clean::
-	-if exist $(OBJ_DIR_OS)\*.* $(RM) $(OBJ_DIR_OS)\*.*
-	-for %d in ($(OBJ_DIR_OS) $(OBJ_ARCH_DIR_OS) $(OBJ_BASE)) do if exist %d $(RDP) %d
-	$(if $(LIB_FILE),-if exist $(LIB_DIR_OS)\*.* $(RM) $(LIB_DIR_OS)\*.*,)
-	$(if $(LIB_FILE),-for %d in ($(LIB_DIR_OS) $(LIB_ARCH_DIR_OS)) do if exist %d $(RDP) %d,)
-	$(if $(EXE_FILE),-if exist $(EXE_DIR_OS)\*.* $(RM) $(EXE_DIR_OS)\*.*,)
-	$(if $(EXE_FILE),-for %d in ($(EXE_DIR_OS) $(EXE_ARCH_DIR_OS)) do if exist %d $(RDP) %d,)
+	-@if exist $(OBJ_DIR_OS)\*.* $(RM) $(OBJ_DIR_OS)\*.*
+	-@for %d in ($(OBJ_DIR_OS) $(OBJ_ARCH_DIR_OS) $(OBJ_BASE)) do if exist %d $(RD) %d
+	$(if $(LIB_FILE),-@if exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
+	$(if $(LIB_FILE),-@for %d in ($(LIB_DIR_OS) $(LIB_ARCH_DIR_OS)) do if exist %d $(RD) %d,)
+	$(if $(EXE_FILE),-@if exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
+	$(if $(EXE_FILE),-@for %d in ($(EXE_DIR_OS) $(EXE_ARCH_DIR_OS)) do if exist %d $(RD) %d,)
 
 endif
 
@@ -117,5 +117,9 @@ dirbase::
 
 clean::
 	-@$(RDP) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(EXE_FILE_OS)
+	$(if $(LIB_FILE),-@$(CMDPREF)if exist $(basename $(LIB_FILE_OS)).bak $(RM) $(basename $(LIB_FILE_OS)).bak,)
+	$(if $(LIB_FILE),-@$(CMDPREF)if not exist $(LIB_DIR_OS)\*.* $(RDP) $(LIB_DIR_OS),)
+	$(if $(EXE_FILE),-@$(CMDPREF)if exist $(basename $(EXE_FILE_OS)).tds $(RM) $(basename $(EXE_FILE_OS)).tds,)
+	$(if $(EXE_FILE),-@$(CMDPREF)if not exist $(EXE_DIR_OS)\*.* $(RDP) $(EXE_DIR_OS),)
 
 endif
