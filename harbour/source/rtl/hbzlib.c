@@ -243,3 +243,11 @@ HB_FUNC( HB_ZUNCOMPRESS )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+/*
+ * HB_ZERROR( <nError> ) => <cErrorDescription>
+ */
+HB_FUNC( HB_ZERROR )
+{
+   hb_retc( zError( hb_parni( 1 ) ) );
+}
