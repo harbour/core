@@ -24,7 +24,7 @@ PROCEDURE Main()
    hb_inetInit()
    socket := hb_inetCreate()
    ? hb_inetTimeout( socket, 500 )
-   ? hb_inetConnect( "www.harbour-project.org", 443, socket )
+   ? hb_inetConnect( "www.fortify.net", 443, socket )
 
    //
 

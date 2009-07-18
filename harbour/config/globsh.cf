@@ -85,9 +85,9 @@ LIB_ARCH_DIR_OS = $(subst /,\,$(LIB_ARCH_DIR))
 EXE_ARCH_DIR_OS = $(subst /,\,$(EXE_ARCH_DIR))
 
 dirbase::
-	@-for %d in ($(OBJ_BASE) $(OBJ_ARCH_DIR_OS) $(OBJ_DIR_OS)) do if not exist %d $(MD) %d
-	$(if $(LIB_FILE),@-for %d in ($(LIB_ARCH_DIR_OS) $(LIB_DIR_OS)) do if not exist %d $(MD) %d,)
-	$(if $(EXE_FILE),@-for %d in ($(EXE_ARCH_DIR_OS) $(EXE_DIR_OS)) do if not exist %d $(MD) %d,)
+	-@for %d in ($(OBJ_BASE) $(OBJ_ARCH_DIR_OS) $(OBJ_DIR_OS)) do if not exist %d $(MD) %d
+	$(if $(LIB_FILE),-@for %d in ($(LIB_ARCH_DIR_OS) $(LIB_DIR_OS)) do if not exist %d $(MD) %d,)
+	$(if $(EXE_FILE),-@for %d in ($(EXE_ARCH_DIR_OS) $(EXE_DIR_OS)) do if not exist %d $(MD) %d,)
 
 clean::
 	-@if exist $(OBJ_DIR_OS)\*.* $(RM) $(OBJ_DIR_OS)\*.*

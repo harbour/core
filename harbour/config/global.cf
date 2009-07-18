@@ -296,6 +296,13 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
       endif
       ifeq ($(HB_ARCHITECTURE),win)
          HB_FLAGSEXTRA += -D__PLATFORM__WINDOWS
+         ifeq ($(HB_CPU),x86_64)
+            HB_FLAGSEXTRA += -D__ARCH64BIT__
+         else
+            ifeq ($(HB_CPU),ia64)
+               HB_FLAGSEXTRA += -D__ARCH64BIT__
+            endif
+         endif
       else
          ifeq ($(HB_ARCHITECTURE),wce)
             HB_FLAGSEXTRA += -D__PLATFORM__WINDOWS -D__PLATFORM__WINCE
