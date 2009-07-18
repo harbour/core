@@ -57,8 +57,8 @@
 
 HB_FUNC( SSL_INIT )
 {
-   SSL_load_error_strings();
    SSL_library_init();
+   SSL_load_error_strings();
 }
 
 HB_FUNC( SSLEAY_VERSION )
@@ -132,7 +132,7 @@ HB_FUNC( SSL_CTX_NEW )
 {
    void ** ph = ( void ** ) hb_gcAlloc( sizeof( SSL_CTX * ), SSL_CTX_release );
 
-   SSL_CTX * ctx = SSL_CTX_new( hb_ssl_method_id_to_ptr( hb_parni( 1 ) ) );
+   SSL_CTX * ctx = SSL_CTX_new( hb_ssl_method_id_to_ptr( HB_ISNUM( 1 ) ? hb_parni( 1 ) : HB_SSL_CTX_NEW_METHOD_DEFAULT ) );
 
    * ph = ( void * ) ctx;
 

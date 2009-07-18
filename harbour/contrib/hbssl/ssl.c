@@ -177,6 +177,22 @@ HB_FUNC( SSL_PENDING )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_SET_BIO )
+{
+   BIO * rbio = ( BIO * ) hb_parptr( 2 );
+   BIO * wbio = ( BIO * ) hb_parptr( 2 );
+
+   if( hb_SSL_is( 1 ) && rbio && wbio )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         SSL_set_bio( ssl, rbio, wbio );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( SSL_CONNECT )
 {
    if( hb_SSL_is( 1 ) )
@@ -357,9 +373,9 @@ HB_FUNC( SSL_READ )
          PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
          int nRead;
 
-         if( pBuffer && HB_ISBYREF( 2 ) && HB_ISNUM( 3 ) )
+         if( pBuffer && HB_ISBYREF( 2 ) )
          {
-            nRead = hb_parni( 3 );
+            nRead = HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( int ) hb_parclen( 2 );
 
             if( ( ULONG ) nRead <= hb_parcsiz( 2 ) )
             {
@@ -445,7 +461,7 @@ HB_FUNC( SSL_WRITE )
                nLen = nWrite;
          }
 
-         hb_retni( SSL_read( ssl, ( void * ) hb_itemGetCPtr( pBuffer ), ( int ) nLen ) );
+         hb_retni( SSL_write( ssl, hb_itemGetCPtr( pBuffer ), ( int ) nLen ) );
       }
    }
    else
@@ -488,7 +504,7 @@ HB_FUNC( SSL_GET_SSL_METHOD )
          else if( method == SSLv23_method()        ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV23;
          else if( method == SSLv23_server_method() ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER;
          else if( method == SSLv23_client_method() ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV23_CLIENT;
-         else                                        nMethod = 0;
+         else                                        nMethod = HB_SSL_CTX_NEW_METHOD_UNKNOWN;
 
          hb_retni( nMethod );
       }
