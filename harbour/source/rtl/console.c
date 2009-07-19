@@ -294,7 +294,7 @@ HB_FUNC( OUTSTD ) /* writes a list of values to the standard output device */
    for( iParam = 1; iParam <= iPCount; iParam++ )
    {
       if( iParam > 1 )
-         hb_conOutAlt( " ", 1 );
+         hb_conOutStd( " ", 1 );
       pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &ulLen, &fFree );
       if( ulLen )
          hb_conOutStd( pszString, ulLen );
@@ -313,7 +313,7 @@ HB_FUNC( OUTERR ) /* writes a list of values to the standard error device */
    for( iParam = 1; iParam <= iPCount; iParam++ )
    {
       if( iParam > 1 )
-         hb_conOutAlt( " ", 1 );
+         hb_conOutErr( " ", 1 );
       pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &ulLen, &fFree );
       if( ulLen )
          hb_conOutErr( pszString, ulLen );

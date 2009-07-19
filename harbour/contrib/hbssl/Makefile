@@ -30,8 +30,10 @@ C_SOURCES=\
 	sslbio.c \
 	sslciph.c \
 	sslctx.c \
+	sslerr.c \
 	sslrand.c \
 	sslsess.c \
+	sslx509.c \
 
 PRG_HEADERS=\
 	hbssl.ch \

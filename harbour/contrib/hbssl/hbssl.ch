@@ -76,17 +76,25 @@
 #define HB_SSLEAY_PLATFORM                     3
 #define HB_SSLEAY_DIR                          4
 
-#define SSL_ERROR_NONE                         0
-#define SSL_ERROR_SSL                          1
-#define SSL_ERROR_WANT_READ                    2
-#define SSL_ERROR_WANT_WRITE                   3
-#define SSL_ERROR_WANT_X509_LOOKUP             4
-#define SSL_ERROR_SYSCALL                      5
-#define SSL_ERROR_ZERO_RETURN                  6
-#define SSL_ERROR_WANT_CONNECT                 7
-#define SSL_ERROR_WANT_ACCEPT                  8
+#define HB_SSL_ERROR_NONE                      0
+#define HB_SSL_ERROR_SSL                       1
+#define HB_SSL_ERROR_WANT_READ                 2
+#define HB_SSL_ERROR_WANT_WRITE                3
+#define HB_SSL_ERROR_WANT_X509_LOOKUP          4
+#define HB_SSL_ERROR_SYSCALL                   5
+#define HB_SSL_ERROR_ZERO_RETURN               6
+#define HB_SSL_ERROR_WANT_CONNECT              7
+#define HB_SSL_ERROR_WANT_ACCEPT               8
 
-#define BIO_NOCLOSE                            0x00
-#define BIO_CLOSE                              0x01
+#define HB_SSL_MODE_ENABLE_PARTIAL_WRITE       1
+#define HB_SSL_MODE_ACCEPT_MOVING_WRITE_BUFFER 2
+#define HB_SSL_MODE_AUTO_RETRY                 4
+#define HB_SSL_MODE_NO_AUTO_CHAIN              8
+
+#define HB_SSL_SENT_SHUTDOWN                   1
+#define HB_SSL_RECEIVED_SHUTDOWN               2
+
+#define HB_BIO_NOCLOSE                         0x00
+#define HB_BIO_CLOSE                           0x01
 
 #endif /* HBSSL_CH_ */

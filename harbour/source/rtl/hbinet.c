@@ -275,6 +275,8 @@ static void hb_inetLinuxSigusrHandle( int sig )
 #  endif
 #endif
 
+static const char * s_inetCRLF = "\r\n";
+
 /* JC1: we need it volatile to be minimally thread safe. */
 static volatile int s_iSessions = 0;
 
@@ -1189,7 +1191,7 @@ static void s_inetRecvPattern( const char * szPattern )
 
 HB_FUNC( HB_INETRECVLINE )
 {
-   s_inetRecvPattern( "\r\n" );
+   s_inetRecvPattern( s_inetCRLF );
 }
 
 HB_FUNC( HB_INETRECVENDBLOCK )
@@ -1483,7 +1485,7 @@ static void s_inetSendInternal( int iMode )
       }
       else if( iLen == 0 )
       {
-         HB_SOCKET_SET_ERROR2( Socket, -1 , "Timeout" );
+         HB_SOCKET_SET_ERROR2( Socket, -1, "Timeout" );
          break;
       }
       else
@@ -2176,7 +2178,7 @@ HB_FUNC( HB_INETDGRAMRECV )
 
 HB_FUNC( HB_INETCRLF )
 {
-   hb_retc_const( "\r\n" );
+   hb_retc_const( s_inetCRLF );
 }
 
 HB_FUNC( HB_INETISSOCKET )

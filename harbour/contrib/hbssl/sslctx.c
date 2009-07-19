@@ -544,6 +544,32 @@ HB_FUNC( SSL_CTX_SET_QUIET_SHUTDOWN )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_CTX_SET_MODE )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         SSL_CTX_set_mode( ctx, hb_parnl( 2 ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_GET_MODE )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_parnl( SSL_CTX_get_mode( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /*
 X509_STORE *SSL_CTX_get_cert_store(const SSL_CTX *);
 void SSL_CTX_set_cert_store(SSL_CTX *,X509_STORE *);

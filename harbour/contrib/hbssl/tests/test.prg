@@ -44,7 +44,7 @@ PROCEDURE Main()
    ? "-------"
 
    socket := hb_inetCreate()
-   ? hb_inetTimeout( socket, 500 )
+   ? hb_inetTimeout( socket, 2500 )
    ? hb_inetConnect( "www.fortify.net", 443, socket )
    ? hb_inetErrorCode( socket )
 
@@ -83,7 +83,7 @@ PROCEDURE Main()
    ? "SSL_CIPHER_GET_NAME"   , SSL_CIPHER_GET_NAME( cipher )
    ? "SSL_CIPHER_GET_VERSION", SSL_CIPHER_GET_VERSION( cipher )
    ? "SSL_CIPHER_GET_BITS"   , SSL_CIPHER_GET_BITS( cipher, @bits ), bits
-// ? "SSL_CIPHER_DESCRIPTION", SSL_CIPHER_DESCRIPTION( cipher )
+   ? "SSL_CIPHER_DESCRIPTION", SSL_CIPHER_DESCRIPTION( cipher )
 
    ? "SSL_WRITE", tmp := SSL_WRITE( ssl, "GET / http/1.1" + hb_inetCRLF() + "Host: " + "www.fortify.net" + hb_inetCRLF() + hb_inetCRLF() )
    ? "SSL_GET_ERROR", SSL_GET_ERROR( ssl, tmp )
