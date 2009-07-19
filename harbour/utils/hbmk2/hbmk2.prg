@@ -2692,7 +2692,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          cLibExt := ".lib"
          cObjExt := ".obj"
          cBin_Lib := "tlib.exe"
-         cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
+         cOpt_Lib := "/P128 {FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
          cOptIncMask := "-I{DI}"
