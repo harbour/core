@@ -111,6 +111,7 @@ PROCEDURE MAIN( ... )
    LOCAL aActions
 
    SET DATE FORMAT TO "yyyy-mm-dd"
+   SET EXACT ON
 
    s_aSwitches[ sw_BaseDir ] := BASE_DIR
    s_aSwitches[ sw_Verbose ] := 2
@@ -260,18 +261,17 @@ PROCEDURE MAIN( ... )
       { "hbextern.ch_", "HB_EXTERN_CH_", "source", STDACTIONS }, ;
    }
 
-   FileEval( "hbextern.lst", ;
-      {|c,n,a| ;
-         n, ;
-         c := AllTrim( c ), ;
-         IIF( SubStr( c, 1, 1 ) == "#" .OR. Len( c ) == 0, ;
-            , ;
-            ( a := Split( c, ","), ;
+   AEval( ;
+      Directory( s_aSwitches[ sw_BaseDir ] + "contrib" + PATH_SEPARATOR + "*", "D" ), ;
+      {|ad| IIf( HB_AScan( s_aSkipDirs, ad[ F_NAME ] ) == 0 .AND. ad[ F_ATTR ] == "D", ;
               AAdd( aActions, ;
-               { Lower( AllTrim( a[2] ) ) + ".ch_", ;
-                 "HB_CONTRIB_EXTERN_" + Upper( AllTrim( a[2] ) ) + "_CH_", ;
-                 "contrib" + PATH_SEPARATOR + Lower( a[1] ), ;
-                 { Capture( "/* " + IIf( Len( a ) < 3, a[1], LTrim( a[3] ) ) + " */", {|a_,b_,c_,f_| a_,b_,c_,f_, .T. } ) } } ) ) ) } )
+               { ad[ F_NAME ] + ".ch_", ;
+                 "HB_CONTRIB_EXTERN_" + Upper( ad[ F_NAME ] ) + "_CH_", ;
+                 "contrib" + PATH_SEPARATOR + ad[ F_NAME ], ;
+                 { Capture( "", {|a_,b_,c_,f_| a_,b_,c_,f_, .T. } ) } } ), ;
+               ) ;
+      } ;
+   )
 
    IF s_aSwitches[ sw_Verbose ] > 0; ? "Processing files:" ; ENDIF
 
@@ -287,29 +287,16 @@ PROCEDURE MAIN( ... )
 
          IF ( nOutput := FCreate( aa[ ACN_OUTPUT ] ) ) > 0
 
-            CopyExistingSourceToTarget( StrTran( aa[ ACN_OUTPUT ], ".ch_", ".ch" ), nOutput )
-
-            FWrite( nOutput, "// NOTE: Machine generated on: " + DTOC( DATE() ) + EOL + ;
-                             "//       This output should be edited by hand after extraction." + EOL + EOL )
-//~ #define YesOrNo(b) IIf((b), "Yes", "No")
-            //~ FWrite( nOutput, ;
-               //~ "/*"  + EOL + ;
-               //~ "  BaseDir" + "=" + s_aSwitches[ sw_BaseDir ] + EOL + ;
-               //~ "  Verbose" + "=" + { "silent", "minimum", "maximum" }[ s_aSwitches[ sw_Verbose ] + 1 ] + EOL + ;
-               //~ "  Case" + "=" + { "unchanged", "upper", "lower" }[ s_aSwitches[ sw_Case ] + 1 ] + EOL + ;
-               //~ "  Exclude duplicates" + "=" + YesOrNo( s_aSwitches[ sw_ExcludeDuplicates ] ) + EOL + ;
-               //~ "  Exclude empty files" + "=" + YesOrNo( s_aSwitches[ sw_ExcludeEmptyFiles ] ) + EOL + ;
-               //~ "  Exclude classes" + "=" + YesOrNo( s_aSwitches[ sw_ExcludeClasses ] ) + EOL + ;
-               //~ "  Exclude class methods" + "=" + YesOrNo( s_aSwitches[ sw_ExcludeClassMethods ] ) + EOL + ;
-               //~ "  Exclude conditionals" + "=" + YesOrNo( s_aSwitches[ sw_ExcludeConditionals ] ) + EOL + ;
-               //~ "  Exclude params" + "=" + YesOrNo( s_aSwitches[ sw_ExcludeParams ] ) + EOL + ;
-               //~ "  Mimic HBExtern" + "=" + YesOrNo( s_aSwitches[ sw_MimicHBExtern ] ) + EOL + ;
-               //~ "*/" + EOL + ;
-               //~ EOL ;
-            //~ )
-//~ #undef YesOrNo
+            IF SubStr( aa[ ACN_FOLDER ], 1, Len( "contrib" ) ) == "contrib"
+               CopyGenericCopyrightToTarget( StrTran( aa[ ACN_OUTPUT ], ".ch_", ".ch" ), nOutput )
+            ELSE
+               CopyExistingSourceToTarget( StrTran( aa[ ACN_OUTPUT ], ".ch_", ".ch" ), nOutput )
+            ENDIF
 
             FWrite( nOutput, ;
+               "// NOTE: Machine generated on: " + DTOC( DATE() ) + EOL + ;
+               "//       This output should be edited by hand after extraction." + EOL + ;
+               EOL + ;
                "#ifndef " + aa[ ACN_HEADER ] + EOL + ;
                "#define " + aa [ ACN_HEADER ] + EOL + ;
                EOL ;
@@ -327,7 +314,9 @@ PROCEDURE MAIN( ... )
 
             FOR EACH ao IN aa[ 4 ]
                IF ao != NIL
-                  FWrite( nOutput, ao[ capt_Desc ] + EOL )
+                  IF Len( ao[ capt_Desc ] ) > 0
+                     FWrite( nOutput, ao[ capt_Desc ] + EOL )
+                  ENDIF
                   IF LEn( ao[ capt_Repository ] ) == 0
                      FWrite( nOutput, "/* empty */" + EOL )
                   ELSE
@@ -349,7 +338,11 @@ PROCEDURE MAIN( ... )
                         FWrite( nOutput, EOL )
                      NEXT
                   ENDIF
-                  FWrite( nOutput, Stuff( ao[ capt_Desc ], 4, 0, "End of ") + EOL + EOL )
+                  IF Len( ao[ capt_Desc ] ) > 0
+                     FWrite( nOutput, Stuff( ao[ capt_Desc ], 4, 0, "End of ") + EOL + EOL )
+                  ELSE
+                     FWrite( nOutput, EOL )
+                  ENDIF
                ENDIF
             NEXT
 
@@ -414,10 +407,6 @@ STATIC PROCEDURE ProcessDir( cDir, aOutput )
 
    IF s_aSwitches[ sw_Verbose ] > 0 ; ? cDir ; ENDIF
 
-   //~ IF .NOT. s_aSwitches[ sw_ExcludeEmptyFiles ]
-      //~ FWrite( nOutput, "// Files from: " + cDir + EOL + EOL )
-   //~ ENDIF
-
    cDir += PATH_SEPARATOR
 
    aFiles := Directory( cDir + "*.*", "D" )
@@ -449,7 +438,7 @@ STATIC FUNCTION FileToArray( cFile )
       FileEval( nH, {|c| AAdd( aResult, c ) }, 255 )
       FClose( nH )
    ELSE
-      IF s_aSwitches[ sw_Verbose ] > 0 ; ? "Could not open [" + cFile + "], error" + hb_ntos( nH ) ; ENDIF
+      IF s_aSwitches[ sw_Verbose ] > 0 ; ? "Could not open [" + cFile + "], error" + HB_NTOS( nH ) ; ENDIF
    END
 
    RETURN aResult
@@ -479,7 +468,7 @@ STATIC PROCEDURE ProcessFile( cFile, lPRG, aOutput )
       FClose( nH )
       s_aSwitches[ sw_ConditionalDepth ] := 0
    ELSE
-      IF s_aSwitches[ sw_Verbose ] > 0 ; ? "Could not process [" + cFile + "], error " + hb_ntos(nH) ; ENDIF
+      IF s_aSwitches[ sw_Verbose ] > 0 ; ? "Could not process [" + cFile + "], error " + HB_NTOS(nH) ; ENDIF
    ENDIF
 
    ASize( s_aConditions, 0 )
@@ -574,7 +563,6 @@ STATIC s_cMethodType, s_lVisible, s_FullLine := ""
          s_aConditions[ Len( s_aConditions ) ] := cLine
       ELSEIF Lower( SubStr( cLine, 1, Len( "#else" ) ) ) == "#else"
          IF s_aSwitches[ sw_ConditionalDepth ] > 0
-            //~ FWrite( nOutput, "#else" + EOL )
 
             //~ s_aConditions[ Len( s_aConditions ) ] := cLine
             DO CASE
@@ -585,13 +573,12 @@ STATIC s_cMethodType, s_lVisible, s_FullLine := ""
             CASE SubStr( ATail( s_aConditions ), 1, Len( "#ifndef " ) ) == "#ifndef "
                s_aConditions[ Len( s_aConditions ) ]  := "#ifdef " + SubStr( ATail( s_aConditions ), Len( "#ifndef " ) + 1 )
             OTHERWISE
-   // TODO: print a more useful error message
-   ? "Error:", cLine, ATail(s_aConditions)
+               // TODO: print a more useful error message
+               ? "Error:", cLine, ATail(s_aConditions)
             ENDCASE
          ENDIF
       ELSEIF Lower( SubStr( cLine, 1, Len( "#endif" ) ) ) == "#endif"
          IF s_aSwitches[ sw_ConditionalDepth ] > 0
-            //~ FWrite( nOutput, "#endif" + EOL )
             s_aSwitches[ sw_ConditionalDepth ]--
          ENDIF
          ASize( s_aConditions, Len( s_aConditions ) - 1 )
@@ -806,7 +793,6 @@ STATIC PROCEDURE WriteSymbol( cFile, cLine, cMethodType, bOutputHeader, cHeader,
 
       IF HB_AScan( s_aSkipNames , {|c| Upper(c) == Upper(cLine) } ) == 0
          IF bOutputHeader
-            //~ FWrite( nOutput, cHeader )
             bOutputHeader := .F.
          ENDIF
 
@@ -848,15 +834,44 @@ STATIC PROCEDURE WriteSymbol( cFile, cLine, cMethodType, bOutputHeader, cHeader,
 
    RETURN
 
+STATIC PROCEDURE CopyGenericCopyrightToTarget( cSource, nOutput )
+   LOCAL cFile := s_aSwitches[ sw_BaseDir ] + "doc" + PATH_SEPARATOR + "hdr_tpl.txt"
+   LOCAL nInput
+   LOCAL cBuffer2
+
+   FWrite( nOutput, ;
+            "/*" + EOL + ;
+            " * $" + "Id" + "$" + EOL + ;
+            "*/" + EOL + ;
+            EOL )
+
+   IF ( nInput := FOpen( cFile ) ) > 0
+      // assume there are two comment blocks seperated by a blank line (svn header and copyright)
+      IF FReadUntil( nInput, "*/", "" /* discard ID comment */ ) .AND. ;
+         FReadUntil( nInput, "*/", "" /* discard note comment */ ) .AND. ;
+         FReadUntil( nInput, "/*", "" /* discard text comment */ ) .AND. ;
+         FReadUntil( nInput, "*/", @cBuffer2 )
+         cBuffer2 := StrTran( cBuffer2, " 2001", "" )
+         cBuffer2 := StrTran( cBuffer2, "{list of individual authors and e-mail addresses}", "- automaticallyt generated by hbextern; do not edit" )
+         cBuffer2 := StrTran( cBuffer2, "{one-liner description about the purpose of this source file}", "Harbour " + cSource + " contrib external header" )
+         FWrite( nOutput, "/*" + cBuffer2 + EOL + EOL )
+      ENDIF
+      FClose( nInput )
+   ELSE
+      ? "error condition: " + HB_NTOS( Abs( nInput ) )
+      ? "Could not open " + cFile
+   ENDIF
+
 STATIC PROCEDURE CopyExistingSourceToTarget( cSource, nOutput )
    LOCAL cFile := s_aSwitches[ sw_BaseDir ] + "include" + PATH_SEPARATOR + cSource
    LOCAL nInput
    LOCAL cBuffer1, cBuffer2
 
    IF Empty( Directory( cFile ) )
+#if 0
       FWrite( nOutput, ;
                "/*" + EOL + ;
-               " * $Id$" + EOL + ;
+               " * $" + "Id" + "$" + EOL + ;
                "*/" + EOL + ;
                EOL )
       cFile := s_aSwitches[ sw_BaseDir ] + "doc" + PATH_SEPARATOR + "hdr_tpl.txt"
@@ -866,13 +881,14 @@ STATIC PROCEDURE CopyExistingSourceToTarget( cSource, nOutput )
             FReadUntil( nInput, "*/", "" /* discard note comment */ ) .AND. ;
             FReadUntil( nInput, "/*", "" /* discard text comment */ ) .AND. ;
             FReadUntil( nInput, "*/", @cBuffer2 )
-            cBuffer2 := StrTran( cBuffer2, "2001", HB_NTOS( Year( date() ) ) )
-            cBuffer2 := StrTran( cBuffer2, "{list of individual authors and e-mail addresses}", "?" )
+            cBuffer2 := StrTran( cBuffer2, " 2001", "" )
+            cBuffer2 := StrTran( cBuffer2, "{list of individual authors and e-mail addresses}", "- automaticallyt generated by hbextern; do not edit" )
             cBuffer2 := StrTran( cBuffer2, "{one-liner description about the purpose of this source file}", "Harbour " + cSource + " contrib external header" )
             FWrite( nOutput, "/*" + cBuffer2 + EOL + EOL )
          ENDIF
          FClose( nInput )
       ENDIF
+ #endif
    ELSEIF ( nInput := FOpen( cFile ) ) > 0
       // assume there are two comment blocks seperated by a blank line (svn header and copyright)
       IF FReadUntil( nInput, "*/", @cBuffer1 ) .AND. FReadUntil( nInput, "*/", @cBuffer2 )
