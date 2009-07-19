@@ -25,6 +25,7 @@ QApplication.qth
 QBitmap.qth
 QBoxLayout.qth
 QBrush.qth
+QButtonGroup.qth
 QCalendarWidget.qth
 QCheckBox.qth
 QClipboard.qth
@@ -77,6 +78,7 @@ QImageReader.qth
 QImageWriter.qth
 QInputDialog.qth
 QInputEvent.qth
+QIODevice.qth
 QKeyEvent.qth
 QKeySequence.qth
 QLabel.qth
@@ -114,6 +116,7 @@ QPrintDialog.qth
 QPrintEngine.qth
 QPrinter.qth
 QPrintPreviewDialog.qth
+QProcess.qth
 QProgressBar.qth
 QProgressDialog.qth
 QPushButton.qth

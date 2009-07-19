@@ -714,6 +714,14 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                aA[ PRT_BODY ] := '( char ) hb_parni( ' + cHBIdx + ' )'
                aA[ PRT_DOC  ] := 'n' + cDocNM
 
+            CASE aA[ PRT_CAST ] == 'char' .and. aA[ PRT_L_FAR ] .and. !( aA[ PRT_L_CONST ] )
+               aA[ PRT_BODY ] := '( char * ) hb_parc( ' + cHBIdx + ' )'
+               aA[ PRT_DOC  ] := 'c' + cDocNM
+
+            CASE aA[ PRT_CAST ] == 'char' .and. !( aA[ PRT_L_FAR ] ) .and. !( aA[ PRT_L_CONST ] )
+               aA[ PRT_BODY ] := '( char ) hb_parni( ' + cHBIdx + ' )'
+               aA[ PRT_DOC  ] := 'c' + cDocNM
+
             CASE ( '::' $ aA[ PRT_CAST ] ) .and. aA[ PRT_L_FAR ]
                aadd( aPre, { aA[ PRT_CAST ] + ' i' + cDocNM + ';', nHBIdx, 'i' + cDocNM, 'hb_storni' } )
                aA[ PRT_BODY ] := '&i' + cDocNM

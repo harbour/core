@@ -22,6 +22,7 @@ CPP_SOURCES=\
 	QBitmap.cpp \
 	QBoxLayout.cpp \
 	QBrush.cpp \
+	QButtonGroup.cpp \
 	QCalendarWidget.cpp \
 	QCheckBox.cpp \
 	QClipboard.cpp \
@@ -74,6 +75,7 @@ CPP_SOURCES=\
 	QImageWriter.cpp \
 	QInputDialog.cpp \
 	QInputEvent.cpp \
+	QIODevice.cpp \
 	QKeyEvent.cpp \
 	QKeySequence.cpp \
 	QLabel.cpp \
@@ -111,6 +113,7 @@ CPP_SOURCES=\
 	QPrintEngine.cpp \
 	QPrinter.cpp \
 	QPrintPreviewDialog.cpp \
+	QProcess.cpp \
 	QProgressBar.cpp \
 	QProgressDialog.cpp \
 	QPushButton.cpp \
@@ -244,6 +247,7 @@ PRG_SOURCES=\
 	TQBitmap.prg \
 	TQBoxLayout.prg \
 	TQBrush.prg \
+	TQButtonGroup.prg \
 	TQCalendarWidget.prg \
 	TQCheckBox.prg \
 	TQClipboard.prg \
@@ -296,6 +300,7 @@ PRG_SOURCES=\
 	TQImageWriter.prg \
 	TQInputDialog.prg \
 	TQInputEvent.prg \
+	TQIODevice.prg \
 	TQKeyEvent.prg \
 	TQKeySequence.prg \
 	TQLabel.prg \
@@ -333,6 +338,7 @@ PRG_SOURCES=\
 	TQPrintEngine.prg \
 	TQPrinter.prg \
 	TQPrintPreviewDialog.prg \
+	TQProcess.prg \
 	TQProgressBar.prg \
 	TQProgressDialog.prg \
 	TQPushButton.prg \
