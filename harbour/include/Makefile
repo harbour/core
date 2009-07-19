@@ -16,6 +16,7 @@ C_HEADERS=\
 	hbapigt.h \
 	hbapiitm.h \
 	hbapilng.h \
+	hbapinet.h \
 	hbapirdd.h \
 	hbassert.h \
 	hbatomic.h \

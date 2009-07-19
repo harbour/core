@@ -53,7 +53,6 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
-#include "hbvm.h"
 
 #include "hbssl.h"
 
@@ -423,194 +422,6 @@ HB_FUNC( SSL_READ )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* Based on HB_INETRECVALL() */
-HB_FUNC( HB_SSL_READ_ALL )
-{
-   fprintf( stdout, "ALL: SSL_READ: ENTER\n" );
-   fflush( stdout );
-
-   if( hb_SSL_is( 1 ) )
-   {
-      SSL * ssl = hb_SSL_par( 1 );
-
-      if( ssl )
-      {
-         PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
-         char * buffer;
-         ULONG ulLen;
-         int iLen, iMaxLen, iReceived;
-         int iTimeElapsed, iTimeout = hb_parni( 4 );
-
-         if( hb_itemGetWriteCL( pBuffer, &buffer, &ulLen ) )
-            iLen = ( int ) ulLen;
-         else
-         {
-            iLen = 0;
-            buffer = NULL;
-         }
-
-         if( HB_ISNUM( 3 ) )
-         {
-            iMaxLen = hb_parni( 3 );
-            if( iLen < iMaxLen )
-               iMaxLen = iLen;
-         }
-         else
-            iMaxLen = iLen;
-
-         hb_vmUnlock();
-
-         iReceived = 0;
-         iTimeElapsed = 0;
-
-         fprintf( stdout, "ALL: SSL_READ: START\n" );
-         fflush( stdout );
-
-         do
-         {
-            if( SSL_pending( ssl ) > 0 )
-            {
-               iLen = SSL_read( ssl, buffer + iReceived, iMaxLen - iReceived );
-
-               fprintf( stdout, "ALL: SSL_READ: %d\n", iLen );
-               fflush( stdout );
-
-               if( iLen > 0 )
-                  iReceived += iLen;
-            }
-            else
-            {
-               iTimeElapsed += iTimeout;
-
-               hb_vmLock();
-
-               hb_retni( iReceived );
-               return;
-            }
-         }
-         while( iReceived < iMaxLen && iLen > 0 );
-
-         hb_vmLock();
-
-         if( iLen == 0 )
-            hb_retni( iLen );
-         else if( iLen < 0 )
-            hb_retni( iLen );
-         else
-            hb_retni( iReceived );
-      }
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* Based on HB_INETRECVLINE() */
-HB_FUNC( HB_SSL_READ_LINE )
-{
-   fprintf( stdout, "ALL: SSL_READ_LINE: ENTER\n" );
-   fflush( stdout );
-
-   if( hb_SSL_is( 1 ) )
-   {
-      SSL * ssl = hb_SSL_par( 1 );
-
-      if( ssl )
-      {
-         static const char * szPattern = "\r\n";
-
-         PHB_ITEM pResult     = hb_param( 2, HB_IT_BYREF );
-         PHB_ITEM pMaxSize    = hb_param( 3, HB_IT_NUMERIC );
-         PHB_ITEM pBufferSize = hb_param( 4, HB_IT_NUMERIC );
-
-         char cChar = '\0';
-         char * Buffer;
-         int iAllocated, iBufferSize, iMax;
-         int iLen = 0, iPatLen;
-         int iPos = 0, iTimeElapsed, iTimeout = hb_parni( 4 );
-
-         iBufferSize = pBufferSize ? hb_itemGetNI( pBufferSize ) : 80;
-         iMax = pMaxSize ? hb_itemGetNI( pMaxSize ) : 0;
-
-         Buffer = ( char * ) hb_xgrab( iBufferSize );
-         iAllocated = iBufferSize;
-         iTimeElapsed = 0;
-         iPatLen = ( int ) strlen( szPattern );
-
-         fprintf( stdout, "ALL: SSL_READ_LINE: START\n" );
-         fflush( stdout );
-
-         do
-         {
-            if( iPos == iAllocated - 1 )
-            {
-               iAllocated += iBufferSize;
-               Buffer = ( char * ) hb_xrealloc( Buffer, iAllocated );
-            }
-
-            fprintf( stdout, "ALL: SSL_READ_LINE: BEFORE READ\n" );
-            fflush( stdout );
-
-            if( SSL_pending( ssl ) > 0 )
-            {
-               iLen = SSL_read( ssl, &cChar, 1 );
-
-               fprintf( stdout, "ALL: SSL_READ_LINE: %d\n", iLen );
-               fflush( stdout );
-
-               if( iLen > 0 )
-               {
-                  Buffer[ iPos++ ] = cChar;
-                  /* verify endsequence recognition automata status */
-                  if( iPos >= iPatLen &&
-                      memcmp( Buffer + iPos - iPatLen, szPattern, iPatLen ) == 0 )
-                  {
-                     break;
-                  }
-               }
-               else
-               {
-                  iTimeElapsed += iTimeout;
-                  break;
-               }
-            }
-            else
-               break;
-         }
-         while( iMax == 0 || iPos < iMax );
-
-         if( iLen <= 0 )
-         {
-            if( pResult )
-               hb_itemPutNI( pResult, iLen );
-
-            hb_xfree( Buffer );
-         }
-         else
-         {
-            if( iMax == 0 || iPos < iMax )
-            {
-               iPos -= iPatLen;
-
-               if( pResult )
-                  hb_itemPutNI( pResult, iPos );
-
-               hb_retclen_buffer( Buffer, iPos );
-            }
-            else
-            {
-               if( pResult )
-                  hb_itemPutNI( pResult, -2 );
-
-               hb_xfree( Buffer );
-               hb_retc_null();
-            }
-         }
-      }
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
 HB_FUNC( SSL_PEEK )
 {
    if( hb_SSL_is( 1 ) )
@@ -968,6 +779,32 @@ HB_FUNC( SSL_GET_FD )
 
       if( ssl )
          hb_retni( SSL_get_fd( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_RFD )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_get_rfd( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_WFD )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_get_wfd( ssl ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

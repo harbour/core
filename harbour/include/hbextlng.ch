@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Harbour hbextlng.ch contrib external header
+ * All HB_LANG_* externals.
  *
  * Copyright 2009 April White <april users.sourceforge.net>
  * www - http://www.harbour-project.org

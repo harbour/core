@@ -366,11 +366,12 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText )
 
    pItem->type = HB_IT_STRING;
    pItem->item.asString.length = ulLen;
-   if( ulLen == 0 )
+   if( ulLen == 0 || szText == NULL )
    {
       pItem->item.asString.allocated = 0;
       pItem->item.asString.value     = ( char * ) "";
-      hb_xfree( szText );
+      if( szText )
+         hb_xfree( szText );
    }
    else if( ulLen == 1 )
    {
@@ -402,11 +403,12 @@ PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
 
    pItem->type = HB_IT_STRING;
    pItem->item.asString.length = ulLen;
-   if( ulLen == 0 )
+   if( ulLen == 0 || szText == NULL )
    {
       pItem->item.asString.allocated = 0;
       pItem->item.asString.value     = ( char * ) "";
-      hb_xfree( szText );
+      if( szText )
+         hb_xfree( szText );
    }
    else if( ulLen == 1 )
    {
