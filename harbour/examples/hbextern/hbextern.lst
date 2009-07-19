@@ -1,0 +1,46 @@
+#
+# $Id$
+#/
+
+#Layout: one contrib entry per line, that being a comma separated list of: folder, .CH file name, description
+#folder,     hbx$$$$$.ch,     description without commas
+
+gtalleg,     hbxalleg,     Allegro based virtual GT with graphic extensions
+gtqtc,       hbxgtqtc,     Video subsystem for Windows using GUI windows instead of Console - QTC
+gtwvg,       hbxgtwvg,     Video subsystem for Windows using GUI windows instead of Console - WVG
+hbblat,      hbxblat,      BLAT library API
+hbbmcdx,     hbxbmcdx,     BMDBFCDX RDD, xHarbour Project source code
+hbbtree,     hbxbtree,     BTree library API
+hbclipsm,    hbxclpsm
+hbcrypt,     hbxcrypt
+hbct,        hbxct,        Clipper Tools library API
+hbcurl,      hbxcurl,      curl library API
+hbfbird,     hbxfbird,     Firebird RDBMS library API
+hbfimage,    hbxfimge,     FreeImage graphic library API
+#hbgd,        hbxgd,        GD graphic library class, # unnecessary as this folder has its own .ch file
+hbgt,        hbxgt,        GT Clipper library API
+hbhpdf,      hbxhpdf,      hbhpdf/libharu library API
+hbmisc,      hbxmisc
+hbmsql,      hbxmsql
+
+# the format of hbmysql/mysqlold.c is such that hbextern.exe will not parse out the function names
+hbmysql,     hbxmysql,     MySQL DBMS library API
+
+hbmzip,      hbxmzip,      minizip library API
+hbnf,        hbxnf,        Nanforums library API
+hbodbc,      hbxodbc,      ODBC library API
+hbpgsql,     hbxpgsql,     PostgreSQL RDD library API
+hbqt,        hbxqt,        QT library API
+hbsqlit3,    hbxsqlt3,     SQLite3 library API
+hbssl,       hbxssl,       OpenSSL library API
+hbtip,       hbxtip,       TIP Internet protocol library API
+hbtpathy,    hbxtpthy,     Telepathy library API
+hbvpdf,      hbxvpdf,      PDF library API
+hbwin,       hbxwin,       Windows library API
+hbxbp,       hbxxbp,       xBase++ library API
+hbziparc,    hbxzip,       ZipArchive library API
+rddado,      hbxado,       ADO RDD library API
+rddads,      hbxads,       Advantage Database Server RDD library API
+rddsql,      hbxsql,       SQL RDD library API
+xhb,         hbxxhb,       xHarbour library API
+xpp,         hbxxpp,       xBase++ library API
