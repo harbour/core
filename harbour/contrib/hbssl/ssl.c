@@ -1207,7 +1207,7 @@ HB_FUNC( SSL_USE_CERTIFICATE )
    if( hb_SSL_is( 1 ) )
    {
       SSL * ssl = hb_SSL_par( 1 );
-      X509 * x509 = hb_parptr( 2 );
+      X509 * x509 = ( X509 * ) hb_parptr( 2 );
 
       if( ssl && x509 )
          hb_retni( SSL_use_certificate( ssl, x509 ) );
@@ -1221,7 +1221,7 @@ HB_FUNC( SSL_ADD_CLIENT_CA )
    if( hb_SSL_is( 1 ) )
    {
       SSL * ssl = hb_SSL_par( 1 );
-      X509 * x509 = hb_parptr( 2 );
+      X509 * x509 = ( X509 * ) hb_parptr( 2 );
 
       if( ssl && x509 )
          hb_retni( SSL_add_client_CA( ssl, x509 ) );

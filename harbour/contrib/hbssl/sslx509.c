@@ -55,6 +55,33 @@
 
 #include "hbssl.h"
 
+static HB_GARBAGE_FUNC( X509_release )
+{
+   void ** ph = ( void ** ) Cargo;
+
+   /* Check if pointer is not NULL to avoid multiple freeing */
+   if( ph && * ph )
+   {
+      /* Destroy the object */
+      X509_free( ( X509 * ) * ph );
+
+      /* set pointer to NULL just in case */
+      * ph = NULL;
+   }
+}
+
+void * hb_X509_is( int iParam )
+{
+   return hb_parptrGC( X509_release, iParam );
+}
+
+X509 * hb_X509_par( int iParam )
+{
+   void ** ph = ( void ** ) hb_parptrGC( X509_release, iParam );
+
+   return ph ? ( X509 * ) * ph : NULL;
+}
+
 HB_FUNC( X509_GET_SUBJECT_NAME )
 {
    X509 * x509 = ( X509 * ) hb_parptr( 1 );
