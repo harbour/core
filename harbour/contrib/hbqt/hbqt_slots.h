@@ -206,6 +206,7 @@ public slots:
    void redoAvailable( bool available );
    void textChanged();
    void undoAvailable( bool available );
+   void timeout();
 };
 
 class Events: public QObject

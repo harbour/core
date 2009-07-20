@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'hbqt_slots.h'
 **
-** Created: Fri Jul 10 15:03:49 2009
+** Created: Mon Jul 20 08:14:21 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -137,7 +137,7 @@ static const uint qt_meta_data_Slots[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-      82,   12, // methods
+      83,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -225,6 +225,7 @@ static const uint qt_meta_data_Slots[] = {
     2242, 2232,    6,    6, 0x0a,
     2262,    6,    6,    6, 0x0a,
     2276, 2232,    6,    6, 0x0a,
+    2296,    6,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -292,7 +293,7 @@ static const char qt_meta_stringdata_Slots[] = {
     "f\0currentCharFormatChanged(QTextCharFormat)\0"
     "cursorPositionChanged()\0available\0"
     "redoAvailable(bool)\0textChanged()\0"
-    "undoAvailable(bool)\0"
+    "undoAvailable(bool)\0timeout()\0"
 };
 
 const QMetaObject Slots::staticMetaObject = {
@@ -402,9 +403,10 @@ int Slots::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 79: redoAvailable((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 80: textChanged(); break;
         case 81: undoAvailable((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 82: timeout(); break;
         default: ;
         }
-        _id -= 82;
+        _id -= 83;
     }
     return _id;
 }

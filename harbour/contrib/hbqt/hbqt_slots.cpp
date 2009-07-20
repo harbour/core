@@ -110,6 +110,20 @@ static void SlotsExec( QWidget* widget, char* event )
    }
 }
 
+static void SlotsExecObject( QObject* widget, char* event )
+{
+   if( widget )
+   {
+      int i = widget->property( event ).toInt();
+      if( ( i > 0 ) && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pWidget = hb_itemPutPtr( NULL, ( QObject* ) widget );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 1, pWidget );
+         hb_itemRelease( pWidget );
+      }
+   }
+}
+
 static void SlotsExecBool( QWidget* widget, char* event, bool bBool )
 {
    if( widget )
@@ -902,6 +916,13 @@ void Slots::undoAvailable( bool available )
    QWidget *oWidget = qobject_cast<QWidget *>( sender() );
    SlotsExecBool( oWidget, ( char* ) "undoAvailable(available)", available );
 }
+void Slots::timeout()
+{
+   QObject *oObject = qobject_cast<QObject *>( sender() );
+   SlotsExecObject( oObject, ( char* ) "timeout()" );
+}
+
+
 /*
  * harbour function to connect signals with slots
  */
@@ -1328,6 +1349,12 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = widget->connect( widget,  SIGNAL( undoAvailable( bool ) ),
                              s_s, SLOT( undoAvailable( bool ) ), Qt::AutoConnection );
    }
+   if( signal == ( QString ) "timeout()" )
+   {
+      ret = widget->connect( widget,  SIGNAL( timeout() ),
+                             s_s, SLOT( timeout() ), Qt::AutoConnection );
+   }
+
 
    hb_retl( ret );
 
