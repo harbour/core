@@ -707,20 +707,55 @@ HB_FUNC( SSL_CTX_USE_RSAPRIVATEKEY_FILE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_CTX_USE_RSAPRIVATEKEY_ASN1 )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_use_RSAPrivateKey_ASN1( ctx, ( const unsigned char * ) hb_parc( 2 ), hb_parclen( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_USE_PRIVATEKEY_ASN1 )
+{
+   if( hb_SSL_CTX_is( 2 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 2 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_use_PrivateKey_ASN1( hb_parni( 1 ), ctx, ( const unsigned char * ) hb_parc( 3 ), hb_parclen( 3 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_USE_CERTIFICATE_ASN1 )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_use_certificate_ASN1( ctx, hb_parclen( 2 ), ( const unsigned char * ) hb_parc( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /*
 #define sk_X509_NAME_new_null() SKM_sk_new_null(X509_NAME)
 #define sk_X509_NAME_push(st, val) SKM_sk_push(X509_NAME, (st), (val))
 #define sk_X509_NAME_free(st) SKM_sk_free(X509_NAME, (st))
 
-int SSL_CTX_use_certificate_ASN1(SSL_CTX *ctx, int len, unsigned char *d);
-
 X509_STORE *SSL_CTX_get_cert_store(const SSL_CTX *);
 void SSL_CTX_set_cert_store(SSL_CTX *,X509_STORE *);
 void SSL_CTX_set_cert_store(SSL_CTX *ctx, X509_STORE *cs);
 int  SSL_CTX_use_PrivateKey(SSL_CTX *ctx, EVP_PKEY *pkey);
-int  SSL_CTX_use_PrivateKey_ASN1(int type, SSL_CTX *ctx, unsigned char *d, long len);
 int  SSL_CTX_use_RSAPrivateKey(SSL_CTX *ctx, RSA *rsa);
-int  SSL_CTX_use_RSAPrivateKey_ASN1(SSL_CTX *ctx, unsigned char *d, long len);
 long SSL_CTX_ctrl(SSL_CTX *ctx, int cmd, long larg, char *parg);
 
 void SSL_CTX_set_app_data(SSL_CTX *ctx, void *arg);

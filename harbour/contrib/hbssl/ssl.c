@@ -1364,19 +1364,54 @@ HB_FUNC( SSL_LOAD_CLIENT_CA_FILE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_USE_RSAPRIVATEKEY_ASN1 )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         /* 'const' not used in 2nd param because ssh.h misses it, too. [vszakats] */
+         hb_retni( SSL_use_RSAPrivateKey_ASN1( ssl, ( unsigned char * ) hb_parc( 2 ), hb_parclen( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_USE_PRIVATEKEY_ASN1 )
+{
+   if( hb_SSL_is( 2 ) )
+   {
+      SSL * ssl = hb_SSL_par( 2 );
+
+      if( ssl )
+         hb_retni( SSL_use_PrivateKey_ASN1( hb_parni( 1 ), ssl, ( const unsigned char * ) hb_parc( 3 ), hb_parclen( 3 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_USE_CERTIFICATE_ASN1 )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_use_certificate_ASN1( ssl, ( const unsigned char * ) hb_parc( 2 ), hb_parclen( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /*
 STACK *      SSL_get_peer_cert_chain(const SSL *ssl);
 int          SSL_use_PrivateKey(SSL *ssl, EVP_PKEY *pkey);
-int          SSL_use_PrivateKey_ASN1(int type, SSL *ssl, unsigned char *d, long len);
 int          SSL_use_RSAPrivateKey(SSL *ssl, RSA *rsa);
-int          SSL_use_RSAPrivateKey_ASN1(SSL *ssl, unsigned char *d, long len);
-int          SSL_use_certificate_ASN1(SSL *ssl, int len, unsigned char *d);
-
 void         SSL_set_app_data(SSL *ssl, char *arg);
 int          SSL_set_ex_data(SSL *ssl, int idx, char *arg);
 char *       SSL_get_app_data(SSL *ssl);
 char *       SSL_get_ex_data( ssl, int );
-
 int          SSL_add_dir_cert_subjects_to_stack(STACK *stack, const char *dir);
 int          SSL_add_file_cert_subjects_to_stack(STACK *stack, const char *file);
 STACK *      SSL_dup_CA_list(STACK *sk);
