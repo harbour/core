@@ -63,12 +63,32 @@
 HB_EXTERN_BEGIN
 
 #if defined( HB_OS_WIN )
-   #define _WINSOCKAPI_  /* Prevents inclusion of winsock.h in windows.h */
    #define HB_SOCKET_T SOCKET
+
+   #define _WINSOCKAPI_  /* Prevents inclusion of winsock.h in windows.h */
    #include <winsock2.h>
    #include <windows.h>
 #else
    #define HB_SOCKET_T int
+
+   #include <errno.h>
+   #if defined( HB_OS_OS2 )
+      #if defined( __WATCOMC__ )
+         #include <types.h>
+         #include <nerrno.h>
+      #endif
+      #include <sys/types.h>
+      #include <sys/socket.h>
+      #include <sys/select.h>
+      #include <sys/ioctl.h>
+   #else
+      #include <sys/types.h>
+      #include <sys/socket.h>
+   #endif
+   #include <netdb.h>
+   #include <netinet/in.h>
+   #include <arpa/inet.h>
+   #include <unistd.h>
 #endif
 
 typedef struct _HB_SOCKET

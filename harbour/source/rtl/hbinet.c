@@ -90,25 +90,6 @@
          #define _XOPEN_SOURCE_EXTENDED
       #endif
 
-      #include <errno.h>
-#if defined( HB_OS_OS2 )
-      #if defined( __WATCOMC__ )
-         #include <types.h>
-         #include <nerrno.h>
-      #endif
-      #include <sys/types.h>
-      #include <sys/socket.h>
-      #include <sys/select.h>
-      #include <sys/ioctl.h>
-#else
-      #include <sys/types.h>
-      #include <sys/socket.h>
-#endif
-      #include <netdb.h>
-      #include <netinet/in.h>
-      #include <arpa/inet.h>
-      #include <unistd.h>
-
       #if ! defined( h_errno )
          #if defined( __WATCOMC__ )
             #define h_errno errno
