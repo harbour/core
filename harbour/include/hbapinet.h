@@ -62,7 +62,7 @@
 
 HB_EXTERN_BEGIN
 
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_UNIX_COMPATIBLE )
    #define HB_SOCKET_T SOCKET
 
    #define _WINSOCKAPI_  /* Prevents inclusion of winsock.h in windows.h */
