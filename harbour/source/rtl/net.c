@@ -129,21 +129,20 @@ char * hb_netname( void )
       return pszValue;
 #  else
       union REGS regs;
+      struct SREGS sregs;
       char * pszValue = ( char * ) hb_xgrab( 16 );
       pszValue[ 0 ] = '\0';
 
       regs.HB_XREGS.ax = 0x5E00;
+      regs.HB_XREGS.dx = FP_OFF( pszValue );
+      sregs.ds = FP_SEG( pszValue );
 
-      {
-         struct SREGS sregs;
+      HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
 
-         regs.HB_XREGS.dx = FP_OFF( pszValue );
-         sregs.ds = FP_SEG( pszValue );
+      if( regs.h.ch == 0 )
+         pszValue = '\0';
 
-         HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
-      }
-
-      return regs.h.ch == 0 ? hb_strdup( "" ) : pszValue;
+      return pszValue;
 #  endif
 
 #elif defined( HB_OS_WIN )
@@ -193,10 +192,10 @@ char * hb_username( void )
 
 HB_FUNC( NETNAME )
 {
-   hb_retc_buffer( hb_netname() );
+   hb_retc_buffer( ( char * ) hb_osDecode( hb_netname(), NULL ) );
 }
 
 HB_FUNC( HB_USERNAME )
 {
-   hb_retc_buffer( hb_username() );
+   hb_retc_buffer( ( char * ) hb_osDecode( hb_username(), NULL ) );
 }
