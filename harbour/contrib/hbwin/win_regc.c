@@ -143,7 +143,11 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
          if( ! hb_storclen_buffer( ( char * ) cValue, nSize, 5 ) )
             hb_xfree( cValue );
       }
+      else
+         hb_storc( NULL, 5 );
    }
+   else
+      hb_stor( 5 );
 
    hb_stornl( nType, 4 );
    hb_retnl( nSize );
@@ -167,14 +171,12 @@ HB_FUNC( WIN_REGSETVALUEEX )
                               sizeof( REG_DWORD ) ) == ERROR_SUCCESS );
    }
    else
-   {
       hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
                               lpKey,
                               0,
                               nType,
                               ( BYTE * ) hb_parcx( 5 ) /* cValue */,
                               hb_parclen( 5 ) + 1 ) == ERROR_SUCCESS );
-   }
 
    HB_TCHAR_FREE( lpKey );
 }

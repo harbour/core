@@ -54,7 +54,8 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 1999-2009 Viktor Szakats (harbour.01 syenar.hu)
+ *    hb_stor()
  *    hb_retnlen()
  *    hb_retnilen()
  *    hb_retnllen()
@@ -1491,6 +1492,30 @@ void hb_retptrGC( void * pointer )
    hb_itemPutPtrGC( hb_stackReturnItem(), pointer );
 }
 
+int hb_stor( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stor( %d )", iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemClear( hb_stackReturnItem() );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemClear( hb_itemUnRef( pItem ) );
+         return 1;
+      }
+   }
+
+   return 0;
+}
 
 int hb_storc( const char * szText, int iParam )
 {

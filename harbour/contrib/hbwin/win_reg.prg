@@ -159,26 +159,35 @@ FUNCTION QueryRegistry( nHKEY, cKeyName, cEntryName, xValue, lSetIt )
    RETURN lRetVal
 
 FUNCTION GetRegistry( nHKEY, cKeyName, cEntryName, xDefault )
-   LOCAL xRetVal := xDefault
+   LOCAL xRetVal
    LOCAL pKeyHandle
    LOCAL nValueType
 
    IF win_RegOpenKeyEx( nHKEY, cKeyName, 0, KEY_QUERY_VALUE, @pKeyHandle )
 
       /* retrieve the length of the value */
-      IF win_RegQueryValueEx( pKeyHandle, cEntryName, 0, @nValueType, @xRetVal ) > 0
 
-         IF nValueType == REG_DWORD .OR. ;
-            nValueType == REG_DWORD_LITTLE_ENDIAN .OR. ;
-            nValueType == REG_DWORD_BIG_ENDIAN .OR. ;
-            nValueType == REG_BINARY
+      win_RegQueryValueEx( pKeyHandle, cEntryName, 0, @nValueType, @xRetVal )
+
+      IF ISCHARACTER( xRetVal )
+         DO CASE
+         CASE nValueType == REG_DWORD .OR. nValueType == REG_DWORD_LITTLE_ENDIAN
             xRetVal := Bin2U( xRetVal )
-         ELSE
-            xRetVal := StrTran( xRetVal, Chr( 0 ) )
-         ENDIF
+         CASE nValueType == REG_DWORD_BIG_ENDIAN
+            xRetVal := Bin2U( Right( xRetVal, 2 ) + Left( xRetVal, 2 ) )
+         OTHERWISE
+            /* Strip ending zero byte */
+            IF Right( xRetVal, 1 ) == Chr( 0 )
+               xRetVal := hb_StrShrink( xRetVal, 1 )
+            ENDIF
+         ENDCASE
+      ELSE
+         xRetVal := xDefault
       ENDIF
 
       win_RegCloseKey( pKeyHandle )
+   ELSE
+      xRetVal := xDefault
    ENDIF
 
    RETURN xRetVal

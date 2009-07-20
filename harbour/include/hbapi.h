@@ -725,6 +725,7 @@ extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns
 #endif /* HB_API_MACROS */
 
 
+extern HB_EXPORT int    hb_stor( int iParam ); /* stores a NIL on a variable by reference */
 extern HB_EXPORT int    hb_storc( const char * szText, int iParam ); /* stores a szString on a variable by reference */
 extern HB_EXPORT int    hb_storclen( const char * szText, ULONG ulLength, int iParam ); /* stores a fixed length string on a variable by reference */
 extern HB_EXPORT int    hb_storclen_buffer( char * szText, ULONG ulLength, int iParam ); /* stores a fixed length string buffer on a variable by reference */

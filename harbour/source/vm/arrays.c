@@ -1506,9 +1506,7 @@ PHB_ITEM hb_arrayFromStack( USHORT uiLen )
    hb_arrayNew( pArray, uiLen );
 
    for( uiPos = 1; uiPos <= uiLen; uiPos++ )
-   {
       hb_arraySet( pArray, uiPos, hb_stackItemFromTop( uiPos - uiLen - 1 ) );
-   }
 
    return pArray;
 }
@@ -1530,9 +1528,7 @@ PHB_ITEM hb_arrayFromParams( int iLevel )
 
    pArray = hb_itemArrayNew( uiPCount );
    for( uiPos = 1; uiPos <= uiPCount; uiPos++ )
-   {
       hb_arraySet( pArray, uiPos, hb_stackItem( lBaseOffset + uiPos + 1 ) );
-   }
 
    return pArray;
 }
@@ -1551,9 +1547,7 @@ PHB_ITEM hb_arrayBaseParams( void )
    hb_arrayNew( pArray, uiPCount );
 
    for( uiPos = 1; uiPos <= uiPCount; uiPos++ )
-   {
       hb_arraySet( pArray, uiPos, hb_stackItemFromBase( uiPos ) );
-   }
 
    return pArray;
 }
@@ -1572,9 +1566,7 @@ PHB_ITEM hb_arraySelfParams( void )
    hb_arrayNew( pArray, uiPCount + 1 );
 
    for( uiPos = 0; uiPos <= uiPCount; uiPos++ )
-   {
       hb_arraySet( pArray, uiPos + 1, hb_stackItemFromBase( uiPos ) );
-   }
 
    return pArray;
 }
