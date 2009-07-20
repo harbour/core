@@ -264,7 +264,7 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, ULONG ulLen )
    else
    {
       ulAlloc = 0;
-      szText = ( char * ) ( ulLen ? hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ] : "" );
+      szText = ( ulLen ? hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ] : "" );
    }
 
    if( pItem )
@@ -328,22 +328,16 @@ PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, ULONG ulLen )
    else
       pItem = hb_itemNew( NULL );
 
-   if( szText == NULL )
-   {
-      pItem->item.asString.value  = ( char * ) "";
-      pItem->item.asString.length = 0;
-   }
-   else
-   {
-      if( szText[ ulLen ] != '\0' )
-         hb_errInternal( 6003, "Internal error: hb_itemPutCLConst() missing termination character", NULL, NULL );
-
-      pItem->item.asString.value  = ( char * ) szText;
-      pItem->item.asString.length = ulLen;
-   }
-
    pItem->type = HB_IT_STRING;
+   pItem->item.asString.length = ulLen;
    pItem->item.asString.allocated = 0;
+
+   if( ulLen == 0 )
+      pItem->item.asString.value  = ( char * ) "";
+   else if( szText[ ulLen ] == '\0' )
+      pItem->item.asString.value  = ( char * ) szText;
+   else
+      hb_errInternal( 6003, "Internal error: hb_itemPutCLConst() missing termination character", NULL, NULL );
 
    return pItem;
 }
@@ -366,7 +360,7 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText )
 
    pItem->type = HB_IT_STRING;
    pItem->item.asString.length = ulLen;
-   if( ulLen == 0 || szText == NULL )
+   if( ulLen == 0 )
    {
       pItem->item.asString.allocated = 0;
       pItem->item.asString.value     = ( char * ) "";
@@ -403,12 +397,11 @@ PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
 
    pItem->type = HB_IT_STRING;
    pItem->item.asString.length = ulLen;
-   if( ulLen == 0 || szText == NULL )
+   if( ulLen == 0 )
    {
       pItem->item.asString.allocated = 0;
       pItem->item.asString.value     = ( char * ) "";
-      if( szText )
-         hb_xfree( szText );
+      hb_xfree( szText );
    }
    else if( ulLen == 1 )
    {

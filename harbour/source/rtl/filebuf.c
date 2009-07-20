@@ -85,6 +85,7 @@ typedef struct _HB_FILE
    BOOL           shared;
    BOOL           readonly;
    HB_FHANDLE     hFile;
+   HB_FHANDLE     hFileRO;
    PHB_FLOCK      pLocks;
    UINT           uiLocks;
    UINT           uiSize;
@@ -141,6 +142,7 @@ static PHB_FILE hb_fileNew( HB_FHANDLE hFile, BOOL fShared, BOOL fReadonly,
       pFile->device   = device;
       pFile->inode    = inode;
       pFile->hFile    = hFile;
+      pFile->hFileRO  = FS_ERROR;
       pFile->shared   = fShared;
       pFile->readonly = fReadonly;
 
@@ -332,9 +334,10 @@ PHB_FILE hb_fileExtOpen( const char * pFilename, const char * pDefExt,
       pFile = hb_fileFind( statbuf.st_dev, statbuf.st_ino );
       if( pFile )
       {
-         if( !fShared || ! pFile->shared || ( uiExFlags & FXO_TRUNCATE ) != 0 ||
-             ( !fReadonly && pFile->readonly ) )
+         if( !fShared || ! pFile->shared || ( uiExFlags & FXO_TRUNCATE ) != 0 )
             fResult = FALSE;
+         else if( !fReadonly && pFile->readonly )
+            pFile = NULL;
          else
             pFile->used++;
       }
@@ -380,12 +383,48 @@ PHB_FILE hb_fileExtOpen( const char * pFilename, const char * pDefExt,
 
          hb_threadEnterCriticalSection( &s_fileMtx );
          pFile = hb_fileNew( hFile, fShared, fReadonly, device, inode, TRUE );
+         if( pFile->hFile != hFile )
+         {
+            if( pFile->hFileRO == FS_ERROR && !fReadonly && pFile->readonly )
+            {
+               pFile->hFileRO = pFile->hFile;
+               pFile->hFile = hFile;
+               pFile->readonly = FALSE;
+               hFile = FS_ERROR;
+            }
+            if( pFile->uiLocks == 0 )
+            {
+#if !defined( HB_USE_SHARELOCKS ) || defined( HB_USE_BSDLOCKS )
+               if( pFile->hFileRO != FS_ERROR )
+               {
+                  hb_fsClose( pFile->hFileRO );
+                  pFile->hFileRO = FS_ERROR;
+               }
+#endif
+               if( hFile != FS_ERROR )
+               {
+                  hb_fsClose( hFile );
+                  hFile = FS_ERROR;
+#if defined( HB_USE_SHARELOCKS ) && !defined( HB_USE_BSDLOCKS )
+                  /* TOFIX: possible race condition */
+                  hb_fsLockLarge( hFile, HB_SHARELOCK_POS, HB_SHARELOCK_SIZE,
+                                  FL_LOCK | FLX_SHARED );
+#endif
+               }
+            }
+         }
+         else
+            hFile = FS_ERROR;
          hb_threadLeaveCriticalSection( &s_fileMtx );
 
-         if( !pFile || pFile->hFile != hFile )
+         if( hFile != FS_ERROR )
+         {
+            /* TOFIX: possible race condition in MT mode,
+             *        close() is not safe due to existing locks
+             *        which are removed.
+             */
             hb_fsClose( hFile );
-         if( !pFile )
-            hb_fsSetError( 32 );
+         }
       }
    }
    hb_xfree( pszFile );
@@ -395,7 +434,7 @@ PHB_FILE hb_fileExtOpen( const char * pFilename, const char * pDefExt,
 
 void hb_fileClose( PHB_FILE pFile )
 {
-   HB_FHANDLE hFile = FS_ERROR;
+   HB_FHANDLE hFile = FS_ERROR, hFileRO = FS_ERROR;
 
    hb_threadEnterCriticalSection( &s_fileMtx );
 
@@ -414,6 +453,7 @@ void hb_fileClose( PHB_FILE pFile )
       }
 
       hFile = pFile->hFile;
+      hFileRO = pFile->hFileRO;
 
       if( pFile->pLocks )
          hb_xfree( pFile->pLocks );
@@ -425,6 +465,8 @@ void hb_fileClose( PHB_FILE pFile )
 
    if( hFile != FS_ERROR )
       hb_fsClose( hFile );
+   if( hFileRO != FS_ERROR )
+      hb_fsClose( hFileRO );
 }
 
 BOOL hb_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
