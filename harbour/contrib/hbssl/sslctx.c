@@ -184,7 +184,7 @@ HB_FUNC( SSL_CTX_SET_CIPHER_LIST )
    {
       SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
 
-      if( ctx )
+      if( ctx && hb_parclen( 2 ) <= 255 )
          SSL_CTX_set_cipher_list( ctx, hb_parcx( 2 ) );
    }
    else
@@ -570,23 +570,110 @@ HB_FUNC( SSL_CTX_GET_MODE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_CTX_USE_CERTIFICATE )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+      X509 * x509 = hb_parptr( 2 );
+
+      if( ctx && x509 )
+         hb_retni( SSL_CTX_use_certificate( ctx, x509 ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_ADD_CLIENT_CA )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+      X509 * x509 = hb_parptr( 2 );
+
+      if( ctx && x509 )
+         hb_retni( SSL_CTX_add_client_CA( ctx, x509 ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_ADD_EXTRA_CHAIN_CERT )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+      X509 * x509 = hb_parptr( 2 );
+
+      if( ctx && x509 )
+         hb_retnl( SSL_CTX_add_extra_chain_cert( ctx, x509 ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_USE_CERTIFICATE_FILE )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_use_certificate_file( ctx, hb_parc( 2 ), hb_parni( 3 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_USE_CERTIFICATE_CHAIN_FILE )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_use_certificate_chain_file( ctx, hb_parc( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_USE_PRIVATEKEY_FILE )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_use_PrivateKey_file( ctx, hb_parc( 2 ), hb_parni( 3 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_USE_RSAPRIVATEKEY_FILE )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_use_RSAPrivateKey_file( ctx, hb_parc( 2 ), hb_parni( 3 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /*
+int SSL_CTX_use_certificate_ASN1(SSL_CTX *ctx, int len, unsigned char *d);
+
 X509_STORE *SSL_CTX_get_cert_store(const SSL_CTX *);
 void SSL_CTX_set_cert_store(SSL_CTX *,X509_STORE *);
-int SSL_CTX_add_client_CA(SSL_CTX *ctx, X509 *x);
-long SSL_CTX_add_extra_chain_cert(SSL_CTX *ctx, X509 *x509);
 void SSL_CTX_set_cert_store(SSL_CTX *ctx, X509_STORE *cs);
-int SSL_CTX_set_cipher_list(SSL_CTX *ctx, char *str);
 int  SSL_CTX_use_PrivateKey(SSL_CTX *ctx, EVP_PKEY *pkey);
 int  SSL_CTX_use_PrivateKey_ASN1(int type, SSL_CTX *ctx, unsigned char *d, long len);
-int  SSL_CTX_use_PrivateKey_file(SSL_CTX *ctx, char *file, int type);
 int  SSL_CTX_use_RSAPrivateKey(SSL_CTX *ctx, RSA *rsa);
 int  SSL_CTX_use_RSAPrivateKey_ASN1(SSL_CTX *ctx, unsigned char *d, long len);
-int  SSL_CTX_use_RSAPrivateKey_file(SSL_CTX *ctx, char *file, int type);
-int  SSL_CTX_use_certificate(SSL_CTX *ctx, X509 *x);
-int  SSL_CTX_use_certificate_ASN1(SSL_CTX *ctx, int len, unsigned char *d);
-int  SSL_CTX_use_certificate_file(SSL_CTX *ctx, char *file, int type);
-int  SSL_CTX_use_psk_identity_hint(SSL_CTX *ctx, const char *hint);
 long SSL_CTX_ctrl(SSL_CTX *ctx, int cmd, long larg, char *parg);
 STACK *SSL_CTX_get_client_CA_list(const SSL_CTX *ctx);
 

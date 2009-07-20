@@ -336,6 +336,32 @@ HB_FUNC( SSL_SET_FD )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_SET_RFD )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_set_rfd( ssl, hb_parni( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_SET_WFD )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_set_wfd( ssl, hb_parni( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( SSL_WANT )
 {
    if( hb_SSL_is( 1 ) )
@@ -579,6 +605,19 @@ HB_FUNC( SSL_GET_CIPHER_LIST )
 
       if( ssl )
          hb_retc( SSL_get_cipher_list( ssl, hb_parni( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_SET_CIPHER_LIST )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl && hb_parclen( 2 ) <= 255 )
+         hb_retni( SSL_set_cipher_list( ssl, hb_parcx( 2 ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -942,32 +981,6 @@ HB_FUNC( SSL_IS_INIT_FINISHED )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SSL_SET_RFD )
-{
-   if( hb_SSL_is( 1 ) )
-   {
-      SSL * ssl = hb_SSL_par( 1 );
-
-      if( ssl )
-         hb_retni( SSL_set_rfd( ssl, hb_parni( 2 ) ) );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-HB_FUNC( SSL_SET_WFD )
-{
-   if( hb_SSL_is( 1 ) )
-   {
-      SSL * ssl = hb_SSL_par( 1 );
-
-      if( ssl )
-         hb_retni( SSL_set_wfd( ssl, hb_parni( 2 ) ) );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
 HB_FUNC( SSL_NUM_RENEGOTIATIONS )
 {
    if( hb_SSL_is( 1 ) )
@@ -1163,6 +1176,19 @@ HB_FUNC( SSL_SET_MTU )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_GET_CERTIFICATE )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retptr( SSL_get_certificate( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( SSL_GET_PEER_CERTIFICATE )
 {
    if( hb_SSL_is( 1 ) )
@@ -1176,18 +1202,79 @@ HB_FUNC( SSL_GET_PEER_CERTIFICATE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_USE_CERTIFICATE )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+      X509 * x509 = hb_parptr( 2 );
+
+      if( ssl && x509 )
+         hb_retni( SSL_use_certificate( ssl, x509 ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_ADD_CLIENT_CA )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+      X509 * x509 = hb_parptr( 2 );
+
+      if( ssl && x509 )
+         hb_retni( SSL_add_client_CA( ssl, x509 ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_USE_CERTIFICATE_FILE )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_use_certificate_file( ssl, hb_parc( 2 ), hb_parni( 3 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_USE_PRIVATEKEY_FILE )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_use_PrivateKey_file( ssl, hb_parc( 2 ), hb_parni( 3 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_USE_RSAPRIVATEKEY_FILE )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_use_RSAPrivateKey_file( ssl, hb_parc( 2 ), hb_parni( 3 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /*
-int          SSL_set_cipher_list(SSL *ssl, char *str);
 int          SSL_use_PrivateKey(SSL *ssl, EVP_PKEY *pkey);
 int          SSL_use_PrivateKey_ASN1(int type, SSL *ssl, unsigned char *d, long len);
-int          SSL_use_PrivateKey_file(SSL *ssl, char *file, int type);
 int          SSL_use_RSAPrivateKey(SSL *ssl, RSA *rsa);
 int          SSL_use_RSAPrivateKey_ASN1(SSL *ssl, unsigned char *d, long len);
-int          SSL_use_RSAPrivateKey_file(SSL *ssl, char *file, int type);
-int          SSL_use_certificate(SSL *ssl, X509 *x);
 int          SSL_use_certificate_ASN1(SSL *ssl, int len, unsigned char *d);
-int          SSL_use_certificate_file(SSL *ssl, char *file, int type);
-int          SSL_use_psk_identity_hint(SSL *ssl, const char *hint);
 
 void         SSL_set_app_data(SSL *ssl, char *arg);
 int          SSL_set_ex_data(SSL *ssl, int idx, char *arg);
@@ -1196,17 +1283,14 @@ char *       SSL_get_ex_data( ssl, int );
 
 int          SSL_add_dir_cert_subjects_to_stack(STACK *stack, const char *dir);
 int          SSL_add_file_cert_subjects_to_stack(STACK *stack, const char *file);
-int          SSL_add_client_CA(SSL *ssl, X509 *x);
 STACK *      SSL_dup_CA_list(STACK *sk);
 SSL_CTX *    SSL_get_SSL_CTX(const SSL *ssl);
-X509 *       SSL_get_certificate(const SSL *ssl);
 STACK *      SSL_get_ciphers(const SSL *ssl);
 STACK *      SSL_get_client_CA_list(const SSL *ssl);
 int          SSL_get_ex_data_X509_STORE_CTX_idx(void);
 int          SSL_get_ex_new_index(long argl, char *argp, int (*new_func);(void), int (*dup_func)(void), void (*free_func)(void))
 void (*SSL_get_info_callback(const SSL *ssl);)()
 STACK *      SSL_get_peer_cert_chain(const SSL *ssl);
-X509 *       SSL_get_peer_certificate(const SSL *ssl);
 EVP_PKEY *   SSL_get_privatekey(SSL *ssl);
 SSL_SESSION *SSL_get_session(const SSL *ssl);
 int (*SSL_get_verify_callback(const SSL *ssl))(int,X509_STORE_CTX *)
