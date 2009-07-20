@@ -71,4 +71,8 @@ extern SSL *         hb_SSL_par( int iParam );
 extern void *        hb_SSL_SESSION_is( int iParam );
 extern SSL_SESSION * hb_SSL_SESSION_par( int iParam );
 
+extern void *        hb_X509_is( int iParam );
+extern X509 *        hb_X509_par( int iParam );
+extern void          hb_X509_ret( X509 * x509 );
+
 #endif /* HBSSL_H_ */

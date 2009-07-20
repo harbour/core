@@ -82,22 +82,37 @@ X509 * hb_X509_par( int iParam )
    return ph ? ( X509 * ) * ph : NULL;
 }
 
+void hb_X509_ret( X509 * x509 )
+{
+   void ** ph = ( void ** ) hb_gcAlloc( sizeof( X509 * ), X509_release );
+
+   * ph = ( void * ) x509;
+
+   hb_retptrGC( ph );
+}
+
 HB_FUNC( X509_GET_SUBJECT_NAME )
 {
-   X509 * x509 = ( X509 * ) hb_parptr( 1 );
+   if( hb_X509_is( 1 ) )
+   {
+      X509 * x509 = hb_X509_par( 1 );
 
-   if( x509 )
-      hb_retptr( X509_get_subject_name( x509 ) );
+      if( x509 )
+         hb_retptr( X509_get_subject_name( x509 ) );
+   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( X509_GET_ISSUER_NAME )
 {
-   X509 * x509 = ( X509 * ) hb_parptr( 1 );
+   if( hb_X509_is( 1 ) )
+   {
+      X509 * x509 = hb_X509_par( 1 );
 
-   if( x509 )
-      hb_retptr( X509_get_issuer_name( x509 ) );
+      if( x509 )
+         hb_retptr( X509_get_issuer_name( x509 ) );
+   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

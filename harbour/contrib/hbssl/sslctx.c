@@ -572,10 +572,10 @@ HB_FUNC( SSL_CTX_GET_MODE )
 
 HB_FUNC( SSL_CTX_USE_CERTIFICATE )
 {
-   if( hb_SSL_CTX_is( 1 ) )
+   if( hb_SSL_CTX_is( 1 ) && hb_X509_is( 2 ) )
    {
       SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
-      X509 * x509 = ( X509 * ) hb_parptr( 2 );
+      X509 * x509 = hb_X509_par( 2 );
 
       if( ctx && x509 )
          hb_retni( SSL_CTX_use_certificate( ctx, x509 ) );
@@ -586,10 +586,10 @@ HB_FUNC( SSL_CTX_USE_CERTIFICATE )
 
 HB_FUNC( SSL_CTX_ADD_CLIENT_CA )
 {
-   if( hb_SSL_CTX_is( 1 ) )
+   if( hb_SSL_CTX_is( 1 ) && hb_X509_is( 2 ) )
    {
       SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
-      X509 * x509 = ( X509 * ) hb_parptr( 2 );
+      X509 * x509 = hb_X509_par( 2 );
 
       if( ctx && x509 )
          hb_retni( SSL_CTX_add_client_CA( ctx, x509 ) );
@@ -600,10 +600,10 @@ HB_FUNC( SSL_CTX_ADD_CLIENT_CA )
 
 HB_FUNC( SSL_CTX_ADD_EXTRA_CHAIN_CERT )
 {
-   if( hb_SSL_CTX_is( 1 ) )
+   if( hb_SSL_CTX_is( 1 ) && hb_X509_is( 2 ) )
    {
       SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
-      X509 * x509 = ( X509 * ) hb_parptr( 2 );
+      X509 * x509 = hb_X509_par( 2 );
 
       if( ctx && x509 )
          hb_retnl( SSL_CTX_add_extra_chain_cert( ctx, x509 ) );

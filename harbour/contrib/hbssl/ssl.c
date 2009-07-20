@@ -1183,7 +1183,7 @@ HB_FUNC( SSL_GET_CERTIFICATE )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_retptr( SSL_get_certificate( ssl ) );
+         hb_X509_ret( SSL_get_certificate( ssl ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1196,7 +1196,7 @@ HB_FUNC( SSL_GET_PEER_CERTIFICATE )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_retptr( SSL_get_peer_certificate( ssl ) );
+         hb_X509_ret( SSL_get_peer_certificate( ssl ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1204,10 +1204,10 @@ HB_FUNC( SSL_GET_PEER_CERTIFICATE )
 
 HB_FUNC( SSL_USE_CERTIFICATE )
 {
-   if( hb_SSL_is( 1 ) )
+   if( hb_SSL_is( 1 ) && hb_X509_is( 2 ) )
    {
       SSL * ssl = hb_SSL_par( 1 );
-      X509 * x509 = ( X509 * ) hb_parptr( 2 );
+      X509 * x509 = hb_X509_par( 2 );
 
       if( ssl && x509 )
          hb_retni( SSL_use_certificate( ssl, x509 ) );
@@ -1218,10 +1218,10 @@ HB_FUNC( SSL_USE_CERTIFICATE )
 
 HB_FUNC( SSL_ADD_CLIENT_CA )
 {
-   if( hb_SSL_is( 1 ) )
+   if( hb_SSL_is( 1 ) && hb_X509_is( 2 ) )
    {
       SSL * ssl = hb_SSL_par( 1 );
-      X509 * x509 = ( X509 * ) hb_parptr( 2 );
+      X509 * x509 = hb_X509_par( 2 );
 
       if( ssl && x509 )
          hb_retni( SSL_add_client_CA( ssl, x509 ) );
