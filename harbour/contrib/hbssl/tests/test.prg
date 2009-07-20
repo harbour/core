@@ -74,6 +74,15 @@ PROCEDURE Main()
    ? "SSL_CONNECT", tmp := SSL_CONNECT( ssl )
    ? "SSL_GET_ERROR", SSL_GET_ERROR( ssl, tmp )
 
+   tmp := SSL_get_ciphers( ssl )
+   FOR EACH cipher IN tmp
+      ? "SSL_CIPHER_GET_NAME"   , SSL_CIPHER_GET_NAME( cipher )
+      ? "SSL_CIPHER_GET_VERSION", SSL_CIPHER_GET_VERSION( cipher )
+      ? "SSL_CIPHER_GET_BITS"   , SSL_CIPHER_GET_BITS( cipher, @bits ), bits
+      ? "SSL_CIPHER_DESCRIPTION", ">" + SSL_CIPHER_DESCRIPTION( cipher ) + "<"
+      ? "- - - - - - - - - - - - - - -"
+   NEXT
+
    ? "SSL_GET_CIPHER_BITS"    , SSL_GET_CIPHER_BITS( ssl, @bits ), bits
    ? "SSL_GET_CIPHER_LIST"    , SSL_GET_CIPHER_LIST( ssl )
    ? "SSL_GET_CIPHER_NAME"    , SSL_GET_CIPHER_NAME( ssl )

@@ -1072,6 +1072,19 @@ HB_FUNC( SSL_SET_CONNECT_STATE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_GET_OPTIONS )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retnl( SSL_get_options( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( SSL_SET_OPTIONS )
 {
    if( hb_SSL_is( 1 ) )
@@ -1269,7 +1282,90 @@ HB_FUNC( SSL_USE_RSAPRIVATEKEY_FILE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_GET_CIPHERS )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+      {
+         STACK_OF( SSL_CIPHER ) * stack = SSL_get_ciphers( ssl );
+         int len = sk_SSL_CIPHER_num( stack );
+
+         if( len > 0 )
+         {
+            PHB_ITEM pArray = hb_itemArrayNew( len );
+            int tmp;
+
+            for( tmp = 0; tmp < len; tmp++ )
+               hb_arraySetPtr( pArray, tmp + 1, sk_SSL_CIPHER_value( stack, tmp ) );
+
+            hb_itemReturnRelease( pArray );
+         }
+         else
+            hb_reta( 0 );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_CLIENT_CA_LIST )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+      {
+         STACK_OF( X509_NAME ) * stack = SSL_get_client_CA_list( ssl );
+         int len = sk_X509_NAME_num( stack );
+
+         if( len > 0 )
+         {
+            PHB_ITEM pArray = hb_itemArrayNew( len );
+            int tmp;
+
+            for( tmp = 0; tmp < len; tmp++ )
+               hb_arraySetPtr( pArray, tmp + 1, sk_X509_NAME_value( stack, tmp ) );
+
+            hb_itemReturnRelease( pArray );
+         }
+         else
+            hb_reta( 0 );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_LOAD_CLIENT_CA_FILE )
+{
+   if( HB_ISCHAR( 1 ) )
+   {
+      STACK_OF( X509_NAME ) * stack = SSL_load_client_CA_file( hb_parc( 1 ) );
+      int len = sk_X509_NAME_num( stack );
+
+      if( len > 0 )
+      {
+         PHB_ITEM pArray = hb_itemArrayNew( len );
+         int tmp;
+
+         for( tmp = 0; tmp < len; tmp++ )
+            hb_arraySetPtr( pArray, tmp + 1, sk_X509_NAME_value( stack, tmp ) );
+
+         hb_itemReturnRelease( pArray );
+      }
+      else
+         hb_reta( 0 );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /*
+STACK *      SSL_get_peer_cert_chain(const SSL *ssl);
 int          SSL_use_PrivateKey(SSL *ssl, EVP_PKEY *pkey);
 int          SSL_use_PrivateKey_ASN1(int type, SSL *ssl, unsigned char *d, long len);
 int          SSL_use_RSAPrivateKey(SSL *ssl, RSA *rsa);
@@ -1285,16 +1381,12 @@ int          SSL_add_dir_cert_subjects_to_stack(STACK *stack, const char *dir);
 int          SSL_add_file_cert_subjects_to_stack(STACK *stack, const char *file);
 STACK *      SSL_dup_CA_list(STACK *sk);
 SSL_CTX *    SSL_get_SSL_CTX(const SSL *ssl);
-STACK *      SSL_get_ciphers(const SSL *ssl);
-STACK *      SSL_get_client_CA_list(const SSL *ssl);
 int          SSL_get_ex_data_X509_STORE_CTX_idx(void);
 int          SSL_get_ex_new_index(long argl, char *argp, int (*new_func);(void), int (*dup_func)(void), void (*free_func)(void))
 void (*SSL_get_info_callback(const SSL *ssl);)()
-STACK *      SSL_get_peer_cert_chain(const SSL *ssl);
 EVP_PKEY *   SSL_get_privatekey(SSL *ssl);
 SSL_SESSION *SSL_get_session(const SSL *ssl);
 int (*SSL_get_verify_callback(const SSL *ssl))(int,X509_STORE_CTX *)
-STACK *      SSL_load_client_CA_file(char *file);
 void         SSL_set_client_CA_list(SSL *ssl, STACK *list);
 void         SSL_set_info_callback(SSL *ssl, void (*cb);(void))
 void         SSL_set_msg_callback(SSL *ctx, void (*cb)(int write_p, int version, int content_type, const void *buf, size_t len, SSL *ssl, void *arg));

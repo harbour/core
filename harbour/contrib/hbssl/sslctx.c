@@ -52,6 +52,7 @@
 
 #include "hbapi.h"
 #include "hbapierr.h"
+#include "hbapiitm.h"
 
 #include "hbssl.h"
 
@@ -518,6 +519,19 @@ HB_FUNC( SSL_CTX_SET_DEFAULT_READ_AHEAD )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_CTX_GET_OPTIONS )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retnl( SSL_CTX_get_options( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( SSL_CTX_SET_OPTIONS )
 {
    if( hb_SSL_CTX_is( 1 ) )
@@ -598,6 +612,35 @@ HB_FUNC( SSL_CTX_ADD_CLIENT_CA )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_CTX_GET_CLIENT_CA_LIST )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+      {
+         STACK_OF( X509_NAME ) * stack = SSL_CTX_get_client_CA_list( ctx );
+         int len = sk_X509_NAME_num( stack );
+
+         if( len > 0 )
+         {
+            PHB_ITEM pArray = hb_itemArrayNew( sk_X509_NAME_num( stack ) );
+            int tmp;
+
+            for( tmp = 0; tmp < len; tmp++ )
+               hb_arraySetPtr( pArray, tmp + 1, sk_X509_NAME_value( stack, tmp ) );
+
+            hb_itemReturnRelease( pArray );
+         }
+         else
+            hb_reta( 0 );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( SSL_CTX_ADD_EXTRA_CHAIN_CERT )
 {
    if( hb_SSL_CTX_is( 1 ) && hb_X509_is( 2 ) )
@@ -665,6 +708,10 @@ HB_FUNC( SSL_CTX_USE_RSAPRIVATEKEY_FILE )
 }
 
 /*
+#define sk_X509_NAME_new_null() SKM_sk_new_null(X509_NAME)
+#define sk_X509_NAME_push(st, val) SKM_sk_push(X509_NAME, (st), (val))
+#define sk_X509_NAME_free(st) SKM_sk_free(X509_NAME, (st))
+
 int SSL_CTX_use_certificate_ASN1(SSL_CTX *ctx, int len, unsigned char *d);
 
 X509_STORE *SSL_CTX_get_cert_store(const SSL_CTX *);
@@ -675,7 +722,6 @@ int  SSL_CTX_use_PrivateKey_ASN1(int type, SSL_CTX *ctx, unsigned char *d, long 
 int  SSL_CTX_use_RSAPrivateKey(SSL_CTX *ctx, RSA *rsa);
 int  SSL_CTX_use_RSAPrivateKey_ASN1(SSL_CTX *ctx, unsigned char *d, long len);
 long SSL_CTX_ctrl(SSL_CTX *ctx, int cmd, long larg, char *parg);
-STACK *SSL_CTX_get_client_CA_list(const SSL_CTX *ctx);
 
 void SSL_CTX_set_app_data(SSL_CTX *ctx, void *arg);
 int SSL_CTX_set_ex_data(SSL_CTX *s, int idx, char *arg);
