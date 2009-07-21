@@ -51,8 +51,22 @@
  */
 
 #include "hbapi.h"
+#include "hbapierr.h"
+
+#include "hbssl.h"
 
 #include <openssl/evp.h>
+
+char * hb_openssl_strdup( const char * pszText )
+{
+   char * pszDup;
+   ULONG ulLen = strlen( pszText ) + 1;
+
+   pszDup = ( char * ) OPENSSL_malloc( ulLen );
+   memcpy( pszDup, pszText, ulLen );
+
+   return pszDup;
+}
 
 HB_FUNC( OPENSSL_ADD_ALL_ALGORITHMS )
 {
@@ -64,8 +78,30 @@ HB_FUNC( EVP_CLEANUP )
    EVP_cleanup();
 }
 
-#if 0
+HB_FUNC( ERR_LOAD_EVP_STRINGS )
+{
+   ERR_load_EVP_strings();
+}
 
-int EVP_PKEY_size(EVP_PKEY *pkey);
+HB_FUNC( EVP_BYTESTOKEY )
+{
+   if( hb_EVP_CIPHER_is( 1 ), hb_EVP_MD_is( 2 ) )
+   {
+      unsigned char key[ EVP_MAX_KEY_LENGTH ];
+      unsigned char iv[ EVP_MAX_IV_LENGTH ];
 
-#endif
+      hb_retni( EVP_BytesToKey( hb_EVP_CIPHER_par( 1 ),
+                                hb_EVP_MD_par( 2 ),
+                                ( const unsigned char * ) hb_parc( 3 ) /* salt */,
+                                ( const unsigned char * ) hb_parc( 4 ) /* data */,
+                                hb_parclen( 4 ),
+                                hb_parni( 5 ) /* count */,
+                                key,
+                                iv ) );
+
+      hb_storc( ( char * ) key, 6 );
+      hb_storc( ( char * ) iv, 7 );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}

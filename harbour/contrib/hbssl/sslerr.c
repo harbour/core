@@ -55,22 +55,22 @@
 
 #include <openssl/err.h>
 
-HB_FUNC( SSL_ERR_GET_ERROR )
+HB_FUNC( ERR_GET_ERROR )
 {
    hb_retnint( ERR_get_error() );
 }
 
-HB_FUNC( SSL_ERR_PEEK_ERROR )
+HB_FUNC( ERR_PEEK_ERROR )
 {
    hb_retnint( ERR_peek_error() );
 }
 
-HB_FUNC( SSL_ERR_PEEK_LAST_ERROR )
+HB_FUNC( ERR_PEEK_LAST_ERROR )
 {
    hb_retnint( ERR_peek_last_error() );
 }
 
-HB_FUNC( SSL_ERR_ERROR_STRING )
+HB_FUNC( ERR_ERROR_STRING )
 {
    char buffer[ 120 + 1 ];
 
@@ -81,22 +81,22 @@ HB_FUNC( SSL_ERR_ERROR_STRING )
    hb_retc( buffer );
 }
 
-HB_FUNC( SSL_ERR_LIB_ERROR_STRING )
+HB_FUNC( ERR_LIB_ERROR_STRING )
 {
    hb_retc( ERR_lib_error_string( ( unsigned long ) hb_parnint( 1 ) ) );
 }
 
-HB_FUNC( SSL_ERR_FUNC_ERROR_STRING )
+HB_FUNC( ERR_FUNC_ERROR_STRING )
 {
    hb_retc( ERR_lib_error_string( ( unsigned long ) hb_parnint( 1 ) ) );
 }
 
-HB_FUNC( SSL_ERR_REASON_ERROR_STRING )
+HB_FUNC( ERR_REASON_ERROR_STRING )
 {
    hb_retc( ERR_lib_error_string( ( unsigned long ) hb_parnint( 1 ) ) );
 }
 
-HB_FUNC( SSL_ERR_GET_ERROR_LINE )
+HB_FUNC( ERR_GET_ERROR_LINE )
 {
    const char * file = NULL;
    int line = 0;
@@ -107,7 +107,7 @@ HB_FUNC( SSL_ERR_GET_ERROR_LINE )
    hb_storni( line, 2 );
 }
 
-HB_FUNC( SSL_ERR_PEEK_ERROR_LINE )
+HB_FUNC( ERR_PEEK_ERROR_LINE )
 {
    const char * file = NULL;
    int line = 0;
@@ -118,7 +118,7 @@ HB_FUNC( SSL_ERR_PEEK_ERROR_LINE )
    hb_storni( line, 2 );
 }
 
-HB_FUNC( SSL_ERR_PEEK_LAST_ERROR_LINE )
+HB_FUNC( ERR_PEEK_LAST_ERROR_LINE )
 {
    const char * file = NULL;
    int line = 0;
@@ -129,7 +129,7 @@ HB_FUNC( SSL_ERR_PEEK_LAST_ERROR_LINE )
    hb_storni( line, 2 );
 }
 
-HB_FUNC( SSL_ERR_GET_ERROR_LINE_DATA )
+HB_FUNC( ERR_GET_ERROR_LINE_DATA )
 {
    const char * file = NULL;
    int line = 0;
@@ -144,7 +144,7 @@ HB_FUNC( SSL_ERR_GET_ERROR_LINE_DATA )
    hb_storni( flags, 4 );
 }
 
-HB_FUNC( SSL_ERR_PEEK_ERROR_LINE_DATA )
+HB_FUNC( ERR_PEEK_ERROR_LINE_DATA )
 {
    const char * file = NULL;
    int line = 0;
@@ -159,7 +159,7 @@ HB_FUNC( SSL_ERR_PEEK_ERROR_LINE_DATA )
    hb_storni( flags, 4 );
 }
 
-HB_FUNC( SSL_ERR_PEEK_LAST_ERROR_LINE_DATA )
+HB_FUNC( ERR_PEEK_LAST_ERROR_LINE_DATA )
 {
    const char * file = NULL;
    int line = 0;

@@ -29,7 +29,9 @@ C_SOURCES=\
 	hbssl.c \
 	evp.c \
 	evpciph.c \
+	evpenc.c \
 	evpmd.c \
+	evppkey.c \
 	ssl.c \
 	sslbio.c \
 	sslciph.c \

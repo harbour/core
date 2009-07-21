@@ -54,6 +54,8 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 
+#include "hbssl.h"
+
 #include "hbssl.ch"
 
 #include <openssl/evp.h>
@@ -90,19 +92,19 @@ static EVP_MD_CTX * hb_EVP_MD_CTX_par( int iParam )
    return ph ? ( EVP_MD_CTX * ) * ph : NULL;
 }
 
-static BOOL hb_EVP_MD_is( int p )
+int hb_EVP_MD_is( int iParam )
 {
-   return HB_ISCHAR( p ) || HB_ISNUM( p );
+   return HB_ISCHAR( iParam ) || HB_ISNUM( iParam );
 }
 
-static const EVP_MD * hb_EVP_MD_par( int p )
+const EVP_MD * hb_EVP_MD_par( int iParam )
 {
    const EVP_MD * method;
 
-   if( HB_ISCHAR( p ) )
-      return EVP_get_digestbyname( hb_parc( p ) );
+   if( HB_ISCHAR( iParam ) )
+      return EVP_get_digestbyname( hb_parc( iParam ) );
 
-   switch( hb_parni( p ) )
+   switch( hb_parni( iParam ) )
    {
    case HB_EVP_MD_MD_NULL   : method = EVP_md_null();   break;
 #ifndef OPENSSL_NO_MD2
@@ -440,6 +442,32 @@ HB_FUNC( EVP_SIGNUPDATE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( EVP_SIGNFINAL )
+{
+   if( hb_EVP_MD_CTX_is( 1 ) && hb_EVP_PKEY_is( 3 ) )
+   {
+      EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
+
+      if( ctx )
+      {
+         unsigned char * buffer = ( unsigned char * ) hb_xgrab( EVP_MAX_MD_SIZE );
+         unsigned int size = 0;
+
+         hb_retni( EVP_SignFinal( ctx, buffer, &size, hb_EVP_PKEY_par( 3 ) ) );
+
+         if( size > 0 )
+         {
+            if( ! hb_storclen_buffer( ( char * ) buffer, ( ULONG ) size, 2 ) )
+               hb_xfree( buffer );
+         }
+         else
+            hb_storc( NULL, 2 );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( EVP_VERIFYINIT )
 {
    if( hb_EVP_MD_CTX_is( 1 ) && hb_EVP_MD_is( 2 ) )
@@ -479,9 +507,15 @@ HB_FUNC( EVP_VERIFYUPDATE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if 0
+HB_FUNC( EVP_VERIFYFINAL )
+{
+   if( hb_EVP_MD_CTX_is( 1 ) && hb_EVP_PKEY_is( 3 ) )
+   {
+      EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
-int EVP_SignFinal(EVP_MD_CTX *ctx,unsigned char *sig,unsigned int *s, EVP_PKEY *pkey);
-int EVP_VerifyFinal(EVP_MD_CTX *ctx,unsigned char *sigbuf, unsigned int siglen,EVP_PKEY *pkey);
-
-#endif
+      if( ctx )
+         hb_retni( EVP_VerifyFinal( ctx, ( const unsigned char * ) hb_parcx( 2 ), ( unsigned int ) hb_parclen( 2 ), hb_EVP_PKEY_par( 3 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}

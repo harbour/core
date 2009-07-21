@@ -17,6 +17,8 @@ PROCEDURE Main()
    LOCAL digest
 
    OpenSSL_add_all_digests()
+   ? "Version built against:", hb_NumToHex( OPENSSL_VERSION() )
+   ? "Version loaded:", hb_NumToHex( SSLEAY() )
 
    ctx := EVP_MD_CTX_create()
    EVP_MD_CTX_init( ctx )

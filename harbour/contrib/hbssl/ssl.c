@@ -78,6 +78,16 @@ HB_FUNC( SSLEAY_VERSION )
    hb_retc( SSLeay_version( value ) );
 }
 
+HB_FUNC( OPENSSL_VERSION )
+{
+   hb_retnint( OPENSSL_VERSION_NUMBER );
+}
+
+HB_FUNC( SSLEAY )
+{
+   hb_retnint( SSLeay() );
+}
+
 static HB_GARBAGE_FUNC( SSL_release )
 {
    void ** ph = ( void ** ) Cargo;
@@ -1426,9 +1436,27 @@ HB_FUNC( SSL_USE_CERTIFICATE_ASN1 )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_USE_PRIVATEKEY )
+{
+   if( hb_SSL_is( 1 ) && hb_EVP_PKEY_is( 2 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         /* QUESTION: It's unclear whether we should pass a copy here,
+                      and who should free such passed EV_PKEY object.
+                      [vszakats] */
+         hb_retni( SSL_use_PrivateKey( ssl, hb_EVP_PKEY_par( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /*
+
+EVP_PKEY *   SSL_get_privatekey(SSL *ssl);
+
 STACK *      SSL_get_peer_cert_chain(const SSL *ssl);
-int          SSL_use_PrivateKey(SSL *ssl, EVP_PKEY *pkey);
 int          SSL_use_RSAPrivateKey(SSL *ssl, RSA *rsa);
 void         SSL_set_app_data(SSL *ssl, char *arg);
 int          SSL_set_ex_data(SSL *ssl, int idx, char *arg);
@@ -1441,7 +1469,6 @@ SSL_CTX *    SSL_get_SSL_CTX(const SSL *ssl);
 int          SSL_get_ex_data_X509_STORE_CTX_idx(void);
 int          SSL_get_ex_new_index(long argl, char *argp, int (*new_func);(void), int (*dup_func)(void), void (*free_func)(void))
 void (*SSL_get_info_callback(const SSL *ssl);)()
-EVP_PKEY *   SSL_get_privatekey(SSL *ssl);
 SSL_SESSION *SSL_get_session(const SSL *ssl);
 int (*SSL_get_verify_callback(const SSL *ssl))(int,X509_STORE_CTX *)
 void         SSL_set_client_CA_list(SSL *ssl, STACK *list);

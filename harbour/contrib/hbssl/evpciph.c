@@ -90,19 +90,19 @@ static EVP_CIPHER_CTX * hb_EVP_CIPHER_CTX_par( int iParam )
    return ph ? ( EVP_CIPHER_CTX * ) * ph : NULL;
 }
 
-static BOOL hb_EVP_CIPHER_is( int p )
+int hb_EVP_CIPHER_is( int iParam )
 {
-   return HB_ISCHAR( p ) || HB_ISNUM( p );
+   return HB_ISCHAR( iParam ) || HB_ISNUM( iParam );
 }
 
-static const EVP_CIPHER * hb_EVP_CIPHER_par( int p )
+const EVP_CIPHER * hb_EVP_CIPHER_par( int iParam )
 {
    const EVP_CIPHER * method;
 
-   if( HB_ISCHAR( p ) )
-      return EVP_get_cipherbyname( hb_parc( p ) );
+   if( HB_ISCHAR( iParam ) )
+      return EVP_get_cipherbyname( hb_parc( iParam ) );
 
-   switch( hb_parni( p ) )
+   switch( hb_parni( iParam ) )
    {
    case HB_EVP_CIPHER_ENC_NULL            : method = EVP_enc_null();            break;
 #ifndef OPENSSL_NO_DES

@@ -724,7 +724,24 @@ HB_FUNC( SSL_CTX_USE_CERTIFICATE_ASN1 )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_CTX_USE_PRIVATEKEY )
+{
+   if( hb_SSL_CTX_is( 1 ) && hb_EVP_PKEY_is( 2 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         /* QUESTION: It's unclear whether we should pass a copy here,
+                      and who should free such passed EV_PKEY object.
+                      [vszakats] */
+         hb_retni( SSL_CTX_use_PrivateKey( ctx, hb_EVP_PKEY_par( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /*
+
 #define sk_X509_NAME_new_null() SKM_sk_new_null(X509_NAME)
 #define sk_X509_NAME_push(st, val) SKM_sk_push(X509_NAME, (st), (val))
 #define sk_X509_NAME_free(st) SKM_sk_free(X509_NAME, (st))
@@ -732,7 +749,6 @@ HB_FUNC( SSL_CTX_USE_CERTIFICATE_ASN1 )
 X509_STORE *SSL_CTX_get_cert_store(const SSL_CTX *);
 void SSL_CTX_set_cert_store(SSL_CTX *,X509_STORE *);
 void SSL_CTX_set_cert_store(SSL_CTX *ctx, X509_STORE *cs);
-int  SSL_CTX_use_PrivateKey(SSL_CTX *ctx, EVP_PKEY *pkey);
 int  SSL_CTX_use_RSAPrivateKey(SSL_CTX *ctx, RSA *rsa);
 long SSL_CTX_ctrl(SSL_CTX *ctx, int cmd, long larg, char *parg);
 
@@ -764,7 +780,7 @@ long SSL_CTX_set_tmp_dh(SSL_CTX* ctx, DH *dh);
 long SSL_CTX_set_tmp_dh_callback(SSL_CTX *ctx, DH *(*cb)(void));
 long SSL_CTX_set_tmp_rsa(SSL_CTX *ctx, RSA *rsa);
 SSL_CTX_set_tmp_rsa_callback
-long <STRONG>SSL_CTX_set_tmp_rsa_callback</STRONG>(SSL_CTX *<STRONG>ctx</STRONG>, RSA *(*<STRONG>cb</STRONG>)(SSL *<STRONG>ssl</STRONG>, int <STRONG>export</STRONG>, int <STRONG>keylength</STRONG>));
+long SSL_CTX_set_tmp_rsa_callback(SSL_CTX *ctx, RSA *(*cb)(SSL *ssl, int export, int keylength));
 Sets the callback which will be called when a temporary private key is required. The export flag will be set if the reason for needing a temp key is that an export ciphersuite is in use, in which case, keylength will contain the required keylength in bits. Generate a key of appropriate size (using ???) and return it.
 SSL_set_tmp_rsa_callback
 long SSL_set_tmp_rsa_callback(SSL *ssl, RSA *(*cb)(SSL *ssl, int export, int keylength));
