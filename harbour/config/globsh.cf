@@ -30,17 +30,17 @@ MD = mkdir
 MDP = mkdir -p
 
 dirbase::
-	@[ -d $(OBJ_DIR) ] || $(MDP) $(OBJ_DIR)
-	@[ -z $(LIB_FILE) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)
-	@[ -z $(EXE_FILE) ] || [ -d $(EXE_DIR) ] || $(MDP) $(EXE_DIR)
+	@[ -d "$(OBJ_DIR)" ] || $(MDP) $(OBJ_DIR)
+	@[ -z "$(LIB_FILE)" ] || [ -d "$(LIB_DIR)" ] || $(MDP) $(LIB_DIR)
+	@[ -z "$(EXE_FILE)" ] || [ -d "$(EXE_DIR)" ] || $(MDP) $(EXE_DIR)
 
 clean::
 	-@$(RDP) $(OBJ_DIR) $(LIB_FILE) $(EXE_FILE); \
-	if [ -n $(LIB_FILE) ]; then \
+	if [ -n "$(LIB_FILE)" ]; then \
 	   $(RM) $(basename $(LIB_FILE)).bak; \
 	   [ "`echo $(LIB_DIR)/*`" != "$(LIB_DIR)/*" ] || $(RDP) $(LIB_DIR); \
 	fi ; \
-	if [ -n $(EXE_FILE) ]; then \
+	if [ -n "$(EXE_FILE)" ]; then \
 	   $(RM) $(basename $(EXE_FILE)).tds; \
 	   [ "`echo $(EXE_DIR)/*`" != "$(EXE_DIR)/*" ] || $(RDP) $(EXE_DIR); \
 	fi
