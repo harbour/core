@@ -77,6 +77,16 @@
 
 /*----------------------------------------------------------------------*/
 
+class HbAbstractItemModel : public QAbstractItemModel
+{
+   Q_OBJECT
+
+public:
+
+};
+
+/*----------------------------------------------------------------------*/
+
 class MyMainWindow : public QMainWindow
 {
    Q_OBJECT
