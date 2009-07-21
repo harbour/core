@@ -46,16 +46,16 @@ goto INST_%HB_ARCHITECTURE%
 
    if not "%HB_DYNLIB%" == "yes" goto _SKIP_DLL_BIN
 
-      call %~dp0hb-mkdyn.bat
+      call "%~dp0hb-mkdyn.bat"
 
       setlocal
       if "%HB_BIN_COMPILE%" == "" set HB_BIN_COMPILE=%HB_BIN_INSTALL%
       if exist "%HB_BIN_INSTALL%\*.dll" (
-         %HB_BIN_COMPILE%\hbmk2 -q0 -lng=en-EN -shared -o%HB_BIN_INSTALL%\hbrun-dll    %~dp0..\utils\hbrun\hbrun.hbp
-         %HB_BIN_COMPILE%\hbmk2 -q0 -lng=en-EN -shared -o%HB_BIN_INSTALL%\hbmk2-dll    %~dp0..\utils\hbmk2\hbmk2.hbp
-         %HB_BIN_COMPILE%\hbmk2 -q0 -lng=en-EN -shared -o%HB_BIN_INSTALL%\hbtest-dll   %~dp0..\utils\hbtest\hbtest.hbp
-         %HB_BIN_COMPILE%\hbmk2 -q0 -lng=en-EN -shared -o%HB_BIN_INSTALL%\hbi18n-dll   %~dp0..\utils\hbi18n\hbi18n.hbp
-         %HB_BIN_COMPILE%\hbmk2 -q0 -lng=en-EN -shared -o%HB_BIN_INSTALL%\hbformat-dll %~dp0..\utils\hbformat\hbformat.hbp
+         "%HB_BIN_COMPILE%\hbmk2" -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbrun-dll"    "%~dp0..\utils\hbrun\hbrun.hbp"
+         "%HB_BIN_COMPILE%\hbmk2" -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbmk2-dll"    "%~dp0..\utils\hbmk2\hbmk2.hbp"
+         "%HB_BIN_COMPILE%\hbmk2" -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbtest-dll"   "%~dp0..\utils\hbtest\hbtest.hbp"
+         "%HB_BIN_COMPILE%\hbmk2" -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbi18n-dll"   "%~dp0..\utils\hbi18n\hbi18n.hbp"
+         "%HB_BIN_COMPILE%\hbmk2" -q0 -lng=en-EN -shared "-o%HB_BIN_INSTALL%\hbformat-dll" "%~dp0..\utils\hbformat\hbformat.hbp"
       )
       endlocal
 
@@ -64,10 +64,10 @@ goto INST_%HB_ARCHITECTURE%
    rem ; We build this here, because GNU Make wouldn't add the icon.
    setlocal
    if "%HB_BIN_COMPILE%" == "" set HB_BIN_COMPILE=%HB_BIN_INSTALL%
-   %HB_BIN_COMPILE%\hbmk2 -q0 -lng=en-EN -o%HB_BIN_INSTALL%\hbrun %~dp0..\utils\hbrun\hbrun.hbp
+   "%HB_BIN_COMPILE%\hbmk2" -q0 -lng=en-EN "-o%HB_BIN_INSTALL%\hbrun" "%~dp0..\utils\hbrun\hbrun.hbp"
    endlocal
 
-   if "%HB_BUILD_IMPLIB%" == "yes" call %~dp0hb-mkimp.bat
+   if "%HB_BUILD_IMPLIB%" == "yes" call "%~dp0hb-mkimp.bat"
 
    goto END
 

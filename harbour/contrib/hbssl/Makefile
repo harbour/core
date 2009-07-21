@@ -27,6 +27,9 @@ HB_USER_CFLAGS += $(foreach d, $(HB_INC_OPENSSL_OK), -I$(d))
 
 C_SOURCES=\
 	hbssl.c \
+	evp.c \
+	evpciph.c \
+	evpmd.c \
 	ssl.c \
 	sslbio.c \
 	sslciph.c \

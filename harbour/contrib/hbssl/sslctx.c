@@ -56,28 +56,6 @@
 
 #include "hbssl.h"
 
-HB_FUNC( SSL_INIT )
-{
-   SSL_library_init();
-   SSL_load_error_strings();
-}
-
-HB_FUNC( SSLEAY_VERSION )
-{
-   int value = hb_parni( 1 );
-
-   switch( value )
-   {
-   case HB_SSLEAY_VERSION  : value = SSLEAY_VERSION;  break;
-   case HB_SSLEAY_CFLAGS   : value = SSLEAY_CFLAGS;   break;
-   case HB_SSLEAY_BUILT_ON : value = SSLEAY_BUILT_ON; break;
-   case HB_SSLEAY_PLATFORM : value = SSLEAY_PLATFORM; break;
-   case HB_SSLEAY_DIR      : value = SSLEAY_DIR;      break;
-   }
-
-   hb_retc( SSLeay_version( value ) );
-}
-
 static HB_GARBAGE_FUNC( SSL_CTX_release )
 {
    void ** ph = ( void ** ) Cargo;

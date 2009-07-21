@@ -49,7 +49,7 @@ endif
 
 ifeq ($(HB_SHELL),nt)
 
-MK = $(subst \,/,$(subst \~,~,$(MAKE)))
+MK = "$(subst \,/,$(subst \~,~,$(MAKE)))"
 RM = del /q /f
 RDP = rmdir /q /s
 CP = $(CMDPREF)copy
