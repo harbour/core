@@ -80,6 +80,10 @@ C_SOURCES=\
 	hbregex.c \
 	hbregexc.c \
 	hbrunfun.c \
+	hbsha1.c \
+	hbsha1hm.c \
+	hbsha2.c \
+	hbsha2hm.c \
 	hbstrfmt.c \
 	hbstrsh.c \
 	hbtoken.c \
@@ -138,6 +142,10 @@ C_SOURCES=\
 	setkey.c \
 	setpos.c \
 	setposbs.c \
+	sha1.c \
+	sha1hmac.c \
+	sha2.c \
+	sha2hmac.c \
 	shadow.c \
 	shadowu.c \
 	soundex.c \
