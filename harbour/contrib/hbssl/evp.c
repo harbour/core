@@ -85,15 +85,18 @@ HB_FUNC( ERR_LOAD_EVP_STRINGS )
 
 HB_FUNC( EVP_BYTESTOKEY )
 {
-   if( hb_EVP_CIPHER_is( 1 ), hb_EVP_MD_is( 2 ) )
+   const EVP_CIPHER * cipher = hb_EVP_CIPHER_par( 1 );
+   const EVP_MD * md = hb_EVP_MD_par( 2 );
+
+   if( cipher && md && ( ! HB_ISCHAR( 3 ) || hb_parclen( 3 ) == 8 ) )
    {
       unsigned char key[ EVP_MAX_KEY_LENGTH ];
       unsigned char iv[ EVP_MAX_IV_LENGTH ];
 
-      hb_retni( EVP_BytesToKey( hb_EVP_CIPHER_par( 1 ),
-                                hb_EVP_MD_par( 2 ),
+      hb_retni( EVP_BytesToKey( cipher,
+                                md,
                                 ( const unsigned char * ) hb_parc( 3 ) /* salt */,
-                                ( const unsigned char * ) hb_parc( 4 ) /* data */,
+                                ( const unsigned char * ) hb_parcx( 4 ) /* data */,
                                 hb_parclen( 4 ),
                                 hb_parni( 5 ) /* count */,
                                 key,

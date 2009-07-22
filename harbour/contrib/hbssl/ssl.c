@@ -573,24 +573,24 @@ HB_FUNC( SSL_GET_SSL_METHOD )
 
       if( ssl )
       {
-         SSL_METHOD * method = SSL_get_ssl_method( ssl );
-         int nMethod;
+         SSL_METHOD * p = SSL_get_ssl_method( ssl );
+         int n;
 
-         if(      method == SSLv2_method()         ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV2;
-         else if( method == SSLv2_server_method()  ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV2_SERVER;
-         else if( method == SSLv2_client_method()  ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV2_CLIENT;
-         else if( method == SSLv3_method()         ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV3;
-         else if( method == SSLv3_server_method()  ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV3_SERVER;
-         else if( method == SSLv3_client_method()  ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV3_CLIENT;
-         else if( method == TLSv1_method()         ) nMethod = HB_SSL_CTX_NEW_METHOD_TLSV1;
-         else if( method == TLSv1_server_method()  ) nMethod = HB_SSL_CTX_NEW_METHOD_TLSV1_SERVER;
-         else if( method == TLSv1_client_method()  ) nMethod = HB_SSL_CTX_NEW_METHOD_TLSV1_CLIENT;
-         else if( method == SSLv23_method()        ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV23;
-         else if( method == SSLv23_server_method() ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER;
-         else if( method == SSLv23_client_method() ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV23_CLIENT;
-         else                                        nMethod = HB_SSL_CTX_NEW_METHOD_UNKNOWN;
+         if(      p == SSLv2_method()         ) n = HB_SSL_CTX_NEW_METHOD_SSLV2;
+         else if( p == SSLv2_server_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV2_SERVER;
+         else if( p == SSLv2_client_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV2_CLIENT;
+         else if( p == SSLv3_method()         ) n = HB_SSL_CTX_NEW_METHOD_SSLV3;
+         else if( p == SSLv3_server_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV3_SERVER;
+         else if( p == SSLv3_client_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV3_CLIENT;
+         else if( p == TLSv1_method()         ) n = HB_SSL_CTX_NEW_METHOD_TLSV1;
+         else if( p == TLSv1_server_method()  ) n = HB_SSL_CTX_NEW_METHOD_TLSV1_SERVER;
+         else if( p == TLSv1_client_method()  ) n = HB_SSL_CTX_NEW_METHOD_TLSV1_CLIENT;
+         else if( p == SSLv23_method()        ) n = HB_SSL_CTX_NEW_METHOD_SSLV23;
+         else if( p == SSLv23_server_method() ) n = HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER;
+         else if( p == SSLv23_client_method() ) n = HB_SSL_CTX_NEW_METHOD_SSLV23_CLIENT;
+         else                                   n = HB_SSL_CTX_NEW_METHOD_UNKNOWN;
 
-         hb_retni( nMethod );
+         hb_retni( n );
       }
    }
    else

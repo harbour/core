@@ -36,6 +36,7 @@ PROCEDURE Main()
    EVP_EncryptFinal( ctx, @result )
    encrypted += result
    ? "ENCRYTPTED", ">" + hb_StrToHex( encrypted ) + "<"
+   ? ">" + encrypted + "<"
 
    EVP_CIPHER_CTX_init( ctx )
    EVP_CIPHER_CTX_cleanup( ctx )

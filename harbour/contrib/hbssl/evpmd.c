@@ -99,86 +99,86 @@ int hb_EVP_MD_is( int iParam )
 
 const EVP_MD * hb_EVP_MD_par( int iParam )
 {
-   const EVP_MD * method;
+   const EVP_MD * p;
 
    if( HB_ISCHAR( iParam ) )
       return EVP_get_digestbyname( hb_parc( iParam ) );
 
    switch( hb_parni( iParam ) )
    {
-   case HB_EVP_MD_MD_NULL   : method = EVP_md_null();   break;
+   case HB_EVP_MD_MD_NULL   : p = EVP_md_null();   break;
 #ifndef OPENSSL_NO_MD2
-   case HB_EVP_MD_MD2       : method = EVP_md2();       break;
+   case HB_EVP_MD_MD2       : p = EVP_md2();       break;
 #endif
 #ifndef OPENSSL_NO_MD4
-   case HB_EVP_MD_MD4       : method = EVP_md4();       break;
+   case HB_EVP_MD_MD4       : p = EVP_md4();       break;
 #endif
 #ifndef OPENSSL_NO_MD5
-   case HB_EVP_MD_MD5       : method = EVP_md5();       break;
+   case HB_EVP_MD_MD5       : p = EVP_md5();       break;
 #endif
 #ifndef OPENSSL_NO_SHA
-   case HB_EVP_MD_SHA       : method = EVP_sha();       break;
-   case HB_EVP_MD_SHA1      : method = EVP_sha1();      break;
-   case HB_EVP_MD_DSS       : method = EVP_dss();       break;
-   case HB_EVP_MD_DSS1      : method = EVP_dss1();      break;
-   case HB_EVP_MD_ECDSA     : method = EVP_ecdsa();     break;
+   case HB_EVP_MD_SHA       : p = EVP_sha();       break;
+   case HB_EVP_MD_SHA1      : p = EVP_sha1();      break;
+   case HB_EVP_MD_DSS       : p = EVP_dss();       break;
+   case HB_EVP_MD_DSS1      : p = EVP_dss1();      break;
+   case HB_EVP_MD_ECDSA     : p = EVP_ecdsa();     break;
 #endif
 #ifndef OPENSSL_NO_SHA256
-   case HB_EVP_MD_SHA224    : method = EVP_sha224();    break;
-   case HB_EVP_MD_SHA256    : method = EVP_sha256();    break;
+   case HB_EVP_MD_SHA224    : p = EVP_sha224();    break;
+   case HB_EVP_MD_SHA256    : p = EVP_sha256();    break;
 #endif
 #ifndef OPENSSL_NO_SHA512
-   case HB_EVP_MD_SHA384    : method = EVP_sha384();    break;
-   case HB_EVP_MD_SHA512    : method = EVP_sha512();    break;
+   case HB_EVP_MD_SHA384    : p = EVP_sha384();    break;
+   case HB_EVP_MD_SHA512    : p = EVP_sha512();    break;
 #endif
 #ifndef OPENSSL_NO_MDC2
-   case HB_EVP_MD_MDC2      : method = EVP_mdc2();      break;
+   case HB_EVP_MD_MDC2      : p = EVP_mdc2();      break;
 #endif
 #ifndef OPENSSL_NO_RIPEMD
-   case HB_EVP_MD_RIPEMD160 : method = EVP_ripemd160(); break;
+   case HB_EVP_MD_RIPEMD160 : p = EVP_ripemd160(); break;
 #endif
-   default                  : method = NULL;
+   default                  : p = NULL;
    }
 
-   return method;
+   return p;
 }
 
-static int hb_EVP_MD_ptr_to_id( const EVP_MD * method )
+static int hb_EVP_MD_ptr_to_id( const EVP_MD * p )
 {
    int n;
 
-   if(      method == EVP_md_null()   ) n = HB_EVP_MD_MD_NULL;
+   if(      p == EVP_md_null()   ) n = HB_EVP_MD_MD_NULL;
 #ifndef OPENSSL_NO_MD2
-   else if( method == EVP_md2()       ) n = HB_EVP_MD_MD2;
+   else if( p == EVP_md2()       ) n = HB_EVP_MD_MD2;
 #endif
 #ifndef OPENSSL_NO_MD4
-   else if( method == EVP_md4()       ) n = HB_EVP_MD_MD4;
+   else if( p == EVP_md4()       ) n = HB_EVP_MD_MD4;
 #endif
 #ifndef OPENSSL_NO_MD5
-   else if( method == EVP_md5()       ) n = HB_EVP_MD_MD5;
+   else if( p == EVP_md5()       ) n = HB_EVP_MD_MD5;
 #endif
 #ifndef OPENSSL_NO_SHA
-   else if( method == EVP_sha()       ) n = HB_EVP_MD_SHA;
-   else if( method == EVP_sha1()      ) n = HB_EVP_MD_SHA1;
-   else if( method == EVP_dss()       ) n = HB_EVP_MD_DSS;
-   else if( method == EVP_dss1()      ) n = HB_EVP_MD_DSS1;
-   else if( method == EVP_ecdsa()     ) n = HB_EVP_MD_ECDSA;
+   else if( p == EVP_sha()       ) n = HB_EVP_MD_SHA;
+   else if( p == EVP_sha1()      ) n = HB_EVP_MD_SHA1;
+   else if( p == EVP_dss()       ) n = HB_EVP_MD_DSS;
+   else if( p == EVP_dss1()      ) n = HB_EVP_MD_DSS1;
+   else if( p == EVP_ecdsa()     ) n = HB_EVP_MD_ECDSA;
 #endif
 #ifndef OPENSSL_NO_SHA256
-   else if( method == EVP_sha224()    ) n = HB_EVP_MD_SHA224;
-   else if( method == EVP_sha256()    ) n = HB_EVP_MD_SHA256;
+   else if( p == EVP_sha224()    ) n = HB_EVP_MD_SHA224;
+   else if( p == EVP_sha256()    ) n = HB_EVP_MD_SHA256;
 #endif
 #ifndef OPENSSL_NO_SHA512
-   else if( method == EVP_sha384()    ) n = HB_EVP_MD_SHA384;
-   else if( method == EVP_sha512()    ) n = HB_EVP_MD_SHA512;
+   else if( p == EVP_sha384()    ) n = HB_EVP_MD_SHA384;
+   else if( p == EVP_sha512()    ) n = HB_EVP_MD_SHA512;
 #endif
 #ifndef OPENSSL_NO_MDC2
-   else if( method == EVP_mdc2()      ) n = HB_EVP_MD_MDC2;
+   else if( p == EVP_mdc2()      ) n = HB_EVP_MD_MDC2;
 #endif
 #ifndef OPENSSL_NO_RIPEMD
-   else if( method == EVP_ripemd160() ) n = HB_EVP_MD_RIPEMD160;
+   else if( p == EVP_ripemd160() ) n = HB_EVP_MD_RIPEMD160;
 #endif
-   else                                 n = HB_EVP_MD_UNSUPPORTED;
+   else                            n = HB_EVP_MD_UNSUPPORTED;
 
    return n;
 }
@@ -201,37 +201,37 @@ HB_FUNC( EVP_GET_DIGESTBYNID )
 
 HB_FUNC( EVP_MD_TYPE )
 {
-   const EVP_MD * method = hb_EVP_MD_par( 1 );
+   const EVP_MD * md = hb_EVP_MD_par( 1 );
 
-   hb_retni( method ? EVP_MD_type( method ) : 0 );
+   hb_retni( md ? EVP_MD_type( md ) : 0 );
 }
 
 HB_FUNC( EVP_MD_NID )
 {
-   const EVP_MD * method = hb_EVP_MD_par( 1 );
+   const EVP_MD * md = hb_EVP_MD_par( 1 );
 
-   hb_retni( method ? EVP_MD_nid( method ) : 0 );
+   hb_retni( md ? EVP_MD_nid( md ) : 0 );
 }
 
 HB_FUNC( EVP_MD_PKEY_TYPE )
 {
-   const EVP_MD * method = hb_EVP_MD_par( 1 );
+   const EVP_MD * md = hb_EVP_MD_par( 1 );
 
-   hb_retni( method ? EVP_MD_pkey_type( method ) : 0 );
+   hb_retni( md ? EVP_MD_pkey_type( md ) : 0 );
 }
 
 HB_FUNC( EVP_MD_SIZE )
 {
-   const EVP_MD * method = hb_EVP_MD_par( 1 );
+   const EVP_MD * md = hb_EVP_MD_par( 1 );
 
-   hb_retni( method ? EVP_MD_size( method ) : 0 );
+   hb_retni( md ? EVP_MD_size( md ) : 0 );
 }
 
 HB_FUNC( EVP_MD_BLOCK_SIZE )
 {
-   const EVP_MD * method = hb_EVP_MD_par( 1 );
+   const EVP_MD * md = hb_EVP_MD_par( 1 );
 
-   hb_retni( method ? EVP_MD_block_size( method ) : 0 );
+   hb_retni( md ? EVP_MD_block_size( md ) : 0 );
 }
 
 HB_FUNC( EVP_MD_CTX_CREATE )
@@ -314,12 +314,14 @@ HB_FUNC( EVP_MD_CTX_COPY_EX )
 
 HB_FUNC( EVP_DIGESTINIT )
 {
-   if( hb_EVP_MD_CTX_is( 1 ) && hb_EVP_MD_is( 2 ) )
+   const EVP_MD * md = hb_EVP_MD_par( 2 );
+
+   if( hb_EVP_MD_CTX_is( 1 ) && md )
    {
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
-         hb_retni( EVP_DigestInit( ctx, hb_EVP_MD_par( 2 ) ) );
+         hb_retni( EVP_DigestInit( ctx, md ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -327,12 +329,14 @@ HB_FUNC( EVP_DIGESTINIT )
 
 HB_FUNC( EVP_DIGESTINIT_EX )
 {
-   if( hb_EVP_MD_CTX_is( 1 ) && hb_EVP_MD_is( 2 ) )
+   const EVP_MD * md = hb_EVP_MD_par( 2 );
+
+   if( hb_EVP_MD_CTX_is( 1 ) && md )
    {
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
-         hb_retni( EVP_DigestInit_ex( ctx, hb_EVP_MD_par( 2 ), ( ENGINE * ) hb_parptr( 3 ) ) );
+         hb_retni( EVP_DigestInit_ex( ctx, md, ( ENGINE * ) hb_parptr( 3 ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -405,12 +409,14 @@ HB_FUNC( EVP_DIGESTFINAL_EX )
 
 HB_FUNC( EVP_SIGNINIT )
 {
-   if( hb_EVP_MD_CTX_is( 1 ) && hb_EVP_MD_is( 2 ) )
+   const EVP_MD * md = hb_EVP_MD_par( 2 );
+
+   if( hb_EVP_MD_CTX_is( 1 ) && md )
    {
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
-         EVP_SignInit( ctx, hb_EVP_MD_par( 2 ) );
+         EVP_SignInit( ctx, md );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -418,12 +424,14 @@ HB_FUNC( EVP_SIGNINIT )
 
 HB_FUNC( EVP_SIGNINIT_EX )
 {
-   if( hb_EVP_MD_CTX_is( 1 ) && hb_EVP_MD_is( 2 ) )
+   const EVP_MD * md = hb_EVP_MD_par( 2 );
+
+   if( hb_EVP_MD_CTX_is( 1 ) && md )
    {
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
-         hb_retni( EVP_SignInit_ex( ctx, hb_EVP_MD_par( 2 ), ( ENGINE * ) hb_parptr( 3 ) ) );
+         hb_retni( EVP_SignInit_ex( ctx, md, ( ENGINE * ) hb_parptr( 3 ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -470,12 +478,14 @@ HB_FUNC( EVP_SIGNFINAL )
 
 HB_FUNC( EVP_VERIFYINIT )
 {
-   if( hb_EVP_MD_CTX_is( 1 ) && hb_EVP_MD_is( 2 ) )
+   const EVP_MD * md = hb_EVP_MD_par( 2 );
+
+   if( hb_EVP_MD_CTX_is( 1 ) && md )
    {
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
-         hb_retni( EVP_VerifyInit( ctx, hb_EVP_MD_par( 2 ) ) );
+         hb_retni( EVP_VerifyInit( ctx, md ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -483,12 +493,14 @@ HB_FUNC( EVP_VERIFYINIT )
 
 HB_FUNC( EVP_VERIFYINIT_EX )
 {
-   if( hb_EVP_MD_CTX_is( 1 ) && hb_EVP_MD_is( 2 ) )
+   const EVP_MD * md = hb_EVP_MD_par( 2 );
+
+   if( hb_EVP_MD_CTX_is( 1 ) && md )
    {
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
-         hb_retni( EVP_VerifyInit_ex( ctx, hb_EVP_MD_par( 2 ), ( ENGINE * ) hb_parptr( 3 ) ) );
+         hb_retni( EVP_VerifyInit_ex( ctx, md, ( ENGINE * ) hb_parptr( 3 ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

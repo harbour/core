@@ -72,67 +72,67 @@ static int hb_BIO_METHOD_is( int iParam )
 
 static BIO_METHOD * hb_BIO_METHOD_par( int iParam )
 {
-   BIO_METHOD * method;
+   BIO_METHOD * p;
 
    switch( hb_parni( iParam ) )
    {
-   case HB_BIO_METHOD_S_NULL       : method = BIO_s_null();       break;
+   case HB_BIO_METHOD_S_NULL       : p = BIO_s_null();       break;
 #ifndef OPENSSL_NO_FP_API
-   case HB_BIO_METHOD_S_FILE       : method = BIO_s_file();       break;
+   case HB_BIO_METHOD_S_FILE       : p = BIO_s_file();       break;
 #endif
-   case HB_BIO_METHOD_S_MEM        : method = BIO_s_mem();        break;
-   case HB_BIO_METHOD_S_SOCKET     : method = BIO_s_socket();     break;
-   case HB_BIO_METHOD_S_CONNECT    : method = BIO_s_connect();    break;
-   case HB_BIO_METHOD_S_ACCEPT     : method = BIO_s_accept();     break;
-   case HB_BIO_METHOD_S_FD         : method = BIO_s_fd();         break;
+   case HB_BIO_METHOD_S_MEM        : p = BIO_s_mem();        break;
+   case HB_BIO_METHOD_S_SOCKET     : p = BIO_s_socket();     break;
+   case HB_BIO_METHOD_S_CONNECT    : p = BIO_s_connect();    break;
+   case HB_BIO_METHOD_S_ACCEPT     : p = BIO_s_accept();     break;
+   case HB_BIO_METHOD_S_FD         : p = BIO_s_fd();         break;
 #ifndef OPENSSL_SYS_OS2
-   case HB_BIO_METHOD_S_LOG        : method = BIO_s_log();        break;
+   case HB_BIO_METHOD_S_LOG        : p = BIO_s_log();        break;
 #endif
-   case HB_BIO_METHOD_S_BIO        : method = BIO_s_bio();        break;
+   case HB_BIO_METHOD_S_BIO        : p = BIO_s_bio();        break;
 #ifndef OPENSSL_NO_DGRAM
-   case HB_BIO_METHOD_S_DATAGRAM   : method = BIO_s_datagram();   break;
+   case HB_BIO_METHOD_S_DATAGRAM   : p = BIO_s_datagram();   break;
 #endif
-   case HB_BIO_METHOD_F_NULL       : method = BIO_f_null();       break;
-   case HB_BIO_METHOD_F_BUFFER     : method = BIO_f_buffer();     break;
+   case HB_BIO_METHOD_F_NULL       : p = BIO_f_null();       break;
+   case HB_BIO_METHOD_F_BUFFER     : p = BIO_f_buffer();     break;
 #ifdef OPENSSL_SYS_VMS
-   case HB_BIO_METHOD_F_LINEBUFFER : method = BIO_f_linebuffer(); break;
+   case HB_BIO_METHOD_F_LINEBUFFER : p = BIO_f_linebuffer(); break;
 #endif
-   case HB_BIO_METHOD_F_NBIO_TEST  : method = BIO_f_nbio_test();  break;
-   default                         : method = NULL;
+   case HB_BIO_METHOD_F_NBIO_TEST  : p = BIO_f_nbio_test();  break;
+   default                         : p = NULL;
    }
 
-   return method;
+   return p;
 }
 
 #if 0
 /* NOTE: Unused yet. Commented to avoid warning */
-static int hb_BIO_METHOD_ptr_to_id( const BIO_METHOD * method )
+static int hb_BIO_METHOD_ptr_to_id( const BIO_METHOD * p )
 {
    int n;
 
-   if(      method == BIO_s_null()       ) n = HB_BIO_METHOD_S_NULL;
+   if(      p == BIO_s_null()       ) n = HB_BIO_METHOD_S_NULL;
 #ifndef OPENSSL_NO_FP_API
-   else if( method == BIO_s_file()       ) n = HB_BIO_METHOD_S_FILE;
+   else if( p == BIO_s_file()       ) n = HB_BIO_METHOD_S_FILE;
 #endif
-   else if( method == BIO_s_mem()        ) n = HB_BIO_METHOD_S_MEM;
-   else if( method == BIO_s_socket()     ) n = HB_BIO_METHOD_S_SOCKET;
-   else if( method == BIO_s_connect()    ) n = HB_BIO_METHOD_S_CONNECT;
-   else if( method == BIO_s_accept()     ) n = HB_BIO_METHOD_S_ACCEPT;
-   else if( method == BIO_s_fd()         ) n = HB_BIO_METHOD_S_FD;
+   else if( p == BIO_s_mem()        ) n = HB_BIO_METHOD_S_MEM;
+   else if( p == BIO_s_socket()     ) n = HB_BIO_METHOD_S_SOCKET;
+   else if( p == BIO_s_connect()    ) n = HB_BIO_METHOD_S_CONNECT;
+   else if( p == BIO_s_accept()     ) n = HB_BIO_METHOD_S_ACCEPT;
+   else if( p == BIO_s_fd()         ) n = HB_BIO_METHOD_S_FD;
 #ifndef OPENSSL_SYS_OS2
-   else if( method == BIO_s_log()        ) n = HB_BIO_METHOD_S_LOG;
+   else if( p == BIO_s_log()        ) n = HB_BIO_METHOD_S_LOG;
 #endif
-   else if( method == BIO_s_bio()        ) n = HB_BIO_METHOD_S_BIO;
+   else if( p == BIO_s_bio()        ) n = HB_BIO_METHOD_S_BIO;
 #ifndef OPENSSL_NO_DGRAM
-   else if( method == BIO_s_datagram()   ) n = HB_BIO_METHOD_S_DATAGRAM;
+   else if( p == BIO_s_datagram()   ) n = HB_BIO_METHOD_S_DATAGRAM;
 #endif
-   else if( method == BIO_f_null()       ) n = HB_BIO_METHOD_F_NULL;
-   else if( method == BIO_f_buffer()     ) n = HB_BIO_METHOD_F_BUFFER;
+   else if( p == BIO_f_null()       ) n = HB_BIO_METHOD_F_NULL;
+   else if( p == BIO_f_buffer()     ) n = HB_BIO_METHOD_F_BUFFER;
 #ifdef OPENSSL_SYS_VMS
-   else if( method == BIO_f_linebuffer() ) n = HB_BIO_METHOD_F_LINEBUFFER;
+   else if( p == BIO_f_linebuffer() ) n = HB_BIO_METHOD_F_LINEBUFFER;
 #endif
-   else if( method == BIO_f_nbio_test()  ) n = HB_BIO_METHOD_F_NBIO_TEST;
-   else                                    n = HB_BIO_METHOD_UNSUPPORTED;
+   else if( p == BIO_f_nbio_test()  ) n = HB_BIO_METHOD_F_NBIO_TEST;
+   else                               n = HB_BIO_METHOD_UNSUPPORTED;
 
    return n;
 }

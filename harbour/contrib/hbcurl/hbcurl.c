@@ -184,27 +184,27 @@ static const char * hb_curl_StrHashNew( PHB_CURL hb_curl, const char * szValue )
 /* ---------------------------------------------------------------------------- */
 /* Global initialization/deinitialization */
 
-void * hb_curl_xgrab( size_t size )
+static void * hb_curl_xgrab( size_t size )
 {
    return hb_xgrab( size );
 }
 
-void hb_curl_xfree( void * p )
+static void hb_curl_xfree( void * p )
 {
    hb_xfree( p );
 }
 
-void * hb_curl_xrealloc( void * p, size_t size )
+static void * hb_curl_xrealloc( void * p, size_t size )
 {
    return hb_xrealloc( p, size );
 }
 
-char * hb_curl_strdup( const char * s )
+static char * hb_curl_strdup( const char * s )
 {
    return hb_strdup( s );
 }
 
-void * hb_curl_calloc( size_t nelem, size_t elsize )
+static void * hb_curl_calloc( size_t nelem, size_t elsize )
 {
    size_t size = nelem * elsize;
    void * ptr = hb_xgrab( size );
@@ -232,7 +232,7 @@ HB_FUNC( CURL_GLOBAL_CLEANUP )
 /* ---------------------------------------------------------------------------- */
 /* Callbacks */
 
-size_t hb_curl_read_dummy_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
+static size_t hb_curl_read_dummy_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
    HB_SYMBOL_UNUSED( buffer );
    HB_SYMBOL_UNUSED( size );
@@ -242,7 +242,7 @@ size_t hb_curl_read_dummy_callback( void * buffer, size_t size, size_t nmemb, vo
    return 0;
 }
 
-size_t hb_curl_read_file_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
+static size_t hb_curl_read_file_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
    PHB_CURL hb_curl = ( PHB_CURL ) Cargo;
 
@@ -266,7 +266,7 @@ size_t hb_curl_read_file_callback( void * buffer, size_t size, size_t nmemb, voi
    return ( size_t ) -1;
 }
 
-size_t hb_curl_read_buff_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
+static size_t hb_curl_read_buff_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
    PHB_CURL hb_curl = ( PHB_CURL ) Cargo;
 
@@ -288,7 +288,7 @@ size_t hb_curl_read_buff_callback( void * buffer, size_t size, size_t nmemb, voi
    return ( size_t ) -1;
 }
 
-size_t hb_curl_write_file_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
+static size_t hb_curl_write_file_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
    PHB_CURL hb_curl = ( PHB_CURL ) Cargo;
 
@@ -311,7 +311,7 @@ size_t hb_curl_write_file_callback( void * buffer, size_t size, size_t nmemb, vo
 #define HB_CURL_DL_BUFF_SIZE_INIT ( CURL_MAX_WRITE_SIZE * 2 )
 #define HB_CURL_DL_BUFF_SIZE_INCR ( CURL_MAX_WRITE_SIZE * 4 )
 
-size_t hb_curl_write_buff_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
+static size_t hb_curl_write_buff_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
    PHB_CURL hb_curl = ( PHB_CURL ) Cargo;
 
@@ -336,7 +336,7 @@ size_t hb_curl_write_buff_callback( void * buffer, size_t size, size_t nmemb, vo
    return ( size_t ) -1;
 }
 
-int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow, double ultotal, double ulnow )
+static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow, double ultotal, double ulnow )
 {
    if( Cargo )
    {
