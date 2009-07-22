@@ -21,6 +21,11 @@ endif
 ifeq ($(HB_ARCHITECTURE),wce)
 HB_WITH_LIBHPDF=no
 endif
+ifeq ($(HB_COMPILER),mingwarm)
+HB_WITH_LIBHPDF=yes
+HB_USER_CFLAGS += -U__COREDLL__
+endif
+
 endif
 
 ifeq ($(HB_WITH_LIBHPDF),yes)

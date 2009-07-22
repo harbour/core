@@ -60,7 +60,7 @@
 /* ---------------------------------------------------------------------------- */
 /* Callbacks */
 
-int hb_ssl_pem_password_cb( char * buf, int size, int rwflag, void * userdata )
+static int hb_ssl_pem_password_cb( char * buf, int size, int rwflag, void * userdata )
 {
    int retsize = 0;
 
@@ -87,6 +87,78 @@ int hb_ssl_pem_password_cb( char * buf, int size, int rwflag, void * userdata )
 HB_FUNC( ERR_LOAD_PEM_STRINGS )
 {
    ERR_load_PEM_strings();
+}
+
+HB_FUNC( PEM_READ_BIO_RSAPRIVATEKEY )
+{
+   BIO * bio;
+
+   if( HB_ISPOINTER( 1 ) )
+      bio = hb_parptr( 1 );
+   else if( HB_ISCHAR( 1 ) )
+      bio = BIO_new_file( hb_parc( 1 ), "r" );
+   else if( HB_ISNUM( 1 ) )
+      bio = BIO_new_fd( hb_parni( 1 ), BIO_NOCLOSE );
+   else
+      bio = NULL;
+
+   if( bio )
+   {
+      PHB_ITEM pPassBlock = NULL;
+
+      if( HB_ISBLOCK( 2 ) )
+      {
+         pPassBlock = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
+         hb_retptr( PEM_read_bio_RSAPrivateKey( bio, NULL, hb_ssl_pem_password_cb, pPassBlock ) );
+      }
+      else if( HB_ISCHAR( 2 ) )
+         /* NOTE: Dropping 'const' qualifier. [vszakats] */
+         hb_retptr( PEM_read_bio_RSAPrivateKey( bio, NULL, NULL, ( void * ) hb_parc( 2 ) ) );
+
+      if( pPassBlock )
+         hb_itemRelease( pPassBlock );
+
+      if( ! HB_ISPOINTER( 1 ) )
+         BIO_free( bio );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( PEM_READ_BIO_RSAPUBLICKEY )
+{
+   BIO * bio;
+
+   if( HB_ISPOINTER( 1 ) )
+      bio = hb_parptr( 1 );
+   else if( HB_ISCHAR( 1 ) )
+      bio = BIO_new_file( hb_parc( 1 ), "r" );
+   else if( HB_ISNUM( 1 ) )
+      bio = BIO_new_fd( hb_parni( 1 ), BIO_NOCLOSE );
+   else
+      bio = NULL;
+
+   if( bio )
+   {
+      PHB_ITEM pPassBlock = NULL;
+
+      if( HB_ISBLOCK( 2 ) )
+      {
+         pPassBlock = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
+         hb_retptr( PEM_read_bio_RSAPrivateKey( bio, NULL, hb_ssl_pem_password_cb, pPassBlock ) );
+      }
+      else if( HB_ISCHAR( 2 ) )
+         /* NOTE: Dropping 'const' qualifier. [vszakats] */
+         hb_retptr( PEM_read_bio_RSAPrivateKey( bio, NULL, NULL, ( void * ) hb_parc( 2 ) ) );
+
+      if( pPassBlock )
+         hb_itemRelease( pPassBlock );
+
+      if( ! HB_ISPOINTER( 1 ) )
+         BIO_free( bio );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #if 0
