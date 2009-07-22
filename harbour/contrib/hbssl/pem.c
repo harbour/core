@@ -52,6 +52,8 @@
 
 #include "hbapi.h"
 #include "hbapierr.h"
+#include "hbapiitm.h"
+#include "hbvm.h"
 
 #include "hbssl.h"
 
@@ -60,12 +62,26 @@
 
 int hb_ssl_pem_password_cb( char * buf, int size, int rwflag, void * userdata )
 {
-   HB_SYMBOL_UNUSED( buf );
-   HB_SYMBOL_UNUSED( size );
-   HB_SYMBOL_UNUSED( rwflag );
-   HB_SYMBOL_UNUSED( userdata );
+   int retsize = 0;
 
-   return 0;
+   if( size > 0 && userdata )
+   {
+      PHB_ITEM p = hb_itemPutNI( NULL, rwflag );
+      PHB_ITEM r = hb_vmEvalBlockV( ( PHB_ITEM ) userdata, 1, p );
+
+      buf[ 0 ] = '\0';
+
+      retsize = hb_itemGetCLen( r );
+
+      if( retsize > size )
+         retsize = size;
+
+      memcpy( buf, hb_itemGetCPtr( r ), retsize );
+
+      hb_itemRelease( p );
+   }
+
+   return retsize;
 }
 
 HB_FUNC( ERR_LOAD_PEM_STRINGS )

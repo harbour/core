@@ -7,6 +7,8 @@ ROOT = ../../
 LIBNAME=hbcrypt
 
 C_SOURCES=\
+	hbsha1.c \
+	hbsha1hm.c \
 	hbsha2.c \
 	hbsha2hm.c \
 	sha1.c \

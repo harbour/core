@@ -135,4 +135,4 @@ STATIC PROCEDURE Test_SHA2_HMAC()
    RETURN
 
 STATIC FUNCTION StrToHex( cString )
-   RETURN Lower( hb_StrToHex( cString ) )
+   RETURN Lower( cString )

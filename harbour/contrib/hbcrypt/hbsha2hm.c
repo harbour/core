@@ -60,7 +60,14 @@ HB_FUNC( HB_HMAC_SHA224 )
 
    hmac_sha224( ( BYTE * ) hb_parcx( 2 ), hb_parclen( 2 ), ( BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
 
-   hb_retclen( ( char * ) mac, HB_SIZEOFARRAY( mac ) );
+   if( ! hb_parl( 3 ) )
+   {
+      char hex[ ( sizeof( mac ) * 2 ) + 1 ];
+      hb_strtohex( ( char * ) mac, sizeof( mac ), hex );
+      hb_retclen( hex, HB_SIZEOFARRAY( hex ) - 1 );
+   }
+   else
+      hb_retclen( ( char * ) mac, sizeof( mac ) );
 }
 
 HB_FUNC( HB_HMAC_SHA256 )
@@ -69,7 +76,14 @@ HB_FUNC( HB_HMAC_SHA256 )
 
    hmac_sha256( ( BYTE * ) hb_parcx( 2 ), hb_parclen( 2 ), ( BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
 
-   hb_retclen( ( char * ) mac, HB_SIZEOFARRAY( mac ) );
+   if( ! hb_parl( 3 ) )
+   {
+      char hex[ ( sizeof( mac ) * 2 ) + 1 ];
+      hb_strtohex( ( char * ) mac, sizeof( mac ), hex );
+      hb_retclen( hex, HB_SIZEOFARRAY( hex ) - 1 );
+   }
+   else
+      hb_retclen( ( char * ) mac, sizeof( mac ) );
 }
 
 HB_FUNC( HB_HMAC_SHA384 )
@@ -78,7 +92,14 @@ HB_FUNC( HB_HMAC_SHA384 )
 
    hmac_sha384( ( BYTE * ) hb_parcx( 2 ), hb_parclen( 2 ), ( BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
 
-   hb_retclen( ( char * ) mac, HB_SIZEOFARRAY( mac ) );
+   if( ! hb_parl( 3 ) )
+   {
+      char hex[ ( sizeof( mac ) * 2 ) + 1 ];
+      hb_strtohex( ( char * ) mac, sizeof( mac ), hex );
+      hb_retclen( hex, HB_SIZEOFARRAY( hex ) - 1 );
+   }
+   else
+      hb_retclen( ( char * ) mac, sizeof( mac ) );
 }
 
 HB_FUNC( HB_HMAC_SHA512 )
@@ -87,5 +108,12 @@ HB_FUNC( HB_HMAC_SHA512 )
 
    hmac_sha512( ( BYTE * ) hb_parcx( 2 ), hb_parclen( 2 ), ( BYTE * ) hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
 
-   hb_retclen( ( char * ) mac, HB_SIZEOFARRAY( mac ) );
+   if( ! hb_parl( 3 ) )
+   {
+      char hex[ ( sizeof( mac ) * 2 ) + 1 ];
+      hb_strtohex( ( char * ) mac, sizeof( mac ), hex );
+      hb_retclen( hex, HB_SIZEOFARRAY( hex ) - 1 );
+   }
+   else
+      hb_retclen( ( char * ) mac, sizeof( mac ) );
 }

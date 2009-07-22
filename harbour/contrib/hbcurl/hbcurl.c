@@ -95,17 +95,17 @@ typedef struct _HB_CURL
    struct curl_slist *    pPREQUOTE;
    struct curl_slist *    pTELNETOPTIONS;
 
-   char *     ul_name;
+   char * ul_name;
    HB_FHANDLE ul_handle;
 
-   char *     dl_name;
+   char * dl_name;
    HB_FHANDLE dl_handle;
 
-   BYTE * ul_ptr;
+   unsigned char * ul_ptr;
    size_t ul_len;
    size_t ul_pos;
 
-   BYTE * dl_ptr;
+   unsigned char * dl_ptr;
    size_t dl_len;
    size_t dl_pos;
 
@@ -143,7 +143,7 @@ static HB_HASH_FUNC( hb_curl_HashKey )    /* ULONG func( const void * Value, con
 /* deletes a string */
 static HB_HASH_FUNC( hb_curl_HashDel )
 {
-   hb_xfree( ( void * ) Value );
+   hb_xfree( Value );
    HB_SYMBOL_UNUSED( HashPtr );
    HB_SYMBOL_UNUSED( Cargo );
    return 1;
@@ -164,11 +164,11 @@ static const char * hb_curl_StrHashNew( PHB_CURL hb_curl, const char * szValue )
       hb_curl->pHash = hb_hashTableCreate( HB_CURL_HASH_TABLE_SIZE,
                            hb_curl_HashKey, hb_curl_HashDel, hb_curl_HashCmp );
 
-   szHash = ( char * ) hb_hashTableFind( hb_curl->pHash, ( const void * ) szValue );
+   szHash = ( char * ) hb_hashTableFind( hb_curl->pHash, szValue );
    if( ! szHash )
    {
       szHash = hb_strdup( szValue );
-      hb_hashTableAdd( hb_curl->pHash, ( void * ) szHash, ( const void * ) szHash );
+      hb_hashTableAdd( hb_curl->pHash, szHash, szHash );
    }
    return szHash;
 }
@@ -323,7 +323,7 @@ static size_t hb_curl_write_buff_callback( void * buffer, size_t size, size_t nm
       if( nTodo > nLeft )
       {
          hb_curl->dl_len += HB_CURL_DL_BUFF_SIZE_INCR;
-         hb_curl->dl_ptr = ( BYTE * ) hb_xrealloc( hb_curl->dl_ptr, hb_curl->dl_len );
+         hb_curl->dl_ptr = ( unsigned char * ) hb_xrealloc( hb_curl->dl_ptr, hb_curl->dl_len );
       }
 
       hb_xmemcpy( hb_curl->dl_ptr + hb_curl->dl_pos, buffer, nTodo );
@@ -343,7 +343,7 @@ static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow
       PHB_ITEM p1 = hb_itemPutND( NULL, ulnow   > 0 ? ulnow   : dlnow   );
       PHB_ITEM p2 = hb_itemPutND( NULL, ultotal > 0 ? ultotal : dltotal );
 
-      BOOL bResult = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) Cargo, 2, p1, p2 ) );
+      hbBool bResult = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) Cargo, 2, p1, p2 ) );
 
       hb_itemRelease( p1 );
       hb_itemRelease( p2 );
@@ -431,7 +431,7 @@ static void hb_curl_buff_dl_free( PHB_CURL hb_curl )
 /* ---------------------------------------------------------------------------- */
 /* Constructor/Destructor */
 
-static void PHB_CURL_free( PHB_CURL hb_curl, BOOL bFree )
+static void PHB_CURL_free( PHB_CURL hb_curl, hbBool bFree )
 {
    curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, NULL );
    curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, NULL );
@@ -496,7 +496,7 @@ static PHB_CURL PHB_CURL_create( CURL * from )
    {
       PHB_CURL hb_curl = ( PHB_CURL ) hb_xgrab( sizeof( HB_CURL ) );
 
-      memset( ( void * ) hb_curl, 0, sizeof( HB_CURL ) );
+      memset( hb_curl, 0, sizeof( HB_CURL ) );
       hb_curl->curl = curl;
 
       return hb_curl;
@@ -513,7 +513,7 @@ static HB_GARBAGE_FUNC( PHB_CURL_release )
    if( ph && * ph )
    {
       /* Destroy the object */
-      PHB_CURL_free( ( PHB_CURL ) * ph, TRUE );
+      PHB_CURL_free( ( PHB_CURL ) * ph, hbTRUE );
 
       /* set pointer to NULL to avoid multiple freeing */
       * ph = NULL;
@@ -566,7 +566,7 @@ HB_FUNC( CURL_EASY_CLEANUP )
       if( ph && * ph )
       {
          /* Destroy the object */
-         PHB_CURL_free( ( PHB_CURL ) * ph, TRUE );
+         PHB_CURL_free( ( PHB_CURL ) * ph, hbTRUE );
 
          /* set pointer to NULL to avoid multiple freeing */
          * ph = NULL;
@@ -585,7 +585,7 @@ HB_FUNC( CURL_EASY_RESET )
       PHB_CURL hb_curl = PHB_CURL_par( 1 );
 
       if( hb_curl )
-         PHB_CURL_free( hb_curl, FALSE );
+         PHB_CURL_free( hb_curl, hbFALSE );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -635,7 +635,7 @@ HB_FUNC( CURL_EASY_SEND )
       {
          size_t size = 0;
 
-         res = curl_easy_send( hb_curl->curl, ( void * ) hb_parcx( 2 ), ( size_t ) hb_parclen( 2 ), &size );
+         res = curl_easy_send( hb_curl->curl, hb_parcx( 2 ), ( size_t ) hb_parclen( 2 ), &size );
 
          hb_stornl( size, 3 );
       }
@@ -1367,7 +1367,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   hb_curl->pProgressBlock = hb_itemNew( pProgressBlock );
 
                   curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSFUNCTION, hb_curl_progress_callback );
-                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSDATA, ( void * ) hb_curl->pProgressBlock );
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSDATA, hb_curl->pProgressBlock );
                }
             }
             break;
@@ -1382,7 +1382,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   hb_curl->ul_handle = FS_ERROR;
 
                   curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, hb_curl_read_file_callback );
-                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, ( void * ) hb_curl );
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, hb_curl );
                }
             }
             break;
@@ -1402,7 +1402,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   hb_curl->dl_handle = FS_ERROR;
 
                   curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, hb_curl_write_file_callback );
-                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, ( void * ) hb_curl );
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, hb_curl );
                }
             }
             break;
@@ -1420,12 +1420,12 @@ HB_FUNC( CURL_EASY_SETOPT )
                {
                   hb_curl->ul_pos = 0;
                   hb_curl->ul_len = hb_parclen( 3 );
-                  hb_curl->ul_ptr = ( BYTE * ) hb_xgrab( hb_curl->ul_len );
+                  hb_curl->ul_ptr = ( unsigned char * ) hb_xgrab( hb_curl->ul_len );
 
                   hb_xmemcpy( hb_curl->ul_ptr, hb_parc( 3 ), hb_curl->ul_len );
 
                   curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, hb_curl_read_buff_callback );
-                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, ( void * ) hb_curl );
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, hb_curl );
                }
             }
             break;
@@ -1436,10 +1436,10 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                hb_curl->dl_pos = 0;
                hb_curl->dl_len = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : HB_CURL_DL_BUFF_SIZE_INIT;
-               hb_curl->dl_ptr = ( BYTE * ) hb_xgrab( hb_curl->dl_len );
+               hb_curl->dl_ptr = ( unsigned char * ) hb_xgrab( hb_curl->dl_len );
 
                curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, hb_curl_write_buff_callback );
-               res = curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, ( void * ) hb_curl );
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, hb_curl );
             }
             break;
 
@@ -1454,7 +1454,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             hb_curl_buff_ul_free( hb_curl );
 
             curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, hb_curl_read_dummy_callback );
-            res = curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, ( void * ) hb_curl );
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, hb_curl );
             break;
          }
       }
@@ -1683,7 +1683,7 @@ HB_FUNC( CURL_EASY_GETINFO )
          hb_retc( ret_string );
          break;
       case HB_CURL_INFO_TYPE_PTR:
-         hb_retptr( ( void * ) ret_ptr );
+         hb_retptr( ret_ptr );
          break;
       case HB_CURL_INFO_TYPE_LONG:
          hb_retnl( ret_long );

@@ -261,19 +261,6 @@ static void hb_md5val( UINT32 accum[], char * md5val )
    }
 }
 
-static void hb_md5digest( const char * md5val, char * digest )
-{
-   int i, b;
-
-   for( i = 0; i < 16; i++ )
-   {
-      b = ( ( UCHAR ) md5val[ i ] >> 4 ) & 0x0F;
-      *digest++ = ( char ) ( b + ( b > 9 ? 'a' - 10 : '0' ) );
-      b = ( UCHAR ) md5val[ i ] & 0x0F;
-      *digest++ = ( char ) ( b + ( b > 9 ? 'a' - 10 : '0' ) );
-   }
-}
-
 void hb_md5( const void * data, ULONG ulLen, char * digest )
 {
    const unsigned char * ucdata = ( const unsigned char * ) data;
@@ -382,10 +369,10 @@ HB_FUNC( HB_MD5 )
 
       hb_md5( pszStr, ulLen, dststr );
 
-      if( ! ISLOG( 2 ) || hb_parl( 2 ) )
+      if( ! hb_parl( 2 ) )
       {
-         char digest[ 32 + 1 ];
-         hb_md5digest( dststr, digest );
+         char digest[ ( sizeof( dststr ) * 2 ) + 1 ];
+         hb_strtohex( dststr, sizeof( dststr ), digest );
          hb_retclen( digest, HB_SIZEOFARRAY( digest ) - 1 );
       }
       else
@@ -409,10 +396,10 @@ HB_FUNC( HB_MD5FILE )
 
          hb_md5file( hFile, dststr );
 
-         if( ! ISLOG( 2 ) || hb_parl( 2 ) )
+         if( ! hb_parl( 2 ) )
          {
-            char digest[ 32 + 1 ];
-            hb_md5digest( dststr, digest );
+            char digest[ ( sizeof( dststr ) * 2 ) + 1 ];
+            hb_strtohex( dststr, sizeof( dststr ), digest );
             hb_retclen( digest, HB_SIZEOFARRAY( digest ) - 1 );
          }
          else
