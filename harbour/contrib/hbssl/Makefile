@@ -27,19 +27,19 @@ HB_USER_CFLAGS += $(foreach d, $(HB_INC_OPENSSL_OK), -I$(d))
 
 C_SOURCES=\
 	hbssl.c \
+	bio.c \
+	err.c \
 	evp.c \
 	evpciph.c \
 	evpenc.c \
 	evpmd.c \
 	evppkey.c \
+	rand.c \
 	ssl.c \
-	sslbio.c \
 	sslciph.c \
 	sslctx.c \
-	sslerr.c \
-	sslrand.c \
 	sslsess.c \
-	sslx509.c \
+	x509.c \
 
 PRG_HEADERS=\
 	hbssl.ch \

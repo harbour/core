@@ -174,7 +174,7 @@
 #define HB_X509_V_ERR_UNNESTED_RESOURCE                     44
 #define HB_X509_V_ERR_APPLICATION_VERIFICATION              50
 
-#define HB_EVP_MD_UNSUPPORTED                               -1
+#define HB_EVP_MD_UNSUPPORTED                               ( -1 )
 #define HB_EVP_MD_MD_NULL                                   0
 #define HB_EVP_MD_MD2                                       1
 #define HB_EVP_MD_MD4                                       2
@@ -191,7 +191,7 @@
 #define HB_EVP_MD_MDC2                                      13
 #define HB_EVP_MD_RIPEMD160                                 14
 
-#define HB_EVP_CIPHER_UNSUPPORTED                           -1
+#define HB_EVP_CIPHER_UNSUPPORTED                           ( -1 )
 #define HB_EVP_CIPHER_ENC_NULL                              0
 #define HB_EVP_CIPHER_DES_ECB                               1
 #define HB_EVP_CIPHER_DES_EDE                               2
@@ -291,5 +291,21 @@
 #define HB_EVP_CIPHER_SEED_CFB128                           96
 #define HB_EVP_CIPHER_SEED_CFB                              97
 #define HB_EVP_CIPHER_SEED_OFB                              98
+
+#define HB_BIO_METHOD_UNSUPPORTED                           ( -1 )
+#define HB_BIO_METHOD_S_NULL                                0
+#define HB_BIO_METHOD_S_FILE                                1
+#define HB_BIO_METHOD_S_MEM                                 2
+#define HB_BIO_METHOD_S_SOCKET                              3
+#define HB_BIO_METHOD_S_CONNECT                             4
+#define HB_BIO_METHOD_S_ACCEPT                              5
+#define HB_BIO_METHOD_S_FD                                  6
+#define HB_BIO_METHOD_S_LOG                                 7
+#define HB_BIO_METHOD_S_BIO                                 8
+#define HB_BIO_METHOD_S_DATAGRAM                            10
+#define HB_BIO_METHOD_F_NULL                                50
+#define HB_BIO_METHOD_F_BUFFER                              51
+#define HB_BIO_METHOD_F_LINEBUFFER                          52
+#define HB_BIO_METHOD_F_NBIO_TEST                           53
 
 #endif /* HBSSL_CH_ */

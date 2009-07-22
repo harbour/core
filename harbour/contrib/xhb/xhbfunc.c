@@ -51,6 +51,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapifs.h"
 #include "hbapigt.h"
 #include "hbapiitm.h"
 #include "hbapigt.h"
@@ -200,6 +201,21 @@ HB_FUNC( HB_CHECKSUM )
    HB_FUNC_EXEC( HB_ADLER32 );
 }
 
+HB_FUNC( HB_F_EOF )
+{
+   USHORT uiError = 6;
+
+   if( HB_ISNUM( 1 ) )
+   {
+      hb_retl( hb_fsEof( hb_numToHandle( hb_parnint( 1 ) ) ) );
+      uiError = hb_fsError();
+   }
+   else
+   {
+      hb_retl( TRUE );
+   }
+   hb_fsSetFError( uiError );
+}
 
 HB_FUNC_EXTERN( HB_CSTR );
 
