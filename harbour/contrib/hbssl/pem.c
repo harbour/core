@@ -58,7 +58,7 @@
 #include "hbssl.h"
 
 /* ---------------------------------------------------------------------------- */
-/* Callbacks */
+/* Callback */
 
 static int hb_ssl_pem_password_cb( char * buf, int size, int rwflag, void * userdata )
 {
@@ -66,19 +66,22 @@ static int hb_ssl_pem_password_cb( char * buf, int size, int rwflag, void * user
 
    if( size > 0 && userdata )
    {
-      PHB_ITEM p = hb_itemPutNI( NULL, rwflag );
+      PHB_ITEM p = hb_itemPutL( NULL, rwflag );
       PHB_ITEM r = hb_vmEvalBlockV( ( PHB_ITEM ) userdata, 1, p );
+
+      hb_itemRelease( p );
 
       buf[ 0 ] = '\0';
 
       retsize = hb_itemGetCLen( r );
 
-      if( retsize > size )
-         retsize = size;
+      if( retsize > 0 )
+      {
+         if( retsize > size )
+            retsize = size;
 
-      memcpy( buf, hb_itemGetCPtr( r ), retsize );
-
-      hb_itemRelease( p );
+         memcpy( buf, hb_itemGetCPtr( r ), retsize );
+      }
    }
 
    return retsize;
@@ -89,12 +92,15 @@ HB_FUNC( ERR_LOAD_PEM_STRINGS )
    ERR_load_PEM_strings();
 }
 
-HB_FUNC( PEM_READ_BIO_RSAPRIVATEKEY )
+typedef void * PEM_READ_BIO(  BIO * bp, void ** x, pem_password_cb * cb, void * u );
+typedef void * PEM_WRITE_BIO( BIO * bp, void ** x, pem_password_cb * cb, void * u );
+
+static void hb_PEM_read_bio( PEM_READ_BIO * func )
 {
    BIO * bio;
 
    if( HB_ISPOINTER( 1 ) )
-      bio = hb_parptr( 1 );
+      bio = ( BIO * ) hb_parptr( 1 );
    else if( HB_ISCHAR( 1 ) )
       bio = BIO_new_file( hb_parc( 1 ), "r" );
    else if( HB_ISNUM( 1 ) )
@@ -109,47 +115,13 @@ HB_FUNC( PEM_READ_BIO_RSAPRIVATEKEY )
       if( HB_ISBLOCK( 2 ) )
       {
          pPassBlock = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
-         hb_retptr( PEM_read_bio_RSAPrivateKey( bio, NULL, hb_ssl_pem_password_cb, pPassBlock ) );
+         hb_retptr( ( * func )( bio, NULL, hb_ssl_pem_password_cb, pPassBlock ) );
       }
       else if( HB_ISCHAR( 2 ) )
-         /* NOTE: Dropping 'const' qualifier. [vszakats] */
-         hb_retptr( PEM_read_bio_RSAPrivateKey( bio, NULL, NULL, ( void * ) hb_parc( 2 ) ) );
-
-      if( pPassBlock )
-         hb_itemRelease( pPassBlock );
-
-      if( ! HB_ISPOINTER( 1 ) )
-         BIO_free( bio );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-HB_FUNC( PEM_READ_BIO_RSAPUBLICKEY )
-{
-   BIO * bio;
-
-   if( HB_ISPOINTER( 1 ) )
-      bio = hb_parptr( 1 );
-   else if( HB_ISCHAR( 1 ) )
-      bio = BIO_new_file( hb_parc( 1 ), "r" );
-   else if( HB_ISNUM( 1 ) )
-      bio = BIO_new_fd( hb_parni( 1 ), BIO_NOCLOSE );
-   else
-      bio = NULL;
-
-   if( bio )
-   {
-      PHB_ITEM pPassBlock = NULL;
-
-      if( HB_ISBLOCK( 2 ) )
       {
-         pPassBlock = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
-         hb_retptr( PEM_read_bio_RSAPrivateKey( bio, NULL, hb_ssl_pem_password_cb, pPassBlock ) );
-      }
-      else if( HB_ISCHAR( 2 ) )
          /* NOTE: Dropping 'const' qualifier. [vszakats] */
-         hb_retptr( PEM_read_bio_RSAPrivateKey( bio, NULL, NULL, ( void * ) hb_parc( 2 ) ) );
+         hb_retptr( ( * func )( bio, NULL, NULL, ( void * ) hb_parc( 2 ) ) );
+      }
 
       if( pPassBlock )
          hb_itemRelease( pPassBlock );
@@ -160,40 +132,40 @@ HB_FUNC( PEM_READ_BIO_RSAPUBLICKEY )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+HB_FUNC( PEM_READ_BIO_PRIVATEKEY    ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_read_bio_PrivateKey    ); }
+HB_FUNC( PEM_READ_BIO_PUBKEY        ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_read_bio_PUBKEY        ); }
+HB_FUNC( PEM_READ_BIO_RSAPRIVATEKEY ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_read_bio_RSAPrivateKey ); }
+HB_FUNC( PEM_READ_BIO_RSAPUBLICKEY  ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_read_bio_RSAPublicKey  ); }
+HB_FUNC( PEM_READ_BIO_RSA_PUBKEY    ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_read_bio_RSA_PUBKEY    ); }
+HB_FUNC( PEM_READ_BIO_DSAPRIVATEKEY ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_read_bio_DSAPrivateKey ); }
+HB_FUNC( PEM_READ_BIO_DSA_PUBKEY    ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_read_bio_DSA_PUBKEY    ); }
+HB_FUNC( PEM_READ_BIO_DSAPARAMS     ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_read_bio_DSAparams     ); }
+HB_FUNC( PEM_READ_BIO_DHPARAMS      ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_read_bio_DHparams      ); }
+HB_FUNC( PEM_READ_BIO_X509          ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_read_bio_X509          ); }
+HB_FUNC( PEM_READ_BIO_X509_AUX      ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_read_bio_X509_AUX      ); }
+HB_FUNC( PEM_READ_BIO_X509_REQ      ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_read_bio_X509_REQ      ); }
+HB_FUNC( PEM_READ_BIO_X509_CRL      ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_read_bio_X509_CRL      ); }
+HB_FUNC( PEM_READ_BIO_PKCS7         ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_read_bio_PKCS7         ); }
 
 #if 0
 
-EVP_PKEY * PEM_read_bio_PrivateKey(BIO *bp, EVP_PKEY **x, pem_password_cb *cb, void *u);
-EVP_PKEY * PEM_read_bio_PUBKEY(BIO *bp, EVP_PKEY **x, pem_password_cb *cb, void *u);
-RSA *      PEM_read_bio_RSAPrivateKey(BIO *bp, RSA **x, pem_password_cb *cb, void *u);
-RSA *      PEM_read_bio_RSAPublicKey(BIO *bp, RSA **x, pem_password_cb *cb, void *u);
-RSA *      PEM_read_bio_RSA_PUBKEY(BIO *bp, RSA **x, pem_password_cb *cb, void *u);
-DSA *      PEM_read_bio_DSAPrivateKey(BIO *bp, DSA **x, pem_password_cb *cb, void *u);
-DSA *      PEM_read_bio_DSA_PUBKEY(BIO *bp, DSA **x, pem_password_cb *cb, void *u);
-DSA *      PEM_read_bio_DSAparams(BIO *bp, DSA **x, pem_password_cb *cb, void *u);
-DH *       PEM_read_bio_DHparams(BIO *bp, DH **x, pem_password_cb *cb, void *u);
-X509 *     PEM_read_bio_X509(BIO *bp, X509 **x, pem_password_cb *cb, void *u);
-X509 *     PEM_read_bio_X509_AUX(BIO *bp, X509 **x, pem_password_cb *cb, void *u);
-X509_REQ * PEM_read_bio_X509_REQ(BIO *bp, X509_REQ **x, pem_password_cb *cb, void *u);
-X509_CRL * PEM_read_bio_X509_CRL(BIO *bp, X509_CRL **x, pem_password_cb *cb, void *u);
-PKCS7 *    PEM_read_bio_PKCS7(BIO *bp, PKCS7 **x, pem_password_cb *cb, void *u);
-
-int        PEM_write_bio_PrivateKey(BIO *bp, EVP_PKEY *x, const EVP_CIPHER *enc, unsigned char *kstr, int klen, pem_password_cb *cb, void *u);
-int        PEM_write_bio_PKCS8PrivateKey(BIO *bp, EVP_PKEY *x, const EVP_CIPHER *enc, char *kstr, int klen, pem_password_cb *cb, void *u);
-int        PEM_write_bio_PKCS8PrivateKey_nid(BIO *bp, EVP_PKEY *x, int nid, char *kstr, int klen, pem_password_cb *cb, void *u);
-int        PEM_write_bio_PUBKEY(BIO *bp, EVP_PKEY *x);
-int        PEM_write_bio_RSAPrivateKey(BIO *bp, RSA *x, const EVP_CIPHER *enc, unsigned char *kstr, int klen, pem_password_cb *cb, void *u);
-int        PEM_write_bio_RSAPublicKey(BIO *bp, RSA *x);
-int        PEM_write_bio_RSA_PUBKEY(BIO *bp, RSA *x);
-int        PEM_write_bio_DSAPrivateKey(BIO *bp, DSA *x, const EVP_CIPHER *enc, unsigned char *kstr, int klen, pem_password_cb *cb, void *u);
-int        PEM_write_bio_DSA_PUBKEY(BIO *bp, DSA *x);
-int        PEM_write_bio_DSAparams(BIO *bp, DSA *x);
-int        PEM_write_bio_DHparams(BIO *bp, DH *x);
-int        PEM_write_bio_X509(BIO *bp, X509 *x);
-int        PEM_write_bio_X509_AUX(BIO *bp, X509 *x);
-int        PEM_write_bio_X509_REQ(BIO *bp, X509_REQ *x);
-int        PEM_write_bio_X509_REQ_NEW(BIO *bp, X509_REQ *x);
-int        PEM_write_bio_X509_CRL(BIO *bp, X509_CRL *x);
-int        PEM_write_bio_PKCS7(BIO *bp, PKCS7 *x);
+int        PEM_write_bio_RSAPrivateKey(      BIO *bp, RSA      *x, const EVP_CIPHER *enc, unsigned char *kstr, int klen, pem_password_cb *cb, void *u);
+int        PEM_write_bio_DSAPrivateKey(      BIO *bp, DSA      *x, const EVP_CIPHER *enc, unsigned char *kstr, int klen, pem_password_cb *cb, void *u);
+int        PEM_write_bio_PrivateKey(         BIO *bp, EVP_PKEY *x, const EVP_CIPHER *enc, unsigned char *kstr, int klen, pem_password_cb *cb, void *u);
+int        PEM_write_bio_PKCS8PrivateKey(    BIO *bp, EVP_PKEY *x, const EVP_CIPHER *enc, char *kstr         , int klen, pem_password_cb *cb, void *u);
+int        PEM_write_bio_PKCS8PrivateKey_nid(BIO *bp, EVP_PKEY *x, int nid              , char *kstr         , int klen, pem_password_cb *cb, void *u);
+int        PEM_write_bio_PUBKEY(             BIO *bp, EVP_PKEY *x);
+int        PEM_write_bio_RSAPublicKey(       BIO *bp, RSA *x);
+int        PEM_write_bio_RSA_PUBKEY(         BIO *bp, RSA *x);
+int        PEM_write_bio_DSA_PUBKEY(         BIO *bp, DSA *x);
+int        PEM_write_bio_DSAparams(          BIO *bp, DSA *x);
+int        PEM_write_bio_DHparams(           BIO *bp, DH *x);
+int        PEM_write_bio_X509(               BIO *bp, X509 *x);
+int        PEM_write_bio_X509_AUX(           BIO *bp, X509 *x);
+int        PEM_write_bio_X509_REQ(           BIO *bp, X509_REQ *x);
+int        PEM_write_bio_X509_REQ_NEW(       BIO *bp, X509_REQ *x);
+int        PEM_write_bio_X509_CRL(           BIO *bp, X509_CRL *x);
+int        PEM_write_bio_PKCS7(              BIO *bp, PKCS7 *x);
 
 #endif
