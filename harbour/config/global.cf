@@ -325,7 +325,8 @@ endif
 
 # Exclude Harbour-wide features prohibiting commercial usage
 ifeq ($(HB_COMMERCE),yes)
-   HB_GPM_MOUSE := no
+   export HB_GPM_MOUSE := no
+   export HB_WITHOUT_GTSLN := yes
 endif
 
 # Names of portable GT drivers
