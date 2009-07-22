@@ -646,7 +646,7 @@ HB_FUNC( BIO_GET_CONN_IP )
 }
 
 #if 0
-/* Commented due to bugs in OpenSSL declaration. Bug report sent. */
+/* NOTE: Commented due to bugs in OpenSSL declaration. Bug report sent #1989 */
 HB_FUNC( BIO_GET_CONN_INT_PORT )
 {
    BIO * bio = hb_BIO_par( 1 );

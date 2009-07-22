@@ -1403,7 +1403,9 @@ HB_FUNC( SSL_USE_RSAPRIVATEKEY_ASN1 )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         /* 'const' not used in 2nd param because ssh.h misses it, too. [vszakats] */
+         /* 'const' not used in 2nd param because ssh.h misses it, too.
+             Bug report sent: #1988
+             [vszakats] */
          hb_retni( SSL_use_RSAPrivateKey_ASN1( ssl, ( unsigned char * ) hb_parc( 2 ), hb_parclen( 2 ) ) );
    }
    else

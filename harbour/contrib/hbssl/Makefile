@@ -34,6 +34,7 @@ C_SOURCES=\
 	evpenc.c \
 	evpmd.c \
 	evppkey.c \
+	pem.c \
 	rand.c \
 	ssl.c \
 	sslciph.c \
