@@ -58,6 +58,7 @@ ifneq ($(strip $(HB_INC_LIBPNG_OK)),)
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_LIBPNG_OK), -I$(d))
 
 C_SOURCES = \
+	_hbhbpdf.c \
 	hpdf_annotation.c \
 	hpdf_array.c \
 	hpdf_binary.c \

@@ -186,6 +186,7 @@ HB_FUNC( BIO_GET_FLAGS )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+#if ! defined( HB_OPENSSL_OLD_OSX_ )
 HB_FUNC( BIO_TEST_FLAGS )
 {
    BIO * bio = hb_BIO_par( 1 );
@@ -195,6 +196,7 @@ HB_FUNC( BIO_TEST_FLAGS )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+#endif
 
 HB_FUNC( BIO_SET_FD )
 {
@@ -406,10 +408,14 @@ HB_FUNC( BIO_NEW_SOCKET )
 
 HB_FUNC( BIO_NEW_DGRAM )
 {
+#ifndef OPENSSL_NO_DGRAM
    if( HB_ISNUM( 1 ) )
       hb_retptr( BIO_new_dgram( hb_parni( 1 ), HB_ISNUM( 2 ) ? hb_parni( 2 ) : BIO_NOCLOSE ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_errRT_BASE( EG_NOFUNC, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 HB_FUNC( BIO_NEW_FD )

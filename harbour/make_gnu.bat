@@ -183,7 +183,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    set HB_CONTRIB_ADDONS=
    set HB_EXTERNALLIBS=no
    set HB_EXTERNAL_ADDONS=
-   %_HB_MAKE% SHLVL=0 clean install %HB_USER_MAKEFLAGS% %_HB_BUILD_LOG%
+   %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %_HB_BUILD_LOG%
    if errorlevel 1 echo Harbour GNU Make returned: %ERRORLEVEL%
    if errorlevel 1 goto MAKE_DONE
    set HB_DYNLIB=no
@@ -195,14 +195,14 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    set _HB_CONTRIB_ADDONS=
    set _HB_EXTERNALLIBS=
    set _HB_EXTERNAL_ADDONS=
-   %_HB_MAKE% SHLVL=0 clean install %HB_USER_MAKEFLAGS% %_HB_BUILD_LOG%
+   %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %_HB_BUILD_LOG%
    if errorlevel 1 echo Harbour GNU Make returned: %ERRORLEVEL%
    goto MAKE_DONE
 
 :DO_GCC
 
    set HB_DYNLIB=no
-   %_HB_MAKE% SHLVL=0 clean install %HB_USER_MAKEFLAGS% %_HB_BUILD_LOG%
+   %_HB_MAKE% clean install %HB_USER_MAKEFLAGS% %_HB_BUILD_LOG%
    if errorlevel 1 echo Harbour GNU Make returned: %ERRORLEVEL%
    goto MAKE_DONE
 
@@ -217,7 +217,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
    if "%HB_COMPILER%" == "cygwin" goto SKIP_WINDLL_CYG
 
-   %_HB_MAKE% SHLVL=0 %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9 %_HB_BUILD_LOG%
+   %_HB_MAKE% %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9 %_HB_BUILD_LOG%
    if errorlevel 1 echo Harbour GNU Make returned: %ERRORLEVEL%
    goto MAKE_DONE
 

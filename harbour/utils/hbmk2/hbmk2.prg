@@ -4208,6 +4208,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
       #elif defined( __PLATFORM__DARWIN )
          IF hbmk[ _HBMK_lGUI ]
+            /* TOFIX: Find a way to pass arbitrary options to an .app. */
+            l_aOPTRUN := {}
             cCommand := "open " + FN_Escape( cCommand + ".app", _ESC_NIX )
          ENDIF
       #endif

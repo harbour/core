@@ -376,6 +376,7 @@ EXAMPLES
       ---
 
       --- MinGW GCC for WinCE/ARM (requires native x86 Harbour binaries + Cygwin)
+      set SHLVL=0
       set PATH=C:\mingwce\opt\mingw32ce\bin;C:\cygwin\bin;%PATH%
       rem
       set HB_BIN_COMPILE=C:\hb-mingw\bin

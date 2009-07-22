@@ -21,6 +21,10 @@ HB_INC_OPENSSL_OK += $(foreach d, $(HB_INC_OPENSSL), $(if $(wildcard $(d)/openss
 
 endif
 
+ifeq ($(HB_ARCHITECTURE),darwin)
+HB_USER_CFLAGS += -DOPENSSL_NO_SHA256 -DOPENSSL_NO_SHA512 -DOPENSSL_NO_CAMELLIA -DOPENSSL_NO_SEED -DOPENSSL_NO_DGRAM -DHB_OPENSSL_OLD_OSX_
+endif
+
 ifneq ($(strip $(HB_INC_OPENSSL_OK)),)
 
 HB_USER_CFLAGS += $(foreach d, $(HB_INC_OPENSSL_OK), -I$(d))
