@@ -904,7 +904,7 @@ HB_FUNC( EVP_SEALINIT )
             npubk = ( int ) hb_arrayLen( pArray = hb_param( 5, HB_IT_ARRAY ) );
          else if( HB_ISPOINTER( 5 ) )
          {
-            if( ( pkey1 = ( EVP_PKEY * ) hb_parptr( 5 ) ) )
+            if( ( pkey1 = ( EVP_PKEY * ) hb_parptr( 5 ) ) != NULL )
                npubk = 1;
          }
 
@@ -1014,11 +1014,84 @@ HB_FUNC( EVP_SEALFINAL )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if 0
+HB_FUNC( EVP_OPENINIT )
+{
+   const EVP_CIPHER * cipher = hb_EVP_CIPHER_par( 2 );
 
-int EVP_OpenInit(EVP_CIPHER_CTX *ctx,EVP_CIPHER *type,unsigned char *ek, int ekl,unsigned char *iv,EVP_PKEY *priv);
-int EVP_OpenUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl, unsigned char *in, int inl);
-int EVP_OpenFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl);
+   if( hb_EVP_CIPHER_CTX_is( 1 ) && cipher )
+   {
+      EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
+      EVP_PKEY * priv = ( EVP_PKEY * ) hb_parptr( 5 );
+
+      if( ctx && priv )
+         hb_retni( EVP_OpenInit( ctx,
+                                 cipher,
+                                 ( const unsigned char * ) hb_parcx( 3 ),
+                                 hb_parclen( 3 ),
+                                 ( HB_ISCHAR( 4 ) && ( int ) hb_parclen( 4 ) == EVP_CIPHER_iv_length( cipher ) ) ? ( const unsigned char * ) hb_parc( 4 ) : NULL,
+                                 priv ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( EVP_OPENUPDATE )
+{
+   if( hb_EVP_CIPHER_CTX_is( 1 ) )
+   {
+      EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
+
+      if( ctx )
+      {
+         int size = hb_parclen( 3 ) + EVP_CIPHER_CTX_block_size( ctx ) - 1;
+         unsigned char * buffer = ( unsigned char * ) hb_xgrab( size );
+
+         hb_retni( EVP_OpenUpdate( ctx,
+                                   buffer,
+                                   &size,
+                                   ( const unsigned char * ) hb_parcx( 3 ),
+                                   ( size_t ) hb_parclen( 3 ) ) );
+
+         if( size > 0 )
+         {
+            if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
+               hb_xfree( buffer );
+         }
+         else
+            hb_storc( NULL, 2 );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( EVP_OPENFINAL )
+{
+   if( hb_EVP_CIPHER_CTX_is( 1 ) )
+   {
+      EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
+
+      if( ctx )
+      {
+         int size = EVP_CIPHER_CTX_block_size( ctx );
+         unsigned char * buffer = ( unsigned char * ) hb_xgrab( size );
+
+         hb_retni( EVP_OpenFinal( ctx, buffer, &size ) );
+
+         if( size > 0 )
+         {
+            if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
+               hb_xfree( buffer );
+         }
+         else
+            hb_storc( NULL, 2 );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+#if 0
 
 #define EVP_CIPHER_CTX_get_app_data(e) ((e)->app_data)
 #define EVP_CIPHER_CTX_set_app_data(e,d) ((e)->app_data=(char *)(d))

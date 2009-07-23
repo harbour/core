@@ -1469,7 +1469,7 @@ static void hb_ssl_msg_callback( int write_p, int version, int content_type, con
       PHB_ITEM p1 = hb_itemPutL( NULL, write_p );
       PHB_ITEM p2 = hb_itemPutNI( NULL, version );
       PHB_ITEM p3 = hb_itemPutNI( NULL, content_type );
-      PHB_ITEM p4 = hb_itemPutCL( NULL, buf, ( ULONG ) len );
+      PHB_ITEM p4 = hb_itemPutCL( NULL, ( const char * ) buf, ( ULONG ) len );
 
       hb_vmEvalBlockV( ( PHB_ITEM ) userdata, 4, p1, p2, p3, p4 );
 

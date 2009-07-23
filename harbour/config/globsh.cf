@@ -57,12 +57,12 @@ MD = mkdir
 MDP = mkdir
 
 dirbase::
-	-@$(CMDPREF)if not exist $(OBJ_DIR_OS) $(MDP) "$(OBJ_DIR_OS)"
+	-@$(CMDPREF)if not exist "$(OBJ_DIR_OS)" $(MDP) "$(OBJ_DIR_OS)"
 	$(if $(LIB_FILE),-@$(CMDPREF)if not exist "$(LIB_DIR_OS)" $(MDP) "$(LIB_DIR_OS)",)
 	$(if $(EXE_FILE),-@$(CMDPREF)if not exist "$(EXE_DIR_OS)" $(MDP) "$(EXE_DIR_OS)",)
 
 clean::
-	-@$(CMDPREF)if exist $(OBJ_DIR_OS) $(RDP) "$(OBJ_DIR_OS)"
+	-@$(CMDPREF)if exist "$(OBJ_DIR_OS)" $(RDP) "$(OBJ_DIR_OS)"
 	$(if $(LIB_FILE),-@$(CMDPREF)if exist "$(LIB_FILE_OS)" $(RM) "$(LIB_FILE_OS)",)
 	$(if $(LIB_FILE),-@$(CMDPREF)if exist "$(basename $(LIB_FILE_OS)).bak" $(RM) "$(basename $(LIB_FILE_OS)).bak",)
 	$(if $(LIB_FILE),-@$(CMDPREF)if exist "$(LIB_DIR_OS)" if not exist "$(LIB_DIR_OS)\*" $(RDP) "$(LIB_DIR_OS)",)
