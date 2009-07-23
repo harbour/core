@@ -128,7 +128,7 @@ HB_FUNC( SSL_NEW )
 
          SSL * ssl = SSL_new( ctx );
 
-         * ph = ( void * ) ssl;
+         * ph = ssl;
 
          hb_retptrGC( ph );
       }
@@ -149,7 +149,7 @@ HB_FUNC( SSL_DUP )
 
          SSL * ssl = SSL_dup( ssl_par );
 
-         * ph = ( void * ) ssl;
+         * ph = ssl;
 
          hb_retptrGC( ph );
       }

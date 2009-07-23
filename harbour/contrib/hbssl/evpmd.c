@@ -244,7 +244,7 @@ HB_FUNC( EVP_MD_CTX_CREATE )
 
    EVP_MD_CTX * ctx = EVP_MD_CTX_create();
 
-   * ph = ( void * ) ctx;
+   * ph = ctx;
 
    hb_retptrGC( ph );
 }
@@ -378,7 +378,10 @@ HB_FUNC( EVP_DIGESTFINAL )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -404,7 +407,10 @@ HB_FUNC( EVP_DIGESTFINAL_EX )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -473,7 +479,10 @@ HB_FUNC( EVP_SIGNFINAL )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else

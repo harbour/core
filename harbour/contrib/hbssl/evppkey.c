@@ -93,7 +93,7 @@ HB_FUNC( EVP_PKEY_NEW )
 
    EVP_PKEY * ctx = EVP_PKEY_new();
 
-   * ph = ( void * ) ctx;
+   * ph = ctx;
 
    hb_retptrGC( ph );
 }

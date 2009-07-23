@@ -70,6 +70,8 @@ static HB_GARBAGE_FUNC( EVP_CIPHER_CTX_release )
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( ph && * ph )
    {
+      /* Cleanup the object */
+      EVP_CIPHER_CTX_cleanup( ( EVP_CIPHER_CTX * ) * ph );
       /* Destroy the object */
       hb_xfree( * ph );
 
@@ -428,7 +430,9 @@ HB_FUNC( HB_EVP_CIPHER_CTX_CREATE )
 
    EVP_CIPHER_CTX * ctx = ( EVP_CIPHER_CTX * ) hb_xgrab( sizeof( EVP_CIPHER_CTX ) );
 
-   * ph = ( void * ) ctx;
+   EVP_CIPHER_CTX_init( ctx );
+
+   * ph = ctx;
 
    hb_retptrGC( ph );
 }
@@ -587,7 +591,10 @@ HB_FUNC( EVP_ENCRYPTUPDATE )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -613,7 +620,10 @@ HB_FUNC( EVP_ENCRYPTFINAL )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -639,7 +649,10 @@ HB_FUNC( EVP_ENCRYPTFINAL_EX )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -706,7 +719,10 @@ HB_FUNC( EVP_DECRYPTUPDATE )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -732,7 +748,10 @@ HB_FUNC( EVP_DECRYPTFINAL )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -758,7 +777,10 @@ HB_FUNC( EVP_DECRYPTFINAL_EX )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -827,7 +849,10 @@ HB_FUNC( EVP_CIPHERUPDATE )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -853,7 +878,10 @@ HB_FUNC( EVP_CIPHERFINAL )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -879,7 +907,10 @@ HB_FUNC( EVP_CIPHERFINAL_EX )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -951,6 +982,7 @@ HB_FUNC( EVP_SEALINIT )
 
             hb_xfree( ek );
             hb_xfree( ekl );
+            hb_xfree( pubk );
          }
       }
    }
@@ -981,7 +1013,10 @@ HB_FUNC( EVP_SEALUPDATE )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -1007,7 +1042,10 @@ HB_FUNC( EVP_SEALFINAL )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -1058,7 +1096,10 @@ HB_FUNC( EVP_OPENUPDATE )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -1084,7 +1125,10 @@ HB_FUNC( EVP_OPENFINAL )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else

@@ -20,7 +20,9 @@ PROCEDURE Main()
 
    LOCAL cKey := "key"
 
-   LOCAL a, iv, pub, bioe, tmp
+   LOCAL a, iv, pub
+   LOCAL bioe
+   LOCAL tmp
 
    LOCAL all := {;
        @PEM_READ_BIO_PRIVATEKEY()      ,;
@@ -56,8 +58,7 @@ PROCEDURE Main()
    ? "ENCRYTPTED", ">" + hb_StrToHex( encrypted ) + "<"
    ? ">" + encrypted + "<"
 
-   EVP_CIPHER_CTX_init( ctx )
-   EVP_CIPHER_CTX_cleanup( ctx )
+   ctx := hb_EVP_CIPHER_CTX_create()
 
    EVP_DecryptInit( ctx, "AES-192-OFB", cKey )
 
@@ -72,15 +73,18 @@ PROCEDURE Main()
    ? ERR_load_PEM_strings()
    ? OpenSSL_add_all_algorithms()
 
-   EVP_CIPHER_CTX_init( ctx )
-   EVP_CIPHER_CTX_cleanup( ctx )
+   ctx := hb_EVP_CIPHER_CTX_create()
 
-   ? "()()()()()()()"
-// bioe := BIO_new_fd( 1, HB_BIO_NOCLOSE )
-// FOR EACH tmp IN all
-//    ? tmp:__enumIndex(), tmp:exec( "pubkey.pem", "test" )
-//    ? ; ERR_print_errors( bioe )
-// NEXT
+   ? "=============="
+   bioe := BIO_new_fd( 1, HB_BIO_NOCLOSE )
+   FOR EACH tmp IN all
+      ? tmp:__enumIndex(), pub := tmp:exec( "pubkey.pem", "test" )
+      IF ! Empty( pub )
+         ? "EVP_PKEY_free", EVP_PKEY_free( pub )
+      ENDIF
+      ? ; ERR_print_errors( bioe )
+   NEXT
+   BIO_free( bioe )
 
    ? pub := PEM_READ_BIO_PUBKEY( "pubkey.pem", "test" )
 
@@ -89,7 +93,9 @@ PROCEDURE Main()
    ? ValType( a[ 1 ] ), ">" + hb_StrToHex( a[ 1 ] ) + "<"
    ? ValType( iv ), ">" + hb_StrToHex( iv ) + "<"
 
-// BIO_free( bioe )
+   ? "EVP_PKEY_free", EVP_PKEY_free( pub )
+
+   ctx := NIL
 
    EVP_cleanup()
 

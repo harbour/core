@@ -83,6 +83,16 @@ HB_FUNC( ERR_LOAD_EVP_STRINGS )
    ERR_load_EVP_strings();
 }
 
+HB_FUNC( EVP_PKEY_FREE )
+{
+   EVP_PKEY * key = ( EVP_PKEY * ) hb_parptr( 1 );
+
+   if( key )
+      EVP_PKEY_free( key );
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( EVP_BYTESTOKEY )
 {
    const EVP_CIPHER * cipher = hb_EVP_CIPHER_par( 1 );

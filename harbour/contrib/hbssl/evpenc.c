@@ -91,7 +91,7 @@ HB_FUNC( HB_EVP_ENCODE_CTX_CREATE )
 
    EVP_ENCODE_CTX * ctx = ( EVP_ENCODE_CTX * ) hb_xgrab( sizeof( EVP_ENCODE_CTX ) );
 
-   * ph = ( void * ) ctx;
+   * ph = ctx;
 
    hb_retptrGC( ph );
 }
@@ -132,7 +132,10 @@ HB_FUNC( EVP_ENCODEUPDATE )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -158,7 +161,10 @@ HB_FUNC( EVP_ENCODEFINAL )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -201,7 +207,10 @@ HB_FUNC( EVP_DECODEUPDATE )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else
@@ -227,7 +236,10 @@ HB_FUNC( EVP_DECODEFINAL )
                hb_xfree( buffer );
          }
          else
+         {
+            hb_xfree( buffer );
             hb_storc( NULL, 2 );
+         }
       }
    }
    else

@@ -524,7 +524,7 @@ static void PHB_CURL_ret( PHB_CURL from )
 {
    void ** ph = ( void ** ) hb_gcAlloc( sizeof( PHB_CURL ), PHB_CURL_release );
 
-   * ph = ( void * ) PHB_CURL_create( from );
+   * ph = PHB_CURL_create( from );
 
    hb_retptrGC( ph );
 }
