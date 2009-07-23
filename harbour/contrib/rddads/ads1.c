@@ -2244,7 +2244,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             else
             {
                u32Len++;                  /* make room for NULL */
-               pucBuf = ( UNSIGNED8 * ) hb_xgrab( u32Len );
+               pucBuf = ( UNSIGNED8 * ) hb_xgrab( u32Len + 1 );
                AdsGetBinary( pArea->hTable, ADSFIELD( uiIndex ), 0, pucBuf, &u32Len );
                hb_itemPutCLPtr( pItem, ( char * ) pucBuf, u32Len );
             }
