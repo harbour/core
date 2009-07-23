@@ -1985,7 +1985,7 @@ int hb_storvclen_buffer( char * szText, ULONG ulLen, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetCPtr( pItem, va_arg( va, ULONG ), szText, ulLen ) ? 1 : 0;
+         iRetVal = hb_arraySetCLPtr( pItem, va_arg( va, ULONG ), szText, ulLen ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }

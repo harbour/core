@@ -1530,7 +1530,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             void * pBuffer = hb_xgrab( ulSize + 1 );
             HB_GTSELF_SAVE( pGT, 0, 0, iRow, iCol, pBuffer );
-            hb_arraySetCPtr( pInfo->pResult, 7, ( char * ) pBuffer, ulSize );
+            hb_arraySetCLPtr( pInfo->pResult, 7, ( char * ) pBuffer, ulSize );
          }
          break;
       }

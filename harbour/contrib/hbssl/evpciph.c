@@ -886,20 +886,144 @@ HB_FUNC( EVP_CIPHERFINAL_EX )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( EVP_SEALINIT )
+{
+   const EVP_CIPHER * cipher = hb_EVP_CIPHER_par( 2 );
+
+   if( hb_EVP_CIPHER_CTX_is( 1 ) && cipher )
+   {
+      EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
+
+      if( ctx )
+      {
+         int npubk = 0;
+         PHB_ITEM pArray = NULL;
+         EVP_PKEY * pkey1 = NULL;
+
+         if( HB_ISARRAY( 5 ) )
+            npubk = ( int ) hb_arrayLen( pArray = hb_param( 5, HB_IT_ARRAY ) );
+         else if( HB_ISPOINTER( 5 ) )
+         {
+            if( ( pkey1 = ( EVP_PKEY * ) hb_parptr( 5 ) ) )
+               npubk = 1;
+         }
+
+         if( npubk > 0 )
+         {
+            unsigned char ** ek = ( unsigned char ** ) hb_xgrab( sizeof( unsigned char * ) * npubk );
+            int * ekl = ( int * ) hb_xgrab( sizeof( int ) * npubk );
+            int ivl = EVP_CIPHER_iv_length( cipher );
+            unsigned char * iv = ivl > 0 ? ( unsigned char * ) hb_xgrab( ivl ) : NULL;
+            EVP_PKEY ** pubk = ( EVP_PKEY ** ) hb_xgrab( sizeof( EVP_PKEY * ) * npubk );
+            PHB_ITEM pPKEY;
+            int tmp;
+
+            for( tmp = 0; tmp < npubk; tmp++ )
+            {
+               pubk[ tmp ] = pkey1 ? pkey1 : ( EVP_PKEY * ) hb_arrayGetPtr( pArray, tmp + 1 );
+               ek[ tmp ] = ( unsigned char * ) hb_xgrab( EVP_PKEY_size( pubk[ tmp ] ) );
+               ekl[ tmp ] = 0;
+            }
+
+            hb_retni( EVP_SealInit( ctx,
+                                    cipher,
+                                    ek,
+                                    ekl,
+                                    iv,
+                                    pubk,
+                                    npubk ) );
+
+            pPKEY = hb_itemArrayNew( npubk );
+
+            for( tmp = 0; tmp < npubk; tmp++ )
+               hb_arraySetCLPtr( pPKEY, tmp + 1, ( char * ) ek[ tmp ], ekl[ tmp ] );
+
+            hb_itemParamStoreForward( 3, pPKEY );
+            hb_itemRelease( pPKEY );
+
+            if( iv )
+            {
+               if( ! hb_storclen_buffer( ( char * ) iv, ivl, 4 ) )
+                  hb_xfree( iv );
+            }
+            else
+               hb_stor( 4 );
+
+            hb_xfree( ek );
+            hb_xfree( ekl );
+         }
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( EVP_SEALUPDATE )
+{
+   if( hb_EVP_CIPHER_CTX_is( 1 ) )
+   {
+      EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
+
+      if( ctx )
+      {
+         int size = hb_parclen( 3 ) + EVP_CIPHER_CTX_block_size( ctx ) - 1;
+         unsigned char * buffer = ( unsigned char * ) hb_xgrab( size );
+
+         hb_retni( EVP_SealUpdate( ctx,
+                                   buffer,
+                                   &size,
+                                   ( const unsigned char * ) hb_parcx( 3 ),
+                                   ( size_t ) hb_parclen( 3 ) ) );
+
+         if( size > 0 )
+         {
+            if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
+               hb_xfree( buffer );
+         }
+         else
+            hb_storc( NULL, 2 );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( EVP_SEALFINAL )
+{
+   if( hb_EVP_CIPHER_CTX_is( 1 ) )
+   {
+      EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
+
+      if( ctx )
+      {
+         int size = EVP_CIPHER_CTX_block_size( ctx );
+         unsigned char * buffer = ( unsigned char * ) hb_xgrab( size );
+
+         hb_retni( EVP_SealFinal( ctx, buffer, &size ) );
+
+         if( size > 0 )
+         {
+            if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
+               hb_xfree( buffer );
+         }
+         else
+            hb_storc( NULL, 2 );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 #if 0
+
+int EVP_OpenInit(EVP_CIPHER_CTX *ctx,EVP_CIPHER *type,unsigned char *ek, int ekl,unsigned char *iv,EVP_PKEY *priv);
+int EVP_OpenUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl, unsigned char *in, int inl);
+int EVP_OpenFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl);
 
 #define EVP_CIPHER_CTX_get_app_data(e) ((e)->app_data)
 #define EVP_CIPHER_CTX_set_app_data(e,d) ((e)->app_data=(char *)(d))
 
 int EVP_CIPHER_param_to_asn1(EVP_CIPHER_CTX *c, ASN1_TYPE *type);
 int EVP_CIPHER_asn1_to_param(EVP_CIPHER_CTX *c, ASN1_TYPE *type);
-
-int EVP_OpenInit(EVP_CIPHER_CTX *ctx,EVP_CIPHER *type,unsigned char *ek, int ekl,unsigned char *iv,EVP_PKEY *priv);
-int EVP_OpenUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl, unsigned char *in, int inl);
-int EVP_OpenFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl);
-
-int EVP_SealInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type, unsigned char **ek, int *ekl, unsigned char *iv, EVP_PKEY **pubk, int npubk);
-int EVP_SealUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl, unsigned char *in, int inl);
-int EVP_SealFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl);
 
 #endif

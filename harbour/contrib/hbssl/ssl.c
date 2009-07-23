@@ -53,6 +53,7 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
+#include "hbvm.h"
 
 #include "hbssl.h"
 
@@ -1456,7 +1457,60 @@ HB_FUNC( SSL_USE_PRIVATEKEY )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/* ---------------------------------------------------------------------------- */
+/* Callback */
+
+static void hb_ssl_msg_callback( int write_p, int version, int content_type, const void * buf, size_t len, SSL * ssl, void * userdata )
+{
+   HB_SYMBOL_UNUSED( ssl );
+
+   if( userdata )
+   {
+      PHB_ITEM p1 = hb_itemPutL( NULL, write_p );
+      PHB_ITEM p2 = hb_itemPutNI( NULL, version );
+      PHB_ITEM p3 = hb_itemPutNI( NULL, content_type );
+      PHB_ITEM p4 = hb_itemPutCL( NULL, buf, ( ULONG ) len );
+
+      hb_vmEvalBlockV( ( PHB_ITEM ) userdata, 4, p1, p2, p3, p4 );
+
+      hb_itemRelease( p4 );
+      hb_itemRelease( p3 );
+      hb_itemRelease( p2 );
+      hb_itemRelease( p1 );
+   }
+}
+
+HB_FUNC( SSL_SET_MSG_CALLBACK )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+      {
+         if( HB_ISBLOCK( 2 ) )
+         {
+            PHB_ITEM pPassBlock = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
+            SSL_set_msg_callback_arg( ssl, pPassBlock );
+            SSL_set_msg_callback( ssl, hb_ssl_msg_callback );
+         }
+         else
+         {
+            /* NOTE: WARNING: Direct access to OpenSSL internals. [vszakats] */
+            hb_itemRelease( ( PHB_ITEM ) ssl->msg_callback_arg );
+            SSL_set_msg_callback_arg( ssl, NULL );
+            SSL_set_msg_callback( ssl, NULL );
+         }
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /*
+
+void         SSL_set_psk_client_callback(SSL *ssl, unsigned int (*callback)(SSL *ssl, const char *hint, char *identity, unsigned int max_identity_len, unsigned char *psk, unsigned int max_psk_len));
+void         SSL_set_psk_server_callback(SSL *ssl, unsigned int (*callback)(SSL *ssl, const char *identity, unsigned char *psk, int max_psk_len));
 
 EVP_PKEY *   SSL_get_privatekey(SSL *ssl);
 
@@ -1477,9 +1531,5 @@ SSL_SESSION *SSL_get_session(const SSL *ssl);
 int (*SSL_get_verify_callback(const SSL *ssl))(int,X509_STORE_CTX *)
 void         SSL_set_client_CA_list(SSL *ssl, STACK *list);
 void         SSL_set_info_callback(SSL *ssl, void (*cb);(void))
-void         SSL_set_msg_callback(SSL *ctx, void (*cb)(int write_p, int version, int content_type, const void *buf, size_t len, SSL *ssl, void *arg));
-void         SSL_set_msg_callback_arg(SSL *ctx, void *arg);
 void         SSL_set_verify(SSL *ssl, int mode, int (*callback);(void))
-void         SSL_set_psk_client_callback(SSL *ssl, unsigned int (*callback)(SSL *ssl, const char *hint, char *identity, unsigned int max_identity_len, unsigned char *psk, unsigned int max_psk_len));
-void         SSL_set_psk_server_callback(SSL *ssl, unsigned int (*callback)(SSL *ssl, const char *identity, unsigned char *psk, int max_psk_len));
 */

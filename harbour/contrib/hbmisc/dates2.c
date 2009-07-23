@@ -178,7 +178,7 @@ HB_FUNC( ISLEAPYEAR )
       hb_retl( FALSE );
 }
 
-HB_FUNC( DAYSINMONTH )
+HB_FUNC( HBMISC_DAYSINMONTH )
 {
    PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
@@ -188,66 +188,6 @@ HB_FUNC( DAYSINMONTH )
 
       hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
       hb_retni( hb_daysinmonth( iYear, iMonth ) );
-   }
-   else
-      hb_retni( 0 );
-}
-
-HB_FUNC( EOM )
-{
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
-
-   if( pDate )
-   {
-      int iYear, iMonth, iDay;
-
-      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
-      hb_retd( iYear, iMonth, hb_daysinmonth( iYear, iMonth ) );
-   }
-   else
-      hb_retdl( 0 );
-}
-
-HB_FUNC( BOM )
-{
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
-
-   if( pDate )
-   {
-      int iYear, iMonth, iDay;
-
-      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
-      hb_retd( iYear, iMonth, 1 );
-   }
-   else
-      hb_retdl( 0 );
-}
-
-HB_FUNC( WOM )
-{
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
-
-   if( pDate )
-   {
-      int iYear, iMonth, iDay;
-
-      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
-      hb_retni( hb_wom( iYear, iMonth, iDay ) );
-   }
-   else
-      hb_retni( 0 );
-}
-
-HB_FUNC( DOY )
-{
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
-
-   if( pDate )
-   {
-      int iYear, iMonth, iDay;
-
-      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
-      hb_retni( hb_doy( iYear, iMonth, iDay ) );
    }
    else
       hb_retni( 0 );
@@ -269,44 +209,3 @@ HB_FUNC( WOY )
    else
       hb_retni( 0 );
 }
-
-HB_FUNC( EOY )
-{
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
-
-   if( pDate )
-   {
-      int iYear, iMonth, iDay;
-
-      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
-      hb_retd( iYear, 12, 31 );
-   }
-   else
-      hb_retdl( 0 );
-}
-
-HB_FUNC( BOY )
-{
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
-
-   if( pDate )
-   {
-      int iYear, iMonth, iDay;
-
-      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
-      hb_retd( iYear, 1, 1 );
-   }
-   else
-      hb_retdl( 0 );
-}
-
-/*
-HB_FUNC( DATETIME )
-{
-   time_t current_time;
-
-   time( &current_time );
-
-   hb_retc( ctime( &current_time ) );
-}
-*/

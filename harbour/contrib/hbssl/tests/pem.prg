@@ -14,14 +14,21 @@
 PROCEDURE Main()
    LOCAL cString
    LOCAL bio
+   LOCAL bioe
 
    ? ERR_load_PEM_strings()
    ? OpenSSL_add_all_algorithms()
 
+   bioe := BIO_new_fd( 1, HB_BIO_NOCLOSE )
+
    ? PEM_READ_BIO_RSAPRIVATEKEY( "privkey.pem", {| lWrite | QOut( "Callback", lWrite, hb_osNewLine() ), "test" } )
+   ? ; ERR_print_errors( bioe )
    ? PEM_READ_BIO_RSAPRIVATEKEY( "privkey.pem", "test" )
+   ? ; ERR_print_errors( bioe )
    ? PEM_READ_BIO_RSAPUBLICKEY( "privkey.pem", {| lWrite | QOut( "Callback", lWrite, hb_osNewLine() ), "test" } )
+   ? ; ERR_print_errors( bioe )
    ? PEM_READ_BIO_RSAPUBLICKEY( "privkey.pem", "test" )
+   ? ; ERR_print_errors( bioe )
 
 #pragma __cstream|cString:=%s
 -----BEGIN RSA PRIVATE KEY-----
@@ -45,10 +52,15 @@ B0NDIZKbaPJHHPb9Ne7nQECzv0/kzmAley9UMTZ1M7fq6KYemR0LsA==
 ENDTEXT
 
    ? PEM_READ_BIO_RSAPRIVATEKEY( bio := BIO_new_mem_buf( cString ), {| lWrite | QOut( "Callback", lWrite, hb_osNewLine() ), "test" } )
+   ? ; ERR_print_errors( bioe )
    BIO_free( bio )
    ? PEM_READ_BIO_RSAPRIVATEKEY( bio := BIO_new_mem_buf( cString ), "test" )
+   ? ; ERR_print_errors( bioe )
    BIO_free( bio )
    ? PEM_READ_BIO_RSAPRIVATEKEY( bio := BIO_new_mem_buf( cString ), "<wrong>" )
+   ? ; ERR_print_errors( bioe )
    BIO_free( bio )
+
+   BIO_free( bioe )
 
    RETURN

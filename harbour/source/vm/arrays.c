@@ -831,9 +831,9 @@ BOOL hb_arraySetCL( PHB_ITEM pArray, ULONG ulIndex, const char * szText, ULONG u
       return FALSE;
 }
 
-BOOL hb_arraySetCPtr( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen )
+BOOL hb_arraySetCLPtr( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetCPtr(%p, %lu, %p, %lu)", pArray, ulIndex, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetCLPtr(%p, %lu, %p, %lu)", pArray, ulIndex, szText, ulLen));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {

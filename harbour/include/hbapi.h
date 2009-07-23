@@ -689,6 +689,8 @@ extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns
 #define hb_retcStatic( szText )              hb_retc_const( (szText) )
 #define hb_storclenAdopt                     hb_storclen_buffer
 #define hb_itemPutCRawStatic                 hb_itemPutCLConst
+/* compatibility with older Harbour */
+#define hb_arraySetCPtr                      hb_arraySetCLPtr
 
 #ifdef HB_API_MACROS
 
@@ -810,7 +812,7 @@ extern HB_EXPORT BOOL         hb_arraySetNInt( PHB_ITEM pArray, ULONG ulIndex, H
 extern HB_EXPORT BOOL         hb_arraySetND( PHB_ITEM pArray, ULONG ulIndex, double dNumber );
 extern HB_EXPORT BOOL         hb_arraySetC( PHB_ITEM pArray, ULONG ulIndex, const char * szText );
 extern HB_EXPORT BOOL         hb_arraySetCL( PHB_ITEM pArray, ULONG ulIndex, const char * szText, ULONG ulLen );
-extern HB_EXPORT BOOL         hb_arraySetCPtr( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen );
+extern HB_EXPORT BOOL         hb_arraySetCLPtr( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen );
 extern HB_EXPORT BOOL         hb_arraySetPtr( PHB_ITEM pArray, ULONG ulIndex, void * pValue );
 extern HB_EXPORT BOOL         hb_arraySetPtrGC( PHB_ITEM pArray, ULONG ulIndex, void * pValue );
 extern HB_EXPORT BOOL         hb_arraySetSymbol( PHB_ITEM pArray, ULONG ulIndex, PHB_SYMB pSymbol );

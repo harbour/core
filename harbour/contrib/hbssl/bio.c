@@ -725,6 +725,13 @@ int BIO_nread(BIO *bio, char **buf, int num);
 int BIO_nwrite0(BIO *bio, char **buf);
 int BIO_nwrite(BIO *bio, char **buf, int num);
 
+BIO_METHOD *   BIO_s_mem(void);
+
+BIO_set_mem_eof_return(BIO *b,int v)
+long BIO_get_mem_data(BIO *b, char **pp)
+BIO_set_mem_buf(BIO *b,BUF_MEM *bm,int c)
+BIO_get_mem_ptr(BIO *b,BUF_MEM **pp)
+
 BIO *BIO_new_mem_buf(void *buf, int len);
 
 #endif

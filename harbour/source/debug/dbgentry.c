@@ -731,7 +731,7 @@ static void hb_dbgAddStopLines( HB_DEBUGINFO *info, PHB_ITEM pItem )
                   pBuffer[ nOrigMin / 8 + k - nMin / 8 ] |= pOrigBuffer[ k ];
                }
                hb_arraySetNL( pLines, 2, nMin );
-               if( !hb_arraySetCPtr( pLines, 3, pBuffer, nLen - 1 ) )
+               if( !hb_arraySetCLPtr( pLines, 3, pBuffer, nLen - 1 ) )
                   hb_xfree( pBuffer );
                bFound = TRUE;
                break;
@@ -755,7 +755,7 @@ static void hb_dbgAddStopLines( HB_DEBUGINFO *info, PHB_ITEM pItem )
 
          if( szName != szModule )
          {
-            hb_arraySetCPtr( pEntry, 1, hb_strdup( szName ), strlen( szName ) );
+            hb_arraySetCLPtr( pEntry, 1, hb_strdup( szName ), strlen( szName ) );
          }
       }
    }

@@ -53,7 +53,24 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 
+#include "hbssl.h"
+
 #include <openssl/err.h>
+
+HB_FUNC( ERR_LOAD_CRYPTO_STRINGS )
+{
+   ERR_load_crypto_strings();
+}
+
+HB_FUNC( ERR_PRINT_ERRORS )
+{
+   BIO * bio = hb_BIO_par( 1 );
+
+   if( bio )
+      ERR_print_errors( bio );
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
 
 HB_FUNC( ERR_GET_ERROR )
 {
@@ -172,4 +189,9 @@ HB_FUNC( ERR_PEEK_LAST_ERROR_LINE_DATA )
    hb_storni( line, 2 );
    hb_storc( data, 3 );
    hb_storni( flags, 4 );
+}
+
+HB_FUNC( ERR_FREE_STRINGS )
+{
+   ERR_free_strings();
 }
