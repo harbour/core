@@ -118,7 +118,7 @@ HB_FUNC( EVP_ENCODEUPDATE )
       if( ctx )
       {
          int size = 512;
-         unsigned char * buffer = ( unsigned char * ) hb_xgrab( size );
+         unsigned char * buffer = ( unsigned char * ) hb_xgrab( size + 1 );
 
          EVP_EncodeUpdate( ctx,
                            buffer,
@@ -148,7 +148,7 @@ HB_FUNC( EVP_ENCODEFINAL )
       if( ctx )
       {
          int size = 512;
-         unsigned char * buffer = ( unsigned char * ) hb_xgrab( size );
+         unsigned char * buffer = ( unsigned char * ) hb_xgrab( size + 1 );
 
          EVP_EncodeFinal( ctx, buffer, &size );
 
@@ -187,7 +187,7 @@ HB_FUNC( EVP_DECODEUPDATE )
       if( ctx )
       {
          int size = 512;
-         unsigned char * buffer = ( unsigned char * ) hb_xgrab( size );
+         unsigned char * buffer = ( unsigned char * ) hb_xgrab( size + 1 );
 
          EVP_DecodeUpdate( ctx,
                            buffer,
@@ -217,7 +217,7 @@ HB_FUNC( EVP_DECODEFINAL )
       if( ctx )
       {
          int size = 512;
-         unsigned char * buffer = ( unsigned char * ) hb_xgrab( size );
+         unsigned char * buffer = ( unsigned char * ) hb_xgrab( size + 1 );
 
          EVP_DecodeFinal( ctx, buffer, &size );
 

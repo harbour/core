@@ -367,7 +367,7 @@ HB_FUNC( EVP_DIGESTFINAL )
 
       if( ctx )
       {
-         unsigned char * buffer = ( unsigned char * ) hb_xgrab( EVP_MAX_MD_SIZE );
+         unsigned char * buffer = ( unsigned char * ) hb_xgrab( EVP_MAX_MD_SIZE + 1 );
          unsigned int size = 0;
 
          hb_retni( EVP_DigestFinal( ctx, buffer, &size ) );
@@ -393,7 +393,7 @@ HB_FUNC( EVP_DIGESTFINAL_EX )
 
       if( ctx )
       {
-         unsigned char * buffer = ( unsigned char * ) hb_xgrab( EVP_MAX_MD_SIZE );
+         unsigned char * buffer = ( unsigned char * ) hb_xgrab( EVP_MAX_MD_SIZE + 1 );
          unsigned int size = 0;
 
          hb_retni( EVP_DigestFinal_ex( ctx, buffer, &size ) );
@@ -462,7 +462,7 @@ HB_FUNC( EVP_SIGNFINAL )
 
       if( ctx )
       {
-         unsigned char * buffer = ( unsigned char * ) hb_xgrab( EVP_MAX_MD_SIZE );
+         unsigned char * buffer = ( unsigned char * ) hb_xgrab( EVP_MAX_MD_SIZE + 1 );
          unsigned int size = 0;
 
          hb_retni( EVP_SignFinal( ctx, buffer, &size, hb_EVP_PKEY_par( 3 ) ) );

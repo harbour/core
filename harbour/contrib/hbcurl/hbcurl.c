@@ -662,7 +662,7 @@ HB_FUNC( CURL_EASY_RECV )
          if( size < 1024 )
             size = 1024;
 
-         buffer = hb_xgrab( size );
+         buffer = hb_xgrab( size + 1 );
 
          res = curl_easy_recv( hb_curl->curl, buffer, size, &size );
 

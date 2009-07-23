@@ -76,7 +76,7 @@ char * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, const char ** Te
    if( *plBuffLen < 10 )
       *plBuffLen = READING_BLOCK;
 
-   pBuff = ( char * ) hb_xgrab( *plBuffLen );
+   pBuff = ( char * ) hb_xgrab( *plBuffLen + 1 );
 
    do
    {

@@ -68,6 +68,7 @@ C_SOURCES=\
 	hbbit.c \
 	hbcrc.c \
 	hbhex.c \
+	hbfeof.c \
 	hbmd5.c \
 	hbntos.c \
 	hbfile.c \

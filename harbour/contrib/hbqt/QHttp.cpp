@@ -86,7 +86,7 @@ HB_FUNC( QT_QHTTP )
  */
 HB_FUNC( QT_QHTTP_READ )
 {
-   char * iData = ( char * ) hb_xgrab( hb_parnint( 3 ) );
+   char * iData = ( char * ) hb_xgrab( hb_parnint( 3 ) + 1 );
    qint64 iRead;
 
    iRead = hbqt_par_QHttp( 1 )->read( iData, hb_parnint( 3 ) );
@@ -316,4 +316,3 @@ HB_FUNC( QT_QHTTP_ABORT )
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */
 /*----------------------------------------------------------------------*/
-

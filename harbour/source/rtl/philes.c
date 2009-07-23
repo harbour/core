@@ -311,20 +311,6 @@ HB_FUNC( HB_DIRBASE )
    hb_retc( szBuffer );
 }
 
-HB_FUNC( HB_FEOF )
-{
-   USHORT uiError = 6;
-
-   if( HB_ISNUM( 1 ) )
-   {
-      hb_retl( hb_fsEof( hb_numToHandle( hb_parnint( 1 ) ) ) );
-      uiError = hb_fsError();
-   }
-   else
-      hb_retl( TRUE );
-   hb_fsSetFError( uiError );
-}
-
 HB_FUNC( HB_FCOMMIT )
 {
    USHORT uiError = 6;

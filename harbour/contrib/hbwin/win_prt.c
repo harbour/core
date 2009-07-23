@@ -345,7 +345,7 @@ HB_FUNC( WINPORTREAD )
    HANDLE hCommPort = s_PortData[ Port ].Port;
    DWORD NumberOfBytesRead;
 
-   lpBuffer = ( char * ) hb_xgrab( NumberOfBytesToRead );
+   lpBuffer = ( char * ) hb_xgrab( NumberOfBytesToRead + 1 );
    s_WinFcn = FCNREADFILE;
    s_WinError = 0;
    if( ! ReadFile( hCommPort, lpBuffer, NumberOfBytesToRead, &NumberOfBytesRead, NULL ) )

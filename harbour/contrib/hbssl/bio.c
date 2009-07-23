@@ -453,7 +453,7 @@ HB_FUNC( BIO_READ )
 
       if( size > 0 )
       {
-         char * buffer = ( char * ) hb_xgrab( size );
+         char * buffer = ( char * ) hb_xgrab( size + 1 );
 
          hb_retni( size = BIO_read( bio, buffer, size ) );
 
@@ -480,7 +480,7 @@ HB_FUNC( BIO_GETS )
 
       if( size > 0 )
       {
-         char * buffer = ( char * ) hb_xgrab( size );
+         char * buffer = ( char * ) hb_xgrab( size + 1 );
 
          hb_retni( size = BIO_gets( bio, buffer, size ) );
 
