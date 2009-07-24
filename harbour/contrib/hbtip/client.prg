@@ -726,7 +726,7 @@ METHOD InetErrorDesc( SocketCon ) CLASS tIPClient
 
 /* BROKEN, should test number of parameters and act accordingly, see doc\inet.txt */
 METHOD InetConnect( cServer, nPort, SocketCon ) CLASS tIPClient
-LOCAL tmp
+
    hb_inetConnect( cServer, nPort, SocketCon )
 
    IF ! Empty( ::nDefaultSndBuffSize )
