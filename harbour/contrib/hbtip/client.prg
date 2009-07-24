@@ -73,6 +73,14 @@
 #include "error.ch"
 #include "fileio.ch"
 
+#if defined( _SSL_DEBUG_TEMP )
+   #include "simpleio.ch"
+#endif
+
+#if defined( HAVE_OPENSSL )
+   #include "hbssl.ch"
+#endif
+
 #include "tip.ch"
 
 #define RCV_BUF_SIZE Int( ::InetRcvBufSize( ::SocketCon ) / 2 )
@@ -114,6 +122,13 @@ CREATE CLASS tIPClient
 
    VAR exGauge              /* Gauge control; it can be a codeblock or a function pointer. */
 
+   VAR lTLS   INIT .F.
+#if defined( HAVE_OPENSSL )
+   VAR ssl_ctx
+   VAR ssl
+   VAR nSSLError INIT 0
+#endif
+
    VAR Cargo
 
    /* Data for proxy connection */
@@ -124,6 +139,8 @@ CREATE CLASS tIPClient
 
    METHOD New( oUrl, lTrace, oCredentials )
    METHOD Open()
+
+   METHOD EnableTLS( lEnable )
 
    METHOD Read( iLen )
    METHOD ReadToFile( cFile, nMode, nSize )
@@ -138,7 +155,7 @@ CREATE CLASS tIPClient
    METHOD SetProxy( cProxyHost, nProxyPort, cProxyUser, cProxyPassword )
 
    METHOD lastErrorCode() INLINE ::nLastError
-   METHOD lastErrorMessage(SocketCon) INLINE ::INetErrorDesc(SocketCon)
+   METHOD lastErrorMessage( SocketCon ) INLINE ::INetErrorDesc( SocketCon )
 
    METHOD InetRcvBufSize( SocketCon, nSizeBuff )
    METHOD InetSndBufSize( SocketCon, nSizeBuff )
@@ -147,8 +164,8 @@ CREATE CLASS tIPClient
 
    VAR nLastError INIT 0
 
-   METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWord, nTimeOut, cUserAgent )
-   METHOD ReadHTTPProxyResponse()
+   METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWord, cUserAgent )
+   METHOD ReadHTTPProxyResponse( sResponse )
 
    /* Methods to log data if needed */
    METHOD InetRecv( SocketCon, cStr1, len)
@@ -156,8 +173,8 @@ CREATE CLASS tIPClient
    METHOD InetRecvAll( SocketCon, cStr1, len )
    METHOD InetCount( SocketCon )
    METHOD InetSendAll( SocketCon, cData, nLen )
-   METHOD InetErrorCode(SocketCon)
-   METHOD InetErrorDesc(SocketCon)
+   METHOD InetErrorCode( SocketCon )
+   METHOD InetErrorDesc( SocketCon )
    METHOD InetConnect( cServer, nPort, SocketCon )
 
    METHOD Log()
@@ -166,11 +183,16 @@ ENDCLASS
 
 METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClient
    LOCAL oErr
+   LOCAL cProtoAccepted := "ftp,http,pop,smtp"
 
    DEFAULT lTrace TO .F.
 
    IF ! ::bInitSocks
       hb_inetInit()
+#if defined( HAVE_OPENSSL )
+      SSL_init()
+      RAND_seed( Time() + hb_username() + DToS( Date() ) + hb_DirBase() + NetName() )
+#endif
       ::bInitSocks := .T.
    ENDIF
 
@@ -178,7 +200,17 @@ METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClient
       oUrl := tUrl():New( oUrl )
    ENDIF
 
-   IF ! oURL:cProto $ "ftp,http,pop,smtp"
+#if defined( HAVE_OPENSSL )
+   IF oURL:cProto == "ftps" .OR. ;
+      oURL:cProto == "https" .OR. ;
+      oURL:cProto == "pops" .OR. ;
+      oURL:cProto == "smtps"
+      ::EnableTLS( .T. )
+   ENDIF
+   cProtoAccepted += "," + "ftps,https,pops,smtps"
+#endif
+
+   IF ! oURL:cProto $ cProtoAccepted
       oErr := ErrorNew()
       oErr:Args          := { Self, oURL:cProto }
       oErr:CanDefault    := .F.
@@ -223,10 +255,13 @@ METHOD Open( cUrl ) CLASS tIPClient
 
    ::SocketCon := hb_inetCreate()
 
-   hb_inetTimeout( ::SocketCon, ::nConnTimeout )
+   IF ISNUMBER( ::nConnTimeout )
+      hb_inetTimeout( ::SocketCon, ::nConnTimeout )
+   ENDIF
+
    IF ! Empty( ::cProxyHost )
       cResp := ""
-      IF ! ::OpenProxy( ::oUrl:cServer, nPort, ::cProxyHost, ::nProxyPort, @cResp, ::cProxyUser, ::cProxyPassword, ::nConnTimeout, "Mozilla/3.0 compatible" )
+      IF ! ::OpenProxy( ::oUrl:cServer, nPort, ::cProxyHost, ::nProxyPort, @cResp, ::cProxyUser, ::cProxyPassword, "Mozilla/3.0 compatible" )
          RETURN .F.
       ENDIF
    ELSE
@@ -239,7 +274,34 @@ METHOD Open( cUrl ) CLASS tIPClient
    ::isOpen := .T.
    RETURN .T.
 
-METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWord, nTimeOut, cUserAgent ) CLASS tIPClient
+METHOD EnableTLS( lEnable ) CLASS tIPClient
+   LOCAL lSuccess
+
+   IF ::lTLS == lEnable
+      RETURN .T.
+   ENDIF
+
+#if defined( HAVE_OPENSSL )
+   IF lEnable
+      ::ssl_ctx := SSL_CTX_new()
+      ::ssl := SSL_new( ::ssl_ctx )
+      ::lTLS := .T.
+      lSuccess := .T.
+   ELSE
+      ::lTLS := .F.
+      lSuccess := .T.
+   ENDIF
+#else
+   IF lEnable
+      lSuccess := .F.
+   ELSE
+      lSuccess := .T.
+   ENDIF
+#endif
+
+   RETURN lSuccess
+
+METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWord, cUserAgent ) CLASS tIPClient
    LOCAL cRequest
    LOCAL lRet := .F.
    LOCAL tmp
@@ -257,7 +319,7 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWor
       cRequest += Chr( 13 ) + Chr( 10 )
       ::InetSendAll( ::SocketCon, cRequest )
       cResp := ""
-      IF ::ReadHTTPProxyResponse( nTimeOut, @cResp )
+      IF ::ReadHTTPProxyResponse( @cResp )
          tmp := At( " ", cResp )
          IF tmp > 0 .AND. Val( SubStr( cResp, tmp + 1 ) ) == 200
             lRet := .T.
@@ -273,17 +335,15 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWor
 
    RETURN lRet
 
-METHOD ReadHTTPProxyResponse( dwTimeout, sResponse ) CLASS tIPClient
+METHOD ReadHTTPProxyResponse( /* @ */ sResponse ) CLASS tIPClient
    LOCAL bMoreDataToRead := .T.
    LOCAL nLength, nData
    LOCAL szResponse
 
-   HB_SYMBOL_UNUSED( dwTimeout )
-
    DO WHILE bMoreDataToRead
 
       szResponse := Space( 1 )
-      nData := hb_inetRecv( ::SocketCon, @szResponse, Len( szResponse ) )
+      nData := ::InetRecv( ::SocketCon, @szResponse, Len( szResponse ) )
       IF nData == 0
          RETURN .F.
       ENDIF
@@ -304,6 +364,14 @@ METHOD Close() CLASS tIPClient
    IF ! Empty( ::SocketCon )
 
       nRet := hb_inetClose( ::SocketCon )
+
+#if defined( HAVE_OPENSSL )
+      IF ::lTLS
+         SSL_shutdown( ::ssl )
+         ::ssl := NIL
+         ::ssl_ctx := NIL
+      ENDIF
+#endif
 
       ::SocketCon := NIL
       ::isOpen := .F.
@@ -346,11 +414,18 @@ METHOD Read( nLen ) CLASS tIPClient
       // read an amount of data
       cStr0 := Space( nLen )
 
-      // S.R. if len of file is less than RCV_BUF_SIZE hb_inetRecvAll return 0
-      //      ::nLastRead := hb_inetRecvAll( ::SocketCon, @cStr0, nLen )
-
-      ::InetRecvAll( ::SocketCon, @cStr0, nLen )
-      ::nLastRead := ::InetCount( ::SocketCon )
+      IF ::lTLS
+#if defined( HAVE_OPENSSL )
+         /* Getting around implementing the hack used in non-SSL branch for now.
+            IMO the proper fix would have been done to hb_inetRecvAll(). [vszakats] */
+         ::nLastRead := ::InetRecvAll( ::SocketCon, @cStr0, nLen )
+#endif
+      ELSE
+         // S.R. if len of file is less than RCV_BUF_SIZE hb_inetRecvAll return 0
+         //      ::nLastRead := ::InetRecvAll( ::SocketCon, @cStr0, nLen )
+         ::InetRecvAll( ::SocketCon, @cStr0, nLen )
+         ::nLastRead := ::InetCount( ::SocketCon )
+      ENDIF
       ::nRead += ::nLastRead
 
       IF ::nLastRead != nLen
@@ -459,7 +534,7 @@ METHOD WriteFromFile( cFile ) CLASS tIPClient
       nLen := FRead( nFin, @cData, nBufSize )
    ENDDO
 
-   // it may happen that the file has lenght 0
+   // it may happen that the file has length 0
    IF nSent > 0
       ::Commit()
    ENDIF
@@ -503,7 +578,19 @@ METHOD InetSendAll( SocketCon, cData, nLen ) CLASS tIPClient
       nLen := Len( cData )
    ENDIF
 
-   nRet := hb_inetSendAll( SocketCon, cData, nLen )
+   IF ::lTLS
+#if defined( HAVE_OPENSSL )
+#if defined( _SSL_DEBUG_TEMP )
+      ? "SSL_WRITE()", cData
+#endif
+      nRet := SSL_write( ::ssl, cData, nLen )
+      ::nSSLError := iif( nRet < 0, nRet, 0 )
+#else
+      nRet := 0
+#endif
+   ELSE
+      nRet := hb_inetSendAll( SocketCon, cData, nLen )
+   ENDIF
 
    IF ::lTrace
       ::Log( SocketCon, nlen, cData, nRet )
@@ -521,7 +608,21 @@ METHOD InetCount( SocketCon ) CLASS tIPClient
    RETURN nRet
 
 METHOD InetRecv( SocketCon, cStr1, len ) CLASS tIPClient
-   LOCAL nRet := hb_inetRecv( SocketCon, @cStr1, len )
+   LOCAL nRet
+
+   IF ::lTLS
+#if defined( HAVE_OPENSSL )
+#if defined( _SSL_DEBUG_TEMP )
+      ? "SSL_READ()"
+#endif
+      nRet := SSL_read( ::ssl, @cStr1, len )
+      ::nSSLError := iif( nRet < 0, nRet, 0 )
+#else
+      nRet := 0
+#endif
+   ELSE
+      nRet := hb_inetRecv( SocketCon, @cStr1, len )
+   ENDIF
 
    IF ::lTrace
       ::Log( SocketCon, "", len, iif( nRet >= 0, cStr1, nRet ) )
@@ -529,8 +630,26 @@ METHOD InetRecv( SocketCon, cStr1, len ) CLASS tIPClient
 
    RETURN nRet
 
-METHOD InetRecvLine( SocketCon, nLen, size ) CLASS tIPClient
-   LOCAL cRet := hb_inetRecvLine( SocketCon, @nLen, size )
+METHOD InetRecvLine( SocketCon, nRet, size ) CLASS tIPClient
+   LOCAL cRet
+
+   IF ::lTLS
+#if defined( HAVE_OPENSSL )
+      nRet := hb_SSL_read_line( ::ssl, @cRet, size, ::nConnTimeout )
+#if defined( _SSL_DEBUG_TEMP )
+      ? "HB_SSL_READ_LINE()", cRet
+#endif
+      IF nRet == 0 .OR. Empty( cRet )
+         cRet := NIL
+      ENDIF
+      ::nSSLError := iif( nRet < 0, nRet, 0 )
+#else
+      cRet := ""
+      nRet := 0
+#endif
+   ELSE
+      cRet := hb_inetRecvLine( SocketCon, @nRet, size )
+   ENDIF
 
    IF ::lTrace
       ::Log( SocketCon, "", size, cRet )
@@ -538,17 +657,45 @@ METHOD InetRecvLine( SocketCon, nLen, size ) CLASS tIPClient
 
   RETURN cRet
 
-METHOD InetRecvAll( SocketCon, cStr1, len ) CLASS tIPClient
-   LOCAL nRet := hb_inetRecvAll( SocketCon, @cStr1, len )
+METHOD InetRecvAll( SocketCon, cRet, size ) CLASS tIPClient
+   LOCAL nRet
+
+   IF ::lTLS
+#if defined( HAVE_OPENSSL )
+      nRet := hb_SSL_read_all( ::ssl, @cRet, size, ::nConnTimeout )
+#if defined( _SSL_DEBUG_TEMP )
+      ? "HB_SSL_READ_ALL()", cRet
+#endif
+      IF nRet == 0 .OR. Empty( cRet )
+         cRet := NIL
+      ENDIF
+      ::nSSLError := iif( nRet < 0, nRet, 0 )
+#else
+      cRet := ""
+      nRet := 0
+#endif
+   ELSE
+      nRet := hb_inetRecvAll( SocketCon, @cRet, size )
+   ENDIF
 
    IF ::lTrace
-      ::Log( SocketCon, "", len, iif( nRet >= 0, cStr1, nRet ) )
+      ::Log( SocketCon, "", size, iif( nRet >= 0, cRet, nRet ) )
    ENDIF
 
    RETURN nRet
 
 METHOD InetErrorCode( SocketCon ) CLASS tIPClient
-   LOCAL nRet := hb_inetErrorCode( SocketCon )
+   LOCAL nRet
+
+   IF ::lTLS
+#if defined( HAVE_OPENSSL )
+      nRet := iif( ::nSSLError == 0, 0, SSL_get_error( ::ssl, ::nSSLError ) )
+#else
+      nRet := 0
+#endif
+   ELSE
+      nRet := hb_inetErrorCode( SocketCon )
+   ENDIF
 
    ::nLastError := nRet
 
@@ -564,14 +711,22 @@ METHOD InetErrorDesc( SocketCon ) CLASS tIPClient
    DEFAULT SocketCon TO ::SocketCon
 
    IF ! Empty( SocketCon )
-      cMsg := hb_inetErrorDesc( SocketCon )
+      IF ::lTLS
+#if defined( HAVE_OPENSSL )
+         IF ::nSSLError != 0
+            cMsg := ERR_error_string( SSL_get_error( ::ssl, ::nSSLError ) )
+         ENDIF
+#endif
+      ELSE
+         cMsg := hb_inetErrorDesc( SocketCon )
+      ENDIF
    ENDIF
 
    RETURN cMsg
 
 /* BROKEN, should test number of parameters and act accordingly, see doc\inet.txt */
 METHOD InetConnect( cServer, nPort, SocketCon ) CLASS tIPClient
-
+LOCAL tmp
    hb_inetConnect( cServer, nPort, SocketCon )
 
    IF ! Empty( ::nDefaultSndBuffSize )
@@ -581,6 +736,15 @@ METHOD InetConnect( cServer, nPort, SocketCon ) CLASS tIPClient
    IF ! Empty( ::nDefaultRcvBuffSize )
       ::InetRcvBufSize( SocketCon, ::nDefaultRcvBuffSize )
    ENDIF
+
+#if defined( HAVE_OPENSSL )
+   IF ::lTLS
+      SSL_set_mode( ::ssl, HB_SSL_MODE_AUTO_RETRY )
+      SSL_set_fd( ::ssl, hb_inetFD( SocketCon ) )
+      SSL_connect( ::ssl )
+      /* TODO: Add error handling */
+   ENDIF
+#endif
 
    IF ::lTrace
       ::Log( cServer, nPort, SocketCon )

@@ -97,8 +97,6 @@ HB_FUNC( TIP_TIMESTAMP )
 
    if( GetTimeZoneInformation( &tzInfo ) == TIME_ZONE_ID_INVALID )
       tzInfo.Bias = 0;
-   else
-      tzInfo.Bias -= tzInfo.Bias;
 
    if( ! pDate )
    {

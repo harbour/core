@@ -54,7 +54,7 @@
 
 #translate ( <exp1> LIKE <exp2> )   => ( hb_regexLike( (<exp2>), (<exp1>) ) )
 
-FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aFiles, cUser, cPass, cPopServer, nPriority, lRead, lTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo )
+FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aFiles, cUser, cPass, cPopServer, nPriority, lRead, lTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, lTLS, cSMTPPass )
    /*
    cServer    -> Required. IP or domain name of the mail server
    nPort      -> Optional. Port used my email server
@@ -126,6 +126,12 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    ENDIF
    IF ! ISCHARACTER( cReplyTo )
       cReplyTo := ""
+   ENDIF
+   IF ! ISLOGICAL( lTLS )
+      lTLS := .F.
+   ENDIF
+   IF ! ISCHARACTER( cSMTPPass )
+      cSMTPPass := cPass
    ENDIF
 
    cUser := StrTran( cUser, "@", "&at;" )
@@ -207,7 +213,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    ENDIF
 
    BEGIN SEQUENCE
-      oUrl := tUrl():New( "smtp://" + cUser + "@" + cServer + "/" + cTo )
+      oUrl := tUrl():New( iif( lTLS, "smtps://", "smtp://" ) + cUser + iif( Empty( cSMTPPass ), "", ":" + cSMTPPass ) + "@" + cServer + "/" + cTo )
    RECOVER
       lReturn := .F.
    END SEQUENCE
@@ -278,19 +284,19 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
          ENDDO
 
          IF lAuthLogin
-            IF ! oInMail:Auth( cUser, cPass )
+            IF ! oInMail:Auth( cUser, cSMTPPass )
                lConnect := .F.
             ELSE
-               lConnectPlain  := .T.
+               lConnectPlain := .T.
             ENDIF
          ENDIF
 
          IF lAuthPlain .AND. ! lConnect
-            IF !oInMail:AuthPlain( cUser, cPass )
+            IF ! oInMail:AuthPlain( cUser, cSMTPPass )
                lConnect := .F.
             ENDIF
          ELSE
-            IF !lConnectPlain
+            IF ! lConnectPlain
                oInmail:Getok()
                lConnect := .F.
             ENDIF
@@ -309,7 +315,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       ENDIF
 
       BEGIN SEQUENCE
-         oInmail := tIPClientsmtp():New( oUrl, lTrace )
+         oInmail := tIPClientSMTP():New( oUrl, lTrace )
       RECOVER
          lReturn := .F.
       END SEQUENCE
@@ -332,14 +338,14 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
    oInMail:oUrl:cUserid := cFrom
 
-   oMail:hHeaders[ "To" ]      := cTo
+   oMail:hHeaders[ "To" ] := cTo
    oMail:hHeaders[ "Subject" ] := cSubject
 
    FOR EACH aThisFile IN aFiles
 
       IF ISCHARACTER( aThisFile )
          cFile := aThisFile
-         cData := Memoread( cFile ) + Chr( 13 ) + Chr( 10 )
+         cData := MemoRead( cFile ) + Chr( 13 ) + Chr( 10 )
       ELSEIF ISARRAY( aThisFile ) .AND. Len( aThisFile ) >= 2
          cFile := aThisFile[ 1 ]
          cData := aThisFile[ 2 ] + Chr( 13 ) + Chr( 10 )

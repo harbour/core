@@ -55,6 +55,9 @@
 */
 
 #include "hbclass.ch"
+
+#include "common.ch"
+
 #include "tip.ch"
 
 CREATE CLASS tIPClientSMTP FROM tIPClient
@@ -92,7 +95,7 @@ METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClientSMTP
    ::nConnTimeout := 5000
    ::nAccessMode := TIP_WO  // a write only
 
-   IF ::ltrace
+   IF ::lTrace
       IF ! hb_FileExists( "sendmail.log" )
          ::nHandle := FCreate( "sendmail.log" )
       ELSE
@@ -106,25 +109,43 @@ METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClientSMTP
 
    RETURN Self
 
-METHOD Open( cUrl ) CLASS tIPClientSMTP
+METHOD Open( cUrl, lTLS ) CLASS tIPClientSMTP
 
    IF ! ::super:Open( cUrl )
       RETURN .F.
    ENDIF
 
    hb_inetTimeout( ::SocketCon, ::nConnTimeout )
+
+   DEFAULT lTLS TO .F.
+
+   IF lTLS
+      ::InetSendall( ::SocketCon, "STARTTLS" + ::cCRLF )
+      IF ::GetOk()
+         ::EnableTLS( .T. )
+      ENDIF
+   ENDIF
 
    ::InetSendall( ::SocketCon, "HELO " + iif( Empty( ::oUrl:cUserid ), "tipClientSMTP", ::oUrl:cUserid ) + ::cCRLF )
 
    RETURN ::GetOk()
 
-METHOD OpenSecure( cUrl ) CLASS tIPClientSMTP
+METHOD OpenSecure( cUrl, lTLS ) CLASS tIPClientSMTP
 
    IF ! ::super:Open( cUrl )
       RETURN .F.
    ENDIF
 
    hb_inetTimeout( ::SocketCon, ::nConnTimeout )
+
+   DEFAULT lTLS TO .F.
+
+   IF lTLS
+      ::InetSendall( ::SocketCon, "STARTTLS" + ::cCRLF )
+      IF ::GetOk()
+         ::EnableTLS( .T. )
+      ENDIF
+   ENDIF
 
    ::InetSendall( ::SocketCon, "EHLO " + iif( Empty( ::oUrl:cUserid ), "tipClientSMTP", ::oUrl:cUserid ) + ::cCRLF )
 
@@ -133,7 +154,7 @@ METHOD OpenSecure( cUrl ) CLASS tIPClientSMTP
 METHOD GetOk() CLASS tIPClientSMTP
 
    ::cReply := ::InetRecvLine( ::SocketCon,, 512 )
-   IF ::InetErrorCode( ::SocketCon ) != 0 .OR. Left( ::cReply, 1 ) == "5"
+   IF ::InetErrorCode( ::SocketCon ) != 0 .OR. ! ISCHARACTER( ::cReply ) .OR. Left( ::cReply, 1 ) == "5"
       RETURN .F.
    ENDIF
 
@@ -141,7 +162,7 @@ METHOD GetOk() CLASS tIPClientSMTP
 
 METHOD Close() CLASS tIPClientSMTP
    hb_inetTimeOut( ::SocketCon, ::nConnTimeout )
-   IF ::ltrace
+   IF ::lTrace
       FClose( ::nHandle )
    ENDIF
    ::Quit()
@@ -250,7 +271,7 @@ METHOD SendMail( oTIpMail ) CLASS TIpClientSmtp
    ENDIF
 
    IF ! ::isAuth
-      ::Auth( ::oUrl:cUserId, ::oUrl:cPassWord )
+      ::Auth( ::oUrl:cUserId, ::oUrl:cPassword )
       IF ! ::isAuth
          RETURN .F.
       ENDIF
