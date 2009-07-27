@@ -201,7 +201,7 @@
 #include "hbdate.h"
 
 /* TODO change error description to sth more user friendly */
-const char * s_socketErrors[] = {
+static const char * s_socketErrors[] = {
    "OK",
    "EPIPE",
    "ETIMEOUT",
@@ -669,7 +669,7 @@ static int s_iSessions;
 static const char * hb_inet_ntoa( struct in_addr * addr, char * pBuffer )
 {
    /* dirty hack to make inet_ntoa() MT safe,
-    * in many systems inet_ntoa() returns pointer to 
+    * in many systems inet_ntoa() returns pointer to
     * static buffer and is not MT safe.
     */
    ULONG u = ntohl( addr->s_addr );
@@ -1856,7 +1856,7 @@ int hb_socketClose( HB_SOCKET_T sd )
 #if defined( HB_OS_WIN )
    ret = closesocket( sd );
 #else
-#  if defined EINTR
+#  if defined( EINTR )
       /* ignoring EINTR in close() it's quite common bug when sockets or
        * pipes are used. Without such protection it's not safe to use
        * signals in user code.

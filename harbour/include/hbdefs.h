@@ -690,6 +690,13 @@ typedef unsigned long HB_COUNTER;
 
 /* Harbour overloaded types: */
 
+/* http://www.opengroup.org/onlinepubs/009695399/basedefs/stdint.h.html
+   http://www.opengroup.org/onlinepubs/009695399/basedefs/stdbool.h.html */
+
+/* TODO: hbBool -> bool
+         hbFALSE / FALSE -> false
+         hbTRUE / TRUE -> true */
+
 #define hbFALSE  0
 #define hbTRUE   (!0)
 

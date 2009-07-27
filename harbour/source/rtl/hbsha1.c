@@ -71,6 +71,4 @@ HB_FUNC( HB_SHA1 )
    }
    else
       hb_retclen( ( char * ) digest, sizeof( digest ) );
-
-   return;
 }

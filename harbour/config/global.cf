@@ -237,6 +237,12 @@ ifeq ($(HB_BUILD_VERBOSE),yes)
    endif
 endif
 
+ifneq ($(findstring $(HB_ARCHITECTURE),win wce dos os2),)
+   HB_UNIX_COMPATIBLE := no
+else
+   HB_UNIX_COMPATIBLE := yes
+endif
+
 ifneq ($(findstring $(HB_HOST_ARCH),win wce dos os2),)
    HB_HOST_BIN_EXT := .exe
 else
@@ -360,6 +366,10 @@ HB_DB_DIRS=\
 ifneq ($(HB_DB_DRVEXT),)
    HB_DB_DRIVERS += $(HB_DB_DRVEXT)
    HB_DB_DIRS += $(HB_DB_DRVEXT)
+endif
+
+ifeq ($(HB_UNIX_COMPATIBLE),no)
+   LIBPOSTFIX := $(DIRSEP)$(HB_ARHICTECTURE)$(DIRSEP)$(HB_COMPILER)
 endif
 
 ifeq ($(HB_BIN_INSTALL),)

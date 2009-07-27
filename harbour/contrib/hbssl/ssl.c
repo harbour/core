@@ -1449,7 +1449,7 @@ HB_FUNC( SSL_USE_PRIVATEKEY )
 
       if( ssl )
          /* QUESTION: It's unclear whether we should pass a copy here,
-                      and who should free such passed EV_PKEY object.
+                      and who should free such passed EVP_PKEY object.
                       [vszakats] */
          hb_retni( SSL_use_PrivateKey( ssl, hb_EVP_PKEY_par( 2 ) ) );
    }

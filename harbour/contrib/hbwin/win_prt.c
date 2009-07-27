@@ -57,36 +57,35 @@
 
 #include <stdlib.h>
 
-
 /* Waste some space ! */
 static struct
 {
-    HANDLE Port;
-    LPCTSTR Name;
+   HANDLE Port;
+   LPCTSTR Name;
 } s_PortData[] =
 {
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM1"  ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM2"  ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM3"  ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM4"  ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM5"  ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM6"  ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM7"  ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM8"  ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM9"  ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM10" ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM11" ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM12" ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM13" ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM14" ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM15" ) },
-    { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM16" ) }
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM1"  ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM2"  ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM3"  ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM4"  ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM5"  ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM6"  ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM7"  ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM8"  ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM9"  ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM10" ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM11" ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM12" ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM13" ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM14" ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM15" ) },
+   { INVALID_HANDLE_VALUE, TEXT( "\\\\.\\COM16" ) }
 };
 
 static struct
 {
-    DCB OldDCB;
-    COMMTIMEOUTS OldTimeouts;
+   DCB OldDCB;
+   COMMTIMEOUTS OldTimeouts;
 } s_PortData2[ 16 ];
 
 

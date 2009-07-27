@@ -57,6 +57,8 @@
 
 #include "hbssl.ch"
 
+HB_EXTERN_BEGIN
+
 extern SSL_METHOD *       hb_ssl_method_id_to_ptr( int n );
 
 extern void *             hb_BIO_is( int iParam );
@@ -85,5 +87,7 @@ extern void *             hb_EVP_PKEY_is( int iParam );
 extern EVP_PKEY *         hb_EVP_PKEY_par( int iParam );
 
 extern char *             hb_openssl_strdup( const char * pszText );
+
+HB_EXTERN_END
 
 #endif /* HBSSL_H_ */

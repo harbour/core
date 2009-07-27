@@ -25,6 +25,9 @@ ifeq ($(HB_COMPILER),mingwarm)
 HB_WITH_LIBHPDF=yes
 HB_USER_CFLAGS += -U__COREDLL__
 endif
+ifeq ($(HB_ARCHITECTURE),os2)
+HB_WITH_LIBHPDF=yes
+endif
 
 endif
 

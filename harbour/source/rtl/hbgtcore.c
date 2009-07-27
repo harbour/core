@@ -2058,7 +2058,7 @@ static void hb_gt_def_SemiCold( PHB_GT pGT )
 {
    int i;
    for( i = 0; i < pGT->iHeight; ++i )
-      pGT->pLines[ i ]  = FALSE;
+      pGT->pLines[ i ] = FALSE;
    pGT->fRefresh = FALSE;
 }
 
@@ -2410,9 +2410,7 @@ static void hb_gt_def_InkeyPoll( PHB_GT pGT )
     * necessary due to different low level GT behavior on some platforms
     */
    if( hb_setGetTypeAhead() )
-   {
       hb_gt_def_InkeyPollDo( pGT );
-   }
 }
 
 /* Return the next key without extracting it */
@@ -2560,6 +2558,7 @@ static void hb_gt_def_InkeyExit( PHB_GT pGT )
       hb_xfree( pGT->StrBuffer );
       pGT->StrBuffer = NULL;
    }
+
    if( pGT->inkeyBufferSize > HB_DEFAULT_INKEY_BUFSIZE )
    {
       hb_xfree( pGT->inkeyBuffer );
