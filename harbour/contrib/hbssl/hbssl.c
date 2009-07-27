@@ -53,12 +53,10 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
-#include "hbapinet.h"
+#include "hbsocket.h"
 #include "hbvm.h"
 
 #include "hbssl.h"
-
-#if defined( HB_API_NET )
 
 HB_FUNC( HB_SSL_READ_ALL )
 {
@@ -82,7 +80,7 @@ HB_FUNC( HB_SSL_READ_ALL )
             int iLen;
 
             if( SSL_pending( ssl ) ||
-                hb_selectReadFD( ( HB_SOCKET_T ) SSL_get_fd( ssl ), iTimeout ) )
+                hb_socketSelectRead( ( HB_SOCKET_T ) SSL_get_fd( ssl ), iTimeout ) )
             {
                iLen = SSL_read( ssl, &buffer, 1 );
 
@@ -151,7 +149,7 @@ HB_FUNC( HB_SSL_READ_LINE )
             int iLen;
 
             if( SSL_pending( ssl ) ||
-                hb_selectReadFD( ( HB_SOCKET_T ) SSL_get_fd( ssl ), iTimeout ) )
+                hb_socketSelectRead( ( HB_SOCKET_T ) SSL_get_fd( ssl ), iTimeout ) )
             {
                iLen = SSL_read( ssl, &buffer, 1 );
 
@@ -201,5 +199,3 @@ HB_FUNC( HB_SSL_READ_LINE )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-#endif

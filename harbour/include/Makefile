@@ -16,7 +16,6 @@ C_HEADERS=\
 	hbapigt.h \
 	hbapiitm.h \
 	hbapilng.h \
-	hbapinet.h \
 	hbapirdd.h \
 	hbassert.h \
 	hbatomic.h \
@@ -47,6 +46,7 @@ C_HEADERS=\
 	hbregex.h \
 	hbset.h \
 	hbsetup.h \
+	hbsocket.h \
 	hbstack.h \
 	hbsxfunc.h \
 	hbthread.h \
@@ -96,6 +96,7 @@ PRG_HEADERS=\
 	hbpers.ch \
 	hbsetup.ch \
 	hbsix.ch \
+	hbsocket.ch \
 	hbstdgen.ch \
 	hbthread.ch \
 	hbusrrdd.ch \

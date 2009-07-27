@@ -789,7 +789,15 @@ static BOOL hb_pp_hasCommand( char * pBuffer, ULONG ulLen, ULONG * pulAt, int iC
    {
       while( ul < ulLen && HB_PP_ISBLANK( pBuffer[ ul ] ) )
          ++ul;
-      if( ul == ulLen || pBuffer[ ul ] == ';' )
+
+      if( ul + 1 < ulLen &&
+          ( pBuffer[ ul ] == '/' || pBuffer[ ul ] == '&' ) &&
+          pBuffer[ ul ] == pBuffer[ ul + 1 ] )
+         /* strip the rest of line with // or && comment */
+         ul = ulLen;
+
+      if( ul == ulLen || pBuffer[ ul ] == ';' ||
+          ( ul + 1 < ulLen && pBuffer[ ul ] == '/' && pBuffer[ ul + 1 ] == '*' ) )
       {
          * pulAt = ul;
          return TRUE;

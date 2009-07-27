@@ -93,6 +93,8 @@ typedef struct
    USHORT   uiFError;
    USHORT   uiErrorLast;
    USHORT   uiOsErrorLast;
+   USHORT   uiSocketError;
+   int      iSocketOsError;
 }
 HB_IOERRORS, * PHB_IOERRORS;
 

@@ -7499,8 +7499,8 @@ void hb_vmFreeSymbols( PHB_SYMBOLS pSymbols )
                if( pSymbol->pDynSym && pSymbol->pDynSym->pSymbol != pSymbol &&
                    ( pSymbol->scope.value & HB_FS_LOCAL ) == 0 )
                   pSymbol->scope.value |= HB_FS_DEFERRED;
+               pSymbol->scope.value &= ~( HB_FS_PCODEFUNC | HB_FS_DYNCODE );
             }
-            pSymbol->scope.value &= ~( HB_FS_PCODEFUNC | HB_FS_DYNCODE );
          }
          pSymbols->hDynLib = NULL;
          pSymbols->fActive = FALSE;

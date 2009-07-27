@@ -584,8 +584,8 @@ static const char * hb_i18n_setcodepage( PHB_I18N_TRANS pI18N,
       {
          if( fTranslate && cdpage )
          {
-            ULONG ulLen = hb_hashLen( pI18N->context_table ), ul;
-            for( ul = 1; ul <= ulLen; ++ul )
+            ULONG ulHashLen = hb_hashLen( pI18N->context_table ), ul;
+            for( ul = 1; ul <= ulHashLen; ++ul )
             {
                PHB_ITEM pContext = hb_hashGetValueAt( pI18N->context_table, ul );
                ULONG ulCount = hb_hashLen( pContext ), ulLen, u;
