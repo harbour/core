@@ -2423,6 +2423,10 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTL ], "-o{OE}" )
          ENDIF
 
+         IF IsGTRequested( hbmk, "gtcrs" )
+            AAdd( l_aLIBSYS, "pdcurses" )
+         ENDIF
+
       /* Watcom family */
       CASE hbmk[ _HBMK_cARCH ] == "dos" .AND. hbmk[ _HBMK_cCOMP ] == "watcom"
          cLibPrefix := "LIB "
@@ -5323,21 +5327,6 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             ENDIF
          NEXT
 
-      /* NOTE: This keyword is used in hbmk.cfg and signals whether
-               a given optional module (gtsln, gtcrs, gtxwc) is part of the
-               Harbour shared library, so that we can automatically add
-               the required libs here. [vszakats] */
-      CASE Lower( Left( cLine, Len( "libdynhas="    ) ) ) == "libdynhas="    ; cLine := SubStr( cLine, Len( "libdynhas="    ) + 1 )
-         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathSepToTarget( hbmk, StrStripQuote( cItem ) )
-            IF ! Empty( cItem )
-               IF Lower( Left( cItem, 2 ) ) == "gt" .AND. ;
-                  AScan( hbmk[ _HBMK_aLIBCOREGT ], {|tmp| Lower( tmp ) == Lower( cItem ) } ) == 0
-                  AAdd( hbmk[ _HBMK_aLIBCOREGT ], cItem )
-               ENDIF
-            ENDIF
-         NEXT
-
       CASE Lower( Left( cLine, Len( "echo="         ) ) ) == "echo="         ; cLine := SubStr( cLine, Len( "echo="         ) + 1 )
          cLine := MacroProc( hbmk, cLine, cFileName )
          IF ! Empty( cLine )
@@ -5511,13 +5500,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
    RETURN .T.
 
 STATIC FUNCTION IsGTRequested( hbmk, cWhichGT )
-
-   IF ! hbmk[ _HBMK_lSHARED ]
-      /* Check if it's a core GT. */
-      RETURN AScan( hbmk[ _HBMK_aLIBCOREGT ], {|tmp| Lower( tmp ) == cWhichGT } ) > 0
-   ENDIF
-
-   RETURN .F.
+   /* Check if it's a core/user GT. */
+   RETURN AScan( hbmk[ _HBMK_aLIBCOREGT ], {|tmp| Lower( tmp ) == cWhichGT } ) > 0 .OR. ;
+          AScan( hbmk[ _HBMK_aLIBUSERGT ], {|tmp| Lower( tmp ) == cWhichGT } ) > 0
 
 STATIC FUNCTION StrStripQuote( cString )
    RETURN iif( Left( cString, 1 ) == '"' .AND. Right( cString, 1 ) == '"',;
