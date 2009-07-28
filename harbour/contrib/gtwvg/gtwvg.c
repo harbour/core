@@ -2279,7 +2279,7 @@ static BOOL hb_gt_wvt_IsDialogMessage( PHB_GTWVT pWVT, LPMSG lpMsg )     /* Prop
    return FALSE;
 }
 
-static DWORD hb_gt_wvt_ProcessMessages( PHB_GTWVT pWVT )
+static WPARAM hb_gt_wvt_ProcessMessages( PHB_GTWVT pWVT )
 {
    MSG msg;
 
@@ -2292,7 +2292,7 @@ static DWORD hb_gt_wvt_ProcessMessages( PHB_GTWVT pWVT )
       }
    }
 
-   return ( DWORD ) msg.wParam;
+   return msg.wParam;
 }
 
 static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFont, int iWidth )

@@ -644,10 +644,10 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
             ch = s_keyTransTbl[ ch ];
       }
    }
-   else if( !_eof( s_hFilenoStdin ) )
+   else if( !_eof( ( int ) s_hFilenoStdin ) )
    {
       BYTE bChar;
-      if( _read( s_hFilenoStdin, &bChar, 1 ) == 1 )
+      if( _read( ( int ) s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
    }
 #elif defined( HB_IO_WIN )

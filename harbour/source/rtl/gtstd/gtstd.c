@@ -370,10 +370,10 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
             ch = pGTSTD->keyTransTbl[ ch ];
       }
    }
-   else if( !_eof( pGTSTD->hStdin ) )
+   else if( !_eof( ( int ) pGTSTD->hStdin ) )
    {
       BYTE bChar;
-      if( _read( pGTSTD->hStdin, &bChar, 1 ) == 1 )
+      if( _read( ( int ) pGTSTD->hStdin, &bChar, 1 ) == 1 )
          ch = pGTSTD->keyTransTbl[ bChar ];
    }
 #elif defined( HB_IO_WIN )

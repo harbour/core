@@ -888,11 +888,11 @@ BOOL hb_fsSetDevMode( HB_FHANDLE hFileHandle, USHORT uiDevMode )
    switch( uiDevMode )
    {
       case FD_BINARY:
-         iRet = _setmode( ( HB_NHANDLE ) hFileHandle, _O_BINARY );
+         iRet = _setmode( ( int ) hFileHandle, _O_BINARY );
          break;
 
       case FD_TEXT:
-         iRet = _setmode( ( HB_NHANDLE ) hFileHandle, _O_TEXT );
+         iRet = _setmode( ( int ) hFileHandle, _O_TEXT );
          break;
    }
 

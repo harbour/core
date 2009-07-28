@@ -50,24 +50,22 @@ static int hb_parnidef( int iParam, int iValue )
    return HB_ISNUM( iParam ) ? hb_parni( iParam ) : iValue;
 }
 
-static HB_SOCKET_T hb_parsocket( int iParam )
+static HB_SOCKET hb_parsocket( int iParam )
 {
-   return HB_ISPOINTER( iParam ) ? ( HB_SOCKET_T ) ( HB_PTRDIFF )
+   return HB_ISPOINTER( iParam ) ? ( HB_SOCKET ) ( HB_PTRDIFF )
                                    hb_parptr( iParam ) : HB_NO_SOCKET;
 }
 
-static void hb_retsocket( HB_SOCKET_T hSocket )
+static void hb_retsocket( HB_SOCKET hSocket )
 {
-   if( hSocket == HB_NO_SOCKET )
-      hb_ret();
-   else
-      hb_retptr( ( void* ) ( HB_PTRDIFF ) hSocket );
+   if( hSocket != HB_NO_SOCKET )
+      hb_retptr( ( void * ) ( HB_PTRDIFF ) hSocket );
 }
 
-static HB_SOCKET_T hb_itemGetSocket( PHB_ITEM pSocket )
+static HB_SOCKET hb_itemGetSocket( PHB_ITEM pSocket )
 {
    if( pSocket && HB_IS_POINTER( pSocket ) )
-      return ( HB_SOCKET_T ) ( HB_PTRDIFF ) hb_itemGetPtr( pSocket );
+      return ( HB_SOCKET ) ( HB_PTRDIFF ) hb_itemGetPtr( pSocket );
    else
       return HB_NO_SOCKET;
 }
@@ -157,7 +155,7 @@ HB_FUNC( SOCKET_RECV )
    len = hb_parni( 3 );
    if( len <= 0 )
       len = 4096;
-   pBuf = ( char* ) hb_xgrab( len + 1 );
+   pBuf = ( char * ) hb_xgrab( len + 1 );
    len = hb_socketRecv( hb_parsocket( 1 ), pBuf, len, hb_parni( 4 ),
                         HB_ISNUM( 5 ) ? hb_parnint( 5 ) : -1 );
    hb_retni( len );

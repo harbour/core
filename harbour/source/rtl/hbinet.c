@@ -68,7 +68,7 @@
 
 typedef struct
 {
-   HB_SOCKET_T  com;
+   HB_SOCKET    com;
    void *       remote;
    unsigned     remotelen;
    char         szErrorText[ 128 ];
@@ -1157,7 +1157,7 @@ HB_FUNC( HB_INETSERVER )
 HB_FUNC( HB_INETACCEPT )
 {
    PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
-   HB_SOCKET_T incoming;
+   HB_SOCKET incoming;
    void * sa;
    unsigned len;
 

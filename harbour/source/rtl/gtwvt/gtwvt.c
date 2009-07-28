@@ -1758,7 +1758,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
    return DefWindowProc( hWnd, message, wParam, lParam );
 }
 
-static DWORD hb_gt_wvt_ProcessMessages( void )
+static WPARAM hb_gt_wvt_ProcessMessages( void )
 {
    MSG msg;
 

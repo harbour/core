@@ -59,14 +59,14 @@
 HB_EXTERN_BEGIN
 
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_UNIX_COMPATIBLE )
-   typedef HB_PTRUINT   HB_SOCKET_T;
+   typedef HB_PTRUINT   HB_SOCKET;
 #else
-   typedef int          HB_SOCKET_T;
+   typedef int          HB_SOCKET;
 #endif
 
-typedef HB_SOCKET_T ( * HB_SOCK_FUNC )( PHB_ITEM );
+typedef HB_SOCKET ( * HB_SOCK_FUNC )( PHB_ITEM );
 
-#define HB_NO_SOCKET          ( ( HB_SOCKET_T ) -1 )
+#define HB_NO_SOCKET          ( ( HB_SOCKET ) -1 )
 
 HB_EXPORT extern int          hb_socketInit( void );
 HB_EXPORT extern void         hb_socketCleanup( void );
@@ -84,31 +84,31 @@ HB_EXPORT extern PHB_ITEM     hb_socketGetAliases( const char * szAddr, int af )
 HB_EXPORT extern int          hb_socketAddrGetPort( const void * pSockAddr, unsigned len );
 HB_EXPORT extern BOOL         hb_socketAddrFromItem( void ** pSockAddr, unsigned * puiLen, PHB_ITEM pAddrItm );
 HB_EXPORT extern PHB_ITEM     hb_socketAddrToItem( const void * pSockAddr, unsigned len );
-HB_EXPORT extern int          hb_socketGetSockName( HB_SOCKET_T sd, void ** pSockAddr, unsigned * puiLen );
-HB_EXPORT extern int          hb_socketGetPeerName( HB_SOCKET_T sd, void ** pSockAddr, unsigned * puiLen );
-HB_EXPORT extern HB_SOCKET_T  hb_socketOpen( int domain, int type, int protocol );
-HB_EXPORT extern int          hb_socketClose( HB_SOCKET_T sd );
-HB_EXPORT extern int          hb_socketShutdown( HB_SOCKET_T sd, int iMode );
-HB_EXPORT extern int          hb_socketBind( HB_SOCKET_T sd, const void * pSockAddr, unsigned uiLen );
-HB_EXPORT extern int          hb_socketListen( HB_SOCKET_T sd, int iBacklog );
-HB_EXPORT extern HB_SOCKET_T  hb_socketAccept( HB_SOCKET_T sd, void ** pSockAddr, unsigned * puiLen, HB_LONG timeout );
-HB_EXPORT extern int          hb_socketConnect( HB_SOCKET_T sd, const void * pSockAddr, unsigned uiLen, HB_LONG timeout );
-HB_EXPORT extern long         hb_socketSend( HB_SOCKET_T sd, const void * data, long len, int flags, HB_LONG timeout );
-HB_EXPORT extern long         hb_socketSendTo( HB_SOCKET_T sd, const void * data, long len, int flags, const void * pSockAddr, unsigned uiSockLen, HB_LONG timeout );
-HB_EXPORT extern long         hb_socketRecv( HB_SOCKET_T sd, void * data, long len, int flags, HB_LONG timeout );
-HB_EXPORT extern long         hb_socketRecvFrom( HB_SOCKET_T sd, void * data, long len, int flags, void ** pSockAddr, unsigned * puiSockLen, HB_LONG timeout );
-HB_EXPORT extern int          hb_socketSetBlockingIO( HB_SOCKET_T sd, BOOL fBlocking );
-HB_EXPORT extern int          hb_socketSetReuseAddr( HB_SOCKET_T sd, BOOL fReuse );
-HB_EXPORT extern int          hb_socketSetKeepAlive( HB_SOCKET_T sd, BOOL fKeepAlive );
-HB_EXPORT extern int          hb_socketSetBroadcast( HB_SOCKET_T sd, BOOL fBroadcast );
-HB_EXPORT extern int          hb_socketSetSndBufSize( HB_SOCKET_T sd, int iSize );
-HB_EXPORT extern int          hb_socketSetRcvBufSize( HB_SOCKET_T sd, int iSize );
-HB_EXPORT extern int          hb_socketGetRcvBufSize( HB_SOCKET_T sd, int * piSize );
-HB_EXPORT extern int          hb_socketGetSndBufSize( HB_SOCKET_T sd, int * piSize );
-HB_EXPORT extern int          hb_socketSetMulticast( HB_SOCKET_T sd, int af, const char * szAddr );
-HB_EXPORT extern int          hb_socketSelectRead( HB_SOCKET_T sd, HB_LONG timeout );
-HB_EXPORT extern int          hb_socketSelectWrite( HB_SOCKET_T sd, HB_LONG timeout );
-HB_EXPORT extern int          hb_socketSelectWriteEx( HB_SOCKET_T sd, HB_LONG timeout );
+HB_EXPORT extern int          hb_socketGetSockName( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen );
+HB_EXPORT extern int          hb_socketGetPeerName( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen );
+HB_EXPORT extern HB_SOCKET    hb_socketOpen( int domain, int type, int protocol );
+HB_EXPORT extern int          hb_socketClose( HB_SOCKET sd );
+HB_EXPORT extern int          hb_socketShutdown( HB_SOCKET sd, int iMode );
+HB_EXPORT extern int          hb_socketBind( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen );
+HB_EXPORT extern int          hb_socketListen( HB_SOCKET sd, int iBacklog );
+HB_EXPORT extern HB_SOCKET    hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, HB_LONG timeout );
+HB_EXPORT extern int          hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_LONG timeout );
+HB_EXPORT extern long         hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_LONG timeout );
+HB_EXPORT extern long         hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags, const void * pSockAddr, unsigned uiSockLen, HB_LONG timeout );
+HB_EXPORT extern long         hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_LONG timeout );
+HB_EXPORT extern long         hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** pSockAddr, unsigned * puiSockLen, HB_LONG timeout );
+HB_EXPORT extern int          hb_socketSetBlockingIO( HB_SOCKET sd, BOOL fBlocking );
+HB_EXPORT extern int          hb_socketSetReuseAddr( HB_SOCKET sd, BOOL fReuse );
+HB_EXPORT extern int          hb_socketSetKeepAlive( HB_SOCKET sd, BOOL fKeepAlive );
+HB_EXPORT extern int          hb_socketSetBroadcast( HB_SOCKET sd, BOOL fBroadcast );
+HB_EXPORT extern int          hb_socketSetSndBufSize( HB_SOCKET sd, int iSize );
+HB_EXPORT extern int          hb_socketSetRcvBufSize( HB_SOCKET sd, int iSize );
+HB_EXPORT extern int          hb_socketGetRcvBufSize( HB_SOCKET sd, int * piSize );
+HB_EXPORT extern int          hb_socketGetSndBufSize( HB_SOCKET sd, int * piSize );
+HB_EXPORT extern int          hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr );
+HB_EXPORT extern int          hb_socketSelectRead( HB_SOCKET sd, HB_LONG timeout );
+HB_EXPORT extern int          hb_socketSelectWrite( HB_SOCKET sd, HB_LONG timeout );
+HB_EXPORT extern int          hb_socketSelectWriteEx( HB_SOCKET sd, HB_LONG timeout );
 HB_EXPORT extern int          hb_socketSelect( PHB_ITEM pArrayRD, BOOL fSetRD,
                                                PHB_ITEM pArrayWR, BOOL fSetWR,
                                                PHB_ITEM pArrayEX, BOOL fSetEX,

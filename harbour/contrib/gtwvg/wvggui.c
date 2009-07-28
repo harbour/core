@@ -1235,7 +1235,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
    return DefWindowProc( hWnd, message, wParam, lParam );
 }
 
-static DWORD hb_gt_wvt_ProcessMessages( PHB_GTWVT pWVT )
+static WPARAM hb_gt_wvt_ProcessMessages( PHB_GTWVT pWVT )
 {
    MSG msg;
    HB_SYMBOL_UNUSED( pWVT );
@@ -1244,7 +1244,7 @@ static DWORD hb_gt_wvt_ProcessMessages( PHB_GTWVT pWVT )
       TranslateMessage( &msg );
       DispatchMessage( &msg );
    }
-   return ( DWORD ) msg.wParam;
+   return msg.wParam;
 }
 
 static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
