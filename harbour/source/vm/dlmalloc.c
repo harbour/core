@@ -467,6 +467,12 @@ DEFAULT_MMAP_THRESHOLD       default: 256K
 #endif  /* HAVE_MORECORE */
 #endif  /* DARWIN */
 
+#if defined(HB_OS_OS2) && defined(__WATCOMC__)
+#ifndef HAVE_MMAP
+#define HAVE_MMAP 0
+#endif
+#endif  /* OS2 */
+
 #ifndef LACKS_SYS_TYPES_H
 #include <sys/types.h>  /* For size_t */
 #endif  /* LACKS_SYS_TYPES_H */
@@ -1390,6 +1396,31 @@ static int win32munmap(void* ptr, size_t size) {
 */
 
 #ifndef WIN32
+#ifdef HB_OS_OS2
+#include "hbthread.h"
+#include "hbatomic.h"
+#ifdef HB_SPINLOCK_T
+#define MLOCK_T HB_SPINLOCK_T
+#define INITIAL_LOCK(l)      *(l)=HB_SPINLOCK_INIT
+#define ACQUIRE_LOCK(l)      HB_SPINLOCK_ACQUIRE(l)
+#define RELEASE_LOCK(l)      HB_SPINLOCK_RELEASE(l)
+
+#if HAVE_MORECORE
+static MLOCK_T morecore_mutex = HB_SPINLOCK_INIT;
+#endif /* HAVE_MORECORE */
+static MLOCK_T magic_init_mutex = HB_SPINLOCK_INIT;
+#else /* !HB_SPINLOCK_T */
+#define MLOCK_T HB_RAWCRITICAL_T
+#define INITIAL_LOCK(l)      HB_CRITICAL_INIT(*(l))
+#define ACQUIRE_LOCK(l)      HB_CRITICAL_LOCK(*(l))
+#define RELEASE_LOCK(l)      HB_CRITICAL_UNLOCK(*(l))
+
+#if HAVE_MORECORE
+static MLOCK_T morecore_mutex;
+#endif /* HAVE_MORECORE */
+static MLOCK_T magic_init_mutex;
+#endif /* HB_SPINLOCK_T */
+#else /* !OS2 */
 /* By default use posix locks */
 #include <pthread.h>
 #define MLOCK_T pthread_mutex_t
@@ -1402,7 +1433,7 @@ static MLOCK_T morecore_mutex = PTHREAD_MUTEX_INITIALIZER;
 #endif /* HAVE_MORECORE */
 
 static MLOCK_T magic_init_mutex = PTHREAD_MUTEX_INITIALIZER;
-
+#endif /* OS2 */
 #else /* WIN32 */
 /*
    Because lock-protected regions have bounded times, and there
