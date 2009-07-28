@@ -1235,7 +1235,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_LONG timeout )
       else
          ptv = NULL;
 
-      iResult = select( ( int ) ( sd + 1 ), &wfds, NULL, NULL, ptv );
+      iResult = select( ( int ) ( sd + 1 ), NULL, &wfds, NULL, ptv );
       hb_socketSetOsError( iResult >= 0 ? 0 : HB_SOCK_GETERROR() );
       if( iResult == -1 && timeout > 0 && HB_SOCK_IS_EINTR() &&
           hb_vmRequestQuery() == 0 )
