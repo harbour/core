@@ -59,6 +59,19 @@
 #define HB_NO_FLATTEN
 #define HB_STACK_LOCAL_MACROS
 
+#define HB_OS_WIN_USED
+
+#define INCL_BASE
+#define INCL_DOSMISC
+#define INCL_DOSERRORS
+#define INCL_DOSDATETIME
+#define INCL_DOSSEMAPHORES
+#define INCL_DOSPROCESS
+#define INCL_DOSSEMAPHORES
+#define INCL_DOSPROCESS
+#define INCL_NOPMAPI
+
+
 /* warning the order of included files is important
  * due to macros used to overload some functions
  */
