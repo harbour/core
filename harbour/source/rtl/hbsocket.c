@@ -2070,20 +2070,19 @@ int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_L
 long hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_LONG timeout )
 {
    long lSent = 0;
-   int ret = 0;
 
    hb_vmUnlock();
 
    if( timeout >= 0 )
    {
-      ret = hb_socketSelectWR( sd, timeout );
-      if( ret == 0 )
+      lSent = hb_socketSelectWR( sd, timeout );
+      if( lSent == 0 )
       {
          hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
-         ret = -1;
+         lSent = -1;
       }
    }
-   if( ret >= 0 )
+   if( lSent >= 0 )
    {
       /* in POSIX systems writing data to broken connection stream causes
        * that system generates SIGPIPE which has to be caught by application
@@ -2109,20 +2108,19 @@ long hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags,
                       const void * pSockAddr, unsigned uiSockLen, HB_LONG timeout )
 {
    long lSent = 0;
-   int ret = 0;
 
    hb_vmUnlock();
 
    if( timeout >= 0 )
    {
-      ret = hb_socketSelectWR( sd, timeout );
-      if( ret == 0 )
+      lSent = hb_socketSelectWR( sd, timeout );
+      if( lSent == 0 )
       {
          hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
-         ret = -1;
+         lSent = -1;
       }
    }
-   if( ret >= 0 )
+   if( lSent >= 0 )
    {
       /* see note above about SIGPIPE */
 #if defined( MSG_NOSIGNAL )
@@ -2144,20 +2142,19 @@ long hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags,
 long hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_LONG timeout )
 {
    long lReceived = 0;
-   int ret = 0;
 
    hb_vmUnlock();
 
    if( timeout >= 0 )
    {
-      ret = hb_socketSelectRD( sd, timeout );
-      if( ret == 0 )
+      lReceived = hb_socketSelectRD( sd, timeout );
+      if( lReceived == 0 )
       {
          hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
-         ret = -1;
+         lReceived = -1;
       }
    }
-   if( ret >= 0 )
+   if( lReceived >= 0 )
    {
       do
       {
@@ -2174,20 +2171,19 @@ long hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_LONG time
 long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** pSockAddr, unsigned * puiSockLen, HB_LONG timeout )
 {
    long lReceived = 0;
-   int ret = 0;
 
    hb_vmUnlock();
 
    if( timeout >= 0 )
    {
-      ret = hb_socketSelectRD( sd, timeout );
-      if( ret == 0 )
+      lReceived = hb_socketSelectRD( sd, timeout );
+      if( lReceived == 0 )
       {
          hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
-         ret = -1;
+         lReceived = -1;
       }
    }
-   if( ret >= 0 )
+   if( lReceived >= 0 )
    {
 #if defined( HB_HAS_SOCKADDR_STORAGE )
       struct sockaddr_storage st;
