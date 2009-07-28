@@ -144,9 +144,7 @@
 #     define HB_HAS_INET_PTON
 #     define HB_HAS_INET_NTOP
 #  else
-      /* please verify it and disable unsupported options in GCC OS2 */
-#     define HB_HAS_INET_PTON
-#     define HB_HAS_INET_NTOP
+   /* test shows that GCC 3.3.6 does not supported inet_pton() and inet_ntop() */
 #  endif
 #endif
 
