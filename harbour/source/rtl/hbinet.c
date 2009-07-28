@@ -1104,6 +1104,11 @@ HB_FUNC( HB_INETSERVER )
       HB_SOCKET_INIT( socket, pSocket );
 
    /* Creates comm socket */
+   if( socket->sd != HB_NO_SOCKET )
+   {
+      hb_socketClose( socket->sd );
+      socket->sd = HB_NO_SOCKET;
+   }
    socket->sd = hb_socketOpen( HB_SOCK_PF_INET, HB_SOCK_STREAM, 0 );
    if( socket->sd == HB_NO_SOCKET )
    {
@@ -1126,7 +1131,7 @@ HB_FUNC( HB_INETSERVER )
    if( socket->remote )
       hb_xfree( socket->remote );
    if( hb_socketInetAddr( &socket->remote, &socket->remotelen,
-                          szAddress ? szAddress : "255.255.255.255", iPort ) )
+                          szAddress ? szAddress : "0.0.0.0", iPort ) )
    {
       if( hb_socketBind( socket->sd, socket->remote, socket->remotelen ) == -1 )
       {
@@ -1344,7 +1349,7 @@ HB_FUNC( HB_INETDGRAMBIND )
    if( socket->remote )
       hb_xfree( socket->remote );
    if( !hb_socketInetAddr( &socket->remote, &socket->remotelen,
-                           szAddress ? szAddress : "255.255.255.255", iPort ) )
+                           szAddress ? szAddress : "0.0.0.0", iPort ) )
    {
       HB_SOCKET_SET_ERROR( socket );
       hb_socketClose( socket->sd );

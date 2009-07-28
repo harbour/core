@@ -80,6 +80,7 @@ PRG_HEADERS=\
 	hbclass.ch \
 	hbdebug.ch \
 	hbextcdp.ch \
+	hbextlng.ch \
 	hbextern.ch \
 	hbgetcmt.ch \
 	hbgfx.ch \
