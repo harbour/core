@@ -22,6 +22,9 @@ endif
 ifeq ($(HB_WITHOUT_GTCRS),yes)
 HB_INC_CURSES =
 endif
+ifeq ($(HB_ARCHITECTURE),os2)
+HB_INC_CURSES =
+endif
 
 HB_INC_CURSES_OK += $(foreach d, $(HB_INC_CURSES), $(if $(wildcard $(d)/curses.h),$(d),))
 HB_INC_CURSES_OK:=$(strip $(HB_INC_CURSES_OK))
