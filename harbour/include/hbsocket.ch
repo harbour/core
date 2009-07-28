@@ -50,8 +50,8 @@
  *
  */
 
-#ifndef HB_SOCK_CH_
-#define HB_SOCK_CH_
+#ifndef HB_SOCKET_CH_
+#define HB_SOCKET_CH_
 
 /* Harbour socket error codes */
 #define HB_SOCKET_ERR_PIPE                1
@@ -125,67 +125,65 @@
 #define HB_SOCKET_ERR_TYPENOTFOUND        69
 #define HB_SOCKET_ERR_OTHER               70
 
-
 /* protocol family */
-#define HB_SOCK_PF_LOCAL      1
-#define HB_SOCK_PF_INET       2
-#define HB_SOCK_PF_IPX        4
-#define HB_SOCK_PF_INET6      10
-#define HB_SOCK_PF_PACKET     17
+#define HB_SOCKET_PF_LOCAL                1
+#define HB_SOCKET_PF_INET                 2
+#define HB_SOCKET_PF_IPX                  4
+#define HB_SOCKET_PF_INET6                10
+#define HB_SOCKET_PF_PACKET               17
 
 /* address familly */
-#define HB_SOCK_AF_LOCAL      HB_SOCK_PF_LOCAL
-#define HB_SOCK_AF_INET       HB_SOCK_PF_INET
-#define HB_SOCK_AF_IPX        HB_SOCK_PF_IPX
-#define HB_SOCK_AF_INET6      HB_SOCK_PF_INET6
-#define HB_SOCK_AF_PACKET     HB_SOCK_PF_PACKET
+#define HB_SOCKET_AF_LOCAL                HB_SOCKET_PF_LOCAL
+#define HB_SOCKET_AF_INET                 HB_SOCKET_PF_INET
+#define HB_SOCKET_AF_IPX                  HB_SOCKET_PF_IPX
+#define HB_SOCKET_AF_INET6                HB_SOCKET_PF_INET6
+#define HB_SOCKET_AF_PACKET               HB_SOCKET_PF_PACKET
 
 /* protocol type */
-#define HB_SOCK_STREAM        1
-#define HB_SOCK_DGRAM         2
-#define HB_SOCK_RAW           3
-#define HB_SOCK_RDM           4
-#define HB_SOCK_SEQPACKET     5
+#define HB_SOCKET_PT_STREAM               1
+#define HB_SOCKET_PT_DGRAM                2
+#define HB_SOCKET_PT_RAW                  3
+#define HB_SOCKET_PT_RDM                  4
+#define HB_SOCKET_PT_SEQPACKET            5
 
 /* IP protocols */
-#define HB_SOCK_IPPROTO_IP          0     /* Dummy protocol for TCP */
-#define HB_SOCK_IPPROTO_ICMP        1     /* Internet Control Message Protocol */
-#define HB_SOCK_IPPROTO_IGMP        2     /* Internet Group Management Protocol */
-#define HB_SOCK_IPPROTO_IPIP        4     /* IPIP tunnels (older KA9Q tunnels use 94) */
-#define HB_SOCK_IPPROTO_TCP         6     /* Transmission Control Protocol */
-#define HB_SOCK_IPPROTO_EGP         8     /* Exterior Gateway Protocol */
-#define HB_SOCK_IPPROTO_PUP         12    /* PUP protocol */
-#define HB_SOCK_IPPROTO_UDP         17    /* User Datagram Protocol */
-#define HB_SOCK_IPPROTO_IDP         22    /* XNS IDP protocol */
-#define HB_SOCK_IPPROTO_DCCP        23    /* DCCP protocol */
-#define HB_SOCK_IPPROTO_RDP         29    /* RDP */
-#define HB_SOCK_IPPROTO_TP          29    /* SO Transport Protocol Class 4 */
-#define HB_SOCK_IPPROTO_IPV6        41    /* IPv6 header */
-#define HB_SOCK_IPPROTO_ROUTING     43    /* IPv6 routing header */
-#define HB_SOCK_IPPROTO_FRAGMENT    44    /* IPv6 fragmentation header */
-#define HB_SOCK_IPPROTO_RSVP        46    /* Reservation Protocol */
-#define HB_SOCK_IPPROTO_GRE         47    /* General Routing Encapsulation */
-#define HB_SOCK_IPPROTO_ESP         50    /* Encapsulating security payload */
-#define HB_SOCK_IPPROTO_AH          51    /* Authentication header */
-#define HB_SOCK_IPPROTO_ICMPV6      58    /* ICMP v6 */
-#define HB_SOCK_IPPROTO_NONE        59    /* IPv6 no next header */
-#define HB_SOCK_IPPROTO_DSTOPTS     60    /* IPv6 destination options */
-#define HB_SOCK_IPPROTO_ND          77    /* ND */
-#define HB_SOCK_IPPROTO_ICLFXBM     78    /* ICLFXBM */
-#define HB_SOCK_IPPROTO_EON         80    /* EON */
-#define HB_SOCK_IPPROTO_MTP         92    /* Multicast Transport Protocol */
-#define HB_SOCK_IPPROTO_ENCAP       98    /* Encapsulation Header */
-#define HB_SOCK_IPPROTO_PIM         103   /* Protocol Independent Multicast */
-#define HB_SOCK_IPPROTO_COMP        108   /* Compression Header Protocol */
-#define HB_SOCK_IPPROTO_PGM         113   /* PGM */
-#define HB_SOCK_IPPROTO_L2TP        115   /* L2TP */
-#define HB_SOCK_IPPROTO_SCTP        132   /* Stream Control Transmission Protocol */
-#define HB_SOCK_IPPROTO_RAW         255   /* Raw IP packets */
+#define HB_SOCKET_IPPROTO_IP              0     /* Dummy protocol for TCP */
+#define HB_SOCKET_IPPROTO_ICMP            1     /* Internet Control Message Protocol */
+#define HB_SOCKET_IPPROTO_IGMP            2     /* Internet Group Management Protocol */
+#define HB_SOCKET_IPPROTO_IPIP            4     /* IPIP tunnels (older KA9Q tunnels use 94) */
+#define HB_SOCKET_IPPROTO_TCP             6     /* Transmission Control Protocol */
+#define HB_SOCKET_IPPROTO_EGP             8     /* Exterior Gateway Protocol */
+#define HB_SOCKET_IPPROTO_PUP             12    /* PUP protocol */
+#define HB_SOCKET_IPPROTO_UDP             17    /* User Datagram Protocol */
+#define HB_SOCKET_IPPROTO_IDP             22    /* XNS IDP protocol */
+#define HB_SOCKET_IPPROTO_DCCP            23    /* DCCP protocol */
+#define HB_SOCKET_IPPROTO_RDP             29    /* RDP */
+#define HB_SOCKET_IPPROTO_TP              29    /* SO Transport Protocol Class 4 */
+#define HB_SOCKET_IPPROTO_IPV6            41    /* IPv6 header */
+#define HB_SOCKET_IPPROTO_ROUTING         43    /* IPv6 routing header */
+#define HB_SOCKET_IPPROTO_FRAGMENT        44    /* IPv6 fragmentation header */
+#define HB_SOCKET_IPPROTO_RSVP            46    /* Reservation Protocol */
+#define HB_SOCKET_IPPROTO_GRE             47    /* General Routing Encapsulation */
+#define HB_SOCKET_IPPROTO_ESP             50    /* Encapsulating security payload */
+#define HB_SOCKET_IPPROTO_AH              51    /* Authentication header */
+#define HB_SOCKET_IPPROTO_ICMPV6          58    /* ICMP v6 */
+#define HB_SOCKET_IPPROTO_NONE            59    /* IPv6 no next header */
+#define HB_SOCKET_IPPROTO_DSTOPTS         60    /* IPv6 destination options */
+#define HB_SOCKET_IPPROTO_ND              77    /* ND */
+#define HB_SOCKET_IPPROTO_ICLFXBM         78    /* ICLFXBM */
+#define HB_SOCKET_IPPROTO_EON             80    /* EON */
+#define HB_SOCKET_IPPROTO_MTP             92    /* Multicast Transport Protocol */
+#define HB_SOCKET_IPPROTO_ENCAP           98    /* Encapsulation Header */
+#define HB_SOCKET_IPPROTO_PIM             103   /* Protocol Independent Multicast */
+#define HB_SOCKET_IPPROTO_COMP            108   /* Compression Header Protocol */
+#define HB_SOCKET_IPPROTO_PGM             113   /* PGM */
+#define HB_SOCKET_IPPROTO_L2TP            115   /* L2TP */
+#define HB_SOCKET_IPPROTO_SCTP            132   /* Stream Control Transmission Protocol */
+#define HB_SOCKET_IPPROTO_RAW             255   /* Raw IP packets */
 
 /* shutdown actions */
-#define HB_SOCK_SHUT_RD       0
-#define HB_SOCK_SHUT_WR       1
-#define HB_SOCK_SHUT_RDWR     2
+#define HB_SOCKET_SHUT_RD                 0
+#define HB_SOCKET_SHUT_WR                 1
+#define HB_SOCKET_SHUT_RDWR               2
 
-
-#endif /* HB_SOCK_CH_ */
+#endif /* HB_SOCKET_CH_ */

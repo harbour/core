@@ -50,8 +50,8 @@
  *
  */
 
-#ifndef HB_SOCK_H_
-#define HB_SOCK_H_
+#ifndef HB_SOCKET_H_
+#define HB_SOCKET_H_
 
 #include "hbapi.h"
 #include "hbsocket.ch"
@@ -64,7 +64,7 @@ HB_EXTERN_BEGIN
    typedef int          HB_SOCKET;
 #endif
 
-typedef HB_SOCKET ( * HB_SOCK_FUNC )( PHB_ITEM );
+typedef HB_SOCKET ( * HB_SOCKET_FUNC )( PHB_ITEM );
 
 #define HB_NO_SOCKET          ( ( HB_SOCKET ) -1 )
 
@@ -112,8 +112,8 @@ HB_EXPORT extern int          hb_socketSelectWriteEx( HB_SOCKET sd, HB_LONG time
 HB_EXPORT extern int          hb_socketSelect( PHB_ITEM pArrayRD, BOOL fSetRD,
                                                PHB_ITEM pArrayWR, BOOL fSetWR,
                                                PHB_ITEM pArrayEX, BOOL fSetEX,
-                                               HB_LONG timeout, HB_SOCK_FUNC pFunc );
+                                               HB_LONG timeout, HB_SOCKET_FUNC pFunc );
 
 HB_EXTERN_END
 
-#endif /* HB_SOCK_H_ */
+#endif /* HB_SOCKET_H_ */

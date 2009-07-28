@@ -610,7 +610,7 @@ int hb_socketSelectWriteEx( HB_SOCKET sd, HB_LONG timeout )
 int hb_socketSelect( PHB_ITEM pArrayRD, BOOL fSetRD,
                      PHB_ITEM pArrayWR, BOOL fSetWR,
                      PHB_ITEM pArrayEX, BOOL fSetEX,
-                     HB_LONG timeout, HB_SOCK_FUNC pFunc )
+                     HB_LONG timeout, HB_SOCKET_FUNC pFunc )
 {
    HB_SYMBOL_UNUSED( pArrayRD );
    HB_SYMBOL_UNUSED( fSetRD );
@@ -1559,22 +1559,22 @@ BOOL hb_socketAddrFromItem( void ** pSockAddr, unsigned * puiLen, PHB_ITEM pAddr
       {
          switch( hb_arrayGetNI( pAddrItm, 1 ) )
          {
-            case HB_SOCK_PF_INET:
+            case HB_SOCKET_PF_INET:
                fOK = hb_socketInetAddr( pSockAddr, puiLen,
                                         hb_arrayGetCPtr( pAddrItm, 2 ),
                                         hb_arrayGetNI( pAddrItm, 3 ) );
                break;
-            case HB_SOCK_PF_INET6:
+            case HB_SOCKET_PF_INET6:
                fOK = hb_socketInet6Addr( pSockAddr, puiLen,
                                          hb_arrayGetCPtr( pAddrItm, 2 ),
                                          hb_arrayGetNI( pAddrItm, 3 ) );
                break;
-            case HB_SOCK_PF_LOCAL:
+            case HB_SOCKET_PF_LOCAL:
                fOK = hb_socketLocalAddr( pSockAddr, puiLen,
                                          hb_arrayGetCPtr( pAddrItm, 2 ) );
                break;
-            case HB_SOCK_PF_PACKET:
-            case HB_SOCK_PF_IPX:
+            case HB_SOCKET_PF_PACKET:
+            case HB_SOCKET_PF_IPX:
                break;
          }
       }
@@ -1607,7 +1607,7 @@ PHB_ITEM hb_socketAddrToItem( const void * pSockAddr, unsigned len )
             if( szAddr )
             {
                pAddrItm = hb_itemArrayNew( 3 );
-               hb_arraySetNI( pAddrItm, 1, HB_SOCK_PF_INET );
+               hb_arraySetNI( pAddrItm, 1, HB_SOCKET_PF_INET );
                hb_arraySetC( pAddrItm, 2, szAddr );
                hb_arraySetNI( pAddrItm, 3, ntohs( sa->sin_port ) );
             }
@@ -1632,7 +1632,7 @@ PHB_ITEM hb_socketAddrToItem( const void * pSockAddr, unsigned len )
             if( szAddr )
             {
                pAddrItm = hb_itemArrayNew( 3 );
-               hb_arraySetNI( pAddrItm, 1, HB_SOCK_PF_INET6 );
+               hb_arraySetNI( pAddrItm, 1, HB_SOCKET_PF_INET6 );
                hb_arraySetC( pAddrItm, 2, szAddr );
                hb_arraySetNI( pAddrItm, 3, ntohs( sa->sin6_port ) );
             }
@@ -1649,7 +1649,7 @@ PHB_ITEM hb_socketAddrToItem( const void * pSockAddr, unsigned len )
          {
             struct sockaddr_un * sa = ( struct sockaddr_un * ) pSockAddr;
             pAddrItm = hb_itemArrayNew( 2 );
-            hb_arraySetNI( pAddrItm, 1, HB_SOCK_PF_LOCAL );
+            hb_arraySetNI( pAddrItm, 1, HB_SOCKET_PF_LOCAL );
             hb_arraySetC( pAddrItm, 2, sa->sun_path );
          }
          break;
@@ -1737,7 +1737,7 @@ HB_SOCKET hb_socketOpen( int domain, int type, int protocol )
 #if defined( HB_SOCKET_TRANSLATE_DOMAIN )
    switch( domain )
    {
-      case HB_SOCK_PF_INET:
+      case HB_SOCKET_PF_INET:
 #if   defined( PF_INET )
          domain = PF_INET;
 #elif defined( AF_INET )
@@ -1747,7 +1747,7 @@ HB_SOCKET hb_socketOpen( int domain, int type, int protocol )
 #endif
          break;
 
-      case HB_SOCK_PF_INET6:
+      case HB_SOCKET_PF_INET6:
 #if   defined( PF_INET6 )
          domain = PF_INET6;
 #elif defined( AF_INET6 )
@@ -1757,7 +1757,7 @@ HB_SOCKET hb_socketOpen( int domain, int type, int protocol )
 #endif
          break;
 
-      case HB_SOCK_PF_LOCAL:
+      case HB_SOCKET_PF_LOCAL:
 #if   defined( PF_LOCAL )
          domain = PF_LOCAL;
 #elif defined( AF_LOCAL )
@@ -1771,7 +1771,7 @@ HB_SOCKET hb_socketOpen( int domain, int type, int protocol )
 #endif
          break;
 
-      case HB_SOCK_PF_PACKET:
+      case HB_SOCKET_PF_PACKET:
 #if   defined( PF_PACKET )
          domain = PF_PACKET;
 #elif defined( AF_PACKET )
@@ -1781,7 +1781,7 @@ HB_SOCKET hb_socketOpen( int domain, int type, int protocol )
 #endif
          break;
 
-      case HB_SOCK_PF_IPX:
+      case HB_SOCKET_PF_IPX:
 #if   defined( PF_IPX )
          domain = PF_IPX;
 #elif defined( AF_ )
@@ -1799,7 +1799,7 @@ HB_SOCKET hb_socketOpen( int domain, int type, int protocol )
 #if defined( HB_SOCKET_TRANSLATE_TYPE )
    if( err == 0 ) switch( type )
    {
-      case HB_SOCK_STREAM:
+      case HB_SOCKET_PT_STREAM:
 #if   defined( SOCK_STREAM )
          type = SOCK_STREAM;
 #else
@@ -1807,7 +1807,7 @@ HB_SOCKET hb_socketOpen( int domain, int type, int protocol )
 #endif
          break;
 
-      case HB_SOCK_DGRAM:
+      case HB_SOCKET_PT_DGRAM:
 #if   defined( SOCK_DGRAM )
          type = SOCK_DGRAM;
 #else
@@ -1815,7 +1815,7 @@ HB_SOCKET hb_socketOpen( int domain, int type, int protocol )
 #endif
          break;
 
-      case HB_SOCK_SEQPACKET:
+      case HB_SOCKET_PT_SEQPACKET:
 #if   defined( SOCK_SEQPACKET )
          type = SOCK_SEQPACKET;
 #else
@@ -1823,7 +1823,7 @@ HB_SOCKET hb_socketOpen( int domain, int type, int protocol )
 #endif
          break;
 
-      case HB_SOCK_RAW:
+      case HB_SOCKET_PT_RAW:
 #if   defined( SOCK_RAW )
          type = SOCK_RAW;
 #else
@@ -1831,7 +1831,7 @@ HB_SOCKET hb_socketOpen( int domain, int type, int protocol )
 #endif
          break;
 
-      case HB_SOCK_RDM:
+      case HB_SOCKET_PT_RDM:
 #if   defined( SOCK_RDM )
          type = SOCK_RDM;
 #else
@@ -1886,30 +1886,30 @@ int hb_socketShutdown( HB_SOCKET sd, int iMode )
    int ret;
 
 #if defined( HB_OS_WIN )
-   if( iMode == HB_SOCK_SHUT_RD )
+   if( iMode == HB_SOCKET_SHUT_RD )
       iMode = SD_RECEIVE;
-   else if( iMode == HB_SOCK_SHUT_WR )
+   else if( iMode == HB_SOCKET_SHUT_WR )
       iMode = SD_SEND;
-   else if( iMode == HB_SOCK_SHUT_RDWR )
+   else if( iMode == HB_SOCKET_SHUT_RDWR )
       iMode = SD_BOTH;
 #elif defined( HB_OS_OS2 )
-   if( iMode == HB_SOCK_SHUT_RD )
+   if( iMode == HB_SOCKET_SHUT_RD )
       iMode = SO_RCV_SHUTDOWN;
-   else if( iMode == HB_SOCK_SHUT_WR )
+   else if( iMode == HB_SOCKET_SHUT_WR )
       iMode = SO_SND_SHUTDOWN;
-   else if( iMode == HB_SOCK_SHUT_RDWR )
+   else if( iMode == HB_SOCKET_SHUT_RDWR )
       iMode = SO_RCV_SHUTDOWN | SO_SND_SHUTDOWN;
 #elif defined( __WATCOMC__ )
-   if( iMode == HB_SOCK_SHUT_RD ||
-       iMode == HB_SOCK_SHUT_WR ||
-       iMode == HB_SOCK_SHUT_RDWR )
+   if( iMode == HB_SOCKET_SHUT_RD ||
+       iMode == HB_SOCKET_SHUT_WR ||
+       iMode == HB_SOCKET_SHUT_RDWR )
    { ; }
 #else
-   if( iMode == HB_SOCK_SHUT_RD )
+   if( iMode == HB_SOCKET_SHUT_RD )
       iMode = SHUT_RD;
-   else if( iMode == HB_SOCK_SHUT_WR )
+   else if( iMode == HB_SOCKET_SHUT_WR )
       iMode = SHUT_WR;
-   else if( iMode == HB_SOCK_SHUT_RDWR )
+   else if( iMode == HB_SOCKET_SHUT_RDWR )
       iMode = SHUT_RDWR;
 #endif
    else
@@ -2277,7 +2277,7 @@ int hb_socketGetRcvBufSize( HB_SOCKET sd, int * piSize )
 
 int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
 {
-   if( af == HB_SOCK_AF_INET )
+   if( af == HB_SOCKET_AF_INET )
    {
 #if defined( IP_ADD_MEMBERSHIP ) && defined( IPPROTO_IP )
       struct ip_mreq mreq;
@@ -2291,7 +2291,7 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
 #endif
    }
 #if defined( HB_HAS_INET6 )
-   else if( af == HB_SOCK_AF_INET6 )
+   else if( af == HB_SOCKET_AF_INET6 )
    {
 #if defined( HB_HAS_INET_PTON ) && defined( IN6ADDR_ANY_INIT )
       struct ipv6_mreq mreq;
@@ -2357,7 +2357,7 @@ int hb_socketSelectWriteEx( HB_SOCKET sd, HB_LONG timeout )
 int hb_socketSelect( PHB_ITEM pArrayRD, BOOL fSetRD,
                      PHB_ITEM pArrayWR, BOOL fSetWR,
                      PHB_ITEM pArrayEX, BOOL fSetEX,
-                     HB_LONG timeout, HB_SOCK_FUNC pFunc )
+                     HB_LONG timeout, HB_SOCKET_FUNC pFunc )
 {
    HB_SOCKET maxsd, sd;
    int i, ret;
@@ -2468,7 +2468,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
 #if defined( HB_SOCKET_TRANSLATE_DOMAIN )
    switch( af )
    {
-      case HB_SOCK_PF_INET:
+      case HB_SOCKET_PF_INET:
 #if   defined( PF_INET )
          af = PF_INET;
 #elif defined( AF_INET )
@@ -2476,7 +2476,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
 #endif
          break;
 
-      case HB_SOCK_PF_INET6:
+      case HB_SOCKET_PF_INET6:
 #if   defined( PF_INET6 )
          af = PF_INET6;
 #elif defined( AF_INET6 )
@@ -2484,7 +2484,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
 #endif
          break;
 
-      case HB_SOCK_PF_LOCAL:
+      case HB_SOCKET_PF_LOCAL:
 #if   defined( PF_LOCAL )
          af = PF_LOCAL;
 #elif defined( AF_LOCAL )
@@ -2496,7 +2496,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
 #endif
          break;
 
-      case HB_SOCK_PF_PACKET:
+      case HB_SOCKET_PF_PACKET:
 #if   defined( PF_PACKET )
          af = PF_PACKET;
 #elif defined( AF_PACKET )
@@ -2504,7 +2504,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
 #endif
          break;
 
-      case HB_SOCK_PF_IPX:
+      case HB_SOCKET_PF_IPX:
 #if   defined( PF_IPX )
          af = PF_IPX;
 #elif defined( AF_ )
@@ -2531,7 +2531,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
    }
 #else
 
-   if( af == HB_SOCK_PF_INET )
+   if( af == HB_SOCKET_PF_INET )
    {
       struct hostent * he = NULL;
 
@@ -2556,7 +2556,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
       hb_vmLock();
    }
 #if defined( HB_HAS_INET6 )
-   else if( af == HB_SOCK_PF_INET6 )
+   else if( af == HB_SOCKET_PF_INET6 )
    {
       int TODO;
    }
@@ -2576,7 +2576,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
 #if defined( HB_SOCKET_TRANSLATE_DOMAIN )
    switch( af )
    {
-      case HB_SOCK_PF_INET:
+      case HB_SOCKET_PF_INET:
 #if   defined( PF_INET )
          af = PF_INET;
 #elif defined( AF_INET )
@@ -2584,7 +2584,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
 #endif
          break;
 
-      case HB_SOCK_PF_INET6:
+      case HB_SOCKET_PF_INET6:
 #if   defined( PF_INET6 )
          af = PF_INET6;
 #elif defined( AF_INET6 )
@@ -2592,7 +2592,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
 #endif
          break;
 
-      case HB_SOCK_PF_LOCAL:
+      case HB_SOCKET_PF_LOCAL:
 #if   defined( PF_LOCAL )
          af = PF_LOCAL;
 #elif defined( AF_LOCAL )
@@ -2604,7 +2604,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
 #endif
          break;
 
-      case HB_SOCK_PF_PACKET:
+      case HB_SOCKET_PF_PACKET:
 #if   defined( PF_PACKET )
          af = PF_PACKET;
 #elif defined( AF_PACKET )
@@ -2612,7 +2612,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
 #endif
          break;
 
-      case HB_SOCK_PF_IPX:
+      case HB_SOCKET_PF_IPX:
 #if   defined( PF_IPX )
          af = PF_IPX;
 #elif defined( AF_ )
@@ -2676,7 +2676,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
    }
 #else
 
-   if( af == HB_SOCK_PF_INET )
+   if( af == HB_SOCKET_PF_INET )
    {
       struct hostent * he = NULL;
       int iCount = 0;
@@ -2724,7 +2724,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
       }
    }
 #if defined( HB_HAS_INET6 )
-   else if( af == HB_SOCK_PF_INET6 )
+   else if( af == HB_SOCKET_PF_INET6 )
    {
       int TODO;
    }

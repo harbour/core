@@ -4409,8 +4409,8 @@ FUNCTION OemToHtml( cOemText )
 
 // This function returs the HTML character entities that are exchangeable between ANSI and OEM character sets
 STATIC PROCEDURE _Init_Html_AnsiCharacterEntities
-s_aHtmlAnsiEntities := ;
-       { ;
+   s_aHtmlAnsiEntities := ;
+      { ;
          { Chr(  38 ), "&amp;"    }, ;      //  ampersand
          { Chr(  60 ), "&lt;"     }, ;      //  less-than sign
          { Chr(  62 ), "&gt;"     }, ;      //  greater-than sign

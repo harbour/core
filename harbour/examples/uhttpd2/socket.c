@@ -87,9 +87,9 @@ HB_FUNC( SOCKET_ERROR )
 
 HB_FUNC( SOCKET_CREATE )
 {
-   hb_retsocket( hb_socketOpen( hb_parnidef( 1, HB_SOCK_PF_INET ),
-                                hb_parnidef( 2, HB_SOCK_STREAM ),
-                                hb_parnidef( 3, HB_SOCK_IPPROTO_TCP ) ) );
+   hb_retsocket( hb_socketOpen( hb_parnidef( 1, HB_SOCKET_PF_INET ),
+                                hb_parnidef( 2, HB_SOCKET_PT_STREAM ),
+                                hb_parnidef( 3, HB_SOCKET_IPPROTO_TCP ) ) );
 }
 
 HB_FUNC( SOCKET_CLOSE )
@@ -144,7 +144,7 @@ HB_FUNC( SOCKET_ACCEPT )
 HB_FUNC( SOCKET_SHUTDOWN )
 {
    hb_retni( hb_socketShutdown( hb_parsocket( 1 ),
-                                hb_parnidef( 2, HB_SOCK_SHUT_RDWR ) ) );
+                                hb_parnidef( 2, HB_SOCKET_SHUT_RDWR ) ) );
 }
 
 HB_FUNC( SOCKET_RECV )
