@@ -1131,7 +1131,7 @@ HB_FUNC( HB_INETSERVER )
    if( socket->remote )
       hb_xfree( socket->remote );
    if( hb_socketInetAddr( &socket->remote, &socket->remotelen,
-                          szAddress ? szAddress : "0.0.0.0", iPort ) )
+                          szAddress, iPort ) )
    {
       if( hb_socketBind( socket->sd, socket->remote, socket->remotelen ) == -1 )
       {
@@ -1349,7 +1349,7 @@ HB_FUNC( HB_INETDGRAMBIND )
    if( socket->remote )
       hb_xfree( socket->remote );
    if( !hb_socketInetAddr( &socket->remote, &socket->remotelen,
-                           szAddress ? szAddress : "0.0.0.0", iPort ) )
+                           szAddress, iPort ) )
    {
       HB_SOCKET_SET_ERROR( socket );
       hb_socketClose( socket->sd );

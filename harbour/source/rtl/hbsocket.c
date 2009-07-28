@@ -669,6 +669,12 @@ static HB_CRITICAL_NEW( s_sockMtx );
 
 static int s_iSessions;
 
+
+#if defined( HB_HAS_INET6 ) && !defined( HB_HAS_INET6_ADDR_CONST ) && \
+    defined( IN6ADDR_ANY_INIT )
+   const struct in6_addr s_in6addr_any = IN6ADDR_ANY_INIT;
+#endif
+
 #if !defined( HB_HAS_INET_NTOP ) && !defined( HB_IS_INET_NTOA_MT_SAFE ) && defined( AF_INET )
 static const char * hb_inet_ntoa( struct in_addr * addr, char * pBuffer )
 {
@@ -1372,22 +1378,29 @@ BOOL hb_socketInetAddr( void ** pSockAddr, unsigned * puiLen,
    memset( &sa, 0, sizeof( sa ) );
    sa.sin_family = AF_INET;
    sa.sin_port = htons( ( hbU16 ) iPort );
-#if defined( HB_HAS_INET_PTON )
-   if( inet_pton( AF_INET, szAddr, &sa.sin_addr ) > 0 )
-#elif defined( HB_HAS_INET_ATON )
-   if( inet_aton( szAddr, &sa.sin_addr ) != 0 )
-#else
-   sa.sin_addr.s_addr = inet_addr( szAddr );
-   if( sa.sin_addr.s_addr != INADDR_NONE ||
-       strcmp( "255.255.255.255", szAddr ) == 0 )  /* dirty hack */
-#endif
+   if( !szAddr || !*szAddr )
    {
-      *pSockAddr = memcpy( hb_xgrab( sizeof( sa ) + 1 ), &sa, sizeof( sa ) );
-      *puiLen = ( unsigned ) sizeof( sa );
-      return TRUE;
+      sa.sin_addr.s_addr = htonl( INADDR_ANY );
    }
    else
-      hb_socketSetRawError( HB_SOCKET_ERR_WRONGADDR );
+   {
+#if defined( HB_HAS_INET_PTON )
+      if( inet_pton( AF_INET, szAddr, &sa.sin_addr ) > 0 )
+#elif defined( HB_HAS_INET_ATON )
+      if( inet_aton( szAddr, &sa.sin_addr ) != 0 )
+#else
+      sa.sin_addr.s_addr = inet_addr( szAddr );
+      if( sa.sin_addr.s_addr != INADDR_NONE ||
+          strcmp( "255.255.255.255", szAddr ) == 0 )  /* dirty hack */
+#endif
+      {
+         *pSockAddr = memcpy( hb_xgrab( sizeof( sa ) + 1 ), &sa, sizeof( sa ) );
+         *puiLen = ( unsigned ) sizeof( sa );
+         return TRUE;
+      }
+      else
+         hb_socketSetRawError( HB_SOCKET_ERR_WRONGADDR );
+   }
 #else
    HB_SYMBOL_UNUSED( szAddr );
    HB_SYMBOL_UNUSED( iPort );
@@ -1408,21 +1421,32 @@ BOOL hb_socketInet6Addr( void ** pSockAddr, unsigned * puiLen,
    memset( &sa, 0, sizeof( sa ) );
    sa.sin6_family = AF_INET6;
    sa.sin6_port = htons( ( hbU16 ) iPort );
-#if defined( HB_HAS_INET_PTON )
-   err = inet_pton( AF_INET6, szAddr, &sa.sin6_addr );
-   if( err > 0 )
+   if( !szAddr || !*szAddr )
    {
-      *pSockAddr = memcpy( hb_xgrab( sizeof( sa ) + 1 ), &sa, sizeof( sa ) );
-      *puiLen = ( unsigned ) sizeof( sa );
-      return TRUE;
-   }
-   else if( err == 0 )
-      hb_socketSetRawError( HB_SOCKET_ERR_WRONGADDR );
-   else
-      hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
-#else
-   int TODO;
+#if defined( HB_HAS_INET6_ADDR_CONST )
+      memcpy( &sa.sin6_addr, &in6addr_any, sizeof( struct in6_addr ) );
+#elif defined( IN6ADDR_ANY_INIT )
+      memcpy( &sa.sin6_addr, &s_in6addr_any, sizeof( struct in6_addr ) );
 #endif
+   }
+   else
+   {
+#if defined( HB_HAS_INET_PTON )
+      err = inet_pton( AF_INET6, szAddr, &sa.sin6_addr );
+      if( err > 0 )
+      {
+         *pSockAddr = memcpy( hb_xgrab( sizeof( sa ) + 1 ), &sa, sizeof( sa ) );
+         *puiLen = ( unsigned ) sizeof( sa );
+         return TRUE;
+      }
+      else if( err == 0 )
+         hb_socketSetRawError( HB_SOCKET_ERR_WRONGADDR );
+      else
+         hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+#else
+      int TODO;
+#endif
+   }
 #else
    HB_SYMBOL_UNUSED( szAddr );
    HB_SYMBOL_UNUSED( iPort );
@@ -2293,16 +2317,18 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
 #if defined( HB_HAS_INET6 )
    else if( af == HB_SOCKET_AF_INET6 )
    {
-#if defined( HB_HAS_INET_PTON ) && defined( IN6ADDR_ANY_INIT )
+#if defined( HB_HAS_INET_PTON )
       struct ipv6_mreq mreq;
       int err = inet_pton( AF_INET6, szAddr, &mreq.ipv6mr_multiaddr );
       if( err > 0 )
       {
 #if defined( HB_HAS_INET6_ADDR_CONST )
          memcpy( &mreq.ipv6mr_interface, &in6addr_any, sizeof( struct in6_addr ) );
+#elif defined( IN6ADDR_ANY_INIT )
+         memcpy( &mreq.ipv6mr_interface, &s_in6addr_any, sizeof( struct in6_addr ) );
 #else
-         const struct in6_addr ia = IN6ADDR_ANY_INIT;
-         memcpy( &mreq.ipv6mr_interface, &ia, sizeof( struct in6_addr ) );
+         int TODO;
+         memset( &mreq.ipv6mr_interface, 0, sizeof( struct in6_addr ) );
 #endif
          return setsockopt( sd, IPPROTO_IPV6, IPV6_JOIN_GROUP, ( const char * ) &mreq, sizeof( mreq ) );
       }
