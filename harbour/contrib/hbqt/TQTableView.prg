@@ -135,3 +135,13 @@ METHOD Configure( xObject ) CLASS QTableView
 
 /*----------------------------------------------------------------------*/
 
+
+CREATE CLASS HBTableView INHERIT QTableView
+
+   METHOD New( pParent )                        INLINE ::pParent := pParent, ::pPtr := Qt_HbTableView( pParent ), Self
+   METHOD navigate( nCursorAction, nModifiers ) INLINE Qt_HbTableView_navigate( ::pPtr, nCursorAction, nModifiers )
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+

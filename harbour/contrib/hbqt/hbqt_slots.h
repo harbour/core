@@ -71,18 +71,65 @@
 #include <QTreeWidgetItem>
 #include <QWebFrame>
 #include <QNetworkRequest>
+#include <QTableView>
+#include <QTableWidget>
+#include <QHeaderView>
 
 #include "hbapi.h"
 #include "hbapiitm.h"
 
 /*----------------------------------------------------------------------*/
 
-class HbAbstractItemModel : public QAbstractItemModel
+class HbDbfModel : public QAbstractItemModel
 {
    Q_OBJECT
 
 public:
+   HbDbfModel( PHB_ITEM pBlock );
+   ~HbDbfModel();
 
+   PHB_ITEM block;
+
+   Qt::ItemFlags flags( const QModelIndex & index ) const;
+   QVariant      data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+   QVariant      headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+   int           rowCount( const QModelIndex & parent = QModelIndex() ) const;
+   int           columnCount( const QModelIndex & parent = QModelIndex() ) const;
+   QModelIndex   index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+   QModelIndex   parent(const QModelIndex &child) const;
+   void          reset();
+};
+
+/*----------------------------------------------------------------------*/
+
+class HbTableView : public QTableView
+//class HbTableView : public QTableWidget
+{
+   Q_OBJECT
+
+public:
+   HbTableView( QWidget * parent = 0 );
+   virtual ~HbTableView();
+
+   void keyPressEvent( QKeyEvent * event );
+   void mouseDoubleClickEvent( QMouseEvent * event );
+   void mouseMoveEvent( QMouseEvent * event );
+   void mousePressEvent( QMouseEvent * event );
+   void mouseReleaseEvent( QMouseEvent * event );
+   void resizeEvent( QResizeEvent * event );
+
+   QModelIndex navigate( int cursorAction );
+
+   QModelIndex moveCursor( HbTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
+
+signals:
+   void sg_keyPressEvent( QKeyEvent * event );
+   void sg_mouseMoveEvent( QMouseEvent * event );
+   void sg_mouseDoubleClickEvent( QMouseEvent * event );
+   void sg_mousePressEvent( QMouseEvent * event );
+   void sg_mouseReleaseEvent( QMouseEvent * event );
+   void sg_resizeEvent( QResizeEvent * event );
+   void sg_moveCursor( HbTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
 };
 
 /*----------------------------------------------------------------------*/
@@ -142,8 +189,6 @@ public slots:
    void entered( const QModelIndex & index );
    void viewportEntered();
    //bool event( QEvent * event, QWidget * w );
-   void keyPressEvent( QKeyEvent * event );
-   void mouseMoveEvent( QMouseEvent * event );
    void hovered( QAction * action );
    void currentChanged( int index );
    /* QAbstractSlider() */
@@ -217,6 +262,14 @@ public slots:
    void textChanged();
    void undoAvailable( bool available );
    void timeout();
+   /* Generic Keyboard and Mouse Events */
+   void keyPressEvent( QKeyEvent * event );
+   void keyReleaseEvent( QKeyEvent * event );
+   void mouseMoveEvent( QMouseEvent * event );
+   void mousePressEvent( QMouseEvent * event );
+   void mouseReleaseEvent( QMouseEvent * event );
+   void mouseDoubleClickEvent( QMouseEvent * event );
+   void resizeEvent( QResizeEvent * event );
 };
 
 class Events: public QObject

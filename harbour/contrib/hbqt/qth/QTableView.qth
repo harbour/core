@@ -59,9 +59,19 @@ Inherit  = QAbstractItemView
 New      = pParent
 </CLASS>
 
+<SUBCLASS>
+CREATE CLASS HBTableView INHERIT QTableView
+
+   METHOD New( pParent )                        INLINE ::pParent := pParent, ::pPtr := Qt_HbTableView( pParent ), Self
+   METHOD navigate( nCursorAction, nModifiers ) INLINE Qt_HbTableView_navigate( ::pPtr, nCursorAction, nModifiers )
+
+   ENDCLASS
+</SUBCLASS>
+
 <CODE>
 #include <QtGui/QTableView>
 
+#include "hbqt_slots.h"
 
 /*
  * QTableView ( QWidget * parent = 0 )
@@ -70,6 +80,16 @@ New      = pParent
 HB_FUNC( QT_QTABLEVIEW )
 {
    hb_retptr( ( QTableView* ) new QTableView( hbqt_par_QWidget( 1 ) ) );
+}
+
+HB_FUNC( QT_HBTABLEVIEW )
+{
+   hb_retptr( new HbTableView( hbqt_par_QWidget( 1 ) ) );
+}
+
+HB_FUNC( QT_HBTABLEVIEW_NAVIGATE )
+{
+   hb_retptr( new QModelIndex( hbqt_par_HbTableView( 1 )->navigate( hb_parni( 2 ) ) ) );
 }
 </CODE>
 

@@ -63,6 +63,8 @@
 
 #include "hbqt_slots.h"
 
+//#include <windows.h>   ////////////////////////////////////////////////////
+
 #include <QWidget>
 #include <QString>
 #include <QList>
@@ -404,11 +406,46 @@ static void SlotsExecPointerPointer( QObject* object, char* event, void * p1, vo
       }
    }
 }
+
+/* Generic Key and Mouse Events emitted by subclass objects */
 void Slots::keyPressEvent( QKeyEvent * event )
 {
    QObject *object = qobject_cast<QObject *>( sender() );
    SlotsExecPointer( object, ( char* ) "keyPressEvent()", event );
 }
+void Slots::keyReleaseEvent( QKeyEvent * event )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecPointer( object, ( char* ) "keyReleaseEvent()", event );
+}
+void Slots::mouseMoveEvent( QMouseEvent * event )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecPointer( object, ( char* ) "mouseMoveEvent()", event );
+}
+void Slots::mouseDoubleClickEvent( QMouseEvent * event )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecPointer( object, ( char* ) "mouseDoubleClickEvent()", event );
+}
+void Slots::mousePressEvent( QMouseEvent * event )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecPointer( object, ( char* ) "mousePressEvent()", event );
+}
+void Slots::mouseReleaseEvent( QMouseEvent * event )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecPointer( object, ( char* ) "mouseReleaseEvent()", event );
+}
+void Slots::resizeEvent( QResizeEvent * event )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecPointer( object, ( char* ) "resizeEvent()", event );
+}
+/* ........................................................ */
+
+
 void Slots::triggered( bool checked )
 {
    QObject *object = qobject_cast<QObject *>( sender() );
@@ -418,11 +455,6 @@ void Slots::hovered( QAction * action )
 {
    QObject *object = qobject_cast<QObject *>( sender() );
    SlotsExecPointer( object, ( char* ) "hovered(action)", action );
-}
-void Slots::mouseMoveEvent( QMouseEvent * event )
-{
-   QObject *object = qobject_cast<QObject *>( sender() );
-   SlotsExecPointer( object, ( char* ) "mouseMoveEvent()", event );
 }
 void Slots::clicked()
 {
@@ -911,16 +943,6 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = object->connect( object, SIGNAL( entered( const QModelIndex & ) ),
                              s_s, SLOT( entered( const QModelIndex & ) ), Qt::AutoConnection );
    }
-   if( signal == ( QString ) "keyPressEvent()" )
-   {
-      ret = object->connect( object, SIGNAL( sg_keyPressEvent( QKeyEvent * ) ),
-                             s_s, SLOT( keyPressEvent( QKeyEvent * ) ), Qt::AutoConnection );
-   }
-   if( signal == ( QString ) "mouseMoveEvent()" )
-   {
-      ret = object->connect( object, SIGNAL( sg_mouseMoveEvent( QMouseEvent * ) ),
-                             s_s, SLOT( mouseMoveEvent( QMouseEvent * ) ), Qt::AutoConnection );
-   }
    if( signal == ( QString ) "hovered(action)" )
    {
       ret = object->connect( object, SIGNAL( hovered( QAction * ) ),
@@ -1260,6 +1282,42 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = object->connect( object,  SIGNAL( timeout() ),
                              s_s, SLOT( timeout() ), Qt::AutoConnection );
    }
+   /* Generic purpose mechanism to receive key and mouse events off subclasses */
+   if( signal == ( QString ) "keyPressEvent()" )
+   {
+      ret = object->connect( object, SIGNAL( sg_keyPressEvent( QKeyEvent * ) ),
+                             s_s, SLOT( keyPressEvent( QKeyEvent * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "keyReleaseEvent()" )
+   {
+      ret = object->connect( object, SIGNAL( sg_keyReleaseEvent( QKeyEvent * ) ),
+                             s_s, SLOT( keyReleaseEvent( QKeyEvent * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "mouseMoveEvent()" )
+   {
+      ret = object->connect( object, SIGNAL( sg_mouseMoveEvent( QMouseEvent * ) ),
+                             s_s, SLOT( mouseMoveEvent( QMouseEvent * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "mouseDoubleClickEvent()" )
+   {
+      ret = object->connect( object, SIGNAL( sg_mouseDoubleClickEvent( QMouseEvent * ) ),
+                             s_s, SLOT( mouseDoubleClickEvent( QMouseEvent * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "mousePressEvent()" )
+   {
+      ret = object->connect( object, SIGNAL( sg_mousePressEvent( QMouseEvent * ) ),
+                             s_s, SLOT( mousePressEvent( QMouseEvent * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "mouseReleaseEvent()" )
+   {
+      ret = object->connect( object, SIGNAL( sg_mouseReleaseEvent( QMouseEvent * ) ),
+                             s_s, SLOT( mouseReleaseEvent( QMouseEvent * ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "resizeEvent()" )
+   {
+      ret = object->connect( object, SIGNAL( sg_resizeEvent( QResizeEvent * ) ),
+                             s_s, SLOT( resizeEvent( QResizeEvent * ) ), Qt::AutoConnection );
+   }
 
 
    hb_retl( ret );
@@ -1527,4 +1585,244 @@ HB_FUNC( QT_QDEBUG )
 
 /*----------------------------------------------------------------------*/
 
+HbTableView::HbTableView( QWidget * parent ) : QTableView( parent )
+//HbTableView::HbTableView( QWidget * parent ) : QTableWidget( parent )
+{
+}
+HbTableView::~HbTableView()
+{
+}
+void HbTableView::keyPressEvent( QKeyEvent * event )
+{
+   emit sg_keyPressEvent( event );
+}
+void HbTableView::mouseDoubleClickEvent( QMouseEvent * event )
+{
+   emit sg_mouseDoubleClickEvent( event );
+}
+void HbTableView::mouseMoveEvent( QMouseEvent * event )
+{
+   emit sg_mouseMoveEvent( event );
+}
+void HbTableView::mousePressEvent( QMouseEvent * event )
+{
+   emit sg_mousePressEvent( event );
+}
+void HbTableView::mouseReleaseEvent( QMouseEvent * event )
+{
+   emit sg_mouseReleaseEvent( event );
+}
+void HbTableView::resizeEvent( QResizeEvent * event )
+{
+   emit sg_resizeEvent( event );
+}
+QModelIndex HbTableView::moveCursor( HbTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers )
+{
+   // char str[ 50 ]; hb_snprintf( str, sizeof( str ), "HbTableView: action=%i %i", cursorAction, QAbstractItemView::MoveDown );  OutputDebugString( str );
+
+   //emit sg_moveCursor( cursorAction, modifiers );
+   return QTableView::moveCursor( cursorAction, modifiers );
+}
+QModelIndex HbTableView::navigate( int cursorAction )
+{
+   return moveCursor( ( HbTableView::CursorAction ) cursorAction, ( Qt::KeyboardModifiers ) 0 );
+}
+/*----------------------------------------------------------------------*/
+
+#define HBQT_BRW_CELLVALUE                        1001
+#define HBQT_BRW_COLCOUNT                         1002
+#define HBQT_BRW_ROWCOUNT                         1003
+#define HBQT_BRW_COLHEADER                        1004
+#define HBQT_BRW_ROWHEADER                        1005
+#define HBQT_BRW_COLALIGN                         1006
+#define HBQT_BRW_COLFGCOLOR                       1007
+#define HBQT_BRW_COLBGCOLOR                       1008
+#define HBQT_BRW_DATFGCOLOR                       1009
+#define HBQT_BRW_DATBGCOLOR                       1010
+#define HBQT_BRW_COLHEIGHT                        1011
+#define HBQT_BRW_DATHEIGHT                        1012
+#define HBQT_BRW_DATALIGN                         1013
+
+QVariant fetchRole( PHB_ITEM block, int what, int par1, int par2 )
+{
+   PHB_ITEM p0  = hb_itemPutNI( NULL, what );
+   PHB_ITEM p1  = hb_itemPutNI( NULL, par1 );
+   PHB_ITEM p2  = hb_itemPutNI( NULL, par2 );
+
+   PHB_ITEM ret = hb_vmEvalBlockV( block, 3, p0, p1, p2 );
+
+   hb_itemRelease( p0 );
+   hb_itemRelease( p1 );
+   hb_itemRelease( p2 );
+
+   if( hb_itemType( ret ) & HB_IT_STRING )
+      return( hb_itemGetC( ret ) );
+   else if( hb_itemType( ret ) & HB_IT_LOGICAL )
+      return( hb_itemGetL( ret ) );
+   else if( hb_itemType( ret ) & HB_IT_DOUBLE  )
+      return( hb_itemGetND( ret ) );
+   else if( hb_itemType( ret ) & HB_IT_NUMERIC )
+      return( hb_itemGetNI( ret ) );
+   else
+      return QVariant();
+
+   hb_itemRelease( ret );
+}
+
+HbDbfModel::HbDbfModel( PHB_ITEM pBlock ) : QAbstractItemModel()
+{
+   block = hb_itemNew( pBlock );
+}
+HbDbfModel::~HbDbfModel()
+{
+}
+Qt::ItemFlags HbDbfModel::flags( const QModelIndex & index ) const
+{
+   if( ! index.isValid() )
+      return 0;
+
+   return( Qt::ItemIsEnabled | Qt::ItemIsSelectable );
+}
+
+QVariant HbDbfModel::data( const QModelIndex & index, int role ) const
+{
+   // char str[ 50 ]; hb_snprintf( str, sizeof( str ), "data - row=%i col=%i role=%i", index.row(), index.column(), role );  OutputDebugString( str );
+   if( !index.isValid() )
+      return QVariant();
+
+   if( role == Qt::SizeHintRole  )
+   {
+      int iHeight = fetchRole( block, HBQT_BRW_DATHEIGHT, index.row()+1, index.column()+1 ).toInt();
+      return( QSize( 20, iHeight ) );
+   }
+   if( role == Qt::TextAlignmentRole )
+   {
+      return( fetchRole( block, HBQT_BRW_DATALIGN, index.row()+1, index.column()+1 ) );
+   }
+   if( role == Qt::BackgroundRole )
+   {
+      int iClr = fetchRole( block, HBQT_BRW_DATBGCOLOR, index.row()+1, index.column()+1 ).toInt();
+      if( iClr < 25 )
+         return( QColor( ( Qt::GlobalColor ) iClr ) );
+      else
+         return( QColor( ( QRgb ) iClr ) );
+   }
+   if( role == Qt::ForegroundRole )
+   {
+      int iClr = fetchRole( block, HBQT_BRW_DATFGCOLOR, index.row()+1, index.column()+1 ).toInt();
+      if( iClr < 25 )
+         return( QColor( ( Qt::GlobalColor ) iClr ) );
+      else
+         return( QColor( ( QRgb ) iClr ) );
+   }
+   if( role != Qt::DisplayRole )
+   {
+      return QVariant();
+   }
+   return fetchRole( block, HBQT_BRW_CELLVALUE, index.row()+1, index.column()+1 );
+}
+
+QVariant HbDbfModel::headerData( int section, Qt::Orientation orientation, int role ) const
+{
+   // char str[ 50 ]; hb_snprintf( str, sizeof( str ), "headerData - section=%i orient=%i role=%i", section, orientation, role );  OutputDebugString( str );
+   #if 0
+   Qt_DisplayRole                            0
+   Qt_DecorationRole                         1
+   Qt_EditRole                               2
+   Qt_ToolTipRole                            3
+   Qt_StatusTipRole                          4
+   Qt_WhatsThisRole                          5
+
+   Qt_FontRole                               6
+   Qt_TextAlignmentRole                      7
+   Qt_BackgroundRole                         8
+   Qt_ForegroundRole                         9
+   Qt_CheckStateRole                         10
+   Qt_SizeHintRole                           13
+   #endif
+
+   if( orientation == Qt::Horizontal )
+   {
+      if( role == Qt::TextAlignmentRole )
+      {
+         return( fetchRole( block, HBQT_BRW_COLALIGN, 0, section+1 ).toInt() );
+      }
+      if( role == Qt::SizeHintRole )
+      {
+         int iHeight = fetchRole( block, HBQT_BRW_COLHEIGHT, 0, section+1 ).toInt();
+         return( QSize( 20, iHeight ) );
+      }
+      if( role == Qt::BackgroundRole )
+      {
+         int iClr = fetchRole( block, HBQT_BRW_COLBGCOLOR, 0, section+1 ).toInt();
+         if( iClr < 25 )
+            return( QColor( ( Qt::GlobalColor ) iClr ) );
+         else
+            return( QColor( ( QRgb ) iClr ) );
+      }
+      if( role == Qt::ForegroundRole )
+      {
+         int iClr = fetchRole( block, HBQT_BRW_COLFGCOLOR, 0, section+1 ).toInt();
+         if( iClr < 25 )
+            return( QColor( ( Qt::GlobalColor ) iClr ) );
+         else
+            return( QColor( ( QRgb ) iClr ) );
+      }
+      if( role == Qt::DisplayRole )
+      {
+         return( fetchRole( block, HBQT_BRW_COLHEADER, 0, section+1 ) );
+      }
+   }
+
+   if( orientation == Qt::Vertical && role == Qt::DisplayRole )
+   {
+      return( section + 1 );
+   }
+
+   return QVariant();
+}
+
+int HbDbfModel::rowCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
+{
+   PHB_ITEM p0 = hb_itemPutNI( NULL, HBQT_BRW_ROWCOUNT );
+   PHB_ITEM ret = hb_vmEvalBlockV( block, 1, p0 );
+   hb_itemRelease( p0 );
+
+   return hb_itemGetNI( ret );
+   hb_itemRelease( ret );
+}
+
+int HbDbfModel::columnCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
+{
+   PHB_ITEM p0 = hb_itemPutNI( NULL, HBQT_BRW_COLCOUNT );
+   PHB_ITEM ret = hb_vmEvalBlockV( block, 1, p0 );
+   hb_itemRelease( p0 );
+
+   return hb_itemGetNI( ret );
+   hb_itemRelease( ret );
+}
+
+QModelIndex HbDbfModel::index( int row, int column, const QModelIndex & parent ) const
+{
+   // char str[ 50 ]; hb_snprintf( str, sizeof( str ), "index:  row=%i col=%i", row, column );  OutputDebugString( str );
+
+   return createIndex( row, column, row * column );
+
+   if( !hasIndex( row, column, parent ) )
+      return QModelIndex();
+
+   return QModelIndex();
+}
+
+QModelIndex HbDbfModel::parent( const QModelIndex & /* child */ ) const
+{
+   return QModelIndex();
+}
+
+void HbDbfModel::reset()
+{
+   QAbstractItemModel::reset();
+}
+
+/*----------------------------------------------------------------------*/
 #endif

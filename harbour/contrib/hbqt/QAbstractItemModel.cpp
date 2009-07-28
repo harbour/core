@@ -79,6 +79,7 @@
 #include <QStringList>
 #include <QtCore/QAbstractItemModel>
 
+#include "hbqt_slots.h"
 
 /*
  * QAbstractItemModel ( QObject * parent = 0 )
@@ -88,6 +89,17 @@ HB_FUNC( QT_QABSTRACTITEMMODEL )
 {
    //hb_retptr( ( QAbstractItemModel* ) new QAbstractItemModel( hbqt_par_QObject( 1 ) ) );
 }
+
+HB_FUNC( QT_HBDBFMODEL )
+{
+   hb_retptr( new HbDbfModel( ( PHB_ITEM ) hb_param( 1, HB_IT_BLOCK ) ) );
+}
+
+HB_FUNC( QT_HBDBFMODEL_RESET )
+{
+   hbqt_par_HbDbfModel( 1 )->reset();
+}
+
 
 /*
  * DESTRUCTOR

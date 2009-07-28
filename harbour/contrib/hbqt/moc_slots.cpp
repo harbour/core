@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'hbqt_slots.h'
 **
-** Created: Tue Jul 21 14:10:05 2009
+** Created: Sun Jul 26 20:16:21 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -17,7 +17,7 @@
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
-static const uint qt_meta_data_HbAbstractItemModel[] = {
+static const uint qt_meta_data_HbDbfModel[] = {
 
  // content:
        2,       // revision
@@ -31,34 +31,155 @@ static const uint qt_meta_data_HbAbstractItemModel[] = {
        0        // eod
 };
 
-static const char qt_meta_stringdata_HbAbstractItemModel[] = {
-    "HbAbstractItemModel\0"
+static const char qt_meta_stringdata_HbDbfModel[] = {
+    "HbDbfModel\0"
 };
 
-const QMetaObject HbAbstractItemModel::staticMetaObject = {
-    { &QAbstractItemModel::staticMetaObject, qt_meta_stringdata_HbAbstractItemModel,
-      qt_meta_data_HbAbstractItemModel, 0 }
+const QMetaObject HbDbfModel::staticMetaObject = {
+    { &QAbstractItemModel::staticMetaObject, qt_meta_stringdata_HbDbfModel,
+      qt_meta_data_HbDbfModel, 0 }
 };
 
-const QMetaObject *HbAbstractItemModel::metaObject() const
+const QMetaObject *HbDbfModel::metaObject() const
 {
     return &staticMetaObject;
 }
 
-void *HbAbstractItemModel::qt_metacast(const char *_clname)
+void *HbDbfModel::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
-    if (!strcmp(_clname, qt_meta_stringdata_HbAbstractItemModel))
-        return static_cast<void*>(const_cast< HbAbstractItemModel*>(this));
+    if (!strcmp(_clname, qt_meta_stringdata_HbDbfModel))
+        return static_cast<void*>(const_cast< HbDbfModel*>(this));
     return QAbstractItemModel::qt_metacast(_clname);
 }
 
-int HbAbstractItemModel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int HbDbfModel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QAbstractItemModel::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     return _id;
+}
+static const uint qt_meta_data_HbTableView[] = {
+
+ // content:
+       2,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       7,   12, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+
+ // signals: signature, parameters, type, tag, flags
+      19,   13,   12,   12, 0x05,
+      48,   13,   12,   12, 0x05,
+      80,   13,   12,   12, 0x05,
+     119,   13,   12,   12, 0x05,
+     152,   13,   12,   12, 0x05,
+     187,   13,   12,   12, 0x05,
+     240,  217,   12,   12, 0x05,
+
+       0        // eod
+};
+
+static const char qt_meta_stringdata_HbTableView[] = {
+    "HbTableView\0\0event\0sg_keyPressEvent(QKeyEvent*)\0"
+    "sg_mouseMoveEvent(QMouseEvent*)\0"
+    "sg_mouseDoubleClickEvent(QMouseEvent*)\0"
+    "sg_mousePressEvent(QMouseEvent*)\0"
+    "sg_mouseReleaseEvent(QMouseEvent*)\0"
+    "sg_resizeEvent(QResizeEvent*)\0"
+    "cursorAction,modifiers\0"
+    "sg_moveCursor(HbTableView::CursorAction,Qt::KeyboardModifiers)\0"
+};
+
+const QMetaObject HbTableView::staticMetaObject = {
+    { &QTableView::staticMetaObject, qt_meta_stringdata_HbTableView,
+      qt_meta_data_HbTableView, 0 }
+};
+
+const QMetaObject *HbTableView::metaObject() const
+{
+    return &staticMetaObject;
+}
+
+void *HbTableView::qt_metacast(const char *_clname)
+{
+    if (!_clname) return 0;
+    if (!strcmp(_clname, qt_meta_stringdata_HbTableView))
+        return static_cast<void*>(const_cast< HbTableView*>(this));
+    return QTableView::qt_metacast(_clname);
+}
+
+int HbTableView::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QTableView::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: sg_keyPressEvent((*reinterpret_cast< QKeyEvent*(*)>(_a[1]))); break;
+        case 1: sg_mouseMoveEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 2: sg_mouseDoubleClickEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 3: sg_mousePressEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 4: sg_mouseReleaseEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 5: sg_resizeEvent((*reinterpret_cast< QResizeEvent*(*)>(_a[1]))); break;
+        case 6: sg_moveCursor((*reinterpret_cast< HbTableView::CursorAction(*)>(_a[1])),(*reinterpret_cast< Qt::KeyboardModifiers(*)>(_a[2]))); break;
+        default: ;
+        }
+        _id -= 7;
+    }
+    return _id;
+}
+
+// SIGNAL 0
+void HbTableView::sg_keyPressEvent(QKeyEvent * _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 0, _a);
+}
+
+// SIGNAL 1
+void HbTableView::sg_mouseMoveEvent(QMouseEvent * _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 1, _a);
+}
+
+// SIGNAL 2
+void HbTableView::sg_mouseDoubleClickEvent(QMouseEvent * _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 2, _a);
+}
+
+// SIGNAL 3
+void HbTableView::sg_mousePressEvent(QMouseEvent * _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 3, _a);
+}
+
+// SIGNAL 4
+void HbTableView::sg_mouseReleaseEvent(QMouseEvent * _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 4, _a);
+}
+
+// SIGNAL 5
+void HbTableView::sg_resizeEvent(QResizeEvent * _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 5, _a);
+}
+
+// SIGNAL 6
+void HbTableView::sg_moveCursor(HbTableView::CursorAction _t1, Qt::KeyboardModifiers _t2)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    QMetaObject::activate(this, &staticMetaObject, 6, _a);
 }
 static const uint qt_meta_data_MyMainWindow[] = {
 
@@ -180,7 +301,7 @@ static const uint qt_meta_data_Slots[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-      83,   12, // methods
+      88,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -200,75 +321,80 @@ static const uint qt_meta_data_Slots[] = {
      192,  108,    6,    6, 0x0a,
      219,  108,    6,    6, 0x0a,
      240,    6,    6,    6, 0x0a,
-     264,  258,    6,    6, 0x0a,
-     290,  258,    6,    6, 0x0a,
-     326,  319,    6,    6, 0x0a,
-     344,  108,    6,    6, 0x0a,
-     364,  319,    6,    6, 0x0a,
-     393,  385,    6,    6, 0x0a,
-     421,  415,    6,    6, 0x0a,
-     438,    6,    6,    6, 0x0a,
-     454,    6,    6,    6, 0x0a,
-     471,  415,    6,    6, 0x0a,
-     499,  489,    6,    6, 0x0a,
-     530,    6,    6,    6, 0x0a,
-     548,    6,    6,    6, 0x0a,
-     564,    6,    6,    6, 0x0a,
-     588,  583,    6,    6, 0x0a,
-     609,  583,    6,    6, 0x0a,
-     646,  629,    6,    6, 0x0a,
-     712,  700,    6,    6, 0x0a,
-     748,  700,    6,    6, 0x0a,
-     782,  700,    6,    6, 0x0a,
-     821,  816,    6,    6, 0x0a,
-     853,  700,    6,    6, 0x0a,
-     893,  700,    6,    6, 0x0a,
-     927,  816,    6,    6, 0x0a,
-     958,  700,    6,    6, 0x0a,
-     992,    6,    6,    6, 0x0a,
-    1015,    6,    6,    6, 0x0a,
-    1052, 1033,    6,    6, 0x0a,
-    1102, 1094,    6,    6, 0x0a,
-    1143, 1137,    6,    6, 0x0a,
-    1173, 1168,    6,    6, 0x0a,
-    1208, 1204,    6,    6, 0x0a,
-    1249, 1226,    6,    6, 0x0a,
-    1289, 1286,    6,    6, 0x0a,
-    1317, 1308,    6,    6, 0x0a,
+     265,  258,    6,    6, 0x0a,
+     283,  108,    6,    6, 0x0a,
+     303,  258,    6,    6, 0x0a,
+     332,  324,    6,    6, 0x0a,
+     360,  354,    6,    6, 0x0a,
+     377,    6,    6,    6, 0x0a,
+     393,    6,    6,    6, 0x0a,
+     410,  354,    6,    6, 0x0a,
+     438,  428,    6,    6, 0x0a,
+     469,    6,    6,    6, 0x0a,
+     487,    6,    6,    6, 0x0a,
+     503,    6,    6,    6, 0x0a,
+     527,  522,    6,    6, 0x0a,
+     548,  522,    6,    6, 0x0a,
+     585,  568,    6,    6, 0x0a,
+     651,  639,    6,    6, 0x0a,
+     687,  639,    6,    6, 0x0a,
+     721,  639,    6,    6, 0x0a,
+     760,  755,    6,    6, 0x0a,
+     792,  639,    6,    6, 0x0a,
+     832,  639,    6,    6, 0x0a,
+     866,  755,    6,    6, 0x0a,
+     897,  639,    6,    6, 0x0a,
+     931,    6,    6,    6, 0x0a,
+     954,    6,    6,    6, 0x0a,
+     991,  972,    6,    6, 0x0a,
+    1041, 1033,    6,    6, 0x0a,
+    1082, 1076,    6,    6, 0x0a,
+    1112, 1107,    6,    6, 0x0a,
+    1147, 1143,    6,    6, 0x0a,
+    1188, 1165,    6,    6, 0x0a,
+    1228, 1225,    6,    6, 0x0a,
+    1256, 1247,    6,    6, 0x0a,
+    1274,    6,    6,    6, 0x0a,
+    1296, 1288,    6,    6, 0x0a,
     1335,    6,    6,    6, 0x0a,
-    1357, 1349,    6,    6, 0x0a,
-    1396,    6,    6,    6, 0x0a,
-    1416, 1137,    6,    6, 0x0a,
-    1453, 1443,    6,    6, 0x0a,
-    1477, 1137,    6,    6, 0x0a,
-    1527, 1516,    6,    6, 0x0a,
-    1599, 1580,    6,    6, 0x0a,
-    1630,  583,    6,    6, 0x0a,
-    1656, 1349,    6,    6, 0x0a,
-    1697, 1349,    6,    6, 0x0a,
-    1742, 1736,    6,    6, 0x0a,
-    1777,    6,    6,    6, 0x0a,
-    1800,    6,    6,    6, 0x0a,
-    1820, 1814,    6,    6, 0x0a,
-    1842, 1204,    6,    6, 0x0a,
-    1864, 1859,    6,    6, 0x0a,
-    1890, 1859,    6,    6, 0x0a,
-    1910,    6,    6,    6, 0x0a,
-    1928, 1921,    6,    6, 0x0a,
-    1942,    6,    6,    6, 0x0a,
-    1958, 1953,    6,    6, 0x0a,
-    1992, 1982,    6,    6, 0x0a,
-    2023, 2018,    6,    6, 0x0a,
-    2054, 2045,    6,    6, 0x0a,
-    2088, 2081,    6,    6, 0x0a,
-    2120, 2112,    6,    6, 0x0a,
-    2144, 2140,    6,    6, 0x0a,
-    2166, 2164,    6,    6, 0x0a,
-    2208,    6,    6,    6, 0x0a,
-    2242, 2232,    6,    6, 0x0a,
-    2262,    6,    6,    6, 0x0a,
-    2276, 2232,    6,    6, 0x0a,
-    2296,    6,    6,    6, 0x0a,
+    1355, 1076,    6,    6, 0x0a,
+    1392, 1382,    6,    6, 0x0a,
+    1416, 1076,    6,    6, 0x0a,
+    1466, 1455,    6,    6, 0x0a,
+    1538, 1519,    6,    6, 0x0a,
+    1569,  522,    6,    6, 0x0a,
+    1595, 1288,    6,    6, 0x0a,
+    1636, 1288,    6,    6, 0x0a,
+    1681, 1675,    6,    6, 0x0a,
+    1716,    6,    6,    6, 0x0a,
+    1739,    6,    6,    6, 0x0a,
+    1759, 1753,    6,    6, 0x0a,
+    1781, 1143,    6,    6, 0x0a,
+    1803, 1798,    6,    6, 0x0a,
+    1829, 1798,    6,    6, 0x0a,
+    1849,    6,    6,    6, 0x0a,
+    1867, 1860,    6,    6, 0x0a,
+    1881,    6,    6,    6, 0x0a,
+    1897, 1892,    6,    6, 0x0a,
+    1931, 1921,    6,    6, 0x0a,
+    1962, 1957,    6,    6, 0x0a,
+    1993, 1984,    6,    6, 0x0a,
+    2027, 2020,    6,    6, 0x0a,
+    2059, 2051,    6,    6, 0x0a,
+    2083, 2079,    6,    6, 0x0a,
+    2105, 2103,    6,    6, 0x0a,
+    2147,    6,    6,    6, 0x0a,
+    2181, 2171,    6,    6, 0x0a,
+    2201,    6,    6,    6, 0x0a,
+    2215, 2171,    6,    6, 0x0a,
+    2235,    6,    6,    6, 0x0a,
+    2251, 2245,    6,    6, 0x0a,
+    2277, 2245,    6,    6, 0x0a,
+    2305, 2245,    6,    6, 0x0a,
+    2334, 2245,    6,    6, 0x0a,
+    2364, 2245,    6,    6, 0x0a,
+    2396, 2245,    6,    6, 0x0a,
+    2432, 2245,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -281,9 +407,7 @@ static const char qt_meta_stringdata_Slots[] = {
     "highlighted(int)\0clicked(QModelIndex)\0"
     "doubleClicked(QModelIndex)\0"
     "entered(QModelIndex)\0viewportEntered()\0"
-    "event\0keyPressEvent(QKeyEvent*)\0"
-    "mouseMoveEvent(QMouseEvent*)\0action\0"
-    "hovered(QAction*)\0currentChanged(int)\0"
+    "action\0hovered(QAction*)\0currentChanged(int)\0"
     "actionTriggered(int)\0min,max\0"
     "rangeChanged(int,int)\0value\0"
     "sliderMoved(int)\0sliderPressed()\0"
@@ -336,7 +460,14 @@ static const char qt_meta_stringdata_Slots[] = {
     "f\0currentCharFormatChanged(QTextCharFormat)\0"
     "cursorPositionChanged()\0available\0"
     "redoAvailable(bool)\0textChanged()\0"
-    "undoAvailable(bool)\0timeout()\0"
+    "undoAvailable(bool)\0timeout()\0event\0"
+    "keyPressEvent(QKeyEvent*)\0"
+    "keyReleaseEvent(QKeyEvent*)\0"
+    "mouseMoveEvent(QMouseEvent*)\0"
+    "mousePressEvent(QMouseEvent*)\0"
+    "mouseReleaseEvent(QMouseEvent*)\0"
+    "mouseDoubleClickEvent(QMouseEvent*)\0"
+    "resizeEvent(QResizeEvent*)\0"
 };
 
 const QMetaObject Slots::staticMetaObject = {
@@ -378,78 +509,83 @@ int Slots::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 11: doubleClicked((*reinterpret_cast< const QModelIndex(*)>(_a[1]))); break;
         case 12: entered((*reinterpret_cast< const QModelIndex(*)>(_a[1]))); break;
         case 13: viewportEntered(); break;
-        case 14: keyPressEvent((*reinterpret_cast< QKeyEvent*(*)>(_a[1]))); break;
-        case 15: mouseMoveEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
-        case 16: hovered((*reinterpret_cast< QAction*(*)>(_a[1]))); break;
-        case 17: currentChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 18: actionTriggered((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 19: rangeChanged((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 20: sliderMoved((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 21: sliderPressed(); break;
-        case 22: sliderReleased(); break;
-        case 23: valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 24: cursorPositionChanged((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 25: editingFinished(); break;
-        case 26: returnPressed(); break;
-        case 27: selectionChanged(); break;
-        case 28: textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 29: textEdited((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 30: currentItemChanged((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< QTreeWidgetItem*(*)>(_a[2]))); break;
-        case 31: itemActivated((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 32: itemChanged((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 33: itemClicked((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 34: itemCollapsed((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1]))); break;
-        case 35: itemDoubleClicked((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 36: itemEntered((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 37: itemExpanded((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1]))); break;
-        case 38: itemPressed((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 39: itemSelectionChanged(); break;
-        case 40: contentsChanged(); break;
-        case 41: databaseQuotaExceeded((*reinterpret_cast< QWebFrame*(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
-        case 42: downloadRequested((*reinterpret_cast< const QNetworkRequest(*)>(_a[1]))); break;
-        case 43: frameCreated((*reinterpret_cast< QWebFrame*(*)>(_a[1]))); break;
-        case 44: geometryChangeRequested((*reinterpret_cast< const QRect(*)>(_a[1]))); break;
-        case 45: linkClicked((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
-        case 46: linkHovered((*reinterpret_cast< const QString(*)>(_a[1])),(*reinterpret_cast< const QString(*)>(_a[2])),(*reinterpret_cast< const QString(*)>(_a[3]))); break;
-        case 47: loadFinished((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 48: loadProgress((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 49: loadStarted(); break;
-        case 50: menuBarVisibilityChangeRequested((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 51: microFocusChanged(); break;
-        case 52: printRequested((*reinterpret_cast< QWebFrame*(*)>(_a[1]))); break;
-        case 53: repaintRequested((*reinterpret_cast< const QRect(*)>(_a[1]))); break;
-        case 54: restoreFrameStateRequested((*reinterpret_cast< QWebFrame*(*)>(_a[1]))); break;
-        case 55: saveFrameStateRequested((*reinterpret_cast< QWebFrame*(*)>(_a[1])),(*reinterpret_cast< QWebHistoryItem*(*)>(_a[2]))); break;
-        case 56: scrollRequested((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< const QRect(*)>(_a[3]))); break;
-        case 57: statusBarMessage((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 58: statusBarVisibilityChangeRequested((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 59: toolBarVisibilityChangeRequested((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 60: unsupportedContent((*reinterpret_cast< QNetworkReply*(*)>(_a[1]))); break;
-        case 61: windowCloseRequested(); break;
-        case 62: iconChanged(); break;
-        case 63: titleChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 64: urlChanged((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
-        case 65: currentFontChanged((*reinterpret_cast< const QFont(*)>(_a[1]))); break;
-        case 66: fontSelected((*reinterpret_cast< const QFont(*)>(_a[1]))); break;
-        case 67: accepted(); break;
-        case 68: finished((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 69: rejected(); break;
-        case 70: currentChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 71: directoryEntered((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 72: fileSelected((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 73: filesSelected((*reinterpret_cast< const QStringList(*)>(_a[1]))); break;
-        case 74: filterSelected((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 75: accepted((*reinterpret_cast< QPrinter*(*)>(_a[1]))); break;
-        case 76: copyAvailable((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 77: currentCharFormatChanged((*reinterpret_cast< const QTextCharFormat(*)>(_a[1]))); break;
-        case 78: cursorPositionChanged(); break;
-        case 79: redoAvailable((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 80: textChanged(); break;
-        case 81: undoAvailable((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 82: timeout(); break;
+        case 14: hovered((*reinterpret_cast< QAction*(*)>(_a[1]))); break;
+        case 15: currentChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 16: actionTriggered((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 17: rangeChanged((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 18: sliderMoved((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 19: sliderPressed(); break;
+        case 20: sliderReleased(); break;
+        case 21: valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 22: cursorPositionChanged((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 23: editingFinished(); break;
+        case 24: returnPressed(); break;
+        case 25: selectionChanged(); break;
+        case 26: textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 27: textEdited((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 28: currentItemChanged((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< QTreeWidgetItem*(*)>(_a[2]))); break;
+        case 29: itemActivated((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 30: itemChanged((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 31: itemClicked((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 32: itemCollapsed((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1]))); break;
+        case 33: itemDoubleClicked((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 34: itemEntered((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 35: itemExpanded((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1]))); break;
+        case 36: itemPressed((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 37: itemSelectionChanged(); break;
+        case 38: contentsChanged(); break;
+        case 39: databaseQuotaExceeded((*reinterpret_cast< QWebFrame*(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 40: downloadRequested((*reinterpret_cast< const QNetworkRequest(*)>(_a[1]))); break;
+        case 41: frameCreated((*reinterpret_cast< QWebFrame*(*)>(_a[1]))); break;
+        case 42: geometryChangeRequested((*reinterpret_cast< const QRect(*)>(_a[1]))); break;
+        case 43: linkClicked((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
+        case 44: linkHovered((*reinterpret_cast< const QString(*)>(_a[1])),(*reinterpret_cast< const QString(*)>(_a[2])),(*reinterpret_cast< const QString(*)>(_a[3]))); break;
+        case 45: loadFinished((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 46: loadProgress((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 47: loadStarted(); break;
+        case 48: menuBarVisibilityChangeRequested((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 49: microFocusChanged(); break;
+        case 50: printRequested((*reinterpret_cast< QWebFrame*(*)>(_a[1]))); break;
+        case 51: repaintRequested((*reinterpret_cast< const QRect(*)>(_a[1]))); break;
+        case 52: restoreFrameStateRequested((*reinterpret_cast< QWebFrame*(*)>(_a[1]))); break;
+        case 53: saveFrameStateRequested((*reinterpret_cast< QWebFrame*(*)>(_a[1])),(*reinterpret_cast< QWebHistoryItem*(*)>(_a[2]))); break;
+        case 54: scrollRequested((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< const QRect(*)>(_a[3]))); break;
+        case 55: statusBarMessage((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 56: statusBarVisibilityChangeRequested((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 57: toolBarVisibilityChangeRequested((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 58: unsupportedContent((*reinterpret_cast< QNetworkReply*(*)>(_a[1]))); break;
+        case 59: windowCloseRequested(); break;
+        case 60: iconChanged(); break;
+        case 61: titleChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 62: urlChanged((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
+        case 63: currentFontChanged((*reinterpret_cast< const QFont(*)>(_a[1]))); break;
+        case 64: fontSelected((*reinterpret_cast< const QFont(*)>(_a[1]))); break;
+        case 65: accepted(); break;
+        case 66: finished((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 67: rejected(); break;
+        case 68: currentChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 69: directoryEntered((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 70: fileSelected((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 71: filesSelected((*reinterpret_cast< const QStringList(*)>(_a[1]))); break;
+        case 72: filterSelected((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 73: accepted((*reinterpret_cast< QPrinter*(*)>(_a[1]))); break;
+        case 74: copyAvailable((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 75: currentCharFormatChanged((*reinterpret_cast< const QTextCharFormat(*)>(_a[1]))); break;
+        case 76: cursorPositionChanged(); break;
+        case 77: redoAvailable((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 78: textChanged(); break;
+        case 79: undoAvailable((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 80: timeout(); break;
+        case 81: keyPressEvent((*reinterpret_cast< QKeyEvent*(*)>(_a[1]))); break;
+        case 82: keyReleaseEvent((*reinterpret_cast< QKeyEvent*(*)>(_a[1]))); break;
+        case 83: mouseMoveEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 84: mousePressEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 85: mouseReleaseEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 86: mouseDoubleClickEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 87: resizeEvent((*reinterpret_cast< QResizeEvent*(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 83;
+        _id -= 88;
     }
     return _id;
 }

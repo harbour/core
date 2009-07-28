@@ -1979,6 +1979,89 @@
 #define QTextCharFormat_AlignBottom               5      // The bottom edge of the object is vertically aligned with the base line.
 #define QTextCharFormat_AlignTop                  4      // The top edge of the object is vertically aligned with the base line.
 
+// enum QAbstractItemView::CursorAction
+// This enum describes the different ways to navigate between items,
+//
+#define QAbstractItemView_MoveUp                  0      // Move to the item above the current item.
+#define QAbstractItemView_MoveDown                1      // Move to the item below the current item.
+#define QAbstractItemView_MoveLeft                2      // Move to the item left of the current item.
+#define QAbstractItemView_MoveRight               3      // Move to the item right of the current item.
+#define QAbstractItemView_MoveHome                4      // Move to the top-left corner item.
+#define QAbstractItemView_MoveEnd                 5      // Move to the bottom-right corner item.
+#define QAbstractItemView_MovePageUp              6      // Move one page up above the current item.
+#define QAbstractItemView_MovePageDown            7      // Move one page down below the current item.
+#define QAbstractItemView_MoveNext                8      // Move to the item after the current item.
+#define QAbstractItemView_MovePrevious            9      // Move to the item before the current item.
+
+// enum #define QAbstractItemView_DragDropMode
+// Describes the various drag and drop events the view can act upon. By default the view does not support dragging or dropping (NoDragDrop).
+//
+#define QAbstractItemView_NoDragDrop              0      // Does not support dragging or dropping.
+#define QAbstractItemView_DragOnly                1      // The view supports dragging of its own items
+#define QAbstractItemView_DropOnly                2      // The view accepts drops
+#define QAbstractItemView_DragDrop                3      // The view supports both dragging and dropping
+#define QAbstractItemView_InternalMove            4      // The view accepts move (not copy) operations only from itself.
+// Note that the model used needs to provide support for drag and drop operations.
+
+// enum QAbstractItemView::DropIndicatorPosition
+// This enum indicates the position of the drop indicator in relation to the index at the current mouse position:
+#define QAbstractItemView_OnItem                  0      // The item will be dropped on the index.
+#define QAbstractItemView_AboveItem               1      // The item will be dropped above the index.
+#define QAbstractItemView_BelowItem               2      // The item will be dropped below the index.
+#define QAbstractItemView_OnViewport              3      // The item will be dropped onto a region of the viewport with no items. The way each view handles items dropped onto the viewport depends on the behavior of the underlying model in use.
+
+// enum #define QAbstractItemView_EditTrigger
+// flags QAbstractItemView::EditTriggers
+// This enum describes actions which will initiate item editing.
+//
+#define QAbstractItemView_NoEditTriggers          0      // No editing possible.
+#define QAbstractItemView_CurrentChanged          1      // Editing start whenever current item changes.
+#define QAbstractItemView_DoubleClicked           2      // Editing starts when an item is double clicked.
+#define QAbstractItemView_SelectedClicked         4      // Editing starts when clicking on an already selected item.
+#define QAbstractItemView_EditKeyPressed          8      // Editing starts when the platform edit key has been pressed over an item.
+#define QAbstractItemView_AnyKeyPressed           16     // Editing starts when any key is pressed over an item.
+#define QAbstractItemView_AllEditTriggers         31     // Editing starts for all above actions.
+// The EditTriggers type is a typedef for QFlags<EditTrigger>. It stores an OR combination of EditTrigger values.
+
+// enum QAbstractItemView::ScrollHint
+//
+#define QAbstractItemView_EnsureVisible           0      // Scroll to ensure that the item is visible.
+#define QAbstractItemView_PositionAtTop           1      // Scroll to position the item at the top of the viewport.
+#define QAbstractItemView_PositionAtBottom        2      // Scroll to position the item at the bottom of the viewport.
+#define QAbstractItemView_PositionAtCenter        3      // Scroll to position the item at the center of the viewport.
+
+// enum #define QAbstractItemView_ScrollMode
+//
+#define QAbstractItemView_ScrollPerItem           0      // The view will scroll the contents one item at a time.
+#define QAbstractItemView_ScrollPerPixel          1      // The view will scroll the contents one pixel at a time.
+
+// enum #define QAbstractItemView_SelectionBehavior
+//
+#define QAbstractItemView_SelectItems             0      // Selecting single items.
+#define QAbstractItemView_SelectRows              1      // Selecting only rows.
+#define QAbstractItemView_SelectColumns           2      // Selecting only columns.
+
+// enum #define QAbstractItemView_SelectionMode
+// This enum indicates how the view responds to user selections:
+//
+#define QAbstractItemView_SingleSelection         1      // When the user selects an item, any already-selected item becomes unselected, and the user cannot unselect the selected item by clicking on it.
+#define QAbstractItemView_ContiguousSelection     4      // When the user selects an item in the usual way, the selection is cleared and the new item selected. However, if the user presses the Shift key while clicking on an item, all items between the current item and the clicked item are selected or unselected, depending on the state of the clicked item.
+#define QAbstractItemView_ExtendedSelection       3      // When the user selects an item in the usual way, the selection is cleared and the new item selected. However, if the user presses the Ctrl key when clicking on an item, the clicked item gets toggled and all other items are left untouched. If the user presses the Shift key while clicking on an item, all items between the current item and the clicked item are selected or unselected, depending on the state of the clicked item. Multiple items can be selected by dragging the mouse over them.
+#define QAbstractItemView_MultiSelection          2      // When the user selects an item in the usual way, the selection status of that item is toggled and the other items are left alone. Multiple items can be toggled by dragging the mouse over them.
+#define QAbstractItemView_NoSelection             0      // Items cannot be selected.
+// The most commonly used modes are SingleSelection and ExtendedSelection.
+
+// enum #define QAbstractItemView_State
+// Describes the different states the view can be in. This is usually only interesting when reimplementing your own view.
+//
+#define QAbstractItemView_NoState                 0      // The is the default state.
+#define QAbstractItemView_DraggingState           1      // The user is dragging items.
+#define QAbstractItemView_DragSelectingState      2      // The user is selecting items.
+#define QAbstractItemView_EditingState            3      // The user is editing an item in a widget editor.
+#define QAbstractItemView_ExpandingState          4      // The user is opening a branch of items.
+#define QAbstractItemView_CollapsingState         5      // The user is closing a branch of items.
+#define QAbstractItemView_AnimatingState          6      // The item view is performing an animation.
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH

@@ -273,7 +273,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    LOCAL cQth, cFileCpp
    LOCAL s, n, nFuncs, nCnvrtd
    LOCAL b_, txt_, enum_, code_, func_, dummy_, cpp_, cmntd_, doc_, varbls_
-   LOCAL class_, cls_, protos_, slots_, enums_, docum_
+   LOCAL class_, cls_, protos_, slots_, enums_, docum_, subCls_
 
    hb_fNameSplit( cProFile, @cPath, @cWidget, @cExt )
 
@@ -311,6 +311,9 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
          ENDIF
       NEXT
    ENDIF
+
+   /* Pull out SUBCLASS section */
+   subCls_ := PullOutSection( @cQth, 'SUBCLASS' )
 
    /* Pull out Doc Section */
    docum_  := PullOutSection( @cQth, 'DOC'   )
@@ -496,7 +499,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 
       /* Build CLASS */
       IF !empty( cls_ )
-         Build_Class( cWidget, cls_, doc_, cPathOut )
+         Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
          cPRG := cWidget
       ELSE
          cPRG := ''
@@ -1249,7 +1252,7 @@ STATIC FUNCTION CreateTarget( cFile, txt_ )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
+STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    LOCAL cFile := cPathOut + s_PathSep + 'T' + cWidget + '.prg'
    LOCAL s, n, cM, ss, cCall, sm, cClassType
    LOCAL nLen := len( cWidget )
@@ -1347,6 +1350,13 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut )
    aadd( txt_, '                                                                           ' )
    aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
    aadd( txt_, '                                                                           ' )
+
+   IF !empty( subCls_ )
+      aeval( subCls_, {|e| aadd( txt_, e ) } )
+      aadd( txt_, '                                                                           ' )
+      aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
+      aadd( txt_, '                                                                           ' )
+   ENDIF
 
    RETURN CreateTarget( cFile, txt_ )
 

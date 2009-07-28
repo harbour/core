@@ -63,6 +63,7 @@
 
 #include <QtGui/QTableView>
 
+#include "hbqt_slots.h"
 
 /*
  * QTableView ( QWidget * parent = 0 )
@@ -71,6 +72,16 @@
 HB_FUNC( QT_QTABLEVIEW )
 {
    hb_retptr( ( QTableView* ) new QTableView( hbqt_par_QWidget( 1 ) ) );
+}
+
+HB_FUNC( QT_HBTABLEVIEW )
+{
+   hb_retptr( new HbTableView( hbqt_par_QWidget( 1 ) ) );
+}
+
+HB_FUNC( QT_HBTABLEVIEW_NAVIGATE )
+{
+   hb_retptr( new QModelIndex( hbqt_par_HbTableView( 1 )->navigate( hb_parni( 2 ) ) ) );
 }
 
 /*

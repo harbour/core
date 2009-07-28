@@ -61,6 +61,9 @@
 
 #if QT_VERSION >= 0x040500
 
+#define hbqt_par_HbDbfModel( n )             ( ( HbDbfModel* ) hb_parptr( n ) )
+#define hbqt_par_HbTableView( n )            ( ( HbTableView* ) hb_parptr( n ) )
+
 #define hbqt_par_ExtensionOption( n )        ( ( ExtensionOption* ) hb_parptr( n ) )
 #define hbqt_par_IUnknown( n )               ( ( IUnknown* ) hb_parptr( n ) )
 #define hbqt_par_QAbstractButton( n )        ( ( QAbstractButton* ) hb_parptr( n ) )
@@ -256,6 +259,7 @@
 #define hbqt_par_QSystemTrayIcon( n )        ( ( QSystemTrayIcon* ) hb_parptr( n ) )
 #define hbqt_par_QTabBar( n )                ( ( QTabBar* ) hb_parptr( n ) )
 #define hbqt_par_QTableView( n )             ( ( QTableView* ) hb_parptr( n ) )
+#define hbqt_par_HbTableView( n )            ( ( HbTableView* ) hb_parptr( n ) )
 #define hbqt_par_QTableWidget( n )           ( ( QTableWidget* ) hb_parptr( n ) )
 #define hbqt_par_QTableWidgetItem( n )       ( ( QTableWidgetItem* ) hb_parptr( n ) )
 #define hbqt_par_QTableWidgetSelectionRange( n ) ( ( QTableWidgetSelectionRange* ) hb_parptr( n ) )

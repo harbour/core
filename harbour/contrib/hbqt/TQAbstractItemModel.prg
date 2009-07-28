@@ -126,3 +126,13 @@ METHOD Configure( xObject ) CLASS QAbstractItemModel
 
 /*----------------------------------------------------------------------*/
 
+
+CREATE CLASS HbDbfModel INHERIT QAbstractItemModel
+
+   METHOD New( bBlock )                        INLINE ::pPtr := Qt_HbDbfModel( bBlock ), Self
+   METHOD Reset()                              INLINE Qt_HbDbfModel_reset( ::pPtr )
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
