@@ -386,7 +386,10 @@ ifeq ($(HB_INC_INSTALL),)
    export HB_INC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
 endif
 ifeq ($(HB_DOC_INSTALL),)
-   export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
+   # Don't set doc dir for *nix targets
+   ifeq ($(HB_UNIX_COMPATIBLE),no)
+      export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
+   endif
 endif
 
 ifeq ($(HB_BIN_COMPILE),)

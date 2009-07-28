@@ -263,15 +263,6 @@ mk_hbtools()
     if [ "${HB_GPM_MOUSE}" = "yes" ]; then
         echo "libs=${hb_mkdef}gpm">> ${hb_hbmkcfg}
     fi
-    if [ "${HB_WITHOUT_X11}" != "yes" ]; then
-        echo "libdynhas=${hb_mkdef}gtxwc">> ${hb_hbmkcfg}
-    fi
-    if [ "${HB_WITHOUT_GTCRS}" != "yes" ] && [ -n "${HB_CRS_LIB}" ]; then
-        echo "libdynhas=${hb_mkdef}gtcrs">> ${hb_hbmkcfg}
-    fi
-    if [ "${HB_WITHOUT_GTSLN}" != "yes" ] && [ -n "${HB_SLN_LIB}" ]; then
-        echo "libdynhas=${hb_mkdef}gtsln">> ${hb_hbmkcfg}
-    fi
 
     echo "Generating ${hb_tool}... "
     cat > ${hb_tool} <<EOF
