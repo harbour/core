@@ -66,21 +66,21 @@
 #include "hbapierr.h"
 #include "hbvm.h"
 
-typedef struct _HB_SOCKET
+typedef struct
 {
-   HB_SOCKET_T        com;
-   void *             remote;
-   unsigned           remotelen;
-   char               szErrorText[ 128 ];
-   const char *       pszErrorText;
-   int                iErrorCode;
-   int                iCount;
-   int                iTimeout;
-   int                iTimeLimit;
-   PHB_ITEM           pPeriodicBlock;
-} HB_SOCKET, * PHB_SOCKET;
+   HB_SOCKET_T  com;
+   void *       remote;
+   unsigned     remotelen;
+   char         szErrorText[ 128 ];
+   const char * pszErrorText;
+   int          iErrorCode;
+   int          iCount;
+   int          iTimeout;
+   int          iTimeLimit;
+   PHB_ITEM     pPeriodicBlock;
+} HB_SOCKET_STRUCT, * PHB_SOCKET_STRUCT;
 
-#define HB_PARSOCKET( n )     ( ( PHB_SOCKET ) hb_parptrGC( hb_inetSocketFinalize, n ) )
+#define HB_PARSOCKET( n )     ( ( PHB_SOCKET_STRUCT ) hb_parptrGC( hb_inetSocketFinalize, n ) )
 
 #define HB_SOCKET_ZERO_ERROR( s )   \
          do { \
@@ -108,8 +108,8 @@ typedef struct _HB_SOCKET
 
 #define HB_SOCKET_INIT( s, p ) \
       do { \
-         s = ( PHB_SOCKET ) hb_gcAlloc( sizeof( HB_SOCKET ), hb_inetSocketFinalize ); \
-         memset( s, '\0', sizeof( HB_SOCKET ) ); \
+         s = ( PHB_SOCKET_STRUCT ) hb_gcAlloc( sizeof( HB_SOCKET_STRUCT ), hb_inetSocketFinalize ); \
+         memset( s, '\0', sizeof( HB_SOCKET_STRUCT ) ); \
          s->com = HB_NO_SOCKET; \
          s->iTimeout = -1; \
          s->iTimeLimit = -1; \
@@ -132,50 +132,50 @@ static void hb_inetLinuxSigusrHandle( int sig )
 
 static const char * s_inetCRLF = "\r\n";
 
-static BOOL hb_inetIsOpen( PHB_SOCKET Socket )
+static BOOL hb_inetIsOpen( PHB_SOCKET_STRUCT socket )
 {
-   if( Socket->com == HB_NO_SOCKET )
+   if( socket->com == HB_NO_SOCKET )
    {
-      HB_SOCKET_SET_ERROR2( Socket, -4, "Closed socket" );
+      HB_SOCKET_SET_ERROR2( socket, -4, "Closed socket" );
       return FALSE;
    }
    return TRUE;
 }
 
-static int hb_inetConnect( PHB_SOCKET Socket )
+static int hb_inetConnect( PHB_SOCKET_STRUCT socket )
 {
    int iErr;
 
-   hb_socketSetKeepAlive( Socket->com, TRUE );
+   hb_socketSetKeepAlive( socket->com, TRUE );
 
-   iErr = hb_socketConnect( Socket->com, Socket->remote, Socket->remotelen,
-                            Socket->iTimeout );
+   iErr = hb_socketConnect( socket->com, socket->remote, socket->remotelen,
+                            socket->iTimeout );
    if( iErr != 0 )
-      HB_SOCKET_SET_ERROR( Socket );
+      HB_SOCKET_SET_ERROR( socket );
 
    return iErr == 0;
 }
 
 static HB_GARBAGE_FUNC( hb_inetSocketFinalize )
 {
-   PHB_SOCKET Socket = ( PHB_SOCKET ) Cargo;
+   PHB_SOCKET_STRUCT socket = ( PHB_SOCKET_STRUCT ) Cargo;
 
-   if( Socket->com != HB_NO_SOCKET )
+   if( socket->com != HB_NO_SOCKET )
    {
-      hb_socketShutdown( Socket->com, HB_SOCK_SHUT_RDWR );
-      hb_socketClose( Socket->com );
-      Socket->com = HB_NO_SOCKET;
+      hb_socketShutdown( socket->com, HB_SOCK_SHUT_RDWR );
+      hb_socketClose( socket->com );
+      socket->com = HB_NO_SOCKET;
    }
 
-   if( Socket->pPeriodicBlock )
+   if( socket->pPeriodicBlock )
    {
-      hb_itemRelease( Socket->pPeriodicBlock );
-      Socket->pPeriodicBlock = NULL;
+      hb_itemRelease( socket->pPeriodicBlock );
+      socket->pPeriodicBlock = NULL;
    }
-   if( Socket->remote )
+   if( socket->remote )
    {
-      hb_xfree( Socket->remote );
-      Socket->remote = NULL;
+      hb_xfree( socket->remote );
+      socket->remote = NULL;
    }
 }
 
@@ -203,26 +203,26 @@ HB_FUNC( HB_INETCLEANUP )
 HB_FUNC( HB_INETCREATE )
 {
    PHB_ITEM pSocket = NULL;
-   PHB_SOCKET Socket;
-   HB_SOCKET_INIT( Socket, pSocket );
+   PHB_SOCKET_STRUCT socket;
+   HB_SOCKET_INIT( socket, pSocket );
 
    if( HB_ISNUM( 1 ) )
-      Socket->iTimeout = hb_parni( 1 );
+      socket->iTimeout = hb_parni( 1 );
 
    hb_itemReturnRelease( pSocket );
 }
 
 HB_FUNC( HB_INETCLOSE )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
+   if( socket )
    {
-      if( Socket->com != HB_NO_SOCKET )
+      if( socket->com != HB_NO_SOCKET )
       {
-         hb_socketShutdown( Socket->com, HB_SOCK_SHUT_RDWR );
-         hb_retni( hb_socketClose( Socket->com ) );
-         Socket->com = HB_NO_SOCKET;
+         hb_socketShutdown( socket->com, HB_SOCK_SHUT_RDWR );
+         hb_retni( hb_socketClose( socket->com ) );
+         socket->com = HB_NO_SOCKET;
 
 #ifdef HB_INET_LINUX_INTERRUPT
          kill( 0, HB_INET_LINUX_INTERRUPT );
@@ -237,14 +237,14 @@ HB_FUNC( HB_INETCLOSE )
 
 HB_FUNC( HB_INETFD )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
+   if( socket )
    {
-      hb_retnint( Socket->com );
+      hb_retnint( socket->com );
 
       if( hb_parl( 2 ) )
-         Socket->com = HB_NO_SOCKET;
+         socket->com = HB_NO_SOCKET;
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -256,10 +256,10 @@ HB_FUNC( HB_INETFD )
 
 HB_FUNC( HB_INETSTATUS )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
-      hb_retni( Socket->com == HB_NO_SOCKET ? -1 : 1 ); /* TODO: hb_retni( Socket->status ); */
+   if( socket )
+      hb_retni( socket->com == HB_NO_SOCKET ? -1 : 1 ); /* TODO: hb_retni( socket->status ); */
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -267,11 +267,11 @@ HB_FUNC( HB_INETSTATUS )
 /* Prepared, but still not used; being in wait for comments
 HB_FUNC( HB_INETSTATUSDESC )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
+   if( socket )
    {
-      switch( Socket->status )
+      switch( socket->status )
       {
          case 0:  hb_retc_const( "Connection not opened" ); return;
          case 1:  hb_retc_const( "Connection alive" ); return;
@@ -287,52 +287,52 @@ HB_FUNC( HB_INETSTATUSDESC )
 
 HB_FUNC( HB_INETERRORCODE )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
-      hb_retni( Socket->iErrorCode );
+   if( socket )
+      hb_retni( socket->iErrorCode );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_INETERRORDESC )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
-      hb_retc( Socket->pszErrorText );
+   if( socket )
+      hb_retc( socket->pszErrorText );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_INETCLEARERROR )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
-      HB_SOCKET_ZERO_ERROR( Socket );
+   if( socket )
+      HB_SOCKET_ZERO_ERROR( socket );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_INETCOUNT )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
-      hb_retni( Socket->iCount );
+   if( socket )
+      hb_retni( socket->iCount );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_INETADDRESS )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
+   if( socket )
    {
-      char * szAddr = Socket->remote ?
-            hb_socketAddrGetName( Socket->remote, Socket->remotelen ) : NULL;
+      char * szAddr = socket->remote ?
+            hb_socketAddrGetName( socket->remote, socket->remotelen ) : NULL;
       if( szAddr )
          hb_retc_buffer( szAddr );
       else
@@ -344,25 +344,25 @@ HB_FUNC( HB_INETADDRESS )
 
 HB_FUNC( HB_INETPORT )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
-      hb_retni( Socket->remote ?
-                hb_socketAddrGetPort( Socket->remote, Socket->remotelen ) : 0 );
+   if( socket )
+      hb_retni( socket->remote ?
+                hb_socketAddrGetPort( socket->remote, socket->remotelen ) : 0 );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_INETTIMEOUT )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
+   if( socket )
    {
-      hb_retni( Socket->iTimeout );
+      hb_retni( socket->iTimeout );
 
       if( HB_ISNUM( 2 ) )
-         Socket->iTimeout = hb_parni( 2 );
+         socket->iTimeout = hb_parni( 2 );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -370,24 +370,24 @@ HB_FUNC( HB_INETTIMEOUT )
 
 HB_FUNC( HB_INETCLEARTIMEOUT )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
-      Socket->iTimeout = -1;
+   if( socket )
+      socket->iTimeout = -1;
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_INETTIMELIMIT )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
+   if( socket )
    {
-      hb_retnl( Socket->iTimeLimit );
+      hb_retnl( socket->iTimeLimit );
 
       if( HB_ISNUM( 2 ) )
-         Socket->iTimeLimit = hb_parnl( 2 );
+         socket->iTimeLimit = hb_parnl( 2 );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -395,30 +395,30 @@ HB_FUNC( HB_INETTIMELIMIT )
 
 HB_FUNC( HB_INETCLEARTIMELIMIT )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
-      Socket->iTimeLimit = -1;
+   if( socket )
+      socket->iTimeLimit = -1;
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_INETPERIODCALLBACK )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
+   if( socket )
    {
       PHB_ITEM pExec = hb_param( 2, HB_IT_ARRAY | HB_IT_BLOCK | HB_IT_SYMBOL );
 
-      if( Socket->pPeriodicBlock )
-         hb_itemReturn( Socket->pPeriodicBlock );
+      if( socket->pPeriodicBlock )
+         hb_itemReturn( socket->pPeriodicBlock );
 
       if( pExec )
       {
-         if( Socket->pPeriodicBlock )
-            hb_itemRelease( Socket->pPeriodicBlock );
-         Socket->pPeriodicBlock = hb_itemClone( pExec );
+         if( socket->pPeriodicBlock )
+            hb_itemRelease( socket->pPeriodicBlock );
+         socket->pPeriodicBlock = hb_itemClone( pExec );
       }
    }
    else
@@ -427,14 +427,14 @@ HB_FUNC( HB_INETPERIODCALLBACK )
 
 HB_FUNC( HB_INETCLEARPERIODCALLBACK )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
+   if( socket )
    {
-      if( Socket->pPeriodicBlock )
+      if( socket->pPeriodicBlock )
       {
-         hb_itemRelease( Socket->pPeriodicBlock );
-         Socket->pPeriodicBlock = NULL;
+         hb_itemRelease( socket->pPeriodicBlock );
+         socket->pPeriodicBlock = NULL;
       }
    }
    else
@@ -443,14 +443,14 @@ HB_FUNC( HB_INETCLEARPERIODCALLBACK )
 
 HB_FUNC( HB_INETGETSNDBUFSIZE )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
+   if( socket )
    {
       int iSize = -1;
-      if( hb_inetIsOpen( Socket ) )
+      if( hb_inetIsOpen( socket ) )
       {
-         if( hb_socketGetSndBufSize( Socket->com, &iSize ) != 0 )
+         if( hb_socketGetSndBufSize( socket->com, &iSize ) != 0 )
             iSize = -1;
       }
       hb_retni( iSize );
@@ -461,14 +461,14 @@ HB_FUNC( HB_INETGETSNDBUFSIZE )
 
 HB_FUNC( HB_INETGETRCVBUFSIZE )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
+   if( socket )
    {
       int iSize = -1;
-      if( hb_inetIsOpen( Socket ) )
+      if( hb_inetIsOpen( socket ) )
       {
-         if( hb_socketGetRcvBufSize( Socket->com, &iSize ) != 0 )
+         if( hb_socketGetRcvBufSize( socket->com, &iSize ) != 0 )
             iSize = -1;
       }
       hb_retni( iSize );
@@ -479,15 +479,15 @@ HB_FUNC( HB_INETGETRCVBUFSIZE )
 
 HB_FUNC( HB_INETSETSNDBUFSIZE )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
+   if( socket )
    {
       int iSize = -1;
-      if( hb_inetIsOpen( Socket ) )
+      if( hb_inetIsOpen( socket ) )
       {
          iSize = hb_parni( 2 );
-         hb_socketSetSndBufSize( Socket->com, iSize );
+         hb_socketSetSndBufSize( socket->com, iSize );
       }
       hb_retni( iSize );
    }
@@ -497,15 +497,15 @@ HB_FUNC( HB_INETSETSNDBUFSIZE )
 
 HB_FUNC( HB_INETSETRCVBUFSIZE )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
 
-   if( Socket )
+   if( socket )
    {
       int iSize = -1;
-      if( hb_inetIsOpen( Socket ) )
+      if( hb_inetIsOpen( socket ) )
       {
          iSize = hb_parni( 2 );
-         hb_socketSetRcvBufSize( Socket->com, iSize );
+         hb_socketSetRcvBufSize( socket->com, iSize );
       }
       hb_retni( iSize );
    }
@@ -521,19 +521,19 @@ HB_FUNC( HB_INETSETRCVBUFSIZE )
 
 static void s_inetRecvInternal( int iMode )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
    char * buffer;
    ULONG ulLen;
    int iLen, iMaxLen, iReceived;
    int iTimeElapsed;
 
-   if( Socket == NULL || pBuffer == NULL || ! HB_ISBYREF( 2 ) )
+   if( socket == NULL || pBuffer == NULL || ! HB_ISBYREF( 2 ) )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
-   else if( ! hb_inetIsOpen( Socket ) )
+   else if( ! hb_inetIsOpen( socket ) )
    {
       hb_retni( 0 );
       return;
@@ -558,12 +558,12 @@ static void s_inetRecvInternal( int iMode )
 
    iReceived = 0;
    iTimeElapsed = 0;
-   HB_SOCKET_ZERO_ERROR( Socket );
+   HB_SOCKET_ZERO_ERROR( socket );
 
    do
    {
-      iLen = hb_socketRecv( Socket->com, buffer + iReceived, iMaxLen - iReceived,
-                            0, Socket->iTimeout );
+      iLen = hb_socketRecv( socket->com, buffer + iReceived, iMaxLen - iReceived,
+                            0, socket->iTimeout );
       if( iLen >= 0 )
       {
          iReceived += iLen;
@@ -575,18 +575,18 @@ static void s_inetRecvInternal( int iMode )
       else if( iLen == -1 && hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
       {
          /* timed out; let's see if we have to run a cb routine */
-         iTimeElapsed += Socket->iTimeout;
+         iTimeElapsed += socket->iTimeout;
 
          /* if we have a pPeriodicBlock, timeLimit is our REAL timeout */
-         if( Socket->pPeriodicBlock )
+         if( socket->pPeriodicBlock )
          {
-            hb_execFromArray( Socket->pPeriodicBlock );
+            hb_execFromArray( socket->pPeriodicBlock );
 
             /* do we continue? */
             if( ! hb_parl( -1 ) || hb_vmRequestQuery() != 0 ||
-                ( Socket->iTimeLimit != -1 && iTimeElapsed >= Socket->iTimeLimit ) )
+                ( socket->iTimeLimit != -1 && iTimeElapsed >= socket->iTimeLimit ) )
             {
-               HB_SOCKET_SET_ERROR2( Socket, -1, "Timeout" );
+               HB_SOCKET_SET_ERROR2( socket, -1, "Timeout" );
                hb_retni( iReceived );
                return;
             }
@@ -596,7 +596,7 @@ static void s_inetRecvInternal( int iMode )
          }
          else /* the timeout has gone, and we have no recovery routine */
          {
-            HB_SOCKET_SET_ERROR2( Socket, -1, "Timeout" );
+            HB_SOCKET_SET_ERROR2( socket, -1, "Timeout" );
             hb_retni( iReceived );
             return;
          }
@@ -604,16 +604,16 @@ static void s_inetRecvInternal( int iMode )
    }
    while( iReceived < iMaxLen && iLen > 0 );
 
-   Socket->iCount = iReceived;
+   socket->iCount = iReceived;
 
    if( iLen == 0 )
    {
-      HB_SOCKET_SET_ERROR2( Socket, -2, "Connection closed" );
+      HB_SOCKET_SET_ERROR2( socket, -2, "Connection closed" );
       hb_retni( iLen );
    }
    else if( iLen < 0 )
    {
-      HB_SOCKET_SET_ERROR( Socket );
+      HB_SOCKET_SET_ERROR( socket );
       hb_retni( iLen );
    }
    else
@@ -634,7 +634,7 @@ HB_FUNC( HB_INETRECVALL )
 
 static void s_inetRecvPattern( const char * szPattern )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
    PHB_ITEM pResult     = hb_param( 2, HB_IT_BYREF );
    PHB_ITEM pMaxSize    = hb_param( 3, HB_IT_NUMERIC );
    PHB_ITEM pBufferSize = hb_param( 4, HB_IT_NUMERIC );
@@ -645,12 +645,12 @@ static void s_inetRecvPattern( const char * szPattern )
    int iLen, iPatLen;
    int iPos = 0, iTimeElapsed;
 
-   if( Socket == NULL )
+   if( socket == NULL )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
-   else if( ! hb_inetIsOpen( Socket ) )
+   else if( ! hb_inetIsOpen( socket ) )
    {
       hb_retni( 0 );
       return;
@@ -659,7 +659,7 @@ static void s_inetRecvPattern( const char * szPattern )
    iBufferSize = pBufferSize ? hb_itemGetNI( pBufferSize ) : 80;
    iMax = pMaxSize ? hb_itemGetNI( pMaxSize ) : 0;
 
-   HB_SOCKET_ZERO_ERROR( Socket );
+   HB_SOCKET_ZERO_ERROR( socket );
 
    Buffer = ( char * ) hb_xgrab( iBufferSize );
    iAllocated = iBufferSize;
@@ -674,21 +674,21 @@ static void s_inetRecvPattern( const char * szPattern )
          Buffer = ( char * ) hb_xrealloc( Buffer, iAllocated );
       }
 
-      iLen = hb_socketRecv( Socket->com, &cChar, 1, 0, Socket->iTimeout );
+      iLen = hb_socketRecv( socket->com, &cChar, 1, 0, socket->iTimeout );
       if( iLen == -1 && hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
       {
-         iTimeElapsed += Socket->iTimeout;
+         iTimeElapsed += socket->iTimeout;
 
-         if( Socket->pPeriodicBlock )
+         if( socket->pPeriodicBlock )
          {
             BOOL fResult;
 
-            hb_execFromArray( Socket->pPeriodicBlock );
+            hb_execFromArray( socket->pPeriodicBlock );
             fResult = hb_parl( -1 ) && hb_vmRequestQuery() == 0;
 
             /* do we continue? */
             if( fResult &&
-                ( Socket->iTimeLimit == -1 || iTimeElapsed < Socket->iTimeLimit ) )
+                ( socket->iTimeLimit == -1 || iTimeElapsed < socket->iTimeLimit ) )
             {
                continue;
             }
@@ -719,11 +719,11 @@ static void s_inetRecvPattern( const char * szPattern )
          hb_itemPutNI( pResult, iLen );
 
       if( iLen == 0 )
-         HB_SOCKET_SET_ERROR2( Socket, -2, "Connection closed" );
+         HB_SOCKET_SET_ERROR2( socket, -2, "Connection closed" );
       else if( iLen == -2 )
-         HB_SOCKET_SET_ERROR2( Socket, -1, "Timeout" );
+         HB_SOCKET_SET_ERROR2( socket, -1, "Timeout" );
       else
-         HB_SOCKET_SET_ERROR( Socket );
+         HB_SOCKET_SET_ERROR( socket );
 
       hb_xfree( Buffer );
    }
@@ -732,7 +732,7 @@ static void s_inetRecvPattern( const char * szPattern )
       if( iMax == 0 || iPos < iMax )
       {
          iPos -= iPatLen;
-         Socket->iCount = iPos;
+         socket->iCount = iPos;
 
          if( pResult )
             hb_itemPutNI( pResult, iPos );
@@ -741,7 +741,7 @@ static void s_inetRecvPattern( const char * szPattern )
       }
       else
       {
-         HB_SOCKET_SET_ERROR2( Socket, -3, "Buffer overrun" );
+         HB_SOCKET_SET_ERROR2( socket, -3, "Buffer overrun" );
 
          if( pResult )
             hb_itemPutNI( pResult, -2 );
@@ -759,7 +759,7 @@ HB_FUNC( HB_INETRECVLINE )
 
 HB_FUNC( HB_INETRECVENDBLOCK )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
    PHB_ITEM pProto      = hb_param( 2, HB_IT_ARRAY | HB_IT_STRING );
    PHB_ITEM pResult     = hb_param( 3, HB_IT_BYREF );
    PHB_ITEM pMaxSize    = hb_param( 4, HB_IT_NUMERIC );
@@ -779,12 +779,12 @@ HB_FUNC( HB_INETRECVENDBLOCK )
    int ifindproto = 0;
    BOOL bProtoFound;
 
-   if( Socket == NULL )
+   if( socket == NULL )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
-   else if( ! hb_inetIsOpen( Socket ) )
+   else if( ! hb_inetIsOpen( socket ) )
    {
       if( pResult )
          hb_itemPutNI( pResult, -1 );
@@ -833,7 +833,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
    iBufferSize = pBufferSize ? hb_itemGetNI( pBufferSize ) : 80;
    iMax = pMaxSize ? hb_itemGetNI( pMaxSize ) : 0;
 
-   HB_SOCKET_ZERO_ERROR( Socket );
+   HB_SOCKET_ZERO_ERROR( socket );
 
    Buffer = ( char * ) hb_xgrab( iBufferSize );
    iAllocated = iBufferSize;
@@ -846,19 +846,19 @@ HB_FUNC( HB_INETRECVENDBLOCK )
          Buffer = ( char * ) hb_xrealloc( Buffer, iAllocated );
       }
 
-      iLen = hb_socketRecv( Socket->com, &cChar, 1, 0, Socket->iTimeout );
+      iLen = hb_socketRecv( socket->com, &cChar, 1, 0, socket->iTimeout );
       if( iLen == -1 && hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
       {
-         iTimeElapsed += Socket->iTimeout;
-         if( Socket->pPeriodicBlock )
+         iTimeElapsed += socket->iTimeout;
+         if( socket->pPeriodicBlock )
          {
             BOOL fResult;
 
-            hb_execFromArray( Socket->pPeriodicBlock );
+            hb_execFromArray( socket->pPeriodicBlock );
             fResult = hb_parl( -1 ) && hb_vmRequestQuery() == 0;
 
             if( fResult &&
-                ( Socket->iTimeLimit == -1 || iTimeElapsed < Socket->iTimeLimit ) )
+                ( socket->iTimeLimit == -1 || iTimeElapsed < socket->iTimeLimit ) )
             {
                continue;
             }
@@ -910,11 +910,11 @@ HB_FUNC( HB_INETRECVENDBLOCK )
          hb_itemPutNI( pResult, iLen );
 
       if( iLen == 0 )
-         HB_SOCKET_SET_ERROR2( Socket, -2, "Connection closed" );
+         HB_SOCKET_SET_ERROR2( socket, -2, "Connection closed" );
       else if( iLen == -2 )
-         HB_SOCKET_SET_ERROR2( Socket, -1, "Timeout" );
+         HB_SOCKET_SET_ERROR2( socket, -1, "Timeout" );
       else
-         HB_SOCKET_SET_ERROR( Socket );
+         HB_SOCKET_SET_ERROR( socket );
 
       hb_xfree( Buffer );
       hb_retc_null();
@@ -923,7 +923,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
    {
       if( iMax == 0 || iPos < iMax )
       {
-         Socket->iCount = iPos;
+         socket->iCount = iPos;
 
          if( pResult )
             hb_itemPutNI( pResult, iPos - ( iprotosize[ ifindproto ] - 1 ) );
@@ -932,7 +932,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
       }
       else
       {
-         HB_SOCKET_SET_ERROR2( Socket, -1, "Buffer overrun" );
+         HB_SOCKET_SET_ERROR2( socket, -1, "Buffer overrun" );
 
          if( pResult )
             hb_itemPutNI( pResult, -2 );
@@ -948,41 +948,41 @@ HB_FUNC( HB_INETRECVENDBLOCK )
 
 HB_FUNC( HB_INETDATAREADY )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
    int iVal;
 
-   if( Socket == NULL || ( hb_pcount() >= 2 && ! HB_ISNUM( 2 ) ) )
+   if( socket == NULL || ( hb_pcount() >= 2 && ! HB_ISNUM( 2 ) ) )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
-   else if( ! hb_inetIsOpen( Socket ) )
+   else if( ! hb_inetIsOpen( socket ) )
    {
       hb_retl( FALSE );
       return;
    }
 
-   HB_SOCKET_ZERO_ERROR( Socket );
-   iVal = hb_socketSelectRead( Socket->com, HB_ISNUM( 2 ) ? hb_parnint( 2 ) : 0 );
+   HB_SOCKET_ZERO_ERROR( socket );
+   iVal = hb_socketSelectRead( socket->com, HB_ISNUM( 2 ) ? hb_parnint( 2 ) : 0 );
    if( iVal < 0 )
-      HB_SOCKET_SET_ERROR( Socket );
+      HB_SOCKET_SET_ERROR( socket );
    hb_retni( iVal );
 }
 
 
 static void s_inetSendInternal( int iMode )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
    const char * Buffer;
    int iLen, iSent, iSend;
 
-   if( Socket == NULL || pBuffer == NULL )
+   if( socket == NULL || pBuffer == NULL )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
-   else if( ! hb_inetIsOpen( Socket ) )
+   else if( ! hb_inetIsOpen( socket ) )
    {
       hb_retni( 0 );
       return;
@@ -998,26 +998,26 @@ static void s_inetSendInternal( int iMode )
          iSend = iLen;
    }
 
-   HB_SOCKET_ZERO_ERROR( Socket );
+   HB_SOCKET_ZERO_ERROR( socket );
 
    iSent = 0;
    iLen = 0;
    while( iSent < iSend )
    {
-      iLen = hb_socketSend( Socket->com, Buffer + iSent, iSend - iSent, 0,
-                            Socket->iTimeout );
+      iLen = hb_socketSend( socket->com, Buffer + iSent, iSend - iSent, 0,
+                            socket->iTimeout );
       if( iLen > 0 )
       {
          iSent += iLen;
       }
       else if( iLen == -1 && hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
       {
-         HB_SOCKET_SET_ERROR2( Socket, -1, "Timeout" );
+         HB_SOCKET_SET_ERROR2( socket, -1, "Timeout" );
          break;
       }
       else
       {
-         HB_SOCKET_SET_ERROR( Socket );
+         HB_SOCKET_SET_ERROR( socket );
          break;
       }
 
@@ -1025,7 +1025,7 @@ static void s_inetSendInternal( int iMode )
          break;
    }
 
-   Socket->iCount = iSent;
+   socket->iCount = iSent;
 
    hb_retni( iLen > 0 ? iSent : -1 );
 }
@@ -1086,28 +1086,28 @@ HB_FUNC( HB_INETGETALIAS )
 
 HB_FUNC( HB_INETSERVER )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 2 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 2 );
    PHB_ITEM pSocket = NULL;
    const char * szAddress;
    int iPort, iListen;
 
    /* Parameter error checking */
-   if( ! HB_ISNUM( 1 ) || ( Socket == NULL && ! HB_ISNIL( 2 ) ) )
+   if( ! HB_ISNUM( 1 ) || ( socket == NULL && ! HB_ISNIL( 2 ) ) )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
 
-   if( Socket )
-      HB_SOCKET_ZERO_ERROR( Socket );
+   if( socket )
+      HB_SOCKET_ZERO_ERROR( socket );
    else
-      HB_SOCKET_INIT( Socket, pSocket );
+      HB_SOCKET_INIT( socket, pSocket );
 
    /* Creates comm socket */
-   Socket->com = hb_socketOpen( HB_SOCK_PF_INET, HB_SOCK_STREAM, 0 );
-   if( Socket->com == HB_NO_SOCKET )
+   socket->com = hb_socketOpen( HB_SOCK_PF_INET, HB_SOCK_STREAM, 0 );
+   if( socket->com == HB_NO_SOCKET )
    {
-      HB_SOCKET_SET_ERROR( Socket );
+      HB_SOCKET_SET_ERROR( socket );
       if( pSocket )
          hb_itemReturnRelease( pSocket );
       else
@@ -1116,36 +1116,36 @@ HB_FUNC( HB_INETSERVER )
    }
 
    /* we'll be using only nonblocking sockets */
-   /* hb_socketSetBlockingIO( Socket->com, FALSE ); */
+   /* hb_socketSetBlockingIO( socket->com, FALSE ); */
 
-   hb_socketSetReuseAddr( Socket->com, TRUE );
+   hb_socketSetReuseAddr( socket->com, TRUE );
 
    iPort = hb_parni( 1 );
    szAddress = hb_parc( 2 );
    iListen = HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10;
-   if( Socket->remote )
-      hb_xfree( Socket->remote );
-   if( hb_socketInetAddr( &Socket->remote, &Socket->remotelen,
+   if( socket->remote )
+      hb_xfree( socket->remote );
+   if( hb_socketInetAddr( &socket->remote, &socket->remotelen,
                           szAddress ? szAddress : "255.255.255.255", iPort ) )
    {
-      if( hb_socketBind( Socket->com, Socket->remote, Socket->remotelen ) == -1 )
+      if( hb_socketBind( socket->com, socket->remote, socket->remotelen ) == -1 )
       {
-         HB_SOCKET_SET_ERROR( Socket );
-         hb_socketClose( Socket->com );
-         Socket->com = HB_NO_SOCKET;
+         HB_SOCKET_SET_ERROR( socket );
+         hb_socketClose( socket->com );
+         socket->com = HB_NO_SOCKET;
       }
-      else if( hb_socketListen( Socket->com, iListen ) == -1 )
+      else if( hb_socketListen( socket->com, iListen ) == -1 )
       {
-         HB_SOCKET_SET_ERROR( Socket );
-         hb_socketClose( Socket->com );
-         Socket->com = HB_NO_SOCKET;
+         HB_SOCKET_SET_ERROR( socket );
+         hb_socketClose( socket->com );
+         socket->com = HB_NO_SOCKET;
       }
    }
    else
    {
-      HB_SOCKET_SET_ERROR( Socket );
-      hb_socketClose( Socket->com );
-      Socket->com = HB_NO_SOCKET;
+      HB_SOCKET_SET_ERROR( socket );
+      hb_socketClose( socket->com );
+      socket->com = HB_NO_SOCKET;
    }
 
    if( pSocket )
@@ -1156,18 +1156,18 @@ HB_FUNC( HB_INETSERVER )
 
 HB_FUNC( HB_INETACCEPT )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
-   PHB_SOCKET NewSocket;
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT new_socket;
    HB_SOCKET_T incoming;
    void * sa;
    unsigned len;
 
-   if( Socket == NULL )
+   if( socket == NULL )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
-   else if( ! hb_inetIsOpen( Socket ) )
+   else if( ! hb_inetIsOpen( socket ) )
       return;
 
    /*
@@ -1177,26 +1177,26 @@ HB_FUNC( HB_INETACCEPT )
     * returned socket.
     */
 
-   HB_SOCKET_ZERO_ERROR( Socket );
+   HB_SOCKET_ZERO_ERROR( socket );
 
-   incoming = hb_socketAccept( Socket->com, &sa, &len, Socket->iTimeout );
+   incoming = hb_socketAccept( socket->com, &sa, &len, socket->iTimeout );
 
    if( incoming == HB_NO_SOCKET )
    {
       if( hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
-         HB_SOCKET_SET_ERROR2( Socket, -1, "Timeout" );
+         HB_SOCKET_SET_ERROR2( socket, -1, "Timeout" );
       else
-         HB_SOCKET_SET_ERROR( Socket );
+         HB_SOCKET_SET_ERROR( socket );
    }
    else
    {
       PHB_ITEM pSocket = NULL;
-      HB_SOCKET_INIT( NewSocket, pSocket );
-      NewSocket->remote = sa;
-      NewSocket->remotelen = len;
-      NewSocket->com = incoming;
+      HB_SOCKET_INIT( new_socket, pSocket );
+      new_socket->remote = sa;
+      new_socket->remotelen = len;
+      new_socket->com = incoming;
       /* we'll be using only nonblocking sockets */
-      /* hb_socketSetBlockingIO( Socket->com, FALSE ); */
+      /* hb_socketSetBlockingIO( socket->com, FALSE ); */
       hb_itemReturnRelease( pSocket );
    }
 }
@@ -1209,46 +1209,46 @@ HB_FUNC( HB_INETCONNECT )
 {
    const char * szHost = hb_parc( 1 );
    char * szAddr;
-   PHB_SOCKET Socket = HB_PARSOCKET( 3 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 3 );
    PHB_ITEM pSocket = NULL;
    int iPort = hb_parni( 2 );
 
-   if( szHost == NULL || iPort == 0 || ( Socket == NULL && ! HB_ISNIL( 3 ) ) )
+   if( szHost == NULL || iPort == 0 || ( socket == NULL && ! HB_ISNIL( 3 ) ) )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
 
-   if( Socket )
+   if( socket )
    {
-      if( Socket->com != HB_NO_SOCKET )
+      if( socket->com != HB_NO_SOCKET )
       {
-         hb_socketClose( Socket->com );
-         Socket->com = HB_NO_SOCKET;
+         hb_socketClose( socket->com );
+         socket->com = HB_NO_SOCKET;
       }
-      HB_SOCKET_ZERO_ERROR( Socket );
+      HB_SOCKET_ZERO_ERROR( socket );
    }
    else
-      HB_SOCKET_INIT( Socket, pSocket );
+      HB_SOCKET_INIT( socket, pSocket );
 
    szAddr = hb_socketResolveAddr( szHost, HB_SOCK_AF_INET );
    if( !szAddr )
-      HB_SOCKET_SET_ERROR( Socket );
+      HB_SOCKET_SET_ERROR( socket );
    else
    {
       /* Creates comm socket */
-      Socket->com = hb_socketOpen( HB_SOCK_PF_INET, HB_SOCK_STREAM, 0 );
-      if( Socket->com == HB_NO_SOCKET )
-         HB_SOCKET_SET_ERROR( Socket );
+      socket->com = hb_socketOpen( HB_SOCK_PF_INET, HB_SOCK_STREAM, 0 );
+      if( socket->com == HB_NO_SOCKET )
+         HB_SOCKET_SET_ERROR( socket );
       else
       {
-         if( Socket->remote )
-            hb_xfree( Socket->remote );
-         if( hb_socketInetAddr( &Socket->remote, &Socket->remotelen,
+         if( socket->remote )
+            hb_xfree( socket->remote );
+         if( hb_socketInetAddr( &socket->remote, &socket->remotelen,
                                 szAddr, iPort ) )
-            hb_inetConnect( Socket );
+            hb_inetConnect( socket );
          else
-            HB_SOCKET_SET_ERROR( Socket );
+            HB_SOCKET_SET_ERROR( socket );
       }
       hb_xfree( szAddr );
    }
@@ -1262,41 +1262,41 @@ HB_FUNC( HB_INETCONNECT )
 HB_FUNC( HB_INETCONNECTIP )
 {
    const char * szHost = hb_parc( 1 );
-   PHB_SOCKET Socket = HB_PARSOCKET( 3 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 3 );
    PHB_ITEM pSocket = NULL;
    int iPort = hb_parni( 2 );
 
-   if( szHost == NULL || iPort == 0 || ( Socket == NULL && ! HB_ISNIL( 3 ) ) )
+   if( szHost == NULL || iPort == 0 || ( socket == NULL && ! HB_ISNIL( 3 ) ) )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
 
-   if( Socket )
+   if( socket )
    {
-      if( Socket->com != HB_NO_SOCKET )
+      if( socket->com != HB_NO_SOCKET )
       {
-         hb_socketClose( Socket->com );
-         Socket->com = HB_NO_SOCKET;
+         hb_socketClose( socket->com );
+         socket->com = HB_NO_SOCKET;
       }
-      HB_SOCKET_ZERO_ERROR( Socket );
+      HB_SOCKET_ZERO_ERROR( socket );
    }
    else
-      HB_SOCKET_INIT( Socket, pSocket );
+      HB_SOCKET_INIT( socket, pSocket );
 
    /* Creates comm socket */
-   Socket->com = hb_socketOpen( HB_SOCK_PF_INET, HB_SOCK_STREAM, 0 );
-   if( Socket->com == HB_NO_SOCKET )
-      HB_SOCKET_SET_ERROR( Socket );
+   socket->com = hb_socketOpen( HB_SOCK_PF_INET, HB_SOCK_STREAM, 0 );
+   if( socket->com == HB_NO_SOCKET )
+      HB_SOCKET_SET_ERROR( socket );
    else
    {
-      if( Socket->remote )
-         hb_xfree( Socket->remote );
-      if( hb_socketInetAddr( &Socket->remote, &Socket->remotelen,
+      if( socket->remote )
+         hb_xfree( socket->remote );
+      if( hb_socketInetAddr( &socket->remote, &socket->remotelen,
                              szHost, iPort ) )
-         hb_inetConnect( Socket );
+         hb_inetConnect( socket );
       else
-         HB_SOCKET_SET_ERROR( Socket );
+         HB_SOCKET_SET_ERROR( socket );
    }
 
    if( pSocket )
@@ -1311,7 +1311,7 @@ HB_FUNC( HB_INETCONNECTIP )
 
 HB_FUNC( HB_INETDGRAMBIND )
 {
-   PHB_SOCKET Socket;
+   PHB_SOCKET_STRUCT socket;
    PHB_ITEM pSocket = NULL;
    int iPort = hb_parni( 1 );
    const char * szAddress;
@@ -1323,43 +1323,43 @@ HB_FUNC( HB_INETDGRAMBIND )
       return;
    }
 
-   HB_SOCKET_INIT( Socket, pSocket );
+   HB_SOCKET_INIT( socket, pSocket );
 
    /* Creates comm socket */
-   Socket->com = hb_socketOpen( HB_SOCK_PF_INET, HB_SOCK_DGRAM, HB_SOCK_IPPROTO_UDP );
-   if( Socket->com == HB_NO_SOCKET )
+   socket->com = hb_socketOpen( HB_SOCK_PF_INET, HB_SOCK_DGRAM, HB_SOCK_IPPROTO_UDP );
+   if( socket->com == HB_NO_SOCKET )
    {
-      HB_SOCKET_SET_ERROR( Socket );
+      HB_SOCKET_SET_ERROR( socket );
       hb_itemReturnRelease( pSocket );
       return;
    }
 
-   hb_socketSetReuseAddr( Socket->com, TRUE );
+   hb_socketSetReuseAddr( socket->com, TRUE );
 
    /* Setting broadcast if needed. */
    if( hb_parl( 3 ) )
-      hb_socketSetBroadcast( Socket->com, TRUE );
+      hb_socketSetBroadcast( socket->com, TRUE );
 
    szAddress = hb_parc( 2 );
-   if( Socket->remote )
-      hb_xfree( Socket->remote );
-   if( !hb_socketInetAddr( &Socket->remote, &Socket->remotelen,
+   if( socket->remote )
+      hb_xfree( socket->remote );
+   if( !hb_socketInetAddr( &socket->remote, &socket->remotelen,
                            szAddress ? szAddress : "255.255.255.255", iPort ) )
    {
-      HB_SOCKET_SET_ERROR( Socket );
-      hb_socketClose( Socket->com );
-      Socket->com = HB_NO_SOCKET;
+      HB_SOCKET_SET_ERROR( socket );
+      hb_socketClose( socket->com );
+      socket->com = HB_NO_SOCKET;
    }
-   else if( hb_socketBind( Socket->com, Socket->remote, Socket->remotelen ) == -1 )
+   else if( hb_socketBind( socket->com, socket->remote, socket->remotelen ) == -1 )
    {
-      HB_SOCKET_SET_ERROR( Socket );
-      hb_socketClose( Socket->com );
-      Socket->com = HB_NO_SOCKET;
+      HB_SOCKET_SET_ERROR( socket );
+      hb_socketClose( socket->com );
+      socket->com = HB_NO_SOCKET;
    }
    else if( hb_pcount() >= 4 )
    {
-      if( hb_socketSetMulticast( Socket->com, HB_SOCK_PF_INET, hb_parc( 4 ) ) != 0 )
-         HB_SOCKET_SET_ERROR( Socket );
+      if( hb_socketSetMulticast( socket->com, HB_SOCK_PF_INET, hb_parc( 4 ) ) != 0 )
+         HB_SOCKET_SET_ERROR( socket );
    }
 
    hb_itemReturnRelease( pSocket );
@@ -1367,57 +1367,57 @@ HB_FUNC( HB_INETDGRAMBIND )
 
 HB_FUNC( HB_INETDGRAM )
 {
-   PHB_SOCKET Socket;
+   PHB_SOCKET_STRUCT socket;
    PHB_ITEM pSocket = NULL;
 
-   HB_SOCKET_INIT( Socket, pSocket );
+   HB_SOCKET_INIT( socket, pSocket );
 
    /* Creates comm socket */
-   Socket->com = hb_socketOpen( HB_SOCK_PF_INET, HB_SOCK_DGRAM, HB_SOCK_IPPROTO_UDP );
-   if( Socket->com == HB_NO_SOCKET )
+   socket->com = hb_socketOpen( HB_SOCK_PF_INET, HB_SOCK_DGRAM, HB_SOCK_IPPROTO_UDP );
+   if( socket->com == HB_NO_SOCKET )
    {
-      HB_SOCKET_SET_ERROR( Socket );
+      HB_SOCKET_SET_ERROR( socket );
       hb_itemReturnRelease( pSocket );
       return;
    }
 
    /* Setting broadcast if needed. */
    if( hb_parl( 1 ) )
-      hb_socketSetBroadcast( Socket->com, TRUE );
+      hb_socketSetBroadcast( socket->com, TRUE );
 
    /* we'll be using non blocking sockets in all functions */
-   /* hb_socketSetBlockingIO( Socket->com, FALSE ); */
+   /* hb_socketSetBlockingIO( socket->com, FALSE ); */
 
    hb_itemReturnRelease( pSocket );
 }
 
 HB_FUNC( HB_INETDGRAMSEND )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
    const char * szAddress = hb_parc( 2 );
    int iPort = hb_parni( 3 );
    PHB_ITEM pBuffer = hb_param( 4, HB_IT_STRING );
    int iLen;
    const char * szBuffer;
 
-   if( Socket == NULL || szAddress == NULL || iPort == 0 || pBuffer == NULL )
+   if( socket == NULL || szAddress == NULL || iPort == 0 || pBuffer == NULL )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
-   else if( ! hb_inetIsOpen( Socket ) )
+   else if( ! hb_inetIsOpen( socket ) )
    {
-      Socket->iCount = 0;
+      socket->iCount = 0;
       hb_retni( 0 );
       return;
    }
 
-   if( Socket->remote )
-      hb_xfree( Socket->remote );
-   if( !hb_socketInetAddr( &Socket->remote, &Socket->remotelen, szAddress, iPort ) )
+   if( socket->remote )
+      hb_xfree( socket->remote );
+   if( !hb_socketInetAddr( &socket->remote, &socket->remotelen, szAddress, iPort ) )
    {
-      HB_SOCKET_SET_ERROR( Socket );
-      Socket->iCount = 0;
+      HB_SOCKET_SET_ERROR( socket );
+      socket->iCount = 0;
       hb_retni( 0 );
       return;
    }
@@ -1431,26 +1431,26 @@ HB_FUNC( HB_INETDGRAMSEND )
          iLen = iMaxLen;
    }
 
-   HB_SOCKET_ZERO_ERROR( Socket );
+   HB_SOCKET_ZERO_ERROR( socket );
 
-   Socket->iCount = hb_socketSendTo( Socket->com, szBuffer, iLen, 0,
-                                     Socket->remote, Socket->remotelen,
-                                     Socket->iTimeout );
-   hb_retni( Socket->iCount );
+   socket->iCount = hb_socketSendTo( socket->com, szBuffer, iLen, 0,
+                                     socket->remote, socket->remotelen,
+                                     socket->iTimeout );
+   hb_retni( socket->iCount );
 
-   if( Socket->iCount == -1 )
+   if( socket->iCount == -1 )
    {
-      Socket->iCount = 0;
+      socket->iCount = 0;
       if( hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
-         HB_SOCKET_SET_ERROR2( Socket, -1, "Timeout" );
+         HB_SOCKET_SET_ERROR2( socket, -1, "Timeout" );
       else
-         HB_SOCKET_SET_ERROR( Socket );
+         HB_SOCKET_SET_ERROR( socket );
    }
 }
 
 HB_FUNC( HB_INETDGRAMRECV )
 {
-   PHB_SOCKET Socket = HB_PARSOCKET( 1 );
+   PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
    int iTimeElapsed = 0;
    int iLen, iMaxLen;
@@ -1458,14 +1458,14 @@ HB_FUNC( HB_INETDGRAMRECV )
    ULONG ulLen;
    BOOL fRepeat;
 
-   if( Socket == NULL || pBuffer == NULL || ! HB_ISBYREF( 2 ) )
+   if( socket == NULL || pBuffer == NULL || ! HB_ISBYREF( 2 ) )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
-   else if( ! hb_inetIsOpen( Socket ) )
+   else if( ! hb_inetIsOpen( socket ) )
    {
-      Socket->iCount = 0;
+      socket->iCount = 0;
       hb_retni( -1 );
       return;
    }
@@ -1487,45 +1487,45 @@ HB_FUNC( HB_INETDGRAMRECV )
    else
       iMaxLen = iLen;
 
-   HB_SOCKET_ZERO_ERROR( Socket );
+   HB_SOCKET_ZERO_ERROR( socket );
 
    do
    {
       fRepeat = FALSE;
-      if( Socket->remote )
-         hb_xfree( Socket->remote );
-      iLen = hb_socketRecvFrom( Socket->com, Buffer, iMaxLen, 0,
-                                &Socket->remote, &Socket->remotelen,
-                                Socket->iTimeout );
-      iTimeElapsed += Socket->iTimeout;
-      if( Socket->pPeriodicBlock )
+      if( socket->remote )
+         hb_xfree( socket->remote );
+      iLen = hb_socketRecvFrom( socket->com, Buffer, iMaxLen, 0,
+                                &socket->remote, &socket->remotelen,
+                                socket->iTimeout );
+      iTimeElapsed += socket->iTimeout;
+      if( socket->pPeriodicBlock )
       {
-         hb_execFromArray( Socket->pPeriodicBlock );
+         hb_execFromArray( socket->pPeriodicBlock );
          /* do we continue? */
          fRepeat = hb_parl( -1 ) && hb_vmRequestQuery() == 0 &&
-                   ( Socket->iTimeLimit == -1 || iTimeElapsed < Socket->iTimeLimit );
+                   ( socket->iTimeLimit == -1 || iTimeElapsed < socket->iTimeLimit );
       }
    }
    while( fRepeat );
 
    if( iLen == -1 && hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
    {
-      HB_SOCKET_SET_ERROR2( Socket, -1, "Timeout" );
-      Socket->iCount = 0;
+      HB_SOCKET_SET_ERROR2( socket, -1, "Timeout" );
+      socket->iCount = 0;
       iLen = -1;
    }
    else if( iLen == 0 )
    {
-      HB_SOCKET_SET_ERROR2( Socket, -2, "Connection closed" );
-      Socket->iCount = 0;
+      HB_SOCKET_SET_ERROR2( socket, -2, "Connection closed" );
+      socket->iCount = 0;
    }
    else if( iLen < 0 )
    {
-      HB_SOCKET_SET_ERROR( Socket );
-      Socket->iCount = 0;
+      HB_SOCKET_SET_ERROR( socket );
+      socket->iCount = 0;
    }
    else
-      Socket->iCount = iLen;
+      socket->iCount = iLen;
 
    hb_retni( iLen );
 }
