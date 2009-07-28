@@ -610,7 +610,7 @@ EXAMPLES
       # ; eliminate libraries which scans for local host header files
       export HB_XBUILD=yes
       # ; Native Linux binaries need to be installed on this path
-      export HB_BIN_COMPILE="/tmp/cros-hb"
+      export HB_BIN_COMPILE="/tmp/cross-hb"
       # ;
       export HB_ARCHITECTURE=os2
       export HB_COMPILER=watcom

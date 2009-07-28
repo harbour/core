@@ -401,6 +401,7 @@ endif
 
 # export some variables to eliminate repeated setting in recursive calls
 export HB_HOST_ARCH
+export HB_HOST_BIN_DIR
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 include $(TOP)$(ROOT)config/globsh.cf
