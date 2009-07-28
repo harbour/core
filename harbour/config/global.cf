@@ -99,20 +99,6 @@ endif
 
 endef
 
-# Directory separator default
-ifeq ($(DIRSEP),)
-   DIRSEP = /
-endif
-ifeq ($(PTHSEP),)
-   # small hack, it's hard to detect what is real path separator because
-   # some shells in DOS/Windows translates DOS style paths to POSIX form
-   ifeq ($(subst ;,:,$(PATH)),$(PATH))
-      PTHSEP = :
-   else
-      PTHSEP = ;
-   endif
-endif
-
 # Shell detection
 ifneq ($(SHLVL),)
    HB_SHELL := sh
@@ -146,6 +132,24 @@ CMDPREF :=
 ifneq ($(HB_SHELL),sh)
    ifneq ($(COMSPEC),)
       CMDPREF := $(COMSPEC) /C
+   endif
+endif
+
+# Directory separator default
+ifeq ($(DIRSEP),)
+   DIRSEP = /
+   ifneq ($(HB_SHELL),sh)
+      DIRSEP = $(subst /,\,\)
+   endif
+endif
+# Path separator default
+ifeq ($(PTHSEP),)
+   # small hack, it's hard to detect what is real path separator because
+   # some shells in DOS/Windows translates DOS style paths to POSIX form
+   ifeq ($(subst ;,:,$(PATH)),$(PATH))
+      PTHSEP = :
+   else
+      PTHSEP = ;
    endif
 endif
 
@@ -369,20 +373,20 @@ ifneq ($(HB_DB_DRVEXT),)
 endif
 
 ifeq ($(HB_UNIX_COMPATIBLE),no)
-   LIBPOSTFIX := /$(ARCH_COMP)
+   LIBPOSTFIX := $(DIRSEP)$(HB_ARCHITECTURE)$(DIRSEP)$(HB_COMPILER)
 endif
 
 ifeq ($(HB_BIN_INSTALL),)
-   export HB_BIN_INSTALL := $(HB_INSTALL_PREFIX)/bin
+   export HB_BIN_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)bin
 endif
 ifeq ($(HB_LIB_INSTALL),)
-   export HB_LIB_INSTALL := $(HB_INSTALL_PREFIX)/lib$(LIBPOSTFIX)
+   export HB_LIB_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)lib$(LIBPOSTFIX)
 endif
 ifeq ($(HB_INC_INSTALL),)
-   export HB_INC_INSTALL := $(HB_INSTALL_PREFIX)/include$(INCPOSTFIX)
+   export HB_INC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
 endif
 ifeq ($(HB_DOC_INSTALL),)
-   export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)/doc
+   export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
 endif
 
 ifeq ($(HB_BIN_COMPILE),)

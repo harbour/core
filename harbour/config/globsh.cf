@@ -10,8 +10,6 @@
 
 ifneq ($(HB_SHELL),sh)
 
-DIRSEP = $(subst /,\,\)
-
 OBJ_DIR_OS = $(subst /,\,$(OBJ_DIR))
 LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
 LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
