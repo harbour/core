@@ -225,58 +225,57 @@ REQUEST hbmk_KEYW
 #define _HBMK_aLIBUSER          24
 #define _HBMK_aLIBUSERGT        25
 #define _HBMK_aLIBPATH          26
-#define _HBMK_aLIBDYNHAS        27
-#define _HBMK_aINSTPATH         28
-#define _HBMK_aOPTC             29
-#define _HBMK_aOPTPRG           30
-#define _HBMK_aOPTRES           31
-#define _HBMK_aOPTL             32
-#define _HBMK_aOPTA             33
-#define _HBMK_aOPTD             34
-#define _HBMK_lCPP              35
-#define _HBMK_lSHARED           36
-#define _HBMK_lSTATICFULL       37
-#define _HBMK_lSHAREDDIST       38
-#define _HBMK_lNULRDD           39
-#define _HBMK_lMAP              40
-#define _HBMK_lBEEP             41
-#define _HBMK_lSTRIP            42
-#define _HBMK_lOPTIM            43
-#define _HBMK_nCOMPR            44
-#define _HBMK_lRUN              45
-#define _HBMK_lINC              46
-#define _HBMK_lREBUILDPO        47
-#define _HBMK_lMINIPO           48
-#define _HBMK_lUNICODE          49
-#define _HBMK_nCONF             50
-#define _HBMK_lIGNOREERROR      51
+#define _HBMK_aINSTPATH         27
+#define _HBMK_aOPTC             28
+#define _HBMK_aOPTPRG           29
+#define _HBMK_aOPTRES           30
+#define _HBMK_aOPTL             31
+#define _HBMK_aOPTA             32
+#define _HBMK_aOPTD             33
+#define _HBMK_lCPP              34
+#define _HBMK_lSHARED           35
+#define _HBMK_lSTATICFULL       36
+#define _HBMK_lSHAREDDIST       37
+#define _HBMK_lNULRDD           38
+#define _HBMK_lMAP              39
+#define _HBMK_lBEEP             40
+#define _HBMK_lSTRIP            41
+#define _HBMK_lOPTIM            42
+#define _HBMK_nCOMPR            43
+#define _HBMK_lRUN              44
+#define _HBMK_lINC              45
+#define _HBMK_lREBUILDPO        46
+#define _HBMK_lMINIPO           47
+#define _HBMK_lUNICODE          48
+#define _HBMK_nCONF             49
+#define _HBMK_lIGNOREERROR      50
 
-#define _HBMK_cFIRST            52
-#define _HBMK_aPRG              53
-#define _HBMK_aC                54
-#define _HBMK_aRESSRC           55
-#define _HBMK_aRESCMP           56
-#define _HBMK_aOBJUSER          57
-#define _HBMK_aICON             58
+#define _HBMK_cFIRST            51
+#define _HBMK_aPRG              52
+#define _HBMK_aC                53
+#define _HBMK_aRESSRC           54
+#define _HBMK_aRESCMP           55
+#define _HBMK_aOBJUSER          56
+#define _HBMK_aICON             57
 
-#define _HBMK_aPO               59
-#define _HBMK_cHBL              60
-#define _HBMK_cHBLDir           61
-#define _HBMK_aLNG              62
-#define _HBMK_cPO               63
+#define _HBMK_aPO               58
+#define _HBMK_cHBL              59
+#define _HBMK_cHBLDir           60
+#define _HBMK_aLNG              61
+#define _HBMK_cPO               62
 
-#define _HBMK_lDEBUGTIME        64
-#define _HBMK_lDEBUGINC         65
-#define _HBMK_lDEBUGSTUB        66
-#define _HBMK_lDEBUGI18N        67
+#define _HBMK_lDEBUGTIME        63
+#define _HBMK_lDEBUGINC         64
+#define _HBMK_lDEBUGSTUB        65
+#define _HBMK_lDEBUGI18N        66
 
-#define _HBMK_cCCPATH           68
-#define _HBMK_cCCPREFIX         69
-#define _HBMK_cCCPOSTFIX        70
+#define _HBMK_cCCPATH           67
+#define _HBMK_cCCPREFIX         68
+#define _HBMK_cCCPOSTFIX        69
 
-#define _HBMK_lUTF8             71
+#define _HBMK_lUTF8             70
 
-#define _HBMK_MAX_              71
+#define _HBMK_MAX_              70
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -1314,7 +1313,6 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
    hbmk[ _HBMK_aINCTRYPATH ] := {}
    hbmk[ _HBMK_aLIBUSER ] := {}
    hbmk[ _HBMK_aLIBUSERGT ] := {}
-   hbmk[ _HBMK_aLIBDYNHAS ] := {}
    hbmk[ _HBMK_aOBJUSER ] := {}
    hbmk[ _HBMK_aICON ] := {}
    l_aOBJA := {}
@@ -2121,8 +2119,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             AAdd( hbmk[ _HBMK_aOPTC ], "-no-cpp-precomp" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-long-double" )
             IF hbmk[ _HBMK_lSHARED ]
-               AAdd( hbmk[ _HBMK_aOPTL ], "-bind_as_load" )
-               AAdd( hbmk[ _HBMK_aOPTL ], "-multiply_defined suppress" )
+               AAdd( hbmk[ _HBMK_aOPTL ], "-bind_at_load" )
+/*             AAdd( hbmk[ _HBMK_aOPTL ], "-multiply_defined suppress" ) */
             ENDIF
          ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
@@ -5333,9 +5331,6 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( hbmk, StrStripQuote( cItem ) )
             IF ! Empty( cItem )
-               IF AScan( hbmk[ _HBMK_aLIBDYNHAS ], {|tmp| tmp == cItem } ) == 0
-                  AAdd( hbmk[ _HBMK_aLIBDYNHAS ], cItem )
-               ENDIF
                IF Lower( Left( cItem, 2 ) ) == "gt" .AND. ;
                   AScan( hbmk[ _HBMK_aLIBCOREGT ], {|tmp| Lower( tmp ) == Lower( cItem ) } ) == 0
                   AAdd( hbmk[ _HBMK_aLIBCOREGT ], cItem )
