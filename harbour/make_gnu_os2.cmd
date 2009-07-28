@@ -16,14 +16,6 @@ rem for further information about see make_gnu.bat
 if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=os2
 if "%HB_COMPILER%" == "" set HB_COMPILER=gcc
 
-rem Set to constant value to be consistent with the non-GNU make files.
-
-if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
-if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib\%HB_ARCHITECTURE%\%HB_COMPILER%
-if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
-if "%HB_DOC_INSTALL%" == "" set HB_DOC_INSTALL=%HB_INSTALL_PREFIX%\doc
-
-
 rem In GCC3.2.2 the TCP/IP headers and libraries scheme have been changed.
 rem The default is the current OS/2 tcpip toolkit (BSD 4.4 based).
 rem To target the older OS/2 tcpip stack (BSD 4.3 based) and create

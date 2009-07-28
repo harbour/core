@@ -199,7 +199,7 @@ HB_FUNC( PRINTSEND )
          hb_retni( 0 );
    }
 
-#elif defined( HB_OS_WIN_32 )
+#elif defined( HB_OS_WIN )
 
    char szChr[ 2 ] = { ' ', '\0' };
    char szPort[ 5 ] = { 'l', 'p', 't', '1', '\0' };

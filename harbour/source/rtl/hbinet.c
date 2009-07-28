@@ -1157,7 +1157,6 @@ HB_FUNC( HB_INETSERVER )
 HB_FUNC( HB_INETACCEPT )
 {
    PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
-   PHB_SOCKET_STRUCT new_socket;
    HB_SOCKET_T incoming;
    void * sa;
    unsigned len;
@@ -1190,6 +1189,7 @@ HB_FUNC( HB_INETACCEPT )
    }
    else
    {
+      PHB_SOCKET_STRUCT new_socket;
       PHB_ITEM pSocket = NULL;
       HB_SOCKET_INIT( new_socket, pSocket );
       new_socket->remote = sa;

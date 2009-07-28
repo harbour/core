@@ -51,13 +51,13 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
 
-#ifdef HB_OS_WIN_32
+#if defined( HB_OS_WIN )
 
 #include <stdio.h>
 
@@ -120,4 +120,4 @@ HB_FUNC( P_WRITEPORT )
    hb_retnl( bRet ? ( long ) nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
 }
 
-#endif /* HB_OS_WIN_32 */
+#endif /* HB_OS_WIN */
