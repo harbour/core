@@ -2076,7 +2076,7 @@ long hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_LON
 
    if( timeout >= 0 )
    {
-      ret = hb_socketSelectRD( sd, timeout );
+      ret = hb_socketSelectWR( sd, timeout );
       if( ret == 0 )
       {
          hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
@@ -2115,7 +2115,7 @@ long hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags,
 
    if( timeout >= 0 )
    {
-      ret = hb_socketSelectRD( sd, timeout );
+      ret = hb_socketSelectWR( sd, timeout );
       if( ret == 0 )
       {
          hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
@@ -2150,7 +2150,7 @@ long hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_LONG time
 
    if( timeout >= 0 )
    {
-      ret = hb_socketSelectWR( sd, timeout );
+      ret = hb_socketSelectRD( sd, timeout );
       if( ret == 0 )
       {
          hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
@@ -2180,7 +2180,7 @@ long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** 
 
    if( timeout >= 0 )
    {
-      ret = hb_socketSelectWR( sd, timeout );
+      ret = hb_socketSelectRD( sd, timeout );
       if( ret == 0 )
       {
          hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
