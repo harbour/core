@@ -5153,7 +5153,7 @@ STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
 
 #define _EOL                    Chr( 10 )
 
-STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel  )
+STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
    LOCAL cFile
    LOCAL cLine
    LOCAL cItem

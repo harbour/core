@@ -369,20 +369,20 @@ ifneq ($(HB_DB_DRVEXT),)
 endif
 
 ifeq ($(HB_UNIX_COMPATIBLE),no)
-   LIBPOSTFIX := $(DIRSEP)$(HB_ARHICTECTURE)$(DIRSEP)$(HB_COMPILER)
+   LIBPOSTFIX := /$(ARCH_COMP)
 endif
 
 ifeq ($(HB_BIN_INSTALL),)
-   export HB_BIN_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)bin
+   export HB_BIN_INSTALL := $(HB_INSTALL_PREFIX)/bin
 endif
 ifeq ($(HB_LIB_INSTALL),)
-   export HB_LIB_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)lib$(LIBPOSTFIX)
+   export HB_LIB_INSTALL := $(HB_INSTALL_PREFIX)/lib$(LIBPOSTFIX)
 endif
 ifeq ($(HB_INC_INSTALL),)
-   export HB_INC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
+   export HB_INC_INSTALL := $(HB_INSTALL_PREFIX)/include$(INCPOSTFIX)
 endif
 ifeq ($(HB_DOC_INSTALL),)
-   export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
+   export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)/doc
 endif
 
 ifeq ($(HB_BIN_COMPILE),)

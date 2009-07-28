@@ -33,11 +33,13 @@ pptable.c : hbpp$(EXE_EXT)
 	$(HB_HOST_BIN_DIR)/hbpp$(HB_HOST_BIN_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q -c$(TOP)$(ROOT) -v$(HB_VERHEADER)
 
 
+ifneq ($(HB_HOST_BUILD),lib)
 ifneq ($(HB_BIN_INSTALL),)
 INSTALL_FILES = $(EXE_DIR)/hbpp$(EXE_EXT)
 INSTALL_DIR = $(HB_BIN_INSTALL)
 HB_INSTALL_DEF = yes
 include $(TOP)$(ROOT)config/install.cf
+endif
 endif
 
 install::
