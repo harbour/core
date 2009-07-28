@@ -1381,6 +1381,9 @@ BOOL hb_socketInetAddr( void ** pSockAddr, unsigned * puiLen,
    if( !szAddr || !*szAddr )
    {
       sa.sin_addr.s_addr = htonl( INADDR_ANY );
+      *pSockAddr = memcpy( hb_xgrab( sizeof( sa ) + 1 ), &sa, sizeof( sa ) );
+      *puiLen = ( unsigned ) sizeof( sa );
+      return TRUE;
    }
    else
    {
@@ -1427,7 +1430,12 @@ BOOL hb_socketInet6Addr( void ** pSockAddr, unsigned * puiLen,
       memcpy( &sa.sin6_addr, &in6addr_any, sizeof( struct in6_addr ) );
 #elif defined( IN6ADDR_ANY_INIT )
       memcpy( &sa.sin6_addr, &s_in6addr_any, sizeof( struct in6_addr ) );
+#else
+      int TODO;
 #endif
+      *pSockAddr = memcpy( hb_xgrab( sizeof( sa ) + 1 ), &sa, sizeof( sa ) );
+      *puiLen = ( unsigned ) sizeof( sa );
+      return TRUE;
    }
    else
    {
