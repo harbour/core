@@ -1174,14 +1174,14 @@ static int hb_socketSelectRD( HB_SOCKET_T sd, HB_LONG timeout )
 
       if( timeout >= 0 )
       {
-         tv.tv_sec = timeout / 1000;
+         tv.tv_sec = ( long ) ( timeout / 1000 );
          tv.tv_usec = ( timeout % 1000 ) * 1000;
          ptv = &tv;
       }
       else
          ptv = NULL;
 
-      iResult = select( sd + 1, &rfds, NULL, NULL, ptv );
+      iResult = select( ( int ) ( sd + 1 ), &rfds, NULL, NULL, ptv );
       hb_socketSetOsError( iResult >= 0 ? 0 : HB_SOCK_GETERROR() );
       if( iResult == -1 && timeout > 0 && HB_SOCK_IS_EINTR() &&
           hb_vmRequestQuery() == 0 )
@@ -1222,14 +1222,14 @@ static int hb_socketSelectWR( HB_SOCKET_T sd, HB_LONG timeout )
 
       if( timeout >= 0 )
       {
-         tv.tv_sec = timeout / 1000;
+         tv.tv_sec = ( long ) ( timeout / 1000 );
          tv.tv_usec = ( timeout % 1000 ) * 1000;
          ptv = &tv;
       }
       else
          ptv = NULL;
 
-      iResult = select( sd + 1, &wfds, NULL, NULL, ptv );
+      iResult = select( ( int ) ( sd + 1 ), &wfds, NULL, NULL, ptv );
       hb_socketSetOsError( iResult >= 0 ? 0 : HB_SOCK_GETERROR() );
       if( iResult == -1 && timeout > 0 && HB_SOCK_IS_EINTR() &&
           hb_vmRequestQuery() == 0 )
@@ -1279,14 +1279,14 @@ static int hb_socketSelectWRE( HB_SOCKET_T sd, HB_LONG timeout )
 #endif
       if( timeout >= 0 )
       {
-         tv.tv_sec = timeout / 1000;
+         tv.tv_sec = ( long ) ( timeout / 1000 );
          tv.tv_usec = ( timeout % 1000 ) * 1000;
          ptv = &tv;
       }
       else
          ptv = NULL;
 
-      iResult = select( sd + 1, NULL, &wfds, pefds, ptv );
+      iResult = select( ( int ) ( sd + 1 ), NULL, &wfds, pefds, ptv );
       hb_socketSetOsError( iResult >= 0 ? 0 : HB_SOCK_GETERROR() );
 #if defined( HB_OS_WIN )
       if( iResult > 0 && FD_ISSET( sd, pefds ) )
@@ -2410,14 +2410,14 @@ int hb_socketSelect( PHB_ITEM pArrayRD, BOOL fSetRD,
 
    if( timeout >= 0 )
    {
-      tv.tv_sec = ( timeout / 1000 );
+      tv.tv_sec = ( long ) ( timeout / 1000 );
       tv.tv_usec = ( timeout % 1000 ) * 1000;
       ptv = &tv;
    }
    else
       ptv = NULL;
 
-   ret = select( maxsd + 1, pfds[ 0 ], pfds[ 1 ], pfds[ 2 ], ptv );
+   ret = select( ( int ) ( maxsd + 1 ), pfds[ 0 ], pfds[ 1 ], pfds[ 2 ], ptv );
 
    for( i = 0; i < 3; i++ )
    {
