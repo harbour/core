@@ -325,6 +325,11 @@
 #define XBPCOL_TYPE_FILEMINIICON                  6
 #define XBPCOL_TYPE_MULTILINETEXT                 7
 
+#define XBPLINE_NONE                              1
+#define XBPLINE_NORMAL                            2
+#define XBPLINE_DASHED                            4
+#define XBPLINE_DOTTED                            8
+
 #define XBPCOL_SEP_NONE                           XBPLINE_NONE
 #define XBPCOL_SEP_LINE                           XBPLINE_NORMAL
 #define XBPCOL_SEP_DASHED                         XBPLINE_DASHED

@@ -1793,6 +1793,8 @@ STATIC FUNCTION Xbp_SetPresParamIfNil( aPP, nParam, xValue )
             aPP[ n,2 ] := xValue
          ENDIF
       ENDIF
+   ELSE
+      aadd( aPP, { nParam, xValue } )
    ENDIF
 
    RETURN nil
@@ -1807,6 +1809,8 @@ STATIC FUNCTION Xbp_SetPresParam( aPP, nParam, xValue )
       IF xValue != NIL
          aPP[ n,2 ] := xValue
       ENDIF
+   ELSE
+      aadd( aPP, { nParam, xValue } )
    ENDIF
 
    RETURN oldValue

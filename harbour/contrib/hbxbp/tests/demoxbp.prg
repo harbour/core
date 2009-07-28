@@ -62,12 +62,15 @@
 
 /*----------------------------------------------------------------------*/
 
+REQUEST DbfCdx
+
 #define TAB_1   1
 #define TAB_2   2
 #define TAB_3   3
 #define TAB_4   4
 #define TAB_5   5
 #define TAB_6   6
+#define TAB_7   7
 
 #define CRLF    chr( 13 )+chr( 10 )
 
@@ -161,10 +164,13 @@ PROCEDURE BuildADialog()
    Build_Statics( oDA )
 
    /* Build HTML Viewer */
-   oHtm := Build_HTMLViewer( aTabs[ TAB_1 ] )
+   oHtm := Build_HTMLViewer( aTabs[ TAB_7 ] )
 
    /* Build RTF */
    Build_Rtf( aTabs[ TAB_6 ] )
+
+   /* Build XBPBrowse() */
+   Build_Browse( aTabs[ TAB_1 ] )
 
    /* Present the dialog on the screen */
    oDlg:Show()
@@ -540,12 +546,12 @@ FUNCTION Build_RadioButton( oStatic )
 
 FUNCTION Build_TabPages( oWnd )
    LOCAL nHeight := 390
-   LOCAL aTabs   := { NIL,NIL,NIL,NIL,NIL,NIL }
+   LOCAL aTabs   := { NIL,NIL,NIL,NIL,NIL,NIL,NIL }
 
    aTabs[ TAB_1 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
-   aTabs[ TAB_1 ]:caption    := "Web"
-//   aTabs[ TAB_1 ]:preOffset  := 10
-//   aTabs[ TAB_1 ]:postOffset := 300
+   aTabs[ TAB_1 ]:caption    := "Brw"
+   aTabs[ TAB_1 ]:preOffset  := 10
+   aTabs[ TAB_1 ]:postOffset := 300
    aTabs[ TAB_1 ]:minimized  := .F.
    aTabs[ TAB_1 ]:create()
    aTabs[ TAB_1 ]:TabActivate := SetMaximized( aTabs, 1 )
@@ -558,7 +564,7 @@ FUNCTION Build_TabPages( oWnd )
    aTabs[ TAB_2 ]:TabActivate := SetMaximized( aTabs, 2 )
 
    aTabs[ TAB_3 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
-   aTabs[ TAB_3 ]:caption    := "Buttons"
+   aTabs[ TAB_3 ]:caption    := "Btns"
    aTabs[ TAB_3 ]:preOffset  := 40
    aTabs[ TAB_3 ]:postOffset := 100
    aTabs[ TAB_3 ]:create()
@@ -589,6 +595,14 @@ FUNCTION Build_TabPages( oWnd )
    aTabs[ TAB_6 ]:postOffset := 40
    aTabs[ TAB_6 ]:create()
    aTabs[ TAB_6 ]:TabActivate := SetMaximized( aTabs, 6 )
+
+   aTabs[ TAB_7 ] := XbpTabPage():new( oWnd, , { 510, 20 }, { 360, nHeight }, , .t. )
+   aTabs[ TAB_7 ]:caption    := "Web"
+   aTabs[ TAB_7 ]:preOffset  := 120
+   aTabs[ TAB_7 ]:postOffset := 20
+   aTabs[ TAB_7 ]:minimized  := .F.
+   aTabs[ TAB_7 ]:create()
+   aTabs[ TAB_7 ]:TabActivate := SetMaximized( aTabs, 7 )
 
    RETURN aTabs
 
@@ -771,14 +785,7 @@ FUNCTION Build_SpinButtons( oWnd )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION RGB( r, g, b )
-
-   HB_SYMBOL_UNUSED( r )
-   HB_SYMBOL_UNUSED( g )
-   HB_SYMBOL_UNUSED( b )
-
-   // Display a static window with flashing color of rgb
-
-   RETURN nil
+   RETURN GraMakeRGBColor( { b,g,r } )           /* a bug in Qt */
 
 /*----------------------------------------------------------------------*/
 
@@ -1133,6 +1140,7 @@ FUNCTION Build_Bitmap( oWnd )
          aadd( aFltr, { "X11 Bitmap                 ", "*.xbm"  } )
          aadd( aFltr, { "X11 Pixmap                 ", "*.xpm"  } )
 
+         oDlg := XbpFileDialog():new():create( oWnd, , { 10,10 } )
          oDlg:title := "Specify how to save it !"
          oDlg:fileFilters := aFltr
          cFile := oDlg:saveAs()
@@ -1153,7 +1161,7 @@ FUNCTION Build_Bitmap( oWnd )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GetAnImageFile( oWnd, cTitle )
-   LOCAL aFltr := {}
+   LOCAL oDlg, aFltr := {}
 
    DEFAULT cTitle TO "Select an Image"
 
@@ -1426,6 +1434,139 @@ STATIC FUNCTION RtfApplyFont( oRTF )
    oDlg:create()
    oDlg:activateApply := {|oFont| oRTF:selFont := oFont }
    oDlg:display( 0 )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_Browse( oWnd )
+   LOCAL aPresParam, oXbpBrowse, oXbpColumn
+
+   #include "set.ch"
+
+   Set( _SET_DATEFORMAT, "MM/DD/YYYY" )
+
+   USE "test.dbf" NEW SHARED VIA 'DBFCDX'
+
+   oXbpBrowse := XbpBrowse():new( oWnd ):create( , , { 10,10 }, { oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45 } )
+
+   aPresParam := { ;
+      { XBP_PP_COL_HA_CAPTION      , "Last"                     }, ;
+      { XBP_PP_COL_HA_FGCLR        , XBPSYSCLR_WINDOWSTATICTEXT }, ;
+      { XBP_PP_COL_HA_BGCLR        , XBPSYSCLR_DIALOGBACKGROUND }, ;
+      { XBP_PP_COL_HA_HEIGHT       , 20                         }, ;
+      { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              }, ;
+      { XBP_PP_COL_DA_BGCLR        , RGB( 248,210,194 )         }, ;
+      { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              }, ;
+      { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           }, ;
+      { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
+      { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
+      { XBP_PP_COL_DA_ROWHEIGHT    , 20                         }  }
+
+   oXbpColumn          := XbpColumn():new( , , , , aPresParam )
+   oXbpColumn:dataLink := {|| test->Last }
+   oXbpColumn:create()
+   oXbpColumn:colorBlock := {|x| IF( left( x,1 ) $ "L,H", { GRA_CLR_BLUE, GRA_CLR_YELLOW }, { NIL, NIL } ) }
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
+
+   aPresParam := { ;
+      { XBP_PP_COL_HA_CAPTION      , "First"                    }, ;
+      { XBP_PP_COL_HA_ALIGNMENT    , XBPALIGN_LEFT              }, ;
+      { XBP_PP_COL_HA_FGCLR        , GraMakeRGBColor( { 200, 100, 255 } ) }, ;
+      { XBP_PP_COL_HA_BGCLR        , GRA_CLR_RED                }, ;
+      { XBP_PP_COL_HA_HEIGHT       , 20                         }, ;
+      { XBP_PP_COL_DA_FGCLR        , GRA_CLR_WHITE              }, ;
+      { XBP_PP_COL_DA_BGCLR        , RGB( 120,130,230 )         }, ;
+      { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              }, ;
+      { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           }, ;
+      { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
+      { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
+      { XBP_PP_COL_DA_ROWHEIGHT    , 20                         }  }
+   //
+   oXbpColumn          := XbpColumn():new( , , , , aPresParam )
+   oXbpColumn:dataLink := {|| test->First }
+   oXbpColumn:create()
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
+
+   aPresParam := { ;
+      { XBP_PP_COL_HA_CAPTION      , "Hired On"                 }, ;
+      { XBP_PP_COL_HA_FGCLR        , GraMakeRGBColor( { 255, 0, 255 } ) }, ;
+      { XBP_PP_COL_HA_BGCLR        , GRA_CLR_YELLOW             }, ;
+      { XBP_PP_COL_HA_HEIGHT       , 20                         }, ;
+      { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              }, ;
+      { XBP_PP_COL_DA_BGCLR        , GRA_CLR_GREEN              }, ;
+      { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              }, ;
+      { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           }, ;
+      { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
+      { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
+      { XBP_PP_COL_DA_ROWHEIGHT    , 20                         }  }
+   //
+   oXbpColumn          := XbpColumn():new( , , , , aPresParam )
+   oXbpColumn:dataLink := {|| test->HireDate }
+   oXbpColumn:create()
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
+
+   aPresParam := { ;
+      { XBP_PP_COL_HA_CAPTION      , "Age"                      }, ;
+      { XBP_PP_COL_HA_FGCLR        , GraMakeRGBColor( { 200, 100, 255 } ) }, ;
+      { XBP_PP_COL_HA_BGCLR        , GRA_CLR_BLUE               }, ;
+      { XBP_PP_COL_HA_HEIGHT       , 20                         }, ;
+      { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              }, ;
+      { XBP_PP_COL_DA_BGCLR        , GRA_CLR_YELLOW             }, ;
+      { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              }, ;
+      { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           }, ;
+      { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
+      { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
+      { XBP_PP_COL_DA_ROWHEIGHT    , 20                         }  }
+   //
+   oXbpColumn          := XbpColumn():new( , , , , aPresParam )
+   oXbpColumn:dataLink := {|| test->Age }
+   oXbpColumn:create()
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
+
+   aPresParam := { ;
+      { XBP_PP_COL_HA_CAPTION      , "City"                     }, ;
+      { XBP_PP_COL_HA_FGCLR        , GRA_CLR_CYAN               }, ;
+      { XBP_PP_COL_HA_BGCLR        , GRA_CLR_BLUE               }, ;
+      { XBP_PP_COL_HA_HEIGHT       , 20                         }, ;
+      { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              }, ;
+      { XBP_PP_COL_DA_BGCLR        , RGB( 205,240,210 )         }, ;
+      { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              }, ;
+      { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           }, ;
+      { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
+      { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
+      { XBP_PP_COL_DA_ROWHEIGHT    , 20                         }  }
+   //
+   oXbpColumn          := XbpColumn():new( , , , , aPresParam )
+   oXbpColumn:dataLink := {|| test->City }
+   oXbpColumn:create()
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
+
+   aPresParam := { ;
+      { XBP_PP_COL_HA_CAPTION      , "Salary"                   }, ;
+      { XBP_PP_COL_HA_ALIGNMENT    , XBPALIGN_RIGHT             }, ;
+      { XBP_PP_COL_HA_FGCLR        , GRA_CLR_WHITE              }, ;
+      { XBP_PP_COL_HA_BGCLR        , RGB( 140,170,240 )         }, ;
+      { XBP_PP_COL_HA_HEIGHT       , 20                         }, ;
+      { XBP_PP_COL_DA_FGCLR        , GRA_CLR_BLACK              }, ;
+      { XBP_PP_COL_DA_BGCLR        , GRA_CLR_DARKGREEN          }, ;
+      { XBP_PP_COL_DA_HILITE_FGCLR , GRA_CLR_WHITE              }, ;
+      { XBP_PP_COL_DA_HILITE_BGCLR , GRA_CLR_DARKGRAY           }, ;
+      { XBP_PP_COL_DA_ROWSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
+      { XBP_PP_COL_DA_COLSEPARATOR , XBPCOL_SEP_DOTTED          }, ;
+      { XBP_PP_COL_DA_ROWHEIGHT    , 20                         }  }
+   //
+   oXbpColumn          := XbpColumn():new( , , , , aPresParam )
+   oXbpColumn:dataLink := {|| test->Salary }
+   oXbpColumn:create()
+   oXbpColumn:colorBlock := {|x| IF( x < 40000, { NIL, RGB( 255,0,0 ) }, {NIL,NIL} ) }
+   //
+   oXbpBrowse:addColumn( oXbpColumn )
 
    RETURN nil
 

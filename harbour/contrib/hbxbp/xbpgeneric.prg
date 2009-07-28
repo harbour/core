@@ -69,6 +69,7 @@
 
 #include "xbp.ch"
 #include "gra.ch"
+#include "appevent.ch"
 
 #include "hbqt.ch"
 
@@ -379,6 +380,24 @@ FUNCTION ConvertAFact( cMode, nFrom, xValue )
       aadd( a_, { XBPRTF_ALIGN_LEFT  , Qt_AlignLeft    } )
       aadd( a_, { XBPRTF_ALIGN_RIGHT , Qt_AlignRight   } )
       aadd( a_, { XBPRTF_ALIGN_CENTER, Qt_AlignCenter  } )
+
+   CASE cMode == "ALIGNMENT"
+      aadd( a_, { XBPALIGN_TOP    , Qt_AlignTop        } )
+      aadd( a_, { XBPALIGN_BOTTOM , Qt_AlignBottom     } )
+      aadd( a_, { XBPALIGN_LEFT   , Qt_AlignLeft       } )
+      aadd( a_, { XBPALIGN_RIGHT  , Qt_AlignRight      } )
+      aadd( a_, { XBPALIGN_VCENTER, Qt_AlignVCenter    } )
+      aadd( a_, { XBPALIGN_HCENTER, Qt_AlignHCenter    } )
+
+   CASE cMode == "BRWNAVIGATE"
+      aadd( a_, { xbeK_DOWN , QAbstractItemView_MoveDown      } )
+      aadd( a_, { xbeK_UP   , QAbstractItemView_MoveUp        } )
+      aadd( a_, { xbeK_RIGHT, QAbstractItemView_MoveRight     } )
+      aadd( a_, { xbeK_LEFT , QAbstractItemView_MoveLeft      } )
+      aadd( a_, { xbeK_HOME , QAbstractItemView_MoveHome      } )
+      aadd( a_, { xbeK_END  , QAbstractItemView_MoveEnd       } )
+      aadd( a_, { xbeK_PGUP , QAbstractItemView_MovePageUp    } )
+      aadd( a_, { xbeK_PGDN , QAbstractItemView_MovePageDown  } )
 
    CASE cMode == "SOMEOTHER"
 
