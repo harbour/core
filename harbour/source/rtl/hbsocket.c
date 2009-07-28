@@ -1189,6 +1189,7 @@ static int hb_socketSelectRD( HB_SOCKET_T sd, HB_LONG timeout )
          if( timecurr > timer )
          {
             timeout -= timecurr - timer;
+            timer = timecurr;
             if( timeout > 0 )
                continue;
          }
@@ -1236,6 +1237,7 @@ static int hb_socketSelectWR( HB_SOCKET_T sd, HB_LONG timeout )
          if( timecurr > timer )
          {
             timeout -= timecurr - timer;
+            timer = timecurr;
             if( timeout > 0 )
                continue;
          }
@@ -1297,6 +1299,7 @@ static int hb_socketSelectWRE( HB_SOCKET_T sd, HB_LONG timeout )
          if( timecurr > timer )
          {
             timeout -= timecurr - timer;
+            timer = timecurr;
             if( timeout > 0 )
                continue;
          }
