@@ -80,6 +80,9 @@
    platform supports getaddrinfo()/freeaddrinfo() functions:
       #define HB_HAS_ADDRINFO
 
+   platform supports constant inet6 addresses in6addr_any and in6addr_loopback:
+      #define HB_HAS_INET6_ADDR_CONST
+
    platform supports IP6 protocol:
       #define HB_HAS_INET6
 
@@ -117,6 +120,7 @@
 #     define HB_HAS_INET6
 #     define HB_HAS_SOCKADDR_STORAGE
 #     define HB_HAS_ADDRINFO
+#     define HB_HAS_INET6_ADDR_CONST
 #  endif
 #  if defined( HB_OS_LINUX )
 #     define HB_HAS_SELECT_TIMER
@@ -2294,8 +2298,12 @@ int hb_socketSetMulticast( HB_SOCKET_T sd, int af, const char * szAddr )
       int err = inet_pton( AF_INET6, szAddr, &mreq.ipv6mr_multiaddr );
       if( err > 0 )
       {
+#if defined( HB_HAS_INET6_ADDR_CONST )
+         memcpy( &mreq.ipv6mr_interface, &in6addr_any, sizeof( struct in6_addr ) );
+#else
          const struct in6_addr ia = IN6ADDR_ANY_INIT;
          memcpy( &mreq.ipv6mr_interface, &ia, sizeof( struct in6_addr ) );
+#endif
          return setsockopt( sd, IPPROTO_IPV6, IPV6_JOIN_GROUP, ( const char * ) &mreq, sizeof( mreq ) );
       }
       else if( err == 0 )
