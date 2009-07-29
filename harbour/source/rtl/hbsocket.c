@@ -2579,8 +2579,19 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
          he = gethostbyname( szAddr );
 
       if( he && he->h_addr_list[ 0 ] )
-         szResult = hb_strdup( he->h_addr_list[ 0 ] );
-
+      {
+         struct in_addr * sin = ( struct in_addr * ) he->h_addr_list[ 0 ];
+#  if defined( HB_HAS_INET_NTOP )
+         char buf[ INET_ADDRSTRLEN ];
+         szAddr = inet_ntop( AF_INET, sin, buf, sizeof( buf ) );
+#  elif defined( HB_IS_INET_NTOA_MT_SAFE )
+         szAddr = inet_ntoa( *sin );
+#  else
+         char buf[ INET_ADDRSTRLEN ];
+         szAddr = hb_inet_ntoa( sin, buf );
+#  endif
+         szResult = hb_strdup( szAddr );
+      }
       hb_vmLock();
    }
 #if defined( HB_HAS_INET6 )
@@ -2736,7 +2747,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
          pItem = hb_itemArrayNew( iCount );
          do
          {
-             struct in_addr * sin = ( struct in_addr * ) he->h_addr_list[ iCount - 1 ];
+            struct in_addr * sin = ( struct in_addr * ) he->h_addr_list[ iCount - 1 ];
 #  if defined( HB_HAS_INET_NTOP )
             char buf[ INET_ADDRSTRLEN ];
             szAddr = inet_ntop( AF_INET, sin, buf, sizeof( buf ) );
