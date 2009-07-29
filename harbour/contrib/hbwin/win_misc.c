@@ -50,6 +50,17 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
+ *    WIN_SYSREFRESH()
+ *
+ * See COPYING for licensing terms.
+ *
+ */
+
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
@@ -238,4 +249,56 @@ HB_FUNC( WIN_LOWORD )
 HB_FUNC( WIN_HIWORD )
 {
    hb_retni( ( int ) HIWORD( ( DWORD ) hb_parnl( 1 ) ) );
+}
+
+HB_FUNC( WIN_SYSREFRESH )
+{
+   DWORD dwMsec = ( DWORD ) hb_parnl( 1 );
+
+   HANDLE hDummyEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
+
+   /* Begin the operation and continue until it is complete
+      or until the user clicks the mouse or presses a key. */
+
+   if( MsgWaitForMultipleObjects( 1, &hDummyEvent, FALSE, ( dwMsec == 0 ? INFINITE : dwMsec ), QS_ALLINPUT | QS_ALLPOSTMESSAGE ) == WAIT_OBJECT_0 + 1 )
+   {
+      MSG msg;
+
+      while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
+      {
+         switch( msg.message )
+         {
+            case WM_CLOSE:
+            {
+               CloseHandle( hDummyEvent );
+               hb_retni( 1 );
+               return;
+            }
+            case WM_QUIT:
+            {
+               CloseHandle( hDummyEvent );
+               hb_retnint( msg.wParam );
+               return;
+            }
+#if 0
+            case WM_LBUTTONDOWN:
+            case WM_RBUTTONDOWN:
+            case WM_KEYDOWN:
+            case WM_LBUTTONUP:
+            case WM_RBUTTONUP:
+            case WM_KEYUP:
+               /* Perform any required cleanup. */
+               break;
+               /* exit; */
+
+#endif
+            default:
+               TranslateMessage( &msg );
+               DispatchMessage( &msg );
+         }
+      }
+   }
+
+   CloseHandle( hDummyEvent );
+   hb_retni( 0 );
 }

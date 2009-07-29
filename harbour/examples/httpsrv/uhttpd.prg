@@ -607,7 +607,7 @@ FUNCTION MAIN( ... )
 
       DO WHILE .T.
 
-#ifdef USE_WIN_ADDONS
+#ifdef __PLATFORM__WINDOWS
          // windows resource releasing - 1 millisecond wait
          IF WIN_SYSREFRESH( 1 ) != 0
             EXIT
@@ -754,7 +754,7 @@ STATIC FUNCTION AcceptConnections()
       // reset socket
       hSocket := NIL
 
-#ifdef USE_WIN_ADDONS
+#ifdef __PLATFORM__WINDOWS
       // releasing resources
       IF WIN_SYSREFRESH( 1 ) != 0
          lQuitRequest := TRUE
@@ -902,7 +902,7 @@ STATIC FUNCTION ProcessConnection()
       // Reset socket
       hSocket := NIL
 
-#ifdef USE_WIN_ADDONS
+#ifdef __PLATFORM__WINDOWS
       // releasing resources
       IF WIN_SYSREFRESH( 1 ) != 0
          lQuitRequest := TRUE
@@ -1065,7 +1065,7 @@ STATIC FUNCTION ServiceConnection()
       // Reset socket
       hSocket := NIL
 
-#ifdef USE_WIN_ADDONS
+#ifdef __PLATFORM__WINDOWS
       // releasing resources
       IF WIN_SYSREFRESH( 1 ) != 0
          lQuitRequest := TRUE
@@ -1505,7 +1505,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
       cDate    := DTOS( dDate )
       nSize    := LEN( t_cResult )
       cReferer := _SERVER[ "HTTP_REFERER" ]
-      cBias    := hb_UTCOffset()
+      cBias    := uhttpd_UTCOffset()
 
       cAccess := _SERVER[ "REMOTE_ADDR" ] + " - - [" + RIGHT( cDate, 2 ) + "/" + ;
                        aMonths[ VAL( SUBSTR( cDate, 5, 2 ) ) ] + ;
@@ -2935,3 +2935,9 @@ STATIC FUNCTION GT_notifier( nEvent, xParams )
   HB_SYMBOL_UNUSED( xParams )
 
 RETURN nReturn
+
+STATIC FUNCTION UHTTPD_UTCOFFSET()
+   LOCAL nOffset := HB_UTCOFFSET()
+   RETURN iif( nOffset < 0, "-", "+" ) +;
+          StrZero( nOffset / 3600, 2, 0 ) +;
+          StrZero( ( nOffset % 3600 ) / 60, 2, 0 )
