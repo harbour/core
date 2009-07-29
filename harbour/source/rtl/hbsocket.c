@@ -2337,14 +2337,7 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
       int err = inet_pton( AF_INET6, szAddr, &mreq.ipv6mr_multiaddr );
       if( err > 0 )
       {
-#if defined( HB_HAS_INET6_ADDR_CONST )
-         memcpy( &mreq.ipv6mr_interface, &in6addr_any, sizeof( struct in6_addr ) );
-#elif defined( IN6ADDR_ANY_INIT )
-         memcpy( &mreq.ipv6mr_interface, &s_in6addr_any, sizeof( struct in6_addr ) );
-#else
-         int TODO;
-         memset( &mreq.ipv6mr_interface, 0, sizeof( struct in6_addr ) );
-#endif
+         mreq.ipv6mr_interface = 0;
          return setsockopt( sd, IPPROTO_IPV6, IPV6_JOIN_GROUP, ( const char * ) &mreq, sizeof( mreq ) );
       }
       else if( err == 0 )
