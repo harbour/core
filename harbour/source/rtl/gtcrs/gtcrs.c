@@ -906,7 +906,7 @@ static void write_ttyseq( InOutBase * ioBase, const char *seq )
       fflush( ioBase->baseout );
    }
    else
-      write( ioBase->base_outfd, seq, strlen( seq ) );
+      ( void ) write( ioBase->base_outfd, seq, strlen( seq ) );
 }
 
 static int addKeyMap( InOutBase * ioBase, int nKey, const char *cdesc )
@@ -1408,11 +1408,11 @@ static void gt_outstr( InOutBase * ioBase, int fd, const char *str,
          else
             buf[i] = c;
       }
-      write( fd, buf, len );
+      ( void ) write( fd, buf, len );
       hb_xfree( buf );
    }
    else
-      write( fd, str, len );
+      ( void ) write( fd, str, len );
 }
 
 static void gt_outstd( InOutBase * ioBase, const char *str, int len )
