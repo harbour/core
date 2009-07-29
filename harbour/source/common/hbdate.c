@@ -87,6 +87,9 @@
 #     define timeb _timeb
 #     define ftime _ftime
 #  endif
+#  ifndef TIME_ZONE_ID_INVALID
+#     define TIME_ZONE_ID_INVALID ( DWORD ) 0xFFFFFFFF
+#  endif
 #endif
 
 
@@ -893,4 +896,33 @@ void hb_timeStampUnpackD( double dTimeStamp,
 
    if( pdSeconds )
       *pdSeconds = ( double ) iSeconds + ( double ) iMSec / 1000;
+}
+
+long hb_timeUTCOffset( void ) /* in seconds */
+{
+#if defined( HB_OS_WIN )
+   {
+      TIME_ZONE_INFORMATION tzInfo;
+      DWORD retval = GetTimeZoneInformation( &tzInfo );
+
+      if( retval == TIME_ZONE_ID_INVALID )
+         return 0;
+      else
+         return -( tzInfo.Bias + ( retval == TIME_ZONE_ID_STANDARD ? tzInfo.StandardBias : tzInfo.DaylightBias ) ) * 60;
+   }
+#else
+   {
+      struct tm tmTime;
+      time_t current;
+
+      time( &current );
+#  if defined( HB_HAS_LOCALTIME_R )
+      localtime_r( &current, &tmTime );
+#  else
+      tmTime = *localtime( &current );
+#  endif
+
+      return tmTime.tm_gmtoff;
+   }
+#endif
 }

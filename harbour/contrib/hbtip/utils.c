@@ -63,21 +63,11 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
 #include "hbdate.h"
-
-#if defined( HB_OS_WIN )
-   #ifndef TIME_ZONE_ID_INVALID
-      #define TIME_ZONE_ID_INVALID ( DWORD ) 0xFFFFFFFF
-   #endif
-#else
-   #include <time.h>
-#endif
 
 /************************************************************
 * Useful internet timestamp based on RFC822
@@ -85,23 +75,12 @@
 
 HB_FUNC( TIP_TIMESTAMP )
 {
+   static const char * s_days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+   static const char * s_months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
    char szRet[ 64 ];
-
-/* sadly, many strftime windows implementations are broken */
-#if defined( HB_OS_WIN )
-
-   int iYear, iMonth, iDay, iHour, iMinute, iSecond, iMSec, iTZBias;
-
-   /* Detect TZ bias */
-   {
-      TIME_ZONE_INFORMATION tzInfo;
-      DWORD retval = GetTimeZoneInformation( &tzInfo );
-
-      if( retval == TIME_ZONE_ID_INVALID )
-         iTZBias = 0;
-      else
-         iTZBias = -( tzInfo.Bias + ( retval == TIME_ZONE_ID_STANDARD ? tzInfo.StandardBias : tzInfo.DaylightBias ) );
-   }
+   int iYear, iMonth, iDay, iHour, iMinute, iSecond, iMSec;
+   long lOffset = hb_timeUTCOffset();
 
    if( HB_ISDATE( 1 ) )
    {
@@ -123,67 +102,11 @@ HB_FUNC( TIP_TIMESTAMP )
       iSecond = ( int )   ( ulHour % 60 );
    }
 
-   {
-      static const char * s_days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-      static const char * s_months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-
-      hb_snprintf( szRet, sizeof( szRet ), "%s, %d %s %d %02d:%02d:%02d %+03d%02d",
-         s_days[ hb_dateDOW( iYear, iMonth, iDay ) - 1 ], iDay, s_months[ iMonth - 1 ],
-         iYear, iHour, iMinute, iSecond,
-         ( int ) iTZBias / 60,
-         ( int ) iTZBias % 60 );
-   }
-
-#else
-
-   struct tm tmTime;
-   time_t current;
-
-   /* init time structure anyway */
-   time( &current );
-#if defined( HB_HAS_LOCALTIME_R )
-   localtime_r( &current, &tmTime );
-#else
-   tmTime = *localtime( &current );
-#endif
-
-   if( HB_ISDATE( 1 ) )
-   {
-      int iYear, iMonth, iDay;
-
-      hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
-
-      tmTime.tm_year = iYear - 1900;
-      tmTime.tm_mon  = iMonth - 1;
-      tmTime.tm_mday = iDay;
-   }
-   else if( HB_ISDATETIME( 1 ) )
-   {
-      int iYear, iMonth, iDay, iHour, iMinute, iSecond, iMSec;
-
-      hb_timeStampUnpack( hb_partd( 1 ), &iYear, &iMonth, &iDay, &iHour, &iMinute, &iSecond, &iMSec );
-
-      tmTime.tm_year = iYear - 1900;
-      tmTime.tm_mon  = iMonth - 1;
-      tmTime.tm_mday = iDay;
-      tmTime.tm_hour = iHour;
-      tmTime.tm_min  = iMinute;
-      tmTime.tm_sec  = iSecond;
-   }
-
-   /* For compatibility */
-   if( HB_ISNUM( 2 ) )
-   {
-      ULONG ulHour = hb_parnl( 2 );
-
-      tmTime.tm_hour = ulHour / 3600;
-      tmTime.tm_min  = ( ulHour % 3600 ) / 60;
-      tmTime.tm_sec  = ulHour % 60;
-   }
-
-   strftime( szRet, sizeof( szRet ), "%a, %d %b %Y %H:%M:%S %z", &tmTime );
-
-#endif
+   hb_snprintf( szRet, sizeof( szRet ), "%s, %d %s %d %02d:%02d:%02d %+03d%02d",
+      s_days[ hb_dateDOW( iYear, iMonth, iDay ) - 1 ], iDay, s_months[ iMonth - 1 ],
+      iYear, iHour, iMinute, iSecond,
+      ( int ) lOffset / 3600,
+      ( int ) ( lOffset % 3600 ) / 60 );
 
    hb_retc( szRet );
 }

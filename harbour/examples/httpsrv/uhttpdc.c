@@ -143,35 +143,11 @@ HB_FUNC( WIN_SYSREFRESH )
 HB_FUNC( HB_UTCOFFSET )
 {
    char szRet[ 6 ];
+   long offset = hb_timeUTCOffset();
 
-#if defined( HB_OS_WIN )
-   {
-      TIME_ZONE_INFORMATION tzInfo;
-      DWORD retval = GetTimeZoneInformation( &tzInfo );
-
-      if( retval == TIME_ZONE_ID_INVALID )
-         tzInfo.Bias = 0;
-      else
-         tzInfo.Bias = -( tzInfo.Bias + ( retval == TIME_ZONE_ID_STANDARD ? tzInfo.StandardBias : tzInfo.DaylightBias ) );
-
-      hb_snprintf( szRet, sizeof( szRet ), "%+03d%02d",
-         ( int ) ( tzInfo.Bias / 60 ),
-         ( int ) ( tzInfo.Bias % 60 > 0 ? - tzInfo.Bias % 60 : tzInfo.Bias % 60 ) );
-   }
-#else
-   {
-      struct tm tmTime;
-      time_t current;
-
-      time( &current );
-#  if defined( HB_HAS_LOCALTIME_R )
-      localtime_r( &current, &tmTime );
-#  else
-      tmTime = *localtime( &current );
-#  endif
-      strftime( szRet, sizeof( szRet ), "%z", &tmTime );
-   }
-#endif
+   hb_snprintf( szRet, sizeof( szRet ), "%+03d%02d",
+      ( int ) ( offset / 3600 ),
+      ( int ) ( ( offset % 3600 ) / 60 ) );
 
    hb_retc( szRet );
 }
