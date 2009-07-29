@@ -724,6 +724,9 @@ static void hb_socketSetOsError( int err )
 #if defined( HB_OS_WIN )
    switch( err )
    {
+      case 0:
+         uiErr = 0;
+         break;
       case WSAEINTR:
          uiErr = HB_SOCKET_ERR_INTERRUPT;
          break;
@@ -913,6 +916,9 @@ static void hb_socketSetOsError( int err )
 #else
    switch( err )
    {
+      case 0:
+         uiErr = 0;
+         break;
 #if defined( EPFNOSUPPORT )
       case EPFNOSUPPORT:
          uiErr = HB_SOCKET_ERR_PFNOSUPPORT;
@@ -2026,6 +2032,13 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
             *puiLen = ( unsigned ) len;
          }
       }
+      /* it's not guarantied that socket returned by accept will use
+       * blocking IO operations. On some systems it inherits blocking IO
+       * from parent handler so we have to force blocking IO mode
+       * explicitly..
+       */
+      if( newsd != HB_NO_SOCKET )
+         hb_socketSetBlockingIO( newsd, TRUE );
    }
    else if( ret == 0 )
       hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
