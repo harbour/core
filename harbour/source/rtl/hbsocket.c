@@ -144,7 +144,7 @@
 #     define HB_HAS_INET_PTON
 #     define HB_HAS_INET_NTOP
 #  else
-   /* test shows that GCC 3.3.6 does not supported inet_pton() and inet_ntop() */
+   /* test shows that GCC 3.3.6 does not support inet_pton() and inet_ntop() */
 #  endif
 #endif
 
@@ -670,7 +670,7 @@ static int s_iSessions;
 
 #if defined( HB_HAS_INET6 ) && !defined( HB_HAS_INET6_ADDR_CONST ) && \
     defined( IN6ADDR_ANY_INIT )
-   const struct in6_addr s_in6addr_any = IN6ADDR_ANY_INIT;
+   static const struct in6_addr s_in6addr_any = IN6ADDR_ANY_INIT;
 #endif
 
 #if !defined( HB_HAS_INET_NTOP ) && !defined( HB_IS_INET_NTOA_MT_SAFE ) && defined( AF_INET )
