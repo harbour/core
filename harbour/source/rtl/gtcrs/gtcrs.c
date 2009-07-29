@@ -898,15 +898,23 @@ static int wait_key( InOutBase * ioBase, int milisec )
    return nKey;
 }
 
-static void write_ttyseq( InOutBase * ioBase, const char *seq )
+static BOOL write_ttyseq( InOutBase * ioBase, const char *seq )
 {
+   BOOL success;
+
    if ( ioBase->baseout != NULL )
    {
-      fwrite( seq, strlen( seq ), 1, ioBase->baseout );
+      size_t seqlen = strlen( seq );
+      success = ( fwrite( seq, seqlen, 1, ioBase->baseout ) == seqlen );
       fflush( ioBase->baseout );
    }
    else
-      ( void ) write( ioBase->base_outfd, seq, strlen( seq ) );
+   {
+      int seqlen = strlen( seq );
+      success = ( write( ioBase->base_outfd, seq, seqlen ) == seqlen );
+   }
+
+   return success;
 }
 
 static int addKeyMap( InOutBase * ioBase, int nKey, const char *cdesc )
@@ -1391,11 +1399,12 @@ static void gt_ttyrestore( InOutBase * ioBase )
       tcsetattr( ioBase->base_infd, TCSANOW, &ioBase->saved_TIO );
 }
 
-static void gt_outstr( InOutBase * ioBase, int fd, const char *str,
+static BOOL gt_outstr( InOutBase * ioBase, int fd, const char *str,
                        int len )
 {
    unsigned char *buf, c;
    int i;
+   BOOL success;
 
    if ( ioBase->out_transtbl != NULL )
    {
@@ -1408,11 +1417,13 @@ static void gt_outstr( InOutBase * ioBase, int fd, const char *str,
          else
             buf[i] = c;
       }
-      ( void ) write( fd, buf, len );
+      success = ( write( fd, buf, len ) == len );
       hb_xfree( buf );
    }
    else
-      ( void ) write( fd, str, len );
+      success = ( write( fd, str, len ) == len );
+
+   return success;
 }
 
 static void gt_outstd( InOutBase * ioBase, const char *str, int len )
