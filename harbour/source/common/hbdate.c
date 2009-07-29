@@ -255,9 +255,9 @@ void hb_dateDecode( long lJulian, int *piYear, int *piMonth, int *piDay )
       V = 80 * lJulian / 2447;
       U = V / 11;
 
-      *piYear  = (int) ( X + U + ( W - 49 ) * 100 );
-      *piMonth = (int) ( V + 2 - ( U * 12 ) );
-      *piDay   = (int) ( lJulian - ( 2447 * V / 80 ) );
+      *piYear  = ( int ) ( X + U + ( W - 49 ) * 100 );
+      *piMonth = ( int ) ( V + 2 - ( U * 12 ) );
+      *piDay   = ( int ) ( lJulian - ( 2447 * V / 80 ) );
    }
    else
    {

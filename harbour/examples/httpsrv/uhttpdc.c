@@ -142,23 +142,21 @@ HB_FUNC( WIN_SYSREFRESH )
 
 HB_FUNC( HB_UTCOFFSET )
 {
-   char * szRet = ( char * ) hb_xgrab( 6 );
-   int nLen;
+   char szRet[ 6 ];
 
 #if defined( HB_OS_WIN )
    {
       TIME_ZONE_INFORMATION tzInfo;
+      DWORD retval = GetTimeZoneInformation( &tzInfo );
 
-      if( GetTimeZoneInformation( &tzInfo ) == TIME_ZONE_ID_INVALID )
+      if( retval == TIME_ZONE_ID_INVALID )
          tzInfo.Bias = 0;
       else
-         tzInfo.Bias = -tzInfo.Bias;
+         tzInfo.Bias = -( tzInfo.Bias + ( retval == TIME_ZONE_ID_STANDARD ? tzInfo.StandardBias : tzInfo.DaylightBias ) );
 
-      hb_snprintf( szRet, 6, "%+03d%02d",
-                ( int )( tzInfo.Bias / 60 ),
-                ( int )( tzInfo.Bias % 60 > 0 ? - tzInfo.Bias % 60 : tzInfo.Bias % 60 ) );
-
-      nLen = strlen( szRet );
+      hb_snprintf( szRet, sizeof( szRet ), "%+03d%02d",
+         ( int ) ( tzInfo.Bias / 60 ),
+         ( int ) ( tzInfo.Bias % 60 > 0 ? - tzInfo.Bias % 60 : tzInfo.Bias % 60 ) );
    }
 #else
    {
@@ -171,12 +169,9 @@ HB_FUNC( HB_UTCOFFSET )
 #  else
       tmTime = *localtime( &current );
 #  endif
-      nLen = strftime( szRet, 6, "%z", &tmTime );
+      strftime( szRet, sizeof( szRet ), "%z", &tmTime );
    }
 #endif
 
-   if( nLen < 6 )
-      szRet = ( char * ) hb_xrealloc( szRet, nLen + 1 );
-
-   hb_retclen_buffer( szRet, nLen );
+   hb_retc( szRet );
 }

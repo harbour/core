@@ -2,18 +2,20 @@
  * $Id$
  */
 
-/******************************************
-* TIP test
-* timestamp encoding and decoding
-*
-* Usage:
-* base64test "timestamp"
-*****/
+/*
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+ * www - http://www.harbour-project.org
+ */
 
-PROCEDURE MAIN( cTimeStamp )
+#include "simpleio.ch"
 
-   IF cTimeStamp == NIL
-      ? "Now is:", TIP_Timestamp()
-      ?
-   ENDIF
-RETURN
+PROCEDURE Main()
+
+   ? ">" + TIP_TIMESTAMP() + "<"
+   ? ">" + TIP_TIMESTAMP( NIL, 200 ) + "<"
+   ? ">" + TIP_TIMESTAMP( Date() ) + "<"
+   ? ">" + TIP_TIMESTAMP( Date(), 200 ) + "<"
+   ? ">" + TIP_TIMESTAMP( hb_DateTime() ) + "<"
+   ? ">" + TIP_TIMESTAMP( hb_DateTime(), 200 ) + "<"
+
+   RETURN

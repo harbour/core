@@ -56,6 +56,8 @@
  *
  * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
  *    hb_strAtI()
+ *    TIP_TIMESTAMP() rework
+ *    cleanup
  *
  * See COPYING for licensing terms.
  *
@@ -83,50 +85,54 @@
 
 HB_FUNC( TIP_TIMESTAMP )
 {
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-   ULONG ulHour = hb_parnl( 2 );
-   int nLen;
-   char * szRet = ( char * ) hb_xgrab( 64 );
+   char szRet[ 64 ];
 
 /* sadly, many strftime windows implementations are broken */
 #if defined( HB_OS_WIN )
 
-   TIME_ZONE_INFORMATION tzInfo;
-   static const char * s_days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-   static const char * s_months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+   int iYear, iMonth, iDay, iHour, iMinute, iSecond, iMSec, iTZBias;
 
-   if( GetTimeZoneInformation( &tzInfo ) == TIME_ZONE_ID_INVALID )
-      tzInfo.Bias = 0;
-
-   if( ! pDate )
+   /* Detect TZ bias */
    {
-      SYSTEMTIME st;
+      TIME_ZONE_INFORMATION tzInfo;
+      DWORD retval = GetTimeZoneInformation( &tzInfo );
 
-      GetLocalTime( &st );
-
-      hb_snprintf( szRet, 64, "%s, %u %s %u %02u:%02u:%02u %+03d%02d",
-            s_days[ st.wDayOfWeek ], st.wDay, s_months[ st.wMonth - 1 ],
-            st.wYear,
-            st.wHour, st.wMinute, st.wSecond,
-            ( int ) ( tzInfo.Bias / 60 ),
-            ( int ) ( tzInfo.Bias % 60 > 0 ? - tzInfo.Bias % 60 : tzInfo.Bias % 60 ) );
+      if( retval == TIME_ZONE_ID_INVALID )
+         iTZBias = 0;
+      else
+         iTZBias = -( tzInfo.Bias + ( retval == TIME_ZONE_ID_STANDARD ? tzInfo.StandardBias : tzInfo.DaylightBias ) );
    }
+
+   if( HB_ISDATE( 1 ) )
+   {
+      hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
+      iHour = iMinute = iSecond = 0;
+   }
+   else if( HB_ISDATETIME( 1 ) )
+      hb_timeStampUnpack( hb_partd( 1 ), &iYear, &iMonth, &iDay, &iHour, &iMinute, &iSecond, &iMSec );
    else
+      hb_timeStampGetLocal( &iYear, &iMonth, &iDay, &iHour, &iMinute, &iSecond, &iMSec );
+
+   /* For compatibility */
+   if( HB_ISNUM( 2 ) )
    {
-      long lDate = hb_itemGetDL( pDate );
-      int iYear, iMonth, iDay;
+      ULONG ulHour = hb_parnl( 2 );
 
-      hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
-
-      hb_snprintf( szRet, 64, "%s, %d %s %d %02u:%02u:%02u %+03d%02d",
-            s_days[ hb_dateDOW( iYear, iMonth, iDay ) - 1 ], iDay,
-            s_months[ iMonth - 1 ], iYear,
-            ( unsigned int )( ulHour / 3600 ), ( unsigned int )( ( ulHour % 3600 ) / 60 ), ( unsigned int ) ( ulHour % 60 ),
-            ( int ) ( tzInfo.Bias / 60 ),
-            ( int ) ( tzInfo.Bias % 60 > 0 ? - tzInfo.Bias % 60 : tzInfo.Bias % 60 ) );
+      iHour   = ( int )   ( ulHour / 3600 );
+      iMinute = ( int ) ( ( ulHour % 3600 ) / 60 );
+      iSecond = ( int )   ( ulHour % 60 );
    }
 
-   nLen = strlen( szRet );
+   {
+      static const char * s_days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+      static const char * s_months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
+      hb_snprintf( szRet, sizeof( szRet ), "%s, %d %s %d %02d:%02d:%02d %+03d%02d",
+         s_days[ hb_dateDOW( iYear, iMonth, iDay ) - 1 ], iDay, s_months[ iMonth - 1 ],
+         iYear, iHour, iMinute, iSecond,
+         ( int ) iTZBias / 60,
+         ( int ) iTZBias % 60 );
+   }
 
 #else
 
@@ -141,39 +147,45 @@ HB_FUNC( TIP_TIMESTAMP )
    tmTime = *localtime( &current );
 #endif
 
-   if( pDate )
+   if( HB_ISDATE( 1 ) )
    {
-      char szDate[ 9 ];
+      int iYear, iMonth, iDay;
 
-      hb_itemGetDS( pDate, szDate );
+      hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
 
-      tmTime.tm_year = (
-         ( szDate[ 0 ] - '0' ) * 1000 +
-         ( szDate[ 1 ] - '0' ) * 100 +
-         ( szDate[ 2 ] - '0' ) * 10 +
-         ( szDate[ 3 ] - '0' ) ) -1900;
+      tmTime.tm_year = iYear - 1900;
+      tmTime.tm_mon  = iMonth - 1;
+      tmTime.tm_mday = iDay;
+   }
+   else if( HB_ISDATETIME( 1 ) )
+   {
+      int iYear, iMonth, iDay, iHour, iMinute, iSecond, iMSec;
 
-      tmTime.tm_mon = (
-         ( szDate[ 4 ] - '0' ) * 10 +
-         ( szDate[ 5 ] - '0' ) ) - 1;
+      hb_timeStampUnpack( hb_partd( 1 ), &iYear, &iMonth, &iDay, &iHour, &iMinute, &iSecond, &iMSec );
 
-      tmTime.tm_mday =
-         ( szDate[ 6 ] - '0' ) * 10 +
-         ( szDate[ 7 ] - '0' );
-
-      tmTime.tm_hour = ulHour / 3600;
-      tmTime.tm_min = ( ulHour % 3600 ) / 60;
-      tmTime.tm_sec = ( ulHour % 60 );
+      tmTime.tm_year = iYear - 1900;
+      tmTime.tm_mon  = iMonth - 1;
+      tmTime.tm_mday = iDay;
+      tmTime.tm_hour = iHour;
+      tmTime.tm_min  = iMinute;
+      tmTime.tm_sec  = iSecond;
    }
 
-   nLen = strftime( szRet, 64, "%a, %d %b %Y %H:%M:%S %z", &tmTime );
+   /* For compatibility */
+   if( HB_ISNUM( 2 ) )
+   {
+      ULONG ulHour = hb_parnl( 2 );
+
+      tmTime.tm_hour = ulHour / 3600;
+      tmTime.tm_min  = ( ulHour % 3600 ) / 60;
+      tmTime.tm_sec  = ulHour % 60;
+   }
+
+   strftime( szRet, sizeof( szRet ), "%a, %d %b %Y %H:%M:%S %z", &tmTime );
 
 #endif
 
-   if( nLen < 64 )
-      szRet = ( char * ) hb_xrealloc( szRet, nLen + 1 );
-
-   hb_retclen_buffer( szRet, nLen );
+   hb_retc( szRet );
 }
 
 /** Detects the mimetype of a given file */
