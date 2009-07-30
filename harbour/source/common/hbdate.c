@@ -912,20 +912,20 @@ long hb_timeUTCOffset( void ) /* in seconds */
    }
 #else
    {
-      struct tm * timeinfo;
+      struct tm timeinfo;
       time_t current, utc, local;
 
       time( &current );
-      timeinfo = gmtime( &current );
-      utc = mktime( timeinfo );
-#  if defined( HB_HAS_LOCALTIME_R )
-      localtime_r( &current, timeinfo );
-#  else
-      timeinfo = localtime( &current );
-#  endif
-      local = mktime( timeinfo );
+      utc = mktime( gmtime( &current ) );
 
-      return difftime( local, utc ) + ( timeinfo->tm_isdst ? 3600 : 0 );
+#if defined( HB_HAS_LOCALTIME_R )
+      localtime_r( &current, &timeinfo );
+#else
+      timeinfo = *localtime( &current );
+#endif
+      local = mktime( &timeinfo );
+
+      return difftime( local, utc ) + ( timeinfo.tm_isdst ? 3600 : 0 );
    }
 #endif
 }
