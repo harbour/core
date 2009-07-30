@@ -113,17 +113,12 @@
    #stdout "Lib GD support disabled"
 #endif
 
-/* Force Harbour socket on non-Window systems */
-#if ! defined( __PLATFORM__WINDOWS ) .AND. ! defined( USE_HB_INET )
-   #define USE_HB_INET
-#endif
-
 #ifdef USE_HB_INET
    #define APP_INET_SUPPORT "_INET"
-   #stdout "Harbour socket"
+   #stdout "inet socket API"
 #else
    #define APP_INET_SUPPORT ""
-   #stdout "Mindaugas socket"
+   #stdout "custom socket API"
 #endif
 
 #ifdef FIXED_THREADS

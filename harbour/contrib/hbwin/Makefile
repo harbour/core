@@ -23,6 +23,8 @@ C_SOURCES = \
 	axcore.c \
 	legacycd.c \
 	legacyco.c \
+	wce_simc.c \
+	wce_smsc.c \
 	win_dll.c \
 	win_misc.c \
 	win_osc.c \
@@ -39,6 +41,7 @@ PRG_SOURCES = \
 	legacy.prg \
 	oleauto.prg \
 	axfunc.prg \
+	wce_sim.prg \
 	win_os.prg \
 	win_reg.prg \
 	win_tprn.prg \

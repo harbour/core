@@ -65,6 +65,10 @@
 
 #include "hbapi.h"
 
+#ifndef QS_ALLPOSTMESSAGE
+#define QS_ALLPOSTMESSAGE   0x0100
+#endif
+
 HB_FUNC( WIN_RUNDETACHED )
 {
    LPTSTR lpCommandName = HB_ISCHAR( 1 ) ? HB_TCHAR_CONVTO( hb_parc( 1 ) ) : NULL;
