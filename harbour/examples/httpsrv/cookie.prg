@@ -106,7 +106,7 @@ METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpO
 
    ::lHttpOnly := lHttpOnly
 
-   IF !Empty( xValue )
+   IF xValue != NIL
       // Search if a cookie already exists
                                         // case sensitive
       IF ( nPos := aScan( ::aCookies, {|e| e[ 1 ] == cCookieName } ) ) > 0

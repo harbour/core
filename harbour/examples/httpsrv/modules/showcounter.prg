@@ -60,10 +60,10 @@ MEMVAR _REQUEST // defined in uHTTPD
 #include "gd.ch"
 
 #ifdef __PLATFORM__UNIX
-#define IMAGES_IN  "../../hbgd/tests/digits/"
+#define IMAGES_IN  "../../../contrib/hbgd/tests/digits/"
 #define IMAGES_OUT ( _SERVER[ "DOCUMENT_ROOT" ] + "/counter/" )
 #else
-#define IMAGES_IN  "..\..\hbgd\tests\digits\"
+#define IMAGES_IN  "..\..\..\contrib\hbgd\tests\digits\"
 #define IMAGES_OUT ( _SERVER[ "DOCUMENT_ROOT" ] + "\counter\" )
 #endif
 
@@ -114,6 +114,8 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
       //hb_ToOutDebug( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found" )
       //THROW( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found" )
       RETURN NIL
+   //ELSE
+   //   hb_ToOutDebug( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' FOUND" )
    ENDIF
 
    nValue := Val( cValue )

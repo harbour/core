@@ -454,7 +454,9 @@ FUNCTION MAIN( ... )
       RETURN 3
    ENDIF
 
-   //hb_ToOutDebug( "s_cDocumentRoot = %s, cDocumentRoot = %s\n\r", s_cDocumentRoot, cDocumentRoot )
+#ifdef DEBUG_ACTIVE
+   hb_ToOutDebug( "s_cDocumentRoot = %s, cDocumentRoot = %s\n\r", s_cDocumentRoot, cDocumentRoot )
+#endif
 
    IF HB_ISSTRING( cDocumentRoot )
       //cI := STRTRAN( SUBSTR( cDocumentRoot, 2 ), "\", "/" )
@@ -476,7 +478,9 @@ FUNCTION MAIN( ... )
       RETURN 3
    ENDIF
 
-   //hb_ToOutDebug( "s_cDocumentRoot = %s, cDocumentRoot = %s\n\r", s_cDocumentRoot, cDocumentRoot )
+#ifdef DEBUG_ACTIVE
+   hb_ToOutDebug( "s_cDocumentRoot = %s, cDocumentRoot = %s\n\r", s_cDocumentRoot, cDocumentRoot )
+#endif
 
    IF nMaxThreads <= 0
       nMaxThreads := MAX_RUNNING_THREADS
@@ -585,8 +589,9 @@ FUNCTION MAIN( ... )
       WriteToConsole( "Starting AcceptConnection Thread" )
       aThreads := {}
       AADD( aThreads, hb_threadStart( @AcceptConnections() ) )
-      //hb_ToOutDebug( "Len( aThreads ) = %i\n\r", Len( aThreads ) )
-
+#ifdef DEBUG_ACTIVE
+      hb_ToOutDebug( "Len( aThreads ) = %i\n\r", Len( aThreads ) )
+#endif
 
       // --------------------------------------------------------------------------------- //
       // main loop
@@ -880,7 +885,9 @@ STATIC FUNCTION ProcessConnection()
 
    nThreadId    := hb_threadID()
 
-   //hb_ToOutDebug( "nThreadId = %s\r\n", nThreadId )
+#ifdef DEBUG_ACTIVE
+   hb_ToOutDebug( "nThreadId = %s\r\n", nThreadId )
+#endif
 
    ErrorBlock( { | oError | uhttpd_DefError( oError ) } )
 
@@ -956,6 +963,10 @@ STATIC FUNCTION ProcessConnection()
          /* receive query */
          nLen := readRequest( hSocket, @cRequest )
 
+#ifdef DEBUG_ACTIVE
+            hb_ToOutDebug( "cRequest -- BEGIN --\n\r%s\n\rcRequest -- END --\n\r", cRequest )
+#endif
+
          IF nLen == -1
 #ifdef USE_HB_INET
             ? "recv() error:", hb_InetErrorCode( hSocket ), hb_InetErrorDesc( hSocket )
@@ -986,7 +997,9 @@ STATIC FUNCTION ProcessConnection()
                cSend := MakeResponse()
             ENDIF
 
-            //hb_ToOutDebug( "cSend = %s\n\r", cSend )
+#ifdef DEBUG_ACTIVE
+            hb_ToOutDebug( "cSend = %s\n\r", cSend )
+#endif
 
             sendReply( hSocket, cSend )
 
@@ -1196,7 +1209,9 @@ STATIC FUNCTION ParseRequest( cRequest )
    // RFC2616
    aRequest := uhttpd_split( CR_LF, cRequest )
 
-   //hb_ToOutDebug( "aRequest = %s\n\r", hb_ValToExp( aRequest ) )
+#ifdef DEBUG_ACTIVE
+   hb_ToOutDebug( "aRequest = %s\n\r", hb_ValToExp( aRequest ) )
+#endif
 
    WriteToConsole( aRequest[1] )
    aLine := uhttpd_split( " ", aRequest[1] )
@@ -1333,13 +1348,15 @@ STATIC FUNCTION ParseRequest( cRequest )
    _SERVER[ "SCRIPT_URL"        ] := _SERVER[ "SCRIPT_NAME" ]
    _SERVER[ "SCRIPT_URI"        ] := "http://" + _HTTP_REQUEST[ "HOST" ] + _SERVER[ "SCRIPT_NAME" ]
 
-   //hb_ToOutDebug( "_SERVER = %s\n\r", hb_ValToExp( _SERVER ) )
-   //hb_ToOutDebug( "_GET = %s\n\r", hb_ValToExp( _GET ) )
-   //hb_ToOutDebug( "_POST = %s\n\r", hb_ValToExp( _POST ) )
-   //hb_ToOutDebug( "_COOKIE = %s\n\r", hb_ValToExp( _COOKIE ) )
-   //hb_ToOutDebug( "_SESSION = %s\n\r", hb_ValToExp( _SESSION ) )
-   //hb_ToOutDebug( "_HTTP_REQUEST = %s\n\r", hb_ValToExp( _HTTP_REQUEST ) )
-   //hb_ToOutDebug( "_HTTP_RESPONSE = %s\n\r", hb_ValToExp( _HTTP_RESPONSE ) )
+#ifdef DEBUG_ACTIVE
+   hb_ToOutDebug( "_SERVER = %s\n\r", hb_ValToExp( _SERVER ) )
+   hb_ToOutDebug( "_GET = %s\n\r", hb_ValToExp( _GET ) )
+   hb_ToOutDebug( "_POST = %s\n\r", hb_ValToExp( _POST ) )
+   hb_ToOutDebug( "_COOKIE = %s\n\r", hb_ValToExp( _COOKIE ) )
+   hb_ToOutDebug( "_SESSION = %s\n\r", hb_ValToExp( _SESSION ) )
+   hb_ToOutDebug( "_HTTP_REQUEST = %s\n\r", hb_ValToExp( _HTTP_REQUEST ) )
+   hb_ToOutDebug( "_HTTP_RESPONSE = %s\n\r", hb_ValToExp( _HTTP_RESPONSE ) )
+#endif
 
    // After defined all SERVER vars we can define a session
    // SESSION - sessions ID is stored as a cookie value, normally as SESSIONID var name (this can be user defined)
@@ -1793,7 +1810,9 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
    nContLen := 0
    DO WHILE /* AT( CR_LF + CR_LF, cRequest ) == 0 .AND. */ nRcvLen > 0
       cBuf := hb_InetRecvLine( hSocket, @nRcvLen )
-      //hb_ToOutDebug( " nRcvLen = %i, cBuf = %s \n\r", nRcvLen, cBuf )
+#ifdef DEBUG_ACTIVE
+      hb_ToOutDebug( "readRequest(): nRcvLen = %i, cBuf = %s \n\r", nRcvLen, cBuf )
+#endif
       IF nRcvLen > 0
          cRequest += cBuf + CR_LF
          nLen += nRcvLen
@@ -1804,7 +1823,9 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
       ENDIF
    ENDDO
 
-   //hb_ToOutDebug( " nLen = %i, nContLen = %i \n\r", nLen, nContLen )
+#ifdef DEBUG_ACTIVE
+   hb_ToOutDebug( "readRequest(): nLen = %i, nContLen = %i \n\r", nLen, nContLen )
+#endif
    // if the request has a content-lenght, we must read it
    IF nLen > 0 .AND. nContLen > 0
       // cPostData is autoAllocated
@@ -1820,11 +1841,16 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
    nLen     := 1
    DO WHILE AT( CR_LF + CR_LF, cRequest ) == 0 .AND. nLen > 0
       nLen := socket_recv( hSocket, @cBuf )
+#ifdef DEBUG_ACTIVE
+   hb_ToOutDebug( "readRequest(): nLen = %i, cBuf = %s \n\r", nLen, cBuf )
+#endif
       cRequest += cBuf
    ENDDO
 #endif
 
-   //hb_ToOutDebug( " nLen = %i, cRequese = %s \n\r", nLen, cRequest )
+#ifdef DEBUG_ACTIVE
+   hb_ToOutDebug( "readRequest(): nLen = %i, cRequest = %s \n\r", nLen, cRequest )
+#endif
 
    RETURN nLen
 
@@ -2801,6 +2827,11 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
              DirChange( s_cDocumentRoot )
 
              xResult := HRBMAIN()
+
+#ifdef DEBUG_ACTIVE
+             hb_ToOutDebug( "Handler_HrbScript(): cFileName = %s,\n\rcCurPath = %s,\n\rs_cDocumentRoot = %s,\n\rpHRB = %s,\n\rxResult = %s\n\r", ;
+                            cFileName, cCurPath, s_cDocumentRoot, pHRB, xResult )
+#endif
 
              // return to original folder
              DirChange( cCurPath )

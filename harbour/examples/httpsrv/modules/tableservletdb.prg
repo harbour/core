@@ -55,9 +55,9 @@
 
 #define CRLF ( chr(13)+chr(10) )
 #ifdef __PLATFORM__WINDOWS
-#define TABLE_NAME_PATH "..\..\..\..\tests\test.dbf"
+#define TABLE_NAME_PATH "..\..\..\tests\test.dbf"
 #else
-#define TABLE_NAME_PATH "../../../../tests/test.dbf"
+#define TABLE_NAME_PATH "../../../tests/test.dbf"
 #endif
 #define SIMULATE_SLOW_REPLY
 
@@ -157,11 +157,15 @@ RETURN Self
 METHOD Open() CLASS TableManager
    LOCAL cDBF := ::cTable
 
+   //hb_ToOutDebug( "CurPath = %s", CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir() )
+
+   //hb_ToOutDebug( "before: cDBF = %s, Used() = %s\n", cDBF, Used() )
+
    IF !::lOpened
 
       CLOSE ALL
       USE ( cDBF ) ALIAS table SHARED NEW
-      //hb_ToOutDebug( "cDBF = %s, Used() = %s\n", cDBF, Used() )
+      //hb_ToOutDebug( "after: cDBF = %s, Used() = %s\n", cDBF, Used() )
       ::lOpened := USED()
 
    ENDIF
