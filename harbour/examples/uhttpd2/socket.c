@@ -45,11 +45,6 @@
 #include "hbsocket.h"
 #include "hbapiitm.h"
 
-static int hb_parnidef( int iParam, int iValue )
-{
-   return HB_ISNUM( iParam ) ? hb_parni( iParam ) : iValue;
-}
-
 static HB_SOCKET hb_parsocket( int iParam )
 {
    return HB_ISPOINTER( iParam ) ? ( HB_SOCKET ) ( HB_PTRDIFF )

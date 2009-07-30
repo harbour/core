@@ -61,6 +61,8 @@
  *    hb_retnllen()
  *    hb_retndlen()
  *    hb_retdl()
+ *    hb_parnidef() (based on idea by Mindaugas Kavaliauskas)
+ *    hb_parnldef()
  *
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
  *    hb_retd()
@@ -481,6 +483,34 @@ int  hb_parni( int iParam )
    return 0;
 }
 
+int  hb_parnidef( int iParam, int iDefValue )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parni(%d, %d)", iParam, iDefValue));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_INTEGER( pItem ) )
+         return pItem->item.asInteger.value;
+      else if( HB_IS_LONG( pItem ) )
+         return ( int ) pItem->item.asLong.value;
+      else if( HB_IS_DOUBLE( pItem ) )
+#ifdef __GNUC__
+         return ( int ) ( unsigned int ) pItem->item.asDouble.value;
+#else
+         return ( int ) pItem->item.asDouble.value;
+#endif
+   }
+
+   return iDefValue;
+}
+
 long  hb_parnl( int iParam )
 {
    HB_STACK_TLS_PRELOAD
@@ -507,6 +537,34 @@ long  hb_parnl( int iParam )
    }
 
    return 0;
+}
+
+long  hb_parnldef( int iParam, long lDefValue )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parnldef(%d, %ld)", iParam, lDefValue));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_LONG( pItem ) )
+         return ( long ) pItem->item.asLong.value;
+      else if( HB_IS_INTEGER( pItem ) )
+         return ( long ) pItem->item.asInteger.value;
+      else if( HB_IS_DOUBLE( pItem ) )
+#ifdef __GNUC__
+         return ( long ) ( unsigned long ) pItem->item.asDouble.value;
+#else
+         return ( long ) pItem->item.asDouble.value;
+#endif
+   }
+
+   return lDefValue;
 }
 
 #ifndef HB_LONG_LONG_OFF

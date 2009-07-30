@@ -2196,7 +2196,7 @@ HB_FUNC( ADSCREATESAVEPOINT )
 #if ADS_LIB_VERSION >= 800
    hb_retnl( AdsCreateSavepoint( HB_ADS_PARCONNECTION( 1 ) /* hConnect */,
                                  ( UNSIGNED8 * ) hb_parc( 2 ) /* pucSavepoint */,
-                                 ADS_DEFAULT /* ulOptions */ ) );
+                                 ( UNSIGNED32 ) ( HB_ISNUM( 3 ) ? hb_parnl( 3 ) : ADS_DEFAULT ) /* ulOptions */ ) );
 #else
    hb_retnl( 0 );
 #endif
@@ -2207,7 +2207,7 @@ HB_FUNC( ADSROLLBACKSAVEPOINT )
 #if ADS_LIB_VERSION >= 800
    hb_retnl( AdsRollbackTransaction80( HB_ADS_PARCONNECTION( 1 ) /* hConnect */,
                                        ( UNSIGNED8 * ) hb_parc( 2 ) /* pucSavepoint */,
-                                       ADS_DEFAULT /* ulOptions */ ) );
+                                       ( UNSIGNED32 ) ( HB_ISNUM( 3 ) ? hb_parnl( 3 ) : ADS_DEFAULT ) /* ulOptions */ ) );
 #else
    hb_retnl( 0 );
 #endif

@@ -622,7 +622,9 @@ extern HB_EXPORT BOOL         hb_partdt( long * plJulian, long * plMilliSec , in
 extern HB_EXPORT int          hb_parl( int iParam ); /* retrieve a logical parameter as an int */
 extern HB_EXPORT double       hb_parnd( int iParam ); /* retrieve a numeric parameter as a double */
 extern HB_EXPORT int          hb_parni( int iParam ); /* retrieve a numeric parameter as a integer */
+extern HB_EXPORT int          hb_parnidef( int iParam, int iDefValue ); /* retrieve a numeric parameter as a integer, return default value if parameter isn't numeric */
 extern HB_EXPORT long         hb_parnl( int iParam ); /* retrieve a numeric parameter as a long */
+extern HB_EXPORT long         hb_parnldef( int iParam, long lDefValue ); /* retrieve a numeric parameter as a long, return default value if parameter isn't numeric */
 extern HB_EXPORT HB_LONG      hb_parnint( int iParam ); /* retrieve a numeric parameter as a HB_LONG */
 extern HB_EXPORT void *       hb_parptr( int iParam ); /* retrieve a parameter as a pointer */
 extern HB_EXPORT void *       hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
