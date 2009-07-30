@@ -925,7 +925,7 @@ long hb_timeUTCOffset( void ) /* in seconds */
 #  endif
       local = mktime( timeinfo );
 
-      return utc - local - ( timeinfo->tm_isdst ? 1 : 0 );
+      return difftime( local, utc ) + ( timeinfo->tm_isdst ? 3600 : 0 );
    }
 #endif
 }
