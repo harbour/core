@@ -916,16 +916,16 @@ long hb_timeUTCOffset( void ) /* in seconds */
       time_t current, utc, local;
 
       time( &current );
-      utc = mktime( gmtime( &current ) );
 
 #if defined( HB_HAS_LOCALTIME_R )
-      localtime_r( &current, &timeinfo );
+      utc = mktime( gmtime_r( &current, &timeinfo ) );
+      local = mktime( localtime_r( &current, &timeinfo ) );
 #else
+      utc = mktime( gmtime( &current ) );
       timeinfo = *localtime( &current );
-#endif
       local = mktime( &timeinfo );
-
-      return difftime( local, utc ) + ( timeinfo.tm_isdst ? 3600 : 0 );
+#endif
+      return difftime( local, utc ) + ( timeinfo.tm_isdst > 0 ? 3600 : 0 );
    }
 #endif
 }
