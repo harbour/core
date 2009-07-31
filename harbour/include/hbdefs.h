@@ -73,7 +73,7 @@
     defined( __MINGW32__ ) || defined( __DMC__ ) || \
     ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 ) || \
     ( defined( __WATCOMC__ ) && __WATCOMC__ >= 1270 ) || \
-    ( defined( __GNUC__ ) && \
+    ( ( defined( __GNUC__ ) || defined( __SUNPRO_C ) ) && \
       ( defined( _ISOC99_SOURCE ) || \
         ( defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 199901L ) || \
         ( defined( __DJGPP__ ) && \
@@ -248,14 +248,14 @@
 
    #if ! defined( HB_DONT_DEFINE_BASIC_TYPES ) && ! defined( _WINNT_H )
       #if !defined( LONGLONG )
-         #if defined( __GNUC__ )
+         #if defined( __GNUC__ ) || defined( __SUNPRO_C )
             typedef signed long long LONGLONG;
          #else
             typedef __int64 LONGLONG;
          #endif
       #endif
       #if !defined( ULONGLONG )
-         #if defined( __GNUC__ )
+         #if defined( __GNUC__ ) || defined( __SUNPRO_C )
             typedef unsigned long long ULONGLONG;
          #else
             typedef unsigned __int64 ULONGLONG;

@@ -77,6 +77,10 @@
 #  define _GNU_SOURCE
 #endif
 
+#if defined( __SUNPRO_C )
+   #define __inline __inline__
+#endif
+
 /* NOTE: For OS/2. Must be ahead of any and all #include statements */
 #define INCL_BASE
 #define INCL_DOSMISC

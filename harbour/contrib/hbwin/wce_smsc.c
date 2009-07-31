@@ -69,9 +69,9 @@ HB_FUNC( SMSSENDMESSAGE ) /* cMessage, cNumber */
       TEXT_PROVIDER_SPECIFIC_DATA tpsd;
       SMS_MESSAGE_ID smsmidMessageID = 0;
 
-      wchar_t  * sztMessage     = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
-      wchar_t  * sztPhoneNumber = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
-      BOOL bInternational       = ( *sztPhoneNumber == '+' );
+      wchar_t * sztMessage     = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+      wchar_t * sztPhoneNumber = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+      BOOL bInternational      = ( *sztPhoneNumber == '+' );
 
       /* Create the destination address */
       memset( &smsaDestination, 0, sizeof( smsaDestination ) );

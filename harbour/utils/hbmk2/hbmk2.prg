@@ -161,7 +161,7 @@ REQUEST hbmk_KEYW
 
 #define _ESC_NONE               0
 #define _ESC_DBLQUOTE           1
-#define _ESC_SINQUOTE_WATCOM    2
+#define _ESC_SGLQUOTE_WATCOM    2
 #define _ESC_NIX                3
 
 #define _MACRO_NORM_PREFIX      "$"
@@ -2480,7 +2480,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
       CASE hbmk[ _HBMK_cARCH ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "watcom"
          nCmd_Esc := _ESC_DBLQUOTE
-         nScr_Esc := _ESC_SINQUOTE_WATCOM
+         nScr_Esc := _ESC_SGLQUOTE_WATCOM
          cLibPrefix := "LIB "
          cLibExt := ".lib"
          cObjPrefix := "FILE "
@@ -4776,7 +4776,7 @@ STATIC FUNCTION ArrayToList( array, cSeparator, nEscapeMode, cPrefix )
          ENDIF
       NEXT
       EXIT
-   CASE _ESC_SINQUOTE_WATCOM
+   CASE _ESC_SGLQUOTE_WATCOM
       FOR tmp := 1 TO Len( array )
          IF " " $ array[ tmp ]
             /* Sloppy */
@@ -5012,7 +5012,7 @@ STATIC FUNCTION FN_Escape( cFileName, nEscapeMode )
          RETURN '"' + cFileName + '"'
       ENDIF
       EXIT
-   CASE _ESC_SINQUOTE_WATCOM
+   CASE _ESC_SGLQUOTE_WATCOM
       IF " " $ cFileName
          /* Sloppy */
          IF Right( cFileName, 1 ) == "\"

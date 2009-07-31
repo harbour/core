@@ -76,7 +76,6 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
    int iCols;
    int iMax;
    char szOldColor[ HB_CLRSTR_LEN ];
-   const char * szStr = "        ";
    char szPct[ 5 ];
 
    hb_gtGetColorStr( szOldColor );
@@ -97,9 +96,9 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
              hb_arrayGetNI( pArray, B_LEFT ) + 1,
              hb_arrayGetNI( pArray, B_BOTTOM ) - 1,
              hb_arrayGetNI( pArray, B_RIGHT ) - 1,
-             szStr );
+             "        " );
 
-   iMax = ( int ) ( hb_arrayGetNI( pArray, B_BOTTOM ) - hb_arrayGetNI( pArray, B_TOP ) - 1 );
+   iMax = hb_arrayGetNI( pArray, B_BOTTOM ) - hb_arrayGetNI( pArray, B_TOP ) - 1;
    for( iRow = 1; iRow <= iMax; iRow++ )
    {
       hb_gtRepChar( hb_arrayGetNI( pArray, B_TOP ) + iRow,
@@ -152,7 +151,6 @@ HB_FUNC( GAUGEDISPLAY )
    {
       int iCenter = ( ( hb_arrayGetNI( pArray, B_RIGHT ) - hb_arrayGetNI( pArray, B_LEFT ) ) / 2 ) + 1;
       char szOldColor[ HB_CLRSTR_LEN ];
-      const char * szStr = "        ";
 
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_arrayGetCPtr( pArray, B_BACKCOLOR ) );
@@ -161,7 +159,7 @@ HB_FUNC( GAUGEDISPLAY )
                 hb_arrayGetNI( pArray, B_LEFT ),
                 hb_arrayGetNI( pArray, B_BOTTOM ),
                 hb_arrayGetNI( pArray, B_RIGHT ),
-                szStr );
+                "        " );
 
       hb_gtBox( hb_arrayGetNI( pArray, B_TOP ),
                 hb_arrayGetNI( pArray, B_LEFT ),

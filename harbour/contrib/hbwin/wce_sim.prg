@@ -70,7 +70,7 @@ CREATE CLASS wce_sim
    METHOD lInitialize()   // Must be initialized before any other method
    METHOD lDeInitialize() // Must be deinitialized....
 
-   METHOD lNumberOfPhoneBookEntries( nType, nTotal , nUsed ) // nTotal, nUsed both by reference
+   METHOD lNumberOfPhoneBookEntries( nType, nTotal, nUsed ) // nTotal, nUsed both by reference
    METHOD aGetAllPhoneBookEntries( nType ) // -> array with phoneBook entries of nType storage
    METHOD lGetSimPhoneEntry( nPos, nType, aEntry ) // -> aEntry by refence contains phonebook entry
    METHOD lSetSimPhoneEntry( nPos, nType, cNumber, cName, nPlan, nAddrType ) // -> .T. / .F. if phonebook entry written
@@ -154,7 +154,7 @@ METHOD aGetAllPhoneBookEntries( nType ) CLASS wce_sim
       ENDIF
    NEXT
 
-   ::nLastError   := nResult
+   ::nLastError := nResult
 
    RETURN aEntries
 
@@ -170,7 +170,7 @@ METHOD lGetSimPhoneEntry( nPos, nType, /* @ */ aEntry ) CLASS wce_sim
 
    DEFAULT nType TO SIM_PBSTORAGE_SIM
 
-   nResult := SimReadPhoneBookEntry(::hSim, nType, nPos, @a)
+   nResult := SimReadPhoneBookEntry( ::hSim, nType, nPos, @a )
 
    aEntry := { a }
    ::nLastError := nResult
