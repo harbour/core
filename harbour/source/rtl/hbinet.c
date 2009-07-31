@@ -878,7 +878,7 @@ HB_FUNC( HB_INETDATAREADY )
 }
 
 
-static void s_inetSendInternal( int iMode )
+static void s_inetSendInternal( BOOL lAll )
 {
    PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
@@ -910,7 +910,7 @@ static void s_inetSendInternal( int iMode )
          if( iLen > 0 )
          {
             iSent += iLen;
-            if( iMode == 0 )
+            if( ! lAll )
                break;
          }
          else
@@ -929,12 +929,12 @@ static void s_inetSendInternal( int iMode )
 
 HB_FUNC( HB_INETSEND )
 {
-   s_inetSendInternal( 0 );
+   s_inetSendInternal( FALSE );
 }
 
 HB_FUNC( HB_INETSENDALL )
 {
-   s_inetSendInternal( 1 );
+   s_inetSendInternal( TRUE );
 }
 
 
