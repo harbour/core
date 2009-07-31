@@ -170,7 +170,7 @@ HB_EXTERN_BEGIN
 #     define HB_COND_INITVAL           { }
 #  endif
 
-#elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+#elif defined( HB_OS_WIN )
 
    typedef HB_LONG            HB_THREAD_NO;
    typedef unsigned           HB_THREAD_ID;
