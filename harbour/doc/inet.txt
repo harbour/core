@@ -147,7 +147,8 @@
  *      hb_InetAccept( SOCKET ) --> SOCKET
  *        Waits until a connection is available on a socket created with hb_InetServer;
  *        Returns a socket that can be used to communicate with the incoming client.
- *        On error, sets error in the newly returned socket.
+ *        On error, NIL is returned and error code sets in the passed SOCKET.
+ *        This error can be accessed using hb_InetErrorCode() function.
  *
  *      Client side socket functions
  *      ----------------------------

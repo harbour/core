@@ -62,27 +62,9 @@ CC_RULE = $(CC) $(CPPFLAGS) $(subst /,\,$(CFLAGS)) $(HB_CDBG) $(subst /,\,$(HB_U
 endif
 endif
 
-# Note: The empty line directly before 'endef' HAVE TO exist!
-# It causes that the 'echo' command is separated by LF
-define link_file
-@echo FILE $(file) >> __link__.tmp
-
-endef
-
-#Note: The empty line directly before 'endef' HAVE TO exist!
-define link_lib
-@echo LIB $(lib) >> __link__.tmp
-
-endef
-
-define link_exe_file
-@echo $(LDFLAGS) NAME $(EXE_DIR)/$@ > __link__.tmp
-$(foreach file, $(^F), $(link_file))
-$(foreach lib, $(LINKLIBS), $(link_lib))
-$(foreach lib, $(RDDLIBS), $(link_lib))
-$(foreach lib, $(GTLIBS), $(link_lib))
--$(LD) @__link__.tmp
-endef
+empty:=
+space:= $(empty) $(empty)
+comma:= ,
 
 LD = wlink
 LDFLAGS = sys OS2V2
@@ -101,19 +83,25 @@ ifeq ($(findstring hbrtl,$(LIBS)),hbrtl)
    GTLIBS = $(foreach gt, $(HB_GT_LIBS), $(LIB_DIR)/$(gt))
 endif
 
-LD_RULE = $(link_exe_file) $(HB_USER_LDFLAGS)
+LDFILES = $(subst $(space),$(comma) ,$(^F))
+LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS) $(RDDLIBS) $(GTLIBS)))
+LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $(EXE_DIR)/$@ FILE $(LDFILES) $(if $(LDLIBS), LIB $(LDLIBS),)
 
-#Note: The empty line below HAVE TO exist!
-define lib_object
-@echo -+$(file) >> __lib__.tmp
-
-endef
-
+# maximum size of command line in OS2 is limited to 1024 characters
+# the trick below with 'wordlist' is workaround for it
 define create_library
-@echo $(LIB_DIR)/$@ > __lib__.tmp
-$(foreach file, $(^F), $(lib_object))
+echo $(LIB_DIR)/$@ > __lib__.tmp
+$(if $(wordlist   1, 50,$(^F)), echo $(wordlist   1, 50,$(addprefix -+,$(^F))) >> __lib__.tmp,)
+$(if $(wordlist  51,100,$(^F)), echo $(wordlist  51,100,$(addprefix -+,$(^F))) >> __lib__.tmp,)
+$(if $(wordlist 101,150,$(^F)), echo $(wordlist 101,150,$(addprefix -+,$(^F))) >> __lib__.tmp,)
+$(if $(wordlist 151,200,$(^F)), echo $(wordlist 151,200,$(addprefix -+,$(^F))) >> __lib__.tmp,)
+$(if $(wordlist 201,250,$(^F)), echo $(wordlist 201,250,$(addprefix -+,$(^F))) >> __lib__.tmp,)
+$(if $(wordlist 250,300,$(^F)), echo $(wordlist 250,300,$(addprefix -+,$(^F))) >> __lib__.tmp,)
+$(if $(wordlist 300,999,$(^F)), echo $(wordlist 300,999,$(addprefix -+,$(^F))) >> __lib__.tmp,)
 $(AR) $(ARFLAGS) @__lib__.tmp
 endef
+
+ARFILES = $(addprefix -+,$(^F))
 
 AR = wlib
 ARFLAGS = -p=64 -c -n $(HB_USER_AFLAGS)
