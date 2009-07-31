@@ -1797,56 +1797,59 @@ PROCEDURE uhttpd_Write( cString )
 ********************************************************************/
 
 STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
-   LOCAL nLen, cBuf
-#ifdef USE_HB_INET
-   LOCAL nRcvLen, nContLen
-#endif
+   LOCAL cBuf, nLen, nPos
 
    /* receive query */
 #ifdef USE_HB_INET
-   cRequest := ""
-   nLen     := 0
-   nRcvLen  := 1
-   nContLen := 0
-   DO WHILE /* AT( CR_LF + CR_LF, cRequest ) == 0 .AND. */ nRcvLen > 0
-      cBuf := hb_InetRecvLine( hSocket, @nRcvLen )
-#ifdef DEBUG_ACTIVE
-      hb_ToOutDebug( "readRequest(): nRcvLen = %i, cBuf = %s \n\r", nRcvLen, cBuf )
-#endif
-      IF nRcvLen > 0
-         cRequest += cBuf + CR_LF
-         nLen += nRcvLen
-         IF At( "CONTENT-LENGTH:", Upper( cBuf ) ) == 1
-            cBuf := Substr( cBuf, At( ":", cBuf ) + 1 )
-            nContLen := Val( cBuf )
-         ENDIF
-      ENDIF
-   ENDDO
-
-#ifdef DEBUG_ACTIVE
-   hb_ToOutDebug( "readRequest(): nLen = %i, nContLen = %i \n\r", nLen, nContLen )
-#endif
-   // if the request has a content-lenght, we must read it
-   IF nLen > 0 .AND. nContLen > 0
-      // cPostData is autoAllocated
-      cBuf := Space( nContLen )
-      IF hb_InetRecvAll( hSocket, @cBuf, nContLen ) <= 0
-         nLen := -1 // force error check
-      ELSE
-         cRequest += cBuf
-      ENDIF
+   cRequest := hb_InetRecvEndBlock( hSocket, CR_LF + CR_LF, @nLen )
+   IF nLen > 0
+      cRequest += CR_LF + CR_LF
    ENDIF
 #else
    cRequest := ""
-   nLen     := 1
-   DO WHILE AT( CR_LF + CR_LF, cRequest ) == 0 .AND. nLen > 0
+   DO WHILE .T.
       nLen := socket_recv( hSocket, @cBuf )
-#ifdef DEBUG_ACTIVE
-   hb_ToOutDebug( "readRequest(): nLen = %i, cBuf = %s \n\r", nLen, cBuf )
-#endif
+      IF nLen <= 0
+         EXIT
+      ENDIF
       cRequest += cBuf
+      IF CR_LF + CR_LF $ cRequest
+         EXIT
+      ENDIF
    ENDDO
 #endif
+
+   /* receive CONTENT-LENGTH data */
+   IF nLen > 0
+      nPos := HB_ATI( CR_LF + "CONTENT-LENGTH:", cRequest )
+      IF nPos > 0
+         nPos := Val( Substr( cRequest, nPos + 17, 10 ) )
+         IF nPos > 0
+#ifdef USE_HB_INET
+            cBuf := Space( nPos )
+            nLen := hb_InetRecvAll( hSocket, @cBuf, nPos )
+            IF nLen < 0
+               nLen := -1
+            ELSE
+               cRequest += Left( cBuf, nLen )
+            ENDIF
+#else
+            /* we have to decrease number of bytes to read by already read
+             * data after CR_LF + CR_LF
+             */
+            nPos -= Len( cRequest ) - At( CR_LF + CR_LF, cRequest ) - 3
+            WHILE nPos > 0
+               nLen := socket_recv( hSocket, @cBuf, nPos )
+               IF nLen <= 0
+                  EXIT
+               ENDIF
+               cRequest += cBuf
+               nPos -= nLen
+            ENDDO
+#endif
+         ENDIF
+      ENDIF
+   ENDIF
 
 #ifdef DEBUG_ACTIVE
    hb_ToOutDebug( "readRequest(): nLen = %i, cRequest = %s \n\r", nLen, cRequest )
