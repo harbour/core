@@ -574,7 +574,7 @@ static long s_inetRecv( PHB_SOCKET_STRUCT socket, char * buffer, long size, BOOL
       {
          size = hb_socketRecv( socket->sd, buffer + rec, size - rec, 0, 0 );
          if( size > 0 )
-            size += rec;
+            rec += size;
       }
    }
    else if( !readahead )
