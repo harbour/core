@@ -2814,37 +2814,40 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
          cHRBBody := HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) )
       ENDIF
       IF hb_mutexLock( s_hmtxHRB )
-         IF HRB_ACTIVATE_CACHE
-            // caching modules
-            IF !hb_HHasKey( s_hHRBModules, cFileName )
-               hb_HSet( s_hHRBModules, cFileName, HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) ) )
+         BEGIN SEQUENCE
+            IF HRB_ACTIVATE_CACHE
+               // caching modules
+               IF !hb_HHasKey( s_hHRBModules, cFileName )
+                  hb_HSet( s_hHRBModules, cFileName, HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) ) )
+               ENDIF
+               cHRBBody := s_hHRBModules[ cFileName ]
             ENDIF
-            cHRBBody := s_hHRBModules[ cFileName ]
-         ENDIF
-         WriteToConsole( "Executing: " + cFileName )
-         IF !EMPTY( pHRB := HB_HRBLOAD( cHRBBody ) )
+            WriteToConsole( "Executing: " + cFileName )
+            IF !EMPTY( pHRB := HB_HRBLOAD( cHRBBody ) )
 
-             // save current directory
-             cCurPath := CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir()
-             // Change dir to document root
-             DirChange( s_cDocumentRoot )
+                // save current directory
+                cCurPath := CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir()
+                // Change dir to document root
+                DirChange( s_cDocumentRoot )
 
-             xResult := HRBMAIN()
+                xResult := HRBMAIN()
 
 #ifdef DEBUG_ACTIVE
-             hb_ToOutDebug( "Handler_HrbScript(): cFileName = %s,\n\rcCurPath = %s,\n\rs_cDocumentRoot = %s,\n\rpHRB = %s,\n\rxResult = %s\n\r", ;
-                            cFileName, cCurPath, s_cDocumentRoot, pHRB, xResult )
+                hb_ToOutDebug( "Handler_HrbScript(): cFileName = %s,\n\rcCurPath = %s,\n\rs_cDocumentRoot = %s,\n\rpHRB = %s,\n\rxResult = %s\n\r", ;
+                               cFileName, cCurPath, s_cDocumentRoot, pHRB, xResult )
 #endif
 
-             // return to original folder
-             DirChange( cCurPath )
+                // return to original folder
+                DirChange( cCurPath )
 
-             HB_HRBUNLOAD( pHRB )
-         ELSE
-             uhttpd_SetStatusCode( 404 )
-             t_cErrorMsg := "File does not exist: " + cFileName
-         ENDIF
-         hb_mutexUnlock( s_hmtxHRB )
+                HB_HRBUNLOAD( pHRB )
+            ELSE
+                uhttpd_SetStatusCode( 404 )
+                t_cErrorMsg := "File does not exist: " + cFileName
+            ENDIF
+         ALWAYS
+            hb_mutexUnlock( s_hmtxHRB )
+         END SEQUENCE
 
       ENDIF
 
