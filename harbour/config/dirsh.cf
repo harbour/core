@@ -30,14 +30,14 @@ endif
 ifeq ($(HB_SHELL),nt)
 
 DIR_RULE =\
-	$(CMDPREF)for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
+	for %%d in ($(DIRS_OS)) do $(MK_OS) -C %%d $@
 
 endif
 
 ifeq ($(HB_SHELL),os2)
 
 DIR_RULE =\
-	$(CMDPREF)for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
+	for %d in ($(DIRS_OS)) do $(MK_OS) -C %d $@
 
 endif
 

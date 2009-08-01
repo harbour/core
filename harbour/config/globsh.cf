@@ -50,23 +50,23 @@ ifeq ($(HB_SHELL),nt)
 MK = "$(subst \,/,$(subst \~,~,$(MAKE)))"
 RM = del /q /f
 RDP = rmdir /q /s
-CP = $(CMDPREF)copy
+CP = copy
 MD = mkdir
 MDP = mkdir
 
 dirbase::
-	-@$(CMDPREF)if not exist "$(OBJ_DIR_OS)" $(MDP) "$(OBJ_DIR_OS)"
-	$(if $(LIB_FILE),-@$(CMDPREF)if not exist "$(LIB_DIR_OS)" $(MDP) "$(LIB_DIR_OS)",)
-	$(if $(EXE_FILE),-@$(CMDPREF)if not exist "$(EXE_DIR_OS)" $(MDP) "$(EXE_DIR_OS)",)
+	-@if not exist "$(OBJ_DIR_OS)" $(MDP) "$(OBJ_DIR_OS)"
+	$(if $(LIB_FILE),-@if not exist "$(LIB_DIR_OS)" $(MDP) "$(LIB_DIR_OS)",)
+	$(if $(EXE_FILE),-@if not exist "$(EXE_DIR_OS)" $(MDP) "$(EXE_DIR_OS)",)
 
 clean::
-	-@$(CMDPREF)if exist "$(OBJ_DIR_OS)" $(RDP) "$(OBJ_DIR_OS)"
-	$(if $(LIB_FILE),-@$(CMDPREF)if exist "$(LIB_FILE_OS)" $(RM) "$(LIB_FILE_OS)",)
-	$(if $(LIB_FILE),-@$(CMDPREF)if exist "$(basename $(LIB_FILE_OS)).bak" $(RM) "$(basename $(LIB_FILE_OS)).bak",)
-	$(if $(LIB_FILE),-@$(CMDPREF)if exist "$(LIB_DIR_OS)" if not exist "$(LIB_DIR_OS)\*" $(RDP) "$(LIB_DIR_OS)",)
-	$(if $(EXE_FILE),-@$(CMDPREF)if exist "$(EXE_FILE_OS)" $(RM) "$(EXE_FILE_OS)",)
-	$(if $(EXE_FILE),-@$(CMDPREF)if exist "$(basename $(EXE_FILE_OS)).tds" $(RM) "$(basename $(EXE_FILE_OS)).tds",)
-	$(if $(EXE_FILE),-@$(CMDPREF)if exist "$(EXE_DIR_OS)" if not exist "$(EXE_DIR_OS)\*" $(RDP) "$(EXE_DIR_OS)",)
+	-@if exist "$(OBJ_DIR_OS)" $(RDP) "$(OBJ_DIR_OS)"
+	$(if $(LIB_FILE),-@if exist "$(LIB_FILE_OS)" $(RM) "$(LIB_FILE_OS)",)
+	$(if $(LIB_FILE),-@if exist "$(basename $(LIB_FILE_OS)).bak" $(RM) "$(basename $(LIB_FILE_OS)).bak",)
+	$(if $(LIB_FILE),-@if exist "$(LIB_DIR_OS)" if not exist "$(LIB_DIR_OS)\*" $(RDP) "$(LIB_DIR_OS)",)
+	$(if $(EXE_FILE),-@if exist "$(EXE_FILE_OS)" $(RM) "$(EXE_FILE_OS)",)
+	$(if $(EXE_FILE),-@if exist "$(basename $(EXE_FILE_OS)).tds" $(RM) "$(basename $(EXE_FILE_OS)).tds",)
+	$(if $(EXE_FILE),-@if exist "$(EXE_DIR_OS)" if not exist "$(EXE_DIR_OS)\*" $(RDP) "$(EXE_DIR_OS)",)
 
 endif
 
@@ -74,26 +74,20 @@ ifeq ($(HB_SHELL),os2)
 
 MK = $(subst /,\,$(subst \~,~,$(MAKE)))
 RM = del /n
-RD = rmdir
-CP = $(CMDPREF)copy
+RD = $(TOOL_DIR)os2-rm -f -r
+CP = copy
 MD = mkdir
-
-OBJ_ARCH_DIR_OS = $(subst /,\,$(OBJ_ARCH_DIR))
-LIB_ARCH_DIR_OS = $(subst /,\,$(LIB_ARCH_DIR))
-EXE_ARCH_DIR_OS = $(subst /,\,$(EXE_ARCH_DIR))
+MDP = $(TOOL_DIR)os2-mkdir -p
 
 dirbase::
-	-@for %d in ($(OBJ_BASE) $(OBJ_ARCH_DIR_OS) $(OBJ_DIR_OS)) do if not exist %d $(MD) %d
-	$(if $(LIB_FILE),-@for %d in ($(LIB_ARCH_DIR_OS) $(LIB_DIR_OS)) do if not exist %d $(MD) %d,)
-	$(if $(EXE_FILE),-@for %d in ($(EXE_ARCH_DIR_OS) $(EXE_DIR_OS)) do if not exist %d $(MD) %d,)
+	-@if not exist $(OBJ_DIR_OS) $(MDP) $(OBJ_DIR_OS)
+	$(if $(LIB_FILE),-@if not exist $(LIB_DIR_OS) $(MDP) $(LIB_DIR_OS),)
+	$(if $(EXE_FILE),-@if not exist $(EXE_DIR_OS) $(MDP) $(EXE_DIR_OS),)
 
 clean::
-	-@if exist $(OBJ_DIR_OS)\*.* $(RM) $(OBJ_DIR_OS)\*.*
-	-@for %d in ($(OBJ_DIR_OS) $(OBJ_ARCH_DIR_OS) $(OBJ_BASE)) do if exist %d $(RD) %d
-	$(if $(LIB_FILE),-@if exist $(LIB_FILE_OS) $(RM) $(LIB_FILE_OS),)
-	$(if $(LIB_FILE),-@for %d in ($(LIB_DIR_OS) $(LIB_ARCH_DIR_OS)) do if exist %d $(RD) %d,)
-	$(if $(EXE_FILE),-@if exist $(EXE_FILE_OS) $(RM) $(EXE_FILE_OS),)
-	$(if $(EXE_FILE),-@for %d in ($(EXE_DIR_OS) $(EXE_ARCH_DIR_OS)) do if exist %d $(RD) %d,)
+	-@$(RDP) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(EXE_FILE_OS)
+	$(if $(LIB_FILE),-@if not exist $(LIB_DIR_OS) $(RDP) $(LIB_DIR_OS),)
+	$(if $(EXE_FILE),-@if not exist $(EXE_DIR_OS) $(RDP) $(EXE_DIR_OS),)
 
 endif
 
@@ -102,22 +96,22 @@ ifeq ($(HB_SHELL),dos)
 TOOL_DIR := $(subst /,\,$(TOP)$(ROOT)config/)
 
 MK = $(subst \,/,$(subst \~,~,$(MAKE)))
-RM = $(TOOL_DIR)dj-rm -f
+RM = del
 RDP = $(TOOL_DIR)dj-rm -f -r
 CP = $(TOOL_DIR)dj-cp -f
-MD = $(TOOL_DIR)dj-mkdir
+MD = mkdir
 MDP = $(TOOL_DIR)dj-mkdir -p
 
 dirbase::
-	-@$(CMDPREF)if not exist $(OBJ_DIR_OS)\nul $(MDP) $(OBJ_DIR_OS)
-	$(if $(LIB_FILE),-@$(CMDPREF)if not exist $(LIB_DIR_OS)\nul $(MDP) $(LIB_DIR_OS),)
-	$(if $(EXE_FILE),-@$(CMDPREF)if not exist $(EXE_DIR_OS)\nul $(MDP) $(EXE_DIR_OS),)
+	-@if not exist $(OBJ_DIR_OS)\nul $(MDP) $(OBJ_DIR_OS)
+	$(if $(LIB_FILE),-@if not exist $(LIB_DIR_OS)\nul $(MDP) $(LIB_DIR_OS),)
+	$(if $(EXE_FILE),-@if not exist $(EXE_DIR_OS)\nul $(MDP) $(EXE_DIR_OS),)
 
 clean::
 	-@$(RDP) $(OBJ_DIR_OS) $(LIB_FILE_OS) $(EXE_FILE_OS)
-	$(if $(LIB_FILE),-@$(CMDPREF)if exist $(basename $(LIB_FILE_OS)).bak $(RM) $(basename $(LIB_FILE_OS)).bak,)
-	$(if $(LIB_FILE),-@$(CMDPREF)if not exist $(LIB_DIR_OS)\*.* $(RDP) $(LIB_DIR_OS),)
-	$(if $(EXE_FILE),-@$(CMDPREF)if exist $(basename $(EXE_FILE_OS)).tds $(RM) $(basename $(EXE_FILE_OS)).tds,)
-	$(if $(EXE_FILE),-@$(CMDPREF)if not exist $(EXE_DIR_OS)\*.* $(RDP) $(EXE_DIR_OS),)
+	$(if $(LIB_FILE),-@if exist $(basename $(LIB_FILE_OS)).bak $(RM) $(basename $(LIB_FILE_OS)).bak,)
+	$(if $(LIB_FILE),-@if not exist $(LIB_DIR_OS)\*.* $(RDP) $(LIB_DIR_OS),)
+	$(if $(EXE_FILE),-@if exist $(basename $(EXE_FILE_OS)).tds $(RM) $(basename $(EXE_FILE_OS)).tds,)
+	$(if $(EXE_FILE),-@if not exist $(EXE_DIR_OS)\*.* $(RDP) $(EXE_DIR_OS),)
 
 endif

@@ -337,9 +337,9 @@ ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 ifneq ($(HB_BUILD_SUBDIR),)
    ARCH_COMP += /$(subst \,/,$(HB_BUILD_SUBDIR))
 endif
-OBJ_BASE := obj
-OBJ_DIR := $(OBJ_BASE)/$(ARCH_COMP)
-OBJ_ARCH_DIR := $(OBJ_BASE)/$(HB_ARCHITECTURE)
+OBJ_DIR := obj/$(ARCH_COMP)
+EXE_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
+LIB_DIR := $(TOP)$(ROOT)lib/$(ARCH_COMP)
 
 # TODO: Set this in <arch>/<comp>.cf
 HB_CPU :=

@@ -7,11 +7,6 @@ include $(TOP)$(ROOT)config/global.cf
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
-# no slash at the end
-EXE_ARCH_DIR := $(TOP)$(ROOT)bin/$(HB_ARCHITECTURE)
-# no slash at the end
-EXE_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
-
 include $(TOP)$(ROOT)config/c.cf
 include $(TOP)$(ROOT)config/prg.cf
 
@@ -32,8 +27,6 @@ ifneq ($(PRG_MAIN),)
 endif
 
 EXE_FILE := $(EXE_DIR)/$(EXE_NAME)
-
-LIB_DIR := $(TOP)$(ROOT)lib/$(ARCH_COMP)
 
 ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 
