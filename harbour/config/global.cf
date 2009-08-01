@@ -332,11 +332,6 @@ endif
 export HB_ARCHITECTURE
 export HB_COMPILER
 
-define add_updir
-GRANDP := $(GRANDP)../
-
-endef
-
 ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 ifneq ($(HB_BUILD_NAME),)
    ARCH_COMP := $(ARCH_COMP)$(subst \,/,$(HB_BUILD_NAME))
