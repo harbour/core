@@ -332,10 +332,11 @@ endif
 export HB_ARCHITECTURE
 export HB_COMPILER
 
-GRANDP = ../../../
+GRANDP := ../../../
 ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)
-ifneq ($(HB_BUILD_SUBDIR),)
-   ARCH_COMP += /$(subst \,/,$(HB_BUILD_SUBDIR))
+ifneq ($(HB_BUILD_NAME),)
+   GRANDP := $(GRANDP)../
+   ARCH_COMP := $(ARCH_COMP)/$(subst \,/,$(HB_BUILD_NAME))
 endif
 OBJ_DIR := obj/$(ARCH_COMP)
 EXE_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
@@ -534,6 +535,6 @@ export HB_HOST_BIN_DIR
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 include $(TOP)$(ROOT)config/globsh.cf
-include $(TOP)$(ROOT)config/$(ARCH_COMP).cf
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/$(HB_COMPILER).cf
 
 endif

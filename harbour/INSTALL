@@ -261,6 +261,13 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                full clean + install cycles will automatically
                                be executed, so you don't have to explicitly
                                pass them to make_gnu.bat.
+   - HB_BUILD_NAME=<name>      Create named build. This allows to keep
+                               multiple builds in parallel for any given
+                               architecture/compiler. F.e. debug / release.
+                               NOTE: In current implementation it's
+                               a directory name, so all filesystem/platform
+                               name rules apply, best to keep it 8 lowercase
+                               ASCII chars max.
    - HB_BUILD_DEBUG=yes        Create a debug build.
    - HB_BUILD_OPTIM=no         Disable C compiler optimizations.
    - HB_BUILD_MODE=[cpp|c]     Changes default build mode to C++ or C.

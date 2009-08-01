@@ -559,8 +559,8 @@ msgstr "visszatér a Harbour fejléc könyvtárral"
 
 #: hbmk2.prg:5769
 #, c-format
-msgid "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
-msgstr "Számos .hbc opcióban és parancssori megfelelõikben (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) használhatók makrók: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_cpu}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
+msgid "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_arch}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
+msgstr "Számos .hbc opcióban és parancssori megfelelõikben (prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=,echo=) használhatók makrók: ${hb_root}, ${hb_self}, ${hb_arch}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
 
 #: hbmk2.prg:5758 hbmk2.prg:6471
 #, c-format
