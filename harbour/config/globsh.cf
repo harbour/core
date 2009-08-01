@@ -10,6 +10,8 @@
 
 ifneq ($(HB_SHELL),sh)
 
+TOOL_DIR := $(subst /,\,$(TOP)$(ROOT)config/)
+
 OBJ_DIR_OS = $(subst /,\,$(OBJ_DIR))
 LIB_DIR_OS = $(subst /,\,$(LIB_DIR))
 LIB_FILE_OS = $(subst /,\,$(LIB_FILE))
@@ -92,8 +94,6 @@ clean::
 endif
 
 ifeq ($(HB_SHELL),dos)
-
-TOOL_DIR := $(subst /,\,$(TOP)$(ROOT)config/)
 
 MK = $(subst \,/,$(subst \~,~,$(MAKE)))
 RM = del
