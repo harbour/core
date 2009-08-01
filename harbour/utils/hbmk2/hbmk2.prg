@@ -1236,7 +1236,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
       IF hb_DirExists( tmp := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
                                                hb_osPathSeparator() + hbmk[ _HBMK_cARCH ] +;
                                                hb_osPathSeparator() + hbmk[ _HBMK_cCOMP ] +;
-                                               iif( Empty( hbmk[ _HBMK_cBUILD ] ), "", hb_osPathSeparator() + PathSepToTarget( hbmk, hbmk[ _HBMK_cBUILD ] ) ) )
+                                               iif( Empty( hbmk[ _HBMK_cBUILD ] ), "", PathSepToTarget( hbmk, hbmk[ _HBMK_cBUILD ] ) ) )
          l_cHB_DYN_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" )
          l_cHB_LIB_INSTALL := tmp
       ELSE

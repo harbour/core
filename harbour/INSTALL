@@ -265,9 +265,9 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                multiple builds in parallel for any given
                                architecture/compiler. F.e. debug / release.
                                NOTE: In current implementation it's
-                               a directory name, so all filesystem/platform
-                               name rules apply, best to keep it 8 lowercase
-                               ASCII chars max.
+                               appended to compiler directory name, so all
+                               filesystem/platform name rules and limits
+                               apply. It's valid to use (back)slashes though.
    - HB_BUILD_DEBUG=yes        Create a debug build.
    - HB_BUILD_OPTIM=no         Disable C compiler optimizations.
    - HB_BUILD_MODE=[cpp|c]     Changes default build mode to C++ or C.

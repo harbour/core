@@ -25,7 +25,7 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS ?= -xarch=v8
 LDFLAGS =
 
-ifeq ($(HB_BUILD_WARN),no)
+ifneq ($(HB_BUILD_WARN),no)
 CFLAGS += -erroff=%all
 else
 CFLAGS += -erroff=%none
@@ -34,7 +34,7 @@ endif
 ifneq ($(HB_BUILD_OPTIM),no)
 # Together with -xarch=v8 above, these are supposed to (somewhat)
 # conform to the Blastwave build standards, see
-# http://wiki.blastwave.org/mediawiki/index.php/Build_Standards
+#    http://wiki.blastwave.org/mediawiki/index.php/Build_Standards
 # Try to keep them this way.
 CFLAGS += -O -fast -xstrconst -xnolibmopt
 endif

@@ -332,15 +332,21 @@ endif
 export HB_ARCHITECTURE
 export HB_COMPILER
 
-GRANDP := ../../../
+define add_updir
+GRANDP := $(GRANDP)../
+
+endef
+
 ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 ifneq ($(HB_BUILD_NAME),)
-   GRANDP := $(GRANDP)../
-   ARCH_COMP := $(ARCH_COMP)/$(subst \,/,$(HB_BUILD_NAME))
+   ARCH_COMP := $(ARCH_COMP)$(subst \,/,$(HB_BUILD_NAME))
 endif
 OBJ_DIR := obj/$(ARCH_COMP)
 EXE_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
 LIB_DIR := $(TOP)$(ROOT)lib/$(ARCH_COMP)
+
+# Calculate number of up-dirs to source from OBJ_DIR.
+GRANDP := ../$(subst $(subst x,x, ),,$(foreach item, $(subst /, ,$(ARCH_COMP)), ../))
 
 # TODO: Set this in <arch>/<comp>.cf
 HB_CPU :=
