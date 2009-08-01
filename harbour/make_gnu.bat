@@ -39,6 +39,8 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    if not "%OS%" == "Windows_NT" goto HELP
 
    rem Order is significant
+   call :COMP_DET_ONE arm-wince-mingw32ce-gcc.exe mingwarm wce arm-wince-mingw32ce-
+   call :COMP_DET_ONE arm-mingw32ce-gcc.exe       mingwarm wce arm-mingw32ce-
    call :COMP_DET_ONE cygstart.exe                cygwin   win
    call :COMP_DET_ONE gcc.exe                     mingw    win
    call :COMP_DET_ONE wpp386.exe                  watcom   win
@@ -49,8 +51,6 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    call :COMP_DET_ONE pocc.exe                    pocc     win
    call :COMP_DET_ONE xcc.exe                     xcc      win
    call :COMP_DET_ONE x86_64-w64-mingw32-gcc.exe  mingw64  win x86_64-w64-mingw32-
-   call :COMP_DET_ONE arm-wince-mingw32ce-gcc.exe mingwarm wce arm-wince-mingw32ce-
-   call :COMP_DET_ONE arm-mingw32ce-gcc.exe       mingwarm wce arm-mingw32ce-
 
    if "%HB_COMPILER%" == "" ( echo HB_COMPILER couldn't be automatically determined. && goto HELP )
 

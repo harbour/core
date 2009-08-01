@@ -2,10 +2,10 @@
 # $Id$
 #
 
+include $(TOP)$(ROOT)config/global.cf
+
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
-
-include $(TOP)$(ROOT)config/global.cf
 
 first::
 

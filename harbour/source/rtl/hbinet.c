@@ -317,7 +317,8 @@ HB_FUNC( HB_INETERRORDESC )
          case HB_INET_ERR_CLOSEDCONN   : hb_retc_const( "Connection closed" ); return;
          case HB_INET_ERR_CLOSEDSOCKET : hb_retc_const( "Closed socket" ); return;
          case HB_INET_ERR_BUFFOVERRUN  : hb_retc_const( "Buffer overrun" ); return;
-         default: hb_retc_const( hb_socketErrorStr( socket->iErrorCode ) );
+         default:
+            hb_retc( hb_socketErrorStr( socket->iErrorCode ) );
       }
    }
    else

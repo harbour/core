@@ -2,10 +2,10 @@
 # $Id$
 #
 
+include $(TOP)$(ROOT)config/global.cf
+
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
-
-include $(TOP)$(ROOT)config/global.cf
 
 ifeq ($(HB_HOST_ARCH),dos)
 #do not use rules for parallel processing in DOS

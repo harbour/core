@@ -2,15 +2,16 @@
 # $Id$
 #
 
+include $(TOP)$(ROOT)config/global.cf
+
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
 # no slash at the end
 LIB_ARCH_DIR := $(TOP)$(ROOT)lib/$(HB_ARCHITECTURE)
 # no slash at the end
-LIB_DIR := $(LIB_ARCH_DIR)/$(HB_COMPILER)
+LIB_DIR := $(TOP)$(ROOT)lib/$(ARCH_COMP)
 
-include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/c.cf
 include $(TOP)$(ROOT)config/prg.cf
 
@@ -19,7 +20,7 @@ LIB_NAME := $(LIB_PREF)$(LIBNAME)$(LIB_EXT)
 LIB_FILE := $(LIB_DIR)/$(LIB_NAME)
 
 ifeq ($(HB_SHELL),os2)
-EXE_ARCH_DIR := $(TOP)$(ROOT)bin/$(HB_ARCHITECTURE)
+   EXE_ARCH_DIR := $(TOP)$(ROOT)bin/$(HB_ARCHITECTURE)
 endif
 EXE_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
 

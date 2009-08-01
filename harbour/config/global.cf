@@ -25,11 +25,10 @@ else
 need := 3.81
 ok := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
 
-GRANDP = ../../../
-ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)
-OBJ_BASE := obj
-OBJ_DIR := $(OBJ_BASE)/$(ARCH_COMP)
-OBJ_ARCH_DIR := $(OBJ_BASE)/$(HB_ARCHITECTURE)
+# Don't indent this subroutine
+define find_in_path
+$(strip $(foreach dir,$(subst $(PTHSEP), ,$(PATH)),$(wildcard $(dir)/$(1)$(HB_HOST_BIN_EXT))))
+endef
 
 define check_host
 
@@ -182,6 +181,12 @@ ifeq ($(HB_HOST_ARCH),)
    endif
 endif
 
+ifneq ($(findstring $(HB_HOST_ARCH),win wce dos os2),)
+   HB_HOST_BIN_EXT := .exe
+else
+   HB_HOST_BIN_EXT :=
+endif
+
 ifeq ($(HB_BUILD_VERBOSE),yes)
    ifeq ($(ok),)
       $(info Detected host platform: $(HB_HOST_ARCH))
@@ -208,6 +213,123 @@ ifeq ($(HB_BUILD_VERBOSE),yes)
       $(info Detected host CPU: $(HB_HOST_CPU))
    endif
 endif
+
+ifeq ($(HB_ARCHITECTURE),)
+   HB_ARCHITECTURE := $(HB_HOST_ARCH)
+   ifneq ($(findstring $(HB_COMPILER),msvcarm mingwarm poccarm),)
+      HB_ARCHITECTURE := wce
+   endif
+   export HB_ARCHITECTURE
+endif
+ifeq ($(HB_COMPILER),)
+   ifeq ($(HB_ARCHITECTURE),win)
+      ifneq ($(call find_in_path,arm-wince-mingw32ce-gcc),)
+         HB_COMPILER := mingwarm
+         HB_ARCHITECTURE := wce
+         export HB_CCPREFIX := arm-wince-mingw32ce-
+      else
+         ifneq ($(call find_in_path,arm-mingw32ce-gcc),)
+            HB_COMPILER := mingwarm
+            HB_ARCHITECTURE := wce
+            export HB_CCPREFIX := arm-mingw32ce-
+         else
+            ifneq ($(call find_in_path,cygstart),)
+               HB_COMPILER := cygwin
+            else
+               ifneq ($(call find_in_path,gcc),)
+                  HB_COMPILER := mingw
+               else
+                  ifneq ($(call find_in_path,wpp386),)
+                     HB_COMPILER := watcom
+                  else
+                     ifneq ($(call find_in_path,ml64),)
+                        HB_COMPILER := msvc64
+                     else
+                        ifneq ($(call find_in_path,icl),)
+                           HB_COMPILER := icc
+                        else
+                           ifneq ($(call find_in_path,cl),)
+                              HB_COMPILER := msvc
+                           else
+                              ifneq ($(call find_in_path,bcc32),)
+                                 HB_COMPILER := bcc
+                              else
+                                 ifneq ($(call find_in_path,pocc),)
+                                    HB_COMPILER := pocc
+                                 else
+                                    ifneq ($(call find_in_path,xcc),)
+                                       HB_COMPILER := xcc
+                                    else
+                                       ifneq ($(call find_in_path,x86_64-w64-mingw32-gcc),)
+                                          HB_COMPILER := mingw64
+                                          export HB_CCPREFIX := x86_64-w64-mingw32-
+                                       endif
+                                    endif
+                                 endif
+                              endif
+                           endif
+                        endif
+                     endif
+                  endif
+               endif
+            endif
+         endif
+      endif
+   else
+      ifeq ($(HB_ARCHITECTURE),linux)
+         ifneq ($(call find_in_path,wpp386),)
+            HB_COMPILER := watcom
+         else
+            ifneq ($(call find_in_path,gcc),)
+               HB_COMPILER := gcc
+            endif
+         endif
+      else
+         ifeq ($(HB_ARCHITECTURE),sunos)
+            ifneq ($(call find_in_path,cc),)
+               HB_COMPILER := sunpro
+            else
+               ifneq ($(call find_in_path,gcc),)
+                  HB_COMPILER := gcc
+               endif
+            endif
+         else
+            ifeq ($(HB_ARCHITECTURE),dos)
+               ifneq ($(call find_in_path,gcc),)
+                  HB_COMPILER := djgpp
+               else
+                  ifneq ($(call find_in_path,wpp386),)
+                     HB_COMPILER := watcom
+                  endif
+               endif
+            else
+               ifeq ($(HB_ARCHITECTURE),os2)
+                  ifneq ($(call find_in_path,gcc),)
+                     HB_COMPILER := gcc
+                  else
+                     ifneq ($(call find_in_path,wpp386),)
+                        HB_COMPILER := watcom
+                     endif
+                  endif
+               else
+                  # add other platforms here
+               endif
+            endif
+         endif
+      endif
+   endif
+   $(info Autodetected HB_COMPILER: $(HB_COMPILER))
+   export HB_COMPILER
+endif
+
+GRANDP = ../../../
+ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)
+ifneq ($(HB_BUILD_SUBDIR),)
+   ARCH_COMP += /$(subst \,/,$(HB_BUILD_SUBDIR))
+endif
+OBJ_BASE := obj
+OBJ_DIR := $(OBJ_BASE)/$(ARCH_COMP)
+OBJ_ARCH_DIR := $(OBJ_BASE)/$(HB_ARCHITECTURE)
 
 # TODO: Set this in <arch>/<comp>.cf
 HB_CPU :=
@@ -245,12 +367,6 @@ ifneq ($(findstring $(HB_ARCHITECTURE),win wce dos os2),)
    HB_UNIX_COMPATIBLE := no
 else
    HB_UNIX_COMPATIBLE := yes
-endif
-
-ifneq ($(findstring $(HB_HOST_ARCH),win wce dos os2),)
-   HB_HOST_BIN_EXT := .exe
-else
-   HB_HOST_BIN_EXT :=
 endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
@@ -373,7 +489,7 @@ ifneq ($(HB_DB_DRVEXT),)
 endif
 
 ifeq ($(HB_UNIX_COMPATIBLE),no)
-   LIBPOSTFIX := $(DIRSEP)$(HB_ARCHITECTURE)$(DIRSEP)$(HB_COMPILER)
+   LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(ARCH_COMP))
 endif
 
 ifeq ($(HB_BIN_INSTALL),)

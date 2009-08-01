@@ -42,36 +42,25 @@ ifeq ($(LD_RULE),)
    LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$(subst /,$(DIRSEP),$(EXE_DIR)/$@) $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LINKLIBS)
 endif
 
-
 # Eliminate these rules.
-
 %.c : %.y
 
 %.c : %.l
 
-# Location of source C files
-# Some DOS compilers doesn't like '/' in filenames - however the MAKE system
-# requires '/' in filenames - this trick allows to solve this conflict
-SOURCE_DIR := $($(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP)
-ifeq ($(SOURCE_DIR),)
-SOURCE_DIR = $(GRANDP)
-endif
-
 # Rule to generate an object file from a C source file in the parent.
-%$(OBJ_EXT) : $(SOURCE_DIR)%.c
+%$(OBJ_EXT) : $(GRANDP)%.c
 	$(CC_RULE)
 
 # Rule to generate an object file from a C source file.
 %$(OBJ_EXT) : %.c
 	$(CC_RULE)
 
-#rules for CPP files
-%$(OBJ_EXT) : $(SOURCE_DIR)%.cpp
+# Rules for CPP files
+%$(OBJ_EXT) : $(GRANDP)%.cpp
 	$(CPP_RULE)
 
 %$(OBJ_EXT) : %.cpp
 	$(CPP_RULE)
-
 
 # Rule to generate an executable file from an object file.
 %$(EXE_EXT) : %$(OBJ_EXT)
