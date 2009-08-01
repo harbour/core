@@ -55,7 +55,7 @@
 #include "common.ch"
 #include "fileio.ch"
 
-#include "hbcompat.ch"
+#xtranslate THROW(<oErr>) => (Eval(ErrorBlock(), <oErr>), Break(<oErr>))
 
 #define BUFFER_SIZE 16384
 

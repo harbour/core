@@ -54,7 +54,6 @@
 #include "common.ch"
 #include "hboo.ch"
 #include "error.ch"
-#include "xhb.ch"
 
 #define CLASS_PROPERTIES 6
 
@@ -231,7 +230,7 @@ PROCEDURE HB_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
 
        IF ( nAt := At( "*", cElem ) ) > 1
           IF nIndex < Len( aDefinitions )
-             aIns( aDefinitions, nIndex + 1, SubStr( cElem, nAt + 1 ), .T. )
+             hb_aIns( aDefinitions, nIndex + 1, SubStr( cElem, nAt + 1 ), .T. )
           ELSE
              aAdd( aDefinitions, SubStr( cElem, nAt + 1 ) )
           ENDIF
@@ -239,7 +238,7 @@ PROCEDURE HB_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
           aDefinitions[nIndex] := StrTran( Left( cElem, nAt ), " ", "" )
        ELSEIF ( nAt := At( "-", cElem ) ) > 1
           IF nIndex < Len( aDefinitions )
-             aIns( aDefinitions, nIndex + 1, SubStr( cElem, nAt ), .T. )
+             hb_aIns( aDefinitions, nIndex + 1, SubStr( cElem, nAt ), .T. )
           ELSE
              aAdd( aDefinitions, SubStr( cElem, nAt ) )
           ENDIF

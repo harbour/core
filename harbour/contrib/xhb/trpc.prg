@@ -197,8 +197,6 @@
 
 #include "hbclass.ch"
 
-#include "xhb.ch"
-
 #include "hbrpc.ch"
 
 
@@ -460,7 +458,7 @@ METHOD Start() CLASS tRPCServeCon
 
    HB_MutexLock( ::mtxBusy )
    IF ::thSelf == NIL
-      ::thSelf := StartThread( Self, "RUN" )
+      ::thSelf := xhb_StartThread( Self, "RUN" )
       lRet := .T.
    ENDIF
    HB_MutexUnlock( ::mtxBusy )
@@ -472,8 +470,8 @@ METHOD Stop() CLASS tRPCServeCon
    LOCAL lRet := .F.
 
    HB_MutexLock( ::mtxBusy )
-   IF IsValidThread( ::thSelf )
-      KillThread( ::thSelf )
+   IF hb_threadId( ::thSelf ) != 0
+      hb_threadQuitRequest( ::thSelf )
       lRet := .T.
       HB_MutexUnlock( ::mtxBusy )
       JoinThread( ::thSelf )
@@ -491,11 +489,11 @@ METHOD Run() CLASS tRPCServeCon
    LOCAL aData
    LOCAL nSafeStatus
 
-   DO WHILE InetErrorCode( ::skRemote ) == 0 .and. .not. lBreak
+   DO WHILE hb_inetErrorCode( ::skRemote ) == 0 .and. .not. lBreak
 
       /* Get the request code */
-      InetRecvAll( ::skRemote, @cCode, 6 )
-      IF InetErrorCode( ::skRemote ) != 0
+      hb_inetRecvAll( ::skRemote, @cCode, 6 )
+      IF hb_inetErrorCode( ::skRemote ) != 0
          EXIT
       ENDIF
 
@@ -507,7 +505,7 @@ METHOD Run() CLASS tRPCServeCon
 
          /* Check for TCP server scan */
          CASE cCode == "XHBR00"
-            InetSendAll( ::skRemote, ;
+            hb_inetSendAll( ::skRemote, ;
                "XHBR10"+ HB_Serialize( ::oServer:cServerName ) )
 
          /* Read autorization request */
@@ -652,7 +650,7 @@ METHOD Run() CLASS tRPCServeCon
                HB_MutexLock( ::mtxBusy )
                ::lCanceled = .T.
                HB_MutexUnlock( ::mtxBusy )
-               InetSendAll( ::skRemote, "XHBR34")
+               hb_inetSendAll( ::skRemote, "XHBR34")
             ENDIF
 
          OTHERWISE
@@ -662,10 +660,10 @@ METHOD Run() CLASS tRPCServeCon
       /* Analisys of the nSafeStatus code */
       DO CASE
          CASE nSafeStatus == RPCS_STATUS_BUSY
-            InetSendAll( ::skRemote, "XHBR4011" )
+            hb_inetSendAll( ::skRemote, "XHBR4011" )
 
          CASE nSafeStatus == RPCS_STATUS_ERROR
-            InetSendAll( ::skRemote, "XHBR4020" )
+            hb_inetSendAll( ::skRemote, "XHBR4020" )
 
          /* Update real status only if not in error case */
          OTHERWISE
@@ -692,7 +690,7 @@ METHOD RecvAuth( lEncrypt ) CLASS tRPCServeCon
    LOCAL cUserID, cPassword
    LOCAL cReadIn
 
-   IF InetRecvAll( ::skRemote, @cLength, 8 ) != 8
+   IF hb_inetRecvAll( ::skRemote, @cLength, 8 ) != 8
       RETURN .F.
    ENDIF
 
@@ -703,7 +701,7 @@ METHOD RecvAuth( lEncrypt ) CLASS tRPCServeCon
    ENDIF
 
    cReadIn := Space( nLen )
-   IF InetRecvAll( ::skRemote, @cReadin, nLen ) != nLen
+   IF hb_inetRecvAll( ::skRemote, @cReadin, nLen ) != nLen
       RETURN .F.
    ENDIF
 
@@ -718,12 +716,12 @@ METHOD RecvAuth( lEncrypt ) CLASS tRPCServeCon
    IF .not. lEncrypt
       ::nAuthLevel := ::oServer:Authorize( cUserid, cPassword )
       IF ::nAuthLevel == 0
-         InetSendAll( ::skRemote, "XHBR91NO" )
+         hb_inetSendAll( ::skRemote, "XHBR91NO" )
          RETURN .F.
       ENDIF
 
-      InetSendAll( ::skRemote, "XHBR91OK" )
-      IF InetErrorCode( ::skRemote ) != 0
+      hb_inetSendAll( ::skRemote, "XHBR91OK" )
+      IF hb_inetErrorCode( ::skRemote ) != 0
          RETURN .F.
       ENDIF
       ::cUserId := cUserId
@@ -753,9 +751,9 @@ METHOD LaunchChallenge( cUserid, cPassword ) CLASS tRPCServeCon
    ::nChallengeCRC = HB_Checksum( cChallenge )
    cChallenge := HB_Crypt( cChallenge, ::cCryptKey )
 
-   InetSendAll( ::skRemote, "XHBR94" + HB_CreateLen8( Len( cChallenge ) ) + cChallenge )
+   hb_inetSendAll( ::skRemote, "XHBR94" + HB_CreateLen8( Len( cChallenge ) ) + cChallenge )
 
-   IF InetErrorCode( ::skRemote ) != 0
+   IF hb_inetErrorCode( ::skRemote ) != 0
       RETURN .F.
    ENDIF
 
@@ -765,7 +763,7 @@ RETURN .T.
 METHOD RecvChallenge() CLASS tRPCServeCon
    LOCAL cNumber := Space( 8 )
 
-   IF InetRecvAll( ::skRemote, @cNumber ) != 8
+   IF hb_inetRecvAll( ::skRemote, @cNumber ) != 8
       RETURN .F.
    ENDIF
 
@@ -773,8 +771,8 @@ METHOD RecvChallenge() CLASS tRPCServeCon
       RETURN .F.
    ENDIF
 
-   InetSendAll( ::skRemote, "XHBR91OK" )
-   IF InetErrorCode( ::skRemote ) != 0
+   hb_inetSendAll( ::skRemote, "XHBR91OK" )
+   IF hb_inetErrorCode( ::skRemote ) != 0
       RETURN .F.
    ENDIF
 
@@ -797,7 +795,7 @@ METHOD RecvFunction( bComp, bMode ) CLASS tRPCServeCon
    LOCAL cData
 
    /* Original lenght of data */
-   IF InetRecvAll( ::skRemote, @cLength, 8 ) != 8
+   IF hb_inetRecvAll( ::skRemote, @cLength, 8 ) != 8
       RETURN NIL
    ENDIF
 
@@ -808,7 +806,7 @@ METHOD RecvFunction( bComp, bMode ) CLASS tRPCServeCon
 
    /* compressed lenght */
    IF bComp
-      IF InetRecvAll( ::skRemote, @cLength, 8 ) != 8
+      IF hb_inetRecvAll( ::skRemote, @cLength, 8 ) != 8
          RETURN NIL
       ENDIF
 
@@ -819,14 +817,14 @@ METHOD RecvFunction( bComp, bMode ) CLASS tRPCServeCon
 
    /* Mode */
    IF bMode
-      IF InetRecvAll( ::skRemote, @cMode ) != 1
+      IF hb_inetRecvAll( ::skRemote, @cMode ) != 1
          RETURN NIL
       ENDIF
    ENDIF
 
    /* Get data */
    cData := Space( nComp )
-   IF InetRecvAll( ::skRemote, @cData ) != nComp
+   IF hb_inetRecvAll( ::skRemote, @cData ) != nComp
       RETURN NIL
    ENDIF
 
@@ -917,7 +915,7 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
    IF Empty(oFunc)
       // signal error
       ::oServer:OnFunctionError( Self, cFuncName, 00 )
-      InetSendAll( ::skRemote, "XHBR4000" )
+      hb_inetSendAll( ::skRemote, "XHBR4000" )
       RETURN .T.
    ENDIF
 
@@ -925,7 +923,7 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
    IF oFunc:nAuthLevel > ::nAuthLevel
       // signal error
       ::oServer:OnFunctionError( Self, cFuncName, 01 )
-      InetSendAll( ::skRemote, "XHBR4001" )
+      hb_inetSendAll( ::skRemote, "XHBR4001" )
       RETURN .T.
    ENDIF
 
@@ -933,7 +931,7 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
    IF aParams == NIL .or. .not. oFunc:CheckTypes( aParams )
       // signal error
       ::oServer:OnFunctionError( Self, cFuncName,02 )
-      InetSendAll( ::skRemote, "XHBR4002" )
+      hb_inetSendAll( ::skRemote, "XHBR4002" )
       RETURN .T.
    ENDIF
 
@@ -944,7 +942,7 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
    ::lCanceled := .F.
    // Set the running status
    ::nStatus := RPCS_STATUS_RUNNING
-   ::thFunction := StartThread( Self, "FunctionRunner", ;
+   ::thFunction := xhb_StartThread( Self, "FunctionRunner", ;
       cFuncName, oFunc, nMode, aParams, aDesc )
    HB_MutexUnlock( ::mtxBusy )
 
@@ -1097,7 +1095,7 @@ METHOD SendResult( oRet, cFuncName )
 
    IF oRet == NIL
       ::oServer:OnFunctionError( Self, cFuncName, 10 )
-      InetSendAll( ::skRemote, "XHBR4010" )
+      hb_inetSendAll( ::skRemote, "XHBR4010" )
    ELSE
       cData := HB_Serialize( oRet )
       cOrigLen := HB_CreateLen8( Len( cData ) )
@@ -1107,13 +1105,13 @@ METHOD SendResult( oRet, cFuncName )
       IF Len( cData ) > 512
          cData := HB_Compress( cData )
          cCompLen := HB_CreateLen8( Len( cData ) )
-         InetSendAll( ::skRemote, "XHBR31" + cOrigLen + cCompLen + ::Encrypt( cData ) )
+         hb_inetSendAll( ::skRemote, "XHBR31" + cOrigLen + cCompLen + ::Encrypt( cData ) )
       ELSE
-         InetSendAll( ::skRemote, "XHBR30" + cOrigLen + ::Encrypt( cData ) )
+         hb_inetSendAll( ::skRemote, "XHBR30" + cOrigLen + ::Encrypt( cData ) )
       ENDIF
    ENDIF
 
-   IF InetErrorCode( ::skRemote ) != 0
+   IF hb_inetErrorCode( ::skRemote ) != 0
       RETURN .F.
    ENDIF
 
@@ -1134,7 +1132,7 @@ METHOD SendProgress( nProgress, oData ) CLASS tRPCServeCon
 
    ::oServer:OnFunctionProgress( Self, nProgress, oData )
    IF Empty( oData )
-      InetSendAll( ::skRemote, "XHBR33" + HB_Serialize( nProgress ) )
+      hb_inetSendAll( ::skRemote, "XHBR33" + HB_Serialize( nProgress ) )
    ELSE
       cData := HB_Serialize( oData )
       cOrigLen := HB_CreateLen8( Len( cData ) )
@@ -1142,15 +1140,15 @@ METHOD SendProgress( nProgress, oData ) CLASS tRPCServeCon
       IF Len( cData ) > 512
          cData := HB_Compress( cData )
          cCompLen := HB_CreateLen8( Len( cData ) )
-         InetSendAll(::skRemote, "XHBR35" + HB_Serialize( nProgress ) +;
+         hb_inetSendAll(::skRemote, "XHBR35" + HB_Serialize( nProgress ) +;
                 cOrigLen + cCompLen + ::Encrypt( cData ) )
       ELSE
-         InetSendAll( ::skRemote, "XHBR34" + HB_Serialize( nProgress ) +;
+         hb_inetSendAll( ::skRemote, "XHBR34" + HB_Serialize( nProgress ) +;
                cOrigLen + ::Encrypt( cData ) )
       ENDIF
    ENDIF
 
-   IF InetErrorCode( ::skRemote ) != 0
+   IF hb_inetErrorCode( ::skRemote ) != 0
       lRet := .F.
    ENDIF
 
@@ -1177,7 +1175,7 @@ RETURN cDataIn
 CLASS tRPCService
    DATA cServerName INIT "RPCGenericServer"
    DATA aFunctions
-   CLASSDATA lInit INIT InetInit()
+   CLASSDATA lInit INIT hb_inetInit()
 
    DATA nUdpPort INIT 1139
    DATA nTcpPort INIT 1140
@@ -1335,17 +1333,17 @@ RETURN cRet
 METHOD Start( lStartUdp ) CLASS tRPCService
 
    IF Empty( ::cBindAddress )
-      ::skServer := InetServer( ::nTcpPort )
-      ::skUdp := InetDGramBind( ::nUdpPort )
+      ::skServer := hb_inetServer( ::nTcpPort )
+      ::skUdp := hb_inetDGramBind( ::nUdpPort )
    ELSE
-      ::skServer := InetServer( ::nTcpPort, ::cBindAddress )
-      ::skUdp := InetDGramBind( ::nUdpPort, ::cBindAddress )
+      ::skServer := hb_inetServer( ::nTcpPort, ::cBindAddress )
+      ::skUdp := hb_inetDGramBind( ::nUdpPort, ::cBindAddress )
    ENDIF
 
-   ::thAccept := StartThread( Self, "Accept" )
+   ::thAccept := xhb_StartThread( Self, "Accept" )
 
    IF lStartUdp != NIL .and. lStartUdp
-      ::thUdp := StartThread( Self, "UdpListen" )
+      ::thUdp := xhb_StartThread( Self, "UdpListen" )
    ELSE
       ::thUdp := NIL
    ENDIF
@@ -1357,24 +1355,24 @@ METHOD Stop() CLASS tRPCService
    LOCAL oElem
 
    HB_MutexLock( ::mtxBusy )
-   IF .not. IsValidThread( ::thAccept )
+   IF hb_threadId( ::thAccept ) == 0
       HB_MutexUnlock( ::mtxBusy )
       RETURN .F.
    ENDIF
 
-   InetClose( ::skServer )
+   hb_inetClose( ::skServer )
    // closing the socket will make their infinite loops to terminate.
    StopThread( ::thAccept)
    JoinThread( ::thAccept )
-   IF IsValidThread( ::thUDP )
-      InetClose( ::skUdp )
+   IF hb_threadId( ::thUDP ) != 0
+      hb_inetClose( ::skUdp )
       StopThread( ::thUdp)
       JoinThread( ::thUdp )
    ENDIF
 
    FOR EACH oElem IN ::aServing
-      IF IsValidThread( oElem:thSelf )
-         KillThread( oElem:thSelf )
+      IF hb_threadId( oElem:thSelf ) != 0
+         hb_threadQuitRequest( oElem:thSelf )
          JoinThread( oElem:thSelf )
       ENDIF
    NEXT
@@ -1393,9 +1391,9 @@ METHOD Accept() CLASS tRPCService
    LOCAL skIn
 
    DO WHILE .T.
-      skIn := InetAccept( ::skServer )
+      skIn := hb_inetAccept( ::skServer )
       // todo: better sync
-      IF InetStatus( ::skServer ) < 0
+      IF hb_inetStatus( ::skServer ) < 0
          EXIT
       ENDIF
       IF skIn != NIL
@@ -1421,8 +1419,8 @@ METHOD UDPListen( ) CLASS tRPCService
    LOCAL nPacketLen
 
    DO WHILE .T.
-      nPacketLen := InetDGramRecv( ::skUdp, @cData, 1000 )
-      IF InetStatus( ::skUdp ) < 0
+      nPacketLen := hb_inetDGramRecv( ::skUdp, @cData, 1000 )
+      IF hb_inetStatus( ::skUdp ) < 0
          EXIT
       ENDIF
       ::UDPParseRequest( cData, nPacketLen )
@@ -1433,8 +1431,8 @@ METHOD UDPParseRequest( cData, nPacketLen ) CLASS tRPCService
    LOCAL cToSend
 
    IF ::UDPInterpretRequest( cData, nPacketLen, @cToSend )
-       InetDGramSend( ::skUdp, ;
-         InetAddress( ::skUdp ), InetPort( ::skUdp ), cToSend )
+       hb_inetDGramSend( ::skUdp, ;
+         hb_inetAddress( ::skUdp ), hb_inetPort( ::skUdp ), cToSend )
        RETURN .T.
    ENDIF
 RETURN .F.

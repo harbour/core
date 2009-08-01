@@ -49,7 +49,6 @@
  *
  */
 
-#include "hbcompat.ch"
 #include "hbclass.ch"
 #include "common.ch"
 #include "hblog.ch"
@@ -243,7 +242,7 @@ METHOD New() CLASS HB_Logger
    LOCAL nCount
 
    FOR nCount := 1 TO PCount()
-      ::AddChannel( PValue( nCount ) )
+      ::AddChannel( hb_PValue( nCount ) )
    NEXT
 RETURN Self
 
@@ -416,6 +415,7 @@ CLASS HB_LogConsole FROM HB_LogChannel
    METHOD New( nLevel )
    METHOD Open( cName )
    METHOD Close( cName )
+   METHOD Out()
 
    METHOD LogOnVt( ldo )      INLINE ::lRealConsole := ldo
 
@@ -435,36 +435,41 @@ METHOD Open( cName ) CLASS HB_LogConsole
       RETURN .F.
    ENDIF
 
-   IF ::lRealConsole
-      OutStd( HB_LogDateStamp(), Time(), "--", cName, "start --", HB_OSnewLine() )
-   ELSE
-      QOut( HB_LogDateStamp(), Time(), "--", cName, "start --" )
-   ENDIF
+   ::Out( HB_LogDateStamp(), Time(), "--", cName, "start --" )
    ::lOpened := .T.
 
 RETURN .T.
 
 METHOD Close( cName ) CLASS HB_LogConsole
 
-   IF .not. ::lOpened
+   IF ! ::lOpened
       RETURN .F.
    ENDIF
 
-   IF ::lRealConsole
-      OutStd( HB_LogDateStamp(), Time(), "--", cName, "end --", HB_OSnewLine() )
-   ELSE
-      QOut( HB_LogDateStamp(), Time(), "--", cName, "end --" )
-   ENDIF
+   ::Out( HB_LogDateStamp(), Time(), "--", cName, "end --" )
    ::lOpened := .F.
 
 RETURN .T.
 
 METHOD PROCEDURE Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogConsole
 
+   ::Out( ::Format( nStyle, cMessage, cName, nPriority ) )
+
+RETURN
+
+METHOD PROCEDURE Out( ... ) CLASS HB_LogConsole
+   LOCAL cMsg := "", xPar
+   LOCAL nLen := Len( hb_aParams() )
+   FOR EACH xPar IN hb_aParams()
+       cMsg += hb_CStr( xPar )
+       IF HB_EnumIndex() < nLen
+          cMsg += " "
+       ENDIF
+   NEXT
    IF ::lRealConsole
-      OutStd( ::Format( nStyle, cMessage, cName, nPriority ), HB_OSnewLine() )
+      OutStd( cMsg, HB_OSnewLine() )
    ELSE
-      QOut( ::Format( nStyle, cMessage, cName, nPriority ) )
+      QOut( cMsg )
    ENDIF
 
 RETURN
@@ -516,7 +521,7 @@ METHOD Open( cProgName ) CLASS HB_LogFile
          Fseek( ::nFileHandle, 0 ,FS_END )
       END
    ELSE
-      ::nFileHandle := FCreate( ::cFileName )
+      ::nFileHandle := hb_FCreate( ::cFileName, FC_NORMAL, FO_READWRITE )
    ENDIF
 
    IF ::nFileHandle < 0
@@ -532,7 +537,7 @@ RETURN .T.
 
 METHOD Close( cProgName ) CLASS HB_LogFile
 
-   IF .not. ::lOpened
+   IF ! ::lOpened
       RETURN .F.
    ENDIF
 
@@ -568,13 +573,141 @@ METHOD Send( nStyle, cMessage, cProgName, nPrio ) CLASS HB_LogFile
          ENDIF
 
          IF FRename( ::cFileName, ::cFileName + ".000" ) == 0
-            ::nFileHandle := FCreate( ::cFileName )
+            ::nFileHandle := hb_FCreate( ::cFileName, FC_NORMAL, FO_READWRITE )
             Fwrite( ::nFileHandle, HB_BldLogMsg( HB_LogDateStamp(), Time(), "LogFile: Reopening file due to size limit breaking", HB_OsNewLine() ) )
          ENDIF
       ENDIF
    ENDIF
 
 RETURN Ferror() == 0
+
+
+/**********************************************
+* Console channel - to dbf
+***********************************************/
+CLASS HB_LogDbf FROM HB_LogChannel
+
+   DATA cDBFName    INIT "messages.dbf"
+   DATA cIndexName  INIT "messages.cdx"
+   DATA cDriver     INIT "DBFCDX"
+   DATA aStruct     INIT { ;
+                           { "PRIORITY", "N",   2, 0 } ,;
+                           { "PROGNAME", "C",  30, 0 } ,;
+                           { "MESSAGE" , "C", 250, 0 } ,;
+                           { "DATE"    , "D",   8, 0 } ,;
+                           { "TIME"    , "C",   8, 0 }  ;
+                         }
+
+   METHOD New( nLevel, cFile, cIndex, aStruct, cDriver )
+   METHOD Open( cName )
+   METHOD Close( cName )
+
+PROTECTED:
+   METHOD Send( nStyle, cMessage, nPriority )
+
+ENDCLASS
+
+
+METHOD New( nLevel, cDBFName, cIndexName, aStruct, cDriver ) CLASS HB_LogDbf
+   LOCAL cPath, cName, cExt, cDrive
+
+   ::Super:New( nLevel )
+   IF ISCHARACTER( cDBFName )
+      HB_FnameSplit( cDBFName, @cPath, @cName, @cExt, @cDrive )
+      IF Empty( cExt )
+         cExt := "dbf"
+      ENDIF
+      ::cDBFName := IIF( !Empty( cDrive ), cDrive + ":\", "" ) + ;
+                    IIF( !Empty( cPath ) , cPath + "\", "" ) + ;
+                    cName + cExt
+      //__OutDebug( "::cDBFName", ::cDBFName )
+   ENDIF
+
+   IF ISCHARACTER( cIndexName )
+      HB_FnameSplit( cIndexName, @cPath, @cName, @cExt, @cDrive )
+      IF Empty( cExt )
+         cExt := "cdx"
+      ENDIF
+      ::cIndexName := IIF( !Empty( cDrive ), cDrive + ":\", "" ) + ;
+                      IIF( !Empty( cPath ) , cPath + "\", "" ) + ;
+                      cName + cExt
+      //__OutDebug( "::cCDXName", ::cCDXName )
+   ENDIF
+
+   IF aStruct != NIL
+      ::aStruct := aStruct
+   ENDIF
+
+   IF cDriver != NIL
+      ::cDriver := cDriver
+   ENDIF
+
+RETURN Self
+
+METHOD Open( cProgName ) CLASS HB_LogDbf
+
+   IF ::lOpened
+      RETURN .F.
+   ENDIF
+
+   IF ! hb_FileExists( ::cDBFName )
+      dbCreate( ::cDBFName, ::aStruct )
+      dbUseArea( .T., ::cDriver, ::cDBFName, "LogDbf", .T. )
+      INDEX ON DToS( FIELD->date ) + FIELD->time + Str( FIELD->priority, 2 ) + FIELD->message TAG "datetime" TO (::cIndexName)
+      INDEX ON Str( FIELD->priority, 2 ) + DToS( FIELD->date ) + FIELD->time + FIELD->message TAG "priority" TO (::cIndexName)
+      LogDbf->( dbCloseArea() )
+   ELSEIF ! hb_FileExists( ::cIndexName )
+      dbUseArea( .T., ::cDriver, ::cDBFName, "LogDbf", .T. )
+      INDEX ON DToS( FIELD->date ) + FIELD->time + Str( FIELD->priority, 2 ) + FIELD->message TAG "datetime" TO (::cIndexName)
+      INDEX ON Str( FIELD->priority, 2 ) + DToS( FIELD->date ) + FIELD->time + FIELD->message TAG "priority" TO (::cIndexName)
+      LogDbf->( dbCloseArea() )
+   ENDIF
+   //__OutDebug( "::cDriver, ::cDBFName", ::cDriver, ::cDBFName )
+   dbUseArea( .T., ::cDriver, ::cDBFName, "LogDbf", .T. )
+   SET INDEX TO (::cIndexName)
+
+   LogDbf->( dbAppend() )
+   LogDbf->priority := HB_LOG_INFO
+   LogDbf->date     := Date()
+   LogDbf->time     := Time()
+   LogDbf->progname := cProgName
+   LogDbf->message  := "-- start --"
+   LogDbf->( dbCommit() )
+
+   ::lOpened := .T.
+
+RETURN .T.
+
+METHOD Close( cProgName ) CLASS HB_LogDbf
+
+   IF ! ::lOpened
+      RETURN .F.
+   ENDIF
+
+   LogDbf->( dbAppend() )
+   LogDbf->priority := HB_LOG_INFO
+   LogDbf->date     := Date()
+   LogDbf->time     := Time()
+   LogDbf->progname := cProgName
+   LogDbf->message  := "-- end --"
+   LogDbf->( dbCommit() )
+
+   ::lOpened := .F.
+
+RETURN .T.
+
+METHOD Send( nStyle, cMessage, cProgName, nPrio ) CLASS HB_LogDbf
+
+   LogDbf->( dbAppend() )
+   LogDbf->priority := nPrio
+   LogDbf->date     := Date()
+   LogDbf->time     := Time()
+   LogDbf->progname := cProgName
+   LogDbf->message  := cMessage
+   LogDbf->( dbCommit() )
+
+   (nStyle)
+RETURN .T.
 
 
 /**********************************************
@@ -617,7 +750,7 @@ RETURN .F.
 
 METHOD Close( cName ) CLASS HB_LogSyslog
 
-   IF .not. ::lOpened
+   IF ! ::lOpened
       RETURN .F.
    ENDIF
 
@@ -659,7 +792,7 @@ RETURN Self
 
 METHOD PROCEDURE Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogDebug
 
-   IF .not. Empty( ::nMaxLevel )
+   IF ! Empty( ::nMaxLevel )
       IF nPriority < ::nMaxLevel
          RETURN
       ENDIF
