@@ -77,8 +77,9 @@
 #  define _GNU_SOURCE
 #endif
 
+/* For Sun C, a more generic solution would be nice */
 #if defined( __SUNPRO_C )
-   #define __inline __inline__
+#  define __inline __inline__
 #endif
 
 /* NOTE: For OS/2. Must be ahead of any and all #include statements */

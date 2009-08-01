@@ -1944,7 +1944,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
 
    IF ! lStopAfterInit .AND. ! lStopAfterHarbour
 
-      IF hbmk[ _HBMK_cGT ] == hbmk[ _HBMK_cGTDEFAULT ]
+      IF hbmk[ _HBMK_cGT ] != NIL .AND. hbmk[ _HBMK_cGT ] == hbmk[ _HBMK_cGTDEFAULT ]
          hbmk[ _HBMK_cGT ] := NIL
       ENDIF
 

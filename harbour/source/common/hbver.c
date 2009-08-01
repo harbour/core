@@ -617,6 +617,21 @@ char * hb_verCompiler( void )
    #else
       iVerPatch = 0;
    #endif
+
+#elif defined( __SUNPRO_C )
+
+   pszName = "Sun C";
+   iVerMajor = __SUNPRO_C / 0x100;
+   iVerMinor = ( __SUNPRO_C & 0xff ) / 0x10;
+   iVerPatch = __SUNPRO_C & 0xf;
+
+#elif defined( __SUNPRO_CC )
+
+   pszName = "Sun C++";
+   iVerMajor = __SUNPRO_CC / 0x100;
+   iVerMinor = ( __SUNPRO_CC & 0xff ) / 0x10;
+   iVerPatch = __SUNPRO_CC & 0xf;
+
 #else
 
    pszName = ( char * ) NULL;

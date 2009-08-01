@@ -21,30 +21,28 @@ CC_OUT = -o$(subst x,x, )
 
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
-CFLAGS =
+# may inherit -m64 from sunpro64.cf, which supersedes -xarch=v8
+CFLAGS ?= -xarch=v8
 LDFLAGS =
 
-ifneq ($(HB_BUILD_WARN),no)
-# XXX:
-# gmake[2]: Entering directory `/home/ice/harbour-build/source/rtl'
-# gmake[3]: Entering directory `/home/ice/harbour-build/source/rtl/obj/sunos/sunpro'
-# cc -I. -I../../../../../include  -errwarn=%all -O -xcode=pic32    -c browdbx.c -o browdbx.o
-# "browdbx.c", line 8: warning: empty translation unit
-# cc: acomp failed for browdbx.c
-# gmake[3]: *** [browdbx.o] Error 2
-# gmake[3]: Leaving directory `/home/ice/harbour-build/source/rtl/obj/sunos/sunpro'
-# CFLAGS += -errwarn=%all
-CFLAGS +=
+ifeq ($(HB_BUILD_WARN),no)
+CFLAGS += -erroff=%all
+else
+CFLAGS += -erroff=%none
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-CFLAGS += -O
+# Together with -xarch=v8 above, these are supposed to (somewhat)
+# conform to the Blastwave build standards, see
+# http://wiki.blastwave.org/mediawiki/index.php/Build_Standards
+# Try to keep them this way.
+CFLAGS += -O -fast -xstrconst -xnolibmopt
 endif
 
 ifeq ($(findstring sparc,$(shell isalist)),sparc)
 CFLAGS += -xcode=pic32
 else
-CFLAGS += -KPIC
+CFLAGS += -Kpic
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)

@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+CFLAGS = -m64
+
+include $(TOP)$(ROOT)config/sunos/sunpro.cf

@@ -27,7 +27,7 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 
    Linux/Darwin/BSD/HP-UX/Solaris
    ------------------------------
-      $ export HB_COMPILER=<[gcc]|watcom|icc>
+      $ export HB_COMPILER=<[gcc]|watcom|icc|sunpro|sunpro64>
       $ export HB_INSTALL_PREFIX=<DIR>
       $ ./make_gnu.sh
       $ sudo ./make_gnu.sh install
@@ -36,6 +36,13 @@ HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
       $ ./hbmk2 ../tests/hello.prg
       $ ./hello
       You should see 'Hello world!' on screen.
+
+      NOTE for sunpro/sunpro64 on Solaris:
+      ------------------------------------
+         If you have any GNU binutils stuff installed, do make sure
+         /usr/ccs/bin (the location of the native Sun C compilation
+         system tools) come *before* the GNU binutils components in
+         your $PATH.
 
    Windows/Windows CE
    ------------------
@@ -181,9 +188,15 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    watcom   - Open Watcom C++
    icc      - Intel(R) C/C++
 
-   Darwin/BSD/HP-UX/Solaris
-   ------------------------
+   Darwin/BSD/HP-UX
+   ----------------
    gcc      - GNU C
+
+   Solaris
+   -------
+   gcc      - GNU C
+   sunpro   - Sun Studio C/C++ (32-bit target)
+   sunpro64 - Sun Studio C/C++ (64-bit target)
 
    Windows (recommended)
    -------
