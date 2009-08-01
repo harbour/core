@@ -189,7 +189,7 @@ endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
    ifeq ($(ok),)
-      $(info Detected host platform: $(HB_HOST_ARCH))
+      $(info Harbour GNU Make: Detected host platform: $(HB_HOST_ARCH))
    endif
 endif
 
@@ -210,7 +210,7 @@ endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
    ifeq ($(ok),)
-      $(info Detected host CPU: $(HB_HOST_CPU))
+      $(info Harbour GNU Make: Detected host CPU: $(HB_HOST_CPU))
    endif
 endif
 
@@ -219,7 +219,6 @@ ifeq ($(HB_ARCHITECTURE),)
    ifneq ($(findstring $(HB_COMPILER),msvcarm mingwarm poccarm),)
       HB_ARCHITECTURE := wce
    endif
-   export HB_ARCHITECTURE
 endif
 ifeq ($(HB_COMPILER),)
    ifeq ($(HB_ARCHITECTURE),win)
@@ -318,9 +317,20 @@ ifeq ($(HB_COMPILER),)
          endif
       endif
    endif
-   $(info Autodetected HB_COMPILER: $(HB_COMPILER))
-   export HB_COMPILER
+   ifeq ($(ok),)
+      $(info Harbour GNU Make: Autodetected C compiler: $(HB_COMPILER))
+   endif
 endif
+
+ifeq ($(HB_ARCHITECTURE),)
+   $(error Harbour GNU Make: HB_ARCHICTECTURE not set, couldn't autodetect.)
+endif
+ifeq ($(HB_COMPILER),)
+   $(error Harbour GNU Make: HB_COMPILER not set, couldn't autodetect.)
+endif
+
+export HB_ARCHITECTURE
+export HB_COMPILER
 
 GRANDP = ../../../
 ARCH_COMP := $(HB_ARCHITECTURE)/$(HB_COMPILER)
@@ -359,7 +369,7 @@ endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
    ifeq ($(ok),)
-      $(info Detected target CPU: $(HB_CPU))
+      $(info Harbour GNU Make: Detected target CPU: $(HB_CPU))
    endif
 endif
 
@@ -371,7 +381,7 @@ endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
    ifeq ($(ok),)
-      $(info Detected host executable extension: $(HB_HOST_BIN_EXT))
+      $(info Harbour GNU Make: Detected host executable extension: $(HB_HOST_BIN_EXT))
    endif
 endif
 
@@ -391,10 +401,10 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
                endif
             endif
             ifeq ($(HB_BIN_COMPILE),)
-               $(warning Warning: HB_BIN_COMPILE not specified. Couldn't find native build.)
+               $(warning Harbour GNU Make: Warning: HB_BIN_COMPILE not specified. Couldn't find native build.)
             else
                ifeq ($(ok),)
-                  $(info HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
+                  $(info Harbour GNU Make: HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
                endif
             endif
          endif
