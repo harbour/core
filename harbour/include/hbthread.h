@@ -173,14 +173,25 @@ HB_EXTERN_BEGIN
 #elif defined( HB_OS_WIN )
 
    typedef HB_LONG            HB_THREAD_NO;
-   typedef unsigned           HB_THREAD_ID;
    typedef HANDLE             HB_THREAD_HANDLE;
    typedef CRITICAL_SECTION   HB_RAWCRITICAL_T;
    typedef HANDLE             HB_OSCOND_T;
 
-#  define HB_THREAD_STARTFUNC( func )     unsigned __stdcall func( void * Cargo )
-#  define HB_THREAD_END                   _endthreadex( 0 ); return 0;
-#  define HB_THREAD_RAWEND                return 0;
+#  if defined( HB_OS_WIN_CE ) && \
+      ( defined( __MINGW32CE__ ) && !defined( __MSVCRT__ ) )
+#     define HB_THREAD_RAWWINAPI
+#  endif
+
+#  if defined( HB_THREAD_RAWWINAPI )
+      typedef DWORD                       HB_THREAD_ID;
+#     define HB_THREAD_STARTFUNC( func )  DWORD WINAPI func( void * Cargo )
+#     define HB_THREAD_END                ExitThread( 0 ); return 0;
+#  else
+      typedef unsigned                    HB_THREAD_ID;
+#     define HB_THREAD_STARTFUNC( func )  unsigned __stdcall func( void * Cargo )
+#     define HB_THREAD_END                _endthreadex( 0 ); return 0;
+#  endif
+#  define HB_THREAD_RAWEND             return 0;
 
 #  define HB_THREAD_SELF()          GetCurrentThreadId()
 #  define HB_CRITICAL_INITVAL       { 0, 0, 0, 0, 0, 0 }

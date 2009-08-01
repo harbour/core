@@ -178,7 +178,8 @@ HB_EXTERN_BEGIN
 #     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
 #     define HB_SPINLOCK_RELEASE(l) hb_spinlock_release(l)
 
-#  elif ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1) )
+#  elif ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1) ) && \
+        !defined( __MINGW32CE__ )
 
 #     define HB_ATOM_INC( p )       __sync_add_and_fetch( (p), 1 )
 #     define HB_ATOM_DEC( p )       __sync_sub_and_fetch( (p), 1 )

@@ -774,7 +774,11 @@ HB_THREAD_HANDLE hb_threadCreate( HB_THREAD_ID * th_id, PHB_THREAD_STARTFUNC sta
       *th_id = ( HB_THREAD_ID ) 0;
    th_h = *th_id;
 #elif defined( HB_OS_WIN )
-   th_h = ( HANDLE ) _beginthreadex( NULL, 0, start_func, Cargo, 0, th_id );
+#  if defined( HB_THREAD_RAWWINAPI )
+      th_h = CreateThread( NULL, 0, start_func, Cargo, 0, th_id );
+#  else
+      th_h = ( HANDLE ) _beginthreadex( NULL, 0, start_func, Cargo, 0, th_id );
+#  endif
    if( !th_h )
       *th_id = ( HB_THREAD_ID ) 0;
 #elif defined( HB_OS_OS2 )

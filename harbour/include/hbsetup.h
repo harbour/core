@@ -472,10 +472,6 @@
    #define HB_OS_EOL_LEN 2
 #endif
 
-#if defined( HB_OS_WIN_CE ) && defined( HB_MT_VM )
-   #undef HB_MT_VM
-#endif
-
 /* ***********************************************************************
  * See also the following files for task specific definitions/settings
  *
