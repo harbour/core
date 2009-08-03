@@ -954,6 +954,13 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                            HB_COMP_PARAM->fLogo = TRUE;
                            HB_COMP_PARAM->fQuiet = TRUE;
                         }
+                        else if( szSwitch[l-1] == '-' && j-l == 4 &&
+                            memcmp( &szSwitch[l], "help", 4 ) == 0 )
+                        {
+                           HB_COMP_PARAM->fLogo = TRUE;
+                           HB_COMP_PARAM->fQuiet = FALSE;
+                           HB_COMP_PARAM->fExit = FALSE;
+                        }
                         else
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, &szSwitch[l], NULL );
                         if( szSwitch[j] )

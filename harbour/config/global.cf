@@ -6,6 +6,11 @@
 # See GNU make docs here:
 #    http://www.gnu.org/software/make/manual/make.html
 #    http://www.jgc.org/feeds/topic-gnumake.xml
+#    http://lists.gnu.org/archive/html/help-make/
+# Portable shell programming:
+#    http://www.gnu.org/software/autoconf/manual/html_node/Portable-Shell.html
+# GNU Coding standards:
+#    http://www.gnu.org/prep/standards/standards.html
 # ---------------------------------------------------------------
 
 # This isn't strictly necessary, but it does signficantly reduce
@@ -23,7 +28,7 @@ all: ; @echo Error: GNU Make version $(MAKE_VERSION) found, $(need) or upper nee
 else
 
 need := 3.81
-ok := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
+MAKE_381 := $(filter $(need),$(firstword $(sort $(MAKE_VERSION) $(need))))
 
 # Don't indent this subroutine
 define find_in_path
@@ -97,6 +102,75 @@ else
 endif
 
 endef
+
+ifeq ($(HB_CONFIG_SHOWN),)
+
+   ifneq ($(MAKE_381),)
+
+      # Some additional ones to be given a standard name:
+      #   HB_HOST_BUILD, HB_XBUILD, HB_WITHOUT_*, HB_REBUILD_PARSER
+
+      ifeq ($(HB_DYNLIB),yes)
+         $(info Dynamic library creation phase)
+      endif
+      ifneq ($(HB_USER_PRGFLAGS),)
+         $(info HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
+      endif
+      ifneq ($(HB_USER_CFLAGS),)
+         $(info HB_USER_CFLAGS: $(HB_USER_CFLAGS))
+      endif
+      ifneq ($(HB_USER_LDFLAGS),)
+         $(info HB_USER_LDFLAGS: $(HB_USER_LDFLAGS))
+      endif
+      ifneq ($(HB_USER_AFLAGS),)
+         $(info HB_USER_AFLAGS: $(HB_USER_AFLAGS))
+      endif
+      ifneq ($(HB_USER_MAKEFLAGS),)
+         $(info HB_USER_MAKEFLAGS: $(HB_USER_MAKEFLAGS))
+      endif
+      ifneq ($(HB_INSTALL_PREFIX),)
+         $(info HB_INSTALL_PREFIX: $(HB_INSTALL_PREFIX))
+      endif
+      ifneq ($(HB_BIN_INSTALL),)
+         $(info HB_BIN_INSTALL: $(HB_BIN_INSTALL))
+      endif
+      ifneq ($(HB_LIB_INSTALL),)
+         $(info HB_LIB_INSTALL: $(HB_LIB_INSTALL))
+      endif
+      ifneq ($(HB_INC_INSTALL),)
+         $(info HB_LIB_INSTALL: $(HB_INC_INSTALL))
+      endif
+      ifneq ($(HB_DOC_INSTALL),)
+         $(info HB_DOC_INSTALL: $(HB_DOC_INSTALL))
+      endif
+      ifneq ($(HB_BUILD_NAME),)
+         $(info HB_BUILD_NAME: $(HB_BUILD_NAME))
+      endif
+      ifneq ($(HB_BUILD_DEBUG),)
+         $(info HB_BUILD_DEBUG: $(HB_BUILD_DEBUG))
+      endif
+      ifneq ($(HB_BUILD_OPTIM),)
+         $(info HB_BUILD_OPTIM: $(HB_BUILD_OPTIM))
+      endif
+      ifneq ($(HB_BUILD_MODE),)
+         $(info HB_BUILD_MODE: $(HB_BUILD_MODE))
+      endif
+      ifneq ($(HB_CONTRIBLIBS),)
+         $(info HB_CONTRIBLIBS: $(HB_CONTRIBLIBS))
+      endif
+      ifneq ($(HB_CONTRIB_ADDONS),)
+         $(info HB_CONTRIB_ADDONS: $(HB_CONTRIB_ADDONS))
+      endif
+      ifneq ($(HB_EXTERNALLIBS),)
+         $(info HB_EXTERNALLIBS: $(HB_EXTERNALLIBS))
+      endif
+      ifneq ($(HB_EXTERNAL_ADDONS),)
+         $(info HB_EXTERNAL_ADDONS: $(HB_EXTERNAL_ADDONS))
+      endif
+   endif
+
+   export HB_CONFIG_SHOWN := yes
+endif
 
 # Shell detection
 ifneq ($(SHLVL),)
@@ -188,7 +262,7 @@ else
 endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
-   ifeq ($(ok),)
+   ifneq ($(MAKE_381),)
       $(info Harbour GNU Make: Detected host platform: $(HB_HOST_ARCH))
    endif
 endif
@@ -209,7 +283,7 @@ else
 endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
-   ifeq ($(ok),)
+   ifneq ($(MAKE_381),)
       $(info Harbour GNU Make: Detected host CPU: $(HB_HOST_CPU))
    endif
 endif
@@ -317,7 +391,7 @@ ifeq ($(HB_COMPILER),)
          endif
       endif
    endif
-   ifeq ($(ok),)
+   ifneq ($(MAKE_381),)
       $(info Harbour GNU Make: Autodetected C compiler: $(HB_COMPILER))
    endif
 endif
@@ -368,7 +442,7 @@ ifeq ($(HB_ARCHITECTURE),win)
 endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
-   ifeq ($(ok),)
+   ifneq ($(MAKE_381),)
       $(info Harbour GNU Make: Detected target CPU: $(HB_CPU))
    endif
 endif
@@ -380,7 +454,7 @@ else
 endif
 
 ifeq ($(HB_BUILD_VERBOSE),yes)
-   ifeq ($(ok),)
+   ifneq ($(MAKE_381),)
       $(info Harbour GNU Make: Detected host executable extension: $(HB_HOST_BIN_EXT))
    endif
 endif
@@ -403,7 +477,7 @@ ifneq ($(HB_HOST_ARCH)$(HB_HOST_CPU),$(HB_ARCHITECTURE)$(HB_CPU))
             ifeq ($(HB_BIN_COMPILE),)
                $(warning Harbour GNU Make: Warning: HB_BIN_COMPILE not specified. Couldn't find native build.)
             else
-               ifeq ($(ok),)
+               ifneq ($(MAKE_381),)
                   $(info Harbour GNU Make: HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
                endif
             endif

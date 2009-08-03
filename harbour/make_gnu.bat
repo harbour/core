@@ -111,6 +111,7 @@ if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
    rem Look for mingw32-make.exe and use it if found. Works only
    rem on Windows NT and upper. [vszakats]
 
+   rem Some other name variations: gnumake.exe, gmake.exe
    set _HB_MAKE=make.exe
 
    if not "%HB_ARCHITECTURE%" == "dos" goto _FM_WIN

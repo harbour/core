@@ -61,7 +61,7 @@ STATIC s_cErrFooter  := " "
 
 
 /***
-*	DefError()
+* DefError()
 */
 
 
@@ -194,7 +194,7 @@ FUNCTION SetErrorFooter()
 RETURN s_cErrFooter
 
 /***
-*	ErrorMessage()
+* ErrorMessage()
 */
 
 STATIC FUNC ErrorMessage( e )

@@ -2,22 +2,22 @@
 # $Id$
 #
 
-ROOT = ./
+ROOT := ./
 
 ifeq ($(HB_HOST_BUILD),yes)
 
-DIRS=\
+DIRS :=\
 	source \
 
 else
 
 ifeq ($(HB_HOST_BUILD),lib)
-HB_UTIL_DIR=
+   HB_UTIL_DIR :=
 else
-HB_UTIL_DIR=utils{source}
+   HB_UTIL_DIR := utils{source}
 endif
 
-DIRS=\
+DIRS :=\
 	doc \
 	include \
 	source \
@@ -28,21 +28,20 @@ DIRS=\
 endif
 
 ifeq ($(HB_POSTINST),)
-
-ifneq ($(HB_ROOTPOSTINST),)
-HB_POSTINST = $(HB_ROOTPOSTINST) $(HB_POSTINSTPARAM)
-else
-ifneq ($(SHLVL),)
-HB_POSTINST = $(TOP)$(ROOT)bin/postinst.sh $(HB_POSTINSTPARAM)
-else
-ifeq ($(HB_ARCHITECTURE),os2)
-HB_POSTINST = $(subst /,\,$(TOP)$(ROOT)bin/postinst.cmd) $(HB_POSTINSTPARAM)
-else
-HB_POSTINST = $(subst /,\,$(TOP)$(ROOT)bin/postinst.bat) $(HB_POSTINSTPARAM)
-endif
-endif
-endif
-
+   ifneq ($(HB_ROOTPOSTINST),)
+      HB_POSTINST := $(HB_ROOTPOSTINST) $(HB_POSTINSTPARAM)
+   else
+      # TOOPT: Use HB_SHELL variable
+      ifneq ($(SHLVL),)
+         HB_POSTINST = $(TOP)$(ROOT)bin/postinst.sh $(HB_POSTINSTPARAM)
+      else
+         ifneq ($(OS2_SHELL),)
+            HB_POSTINST = $(subst /,\,$(TOP)$(ROOT)bin/postinst.cmd) $(HB_POSTINSTPARAM)
+         else
+            HB_POSTINST = $(subst /,\,$(TOP)$(ROOT)bin/postinst.bat) $(HB_POSTINSTPARAM)
+         endif
+      endif
+   endif
 endif
 
 include $(ROOT)config/dir.cf
