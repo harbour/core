@@ -82,7 +82,7 @@ then
          [ "$HB_COMPILER" = "sunpro64" ]; then
         hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
         rm -f "${hb_mkdyn}"
-        if [ "$HB_COMPILER" = "sunos" ]; then
+        if [ "$HB_ARCHITECTURE" = "sunos" ]; then
             sed -e "s/gcc  -shared -fPIC/cc -G -xcode=pic32/g" "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
             chmod 755 "${hb_mkdyn}"
         else

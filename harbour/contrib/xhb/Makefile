@@ -66,6 +66,16 @@ PRG_SOURCES=\
 	xhbmt.prg \
 	xhbver.prg \
 	xthrow.prg \
+	\
+	hjwindow.prg \
+	hterrsys.prg \
+	htjlist.prg \
+	htmutil.prg \
+	tcgi.prg \
+	tedit.prg \
+	tfile.prg \
+	tframe.prg \
+	thtm.prg \
 
 PRG_HEADERS=\
 	hbcompat.ch \
