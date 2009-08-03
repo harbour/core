@@ -629,6 +629,7 @@ char * hb_verCompiler( void )
       /* Until someone at Sun somes up with a reliable way of identifying
          Sun Studio releases >= about 11. */
       iVerMajor = iVerMinor = iVerPatch = 0;
+      hb_snprintf( szSub, sizeof( szSub ) - 1, "(ident 0x%X)", __SUNPRO_C );
    #endif
 
 #elif defined( __SUNPRO_CC )
@@ -643,6 +644,7 @@ char * hb_verCompiler( void )
       /* Until someone at Sun somes up with a reliable way of identifying
          Sun Studio releases >= about 11. */
       iVerMajor = iVerMinor = iVerPatch = 0;
+      hb_snprintf( szSub, sizeof( szSub ) - 1, "(ident 0x%X)", __SUNPRO_CC );
    #endif
 
 #else

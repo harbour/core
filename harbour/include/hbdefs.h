@@ -73,7 +73,7 @@
     defined( __MINGW32__ ) || defined( __DMC__ ) || \
     ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 ) || \
     ( defined( __WATCOMC__ ) && __WATCOMC__ >= 1270 ) || \
-    ( ( defined( __GNUC__ ) || defined( __SUNPRO_C ) ) && \
+    ( ( defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) ) && \
       ( defined( _ISOC99_SOURCE ) || \
         ( defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 199901L ) || \
         ( defined( __DJGPP__ ) && \
@@ -248,14 +248,14 @@
 
    #if ! defined( HB_DONT_DEFINE_BASIC_TYPES ) && ! defined( _WINNT_H )
       #if !defined( LONGLONG )
-         #if defined( __GNUC__ ) || defined( __SUNPRO_C )
+         #if defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC )
             typedef signed long long LONGLONG;
          #else
             typedef __int64 LONGLONG;
          #endif
       #endif
       #if !defined( ULONGLONG )
-         #if defined( __GNUC__ ) || defined( __SUNPRO_C )
+         #if defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC )
             typedef unsigned long long ULONGLONG;
          #else
             typedef unsigned __int64 ULONGLONG;
@@ -798,7 +798,12 @@ typedef long                hbVMIntMax;       /* TOFIX */
  * different architectures - SPARC + LINUX, ALPHA + LINUX
  */
 #if !defined( HB_STRICT_ALIGNMENT )
-#  if defined( HB_OS_SUNOS ) || defined( HB_OS_HPUX ) || defined( _M_ARM )
+#  if defined( HB_CPU_SPARC ) || defined( HB_CPU_SPARC_64 ) || \
+      defined( HB_CPU_ALPHA ) || \
+      defined( HB_CPU_PARISC ) || \
+      defined( HB_CPU_MIPS ) || \
+      defined( HB_CPU_PPC ) || defined( HB_CPU_PPC_64 ) || \
+      defined( HB_CPU_ARM )
 #     define HB_STRICT_ALIGNMENT
 #  endif
 #endif

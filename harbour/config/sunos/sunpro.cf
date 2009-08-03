@@ -36,7 +36,12 @@ ifneq ($(HB_BUILD_OPTIM),no)
 # conform to the Blastwave build standards, see
 #    http://wiki.blastwave.org/mediawiki/index.php/Build_Standards
 # Try to keep them this way.
-CFLAGS += -O -fast -xstrconst -xnolibmopt
+CFLAGS += -O -fast
+ifneq ($(HB_BUILD_MODE),cpp)
+CFLAGS += -xstrconst
+endif
+CFLAGS += -xnolibmopt
+endif
 endif
 
 ifeq ($(findstring sparc,$(shell isalist)),sparc)
@@ -50,7 +55,7 @@ CFLAGS += -g
 endif
 
 LD = $(HB_CCACHE) $(HB_CMP)
-LD_OUT = -o
+LD_OUT = -o$(subst x,x, )
 
 # Add all libraries specified in LIBS.
 LINKPATHS += -L$(LIB_DIR)

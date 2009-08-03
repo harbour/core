@@ -105,7 +105,7 @@ LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo 
 
    errmsg[ 0 ] = '\0';
 
-#if defined( HB_OS_WIN_64 ) && ( defined( _M_X64 ) || defined( __MINGW64__ ) )
+#if defined( HB_OS_WIN_64 ) && defined( HB_CPU_X86_64 )
    {
       PCONTEXT pCtx = pExceptionInfo->ContextRecord;
 
@@ -134,7 +134,7 @@ LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo 
                See: - StackWalk64()
                     - http://www.codeproject.com/KB/threads/StackWalker.aspx?fid=202364 */
    }
-#elif defined( HB_OS_WIN_64 ) && defined( _M_IA64 )
+#elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_IA_64 )
    {
       /* TODO: Itanium
                See: winnt.h for PCONTEXT structure. */
