@@ -66,7 +66,7 @@
 
 #if defined( HB_OS_WIN )
 
-#if defined( HB_ARCH_32BIT ) && !defined( _M_ARM ) && \
+#if defined( HB_CPU_X86 ) && \
     ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
       defined( __WATCOMC__ ) || defined( __MINGW32__ ) )
 
@@ -87,7 +87,7 @@ static int hb_Inp9x( USHORT usPort )
       __emit__(0x32,0xE4);    /* ASM XOR AH, AH */
       usVal = _AX;
 
-   #elif ( defined( __XCC__ ) || defined( __POCC__ ) ) && defined( _M_IX86 )
+   #elif defined( __XCC__ ) || defined( __POCC__ )
 
       __asm {
                mov   dx, usPort
@@ -124,7 +124,7 @@ static int hb_Outp9x( USHORT usPort, USHORT usVal )
       _AL = usVal;
       __emit__(0xEE);        /* ASM OUT DX, AL */
 
-   #elif ( defined( __XCC__ ) || defined( __POCC__ ) ) && defined( _M_IX86 )
+   #elif defined( __XCC__ ) || defined( __POCC__ )
 
       __asm {
                mov   dx, usPort
@@ -153,7 +153,7 @@ static int hb_Outp9x( USHORT usPort, USHORT usVal )
 /* dDurat is in seconds */
 static void hb_gt_w9xTone( double dFreq, double dDurat )
 {
-   INT uLSB,uMSB;
+   INT uLSB, uMSB;
    ULONG lAdjFreq;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_w9xtone(%lf, %lf)", dFreq, dDurat));
@@ -167,32 +167,31 @@ static void hb_gt_w9xTone( double dFreq, double dDurat )
    if( dFreq >= 20.0 )
    {
       /* Setup Sound Control Port Registers and timer channel 2 */
-      hb_Outp9x(67, 182) ;
+      hb_Outp9x( 67, 182 );
 
-      lAdjFreq = (ULONG)( 1193180 / dFreq ) ;
+      lAdjFreq = ( ULONG ) ( 1193180 / dFreq );
 
-      if( (LONG) lAdjFreq < 0 )
+      if( ( LONG ) lAdjFreq < 0 )
          uLSB = lAdjFreq + 65536;
       else
          uLSB = lAdjFreq % 256;
 
-      if( (LONG) lAdjFreq < 0 )
+      if( ( LONG ) lAdjFreq < 0 )
          uMSB = lAdjFreq + 65536;
       else
          uMSB = lAdjFreq / 256;
 
+      /* set the frequency ( LSB, MSB ) */
 
-      /* set the frequency (LSB,MSB) */
-
-      hb_Outp9x(66, ( USHORT ) uLSB);
-      hb_Outp9x(66, ( USHORT ) uMSB);
+      hb_Outp9x( 66, ( USHORT ) uLSB );
+      hb_Outp9x( 66, ( USHORT ) uMSB );
 
       /* Get current Port setting */
       /* enable Speaker Data & Timer gate bits */
       /* (00000011B is bitmask to enable sound) */
       /* Turn on Speaker - sound Tone for duration.. */
 
-      hb_Outp9x(97, ( USHORT ) hb_Inp9x( 97 ) | 3);
+      hb_Outp9x( 97, ( USHORT ) hb_Inp9x( 97 ) | 3 );
 
       hb_idleSleep( dDurat );
 
@@ -201,13 +200,12 @@ static void hb_gt_w9xTone( double dFreq, double dDurat )
       /* (11111100B is bitmask to disable sound) */
       /* Turn off the Speaker ! */
 
-      hb_Outp9x(97, hb_Inp9x( 97 ) & 0xFC);
+      hb_Outp9x( 97, hb_Inp9x( 97 ) & 0xFC );
    }
    else
-   {
       hb_idleSleep( dDurat );
-   }
 }
+
 #endif
 
 /* *********************************************************************** */
@@ -220,13 +218,9 @@ static void hb_gt_wNtTone( double dFreq, double dDurat )
       less than < 20 hz.  Windows NT minimum is 37... */
 
    if( dFreq >= 37.0 )
-   {
-      Beep( (ULONG) dFreq, (ULONG) ( dDurat * 1000 ) ); /* Beep wants Milliseconds */
-   }
+      Beep( ( ULONG ) dFreq, ( ULONG ) ( dDurat * 1000 ) ); /* Beep wants Milliseconds */
    else
-   {
       hb_idleSleep( dDurat );
-   }
 }
 
 /* *********************************************************************** */
@@ -254,9 +248,9 @@ void hb_gt_winapi_tone( double dFrequency, double dDuration )
    }
    else  /* If Windows 95 or 98, use w9xTone for chosen C compilers */
    {
-      #if defined( HB_ARCH_32BIT ) && !defined( _M_ARM ) && \
-           ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
-             defined( __WATCOMC__ )  || defined( __MINGW32__ ) )
+      #if defined( HB_CPU_X86 ) && \
+          ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
+            defined( __WATCOMC__ ) || defined( __MINGW32__ ) )
          hb_gt_w9xTone( dFrequency, dDuration );
       #else
          hb_gt_wNtTone( dFrequency, dDuration );

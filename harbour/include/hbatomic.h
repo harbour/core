@@ -73,7 +73,7 @@ HB_EXTERN_BEGIN
 /* Inline assembler version of atomic operations on memory reference counters */
 #if defined( __GNUC__ )
 
-#  if ( defined( i386 ) || defined( __i386__ ) || defined( __x86_64__ ) )
+#  if defined( HB_CPU_X86 ) || defined( HB_CPU_X86_64 )
 
 #     if HB_COUNTER_SIZE == 4
 
@@ -218,7 +218,7 @@ HB_EXTERN_BEGIN
 #     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
 #     define HB_SPINLOCK_RELEASE(l) __sync_lock_release(l)
 
-#  elif defined( __powerpc__ ) || defined( __ppc )
+#  elif defined( HB_CPU_PPC )
 
 #     if HB_COUNTER_SIZE == 4
 
@@ -265,7 +265,7 @@ HB_EXTERN_BEGIN
 
 #elif defined( _MSC_VER )
 
-#  if defined( i386 ) || defined( __i386__ ) || defined( _M_IX86 )
+#  if defined( HB_CPU_X86 )
 
 #     if HB_COUNTER_SIZE == 4
 
@@ -301,8 +301,7 @@ HB_EXTERN_BEGIN
 
 #elif defined( __WATCOMC__ ) && defined( __cplusplus )
 
-#  if defined( i386 ) || defined( __i386__ ) || defined( __x86_64__ ) || \
-      defined( _M_IX86 ) || defined( _M_AMD64 )
+#  if defined( HB_CPU_X86 ) || defined( HB_CPU_X86_64 )
 
 #     if HB_COUNTER_SIZE == 4
 

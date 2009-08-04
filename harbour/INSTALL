@@ -187,6 +187,7 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    gcc      - GNU C
    watcom   - Open Watcom C++
    icc      - Intel(R) C/C++
+   sunpro   - Sun Studio C/C++
 
    Darwin/BSD/HP-UX
    ----------------

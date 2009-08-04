@@ -42,7 +42,6 @@ CFLAGS += -xstrconst
 endif
 CFLAGS += -xnolibmopt
 endif
-endif
 
 ifeq ($(findstring sparc,$(shell isalist)),sparc)
 CFLAGS += -xcode=pic32

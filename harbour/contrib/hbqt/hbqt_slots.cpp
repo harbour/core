@@ -63,8 +63,6 @@
 
 #include "hbqt_slots.h"
 
-#include <windows.h>   ////////////////////////////////////////////////////
-
 #include <QWidget>
 #include <QString>
 #include <QList>

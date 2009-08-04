@@ -411,12 +411,15 @@
       defined( _M_MIPS )
    #define HB_CPU_MIPS
 
-#elif defined( __powerpc64__ )
+#elif defined( __powerpc64__ ) || \
+      defined( __ppc64__ ) || \
+      defined( _ARCH_PPC64 )
    #define HB_CPU_PPC_64
 
 #elif defined( __powerpc__ ) || \
       defined( __powerpc ) || \
       defined( __POWERPC__ ) || \
+      defined( __ppc ) || \
       defined( __ppc__ ) || \
       defined( __PPC__ ) || \
       defined( _ARCH_PPC ) || \

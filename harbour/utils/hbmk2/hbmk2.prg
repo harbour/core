@@ -2308,8 +2308,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-x64",;
                                                       "harbour" + cDL_Version_Alter + "-x64" ) }
          CASE hbmk[ _HBMK_cCOMP ] == "mingwarm"
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-arm",;
-                                                      "harbour" + cDL_Version_Alter + "-arm" ) }
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-arm",;
+                                                      "harbour" + cDL_Version_Alter + "-wce-arm" ) }
          OTHERWISE
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter,;
                                                       "harbour" + cDL_Version_Alter ) }
@@ -2880,8 +2880,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-ia64" + cLibExt,;
                                                       "harbour" + cDL_Version_Alter + "-ia64" + cLibExt ) }
          CASE hbmk[ _HBMK_cCOMP ] == "msvcarm"
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-arm" + cLibExt,;
-                                                      "harbour" + cDL_Version_Alter + "-arm" + cLibExt ) }
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-arm" + cLibExt,;
+                                                      "harbour" + cDL_Version_Alter + "-wce-arm" + cLibExt ) }
          ENDCASE
 
          l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
@@ -2978,8 +2978,8 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-x64" + cLibExt,;
                                                       "harbour" + cDL_Version_Alter + "-x64" + cLibExt ) }
          CASE hbmk[ _HBMK_cCOMP ] == "poccarm"
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-arm" + cLibExt,;
-                                                      "harbour" + cDL_Version_Alter + "-arm" + cLibExt ) }
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-arm" + cLibExt,;
+                                                      "harbour" + cDL_Version_Alter + "-wce-arm" + cLibExt ) }
          OTHERWISE
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + cLibExt,;
                                                       "harbour" + cDL_Version_Alter + cLibExt ) }
