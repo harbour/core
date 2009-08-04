@@ -61,6 +61,7 @@ CPP_SOURCES=\
 	QFontDialog.cpp \
 	QFontInfo.cpp \
 	QFormLayout.cpp \
+	QFontMetrics.cpp \
 	QFrame.cpp \
 	QFtp.cpp \
 	QGradient.cpp \
@@ -285,6 +286,7 @@ PRG_SOURCES=\
 	TQFontDatabase.prg \
 	TQFontDialog.prg \
 	TQFontInfo.prg \
+	TQFontMetrics.prg \
 	TQFormLayout.prg \
 	TQFrame.prg \
 	TQFtp.prg \

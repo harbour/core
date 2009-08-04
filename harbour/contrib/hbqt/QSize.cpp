@@ -74,6 +74,10 @@ HB_FUNC( QT_QSIZE )
    {
       hb_retptr( ( QSize* ) new QSize( hb_parni( 1 ), hb_parni( 2 ) ) );
    }
+   else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QSize* ) new QSize( *hbqt_par_QSize( 1 ) ) );
+   }
    else
    {
       hb_retptr( ( QSize* ) new QSize() );

@@ -63,7 +63,7 @@
 
 #include "hbqt_slots.h"
 
-//#include <windows.h>   ////////////////////////////////////////////////////
+#include <windows.h>   ////////////////////////////////////////////////////
 
 #include <QWidget>
 #include <QString>
@@ -1629,6 +1629,15 @@ QModelIndex HbTableView::navigate( int cursorAction )
 }
 /*----------------------------------------------------------------------*/
 
+#if 0
+Qt_DisplayRole              0       Qt_FontRole                    6
+Qt_DecorationRole           1       Qt_TextAlignmentRole           7
+Qt_EditRole                 2       Qt_BackgroundRole              8
+Qt_ToolTipRole              3       Qt_ForegroundRole              9
+Qt_StatusTipRole            4       Qt_CheckStateRole              10
+Qt_WhatsThisRole            5       Qt_SizeHintRole                13
+#endif
+
 #define HBQT_BRW_CELLVALUE                        1001
 #define HBQT_BRW_COLCOUNT                         1002
 #define HBQT_BRW_ROWCOUNT                         1003
@@ -1686,91 +1695,85 @@ Qt::ItemFlags HbDbfModel::flags( const QModelIndex & index ) const
 
 QVariant HbDbfModel::data( const QModelIndex & index, int role ) const
 {
-   // char str[ 50 ]; hb_snprintf( str, sizeof( str ), "data - row=%i col=%i role=%i", index.row(), index.column(), role );  OutputDebugString( str );
+//char str[ 50 ]; hb_snprintf( str, sizeof( str ), "data - row=%i col=%i role=%i", index.row(), index.column(), role );  OutputDebugString( str );
    if( !index.isValid() )
-      return QVariant();
+      return( QVariant() );
 
-   if( role == Qt::SizeHintRole  )
+   switch( role )
    {
-      int iHeight = fetchRole( block, HBQT_BRW_DATHEIGHT, index.row()+1, index.column()+1 ).toInt();
-      return( QSize( 20, iHeight ) );
+      case Qt::SizeHintRole:
+      {
+         int iHeight = fetchRole( block, HBQT_BRW_DATHEIGHT, index.row()+1, index.column()+1 ).toInt();
+         return( QSize( 20, iHeight ) );
+      }
+      case Qt::TextAlignmentRole:
+      {
+         return( fetchRole( block, HBQT_BRW_DATALIGN, index.row()+1, index.column()+1 ) );
+      }
+      case Qt::BackgroundRole:
+      {
+         int iClr = fetchRole( block, HBQT_BRW_DATBGCOLOR, index.row()+1, index.column()+1 ).toInt();
+         if( iClr < 25 )
+            return( QColor( ( Qt::GlobalColor ) iClr ) );
+         else
+            return( QColor( ( QRgb ) iClr ) );
+      }
+      case Qt::ForegroundRole:
+      {
+         int iClr = fetchRole( block, HBQT_BRW_DATFGCOLOR, index.row()+1, index.column()+1 ).toInt();
+         if( iClr < 25 )
+            return( QColor( ( Qt::GlobalColor ) iClr ) );
+         else
+            return( QColor( ( QRgb ) iClr ) );
+      }
+      case Qt::DisplayRole:
+      {
+         return( fetchRole( block, HBQT_BRW_CELLVALUE, index.row()+1, index.column()+1 ) );
+      }
    }
-   if( role == Qt::TextAlignmentRole )
-   {
-      return( fetchRole( block, HBQT_BRW_DATALIGN, index.row()+1, index.column()+1 ) );
-   }
-   if( role == Qt::BackgroundRole )
-   {
-      int iClr = fetchRole( block, HBQT_BRW_DATBGCOLOR, index.row()+1, index.column()+1 ).toInt();
-      if( iClr < 25 )
-         return( QColor( ( Qt::GlobalColor ) iClr ) );
-      else
-         return( QColor( ( QRgb ) iClr ) );
-   }
-   if( role == Qt::ForegroundRole )
-   {
-      int iClr = fetchRole( block, HBQT_BRW_DATFGCOLOR, index.row()+1, index.column()+1 ).toInt();
-      if( iClr < 25 )
-         return( QColor( ( Qt::GlobalColor ) iClr ) );
-      else
-         return( QColor( ( QRgb ) iClr ) );
-   }
-   if( role != Qt::DisplayRole )
-   {
-      return QVariant();
-   }
-   return fetchRole( block, HBQT_BRW_CELLVALUE, index.row()+1, index.column()+1 );
+   return( QVariant() );
 }
 
 QVariant HbDbfModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-   // char str[ 50 ]; hb_snprintf( str, sizeof( str ), "headerData - section=%i orient=%i role=%i", section, orientation, role );  OutputDebugString( str );
-   #if 0
-   Qt_DisplayRole                            0
-   Qt_DecorationRole                         1
-   Qt_EditRole                               2
-   Qt_ToolTipRole                            3
-   Qt_StatusTipRole                          4
-   Qt_WhatsThisRole                          5
-
-   Qt_FontRole                               6
-   Qt_TextAlignmentRole                      7
-   Qt_BackgroundRole                         8
-   Qt_ForegroundRole                         9
-   Qt_CheckStateRole                         10
-   Qt_SizeHintRole                           13
-   #endif
+//char str[ 50 ]; hb_snprintf( str, sizeof( str ), "headerData - section=%i orient=%i role=%i", section, orientation, role );  OutputDebugString( str );
 
    if( orientation == Qt::Horizontal )
    {
-      if( role == Qt::TextAlignmentRole )
+      switch( role )
       {
-         return( fetchRole( block, HBQT_BRW_COLALIGN, 0, section+1 ).toInt() );
-      }
-      if( role == Qt::SizeHintRole )
-      {
-         int iHeight = fetchRole( block, HBQT_BRW_COLHEIGHT, 0, section+1 ).toInt();
-         return( QSize( 20, iHeight ) );
-      }
-      if( role == Qt::BackgroundRole )
-      {
-         int iClr = fetchRole( block, HBQT_BRW_COLBGCOLOR, 0, section+1 ).toInt();
-         if( iClr < 25 )
-            return( QColor( ( Qt::GlobalColor ) iClr ) );
-         else
-            return( QColor( ( QRgb ) iClr ) );
-      }
-      if( role == Qt::ForegroundRole )
-      {
-         int iClr = fetchRole( block, HBQT_BRW_COLFGCOLOR, 0, section+1 ).toInt();
-         if( iClr < 25 )
-            return( QColor( ( Qt::GlobalColor ) iClr ) );
-         else
-            return( QColor( ( QRgb ) iClr ) );
-      }
-      if( role == Qt::DisplayRole )
-      {
-         return( fetchRole( block, HBQT_BRW_COLHEADER, 0, section+1 ) );
+         case Qt::TextAlignmentRole:
+         {
+            return( fetchRole( block, HBQT_BRW_COLALIGN, 0, section+1 ).toInt() );
+         }
+         case Qt::SizeHintRole:
+         {
+            int iHeight = fetchRole( block, HBQT_BRW_COLHEIGHT, 0, section+1 ).toInt();
+            return( QSize( 20, iHeight ) );
+         }
+         case Qt::BackgroundRole:
+         {
+            int iClr = fetchRole( block, HBQT_BRW_COLBGCOLOR, 0, section+1 ).toInt();
+            if( iClr < 25 )
+               return( QColor( ( Qt::GlobalColor ) iClr ) );
+            else
+               return( QColor( ( QRgb ) iClr ) );
+         }
+         case Qt::ForegroundRole:
+         {
+            int iClr = fetchRole( block, HBQT_BRW_COLFGCOLOR, 0, section+1 ).toInt();
+            if( iClr < 25 )
+               return( QColor( ( Qt::GlobalColor ) iClr ) );
+            else
+               return( QColor( ( QRgb ) iClr ) );
+         }
+         case Qt::DisplayRole:
+         {
+            return( fetchRole( block, HBQT_BRW_COLHEADER, 0, section+1 ) );
+         }
+         case Qt::FontRole:
+         case Qt::DecorationRole:
+            break;
       }
    }
 
@@ -1804,14 +1807,10 @@ int HbDbfModel::columnCount( const QModelIndex & /*parent = QModelIndex()*/ ) co
 
 QModelIndex HbDbfModel::index( int row, int column, const QModelIndex & parent ) const
 {
-   // char str[ 50 ]; hb_snprintf( str, sizeof( str ), "index:  row=%i col=%i", row, column );  OutputDebugString( str );
+//char str[ 50 ]; hb_snprintf( str, sizeof( str ), "index:  row=%i col=%i", row, column );  OutputDebugString( str );
+   HB_SYMBOL_UNUSED( parent );
 
-   return createIndex( row, column, row * column );
-
-   if( !hasIndex( row, column, parent ) )
-      return QModelIndex();
-
-   return QModelIndex();
+   return( createIndex( row, column, row * column ) );
 }
 
 QModelIndex HbDbfModel::parent( const QModelIndex & /* child */ ) const

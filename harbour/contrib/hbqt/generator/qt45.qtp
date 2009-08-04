@@ -63,6 +63,7 @@ QFontComboBox.qth
 QFontDatabase.qth
 QFontDialog.qth
 QFontInfo.qth
+QFontMetrics.qth
 QFormLayout.qth
 QFrame.qth
 QFtp.qth

@@ -65,6 +65,7 @@ CREATE CLASS HbDbfModel INHERIT QAbstractItemModel
 
    METHOD New( bBlock )                        INLINE ::pPtr := Qt_HbDbfModel( bBlock ), Self
    METHOD Reset()                              INLINE Qt_HbDbfModel_reset( ::pPtr )
+   METHOD Index( nRow, nCol )                  INLINE Qt_HbDbfModel_index( ::pPtr, nRow, nCol, 0 )   
 
    ENDCLASS
 </SUBCLASS>
@@ -93,6 +94,11 @@ HB_FUNC( QT_HBDBFMODEL )
 HB_FUNC( QT_HBDBFMODEL_RESET )
 {
    hbqt_par_HbDbfModel( 1 )->reset();
+}
+
+HB_FUNC( QT_HBDBFMODEL_INDEX )
+{
+   hb_retptr( new QModelIndex( hbqt_par_HbDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ) );
 }
 
 </CODE>

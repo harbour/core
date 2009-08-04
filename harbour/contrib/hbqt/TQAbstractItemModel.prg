@@ -131,6 +131,7 @@ CREATE CLASS HbDbfModel INHERIT QAbstractItemModel
 
    METHOD New( bBlock )                        INLINE ::pPtr := Qt_HbDbfModel( bBlock ), Self
    METHOD Reset()                              INLINE Qt_HbDbfModel_reset( ::pPtr )
+   METHOD Index( nRow, nCol )                  INLINE Qt_HbDbfModel_index( ::pPtr, nRow, nCol, 0 )
 
    ENDCLASS
 

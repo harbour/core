@@ -100,6 +100,11 @@ HB_FUNC( QT_HBDBFMODEL_RESET )
    hbqt_par_HbDbfModel( 1 )->reset();
 }
 
+HB_FUNC( QT_HBDBFMODEL_INDEX )
+{
+   hb_retptr( new QModelIndex( hbqt_par_HbDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), QModelIndex() ) ) );
+}
+
 
 /*
  * DESTRUCTOR
