@@ -24,9 +24,9 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 LDFLAGS =
 
 ifneq ($(HB_BUILD_WARN),no)
-CFLAGS += -erroff=%all
-else
 CFLAGS += -erroff=%none
+else
+CFLAGS += -erroff=%all
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
