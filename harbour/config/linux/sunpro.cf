@@ -82,6 +82,11 @@ endif
 
 endif
 
+# HB_GPM_MOUSE: use gpm mouse driver
+ifeq ($(HB_GPM_MOUSE),yes)
+LINKLIBS += -lgpm
+endif
+
 ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
 LINKLIBS += -lpcre
 endif
