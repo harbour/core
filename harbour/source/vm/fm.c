@@ -79,7 +79,9 @@
 
 /* For Sun C, a more generic solution would be nice */
 #if defined( __SUNPRO_C ) || defined( __SUNPRO_CC )
-#  define __inline __inline__
+#  ifndef __inline
+#     define __inline __inline__
+#  endif
 #endif
 
 /* NOTE: For OS/2. Must be ahead of any and all #include statements */
