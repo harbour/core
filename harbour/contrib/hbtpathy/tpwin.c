@@ -120,4 +120,12 @@ HB_FUNC( P_WRITEPORT )
    hb_retnl( bRet ? ( long ) nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
 }
 
+/* TODO: Implement these dummy functions. */
+HB_FUNC( P_OUTFREE ) {}
+HB_FUNC( P_CTRLCTS ) {}
+HB_FUNC( P_ISDCD ) {}
+HB_FUNC( P_ISRI ) {}
+HB_FUNC( P_ISDSR ) {}
+HB_FUNC( P_ISCTS ) {}
+
 #endif /* HB_OS_WIN */

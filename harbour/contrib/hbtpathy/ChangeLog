@@ -109,7 +109,6 @@
    * tp_/testtp.prg
       + Added CVS ID to every file
 
-
 I sent the original version to the flagship website in may 2000.
 I just now (July 2001) made the first change to the code.
 
@@ -120,6 +119,3 @@ assumed that if you were setting parity to N, the port was already at N and I
 didn't explicitly call stty -parenb and -parodd.
 
 I included telepathy.bak in case you care to look at the prior version.
-
-
-

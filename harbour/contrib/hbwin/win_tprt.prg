@@ -55,7 +55,7 @@
 
 #include "hbwin.ch"
 
-#define MAXSERIAL                   16
+#define MAXSERIAL                   32
 
 //
 // The class is a VERY thin layer over the xHarbour functions and the xHarbour functions
@@ -121,7 +121,7 @@ METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits ) CLASS WinPort
 
    RETURN self
 
-METHOD Read( /*@*/cString, nLength ) CLASS WinPort
+METHOD Read( /* @ */ cString, nLength ) CLASS WinPort
    LOCAL nResult
 
    cString := Space( nlength )
@@ -204,6 +204,6 @@ METHOD Error() CLASS WinPort
    ENDIF
 
    // WinPortError clears the error - don't call it twice
-   cString += "error (" + LTrim( Str( nError := WinPortError() ) ) + ") : " + FormatMessage( nError )
+   cString += "error (" + hb_ntos( nError := WinPortError() ) + ") : " + FormatMessage( nError )
 
    RETURN cString
