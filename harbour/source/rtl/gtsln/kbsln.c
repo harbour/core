@@ -497,9 +497,14 @@ static int hb_sln_try_get_Kbd_State( void )
 
       return modifiers;
    }
-#endif
+   else
+      return 0;
+
+#else
 
    return 0;
+
+#endif
 }
 
 /* *********************************************************************** */
