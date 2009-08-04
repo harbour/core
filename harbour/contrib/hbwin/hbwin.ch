@@ -106,10 +106,6 @@
 #define RTS_CONTROL_HANDSHAKE  0x02
 #define RTS_CONTROL_TOGGLE     0x03
 
-#ifndef INVALID_HANDLE_VALUE
-#define INVALID_HANDLE_VALUE    -1
-#endif
-
 /* win_Prn() related values */
 
 #define FORM_A4                9

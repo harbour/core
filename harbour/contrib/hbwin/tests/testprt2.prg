@@ -69,8 +69,8 @@ procedure main(cPortName)
     ?
     inkey(0)
 
-    oWinPort := WinPort():Init(cPortName, CBR_9600, ODDPARITY, 7, ONESTOPBIT)
-    if !oWinPort:Open
+    oWinPort := Win_Port():Init(cPortName, CBR_9600, ODDPARITY, 7, ONESTOPBIT)
+    if !oWinPort:Open()
         ? "Open() failed :", oWinPort:Error()
     else
         ? "Open() succeeded"

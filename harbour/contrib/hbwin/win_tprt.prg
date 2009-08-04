@@ -55,8 +55,6 @@
 
 #include "hbwin.ch"
 
-#define MAXSERIAL                   32
-
 //
 // The class is a VERY thin layer over the xHarbour functions and the xHarbour functions
 // are a VERY thin layer over the Win functions, almost no parameter checking! You get what you
@@ -71,7 +69,7 @@
 // Really Windows comms should be done with threads and/or OVERLAPPED I/O - and I haven't.
 //
 
-CREATE CLASS WinPort
+CREATE CLASS Win_Port
 
    // if this is not true something didn't work!
    ACCESS Open() INLINE ::lOpen
@@ -85,47 +83,47 @@ CREATE CLASS WinPort
    METHOD Read( cString, nLength )
    METHOD Recv( nLength )
    METHOD RecvTo( cDelim, nMaxlen )
-   METHOD Write( cString ) INLINE WinPortWrite( ::nPort, cString )
-   METHOD Status( lCTS, lDSR, lRing, lDCD ) INLINE WinPortStatus( ::nPort, @lCTS, @lDSR, @lRing, @lDCD )
+   METHOD Write( cString ) INLINE Win_PortWrite( ::nPort, cString )
+   METHOD Status( lCTS, lDSR, lRing, lDCD ) INLINE Win_PortStatus( ::nPort, @lCTS, @lDSR, @lRing, @lDCD )
    METHOD QueueStatus( lCTSHold, lDSRHold, lDCDHold, lXoffHold, lXoffSent, nInQueue, nOutQueue ) INLINE ;
-           WinPortQueueStatus( ::nPort, @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
+           Win_PortQueueStatus( ::nPort, @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
    // boolean return is the status of the call not the line!
-   METHOD SetRTS( lCTS ) INLINE WinPortSetRTS( ::nPort, lCTS )
+   METHOD SetRTS( lCTS ) INLINE Win_PortSetRTS( ::nPort, lCTS )
    // boolean return is the status of the call not the line!
-   METHOD SetDTR( lDTR ) INLINE WinPortSetDTR( ::nPort, lDTR )
-   METHOD RTSFlow( nRTS ) INLINE WinPortRTSFlow( ::nPort, nRTS )
-   METHOD DTRFlow( nDTR ) INLINE WinPortDTRFlow( ::nPort, nDTR )
-   METHOD XonXoffFlow( lXonXoff ) INLINE WinPortXonXoffFlow( ::nPort, lXonXoff )
-   METHOD Purge( lRXBuffer, lTXBuffer ) INLINE WinPortPurge( ::nPort, lRXBuffer, lTXBuffer )
-   METHOD PurgeRX() INLINE WinPortPurge( ::nPort, .T., .F. )
-   METHOD PurgeTX() INLINE WinPortPurge( ::nPort, .F., .T. )
-   METHOD Close( nDrain ) INLINE WinPortClose( ::nPort, iif( Empty( nDrain ), 0, nDrain ) )
+   METHOD SetDTR( lDTR ) INLINE Win_PortSetDTR( ::nPort, lDTR )
+   METHOD RTSFlow( nRTS ) INLINE Win_PortRTSFlow( ::nPort, nRTS )
+   METHOD DTRFlow( nDTR ) INLINE Win_PortDTRFlow( ::nPort, nDTR )
+   METHOD XonXoffFlow( lXonXoff ) INLINE Win_PortXonXoffFlow( ::nPort, lXonXoff )
+   METHOD Purge( lRXBuffer, lTXBuffer ) INLINE Win_PortPurge( ::nPort, lRXBuffer, lTXBuffer )
+   METHOD PurgeRX() INLINE Win_PortPurge( ::nPort, .T., .F. )
+   METHOD PurgeTX() INLINE Win_PortPurge( ::nPort, .F., .T. )
+   METHOD Close( nDrain ) INLINE Win_PortClose( ::nPort, iif( Empty( nDrain ), 0, nDrain ) )
    METHOD Error()
-   METHOD DebugDCB( nDebug ) INLINE WinPortDebugDCB(::nPort, nDebug )
+   METHOD DebugDCB( nDebug ) INLINE Win_PortDebugDCB(::nPort, nDebug )
    METHOD TimeOuts( nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant ) INLINE ;
-           WinPortTimeOuts( nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant )
-   METHOD Buffers( nInQueue, nOutQueue ) INLINE WinPortBuffers( nInQueue, nOutQueue )
+           Win_PortTimeOuts( nReadInterval, nReadMultiplier, nReadConstant, nWriteMultiplier, nWriteConstant )
+   METHOD Buffers( nInQueue, nOutQueue ) INLINE Win_PortBuffers( nInQueue, nOutQueue )
 
 ENDCLASS
 
 
-METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits ) CLASS WinPort
+METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits ) CLASS Win_Port
 
    ::cPortName := Upper( cPortName )
-   IF Left( ::cPortName, 3 ) == "COM" .AND. ( ::nPort := Val( SubStr( ::cPortName, 4 ) ) ) >= 1 .AND. ::nPort <= MAXSERIAL
-      ::nPort--
-      IF WinPortOpen( ::nPort, nBaudRate, nParity, nByteSize, nStopBits ) != INVALID_HANDLE_VALUE
+   IF Left( ::cPortName, 3 ) == "COM"
+      ::nPort := Val( SubStr( ::cPortName, 4 ) ) - 1
+      IF Win_PortOpen( ::nPort, nBaudRate, nParity, nByteSize, nStopBits ) != -1
          ::lOpen := .T.
       ENDIF
    ENDIF
 
    RETURN self
 
-METHOD Read( /* @ */ cString, nLength ) CLASS WinPort
+METHOD Read( /* @ */ cString, nLength ) CLASS Win_Port
    LOCAL nResult
 
    cString := Space( nlength )
-   IF ( nResult := WinPortRead( ::nPort, @cString ) ) != INVALID_HANDLE_VALUE
+   IF ( nResult := Win_PortRead( ::nPort, @cString ) ) != -1
       cString := Left( cString, nResult )
    ELSE
       cString := ""
@@ -133,11 +131,11 @@ METHOD Read( /* @ */ cString, nLength ) CLASS WinPort
 
    RETURN nResult
 
-METHOD Recv( nLength ) CLASS WinPort
+METHOD Recv( nLength ) CLASS Win_Port
    LOCAL nResult
    LOCAL cString := Space( nlength )
 
-   IF ( nResult := WinPortRead( ::nPort, @cString ) ) != INVALID_HANDLE_VALUE
+   IF ( nResult := Win_PortRead( ::nPort, @cString ) ) != -1
       cString := Left( cString, nResult )
    ELSE
       cString := ""
@@ -145,7 +143,7 @@ METHOD Recv( nLength ) CLASS WinPort
 
    RETURN cString
 
-METHOD RecvTo( cDelim, nMaxlen ) CLASS WinPort
+METHOD RecvTo( cDelim, nMaxlen ) CLASS Win_Port
    LOCAL nResult
    LOCAL cRecv := ""
 
@@ -153,7 +151,7 @@ METHOD RecvTo( cDelim, nMaxlen ) CLASS WinPort
 
    DO WHILE .T.
       cString := Space( 1 )
-      IF ( nResult := WinPortRead( ::nPort, @cString ) ) != INVALID_HANDLE_VALUE
+      IF ( nResult := Win_PortRead( ::nPort, @cString ) ) != -1
          IF nResult == 0
             EXIT
          ELSE
@@ -173,14 +171,15 @@ METHOD RecvTo( cDelim, nMaxlen ) CLASS WinPort
    RETURN cRecv
 
 //
-// Since the WinPort functions are an amalgamation of Win functions this allows
+// Since the Win_Port functions are an amalgamation of Win functions this allows
 // you to see what call did the deed when things go wrong.
 //
 
-METHOD Error() CLASS WinPort
-   LOCAL nFcn := WinPortFcn()
+METHOD Error() CLASS Win_Port
+   LOCAL nFcn := Win_PortFcn()
    LOCAL cString
    LOCAL nError
+   LOCAL cMsg
    LOCAL aWinPortFcns := { ;
       "CreateFile", ;
       "GetCommState", ;
@@ -204,6 +203,8 @@ METHOD Error() CLASS WinPort
    ENDIF
 
    // WinPortError clears the error - don't call it twice
-   cString += "error (" + hb_ntos( nError := WinPortError() ) + ") : " + FormatMessage( nError )
+   cMsg := Space( 256 )
+   wapi_FormatMessage( NIL, NIL, nError := Win_PortError(), NIL, @cMsg )
+   cString += "error (" + hb_ntos( nError ) + ") : " + cMsg
 
    RETURN cString

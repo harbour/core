@@ -54,11 +54,15 @@
 #include "hbcomp.h"
 #include "hbassert.h"
 
+HB_EXTERN_BEGIN
+
 typedef void HB_STRIP_INFO, * PHB_STRIP_INFO;
 
 #define HB_STRIP_FUNC( func ) HB_PCODE_FUNC( func, PHB_STRIP_INFO )
 typedef HB_STRIP_FUNC( HB_STRIP_FUNC_ );
 typedef HB_STRIP_FUNC_ * PHB_STRIP_FUNC;
+
+HB_EXTERN_END
 
 static HB_STRIP_FUNC( hb_p_line )
 {

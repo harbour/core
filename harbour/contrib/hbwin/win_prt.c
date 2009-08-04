@@ -56,8 +56,6 @@
 #include "hbapierr.h"
 #include "hbwin.h"
 
-//#include <stdlib.h>
-
 /* Waste some space ! */
 static struct
 {
@@ -119,7 +117,7 @@ static int s_iInQueue = -1;
 static int s_iOutQueue = -1;
 
 
-HB_FUNC( WINPORTOPEN )
+HB_FUNC( WIN_PORTOPEN )
 {
    int Port = hb_parni( 1 );
    int iPort = hb_parni( 1 );
@@ -296,10 +294,10 @@ HB_FUNC( WINPORTOPEN )
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_retnl( -1 );
 }
 
-HB_FUNC( WINPORTCLOSE )
+HB_FUNC( WIN_PORTCLOSE )
 {
    int iPort = hb_parni( 1 );
 
@@ -344,7 +342,7 @@ HB_FUNC( WINPORTCLOSE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( WINPORTWRITE )
+HB_FUNC( WIN_PORTWRITE )
 {
    int iPort = hb_parni( 1 );
 
@@ -369,7 +367,7 @@ HB_FUNC( WINPORTWRITE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( WINPORTREAD )
+HB_FUNC( WIN_PORTREAD )
 {
    int iPort = hb_parni( 1 );
 
@@ -399,7 +397,7 @@ HB_FUNC( WINPORTREAD )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( WINPORTSTATUS )
+HB_FUNC( WIN_PORTSTATUS )
 {
    int iPort = hb_parni( 1 );
 
@@ -429,7 +427,7 @@ HB_FUNC( WINPORTSTATUS )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( WINPORTPURGE )
+HB_FUNC( WIN_PORTPURGE )
 {
    int iPort = hb_parni( 1 );
 
@@ -453,7 +451,7 @@ HB_FUNC( WINPORTPURGE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( WINPORTQUEUESTATUS )
+HB_FUNC( WIN_PORTQUEUESTATUS )
 {
    int iPort = hb_parni( 1 );
 
@@ -490,7 +488,7 @@ HB_FUNC( WINPORTQUEUESTATUS )
 /* If handshaking is enabled, it is an error for the application to adjust the line by
    using the EscapeCommFunction function */
 
-HB_FUNC( WINPORTSETRTS )
+HB_FUNC( WIN_PORTSETRTS )
 {
    int iPort = hb_parni( 1 );
 
@@ -516,7 +514,7 @@ HB_FUNC( WINPORTSETRTS )
 /* If handshaking is enabled, it is an error for the application to adjust the line by
    using the EscapeCommFunction function */
 
-HB_FUNC( WINPORTSETDTR )
+HB_FUNC( WIN_PORTSETDTR )
 {
    int iPort = hb_parni( 1 );
 
@@ -539,7 +537,7 @@ HB_FUNC( WINPORTSETDTR )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( WINPORTRTSFLOW )
+HB_FUNC( WIN_PORTRTSFLOW )
 {
    int iPort = hb_parni( 1 );
 
@@ -594,7 +592,7 @@ HB_FUNC( WINPORTRTSFLOW )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( WINPORTDTRFLOW )
+HB_FUNC( WIN_PORTDTRFLOW )
 {
    int iPort = hb_parni( 1 );
 
@@ -649,7 +647,7 @@ HB_FUNC( WINPORTDTRFLOW )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( WINPORTXONXOFFFLOW )
+HB_FUNC( WIN_PORTXONXOFFFLOW )
 {
    int iPort = hb_parni( 1 );
 
@@ -695,7 +693,7 @@ HB_FUNC( WINPORTXONXOFFFLOW )
 
 /* You can leave some out. If you pass them by reference you can save the current setting. */
 
-HB_FUNC( WINPORTTIMEOUTS )
+HB_FUNC( WIN_PORTTIMEOUTS )
 {
    int iTmp;
 
@@ -747,38 +745,24 @@ HB_FUNC( WINPORTTIMEOUTS )
 
 /* You must set both! */
 
-HB_FUNC( WINPORTBUFFERS )
+HB_FUNC( WIN_PORTBUFFERS )
 {
    s_iInQueue = hb_parni( 1 );
    s_iOutQueue = hb_parni( 2 );
 }
 
-HB_FUNC( WINPORTERROR )
+HB_FUNC( WIN_PORTERROR )
 {
    hb_retnl( s_dwWinError );
-   s_dwWinError = 0;       /* Note - reset */
+   s_dwWinError = 0; /* NOTE: reset */
 }
 
-HB_FUNC( WINPORTFCN )
+HB_FUNC( WIN_PORTFCN )
 {
    hb_retni( s_iWinFcn );
 }
 
-HB_FUNC( FORMATMESSAGE )
-{
-   char buffer[ 256 ] = "";
-   DWORD dwMessageid = HB_ISNUM( 1 ) ? ( DWORD ) hb_parnl( 1 ) : GetLastError();
-
-   if( FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, dwMessageid, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), /* Default language */
-           ( LPTSTR ) buffer, sizeof( buffer ), NULL) == 0 )
-   {
-      hb_snprintf( buffer, sizeof( buffer ), "FormatMessage() failed for message %ld.", dwMessageid );
-   }
-
-   hb_retc( buffer );
-}
-
-HB_FUNC( WINPORTDEBUGDCB )
+HB_FUNC( WIN_PORTDEBUGDCB )
 {
    int iPort = hb_parni( 1 );
 

@@ -489,12 +489,12 @@ HB_FUNC( __OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
          if( cID[ 0 ] == '{' )
          {
             cCLSID = AnsiToWide( cID );
-            lOleError = CLSIDFromString( (LPOLESTR) cCLSID, &iid );
+            lOleError = CLSIDFromString( ( LPOLESTR ) cCLSID, &iid );
             hb_xfree( cCLSID );
          }
          else if( hb_parclen( 2 ) == ( ULONG ) sizeof( iid ) )
          {
-            memcpy( (LPVOID) &iid, cID, sizeof( iid ) );
+            memcpy( ( LPVOID ) &iid, cID, sizeof( iid ) );
          }
       }
 

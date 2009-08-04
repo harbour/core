@@ -54,11 +54,11 @@
 
 procedure main(cPortName)
 
-    local oWinPort := WinPort():Init(cPortName, CBR_9600, NOPARITY, 8, ONESTOPBIT)
+    local oWinPort := Win_Port():Init(cPortName, CBR_9600, NOPARITY, 8, ONESTOPBIT)
     local cString := "ATE0" + chr(13) + "ATI3" + chr(13)
     local nResult
 
-    if !oWinPort:Open
+    if !oWinPort:Open()
         ? "Open() failed :", oWinPort:Error()
     else
         ? "Open() succeeded"
