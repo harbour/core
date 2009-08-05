@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+HB_ISAOPT = -m64
+
+include $(TOP)$(ROOT)config/linux/sunpro.cf

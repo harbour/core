@@ -61,9 +61,11 @@ if [ -z "$HB_GPM_MOUSE" ]; then
     export HB_GPM_MOUSE
 fi
 
-if [ "$HB_ARCHITECTURE" = "linux" ]
+if [ "$HB_ARCHITECTURE" = "linux" ] && \
+   [ "$HB_COMPILER" != "sunpro" ] && \
+   [ "$HB_COMPILER" != "sunpro64" ]
 then
-    if [ "${HB_USER_CFLAGS}" == "${HB_USER_CFLAGS//-fPIC/}" ]
+    if [ "${HB_USER_CFLAGS}" = "${HB_USER_CFLAGS//-fPIC/}" ]
     then
         HB_CPU=`uname -m`
         case "$HB_CPU" in

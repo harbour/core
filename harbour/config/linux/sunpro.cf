@@ -19,31 +19,33 @@ CC_IN = -c
 #       Now solved with '$(subst x,x, )' expression.
 CC_OUT = -o$(subst x,x, )
 
-CFLAGS =
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
-LDFLAGS =
+# try to keep `-fast' as left as possible, as later optim
+# flags may override values set by `-fast', and this way
+# no warnings are generated.
+
+# may inherit -m64 from sunpro64.cf, which supersedes -xarch=386
+HB_ISAOPT ?= -xarch=386
+LDFLAGS ?= $(HB_ISAOPT)
+
+export HB_ISAOPT
+
+ifneq ($(HB_BUILD_OPTIM),no)
+# Together with $(HB_ISAOPT) above, these are supposed to (somewhat)
+# conform to the Blastwave build standards, see
+#    http://wiki.blastwave.org/mediawiki/index.php/Build_Standards
+# Try to keep them this way.
+CFLAGS = -fast $(HB_ISAOPT)
+endif
+
+CFLAGS += -KPIC
 
 ifneq ($(HB_BUILD_WARN),no)
 CFLAGS += -erroff=%none
 else
 CFLAGS += -erroff=%all
 endif
-
-ifneq ($(HB_BUILD_OPTIM),no)
-# Together with -xarch=v8 above, these are supposed to (somewhat)
-# conform to the Blastwave build standards, see
-#    http://wiki.blastwave.org/mediawiki/index.php/Build_Standards
-# Try to keep them this way.
-CFLAGS += -O -fast
-ifneq ($(HB_BUILD_MODE),cpp)
-CFLAGS += -xstrconst
-else
-CFLAGS += -xnolibmopt
-endif
-endif
-
-CFLAGS += -Kpic
 
 ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -g

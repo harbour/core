@@ -13,7 +13,7 @@ EXE_EXT =
 LIB_PREF = lib
 LIB_EXT = .a
 
-CC = $(HB_CCACHE) $(HB_CMP)
+CC = $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)
 CC_IN = -c
 # NOTE: The ending space after -o is important, please preserve it.
 #       Now solved with '$(subst x,x, )' expression.
@@ -21,22 +21,24 @@ CC_OUT = -o$(subst x,x, )
 
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
-# may inherit -m64 from sunpro64.cf, which supersedes -xarch=v8
-CFLAGS ?= -xarch=v8
-LDFLAGS =
+# try to keep `-fast' as left as possible, as later optim
+# flags may override values set by `-fast', and this way
+# no warnings are generated.
 
-ifneq ($(HB_BUILD_WARN),no)
-CFLAGS += -erroff=%none
-else
-CFLAGS += -erroff=%all
-endif
+# may inherit -m64 from sunpro64.cf, which supersedes -xarch=v8
+HB_ISAOPT ?= -xarch=v8
+LDFLAGS ?= $(HB_ISAOPT)
+
+# might not be needed for sunos, but helps keeping
+# {linux,sunos}/sunpro.cf easily vimdiff'able for now
+export HB_ISAOPT
 
 ifneq ($(HB_BUILD_OPTIM),no)
-# Together with -xarch=v8 above, these are supposed to (somewhat)
+# Together with $(HB_ISAOPT) above, these are supposed to (somewhat)
 # conform to the Blastwave build standards, see
 #    http://wiki.blastwave.org/mediawiki/index.php/Build_Standards
 # Try to keep them this way.
-CFLAGS += -O -fast
+CFLAGS = -fast $(HB_ISAOPT)
 ifneq ($(HB_BUILD_MODE),cpp)
 CFLAGS += -xstrconst
 endif
@@ -46,14 +48,20 @@ endif
 ifeq ($(findstring sparc,$(shell isalist)),sparc)
 CFLAGS += -xcode=pic32
 else
-CFLAGS += -Kpic
+CFLAGS += -KPIC
+endif
+
+ifneq ($(HB_BUILD_WARN),no)
+CFLAGS += -erroff=%none
+else
+CFLAGS += -erroff=%all
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -g
 endif
 
-LD = $(HB_CCACHE) $(HB_CMP)
+LD = $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)
 LD_OUT = -o$(subst x,x, )
 
 # Add all libraries specified in LIBS.

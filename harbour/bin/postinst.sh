@@ -83,10 +83,10 @@ then
         hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
         rm -f "${hb_mkdyn}"
         if [ "$HB_ARCHITECTURE" = "sunos" ]; then
-            sed -e "s/gcc  -shared -fPIC/cc -G -xcode=pic32/g" "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
+            sed -e "s/gcc -shared -fPIC/cc -G -xcode=pic32 ${HB_ISAOPT}/g" "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
             chmod 755 "${hb_mkdyn}"
         else
-            sed -e "s/gcc  -shared -fPIC/cc -G -Kpic/g" "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
+            sed -e "s/gcc -shared -fPIC/cc -G -KPIC ${HB_ISAOPT}/g" "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
             chmod 755 "${hb_mkdyn}"
         fi
     elif [ "${HB_ARCHITECTURE}" = "sunos" ] || \
