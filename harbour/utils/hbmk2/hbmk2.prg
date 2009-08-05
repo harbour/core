@@ -2759,11 +2759,7 @@ FUNCTION hbmk( aArgs, /* @ */ lPause, /* @ */ lUTF8 )
          ENDIF
 
          IF hbmk[ _HBMK_lDEBUG ]
-            IF hbmk[ _HBMK_cCOMP ] == "msvcarm"
-               AAdd( hbmk[ _HBMK_aOPTC ], "-Zi" )
-            ELSE
-               AAdd( hbmk[ _HBMK_aOPTC ], "-MTd -Zi" )
-            ENDIF
+            AAdd( hbmk[ _HBMK_aOPTC ], "-Zi" )
             AAdd( hbmk[ _HBMK_aOPTL ], "/debug" )
          ENDIF
          IF hbmk[ _HBMK_lGUI ]
