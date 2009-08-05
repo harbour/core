@@ -64,6 +64,7 @@ QFontDatabase.qth
 QFontDialog.qth
 QFontInfo.qth
 QFontMetrics.qth
+QFontMetricsF.qth
 QFormLayout.qth
 QFrame.qth
 QFtp.qth
@@ -149,6 +150,8 @@ QStringListModel.qth
 
 QStyle.qth
 QStyledItemDelegate.qth
+
+QStyleFactory.qth
 
 QStyleHintReturn.qth
 QStyleHintReturnMask.qth
