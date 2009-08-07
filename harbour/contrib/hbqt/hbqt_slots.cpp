@@ -63,6 +63,8 @@
 
 #include "hbqt_slots.h"
 
+//             #include <windows.h>   ////////////////////////////////////////////////////
+
 #include <QWidget>
 #include <QString>
 #include <QList>
@@ -145,6 +147,26 @@ static void SlotsExecIntInt( QObject* object, char* event, int iValue1, int iVal
          hb_itemRelease( pObject );
          hb_itemRelease( pValue1 );
          hb_itemRelease( pValue2 );
+      }
+   }
+}
+
+static void SlotsExecIntIntInt( QObject* object, char* event, int iValue1, int iValue2, int iValue3 )
+{
+   if( object )
+   {
+      int i = object->property( event ).toInt();
+      if( i > 0 && ( s_s->listActv.at( i - 1 ) == true ) )
+      {
+         PHB_ITEM pObject = hb_itemPutPtr( NULL, ( QObject* ) object );
+         PHB_ITEM pValue1 = hb_itemPutNI( NULL, iValue1 );
+         PHB_ITEM pValue2 = hb_itemPutNI( NULL, iValue2 );
+         PHB_ITEM pValue3 = hb_itemPutNI( NULL, iValue3 );
+         hb_vmEvalBlockV( ( PHB_ITEM ) s_s->listBlock.at( i - 1 ), 4, pObject, pValue1, pValue2, pValue3 );
+         hb_itemRelease( pObject );
+         hb_itemRelease( pValue1 );
+         hb_itemRelease( pValue2 );
+         hb_itemRelease( pValue3 );
       }
    }
 }
@@ -857,6 +879,66 @@ void Slots::timeout()
    QObject *object = qobject_cast<QObject *>( sender() );
    SlotsExec( object, ( char* ) "timeout()" );
 }
+void Slots::scrollContentsBy( int x, int y )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecIntInt( object, ( char* ) "scrollContentsBy(int,int)", x, y );
+}
+void Slots::geometriesChanged()
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExec( object, ( char* ) "geometriesChanged()" );
+}
+void Slots::sectionAutoResize( int logicalIndex, QHeaderView::ResizeMode mode )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecIntInt( object, ( char* ) "sectionAutoResize(int,int)", logicalIndex, mode );
+}
+void Slots::sectionClicked( int logicalIndex )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecInt( object, ( char* ) "sectionClicked(int)", logicalIndex );
+}
+void Slots::sectionCountChanged( int oldCount, int newCount )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecIntInt( object, ( char* ) "sectionCountChanged(int,int)", oldCount, newCount );
+}
+void Slots::sectionDoubleClicked( int logicalIndex )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecInt( object, ( char* ) "sectionDoubleClicked(int)", logicalIndex );
+}
+void Slots::sectionEntered( int logicalIndex )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecInt( object, ( char* ) "sectionEntered(int)", logicalIndex );
+}
+void Slots::sectionHandleDoubleClicked( int logicalIndex )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecInt( object, ( char* ) "sectionHandleDoubleClicked(int)", logicalIndex );
+}
+void Slots::sectionMoved( int logicalIndex, int oldVisualIndex, int newVisualIndex )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecIntIntInt( object, ( char* ) "sectionMoved(int,int,int)", logicalIndex, oldVisualIndex, newVisualIndex );
+}
+void Slots::sectionPressed( int logicalIndex )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecInt( object, ( char* ) "sectionPressed(int)", logicalIndex );
+}
+void Slots::sectionResized( int logicalIndex, int oldSize, int newSize )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecIntIntInt( object, ( char* ) "sectionResized(int,int,int)", logicalIndex, oldSize, newSize );
+}
+void Slots::sortIndicatorChanged( int logicalIndex, Qt::SortOrder order )
+{
+   QObject *object = qobject_cast<QObject *>( sender() );
+   SlotsExecIntInt( object, ( char* ) "sortIndicatorChanged(int,int)", logicalIndex, order );
+}
 
 
 /*
@@ -1316,6 +1398,66 @@ HB_FUNC( QT_CONNECT_SIGNAL )
       ret = object->connect( object, SIGNAL( sg_resizeEvent( QResizeEvent * ) ),
                              s_s, SLOT( resizeEvent( QResizeEvent * ) ), Qt::AutoConnection );
    }
+   if( signal == ( QString ) "scrollContentsBy(int,int)" )
+   {
+      ret = object->connect( object, SIGNAL( sg_scrollContentsBy( int, int ) ),
+                             s_s, SLOT( scrollContentsBy( int, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "geometriesChanged()" )
+   {
+      ret = object->connect( object, SIGNAL( geometriesChanged() ),
+                             s_s, SLOT( geometriesChanged() ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "sectionAutoResize(int,int)" )
+   {
+      ret = object->connect( object, SIGNAL( sectionAutoResize( int, QHeaderView::ResizeMode ) ),
+                             s_s, SLOT( sectionAutoResize( int, QHeaderView::ResizeMode ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "sectionClicked(int)" )
+   {
+      ret = object->connect( object, SIGNAL( sectionClicked( int ) ),
+                             s_s, SLOT( sectionClicked( int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "sectionCountChanged(int,int)" )
+   {
+      ret = object->connect( object, SIGNAL( sectionCountChanged( int, int ) ),
+                             s_s, SLOT( sectionCountChanged( int, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "sectionDoubleClicked(int)" )
+   {
+      ret = object->connect( object, SIGNAL( sectionDoubleClicked( int ) ),
+                             s_s, SLOT( sectionDoubleClicked( int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "sectionEntered(int)" )
+   {
+      ret = object->connect( object, SIGNAL( sectionEntered( int ) ),
+                             s_s, SLOT( sectionEntered( int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "sectionHandleDoubleClicked(int)" )
+   {
+      ret = object->connect( object, SIGNAL( sectionHandleDoubleClicked( int ) ),
+                             s_s, SLOT( sectionHandleDoubleClicked( int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "sectionMoved(int,int,int)" )
+   {
+      ret = object->connect( object, SIGNAL( sectionMoved( int, int, int ) ),
+                             s_s, SLOT( sectionMoved( int, int, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "sectionPressed(int)" )
+   {
+      ret = object->connect( object, SIGNAL( sectionPressed( int ) ),
+                             s_s, SLOT( sectionPressed( int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "sectionResized(int,int,int)" )
+   {
+      ret = object->connect( object, SIGNAL( sectionResized( int, int, int ) ),
+                             s_s, SLOT( sectionResized( int, int, int ) ), Qt::AutoConnection );
+   }
+   if( signal == ( QString ) "sortIndicatorChanged(int,int)" )
+   {
+      ret = object->connect( object, SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ),
+                             s_s, SLOT( sortIndicatorChanged( int, Qt::SortOrder ) ), Qt::AutoConnection );
+   }
 
 
    hb_retl( ret );
@@ -1584,7 +1726,6 @@ HB_FUNC( QT_QDEBUG )
 /*----------------------------------------------------------------------*/
 
 HbTableView::HbTableView( QWidget * parent ) : QTableView( parent )
-//HbTableView::HbTableView( QWidget * parent ) : QTableWidget( parent )
 {
 }
 HbTableView::~HbTableView()
@@ -1625,6 +1766,16 @@ QModelIndex HbTableView::navigate( int cursorAction )
 {
    return moveCursor( ( HbTableView::CursorAction ) cursorAction, ( Qt::KeyboardModifiers ) 0 );
 }
+void HbTableView::scrollContentsBy( int x, int y )
+{
+   emit sg_scrollContentsBy( x, y );
+}
+void HbTableView::scrollTo( const QModelIndex & index, QAbstractItemView::ScrollHint hint )
+{
+//char str[ 50 ]; hb_snprintf( str, sizeof( str ), "HbTableView:scrollTo row = %i col = %i", index.row(),index.column() );  OutputDebugString( str );
+   QTableView::scrollTo( index, hint );
+}
+
 /*----------------------------------------------------------------------*/
 
 #if 0

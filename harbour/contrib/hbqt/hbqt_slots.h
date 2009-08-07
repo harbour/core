@@ -117,6 +117,8 @@ public:
    void mousePressEvent( QMouseEvent * event );
    void mouseReleaseEvent( QMouseEvent * event );
    void resizeEvent( QResizeEvent * event );
+   void scrollContentsBy( int x, int y );
+   void scrollTo( const QModelIndex & index, QAbstractItemView::ScrollHint hint = QAbstractItemView::EnsureVisible );
 
    QModelIndex navigate( int cursorAction );
 
@@ -130,6 +132,7 @@ signals:
    void sg_mouseReleaseEvent( QMouseEvent * event );
    void sg_resizeEvent( QResizeEvent * event );
    void sg_moveCursor( HbTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
+   void sg_scrollContentsBy( int x, int y );
 };
 
 /*----------------------------------------------------------------------*/
@@ -270,6 +273,18 @@ public slots:
    void mouseReleaseEvent( QMouseEvent * event );
    void mouseDoubleClickEvent( QMouseEvent * event );
    void resizeEvent( QResizeEvent * event );
+   void scrollContentsBy( int x, int y );
+   void geometriesChanged();
+   void sectionAutoResize( int logicalIndex, QHeaderView::ResizeMode mode );
+   void sectionClicked( int logicalIndex );
+   void sectionCountChanged( int oldCount, int newCount );
+   void sectionDoubleClicked( int logicalIndex );
+   void sectionEntered( int logicalIndex );
+   void sectionHandleDoubleClicked( int logicalIndex );
+   void sectionMoved( int logicalIndex, int oldVisualIndex, int newVisualIndex );
+   void sectionPressed( int logicalIndex );
+   void sectionResized( int logicalIndex, int oldSize, int newSize );
+   void sortIndicatorChanged( int logicalIndex, Qt::SortOrder order );
 };
 
 class Events: public QObject

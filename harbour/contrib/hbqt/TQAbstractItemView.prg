@@ -128,6 +128,7 @@ CREATE CLASS QAbstractItemView INHERIT QAbstractScrollArea
    METHOD  selectAll()                         INLINE  Qt_QAbstractItemView_selectAll( ::pPtr )
    METHOD  setCurrentIndex( pIndex )           INLINE  Qt_QAbstractItemView_setCurrentIndex( ::pPtr, pIndex )
    METHOD  setRootIndex( pIndex )              INLINE  Qt_QAbstractItemView_setRootIndex( ::pPtr, pIndex )
+   METHOD  update( pIndex )                    INLINE  Qt_QAbstractItemView_update( ::pPtr, pIndex )
 
    ENDCLASS
 

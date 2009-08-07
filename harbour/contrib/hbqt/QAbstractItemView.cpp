@@ -70,15 +70,6 @@
  *  enum SelectionMode { SingleSelection, ContiguousSelection, ExtendedSelection, MultiSelection, NoSelection }
  */
 
-/*
- *  Constructed[ 62/63 [ 98.41% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  void update ( const QModelIndex & index
- */
-
 
 #include <QtGui/QAbstractItemView>
 
@@ -594,6 +585,14 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETCURRENTINDEX )
 HB_FUNC( QT_QABSTRACTITEMVIEW_SETROOTINDEX )
 {
    hbqt_par_QAbstractItemView( 1 )->setRootIndex( *hbqt_par_QModelIndex( 2 ) );
+}
+
+/*
+ * void update ( const QModelIndex & index )
+ */
+HB_FUNC( QT_QABSTRACTITEMVIEW_UPDATE )
+{
+   hbqt_par_QAbstractItemView( 1 )->update( *hbqt_par_QModelIndex( 2 ) );
 }
 
 
