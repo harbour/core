@@ -19,6 +19,8 @@ setlocal
 
 if "%HB_ARCHITECTURE%" == "" ( echo HB_ARCHITECTURE needs to be set. && goto END )
 if "%HB_COMPILER%" == "" ( echo HB_COMPILER needs to be set. && goto END )
+if "%HB_BIN_INSTALL%" == "" ( echo HB_BIN_INSTALL needs to be set. && goto END )
+if "%HB_LIB_INSTALL%" == "" ( echo HB_LIB_INSTALL needs to be set. && goto END )
 
 set HB_DLL_VERSION=20
 set HB_DLL_LIBS=hbcommon hbpp hbrtl hbmacro hblang hbcpage hbpcre hbzlib hbextern hbrdd rddntx rddnsx rddcdx rddfpt hbsix hbhsx hbusrrdd gtcgi gtpca gtstd gtwvt gtgui

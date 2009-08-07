@@ -579,28 +579,31 @@ ifneq ($(HB_DB_DRVEXT),)
    HB_DB_DIRS += $(HB_DB_DRVEXT)
 endif
 
-ifeq ($(HB_UNIX_COMPATIBLE),no)
-   LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(ARCH_COMP))
-endif
+ifneq ($(HB_INSTALL_PREFIX),)
 
-ifeq ($(HB_BIN_INSTALL),)
-   export HB_BIN_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)bin
-endif
-ifeq ($(HB_LIB_INSTALL),)
-   export HB_LIB_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)lib$(LIBPOSTFIX)
-endif
-ifeq ($(HB_INC_INSTALL),)
-   export HB_INC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
-endif
-ifeq ($(HB_DOC_INSTALL),)
-   # Don't set doc dir for *nix targets
    ifeq ($(HB_UNIX_COMPATIBLE),no)
-      export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
+      LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(ARCH_COMP))
+   endif
+
+   ifeq ($(HB_BIN_INSTALL),)
+      export HB_BIN_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)bin
+   endif
+   ifeq ($(HB_LIB_INSTALL),)
+      export HB_LIB_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)lib$(LIBPOSTFIX)
+   endif
+   ifeq ($(HB_INC_INSTALL),)
+      export HB_INC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
+   endif
+   ifeq ($(HB_DOC_INSTALL),)
+      # Don't set doc dir for *nix targets
+      ifeq ($(HB_UNIX_COMPATIBLE),no)
+         export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
+      endif
    endif
 endif
 
 ifeq ($(HB_BIN_COMPILE),)
-   HB_HOST_BIN_DIR := $(TOP)$(ROOT)bin/$(ARCH_COMP)
+   HB_HOST_BIN_DIR := $(BIN_DIR)
 else
    HB_HOST_BIN_DIR := $(HB_BIN_COMPILE)
 endif
