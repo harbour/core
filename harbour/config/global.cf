@@ -111,9 +111,8 @@ ifeq ($(HB_CONFIG_SHOWN),)
       #   HB_HOST_BUILD, HB_XBUILD, HB_WITHOUT_*, HB_REBUILD_PARSER
 
       ifeq ($(HB_DYNLIB),yes)
-         $(info Harbour GNU Make: Dynamic library creation phase)
+         $(info Dynamic library creation phase)
       endif
-      $(info Harbour GNU Make: Configuration:)
       ifneq ($(HB_USER_PRGFLAGS),)
          $(info HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
       endif
@@ -359,34 +358,40 @@ ifeq ($(HB_COMPILER),)
             endif
          endif
       else
-         ifeq ($(HB_ARCHITECTURE),sunos)
-            ifneq ($(call find_in_path,cc),)
-               HB_COMPILER := sunpro
-            else
-               ifneq ($(call find_in_path,gcc),)
-                  HB_COMPILER := gcc
-               endif
+         ifneq ($(findstring $(HB_ARCHITECTURE),darwin hpux bsd),)
+            ifneq ($(call find_in_path,gcc),)
+               HB_COMPILER := gcc
             endif
          else
-            ifeq ($(HB_ARCHITECTURE),dos)
-               ifneq ($(call find_in_path,gcc),)
-                  HB_COMPILER := djgpp
+            ifeq ($(HB_ARCHITECTURE),sunos)
+               ifneq ($(call find_in_path,cc),)
+                  HB_COMPILER := sunpro
                else
-                  ifneq ($(call find_in_path,wpp386),)
-                     HB_COMPILER := watcom
+                  ifneq ($(call find_in_path,gcc),)
+                     HB_COMPILER := gcc
                   endif
                endif
             else
-               ifeq ($(HB_ARCHITECTURE),os2)
+               ifeq ($(HB_ARCHITECTURE),dos)
                   ifneq ($(call find_in_path,gcc),)
-                     HB_COMPILER := gcc
+                     HB_COMPILER := djgpp
                   else
                      ifneq ($(call find_in_path,wpp386),)
                         HB_COMPILER := watcom
                      endif
                   endif
                else
-                  # add other platforms here
+                  ifeq ($(HB_ARCHITECTURE),os2)
+                     ifneq ($(call find_in_path,gcc),)
+                        HB_COMPILER := gcc
+                     else
+                        ifneq ($(call find_in_path,wpp386),)
+                           HB_COMPILER := watcom
+                        endif
+                     endif
+                  else
+                     # add other platforms here
+                  endif
                endif
             endif
          endif
