@@ -123,7 +123,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       lNoAuth := .F.
    ENDIF
    IF ! ISNUMBER( nTimeOut )
-      nTimeOut := 100
+      nTimeOut := 1000
    ENDIF
    IF ! ISCHARACTER( cReplyTo )
       cReplyTo := ""

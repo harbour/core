@@ -197,15 +197,17 @@ METHOD Data( cData ) CLASS tIPClientSMTP
 METHOD Auth( cUser, cPass ) CLASS tIPClientSMTP
 
    ::InetSendall( ::SocketCon, "AUTH LOGIN" + ::cCRLF )
-
    IF ::GetOk()
       ::InetSendall( ::SocketCon, hb_base64Encode( StrTran( cUser, "&at;", "@" ) ) + ::cCRLF  )
       IF ::GetOk()
          ::InetSendall( ::SocketCon, hb_base64Encode( cPass ) + ::cCRLF )
+         IF ::GetOk()
+            RETURN ::isAuth := .T.
+         ENDIF
       ENDIF
    ENDIF
 
-   RETURN ::isAuth := ::GetOk()
+   RETURN ::isAuth := .F.
 
 METHOD AuthPlain( cUser, cPass ) CLASS tIPClientSMTP
 
