@@ -20,14 +20,14 @@ PRG_SOURCES= \
 	encoder.prg \
 	encqp.prg \
 	encurl.prg \
-	ftpcln.prg \
-	httpcln.prg \
+	ftpcli.prg \
+	httpcli.prg \
 	log.prg \
 	mail.prg \
-	popcln.prg \
+	popcli.prg \
 	sendmail.prg \
 	sessid.prg \
-	smtpcln.prg	\
+	smtpcli.prg	\
 	thtml.prg \
 	url.prg \
 
